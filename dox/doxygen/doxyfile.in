@@ -38,7 +38,7 @@ EXCLUDE = "@elastix_SOURCE_DIR@/Common/ParameterFileParser"
 # fine-tune the look of the HTML output. If the tag is left blank doxygen 
 # will generate a default style sheet 
 
-HTML_STYLESHEET        = "@ELX_DOXYGEN_DIR@/doxygen.css"
+HTML_STYLESHEET        = "@ELX_DOXYGEN_DIR@/elastix.css"
 
 # The IMAGE_PATH tag can be used to specify one or more files or 
 # directories that contain image that are included in the documentation (see 
@@ -66,6 +66,14 @@ PROJECT_NAME           = elastix
 
 PROJECT_NUMBER         = 3.0
 
+# If the CREATE_SUBDIRS tag is set to YES, then doxygen will create
+# 4096 sub-directories (in 2 levels) under the output directory of
+# each output format and will distribute the generated files over
+# these directories. Enabling this option can be useful when feeding
+# doxygen a huge amount of source files, where putting all generated
+# files in the same directory would otherwise causes performance
+# problems for the file system.
+
 CREATE_SUBDIRS         = NO
 
 # The OUTPUT_LANGUAGE tag is used to specify the language in which all 
@@ -76,7 +84,18 @@ CREATE_SUBDIRS         = NO
 # Spanish and Russian
 
 OUTPUT_LANGUAGE        = English
-USE_WINDOWS_ENCODING   = YES
+
+# This tag can be used to specify the encoding used in the generated
+# output. The encoding is not always determined by the language
+# that is chosen, but also whether or not the output is meant
+# for Windows or non-Windows users. In case there is a
+# difference, setting the USE_WINDOWS_ENCODING tag to YES
+# forces the Windows encoding, (this is the default for the
+# Windows binary), whereas setting the tag to NO uses a
+# Unix-style encoding (the default for all platforms
+# other than Windows).
+
+USE_WINDOWS_ENCODING   = NO
 
 # If the BRIEF_MEMBER_DESC tag is set to YES (the default) Doxygen will 
 # include brief member descriptions after the members that are listed in 
@@ -92,6 +111,16 @@ BRIEF_MEMBER_DESC      = NO
 # brief descriptions will be completely suppressed. 
 
 REPEAT_BRIEF           = YES
+
+# This tag implements a quasi-intelligent brief description abbreviator
+# that is used to form the text in various listings. Each string in this
+# list, if found as the leading text of the brief description, will be
+# stripped from the text and the result after processing the whole list,
+# is used as the annotated text. Otherwise, the brief description is used
+# as-is. If left blank, the following values are used ("\$name" is
+# automatically replaced with the name of the entity):
+# "The $name class" "The $name widget" "The $name file" "is" "provides"
+# "specifies" "contains" "represents" "a" "an" "the".
 
 ABBREVIATE_BRIEF       = "The $name class" \
                          "The $name widget" \
@@ -111,6 +140,12 @@ ABBREVIATE_BRIEF       = "The $name class" \
 
 ALWAYS_DETAILED_SEC    = NO
 
+# If the INLINE_INHERITED_MEMB tag is set to YES, doxygen will show
+# all inherited members of a class in the documentation of that class
+# as if those members were ordinary class members. Constructors,
+# destructors and assignment operators of the base classes will
+# not be shown.
+
 INLINE_INHERITED_MEMB  = NO
 
 # If the FULL_PATH_NAMES tag is set to YES then Doxygen will prepend the full 
@@ -127,6 +162,13 @@ FULL_PATH_NAMES        = NO
 
 STRIP_FROM_PATH        =
 
+# The STRIP_FROM_INC_PATH tag can be used to strip a user-defined part
+# of the path mentioned in the documentation of a class, which tells
+# the reader which header file to include in order to use a class.
+# If left blank only the name of the header file containing the class
+# definition is used. Otherwise one should specify the include paths
+# that are normally passed to the compiler using the -I flag.
+
 STRIP_FROM_INC_PATH    =
 
 # If the SHORT_NAMES tag is set to NO (the default) then Doxygen will
@@ -134,7 +176,7 @@ STRIP_FROM_INC_PATH    =
 # set to YES, short names in the format a00000.html will be used.
 # This may be necessary to support 8.3 filesystems.
 
-SHORT_NAMES            = NO
+SHORT_NAMES            = YES
 
 # If the JAVADOC_AUTOBRIEF tag is set to YES (the default) then Doxygen 
 # will interpret the first line (until the first dot) of a JavaDoc-style 
@@ -143,7 +185,20 @@ SHORT_NAMES            = NO
 
 JAVADOC_AUTOBRIEF      = NO
 
+# The MULTILINE_CPP_IS_BRIEF tag can be set to YES to make Doxygen treat
+# a multi-line C++ special comment block (i.e. a block of //! or ///
+# comments) as a brief description. This used to be the default
+# behaviour. The new default is to treat a multi-line C++ comment
+# block as a detailed description. Set this tag to YES if you prefer
+# the old behaviour instead. Note that setting this tag to YES also
+# means that rational rose comments are not recognized any more.
+
 MULTILINE_CPP_IS_BRIEF = NO
+
+# If the DETAILS_AT_TOP tag is set to YES then Doxygen will output
+# the detailed description near the top, like JavaDoc. If set to
+# NO, the detailed description appears after the member documentation.
+
 DETAILS_AT_TOP         = NO
 
 # If the INHERIT_DOCS tag is set to YES (the default) then an undocumented 
@@ -164,10 +219,41 @@ DISTRIBUTE_GROUP_DOC   = YES
 
 TAB_SIZE               = 2
 
+# This tag can be used to specify a number of aliases that acts as
+# commands in the documentation. An alias has the form
+#    name=value
+# For example adding
+#   "sideeffect=\par Side Effects:\n"
+# will allow you to put the command \sideeffect (or @sideeffect)
+# in the documentation, which will result in a user-defined paragraph
+# with heading "Side Effects:". You can put \n's in the value part
+# of an alias to insert newlines.
+
 ALIASES                =
+
+# Set the OPTIMIZE_OUTPUT_FOR_C tag to YES if your project consists
+# of C sources only. Doxygen will then generate output that is more
+# tailored for C. For instance, some of the names that are used
+# will be different. The list of all members will be omitted, etc.
+
 OPTIMIZE_OUTPUT_FOR_C  = YES
+
+# Set the OPTIMIZE_OUTPUT_JAVA tag to YES if your project consists
+# of Java sources only. Doxygen will then generate output that is
+# more tailored for Java. For instance, namespaces will be presented
+# as packages, qualified scopes will look different, etc.
+
 OPTIMIZE_OUTPUT_JAVA   = NO
+
+# Set the SUBGROUPING tag to YES (the default) to allow class member
+# groups of the same type (for instance a group of public functions)
+# to be put as a subgroup of that type (e.g. under the Public
+# Functions section). Set it to NO to prevent subgrouping.
+# Alternatively, this can be done per class using the
+# \nosubgrouping command.
+
 SUBGROUPING            = YES
+
 #---------------------------------------------------------------------------
 # Build related configuration options
 #---------------------------------------------------------------------------
@@ -189,7 +275,18 @@ EXTRACT_PRIVATE        = YES
 
 EXTRACT_STATIC         = YES
 
+# If the EXTRACT_LOCAL_CLASSES tag is set to YES classes (and structs)
+# defined locally in source files will be included in the documentation.
+# If set to NO only classes defined in header files are included.
+# Does not have any effect for Java sources.
+
 EXTRACT_LOCAL_CLASSES  = YES
+
+# This flag is only useful for Objective-C code. When set to YES
+# local methods, which are defined in the implementation section
+# but not in the interface are included in the documentation.
+# If set to NO (the default) only methods in the interface
+# are included.
 
 EXTRACT_LOCAL_METHODS  = YES
 
@@ -208,8 +305,19 @@ HIDE_UNDOC_MEMBERS     = NO
 
 HIDE_UNDOC_CLASSES     = NO
 
+# If the HIDE_FRIEND_COMPOUNDS tag is set to YES, Doxygen will
+# hide all friend (class|struct|union) declarations. If set to
+# NO (the default) these declarations will be included in the
+# documentation.
+
 HIDE_FRIEND_COMPOUNDS  = NO
-HIDE_IN_BODY_DOCS      = NO
+
+# If the HIDE_IN_BODY_DOCS tag is set to YES, Doxygen will
+# hide any documentation blocks found inside the body of a
+# function. If set to NO (the default) these blocks will be
+# appended to the function's detailed documentation block.
+
+HIDE_IN_BODY_DOCS      = YES
 
 # The INTERNAL_DOCS tag determines if documentation 
 # that is typed after a \internal command is included. If the tag is set 
@@ -249,15 +357,64 @@ INLINE_INFO            = YES
 # declaration order. 
 
 SORT_MEMBER_DOCS       = YES
+
+# If the SORT_BRIEF_DOCS tag is set to YES then doxygen will sort
+# the brief descriptions of file, namespace and class members
+# alphabetically by member name. If set to NO (the default)
+# the members will appear in declaration order.
+
 SORT_BRIEF_DOCS        = YES
+
+# ???
 SORT_BY_SCOPE_NAME     = YES
+
+# The GENERATE_TODOLIST tag can be used to enable (YES) or
+# disable (NO) the todo list. This list is created by putting
+# \todo commands in the documentation.
+
 GENERATE_TODOLIST      = YES
+
+# The GENERATE_TESTLIST tag can be used to enable (YES) or
+# disable (NO) the test list. This list is created by putting
+# \test commands in the documentation.
+
 GENERATE_TESTLIST      = YES
+
+# The GENERATE_BUGLIST tag can be used to enable (YES) or
+# disable (NO) the bug list. This list is created by putting
+# \bug commands in the documentation.
+
 GENERATE_BUGLIST       = YES
+
+# The GENERATE_DEPRECATEDLIST tag can be used to enable
+# (YES) or disable (NO) the deprecated list. This list is
+# created by putting \deprecated commands in the documentation.
+
 GENERATE_DEPRECATEDLIST= YES
+
+# The ENABLED_SECTIONS tag can be used to enable conditional
+# documentation sections, marked by \if <section-label>
+# ... \endif blocks.
+
 ENABLED_SECTIONS       =
+
+# The MAX_INITIALIZER_LINES tag determines the maximum number of
+# lines that the initial value of a variable or define can be.
+# If the initializer consists of more lines than specified here
+# it will be hidden. Use a value of 0 to hide initializers
+# completely. The appearance of the value of individual variables
+# and defines can be controlled using \showinitializer or
+# \hideinitializer command in the documentation.
+
 MAX_INITIALIZER_LINES  = 30
-SHOW_USED_FILES        = YES
+
+# Set the SHOW_USED_FILES tag to NO to disable the list of
+# files generated at the bottom of the documentation of classes
+# and structs. If set to YES the list will mention the files
+# that were used to generate the documentation.
+
+SHOW_USED_FILES        = NO
+
 #---------------------------------------------------------------------------
 # configuration options related to warning and progress messages
 #---------------------------------------------------------------------------
@@ -278,6 +435,12 @@ WARNINGS               = YES
 # automatically be disabled. 
 
 WARN_IF_UNDOCUMENTED   = YES
+
+# If WARN_IF_DOC_ERROR is set to YES, doxygen will generate warnings for
+# potential errors in the documentation, such as not documenting some
+# parameters in a documented function, or documenting parameters
+# that don't exist or using markup commands wrongly.
+
 WARN_IF_DOC_ERROR      = YES
 
 # The WARN_FORMAT tag determines the format of the warning messages that 
@@ -287,7 +450,12 @@ WARN_IF_DOC_ERROR      = YES
 
 WARN_FORMAT            = "$file:$line: $text"
 
+# The WARN_LOGFILE tag can be used to specify a file to which warning
+# and error messages should be written. If left blank the output is
+# written to stderr.
+
 WARN_LOGFILE =
+
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
@@ -297,23 +465,30 @@ WARN_LOGFILE =
 # and *.h) to filter out the source-files in the directories. If left 
 # blank all files are included. 
 
-FILE_PATTERNS          = *.c \
-                         *.dox \
-                         *.cc \
-                         *.cxx \
-                         *.cpp \
-                         *.c++ \
-                         *.h \
-                         *.hh \
-                         *.hxx \
-                         *.hpp \
-                         *.h++ \
+FILE_PATTERNS          = *.h \
+                         *.dox
+
+#FILE_PATTERNS          = *.c \
+#                         *.dox \
+#                         *.cc \
+#                         *.cxx \
+#                         *.cpp \
+#                         *.c++ \
+#                         *.h \
+#                         *.hh \
+#                         *.hxx \
+#                         *.hpp \
+#                         *.h++ \
 
 # The RECURSIVE tag can be used to turn specify whether or not subdirectories 
 # should be searched for input files as well. Possible values are YES and NO. 
 # If left blank NO is used. 
 
 RECURSIVE              = YES
+
+# The EXCLUDE_SYMLINKS tag can be used select whether or not files or
+# directories that are symbolic links (a Unix filesystem feature)
+# are excluded from the input.
 
 EXCLUDE_SYMLINKS       = NO
 
@@ -335,6 +510,12 @@ EXAMPLE_PATH           =
 # blank all files are included. 
 
 EXAMPLE_PATTERNS       = *
+
+# If the EXAMPLE_RECURSIVE tag is set to YES then subdirectories will
+# be searched for input files to be used with the \include or
+# \dontinclude commands irrespective of the value of the RECURSIVE
+# tag. Possible values are YES and NO. If left blank NO is used.
+
 EXAMPLE_RECURSIVE      = NO
 
 # The INPUT_FILTER tag can be used to specify a program that doxygen should 
@@ -346,8 +527,21 @@ EXAMPLE_RECURSIVE      = NO
 
 INPUT_FILTER           =
 
+# The FILTER_PATTERNS tag can be used to specify filters on a per file
+# pattern basis. Doxygen will compare the file name with each pattern
+# and apply the filter if there is a match. The filters are a list of
+# the form: pattern=filter (like *.cpp=my_cpp_filter). See
+# INPUT_FILTER for further info on how filters are used. If
+# FILTER_PATTERNS is empty, INPUT_FILTER is applied to all files.
+
 FILTER_PATTERNS        =
+
+# If the FILTER_SOURCE_FILES tag is set to YES, the input filter
+# (if set using INPUT_FILTER ) will be used to filter the input files
+# when producing source files to browse.
+
 FILTER_SOURCE_FILES    = NO
+
 #---------------------------------------------------------------------------
 # configuration options related to source browsing
 #---------------------------------------------------------------------------
@@ -367,7 +561,17 @@ INLINE_SOURCES         = NO
 # fragments. Normal C and C++ comments will always remain visible. 
 
 STRIP_CODE_COMMENTS    = YES
+
+# If the REFERENCED_BY_RELATION tag is set to YES (the default) then
+# for each documented function all documented functions referencing
+# it will be listed.
+
 REFERENCED_BY_RELATION = NO
+
+# If the REFERENCES_RELATION tag is set to YES (the default) then
+# for each documented function all documented entities called/used
+# by that function will be listed.
+
 REFERENCES_RELATION    = NO
 
 # If the VERBATIM_HEADERS tag is set to YES (the default) then Doxygen 
@@ -375,7 +579,7 @@ REFERENCES_RELATION    = NO
 # which an include is specified. Set to NO to disable this. 
 # changed, was NO
 
-VERBATIM_HEADERS       = YES
+VERBATIM_HEADERS       = NO
 
 #---------------------------------------------------------------------------
 # configuration options related to the alphabetical class index
@@ -399,6 +603,7 @@ COLS_IN_ALPHA_INDEX    = 2
 # should be ignored while generating the index headers. 
 
 IGNORE_PREFIX          =
+
 #---------------------------------------------------------------------------
 # configuration options related to the HTML output
 #---------------------------------------------------------------------------
@@ -413,19 +618,32 @@ GENERATE_HTML          = YES
 # put in front of it. If left blank `html' will be used as the default path. 
 
 HTML_OUTPUT            = html
+
+# The HTML_FILE_EXTENSION tag can be used to specify the file extension
+# for each generated HTML page (for example: .htm, .php, .asp). If it
+# is left blank doxygen will generate files with .html extension.
+
 HTML_FILE_EXTENSION    = .html
+
+# The DISABLE_INDEX tag can be used to turn on/off the condensed index at 
+# top of each HTML page. The value NO (the default) enables the index and 
+# the value YES disables it. 
+
+DISABLE_INDEX          = YES
 
 # The HTML_HEADER tag can be used to specify a personal HTML header for 
 # each generated HTML page. If it is left blank doxygen will generate a 
 # standard header.
+# Set DISABLE_INDEX to NO if the personal HTML header is meant to
+# replace the automaticly generated condensed index.
 
-HTML_HEADER            =
+HTML_HEADER            = "@ELX_DOXYGEN_DIR@/DoxygenHeader.html"
 
 # The HTML_FOOTER tag can be used to specify a personal HTML footer for 
 # each generated HTML page. If it is left blank doxygen will generate a 
 # standard footer.
 
-HTML_FOOTER            =
+HTML_FOOTER            = "@ELX_DOXYGEN_DIR@/DoxygenFooter.html"
 
 # If the HTML_ALIGN_MEMBERS tag is set to YES, the members of classes, 
 # files or namespaces will be aligned in HTML using tables. If set to 
@@ -439,23 +657,58 @@ HTML_ALIGN_MEMBERS     = YES
 # of the generated HTML documentation. 
 
 GENERATE_HTMLHELP      = NO
+
+# If the GENERATE_HTMLHELP tag is set to YES, the CHM_FILE tag can be
+# used to specify the file name of the resulting .chm file. You can
+# add a path in front of the file if the result should not be
+# written to the html output directory.
+
 CHM_FILE               =
+
+# If the GENERATE_HTMLHELP tag is set to YES, the HHC_LOCATION tag can
+# be used to specify the location (absolute path including file name)
+# of the HTML help compiler (hhc.exe). If non empty doxygen will try
+# to run the HTML help compiler on the generated index.hhp.
+
 HHC_LOCATION           =
+
+# If the GENERATE_HTMLHELP tag is set to YES, the GENERATE_CHI flag
+# controls if a separate .chi index file is generated (YES) or that
+# it should be included in the master .chm file (NO).
+
 GENERATE_CHI           = NO
+
+# If the GENERATE_HTMLHELP tag is set to YES, the BINARY_TOC flag
+# controls whether a binary table of contents is generated (YES)
+# or a normal table of contents (NO) in the .chm file.
+
 BINARY_TOC             = NO
+
+# The TOC_EXPAND flag can be set to YES to add extra items for
+# group members to the table of contents of the HTML help
+# documentation and to the tree view.
+
 TOC_EXPAND             = NO
 
-# The DISABLE_INDEX tag can be used to turn on/off the condensed index at 
-# top of each HTML page. The value NO (the default) enables the index and 
-# the value YES disables it. 
-# This is the index on top of the html file. Disable this only if
-# you declare a header file.
-
-DISABLE_INDEX          = NO
+# This tag can be used to set the number of enum values (range [1..20])
+# that doxygen will group on one line in the generated HTML documentation.
 
 ENUM_VALUES_PER_LINE   = 4
+
+# If the GENERATE_TREEVIEW tag is set to YES, a side panel will be
+# generated containing a tree-like index structure (just like the one
+# that is generated for HTML Help). For this to work a browser that
+# supports JavaScript and frames is required (for instance Mozilla
+# 1.0+, Netscape 6.0+ or Internet explorer 5.0+ or Konqueror).
+
 GENERATE_TREEVIEW      = NO
+
+# If the treeview is enabled (see GENERATE_TREEVIEW) then this tag
+# can be used to set the initial width (in pixels) of the frame
+# in which the tree is shown.
+
 TREEVIEW_WIDTH         = 250
+
 #---------------------------------------------------------------------------
 # configuration options related to the LaTeX output
 #---------------------------------------------------------------------------
@@ -614,10 +867,11 @@ SEARCH_INCLUDES        = NO
 INCLUDE_PATH           =
 
 # The PREDEFINED tag can be used to specify one or more macro
-names that # are defined before the preprocessor is started
-(similar to the -D option of # gcc). The argument of the tag is a
-list of macros of the form: name # or name=definition (no spaces).
-If the definition and the = are # omitted =1 is assumed.
+# names that are defined before the preprocessor is started
+# (similar to the -D option of # gcc). The argument of the tag
+# is a list of macros of the form: name or name=definition
+# (no spaces). If the definition and the = are omitted
+# =1 is assumed.
 
 PREDEFINED  =  "itkNotUsed(x)="\
                "itkSetMacro(name,type)= \
@@ -729,8 +983,22 @@ EXPAND_ONLY_PREDEF    = YES
 
 INCLUDE_FILE_PATTERNS  =
 
+# If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES
+# then this tag can be used to specify a list of macro names that
+# should be expanded. The macro definition that is found in the
+# sources will be used. Use the PREDEFINED tag if you want to use
+# a different macro definition.
+
 EXPAND_AS_DEFINED      =
+
+# If the SKIP_FUNCTION_MACROS tag is set to YES (the default) then
+# doxygen's preprocessor will remove all function-like macros that
+# are alone on a line, have an all uppercase name, and do not end
+# with a semicolon. Such function macros are typically used for
+# boiler-plate code, and will confuse the parser if not removed.
+
 SKIP_FUNCTION_MACROS   = YES
+
 #---------------------------------------------------------------------------
 # Configuration::additions related to external references
 #---------------------------------------------------------------------------
@@ -750,12 +1018,17 @@ GENERATE_TAGFILE       =
 
 ALLEXTERNALS           = NO
 
-EXTERNAL_GROUPS        = YES
+# If the EXTERNAL_GROUPS tag is set to YES all external groups will be
+# listed in the modules index. If set to NO, only the current project's
+# groups will be listed.
+
+EXTERNAL_GROUPS        = NO
 
 # The PERL_PATH should be the absolute path and name of the perl script 
 # interpreter (i.e. the result of `which perl'). 
 
 PERL_PATH              = /usr/bin/perl
+
 #---------------------------------------------------------------------------
 # Configuration options related to the dot tool
 #---------------------------------------------------------------------------
@@ -812,7 +1085,7 @@ INCLUDE_GRAPH          = YES
 # YES then doxygen will generate a graph for each documented header file showing 
 # the documented files that directly or indirectly include this file 
 
-INCLUDED_BY_GRAPH      = YES
+INCLUDED_BY_GRAPH      = NO
 
 # If the CALL_GRAPH and HAVE_DOT tags are set to YES then doxygen will 
 # generate a call dependency graph for every global function or class
@@ -878,6 +1151,7 @@ GENERATE_LEGEND        = YES
 # the intermediate dot files that are used to generate the various graphs.
 
 DOT_CLEANUP            = YES
+
 #---------------------------------------------------------------------------
 # Configuration::additions related to the search engine
 #---------------------------------------------------------------------------
