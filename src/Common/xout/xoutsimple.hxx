@@ -105,7 +105,7 @@ namespace xoutlibrary
 		const typename xoutbase<charT, traits>::XStreamMapType &
 		xoutsimple<charT, traits>::GetXOutputs(void)
 	{		
-		return m_XTargetCells;
+		return this->m_XTargetCells;
 
 	} // end GetOutputs
 
@@ -118,7 +118,7 @@ namespace xoutlibrary
 		const typename xoutbase<charT, traits>::CStreamMapType &
 		xoutsimple<charT, traits>::GetCOutputs(void)
 	{		
-		return m_CTargetCells;
+		return this->m_CTargetCells;
 
 	} // end GetOutputs
 

@@ -53,7 +53,7 @@ namespace xoutlibrary
 		/** Write the cell-data to the outputs, separated by tabs */
 		XStreamMapIteratorType xit;
 
-		for ( xit = m_XTargetCells.begin(); xit != m_XTargetCells.end(); ++xit )
+		for ( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
 		{
 			/** Write a tab to the cell */
 			*(xit->second) <<	"\t" ;
@@ -89,8 +89,8 @@ namespace xoutlibrary
 			XOutCellType * cell = new XOutCellType;
 
 			/** Set the outputs equal to the outputs of this object */
-			cell->SetOutputs( m_COutputs );
-			cell->SetOutputs( m_XOutputs );
+			cell->SetOutputs( this->m_COutputs );
+			cell->SetOutputs( this->m_XOutputs );
 
 			/** Stored in a map, to make sure that later we can 
 			 * delete all mnemory, assigned in this function. */
@@ -118,9 +118,9 @@ namespace xoutlibrary
 	{
 		int returndummy = 1;
 
-		if ( m_XTargetCells.count( name ) )
+		if ( this->m_XTargetCells.count( name ) )
 		{
-			m_XTargetCells.erase( name );
+			this->m_XTargetCells.erase( name );
 			returndummy = 0;
 		}
 		
@@ -177,7 +177,7 @@ namespace xoutlibrary
 		XStreamMapIteratorType xit;
 
 		/** Set the output in all cells */
-		for ( xit = m_XTargetCells.begin(); xit != m_XTargetCells.end(); ++xit )
+		for ( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
 		{
 			returndummy |= xit->second->AddOutput( name, output );
 		}
@@ -202,7 +202,7 @@ namespace xoutlibrary
 		XStreamMapIteratorType xit;
 
 		/** Set the output in all cells */
-		for ( xit = m_XTargetCells.begin(); xit != m_XTargetCells.end(); ++xit )
+		for ( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
 		{
 			returndummy |= xit->second->AddOutput( name, output );
 		}
@@ -227,7 +227,7 @@ namespace xoutlibrary
 		XStreamMapIteratorType xit;
 
 		/** Set the output in all cells */
-		for ( xit = m_XTargetCells.begin(); xit != m_XTargetCells.end(); ++xit )
+		for ( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
 		{
 			returndummy |= xit->second->RemoveOutput( name );
 		}

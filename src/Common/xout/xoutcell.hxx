@@ -48,15 +48,15 @@ namespace xoutlibrary
 		const char * charbuf = strbuf.c_str();
 
 		/** Send the string to the outputs */
-		for ( CStreamMapIteratorType cit = m_COutputs.begin();
-			cit != m_COutputs.end(); ++cit )
+		for ( CStreamMapIteratorType cit = this->m_COutputs.begin();
+			cit != this->m_COutputs.end(); ++cit )
 		{
 			*(cit->second) << charbuf << flush;
 		}
 			
 		/** Send the string to the outputs */
-		for ( XStreamMapIteratorType xit = m_XOutputs.begin();
-			xit != m_XOutputs.end(); ++xit )
+		for ( XStreamMapIteratorType xit = this->m_XOutputs.begin();
+			xit != this->m_XOutputs.end(); ++xit )
 		{
 			*(xit->second) << charbuf;
 			xit->second->WriteBufferedData();
