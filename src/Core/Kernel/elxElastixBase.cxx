@@ -151,17 +151,19 @@ namespace elastix
 			i++;
 		}
 
-		/** Check for appearance of "-priority".*/
-		check = "";
-		check = this->GetConfiguration()->GetCommandLineArgument( "-priority" );
-		if ( check == "" )
-		{
-			elxout << "-priority\tunspecified, so NORMAL process priority" << std::endl;
-		}
-		else
-		{
-			elxout << "-priority\t" << check << std::endl;
-		}
+		/** Check for appearance of "-priority", if this is a Windows station. */
+		#ifdef _WIN32
+			check = "";
+			check = this->GetConfiguration()->GetCommandLineArgument( "-priority" );
+			if ( check == "" )
+			{
+				elxout << "-priority\tunspecified, so NORMAL process priority" << std::endl;
+			}
+			else
+			{
+				elxout << "-priority\t" << check << std::endl;
+			}
+		#endif
 
 		/** Return a value.*/
 		return returndummy;

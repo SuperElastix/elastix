@@ -357,24 +357,22 @@ namespace elastix
 			/** Tell the user.*/
 			elxout << "\t\t\t\tdone!" << std::endl;
 		}
-		
-		/** Tell the user.*/
-		elxout << "Calling all ReadFromFile()'s ...";
 
 		/** Call all the ReadFromFile() functions.*/
+		elxout << "Calling all ReadFromFile()'s ...";
 		m_elx_ResampleInterpolator->ReadFromFile();		
 		m_elx_Resampler->ReadFromFile();
 		m_elx_Transform->ReadFromFile();
 
 		/** Tell the user.*/
-		elxout << "\t\t\tdone!" << std::endl;
+		elxout << "\t\tdone!" << std::endl;
 		elxout << "Transforming points (if called for) ...";
 
 		/** Call TransformPoints.*/
 		m_elx_Transform->TransformPoints();
-
-		/** Tell the user.*/
 		elxout << "\t\tdone!" << std::endl;
+
+		/** Resample the image. */
 		if (inputImageFileName != "")
 		{
 			elxout << "Resampling image and writing to disk ...";
