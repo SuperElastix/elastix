@@ -144,6 +144,7 @@ namespace elastix
 
 	ElastixMain::~ElastixMain()
 	{
+		std::cerr << "Destroying ElastixMain" << std::endl;
 	} // end Destructor
 
 
@@ -516,16 +517,66 @@ namespace elastix
 	{
 		 elxout << "Components are deleted from memory... " << std::endl;
 	
-		 m_Elastix = 0;
-		 m_Registration = 0;
-		 m_FixedImagePyramid = 0;
-		 m_MovingImagePyramid = 0;
-		 m_Interpolator = 0;
-		 m_Metric = 0;
-		 m_Optimizer = 0;
-		 m_Resampler = 0;
+		 
+		 elxout << "registration deleted" << std::endl;
+		 m_Registration->Delete();
+		 elxout << "fix image pyramid deleted" << std::endl;
+		 m_FixedImagePyramid->Delete();
+		 elxout << "moving image pyramid deleted" << std::endl;
+		 m_MovingImagePyramid->Delete();
+		 elxout << "interpoloat deleted" << std::endl;
+		 m_Interpolator->Delete();
+		 elxout << "metric deleted" << std::endl;
+		 m_Metric->Delete();
+		 elxout << "optimzie deleted" << std::endl;
+		 m_Optimizer->Delete();
+		 elxout << "resampler deleted" << std::endl;
+		 m_Resampler->Delete();
+		 elxout << "resampleinterpolator deleted" << std::endl;
+		 m_ResampleInterpolator->Delete();
+		 if (m_InitialTransform)
+		 {
+		elxout << "InitialTransform deleted" << std::endl;
+		
+	 	  	m_InitialTransform->Delete();
+				m_InitialTransform = 0;
+  	 }
+		 
+		 elxout << "transform deleted" << std::endl;
+		 m_Transform->Delete();
+		 elxout << "elastix deletedd" << std::endl;
+		 m_Elastix->Delete();
+		
+		elxout << "pointers set to zero" << std::endl;
+		 try 
+		 {
+		 elxout << "start resampleinterpolator" << std::endl;
 		 m_ResampleInterpolator = 0;
+		 elxout << "start Elastix" << std::endl;
+		 m_Elastix = 0;
+		 elxout << "start registration " <<std::endl;
+		 m_Registration = 0;
+		 elxout << "start fix pyramid " <<std::endl;
+		 m_FixedImagePyramid = 0;
+		 elxout << "moving pyr " <<std::endl;
+		 m_MovingImagePyramid = 0;
+		 elxout << "start interpolator " <<std::endl;
+		 m_Interpolator = 0;
+		 elxout << "start metric" << std::endl;
+		 m_Metric = 0;
+		 elxout << "start optimizer" << std::endl;
+		 m_Optimizer = 0;
+		 elxout << "start resampler" << std::endl;
+		 m_Resampler = 0;
+		 elxout << "start transform" << std::endl;
 		 m_Transform = 0;
+		 elxout << "klaar met nul zetten" << std::endl;
+		 }
+		 catch (itk::ExceptionObject & err)
+		 {
+		 std::cerr << "Error!" << std::endl;
+		 std::cerr << err	<< std::endl;
+		 }
 	}
 	
 	

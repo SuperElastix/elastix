@@ -118,7 +118,7 @@ namespace elastix
 	protected:
 		
 		ComponentDatabase(){}
-		virtual ~ComponentDatabase(){}
+		virtual ~ComponentDatabase(){std::cerr << "ComponentDatabase destroyed" << std::endl;};
 
 		CreatorMapType		CreatorMap;
 		IndexMapType			IndexMap;

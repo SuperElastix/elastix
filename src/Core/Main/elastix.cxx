@@ -236,9 +236,39 @@ int main( int argc, char **argv )
 	for ( unsigned int i = 0; i < NrOfParameterFiles; i++ )
 	{
 		elastices[i]->ClearComponents();
+		elxout << "elastices " << i << " deleted" << std::endl;
+		elastices[i]->Delete();
 	}	
 
-	elxout << "Unloading Components... " << std::endl;
+	if (transform)
+	{
+	elxout << "transform in main() deleted" << std::endl;
+	transform->Delete();
+	}
+
+	if (fixedImage)
+	{
+	elxout << "fixedimage in main() deleted" << std::endl;
+	fixedImage->Delete();
+	}
+	if (movingImage)
+	{
+	elxout << "moving image in main() deleted" << std::endl;
+	movingImage->Delete();
+	}
+	if (fixedInternalImage)
+	{
+	elxout << "fixed internal imagem in main() deleted" << std::endl;
+	fixedInternalImage->Delete();
+	}
+	if (movingInternalImage)
+	{
+	elxout << "moving internal image  in main() deleted" << std::endl;
+	movingInternalImage->Delete();
+	}
+	
+
+	elxout << "UnloadComponents function called... " << std::endl;
 	ElastixType::UnloadComponents();
 	
 	elxout << "Exiting... " << std::endl;				

@@ -285,7 +285,8 @@ namespace elastix
 			m_LibLoader->CloseLibrary(currentLib);
 			m_LibHandleContainer.pop();
 		}
-   	
+  
+		elxout << "Components are unloaded." << std::endl;
 		//TODO: also clean up componentdatabase...
 
 	}

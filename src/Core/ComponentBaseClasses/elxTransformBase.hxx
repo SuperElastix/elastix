@@ -30,7 +30,10 @@ namespace elastix
 		TransformBase<TElastix>::~TransformBase()
 	{
 		/** Delete.*/
-		delete m_TransformParametersPointer;
+		if (m_TransformParametersPointer)
+		{
+			delete m_TransformParametersPointer;
+		}
 
 	} // end Destructor
 	

@@ -60,6 +60,7 @@ SOURCE_GROUP("ComponentBaseClasses" FILES ${ComponentBaseClassFiles} )
 
 ADD_LIBRARY(elxCore
 ${KernelFiles}
+${InstallFiles}
 ${ConfigurationFiles}
 ${ComponentBaseClassFiles} )
 
