@@ -23,7 +23,7 @@
 #endif	
 
 #if defined(_itkImageRandomIteratorWithIndex_txx)
-	#undef __itkImageRandomIteratorWithIndex_txx
+	#undef _itkImageRandomIteratorWithIndex_txx
 #else 
 	#define __dont_forget_to_undef_itkit_txx_
 #endif	
@@ -41,7 +41,7 @@
 
 #ifdef __dont_forget_to_undef_itkit_txx_
 	#undef __dont_forget_to_undef_itkit_txx_
-	#undef __itkImageRandomIteratorWithIndex_txx
+	#undef _itkImageRandomIteratorWithIndex_txx
 #endif
  
 #undef vnl_sample_reseed

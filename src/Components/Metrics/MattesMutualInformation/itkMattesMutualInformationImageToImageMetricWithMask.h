@@ -239,6 +239,11 @@ namespace itk
 		virtual void SetUseExactDerivative( bool _arg );
 		itkGetConstMacro(UseExactDerivative, bool);
 		
+		/** SmartSampleSelect flag, added by Stefan to test a different sample strategy,
+		 * which is hopefully smarter than the normal one... */
+		itkSetMacro(SmartSampleSelect, bool);
+		itkGetConstMacro(SmartSampleSelect, bool);
+
 	protected:
 		
 		MattesMutualInformationImageToImageMetricWithMask();
@@ -298,6 +303,20 @@ namespace itk
 		/** Uniformly select a sample set from the fixed image domain. */
 		void SampleFixedImageDomain( 
 			FixedImageSpatialSampleContainer& samples ) const;
+
+		/** Added by Stefan. To test a different way of selecting spatial samples */
+		typedef Image<unsigned long,
+			::itk::GetImageDimension<FixedImageType>::ImageDimension > SelectedSamplesImageType;
+		typedef typename SelectedSamplesImageType::Pointer SelectedSamplesImagePointer;
+		typedef typename SelectedSamplesImageType::IndexType SelSamIndexType;
+		typedef typename SelectedSamplesImageType::PointType SelSamPointType;
+
+		void SampleFixedImageDomainSmart(FixedImageSpatialSampleContainer & samples) const;
+		mutable SelectedSamplesImagePointer m_PreviousSelectedSamples;
+		mutable long long m_NrOfJumpsInFixedMask;
+		unsigned long m_NrOfPixelsInFixedMask;
+		bool m_SmartSampleSelect;
+
 		
 		/** The marginal PDFs are stored as std::vector. */
 		typedef float PDFValueType;

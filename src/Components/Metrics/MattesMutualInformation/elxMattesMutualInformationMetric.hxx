@@ -274,6 +274,19 @@ using namespace itk;
 			{
 				m_NewSamplesEveryIteration = false;
 			}
+			
+			/** Check if the "smart sample strategy" should be used */
+			std::string smartSampleSelect = "false";
+			this->GetConfiguration()->
+				ReadParameter(smartSampleSelect,"SmartSampleSelect", level);
+			if (smartSampleSelect == "true")
+			{
+				this->SetSmartSampleSelect(true);
+			}
+			else
+			{
+				this->SetSmartSampleSelect(false);
+			}
 
 		}
 		else	
