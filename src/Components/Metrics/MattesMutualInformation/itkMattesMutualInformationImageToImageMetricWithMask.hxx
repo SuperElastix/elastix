@@ -95,7 +95,8 @@ namespace itk
 
 		m_PreviousSelectedSamples = 0;
 		m_NrOfPixelsInFixedMask = 0;
-		m_NrOfJumpsInFixedMask = 0;
+		//m_NrOfJumpsInFixedMask = 0;
+		m_CurrentLabel = 1;
 
 	} // end Constructor
 	
@@ -265,7 +266,8 @@ namespace itk
 		
 		/** Initialize the image that stores all samples that are selected */
 		m_NrOfPixelsInFixedMask = 0;
-		m_NrOfJumpsInFixedMask = 0;
+		//m_NrOfJumpsInFixedMask = 0;
+		m_CurrentLabel = 1;
 		
 		if (this->m_SmartSampleSelect)
 		{
@@ -279,7 +281,10 @@ namespace itk
 				SelSamIteratorType selsamit(m_PreviousSelectedSamples, 
 					m_PreviousSelectedSamples->GetLargestPossibleRegion() );
 				selsamit.GoToBegin();
-				const unsigned long maxulongint = 4294967295UL;
+
+				const char outsidemasklabel = 100;
+
+				//const unsigned long maxulongint = 4294967295UL;
 
 				while (!selsamit.IsAtEnd())
 				{
@@ -293,7 +298,7 @@ namespace itk
 					if  ( !(m_FixedMask->IsInMask(point)) )
 					{
 						/** Make sure this sample will never be used */
-						selsamit.Set( maxulongint );
+						selsamit.Set( outsidemasklabel );
 					} //if
 					else
 					{
@@ -2017,8 +2022,15 @@ namespace itk
 		 */
 		randIter.SetNumberOfSamples( 50*m_NumberOfSpatialSamples );
 		
-		const unsigned long outsideMask = 4294967295UL;
+		const unsigned long outsideMask = 100;
+
+		//const unsigned long outsideMask = 4294967295UL;
+
 		const unsigned long TwiceNrOfPixelsInFixedMask = 2 * m_NrOfPixelsInFixedMask;
+
+
+		m_CurrentLabel = ( !(m_CurrentLabel-1) ) + 1;
+
 	
 		/** iterate over the sample container (which will be filled) */
 		for( iter=samples.begin(); iter != end; ++iter )
@@ -2036,11 +2048,12 @@ namespace itk
 					sampledBefore = randIter.Get();
 				} while ( sampledBefore == outsideMask );
 	
-				++m_NrOfJumpsInFixedMask;
+				//++m_NrOfJumpsInFixedMask;
 				
 				/** If the sample has been selected fewer times, than
 				 * select this sample now: */
-				if ( sampledBefore < m_NrOfJumpsInFixedMask/TwiceNrOfPixelsInFixedMask ) 
+				//if ( sampledBefore < m_NrOfJumpsInFixedMask/TwiceNrOfPixelsInFixedMask ) 
+				if ( sampledBefore != m_CurrentLabel ) 
 				{
 					/** Get sampled index */
 					SelSamIndexType index = randIter.GetIndex();
@@ -2051,7 +2064,8 @@ namespace itk
 						index, (*iter).FixedImagePointValue );
 					/** Remember that we took a sample */
 					sampleSelected = true;
-					randIter.Set( sampledBefore + 1 );
+					//randIter.Set( sampledBefore + 1 );
+					randIter.Set( m_CurrentLabel );
 				} // if 
 						
 			} while (!sampleSelected);

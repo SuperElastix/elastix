@@ -305,17 +305,18 @@ namespace itk
 			FixedImageSpatialSampleContainer& samples ) const;
 
 		/** Added by Stefan. To test a different way of selecting spatial samples */
-		typedef Image<unsigned long,
+		typedef Image<char,
 			::itk::GetImageDimension<FixedImageType>::ImageDimension > SelectedSamplesImageType;
 		typedef typename SelectedSamplesImageType::Pointer SelectedSamplesImagePointer;
 		typedef typename SelectedSamplesImageType::IndexType SelSamIndexType;
 		typedef typename SelectedSamplesImageType::PointType SelSamPointType;
 
 		void SampleFixedImageDomainSmart(FixedImageSpatialSampleContainer & samples) const;
-		mutable SelectedSamplesImagePointer m_PreviousSelectedSamples;
-		mutable long long m_NrOfJumpsInFixedMask;
+		SelectedSamplesImagePointer m_PreviousSelectedSamples;
+		//mutable long long m_NrOfJumpsInFixedMask;
 		unsigned long m_NrOfPixelsInFixedMask;
 		bool m_SmartSampleSelect;
+		mutable char m_CurrentLabel;
 
 		
 		/** The marginal PDFs are stored as std::vector. */
