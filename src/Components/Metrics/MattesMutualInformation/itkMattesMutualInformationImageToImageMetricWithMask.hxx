@@ -279,7 +279,7 @@ namespace itk
 				SelSamIteratorType selsamit(m_PreviousSelectedSamples, 
 					m_PreviousSelectedSamples->GetLargestPossibleRegion() );
 				selsamit.GoToBegin();
-				const unsigned long maxulongint = 4294967295;
+				const unsigned long maxulongint = 4294967295UL;
 
 				while (!selsamit.IsAtEnd())
 				{
@@ -2017,7 +2017,7 @@ namespace itk
 		 */
 		randIter.SetNumberOfSamples( 50*m_NumberOfSpatialSamples );
 		
-		const unsigned long outsideMask = 4294967295;
+		const unsigned long outsideMask = 4294967295UL;
 		const unsigned long TwiceNrOfPixelsInFixedMask = 2 * m_NrOfPixelsInFixedMask;
 	
 		/** iterate over the sample container (which will be filled) */
