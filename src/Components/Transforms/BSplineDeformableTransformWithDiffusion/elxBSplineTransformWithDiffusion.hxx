@@ -203,7 +203,7 @@ using namespace itk;
 		void BSplineTransformWithDiffusion<TElastix>
 		::BeforeEachResolution(void)
 	{
-		/** What is the current resolution level?*/
+		/** What is the current resolution level? */
 		unsigned int level = m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
 		/** What is the UpsampleGridOption?
@@ -218,10 +218,10 @@ using namespace itk;
 		if ( upsampleBSplineGridOption == "true" ) upsampleGridOption = true;
 		else if ( upsampleBSplineGridOption == "false" ) upsampleGridOption = false;
 		
-		/** Resample the grid.*/
+		/** Resample the grid. */
 		if ( level == 0 )
 		{
-			/** Set grid equal to lowest resolution fixed image.*/
+			/** Set grid equal to lowest resolution fixed image. */
 			this->SetInitialGrid( upsampleGridOption );			
 		}	
 		else
@@ -711,11 +711,32 @@ using namespace itk;
 		/** Add some BSplineTransformWithDiffusion specific lines.*/
 		xout["transpar"] << std::endl << "// BSplineTransformWithDiffusion specific" << std::endl;
 
+		/** Get the current iteration number and convert it to string. */
+		unsigned int currentIterationNumber = m_Elastix->GetIterationCounter();
+		std::ostringstream makeIterationString("");
+		unsigned int border = 1000000;
+		while (border > 1)
+		{
+			if ( currentIterationNumber < border )
+			{
+				makeIterationString << "0";
+				border /= 10;
+			}
+			else
+			{
+				/** stop */
+				border=1;
+			}
+		}
+		makeIterationString << currentIterationNumber;
+
 		/** Write the filename of the deformationField image. */
 		std::ostringstream makeFileName( "" );
 		makeFileName << m_Configuration->GetCommandLineArgument( "-out" )
-			<< "TransformParametersDeformationFieldImage."
+			<< "DeformationFieldImage."
 			<< m_Configuration->GetElastixLevel()
+			<< ".R" << this->GetRegistration()->GetAsITKBaseType()->GetCurrentLevel()
+			<< ".It" << makeIterationString.str()
 			<< ".mhd";
 		xout["transpar"] << "(DeformationFieldFileName \""
 			<< makeFileName.str() << "\")" << std::endl;
@@ -724,7 +745,6 @@ using namespace itk;
 		typename DeformationFieldWriterType::Pointer writer
 			= DeformationFieldWriterType::New();
 		writer->SetFileName( makeFileName.str().c_str() );
-		// \todo write deformation field
 		writer->SetInput( m_DiffusedField );
 		/** Do the writing. */
 		try
