@@ -24,6 +24,8 @@
 #include "itkDeformationFieldRegulizerForBSpline.h"
 #include "itkVectorMeanDiffusionImageFilter.h"
 #include "itkResampleImageFilter.h"
+#include "itkMaximumImageFilter.h"
+
 
 namespace elastix
 {
@@ -162,6 +164,9 @@ using namespace itk;
 		typedef ImageRegionIterator<
 			VectorImageType >																VectorImageIteratorType;
 		typedef FixedImageELXType													GrayValueImageType;
+		typedef MaximumImageFilter<
+			GrayValueImageType, GrayValueImageType,
+			GrayValueImageType >														MaximumImageFilterType;
 		typedef VectorMeanDiffusionImageFilter<
 			VectorImageType, GrayValueImageType >						DiffusionFilterType;
 		typedef typename VectorImageType::SizeType				RadiusType;
@@ -230,7 +235,8 @@ using namespace itk;
 		typename DiffusionFilterType::Pointer		m_Diffusion;
 		typename VectorImageType::Pointer				m_DeformationField;
 		typename VectorImageType::Pointer				m_DiffusedField;
-		typename GrayValueImageType::Pointer		m_GrayValueImage;
+		typename GrayValueImageType::Pointer		m_GrayValueImage1;
+		typename GrayValueImageType::Pointer		m_GrayValueImage2;
 		typename ResamplerType::Pointer					m_Resampler;
 		RegionType															m_DeformationRegion;
 		OriginType															m_DeformationOrigin;

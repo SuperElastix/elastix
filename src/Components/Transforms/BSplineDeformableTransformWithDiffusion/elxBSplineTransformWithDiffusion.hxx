@@ -32,7 +32,8 @@ using namespace itk;
 		m_Diffusion = 0;
 		m_DeformationField = 0;
 		m_DiffusedField = 0;
-		m_GrayValueImage = 0;
+		m_GrayValueImage1 = 0;
+		m_GrayValueImage2 = 0;
 		m_Resampler = 0;
 
 		/** Initialize to false. */
@@ -151,17 +152,18 @@ using namespace itk;
 		m_DiffusedField->Allocate();
 
 		/** Create m_GrayValueImage and allocate memory. */
-		m_GrayValueImage = GrayValueImageType::New();
-		m_GrayValueImage->SetRegions( m_DeformationRegion );
-		m_GrayValueImage->SetOrigin( m_DeformationOrigin );
-		m_GrayValueImage->SetSpacing( m_DeformationSpacing );
-		m_GrayValueImage->Allocate();
+		m_GrayValueImage1 = GrayValueImageType::New();
+		m_GrayValueImage1->SetRegions( m_DeformationRegion );
+		m_GrayValueImage1->SetOrigin( m_DeformationOrigin );
+		m_GrayValueImage1->SetSpacing( m_DeformationSpacing );
+		m_GrayValueImage1->Allocate();
+		m_GrayValueImage2 = GrayValueImageType::New();
 
 		/** Create a resampler. */
 		m_Resampler = ResamplerType::New();
 		m_Resampler->SetTransform( this->GetIntermediaryDeformationFieldTransform() );
 		//m_Resampler->SetInterpolator(); // default = LinearInterpolateImageFunction
-		m_Resampler->SetInput( dynamic_cast<FixedImageELXType *>(
+		m_Resampler->SetInput( dynamic_cast<MovingImageELXType *>(
 			m_Elastix->GetMovingImage() ) );
 		unsigned int defaultPixelValue = 0;
 		m_Configuration->ReadParameter( defaultPixelValue, "DefaultPixelValue", 0 );
@@ -187,7 +189,7 @@ using namespace itk;
 		m_Diffusion->SetNumberOfIterations( iterations );
 		m_Diffusion->SetUseThreshold( thresholdBool );
 		m_Diffusion->SetThreshold( threshold );
-		m_Diffusion->SetGrayValueImage( m_GrayValueImage );
+		m_Diffusion->SetGrayValueImage( m_GrayValueImage1 );
 		m_Diffusion->SetInput( m_DeformationField );
 
 	} // end BeforeRegistration
@@ -776,21 +778,54 @@ using namespace itk;
 		/** ------------- 3: Create GrayValueImage. ------------- */
 
 		m_Resampler->Modified();
-		m_GrayValueImage = m_Resampler->GetOutput();
+		m_GrayValueImage1 = m_Resampler->GetOutput();
 
 		/** Do the resampling. */
 		try
 		{
-			m_GrayValueImage->Update();
+			m_GrayValueImage1->Update();
 		}
 		catch( itk::ExceptionObject & excp )
 		{
 			xl::xout["error"] << excp << std::endl;
 		}
 
+		/** If wanted also take the fixed image into account
+		 * for the derivation of the GrayValueImage.
+		 */
+		/** Check if wanted. */
+		std::string alsoFixed = "false";
+		m_Configuration->ReadParameter( alsoFixed, "GrayValueImageAlsoBasedOnFixedImage", 0 );
+		MaximumImageFilterType::Pointer maximumImageFilter
+			= MaximumImageFilterType::New();
+		if( alsoFixed == "true" )
+		{
+			maximumImageFilter->SetInput( 0, m_GrayValueImage1 );
+			maximumImageFilter->SetInput( 1, dynamic_cast<FixedImageELXType *>(
+			m_Elastix->GetFixedImage() ) );
+			m_GrayValueImage2 = maximumImageFilter->GetOutput();
+
+			/** Do the maximum (OR filter). */
+			try
+			{
+				m_GrayValueImage2->Update();
+			}
+			catch( itk::ExceptionObject & excp )
+			{
+				xl::xout["error"] << excp << std::endl;
+			}
+		} // end if
+
 		/** ------------- 4: Setup the diffusion. ------------- */
 
-		m_Diffusion->SetGrayValueImage( m_GrayValueImage );
+		if( alsoFixed == "true" )
+		{
+			m_Diffusion->SetGrayValueImage( m_GrayValueImage2 );
+		}
+		else
+		{
+			m_Diffusion->SetGrayValueImage( m_GrayValueImage1 );
+		}
 		m_Diffusion->SetInput( m_DeformationField );
 		m_Diffusion->Modified();
 		m_DiffusedField = m_Diffusion->GetOutput();
@@ -856,7 +891,15 @@ using namespace itk;
 			typename GrayValueImageWriterType::Pointer grayValueImageWriter
 				= GrayValueImageWriterType::New();
 			grayValueImageWriter->SetFileName( makeFileName2.str().c_str() );
-			grayValueImageWriter->SetInput( m_GrayValueImage );
+			if( alsoFixed == "true" )
+			{
+				grayValueImageWriter->SetInput( m_GrayValueImage2 );
+			}
+			else
+			{
+				grayValueImageWriter->SetInput( m_GrayValueImage1 );
+			}
+			
 			/** Do the writing. */
 			try
 			{

@@ -308,9 +308,8 @@ namespace itk
 	 * ******************** FilterGrayValueImage ********************
 	 *
 	 * This function reads an image u(x). This image is rescaled to
-	 * intensities between 0.0 and 1.0, giving u~(x). Then we calculate
-	 * c(x) = sqrt( u~(x) / m_K ) (or c(x) = exp( u~(x) / m_K ) ). Finally, we
-	 * calculate out(x) = c(x) + 1/2 * SUM_i{ d/dx_i c(x) }.
+	 * intensities between 0.0 and 1.0, giving u~(x). Then we threshold
+	 * the coefficient image or not.
 	 */
 	
 	template< class TInputImage, class TGrayValueImage >
