@@ -175,6 +175,8 @@ namespace elastix
 		std::string elxCoreLibName(libprefix + "elxCore" + libextension);
 		std::string elxCommonLibName(libprefix + "elxCommon" + libextension);
 
+		/** Load and install libraries. */
+		elxout << "Loading and installing libraries" << std::endl;
 		for (unsigned int i = 0; i< nrOfFiles; i++)
 		{
 			fileIsLib = false;
@@ -214,10 +216,6 @@ namespace elastix
 			{			
 		
 				/** Open the lib */
-				elxout
-					<< "Loading library: "
-					<< currentLibName
-					<< std::endl;
 				m_LibHandleContainer.push( m_LibLoader->OpenLibrary( currentLibName.c_str() ) );
 				//currentLib = m_LibLoader->OpenLibrary( currentLibName.c_str() );
 				currentLib = m_LibHandleContainer.top();
@@ -239,7 +237,7 @@ namespace elastix
 					
 					/** Execute it */
 					/** \todo : How to check if the conversion went alright? */
-					elxout
+					xout["logonly"]
 						<< "Installing component: "
 						<< currentLibName
 						<< std::endl;
