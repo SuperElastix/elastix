@@ -527,7 +527,20 @@ using namespace itk;
 			// \todo quit program nicely or throw an exception
 		}
 
-		/** Read in the deformationField image. */
+		/** Read in the deformationField image. *
+		typename ReaderType::Pointer reader = ReaderType::New();
+		reader->SetFileName( fileName );
+		defImage = reader->GetOutput();
+
+		/** Do the reading. *
+		try
+		{
+			defImage->Update();
+		}
+		catch( itk::ExceptionObject & excp )
+		{
+			xl::xout["error"] << excp << std::endl;
+		}
 
 		/** Set the parameters. */
 		//this->SetCoefficientImage( defImage );
