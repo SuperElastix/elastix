@@ -1,5 +1,5 @@
-#ifndef __elxMutualInformationHistogramMetric_CXX__
-#define __elxMutualInformationHistogramMetric_CXX__
+#ifndef __elxMutualInformationHistogramMetric_HXX__
+#define __elxMutualInformationHistogramMetric_HXX__
 
 #include "elxMutualInformationHistogramMetric.h"
 
@@ -234,5 +234,5 @@ using namespace itk;
 } // end namespace elastix
 
 
-#endif // end #ifndef __elxMutualInformationHistogramMetric_CXX__
+#endif // end #ifndef __elxMutualInformationHistogramMetric_HXX__
 

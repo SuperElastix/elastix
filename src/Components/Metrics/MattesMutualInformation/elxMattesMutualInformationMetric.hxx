@@ -1,5 +1,5 @@
-#ifndef __elxMattesMutualInformationMetric_CXX__
-#define __elxMattesMutualInformationMetric_CXX__
+#ifndef __elxMattesMutualInformationMetric_HXX__
+#define __elxMattesMutualInformationMetric_HXX__
 
 #include "elxMattesMutualInformationMetric.h"
 
@@ -259,5 +259,5 @@ using namespace itk;
 } // end namespace elastix
 
 
-#endif // end #ifndef __elxMattesMutualInformationMetric_CXX__
+#endif // end #ifndef __elxMattesMutualInformationMetric_HXX__
 

@@ -1,5 +1,5 @@
-#ifndef __elxNormalizedCorrelationMetric_CXX__
-#define __elxNormalizedCorrelationMetric_CXX__
+#ifndef __elxNormalizedCorrelationMetric_HXX__
+#define __elxNormalizedCorrelationMetric_HXX__
 
 #include "elxNormalizedCorrelationMetric.h"
 
@@ -155,5 +155,5 @@ using namespace itk;
 } // end namespace elastix
 
 
-#endif // end #ifndef __elxNormalizedCorrelationMetric_CXX__
+#endif // end #ifndef __elxNormalizedCorrelationMetric_HXX__
 

@@ -1,5 +1,5 @@
-#ifndef __elxViolaWellsMutualInformationMetric_CXX__
-#define __elxViolaWellsMutualInformationMetric_CXX__
+#ifndef __elxViolaWellsMutualInformationMetric_HXX__
+#define __elxViolaWellsMutualInformationMetric_HXX__
 
 #include "elxViolaWellsMutualInformationMetric.h"
 
@@ -243,5 +243,5 @@ using namespace itk;
 } // end namespace elastix
 
 
-#endif // end #ifndef __elxViolaWellsMutualInformationMetric_CXX__
+#endif // end #ifndef __elxViolaWellsMutualInformationMetric_HXX__
 
