@@ -170,6 +170,7 @@ using namespace itk;
 		typedef ImageRegionIterator<
 			VectorImageType >																VectorImageIteratorType;
 		typedef FixedImageELXType													GrayValueImageType;
+		typedef typename GrayValueImageType::PixelType		GrayValuePixelType;
 		typedef ImageRegionIterator<
 			GrayValueImageType >														GrayValueImageIteratorType;
 		typedef MaximumImageFilter<

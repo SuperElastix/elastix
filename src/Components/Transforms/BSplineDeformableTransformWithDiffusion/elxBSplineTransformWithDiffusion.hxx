@@ -164,7 +164,7 @@ using namespace itk;
 		//m_Resampler->SetInterpolator(); // default = LinearInterpolateImageFunction
 		m_Resampler->SetInput( dynamic_cast<MovingImageELXType *>(
 			m_Elastix->GetMovingImage() ) );
-		PixelType defaultPixelValue = NumericTraits<PixelType>::Zero;
+		GrayValuePixelType defaultPixelValue = NumericTraits<PixelType>::Zero;
 		m_Configuration->ReadParameter( defaultPixelValue, "DefaultPixelValue", 0 );
 		m_Resampler->SetDefaultPixelValue( defaultPixelValue );
 		m_Resampler->SetSize( m_DeformationRegion.GetSize() );
