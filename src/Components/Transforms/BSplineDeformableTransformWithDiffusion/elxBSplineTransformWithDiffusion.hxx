@@ -559,7 +559,13 @@ using namespace itk;
 			}
 			catch( itk::ExceptionObject & excp )
 			{
-				xl::xout["error"] << excp << std::endl;
+				/** Add information to the exception. */
+				excp.SetLocation( "BSplineTransformWithDiffusion - IncreaseScale()" );
+				std::string err_str = excp.GetDescription();
+				err_str += "\nError occured while using decompositionFilter.\n";
+				excp.SetDescription( err_str );
+				/** Pass the exception to an higher level. */
+				throw excp;
 			}
 			
 			/** Create an upsampled image. */
@@ -624,7 +630,13 @@ using namespace itk;
 		}
 		catch( itk::ExceptionObject & excp )
 		{
-			xl::xout["error"] << excp << std::endl;
+			/** Add information to the exception. */
+			excp.SetLocation( "BSplineTransformWithDiffusion - ReadFromFile()" );
+			std::string err_str = excp.GetDescription();
+			err_str += "\nError while reading the deformationFieldImage.\n";
+			excp.SetDescription( err_str );
+			/** Pass the exception to an higher level. */
+			throw excp;
 		}
 
 		/** Get image information and set it in the DeformationFieldTransform. */
@@ -786,6 +798,12 @@ using namespace itk;
 		}
 		catch( itk::ExceptionObject & excp )
 		{
+			/** Add information to the exception. */
+			excp.SetLocation( "BSplineTransformWithDiffusion - WriteToFile()" );
+			std::string err_str = excp.GetDescription();
+			err_str += "\nError while writing the deformationFieldImage.\n";
+			excp.SetDescription( err_str );
+			/** Print the exception. */
 			xl::xout["error"] << excp << std::endl;
 		}
 
@@ -919,7 +937,13 @@ using namespace itk;
 		}
 		catch( itk::ExceptionObject & excp )
 		{
-			xl::xout["error"] << excp << std::endl;
+			/** Add information to the exception. */
+			excp.SetLocation( "BSplineTransformWithDiffusion - DiffuseDeformationField()" );
+			std::string err_str = excp.GetDescription();
+			err_str += "\nError occured while resampling the grayValue image.\n";
+			excp.SetDescription( err_str );
+			/** Pass the exception to an higher level. */
+			throw excp;
 		}
 
 		/** If wanted also take the fixed image into account
@@ -941,7 +965,13 @@ using namespace itk;
 			}
 			catch( itk::ExceptionObject & excp )
 			{
-				xl::xout["error"] << excp << std::endl;
+				/** Add information to the exception. */
+				excp.SetLocation( "BSplineTransformWithDiffusion - DiffuseDeformationField()" );
+				std::string err_str = excp.GetDescription();
+				err_str += "\nError occured when using the maximumImageFilter to get the grayValue image.\n";
+				excp.SetDescription( err_str );
+				/** Pass the exception to an higher level. */
+				throw excp;
 			}
 		} // end if
 
@@ -983,7 +1013,13 @@ using namespace itk;
 		}
 		catch( itk::ExceptionObject & excp )
 		{
-			xl::xout["error"] << excp << std::endl;
+			/** Add information to the exception. */
+			excp.SetLocation( "BSplineTransformWithDiffusion - DiffuseDeformationField()" );
+			std::string err_str = excp.GetDescription();
+			err_str += "\nError occured while diffusing the deformation field.\n";
+			excp.SetDescription( err_str );
+			/** Pass the exception to an higher level. */
+			throw excp;
 		}
 
 		/** ------------- 5: Update the intermediary transform. ------------- */
@@ -1032,6 +1068,12 @@ using namespace itk;
 			}
 			catch( itk::ExceptionObject & excp )
 			{
+				/** Add information to the exception. */
+				excp.SetLocation( "BSplineTransformWithDiffusion - DiffuseDeformationField()" );
+				std::string err_str = excp.GetDescription();
+				err_str += "\nError occured while writing the deformationField image.\n";
+				excp.SetDescription( err_str );
+				/** Print the exception. */
 				xl::xout["error"] << excp << std::endl;
 			}
 
@@ -1057,6 +1099,12 @@ using namespace itk;
 			}
 			catch( itk::ExceptionObject & excp )
 			{
+				/** Add information to the exception. */
+				excp.SetLocation( "BSplineTransformWithDiffusion - DiffuseDeformationField()" );
+				std::string err_str = excp.GetDescription();
+				err_str += "\nError occured while writing the grayValue image.\n";
+				excp.SetDescription( err_str );
+				/** Print the exception. */
 				xl::xout["error"] << excp << std::endl;
 			}
 
@@ -1075,6 +1123,12 @@ using namespace itk;
 			}
 			catch( itk::ExceptionObject & excp )
 			{
+				/** Add information to the exception. */
+				excp.SetLocation( "BSplineTransformWithDiffusion - DiffuseDeformationField()" );
+				std::string err_str = excp.GetDescription();
+				err_str += "\nError occured while writing the diffusedField image.\n";
+				excp.SetDescription( err_str );
+				/** Print the exception. */
 				xl::xout["error"] << excp << std::endl;
 			}
 

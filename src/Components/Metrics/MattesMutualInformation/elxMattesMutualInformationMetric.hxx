@@ -106,21 +106,27 @@ using namespace itk;
 			m_FixedMaskImageReader	= FixedMaskImageReaderType::New();
 			m_FixedMaskImageReader->SetFileName( fixedMaskFileName.c_str() );
 
-			/** Do the reading.*/
+			/** Do the reading. */
 			try
 			{
 				m_FixedMaskImageReader->Update();
 			}
 			catch( itk::ExceptionObject & excp )
 			{
-				xl::xout["error"] << excp << std::endl;
+				/** Add information to the exception. */
+				excp.SetLocation( "MattesMutualInformationMetric - BeforeRegistration()" );
+				std::string err_str = excp.GetDescription();
+				err_str += "\nError occured while reading fixed mask.\n";
+				excp.SetDescription( err_str );
+				/** Pass the exception to an higher level. */
+				throw excp;
 			}
 			/** Set the fixedmask.*/
 			this->SetFixedMask( m_FixedMaskImageReader->GetOutput() );
 
 		} // end if ( fixed mask present )
 		
-		/** Read moving mask.*/
+		/** Read moving mask. */
 		std::string movingMaskFileName = m_Configuration->
 			GetCommandLineArgument( "-mMask" );
 		if ( !( movingMaskFileName.empty() ) )
@@ -128,16 +134,22 @@ using namespace itk;
 			m_MovingMaskImageReader	= MovingMaskImageReaderType::New();
 			m_MovingMaskImageReader->SetFileName( movingMaskFileName.c_str() );
 
-			/** Do the reading.*/
+			/** Do the reading. */
 			try
 			{
 				m_MovingMaskImageReader->Update();
 			}
 			catch( itk::ExceptionObject & excp )
 			{
-				xl::xout["error"] << excp << std::endl;
+				/** Add information to the exception. */
+				excp.SetLocation( "MattesMutualInformationMetric - BeforeRegistration()" );
+				std::string err_str = excp.GetDescription();
+				err_str += "\nError occured while reading moving mask.\n";
+				excp.SetDescription( err_str );
+				/** Pass the exception to an higher level. */
+				throw excp;
 			}
-			/** Set the movingmask.*/
+			/** Set the movingmask. */
 			this->SetMovingMask( m_MovingMaskImageReader->GetOutput() );
 
 		} // end if ( moving mask present )

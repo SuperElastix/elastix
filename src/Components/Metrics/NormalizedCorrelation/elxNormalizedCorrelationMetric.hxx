@@ -33,6 +33,7 @@ using namespace itk;
 		BeforeRegistration(void)
 	{		
 		/** Read masks if necessary.*/
+		// \todo support masks
 		
 		/** Read fixed mask.*/
 /*		std::string fixedMaskFileName = m_Configuration->
@@ -51,7 +52,13 @@ using namespace itk;
 			}
 			catch( itk::ExceptionObject & excp )
 			{
-				xl::xout["error"] << excp << std::endl;
+				/** Add information to the exception. *
+				excp.SetLocation( "NormalizedCorrelationMetric - BeforeRegistration()" );
+				std::string err_str = excp.GetDescription();
+				err_str += "\nError occured while reading fixed mask.\n";
+				excp.SetDescription( err_str );
+				/** Pass the exception to an higher level. *
+				throw excp;
 			}
 
 		}  // end if ( fixed mask present )*/
@@ -73,7 +80,13 @@ using namespace itk;
 			}
 			catch( itk::ExceptionObject & excp )
 			{
-				xl::xout["error"] << excp << std::endl;
+				/** Add information to the exception. *
+				excp.SetLocation( "NormalizedCorrelationMetric - BeforeRegistration()" );
+				std::string err_str = excp.GetDescription();
+				err_str += "\nError occured while reading moving mask.\n";
+				excp.SetDescription( err_str );
+				/** Pass the exception to an higher level. *
+				throw excp;
 			}
 
 		}  // end if ( moving mask present )*/

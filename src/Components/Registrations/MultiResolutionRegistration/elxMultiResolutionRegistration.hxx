@@ -41,17 +41,23 @@ using namespace itk;
 		/** Make the fixedImagePointer non-const, to allow for calling ->Update() */
 		FixedImageType * nonconstFixedImage = const_cast<FixedImageType *>( this->GetFixedImage() );
 		
-		/** Update and Set the image region.*/
+		/** Update and Set the image region. */
 		try
 		{
 			nonconstFixedImage->Update();
 		}
 		catch( itk::ExceptionObject & excp )
 		{
-			xl::xout["error"] << excp << std::endl;
+			/** Add information to the exception. */
+			excp.SetLocation( "MultiResolutionRegistration - BeforeRegistration()" );
+			std::string err_str = excp.GetDescription();
+			err_str += "\nError occured while updating region info of the fixed image.\n";
+			excp.SetDescription( err_str );
+			/** Pass the exception to an higher level. */
+			throw excp;
 		}
 
-		/** Set the fixedImageRegion.*/
+		/** Set the fixedImageRegion. */
 		this->SetFixedImageRegion( nonconstFixedImage->GetBufferedRegion() );
 		
 	} // end BeforeRegistration

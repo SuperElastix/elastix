@@ -311,8 +311,14 @@ namespace elastix
 
 		m_elx_Elastix->SetInitialTransform( m_InitialTransform );
 
-		/** Run! */
-		ErrorCode = m_elx_Elastix->Run();
+		/** Run elastix! */
+		try { ErrorCode = m_elx_Elastix->Run(); }
+		catch( itk::ExceptionObject & excp )
+		{
+			/** We just print the exception and let the programm quit. */
+			xl::xout["error"] << excp << std::endl;
+			ErrorCode = 1;
+		}
 
 		/** Store the images in ElastixMain	*/
 		this->SetFixedImage( m_elx_Elastix->GetFixedImage() );
@@ -320,7 +326,6 @@ namespace elastix
 		this->SetFixedInternalImage( m_elx_Elastix->GetFixedInternalImage() );
 		this->SetMovingInternalImage( m_elx_Elastix->GetMovingInternalImage() );
 		
-
 		/** Set processPriority to normal again.*/
 		if ( processPriority == "high" )
 		{

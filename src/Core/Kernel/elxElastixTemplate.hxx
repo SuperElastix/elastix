@@ -205,16 +205,21 @@ namespace elastix
 			m_FixedImageReader->SetFileName(
 				this->GetConfiguration()->GetCommandLineArgument( "-f" )  );
 			m_FixedImage = m_FixedImageReader->GetOutput();
-			/** Do the reading.*/
+
+			/** Do the reading. */
 			try
 			{
 				m_FixedImage->Update();
 			}
 			catch( itk::ExceptionObject & excp )
 			{
-				xl::xout["error"] << excp << std::endl;
-				xl::xout["error"] << "Error occured while reading fixed image." << std::endl;
-				return -1;
+				/** Add information to the exception. */
+				excp.SetLocation( "ElastixTemplate - Run()" );
+				std::string err_str = excp.GetDescription();
+				err_str += "\nError occured while reading fixed image.\n";
+				excp.SetDescription( err_str );
+				/** Pass the exception to an higher level. */
+				throw excp;
 			}
 		}
 
@@ -230,9 +235,13 @@ namespace elastix
 			}
 			catch( itk::ExceptionObject & excp )
 			{
-				xl::xout["error"] << excp << std::endl;
-				xl::xout["error"] << "Error occured while casting fixed image to InternalImageType." << std::endl;
-				return -1;
+				/** Add information to the exception. */
+				excp.SetLocation( "ElastixTemplate - Run()" );
+				std::string err_str = excp.GetDescription();
+				err_str += "\nError occured while casting fixed image to InternalImageType.\n";
+				excp.SetDescription( err_str );
+				/** Pass the exception to an higher level. */
+				throw excp;
 			}
 		}
 
@@ -254,9 +263,13 @@ namespace elastix
 			}
 			catch( itk::ExceptionObject & excp )
 			{
-				xl::xout["error"] << excp << std::endl;
-				xl::xout["error"] << "Error occured while reading moving image." << std::endl;
-				return -1;
+				/** Add information to the exception. */
+				excp.SetLocation( "ElastixTemplate - Run()" );
+				std::string err_str = excp.GetDescription();
+				err_str += "\nError occured while reading moving image.\n";
+				excp.SetDescription( err_str );
+				/** Pass the exception to an higher level. */
+				throw excp;
 			}
 		}
 
@@ -272,9 +285,13 @@ namespace elastix
 			}
 			catch( itk::ExceptionObject & excp )
 			{
-				xl::xout["error"] << excp << std::endl;
-				xl::xout["error"] << "Error occured while casting moving image to InternalImageType." << std::endl;
-				return -1;
+				/** Add information to the exception. */
+				excp.SetLocation( "ElastixTemplate - Run()" );
+				std::string err_str = excp.GetDescription();
+				err_str += "\nError occured while casting moving image to InternalImageType.\n";
+				excp.SetDescription( err_str );
+				/** Pass the exception to an higher level. */
+				throw excp;
 			}
 		}
 
@@ -286,20 +303,23 @@ namespace elastix
 		elxout << "Reading images took " <<	static_cast<unsigned long>(
 			m_Timer0->GetElapsedClockSec() * 1000 ) << " ms.\n" << std::endl;
 
-		/** Give all components the opportunity to do some initialization.*/
+		/** Give all components the opportunity to do some initialization. */
 		this->BeforeRegistration();
 	
 		/** START! */
 		try
 		{
-
 			( m_elx_Registration->GetAsITKBaseType() )->StartRegistration();
 		}
-		catch( itk::ExceptionObject & err )
+		catch( itk::ExceptionObject & excp )
 		{
-			xl::xout["error"] << "ExceptionObject caught !" << std::endl;
-			xl::xout["error"] << err << std::endl;
-			return -1;
+			/** Add information to the exception. */
+			excp.SetLocation( "ElastixTemplate - Run()" );
+			std::string err_str = excp.GetDescription();
+			err_str += "\nError occured during actual registration.\n";
+			excp.SetDescription( err_str );
+			/** Pass the exception to an higher level. */
+			throw excp;
 		}
 		
 		/** Save, show results etc.*/
@@ -331,10 +351,10 @@ namespace elastix
 			this->GetConfiguration()->GetCommandLineArgument( "-in" );
 		if ( inputImageFileName != "")
 		{
-			/** Tell the user.*/
+			/** Tell the user. */
 			elxout << std::endl << "Reading input image ...";
 			
-			/** Set the inputImage == movingImage.*/
+			/** Set the inputImage == movingImage. */
 			typename InputImageReaderType::Pointer	inputImageReader;
 			if ( !m_MovingImage )
 			{
@@ -343,33 +363,47 @@ namespace elastix
 					this->GetConfiguration()->GetCommandLineArgument( "-in" ) );
 				m_MovingImage = inputImageReader->GetOutput();
 
-				/** Do the reading.*/
+				/** Do the reading. */
 				try
 				{
 					m_MovingImage->Update();
 				}
 				catch( itk::ExceptionObject & excp )
 				{
-					xl::xout["error"] << excp << std::endl;
+					/** Add information to the exception. */
+					excp.SetLocation( "ElastixTemplate - ApplyTransform()" );
+					std::string err_str = excp.GetDescription();
+					err_str += "\nError occured while reading moving image.\n";
+					excp.SetDescription( err_str );
+					/** Pass the exception to an higher level. */
+					throw excp;
 				}
-			}
+			} // end if !moving image
 
 			/** Tell the user.*/
 			elxout << "\t\t\t\tdone!" << std::endl;
-		}
+		} // end if ! inputImageFileName
 
-		/** Call all the ReadFromFile() functions.*/
+		/** Call all the ReadFromFile() functions. */
 		elxout << "Calling all ReadFromFile()'s ...";
 		m_elx_ResampleInterpolator->ReadFromFile();		
 		m_elx_Resampler->ReadFromFile();
 		m_elx_Transform->ReadFromFile();
 
-		/** Tell the user.*/
+		/** Tell the user. */
 		elxout << "\t\tdone!" << std::endl;
 		elxout << "Transforming points (if called for) ...";
 
-		/** Call TransformPoints.*/
-		m_elx_Transform->TransformPoints();
+		/** Call TransformPoints. */
+		try
+		{
+      m_elx_Transform->TransformPoints();
+		}
+		catch( itk::ExceptionObject & excp )
+		{
+			xout["error"] << excp << std::endl;
+			xout["error"] << "However, transformix continues anyway with resampling." << std::endl;
+		}
 		elxout << "\t\tdone!" << std::endl;
 
 		/** Resample the image. */
@@ -377,31 +411,37 @@ namespace elastix
 		{
 			elxout << "Resampling image and writing to disk ...";
 			
-			/** Create a name for the final result.*/
+			/** Create a name for the final result. */
 			std::ostringstream makeFileName("");
 			makeFileName << 
 				m_Configuration->GetCommandLineArgument( "-out" ) << "result.mhd";
 			
-			/** Write the resampled image to disk.*/
+			/** Write the resampled image to disk. */
 			typename OutputImageWriterType::Pointer writer = OutputImageWriterType::New();		
 			writer->SetInput( m_elx_Resampler->GetAsITKBaseType()->GetOutput() );
 			writer->SetFileName( makeFileName.str().c_str() );
 
-			/** Do the writing.*/
+			/** Do the writing. */
 			try
 			{
 				writer->Update();
 			}
 			catch( itk::ExceptionObject & excp )
 			{
-				xl::xout["error"] << excp << std::endl;
+				/** Add information to the exception. */
+				excp.SetLocation( "ElastixTemplate - ApplyTransform()" );
+				std::string err_str = excp.GetDescription();
+				err_str += "\nError occured while writing resampled image.\n";
+				excp.SetDescription( err_str );
+				/** Pass the exception to an higher level. */
+				throw excp;
 			}
 			
-			/** Tell the user.*/
+			/** Tell the user. */
 			elxout << "\tdone!" << std::endl;
 		}
 
-		/** Return a value.*/
+		/** Return a value. */
 		return 0;
 
 	} // end ApplyTransform

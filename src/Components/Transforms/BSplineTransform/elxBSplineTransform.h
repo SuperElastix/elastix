@@ -25,7 +25,26 @@ using namespace itk;
 	 * \class BSplineTransform
 	 * \brief A transform based on the itkBSplineTransform
 	 *
-	 * This transform is an bspline transformation...
+	 * This transform is a B-spline transformation...
+	 *
+	 * The parameters used in this class are:
+	 * \parameter FinalGridSpacing: the grid spacing of the B-spline transform \n
+	 *		example: <tt>(FinalGridSpacing 32)</tt>
+	 * \parameter UpsampleGridOption: whether or not the B-spline grid should
+	 *		be upsampled from one resolution level to another. Choose from {true, false} \n
+	 *		example: <tt>(UpsampleGridOption "true")</tt>
+	 * 
+	 * The transform parameters necessary for transformix are:
+	 * \transformparameter GridSize: stores the size of the B-spline grid \n
+	 *		example: <tt>(GridSize 16 16 16)</tt>
+	 * \transformparameter GridIndex: stores the index of the B-spline grid \n
+	 *		example: <tt>(GridIndex 0 0 0)</tt>
+	 * \transformparameter GridSpacing: stores the spacing of the B-spline grid \n
+	 *		example: <tt>(GridSpacing 16.0 16.0 16.0)</tt>
+	 * \transformparameter GridOrigin: stores the origin of the B-spline grid \n
+	 *		example: <tt>(GridOrigin 0.0 0.0 0.0)</tt>
+	 * \transformparameter NumberOfParameters: stores the number of B-spline parameters \n
+	 *		example: <tt>(NumberOfParameters 1000)</tt>
 	 *
 	 * \ingroup Transforms
 	 */

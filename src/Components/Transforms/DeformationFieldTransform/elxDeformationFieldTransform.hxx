@@ -75,7 +75,13 @@ using namespace itk;
 		}
 		catch( itk::ExceptionObject & excp )
 		{
-			xl::xout["error"] << excp << std::endl;
+			/** Add information to the exception. */
+			excp.SetLocation( "DeformationFieldTransform - ReadFromFile()" );
+			std::string err_str = excp.GetDescription();
+			err_str += "\nError occured while reading the deformationField image.\n";
+			excp.SetDescription( err_str );
+			/** Pass the exception to an higher level. */
+			throw excp;
 		}		
 
 		/** Set the deformationFieldImage in the
@@ -173,6 +179,12 @@ using namespace itk;
 		}
 		catch( itk::ExceptionObject & excp )
 		{
+			/** Add information to the exception. *
+			excp.SetLocation( "DeformationFieldTransform - WriteToFile()" );
+			std::string err_str = excp.GetDescription();
+			err_str += "\nError occured while writing the deformationField image.\n";
+			excp.SetDescription( err_str );
+			/** Print the exception. *
 			xl::xout["error"] << excp << std::endl;
 		}
 		*/

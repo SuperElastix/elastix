@@ -339,7 +339,13 @@ using namespace itk;
 			}
 			catch( itk::ExceptionObject & excp )
 			{
-				xl::xout["error"] << excp << std::endl;
+				/** Add information to the exception. */
+				excp.SetLocation( "BSplineTransform - IncreaseScale()" );
+				std::string err_str = excp.GetDescription();
+				err_str += "\nError occured while using decompositionFilter.\n";
+				excp.SetDescription( err_str );
+				/** Pass the exception to an higher level. */
+				throw excp;
 			}
 			
 			/** Create an upsampled image.*/
@@ -533,6 +539,12 @@ using namespace itk;
 				}
 				catch( itk::ExceptionObject & excp )
 				{
+					/** Add information to the exception. */
+					excp.SetLocation( "BSplineTransform - WriteToFile()" );
+					std::string err_str = excp.GetDescription();
+					err_str += "\nError occured while writing B-spline coefficient image.\n";
+					excp.SetDescription( err_str );
+					/** Print the exception. */
 					xl::xout["error"] << excp << std::endl;
 				}
 				

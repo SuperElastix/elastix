@@ -52,10 +52,10 @@ namespace itk
 		/** Declare radiusarray.*/
 		RadiusType radiusarray;
 		
-		/** Set as input .....*/
+		/** Set as input ..... */
 		erosion[ 0 ]->SetInput(this);
 		
-		/***/
+		/**  */
 		for ( unsigned int i = 0; i < MaskDimension; i++ )
 		{			
 			radiusarray.Fill(0);
@@ -77,14 +77,20 @@ namespace itk
 		dummyoutput->Allocate();
 		erosion[ MaskDimension - 1 ]->GraftOutput( dummyoutput );
 
-		/** Do the erosion.*/
+		/** Do the erosion. */
 		try
 		{
 			erosion[ MaskDimension - 1 ]->Update();
 		}
 		catch( itk::ExceptionObject & excp )
 		{
-			xl::xout["error"] << excp << std::endl;
+			/** Add information to the exception. */
+			excp.SetLocation( "MaskImage - Erode()" );
+			std::string err_str = excp.GetDescription();
+			err_str += "\nError while eroding the mask.\n";
+			excp.SetDescription( err_str );
+			/** Pass the exception to an higher level. */
+			throw excp;
 		}
 		
 		/** return a value.*/
@@ -137,14 +143,20 @@ namespace itk
 		dummyoutput->Allocate();
 		dilation[ MaskDimension - 1 ]->GraftOutput( dummyoutput );
 		
-		/** Do the dilation.*/
+		/** Do the dilation. */
 		try
 		{
 			dilation[ MaskDimension - 1 ]->Update();
 		}
 		catch( itk::ExceptionObject & excp )
 		{
-			xl::xout["error"] << excp << std::endl;
+			/** Add information to the exception. */
+			excp.SetLocation( "MaskImage - Dilate()" );
+			std::string err_str = excp.GetDescription();
+			err_str += "\nError while dilating the mask.\n";
+			excp.SetDescription( err_str );
+			/** Pass the exception to an higher level. */
+			throw excp;
 		}
 		
 		/** return a value.*/

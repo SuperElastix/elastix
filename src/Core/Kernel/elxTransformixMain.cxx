@@ -120,10 +120,19 @@ namespace elastix
 		m_elx_Elastix->SetMovingImage( this->GetMovingImage() );
 		m_elx_Elastix->SetInitialTransform( m_InitialTransform );
 		
-		/** ApplyTransform!*/
-		ErrorCode = m_elx_Elastix->ApplyTransform();
+		/** ApplyTransform! */
+		try { ErrorCode = m_elx_Elastix->ApplyTransform(); }
+		catch( itk::ExceptionObject & excp )
+		{
+			/** We just print the exception and let the programm quit. */
+			xl::xout["error"]	<< std::endl
+				<< "--------------- Exception ---------------"
+				<< std::endl << excp
+				<< "-----------------------------------------" << std::endl;
+			ErrorCode = 1;
+		}
 		
-		/** Set processPriority to normal again.*/
+		/** Set processPriority to normal again. */
 		if ( processPriority == "high" )
 		{
 			#ifdef _WIN32

@@ -37,15 +37,77 @@ using namespace itk;
 	/**
 	 * \class BSplineTransformWithDiffusion
 	 * \brief This class combines a B-spline transform with the
-	 * diffusion of the deformationfield.
+	 * diffusion/filtering of the deformationfield.
 	 *
 	 * Every n iterations the deformationfield is diffused using the
 	 * VectorMeanDiffusionImageFilter. The total transformation of a point
-	 * is determined by adding the bspline deformation to the
-	 * deformationfield arrow.
+	 * is determined by adding the B-spline deformation to the
+	 * deformationfield arrow. Filtering of the deformation field is based
+	 * on some 'stiffness coefficient' image.
+	 *
+	 * The parameters used in this class are:
+	 * \parameter FinalGridSpacing: the grid spacing of the B-spline transform
+	 *		part of this transform \n
+	 *		example: <tt>(FinalGridSpacing 32)</tt>
+	 * \parameter UpsampleGridOption: whether or not the B-spline grid should
+	 *		be upsampled from one resolution level to another. Choose from {true, false} \n
+	 *		example: <tt>(UpsampleGridOption "true")</tt>
+	 * \parameter FilterPattern: defines according to what schedule/pattern
+	 *		the deformation field should be filtered. Choose from {1,2}, where
+	 *		FilterPattern 1 is diffusion every "DiffusionEachNIterations" iterations,
+	 *		and where FilterPattern 2 filters more frequent in the beginning
+	 *		and less frequent at the end of a resolution \n
+	 *		example: <tt>(FilterPattern 1)</tt>
+	 * \parameter DiffusionEachNIterations: defines for FilterPattern 1 after how
+	 *		many iterations of the optimiser there should be a filtering step \n
+	 *		example: <tt>(DiffusionEachNIterations 5)</tt>
+	 * \parameter AfterIterations: defines for FilterPattern 2 after how many
+	 *		iterations of the optimiser the filter frequency should be increased \n
+	 *		example: <tt>(AfterIterations 50 100)</tt>
+	 * \parameter HowManyIterations: defines to what frequency the filtering
+	 *		should be increased \n
+	 *		example: <tt>(HowManyIterations 1 5 10)</tt>
+	 * \parameter MaximumNumberOfIterations: defines the maximum number of
+	 *		iterations of the optimiser in a resolution. The deformation
+	 *		field is also filtered the last iteration \n
+	 *		example: <tt>(MaximumNumberOfIterations 100 100 100)</tt>
+	 * \parameter NumberOfDiffusionIterations: defines the number of times
+	 *		the adaptive filtering is performed \n
+	 *		example: <tt>(NumberOfDiffusionIterations 10)</tt>
+	 * \parameter Radius: defines the radius of the filter \n
+	 *		example: <tt>(Radius 1)</tt>
+	 * \parameter ThresholdBool: defines whether or not the stiffness coefficient
+	 *		image should be thresholded. Choose from {true, false} \n
+	 *		example: <tt>(ThresholdBool "true")</tt>
+	 * \parameter ThresholdHU: if it is thresholded, this defines the threshold in
+	 *		Houndsfield units \n
+	 *		example: <tt>(ThresholdHU 150)</tt>
+	 * \parameter WriteDiffusionFiles: defines whether or not the stiffness coefficient
+	 *		image, the deformation field and the filtered field should be written
+	 *		to file. Choose from {true, false} \n
+	 *		example: <tt>(WriteDiffusionFiles "false")</tt>
+	 * \parameter GrayValueImageAlsoBasedOnFixedImage: defines whether or not
+	 *		the stiffness coefficient image should also be based on the fixed image.
+	 *		Choose from {true, false}, default is true \n
+	 *		example: <tt>(GrayValueImageAlsoBasedOnFixedImage "true")</tt>
+	 * 
+	 * The transform parameters necessary for transformix are:
+	 * \transformparameter DeformationFieldFileName: stores the name of the deformation field \n
+	 *		example: <tt>(DeformationFieldFileName "defField.mhd")</tt>
+	 * \transformparameter GridSize: stores the size of the B-spline grid \n
+	 *		example: <tt>(GridSize 16 16 16)</tt>
+	 * \transformparameter GridIndex: stores the index of the B-spline grid \n
+	 *		example: <tt>(GridIndex 0 0 0)</tt>
+	 * \transformparameter GridSpacing: stores the spacing of the B-spline grid \n
+	 *		example: <tt>(GridSpacing 16.0 16.0 16.0)</tt>
+	 * \transformparameter GridOrigin: stores the origin of the B-spline grid \n
+	 *		example: <tt>(GridOrigin 0.0 0.0 0.0)</tt>
+	 * \transformparameter NumberOfParameters: stores the number of B-spline parameters \n
+	 *		example: <tt>(NumberOfParameters 1000)</tt>
 	 *
 	 * \ingroup Transforms
 	 */
+
 
 	template < class TElastix >
 		class BSplineTransformWithDiffusion:

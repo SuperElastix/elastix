@@ -110,7 +110,13 @@ using namespace itk;
 			}
 			catch( itk::ExceptionObject & excp )
 			{
-				xl::xout["error"] << excp << std::endl;
+				/** Add information to the exception. */
+				excp.SetLocation( "ViolaWellsMutualInformationMetric - BeforeRegistration()" );
+				std::string err_str = excp.GetDescription();
+				err_str += "\nError occured while reading fixed mask.\n";
+				excp.SetDescription( err_str );
+				/** Pass the exception to an higher level. */
+				throw excp;
 			}
 			/** Set the fixedmask.*/
 			this->SetFixedMask( m_FixedMaskImageReader->GetOutput() );
@@ -132,7 +138,13 @@ using namespace itk;
 			}
 			catch( itk::ExceptionObject & excp )
 			{
-				xl::xout["error"] << excp << std::endl;
+				/** Add information to the exception. */
+				excp.SetLocation( "ViolaWellsMutualInformationMetric - BeforeRegistration()" );
+				std::string err_str = excp.GetDescription();
+				err_str += "\nError occured while reading moving mask.\n";
+				excp.SetDescription( err_str );
+				/** Pass the exception to an higher level. */
+				throw excp;
 			}
 			/** Set the movingmask.*/
 			this->SetMovingMask( m_MovingMaskImageReader->GetOutput() );

@@ -761,7 +761,13 @@ namespace elastix
 		}
 		catch( itk::ExceptionObject & excp )
 		{
-			xl::xout["error"] << excp << std::endl;
+			/** Add information to the exception. */
+			excp.SetLocation( "TransformBase - TransformPointsAllPoints()" );
+			std::string err_str = excp.GetDescription();
+			err_str += "\nError occured while writing deformation field image.\n";
+			excp.SetDescription( err_str );
+			/** Pass the exception to an higher level. */
+			throw excp;
 		}
 		
 	} // end TransformPointsAllPoints
