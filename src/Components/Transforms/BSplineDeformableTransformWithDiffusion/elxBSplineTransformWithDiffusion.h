@@ -147,6 +147,10 @@ using namespace itk;
 		typedef BSplineUpsampleImageFilter<
 			ImageType,ImageType,BSplineResamplerType>		UpsamplerType; 
 		typedef ImageRegionConstIterator<ImageType>		IteratorType;
+		typedef	Image< short,
+			itkGetStaticConstMacro( SpaceDimension ) >	DummyImageType;
+		typedef ImageRegionConstIterator<
+			DummyImageType >														DummyIteratorType;
 
 		/** For saving the deformation fields: */
 		typedef __CoefficientOutputType								CoefficientOutputType;
@@ -159,6 +163,9 @@ using namespace itk;
 
 		/** Typedef's for the diffusion of the deformation field. */
 		typedef typename Superclass2::OutputImageType			VectorImageType;
+		typedef typename VectorImageType::PixelType				VectorType;
+		typedef ImageRegionIterator<
+			VectorImageType >																VectorImageIteratorType;
 		typedef FixedImageELXType													GrayValueImageType;
 		typedef VectorMeanDiffusionImageFilter<
 			VectorImageType, GrayValueImageType >						DiffusionFilterType;
@@ -226,8 +233,8 @@ using namespace itk;
 		
 		/** Member variables for diffusion. */
 		typename DiffusionFilterType::Pointer		m_Diffusion;
-		typename OutputImageType::Pointer				m_DeformationField;
-		typename OutputImageType::Pointer				m_DiffusedField;
+		typename VectorImageType::Pointer				m_DeformationField;
+		typename VectorImageType::Pointer				m_DiffusedField;
 		typename GrayValueImageType::Pointer		m_GrayValueImage;
 		typename ResamplerType::Pointer					m_Resampler;
 		RegionType															m_DeformationRegion;

@@ -137,14 +137,14 @@ using namespace itk;
 		this->InitializeDeformationFields();
 
 		/** Create m_DeformationField and allocate memory. */
-		m_DeformationField = OutputImageType::New();
+		m_DeformationField = VectorImageType::New();
 		m_DeformationField->SetRegions( m_DeformationRegion );
 		m_DeformationField->SetOrigin( m_DeformationOrigin );
 		m_DeformationField->SetSpacing( m_DeformationSpacing );
 		m_DeformationField->Allocate();
 
 		/** Create m_DeformationField and allocate memory. */
-		m_DiffusedField = OutputImageType::New();
+		m_DiffusedField = VectorImageType::New();
 		m_DiffusedField->SetRegions( m_DeformationRegion );
 		m_DiffusedField->SetOrigin( m_DeformationOrigin );
 		m_DiffusedField->SetSpacing( m_DeformationSpacing );
@@ -661,27 +661,27 @@ using namespace itk;
 		dummyImage->SetOrigin( m_DeformationOrigin );
 		dummyImage->SetSpacing( m_DeformationSpacing );
 
-		/** Setup an iterator over dummyImage and outputImage.*/
+		/** Setup an iterator over dummyImage and outputImage. */
 		DummyIteratorType				iter( dummyImage, m_DeformationRegion );
-		OutputImageIteratorType	iterout( m_DeformationField, m_DeformationRegion );
+		VectorImageIteratorType	iterout( m_DeformationField, m_DeformationRegion );
 		
-		/** Declare stuff.*/
+		/** Declare stuff. */
 		InputPointType	inputPoint;
 		OutputPointType	outputPoint;
 		VectorType			diff_point;
 		IndexType				inputIndex;
 		
-		/** Calculate the TransformPoint of all voxels of the image.*/
+		/** Calculate the TransformPoint of all voxels of the image. */
 		iter.Begin();
 		iterout.Begin();
 		while ( !iter.IsAtEnd() )
 		{
 			inputIndex = iter.GetIndex();
-			/** Transform the points to physical space.*/
+			/** Transform the points to physical space. */
 			dummyImage->TransformIndexToPhysicalPoint( inputIndex, inputPoint );
-			/** Call TransformPoint.*/
+			/** Call TransformPoint. */
 			outputPoint = this->GetAsITKBaseType()->TransformPoint( inputPoint );
-			/** Calculate the difference.*/
+			/** Calculate the difference. */
 			for ( unsigned int i = 0; i < FixedImageDimension; i++ )
 			{
 				diff_point[ i ] = outputPoint[ i ] - inputPoint[ i ];
