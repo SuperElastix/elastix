@@ -241,6 +241,7 @@ using namespace itk;
 		OriginType															m_DeformationOrigin;
 		SpacingType															m_DeformationSpacing;
 
+		/** Member variables for writing diffusion files. */
 		bool m_WriteDiffusionFiles;
 		typename DeformationFieldWriterType::Pointer		m_DeformationFieldWriter;
 		typename DeformationFieldWriterType::Pointer		m_DiffusedFieldWriter;

@@ -535,6 +535,9 @@ using namespace itk;
 		/** Call the WriteToFile from the TransformBase.*/
 		this->Superclass2::WriteToFile( param );
 
+		// \todo let writetofile output relevant info, such as the name of the deformationField file
+		// \todo Set HowToCombineTransforms to NoInitialTransform
+
 		/** Add some BSplineTransform specific lines.*/
 		xout["transpar"] << std::endl << "// BSplineTransform specific" << std::endl;
 
@@ -680,7 +683,7 @@ using namespace itk;
 			/** Transform the points to physical space. */
 			dummyImage->TransformIndexToPhysicalPoint( inputIndex, inputPoint );
 			/** Call TransformPoint. */
-			outputPoint = this->GetAsITKBaseType()->TransformPoint( inputPoint );
+			outputPoint = this->TransformPoint( inputPoint );
 			/** Calculate the difference. */
 			for ( unsigned int i = 0; i < FixedImageDimension; i++ )
 			{
@@ -808,6 +811,7 @@ using namespace itk;
 		dummyParameters.Fill( 0.0 );
 		this->SetParameters( dummyParameters );
 		this->m_Elastix->GetElxOptimizerBase()->SetCurrentPositionPublic( dummyParameters );
+		this->SetGrouper( "NoInitialTransform" );
 
 	} // end DiffuseDeformationField
 

@@ -56,7 +56,7 @@ namespace itk
 
 		/** Typedef's needed in this class. */
 		typedef DeformationVectorFieldTransform<
-			ScalarType, itkGetStaticConstMacro( InputSpaceDimension ) >											IntermediaryDFTransformType;
+			ScalarType, itkGetStaticConstMacro( InputSpaceDimension ) >				IntermediaryDFTransformType;
 		typedef typename IntermediaryDFTransformType::VectorImageType				VectorImageType;
 		typedef typename VectorImageType::PixelType							VectorPixelType;
 		typedef ImageRegionIterator< VectorImageType >					IteratorType;
@@ -109,9 +109,9 @@ namespace itk
 		
 		/** Declaration of members. */
 		typename IntermediaryDFTransformType::Pointer		m_IntermediaryDeformationFieldTransform;
-		typename VectorImageType::Pointer		m_IntermediaryDeformationField;
-		typename VectorImageType::Pointer		m_TempField;
-		bool									m_Initialized;
+		typename VectorImageType::Pointer								m_IntermediaryDeformationField;
+		typename VectorImageType::Pointer								m_TempField;
+		bool		m_Initialized;
 
 		/** Declarations of region things. */
 		RegionType															m_DeformationFieldRegion;

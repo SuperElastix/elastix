@@ -96,10 +96,12 @@ namespace itk
 		
 		/** The constructor. */
 		DeformationVectorFieldTransform();
+		/** The destructor. */
 		virtual ~DeformationVectorFieldTransform();
 
 	private:
 		
+		/** The private constructor. */
 		DeformationVectorFieldTransform( const Self& );	// purposely not implemented
 		void operator=( const Self& );									// purposely not implemented
 
