@@ -9,9 +9,21 @@ Common contains different types of common functionality.
 */
 
 /**
+\defgroup Miscellaneous Miscellaneous
+\ingroup Common
+The Miscellaneous contains everything else.
+*/
+
+/**
 \defgroup ParameterFileParser ParameterFileParser
 \ingroup Common
 The ParameterFileParser contains functionality to communicate options and parameter values to elastix.
+*/
+
+/**
+\defgroup Timer Timer
+\ingroup Common
+Timer contains functionality to time (parts of) the registration.
 */
 
 /**
@@ -65,6 +77,12 @@ Registrations are
 \defgroup ResampleInterpolators ResampleInterpolators
 \ingroup Components
 ResampleInterpolators 
+*/
+
+/**
+\defgroup Resamplers Resamplers
+\ingroup Components
+Resamplers ...
 */
 
 /**
