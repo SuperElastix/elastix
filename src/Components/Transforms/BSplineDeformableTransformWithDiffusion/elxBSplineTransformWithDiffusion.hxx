@@ -796,7 +796,7 @@ using namespace itk;
 		/** Check if wanted. */
 		std::string alsoFixed = "false";
 		m_Configuration->ReadParameter( alsoFixed, "GrayValueImageAlsoBasedOnFixedImage", 0 );
-		MaximumImageFilterType::Pointer maximumImageFilter
+		typename MaximumImageFilterType::Pointer maximumImageFilter
 			= MaximumImageFilterType::New();
 		if( alsoFixed == "true" )
 		{
