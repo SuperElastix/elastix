@@ -4,6 +4,7 @@
 #include "itkDeformationVectorFieldTransform.h"
 #include "itkImageRegionIterator.h"
 
+#include "itkVector.h"
 
 namespace itk
 {
@@ -57,9 +58,8 @@ namespace itk
 
 		/** Typedef's needed in this class. */
 		typedef DeformationVectorFieldTransform<
-			ScalarType, InputSpaceDimension >											IntermediaryDFTransformType;
+			ScalarType, itkGetStaticConstMacro( InputSpaceDimension ) >											IntermediaryDFTransformType;
 		typedef typename IntermediaryDFTransformType::VectorImageType				VectorImageType;
-		typedef typename IntermediaryDFTransformType::VectorImagePointer		VectorImagePointer;
 		typedef typename VectorImageType::PixelType							VectorPixelType;
 		typedef ImageRegionIterator< VectorImageType >					IteratorType;
 
@@ -74,12 +74,12 @@ namespace itk
 		/** Function to update the intermediary deformation field by adding
 		 * a deformation field to it.
 		 */
-		virtual void UpdateIntermediaryDeformationFieldTransformTemp( VectorImagePointer vecImage );
+		virtual void UpdateIntermediaryDeformationFieldTransformTemp( typename VectorImageType::Pointer vecImage );
 
 		/** Function to update the intermediary deformation field by adding
 		 * a diffused deformation field to it.
 		 */
-		virtual void UpdateIntermediaryDeformationFieldTransform( VectorImagePointer vecImage );
+		virtual void UpdateIntermediaryDeformationFieldTransform( typename VectorImageType::Pointer vecImage );
 
 		/** itk Set macro for the region of the deformation field. */
 		itkSetMacro( DeformationFieldRegion, RegionType );
@@ -111,8 +111,8 @@ namespace itk
 		
 		/** Declaration of members. */
 		typename IntermediaryDFTransformType::Pointer		m_IntermediaryDeformationFieldTransform;
-		VectorImagePointer		m_IntermediaryDeformationField;
-		VectorImagePointer		m_TempField;
+		typename VectorImageType::Pointer		m_IntermediaryDeformationField;
+		typename VectorImageType::Pointer		m_TempField;
 		bool									m_Initialized;
 
 		/** Declarations of region things. */

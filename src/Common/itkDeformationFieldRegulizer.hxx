@@ -112,7 +112,7 @@ namespace itk
 
 	template <class TAnyITKTransform>
 		void DeformationFieldRegulizer<TAnyITKTransform>
-		::UpdateIntermediaryDeformationFieldTransformTemp( VectorImagePointer vecImage )
+		::UpdateIntermediaryDeformationFieldTransformTemp( typename VectorImageType::Pointer vecImage )
 	{
 		/** Initialize the deformation fields. */
 		if ( !m_Initialized )
@@ -151,7 +151,7 @@ namespace itk
 
 	template <class TAnyITKTransform>
 		void DeformationFieldRegulizer<TAnyITKTransform>
-		::UpdateIntermediaryDeformationFieldTransform( VectorImagePointer vecImage )
+		::UpdateIntermediaryDeformationFieldTransform( typename VectorImageType::Pointer  vecImage )
 	{
 		/** Initialize the deformation fields. */
 		if ( !m_Initialized )
