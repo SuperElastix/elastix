@@ -242,21 +242,42 @@ using namespace itk;
 		/** Remove the ExactMetric-column, if it already existed. */
 		xl::xout["iteration"].RemoveTargetCell("ExactMetric");
 
-		std::string showExactMetricValue = "false";
+
+		bool useExactDerivativeBool = false;
+		std::string useExactDerivative = "false";
 		this->GetConfiguration()->
-			ReadParameter(showExactMetricValue, "ShowExactMetricValue", level);
-		if (showExactMetricValue == "true")
+			ReadParameter(useExactDerivative, "UseExactDerivative", level);
+		if (useExactDerivative == "true")
 		{
-			m_ShowExactMetricValue = true;
-			xl::xout["iteration"].AddTargetCell("ExactMetric");
-			xl::xout["iteration"]["ExactMetric"] << std::showpoint << std::fixed;
+			useExactDerivativeBool = true;
 		}
 		else
 		{
+			useExactDerivativeBool = false;
+		}
+		this->SetUseExactDerivative(useExactDerivativeBool);
+
+		if (!useExactDerivativeBool)
+		{
+			std::string showExactMetricValue = "false";
+			this->GetConfiguration()->
+				ReadParameter(showExactMetricValue, "ShowExactMetricValue", level);
+			if (showExactMetricValue == "true")
+			{
+				m_ShowExactMetricValue = true;
+				xl::xout["iteration"].AddTargetCell("ExactMetric");
+				xl::xout["iteration"]["ExactMetric"] << std::showpoint << std::fixed;
+			}
+			else
+			{
+				m_ShowExactMetricValue = false;
+			}
+		}
+		else	
+		{
+			/** The exact metric value is shown anyway */
 			m_ShowExactMetricValue = false;
 		}
-
-
 		
 	} // end BeforeEachResolution
 	

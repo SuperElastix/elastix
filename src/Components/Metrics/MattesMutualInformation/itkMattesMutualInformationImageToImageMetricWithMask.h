@@ -1,3 +1,15 @@
+/**
+ * This file is an adapted version of the original itk-class.
+ * For Elastix the following things have been added
+ *  - Mask-support
+ *  - New random samples every iteration (optionally)
+ *	- Random generator that gives the same output in linux and windows.
+ *  - GetExactValue and GetExactValueAndDerivative methods, that 
+ *		compute the mutual information/its derivative using the full images
+ *
+ * The original itk-copyright message is stated below:
+ */
+
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
@@ -115,8 +127,9 @@ namespace itk
 * in the calculation of the MutualInformation. 
 * Besides, it adds the function SampleFixedImageDomain, which allows the user
 * to force a new sample set to be created.
-* Finally, it adds the GetExactValue method, that computes the mutual information
-* using all voxels of the images.
+* Finally, it adds the GetExactValue method and the GetExactValueAndDerivative
+* methods, that compute the mutual information/its derivative using all voxels
+* of the images.
 *
 * \ingroup RegistrationMetrics
 * \ingroup ThreadUnSafe
@@ -184,6 +197,7 @@ namespace itk
 		void GetValueAndDerivative( const ParametersType& parameters, 
 			MeasureType& Value, DerivativeType& Derivative ) const;
 		
+		
 		/** Number of spatial samples to used to compute metric */
 		itkSetClampMacro( NumberOfSpatialSamples, unsigned long,
 			1, NumericTraits<unsigned long>::max() );
@@ -221,6 +235,9 @@ namespace itk
 		/**  Get the exact value. Mutual information computed over all points. */
 		virtual MeasureType GetExactValue( const ParametersType& parameters ) const;
 				
+		/** UseExactDerivative flag */
+		virtual void SetUseExactDerivative( bool _arg );
+		itkGetConstMacro(UseExactDerivative, bool);
 		
 	protected:
 		
@@ -234,6 +251,20 @@ namespace itk
 		FixedMaskImagePointer		m_FixedMask;
 		MovingMaskImagePointer	m_MovingMask;
 		
+
+		/** 
+		 * Implementations of the GetValueAndDerivative-functions. These
+		 * are called by the GetValueAndDerivative() function, depending
+		 * on the setting of the UseExactDerivative flag. (added by stefan)
+		 */
+		virtual void GetApproximateValueAndDerivative( const ParametersType& parameters, 
+			MeasureType& Value, DerivativeType& Derivative ) const;
+		virtual void GetExactValueAndDerivative( const ParametersType& parameters, 
+			MeasureType& Value, DerivativeType& Derivative ) const;
+		
+		bool m_UseExactDerivative;
+
+
 	private:
 		
 		MattesMutualInformationImageToImageMetricWithMask( const Self& );	// purposely not implemented
