@@ -4,9 +4,9 @@
 
 #include "elastix.h"
 
-
 int main( int argc, char **argv )
 {
+	
 	/** Check if "-help" was asked for.*/
 	if ( argc == 1 )
 	{
@@ -233,50 +233,32 @@ int main( int argc, char **argv )
 	elxout << "Total time elapsed: " << totaltimer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
 
 
+	/** 
+	 * Make sure all the components that are defined in a Module (.DLL/.so) 
+	 * are deleted before the modules are closed.
+	 */
+
 	for ( unsigned int i = 0; i < NrOfParameterFiles; i++ )
 	{
-		elastices[i]->ClearComponents();
-		elxout << "elastices " << i << " deleted" << std::endl;
-		elastices[i]->Delete();
+		//elastices[i]->ClearComponents(); not needed anymore?
+		elastices[i] = 0;
 	}	
 
-	if (transform)
-	{
-	elxout << "transform in main() deleted" << std::endl;
-	transform->Delete();
-	}
-
-	if (fixedImage)
-	{
-	elxout << "fixedimage in main() deleted" << std::endl;
-	fixedImage->Delete();
-	}
-	if (movingImage)
-	{
-	elxout << "moving image in main() deleted" << std::endl;
-	movingImage->Delete();
-	}
-	if (fixedInternalImage)
-	{
-	elxout << "fixed internal imagem in main() deleted" << std::endl;
-	fixedInternalImage->Delete();
-	}
-	if (movingInternalImage)
-	{
-	elxout << "moving internal image  in main() deleted" << std::endl;
-	movingInternalImage->Delete();
-	}
+	transform=0;
+	fixedImage=0;
+	movingImage=0;
+	fixedInternalImage=0;
+	movingInternalImage=0;
 	
-
-	elxout << "UnloadComponents function called... " << std::endl;
+	/** Close the modules */
 	ElastixType::UnloadComponents();
-	
-	elxout << "Exiting... " << std::endl;				
 	
 	/** Exit and return the error code.*/
 	return returndummy;
 
 } // end main
+
+
 
 
 /**

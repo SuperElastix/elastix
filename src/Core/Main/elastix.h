@@ -6,7 +6,6 @@
 #include <string>
 #include <vector>
 #include <queue>
-
 #include "itkObject.h"
 #include "itkDataObject.h"
 
