@@ -22,7 +22,7 @@ namespace elastix
 		unsigned int splineOrder = 3;  
 
 		/** Read the desired splineOrder from the parameterFile.*/
-		m_Configuration->ReadParameter( splineOrder, "FinalBSplineInterpolationOrder", 0 );
+		this->m_Configuration->ReadParameter( splineOrder, "FinalBSplineInterpolationOrder", 0 );
 
 		/** Set the splineOrder in the superclass.*/
 		this->SetSplineOrder( splineOrder );
@@ -47,7 +47,7 @@ namespace elastix
 		unsigned int splineOrder = 3;  
 
 		/** Read the desired splineOrder from the parameterFile.*/
-		m_Configuration->ReadParameter( splineOrder, "FinalBSplineInterpolationOrder", 0 );
+		this->m_Configuration->ReadParameter( splineOrder, "FinalBSplineInterpolationOrder", 0 );
 
 		/** Set the splineOrder in the superclass.*/
 		this->SetSplineOrder( splineOrder );

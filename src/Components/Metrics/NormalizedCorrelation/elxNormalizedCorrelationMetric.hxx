@@ -16,10 +16,10 @@ using namespace itk;
 		NormalizedCorrelationMetric<TElastix>::NormalizedCorrelationMetric()
 	{
 		/** Initialize.*/
-/*		m_FixedMaskImageReader = 0;
-		m_MovingMaskImageReader = 0;
-		m_FixedMaskCaster = 0;
-		m_MovingMaskCaster = 0;*/
+/*		this->m_FixedMaskImageReader = 0;
+		this->m_MovingMaskImageReader = 0;
+		this->m_FixedMaskCaster = 0;
+		this->m_MovingMaskCaster = 0;*/
 
 	} // end Constructor
 
@@ -36,19 +36,19 @@ using namespace itk;
 		// \todo support masks
 		
 		/** Read fixed mask.*/
-/*		std::string fixedMaskFileName = m_Configuration->
+/*		std::string fixedMaskFileName = this->m_Configuration->
 			GetCommandLineArgument( "-fMask" );
 		if ( !( fixedMaskFileName.empty() ) )
 		{
-			m_FixedMaskImageReader	= FixedMaskImageReaderType::New();
-			m_FixedMaskCaster				= FixedMaskCastFilterType::New();
+			this->m_FixedMaskImageReader	= FixedMaskImageReaderType::New();
+			this->m_FixedMaskCaster				= FixedMaskCastFilterType::New();
 			
-			m_FixedMaskImageReader->SetFileName( fixedMaskFileName.c_str() );
-			m_FixedMaskCaster->SetInput( m_FixedMaskImageReader->GetOutput() );
+			this->m_FixedMaskImageReader->SetFileName( fixedMaskFileName.c_str() );
+			this->m_FixedMaskCaster->SetInput( this->m_FixedMaskImageReader->GetOutput() );
 			/** Do the casting.*
 			try
 			{
-				m_FixedMaskCaster->Update();
+				this->m_FixedMaskCaster->Update();
 			}
 			catch( itk::ExceptionObject & excp )
 			{
@@ -64,19 +64,19 @@ using namespace itk;
 		}  // end if ( fixed mask present )*/
 		
 		/** Read moving mask.*/
-/*		std::string movingMaskFileName = m_Configuration->
+/*		std::string movingMaskFileName = this->m_Configuration->
 			GetCommandLineArgument( "-mMask" );
 		if ( !( movingMaskFileName.empty() ) )
 		{
-			m_MovingMaskImageReader	= MovingMaskImageReaderType::New();
-			m_MovingMaskCaster			= MovingMaskCastFilterType::New();
+			this->m_MovingMaskImageReader	= MovingMaskImageReaderType::New();
+			this->m_MovingMaskCaster			= MovingMaskCastFilterType::New();
 			
-			m_MovingMaskImageReader->SetFileName( movingMaskFileName.c_str() );
-			m_MovingMaskCaster->SetInput( m_MovingMaskImageReader->GetOutput() );
+			this->m_MovingMaskImageReader->SetFileName( movingMaskFileName.c_str() );
+			this->m_MovingMaskCaster->SetInput( this->m_MovingMaskImageReader->GetOutput() );
 			/** Do the casting.*
 			try
 			{
-				m_MovingMaskCaster->Update();
+				this->m_MovingMaskCaster->Update();
 			}
 			catch( itk::ExceptionObject & excp )
 			{
@@ -112,7 +112,7 @@ using namespace itk;
 
 		/** Read the number of resolutions from the ParameterFile.*
 		unsigned int numberOfResolutions = 3;
-		m_Configuration->ReadParameter( numberOfResolutions, "NumberOfResolutions", 0 );
+		this->m_Configuration->ReadParameter( numberOfResolutions, "NumberOfResolutions", 0 );
 		
 		/** Erode and Set the fixed Mask if necessary *
 		if ( this->GetFixedMask() )
@@ -128,7 +128,7 @@ using namespace itk;
 		
 			this->SetFixedMask
 			(
-				( m_FixedMaskCaster->GetOutput() )->Erode
+				( this->m_FixedMaskCaster->GetOutput() )->Erode
 				( 
 					static_cast<unsigned long>
 					(
@@ -150,7 +150,7 @@ using namespace itk;
 			
 			this->SetMovingMask
 			(
-				( m_MovingMaskCaster->GetOutput() )->Erode
+				( this->m_MovingMaskCaster->GetOutput() )->Erode
 				( 
 					static_cast<unsigned long>
 					(

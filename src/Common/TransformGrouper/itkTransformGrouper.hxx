@@ -15,7 +15,7 @@ namespace itk
 		TransformGrouper<TAnyITKTransform>::TransformGrouper()
 	{
 		/** Initialize.*/
-		m_InitialTransform = 0;
+		this->m_InitialTransform = 0;
 				
 		/** Add the default groupers to the map.*/
 		this->AddGrouperToMap( "NoInitialTransform", &Self::NoInitialTransform );
@@ -47,8 +47,8 @@ namespace itk
 		SetCurrentGrouper( const GrouperDescriptionType & name )
 	{
 		/** Set the name and put it in GrouperMap.*/
-		m_NameOfCurrentGrouper = name;
-		m_Grouper = m_GrouperMap[ name ];
+		this->m_NameOfCurrentGrouper = name;
+		this->m_Grouper = this->m_GrouperMap[ name ];
 
 	} // end SetCurrentGrouper
 
@@ -62,7 +62,7 @@ namespace itk
 		TransformGrouper<TAnyITKTransform>::
 		TransformPoint0( const InputPointType  & point ) const
 	{
-		return m_InitialTransform->TransformPoint( point );
+		return this->m_InitialTransform->TransformPoint( point );
 
 	} // end TransformPoint0
 
@@ -150,14 +150,14 @@ namespace itk
 		::SetInitialTransform( ObjectType * _arg )
 	{
 		/** .*/
-		if ( m_InitialTransform != _arg )
+		if ( this->m_InitialTransform != _arg )
 		{
-			m_InitialTransform = dynamic_cast<InitialTransformType *>( _arg );
+			this->m_InitialTransform = dynamic_cast<InitialTransformType *>( _arg );
 			this->Modified();
 			if ( _arg )
 			{
 				/** if not zero, try to set the DesiredGrouper  */
-				this->SetGrouper( m_NameOfDesiredGrouper );
+				this->SetGrouper( this->m_NameOfDesiredGrouper );
 			}
 			else
 			{
@@ -180,7 +180,7 @@ namespace itk
 		SetGrouper( const GrouperDescriptionType & name )
 	{
 		/** .*/
-		if ( m_GrouperMap.count( name ) == 0 ) 
+		if ( this->m_GrouperMap.count( name ) == 0 ) 
 		{
 			std::cerr << "Error: " << std::endl;
 			std::cerr << name << " - This grouper is not installed!" << std::endl;
@@ -188,11 +188,11 @@ namespace itk
 		}
 		else
 		{
-			m_NameOfDesiredGrouper = name;
+			this->m_NameOfDesiredGrouper = name;
 
 			/** Set the Grouper to the desired grouper, but only if the Transform
 			* is non-zero, or if the desired grouper is "NoInitialTransform" */
-			if ( m_InitialTransform ) 
+			if ( this->m_InitialTransform ) 
 			{
 				this->SetCurrentGrouper( name );
 			}
@@ -216,7 +216,7 @@ namespace itk
 		TransformGrouper<TAnyITKTransform>::	
 		GetNameOfDesiredGrouper(void) const
 	{
-		return m_NameOfDesiredGrouper;
+		return this->m_NameOfDesiredGrouper;
 
 	} // end GetNameOfDesiredGrouper
 
@@ -230,7 +230,7 @@ namespace itk
 		TransformGrouper<TAnyITKTransform>::	
 		GetNameOfCurrentGrouper(void) const
 	{
-		return m_NameOfCurrentGrouper;
+		return this->m_NameOfCurrentGrouper;
 
 	} // end GetNameOfCurrentGrouper
 
@@ -245,8 +245,7 @@ namespace itk
 		int TransformGrouper<TAnyITKTransform>::	
 		AddGrouperToMap( const GrouperDescriptionType & name, PtrToGrouper funcptr )
 	{
-				
-		if ( m_GrouperMap.count( name ) ) //==1
+		if ( this->m_GrouperMap.count( name ) ) //==1
 		{
 			std::cerr << "Error: " << std::endl;
 			std::cerr << name << " - This grouper has already been installed!" << std::endl;
@@ -254,7 +253,7 @@ namespace itk
 		}
 		else
 		{
-			m_GrouperMap.insert(	MapEntryType( name,	funcptr	)	);
+			this->m_GrouperMap.insert(	MapEntryType( name,	funcptr	)	);
 			return 0;
 		}
 		

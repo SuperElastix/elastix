@@ -28,12 +28,12 @@ using namespace itk;
 		void MultiResolutionRegistration<TElastix>
 		::BeforeRegistration(void)
 	{	
-		/** Get the components from m_Elastix and set them.*/
+		/** Get the components from this->m_Elastix and set them.*/
 		this->SetComponents();
 
 		/** Set the number of resolutions.*/		
 		unsigned int numberOfResolutions = 3;
-		m_Configuration->ReadParameter( numberOfResolutions, "NumberOfResolutions", 0 );
+		this->m_Configuration->ReadParameter( numberOfResolutions, "NumberOfResolutions", 0 );
 		this->SetNumberOfLevels( numberOfResolutions );
 				
 		/** Set the FixedImageRegion.*/
@@ -71,38 +71,38 @@ using namespace itk;
 		void MultiResolutionRegistration<TElastix>
 		::SetComponents(void)
 	{	
-		/** Get the component from m_Elastix (as Object::Pointer),
+		/** Get the component from this->m_Elastix (as Object::Pointer),
 		 * cast it to the appropriate type and set it in 'this'.
 		 */
 		this->SetFixedImagePyramid(
 			dynamic_cast<FixedImagePyramidType *>(
-				m_Elastix->GetFixedImagePyramid() 	)
+				this->m_Elastix->GetFixedImagePyramid() 	)
 		);
 
 		this->SetInterpolator(
 			dynamic_cast<InterpolatorType *>(
-				m_Elastix->GetInterpolator()	)
+				this->m_Elastix->GetInterpolator()	)
 		);
 
 		this->SetMetric(
 			dynamic_cast<MetricType *>(
-				m_Elastix->GetMetric()	)
+				this->m_Elastix->GetMetric()	)
 		);
 
 		this->SetMovingImagePyramid(
 			dynamic_cast<MovingImagePyramidType *>(
-				m_Elastix->GetMovingImagePyramid()		)
+				this->m_Elastix->GetMovingImagePyramid()		)
 		);
 
 		this->SetOptimizer(
 			dynamic_cast<OptimizerType *>(
-				m_Elastix->GetOptimizer() 	)
+				this->m_Elastix->GetOptimizer() 	)
 		);
 
 
 		this->SetTransform(
 			dynamic_cast<TransformType *>(
-				m_Elastix->GetTransform() 	)
+				this->m_Elastix->GetTransform() 	)
 		);
 
 

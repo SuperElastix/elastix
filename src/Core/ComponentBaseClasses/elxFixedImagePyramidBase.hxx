@@ -36,7 +36,7 @@ namespace elastix
 
 		/** Read numberOfResolutions.*/
 		unsigned int numberOfResolutions = 0;
-		m_Configuration->ReadParameter( numberOfResolutions, "NumberOfResolutions", 0, true );
+		this->m_Configuration->ReadParameter( numberOfResolutions, "NumberOfResolutions", 0, true );
 		if ( numberOfResolutions == 0 )
 		{
 			xl::xout["error"] << "ERROR: NumberOfResolutions not specified!" << std::endl;
@@ -52,8 +52,8 @@ namespace elastix
 		 */
 		unsigned int temp_fix = 0;
 		unsigned int temp_mov = 0;
-		m_Configuration->ReadParameter( temp_fix, "FixedPyramidSchedule", 0, true );
-		m_Configuration->ReadParameter( temp_mov, "MovingPyramidSchedule", 0, true );
+		this->m_Configuration->ReadParameter( temp_fix, "FixedPyramidSchedule", 0, true );
+		this->m_Configuration->ReadParameter( temp_mov, "MovingPyramidSchedule", 0, true );
 
 		/** If the FixedPyramidSchedule exists:*/
 		if ( temp_fix != 0 )
@@ -65,7 +65,7 @@ namespace elastix
 			{
 				for ( unsigned int j = 0; j < FixedImageDimension; j++ )
 				{
-					m_Configuration->ReadParameter(
+					this->m_Configuration->ReadParameter(
 						fixedSchedule[ j ][ i ],
 						"FixedPyramidSchedule",
 						i * numberOfResolutions + j );
@@ -86,7 +86,7 @@ namespace elastix
 			{
 				for ( unsigned int j = 0; j < FixedImageDimension; j++ )
 				{
-					m_Configuration->ReadParameter(
+					this->m_Configuration->ReadParameter(
 						fixedSchedule[ j ][ i ],
 						"MovingPyramidSchedule",
 						i * numberOfResolutions + j );

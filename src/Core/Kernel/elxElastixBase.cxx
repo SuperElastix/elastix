@@ -13,11 +13,11 @@ namespace elastix
 	ElastixBase::ElastixBase()
 	{
 		/** Initialize.*/
-		m_Configuration = 0;
-		m_CDB= 0;
+		this->m_Configuration = 0;
+		this->m_CDB= 0;
 
 		/** The default output precision of elxout is set to 6 */
-		m_DefaultOutputPrecision = 6;
+		this->m_DefaultOutputPrecision = 6;
 
 	} // end Constructor
 
@@ -76,8 +76,8 @@ namespace elastix
 		int returndummy = 0;
 
 		/** Set the default precision of floating values in the output */
-		m_Configuration->ReadParameter(m_DefaultOutputPrecision, "DefaultOutputPrecision", 0, true);
-		elxout << std::setprecision(m_DefaultOutputPrecision);
+		this->m_Configuration->ReadParameter(this->m_DefaultOutputPrecision, "DefaultOutputPrecision", 0, true);
+		elxout << std::setprecision(this->m_DefaultOutputPrecision);
 
 		/** Print to log file.*/
 		elxout << std::setprecision(3);
@@ -180,10 +180,10 @@ namespace elastix
 		using namespace xl;
 
 		/** Set up the "iteration" writing field.*/
-		m_IterationInfo.SetOutputs( xout.GetCOutputs() );
-		m_IterationInfo.SetOutputs( xout.GetXOutputs() );
+		this->m_IterationInfo.SetOutputs( xout.GetCOutputs() );
+		this->m_IterationInfo.SetOutputs( xout.GetXOutputs() );
 	  
-		xout.AddTargetCell( "iteration", &m_IterationInfo );
+		xout.AddTargetCell( "iteration", &this->m_IterationInfo );
 
 	} // end BeforeRegistrationBase
 

@@ -64,7 +64,7 @@ using namespace itk;
 
 		/** Read deformationFieldImage-name from parameter-file. */
 		std::string fileName = "";
-		m_Configuration->ReadParameter( fileName,
+		this->m_Configuration->ReadParameter( fileName,
 			"DeformationFieldFileName", 0 );
 
 		/** Read deformationFieldImage from file. */
@@ -98,7 +98,7 @@ using namespace itk;
 		
 		/** Get the InitialTransformName. */
 		fileName = "";
-		m_Configuration->ReadParameter( fileName,
+		this->m_Configuration->ReadParameter( fileName,
 			"InitialTransformParametersFileName", 0 );
 		
 		/** Call the function ReadInitialTransformFromFile.*/
@@ -111,7 +111,7 @@ using namespace itk;
 		 * initial transform with the current transform.
 		 */
 		std::string howToCombineTransforms = "Add"; // default
-		m_Configuration->ReadParameter( howToCombineTransforms, "HowToCombineTransforms", 0, true );
+		this->m_Configuration->ReadParameter( howToCombineTransforms, "HowToCombineTransforms", 0, true );
 		
 		/** Convert 'this' to a pointer to a TransformGrouperInterface and set how
 		 * to combine the current transform with the initial transform */
@@ -158,9 +158,9 @@ using namespace itk;
 
 		/** Write the filename of the deformationField image. */
 		std::ostringstream makeFileName( "" );
-		makeFileName << m_Configuration->GetCommandLineArgument( "-out" )
+		makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
 			<< "TransformParametersDeformationFieldImage."
-			<< m_Configuration->GetElastixLevel()
+			<< this->m_Configuration->GetElastixLevel()
 			<< ".mhd";
 		xout["transpar"] << "(TransformParametersDeformationFieldImageFileName \""
 			<< makeFileName.str() << "\")" << std::endl;

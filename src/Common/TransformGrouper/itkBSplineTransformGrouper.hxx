@@ -21,7 +21,7 @@ namespace itk
 
 		this->AddGrouperToMap(
 			"InternalBSplineTransformAdder",
-			m_GrouperMap[ "NoInitialTransform" ] );
+			this->m_GrouperMap[ "NoInitialTransform" ] );
 					
 	} // end Constructor
 	

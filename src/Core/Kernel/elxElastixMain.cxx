@@ -99,35 +99,35 @@ namespace elastix
 	ElastixMain::ElastixMain()
 	{
 		/** Initialize the components.*/
-		m_Configuration = ConfigurationType::New();
+		this->m_Configuration = ConfigurationType::New();
 
-		m_Elastix = 0;
-		m_elx_Elastix = 0;
+		this->m_Elastix = 0;
+		this->m_elx_Elastix = 0;
 
-		m_FixedImagePixelType = "";
-		m_FixedImageDimension = 0;
+		this->m_FixedImagePixelType = "";
+		this->m_FixedImageDimension = 0;
 
-		m_MovingImagePixelType = "";
-		m_MovingImageDimension = 0;
+		this->m_MovingImagePixelType = "";
+		this->m_MovingImageDimension = 0;
 
-		m_DBIndex = 0;
+		this->m_DBIndex = 0;
 
-		m_FixedImage = 0;
-		m_MovingImage = 0;
-		m_FixedInternalImage = 0;
-		m_MovingInternalImage = 0;
+		this->m_FixedImage = 0;
+		this->m_MovingImage = 0;
+		this->m_FixedInternalImage = 0;
+		this->m_MovingInternalImage = 0;
 
-		m_Registration = 0;
-		m_FixedImagePyramid = 0;
-		m_MovingImagePyramid = 0;
-		m_Interpolator = 0;
-		m_Metric = 0;
-		m_Optimizer = 0;
-		m_Resampler = 0;
-		m_ResampleInterpolator = 0;
-		m_Transform = 0;
+		this->m_Registration = 0;
+		this->m_FixedImagePyramid = 0;
+		this->m_MovingImagePyramid = 0;
+		this->m_Interpolator = 0;
+		this->m_Metric = 0;
+		this->m_Optimizer = 0;
+		this->m_Resampler = 0;
+		this->m_ResampleInterpolator = 0;
+		this->m_Transform = 0;
 
-		m_InitialTransform = 0;
+		this->m_InitialTransform = 0;
 
 	} // end Constructor
 
@@ -158,7 +158,7 @@ namespace elastix
 		/** Initialize the configuration object with the 
 		 * command line parameters entered by the user.
 		 */		
-		int dummy = m_Configuration->Initialize( argmap );
+		int dummy = this->m_Configuration->Initialize( argmap );
 		if (dummy)
 		{
 			xout["error"] << "ERROR: Something went wrong during initialisation of the configuration object." << std::endl;
@@ -178,7 +178,7 @@ namespace elastix
 	{
 		/** If wanted, set the priority of this process high.*/
 		std::string processPriority = "";
-		processPriority = m_Configuration->GetCommandLineArgument( "-priority" );
+		processPriority = this->m_Configuration->GetCommandLineArgument( "-priority" );
 		if ( processPriority == "high" )
 		{
 			#ifdef _WIN32
@@ -195,87 +195,87 @@ namespace elastix
 
 		/** Get the different components.*/
 		ComponentDescriptionType RegistrationName = "MultiResolutionRegistration";
-		m_Configuration->ReadParameter( RegistrationName, "Registration", 0 );
+		this->m_Configuration->ReadParameter( RegistrationName, "Registration", 0 );
 		
 		ComponentDescriptionType FixedImagePyramidName = "FixedRecursiveImagePyramid";
-		m_Configuration->ReadParameter( FixedImagePyramidName, "FixedImagePyramid", 0 );
+		this->m_Configuration->ReadParameter( FixedImagePyramidName, "FixedImagePyramid", 0 );
 
 		ComponentDescriptionType MovingImagePyramidName = "MovingRecursiveImagePyramid";
-		m_Configuration->ReadParameter( MovingImagePyramidName, "MovingImagePyramid", 0 );
+		this->m_Configuration->ReadParameter( MovingImagePyramidName, "MovingImagePyramid", 0 );
 		
 		ComponentDescriptionType InterpolatorName = "BSplineInterpolator";
-		m_Configuration->ReadParameter( InterpolatorName, "Interpolator", 0 );
+		this->m_Configuration->ReadParameter( InterpolatorName, "Interpolator", 0 );
 
 		ComponentDescriptionType MetricName = "MattesMutualInformation";
-		m_Configuration->ReadParameter( MetricName, "Metric", 0 );
+		this->m_Configuration->ReadParameter( MetricName, "Metric", 0 );
 
 		ComponentDescriptionType OptimizerName = "RegularStepGradientDescent";
-		m_Configuration->ReadParameter( OptimizerName, "Optimizer", 0 );
+		this->m_Configuration->ReadParameter( OptimizerName, "Optimizer", 0 );
 		
 		ComponentDescriptionType ResampleInterpolatorName = "FinalBSplineInterpolator";
-		m_Configuration->ReadParameter( ResampleInterpolatorName, "ResampleInterpolator", 0 );
+		this->m_Configuration->ReadParameter( ResampleInterpolatorName, "ResampleInterpolator", 0 );
 
 		ComponentDescriptionType ResamplerName = "DefaultResampler";
-		m_Configuration->ReadParameter( ResamplerName, "Resampler", 0 );
+		this->m_Configuration->ReadParameter( ResamplerName, "Resampler", 0 );
 
 		ComponentDescriptionType TransformName = "BSplineTransform";
-		m_Configuration->ReadParameter( TransformName, "Transform", 0 );
+		this->m_Configuration->ReadParameter( TransformName, "Transform", 0 );
 
 		/** Create the components! */
 		PtrToCreator testcreator;
 
 		/** Key "Elastix", see elxComponentLoader::InstallSupportedImageTypes(). */
 		testcreator = 0;
-		testcreator = this->s_CDB->GetCreator( "Elastix", m_DBIndex );
-		m_Elastix	= testcreator ? testcreator() : NULL;
+		testcreator = this->s_CDB->GetCreator( "Elastix", this->m_DBIndex );
+		this->m_Elastix	= testcreator ? testcreator() : NULL;
 		
 		testcreator = 0;
-		testcreator = this->s_CDB->GetCreator( RegistrationName,	m_DBIndex );
-		m_Registration = testcreator ? testcreator() : NULL;
+		testcreator = this->s_CDB->GetCreator( RegistrationName,	this->m_DBIndex );
+		this->m_Registration = testcreator ? testcreator() : NULL;
 
 		testcreator = 0;
-		testcreator = this->s_CDB->GetCreator( FixedImagePyramidName, m_DBIndex );
-		m_FixedImagePyramid = testcreator ? testcreator() : NULL;
+		testcreator = this->s_CDB->GetCreator( FixedImagePyramidName, this->m_DBIndex );
+		this->m_FixedImagePyramid = testcreator ? testcreator() : NULL;
 
 		testcreator = 0;
-		testcreator = this->s_CDB->GetCreator( MovingImagePyramidName, m_DBIndex );
-		m_MovingImagePyramid = testcreator ? testcreator() : NULL;
+		testcreator = this->s_CDB->GetCreator( MovingImagePyramidName, this->m_DBIndex );
+		this->m_MovingImagePyramid = testcreator ? testcreator() : NULL;
 
 		testcreator = 0;
-		testcreator = this->s_CDB->GetCreator( InterpolatorName, m_DBIndex );
-		m_Interpolator = testcreator ? testcreator() : NULL;
+		testcreator = this->s_CDB->GetCreator( InterpolatorName, this->m_DBIndex );
+		this->m_Interpolator = testcreator ? testcreator() : NULL;
 
 		testcreator = 0;
-		testcreator = this->s_CDB->GetCreator( MetricName, m_DBIndex );
-		m_Metric = testcreator ? testcreator() : NULL;
+		testcreator = this->s_CDB->GetCreator( MetricName, this->m_DBIndex );
+		this->m_Metric = testcreator ? testcreator() : NULL;
 
 		testcreator = 0;
-		testcreator = this->s_CDB->GetCreator( OptimizerName, m_DBIndex );
-		m_Optimizer = testcreator ? testcreator() : NULL;
+		testcreator = this->s_CDB->GetCreator( OptimizerName, this->m_DBIndex );
+		this->m_Optimizer = testcreator ? testcreator() : NULL;
 
 		testcreator = 0;
-		testcreator = this->s_CDB->GetCreator( ResamplerName, m_DBIndex );
-		m_Resampler = testcreator ? testcreator() : NULL;
+		testcreator = this->s_CDB->GetCreator( ResamplerName, this->m_DBIndex );
+		this->m_Resampler = testcreator ? testcreator() : NULL;
 
 		testcreator = 0;
-		testcreator = this->s_CDB->GetCreator( ResampleInterpolatorName, m_DBIndex );
-		m_ResampleInterpolator	= testcreator ? testcreator() : NULL;
+		testcreator = this->s_CDB->GetCreator( ResampleInterpolatorName, this->m_DBIndex );
+		this->m_ResampleInterpolator	= testcreator ? testcreator() : NULL;
 
 		testcreator = 0;
-		testcreator = this->s_CDB->GetCreator( TransformName, m_DBIndex );
-		m_Transform = testcreator ? testcreator() : NULL;
+		testcreator = this->s_CDB->GetCreator( TransformName, this->m_DBIndex );
+		this->m_Transform = testcreator ? testcreator() : NULL;
 
 		/** Check if all component could be created.*/
-		if (	( m_Elastix == 0 ) |
-					( m_Registration == 0 ) |
-					( m_FixedImagePyramid == 0 ) |
-					( m_MovingImagePyramid == 0 ) |
-					( m_Interpolator == 0 ) |
-					( m_Metric == 0 ) |
-					( m_Optimizer == 0 ) |
-					( m_Resampler == 0 ) |
-					( m_ResampleInterpolator == 0 ) |
-					( m_Transform == 0 ) )
+		if (	( this->m_Elastix == 0 ) |
+					( this->m_Registration == 0 ) |
+					( this->m_FixedImagePyramid == 0 ) |
+					( this->m_MovingImagePyramid == 0 ) |
+					( this->m_Interpolator == 0 ) |
+					( this->m_Metric == 0 ) |
+					( this->m_Optimizer == 0 ) |
+					( this->m_Resampler == 0 ) |
+					( this->m_ResampleInterpolator == 0 ) |
+					( this->m_Transform == 0 ) )
 		{
 			xout["error"] << "ERROR:" << std::endl;
 			xout["error"] << "One or more components could not be created." << std::endl;
@@ -283,36 +283,36 @@ namespace elastix
 		}
 		
 		/** Convert ElastixAsObject to a pointer to an ElastixBaseType. */
-		m_elx_Elastix = dynamic_cast<ElastixBaseType *>( m_Elastix.GetPointer() );
+		this->m_elx_Elastix = dynamic_cast<ElastixBaseType *>( this->m_Elastix.GetPointer() );
 
 		/** Set all components in the ElastixBase (so actually in
 		* the appropriate ElastixTemplate) */
-		m_elx_Elastix->SetConfiguration( m_Configuration );
-		m_elx_Elastix->SetComponentDatabase(this->s_CDB);
+		this->m_elx_Elastix->SetConfiguration( this->m_Configuration );
+		this->m_elx_Elastix->SetComponentDatabase(this->s_CDB);
 
-		m_elx_Elastix->SetRegistration( m_Registration );
-		m_elx_Elastix->SetFixedImagePyramid( m_FixedImagePyramid );
-		m_elx_Elastix->SetMovingImagePyramid( m_MovingImagePyramid );
-		m_elx_Elastix->SetInterpolator( m_Interpolator );
-		m_elx_Elastix->SetMetric( m_Metric );
-		m_elx_Elastix->SetOptimizer( m_Optimizer );
-		m_elx_Elastix->SetResampler( m_Resampler );
-		m_elx_Elastix->SetResampleInterpolator( m_ResampleInterpolator );
-		m_elx_Elastix->SetTransform( m_Transform );
+		this->m_elx_Elastix->SetRegistration( this->m_Registration );
+		this->m_elx_Elastix->SetFixedImagePyramid( this->m_FixedImagePyramid );
+		this->m_elx_Elastix->SetMovingImagePyramid( this->m_MovingImagePyramid );
+		this->m_elx_Elastix->SetInterpolator( this->m_Interpolator );
+		this->m_elx_Elastix->SetMetric( this->m_Metric );
+		this->m_elx_Elastix->SetOptimizer( this->m_Optimizer );
+		this->m_elx_Elastix->SetResampler( this->m_Resampler );
+		this->m_elx_Elastix->SetResampleInterpolator( this->m_ResampleInterpolator );
+		this->m_elx_Elastix->SetTransform( this->m_Transform );
 
-		m_elx_Elastix->SetDBIndex( m_DBIndex );
+		this->m_elx_Elastix->SetDBIndex( this->m_DBIndex );
 
 		/** Set the images. If not set by the user, it is not a problem.
 		* ElastixTemplate!= will try to load them from disk.*/
-		m_elx_Elastix->SetFixedImage( m_FixedImage );
-		m_elx_Elastix->SetMovingImage( m_MovingImage );
-		m_elx_Elastix->SetFixedInternalImage( m_FixedInternalImage );
-		m_elx_Elastix->SetMovingInternalImage( m_MovingInternalImage );
+		this->m_elx_Elastix->SetFixedImage( this->m_FixedImage );
+		this->m_elx_Elastix->SetMovingImage( this->m_MovingImage );
+		this->m_elx_Elastix->SetFixedInternalImage( this->m_FixedInternalImage );
+		this->m_elx_Elastix->SetMovingInternalImage( this->m_MovingInternalImage );
 
-		m_elx_Elastix->SetInitialTransform( m_InitialTransform );
+		this->m_elx_Elastix->SetInitialTransform( this->m_InitialTransform );
 
 		/** Run elastix! */
-		try { ErrorCode = m_elx_Elastix->Run(); }
+		try { ErrorCode = this->m_elx_Elastix->Run(); }
 		catch( itk::ExceptionObject & excp )
 		{
 			/** We just print the exception and let the programm quit. */
@@ -321,10 +321,10 @@ namespace elastix
 		}
 
 		/** Store the images in ElastixMain	*/
-		this->SetFixedImage( m_elx_Elastix->GetFixedImage() );
-		this->SetMovingImage( m_elx_Elastix->GetMovingImage() );
-		this->SetFixedInternalImage( m_elx_Elastix->GetFixedInternalImage() );
-		this->SetMovingInternalImage( m_elx_Elastix->GetMovingInternalImage() );
+		this->SetFixedImage( this->m_elx_Elastix->GetFixedImage() );
+		this->SetMovingImage( this->m_elx_Elastix->GetMovingImage() );
+		this->SetFixedInternalImage( this->m_elx_Elastix->GetFixedInternalImage() );
+		this->SetMovingInternalImage( this->m_elx_Elastix->GetMovingInternalImage() );
 		
 		/** Set processPriority to normal again.*/
 		if ( processPriority == "high" )
@@ -364,15 +364,15 @@ namespace elastix
 	int ElastixMain::InitDBIndex(void)
 	{
 		/** .*/
-		if ( m_Configuration->Initialized() )
+		if ( this->m_Configuration->Initialized() )
 		{			
 			/** FixedImagePixelType */
-			if ( m_FixedImagePixelType.empty() )
+			if ( this->m_FixedImagePixelType.empty() )
 			{
 				/** Try to read it from the parameterfile. */
-				m_Configuration->ReadParameter( m_FixedImagePixelType,	"FixedImagePixelType", 0 );
+				this->m_Configuration->ReadParameter( this->m_FixedImagePixelType,	"FixedImagePixelType", 0 );
 				
-				if ( m_FixedImagePixelType.empty() ) // not found in parameterfile
+				if ( this->m_FixedImagePixelType.empty() ) // not found in parameterfile
 				{
 					xout["error"] << "ERROR:" << std::endl;
 					xout["error"] << "The FixedImagePixelType is not given." << std::endl;
@@ -381,12 +381,12 @@ namespace elastix
 			}
 
 			/** MovingImagePixelType */
-			if ( m_MovingImagePixelType.empty() )
+			if ( this->m_MovingImagePixelType.empty() )
 			{
 				/** Try to read it from the parameterfile. */
-				m_Configuration->ReadParameter( m_MovingImagePixelType, "MovingImagePixelType", 0 );
+				this->m_Configuration->ReadParameter( this->m_MovingImagePixelType, "MovingImagePixelType", 0 );
 
-				if ( m_MovingImagePixelType.empty() )
+				if ( this->m_MovingImagePixelType.empty() )
 				{
 					xout["error"] << "ERROR:" << std::endl;
 					xout["error"] << "The MovingImagePixelType is not given." << std::endl;
@@ -395,12 +395,12 @@ namespace elastix
 			}
 
 			/** FixedImageDimension */
-			if ( m_FixedImageDimension == 0 )
+			if ( this->m_FixedImageDimension == 0 )
 			{
 				/** Try to read it from the parameterfile. */
-				m_Configuration->ReadParameter( m_FixedImageDimension, "FixedImageDimension", 0 );
+				this->m_Configuration->ReadParameter( this->m_FixedImageDimension, "FixedImageDimension", 0 );
 
-				if ( m_FixedImageDimension == 0 )
+				if ( this->m_FixedImageDimension == 0 )
 				{
 					xout["error"] << "ERROR:" << std::endl;
 					xout["error"] << "The FixedImageDimension is not given." << std::endl;
@@ -409,12 +409,12 @@ namespace elastix
 			}
 
 			/** MovingImageDimension */
-			if ( m_MovingImageDimension == 0 )
+			if ( this->m_MovingImageDimension == 0 )
 			{
 				/** Try to read it from the parameterfile. */
-				m_Configuration->ReadParameter( m_MovingImageDimension, "MovingImageDimension", 0 );
+				this->m_Configuration->ReadParameter( this->m_MovingImageDimension, "MovingImageDimension", 0 );
 
-				if ( m_MovingImageDimension == 0 )
+				if ( this->m_MovingImageDimension == 0 )
 				{
 					xout["error"] << "ERROR:" << std::endl;
 					xout["error"] << "The MovingImageDimension is not given." << std::endl;
@@ -436,12 +436,12 @@ namespace elastix
 			if (this->s_CDB!=0)
 			{
 				/** Get the DBIndex from the ComponentDatabase */
-				m_DBIndex = this->s_CDB->GetIndex(
-					m_FixedImagePixelType,
-					m_FixedImageDimension,			
-					m_MovingImagePixelType,
-					m_MovingImageDimension );
-				if ( m_DBIndex == 0 )
+				this->m_DBIndex = this->s_CDB->GetIndex(
+					this->m_FixedImagePixelType,
+					this->m_FixedImageDimension,			
+					this->m_MovingImagePixelType,
+					this->m_MovingImageDimension );
+				if ( this->m_DBIndex == 0 )
 				{
 					xout["error"] << "ERROR:" << std::endl;
 					xout["error"] << "Something went wrong in the ComponentDatabase" << std::endl;
@@ -470,7 +470,7 @@ namespace elastix
 	void ElastixMain::SetElastixLevel( unsigned int level )
 	{
 		/** Call SetElastixLevel from MyConfiguration.*/
-		m_Configuration->SetElastixLevel( level );
+		this->m_Configuration->SetElastixLevel( level );
 
 	} // end SetElastixLevel
 
@@ -482,7 +482,7 @@ namespace elastix
 	unsigned int ElastixMain::GetElastixLevel(void)
 	{
 		/** Call GetElastixLevel from MyConfiguration.*/
-		return m_Configuration->GetElastixLevel();
+		return this->m_Configuration->GetElastixLevel();
 
 	} // end GetElastixLevel
 
@@ -507,7 +507,7 @@ namespace elastix
 		}
 
 
-		const char * argv0 = m_Configuration->GetCommandLineArgument("-argv0");
+		const char * argv0 = this->m_Configuration->GetCommandLineArgument("-argv0");
 
 		return this->s_ComponentLoader->LoadComponents(argv0);
 		

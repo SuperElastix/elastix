@@ -16,9 +16,9 @@ namespace elastix
 	BaseComponentSE<TElastix>::BaseComponentSE()
 	{
 		/** Initialize.*/
-		m_Elastix = 0;
-		m_Configuration = 0;
-		m_Registration = 0;
+		this->m_Elastix = 0;
+		this->m_Configuration = 0;
+		this->m_Registration = 0;
 
 	}
 
@@ -30,13 +30,13 @@ namespace elastix
 	template <class TElastix>
 	void BaseComponentSE<TElastix>::SetElastix( TElastix * _arg )
 	{
-		/** If m_Elastix is not set, then set it.*/
+		/** If this->m_Elastix is not set, then set it.*/
 		if ( this->m_Elastix != _arg )
 		{
 			this->m_Elastix = _arg;
 
-			m_Configuration = m_Elastix->GetConfiguration();
-			m_Registration = dynamic_cast<RegistrationPointer>( m_Elastix->GetRegistration() );
+			this->m_Configuration = this->m_Elastix->GetConfiguration();
+			this->m_Registration = dynamic_cast<RegistrationPointer>( this->m_Elastix->GetRegistration() );
 
 			Object * thisasobject = dynamic_cast<Object *>(this);
 			if ( thisasobject )
@@ -57,7 +57,7 @@ namespace elastix
 	template <class TElastix>
 	void BaseComponentSE<TElastix>::SetConfiguration( ConfigurationType * _arg )
 	{
-		/** If m_Elastix is not set, then set it.*/
+		/** If this->m_Elastix is not set, then set it.*/
 		if ( this->m_Configuration != _arg )
 		{
 			this->m_Configuration = _arg;

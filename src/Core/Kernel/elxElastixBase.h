@@ -88,7 +88,7 @@ namespace elastix
 		{
 			if ( this->m_CDB != arg )
 			{
-				m_CDB = arg;
+				this->m_CDB = arg;
 			}
 		}
 
@@ -152,7 +152,7 @@ namespace elastix
 		 */
 		virtual int GetDefaultOutputPrecision(void)
 		{
-			return m_DefaultOutputPrecision;
+			return this->m_DefaultOutputPrecision;
 		}
 		
 		

@@ -40,11 +40,11 @@ namespace itk
 		::VectorMeanDiffusionImageFilter()
 	{
 		/** Initialise things for the filter. */
-		m_NumberOfIterations = 0;
-		m_Radius.Fill(1);
-		m_RescaleFilter = 0;
-		m_GrayValueImage = 0;
-		m_Cx = 0;
+		this->m_NumberOfIterations = 0;
+		this->m_Radius.Fill(1);
+		this->m_RescaleFilter = 0;
+		this->m_GrayValueImage = 0;
+		this->m_Cx = 0;
 
 	} // end Constructor
 	
@@ -77,7 +77,7 @@ namespace itk
 		inputRequestedRegion = inputPtr->GetRequestedRegion();
 		
 		// pad the input requested region by the operator radius
-		inputRequestedRegion.PadByRadius( m_Radius );
+		inputRequestedRegion.PadByRadius( this->m_Radius );
 		
 		// crop the input requested region at the input's largest possible region
 		if ( inputRequestedRegion.Crop(inputPtr->GetLargestPossibleRegion()) )
@@ -160,13 +160,13 @@ namespace itk
 
 		/** Setup neighborhood iterator for the output deformation image. */
 		nit = NeighborhoodIterator< InputImageType >( 
-			m_Radius, output, output->GetLargestPossibleRegion() );
+			this->m_Radius, output, output->GetLargestPossibleRegion() );
 		unsigned int neighborhoodSize = nit.Size();
 		nit.OverrideBoundaryCondition( &nbc );
 
 		/** Setup neighborhood iterator for the "stiffness coefficient" image. */
 		nit2 = NeighborhoodIterator< DoubleImageType >( 
-			m_Radius, m_Cx, m_Cx->GetLargestPossibleRegion() );
+			this->m_Radius, this->m_Cx, this->m_Cx->GetLargestPossibleRegion() );
 		nit2.OverrideBoundaryCondition( &nbc2 );
 
 		/** Setup iterator over outputtmp. */
@@ -197,7 +197,7 @@ namespace itk
 				double sumc = 0.0;
 				
 				/** Calculate the weighted mean over the neighborhood.
-				 * mean = SUM_i{ ci * x_i } / SUM_i{ ci }
+				 * mean = SUthis->m_i{ ci * x_i } / SUthis->m_i{ ci }
 				 */
 				for ( i = 0; i < neighborhoodSize; ++i )
 				{
@@ -207,7 +207,7 @@ namespace itk
 					/** Get ci-value on current index. */
 					ci = nit2.GetPixel( i );
 
-					/** Calculate SUM_i{ ci } and SUM_i{ ci * x_i }. */
+					/** Calculate SUthis->m_i{ ci } and SUthis->m_i{ ci * x_i }. */
 					sumc += ci;
 					for ( j = 0; j < InputImageDimension; j++ )
 					{
@@ -280,7 +280,7 @@ namespace itk
 		::PrintSelf( std::ostream& os, Indent indent) const
 	{
 		Superclass::PrintSelf( os, indent );
-		os << indent << "Radius: " << m_Radius << std::endl;
+		os << indent << "Radius: " << this->m_Radius << std::endl;
 		
 	} // end PrintSelf
 
@@ -316,26 +316,26 @@ namespace itk
 		::FilterGrayValueImage(void)
 	{
 		/** This functions rescales the intensities of the input
-		 * m_GrayValueImage between 0 and 1, and converts it to
+		 * this->m_GrayValueImage between 0 and 1, and converts it to
 		 * a double image. No thresholding is performed.
 		 */
 
-		/** Create m_Cx. */
-		m_Cx = DoubleImageType::New();
+		/** Create this->m_Cx. */
+		this->m_Cx = DoubleImageType::New();
 		
-		/** Rescale intensity of m_GrayValueImage to values between
+		/** Rescale intensity of this->m_GrayValueImage to values between
 		* 0.0 and 1.0.
 		*/
-		m_RescaleFilter = RescaleImageFilterType::New();
-		m_RescaleFilter->SetOutputMinimum( 0.0 );
-		m_RescaleFilter->SetOutputMaximum( 1.0 );
-		m_RescaleFilter->SetInput( m_GrayValueImage );
+		this->m_RescaleFilter = RescaleImageFilterType::New();
+		this->m_RescaleFilter->SetOutputMinimum( 0.0 );
+		this->m_RescaleFilter->SetOutputMaximum( 1.0 );
+		this->m_RescaleFilter->SetInput( this->m_GrayValueImage );
 		
-		/** First set m_Cx = rescaleFilter->GetOutput(). */
-		m_Cx = m_RescaleFilter->GetOutput();
+		/** First set this->m_Cx = rescaleFilter->GetOutput(). */
+		this->m_Cx = this->m_RescaleFilter->GetOutput();
 		try
 		{
-			m_Cx->Update();
+			this->m_Cx->Update();
 		}
 		catch( itk::ExceptionObject & excp )
 		{
@@ -352,7 +352,7 @@ namespace itk
 		 * smaller than 0.00001 to 0.00001 and everything larger
 		 * than 0.99999 to 0.99999.
 		 */
-		ImageRegionIterator< DoubleImageType > it( m_Cx, m_Cx->GetLargestPossibleRegion() );
+		ImageRegionIterator< DoubleImageType > it( this->m_Cx, this->m_Cx->GetLargestPossibleRegion() );
 		it.GoToBegin();
 		while ( !it.IsAtEnd() )
 		{

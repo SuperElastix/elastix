@@ -17,11 +17,11 @@ using namespace itk;
 		::MattesMutualInformationMetric()
 	{
 		/** Initialize.*/
-		m_FixedMaskImageReader = 0;
-		m_MovingMaskImageReader = 0;
+		this->m_FixedMaskImageReader = 0;
+		this->m_MovingMaskImageReader = 0;
 
-		m_NewSamplesEveryIteration = false;
-		m_ShowExactMetricValue = false;
+		this->m_NewSamplesEveryIteration = false;
+		this->m_ShowExactMetricValue = false;
 
 	} // end Constructor
 
@@ -42,7 +42,7 @@ using namespace itk;
 		std::string check = "";
 
 		/** Check for appearance of "-fMask".*/
-		check = m_Configuration->GetCommandLineArgument( "-fMask" );
+		check = this->m_Configuration->GetCommandLineArgument( "-fMask" );
 		if ( check == "" )
 		{
 			elxout << "-fMask\t\tunspecified, so no fixed mask used" << std::endl;
@@ -54,7 +54,7 @@ using namespace itk;
 
 		/** Check for appearance of "-mMask".*/
 		check = "";
-		check = m_Configuration->GetCommandLineArgument( "-mMask" );
+		check = this->m_Configuration->GetCommandLineArgument( "-mMask" );
 		if ( check == "" )
 		{
 			elxout << "-mMask\t\tunspecified, so no moving mask used" << std::endl;
@@ -99,17 +99,17 @@ using namespace itk;
 		/** Read masks if necessary.*/
 		
 		/** Read fixed mask.*/
-		std::string fixedMaskFileName = m_Configuration->
+		std::string fixedMaskFileName = this->m_Configuration->
 			GetCommandLineArgument( "-fMask" );
 		if ( !( fixedMaskFileName.empty() ) )
 		{
-			m_FixedMaskImageReader	= FixedMaskImageReaderType::New();
-			m_FixedMaskImageReader->SetFileName( fixedMaskFileName.c_str() );
+			this->m_FixedMaskImageReader	= FixedMaskImageReaderType::New();
+			this->m_FixedMaskImageReader->SetFileName( fixedMaskFileName.c_str() );
 
 			/** Do the reading. */
 			try
 			{
-				m_FixedMaskImageReader->Update();
+				this->m_FixedMaskImageReader->Update();
 			}
 			catch( itk::ExceptionObject & excp )
 			{
@@ -122,22 +122,22 @@ using namespace itk;
 				throw excp;
 			}
 			/** Set the fixedmask.*/
-			this->SetFixedMask( m_FixedMaskImageReader->GetOutput() );
+			this->SetFixedMask( this->m_FixedMaskImageReader->GetOutput() );
 
 		} // end if ( fixed mask present )
 		
 		/** Read moving mask. */
-		std::string movingMaskFileName = m_Configuration->
+		std::string movingMaskFileName = this->m_Configuration->
 			GetCommandLineArgument( "-mMask" );
 		if ( !( movingMaskFileName.empty() ) )
 		{
-			m_MovingMaskImageReader	= MovingMaskImageReaderType::New();
-			m_MovingMaskImageReader->SetFileName( movingMaskFileName.c_str() );
+			this->m_MovingMaskImageReader	= MovingMaskImageReaderType::New();
+			this->m_MovingMaskImageReader->SetFileName( movingMaskFileName.c_str() );
 
 			/** Do the reading. */
 			try
 			{
-				m_MovingMaskImageReader->Update();
+				this->m_MovingMaskImageReader->Update();
 			}
 			catch( itk::ExceptionObject & excp )
 			{
@@ -150,7 +150,7 @@ using namespace itk;
 				throw excp;
 			}
 			/** Set the movingmask. */
-			this->SetMovingMask( m_MovingMaskImageReader->GetOutput() );
+			this->SetMovingMask( this->m_MovingMaskImageReader->GetOutput() );
 
 		} // end if ( moving mask present )
 	
@@ -173,7 +173,7 @@ using namespace itk;
 
 		/** Get the current resolution level.*/
 		unsigned int level = 
-			( m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 		
 		/** Set the number of histogram bins and spatial samples.*/				
 		unsigned int numberOfHistogramBins = 32;
@@ -183,8 +183,8 @@ using namespace itk;
 		 */
 		
 		/** Read the parameters from the ParameterFile.*/
-		m_Configuration->ReadParameter( numberOfHistogramBins, "NumberOfHistogramBins", level );
-		m_Configuration->ReadParameter( numberOfSpatialSamples, "NumberOfSpatialSamples", level );
+		this->m_Configuration->ReadParameter( numberOfHistogramBins, "NumberOfHistogramBins", level );
+		this->m_Configuration->ReadParameter( numberOfSpatialSamples, "NumberOfSpatialSamples", level );
 		
 		/** Set them.*/
 		this->SetNumberOfHistogramBins( numberOfHistogramBins );
@@ -194,7 +194,7 @@ using namespace itk;
 
 		/** Read the number of resolutions from the ParameterFile.*/
 		unsigned int numberOfResolutions = 3;
-		m_Configuration->ReadParameter( numberOfResolutions, "NumberOfResolutions", 0 );
+		this->m_Configuration->ReadParameter( numberOfResolutions, "NumberOfResolutions", 0 );
 		
 		/** Erode and Set the fixed Mask if necessary */
 		if ( this->GetFixedMask() )
@@ -213,7 +213,7 @@ using namespace itk;
 				ceil( pow( 2.0, static_cast<int>(	numberOfResolutions - level - 1 ) ) ) + 1 );
 
 			/** Erode the mask.*/
-			this->SetFixedMask( (m_FixedMaskImageReader->GetOutput())->Erode( radius ) );
+			this->SetFixedMask( (this->m_FixedMaskImageReader->GetOutput())->Erode( radius ) );
 
 		} // end if fixedmask present
 
@@ -231,7 +231,7 @@ using namespace itk;
 				ceil( pow( 2.0, static_cast<int>(	numberOfResolutions - level ) ) ) + 1 );
 
 			/** Erode the mask.*/
-			this->SetMovingMask( (m_MovingMaskImageReader->GetOutput())->Erode( radius ) );
+			this->SetMovingMask( (this->m_MovingMaskImageReader->GetOutput())->Erode( radius ) );
 
 		} // end if movingmask present
 
@@ -265,13 +265,13 @@ using namespace itk;
 				ReadParameter(showExactMetricValue, "ShowExactMetricValue", level);
 			if (showExactMetricValue == "true")
 			{
-				m_ShowExactMetricValue = true;
+				this->m_ShowExactMetricValue = true;
 				xl::xout["iteration"].AddTargetCell("ExactMetric");
 				xl::xout["iteration"]["ExactMetric"] << std::showpoint << std::fixed;
 			}
 			else
 			{
-				m_ShowExactMetricValue = false;
+				this->m_ShowExactMetricValue = false;
 			}
 
 			/** Check if after every iteration a new sample set should be created */
@@ -280,11 +280,11 @@ using namespace itk;
 				ReadParameter(newSamplesEveryIteration, "NewSamplesEveryIteration", level);
 			if (newSamplesEveryIteration == "true")
 			{	
-				m_NewSamplesEveryIteration = true;
+				this->m_NewSamplesEveryIteration = true;
 			}
 			else
 			{
-				m_NewSamplesEveryIteration = false;
+				this->m_NewSamplesEveryIteration = false;
 			}
 			
 			/** Check if the "smart sample strategy" should be used */
@@ -304,10 +304,10 @@ using namespace itk;
 		else	
 		{
 			/** The exact metric value is shown anyway */
-			m_ShowExactMetricValue = false;
+			this->m_ShowExactMetricValue = false;
 
 			/** And new samples every iteration is not appropriate either */
-			m_NewSamplesEveryIteration = false;
+			this->m_NewSamplesEveryIteration = false;
 		}
 		
 	} // end BeforeEachResolution
@@ -324,7 +324,7 @@ using namespace itk;
 	{		
 		/** Show the mutual information computed on all voxels,
 		 * if the user wanted it */
-		if (m_ShowExactMetricValue)
+		if (this->m_ShowExactMetricValue)
 		{
 			xl::xout["iteration"]["ExactMetric"] << this->GetExactValue(
 				this->GetElastix()->
@@ -333,7 +333,7 @@ using namespace itk;
 		}
 
 		/** Create a new sample set if the user wanted it  */
-		if (m_NewSamplesEveryIteration)
+		if (this->m_NewSamplesEveryIteration)
 		{
 			this->SampleFixedImageDomain();
 		}

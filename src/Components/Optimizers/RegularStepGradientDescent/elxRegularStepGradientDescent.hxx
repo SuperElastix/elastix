@@ -54,28 +54,28 @@ using namespace itk;
 	{
 		/** Get the current resolution level.*/
 		unsigned int level = static_cast<unsigned int>(
-			m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
+			this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
 		
 		/** Set the Gradient Magnitude Stopping Criterion.*/
 		double minGradientMagnitude = 1e-8;
-		m_Configuration->ReadParameter( minGradientMagnitude, "MinimumGradientMagnitude", level );
+		this->m_Configuration->ReadParameter( minGradientMagnitude, "MinimumGradientMagnitude", level );
 		this->SetGradientMagnitudeTolerance( minGradientMagnitude );
 
 		/** Set the MaximumStepLength.*/
 		double maxStepLength = 16.0 / pow( 2.0, static_cast<int>( level ) );
-		m_Configuration->ReadParameter( maxStepLength, "MaximumStepLength", level );
+		this->m_Configuration->ReadParameter( maxStepLength, "MaximumStepLength", level );
 		this->SetMaximumStepLength( maxStepLength );
 
 		/** Set the MinimumStepLength.*/
 		double minStepLength = 0.5 / pow( 2.0, static_cast<int>( level ) );
-		m_Configuration->ReadParameter( minStepLength, "MinimumStepLength", level );
+		this->m_Configuration->ReadParameter( minStepLength, "MinimumStepLength", level );
 		this->SetMinimumStepLength( minStepLength );
 
 		/** \todo max and min steplength should maybe depend on the imagespacing or on something else... */
 		
 		/** Set the maximumNumberOfIterations.*/
 		unsigned int maximumNumberOfIterations = 100;
-		m_Configuration->ReadParameter( maximumNumberOfIterations , "MaximumNumberOfIterations", level );
+		this->m_Configuration->ReadParameter( maximumNumberOfIterations , "MaximumNumberOfIterations", level );
 		this->SetNumberOfIterations( maximumNumberOfIterations );
 
 		/** \todo put in SPoptimizer:

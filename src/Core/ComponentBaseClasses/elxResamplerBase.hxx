@@ -16,8 +16,8 @@ namespace elastix
 		ResamplerBase<TElastix>::ResamplerBase()
 	{
 		/** Create caster and writer.*/
-		m_Caster	=	CasterType::New();
-		m_Writer	= WriterType::New();
+		this->m_Caster	=	CasterType::New();
+		this->m_Writer	= WriterType::New();
 
 	} // end Constructor
 
@@ -37,7 +37,7 @@ namespace elastix
 		
 		/** Get a pointer to the fixedImage.*/
 		OutputImageType * fixedImage = dynamic_cast<OutputImageType *>(
-			m_Elastix->GetFixedImage() );
+			this->m_Elastix->GetFixedImage() );
 		
 		/** Set the region info to the same values as in the fixedImage.*/
 		this->GetAsITKBaseType()->SetSize( fixedImage->GetLargestPossibleRegion().GetSize() );
@@ -49,7 +49,7 @@ namespace elastix
 		 * that come from outside the original (moving) image.
 		 */
 		PixelType defaultPixelValue = NumericTraits<PixelType>::Zero;
-		m_Configuration->ReadParameter( defaultPixelValue, "DefaultPixelValue", 0 );
+		this->m_Configuration->ReadParameter( defaultPixelValue, "DefaultPixelValue", 0 );
 		
 		/** Set the defaultPixelValue in the Superclass.*/
 		this->GetAsITKBaseType()->SetDefaultPixelValue( defaultPixelValue );
@@ -74,24 +74,24 @@ namespace elastix
 		elxout << std::endl << "Applying final transform ..." << std::endl;
 		
 		this->GetElastix()->GetElxTransformBase()->GetAsITKBaseType()->SetParameters(
-			m_Registration->GetAsITKBaseType()->GetLastTransformParameters() );
+			this->m_Registration->GetAsITKBaseType()->GetLastTransformParameters() );
 		
-		m_Caster->SetInput( this->GetAsITKBaseType()->GetOutput() );
-		m_Writer->SetInput( m_Caster->GetOutput() );
+		this->m_Caster->SetInput( this->GetAsITKBaseType()->GetOutput() );
+		this->m_Writer->SetInput( this->m_Caster->GetOutput() );
 		
 		/** Create a name for the final result.*/
 		
 		std::ostringstream makeFileName( "" );
-		makeFileName << m_Configuration->GetCommandLineArgument( "-out" )
-			<< "result." << m_Configuration->GetElastixLevel() << ".mhd";
+		makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
+			<< "result." << this->m_Configuration->GetElastixLevel() << ".mhd";
 		
 		/** Set the filename.*/
-		m_Writer->SetFileName( makeFileName.str().c_str() );
+		this->m_Writer->SetFileName( makeFileName.str().c_str() );
 
 		/** Do the writing.*/
 		try
 		{
-			m_Writer->Update();
+			this->m_Writer->Update();
 		}
 		catch( itk::ExceptionObject & excp )
 		{
@@ -119,13 +119,13 @@ namespace elastix
 		 * (which is the moving image).
 		 */
 		this->GetAsITKBaseType()->SetTransform(		dynamic_cast<TransformType *>(
-			m_Elastix->GetTransform() ) );
+			this->m_Elastix->GetTransform() ) );
 		
 		this->GetAsITKBaseType()->SetInterpolator(		dynamic_cast<InterpolatorType *>(
-			m_Elastix->GetResampleInterpolator() ) );
+			this->m_Elastix->GetResampleInterpolator() ) );
 		
 		this->GetAsITKBaseType()->SetInput( dynamic_cast<InputImageType *>(
-			m_Elastix->GetMovingImage() ) );
+			this->m_Elastix->GetMovingImage() ) );
 		
 		/** \todo dit zou bijvoorbeeld ook een gridplaatje kunnen zijn. */
 		
@@ -151,19 +151,19 @@ namespace elastix
 		for ( unsigned int i = 0; i < ImageDimension; i++ )
 		{
 			/** No default size. Read size from the parameter file. */
-			m_Configuration->ReadParameter(	size[ i ], "Size", i );
+			this->m_Configuration->ReadParameter(	size[ i ], "Size", i );
 
 			/** Default index. Read index from the parameter file. */
 			index[ i ] = 0;
-			m_Configuration->ReadParameter(	index[ i ], "Index", i );
+			this->m_Configuration->ReadParameter(	index[ i ], "Index", i );
 
 			/** Default spacing. Read spacing from the parameter file. */
 			spacing[ i ] = 1.0;
-			m_Configuration->ReadParameter(	spacing[ i ], "Spacing", i );
+			this->m_Configuration->ReadParameter(	spacing[ i ], "Spacing", i );
 
 			/** Default origin. Read origin from the parameter file. */
 			origin[ i ] = 0.0;
-			m_Configuration->ReadParameter(	origin[ i ], "Origin", i );
+			this->m_Configuration->ReadParameter(	origin[ i ], "Origin", i );
 		}
 
 		/** Check for image size.*/
@@ -188,7 +188,7 @@ namespace elastix
 		 * that come from outside the original (moving) image.
 		 */
 		int defaultPixelValue = 0;
-		m_Configuration->ReadParameter( defaultPixelValue, "DefaultPixelValue", 0 );
+		this->m_Configuration->ReadParameter( defaultPixelValue, "DefaultPixelValue", 0 );
 		
 		/** Set the defaultPixelValue in the Superclass*/
 		this->GetAsITKBaseType()->SetDefaultPixelValue( defaultPixelValue );

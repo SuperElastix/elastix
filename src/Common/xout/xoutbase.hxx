@@ -16,7 +16,7 @@ namespace xoutlibrary
 	template< class charT, class traits >
 		xoutbase<charT, traits>::xoutbase()
 	{
-		m_Call = false;
+		this->m_Call = false;
 
 	} // end Constructor
 
@@ -58,15 +58,15 @@ namespace xoutlibrary
 		void xoutbase<charT, traits>::WriteBufferedData(void)
 	{
 		/** Update the target c-streams. */
-		for ( CStreamMapIteratorType cit = m_CTargetCells.begin();
-			cit != m_CTargetCells.end(); ++cit )
+		for ( CStreamMapIteratorType cit = this->m_CTargetCells.begin();
+			cit != this->m_CTargetCells.end(); ++cit )
 		{
 			*(cit->second) << flush;
 		}
 			
 		/** WriteBufferedData of the target xout-objects. */
-		for ( XStreamMapIteratorType xit = m_XTargetCells.begin();
-				xit != m_XTargetCells.end(); ++xit )
+		for ( XStreamMapIteratorType xit = this->m_XTargetCells.begin();
+				xit != this->m_XTargetCells.end(); ++xit )
 		{
 			(*(xit->second)).WriteBufferedData();
 		}
@@ -84,16 +84,16 @@ namespace xoutlibrary
 	{
 		int returndummy = 1;
 
-		if ( m_XTargetCells.count( name ) )
+		if ( this->m_XTargetCells.count( name ) )
 		{
 			/** an X-cell with the same name already exists */
 			returndummy = 2;
 		}
 		else
 		{
-			if ( m_CTargetCells.count( name ) == 0 )
+			if ( this->m_CTargetCells.count( name ) == 0 )
 			{
-				m_CTargetCells.insert( CStreamMapEntryType( name, cell ) );
+				this->m_CTargetCells.insert( CStreamMapEntryType( name, cell ) );
 				returndummy = 0;
 			}
 		}
@@ -113,16 +113,16 @@ namespace xoutlibrary
 	{
 		int returndummy = 1;
 
-		if ( m_CTargetCells.count( name ) )
+		if ( this->m_CTargetCells.count( name ) )
 		{ 
 		 	/** a C-cell with the same name already exists */
 			returndummy = 2;
 		}
 		else
 		{
-			if ( m_XTargetCells.count( name ) == 0 )
+			if ( this->m_XTargetCells.count( name ) == 0 )
 			{
-				m_XTargetCells.insert( XStreamMapEntryType( name, cell ) );
+				this->m_XTargetCells.insert( XStreamMapEntryType( name, cell ) );
 				returndummy = 0;
 			}
 		}
@@ -142,15 +142,15 @@ namespace xoutlibrary
 	{
 		int returndummy = 1;
 
-		if ( m_XTargetCells.count( name ) )
+		if ( this->m_XTargetCells.count( name ) )
 		{
-			m_XTargetCells.erase( name );
+			this->m_XTargetCells.erase( name );
 			returndummy = 0;
 		}
 		
-		if ( m_CTargetCells.count( name ) )
+		if ( this->m_CTargetCells.count( name ) )
 		{
-			m_CTargetCells.erase( name );
+			this->m_CTargetCells.erase( name );
 			returndummy = 0;
 		}
 		
@@ -167,7 +167,7 @@ namespace xoutlibrary
 		void xoutbase<charT, traits>::
 		SetTargetCells( const CStreamMapType & cellmap )
 	{		
-		m_CTargetCells = cellmap;
+		this->m_CTargetCells = cellmap;
 
 	} // end SetTargetCells
 
@@ -179,7 +179,7 @@ namespace xoutlibrary
 		void xoutbase<charT, traits>::
 		SetTargetCells( const XStreamMapType & cellmap )
 	{		
-		m_XTargetCells = cellmap;
+		this->m_XTargetCells = cellmap;
 
 	} // end SetTargetCells
 
@@ -194,15 +194,15 @@ namespace xoutlibrary
 	{
 		int returndummy = 1;
 
-		if ( m_XOutputs.count( name ) )
+		if ( this->m_XOutputs.count( name ) )
 		{ 
 			returndummy = 2;
 		}
 		else
 		{
-			if ( m_COutputs.count( name ) == 0 )
+			if ( this->m_COutputs.count( name ) == 0 )
 			{
-				m_COutputs.insert( CStreamMapEntryType( name, output ) );
+				this->m_COutputs.insert( CStreamMapEntryType( name, output ) );
 				returndummy = 0;
 			}
 		}
@@ -222,15 +222,15 @@ namespace xoutlibrary
 	{
 		int returndummy = 1;
 
-		if ( m_COutputs.count( name ) )
+		if ( this->m_COutputs.count( name ) )
 		{ 
 			returndummy = 2;
 		}
 		else
 		{
-			if ( m_XOutputs.count( name ) == 0 )
+			if ( this->m_XOutputs.count( name ) == 0 )
 			{
-				m_XOutputs.insert( XStreamMapEntryType( name, output ) );
+				this->m_XOutputs.insert( XStreamMapEntryType( name, output ) );
 				returndummy = 0;
 			}
 		}
@@ -250,15 +250,15 @@ namespace xoutlibrary
 	{
 		int returndummy = 1;
 
-		if ( m_XOutputs.count( name ) )
+		if ( this->m_XOutputs.count( name ) )
 		{
-			m_XOutputs.erase( name );
+			this->m_XOutputs.erase( name );
 			returndummy = 0;
 		}
 		
-		if ( m_COutputs.count( name ) )
+		if ( this->m_COutputs.count( name ) )
 		{
-			m_COutputs.erase( name );
+			this->m_COutputs.erase( name );
 			returndummy = 0;
 		}
 		
@@ -275,7 +275,7 @@ namespace xoutlibrary
 		void xoutbase<charT, traits>::
 		SetOutputs( const CStreamMapType & outputmap )
 	{		
-		m_COutputs = outputmap;
+		this->m_COutputs = outputmap;
 
 	} // end SetOutputs
 
@@ -288,7 +288,7 @@ namespace xoutlibrary
 		void xoutbase<charT, traits>::
 		SetOutputs( const XStreamMapType & outputmap )
 	{		
-		m_XOutputs = outputmap;
+		this->m_XOutputs = outputmap;
 
 	} // end SetOutputs
 
@@ -303,9 +303,9 @@ namespace xoutlibrary
 		xoutbase<charT, traits> &
 		xoutbase<charT, traits>::SelectXCell( const char * name )
 	{		
-		if ( m_XTargetCells.count( name ) )
+		if ( this->m_XTargetCells.count( name ) )
 		{
-			return *( m_XTargetCells[ name ] );
+			return *( this->m_XTargetCells[ name ] );
 		}
 		else
 		{
@@ -323,7 +323,7 @@ namespace xoutlibrary
 		const typename xoutbase<charT, traits>::XStreamMapType &
 		xoutbase<charT, traits>::GetXOutputs(void)
 	{		
-		return m_XOutputs;
+		return this->m_XOutputs;
 
 	} // end GetOutputs
 
@@ -336,7 +336,7 @@ namespace xoutlibrary
 		const typename xoutbase<charT, traits>::CStreamMapType &
 		xoutbase<charT, traits>::GetCOutputs(void)
 	{		
-		return m_COutputs;
+		return this->m_COutputs;
 
 	} // end GetOutputs
 

@@ -38,8 +38,8 @@ namespace elastix
 			j += SpaceDimension + 1;
 		}
 
-		/** And give it to m_Registration.*/
-		m_Registration->GetAsITKBaseType()
+		/** And give it to this->m_Registration.*/
+		this->m_Registration->GetAsITKBaseType()
 			->SetInitialTransformParameters( dummyInitialParameters );
 		
 		/** Task 2 - Set center of rotation.*/
@@ -73,14 +73,14 @@ namespace elastix
 		ScalesType newscales( this->GetNumberOfParameters() );
 		newscales.Fill(1.0);
 		double scaler = 100000.0;
-		m_Configuration->ReadParameter( scaler, "Scaler", 0 );
+		this->m_Configuration->ReadParameter( scaler, "Scaler", 0 );
 		for ( unsigned int i = 0; i < SpaceDimension * SpaceDimension; i++ )
 		{
 			newscales[ i ] *= scaler;
 		}
 
 		/** And give it to the optimizer.*/
-		m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newscales );
+		this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newscales );
 		
 	} // end BeforeRegistration
 	
@@ -100,7 +100,7 @@ namespace elastix
 		 */
 		
 		/** Get fixed Image size.*/
-		SizeType fixedSize = m_Registration->GetAsITKBaseType()->
+		SizeType fixedSize = this->m_Registration->GetAsITKBaseType()->
 			GetFixedImage()->GetLargestPossibleRegion().GetSize();
 		
 		/** Fill CenterOfRotationIndices,
@@ -111,7 +111,7 @@ namespace elastix
 		for ( unsigned int i = 0; i < SpaceDimension; i++ )
 		{
 			CenterOfRotationIndices[ i ] = static_cast<IndexValueType>( fixedSize[ i ] / 2 );
-			m_Configuration->ReadParameter( CenterOfRotationIndices[ i ], "CenterOfRotation", i, true );
+			this->m_Configuration->ReadParameter( CenterOfRotationIndices[ i ], "CenterOfRotation", i, true );
 			/** Check if CenterOfRotation has index-values within image.*/
 			if ( CenterOfRotationIndices[ i ] < 0 || CenterOfRotationIndices[ i ] > fixedSize[ i ] )
 			{
@@ -126,7 +126,7 @@ namespace elastix
 		}
 		
 		/** Convert from index-value to physical-point-value.*/
-		m_Registration->GetAsITKBaseType()->GetFixedImage()->
+		this->m_Registration->GetAsITKBaseType()->GetFixedImage()->
 			TransformIndexToPhysicalPoint( CenterOfRotationIndices, rotationPoint );
 
 	} // end CalculateRotationPoint
@@ -145,7 +145,7 @@ namespace elastix
 		for ( unsigned int i = 0; i < SpaceDimension; i++ )
 		{
 			rotationIndex[ i ] = 0;
-			m_Configuration->ReadParameter( rotationIndex[ i ], "CenterOfRotation", i, true );		
+			this->m_Configuration->ReadParameter( rotationIndex[ i ], "CenterOfRotation", i, true );		
 		}
 		
 		/** Get spacing, origin and size of the fixed image.
@@ -159,19 +159,19 @@ namespace elastix
 		for ( unsigned int i = 0; i < SpaceDimension; i++ )
 		{
 			/** No default size. Read size from the parameter file. */
-			m_Configuration->ReadParameter(	size[ i ], "Size", i );
+			this->m_Configuration->ReadParameter(	size[ i ], "Size", i );
 
 			/** Default index. Read index from the parameter file. */
 			index[ i ] = 0;
-			m_Configuration->ReadParameter(	index[ i ], "Index", i );
+			this->m_Configuration->ReadParameter(	index[ i ], "Index", i );
 
 			/** Default spacing. Read spacing from the parameter file. */
 			spacing[ i ] = 1.0;
-			m_Configuration->ReadParameter(	spacing[ i ], "Spacing", i );
+			this->m_Configuration->ReadParameter(	spacing[ i ], "Spacing", i );
 
 			/** Default origin. Read origin from the parameter file. */
 			origin[ i ] = 0.0;
-			m_Configuration->ReadParameter(	origin[ i ], "Origin", i );
+			this->m_Configuration->ReadParameter(	origin[ i ], "Origin", i );
 		}
 
 		/** Check for image size. */
@@ -197,14 +197,14 @@ namespace elastix
 		dummyImage->SetOrigin( origin );
 		dummyImage->SetSpacing( spacing );
 
-		/** region.SetIndex( (dynamic_cast< typename ElastixType::ResamplerBaseType *>( m_Elastix->GetResampler() ))
+		/** region.SetIndex( (dynamic_cast< typename ElastixType::ResamplerBaseType *>( this->m_Elastix->GetResampler() ))
 			->GetAsITKBaseType()->GetOutputStartIndex() );
-		region.SetSize( (dynamic_cast< typename ElastixType::ResamplerBaseType *>( m_Elastix->GetResampler() ))
+		region.SetSize( (dynamic_cast< typename ElastixType::ResamplerBaseType *>( this->m_Elastix->GetResampler() ))
 			->GetAsITKBaseType()->GetSize() );
 		dummyImage->SetRegions( region );
-		dummyImage->SetOrigin( (dynamic_cast< typename ElastixType::ResamplerBaseType *>( m_Elastix->GetResampler() ))
+		dummyImage->SetOrigin( (dynamic_cast< typename ElastixType::ResamplerBaseType *>( this->m_Elastix->GetResampler() ))
 			->GetAsITKBaseType()->GetOutputOrigin() );
-		dummyImage->SetSpacing( (dynamic_cast< typename ElastixType::ResamplerBaseType *>( m_Elastix->GetResampler() ))
+		dummyImage->SetSpacing( (dynamic_cast< typename ElastixType::ResamplerBaseType *>( this->m_Elastix->GetResampler() ))
 			->GetAsITKBaseType()->GetOutputSpacing() );*/
 				
 		/** Convert center of rotation from index-value to physical-point-value.*/
@@ -242,7 +242,7 @@ namespace elastix
 		 */
 		IndexType rotationIndex;
 		InputPointType rotationPoint = this->GetCenterOfRotationComponent();
-		m_Registration->GetAsITKBaseType()->GetFixedImage()->
+		this->m_Registration->GetAsITKBaseType()->GetFixedImage()->
 			TransformPhysicalPointToIndex( rotationPoint, rotationIndex );
 
 		/** Write the center of rotation.*/

@@ -27,11 +27,11 @@ namespace elastix
 		void TranslationTransformElastix<TElastix>
 		::BeforeRegistration(void)
 	{
-		/** Give initial parameters to m_Registration.*/
+		/** Give initial parameters to this->m_Registration.*/
 		ParametersType dummyInitialParameters( this->GetNumberOfParameters() );
 		dummyInitialParameters.Fill(0.0);
 		
-		m_Registration->GetAsITKBaseType()->
+		this->m_Registration->GetAsITKBaseType()->
 			SetInitialTransformParameters( dummyInitialParameters );
 		
 	} // end BeforeRegistration

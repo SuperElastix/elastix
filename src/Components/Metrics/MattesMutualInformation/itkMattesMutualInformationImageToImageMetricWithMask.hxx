@@ -53,17 +53,17 @@ namespace itk
 		::MattesMutualInformationImageToImageMetricWithMask()
 	{
 		/** Initialize.*/
-		m_NumberOfSpatialSamples = 500;
-		m_NumberOfHistogramBins = 50;
+		this->m_NumberOfSpatialSamples = 500;
+		this->m_NumberOfHistogramBins = 50;
 		
-		m_ComputeGradient = false; // don't use the default gradient for now
+		this->m_ComputeGradient = false; // don't use the default gradient for now
 		
-		m_InterpolatorIsBSpline = false;
-		m_TransformIsBSpline    = false;
+		this->m_InterpolatorIsBSpline = false;
+		this->m_TransformIsBSpline    = false;
 		
 		// Initialize PDFs to NULL
-		m_JointPDF = NULL;
-		m_JointPDFDerivatives = NULL;
+		this->m_JointPDF = NULL;
+		this->m_JointPDFDerivatives = NULL;
 		
 		typename BSplineTransformType::Pointer transformer = BSplineTransformType::New();
 		this->SetTransform (transformer);
@@ -72,32 +72,32 @@ namespace itk
 		this->SetInterpolator (interpolator);
 		
 		// Initialize memory
-		m_MovingImageNormalizedMin = 0.0;
-		m_FixedImageNormalizedMin = 0.0;
-		m_MovingImageTrueMin = 0.0;
-		m_MovingImageTrueMax = 0.0;
-		m_FixedImageBinSize = 0.0;
-		m_MovingImageBinSize = 0.0;
-		m_CubicBSplineDerivativeKernel = NULL;
-		m_BSplineInterpolator = NULL;
-		m_DerivativeCalculator = NULL;
-		m_NumParametersPerDim = 0;
-		m_NumBSplineWeights = 0;
-		m_BSplineTransform = NULL;
-		m_NumberOfParameters = 0;
+		this->m_MovingImageNormalizedMin = 0.0;
+		this->m_FixedImageNormalizedMin = 0.0;
+		this->m_MovingImageTrueMin = 0.0;
+		this->m_MovingImageTrueMax = 0.0;
+		this->m_FixedImageBinSize = 0.0;
+		this->m_MovingImageBinSize = 0.0;
+		this->m_CubicBSplineDerivativeKernel = NULL;
+		this->m_BSplineInterpolator = NULL;
+		this->m_DerivativeCalculator = NULL;
+		this->m_NumParametersPerDim = 0;
+		this->m_NumBSplineWeights = 0;
+		this->m_BSplineTransform = NULL;
+		this->m_NumberOfParameters = 0;
 		
 		//Added by Stefan for support of US images:
-		m_FixedMask = NULL;
-		m_MovingMask = NULL;
+		this->m_FixedMask = NULL;
+		this->m_MovingMask = NULL;
 		
-		m_UseExactDerivative = false;
+		this->m_UseExactDerivative = false;
 
 		/** Set the SmartSampleSelect to false by default, because it's just
 		 * an experiment still. 
 		 */
-		m_SmartSampleSelect = false;
-		m_NrOfPixelsInFixedMask = 0;
-		m_DRandomHelp = 0.0;
+		this->m_SmartSampleSelect = false;
+		this->m_NrOfPixelsInFixedMask = 0;
+		this->m_DRandomHelp = 0.0;
 		
 		
 
@@ -120,29 +120,29 @@ namespace itk
 		Superclass::PrintSelf(os, indent);
 		
 		os << indent << "NumberOfSpatialSamples: ";
-		os << m_NumberOfSpatialSamples << std::endl;
+		os << this->m_NumberOfSpatialSamples << std::endl;
 		os << indent << "NumberOfHistogramBins: ";
-		os << m_NumberOfHistogramBins << std::endl;
+		os << this->m_NumberOfHistogramBins << std::endl;
 		
 		// Debugging information
 		os << indent << "NumberOfParameters: ";
-		os << m_NumberOfParameters << std::endl;
+		os << this->m_NumberOfParameters << std::endl;
 		os << indent << "FixedImageNormalizedMin: ";
-		os << m_FixedImageNormalizedMin << std::endl;
+		os << this->m_FixedImageNormalizedMin << std::endl;
 		os << indent << "MovingImageNormalizedMin: ";
-		os << m_MovingImageNormalizedMin << std::endl;
+		os << this->m_MovingImageNormalizedMin << std::endl;
 		os << indent << "MovingImageTrueMin: ";
-		os << m_MovingImageTrueMin << std::endl;
+		os << this->m_MovingImageTrueMin << std::endl;
 		os << indent << "MovingImageTrueMax: ";
-		os << m_MovingImageTrueMax << std::endl;
+		os << this->m_MovingImageTrueMax << std::endl;
 		os << indent << "FixedImageBinSize: "; 
-		os << m_FixedImageBinSize << std::endl;
+		os << this->m_FixedImageBinSize << std::endl;
 		os << indent << "MovingImageBinSize: ";
-		os << m_MovingImageBinSize << std::endl;
+		os << this->m_MovingImageBinSize << std::endl;
 		os << indent << "InterpolatorIsBSpline: ";
-		os << m_InterpolatorIsBSpline << std::endl;
+		os << this->m_InterpolatorIsBSpline << std::endl;
 		os << indent << "TransformIsBSpline: ";
-		os << m_TransformIsBSpline << std::endl;
+		os << this->m_TransformIsBSpline << std::endl;
 		
 	} // end PrintSelf
 	
@@ -160,7 +160,7 @@ namespace itk
 		this->Superclass::Initialize();
 		
 		/** Cache the number of transformation parameters.*/
-		m_NumberOfParameters = m_Transform->GetNumberOfParameters();
+		this->m_NumberOfParameters = this->m_Transform->GetNumberOfParameters();
 		
 		/**
 		 * Compute the minimum and maximum for the FixedImage over
@@ -174,7 +174,7 @@ namespace itk
 		
 		typedef ImageRegionConstIterator<FixedImageType> FixedIteratorType;
 		FixedIteratorType fixedImageIterator( 
-			m_FixedImage, this->GetFixedImageRegion() );
+			this->m_FixedImage, this->GetFixedImageRegion() );
 		
 		for ( fixedImageIterator.GoToBegin(); 
 		!fixedImageIterator.IsAtEnd(); ++fixedImageIterator )
@@ -202,7 +202,7 @@ namespace itk
 		
 		typedef ImageRegionConstIterator<MovingImageType> MovingIteratorType;
 		MovingIteratorType movingImageIterator(
-			m_MovingImage, m_MovingImage->GetBufferedRegion() );
+			this->m_MovingImage, this->m_MovingImage->GetBufferedRegion() );
 		
 		for ( movingImageIterator.GoToBegin(); 
 		!movingImageIterator.IsAtEnd(); ++movingImageIterator)
@@ -220,8 +220,8 @@ namespace itk
       }
     }
 		
-		m_MovingImageTrueMin = movingImageMin;
-		m_MovingImageTrueMax = movingImageMax;
+		this->m_MovingImageTrueMin = movingImageMin;
+		this->m_MovingImageTrueMax = movingImageMax;
 		
 		itkDebugMacro( " FixedImageMin: " << fixedImageMin << 
 			" FixedImageMax: " << fixedImageMax << std::endl );
@@ -246,40 +246,40 @@ namespace itk
 		 */
 		const int padding = 2;  // this will pad by 2 bins
 		
-		m_FixedImageBinSize = ( fixedImageMax - fixedImageMin ) /
-			static_cast<double>( m_NumberOfHistogramBins - 2 * padding );
-		m_FixedImageNormalizedMin = fixedImageMin / m_FixedImageBinSize - 
+		this->m_FixedImageBinSize = ( fixedImageMax - fixedImageMin ) /
+			static_cast<double>( this->m_NumberOfHistogramBins - 2 * padding );
+		this->m_FixedImageNormalizedMin = fixedImageMin / this->m_FixedImageBinSize - 
 			static_cast<double>( padding );
 		
-		m_MovingImageBinSize = ( movingImageMax - movingImageMin ) /
-			static_cast<double>( m_NumberOfHistogramBins - 2 * padding );
-		m_MovingImageNormalizedMin = movingImageMin / m_MovingImageBinSize -
+		this->m_MovingImageBinSize = ( movingImageMax - movingImageMin ) /
+			static_cast<double>( this->m_NumberOfHistogramBins - 2 * padding );
+		this->m_MovingImageNormalizedMin = movingImageMin / this->m_MovingImageBinSize -
 			static_cast<double>( padding );
 		
 		
-		itkDebugMacro( "FixedImageNormalizedMin: " << m_FixedImageNormalizedMin );
-		itkDebugMacro( "MovingImageNormalizedMin: " << m_MovingImageNormalizedMin );
-		itkDebugMacro( "FixedImageBinSize: " << m_FixedImageBinSize );
-		itkDebugMacro( "MovingImageBinSize; " << m_MovingImageBinSize );
+		itkDebugMacro( "FixedImageNormalizedMin: " << this->m_FixedImageNormalizedMin );
+		itkDebugMacro( "MovingImageNormalizedMin: " << this->m_MovingImageNormalizedMin );
+		itkDebugMacro( "FixedImageBinSize: " << this->m_FixedImageBinSize );
+		itkDebugMacro( "MovingImageBinSize; " << this->m_MovingImageBinSize );
 		
 		/**
 		* Allocate memory for the fixed image sample container.
 		*/
-		m_FixedImageSamples.resize( m_NumberOfSpatialSamples);
+		this->m_FixedImageSamples.resize( this->m_NumberOfSpatialSamples);
 		
 		/** Initialize the image that stores all samples that are selected */
-		m_NrOfPixelsInFixedMask = 0;
-		//m_NrOfJumpsInFixedMask = 0;
+		this->m_NrOfPixelsInFixedMask = 0;
+		//this->m_NrOfJumpsInFixedMask = 0;
 		
 		
 		if (this->m_SmartSampleSelect)
 		{
     
-			if (m_FixedMask)
+			if (this->m_FixedMask)
 			{
 				typedef ImageRegionConstIteratorWithIndex<FixedImageType> FixedIteratorWithIndexType;
 				FixedIteratorWithIndexType fixedImageIteratorWithIndex( 
-					m_FixedImage, this->GetFixedImageRegion() );
+					this->m_FixedImage, this->GetFixedImageRegion() );
 		
 				for ( fixedImageIteratorWithIndex.GoToBegin(); 
 				!fixedImageIteratorWithIndex.IsAtEnd(); ++fixedImageIteratorWithIndex )
@@ -289,36 +289,36 @@ namespace itk
 					FixedImagePointType point;
 					 
 					// Translate index to point
-					m_FixedImage->TransformIndexToPhysicalPoint( index, point );
+					this->m_FixedImage->TransformIndexToPhysicalPoint( index, point );
 					 
-					if  ( m_FixedMask->IsInMask(point) )
+					if  ( this->m_FixedMask->IsInMask(point) )
 					{
-						++m_NrOfPixelsInFixedMask;
+						++this->m_NrOfPixelsInFixedMask;
 					}
 	
 				} //for
 
-			} //if m_FixedMask
+			} //if this->m_FixedMask
 			else // no mask, so all pixels can be used:
 			{
-				m_NrOfPixelsInFixedMask = 
-					m_FixedImage->GetLargestPossibleRegion().GetNumberOfPixels();
+				this->m_NrOfPixelsInFixedMask = 
+					this->m_FixedImage->GetLargestPossibleRegion().GetNumberOfPixels();
 			}
-		} //if m_SmartSampleSelect
+		} //if this->m_SmartSampleSelect
 		
 		/**
 		* Allocate memory for the marginal PDF and initialize values
 		* to zero. The marginal PDFs are stored as std::vector.
 		*/
-		m_FixedImageMarginalPDF.resize( m_NumberOfHistogramBins, 0.0 );
-		m_MovingImageMarginalPDF.resize( m_NumberOfHistogramBins, 0.0 );
+		this->m_FixedImageMarginalPDF.resize( this->m_NumberOfHistogramBins, 0.0 );
+		this->m_MovingImageMarginalPDF.resize( this->m_NumberOfHistogramBins, 0.0 );
 		
 		/**
 		* Allocate memory for the joint PDF and joint PDF derivatives.
 		* The joint PDF and joint PDF derivatives are store as itk::Image.
 		*/
-		m_JointPDF = JointPDFType::New();
-		m_JointPDFDerivatives = JointPDFDerivativesType::New();
+		this->m_JointPDF = JointPDFType::New();
+		this->m_JointPDFDerivatives = JointPDFDerivativesType::New();
 		
 		// Instantiate a region, index, size
 		JointPDFRegionType            jointPDFRegion;
@@ -330,45 +330,45 @@ namespace itk
 		JointPDFDerivativesSizeType    jointPDFDerivativesSize;
 		
 		// For the joint PDF define a region starting from {0,0} 
-		// with size {m_NumberOfHistogramBins, m_NumberOfHistogramBins}
+		// with size {this->m_NumberOfHistogramBins, this->m_NumberOfHistogramBins}
 		jointPDFIndex.Fill( 0 ); 
-		jointPDFSize.Fill( m_NumberOfHistogramBins ); 
+		jointPDFSize.Fill( this->m_NumberOfHistogramBins ); 
 		
 		jointPDFRegion.SetIndex( jointPDFIndex );
 		jointPDFRegion.SetSize( jointPDFSize );
 		
 		// Set the regions and allocate
-		m_JointPDF->SetRegions( jointPDFRegion );
-		m_JointPDF->Allocate();
+		this->m_JointPDF->SetRegions( jointPDFRegion );
+		this->m_JointPDF->Allocate();
 		
 		// For the derivatives of the joint PDF define a region starting from {0,0,0} 
-		// with size {m_NumberOfHistogramBins, 
-		// m_NumberOfHistogramBins, m_NumberOfParameters}
+		// with size {this->m_NumberOfHistogramBins, 
+		// this->m_NumberOfHistogramBins, this->m_NumberOfParameters}
 		jointPDFDerivativesIndex.Fill( 0 ); 
-		jointPDFDerivativesSize[0] = m_NumberOfHistogramBins;
-		jointPDFDerivativesSize[1] = m_NumberOfHistogramBins;
-		jointPDFDerivativesSize[2] = m_NumberOfParameters;
+		jointPDFDerivativesSize[0] = this->m_NumberOfHistogramBins;
+		jointPDFDerivativesSize[1] = this->m_NumberOfHistogramBins;
+		jointPDFDerivativesSize[2] = this->m_NumberOfParameters;
 		
 		jointPDFDerivativesRegion.SetIndex( jointPDFDerivativesIndex );
 		jointPDFDerivativesRegion.SetSize( jointPDFDerivativesSize );
 		
 		// Set the regions and allocate
-		m_JointPDFDerivatives->SetRegions( jointPDFDerivativesRegion );
-		m_JointPDFDerivatives->Allocate();
+		this->m_JointPDFDerivatives->SetRegions( jointPDFDerivativesRegion );
+		this->m_JointPDFDerivatives->Allocate();
 		
 		
 		/**
 		* Setup the kernels used for the Parzen windows.
 		*/
-		m_CubicBSplineKernel = CubicBSplineFunctionType::New();
-		m_CubicBSplineDerivativeKernel = CubicBSplineDerivativeFunctionType::New();    
+		this->m_CubicBSplineKernel = CubicBSplineFunctionType::New();
+		this->m_CubicBSplineDerivativeKernel = CubicBSplineDerivativeFunctionType::New();    
 		
 		
 		/** 
 		* Uniformly sample the fixed image (within the fixed image region)
 		* to create the sample points list.
 		*/
-		this->SampleFixedImageDomain( m_FixedImageSamples );
+		this->SampleFixedImageDomain( this->m_FixedImageSamples );
 		
 		
 		/**
@@ -381,24 +381,24 @@ namespace itk
 		/** \todo Also add it the possibility of using the default gradient
 		 * provided by the superclass.
 		 */
-		m_InterpolatorIsBSpline = true;
+		this->m_InterpolatorIsBSpline = true;
 		
 		BSplineInterpolatorType * testPtr = dynamic_cast<BSplineInterpolatorType *>(
-			m_Interpolator.GetPointer() );
+			this->m_Interpolator.GetPointer() );
 		if ( !testPtr )
     {
-			m_InterpolatorIsBSpline = false;
+			this->m_InterpolatorIsBSpline = false;
 			
-			m_DerivativeCalculator = DerivativeFunctionType::New();
-			m_DerivativeCalculator->SetInputImage( m_MovingImage );
+			this->m_DerivativeCalculator = DerivativeFunctionType::New();
+			this->m_DerivativeCalculator->SetInputImage( this->m_MovingImage );
 			
-			m_BSplineInterpolator = NULL;
+			this->m_BSplineInterpolator = NULL;
 			itkDebugMacro( "Interpolator is not BSpline" );
     } 
 		else
     {
-			m_BSplineInterpolator = testPtr;
-			m_DerivativeCalculator = NULL;
+			this->m_BSplineInterpolator = testPtr;
+			this->m_DerivativeCalculator = NULL;
 			itkDebugMacro( "Interpolator is BSpline" );
     }
 		
@@ -408,28 +408,28 @@ namespace itk
 		* the parameters in the support region of a point.
 		*
 		*/
-		m_TransformIsBSpline = true;
+		this->m_TransformIsBSpline = true;
 		
 		BSplineTransformType * testPtr2 = dynamic_cast<BSplineTransformType *>(
-			m_Transform.GetPointer() );
+			this->m_Transform.GetPointer() );
 		if( !testPtr2 )
     {
-			m_TransformIsBSpline = false;
-			m_BSplineTransform = NULL;
+			this->m_TransformIsBSpline = false;
+			this->m_BSplineTransform = NULL;
 			itkDebugMacro( "Transform is not BSplineDeformable" );
     }
 		else
     {
-			m_BSplineTransform = testPtr2;
-			m_NumParametersPerDim = m_BSplineTransform->GetNumberOfParametersPerDimension();
-			m_NumBSplineWeights = m_BSplineTransform->GetNumberOfWeights();
+			this->m_BSplineTransform = testPtr2;
+			this->m_NumParametersPerDim = this->m_BSplineTransform->GetNumberOfParametersPerDimension();
+			this->m_NumBSplineWeights = this->m_BSplineTransform->GetNumberOfWeights();
 			itkDebugMacro( "Transform is BSplineDeformable" );
     }
 		
-		if ( m_TransformIsBSpline )
+		if ( this->m_TransformIsBSpline )
     {
-			m_BSplineTransformWeights = BSplineTransformWeightsType( m_NumBSplineWeights );
-			m_BSplineTransformIndices = BSplineTransformIndexArrayType( m_NumBSplineWeights );
+			this->m_BSplineTransformWeights = BSplineTransformWeightsType( this->m_NumBSplineWeights );
+			this->m_BSplineTransformIndices = BSplineTransformIndexArrayType( this->m_NumBSplineWeights );
     }
 		
 	} // end Initialize
@@ -446,7 +446,7 @@ namespace itk
 		 MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
 		 ::SampleFixedImageDomain( FixedImageSpatialSampleContainer& samples ) const
 	 {		 
-		if (m_SmartSampleSelect)
+		if (this->m_SmartSampleSelect)
 		{
 			this->SampleFixedImageDomainSmart(samples);
 			return;
@@ -462,16 +462,16 @@ namespace itk
 		 // indeed not so random...
 		 typedef ImageMoreRandomConstIteratorWithIndex<FixedImageType> RandomIterator;
 
-		 RandomIterator randIter( m_FixedImage, this->GetFixedImageRegion() );
+		 RandomIterator randIter( this->m_FixedImage, this->GetFixedImageRegion() );
 		 
 		 randIter.GoToBegin();
 		 
 		 typename FixedImageSpatialSampleContainer::iterator iter;
 		 typename FixedImageSpatialSampleContainer::const_iterator end=samples.end();
 		 
-		 if (!m_FixedMask)
+		 if (!(this->m_FixedMask))
 		 {
-			 randIter.SetNumberOfSamples( m_NumberOfSpatialSamples );
+			 randIter.SetNumberOfSamples( this->m_NumberOfSpatialSamples );
 			 
 			 for( iter=samples.begin(); iter != end; ++iter )
 			 {
@@ -480,7 +480,7 @@ namespace itk
 				 // Get sampled fixed image value
 				 (*iter).FixedImageValue = randIter.Get();
 				 // Translate index to point
-				 m_FixedImage->TransformIndexToPhysicalPoint( index,
+				 this->m_FixedImage->TransformIndexToPhysicalPoint( index,
 					 (*iter).FixedImagePointValue );
 				 // Jump to random position
 				 ++randIter;
@@ -488,7 +488,7 @@ namespace itk
 		 }
 		 else
 		 {
-			 randIter.SetNumberOfSamples( 50 * m_NumberOfSpatialSamples );
+			 randIter.SetNumberOfSamples( 50 * this->m_NumberOfSpatialSamples );
 			 
 			 for( iter=samples.begin(); iter != end; ++iter )
 			 {
@@ -502,10 +502,10 @@ namespace itk
 					 FixedImageIndexType index = randIter.GetIndex();
 					 
 					 // Translate index to point
-					 m_FixedImage->TransformIndexToPhysicalPoint( index,
+					 this->m_FixedImage->TransformIndexToPhysicalPoint( index,
 						 (*iter).FixedImagePointValue );
 					 
-				 } while ( !(m_FixedMask->IsInMask((*iter).FixedImagePointValue)) );
+				 } while ( !(this->m_FixedMask->IsInMask((*iter).FixedImagePointValue)) );
 				 
 				 // Get sampled fixed image value
 				 (*iter).FixedImageValue = randIter.Get();
@@ -532,23 +532,23 @@ namespace itk
 		 // Reset marginal pdf to all zeros.
 		 // Assumed the size has already been set to NumberOfHistogramBins
 		 // in Initialize().
-		 for ( unsigned int j = 0; j < m_NumberOfHistogramBins; j++ )
+		 for ( unsigned int j = 0; j < this->m_NumberOfHistogramBins; j++ )
 		 {
-			 m_FixedImageMarginalPDF[j]  = 0.0;
-			 m_MovingImageMarginalPDF[j] = 0.0;
+			 this->m_FixedImageMarginalPDF[j]  = 0.0;
+			 this->m_MovingImageMarginalPDF[j] = 0.0;
 		 }
 		 
 		 // Reset the joint pdfs to zero
-		 m_JointPDF->FillBuffer( 0.0 );
+		 this->m_JointPDF->FillBuffer( 0.0 );
 		 
 		 // Set up the parameters in the transform
-		 m_Transform->SetParameters( parameters );
+		 this->m_Transform->SetParameters( parameters );
 		 
 		 
 		 // Declare iterators for iteration over the sample container
 		 typename FixedImageSpatialSampleContainer::const_iterator fiter;
 		 typename FixedImageSpatialSampleContainer::const_iterator fend = 
-			 m_FixedImageSamples.end();
+			 this->m_FixedImageSamples.end();
 		 
 		 unsigned long nSamples=0;
 		 unsigned long nFixedImageSamples=0;
@@ -556,7 +556,7 @@ namespace itk
 		 // Declare variables for accessing the joint pdf
 		 JointPDFIndexType                jointPDFIndex;
 		 
-		 for ( fiter = m_FixedImageSamples.begin(); fiter != fend; ++fiter )
+		 for ( fiter = this->m_FixedImageSamples.begin(); fiter != fend; ++fiter )
 		 {			 
 			 ++nFixedImageSamples;
 			 
@@ -580,13 +580,13 @@ namespace itk
 				 
 				 // Determine parzen window arguments (see eqn 6 of Mattes paper [2]).    
 				 double movingImageParzenWindowTerm =
-					 movingImageValue / m_MovingImageBinSize - m_MovingImageNormalizedMin;
+					 movingImageValue / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
 				 unsigned int movingImageParzenWindowIndex = 
 					 static_cast<unsigned int>( floor( movingImageParzenWindowTerm ) );
 				 
 				 double fixedImageParzenWindowTerm = 
-					 static_cast<double>( (*fiter).FixedImageValue ) / m_FixedImageBinSize -
-					 m_FixedImageNormalizedMin;
+					 static_cast<double>( (*fiter).FixedImageValue ) / this->m_FixedImageBinSize -
+					 this->m_FixedImageNormalizedMin;
 				 unsigned int fixedImageParzenWindowIndex =
 					 static_cast<unsigned int>( floor( fixedImageParzenWindowTerm ) );
 				 
@@ -596,26 +596,26 @@ namespace itk
 				 {
 					 fixedImageParzenWindowIndex = 2;
 				 }
-				 else if ( fixedImageParzenWindowIndex > (m_NumberOfHistogramBins - 3) )
+				 else if ( fixedImageParzenWindowIndex > (this->m_NumberOfHistogramBins - 3) )
 				 {
-					 fixedImageParzenWindowIndex = m_NumberOfHistogramBins - 3;
+					 fixedImageParzenWindowIndex = this->m_NumberOfHistogramBins - 3;
 				 }
 				 
 				 if ( movingImageParzenWindowIndex < 2 )
 				 {
 					 movingImageParzenWindowIndex = 2;
 				 }
-				 else if ( movingImageParzenWindowIndex > (m_NumberOfHistogramBins - 3) )
+				 else if ( movingImageParzenWindowIndex > (this->m_NumberOfHistogramBins - 3) )
 				 {
-					 movingImageParzenWindowIndex = m_NumberOfHistogramBins - 3;
+					 movingImageParzenWindowIndex = this->m_NumberOfHistogramBins - 3;
 				 }
 				 
 				 
 				 // Since a zero-order BSpline (box car) kernel is used for
 				 // the fixed image marginal pdf, we need only increment the
 				 // fixedImageParzenWindowIndex by value of 1.0.
-				 m_FixedImageMarginalPDF[fixedImageParzenWindowIndex] =
-					 m_FixedImageMarginalPDF[fixedImageParzenWindowIndex] + 
+				 this->m_FixedImageMarginalPDF[fixedImageParzenWindowIndex] =
+					 this->m_FixedImageMarginalPDF[fixedImageParzenWindowIndex] + 
 					 static_cast<PDFValueType>( 1 );
 				 
 					 /**
@@ -643,9 +643,9 @@ namespace itk
 					 jointPDFIndex[1] = pdfMovingIndex;
 					 
 					 // Update PDF for the current intensity pair
-					 JointPDFValueType & pdfValue = m_JointPDF->GetPixel( jointPDFIndex );
+					 JointPDFValueType & pdfValue = this->m_JointPDF->GetPixel( jointPDFIndex );
 					 pdfValue += static_cast<PDFValueType>( 
-						 m_CubicBSplineKernel->Evaluate( movingImageParzenWindowArg ) );
+						 this->m_CubicBSplineKernel->Evaluate( movingImageParzenWindowArg ) );
 					 
 					 
 				 }  //end parzen windowing for loop
@@ -655,12 +655,12 @@ namespace itk
 		 } // end iterating over fixed image spatial sample container for loop
 		 
 		 itkDebugMacro( "Ratio of voxels mapping into moving image buffer: " 
-			 << nSamples << " / " << m_NumberOfSpatialSamples << std::endl );
+			 << nSamples << " / " << this->m_NumberOfSpatialSamples << std::endl );
 		 
-		 if( nSamples < m_NumberOfSpatialSamples / 4 )
+		 if( nSamples < this->m_NumberOfSpatialSamples / 4 )
 		 {
 			 itkExceptionMacro( "Too many samples map outside moving image buffer: "
-				 << nSamples << " / " << m_NumberOfSpatialSamples << std::endl );
+				 << nSamples << " / " << this->m_NumberOfSpatialSamples << std::endl );
 		 }		 
 		 
 		 /**
@@ -668,7 +668,7 @@ namespace itk
 		 *
 		 */
 		 typedef ImageRegionIterator<JointPDFType> JointPDFIteratorType;
-		 JointPDFIteratorType jointPDFIterator ( m_JointPDF, m_JointPDF->GetBufferedRegion() );
+		 JointPDFIteratorType jointPDFIterator ( this->m_JointPDF, this->m_JointPDF->GetBufferedRegion() );
 		 
 		 jointPDFIterator.GoToBegin();
 		 
@@ -699,9 +699,9 @@ namespace itk
 		 
 		 // Normalize the fixed image marginal PDF
 		 double fixedPDFSum = 0.0;
-		 for( unsigned int bin = 0; bin < m_NumberOfHistogramBins; bin++ )
+		 for( unsigned int bin = 0; bin < this->m_NumberOfHistogramBins; bin++ )
 		 {
-			 fixedPDFSum += m_FixedImageMarginalPDF[bin];
+			 fixedPDFSum += this->m_FixedImageMarginalPDF[bin];
 		 }
 		 
 		 if ( fixedPDFSum == 0.0 )
@@ -709,16 +709,16 @@ namespace itk
 			 itkExceptionMacro( "Fixed image marginal PDF summed to zero" );
 		 }
 		 
-		 for( unsigned int bin=0; bin < m_NumberOfHistogramBins; bin++ )
+		 for( unsigned int bin=0; bin < this->m_NumberOfHistogramBins; bin++ )
 		 {
-			 m_FixedImageMarginalPDF[bin] /= static_cast<PDFValueType>( fixedPDFSum );
+			 this->m_FixedImageMarginalPDF[bin] /= static_cast<PDFValueType>( fixedPDFSum );
 		 }
 		 
 		 
 		 // Compute moving image marginal PDF by summing over fixed image bins.
 		 typedef ImageLinearIteratorWithIndex<JointPDFType> JointPDFLinearIterator;
 		 JointPDFLinearIterator linearIter( 
-			 m_JointPDF, m_JointPDF->GetBufferedRegion() );
+			 this->m_JointPDF, this->m_JointPDF->GetBufferedRegion() );
 		 
 		 linearIter.SetDirection( 0 );
 		 linearIter.GoToBegin();
@@ -735,7 +735,7 @@ namespace itk
 				 ++linearIter;
 			 }
 			 
-			 m_MovingImageMarginalPDF[movingIndex] = static_cast<PDFValueType>(sum);
+			 this->m_MovingImageMarginalPDF[movingIndex] = static_cast<PDFValueType>(sum);
 			 
 			 linearIter.NextLine();
 			 ++movingIndex;			 
@@ -746,16 +746,16 @@ namespace itk
 		 /** \todo We might be able to optimize this part with Iterators. */
 
 		 double sum = 0.0;
-		 for( unsigned int fixedIndex = 0; fixedIndex < m_NumberOfHistogramBins; ++fixedIndex )
+		 for( unsigned int fixedIndex = 0; fixedIndex < this->m_NumberOfHistogramBins; ++fixedIndex )
 		 {
 			 jointPDFIndex[0] = fixedIndex;
-			 double fixedImagePDFValue = m_FixedImageMarginalPDF[fixedIndex];
-			 for( unsigned int movingIndex = 0; movingIndex < m_NumberOfHistogramBins; ++movingIndex )      
+			 double fixedImagePDFValue = this->m_FixedImageMarginalPDF[fixedIndex];
+			 for( unsigned int movingIndex = 0; movingIndex < this->m_NumberOfHistogramBins; ++movingIndex )      
 			 {
-				 double movingImagePDFValue = m_MovingImageMarginalPDF[movingIndex];
+				 double movingImagePDFValue = this->m_MovingImageMarginalPDF[movingIndex];
 				 jointPDFIndex[1] = movingIndex;
 				 
-				 double jointPDFValue = m_JointPDF->GetPixel( jointPDFIndex );
+				 double jointPDFValue = this->m_JointPDF->GetPixel( jointPDFIndex );
 				 
 				 if( jointPDFValue > 1e-16 &&  movingImagePDFValue > 1e-16 )
 				 {
@@ -826,25 +826,25 @@ namespace itk
 		 // Reset marginal pdf to all zeros.
 		 // Assumed the size has already been set to NumberOfHistogramBins
 		 // in Initialize().
-		 for ( unsigned int j = 0; j < m_NumberOfHistogramBins; j++ )
+		 for ( unsigned int j = 0; j < this->m_NumberOfHistogramBins; j++ )
 		 {
-			 m_FixedImageMarginalPDF[j]  = 0.0;
-			 m_MovingImageMarginalPDF[j] = 0.0;
+			 this->m_FixedImageMarginalPDF[j]  = 0.0;
+			 this->m_MovingImageMarginalPDF[j] = 0.0;
 		 }
 		 
 		 // Reset the joint pdfs to zero
-		 m_JointPDF->FillBuffer( 0.0 );
-		 m_JointPDFDerivatives->FillBuffer( 0.0 );
+		 this->m_JointPDF->FillBuffer( 0.0 );
+		 this->m_JointPDFDerivatives->FillBuffer( 0.0 );
 		 
 		 
 		 // Set up the parameters in the transform
-		 m_Transform->SetParameters( parameters );
+		 this->m_Transform->SetParameters( parameters );
 		 
 		 
 		 // Declare iterators for iteration over the sample container
 		 typename FixedImageSpatialSampleContainer::const_iterator fiter;
 		 typename FixedImageSpatialSampleContainer::const_iterator fend = 
-			 m_FixedImageSamples.end();
+			 this->m_FixedImageSamples.end();
 		 
 		 unsigned long nSamples=0;
 		 unsigned long nFixedImageSamples=0;
@@ -853,7 +853,7 @@ namespace itk
 		 JointPDFIndexType                jointPDFIndex;
 		 JointPDFDerivativesIndexType    jointPDFDerivativesIndex;
 		 
-		 for ( fiter = m_FixedImageSamples.begin(); fiter != fend; ++fiter )
+		 for ( fiter = this->m_FixedImageSamples.begin(); fiter != fend; ++fiter )
 		 {
 			 
 			 ++nFixedImageSamples;
@@ -883,13 +883,13 @@ namespace itk
 				 
 				 // Determine parzen window arguments (see eqn 6 of Mattes paper [2]).    
 				 double movingImageParzenWindowTerm =
-					 movingImageValue / m_MovingImageBinSize - m_MovingImageNormalizedMin;
+					 movingImageValue / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
 				 unsigned int movingImageParzenWindowIndex = 
 					 static_cast<unsigned int>( floor( movingImageParzenWindowTerm ) );
 				 
 				 double fixedImageParzenWindowTerm = 
-					 static_cast<double>( (*fiter).FixedImageValue ) / m_FixedImageBinSize -
-					 m_FixedImageNormalizedMin;
+					 static_cast<double>( (*fiter).FixedImageValue ) / this->m_FixedImageBinSize -
+					 this->m_FixedImageNormalizedMin;
 				 unsigned int fixedImageParzenWindowIndex =
 					 static_cast<unsigned int>( floor( fixedImageParzenWindowTerm ) );
 				 
@@ -899,26 +899,26 @@ namespace itk
 				 {
 					 fixedImageParzenWindowIndex = 2;
 				 }
-				 else if ( fixedImageParzenWindowIndex > (m_NumberOfHistogramBins - 3) )
+				 else if ( fixedImageParzenWindowIndex > (this->m_NumberOfHistogramBins - 3) )
 				 {
-					 fixedImageParzenWindowIndex = m_NumberOfHistogramBins - 3;
+					 fixedImageParzenWindowIndex = this->m_NumberOfHistogramBins - 3;
 				 }
 				 
 				 if ( movingImageParzenWindowIndex < 2 )
 				 {
 					 movingImageParzenWindowIndex = 2;
 				 }
-				 else if ( movingImageParzenWindowIndex > (m_NumberOfHistogramBins - 3) )
+				 else if ( movingImageParzenWindowIndex > (this->m_NumberOfHistogramBins - 3) )
 				 {
-					 movingImageParzenWindowIndex = m_NumberOfHistogramBins - 3;
+					 movingImageParzenWindowIndex = this->m_NumberOfHistogramBins - 3;
 				 }
 				 
 				 
 				 // Since a zero-order BSpline (box car) kernel is used for
 				 // the fixed image marginal pdf, we need only increment the
 				 // fixedImageParzenWindowIndex by value of 1.0.
-				 m_FixedImageMarginalPDF[fixedImageParzenWindowIndex] =
-					 m_FixedImageMarginalPDF[fixedImageParzenWindowIndex] + 
+				 this->m_FixedImageMarginalPDF[fixedImageParzenWindowIndex] =
+					 this->m_FixedImageMarginalPDF[fixedImageParzenWindowIndex] + 
 					 static_cast<PDFValueType>( 1 );
 				 
 					 /**
@@ -946,13 +946,13 @@ namespace itk
 					 jointPDFIndex[1] = pdfMovingIndex;
 					 
 					 // Update PDF for the current intensity pair
-					 JointPDFValueType & pdfValue = m_JointPDF->GetPixel( jointPDFIndex );
+					 JointPDFValueType & pdfValue = this->m_JointPDF->GetPixel( jointPDFIndex );
 					 pdfValue += static_cast<PDFValueType>( 
-						 m_CubicBSplineKernel->Evaluate( movingImageParzenWindowArg ) );
+						 this->m_CubicBSplineKernel->Evaluate( movingImageParzenWindowArg ) );
 					 
 					 // Compute the cubicBSplineDerivative for later repeated use.
 					 double cubicBSplineDerivativeValue = 
-						 m_CubicBSplineDerivativeKernel->Evaluate( movingImageParzenWindowArg );
+						 this->m_CubicBSplineDerivativeKernel->Evaluate( movingImageParzenWindowArg );
 					 
 					 // Compute PDF derivative contribution.
 					 this->ComputePDFDerivatives( (*fiter).FixedImagePointValue, fixedImageParzenWindowIndex,
@@ -966,12 +966,12 @@ namespace itk
     } // end iterating over fixed image spatial sample container for loop
 		
 		itkDebugMacro( "Ratio of voxels mapping into moving image buffer: " 
-			<< nSamples << " / " << m_NumberOfSpatialSamples << std::endl );
+			<< nSamples << " / " << this->m_NumberOfSpatialSamples << std::endl );
 		
-		if( nSamples < m_NumberOfSpatialSamples / 4 )
+		if( nSamples < this->m_NumberOfSpatialSamples / 4 )
     {
 			itkExceptionMacro( "Too many samples map outside moving image buffer: "
-				<< nSamples << " / " << m_NumberOfSpatialSamples << std::endl );
+				<< nSamples << " / " << this->m_NumberOfSpatialSamples << std::endl );
     }
 		
 		
@@ -980,7 +980,7 @@ namespace itk
 		*
 		*/
 		typedef ImageRegionIterator<JointPDFType> JointPDFIteratorType;
-		JointPDFIteratorType jointPDFIterator ( m_JointPDF, m_JointPDF->GetBufferedRegion() );
+		JointPDFIteratorType jointPDFIterator ( this->m_JointPDF, this->m_JointPDF->GetBufferedRegion() );
 		
 		jointPDFIterator.GoToBegin();
 		
@@ -1011,9 +1011,9 @@ namespace itk
 		
 		// Normalize the fixed image marginal PDF
 		double fixedPDFSum = 0.0;
-		for( unsigned int bin = 0; bin < m_NumberOfHistogramBins; bin++ )
+		for( unsigned int bin = 0; bin < this->m_NumberOfHistogramBins; bin++ )
     {
-			fixedPDFSum += m_FixedImageMarginalPDF[bin];
+			fixedPDFSum += this->m_FixedImageMarginalPDF[bin];
     }
 		
 		if ( fixedPDFSum == 0.0 )
@@ -1021,16 +1021,16 @@ namespace itk
 			itkExceptionMacro( "Fixed image marginal PDF summed to zero" );
     }
 		
-		for( unsigned int bin=0; bin < m_NumberOfHistogramBins; bin++ )
+		for( unsigned int bin=0; bin < this->m_NumberOfHistogramBins; bin++ )
     {
-			m_FixedImageMarginalPDF[bin] /= static_cast<PDFValueType>( fixedPDFSum );
+			this->m_FixedImageMarginalPDF[bin] /= static_cast<PDFValueType>( fixedPDFSum );
     }
 		
 		
 		// Compute moving image marginal PDF by summing over fixed image bins.
 		typedef ImageLinearIteratorWithIndex<JointPDFType> JointPDFLinearIterator;
 		JointPDFLinearIterator linearIter( 
-			m_JointPDF, m_JointPDF->GetBufferedRegion() );
+			this->m_JointPDF, this->m_JointPDF->GetBufferedRegion() );
 		
 		linearIter.SetDirection( 0 );
 		linearIter.GoToBegin();
@@ -1047,7 +1047,7 @@ namespace itk
 				++linearIter;
       }
 			
-			m_MovingImageMarginalPDF[movingIndex] = static_cast<PDFValueType>(sum);
+			this->m_MovingImageMarginalPDF[movingIndex] = static_cast<PDFValueType>(sum);
 			
 			linearIter.NextLine();
 			++movingIndex;
@@ -1058,11 +1058,11 @@ namespace itk
 		// Normalize the joint PDF derivatives by the test image binsize and nSamples
 		typedef ImageRegionIterator<JointPDFDerivativesType> JointPDFDerivativesIteratorType;
 		JointPDFDerivativesIteratorType jointPDFDerivativesIterator (
-			m_JointPDFDerivatives, m_JointPDFDerivatives->GetBufferedRegion() );
+			this->m_JointPDFDerivatives, this->m_JointPDFDerivatives->GetBufferedRegion() );
 		
 		jointPDFDerivativesIterator.GoToBegin();
 		
-		double nFactor = 1.0 / ( m_MovingImageBinSize * static_cast<double>( nSamples ) );
+		double nFactor = 1.0 / ( this->m_MovingImageBinSize * static_cast<double>( nSamples ) );
 		
 		while( !jointPDFDerivativesIterator.IsAtEnd() )
     {
@@ -1076,16 +1076,16 @@ namespace itk
 		/** \todo We might be able to optimize this part with Iterators. */
 
 		double sum = 0.0;
-		for( unsigned int fixedIndex = 0; fixedIndex < m_NumberOfHistogramBins; ++fixedIndex )
+		for( unsigned int fixedIndex = 0; fixedIndex < this->m_NumberOfHistogramBins; ++fixedIndex )
     {
 			jointPDFIndex[0] = fixedIndex;
-			double fixedImagePDFValue = m_FixedImageMarginalPDF[fixedIndex];
-			for( unsigned int movingIndex = 0; movingIndex < m_NumberOfHistogramBins; ++movingIndex )      
+			double fixedImagePDFValue = this->m_FixedImageMarginalPDF[fixedIndex];
+			for( unsigned int movingIndex = 0; movingIndex < this->m_NumberOfHistogramBins; ++movingIndex )      
       {
-				double movingImagePDFValue = m_MovingImageMarginalPDF[movingIndex];
+				double movingImagePDFValue = this->m_MovingImageMarginalPDF[movingIndex];
 				jointPDFIndex[1] = movingIndex;
 				
-				double jointPDFValue = m_JointPDF->GetPixel( jointPDFIndex );
+				double jointPDFValue = this->m_JointPDF->GetPixel( jointPDFIndex );
 				
 				if( jointPDFValue > 1e-16 &&  movingImagePDFValue > 1e-16 )
         {
@@ -1094,13 +1094,13 @@ namespace itk
 					if( fixedImagePDFValue > 1e-16)
 						sum += jointPDFValue * ( pRatio - log( fixedImagePDFValue ) );
 					
-					for( unsigned int parameter=0; parameter < m_NumberOfParameters; ++parameter )
+					for( unsigned int parameter=0; parameter < this->m_NumberOfParameters; ++parameter )
           {
 						jointPDFDerivativesIndex[0] = fixedIndex;
 						jointPDFDerivativesIndex[1] = movingIndex;
 						jointPDFDerivativesIndex[2] = parameter;
 						double jointPDFDerivativesValue = 
-							m_JointPDFDerivatives->GetPixel( jointPDFDerivativesIndex );
+							this->m_JointPDFDerivatives->GetPixel( jointPDFDerivativesIndex );
 						
 						// Ref: eqn 23 of Thevenaz & Unser paper [3]
 						derivative[parameter] -= jointPDFDerivativesValue * pRatio;
@@ -1139,28 +1139,28 @@ namespace itk
 		 // Reset marginal pdf to all zeros.
 		 // Assumed the size has already been set to NumberOfHistogramBins
 		 // in Initialize().
-		 for ( unsigned int j = 0; j < m_NumberOfHistogramBins; j++ )
+		 for ( unsigned int j = 0; j < this->m_NumberOfHistogramBins; j++ )
 		 {
-			 m_FixedImageMarginalPDF[j]  = 0.0;
-			 m_MovingImageMarginalPDF[j] = 0.0;
+			 this->m_FixedImageMarginalPDF[j]  = 0.0;
+			 this->m_MovingImageMarginalPDF[j] = 0.0;
 		 }
 		 
 		 // Reset the joint pdfs to zero
-		 m_JointPDF->FillBuffer( 0.0 );
-		 m_JointPDFDerivatives->FillBuffer( 0.0 );
+		 this->m_JointPDF->FillBuffer( 0.0 );
+		 this->m_JointPDFDerivatives->FillBuffer( 0.0 );
 		 
 		 
 		 // Set up the parameters in the transform
-		 m_Transform->SetParameters( parameters );
+		 this->m_Transform->SetParameters( parameters );
 		 
 		 // Declare iterators for iteration over the sample container
 		 //typename FixedImageSpatialSampleContainer::const_iterator fiter;
 		 //typename FixedImageSpatialSampleContainer::const_iterator fend = 
-		 // m_FixedImageSamples.end();
+		 // this->m_FixedImageSamples.end();
 		 
 		 /** Iterator that walks over the whole fixed image region. */
 		 typedef ImageRegionConstIteratorWithIndex<FixedImageType> FixedImageIteratorType;
-		 FixedImageIteratorType fiter(m_FixedImage, this->GetFixedImageRegion());
+		 FixedImageIteratorType fiter(this->m_FixedImage, this->GetFixedImageRegion());
 
 
 		 unsigned long nSamples=0;
@@ -1170,7 +1170,7 @@ namespace itk
 		 JointPDFIndexType                jointPDFIndex;
 		 JointPDFDerivativesIndexType    jointPDFDerivativesIndex;
 		 
-		 //for ( fiter = m_FixedImageSamples.begin(); fiter != fend; ++fiter )
+		 //for ( fiter = this->m_FixedImageSamples.begin(); fiter != fend; ++fiter )
 		 for ( fiter.GoToBegin(); !fiter.IsAtEnd(); ++fiter )
 		 {
 			 
@@ -1183,7 +1183,7 @@ namespace itk
 			 const FixedImageIndexType & fixedImageIndex = fiter.GetIndex();
 			 FixedImagePointType fixedImagePoint;
 
-       m_FixedImage->TransformIndexToPhysicalPoint( fixedImageIndex, fixedImagePoint);
+       this->m_FixedImage->TransformIndexToPhysicalPoint( fixedImageIndex, fixedImagePoint);
 
 			 /** Check if the sample lies within the fixed mask. */
 
@@ -1217,13 +1217,13 @@ namespace itk
 				 
 				 // Determine parzen window arguments (see eqn 6 of Mattes paper [2]).    
 				 double movingImageParzenWindowTerm =
-					 movingImageValue / m_MovingImageBinSize - m_MovingImageNormalizedMin;
+					 movingImageValue / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
 				 unsigned int movingImageParzenWindowIndex = 
 					 static_cast<unsigned int>( floor( movingImageParzenWindowTerm ) );
 				 
 				 double fixedImageParzenWindowTerm = 
-					 static_cast<double>( fiter.Value() ) / m_FixedImageBinSize -
-					 m_FixedImageNormalizedMin;
+					 static_cast<double>( fiter.Value() ) / this->m_FixedImageBinSize -
+					 this->m_FixedImageNormalizedMin;
 				 unsigned int fixedImageParzenWindowIndex =
 					 static_cast<unsigned int>( floor( fixedImageParzenWindowTerm ) );
 				 
@@ -1233,26 +1233,26 @@ namespace itk
 				 {
 					 fixedImageParzenWindowIndex = 2;
 				 }
-				 else if ( fixedImageParzenWindowIndex > (m_NumberOfHistogramBins - 3) )
+				 else if ( fixedImageParzenWindowIndex > (this->m_NumberOfHistogramBins - 3) )
 				 {
-					 fixedImageParzenWindowIndex = m_NumberOfHistogramBins - 3;
+					 fixedImageParzenWindowIndex = this->m_NumberOfHistogramBins - 3;
 				 }
 				 
 				 if ( movingImageParzenWindowIndex < 2 )
 				 {
 					 movingImageParzenWindowIndex = 2;
 				 }
-				 else if ( movingImageParzenWindowIndex > (m_NumberOfHistogramBins - 3) )
+				 else if ( movingImageParzenWindowIndex > (this->m_NumberOfHistogramBins - 3) )
 				 {
-					 movingImageParzenWindowIndex = m_NumberOfHistogramBins - 3;
+					 movingImageParzenWindowIndex = this->m_NumberOfHistogramBins - 3;
 				 }
 				 
 				 
 				 // Since a zero-order BSpline (box car) kernel is used for
 				 // the fixed image marginal pdf, we need only increment the
 				 // fixedImageParzenWindowIndex by value of 1.0.
-				 m_FixedImageMarginalPDF[fixedImageParzenWindowIndex] =
-					 m_FixedImageMarginalPDF[fixedImageParzenWindowIndex] + 
+				 this->m_FixedImageMarginalPDF[fixedImageParzenWindowIndex] =
+					 this->m_FixedImageMarginalPDF[fixedImageParzenWindowIndex] + 
 					 static_cast<PDFValueType>( 1 );
 				 
 					 /**
@@ -1280,13 +1280,13 @@ namespace itk
 					 jointPDFIndex[1] = pdfMovingIndex;
 					 
 					 // Update PDF for the current intensity pair
-					 JointPDFValueType & pdfValue = m_JointPDF->GetPixel( jointPDFIndex );
+					 JointPDFValueType & pdfValue = this->m_JointPDF->GetPixel( jointPDFIndex );
 					 pdfValue += static_cast<PDFValueType>( 
-						 m_CubicBSplineKernel->Evaluate( movingImageParzenWindowArg ) );
+						 this->m_CubicBSplineKernel->Evaluate( movingImageParzenWindowArg ) );
 					 
 					 // Compute the cubicBSplineDerivative for later repeated use.
 					 double cubicBSplineDerivativeValue = 
-						 m_CubicBSplineDerivativeKernel->Evaluate( movingImageParzenWindowArg );
+						 this->m_CubicBSplineDerivativeKernel->Evaluate( movingImageParzenWindowArg );
 					 
 					 // Compute PDF derivative contribution.
 					 this->ComputePDFDerivatives( fixedImagePoint, fixedImageParzenWindowIndex,
@@ -1300,12 +1300,12 @@ namespace itk
     } // end iterating over fixed image spatial sample container for loop
 		
 		itkDebugMacro( "Ratio of voxels mapping into moving image buffer: " 
-			<< nSamples << " / " << m_NumberOfSpatialSamples << std::endl );
+			<< nSamples << " / " << this->m_NumberOfSpatialSamples << std::endl );
 		
-		if( nSamples < m_NumberOfSpatialSamples / 4 )
+		if( nSamples < this->m_NumberOfSpatialSamples / 4 )
     {
 			itkExceptionMacro( "Too many samples map outside moving image buffer: "
-				<< nSamples << " / " << m_NumberOfSpatialSamples << std::endl );
+				<< nSamples << " / " << this->m_NumberOfSpatialSamples << std::endl );
     }
 		
 		
@@ -1314,7 +1314,7 @@ namespace itk
 		*
 		*/
 		typedef ImageRegionIterator<JointPDFType> JointPDFIteratorType;
-		JointPDFIteratorType jointPDFIterator ( m_JointPDF, m_JointPDF->GetBufferedRegion() );
+		JointPDFIteratorType jointPDFIterator ( this->m_JointPDF, this->m_JointPDF->GetBufferedRegion() );
 		
 		jointPDFIterator.GoToBegin();
 		
@@ -1345,9 +1345,9 @@ namespace itk
 		
 		// Normalize the fixed image marginal PDF
 		double fixedPDFSum = 0.0;
-		for( unsigned int bin = 0; bin < m_NumberOfHistogramBins; bin++ )
+		for( unsigned int bin = 0; bin < this->m_NumberOfHistogramBins; bin++ )
     {
-			fixedPDFSum += m_FixedImageMarginalPDF[bin];
+			fixedPDFSum += this->m_FixedImageMarginalPDF[bin];
     }
 		
 		if ( fixedPDFSum == 0.0 )
@@ -1355,16 +1355,16 @@ namespace itk
 			itkExceptionMacro( "Fixed image marginal PDF summed to zero" );
     }
 		
-		for( unsigned int bin=0; bin < m_NumberOfHistogramBins; bin++ )
+		for( unsigned int bin=0; bin < this->m_NumberOfHistogramBins; bin++ )
     {
-			m_FixedImageMarginalPDF[bin] /= static_cast<PDFValueType>( fixedPDFSum );
+			this->m_FixedImageMarginalPDF[bin] /= static_cast<PDFValueType>( fixedPDFSum );
     }
 		
 		
 		// Compute moving image marginal PDF by summing over fixed image bins.
 		typedef ImageLinearIteratorWithIndex<JointPDFType> JointPDFLinearIterator;
 		JointPDFLinearIterator linearIter( 
-			m_JointPDF, m_JointPDF->GetBufferedRegion() );
+			this->m_JointPDF, this->m_JointPDF->GetBufferedRegion() );
 		
 		linearIter.SetDirection( 0 );
 		linearIter.GoToBegin();
@@ -1381,7 +1381,7 @@ namespace itk
 				++linearIter;
       }
 			
-			m_MovingImageMarginalPDF[movingIndex] = static_cast<PDFValueType>(sum);
+			this->m_MovingImageMarginalPDF[movingIndex] = static_cast<PDFValueType>(sum);
 			
 			linearIter.NextLine();
 			++movingIndex;
@@ -1392,11 +1392,11 @@ namespace itk
 		// Normalize the joint PDF derivatives by the test image binsize and nSamples
 		typedef ImageRegionIterator<JointPDFDerivativesType> JointPDFDerivativesIteratorType;
 		JointPDFDerivativesIteratorType jointPDFDerivativesIterator (
-			m_JointPDFDerivatives, m_JointPDFDerivatives->GetBufferedRegion() );
+			this->m_JointPDFDerivatives, this->m_JointPDFDerivatives->GetBufferedRegion() );
 		
 		jointPDFDerivativesIterator.GoToBegin();
 		
-		double nFactor = 1.0 / ( m_MovingImageBinSize * static_cast<double>( nSamples ) );
+		double nFactor = 1.0 / ( this->m_MovingImageBinSize * static_cast<double>( nSamples ) );
 		
 		while( !jointPDFDerivativesIterator.IsAtEnd() )
     {
@@ -1410,16 +1410,16 @@ namespace itk
 		/** \todo We might be able to optimize this part with Iterators. */
 
 		double sum = 0.0;
-		for( unsigned int fixedIndex = 0; fixedIndex < m_NumberOfHistogramBins; ++fixedIndex )
+		for( unsigned int fixedIndex = 0; fixedIndex < this->m_NumberOfHistogramBins; ++fixedIndex )
     {
 			jointPDFIndex[0] = fixedIndex;
-			double fixedImagePDFValue = m_FixedImageMarginalPDF[fixedIndex];
-			for( unsigned int movingIndex = 0; movingIndex < m_NumberOfHistogramBins; ++movingIndex )      
+			double fixedImagePDFValue = this->m_FixedImageMarginalPDF[fixedIndex];
+			for( unsigned int movingIndex = 0; movingIndex < this->m_NumberOfHistogramBins; ++movingIndex )      
       {
-				double movingImagePDFValue = m_MovingImageMarginalPDF[movingIndex];
+				double movingImagePDFValue = this->m_MovingImageMarginalPDF[movingIndex];
 				jointPDFIndex[1] = movingIndex;
 				
-				double jointPDFValue = m_JointPDF->GetPixel( jointPDFIndex );
+				double jointPDFValue = this->m_JointPDF->GetPixel( jointPDFIndex );
 				
 				if( jointPDFValue > 1e-16 &&  movingImagePDFValue > 1e-16 )
         {
@@ -1428,13 +1428,13 @@ namespace itk
 					if( fixedImagePDFValue > 1e-16)
 						sum += jointPDFValue * ( pRatio - log( fixedImagePDFValue ) );
 					
-					for( unsigned int parameter=0; parameter < m_NumberOfParameters; ++parameter )
+					for( unsigned int parameter=0; parameter < this->m_NumberOfParameters; ++parameter )
           {
 						jointPDFDerivativesIndex[0] = fixedIndex;
 						jointPDFDerivativesIndex[1] = movingIndex;
 						jointPDFDerivativesIndex[2] = parameter;
 						double jointPDFDerivativesValue = 
-							m_JointPDFDerivatives->GetPixel( jointPDFDerivativesIndex );
+							this->m_JointPDFDerivatives->GetPixel( jointPDFDerivativesIndex );
 						
 						// Ref: eqn 23 of Thevenaz & Unser paper [3]
 						derivative[parameter] -= jointPDFDerivativesValue * pRatio;
@@ -1483,15 +1483,15 @@ namespace itk
 		const MovingImagePointType& mappedPoint, 
 		ImageDerivativesType& gradient ) const
 	{		
-		if( m_InterpolatorIsBSpline )
+		if( this->m_InterpolatorIsBSpline )
 		{
 			// Computed moving image gradient using derivative BSpline kernel.
-			gradient = m_BSplineInterpolator->EvaluateDerivative( mappedPoint );
+			gradient = this->m_BSplineInterpolator->EvaluateDerivative( mappedPoint );
 		}
 		else
 		{
 			// For all generic interpolator use central differencing.
-			gradient = m_DerivativeCalculator->Evaluate( mappedPoint );
+			gradient = this->m_DerivativeCalculator->Evaluate( mappedPoint );
 		}
 		
 	} // end ComputeImageDerivatives
@@ -1516,23 +1516,23 @@ namespace itk
 		
 		bool insideBSValidRegion;
 		
-		if ( !m_TransformIsBSpline )
+		if ( !(this->m_TransformIsBSpline) )
 		{
-			mappedPoint = m_Transform->TransformPoint( fixedImagePoint );
+			mappedPoint = this->m_Transform->TransformPoint( fixedImagePoint );
 		}
 		else
 		{
-			m_BSplineTransform->TransformPoint( fixedImagePoint,
+			this->m_BSplineTransform->TransformPoint( fixedImagePoint,
 				mappedPoint,
-				m_BSplineTransformWeights,
-				m_BSplineTransformIndices,
+				this->m_BSplineTransformWeights,
+				this->m_BSplineTransformIndices,
 				insideBSValidRegion );
 		}
 		
 		// Check if mapped point inside image buffer
-		sampleOk = m_Interpolator->IsInsideBuffer( mappedPoint );
+		sampleOk = this->m_Interpolator->IsInsideBuffer( mappedPoint );
 		
-		if ( m_TransformIsBSpline )
+		if ( this->m_TransformIsBSpline )
 		{
 			// Check if mapped point is within the support region of a grid point.
 			// This is neccessary for computing the metric gradient
@@ -1541,17 +1541,17 @@ namespace itk
 		
 		//Added for support of masks:
 		//if mask exists and point is inside buffer
-		if ( m_MovingMask && sampleOk ) 
+		if ( this->m_MovingMask && sampleOk ) 
 		{
-			sampleOk = (m_MovingMask->IsInMask(mappedPoint));
+			sampleOk = (this->m_MovingMask->IsInMask(mappedPoint));
 		}
 		
 		if ( sampleOk )
 		{
-			movingImageValue = m_Interpolator->Evaluate( mappedPoint );
+			movingImageValue = this->m_Interpolator->Evaluate( mappedPoint );
 			
-			if ( movingImageValue < m_MovingImageTrueMin || 
-				movingImageValue > m_MovingImageTrueMax )
+			if ( movingImageValue < this->m_MovingImageTrueMin || 
+				movingImageValue > this->m_MovingImageTrueMax )
 			{
 				// need to throw out this sample as it will not fall into a valid bin
 				sampleOk = false;
@@ -1584,7 +1584,7 @@ namespace itk
 		jointPDFDerivativesIndex[0] = fixedImageParzenWindowIndex;
 		jointPDFDerivativesIndex[1] = pdfMovingIndex;
 		
-		if( !m_TransformIsBSpline )
+		if( !(this->m_TransformIsBSpline) )
 		{
 			
 		/**
@@ -1594,9 +1594,9 @@ namespace itk
 			// Compute the transform Jacobian.
 			typedef typename TransformType::JacobianType JacobianType;
 			const JacobianType& jacobian = 
-				m_Transform->GetJacobian( fixedImagePoint );
+				this->m_Transform->GetJacobian( fixedImagePoint );
 			
-			for ( unsigned int mu = 0; mu < m_NumberOfParameters; mu++ )
+			for ( unsigned int mu = 0; mu < this->m_NumberOfParameters; mu++ )
 			{
 				double innerProduct = 0.0;
 				for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
@@ -1610,7 +1610,7 @@ namespace itk
 				jointPDFDerivativesIndex[2] = mu;
 				
 				JointPDFDerivativesValueType & pdfDerivative =
-					m_JointPDFDerivatives->GetPixel( jointPDFDerivativesIndex );
+					this->m_JointPDFDerivatives->GetPixel( jointPDFDerivativesIndex );
 				pdfDerivative -= innerProduct * cubicBSplineDerivativeValue;
 				
 			}
@@ -1627,21 +1627,21 @@ namespace itk
 			{
 				
 				/* Get correct index in parameter space */
-				long offset = dim * m_NumParametersPerDim;
+				long offset = dim * this->m_NumParametersPerDim;
 				
-				for( unsigned int mu = 0; mu < m_NumBSplineWeights; mu++ )
+				for( unsigned int mu = 0; mu < this->m_NumBSplineWeights; mu++ )
 				{
 					
 				/* The array weights contains the Jacobian values in a 1-D array 
 				* (because for each parameter the Jacobian is non-zero in only 1 of the
 					* possible dimensions) which is multiplied by the moving image gradient. */
-					double innerProduct = movingImageGradientValue[dim] * m_BSplineTransformWeights[mu];
+					double innerProduct = movingImageGradientValue[dim] * this->m_BSplineTransformWeights[mu];
 					
 					/* Index into the correct parameter slices of the jointPDFDerivative volume. */
-					jointPDFDerivativesIndex[2] = m_BSplineTransformIndices[mu] + offset;
+					jointPDFDerivativesIndex[2] = this->m_BSplineTransformIndices[mu] + offset;
 					
 					JointPDFDerivativesValueType & pdfDerivative =
-						m_JointPDFDerivatives->GetPixel( jointPDFDerivativesIndex );
+						this->m_JointPDFDerivatives->GetPixel( jointPDFDerivativesIndex );
 					pdfDerivative -= innerProduct * cubicBSplineDerivativeValue;
 					
 				} //end mu for loop
@@ -1666,13 +1666,13 @@ namespace itk
 	  /**
 		 * Allocate memory for the fixed image sample container.
 		 */
-		m_FixedImageSamples.resize( m_NumberOfSpatialSamples);
+		this->m_FixedImageSamples.resize( this->m_NumberOfSpatialSamples);
 
 		/** 
 		* Uniformly sample the fixed image (within the fixed image region)
 		* to create the sample points list.
 		*/
-		this->SampleFixedImageDomain( m_FixedImageSamples );
+		this->SampleFixedImageDomain( this->m_FixedImageSamples );
 
 	}
 
@@ -1694,27 +1694,27 @@ namespace itk
 		 // Reset marginal pdf to all zeros.
 		 // Assumed the size has already been set to NumberOfHistogramBins
 		 // in Initialize().
-		 for ( unsigned int j = 0; j < m_NumberOfHistogramBins; j++ )
+		 for ( unsigned int j = 0; j < this->m_NumberOfHistogramBins; j++ )
 		 {
-			 m_FixedImageMarginalPDF[j]  = 0.0;
-			 m_MovingImageMarginalPDF[j] = 0.0;
+			 this->m_FixedImageMarginalPDF[j]  = 0.0;
+			 this->m_MovingImageMarginalPDF[j] = 0.0;
 		 }
 		 
 		 // Reset the joint pdfs to zero
-		 m_JointPDF->FillBuffer( 0.0 );
+		 this->m_JointPDF->FillBuffer( 0.0 );
 		 
 		 // Set up the parameters in the transform
-		 m_Transform->SetParameters( parameters );
+		 this->m_Transform->SetParameters( parameters );
 		 
 		 
 		 // Declare iterators for iteration over the sample container
 		 //typename FixedImageSpatialSampleContainer::const_iterator fiter;
 		 //typename FixedImageSpatialSampleContainer::const_iterator fend = 
-		 // m_FixedImageSamples.end();
+		 // this->m_FixedImageSamples.end();
 		 
 		 /** Iterator that walks over the whole fixed image region. */
 		 typedef ImageRegionConstIteratorWithIndex<FixedImageType> FixedImageIteratorType;
-		 FixedImageIteratorType fiter(m_FixedImage, this->GetFixedImageRegion());
+		 FixedImageIteratorType fiter(this->m_FixedImage, this->GetFixedImageRegion());
 
 		 unsigned long nSamples=0;
 		 unsigned long nFixedImageSamples=0;
@@ -1733,7 +1733,7 @@ namespace itk
 			 const FixedImageIndexType & fixedImageIndex = fiter.GetIndex();
 			 FixedImagePointType fixedImagePoint;
 
-       m_FixedImage->TransformIndexToPhysicalPoint( fixedImageIndex, fixedImagePoint);
+       this->m_FixedImage->TransformIndexToPhysicalPoint( fixedImageIndex, fixedImagePoint);
 
 			 /** Check if the sample lies within the fixed mask. */
 
@@ -1760,13 +1760,13 @@ namespace itk
 				 
 				 // Determine parzen window arguments (see eqn 6 of Mattes paper [2]).    
 				 double movingImageParzenWindowTerm =
-					 movingImageValue / m_MovingImageBinSize - m_MovingImageNormalizedMin;
+					 movingImageValue / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
 				 unsigned int movingImageParzenWindowIndex = 
 					 static_cast<unsigned int>( floor( movingImageParzenWindowTerm ) );
 				 
 				 double fixedImageParzenWindowTerm = 
-					 static_cast<double>( fiter.Value() ) / m_FixedImageBinSize -
-					 m_FixedImageNormalizedMin;
+					 static_cast<double>( fiter.Value() ) / this->m_FixedImageBinSize -
+					 this->m_FixedImageNormalizedMin;
 				 unsigned int fixedImageParzenWindowIndex =
 					 static_cast<unsigned int>( floor( fixedImageParzenWindowTerm ) );
 				 
@@ -1776,26 +1776,26 @@ namespace itk
 				 {
 					 fixedImageParzenWindowIndex = 2;
 				 }
-				 else if ( fixedImageParzenWindowIndex > (m_NumberOfHistogramBins - 3) )
+				 else if ( fixedImageParzenWindowIndex > (this->m_NumberOfHistogramBins - 3) )
 				 {
-					 fixedImageParzenWindowIndex = m_NumberOfHistogramBins - 3;
+					 fixedImageParzenWindowIndex = this->m_NumberOfHistogramBins - 3;
 				 }
 				 
 				 if ( movingImageParzenWindowIndex < 2 )
 				 {
 					 movingImageParzenWindowIndex = 2;
 				 }
-				 else if ( movingImageParzenWindowIndex > (m_NumberOfHistogramBins - 3) )
+				 else if ( movingImageParzenWindowIndex > (this->m_NumberOfHistogramBins - 3) )
 				 {
-					 movingImageParzenWindowIndex = m_NumberOfHistogramBins - 3;
+					 movingImageParzenWindowIndex = this->m_NumberOfHistogramBins - 3;
 				 }
 				 
 				 
 				 // Since a zero-order BSpline (box car) kernel is used for
 				 // the fixed image marginal pdf, we need only increment the
 				 // fixedImageParzenWindowIndex by value of 1.0.
-				 m_FixedImageMarginalPDF[fixedImageParzenWindowIndex] =
-					 m_FixedImageMarginalPDF[fixedImageParzenWindowIndex] + 
+				 this->m_FixedImageMarginalPDF[fixedImageParzenWindowIndex] =
+					 this->m_FixedImageMarginalPDF[fixedImageParzenWindowIndex] + 
 					 static_cast<PDFValueType>( 1 );
 				 
 					 /**
@@ -1823,9 +1823,9 @@ namespace itk
 					 jointPDFIndex[1] = pdfMovingIndex;
 					 
 					 // Update PDF for the current intensity pair
-					 JointPDFValueType & pdfValue = m_JointPDF->GetPixel( jointPDFIndex );
+					 JointPDFValueType & pdfValue = this->m_JointPDF->GetPixel( jointPDFIndex );
 					 pdfValue += static_cast<PDFValueType>( 
-						 m_CubicBSplineKernel->Evaluate( movingImageParzenWindowArg ) );
+						 this->m_CubicBSplineKernel->Evaluate( movingImageParzenWindowArg ) );
 					 
 					 
 				 }  //end parzen windowing for loop
@@ -1835,12 +1835,12 @@ namespace itk
 		 } // end iterating over fixed image spatial sample container for loop
 		 
 		 itkDebugMacro( "Ratio of voxels mapping into moving image buffer: " 
-			 << nSamples << " / " << m_NumberOfSpatialSamples << std::endl );
+			 << nSamples << " / " << this->m_NumberOfSpatialSamples << std::endl );
 		 
-		 if( nSamples < m_NumberOfSpatialSamples / 4 )
+		 if( nSamples < this->m_NumberOfSpatialSamples / 4 )
 		 {
 			 itkExceptionMacro( "Too many samples map outside moving image buffer: "
-				 << nSamples << " / " << m_NumberOfSpatialSamples << std::endl );
+				 << nSamples << " / " << this->m_NumberOfSpatialSamples << std::endl );
 		 }		 
 		 
 		 /**
@@ -1848,7 +1848,7 @@ namespace itk
 		 *
 		 */
 		 typedef ImageRegionIterator<JointPDFType> JointPDFIteratorType;
-		 JointPDFIteratorType jointPDFIterator ( m_JointPDF, m_JointPDF->GetBufferedRegion() );
+		 JointPDFIteratorType jointPDFIterator ( this->m_JointPDF, this->m_JointPDF->GetBufferedRegion() );
 		 
 		 jointPDFIterator.GoToBegin();
 		 
@@ -1879,9 +1879,9 @@ namespace itk
 		 
 		 // Normalize the fixed image marginal PDF
 		 double fixedPDFSum = 0.0;
-		 for( unsigned int bin = 0; bin < m_NumberOfHistogramBins; bin++ )
+		 for( unsigned int bin = 0; bin < this->m_NumberOfHistogramBins; bin++ )
 		 {
-			 fixedPDFSum += m_FixedImageMarginalPDF[bin];
+			 fixedPDFSum += this->m_FixedImageMarginalPDF[bin];
 		 }
 		 
 		 if ( fixedPDFSum == 0.0 )
@@ -1889,16 +1889,16 @@ namespace itk
 			 itkExceptionMacro( "Fixed image marginal PDF summed to zero" );
 		 }
 		 
-		 for( unsigned int bin=0; bin < m_NumberOfHistogramBins; bin++ )
+		 for( unsigned int bin=0; bin < this->m_NumberOfHistogramBins; bin++ )
 		 {
-			 m_FixedImageMarginalPDF[bin] /= static_cast<PDFValueType>( fixedPDFSum );
+			 this->m_FixedImageMarginalPDF[bin] /= static_cast<PDFValueType>( fixedPDFSum );
 		 }
 		 
 		 
 		 // Compute moving image marginal PDF by summing over fixed image bins.
 		 typedef ImageLinearIteratorWithIndex<JointPDFType> JointPDFLinearIterator;
 		 JointPDFLinearIterator linearIter( 
-			 m_JointPDF, m_JointPDF->GetBufferedRegion() );
+			 this->m_JointPDF, this->m_JointPDF->GetBufferedRegion() );
 		 
 		 linearIter.SetDirection( 0 );
 		 linearIter.GoToBegin();
@@ -1915,7 +1915,7 @@ namespace itk
 				 ++linearIter;
 			 }
 			 
-			 m_MovingImageMarginalPDF[movingIndex] = static_cast<PDFValueType>(sum);
+			 this->m_MovingImageMarginalPDF[movingIndex] = static_cast<PDFValueType>(sum);
 			 
 			 linearIter.NextLine();
 			 ++movingIndex;			 
@@ -1926,16 +1926,16 @@ namespace itk
 		 /** \todo We might be able to optimize this part with Iterators. */
 
 		 double sum = 0.0;
-		 for( unsigned int fixedIndex = 0; fixedIndex < m_NumberOfHistogramBins; ++fixedIndex )
+		 for( unsigned int fixedIndex = 0; fixedIndex < this->m_NumberOfHistogramBins; ++fixedIndex )
 		 {
 			 jointPDFIndex[0] = fixedIndex;
-			 double fixedImagePDFValue = m_FixedImageMarginalPDF[fixedIndex];
-			 for( unsigned int movingIndex = 0; movingIndex < m_NumberOfHistogramBins; ++movingIndex )      
+			 double fixedImagePDFValue = this->m_FixedImageMarginalPDF[fixedIndex];
+			 for( unsigned int movingIndex = 0; movingIndex < this->m_NumberOfHistogramBins; ++movingIndex )      
 			 {
-				 double movingImagePDFValue = m_MovingImageMarginalPDF[movingIndex];
+				 double movingImagePDFValue = this->m_MovingImageMarginalPDF[movingIndex];
 				 jointPDFIndex[1] = movingIndex;
 				 
-				 double jointPDFValue = m_JointPDF->GetPixel( jointPDFIndex );
+				 double jointPDFValue = this->m_JointPDF->GetPixel( jointPDFIndex );
 				 
 				 if( jointPDFValue > 1e-16 &&  movingImagePDFValue > 1e-16 )
 				 {
@@ -2015,24 +2015,24 @@ namespace itk
 					FixedImagePointType point;
 					
 					/** Translate index to point, and check if it's inside the fixedmask */
-					m_FixedImage->TransformIndexToPhysicalPoint( fixedIter.GetIndex(), point );
+					this->m_FixedImage->TransformIndexToPhysicalPoint( fixedIter.GetIndex(), point );
 
 					if ( this->m_FixedMask->IsInMask(point) )
 					{
 						/** Use this sample? (stochastic process) */
-						m_DRandomHelp += elx_sample_uniform(0,2);
+						this->m_DRandomHelp += elx_sample_uniform(0,2);
 						char useThisSample = 0;
 						const unsigned char randomHelp2 = static_cast<unsigned char>(
-							vnl_math_rnd(m_DRandomHelp) % 2   );
+							vnl_math_rnd(this->m_DRandomHelp) % 2   );
 						if (randomHelp2 == 1)
 						{
 		  				useThisSample = static_cast<char>(
-								vnl_math_rnd( ceil(m_DRandomHelp) - m_DRandomHelp + probabilitySelector )   );
+								vnl_math_rnd( ceil(this->m_DRandomHelp) - this->m_DRandomHelp + probabilitySelector )   );
 						}
 						else 
 						{
 							useThisSample = static_cast<char>(
-								vnl_math_rnd( m_DRandomHelp - floor(m_DRandomHelp) + probabilitySelector )   );
+								vnl_math_rnd( this->m_DRandomHelp - floor(this->m_DRandomHelp) + probabilitySelector )   );
 				 		}					
 	          
 						if ( useThisSample >= 1 )
@@ -2052,7 +2052,7 @@ namespace itk
 
 				const double expected = static_cast<double>( this->m_NumberOfSpatialSamples );
 				const double selected = static_cast<double>( nrOfSamplesSelected );
-				m_DRandomHelp /= this->m_NrOfPixelsInFixedMask * 3;        
+				this->m_DRandomHelp /= this->m_NrOfPixelsInFixedMask * 3;        
 
 				/** Prepare for next walk through the image. */
 				if (containerIter != end)
@@ -2075,19 +2075,19 @@ namespace itk
 				while ( (containerIter != end) & !(fixedIter.IsAtEnd()) )
 				{
 					/** Use this sample? (stochastic process) */
-					m_DRandomHelp += elx_sample_uniform(0,2);
+					this->m_DRandomHelp += elx_sample_uniform(0,2);
 					char useThisSample = 0;
 					const unsigned char randomHelp2 = static_cast<unsigned char>(
-						vnl_math_rnd(m_DRandomHelp) % 2   );
+						vnl_math_rnd(this->m_DRandomHelp) % 2   );
 					if (randomHelp2 == 1)
 					{
 		  			useThisSample = static_cast<char>(
-							vnl_math_rnd( ceil(m_DRandomHelp) - m_DRandomHelp + probabilitySelector )   );
+							vnl_math_rnd( ceil(this->m_DRandomHelp) - this->m_DRandomHelp + probabilitySelector )   );
 					}
 					else 
 					{
 						useThisSample = static_cast<char>(
-							vnl_math_rnd( m_DRandomHelp - floor(m_DRandomHelp) + probabilitySelector )   );
+							vnl_math_rnd( this->m_DRandomHelp - floor(this->m_DRandomHelp) + probabilitySelector )   );
 				 	}					
 	         
 					if ( useThisSample >= 1 )
@@ -2095,7 +2095,7 @@ namespace itk
 						/** Get sampled value, and put it in the sample container */
 						(*containerIter).FixedImageValue = fixedIter.Value();
 						/** Translate index to point and store the point in the container */
-						m_FixedImage->TransformIndexToPhysicalPoint( 
+						this->m_FixedImage->TransformIndexToPhysicalPoint( 
 							fixedIter.GetIndex(),	(*containerIter).FixedImagePointValue );
 						++containerIter;
 						++nrOfSamplesSelected;
@@ -2107,7 +2107,7 @@ namespace itk
 
 				const double expected = static_cast<double>( this->m_NumberOfSpatialSamples );
 				const double selected = static_cast<double>( nrOfSamplesSelected );
-				m_DRandomHelp /= this->m_NrOfPixelsInFixedMask * 3;        
+				this->m_DRandomHelp /= this->m_NrOfPixelsInFixedMask * 3;        
 
 				/** Prepare for next walk through the image. */
 				if (containerIter != end)

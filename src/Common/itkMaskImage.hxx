@@ -17,8 +17,8 @@ namespace itk
 		: Superclass() 
 	{
 		/** Initialize.*/
-		m_Interpolator = MaskInterpolator::New();
-		m_Interpolator->SetInputImage(this);
+		this->m_Interpolator = MaskInterpolator::New();
+		this->m_Interpolator->SetInputImage(this);
 		
 	}	// end Constructor
 	
@@ -61,10 +61,10 @@ namespace itk
 			radiusarray.Fill(0);
 			radiusarray.SetElement( i, radius );
 			
-			m_Ball.SetRadius( radiusarray );
-			m_Ball.CreateStructuringElement();
+			this->m_Ball.SetRadius( radiusarray );
+			this->m_Ball.CreateStructuringElement();
 			
-			erosion[ i ]->SetKernel( m_Ball );
+			erosion[ i ]->SetKernel( this->m_Ball );
 
 			if ( i > 0 ) erosion[ i ]->SetInput( erosion[ i - 1 ]->GetOutput() );			
 		}
@@ -127,10 +127,10 @@ namespace itk
 			radiusarray.Fill(0);
 			radiusarray.SetElement( i, radius );
 			
-			m_Ball.SetRadius( radiusarray );
-			m_Ball.CreateStructuringElement();
+			this->m_Ball.SetRadius( radiusarray );
+			this->m_Ball.CreateStructuringElement();
 			
-			dilation[ i ]->SetKernel( m_Ball );
+			dilation[ i ]->SetKernel( this->m_Ball );
 
 			if ( i > 0 ) dilation[ i ]->SetInput( dilation[ i - 1 ]->GetOutput() );			
 		}

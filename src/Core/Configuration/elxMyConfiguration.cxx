@@ -15,8 +15,8 @@ namespace elastix
 	MyConfiguration::MyConfiguration()
 	{
 		/***/
-		m_ParameterFileName = "";
-		m_Initialized = false;
+		this->m_ParameterFileName = "";
+		this->m_Initialized = false;
 
 	} // end Constructor
 	
@@ -65,7 +65,7 @@ namespace elastix
 
 	int MyConfiguration::Initialize( ArgumentMapType & _arg )
 	{
-		m_ArgumentMap = _arg;
+		this->m_ArgumentMap = _arg;
 
 		/** This function can either be called by elastix or transformix.
 		 * If called by elastix the command line argument "-p" has to be
@@ -104,9 +104,9 @@ namespace elastix
 		}
 
 		/** Open the ParameterFile.*/
-		m_ParameterFile.Initialize( m_ParameterFileName.c_str() );
+		this->m_ParameterFile.Initialize( this->m_ParameterFileName.c_str() );
 
-		m_Initialized = true;
+		this->m_Initialized = true;
 
 		/** Return a value.*/
 		return 0;
@@ -122,7 +122,7 @@ namespace elastix
 
 	bool MyConfiguration::Initialized(void)
 	{
-		return m_Initialized;
+		return this->m_Initialized;
 
 	} // end Initialized
 
@@ -134,13 +134,13 @@ namespace elastix
 	const char * MyConfiguration::GetCommandLineArgument( const char * key ) const
 	{
 		/** .*/
-		if ( m_ArgumentMap.count( key ) == 0 )
+		if ( this->m_ArgumentMap.count( key ) == 0 )
 		{
 			return "";
 		}
 		else
 		{
-			return m_ArgumentMap[ key ].c_str();
+			return this->m_ArgumentMap[ key ].c_str();
 		}
 
 	} // end GetCommandLineArgument
@@ -155,8 +155,8 @@ namespace elastix
 		/** Remove all (!) entries with key 'key' and
 		 * insert one entry ( key, value ).
 		 */
-		m_ArgumentMap.erase( key );
-		m_ArgumentMap.insert( EntryType( key, value ) );
+		this->m_ArgumentMap.erase( key );
+		this->m_ArgumentMap.insert( EntryType( key, value ) );
 
 	} // end SetCommandLineArgument
 

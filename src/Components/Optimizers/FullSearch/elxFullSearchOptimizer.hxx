@@ -20,7 +20,7 @@ using namespace itk;
 		FullSearch<TElastix>
 		::FullSearch() 
 	{
-		m_OptimizationSurface = 0;
+		this->m_OptimizationSurface = 0;
 
 	} // end Constructor
 	
@@ -54,7 +54,7 @@ using namespace itk;
 	{
 		/** Get the current resolution level.*/
 		unsigned int level = static_cast<unsigned int>(
-			m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
+			this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
 		
 		/**
 		 * Read FullSearchRange from the parameter file
@@ -139,7 +139,7 @@ using namespace itk;
 					<< param_nr;
 
 				/** Store the name and create a column in xout["iteration"] */
-				m_SearchSpaceDimensionNames[param_nr] = makeString.str();
+				this->m_SearchSpaceDimensionNames[param_nr] = makeString.str();
 				xl::xout["iteration"].AddTargetCell( makeString.str().c_str() );
 
 				/** Format this xout iteration column as float */
@@ -157,15 +157,15 @@ using namespace itk;
 			nrOfSearchSpaceDimensions = this->GetNumberOfSearchSpaceDimensions();
 			
 			/** Create the image that will store the results of the full search. */
-			m_OptimizationSurface = 
+			this->m_OptimizationSurface = 
 				NDImageType::NewNDImage(nrOfSearchSpaceDimensions);
-			m_OptimizationSurface->CreateNewImage();
+			this->m_OptimizationSurface->CreateNewImage();
 			/** \todo don't do this if more than max allowable dimensions. */
 		
 			/** Set the correct size and allocate memory */
-			m_OptimizationSurface->SetRegions(
+			this->m_OptimizationSurface->SetRegions(
 				this->GetSearchSpaceSize()  );
-			m_OptimizationSurface->Allocate();
+			this->m_OptimizationSurface->Allocate();
 			/** \todo try/catch block around Allocate? */
 					
 			/** Set the name of this image on disk. */
@@ -177,7 +177,7 @@ using namespace itk;
 				<< ".R"
 				<< level
 				<< ".mhd" ;
-			m_OptimizationSurface->SetOutputFileName( makeString.str().c_str() );
+			this->m_OptimizationSurface->SetOutputFileName( makeString.str().c_str() );
 			
 			elxout
 				<< "Total number of iterations needed in this resolution: "
@@ -204,13 +204,13 @@ using namespace itk;
 		xl::xout["iteration"]["1:ItNr"]			<< this->GetCurrentIteration();
 		xl::xout["iteration"]["2:Metric"]		<< this->GetValue();
 
-		m_OptimizationSurface->SetPixel(
+		this->m_OptimizationSurface->SetPixel(
 			this->GetCurrentIndexInSearchSpace(),
 			this->GetValue()   );
 
 		SearchSpacePointType currentPoint = this->GetCurrentPointInSearchSpace();
 		unsigned int nrOfSSDims = currentPoint.GetSize();
-		NameIteratorType name_it = m_SearchSpaceDimensionNames.begin();
+		NameIteratorType name_it = this->m_SearchSpaceDimensionNames.begin();
 
 		for ( unsigned int dim = 0; dim < nrOfSSDims; dim++)
 		{	
@@ -256,10 +256,10 @@ using namespace itk;
 		elxout << "Stopping condition: " << stopcondition << "." << std::endl;
 				
 		/** Write the optimization surface to disk */
-		m_OptimizationSurface->Write(); /** \todo try/catch? */
+		this->m_OptimizationSurface->Write(); /** \todo try/catch? */
 		elxout
 			<< "\nThe scanned optimization surface is saved as: "
-			<< m_OptimizationSurface->GetOutputFileName()
+			<< this->m_OptimizationSurface->GetOutputFileName()
 			<< std::endl;
 
 		/** Print the best metric value */
@@ -289,7 +289,7 @@ using namespace itk;
 		elxout << "]\n" << std::endl;
 		
 		/** Remove the columns from xout["iteration"] */
-		NameIteratorType name_it = m_SearchSpaceDimensionNames.begin();
+		NameIteratorType name_it = this->m_SearchSpaceDimensionNames.begin();
 		for ( unsigned int dim = 0; dim < nrOfSSDims; dim++)
 		{	
 			xl::xout["iteration"].RemoveTargetCell( name_it->second.c_str() );
@@ -297,7 +297,7 @@ using namespace itk;
 		}
 
 		/** Clear the dimension names of the previous resolution's search space */
-		m_SearchSpaceDimensionNames.clear();
+		this->m_SearchSpaceDimensionNames.clear();
 		/** Clear the full search ranges */
 		this->SetSearchSpace(0);
 

@@ -16,8 +16,8 @@ namespace itk
 		::DeformationFieldRegulizer()
 	{
 		/** Initialize. */
-		m_IntermediaryDeformationFieldTransform = 0;
-		m_Initialized = false;
+		this->m_IntermediaryDeformationFieldTransform = 0;
+		this->m_Initialized = false;
 				
 	} // end Constructor
 	
@@ -42,14 +42,14 @@ namespace itk
 		void DeformationFieldRegulizer<TAnyITKTransform>
 		::InitializeDeformationFields( void )
 	{
-		/** Initialize m_IntermediaryDeformationFieldTransform. */
-		m_IntermediaryDeformationFieldTransform = IntermediaryDFTransformType::New();
+		/** Initialize this->m_IntermediaryDeformationFieldTransform. */
+		this->m_IntermediaryDeformationFieldTransform = IntermediaryDFTransformType::New();
 
-		/** Initialize m_IntermediaryDeformationField. */
+		/** Initialize this->m_IntermediaryDeformationField. */
 		typename VectorImageType::Pointer intermediaryDeformationField = VectorImageType::New();
-		intermediaryDeformationField->SetRegions( m_DeformationFieldRegion );
-		intermediaryDeformationField->SetSpacing( m_DeformationFieldSpacing );
-		intermediaryDeformationField->SetOrigin( m_DeformationFieldOrigin );
+		intermediaryDeformationField->SetRegions( this->m_DeformationFieldRegion );
+		intermediaryDeformationField->SetSpacing( this->m_DeformationFieldSpacing );
+		intermediaryDeformationField->SetOrigin( this->m_DeformationFieldOrigin );
 		intermediaryDeformationField->Allocate();
 
 		/** Set everything to zero. */
@@ -64,10 +64,10 @@ namespace itk
 		}
 
 		/** Set the deformation field in the transform. */
-		m_IntermediaryDeformationFieldTransform->SetCoefficientImage( intermediaryDeformationField );
+		this->m_IntermediaryDeformationFieldTransform->SetCoefficientImage( intermediaryDeformationField );
 
 		/** Set to initialized. */
-		m_Initialized = true;
+		this->m_Initialized = true;
 
 	} // end InitializeDeformationFields
 
@@ -84,7 +84,7 @@ namespace itk
 		/** Get the outputpoint of any ITK Transform and the deformationfield. */
 		OutputPointType oppAnyT, oppDF, opp;
 		oppAnyT = this->Superclass::TransformPoint( inputPoint );
-		oppDF = m_IntermediaryDeformationFieldTransform->TransformPoint( inputPoint );
+		oppDF = this->m_IntermediaryDeformationFieldTransform->TransformPoint( inputPoint );
 
 		/** Add them: don't forget to subtract ipp. */
 		for ( unsigned int i = 0; i < OutputSpaceDimension; i++ )
@@ -109,7 +109,7 @@ namespace itk
 		/** Set the vecImage (which is allocated elsewhere) and put it in
 		 * IntermediaryDeformationFieldTransform (where it is copied and split up).
 		 */
-		m_IntermediaryDeformationFieldTransform->SetCoefficientImage( vecImage );
+		this->m_IntermediaryDeformationFieldTransform->SetCoefficientImage( vecImage );
 
 	} // end UpdateIntermediaryDeformationFieldTransform
 

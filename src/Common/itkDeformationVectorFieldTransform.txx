@@ -36,7 +36,7 @@ namespace itk
 		/** Initialize m_Images. */
 		for ( unsigned int i = 0; i < SpaceDimension; i++ )
 		{
-			m_Images[ i ] = 0;
+			this->m_Images[ i ] = 0;
 		}
 		
 	} // end Constructor
@@ -75,11 +75,11 @@ namespace itk
 		 */
 		for ( unsigned int i = 0; i < SpaceDimension; i++ )
 		{
-			m_Images[ i ] = ImageType::New();
-			m_Images[ i ]->SetRegions(	vecImage->GetLargestPossibleRegion() );
-			m_Images[ i ]->SetOrigin(		vecImage->GetOrigin() );
-			m_Images[ i ]->SetSpacing(	vecImage->GetSpacing() );
-			m_Images[ i ]->Allocate();
+			this->m_Images[ i ] = ImageType::New();
+			this->m_Images[ i ]->SetRegions(	vecImage->GetLargestPossibleRegion() );
+			this->m_Images[ i ]->SetOrigin(		vecImage->GetOrigin() );
+			this->m_Images[ i ]->SetSpacing(	vecImage->GetSpacing() );
+			this->m_Images[ i ]->Allocate();
 		}
 
 		/** Setup the iterators. */
@@ -88,7 +88,7 @@ namespace itk
 		IteratorType it[ SpaceDimension ];
 		for ( unsigned int i = 0; i < SpaceDimension; i++ )
 		{
-			it[ i ] = IteratorType( m_Images[ i ], m_Images[ i ]->GetLargestPossibleRegion() );
+			it[ i ] = IteratorType( this->m_Images[ i ], this->m_Images[ i ]->GetLargestPossibleRegion() );
 			it[ i ].GoToBegin();
 		}
 
@@ -106,7 +106,7 @@ namespace itk
 		}
 
 		/** Put it in the Superclass. */
-		this->Superclass::SetCoefficientImage( m_Images );
+		this->Superclass::SetCoefficientImage( this->m_Images );
 
 	} // end SetCoefficientImage
 

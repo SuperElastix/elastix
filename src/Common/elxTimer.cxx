@@ -15,11 +15,11 @@ using namespace itk;
 	Timer::Timer()
 	{
 		/** Initialize.*/
-		m_ElapsedTimeDHMS.resize( 4 );
-		m_StartTime = 0;
-		m_StartClock = 0;
-		m_StopTime = 0;
-		m_StopClock = 0;
+		this->m_ElapsedTimeDHMS.resize( 4 );
+		this->m_StartTime = 0;
+		this->m_StartClock = 0;
+		this->m_StopTime = 0;
+		this->m_StopClock = 0;
 		
 	} // end Constructor
 	
@@ -40,8 +40,8 @@ using namespace itk;
 	void Timer::StartTimer(void)
 	{
 		/** Get the current time.*/
-		m_StartTime = time( '\0' );
-		m_StartClock = clock();
+		this->m_StartTime = time( '\0' );
+		this->m_StartClock = clock();
 		
 	} // end StartTimer
 	
@@ -53,11 +53,11 @@ using namespace itk;
 	int Timer::StopTimer(void)
 	{
 		/** Check if m_StartTime != 0.*/
-		if ( m_StartTime == 0 ) return 1;
+		if ( this->m_StartTime == 0 ) return 1;
 		
 		/** Get the current time.*/
-		m_StopTime = time( '\0' );
-		m_StopClock = clock();
+		this->m_StopTime = time( '\0' );
+		this->m_StopClock = clock();
 		
 		/** Get the elapsed time.*/
 		this->ElapsedClockAndTime();
@@ -74,24 +74,24 @@ using namespace itk;
 	int Timer::ElapsedClockAndTime(void)
 	{
 		/** Check if if m_StopTime != 0.*/
-		if ( m_StopTime == 0 ) return 1;
+		if ( this->m_StopTime == 0 ) return 1;
 		
 		/** Calculate time difference = m_Elapsedtime.*/
-		m_ElapsedTime = static_cast<time_t>( difftime( m_StopTime, m_StartTime ) );
-		m_ElapsedClock = m_StopClock - m_StartClock;
+		this->m_ElapsedTime = static_cast<time_t>( difftime( this->m_StopTime, this->m_StartTime ) );
+		this->m_ElapsedClock = this->m_StopClock - this->m_StartClock;
 		
 		/** Fill m_ElapsedTimeSec.*/
-		m_ElapsedTimeSec = static_cast<int>( m_ElapsedTime );
+		this->m_ElapsedTimeSec = static_cast<int>( this->m_ElapsedTime );
 		
 		/** Fill m_ElapsedClockSec.*/
-		m_ElapsedClockSec = static_cast<double>( m_ElapsedClock ) / CLOCKS_PER_SEC;
+		this->m_ElapsedClockSec = static_cast<double>( this->m_ElapsedClock ) / CLOCKS_PER_SEC;
 		
 		/** Fill m_TimeDHMS.*/
-		struct tm *sElapsedTime = localtime( &m_ElapsedTime );
-		m_ElapsedTimeDHMS[ 0 ] = sElapsedTime->tm_yday;
-		m_ElapsedTimeDHMS[ 1 ] = sElapsedTime->tm_hour - 1;
-		m_ElapsedTimeDHMS[ 2 ] = sElapsedTime->tm_min;
-		m_ElapsedTimeDHMS[ 3 ] = sElapsedTime->tm_sec;
+		struct tm *sElapsedTime = localtime( &(this->m_ElapsedTime) );
+		this->m_ElapsedTimeDHMS[ 0 ] = sElapsedTime->tm_yday;
+		this->m_ElapsedTimeDHMS[ 1 ] = sElapsedTime->tm_hour - 1;
+		this->m_ElapsedTimeDHMS[ 2 ] = sElapsedTime->tm_min;
+		this->m_ElapsedTimeDHMS[ 3 ] = sElapsedTime->tm_sec;
 		
 		return 0;
 
@@ -106,14 +106,14 @@ using namespace itk;
 	{
 				
 		/** Convert time to string.*/
-		struct tm *sStartTime = localtime( &m_StartTime );
+		struct tm *sStartTime = localtime( &(this->m_StartTime) );
 
-		m_StartTimeString =  asctime( sStartTime );
+		this->m_StartTimeString =  asctime( sStartTime );
 
-		m_StartTimeString.erase( m_StartTimeString.end() - 1 );
+		this->m_StartTimeString.erase( this->m_StartTimeString.end() - 1 );
 		
-				
-		return m_StartTimeString;
+		/** Return a value. */
+		return this->m_StartTimeString;
 
 	} // end PrintStartTime
 	
@@ -126,14 +126,14 @@ using namespace itk;
 	{
 				
 		/** Convert time to string.*/
-		struct tm *sStopTime = localtime( &m_StopTime );
+		struct tm *sStopTime = localtime( &(this->m_StopTime) );
 
-		m_StopTimeString = asctime( sStopTime );
+		this->m_StopTimeString = asctime( sStopTime );
 
-		m_StopTimeString.erase( m_StopTimeString.end() - 1 );
+		this->m_StopTimeString.erase( this->m_StopTimeString.end() - 1 );
 
-						
-		return m_StopTimeString;
+		/** Return a value. */
+		return this->m_StopTimeString;
 
 	} // end PrintStopTime
 		
@@ -147,17 +147,18 @@ using namespace itk;
 		
 		/** Print m_ElapsedTime in Days, Hours, Minutes and Seconds.*/
 		std::ostringstream make_string( "" );
-		if ( m_ElapsedTimeDHMS[ 0 ] != 0 )
-			make_string << m_ElapsedTimeDHMS[ 0 ] << " Days, ";
-		if ( m_ElapsedTimeDHMS[ 1 ] != 0 )
-			make_string << m_ElapsedTimeDHMS[ 1 ] << " Hours, ";
-		if ( m_ElapsedTimeDHMS[ 2 ] != 0 )
-			make_string << m_ElapsedTimeDHMS[ 2 ] << " Minutes, ";
-		make_string << m_ElapsedTimeDHMS[ 3 ] << " Seconds";
+		if ( this->m_ElapsedTimeDHMS[ 0 ] != 0 )
+			make_string << this->m_ElapsedTimeDHMS[ 0 ] << " Days, ";
+		if ( this->m_ElapsedTimeDHMS[ 1 ] != 0 )
+			make_string << this->m_ElapsedTimeDHMS[ 1 ] << " Hours, ";
+		if ( this->m_ElapsedTimeDHMS[ 2 ] != 0 )
+			make_string << this->m_ElapsedTimeDHMS[ 2 ] << " Minutes, ";
+		make_string << this->m_ElapsedTimeDHMS[ 3 ] << " Seconds";
 		
-		m_ElapsedTimeDHMSString = make_string.str();
+		this->m_ElapsedTimeDHMSString = make_string.str();
 		
-		return m_ElapsedTimeDHMSString;
+		/** Return a value. */
+		return this->m_ElapsedTimeDHMSString;
 
 	} // end PrintElapsedTimeDHMS
 	
@@ -168,15 +169,13 @@ using namespace itk;
 	
 	const std::string & Timer::PrintElapsedTimeSec( void )
 	{
-		
-
 		/** Print m_ElapsedTime in seconds.*/
 		std::ostringstream make_string( "" );
-		make_string << m_ElapsedTimeSec;
+		make_string << this->m_ElapsedTimeSec;
 
-		m_ElapsedTimeSecString = make_string.str();
+		this->m_ElapsedTimeSecString = make_string.str();
 		
-		return m_ElapsedTimeSecString;
+		return this->m_ElapsedTimeSecString;
 
 	} // end PrintElapsedTimeSec
 	
@@ -187,14 +186,13 @@ using namespace itk;
 	
 	const std::string & Timer::PrintElapsedClock( void )
 	{
-				
 		/** Print m_ElapsedClock.*/
 		std::ostringstream make_string( "" );
-		make_string << m_ElapsedClock;
+		make_string << this->m_ElapsedClock;
 
-		m_ElapsedClockString = make_string.str();
+		this->m_ElapsedClockString = make_string.str();
 		
-		return m_ElapsedClockString;
+		return this->m_ElapsedClockString;
 
 	} // end PrintElapsedClock
 
@@ -205,15 +203,13 @@ using namespace itk;
 	
 	const std::string & Timer::PrintElapsedClockSec( void )
 	{
-		
 		/** Print m_ElapsedClockSec.*/
-
 		std::ostringstream make_string( "" );
-		make_string << m_ElapsedClockSec;
+		make_string << this->m_ElapsedClockSec;
 		
-		m_ElapsedClockSecString = make_string.str();
+		this->m_ElapsedClockSecString = make_string.str();
 		
-		return m_ElapsedClockSecString;
+		return this->m_ElapsedClockSecString;
 
 	} // end PrintElapsedClockSec
 	

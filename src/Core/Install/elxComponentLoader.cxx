@@ -66,8 +66,8 @@ namespace elastix
 		
 	ComponentLoader::ComponentLoader()
 	{
-		m_LibLoader = LibLoaderType::New();
-		m_ImageTypeSupportInstalled = false;
+		this->m_LibLoader = LibLoaderType::New();
+		this->m_ImageTypeSupportInstalled = false;
 	}
 
 	
@@ -98,11 +98,11 @@ namespace elastix
 
 		/** Call class<1>::DO(...) */
 		int _InstallDummy_SupportedImageTypes = 
-			_installsupportedimagesrecursively<1>::DO( "Elastix", m_ComponentDatabase );
+			_installsupportedimagesrecursively<1>::DO( "Elastix", this->m_ComponentDatabase );
 
 		if ( _InstallDummy_SupportedImageTypes==0 ) 
 		{
-			m_ImageTypeSupportInstalled = true;
+			this->m_ImageTypeSupportInstalled = true;
 		}
 
 		return _InstallDummy_SupportedImageTypes;
@@ -117,7 +117,7 @@ namespace elastix
 	{
 		int installReturnCode = 0;
 
-		if (!m_ImageTypeSupportInstalled)
+		if (!this->m_ImageTypeSupportInstalled)
 		{
 			installReturnCode =	this->InstallSupportedImageTypes();
 			if (installReturnCode != 0)
@@ -160,9 +160,9 @@ namespace elastix
 		unsigned int nrOfFiles =
 			static_cast<unsigned int>( componentDir->GetNumberOfFiles() );
 		std::string libextension = itksys::SystemTools::LowerCase(
-					m_LibLoader->LibExtension() );
+					this->m_LibLoader->LibExtension() );
 		std::string libprefix = itksys::SystemTools::LowerCase(
-					m_LibLoader->LibPrefix() );
+					this->m_LibLoader->LibPrefix() );
 		std::string currentLibName("");
 		LibHandleType currentLib;
 		void* addressOfInstallComponentFunction = 0;
@@ -216,15 +216,15 @@ namespace elastix
 			{			
 		
 				/** Open the lib */
-				m_LibHandleContainer.push( m_LibLoader->OpenLibrary( currentLibName.c_str() ) );
-				//currentLib = m_LibLoader->OpenLibrary( currentLibName.c_str() );
-				currentLib = m_LibHandleContainer.top();
+				this->m_LibHandleContainer.push( this->m_LibLoader->OpenLibrary( currentLibName.c_str() ) );
+				//currentLib = this->m_LibLoader->OpenLibrary( currentLibName.c_str() );
+				currentLib = this->m_LibHandleContainer.top();
 				/** Store the handle to the lib, because we need it for closing the lib later. */
 				//LibHandleContainer.push(currentLib);
 				
 				/** Look for the InstallComponent function */
 				addressOfInstallComponentFunction	=
-					m_LibLoader->GetSymbolAddress(currentLib, "InstallComponent");
+					this->m_LibLoader->GetSymbolAddress(currentLib, "InstallComponent");
 				
 				/** If it exists, execute it */
 				if (addressOfInstallComponentFunction)
@@ -241,7 +241,7 @@ namespace elastix
 						<< "Installing component: "
 						<< currentLibName
 						<< std::endl;
-					installReturnCode = installer( m_ComponentDatabase, & xout );
+					installReturnCode = installer( this->m_ComponentDatabase, & xout );
 
 					if ( installReturnCode )
 					{
@@ -287,19 +287,19 @@ namespace elastix
 		LibHandleType currentLib;
 
 		unsigned int nrOfLibs =
-			static_cast<unsigned int>( m_LibHandleContainer.size() );
+			static_cast<unsigned int>( this->m_LibHandleContainer.size() );
 
 		for (unsigned int i = 0; i < nrOfLibs; i++)
 		{
 			
-			currentLib = m_LibHandleContainer.top();
-			m_LibLoader->CloseLibrary(currentLib);
-			m_LibHandleContainer.pop();
+			currentLib = this->m_LibHandleContainer.top();
+			this->m_LibLoader->CloseLibrary(currentLib);
+			this->m_LibHandleContainer.pop();
 
 		}
   
 		//Not necessary I think:
-		//m_ComponentDatabase = 0;
+		//this->m_ComponentDatabase = 0;
 
 	}
 

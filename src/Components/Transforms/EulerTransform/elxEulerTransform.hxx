@@ -30,8 +30,8 @@ namespace elastix
 		ParametersType dummyInitialParameters( this->GetNumberOfParameters() );
 		dummyInitialParameters.Fill(0.0);
 
-		/** And give it to m_Registration.*/
-		m_Registration->GetAsITKBaseType()
+		/** And give it to this->m_Registration.*/
+		this->m_Registration->GetAsITKBaseType()
 			->SetInitialTransformParameters( dummyInitialParameters );
 		
 		/** Task 2 - Set the scales.*/
@@ -60,7 +60,7 @@ namespace elastix
 		ScalesType newscales( this->GetNumberOfParameters() );
 		newscales.Fill(1.0);
 		double scaler = 100000.0;
-		m_Configuration->ReadParameter( scaler, "Scaler", 0 );
+		this->m_Configuration->ReadParameter( scaler, "Scaler", 0 );
 		/**
 		 * - If the Dimension is 3, the first 3 parameters represent angles.
 		 * - If the Dimension is 2, only the first parameter represent an angle.
@@ -73,7 +73,7 @@ namespace elastix
 		}
 
 		/** And give it to the optimizer.*/
-		m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newscales );
+		this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newscales );
 		
 	} // end BeforeRegistration
 	

@@ -22,12 +22,12 @@ using namespace itk;
 		BSplineTransform()
 	{
 		/** Initialize.*/		
-		m_Coeffs1 = 0;
+		this->m_Coeffs1 = 0;
 		
-		m_GridSpacingFactor = 8.0;
+		this->m_GridSpacingFactor = 8.0;
 
-		m_Caster	= TransformCastFilterType::New();
-		m_Writer	= TransformWriterType::New();
+		this->m_Caster	= TransformCastFilterType::New();
+		this->m_Writer	= TransformWriterType::New();
 		
 	} // end Constructor
 	
@@ -76,7 +76,7 @@ using namespace itk;
 		dummyInitialParameters.Fill(0.0);
 		
 		/** Put parameters in the registration.*/
-		m_Registration->GetAsITKBaseType()->SetInitialTransformParameters( dummyInitialParameters );
+		this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters( dummyInitialParameters );
 		
 	} // end BeforeRegistration
 	
@@ -90,7 +90,7 @@ using namespace itk;
 		::BeforeEachResolution(void)
 	{
 		/** What is the current resolution level?*/
-		unsigned int level = m_Registration->GetAsITKBaseType()->GetCurrentLevel();
+		unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
 		/** What is the UpsampleGridOption?
 		 * This option defines the user's wish:
@@ -100,7 +100,7 @@ using namespace itk;
 		 */
 		std::string upsampleBSplineGridOption( "true" );
 		bool upsampleGridOption = true;
-		m_Configuration->ReadParameter( upsampleBSplineGridOption, "UpsampleGridOption", 0, true );
+		this->m_Configuration->ReadParameter( upsampleBSplineGridOption, "UpsampleGridOption", 0, true );
 		if ( upsampleBSplineGridOption == "true" ) upsampleGridOption = true;
 		else if ( upsampleBSplineGridOption == "false" ) upsampleGridOption = false;
 		
@@ -149,7 +149,7 @@ using namespace itk;
 		/** Get the fixed image.*/
 		typename FixedImageType::Pointer fixedimage;
 		fixedimage = const_cast< FixedImageType * >(
-			m_Registration->GetAsITKBaseType()->GetFixedImage() );
+			this->m_Registration->GetAsITKBaseType()->GetFixedImage() );
 		
 		/** Get the size etc. of this image */
 
@@ -165,8 +165,8 @@ using namespace itk;
 		gridorigin	=	fixedimage->GetOrigin();
 		
 		/** Read the desired grid spacing */
-		m_GridSpacingFactor = 8.0;
-		m_Configuration->ReadParameter( m_GridSpacingFactor, "FinalGridSpacing", 0 );
+		this->m_GridSpacingFactor = 8.0;
+		this->m_Configuration->ReadParameter( this->m_GridSpacingFactor, "FinalGridSpacing", 0 );
 
 		/** If multigrid, then start with a lower resolution grid */
 		if (upsampleGridOption)
@@ -174,18 +174,18 @@ using namespace itk;
 			/** cast to int, otherwise gcc does not understand it... */
 			int nrOfResolutions = static_cast<int>(
 				this->GetRegistration()->GetAsITKBaseType()->GetNumberOfLevels()  );
-			m_GridSpacingFactor *= pow(2.0, (nrOfResolutions-1) );
+			this->m_GridSpacingFactor *= pow(2.0, (nrOfResolutions-1) );
 		}
 
 		/** Determine the correct grid size */
 		for ( unsigned int j = 0; j < SpaceDimension; j++ )
 		{
-			gridspacing[ j ] = gridspacing[ j ] * m_GridSpacingFactor;
+			gridspacing[ j ] = gridspacing[ j ] * this->m_GridSpacingFactor;
 			gridorigin[j] -= gridspacing[j] *
 				floor( static_cast<double>(SplineOrder) / 2.0 );
 			gridindex[j] = 0; // isn't this always the case anyway?
 			gridsize[j]= static_cast< typename RegionType::SizeValueType >
-				( ceil( gridsize[j] / m_GridSpacingFactor ) + SplineOrder );
+				( ceil( gridsize[j] / this->m_GridSpacingFactor ) + SplineOrder );
 		}
 		
 		/** Set the size data in the transform */
@@ -196,11 +196,12 @@ using namespace itk;
 		this->SetGridOrigin( gridorigin );
 		
 		/** Set initial parameters to 0.0 */
-		m_Parameterspointer =
+		this->m_Parameterspointer =
 			new ParametersType( this->GetNumberOfParameters() );
-		m_Parameterspointer->Fill(0.0);
-		m_Registration->GetAsITKBaseType()->SetInitialTransformParametersOfNextLevel( *m_Parameterspointer );
-		delete m_Parameterspointer;
+		this->m_Parameterspointer->Fill(0.0);
+		this->m_Registration->GetAsITKBaseType()->
+			SetInitialTransformParametersOfNextLevel( *(this->m_Parameterspointer) );
+		delete this->m_Parameterspointer;
 		
 	} // end SetInitialGrid()
 	
@@ -237,7 +238,7 @@ using namespace itk;
 		/** Get the fixed image.*/
 		typename FixedImageType::Pointer fixedimage;
 		fixedimage = const_cast< FixedImageType * >(
-			m_Registration->GetAsITKBaseType()->GetFixedImage() );
+			this->m_Registration->GetAsITKBaseType()->GetFixedImage() );
 		
 		/** Set start values for computing the new grid size. */
 		RegionType gridregionHigh	= fixedimage->GetLargestPossibleRegion();
@@ -247,38 +248,39 @@ using namespace itk;
 		OriginType gridoriginHigh	=	fixedimage->GetOrigin();
 		
 		/** A twice as dense grid: */
-		m_GridSpacingFactor /= 2;
+		this->m_GridSpacingFactor /= 2;
 
 		/** Determine the correct grid size */
 		for ( unsigned int j = 0; j < SpaceDimension; j++ )
 		{
-			gridspacingHigh[ j ] = gridspacingHigh[ j ] * m_GridSpacingFactor;
+			gridspacingHigh[ j ] = gridspacingHigh[ j ] * this->m_GridSpacingFactor;
 			gridoriginHigh[j] -= gridspacingHigh[j] *
 				floor( static_cast<double>(SplineOrder) / 2.0 );
 			gridindexHigh[j] = 0; // isn't this always the case anyway?
 			gridsizeHigh[j]= static_cast< typename RegionType::SizeValueType >
-				( ceil( gridsizeHigh[j] / m_GridSpacingFactor ) + SplineOrder );
+				( ceil( gridsizeHigh[j] / this->m_GridSpacingFactor ) + SplineOrder );
 		}
 		gridregionHigh.SetSize(gridsizeHigh);
 		gridregionHigh.SetIndex(gridindexHigh);
 
 		/** Get the latest transform parameters */
-		m_Parameterspointer =
+		this->m_Parameterspointer =
 			new ParametersType( this->GetNumberOfParameters() );
-		*m_Parameterspointer = m_Registration->GetAsITKBaseType()->GetLastTransformParameters();
+		*(this->m_Parameterspointer) =
+			this->m_Registration->GetAsITKBaseType()->GetLastTransformParameters();
 		
-		/** Get the pointer to the data in *m_Parameterspointer */
-		PixelType * dataPointer = static_cast<PixelType *>( m_Parameterspointer->data_block() );
+		/** Get the pointer to the data in *(this->m_Parameterspointer) */
+		PixelType * dataPointer = static_cast<PixelType *>( this->m_Parameterspointer->data_block() );
 		/** Get the number of pixels that should go into one coefficient image */
 		unsigned int numberOfPixels = ( this->GetGridRegion() ).GetNumberOfPixels();
 		
 		/** Set the correct region/size info of the coeff image
 		* that will be filled with the current parameters */
-		m_Coeffs1 = ImageType::New();
-		m_Coeffs1->SetRegions( this->GetGridRegion() );
-		m_Coeffs1->SetOrigin( (this->GetGridOrigin()).GetDataPointer() );
-		m_Coeffs1->SetSpacing( (this->GetGridSpacing()).GetDataPointer() );
-		//m_Coeffs1->Allocate() not needed because the data is set by directly pointing
+		this->m_Coeffs1 = ImageType::New();
+		this->m_Coeffs1->SetRegions( this->GetGridRegion() );
+		this->m_Coeffs1->SetOrigin( (this->GetGridOrigin()).GetDataPointer() );
+		this->m_Coeffs1->SetSpacing( (this->GetGridSpacing()).GetDataPointer() );
+		//this->m_Coeffs1->Allocate() not needed because the data is set by directly pointing
 		// to an existing piece of memory.
 		
 		/** 
@@ -286,7 +288,7 @@ using namespace itk;
 		 * correct size (which is now approx 2^dim as big as the
 		 * size in the previous resolution!)
 		 */
-		m_Parameterspointer_out = new ParametersType(
+		this->m_Parameterspointer_out = new ParametersType(
 			gridregionHigh.GetNumberOfPixels() * SpaceDimension );
 
 		/** initialise iterator in the parameterspointer_out */
@@ -298,7 +300,7 @@ using namespace itk;
 			/** Fill the coeff image with parameter data (displacements
 			 * of the control points in the direction of dimension j).
 			 */		
-			m_Coeffs1->GetPixelContainer()->
+			this->m_Coeffs1->GetPixelContainer()->
 				SetImportPointer( dataPointer, numberOfPixels );
 			dataPointer += numberOfPixels;
 				
@@ -327,7 +329,7 @@ using namespace itk;
 			upsampler->SetOutputStartIndex(gridindexHigh);
 			upsampler->SetOutputSpacing(gridspacingHigh);
 			upsampler->SetOutputOrigin(gridoriginHigh);
-		  upsampler->SetInput( m_Coeffs1 );
+		  upsampler->SetInput( this->m_Coeffs1 );
 						
 			decompositionFilter->SetSplineOrder(SplineOrder);
 			decompositionFilter->SetInput( upsampler->GetOutput() );
@@ -349,15 +351,15 @@ using namespace itk;
 			}
 			
 			/** Create an upsampled image.*/
-			m_Coeffs2 = decompositionFilter->GetOutput();
+			this->m_Coeffs2 = decompositionFilter->GetOutput();
 					
 			/** Create an iterator on the new coefficient image*/
-			IteratorType iterator( m_Coeffs2, gridregionHigh );
+			IteratorType iterator( this->m_Coeffs2, gridregionHigh );
 			iterator.GoToBegin();
 			while ( !iterator.IsAtEnd() )
 			{
 				/** Copy the contents of coeff2 in a ParametersType array*/
-				(*m_Parameterspointer_out)[ i ] = iterator.Get();
+				(*(this->m_Parameterspointer_out))[ i ] = iterator.Get();
 				++iterator;
 				++i;
 			} // end while coeff2 iterator loop
@@ -368,11 +370,11 @@ using namespace itk;
 		this->SetGridRegion( gridregionHigh );
 		this->SetGridOrigin( gridoriginHigh );
 		this->SetGridSpacing( gridspacingHigh );
-		m_Registration->GetAsITKBaseType()->
-			SetInitialTransformParametersOfNextLevel( *m_Parameterspointer_out );
+		this->m_Registration->GetAsITKBaseType()->
+			SetInitialTransformParametersOfNextLevel( *(this->m_Parameterspointer_out) );
 		
-		delete m_Parameterspointer;
-		delete m_Parameterspointer_out;	
+		delete this->m_Parameterspointer;
+		delete this->m_Parameterspointer_out;	
 		
 	}  // end IncreaseScale()
 	
@@ -403,10 +405,10 @@ using namespace itk;
 		/** Get GridSize, GridIndex, GridSpacing and GridOrigin.*/
 		for ( unsigned int i = 0; i < SpaceDimension; i++ )
 		{
-			m_Configuration->ReadParameter( gridsize[ i ], "GridSize", i );
-			m_Configuration->ReadParameter( gridindex[ i ], "GridIndex", i );
-			m_Configuration->ReadParameter( gridspacing[ i ], "GridSpacing", i );
-			m_Configuration->ReadParameter( gridorigin[ i ], "GridOrigin", i );
+			this->m_Configuration->ReadParameter( gridsize[ i ], "GridSize", i );
+			this->m_Configuration->ReadParameter( gridindex[ i ], "GridIndex", i );
+			this->m_Configuration->ReadParameter( gridspacing[ i ], "GridSpacing", i );
+			this->m_Configuration->ReadParameter( gridorigin[ i ], "GridOrigin", i );
 		}
 		
 		/** Set it all.*/
@@ -489,7 +491,7 @@ using namespace itk;
 		xout["transpar"] << origin[ SpaceDimension - 1 ] << ")" << std::endl;
 
 		/** Set the precision back to default value.*/
-		xout["transpar"] << std::setprecision( m_Elastix->GetDefaultOutputPrecision() );
+		xout["transpar"] << std::setprecision( this->m_Elastix->GetDefaultOutputPrecision() );
 
 		/** If wanted, write the TransformParameters as deformation
 		 * images to a file.
@@ -506,36 +508,36 @@ using namespace itk;
 				(this->GetGridRegion()).GetNumberOfPixels();
 			
 			/** Initialise the coeffs image */
-			m_Coeffs1->SetRegions( this->GetGridRegion() );
-			m_Coeffs1->SetOrigin( (this->GetGridOrigin()).GetDataPointer() );
-			m_Coeffs1->SetSpacing( (this->GetGridSpacing()).GetDataPointer() );
+			this->m_Coeffs1->SetRegions( this->GetGridRegion() );
+			this->m_Coeffs1->SetOrigin( (this->GetGridOrigin()).GetDataPointer() );
+			this->m_Coeffs1->SetSpacing( (this->GetGridSpacing()).GetDataPointer() );
 			
 			for ( unsigned int i = 0; i < SpaceDimension; i++ )
 			{
 				/** Get the set of parameters that represent the control point
 				 * displacements in the i-th dimension.
 				 */
-				m_Coeffs1->GetPixelContainer()->
+				this->m_Coeffs1->GetPixelContainer()->
 					SetImportPointer( dataPointer, numberOfPixels );
 				dataPointer += numberOfPixels;
-				m_Coeffs1->Modified();
+				this->m_Coeffs1->Modified();
 				
 				/** Create complete filename: "name"."dimension".mhd
 				 * --> two files are created: a header (.mhd) and a data (.raw) file.
 				 */
 				std::ostringstream makeFileName( "" );
-				makeFileName << m_Configuration->GetCommandLineArgument("-t")	<< "." << i << ".mhd";
-				m_Writer->SetFileName( makeFileName.str().c_str() );
+				makeFileName << this->m_Configuration->GetCommandLineArgument("-t")	<< "." << i << ".mhd";
+				this->m_Writer->SetFileName( makeFileName.str().c_str() );
 				
 
 				/** Write the coefficient image (i-th dimension) to file. */
-				m_Caster->SetInput( m_Coeffs1 );
-				m_Writer->SetInput( m_Caster->GetOutput() );
+				this->m_Caster->SetInput( this->m_Coeffs1 );
+				this->m_Writer->SetInput( this->m_Caster->GetOutput() );
 
 				/** Do the writing.*/
 				try
 				{
-					m_Writer->Update();
+					this->m_Writer->Update();
 				}
 				catch( itk::ExceptionObject & excp )
 				{
@@ -549,7 +551,7 @@ using namespace itk;
 				}
 				
 				/** Force the writer to make a new .raw file.*/
-				m_Writer->SetImageIO(NULL);
+				this->m_Writer->SetImageIO(NULL);
 				
 			}  // end for i
 			

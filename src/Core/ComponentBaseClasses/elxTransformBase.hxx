@@ -16,9 +16,9 @@ namespace elastix
 		TransformBase<TElastix>::TransformBase()
 	{
 		/** Initialize.*/
-		m_TransformParametersPointer = 0;
-		m_ConfigurationInitialTransform = 0;
-		m_ReadWriteTransformParameters = true; // default
+		this->m_TransformParametersPointer = 0;
+		this->m_ConfigurationInitialTransform = 0;
+		this->m_ReadWriteTransformParameters = true; // default
 
 	} // end Constructor
 
@@ -31,9 +31,9 @@ namespace elastix
 		TransformBase<TElastix>::~TransformBase()
 	{
 		/** Delete.*/
-		if (m_TransformParametersPointer)
+		if (this->m_TransformParametersPointer)
 		{
-			delete m_TransformParametersPointer;
+			delete this->m_TransformParametersPointer;
 		}
 
 	} // end Destructor
@@ -52,7 +52,7 @@ namespace elastix
 		std::string check("");
 		
 		/** Check for appearance of "-t0".*/
-		check = m_Configuration->GetCommandLineArgument( "-t0" );
+		check = this->m_Configuration->GetCommandLineArgument( "-t0" );
 		if ( check.empty() )
 		{
 			elxout << "-t0\t\tunspecified, so no initial transform used" << std::endl;
@@ -82,7 +82,7 @@ namespace elastix
 		std::string check = "";
 
 		/** Check for appearance of "-ipp".*/
-		check = m_Configuration->GetCommandLineArgument( "-ipp" );
+		check = this->m_Configuration->GetCommandLineArgument( "-ipp" );
 		if ( check == "" )
 		{
 			elxout << "-ipp\t\tunspecified, so no inputpoints transformed" << std::endl;
@@ -109,7 +109,7 @@ namespace elastix
 		* transform with the current transform.
 		*/
 		std::string howToCombineTransforms = "Add"; //default
-		m_Configuration->ReadParameter( howToCombineTransforms, "HowToCombineTransforms", 0, true );
+		this->m_Configuration->ReadParameter( howToCombineTransforms, "HowToCombineTransforms", 0, true );
 
 		/***/
 		TransformGrouperInterface * thisAsGrouper = 
@@ -120,13 +120,13 @@ namespace elastix
 		}
 
 		/***/
-		if ( m_Elastix->GetInitialTransform() )
+		if ( this->m_Elastix->GetInitialTransform() )
 		{
-			this->SetInitialTransform( m_Elastix->GetInitialTransform() );
+			this->SetInitialTransform( this->m_Elastix->GetInitialTransform() );
 		}
 		else
 		{
-			std::string fileName =  m_Configuration->GetCommandLineArgument( "-t0" );
+			std::string fileName =  this->m_Configuration->GetCommandLineArgument( "-t0" );
 			if ( !fileName.empty() )
 			{
 				this->ReadInitialTransformFromFile(	fileName.c_str() );
@@ -189,7 +189,7 @@ namespace elastix
 		void TransformBase<TElastix>::AfterRegistrationBase(void)
 	{
 		/** Get the final Parameters.*/
-		ParametersType finalParameters = m_Registration->GetAsITKBaseType()->GetLastTransformParameters();
+		ParametersType finalParameters = this->m_Registration->GetAsITKBaseType()->GetLastTransformParameters();
 
 		/** Set the final Parameters for the resampler.*/
 		this->GetAsITKBaseType()->SetParameters( finalParameters );
@@ -205,7 +205,7 @@ namespace elastix
 		void TransformBase<TElastix>::ReadFromFile(void)
 	{
 		/** 
-		 * This method assumes m_Configuration is initialised with a
+		 * This method assumes this->m_Configuration is initialised with a
 		 * transformparameterfile, so not an elastix parameter file!!
 		 */
 						
@@ -213,21 +213,21 @@ namespace elastix
 
 		/** Get the number of TransformParameters.*/
 		unsigned int NumberOfParameters = 0;
-		m_Configuration->ReadParameter( NumberOfParameters, "NumberOfParameters", 0 );
+		this->m_Configuration->ReadParameter( NumberOfParameters, "NumberOfParameters", 0 );
 
-		if ( m_ReadWriteTransformParameters )
+		if ( this->m_ReadWriteTransformParameters )
 		{
 			/** Get the TransformParameters. */
-			if ( m_TransformParametersPointer ) delete m_TransformParametersPointer;
-			m_TransformParametersPointer = new ParametersType( NumberOfParameters );
+			if ( this->m_TransformParametersPointer ) delete this->m_TransformParametersPointer;
+			this->m_TransformParametersPointer = new ParametersType( NumberOfParameters );
 
 			/** If NumberOfParameters < 20, we read in the normal way.*/
 			if ( NumberOfParameters < 20 )
 			{			
 				for ( unsigned int i = 0; i < NumberOfParameters; i++ )
 				{
-					m_Configuration->ReadParameter(
-						(*m_TransformParametersPointer)[ i ], "TransformParameters", i );
+					this->m_Configuration->ReadParameter(
+						(*(this->m_TransformParametersPointer))[ i ], "TransformParameters", i );
 				}
 			}
 			/** Else, do the reading more 'manually'.
@@ -264,7 +264,7 @@ namespace elastix
 							/** Now read the TransformParameters.*/
 							for ( unsigned int i = 0; i < NumberOfParameters; i++ )
 							{
-								input >> (*m_TransformParametersPointer)[ i ];
+								input >> (*(this->m_TransformParametersPointer))[ i ];
 							}
 							/** We are done, so no need for reading more lines.*/
 							nextline = false;
@@ -274,14 +274,14 @@ namespace elastix
 			} // end else
 
 			/** Set the parameters into this transform.*/
-			this->GetAsITKBaseType()->SetParameters( *m_TransformParametersPointer );
-		} // end if m_ReadWriteTransformParameters
+			this->GetAsITKBaseType()->SetParameters( *(this->m_TransformParametersPointer) );
+		} // end if this->m_ReadWriteTransformParameters
 
 		/** Task 2 - Get the InitialTransform.*/
 
 		/** Get the InitialTransformName. */
 		std::string fileName = "";
-		m_Configuration->ReadParameter( fileName,
+		this->m_Configuration->ReadParameter( fileName,
 			"InitialTransformParametersFileName", 0 );
 		
 		/** Call the function ReadInitialTransformFromFile.*/
@@ -294,7 +294,7 @@ namespace elastix
 		 * initial transform with the current transform.
 		 */
 		std::string howToCombineTransforms = "Add"; // default
-		m_Configuration->ReadParameter( howToCombineTransforms, "HowToCombineTransforms", 0, true );
+		this->m_Configuration->ReadParameter( howToCombineTransforms, "HowToCombineTransforms", 0, true );
 		
 		/** Convert 'this' to a pointer to a TransformGrouperInterface and set how
 		 * to combine the current transform with the initial transform */
@@ -326,9 +326,9 @@ namespace elastix
 		/** Create a new configuration, which will be initialised with
 		 * the transformParameterFileName.
 		 */
-		if ( !m_ConfigurationInitialTransform )
+		if ( !(this->m_ConfigurationInitialTransform) )
 		{
-			m_ConfigurationInitialTransform = ConfigurationType::New();
+			this->m_ConfigurationInitialTransform = ConfigurationType::New();
 		}
 		
 		/** Create argmapInitialTransform.*/
@@ -336,18 +336,18 @@ namespace elastix
 		argmapInitialTransform.insert( ArgumentMapEntryType(
 			"-tp", transformParametersFileName ) );
 		
-		int dummy = m_ConfigurationInitialTransform->Initialize( argmapInitialTransform );
+		int dummy = this->m_ConfigurationInitialTransform->Initialize( argmapInitialTransform );
 		
 		/** Read the InitialTransform name.*/
 		ComponentDescriptionType InitialTransformName = "FixedCenterOfRotationAffineTransform";
-		m_ConfigurationInitialTransform->ReadParameter( InitialTransformName, "Transform", 0 );
+		this->m_ConfigurationInitialTransform->ReadParameter( InitialTransformName, "Transform", 0 );
 		
 		/** Create an InitialTransform.*/
 		ObjectType::Pointer initialTransform;
 		
 		PtrToCreator testcreator = 0;
 		testcreator = this->GetElastix()->GetComponentDatabase()->
-			GetCreator( InitialTransformName, m_Elastix->GetDBIndex() );
+			GetCreator( InitialTransformName, this->m_Elastix->GetDBIndex() );
 		initialTransform = testcreator ? testcreator() : NULL;
 		
 		Self * elx_initialTransform = dynamic_cast< Self * >( initialTransform.GetPointer() );			
@@ -357,7 +357,7 @@ namespace elastix
 		{
 			//elx_initialTransform->SetTransformParametersFileName(transformParametersFileName);
 			elx_initialTransform->SetElastix( this->GetElastix() );
-			elx_initialTransform->SetConfiguration( m_ConfigurationInitialTransform );			
+			elx_initialTransform->SetConfiguration( this->m_ConfigurationInitialTransform );			
 			elx_initialTransform->ReadFromFile();
 		
 			/** Set initial transform.*/
@@ -397,7 +397,7 @@ namespace elastix
 			<< this->elxGetClassName() << "\")" << std::endl;
 
 		/** Get the number of parameters of this transform.*/
-		unsigned int nrP = m_Registration->GetAsITKBaseType()->GetTransform()
+		unsigned int nrP = this->m_Registration->GetAsITKBaseType()->GetTransform()
 			->GetNumberOfParameters();
 
 		/** Write the number of parameters of this transform.*/
@@ -405,7 +405,7 @@ namespace elastix
 			<< nrP << ")" << std::endl;
 
 		/** Write the parameters of this transform.*/
-		if ( m_ReadWriteTransformParameters )
+		if ( this->m_ReadWriteTransformParameters )
 		{
 			if ( nrP < 20 )
 			{
@@ -430,7 +430,7 @@ namespace elastix
 				}
 				xout["transpar"] << std::endl;
 			}
-		} // end if m_WriteTransformParameters
+		} // end if this->m_WriteTransformParameters
 
 		/** Write the name of the parameters-file of the initial transform.*/
 		if ( this->GetInitialTransform() )
@@ -463,21 +463,21 @@ namespace elastix
 
 		/** Write image pixel types.*/
 		std::string fixpix, movpix;
-		m_Configuration->ReadParameter( fixpix, "FixedImagePixelType", 0 );
-		m_Configuration->ReadParameter( movpix, "MovingImagePixelType", 0 );
+		this->m_Configuration->ReadParameter( fixpix, "FixedImagePixelType", 0 );
+		this->m_Configuration->ReadParameter( movpix, "MovingImagePixelType", 0 );
 		xout["transpar"] << "(FixedImagePixelType \""	<< fixpix << "\")" << std::endl;
 		xout["transpar"] << "(MovingImagePixelType \""	<< movpix << "\")" << std::endl;
 
 		/** Get the Size, Spacing and Origin of the fixed image.*/
 		/** \todo we get it now from the resampler, but maybe from an inputimage?? */
 		SizeType size = dynamic_cast<typename ElastixType::FixedImageType *>(
-			m_Elastix->GetFixedImage() )->GetLargestPossibleRegion().GetSize();
+			this->m_Elastix->GetFixedImage() )->GetLargestPossibleRegion().GetSize();
 		IndexType index = dynamic_cast<typename ElastixType::FixedImageType *>(
-			m_Elastix->GetFixedImage() )->GetLargestPossibleRegion().GetIndex();
+			this->m_Elastix->GetFixedImage() )->GetLargestPossibleRegion().GetIndex();
 		SpacingType spacing = dynamic_cast<typename ElastixType::FixedImageType *>(
-			m_Elastix->GetFixedImage() )->GetSpacing();
+			this->m_Elastix->GetFixedImage() )->GetSpacing();
 		OriginType origin = dynamic_cast<typename ElastixType::FixedImageType *>(
-			m_Elastix->GetFixedImage() )->GetOrigin();
+			this->m_Elastix->GetFixedImage() )->GetOrigin();
 
 		/** Write image Size.*/
 		xout["transpar"] << "(Size ";
@@ -517,7 +517,7 @@ namespace elastix
 		xout["transpar"] << origin[ FixedImageDimension - 1 ] << ")" << std::endl;
 
 		/** Set the precision back to default value.*/
-		xout["transpar"] << std::setprecision( m_Elastix->GetDefaultOutputPrecision() );
+		xout["transpar"] << std::setprecision( this->m_Elastix->GetDefaultOutputPrecision() );
 
 	} // end WriteToFile
 
@@ -597,14 +597,14 @@ namespace elastix
 			typename DummyImageType::Pointer dummyImage = DummyImageType::New();
 			RegionType region;
 			
-			region.SetIndex( m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputStartIndex() );
-			region.SetSize( m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize() );
+			region.SetIndex( this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputStartIndex() );
+			region.SetSize( this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize() );
 			dummyImage->SetRegions( region );
-			dummyImage->SetOrigin( m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputOrigin() );
-			dummyImage->SetSpacing( m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputSpacing() );
+			dummyImage->SetOrigin( this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputOrigin() );
+			dummyImage->SetSpacing( this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputSpacing() );
 			
 			/** Create filename and filestream.*/
-			std::string outputPointsFileName = m_Configuration->GetCommandLineArgument( "-out" );
+			std::string outputPointsFileName = this->m_Configuration->GetCommandLineArgument( "-out" );
 			outputPointsFileName += "outputpoints.txt";
 			std::ofstream outputPointsFile( outputPointsFileName.c_str() );
 			outputPointsFile << std::showpoint << std::fixed;
@@ -695,13 +695,13 @@ namespace elastix
 		 */
 		typename DummyImageType::Pointer dummyImage = DummyImageType::New();
 		RegionType region;
-		OriginType origin = m_Elastix->GetElxResamplerBase()
+		OriginType origin = this->m_Elastix->GetElxResamplerBase()
 			->GetAsITKBaseType()->GetOutputOrigin();
-		SpacingType spacing = m_Elastix->GetElxResamplerBase()
+		SpacingType spacing = this->m_Elastix->GetElxResamplerBase()
 			->GetAsITKBaseType()->GetOutputSpacing();
 		
-		region.SetIndex( m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputStartIndex() );
-		region.SetSize( m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize() );
+		region.SetIndex( this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputStartIndex() );
+		region.SetSize( this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize() );
 		dummyImage->SetRegions( region );
 		dummyImage->SetOrigin( origin );
 		dummyImage->SetSpacing( spacing );
@@ -746,7 +746,7 @@ namespace elastix
 		/** Create a name for the offsetImage file.*/
 		std::ostringstream makeFileName( "" );
 		makeFileName << 
-			m_Configuration->GetCommandLineArgument( "-out" ) << "deformationField.mhd";
+			this->m_Configuration->GetCommandLineArgument( "-out" ) << "deformationField.mhd";
 		
 		/** Write outputImage to disk.*/
 		typename OutputFileWriterType::Pointer outputWriter

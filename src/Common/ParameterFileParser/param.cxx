@@ -87,15 +87,15 @@ void ValueFactory::Delete( GenericValue *v)
 
 const Parameter& ParameterFile::operator[](const std::string &s)
 {
-  if ( m_File.find(s) == m_File.end() )
+  if ( this->m_File.find(s) == this->m_File.end() )
     {
-      return m_InvalidParameter;
+      return this->m_InvalidParameter;
       //      std::string temp = "ParameterFile::operator[]: Parameter \""
       //        + s + "\" was not found.";
       //      throw Exception(temp);
       //      DIE(temp.c_str());
     }
-  return m_File[s];
+  return this->m_File[s];
 }
 
 GenericValue * Parameter
@@ -104,7 +104,7 @@ GenericValue * Parameter
   typedef std::vector<GenericValue *> Superclass;
   if (this->valid() == false)
     {
-      return &m_InvalidValue;
+      return &this->m_InvalidValue;
       //      DIE("VPF::Parameter: request for element in an invalid parameter");
     }
   if (this->size() <= n)
@@ -112,7 +112,7 @@ GenericValue * Parameter
       //      throw Exception(
       //      "VPF::Parameter: request for element past the end of parameter \""
       //      + this->Key()+"\"" );
-      return &m_InvalidValue;
+      return &this->m_InvalidValue;
       //      DIE("VPF::Parameter: request for element past the end of parameter");
     }
   return Superclass::operator[](n);
@@ -145,7 +145,7 @@ void ParameterFile::Initialize(const char* fn)
         }
       else
         {
-          m_File = ::VPF_file_parse_result;
+          this->m_File = ::VPF_file_parse_result;
         }
     }
   

@@ -56,11 +56,11 @@ using namespace itk;
 	{
 		/** Get the current resolution level.*/
 		unsigned int level = static_cast<unsigned int>(
-			m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
+			this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
 				
 		/** Set the maximumNumberOfIterations.*/
 		unsigned int maximumNumberOfIterations = 100;
-		m_Configuration->ReadParameter( maximumNumberOfIterations , "MaximumNumberOfIterations", level );
+		this->m_Configuration->ReadParameter( maximumNumberOfIterations , "MaximumNumberOfIterations", level );
 		this->SetNumberOfIterations( maximumNumberOfIterations );
 
 		double a;

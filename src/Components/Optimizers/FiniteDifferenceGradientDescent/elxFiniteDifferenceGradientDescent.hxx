@@ -19,7 +19,7 @@ using namespace itk;
 		FiniteDifferenceGradientDescent<TElastix>
 		::FiniteDifferenceGradientDescent() 
 	{
-		m_ShowMetricValues = true;
+		this->m_ShowMetricValues = true;
 	} // end Constructor
 	
 
@@ -36,13 +36,13 @@ using namespace itk;
 			showMetricValues, "ShowMetricValues", 0);
 		if (showMetricValues == "false")
 		{
-			m_ShowMetricValues = false;
-			this->SetComputeCurrentValue(m_ShowMetricValues);
+			this->m_ShowMetricValues = false;
+			this->SetComputeCurrentValue(this->m_ShowMetricValues);
 		}
 		else
 		{
-			m_ShowMetricValues = true;
-			this->SetComputeCurrentValue(m_ShowMetricValues);
+			this->m_ShowMetricValues = true;
+			this->SetComputeCurrentValue(this->m_ShowMetricValues);
 		}
 
 		/** Add the target cell "stepsize" to xout["iteration"].*/
@@ -69,11 +69,11 @@ using namespace itk;
 	{
 		/** Get the current resolution level.*/
 		unsigned int level = static_cast<unsigned int>(
-			m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
+			this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
 				
 		/** Set the maximumNumberOfIterations.*/
 		unsigned int maximumNumberOfIterations = 100;
-		m_Configuration->ReadParameter( maximumNumberOfIterations , "MaximumNumberOfIterations", level );
+		this->m_Configuration->ReadParameter( maximumNumberOfIterations , "MaximumNumberOfIterations", level );
 		this->SetNumberOfIterations( maximumNumberOfIterations );
 
 		double a;
@@ -128,7 +128,7 @@ using namespace itk;
 		/** Print some information */
 		xl::xout["iteration"]["1:ItNr"]			<< this->GetCurrentIteration();
 
-		if (m_ShowMetricValues)
+		if (this->m_ShowMetricValues)
 		{
 			xl::xout["iteration"]["2:Metric"]		<< this->GetValue();
 		}
@@ -191,7 +191,7 @@ using namespace itk;
 	{
 	  /** Print the best metric value */
 		double bestValue;
-		if (m_ShowMetricValues)
+		if (this->m_ShowMetricValues)
 		{
 			bestValue = this->GetValue();
 			elxout

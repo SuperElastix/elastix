@@ -31,7 +31,7 @@ namespace xoutlibrary
 		
 		/** Call the function SetTargetCells, with as argument an empty
 		 * XStreamMapType; In this way the memory that is managed by
-		 * the cells in m_CellMap is properly deallocated */
+		 * the cells in this->m_CellMap is properly deallocated */
 
 		this->SetTargetCells( XStreamMapType() );
 		
@@ -83,7 +83,7 @@ namespace xoutlibrary
 		int xoutrow<charT, traits>::
 		AddTargetCell( const char * name )
 	{		
-		if ( m_CellMap.count( name ) == 0 )
+		if ( this->m_CellMap.count( name ) == 0 )
 		{		
 			/** A new cell (type xoutcell) is created.*/
 			XOutCellType * cell = new XOutCellType;
@@ -94,7 +94,7 @@ namespace xoutlibrary
 
 			/** Stored in a map, to make sure that later we can 
 			 * delete all mnemory, assigned in this function. */
-			m_CellMap.insert( XStreamMapEntryType( name, cell ) );
+			this->m_CellMap.insert( XStreamMapEntryType( name, cell ) );
 				
 		}
 		else 
@@ -103,7 +103,7 @@ namespace xoutlibrary
 		}
 	
 		/** Add the pointer to the TargetCell-map. */
-		return this->Superclass::AddTargetCell( name, m_CellMap[ name ] );
+		return this->Superclass::AddTargetCell( name, this->m_CellMap[ name ] );
 
 	} // end AddTargetCell
 
@@ -124,10 +124,10 @@ namespace xoutlibrary
 			returndummy = 0;
 		}
 		
-		if ( m_CellMap.count( name ) )
+		if ( this->m_CellMap.count( name ) )
 		{
-			delete m_CellMap[ name ];
-			m_CellMap.erase( name );
+			delete this->m_CellMap[ name ];
+			this->m_CellMap.erase( name );
 			returndummy = 0;
 		}
 		
@@ -144,23 +144,23 @@ namespace xoutlibrary
 		void xoutrow<charT, traits>::
 		SetTargetCells( const XStreamMapType & cellmap )
 	{
-		/** Clean the m_CellMap (cells that are created using the 
+		/** Clean the this->m_CellMap (cells that are created using the 
 		 * AddTarget(const char *) method */
 
 		XStreamMapIteratorType xit;
 
-		for ( xit = m_CellMap.begin(); xit != m_CellMap.end(); ++xit )
+		for ( xit = this->m_CellMap.begin(); xit != this->m_CellMap.end(); ++xit )
 		{
 			delete xit->second;
 		}
 		
-		m_CellMap.clear();
+		this->m_CellMap.clear();
 
 		/**	Replace the TargetCellMap with the input of this function.
 		 * The outputs are not automatically set, because the user may
 		 * want to keep the outputmap that was set in the cellmap */
 
-		m_XTargetCells = cellmap;
+		this->m_XTargetCells = cellmap;
 
 	} // end SetTargetCells
 
@@ -251,7 +251,7 @@ namespace xoutlibrary
 		XStreamMapIteratorType xit;
 
 		/** Set the output in all cells */
-		for ( xit = m_XTargetCells.begin(); xit != m_XTargetCells.end(); ++xit )
+		for ( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
 		{
 			xit->second->SetOutputs( outputmap );
 		}
@@ -273,7 +273,7 @@ namespace xoutlibrary
 		XStreamMapIteratorType xit;
 
 		/** Set the output in all cells */
-		for ( xit = m_XTargetCells.begin(); xit != m_XTargetCells.end(); ++xit )
+		for ( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
 		{
 			xit->second->SetOutputs( outputmap );
 		}
@@ -293,14 +293,14 @@ namespace xoutlibrary
 	{
 		/** Copy '*this' */
 		Self headerwriter;
-		headerwriter.SetTargetCells( m_XTargetCells ); //no CTargetCells, because they are not used in xoutrow!
-		headerwriter.SetOutputs( m_COutputs );
-		headerwriter.SetOutputs( m_XOutputs );
+		headerwriter.SetTargetCells( this->m_XTargetCells ); //no CTargetCells, because they are not used in xoutrow!
+		headerwriter.SetOutputs( this->m_COutputs );
+		headerwriter.SetOutputs( this->m_XOutputs );
 
 		/** Write the cell-names to the cells of the headerwriter.*/		
 		XStreamMapIteratorType xit;
 
-		for ( xit = m_XTargetCells.begin(); xit != m_XTargetCells.end(); ++xit )
+		for ( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
 		{
 			/** Write the cell's name to each cell. */
 			headerwriter[ xit->first.c_str() ] << xit->first;

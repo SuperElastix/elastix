@@ -14,7 +14,7 @@ namespace xoutlibrary
 	template< class charT, class traits >
 		xoutcell<charT, traits>::xoutcell()
 	{		
-		this->AddTargetCell( "InternalBuffer", &m_InternalBuffer );
+		this->AddTargetCell( "InternalBuffer", &(this->m_InternalBuffer) );
 
 	} // end Constructor
 
@@ -41,9 +41,9 @@ namespace xoutlibrary
 		void xoutcell<charT, traits>::WriteBufferedData(void)
 	{
 		/** Make sure all data is written to the string */
-		m_InternalBuffer << flush;
+		this->m_InternalBuffer << flush;
 		
-		const std::string & strbuf = m_InternalBuffer.str();
+		const std::string & strbuf = this->m_InternalBuffer.str();
 
 		const char * charbuf = strbuf.c_str();
 
@@ -63,7 +63,7 @@ namespace xoutlibrary
 		}
 
 		/** Empty the internal buffer */
-		m_InternalBuffer.str( string("") );
+		this->m_InternalBuffer.str( string("") );
 
 	} // end WriteBufferedData
 
