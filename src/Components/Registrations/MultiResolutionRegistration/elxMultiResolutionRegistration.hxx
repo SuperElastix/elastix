@@ -94,19 +94,11 @@ using namespace itk;
 		);
 
 
-		elxout << "in SetComponents " << m_Elastix->GetTransform() << " " 
-		<< m_Elastix->GetMetric() << std::endl;
-		elxout << "this-metric "<<	this->GetMetric() << std::endl;
-	
-		
-
 		this->SetTransform(
 			dynamic_cast<TransformType *>(
 				m_Elastix->GetTransform() 	)
 		);
 
-		
-		elxout << "in SetComponents thistransform and thismetric " << this->GetTransform() << " " << this->GetMetric() << std::endl;
 
 	} // end SetComponents
 

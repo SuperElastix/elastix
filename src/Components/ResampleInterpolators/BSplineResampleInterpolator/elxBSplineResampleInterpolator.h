@@ -82,9 +82,9 @@ namespace elastix
 
 	protected:
 
-		  BSplineResampleInterpolator() {std::cerr << "resampler created " << this << std::endl;}
-			virtual ~BSplineResampleInterpolator() {std::cerr << this->GetReferenceCount() << "resampinterpolator dies " << this << std::endl;};
-			
+		  BSplineResampleInterpolator() {}
+			virtual ~BSplineResampleInterpolator() {}
+						
 	private:
 
 		  BSplineResampleInterpolator( const Self& );	// purposely not implemented
