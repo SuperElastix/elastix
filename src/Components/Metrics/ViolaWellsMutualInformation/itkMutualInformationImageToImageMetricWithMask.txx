@@ -25,7 +25,7 @@
 #include "itkGaussianKernelFunction.h"
 
 /** elastix random iterator (that behaves the same in linux and windows) */
-#include "itkImageNotSoRandomConstIteratorWithIndex.h"
+#include "itkImageMoreRandomConstIteratorWithIndex.h"
 
 namespace itk
 {
@@ -113,7 +113,7 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
   SpatialSampleContainer& samples ) const
 {
   //typedef ImageRandomConstIteratorWithIndex<FixedImageType> RandomIterator;
-	typedef ImageNotSoRandomConstIteratorWithIndex<FixedImageType> RandomIterator;
+	typedef ImageMoreRandomConstIteratorWithIndex<FixedImageType> RandomIterator;
 
   RandomIterator randIter( m_FixedImage, this->GetFixedImageRegion() );
 
