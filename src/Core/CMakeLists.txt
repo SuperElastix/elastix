@@ -1,29 +1,34 @@
 PROJECT(elxCore)
 
-SET(KernelFiles 
-Kernel/elxElastixBase.cxx
-Kernel/elxElastixBase.h
+
+SET(KernelFilesForExecutables
 Kernel/elxElastixMain.cxx
 Kernel/elxElastixMain.h
-Kernel/elxElastixTemplate.h
-Kernel/elxElastixTemplate.hxx
 Kernel/elxTransformixMain.cxx
 Kernel/elxTransformixMain.h )
 
-SET(InstallFiles
+SET(KernelFilesForComponents
+Kernel/elxElastixBase.cxx
+Kernel/elxElastixBase.h
+Kernel/elxElastixTemplate.h
+Kernel/elxElastixTemplate.hxx)
+
+SET(InstallFilesForExecutables
+Install/elxComponentLoader.cxx
+Install/elxComponentLoader.h
+Install/elxDynamicLoader.h
+Install/elxDynamicLoader.cxx)
+
+SET(InstallFilesForComponents
+Install/elxComponentDatabase.cxx
+Install/elxComponentDatabase.h
 Install/elxBaseComponent.h
 Install/elxBaseComponentSE.h
 Install/elxBaseComponentSE.hxx
-Install/elxComponentDatabase.cxx
-Install/elxComponentDatabase.h
-Install/elxComponentLoader.cxx
-Install/elxComponentLoader.h
 Install/elxInstallFunctions.h
 Install/elxMacro.h
 Install/elxIncludes.h
-Install/elxSupportedImageTypes.h
-Install/elxDynamicLoader.h
-Install/elxDynamicLoader.cxx)
+Install/elxSupportedImageTypes.h)
 
 SET(ConfigurationFiles
 Configuration/elxConfigurationBase.cxx
@@ -42,7 +47,6 @@ ComponentBaseClasses/elxRegistrationBase.h
 ComponentBaseClasses/elxResampleInterpolatorBase.h
 ComponentBaseClasses/elxResamplerBase.h
 ComponentBaseClasses/elxTransformBase.h
-
 ComponentBaseClasses/elxFixedImagePyramidBase.hxx
 ComponentBaseClasses/elxInterpolatorBase.hxx
 ComponentBaseClasses/elxMetricBase.hxx
@@ -53,28 +57,49 @@ ComponentBaseClasses/elxResampleInterpolatorBase.hxx
 ComponentBaseClasses/elxResamplerBase.hxx
 ComponentBaseClasses/elxTransformBase.hxx )
  
-SOURCE_GROUP("Install" FILES ${InstallFiles} )
-SOURCE_GROUP("Kernel" FILES ${KernelFiles} )
+
+SOURCE_GROUP("Install" FILES
+	${InstallFilesForComponents}
+	${InstallFilesForExecutables} )
+	
+SOURCE_GROUP("Kernel" FILES
+${KernelFilesForComponents}
+${KernelFilesForExecutables} )
+
 SOURCE_GROUP("Configuration" FILES ${ConfigurationFiles} )
 SOURCE_GROUP("ComponentBaseClasses" FILES ${ComponentBaseClassFiles} )
 
-ADD_LIBRARY(elxCore
-${KernelFiles}
-${InstallFiles}
+
+ADD_LIBRARY(elxCore SHARED
+${KernelFilesForComponents}
+${InstallFilesForComponents}
 ${ConfigurationFiles}
 ${ComponentBaseClassFiles} )
 
 TARGET_LINK_LIBRARIES(elxCore
 elxCommon
-param
 xoutlib
 ITKBasicFilters
 ITKNumerics
 ITKIO
 ITKCommon )
+#param
 
-ADD_EXECUTABLE(elastix Main/elastix.cxx Main/elastix.h)
-ADD_EXECUTABLE(transformix Main/transformix.cxx Main/transformix.h)
+ADD_EXECUTABLE(elastix
+Main/elastix.cxx
+Main/elastix.h
+Kernel/elxElastixMain.cxx
+Kernel/elxElastixMain.h
+${InstallFilesForExecutables} )
+
+ADD_EXECUTABLE(transformix
+Main/transformix.cxx
+Main/transformix.h
+Kernel/elxElastixMain.cxx
+Kernel/elxElastixMain.h
+Kernel/elxTransformixMain.cxx
+Kernel/elxTransformixMain.h
+${InstallFilesForExecutables} )
 
 TARGET_LINK_LIBRARIES(elastix
 elxCommon
