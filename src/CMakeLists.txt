@@ -60,9 +60,16 @@ MARK_AS_ADVANCED(LIBRARY_OUTPUT_PATH EXECUTABLE_OUTPUT_PATH)
 SET(elastix_LIBRARY_PATH "${LIBRARY_OUTPUT_PATH}")
 SET(elastix_EXECUTABLE_PATH "${EXECUTABLE_OUTPUT_PATH}")
 
+# Set correct Linker options for GCC. Only tested for Linux.
+IF(CMAKE_COMPILER_IS_GNUCXX)
+  # -W1,-E means that the dynamic symbol table is exported. The component can now
+	# access the symbols of the executable.
+  SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}	-W1,-E")
+ENDIF(CMAKE_COMPILER_IS_GNUCXX)
+
 #---------------------------------------------------------------------
 # Make sure the MS VC compiler has enough memory 
-# stil necessary??
+# stil necessary?? No, it doesn't seem so.
 
 #IF(CMAKE_BUILD_TOOL MATCHES "(msdev|devenv|nmake)")
 # IF(CMAKE_CXX_FLAGS MATCHES "/Zm(0|1|2|3|4|5|6|7|8|9)*[^ ]")
@@ -84,3 +91,5 @@ SET(ELX_DOXYGEN_DIR ${elastix_SOURCE_DIR}/../dox/doxygen)
 SET(ELX_HELP_DIR ${elastix_SOURCE_DIR}/../help CACHE PATH "path to the doxygen generated help files")
 CONFIGURE_FILE(${elastix_SOURCE_DIR}/../dox/doxygen/doxyfile.in ${ELX_HELP_DIR}/doxyfile.out
 @ONLY)
+
+																

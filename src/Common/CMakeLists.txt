@@ -28,7 +28,7 @@ TransformGrouper/itkTransformGrouperInterface.h )
 
 SOURCE_GROUP("TransformGrouper" FILES ${TransformGrouperFiles} )
 
-ADD_LIBRARY(elxCommon ${CommonFiles} ${TransformGrouperFiles} )
+ADD_LIBRARY(elxCommon SHARED ${CommonFiles} ${TransformGrouperFiles} )
 
 TARGET_LINK_LIBRARIES(elxCommon
 ITKBasicFilters
