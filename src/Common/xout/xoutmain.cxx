@@ -9,7 +9,7 @@ namespace xoutlibrary
 
 
 	
-	xoutbase_type * local_xout = 0;
+	static xoutbase_type * local_xout = 0;
 
 	xoutbase_type & get_xout(void)
 	{

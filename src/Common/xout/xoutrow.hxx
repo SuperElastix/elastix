@@ -34,6 +34,7 @@ namespace xoutlibrary
 		 * the cells in m_CellMap is properly deallocated */
 
 		this->SetTargetCells( XStreamMapType() );
+		
 
 	} // end Destructor
 
