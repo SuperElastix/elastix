@@ -131,7 +131,7 @@ using namespace itk;
 	protected:
 
 		MattesMutualInformationMetric(); 
-		virtual ~MattesMutualInformationMetric() {std::cerr << "Metric dies" << std::endl;}
+		virtual ~MattesMutualInformationMetric() {}
 
 		/** Declaration of member variables.*/
 		FixedMaskImageReaderPointer		m_FixedMaskImageReader;
