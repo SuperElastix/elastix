@@ -15,8 +15,13 @@ itkMaskImage.h
 itkMaskImage.hxx
 itkNDImageBase.h
 itkNDImageTemplate.h
-itkNDImageTemplate.hxx 
-)
+itkNDImageTemplate.hxx
+itkDeformationFieldRegulizer.h
+itkDeformationFieldRegulizer.hxx
+itkDeformationFieldRegulizerForBSpline.h
+itkDeformationFieldRegulizerForBSpline.hxx
+itkDeformationVectorFieldTransform.h
+itkDeformationVectorFieldTransform.txx )
 
 SET( TransformGrouperFiles 
 TransformGrouper/itkBSplineTransformGrouper.h

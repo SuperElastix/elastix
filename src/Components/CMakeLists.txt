@@ -1,5 +1,10 @@
+#---------------------------------------------------------------------
+# Sub project name
 
 PROJECT(elxComponents)
+
+#---------------------------------------------------------------------
+# Set stuff
 
 SET(elxLinkLibs
 
@@ -19,16 +24,18 @@ ITKCommon )
 # Usage: 
 # ADD_ELXCOMPONENT( <name_of_dll> <list_of_source_and_header_files> )
 #
+
 MACRO(ADD_ELXCOMPONENT name)
   PROJECT(${name})
   ADD_LIBRARY(${name} MODULE ${ARGN} )
   TARGET_LINK_LIBRARIES( ${name} ${elxLinkLibs} )
   INSTALL_TARGETS(/. ${name})
 ENDMACRO(ADD_ELXCOMPONENT)
+
 #---------------------------------------------------------------------
+# ???
 
 FILE(GLOB_RECURSE ListOfComponents "*/CMakeLists.txt")
-
 
 FOREACH(comp ${ListOfComponents} )
   GET_FILENAME_COMPONENT(path_to_comp ${comp} PATH)
