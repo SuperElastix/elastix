@@ -25,6 +25,7 @@
 #include "itkVectorMeanDiffusionImageFilter.h"
 #include "itkResampleImageFilter.h"
 #include "itkMaximumImageFilter.h"
+#include "itkImageRegionIterator.h"
 
 
 namespace elastix
@@ -164,6 +165,8 @@ using namespace itk;
 		typedef ImageRegionIterator<
 			VectorImageType >																VectorImageIteratorType;
 		typedef FixedImageELXType													GrayValueImageType;
+		typedef ImageRegionIterator<
+			GrayValueImageType >														GrayValueImageIteratorType;
 		typedef MaximumImageFilter<
 			GrayValueImageType, GrayValueImageType,
 			GrayValueImageType >														MaximumImageFilterType;

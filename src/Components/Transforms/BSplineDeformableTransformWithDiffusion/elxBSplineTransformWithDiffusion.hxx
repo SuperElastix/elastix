@@ -242,31 +242,88 @@ using namespace itk;
 		void BSplineTransformWithDiffusion<TElastix>
 		::AfterEachIteration(void)
 	{
-		/** Find out after how many iterations a diffusion is wanted . */
-		unsigned int CurrentIterationNumber = m_Elastix->GetIterationCounter();
-		unsigned int DiffusionEachNIterations = 0;
-		m_Configuration->ReadParameter( DiffusionEachNIterations, "DiffusionEachNIterations", 0 );
+		/** Declare boolean. */
+		bool DiffusionNow;
 
-		/** Checking DiffusionEachNIterations. */
-		if ( DiffusionEachNIterations < 1 )
+		/** Find out filterpattern. */
+		unsigned int filterPattern = 1;
+		m_Configuration->ReadParameter( filterPattern, "FilterPattern", 0 );
+		if ( filterPattern != 1 && filterPattern != 2 )
 		{
-			xout["warning"] << "WARNING: DiffusionEachNIterations < 1" << std::endl;
-			xout["warning"] << "\t\tDiffusionEachNIterations is set to 1" << std::endl;
-			DiffusionEachNIterations = 1;
+			filterPattern = 1;
+			xout["warning"] << "WARNING: filterPattern set to 1" << std::endl;
 		}
+
+		/** Get the current iteration number. */
+		unsigned int CurrentIterationNumber = m_Elastix->GetIterationCounter();
 
 		/** Get the MaximumNumberOfIterations of this resolution level. */
 		unsigned int ResNr = m_Elastix->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel();
 		unsigned int MaximumNumberOfIterations = 0;
 		m_Configuration->ReadParameter( MaximumNumberOfIterations, "MaximumNumberOfIterations", ResNr );
 
-		/** Determine if diffusion is wanted after this iteration:
-		 * Do it every N iterations, but not at the first iteration
-		 * of a resolution, and also at the last iteration.
-		 */
-		bool DiffusionNow = ( ( CurrentIterationNumber + 1 ) % DiffusionEachNIterations == 0 );
-		DiffusionNow &= ( CurrentIterationNumber != 0 );
-		DiffusionNow |= ( CurrentIterationNumber == ( MaximumNumberOfIterations - 1 ) );
+		/** Find out if we have to filter now. */
+		if ( filterPattern == 1 )
+		{
+			/** Find out after how many iterations a diffusion is wanted . */
+			unsigned int DiffusionEachNIterations = 0;
+			m_Configuration->ReadParameter( DiffusionEachNIterations, "DiffusionEachNIterations", 0 );
+      
+			/** Checking DiffusionEachNIterations. */
+			if ( DiffusionEachNIterations < 1 )
+			{
+				xout["warning"] << "WARNING: DiffusionEachNIterations < 1" << std::endl;
+				xout["warning"] << "\t\tDiffusionEachNIterations is set to 1" << std::endl;
+				DiffusionEachNIterations = 1;
+			}
+
+			/** Determine if diffusion is wanted after this iteration:
+			 * Do it every N iterations, but not at the first iteration
+			 * of a resolution, and also at the last iteration.
+			 */
+			DiffusionNow = ( ( CurrentIterationNumber + 1 ) % DiffusionEachNIterations == 0 );
+			DiffusionNow &= ( CurrentIterationNumber != 0 );
+			DiffusionNow |= ( CurrentIterationNumber == ( MaximumNumberOfIterations - 1 ) );
+		}
+		else if ( filterPattern == 2 )
+		{
+			/** Find out . */
+			unsigned int afterIterations0, afterIterations1;
+			m_Configuration->ReadParameter( afterIterations0, "AfterIterations", 0 );
+			m_Configuration->ReadParameter( afterIterations1, "AfterIterations", 1 );
+
+			/** Find out . */
+			unsigned int howManyIterations0, howManyIterations1, howManyIterations2;
+			m_Configuration->ReadParameter( howManyIterations0, "HowManyIterations", 0 );
+			m_Configuration->ReadParameter( howManyIterations1, "HowManyIterations", 1 );
+			m_Configuration->ReadParameter( howManyIterations2, "HowManyIterations", 2 );
+
+			/** The first afterIterations0 the deformationField is filtered
+			 * every howManyIterations0 iterations. Then, for iterations between
+			 * afterIterations0 and afterIterations1 , the deformationField
+			 * is filtered after every howManyIterations1 iterations. Finally,
+			 * the deformationField is filtered every howManyIterations2 iterations.
+			 */
+			unsigned int diffusionEachNIterations;
+			if ( CurrentIterationNumber < afterIterations0 )
+			{
+				diffusionEachNIterations = howManyIterations0;
+			}
+			else if ( CurrentIterationNumber >= afterIterations0 && CurrentIterationNumber < afterIterations1 )
+			{
+				diffusionEachNIterations = howManyIterations1;
+			}
+			else
+			{
+				diffusionEachNIterations = howManyIterations2;
+			}
+
+			/** This iteration filteren? Also filter after the last iteration. */
+			DiffusionNow = ( ( CurrentIterationNumber + 1 ) % diffusionEachNIterations == 0 );
+			//DiffusionNow &= ( CurrentIterationNumber != 0 );
+			DiffusionNow |= ( CurrentIterationNumber == ( MaximumNumberOfIterations - 1 ) );
+
+		} // else if filterpattern
 
 		/** If wanted, do a diffusion. */
 		if ( DiffusionNow )
@@ -794,7 +851,7 @@ using namespace itk;
 		 * for the derivation of the GrayValueImage.
 		 */
 		/** Check if wanted. */
-		std::string alsoFixed = "false";
+		std::string alsoFixed = "true";
 		m_Configuration->ReadParameter( alsoFixed, "GrayValueImageAlsoBasedOnFixedImage", 0 );
 		typename MaximumImageFilterType::Pointer maximumImageFilter
 			= MaximumImageFilterType::New();
@@ -814,6 +871,30 @@ using namespace itk;
 			{
 				xl::xout["error"] << excp << std::endl;
 			}
+		} // end if
+
+		/** Get diffusion information: threshold information. */
+		std::string thresholdbooltmp = "";
+		bool thresholdBool = false;
+		m_Configuration->ReadParameter( thresholdbooltmp, "ThresholdBool", 0 );
+		if ( thresholdbooltmp == "true" ) thresholdBool = true;
+
+		int threshold = 150;
+		m_Configuration->ReadParameter( threshold, "ThresholdHU", 0 );
+
+		if ( thresholdBool )
+		{
+			/** Setup iterator. */
+			GrayValueImageIteratorType it( m_GrayValueImage2, m_GrayValueImage2->GetLargestPossibleRegion() );
+			it.GoToBegin();
+			while ( !it.IsAtEnd() )
+			{
+				/** Threshold or just make sure everything is between 0 and 1. */
+				if ( it.Get() < threshold ) it.Set( 0 );
+				if ( it.Get() >= threshold ) it.Set( 100 );
+				/** Update iterator. */
+				++it;
+			} // end while
 		} // end if
 
 		/** ------------- 4: Setup the diffusion. ------------- */

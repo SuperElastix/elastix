@@ -362,13 +362,14 @@ namespace itk
 			}
 		} // end if*/
 
-		/** Set threshold value T. */
+		// \todo: veranderen
+		/** Set threshold value T. *
 		double T1, T2;
 		if ( this->GetUseThreshold() )
 		{
 			/** To avoid numerical instability, check if the
 			 * threshold is between 0.00001 and 0.99999.
-			 */
+			 *
 			if ( this->GetThreshold() >= 0.00001 && this->GetThreshold() <= 0.99999 )
 			{
 				T1 = this->GetThreshold();
@@ -394,13 +395,10 @@ namespace itk
 		while ( !it.IsAtEnd() )
 		{
 			/** Threshold or just make sure everything is between 0 and 1. */
-			if ( it.Get() < T1 ) it.Set( 0.00001 );
-			if ( it.Get() >= T2 ) it.Set( 0.99999 );
-			/** Calculate m_Cx = c(x). */
-			// float e = 2.7182818284590452353602874713527;
-			//it.Set( ::exp( it.Get() * ln(2) ) - 1.0 );
-			//it.Set( ::exp( it.Get() ) / ( e - 1.0 ) + 1.0 / ( 1.0 - e ) );
-			//it.Set( ::sqrt( it.Get() ) );
+			//if ( it.Get() < T1 ) it.Set( 0.00001 );
+			//if ( it.Get() >= T2 ) it.Set( 0.99999 );
+			if ( it.Get() < 0.00001 ) it.Set( 0.00001 );
+			if ( it.Get() > 0.99999 ) it.Set( 0.99999 );
 			++it;
 		}
 
