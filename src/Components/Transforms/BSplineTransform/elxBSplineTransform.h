@@ -29,7 +29,7 @@ using namespace itk;
 	 *
 	 * The parameters used in this class are:
 	 * \parameter FinalGridSpacing: the grid spacing of the B-spline transform \n
-	 *		example: <tt>(FinalGridSpacing 32)</tt>
+	 *		example: <tt>(FinalGridSpacing 32.0)</tt>
 	 * \parameter UpsampleGridOption: whether or not the B-spline grid should
 	 *		be upsampled from one resolution level to another. Choose from {true, false} \n
 	 *		example: <tt>(UpsampleGridOption "true")</tt>

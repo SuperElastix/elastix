@@ -1,3 +1,10 @@
+/**
+ * This file is an adapted version of the original itk-class.
+ *
+ * The original itk-copyright message is stated below:
+ */
+
+
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
@@ -24,9 +31,6 @@
 
 #include "itkImageRegionConstIterator.h"
 #include "itkImageRegionIterator.h"
-// for SmartSampleSelect test:
-#include "vnl/vnl_math.h"
-#include "math.h"
 //#include "vnl/vnl_numeric_limits.h" //deprecated
 #include "itkBSplineDeformableTransform.h"
 
@@ -91,14 +95,6 @@ namespace itk
 		this->m_MovingMask = NULL;
 		
 		this->m_UseExactDerivative = false;
-
-		/** Set the SmartSampleSelect to false by default, because it's just
-		 * an experiment still. 
-		 */
-		this->m_SmartSampleSelect = false;
-		this->m_NrOfPixelsInFixedMask = 0;
-		this->m_DRandomHelp = 0.0;
-		
 		
 
 	} // end Constructor
@@ -266,46 +262,7 @@ namespace itk
 		* Allocate memory for the fixed image sample container.
 		*/
 		this->m_FixedImageSamples.resize( this->m_NumberOfSpatialSamples);
-		
-		/** Initialize the image that stores all samples that are selected */
-		this->m_NrOfPixelsInFixedMask = 0;
-		//this->m_NrOfJumpsInFixedMask = 0;
-		
-		
-		if (this->m_SmartSampleSelect)
-		{
-    
-			if (this->m_FixedMask)
-			{
-				typedef ImageRegionConstIteratorWithIndex<FixedImageType> FixedIteratorWithIndexType;
-				FixedIteratorWithIndexType fixedImageIteratorWithIndex( 
-					this->m_FixedImage, this->GetFixedImageRegion() );
-		
-				for ( fixedImageIteratorWithIndex.GoToBegin(); 
-				!fixedImageIteratorWithIndex.IsAtEnd(); ++fixedImageIteratorWithIndex )
-				{
-			
-					FixedImageIndexType index = fixedImageIteratorWithIndex.GetIndex();
-					FixedImagePointType point;
-					 
-					// Translate index to point
-					this->m_FixedImage->TransformIndexToPhysicalPoint( index, point );
-					 
-					if  ( this->m_FixedMask->IsInMask(point) )
-					{
-						++this->m_NrOfPixelsInFixedMask;
-					}
-	
-				} //for
-
-			} //if this->m_FixedMask
-			else // no mask, so all pixels can be used:
-			{
-				this->m_NrOfPixelsInFixedMask = 
-					this->m_FixedImage->GetLargestPossibleRegion().GetNumberOfPixels();
-			}
-		} //if this->m_SmartSampleSelect
-		
+					
 		/**
 		* Allocate memory for the marginal PDF and initialize values
 		* to zero. The marginal PDFs are stored as std::vector.
@@ -446,17 +403,12 @@ namespace itk
 		 MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
 		 ::SampleFixedImageDomain( FixedImageSpatialSampleContainer& samples ) const
 	 {		 
-		if (this->m_SmartSampleSelect)
-		{
-			this->SampleFixedImageDomainSmart(samples);
-			return;
-		}
 
 		 /** Set up a random interator within the user specified fixed image region.*/
-		 
+		 		 
+		 //typedef ImageRandomConstIteratorWithIndex<FixedImageType> RandomIterator;
 		 //changed to the NotSoRandomConstIterator, to make sure the same samples are
 		 //picked in linux and win32 (hopefully...)
-		 //typedef ImageRandomConstIteratorWithIndex<FixedImageType> RandomIterator;
 		 //typedef ImageNotSoRandomConstIteratorWithIndex<FixedImageType> RandomIterator;
 		 //Changed to ImageMoreRandomConstIteratorWithIndex, because the NotSoRandom was
 		 // indeed not so random...
@@ -1978,153 +1930,6 @@ namespace itk
 		}
 	} // end SetUseExactDerivative
 
-
-	template < class TFixedImage, class TMovingImage >
-	void
-		MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
-		::SampleFixedImageDomainSmart( FixedImageSpatialSampleContainer& samples ) const
-	{		 
-	//this function will be removed.
-		/** Set up a random interator within the user specified fixed image region.
-		* Use the NotSoRandomConstIterator, to make sure the same samples are
-		* picked in Linux and Win32.
-		*
-		*/
-		typedef ImageRegionConstIteratorWithIndex<FixedImageType> FixedIteratorType;
-		FixedIteratorType fixedIter( this->GetFixedImage(), this->GetFixedImageRegion() );
-		fixedIter.GoToBegin();
-		
-		/** Create an iterator on the sample container */
-		typename FixedImageSpatialSampleContainer::iterator containerIter;
-		typename FixedImageSpatialSampleContainer::const_iterator end = samples.end();
-		
-		containerIter=samples.begin();
-
-		/** This number will be used to set the probability that a sample is picked. */
-		double probabilitySelector = static_cast<double>(this->m_NumberOfSpatialSamples) /
-			static_cast<double>(this->m_NrOfPixelsInFixedMask) - 0.5;
-
-		unsigned long nrOfSamplesSelected = 0;
-
-		if ( this->m_FixedMask )
-		{
-			while ( (containerIter != end) )
-			{
-				while ( (containerIter != end) & !(fixedIter.IsAtEnd()) )
-				{
-					FixedImagePointType point;
-					
-					/** Translate index to point, and check if it's inside the fixedmask */
-					this->m_FixedImage->TransformIndexToPhysicalPoint( fixedIter.GetIndex(), point );
-
-					if ( this->m_FixedMask->IsInMask(point) )
-					{
-						/** Use this sample? (stochastic process) */
-						this->m_DRandomHelp += elx_sample_uniform(0,2);
-						char useThisSample = 0;
-						const unsigned char randomHelp2 = static_cast<unsigned char>(
-							vnl_math_rnd(this->m_DRandomHelp) % 2   );
-						if (randomHelp2 == 1)
-						{
-		  				useThisSample = static_cast<char>(
-								vnl_math_rnd( ceil(this->m_DRandomHelp) - this->m_DRandomHelp + probabilitySelector )   );
-						}
-						else 
-						{
-							useThisSample = static_cast<char>(
-								vnl_math_rnd( this->m_DRandomHelp - floor(this->m_DRandomHelp) + probabilitySelector )   );
-				 		}					
-	          
-						if ( useThisSample >= 1 )
-						{
-							/** Get sampled value, and put it in the sample container */
-							(*containerIter).FixedImageValue = fixedIter.Value();
-							(*containerIter).FixedImagePointValue = point;
-							++containerIter;
-							++nrOfSamplesSelected;
-						} // end if useThisSample
-
-					}	//end if InsideMask
-
-					++fixedIter;
-
-				}	//end while container not full and not at end of image
-
-				const double expected = static_cast<double>( this->m_NumberOfSpatialSamples );
-				const double selected = static_cast<double>( nrOfSamplesSelected );
-				this->m_DRandomHelp /= this->m_NrOfPixelsInFixedMask * 3;        
-
-				/** Prepare for next walk through the image. */
-				if (containerIter != end)
-				{
-					/** Adjust probabilitySelector */
-					probabilitySelector = ( expected / (selected+0.0001) ) * ( expected - selected ) /
-						static_cast<double>(this->m_NrOfPixelsInFixedMask) - 0.5;
-					fixedIter.GoToBegin();
-				} //end if
-	
-			} //end while container not full
-
-		} //end if mask.
-		else
-		{
-			/** No mask, so we can skip some tests */
-
-			while ( (containerIter !=end) )
-			{
-				while ( (containerIter != end) & !(fixedIter.IsAtEnd()) )
-				{
-					/** Use this sample? (stochastic process) */
-					this->m_DRandomHelp += elx_sample_uniform(0,2);
-					char useThisSample = 0;
-					const unsigned char randomHelp2 = static_cast<unsigned char>(
-						vnl_math_rnd(this->m_DRandomHelp) % 2   );
-					if (randomHelp2 == 1)
-					{
-		  			useThisSample = static_cast<char>(
-							vnl_math_rnd( ceil(this->m_DRandomHelp) - this->m_DRandomHelp + probabilitySelector )   );
-					}
-					else 
-					{
-						useThisSample = static_cast<char>(
-							vnl_math_rnd( this->m_DRandomHelp - floor(this->m_DRandomHelp) + probabilitySelector )   );
-				 	}					
-	         
-					if ( useThisSample >= 1 )
-					{
-						/** Get sampled value, and put it in the sample container */
-						(*containerIter).FixedImageValue = fixedIter.Value();
-						/** Translate index to point and store the point in the container */
-						this->m_FixedImage->TransformIndexToPhysicalPoint( 
-							fixedIter.GetIndex(),	(*containerIter).FixedImagePointValue );
-						++containerIter;
-						++nrOfSamplesSelected;
-					} // end if useThisSample
-			
-					++fixedIter;
-
-				}	//end while container not full and not at end of image
-
-				const double expected = static_cast<double>( this->m_NumberOfSpatialSamples );
-				const double selected = static_cast<double>( nrOfSamplesSelected );
-				this->m_DRandomHelp /= this->m_NrOfPixelsInFixedMask * 3;        
-
-				/** Prepare for next walk through the image. */
-				if (containerIter != end)
-				{
-					/** Adjust probabilitySelector */
-					probabilitySelector = ( expected / (selected+0.0001) ) * ( expected - selected ) /
-						static_cast<double>(this->m_NrOfPixelsInFixedMask) - 0.5;
-					fixedIter.GoToBegin();
-				} // end if
-	
-			} //end while container not full
-
-		} //end else: so no mask.
-
-
-
-	} // end function SampleFixedImageDomainSmart
 
 
 

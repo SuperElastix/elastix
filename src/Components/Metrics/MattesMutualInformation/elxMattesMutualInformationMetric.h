@@ -10,8 +10,7 @@
 #include "elxTimer.h"
 #include "itkImageFileReader.h"
 #include "itkCastImageFilter.h"
-#include "math.h"
-#include <string>
+
 
 namespace elastix
 {
@@ -19,13 +18,52 @@ using namespace itk;
 
 	/**
 	 * \class MattesMutualInformationMetric
-	 * \brief An metric based on mutual information...
+	 * \brief A metric based on mutual information...
 	 *
-	 * This metric ...
+	 * This metric is based on an adapted version of the
+	 * itk::MattesMutualInformationImageToImageMetric. 
 	 *
+	 * The command line argumemts used by this class are:
+	 * \commandlinearg -fMask: Optional argument with the file name of a mask for
+	 * the fixed image. The mask image should contain of zeros and ones, zeros indicating 
+	 * pixels that are not used for the registration. \n
+	 *   example: <tt> -fMask fixedmask.mhd </tt>
+	 * \commandlinearg -mMask: Optional argument with the file name of a mask for
+	 * the moving image. The mask image should contain of zeros and ones, zeros indicating 
+	 * pixels that are not used for the registration. \n
+	 *   example: <tt> -mMask movingmask.mhd </tt>
+	 *
+	 * The parameters used in this class are:
+	 * \parameter Metric: Select this metric as follows:\n
+	 * <tt> (Metric MattesMutualInformation) </tt>
+	 * \parameter NumberOfHistogramBins: The size of the histogram. Must be given for each 
+	 * resolution. \n
+	 *   example: <tt> (NumberOfHistogramBins 32 32 64)</tt>
+	 * \parameter NumberOfSpatialSamples: The number of image voxels used for computing the
+	 * metric value and its derivative in each iteration. Must be given for each resolution.\n
+	 *  example: <tt> (NumberOfSpatialSamples 2048 2048 4000) </tt>
+	 * \parameter NumberOfResolutions: The number of resolutions.\n
+	 *   example: <tt> (NumberOfResolutions 3) </tt>
+	 * \parameter	UseExactMetricDerivative: Flag to force the metric to use ALL voxels for 
+	 * computing the metric value and its derivative in each iteration. Must be given for each
+	 * resolution. Can have values "true" or "false".\n
+	 *   example: <tt> (UseExactMetricDerivative "true" "false" "true") </tt>
+	 * \parameter ShowExactMetricValue: Flag that can set to "true" or "false". If "true" the 
+	 * metric computes the exact metric value (computed on all voxels rather than on the set of
+	 * spatial samples) and shows it each iteration. Must be given for each resolution.\n
+	 * NB: If the UseExactMetricDerivative flag is set to "true", this option is ignored.\n
+	 *   example: <tt> (ShowExactMetricValue "true" "true" "false")
+	 * \parameter NewSamplesEveryIteration: Flag that can set to "true" or "false". If "true" 
+	 * the metric (randomly) selects a new set of spatial samples in every iteration. This, if 
+	 * used in combination with the correct optimizer (such as the StandardGradientDescent),
+	 * allows for a very low number of spatial samples (around 2000), even with large images 
+	 * and transforms with a large number of parameters. \n
+	 *   example: <tt> (NewSamplesEveryIteration "true" "true" "true") </tt>
+	 *
+   * \sa MattesMutualInformationMetricWithMask
 	 * \ingroup Metrics
 	 */
-
+	
 	template <class TElastix >	
 		class MattesMutualInformationMetric :
 		public
@@ -120,7 +158,7 @@ using namespace itk;
 		typedef tmr::Timer					TimerType;
 		typedef TimerType::Pointer	TimerPointer;
 		
-		/** Methods that have to be present everywhere.*/
+		/** Methods that take care of setting the parameters and showing information.*/
 		virtual int BeforeAll(void);
 		virtual void BeforeRegistration(void);
 		virtual void BeforeEachResolution(void);

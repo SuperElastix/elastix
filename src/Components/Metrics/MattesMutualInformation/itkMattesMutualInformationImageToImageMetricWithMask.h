@@ -238,11 +238,7 @@ namespace itk
 		/** UseExactDerivative flag */
 		virtual void SetUseExactDerivative( bool _arg );
 		itkGetConstMacro(UseExactDerivative, bool);
-		
-		/** SmartSampleSelect flag, added by Stefan to test a different sample strategy,
-		 * which is hopefully smarter than the normal one... */
-		itkSetMacro(SmartSampleSelect, bool);
-		itkGetConstMacro(SmartSampleSelect, bool);
+	
 
 	protected:
 		
@@ -304,13 +300,6 @@ namespace itk
 		void SampleFixedImageDomain( 
 			FixedImageSpatialSampleContainer& samples ) const;
 
-		void SampleFixedImageDomainSmart(FixedImageSpatialSampleContainer & samples) const;
-		
-		mutable double m_DRandomHelp;
-		unsigned long m_NrOfPixelsInFixedMask;
-		bool m_SmartSampleSelect;
-		
-		
 		/** The marginal PDFs are stored as std::vector. */
 		typedef float PDFValueType;
 		typedef std::vector<PDFValueType> MarginalPDFType;

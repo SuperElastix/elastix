@@ -2,6 +2,8 @@
 #define __elxMattesMutualInformationMetric_HXX__
 
 #include "elxMattesMutualInformationMetric.h"
+#include "math.h"
+#include <string>
 
 namespace elastix
 {
@@ -206,6 +208,9 @@ using namespace itk;
 			*  The lowest resolution level has a schedule of 2^(nr_of_levels-1).
 			*  The 'radius' of the convolution filter is roughly twice the standard deviation.
 			*	 Thus, the parts in the edge with size 'radius' are influenced by the background.
+			*
+			*  \todo Get the schedules from the Fixed and Moving Pyramid. 
+			*  \warning The masks may not work if a nonstandard pyramid schedule is used.
 			*/
 		
 			/** Define the radius.*/
@@ -287,19 +292,7 @@ using namespace itk;
 				this->m_NewSamplesEveryIteration = false;
 			}
 			
-			/** Check if the "smart sample strategy" should be used */
-			std::string smartSampleSelect = "false";
-			this->GetConfiguration()->
-				ReadParameter(smartSampleSelect,"SmartSampleSelect", level);
-			if (smartSampleSelect == "true")
-			{
-				this->SetSmartSampleSelect(true);
-			}
-			else
-			{
-				this->SetSmartSampleSelect(false);
-			}
-
+		
 		}
 		else	
 		{
