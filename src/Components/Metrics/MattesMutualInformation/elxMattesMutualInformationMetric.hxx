@@ -246,7 +246,7 @@ using namespace itk;
 		bool useExactDerivativeBool = false;
 		std::string useExactDerivative = "false";
 		this->GetConfiguration()->
-			ReadParameter(useExactDerivative, "UseExactDerivative", level);
+			ReadParameter(useExactDerivative, "UseExactMetricDerivative", level);
 		if (useExactDerivative == "true")
 		{
 			useExactDerivativeBool = true;
