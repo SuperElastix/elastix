@@ -17,10 +17,7 @@
 #ifndef __itkDeformationVectorFieldTransform_H__
 #define __itkDeformationVectorFieldTransform_H__
 
-//#include <iostream>
 #include "itkBSplineDeformableTransform.h"
-//#include "itkImage.h"
-//#include "itkVector.h"
 
 namespace itk
 {
