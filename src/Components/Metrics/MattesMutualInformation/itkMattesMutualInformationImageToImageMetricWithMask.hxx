@@ -21,7 +21,7 @@
 
 #include "itkBSplineInterpolateImageFunction.h"
 #include "itkCovariantVector.h"
-#include "itkImageRandomConstIteratorWithIndex.h"
+
 #include "itkImageRegionConstIterator.h"
 #include "itkImageRegionIterator.h"
 // for SmartSampleSelect test:
@@ -30,8 +30,13 @@
 //#include "vnl/vnl_numeric_limits.h" //deprecated
 #include "itkBSplineDeformableTransform.h"
 
+/** Original itkRandomIterator. */
+//#include "itkImageRandomConstIteratorWithIndex.h"
 /** elastix random iterator (that behaves the same in linux and windows) */
-#include "itkImageNotSoRandomConstIteratorWithIndex.h"
+//#include "itkImageNotSoRandomConstIteratorWithIndex.h"
+/** improved elastix random iterator (that behaves the same in linux and windows)
+ * and is more random. */
+#include "itkImageMoreRandomConstIteratorWithIndex.h"
 
 
 
@@ -452,8 +457,11 @@ namespace itk
 		 //changed to the NotSoRandomConstIterator, to make sure the same samples are
 		 //picked in linux and win32 (hopefully...)
 		 //typedef ImageRandomConstIteratorWithIndex<FixedImageType> RandomIterator;
-		 typedef ImageNotSoRandomConstIteratorWithIndex<FixedImageType> RandomIterator;
-		 
+		 //typedef ImageNotSoRandomConstIteratorWithIndex<FixedImageType> RandomIterator;
+		 //Changed to ImageMoreRandomConstIteratorWithIndex, because the NotSoRandom was
+		 // indeed not so random...
+		 typedef ImageMoreRandomConstIteratorWithIndex<FixedImageType> RandomIterator;
+
 		 RandomIterator randIter( m_FixedImage, this->GetFixedImageRegion() );
 		 
 		 randIter.GoToBegin();
@@ -1976,7 +1984,7 @@ namespace itk
 		MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
 		::SampleFixedImageDomainSmart( FixedImageSpatialSampleContainer& samples ) const
 	{		 
-	
+	//this function will be removed.
 		/** Set up a random interator within the user specified fixed image region.
 		* Use the NotSoRandomConstIterator, to make sure the same samples are
 		* picked in Linux and Win32.

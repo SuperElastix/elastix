@@ -1,6 +1,0 @@
-itkBSplineTransformGrouper.h
-itkBSplineTransformGrouper.hxx
-itkTransformGrouper.h
-itkTransformGrouper.hxx
-itkTransformGrouperInterface.h
-tempje.txt

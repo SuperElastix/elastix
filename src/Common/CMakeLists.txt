@@ -7,10 +7,6 @@ SUBDIRS(xout)
 SET(CommonFiles
 elxTimer.cxx
 elxTimer.h
-elx_sample.cxx
-elx_sample.h
-itkImageNotSoRandomConstIteratorWithIndex.h
-itkImageNotSoRandomIteratorWithIndex.h
 itkMaskImage.h
 itkMaskImage.hxx
 itkNDImageBase.h
@@ -30,10 +26,20 @@ TransformGrouper/itkTransformGrouper.h
 TransformGrouper/itkTransformGrouper.hxx
 TransformGrouper/itkTransformGrouperInterface.h )
 
+SET( MoreRandomFiles
+MoreRandom/elx_sample.h
+MoreRandom/elx_sample.cxx
+MoreRandom/vnl_random.h
+MoreRandom/vnl_random.cxx
+MoreRandom/itkImageMoreRandomConstIteratorWithIndex.h
+MoreRandom/itkImageMoreRandomConstIteratorWithIndex.txx
+MoreRandom/itkImageMoreRandomIteratorWithIndex.h
+MoreRandom/itkImageMoreRandomIteratorWithIndex.txx)
 
 SOURCE_GROUP("TransformGrouper" FILES ${TransformGrouperFiles} )
+SOURCE_GROUP("MoreRandom" FILES ${MoreRandomFiles} )
 
-ADD_LIBRARY(elxCommon ${CommonFiles} ${TransformGrouperFiles} )
+ADD_LIBRARY(elxCommon ${CommonFiles} ${TransformGrouperFiles} ${MoreRandomFiles})
 
 TARGET_LINK_LIBRARIES(elxCommon
 ITKBasicFilters
