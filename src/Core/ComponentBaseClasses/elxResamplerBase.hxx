@@ -48,7 +48,7 @@ namespace elastix
 		/** Set the DefaultPixelValue (for pixels in the resampled image
 		 * that come from outside the original (moving) image.
 		 */
-		unsigned int defaultPixelValue = 0;
+		int defaultPixelValue = 0;
 		m_Configuration->ReadParameter( defaultPixelValue, "DefaultPixelValue", 0 );
 		
 		/** Set the defaultPixelValue in the Superclass.*/
@@ -181,7 +181,7 @@ namespace elastix
 		/** Set the DefaultPixelValue (for pixels in the resampled image
 		 * that come from outside the original (moving) image.
 		 */
-		unsigned int defaultPixelValue = 0;
+		int defaultPixelValue = 0;
 		m_Configuration->ReadParameter( defaultPixelValue, "DefaultPixelValue", 0 );
 		
 		/** Set the defaultPixelValue in the Superclass*/
