@@ -154,7 +154,7 @@ using namespace itk;
 	protected:
 
 		BSplineTransform();
-		virtual ~BSplineTransform() {std::cerr << "transform dies" << std::endl;};
+		virtual ~BSplineTransform() {}
 		
 		/** Member variabels.*/
 		typename UpsamplerType::Pointer							m_Upsampler;

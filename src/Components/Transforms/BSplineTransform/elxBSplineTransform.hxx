@@ -201,6 +201,9 @@ using namespace itk;
 		void BSplineTransform<TElastix>::
 		IncreaseScale(void)
 	{
+		/** \todo Implement the method as in the example DeformableRegistration6.cxx */
+		
+	
 		/**	Declarations.*/
 		RegionType gridregion;
 		SizeType gridsize;
