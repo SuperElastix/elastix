@@ -70,7 +70,7 @@ namespace itk
 		}
 		
 		/***/
-		Self::Pointer dummyoutput = Self::New();
+		typename Self::Pointer dummyoutput = Self::New();
 		dummyoutput->SetRegions( this->GetLargestPossibleRegion() );
 		dummyoutput->SetOrigin( this->GetOrigin() );
 		dummyoutput->SetSpacing( this->GetSpacing() );
@@ -136,7 +136,7 @@ namespace itk
 		}
 		
 		/***/
-		Self::Pointer dummyoutput = Self::New();
+		typename Self::Pointer dummyoutput = Self::New();
 		dummyoutput->SetRegions( this->GetLargestPossibleRegion() );
 		dummyoutput->SetOrigin( this->GetOrigin() );
 		dummyoutput->SetSpacing( this->GetSpacing() );

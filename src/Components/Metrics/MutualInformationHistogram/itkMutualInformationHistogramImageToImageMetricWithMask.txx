@@ -33,8 +33,8 @@ namespace itk
 		::MutualInformationHistogramImageToImageMetricWithMask()
   {
 		// Added for support of masks.
-		m_FixedMask = NULL;
-		m_MovingMask = NULL;
+		this->m_FixedMask = NULL;
+		this->m_MovingMask = NULL;
 		
 	} // end Constructor
 		
@@ -55,7 +55,7 @@ namespace itk
     MeasureType jointEntropy = NumericTraits<MeasureType>::Zero;
     HistogramFrequencyType totalFreq = histogram.GetTotalFrequency();
 		
-    for (unsigned int i = 0; i < m_HistogramSize[0]; i++)
+    for (unsigned int i = 0; i < this->m_HistogramSize[0]; i++)
     {
       HistogramFrequencyType freq = histogram.GetFrequency(i, 0);
       if (freq > 0)
@@ -66,7 +66,7 @@ namespace itk
 		
     entropyX = -entropyX/static_cast<MeasureType>(totalFreq) + log(totalFreq);
 		
-    for (unsigned int i = 0; i < m_HistogramSize[1]; i++)
+    for (unsigned int i = 0; i < this->m_HistogramSize[1]; i++)
     {
       HistogramFrequencyType freq = histogram.GetFrequency(i, 1);
       if (freq > 0) 

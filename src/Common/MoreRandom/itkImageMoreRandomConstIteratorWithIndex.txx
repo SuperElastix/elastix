@@ -33,10 +33,10 @@ template<class TImage>
 ImageMoreRandomConstIteratorWithIndex<TImage>
 ::ImageMoreRandomConstIteratorWithIndex() : ImageConstIteratorWithIndex<TImage>()
 {
-  m_NumberOfPixelsInRegion    = 0L;
-  m_NumberOfSamplesRequested  = 0L;
-  m_NumberOfSamplesDone       = 0L;
-  m_NumberOfRandomJumps       = 0L;
+  this->m_NumberOfPixelsInRegion    = 0L;
+  this->m_NumberOfSamplesRequested  = 0L;
+  this->m_NumberOfSamplesDone       = 0L;
+  this->m_NumberOfRandomJumps       = 0L;
 }
 
 /** Constructor establishes an iterator to walk a particular image and a
@@ -46,9 +46,9 @@ ImageMoreRandomConstIteratorWithIndex<TImage>
 ::ImageMoreRandomConstIteratorWithIndex(const ImageType *ptr, const RegionType& region)
   : ImageConstIteratorWithIndex<TImage>( ptr, region )
 {
-  m_NumberOfPixelsInRegion   = region.GetNumberOfPixels();
-  m_NumberOfSamplesRequested = 0L;
-  m_NumberOfSamplesDone      = 0L;
+  this->m_NumberOfPixelsInRegion   = region.GetNumberOfPixels();
+  this->m_NumberOfSamplesRequested = 0L;
+  this->m_NumberOfSamplesDone      = 0L;
 }
 
 /**  Set the number of samples to extract from the region */
@@ -57,7 +57,7 @@ void
 ImageMoreRandomConstIteratorWithIndex<TImage>
 ::SetNumberOfSamples( unsigned long number )
 {
-  m_NumberOfSamplesRequested = number;
+  this->m_NumberOfSamplesRequested = number;
 }
 
 /**  Set the number of samples to extract from the region */
@@ -66,7 +66,7 @@ unsigned long
 ImageMoreRandomConstIteratorWithIndex<TImage>
 ::GetNumberOfSamples( void ) const
 {
-  return m_NumberOfSamplesRequested;
+  return this->m_NumberOfSamplesRequested;
 }
 
 /** Reinitialize the seed of the random number generator */
@@ -95,20 +95,20 @@ ImageMoreRandomConstIteratorWithIndex<TImage>
   const unsigned long randomPosition =
     static_cast<unsigned long > (
       elx_sample_uniform(0.0f, 
-                         static_cast<double>(m_NumberOfPixelsInRegion)-0.5) );
+                         static_cast<double>(this->m_NumberOfPixelsInRegion)-0.5) );
   
   unsigned long position = randomPosition;
   unsigned long residual;
   for( unsigned int dim = 0; dim < TImage::ImageDimension; dim++ )
     {
-    const unsigned long sizeInThisDimension = m_Region.GetSize()[dim];
+    const unsigned long sizeInThisDimension = this->m_Region.GetSize()[dim];
     residual = position % sizeInThisDimension;
-    m_PositionIndex[dim] =  residual + m_BeginIndex[dim];
+    this->m_PositionIndex[dim] =  residual + this->m_BeginIndex[dim];
     position -= residual;
     position /= sizeInThisDimension;
     }
 
-  m_Position = m_Image->GetBufferPointer() + m_Image->ComputeOffset( m_PositionIndex );
+  this->m_Position = this->m_Image->GetBufferPointer() + this->m_Image->ComputeOffset( this->m_PositionIndex );
 }
 
 
