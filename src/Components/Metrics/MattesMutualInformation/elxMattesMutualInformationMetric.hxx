@@ -224,24 +224,12 @@ using namespace itk;
 		} // end if movingmask present
 
 
-		/** Check if after every iteration a new sample set should be created */
-		std::string newSamplesEveryIteration = "false";
-		this->GetConfiguration()->
-			ReadParameter(newSamplesEveryIteration, "NewSamplesEveryIteration", level);
-		if (newSamplesEveryIteration == "true")
-		{
-			m_NewSamplesEveryIteration = true;
-		}
-		else
-		{
-			m_NewSamplesEveryIteration = false;
-		}
-
-		/** Check if the exact metric value, computed on all pixels, should be shown. */
+		/** Check if the exact metric value, computed on all pixels, should be shown, 
+		 * and whether the exact metric derivative should be used
+		 */
 
 		/** Remove the ExactMetric-column, if it already existed. */
 		xl::xout["iteration"].RemoveTargetCell("ExactMetric");
-
 
 		bool useExactDerivativeBool = false;
 		std::string useExactDerivative = "false";
@@ -259,6 +247,7 @@ using namespace itk;
 
 		if (!useExactDerivativeBool)
 		{
+			/** Show the exact metric VALUE anyway? */
 			std::string showExactMetricValue = "false";
 			this->GetConfiguration()->
 				ReadParameter(showExactMetricValue, "ShowExactMetricValue", level);
@@ -272,11 +261,28 @@ using namespace itk;
 			{
 				m_ShowExactMetricValue = false;
 			}
+
+			/** Check if after every iteration a new sample set should be created */
+			std::string newSamplesEveryIteration = "false";
+			this->GetConfiguration()->
+				ReadParameter(newSamplesEveryIteration, "NewSamplesEveryIteration", level);
+			if (newSamplesEveryIteration == "true")
+			{	
+				m_NewSamplesEveryIteration = true;
+			}
+			else
+			{
+				m_NewSamplesEveryIteration = false;
+			}
+
 		}
 		else	
 		{
 			/** The exact metric value is shown anyway */
 			m_ShowExactMetricValue = false;
+
+			/** And new samples every iteration is not appropriate either */
+			m_NewSamplesEveryIteration = false;
 		}
 		
 	} // end BeforeEachResolution
