@@ -240,7 +240,6 @@ int main( int argc, char **argv )
 
 	for ( unsigned int i = 0; i < NrOfParameterFiles; i++ )
 	{
-		//elastices[i]->ClearComponents(); not needed anymore?
 		elastices[i] = 0;
 	}	
 

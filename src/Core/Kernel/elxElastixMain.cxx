@@ -188,8 +188,6 @@ namespace elastix
 
 		/** Initialize database.*/		
 		int ErrorCode = this->InitDBIndex();
-		
-		
 		if ( ErrorCode != 0 )
 		{
 			return ErrorCode;
@@ -228,43 +226,43 @@ namespace elastix
 
 		/** Key "Elastix", see elxComponentLoader::InstallSupportedImageTypes(). */
 		testcreator = 0;
-		testcreator = s_CDB->GetCreator( "Elastix", m_DBIndex );
+		testcreator = this->s_CDB->GetCreator( "Elastix", m_DBIndex );
 		m_Elastix	= testcreator ? testcreator() : NULL;
 		
 		testcreator = 0;
-		testcreator = s_CDB->GetCreator( RegistrationName,	m_DBIndex );
+		testcreator = this->s_CDB->GetCreator( RegistrationName,	m_DBIndex );
 		m_Registration = testcreator ? testcreator() : NULL;
 
 		testcreator = 0;
-		testcreator = s_CDB->GetCreator( FixedImagePyramidName, m_DBIndex );
+		testcreator = this->s_CDB->GetCreator( FixedImagePyramidName, m_DBIndex );
 		m_FixedImagePyramid = testcreator ? testcreator() : NULL;
 
 		testcreator = 0;
-		testcreator = s_CDB->GetCreator( MovingImagePyramidName, m_DBIndex );
+		testcreator = this->s_CDB->GetCreator( MovingImagePyramidName, m_DBIndex );
 		m_MovingImagePyramid = testcreator ? testcreator() : NULL;
 
 		testcreator = 0;
-		testcreator = s_CDB->GetCreator( InterpolatorName, m_DBIndex );
+		testcreator = this->s_CDB->GetCreator( InterpolatorName, m_DBIndex );
 		m_Interpolator = testcreator ? testcreator() : NULL;
 
 		testcreator = 0;
-		testcreator = s_CDB->GetCreator( MetricName, m_DBIndex );
+		testcreator = this->s_CDB->GetCreator( MetricName, m_DBIndex );
 		m_Metric = testcreator ? testcreator() : NULL;
 
 		testcreator = 0;
-		testcreator = s_CDB->GetCreator( OptimizerName, m_DBIndex );
+		testcreator = this->s_CDB->GetCreator( OptimizerName, m_DBIndex );
 		m_Optimizer = testcreator ? testcreator() : NULL;
 
 		testcreator = 0;
-		testcreator = s_CDB->GetCreator( ResamplerName, m_DBIndex );
+		testcreator = this->s_CDB->GetCreator( ResamplerName, m_DBIndex );
 		m_Resampler = testcreator ? testcreator() : NULL;
 
 		testcreator = 0;
-		testcreator = s_CDB->GetCreator( ResampleInterpolatorName, m_DBIndex );
+		testcreator = this->s_CDB->GetCreator( ResampleInterpolatorName, m_DBIndex );
 		m_ResampleInterpolator	= testcreator ? testcreator() : NULL;
 
 		testcreator = 0;
-		testcreator = s_CDB->GetCreator( TransformName, m_DBIndex );
+		testcreator = this->s_CDB->GetCreator( TransformName, m_DBIndex );
 		m_Transform = testcreator ? testcreator() : NULL;
 
 		/** Check if all component could be created.*/
@@ -511,26 +509,7 @@ namespace elastix
 	} // end LoadComponents
 
 
-	/**
-	 * ********************* ClearComponents **************************
-	 */
-	
-	void ElastixMain::ClearComponents(void)
-	{
-		 // \todo : this function not necessary anymore probably.
-		 m_ResampleInterpolator = 0;
-		 m_Elastix = 0;
-		 m_Registration = 0;
-		 m_FixedImagePyramid = 0;
-		 m_MovingImagePyramid = 0;
-		 m_Interpolator = 0;
-		 m_Metric = 0;
-		 m_Optimizer = 0;
-		 m_Resampler = 0;
-		 m_Transform = 0;
-	}
-	
-	
+		
 	/**
 	 * ********************* UnloadComponents **************************
 	 */

@@ -247,7 +247,7 @@ namespace elastix
 			if (this->s_CDB!=0)
 			{
 				/** Get the DBIndex from the ComponentDatabase */
-				m_DBIndex = s_CDB->GetIndex(
+				m_DBIndex = this->s_CDB->GetIndex(
 					m_FixedImagePixelType,
 					m_FixedImageDimension,			
 					m_MovingImagePixelType,
@@ -258,7 +258,7 @@ namespace elastix
 					xl::xout["error"] << "Something went wrong in the ComponentDatabase" << std::endl;
 					return 1;
 				}
-			}
+			} //end if s_CDB!=0
 
 		} // end if m_Configuration->Initialized();
 		else

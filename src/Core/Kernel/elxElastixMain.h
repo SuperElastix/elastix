@@ -179,7 +179,6 @@ namespace elastix
 			}
 		}
 
-		void ClearComponents(void);
 		static void UnloadComponents(void);
 
 	protected:
