@@ -84,8 +84,8 @@ namespace elastix
 		
 	protected:
 
-		BaseComponent() {};
-		virtual ~BaseComponent() {std::cerr << "Object destroyed: " << this->elxGetClassName() << std::endl;} 
+		BaseComponent() {}
+		virtual ~BaseComponent() {} 
 
 	private:
 

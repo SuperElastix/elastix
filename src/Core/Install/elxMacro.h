@@ -105,7 +105,6 @@
 	{ \
 		int _InstallDummy##_classname = _classname##_install<1>::DO( _cdb  ); \
 		::xl::set_xout( _xout ); \
-		std::cerr << "ik installeer " << #_classname << std::endl; \
 		return _InstallDummy##_classname ; \
 	}//ignore semicolon
 

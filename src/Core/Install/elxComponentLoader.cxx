@@ -172,6 +172,8 @@ namespace elastix
 		std::string fullFileName("");
 		bool fileIsDir;
 		std::string extension("");
+		std::string elxCoreLibName(libprefix + "elxCore" + libextension);
+		std::string elxCommonLibName(libprefix + "elxCommon" + libextension);
 
 		for (unsigned int i = 0; i< nrOfFiles; i++)
 		{
@@ -182,7 +184,7 @@ namespace elastix
 			
 			fileIsDir =
 				itksys::SystemTools::FileIsDirectory( fullFileName.c_str() );
-      
+
 			if (!fileIsDir)
 			{
 				extension = itksys::SystemTools::LowerCase(
@@ -191,9 +193,18 @@ namespace elastix
 				if ( extension == libextension )
 				{
 					/** file may be lib, but check the prefix, to be sure: */
-					//TODO: some smart string stuff, with string::compare(prefix::size() ofzo)
-					fileIsLib = true;
-					currentLibName = fullFileName;
+					// \todo : some smart string stuff, with string::compare(prefix::size() ofzo)
+
+					if ( (fileName==elxCoreLibName) || (fileName==elxCommonLibName) )
+					{
+					  /** Not a component */
+						fileIsLib = false;
+					}
+					else
+					{
+						fileIsLib = true;
+						currentLibName = fullFileName;
+					}
 				}
 
 			}
@@ -207,10 +218,11 @@ namespace elastix
 					<< "Loading library: "
 					<< currentLibName
 					<< std::endl;
-				currentLib = m_LibLoader->OpenLibrary( currentLibName.c_str() );
-
+				m_LibHandleContainer.push( m_LibLoader->OpenLibrary( currentLibName.c_str() ) );
+				//currentLib = m_LibLoader->OpenLibrary( currentLibName.c_str() );
+				currentLib = m_LibHandleContainer.top();
 				/** Store the handle to the lib, because we need it for closing the lib later. */
-				m_LibHandleContainer.push(currentLib);
+				//LibHandleContainer.push(currentLib);
 				
 				/** Look for the InstallComponent function */
 				addressOfInstallComponentFunction	=
@@ -226,7 +238,7 @@ namespace elastix
 					installer =	(InstallFunctionPointer)(addressOfInstallComponentFunction);
 					
 					/** Execute it */
-					//TODO: how to check if the conversion went alright?
+					/** \todo : How to check if the conversion went alright? */
 					elxout
 						<< "Installing component: "
 						<< currentLibName
@@ -247,7 +259,8 @@ namespace elastix
 					elxout
 						<< "No InstallComponent function found in: "
 						<< currentLibName
-						<< std::endl; 
+						<< std::endl;
+	
 				}
 
 			} //end if fileIsLib
@@ -278,16 +291,17 @@ namespace elastix
 		unsigned int nrOfLibs =
 			static_cast<unsigned int>( m_LibHandleContainer.size() );
 
-		elxout << "Unloading components..." << std::endl;
 		for (unsigned int i = 0; i < nrOfLibs; i++)
 		{
+			
 			currentLib = m_LibHandleContainer.top();
 			m_LibLoader->CloseLibrary(currentLib);
 			m_LibHandleContainer.pop();
+
 		}
   
-		elxout << "Components are unloaded." << std::endl;
-		//TODO: also clean up componentdatabase...
+		//Not necessary I think:
+		//m_ComponentDatabase = 0;
 
 	}
 

@@ -260,7 +260,7 @@ LibHandle
 DynamicLoader
 ::OpenLibrary(const char* libname )
 {
-  return dlopen(libname, RTLD_LAZY | RTLD_GLOBAL);
+  return dlopen(libname, RTLD_LAZY | RTLD_GLOBAL );
 }
 
 //----------------------------------------------------------------------------
