@@ -12,11 +12,14 @@ namespace elastix
 {
 using namespace itk;
 
-
 	/**
-	 * *********************** RegistrationBase *********************
+	 * \class RegistrationBase
+	 * \brief This class is the base for all Registrations
 	 *
-	 * The RegistrationBase class ....
+	 * This class contains all the common functionality for Registrations ...
+	 *
+	 * \ingroup Registrations
+	 * \ingroup ComponentBaseClasses
 	 */
 
 	template <class TElastix>

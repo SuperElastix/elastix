@@ -24,11 +24,13 @@ namespace elastix
 {
 using namespace itk;
 
-
 	/**
-	 * ********************* BSplineTransform ***********************
+	 * \class BSplineTransform
+	 * \brief A transform based on the itkBSplineTransform
 	 *
-	 * This class
+	 * This transform is an bspline transformation...
+	 *
+	 * \ingroup Transforms
 	 */
 
 	template < class TElastix >

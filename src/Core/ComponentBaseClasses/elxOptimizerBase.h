@@ -12,11 +12,14 @@ namespace elastix
 {
 using namespace itk;
 
-
 	/**
-	 * *********************** OptimizerBase ************************
+	 * \class OptimizerBase
+	 * \brief This class is the base for all Optimizers
 	 *
-	 * The OptimizerBase class ....
+	 * This class contains all the common functionality for Optimizers ...
+	 *
+	 * \ingroup Optimizers
+	 * \ingroup ComponentBaseClasses
 	 */
 
 	template <class TElastix>

@@ -14,11 +14,14 @@ namespace elastix
 {
 	using namespace itk;
 	
-
 	/**
-	 * ********************** ResamplerBase *************************
+	 * \class ResampleBase
+	 * \brief This class is the base for all Resamplers
 	 *
-	 * This class 
+	 * This class contains all the common functionality for Resamplers ...
+	 *
+	 * \ingroup Resamplers
+	 * \ingroup ComponentBaseClasses
 	 */
 
 	template <class TElastix>

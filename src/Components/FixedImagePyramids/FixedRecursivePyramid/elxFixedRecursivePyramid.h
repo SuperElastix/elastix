@@ -8,11 +8,13 @@ namespace elastix
 {
 using namespace itk;
 
-
 	/**
-	 * ******************** FixedRecursivePyramid *******************
+	 * \class FixedRecursivePyramid
+	 * \brief A FixedRecursivePyramid...
 	 *
-	 * The FixedRecursivePyramid class ....
+	 * This FixedRecursivePyramid ...
+	 *
+	 * \ingroup FixedImagePyramids
 	 */
 
 	template <class TElastix>	

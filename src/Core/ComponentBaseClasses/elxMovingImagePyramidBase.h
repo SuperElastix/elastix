@@ -14,11 +14,14 @@ namespace elastix
 {
 using namespace itk;
 
-
 	/**
-	 * ******************** MovingImagePyramidBase ******************
+	 * \class MovingImagePyramidBase
+	 * \brief This class is the base for all MovingImagePyramids
 	 *
-	 * The MovingImagePyramidBase class ....
+	 * This class contains all the common functionality for MovingImagePyramids ...
+	 *
+	 * \ingroup MovingImagePyramids
+	 * \ingroup ComponentBaseClasses
 	 */
 
 	template <class TElastix>

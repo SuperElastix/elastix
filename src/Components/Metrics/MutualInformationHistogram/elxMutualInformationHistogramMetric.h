@@ -17,11 +17,13 @@ namespace elastix
 {
 using namespace itk;
 
-
 	/**
-	 * ************* MutualInformationHistogramMetric ***************
+	 * \class MutualInformationHistogramMetric
+	 * \brief An metric based on mutual information...
 	 *
-	 * The MutualInformationHistogramMetric class ....
+	 * This metric ...
+	 *
+	 * \ingroup Metrics
 	 */
 
 	template <class TElastix >	

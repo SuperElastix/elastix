@@ -17,11 +17,13 @@ namespace elastix
 {
 using namespace itk;
 
-
 	/**
-	 * ************* MultiResolutionRegistration ********************
+	 * \class MultiResolutionRegistration
+	 * \brief A MultiResolutionRegistration...
 	 *
-	 * The MultiResolutionRegistration class ....
+	 * This MultiResolutionRegistration ...
+	 *
+	 * \ingroup Registrations
 	 */
 
 	template <class TElastix>

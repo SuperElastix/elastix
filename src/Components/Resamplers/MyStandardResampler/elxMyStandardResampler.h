@@ -8,11 +8,13 @@ namespace elastix
 {
 	using namespace itk;
 	
-
 	/**
-	 * ******************** MyStandardResampler *********************
+	 * \class MyStandardResampler
+	 * \brief A MyStandardResampler...
 	 *
-	 * This class 
+	 * This MyStandardResampler ...
+	 *
+	 * \ingroup Resamplers
 	 */
 
 	template < class TElastix >	

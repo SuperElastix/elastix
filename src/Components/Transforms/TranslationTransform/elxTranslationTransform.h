@@ -8,11 +8,13 @@ namespace elastix
 {
 	using namespace itk;
 	
-
 	/**
-	 * ***************** TranslationTransformElastix ****************
+	 * \class TranslationTransformElastix
+	 * \brief A transform based on the itk TranslationTransform
 	 *
-	 * This class
+	 * This transform is an translation transformation...
+	 *
+	 * \ingroup Transforms
 	 */
 
 	template < class TElastix >

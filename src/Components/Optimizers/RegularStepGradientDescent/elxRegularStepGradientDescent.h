@@ -8,11 +8,13 @@ namespace elastix
 {
 using namespace itk;
 
-
 	/**
-	 * **************** RegularStepGradientDescent ******************
+	 * \class RegularStepGradientDescent
+	 * \brief An optimizer based on gradient descent...
 	 *
-	 * The RegularStepGradientDescent class ....
+	 * This optimizer 
+	 *
+	 * \ingroup Optimizers
 	 */
 
 	template <class TElastix>

@@ -8,12 +8,10 @@ namespace elastix
 {
 using namespace itk;
 
-
 	/**
-	 * **************** RSGDEachParameterApart ******************
+	 * \class RSGDEachParameterApart
+	 * \brief An optimizer based on gradient descent...
 	 *
-	 * The RSGDEachParameterApart class ....
-	 * 
 	 * The underlying itk class is almost a copy of the normal
 	 * RegularStepGradientDescent. The difference is that each
 	 * parameter has its own step length, whereas the normal 
@@ -32,7 +30,8 @@ using namespace itk;
 	 * The elastix shell class (so, this class...), is a copy of
 	 * the elxRegularStepGradientDescent, so the parameters in the
 	 * parameter file, the output etc are similar.
-	 * 
+	 *
+	 * \ingroup Optimizers
 	 */
 
 	template <class TElastix>

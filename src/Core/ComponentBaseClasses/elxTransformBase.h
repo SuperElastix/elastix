@@ -24,11 +24,14 @@ namespace elastix
 {
   using namespace itk;
 
-
 	/**
-	 * ********************** TransformBase *************************
+	 * \class TransformBase
+	 * \brief This class is the base for all Transforms
 	 *
-	 * This class
+	 * This class contains all the common functionality for Transforms ...
+	 *
+	 * \ingroup Transforms
+	 * \ingroup ComponentBaseClasses
 	 */
 
 	template <class TElastix>

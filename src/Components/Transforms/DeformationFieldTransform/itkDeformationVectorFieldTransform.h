@@ -27,7 +27,7 @@ namespace itk
 {
 
 /** \class DeformationVectorFieldTransform
- * \brief A transform based on a DeformationVectorField
+ * \brief An itk transform based on a DeformationVectorField
  *
  * This class inherits from the BSplineDeformableTransform,
  * but sets the controlpoints at every index point.

@@ -16,11 +16,13 @@ namespace elastix
 {
 using namespace itk;
 
-
 	/**
-	 * **************** NormalizedCorrelationMetric *****************
+	 * \class NormalizedCorrelationMetric
+	 * \brief An metric based on normalized correlation...
 	 *
-	 * The NormalizedCorrelationMetric class ....
+	 * This metric ...
+	 *
+	 * \ingroup Metrics
 	 */
 
 // TO DO: Add masks.

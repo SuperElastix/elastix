@@ -13,11 +13,14 @@ namespace elastix
 {
 using namespace itk;
 
-
 	/**
-	 * ******************** FixedImagePyramidBase *******************
+	 * \class FixedImagePyramidBase
+	 * \brief This class is the base for all FixedImagePyramids
 	 *
-	 * The FixedImagePyramidBase class ....
+	 * This class contains all the common functionality for FixedImagePyramids ...
+	 *
+	 * \ingroup FixedImagePyramids
+	 * \ingroup ComponentBaseClasses
 	 */
 
 	template <class TElastix>

@@ -6,13 +6,15 @@
 namespace itk
 {
 
-	/**
-	 * *********** ImprovedRegularStepGradientDescent ******************
+		/**
+	 * \class ImprovedRegularStepGradientDescentOptimizer
+	 * \brief An optimizer based on gradient descent...
 	 *
-	 * The ImprovedRegularStepGradientDescent class.
-	 * This one is faster than the parent class.
+	 * This one is faster than the parent itk class: RegularStepGradientDescentOptimizer.
 	 * Instead of GetValue and GetDerivative, the GetValueAndDerivative
 	 * method is used, to obtain the metric value and its derivatives.
+	 *
+	 * \ingroup Optimizers
 	 */
 
 	class ImprovedRegularStepGradientDescentOptimizer :

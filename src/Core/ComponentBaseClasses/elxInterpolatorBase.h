@@ -13,11 +13,14 @@ namespace elastix
 {
 using namespace itk;
 
-
 	/**
-	 * ******************** InterpolatorBase ************************
+	 * \class InterpolatorBase
+	 * \brief This class is the base for all Interpolators
 	 *
-	 * The InterpolatorBase class ....
+	 * This class contains all the common functionality for Interpolators ...
+	 *
+	 * \ingroup Interpolators
+	 * \ingroup ComponentBaseClasses
 	 */
 
 	template <class TElastix>

@@ -12,10 +12,13 @@ namespace itk
 {
 	
 	/**
-	 * ********** class FullSearchOptimizer **************************
+	 * \class FullSearchOptimizer
+	 * \brief An optimizer based on full search.
 	 *
 	 * Optimizer that scans a subspace of the parameter space
 	 * and searches for the best parameters.
+	 *
+	 * \ingroup Optimizers
 	 */
 	
 	class FullSearchOptimizer : public SingleValuedNonLinearOptimizer

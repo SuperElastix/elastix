@@ -13,11 +13,13 @@ namespace elastix
 {
 using namespace itk;
 
-
 	/**
-	 * **************** FullSearch ******************
+	 * \class FullSearch
+	 * \brief An optimizer based on full search.
 	 *
-	 * The FullSearch class ....
+	 * This optimizer ...
+	 *
+	 * \ingroup Optimizers
 	 */
 
 	template <class TElastix>

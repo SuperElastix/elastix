@@ -8,7 +8,14 @@ namespace elastix
 {
 using namespace itk;
 
-
+	/**
+	 * \class MovingRecursivePyramid
+	 * \brief A MovingRecursivePyramid...
+	 *
+	 * This MovingRecursivePyramid ...
+	 *
+	 * \ingroup MovingImagePyramids
+	 */
 	/**
 	 * ******************** MovingRecursivePyramid ******************
 	 *

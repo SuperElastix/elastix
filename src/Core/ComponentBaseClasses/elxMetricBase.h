@@ -12,11 +12,14 @@ namespace elastix
 {
 using namespace itk;
 
-
 	/**
-	 * ******************** MetricBase ******************************
+	 * \class MetricBase
+	 * \brief This class is the base for all Metrics
 	 *
-	 * The MetricBase class ....
+	 * This class contains all the common functionality for Metrics ...
+	 *
+	 * \ingroup Metrics
+	 * \ingroup ComponentBaseClasses
 	 */
 
 	template <class TElastix>

@@ -7,11 +7,14 @@
 namespace itk
 {
   
-/************** SimultaneousPerturbation **************************
- * 
- * \brief Implements a SimultaneousPerturbation optimizer
- *
- */  
+	/**
+	 * \class SimultaneousPerturbationOptimizer
+	 * \brief An optimizer based on simultaneous perturbation...
+	 *
+	 * This optimizer 
+	 *
+	 * \ingroup Optimizers
+	 */
 	
 	class SimultaneousPerturbationOptimizer
 		: public SingleValuedNonLinearOptimizer

@@ -12,11 +12,14 @@ namespace elastix
 {	
   using namespace itk;
 
-
 	/**
-	 * ***************** ResampleInterpolatorBase *******************
+	 * \class ResampleInterpolatorBase
+	 * \brief This class is the base for all ResampleInterpolators
 	 *
-	 * This class 
+	 * This class contains all the common functionality for ResampleInterpolators ...
+	 *
+	 * \ingroup ResampleInterpolators
+	 * \ingroup ComponentBaseClasses
 	 */
 
 	template <class TElastix>

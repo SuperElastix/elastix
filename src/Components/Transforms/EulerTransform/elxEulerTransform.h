@@ -8,11 +8,13 @@ namespace elastix
 {
 using namespace itk;
 
-
 	/**
-	 * ****************** EulerTransformElastix *********************
+	 * \class EulerTransformElastix
+	 * \brief A transform based on the itk EulerTransforms
 	 *
-	 * This class
+	 * This transform is a rigid transformation...
+	 *
+	 * \ingroup Transforms
 	 */
 	
 	template < class TElastix >

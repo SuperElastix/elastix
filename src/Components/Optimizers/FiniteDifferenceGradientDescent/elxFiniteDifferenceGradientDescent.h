@@ -8,11 +8,13 @@ namespace elastix
 {
 using namespace itk;
 
-
 	/**
-	 * **************** FiniteDifferenceGradientDescent ******************
+	 * \class FiniteDifferenceGradientDescent
+	 * \brief An optimizer based on gradient descent ...
 	 *
-	 * The FiniteDifferenceGradientDescent class ....
+	 * This optimizer ...
+	 *
+	 * \ingroup Optimizers
 	 */
 
 	template <class TElastix>

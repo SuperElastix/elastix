@@ -6,12 +6,15 @@
 
 namespace itk
 {
-  
-/************** FiniteDifferenceGradientDescent **************************
- * 
- * \brief Implements a FiniteDifferenceGradientDescent optimizer
- *
- */  
+
+	/**
+	 * \class FiniteDifferenceGradientDescentOptimizer
+	 * \brief An optimizer based on gradient descent ...
+	 *
+	 * This optimizer ...
+	 *
+	 * \ingroup Optimizers
+	 */
 	
 	class FiniteDifferenceGradientDescentOptimizer
 		: public SingleValuedNonLinearOptimizer

@@ -5,58 +5,62 @@
 
 namespace itk
 {
-  
-/** \class RSGDEachParameterApartOptimizer
- * \brief Implement a gradient descent optimizer
- *
- *
- */
-class RSGDEachParameterApartOptimizer : 
+
+	/**
+	 * \class RSGDEachParameterApartOptimizer
+	 * \brief An optimizer based on gradient descent...
+	 *
+	 * This optimizer 
+	 *
+	 * \ingroup Optimizers
+	 */
+	
+	class RSGDEachParameterApartOptimizer : 
     public RSGDEachParameterApartBaseOptimizer
-{
-public:
-  /** Standard class typedefs. */
-  typedef RSGDEachParameterApartOptimizer         Self;
-  typedef RSGDEachParameterApartBaseOptimizer     Superclass;
-  typedef SmartPointer<Self>                          Pointer;
-  typedef SmartPointer<const Self>                    ConstPointer;
-  
-  /** Method for creation through the object factory. */
-  itkNewMacro(Self);
-  
-  /** Run-time type information (and related methods). */
-  itkTypeMacro( RSGDEachParameterApartOptimizer, 
-                RSGDEachParameterApartBaseOptimizer );
+	{
+	public:
+		/** Standard class typedefs. */
+		typedef RSGDEachParameterApartOptimizer         Self;
+		typedef RSGDEachParameterApartBaseOptimizer     Superclass;
+		typedef SmartPointer<Self>                          Pointer;
+		typedef SmartPointer<const Self>                    ConstPointer;
 
-  /** Cost function typedefs. */
-  typedef Superclass::CostFunctionType        CostFunctionType;
-  typedef CostFunctionType::Pointer           CostFunctionPointer;
-  
+		/** Method for creation through the object factory. */
+		itkNewMacro(Self);
 
-protected:
-  RSGDEachParameterApartOptimizer() {};
-  virtual ~RSGDEachParameterApartOptimizer() {};
+		/** Run-time type information (and related methods). */
+		itkTypeMacro( RSGDEachParameterApartOptimizer, 
+			RSGDEachParameterApartBaseOptimizer );
 
-  /** Advance one step along the corrected gradient taking into
-   * account the steplengths represented by the factor array.
-   * This method is invoked by AdvanceOneStep. It is expected
-   * to be overrided by optimization methods in non-vector spaces
-   * \sa AdvanceOneStep */
-  virtual void StepAlongGradient( 
-    const DerivativeType & factor, 
-    const DerivativeType & transformedGradient );
+		/** Cost function typedefs. */
+		typedef Superclass::CostFunctionType        CostFunctionType;
+		typedef CostFunctionType::Pointer           CostFunctionPointer;
 
-private:
-  RSGDEachParameterApartOptimizer(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+	protected:
 
-};
+		RSGDEachParameterApartOptimizer() {};
+		virtual ~RSGDEachParameterApartOptimizer() {};
+
+		/** Advance one step along the corrected gradient taking into
+		* account the steplengths represented by the factor array.
+		* This method is invoked by AdvanceOneStep. It is expected
+		* to be overrided by optimization methods in non-vector spaces
+		* \sa AdvanceOneStep */
+		virtual void StepAlongGradient( 
+			const DerivativeType & factor, 
+			const DerivativeType & transformedGradient );
+
+	private:
+
+		RSGDEachParameterApartOptimizer( const Self& );	// purposely not implemented
+		void operator=( const Self& );									// purposely not implemented
+
+	}; // end class RSGDEachParameterApartOptimizer
 
 } // end namespace itk
 
 
-
-#endif
+#endif // end #ifndef __itkRSGDEachParameterApartOptimizer_h
 
 
 

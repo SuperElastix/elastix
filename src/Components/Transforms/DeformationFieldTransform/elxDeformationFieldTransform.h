@@ -13,9 +13,12 @@ using namespace itk;
 
 
 	/**
-	 * **************** DeformationFieldTransform *******************
+	 * \class DeformationFieldTransform
+	 * \brief A transform based on a DeformationVectorField
 	 *
 	 * This class
+	 *
+	 * \ingroup Transforms
 	 */
 
 	template < class TElastix >

@@ -8,11 +8,13 @@ namespace elastix
 {
 using namespace itk;
 
-
 	/**
-	 * ******** FixedCenterOfRotationAffineTransformElastix *********
+	 * \class FixedCenterOfRotationAffineTransformElastix
+	 * \brief A transform based on the itk FixedCenterOfRotationAffineTransform
 	 *
-	 * This class
+	 * This transform is an affine transformation...
+	 *
+	 * \ingroup Transforms
 	 */
 	
 	template < class TElastix >

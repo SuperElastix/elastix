@@ -8,11 +8,13 @@ namespace elastix
 {
 using namespace itk;
 
-
 	/**
-	 * **************** SimultaneousPerturbation ******************
+	 * \class SimultaneousPerturbation
+	 * \brief An optimizer based on simultaneous perturbation...
 	 *
-	 * The SimultaneousPerturbation class ....
+	 * This optimizer 
+	 *
+	 * \ingroup Optimizers
 	 */
 
 	template <class TElastix>

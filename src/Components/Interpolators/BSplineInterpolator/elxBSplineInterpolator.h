@@ -8,11 +8,13 @@ namespace elastix
 {
 using namespace itk;
 
-
 	/**
-	 * ******************** BSplineInterpolator *********************
+	 * \class BSplineInterpolator
+	 * \brief An interpolator based on B-splines.
 	 *
-	 * The BSplineInterpolator class ....
+	 * This interpolator...
+	 *
+	 * \ingroup Interpolators
 	 */
 
 	template < class TElastix >
