@@ -1,0 +1,32 @@
+Commentaar
+
+Tussen functies in de cxx/hxx:
+/**
+ ********************** FunctieNaam *************************
+ * 
+ * blabla, beschrijving
+ */
+
+Lange verhalen
+/**
+ * blabla
+ * blabla
+ * blabla
+ */
+
+
+// alleen voor herinneringen/TODO-lijstjes en voor “//end class”
+
+
+/** blabla */ voor kort commentaar
+
+
+//end class en //end function na elke class/function
+
+Indents
+
+
+After { always 1 tab.
+
+
+

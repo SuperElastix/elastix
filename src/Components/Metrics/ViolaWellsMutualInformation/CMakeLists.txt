@@ -1,0 +1,12 @@
+
+
+ADD_ELXCOMPONENT( elxViolaWellsMutualInformationMetric
+ elxViolaWellsMutualInformationMetric.h
+ elxViolaWellsMutualInformationMetric.hxx
+ elxViolaWellsMutualInformationMetric.cxx
+ itkMutualInformationImageToImageMetricWithMask.h
+ itkMutualInformationImageToImageMetricWithMask.txx )
+
+
+
+

@@ -1,0 +1,72 @@
+#ifndef __xoutsimple_h
+#define __xoutsimple_h
+
+#include "xoutbase.h"
+
+
+namespace xoutlibrary
+{
+	using namespace std;
+
+
+	/*
+	 *****************  xoutsimple *********************
+	 *
+	 * An abstract base class, which defines the interface 
+	 * for using xout.
+	 */
+
+	
+	template<class charT, class traits = char_traits<charT> >
+		class xoutsimple : public xoutbase<charT, traits>
+	{
+	public:
+
+		/** Typedef's.*/
+		typedef xoutsimple												Self;
+		typedef xoutbase<charT, traits>						Superclass;
+
+		typedef typename Superclass::traits_type	traits_type;
+		typedef typename Superclass::char_type		char_type;
+		typedef typename Superclass::int_type			int_type;
+		typedef typename Superclass::pos_type			pos_type;
+		typedef typename Superclass::off_type			off_type;
+		typedef typename Superclass::ostream_type	ostream_type;
+		typedef typename Superclass::ios_type			ios_type;
+		
+		typedef typename Superclass::CStreamMapType					CStreamMapType;
+		typedef typename Superclass::XStreamMapType					XStreamMapType;
+		typedef typename Superclass::CStreamMapIteratorType CStreamMapIteratorType;
+		typedef typename Superclass::XStreamMapIteratorType XStreamMapIteratorType;
+		typedef typename Superclass::CStreamMapEntryType		CStreamMapEntryType;
+		typedef typename Superclass::XStreamMapEntryType		XStreamMapEntryType;
+
+		/** Constructors */
+		xoutsimple();
+
+		/** Destructor */
+		virtual ~xoutsimple();
+	
+		/** Add/Remove an output stream (like cout, or an fstream, or an xout-object).  */
+		virtual int AddOutput( const char * name, ostream_type * output );
+		virtual int AddOutput( const char * name, Superclass * output );
+		virtual int RemoveOutput( const char * name );
+
+		virtual void SetOutputs( const CStreamMapType & outputmap );
+		virtual void SetOutputs( const XStreamMapType & outputmap );
+
+		/** Get the output maps. */
+		virtual const CStreamMapType & GetCOutputs(void);
+		virtual const XStreamMapType & GetXOutputs(void);
+		
+		
+	}; // end class xoutsimple
+
+
+} // end namespace xoutlibrary
+
+
+#include "xoutsimple.hxx"
+
+#endif // end #ifndef __xoutsimple_h
+

@@ -1,0 +1,117 @@
+ELASTIX VERSION NUMBER: 2.001
+DATE/TIME: 16:04:34 17-05-2004
+Command line: “hahvjABV HVASDJ VFJASVD JV ”
+Fixed image: “fixed.mhd”
+Moving image: “moving.mhd”
+-p:	“param1.txt”
+-p:	“param2.txt”
+-out:	”/outputfolder/...”
+(optioneel
+fixed mask:	“”
+moving mask:	“”)
+
+----------------------------------------------------------------------------------------------
+STAGE 0
+starttime
+[print parameter file 0]
+
+START REGISTRATION:
+
+Resolution level 0
+It. Nr.		Cost fie value	Stepsize	...	(optional TransformParameterfile, Deformed image name)
+0		-0.6		16		...	Transformname-stage-resolution-iteration
+.
+.
+.
+(optional TransformParameterfile, Deformed image name
+Transformname-stage-resolution-FINAL)
+Resolution level 1
+It. Nr.		Cost fie value	Stepsize	...	(optional TransformParameterfile, Deformed image name)
+
+0		-0.7		8		...
+.
+WARNING: “bla bla”
+.
+etc.
+(optional TransformParameterfile, Deformed image name
+Transformname-stage-resolution-FINAL)
+
+AFTER Registration:
+TransformParameterfile: “affineparameters.txt”
+Transformname-stage-FINAL-FINAL)
+(Affineparameters 1.00 0.02 ...)
++ de rest.
+(optional Deformed image name)
+end time, elapsed time
+----------------------------------------------------------------------------------------------
+STAGE 1
+[print parameter file 1]
+start time
+
+START REGISTRATION:
+
+Resolution level 0
+It. Nr.		Cost fie value	Stepsize	...	(optional TransformParameterfile, Deformed image name)
+0		-0.6		16		...	Transformname-stage-resolution-iteration
+.
+.
+.
+(optional TransformParameterfile, Deformed image name
+Transformname-stage-resolution-FINAL)
+Resolution level 1
+It. Nr.		Cost fie value	Stepsize	...	(optional TransformParameterfile, Deformed image name)
+
+0		-0.7		8		...
+.
+WARNING: “bla bla”
+.
+etc.
+(optional TransformParameterfile, Deformed image name
+Transformname-stage-resolution-FINAL)
+
+AFTER Registration:
+TransformParameterfile: “bsplineparameters.txt”
+Transformname-stage-FINAL-FINAL)
+(BSPlineparameters 1.00 0.02 ...)
++ de rest.
+(optional Deformed image name)
+end time, elapsed time
+
+
+
+AFTER ALL REGISTRATIONS: time, elapsed time, processor time!?
+ 
+TRANSFORM PARAMETER FILE:
+
+// Transform specific
+(TransformName “TransformName”)
+(NumberOfParameters 400)
+(TransformParameters ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?)
+(InitialTransformParameterFileName “InitialTransformParameterFileName”)
+(HowToCombineTransforms "Add")
+
+// Image specific
+(FixedImageDimension 3)
+(FixedImagePixelType "short")
+(MovingImageDimension 3)
+(FixedImagePixelType "short")
+(Size 128 128 128)
+(Index 0 0 0)
+(Spacing 1.0 1.0 1.0)
+(Origin 0.0 0.0 0.0)
+
+// BSplineTransform specific
+(GridSize 128 128 128)
+(GridIndex 1 1 1)
+(GridSpacing 1.0 1.0 1.0)
+(GridOrigin 0.0 0.0 0.0)
+
+// Resampler specific
+(ResamplerName "ResamplerName")
+(DefaultPixelValue 0)
+
+// ResampleInterpolator specific
+(ResampleInterpolator "FinalBSplineInterpolator")
+(FinalBSplineInterpolationOrder 3)
+
+

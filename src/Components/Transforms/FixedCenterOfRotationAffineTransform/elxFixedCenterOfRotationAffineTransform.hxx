@@ -1,0 +1,241 @@
+#ifndef __elxFixedCenterOfRotationAffineTransform_HXX_
+#define __elxFixedCenterOfRotationAffineTransform_HXX_
+
+#include "elxFixedCenterOfRotationAffineTransform.h"
+
+namespace elastix
+{
+	using namespace itk;
+	
+	/**
+	 * ********************* Constructor ****************************
+	 */
+	
+	template <class TElastix>
+		FixedCenterOfRotationAffineTransformElastix<TElastix>
+		::FixedCenterOfRotationAffineTransformElastix()
+	{
+	} // end Constructor
+	
+	
+	/**
+	 * ******************* BeforeRegistration ***********************
+	 */
+	
+	template <class TElastix>
+		void FixedCenterOfRotationAffineTransformElastix<TElastix>
+		::BeforeRegistration(void)
+	{
+		/** Task 1 - Set initial parameters.*/
+		ParametersType dummyInitialParameters( this->GetNumberOfParameters() );
+		dummyInitialParameters.Fill(0.0);
+		unsigned int j = 0;
+
+		/** Set it to the Identity-matrix.*/
+		for ( unsigned int i = 0; i < SpaceDimension; i++ )
+		{
+			dummyInitialParameters[ j ] = 1.0;
+			j += SpaceDimension + 1;
+		}
+
+		/** And give it to m_Registration.*/
+		m_Registration->GetAsITKBaseType()
+			->SetInitialTransformParameters( dummyInitialParameters );
+		
+		/** Task 2 - Set center of rotation.*/
+		InputPointType rotationPoint;
+		this->CalculateRotationPoint( rotationPoint );
+		this->Superclass1::SetCenterOfRotationComponent( rotationPoint );
+		
+		/** Task 3 - Set the scales.*/
+		ScalesType newscales( this->GetNumberOfParameters() );
+		newscales.Fill(1.0);
+		double scaler = 100000.0;
+		m_Configuration->ReadParameter( scaler, "Scaler", 0 );
+		for ( unsigned int i = 0; i < SpaceDimension * SpaceDimension; i++ )
+		{
+			newscales[ i ] *= scaler;
+		}
+
+		/** And give it to the optimizer.*/
+		m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newscales );
+		
+	} // end BeforeRegistration
+	
+	
+	/**
+	 * ***************** CalculateRotationPoint *********************
+	 */
+	
+	template <class TElastix>
+		void FixedCenterOfRotationAffineTransformElastix<TElastix>
+		::CalculateRotationPoint( InputPointType & rotationPoint )
+	{
+		/** Fill rotationPoint.
+		 * The CenterOfRotation is set by default to the middle
+		 * of the fixed image. If CenterOfRotation is specified
+		 * in the Parameterfile, then the default value is overwritten.
+		 */
+		
+		/** Get fixed Image size.*/
+		SizeType fixedSize = m_Registration->GetAsITKBaseType()->
+			GetFixedImage()->GetLargestPossibleRegion().GetSize();
+		
+		/** Fill CenterOfRotationIndices,
+		 * which is the rotationPoint, expressed in index-values.
+		 */
+		IndexType CenterOfRotationIndices;
+		bool CORInImage = true;
+		for ( unsigned int i = 0; i < SpaceDimension; i++ )
+		{
+			CenterOfRotationIndices[ i ] = static_cast<IndexValueType>( fixedSize[ i ] / 2 );
+			m_Configuration->ReadParameter( CenterOfRotationIndices[ i ], "CenterOfRotation", i, true );
+			/** Check if CenterOfRotation has index-values within image.*/
+			if ( CenterOfRotationIndices[ i ] < 0 || CenterOfRotationIndices[ i ] > fixedSize[ i ] )
+			{
+				CORInImage = false;
+			}
+		}
+		
+		/** Give a warning if necessary.*/
+		if ( !CORInImage )
+		{
+			xl::xout["warning"] << "WARNING: Center of Rotation is not within image boundaries!" << std::endl;
+		}
+		
+		/** Convert from index-value to physical-point-value.*/
+		m_Registration->GetAsITKBaseType()->GetFixedImage()->
+			TransformIndexToPhysicalPoint( CenterOfRotationIndices, rotationPoint );
+
+	} // end CalculateRotationPoint
+	
+	
+	/**
+	 * ************************* ReadFromFile ************************
+	 */
+
+	template <class TElastix>
+	void FixedCenterOfRotationAffineTransformElastix<TElastix>::
+		ReadFromFile(void)
+	{
+		/** Read the center of rotation.*/
+		IndexType rotationIndex;
+		for ( unsigned int i = 0; i < SpaceDimension; i++ )
+		{
+			rotationIndex[ i ] = 0;
+			m_Configuration->ReadParameter( rotationIndex[ i ], "CenterOfRotation", i, true );		
+		}
+		
+		/** Get spacing, origin and size of the fixed image.
+		 * We put this in a dummy image, so that we can correctly
+		 * calculate the center of rotation in world coordinates.
+		 */
+		SpacingType		spacing;
+		IndexType			index;
+		PointType			origin;
+		SizeType			size;
+		for ( unsigned int i = 0; i < SpaceDimension; i++ )
+		{
+			/** No default size. Read size from the parameter file. */
+			m_Configuration->ReadParameter(	size[ i ], "Size", i );
+
+			/** Default index. Read index from the parameter file. */
+			index[ i ] = 0;
+			m_Configuration->ReadParameter(	index[ i ], "Index", i );
+
+			/** Default spacing. Read spacing from the parameter file. */
+			spacing[ i ] = 1.0;
+			m_Configuration->ReadParameter(	spacing[ i ], "Spacing", i );
+
+			/** Default origin. Read origin from the parameter file. */
+			origin[ i ] = 0.0;
+			m_Configuration->ReadParameter(	origin[ i ], "Origin", i );
+		}
+
+		/** Check for image size. */
+		unsigned int sum = 0;
+		for ( unsigned int i = 0; i < SpaceDimension; i++ )
+		{
+			if ( size[ i ] == 0 ) sum++;
+		}
+		if ( sum > 0 )
+		{
+			xl::xout["error"] << "ERROR: One or more image sizes are 0!" << std::endl;
+			//TODO: quit program nicely.
+		}
+		
+		/** Make a temporary image with the right region info,
+		* so that the TransformIndexToPhysicalPoint-functions will be right.
+		*/
+		typename DummyImageType::Pointer dummyImage = DummyImageType::New();
+		RegionType region;
+		region.SetIndex( index );
+		region.SetSize( size );
+		dummyImage->SetRegions( region );
+		dummyImage->SetOrigin( origin );
+		dummyImage->SetSpacing( spacing );
+
+		/** region.SetIndex( (dynamic_cast< typename ElastixType::ResamplerBaseType *>( m_Elastix->GetResampler() ))
+			->GetAsITKBaseType()->GetOutputStartIndex() );
+		region.SetSize( (dynamic_cast< typename ElastixType::ResamplerBaseType *>( m_Elastix->GetResampler() ))
+			->GetAsITKBaseType()->GetSize() );
+		dummyImage->SetRegions( region );
+		dummyImage->SetOrigin( (dynamic_cast< typename ElastixType::ResamplerBaseType *>( m_Elastix->GetResampler() ))
+			->GetAsITKBaseType()->GetOutputOrigin() );
+		dummyImage->SetSpacing( (dynamic_cast< typename ElastixType::ResamplerBaseType *>( m_Elastix->GetResampler() ))
+			->GetAsITKBaseType()->GetOutputSpacing() );*/
+				
+		/** Convert center of rotation from index-value to physical-point-value.*/
+		InputPointType rotationPoint;
+		dummyImage->TransformIndexToPhysicalPoint( rotationIndex, rotationPoint );
+
+		/** Set it in this Transform.*/
+		this->SetCenterOfRotationComponent( rotationPoint );
+
+		/** Call the ReadFromFile from the TransformBase.
+		 * BE AWARE: Only call Superclass2::ReadFromFile() after CenterOfRotation
+		 * is set, because it is used in the SetParameters()-function of this transform.
+		 */
+		this->Superclass2::ReadFromFile();
+
+	} // end ReadFromFile
+
+
+	/**
+	 * ************************* WriteToFile ************************
+	 */
+	
+	template <class TElastix>
+		void FixedCenterOfRotationAffineTransformElastix<TElastix>
+		::WriteToFile( const ParametersType & param )
+	{
+		/** Call the WriteToFile from the TransformBase.*/
+		this->Superclass2::WriteToFile( param );
+
+		/** Write AffineTransform specific things.*/
+		xout["transpar"] << std::endl << "// FixedCenterOfRotationAffineTransform specific" << std::endl;
+
+		/** Get the center of rotation and convert it from 
+		 * physical-point-value to index-value.
+		 */
+		IndexType rotationIndex;
+		InputPointType rotationPoint = this->GetCenterOfRotationComponent();
+		m_Registration->GetAsITKBaseType()->GetFixedImage()->
+			TransformPhysicalPointToIndex( rotationPoint, rotationIndex );
+
+		/** Write the center of rotation.*/
+		xout["transpar"] << "(CenterOfRotation ";
+		for ( unsigned int i = 0; i < SpaceDimension - 1; i++ )
+		{
+			xout["transpar"] << rotationIndex[ i ] << " ";
+		}
+		xout["transpar"] << rotationIndex[ SpaceDimension - 1 ] << ")" << std::endl;
+	
+	} // end WriteToFile
+	
+	
+} // end namespace elastix
+
+
+#endif // end #ifndef __elxFixedCenterOfRotationAffineTransform_HXX_
+
