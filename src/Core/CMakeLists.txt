@@ -70,7 +70,7 @@ SOURCE_GROUP("Configuration" FILES ${ConfigurationFiles} )
 SOURCE_GROUP("ComponentBaseClasses" FILES ${ComponentBaseClassFiles} )
 
 
-ADD_LIBRARY(elxCore SHARED
+ADD_LIBRARY(elxCore 
 ${KernelFilesForComponents}
 ${InstallFilesForComponents}
 ${ConfigurationFiles}

@@ -4,19 +4,32 @@
 PROJECT(elxComponents)
 
 #---------------------------------------------------------------------
-# Set stuff
+# Set the libraries to be linked.
 
-SET(elxLinkLibs
+# linux gives an error, if param is linked.
+IF(CMAKE_COMPILER_IS_GNUCXX)
+  SET(elxLinkLibs
+    xoutlib
+    elxCommon
+    elxCore
+    ITKBasicFilters
+    ITKNumerics
+    ITKIO
+    ITKCommon )
+ENDIF(CMAKE_COMPILER_IS_GNUCXX)
 
-xoutlib
-elxCommon
-elxCore
-ITKBasicFilters
-ITKNumerics
-ITKIO
-ITKCommon )
-
-#param
+# interestingly, visual c++ does need param
+IF(WIN32)
+  SET(elxLinkLibs
+    param
+    xoutlib
+    elxCommon
+    elxCore
+    ITKBasicFilters
+    ITKNumerics
+    ITKIO
+    ITKCommon )
+ENDIF(WIN32)
 
 #---------------------------------------------------------------------
 # Macro that simplifies the addition of elx-components
@@ -33,7 +46,7 @@ MACRO(ADD_ELXCOMPONENT name)
 ENDMACRO(ADD_ELXCOMPONENT)
 
 #---------------------------------------------------------------------
-# ???
+# Search for all components
 
 FILE(GLOB_RECURSE ListOfComponents "*/CMakeLists.txt")
 
