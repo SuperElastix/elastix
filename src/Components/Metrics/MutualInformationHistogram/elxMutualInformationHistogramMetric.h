@@ -73,6 +73,8 @@ using namespace itk;
 		typedef typename Superclass1::FixedImagePointType				FixedImagePointType;
 		typedef typename Superclass1::MovingImagePointType 			MovingImagePointType;
 		
+		typedef typename Superclass1::ScalesType								ScalesType;
+		
 		/** The moving image dimension. */
 		itkStaticConstMacro( MovingImageDimension, unsigned int,
 			MovingImageType::ImageDimension );
@@ -85,6 +87,7 @@ using namespace itk;
 		typedef typename Superclass1::MovingMaskImageType				MovingMaskImageType;
 		typedef typename Superclass1::FixedMaskImagePointer			FixedMaskImagePointer;
 		typedef typename Superclass1::MovingMaskImagePointer		MovingMaskImagePointer;
+		
 		
 		/** Typedef's inherited from Elastix.*/
 		typedef typename Superclass2::ElastixType						ElastixType;
