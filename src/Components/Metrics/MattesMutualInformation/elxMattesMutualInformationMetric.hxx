@@ -21,6 +21,7 @@ using namespace itk;
 		m_MovingMaskImageReader = 0;
 
 		m_NewSamplesEveryIteration = false;
+		m_ShowExactMetricValue = false;
 
 	} // end Constructor
 
@@ -235,6 +236,27 @@ using namespace itk;
 		{
 			m_NewSamplesEveryIteration = false;
 		}
+
+		/** Check if the exact metric value, computed on all pixels, should be shown. */
+
+		/** Remove the ExactMetric-column, if it already existed. */
+		xl::xout["iteration"].RemoveTargetCell("ExactMetric");
+
+		std::string showExactMetricValue = "false";
+		this->GetConfiguration()->
+			ReadParameter(showExactMetricValue, "ShowExactMetricValue", level);
+		if (showExactMetricValue == "true")
+		{
+			m_ShowExactMetricValue = true;
+			xl::xout["iteration"].AddTargetCell("ExactMetric");
+			xl::xout["iteration"]["ExactMetric"] << std::showpoint << std::fixed;
+		}
+		else
+		{
+			m_ShowExactMetricValue = false;
+		}
+
+
 		
 	} // end BeforeEachResolution
 	
@@ -248,6 +270,16 @@ using namespace itk;
 		void MattesMutualInformationMetric<TElastix>
 		::AfterEachIteration(void)
 	{		
+		/** Show the mutual information computed on all voxels,
+		 * if the user wanted it */
+		if (m_ShowExactMetricValue)
+		{
+			xl::xout["iteration"]["ExactMetric"] << this->GetExactValue(
+				this->GetElastix()->
+				GetElxOptimizerBase()->GetAsITKBaseType()->
+				GetCurrentPosition() );
+		}
+
 		/** Create a new sample set if the user wanted it  */
 		if (m_NewSamplesEveryIteration)
 		{

@@ -180,7 +180,7 @@ namespace elastix
 		/** Set up the "iteration" writing field.*/
 		m_IterationInfo.SetOutputs( xout.GetCOutputs() );
 		m_IterationInfo.SetOutputs( xout.GetXOutputs() );
-
+	  
 		xout.AddTargetCell( "iteration", &m_IterationInfo );
 
 	} // end BeforeRegistrationBase

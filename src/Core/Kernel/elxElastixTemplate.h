@@ -23,6 +23,7 @@
 #include "elxTimer.h"
 
 #include <sstream>
+#include <fstream>
 
 /** Like itkSetObjectMacro, but in this macro also the m_elx_... member 
  * is set (to the same value, but casted to a pointer to _elxtype).
@@ -299,6 +300,10 @@ namespace elastix
 		
 		/** CreateTransformParameterFile.*/
 		virtual void CreateTransformParameterFile( std::string FileName, bool ToLog );
+
+		/** Open the IterationInfoFile, where the table with iteration info is written to */
+		virtual void OpenIterationInfoFile(void);
+		std::ofstream m_IterationInfoFile;
 
 		/** Used by the callback functions, beforeeachresolution() etc.).*/
 		void CallInEachComponent( PtrToMemberFunction func );

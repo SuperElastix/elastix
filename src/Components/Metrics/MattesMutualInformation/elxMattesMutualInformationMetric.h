@@ -138,6 +138,7 @@ using namespace itk;
 		MovingMaskImageReaderPointer	m_MovingMaskImageReader;
 
 		bool m_NewSamplesEveryIteration;
+		bool m_ShowExactMetricValue;
 				
 	private:
 

@@ -33,7 +33,7 @@
 namespace itk
 {
 	
-/** \class MattesMutualInformationImageToImageMetric
+/** \class MattesMutualInformationImageToImageMetricWithMask
 * \brief Computes the mutual information between two images to be 
 * registered using the methof of Mattes et al.
 *
@@ -105,6 +105,18 @@ namespace itk
 *      Registration"
 *      P. Thevenaz and M. Unser
 *      IEEE Transactions in Image Processing, 9(12) December 2000.
+*
+*
+*	NB:
+* This file declares the itk::MattesMutualInformationImageToImageMetricWithMask.
+* It is largely the same as itk::MattesMutualInformationImageToImageMetric,
+* but, as you might expect from the name, it allows entering masks for the 
+* fixed and the moving image, which can exclude some pixels from being used
+* in the calculation of the MutualInformation. 
+* Besides, it adds the function SampleFixedImageDomain, which allows the user
+* to force a new sample set to be created.
+* Finally, it adds the GetExactValue method, that computes the mutual information
+* using all voxels of the images.
 *
 * \ingroup RegistrationMetrics
 * \ingroup ThreadUnSafe
@@ -201,9 +213,14 @@ namespace itk
 		itkGetObjectMacro( FixedMask, FixedMaskImageType );
 		itkGetObjectMacro( MovingMask, MovingMaskImageType );
 
-		/** Added for Elastix!: */
+		/** Added for Elastix! This function allows the user to force the metric to 
+		 * select new samples. Normally only every resolution the sample set is 
+		 * refreshed. For stochastic optimisation, this method is essential. */
 		void SampleFixedImageDomain(void) const;
 		
+		/**  Get the exact value. Mutual information computed over all points. */
+		virtual MeasureType GetExactValue( const ParametersType& parameters ) const;
+				
 		
 	protected:
 		

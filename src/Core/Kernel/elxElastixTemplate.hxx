@@ -555,6 +555,8 @@ namespace elastix
 		/** Print the current resolution */
 		elxout << "\nResolution: " <<	level	<< std::endl;
 
+		this->OpenIterationInfoFile();
+
 		/**
 		 * Call all the BeforeEachResolution() functions.
 		 */
@@ -853,6 +855,50 @@ namespace elastix
 				
 	} // end CallInEachComponent
 
+
+	/**
+	 * ************** OpenIterationInfoFile *************************
+	 *
+	 * Open a file called IterationInfo.<ElastixLevel>.R<Resolution>.txt,
+	 * which will contain the iteration info table.
+	 */
+	
+	template <class TFixedImage, class TMovingImage>
+		void ElastixTemplate<TFixedImage, TMovingImage>
+		::OpenIterationInfoFile( void )
+	{
+		using namespace xl;
+		
+		/** Remove the current iteration info output file, if any */
+		xout["iteration"].RemoveOutput( "IterationInfoFile" );
+		
+		if ( m_IterationInfoFile.is_open() )
+		{
+			m_IterationInfoFile.close();
+		}
+
+		/** Create the IterationInfo filename for this resolution.*/
+			std::ostringstream makeFileName("");
+			makeFileName << m_Configuration->GetCommandLineArgument( "-out" )
+				<< "IterationInfo."
+				<< m_Configuration->GetElastixLevel()
+				<< ".R" << m_elx_Registration->GetAsITKBaseType()->GetCurrentLevel()
+				<< ".txt";
+			std::string FileName = makeFileName.str();
+
+		/** Open the IterationInfoFile.*/
+		m_IterationInfoFile.open( FileName.c_str() );
+		if ( !m_IterationInfoFile.is_open() )
+		{
+			xout["error"] << "ERROR: File \"" << FileName << "\" could not be opened!" << std::endl;
+		}
+		else    
+		{
+			/** Add this file to the list of outputs of xout["iteration"] */
+			xout["iteration"].AddOutput( "IterationInfoFile", &m_IterationInfoFile );
+		}
+
+	} //end of function penIterationInfoFile
 
 } // end namespace elastix
 

@@ -376,7 +376,7 @@ namespace elastix
 		void TransformBase<TElastix>
 		::WriteToFile(void)
 	{
-		/** Write the currently set parameters to file.*/
+		/** Write the current set parameters to file.*/
 		this->WriteToFile( this->GetAsITKBaseType()->GetParameters() );
  
 	} // end WriteToFile

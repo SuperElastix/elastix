@@ -14,8 +14,8 @@
 			PURPOSE.  See the above copyright notices for more information.
 			
 =========================================================================*/
-#ifndef _itkMattesMutualInformationImageToImageMetricWithMask_CXX__
-#define _itkMattesMutualInformationImageToImageMetricWithMask_CXX__
+#ifndef _itkMattesMutualInformationImageToImageMetricWithMask_HXX__
+#define _itkMattesMutualInformationImageToImageMetricWithMask_HXX__
 
 #include "itkMattesMutualInformationImageToImageMetricWithMask.h"
 
@@ -1246,6 +1246,282 @@ namespace itk
 
 	
 } // end namespace itk
+
+
+	/**
+	 * ************************** GetExactValue **************************
+	 *
+	 * Get the match Measure.
+	 */
+
+	 template < class TFixedImage, class TMovingImage  >
+		 typename MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+		 ::MeasureType
+		 MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+		 ::GetExactValue( const ParametersType& parameters ) const
+	 {		 
+		 // Reset marginal pdf to all zeros.
+		 // Assumed the size has already been set to NumberOfHistogramBins
+		 // in Initialize().
+		 for ( unsigned int j = 0; j < m_NumberOfHistogramBins; j++ )
+		 {
+			 m_FixedImageMarginalPDF[j]  = 0.0;
+			 m_MovingImageMarginalPDF[j] = 0.0;
+		 }
+		 
+		 // Reset the joint pdfs to zero
+		 m_JointPDF->FillBuffer( 0.0 );
+		 
+		 // Set up the parameters in the transform
+		 m_Transform->SetParameters( parameters );
+		 
+		 
+		 // Declare iterators for iteration over the sample container
+		 //typename FixedImageSpatialSampleContainer::const_iterator fiter;
+		 //typename FixedImageSpatialSampleContainer::const_iterator fend = 
+		 // m_FixedImageSamples.end();
+		 
+		 /** Iterator that walks over the whole fixed image region. */
+		 typedef ImageRegionConstIteratorWithIndex<FixedImageType> FixedImageIteratorType;
+		 FixedImageIteratorType fiter(m_FixedImage, this->GetFixedImageRegion());
+
+		 unsigned long nSamples=0;
+		 unsigned long nFixedImageSamples=0;
+		 
+		 // Declare variables for accessing the joint pdf
+		 JointPDFIndexType                jointPDFIndex;
+		 
+		 for ( fiter.GoToBegin(); !fiter.IsAtEnd(); ++fiter )
+		 {			 
+			 ++nFixedImageSamples;
+			 
+			 // Get moving image value
+			 MovingImagePointType mappedPoint;
+			 bool sampleOk = true;
+			 double movingImageValue;
+			 const FixedImageIndexType & fixedImageIndex = fiter.GetIndex();
+			 FixedImagePointType fixedImagePoint;
+
+       m_FixedImage->TransformIndexToPhysicalPoint( fixedImageIndex, fixedImagePoint);
+
+			 /** Check if the sample lies within the fixed mask. */
+
+			 if (m_FixedMask)
+			 {
+				 sampleOk = m_FixedMask->IsInMask(fixedImagePoint);			
+			 }
+       
+			 /** Check if the sample does not map outside the moving image/mask */
+			 if (sampleOk)
+			 {
+			   this->TransformPoint( fixedImagePoint, mappedPoint, 
+				   sampleOk, movingImageValue );
+			 }		 
+			 if( sampleOk )
+			 {
+				 
+				 ++nSamples; 
+				 
+				 /**
+				 * Compute this sample's contribution to the marginal and joint distributions.
+				 *
+				 */
+				 
+				 // Determine parzen window arguments (see eqn 6 of Mattes paper [2]).    
+				 double movingImageParzenWindowTerm =
+					 movingImageValue / m_MovingImageBinSize - m_MovingImageNormalizedMin;
+				 unsigned int movingImageParzenWindowIndex = 
+					 static_cast<unsigned int>( floor( movingImageParzenWindowTerm ) );
+				 
+				 double fixedImageParzenWindowTerm = 
+					 static_cast<double>( fiter.Value() ) / m_FixedImageBinSize -
+					 m_FixedImageNormalizedMin;
+				 unsigned int fixedImageParzenWindowIndex =
+					 static_cast<unsigned int>( floor( fixedImageParzenWindowTerm ) );
+				 
+				 
+				 // Make sure the extreme values are in valid bins
+				 if ( fixedImageParzenWindowIndex < 2 )
+				 {
+					 fixedImageParzenWindowIndex = 2;
+				 }
+				 else if ( fixedImageParzenWindowIndex > (m_NumberOfHistogramBins - 3) )
+				 {
+					 fixedImageParzenWindowIndex = m_NumberOfHistogramBins - 3;
+				 }
+				 
+				 if ( movingImageParzenWindowIndex < 2 )
+				 {
+					 movingImageParzenWindowIndex = 2;
+				 }
+				 else if ( movingImageParzenWindowIndex > (m_NumberOfHistogramBins - 3) )
+				 {
+					 movingImageParzenWindowIndex = m_NumberOfHistogramBins - 3;
+				 }
+				 
+				 
+				 // Since a zero-order BSpline (box car) kernel is used for
+				 // the fixed image marginal pdf, we need only increment the
+				 // fixedImageParzenWindowIndex by value of 1.0.
+				 m_FixedImageMarginalPDF[fixedImageParzenWindowIndex] =
+					 m_FixedImageMarginalPDF[fixedImageParzenWindowIndex] + 
+					 static_cast<PDFValueType>( 1 );
+				 
+					 /**
+					 * The region of support of the parzen window determines which bins
+					 * of the joint PDF are effected by the pair of image values.
+					 * Since we are using a cubic spline for the moving image parzen
+					 * window, four bins are effected.  The fixed image parzen window is
+					 * a zero-order spline (box car) and thus effects only one bin.
+					 *
+					 *  The PDF is arranged so that fixed image bins corresponds to the 
+					 * zero-th (column) dimension and the moving image bins corresponds
+					 * to the first (row) dimension.
+					 *
+				 */
+				 for ( int pdfMovingIndex = static_cast<int>( movingImageParzenWindowIndex ) - 1;
+				 pdfMovingIndex <= static_cast<int>( movingImageParzenWindowIndex ) + 2;
+				 pdfMovingIndex++ )
+				 {
+					 
+					 double movingImageParzenWindowArg = 
+						 static_cast<double>( pdfMovingIndex ) - 
+						 static_cast<double>(movingImageParzenWindowTerm);
+					 
+					 jointPDFIndex[0] = fixedImageParzenWindowIndex;
+					 jointPDFIndex[1] = pdfMovingIndex;
+					 
+					 // Update PDF for the current intensity pair
+					 JointPDFValueType & pdfValue = m_JointPDF->GetPixel( jointPDFIndex );
+					 pdfValue += static_cast<PDFValueType>( 
+						 m_CubicBSplineKernel->Evaluate( movingImageParzenWindowArg ) );
+					 
+					 
+				 }  //end parzen windowing for loop
+				 
+			 } //end if-block check sampleOk
+			 
+		 } // end iterating over fixed image spatial sample container for loop
+		 
+		 itkDebugMacro( "Ratio of voxels mapping into moving image buffer: " 
+			 << nSamples << " / " << m_NumberOfSpatialSamples << std::endl );
+		 
+		 if( nSamples < m_NumberOfSpatialSamples / 4 )
+		 {
+			 itkExceptionMacro( "Too many samples map outside moving image buffer: "
+				 << nSamples << " / " << m_NumberOfSpatialSamples << std::endl );
+		 }		 
+		 
+		 /**
+		 * Normalize the PDFs, compute moving image marginal PDF
+		 *
+		 */
+		 typedef ImageRegionIterator<JointPDFType> JointPDFIteratorType;
+		 JointPDFIteratorType jointPDFIterator ( m_JointPDF, m_JointPDF->GetBufferedRegion() );
+		 
+		 jointPDFIterator.GoToBegin();
+		 
+		 
+		 // Compute joint PDF normalization factor (to ensure joint PDF sum adds to 1.0)
+		 double jointPDFSum = 0.0;
+		 
+		 while( !jointPDFIterator.IsAtEnd() )
+		 {
+			 jointPDFSum += jointPDFIterator.Get();
+			 ++jointPDFIterator;
+		 }
+		 
+		 if ( jointPDFSum == 0.0 )
+		 {
+			 itkExceptionMacro( "Joint PDF summed to zero" );
+		 }
+		 
+		 
+		 // Normalize the PDF bins
+		 jointPDFIterator.GoToEnd();
+		 while( !jointPDFIterator.IsAtBegin() )
+		 {
+			 --jointPDFIterator;
+			 jointPDFIterator.Value() /= static_cast<PDFValueType>( jointPDFSum );
+		 }
+		 
+		 
+		 // Normalize the fixed image marginal PDF
+		 double fixedPDFSum = 0.0;
+		 for( unsigned int bin = 0; bin < m_NumberOfHistogramBins; bin++ )
+		 {
+			 fixedPDFSum += m_FixedImageMarginalPDF[bin];
+		 }
+		 
+		 if ( fixedPDFSum == 0.0 )
+		 {
+			 itkExceptionMacro( "Fixed image marginal PDF summed to zero" );
+		 }
+		 
+		 for( unsigned int bin=0; bin < m_NumberOfHistogramBins; bin++ )
+		 {
+			 m_FixedImageMarginalPDF[bin] /= static_cast<PDFValueType>( fixedPDFSum );
+		 }
+		 
+		 
+		 // Compute moving image marginal PDF by summing over fixed image bins.
+		 typedef ImageLinearIteratorWithIndex<JointPDFType> JointPDFLinearIterator;
+		 JointPDFLinearIterator linearIter( 
+			 m_JointPDF, m_JointPDF->GetBufferedRegion() );
+		 
+		 linearIter.SetDirection( 0 );
+		 linearIter.GoToBegin();
+		 unsigned int movingIndex = 0;
+		 
+		 while( !linearIter.IsAtEnd() )
+		 {
+			 
+			 double sum = 0.0;
+			 
+			 while( !linearIter.IsAtEndOfLine() )
+			 {
+				 sum += linearIter.Get();
+				 ++linearIter;
+			 }
+			 
+			 m_MovingImageMarginalPDF[movingIndex] = static_cast<PDFValueType>(sum);
+			 
+			 linearIter.NextLine();
+			 ++movingIndex;			 
+		 }
+		 
+		 /** Compute the metric by double summation over histogram. */
+
+		 /** \todo We might be able to optimize this part with Iterators. */
+
+		 double sum = 0.0;
+		 for( unsigned int fixedIndex = 0; fixedIndex < m_NumberOfHistogramBins; ++fixedIndex )
+		 {
+			 jointPDFIndex[0] = fixedIndex;
+			 double fixedImagePDFValue = m_FixedImageMarginalPDF[fixedIndex];
+			 for( unsigned int movingIndex = 0; movingIndex < m_NumberOfHistogramBins; ++movingIndex )      
+			 {
+				 double movingImagePDFValue = m_MovingImageMarginalPDF[movingIndex];
+				 jointPDFIndex[1] = movingIndex;
+				 
+				 double jointPDFValue = m_JointPDF->GetPixel( jointPDFIndex );
+				 
+				 if( jointPDFValue > 1e-16 &&  movingImagePDFValue > 1e-16 )
+				 {
+					 
+					 double pRatio = log( jointPDFValue / movingImagePDFValue );
+					 if( fixedImagePDFValue > 1e-16)
+						 sum += jointPDFValue * ( pRatio - log( fixedImagePDFValue ) );
+					 
+				 }  // end if-block to check non-zero bin contribution
+			 }  // end for-loop over moving index
+		 }  // end for-loop over fixed index
+		 
+		 return static_cast<MeasureType>( -1.0 * sum );
+		 
+	} // end GetValue
+
+
 
 
 #endif // end #ifndef _itkMattesMutualInformationImageToImageMetricWithMask_CXX__
