@@ -91,11 +91,9 @@ using namespace itk;
 		typedef typename Superclass2::MovingImageType						MovingImageType;
 		typedef typename Superclass2::ITKBaseType								ITKBaseType;
 
-
 		/** Methods that have to be present in any Transform. */
 		virtual void BeforeRegistration(void);
 		virtual void BeforeEachResolution(void);
-		
 	
 		/** Function to read/write transform-parameters from/to a file.*/
 		virtual void ReadFromFile(void);
@@ -106,7 +104,6 @@ using namespace itk;
 		DeformationFieldTransform();
 		virtual ~DeformationFieldTransform() {};
 		
-
 	private:
 
 		DeformationFieldTransform( const Self& );	// purposely not implemented
