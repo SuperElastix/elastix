@@ -37,9 +37,10 @@ using namespace itk;
 		void BSplineInterpolator<TElastix>::
 		BeforeEachResolution(void)
 	{
-		//TODO: Make it possible to set the spline order here
-		//May be hard, because it's not possible after setting the 
-		//input image, according to the help.
+		/** \todo Make it possible to set the spline order here
+		 * May be hard, because it's not possible after setting the 
+		 * input image, according to the help.
+		 */
 	}
 
 

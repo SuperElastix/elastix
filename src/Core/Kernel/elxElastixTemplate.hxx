@@ -199,7 +199,7 @@ namespace elastix
 		m_Timer0->StartTimer();
 		elxout << "\nReading images..." << std::endl;
 
-		//TODO: Multithreaden? Reading the fixed and moving images could be two threads.  
+		/** \todo Multithreaden? Reading the fixed and moving images could be two threads. */
 
 		/** Set the fixedImage.*/
 		if ( !m_FixedImage )

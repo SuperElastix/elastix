@@ -387,7 +387,7 @@ namespace itk
 	{
 		const unsigned int searchSpaceDimension = this->GetNumberOfSearchSpaceDimensions();
 
-		//TODO: check if point has the same dimension
+		/** \todo check if point has the same dimension. */
 
 		ParametersType param = this->GetInitialPosition();
 

@@ -87,7 +87,7 @@ namespace elastix
 		template <class T>
 		int ReadParameter( T & param, const char * name_field, const unsigned int entry_nr, bool silent = false )
 		{			
-			//TODO: make a standard parameter file with the default values
+			/** \todo make a standard parameter file with the default values. */
 			
 			/** Very basic error-checking.*/
 			if (VPF::set(param, m_ParameterFile[name_field][entry_nr])

@@ -14,7 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
 #ifndef __itkDeformationVectorFieldTransform_H__
 #define __itkDeformationVectorFieldTransform_H__
 
@@ -33,11 +32,12 @@ namespace itk
  * but sets the controlpoints at every index point.
  *
  * \ingroup Transforms
+ *
+ * \todo I take a 0-th order BSplineDeformableTransform, where a
+ * 1-st order might be better. However, in that case:
+ * take care of image edges, where there is BSpline support!
  */
 
-	// I take a 0-th order BSplineDeformableTransform, where a
-	// 1-st order might be better. However, in that case:
-	// TODO: take care of image edges, where there is BSpline support!
 	template <
     class TScalarType = double,				// Data type for scalars (float or double)
     unsigned int NDimensions = 3 >		// Number of dimensions
@@ -95,32 +95,9 @@ namespace itk
 		/** Set the coefficient image. */
 		virtual void SetCoefficientImage( VectorImagePointer vecImage );
 		
-		/** Don't allow the GridRegion, GridSpacing, and GridOrigin
-		 * to be set from outside. These are determined by the region,
-		 * spacing and origin of the VectorImage.
-		 */
-
-		/** This method specifies the region over which the grid resides. *
-		virtual void SetGridRegion( const RegionType& region )
-		{
-			itkExceptionMacro(<< "Method not applicable for deformation field transform. ");
-		}
-		
-		/** This method specifies the grid spacing or resolution. *
-		virtual void SetGridSpacing( const SpacingType& spacing )
-		{
-			itkExceptionMacro(<< "Method not applicable for deformation field transform. ");
-		}
-		
-		/** This method specifies the grid origin. *
-		virtual void SetGridOrigin( const OriginType& origin )
-		{
-			itkExceptionMacro(<< "Method not applicable for deformation field transform. ");
-		}
-		*/
-		
 	protected:
-
+		
+		/** The constructor. */
 		DeformationVectorFieldTransform();
 		virtual ~DeformationVectorFieldTransform();
 

@@ -21,7 +21,6 @@
 
 /** Added for the support of masks.*/
 #include "itkMaskImage.h"
-//TODO: add support for masks!
 
 namespace itk
 {
@@ -103,6 +102,8 @@ public HistogramImageToImageMetric<TFixedImage, TMovingImage>
 	itkSetObjectMacro( MovingMask, MovingMaskImageType );
 	itkGetObjectMacro( FixedMask, FixedMaskImageType );
 	itkGetObjectMacro( MovingMask, MovingMaskImageType );
+
+	/** \todo add support for masks! */
 
 protected:
 

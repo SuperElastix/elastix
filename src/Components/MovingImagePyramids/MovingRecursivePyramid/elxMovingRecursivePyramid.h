@@ -16,11 +16,6 @@ using namespace itk;
 	 *
 	 * \ingroup MovingImagePyramids
 	 */
-	/**
-	 * ******************** MovingRecursivePyramid ******************
-	 *
-	 * The MovingRecursivePyramid class ....
-	 */
 
 	template <class TElastix>	
 		class MovingRecursivePyramid :

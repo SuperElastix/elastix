@@ -196,7 +196,7 @@ using namespace itk;
 			this->SetScales( newscales );
 		}
 		
-		//TODO: to optimizerbase?
+		/** \todo to optimizerbase? */
 
 	} // end SetInitialPosition
 	

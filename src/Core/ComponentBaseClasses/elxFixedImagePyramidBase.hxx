@@ -41,7 +41,7 @@ namespace elastix
 		{
 			xl::xout["error"] << "ERROR: NumberOfResolutions not specified!" << std::endl;
 		}
-		// TO DO: quit program? Actually this check should be in the ::BeforeAll() method.
+		/** \todo quit program? Actually this check should be in the ::BeforeAll() method. */
 
 		/** Create a fixedSchedule.*/
 		ScheduleType fixedSchedule( numberOfResolutions, FixedImageDimension );

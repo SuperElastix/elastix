@@ -71,7 +71,7 @@ using namespace itk;
 		m_Configuration->ReadParameter( minStepLength, "MinimumStepLength", level );
 		this->SetMinimumStepLength( minStepLength );
 
-		//TODO: max and min steplength should maybe depend on the imagespacing or on something else...
+		/** \todo max and min steplength should maybe depend on the imagespacing or on something else... */
 		
 		/** Set the maximumNumberOfIterations.*/
 		unsigned int maximumNumberOfIterations = 100;
@@ -196,7 +196,7 @@ using namespace itk;
 			this->SetScales( newscales );
 		}
 		
-		//TODO: to optimizerbase?
+		/** \todo to optimizerbase? */
 
 	} // end SetInitialPosition
 	

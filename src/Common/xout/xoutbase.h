@@ -69,7 +69,7 @@ namespace xoutlibrary
 		 * and need to deduce their own template arguments)
 		 */
 
-	/**	template <class T>
+	/**	template < class T >
 			Self & operator<<(T &  _arg)
 		{
 			return this->SendToTargets(_arg);

@@ -128,7 +128,6 @@ namespace elastix
 				this->ReadInitialTransformFromFile(	fileName.c_str() );
 			}
 		}
-
 		
 	} // end BeforeRegistrationBase
 
@@ -459,7 +458,7 @@ namespace elastix
 		xout["transpar"] << "(MovingImagePixelType \""	<< movpix << "\")" << std::endl;
 
 		/** Get the Size, Spacing and Origin of the fixed image.*/
-		// TO DO: we get it now from the resampler, but maybe from an inputimage??
+		/** \todo we get it now from the resampler, but maybe from an inputimage?? */
 		SizeType size = dynamic_cast<typename ElastixType::FixedImageType *>(
 			m_Elastix->GetFixedImage() )->GetLargestPossibleRegion().GetSize();
 		IndexType index = dynamic_cast<typename ElastixType::FixedImageType *>(

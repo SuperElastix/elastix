@@ -91,7 +91,7 @@ using namespace itk;
 		 * because that function tries to read parameters from the file,
 		 * which is not necessary in this case, because the parameters are
 		 * in the vectorImage.
-		 * However, we have to do copy the rest of the functionality:
+		 * However, we have to copy the rest of the functionality:
 		 */
 		
 		/** Get the InitialTransformName. */

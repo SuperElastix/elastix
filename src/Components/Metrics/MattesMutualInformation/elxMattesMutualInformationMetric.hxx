@@ -152,11 +152,11 @@ using namespace itk;
 		void MattesMutualInformationMetric<TElastix>
 		::BeforeEachResolution(void)
 	{
-		//TODO: SecondOrderRegularisationMetric aanpassen.
-		//Set alpha, which balances the similarity and deformation energy
-		// E_total = (1-alpha)*E_sim + alpha*E_def.
-		//	metric->SetAlpha(
-		//	config.GetAlpha(level));
+		/** \todo Adapt SecondOrderRegularisationMetric.
+		 * Set alpha, which balances the similarity and deformation energy
+		 * E_total = (1-alpha)*E_sim + alpha*E_def.
+		 * 	metric->SetAlpha( config.GetAlpha(level) );
+		 */
 
 		/** Get the current resolution level.*/
 		unsigned int level = 
@@ -165,8 +165,9 @@ using namespace itk;
 		/** Set the number of histogram bins and spatial samples.*/				
 		unsigned int numberOfHistogramBins = 32;
 		unsigned int numberOfSpatialSamples = 10000;
-		//TODO: guess the default numberOfSpatialSamples from the 
-		// imagesize, the numberOfParameters, and the number of bins....
+		/** \todo guess the default numberOfSpatialSamples from the 
+		 * imagesize, the numberOfParameters, and the number of bins...
+		 */
 		
 		/** Read the parameters from the ParameterFile.*/
 		m_Configuration->ReadParameter( numberOfHistogramBins, "NumberOfHistogramBins", level );

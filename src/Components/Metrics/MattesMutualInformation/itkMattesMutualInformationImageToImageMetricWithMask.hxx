@@ -318,11 +318,11 @@ namespace itk
 		* If so, we can make use of its EvaluateDerivatives method.
 		* Otherwise, we instantiate an external central difference
 		* derivative calculator.
-		*
-		* TODO: Also add it the possibility of using the default gradient
-		* provided by the superclass.
-		*
 		*/
+
+		/** \todo Also add it the possibility of using the default gradient
+		 * provided by the superclass.
+		 */
 		m_InterpolatorIsBSpline = true;
 		
 		BSplineInterpolatorType * testPtr = dynamic_cast<BSplineInterpolatorType *>(
@@ -674,11 +674,10 @@ namespace itk
 			 ++movingIndex;			 
 		 }
 		 
-		 /**
-		 * Compute the metric by double summation over histogram.
-		 * TODO: We might be able to optimize this part with Iterators.
-		 *
-		 */
+		 /** Compute the metric by double summation over histogram. */
+
+		 /** \todo We might be able to optimize this part with Iterators. */
+
 		 double sum = 0.0;
 		 for( unsigned int fixedIndex = 0; fixedIndex < m_NumberOfHistogramBins; ++fixedIndex )
 		 {
@@ -975,11 +974,10 @@ namespace itk
     }
 		
 		
-		/**
-		* Compute the metric by double summation over histogram.
-		* TODO: We might be able to optimize this part with Iterators.
-		*
-		*/
+		/** Compute the metric by double summation over histogram. */
+
+		/** \todo We might be able to optimize this part with Iterators. */
+
 		double sum = 0.0;
 		for( unsigned int fixedIndex = 0; fixedIndex < m_NumberOfHistogramBins; ++fixedIndex )
     {

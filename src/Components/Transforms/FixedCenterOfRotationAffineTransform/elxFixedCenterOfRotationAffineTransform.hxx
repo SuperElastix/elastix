@@ -161,7 +161,7 @@ namespace elastix
 		if ( sum > 0 )
 		{
 			xl::xout["error"] << "ERROR: One or more image sizes are 0!" << std::endl;
-			//TODO: quit program nicely.
+			/** \todo quit program nicely. */
 		}
 		
 		/** Make a temporary image with the right region info,

@@ -41,7 +41,7 @@ namespace elastix
 		{
 			xl::xout["error"] << "ERROR: NumberOfResolutions not specified!" << std::endl;
 		}
-		// TO DO: quit program?
+		/** \todo quit program? */
 
 		/** Create a movingSchedule.*/
 		ScheduleType movingSchedule( numberOfResolutions, MovingImageDimension );

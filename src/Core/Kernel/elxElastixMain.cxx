@@ -20,9 +20,11 @@ namespace elastix
 	 * ******************* Global variables *************************
 	 * 
 	 * Some global variables (not part of the ElastixMain class, used
-	 * by xoutSetup. TODO: move to ElastixMain class, as static vars?
+	 * by xoutSetup.	 
 	 */
 	
+	/** \todo move to ElastixMain class, as static vars? */
+
 	/** xout TargetCells. */
 	xoutbase_type		g_xout;
 	xoutsimple_type g_WarningXout;

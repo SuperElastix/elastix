@@ -108,8 +108,7 @@ namespace itk
 		virtual SpacingType GetSpacing(void);
 		virtual PointType GetOrigin(void);
 		
-				
-		/** TODO: Transform IndexToPoint methods. */
+		/** \todo Transform IndexToPoint methods. */
 		
 		virtual void CopyInformation(const DataObject *data);
 		virtual const OffsetValueType *GetOffsetTable() const;

@@ -121,7 +121,7 @@ namespace elastix
 		this->GetAsITKBaseType()->SetInput( dynamic_cast<InputImageType *>(
 			m_Elastix->GetMovingImage() ) );
 		
-		// TODO: dit zou bijvoorbeeld ook een gridplaatje kunnen zijn.
+		/** \todo dit zou bijvoorbeeld ook een gridplaatje kunnen zijn. */
 		
 	} // end SetComponents
 
@@ -169,7 +169,7 @@ namespace elastix
 		if ( sum > 0 )
 		{
 			xl::xout["error"] << "ERROR: One or more image sizes are 0!" << std::endl;
-			//TODO: quit program nicely.
+			/** \todo quit program nicely. */
 		}
 		
 		/** Set the region info to the same values as in the fixedImage.*/

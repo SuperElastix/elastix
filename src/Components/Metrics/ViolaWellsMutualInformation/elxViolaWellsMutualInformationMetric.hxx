@@ -139,8 +139,7 @@ using namespace itk;
 
 		} // end if ( moving mask present )
 		
-		/***/
-		//TODO: Select another kernel function than the Gaussian
+		/** \todo Select another kernel function than the Gaussian. */
 
 	} // end BeforeRegistration
 	
@@ -153,11 +152,11 @@ using namespace itk;
 		void ViolaWellsMutualInformationMetric<TElastix>::
 		BeforeEachResolution(void)
 	{
-		//TODO: SecondOrderRegularisationMetric aanpassen.
-		//Set alpha, which balances the similarity and deformation energy
-		// E_total = (1-alpha)*E_sim + alpha*E_def.
-		//	metric->SetAlpha(
-		//	config.GetAlpha(level));
+		/** \todo adapt SecondOrderRegularisationMetric.
+		 * Set alpha, which balances the similarity and deformation energy
+		 * E_total = (1-alpha)*E_sim + alpha*E_def.
+		 * metric->SetAlpha( config.GetAlpha(level) );
+		 */
 
 		/** Get the current resolution level.*/
 		unsigned int level = 
@@ -165,8 +164,9 @@ using namespace itk;
 		
 		/** Set the number of histogram bins and spatial samples.*/
 		unsigned int numberOfSpatialSamples = 10000;
-		//TODO: guess the default numberOfSpatialSamples from the 
-		// imagesize, the numberOfParameters, and the number of bins....
+		/** \todo guess the default numberOfSpatialSamples from the 
+		 * imagesize, the numberOfParameters, and the number of bins....
+		 */
 
 		/** Set the intensity standard deviation of the fixed
 		 * and moving images. This defines the kernel bandwidth
@@ -177,7 +177,7 @@ using namespace itk;
 		 */
 		double fixedImageStandardDeviation = 0.4;
 		double movingImageStandardDeviation = 0.4;
-		//TODO: calculate them???
+		/** \todo calculate them??? */
 		
 		/** Read the parameters from the ParameterFile.*/
 		m_Configuration->ReadParameter(

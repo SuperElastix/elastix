@@ -84,7 +84,7 @@ using namespace itk;
 		while ( errorcode==0 )  //as long as still search ranges are defined
 		{
 			/** Try to read (silently) from the parameter file */
-			//TODO: check earlier, in BeforeAll, if the searchspace has been defined
+			/** \todo check earlier, in BeforeAll, if the searchspace has been defined. */
 
 			if (!realerror && !errorcode)
 			{
@@ -160,13 +160,13 @@ using namespace itk;
 			m_OptimizationSurface = 
 				NDImageType::NewNDImage(nrOfSearchSpaceDimensions);
 			m_OptimizationSurface->CreateNewImage();
-			//TODO: don't do this if more than max allowable dimensions.
+			/** \todo don't do this if more than max allowable dimensions. */
 		
 			/** Set the correct size and allocate memory */
 			m_OptimizationSurface->SetRegions(
 				this->GetSearchSpaceSize()  );
 			m_OptimizationSurface->Allocate();
-			//TODO: try/catch block around Allocate?
+			/** \todo try/catch block around Allocate? */
 					
 			/** Set the name of this image on disk. */
 			makeString.str("");
@@ -187,7 +187,7 @@ using namespace itk;
 				
 		} // if (!realerror)
 
-		//TODO: else: quit program or something like that.
+		/** \todo else: quit program or something like that. */
 
 	} // end BeforeEachResolution
 
@@ -256,7 +256,7 @@ using namespace itk;
 		elxout << "Stopping condition: " << stopcondition << "." << std::endl;
 				
 		/** Write the optimization surface to disk */
-		m_OptimizationSurface->Write(); // TODO: try/catch?
+		m_OptimizationSurface->Write(); /** \todo try/catch? */
 		elxout
 			<< "\nThe scanned optimization surface is saved as: "
 			<< m_OptimizationSurface->GetOutputFileName()

@@ -67,16 +67,17 @@ namespace itk
 		typedef Array<OffsetValueType>									OffsetType;
 		
 				
-		
-		
 		/** Region typedef support. A region is used to specify a subset of an image. */
+
 		//typedef typename Superclass::RegionType  RegionType;
-		//TODO:  an NDRegionType should first be declared, in the same way as NDImage
-		//use SetRegions(size) for now. then knowlegde of the RegionType is not 
-		// necessary
-		//alternative: forget about the regiontype and add the functions
-		//SetLargestPossibleRegion, SetRegions etc with arguments (index,size)
-		//or maybe: ImageIORegion
+
+		/** \todo an NDRegionType should first be declared, in the same way as NDImage
+		 * use SetRegions(size) for now. then knowlegde of the RegionType is not 
+		 * necessary.
+		 * alternative: forget about the regiontype and add the functions
+		 * SetLargestPossibleRegion, SetRegions etc with arguments (index,size)
+		 * or maybe: ImageIORegion
+		 */
 		
 		//void SetRegions(RegionType region) = 0; 
 		virtual void SetRegions(SizeType size) = 0;
@@ -114,9 +115,7 @@ namespace itk
 		virtual SpacingType GetSpacing(void) = 0;
 		virtual PointType GetOrigin(void) = 0;
 		
-				
-		/** TODO: Transform IndexToPoint methods. */
-		
+		/** \todo Transform IndexToPoint methods. */		
 		
 		virtual void CopyInformation(const DataObject *data) = 0;
 		virtual const OffsetValueType *GetOffsetTable() const = 0;

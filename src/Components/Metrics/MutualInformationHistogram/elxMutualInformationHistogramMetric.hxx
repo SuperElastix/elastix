@@ -139,8 +139,7 @@ using namespace itk;
 
 		} // end if ( moving mask present )
 		
-		/***/
-		//TODO: Select another kernel function than the Gaussian
+		/** \todo Select another kernel function than the Gaussian. */
 
 	} // end BeforeRegistration
 	
@@ -153,11 +152,11 @@ using namespace itk;
 		void MutualInformationHistogramMetric<TElastix>::
 		BeforeEachResolution(void)
 	{
-		//TODO: SecondOrderRegularisationMetric aanpassen.
-		//Set alpha, which balances the similarity and deformation energy
-		// E_total = (1-alpha)*E_sim + alpha*E_def.
-		//	metric->SetAlpha(
-		//	config.GetAlpha(level));
+		/** \todo adapt SecondOrderRegularisationMetric.
+		 * Set alpha, which balances the similarity and deformation energy
+		 * E_total = (1-alpha)*E_sim + alpha*E_def.
+		 * metric->SetAlpha( config.GetAlpha(level) );
+		 */
 
 		/** Get the current resolution level.*/
 		unsigned int level = 

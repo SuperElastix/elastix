@@ -23,9 +23,9 @@ using namespace itk;
 	 * This metric ...
 	 *
 	 * \ingroup Metrics
+	 *
+	 * \todo Add support for masks.
 	 */
-
-// TO DO: Add masks.
 
 	template <class TElastix >
 		class NormalizedCorrelationMetric:
@@ -127,7 +127,7 @@ using namespace itk;
 		typedef typename MovingMaskImageReaderType::Pointer		MovingMaskImageReaderPointer;
 		typedef typename FixedMaskCastFilterType::Pointer			FixedMaskCastFilterPointer;
 		typedef typename MovingMaskCastFilterType::Pointer		MovingMaskCastFilterPointer;
-*/		
+*/
 
 		/** Methods that have to be present everywhere.*/
 		virtual void BeforeRegistration(void);

@@ -18,11 +18,11 @@ namespace elastix
 {
 	using namespace itk;
 
-	/**
-	 * ********************** Global Functions **********************
-	 * 
-	 * NB: not part of the ElastixMain class.
-	 */
+	/// 
+	/// ********************** Global Functions **********************
+	/// 
+	/// NB: not part of the ElastixMain class.
+	///
 
 	/** Configure the xl::xout variable, which has to be used for 
 	 * for writing messages. The function adds some default fields,

@@ -228,7 +228,7 @@ using namespace itk;
 		/** initialise iterator in the parameterspointer_out */
 		unsigned int i = 0; 
 		
-		/* Loop over dimension. */
+		/** Loop over dimension. */
 		for ( unsigned int j = 0; j < SpaceDimension; j++ )
 		{
 			/** Fill the coeff image with parameter data (displacements
@@ -453,7 +453,7 @@ using namespace itk;
 				dataPointer += numberOfPixels;
 				m_Coeffs1->Modified();
 				
-				/** Create complete filename: <name>.<dimension>.mhd
+				/** Create complete filename: "name"."dimension".mhd
 				 * --> two files are created: a header (.mhd) and a data (.raw) file.
 				 */
 				std::ostringstream makeFileName( "" );

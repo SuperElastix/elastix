@@ -89,11 +89,11 @@ using namespace itk;
 		void NormalizedCorrelationMetric<TElastix>::
 		BeforeEachResolution(void)
 	{
-		//TODO: SecondOrderRegularisationMetric aanpassen.
-		//Set alpha, which balances the similarity and deformation energy
-		// E_total = (1-alpha)*E_sim + alpha*E_def.
-		//	metric->SetAlpha(
-		//	config.GetAlpha(level));
+		/** \todo adapt SecondOrderRegularisationMetric.
+		 * Set alpha, which balances the similarity and deformation energy
+		 * E_total = (1-alpha)*E_sim + alpha*E_def.
+		 * metric->SetAlpha( config.GetAlpha(level) );
+		 */
 
 	/** Erode and Set masks if necessary.*/
 
