@@ -88,21 +88,21 @@ namespace itk
 	template <class TAnyITKTransform>
 		typename DeformationFieldRegulizer<TAnyITKTransform>::OutputPointType
 		DeformationFieldRegulizer<TAnyITKTransform>
-		::TransformPoint( const InputPointType & point ) const
+		::TransformPoint( const InputPointType & inputPoint ) const
 	{
 		/** Get the outputpoint of the BSpline and the deformationfield. */
-		OutputPointType oppBS, oppDF, oppSum;
-		oppBS = this->Superclass::TransformPoint( point );
-		oppDF = m_IntermediaryDeformationFieldTransform->TransformPoint( point );
+		OutputPointType oppBS, oppDF, opp;
+		oppBS = this->Superclass::TransformPoint( inputPoint );
+		oppDF = m_IntermediaryDeformationFieldTransform->TransformPoint( inputPoint );
 
 		/** Add them. */
 		for ( unsigned int i = 0; i < OutputSpaceDimension; i++ )
 		{
-			oppSum[ i ] = oppBS[ i ] + oppDF[ i ] - point[ i ];
+			opp[ i ] = oppBS[ i ] + oppDF[ i ] - inputPoint[ i ];
 		}
 
 		/** Return a value. */
-		return oppSum;
+		return opp;
 
 	} // end TransformPoint
 

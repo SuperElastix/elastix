@@ -91,8 +91,11 @@ namespace itk
 		/** itk Get macro for the deformation field transform. */
 		itkGetConstObjectMacro( IntermediaryDeformationFieldTransform, IntermediaryDFTransformType );
 
+		/** itk Get macro for the deformation field image. */
+		itkGetObjectMacro( IntermediaryDeformationField, VectorImageType );
+
 		/** Method to transform a point. */
-		virtual OutputPointType TransformPoint( const InputPointType & point ) const;
+		virtual OutputPointType TransformPoint( const InputPointType & inputPoint ) const;
 		
 	protected:
 		

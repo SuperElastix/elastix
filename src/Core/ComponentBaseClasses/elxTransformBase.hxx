@@ -18,6 +18,7 @@ namespace elastix
 		/** Initialize.*/
 		m_TransformParametersPointer = 0;
 		m_ConfigurationInitialTransform = 0;
+		m_ReadWriteTransformParameters = true; // default
 
 	} // end Constructor
 
@@ -214,63 +215,67 @@ namespace elastix
 		unsigned int NumberOfParameters = 0;
 		m_Configuration->ReadParameter( NumberOfParameters, "NumberOfParameters", 0 );
 
-		/** Get the TransformParameters.*/
-		if ( m_TransformParametersPointer ) delete m_TransformParametersPointer;
-		m_TransformParametersPointer = new ParametersType( NumberOfParameters );
-		/** If NumberOfParameters < 20, we read in the normal way.*/
-		if ( NumberOfParameters < 20 )
-		{			
-			for ( unsigned int i = 0; i < NumberOfParameters; i++ )
-			{
-				m_Configuration->ReadParameter(
-					(*m_TransformParametersPointer)[ i ], "TransformParameters", i );
-			}
-		}
-		/** Else, do the reading more 'manually'.
-		 * This is neccesary, because the ReadParameter can not handle
-		 * many parameters.
-		 */
-		else
+		if ( m_ReadWriteTransformParameters )
 		{
-			std::ifstream input( this->GetConfiguration()->GetCommandLineArgument( "-tp" ) );
-			if ( input.is_open() )
-			{
-				/** p the getline->streamsize are set to have length 1000.
-				 * BEWARE: if somewhere before TransformParameters, there
-				 * exists a line with more then 1000 characters, the
-				 * getline can not get beyond that line, and this will FAIL.
-				 * It can be 'solved' by setting 1000 to a larger number.
-				 */
-				char p[ 1000 ];
-				bool nextline = true;				
-				while ( nextline )
-				{
-					/** Get a line, put it in a string, and compare it
-					 * with "// (TransformParameters)".
-					 */
-					input.getline( p, 1000 );
-					std::string ps( p );
-					int pos = ps.find( "// (TransformParameters)" );
-					/** If we have correspondence, we are at the right line.*/
-					if ( pos == 0 )
-					{
-						/** First read the "// " into tmp.*/
-						std::string tmp;
-						input >> tmp;
-						/** Now read the TransformParameters.*/
-						for ( unsigned int i = 0; i < NumberOfParameters; i++ )
-						{
-							input >> (*m_TransformParametersPointer)[ i ];
-						}
-						/** We are done, so no need for reading more lines.*/
-						nextline = false;
-					} // end if at the right position
-				} // end while reading lines
-			} // end if input-file is open
-		} // end else
+			/** Get the TransformParameters. */
+			if ( m_TransformParametersPointer ) delete m_TransformParametersPointer;
+			m_TransformParametersPointer = new ParametersType( NumberOfParameters );
 
-		/** Set the parameters into this transform.*/
-		this->GetAsITKBaseType()->SetParameters( *m_TransformParametersPointer );
+			/** If NumberOfParameters < 20, we read in the normal way.*/
+			if ( NumberOfParameters < 20 )
+			{			
+				for ( unsigned int i = 0; i < NumberOfParameters; i++ )
+				{
+					m_Configuration->ReadParameter(
+						(*m_TransformParametersPointer)[ i ], "TransformParameters", i );
+				}
+			}
+			/** Else, do the reading more 'manually'.
+			* This is neccesary, because the ReadParameter can not handle
+			* many parameters.
+			*/
+			else
+			{
+				std::ifstream input( this->GetConfiguration()->GetCommandLineArgument( "-tp" ) );
+				if ( input.is_open() )
+				{
+					/** p the getline->streamsize are set to have length 1000.
+					* BEWARE: if somewhere before TransformParameters, there
+					* exists a line with more then 1000 characters, the
+					* getline can not get beyond that line, and this will FAIL.
+					* It can be 'solved' by setting 1000 to a larger number.
+				 */
+					char p[ 1000 ];
+					bool nextline = true;				
+					while ( nextline )
+					{
+						/** Get a line, put it in a string, and compare it
+						* with "// (TransformParameters)".
+					 */
+						input.getline( p, 1000 );
+						std::string ps( p );
+						int pos = ps.find( "// (TransformParameters)" );
+						/** If we have correspondence, we are at the right line.*/
+						if ( pos == 0 )
+						{
+							/** First read the "// " into tmp.*/
+							std::string tmp;
+							input >> tmp;
+							/** Now read the TransformParameters.*/
+							for ( unsigned int i = 0; i < NumberOfParameters; i++ )
+							{
+								input >> (*m_TransformParametersPointer)[ i ];
+							}
+							/** We are done, so no need for reading more lines.*/
+							nextline = false;
+						} // end if at the right position
+					} // end while reading lines
+				} // end if input-file is open
+			} // end else
+
+			/** Set the parameters into this transform.*/
+			this->GetAsITKBaseType()->SetParameters( *m_TransformParametersPointer );
+		} // end if m_ReadWriteTransformParameters
 
 		/** Task 2 - Get the InitialTransform.*/
 
@@ -400,29 +405,32 @@ namespace elastix
 			<< nrP << ")" << std::endl;
 
 		/** Write the parameters of this transform.*/
-		if ( nrP < 20 )
+		if ( m_ReadWriteTransformParameters )
 		{
-			/** In this case, write in a normal way to the Parameterfile.*/
-			xout["transpar"] << "(TransformParameters ";
-			for ( unsigned int i = 0; i < nrP - 1; i++ )
+			if ( nrP < 20 )
 			{
-				xout["transpar"] << param[ i ] << " ";
+				/** In this case, write in a normal way to the Parameterfile.*/
+				xout["transpar"] << "(TransformParameters ";
+				for ( unsigned int i = 0; i < nrP - 1; i++ )
+				{
+					xout["transpar"] << param[ i ] << " ";
+				}
+				xout["transpar"] << param[ nrP - 1 ] << ")" << std::endl;
 			}
-			xout["transpar"] << param[ nrP - 1 ] << ")" << std::endl;
-		}
-		else
-		{
-			/** Otherwise, write to Parameterfile with "// " in front of it.
-			 * This is neccesary, because the ReadParameter can not handle
-			 * many parameters.
+			else
+			{
+				/** Otherwise, write to Parameterfile with "// " in front of it.
+				* This is neccesary, because the ReadParameter can not handle
+				* many parameters.
 			 */
-			xout["transpar"] << "// (TransformParameters)" << std::endl << "// ";
-			for ( unsigned int i = 0; i < nrP - 1; i++ )
-			{
-				xout["transpar"] << param[ i ] << " ";
+				xout["transpar"] << "// (TransformParameters)" << std::endl << "// ";
+				for ( unsigned int i = 0; i < nrP - 1; i++ )
+				{
+					xout["transpar"] << param[ i ] << " ";
+				}
+				xout["transpar"] << std::endl;
 			}
-			xout["transpar"] << std::endl;
-		}
+		} // end if m_WriteTransformParameters
 
 		/** Write the name of the parameters-file of the initial transform.*/
 		if ( this->GetInitialTransform() )
@@ -785,6 +793,24 @@ namespace elastix
 
 	} // end SetTransformParametersFileName
 
+
+	/**
+	 * ************** SetReadWriteTransformParameters ***************
+	 */
+	
+	template <class TElastix>
+		void TransformBase<TElastix>
+		::SetReadWriteTransformParameters( const bool _arg )
+	{
+		/** Copied from itkSetMacro. */
+		if ( this->m_ReadWriteTransformParameters != _arg  )
+		{
+			this->m_ReadWriteTransformParameters = _arg;
+			ObjectType * thisAsObject = dynamic_cast<ObjectType *>(this);
+			thisAsObject->Modified();
+		}
+
+	} // end SetReadWriteTransformParameters
 
 
 } // end namespace elastix

@@ -480,7 +480,7 @@ using namespace itk;
 	void BSplineTransformWithDiffusion<TElastix>
 	::ReadFromFile(void)
 	{
-		/** Read and Set the Grid: this is a BSplineTransform specific task.*/
+		/** Read and Set the Grid: this is a BSplineTransformWithDiffusion specific task.*/
 
 		/** Declarations.*/
 		RegionType	gridregion;
@@ -518,6 +518,21 @@ using namespace itk;
 		 */
 		this->Superclass2::ReadFromFile();
 
+		// \todo Test this ReadFromFile function.
+		// \todo Read and set the parameters of the deformationFieldTransform part.
+
+		/** Read the name of the deformationFieldImage. */
+		std::string fileName = "";
+		m_Configuration->ReadParameter( fileName, "TransformParametersDeformationFieldImageFileName", 0 );
+
+		/** Error checking ... */
+		if ( fileName == "" )
+		{
+			xout["error"] << "ERROR: TransformParametersDeformationFieldImageFileName not specified."
+				<< std::endl << "Unable to read and set the transform parameters." << std::endl;
+			// \todo quit program nicely or throw an exception
+		}
+
 	} // end ReadFromFile
 
 
@@ -532,14 +547,40 @@ using namespace itk;
 		void BSplineTransformWithDiffusion<TElastix>
 		::WriteToFile( const ParametersType & param )
 	{
+		/** Make sure that the Transformbase::WriteToFile() does
+		 * not write the transformParameters in the file.
+		 */
+		this->SetReadWriteTransformParameters( false );
+
 		/** Call the WriteToFile from the TransformBase.*/
 		this->Superclass2::WriteToFile( param );
 
-		// \todo let writetofile output relevant info, such as the name of the deformationField file
-		// \todo Set HowToCombineTransforms to NoInitialTransform
-
 		/** Add some BSplineTransform specific lines.*/
-		xout["transpar"] << std::endl << "// BSplineTransform specific" << std::endl;
+		xout["transpar"] << std::endl << "// BSplineTransformWithDiffusion specific" << std::endl;
+
+		/** Write the filename of the deformationField image. */
+		std::ostringstream makeFileName( "" );
+		makeFileName << m_Configuration->GetCommandLineArgument( "-out" )
+			<< "TransformParametersDeformationFieldImage."
+			<< m_Configuration->GetElastixLevel()
+			<< ".mhd";
+		xout["transpar"] << "(TransformParametersDeformationFieldImageFileName \""
+			<< makeFileName.str() << "\")" << std::endl;
+
+		/** Write the deformation field image. */
+		typename DeformationFieldWriterType::Pointer writer
+			= DeformationFieldWriterType::New();
+		writer->SetFileName( makeFileName.str().c_str() );
+		writer->SetInput( this->GetIntermediaryDeformationField() );
+		/** Do the writing. */
+		try
+		{
+			writer->Update();
+		}
+		catch( itk::ExceptionObject & excp )
+		{
+			xl::xout["error"] << excp << std::endl;
+		}
 
 		/** Get the GridSize, GridIndex, GridSpacing and
 		 * GridOrigin of this transform.
@@ -587,62 +628,8 @@ using namespace itk;
 		xout["transpar"] << origin[ SpaceDimension - 1 ] << ")" << std::endl;
 
 		/** Set the precision back to default value.*/
-		xout["transpar"] << std::setprecision(6);
-
-		/** If wanted, write the TransformParameters as deformation
-		 * images to a file.
-		 */
-		if ( 0 )
-		{
-			/** Get the pointer to the data in 'param' */
-			PixelType * dataPointer = const_cast<PixelType *>(
-				static_cast<const PixelType *>( param.data_block() )		);
-			unsigned int numberOfPixels =
-				(this->GetGridRegion()).GetNumberOfPixels();
-			
-			/** Initialise the coeffs image */
-			m_Coeffs1->SetRegions( this->GetGridRegion() );
-			m_Coeffs1->SetOrigin( (this->GetGridOrigin()).GetDataPointer() );
-			m_Coeffs1->SetSpacing( (this->GetGridSpacing()).GetDataPointer() );
-			
-			for ( unsigned int i = 0; i < SpaceDimension; i++ )
-			{
-				/** Get the set of parameters that represent the control point
-				 * displacements in the i-th dimension.
-				 */
-				m_Coeffs1->GetPixelContainer()->
-					SetImportPointer( dataPointer, numberOfPixels );
-				dataPointer += numberOfPixels;
-				m_Coeffs1->Modified();
-				
-				/** Create complete filename: <name>.<dimension>.mhd
-				 * --> two files are created: a header (.mhd) and a data (.raw) file.
-				 */
-				std::ostringstream makeFileName( "" );
-				makeFileName << m_Configuration->GetCommandLineArgument("-t")	<< "." << i << ".mhd";
-				m_Writer->SetFileName( makeFileName.str().c_str() );
-				
-				/** Write the coefficient image (i-th dimension) to file. */
-				m_Caster->SetInput( m_Coeffs1 );
-				m_Writer->SetInput( m_Caster->GetOutput() );
-
-				/** Do the writing.*/
-				try
-				{
-					m_Writer->Update();
-				}
-				catch( itk::ExceptionObject & excp )
-				{
-					xl::xout["error"] << excp << std::endl;
-				}
-				
-				/** Force the writer to make a new .raw file.*/
-				m_Writer->SetImageIO(NULL);
-				
-			}  // end for i
-			
-		} // end if
-
+		xout["transpar"] << std::setprecision( m_Elastix->GetDefaultOutputPrecision() );
+		
 	} // end WriteToFile
 
 
@@ -805,13 +792,19 @@ using namespace itk;
 
 		this->UpdateIntermediaryDeformationFieldTransform( m_DiffusedField );
 
-		/** ------------- Set the current B-spline transform parameters to zero. ------------- */
+		/** ------------- Reset the current transform parameters. ------------- */
 
 		ParametersType dummyParameters( this->GetNumberOfParameters() );
 		dummyParameters.Fill( 0.0 );
+		/** Reset the BSpline. */
 		this->SetParameters( dummyParameters );
+		/** Reset the optimizer. */
 		this->m_Elastix->GetElxOptimizerBase()->SetCurrentPositionPublic( dummyParameters );
+		/** Get rid of the initial transform, because this is now captured
+		 * within the DeformationFieldTransform.
+		 */
 		this->SetGrouper( "NoInitialTransform" );
+		this->Superclass2::SetInitialTransform( 0 );
 
 	} // end DiffuseDeformationField
 

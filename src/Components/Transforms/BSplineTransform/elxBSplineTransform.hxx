@@ -425,7 +425,7 @@ using namespace itk;
 		xout["transpar"] << origin[ SpaceDimension - 1 ] << ")" << std::endl;
 
 		/** Set the precision back to default value.*/
-		xout["transpar"] << std::setprecision(6);
+		xout["transpar"] << std::setprecision( m_Elastix->GetDefaultOutputPrecision() );
 
 		/** If wanted, write the TransformParameters as deformation
 		 * images to a file.

@@ -19,14 +19,8 @@ using namespace itk;
 		DeformationFieldTransform<TElastix>
 		::DeformationFieldTransform()
 	{
-		/** Initialize.*
-		m_Coeffs1 = ImageType::New();
-		m_Upsampler = UpsamplerType::New();
-		m_Upsampler->SetSplineOrder(SplineOrder); 
+		/** Initialize. */
 
-		m_Caster	= TransformCastFilterType::New();
-		m_Writer	= TransformWriterType::New();
-		*/
 	} // end Constructor
 	
 
@@ -61,6 +55,8 @@ using namespace itk;
 	void DeformationFieldTransform<TElastix>::
 		ReadFromFile(void)
 	{
+		// \todo Test this ReadFromFile function.
+
 		/** Setup VectorImageReader. */
 		typedef ImageFileReader< VectorImageType >	VectorReaderType;
 		typename VectorReaderType::Pointer vectorReader
@@ -141,63 +137,45 @@ using namespace itk;
 		void DeformationFieldTransform<TElastix>::
 		WriteToFile( const ParametersType & param )
 	{
-		/** Call the WriteToFile from the TransformBase.*
+		// \todo Finish and Test this WriteToFile function.
+
+    /** Make sure that the Transformbase::WriteToFile() does
+		 * not write the transformParameters in the file.
+		 */
+		this->SetReadWriteTransformParameters( false );
+
+		/** Call the WriteToFile from the TransformBase.*/
 		this->Superclass2::WriteToFile( param );
 
-		/** Add some DeformationFieldTransform specific lines.*
+		/** Add some BSplineTransform specific lines.*/
 		xout["transpar"] << std::endl << "// DeformationFieldTransform specific" << std::endl;
 
-		/** Get the GridSize, GridIndex, GridSpacing and
-		 * GridOrigin of this transform.
-		 *
-		SizeType size = this->GetGridRegion().GetSize();
-		IndexType index = this->GetGridRegion().GetIndex();
-		SpacingType spacing = this->GetGridSpacing();
-		OriginType origin = this->GetGridOrigin();
+		/** Write the filename of the deformationField image. */
+		std::ostringstream makeFileName( "" );
+		makeFileName << m_Configuration->GetCommandLineArgument( "-out" )
+			<< "TransformParametersDeformationFieldImage."
+			<< m_Configuration->GetElastixLevel()
+			<< ".mhd";
+		xout["transpar"] << "(TransformParametersDeformationFieldImageFileName \""
+			<< makeFileName.str() << "\")" << std::endl;
 
-		/** Write the GridSize of this transform.*
-		xout["transpar"] << "(GridSize ";
-		for ( unsigned int i = 0; i < SpaceDimension - 1; i++ )
+		// \todo Get the deformationField image and write it.
+
+		/** Write the deformation field image. *
+		typename DeformationFieldWriterType::Pointer writer
+			= DeformationFieldWriterType::New();
+		writer->SetFileName( makeFileName.str().c_str() );
+		writer->SetInput( this->GetIntermediaryDeformationField() );
+		/** Do the writing. *
+		try
 		{
-			xout["transpar"] << size[ i ] << " ";
+			writer->Update();
 		}
-		xout["transpar"] << size[ SpaceDimension - 1 ] << ")" << std::endl;
-		
-		/** Write the GridIndex of this transform.*
-		xout["transpar"] << "(GridIndex ";
-		for ( unsigned int i = 0; i < SpaceDimension - 1; i++ )
+		catch( itk::ExceptionObject & excp )
 		{
-			xout["transpar"] << index[ i ] << " ";
+			xl::xout["error"] << excp << std::endl;
 		}
-		xout["transpar"] << index[ SpaceDimension - 1 ] << ")" << std::endl;
-		
-		/** Set the precision of cout to 2, because GridSpacing and
-		 * GridOrigin must have at least one digit precision.
-		 *
-		xout["transpar"] << std::setprecision(1);
-
-		/** Write the GridSpacing of this transform.*
-		xout["transpar"] << "(GridSpacing ";
-		for ( unsigned int i = 0; i < SpaceDimension - 1; i++ )
-		{
-			xout["transpar"] << spacing[ i ] << " ";
-		}
-		xout["transpar"] << spacing[ SpaceDimension - 1 ] << ")" << std::endl;
-
-		/** Write the GridOrigin of this transform.*
-		xout["transpar"] << "(GridOrigin ";
-		for ( unsigned int i = 0; i < SpaceDimension - 1; i++ )
-		{
-			xout["transpar"] << origin[ i ] << " ";
-		}
-		xout["transpar"] << origin[ SpaceDimension - 1 ] << ")" << std::endl;
-
-		/** Set the precision back to default value.*
-		xout["transpar"] << std::setprecision(6);
-
-		/** If wanted, write the TransformParameters as deformation
-		 * images to a file.
-		 */
+		*/
 
 	} // end WriteToFile
 

@@ -143,6 +143,8 @@ namespace elastix
 		virtual void WriteToFile( const ParametersType & param );
 		/** Function to write transform-parameters to a file. */
 		virtual void WriteToFile(void);
+		/** Macro for reading and writing the transform parameters in WriteToFile or not. */
+		virtual void SetReadWriteTransformParameters( const bool _arg );
 		/** Function to read the initial transform parameters from a file. */
 		virtual void ReadInitialTransformFromFile(
 			const char * transformParameterFileName);
@@ -152,7 +154,7 @@ namespace elastix
 		/** Function to transform coordinates from fixed to moving image. */
 		virtual void TransformPointsSomePoints( std::string filename );
 		/** Function to transform all coordinates from fixed to moving image. */
-		virtual void TransformPointsAllPoints(void);		
+		virtual void TransformPointsAllPoints(void);
 
 	protected:
 
@@ -171,6 +173,9 @@ namespace elastix
 		/** The private constructor. */
 		TransformBase( const Self& );		// purposely not implemented
 		void operator=( const Self& );	// purposely not implemented
+
+		/** Boolean to decide whether or not the transform parameters are written. */
+		bool		m_ReadWriteTransformParameters;
 
 	}; // end class TransformBase
 

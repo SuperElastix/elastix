@@ -76,13 +76,10 @@ namespace itk
 		typedef typename BSplineTransformType::ContinuousIndexType				ContinuousIndexType;
 		typedef typename BSplineTransformType::ParameterIndexArrayType		ParameterIndexArrayType;
 
-		/** Method to transform a point. */
-		virtual OutputPointType TransformPoint( const InputPointType & point ) const
-		{
-			return this->BSplineTransformType::TransformPoint( point );
-		}
+		/** Method to transform a point, 1 argument. */
+		virtual OutputPointType TransformPoint( const InputPointType & point ) const;
 
-		/**  Method to transform a point. */
+		/**  Method to transform a point, 5 arguments. */
 		virtual void TransformPoint(
 			const InputPointType &inputPoint,
 			OutputPointType &outputPoint,
