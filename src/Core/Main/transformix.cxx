@@ -155,12 +155,9 @@ int main( int argc, char **argv )
 	elxout << "Elapsed time: " <<
 		totaltimer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
 
-
 	/** Clean up */
-
 	inputImage = 0;
 	transformix = 0;
-
 	elx::TransformixMain::UnloadComponents();
 
 	/** Exit and return the error code */

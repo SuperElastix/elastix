@@ -76,6 +76,10 @@ namespace itk
 		typedef typename BSplineTransformType::ContinuousIndexType				ContinuousIndexType;
 		typedef typename BSplineTransformType::ParameterIndexArrayType		ParameterIndexArrayType;
 
+		/** Other typedef's inherited from Superclass. */
+		typedef typename Superclass::IntermediaryDFTransformType					IntermediaryDFTransformType;
+		typedef typename Superclass::VectorImageType											VectorImageType;
+
 		/** Method to transform a point, 1 argument. */
 		virtual OutputPointType TransformPoint( const InputPointType & point ) const;
 

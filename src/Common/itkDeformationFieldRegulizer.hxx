@@ -107,7 +107,7 @@ namespace itk
 		::UpdateIntermediaryDeformationFieldTransform( typename VectorImageType::Pointer  vecImage )
 	{
 		/** Set the vecImage (which is allocated elsewhere) and put it in
-		 * Intermediary deformationFieldtransform (where it is copied and split up).
+		 * IntermediaryDeformationFieldTransform (where it is copied and split up).
 		 */
 		m_IntermediaryDeformationFieldTransform->SetCoefficientImage( vecImage );
 
