@@ -142,11 +142,6 @@ using namespace itk;
 		typedef FixedImagePyramidITKBaseType *									FixedImagePyramidPointer;
 		
 		/** Other typedef's.*/
-		typedef BSplineResampleImageFilterBase<
-			ImageType, ImageType>												BSplineResamplerType;
-		typedef BSplineUpsampleImageFilter<
-			ImageType,ImageType,BSplineResamplerType>		UpsamplerType; 
-		typedef ImageRegionConstIterator<ImageType>		IteratorType;
 		typedef	Image< short,
 			itkGetStaticConstMacro( SpaceDimension ) >	DummyImageType;
 		typedef ImageRegionConstIterator<
@@ -214,11 +209,11 @@ using namespace itk;
 		/** The destructor. */
 		virtual ~BSplineTransformWithDiffusion() {};
 		
-		/** Member variabels.*/
-		typename UpsamplerType::Pointer							m_Upsampler;
+		/** Member variables.*/
 		typename TransformCastFilterType::Pointer		m_Caster;
 		typename TransformWriterType::Pointer				m_Writer;
-		
+		double																			m_GridSpacingFactor;
+
 		ParametersType * m_Parameterspointer;
 	  ParametersType * m_Parameterspointer_out;
 	

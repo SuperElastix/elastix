@@ -7,12 +7,9 @@
 #define __CoefficientOutputType float
 
 #include "itkBSplineDeformableTransform.h"
-#include "itkBSplineResampleImageFilterBase.h"
-#include "itkBSplineUpsampleImageFilter.h"
 #include "itkImage.h"
 #include "itkCastImageFilter.h"
 #include "itkImageFileWriter.h"
-#include "itkImageRegionConstIteratorWithIndex.h"
 
 #include "elxIncludes.h"
 
@@ -115,7 +112,7 @@ using namespace itk;
 		/** Typedefs & Vars needed for setting the grid size and upsampling the grid.*/
 		
 		/** the FixedImagePyramidBase */
-		typedef typename ElastixType::FixedImagePyramidBaseType			FixedImagePyramidType;
+		typedef typename ElastixType::FixedImagePyramidBaseType	FixedImagePyramidType;
 
 		/** itk::MultiResolutionImagePyramidFilter */
 		typedef typename FixedImagePyramidType::ITKBaseType			FixedImagePyramidITKBaseType;
@@ -123,14 +120,7 @@ using namespace itk;
 		/** pointer to itk::MultiResolutionImagePyramidFilter  */
 		typedef FixedImagePyramidITKBaseType *									FixedImagePyramidPointer;
 		
-		/** Other typedef's.*/
-		typedef BSplineResampleImageFilterBase<
-			ImageType, ImageType>												BSplineResamplerType;
-		typedef BSplineUpsampleImageFilter<
-			ImageType,ImageType,BSplineResamplerType>		UpsamplerType; 
-		typedef ImageRegionConstIterator<ImageType>		IteratorType;
-
-		/** For saving the deformation fields: */
+		/** Typedefs for saving the deformation fields: */
 		typedef __CoefficientOutputType								CoefficientOutputType;
 		typedef Image< CoefficientOutputType,
 			itkGetStaticConstMacro(SpaceDimension) >		CoefficientOutputImageType;
@@ -139,7 +129,7 @@ using namespace itk;
 		typedef ImageFileWriter<
 			CoefficientOutputImageType >								TransformWriterType;
 
-		/** Methods that have to be present in each version of BSplineTransform.*/
+		/** Methods in which parameters can be changed; automatically called by elastix.*/
 		virtual void BeforeRegistration(void);
 		virtual void BeforeEachResolution(void);
 		
@@ -156,11 +146,11 @@ using namespace itk;
 		BSplineTransform();
 		virtual ~BSplineTransform() {}
 		
-		/** Member variabels.*/
-		typename UpsamplerType::Pointer							m_Upsampler;
+		/** Member variables.*/
 		typename TransformCastFilterType::Pointer		m_Caster;
 		typename TransformWriterType::Pointer				m_Writer;
-				
+		double																			m_GridSpacingFactor;
+
 		ParametersType * m_Parameterspointer;
 	  ParametersType * m_Parameterspointer_out;
 	
