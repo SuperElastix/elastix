@@ -4,8 +4,6 @@
 #include "itkDeformationVectorFieldTransform.h"
 #include "itkImageRegionIterator.h"
 
-#include "itkVector.h"
-
 namespace itk
 {
 	
