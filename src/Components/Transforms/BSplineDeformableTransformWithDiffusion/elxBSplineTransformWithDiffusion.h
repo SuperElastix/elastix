@@ -253,6 +253,9 @@ using namespace itk;
 		/** Member variables for writing diffusion files. */
 		bool m_WriteDiffusionFiles;
 
+		/** The B-spline parameters, which is going to be filled with zeros. */
+		ParametersType bsplineParameters;
+
 	}; // end class BSplineTransformWithDiffusion
 	
 

@@ -4,7 +4,6 @@
 #include "elxBSplineTransformWithDiffusion.h"
 #include "itkBSplineResampleImageFunction.h"
 #include "itkBSplineDecompositionImageFilter.h"
-//#include "itkResampleImageFilter.h"
 #include "math.h"
 
 namespace elastix
@@ -165,7 +164,7 @@ using namespace itk;
 		//m_Resampler->SetInterpolator(); // default = LinearInterpolateImageFunction
 		m_Resampler->SetInput( dynamic_cast<MovingImageELXType *>(
 			m_Elastix->GetMovingImage() ) );
-		unsigned int defaultPixelValue = 0;
+		PixelType defaultPixelValue = NumericTraits<PixelType>::Zero;
 		m_Configuration->ReadParameter( defaultPixelValue, "DefaultPixelValue", 0 );
 		m_Resampler->SetDefaultPixelValue( defaultPixelValue );
 		m_Resampler->SetSize( m_DeformationRegion.GetSize() );
@@ -609,14 +608,11 @@ using namespace itk;
 		/** Read in the deformationField image. */
 		typename VectorReaderType::Pointer vectorReader = VectorReaderType::New();
 		vectorReader->SetFileName( fileName.c_str() );
-		//VectorImageType::Pointer defImage = VectorImageType::New();
-		//defImage = vectorReader->GetOutput();
 
 		/** Do the reading. */
 		try
 		{
 			vectorReader->Update();
-			//defImage->Update();
 		}
 		catch( itk::ExceptionObject & excp )
 		{
@@ -633,23 +629,53 @@ using namespace itk;
 		this->InitializeDeformationFields();
 
 		/** Set the deformationFieldImage in the itkDeformationVectorFieldTransform. */
-		//this->GetIntermediaryDeformationFieldTransform()->SetCoefficientImage( vectorReader->GetOutput() );
-		//this->Superclass1::SetCoefficientImage( vectorReader->GetOutput() );
 		this->UpdateIntermediaryDeformationFieldTransform( vectorReader->GetOutput() );
-		//this->UpdateIntermediaryDeformationFieldTransform( defImage );
 
-		/** Set the parameters. */
-		//this->SetParameters( 0 );
+		/** Task 2 - Get and Set the B-spline part of this transform. */
+
+		/** Declarations of the B-spline grid and fill everything with default values. */
+		RegionType	gridregion;
+		SizeType		gridsize;
+		IndexType		gridindex;
+		SpacingType	gridspacing;
+		OriginType	gridorigin;
+		gridsize.Fill(1);
+		gridindex.Fill(0);
+		gridspacing.Fill(1.0);
+		gridorigin.Fill(0.0);
+
+		/** Get GridSize, GridIndex, GridSpacing and GridOrigin. */
+		for ( unsigned int i = 0; i < SpaceDimension; i++ )
+		{
+			m_Configuration->ReadParameter( gridsize[ i ], "GridSize", i );
+			m_Configuration->ReadParameter( gridindex[ i ], "GridIndex", i );
+			m_Configuration->ReadParameter( gridspacing[ i ], "GridSpacing", i );
+			m_Configuration->ReadParameter( gridorigin[ i ], "GridOrigin", i );
+		}
+		
+		/** Set the B-spline grid. */
+		gridregion.SetIndex( gridindex );
+		gridregion.SetSize( gridsize );
+		this->SetGridRegion( gridregion );
+		this->SetGridSpacing( gridspacing );
+		this->SetGridOrigin( gridorigin );
+
+		/** Fill and set the B-spline parameters. */
+		unsigned int nop = 0;
+		m_Configuration->ReadParameter( nop, "NumberOfParameters", 0 );
+		bsplineParameters.SetSize( nop );
+		bsplineParameters.Fill(0.0);
+		this->SetParameters( bsplineParameters );
 
 		/** Do not call the ReadFromFile from the TransformBase,
 		 * because that function tries to read parameters from the file,
 		 * which is not necessary in this case, because the parameters are
 		 * in the vectorImage.
 		 * NOT: this->Superclass2::ReadFromFile();
-		 * However, we have to copy the rest of the functionality:
+		 * However, we do have to copy some of the functionality:
 		 */
 
-		/** Task 2 - Get and Set the Initial Transform. */
+		/** Task 3 - Get and Set the Initial Transform. */
 
 		/** Get the InitialTransformName. */
 		fileName = "";
@@ -677,7 +703,7 @@ using namespace itk;
 			thisAsGrouper->SetGrouper( howToCombineTransforms );
 		}		
 
-		/** Task 3 - Remember the name of the TransformParametersFileName.
+		/** Task 4 - Remember the name of the TransformParametersFileName.
 		 * This will be needed when another transform will use this transform
 		 * as an initial transform (see the WriteToFile method)
 		 */

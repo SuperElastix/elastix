@@ -18,7 +18,7 @@ namespace elastix
 		/** Create caster and writer.*/
 		m_Caster	=	CasterType::New();
 		m_Writer	= WriterType::New();
-		
+
 	} // end Constructor
 
 
@@ -48,7 +48,7 @@ namespace elastix
 		/** Set the DefaultPixelValue (for pixels in the resampled image
 		 * that come from outside the original (moving) image.
 		 */
-		int defaultPixelValue = 0;
+		PixelType defaultPixelValue = NumericTraits<PixelType>::Zero;
 		m_Configuration->ReadParameter( defaultPixelValue, "DefaultPixelValue", 0 );
 		
 		/** Set the defaultPixelValue in the Superclass.*/
