@@ -168,7 +168,7 @@ namespace elastix
 
 	private:
 
-		/** private constructor. */
+		/** The private constructor. */
 		TransformBase( const Self& );		// purposely not implemented
 		void operator=( const Self& );	// purposely not implemented
 

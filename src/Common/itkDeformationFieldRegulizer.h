@@ -68,6 +68,14 @@ namespace itk
 		typedef typename VectorImageType::SpacingType						SpacingType;
 		typedef typename VectorImageType::PointType							OriginType;
 
+		/** Function to create and initialze the deformation fields. */
+		void InitializeDeformationFields( void );
+
+		/** Function to update the intermediary deformation field by adding
+		 * a deformation field to it.
+		 */
+		virtual void UpdateIntermediaryDeformationFieldTransformTemp( VectorImagePointer vecImage );
+
 		/** Function to update the intermediary deformation field by adding
 		 * a diffused deformation field to it.
 		 */
@@ -82,8 +90,8 @@ namespace itk
 		/** itk Set macro for the origin of the deformation field. */
 		itkSetMacro( DeformationFieldOrigin, OriginType );
 
-		/** Function to create and initialze the IntermediaryDF. */
-		void InitializeIntermediaryDeformationField( void );
+		/** itk Get macro for the deformation field transform. */
+		itkGetConstObjectMacro( IntermediaryDeformationFieldTransform, IntermediaryDFTransformType );
 
 		/** Method to transform a point. */
 		virtual OutputPointType TransformPoint( const InputPointType & point ) const;
@@ -103,8 +111,9 @@ namespace itk
 		
 		/** Declaration of members. */
 		typename IntermediaryDFTransformType::Pointer		m_IntermediaryDeformationFieldTransform;
-		VectorImagePointer										m_IntermediaryDeformationField;
-		bool		m_Initialized;
+		VectorImagePointer		m_IntermediaryDeformationField;
+		VectorImagePointer		m_TempField;
+		bool									m_Initialized;
 
 		/** Declarations of region things. */
 		RegionType															m_DeformationFieldRegion;

@@ -66,7 +66,6 @@ namespace itk
 		* \sa ResumeOptimization */
 		void StopOptimization( void );
 		
-		
 		/** Set the number of iterations. */
 		itkSetMacro( NumberOfIterations, unsigned long );
 		
@@ -106,7 +105,6 @@ namespace itk
 		itkSetMacro( ComputeCurrentValue, bool );
 		itkBooleanMacro( ComputeCurrentValue );
 		
-		
 		/** Get the CurrentStepLength, GradientMagnitude and LearningRate (a_k) */
 		itkGetConstMacro( GradientMagnitude, double );
 		itkGetConstMacro( LearningRate, double);
@@ -136,7 +134,6 @@ namespace itk
 		virtual double Compute_a( unsigned long k ) const;
 		virtual double Compute_c( unsigned long k ) const;
 		
-		
 	private:
 
 		FiniteDifferenceGradientDescentOptimizer( const Self& );	// purposely not implemented
@@ -155,7 +152,6 @@ namespace itk
 		double												m_Param_A;
 		double												m_Param_alpha;
 		double												m_Param_gamma;
-		
 		
 	}; // end class FiniteDifferenceGradientDescentOptimizer
 

@@ -25,9 +25,9 @@ using namespace itk;
 	public:
 
 		/** Standard ITK.*/
-		typedef StandardGradientDescent									Self;
-		typedef StandardGradientDescentOptimizer	Superclass1;
-		typedef OptimizerBase<TElastix>											Superclass2;
+		typedef StandardGradientDescent							Self;
+		typedef StandardGradientDescentOptimizer		Superclass1;
+		typedef OptimizerBase<TElastix>							Superclass2;
 		typedef SmartPointer<Self>									Pointer;
 		typedef SmartPointer<const Self>						ConstPointer;
 		
@@ -55,6 +55,9 @@ using namespace itk;
 		typedef typename Superclass2::RegistrationPointer		RegistrationPointer;
 		typedef typename Superclass2::ITKBaseType						ITKBaseType;
 		
+		/** Typedef for the ParametersType. */
+		typedef typename Superclass1::ParametersType				ParametersType;
+
 		/** Methods that have to be present everywhere.*/
 		virtual void BeforeRegistration(void);
 		virtual void BeforeEachResolution(void);
@@ -64,6 +67,14 @@ using namespace itk;
 		
 		/** Override the SetInitialPosition.*/
 		virtual void SetInitialPosition( const ParametersType & param );
+
+		/** Add SetCurrentPositionPublic, which calls the protected
+		 * SetCurrentPosition of the itkStandardGradientDescentOptimizer class.
+		 */
+		virtual void SetCurrentPositionPublic( const ParametersType &param )
+		{
+			this->Superclass1::SetCurrentPosition( param );
+		}
 		
 	protected:
 

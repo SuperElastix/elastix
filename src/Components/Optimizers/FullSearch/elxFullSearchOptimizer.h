@@ -76,9 +76,11 @@ using namespace itk;
 		typedef typename NDImageType::Pointer								NDImagePointer;
 
 		/** To store the names of the search space dimensions */
-		typedef std::map<unsigned int, std::string> DimensionNameMapType;
-		typedef typename DimensionNameMapType::const_iterator NameIteratorType;
-				
+		typedef std::map<unsigned int, std::string>							DimensionNameMapType;
+		typedef typename DimensionNameMapType::const_iterator		NameIteratorType;
+		
+		/** Typedef for the ParametersType. */
+		typedef typename Superclass1::ParametersType				ParametersType;
 
 		/** Methods that have to be present everywhere.*/
 		virtual void BeforeRegistration(void);

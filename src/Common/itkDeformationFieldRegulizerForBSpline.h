@@ -60,20 +60,27 @@ namespace itk
 		typedef typename Superclass::OutputPointType						OutputPointType;
 
 		/** Typedef's inherited from the BSplineTransform. */
-		typedef typename TBSplineTransform::PixelType									PixelType;
-		typedef typename TBSplineTransform::ImageType									ImageType;
-		typedef typename TBSplineTransform::ImagePointer							ImagePointer;
-		typedef typename TBSplineTransform::RegionType								RegionType;
-		typedef typename TBSplineTransform::IndexType									IndexType;
-		typedef typename TBSplineTransform::SizeType									SizeType;
-		typedef typename TBSplineTransform::SpacingType								SpacingType;
-		typedef typename TBSplineTransform::OriginType								OriginType;
-		typedef typename TBSplineTransform::BulkTransformType					BulkTransformType;
-		typedef typename TBSplineTransform::BulkTransformPointer			BulkTransformPointer;
-		typedef typename TBSplineTransform::WeightsFunctionType				WeightsFunctionType;
-		typedef typename TBSplineTransform::WeightsType								WeightsType;
-		typedef typename TBSplineTransform::ContinuousIndexType				ContinuousIndexType;
-		typedef typename TBSplineTransform::ParameterIndexArrayType		ParameterIndexArrayType;
+		typedef TBSplineTransform			BSplineTransformType;
+		typedef typename BSplineTransformType::PixelType									PixelType;
+		typedef typename BSplineTransformType::ImageType									ImageType;
+		typedef typename BSplineTransformType::ImagePointer								ImagePointer;
+		typedef typename BSplineTransformType::RegionType									RegionType;
+		typedef typename BSplineTransformType::IndexType									IndexType;
+		typedef typename BSplineTransformType::SizeType										SizeType;
+		typedef typename BSplineTransformType::SpacingType								SpacingType;
+		typedef typename BSplineTransformType::OriginType									OriginType;
+		typedef typename BSplineTransformType::BulkTransformType					BulkTransformType;
+		typedef typename BSplineTransformType::BulkTransformPointer				BulkTransformPointer;
+		typedef typename BSplineTransformType::WeightsFunctionType				WeightsFunctionType;
+		typedef typename BSplineTransformType::WeightsType								WeightsType;
+		typedef typename BSplineTransformType::ContinuousIndexType				ContinuousIndexType;
+		typedef typename BSplineTransformType::ParameterIndexArrayType		ParameterIndexArrayType;
+
+		/** Method to transform a point. */
+		virtual OutputPointType TransformPoint( const InputPointType & point ) const
+		{
+			return this->BSplineTransformType::TransformPoint( point );
+		}
 
 		/**  Method to transform a point. */
 		virtual void TransformPoint(

@@ -72,6 +72,9 @@ using namespace itk;
 		typedef typename Superclass2::RegistrationPointer		RegistrationPointer;
 		typedef typename Superclass2::ITKBaseType						ITKBaseType;
 		
+		/** Typedef for the ParametersType. */
+		typedef typename Superclass1::ParametersType				ParametersType;
+
 		/** Methods that have to be present everywhere.*/
 		virtual void BeforeRegistration(void);
 		virtual void BeforeEachResolution(void);

@@ -62,9 +62,27 @@ namespace itk
 			typedef typename Superclass::InitialOutputPointType			InitialOutputPointType;
 			
 			/** Other typedef's.*/
-			typedef typename TBSplineTransform::BulkTransformType			BulkTransformType;
-			typedef typename TBSplineTransform::BulkTransformPointer	BulkTransformPointer;
+			typedef TBSplineTransform		BSplineTransformType;
+			typedef typename BSplineTransformType::BulkTransformType				BulkTransformType;
+			typedef typename BSplineTransformType::BulkTransformPointer			BulkTransformPointer;
+			typedef typename BSplineTransformType::WeightsType							WeightsType;
+			typedef typename BSplineTransformType::ParameterIndexArrayType	ParameterIndexArrayType;
 			
+			/** TransformPoint with 1 input argument. */
+			OutputPointType TransformPoint( const InputPointType &point ) const
+			{
+				return this->Superclass::TransformPoint( point );
+			}
+
+			/** TransformPoint with 5 input argument. */
+			virtual void TransformPoint ( const InputPointType &inputPoint,
+				OutputPointType &outputPoint, WeightsType &weights,
+				ParameterIndexArrayType &indices, bool &inside) const
+			{
+				this->BSplineTransformType::TransformPoint(
+					inputPoint, outputPoint, weights, indices, inside );
+			}
+
 		protected:
 			
 			BSplineTransformGrouper();

@@ -18,6 +18,7 @@ namespace itk
 		/** Initialize. */
 		m_IntermediaryDeformationFieldTransform = 0;
 		m_IntermediaryDeformationField = 0;
+		m_TempField = 0;
 		m_Initialized = false;
 				
 	} // end Constructor
@@ -41,7 +42,7 @@ namespace itk
 
 	template <class TAnyITKTransform>
 		void DeformationFieldRegulizer<TAnyITKTransform>
-		::InitializeIntermediaryDeformationField( void )
+		::InitializeDeformationFields( void )
 	{
 		/** Initialize m_IntermediaryDeformationFieldTransform. */
 		m_IntermediaryDeformationFieldTransform = IntermediaryDFTransformType::New();
@@ -64,13 +65,20 @@ namespace itk
 			++it;
 		}
 
+		/** Initialize m_TempField. */
+		m_TempField = VectorImageType::New();
+		m_TempField->SetRegions( m_DeformationFieldRegion );
+		m_TempField->SetSpacing( m_DeformationFieldSpacing );
+		m_TempField->SetOrigin( m_DeformationFieldOrigin );
+		m_TempField->Allocate();
+
 		/** Set the deformation field in the transform. */
 		m_IntermediaryDeformationFieldTransform->SetCoefficientImage( m_IntermediaryDeformationField );
 
 		/** Set to initialized. */
 		m_Initialized = true;
 
-	} // end InitializeIntermediaryDeformationField
+	} // end InitializeDeformationFields
 
 
 	/**
@@ -90,13 +98,51 @@ namespace itk
 		/** Add them. */
 		for ( unsigned int i = 0; i < OutputSpaceDimension; i++ )
 		{
-			oppSum[ i ] = oppBS[ i ] + oppDF[ i ];
+			oppSum[ i ] = oppBS[ i ] + oppDF[ i ] - point[ i ];
 		}
 
 		/** Return a value. */
 		return oppSum;
 
 	} // end TransformPoint
+
+	/**
+	 * ******** UpdateIntermediaryDeformationFieldTransformTemp *********
+	 */
+
+	template <class TAnyITKTransform>
+		void DeformationFieldRegulizer<TAnyITKTransform>
+		::UpdateIntermediaryDeformationFieldTransformTemp( VectorImagePointer vecImage )
+	{
+		/** Initialize the deformation fields. */
+		if ( !m_Initialized )
+		{
+			this->InitializeDeformationFields();
+		}
+
+		/** Create iterators. */
+		IteratorType it0( m_TempField,
+			m_TempField->GetLargestPossibleRegion() );
+		IteratorType it2( vecImage,
+			vecImage->GetLargestPossibleRegion() );
+
+		/** Update IntermediaryDeformationFieldTransform. */
+		it0.GoToBegin();
+		it2.GoToBegin();
+		while ( !it0.IsAtEnd() )
+		{
+			/** Replace the old deformation field with the new one. */
+			it0.Set( it2.Get() );
+
+			/** Increase iterators. */
+			++it0;
+			++it2;
+		}
+		
+		/** Set the updated deformation field in the transform. */
+		m_IntermediaryDeformationFieldTransform->SetCoefficientImage( m_TempField );
+
+	} // end UpdateIntermediaryDeformationFieldTransformTemp
 
 
 	/**
@@ -107,10 +153,10 @@ namespace itk
 		void DeformationFieldRegulizer<TAnyITKTransform>
 		::UpdateIntermediaryDeformationFieldTransform( VectorImagePointer vecImage )
 	{
-		/** Initialize m_IntermediaryDeformationFieldTransform. */
+		/** Initialize the deformation fields. */
 		if ( !m_Initialized )
 		{
-			this->InitializeIntermediaryDeformationField();
+			this->InitializeDeformationFields();
 		}
 
 		/** Create iterators. */
@@ -124,7 +170,8 @@ namespace itk
 		it2.GoToBegin();
 		while ( !it1.IsAtEnd() )
 		{
-			it1.Set( it1.Get() + it2.Get() );
+			/** Replace the old deformation field with the new one. */
+			it1.Set( it2.Get() );
 
 			/** Increase iterators. */
 			++it1;
@@ -134,7 +181,7 @@ namespace itk
 		/** Set the updated deformation field in the transform. */
 		m_IntermediaryDeformationFieldTransform->SetCoefficientImage( m_IntermediaryDeformationField );
 
-	} // end SetIntermediaryDeformationFieldTransform
+	} // end UpdateIntermediaryDeformationFieldTransform
 
 
 } // end namespace itk

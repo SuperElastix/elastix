@@ -42,10 +42,21 @@ using namespace itk;
 		/** ITKBaseType.*/
 		typedef itk::Optimizer	ITKBaseType;
 
+		/** Typedef needed for the SetCurrentPositionPublic function. */
+		typedef typename ITKBaseType::ParametersType				ParametersType;
+
 		/** Cast to ITKBaseType.*/
 		virtual ITKBaseType * GetAsITKBaseType(void)
 		{
 			return dynamic_cast<ITKBaseType *>(this);
+		}
+
+		/** Add empty SetCurrentPositionPublic, so it is known everywhere. */
+		virtual void SetCurrentPositionPublic( const ParametersType &param )
+		{
+			xl::xout["error"] << "ERROR: This function should be overridden or just not used." << std::endl;
+			xl::xout["error"] << "\tAre you using BSplineTransformWithDiffusion in combination" << std::endl;
+			xl::xout["error"] << "\twith another optimzer than the StandardGradientDescentOptimizer? don't!" << std::endl;
 		}
 		
 	protected:

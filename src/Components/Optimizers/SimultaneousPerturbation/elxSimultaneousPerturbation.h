@@ -47,7 +47,6 @@ using namespace itk;
 		typedef Superclass1::CostFunctionPointer	CostFunctionPointer;
 		typedef Superclass1::StopConditionType		StopConditionType;
 		
-
 		/** Typedef's inherited from Elastix.*/
 		typedef typename Superclass2::ElastixType						ElastixType;
 		typedef typename Superclass2::ElastixPointer				ElastixPointer;
@@ -57,6 +56,9 @@ using namespace itk;
 		typedef typename Superclass2::RegistrationPointer		RegistrationPointer;
 		typedef typename Superclass2::ITKBaseType						ITKBaseType;
 		
+		/** Typedef for the ParametersType. */
+		typedef typename Superclass1::ParametersType				ParametersType;
+
 		/** Methods that have to be present everywhere.*/
 		virtual void BeforeRegistration(void);
 		virtual void BeforeEachResolution(void);

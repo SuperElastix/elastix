@@ -286,15 +286,10 @@ namespace elastix
 		elxout << "Reading images took " <<	static_cast<unsigned long>(
 			m_Timer0->GetElapsedClockSec() * 1000 ) << " ms.\n" << std::endl;
 
-
-
 		/** Give all components the opportunity to do some initialization.*/
 		this->BeforeRegistration();
 	
-
-	
-		/** START!*/
-		
+		/** START! */
 		try
 		{
 

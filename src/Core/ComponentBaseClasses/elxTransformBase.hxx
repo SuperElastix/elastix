@@ -315,8 +315,8 @@ namespace elastix
 	 */
 
 	template <class TElastix>
-		void TransformBase<TElastix>::ReadInitialTransformFromFile(
-			const char * transformParametersFileName)
+		void TransformBase<TElastix>
+		::ReadInitialTransformFromFile( const char * transformParametersFileName )
 	{
 		/** Create a new configuration, which will be initialised with
 		 * the transformParameterFileName.

@@ -41,16 +41,16 @@ namespace itk
 			OutputPointType &outputPoint, WeightsType &weights,
 			ParameterIndexArrayType &indices, bool &inside ) const
 	{ 
-		elxout << "testin, empty function yet ... " << std::endl;
+		//elxout << "testin, empty function yet ... " << std::endl;
 		/** Get the opp's ?????? TP1(ipp) + TP2(ipp)??
 		 * of TP2(TP1(ipp)) ?????
 		 */
-		this->TransformPoint( inputPoint, outputPoint, weights, indices, inside );
-		OutputPointType oppDF = this->Superclass::TransformPoint( inputPoint );
+		this->BSplineTransformType::TransformPoint( inputPoint, outputPoint, weights, indices, inside );
+		OutputPointType oppDF = this->GetIntermediaryDeformationFieldTransform()->TransformPoint( inputPoint );
 
 		for ( unsigned int i = 0; i < OutputSpaceDimension; i++ )
 		{
-			outputPoint[ i ] += oppDF[ i ];
+			outputPoint[ i ] = outputPoint[ i ] + oppDF[ i ] - inputPoint[ i ];
 		}
 
 	} // end TransformPoint

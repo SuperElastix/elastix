@@ -66,13 +66,9 @@ namespace elastix
 		typedef typename Superclass2::RegistrationType			RegistrationType;
 		typedef typename Superclass2::RegistrationPointer		RegistrationPointer;
 		typedef typename Superclass2::ITKBaseType						ITKBaseType;
-		
-
-		
+				
 		/* Nothing to add. In the baseclass already everything is done what should be done */
 	
-	
-
 	protected:
 
 		MyStandardResampler() {}
