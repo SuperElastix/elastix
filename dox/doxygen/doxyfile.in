@@ -1,4 +1,4 @@
-# Doxyfile 1.3.8
+# Doxyfile 1.4.1
 
 # This file describes the settings to be used by doxygen for a project
 #
@@ -231,6 +231,7 @@ TAB_SIZE               = 2
 
 ALIASES       = "parameter=\xrefitem parameter \"Parameters\" \"Parameters\""
 ALIASES      += "transformparameter=\xrefitem transformparameter \"Transform Parameters\" \"Transform Parameters\""
+ALIASES      += "commandlinearg=\xrefitem commandlinearg \"Command line arguments\" \"Command line arguments\""
 
 # Set the OPTIMIZE_OUTPUT_FOR_C tag to YES if your project consists
 # of C sources only. Doxygen will then generate output that is more
@@ -644,7 +645,7 @@ HTML_HEADER            = "@ELX_DOXYGEN_DIR@/DoxygenHeader.html"
 # each generated HTML page. If it is left blank doxygen will generate a 
 # standard footer.
 
-HTML_FOOTER            = "@ELX_DOXYGEN_DIR@/DoxygenFooter.html"
+HTML_FOOTER            = "@ELX_HELP_DIR@/DoxygenFooter.html"
 
 # If the HTML_ALIGN_MEMBERS tag is set to YES, the members of classes, 
 # files or namespaces will be aligned in HTML using tables. If set to 
