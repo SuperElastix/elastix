@@ -282,8 +282,8 @@ void PrintHelp(void)
 
 	/** Optional arguments.*/
 	std::cout << "Optional extra commands:" << std::endl;
-	std::cout << "-fmask\t\tmask for fixed image (.mhd)" << std::endl;
-	std::cout << "-mmask\t\tmask for moving image (.mhd)" << std::endl;
+	std::cout << "-fMask\t\tmask for fixed image (.mhd)" << std::endl;
+	std::cout << "-mMask\t\tmask for moving image (.mhd)" << std::endl;
 	std::cout << "-t0\t\tparameter file for initial transform" << std::endl;
 	std::cout << "-priority\tset the process priority to high (Windows only)"
 		<< std::endl << std::endl;
