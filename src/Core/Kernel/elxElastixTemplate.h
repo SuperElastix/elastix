@@ -231,7 +231,7 @@ namespace elastix
 		virtual int Run(void);
 		virtual int ApplyTransform(void);
 		
-		/** These functions are present everywhere.*/
+		/** The Callback functions. */
 		virtual int BeforeAll(void);
 		virtual int BeforeAllTransformix(void);
 		virtual void BeforeRegistration(void);
@@ -240,6 +240,7 @@ namespace elastix
 		virtual void AfterEachIteration(void);
 		virtual void AfterRegistration(void);
 
+		itkGetConstMacro(IterationCounter, unsigned int);
 		
 	protected:
 

@@ -171,7 +171,6 @@ namespace elastix
 		m_elx_Resampler->SetElastix(this);
 		m_elx_ResampleInterpolator->SetElastix(this);
 
-		elxout << m_elx_Transform << " " << m_elx_Metric <<  std::endl;
 
 		/** Call BeforeAll to do some checking.*/
 		int dummy = this->BeforeAll();
@@ -193,8 +192,6 @@ namespace elastix
 		m_Optimizer->AddObserver( itk::EndEvent(), m_AfterEachResolutionCommand );
 	
 
-		elxout << m_elx_Transform << " " << m_elx_Metric <<  std::endl;
-	
 		/** Start the timer for reading images. */
 		m_Timer0->StartTimer();
 		elxout << "\nReading images..." << std::endl;
@@ -242,7 +239,6 @@ namespace elastix
 		m_elx_Registration->GetAsITKBaseType()->
 			SetFixedImage( m_FixedInternalImage );		
 
-		elxout << m_elx_Transform << " " << m_elx_Metric <<  std::endl;
 		
 		/** Set the movingImage.*/
 		if ( !m_MovingImage )
@@ -291,19 +287,17 @@ namespace elastix
 			m_Timer0->GetElapsedClockSec() * 1000 ) << " ms.\n" << std::endl;
 
 
-		elxout << m_elx_Transform << " " << m_elx_Metric <<  std::endl;
 
 		/** Give all components the opportunity to do some initialization.*/
 		this->BeforeRegistration();
 	
 
-		elxout << m_elx_Transform << " " << m_elx_Metric <<  std::endl;
 	
 		/** START!*/
+		
 		try
 		{
 
-			elxout << m_elx_Transform << " " << m_elx_Metric <<  std::endl;
 			( m_elx_Registration->GetAsITKBaseType() )->StartRegistration();
 		}
 		catch( itk::ExceptionObject & err )
