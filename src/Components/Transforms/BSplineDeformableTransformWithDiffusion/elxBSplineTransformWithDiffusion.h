@@ -243,9 +243,6 @@ using namespace itk;
 
 		/** Member variables for writing diffusion files. */
 		bool m_WriteDiffusionFiles;
-		typename DeformationFieldWriterType::Pointer		m_DeformationFieldWriter;
-		typename DeformationFieldWriterType::Pointer		m_DiffusedFieldWriter;
-		typename GrayValueImageWriterType::Pointer			m_GrayValueImageWriter;
 
 	}; // end class BSplineTransformWithDiffusion
 	

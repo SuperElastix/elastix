@@ -34,9 +34,6 @@ using namespace itk;
 
 		/** Initialize to false. */
 		m_WriteDiffusionFiles = false;
-		m_DeformationFieldWriter = 0;
-		m_DiffusedFieldWriter = 0;
-		m_GrayValueImageWriter = 0;
 
 	} // end Constructor
 	
@@ -179,9 +176,6 @@ using namespace itk;
 		if ( writetofile == "true" )
 		{
 			m_WriteDiffusionFiles = true;
-			m_DeformationFieldWriter = DeformationFieldWriterType::New();
-			m_DiffusedFieldWriter = DeformationFieldWriterType::New();
-			m_GrayValueImageWriter = GrayValueImageWriterType::New();
 		}
 
 		/** Create m_Diffusion. */
@@ -265,7 +259,7 @@ using namespace itk;
 		 * Do it every N iterations, but not at the first iteration
 		 * of a resolution, and also at the last iteration.
 		 */
-		bool DiffusionNow = ( CurrentIterationNumber % DiffusionEachNIterations == 0 );
+		bool DiffusionNow = ( ( CurrentIterationNumber + 1 ) % DiffusionEachNIterations == 0 );
 		DiffusionNow &= ( CurrentIterationNumber != 0 );
 		DiffusionNow |= ( CurrentIterationNumber == ( MaximumNumberOfIterations - 1 ) );
 
@@ -533,6 +527,12 @@ using namespace itk;
 			// \todo quit program nicely or throw an exception
 		}
 
+		/** Read in the deformationField image. */
+
+		/** Set the parameters. */
+		//this->SetCoefficientImage( defImage );
+		//this->SetParameters( 0 );
+
 	} // end ReadFromFile
 
 
@@ -571,7 +571,8 @@ using namespace itk;
 		typename DeformationFieldWriterType::Pointer writer
 			= DeformationFieldWriterType::New();
 		writer->SetFileName( makeFileName.str().c_str() );
-		writer->SetInput( this->GetIntermediaryDeformationField() );
+		// \todo write deformation field
+		writer->SetInput( m_DiffusedField );
 		/** Do the writing. */
 		try
 		{
@@ -641,7 +642,22 @@ using namespace itk;
 		void BSplineTransformWithDiffusion<TElastix>
 		::DiffuseDeformationField(void)
 	{
-		/** ------------- Create deformationField. ------------- */
+		/** This function does:
+		 * 1) Calculate current deformation field.
+		 * 2) Update the intermediary deformationFieldtransform
+		 *		with this deformation field.
+		 * 3) Calculate the GrayValueImage with the resampler,
+		 *		which is over the intermediary deformationFieldtransform.
+		 * 4) Diffuse the current deformation field.
+		 * 5) Update the intermediary deformationFieldtransform
+		 *		with this diffused deformation field.
+		 * 6) Reset the parameters of the BSplineTransform
+		 *		and the optimizer. Reset the initial transform.
+		 * 7) If wanted, write the deformationField, the 
+		 *		GrayValueImage and the diffusedField.
+		 */
+
+		/** ------------- 1: Create deformationField. ------------- */
 
 		/** First, create a dummyImage with the right region info, so
 		 * that the TransformIndexToPhysicalPoint-functions will be right.
@@ -681,34 +697,13 @@ using namespace itk;
 			++iterout;
 		}
 
-		/** Write deformation field to file if wanted. */
-		if ( m_WriteDiffusionFiles )
-		{
-			std::ostringstream makeFileName( "" );
-			makeFileName << m_Configuration->GetCommandLineArgument( "-out" )
-				<< "deformationField"
-				<< ".R" << m_Elastix->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel()
-				<< ".It" << m_Elastix->GetIterationCounter()	<< ".mhd";
-			m_DeformationFieldWriter->SetFileName( makeFileName.str().c_str() );
-			m_DeformationFieldWriter->SetInput( m_DeformationField );
-			/** Do the writing. */
-			try
-			{
-				m_DeformationFieldWriter->Update();
-			}
-			catch( itk::ExceptionObject & excp )
-			{
-				xl::xout["error"] << excp << std::endl;
-			}
+		/** ------------- 2: Update the intermediary deformationFieldTransform. ------------- */
 
-			/** Force the writer to make a new .raw file. */
-			m_DeformationFieldWriter->SetImageIO(NULL);
-		}
+		this->UpdateIntermediaryDeformationFieldTransform( m_DeformationField );
 
-		/** ------------- Create GrayValueImage. ------------- */
+		/** ------------- 3: Create GrayValueImage. ------------- */
 
-		/** Update the deformationFieldTransform. */
-		this->UpdateIntermediaryDeformationFieldTransformTemp( m_DeformationField );
+		m_Resampler->Modified();
 		m_GrayValueImage = m_Resampler->GetOutput();
 
 		/** Do the resampling. */
@@ -721,31 +716,7 @@ using namespace itk;
 			xl::xout["error"] << excp << std::endl;
 		}
 
-		/** Write gray value image to file if wanted. */
-		if ( m_WriteDiffusionFiles )
-		{
-			std::ostringstream makeFileName( "" );
-			makeFileName << m_Configuration->GetCommandLineArgument( "-out" )
-				<< "GrayValueImage"
-				<< ".R" << m_Elastix->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel()
-				<< ".It" << m_Elastix->GetIterationCounter()	<< ".mhd";
-			m_GrayValueImageWriter->SetFileName( makeFileName.str().c_str() );
-			m_GrayValueImageWriter->SetInput( m_GrayValueImage );
-			/** Do the writing. */
-			try
-			{
-				m_GrayValueImageWriter->Update();
-			}
-			catch( itk::ExceptionObject & excp )
-			{
-				xl::xout["error"] << excp << std::endl;
-			}
-
-			/** Force the writer to make a new .raw file. */
-			m_GrayValueImageWriter->SetImageIO(NULL);
-		}
-
-		/** ------------- Setup the diffusion. ------------- */
+		/** ------------- 4: Setup the diffusion. ------------- */
 
 		m_Diffusion->SetGrayValueImage( m_GrayValueImage );
 		m_Diffusion->SetInput( m_DeformationField );
@@ -762,37 +733,11 @@ using namespace itk;
 			xl::xout["error"] << excp << std::endl;
 		}
 
-		/** Write diffused field to file if wanted. */
-		if ( m_WriteDiffusionFiles )
-		{
-			// reset m_DeformationFieldWriter??
-			std::ostringstream makeFileName( "" );
-			makeFileName << m_Configuration->GetCommandLineArgument( "-out" )
-				<< "diffusedField"
-				<< ".R" << m_Elastix->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel()
-				<< ".It" << m_Elastix->GetIterationCounter()	<< ".mhd";
-			m_DiffusedFieldWriter->SetFileName( makeFileName.str().c_str() );
-			m_DiffusedFieldWriter->SetInput( m_DiffusedField );
-			m_DiffusedFieldWriter->Modified();
-			/** Do the writing. */
-			try
-			{
-				m_DiffusedFieldWriter->Update();
-			}
-			catch( itk::ExceptionObject & excp )
-			{
-				xl::xout["error"] << excp << std::endl;
-			}
-
-			/** Force the writer to make a new .raw file. */
-			m_DiffusedFieldWriter->SetImageIO(NULL);
-		}
-
-		/** ------------- Update the intermediary transform. ------------- */
+		/** ------------- 5: Update the intermediary transform. ------------- */
 
 		this->UpdateIntermediaryDeformationFieldTransform( m_DiffusedField );
 
-		/** ------------- Reset the current transform parameters. ------------- */
+		/** ------------- 6: Reset the current transform parameters. ------------- */
 
 		ParametersType dummyParameters( this->GetNumberOfParameters() );
 		dummyParameters.Fill( 0.0 );
@@ -804,7 +749,70 @@ using namespace itk;
 		 * within the DeformationFieldTransform.
 		 */
 		this->SetGrouper( "NoInitialTransform" );
-		this->Superclass2::SetInitialTransform( 0 );
+		this->Superclass1::SetInitialTransform( 0 );
+
+		/** ------------- 7: Write images. ------------- */
+
+		/** If wanted, write the deformationField, the GrayValueImage and the diffusedField. */
+		if ( m_WriteDiffusionFiles )
+		{
+			/** Filename. */
+			std::ostringstream makeFileName1( "" ), begin(""), end("");
+			begin	<< m_Configuration->GetCommandLineArgument( "-out" );
+			end		<< ".R" << m_Elastix->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel()
+				<< ".It" << m_Elastix->GetIterationCounter()	<< ".mhd";
+
+			/** Write the deformationFieldImage. */
+			makeFileName1 << begin.str() << "deformationField" << end.str();
+			typename DeformationFieldWriterType::Pointer deformationFieldWriter
+				= DeformationFieldWriterType::New();
+			deformationFieldWriter->SetFileName( makeFileName1.str().c_str() );
+			deformationFieldWriter->SetInput( m_DeformationField );
+			/** Do the writing. */
+			try
+			{
+				deformationFieldWriter->Update();
+			}
+			catch( itk::ExceptionObject & excp )
+			{
+				xl::xout["error"] << excp << std::endl;
+			}
+
+			/** Write the GrayValueImage. */
+			std::ostringstream makeFileName2( "" );
+			makeFileName2 << begin.str() << "GrayValueImage" << end.str();
+			typename GrayValueImageWriterType::Pointer grayValueImageWriter
+				= GrayValueImageWriterType::New();
+			grayValueImageWriter->SetFileName( makeFileName2.str().c_str() );
+			grayValueImageWriter->SetInput( m_GrayValueImage );
+			/** Do the writing. */
+			try
+			{
+				grayValueImageWriter->Update();
+			}
+			catch( itk::ExceptionObject & excp )
+			{
+				xl::xout["error"] << excp << std::endl;
+			}
+
+			/** Write the diffusedFieldImage. */
+			std::ostringstream makeFileName3( "" );
+			makeFileName3 << begin.str() << "diffusedField" << end.str();
+			typename DeformationFieldWriterType::Pointer diffusedFieldWriter
+				= DeformationFieldWriterType::New();
+			diffusedFieldWriter->SetFileName( makeFileName3.str().c_str() );
+			diffusedFieldWriter->SetInput( m_DiffusedField );
+			/** Do the writing. */
+			try
+			{
+				diffusedFieldWriter->Update();
+			}
+			catch( itk::ExceptionObject & excp )
+			{
+				xl::xout["error"] << excp << std::endl;
+			}
+
+		} // end if m_WriteDiffusionFiles
 
 	} // end DiffuseDeformationField
 

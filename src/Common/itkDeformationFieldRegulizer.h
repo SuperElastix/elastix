@@ -70,11 +70,6 @@ namespace itk
 		void InitializeDeformationFields( void );
 
 		/** Function to update the intermediary deformation field by adding
-		 * a deformation field to it.
-		 */
-		virtual void UpdateIntermediaryDeformationFieldTransformTemp( typename VectorImageType::Pointer vecImage );
-
-		/** Function to update the intermediary deformation field by adding
 		 * a diffused deformation field to it.
 		 */
 		virtual void UpdateIntermediaryDeformationFieldTransform( typename VectorImageType::Pointer vecImage );
@@ -90,9 +85,6 @@ namespace itk
 
 		/** itk Get macro for the deformation field transform. */
 		itkGetConstObjectMacro( IntermediaryDeformationFieldTransform, IntermediaryDFTransformType );
-
-		/** itk Get macro for the deformation field image. */
-		itkGetObjectMacro( IntermediaryDeformationField, VectorImageType );
 
 		/** Method to transform a point. */
 		virtual OutputPointType TransformPoint( const InputPointType & inputPoint ) const;
@@ -112,8 +104,6 @@ namespace itk
 		
 		/** Declaration of members. */
 		typename IntermediaryDFTransformType::Pointer		m_IntermediaryDeformationFieldTransform;
-		typename VectorImageType::Pointer								m_IntermediaryDeformationField;
-		typename VectorImageType::Pointer								m_TempField;
 		bool		m_Initialized;
 
 		/** Declarations of region things. */
