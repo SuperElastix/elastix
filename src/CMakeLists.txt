@@ -88,8 +88,41 @@ SUBDIRS(Common)
 SUBDIRS(Core)
 SUBDIRS(Components)
 
-SET(ELX_DOXYGEN_DIR ${elastix_SOURCE_DIR}/../dox/doxygen)
-SET(ELX_HELP_DIR ${elastix_SOURCE_DIR}/../help CACHE PATH "path to the doxygen generated help files")
-CONFIGURE_FILE(${elastix_SOURCE_DIR}/../dox/doxygen/doxyfile.in ${ELX_HELP_DIR}/doxyfile.out @ONLY)
+#---------------------------------------------------------------------
+# Configure the doxygen-configuration
+
+FIND_PACKAGE(Doxygen QUIET)
+STRING(COMPARE NOTEQUAL ${DOXYGEN} "DOXYGEN-NOTFOUND" Doxygen_FOUND)
+
+IF(Doxygen_FOUND)
+
+  # Set the path to the doxygen configuration source and the help dir
+  SET(ELX_DOXYGEN_DIR ${elastix_SOURCE_DIR}/../dox/doxygen)
+  SET(ELX_HELP_DIR ${elastix_SOURCE_DIR}/../help CACHE PATH "path to the doxygen generated help files")
+
+  # Get the version number of doxygen
+  GET_FILENAME_COMPONENT(ELX_PATH_TO_DOXYGEN ${DOXYGEN} PATH)
+	FIND_FILE(ELX_DOXYGEN_VERSION_FILENAME version.txt "${ELX_PATH_TO_DOXYGEN}/.." )
+	MARK_AS_ADVANCED(FORCE ELX_DOXYGEN_VERSION_FILENAME)
+	STRING(COMPARE NOTEQUAL ${ELX_DOXYGEN_VERSION_FILENAME}
+	"ELX_DOXYGEN_VERSION_FILENAME-NOTFOUND" ELX_DOXYGEN_VERSION_FOUND )
+	IF(ELX_DOXYGEN_VERSION_FOUND)
+    FILE(READ ${ELX_DOXYGEN_VERSION_FILENAME} ELX_DOXYGEN_VERSION)
+  ELSE(ELX_DOXYGEN_VERSION_FOUND)
+    SET(ELX_DOXYGEN_VERSION " ")  	
+  ENDIF(ELX_DOXYGEN_VERSION_FOUND)
+	
+	# Configure the doxygen configuration
+	CONFIGURE_FILE(${elastix_SOURCE_DIR}/../dox/doxygen/doxyfile.in ${ELX_HELP_DIR}/doxyfile.out @ONLY)
+	# Configure the footer of the help website.
+	CONFIGURE_FILE(${elastix_SOURCE_DIR}/../dox/doxygen/DoxygenFooter.html.in ${ELX_HELP_DIR}/DoxygenFooter.html @ONLY)
+	
+ENDIF(Doxygen_FOUND)
+
+
+
+
+
+
 
 																

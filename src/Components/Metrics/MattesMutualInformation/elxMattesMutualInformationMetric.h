@@ -52,7 +52,7 @@ using namespace itk;
 	 * metric computes the exact metric value (computed on all voxels rather than on the set of
 	 * spatial samples) and shows it each iteration. Must be given for each resolution.\n
 	 * NB: If the UseExactMetricDerivative flag is set to "true", this option is ignored.\n
-	 *   example: <tt> (ShowExactMetricValue "true" "true" "false")
+	 *   example: <tt> (ShowExactMetricValue "true" "true" "false") </tt>
 	 * \parameter NewSamplesEveryIteration: Flag that can set to "true" or "false". If "true" 
 	 * the metric (randomly) selects a new set of spatial samples in every iteration. This, if 
 	 * used in combination with the correct optimizer (such as the StandardGradientDescent),
@@ -60,7 +60,7 @@ using namespace itk;
 	 * and transforms with a large number of parameters. \n
 	 *   example: <tt> (NewSamplesEveryIteration "true" "true" "true") </tt>
 	 *
-   * \sa MattesMutualInformationMetricWithMask
+   * \sa MattesMutualInformationImageToImageMetricWithMask
 	 * \ingroup Metrics
 	 */
 	
@@ -133,37 +133,51 @@ using namespace itk;
 		typedef typename Superclass2::RegistrationPointer		RegistrationPointer;
 		typedef typename Superclass2::ITKBaseType						ITKBaseType;
 			
-		/** Typedef's for the suppport of masks.*/
+		/** Typedef for the suppport of masks.*/
 		typedef __MaskFilePixelType	MaskFilePixelType; //defined at the top of this file
+		/** Typedef's for the suppport of masks.*/
 		typedef FixedCoordRepType		MaskCoordinateType;
 		
+		/** Typedef for the suppport of masks.*/
 		typedef MaskImage<
 			MaskFilePixelType,
 			itkGetStaticConstMacro(MovingImageDimension),
 			FixedCoordRepType >				FixedMaskFileImageType;
+		/** Typedef for the suppport of masks.*/
 		typedef MaskImage<
 			MaskFilePixelType,
 			itkGetStaticConstMacro(MovingImageDimension),
 			MovingCoordRepType >			MovingMaskFileImageType;
-		
+
+		/** Typedef for the suppport of masks.*/
 		typedef ImageFileReader<
 			FixedMaskFileImageType > 	FixedMaskImageReaderType;
+
+		/** Typedef for the suppport of masks.*/
 		typedef ImageFileReader<
 			MovingMaskFileImageType >	MovingMaskImageReaderType;
 		
+		/** Typedef for the suppport of masks.*/
 		typedef typename FixedMaskImageReaderType::Pointer		FixedMaskImageReaderPointer;
+		/** Typedef for the suppport of masks.*/
 		typedef typename MovingMaskImageReaderType::Pointer		MovingMaskImageReaderPointer;
 
-		/** Typedef's for timer.*/
+		/** Typedef for timer.*/
 		typedef tmr::Timer					TimerType;
+		/** Typedef for timer.*/
 		typedef TimerType::Pointer	TimerPointer;
 		
-		/** Methods that take care of setting the parameters and showing information.*/
+		/** Method that takes care of setting the parameters and showing information.*/
 		virtual int BeforeAll(void);
+		/** Method that takes care of setting the parameters and showing information.*/
 		virtual void BeforeRegistration(void);
+		/** Method that takes care of setting the parameters and showing information.*/
 		virtual void BeforeEachResolution(void);
+		/** Method that takes care of setting the parameters and showing information.*/
 		virtual void AfterEachIteration(void);
 
+		/** Sets up a timer to measure the intialisation time and calls the Superclass'
+		 * implementation */
 		virtual void Initialize(void) throw (ExceptionObject);
 		
 	protected:
@@ -171,11 +185,14 @@ using namespace itk;
 		MattesMutualInformationMetric(); 
 		virtual ~MattesMutualInformationMetric() {}
 
-		/** Declaration of member variables.*/
+		/** Declaration of member variable, for mask support.*/
 		FixedMaskImageReaderPointer		m_FixedMaskImageReader;
+		/** Declaration of member variable, for mask support.*/
 		MovingMaskImageReaderPointer	m_MovingMaskImageReader;
 
+		/** Flag */
 		bool m_NewSamplesEveryIteration;
+		/** Flag */
 		bool m_ShowExactMetricValue;
 				
 	private:
