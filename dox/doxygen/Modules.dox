@@ -1,0 +1,126 @@
+# 
+# ############## COMMON #####################
+#
+
+/** 
+ \defgroup Common Common
+
+Common contains different types of common functionality.
+*/
+
+/**
+\defgroup ParameterFileParser ParameterFileParser
+\ingroup Common
+The ParameterFileParser contains functionality to communicate options and parameter values to elastix.
+*/
+
+/**
+\defgroup TransformGrouper TransformGrouper
+\ingroup Common
+TransformGrouper contains functionality to combine two or more transforms.
+*/
+
+/**
+\defgroup xout xout
+\ingroup Common
+xout contains functionality to print all output of the program to whatever.
+*/
+
+
+# 
+# ############## COMPONENTS #####################
+#
+
+/** 
+ \defgroup Components Components
+
+Components contains the different registration components.
+*/
+
+/**
+\defgroup Interpolators Interpolators
+\ingroup Components
+Interpolators are 
+*/
+
+/**
+\defgroup Metrics Metrics
+\ingroup Components
+Metrics are 
+*/
+
+/**
+\defgroup Optimizers Optimizers
+\ingroup Components
+Optimizers are 
+*/
+
+/**
+\defgroup Registrations Registrations
+\ingroup Components
+Registrations are 
+*/
+
+/**
+\defgroup ResampleInterpolators ResampleInterpolators
+\ingroup Components
+ResampleInterpolators 
+*/
+
+/**
+\defgroup Transforms Transforms
+\ingroup Components
+Transforms are 
+*/
+
+/**
+\defgroup FixedImagePyramids FixedImagePyramids
+\ingroup Components
+FixedImagePyramids are 
+*/
+
+/**
+\defgroup MovingImagePyramids MovingImagePyramids
+\ingroup Components
+MovingImagePyramids are 
+*/
+
+# 
+# ############## CORE #####################
+#
+
+/** 
+ \defgroup Core Core
+
+This group contains the elastix core.
+*/
+
+/**
+\defgroup ComponentBaseClasses Component Base Classes
+\ingroup Core
+ComponentBaseClasses are base classes for the different components. For example: the TransformBase class contains common functionality that all Transform types need.
+*/
+
+/**
+\defgroup Configuration Configuration
+\ingroup Core
+The Configuration classes make it possible to conveniently and easily choose a registration, which consists of a combination of interpolator, transform, metric, etc.
+*/
+
+/**
+\defgroup Install Install
+\ingroup Core
+The Install group contains functionality to install and use the different libraries.
+*/
+
+/**
+\defgroup Kernel Kernel
+\ingroup Core
+Kernel contains the basic registration layout.
+*/
+
+/**
+\defgroup Main Main
+\ingroup Core
+Main contains the main elastix and transformix program.
+*/

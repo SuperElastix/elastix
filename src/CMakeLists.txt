@@ -80,3 +80,7 @@ SUBDIRS(Common)
 SUBDIRS(Core)
 SUBDIRS(Components)
 
+SET(ELX_DOXYGEN_DIR ${elastix_SOURCE_DIR}/../dox/doxygen)
+SET(ELX_HELP_DIR ${elastix_SOURCE_DIR}/../help CACHE PATH "path to the doxygen generated help files")
+CONFIGURE_FILE(${elastix_SOURCE_DIR}/../dox/doxygen/doxyfile.in ${ELX_HELP_DIR}/doxyfile.out
+@ONLY)
