@@ -2,14 +2,16 @@
 PROJECT(elxComponents)
 
 SET(elxLinkLibs
+
+xoutlib
 elxCommon
 elxCore
-param
-xoutlib
 ITKBasicFilters
 ITKNumerics
 ITKIO
 ITKCommon )
+
+#param
 
 #---------------------------------------------------------------------
 # Macro that simplifies the addition of elx-components
