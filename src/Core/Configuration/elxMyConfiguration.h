@@ -25,11 +25,13 @@ namespace elastix
 {
 	using namespace itk;
 
-
 	/**
-	 * ********************** MyConfiguration ***********************
+	 * \class MyConfiguration
+	 * \brief ???
 	 *
 	 * The MyConfiguration class ....
+	 *
+	 * \ingroup Configuration
 	 */
 
 	class MyConfiguration : public Object, public ConfigurationBase

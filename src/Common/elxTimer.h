@@ -32,11 +32,14 @@ namespace tmr
 {
 using namespace itk;
 
-
 	/**
-	 * **************************** Timer ***************************
+	 * \class Timer
+	 * \brief A class to time the different parts of the registration.
 	 *
-	 * This class
+	 * This class is a wrap around ctime.h. It is used to time the registration,
+	 * to get the time per iteration, or whatever.
+	 *
+	 * \ingroup Timer
 	 */
 
 	class Timer : public Object

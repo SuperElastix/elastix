@@ -7,11 +7,13 @@
 namespace itk
 {
 	
-
 	/**
-	 * ******************* BSplineTransformGrouper ******************
+	 * \class BSplineTransformGrouper
+	 * \brief ???
 	 *
-	 * This class
+	 * The BSplineTransformGrouper class ....
+	 *
+	 * \ingroup TransformGrouper
 	 */
 
 	template <class TBSplineTransform>

@@ -10,13 +10,14 @@ namespace xoutlibrary
 	using namespace std;
 
 
-	/*
-	 *****************  xoutrow *********************
+	/**
+	 * \class xoutrow
+	 * \brief ???
 	 *
-	 * An abstract base class, which defines the interface 
-	 * for using xout.
+	 * The xoutrow class ....
+	 *
+	 * \ingroup xout
 	 */
-
 	
 	template<class charT, class traits = char_traits<charT> >
 		class xoutrow : public xoutbase<charT, traits>

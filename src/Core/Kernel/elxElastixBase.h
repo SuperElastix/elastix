@@ -26,11 +26,13 @@ namespace elastix
 {
   using namespace itk;	
 	
-	
 	/**
-	 * *********************** ElastixBase **************************
+	 * \class ElastixBase
+	 * \brief ???
 	 *
-	 * The ElastixBase class is a class 
+	 * The ElastixBase class ....
+	 *
+	 * \ingroup Kernel
 	 */
 
 	class ElastixBase : public BaseComponent

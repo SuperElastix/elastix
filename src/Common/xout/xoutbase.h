@@ -18,14 +18,15 @@ namespace xoutlibrary
 {
 	using namespace std;
 
-
 	/**
-	 * ************************  xoutbase ***************************
+	 * \class xoutbase
+	 * \brief Base class for xout.
 	 *
 	 * An abstract base class, which defines the interface 
 	 * for using xout.
+	 *
+	 * \ingroup xout
 	 */
-
 	
 	template<class charT, class traits = char_traits<charT> >
 		class xoutbase

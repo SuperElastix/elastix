@@ -10,11 +10,14 @@
 namespace itk
 {
 	
-/**
- * ******************** NDImageBase *******************************
- *
- * The NDImageBase class ....
- */
+	/**
+	 * \class NDImageBase
+	 * \brief ???
+	 *
+	 * The NDImageBase class ....
+	 *
+	 * \ingroup Miscellaneous
+	 */
 	
 	template < class TPixel >
 		class NDImageBase :	public Object

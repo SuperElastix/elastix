@@ -10,11 +10,13 @@
 namespace itk
 {
 	
-	
 	/**
-	 * ********************* TransformGrouper ***********************
+	 * \class TransformGrouper
+	 * \brief ???
 	 *
-	 * This class
+	 * The TransformGrouper class ....
+	 *
+	 * \ingroup TransformGrouper
 	 */
 	
 	template <class TAnyITKTransform>

@@ -8,9 +8,12 @@ namespace itk
 {
 	
 	/**
-	 * ***************** TransformGrouperInterface ******************
+	 * \class TransformGrouperInterface
+	 * \brief ???
 	 *
-	 * This class
+	 * The TransformGrouperInterface class ....
+	 *
+	 * \ingroup TransformGrouper
 	 */
 
 	class TransformGrouperInterface

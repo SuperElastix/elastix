@@ -8,11 +8,14 @@
 namespace itk
 {
 	
-/**
- * ******************** NDImageTemplate *******************************
- *
- * The NDImageTemplate class ....
- */
+	/**
+	 * \class NDImageTemplate
+	 * \brief ???
+	 *
+	 * The NDImageTemplate class ....
+	 *
+	 * \ingroup Miscellaneous
+	 */
 	
 	template < class TPixel, unsigned int VDimension >
 		class NDImageTemplate :	public NDImageBase<TPixel>

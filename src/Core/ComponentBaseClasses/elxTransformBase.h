@@ -28,7 +28,8 @@ namespace elastix
 	 * \class TransformBase
 	 * \brief This class is the base for all Transforms
 	 *
-	 * This class contains all the common functionality for Transforms ...
+	 * This class contains the common functionality for all Transforms.
+	 * Everything that is the same for every transform should be in this class.
 	 *
 	 * \ingroup Transforms
 	 * \ingroup ComponentBaseClasses
@@ -39,7 +40,7 @@ namespace elastix
 	{
 	public:
 
-		/** Standard.*/
+		/** Standard itk. */
 		typedef TransformBase								Self;
 		typedef BaseComponentSE<TElastix>		Superclass;
 
@@ -68,8 +69,9 @@ namespace elastix
 		typedef ComponentDatabaseType::ComponentDescriptionType		ComponentDescriptionType;
 		typedef ComponentDatabase::PtrToCreator										PtrToCreator;
 		
-		/** Get Dimensions.*/
+		/** Get	the dimension of the fixed image. */
 		itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
+		/** Get	the dimension of the moving image. */
 		itkStaticConstMacro( MovingImageDimension, unsigned int, MovingImageType::ImageDimension );
 
 		/** Other typedef's.*/
@@ -102,41 +104,61 @@ namespace elastix
 			OutputImageType >																	OutputImageIteratorType;
 		typedef ImageFileWriter< OutputImageType >					OutputFileWriterType;
 
-		/** Cast to ITKBaseType.*/
+		/** Cast to ITKBaseType. */
 		virtual ITKBaseType * GetAsITKBaseType(void)
 		{
 			return dynamic_cast<ITKBaseType *>(this);
 		}
 
-		/** Callback Methods.*/
+		/** Execute stuff before everything else:
+		 * \li Check the appearance of an initial transform.
+		 */
 		virtual int BeforeAllBase(void);
+		/** Execute stuff before the actual transformation:
+		 * \li Check the appearance of inputpoints to be transformed.
+		 */
 		virtual int BeforeAllTransformix(void);
+		/** Execute stuff before the actual registration:
+		 * \li stuff regarding the initial tranform.
+		 */
 		virtual void BeforeRegistrationBase(void);
+		/** Execute stuff after the actual registration:
+		 * \li Get and set the final parameters for the resampler.
+		 */
 		virtual void AfterRegistrationBase(void);
 
-		/** Get/Set InitialTransform.*/
+		/** Get the initial transform. */
 		virtual ObjectType * GetInitialTransform(void);
+		/** Set the initial transform. */
 		virtual void SetInitialTransform( ObjectType * _arg );
 
-		/** Get and Set the TransformParametersFileName.*/
+		/** Set the TransformParametersFileName. */
 		virtual void SetTransformParametersFileName( const char * filename );
+		/** Get the TransformParametersFileName. */
 		itkGetStringMacro( TransformParametersFileName );
 
-		/** Function to read/write transform-parameters from/to a file.*/
+		/** Function to read transform-parameters from a file. */
 		virtual void ReadFromFile(void);
+		/** Function to write transform-parameters to a file. */
 		virtual void WriteToFile( const ParametersType & param );
+		/** Function to write transform-parameters to a file. */
 		virtual void WriteToFile(void);
+		/** Function to read the initial transform parameters from a file. */
 		virtual void ReadInitialTransformFromFile(
 			const char * transformParameterFileName);
 
-		/** Function to transform coordinates from fixed to moving image.*/
+		/** Function to transform coordinates from fixed to moving image. */
 		virtual void TransformPoints(void);
+		/** Function to transform coordinates from fixed to moving image. */
 		virtual void TransformPointsSomePoints( std::string filename );
+		/** Function to transform all coordinates from fixed to moving image. */
 		virtual void TransformPointsAllPoints(void);		
 
 	protected:
 
+		/** The constructor. */
 		TransformBase();
+		/** The destructor. */
 		virtual ~TransformBase();
 
 		/** Member variables.*/
@@ -146,6 +168,7 @@ namespace elastix
 
 	private:
 
+		/** private constructor. */
 		TransformBase( const Self& );		// purposely not implemented
 		void operator=( const Self& );	// purposely not implemented
 

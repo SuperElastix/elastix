@@ -7,15 +7,17 @@ namespace elastix
 {
 	using namespace itk;
 	
-	
 	/**
-	 * ******************** TransformixMain *************************
+	 * \class TransformixMain
+	 * \brief ???
 	 *
-	 * This class inherits from ElastixMain. We overwrite the Run()
+	 * The TransformixMain class inherits from ElastixMain. We overwrite the Run()
 	 * -function. In the new Run() the Run()-function from the
 	 * ElastixTemplate-class is not called (as in elxElastixMain.cxx),
 	 * because this time we don't want to start a registration, but
 	 * just apply a transformation to an input image.
+	 *
+	 * \ingroup Kernel
 	 */
 	
 	class TransformixMain : public ElastixMain

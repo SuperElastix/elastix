@@ -12,11 +12,13 @@
 namespace elastix
 {
 	
-
 	/**
-	 * ********************** ConfigurationBase *********************
+	 * \class ConfigurationBase
+	 * \brief ???
 	 *
 	 * The ConfigurationBase class ....
+	 *
+	 * \ingroup Configuration
 	 */
 
 	class ConfigurationBase : public BaseComponent

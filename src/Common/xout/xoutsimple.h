@@ -8,14 +8,14 @@ namespace xoutlibrary
 {
 	using namespace std;
 
-
-	/*
-	 *****************  xoutsimple *********************
+	/**
+	 * \class xoutsimple
+	 * \brief ???
 	 *
-	 * An abstract base class, which defines the interface 
-	 * for using xout.
+	 * The xoutsimple class ....
+	 *
+	 * \ingroup xout
 	 */
-
 	
 	template<class charT, class traits = char_traits<charT> >
 		class xoutsimple : public xoutbase<charT, traits>

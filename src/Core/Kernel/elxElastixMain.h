@@ -34,11 +34,13 @@ namespace elastix
 	 */
 	extern int xoutSetup(const char * logfilename);
 
-		
 	/**
-	 * ********************** ElastixMain ***************************
+	 * \class ElastixMain
+	 * \brief ???
 	 *
 	 * The ElastixMain class ....
+	 *
+	 * \ingroup Kernel
 	 */
 
 	class ElastixMain : public Object
@@ -232,8 +234,6 @@ namespace elastix
 		 * ComponentDatabase.
 		 */
     virtual int InitDBIndex(void);
-
-		
 
 	private:
 

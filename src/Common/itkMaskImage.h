@@ -11,9 +11,13 @@ namespace itk
 {
 
 	/**
-	 * ******************** MaskImage *******************************
+	 * \class MaskImage
+	 * \brief A class to provide mask functionality for the fixed
+	 * and moving image.
 	 *
 	 * The MaskImage class ....
+	 *
+	 * \ingroup Miscellaneous
 	 */
 
 	template < class MaskPixelType = char,

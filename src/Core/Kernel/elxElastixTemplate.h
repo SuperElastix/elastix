@@ -54,11 +54,13 @@ namespace elastix
 {
 	using namespace itk;
 	
-	
 	/**
-	 * ********************** ElastixTemplate ***********************
+	 * \class ElastixTemplate
+	 * \brief ???
 	 *
 	 * The ElastixTemplate class ....
+	 *
+	 * \ingroup Kernel
 	 */
 	
 	template <class TFixedImage, class TMovingImage>
