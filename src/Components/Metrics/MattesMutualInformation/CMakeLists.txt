@@ -1,0 +1,12 @@
+
+
+ADD_ELXCOMPONENT( elxMattesMutualInformationMetric
+ elxMattesMutualInformationMetric.h
+ elxMattesMutualInformationMetric.hxx
+ elxMattesMutualInformationMetric.cxx
+ itkMattesMutualInformationImageToImageMetricWithMask.h 
+ itkMattesMutualInformationImageToImageMetricWithMask.hxx)
+
+
+
+
