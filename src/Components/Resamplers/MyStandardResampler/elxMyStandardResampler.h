@@ -76,7 +76,7 @@ namespace elastix
 	protected:
 
 		MyStandardResampler() {};
-		virtual ~MyStandardResampler() {};
+		virtual ~MyStandardResampler() {std::cerr << "resampler dies " << std::endl;};
 		
 	private:
 

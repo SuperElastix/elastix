@@ -3,6 +3,7 @@
 
 #include "itkBSplineInterpolateImageFunction.h"
 #include "elxIncludes.h"
+#include <iostream>
 
 namespace elastix
 {
@@ -81,8 +82,8 @@ namespace elastix
 
 	protected:
 
-		  BSplineResampleInterpolator() {}
-			virtual ~BSplineResampleInterpolator() {};
+		  BSplineResampleInterpolator() {std::cerr << "resampler created " << this << std::endl;}
+			virtual ~BSplineResampleInterpolator() {std::cerr << this->GetReferenceCount() << "resampinterpolator dies " << this << std::endl;};
 			
 	private:
 
