@@ -1245,7 +1245,6 @@ namespace itk
 	}
 
 	
-} // end namespace itk
 
 
 	/**
@@ -1522,6 +1521,8 @@ namespace itk
 	} // end GetValue
 
 
+
+} // end namespace itk
 
 
 #endif // end #ifndef _itkMattesMutualInformationImageToImageMetricWithMask_CXX__
