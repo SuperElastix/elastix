@@ -12,6 +12,7 @@
 #include "itkImage.h"
 #include "itkCastImageFilter.h"
 #include "itkImageFileWriter.h"
+#include "itkImageFileReader.h"
 #include "itkImageRegionConstIteratorWithIndex.h"
 
 #include "elxIncludes.h"
@@ -131,6 +132,10 @@ using namespace itk;
 		typedef typename Superclass2::MovingImageType						MovingImageType;
 		typedef typename Superclass2::ITKBaseType								ITKBaseType;
 
+		/** Other typedef's inherited from Superclass1. */
+		typedef typename Superclass1::IntermediaryDFTransformType					IntermediaryDFTransformType;
+		typedef typename Superclass1::VectorImageType											VectorImageType;
+
 		/** Typedefs & Vars needed for setting the grid size and upsampling the grid.*/
 		
 		/** the FixedImagePyramidBase */
@@ -160,7 +165,7 @@ using namespace itk;
 			CoefficientOutputImageType >								TransformWriterType;
 
 		/** Typedef's for the diffusion of the deformation field. */
-		typedef typename Superclass2::OutputImageType			VectorImageType;
+		typedef ImageFileReader< VectorImageType >				VectorReaderType;
 		typedef typename VectorImageType::PixelType				VectorType;
 		typedef ImageRegionIterator<
 			VectorImageType >																VectorImageIteratorType;

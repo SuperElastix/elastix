@@ -4,7 +4,7 @@
 #include "elxBSplineTransformWithDiffusion.h"
 #include "itkBSplineResampleImageFunction.h"
 #include "itkBSplineDecompositionImageFilter.h"
-#include "itkResampleImageFilter.h"
+//#include "itkResampleImageFilter.h"
 #include "math.h"
 
 namespace elastix
@@ -592,78 +592,100 @@ using namespace itk;
 	void BSplineTransformWithDiffusion<TElastix>
 	::ReadFromFile(void)
 	{
-		/** Read and Set the Grid: this is a BSplineTransformWithDiffusion specific task.*/
-
-		/** Declarations.*/
-		RegionType	gridregion;
-		SizeType		gridsize;
-		IndexType		gridindex;
-		SpacingType	gridspacing;
-		OriginType	gridorigin;
-		
-		/** Fill everything with default values.*/
-		gridsize.Fill(1);
-		gridindex.Fill(0);
-		gridspacing.Fill(1.0);
-		gridorigin.Fill(0.0);
-
-		/** Get GridSize, GridIndex, GridSpacing and GridOrigin.*/
-		for ( unsigned int i = 0; i < SpaceDimension; i++ )
-		{
-			m_Configuration->ReadParameter( gridsize[ i ], "GridSize", i );
-			m_Configuration->ReadParameter( gridindex[ i ], "GridIndex", i );
-			m_Configuration->ReadParameter( gridspacing[ i ], "GridSpacing", i );
-			m_Configuration->ReadParameter( gridorigin[ i ], "GridOrigin", i );
-		}
-		
-		/** Set it all.*/
-		gridregion.SetIndex( gridindex );
-		gridregion.SetSize( gridsize );
-		this->SetGridRegion( gridregion );
-		this->SetGridSpacing( gridspacing );
-		this->SetGridOrigin( gridorigin );
-
-		/** Call the ReadFromFile from the TransformBase.
-		 * This must be done after setting the Grid, because later the
-		 * ReadFromFile from TransformBase calls SetParameters, which
-		 * checks the parameter-size, which is based on the GridSize.
-		 */
-		this->Superclass2::ReadFromFile();
-
-		// \todo Test this ReadFromFile function.
-		// \todo Read and set the parameters of the deformationFieldTransform part.
+		/** Task 1 - Get and Set the DeformationField Image. */
 
 		/** Read the name of the deformationFieldImage. */
 		std::string fileName = "";
-		m_Configuration->ReadParameter( fileName, "TransformParametersDeformationFieldImageFileName", 0 );
+		m_Configuration->ReadParameter( fileName, "DeformationFieldFileName", 0 );
 
 		/** Error checking ... */
 		if ( fileName == "" )
 		{
-			xout["error"] << "ERROR: TransformParametersDeformationFieldImageFileName not specified."
+			xout["error"] << "ERROR: DeformationFieldFileName not specified."
 				<< std::endl << "Unable to read and set the transform parameters." << std::endl;
 			// \todo quit program nicely or throw an exception
 		}
 
-		/** Read in the deformationField image. *
-		typename ReaderType::Pointer reader = ReaderType::New();
-		reader->SetFileName( fileName );
-		defImage = reader->GetOutput();
+		/** Read in the deformationField image. */
+		typename VectorReaderType::Pointer vectorReader = VectorReaderType::New();
+		vectorReader->SetFileName( fileName.c_str() );
+		//VectorImageType::Pointer defImage = VectorImageType::New();
+		//defImage = vectorReader->GetOutput();
 
-		/** Do the reading. *
+		/** Do the reading. */
 		try
 		{
-			defImage->Update();
+			vectorReader->Update();
+			//defImage->Update();
 		}
 		catch( itk::ExceptionObject & excp )
 		{
 			xl::xout["error"] << excp << std::endl;
 		}
 
+		/** Get image information and set it in the DeformationFieldTransform. */
+		RegionType region = vectorReader->GetOutput()->GetLargestPossibleRegion();
+		SpacingType spacing = vectorReader->GetOutput()->GetSpacing();
+		OriginType origin = vectorReader->GetOutput()->GetOrigin();
+		this->SetDeformationFieldRegion( region );
+		this->SetDeformationFieldSpacing( spacing );
+		this->SetDeformationFieldOrigin( origin );
+		this->InitializeDeformationFields();
+
+		/** Set the deformationFieldImage in the itkDeformationVectorFieldTransform. */
+		//this->GetIntermediaryDeformationFieldTransform()->SetCoefficientImage( vectorReader->GetOutput() );
+		//this->Superclass1::SetCoefficientImage( vectorReader->GetOutput() );
+		this->UpdateIntermediaryDeformationFieldTransform( vectorReader->GetOutput() );
+		//this->UpdateIntermediaryDeformationFieldTransform( defImage );
+
 		/** Set the parameters. */
-		//this->SetCoefficientImage( defImage );
 		//this->SetParameters( 0 );
 
+		/** Do not call the ReadFromFile from the TransformBase,
+		 * because that function tries to read parameters from the file,
+		 * which is not necessary in this case, because the parameters are
+		 * in the vectorImage.
+		 * NOT: this->Superclass2::ReadFromFile();
+		 * However, we have to copy the rest of the functionality:
+		 */
+
+		/** Task 2 - Get and Set the Initial Transform. */
+
+		/** Get the InitialTransformName. */
+		fileName = "";
+		m_Configuration->ReadParameter( fileName,
+			"InitialTransformParametersFileName", 0 );
+		
+		/** Call the function ReadInitialTransformFromFile.*/
+		if ( fileName != "NoInitialTransform" )
+		{			
+			this->Superclass2::ReadInitialTransformFromFile( fileName.c_str() );
+		}
+
+		/** Read from the configuration file how to combine the
+		 * initial transform with the current transform.
+		 */
+		std::string howToCombineTransforms = "Add"; // default
+		m_Configuration->ReadParameter( howToCombineTransforms, "HowToCombineTransforms", 0, true );
+		
+		/** Convert 'this' to a pointer to a TransformGrouperInterface and set how
+		 * to combine the current transform with the initial transform */
+		TransformGrouperInterface * thisAsGrouper = 
+			dynamic_cast< TransformGrouperInterface * >(this);
+		if ( thisAsGrouper )
+		{
+			thisAsGrouper->SetGrouper( howToCombineTransforms );
+		}		
+
+		/** Task 3 - Remember the name of the TransformParametersFileName.
+		 * This will be needed when another transform will use this transform
+		 * as an initial transform (see the WriteToFile method)
+		 */
+		this->SetTransformParametersFileName(
+			this->GetConfiguration()->GetCommandLineArgument( "-tp" ) );
+		
+		// \todo Test this ReadFromFile function.
+		
 	} // end ReadFromFile
 
 
@@ -686,7 +708,7 @@ using namespace itk;
 		/** Call the WriteToFile from the TransformBase.*/
 		this->Superclass2::WriteToFile( param );
 
-		/** Add some BSplineTransform specific lines.*/
+		/** Add some BSplineTransformWithDiffusion specific lines.*/
 		xout["transpar"] << std::endl << "// BSplineTransformWithDiffusion specific" << std::endl;
 
 		/** Write the filename of the deformationField image. */
@@ -695,7 +717,7 @@ using namespace itk;
 			<< "TransformParametersDeformationFieldImage."
 			<< m_Configuration->GetElastixLevel()
 			<< ".mhd";
-		xout["transpar"] << "(TransformParametersDeformationFieldImageFileName \""
+		xout["transpar"] << "(DeformationFieldFileName \""
 			<< makeFileName.str() << "\")" << std::endl;
 
 		/** Write the deformation field image. */
