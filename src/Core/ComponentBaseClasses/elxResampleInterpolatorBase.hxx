@@ -30,10 +30,10 @@ namespace elastix
 		::WriteToFile(void)
 	{
 		/** Write ResampleInterpolator specific things.*/
-		xout["transpar"] << std::endl << "// ResampleInterpolator specific" << std::endl;
+		xl::xout["transpar"] << std::endl << "// ResampleInterpolator specific" << std::endl;
 
 		/** Write the name of the resample-interpolator.*/
-		xout["transpar"] << "(ResampleInterpolator \""
+		xl::xout["transpar"] << "(ResampleInterpolator \""
 			<< this->elxGetClassName() << "\")" << std::endl;		
 
 	} // end WriteToFile

@@ -205,14 +205,14 @@ namespace elastix
 		::WriteToFile(void)
 	{
 		/** Write Resampler specific things.*/
-		xout["transpar"] << std::endl << "// Resampler specific" << std::endl;
+		xl::xout["transpar"] << std::endl << "// Resampler specific" << std::endl;
 
 		/** Write the name of the Resampler.*/
-		xout["transpar"] << "(Resampler \""
+		xl::xout["transpar"] << "(Resampler \""
 			<< this->elxGetClassName() << "\")" << std::endl;
 
 		/** Write the DefaultPixelValue.*/
-		xout["transpar"] << "(DefaultPixelValue " <<
+		xl::xout["transpar"] << "(DefaultPixelValue " <<
 			this->GetAsITKBaseType()->GetDefaultPixelValue() << ")" << std::endl;
 
 	} // end WriteToFile

@@ -111,7 +111,7 @@ namespace itk
 		typedef EulerGroupWrap<Dimension> 							EulerGroupWrapInstance;
 		typedef typename EulerGroupWrapInstance::Euler 	Euler;
 		
-		typedef typename Euler::Dummy< ScalarType >			EulerDummy;
+		typedef typename Euler::template Dummy< ScalarType >			EulerDummy;
 		typedef typename EulerDummy::EulerTransform_tmp	EulerTransform_tmp;
 		
 	}; // end class EulerGroupTemplate

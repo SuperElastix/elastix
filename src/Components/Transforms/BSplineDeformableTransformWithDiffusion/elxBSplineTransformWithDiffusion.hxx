@@ -95,7 +95,7 @@ using namespace itk;
 		unsigned int radius1D;
 		this->m_Configuration->ReadParameter( radius1D, "Radius", 0 );
 		RadiusType radius;
-		for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+		for ( unsigned int i = 0; i < this->FixedImageDimension; i++ )
 		{
 			radius[ i ] = static_cast<long unsigned int>( radius1D );
 		}
@@ -912,7 +912,7 @@ using namespace itk;
 			/** Call TransformPoint. */
 			outputPoint = this->TransformPoint( inputPoint );
 			/** Calculate the difference. */
-			for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+			for ( unsigned int i = 0; i < this->FixedImageDimension; i++ )
 			{
 				diff_point[ i ] = outputPoint[ i ] - inputPoint[ i ];
 			}
