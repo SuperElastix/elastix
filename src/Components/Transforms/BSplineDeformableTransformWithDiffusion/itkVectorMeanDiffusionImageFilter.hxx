@@ -39,11 +39,9 @@ namespace itk
 		VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
 		::VectorMeanDiffusionImageFilter()
 	{
+		/** Initialise things for the filter. */
 		m_NumberOfIterations = 0;
 		m_Radius.Fill(1);
-		m_UseThreshold = false;
-		m_Threshold = 0.00001;
-
 		m_RescaleFilter = 0;
 		m_GrayValueImage = 0;
 		m_Cx = 0;
@@ -317,6 +315,11 @@ namespace itk
 		VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
 		::FilterGrayValueImage(void)
 	{
+		/** This functions rescales the intensities of the input
+		 * m_GrayValueImage between 0 and 1, and converts it to
+		 * a double image. No thresholding is performed.
+		 */
+
 		/** Create m_Cx. */
 		m_Cx = DoubleImageType::New();
 		
@@ -339,88 +342,22 @@ namespace itk
 			xl::xout["error"] << excp << std::endl;
 		}
 		
-		/** Want to write m_Cx? *
-		typedef Image< float, InputImageDimension >		FloatImageType;
-		typedef CastImageFilter< DoubleImageType, FloatImageType > CastType;
-		typedef ImageFileWriter< FloatImageType >		WriterType;
-		typename CastType::Pointer caster = CastType::New();
-		typename WriterType::Pointer mCxWriter = WriterType::New();
-		if ( true )
-		{
-			caster->SetInput( m_Cx );
-			mCxWriter->SetFileName( "Cx1.mhd" );
-			mCxWriter->SetInput( caster->GetOutput() );
-			mCxWriter->Modified();
-			/** Do the writing. *
-			try
-			{
-				mCxWriter->Update();
-			}
-			catch( itk::ExceptionObject & excp )
-			{
-				xl::xout["error"] << excp << std::endl;
-			}
-		} // end if*/
-
-		// \todo: veranderen
-		/** Set threshold value T. *
-		double T1, T2;
-		if ( this->GetUseThreshold() )
-		{
-			/** To avoid numerical instability, check if the
-			 * threshold is between 0.00001 and 0.99999.
-			 *
-			if ( this->GetThreshold() >= 0.00001 && this->GetThreshold() <= 0.99999 )
-			{
-				T1 = this->GetThreshold();
-				T2 = this->GetThreshold();
-			}
-			else
-			{
-				elxout << "WARNING: Threshold should be in the range [ 0.00001, 0.99999 ]." << std::endl;
-				// \todo quit program?
-			}
-		}
-		else
-		{
-			T1 = 0.00001;
-			T2 = 0.99999;
-		}
-
-		/** Setup iterator. */
+		/** Then, to avoid numerical problems, set everything
+		 * smaller than 0.00001 to 0.00001 and everything larger
+		 * than 0.99999 to 0.99999.
+		 */
 		ImageRegionIterator< DoubleImageType > it( m_Cx, m_Cx->GetLargestPossibleRegion() );
 		it.GoToBegin();
-
-		/** Then, calculate m_Cx = c(x) = c( rescaled image ). */
 		while ( !it.IsAtEnd() )
 		{
-			/** Threshold or just make sure everything is between 0 and 1. */
-			//if ( it.Get() < T1 ) it.Set( 0.00001 );
-			//if ( it.Get() >= T2 ) it.Set( 0.99999 );
 			if ( it.Get() < 0.00001 ) it.Set( 0.00001 );
 			if ( it.Get() > 0.99999 ) it.Set( 0.99999 );
 			++it;
 		}
 
-		/** Want to write m_Cx? *
-		if ( true )
-		{
-			caster->SetInput( m_Cx );
-			caster->Modified();
-			mCxWriter->SetFileName( "Cx.mhd" );
-			mCxWriter->SetInput( caster->GetOutput() );
-			mCxWriter->Modified();
-			/** Do the writing. *
-			try
-			{
-				mCxWriter->Update();
-			}
-			catch( itk::ExceptionObject & excp )
-			{
-				xl::xout["error"] << excp << std::endl;
-			}
-		} // end if*/
-		
+		// \todo Is it possible to just use the rescale image filter with
+		// minimum and maximum values of 0.00001 and 0.99999.
+
 	} // end FilterGrayValueImage
 
 

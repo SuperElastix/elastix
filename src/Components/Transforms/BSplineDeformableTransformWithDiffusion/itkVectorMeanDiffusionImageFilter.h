@@ -103,12 +103,6 @@ namespace itk
 		itkSetMacro( NumberOfIterations, unsigned int );
 		itkGetConstMacro( NumberOfIterations, unsigned int );
 
-		/** Set & Get the Threshold. */
-		itkSetMacro( Threshold, double );
-		itkGetConstMacro( Threshold, double );
-		itkSetMacro( UseThreshold, bool );
-		itkGetConstMacro( UseThreshold, bool );
-
 		/** Set- and GetObjectMacro's for the GrayValueImage. */
 		void SetGrayValueImage( GrayValueImageType * _arg );
 		typename GrayValueImageType::Pointer GetGrayValueImage(void)
@@ -152,10 +146,6 @@ namespace itk
 
 		/** For calculating a feature image from the input m_GrayValueImage. */
 		void FilterGrayValueImage(void);
-
-		/** Threshold for grayvalueimage. */
-		bool m_UseThreshold;
-		double m_Threshold;
 
 	}; // end class VectorMeanDiffusionImageFilter
   
