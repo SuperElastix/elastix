@@ -550,6 +550,9 @@ namespace elastix
 		CallInEachComponent( &BaseComponentType::BeforeRegistrationBase );
 		CallInEachComponent( &BaseComponentType::BeforeRegistration );
 
+		/** Add a column to iteration with the iteration number */
+		xout["iteration"].AddTargetCell("1:ItNr");
+
 		/** Add a column to iteration with timing information.*/
 		xout["iteration"].AddTargetCell("Time[ms]");
 
@@ -676,6 +679,9 @@ namespace elastix
 		this->AfterEachIterationBase();
 		CallInEachComponent( &BaseComponentType::AfterEachIterationBase );
 		CallInEachComponent( &BaseComponentType::AfterEachIteration );
+
+		/** Write the iteration number to the table. */
+		xout["iteration"]["1:ItNr"] << m_IterationCounter;
 
 		/** Time in this iteration.*/
 		this->m_IterationTimer->StopTimer();

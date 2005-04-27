@@ -45,13 +45,12 @@ using namespace itk;
 			this->SetComputeCurrentValue(this->m_ShowMetricValues);
 		}
 
-		/** Add the target cell "stepsize" to xout["iteration"].*/
-		xout["iteration"].AddTargetCell("1:ItNr");
+		/** Add some target cells to xout["iteration"].*/
 		xout["iteration"].AddTargetCell("2:Metric");
 		xout["iteration"].AddTargetCell("3:Gain a_k");
 		xout["iteration"].AddTargetCell("4:||Gradient||");
 
-		/** Format the metric and stepsize as floats */			
+		/** Format them as floats */			
 		xl::xout["iteration"]["2:Metric"]		<< std::showpoint << std::fixed;
 		xl::xout["iteration"]["3:Gain a_k"] << std::showpoint << std::fixed;
 		xl::xout["iteration"]["4:||Gradient||"] << std::showpoint << std::fixed;
@@ -126,8 +125,7 @@ using namespace itk;
 		::AfterEachIteration(void)
 	{
 		/** Print some information */
-		xl::xout["iteration"]["1:ItNr"]			<< this->GetCurrentIteration();
-
+		
 		if (this->m_ShowMetricValues)
 		{
 			xl::xout["iteration"]["2:Metric"]		<< this->GetValue();
@@ -138,6 +136,12 @@ using namespace itk;
 		}
 		xl::xout["iteration"]["3:Gain a_k"] << this->GetLearningRate();
 		xl::xout["iteration"]["4:||Gradient||"] << this->GetGradientMagnitude();
+
+		/** Select new spatial samples for the computation of the metric */
+		if ( this->GetNewSamplesEveryIteration() )
+		{
+			this->SelectNewSamples();
+		}
 		
 
 	} // end AfterEachIteration

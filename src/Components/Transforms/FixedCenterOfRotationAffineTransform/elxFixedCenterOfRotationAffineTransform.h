@@ -19,20 +19,20 @@ using namespace itk;
 	
 	template < class TElastix >
 		class FixedCenterOfRotationAffineTransformElastix :
-	public TransformGrouper<
-		FixedCenterOfRotationAffineTransform<
-		ITK_TYPENAME TransformBase<TElastix>::CoordRepType,
-		TransformBase<TElastix>::FixedImageDimension >	>,
-		public TransformBase<TElastix>
+			public TransformGrouper<
+				FixedCenterOfRotationAffineTransform<
+					ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,
+					elx::TransformBase<TElastix>::FixedImageDimension >	>,
+			public elx::TransformBase<TElastix>
 	{
 	public:
 
 		/** Standard ITK-stuff.*/
 		typedef FixedCenterOfRotationAffineTransformElastix			Self;
 		typedef FixedCenterOfRotationAffineTransform<
-			typename TransformBase<TElastix>::CoordRepType,
-			TransformBase<TElastix>::FixedImageDimension >				Superclass1;
-		typedef TransformBase<TElastix>													Superclass2;
+			typename elx::TransformBase<TElastix>::CoordRepType,
+			elx::TransformBase<TElastix>::FixedImageDimension >				Superclass1;
+		typedef elx::TransformBase<TElastix>													Superclass2;
 		typedef SmartPointer<Self>															Pointer;
 		typedef SmartPointer<const Self>												ConstPointer;
 		

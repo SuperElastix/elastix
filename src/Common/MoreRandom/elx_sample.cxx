@@ -1,4 +1,5 @@
-// This is core/vnl/vnl_sample.cxx
+// This is and adapted version of core/vnl/vnl_sample.cxx
+// Stefan Klein, february 2005.
 
 //#ifdef VCL_NEEDS_PRAGMA_INTERFACE
 //#pragma implementation

@@ -90,10 +90,10 @@ namespace elastix
 		m_Transform = testcreator ? testcreator() : NULL;
 		
 		/** Check if all components could be created.*/
-		if (	( m_Elastix == 0 ) |
-				( m_Resampler == 0 ) |
-				( m_ResampleInterpolator == 0 ) |
-				( m_Transform == 0 ) )
+		if (	( m_Elastix.IsNull() ) |
+				( m_Resampler.IsNull() ) |
+				( m_ResampleInterpolator.IsNull() ) |
+				( m_Transform.IsNull() ) )
 		{
 			xl::xout["error"] << "ERROR:" << std::endl;
 			xl::xout["error"] << "One or more components could not be created." << std::endl;
@@ -243,7 +243,7 @@ namespace elastix
 			}
 			
 			/** Load the components */
-			if (this->s_CDB==0)
+			if (this->s_CDB.IsNull())
 			{
 				int loadReturnCode = this->LoadComponents();
 				if (loadReturnCode !=0)
@@ -253,7 +253,7 @@ namespace elastix
 				}
 			}
 
-			if (this->s_CDB!=0)
+			if (this->s_CDB.IsNotNull())
 			{
 				/** Get the DBIndex from the ComponentDatabase */
 				m_DBIndex = this->s_CDB->GetIndex(

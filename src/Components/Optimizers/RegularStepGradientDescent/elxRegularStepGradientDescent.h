@@ -13,7 +13,7 @@ using namespace itk;
 	 * \brief An optimizer based on gradient descent...
 	 *
 	 * This optimizer 
-	 *
+	 * \todo Add description of parameters and the method.
 	 * \ingroup Optimizers
 	 */
 

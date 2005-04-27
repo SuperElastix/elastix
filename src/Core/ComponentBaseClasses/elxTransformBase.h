@@ -22,7 +22,7 @@
 
 namespace elastix
 {
-  using namespace itk;
+  //using namespace itk; //Not here, because a TransformBase class was recently added to ITK...
 
 	/**
 	 * \class TransformBase
@@ -41,7 +41,7 @@ namespace elastix
 	public:
 
 		/** Standard itk. */
-		typedef TransformBase								Self;
+		typedef TransformBase					Self;
 		typedef BaseComponentSE<TElastix>		Superclass;
 
 		/** Typedef's from Superclass.*/
@@ -88,21 +88,21 @@ namespace elastix
 		/** Typedef's for TransformPoint.*/
 		typedef typename ITKBaseType::InputPointType				InputPointType;
 		typedef typename ITKBaseType::OutputPointType				OutputPointType;		
-		typedef	Image< short,
+		typedef	itk::Image< short,
 			itkGetStaticConstMacro( FixedImageDimension ) >		DummyImageType;
 		typedef typename DummyImageType::RegionType					RegionType;
-		typedef Vector<
+		typedef itk::Vector<
 			float,
 			itkGetStaticConstMacro( FixedImageDimension ) >		VectorType;
-		typedef Image<
+		typedef itk::Image<
 			VectorType,
 			itkGetStaticConstMacro( FixedImageDimension ) >		OutputImageType;
 		typedef typename OutputImageType::Pointer						OutputImagePointer;
-		typedef ImageRegionConstIteratorWithIndex<
+		typedef itk::ImageRegionConstIteratorWithIndex<
 			DummyImageType >																	DummyIteratorType;
-		typedef ImageRegionIteratorWithIndex<
+		typedef itk::ImageRegionIteratorWithIndex<
 			OutputImageType >																	OutputImageIteratorType;
-		typedef ImageFileWriter< OutputImageType >					OutputFileWriterType;
+		typedef itk::ImageFileWriter< OutputImageType >			OutputFileWriterType;
 
 		/** Cast to ITKBaseType. */
 		virtual ITKBaseType * GetAsITKBaseType(void)

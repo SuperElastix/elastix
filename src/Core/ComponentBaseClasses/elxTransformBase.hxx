@@ -5,7 +5,7 @@
 
 namespace elastix
 {
-	using namespace itk;
+	//using namespace itk; //Not here because the ITK also started to define a TransformBase class....
 
 
 	/**
@@ -112,8 +112,8 @@ namespace elastix
 		this->m_Configuration->ReadParameter( howToCombineTransforms, "HowToCombineTransforms", 0, true );
 
 		/***/
-		TransformGrouperInterface * thisAsGrouper = 
-			dynamic_cast< TransformGrouperInterface * >(this);
+		itk::TransformGrouperInterface * thisAsGrouper = 
+			dynamic_cast< itk::TransformGrouperInterface * >(this);
 		if ( thisAsGrouper )
 		{
 			thisAsGrouper->SetGrouper( howToCombineTransforms );
@@ -145,8 +145,8 @@ namespace elastix
 		TransformBase<TElastix>::GetInitialTransform(void)
 	{
 		/***/
-		TransformGrouperInterface * thisAsGrouper = 
-			dynamic_cast< TransformGrouperInterface * >(this);
+		itk::TransformGrouperInterface * thisAsGrouper = 
+			dynamic_cast< itk::TransformGrouperInterface * >(this);
 
 		/***/
 		if ( thisAsGrouper )
@@ -169,8 +169,8 @@ namespace elastix
 		void TransformBase<TElastix>::SetInitialTransform( ObjectType * _arg )
 	{
 		/***/
-		TransformGrouperInterface * thisAsGrouper = 
-			dynamic_cast< TransformGrouperInterface * >(this);
+		itk::TransformGrouperInterface * thisAsGrouper = 
+			dynamic_cast< itk::TransformGrouperInterface * >(this);
 
 		/***/
 		if ( thisAsGrouper )
@@ -298,8 +298,8 @@ namespace elastix
 		
 		/** Convert 'this' to a pointer to a TransformGrouperInterface and set how
 		 * to combine the current transform with the initial transform */
-		TransformGrouperInterface * thisAsGrouper = 
-			dynamic_cast< TransformGrouperInterface * >(this);
+		itk::TransformGrouperInterface * thisAsGrouper = 
+			dynamic_cast< itk::TransformGrouperInterface * >(this);
 		if ( thisAsGrouper )
 		{
 			thisAsGrouper->SetGrouper( howToCombineTransforms );

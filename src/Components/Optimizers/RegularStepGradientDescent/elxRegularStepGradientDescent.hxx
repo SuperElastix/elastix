@@ -4,7 +4,7 @@
 #include "elxRegularStepGradientDescent.h"
 #include <iomanip>
 #include <string>
-#include "math.h"
+#include "vnl/vnl_math.h"
 
 namespace elastix
 {
@@ -31,7 +31,6 @@ using namespace itk;
 		BeforeRegistration(void)
 	{
 		/** Add the target cell "stepsize" to xout["iteration"].*/
-		xout["iteration"].AddTargetCell("1:ItNr");
 		xout["iteration"].AddTargetCell("2:Metric");
 		xout["iteration"].AddTargetCell("3:StepSize");
 		xout["iteration"].AddTargetCell("4:||Gradient||");
@@ -71,6 +70,14 @@ using namespace itk;
 		this->m_Configuration->ReadParameter( minStepLength, "MinimumStepLength", level );
 		this->SetMinimumStepLength( minStepLength );
 
+		/** Set the Relaxation factor 
+		 * \todo uncomment if ITK-version >2.0 is used.
+		 */
+		//double relaxationFactor = 0.5;
+		//this->m_Configuration->ReadParameter( relaxationFactor, "RelaxationFactor", level );
+		//this->SetRelaxationFactor( relaxationFactor );
+
+
 		/** \todo max and min steplength should maybe depend on the imagespacing or on something else... */
 		
 		/** Set the maximumNumberOfIterations.*/
@@ -78,22 +85,7 @@ using namespace itk;
 		this->m_Configuration->ReadParameter( maximumNumberOfIterations , "MaximumNumberOfIterations", level );
 		this->SetNumberOfIterations( maximumNumberOfIterations );
 
-		/** \todo put in SPoptimizer:
-		if (SP)
-		{
-			optimizer->SetParam_a(
-				config.GetParam_a(level));
-			optimizer->SetParam_c(
-				config.GetParam_c(level));
-			optimizer->SetParam_A(
-				config.GetParam_A(level));
-			optimizer->SetParam_alpha(
-				config.GetParam_alpha(level));
-			optimizer->SetParam_gamma(
-				config.GetParam_gamma(level));
-		}
-		*/
-
+		
 	} // end BeforeEachResolution
 
 
@@ -106,7 +98,6 @@ using namespace itk;
 		::AfterEachIteration(void)
 	{
 		/** Print some information */
-		xl::xout["iteration"]["1:ItNr"]			<< this->GetCurrentIteration();
 		xl::xout["iteration"]["2:Metric"]		<< this->GetValue();
 		xl::xout["iteration"]["3:StepSize"] << this->GetCurrentStepLength();
 		xl::xout["iteration"]["4:||Gradient||"] << this->GetGradientMagnitude();

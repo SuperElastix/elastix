@@ -31,6 +31,8 @@ using namespace itk;
 		typedef MetricBase									Self;
 		typedef BaseComponentSE<TElastix>		Superclass;
 
+		itkTypeMacro(MetricBase,BaseComponentSE);
+
 		/** Typedef's inherited from Elastix.*/
 		typedef typename Superclass::ElastixType						ElastixType;
 		typedef typename Superclass::ElastixPointer					ElastixPointer;
@@ -52,6 +54,12 @@ using namespace itk;
 		{
 			return dynamic_cast<ITKBaseType *>(this);
 		}
+
+		/**
+		 * Force the metric to base its computation on a new subset of image samples.
+		 * Not every metric may have implemented this.
+		 */
+		virtual void SelectNewSamples(void);
 
 	protected:
 

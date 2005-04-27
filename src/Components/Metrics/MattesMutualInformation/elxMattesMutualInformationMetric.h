@@ -44,21 +44,15 @@ using namespace itk;
 	 *  example: <tt> (NumberOfSpatialSamples 2048 2048 4000) </tt>
 	 * \parameter NumberOfResolutions: The number of resolutions.\n
 	 *   example: <tt> (NumberOfResolutions 3) </tt>
-	 * \parameter	UseExactMetricDerivative: Flag to force the metric to use ALL voxels for 
+	 * \parameter	UseAllPixels: Flag to force the metric to use ALL voxels for 
 	 * computing the metric value and its derivative in each iteration. Must be given for each
 	 * resolution. Can have values "true" or "false".\n
-	 *   example: <tt> (UseExactMetricDerivative "true" "false" "true") </tt>
+	 *   example: <tt> (UseAllPixels "true" "false" "true") </tt>
 	 * \parameter ShowExactMetricValue: Flag that can set to "true" or "false". If "true" the 
 	 * metric computes the exact metric value (computed on all voxels rather than on the set of
 	 * spatial samples) and shows it each iteration. Must be given for each resolution.\n
-	 * NB: If the UseExactMetricDerivative flag is set to "true", this option is ignored.\n
-	 *   example: <tt> (ShowExactMetricValue "true" "true" "false") </tt>
-	 * \parameter NewSamplesEveryIteration: Flag that can set to "true" or "false". If "true" 
-	 * the metric (randomly) selects a new set of spatial samples in every iteration. This, if 
-	 * used in combination with the correct optimizer (such as the StandardGradientDescent),
-	 * allows for a very low number of spatial samples (around 2000), even with large images 
-	 * and transforms with a large number of parameters. \n
-	 *   example: <tt> (NewSamplesEveryIteration "true" "true" "true") </tt>
+	 * NB: If the UseallPixels flag is set to "true", this option is ignored.\n
+	 *   example: <tt> (ShowAllPixels "true" "true" "false") </tt>
 	 *
    * \sa MattesMutualInformationImageToImageMetricWithMask
 	 * \ingroup Metrics
@@ -179,6 +173,9 @@ using namespace itk;
 		/** Sets up a timer to measure the intialisation time and calls the Superclass'
 		 * implementation */
 		virtual void Initialize(void) throw (ExceptionObject);
+
+		/** Select a new sample set on request */
+		virtual void SelectNewSamples(void);
 		
 	protected:
 
@@ -190,8 +187,6 @@ using namespace itk;
 		/** Declaration of member variable, for mask support.*/
 		MovingMaskImageReaderPointer	m_MovingMaskImageReader;
 
-		/** Flag */
-		bool m_NewSamplesEveryIteration;
 		/** Flag */
 		bool m_ShowExactMetricValue;
 				

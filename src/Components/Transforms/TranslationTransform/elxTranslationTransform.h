@@ -19,22 +19,22 @@ namespace elastix
 
 	template < class TElastix >
 		class TranslationTransformElastix:
-	public TransformGrouper<
-		TranslationTransform<
-		ITK_TYPENAME TransformBase<TElastix>::CoordRepType,
-		TransformBase<TElastix>::FixedImageDimension >		> ,
-		public TransformBase<TElastix>
+			public TransformGrouper<
+				TranslationTransform<
+					ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,
+					elx::TransformBase<TElastix>::FixedImageDimension >		> ,
+			public elx::TransformBase<TElastix>
 	{
 	public:
 		
 		/** Standard ITK-stuff.*/
-		typedef TranslationTransformElastix								Self;
+		typedef TranslationTransformElastix											Self;
 		typedef TranslationTransform<
-			typename TransformBase<TElastix>::CoordRepType,
-			TransformBase<TElastix>::FixedImageDimension >	Superclass1;
-		typedef TransformBase<TElastix>										Superclass2;
-		typedef SmartPointer<Self>												Pointer;
-		typedef SmartPointer<const Self>									ConstPointer;
+			typename elx::TransformBase<TElastix>::CoordRepType,
+			elx::TransformBase<TElastix>::FixedImageDimension >		Superclass1;
+		typedef elx::TransformBase<TElastix>										Superclass2;
+		typedef SmartPointer<Self>															Pointer;
+		typedef SmartPointer<const Self>												ConstPointer;
 		
 		/** Method for creation through the object factory. */
 		itkNewMacro( Self );

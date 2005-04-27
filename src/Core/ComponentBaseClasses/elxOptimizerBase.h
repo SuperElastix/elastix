@@ -18,6 +18,13 @@ using namespace itk;
 	 *
 	 * This class contains all the common functionality for Optimizers ...
 	 *
+	 * \parameter NewSamplesEveryIteration: Flag that can set to "true" or "false". If "true" 
+	 * some optimizers force the metric to (randomly) select a new set of spatial samples in
+	 * every iteration. This, if used in combination with the correct optimizer (such as the
+	 * StandardGradientDescent), allows for a very low number of spatial samples (around 2000),
+	 * even with large images and transforms with a large number of parameters. \n
+	 *   example: <tt> (NewSamplesEveryIteration "true" "true" "true") </tt>	 *
+	 *
 	 * \ingroup Optimizers
 	 * \ingroup ComponentBaseClasses
 	 */
@@ -30,6 +37,8 @@ using namespace itk;
 		/** Standard.*/
 		typedef OptimizerBase								Self;
 		typedef BaseComponentSE<TElastix>		Superclass;
+
+		itkTypeMacro(OptimizerBase, BaseComponentSE);
 
 		/** Typedefs inherited from Elastix.*/
 		typedef typename Superclass::ElastixType						ElastixType;
@@ -52,22 +61,32 @@ using namespace itk;
 		}
 
 		/** Add empty SetCurrentPositionPublic, so it is known everywhere. */
-		virtual void SetCurrentPositionPublic( const ParametersType &param )
-		{
-			xl::xout["error"] << "ERROR: This function should be overridden or just not used." << std::endl;
-			xl::xout["error"] << "\tAre you using BSplineTransformWithDiffusion in combination" << std::endl;
-			xl::xout["error"] << "\twith another optimzer than the StandardGradientDescentOptimizer? don't!" << std::endl;
-		}
-		
+		virtual void SetCurrentPositionPublic( const ParametersType &param );
+
+		/** Do some things before each resolution that make sense for each
+		 * optimizer */
+		virtual void BeforeEachResolutionBase();
+
 	protected:
 
-		OptimizerBase() {}
+		OptimizerBase();
 		virtual ~OptimizerBase() {}
 
+		/**
+		 * Force the metric to base its computation on a new subset of image samples.
+		 * Not every metric may have implemented this.
+		 */
+		virtual void SelectNewSamples(void);
+
+		/** Check whether the user asked to select new samples every iteration */
+		virtual const bool GetNewSamplesEveryIteration(void) const;
+		
 	private:
 
 		OptimizerBase( const Self& );		// purposely not implemented
 		void operator=( const Self& );	// purposely not implemented
+
+		bool m_NewSamplesEveryIteration;
 
 	}; // end class OptimizerBase
 

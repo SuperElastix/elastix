@@ -266,16 +266,16 @@ namespace elastix
 		this->m_Transform = testcreator ? testcreator() : NULL;
 
 		/** Check if all component could be created.*/
-		if (	( this->m_Elastix == 0 ) |
-					( this->m_Registration == 0 ) |
-					( this->m_FixedImagePyramid == 0 ) |
-					( this->m_MovingImagePyramid == 0 ) |
-					( this->m_Interpolator == 0 ) |
-					( this->m_Metric == 0 ) |
-					( this->m_Optimizer == 0 ) |
-					( this->m_Resampler == 0 ) |
-					( this->m_ResampleInterpolator == 0 ) |
-					( this->m_Transform == 0 ) )
+		if (	( this->m_Elastix.IsNull() ) |
+					( this->m_Registration.IsNull() ) |
+					( this->m_FixedImagePyramid.IsNull() ) |
+					( this->m_MovingImagePyramid.IsNull() ) |
+					( this->m_Interpolator.IsNull() ) |
+					( this->m_Metric.IsNull() ) |
+					( this->m_Optimizer.IsNull() ) |
+					( this->m_Resampler.IsNull() ) |
+					( this->m_ResampleInterpolator.IsNull() ) |
+					( this->m_Transform.IsNull() ) )
 		{
 			xout["error"] << "ERROR:" << std::endl;
 			xout["error"] << "One or more components could not be created." << std::endl;
@@ -423,7 +423,7 @@ namespace elastix
 			}
 			
 			/** Load the components */
-			if (this->s_CDB==0)
+			if (this->s_CDB.IsNull())
 			{
 				int loadReturnCode = this->LoadComponents();
 				if (loadReturnCode !=0)
@@ -433,7 +433,7 @@ namespace elastix
 				}
 			}
 
-			if (this->s_CDB!=0)
+			if (this->s_CDB.IsNotNull())
 			{
 				/** Get the DBIndex from the ComponentDatabase */
 				this->m_DBIndex = this->s_CDB->GetIndex(
@@ -495,12 +495,12 @@ namespace elastix
 	{
 		//look for dlls, load them, call the install function
 
-		if (this->s_CDB == 0)
+		if (this->s_CDB.IsNull())
 		{
 			this->s_CDB = ComponentDatabaseType::New();
 		}
 
-		if (this->s_ComponentLoader == 0)
+		if (this->s_ComponentLoader.IsNull())
 		{
 			this->s_ComponentLoader = ComponentLoaderType::New();
 			this->s_ComponentLoader->SetComponentDatabase(s_CDB);

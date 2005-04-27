@@ -185,6 +185,7 @@ namespace itk
 		 */
 		void Initialize(void) throw ( ExceptionObject );
 		
+		
 		/** Get the derivatives of the match measure. */
 		void GetDerivative( 
 			const ParametersType& parameters,
@@ -192,7 +193,7 @@ namespace itk
 		
 		/**  Get the value. */
 		MeasureType GetValue( const ParametersType& parameters ) const;
-		
+
 		/**  Get the value and derivatives for single valued optimizers. */
 		void GetValueAndDerivative( const ParametersType& parameters, 
 			MeasureType& Value, DerivativeType& Derivative ) const;
@@ -230,14 +231,21 @@ namespace itk
 		/** Added for Elastix! This function allows the user to force the metric to 
 		 * select new samples. Normally only every resolution the sample set is 
 		 * refreshed. For stochastic optimisation, this method is essential. */
-		void SampleFixedImageDomain(void) const;
+		void SampleFixedImageDomain(void);
 		
-		/**  Get the exact value. Mutual information computed over all points. */
-		virtual MeasureType GetExactValue( const ParametersType& parameters ) const;
+		/**  Get the exact value. Mutual information computed over all points.
+		 * This method does not need the UseAllPixels flag to be set true. It is
+		 * meant in situations when you optimise using just a subset of pixels, 
+		 * but are interested in the exact value of the metric. */
+		virtual MeasureType GetExactValue( const ParametersType& parameters );
+
+		/** \todo the method GetExactDerivative could as well be added here. */
 				
-		/** UseExactDerivative flag */
-		virtual void SetUseExactDerivative( bool _arg );
-		itkGetConstMacro(UseExactDerivative, bool);
+		/** UseAllPixels flag. Determines whether the value and derivative are computed
+		 * on all pixels or just a randomly sampled subset. Make sure to set it true
+		 * before calling Initialize() */
+		itkSetMacro(UseAllPixels, bool);
+		itkGetConstMacro(UseAllPixels, bool);
 	
 
 	protected:
@@ -251,27 +259,8 @@ namespace itk
 		/** Masks (added by Stefan).*/
 		FixedMaskImagePointer		m_FixedMask;
 		MovingMaskImagePointer	m_MovingMask;
-		
 
-		/** 
-		 * Implementations of the GetValueAndDerivative-functions. These
-		 * are called by the GetValueAndDerivative() function, depending
-		 * on the setting of the UseExactDerivative flag. (added by stefan)
-		 */
-		virtual void GetApproximateValueAndDerivative( const ParametersType& parameters, 
-			MeasureType& Value, DerivativeType& Derivative ) const;
-		virtual void GetExactValueAndDerivative( const ParametersType& parameters, 
-			MeasureType& Value, DerivativeType& Derivative ) const;
-		
-		bool m_UseExactDerivative;
-
-
-	private:
-		
-		MattesMutualInformationImageToImageMetricWithMask( const Self& );	// purposely not implemented
-		void operator=( const Self& );																		// purposely not implemented
-		
-		/**
+    /**
 		 * ************** FixedImageSpatialSample *********************
 		 *
 		 * A fixed image spatial sample consists of the fixed domain point
@@ -281,7 +270,8 @@ namespace itk
 		{
 		public:
 
-			FixedImageSpatialSample():FixedImageValue(0.0) { FixedImagePointValue.Fill(0.0); }
+			FixedImageSpatialSample():FixedImageValue(0.0)
+			{ FixedImagePointValue.Fill(0.0); }
 			~FixedImageSpatialSample() {};
 			
 			FixedImagePointType           FixedImagePointValue;
@@ -294,11 +284,40 @@ namespace itk
 			FixedImageSpatialSampleContainer;
 		
 		/** Container to store a set of points and fixed image values. */
-		mutable FixedImageSpatialSampleContainer    m_FixedImageSamples;
-		
-		/** Uniformly select a sample set from the fixed image domain. */
+	  FixedImageSpatialSampleContainer    m_FixedImageSamples;
+
+		/** Added for elastix: a container that holds all fixed image pixels.
+		 * If the m_UseAllPixels is set before the Initialize method is called,
+		 * the container is filled in this method. If not, it is filled
+		 * the first time that GetExactValue is invoked */
+		FixedImageSpatialSampleContainer		m_AllFixedImagePixels;
+
+	  /** Uniformly select a sample set from the fixed image domain. */
 		void SampleFixedImageDomain( 
-			FixedImageSpatialSampleContainer& samples ) const;
+			FixedImageSpatialSampleContainer& samples );
+
+		/** Added for elastix: store all fixed image pixels that are within the mask */
+		void SampleFullFixedImageDomain(
+			FixedImageSpatialSampleContainer& samples );
+
+		bool m_AllFixedImagePixelsStoredInContainer;
+
+		/** Transform a point from FixedImage domain to MovingImage domain.
+		 * This function also checks if mapped point is within support region. */
+		virtual void TransformPoint( const FixedImagePointType& fixedImagePoint,
+			MovingImagePointType& mappedPoint, bool& sampleWithinSupportRegion,
+			double& movingImageValue ) const;
+		
+  
+	private:
+		
+		MattesMutualInformationImageToImageMetricWithMask( const Self& );	// purposely not implemented
+		void operator=( const Self& );																		// purposely not implemented
+		
+		
+		bool m_UseAllPixels;
+				
+
 
 		/** The marginal PDFs are stored as std::vector. */
 		typedef float PDFValueType;
@@ -379,12 +398,6 @@ namespace itk
 		
 		/** Pointer to central difference calculator. */
 		typename DerivativeFunctionType::Pointer m_DerivativeCalculator;
-		
-		/** Transform a point from FixedImage domain to MovingImage domain.
-		* This function also checks if mapped point is within support region. */
-		virtual void TransformPoint( const FixedImagePointType& fixedImagePoint,
-			MovingImagePointType& mappedPoint, bool& sampleWithinSupportRegion,
-			double& movingImageValue ) const;
 		
 		/** Compute PDF derivative contribution for each parameter. */
 		virtual void ComputePDFDerivatives( const FixedImagePointType& fixedImagePoint,

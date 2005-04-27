@@ -19,22 +19,22 @@ using namespace itk;
 	
 	template < class TElastix >
 		class EulerTransformElastix:
-	public 	TransformGrouper<
-		EulerTransform<
-		ITK_TYPENAME TransformBase< TElastix >::CoordRepType,
-		TransformBase< TElastix >::FixedImageDimension >	>,
-		public TransformBase< TElastix >
+	    public 	TransformGrouper<
+		    EulerTransform<
+		    ITK_TYPENAME elx::TransformBase< TElastix >::CoordRepType,
+			  elx::TransformBase< TElastix >::FixedImageDimension >	>,
+			public elx::TransformBase< TElastix >
 	{
 	public:
 		
 		/** Standard ITK-stuff.*/
-		typedef EulerTransformElastix														Self;
+		typedef EulerTransformElastix																Self;
 		typedef EulerTransform<
-			typename TransformBase< TElastix >::CoordRepType,
-			TransformBase< TElastix >::FixedImageDimension >			Superclass1;
-		typedef TransformBase< TElastix >												Superclass2;
-		typedef SmartPointer<Self>															Pointer;
-		typedef SmartPointer<const Self>												ConstPointer;
+			typename elx::TransformBase< TElastix >::CoordRepType,
+			elx::TransformBase< TElastix >::FixedImageDimension >			Superclass1;
+		typedef elx::TransformBase< TElastix >											Superclass2;
+		typedef SmartPointer<Self>																	Pointer;
+		typedef SmartPointer<const Self>														ConstPointer;
 		
 		/** Method for creation through the object factory.*/
 		itkNewMacro( Self );

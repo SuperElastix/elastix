@@ -155,7 +155,7 @@ namespace elastix
 		typedef RegistrationBase<Self>																		RegistrationBaseType;
 		typedef ResamplerBase<Self> 																			ResamplerBaseType;
 		typedef ResampleInterpolatorBase<Self>														ResampleInterpolatorBaseType;
-		typedef TransformBase<Self> 																			TransformBaseType;
+		typedef elx::TransformBase<Self> 																	TransformBaseType;
 
 		/** Typedef's for Timer class.*/
 		typedef tmr::Timer																								TimerType;

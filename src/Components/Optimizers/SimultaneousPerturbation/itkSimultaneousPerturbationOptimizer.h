@@ -11,8 +11,17 @@ namespace itk
 	 * \class SimultaneousPerturbationOptimizer
 	 * \brief An optimizer based on simultaneous perturbation...
 	 *
-	 * This optimizer 
+	 * \todo use the optimizer which is now in the ITK
+	 * 
+	 * This optimizer is an implementation of the Simultaneous
+	 * Perturbation method, described in:
+	 * 
+	 * - http://www.jhuapl.edu/SPSA/
 	 *
+	 * - Spall, J.C. (1998), "An Overview of the Simultaneous
+	 * Perturbation Method for Efficient Optimization," Johns
+	 * Hopkins APL Technical Digest, vol. 19, pp. 482-492
+ 	 *
 	 * \ingroup Optimizers
 	 */
 	

@@ -22,7 +22,6 @@ using namespace itk;
 		this->m_FixedMaskImageReader = 0;
 		this->m_MovingMaskImageReader = 0;
 
-		this->m_NewSamplesEveryIteration = false;
 		this->m_ShowExactMetricValue = false;
 
 	} // end Constructor
@@ -242,27 +241,27 @@ using namespace itk;
 
 
 		/** Check if the exact metric value, computed on all pixels, should be shown, 
-		 * and whether the exact metric derivative should be used
+		 * and whether the all pixels should be used during optimisation
 		 */
 
 		/** Remove the ExactMetric-column, if it already existed. */
 		xl::xout["iteration"].RemoveTargetCell("ExactMetric");
 
-		bool useExactDerivativeBool = false;
-		std::string useExactDerivative = "false";
+		bool useAllPixelsBool = false;
+		std::string useAllPixels = "false";
 		this->GetConfiguration()->
-			ReadParameter(useExactDerivative, "UseExactMetricDerivative", level);
-		if (useExactDerivative == "true")
+			ReadParameter(useAllPixels, "UseAllPixels", level);
+		if (useAllPixels == "true")
 		{
-			useExactDerivativeBool = true;
+			useAllPixelsBool = true;
 		}
 		else
 		{
-			useExactDerivativeBool = false;
+			useAllPixelsBool = false;
 		}
-		this->SetUseExactDerivative(useExactDerivativeBool);
+		this->SetUseAllPixels(useAllPixelsBool);
 
-		if (!useExactDerivativeBool)
+		if (!useAllPixelsBool)
 		{
 			/** Show the exact metric VALUE anyway? */
 			std::string showExactMetricValue = "false";
@@ -278,29 +277,11 @@ using namespace itk;
 			{
 				this->m_ShowExactMetricValue = false;
 			}
-
-			/** Check if after every iteration a new sample set should be created */
-			std::string newSamplesEveryIteration = "false";
-			this->GetConfiguration()->
-				ReadParameter(newSamplesEveryIteration, "NewSamplesEveryIteration", level);
-			if (newSamplesEveryIteration == "true")
-			{	
-				this->m_NewSamplesEveryIteration = true;
-			}
-			else
-			{
-				this->m_NewSamplesEveryIteration = false;
-			}
-			
-		
 		}
 		else	
 		{
 			/** The exact metric value is shown anyway */
 			this->m_ShowExactMetricValue = false;
-
-			/** And new samples every iteration is not appropriate either */
-			this->m_NewSamplesEveryIteration = false;
 		}
 		
 	} // end BeforeEachResolution
@@ -325,14 +306,26 @@ using namespace itk;
 				GetCurrentPosition() );
 		}
 
-		/** Create a new sample set if the user wanted it  */
-		if (this->m_NewSamplesEveryIteration)
+	}
+
+
+	/**
+	 * *************** SelectNewSamples ****************************
+	 */
+
+	template <class TElastix>
+		void MattesMutualInformationMetric<TElastix>
+		::SelectNewSamples(void)
+	{
+		/** Select new spatial samples; only if we do not use ALL pixels
+		 * anyway */
+		if ( !this->GetUseAllPixels() )
 		{
 			this->SampleFixedImageDomain();
 		}
 	}
-
 	
+
 } // end namespace elastix
 
 

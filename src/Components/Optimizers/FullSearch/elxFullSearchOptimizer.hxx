@@ -5,7 +5,7 @@
 #include <iomanip>
 #include <sstream>
 #include <string>
-#include "math.h"
+#include "vnl/vnl_math.h"
 
 namespace elastix
 {
@@ -34,7 +34,6 @@ using namespace itk;
 		BeforeRegistration(void)
 	{
 		/** Add the target cells "ItNr" and "Metric" to xout["iteration"].*/
-		xl::xout["iteration"].AddTargetCell("1:ItNr");
 		xl::xout["iteration"].AddTargetCell("2:Metric");
 
 		/** Format the metric as floats */			
@@ -201,7 +200,6 @@ using namespace itk;
 		::AfterEachIteration(void)
 	{
 		/** Print some information */
-		xl::xout["iteration"]["1:ItNr"]			<< this->GetCurrentIteration();
 		xl::xout["iteration"]["2:Metric"]		<< this->GetValue();
 
 		this->m_OptimizationSurface->SetPixel(

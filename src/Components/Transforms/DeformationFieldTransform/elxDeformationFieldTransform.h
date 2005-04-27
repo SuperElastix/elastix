@@ -26,8 +26,8 @@ using namespace itk;
 	public
 		BSplineTransformGrouper< 
 			DeformationVectorFieldTransform<
-				ITK_TYPENAME TransformBase<TElastix>::CoordRepType,			
-				TransformBase<TElastix>::FixedImageDimension > >,
+			  ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,			
+				elx::TransformBase<TElastix>::FixedImageDimension > >,
 	public
 		TransformBase<TElastix>
 	{
@@ -36,9 +36,9 @@ using namespace itk;
 		/** Standard ITK-stuff.*/
 		typedef DeformationFieldTransform											Self;
 		typedef DeformationVectorFieldTransform<
-			typename TransformBase< TElastix >::CoordRepType,
-			TransformBase< TElastix >::FixedImageDimension >		Superclass1;
-		typedef TransformBase< TElastix >											Superclass2;		
+			typename elx::TransformBase< TElastix >::CoordRepType,
+			elx::TransformBase< TElastix >::FixedImageDimension >		Superclass1;
+		typedef elx::TransformBase< TElastix >											Superclass2;		
 		typedef SmartPointer< Self >													Pointer;
 		typedef SmartPointer< const Self >										ConstPointer;
 		

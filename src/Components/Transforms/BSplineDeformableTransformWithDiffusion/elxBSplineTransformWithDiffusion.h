@@ -115,8 +115,8 @@ using namespace itk;
 	DeformationFieldRegulizerForBSpline<
 		BSplineTransformGrouper<
 			BSplineDeformableTransform<
-				ITK_TYPENAME TransformBase<TElastix>::CoordRepType,
-				TransformBase<TElastix>::FixedImageDimension,
+			  ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,
+				elx::TransformBase<TElastix>::FixedImageDimension,
 				__VSplineOrder
 			>
 		>
@@ -131,10 +131,10 @@ using namespace itk;
 		typedef DeformationFieldRegulizerForBSpline<
 			BSplineTransformGrouper<
 				BSplineDeformableTransform<
-					typename TransformBase<TElastix>::CoordRepType,
-					TransformBase<TElastix>::FixedImageDimension,
+				  typename elx::TransformBase<TElastix>::CoordRepType,
+					elx::TransformBase<TElastix>::FixedImageDimension,
 					__VSplineOrder > > >									Superclass1;
-		typedef TransformBase<TElastix>							Superclass2;
+		typedef elx::TransformBase<TElastix>				Superclass2;
 		typedef SmartPointer<Self>									Pointer;
 		typedef SmartPointer<const Self>						ConstPointer;
 		

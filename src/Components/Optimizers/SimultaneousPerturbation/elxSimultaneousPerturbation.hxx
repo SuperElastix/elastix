@@ -4,7 +4,7 @@
 #include "elxSimultaneousPerturbation.h"
 #include <iomanip>
 #include <string>
-#include "math.h"
+#include "vnl/vnl_math.h"
 
 namespace elastix
 {
@@ -46,7 +46,6 @@ using namespace itk;
 		}
 
 		/** Add the target cell "stepsize" to xout["iteration"].*/
-		xout["iteration"].AddTargetCell("1:ItNr");
 		xout["iteration"].AddTargetCell("2:Metric");
 		xout["iteration"].AddTargetCell("3:StepSize");
 		xout["iteration"].AddTargetCell("4:Gain a_k");
@@ -128,8 +127,7 @@ using namespace itk;
 		::AfterEachIteration(void)
 	{
 		/** Print some information */
-		xl::xout["iteration"]["1:ItNr"]			<< this->GetCurrentIteration();
-
+		
 		if (this->m_ShowMetricValues)
 		{
 			xl::xout["iteration"]["2:Metric"]		<< this->GetValue();
@@ -142,6 +140,11 @@ using namespace itk;
 		xl::xout["iteration"]["4:Gain a_k"] << this->GetLearningRate();
 		xl::xout["iteration"]["5:||Gradient||"] << this->GetGradientMagnitude();
 		
+		/** Select new spatial samples for the computation of the metric */
+		if ( this->GetNewSamplesEveryIteration() )
+		{
+			this->SelectNewSamples();
+		}
 
 	} // end AfterEachIteration
 

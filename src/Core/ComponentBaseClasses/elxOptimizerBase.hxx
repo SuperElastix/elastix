@@ -7,7 +7,86 @@ namespace elastix
 {
 using namespace itk;
 
-// nothing
+
+/**
+ * ****************** Constructor ***********************************
+ */
+
+template <class TElastix>
+	OptimizerBase<TElastix>::OptimizerBase()
+{
+	this->m_NewSamplesEveryIteration = false;
+} // end Constructor
+
+
+/**
+ * ****************** SetCurrentPositionPublic ************************
+ * Add empty SetCurrentPositionPublic, so it is known everywhere.
+ */
+
+template <class TElastix>
+  void
+	OptimizerBase<TElastix>::SetCurrentPositionPublic( const ParametersType &param )
+{
+	xl::xout["error"] << "ERROR: This function should be overridden or just not used." << std::endl;
+	xl::xout["error"] << "\tAre you using BSplineTransformWithDiffusion in combination" << std::endl;
+  xl::xout["error"] << "\twith another optimizer than the StandardGradientDescentOptimizer? don't!" << std::endl;
+ 	itkExceptionMacro(<< "ERROR: The SetCurrentPositionPublic method is not implemented in your optimizer");
+} // end SetCurrentPositionPublic
+
+
+/**
+ * ****************** BeforeEachResolutionBase **********************
+ */
+
+template <class TElastix>
+  void
+	OptimizerBase<TElastix>::BeforeEachResolutionBase(void)
+{
+	/** Get the current resolution level.*/
+		unsigned int level = 
+			( this->GetRegistration()->GetAsITKBaseType() )->GetCurrentLevel();
+		
+  /** Check if after every iteration a new sample set should be created */
+	std::string newSamplesEveryIteration = "false";
+	this->GetConfiguration()->
+	  ReadParameter(newSamplesEveryIteration, "NewSamplesEveryIteration", level);
+	if (newSamplesEveryIteration == "true")
+	{	
+		this->m_NewSamplesEveryIteration = true;
+	}
+	else
+	{
+		this->m_NewSamplesEveryIteration = false;
+	}
+}
+
+/**
+ * ****************** SelectNewSamples ****************************
+ */
+template <class TElastix>
+  void
+	OptimizerBase<TElastix>::SelectNewSamples(void)
+{
+	/**
+   * Force the metric to base its computation on a new subset of image samples.
+	 * Not every metric may have implemented this.
+	 */
+	this->GetElastix()->GetElxMetricBase()->SelectNewSamples();
+}
+
+
+/**
+ * ****************** GetNewSamplesEveryIteration ********************
+ */
+template <class TElastix>
+  const bool
+	OptimizerBase<TElastix>::GetNewSamplesEveryIteration(void) const
+{
+	/** itkGetConstMacro Without the itkDebugMacro */
+	return this->m_NewSamplesEveryIteration;
+} // end GetNewSamplesEveryIteration
+
 
 } // end namespace elastix
 

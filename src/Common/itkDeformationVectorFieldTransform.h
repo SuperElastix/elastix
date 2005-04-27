@@ -25,8 +25,14 @@ namespace itk
 /** \class DeformationVectorFieldTransform
  * \brief An itk transform based on a DeformationVectorField
  *
- * This class inherits from the BSplineDeformableTransform,
- * but sets the controlpoints at every index point.
+ * This class makes it easy to set a deformation vector field
+ * as a Transform-object.
+ *
+ * The class inherits from the 0th-order BSplineDeformableTransform,
+ * and converts a VectorImage to the BSpline CoefficientImage.
+ * 
+ * This is useful if you know for example how to deform each voxel
+ * in an image and want to apply it to that image.
  *
  * \ingroup Transforms
  *
