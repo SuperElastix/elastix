@@ -498,7 +498,7 @@ namespace elastix
 		/** Set the precision of cout to 2, because Spacing and
 		 * Origin must have at least one digit precision.
 		 */
-		xout["transpar"] << std::setprecision(1);
+		xout["transpar"] << std::setprecision(10);
 
 		/** Write image Spacing.*/
 		xout["transpar"] << "(Spacing ";
