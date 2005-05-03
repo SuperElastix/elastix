@@ -345,3 +345,4 @@ namespace itk
 
 
 #endif // #ifndef __itkMoreThuenteLineSearchOptimizer_h
+

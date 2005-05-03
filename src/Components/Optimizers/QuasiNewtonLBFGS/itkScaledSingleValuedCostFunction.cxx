@@ -236,3 +236,4 @@ namespace itk
 } //end namespace itk
 
 #endif // #ifndef __itkScaledSingleValuedCostFunction_cxx
+

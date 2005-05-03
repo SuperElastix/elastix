@@ -123,3 +123,4 @@ namespace itk
 } // end namespace itk
 
 #endif // #ifndef __itkLineSearchOptimizer_h
+

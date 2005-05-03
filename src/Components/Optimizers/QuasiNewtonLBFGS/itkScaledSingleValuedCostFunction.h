@@ -102,3 +102,4 @@ namespace itk
 
 
 #endif // #ifndef __itkScaledSingleValuedCostFunction_h
+

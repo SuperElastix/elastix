@@ -934,3 +934,4 @@ namespace itk
 } // end namespace itk
 
 #endif // #ifndef __itkMoreThuenteLineSearchOptimizer_cxx
+

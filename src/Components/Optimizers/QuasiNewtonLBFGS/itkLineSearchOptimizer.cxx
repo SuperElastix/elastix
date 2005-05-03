@@ -69,3 +69,4 @@ namespace itk
 
 
 #endif // #ifndef __itkLineSearchOptimizer_cxx
+

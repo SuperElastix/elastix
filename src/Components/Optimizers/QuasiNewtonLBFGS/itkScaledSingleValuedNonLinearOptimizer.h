@@ -153,3 +153,4 @@ namespace itk
 } // end namespace itk
 
 #endif //#ifndef __ScaledSingleValuedNonLinearOptimizer_h
+

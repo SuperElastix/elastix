@@ -412,3 +412,4 @@ namespace itk
 
 
 #endif // #ifndef __itkQuasiNewtonLBFGSOptimizer_cxx
+
