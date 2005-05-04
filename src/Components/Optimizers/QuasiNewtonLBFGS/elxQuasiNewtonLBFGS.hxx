@@ -28,6 +28,7 @@ using namespace itk;
 
 		this->m_SearchDirectionMagnitude = 0.0;
 		this->m_StartLineSearch = false;	
+		this->m_GenerateLineSearchIterations = false;
 
 	} // end Constructor
 	
@@ -43,13 +44,18 @@ using namespace itk;
 		if( typeid( event ) == typeid( StartEvent ) )
 		{
 			this->m_StartLineSearch = true;
+			this->m_SearchDirectionMagnitude =
+				this->m_LineOptimizer->GetLineSearchDirection().magnitude();
 		}
 		else
 		{
 			this->m_StartLineSearch = false;
 		}
 		
-		this->InvokeEvent( IterationEvent() );
+		if ( this->m_GenerateLineSearchIterations )
+		{
+			this->InvokeEvent( IterationEvent() );
+		}
 
 		this->m_StartLineSearch = false;
 	} // end InvokeIterationEvent
@@ -92,16 +98,16 @@ using namespace itk;
 	 */
 
 	template <class TElastix>
-		const char * QuasiNewtonLBFGS<TElastix>::
+		std::string QuasiNewtonLBFGS<TElastix>::
     DeterminePhase(void) const
 	{
 		
 		if ( this->GetInLineSearch() )
 		{
-			return "LineOptimizing";
+			return std::string("LineOptimizing");
 		}
 
-		return "Main";
+		return std::string("Main");
 
 	} // end DeterminePhase
 
@@ -115,6 +121,7 @@ using namespace itk;
 		BeforeRegistration(void)
 	{
 
+		using namespace xl;
 		
 		/** Add target cells to xout["iteration"].*/
 		xout["iteration"].AddTargetCell("1a:SrchDirNr");
@@ -127,16 +134,26 @@ using namespace itk;
 		xout["iteration"].AddTargetCell("5:Phase");
     xout["iteration"].AddTargetCell("6a:Wolfe1");
 		xout["iteration"].AddTargetCell("6b:Wolfe2");
+		xout["iteration"].AddTargetCell("7:LinSrchStopCondition");
 	
 		/** Format the metric and stepsize as floats */			
-		xl::xout["iteration"]["2:Metric"]		<< std::showpoint << std::fixed;
-		xl::xout["iteration"]["3:StepLength"] << std::showpoint << std::fixed;
-		xl::xout["iteration"]["4a:||Gradient||"] << std::showpoint << std::fixed;
-		xl::xout["iteration"]["4b:||SearchDir||"] << std::showpoint << std::fixed;
-		xl::xout["iteration"]["4c:DirGradient"] << std::showpoint << std::fixed;
-		
-		/** \todo: call the correct functions */
+		xout["iteration"]["2:Metric"]		<< std::showpoint << std::fixed;
+		xout["iteration"]["3:StepLength"] << std::showpoint << std::fixed;
+		xout["iteration"]["4a:||Gradient||"] << std::showpoint << std::fixed;
+		xout["iteration"]["4b:||SearchDir||"] << std::showpoint << std::fixed;
+		xout["iteration"]["4c:DirGradient"] << std::showpoint << std::fixed;
 
+		/** Check in the parameter file whether line search iterations should
+		 * be generated */
+		this->m_GenerateLineSearchIterations = false; //bool
+		std::string generateLineSearchIterations = "false";
+		this->m_Configuration->ReadParameter( generateLineSearchIterations,
+			"GenerateLineSearchIterations", 0 );
+		if ( generateLineSearchIterations == "true" )
+		{
+			this->m_GenerateLineSearchIterations = true;
+		}
+				
 	} // end BeforeRegistration
 
 
@@ -207,13 +224,13 @@ using namespace itk;
 		::AfterEachIteration(void)
 	{
 		
+		using namespace xl;
+
 		/** Print some information. */
 		
 		if ( this->GetStartLineSearch() )
 		{
-			xl::xout["iteration"]["1b:LineItNr"] << "start";
-			m_SearchDirectionMagnitude =
-				this->m_LineOptimizer->GetLineSearchDirection().magnitude();
+			xout["iteration"]["1b:LineItNr"] << "start";
 		}
 		else
 		{
@@ -224,51 +241,54 @@ using namespace itk;
 			 * line search iteration number (so the number of line search
 			 * iterations minus one) is printed out.
 			 */
-   	  xl::xout["iteration"]["1b:LineItNr"] <<
+   	  xout["iteration"]["1b:LineItNr"] <<
 	  		this->m_LineOptimizer->GetCurrentIteration();
 		}
 
 		if ( this->GetInLineSearch() )
 		{
-			xl::xout["iteration"]["2:Metric"]	<<
+			xout["iteration"]["2:Metric"]	<<
 				this->m_LineOptimizer->GetCurrentValue();
-			xl::xout["iteration"]["3:StepLength"] <<
+			xout["iteration"]["3:StepLength"] <<
 				this->m_LineOptimizer->GetCurrentStepLength();
 			LineOptimizerType::DerivativeType cd;
 			this->m_LineOptimizer->GetCurrentDerivative(cd);
-			xl::xout["iteration"]["4a:||Gradient||"] << cd.magnitude();
+			xout["iteration"]["4a:||Gradient||"] << cd.magnitude();
+			xout["iteration"]["7:LinSrchStopCondition"] << "---";
 		} // end if in line search
 		else
 		{
-			xl::xout["iteration"]["2:Metric"]	<<
+			xout["iteration"]["2:Metric"]	<<
 				this->GetCurrentValue();
-			xl::xout["iteration"]["3:StepLength"] << 
+			xout["iteration"]["3:StepLength"] << 
 				this->GetCurrentStepLength(); 
-			xl::xout["iteration"]["4a:||Gradient||"] << 
+			xout["iteration"]["4a:||Gradient||"] << 
 		    this->GetCurrentGradient().magnitude();
+			xout["iteration"]["7:LinSrchStopCondition"] <<
+				this->GetLineSearchStopCondition();
 		} // end else (not in line search)
 	
-		xl::xout["iteration"]["1a:SrchDirNr"]		<< this->GetCurrentIteration();
-		xl::xout["iteration"]["5:Phase"]    << this->DeterminePhase();
-		xl::xout["iteration"]["4b:||SearchDir||"] << 
+		xout["iteration"]["1a:SrchDirNr"]		<< this->GetCurrentIteration();
+		xout["iteration"]["5:Phase"]    << this->DeterminePhase();
+		xout["iteration"]["4b:||SearchDir||"] << 
 			this->m_SearchDirectionMagnitude ;
-		xl::xout["iteration"]["4c:DirGradient"] <<
-				this->m_LineOptimizer->GetCurrentDirectionalDerivative();
+		xout["iteration"]["4c:DirGradient"] <<
+			this->m_LineOptimizer->GetCurrentDirectionalDerivative();
 		if ( this->m_LineOptimizer->GetSufficientDecreaseConditionSatisfied() )
 		{
-		  xl::xout["iteration"]["6a:Wolfe1"] << "true";
+		  xout["iteration"]["6a:Wolfe1"] << "true";
 		}
 		else
 		{
-			xl::xout["iteration"]["6a:Wolfe1"] << "false";
+			xout["iteration"]["6a:Wolfe1"] << "false";
 		}
 		if ( this->m_LineOptimizer->GetCurvatureConditionSatisfied() )
 		{
-		  xl::xout["iteration"]["6b:Wolfe2"] << "true";
+		  xout["iteration"]["6b:Wolfe2"] << "true";
 		}
 		else
 		{
-			xl::xout["iteration"]["6b:Wolfe2"] << "false";
+			xout["iteration"]["6b:Wolfe2"] << "false";
 		}
 
 		if ( !(this->GetInLineSearch()) )
@@ -312,6 +332,7 @@ using namespace itk;
       MaximumNumberOfIterations,
       InvalidDiagonalMatrix,
       GradientMagnitudeTolerance,
+			ZeroStep,
       Unknown } 
 			*/
 		
@@ -339,6 +360,10 @@ using namespace itk;
 			case GradientMagnitudeTolerance :
 			  stopcondition = "The gradient magnitude has (nearly) vanished";	
 			  break;	
+
+			case ZeroStep :
+				stopcondition = "The last step size was (nearly) zero";
+				break;
 					
 		  default:
 			  stopcondition = "Unknown";
@@ -368,6 +393,78 @@ using namespace itk;
 			<< std::endl;
 		
 	} // end AfterRegistration
+
+
+	/**
+	 * ***************** GetLineSearchStopCondition *****************
+	 */
+
+	template <class TElastix>
+		std::string QuasiNewtonLBFGS<TElastix>
+		::GetLineSearchStopCondition(void) const
+	{
+		/** Must be repeated here; otherwise the StopconditionTypes of the
+		 * QuasiNewtonOptimizer and the LineSearchOptimizer are mixed up. */
+    typedef enum {
+      StrongWolfeConditionsSatisfied,
+      MetricError,
+      MaximumNumberOfIterations,
+      StepTooSmall,
+      StepTooLarge,
+      IntervalTooSmall,
+      RoundingError,
+      AscentSearchDirection,
+      Unknown }    LineSearchStopConditionType;
+
+  	std::string stopcondition;
+
+		LineSearchStopConditionType lineSearchStopCondition
+			= static_cast<LineSearchStopConditionType>(
+			this->m_LineOptimizer->GetStopCondition() ) ;
+		
+		switch( lineSearchStopCondition )
+		{
+	
+			case StrongWolfeConditionsSatisfied :
+				stopcondition = "WolfeSatisfied";
+				break;
+
+			case MetricError :
+			  stopcondition = "MetricError";	
+			  break;	
+	  
+			case MaximumNumberOfIterations :
+			  stopcondition = "MaxNrIterations";	
+			  break;	
+	
+			case StepTooSmall :
+			  stopcondition = "StepTooSmall";
+			  break;	
+
+			case StepTooLarge :
+			  stopcondition = "StepTooLarge";	
+			  break;	
+
+			case IntervalTooSmall :
+			  stopcondition = "IntervalTooSmall";	
+			  break;	
+			
+			case RoundingError :
+			  stopcondition = "RoundingError";	
+				break;	
+
+			case AscentSearchDirection :
+			  stopcondition = "AscentSearchDir";	
+			  break;	
+								
+		  default:
+			  stopcondition = "Unknown";
+			  break;
+		}
+
+		return stopcondition;
+
+	} // end GetLineSearchStopCondition
 
 
 

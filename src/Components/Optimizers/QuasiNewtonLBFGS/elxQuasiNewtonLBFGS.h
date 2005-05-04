@@ -86,17 +86,24 @@ using namespace itk;
 
 		LineOptimizerPointer					m_LineOptimizer;
 
+		/** Convert the line search stop condition to a string */
+		virtual std::string GetLineSearchStopCondition(void) const;
+
+		/** Generate a string, representing the phase of optimisation 
+		 * (line search, main) */
+		virtual std::string DeterminePhase(void) const;
+
 	private:
 
 		QuasiNewtonLBFGS( const Self& );	// purposely not implemented
 		void operator=( const Self& );							// purposely not implemented
 
-		const char * DeterminePhase(void) const;
-
 		void InvokeIterationEvent(const EventObject & event);
+
 		EventPassThroughPointer			m_EventPasser;
 		double											m_SearchDirectionMagnitude;
 		bool												m_StartLineSearch;
+		bool												m_GenerateLineSearchIterations;
 			
 	}; // end class QuasiNewtonLBFGS
 	

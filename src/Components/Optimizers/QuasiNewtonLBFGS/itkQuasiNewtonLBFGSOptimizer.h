@@ -69,6 +69,7 @@ namespace itk
       MaximumNumberOfIterations,
       InvalidDiagonalMatrix,
       GradientMagnitudeTolerance,
+			ZeroStep,
       Unknown }                                   StopConditionType;
 
     virtual void StartOptimization(void);

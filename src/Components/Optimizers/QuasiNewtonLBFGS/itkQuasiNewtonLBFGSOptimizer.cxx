@@ -382,6 +382,12 @@ namespace itk
       this->StopOptimization();
       throw err;
     }
+
+		if ( step < NumericTraits<double>::epsilon() )
+		{
+			this->m_StopCondition = ZeroStep;
+			this->StopOptimization();
+		}; 
     
   } // end LineSearch
 
@@ -400,7 +406,7 @@ namespace itk
 
     this->m_S[ this->m_Point ] = step; // s
     this->m_Y[ this->m_Point ] = grad_dif; // y
-    this->m_Rho[ this->m_Point ] = 1.0 / inner_product( step, grad_dif ); // 1/ys
+		this->m_Rho[ this->m_Point ] = 1.0 / inner_product( step, grad_dif ); // 1/ys
 
   } // end StoreCurrentPoint
 
