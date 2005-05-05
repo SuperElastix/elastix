@@ -104,6 +104,7 @@ using namespace itk;
 		double											m_SearchDirectionMagnitude;
 		bool												m_StartLineSearch;
 		bool												m_GenerateLineSearchIterations;
+		bool												m_StopIfWolfeNotSatisfied;
 			
 	}; // end class QuasiNewtonLBFGS
 	

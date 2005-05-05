@@ -29,6 +29,7 @@ using namespace itk;
 		this->m_SearchDirectionMagnitude = 0.0;
 		this->m_StartLineSearch = false;	
 		this->m_GenerateLineSearchIterations = false;
+		this->m_StopIfWolfeNotSatisfied = true;
 
 	} // end Constructor
 	
@@ -209,6 +210,16 @@ using namespace itk;
 			"LBFGSUpdateAccuracy", level );
 		this->SetMemory(LBFGSUpdateAccuracy);
 
+		/** Check whether to stop optimisation if Wolfe conditions are not satisfied. */
+		this->m_StopIfWolfeNotSatisfied = true;
+		std::string stopIfWolfeNotSatisfied = "true";
+		this->m_Configuration->ReadParameter( stopIfWolfeNotSatisfied,
+			"StopIfWolfeNotSatisfied", level );
+		if ( stopIfWolfeNotSatisfied == "false")
+		{
+			this->m_StopIfWolfeNotSatisfied = false;
+		}
+		
 		this->m_SearchDirectionMagnitude = 0.0;
 		this->m_StartLineSearch = false;
 				
@@ -289,6 +300,20 @@ using namespace itk;
 		else
 		{
 			xout["iteration"]["6b:Wolfe2"] << "false";
+		}
+
+		/** Stop if the Wolfe conditions are not satisfied */
+		if ( this->m_StopIfWolfeNotSatisfied)
+		{
+			if ( 
+				(!(this->m_LineOptimizer->GetCurvatureConditionSatisfied()))
+				||
+				(!(this->m_LineOptimizer->GetSufficientDecreaseConditionSatisfied()))   )
+			{
+				/** Stop the optimisation; do not use StopOptimization because it will generate
+				 * an end event while we are still in the iteration event phase. */
+				this->m_Stop = true;
+			}
 		}
 
 		if ( !(this->GetInLineSearch()) )
