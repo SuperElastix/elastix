@@ -103,7 +103,8 @@ namespace elastix
 	 */
 
 	template <class TElastix>
-		void TransformBase<TElastix>::BeforeRegistrationBase(void)
+		void TransformBase<TElastix>
+		::BeforeRegistrationBase(void)
 	{	
 		/** Read from the configuration file how to combine the initial
 		* transform with the current transform.
@@ -186,7 +187,8 @@ namespace elastix
 	 */
 
 	template <class TElastix>
-		void TransformBase<TElastix>::AfterRegistrationBase(void)
+		void TransformBase<TElastix>
+		::AfterRegistrationBase(void)
 	{
 		/** Get the final Parameters.*/
 		ParametersType finalParameters = this->m_Registration->GetAsITKBaseType()->GetLastTransformParameters();
@@ -202,7 +204,8 @@ namespace elastix
 	 */
 
 	template <class TElastix>
-		void TransformBase<TElastix>::ReadFromFile(void)
+		void TransformBase<TElastix>
+		::ReadFromFile(void)
 	{
 		/** 
 		 * This method assumes this->m_Configuration is initialised with a
