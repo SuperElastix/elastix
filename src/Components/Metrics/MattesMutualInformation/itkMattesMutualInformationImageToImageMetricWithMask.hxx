@@ -1339,30 +1339,6 @@ namespace itk
 	
 
 	/**
-	 * ******************* SampleFixedImageDomain (public) **********
-	 */
- 
-	template < class TFixedImage, class TMovingImage >
-		void
-		MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
-		::SampleFixedImageDomain(void)
-	{
-		/** This function is added for Elastix */
-
-	  /**
-		 * Allocate memory for the fixed image sample container.
-		 */
-		this->m_FixedImageSamples.resize( this->m_NumberOfSpatialSamples);
-
-		/** 
-		* Uniformly sample the fixed image (within the fixed image region)
-		* to create the sample points list.
-		*/
-		this->SampleFixedImageDomain( this->m_FixedImageSamples );
-
-	}
-
-	/**
 	 * ************************** GetExactValue **************************
 	 *
 	 * Get the match Measure, computed on all voxels.

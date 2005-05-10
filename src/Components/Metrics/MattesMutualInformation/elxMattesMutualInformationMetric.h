@@ -36,7 +36,7 @@ using namespace itk;
 	 * metric computes the exact metric value (computed on all voxels rather than on the set of
 	 * spatial samples) and shows it each iteration. Must be given for each resolution.\n
 	 * NB: If the UseallPixels flag is set to "true", this option is ignored.\n
-	 *   example: <tt> (ShowAllPixels "true" "true" "false") </tt>
+	 *   example: <tt> (ShowExactMetricValue "true" "true" "false") </tt>
 	 *
    * \sa MattesMutualInformationImageToImageMetricWithMask
 	 * \ingroup Metrics
@@ -89,6 +89,10 @@ using namespace itk;
 		typedef typename Superclass1::FixedImagePointType				FixedImagePointType;
 		typedef typename Superclass1::MovingImagePointType 			MovingImagePointType;
 		
+
+		/** The fixed image dimension */
+		itkStaticConstMacro (FixedImageDimension, unsigned int,
+			FixedImageType::ImageDimension);
 		/** The moving image dimension. */
 		itkStaticConstMacro( MovingImageDimension, unsigned int,
 			MovingImageType::ImageDimension );
@@ -106,11 +110,16 @@ using namespace itk;
 		typedef tmr::Timer					TimerType;
 		/** Typedef for timer.*/
 		typedef TimerType::Pointer	TimerPointer;
+
+		/** Typedefs for support of user defined grid spacing for the spatial samples */
+		typedef typename FixedImageType::OffsetType							SampleGridSpacingType;
+		typedef typename SampleGridSpacingType::OffsetValueType SampleGridSpacingValueType;
+		typedef typename FixedImageType::SizeType								SampleGridSizeType;
+		typedef FixedImageIndexType															SampleGridIndexType;
+		typedef typename FixedImageType::SizeType 							FixedImageSizeType;
 		
 		/** Method that takes care of setting the parameters and showing information.*/
 		virtual int BeforeAll(void);
-		/** Method that takes care of setting the parameters and showing information.*/
-		virtual void BeforeRegistration(void);
 		/** Method that takes care of setting the parameters and showing information.*/
 		virtual void BeforeEachResolution(void);
 		/** Method that takes care of setting the parameters and showing information.*/
@@ -128,8 +137,25 @@ using namespace itk;
 		MattesMutualInformationMetric(); 
 		virtual ~MattesMutualInformationMetric() {}
 
+		/** Uniformly select a sample set from the fixed image domain.
+		 * This version adds the functionality to select the samples on a 
+		 * uniform grid.
+		 *
+		 * Mainly for testing purposes. Does not take spacings into account. */
+		typedef typename Superclass1::FixedImageSpatialSampleContainer
+			FixedImageSpatialSampleContainer;
+		virtual void SampleFixedImageDomain( 
+			FixedImageSpatialSampleContainer& samples );
+		
 		/** Flag */
 		bool m_ShowExactMetricValue;
+
+		/** The grid spacing of the spatial samples. Only used when the user asked
+		 * for a regular sampling grid, instead of randomly placed samples. */
+		SampleGridSpacingType			m_SampleGridSpacing;
+
+		/** Flag, whether to put the spatial sample son a uniform grid. */
+		bool											m_SamplesOnUniformGrid;
 				
 	private:
 

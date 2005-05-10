@@ -206,11 +206,6 @@ namespace itk
 			1, NumericTraits<unsigned long>::max() );
 		itkGetMacro( NumberOfHistogramBins, unsigned long);   
 		
-		/** Added for Elastix! This function allows the user to force the metric to 
-		 * select new samples. Normally only every resolution the sample set is 
-		 * refreshed. For stochastic optimisation, this method is essential. */
-		void SampleFixedImageDomain(void);
-		
 		/**  Get the exact value. Mutual information computed over all points.
 		 * This method does not need the UseAllPixels flag to be set true. It is
 		 * meant in situations when you optimise using just a subset of pixels, 
@@ -266,11 +261,11 @@ namespace itk
 		FixedImageSpatialSampleContainer		m_AllFixedImagePixels;
 
 	  /** Uniformly select a sample set from the fixed image domain. */
-		void SampleFixedImageDomain( 
+		virtual void SampleFixedImageDomain( 
 			FixedImageSpatialSampleContainer& samples );
 
 		/** Added for elastix: store all fixed image pixels that are within the mask */
-		void SampleFullFixedImageDomain(
+		virtual void SampleFullFixedImageDomain(
 			FixedImageSpatialSampleContainer& samples );
 
 		bool m_AllFixedImagePixelsStoredInContainer;
