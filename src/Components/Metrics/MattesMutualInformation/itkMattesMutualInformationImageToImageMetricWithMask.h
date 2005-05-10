@@ -39,9 +39,6 @@
 #include "itkBSplineInterpolateImageFunction.h"
 #include "itkBSplineDeformableTransform.h"
 
-/** Added for the support of masks.*/
-#include "itkMaskImage.h"
-
 namespace itk
 {
 	
@@ -209,25 +206,6 @@ namespace itk
 			1, NumericTraits<unsigned long>::max() );
 		itkGetMacro( NumberOfHistogramBins, unsigned long);   
 		
-		/** Typedefs added (by Stefan) for masks.*/
-		typedef char																					MaskPixelType;
-		typedef typename FixedImagePointType::CoordRepType		FixedCoordRepType;
-		typedef typename MovingImagePointType::CoordRepType		MovingCoordRepType;
-		typedef MaskImage<MaskPixelType,
-			::itk::GetImageDimension<FixedImageType>::ImageDimension,
-			FixedCoordRepType>																	FixedMaskImageType;
-		typedef MaskImage<MaskPixelType,
-			::itk::GetImageDimension<MovingImageType>::ImageDimension,
-			MovingCoordRepType>																	MovingMaskImageType;		
-		typedef typename FixedMaskImageType::Pointer					FixedMaskImagePointer;
-		typedef typename MovingMaskImageType::Pointer					MovingMaskImagePointer;
-		
-		/** Set and Get the masks.*/
-		itkSetObjectMacro( FixedMask, FixedMaskImageType );
-		itkSetObjectMacro( MovingMask, MovingMaskImageType );
-		itkGetObjectMacro( FixedMask, FixedMaskImageType );
-		itkGetObjectMacro( MovingMask, MovingMaskImageType );
-
 		/** Added for Elastix! This function allows the user to force the metric to 
 		 * select new samples. Normally only every resolution the sample set is 
 		 * refreshed. For stochastic optimisation, this method is essential. */
@@ -246,7 +224,6 @@ namespace itk
 		 * before calling Initialize() */
 		itkSetMacro(UseAllPixels, bool);
 		itkGetConstMacro(UseAllPixels, bool);
-	
 
 	protected:
 		
@@ -256,10 +233,6 @@ namespace itk
 		/** Print Self*/
 		void PrintSelf( std::ostream& os, Indent indent ) const;
 		
-		/** Masks (added by Stefan).*/
-		FixedMaskImagePointer		m_FixedMask;
-		MovingMaskImagePointer	m_MovingMask;
-
     /**
 		 * ************** FixedImageSpatialSample *********************
 		 *
@@ -314,11 +287,8 @@ namespace itk
 		MattesMutualInformationImageToImageMetricWithMask( const Self& );	// purposely not implemented
 		void operator=( const Self& );																		// purposely not implemented
 		
-		
 		bool m_UseAllPixels;
 				
-
-
 		/** The marginal PDFs are stored as std::vector. */
 		typedef float PDFValueType;
 		typedef std::vector<PDFValueType> MarginalPDFType;

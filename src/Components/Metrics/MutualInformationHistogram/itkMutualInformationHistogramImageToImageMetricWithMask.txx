@@ -32,10 +32,6 @@ namespace itk
 		MutualInformationHistogramImageToImageMetricWithMask<TFixedImage, TMovingImage>
 		::MutualInformationHistogramImageToImageMetricWithMask()
   {
-		// Added for support of masks.
-		this->m_FixedMask = NULL;
-		this->m_MovingMask = NULL;
-		
 	} // end Constructor
 		
 	

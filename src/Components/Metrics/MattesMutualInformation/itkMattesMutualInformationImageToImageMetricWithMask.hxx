@@ -90,14 +90,10 @@ namespace itk
 		this->m_BSplineTransform = NULL;
 		this->m_NumberOfParameters = 0;
 		
-		//Added by Stefan for support of US images:
-		this->m_FixedMask = NULL;
-		this->m_MovingMask = NULL;
-		
+		//Added by Stefan:
 		this->m_UseAllPixels = false;
 		this->m_AllFixedImagePixelsStoredInContainer = false;
 		
-
 	} // end Constructor
 	
 	
@@ -424,7 +420,7 @@ namespace itk
 		 typename FixedImageSpatialSampleContainer::iterator iter;
 		 typename FixedImageSpatialSampleContainer::const_iterator end=samples.end();
 		 
-		 if (!(this->m_FixedMask))
+		 if (!(this->m_FixedImageMask))
 		 {
 			 randIter.SetNumberOfSamples( this->m_NumberOfSpatialSamples );
 			 
@@ -461,14 +457,14 @@ namespace itk
 					 this->m_FixedImage->TransformIndexToPhysicalPoint( index,
 						 (*iter).FixedImagePointValue );
 					 
-				 } while ( !(this->m_FixedMask->IsInMask((*iter).FixedImagePointValue)) );
+				 } while ( !(this->m_FixedImageMask->IsInside((*iter).FixedImagePointValue)) );
 				 
 				 // Get sampled fixed image value
 				 (*iter).FixedImageValue = randIter.Get();
 				 
-			 } // for iter=samples...
+			 } // end for iter=samples...
 			 
-		 } // else (if mask exists)
+		 } // end else (if mask exists)
 		 
 	 } // end SampleFixedImageDomain
 	 
@@ -491,7 +487,7 @@ namespace itk
 	   typedef ImageRegionConstIteratorWithIndex<FixedImageType> FixedImageIterator;
 		 FixedImageIterator fiter( this->m_FixedImage, this->GetFixedImageRegion() );
 			 
-		 if (!(this->m_FixedMask))
+		 if (!(this->m_FixedImageMask))
 		 {
 			 		 
 			 for( fiter.GoToBegin(); ! fiter.IsAtEnd(); ++fiter )
@@ -527,7 +523,7 @@ namespace itk
 				 this->m_FixedImage->TransformIndexToPhysicalPoint( index,
 					 tempsample.FixedImagePointValue );
 
-				 if ( this->m_FixedMask->IsInMask( tempsample.FixedImagePointValue ) )
+				 if ( this->m_FixedImageMask->IsInside( tempsample.FixedImagePointValue ) )
 				 {
  				   // Get sampled fixed image value
 	 			   tempsample.FixedImageValue = fiter.Get();
@@ -537,7 +533,7 @@ namespace itk
 				 }
 			 }
 			 
-		 } // else (if mask exists)
+		 } // end else (if mask exists)
 
 		 this->m_AllFixedImagePixelsStoredInContainer = true;
 		 
@@ -1231,9 +1227,9 @@ namespace itk
 		
 		//Added for support of masks:
 		//if mask exists and point is inside buffer
-		if ( this->m_MovingMask && sampleOk ) 
+		if ( this->m_MovingImageMask && sampleOk ) 
 		{
-			sampleOk = (this->m_MovingMask->IsInMask(mappedPoint));
+			sampleOk = (this->m_MovingImageMask->IsInside(mappedPoint));
 		}
 		
 		if ( sampleOk )

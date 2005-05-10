@@ -54,10 +54,6 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
   this->m_ComputeGradient = false; // don't use the default gradient for now
   this->m_DerivativeCalculator = DerivativeFunctionType::New();
 
-	// Added for support of masks.
-	this->m_FixedMask = NULL;
-	this->m_MovingMask = NULL;
-		
 }
 
 
@@ -125,7 +121,7 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
   bool allOutside = true;
 
 	/** If no mask.*/
-	if ( !(this->m_FixedMask) )
+	if ( !(this->m_FixedImageMask) )
 	{
 		/** Set number of samples equal to m_NumberOfSpatialSamples.*/
 		randIter.SetNumberOfSamples( this->m_NumberOfSpatialSamples );
@@ -182,7 +178,7 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
 				this->m_FixedImage->TransformIndexToPhysicalPoint( index, 
 					(*iter).FixedImagePointValue );
 				
-			} while ( !(this->m_FixedMask->IsInMask((*iter).FixedImagePointValue)) );
+			} while ( !(this->m_FixedImageMask->IsInside((*iter).FixedImagePointValue)) );
 
 			// get sampled fixed image value
 			(*iter).FixedImageValue = randIter.Get();
@@ -191,7 +187,7 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
 			MovingImagePointType mappedPoint = 
 				this->m_Transform->TransformPoint( (*iter).FixedImagePointValue );
 			
-			if( this->m_Interpolator->IsInsideBuffer( mappedPoint ) && this->m_MovingMask->IsInMask( mappedPoint ) )
+			if( this->m_Interpolator->IsInsideBuffer( mappedPoint ) && this->m_MovingImageMask->IsInside( mappedPoint ) )
 			{
 				(*iter).MovingImageValue = this->m_Interpolator->Evaluate( mappedPoint );
 				allOutside = false;
@@ -531,9 +527,6 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
   // This method should be the same used in the ImageRandomIterator
   elx_sample_reseed(seed);
 }
-
-  
-
 
 
 } // end namespace itk

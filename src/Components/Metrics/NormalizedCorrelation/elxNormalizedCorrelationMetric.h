@@ -1,16 +1,10 @@
 #ifndef __elxNormalizedCorrelationMetric_H__
 #define __elxNormalizedCorrelationMetric_H__
 
-/** For easy changing the pixel type of the mask images: */
-#define __MaskFilePixelType char
-
 #include "elxIncludes.h"
 #include "itkNormalizedCorrelationImageToImageMetric.h"
 
-#include "itkImageFileReader.h"
-#include "itkCastImageFilter.h"
-#include "math.h"
-#include <string>
+#include "elxTimer.h"
 
 namespace elastix
 {
@@ -24,7 +18,6 @@ using namespace itk;
 	 *
 	 * \ingroup Metrics
 	 *
-	 * \todo Add support for masks.
 	 */
 
 	template <class TElastix >
@@ -57,93 +50,60 @@ using namespace itk;
 
 		/** Typedefs inherited from the superclass.*/
 		typedef typename Superclass1::TransformType							TransformType;
-		typedef typename Superclass1::TransformPointer 					TransformPointer;
-		typedef typename Superclass1::TransformParametersType		TransformParametersType;
+		typedef typename Superclass1::TransformPointer 					TransformPointer;		
 		typedef typename Superclass1::TransformJacobianType			TransformJacobianType;
-		typedef typename Superclass1::GradientPixelType					GradientPixelType;
+		typedef typename Superclass1::InterpolatorType 					InterpolatorType;
 		typedef typename Superclass1::MeasureType								MeasureType;
 		typedef typename Superclass1::DerivativeType 						DerivativeType;
+		typedef typename Superclass1::ParametersType 						ParametersType;
 		typedef typename Superclass1::FixedImageType 						FixedImageType;
 		typedef typename Superclass1::MovingImageType						MovingImageType;
 		typedef typename Superclass1::FixedImageConstPointer 		FixedImageConstPointer;
 		typedef typename Superclass1::MovingImageConstPointer		MovingImageConstPointer;
 		
-/*
-		typedef typename Superclass1::InterpolatorType 					InterpolatorType;
-		typedef typename Superclass1::ParametersType 						ParametersType;
-		typedef typename Superclass1::FixedImageIndexType				FixedImageIndexType;
-		typedef typename Superclass1::FixedImageIndexValueType 	FixedImageIndexValueType;
-		typedef typename Superclass1::MovingImageIndexType 			MovingImageIndexType;
-		typedef typename Superclass1::FixedImagePointType				FixedImagePointType;
-		typedef typename Superclass1::MovingImagePointType 			MovingImagePointType;*/
-		
 		/** The moving image dimension. */
 		itkStaticConstMacro( MovingImageDimension, unsigned int,
 			MovingImageType::ImageDimension );
 		
-		/** Other typedef's.*/
-/*		typedef typename Superclass1::MaskPixelType							MaskPixelType;
-		typedef typename Superclass1::FixedCoordRepType					FixedCoordRepType;
-		typedef typename Superclass1::MovingCoordRepType 				MovingCoordRepType;
-		typedef typename Superclass1::FixedMaskImageType 				FixedMaskImageType;
-		typedef typename Superclass1::MovingMaskImageType				MovingMaskImageType;
-		typedef typename Superclass1::FixedMaskImagePointer			FixedMaskImagePointer;
-		typedef typename Superclass1::MovingMaskImagePointer		MovingMaskImagePointer;*/
+		/** Other typedef's. */
+		//typedef typename Superclass1::MaskPixelType							MaskPixelType;
+		//typedef typename Superclass1::FixedCoordRepType					FixedCoordRepType;
+		//typedef typename Superclass1::MovingCoordRepType 				MovingCoordRepType;
+		typedef typename Superclass1::FixedImageMaskType 				FixedMaskImageType;
+		typedef typename Superclass1::MovingImageMaskType				MovingMaskImageType;
+		typedef typename Superclass1::FixedImageMaskPointer			FixedMaskImagePointer;
+		typedef typename Superclass1::MovingImageMaskPointer		MovingMaskImagePointer;
 		
-		/** Typedef's inherited from Elastix.*/
-		typedef typename Superclass2::ElastixType						ElastixType;
-		typedef typename Superclass2::ElastixPointer				ElastixPointer;
-		typedef typename Superclass2::ConfigurationType			ConfigurationType;
-		typedef typename Superclass2::ConfigurationPointer	ConfigurationPointer;
-		typedef typename Superclass2::RegistrationType			RegistrationType;
-		typedef typename Superclass2::RegistrationPointer		RegistrationPointer;
-		typedef typename Superclass2::ITKBaseType						ITKBaseType;
+		/** Typedef's inherited from Elastix. */
+		typedef typename Superclass2::ElastixType								ElastixType;
+		typedef typename Superclass2::ElastixPointer						ElastixPointer;
+		typedef typename Superclass2::ConfigurationType					ConfigurationType;
+		typedef typename Superclass2::ConfigurationPointer			ConfigurationPointer;
+		typedef typename Superclass2::RegistrationType					RegistrationType;
+		typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
+		typedef typename Superclass2::ITKBaseType								ITKBaseType;
 			
-		/** Typedef's for the suppport of masks.*/
-/*		typedef __MaskFilePixelType	MaskFilePixelType; //defined at the top of this file
-		typedef FixedCoordRepType		MaskCoordinateType;
-		
-		typedef MaskImage<
-			MaskFilePixelType,
-			itkGetStaticConstMacro(MovingImageDimension),
-			FixedCoordRepType >				FixedMaskFileImageType;
-		typedef MaskImage<
-			MaskFilePixelType,
-			itkGetStaticConstMacro(MovingImageDimension),
-			MovingCoordRepType >			MovingMaskFileImageType;
-		
-		typedef ImageFileReader<
-			FixedMaskFileImageType > 	FixedMaskImageReaderType;
-		typedef ImageFileReader<
-			MovingMaskFileImageType >	MovingMaskImageReaderType;
-		typedef CastImageFilter< 
-			FixedMaskFileImageType,
-			FixedMaskImageType >			FixedMaskCastFilterType;
-		typedef CastImageFilter< 
-			MovingMaskFileImageType,
-			MovingMaskImageType >			MovingMaskCastFilterType;
-		
-		typedef typename FixedMaskImageReaderType::Pointer		FixedMaskImageReaderPointer;
-		typedef typename MovingMaskImageReaderType::Pointer		MovingMaskImageReaderPointer;
-		typedef typename FixedMaskCastFilterType::Pointer			FixedMaskCastFilterPointer;
-		typedef typename MovingMaskCastFilterType::Pointer		MovingMaskCastFilterPointer;
-*/
+		/** Typedef for timer.*/
+		typedef tmr::Timer					TimerType;
+		/** Typedef for timer.*/
+		typedef TimerType::Pointer	TimerPointer;
 
-		/** Methods that have to be present everywhere.*/
+		/** Method that takes care of setting the parameters and showing information.*/
+		virtual int BeforeAll(void);
+		/** Method that takes care of setting the parameters and showing information.*/
 		virtual void BeforeRegistration(void);
+		/** Method that takes care of setting the parameters and showing information.*/
 		virtual void BeforeEachResolution(void);
+
+		/** Sets up a timer to measure the intialisation time and calls the Superclass'
+		 * implementation */
+		virtual void Initialize(void) throw (ExceptionObject);
 
 	protected:
 
 		NormalizedCorrelationMetric(); 
 		virtual ~NormalizedCorrelationMetric() {}
 
-		/** Declaration of member variables.*/
-/*		FixedMaskImageReaderPointer		m_FixedMaskImageReader;
-		MovingMaskImageReaderPointer	m_MovingMaskImageReader;
-		FixedMaskCastFilterPointer		m_FixedMaskCaster;
-		MovingMaskCastFilterPointer		m_MovingMaskCaster;*/
-				
 	private:
 
 		NormalizedCorrelationMetric( const Self& );	// purposely not implemented

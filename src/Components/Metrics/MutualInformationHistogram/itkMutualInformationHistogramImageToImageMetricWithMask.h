@@ -19,9 +19,6 @@
 
 #include "itkHistogramImageToImageMetric.h"
 
-/** Added for the support of masks.*/
-#include "itkMaskImage.h"
-
 namespace itk
 {
   /** \class MutualInformationHistogramImageToImageMetricWithMask
@@ -84,25 +81,6 @@ public HistogramImageToImageMetric<TFixedImage, TMovingImage>
   typedef typename TransformType::InputPointType        FixedImagePointType;
   typedef typename TransformType::OutputPointType       MovingImagePointType;
 
-	/** Typedefs added for masks.*/
-	typedef char																					MaskPixelType;
-	typedef typename FixedImagePointType::CoordRepType		FixedCoordRepType;
-	typedef typename MovingImagePointType::CoordRepType		MovingCoordRepType;
-	typedef MaskImage<MaskPixelType,
-		::itk::GetImageDimension<FixedImageType>::ImageDimension,
-		FixedCoordRepType>																	FixedMaskImageType;
-	typedef MaskImage<MaskPixelType,
-		::itk::GetImageDimension<MovingImageType>::ImageDimension,
-		MovingCoordRepType>																	MovingMaskImageType;		
-	typedef typename FixedMaskImageType::Pointer					FixedMaskImagePointer;
-	typedef typename MovingMaskImageType::Pointer					MovingMaskImagePointer;
-	
-	/** Set and Get the masks.*/
-	itkSetObjectMacro( FixedMask, FixedMaskImageType );
-	itkSetObjectMacro( MovingMask, MovingMaskImageType );
-	itkGetObjectMacro( FixedMask, FixedMaskImageType );
-	itkGetObjectMacro( MovingMask, MovingMaskImageType );
-
 	/** \todo add support for masks! */
 
 protected:
@@ -114,10 +92,6 @@ protected:
 
   /** Evaluates the mutual information from the histogram. */
   virtual MeasureType EvaluateMeasure(HistogramType& histogram) const;
-
-	/** Masks.*/
-	FixedMaskImagePointer		m_FixedMask;
-	MovingMaskImagePointer	m_MovingMask;
 
 private:
 

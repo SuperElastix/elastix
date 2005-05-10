@@ -1,17 +1,10 @@
 #ifndef __elxViolaWellsMutualInformationMetric_H__
 #define __elxViolaWellsMutualInformationMetric_H__
 
-/** For easy changing the pixel type of the mask images: */
-#define __MaskFilePixelType char
-
 #include "elxIncludes.h"
 #include "itkMutualInformationImageToImageMetricWithMask.h"
 
 #include "elxTimer.h"
-#include "itkImageFileReader.h"
-#include "itkCastImageFilter.h"
-#include "math.h"
-#include <string>
 
 namespace elastix
 {
@@ -77,16 +70,13 @@ using namespace itk;
 		itkStaticConstMacro( MovingImageDimension, unsigned int,
 			MovingImageType::ImageDimension );
 		
-		/** Other typedef's for masks.*/
-		typedef typename Superclass1::MaskPixelType							MaskPixelType;
-		typedef typename Superclass1::FixedCoordRepType					FixedCoordRepType;
-		typedef typename Superclass1::MovingCoordRepType 				MovingCoordRepType;
+		/** Other typedef's for masks. *
 		typedef typename Superclass1::FixedMaskImageType 				FixedMaskImageType;
 		typedef typename Superclass1::MovingMaskImageType				MovingMaskImageType;
 		typedef typename Superclass1::FixedMaskImagePointer			FixedMaskImagePointer;
 		typedef typename Superclass1::MovingMaskImagePointer		MovingMaskImagePointer;
 		
-		/** Typedef's inherited from Elastix.*/
+		/** Typedef's inherited from Elastix. */
 		typedef typename Superclass2::ElastixType						ElastixType;
 		typedef typename Superclass2::ElastixPointer				ElastixPointer;
 		typedef typename Superclass2::ConfigurationType			ConfigurationType;
@@ -95,28 +85,7 @@ using namespace itk;
 		typedef typename Superclass2::RegistrationPointer		RegistrationPointer;
 		typedef typename Superclass2::ITKBaseType						ITKBaseType;
 			
-		/** Typedef's for the suppport of masks.*/
-		typedef __MaskFilePixelType	MaskFilePixelType; //defined at the top of this file
-		typedef FixedCoordRepType		MaskCoordinateType;
-		
-		typedef MaskImage<
-			MaskFilePixelType,
-			itkGetStaticConstMacro(MovingImageDimension),
-			FixedCoordRepType >				FixedMaskFileImageType;
-		typedef MaskImage<
-			MaskFilePixelType,
-			itkGetStaticConstMacro(MovingImageDimension),
-			MovingCoordRepType >			MovingMaskFileImageType;
-		
-		typedef ImageFileReader<
-			FixedMaskFileImageType > 	FixedMaskImageReaderType;
-		typedef ImageFileReader<
-			MovingMaskFileImageType >	MovingMaskImageReaderType;
-
-		typedef typename FixedMaskImageReaderType::Pointer		FixedMaskImageReaderPointer;
-		typedef typename MovingMaskImageReaderType::Pointer		MovingMaskImageReaderPointer;
-
-		/** Typedef's for timer.*/
+		/** Typedef's for timer. */
 		typedef tmr::Timer					TimerType;
 		typedef TimerType::Pointer	TimerPointer;
 		
@@ -131,10 +100,6 @@ using namespace itk;
 
 		ViolaWellsMutualInformationMetric(); 
 		virtual ~ViolaWellsMutualInformationMetric() {}
-
-		/** Declaration of member variables.*/
-		FixedMaskImageReaderPointer		m_FixedMaskImageReader;
-		MovingMaskImageReaderPointer	m_MovingMaskImageReader;
 
 	private:
 

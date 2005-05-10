@@ -1,16 +1,10 @@
 #ifndef __elxMattesMutualInformationMetric_H__
 #define __elxMattesMutualInformationMetric_H__
 
-/** For easy changing the pixel type of the mask images: */
-#define __MaskFilePixelType char
-
 #include "elxIncludes.h"
 #include "itkMattesMutualInformationImageToImageMetricWithMask.h"
 
 #include "elxTimer.h"
-#include "itkImageFileReader.h"
-#include "itkCastImageFilter.h"
-
 
 namespace elastix
 {
@@ -22,16 +16,6 @@ using namespace itk;
 	 *
 	 * This metric is based on an adapted version of the
 	 * itk::MattesMutualInformationImageToImageMetric. 
-	 *
-	 * The command line argumemts used by this class are:
-	 * \commandlinearg -fMask: Optional argument with the file name of a mask for
-	 * the fixed image. The mask image should contain of zeros and ones, zeros indicating 
-	 * pixels that are not used for the registration. \n
-	 *   example: <tt> -fMask fixedmask.mhd </tt>
-	 * \commandlinearg -mMask: Optional argument with the file name of a mask for
-	 * the moving image. The mask image should contain of zeros and ones, zeros indicating 
-	 * pixels that are not used for the registration. \n
-	 *   example: <tt> -mMask movingmask.mhd </tt>
 	 *
 	 * The parameters used in this class are:
 	 * \parameter Metric: Select this metric as follows:\n
@@ -98,7 +82,7 @@ using namespace itk;
 		typedef typename Superclass1::FixedImageType 						FixedImageType;
 		typedef typename Superclass1::MovingImageType						MovingImageType;
 		typedef typename Superclass1::FixedImageConstPointer 		FixedImageConstPointer;
-		typedef typename Superclass1::MovingImageConstPointer		MovingImageCosntPointer;
+		typedef typename Superclass1::MovingImageConstPointer		MovingImageConstPointer;
 		typedef typename Superclass1::FixedImageIndexType				FixedImageIndexType;
 		typedef typename Superclass1::FixedImageIndexValueType 	FixedImageIndexValueType;
 		typedef typename Superclass1::MovingImageIndexType 			MovingImageIndexType;
@@ -109,53 +93,15 @@ using namespace itk;
 		itkStaticConstMacro( MovingImageDimension, unsigned int,
 			MovingImageType::ImageDimension );
 		
-		/** Other typedef's.*/
-		typedef typename Superclass1::MaskPixelType							MaskPixelType;
-		typedef typename Superclass1::FixedCoordRepType					FixedCoordRepType;
-		typedef typename Superclass1::MovingCoordRepType 				MovingCoordRepType;
-		typedef typename Superclass1::FixedMaskImageType 				FixedMaskImageType;
-		typedef typename Superclass1::MovingMaskImageType				MovingMaskImageType;
-		typedef typename Superclass1::FixedMaskImagePointer			FixedMaskImagePointer;
-		typedef typename Superclass1::MovingMaskImagePointer		MovingMaskImagePointer;
-		
-		/** Typedef's inherited from Elastix.*/
-		typedef typename Superclass2::ElastixType						ElastixType;
-		typedef typename Superclass2::ElastixPointer				ElastixPointer;
-		typedef typename Superclass2::ConfigurationType			ConfigurationType;
-		typedef typename Superclass2::ConfigurationPointer	ConfigurationPointer;
-		typedef typename Superclass2::RegistrationType			RegistrationType;
-		typedef typename Superclass2::RegistrationPointer		RegistrationPointer;
-		typedef typename Superclass2::ITKBaseType						ITKBaseType;
+		/** Typedef's inherited from Elastix. */
+		typedef typename Superclass2::ElastixType								ElastixType;
+		typedef typename Superclass2::ElastixPointer						ElastixPointer;
+		typedef typename Superclass2::ConfigurationType					ConfigurationType;
+		typedef typename Superclass2::ConfigurationPointer			ConfigurationPointer;
+		typedef typename Superclass2::RegistrationType					RegistrationType;
+		typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
+		typedef typename Superclass2::ITKBaseType								ITKBaseType;
 			
-		/** Typedef for the suppport of masks.*/
-		typedef __MaskFilePixelType	MaskFilePixelType; //defined at the top of this file
-		/** Typedef's for the suppport of masks.*/
-		typedef FixedCoordRepType		MaskCoordinateType;
-		
-		/** Typedef for the suppport of masks.*/
-		typedef MaskImage<
-			MaskFilePixelType,
-			itkGetStaticConstMacro(MovingImageDimension),
-			FixedCoordRepType >				FixedMaskFileImageType;
-		/** Typedef for the suppport of masks.*/
-		typedef MaskImage<
-			MaskFilePixelType,
-			itkGetStaticConstMacro(MovingImageDimension),
-			MovingCoordRepType >			MovingMaskFileImageType;
-
-		/** Typedef for the suppport of masks.*/
-		typedef ImageFileReader<
-			FixedMaskFileImageType > 	FixedMaskImageReaderType;
-
-		/** Typedef for the suppport of masks.*/
-		typedef ImageFileReader<
-			MovingMaskFileImageType >	MovingMaskImageReaderType;
-		
-		/** Typedef for the suppport of masks.*/
-		typedef typename FixedMaskImageReaderType::Pointer		FixedMaskImageReaderPointer;
-		/** Typedef for the suppport of masks.*/
-		typedef typename MovingMaskImageReaderType::Pointer		MovingMaskImageReaderPointer;
-
 		/** Typedef for timer.*/
 		typedef tmr::Timer					TimerType;
 		/** Typedef for timer.*/
@@ -181,11 +127,6 @@ using namespace itk;
 
 		MattesMutualInformationMetric(); 
 		virtual ~MattesMutualInformationMetric() {}
-
-		/** Declaration of member variable, for mask support.*/
-		FixedMaskImageReaderPointer		m_FixedMaskImageReader;
-		/** Declaration of member variable, for mask support.*/
-		MovingMaskImageReaderPointer	m_MovingMaskImageReader;
 
 		/** Flag */
 		bool m_ShowExactMetricValue;

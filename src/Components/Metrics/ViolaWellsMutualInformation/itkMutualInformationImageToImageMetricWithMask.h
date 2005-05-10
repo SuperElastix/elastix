@@ -25,9 +25,6 @@
 #include "itkKernelFunction.h"
 #include "itkCentralDifferenceImageFunction.h"
 
-/** Added for the support of masks.*/
-#include "itkMaskImage.h"
-
 namespace itk
 {
 
@@ -176,34 +173,11 @@ public:
   itkSetObjectMacro( KernelFunction, KernelFunction );
   itkGetObjectMacro( KernelFunction, KernelFunction );
 
-	/** Typedefs added for masks.*/
-	typedef char																					MaskPixelType;
-	typedef typename FixedImagePointType::CoordRepType		FixedCoordRepType;
-	typedef typename MovingImagePointType::CoordRepType		MovingCoordRepType;
-	typedef MaskImage<MaskPixelType,
-		::itk::GetImageDimension<FixedImageType>::ImageDimension,
-		FixedCoordRepType>																	FixedMaskImageType;
-	typedef MaskImage<MaskPixelType,
-		::itk::GetImageDimension<MovingImageType>::ImageDimension,
-		MovingCoordRepType>																	MovingMaskImageType;		
-	typedef typename FixedMaskImageType::Pointer					FixedMaskImagePointer;
-	typedef typename MovingMaskImageType::Pointer					MovingMaskImagePointer;
-	
-	/** Set and Get the masks.*/
-	itkSetObjectMacro( FixedMask, FixedMaskImageType );
-	itkSetObjectMacro( MovingMask, MovingMaskImageType );
-	itkGetObjectMacro( FixedMask, FixedMaskImageType );
-	itkGetObjectMacro( MovingMask, MovingMaskImageType );
-
 protected:
 
   MutualInformationImageToImageMetricWithMask();
   virtual ~MutualInformationImageToImageMetricWithMask() {};
   void PrintSelf(std::ostream& os, Indent indent) const;
-
-	/** Masks.*/
-	FixedMaskImagePointer		m_FixedMask;
-	MovingMaskImagePointer	m_MovingMask;
 
 private:
 
