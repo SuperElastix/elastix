@@ -484,7 +484,7 @@ namespace elastix
 		elxout << "ELASTIX version: " << __ELASTIX_VERSION << std::endl;
 
 		/** Check Command line options and print them to the logfile.*/
-		elxout << "Command line options:" << std::endl;
+		elxout << "Command line options from ElastixTemplate:" << std::endl;
 		std::string check = "";
 
 		/** Check for appearance of "-in".*/

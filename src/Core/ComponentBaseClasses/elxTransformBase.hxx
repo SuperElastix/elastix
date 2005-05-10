@@ -48,7 +48,7 @@ namespace elastix
 		::BeforeAllBase(void)
 	{
 		/** Check Command line options and print them to the logfile.*/
-		elxout << "Command line options:" << std::endl;
+		elxout << "Command line options from TransformBase:" << std::endl;
 		std::string check("");
 		
 		/** Check for appearance of "-t0".*/

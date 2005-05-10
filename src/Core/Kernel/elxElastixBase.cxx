@@ -85,7 +85,7 @@ namespace elastix
 		elxout << std::setprecision( this->GetDefaultOutputPrecision() );
 
 		/** Check Command line options and print them to the logfile.*/
-		elxout << "Command line options:" << std::endl;
+		elxout << "Command line options from ElastixBase:" << std::endl;
 		std::string check = "";
 
 		/** Check for appearance of "-f".*/
