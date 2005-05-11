@@ -88,10 +88,11 @@ namespace elastix
 			GetCommandLineArgument( "-fMask" );
 		if ( !( fixedMaskFileName.empty() ) )
 		{
+			/** Create reader for fixed mask. */
 			this->m_FixedMaskImageReader			= FixedMaskImageReaderType::New();
-			this->m_FixedMaskAsImage					= FixedMaskImageType::New();
-			this->m_FixedMaskAsSpatialObject	= FixedImageMaskSpatialObjectType::New();
 			this->m_FixedMaskImageReader->SetFileName( fixedMaskFileName.c_str() );
+			/** Create spatial object for fixed mask. */
+			this->m_FixedMaskAsSpatialObject	= FixedImageMaskSpatialObjectType::New();
 
 			/** Do the reading. */
 			try
@@ -121,11 +122,12 @@ namespace elastix
 			GetCommandLineArgument( "-mMask" );
 		if ( !( movingMaskFileName.empty() ) )
 		{
+			/** Create reader for moving mask. */
 			this->m_MovingMaskImageReader			= MovingMaskImageReaderType::New();
-			this->m_MovingMaskAsImage					= MovingMaskImageType::New();
-			this->m_MovingMaskAsSpatialObject	= MovingImageMaskSpatialObjectType::New();
 			this->m_MovingMaskImageReader->SetFileName( movingMaskFileName.c_str() );
-
+			/** Create spatial object for moving mask. */
+			this->m_MovingMaskAsSpatialObject	= MovingImageMaskSpatialObjectType::New();
+			
 			/** Do the reading. */
 			try
 			{
@@ -197,8 +199,10 @@ namespace elastix
 			{
 				/** Start timer. */
 				timer->StartTimer();
+
 				/** Erode masks. */
 				this->UpdateMasks( level );
+
 				/** Stop timer and print the elapsed time. */
 				timer->StopTimer();
 				elxout << "Eroding the masks took: "
@@ -219,12 +223,20 @@ namespace elastix
 		/** Some typedef's. */
 		typedef BinaryBallStructuringElement<
 			MaskFilePixelType,
-			MovingImageDimension >							StructuringElementType;
-		typedef typename StructuringElementType::RadiusType		RadiusType;
+			FixedImageDimension >							StructuringElementTypeF;
+		typedef typename StructuringElementTypeF::RadiusType		RadiusTypeF;
+		typedef GrayscaleErodeImageFilter<
+			FixedMaskImageType,
+			FixedMaskImageType,
+			StructuringElementTypeF >					ErodeFilterTypeF;
+		typedef BinaryBallStructuringElement<
+			MaskFilePixelType,
+			MovingImageDimension >							StructuringElementTypeM;
+		typedef typename StructuringElementTypeM::RadiusType		RadiusTypeM;
 		typedef GrayscaleErodeImageFilter<
 			MovingMaskImageType,
 			MovingMaskImageType,
-			StructuringElementType >					ErodeFilterType;
+			StructuringElementTypeM >					ErodeFilterTypeM;
 
 		/** Erode and set the fixed mask if necessary. ****************************
 		 **************************************************************************
@@ -241,15 +253,15 @@ namespace elastix
 			 */
 
 			/** Create erosion-filters. */
-			typename ErodeFilterType::Pointer erosionF[ FixedImageDimension ];
+			typename ErodeFilterTypeF::Pointer erosionF[ FixedImageDimension ];
 			for ( unsigned int i = 0; i < FixedImageDimension; i++ )
 			{
-				erosionF[ i ] = ErodeFilterType::New();
+				erosionF[ i ] = ErodeFilterTypeF::New();
 			}
       
 			/** Declare radius-array and structuring element. */
-			RadiusType								radiusarrayF;
-			StructuringElementType		S_ballF;
+			RadiusTypeF								radiusarrayF;
+			StructuringElementTypeF		S_ballF;
 
 			/** Setup the erosion pipeline. */
 			erosionF[ 0 ]->SetInput( this->m_FixedMaskImageReader->GetOutput() );
@@ -291,7 +303,13 @@ namespace elastix
 				throw excp;
 			}
 
-			/** Convert image to spatial object and put it in the metric. */
+			/** Convert image to spatial object and put it in the metric.
+			 * NOTE: It is important to destruct the old SpatialObject
+			 * and create a new one, because otherwise in SetImage()
+			 * the spacing gets multiplied and multiplied, and so on,
+			 * for each time this function is called (i.e. each resolution).
+			 */
+			this->m_FixedMaskAsSpatialObject = FixedImageMaskSpatialObjectType::New();
 			this->m_FixedMaskAsSpatialObject->SetImage( m_FixedMaskAsImage );
 			this->GetAsITKBaseType()->SetFixedImageMask( m_FixedMaskAsSpatialObject );
 
@@ -309,15 +327,15 @@ namespace elastix
 			 */
 
 			/** Create erosion-filters. */
-			typename ErodeFilterType::Pointer erosionM[ MovingImageDimension ];
+			typename ErodeFilterTypeM::Pointer erosionM[ MovingImageDimension ];
 			for ( unsigned int i = 0; i < MovingImageDimension; i++ )
 			{
-				erosionM[ i ] = ErodeFilterType::New();
+				erosionM[ i ] = ErodeFilterTypeM::New();
 			}
       
 			/** Declare radius-array and structuring element. */
-			RadiusType								radiusarrayM;
-			StructuringElementType		S_ballM;
+			RadiusTypeM								radiusarrayM;
+			StructuringElementTypeM		S_ballM;
 
 			/** Setup the erosion pipeline. */
 			erosionM[ 0 ]->SetInput( this->m_MovingMaskImageReader->GetOutput() );
@@ -359,7 +377,13 @@ namespace elastix
 				throw excp;
 			}
 
-			/** Convert image to spatial object and put it in the metric. */
+			/** Convert image to spatial object and put it in the metric.
+			 * NOTE: It is important to destruct the old SpatialObject
+			 * and create a new one, because otherwise in SetImage()
+			 * the spacing gets multiplied and multiplied, and so on,
+			 * for each time this function is called (i.e. each resolution).
+			 */
+			this->m_MovingMaskAsSpatialObject = MovingImageMaskSpatialObjectType::New();
 			this->m_MovingMaskAsSpatialObject->SetImage( m_MovingMaskAsImage );
 			this->GetAsITKBaseType()->SetMovingImageMask( m_MovingMaskAsSpatialObject );
 
