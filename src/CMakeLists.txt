@@ -24,7 +24,8 @@ ${elastix_SOURCE_DIR}/Common
 ${elastix_SOURCE_DIR}/Common/TransformGrouper
 ${elastix_SOURCE_DIR}/Common/ParameterFileParser
 ${elastix_SOURCE_DIR}/Common/xout
-${elastix_SOURCE_DIR}/Common/MoreRandom)
+${elastix_SOURCE_DIR}/Common/MoreRandom
+${elastix_SOURCE_DIR}/Common/LineSearchOptimizers)
 
 SET( elxCore_INCLUDE_DIRECTORIES
 ${elastix_SOURCE_DIR}/Core
