@@ -17,7 +17,11 @@ itkDeformationFieldRegulizer.hxx
 itkDeformationFieldRegulizerForBSpline.h
 itkDeformationFieldRegulizerForBSpline.hxx
 itkDeformationVectorFieldTransform.h
-itkDeformationVectorFieldTransform.txx )
+itkDeformationVectorFieldTransform.txx 
+itkScaledSingleValuedCostFunction.h
+itkScaledSingleValuedCostFunction.cxx
+itkScaledSingleValuedNonLinearOptimizer.h
+itkScaledSingleValuedNonLinearOptimizer.cxx )
 
 SET( TransformGrouperFiles 
 TransformGrouper/itkBSplineTransformGrouper.h
@@ -36,8 +40,16 @@ MoreRandom/itkImageMoreRandomConstIteratorWithIndex.txx
 MoreRandom/itkImageMoreRandomIteratorWithIndex.h
 MoreRandom/itkImageMoreRandomIteratorWithIndex.txx)
 
+SET( LineSearchOptimizersFiles
+LineSearchOptimizer/itkMoreThuenteLineSearchOptimizer.h
+LineSearchOptimizer/itkMoreThuenteLineSearchOptimizer.cxx
+LineSearchOptimizer/itkLineSearchOptimizer.h
+LineSearchOptimizer/itkLineSearchOptimizer.cxx)
+
+
 SOURCE_GROUP("TransformGrouper" FILES ${TransformGrouperFiles} )
 SOURCE_GROUP("MoreRandom" FILES ${MoreRandomFiles} )
+SOURCE_GROUP("LineSearchOptimizers" FILES ${LineSearchOptimizersFiles} )
 
 IF(CMAKE_COMPILER_IS_GNUCXX)
   #Add -fPIC to the gcc-options. 
@@ -46,7 +58,11 @@ IF(CMAKE_COMPILER_IS_GNUCXX)
   SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
 ENDIF(CMAKE_COMPILER_IS_GNUCXX)
 
-ADD_LIBRARY(elxCommon ${CommonFiles} ${TransformGrouperFiles} ${MoreRandomFiles})
+ADD_LIBRARY(elxCommon
+  ${CommonFiles}
+	${TransformGrouperFiles}
+	${MoreRandomFiles}
+	${LineSearchOptimizersFiles} )
 
 TARGET_LINK_LIBRARIES(elxCommon
 ITKBasicFilters
