@@ -136,7 +136,7 @@ using namespace itk;
     
 		/** Put spatial samples on a uniform grid? */
 		this->m_SamplesOnUniformGrid = false;
-		std::string samplesOnUniformGrid;
+		std::string samplesOnUniformGrid = "false";
 		this->GetConfiguration()->
 			ReadParameter(samplesOnUniformGrid , "SamplesOnUniformGrid", level);
 		if ( samplesOnUniformGrid == "true" )
