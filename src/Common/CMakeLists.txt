@@ -41,10 +41,10 @@ MoreRandom/itkImageMoreRandomIteratorWithIndex.h
 MoreRandom/itkImageMoreRandomIteratorWithIndex.txx)
 
 SET( LineSearchOptimizersFiles
-LineSearchOptimizer/itkMoreThuenteLineSearchOptimizer.h
-LineSearchOptimizer/itkMoreThuenteLineSearchOptimizer.cxx
-LineSearchOptimizer/itkLineSearchOptimizer.h
-LineSearchOptimizer/itkLineSearchOptimizer.cxx)
+LineSearchOptimizers/itkMoreThuenteLineSearchOptimizer.h
+LineSearchOptimizers/itkMoreThuenteLineSearchOptimizer.cxx
+LineSearchOptimizers/itkLineSearchOptimizer.h
+LineSearchOptimizers/itkLineSearchOptimizer.cxx)
 
 
 SOURCE_GROUP("TransformGrouper" FILES ${TransformGrouperFiles} )
