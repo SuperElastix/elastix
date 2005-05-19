@@ -834,7 +834,7 @@ using namespace itk;
 		/** Set the precision of cout to 2, because GridSpacing and
 		 * GridOrigin must have at least one digit precision.
 		 */
-		xout["transpar"] << std::setprecision(1);
+		xout["transpar"] << std::setprecision(10);
 
 		/** Write the GridSpacing of this transform.*/
 		xout["transpar"] << "(GridSpacing ";
