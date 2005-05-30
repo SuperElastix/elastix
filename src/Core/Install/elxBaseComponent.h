@@ -13,17 +13,17 @@
 #ifndef __elxBaseComponent_h
 #define __elxBaseComponent_h
 
-/** Get rid of warnings about too long variable names.*/
+/** Get rid of warnings about too long variable names. */
 #ifdef _MSC_VER
 #pragma warning ( disable : 4786 )
 #pragma warning ( disable : 4503 )
 #endif
 
 #include <iostream>
-/** The current Elastix version.*/
-#define __ELASTIX_VERSION 3.104
+/** The current Elastix version. */
+#define __ELASTIX_VERSION 3.105
 
-/** All Elastix components should be in namespace elastix.*/
+/** All Elastix components should be in namespace elastix. */
 namespace elastix
 {
 	

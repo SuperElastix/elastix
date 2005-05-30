@@ -68,7 +68,7 @@ namespace elastix
 					this->m_Configuration->ReadParameter(
 						movingSchedule[ j ][ i ],
 						"MovingPyramidSchedule",
-						i * numberOfResolutions + j );
+						i * MovingImageDimension + j );
 				} // end for MovingImageDimension
 			} // end for numberOfResolutions
 
@@ -89,7 +89,7 @@ namespace elastix
 					this->m_Configuration->ReadParameter(
 						movingSchedule[ j ][ i ],
 						"FixedPyramidSchedule",
-						i * numberOfResolutions + j );
+						i * MovingImageDimension + j );
 				} // end for MovingImageDimension
 			} // end for numberOfResolutions
 
