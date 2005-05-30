@@ -58,6 +58,9 @@ namespace elastix
 		/** If the FixedPyramidSchedule exists: */
 		if ( temp_fix != 0 )
 		{
+			/** Always set the numberOfLevels first. */
+			this->GetAsITKBaseType()->SetNumberOfLevels( numberOfResolutions );
+
 			/** In this case set the fixedPyramidSchedule to the
 			 * FixedPyramidSchedule given in the parameter-file.
 			 */
@@ -66,7 +69,7 @@ namespace elastix
 				for ( unsigned int j = 0; j < FixedImageDimension; j++ )
 				{
 					this->m_Configuration->ReadParameter(
-						fixedSchedule[ j ][ i ],
+						fixedSchedule[ i ][ j ],
 						"FixedPyramidSchedule",
 						i * FixedImageDimension + j );
 				} // end for FixedImageDimension
@@ -79,6 +82,9 @@ namespace elastix
 		/** If only the MovingPyramidSchedule exists: */
 		else if ( temp_fix == 0 && temp_mov != 0 && FixedImageDimension == MovingImageDimension )
 		{
+			/** Always set the numberOfLevels first. */
+			this->GetAsITKBaseType()->SetNumberOfLevels( numberOfResolutions );
+
 			/** In this case set the fixedPyramidSchedule to the
 			 * MovingPyramidSchedule given in the parameter-file.
 			 */
@@ -87,7 +93,7 @@ namespace elastix
 				for ( unsigned int j = 0; j < FixedImageDimension; j++ )
 				{
 					this->m_Configuration->ReadParameter(
-						fixedSchedule[ j ][ i ],
+						fixedSchedule[ i ][ j ],
 						"MovingPyramidSchedule",
 						i * FixedImageDimension + j );
 				} // end for FixedImageDimension
@@ -104,6 +110,9 @@ namespace elastix
 		/** If both PyramidSchedule's don't exist: */
 		else
 		{
+			/** Always set the numberOfLevels first. */
+			std::cout << "numberOfResolutions = " << numberOfResolutions << std::endl;
+
 			/** In this case set the fixedPyramidSchedule to the
 			 * default schedule.
 			 */

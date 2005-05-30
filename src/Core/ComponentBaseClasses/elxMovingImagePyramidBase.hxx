@@ -58,6 +58,9 @@ namespace elastix
 		/** If the MovingPyramidSchedule exists:*/
 		if ( temp_mov != 0 )
 		{
+			/** Always set the numberOfLevels first. */
+			this->GetAsITKBaseType()->SetNumberOfLevels( numberOfResolutions );
+
 			/** In this case set the movingPyramidSchedule to the
 			 * MovingPyramidSchedule given in the parameter-file.
 			 */
@@ -66,7 +69,7 @@ namespace elastix
 				for ( unsigned int j = 0; j < MovingImageDimension; j++ )
 				{
 					this->m_Configuration->ReadParameter(
-						movingSchedule[ j ][ i ],
+						movingSchedule[ i ][ j ],
 						"MovingPyramidSchedule",
 						i * MovingImageDimension + j );
 				} // end for MovingImageDimension
@@ -79,6 +82,9 @@ namespace elastix
 		/** If only the FixedPyramidSchedule exists:*/
 		else if ( temp_fix != 0 && temp_mov == 0 && FixedImageDimension == MovingImageDimension )
 		{
+			/** Always set the numberOfLevels first. */
+			this->GetAsITKBaseType()->SetNumberOfLevels( numberOfResolutions );
+
 			/** In this case set the movingPyramidSchedule to the
 			 * FixedPyramidSchedule given in the parameter-file.
 			 */
@@ -87,7 +93,7 @@ namespace elastix
 				for ( unsigned int j = 0; j < MovingImageDimension; j++ )
 				{
 					this->m_Configuration->ReadParameter(
-						movingSchedule[ j ][ i ],
+						movingSchedule[ i ][ j ],
 						"FixedPyramidSchedule",
 						i * MovingImageDimension + j );
 				} // end for MovingImageDimension

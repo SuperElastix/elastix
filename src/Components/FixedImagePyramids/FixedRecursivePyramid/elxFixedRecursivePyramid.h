@@ -55,6 +55,7 @@ using namespace itk;
 		typedef typename Superclass1::InputImagePointer					InputImagePointer;
 		typedef typename Superclass1::OutputImagePointer				OutputImagePointer;
 		typedef typename Superclass1::InputImageConstPointer		InputImageConstPointer;
+		typedef typename Superclass1::ScheduleType							ScheduleType;
 
 		/** Typedefs inherited from Elastix.*/
 		typedef typename Superclass2::ElastixType						ElastixType;
@@ -65,6 +66,10 @@ using namespace itk;
 		typedef typename Superclass2::RegistrationPointer		RegistrationPointer;
 		typedef typename Superclass2::ITKBaseType						ITKBaseType;
 		
+		/***/
+		//void BeforeRegistration();
+		//void BeforeEachResolution();
+
 	protected:
 
 		  FixedRecursivePyramid() {}
