@@ -651,6 +651,24 @@ namespace elastix
 		CallInEachComponent( &BaseComponentType::AfterEachResolutionBase );
 		CallInEachComponent( &BaseComponentType::AfterEachResolution );
 
+		/** Create a TransformParameter-file for the current resolution. */
+		std::string TranParOptionRes = "false";
+		this->m_Configuration->ReadParameter( TranParOptionRes, "WriteTransformParametersEachResolution", 0, true );
+		if ( TranParOptionRes == "true" )
+		{
+			/** Create the TransformParameters filename for this resolution. */
+			std::ostringstream makeFileName("");
+			makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
+				<< "TransformParameters."
+				<< this->m_Configuration->GetElastixLevel()
+				<< ".R" << this->m_elx_Registration->GetAsITKBaseType()->GetCurrentLevel()
+				<< ".txt";
+			std::string FileName = makeFileName.str();
+			
+			/** Create a TransformParameterFile for this iteration.*/
+			this->CreateTransformParameterFile( FileName, false );
+		}
+
 		/** Start Timer0 here, to make it possible to measure the time needed for:
 		 *    - executing the BeforeEachResolution methods (if this was not the last resolution)
 		 *		- executing the AfterRegistration methods (if this was the last resolution)
@@ -787,20 +805,20 @@ namespace elastix
 	{
 		using namespace xl;
 
-		/** Create transformParameterFile and xout["transpar"].*/
+		/** Create transformParameterFile and xout["transpar"]. */
 		xoutsimple_type		transformationParameterInfo;
 		std::ofstream					transformParameterFile;
 		
-		/** Set up the "TransformationParameters" writing field.*/
+		/** Set up the "TransformationParameters" writing field. */
 		transformationParameterInfo.SetOutputs( xout.GetCOutputs() );
 		transformationParameterInfo.SetOutputs( xout.GetXOutputs() );
 		
 		xout.AddTargetCell( "transpar", &transformationParameterInfo );
 		
-		/** Set it in the Transform, for later use.*/
+		/** Set it in the Transform, for later use. */
 		this->m_elx_Transform->SetTransformParametersFileName( FileName.c_str() );
 		
-		/** Open the TransformParameter file.*/
+		/** Open the TransformParameter file. */
 		transformParameterFile.open( FileName.c_str() );
 		if ( !transformParameterFile.is_open() )
 		{
@@ -820,7 +838,7 @@ namespace elastix
 		xout["transpar"] << std::fixed;
 		xout["transpar"] << std::setprecision( this->GetDefaultOutputPrecision() );
 		
-		/** Separate clearly in log-file.*/
+		/** Separate clearly in log-file. */
 		if ( ToLog )
 		{
 			xout["logonly"] <<
@@ -835,14 +853,14 @@ namespace elastix
 		this->m_elx_ResampleInterpolator->WriteToFile();
 		this->m_elx_Resampler->WriteToFile();
 		
-		/** Separate clearly in log-file.*/
+		/** Separate clearly in log-file. */
 		if ( ToLog )
 		{
 			xout["logonly"] << 
 				"\n=============== end of TransformParameterFile ===============" << std::endl;
 		}
 
-		/** Remove the "transpar" writing field */
+		/** Remove the "transpar" writing field. */
 		xout.RemoveTargetCell( "transpar" );
 		
 	} // end CreateTransformParameterFile
