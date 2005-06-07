@@ -110,9 +110,6 @@ namespace elastix
 		/** If both PyramidSchedule's don't exist: */
 		else
 		{
-			/** Always set the numberOfLevels first. */
-			std::cout << "numberOfResolutions = " << numberOfResolutions << std::endl;
-
 			/** In this case set the fixedPyramidSchedule to the
 			 * default schedule.
 			 */
