@@ -16,7 +16,7 @@ namespace elastix
 		void MovingImagePyramidBase<TElastix>
 		::BeforeRegistrationBase(void)
 	{
-		/** Call SetFixedSchedule.*/
+		/** Call SetMovingSchedule.*/
 		this->SetMovingSchedule();
 		
 	} // end BeforeRegistrationBase
@@ -107,7 +107,7 @@ namespace elastix
 		{
 			xl::xout["warning"] << "WARNING: MovingImagePyramidSchedule is not specified!" << std::endl;
 			xl::xout["warning"] << "A default schedule is assumed. " << std::endl;
-			}		
+		}		
 		/** If both PyramidSchedule's don't exist:*/
 		else
 		{
