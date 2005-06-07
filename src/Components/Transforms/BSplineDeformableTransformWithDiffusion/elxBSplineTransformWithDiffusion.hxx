@@ -24,6 +24,7 @@ using namespace itk;
 		this->m_GridSpacingFactor = 8.0;
 		this->m_Caster	= TransformCastFilterType::New();
 		this->m_Writer	= TransformWriterType::New();
+		this->m_Interpolator	= InterpolatorType::New();
 
 		/** Initialize things for diffusion. */
 		this->m_Diffusion = 0;
@@ -31,11 +32,20 @@ using namespace itk;
 		this->m_DiffusedField = 0;
 		this->m_GrayValueImage1 = 0;
 		this->m_GrayValueImage2 = 0;
-		this->m_Resampler = 0;
+		this->m_MovingSegmentationImage = 0;
+		this->m_FixedSegmentationImage = 0;
+		this->m_MovingSegmentationReader = 0;
+		this->m_FixedSegmentationReader = 0;
+		this->m_MovingSegmentationFileName = "";
+		this->m_FixedSegmentationFileName = "";
+		this->m_Resampler1 = 0;
+		this->m_Resampler2 = 0;
 		this->m_WriteDiffusionFiles = false;
 		this->m_AlsoFixed = true;
-		this->m_ThresholdBool = false;
+		this->m_ThresholdBool = true;
 		this->m_ThresholdHU = static_cast<GrayValuePixelType>( 150 );
+		this->m_UseMovingSegmentation = false;
+		this->m_UseFixedSegmentation = false;
 
 	} // end Constructor
 	
@@ -92,7 +102,7 @@ using namespace itk;
 		 */
 		
 		/** Get diffusion information: radius. */
-		unsigned int radius1D;
+		unsigned int radius1D = 1;
 		this->m_Configuration->ReadParameter( radius1D, "Radius", 0 );
 		RadiusType radius;
 		for ( unsigned int i = 0; i < this->FixedImageDimension; i++ )
@@ -109,9 +119,9 @@ using namespace itk;
 		}
 
 		/** Get diffusion information: threshold information. */
-		std::string thresholdbooltmp = "";
+		std::string thresholdbooltmp = "true";
 		this->m_Configuration->ReadParameter( thresholdbooltmp, "ThresholdBool", 0 );
-		if ( thresholdbooltmp == "true" ) this->m_ThresholdBool = true;
+		if ( thresholdbooltmp == "false" ) this->m_ThresholdBool = false;
 
 		this->m_Configuration->ReadParameter( this->m_ThresholdHU, "ThresholdHU", 0 );
 
@@ -122,11 +132,53 @@ using namespace itk;
 		this->m_Configuration->ReadParameter( alsoFixed, "GrayValueImageAlsoBasedOnFixedImage", 0 );
 		if ( alsoFixed == "false" ) this->m_AlsoFixed = false;
 
+		/** Get diffusion information: is it wanted to base the GrayValueImage
+		 * on a segmentation of the moving image.
+		 */
+		std::string useMovingSegmentation = "false";
+		this->m_Configuration->ReadParameter( useMovingSegmentation, "UseMovingSegmentation", 0 );
+		if ( useMovingSegmentation == "true" ) this->m_UseMovingSegmentation = true;
+
+		/** Get diffusion information: in case m_UseMovingSegmentation = true,
+		 * get the filename.
+		 */
+		if ( this->m_UseMovingSegmentation )
+		{
+			this->m_Configuration->ReadParameter( m_MovingSegmentationFileName, "MovingSegmentationFileName", 0 );
+			if ( m_MovingSegmentationFileName == "" )
+			{
+				xout[ "error" ] << "ERROR: No MovingSegmentation filename specified." << std::endl;
+				/** Create and throw an exception. */
+				itkExceptionMacro(<<"ERROR: No MovingSegmentation filename specified.");
+			}
+		}
+
+		/** Get diffusion information: is it wanted to base the GrayValueImage
+		 * on a segmentation of the fixed image.
+		 */
+		std::string useFixedSegmentation = "false";
+		this->m_Configuration->ReadParameter( useFixedSegmentation, "UseFixedSegmentation", 0 );
+		if ( useFixedSegmentation == "true" ) this->m_UseFixedSegmentation = true;
+
+		/** Get diffusion information: in case m_UseFixedSegmentation = true,
+		 * get the filename.
+		 */
+		if ( this->m_UseFixedSegmentation )
+		{
+			this->m_Configuration->ReadParameter( m_FixedSegmentationFileName, "FixedSegmentationFileName", 0 );
+			if ( m_FixedSegmentationFileName == "" )
+			{
+				xout[ "error" ] << "ERROR: No FixedSegmentation filename specified." << std::endl;
+				/** Create and throw an exception. */
+				itkExceptionMacro(<<"ERROR: No FixedSegmentation filename specified.");
+			}
+		}
+
 		/** Get diffusion information: Find out if the user wants
 		 * to write the diffusion files:
 		 * deformationField, GrayvalueImage, diffusedField.
 		 */
-		std::string writetofile;
+		std::string writetofile = "false";
 		this->m_Configuration->ReadParameter( writetofile, "WriteDiffusionFiles", 0 );
 		if ( writetofile == "true" ) this->m_WriteDiffusionFiles = true;
 
@@ -164,34 +216,148 @@ using namespace itk;
 		this->m_DiffusedField->SetSpacing( this->m_DeformationSpacing );
 		this->m_DiffusedField->Allocate();
 
-		/** Create this->m_GrayValueImage and allocate memory. */
-		this->m_GrayValueImage1 = GrayValueImageType::New();
-		this->m_GrayValueImage1->SetRegions( this->m_DeformationRegion );
-		this->m_GrayValueImage1->SetOrigin( this->m_DeformationOrigin );
-		this->m_GrayValueImage1->SetSpacing( this->m_DeformationSpacing );
-		this->m_GrayValueImage1->Allocate();
-		this->m_GrayValueImage2 = GrayValueImageType::New();
+		/** Create the GrayValueImages and allocate memory. */
+		if ( this->m_UseMovingSegmentation && !this->m_ThresholdBool )
+		{
+			/** In this case we have to read in the m_MovingSegmentationImage. */
+			this->m_MovingSegmentationReader = GrayValueImageReaderType::New();
+			this->m_MovingSegmentationReader->SetFileName( m_MovingSegmentationFileName.c_str() );
+			this->m_MovingSegmentationImage = m_MovingSegmentationReader->GetOutput();
+
+			/** Read the MovingSegmentation. */
+			try
+			{
+				this->m_MovingSegmentationImage->Update();
+			}
+			catch( itk::ExceptionObject & excp )
+			{
+				/** Add information to the exception. */
+				excp.SetLocation( "BSplineTransformWithDiffusion - BeforeRegistration()" );
+				std::string err_str = excp.GetDescription();
+				err_str += "\nError occured while reading the MovingSegmentationImage.\n";
+				excp.SetDescription( err_str );
+				/** Pass the exception to an higher level. */
+				throw excp;
+			}
+
+			/** In this case: check if a FixedSegmentationImage is needed. */
+			if ( this->m_UseFixedSegmentation )
+			{
+				/** In this case we have to read in the m_MovingSegmentationImage. */
+				this->m_FixedSegmentationReader = GrayValueImageReaderType::New();
+				this->m_FixedSegmentationReader->SetFileName( m_FixedSegmentationFileName.c_str() );
+				this->m_FixedSegmentationImage = m_FixedSegmentationReader->GetOutput();
+
+				/** Read the FixedSegmentation. */
+				try
+				{
+					this->m_FixedSegmentationImage->Update();
+				}
+				catch( itk::ExceptionObject & excp )
+				{
+					/** Add information to the exception. */
+					excp.SetLocation( "BSplineTransformWithDiffusion - BeforeRegistration()" );
+					std::string err_str = excp.GetDescription();
+					err_str += "\nError occured while reading the FixedSegmentationImage.\n";
+					excp.SetDescription( err_str );
+					/** Pass the exception to an higher level. */
+					throw excp;
+				} // end try/catch
+			} // end if fixed segmentation
+		} // end if moving segmentation
+		/** Otherwise defining rigid object is based on thresholding the resampled moving image. */
+		else if ( !this->m_UseMovingSegmentation && this->m_ThresholdBool )
+		{
+			this->m_GrayValueImage1 = GrayValueImageType::New();
+			this->m_GrayValueImage1->SetRegions( this->m_DeformationRegion );
+			this->m_GrayValueImage1->SetOrigin( this->m_DeformationOrigin );
+			this->m_GrayValueImage1->SetSpacing( this->m_DeformationSpacing );
+			this->m_GrayValueImage1->Allocate();
+			this->m_GrayValueImage2 = GrayValueImageType::New();
+		}
+		else
+		{
+			xout[ "error" ] << "ERROR: So what are you using for the GrayValueImage," << std::endl
+				<< "either a threshold or a segmentation, make a choice!" << std::endl;
+			/** Create and throw an exception. */
+			itkExceptionMacro(<<"ERROR: Difficulty determining how to create the GrayValueImage. Check your parameter file.");
+		}
+
+		/** Set the interpolator. */
+		if ( this->m_UseMovingSegmentation )
+		{
+			this->m_Interpolator->SetSplineOrder( 0 );
+		}
+		else
+		{
+			this->m_Interpolator->SetSplineOrder( 1 );
+		}
 
 		/** Create a resampler. */
-		this->m_Resampler = ResamplerType::New();
-		this->m_Resampler->SetTransform( this->GetIntermediaryDeformationFieldTransform() );
-		//this->m_Resampler->SetInterpolator(); // default = LinearInterpolateImageFunction
-		this->m_Resampler->SetInput( dynamic_cast<MovingImageELXType *>(
-			this->m_Elastix->GetMovingImage() ) );
-		GrayValuePixelType defaultPixelValue = NumericTraits<GrayValuePixelType>::Zero;
-		this->m_Configuration->ReadParameter( defaultPixelValue, "DefaultPixelValue", 0 );
-		this->m_Resampler->SetDefaultPixelValue( defaultPixelValue );
-		this->m_Resampler->SetSize( this->m_DeformationRegion.GetSize() );
-		this->m_Resampler->SetOutputStartIndex( this->m_DeformationRegion.GetIndex() );
-		this->m_Resampler->SetOutputOrigin( this->m_DeformationOrigin );
-		this->m_Resampler->SetOutputSpacing( this->m_DeformationSpacing );
+		if ( this->m_UseMovingSegmentation )
+		{
+			this->m_Resampler2 = ResamplerType2::New();
+			this->m_Resampler2->SetTransform( this->GetIntermediaryDeformationFieldTransform() );
+			this->m_Resampler2->SetInterpolator( this->m_Interpolator ); // default = LinearInterpolateImageFunction
+		}
+		else
+		{
+			this->m_Resampler1 = ResamplerType1::New();
+			this->m_Resampler1->SetTransform( this->GetIntermediaryDeformationFieldTransform() );
+			this->m_Resampler1->SetInterpolator( this->m_Interpolator ); // default = LinearInterpolateImageFunction
+		}
 
+		/** What are we using for defining rigid structures? */
+		if ( this->m_UseMovingSegmentation && !this->m_ThresholdBool )
+		{
+			this->m_Resampler2->SetInput( this->m_MovingSegmentationImage );
+		}
+		else
+		{
+			this->m_Resampler1->SetInput( dynamic_cast<MovingImageELXType *>(
+				this->m_Elastix->GetMovingImage() ) );
+		}
+
+		/** Get the default pixel value. */
+		GrayValuePixelType defaultPixelValueForGVI = NumericTraits<GrayValuePixelType>::Zero;
+		if ( this->m_UseMovingSegmentation && !this->m_ThresholdBool )
+		{
+			this->m_Configuration->ReadParameter( defaultPixelValueForGVI, "DefaultPixelValueForGVI", 0 );
+			this->m_Resampler2->SetDefaultPixelValue( defaultPixelValueForGVI );
+		}
+		else
+		{
+			this->m_Configuration->ReadParameter( defaultPixelValueForGVI, "DefaultPixelValue", 0 );
+			this->m_Resampler1->SetDefaultPixelValue( defaultPixelValueForGVI );
+		}
+
+		/** Set other stuff. */
+		if ( this->m_UseMovingSegmentation )
+		{
+			this->m_Resampler2->SetSize( this->m_DeformationRegion.GetSize() );
+			this->m_Resampler2->SetOutputStartIndex( this->m_DeformationRegion.GetIndex() );
+			this->m_Resampler2->SetOutputOrigin( this->m_DeformationOrigin );
+			this->m_Resampler2->SetOutputSpacing( this->m_DeformationSpacing );
+		}
+		else
+		{
+			this->m_Resampler1->SetSize( this->m_DeformationRegion.GetSize() );
+			this->m_Resampler1->SetOutputStartIndex( this->m_DeformationRegion.GetIndex() );
+			this->m_Resampler1->SetOutputOrigin( this->m_DeformationOrigin );
+			this->m_Resampler1->SetOutputSpacing( this->m_DeformationSpacing );
+		}
 		/** Create this->m_Diffusion, the diffusion filter. */
 		this->m_Diffusion = DiffusionFilterType::New();
 		this->m_Diffusion->SetRadius( radius );
 		this->m_Diffusion->SetNumberOfIterations( iterations );
 		this->m_Diffusion->SetGrayValueImage( this->m_GrayValueImage1 );
 		this->m_Diffusion->SetInput( this->m_DeformationField );
+
+		// temp
+		GrayValueImageWriterType::Pointer writer = GrayValueImageWriterType::New();
+		writer->SetFileName("tmp1.mhd");
+		writer->SetInput( m_Resampler2->GetOutput() );
+		writer->Update();
 
 	} // end BeforeRegistration
 
@@ -927,8 +1093,22 @@ using namespace itk;
 
 		/** ------------- 3: Create GrayValueImage. ------------- */
 
-		this->m_Resampler->Modified();
-		this->m_GrayValueImage1 = this->m_Resampler->GetOutput();
+		/** This gives:
+		 * - either a deformed moving image, in case that the grayValueImage
+		 *   is based on a threshold and not on a segmentation,
+		 * - or a deformed segmentation of the moving image, in case that
+		 *   the grayValueImage is based on a segmentation and not on a threshold.
+		 */
+		if ( this->m_UseMovingSegmentation )
+		{
+			this->m_Resampler2->Modified();
+			this->m_GrayValueImage1 = this->m_Resampler2->GetOutput();
+		}
+		else
+		{
+			this->m_Resampler1->Modified();
+			this->m_GrayValueImage1 = this->m_Resampler1->GetOutput();
+		}
 
 		/** Do the resampling. */
 		try
@@ -946,55 +1126,88 @@ using namespace itk;
 			throw excp;
 		}
 
-		/** If wanted also take the fixed image into account
-		 * for the derivation of the GrayValueImage, by taking the maximum.
-		 */
-		typename MaximumImageFilterType::Pointer maximumImageFilter;
-		if( this->m_AlsoFixed )
+		/** First we make a distinction between using segmentation or not. */
+		if ( !this->m_UseMovingSegmentation )
 		{
-			maximumImageFilter = MaximumImageFilterType::New();
-			maximumImageFilter->SetInput( 0, this->m_GrayValueImage1 );
-			maximumImageFilter->SetInput( 1, dynamic_cast<FixedImageELXType *>(
-			this->m_Elastix->GetFixedImage() ) );
-			this->m_GrayValueImage2 = maximumImageFilter->GetOutput();
-
-			/** Do the maximum (OR filter). */
-			try
+			/** If wanted also take the fixed image into account
+			 * for the derivation of the GrayValueImage, by taking the maximum.
+			 */
+			typename MaximumImageFilterType::Pointer maximumImageFilter;
+			if( this->m_AlsoFixed )
 			{
-				this->m_GrayValueImage2->Update();
-			}
-			catch( itk::ExceptionObject & excp )
-			{
-				/** Add information to the exception. */
-				excp.SetLocation( "BSplineTransformWithDiffusion - DiffuseDeformationField()" );
-				std::string err_str = excp.GetDescription();
-				err_str += "\nError occured when using the maximumImageFilter to get the grayValue image.\n";
-				excp.SetDescription( err_str );
-				/** Pass the exception to an higher level. */
-				throw excp;
-			}
-		} // end if
+				maximumImageFilter = MaximumImageFilterType::New();
+				maximumImageFilter->SetInput( 0, this->m_GrayValueImage1 );
+				maximumImageFilter->SetInput( 1, dynamic_cast<FixedImageELXType *>(
+					this->m_Elastix->GetFixedImage() ) );
+				this->m_GrayValueImage2 = maximumImageFilter->GetOutput();
 
-		if ( this->m_ThresholdBool )
+				/** Do the maximum (OR filter). */
+				try
+				{
+					this->m_GrayValueImage2->Update();
+				}
+				catch( itk::ExceptionObject & excp )
+				{
+					/** Add information to the exception. */
+					excp.SetLocation( "BSplineTransformWithDiffusion - DiffuseDeformationField()" );
+					std::string err_str = excp.GetDescription();
+					err_str += "\nError occured when using the maximumImageFilter to get the grayValue image.\n";
+					excp.SetDescription( err_str );
+					/** Pass the exception to an higher level. */
+					throw excp;
+				}
+			} // end if alsoFixed
+
+			if ( this->m_ThresholdBool )
+			{
+				/** Setup iterator. */
+				GrayValueImageIteratorType it( this->m_GrayValueImage2, this->m_GrayValueImage2->GetLargestPossibleRegion() );
+				it.GoToBegin();
+				while ( !it.IsAtEnd() )
+				{
+					/** Threshold or just make sure everything is between 0 and 100. */
+					// \todo Possibly combine this with the rescaleIntensity filter of
+					//		the vectorMeanDiffusionImageFilter, in order to speed up.
+					if ( it.Get() < this->m_ThresholdHU ) it.Set( 0 );
+					if ( it.Get() >= this->m_ThresholdHU ) it.Set( 100 );
+					/** Update iterator. */
+					++it;
+				} // end while
+			} // end if
+		}
+		/** In case we do use a segmentation of the moving image: */
+		else
 		{
-			/** Setup iterator. */
-			GrayValueImageIteratorType it( this->m_GrayValueImage2, this->m_GrayValueImage2->GetLargestPossibleRegion() );
-			it.GoToBegin();
-			while ( !it.IsAtEnd() )
+			typename MaximumImageFilterType::Pointer maximumImageFilter;
+			/** Check if we also want to use a segmentation of the fixed image. */
+			if ( this->m_UseFixedSegmentation )
 			{
-				/** Threshold or just make sure everything is between 0 and 100. */
-				// \todo Possibly combine this with the rescaleIntensity filter of
-				//		the vectorMeanDiffusionImageFilter, in order to speed up.
-				if ( it.Get() < this->m_ThresholdHU ) it.Set( 0 );
-				if ( it.Get() >= this->m_ThresholdHU ) it.Set( 100 );
-				/** Update iterator. */
-				++it;
-			} // end while
-		} // end if
+				maximumImageFilter = MaximumImageFilterType::New();
+				maximumImageFilter->SetInput( 0, this->m_GrayValueImage1 );
+				maximumImageFilter->SetInput( 1, this->m_FixedSegmentationImage );
+				this->m_GrayValueImage2 = maximumImageFilter->GetOutput();
+
+				/** Do the maximum (OR filter). */
+				try
+				{
+					this->m_GrayValueImage2->Update();
+				}
+				catch( itk::ExceptionObject & excp )
+				{
+					/** Add information to the exception. */
+					excp.SetLocation( "BSplineTransformWithDiffusion - DiffuseDeformationField()" );
+					std::string err_str = excp.GetDescription();
+					err_str += "\nError occured when using the maximumImageFilter to get the grayValue image.\n";
+					excp.SetDescription( err_str );
+					/** Pass the exception to an higher level. */
+					throw excp;
+				}
+			}
+		}
 
 		/** ------------- 4: Setup the diffusion. ------------- */
 
-		if( this->m_AlsoFixed )
+		if( this->m_AlsoFixed || this->m_UseFixedSegmentation )
 		{
 			this->m_Diffusion->SetGrayValueImage( this->m_GrayValueImage2 );
 		}
@@ -1083,7 +1296,7 @@ using namespace itk;
 			typename GrayValueImageWriterType::Pointer grayValueImageWriter
 				= GrayValueImageWriterType::New();
 			grayValueImageWriter->SetFileName( makeFileName2.str().c_str() );
-			if( this->m_AlsoFixed )
+			if( this->m_AlsoFixed || this->m_UseFixedSegmentation )
 			{
 				grayValueImageWriter->SetInput( this->m_GrayValueImage2 );
 			}

@@ -27,6 +27,7 @@
 #include "itkResampleImageFilter.h"
 #include "itkMaximumImageFilter.h"
 #include "itkImageRegionIterator.h"
+#include "itkBSplineInterpolateImageFunction.h"
 
 
 namespace elastix
@@ -243,7 +244,13 @@ using namespace itk;
 		typedef typename VectorImageType::SizeType				RadiusType;
 		typedef ResampleImageFilter<
 			MovingImageELXType, GrayValueImageType,
-			CoordRepType >																	ResamplerType;
+			CoordRepType >																	ResamplerType1;
+		typedef ResampleImageFilter<
+			GrayValueImageType, GrayValueImageType,
+			CoordRepType >																	ResamplerType2;
+		typedef BSplineInterpolateImageFunction<
+			GrayValueImageType >														InterpolatorType;
+		typedef ImageFileReader< GrayValueImageType >			GrayValueImageReaderType;
 		typedef ImageFileWriter< GrayValueImageType >			GrayValueImageWriterType;
 		typedef ImageFileWriter< VectorImageType >				DeformationFieldWriterType;
 
@@ -308,7 +315,15 @@ using namespace itk;
 		typename VectorImageType::Pointer				m_DiffusedField;
 		typename GrayValueImageType::Pointer		m_GrayValueImage1;
 		typename GrayValueImageType::Pointer		m_GrayValueImage2;
-		typename ResamplerType::Pointer					m_Resampler;
+		typename GrayValueImageType::Pointer		m_MovingSegmentationImage;
+		typename GrayValueImageType::Pointer		m_FixedSegmentationImage;
+		typename GrayValueImageReaderType::Pointer	m_MovingSegmentationReader;
+		typename GrayValueImageReaderType::Pointer	m_FixedSegmentationReader;
+		std::string															m_MovingSegmentationFileName;
+		std::string															m_FixedSegmentationFileName;
+		typename ResamplerType1::Pointer				m_Resampler1;
+		typename ResamplerType2::Pointer				m_Resampler2;
+		typename InterpolatorType::Pointer			m_Interpolator;
 		RegionType															m_DeformationRegion;
 		OriginType															m_DeformationOrigin;
 		SpacingType															m_DeformationSpacing;
@@ -318,6 +333,8 @@ using namespace itk;
 		bool m_AlsoFixed;
 		bool m_ThresholdBool;
 		GrayValuePixelType m_ThresholdHU;
+		bool m_UseMovingSegmentation;
+		bool m_UseFixedSegmentation;
 
 		/** The B-spline parameters, which is going to be filled with zeros. */
 		ParametersType m_BSplineParameters;
