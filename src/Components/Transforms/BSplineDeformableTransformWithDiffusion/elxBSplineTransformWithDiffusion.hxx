@@ -353,12 +353,6 @@ using namespace itk;
 		this->m_Diffusion->SetGrayValueImage( this->m_GrayValueImage1 );
 		this->m_Diffusion->SetInput( this->m_DeformationField );
 
-		// temp
-		GrayValueImageWriterType::Pointer writer = GrayValueImageWriterType::New();
-		writer->SetFileName("tmp1.mhd");
-		writer->SetInput( m_Resampler2->GetOutput() );
-		writer->Update();
-
 	} // end BeforeRegistration
 
 
