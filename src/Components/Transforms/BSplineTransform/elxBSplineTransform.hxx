@@ -24,7 +24,7 @@ using namespace itk;
 		/** Initialize.*/		
 		this->m_Coeffs1 = 0;
 		
-		this->m_GridSpacingFactor = 8.0;
+		this->m_GridSpacingFactor.Fill(8.0);
 
 		this->m_Caster	= TransformCastFilterType::New();
 		this->m_Writer	= TransformWriterType::New();
@@ -100,7 +100,7 @@ using namespace itk;
 		 */
 		std::string upsampleBSplineGridOption( "true" );
 		bool upsampleGridOption = true;
-		this->m_Configuration->ReadParameter( upsampleBSplineGridOption, "UpsampleGridOption", 0, true );
+		this->m_Configuration->ReadParameter( upsampleBSplineGridOption, "UpsampleGridOption", 0 );
 		if ( upsampleBSplineGridOption == "true" ) upsampleGridOption = true;
 		else if ( upsampleBSplineGridOption == "false" ) upsampleGridOption = false;
 		
@@ -164,9 +164,15 @@ using namespace itk;
 		gridspacing	=	fixedimage->GetSpacing();
 		gridorigin	=	fixedimage->GetOrigin();
 		
-		/** Read the desired grid spacing */
-		this->m_GridSpacingFactor = 8.0;
-		this->m_Configuration->ReadParameter( this->m_GridSpacingFactor, "FinalGridSpacing", 0 );
+		/** Read the desired grid spacing for each dimension. If only one gridspacing factor
+		 * is given, that one is used for each dimension. */
+		this->m_GridSpacingFactor[0]=8.0;
+		this->m_Configuration->ReadParameter( this->m_GridSpacingFactor[0], "FinalGridSpacing", 0);
+    this->m_GridSpacingFactor.Fill( this->m_GridSpacingFactor[0] );
+		for ( unsigned int j = 1; j < SpaceDimension; j++ )
+		{
+      this->m_Configuration->ReadParameter( this->m_GridSpacingFactor[j], "FinalGridSpacing", j);
+		}
 
 		/** If multigrid, then start with a lower resolution grid */
 		if (upsampleGridOption)
@@ -180,12 +186,12 @@ using namespace itk;
 		/** Determine the correct grid size */
 		for ( unsigned int j = 0; j < SpaceDimension; j++ )
 		{
-			gridspacing[ j ] = gridspacing[ j ] * this->m_GridSpacingFactor;
+			gridspacing[ j ] = gridspacing[ j ] * this->m_GridSpacingFactor[j];
 			gridorigin[j] -= gridspacing[j] *
 				floor( static_cast<double>(SplineOrder) / 2.0 );
 			gridindex[j] = 0; // isn't this always the case anyway?
 			gridsize[j]= static_cast< typename RegionType::SizeValueType >
-				( ceil( gridsize[j] / this->m_GridSpacingFactor ) + SplineOrder );
+				( ceil( gridsize[j] / this->m_GridSpacingFactor[j] ) + SplineOrder );
 		}
 		
 		/** Set the size data in the transform */
@@ -253,12 +259,12 @@ using namespace itk;
 		/** Determine the correct grid size */
 		for ( unsigned int j = 0; j < SpaceDimension; j++ )
 		{
-			gridspacingHigh[ j ] = gridspacingHigh[ j ] * this->m_GridSpacingFactor;
+			gridspacingHigh[ j ] = gridspacingHigh[ j ] * this->m_GridSpacingFactor[j];
 			gridoriginHigh[j] -= gridspacingHigh[j] *
 				floor( static_cast<double>(SplineOrder) / 2.0 );
 			gridindexHigh[j] = 0; // isn't this always the case anyway?
 			gridsizeHigh[j]= static_cast< typename RegionType::SizeValueType >
-				( ceil( gridsizeHigh[j] / this->m_GridSpacingFactor ) + SplineOrder );
+				( ceil( gridsizeHigh[j] / this->m_GridSpacingFactor[j] ) + SplineOrder );
 		}
 		gridregionHigh.SetSize(gridsizeHigh);
 		gridregionHigh.SetIndex(gridindexHigh);

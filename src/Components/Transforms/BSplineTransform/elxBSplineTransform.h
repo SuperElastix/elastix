@@ -28,8 +28,10 @@ using namespace itk;
 	 * This transform is a B-spline transformation...
 	 *
 	 * The parameters used in this class are:
-	 * \parameter FinalGridSpacing: the grid spacing of the B-spline transform \n
-	 *		example: <tt>(FinalGridSpacing 32.0)</tt>
+	 * \parameter FinalGridSpacing: the grid spacing of the B-spline transform for each dimension \n
+	 *		example: <tt>(FinalGridSpacing 32.0 32.0 32.0)</tt> \n
+	 *    If only one argument is given, that factor is used for each dimension. The spacing
+	 *    is not in millimeters, but in "voxel size units".
 	 * \parameter UpsampleGridOption: whether or not the B-spline grid should
 	 *		be upsampled from one resolution level to another. Choose from {true, false} \n
 	 *		example: <tt>(UpsampleGridOption "true")</tt>
@@ -168,7 +170,7 @@ using namespace itk;
 		/** Member variables.*/
 		typename TransformCastFilterType::Pointer		m_Caster;
 		typename TransformWriterType::Pointer				m_Writer;
-		double																			m_GridSpacingFactor;
+		SpacingType																	m_GridSpacingFactor;
 
 		ParametersType * m_Parameterspointer;
 	  ParametersType * m_Parameterspointer_out;
