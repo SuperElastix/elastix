@@ -1,0 +1,4 @@
+#include "elxMattesMutualInformationMetricWithRigidRegularization.h"
+
+elxInstallMacro( MattesMutualInformationMetricWithRigidRegularization );
+
