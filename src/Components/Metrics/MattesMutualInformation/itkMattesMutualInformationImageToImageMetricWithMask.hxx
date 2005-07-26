@@ -43,7 +43,6 @@
 #include "itkImageMoreRandomConstIteratorWithIndex.h"
 
 
-
 namespace itk
 {
 	

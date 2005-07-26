@@ -161,6 +161,8 @@ namespace itk
 		typedef typename Superclass::MovingImageType          MovingImageType;
 		typedef typename Superclass::FixedImageConstPointer   FixedImageConstPointer;
 		typedef typename Superclass::MovingImageConstPointer  MovingImageCosntPointer;
+		typedef typename Superclass::CoordinateRepresentationType
+			CoordinateRepresentationType;
 		
 		/** Index and Point typedef support. */
 		typedef typename FixedImageType::IndexType            FixedImageIndexType;
@@ -181,8 +183,7 @@ namespace itk
 		 * (3) allocate memory for pdf data structures.
 		 */
 		void Initialize(void) throw ( ExceptionObject );
-		
-		
+				
 		/** Get the derivatives of the match measure. */
 		void GetDerivative( 
 			const ParametersType& parameters,
@@ -194,7 +195,6 @@ namespace itk
 		/**  Get the value and derivatives for single valued optimizers. */
 		void GetValueAndDerivative( const ParametersType& parameters, 
 			MeasureType& Value, DerivativeType& Derivative ) const;
-		
 		
 		/** Number of spatial samples to used to compute metric */
 		itkSetClampMacro( NumberOfSpatialSamples, unsigned long,
@@ -276,7 +276,47 @@ namespace itk
 			MovingImagePointType& mappedPoint, bool& sampleWithinSupportRegion,
 			double& movingImageValue ) const;
 		
+		/** Types and variables related to BSpline deformable transforms.
+		 * If the transform is of type third order BSplineDeformableTransform,
+		 * then we can speed up the metric derivative calculation by
+		 * only inspecting the parameters within the support region
+		 * of a mapped point.
+		 */
+		
+		/** Boolean to indicate if the transform is BSpline deformable. */
+		bool m_TransformIsBSpline;
+		
+		/** The number of BSpline parameters per image dimension. */
+		long m_NumParametersPerDim;
+		
+		/** 
+		* The number of BSpline transform weights is the number of
+		* of parameter in the support region (per dimension ). */   
+		unsigned long m_NumBSplineWeights;
+		
+		/** The fixed image dimension. */
+		itkStaticConstMacro( FixedImageDimension, unsigned int,
+			FixedImageType::ImageDimension );
+		
+		/** Enum of the deformabtion field spline order.*/
+		enum { DeformationSplineOrder = 3 };
+		
+		/** Typedefs for the BSplineDeformableTransform.*/
+		typedef BSplineDeformableTransform<
+			CoordinateRepresentationType,
+			::itk::GetImageDimension<FixedImageType>::ImageDimension,
+			DeformationSplineOrder> BSplineTransformType;
+		typedef typename BSplineTransformType::WeightsType 
+			BSplineTransformWeightsType;
+		typedef typename BSplineTransformType::ParameterIndexArrayType 
+			BSplineTransformIndexArrayType;
+		
+		/** Variables used when transform is of type BSpline deformable.*/
+		typename BSplineTransformType::Pointer m_BSplineTransform;
+		mutable BSplineTransformWeightsType    m_BSplineTransformWeights;
+		mutable BSplineTransformIndexArrayType m_BSplineTransformIndices;
   
+
 	private:
 		
 		MattesMutualInformationImageToImageMetricWithMask( const Self& );	// purposely not implemented
@@ -348,8 +388,6 @@ namespace itk
 		bool m_InterpolatorIsBSpline;
 		
 		/** Typedefs for using BSpline interpolator. */
-		typedef typename Superclass::CoordinateRepresentationType
-			CoordinateRepresentationType;
 		typedef
 			BSplineInterpolateImageFunction<MovingImageType,
 			CoordinateRepresentationType> BSplineInterpolatorType;
@@ -369,46 +407,6 @@ namespace itk
 			int fixedImageParzenWindowIndex, int movingImageParzenWindowIndex,
 			const ImageDerivativesType& movingImageGradientValue,
 			double cubicBSplineDerivativeValue ) const;
-		
-		/** Types and variables related to BSpline deformable transforms.
-		 * If the transform is of type third order BSplineDeformableTransform,
-		 * then we can speed up the metric derivative calculation by
-		 * only inspecting the parameters within the support region
-		 * of a mapped point.
-		 */
-		
-		/** Boolean to indicate if the transform is BSpline deformable. */
-		bool m_TransformIsBSpline;
-		
-		/** The number of BSpline parameters per image dimension. */
-		long m_NumParametersPerDim;
-		
-		/** 
-		* The number of BSpline transform weights is the number of
-		* of parameter in the support region (per dimension ). */   
-		unsigned long m_NumBSplineWeights;
-		
-		/** The fixed image dimension. */
-		itkStaticConstMacro( FixedImageDimension, unsigned int,
-			FixedImageType::ImageDimension );
-		
-		/** Enum of the deformabtion field spline order.*/
-		enum { DeformationSplineOrder = 3 };
-		
-		/** Typedefs for the BSplineDeformableTransform.*/
-		typedef BSplineDeformableTransform<
-			CoordinateRepresentationType,
-			::itk::GetImageDimension<FixedImageType>::ImageDimension,
-			DeformationSplineOrder> BSplineTransformType;
-		typedef typename BSplineTransformType::WeightsType 
-			BSplineTransformWeightsType;
-		typedef typename BSplineTransformType::ParameterIndexArrayType 
-			BSplineTransformIndexArrayType;
-		
-		/** Variables used when transform is of type BSpline deformable.*/
-		typename BSplineTransformType::Pointer m_BSplineTransform;
-		mutable BSplineTransformWeightsType    m_BSplineTransformWeights;
-		mutable BSplineTransformIndexArrayType m_BSplineTransformIndices;  
 		
 	}; // end class MattesMutualInformationImageToImageMetricWithMask
 
