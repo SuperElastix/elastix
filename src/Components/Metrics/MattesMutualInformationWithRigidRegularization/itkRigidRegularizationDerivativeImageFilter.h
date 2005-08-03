@@ -165,6 +165,9 @@ namespace itk
 		/** Get the value of the rigid regulizer. */
 		InputVectorValueType GetRigidRegulizerValue(void);
 
+		/** Set the OutputDirectoryName. */
+		itkSetStringMacro( OutputDirectoryName );
+
 	protected:
 
 		RigidRegularizationDerivativeImageFilter();
@@ -211,6 +214,9 @@ namespace itk
 		 * This only stores a pointer to an externally kept image.
 		 */
 		InputScalarImagePointer		m_RigidityImage;
+
+		/** Name of the output directory. */
+		std::string m_OutputDirectoryName;
 
 	}; // end class RigidRegularizationDerivativeImageFilter
 

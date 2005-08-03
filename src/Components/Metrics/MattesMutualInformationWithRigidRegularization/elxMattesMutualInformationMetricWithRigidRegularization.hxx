@@ -18,7 +18,7 @@ using namespace itk;
 		MattesMutualInformationMetricWithRigidRegularization<TElastix>
 		::MattesMutualInformationMetricWithRigidRegularization()
 	{
-		/** Initialize.*/
+		/** Initialize. */
 		this->m_ShowExactMetricValue = false;
 		this->m_SamplesOnUniformGrid = false;
 
@@ -36,7 +36,7 @@ using namespace itk;
 		int MattesMutualInformationMetricWithRigidRegularization<TElastix>
 		::BeforeAll(void)
 	{
-		/** Return a value.*/
+		/** Return a value. */
 		return 0;
 
 	} // end BeforeAll
@@ -75,6 +75,10 @@ using namespace itk;
 		double dilationRadiusMultiplier = 1.0;
 		this->GetConfiguration()->ReadParameter( dilationRadiusMultiplier, "DilationRadiusMultiplier", 0 );
 		this->SetDilationRadiusMultiplier( dilationRadiusMultiplier );
+
+		/** Get and set the output directory name. */
+		std::string outdir = this->GetConfiguration()->GetCommandLineArgument( "-out" );
+		this->SetOutputDirectoryName( outdir.c_str() );
 
 		/** Read the fixed rigidity image and set it in the right class. */
 		std::string fixedRigidityImageName = "";
@@ -146,8 +150,13 @@ using namespace itk;
 
 		} // end if
 
-		// \todo Maybe a dilation before setting the rigidity images.
-		// this enlarges the support for rigidity, which could be neccessary
+		/** Add target cells to xout["iteration"]. */
+		xout["iteration"].AddTargetCell("Metric - MI");
+		xout["iteration"].AddTargetCell("Metric - RR");
+
+		/** Format the metric as floats. */
+		xl::xout["iteration"]["Metric - MI"] << std::showpoint << std::fixed;
+		xl::xout["iteration"]["Metric - RR"] << std::showpoint << std::fixed;
 
 	} // end BeforeRegistration
 
@@ -297,6 +306,10 @@ using namespace itk;
 				GetElxOptimizerBase()->GetAsITKBaseType()->
 				GetCurrentPosition() );
 		}
+
+		/** Print some information. */
+		xl::xout["iteration"]["Metric - MI"] << this->GetMIValue();
+		xl::xout["iteration"]["Metric - RR"] << this->GetRigidValue();
 
 	}
 

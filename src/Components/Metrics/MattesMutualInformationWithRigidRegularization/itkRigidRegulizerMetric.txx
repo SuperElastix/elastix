@@ -112,6 +112,7 @@ namespace itk
 		rigidDerivativeFilter->SetUseImageSpacing( this->m_UseImageSpacing );
 		rigidDerivativeFilter->SetSecondOrderWeight( this->m_SecondOrderWeight );
 		rigidDerivativeFilter->SetRigidityImage( this->m_RigidityImage );
+		rigidDerivativeFilter->SetOutputDirectoryName( this->m_OutputDirectoryName.c_str() );
 
     /** Set the pipeline. */
 		// \todo Let the derivativeFilter  accept an array of coefficient images,
@@ -201,6 +202,7 @@ namespace itk
 		rigidDerivativeFilter->SetUseImageSpacing( this->m_UseImageSpacing );
 		rigidDerivativeFilter->SetSecondOrderWeight( this->m_SecondOrderWeight );
 		rigidDerivativeFilter->SetRigidityImage( this->m_RigidityImage );
+		rigidDerivativeFilter->SetOutputDirectoryName( this->m_OutputDirectoryName.c_str() );
 
     /** Set the pipeline. */
 		// \todo Let the derivativeFilter  accept an array of coefficient images,

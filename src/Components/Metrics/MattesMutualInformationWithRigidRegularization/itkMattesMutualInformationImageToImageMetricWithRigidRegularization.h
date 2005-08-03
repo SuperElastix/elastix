@@ -172,6 +172,13 @@ namespace itk
 		/** Function to fill the RigidityCoefficientImage every iteration. */
 		void FillRigidityCoefficientImage( const ParametersType& parameters ) const;
 
+		/** For printing purposes. */
+		itkGetMacro( MIValue, double );
+		itkGetMacro( RigidValue, double );
+
+		/** Set the OutputDirectoryName. */
+		void SetOutputDirectoryName( const char * _arg );
+
 	protected:
 		
 		MattesMutualInformationImageToImageMetricWithRigidRegularization();
@@ -203,6 +210,12 @@ namespace itk
 		std::vector< DilateFilterPointer >	m_MovingRigidityImageDilation;
 		RigidityImagePointer						m_FixedRigidityImageDilated;
 		RigidityImagePointer						m_MovingRigidityImageDilated;
+
+		/** For printing purposes. */
+		mutable double m_MIValue, m_RigidValue;
+
+		/** Name of the output directory. */
+		std::string m_OutputDirectoryName;
 		
 	}; // end class MattesMutualInformationImageToImageMetricWithRigidRegularization
 

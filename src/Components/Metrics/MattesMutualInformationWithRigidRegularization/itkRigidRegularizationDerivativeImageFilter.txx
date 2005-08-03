@@ -1154,116 +1154,143 @@ namespace itk
 		 */
     this->GraftOutput( combiner->GetOutput() );
 
-		///** TASK 8:
-		// * Calculate the VALUE of the rigid regulizer.
-		// * \todo seperate this from the calculation of the derivative, so that
-		// * it is not necessary to do that heavy calculation stuff if just the
-		// * value is required.
-		// ************************************************************************* */
+		/** TASK 8:
+		 * Calculate the VALUE of the rigid regulizer.
+		 * \todo seperate this from the calculation of the derivative, so that
+		 * it is not necessary to do that heavy calculation stuff if just the
+		 * value is required.
+		 ************************************************************************* */
 
-		//if ( ImageDimension == 2 )
-		//{
-		//	/** Create operators C, D and E. */
-		//	std::vector< NeighborhoodType > Operators_C( ImageDimension ),
-		//		Operators_D( ImageDimension ), Operators_E( ImageDimension );
+		if ( ImageDimension == 2 )
+		{
+			/** Create a penalty-image. */
+			OutputScalarImagePointer pim = OutputScalarImageType::New();
+			pim->SetRegions( inputImages[ 0 ]->GetLargestPossibleRegion() );
+			pim->Allocate();
+			OutputScalarImageIteratorType pimit( pim, pim->GetLargestPossibleRegion() );
+			pimit.GoToBegin();
 
-		//	/** Create scalar images that are filtered once. */
-		//	std::vector< InputScalarImagePointer > ui_FC( ImageDimension ),
-		//		ui_FD( ImageDimension ), ui_FE( ImageDimension );
+			/** Create operators C, D and E. */
+			std::vector< NeighborhoodType > Operators_C( ImageDimension ),
+				Operators_D( ImageDimension ), Operators_E( ImageDimension );
 
-		//	/** For all dimensions ... */
-		//	for ( unsigned int i = 0; i < ImageDimension; i++ )
-		//	{
-		//		/** ... create the filtered images ... */
-		//		ui_FC[ i ] = InputScalarImageType::New();
-		//		ui_FD[ i ] = InputScalarImageType::New();
-		//		ui_FE[ i ] = InputScalarImageType::New();
-		//		/** ... and the apropiate operators.
-		//		 * The operators C, D and E from the paper are here created
-		//		 * by Create1DOperator D, E and G, because of the 3D case and history.
-		//		 */
-		//		this->Create1DOperator( Operators_C[ i ], "FD_xi", i + 1 );
-		//		this->Create1DOperator( Operators_D[ i ], "FE_xi", i + 1 );
-		//		this->Create1DOperator( Operators_E[ i ], "FG_xi", i + 1 );
-		//	}
+			/** Create scalar images that are filtered once. */
+			std::vector< InputScalarImagePointer > ui_FC( ImageDimension ),
+				ui_FD( ImageDimension ), ui_FE( ImageDimension );
 
-		//	/** Filter the inputImages. */
-		//	for ( unsigned int i = 0; i < ImageDimension; i++ )
-		//	{
-		//		ui_FC[ i ] = this->FilterSeparable( inputImages[ i ], Operators_C );
-		//		ui_FD[ i ] = this->FilterSeparable( inputImages[ i ], Operators_D );
-		//		ui_FE[ i ] = this->FilterSeparable( inputImages[ i ], Operators_E );
-		//	}
+			/** For all dimensions ... */
+			for ( unsigned int i = 0; i < ImageDimension; i++ )
+			{
+				/** ... create the filtered images ... */
+				ui_FC[ i ] = InputScalarImageType::New();
+				ui_FD[ i ] = InputScalarImageType::New();
+				ui_FE[ i ] = InputScalarImageType::New();
+				/** ... and the apropiate operators.
+				 * The operators C, D and E from the paper are here created
+				 * by Create1DOperator D, E and G, because of the 3D case and history.
+				 */
+				this->Create1DOperator( Operators_C[ i ], "FD_xi", i + 1 );
+				this->Create1DOperator( Operators_D[ i ], "FE_xi", i + 1 );
+				this->Create1DOperator( Operators_E[ i ], "FG_xi", i + 1 );
+			}
 
-		//	/** Create iterators. */
-		//	std::vector< OutputScalarImageIteratorType >
-		//		itC( ImageDimension ), itD( ImageDimension ), itE( ImageDimension );
-		//	for ( unsigned int i = 0; i < ImageDimension; i++ )
-		//	{
-		//		/** Create iterators. */
-		//		itC[ i ] = OutputScalarImageIteratorType( ui_FC[ i ], ui_FC[ i ]->GetLargestPossibleRegion() );
-		//		itD[ i ] = OutputScalarImageIteratorType( ui_FD[ i ], ui_FD[ i ]->GetLargestPossibleRegion() );
-		//		itE[ i ] = OutputScalarImageIteratorType( ui_FE[ i ], ui_FE[ i ]->GetLargestPossibleRegion() );
-		//		/** Reset iterators. */
-		//		itA[ i ].GoToBegin(); itB[ i ].GoToBegin(); 
-		//		itC[ i ].GoToBegin(); itD[ i ].GoToBegin(); itE[ i ].GoToBegin();
-		//	}
+			/** Filter the inputImages. */
+			for ( unsigned int i = 0; i < ImageDimension; i++ )
+			{
+				ui_FC[ i ] = this->FilterSeparable( inputImages[ i ], Operators_C );
+				ui_FD[ i ] = this->FilterSeparable( inputImages[ i ], Operators_D );
+				ui_FE[ i ] = this->FilterSeparable( inputImages[ i ], Operators_E );
+			}
 
-		//	/** Create iterator over coeficient image. */
-		//	InputScalarImageIteratorType it_Coef( m_RigidityImage,
-		//		m_RigidityImage->GetLargestPossibleRegion() );
-		//	it_Coef.GoToBegin();
+			/** Create iterators. */
+			std::vector< OutputScalarImageIteratorType >
+				itC( ImageDimension ), itD( ImageDimension ), itE( ImageDimension );
+			for ( unsigned int i = 0; i < ImageDimension; i++ )
+			{
+				/** Create iterators. */
+				itC[ i ] = OutputScalarImageIteratorType( ui_FC[ i ], ui_FC[ i ]->GetLargestPossibleRegion() );
+				itD[ i ] = OutputScalarImageIteratorType( ui_FD[ i ], ui_FD[ i ]->GetLargestPossibleRegion() );
+				itE[ i ] = OutputScalarImageIteratorType( ui_FE[ i ], ui_FE[ i ]->GetLargestPossibleRegion() );
+				/** Reset iterators. */
+				itA[ i ].GoToBegin(); itB[ i ].GoToBegin(); 
+				itC[ i ].GoToBegin(); itD[ i ].GoToBegin(); itE[ i ].GoToBegin();
+			}
 
-		//	/** Do the addition. */
-		//	while ( !itA[ 0 ].IsAtEnd() )
-		//	{
-		//		/** First order part. */
-		//		InputVectorValueType tmp = 0.0;
-		//		tmp = vcl_pow(
-		//				+ vcl_pow( static_cast<double>( 1.0 + itA[ 0 ].Get() ), 2.0 )
-		//				+ vcl_pow( static_cast<double>( itA[ 1 ].Get() ), 2.0 )
-		//				- 1.0
-		//			, 2.0 )
-		//			+ vcl_pow(
-		//				+ vcl_pow( static_cast<double>( itB[ 0 ].Get() ), 2.0 )
-		//				+ vcl_pow( static_cast<double>( 1.0 + itB[ 1 ].Get() ), 2.0 )
-		//				- 1.0
-		//			, 2.0 )
-		//			+ vcl_pow(
-		//				+ ( 1.0 + itA[ 0 ].Get() ) * ( itB[ 0 ].Get() )
-		//				+ ( itA[ 1 ].Get() ) * ( 1.0 + itB[ 1 ].Get() )
-		//			, 2.0 )
-  //        + vcl_pow(
-		//				+ ( 1.0 + itA[ 0 ].Get() ) * ( 1.0 + itB[ 1 ].Get() )
-		//				- ( itA[ 1 ].Get() ) * ( itB[ 0 ].Get() )
-		//				- 1.0
-		//			, 2.0 )
-		//			/** Second order part. */
-		//			+ this->m_SecondOrderWeight * (
-		//				+ vcl_pow( static_cast<double>( itC[ 0 ].Get() ), 2.0 )
-		//				+ vcl_pow( static_cast<double>( itC[ 1 ].Get() ), 2.0 )
-		//				+ vcl_pow( static_cast<double>( itD[ 0 ].Get() ), 2.0 )
-		//				+ vcl_pow( static_cast<double>( itD[ 1 ].Get() ), 2.0 )
-		//				+ vcl_pow( static_cast<double>( itE[ 0 ].Get() ), 2.0 )
-		//				+ vcl_pow( static_cast<double>( itE[ 1 ].Get() ), 2.0 )
-		//			);
+			/** Create iterator over coeficient image. */
+			InputScalarImageIteratorType it_Coef( m_RigidityImage,
+				m_RigidityImage->GetLargestPossibleRegion() );
+			it_Coef.GoToBegin();
 
-		//		this->m_RigidRegulizerValue += it_Coef.Get() * tmp;
+			/** Do the addition. */
+			while ( !itA[ 0 ].IsAtEnd() )
+			{
+				/** First order part. */
+				InputVectorValueType tmp = 0.0;
+				tmp = vcl_pow(
+						+ vcl_pow( static_cast<double>( 1.0 + itA[ 0 ].Get() ), 2.0 )
+						+ vcl_pow( static_cast<double>( itA[ 1 ].Get() ), 2.0 )
+						- 1.0
+					, 2.0 )
+					+ vcl_pow(
+						+ vcl_pow( static_cast<double>( itB[ 0 ].Get() ), 2.0 )
+						+ vcl_pow( static_cast<double>( 1.0 + itB[ 1 ].Get() ), 2.0 )
+						- 1.0
+					, 2.0 )
+					+ vcl_pow(
+						+ ( 1.0 + itA[ 0 ].Get() ) * ( itB[ 0 ].Get() )
+						+ ( itA[ 1 ].Get() ) * ( 1.0 + itB[ 1 ].Get() )
+					, 2.0 )
+          + vcl_pow(
+						+ ( 1.0 + itA[ 0 ].Get() ) * ( 1.0 + itB[ 1 ].Get() )
+						- ( itA[ 1 ].Get() ) * ( itB[ 0 ].Get() )
+						- 1.0
+					, 2.0 )
+					/** Second order part. */
+					+ this->m_SecondOrderWeight * (
+						+ vcl_pow( static_cast<double>( itC[ 0 ].Get() ), 2.0 )
+						+ vcl_pow( static_cast<double>( itC[ 1 ].Get() ), 2.0 )
+						+ vcl_pow( static_cast<double>( itD[ 0 ].Get() ), 2.0 )
+						+ vcl_pow( static_cast<double>( itD[ 1 ].Get() ), 2.0 )
+						+ vcl_pow( static_cast<double>( itE[ 0 ].Get() ), 2.0 )
+						+ vcl_pow( static_cast<double>( itE[ 1 ].Get() ), 2.0 )
+					);
 
-		//		/** Increase all iterators. */
-		//		for ( unsigned int i = 0; i < ImageDimension; i++ )
-		//		{
-		//			++itA[ i ];++itB[ i ];++itC[ i ];++itD[ i ];++itE[ i ];
-		//		}
-		//		++it_Coef;
+				this->m_RigidRegulizerValue += it_Coef.Get() * tmp;
 
-		//	} // end while
+				/** Fill the penalty image. */
+				pimit.Set( it_Coef.Get() * tmp );
+				++pimit;
 
-		//} // end if the 2D case
-		//else if ( ImageDimension == 3 )
-		//{
-		//	this->m_RigidRegulizerValue = NumericTraits<InputVectorValueType>::Zero;
-		//} // end if the 3D case
+				/** Increase all iterators. */
+				for ( unsigned int i = 0; i < ImageDimension; i++ )
+				{
+					++itA[ i ];++itB[ i ];++itC[ i ];++itD[ i ];++itE[ i ];
+				}
+				++it_Coef;
+
+			} // end while
+
+			/** Write the penalty image to file. */
+			typedef ImageFileWriter< OutputScalarImageType >		PenaltyWriterType;
+			typename PenaltyWriterType::Pointer penaltywriter = PenaltyWriterType::New();
+			std::string filename1 = this->m_OutputDirectoryName + "penaltyImage.mhd";
+			penaltywriter->SetFileName( filename1.c_str() );
+			penaltywriter->SetInput( pim );
+			penaltywriter->Update();
+
+			/** Write the penalty image to file. */
+			typedef ImageFileWriter< InputScalarImageType >			RigidityWriterType;
+			typename RigidityWriterType::Pointer rigiditywriter = RigidityWriterType::New();
+			std::string filename2 = this->m_OutputDirectoryName + "rigidityImage.mhd";
+			rigiditywriter->SetFileName( filename2.c_str() );
+			rigiditywriter->SetInput( this->m_RigidityImage );
+			rigiditywriter->Update();
+
+		} // end if the 2D case
+		else if ( ImageDimension == 3 )
+		{
+			this->m_RigidRegulizerValue = NumericTraits<InputVectorValueType>::Zero;
+		} // end if the 3D case
 
 		/** Check if this function is called. */
 		this->m_GenerateDataCalled = true;

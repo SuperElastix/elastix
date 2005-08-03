@@ -99,6 +99,9 @@ namespace itk
 		/** Set macro for the weight of the second order term. */
 		itkSetMacro( SecondOrderWeight, ScalarType );
 
+		/** Set the OutputDirectoryName. */
+		itkSetStringMacro( OutputDirectoryName );
+
   protected:
 
     RigidRegulizerMetric();
@@ -117,6 +120,9 @@ namespace itk
 
 		bool				m_UseImageSpacing;
 		ScalarType	m_SecondOrderWeight;
+
+		/** Name of the output directory. */
+		std::string m_OutputDirectoryName;
 
   }; // end class RigidRegulizerMetric
   

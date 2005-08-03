@@ -53,6 +53,9 @@ namespace itk
 
 		this->m_FixedRigidityImageDilated = 0;
 		this->m_MovingRigidityImageDilated = 0;
+
+		/** For printing purposes. */
+		this->m_MIValue = this->m_RigidValue = 0.0;
 	
 	} // end Constructor
 	
@@ -309,6 +312,10 @@ namespace itk
 		 /** Calculate the sum of derivatives. */
 		 derivative = MIDerivative + this->m_RigidPenaltyWeight * RigidDerivative;
 
+		 /** For printing purposes. */
+		 this->m_MIValue = MIValue;
+		 this->m_RigidValue = RigidValue;
+
 		 //temp
 		 if (0)
 		 {
@@ -423,28 +430,33 @@ namespace itk
 	 } // end FillRigidityCoefficientImage
 
 	/**
-	 * ******************** SetRigidityImage *******************
+	 * ******************** SetOutputDirectoryName ******************
 	 *
-	 * This is a copy of the itkSetMacro, but with the additional
-	 * pass of the rigidity image to the rigidregulizer metric.
+	 * This is a copy of the itkSetStringMacro, but with the additional
+	 * pass of the OutputDirectoryName to the rigidregulizer metric.
 	 */
 
-	 //template < class TFixedImage, class TMovingImage  >
-		// void
-		// MattesMutualInformationImageToImageMetricWithRigidRegularization<TFixedImage,TMovingImage>
-		// ::SetRigidityImage( RigidityImagePointer rim )
-	 //{
-		// /** Set the pointer in this class. */
-		// if ( this->m_RigidityImage != rim )
-		// {
-		//	 this->m_RigidityImage = rim;
-		//	 this->Modified();
-		// }
+	 template < class TFixedImage, class TMovingImage  >
+		 void
+		 MattesMutualInformationImageToImageMetricWithRigidRegularization<TFixedImage,TMovingImage>
+		 ::SetOutputDirectoryName( const char * _arg )
+	 {
+		 /** Set the pointer in this class. */
+		 if ( _arg && ( _arg == this->m_OutputDirectoryName ) ) { return; }
+		 if ( _arg )
+		 {
+			 this->m_OutputDirectoryName = _arg;
+		 }
+		 else
+		 {
+			 this->m_OutputDirectoryName = "";
+		 }
+		 this->Modified();
 
-		// /** Set the pointer in the RigidRegulizerMetric class. */
-		// this->m_RigidRegulizer->SetRigidityImage( this->m_RigidityImage );
+		 /** Set the pointer in the RigidRegulizerMetric class. */
+		 this->m_RigidRegulizer->SetOutputDirectoryName( this->m_OutputDirectoryName.c_str() );
 
-	 //} // end SetRigidityImage
+	 } // end SetOutputDirectoryName
 
 } // end namespace itk
 
