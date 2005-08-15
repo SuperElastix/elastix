@@ -145,7 +145,7 @@ namespace itk
 				/** Create the structuring element. */
 				radius.Fill( 0 );
 				radius.SetElement( i,
-					this->m_DilationRadiusMultiplier * this->m_BSplineTransform->GetGridSpacing()[ i ] );
+					static_cast<unsigned long>(this->m_DilationRadiusMultiplier * this->m_BSplineTransform->GetGridSpacing()[ i ]) );
 
 				structuringElement[ i ].SetRadius( radius );
 				structuringElement[ i ].CreateStructuringElement();
