@@ -15,7 +15,8 @@ IF(CMAKE_COMPILER_IS_GNUCXX)
     ITKBasicFilters
     ITKNumerics
     ITKIO
-    ITKCommon )
+    ITKCommon
+    ITKStatistics )
 ENDIF(CMAKE_COMPILER_IS_GNUCXX)
 
 # interestingly, visual c++ does need param
@@ -28,7 +29,8 @@ IF(WIN32)
     ITKBasicFilters
     ITKNumerics
     ITKIO
-    ITKCommon )
+    ITKCommon
+    ITKStatistics )
 ENDIF(WIN32)
 
 #---------------------------------------------------------------------
