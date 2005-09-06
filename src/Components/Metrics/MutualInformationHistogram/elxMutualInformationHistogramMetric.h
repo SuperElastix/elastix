@@ -2,7 +2,7 @@
 #define __elxMutualInformationHistogramMetric_H__
 
 #include "elxIncludes.h"
-#include "itkMutualInformationHistogramImageToImageMetricWithMask.h"
+#include "itkMutualInformationHistogramImageToImageMetric.h"
 
 #include "elxTimer.h"
 
@@ -22,7 +22,7 @@ using namespace itk;
 	template <class TElastix >	
 		class MutualInformationHistogramMetric :
 		public
-			MutualInformationHistogramImageToImageMetricWithMask<
+			MutualInformationHistogramImageToImageMetric<
 				ITK_TYPENAME MetricBase<TElastix>::FixedImageType,
 				ITK_TYPENAME MetricBase<TElastix>::MovingImageType >,
 		public MetricBase<TElastix>
@@ -31,7 +31,7 @@ using namespace itk;
 
 		/** Standard ITK-stuff.*/
 		typedef MutualInformationHistogramMetric							Self;
-		typedef MutualInformationHistogramImageToImageMetricWithMask<
+		typedef MutualInformationHistogramImageToImageMetric<
 			typename MetricBase<TElastix>::FixedImageType,
 			typename MetricBase<TElastix>::MovingImageType >		Superclass1;
 		typedef MetricBase<TElastix>													Superclass2;
@@ -43,7 +43,7 @@ using namespace itk;
 		
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( MutualInformationHistogramMetric,
-			MutualInformationHistogramImageToImageMetricWithMask );
+			MutualInformationHistogramImageToImageMetric );
 		
 		/** Name of this class.*/
 		elxClassNameMacro( "MutualInformationHistogram" );
@@ -60,12 +60,6 @@ using namespace itk;
 		typedef typename Superclass1::MovingImageType						MovingImageType;
 		typedef typename Superclass1::FixedImageConstPointer 		FixedImageConstPointer;
 		typedef typename Superclass1::MovingImageConstPointer		MovingImageCosntPointer;
-		typedef typename Superclass1::FixedImageIndexType				FixedImageIndexType;
-		typedef typename Superclass1::FixedImageIndexValueType 	FixedImageIndexValueType;
-		typedef typename Superclass1::MovingImageIndexType 			MovingImageIndexType;
-		typedef typename Superclass1::FixedImagePointType				FixedImagePointType;
-		typedef typename Superclass1::MovingImagePointType 			MovingImagePointType;
-		
 		typedef typename Superclass1::ScalesType								ScalesType;
 		
 		/** The moving image dimension. */

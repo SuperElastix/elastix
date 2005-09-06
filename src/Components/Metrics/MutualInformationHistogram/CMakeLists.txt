@@ -3,9 +3,7 @@
 ADD_ELXCOMPONENT( elxMutualInformationHistogramMetric
  elxMutualInformationHistogramMetric.h
  elxMutualInformationHistogramMetric.hxx
- elxMutualInformationHistogramMetric.cxx 
- itkMutualInformationHistogramImageToImageMetricWithMask.h
- itkMutualInformationHistogramImageToImageMetricWithMask.txx)
+ elxMutualInformationHistogramMetric.cxx )
 
 
 
