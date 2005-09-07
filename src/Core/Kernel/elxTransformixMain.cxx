@@ -51,6 +51,12 @@ namespace elastix
 			SetPriorityClass( GetCurrentProcess(), HIGH_PRIORITY_CLASS );
 			#endif
 		}
+		else if ( processPriority == "belownormal" )
+		{
+			#ifdef _WIN32
+			SetPriorityClass( GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS );
+			#endif
+		}
 
 		/** Initialize database.*/		
 		int ErrorCode = this->InitDBIndex();

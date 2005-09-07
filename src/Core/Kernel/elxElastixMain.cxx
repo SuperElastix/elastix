@@ -185,6 +185,12 @@ namespace elastix
 			SetPriorityClass( GetCurrentProcess(), HIGH_PRIORITY_CLASS );
 			#endif
 		}
+		else if ( processPriority == "belownormal" )
+		{
+			#ifdef _WIN32
+			SetPriorityClass( GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS );
+			#endif
+		}
 
 		/** Initialize database.*/		
 		int ErrorCode = this->InitDBIndex();
@@ -320,13 +326,13 @@ namespace elastix
 			ErrorCode = 1;
 		}
 
-		/** Store the images in ElastixMain	*/
+		/** Store the images in ElastixMain. */
 		this->SetFixedImage( this->m_elx_Elastix->GetFixedImage() );
 		this->SetMovingImage( this->m_elx_Elastix->GetMovingImage() );
 		this->SetFixedInternalImage( this->m_elx_Elastix->GetFixedInternalImage() );
 		this->SetMovingInternalImage( this->m_elx_Elastix->GetMovingInternalImage() );
 		
-		/** Set processPriority to normal again.*/
+		/** Set processPriority to normal again. */
 		if ( processPriority == "high" )
 		{
 			#ifdef _WIN32

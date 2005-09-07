@@ -285,7 +285,7 @@ void PrintHelp(void)
 	std::cout << "-fMask\t\tmask for fixed image (.mhd)" << std::endl;
 	std::cout << "-mMask\t\tmask for moving image (.mhd)" << std::endl;
 	std::cout << "-t0\t\tparameter file for initial transform" << std::endl;
-	std::cout << "-priority\tset the process priority to high (Windows only)"
+	std::cout << "-priority\tset the process priority to high or belownormal (Windows only)"
 		<< std::endl << std::endl;
 	
 	/** The parameter file.*/

@@ -190,7 +190,7 @@ void PrintHelp(void)
 	std::cout << "-ipp\t\tfile containing input-image points" << std::endl;
 	std::cout << "\t\tthe point are transformed according to the specified transform-parameter file" << std::endl;
 	std::cout << "\t\tuse \"-ipp all\" to transform all points from the input-image" << std::endl;
-	std::cout << "-priority\tset the process priority to high (Windows only)"	<< std::endl;
+	std::cout << "-priority\tset the process priority to high or belownormal (Windows only)"	<< std::endl;
 	std::cout << "-ipt\t\tInput pixel type" << std::endl;
 	std::cout << "-opt\t\tOutput pixel type" << std::endl;
 	std::cout << "If \"-ipt\" and/or \"-opt\" are not given, transformix attempts to read them from the transform-parameter file"
