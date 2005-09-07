@@ -72,7 +72,7 @@ namespace itk
 		typedef GrayscaleErodeImageFilter<
 			Superclass, Superclass, StructuringElement >		ErodeFilter;
 		typedef GrayscaleDilateImageFilter<
-			Superclass, Superclass, StructuringElement >		DilateFilter;		
+			Superclass, Superclass, StructuringElement >		DilateFilter;
 		
 		/** Evaluate if a point falls within the mask or not. */
 		virtual bool IsInMask( const PointType &point ) const  
