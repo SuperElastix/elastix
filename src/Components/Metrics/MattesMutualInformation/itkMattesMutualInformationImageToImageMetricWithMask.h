@@ -213,7 +213,11 @@ namespace itk
 		virtual MeasureType GetExactValue( const ParametersType& parameters );
 
 		/** \todo the method GetExactDerivative could as well be added here. */
-				
+	
+    /** Provide API to reinitialize the seed of the random number generator */
+		static void ReinitializeSeed();
+		static void ReinitializeSeed(int);
+
 		/** UseAllPixels flag. Determines whether the value and derivative are computed
 		 * on all pixels or just a randomly sampled subset. Make sure to set it true
 		 * before calling Initialize() */

@@ -1379,6 +1379,37 @@ namespace itk
 	 } // end GetExactValue
 
 
+	 /**
+	  * *********************** ReinitializeSeed ********************
+	  *
+	  * Method to reinitialize the seed of the random number generator
+	  */
+
+	 template < class TFixedImage, class TMovingImage  >
+		 void MattesMutualInformationImageToImageMetricWithMask< TFixedImage, TMovingImage >
+		 ::ReinitializeSeed()
+	 {
+		 // This method should be the same used in the ImageRandomIterator
+		 elx_sample_reseed();
+
+	 } // end ReinitializeSeed
+
+
+	 /**
+	  * *********************** ReinitializeSeed ********************
+	  *
+	  * Method to reinitialize the seed of the random number generator
+	  */
+
+	 template < class TFixedImage, class TMovingImage  >
+		 void MattesMutualInformationImageToImageMetricWithMask< TFixedImage, TMovingImage >
+		 ::ReinitializeSeed(int seed)
+	 {
+		 // This method should be the same used in the ImageRandomIterator
+		 elx_sample_reseed(seed);
+
+	 } // end ReinitializeSeed
+
 
 } // end namespace itk
 
