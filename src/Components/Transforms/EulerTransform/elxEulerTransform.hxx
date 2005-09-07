@@ -189,6 +189,7 @@ namespace elastix
 		/** Make a temporary image with the right region info,
 		* so that the TransformIndexToPhysicalPoint-functions will be right.
 		*/
+		typedef FixedImageType DummyImageType; 
 		typename DummyImageType::Pointer dummyImage = DummyImageType::New();
 		RegionType region;
 		region.SetIndex( index );
