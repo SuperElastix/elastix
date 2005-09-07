@@ -1,0 +1,9 @@
+HISTORY-file:
+
+-------------------------------------------------
+2005 september 7
+
+- Created this document
+- Created a tag elastix_03_2
+- elastix is now compiled with ITK 2.2
+
