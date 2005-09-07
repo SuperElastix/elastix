@@ -14,18 +14,15 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef _itkMutualInformationImageToImageMetricWithMask_txx
-#define _itkMutualInformationImageToImageMetricWithMask_txx
+#ifndef _itkMutualInformationImageToImageMetricMoreRandom_txx
+#define _itkMutualInformationImageToImageMetricMoreRandom_txx
 
-#include "itkMutualInformationImageToImageMetricWithMask.h"
-
+#include "itkMutualInformationImageToImageMetricMoreRandom.h"
 #include "itkCovariantVector.h"
 //#include "itkImageRandomConstIteratorWithIndex.h"
+#include "itkImageMoreRandomConstIteratorWithIndex.h"
 #include "vnl/vnl_math.h"
 #include "itkGaussianKernelFunction.h"
-
-/** elastix random iterator (that behaves the same in linux and windows) */
-#include "itkImageMoreRandomConstIteratorWithIndex.h"
 
 namespace itk
 {
@@ -34,43 +31,44 @@ namespace itk
  * Constructor
  */
 template < class TFixedImage, class TMovingImage >
-MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
-::MutualInformationImageToImageMetricWithMask()
+MutualInformationImageToImageMetricMoreRandom<TFixedImage,TMovingImage>
+::MutualInformationImageToImageMetricMoreRandom()
 {
 
-  this->m_NumberOfSpatialSamples = 0;
+  m_NumberOfSpatialSamples = 0;
   this->SetNumberOfSpatialSamples( 50 );
 
-  this->m_KernelFunction  = dynamic_cast<KernelFunction*>(
+  m_KernelFunction  = dynamic_cast<KernelFunction*>(
     GaussianKernelFunction::New().GetPointer() );
 
-  this->m_FixedImageStandardDeviation = 0.4;
-  this->m_MovingImageStandardDeviation = 0.4;
+  m_FixedImageStandardDeviation = 0.4;
+  m_MovingImageStandardDeviation = 0.4;
 
-  this->m_MinProbability = 0.0001;
+  m_MinProbability = 0.0001;
 
+  //
   // Following initialization is related to
   // calculating image derivatives
-  this->m_ComputeGradient = false; // don't use the default gradient for now
-  this->m_DerivativeCalculator = DerivativeFunctionType::New();
+  this->SetComputeGradient(false); // don't use the default gradient for now
+  m_DerivativeCalculator = DerivativeFunctionType::New();
 
 }
 
 
 template < class TFixedImage, class TMovingImage  >
 void
-MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+MutualInformationImageToImageMetricMoreRandom<TFixedImage,TMovingImage>
 ::PrintSelf(std::ostream& os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);
   os << indent << "NumberOfSpatialSamples: ";
-  os << this->m_NumberOfSpatialSamples << std::endl;
+  os << m_NumberOfSpatialSamples << std::endl;
   os << indent << "FixedImageStandardDeviation: ";
-  os << this->m_FixedImageStandardDeviation << std::endl;
+  os << m_FixedImageStandardDeviation << std::endl;
   os << indent << "MovingImageStandardDeviation: ";
-  os << this->m_MovingImageStandardDeviation << std::endl;
+  os << m_MovingImageStandardDeviation << std::endl;
   os << indent << "KernelFunction: ";
-  os << this->m_KernelFunction.GetPointer() << std::endl;
+  os << m_KernelFunction.GetPointer() << std::endl;
 }
 
 
@@ -79,20 +77,20 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
  */
 template < class TFixedImage, class TMovingImage  >
 void
-MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+MutualInformationImageToImageMetricMoreRandom<TFixedImage,TMovingImage>
 ::SetNumberOfSpatialSamples( 
   unsigned int num )
 {
-  if ( num == this->m_NumberOfSpatialSamples ) return;
+  if ( num == m_NumberOfSpatialSamples ) return;
 
   this->Modified();
  
   // clamp to minimum of 1
-  this->m_NumberOfSpatialSamples = ((num > 1) ? num : 1 );
+  m_NumberOfSpatialSamples = ((num > 1) ? num : 1 );
 
   // resize the storage vectors
-  this->m_SampleA.resize( this->m_NumberOfSpatialSamples );
-  this->m_SampleB.resize( this->m_NumberOfSpatialSamples );
+  m_SampleA.resize( m_NumberOfSpatialSamples );
+  m_SampleB.resize( m_NumberOfSpatialSamples );
 
 }
 
@@ -104,15 +102,16 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
  */
 template < class TFixedImage, class TMovingImage  >
 void
-MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+MutualInformationImageToImageMetricMoreRandom<TFixedImage,TMovingImage>
 ::SampleFixedImageDomain(
   SpatialSampleContainer& samples ) const
 {
+
   //typedef ImageRandomConstIteratorWithIndex<FixedImageType> RandomIterator;
 	typedef ImageMoreRandomConstIteratorWithIndex<FixedImageType> RandomIterator;
-
   RandomIterator randIter( this->m_FixedImage, this->GetFixedImageRegion() );
 
+  randIter.SetNumberOfSamples( m_NumberOfSpatialSamples );
   randIter.GoToBegin();
 
   typename SpatialSampleContainer::iterator iter;
@@ -120,85 +119,75 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
 
   bool allOutside = true;
 
-	/** If no mask.*/
-	if ( !(this->m_FixedImageMask) )
-	{
-		/** Set number of samples equal to m_NumberOfSpatialSamples.*/
-		randIter.SetNumberOfSamples( this->m_NumberOfSpatialSamples );
+  this->m_NumberOfPixelsCounted = 0;    // Number of pixels that map into the 
+                                        // fixed and moving image mask, if specified
+                                        // and the resampled fixed grid after 
+                                        // transformation. 
+                                        
+  // Number of random picks made from the portion of fixed image within the fixed mask
+  unsigned long numberOfFixedImagePixelsVisited = 0; 
+  unsigned long dryRunTolerance = this->GetFixedImageRegion().GetNumberOfPixels();
 
-		for( iter = samples.begin(); iter != end; ++iter )
+  for( iter=samples.begin(); iter != end; ++iter )
     {
-			// get sampled index
-			FixedImageIndexType index = randIter.GetIndex();
-			
-			// get sampled fixed image value
-			(*iter).FixedImageValue = randIter.Get();
-			
-			// get moving image value
-			this->m_FixedImage->TransformIndexToPhysicalPoint( index, 
-				(*iter).FixedImagePointValue );
-			
-			MovingImagePointType mappedPoint = 
-				this->m_Transform->TransformPoint( (*iter).FixedImagePointValue );
-			
-			if( this->m_Interpolator->IsInsideBuffer( mappedPoint ) )
+    // Get sampled index
+    FixedImageIndexType index = randIter.GetIndex();
+    // Get sampled fixed image value
+    (*iter).FixedImageValue = randIter.Get();
+    // Translate index to point
+    this->m_FixedImage->TransformIndexToPhysicalPoint( index,
+                                                 (*iter).FixedImagePointValue );
+    
+    // If not inside the fixed mask, ignore the point
+    if( this->m_FixedImageMask && 
+        !this->m_FixedImageMask->IsInside( (*iter).FixedImagePointValue ) )
       {
-				(*iter).MovingImageValue = this->m_Interpolator->Evaluate( mappedPoint );
-				allOutside = false;
+      ++randIter; // jump to another random position
+      continue;
       }
-			else
+
+    if( allOutside )
       {
-				(*iter).MovingImageValue = 0;
+      ++numberOfFixedImagePixelsVisited;
+      if( numberOfFixedImagePixelsVisited > dryRunTolerance )
+        {
+        // We randomly visited as many points as is the size of the fixed image
+        // region.. Too may samples mapped ouside.. go change your transform
+        itkExceptionMacro( << "Too many samples mapped outside the moving buffer" );
+        }
       }
-			
-			// jump to random position
-			++randIter;
-			
-    } // end for loop
-	} // end if no mask
-	else
-	{
-		/** If there is a mask.*/
 
-		/** Set number of samples equal to m_NumberOfSpatialSamples.*/
-		randIter.SetNumberOfSamples( 50 * this->m_NumberOfSpatialSamples );
+    MovingImagePointType mappedPoint = 
+      this->m_Transform->TransformPoint( (*iter).FixedImagePointValue );
 
-		for( iter = samples.begin(); iter != end; ++iter )
-    {
-			/** Start jumping around untill a point within the mask is found.*/
-			do
-			{
-				// jump to random position
-				++randIter;
+    // If the transformed point after transformation does not lie within the 
+    // MovingImageMask, skip it.
+    if( this->m_MovingImageMask && 
+        !this->m_MovingImageMask->IsInside( mappedPoint ) )
+      {
+      ++randIter;
+      continue;
+      }
 
-				// get sampled index
-				FixedImageIndexType index = randIter.GetIndex();
-				
-				// get moving image value
-				this->m_FixedImage->TransformIndexToPhysicalPoint( index, 
-					(*iter).FixedImagePointValue );
-				
-			} while ( !(this->m_FixedImageMask->IsInside((*iter).FixedImagePointValue)) );
+    // The interpolator does not need to do bounds checking if we have masks, 
+    // since we know that the point is within the fixed and moving masks. But
+    // a crazy user can specify masks that are bigger than the image. Then we
+    // will need bounds checking.. So keep this anyway.
+    if( this->m_Interpolator->IsInsideBuffer( mappedPoint ) )
+      {
+      (*iter).MovingImageValue = this->m_Interpolator->Evaluate( mappedPoint );
+      this->m_NumberOfPixelsCounted++;
+      allOutside = false;
+      }
+    else
+      {
+      (*iter).MovingImageValue = 0;
+      }
 
-			// get sampled fixed image value
-			(*iter).FixedImageValue = randIter.Get();
+    // Jump to random position
+    ++randIter;
 
-			// Get the mapped point
-			MovingImagePointType mappedPoint = 
-				this->m_Transform->TransformPoint( (*iter).FixedImagePointValue );
-			
-			if( this->m_Interpolator->IsInsideBuffer( mappedPoint ) && this->m_MovingImageMask->IsInside( mappedPoint ) )
-			{
-				(*iter).MovingImageValue = this->m_Interpolator->Evaluate( mappedPoint );
-				allOutside = false;
-			}
-			else
-			{
-				(*iter).MovingImageValue = 0;
-			}
-
-    } // end for loop
-	} // end if there is a mask
+    }
 
   if( allOutside )
     {
@@ -213,9 +202,9 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
  * Get the match Measure
  */
 template < class TFixedImage, class TMovingImage  >
-typename MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+typename MutualInformationImageToImageMetricMoreRandom<TFixedImage,TMovingImage>
 ::MeasureType
-MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+MutualInformationImageToImageMetricMoreRandom<TFixedImage,TMovingImage>
 ::GetValue( const ParametersType& parameters ) const
 {
 
@@ -223,10 +212,10 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
   this->m_Transform->SetParameters( parameters );
 
   // collect sample set A
-  this->SampleFixedImageDomain( this->m_SampleA );
+  this->SampleFixedImageDomain( m_SampleA );
 
   // collect sample set B
-  this->SampleFixedImageDomain( this->m_SampleB );
+  this->SampleFixedImageDomain( m_SampleB );
 
   // calculate the mutual information
   double dLogSumFixed = 0.0;
@@ -234,28 +223,28 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
   double dLogSumJoint  = 0.0;
 
   typename SpatialSampleContainer::const_iterator aiter;
-  typename SpatialSampleContainer::const_iterator aend = this->m_SampleA.end();
+  typename SpatialSampleContainer::const_iterator aend = m_SampleA.end();
   typename SpatialSampleContainer::const_iterator biter;
-  typename SpatialSampleContainer::const_iterator bend = this->m_SampleB.end();
+  typename SpatialSampleContainer::const_iterator bend = m_SampleB.end();
 
   for( biter = m_SampleB.begin() ; biter != bend; ++biter )
     {
-    double dSumFixed  = this->m_MinProbability;
-    double dSumMoving     = this->m_MinProbability;
-    double dSumJoint   = this->m_MinProbability;
+    double dSumFixed  = m_MinProbability;
+    double dSumMoving     = m_MinProbability;
+    double dSumJoint   = m_MinProbability;
 
-    for( aiter = this->m_SampleA.begin() ; aiter != aend; ++aiter )
+    for( aiter = m_SampleA.begin() ; aiter != aend; ++aiter )
       {
       double valueFixed;
       double valueMoving;
 
       valueFixed = ( (*biter).FixedImageValue - (*aiter).FixedImageValue ) /
-        this->m_FixedImageStandardDeviation;
-      valueFixed = this->m_KernelFunction->Evaluate( valueFixed );
+        m_FixedImageStandardDeviation;
+      valueFixed = m_KernelFunction->Evaluate( valueFixed );
 
       valueMoving = ( (*biter).MovingImageValue - (*aiter).MovingImageValue ) /
-        this->m_MovingImageStandardDeviation;
-      valueMoving = this->m_KernelFunction->Evaluate( valueMoving );
+        m_MovingImageStandardDeviation;
+      valueMoving = m_KernelFunction->Evaluate( valueMoving );
 
       dSumFixed += valueFixed;
       dSumMoving    += valueMoving;
@@ -263,15 +252,15 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
 
       } // end of sample A loop
 
-    dLogSumFixed -= log( dSumFixed );
-    dLogSumMoving    -= log( dSumMoving );
-    dLogSumJoint  -= log( dSumJoint );
+    dLogSumFixed  -= ( dSumFixed > 0.0 ) ? log( dSumFixed  ) : 0.0;
+    dLogSumMoving -= ( dSumMoving> 0.0 ) ? log( dSumMoving ) : 0.0;
+    dLogSumJoint  -= ( dSumJoint > 0.0 ) ? log( dSumJoint  ) : 0.0;
 
     } // end of sample B loop
 
-  double nsamp   = double( this->m_NumberOfSpatialSamples );
+  double nsamp   = double( m_NumberOfSpatialSamples );
 
-  double threshold = -0.5 * nsamp * log( this->m_MinProbability );
+  double threshold = -0.5 * nsamp * log( m_MinProbability );
   if( dLogSumMoving > threshold || dLogSumFixed > threshold ||
       dLogSumJoint > threshold  )
     {
@@ -294,7 +283,7 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
  */
 template < class TFixedImage, class TMovingImage  >
 void
-MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+MutualInformationImageToImageMetricMoreRandom<TFixedImage,TMovingImage>
 ::GetValueAndDerivative(
   const ParametersType& parameters,
   MeasureType& value,
@@ -311,13 +300,13 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
   this->m_Transform->SetParameters( parameters );
 
   // set the DerivativeCalculator
-  this->m_DerivativeCalculator->SetInputImage( this->m_MovingImage );
+  m_DerivativeCalculator->SetInputImage( this->m_MovingImage );
 
   // collect sample set A
-  this->SampleFixedImageDomain( this->m_SampleA );
+  this->SampleFixedImageDomain( m_SampleA );
 
   // collect sample set B
-  this->SampleFixedImageDomain( this->m_SampleB );
+  this->SampleFixedImageDomain( m_SampleB );
 
 
   // calculate the mutual information
@@ -326,19 +315,19 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
   double dLogSumJoint  = 0.0;
 
   typename SpatialSampleContainer::iterator aiter;
-  typename SpatialSampleContainer::const_iterator aend = this->m_SampleA.end();
+  typename SpatialSampleContainer::const_iterator aend = m_SampleA.end();
   typename SpatialSampleContainer::iterator biter;
-  typename SpatialSampleContainer::const_iterator bend = this->m_SampleB.end();
+  typename SpatialSampleContainer::const_iterator bend = m_SampleB.end();
 
   // precalculate all the image derivatives for sample A
   typedef std::vector<DerivativeType> DerivativeContainer;
   DerivativeContainer sampleADerivatives;
-  sampleADerivatives.resize( this->m_NumberOfSpatialSamples );
+  sampleADerivatives.resize( m_NumberOfSpatialSamples );
 
   typename DerivativeContainer::iterator aditer;
   DerivativeType tempDeriv( numberOfParameters );
 
-  for( aiter = this->m_SampleA.begin(), aditer = sampleADerivatives.begin();
+  for( aiter = m_SampleA.begin(), aditer = sampleADerivatives.begin();
        aiter != aend; ++aiter, ++aditer )
     {
     /*** FIXME: is there a way to avoid the extra copying step? *****/
@@ -349,25 +338,25 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
 
   DerivativeType derivB(numberOfParameters);
 
-  for( biter = this->m_SampleB.begin(); biter != bend; ++biter )
+  for( biter = m_SampleB.begin(); biter != bend; ++biter )
     {
-    double dDenominatorMoving = this->m_MinProbability;
-    double dDenominatorJoint = this->m_MinProbability;
+    double dDenominatorMoving = m_MinProbability;
+    double dDenominatorJoint = m_MinProbability;
 
-    double dSumFixed = this->m_MinProbability;
+    double dSumFixed = m_MinProbability;
 
-    for( aiter = this->m_SampleA.begin(); aiter != aend; ++aiter )
+    for( aiter = m_SampleA.begin(); aiter != aend; ++aiter )
       {
       double valueFixed;
       double valueMoving;
 
       valueFixed = ( (*biter).FixedImageValue - (*aiter).FixedImageValue )
-        / this->m_FixedImageStandardDeviation;
-      valueFixed = this->m_KernelFunction->Evaluate( valueFixed );
+        / m_FixedImageStandardDeviation;
+      valueFixed = m_KernelFunction->Evaluate( valueFixed );
 
       valueMoving = ( (*biter).MovingImageValue - (*aiter).MovingImageValue )
-        / this->m_MovingImageStandardDeviation;
-      valueMoving = this->m_KernelFunction->Evaluate( valueMoving );
+        / m_MovingImageStandardDeviation;
+      valueMoving = m_KernelFunction->Evaluate( valueMoving );
 
       dDenominatorMoving += valueMoving;
       dDenominatorJoint += valueMoving * valueFixed;
@@ -376,16 +365,25 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
 
       } // end of sample A loop
 
-    dLogSumFixed -= log( dSumFixed );
-    dLogSumMoving    -= log( dDenominatorMoving );
-    dLogSumJoint  -= log( dDenominatorJoint );
+    if( dSumFixed > 0.0 )
+      {
+      dLogSumFixed -= log( dSumFixed );
+      }
+    if( dDenominatorMoving > 0.0 )
+      {
+      dLogSumMoving    -= log( dDenominatorMoving );
+      }
+    if( dDenominatorJoint > 0.0 )
+      {
+      dLogSumJoint  -= log( dDenominatorJoint );
+      }
 
     // get the image derivative for this B sample
     this->CalculateDerivatives( (*biter).FixedImagePointValue, derivB );
 
     double totalWeight = 0.0;
 
-    for( aiter = this->m_SampleA.begin(), aditer = sampleADerivatives.begin();
+    for( aiter = m_SampleA.begin(), aditer = sampleADerivatives.begin();
          aiter != aend; ++aiter, ++aditer )
       {
       double valueFixed;
@@ -395,12 +393,12 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
       double weight;
 
       valueFixed = ( (*biter).FixedImageValue - (*aiter).FixedImageValue ) /
-        this->m_FixedImageStandardDeviation;
-      valueFixed = this->m_KernelFunction->Evaluate( valueFixed );
+        m_FixedImageStandardDeviation;
+      valueFixed = m_KernelFunction->Evaluate( valueFixed );
 
       valueMoving = ( (*biter).MovingImageValue - (*aiter).MovingImageValue ) /
-        this->m_MovingImageStandardDeviation;
-      valueMoving = this->m_KernelFunction->Evaluate( valueMoving );
+        m_MovingImageStandardDeviation;
+      valueMoving = m_KernelFunction->Evaluate( valueMoving );
 
       weightMoving = valueMoving / dDenominatorMoving;
       weightJoint = valueMoving * valueFixed / dDenominatorJoint;
@@ -418,9 +416,9 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
     } // end of sample B loop
 
 
-  double nsamp    = double( this->m_NumberOfSpatialSamples );
+  double nsamp    = double( m_NumberOfSpatialSamples );
 
-  double threshold = -0.5 * nsamp * log( this->m_MinProbability );
+  double threshold = -0.5 * nsamp * log( m_MinProbability );
   if( dLogSumMoving > threshold || dLogSumFixed > threshold ||
       dLogSumJoint > threshold  )
     {
@@ -435,7 +433,7 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
   value += log( nsamp );
 
   derivative  /= nsamp;
-  derivative  /= vnl_math_sqr( this->m_MovingImageStandardDeviation );
+  derivative  /= vnl_math_sqr( m_MovingImageStandardDeviation );
 
 }
 
@@ -445,7 +443,7 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
  */
 template < class TFixedImage, class TMovingImage  >
 void
-MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+MutualInformationImageToImageMetricMoreRandom<TFixedImage,TMovingImage>
 ::GetDerivative( const ParametersType& parameters, DerivativeType & derivative ) const
 {
   MeasureType value;
@@ -466,7 +464,7 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
  */
 template < class TFixedImage, class TMovingImage  >
 void
-MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+MutualInformationImageToImageMetricMoreRandom<TFixedImage,TMovingImage>
 ::CalculateDerivatives(
   const FixedImagePointType& point,
   DerivativeType& derivatives ) const
@@ -476,9 +474,9 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
   
   CovariantVector<double,MovingImageDimension> imageDerivatives;
 
-  if ( this->m_DerivativeCalculator->IsInsideBuffer( mappedPoint ) )
+  if ( m_DerivativeCalculator->IsInsideBuffer( mappedPoint ) )
     {
-    imageDerivatives = this->m_DerivativeCalculator->Evaluate( mappedPoint );
+    imageDerivatives = m_DerivativeCalculator->Evaluate( mappedPoint );
     }
   else
     {
@@ -509,7 +507,7 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
  */
 template < class TFixedImage, class TMovingImage  >
 void
-MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+MutualInformationImageToImageMetricMoreRandom<TFixedImage,TMovingImage>
 ::ReinitializeSeed()
 {
   // This method should be the same used in the ImageRandomIterator
@@ -521,12 +519,15 @@ MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
  */
 template < class TFixedImage, class TMovingImage  >
 void
-MutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+MutualInformationImageToImageMetricMoreRandom<TFixedImage,TMovingImage>
 ::ReinitializeSeed(int seed)
 {
   // This method should be the same used in the ImageRandomIterator
   elx_sample_reseed(seed);
 }
+
+  
+
 
 
 } // end namespace itk

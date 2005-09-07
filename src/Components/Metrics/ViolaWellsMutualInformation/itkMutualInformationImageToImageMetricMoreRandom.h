@@ -14,8 +14,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkMutualInformationImageToImageMetricWithMask_h
-#define __itkMutualInformationImageToImageMetricWithMask_h
+#ifndef __itkMutualInformationImageToImageMetricMoreRandom_h
+#define __itkMutualInformationImageToImageMetricMoreRandom_h
 
 #include "itkImageToImageMetric.h"
 #include "itkCovariantVector.h"
@@ -28,10 +28,10 @@
 namespace itk
 {
 
-/** \class MutualInformationImageToImageMetric
+/** \class MutualInformationImageToImageMetricMoreRandom
  * \brief Computes the mutual information between two images to be registered
  *
- * MutualInformationImageToImageMetric computes the mutual information
+ * MutualInformationImageToImageMetricMoreRandom computes the mutual information
  * between a fixed and moving image to be registered.
  *
  * This class is templated over the FixedImage type and the MovingImage type.
@@ -87,23 +87,22 @@ namespace itk
  * \ingroup RegistrationMetrics
  */
 template <class TFixedImage,class TMovingImage >
-class ITK_EXPORT MutualInformationImageToImageMetricWithMask :
+class ITK_EXPORT MutualInformationImageToImageMetricMoreRandom :
     public ImageToImageMetric< TFixedImage, TMovingImage >
 {
 public:
 
   /** Standard class typedefs. */
-  typedef MutualInformationImageToImageMetricWithMask				Self;
-  typedef ImageToImageMetric< TFixedImage, TMovingImage >		Superclass;
-  typedef SmartPointer<Self>																Pointer;
-  typedef SmartPointer<const Self>													ConstPointer;
+  typedef MutualInformationImageToImageMetricMoreRandom  Self;
+  typedef ImageToImageMetric< TFixedImage, TMovingImage > Superclass;
+  typedef SmartPointer<Self>  Pointer;
+  typedef SmartPointer<const Self>  ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( MutualInformationImageToImageMetricWithMask,
-		ImageToImageMetric );
+  itkTypeMacro(MutualInformationImageToImageMetricMoreRandom, ImageToImageMetric);
 
   /** Types inherited from Superclass. */
   typedef typename Superclass::TransformType            TransformType;
@@ -126,8 +125,8 @@ public:
   typedef typename TransformType::OutputPointType       MovingImagePointType;
 
   /** Enum of the moving image dimension. */
-  itkStaticConstMacro( MovingImageDimension, unsigned int,
-		MovingImageType::ImageDimension );
+  itkStaticConstMacro(MovingImageDimension, unsigned int,
+                      MovingImageType::ImageDimension);
 
   /** Get the derivatives of the match measure. */
   void GetDerivative( 
@@ -139,7 +138,7 @@ public:
 
   /**  Get the value and derivatives for single valued optimizers. */
   void GetValueAndDerivative( const ParametersType& parameters, 
-		MeasureType& Value, DerivativeType& Derivative ) const;
+                              MeasureType& Value, DerivativeType& Derivative ) const;
 
   /** Set the number of spatial samples. This is the number of image
    * samples used to calculate the joint probability distribution.
@@ -148,7 +147,7 @@ public:
   void SetNumberOfSpatialSamples( unsigned int num );
 
   /** Get the number of spatial samples. */
-  itkGetConstMacro( NumberOfSpatialSamples, unsigned int );
+  itkGetConstReferenceMacro( NumberOfSpatialSamples, unsigned int );
 
   /** Set/Get the moving image intensitiy standard deviation. This defines
    * the kernel bandwidth used in the joint probability distribution
@@ -156,8 +155,8 @@ public:
    * normalized to a mean of 0 and standard deviation of 1.0.  
    * Value is clamped to be always greater than zero. */
   itkSetClampMacro( MovingImageStandardDeviation, double, 
-		NumericTraits<double>::NonpositiveMin(), NumericTraits<double>::max() );
-  itkGetConstMacro( MovingImageStandardDeviation, double );
+                    NumericTraits<double>::NonpositiveMin(), NumericTraits<double>::max() );
+  itkGetConstReferenceMacro( MovingImageStandardDeviation, double );
 
   /** Set/Get the fixed image intensitiy standard deviation. This defines
    * the kernel bandwidth used in the joint probability distribution
@@ -165,7 +164,7 @@ public:
    * normalized to a mean of 0 and standard deviation of 1.0.  
    * Value is clamped to be always greater than zero. */
   itkSetClampMacro( FixedImageStandardDeviation, double,
-		NumericTraits<double>::NonpositiveMin(), NumericTraits<double>::max() );
+                    NumericTraits<double>::NonpositiveMin(), NumericTraits<double>::max() );
   itkGetMacro( FixedImageStandardDeviation, double );
 
   /** Set/Get the kernel function. This is used to calculate the joint
@@ -173,15 +172,16 @@ public:
   itkSetObjectMacro( KernelFunction, KernelFunction );
   itkGetObjectMacro( KernelFunction, KernelFunction );
 
-protected:
+  static void ReinitializeSeed();
+  static void ReinitializeSeed(int);
 
-  MutualInformationImageToImageMetricWithMask();
-  virtual ~MutualInformationImageToImageMetricWithMask() {};
+protected:
+  MutualInformationImageToImageMetricMoreRandom();
+  virtual ~MutualInformationImageToImageMetricMoreRandom() {};
   void PrintSelf(std::ostream& os, Indent indent) const;
 
 private:
-
-  MutualInformationImageToImageMetricWithMask(const Self&); //purposely not implemented
+  MutualInformationImageToImageMetricMoreRandom(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
   
   /** A spatial sample consists of the fixed domain point, the fixed image value
@@ -223,10 +223,6 @@ private:
    */
   void CalculateDerivatives( const FixedImagePointType& , DerivativeType& ) const;
 
-  /** Reinitialize the seed of the random number generator */
-  static void ReinitializeSeed();
-  static void ReinitializeSeed(int);
-
   typedef typename Superclass::CoordinateRepresentationType  
   CoordinateRepresentationType;
   typedef CentralDifferenceImageFunction< MovingImageType, 
@@ -234,13 +230,13 @@ private:
 
   typename DerivativeFunctionType::Pointer  m_DerivativeCalculator;
 
-}; // end class MutualInformationImageToImageMetricWithMask
+};
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMutualInformationImageToImageMetricWithMask.txx"
+#include "itkMutualInformationImageToImageMetricMoreRandom.txx"
 #endif
 
-#endif // end #ifndef __itkMutualInformationImageToImageMetricWithMask_h
+#endif
 

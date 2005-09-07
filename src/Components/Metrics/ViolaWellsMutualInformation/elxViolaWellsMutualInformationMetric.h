@@ -2,7 +2,7 @@
 #define __elxViolaWellsMutualInformationMetric_H__
 
 #include "elxIncludes.h"
-#include "itkMutualInformationImageToImageMetricWithMask.h"
+#include "itkMutualInformationImageToImageMetricMoreRandom.h"
 
 #include "elxTimer.h"
 
@@ -22,7 +22,7 @@ using namespace itk;
 	template <class TElastix >	
 		class ViolaWellsMutualInformationMetric :
 		public
-			MutualInformationImageToImageMetricWithMask<
+			MutualInformationImageToImageMetricMoreRandom<
 				ITK_TYPENAME MetricBase<TElastix>::FixedImageType,
 				ITK_TYPENAME MetricBase<TElastix>::MovingImageType >,
 		public MetricBase<TElastix>
@@ -31,7 +31,7 @@ using namespace itk;
 
 		/** Standard ITK-stuff.*/
 		typedef ViolaWellsMutualInformationMetric							Self;
-		typedef MutualInformationImageToImageMetricWithMask<
+		typedef MutualInformationImageToImageMetricMoreRandom<
 			typename MetricBase<TElastix>::FixedImageType,
 			typename MetricBase<TElastix>::MovingImageType >		Superclass1;
 		typedef MetricBase<TElastix>													Superclass2;
@@ -43,7 +43,7 @@ using namespace itk;
 		
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( ViolaWellsMutualInformationMetric,
-			MutualInformationImageToImageMetricWithMask );
+			MutualInformationImageToImageMetricMoreRandom );
 		
 		/** Name of this class.*/
 		elxClassNameMacro( "ViolaWellsMutualInformation" );
