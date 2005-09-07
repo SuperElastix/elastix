@@ -83,9 +83,23 @@ using namespace itk;
 		typedef typename RegistrationType::ITKBaseType					ITKRegistrationType;
 		typedef typename ITKRegistrationType::OptimizerType			OptimizerType;
 		typedef typename OptimizerType::ScalesType							ScalesType;
+
+		typedef typename FixedImageType::IndexType							IndexType;
+		typedef typename IndexType::IndexValueType							IndexValueType;
+		typedef typename FixedImageType::SizeType								SizeType;
+		typedef typename FixedImageType::PointType							PointType;
+		typedef typename FixedImageType::SpacingType						SpacingType;
+		typedef typename FixedImageType::RegionType							RegionType;
 		
 		/** Methods that have to be present in each version of MyTransform.*/
 		virtual void BeforeRegistration(void);
+
+		/** Calculate the center of rotation or use a user specified one. */
+		void CalculateRotationPoint( InputPointType & rotationPoint );
+
+		/** Functions to read/write transform-parameters from/to a file. */
+		virtual void ReadFromFile(void);
+		virtual void WriteToFile( const ParametersType & param );
 
 	protected:
 
