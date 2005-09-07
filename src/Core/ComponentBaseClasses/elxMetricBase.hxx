@@ -220,6 +220,9 @@ namespace elastix
 	template <class TElastix>
   void MetricBase<TElastix>::UpdateMasks( unsigned int level )
 	{
+
+		/**\todo: moet dit eigenlijk niet in de fixed/moving-pyramidbase ofzo? */
+
 		/** Some typedef's. */
 		typedef BinaryBallStructuringElement<
 			MaskFilePixelType,
@@ -262,7 +265,7 @@ namespace elastix
 			/** Declare radius-array and structuring element. */
 			RadiusTypeF								radiusarrayF;
 			StructuringElementTypeF		S_ballF;
-
+			
 			/** Setup the erosion pipeline. */
 			erosionF[ 0 ]->SetInput( this->m_FixedMaskImageReader->GetOutput() );
 			for ( unsigned int i = 0; i < FixedImageDimension; i++ )
@@ -278,7 +281,7 @@ namespace elastix
 				S_ballF.SetRadius( radiusarrayF );
 				S_ballF.CreateStructuringElement();
 				erosionF[ i ]->SetKernel( S_ballF );
-				
+								
 				/** Connect the pipeline. */
 				if ( i > 0 ) erosionF[ i ]->SetInput( erosionF[ i - 1 ]->GetOutput() );			
 			}
@@ -336,7 +339,7 @@ namespace elastix
 			/** Declare radius-array and structuring element. */
 			RadiusTypeM								radiusarrayM;
 			StructuringElementTypeM		S_ballM;
-
+			
 			/** Setup the erosion pipeline. */
 			erosionM[ 0 ]->SetInput( this->m_MovingMaskImageReader->GetOutput() );
 			for ( unsigned int i = 0; i < MovingImageDimension; i++ )
@@ -352,7 +355,7 @@ namespace elastix
 				S_ballM.SetRadius( radiusarrayM );
 				S_ballM.CreateStructuringElement();
 				erosionM[ i ]->SetKernel( S_ballM );
-				
+								
 				/** Connect the pipeline. */
 				if ( i > 0 ) erosionM[ i ]->SetInput( erosionM[ i - 1 ]->GetOutput() );			
 			}

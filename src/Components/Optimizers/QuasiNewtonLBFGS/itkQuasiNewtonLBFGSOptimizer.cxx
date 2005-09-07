@@ -265,7 +265,7 @@ namespace itk
     typedef Array<double>     AlphaType;
     AlphaType alpha( this->GetMemory() );
 
-    const unsigned int numberOfParameters = searchDir.GetSize();
+    const unsigned int numberOfParameters = gradient.GetSize();
     DiagonalMatrixType H0;
     this->ComputeDiagonalMatrix(H0);
 
