@@ -33,8 +33,6 @@ TransformGrouper/itkTransformGrouperInterface.h )
 SET( MoreRandomFiles
 MoreRandom/elx_sample.h
 MoreRandom/elx_sample.cxx
-MoreRandom/vnl_random.h
-MoreRandom/vnl_random.cxx
 MoreRandom/itkImageMoreRandomConstIteratorWithIndex.h
 MoreRandom/itkImageMoreRandomConstIteratorWithIndex.txx
 MoreRandom/itkImageMoreRandomIteratorWithIndex.h
