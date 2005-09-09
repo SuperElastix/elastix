@@ -7,8 +7,6 @@ SUBDIRS(xout)
 SET(CommonFiles
 elxTimer.cxx
 elxTimer.h
-itkMaskImage.h
-itkMaskImage.hxx
 itkNDImageBase.h
 itkNDImageTemplate.h
 itkNDImageTemplate.hxx
