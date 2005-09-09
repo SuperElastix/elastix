@@ -1,9 +1,0 @@
-
-
-ADD_ELXCOMPONENT( elxFixedCenterOfRotationAffineTransform
- elxFixedCenterOfRotationAffineTransform.h
- elxFixedCenterOfRotationAffineTransform.hxx
- elxFixedCenterOfRotationAffineTransform.cxx )
-
-
-
