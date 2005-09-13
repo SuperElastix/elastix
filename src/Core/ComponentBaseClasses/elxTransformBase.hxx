@@ -342,7 +342,7 @@ namespace elastix
 		int dummy = this->m_ConfigurationInitialTransform->Initialize( argmapInitialTransform );
 		
 		/** Read the InitialTransform name.*/
-		ComponentDescriptionType InitialTransformName = "FixedCenterOfRotationAffineTransform";
+		ComponentDescriptionType InitialTransformName = "AffineTransform";
 		this->m_ConfigurationInitialTransform->ReadParameter( InitialTransformName, "Transform", 0 );
 		
 		/** Create an InitialTransform.*/
