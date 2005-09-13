@@ -15,6 +15,7 @@ namespace elastix
 		/** Initialize.*/
 		this->m_Configuration = 0;
 		this->m_CDB= 0;
+		this->m_DBIndex = 0;
 
 		/** The default output precision of elxout is set to 6 */
 		this->m_DefaultOutputPrecision = 6;
