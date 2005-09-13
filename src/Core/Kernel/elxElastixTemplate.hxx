@@ -939,14 +939,14 @@ namespace elastix
 			this->m_IterationInfoFile.close();
 		}
 
-		/** Create the IterationInfo filename for this resolution.*/
-			std::ostringstream makeFileName("");
-			makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
-				<< "IterationInfo."
-				<< this->m_Configuration->GetElastixLevel()
-				<< ".R" << this->m_elx_Registration->GetAsITKBaseType()->GetCurrentLevel()
-				<< ".txt";
-			std::string FileName = makeFileName.str();
+		/** Create the IterationInfo filename for this resolution. */
+		std::ostringstream makeFileName("");
+		makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
+			<< "IterationInfo."
+			<< this->m_Configuration->GetElastixLevel()
+			<< ".R" << this->m_elx_Registration->GetAsITKBaseType()->GetCurrentLevel()
+			<< ".txt";
+		std::string FileName = makeFileName.str();
 
 		/** Open the IterationInfoFile.*/
 		this->m_IterationInfoFile.open( FileName.c_str() );
@@ -960,7 +960,7 @@ namespace elastix
 			xout["iteration"].AddOutput( "IterationInfoFile", &(this->m_IterationInfoFile) );
 		}
 
-	} //end of function penIterationInfoFile
+	} // end of function OpenIterationInfoFile
 
 } // end namespace elastix
 
