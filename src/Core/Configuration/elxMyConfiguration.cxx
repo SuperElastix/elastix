@@ -14,9 +14,10 @@ namespace elastix
 
 	MyConfiguration::MyConfiguration()
 	{
-		/***/
+		/** Initialize stuff. */
 		this->m_ParameterFileName = "";
 		this->m_Initialized = false;
+		this->m_ElastixLevel = 0;
 
 	} // end Constructor
 	
