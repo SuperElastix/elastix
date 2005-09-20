@@ -21,7 +21,6 @@
 
 
 #if defined(ELX_MORE_RANDOM)
-  //link vnl_random.cxx to your project  
   #include "vnl/vnl_random.h"
   static const unsigned long initial_seed = 9667566;
   static vnl_random morerandom_generator(initial_seed);
