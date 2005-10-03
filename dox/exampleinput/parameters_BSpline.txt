@@ -1,0 +1,56 @@
+//Description of the ImageTypes
+(FixedImagePixelType "short")
+(FixedImageDimension 2)
+(MovingImagePixelType "short")
+(MovingImageDimension 2)
+
+//Which Components to use
+(Registration "MultiResolutionRegistration")
+(FixedImagePyramid "FixedRecursiveImagePyramid")
+(MovingImagePyramid "MovingRecursiveImagePyramid")
+(Interpolator "BSplineInterpolator")
+(Metric "MattesMutualInformation")
+(Optimizer "StandardGradientDescent")
+(ResampleInterpolator "FinalBSplineInterpolator")
+(Resampler "DefaultResampler")
+(Transform "BSplineTransform")
+
+//Final spacing of B-Spline grid (unit = size of 1 voxel):
+//Higher in the pyramid the gridspacing is doubled each resolution, when the 
+//UpsampleGridOption is set to "true"
+(UpsampleGridOption "true")
+(FinalGridSpacing 16.0)
+
+//The number of resolutions, the downsampling schedules of the pyramids are determined automatically
+(NumberOfResolutions 3)
+//It is also possible to give the schedules manually, like this:
+//(FixedPyramidSchedule 8 8 8 4 4 4 2 2 2)
+//(MovingPyramidSchedule 8 8 8 4 4 4 2 2 2)
+//See itk website for more details
+
+//Maximum number of iterations in each resolution level:
+(MaximumNumberOfIterations 200 200 200)
+
+//Number of grey level bins in each resolution level for the mutual information:
+(NumberOfHistogramBins 16 32 32)
+
+//Number of spatial samples used to compute the mutual information in each resolution level:
+(NumberOfSpatialSamples 2048 2048 2048)
+
+//Settings for the StandardGradientDescent optimizer, to determine the gain
+//a_k at each iteration k: a_k = a/(A+k+1)^alpha. This optimizer works
+//especially well in combination with using a new set of randomly chosen image
+//samples in each iteration.
+(SP_a 3200.0 3200.0 3200.0)
+(SP_A 50.0 50.0 50.0)
+(SP_alpha 0.602 0.602 0.602)
+(NewSamplesEveryIteration "true" "true" "true")
+
+//Order of B-Spline interpolation used in each resolution level:
+(BSplineInterpolationOrder 1 1 1)
+
+//Order of B-Spline interpolation used for applying the final deformation:
+(FinalBSplineInterpolationOrder 3)
+
+//Default pixel value for pixels that come from outside the picture:
+(DefaultPixelValue 0)

@@ -89,6 +89,53 @@ SUBDIRS(Common)
 SUBDIRS(Core)
 SUBDIRS(Components)
 
+#--------------------------------------------------------------------
+# Configure the examples
+
+SET(ELX_DOX_DIR ${elastix_SOURCE_DIR}/../dox )
+SET(ELX_HELP_DIR ${elastix_SOURCE_DIR}/../help CACHE PATH "path to the doxygen generated help files and the examples")
+
+# Copy the examples to the help directory
+
+IF(WIN32)
+  CONFIGURE_FILE(
+	  ${ELX_DOX_DIR}/example_windows.bat
+		${ELX_HELP_DIR}/example_windows.bat
+		COPYONLY )
+ELSE(WIN32)
+  CONFIGURE_FILE(
+	  ${ELX_DOX_DIR}/example
+		${ELX_HELP_DIR}/example
+		COPYONLY )
+ENDIF(WIN32)
+
+MAKE_DIRECTORY( ${ELX_HELP_DIR}/exampleinput )
+MAKE_DIRECTORY( ${ELX_HELP_DIR}/exampleoutput )
+
+SET(ELX_EXAMPLEINPUTFILES
+fixed.mhd
+fixed.raw
+mask_fixed.mhd
+mask_fixed.raw
+mask_moving.mhd
+mask_moving.raw
+moving.mhd
+moving.raw
+parameters_Affine.txt
+parameters_BSpline.txt
+parameters_Rigid.txt
+parameters_Translation.txt
+solution_deformedmovingimage.mhd
+solution_deformedmovingimage.raw )
+
+FOREACH( ELX_EXAMPLEINPUTFILE ${ELX_EXAMPLEINPUTFILES} )
+  CONFIGURE_FILE(
+	  ${ELX_DOX_DIR}/exampleinput/${ELX_EXAMPLEINPUTFILE}
+		${ELX_HELP_DIR}/exampleinput/${ELX_EXAMPLEINPUTFILE}
+		COPYONLY )
+ENDFOREACH( ELX_EXAMPLEINPUTFILE )
+
+
 #---------------------------------------------------------------------
 # Configure the doxygen-configuration
 
@@ -97,9 +144,8 @@ STRING(COMPARE NOTEQUAL ${DOXYGEN} "DOXYGEN-NOTFOUND" Doxygen_FOUND)
 
 IF(Doxygen_FOUND)
 
-  # Set the path to the doxygen configuration source and the help dir
-  SET(ELX_DOXYGEN_DIR ${elastix_SOURCE_DIR}/../dox/doxygen)
-  SET(ELX_HELP_DIR ${elastix_SOURCE_DIR}/../help CACHE PATH "path to the doxygen generated help files")
+  # Set the path to the doxygen configuration source
+  SET(ELX_DOXYGEN_DIR ${ELX_DOX_DIR}/doxygen)
 
   # Get the version number of doxygen
   GET_FILENAME_COMPONENT(ELX_PATH_TO_DOXYGEN ${DOXYGEN} PATH)
@@ -114,15 +160,13 @@ IF(Doxygen_FOUND)
   ENDIF(ELX_DOXYGEN_VERSION_FOUND)
 	
 	# Configure the doxygen configuration
-	CONFIGURE_FILE(${elastix_SOURCE_DIR}/../dox/doxygen/doxyfile.in ${ELX_HELP_DIR}/doxyfile.out @ONLY)
+	CONFIGURE_FILE(
+	  ${ELX_DOXYGEN_DIR}/doxyfile.in
+		${ELX_HELP_DIR}/doxyfile.out @ONLY )
 	# Configure the footer of the help website.
 	CONFIGURE_FILE(${elastix_SOURCE_DIR}/../dox/doxygen/DoxygenFooter.html.in ${ELX_HELP_DIR}/DoxygenFooter.html @ONLY)
 	
 ENDIF(Doxygen_FOUND)
-
-
-
-
 
 
 

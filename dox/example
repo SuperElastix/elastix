@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# this batch file shows an example of how to call elastix.
+# Run "elastix -help" for more information.
+#
+# This example requires elastix to be in your path
+
+# Here we perform a registration by doing sequentially:
+#  1) a translation-registration
+#  2) an affine-registration
+#  3) a bspline-registration
+# We write all output in the exampleoutput directory.
+
+
+elastix -f exampleinput/fixed.mhd -m exampleinput/moving.mhd  -out exampleoutput -p exampleinput/parameters_Translation.txt -p exampleinput/parameters_Affine.txt -p exampleinput/parameters_BSpline.txt
+
+# 
+# In the following way we may mask the input images,
+# to prevent background pixels to be taken into account:
+# 
+# elastix -f exampleinput/fixed.mhd -m exampleinput/moving.mhd -fMask exampleinput/mask_fixed.mhd -mMask exampleinput/mask_moving.mhd -out exampleoutput -p exampleinput/parameters_Translation.txt -p exampleinput/parameters_Affine.txt -p exampleinput/parameters_BSpline.txt
+
+
+# See /exampleoutput/ for the results:
+#  1) elastix.log = the logfile
+#  2) result.0.mhd = the translation transformed result
+#  3) result.1.mhd = the affine transformed result
+#  4) result.2.mhd = the bspline transformed result
+#  5) TransformParameters.0.txt = the found translation
+#  6) TransformParameters.1.txt = the found affine parameters
+#  7) TransformParameters.2.txt = the found bspline parameters
+#
+# You may compare result.2.mhd to the solution, which is located in
+# ./exampleinput: solution_deformedmovingimage.mhd
+#
+# After doing the registration, we could apply the found deformation to the moving mask.
+# For this we use transformix:
+
+transformix -in exampleinput/mask_moving.mhd -out exampleoutput -tp exampleoutput/TransformParameters.2.txt
+
+# See /exampleoutput/ for the results:
+#  8) transformix.log = the logfile
+#  9) result.mhd = the transformed mask
+#
+
+exit

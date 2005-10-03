@@ -1,0 +1,51 @@
+//Description of the ImageTypes
+(FixedImagePixelType "short")
+(FixedImageDimension 2)
+(MovingImagePixelType "short")
+(MovingImageDimension 2)
+
+//Which Components to use
+(Registration "MultiResolutionRegistration")
+(FixedImagePyramid "FixedRecursiveImagePyramid")
+(MovingImagePyramid "MovingRecursiveImagePyramid")
+(Interpolator "BSplineInterpolator")
+(Metric "MattesMutualInformation")
+(Optimizer "RegularStepGradientDescent")
+(ResampleInterpolator "FinalBSplineInterpolator")
+(Resampler "DefaultResampler")
+(Transform "TranslationTransform")
+
+//The number of resolutions, the downsampling schedules of the pyramids are
+//determined automatically
+(NumberOfResolutions 3)
+//It is also possible to give the schedules manually, like this:
+//(FixedPyramidSchedule 8 8 8 4 4 4 2 2 2)
+//(MovingPyramidSchedule 8 8 8 4 4 4 2 2 2)
+//See itk website for more details
+
+//Maximum number of iterations in each resolution level:
+(MaximumNumberOfIterations 100 100 100)
+
+//Number of grey level bins in each resolution level for mutual information:
+(NumberOfHistogramBins 16 32 32)
+
+//Number of spatial samples used to compute the mutual information in each resolution level:
+(NumberOfSpatialSamples 500 2000 8000)
+
+//Maximum step size of the optimizer for each resolution level:
+(MaximumStepLength 8.0 4.0 2.0)
+
+//Minimum step size of the optimizer for each resolution level:
+(MinimumStepLength 0.5 0.2 0.2)
+
+//Minimum magnitude of the gradient (stopping criterion) of the optimizer:
+(MinimumGradientMagnitude 0.00000001 0.00000001 0.00000001)
+
+//Order of B-Spline interpolation used in each resolution level:
+(BSplineInterpolationOrder 1)
+
+//Order of B-Spline interpolation used for applying the final deformation:
+(FinalBSplineInterpolationOrder 3)
+
+//Default pixel value for pixels that come from outside the picture:
+(DefaultPixelValue 0)
