@@ -915,32 +915,18 @@ using namespace itk;
 		/** Add some BSplineTransformWithDiffusion specific lines.*/
 		xout["transpar"] << std::endl << "// BSplineTransformWithDiffusion specific" << std::endl;
 
-		/** Get the current iteration number and convert it to string. */
-		unsigned int currentIterationNumber = this->m_Elastix->GetIterationCounter();
-		std::ostringstream makeIterationString("");
-		unsigned int border = 1000000;
-		while (border > 1)
-		{
-			if ( currentIterationNumber < border )
-			{
-				makeIterationString << "0";
-				border /= 10;
-			}
-			else
-			{
-				/** stop */
-				border=1;
-			}
-		}
-		makeIterationString << currentIterationNumber;
+		/** Get the last part of the filename of the transformParameter-file,
+		 * which is going to be part of the filename of the deformationField image.
+		 */
+		std::string ctpfn = this->GetElastix()->GetCurrentTransformParameterFileName();
+		std::basic_string<char>::size_type pos = ctpfn.rfind( "TransformParameters." );
+		std::string lastpart = ctpfn.substr( pos + 19, ctpfn.size() - pos - 19 - 4 );
 
 		/** Write the filename of the deformationField image. */
 		std::ostringstream makeFileName( "" );
 		makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
-			<< "DeformationFieldImage."
-			<< this->m_Configuration->GetElastixLevel()
-			<< ".R" << this->GetRegistration()->GetAsITKBaseType()->GetCurrentLevel()
-			<< ".It" << makeIterationString.str()
+			<< "DeformationFieldImage"
+			<< lastpart
 			<< ".mhd";
 		xout["transpar"] << "(DeformationFieldFileName \""
 			<< makeFileName.str() << "\")" << std::endl;
