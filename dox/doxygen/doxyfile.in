@@ -31,7 +31,11 @@ OUTPUT_DIRECTORY       = "@ELX_HELP_DIR@"
 # excluded from the INPUT source files. This way you can easily exclude a 
 # subdirectory from a directory tree whose root is specified with the INPUT tag. 
 
-EXCLUDE = "@elastix_SOURCE_DIR@/Common/ParameterFileParser"
+EXCLUDE = "@elastix_SOURCE_DIR@/Common/ParameterFileParser" \
+	  "@elastix_SOURCE_DIR@/Components/Metrics/MattesMutualInformationWithRigidRegularization" \
+	  "@elastix_SOURCE_DIR@/Components/Transforms/BSplineDeformableTransformWithDiffusion" \
+	  "@elastix_SOURCE_DIR@/Components/Optimizers/QuasiNewtonLBFGS" \
+	  "@elastix_SOURCE_DIR@/Components/Optimizers/ConjugateGradient"
 
 # The HTML_STYLESHEET tag can be used to specify a user defined cascading 
 # style sheet that is used by each HTML page. It can be used to 
