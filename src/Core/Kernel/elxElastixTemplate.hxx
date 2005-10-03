@@ -65,6 +65,9 @@ namespace elastix
 
 		/** Initialize the this->m_IterationCounter.*/
 		this->m_IterationCounter = 0;
+
+		/** Initialize CurrentTransformParameterFileName. */
+		this->m_CurrentTransformParameterFileName = "";
 		
 	} // end Constructor
 	
@@ -770,8 +773,8 @@ namespace elastix
 		/** Create the final TransformParameters filename.*/
 		std::ostringstream makeFileName("");
 		makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
-			<< "TransformParameters." << 
-			this->m_Configuration->GetElastixLevel() << ".txt";
+			<< "TransformParameters."
+			<< this->m_Configuration->GetElastixLevel() << ".txt";
 		std::string FileName = makeFileName.str();
 
 		/** Create a final TransformParameterFile.*/
@@ -805,9 +808,12 @@ namespace elastix
 	{
 		using namespace xl;
 
+		/** Store CurrentTransformParameterFileName. */
+		this->m_CurrentTransformParameterFileName = FileName;
+
 		/** Create transformParameterFile and xout["transpar"]. */
 		xoutsimple_type		transformationParameterInfo;
-		std::ofstream					transformParameterFile;
+		std::ofstream			transformParameterFile;
 		
 		/** Set up the "TransformationParameters" writing field. */
 		transformationParameterInfo.SetOutputs( xout.GetCOutputs() );

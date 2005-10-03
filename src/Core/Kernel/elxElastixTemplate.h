@@ -242,6 +242,8 @@ namespace elastix
 		virtual void AfterRegistration(void);
 
 		itkGetConstMacro(IterationCounter, unsigned int);
+
+		itkGetStringMacro( CurrentTransformParameterFileName );
 		
 	protected:
 
@@ -294,6 +296,8 @@ namespace elastix
 		TimerPointer m_IterationTimer;
 		TimerPointer m_ResolutionTimer;
 
+		/** Store the CurrentTransformParameterFileName. */
+		std::string	m_CurrentTransformParameterFileName;
 		
 		/** Count the number of iterations. */
 		unsigned int m_IterationCounter;
