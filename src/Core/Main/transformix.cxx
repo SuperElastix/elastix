@@ -9,20 +9,28 @@ int main( int argc, char **argv )
 	/** Check if "-help" was asked for.*/
 	if ( argc == 1 )
 	{
-		std::cout << "Use \"transformix -help\" for information about transformix-usage." << std::endl;
+		std::cout << "Use \"transformix --help\" for information about transformix-usage." << std::endl;
 		return 0;
 	}
 	else if ( argc == 2 )
 	{
-		std::string help( argv[ 1 ] );
-		if ( help == "-help" || help == "--help" )
+		std::string argument( argv[ 1 ] );
+		if ( argument == "-help" || argument == "--help" )
 		{
 			PrintHelp();
 			return 0;
 		}
+		else if( argument == "--version" )
+		{
+			std::cout << std::fixed;
+			std::cout << std::showpoint;
+			std::cout << std::setprecision(3);
+			std::cout << "transformix version: " << __ELASTIX_VERSION << std::endl;
+			return 0;
+		}
 		else
 		{
-			std::cout << "Use \"transformix -help\" for information about transformix-usage." << std::endl;
+			std::cout << "Use \"transformix --help\" for information about transformix-usage." << std::endl;
 			return 0;
 		}
 	}

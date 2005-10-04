@@ -7,45 +7,53 @@
 int main( int argc, char **argv )
 {
 	
-	/** Check if "-help" was asked for.*/
+	/** Check if "--help" or "--version" was asked for. */
 	if ( argc == 1 )
 	{
-		std::cout << "Use \"elastix -help\" for information about elastix-usage." << std::endl;
+		std::cout << "Use \"elastix --help\" for information about elastix-usage." << std::endl;
 		return 0;
 	}
 	else if ( argc == 2 )
 	{
-		std::string help( argv[ 1 ] );
-		if ( help == "-help" || help == "--help" )
+		std::string argument( argv[ 1 ] );
+		if ( argument == "-help" || argument == "--help" )
 		{
 			PrintHelp();
 			return 0;
 		}
+		else if( argument == "--version" )
+		{
+			std::cout << std::fixed;
+			std::cout << std::showpoint;
+			std::cout << std::setprecision(3);
+			std::cout << "elastix version: " << __ELASTIX_VERSION << std::endl;
+			return 0;
+		}
 		else
 		{
-			std::cout << "Use \"elastix -help\" for information about elastix-usage." << std::endl;
+			std::cout << "Use \"elastix --help\" for information about elastix-usage." << std::endl;
 			return 0;
 		}
 	}
 
-	/** Some typedef's.*/
-	typedef elx::ElastixMain ElastixType;
-	typedef ElastixType::Pointer ElastixPointer;
-	typedef std::vector<ElastixPointer> ElastixVectorType;
+	/** Some typedef's. */
+	typedef elx::ElastixMain												ElastixType;
+	typedef ElastixType::Pointer										ElastixPointer;
+	typedef std::vector<ElastixPointer>							ElastixVectorType;
 
-	typedef ElastixType::ObjectType ObjectType;
-	typedef ElastixType::DataObjectType DataObjectType;
-	typedef ElastixType::ObjectPointer ObjectPointer;
-	typedef ElastixType::DataObjectPointer DataObjectPointer;
+	typedef ElastixType::ObjectType									ObjectType;
+	typedef ElastixType::DataObjectType							DataObjectType;
+	typedef ElastixType::ObjectPointer							ObjectPointer;
+	typedef ElastixType::DataObjectPointer					DataObjectPointer;
 
-	typedef ElastixType::ArgumentMapType ArgumentMapType;
-	typedef ArgumentMapType::value_type ArgumentMapEntryType;
+	typedef ElastixType::ArgumentMapType						ArgumentMapType;
+	typedef ArgumentMapType::value_type							ArgumentMapEntryType;
 
-	typedef std::pair< std::string, std::string > ArgPairType;
-	typedef std::queue< ArgPairType > ParameterFileListType;
-	typedef ParameterFileListType::value_type ParameterFileListEntryType;
+	typedef std::pair< std::string, std::string >		ArgPairType;
+	typedef std::queue< ArgPairType >								ParameterFileListType;
+	typedef ParameterFileListType::value_type				ParameterFileListEntryType;
 	
-	/** Some declarations.*/
+	/** Some declarations and initialisations. */
 	ElastixVectorType elastices;
 	
 	ObjectPointer transform = 0;
@@ -60,7 +68,7 @@ int main( int argc, char **argv )
 	bool outFolderPresent = false;
 	std::string logFileName;
 
-	/** Put command line parameters into parameterFileList.*/
+	/** Put command line parameters into parameterFileList. */
 	for ( unsigned int i = 1; i < ( argc - 1 ); i += 2 )
 	{
 		std::string key( argv[ i ] );
@@ -73,33 +81,33 @@ int main( int argc, char **argv )
 			parameterFileList.push( 
 				ParameterFileListEntryType( key.c_str(), value.c_str() ) );
 			/** The different '-p' are stored in the argMap, with
-			 * keys p(1), p(2), etc.*/
+			 * keys p(1), p(2), etc. */
 			std::ostringstream tempPname("");
 			tempPname << "-p(" << NrOfParameterFiles << ")";
 			std::string tempPName = tempPname.str();
 			argMap.insert( ArgumentMapEntryType( tempPName.c_str(), value.c_str() ) );
 		}
 		else
-		{			
+		{
 			if ( key == "-out" )
 			{
 				outFolderPresent = true;
 
-				/** Make sure that last character of the outputfolder equals a '/'.*/
+				/** Make sure that last character of the outputfolder equals a '/'. */
 				if ( value.find_last_of( "/" ) != value.size() - 1 )
 				{
 					value.append( "/" );
 				} 
 			} // end if key == "-out"
 			
-			/** Attempt to save the arguments in the ArgumentMap */
+			/** Attempt to save the arguments in the ArgumentMap. */
 			if ( argMap.count( key.c_str() ) == 0 )
 			{	
 				argMap.insert( ArgumentMapEntryType( key.c_str(), value.c_str() ) );
 			}
 			else
 			{
-				/** duplicate argument */
+				/** Duplicate arguments. */
 				std::cerr << "WARNING!" << std::endl;
 				std::cerr << "Argument "<< key.c_str() << "is only required once." << std::endl;
 				std::cerr << "Arguments " << key.c_str() << " " << value.c_str() << "are ignored" << std::endl;
@@ -113,7 +121,7 @@ int main( int argc, char **argv )
 	argMap.insert( ArgumentMapEntryType( "-argv0", argv[0] )  );
 
 
-	/** Check if at least once the option "-p" is given.*/
+	/** Check if at least once the option "-p" is given. */
 	if ( NrOfParameterFiles == 0 )
 	{
 		std::cerr << "ERROR: No CommandLine option \"-p\" given!" << std::endl;
@@ -123,7 +131,7 @@ int main( int argc, char **argv )
 	/** Check if the -out option is given. */
 	if ( outFolderPresent )
 	{
-		/** Setup xout.*/
+		/** Setup xout. */
     logFileName = argMap[ "-out" ] + "elastix.log";
 		int returndummy2 = elx::xoutSetup( logFileName.c_str() );
 		if ( returndummy2 )
@@ -138,7 +146,7 @@ int main( int argc, char **argv )
 		std::cerr << "ERROR: No CommandLine option \"-out\" given!" << std::endl;
 	}
 
-	/** Stop if some fatal errors occured */
+	/** Stop if some fatal errors occured. */
 	if ( returndummy )
 	{
 		return returndummy;
@@ -146,7 +154,7 @@ int main( int argc, char **argv )
 
 	elxout << std::endl;
 
-	/** Declare a timer, start it and print the start time.*/
+	/** Declare a timer, start it and print the start time. */
 	tmr::Timer::Pointer totaltimer = tmr::Timer::New();
 	totaltimer->StartTimer();
 	elxout << "Elastix is started at " << totaltimer->PrintStartTime() << ".\n" << std::endl;
@@ -159,46 +167,46 @@ int main( int argc, char **argv )
 
 	for ( unsigned int i = 0; i < NrOfParameterFiles; i++ )
 	{
-		/** Create another instance of ElastixMain.*/
+		/** Create another instance of ElastixMain. */
 		elastices.push_back( elx::ElastixMain::New() );
 		
-		/** Set stuff we get from a former registration.*/
+		/** Set stuff we get from a former registration. */
 		elastices[ i ]->SetInitialTransform( transform );
 		elastices[ i ]->SetFixedImage( fixedImage );
 		elastices[ i ]->SetMovingImage( movingImage );
 		elastices[ i ]->SetFixedInternalImage( fixedInternalImage );
 		elastices[ i ]->SetMovingInternalImage( movingInternalImage );
 
-		/** Set the current elastix-level.*/
+		/** Set the current elastix-level. */
 		elastices[ i ]->SetElastixLevel( i );
 
-		/** Delete the previous ParameterFileName.*/
+		/** Delete the previous ParameterFileName. */
 		if ( argMap.count( "-p" ) )
 		{
 			argMap.erase( "-p" );
 		}
 
-		/** Read the first parameterFileName in the queue.*/
+		/** Read the first parameterFileName in the queue. */
 		ArgPairType argPair = parameterFileList.front();
 		parameterFileList.pop();
 
-		/** Put it in the ArgumentMap.*/
+		/** Put it in the ArgumentMap. */
 		argMap.insert( ArgumentMapEntryType( argPair.first, argPair.second ) );
 
-		/** Print a start message.*/
+		/** Print a start message. */
 		elxout << "-------------------------------------------------------------------------" << "\n" << std::endl;
 		elxout << "Running Elastix with parameter file " << i
 			<< ": \"" << argMap[ "-p" ] << "\".\n" << std::endl;
 
-		/** Declare a timer, start it and print the start time.*/
+		/** Declare a timer, start it and print the start time. */
 		tmr::Timer::Pointer timer = tmr::Timer::New();
 		timer->StartTimer();
 		elxout << "Current time: " << timer->PrintStartTime() << "." << std::endl;
 
-		/** Start registration.*/
+		/** Start registration. */
 		returndummy = elastices[ i ]->Run( argMap );
 		
-		/** Check for errors.*/
+		/** Check for errors. */
 		if ( returndummy != 0 )
 		{
 			xl::xout["error"] << "Errors occured!" << std::endl;
@@ -214,11 +222,11 @@ int main( int argc, char **argv )
 		fixedInternalImage	= elastices[ i ]->GetFixedInternalImage();
 		movingInternalImage = elastices[ i ]->GetMovingInternalImage();
 		
-		/** Print a finish message.*/
+		/** Print a finish message. */
 		elxout << "Running Elastix with parameter file " << i
 			<< ": \"" << argMap[ "-p" ] << "\", has finished.\n" << std::endl;
 
-		/** Stop timer and print it.*/
+		/** Stop timer and print it. */
 		timer->StopTimer();
 		elxout << "\nCurrent time: " << timer->PrintStopTime() << "." << std::endl;
 		elxout << "Time used for running Elastix with this parameter file: "
@@ -228,7 +236,7 @@ int main( int argc, char **argv )
 
 	elxout << "-------------------------------------------------------------------------" << "\n" << std::endl;	
 
-	/** Stop totaltimer and print it.*/
+	/** Stop totaltimer and print it. */
 	totaltimer->StopTimer();
 	elxout << "Total time elapsed: " << totaltimer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
 
@@ -249,10 +257,10 @@ int main( int argc, char **argv )
 	fixedInternalImage=0;
 	movingInternalImage=0;
 	
-	/** Close the modules */
+	/** Close the modules. */
 	ElastixType::UnloadComponents();
 	
-	/** Exit and return the error code.*/
+	/** Exit and return the error code. */
 	return returndummy;
 
 } // end main
@@ -268,7 +276,7 @@ void PrintHelp(void)
 {
 	std::cout << "*********** elastix help: ***********\n\n";
 
-	/** What is elastix?*/
+	/** What is elastix? */
 	std::cout << "Elastix registers a moving image to a fixed image." << std::endl;
 	std::cout << "The registration-process is specified in the parameter file."
 		<< std::endl << std::endl;
