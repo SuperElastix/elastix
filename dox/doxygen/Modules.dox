@@ -52,55 +52,49 @@ Components contains the different registration components.
 /**
 \defgroup Interpolators Interpolators
 \ingroup Components
-Interpolators are 
+Interpolators are used to interpolate intensities of images and deformations of transforms.
 */
 
 /**
 \defgroup Metrics Metrics
 \ingroup Components
-Metrics are 
+Metrics are the similarity measures that a registration algorithm tries to optimize.
 */
 
 /**
 \defgroup Optimizers Optimizers
 \ingroup Components
-Optimizers are 
+Optimizers are used in the registration framework to find the best similarity between images, i.e., to optimize some similarity measure.
 */
 
 /**
 \defgroup Registrations Registrations
 \ingroup Components
-Registrations are 
+Registrations are classes that combine all components of a registration framework, such as fixed and moving images, the metric, transform, optimizer, etc.
 */
 
 /**
 \defgroup ResampleInterpolators ResampleInterpolators
 \ingroup Components
-ResampleInterpolators 
+ResampleInterpolators are used to interpolate the intensity of an image when resampling it.
 */
 
 /**
 \defgroup Resamplers Resamplers
 \ingroup Components
-Resamplers ...
+Resamplers are used to calculate a new deformed image from a tranform and an input image.
 */
 
 /**
 \defgroup Transforms Transforms
 \ingroup Components
-Transforms are 
+Transforms model the underlying deformation field during registration.
 */
 
 /**
-\defgroup FixedImagePyramids FixedImagePyramids
+\defgroup ImagePyramids ImagePyramids
 \ingroup Components
-FixedImagePyramids are 
-*/
-
-/**
-\defgroup MovingImagePyramids MovingImagePyramids
-\ingroup Components
-MovingImagePyramids are 
+ImagePyramids are used in a multiresolution framework in order to avoid local minima and increase the capture range of a registration.
 */
 
 # 
