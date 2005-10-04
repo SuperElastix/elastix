@@ -7,13 +7,35 @@ namespace itk
 {
 
 	/**
-	 * *********** StandardGradientDescent ******************
+	 * \class StandardGradientDescentOptimizer
+	 * \brief This class implements a gradient descent optimizer with a decaying gain.
 	 *
-	 * The StandardGradientDescent class.
+	 * This class implements a gradient descent optimizer with a decaying gain.
 	 *
-	 * It adds calculation of the steplength in each iteration,
-	 * in a way similar to the Simultaneous Perturbation
+	 * If \a C(x) is a costfunction that has to be minimised, the following iterative
+	 * algorithm is used to find the optimal parameters \a x:
 	 * 
+	 * x(k+1) = x(k) - a(k) dC/dx
+	 *
+   * The gain \a a(k) at each iteration \a k is defined by \n
+	 * <em>a(k) =  a / (A + k + 1)^alpha</em>. \n
+	 * 
+	 * It is very suitable to be used in combination with a stochastic estimate
+	 * of the gradient \a dC/dx. For example, in image registration problems it is
+	 * often advantageous to compute the metric derivative (\a dC/dx) on a new set 
+	 * of randomly selected image samples in each iteration. You may set the parameter
+	 * \c NewSamplesEveryIteration to \c "true" to achieve this effect.
+	 * For more information on this strategy, you may have a look at:
+	 * S. Klein, M. Staring, J.P.W. Pluim,
+	 * "Comparison of gradient approximation techniques for optimisation of mutual information in nonrigid registration",
+	 * in: SPIE Medical Imaging: Image Processing,
+	 * Editor(s): J.M. Fitzpatrick, J.M. Reinhardt, SPIE press, 2005, vol. 5747, Proceedings of SPIE, pp. 192-203.
+	 *   
+	 * Note that the gain is computed in the same way as in the
+	 * SimultaneousPerturbationOptimizer
+	 * 
+	 * \sa SimultaneousPerturbationOptimizer, StandardGradientDescent
+	 * \ingroup Optimizers
 	 */
 
 	class StandardGradientDescentOptimizer :
@@ -33,8 +55,7 @@ namespace itk
 		
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( StandardGradientDescentOptimizer, GradientDescentOptimizer );
-		
-		
+				
 		/** Typedef's inherited from Superclass.*/
 	  typedef Superclass::CostFunctionType			CostFunctionType;
 		typedef Superclass::CostFunctionPointer		CostFunctionPointer;
@@ -58,6 +79,7 @@ namespace itk
 		 */
 		virtual void AdvanceOneStep(void);
 
+		/** Compute the gradient magnitude */
 		const double GetGradientMagnitude(void) const;
 		
 	protected:
@@ -65,7 +87,7 @@ namespace itk
 		  StandardGradientDescentOptimizer();
 			virtual ~StandardGradientDescentOptimizer() {};
 
-		// Function to compute the parameter at iteration k.
+		/** Function to compute the parameter at iteration k. */
 		virtual double Compute_a( unsigned long k ) const;
 
 			

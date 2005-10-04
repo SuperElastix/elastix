@@ -71,12 +71,10 @@ using namespace itk;
 		this->SetMinimumStepLength( minStepLength );
 
 		/** Set the Relaxation factor 
-		 * \todo uncomment if ITK-version >2.0 is used.
 		 */
-		//double relaxationFactor = 0.5;
-		//this->m_Configuration->ReadParameter( relaxationFactor, "RelaxationFactor", level );
-		//this->SetRelaxationFactor( relaxationFactor );
-
+		double relaxationFactor = 0.5;
+		this->m_Configuration->ReadParameter( relaxationFactor, "RelaxationFactor", level );
+		this->SetRelaxationFactor( relaxationFactor );
 
 		/** \todo max and min steplength should maybe depend on the imagespacing or on something else... */
 		
