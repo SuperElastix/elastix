@@ -10,9 +10,8 @@ namespace elastix
 	
 	/**
 	 * \class MyStandardResampler
-	 * \brief A MyStandardResampler...
+	 * \brief A resampler based on the itkResampleImageFilter.
 	 *
-	 * This MyStandardResampler ...
 	 *
 	 * \ingroup Resamplers
 	 */
@@ -24,23 +23,23 @@ namespace elastix
 	{
 	public:
 		
-		/** Standard ITK-stuff.*/
+		/** Standard ITK-stuff. */
 		typedef MyStandardResampler															Self;
 		typedef typename ResamplerBase<TElastix>::ITKBaseType		Superclass1;
 		typedef ResamplerBase<TElastix>													Superclass2;
 		typedef SmartPointer<Self>															Pointer;
 		typedef SmartPointer<const Self>												ConstPointer;
 		
-		/** Method for creation through the object factory.*/
+		/** Method for creation through the object factory. */
 		itkNewMacro(Self);
 		
-		/** Run-time type information (and related methods).*/
+		/** Run-time type information (and related methods). */
 		itkTypeMacro( MyStandardResampler, ResampleImageFilter );
 
-		/** Name of this class.*/
+		/** Name of this class. */
 		elxClassNameMacro( "DefaultResampler" );
 		
-		/** Typedef's inherited from the superclass.*/
+		/** Typedef's inherited from the superclass. */
 		typedef typename Superclass1::InputImageType						InputImageType;
 		typedef typename Superclass1::OutputImageType						OutputImageType;
 		typedef typename Superclass1::InputImagePointer					InputImagePointer;
@@ -58,7 +57,7 @@ namespace elastix
 		typedef typename Superclass1::SpacingType								SpacingType;
 		typedef typename Superclass1::OriginPointType						OriginPointType;
 		
-		/** Typedef's from the ResamplerBase.*/
+		/** Typedef's from the ResamplerBase. */
 		typedef typename Superclass2::ElastixType						ElastixType;
 		typedef typename Superclass2::ElastixPointer				ElastixPointer;
 		typedef typename Superclass2::ConfigurationType			ConfigurationType;

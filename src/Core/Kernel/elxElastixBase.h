@@ -28,9 +28,40 @@ namespace elastix
 	
 	/**
 	 * \class ElastixBase
-	 * \brief ???
+	 * \brief This class creates an interface for elastix.
 	 *
-	 * The ElastixBase class ....
+	 * The ElastixBase class creates an interface for elastix.
+	 * This is specified in ElastixTemplate, where all functions are defined.
+	 * Functionality that does not depend on the pixel type and the dimension
+	 * of the images to be registered, is defined in this class.
+	 *
+	 * The command line arguments used by this class are:
+	 * \commandlinearg -f: mandatory argument for elastix with the file name of the fixed image. \n
+	 *		example: <tt>-f fixedImage.mhd</tt> \n
+	 * \commandlinearg -m: mandatory argument for elastix with the file name of the moving image. \n
+	 *		example: <tt>-m movingImage.mhd</tt> \n
+	 * \commandlinearg -out: mandatory argument for both elastix and transformix
+	 *		with the name of the directory that is going to contain everything that
+	 *		elastix or tranformix returns as output. \n
+	 *		example: <tt>-out outputdirectory</tt> \n
+	 * \commandlinearg -p: mandatory argument for elastix with the name of the parameter file. \n
+	 *		example: <tt>-p parameters.txt</tt> \n
+	 *		Multiple parameter files are allowed. It means that multiple registrations
+	 *		are runned in sequence, with the output of some registration as input
+	 *		to the next.
+	 * \commandlinearg -tp: mandatory argument for transformix with the name of
+	 *		the transform parameter file. \n
+	 *		example: <tt>-tp TransformParameters.txt</tt> \n
+	 *		In one such a transform parameter file a reference can be used to another
+	 *		transform parameter file, which is then used as an initial transform.
+	 * \commandlinearg -priority: optional argument for both elastix and transformix to
+	 *		specify the priority setting of this process. Choose one from {belownormal, high}. \n
+	 *		example: <tt>-priority high</tt> \n
+	 *		This argument is only valid for running under Windows. For Linux, run
+	 *		elastix with "nice".
+	 * \commandlinearg -in: optional argument for transformix with the file name of an input image. \n
+	 *		example: <tt>-in inputImage.mhd</tt> \n
+	 *		If this option is skipped, a deformation field of the transform will be generated.
 	 *
 	 * \ingroup Kernel
 	 */

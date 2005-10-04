@@ -10,11 +10,10 @@ using namespace itk;
 
 	/**
 	 * \class MovingRecursivePyramid
-	 * \brief A MovingRecursivePyramid...
+	 * \brief A pyramid based on the itkRecursiveMultiResolutionPyramidImageFilter.
 	 *
-	 * This MovingRecursivePyramid ...
 	 *
-	 * \ingroup MovingImagePyramids
+	 * \ingroup ImagePyramids
 	 */
 
 	template <class TElastix>	
@@ -28,7 +27,7 @@ using namespace itk;
 	{
 	public:
 
-		/** Standard ITK.*/
+		/** Standard ITK. */
 		typedef MovingRecursivePyramid																		Self;
 		typedef RecursiveMultiResolutionPyramidImageFilter<
 				typename MovingImagePyramidBase<TElastix>::InputImageType,
@@ -43,20 +42,20 @@ using namespace itk;
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( MovingRecursivePyramid, RecursiveMultiResolutionPyramidImageFilter );
 		
-		/** Name of this class.*/
+		/** Name of this class. */
 		elxClassNameMacro( "MovingRecursiveImagePyramid" );
 
-		/** Get the ImageDimension.*/
+		/** Get the ImageDimension. */
 		itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
 		
-		/** Typedefs inherited from Superclass1.*/
+		/** Typedefs inherited from Superclass1. */
 		typedef typename Superclass1::InputImageType						InputImageType; 
 		typedef typename Superclass1::OutputImageType						OutputImageType;
 		typedef typename Superclass1::InputImagePointer					InputImagePointer;
 		typedef typename Superclass1::OutputImagePointer				OutputImagePointer;
 		typedef typename Superclass1::InputImageConstPointer		InputImageConstPointer;
 
-		/** Typedefs inherited from Elastix.*/
+		/** Typedefs inherited from Elastix. */
 		typedef typename Superclass2::ElastixType						ElastixType;
 		typedef typename Superclass2::ElastixPointer				ElastixPointer;
 		typedef typename Superclass2::ConfigurationType			ConfigurationType;

@@ -127,7 +127,7 @@ namespace elastix
 		}
 		else
 		{
-			/** Make sure that last character of -out equals a '/'.*/
+			/** Make sure that last character of -out equals a '/'. */
 			std::string folder( check );
 			if ( folder.find_last_of( "/" ) != folder.size() - 1 )
 			{
@@ -137,7 +137,7 @@ namespace elastix
 			elxout << "-out\t\t" << check << std::endl;
 		}
 
-		/** Print all "-p".*/
+		/** Print all "-p". */
 		unsigned int i = 1;
 		bool loop = true;
 		while ( loop )

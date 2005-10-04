@@ -22,19 +22,19 @@ using namespace itk;
 
 	/**
 	 * \class MetricBase
-	 * \brief This class is the base for all Metrics
+	 * \brief This class is the base for all Metrics.
 	 *
-	 * This class contains all the common functionality for Metrics ...
+	 * This class contains the common functionality for all Metrics.
 	 *
-	 * The command line argumemts used by this class are:
-	 * \commandlinearg -fMask: Optional argument with the file name of a mask for
-	 * the fixed image. The mask image should contain of zeros and ones, zeros indicating 
-	 * pixels that are not used for the registration. \n
-	 *   example: <tt> -fMask fixedmask.mhd </tt>
-	 * \commandlinearg -mMask: Optional argument with the file name of a mask for
-	 * the moving image. The mask image should contain of zeros and ones, zeros indicating 
-	 * pixels that are not used for the registration. \n
-	 *   example: <tt> -mMask movingmask.mhd </tt>
+	 * The command line arguments used by this class are:
+	 * \commandlinearg -fMask: Optional argument for elastix with the file name of a mask for
+	 *		the fixed image. The mask image should contain of zeros and ones, zeros indicating 
+	 *		pixels that are not used for the registration. \n
+	 *		example: <tt>-fMask fixedmask.mhd</tt> \n
+	 * \commandlinearg -mMask: Optional argument for elastix with the file name of a mask for
+	 *		the moving image. The mask image should contain of zeros and ones, zeros indicating 
+	 *		pixels that are not used for the registration. \n
+	 *		example: <tt>-mMask movingmask.mhd</tt> \n
 	 *
 	 * \ingroup Metrics
 	 * \ingroup ComponentBaseClasses

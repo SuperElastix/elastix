@@ -16,14 +16,14 @@ using namespace itk;
 		void BSplineInterpolator<TElastix>::
 		BeforeRegistration(void)
 	{
-		/** Set the SplineOrder, default value = 1.*/
+		/** Set the SplineOrder, default value = 1. */
 		unsigned int splineOrder = 1;
 		
-		/** Read the desired splineOrder from the parameterFile.*/
+		/** Read the desired splineOrder from the parameterFile. */
 		( this->GetConfiguration() )->
 			ReadParameter( splineOrder, "BSplineInterpolationOrder", 0 );
 
-		/** Set the splineOrder.*/
+		/** Set the splineOrder. */
 		this->SetSplineOrder( splineOrder );
 		
 	} // end BeforeRegistration

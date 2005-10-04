@@ -10,11 +10,10 @@ using namespace itk;
 
 	/**
 	 * \class FixedRecursivePyramid
-	 * \brief A FixedRecursivePyramid...
+	 * \brief A pyramid based on the itkRecursiveMultiResolutionPyramidImageFilter.
 	 *
-	 * This FixedRecursivePyramid ...
 	 *
-	 * \ingroup FixedImagePyramids
+	 * \ingroup ImagePyramids
 	 */
 
 	template <class TElastix>	
@@ -28,7 +27,7 @@ using namespace itk;
 	{
 	public:
 
-		/** Standard ITK-stuff.*/
+		/** Standard ITK-stuff. */
 		typedef FixedRecursivePyramid																		Self;
 		typedef RecursiveMultiResolutionPyramidImageFilter<
 				typename FixedImagePyramidBase<TElastix>::InputImageType,
@@ -43,13 +42,13 @@ using namespace itk;
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( FixedRecursivePyramid, RecursiveMultiResolutionPyramidImageFilter );
 		
-		/** Name of this class.*/
+		/** Name of this class. */
 		elxClassNameMacro( "FixedRecursiveImagePyramid" );
 
-		/** Get the ImageDimension.*/
+		/** Get the ImageDimension. */
 		itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
 		
-		/** Typedefs inherited from the superclass.*/
+		/** Typedefs inherited from the superclass. */
 		typedef typename Superclass1::InputImageType						InputImageType; 
 		typedef typename Superclass1::OutputImageType						OutputImageType;
 		typedef typename Superclass1::InputImagePointer					InputImagePointer;
@@ -57,7 +56,7 @@ using namespace itk;
 		typedef typename Superclass1::InputImageConstPointer		InputImageConstPointer;
 		typedef typename Superclass1::ScheduleType							ScheduleType;
 
-		/** Typedefs inherited from Elastix.*/
+		/** Typedefs inherited from Elastix. */
 		typedef typename Superclass2::ElastixType						ElastixType;
 		typedef typename Superclass2::ElastixPointer				ElastixPointer;
 		typedef typename Superclass2::ConfigurationType			ConfigurationType;
@@ -66,10 +65,6 @@ using namespace itk;
 		typedef typename Superclass2::RegistrationPointer		RegistrationPointer;
 		typedef typename Superclass2::ITKBaseType						ITKBaseType;
 		
-		/***/
-		//void BeforeRegistration();
-		//void BeforeEachResolution();
-
 	protected:
 
 		  FixedRecursivePyramid() {}

@@ -26,10 +26,14 @@ namespace elastix
 
 	/**
 	 * \class TransformBase
-	 * \brief This class is the base for all Transforms
+	 * \brief This class is the base for all Transforms.
 	 *
 	 * This class contains the common functionality for all Transforms.
-	 * Everything that is the same for every transform should be in this class.
+	 *
+	 * The command line arguments used by this class are:
+	 * \commandlinearg -t0: optional argument for elastix for specifying an initial tranform
+	 *		parameter file. \n
+	 *		example: <tt>-t0 TransformParameters.txt</tt> \n
 	 *
 	 * \ingroup Transforms
 	 * \ingroup ComponentBaseClasses

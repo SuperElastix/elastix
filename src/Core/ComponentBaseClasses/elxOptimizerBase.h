@@ -23,7 +23,7 @@ using namespace itk;
 	 * every iteration. This, if used in combination with the correct optimizer (such as the
 	 * StandardGradientDescent), allows for a very low number of spatial samples (around 2000),
 	 * even with large images and transforms with a large number of parameters. \n
-	 *   example: <tt> (NewSamplesEveryIteration "true" "true" "true") </tt>	 *
+	 *   example: <tt> (NewSamplesEveryIteration "true" "true" "true") </tt> \n
 	 *
 	 * \ingroup Optimizers
 	 * \ingroup ComponentBaseClasses

@@ -10,9 +10,15 @@ using namespace itk;
 
 	/**
 	 * \class BSplineInterpolator
-	 * \brief An interpolator based on B-splines.
+	 * \brief An interpolator based on the itkBSplineInterpolateImageFunction.
 	 *
-	 * This interpolator...
+	 * This interpolator interpolates images with an underlying B-spline
+	 * polynomial.
+	 *
+	 * The parameters used in this class are:
+	 * \parameter BSplineInterpolationOrder: the order of the B-spline polynomial. \n
+	 *		example: <tt>(BSplineInterpolationOrder 3)</tt> \n
+	 *		The default order is 1.
 	 *
 	 * \ingroup Interpolators
 	 */

@@ -334,18 +334,18 @@ namespace elastix
 			this->m_ConfigurationInitialTransform = ConfigurationType::New();
 		}
 		
-		/** Create argmapInitialTransform.*/
+		/** Create argmapInitialTransform. */
 		ArgumentMapType argmapInitialTransform;
 		argmapInitialTransform.insert( ArgumentMapEntryType(
 			"-tp", transformParametersFileName ) );
 		
 		int dummy = this->m_ConfigurationInitialTransform->Initialize( argmapInitialTransform );
 		
-		/** Read the InitialTransform name.*/
+		/** Read the InitialTransform name. */
 		ComponentDescriptionType InitialTransformName = "AffineTransform";
 		this->m_ConfigurationInitialTransform->ReadParameter( InitialTransformName, "Transform", 0 );
 		
-		/** Create an InitialTransform.*/
+		/** Create an InitialTransform. */
 		ObjectType::Pointer initialTransform;
 		
 		PtrToCreator testcreator = 0;

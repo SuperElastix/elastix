@@ -19,9 +19,15 @@ using namespace itk;
 
 	/**
 	 * \class MultiResolutionRegistration
-	 * \brief A MultiResolutionRegistration...
+	 * \brief A registration framework based on the itkMultiResolutionImageRegistrationMethod.
 	 *
-	 * This MultiResolutionRegistration ...
+	 * This MultiResolutionRegistration givees a framework for registration with a
+	 * multi-resolution approach.
+	 *
+	 * The parameters used in this class are:
+	 * \parameter NumberOfResolutions: the number of resolutions used. \n
+	 *		example: <tt>(NumberOfResolutions 4)</tt> \n
+	 *		The default is 3.
 	 *
 	 * \ingroup Registrations
 	 */
