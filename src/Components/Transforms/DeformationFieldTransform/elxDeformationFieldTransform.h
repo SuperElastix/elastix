@@ -14,9 +14,15 @@ using namespace itk;
 
 	/**
 	 * \class DeformationFieldTransform
-	 * \brief A transform based on a DeformationVectorField
+	 * \brief A transform based on a DeformationVectorField.
 	 *
-	 * This class
+	 * This transform models the transformation by a deformation vector field.
+	 *
+	 * The transform parameters necessary for transformix, additionally defined by this class, are:
+	 * \transformparameter DeformationFieldFileName: stores the name of the deformation field. \n
+	 *		example: <tt>(DeformationFieldFileName "defField.mhd")</tt>
+	 *
+	 * \sa DeformationVectorFieldTransform
 	 *
 	 * \ingroup Transforms
 	 */

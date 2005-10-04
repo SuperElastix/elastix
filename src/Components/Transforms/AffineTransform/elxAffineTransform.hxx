@@ -26,29 +26,28 @@ namespace elastix
 		void AffineTransformElastix<TElastix>
 		::BeforeRegistration(void)
 	{
-		/** Task 1 - Set initial parameters.*/
+		/** Task 1 - Set initial parameters. */
 		ParametersType dummyInitialParameters( this->GetNumberOfParameters() );
 		dummyInitialParameters.Fill(0.0);
 		unsigned int j = 0;
 
-		/** Set it to the Identity-matrix.*/
+		/** Set it to the Identity-matrix. */
 		for ( unsigned int i = 0; i < SpaceDimension; i++ )
 		{
 			dummyInitialParameters[ j ] = 1.0;
 			j += SpaceDimension + 1;
 		}
 
-		/** And give it to this->m_Registration.*/
+		/** And give it to this->m_Registration. */
 		this->m_Registration->GetAsITKBaseType()
 			->SetInitialTransformParameters( dummyInitialParameters );
 		
-		/** Task 2 - Set center of rotation.*/
+		/** Task 2 - Set center of rotation. */
 		InputPointType rotationPoint;
 		this->CalculateRotationPoint( rotationPoint );
-		//this->Superclass1::SetCenterOfRotationComponent( rotationPoint );
 		this->Superclass1::SetCenter( rotationPoint );
 		
-		/** Task 3 - Set the scales.*/
+		/** Task 3 - Set the scales. */
 		/** Here is an heuristic rule for estimating good values for
 		 * the rotation/translation scales.
 		 *
@@ -72,15 +71,43 @@ namespace elastix
 		 * large as 1/10 of the diagonal of the bounding box.
 		 */
 		ScalesType newscales( this->GetNumberOfParameters() );
-		newscales.Fill(1.0);
-		double scaler = 100000.0;
-		this->m_Configuration->ReadParameter( scaler, "Scaler", 0 );
-		for ( unsigned int i = 0; i < SpaceDimension * SpaceDimension; i++ )
+		newscales.Fill( 1.0 );
+		double dummy = 100000.0;
+
+		/** If the scales are given for all parameters. */
+		if ( this->m_Configuration->ReadParameter( dummy, "Scaler", 1, true ) == 1 )
 		{
-			newscales[ i ] *= scaler;
+			for ( unsigned int i = 0; i < this->GetNumberOfParameters(); i++ )
+			{
+				double scaler = 1.0;
+				this->m_Configuration->ReadParameter( scaler, "Scaler", i );
+				newscales[ i ] *= scaler;
+			}
+		}
+		/** If only the first scale is given, set the first SpaceDimension
+		 * times SpaceDimension parameters to it.
+		 */
+		else if ( this->m_Configuration->ReadParameter( dummy, "Scaler", 0 ) == 1 )
+		{
+			double scaler = 100000.0;
+			this->m_Configuration->ReadParameter( scaler, "Scaler", 0 );
+			for ( unsigned int i = 0; i < SpaceDimension * SpaceDimension; i++ )
+			{
+				newscales[ i ] *= scaler;
+			}
+		}
+		/** Otherwise, if nothing is given, set the first SpaceDimension
+		 * times SpaceDimension parameters to 100000.0.
+		 */
+		else
+		{
+			for ( unsigned int i = 0; i < SpaceDimension * SpaceDimension; i++ )
+			{
+				newscales[ i ] *= 100000.0;
+			}
 		}
 
-		/** And give it to the optimizer.*/
+		/** And set the scales into the optimizer. */
 		this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newscales );
 		
 	} // end BeforeRegistration

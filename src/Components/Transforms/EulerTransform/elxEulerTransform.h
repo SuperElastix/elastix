@@ -10,9 +10,27 @@ using namespace itk;
 
 	/**
 	 * \class EulerTransformElastix
-	 * \brief A transform based on the itk EulerTransforms
+	 * \brief A transform based on the itk EulerTransforms.
 	 *
-	 * This transform is a rigid transformation...
+	 * This transform is a rigid body transformation.
+	 *
+	 * The parameters used in this class are:
+	 * \parameter Scaler: the scale factor between the rotations and translations,
+	 *		used in the optimizer. \n
+	 *		example: <tt>(Scaler 100000.0)</tt> \n
+	 *		example: <tt>(Scaler 100000.0 60000.0 ... 80000.0)</tt> \n
+	 *    If only one argument is given, that factor is used for the rotations.
+	 *		If more than one argument is given, then the number of arguments should be
+	 *		equal to the number of parameters: for each parameter its scale factor.
+	 *		If this parameter option is not used, by default the rotations are scaled
+	 *		by a factor of 100000.0.
+	 * \parameter CenterOfRotation: an index around which the image is rotated. \n
+	 *		example: <tt>(CenterOfRotation 128 128 90)</tt> \n
+	 *		By default the CenterOfRotation is set to the center of the image.
+	 *
+	 * The transform parameters necessary for transformix, additionally defined by this class, are:
+	 * \transformparameter CenterOfRotation: stores the center of rotation. \n
+	 *		example: <tt>(CenterOfRotation 128 128 90)</tt>
 	 *
 	 * \ingroup Transforms
 	 */

@@ -166,21 +166,20 @@ using namespace itk;
 		
 		/** Read the desired grid spacing for each dimension. If only one gridspacing factor
 		 * is given, that one is used for each dimension. */
-		this->m_GridSpacingFactor[0]=8.0;
-		this->m_Configuration->ReadParameter( this->m_GridSpacingFactor[0], "FinalGridSpacing", 0);
-    this->m_GridSpacingFactor.Fill( this->m_GridSpacingFactor[0] );
+		this->m_GridSpacingFactor[ 0 ] = 8.0;
+		this->m_Configuration->ReadParameter( this->m_GridSpacingFactor[ 0 ], "FinalGridSpacing", 0 );
+    this->m_GridSpacingFactor.Fill( this->m_GridSpacingFactor[ 0 ] );
 		for ( unsigned int j = 1; j < SpaceDimension; j++ )
 		{
-      this->m_Configuration->ReadParameter( this->m_GridSpacingFactor[j], "FinalGridSpacing", j);
+      this->m_Configuration->ReadParameter( this->m_GridSpacingFactor[ j ], "FinalGridSpacing", j );
 		}
 
-		/** If multigrid, then start with a lower resolution grid */
-		if (upsampleGridOption)
+		/** If multigrid, then start with a lower resolution grid. */
+		if ( upsampleGridOption )
 		{
-			/** cast to int, otherwise gcc does not understand it... */
 			int nrOfResolutions = static_cast<int>(
 				this->GetRegistration()->GetAsITKBaseType()->GetNumberOfLevels()  );
-			this->m_GridSpacingFactor *= pow(2.0, (nrOfResolutions-1) );
+			this->m_GridSpacingFactor *= pow( 2.0, ( nrOfResolutions - 1 ) );
 		}
 
 		/** Determine the correct grid size */

@@ -23,30 +23,30 @@ using namespace itk;
 
 	/**
 	 * \class BSplineTransform
-	 * \brief A transform based on the itkBSplineTransform
+	 * \brief A transform based on the itkBSplineTransform.
 	 *
-	 * This transform is a B-spline transformation...
+	 * This transform is a B-spline transformation, commonly used for nonrigid registration.
 	 *
 	 * The parameters used in this class are:
-	 * \parameter FinalGridSpacing: the grid spacing of the B-spline transform for each dimension \n
-	 *		example: <tt>(FinalGridSpacing 32.0 32.0 32.0)</tt> \n
+	 * \parameter FinalGridSpacing: the grid spacing of the B-spline transform for each dimension. \n
+	 *		example: <tt>(FinalGridSpacing 8.0 8.0 8.0)</tt> \n
 	 *    If only one argument is given, that factor is used for each dimension. The spacing
 	 *    is not in millimeters, but in "voxel size units".
+	 *		The default is 8.0 in every dimension.
 	 * \parameter UpsampleGridOption: whether or not the B-spline grid should
-	 *		be upsampled from one resolution level to another. Choose from {true, false} \n
+	 *		be upsampled from one resolution level to another. Choose from {true, false}. \n
 	 *		example: <tt>(UpsampleGridOption "true")</tt>
+	 *		The default is "true".
 	 * 
-	 * The transform parameters necessary for transformix are:
-	 * \transformparameter GridSize: stores the size of the B-spline grid \n
+	 * The transform parameters necessary for transformix, additionally defined by this class, are:
+	 * \transformparameter GridSize: stores the size of the B-spline grid. \n
 	 *		example: <tt>(GridSize 16 16 16)</tt>
-	 * \transformparameter GridIndex: stores the index of the B-spline grid \n
+	 * \transformparameter GridIndex: stores the index of the B-spline grid. \n
 	 *		example: <tt>(GridIndex 0 0 0)</tt>
-	 * \transformparameter GridSpacing: stores the spacing of the B-spline grid \n
+	 * \transformparameter GridSpacing: stores the spacing of the B-spline grid. \n
 	 *		example: <tt>(GridSpacing 16.0 16.0 16.0)</tt>
-	 * \transformparameter GridOrigin: stores the origin of the B-spline grid \n
+	 * \transformparameter GridOrigin: stores the origin of the B-spline grid. \n
 	 *		example: <tt>(GridOrigin 0.0 0.0 0.0)</tt>
-	 * \transformparameter NumberOfParameters: stores the number of B-spline parameters \n
-	 *		example: <tt>(NumberOfParameters 1000)</tt>
 	 *
 	 * \ingroup Transforms
 	 */
@@ -64,7 +64,7 @@ using namespace itk;
 	{
 	public:
 
-		/** Standard ITK-stuff.*/
+		/** Standard ITK-stuff. */
 		typedef BSplineTransform 										Self;
 		typedef BSplineDeformableTransform<
 			typename elx::TransformBase<TElastix>::CoordRepType,
@@ -80,7 +80,7 @@ using namespace itk;
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( BSplineTransform, BSplineDeformableTransform );
 
-		/** Name of this class.*/
+		/** Name of this class. */
 		elxClassNameMacro( "BSplineTransform" );
 		
 		/** Dimension of the domain space. */
@@ -89,7 +89,7 @@ using namespace itk;
 		/** The BSpline order. */
 		itkStaticConstMacro( SplineOrder, unsigned int, __VSplineOrder );
 		
-		/** Typedefs inherited from the superclass.*/
+		/** Typedefs inherited from the superclass. */
 		typedef typename Superclass1::ScalarType 								ScalarType;
 		typedef typename Superclass1::ParametersType 						ParametersType;
 		typedef typename Superclass1::JacobianType 							JacobianType;
@@ -102,7 +102,7 @@ using namespace itk;
 		typedef typename Superclass1::InputPointType 						InputPointType;
 		typedef typename Superclass1::OutputPointType						OutputPointType;
 		
-		/** Typedef's specific for the BSplineTransform.*/
+		/** Typedef's specific for the BSplineTransform. */
 		typedef typename Superclass1::PixelType									PixelType;
 		typedef typename Superclass1::ImageType									ImageType;
 		typedef typename Superclass1::ImagePointer							ImagePointer;
@@ -118,7 +118,7 @@ using namespace itk;
 		typedef typename Superclass1::ContinuousIndexType				ContinuousIndexType;
 		typedef typename Superclass1::ParameterIndexArrayType		ParameterIndexArrayType;
 
-		/** Typedef's from TransformBase.*/
+		/** Typedef's from TransformBase. */
 		typedef typename Superclass2::ElastixType								ElastixType;
 		typedef typename Superclass2::ElastixPointer						ElastixPointer;
 		typedef typename Superclass2::ConfigurationType					ConfigurationType;
@@ -132,16 +132,14 @@ using namespace itk;
 
 		/** Typedefs & Vars needed for setting the grid size and upsampling the grid.*/
 		
-		/** the FixedImagePyramidBase */
+		/** The FixedImagePyramidBase. */
 		typedef typename ElastixType::FixedImagePyramidBaseType	FixedImagePyramidType;
 
-		/** itk::MultiResolutionImagePyramidFilter */
+		/** The MultiResolutionImagePyramidFilter. */
 		typedef typename FixedImagePyramidType::ITKBaseType			FixedImagePyramidITKBaseType;
-
-		/** pointer to itk::MultiResolutionImagePyramidFilter  */
 		typedef FixedImagePyramidITKBaseType *									FixedImagePyramidPointer;
 		
-		/** Typedefs for saving the deformation fields: */
+		/** Typedefs for saving the deformation fields. */
 		typedef __CoefficientOutputType								CoefficientOutputType;
 		typedef Image< CoefficientOutputType,
 			itkGetStaticConstMacro(SpaceDimension) >		CoefficientOutputImageType;
@@ -150,15 +148,15 @@ using namespace itk;
 		typedef ImageFileWriter<
 			CoefficientOutputImageType >								TransformWriterType;
 
-		/** Methods in which parameters can be changed; automatically called by elastix.*/
+		/** Methods in which parameters can be changed; automatically called by elastix. */
 		virtual void BeforeRegistration(void);
 		virtual void BeforeEachResolution(void);
 		
-		/** These two methods are called by BeforeEachResolution()*/
+		/** These two methods are called by BeforeEachResolution(). */
 		virtual void SetInitialGrid( bool upsampleGridOption );
 		virtual void IncreaseScale(void);
 		
-		/** Function to read/write transform-parameters from/to a file.*/
+		/** Function to read/write transform-parameters from/to a file. */
 		virtual void ReadFromFile(void);
 		virtual void WriteToFile( const ParametersType & param );
 		
@@ -167,7 +165,7 @@ using namespace itk;
 		BSplineTransform();
 		virtual ~BSplineTransform() {}
 		
-		/** Member variables.*/
+		/** Member variables. */
 		typename TransformCastFilterType::Pointer		m_Caster;
 		typename TransformWriterType::Pointer				m_Writer;
 		SpacingType																	m_GridSpacingFactor;

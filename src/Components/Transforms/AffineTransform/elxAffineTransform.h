@@ -10,9 +10,30 @@ using namespace itk;
 
 	/**
 	 * \class AffineTransformElastix
-	 * \brief A transform based on the itkAffineTransform
+	 * \brief A transform based on the itkAffineTransform.
 	 *
-	 * This transform is an affine transformation...
+	 * This transform is an affine transformation.
+	 *
+	 * The first couple of parameters (4 in 2D and 9 in 3D) define the affine
+	 * matrix, the last couple (2 in 2D and 3 in 3D) define the translation.
+	 *
+	 * The parameters used in this class are:
+	 * \parameter Scaler: the scale factor between the rotations and translations,
+	 *		used in the optimizer. \n
+	 *		example: <tt>(Scaler 100000.0)</tt> \n
+	 *		example: <tt>(Scaler 100000.0 60000.0 ... 80000.0)</tt> \n
+	 *    If only one argument is given, that factor is used for the rotations.
+	 *		If more than one argument is given, then the number of arguments should be
+	 *		equal to the number of parameters: for each parameter its scale factor.
+	 *		If this parameter option is not used, by default the rotations are scaled
+	 *		by a factor of 100000.0.
+	 * \parameter CenterOfRotation: an index around which the image is rotated. \n
+	 *		example: <tt>(CenterOfRotation 128 128 90)</tt> \n
+	 *		By default the CenterOfRotation is set to the center of the image.
+	 *
+	 * The transform parameters necessary for transformix, additionally defined by this class, are:
+	 * \transformparameter CenterOfRotation: stores the center of rotation. \n
+	 *		example: <tt>(CenterOfRotation 128 128 90)</tt>
 	 *
 	 * \ingroup Transforms
 	 */
@@ -85,14 +106,14 @@ using namespace itk;
 		typedef typename OptimizerType::ScalesType							ScalesType;
 		typedef typename Superclass2::DummyImageType						DummyImageType;
 		
-		/** Methods that have to be present in each version of MyTransform.*/
+		/** Methods that have to be present in each version of MyTransform. */
 		virtual void BeforeRegistration(void);
 		
-		/** Function to read/write transform-parameters from/to a file.*/
+		/** Function to read/write transform-parameters from/to a file. */
 		virtual void ReadFromFile(void);
 		virtual void WriteToFile( const ParametersType & param );
 
-		/** To Set the center of rotation.*/
+		/** To Set the center of rotation. */
 		void CalculateRotationPoint( InputPointType & rotationPoint );
 		
 	protected:

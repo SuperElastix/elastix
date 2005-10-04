@@ -58,18 +58,47 @@ namespace elastix
 		 * large as 1/10 of the diagonal of the bounding box.
 		 */
 		ScalesType newscales( this->GetNumberOfParameters() );
-		newscales.Fill(1.0);
-		double scaler = 100000.0;
-		this->m_Configuration->ReadParameter( scaler, "Scaler", 0 );
+		newscales.Fill( 1.0 );
+		double dummy = 100000.0;
+
 		/**
 		 * - If the Dimension is 3, the first 3 parameters represent angles.
 		 * - If the Dimension is 2, only the first parameter represent an angle.
 		 */
 		unsigned int AnglePartEnd = 3;
 		if ( SpaceDimension == 2 ) AnglePartEnd = 1;
-		for ( unsigned int i = 0; i < AnglePartEnd; i++ )
+
+		/** If the scales are given for all parameters. */
+		if ( this->m_Configuration->ReadParameter( dummy, "Scaler", 1, true ) == 1 )
 		{
-			newscales[ i ] *= scaler;
+			for ( unsigned int i = 0; i < this->GetNumberOfParameters(); i++ )
+			{
+				double scaler = 1.0;
+				this->m_Configuration->ReadParameter( scaler, "Scaler", i );
+				newscales[ i ] *= scaler;
+			}
+		}
+		/** If only the first scale is given, set the first AnglePartEnd
+		 * (1 in 2D and 3 in 3D) parameters to it.
+		 */
+		else if ( this->m_Configuration->ReadParameter( dummy, "Scaler", 0 ) == 1 )
+		{
+			double scaler = 100000.0;
+			this->m_Configuration->ReadParameter( scaler, "Scaler", 0 );
+			for ( unsigned int i = 0; i < AnglePartEnd; i++ )
+			{
+				newscales[ i ] *= scaler;
+			}
+		}
+		/** Otherwise, if nothing is given, set the first AnglePartEnd
+		 * (1 in 2D and 3 in 3D) parameters to 100000.0.
+		 */
+		else
+		{
+			for ( unsigned int i = 0; i < AnglePartEnd; i++ )
+			{
+				newscales[ i ] *= 100000.0;
+			}
 		}
 
 		/** And give it to the optimizer. */

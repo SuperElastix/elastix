@@ -9,9 +9,9 @@ namespace itk
 	
 	
 	/**
-	 * ********************* class EulerGroup ***********************
+	 * \class EulerGroup
+	 * \brief This class only contains a dummy class.
 	 *
-	 * This class only contains a dummy class.
 	 */
 	
 	template< unsigned int Dimension >
@@ -25,8 +25,8 @@ namespace itk
 		public:
 			
 			/** Typedef's.*/
-			typedef Euler3DTransform< TScalarType >										EulerTransform_tmp;
-			typedef typename EulerTransform_tmp::AngleType						AngleType;
+			typedef Euler3DTransform< TScalarType >							EulerTransform_tmp;
+			typedef typename EulerTransform_tmp::AngleType			AngleType;
 			
 		}; // end class Dummy
 		
@@ -34,9 +34,9 @@ namespace itk
 	
 	
 	/**
-	 * ******************** class EulerGroup<2> *********************
+	 * \class EulerGroup<2>
+	 * \brief This class only contains a dummy class for the 2D case.
 	 *
-	 * This class only contains a dummy class.
 	 */
 	
 	template<>
@@ -59,9 +59,9 @@ namespace itk
 	
 	
 	/**
-	 * ******************** class EulerGroup<3> *********************
+	 * \class EulerGroup<3>
+	 * \brief This class only contains a dummy class for the 3D case.
 	 *
-	 * This class only contains a dummy class.
 	 */
 	
 	template<>
@@ -84,9 +84,9 @@ namespace itk
 	
 	
 	/**
-	 * ***************** class EulerGroupTemplate *******************
+	 * \class EulerGroupTemplate
+	 * \brief This class templates the EulerGroup over its dimension.
 	 *
-	 * This class
 	 */
 	
 	template< class TScalarType, unsigned int Dimension >
@@ -116,10 +116,14 @@ namespace itk
 		
 	}; // end class EulerGroupTemplate
 	
+
 	/**
-	 * ******************* class EulerTransform *********************
+	 * \class EulerTransform
+	 * \brief This class combines the Euler2DTransform with the Euler3DTransform.
 	 *
-	 * This class
+	 * This transform is a rigid body transformation.
+	 *
+	 * \ingroup Transforms
 	 */
 	
 	template< class TScalarType, unsigned int Dimension >
@@ -129,7 +133,7 @@ namespace itk
 	{
 	public:
 
-		/** Standard ITK-stuff.*/
+		/** Standard ITK-stuff. */
 		typedef EulerTransform											Self;
 		typedef typename EulerGroupTemplate<
 			TScalarType, Dimension >
@@ -137,18 +141,18 @@ namespace itk
 		typedef SmartPointer<Self>									Pointer;
 		typedef SmartPointer<const Self>						ConstPointer;
 		
-		/** Method for creation through the object factory.*/
+		/** Method for creation through the object factory. */
 		itkNewMacro( Self );
 		
-		/** Run-time type information (and related methods).*/
+		/** Run-time type information (and related methods). */
 		itkTypeMacro( EulerTransform, EulerGroupTemplate );
 		
-		/** Dimension of the domain space.*/
+		/** Dimension of the domain space. */
 		itkStaticConstMacro( SpaceDimension, unsigned int, Dimension );
 		
-		/** Typedefs inherited from the superclass.*/
+		/** Typedefs inherited from the superclass. */
 
-		/** These are both in Euler2D and Euler3D.*/
+		/** These are both in Euler2D and Euler3D. */
 		typedef typename Superclass::ScalarType										ScalarType;
 		typedef typename Superclass::ParametersType								ParametersType;
 		typedef typename Superclass::JacobianType									JacobianType;
@@ -162,7 +166,7 @@ namespace itk
 		typedef typename Superclass::InputVnlVectorType						InputVnlVectorType;
 		typedef typename Superclass::OutputVnlVectorType					OutputVnlVectorType;
 		
-		/** NOTE: use these only in 3D (otherwise they are just int's).*/
+		/** NOTE: use these only in 3D (otherwise they are just int's). */
 		typedef typename EulerGroupTemplate<
 			TScalarType, Dimension >::EulerDummy										EulerDummy;
 		typedef typename EulerDummy::AngleType										AngleType;
@@ -174,8 +178,8 @@ namespace itk
 		
 	private:
 
-		EulerTransform(const Self&); // purposely not implemented
-		void operator=(const Self&); // purposely not implemented
+		EulerTransform( const Self& ); // purposely not implemented
+		void operator=( const Self& ); // purposely not implemented
 		
 	}; // end class EulerTransform
 	

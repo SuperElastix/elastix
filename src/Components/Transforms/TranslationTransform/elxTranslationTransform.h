@@ -10,9 +10,9 @@ namespace elastix
 	
 	/**
 	 * \class TranslationTransformElastix
-	 * \brief A transform based on the itk TranslationTransform
+	 * \brief A transform based on the itkTranslationTransform.
 	 *
-	 * This transform is an translation transformation...
+	 * This transform is a translation transformation.
 	 *
 	 * \ingroup Transforms
 	 */

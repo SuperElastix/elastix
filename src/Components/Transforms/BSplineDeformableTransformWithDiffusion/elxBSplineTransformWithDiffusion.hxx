@@ -111,7 +111,7 @@ using namespace itk;
 		}
 
 		/** Get diffusion information: Number of iterations. */
-		unsigned int iterations = 0;
+		unsigned int iterations = 1;
 		this->m_Configuration->ReadParameter( iterations, "NumberOfDiffusionIterations", 0 );
 		if ( iterations < 1 )
 		{
@@ -454,12 +454,15 @@ using namespace itk;
 		else if ( filterPattern == 2 )
 		{
 			/** Find out after how many iterations a change in n_i is needed. */
-			unsigned int afterIterations0, afterIterations1;
+			unsigned int afterIterations0 = 50;
+			unsigned int afterIterations1 = 100;
 			this->m_Configuration->ReadParameter( afterIterations0, "AfterIterations", 0 );
 			this->m_Configuration->ReadParameter( afterIterations1, "AfterIterations", 1 );
 
 			/** Find out n1, n2 and n3. */
-			unsigned int howManyIterations0, howManyIterations1, howManyIterations2;
+			unsigned int howManyIterations0 = 1;
+			unsigned int howManyIterations1 = 5;
+			unsigned int howManyIterations2 = 10;
 			this->m_Configuration->ReadParameter( howManyIterations0, "HowManyIterations", 0 );
 			this->m_Configuration->ReadParameter( howManyIterations1, "HowManyIterations", 1 );
 			this->m_Configuration->ReadParameter( howManyIterations2, "HowManyIterations", 2 );

@@ -48,63 +48,89 @@ using namespace itk;
 	 *
 	 * The parameters used in this class are:
 	 * \parameter FinalGridSpacing: the grid spacing of the B-spline transform
-	 *		part of this transform \n
-	 *		example: <tt>(FinalGridSpacing 32)</tt>
+	 *		part of this transform for each dimension. \n
+	 *		example: <tt>(FinalGridSpacing 8.0 8.0 8.0)</tt>
+	 *		If only one argument is given, that factor is used for each dimension. The spacing
+	 *    is not in millimeters, but in "voxel size units".
+	 *		The default is 8.0 in every dimension.
 	 * \parameter UpsampleGridOption: whether or not the B-spline grid should
-	 *		be upsampled from one resolution level to another. Choose from {true, false} \n
+	 *		be upsampled from one resolution level to another. Choose from {true, false}. \n
 	 *		example: <tt>(UpsampleGridOption "true")</tt>
+	 *		The default is "true".
 	 * \parameter FilterPattern: defines according to what schedule/pattern
 	 *		the deformation field should be filtered. Choose from {1,2}, where
 	 *		FilterPattern 1 is diffusion every "DiffusionEachNIterations" iterations,
 	 *		and where FilterPattern 2 filters more frequent in the beginning
-	 *		and less frequent at the end of a resolution \n
+	 *		and less frequent at the end of a resolution. \n
 	 *		example: <tt>(FilterPattern 1)</tt>
+	 *		The default is filter pattern 1.
 	 * \parameter DiffusionEachNIterations: defines for FilterPattern 1 after how
-	 *		many iterations of the optimiser there should be a filtering step \n
+	 *		many iterations of the optimiser there should be a filtering step. \n
 	 *		example: <tt>(DiffusionEachNIterations 5)</tt>
+	 *		The default is 1.
 	 * \parameter AfterIterations: defines for FilterPattern 2 after how many
-	 *		iterations of the optimiser the filter frequency should be increased \n
-	 *		example: <tt>(AfterIterations 50 100)</tt>
+	 *		iterations of the optimiser the filter frequency should be increased. \n
+	 *		example: <tt>(AfterIterations 100 200)</tt>
+	 *		The default is 50 and 100.
 	 * \parameter HowManyIterations: defines to what frequency the filtering
-	 *		should be increased \n
+	 *		should be increased. \n
 	 *		example: <tt>(HowManyIterations 1 5 10)</tt>
-	 * \parameter MaximumNumberOfIterations: defines the maximum number of
-	 *		iterations of the optimiser in a resolution. The deformation
-	 *		field is also filtered the last iteration \n
-	 *		example: <tt>(MaximumNumberOfIterations 100 100 100)</tt>
+	 *		The default is 1, 5 and 10.
 	 * \parameter NumberOfDiffusionIterations: defines the number of times
-	 *		the adaptive filtering is performed \n
+	 *		the adaptive filtering is performed. \n
 	 *		example: <tt>(NumberOfDiffusionIterations 10)</tt>
-	 * \parameter Radius: defines the radius of the filter \n
+	 *		The default is 1.
+	 * \parameter Radius: defines the radius of the filter. \n
 	 *		example: <tt>(Radius 1)</tt>
+	 *		The default is 1.
 	 * \parameter ThresholdBool: defines whether or not the stiffness coefficient
-	 *		image should be thresholded. Choose from {true, false} \n
+	 *		image should be thresholded. Choose from {true, false}. \n
 	 *		example: <tt>(ThresholdBool "true")</tt>
+	 *		The default is "true".
 	 * \parameter ThresholdHU: if it is thresholded, this defines the threshold in
-	 *		Houndsfield units \n
+	 *		Houndsfield units. \n
 	 *		example: <tt>(ThresholdHU 150)</tt>
+	 *		The default is 150.
 	 * \parameter WriteDiffusionFiles: defines whether or not the stiffness coefficient
 	 *		image, the deformation field and the filtered field should be written
-	 *		to file. Choose from {true, false} \n
-	 *		example: <tt>(WriteDiffusionFiles "false")</tt>
+	 *		to file. Choose from {true, false}. \n
+	 *		example: <tt>(WriteDiffusionFiles "true")</tt>
+	 *		The default is "false".
 	 * \parameter GrayValueImageAlsoBasedOnFixedImage: defines whether or not
 	 *		the stiffness coefficient image should also be based on the fixed image.
-	 *		Choose from {true, false}, default is true \n
+	 *		Choose from {true, false}. \n
 	 *		example: <tt>(GrayValueImageAlsoBasedOnFixedImage "true")</tt>
+	 *		The default is "true".
+	 * \parameter UseFixedSegmentation: defines whether or not the stiffness coefficient
+	 *		image should be based on some prior defined segmentation of rigid structures in
+	 *		the fixed image, instead on a thresholding. Choose from {true, false}. \n
+	 *		example: <tt>(UseFixedSegmentation "true")</tt>
+	 *		The default is "false".
+	 * \parameter FixedSegmentationFileName: the filename of this segmentation. \n
+	 *		example: <tt>(FixedSegmentationFileName "somestring")</tt>
+	 * \parameter UseMovingSegmentation: defines whether or not the stiffness coefficient
+	 *		image should be based on some prior defined segmentation of rigid structures in
+	 *		the moving image, instead on a thresholding. Choose from {true, false}. \n
+	 *		example: <tt>(UseMovingSegmentation "true")</tt>
+	 *		The default is "false".
+	 * \parameter MovingSegmentationFileName: the filename of this segmentation. \n
+	 *		example: <tt>(MovingSegmentationFileName "somestring")</tt>
+	 * \parameter DefaultPixelValueForGVI: the default pixel value, when resampling
+	 *		the grayvalueimage.
+	 *		example: <tt>(DefaultPixelValueForGVI 0)</tt>
+	 *		The default is 0.
 	 * 
-	 * The transform parameters necessary for transformix are:
-	 * \transformparameter DeformationFieldFileName: stores the name of the deformation field \n
+	 * The transform parameters necessary for transformix, additionally defined by this class, are:
+	 * \transformparameter DeformationFieldFileName: stores the name of the deformation field. \n
 	 *		example: <tt>(DeformationFieldFileName "defField.mhd")</tt>
-	 * \transformparameter GridSize: stores the size of the B-spline grid \n
+	 * \transformparameter GridSize: stores the size of the B-spline grid. \n
 	 *		example: <tt>(GridSize 16 16 16)</tt>
-	 * \transformparameter GridIndex: stores the index of the B-spline grid \n
+	 * \transformparameter GridIndex: stores the index of the B-spline grid. \n
 	 *		example: <tt>(GridIndex 0 0 0)</tt>
-	 * \transformparameter GridSpacing: stores the spacing of the B-spline grid \n
+	 * \transformparameter GridSpacing: stores the spacing of the B-spline grid. \n
 	 *		example: <tt>(GridSpacing 16.0 16.0 16.0)</tt>
-	 * \transformparameter GridOrigin: stores the origin of the B-spline grid \n
+	 * \transformparameter GridOrigin: stores the origin of the B-spline grid. \n
 	 *		example: <tt>(GridOrigin 0.0 0.0 0.0)</tt>
-	 * \transformparameter NumberOfParameters: stores the number of B-spline parameters \n
-	 *		example: <tt>(NumberOfParameters 1000)</tt>
 	 *
 	 * \ingroup Transforms
 	 */
