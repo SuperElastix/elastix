@@ -15,9 +15,13 @@ using namespace itk;
 
 	/**
 	 * \class FullSearch
-	 * \brief An optimizer based on full search.
+	 * \brief An optimizer based on the itk::FullSearchOptimizer.
 	 *
 	 * This optimizer ...
+	 *
+	 * The parameters used in this class are:
+	 * \parameter Optimizer: Select this optimizer as follows:\n
+	 *		<tt>(Optimizer "FullSearch")</tt>
 	 *
 	 * \ingroup Optimizers
 	 */
@@ -44,7 +48,10 @@ using namespace itk;
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( FullSearch, FullSearchOptimizer );
 		
-		/** Name of this class.*/
+		/** Name of this class.
+		 * Use this name in the parameter file to select this specific optimizer. \n
+		 * example: <tt>(Optimizer "FullSearch")</tt>\n
+		 */
 		elxClassNameMacro( "FullSearch" );
 
 		/** Typedef's inherited from Superclass1.*/

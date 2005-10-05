@@ -10,9 +10,13 @@ using namespace itk;
 
 	/**
 	 * \class SimultaneousPerturbation
-	 * \brief An optimizer based on simultaneous perturbation...
+	 * \brief An optimizer based on the itk::SimultaneousPerturbationOptimizer.
 	 *
 	 * This optimizer 
+	 *
+	 * The parameters used in this class are:
+	 * \parameter Optimizer: Select this optimizer as follows:\n
+	 *		<tt>(Optimizer "SimultaneousPerturbation")</tt>
 	 *
 	 * \ingroup Optimizers
 	 */
@@ -39,7 +43,10 @@ using namespace itk;
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( SimultaneousPerturbation, SimultaneousPerturbationOptimizer );
 		
-		/** Name of this class.*/
+		/** Name of this class.
+		 * Use this name in the parameter file to select this specific optimizer. \n
+		 * example: <tt>(Optimizer "SimultaneousPerturbation")</tt>\n
+		 */
 		elxClassNameMacro( "SimultaneousPerturbation" );
 
 		/** Typedef's inherited from Superclass1.*/

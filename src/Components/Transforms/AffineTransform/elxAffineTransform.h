@@ -18,6 +18,8 @@ using namespace itk;
 	 * matrix, the last couple (2 in 2D and 3 in 3D) define the translation.
 	 *
 	 * The parameters used in this class are:
+	 * \parameter Transform: Select this transform as follows:\n
+	 *		<tt>(Transform "AffineTransform")</tt>
 	 * \parameter Scaler: the scale factor between the rotations and translations,
 	 *		used in the optimizer. \n
 	 *		example: <tt>(Scaler 100000.0)</tt> \n
@@ -63,7 +65,10 @@ using namespace itk;
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( AffineTransformElastix, AffineTransform );
 
-		/** Name of this class.*/
+		/** Name of this class.
+		 * Use this name in the parameter file to select this specific transform. \n
+		 * example: <tt>(Transform "AffineTransform")</tt>\n
+		 */
 		elxClassNameMacro( "AffineTransform" );
 		
 		/** Dimension of the domain space. */

@@ -21,6 +21,8 @@ using namespace itk;
 	 * itkRegularStepGradientDescentOptimizer (in the ITK-manual).
 	 *
 	 * The parameters used in this class are:
+	 * \parameter Optimizer: Select this optimizer as follows:\n
+	 *		<tt>(Optimizer "RegularStepGradientDescent")</tt>
 	 * \parameter MaximumNumberOfIterations: the maximum number of iterations in each resolution \n
 	 *	 example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
 	 *   Default value: 100.
@@ -70,7 +72,7 @@ using namespace itk;
 		itkTypeMacro( RegularStepGradientDescent, ImprovedRegularStepGradientDescentOptimizer );
 		
 		/** Name of this class.
-		 * Use this name in the parameter file to select this specific optimizer.
+		 * Use this name in the parameter file to select this specific optimizer. \n
 		 * example: <tt>(Optimizer "RegularStepGradientDescent")</tt>\n
 		 */
 		elxClassNameMacro( "RegularStepGradientDescent" );

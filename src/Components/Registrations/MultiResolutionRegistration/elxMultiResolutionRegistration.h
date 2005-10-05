@@ -25,6 +25,8 @@ using namespace itk;
 	 * multi-resolution approach.
 	 *
 	 * The parameters used in this class are:
+	 * \parameter Registration: Select this registration framework as follows:\n
+	 *		<tt>(Registration "MultiResolutionRegistration")</tt>
 	 * \parameter NumberOfResolutions: the number of resolutions used. \n
 	 *		example: <tt>(NumberOfResolutions 4)</tt> \n
 	 *		The default is 3.
@@ -55,7 +57,10 @@ using namespace itk;
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( MultiResolutionRegistration, MultiResolutionImageRegistrationMethod );
 
-		/** Name of this class.*/
+		/** Name of this class.
+		 * Use this name in the parameter file to select this specific registration framework. \n
+		 * example: <tt>(Registration "MultiResolutionRegistration")</tt>\n
+		 */
 		elxClassNameMacro( "MultiResolutionRegistration" );
 		
 		/** Typedef's inherited from Superclass1.*/
@@ -92,11 +97,12 @@ using namespace itk;
 		typedef typename Superclass1::MovingImagePyramidType		MovingImagePyramidType ;
 		typedef typename Superclass1::MovingImagePyramidPointer	MovingImagePyramidPointer;
 		
-		/** Type of the Transformation parameters This is the same type used to
-		*  represent the search space of the optimization algorithm 	*/
+		/** Type of the Transformation parameters. This is the same type used to
+		 *  represent the search space of the optimization algorithm.
+		 */
 		typedef typename Superclass1::ParametersType						ParametersType;
 		
-		/** Typedef's from Elastix.*/
+		/** Typedef's from Elastix. */
 		typedef typename Superclass2::ElastixType						ElastixType;
 		typedef typename Superclass2::ElastixPointer				ElastixPointer;
 		typedef typename Superclass2::ConfigurationType			ConfigurationType;
@@ -105,7 +111,7 @@ using namespace itk;
 		typedef typename Superclass2::RegistrationPointer		RegistrationPointer;
 		typedef typename Superclass2::ITKBaseType						ITKBaseType;
 
-		/** Methods that have to be present everywhere.*/
+		/** Methods that have to be present everywhere. */
 		virtual void BeforeRegistration(void);
 				
 	protected:

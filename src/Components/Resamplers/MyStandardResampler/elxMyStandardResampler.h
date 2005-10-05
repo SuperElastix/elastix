@@ -10,8 +10,11 @@ namespace elastix
 	
 	/**
 	 * \class MyStandardResampler
-	 * \brief A resampler based on the itkResampleImageFilter.
+	 * \brief A resampler based on the itk::ResampleImageFilter.
 	 *
+	 * The parameters used in this class are:
+	 * \parameter Resampler: Select this resampler as follows:\n
+	 *		<tt>(Resampler "DefaultResampler")</tt>
 	 *
 	 * \ingroup Resamplers
 	 */
@@ -36,7 +39,10 @@ namespace elastix
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( MyStandardResampler, ResampleImageFilter );
 
-		/** Name of this class. */
+		/** Name of this class.
+		 * Use this name in the parameter file to select this specific resampler. \n
+		 * example: <tt>(Resampler "DefaultResampler")</tt>\n
+		 */
 		elxClassNameMacro( "DefaultResampler" );
 		
 		/** Typedef's inherited from the superclass. */
@@ -66,7 +72,7 @@ namespace elastix
 		typedef typename Superclass2::RegistrationPointer		RegistrationPointer;
 		typedef typename Superclass2::ITKBaseType						ITKBaseType;
 				
-		/* Nothing to add. In the baseclass already everything is done what should be done */
+		/* Nothing to add. In the baseclass already everything is done what should be done. */
 	
 	protected:
 

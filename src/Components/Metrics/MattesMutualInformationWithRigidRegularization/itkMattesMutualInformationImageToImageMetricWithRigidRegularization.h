@@ -30,26 +30,29 @@
 namespace itk
 {
 	
-/** \class MattesMutualInformationImageToImageMetricWithRigidRegularization
-* \brief Computes the mutual information between two images to be 
-* registered using the method of Mattes et al. and adds a rigid penalty term.
-*
-* MattesMutualInformationImageToImageMetricWithRigidRegularization computes the mutual 
-* information between a fixed and moving image to be registered and adds a
-* rigid penalty term.
-*
-* This class is templated over the FixedImage type and the MovingImage 
-* type.
-*
-* This class is derived from MattesMutualInformationImageToImageMetricWithMask,
-* which is the itk::MattesMutualInformationImageToImageMetric with some
-* contributions of our own. This class changes the GetValue() and 
-* GetValueAndDerivative() methods, such that it adds a rigid penalty
-* term to the Mutual Information metric of the superclass.
-*
-* \ingroup RegistrationMetrics
-* \ingroup ThreadUnSafe
-*/
+	/** \class MattesMutualInformationImageToImageMetricWithRigidRegularization
+	* \brief Computes the mutual information between two images to be 
+	* registered using the method of Mattes et al. and adds a rigid penalty term.
+	*
+	* MattesMutualInformationImageToImageMetricWithRigidRegularization computes the mutual 
+	* information between a fixed and moving image to be registered and adds a
+	* rigid penalty term. The rigid penalty term penalizes deviations from a rigid
+	* transformation at regions specified by the so-called rigidity images.
+	*
+	* This class is derived from MattesMutualInformationImageToImageMetricWithMask,
+	* which is the itk::MattesMutualInformationImageToImageMetric with some
+	* contributions of our own. This class changes the GetValue() and 
+	* GetValueAndDerivative() methods, such that it adds a rigid penalty
+	* term to the Mutual Information metric of the superclass.
+	*
+	* This metric only works with B-splines as a transformation model.
+	*
+	* \sa MattesMutualInformationImageToImageMetricWithMask
+	* \sa RigidRegulizerMetric
+	* \sa BSplineTransform
+	* \ingroup Metrics
+	*/
+
 	template < class TFixedImage, class TMovingImage >
 		class MattesMutualInformationImageToImageMetricWithRigidRegularization :
 	public MattesMutualInformationImageToImageMetricWithMask< TFixedImage, TMovingImage >
@@ -64,10 +67,10 @@ namespace itk
 		typedef SmartPointer<Self>														Pointer;
 		typedef SmartPointer<const Self>											ConstPointer;
 		
-		/** Method for creation through the object factory.*/
+		/** Method for creation through the object factory. */
 		itkNewMacro( Self );
 		
-		/** Run-time type information (and related methods).*/
+		/** Run-time type information (and related methods). */
 		itkTypeMacro( MattesMutualInformationImageToImageMetricWithRigidRegularization,
 			MattesMutualInformationImageToImageMetricWithMask );
 		

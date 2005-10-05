@@ -11,9 +11,16 @@ using namespace itk;
 
 
 	/**
-	 * **************** QuasiNewtonLBFGS ******************
+	 * \class QuasiNewtonLBFGS
+	 * \brief An optimizer based on the itk::QuasiNewtonLBFGSOptimizer.
 	 *
 	 * The QuasiNewtonLBFGS class ....
+	 *
+	 * The parameters used in this class are:
+	 * \parameter Optimizer: Select this optimizer as follows:\n
+	 *		<tt>(Optimizer "QuasiNewtonLBFGS")</tt>
+	 *
+	 * \ingroup Optimizers
 	 */
 
 	template <class TElastix>
@@ -38,7 +45,10 @@ using namespace itk;
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( QuasiNewtonLBFGS, QuasiNewtonLBFGSOptimizer );
 		
-		/** Name of this class.*/
+		/** Name of this class.
+		 * Use this name in the parameter file to select this specific optimizer. \n
+		 * example: <tt>(Optimizer "QuasiNewtonLBFGS")</tt>\n
+		 */
 		elxClassNameMacro( "QuasiNewtonLBFGS" );
 
 		/** Typedef's inherited from Superclass1.*/

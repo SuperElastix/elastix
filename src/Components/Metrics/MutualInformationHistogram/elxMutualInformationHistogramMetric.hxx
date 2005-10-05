@@ -58,7 +58,10 @@ using namespace itk;
 	template <class TElastix>
 		void MutualInformationHistogramMetric<TElastix>::
 		BeforeRegistration(void)
-	{		
+	{
+		/** This exception can be removed once this class is fully implemented. */
+		itkExceptionMacro( << "ERROR: This class is not yet fully implemented." );
+
 	} // end BeforeRegistration
 	
 

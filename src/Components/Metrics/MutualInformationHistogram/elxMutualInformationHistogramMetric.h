@@ -12,9 +12,13 @@ using namespace itk;
 
 	/**
 	 * \class MutualInformationHistogramMetric
-	 * \brief An metric based on mutual information...
+	 * \brief An metric based on the itk::MutualInformationHistogramImageToImageMetric.
 	 *
-	 * This metric ...
+	 * This metric is not yet fully supported. But with a little effort it is!
+	 *
+	 * The parameters used in this class are:
+	 * \parameter Metric: Select this metric as follows:\n
+	 *		<tt>(Metric "MutualInformationHistogram")</tt>
 	 *
 	 * \ingroup Metrics
 	 */
@@ -29,7 +33,7 @@ using namespace itk;
 	{
 	public:
 
-		/** Standard ITK-stuff.*/
+		/** Standard ITK-stuff. */
 		typedef MutualInformationHistogramMetric							Self;
 		typedef MutualInformationHistogramImageToImageMetric<
 			typename MetricBase<TElastix>::FixedImageType,
@@ -45,10 +49,13 @@ using namespace itk;
 		itkTypeMacro( MutualInformationHistogramMetric,
 			MutualInformationHistogramImageToImageMetric );
 		
-		/** Name of this class.*/
+		/** Name of this class.
+		 * Use this name in the parameter file to select this specific metric. \n
+		 * example: <tt>(Metric "MutualInformationHistogram")</tt>\n
+		 */
 		elxClassNameMacro( "MutualInformationHistogram" );
 
-		/** Typedefs inherited from the superclass.*/
+		/** Typedefs inherited from the superclass. */
 		typedef typename Superclass1::TransformType							TransformType;
 		typedef typename Superclass1::TransformPointer 					TransformPointer;
 		typedef typename Superclass1::TransformJacobianType			TransformJacobianType;
@@ -66,7 +73,7 @@ using namespace itk;
 		itkStaticConstMacro( MovingImageDimension, unsigned int,
 			MovingImageType::ImageDimension );
 		
-		/** Typedef's inherited from Elastix.*/
+		/** Typedef's inherited from Elastix. */
 		typedef typename Superclass2::ElastixType						ElastixType;
 		typedef typename Superclass2::ElastixPointer				ElastixPointer;
 		typedef typename Superclass2::ConfigurationType			ConfigurationType;
@@ -75,11 +82,11 @@ using namespace itk;
 		typedef typename Superclass2::RegistrationPointer		RegistrationPointer;
 		typedef typename Superclass2::ITKBaseType						ITKBaseType;
 			
-		/** Typedef's for timer.*/
+		/** Typedef's for timer. */
 		typedef tmr::Timer					TimerType;
 		typedef TimerType::Pointer	TimerPointer;
 		
-		/** Methods that have to be present everywhere.*/
+		/** Methods that have to be present everywhere. */
 		virtual int BeforeAll(void);
 		virtual void BeforeRegistration(void);
 		virtual void BeforeEachResolution(void);

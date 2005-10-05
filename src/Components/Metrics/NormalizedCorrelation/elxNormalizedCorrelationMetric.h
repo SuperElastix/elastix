@@ -12,9 +12,11 @@ using namespace itk;
 
 	/**
 	 * \class NormalizedCorrelationMetric
-	 * \brief An metric based on normalized correlation...
+	 * \brief An metric based on the itk::NormalizedCorrelationImageToImageMetric.
 	 *
-	 * This metric ...
+	 * The parameters used in this class are:
+	 * \parameter Metric: Select this metric as follows:\n
+	 *		<tt>(Metric "NormalizedCorrelation")</tt>
 	 *
 	 * \ingroup Metrics
 	 *
@@ -30,7 +32,7 @@ using namespace itk;
 	{
 	public:
 
-		/** Standard ITK-stuff.*/
+		/** Standard ITK-stuff. */
 		typedef NormalizedCorrelationMetric										Self;
 		typedef NormalizedCorrelationImageToImageMetric<
 			typename MetricBase<TElastix>::FixedImageType,
@@ -45,10 +47,13 @@ using namespace itk;
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( NormalizedCorrelationMetric, NormalizedCorrelationImageToImageMetric );
 		
-		/** Name of this class.*/
+		/** Name of this class.
+		 * Use this name in the parameter file to select this specific metric. \n
+		 * example: <tt>(Metric "NormalizedCorrelation")</tt>\n
+		 */
 		elxClassNameMacro( "NormalizedCorrelation" );
 
-		/** Typedefs inherited from the superclass.*/
+		/** Typedefs inherited from the superclass. */
 		typedef typename Superclass1::TransformType							TransformType;
 		typedef typename Superclass1::TransformPointer 					TransformPointer;		
 		typedef typename Superclass1::TransformJacobianType			TransformJacobianType;
@@ -83,16 +88,16 @@ using namespace itk;
 		typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
 		typedef typename Superclass2::ITKBaseType								ITKBaseType;
 			
-		/** Typedef for timer.*/
+		/** Typedef for timer. */
 		typedef tmr::Timer					TimerType;
-		/** Typedef for timer.*/
+		/** Typedef for timer. */
 		typedef TimerType::Pointer	TimerPointer;
 
-		/** Method that takes care of setting the parameters and showing information.*/
+		/** Method that takes care of setting the parameters and showing information. */
 		virtual int BeforeAll(void);
-		/** Method that takes care of setting the parameters and showing information.*/
+		/** Method that takes care of setting the parameters and showing information. */
 		virtual void BeforeRegistration(void);
-		/** Method that takes care of setting the parameters and showing information.*/
+		/** Method that takes care of setting the parameters and showing information. */
 		virtual void BeforeEachResolution(void);
 
 		/** Sets up a timer to measure the intialisation time and calls the Superclass'

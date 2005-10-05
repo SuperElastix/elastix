@@ -13,7 +13,9 @@ namespace elastix
 	 * \class BSplineResampleInterpolator
 	 * \brief A resample-interpolator based on B-splines.
 	 *
-	 * This resample-interpolator...
+	 * The parameters used in this class are:
+	 * \parameter ResampleInterpolator: Select this resample interpolator as follows:\n
+	 *		<tt>(ResampleInterpolator "FinalBSplineInterpolator")</tt>
 	 *
 	 * \ingroup ResampleInterpolators
 	 */
@@ -45,7 +47,10 @@ namespace elastix
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( BSplineResampleInterpolator, BSplineInterpolateImageFunction );
 		
-		/** Name of this class.*/
+		/** Name of this class.
+		 * Use this name in the parameter file to select this specific resample interpolator. \n
+		 * example: <tt>(ResampleInterpolator "FinalBSplineInterpolator")</tt>\n
+		 */
 		elxClassNameMacro( "FinalBSplineInterpolator" );
 
 		itkStaticConstMacro( ImageDimension, unsigned int,Superclass1::ImageDimension );

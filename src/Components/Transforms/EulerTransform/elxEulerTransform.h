@@ -15,6 +15,8 @@ using namespace itk;
 	 * This transform is a rigid body transformation.
 	 *
 	 * The parameters used in this class are:
+	 * \parameter Transform: Select this transform as follows:\n
+	 *		<tt>(Transform "EulerTransform")</tt>
 	 * \parameter Scaler: the scale factor between the rotations and translations,
 	 *		used in the optimizer. \n
 	 *		example: <tt>(Scaler 100000.0)</tt> \n
@@ -60,7 +62,10 @@ using namespace itk;
 		/** Run-time type information (and related methods).*/
 		itkTypeMacro( EulerTransformElastix, EulerTransform );
 
-		/** Name of this class.*/
+		/** Name of this class.
+		 * Use this name in the parameter file to select this specific transform. \n
+		 * example: <tt>(Transform "EulerTransform")</tt>\n
+		 */
 		elxClassNameMacro( "EulerTransform" );
 		
 		/** Dimension of the domain space.*/

@@ -13,7 +13,17 @@ namespace itk
    * \class RigidRegulizerMetric
    * \brief A metric that calculates a rigid penalty term.
    *
+	 * The rigid penalty term penalizes deviations from a rigid
+	 * transformation at regions specified by the so-called rigidity images.
+	 *
+	 * This metric only works with B-splines as a transformation model.
+	 *
+	 * References:
+	 * [1] "Nonrigid Registration Using a Rigidity Constraint"
+	 *		M. Staring, S. Klein and Josien P.W. Pluim
+	 *		SPIE Medical Imaging 2006: Image Processing, 2006.
    * 
+	 * \sa BSplineTransform
    * \ingroup Metrics
    */
 
@@ -28,7 +38,10 @@ namespace itk
     typedef SmartPointer<Self>              Pointer;
     typedef SmartPointer<const Self>        ConstPointer;
 
+		/** Method for creation through the object factory. */
     itkNewMacro( Self );
+
+		/** Run-time type information (and related methods). */
     itkTypeMacro( RigidRegulizerMetric, SingleValuedCostFunction );
 
 		/** Typedef's inherited from the superclass. */
@@ -36,14 +49,15 @@ namespace itk
     typedef typename Superclass::DerivativeType      DerivativeType;
     typedef typename Superclass::ParametersType      ParametersType;
 
-   // typedef Superclass::Pointer             SingleValuedCostFunctionPointer;
 		typedef TScalarType		ScalarType;
+
 		/** Define the dimension. */
 		itkStaticConstMacro( ImageDimension, unsigned int, Dimension );
 
 		/** Typedef's for BSpline transform. */
-		typedef BSplineDeformableTransform< ScalarType, Dimension, 3 >	BSplineTransformType;
-		typedef typename BSplineTransformType::Pointer			BSplineTransformPointer;
+		typedef BSplineDeformableTransform< ScalarType,
+			Dimension, 3 >																	BSplineTransformType;
+		typedef typename BSplineTransformType::Pointer		BSplineTransformPointer;
 
 		/** Typedef's for the coefficient image (which is a scalar image),
 		 * for the coefficient vector image (which is a vector image,
@@ -67,7 +81,7 @@ namespace itk
 			CoefficientVectorImageType >												RigidDerivativeFilterType;
 		typedef typename RigidDerivativeFilterType::Pointer		RigidDerivativeFilterPointer;
 
-    /** The GetValue()-method returns the rigid penalty number. */
+    /** The GetValue()-method returns the rigid penalty value. */
     virtual MeasureType GetValue(
 			const ParametersType & parameters ) const;
 
@@ -76,7 +90,7 @@ namespace itk
 			const ParametersType & parameters,
 			DerivativeType & derivative ) const;
 
-    /** Same procedure as in GetValue and GetDerivative */
+    /** The GetValueAndDerivative()-method returns the rigid penalty value and its derivative. */
     virtual void GetValueAndDerivative(
       const ParametersType & parameters,
       MeasureType & value,
@@ -107,7 +121,8 @@ namespace itk
     RigidRegulizerMetric();
     virtual ~RigidRegulizerMetric() {};
 
-    void PrintSelf( std::ostream& os, Indent indent ) const{};
+		/** PrintSelf. */
+    void PrintSelf( std::ostream& os, Indent indent ) const;
 
   private:
 

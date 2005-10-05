@@ -47,6 +47,8 @@ using namespace itk;
 	 * on some 'stiffness coefficient' image.
 	 *
 	 * The parameters used in this class are:
+	 * \parameter Transform: Select this transform as follows:\n
+	 *		<tt>(Transform "BSplineTransformWithDiffusion")</tt>
 	 * \parameter FinalGridSpacing: the grid spacing of the B-spline transform
 	 *		part of this transform for each dimension. \n
 	 *		example: <tt>(FinalGridSpacing 8.0 8.0 8.0)</tt>
@@ -171,7 +173,10 @@ using namespace itk;
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( BSplineTransformWithDiffusion, DeformationFieldRegulizerForBSpline );
 
-		/** Name of this class.*/
+		/** Name of this class.
+		 * Use this name in the parameter file to select this specific transform. \n
+		 * example: <tt>(Transform "BSplineTransformWithDiffusion")</tt>\n
+		 */
 		elxClassNameMacro( "BSplineTransformWithDiffusion" );
 		
 		/** Dimension of the domain space. */

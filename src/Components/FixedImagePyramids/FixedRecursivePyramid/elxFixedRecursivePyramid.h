@@ -10,8 +10,11 @@ using namespace itk;
 
 	/**
 	 * \class FixedRecursivePyramid
-	 * \brief A pyramid based on the itkRecursiveMultiResolutionPyramidImageFilter.
+	 * \brief A pyramid based on the itk::RecursiveMultiResolutionPyramidImageFilter.
 	 *
+	 * The parameters used in this class are:
+	 * \parameter FixedImagePyramid: Select this pyramid as follows:\n
+	 *		<tt>(FixedImagePyramid "FixedRecursiveImagePyramid")</tt>
 	 *
 	 * \ingroup ImagePyramids
 	 */
@@ -42,7 +45,10 @@ using namespace itk;
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( FixedRecursivePyramid, RecursiveMultiResolutionPyramidImageFilter );
 		
-		/** Name of this class. */
+		/** Name of this class.
+		 * Use this name in the parameter file to select this specific pyramid. \n
+		 * example: <tt>(FixedImagePyramid "FixedRecursiveImagePyramid")</tt>\n
+		 */
 		elxClassNameMacro( "FixedRecursiveImagePyramid" );
 
 		/** Get the ImageDimension. */

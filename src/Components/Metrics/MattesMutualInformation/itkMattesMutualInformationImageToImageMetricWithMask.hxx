@@ -108,15 +108,14 @@ namespace itk
 		MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
 		::PrintSelf( std::ostream& os, Indent indent ) const
 	{
+		/** Call the superclass' PrintSelf. */
+		Superclass::PrintSelf( os, indent );
 		
-		Superclass::PrintSelf(os, indent);
-		
+		/** Add debugging information. */
 		os << indent << "NumberOfSpatialSamples: ";
 		os << this->m_NumberOfSpatialSamples << std::endl;
 		os << indent << "NumberOfHistogramBins: ";
 		os << this->m_NumberOfHistogramBins << std::endl;
-		
-		// Debugging information
 		os << indent << "NumberOfParameters: ";
 		os << this->m_NumberOfParameters << std::endl;
 		os << indent << "FixedImageNormalizedMin: ";

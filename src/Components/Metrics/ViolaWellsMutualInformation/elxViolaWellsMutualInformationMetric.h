@@ -12,10 +12,28 @@ using namespace itk;
 
 	/**
 	 * \class ViolaWellsMutualInformationMetric
-	 * \brief An metric based on mutual information...
+	 * \brief An metric based on the itk::MutualInformationImageToImageMetricMoreRandom.
 	 *
-	 * This metric ...
+	 * This metric changes the itk::MutualInformationImageToImageMetric such that it
+	 * uses a better random number generator.
 	 *
+	 * The parameters used in this class are:
+	 * \parameter Metric: Select this metric as follows:\n
+	 *		<tt>(Metric "ViolaWellsMutualInformation")</tt>
+	 * \parameter NumberOfSpatialSamples: for each resolution the number of samples
+	 *		used to calculate this metrics value and its derivative. \n
+	 *		example: <tt>(NumberOfSpatialSamples 5000 5000 10000)</tt> \n
+	 *		The default is 10000 for each resolution.
+	 * \parameter FixedImageStandardDeviation: for each resolution the standard
+	 *		deviation of the fixed image. \n
+	 *		example: <tt>(FixedImageStandardDeviation 1.3 1.9 1.0)</tt> \n
+	 *		The default is 0.4 for each resolution.
+	 * \parameter MovingImageStandardDeviation: for each resolution the standard
+	 *		deviation of the moving image. \n
+	 *		example: <tt>(MovingImageStandardDeviation 1.3 1.9 1.0)</tt> \n
+	 *		The default is 0.4 for each resolution.
+	 *
+	 * \sa MutualInformationImageToImageMetricMoreRandom
 	 * \ingroup Metrics
 	 */
 
@@ -45,7 +63,10 @@ using namespace itk;
 		itkTypeMacro( ViolaWellsMutualInformationMetric,
 			MutualInformationImageToImageMetricMoreRandom );
 		
-		/** Name of this class.*/
+		/** Name of this class.
+		 * Use this name in the parameter file to select this specific metric. \n
+		 * example: <tt>(Metric "ViolaWellsMutualInformation")</tt>\n
+		 */
 		elxClassNameMacro( "ViolaWellsMutualInformation" );
 
 		/** Typedefs inherited from the superclass.*/

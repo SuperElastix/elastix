@@ -28,6 +28,8 @@ using namespace itk;
 	 * This transform is a B-spline transformation, commonly used for nonrigid registration.
 	 *
 	 * The parameters used in this class are:
+	 * \parameter Transform: Select this transform as follows:\n
+	 *		<tt>(Transform "BSplineTransform")</tt>
 	 * \parameter FinalGridSpacing: the grid spacing of the B-spline transform for each dimension. \n
 	 *		example: <tt>(FinalGridSpacing 8.0 8.0 8.0)</tt> \n
 	 *    If only one argument is given, that factor is used for each dimension. The spacing
@@ -80,7 +82,10 @@ using namespace itk;
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( BSplineTransform, BSplineDeformableTransform );
 
-		/** Name of this class. */
+		/** Name of this class.
+		 * Use this name in the parameter file to select this specific transform. \n
+		 * example: <tt>(Transform "BSplineTransform")</tt>\n
+		 */
 		elxClassNameMacro( "BSplineTransform" );
 		
 		/** Dimension of the domain space. */

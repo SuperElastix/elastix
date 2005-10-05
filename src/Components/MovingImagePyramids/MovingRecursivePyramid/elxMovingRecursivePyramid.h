@@ -12,6 +12,9 @@ using namespace itk;
 	 * \class MovingRecursivePyramid
 	 * \brief A pyramid based on the itkRecursiveMultiResolutionPyramidImageFilter.
 	 *
+	 * The parameters used in this class are:
+	 * \parameter MovingImagePyramid: Select this pyramid as follows:\n
+	 *		<tt>(MovingImagePyramid "MovingRecursiveImagePyramid")</tt>
 	 *
 	 * \ingroup ImagePyramids
 	 */
@@ -42,7 +45,10 @@ using namespace itk;
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( MovingRecursivePyramid, RecursiveMultiResolutionPyramidImageFilter );
 		
-		/** Name of this class. */
+		/** Name of this class.
+		 * Use this name in the parameter file to select this specific pyramid. \n
+		 * example: <tt>(MovingImagePyramid "MovingRecursiveImagePyramid")</tt>\n
+		 */
 		elxClassNameMacro( "MovingRecursiveImagePyramid" );
 
 		/** Get the ImageDimension. */

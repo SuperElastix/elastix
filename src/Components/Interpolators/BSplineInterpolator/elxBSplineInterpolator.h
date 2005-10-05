@@ -16,6 +16,8 @@ using namespace itk;
 	 * polynomial.
 	 *
 	 * The parameters used in this class are:
+	 * \parameter Interpolator: Select this interpolator as follows:\n
+	 *		<tt>(Interpolator "BSplineInterpolator")</tt>
 	 * \parameter BSplineInterpolationOrder: the order of the B-spline polynomial. \n
 	 *		example: <tt>(BSplineInterpolationOrder 3)</tt> \n
 	 *		The default order is 1.
@@ -51,7 +53,10 @@ using namespace itk;
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( BSplineInterpolator, BSplineInterpolateImageFunction );
 		
-		/** Name of this class.*/
+		/** Name of this class.
+		 * Use this name in the parameter file to select this specific interpolator. \n
+		 * example: <tt>(Interpolator "BSplineInterpolator")</tt>\n
+		 */
 		elxClassNameMacro( "BSplineInterpolator" );
 
 		/** Get the ImageDimension.*/

@@ -18,6 +18,10 @@ using namespace itk;
 	 *
 	 * This transform models the transformation by a deformation vector field.
 	 *
+	 * The parameters used in this class are:
+	 * \parameter Transform: Select this transform as follows:\n
+	 *		<tt>(Transform "DeformationFieldTransform")</tt>
+	 *
 	 * The transform parameters necessary for transformix, additionally defined by this class, are:
 	 * \transformparameter DeformationFieldFileName: stores the name of the deformation field. \n
 	 *		example: <tt>(DeformationFieldFileName "defField.mhd")</tt>
@@ -54,7 +58,10 @@ using namespace itk;
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( DeformationFieldTransform, DeformationVectorFieldTransform );
 
-		/** Name of this class.*/
+		/** Name of this class.
+		 * Use this name in the parameter file to select this specific transform. \n
+		 * example: <tt>(Transform "DeformationFieldTransform")</tt>\n
+		 */
 		elxClassNameMacro( "DeformationFieldTransform" );
 		
 		/** Dimension of the domain space. */

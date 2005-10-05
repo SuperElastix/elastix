@@ -14,31 +14,75 @@ using namespace itk;
 	 * \class MattesMutualInformationMetricWithRigidRegularization
 	 * \brief A metric based on mutual information and a rigid penalty term.
 	 *
-	 * This metric is based on an adapted version of the
-	 * itk::MattesMutualInformationImageToImageMetric. 
+	 * This metric adds two metrics, namely an adapted version of the
+	 * itk::MattesMutualInformationImageToImageMetric with the
+	 * itk::RigidRegulizerMetric.
+	 *
+	 * This metric only works with B-splines as a transformation model.
 	 *
 	 * The parameters used in this class are:
 	 * \parameter Metric: Select this metric as follows:\n
-	 * <tt> (Metric MattesMutualInformation) </tt>
+	 *		<tt>(Metric "MattesMutualInformationWithRigidRegularization")</tt>
 	 * \parameter NumberOfHistogramBins: The size of the histogram. Must be given for each 
-	 * resolution. \n
-	 *   example: <tt> (NumberOfHistogramBins 32 32 64)</tt>
+	 *		resolution. \n
+	 *		example: <tt>(NumberOfHistogramBins 32 32 64)</tt> \n
+	 *		The default is 32 for each resolution.
 	 * \parameter NumberOfSpatialSamples: The number of image voxels used for computing the
-	 * metric value and its derivative in each iteration. Must be given for each resolution.\n
-	 *  example: <tt> (NumberOfSpatialSamples 2048 2048 4000) </tt>
-	 * \parameter NumberOfResolutions: The number of resolutions.\n
-	 *   example: <tt> (NumberOfResolutions 3) </tt>
+	 *		metric value and its derivative in each iteration. Must be given for each resolution.\n
+	 *		example: <tt>(NumberOfSpatialSamples 2048 2048 4000)</tt> \n
+	 *		The default is 10000.
 	 * \parameter	UseAllPixels: Flag to force the metric to use ALL voxels for 
-	 * computing the metric value and its derivative in each iteration. Must be given for each
-	 * resolution. Can have values "true" or "false".\n
-	 *   example: <tt> (UseAllPixels "true" "false" "true") </tt>
+	 *		computing the metric value and its derivative in each iteration. Must be given for each
+	 *		resolution. Choose one of {"true", "false"}. \n
+	 *		example: <tt>(UseAllPixels "true" "false" "true")</tt> \n
+	 *		Default is "false" for all resolutions.
 	 * \parameter ShowExactMetricValue: Flag that can set to "true" or "false". If "true" the 
-	 * metric computes the exact metric value (computed on all voxels rather than on the set of
-	 * spatial samples) and shows it each iteration. Must be given for each resolution.\n
-	 * NB: If the UseallPixels flag is set to "true", this option is ignored.\n
-	 *   example: <tt> (ShowExactMetricValue "true" "true" "false") </tt>
+	 *		metric computes the exact metric value (computed on all voxels rather than on the set of
+	 *		spatial samples) and shows it each iteration. Must be given for each resolution. \n
+	 *		NB: If the UseallPixels flag is set to "true", this option is ignored. \n
+	 *		example: <tt>(ShowExactMetricValue "true" "true" "false")</tt> \n
+	 *		Default is "false" for all resolutions.
+	 * \parameter SamplesOnUniformGrid: Flag to choose the samples on a uniform grid. \n
+	 *		example: <tt>(SamplesOnUniformGrid "true")</tt> \n
+	 *		Default is "false".
+	 * \parameter SampleGridSpacing: if the SamplesOnUniformGrid is set to "true", this parameter
+	 *		controls the spacing of the uniform grid in all dimensions. This should be given in
+	 *		index coordinates. \n
+	 *		example: <tt>(SampleGridSpacing 4 4 4)</tt> \n
+	 *		Default is 2 in each dimension.
+	 * \parameter RigidPenaltyWeight: A parameter to weigh the rigidity penalty
+	 *		term against the mutual information metric. \n
+	 *		example: <tt>(RigidPenaltyWeight 0.1)</tt> \n
+	 *		Default is 1.0.
+	 * \parameter SecondOrderWeight: A parameter to weigh the second order terms
+	 *		of the rigidity term against its first order terms. \n
+	 *		example: <tt>(SecondOrderWeight 2.0)</tt> \n
+	 *		Default is 1.0.
+	 * \parameter UseImageSpacing: flag to specify the use of the spacing of voxels
+	 *		when calculating the rigidity term. \n
+	 *		example: <tt>(UseImageSpacing "false")</tt> \n
+	 *		Default is "true".
+	 * \parameter FixedRigidityImageName: the name of a coefficient image to specify
+	 *		the rigidity index of voxels in the fixed image. \n
+	 *		example: <tt>(FixedRigidityImageName "fixedRigidityImage.mhd")</tt> \n
+	 *		This argument is mandatory.
+	 * \parameter MovingRigidityImageName: the name of a coefficient image to specify
+	 *		the rigidity index of voxels in the moving image. \n
+	 *		example: <tt>(MovingRigidityImageName "movingRigidityImage.mhd")</tt> \n
+	 *		This argument is mandatory.
+	 * \parameter DilateRigidityImages: flag to specify the dilation of the rigidity
+	 *		coefficient images. With this the region of rigidity can be extended to
+	 *		force rigidity of the inner region. \n
+	 *		example: <tt>(DilateRigidityImages )</tt> \n
+	 *		Default is "true".
+	 * \parameter DilationRadiusMultiplier: the dilation radius is a muliplier times the
+	 *		gridspacing of the B-spline transform. \n
+	 *		example: <tt>(DilationRadiusMultiplier 2.0)</tt> \n
+	 *		Default is 1.0.
 	 *
    * \sa MattesMutualInformationImageToImageMetricWithMask
+	 * \sa RigidRegulizerMetric
+	 * \sa BSplineTransform
 	 * \ingroup Metrics
 	 */
 	
@@ -68,7 +112,10 @@ using namespace itk;
 		itkTypeMacro( MattesMutualInformationMetricWithRigidRegularization,
 			MattesMutualInformationImageToImageMetricWithRigidRegularization );
 		
-		/** Name of this class.*/
+		/** Name of this class.
+		 * Use this name in the parameter file to select this specific metric. \n
+		 * example: <tt>(Metric "MattesMutualInformationWithRigidRegularization")</tt>\n
+		 */
 		elxClassNameMacro( "MattesMutualInformationWithRigidRegularization" );
 
 		/** Typedefs inherited from the superclass.*/

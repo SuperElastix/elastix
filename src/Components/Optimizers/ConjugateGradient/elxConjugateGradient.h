@@ -11,9 +11,17 @@ using namespace itk;
 
 
 	/**
-	 * **************** ConjugateGradient ******************
+	 * \class ConjugateGradient
+	 * \brief An optimizer based on the itk::GenericConjugateGradientOptimizer.
 	 *
 	 * The ConjugateGradient class ....
+	 *
+	 * The parameters used in this class are:
+	 * \parameter Optimizer: Select this optimizer as follows:\n
+	 *		<tt>(Optimizer "ConjugateGradient")</tt>
+	 * \parameter alotofothers: ???
+	 *
+	 * \ingroup Optimizers
 	 */
 
 	template <class TElastix>
@@ -38,7 +46,10 @@ using namespace itk;
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( ConjugateGradient, GenericConjugateGradientOptimizer );
 		
-		/** Name of this class.*/
+		/** Name of this class.
+		 * Use this name in the parameter file to select this specific optimizer. \n
+		 * example: <tt>(Optimizer "ConjugateGradient")</tt>\n
+		 */
 		elxClassNameMacro( "ConjugateGradient" );
 
 		/** Typedef's inherited from Superclass1.*/

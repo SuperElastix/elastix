@@ -61,16 +61,28 @@ namespace itk
 		RigidRegularizationDerivativeImageFilter< TInputImage, TOutputImage >
 		::PrintSelf( std::ostream& os, Indent indent ) const  
 	{
-		Superclass::PrintSelf(os,indent);
+		/** Call the superclass' PrintSelf. */
+		Superclass::PrintSelf( os, indent );
 
-		os << indent << "UseImageSpacing = " << this->m_UseImageSpacing << std::endl;
-
+		/** Add debugging information. */
+		os << indent << "UseImageSpacing = "
+			<< this->m_UseImageSpacing << std::endl;
 		os << indent << "ImageSpacingUsed = ";
 		for ( unsigned int i = 0; i < ImageDimension; i++ )
 		{
 			os << this->m_ImageSpacingUsed[ i ] << " ";
 		}
 		os << std::endl;
+		os << indent << "SecondOrderWeight: "
+			<< this->m_SecondOrderWeight << std::endl;
+		os << indent << "RigidityImage: "
+			<< this->m_RigidityImage << std::endl;
+		os << indent << "OutputDirectoryName: "
+			<< this->m_OutputDirectoryName << std::endl;
+		os << indent << "RigidRegulizerValue: "
+			<< this->m_RigidRegulizerValue << std::endl;
+		os << indent << "GenerateDataCalled: "
+			<< this->m_GenerateDataCalled << std::endl;
 
 	} // end PrintSelf
 

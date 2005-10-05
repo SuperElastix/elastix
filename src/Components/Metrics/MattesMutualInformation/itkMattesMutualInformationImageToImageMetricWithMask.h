@@ -42,95 +42,96 @@
 namespace itk
 {
 	
-/** \class MattesMutualInformationImageToImageMetricWithMask
-* \brief Computes the mutual information between two images to be 
-* registered using the methof of Mattes et al.
-*
-* MattesMutualInformationImageToImageMetric computes the mutual 
-* information between a fixed and moving image to be registered.
-*
-* This class is templated over the FixedImage type and the MovingImage 
-* type.
-*
-* The fixed and moving images are set via methods SetFixedImage() and
-* SetMovingImage(). This metric makes use of user specified Transform and
-* Interpolator. The Transform is used to map points from the fixed image to
-* the moving image domain. The Interpolator is used to evaluate the image
-* intensity at user specified geometric points in the moving image.
-* The Transform and Interpolator are set via methods SetTransform() and
-* SetInterpolator().
-*
-* If a BSplineInterpolationFunction is used, this class obtain
-* image derivatives from the BSpline interpolator. Otherwise, 
-* image derivatives are computed using central differencing.
-*
-* \warning This metric assumes that the moving image has already been
-* connected to the interpolator outside of this class. 
-*
-* The method GetValue() computes of the mutual information
-* while method GetValueAndDerivative() computes
-* both the mutual information and its derivatives with respect to the
-* transform parameters.
-*
-* The calculations are based on the method of Mattes et al [1,2]
-* where the probability density distribution are estimated using
-* Parzen histograms. Since the fixed image PDF does not contribute
-* to the derivatives, it does not need to be smooth. Hence, 
-* a zero order (box car) BSpline kernel is used
-* for the fixed image intensity PDF. On the other hand, to ensure
-* smoothness a third order BSpline kernel is used for the 
-* moving image intensity PDF.
-*
-* On Initialize(), the FixedImage is uniformly sampled within
-* the FixedImageRegion. The number of samples used can be set
-* via SetNumberOfSpatialSamples(). Typically, the number of
-* spatial samples used should increase with the image size.
-*
-* During each call of GetValue(), GetDerivatives(),
-* GetValueAndDerivatives(), marginal and joint intensity PDF's
-* values are estimated at discrete position or bins. 
-* The number of bins used can be set via SetNumberOfHistogramBins().
-* To handle data with arbitray magnitude and dynamic range, 
-* the image intensity is scale such that any contribution to the
-* histogram will fall into a valid bin.
-*
-* One the PDF's have been contructed, the mutual information
-* is obtained by doubling summing over the discrete PDF values.
-*
-*
-* Notes: 
-* 1. This class returns the negative mutual information value.
-* 2. This class in not thread safe due the private data structures
-*     used to the store the sampled points and the marginal and joint pdfs.
-*
-* References:
-* [1] "Nonrigid multimodality image registration"
-*      D. Mattes, D. R. Haynor, H. Vesselle, T. Lewellen and W. Eubank
-*      Medical Imaging 2001: Image Processing, 2001, pp. 1609-1620.
-* [2] "PET-CT Image Registration in the Chest Using Free-form Deformations"
-*      D. Mattes, D. R. Haynor, H. Vesselle, T. Lewellen and W. Eubank
-*      IEEE Transactions in Medical Imaging. To Appear.
-* [3] "Optimization of Mutual Information for MultiResolution Image
-*      Registration"
-*      P. Thevenaz and M. Unser
-*      IEEE Transactions in Image Processing, 9(12) December 2000.
-*
-*
-*	NB:
-* This file declares the itk::MattesMutualInformationImageToImageMetricWithMask.
-* It is largely the same as itk::MattesMutualInformationImageToImageMetric,
-* but, as you might expect from the name, it allows entering masks for the 
-* fixed and the moving image, which can exclude some pixels from being used
-* in the calculation of the MutualInformation. 
-* Besides, it adds the function SampleFixedImageDomain, which allows the user
-* to force a new sample set to be created.
-* Finally, it adds the GetExactValue method and the GetExactValueAndDerivative
-* methods, that compute the mutual information/its derivative using all voxels
-* of the images.
-*
-* \ingroup RegistrationMetrics
-* \ingroup ThreadUnSafe
-*/
+	/**
+	 * \class MattesMutualInformationImageToImageMetricWithMask
+	 * \brief Computes the mutual information between two images to be 
+	 * registered using the methof of Mattes et al.
+	 *
+	 * MattesMutualInformationImageToImageMetric computes the mutual 
+	 * information between a fixed and moving image to be registered.
+	 *
+	 * This class is templated over the FixedImage type and the MovingImage 
+	 * type.
+	 *
+	 * The fixed and moving images are set via methods SetFixedImage() and
+	 * SetMovingImage(). This metric makes use of user specified Transform and
+	 * Interpolator. The Transform is used to map points from the fixed image to
+	 * the moving image domain. The Interpolator is used to evaluate the image
+	 * intensity at user specified geometric points in the moving image.
+	 * The Transform and Interpolator are set via methods SetTransform() and
+	 * SetInterpolator().
+	 *
+	 * If a BSplineInterpolationFunction is used, this class obtain
+	 * image derivatives from the BSpline interpolator. Otherwise, 
+	 * image derivatives are computed using central differencing.
+	 *
+	 * \warning This metric assumes that the moving image has already been
+	 * connected to the interpolator outside of this class. 
+	 *
+	 * The method GetValue() computes of the mutual information
+	 * while method GetValueAndDerivative() computes
+	 * both the mutual information and its derivatives with respect to the
+	 * transform parameters.
+	 *
+	 * The calculations are based on the method of Mattes et al [1,2]
+	 * where the probability density distribution are estimated using
+	 * Parzen histograms. Since the fixed image PDF does not contribute
+	 * to the derivatives, it does not need to be smooth. Hence, 
+	 * a zero order (box car) BSpline kernel is used
+	 * for the fixed image intensity PDF. On the other hand, to ensure
+	 * smoothness a third order BSpline kernel is used for the 
+	 * moving image intensity PDF.
+	 *
+	 * On Initialize(), the FixedImage is uniformly sampled within
+	 * the FixedImageRegion. The number of samples used can be set
+	 * via SetNumberOfSpatialSamples(). Typically, the number of
+	 * spatial samples used should increase with the image size.
+	 *
+	 * During each call of GetValue(), GetDerivatives(),
+	 * GetValueAndDerivatives(), marginal and joint intensity PDF's
+	 * values are estimated at discrete position or bins. 
+	 * The number of bins used can be set via SetNumberOfHistogramBins().
+	 * To handle data with arbitray magnitude and dynamic range, 
+	 * the image intensity is scale such that any contribution to the
+	 * histogram will fall into a valid bin.
+	 *
+	 * One the PDF's have been contructed, the mutual information
+	 * is obtained by doubling summing over the discrete PDF values.
+	 *
+	 *
+	 * Notes: 
+	 * 1. This class returns the negative mutual information value.
+	 * 2. This class in not thread safe due the private data structures
+	 *     used to the store the sampled points and the marginal and joint pdfs.
+	 *
+	 * References:
+	 * [1] "Nonrigid multimodality image registration"
+	 *      D. Mattes, D. R. Haynor, H. Vesselle, T. Lewellen and W. Eubank
+	 *      Medical Imaging 2001: Image Processing, 2001, pp. 1609-1620.
+	 * [2] "PET-CT Image Registration in the Chest Using Free-form Deformations"
+	 *      D. Mattes, D. R. Haynor, H. Vesselle, T. Lewellen and W. Eubank
+	 *      IEEE Transactions in Medical Imaging. To Appear.
+	 * [3] "Optimization of Mutual Information for MultiResolution Image
+	 *      Registration"
+	 *      P. Thevenaz and M. Unser
+	 *      IEEE Transactions in Image Processing, 9(12) December 2000.
+	 *
+	 *
+	 *	NB:
+	 * This file declares the itk::MattesMutualInformationImageToImageMetricWithMask.
+	 * It is largely the same as itk::MattesMutualInformationImageToImageMetric,
+	 * but, as you might expect from the name, it allows entering masks for the 
+	 * fixed and the moving image, which can exclude some pixels from being used
+	 * in the calculation of the MutualInformation. 
+	 * Besides, it adds the function SampleFixedImageDomain, which allows the user
+	 * to force a new sample set to be created.
+	 * Finally, it adds the GetExactValue method and the GetExactValueAndDerivative
+	 * methods, that compute the mutual information/its derivative using all voxels
+	 * of the images.
+	 *
+	 * \ingroup Metrics
+	 */
+
 	template <class TFixedImage,class TMovingImage >
 		class MattesMutualInformationImageToImageMetricWithMask :
 	public ImageToImageMetric< TFixedImage, TMovingImage >
@@ -143,10 +144,10 @@ namespace itk
 		typedef SmartPointer<Self>																	Pointer;
 		typedef SmartPointer<const Self>														ConstPointer;
 		
-		/** Method for creation through the object factory.*/
+		/** Method for creation through the object factory. */
 		itkNewMacro( Self );
 		
-		/** Run-time type information (and related methods).*/
+		/** Run-time type information (and related methods). */
 		itkTypeMacro( MattesMutualInformationImageToImageMetricWithMask, ImageToImageMetric );
 		
 		/** Types inherited from Superclass. */
@@ -196,7 +197,7 @@ namespace itk
 		void GetValueAndDerivative( const ParametersType& parameters, 
 			MeasureType& Value, DerivativeType& Derivative ) const;
 		
-		/** Number of spatial samples to used to compute metric */
+		/** Number of spatial samples to used to compute metric. */
 		itkSetClampMacro( NumberOfSpatialSamples, unsigned long,
 			1, NumericTraits<unsigned long>::max() );
 		itkGetMacro( NumberOfSpatialSamples, unsigned long); 
@@ -214,13 +215,14 @@ namespace itk
 
 		/** \todo the method GetExactDerivative could as well be added here. */
 	
-    /** Provide API to reinitialize the seed of the random number generator */
+    /** Provide API to reinitialize the seed of the random number generator. */
 		static void ReinitializeSeed();
 		static void ReinitializeSeed(int);
 
 		/** UseAllPixels flag. Determines whether the value and derivative are computed
 		 * on all pixels or just a randomly sampled subset. Make sure to set it true
-		 * before calling Initialize() */
+		 * before calling Initialize().
+		 */
 		itkSetMacro(UseAllPixels, bool);
 		itkGetConstMacro(UseAllPixels, bool);
 
@@ -229,7 +231,7 @@ namespace itk
 		MattesMutualInformationImageToImageMetricWithMask();
 		virtual ~MattesMutualInformationImageToImageMetricWithMask() {};
 
-		/** Print Self*/
+		/** Print Self. */
 		void PrintSelf( std::ostream& os, Indent indent ) const;
 		
     /**
@@ -261,21 +263,23 @@ namespace itk
 		/** Added for elastix: a container that holds all fixed image pixels.
 		 * If the m_UseAllPixels is set before the Initialize method is called,
 		 * the container is filled in this method. If not, it is filled
-		 * the first time that GetExactValue is invoked */
+		 * the first time that GetExactValue is invoked.
+		 */
 		FixedImageSpatialSampleContainer		m_AllFixedImagePixels;
 
 	  /** Uniformly select a sample set from the fixed image domain. */
 		virtual void SampleFixedImageDomain( 
 			FixedImageSpatialSampleContainer& samples );
 
-		/** Added for elastix: store all fixed image pixels that are within the mask */
+		/** Added for elastix: store all fixed image pixels that are within the mask. */
 		virtual void SampleFullFixedImageDomain(
 			FixedImageSpatialSampleContainer& samples );
 
 		bool m_AllFixedImagePixelsStoredInContainer;
 
 		/** Transform a point from FixedImage domain to MovingImage domain.
-		 * This function also checks if mapped point is within support region. */
+		 * This function also checks if mapped point is within support region.
+		 */
 		virtual void TransformPoint( const FixedImagePointType& fixedImagePoint,
 			MovingImagePointType& mappedPoint, bool& sampleWithinSupportRegion,
 			double& movingImageValue ) const;
@@ -302,10 +306,10 @@ namespace itk
 		itkStaticConstMacro( FixedImageDimension, unsigned int,
 			FixedImageType::ImageDimension );
 		
-		/** Enum of the deformabtion field spline order.*/
+		/** Enum of the deformabtion field spline order. */
 		enum { DeformationSplineOrder = 3 };
 		
-		/** Typedefs for the BSplineDeformableTransform.*/
+		/** Typedefs for the BSplineDeformableTransform. */
 		typedef BSplineDeformableTransform<
 			CoordinateRepresentationType,
 			::itk::GetImageDimension<FixedImageType>::ImageDimension,
@@ -315,7 +319,7 @@ namespace itk
 		typedef typename BSplineTransformType::ParameterIndexArrayType 
 			BSplineTransformIndexArrayType;
 		
-		/** Variables used when transform is of type BSpline deformable.*/
+		/** Variables used when transform is of type BSpline deformable. */
 		typename BSplineTransformType::Pointer m_BSplineTransform;
 		mutable BSplineTransformWeightsType    m_BSplineTransformWeights;
 		mutable BSplineTransformIndexArrayType m_BSplineTransformIndices;

@@ -19,6 +19,8 @@ using namespace itk;
 	 * of the StandardGradientDescentOptimizer class.
 	 *
 	 * The parameters used in this class are:
+	 * \parameter Optimizer: Select this optimizer as follows:\n
+	 *		<tt>(Optimizer "StandardGradientDescent")</tt>
 	 * \parameter MaximumNumberOfIterations: the maximum number of iterations in each resolution \n
 	 *		example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
 	 *    Default value: 100.

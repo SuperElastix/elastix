@@ -10,9 +10,13 @@ namespace elastix
 	
 	/**
 	 * \class TranslationTransformElastix
-	 * \brief A transform based on the itkTranslationTransform.
+	 * \brief A transform based on the itk::TranslationTransform.
 	 *
 	 * This transform is a translation transformation.
+	 *
+	 * The parameters used in this class are:
+	 * \parameter Transform: Select this transform as follows:\n
+	 *		<tt>(Transform "TranslationTransform")</tt>
 	 *
 	 * \ingroup Transforms
 	 */
@@ -42,7 +46,10 @@ namespace elastix
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( TranslationTransformElastix, TranslationTransform );
 
-		/** Name of this class.*/
+		/** Name of this class.
+		 * Use this name in the parameter file to select this specific transform. \n
+		 * example: <tt>(Transform "TranslationTransform")</tt>\n
+		 */
 		elxClassNameMacro( "TranslationTransform" );
 
 		/** Dimension of the domain space. */

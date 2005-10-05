@@ -130,7 +130,7 @@ using namespace itk;
 		}
 		else	
 		{
-			/** The exact metric value is shown anyway */
+			/** The exact metric value is shown anyway. */
 			this->m_ShowExactMetricValue = false;
 		}
     
@@ -143,7 +143,7 @@ using namespace itk;
 		{
 			this->m_SamplesOnUniformGrid = true;
 	
-			/** Read the desired spacing of the samples */
+			/** Read the desired spacing of the samples. */
 			unsigned int spacing_dim;
 			for (unsigned int dim = 0; dim < FixedImageDimension; dim++)
 			{

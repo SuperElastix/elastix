@@ -31,6 +31,10 @@ using namespace itk;
 	 * the elxRegularStepGradientDescent, so the parameters in the
 	 * parameter file, the output etc are similar.
 	 *
+	 * The parameters used in this class are:
+	 * \parameter Optimizer: Select this optimizer as follows:\n
+	 *		<tt>(Optimizer "RSGDEachParameterApart")</tt>
+	 *
 	 * \ingroup Optimizers
 	 */
 
@@ -56,7 +60,10 @@ using namespace itk;
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( RSGDEachParameterApart, RSGDEachParameterApartOptimizer );
 		
-		/** Name of this class.*/
+		/** Name of this class.
+		 * Use this name in the parameter file to select this specific optimizer. \n
+		 * example: <tt>(Optimizer "RSGDEachParameterApart")</tt>\n
+		 */
 		elxClassNameMacro( "RSGDEachParameterApart" );
 
 		/** Typedef's inherited from Superclass1.*/

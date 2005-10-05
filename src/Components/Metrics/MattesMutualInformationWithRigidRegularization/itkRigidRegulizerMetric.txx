@@ -234,6 +234,32 @@ namespace itk
 
   } // end GetValueAndDerivative
 
+	/**
+	 * ********************* PrintSelf ******************************
+	 *
+	 * Print out internal information about this class.
+	 */
+
+	template< unsigned int Dimension, class TScalarType >
+		void RigidRegulizerMetric< Dimension, TScalarType >
+		::PrintSelf( std::ostream& os, Indent indent ) const
+	{
+		/** Call the superclass' PrintSelf. */
+		Superclass::PrintSelf( os, indent );
+		
+		/** Add debugging information. */
+		os << indent << "SecondOrderWeight: "
+			<< this->m_SecondOrderWeight << std::endl;
+		os << indent << "UseImageSpacing: "
+			<< this->m_UseImageSpacing << std::endl;
+		os << indent << "RigidityImage: "
+			<< this->m_RigidityImage << std::endl;
+		os << indent << "BSplineTransform: "
+			<< this->m_BSplineTransform << std::endl;
+		os << indent << "OutputDirectoryName: "
+			<< this->m_OutputDirectoryName << std::endl;
+		
+	} // end PrintSelf
 
 } // end namespace itk
 

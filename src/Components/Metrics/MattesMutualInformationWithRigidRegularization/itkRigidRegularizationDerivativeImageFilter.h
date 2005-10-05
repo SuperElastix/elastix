@@ -29,33 +29,27 @@
 
 namespace itk
 {
-/**
- * \class RigidRegularizationDerivativeImageFilter
- *
- * \brief This filter computes the derivative of a penalty term on a 
- * vector-valued image. This penalty term is an isotropic measure of the
- * 1st and 2nd order spatial derivatives of an image.
- *
- * The intended use for this filter is to filter a B-spline coefficient
- * image in order to introduce a regularization term on a B-spline transform. 
- * 
- * \par
- * The RigidRegularizationDerivativeImageFilter at each pixel location is computed by
- * convolution with the itk::SecondOrderRegularizationNonSeparableOperator
- * and with other separable 1D kernels.
- *
- * \par Inputs and Outputs
- * The input to this filter is a vector-valued itk::Image of arbitrary
- * dimension. The output is a vector-valued itk::Image of the same dimension.
- *
- * \sa Image
- * \sa Neighborhood
- * \sa NeighborhoodOperator
- * \sa NeighborhoodIterator
- * \sa SecondOrderRegularizationNonSeparableOperator
- *
- * \ingroup ImageFeatureExtraction
- */
+  /**
+	 * \class RigidRegularizationDerivativeImageFilter
+	 * \brief This filter computes the derivative of a penalty term on a 
+	 * vector-valued image. This penalty term is an isotropic measure of the
+	 * 1st and 2nd order spatial derivatives of an image.
+	 *
+	 * The intended use for this filter is to filter a B-spline coefficient
+	 * image in order to introduce a rigid regularization term on a B-spline transform. 
+	 * 
+	 * \par
+	 * The RigidRegularizationDerivativeImageFilter at each pixel location is computed by
+	 * convolution with some separable 1D kernels.
+	 *
+	 * \par Inputs and Outputs
+	 * The input to this filter is a vector-valued itk::Image of dimension 2 or 3.
+	 * The output is a vector-valued itk::Image of the same dimension.
+	 *
+	 * \sa RigidRegulizerMetric
+	 * \sa BSplineTransform
+	 * \ingroup Miscellaneous
+	 */
 
 	template < class TInputImage, class TOutputImage >
 	class ITK_EXPORT RigidRegularizationDerivativeImageFilter : 
@@ -180,6 +174,8 @@ namespace itk
 		* multithreaded by default.
 		*/
 		void GenerateData();
+
+		/** PrintSelf. */
 		void PrintSelf( std::ostream&, Indent ) const;
 
 	private:

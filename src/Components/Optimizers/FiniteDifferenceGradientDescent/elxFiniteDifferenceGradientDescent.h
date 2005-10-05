@@ -10,9 +10,13 @@ using namespace itk;
 
 	/**
 	 * \class FiniteDifferenceGradientDescent
-	 * \brief An optimizer based on gradient descent ...
+	 * \brief An optimizer based on the itk::FiniteDifferenceGradientDescentOptimizer.
 	 *
 	 * This optimizer ...
+	 *
+	 * The parameters used in this class are:
+	 * \parameter Optimizer: Select this optimizer as follows:\n
+	 *		<tt>(Optimizer "FiniteDifferenceGradientDescent")</tt>
 	 *
 	 * \ingroup Optimizers
 	 */
@@ -39,7 +43,10 @@ using namespace itk;
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( FiniteDifferenceGradientDescent, FiniteDifferenceGradientDescentOptimizer );
 		
-		/** Name of this class.*/
+		/** Name of this class.
+		 * Use this name in the parameter file to select this specific optimizer. \n
+		 * example: <tt>(Optimizer "FiniteDifferenceGradientDescent")</tt>\n
+		 */
 		elxClassNameMacro( "FiniteDifferenceGradientDescent" );
 
 		/** Typedef's inherited from Superclass1.*/
