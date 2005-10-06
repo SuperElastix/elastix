@@ -180,6 +180,27 @@ namespace elastix
 		}
 
 	} // end SetInitialTransform
+ 
+	/**
+	 * ******************* SetFinalParameters ********************
+	 */
+
+	template <class TElastix>
+		void TransformBase<TElastix>
+		::SetFinalParameters(void)
+	{
+		/** Get the final Parameters.*/
+
+    /** Make a local copy, since some transforms do not do this,
+		 * like the BSpline-transform */
+		m_FinalParameters = this->m_Registration->GetAsITKBaseType()->
+			GetLastTransformParameters();
+
+		/** Set the final Parameters for the resampler.*/
+		this->GetAsITKBaseType()->SetParameters( m_FinalParameters );
+
+	} // end SetFinalParameters
+
 
 
 	/**
@@ -190,11 +211,9 @@ namespace elastix
 		void TransformBase<TElastix>
 		::AfterRegistrationBase(void)
 	{
-		/** Get the final Parameters.*/
-		ParametersType finalParameters = this->m_Registration->GetAsITKBaseType()->GetLastTransformParameters();
-
-		/** Set the final Parameters for the resampler.*/
-		this->GetAsITKBaseType()->SetParameters( finalParameters );
+		/** Set the final Parameters.*/
+		
+		this->SetFinalParameters();
 
 	} // end AfterRegistrationBase
 
@@ -400,8 +419,12 @@ namespace elastix
 			<< this->elxGetClassName() << "\")" << std::endl;
 
 		/** Get the number of parameters of this transform.*/
-		unsigned int nrP = this->m_Registration->GetAsITKBaseType()->GetTransform()
-			->GetNumberOfParameters();
+		unsigned int nrP = param.GetSize();
+		
+		// used to be:
+		//unsigned int nrP = this->m_Registration->GetAsITKBaseType()->GetTransform()
+		//	->GetNumberOfParameters();
+		// but this is much simpler, or do I miss something?
 
 		/** Write the number of parameters of this transform.*/
 		xout["transpar"] << "(NumberOfParameters "

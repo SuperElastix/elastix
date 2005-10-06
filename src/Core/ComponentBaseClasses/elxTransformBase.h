@@ -160,6 +160,10 @@ namespace elastix
 		/** Function to transform all coordinates from fixed to moving image. */
 		virtual void TransformPointsAllPoints(void);
 
+		/** Makes sure that the final parameters from the registration components
+		 * are copied, set, and stored. */
+		virtual void SetFinalParameters(void);
+
 	protected:
 
 		/** The constructor. */
@@ -171,6 +175,7 @@ namespace elastix
 		ParametersType *			m_TransformParametersPointer;
 		ConfigurationPointer	m_ConfigurationInitialTransform;
 		std::string						m_TransformParametersFileName;
+		ParametersType				m_FinalParameters;
 
 	private:
 

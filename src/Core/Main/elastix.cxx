@@ -232,6 +232,9 @@ int main( int argc, char **argv )
 		elxout << "Time used for running Elastix with this parameter file: "
 			<< timer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
 
+		/** Try to release some memory */
+		elastices[i] = 0;
+
 	} // end loop over registrations
 
 	elxout << "-------------------------------------------------------------------------" << "\n" << std::endl;	

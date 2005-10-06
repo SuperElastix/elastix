@@ -73,8 +73,7 @@ namespace elastix
 		/** Apply the final transform, and save the result.*/
 		elxout << std::endl << "Applying final transform ..." << std::endl;
 		
-		this->GetElastix()->GetElxTransformBase()->GetAsITKBaseType()->SetParameters(
-			this->m_Registration->GetAsITKBaseType()->GetLastTransformParameters() );
+		this->GetElastix()->GetElxTransformBase()->SetFinalParameters();
 		
 		this->m_Caster->SetInput( this->GetAsITKBaseType()->GetOutput() );
 		this->m_Writer->SetInput( this->m_Caster->GetOutput() );

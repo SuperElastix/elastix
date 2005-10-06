@@ -327,7 +327,35 @@ namespace elastix
 		
 		/** Save, show results etc.*/
 		this->AfterRegistration();
-		
+
+		/** Make sure that the transform has stored the final parameters. 
+		 *
+		 * The transform may be used as a transform in a next elastixLevel;
+		 * We need to be sure that it has the final parameters set. 
+		 * In the AfterRegistration-method of TransformBase, this method is
+		 * already called, but some other component may change the parameters
+		 * again in its AfterRegistration-method.
+		 *
+		 * For now we leave it commented, since there is only Resampler, which 
+		 * already calls this method. Calling it again would just take time.
+		 */
+		//this->m_elx_Transform->SetFinalParameters();
+
+		/** Decouple the components from Elastix. This increases the chance that
+		 * some memory is released... */
+				
+		this->m_elx_Registration->SetElastix(0);
+		this->m_elx_Transform->SetElastix(0);
+		this->m_elx_Metric->SetElastix(0);
+		this->m_elx_Interpolator->SetElastix(0);
+		this->m_elx_Optimizer->SetElastix(0);
+		this->m_elx_FixedImagePyramid->SetElastix(0);
+		this->m_elx_MovingImagePyramid->SetElastix(0);
+		this->m_elx_Resampler->SetElastix(0);
+		this->m_elx_ResampleInterpolator->SetElastix(0);
+
+
+
 		return 0;
 		
 	} // end Run
@@ -786,7 +814,8 @@ namespace elastix
 		this->AfterRegistrationBase();
 		CallInEachComponent( &BaseComponentType::AfterRegistrationBase );
 		CallInEachComponent( &BaseComponentType::AfterRegistration );
-		
+
+			
 		/** Print the time spent on things after the registration. */
 		this->m_Timer0->StopTimer();
 		elxout << "Time spent on saving the results, applying the final transform etc.: "

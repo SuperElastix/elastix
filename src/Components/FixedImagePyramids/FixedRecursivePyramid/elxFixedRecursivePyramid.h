@@ -73,7 +73,7 @@ using namespace itk;
 		
 	protected:
 
-		  FixedRecursivePyramid() {}
+		FixedRecursivePyramid() {}
 			virtual ~FixedRecursivePyramid() {}
 			
 	private:

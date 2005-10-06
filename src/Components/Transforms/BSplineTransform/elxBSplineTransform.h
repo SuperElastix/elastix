@@ -135,15 +135,7 @@ using namespace itk;
 		typedef typename Superclass2::MovingImageType						MovingImageType;
 		typedef typename Superclass2::ITKBaseType								ITKBaseType;
 
-		/** Typedefs & Vars needed for setting the grid size and upsampling the grid.*/
-		
-		/** The FixedImagePyramidBase. */
-		typedef typename ElastixType::FixedImagePyramidBaseType	FixedImagePyramidType;
-
-		/** The MultiResolutionImagePyramidFilter. */
-		typedef typename FixedImagePyramidType::ITKBaseType			FixedImagePyramidITKBaseType;
-		typedef FixedImagePyramidITKBaseType *									FixedImagePyramidPointer;
-		
+				
 		/** Typedefs for saving the deformation fields. */
 		typedef __CoefficientOutputType								CoefficientOutputType;
 		typedef Image< CoefficientOutputType,

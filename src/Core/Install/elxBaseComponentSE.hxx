@@ -35,8 +35,11 @@ namespace elastix
 		{
 			this->m_Elastix = _arg;
 
-			this->m_Configuration = this->m_Elastix->GetConfiguration();
-			this->m_Registration = dynamic_cast<RegistrationPointer>( this->m_Elastix->GetRegistration() );
+			if ( this->m_Elastix.IsNotNull() )
+			{
+				this->m_Configuration = this->m_Elastix->GetConfiguration();
+				this->m_Registration = dynamic_cast<RegistrationPointer>( this->m_Elastix->GetRegistration() );
+			}
 
 			Object * thisasobject = dynamic_cast<Object *>(this);
 			if ( thisasobject )
