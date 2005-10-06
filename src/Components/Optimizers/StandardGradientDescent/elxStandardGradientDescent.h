@@ -21,7 +21,7 @@ using namespace itk;
 	 * The parameters used in this class are:
 	 * \parameter Optimizer: Select this optimizer as follows:\n
 	 *		<tt>(Optimizer "StandardGradientDescent")</tt>
-	 * \parameter MaximumNumberOfIterations: the maximum number of iterations in each resolution \n
+	 * \parameter MaximumNumberOfIterations: The maximum number of iterations in each resolution. \n
 	 *		example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
 	 *    Default value: 100.
 	 * \parameter SP_a: The gain \a a(k) at each iteration \a k is defined by \n

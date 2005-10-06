@@ -23,7 +23,7 @@ using namespace itk;
 	 * The parameters used in this class are:
 	 * \parameter Optimizer: Select this optimizer as follows:\n
 	 *		<tt>(Optimizer "RegularStepGradientDescent")</tt>
-	 * \parameter MaximumNumberOfIterations: the maximum number of iterations in each resolution \n
+	 * \parameter MaximumNumberOfIterations: the maximum number of iterations in each resolution. \n
 	 *	 example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
 	 *   Default value: 100.
 	 * \parameter MinimumGradientMagnitude: stopping criterion. If the magnitude of the derivative
@@ -34,16 +34,14 @@ using namespace itk;
 	 *   value, optimisation is stopped. \n
 	 *	 example: <tt>(MinimumStepLength 1.0 0.5 0.1)</tt> \n
 	 *   Default value: <em>0.5 / 2^resolutionlevel</em>
-	 * \parameter MaximumStepLength: the starting steplength  \n
+	 * \parameter MaximumStepLength: the starting steplength.  \n
 	 *	 example: <tt>(MaxiumStepLength 16.0 8.0 4.0)</tt> \n
-	 *   Default value: <em>16 / 2^resolutionlevel</em> 
+	 *   Default value: <em>16 / 2^resolutionlevel</em>. 
 	 * \parameter RelaxationFactor: the factor with which the steplength is multiplied,
 	 *   if the optimiser notices that a smaller steplength is needed. \n
-	 *	 example: <tt>(RelaxationFactor 0.5 0.5 0.8 )</tt> \n
+	 *	 example: <tt>(RelaxationFactor 0.5 0.5 0.8 )</tt>. \n
 	 *   Default/recommended value: 0.5.
 	 *	 
-	 *
-	 * RelaxationFactor
 	 * 
 	 * \sa ImprovedRegularStepGradientDescentOptimizer
 	 * \ingroup Optimizers

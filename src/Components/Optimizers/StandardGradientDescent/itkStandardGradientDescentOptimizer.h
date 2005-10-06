@@ -10,15 +10,14 @@ namespace itk
 	 * \class StandardGradientDescentOptimizer
 	 * \brief This class implements a gradient descent optimizer with a decaying gain.
 	 *
-	 * This class implements a gradient descent optimizer with a decaying gain.
-	 *
 	 * If \a C(x) is a costfunction that has to be minimised, the following iterative
 	 * algorithm is used to find the optimal parameters \a x:
 	 * 
 	 * x(k+1) = x(k) - a(k) dC/dx
 	 *
-   * The gain \a a(k) at each iteration \a k is defined by \n
-	 * <em>a(k) =  a / (A + k + 1)^alpha</em>. \n
+   * The gain \a a(k) at each iteration \a k is defined by:
+	 *
+	 * <em>a(k) =  a / (A + k + 1)^alpha</em>.
 	 * 
 	 * It is very suitable to be used in combination with a stochastic estimate
 	 * of the gradient \a dC/dx. For example, in image registration problems it is
@@ -26,6 +25,7 @@ namespace itk
 	 * of randomly selected image samples in each iteration. You may set the parameter
 	 * \c NewSamplesEveryIteration to \c "true" to achieve this effect.
 	 * For more information on this strategy, you may have a look at:
+	 *
 	 * S. Klein, M. Staring, J.P.W. Pluim,
 	 * "Comparison of gradient approximation techniques for optimisation of mutual information in nonrigid registration",
 	 * in: SPIE Medical Imaging: Image Processing,
