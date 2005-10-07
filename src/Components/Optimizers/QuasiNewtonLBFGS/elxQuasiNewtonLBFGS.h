@@ -14,8 +14,9 @@ using namespace itk;
 	 * \class QuasiNewtonLBFGS
 	 * \brief An optimizer based on the itk::QuasiNewtonLBFGSOptimizer.
 	 *
-	 * The QuasiNewtonLBFGS class ....
-	 *
+	 * The QuasiNewtonLBFGS class is a wrap around the QuasiNewtonLBFGSOptimizer. 
+	 * Please read the documentation of this class to find out more about it.
+	 * 
 	 * The parameters used in this class are:
 	 * \parameter Optimizer: Select this optimizer as follows:\n
 	 *		<tt>(Optimizer "QuasiNewtonLBFGS")</tt>

@@ -8,13 +8,18 @@ namespace itk
 
 		/**
 	 * \class ImprovedRegularStepGradientDescentOptimizer
-	 * \brief An optimizer based on gradient descent...
+	 * \brief A slightly improved version of the itk::RegularStepGradientDescentOptimizer
 	 *
 	 * This one is faster than the parent itk class: RegularStepGradientDescentOptimizer.
 	 * Instead of GetValue and GetDerivative, the GetValueAndDerivative
 	 * method is used, to obtain the metric value and its derivatives.
 	 *
+	 * \todo: the ITK has implemented almost the same fix, but without a try/catch-block
+	 * and it makes an unnecessary copy of the parameters-array. These bugs are committed
+	 * to the ITK. Once they are fixed we can get rid of this class.
+	 *
 	 * \ingroup Optimizers
+	 * \sa RegularStepGradientDescent
 	 */
 
 	class ImprovedRegularStepGradientDescentOptimizer :

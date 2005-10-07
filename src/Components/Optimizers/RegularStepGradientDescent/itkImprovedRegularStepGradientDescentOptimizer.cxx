@@ -73,18 +73,18 @@ ImprovedRegularStepGradientDescentOptimizer
 
 		/** faster:*/
 
-		m_PreviousGradient = m_Gradient;
-		try
-		{
-			m_CostFunction->GetValueAndDerivative(
-				this->GetCurrentPosition(), m_Value, m_Gradient );
-		}
-		catch( ExceptionObject& err)
-		{
-			//m_StopCondition = MetricError;
-			this->StopOptimization();
-			throw err;
-		}
+    m_PreviousGradient = m_Gradient;
+    try
+    {
+      m_CostFunction->GetValueAndDerivative(
+        this->GetCurrentPosition(), m_Value, m_Gradient );
+    }
+    catch( ExceptionObject& err)
+    {
+      //m_StopCondition = MetricError;
+      this->StopOptimization();
+      throw err;
+    }
 
     if( m_Stop )
       {

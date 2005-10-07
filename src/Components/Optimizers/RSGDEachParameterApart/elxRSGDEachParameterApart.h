@@ -34,6 +34,20 @@ using namespace itk;
 	 * The parameters used in this class are:
 	 * \parameter Optimizer: Select this optimizer as follows:\n
 	 *		<tt>(Optimizer "RSGDEachParameterApart")</tt>
+	 * \parameter MaximumNumberOfIterations: the maximum number of iterations in each resolution. \n
+	 *	 example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
+	 *   Default value: 100.
+	 * \parameter MinimumGradientMagnitude: stopping criterion. If the magnitude of the derivative
+	 *   of the cost function is below this value, optimisation is stopped. \n
+	 *	 example: <tt>(MinimumGradientMagnitude 0.0001 0.0001 0.001)</tt> \n
+	 *   Default value: 1e-8. 
+	 * \parameter MinimumStepLength: stopping criterion. If the steplength is below this
+	 *   value, optimisation is stopped. \n
+	 *	 example: <tt>(MinimumStepLength 1.0 0.5 0.1)</tt> \n
+	 *   Default value: <em>0.5 / 2^resolutionlevel</em>
+	 * \parameter MaximumStepLength: the starting steplength.  \n
+	 *	 example: <tt>(MaxiumStepLength 16.0 8.0 4.0)</tt> \n
+	 *   Default value: <em>16 / 2^resolutionlevel</em>. 
 	 *
 	 * \ingroup Optimizers
 	 */
@@ -89,12 +103,15 @@ using namespace itk;
 		virtual void AfterEachIteration(void);
 		virtual void AfterRegistration(void);		
 		
-		/** Override the SetInitialPosition.*/
+		/** Override the SetInitialPosition.
+		 * Override the implementation in itkOptimizer.h, to
+		 * ensure that the scales array and the parameters
+		 * array have the same size. */
 		virtual void SetInitialPosition( const ParametersType & param );
 		
 	protected:
 
-		  RSGDEachParameterApart();
+		RSGDEachParameterApart(){};
 			virtual ~RSGDEachParameterApart() {};
 			
 	private:

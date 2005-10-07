@@ -17,8 +17,13 @@ namespace itk
 	 *
 	 * Optimizer that scans a subspace of the parameter space
 	 * and searches for the best parameters.
+	 * 
+	 * \todo This optimizer has similar functionality as the recently added 
+	 * itkExhaustiveOptimizer. See if we can replace it by that optimizer,
+	 * or inherit from it.
 	 *
 	 * \ingroup Optimizers
+	 * \sa FullSearch
 	 */
 	
 	class FullSearchOptimizer : public SingleValuedNonLinearOptimizer
@@ -82,7 +87,20 @@ namespace itk
 		void MinimizeOff()
 		{ this->MaximizeOn(); }
 		
-		/** Set the CurrentPosition, CurrentPoint and CurrentIndex to the next point in search space. */
+		/** Set the CurrentPosition, CurrentPoint and CurrentIndex to the next point
+		 * in the search space.
+		 *
+		 * example of sequence of indices in a 3d search space:
+		 * 
+		 * dim1: 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2
+		 * dim2: 0 0 0 1 1 1 2 2 2 0 0 0 1 1 1 2 2 2 0 0 0 1 1 1 2 2 2 
+		 * dim3: 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 
+		 * 
+		 * The indices are transformed to points in search space with the formula:
+		 * point[i] = min[i] + stepsize[i]*index[i]				for all i.
+		 * 
+		 * Then the appropriate parameters in the ParameterArray are updated.
+		 */
 		virtual void UpdateCurrentPosition(void);
 		
 		/** Start optimization.
@@ -146,8 +164,7 @@ namespace itk
 		
 		/** Get the best value. */
 		itkGetConstMacro( BestValue, double );
-		
-		
+				
 		/** Get Stop condition. */
 		itkGetConstMacro( StopCondition, StopConditionType );
 		
@@ -180,9 +197,7 @@ namespace itk
 		void operator=(const Self&); //purposely not implemented
 		
 		unsigned long                 m_CurrentIteration;
-		
-		
-		
+			
 	}; // end class
 
 } // end namespace itk

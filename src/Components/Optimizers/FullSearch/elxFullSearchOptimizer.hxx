@@ -77,9 +77,7 @@ using namespace itk;
 		/** fullFieldName = "FullSearchSpace0" at level 0; */
 		makeString << "FullSearchSpace" << level;
 		std::string fullFieldName = makeString.str();
-
-
-		
+	
 		while ( errorcode==0 )  //as long as still search ranges are defined
 		{
 			/** Try to read (silently) from the parameter file */
@@ -254,11 +252,26 @@ using namespace itk;
 		elxout << "Stopping condition: " << stopcondition << "." << std::endl;
 				
 		/** Write the optimization surface to disk */
-		this->m_OptimizationSurface->Write(); /** \todo try/catch? */
-		elxout
-			<< "\nThe scanned optimization surface is saved as: "
-			<< this->m_OptimizationSurface->GetOutputFileName()
-			<< std::endl;
+		try
+		{
+			this->m_OptimizationSurface->Write();
+			elxout
+				<< "\nThe scanned optimization surface is saved as: "
+				<< this->m_OptimizationSurface->GetOutputFileName()
+				<< std::endl;
+		}
+		catch ( ExceptionObject& err )
+		{
+			xl::xout["error"] 
+			  << "ERROR: Saving "
+				<< this->m_OptimizationSurface->GetOutputFileName()
+				<< " failed."
+				<< std::endl;
+			xl::xout["error"] << err << std::endl;
+
+
+		  // do not throw an error, since we would like to go on.
+		}
 
 		/** Print the best metric value */
 		elxout 

@@ -19,7 +19,7 @@ using namespace itk;
 		SimultaneousPerturbation<TElastix>
 		::SimultaneousPerturbation() 
 	{
-		this->m_ShowMetricValues = true;
+		this->m_ShowMetricValues = false;
 	} // end Constructor
 	
 
@@ -31,31 +31,27 @@ using namespace itk;
 		void SimultaneousPerturbation<TElastix>::
 		BeforeRegistration(void)
 	{
-		std::string showMetricValues("true");
+		std::string showMetricValues("false");
 		this->GetConfiguration()->ReadParameter(
 			showMetricValues, "ShowMetricValues", 0);
 		if (showMetricValues == "false")
 		{
 			this->m_ShowMetricValues = false;
-			this->SetComputeCurrentValue(this->m_ShowMetricValues);
 		}
 		else
 		{
 			this->m_ShowMetricValues = true;
-			this->SetComputeCurrentValue(this->m_ShowMetricValues);
 		}
 
 		/** Add the target cell "stepsize" to xout["iteration"].*/
 		xout["iteration"].AddTargetCell("2:Metric");
-		xout["iteration"].AddTargetCell("3:StepSize");
-		xout["iteration"].AddTargetCell("4:Gain a_k");
-		xout["iteration"].AddTargetCell("5:||Gradient||");
+		xout["iteration"].AddTargetCell("3:Gain a_k");
+		xout["iteration"].AddTargetCell("4:||Gradient||");
 
 		/** Format the metric and stepsize as floats */			
 		xl::xout["iteration"]["2:Metric"]		<< std::showpoint << std::fixed;
-		xl::xout["iteration"]["3:StepSize"] << std::showpoint << std::fixed;
-		xl::xout["iteration"]["4:Gain a_k"] << std::showpoint << std::fixed;
-		xl::xout["iteration"]["5:||Gradient||"] << std::showpoint << std::fixed;
+		xl::xout["iteration"]["3:Gain a_k"] << std::showpoint << std::fixed;
+		xl::xout["iteration"]["4:||Gradient||"] << std::showpoint << std::fixed;
 		
 	} // end BeforeRegistration
 
@@ -75,7 +71,12 @@ using namespace itk;
 		/** Set the maximumNumberOfIterations.*/
 		unsigned int maximumNumberOfIterations = 100;
 		this->m_Configuration->ReadParameter( maximumNumberOfIterations , "MaximumNumberOfIterations", level );
-		this->SetNumberOfIterations( maximumNumberOfIterations );
+		this->SetMaximumNumberOfIterations( maximumNumberOfIterations );
+
+		/** Set the number of perturbation used to construct a gradient estimate g_k. */
+    unsigned int numberOfPerturbations = 1;
+		this->m_Configuration->ReadParameter( numberOfPerturbations , "NumberOfPerturbations", level );
+		this->SetNumberOfPerturbations( numberOfPerturbations );
 
 		double a;
 		double c;
@@ -83,6 +84,7 @@ using namespace itk;
 		double alpha;
 		double gamma;
 
+		/** \todo call the GuessParameters function */
 		if (level == 0)
 		{
 			a = 400;
@@ -96,11 +98,11 @@ using namespace itk;
 			/** If only one parameter is set, then this parameter
 			 * is used in each resolution.
 			 */
-			a = this->GetParam_a();
-			c = this->GetParam_c();
-			A = this->GetParam_A();
-			alpha = this->GetParam_alpha();
-			gamma = this->GetParam_gamma();
+			a = this->Geta();
+			c = this->Getc();
+			A = this->GetA();
+			alpha = this->GetAlpha();
+			gamma = this->GetGamma();
 		}
 
 		this->GetConfiguration()->ReadParameter(a, "SP_a", level);
@@ -109,11 +111,14 @@ using namespace itk;
 		this->GetConfiguration()->ReadParameter(alpha, "SP_alpha", level);
 		this->GetConfiguration()->ReadParameter(gamma, "SP_gamma", level);
 
-		this->SetParam_a(	a );
-		this->SetParam_c( c );
-		this->SetParam_A( A );
-		this->SetParam_alpha( alpha );
-		this->SetParam_gamma( gamma );
+		this->Seta(	a );
+		this->Setc( c );
+		this->SetA( A );
+		this->SetAlpha( alpha );
+		this->SetGamma( gamma );
+
+		/** Ignore the build-in stop criterion; it's quite ad hoc. */
+		this->SetTolerance(0.0);
 		
 	} // end BeforeEachResolution
 
@@ -136,9 +141,9 @@ using namespace itk;
 		{
 			xl::xout["iteration"]["2:Metric"]		<< "---";
 		}
-		xl::xout["iteration"]["3:StepSize"] << this->GetCurrentStepLength();
-		xl::xout["iteration"]["4:Gain a_k"] << this->GetLearningRate();
-		xl::xout["iteration"]["5:||Gradient||"] << this->GetGradientMagnitude();
+		
+		xl::xout["iteration"]["3:Gain a_k"] << this->GetLearningRate();
+		xl::xout["iteration"]["4:||Gradient||"] << this->GetGradientMagnitude();
 		
 		/** Select new spatial samples for the computation of the metric */
 		if ( this->GetNewSamplesEveryIteration() )
@@ -160,6 +165,7 @@ using namespace itk;
 		
 		/**
 		 * enum   StopConditionType {  MaximumNumberOfIterations, MetricError }  
+		 * ignore the BelowTolerance-criterion.
 		 */
 		std::string stopcondition;
 
@@ -197,24 +203,14 @@ using namespace itk;
 	{
 	  /** Print the best metric value */
 		double bestValue;
-		if (this->m_ShowMetricValues)
-		{
-			bestValue = this->GetValue();
-			elxout
-				<< std::endl
-				<< "Final metric value  = " 
-				<< bestValue
-				<< std::endl;
-		}
-		else
-		{
-			elxout 
+		
+		bestValue = this->GetValue();
+		elxout
 			<< std::endl
-			<< "Run Elastix again with the option \"ShowMetricValues\" set"
-			<< " to \"true\", to see information about the metric values. "
+			<< "Final metric value  = " 
+			<< bestValue
 			<< std::endl;
-		}
-
+		
 	} // end AfterRegistration
 
 

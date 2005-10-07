@@ -11,18 +11,7 @@ namespace elastix
 using namespace itk;
 
 
-	/**
-	 * ********************* Constructor ****************************
-	 */
-	
-	template <class TElastix>
-		RSGDEachParameterApart<TElastix>
-		::RSGDEachParameterApart() 
-	{
-	} // end Constructor
-	
-
-	/**
+/**
 	 * ***************** BeforeRegistration ***********************
 	 */
 
@@ -117,11 +106,10 @@ using namespace itk;
 		
 		/**
 		 * enum   StopConditionType {   GradientMagnitudeTolerance = 1, StepTooSmall,
-		 * ImageNotAvailable, SamplesNotAvailable, MaximumNumberOfIterations  
+		 * ImageNotAvailable, SamplesNotAvailable, MaximumNumberOfIterations, MetricError
 		 */
 		std::string stopcondition;
-
-		
+	
 		
 		switch( this->GetStopCondition() )
 		{
@@ -161,6 +149,7 @@ using namespace itk;
 
 	} // end AfterEachResolution
 	
+
 	/**
 	 * ******************* AfterRegistration ************************
 	 */

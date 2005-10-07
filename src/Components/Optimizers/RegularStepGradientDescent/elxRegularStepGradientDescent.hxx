@@ -11,16 +11,6 @@ namespace elastix
 using namespace itk;
 
 
-	/**
-	 * ********************* Constructor ****************************
-	 */
-	
-	template <class TElastix>
-		RegularStepGradientDescent<TElastix>
-		::RegularStepGradientDescent() 
-	{
-	} // end Constructor
-	
 
 	/**
 	 * ***************** BeforeRegistration ***********************

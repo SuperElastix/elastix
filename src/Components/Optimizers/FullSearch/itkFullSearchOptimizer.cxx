@@ -149,10 +149,8 @@ namespace itk
 		this->SetCurrentPosition(
 			this->PointToPosition(m_BestPointInSearchSpace) );
 		InvokeEvent( EndEvent() );
-	}
-	
-	
-	
+
+	} // end function StopOptimization
 	
 	
 	/**
@@ -171,6 +169,7 @@ namespace itk
 	 * 
 	 * Then the appropriate parameters in the ParameterArray are updated.
 	 */
+
 	void
 		FullSearchOptimizer
 		::UpdateCurrentPosition( void )

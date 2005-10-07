@@ -19,7 +19,7 @@ using namespace itk;
 		FiniteDifferenceGradientDescent<TElastix>
 		::FiniteDifferenceGradientDescent() 
 	{
-		this->m_ShowMetricValues = true;
+		this->m_ShowMetricValues = false;
 	} // end Constructor
 	
 
@@ -31,7 +31,7 @@ using namespace itk;
 		void FiniteDifferenceGradientDescent<TElastix>::
 		BeforeRegistration(void)
 	{
-		std::string showMetricValues("true");
+		std::string showMetricValues("false");
 		this->GetConfiguration()->ReadParameter(
 			showMetricValues, "ShowMetricValues", 0);
 		if (showMetricValues == "false")

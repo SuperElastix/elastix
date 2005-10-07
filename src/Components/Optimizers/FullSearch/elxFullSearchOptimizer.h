@@ -17,13 +17,25 @@ using namespace itk;
 	 * \class FullSearch
 	 * \brief An optimizer based on the itk::FullSearchOptimizer.
 	 *
-	 * This optimizer ...
+	 * Optimizer that scans a subspace of the parameter space
+	 * and searches for the best parameters.
 	 *
+	 * The results are written to the output-directory as an image
+	 * OptimizationSurface.<elastixlevel>.R<resolution>.mhd",
+	 * which is an N-dimensional float image, where N is the
+	 * dimension of the search space.
+	 * 
 	 * The parameters used in this class are:
 	 * \parameter Optimizer: Select this optimizer as follows:\n
 	 *		<tt>(Optimizer "FullSearch")</tt>
-	 *
+	 * \parameter FullSearchSpace<r>: Defines for resolution r a range of parameters to scan.\n
+	 *   Full syntax: (FullSearchSpace<r> <parameter_nr> <min> <max> <stepsize> [...] ) \n
+	 *   example: <tt>(FullSearchSpace0 2 -4.0 3.0 1.0 3 -1.0 1.0 0.5)</tt> \n
+	 *   This varies the second transform parameter in the range [-4.0 3.0] with steps of 1.0
+	 *   and the third parameter in the range [-1.0 1.0] with steps of 0.5.
+	 *   
 	 * \ingroup Optimizers
+	 * \sa FullSearchOptimizer
 	 */
 
 	template <class TElastix>

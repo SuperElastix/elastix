@@ -107,7 +107,7 @@ using namespace itk;
 		
 	protected:
 
-		  RegularStepGradientDescent();
+		RegularStepGradientDescent(){};
 			virtual ~RegularStepGradientDescent() {};
 			
 	private:
