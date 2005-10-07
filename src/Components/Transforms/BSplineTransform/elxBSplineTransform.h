@@ -3,19 +3,12 @@
 
 /* For easy changing the BSplineOrder: */
 #define __VSplineOrder 3
-/* For easy changing the PixelType of the saved deformation fields: */
-#define __CoefficientOutputType float
 
 #include "itkBSplineDeformableTransform.h"
-#include "itkImage.h"
-#include "itkCastImageFilter.h"
-#include "itkImageFileWriter.h"
+#include "itkBSplineTransformGrouper.h"
 
 #include "elxIncludes.h"
 
-#include "itkBSplineTransformGrouper.h"
-
-#include <sstream>
 
 namespace elastix
 {
@@ -135,46 +128,44 @@ using namespace itk;
 		typedef typename Superclass2::MovingImageType						MovingImageType;
 		typedef typename Superclass2::ITKBaseType								ITKBaseType;
 
-				
-		/** Typedefs for saving the deformation fields. */
-		typedef __CoefficientOutputType								CoefficientOutputType;
-		typedef Image< CoefficientOutputType,
-			itkGetStaticConstMacro(SpaceDimension) >		CoefficientOutputImageType;
-		typedef CastImageFilter< 
-			ImageType, CoefficientOutputImageType >			TransformCastFilterType;
-		typedef ImageFileWriter<
-			CoefficientOutputImageType >								TransformWriterType;
-
-		/** Methods in which parameters can be changed; automatically called by elastix. */
+		/** Execute stuff before the actual registration:
+		 * \li Create an initial B-spline grid.
+		 * \li Create initial registration parameters.
+		 */
 		virtual void BeforeRegistration(void);
+
+		/** Execute stuff before each new pyramid resolution:
+		 * \li upsample the B-spline grid.
+		 */
 		virtual void BeforeEachResolution(void);
 		
-		/** These two methods are called by BeforeEachResolution(). */
+		/** Method to set the initial BSpline grid, called by BeforeEachResolution(). */
 		virtual void SetInitialGrid( bool upsampleGridOption );
+		/** Method to increase the density of the BSpline grid,
+		 * called by BeforeEachResolution().
+		 */
 		virtual void IncreaseScale(void);
 		
-		/** Function to read/write transform-parameters from/to a file. */
+		/** Function to read transform-parameters from a file. */
 		virtual void ReadFromFile(void);
+		/** Function to write transform-parameters to a file. */
 		virtual void WriteToFile( const ParametersType & param );
 		
 	protected:
 
+		/** The constructor. */
 		BSplineTransform();
+		/** The destructor. */
 		virtual ~BSplineTransform() {}
 		
 		/** Member variables. */
-		typename TransformCastFilterType::Pointer		m_Caster;
-		typename TransformWriterType::Pointer				m_Writer;
-		SpacingType																	m_GridSpacingFactor;
-
-		ParametersType * m_Parameterspointer;
-	  ParametersType * m_Parameterspointer_out;
-	
-		ImagePointer m_Coeffs1;
-	  ImagePointer m_Coeffs2;
+		SpacingType		m_GridSpacingFactor;
 
 	private:
+
+		/** The private constructor. */
 		BSplineTransform( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );		// purposely not implemented
 		
 	}; // end class BSplineTransform
