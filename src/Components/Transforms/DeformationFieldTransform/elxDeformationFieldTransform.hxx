@@ -26,7 +26,7 @@ using namespace itk;
 
 	/**
 	 * ******************* BeforeRegistration ***********************
-	 */
+	 *
 
 	template <class TElastix>
 		void DeformationFieldTransform<TElastix>
@@ -38,7 +38,7 @@ using namespace itk;
 
 	/**
 	 * ***************** BeforeEachResolution ***********************
-	 */
+	 *
 
 	template <class TElastix>
 		void DeformationFieldTransform<TElastix>

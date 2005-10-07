@@ -81,7 +81,7 @@ using namespace itk;
 		 */
 		elxClassNameMacro( "BSplineTransform" );
 		
-		/** Dimension of the domain space. */
+		/** Dimension of the fixed image. */
 		itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );
 		
 		/** The BSpline order. */
@@ -135,7 +135,7 @@ using namespace itk;
 		virtual void BeforeRegistration(void);
 
 		/** Execute stuff before each new pyramid resolution:
-		 * \li upsample the B-spline grid.
+		 * \li Upsample the B-spline grid.
 		 */
 		virtual void BeforeEachResolution(void);
 		

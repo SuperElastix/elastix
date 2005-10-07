@@ -164,7 +164,9 @@ namespace itk
 
 	protected:
 
+		/** The constructor. */
 		RigidRegularizationDerivativeImageFilter();
+		/** The destructor. */
 		virtual ~RigidRegularizationDerivativeImageFilter(){}
 
 		/** Standard pipeline method. While this class does not implement a
@@ -180,7 +182,9 @@ namespace itk
 
 	private:
 
+		/** The private constructor. */
 		RigidRegularizationDerivativeImageFilter( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );									// purposely not implemented
 
 		/** Some private functions used for the filtering. */

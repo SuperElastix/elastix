@@ -20,20 +20,6 @@ using namespace itk;
 
 
 	/**
-	 * ************************ BeforeAll ***************************
-	 */
-	
-	template <class TElastix>
-		int ViolaWellsMutualInformationMetric<TElastix>
-		::BeforeAll(void)
-	{
-		/** Return a value.*/
-		return 0;
-
-	} // end BeforeAll
-
-
-	/**
 	 * ******************* Initialize ***********************
 	 */
 
@@ -52,17 +38,6 @@ using namespace itk;
 
 	
 	/**
-	 * ******************* BeforeRegistration ***********************
-	 */
-
-	template <class TElastix>
-		void ViolaWellsMutualInformationMetric<TElastix>::
-		BeforeRegistration(void)
-	{		
-	} // end BeforeRegistration
-	
-
-	/**
 	 * ***************** BeforeEachResolution ***********************
 	 */
 
@@ -76,11 +51,11 @@ using namespace itk;
 		 * metric->SetAlpha( config.GetAlpha(level) );
 		 */
 
-		/** Get the current resolution level.*/
+		/** Get the current resolution level. */
 		unsigned int level = 
 			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 		
-		/** Set the number of histogram bins and spatial samples.*/
+		/** Set the number of histogram bins and spatial samples. */
 		unsigned int numberOfSpatialSamples = 10000;
 		/** \todo guess the default numberOfSpatialSamples from the 
 		 * imagesize, the numberOfParameters, and the number of bins....
@@ -97,7 +72,7 @@ using namespace itk;
 		double movingImageStandardDeviation = 0.4;
 		/** \todo calculate them??? */
 		
-		/** Read the parameters from the ParameterFile.*/
+		/** Read the parameters from the ParameterFile. */
 		this->m_Configuration->ReadParameter(
 			numberOfSpatialSamples, "NumberOfSpatialSamples", level );
 		this->m_Configuration->ReadParameter(
@@ -105,7 +80,7 @@ using namespace itk;
 		this->m_Configuration->ReadParameter(
 			movingImageStandardDeviation, "MovingImageStandardDeviation", level );
 		
-		/** Set them.*/
+		/** Set them. */
 		this->SetNumberOfSpatialSamples( numberOfSpatialSamples );
 		this->SetFixedImageStandardDeviation( fixedImageStandardDeviation );
 		this->SetMovingImageStandardDeviation( movingImageStandardDeviation );

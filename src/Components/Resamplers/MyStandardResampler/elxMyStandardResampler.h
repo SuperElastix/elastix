@@ -76,12 +76,16 @@ namespace elastix
 	
 	protected:
 
+		/** The constructor. */
 		MyStandardResampler() {}
+		/** The destructor. */
 		virtual ~MyStandardResampler() {}
 		
 	private:
 
+		/** The private constructor. */
 		MyStandardResampler( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );			// purposely not implemented
 		
 	}; // end class MyStandardResampler

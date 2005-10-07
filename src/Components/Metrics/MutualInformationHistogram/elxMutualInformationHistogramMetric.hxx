@@ -20,20 +20,6 @@ using namespace itk;
 
 
 	/**
-	 * ************************ BeforeAll ***************************
-	 */
-	
-	template <class TElastix>
-		int MutualInformationHistogramMetric<TElastix>
-		::BeforeAll(void)
-	{
-		/** Return a value.*/
-		return 0;
-
-	} // end BeforeAll
-
-
-	/**
 	 * ******************* Initialize ***********************
 	 */
 

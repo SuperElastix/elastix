@@ -223,12 +223,14 @@ namespace itk
 		 * on all pixels or just a randomly sampled subset. Make sure to set it true
 		 * before calling Initialize().
 		 */
-		itkSetMacro(UseAllPixels, bool);
-		itkGetConstMacro(UseAllPixels, bool);
+		itkSetMacro( UseAllPixels, bool );
+		itkGetConstMacro( UseAllPixels, bool );
 
 	protected:
 		
+		/** The constructor. */
 		MattesMutualInformationImageToImageMetricWithMask();
+		/** The destructor. */
 		virtual ~MattesMutualInformationImageToImageMetricWithMask() {};
 
 		/** Print Self. */
@@ -327,7 +329,9 @@ namespace itk
 
 	private:
 		
+		/** The private constructor. */
 		MattesMutualInformationImageToImageMetricWithMask( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );																		// purposely not implemented
 		
 		bool m_UseAllPixels;

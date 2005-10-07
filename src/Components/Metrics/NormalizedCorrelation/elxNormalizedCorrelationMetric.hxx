@@ -20,20 +20,6 @@ using namespace itk;
 
 	
 	/**
-	 * ************************ BeforeAll ***************************
-	 */
-	
-	template <class TElastix>
-		int NormalizedCorrelationMetric<TElastix>
-		::BeforeAll(void)
-	{
-		/** Return a value.*/
-		return 0;
-
-	} // end BeforeAll
-
-
-	/**
 	 * ******************* Initialize ***********************
 	 */
 
@@ -51,28 +37,6 @@ using namespace itk;
 	} // end Initialize
 
 
-	/**
-	 * ******************* BeforeRegistration ***********************
-	 */
-
-	template <class TElastix>
-		void NormalizedCorrelationMetric<TElastix>::
-		BeforeRegistration(void)
-	{	
-	} // end BeforeRegistration
-	
-
-	/**
-	 * ***************** BeforeEachResolution ***********************
-	 */
-
-	template <class TElastix>
-		void NormalizedCorrelationMetric<TElastix>::
-		BeforeEachResolution(void)
-	{
-	} // end BeforeEachResolution
-	
-	
 } // end namespace elastix
 
 

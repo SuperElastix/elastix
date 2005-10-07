@@ -31,7 +31,7 @@ namespace elastix
 	{
 	public:
 		
-		/** Standard ITK-stuff.*/
+		/** Standard ITK-stuff. */
 		typedef TranslationTransformElastix											Self;
 		typedef TranslationTransform<
 			typename elx::TransformBase<TElastix>::CoordRepType,
@@ -55,7 +55,7 @@ namespace elastix
 		/** Dimension of the domain space. */
 		itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );
 		
-		/** Typedefs inherited from the superclass.*/
+		/** Typedefs inherited from the superclass. */
 		typedef typename Superclass1::ScalarType 								ScalarType;
 		typedef typename Superclass1::ParametersType 						ParametersType;
 		typedef typename Superclass1::JacobianType 							JacobianType;
@@ -68,7 +68,7 @@ namespace elastix
 		typedef typename Superclass1::InputPointType 						InputPointType;
 		typedef typename Superclass1::OutputPointType						OutputPointType;
 		
-		/** Typedef's from the TransformBase class.*/
+		/** Typedef's from the TransformBase class. */
 		typedef typename Superclass2::ElastixType								ElastixType;
 		typedef typename Superclass2::ElastixPointer						ElastixPointer;
 		typedef typename Superclass2::ConfigurationType					ConfigurationType;
@@ -80,17 +80,23 @@ namespace elastix
 		typedef typename Superclass2::MovingImageType						MovingImageType;
 		typedef typename Superclass2::ITKBaseType								ITKBaseType;
 		
-		/** Methods that have to be present in each version of MyTransform.*/
+		/** Execute stuff before the actual registration:
+		 * \li Create initial registration parameters.
+		 */
 		virtual void BeforeRegistration(void);
 
 	protected:
 
+		/** The constructor. */
 		TranslationTransformElastix();
+		/** The destructor. */
 		virtual ~TranslationTransformElastix() {};
 		
 	private:
 
+		/** The private constructor. */
 		TranslationTransformElastix( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );							// purposely not implemented
 		
 	}; // end class TranslationTransformElastix

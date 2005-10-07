@@ -56,7 +56,7 @@ namespace itk
 		typedef SmartPointer< Self >									Pointer;
 		typedef SmartPointer< const Self >						ConstPointer;
 		
-		/** New macro for creation of through the object factory. */
+		/** Method for creation through the object factory. */
 		itkNewMacro( Self );
 		
 		/** Run-time type information (and related methods). */
@@ -109,6 +109,7 @@ namespace itk
 		
 		/** The private constructor. */
 		DeformationVectorFieldTransform( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );									// purposely not implemented
 
 		/** Member variables. */

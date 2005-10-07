@@ -86,21 +86,33 @@ using namespace itk;
 		typedef tmr::Timer					TimerType;
 		typedef TimerType::Pointer	TimerPointer;
 		
-		/** Methods that have to be present everywhere. */
-		virtual int BeforeAll(void);
+		/** Execute stuff before the actual registration:
+		 * \li Nothing yet: still to be implemented.
+		 */
 		virtual void BeforeRegistration(void);
+
+		/** Execute stuff before each new pyramid resolution:
+		 * \li Nothing yet: still to be implemented.
+		 */
 		virtual void BeforeEachResolution(void);
 
+		/** Sets up a timer to measure the intialisation time and
+		 * calls the Superclass' implementation.
+		 */
 		virtual void Initialize(void) throw (ExceptionObject);
 		
 	protected:
 
+		/** The constructor. */
 		MutualInformationHistogramMetric(); 
+		/** The destructor. */
 		virtual ~MutualInformationHistogramMetric() {}
 
 	private:
 
+		/** The private constructor. */
 		MutualInformationHistogramMetric( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );										// purposely not implemented
 		
 	}; // end class MutualInformationHistogramMetric

@@ -189,14 +189,13 @@ namespace elastix
 		void TransformBase<TElastix>
 		::SetFinalParameters(void)
 	{
-		/** Get the final Parameters.*/
-
     /** Make a local copy, since some transforms do not do this,
-		 * like the BSpline-transform */
+		 * like the BSpline-transform.
+		 */
 		m_FinalParameters = this->m_Registration->GetAsITKBaseType()->
 			GetLastTransformParameters();
 
-		/** Set the final Parameters for the resampler.*/
+		/** Set the final Parameters for the resampler. */
 		this->GetAsITKBaseType()->SetParameters( m_FinalParameters );
 
 	} // end SetFinalParameters

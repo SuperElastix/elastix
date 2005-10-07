@@ -1,12 +1,3 @@
-/**
-* MultiResolutionRegistration class.
-*
-* This class is a wrap around:
-*		MultiResolutionImageRegistrationMethod
-*
-* NB: This class inherits from two classes. 
-*/
-
 #ifndef __elxMultiResolutionRegistration_H__
 #define __elxMultiResolutionRegistration_H__
 
@@ -19,7 +10,7 @@ using namespace itk;
 
 	/**
 	 * \class MultiResolutionRegistration
-	 * \brief A registration framework based on the itkMultiResolutionImageRegistrationMethod.
+	 * \brief A registration framework based on the itk::MultiResolutionImageRegistrationMethod.
 	 *
 	 * This MultiResolutionRegistration givees a framework for registration with a
 	 * multi-resolution approach.
@@ -43,7 +34,7 @@ using namespace itk;
 	{
 	public:
 
-		/** Standard ITK.*/
+		/** Standard ITK. */
 		typedef MultiResolutionRegistration									Self;
 		typedef	typename RegistrationBase<TElastix>
 			::ITKBaseType																			Superclass1;
@@ -63,7 +54,7 @@ using namespace itk;
 		 */
 		elxClassNameMacro( "MultiResolutionRegistration" );
 		
-		/** Typedef's inherited from Superclass1.*/
+		/** Typedef's inherited from Superclass1. */
 		
 		/**  Type of the Fixed image. */
 		typedef typename Superclass1::FixedImageType						FixedImageType;
@@ -111,23 +102,28 @@ using namespace itk;
 		typedef typename Superclass2::RegistrationPointer		RegistrationPointer;
 		typedef typename Superclass2::ITKBaseType						ITKBaseType;
 
-		/** Methods that have to be present everywhere. */
+		/** Execute stuff before the actual registration:
+		 * \li Connect all components to the registration framework.
+		 * \li Set the number of resolution levels.
+		 * \li Set the fixed image region.
+		 */
 		virtual void BeforeRegistration(void);
 				
 	protected:
 
+		/** The constructor. */
 		MultiResolutionRegistration();
+		/** The destructor. */
 		virtual ~MultiResolutionRegistration() {};
 
-		/**
-		* Read the components from m_Elastix and set them in the 
-		* Registration class
-		*/
+		/** Read the components from m_Elastix and set them in the Registration class. */
 		virtual void SetComponents(void);		
 		
 	private:
 
+		/** The private constructor. */
 		MultiResolutionRegistration( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );							// purposely not implemented
 
 	}; // end class MultiResolutionRegistration

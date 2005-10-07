@@ -28,17 +28,17 @@ namespace itk
 	{
 	public:
 		
-		/** Standard itk.*/
+		/** Standard itk. */
 		typedef DeformationFieldRegulizerForBSpline			Self;
 		typedef DeformationFieldRegulizer<
 			TBSplineTransform >														Superclass;
 		typedef SmartPointer< Self >										Pointer;
 		typedef SmartPointer< const Self >							ConstPointer;
 		
-		/** New method for creating an object using a factory.*/
+		/** Method for creation through the object factory. */
 		itkNewMacro( Self );
 		
-		/** Itk Type info */
+		/** Run-time type information (and related methods). */
 		itkTypeMacro( DeformationFieldRegulizerForBSpline, DeformationFieldRegulizer );
 		
 		/** Get	the dimension of the input space. */
@@ -102,6 +102,7 @@ namespace itk
 		
 		/** The private constructor. */
 		DeformationFieldRegulizerForBSpline( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );											// purposely not implemented
 		
 	}; // end class DeformationFieldRegulizerForBSpline

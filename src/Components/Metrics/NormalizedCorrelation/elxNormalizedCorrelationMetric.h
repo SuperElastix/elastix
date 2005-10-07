@@ -71,9 +71,6 @@ using namespace itk;
 			MovingImageType::ImageDimension );
 		
 		/** Other typedef's. */
-		//typedef typename Superclass1::MaskPixelType							MaskPixelType;
-		//typedef typename Superclass1::FixedCoordRepType					FixedCoordRepType;
-		//typedef typename Superclass1::MovingCoordRepType 				MovingCoordRepType;
 		typedef typename Superclass1::FixedImageMaskType 				FixedMaskImageType;
 		typedef typename Superclass1::MovingImageMaskType				MovingMaskImageType;
 		typedef typename Superclass1::FixedImageMaskPointer			FixedMaskImagePointer;
@@ -93,25 +90,23 @@ using namespace itk;
 		/** Typedef for timer. */
 		typedef TimerType::Pointer	TimerPointer;
 
-		/** Method that takes care of setting the parameters and showing information. */
-		virtual int BeforeAll(void);
-		/** Method that takes care of setting the parameters and showing information. */
-		virtual void BeforeRegistration(void);
-		/** Method that takes care of setting the parameters and showing information. */
-		virtual void BeforeEachResolution(void);
-
-		/** Sets up a timer to measure the intialisation time and calls the Superclass'
-		 * implementation */
+		/** Sets up a timer to measure the intialisation time and
+		 * calls the Superclass' implementation.
+		 */
 		virtual void Initialize(void) throw (ExceptionObject);
 
 	protected:
 
-		NormalizedCorrelationMetric(); 
+		/** The constructor. */
+		NormalizedCorrelationMetric();
+		/** The destructor. */
 		virtual ~NormalizedCorrelationMetric() {}
 
 	private:
 
+		/** The private constructor. */
 		NormalizedCorrelationMetric( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );							// purposely not implemented
 		
 	}; // end class NormalizedCorrelationMetric

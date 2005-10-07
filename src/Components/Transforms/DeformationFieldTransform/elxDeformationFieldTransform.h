@@ -11,7 +11,6 @@ namespace elastix
 {
 using namespace itk;
 
-
 	/**
 	 * \class DeformationFieldTransform
 	 * \brief A transform based on a DeformationVectorField.
@@ -43,7 +42,7 @@ using namespace itk;
 	{
 	public:
 
-		/** Standard ITK-stuff.*/
+		/** Standard ITK-stuff. */
 		typedef DeformationFieldTransform											Self;
 		typedef DeformationVectorFieldTransform<
 			typename elx::TransformBase< TElastix >::CoordRepType,
@@ -92,7 +91,7 @@ using namespace itk;
 		typedef typename Superclass1::BulkTransformType					BulkTransformType;
 		typedef typename Superclass1::BulkTransformPointer			BulkTransformPointer;
 
-		/** Typedef's from TransformBase.*/
+		/** Typedef's from TransformBase. */
 		typedef typename Superclass2::ElastixType								ElastixType;
 		typedef typename Superclass2::ElastixPointer						ElastixPointer;
 		typedef typename Superclass2::ConfigurationType					ConfigurationType;
@@ -104,22 +103,29 @@ using namespace itk;
 		typedef typename Superclass2::MovingImageType						MovingImageType;
 		typedef typename Superclass2::ITKBaseType								ITKBaseType;
 
-		/** Methods that have to be present in any Transform. */
-		virtual void BeforeRegistration(void);
-		virtual void BeforeEachResolution(void);
+		/** Execute stuff before the actual registration:
+		 * \li nothing here
+		 */
+		//virtual void BeforeRegistration(void);
+		//virtual void BeforeEachResolution(void);
 	
-		/** Function to read/write transform-parameters from/to a file.*/
+		/** Function to read transform-parameters from a file. */
 		virtual void ReadFromFile(void);
+		/** Function to write transform-parameters to a file. */
 		virtual void WriteToFile( const ParametersType & param );
 
 	protected:
 
+		/** The constructor. */
 		DeformationFieldTransform();
+		/** The destructor. */
 		virtual ~DeformationFieldTransform() {};
 		
 	private:
 
+		/** The private constructor. */
 		DeformationFieldTransform( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );						// purposely not implemented
 		
 	}; // end class DeformationFieldTransform

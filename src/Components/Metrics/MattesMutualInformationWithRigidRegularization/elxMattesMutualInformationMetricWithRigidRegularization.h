@@ -81,6 +81,7 @@ using namespace itk;
 	 *		Default is 1.0.
 	 *
    * \sa MattesMutualInformationImageToImageMetricWithMask
+	 * \sa MattesMutualInformationImageToImageMetricWithRigidRegularization
 	 * \sa RigidRegulizerMetric
 	 * \sa BSplineTransform
 	 * \ingroup Metrics
@@ -96,7 +97,7 @@ using namespace itk;
 	{
 	public:
 
-		/** Standard ITK-stuff.*/
+		/** Standard ITK-stuff. */
 		typedef MattesMutualInformationMetricWithRigidRegularization									Self;
 		typedef MattesMutualInformationImageToImageMetricWithRigidRegularization<
 			typename MetricBase<TElastix>::FixedImageType,
@@ -118,7 +119,7 @@ using namespace itk;
 		 */
 		elxClassNameMacro( "MattesMutualInformationWithRigidRegularization" );
 
-		/** Typedefs inherited from the superclass.*/
+		/** Typedefs inherited from the superclass. */
 		typedef typename Superclass1::TransformType							TransformType;
 		typedef typename Superclass1::TransformPointer 					TransformPointer;
 		typedef typename Superclass1::TransformJacobianType			TransformJacobianType;
@@ -136,8 +137,7 @@ using namespace itk;
 		typedef typename Superclass1::FixedImagePointType				FixedImagePointType;
 		typedef typename Superclass1::MovingImagePointType 			MovingImagePointType;
 		
-
-		/** The fixed image dimension */
+		/** The fixed image dimension. */
 		itkStaticConstMacro (FixedImageDimension, unsigned int,
 			FixedImageType::ImageDimension);
 		/** The moving image dimension. */
@@ -153,41 +153,65 @@ using namespace itk;
 		typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
 		typedef typename Superclass2::ITKBaseType								ITKBaseType;
 			
-		/** Typedef for timer.*/
+		/** Typedef for timer. */
 		typedef tmr::Timer					TimerType;
-		/** Typedef for timer.*/
+		/** Typedef for timer. */
 		typedef TimerType::Pointer	TimerPointer;
 
-		/** Typedefs for support of user defined grid spacing for the spatial samples */
+		/** Typedefs for support of user defined grid spacing for the spatial samples. */
 		typedef typename FixedImageType::OffsetType							SampleGridSpacingType;
 		typedef typename SampleGridSpacingType::OffsetValueType SampleGridSpacingValueType;
 		typedef typename FixedImageType::SizeType								SampleGridSizeType;
 		typedef FixedImageIndexType															SampleGridIndexType;
 		typedef typename FixedImageType::SizeType 							FixedImageSizeType;
 
+		/** Typedefs for the rigidity image. */
 		typedef typename Superclass1::RigidityImageType					RigidityImageType;
 		typedef ImageFileReader< RigidityImageType >						RigidityImageReaderType;
 		typedef typename RigidityImageReaderType::Pointer				RigidityImageReaderPointer;
 		
-		/** Method that takes care of setting the parameters and showing information.*/
-		virtual int BeforeAll(void);
-		/** Method that takes care of setting the parameters and showing information.*/
+		/** Execute stuff before the actual registration:
+		 * \li Set the rigid penalty weight.
+		 * \li Set the  weight of the second order term of the penalty term.
+		 * \li Set the flag to use the image spacing for calculations.
+		 * \li Set the flag to dilate the rigidity images.
+		 * \li Set the dilation radius multiplier
+		 * \li Set the output directory name.
+		 * \li Set the rigidity coefficients of the fixed image.
+		 * \li Set the rigidity coefficients of the moving image.
+		 * \li Setup the output to the logfile.
+		 */
 		virtual void BeforeRegistration(void);
-		/** Method that takes care of setting the parameters and showing information.*/
+
+		/** Execute stuff before each new pyramid resolution:
+		 * \li Set the number of histogram bins.
+		 * \li Set the number of spatial samples.
+		 * \li Set the flag to use all samples.
+		 * \li Set the flag to calculate and show the exact metric value.
+		 * \li Set the flag to take samples on a uniform grid.
+		 * \li Set the grid spacing of the sampling grid.
+		 */
 		virtual void BeforeEachResolution(void);
-		/** Method that takes care of setting the parameters and showing information.*/
+
+		/** Execute stuff after each iteration:
+		 * \li Show the exact metric value if desired.
+		 * \li Show the metric values of the MI and the rigidity term.
+		 */
 		virtual void AfterEachIteration(void);
 
 		/** Sets up a timer to measure the intialisation time and calls the Superclass'
-		 * implementation */
+		 * implementation.
+		 */
 		virtual void Initialize(void) throw (ExceptionObject);
 
-		/** Select a new sample set on request */
+		/** Select a new sample set on request. */
 		virtual void SelectNewSamples(void);
 		
 	protected:
 
-		MattesMutualInformationMetricWithRigidRegularization(); 
+		/** The constructor. */
+		MattesMutualInformationMetricWithRigidRegularization();
+		/** The destructor. */
 		virtual ~MattesMutualInformationMetricWithRigidRegularization() {}
 
 		/** Uniformly select a sample set from the fixed image domain.
@@ -200,7 +224,7 @@ using namespace itk;
 		virtual void SampleFixedImageDomain( 
 			FixedImageSpatialSampleContainer& samples );
 		
-		/** Flag */
+		/** Flag. */
 		bool m_ShowExactMetricValue;
 
 		/** The grid spacing of the spatial samples. Only used when the user asked
@@ -212,9 +236,12 @@ using namespace itk;
 				
 	private:
 
+		/** The private constructor. */
 		MattesMutualInformationMetricWithRigidRegularization( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );								// purposely not implemented
 		
+		/** Member variables. */
 		RigidityImageReaderPointer			m_FixedRigidityImageReader;
 		RigidityImageReaderPointer			m_MovingRigidityImageReader;
 

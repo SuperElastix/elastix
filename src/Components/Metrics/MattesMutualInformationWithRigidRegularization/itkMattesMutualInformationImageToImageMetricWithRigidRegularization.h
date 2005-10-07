@@ -48,6 +48,7 @@ namespace itk
 	* This metric only works with B-splines as a transformation model.
 	*
 	* \sa MattesMutualInformationImageToImageMetricWithMask
+	* \sa MattesMutualInformationMetricWithRigidRegularization
 	* \sa RigidRegulizerMetric
 	* \sa BSplineTransform
 	* \ingroup Metrics
@@ -184,15 +185,19 @@ namespace itk
 
 	protected:
 		
+		/** The constructor. */
 		MattesMutualInformationImageToImageMetricWithRigidRegularization();
+		/** The destructor. */
 		virtual ~MattesMutualInformationImageToImageMetricWithRigidRegularization() {};
 
-		/** Print Self. */
+		/** PrintSelf. */
 		void PrintSelf( std::ostream& os, Indent indent ) const;
 		
 	private:
 		
+		/** The private constructor. */
 		MattesMutualInformationImageToImageMetricWithRigidRegularization( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );																		// purposely not implemented
 		
 		/** Weightings. */

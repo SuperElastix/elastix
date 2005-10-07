@@ -99,12 +99,10 @@ using namespace itk;
 				this->m_Elastix->GetOptimizer() 	)
 		);
 
-
 		this->SetTransform(
 			dynamic_cast<TransformType *>(
 				this->m_Elastix->GetTransform() 	)
 		);
-
 
 	} // end SetComponents
 

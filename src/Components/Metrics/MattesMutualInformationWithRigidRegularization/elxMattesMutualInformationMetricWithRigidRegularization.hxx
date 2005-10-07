@@ -29,19 +29,6 @@ using namespace itk;
 
 
 	/**
-	 * ************************ BeforeAll ***************************
-	 */
-	
-	template <class TElastix>
-		int MattesMutualInformationMetricWithRigidRegularization<TElastix>
-		::BeforeAll(void)
-	{
-		/** Return a value. */
-		return 0;
-
-	} // end BeforeAll
-
-	/**
 	 * ********************** BeforeRegistration *********************
 	 */
 	
@@ -296,7 +283,7 @@ using namespace itk;
 	template <class TElastix>
 		void MattesMutualInformationMetricWithRigidRegularization<TElastix>
 		::AfterEachIteration(void)
-	{		
+	{
 		/** Show the mutual information computed on all voxels,
 		 * if the user wanted it */
 		if (this->m_ShowExactMetricValue)

@@ -63,7 +63,7 @@ using namespace itk;
 	{
 	public:
 
-		/** Standard ITK-stuff.*/
+		/** Standard ITK-stuff. */
 		typedef MattesMutualInformationMetric									Self;
 		typedef MattesMutualInformationImageToImageMetricWithMask<
 			typename MetricBase<TElastix>::FixedImageType,
@@ -103,7 +103,6 @@ using namespace itk;
 		typedef typename Superclass1::FixedImagePointType				FixedImagePointType;
 		typedef typename Superclass1::MovingImagePointType 			MovingImagePointType;
 		
-
 		/** The fixed image dimension */
 		itkStaticConstMacro (FixedImageDimension, unsigned int,
 			FixedImageType::ImageDimension);
@@ -120,27 +119,41 @@ using namespace itk;
 		typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
 		typedef typename Superclass2::ITKBaseType								ITKBaseType;
 			
-		/** Typedef for timer.*/
+		/** Typedef for timer. */
 		typedef tmr::Timer					TimerType;
-		/** Typedef for timer.*/
+		/** Typedef for timer. */
 		typedef TimerType::Pointer	TimerPointer;
 
-		/** Typedefs for support of user defined grid spacing for the spatial samples */
+		/** Typedefs for support of user defined grid spacing for the spatial samples. */
 		typedef typename FixedImageType::OffsetType							SampleGridSpacingType;
 		typedef typename SampleGridSpacingType::OffsetValueType SampleGridSpacingValueType;
 		typedef typename FixedImageType::SizeType								SampleGridSizeType;
 		typedef FixedImageIndexType															SampleGridIndexType;
 		typedef typename FixedImageType::SizeType 							FixedImageSizeType;
 		
-		/** Method that takes care of setting the parameters and showing information.*/
-		virtual int BeforeAll(void);
-		/** Method that takes care of setting the parameters and showing information.*/
+		/** Execute stuff before everything else:
+		 * \li nothing here
+		 */
+		//virtual int BeforeAll(void);
+
+		/** Execute stuff before each new pyramid resolution:
+		 * \li Set the number of histogram bins.
+		 * \li Set the number of spatial samples.
+		 * \li Set the flag to use all samples.
+		 * \li Set the flag to calculate and show the exact metric value.
+		 * \li Set the flag to take samples on a uniform grid.
+		 * \li Set the grid spacing of the sampling grid.
+		 */
 		virtual void BeforeEachResolution(void);
-		/** Method that takes care of setting the parameters and showing information.*/
+
+		/** Execute stuff after each iteration:
+		 * \li Show the exact metric value if desired.
+		 */
 		virtual void AfterEachIteration(void);
 
-		/** Sets up a timer to measure the intialisation time and calls the Superclass'
-		 * implementation */
+		/** Sets up a timer to measure the intialisation time and
+		 * calls the Superclass' implementation.
+		 */
 		virtual void Initialize(void) throw (ExceptionObject);
 
 		/** Select a new sample set on request */
@@ -148,7 +161,9 @@ using namespace itk;
 		
 	protected:
 
+		/** The constructor. */
 		MattesMutualInformationMetric(); 
+		/** The destructor. */
 		virtual ~MattesMutualInformationMetric() {}
 
 		/** Uniformly select a sample set from the fixed image domain.
@@ -173,7 +188,9 @@ using namespace itk;
 				
 	private:
 
+		/** The private constructor. */
 		MattesMutualInformationMetric( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );								// purposely not implemented
 		
 	}; // end class MattesMutualInformationMetric

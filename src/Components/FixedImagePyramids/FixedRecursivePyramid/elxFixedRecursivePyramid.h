@@ -73,13 +73,17 @@ using namespace itk;
 		
 	protected:
 
+		/** The constructor. */
 		FixedRecursivePyramid() {}
-			virtual ~FixedRecursivePyramid() {}
+		/** The destructor. */
+		virtual ~FixedRecursivePyramid() {}
 			
 	private:
 
-		  FixedRecursivePyramid( const Self& );	// purposely not implemented
-			void operator=( const Self& );				// purposely not implemented
+		/** The private constructor. */
+		FixedRecursivePyramid( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
+		void operator=( const Self& );				// purposely not implemented
 			
 	}; // end class FixedRecursivePyramid
 	

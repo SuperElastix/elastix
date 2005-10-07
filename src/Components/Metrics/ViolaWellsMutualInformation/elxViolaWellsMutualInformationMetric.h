@@ -47,7 +47,7 @@ using namespace itk;
 	{
 	public:
 
-		/** Standard ITK-stuff.*/
+		/** Standard ITK-stuff. */
 		typedef ViolaWellsMutualInformationMetric							Self;
 		typedef MutualInformationImageToImageMetricMoreRandom<
 			typename MetricBase<TElastix>::FixedImageType,
@@ -69,7 +69,7 @@ using namespace itk;
 		 */
 		elxClassNameMacro( "ViolaWellsMutualInformation" );
 
-		/** Typedefs inherited from the superclass.*/
+		/** Typedefs inherited from the superclass. */
 		typedef typename Superclass1::TransformType							TransformType;
 		typedef typename Superclass1::TransformPointer 					TransformPointer;
 		typedef typename Superclass1::TransformJacobianType			TransformJacobianType;
@@ -91,12 +91,6 @@ using namespace itk;
 		itkStaticConstMacro( MovingImageDimension, unsigned int,
 			MovingImageType::ImageDimension );
 		
-		/** Other typedef's for masks. *
-		typedef typename Superclass1::FixedMaskImageType 				FixedMaskImageType;
-		typedef typename Superclass1::MovingMaskImageType				MovingMaskImageType;
-		typedef typename Superclass1::FixedMaskImagePointer			FixedMaskImagePointer;
-		typedef typename Superclass1::MovingMaskImagePointer		MovingMaskImagePointer;
-		
 		/** Typedef's inherited from Elastix. */
 		typedef typename Superclass2::ElastixType						ElastixType;
 		typedef typename Superclass2::ElastixPointer				ElastixPointer;
@@ -109,22 +103,31 @@ using namespace itk;
 		/** Typedef's for timer. */
 		typedef tmr::Timer					TimerType;
 		typedef TimerType::Pointer	TimerPointer;
-		
-		/** Methods that have to be present everywhere.*/
-		virtual int BeforeAll(void);
-		virtual void BeforeRegistration(void);
+
+		/** Execute stuff before each new pyramid resolution:
+		 * \li Set the number of spatial samples.
+		 * \li Set the standard deviation of the fixed image.
+		 * \li Set the standard deviation of the moving image.
+		 */
 		virtual void BeforeEachResolution(void);
 
+		/** Sets up a timer to measure the intialisation time and
+		 * calls the Superclass' implementation.
+		 */
 		virtual void Initialize(void) throw (ExceptionObject);
 		
 	protected:
 
-		ViolaWellsMutualInformationMetric(); 
+		/** The constructor. */
+		ViolaWellsMutualInformationMetric();
+		/** The destructor. */
 		virtual ~ViolaWellsMutualInformationMetric() {}
 
 	private:
 
+		/** The private constructor. */
 		ViolaWellsMutualInformationMetric( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );										// purposely not implemented
 		
 	}; // end class ViolaWellsMutualInformationMetric

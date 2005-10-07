@@ -128,12 +128,16 @@ using namespace itk;
 		
 	protected:
 
+		/** The constructor. */
 		AffineTransformElastix();
+		/** The destructor. */
 		virtual ~AffineTransformElastix() {};
 		
 	private:
 
+		/** The private constructor. */
 		AffineTransformElastix( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );					// purposely not implemented
 		
 	}; // end class AffineTransformElastix

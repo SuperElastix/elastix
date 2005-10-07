@@ -56,10 +56,10 @@ using namespace itk;
 		typedef SmartPointer<Self>																	Pointer;
 		typedef SmartPointer<const Self>														ConstPointer;
 		
-		/** Method for creation through the object factory.*/
+		/** Method for creation through the object factory. */
 		itkNewMacro( Self );
 		
-		/** Run-time type information (and related methods).*/
+		/** Run-time type information (and related methods). */
 		itkTypeMacro( EulerTransformElastix, EulerTransform );
 
 		/** Name of this class.
@@ -68,12 +68,12 @@ using namespace itk;
 		 */
 		elxClassNameMacro( "EulerTransform" );
 		
-		/** Dimension of the domain space.*/
+		/** Dimension of the fixed image. */
 		itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );
 		
-		/** Typedefs inherited from the superclass.*/
+		/** Typedefs inherited from the superclass. */
 
-		/** These are both in Euler2D and Euler3D.*/
+		/** These are both in Euler2D and Euler3D. */
 		typedef typename Superclass1::ScalarType									ScalarType;
 		typedef typename Superclass1::ParametersType							ParametersType;
 		typedef typename Superclass1::JacobianType								JacobianType;
@@ -87,10 +87,10 @@ using namespace itk;
 		typedef typename Superclass1::InputVnlVectorType					InputVnlVectorType;
 		typedef typename Superclass1::OutputVnlVectorType					OutputVnlVectorType;
 		
-		/** NOTE: use this one only in 3D (otherwise it's just an int).*/
+		/** NOTE: use this one only in 3D (otherwise it's just an int). */
 		typedef typename Superclass1::AngleType										AngleType;
 		
-		/** Typedef's inherited from TransformBase.*/
+		/** Typedef's inherited from TransformBase. */
 		typedef typename Superclass2::ElastixType								ElastixType;
 		typedef typename Superclass2::ElastixPointer						ElastixPointer;
 		typedef typename Superclass2::ConfigurationType					ConfigurationType;
@@ -102,7 +102,7 @@ using namespace itk;
 		typedef typename Superclass2::MovingImageType						MovingImageType;
 		typedef typename Superclass2::ITKBaseType								ITKBaseType;
 		
-		/** Other typedef's.*/
+		/** Other typedef's. */
 		typedef typename RegistrationType::ITKBaseType					ITKRegistrationType;
 		typedef typename ITKRegistrationType::OptimizerType			OptimizerType;
 		typedef typename OptimizerType::ScalesType							ScalesType;
@@ -114,26 +114,33 @@ using namespace itk;
 		typedef typename FixedImageType::SpacingType						SpacingType;
 		typedef typename FixedImageType::RegionType							RegionType;
 		
-		/** Methods that have to be present in each version of MyTransform.*/
+		/** Execute stuff before the actual registration:
+		 * \li Create initial registration parameters.
+		 * \li Set the scales.
+		 * \li Set the center of rotation.
+		 */
 		virtual void BeforeRegistration(void);
 
 		/** Calculate the center of rotation or use a user specified one. */
 		void CalculateRotationPoint( InputPointType & rotationPoint );
 
-		/** Functions to read/write transform-parameters from/to a file. */
+		/** Function to read transform-parameters from a file. */
 		virtual void ReadFromFile(void);
+		/** Function to write transform-parameters to a file. */
 		virtual void WriteToFile( const ParametersType & param );
 
 	protected:
 
+		/** The constructor. */
 		EulerTransformElastix();
+		/** The destructor. */
 		virtual ~EulerTransformElastix() {};
-		
-		/** Variables that will store the program arguments.*/
 		
 	private:
 
+		/** The private constructor. */
 		EulerTransformElastix( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );				// purposely not implemented
 		
 	}; // end class EulerTransformElastix

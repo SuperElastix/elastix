@@ -72,12 +72,16 @@ using namespace itk;
 		
 	protected:
 
+		/** The constructor. */
 		MovingRecursivePyramid() {}
+		/** The destructor. */
 		virtual ~MovingRecursivePyramid() {}
 		
 	private:
 
+		/** The private constructor. */
 		MovingRecursivePyramid( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );					// purposely not implemented
 			
 	}; // end class MovingRecursivePyramid

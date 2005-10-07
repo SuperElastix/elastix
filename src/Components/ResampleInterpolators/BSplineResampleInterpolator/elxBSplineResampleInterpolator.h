@@ -3,7 +3,6 @@
 
 #include "itkBSplineInterpolateImageFunction.h"
 #include "elxIncludes.h"
-#include <iostream>
 
 namespace elastix
 {
@@ -31,7 +30,7 @@ namespace elastix
 	{
 	public:
 
-		/** Standard ITK-stuff.*/
+		/** Standard ITK-stuff. */
 		typedef BSplineResampleInterpolator						Self;
 		typedef BSplineInterpolateImageFunction<
 			typename ResampleInterpolatorBase<TElastix>::InputImageType,
@@ -42,7 +41,7 @@ namespace elastix
 		typedef SmartPointer<const Self>						  ConstPointer;
 		
 		/** Method for creation through the object factory. */
-		itkNewMacro(Self);
+		itkNewMacro( Self );
 		
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( BSplineResampleInterpolator, BSplineInterpolateImageFunction );
@@ -53,15 +52,15 @@ namespace elastix
 		 */
 		elxClassNameMacro( "FinalBSplineInterpolator" );
 
+		/** Dimension of the image. */
 		itkStaticConstMacro( ImageDimension, unsigned int,Superclass1::ImageDimension );
 		
-		/** Typedef's inherited from the superclass.*/
+		/** Typedef's inherited from the superclass. */
 		typedef typename Superclass1::OutputType	 							OutputType;
 		typedef typename Superclass1::InputImageType						InputImageType;
 		typedef typename Superclass1::IndexType									IndexType;
 		typedef typename Superclass1::ContinuousIndexType				ContinuousIndexType;
 		typedef typename Superclass1::PointType									PointType;
-		
 		typedef typename Superclass1::Iterator									Iterator;
 		typedef typename Superclass1::CoefficientDataType				CoefficientDataType;
 		typedef typename Superclass1::CoefficientImageType			CoefficientImageType;
@@ -69,7 +68,7 @@ namespace elastix
 		typedef typename Superclass1::CoefficientFilterPointer	CoefficientFilterPointer;
 		typedef typename Superclass1::CovariantVectorType				CovariantVectorType;
 		
-		/** Typedef's from ResampleInterpolatorBase.*/
+		/** Typedef's from ResampleInterpolatorBase. */
 		typedef typename Superclass2::ElastixType								ElastixType;
 		typedef typename Superclass2::ElastixPointer						ElastixPointer;
 		typedef typename Superclass2::ConfigurationType					ConfigurationType;
@@ -78,22 +77,29 @@ namespace elastix
 		typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
 		typedef typename Superclass2::ITKBaseType								ITKBaseType;
 		
-		/** Methods that have to be present in each version of MyResampleInterpolator.*/
+		/** Execute stuff before the actual registration:
+		 * \li Set the spline order.
+		 */
 		virtual void BeforeRegistration(void);
 
-		/** Read/Write ResampleInterpolator specific things from/to file.*/
+		/** Function to read transform-parameters from a file. */
 		virtual void ReadFromFile(void);
+		/** Function to write transform-parameters to a file. */
 		virtual void WriteToFile(void);
 
 	protected:
 
-		  BSplineResampleInterpolator() {}
-			virtual ~BSplineResampleInterpolator() {}
+		/** The constructor. */
+		BSplineResampleInterpolator() {}
+		/** The destructor. */
+		virtual ~BSplineResampleInterpolator() {}
 						
 	private:
 
-		  BSplineResampleInterpolator( const Self& );	// purposely not implemented
-			void operator=( const Self& );							// purposely not implemented
+		/** The private constructor. */
+		BSplineResampleInterpolator( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
+		void operator=( const Self& );							// purposely not implemented
 			
 	}; // end class BSplineResampleInterpolator
 	
@@ -104,5 +110,5 @@ namespace elastix
 #include "elxBSplineResampleInterpolator.hxx"
 #endif
 
-#endif
+#endif // end __elxBSplineResampleInterpolator_h
 

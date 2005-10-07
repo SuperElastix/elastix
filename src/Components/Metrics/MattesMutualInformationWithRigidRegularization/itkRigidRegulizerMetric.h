@@ -24,6 +24,9 @@ namespace itk
 	 *		SPIE Medical Imaging 2006: Image Processing, 2006.
    * 
 	 * \sa BSplineTransform
+	 * \sa RigidRegularizationDerivativeImageFilter
+	 * \sa MattesMutualInformationImageToImageMetricWithRigidRegularization
+	 * \sa MattesMutualInformationMetricWithRigidRegularization
    * \ingroup Metrics
    */
 
@@ -118,7 +121,9 @@ namespace itk
 
   protected:
 
+		/** The constructor. */
     RigidRegulizerMetric();
+		/** The destructor. */
     virtual ~RigidRegulizerMetric() {};
 
 		/** PrintSelf. */
@@ -126,7 +131,9 @@ namespace itk
 
   private:
 
+		/** The private constructor. */
     RigidRegulizerMetric( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
     void operator=( const Self& );				// purposely not implemented
 
 		/** Member variables. */

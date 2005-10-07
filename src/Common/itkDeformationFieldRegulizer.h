@@ -31,14 +31,15 @@ namespace itk
 		typedef SmartPointer< Self >				Pointer;
 		typedef SmartPointer< const Self >	ConstPointer;
 		
-		/** New method for creating an object using a factory. */
+		/** Method for creation through the object factory. */
 		itkNewMacro( Self );
 		
-		/** Itk Type info. */
+		/** Run-time type information (and related methods). */
 		itkTypeMacro( DeformationFieldRegulizer, TAnyITKTransform );
 		
-		/** Input and Output space dimension. */
+		/** Input space dimension. */
 		itkStaticConstMacro( InputSpaceDimension, unsigned int, Superclass::InputSpaceDimension );
+		/** Output space dimension. */
 		itkStaticConstMacro( OutputSpaceDimension, unsigned int, Superclass::OutputSpaceDimension );
 		
 		/** Typedef's inherited from Superclass. */
@@ -56,8 +57,10 @@ namespace itk
 
 		/** Typedef's needed in this class. */
 		typedef DeformationVectorFieldTransform<
-			ScalarType, itkGetStaticConstMacro( InputSpaceDimension ) >				IntermediaryDFTransformType;
-		typedef typename IntermediaryDFTransformType::VectorImageType				VectorImageType;
+			ScalarType,
+			itkGetStaticConstMacro( InputSpaceDimension ) >				IntermediaryDFTransformType;
+		typedef typename IntermediaryDFTransformType
+			::VectorImageType																			VectorImageType;
 		typedef typename VectorImageType::PixelType							VectorPixelType;
 		typedef ImageRegionIterator< VectorImageType >					IteratorType;
 
@@ -72,7 +75,8 @@ namespace itk
 		/** Function to update the intermediary deformation field by adding
 		 * a diffused deformation field to it.
 		 */
-		virtual void UpdateIntermediaryDeformationFieldTransform( typename VectorImageType::Pointer vecImage );
+		virtual void UpdateIntermediaryDeformationFieldTransform(
+			typename VectorImageType::Pointer vecImage );
 
 		/** itk Set macro for the region of the deformation field. */
 		itkSetMacro( DeformationFieldRegion, RegionType );
@@ -100,6 +104,7 @@ namespace itk
 
 		/** The private constructor. */
 		DeformationFieldRegulizer( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );						// purposely not implemented
 		
 		/** Declaration of members. */

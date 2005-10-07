@@ -37,7 +37,7 @@ using namespace itk;
 	{	
 	public:
 	
-		/** Standard ITK-stuff.*/
+		/** Standard ITK-stuff. */
 		typedef BSplineInterpolator									Self;
 		typedef	BSplineInterpolateImageFunction<
 			typename InterpolatorBase<TElastix>::InputImageType,
@@ -59,16 +59,15 @@ using namespace itk;
 		 */
 		elxClassNameMacro( "BSplineInterpolator" );
 
-		/** Get the ImageDimension.*/
+		/** Get the ImageDimension. */
 		itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
 		
-		/** Typedefs inherited from the superclass.*/
+		/** Typedefs inherited from the superclass. */
 		typedef typename Superclass1::OutputType								OutputType;
 		typedef typename Superclass1::InputImageType						InputImageType;
 		typedef typename Superclass1::IndexType									IndexType;
 		typedef typename Superclass1::ContinuousIndexType				ContinuousIndexType;
-		typedef typename Superclass1::PointType									PointType;
-		
+		typedef typename Superclass1::PointType									PointType;		
 		typedef typename Superclass1::Iterator									Iterator;
 		typedef typename Superclass1::CoefficientDataType				CoefficientDataType;
 		typedef typename Superclass1::CoefficientImageType			CoefficientImageType;
@@ -76,7 +75,7 @@ using namespace itk;
 		typedef typename Superclass1::CoefficientFilterPointer	CoefficientFilterPointer;
 		typedef typename Superclass1::CovariantVectorType				CovariantVectorType;
 		
-		/** Typedefs inherited from Elastix.*/
+		/** Typedefs inherited from Elastix. */
 		typedef typename Superclass2::ElastixType								ElastixType;
 		typedef typename Superclass2::ElastixPointer						ElastixPointer;
 		typedef typename Superclass2::ConfigurationType					ConfigurationType;
@@ -85,18 +84,28 @@ using namespace itk;
 		typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
 		typedef typename Superclass2::ITKBaseType								ITKBaseType;
 
-		/** Overriding some inherited functions */
+		/** Execute stuff before the actual registration:
+		 * \li Set the spline order.
+		 */
 		virtual void BeforeRegistration(void);
-		virtual void BeforeEachResolution(void);
+
+		/** Execute stuff before each new pyramid resolution:
+		 * \li nothing done here.
+		 */
+		//virtual void BeforeEachResolution(void);
 
 	protected:
 
+		/** The constructor. */
 		BSplineInterpolator() {}
+		/** The destructor. */
 		virtual ~BSplineInterpolator() {}
 		
 	private:
 
+		/** The private constructor. */
 		BSplineInterpolator( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );			// purposely not implemented
 			
 	}; // end class BSplineInterpolator
