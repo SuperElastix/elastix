@@ -127,7 +127,7 @@ namespace elastix
 		 * in the Parameterfile, then the default value is overwritten.
 		 */
 		
-		/** Get fixed Image size.*/
+		/** Get fixed Image size. */
 		SizeType fixedSize = this->m_Registration->GetAsITKBaseType()->
 			GetFixedImage()->GetLargestPossibleRegion().GetSize();
 		
@@ -140,20 +140,20 @@ namespace elastix
 		{
 			CenterOfRotationIndices[ i ] = static_cast<IndexValueType>( fixedSize[ i ] / 2 );
 			this->m_Configuration->ReadParameter( CenterOfRotationIndices[ i ], "CenterOfRotation", i, true );
-			/** Check if CenterOfRotation has index-values within image.*/
+			/** Check if CenterOfRotation has index-values within image. */
 			if ( CenterOfRotationIndices[ i ] < 0 || CenterOfRotationIndices[ i ] > fixedSize[ i ] )
 			{
 				CORInImage = false;
 			}
 		}
 		
-		/** Give a warning if necessary.*/
+		/** Give a warning if necessary. */
 		if ( !CORInImage )
 		{
 			xl::xout["warning"] << "WARNING: Center of Rotation is not within image boundaries!" << std::endl;
 		}
 		
-		/** Convert from index-value to physical-point-value.*/
+		/** Convert from index-value to physical-point-value. */
 		this->m_Registration->GetAsITKBaseType()->GetFixedImage()->
 			TransformIndexToPhysicalPoint( CenterOfRotationIndices, rotationPoint );
 
@@ -168,7 +168,7 @@ namespace elastix
 	void AffineTransformElastix<TElastix>::
 		ReadFromFile(void)
 	{
-		/** Read the center of rotation.*/
+		/** Read the center of rotation. */
 		IndexType rotationIndex;
 		for ( unsigned int i = 0; i < SpaceDimension; i++ )
 		{
@@ -225,22 +225,11 @@ namespace elastix
 		dummyImage->SetOrigin( origin );
 		dummyImage->SetSpacing( spacing );
 
-		/** region.SetIndex( (dynamic_cast< typename ElastixType::ResamplerBaseType *>( this->m_Elastix->GetResampler() ))
-			->GetAsITKBaseType()->GetOutputStartIndex() );
-		region.SetSize( (dynamic_cast< typename ElastixType::ResamplerBaseType *>( this->m_Elastix->GetResampler() ))
-			->GetAsITKBaseType()->GetSize() );
-		dummyImage->SetRegions( region );
-		dummyImage->SetOrigin( (dynamic_cast< typename ElastixType::ResamplerBaseType *>( this->m_Elastix->GetResampler() ))
-			->GetAsITKBaseType()->GetOutputOrigin() );
-		dummyImage->SetSpacing( (dynamic_cast< typename ElastixType::ResamplerBaseType *>( this->m_Elastix->GetResampler() ))
-			->GetAsITKBaseType()->GetOutputSpacing() );*/
-				
-		/** Convert center of rotation from index-value to physical-point-value.*/
+		/** Convert center of rotation from index-value to physical-point-value. */
 		InputPointType rotationPoint;
 		dummyImage->TransformIndexToPhysicalPoint( rotationIndex, rotationPoint );
 
-		/** Set it in this Transform.*/
-		//this->SetCenterOfRotationComponent( rotationPoint );
+		/** Set it in this Transform. */
 		this->SetCenter( rotationPoint );
 
 		/** Call the ReadFromFile from the TransformBase.
@@ -260,22 +249,21 @@ namespace elastix
 		void AffineTransformElastix<TElastix>
 		::WriteToFile( const ParametersType & param )
 	{
-		/** Call the WriteToFile from the TransformBase.*/
+		/** Call the WriteToFile from the TransformBase. */
 		this->Superclass2::WriteToFile( param );
 
-		/** Write AffineTransform specific things.*/
+		/** Write AffineTransform specific things. */
 		xout["transpar"] << std::endl << "// AffineTransform specific" << std::endl;
 
 		/** Get the center of rotation and convert it from 
 		 * physical-point-value to index-value.
 		 */
 		IndexType rotationIndex;
-		//InputPointType rotationPoint = this->GetCenterOfRotationComponent();
 		InputPointType rotationPoint = this->GetCenter();
 		this->m_Registration->GetAsITKBaseType()->GetFixedImage()->
 			TransformPhysicalPointToIndex( rotationPoint, rotationIndex );
 
-		/** Write the center of rotation.*/
+		/** Write the center of rotation. */
 		xout["transpar"] << "(CenterOfRotation ";
 		for ( unsigned int i = 0; i < SpaceDimension - 1; i++ )
 		{

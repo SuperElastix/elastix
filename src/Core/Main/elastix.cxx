@@ -118,7 +118,7 @@ int main( int argc, char **argv )
 	} // end for loop
 	
 	/** The argv0 argument, required for finding the component.dll/so's. */
-	argMap.insert( ArgumentMapEntryType( "-argv0", argv[0] )  );
+	argMap.insert( ArgumentMapEntryType( "-argv0", argv[ 0 ] )  );
 
 
 	/** Check if at least once the option "-p" is given. */
@@ -232,10 +232,11 @@ int main( int argc, char **argv )
 		elxout << "Time used for running Elastix with this parameter file: "
 			<< timer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
 
-		/** Try to release some memory */
-		elastices[i] = 0;
+		/** Try to release some memory. */
+		elastices[ i ] = 0;
 
 	} // end loop over registrations
+
 
 	elxout << "-------------------------------------------------------------------------" << "\n" << std::endl;	
 
@@ -251,14 +252,14 @@ int main( int argc, char **argv )
 
 	for ( unsigned int i = 0; i < NrOfParameterFiles; i++ )
 	{
-		elastices[i] = 0;
+		elastices[ i ] = 0;
 	}	
 
-	transform=0;
-	fixedImage=0;
-	movingImage=0;
-	fixedInternalImage=0;
-	movingInternalImage=0;
+	transform = 0;
+	fixedImage = 0;
+	movingImage = 0;
+	fixedInternalImage = 0;
+	movingInternalImage = 0;
 	
 	/** Close the modules. */
 	ElastixType::UnloadComponents();

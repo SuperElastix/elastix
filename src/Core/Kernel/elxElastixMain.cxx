@@ -318,7 +318,10 @@ namespace elastix
 		this->m_elx_Elastix->SetInitialTransform( this->m_InitialTransform );
 
 		/** Run elastix! */
-		try { ErrorCode = this->m_elx_Elastix->Run(); }
+		try
+		{
+			ErrorCode = this->m_elx_Elastix->Run();
+		}
 		catch( itk::ExceptionObject & excp )
 		{
 			/** We just print the exception and let the programm quit. */
@@ -340,6 +343,7 @@ namespace elastix
 			#endif
 		}
 
+		/** Return a value. */
 		return ErrorCode;
 
 	} // end Run

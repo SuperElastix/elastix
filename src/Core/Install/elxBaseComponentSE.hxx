@@ -30,7 +30,7 @@ namespace elastix
 	template <class TElastix>
 	void BaseComponentSE<TElastix>::SetElastix( TElastix * _arg )
 	{
-		/** If this->m_Elastix is not set, then set it.*/
+		/** If this->m_Elastix is not set, then set it. */
 		if ( this->m_Elastix != _arg )
 		{
 			this->m_Elastix = _arg;

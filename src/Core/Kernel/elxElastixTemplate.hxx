@@ -325,9 +325,9 @@ namespace elastix
 			throw excp;
 		}
 		
-		/** Save, show results etc.*/
+		/** Save, show results etc. */
 		this->AfterRegistration();
-
+		
 		/** Make sure that the transform has stored the final parameters. 
 		 *
 		 * The transform may be used as a transform in a next elastixLevel;
@@ -342,20 +342,19 @@ namespace elastix
 		//this->m_elx_Transform->SetFinalParameters();
 
 		/** Decouple the components from Elastix. This increases the chance that
-		 * some memory is released... */
-				
-		this->m_elx_Registration->SetElastix(0);
-		this->m_elx_Transform->SetElastix(0);
-		this->m_elx_Metric->SetElastix(0);
-		this->m_elx_Interpolator->SetElastix(0);
-		this->m_elx_Optimizer->SetElastix(0);
-		this->m_elx_FixedImagePyramid->SetElastix(0);
-		this->m_elx_MovingImagePyramid->SetElastix(0);
-		this->m_elx_Resampler->SetElastix(0);
-		this->m_elx_ResampleInterpolator->SetElastix(0);
+		 * some memory is released.
+		 */				
+		this->m_elx_Registration->SetElastix( 0 );
+		this->m_elx_Transform->SetElastix( 0 );
+		this->m_elx_Metric->SetElastix( 0 );
+		this->m_elx_Interpolator->SetElastix( 0 );
+		this->m_elx_Optimizer->SetElastix( 0 );
+		this->m_elx_FixedImagePyramid->SetElastix( 0 );
+		this->m_elx_MovingImagePyramid->SetElastix( 0 );
+		this->m_elx_Resampler->SetElastix( 0 );
+		this->m_elx_ResampleInterpolator->SetElastix( 0 );
 
-
-
+		/** Return a value. */
 		return 0;
 		
 	} // end Run

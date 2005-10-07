@@ -10,7 +10,7 @@ using namespace itk;
 
 	/**
 	 * \class AffineTransformElastix
-	 * \brief A transform based on the itkAffineTransform.
+	 * \brief A transform based on the itk::AffineTransform.
 	 *
 	 * This transform is an affine transformation.
 	 *
@@ -50,7 +50,7 @@ using namespace itk;
 	{
 	public:
 
-		/** Standard ITK-stuff.*/
+		/** Standard ITK-stuff. */
 		typedef AffineTransformElastix														Self;
 		typedef AffineTransform<
 			typename elx::TransformBase<TElastix>::CoordRepType,
@@ -74,7 +74,7 @@ using namespace itk;
 		/** Dimension of the domain space. */
 		itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );
 		
-		/** Typedefs inherited from the superclass.*/
+		/** Typedefs inherited from the superclass. */
 		typedef typename Superclass1::ScalarType 								ScalarType;
 		typedef typename Superclass1::ParametersType 						ParametersType;
 		typedef typename Superclass1::JacobianType 							JacobianType;
@@ -87,7 +87,7 @@ using namespace itk;
 		typedef typename Superclass1::InputPointType 						InputPointType;
 		typedef typename Superclass1::OutputPointType						OutputPointType;
 		
-		/** Typedef's from the TransformBase class.*/
+		/** Typedef's from the TransformBase class. */
 		typedef typename Superclass2::ElastixType								ElastixType;
 		typedef typename Superclass2::ElastixPointer						ElastixPointer;
 		typedef typename Superclass2::ConfigurationType					ConfigurationType;
@@ -99,7 +99,7 @@ using namespace itk;
 		typedef typename Superclass2::MovingImageType						MovingImageType;
 		typedef typename Superclass2::ITKBaseType								ITKBaseType;
 		
-		/** Other typedef's.*/
+		/** Other typedef's. */
 		typedef typename FixedImageType::IndexType							IndexType;
 		typedef typename IndexType::IndexValueType							IndexValueType;
 		typedef typename FixedImageType::SizeType								SizeType;
@@ -111,14 +111,19 @@ using namespace itk;
 		typedef typename OptimizerType::ScalesType							ScalesType;
 		typedef typename Superclass2::DummyImageType						DummyImageType;
 		
-		/** Methods that have to be present in each version of MyTransform. */
+		/** Execute stuff before the actual registration:
+		 * \li Create initial registration parameters.
+		 * \li Set the center of rotation.
+		 * \li Set the scale of the parameters
+		 */
 		virtual void BeforeRegistration(void);
 		
-		/** Function to read/write transform-parameters from/to a file. */
+		/** Function to read transform-parameters from a file. */
 		virtual void ReadFromFile(void);
+		/** Function to write transform-parameters to a file. */
 		virtual void WriteToFile( const ParametersType & param );
 
-		/** To Set the center of rotation. */
+		/** Function to calculate the center of rotation. */
 		void CalculateRotationPoint( InputPointType & rotationPoint );
 		
 	protected:
