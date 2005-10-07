@@ -3,28 +3,25 @@
 
 /* For easy changing the BSplineOrder: */
 #define __VSplineOrder 3
-/* For easy changing the PixelType of the saved deformation fields: */
-#define __CoefficientOutputType float
 
 #include "itkBSplineDeformableTransform.h"
+#include "itkBSplineTransformGrouper.h"
 #include "itkBSplineResampleImageFilterBase.h"
 #include "itkBSplineUpsampleImageFilter.h"
-#include "itkImage.h"
-#include "itkCastImageFilter.h"
-#include "itkImageFileWriter.h"
-#include "itkImageFileReader.h"
-#include "itkImageRegionConstIteratorWithIndex.h"
+
+#include "itkImageRegionConstIterator.h"
 
 #include "elxIncludes.h"
 
-#include "itkBSplineTransformGrouper.h"
-
-#include <sstream>
+//#include <sstream>
 
 /** Include structure for the diffusion. */
 #include "itkDeformationFieldRegulizerForBSpline.h"
 #include "itkVectorMeanDiffusionImageFilter.h"
+#include "itkImageFileReader.h"
+#include "itkImageFileWriter.h"
 #include "itkResampleImageFilter.h"
+#include "itkCastImageFilter.h"
 #include "itkMaximumImageFilter.h"
 #include "itkImageRegionIterator.h"
 #include "itkBSplineInterpolateImageFunction.h"
@@ -137,7 +134,6 @@ using namespace itk;
 	 * \ingroup Transforms
 	 */
 
-
 	template < class TElastix >
 		class BSplineTransformWithDiffusion:
 	public
@@ -155,7 +151,7 @@ using namespace itk;
 	{
 	public:
 
-		/** Standard ITK-stuff.*/
+		/** Standard ITK-stuff. */
 		typedef BSplineTransformWithDiffusion				Self;
 		typedef DeformationFieldRegulizerForBSpline<
 			BSplineTransformGrouper<
@@ -229,34 +225,16 @@ using namespace itk;
 		/** Other typedef's inherited from Superclass1. */
 		typedef typename Superclass1::IntermediaryDFTransformType					IntermediaryDFTransformType;
 		typedef typename Superclass1::VectorImageType											VectorImageType;
-
-		/** Typedefs & Vars needed for setting the grid size and upsampling the grid.*/
 		
-		/** the FixedImagePyramidBase */
-		typedef typename ElastixType::FixedImagePyramidBaseType	FixedImagePyramidType;
+		/** References to the fixed and moving image types. */
 		typedef typename ElastixType::FixedImageType						FixedImageELXType;
 		typedef typename ElastixType::MovingImageType						MovingImageELXType;
-
-		/** itk::MultiResolutionImagePyramidFilter */
-		typedef typename FixedImagePyramidType::ITKBaseType			FixedImagePyramidITKBaseType;
-
-		/** pointer to itk::MultiResolutionImagePyramidFilter  */
-		typedef FixedImagePyramidITKBaseType *									FixedImagePyramidPointer;
 		
 		/** Other typedef's.*/
 		typedef	Image< short,
 			itkGetStaticConstMacro( SpaceDimension ) >	DummyImageType;
 		typedef ImageRegionConstIterator<
 			DummyImageType >														DummyIteratorType;
-
-		/** For saving the deformation fields: */
-		typedef __CoefficientOutputType								CoefficientOutputType;
-		typedef Image< CoefficientOutputType,
-			itkGetStaticConstMacro(SpaceDimension) >		CoefficientOutputImageType;
-		typedef CastImageFilter< 
-			ImageType, CoefficientOutputImageType >			TransformCastFilterType;
-		typedef ImageFileWriter<
-			CoefficientOutputImageType >								TransformWriterType;
 
 		/** Typedef's for the diffusion of the deformation field. */
 		typedef ImageFileReader< VectorImageType >				VectorReaderType;
@@ -302,6 +280,11 @@ using namespace itk;
 		 */
 		virtual void AfterEachIteration(void);
 		
+		/** Execute stuff after registration:
+		 * \li Destroy things that are not needed anymore in order to free memory.
+		 */
+		virtual void AfterRegistration(void);
+
 		/** Set the initial B-spline grid. */
 		virtual void SetInitialGrid( bool upsampleGridOption );
 
@@ -323,21 +306,15 @@ using namespace itk;
 		/** The destructor. */
 		virtual ~BSplineTransformWithDiffusion() {};
 		
-		/** Member variables.*/
-		typename TransformCastFilterType::Pointer		m_Caster;
-		typename TransformWriterType::Pointer				m_Writer;
-		double																			m_GridSpacingFactor;
+		/** Member variables. */
+		SpacingType		m_GridSpacingFactor;
 
-		ParametersType * m_Parameterspointer;
-	  ParametersType * m_Parameterspointer_out;
-	
-		ImagePointer m_Coeffs1;
-	  ImagePointer m_Coeffs2;
 
 	private:
 
 		/** The private constructor. */
 		BSplineTransformWithDiffusion( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );								// purposely not implemented
 		
 		/** Member variables for diffusion. */

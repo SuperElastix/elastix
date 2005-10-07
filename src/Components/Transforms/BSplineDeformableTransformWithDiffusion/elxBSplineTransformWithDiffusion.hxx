@@ -2,9 +2,11 @@
 #define __elxBSplineTransformWithDiffusion_HXX__
 
 #include "elxBSplineTransformWithDiffusion.h"
+
 #include "itkBSplineResampleImageFunction.h"
 #include "itkBSplineDecompositionImageFilter.h"
-#include "math.h"
+
+#include "vnl/vnl_math.h"
 
 namespace elastix
 {
@@ -20,10 +22,7 @@ using namespace itk;
 		::BSplineTransformWithDiffusion()
 	{
 		/** Initialize some things. */
-		this->m_Coeffs1 = 0;
-		this->m_GridSpacingFactor = 8.0;
-		this->m_Caster	= TransformCastFilterType::New();
-		this->m_Writer	= TransformWriterType::New();
+		this->m_GridSpacingFactor.Fill( 8.0 );
 		this->m_Interpolator	= InterpolatorType::New();
 
 		/** Initialize things for diffusion. */
@@ -83,18 +82,19 @@ using namespace itk;
 		gridorigin.Fill(0.0);
 		
 		/** Set it all. */
-		gridregion.SetIndex(gridindex);
-		gridregion.SetSize(gridsize);
+		gridregion.SetIndex( gridindex );
+		gridregion.SetSize( gridsize );
 		this->SetGridRegion( gridregion );
 		this->SetGridSpacing( gridspacing );
 		this->SetGridOrigin( gridorigin );
     
 		/** Task 2 - Give the registration an initial parameter-array. */
 		ParametersType dummyInitialParameters( this->GetNumberOfParameters() );
-		dummyInitialParameters.Fill(0.0);
+		dummyInitialParameters.Fill( 0.0 );
 		
 		/** Put parameters in the registration. */
-		this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters( dummyInitialParameters );
+		this->m_Registration->GetAsITKBaseType()
+			->SetInitialTransformParameters( dummyInitialParameters );
 
 		/** Task 3: This registration uses a diffusion of the deformation field
 		 * every n-th iteration; the diffusion filter must be created.
@@ -243,7 +243,7 @@ using namespace itk;
 			/** In this case: check if a FixedSegmentationImage is needed. */
 			if ( this->m_UseFixedSegmentation )
 			{
-				/** In this case we have to read in the m_MovingSegmentationImage. */
+				/** In this case we have to read in the m_FixedSegmentationImage. */
 				this->m_FixedSegmentationReader = GrayValueImageReaderType::New();
 				this->m_FixedSegmentationReader->SetFileName( m_FixedSegmentationFileName.c_str() );
 				this->m_FixedSegmentationImage = m_FixedSegmentationReader->GetOutput();
@@ -346,6 +346,7 @@ using namespace itk;
 			this->m_Resampler1->SetOutputOrigin( this->m_DeformationOrigin );
 			this->m_Resampler1->SetOutputSpacing( this->m_DeformationSpacing );
 		}
+
 		/** Create this->m_Diffusion, the diffusion filter. */
 		this->m_Diffusion = DiffusionFilterType::New();
 		this->m_Diffusion->SetRadius( radius );
@@ -504,6 +505,42 @@ using namespace itk;
 
 	
 	/**
+	 * ******************* AfterRegistration ***********************
+	 */
+
+	template <class TElastix>
+		void BSplineTransformWithDiffusion<TElastix>
+		::AfterRegistration(void)
+	{
+		/** Destruct some member variables that are not necessary to keep in
+		 * memory. Only those variables needed for the transform parameters
+		 * have to be kept.
+		 */
+		this->m_GrayValueImage1 = 0;
+		this->m_GrayValueImage2 = 0;
+		this->m_Resampler1 = 0;
+		this->m_Resampler2 = 0;
+		this->m_MovingSegmentationReader = 0;
+		this->m_FixedSegmentationReader = 0;
+		this->m_MovingSegmentationImage = 0;
+		this->m_FixedSegmentationImage = 0;
+		this->m_Diffusion = 0;
+
+		/** In the very last iteration of the registration in the function
+		 * DiffuseDeformationField() the intermediary deformation field is updated:
+		 * this->UpdateIntermediaryDeformationFieldTransform( this->m_DiffusedField );
+		 * This function copies the deformation field into number of dimensions
+		 * coefficient images (the DeformationFieldTransform is actually a
+		 * BSplineTransform).
+		 * Therefore the memory of the deformation fields can be freed.
+		 */
+		this->m_DeformationField = 0;
+		this->m_DiffusedField = 0;
+
+	} // end AfterRegistration
+
+
+	/**
 	 * ********************* SetInitialGrid *************************
 	 *
 	 * Set the size of the initial control point grid.
@@ -547,28 +584,35 @@ using namespace itk;
 		gridspacing	=	fixedimage->GetSpacing();
 		gridorigin	=	fixedimage->GetOrigin();
 		
-		/** Read the desired grid spacing. */
-		this->m_GridSpacingFactor = 8.0;
-		this->m_Configuration->ReadParameter( this->m_GridSpacingFactor, "FinalGridSpacing", 0 );
+		/** Read the desired grid spacing for each dimension. If only one gridspacing factor
+		 * is given, that one is used for each dimension.
+		 */
+		this->m_GridSpacingFactor[ 0 ] = 8.0;
+		this->m_Configuration->ReadParameter( this->m_GridSpacingFactor[ 0 ], "FinalGridSpacing", 0 );
+    this->m_GridSpacingFactor.Fill( this->m_GridSpacingFactor[ 0 ] );
+		for ( unsigned int j = 1; j < SpaceDimension; j++ )
+		{
+      this->m_Configuration->ReadParameter( this->m_GridSpacingFactor[ j ], "FinalGridSpacing", j );
+		}
 
 		/** If multigrid, then start with a lower resolution grid. */
 		if ( upsampleGridOption )
 		{
-			/** cast to int, otherwise gcc does not understand it... */
 			int nrOfResolutions = static_cast<int>(
 				this->GetRegistration()->GetAsITKBaseType()->GetNumberOfLevels()  );
-			this->m_GridSpacingFactor *= pow( 2.0, ( nrOfResolutions - 1 ) );
+			this->m_GridSpacingFactor *= vcl_pow( 2.0,
+				static_cast<double>( nrOfResolutions - 1 ) );
 		}
 
 		/** Determine the correct grid size. */
 		for ( unsigned int j = 0; j < SpaceDimension; j++ )
 		{
-			gridspacing[ j ] = gridspacing[ j ] * this->m_GridSpacingFactor;
+			gridspacing[ j ] = gridspacing[ j ] * this->m_GridSpacingFactor[ j ];
 			gridorigin[ j ] -= gridspacing[ j ] *
-				floor( static_cast<double>( SplineOrder ) / 2.0 );
+				vcl_floor( static_cast<double>( SplineOrder ) / 2.0 );
 			gridindex[ j ] = 0; // isn't this always the case anyway?
 			gridsize[ j ]= static_cast< typename RegionType::SizeValueType >
-				( ceil( gridsize[ j ] / this->m_GridSpacingFactor ) + SplineOrder );
+				( vcl_ceil( gridsize[ j ] / this->m_GridSpacingFactor[ j ] ) + SplineOrder );
 		}
 		
 		/** Set the size data in the transform. */
@@ -579,12 +623,11 @@ using namespace itk;
 		this->SetGridOrigin( gridorigin );
 		
 		/** Set initial parameters to 0.0. */
-		this->m_Parameterspointer =
-			new ParametersType( this->GetNumberOfParameters() );
-		this->m_Parameterspointer->Fill(0.0);
-		this->m_Registration->GetAsITKBaseType()->SetInitialTransformParametersOfNextLevel( *(this->m_Parameterspointer) );
-		delete this->m_Parameterspointer;
-	
+		ParametersType initialParameters( this->GetNumberOfParameters() );
+		initialParameters.Fill( 0.0 );
+		this->m_Registration->GetAsITKBaseType()
+			->SetInitialTransformParametersOfNextLevel( initialParameters );
+		
 	} // end SetInitialGrid
 	
 	
@@ -609,7 +652,7 @@ using namespace itk;
 			DecompositionFilterType;
 		typedef ImageRegionConstIterator<ImageType>		IteratorType;
 
-		/** The current region/spacing settings of the grid: */
+		/** The current region/spacing settings of the grid. */
 		RegionType gridregionLow = this->GetGridRegion();
 		SizeType gridsizeLow = gridregionLow.GetSize();
 		IndexType gridindexLow = gridregionLow.GetIndex();
@@ -634,34 +677,33 @@ using namespace itk;
 		/** Determine the correct grid size. */
 		for ( unsigned int j = 0; j < SpaceDimension; j++ )
 		{
-			gridspacingHigh[ j ] = gridspacingHigh[ j ] * this->m_GridSpacingFactor;
+			gridspacingHigh[ j ] = gridspacingHigh[ j ] * this->m_GridSpacingFactor[ j ];
 			gridoriginHigh[ j ] -= gridspacingHigh[ j ] *
-				floor( static_cast<double>( SplineOrder ) / 2.0 );
+				vcl_floor( static_cast<double>( SplineOrder ) / 2.0 );
 			gridindexHigh[ j ] = 0; // isn't this always the case anyway?
-			gridsizeHigh[ j ]= static_cast< typename RegionType::SizeValueType >
-				( ceil( gridsizeHigh[ j ] / this->m_GridSpacingFactor ) + SplineOrder );
+			gridsizeHigh[j]= static_cast< typename RegionType::SizeValueType >
+				( vcl_ceil( gridsizeHigh[ j ] / this->m_GridSpacingFactor[ j ] ) + SplineOrder );
 		}
 		gridregionHigh.SetSize( gridsizeHigh );
 		gridregionHigh.SetIndex( gridindexHigh );
 
 		/** Get the latest transform parameters. */
-		this->m_Parameterspointer =
-			new ParametersType( this->GetNumberOfParameters() );
-		*(this->m_Parameterspointer) = this->m_Registration->GetAsITKBaseType()->GetLastTransformParameters();
+		ParametersType latestParameters =
+			this->m_Registration->GetAsITKBaseType()->GetLastTransformParameters();
 		
-		/** Get the pointer to the data in *(this->m_Parameterspointer). */
-		PixelType * dataPointer = static_cast<PixelType *>( this->m_Parameterspointer->data_block() );
+		/** Get the pointer to the data in latestParameters. */
+		PixelType * dataPointer = static_cast<PixelType *>( latestParameters.data_block() );
 		/** Get the number of pixels that should go into one coefficient image. */
 		unsigned int numberOfPixels = ( this->GetGridRegion() ).GetNumberOfPixels();
 		
-		/** Set the correct region/size info of the coeff image
+		/** Set the correct region/size info of the coefficient image
 		 * that will be filled with the current parameters.
 		 */
-		this->m_Coeffs1 = ImageType::New();
-		this->m_Coeffs1->SetRegions( this->GetGridRegion() );
-		this->m_Coeffs1->SetOrigin( (this->GetGridOrigin()).GetDataPointer() );
-		this->m_Coeffs1->SetSpacing( (this->GetGridSpacing()).GetDataPointer() );
-		//this->m_Coeffs1->Allocate() not needed because the data is set by directly pointing
+		ImagePointer coeffs1 = ImageType::New();
+		coeffs1->SetRegions( this->GetGridRegion() );
+		coeffs1->SetOrigin( (this->GetGridOrigin()).GetDataPointer() );
+		coeffs1->SetSpacing( (this->GetGridSpacing()).GetDataPointer() );
+		//coeffs1->Allocate() not needed because the data is set by directly pointing
 		// to an existing piece of memory.
 		
 		/** 
@@ -669,10 +711,10 @@ using namespace itk;
 		 * correct size (which is now approx 2^dim as big as the
 		 * size in the previous resolution!).
 		 */
-		this->m_Parameterspointer_out = new ParametersType(
+		ParametersType parameters_out(
 			gridregionHigh.GetNumberOfPixels() * SpaceDimension );
 
-		/** Initialise iterator in the parameterspointer_out. */
+		/** initialise iterator in the parameters_out. */
 		unsigned int i = 0; 
 		
 		/** Loop over dimension. */
@@ -681,7 +723,7 @@ using namespace itk;
 			/** Fill the coeff image with parameter data (displacements
 			 * of the control points in the direction of dimension j).
 			 */		
-			this->m_Coeffs1->GetPixelContainer()->
+			coeffs1->GetPixelContainer()->
 				SetImportPointer( dataPointer, numberOfPixels );
 			dataPointer += numberOfPixels;
 				
@@ -697,12 +739,14 @@ using namespace itk;
 			 * DeformableRegistration6.cxx .
 			 */
 			
-			typename UpsampleFilterType::Pointer upsampler = UpsampleFilterType::New();
-			typename IdentityTransformType::Pointer identity = IdentityTransformType::New();
-			typename CoefficientUpsampleFunctionType::Pointer coeffUpsampleFunction =
-				CoefficientUpsampleFunctionType::New();
-			typename DecompositionFilterType::Pointer decompositionFilter = 
-				DecompositionFilterType::New();
+			typename UpsampleFilterType::Pointer upsampler
+				= UpsampleFilterType::New();
+			typename IdentityTransformType::Pointer identity
+				= IdentityTransformType::New();
+			typename CoefficientUpsampleFunctionType::Pointer coeffUpsampleFunction
+				= CoefficientUpsampleFunctionType::New();
+			typename DecompositionFilterType::Pointer decompositionFilter
+				= DecompositionFilterType::New();
 
 			upsampler->SetInterpolator( coeffUpsampleFunction );
 			upsampler->SetTransform( identity );
@@ -710,7 +754,7 @@ using namespace itk;
 			upsampler->SetOutputStartIndex( gridindexHigh );
 			upsampler->SetOutputSpacing( gridspacingHigh );
 			upsampler->SetOutputOrigin( gridoriginHigh );
-		  upsampler->SetInput( this->m_Coeffs1 );
+		  upsampler->SetInput( coeffs1 );
 						
 			decompositionFilter->SetSplineOrder( SplineOrder );
 			decompositionFilter->SetInput( upsampler->GetOutput() );
@@ -723,7 +767,7 @@ using namespace itk;
 			catch( itk::ExceptionObject & excp )
 			{
 				/** Add information to the exception. */
-				excp.SetLocation( "BSplineTransformWithDiffusion - IncreaseScale()" );
+				excp.SetLocation( "BSplineTransform - IncreaseScale()" );
 				std::string err_str = excp.GetDescription();
 				err_str += "\nError occured while using decompositionFilter.\n";
 				excp.SetDescription( err_str );
@@ -732,32 +776,29 @@ using namespace itk;
 			}
 			
 			/** Create an upsampled image. */
-			this->m_Coeffs2 = decompositionFilter->GetOutput();
+			ImagePointer coeffs2 = decompositionFilter->GetOutput();
 					
 			/** Create an iterator on the new coefficient image. */
-			IteratorType iterator( this->m_Coeffs2, gridregionHigh );
+			IteratorType iterator( coeffs2, gridregionHigh );
 			iterator.GoToBegin();
 			while ( !iterator.IsAtEnd() )
 			{
-				/** Copy the contents of coeff2 in a ParametersType array*/
-				(*(this->m_Parameterspointer_out))[ i ] = iterator.Get();
+				/** Copy the contents of coeffs2 in a ParametersType array. */
+				parameters_out[ i ] = iterator.Get();
 				++iterator;
 				++i;
 			} // end while coeff2 iterator loop
 			
 		} // end for dimension loop
 		
-		/** Set the initial parameters for the next resolution level.*/
+		/** Set the initial parameters for the next resolution level. */
 		this->SetGridRegion( gridregionHigh );
 		this->SetGridOrigin( gridoriginHigh );
 		this->SetGridSpacing( gridspacingHigh );
 		this->m_Registration->GetAsITKBaseType()->
-			SetInitialTransformParametersOfNextLevel( *(this->m_Parameterspointer_out) );
-		
-		delete this->m_Parameterspointer;
-		delete this->m_Parameterspointer_out;	
-		
-	}  // end IncreaseScale()
+			SetInitialTransformParametersOfNextLevel( parameters_out );
+	
+	}  // end IncreaseScale
 	
 
 	/**
@@ -1144,7 +1185,8 @@ using namespace itk;
 			if ( this->m_ThresholdBool )
 			{
 				/** Setup iterator. */
-				GrayValueImageIteratorType it( this->m_GrayValueImage2, this->m_GrayValueImage2->GetLargestPossibleRegion() );
+				GrayValueImageIteratorType it( this->m_GrayValueImage2,
+					this->m_GrayValueImage2->GetLargestPossibleRegion() );
 				it.GoToBegin();
 				while ( !it.IsAtEnd() )
 				{
@@ -1224,15 +1266,17 @@ using namespace itk;
 
 		/** ------------- 6: Reset the current transform parameters of the optimiser. ------------- */
 
+		/** Create a vector of zeros in order to reset the B-spline transform. */
 		ParametersType dummyParameters( this->GetNumberOfParameters() );
 		dummyParameters.Fill( 0.0 );
-		/** Reset the B-spline. */
 		this->SetParameters( dummyParameters );
+
 		/** Reset the optimiser.
 		 * We had to create the SetCurrentPositionPublic-function, because
 		 * SetCurrentPosition() is protected.
 		 */
 		this->m_Elastix->GetElxOptimizerBase()->SetCurrentPositionPublic( dummyParameters );
+
 		/** Get rid of the initial transform, because this is now captured
 		 * within the DeformationFieldTransform.
 		 */
@@ -1244,7 +1288,7 @@ using namespace itk;
 		/** If wanted, write the deformationField, the GrayValueImage and the diffusedField. */
 		if ( this->m_WriteDiffusionFiles )
 		{
-			/** Filename. */
+			/** Create parts of the filenames. */
 			std::ostringstream makeFileName1( "" ), begin(""), end("");
 			begin	<< this->m_Configuration->GetCommandLineArgument( "-out" );
 			end		<< ".R" << this->m_Elastix->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel()
