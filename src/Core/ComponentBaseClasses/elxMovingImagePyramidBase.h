@@ -16,11 +16,11 @@ using namespace itk;
 
 	/**
 	 * \class MovingImagePyramidBase
-	 * \brief This class is the base for all MovingImagePyramids
+	 * \brief This class is based on the itk::MultiResolutionPyramidImageFilter.
 	 *
-	 * This class contains all the common functionality for MovingImagePyramids ...
+	 * This class contains all the common functionality for MovingImagePyramids.
 	 *
-	 * \ingroup MovingImagePyramids
+	 * \ingroup ImagePyramids
 	 * \ingroup ComponentBaseClasses
 	 */
 
@@ -29,11 +29,14 @@ using namespace itk;
 	{
 	public:
 
-		/** Standard.*/
+		/** Standard ITK-stuff. */
 		typedef MovingImagePyramidBase			Self;
 		typedef BaseComponentSE<TElastix>		Superclass;
 
-		/** Typedefs inherited from the superclass.*/
+		/** Run-time type information (and related methods). */
+		itkTypeMacro( MovingImagePyramidBase, BaseComponentSE );
+
+		/** Typedefs inherited from the superclass. */
 		typedef typename Superclass::ElastixType						ElastixType;
 		typedef typename Superclass::ElastixPointer					ElastixPointer;
 		typedef typename Superclass::ConfigurationType			ConfigurationType;
@@ -41,40 +44,46 @@ using namespace itk;
 		typedef typename Superclass::RegistrationType				RegistrationType;
 		typedef typename Superclass::RegistrationPointer		RegistrationPointer;
 
-		/** Typedefs inherited from Elastix.*/
+		/** Typedefs inherited from Elastix. */
 		typedef typename ElastixType::MovingInternalImageType		InputImageType;
 		typedef typename ElastixType::MovingInternalImageType		OutputImageType;
 
-		/** Typedef used by the function GetMovingSchedule */
+		/** Typedef used by the function GetMovingSchedule. */
 		typedef typename ElastixType::FixedInternalImageType		FixedImageType;
 		
-		/** Other typedef's.*/
+		/** Other typedef's. */
 		typedef MultiResolutionPyramidImageFilter<
 			InputImageType, OutputImageType >				ITKBaseType;
 
-		/** Typedef's from ITKBaseType.*/
+		/** Typedef's from ITKBaseType. */
 		typedef typename ITKBaseType::ScheduleType					ScheduleType;
 
-		/** Cast to ITKBaseType.*/
+		/** Cast to ITKBaseType. */
 		virtual ITKBaseType * GetAsITKBaseType(void)
 		{
 			return dynamic_cast<ITKBaseType *>(this);
 		}
 
-		/** Methods that have to be present everywhere.*/
+		/** Execute stuff before the actual registration:
+		 * \li Set the schedule of the moving image pyramid.
+		 */
 		virtual void BeforeRegistrationBase(void);
 
-		/** Method for setting the schedule.*/
+		/** Method for setting the schedule. */
 		virtual void SetMovingSchedule(void);
 
 	protected:
 
+		/** The constructor. */
 		MovingImagePyramidBase() {}
+		/** The destructor. */
 		virtual ~MovingImagePyramidBase() {}
 		
 	private:
 
+		/** The private constructor. */
 		MovingImagePyramidBase( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );					// purposely not implemented
 
 	}; // end class MovingImagePyramidBase

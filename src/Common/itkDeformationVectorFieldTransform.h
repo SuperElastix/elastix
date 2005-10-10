@@ -95,8 +95,11 @@ namespace itk
 			itkGetStaticConstMacro( SpaceDimension ) >	VectorImageType;
 		typedef typename VectorImageType::Pointer			VectorImagePointer;
 		
-		/** Set the coefficient image. */
+		/** Set the coefficient image as a deformation field. */
 		virtual void SetCoefficientImage( VectorImagePointer vecImage );
+
+		/** Get the coefficient image as a deformation field. */
+		virtual void GetCoefficientVectorImage( VectorImagePointer & vecImage );
 		
 	protected:
 		

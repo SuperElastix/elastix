@@ -149,7 +149,6 @@ using namespace itk;
 
 		if (!realerror)
 		{
-			
 			/** The number of dimensions */
 			nrOfSearchSpaceDimensions = this->GetNumberOfSearchSpaceDimensions();
 			
@@ -166,21 +165,21 @@ using namespace itk;
 			/** \todo try/catch block around Allocate? */
 					
 			/** Set the name of this image on disk. */
+			std::string resultImageFormat = "mhd";
+			this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0 );
 			makeString.str("");
 			makeString
 				<< this->GetConfiguration()->GetCommandLineArgument("-out")
-				<< "OptimizationSurface"
+				<< "OptimizationSurface."
 				<< this->GetConfiguration()->GetElastixLevel()
-				<< ".R"
-				<< level
-				<< ".mhd" ;
+				<< ".R" << level
+				<< "." << resultImageFormat;
 			this->m_OptimizationSurface->SetOutputFileName( makeString.str().c_str() );
 			
 			elxout
 				<< "Total number of iterations needed in this resolution: "
 				<< this->GetNumberOfIterations()
-				<< "."
-				<< std::endl;
+				<< "." << std::endl;
 				
 		} // if (!realerror)
 

@@ -287,15 +287,15 @@ void PrintHelp(void)
 
 	/** Mandatory argments.*/
 	std::cout << "Call elastix from the command line with mandatory arguments:" << std::endl;
-	std::cout << "-f\t\tfixed image (.mhd)" << std::endl;
-	std::cout << "-m\t\tmoving image (.mhd)" << std::endl;
+	std::cout << "-f\t\tfixed image" << std::endl;
+	std::cout << "-m\t\tmoving image" << std::endl;
 	std::cout << "-out\t\toutput directory" << std::endl;
 	std::cout << "-p\t\tparameter file, elastix handles 1 or more \"-p\"" << std::endl << std::endl;
 
 	/** Optional arguments.*/
 	std::cout << "Optional extra commands:" << std::endl;
-	std::cout << "-fMask\t\tmask for fixed image (.mhd)" << std::endl;
-	std::cout << "-mMask\t\tmask for moving image (.mhd)" << std::endl;
+	std::cout << "-fMask\t\tmask for fixed image" << std::endl;
+	std::cout << "-mMask\t\tmask for moving image" << std::endl;
 	std::cout << "-t0\t\tparameter file for initial transform" << std::endl;
 	std::cout << "-priority\tset the process priority to high or belownormal (Windows only)"
 		<< std::endl << std::endl;

@@ -28,7 +28,7 @@ using namespace itk;
 	 *    If only one argument is given, that factor is used for each dimension. The spacing
 	 *    is not in millimeters, but in "voxel size units".
 	 *		The default is 8.0 in every dimension.
-	 * \parameter UpsampleGridOption: whether or not the B-spline grid should
+	 * \parameter UpsampleGridOption: a flag to determine if the B-spline grid should
 	 *		be upsampled from one resolution level to another. Choose from {true, false}. \n
 	 *		example: <tt>(UpsampleGridOption "true")</tt>
 	 *		The default is "true".

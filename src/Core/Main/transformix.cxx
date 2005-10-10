@@ -194,7 +194,7 @@ void PrintHelp(void)
 
 	/** Optional arguments.*/
 	std::cout << "Optional extra commands:" << std::endl;
-	std::cout << "-in\t\tinput image (.mhd) to deform" << std::endl;
+	std::cout << "-in\t\tinput image to deform" << std::endl;
 	std::cout << "-ipp\t\tfile containing input-image points" << std::endl;
 	std::cout << "\t\tthe point are transformed according to the specified transform-parameter file" << std::endl;
 	std::cout << "\t\tuse \"-ipp all\" to transform all points from the input-image" << std::endl;

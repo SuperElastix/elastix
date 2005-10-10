@@ -967,11 +967,13 @@ using namespace itk;
 		std::string lastpart = ctpfn.substr( pos + 19, ctpfn.size() - pos - 19 - 4 );
 
 		/** Write the filename of the deformationField image. */
+		std::string resultImageFormat = "mhd";
+		this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0 );
 		std::ostringstream makeFileName( "" );
 		makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
 			<< "DeformationFieldImage"
 			<< lastpart
-			<< ".mhd";
+			<< "." << resultImageFormat;
 		xout["transpar"] << "(DeformationFieldFileName \""
 			<< makeFileName.str() << "\")" << std::endl;
 
@@ -1289,10 +1291,13 @@ using namespace itk;
 		if ( this->m_WriteDiffusionFiles )
 		{
 			/** Create parts of the filenames. */
+			std::string resultImageFormat = "mhd";
+			this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0 );
 			std::ostringstream makeFileName1( "" ), begin(""), end("");
-			begin	<< this->m_Configuration->GetCommandLineArgument( "-out" );
-			end		<< ".R" << this->m_Elastix->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel()
-				<< ".It" << this->m_Elastix->GetIterationCounter()	<< ".mhd";
+			begin << this->m_Configuration->GetCommandLineArgument( "-out" );
+			end << ".R" << this->m_Elastix->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel()
+				<< ".It" << this->m_Elastix->GetIterationCounter()
+				<< "." << resultImageFormat;
 
 			/** Write the deformationFieldImage. */
 			makeFileName1 << begin.str() << "deformationField" << end.str();

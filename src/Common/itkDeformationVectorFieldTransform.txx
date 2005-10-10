@@ -20,6 +20,7 @@
 #include "itkDeformationVectorFieldTransform.h"
 #include "itkImageRegionIterator.h"
 #include "itkImageRegionConstIterator.h"
+#include "itkScalarToArrayCastImageFilter.h"
 
 namespace itk
 {
@@ -107,6 +108,38 @@ namespace itk
 
 		/** Put it in the Superclass. */
 		this->Superclass::SetCoefficientImage( this->m_Images );
+
+	} // end SetCoefficientImage
+
+
+	/**
+	 * ******************* GetCoefficientImage **********************
+	 *
+	 * Convert series of coefficient images to VectorImage (= deformation field).
+	 * 
+	 */
+
+	template< class TScalarType, unsigned int NDimensions >
+		void
+		DeformationVectorFieldTransform< TScalarType, NDimensions >
+		::GetCoefficientVectorImage( VectorImagePointer & vecImage )
+	{
+		/** Typedef for the combiner. */
+		typedef ScalarToArrayCastImageFilter<
+			ImageType, VectorImageType >			ScalarImageCombineType;
+
+		/** Get a handle to the series of coefficient images. */
+		ImagePointer * coefImage;
+		coefImage = this->GetCoefficientImage();
+
+		/** Combine the coefficient images to a vector image. */
+		typename ScalarImageCombineType::Pointer combiner = ScalarImageCombineType::New();
+		for ( unsigned int i = 0; i < SpaceDimension; i++ )
+		{
+			combiner->SetInput( i, coefImage[ i ] );
+		}
+		vecImage = combiner->GetOutput();
+		vecImage->Update();
 
 	} // end SetCoefficientImage
 

@@ -14,9 +14,9 @@ namespace elastix
 
 	/**
 	 * \class ResampleInterpolatorBase
-	 * \brief This class is the base for all ResampleInterpolators
+	 * \brief This class is the base for all ResampleInterpolators.
 	 *
-	 * This class contains all the common functionality for ResampleInterpolators ...
+	 * This class contains all the common functionality for ResampleInterpolators.
 	 *
 	 * \ingroup ResampleInterpolators
 	 * \ingroup ComponentBaseClasses
@@ -27,11 +27,14 @@ namespace elastix
 	{
 	public:
 
-		/** Standard stuff.*/
+		/** Standard ITK stuff. */
 		typedef ResampleInterpolatorBase		Self;
 		typedef BaseComponentSE<TElastix>		Superclass;
 
-		/** Typedef's from superclass.*/
+		/** Run-time type information (and related methods). */
+		itkTypeMacro( ResampleInterpolatorBase, BaseComponentSE );
+
+		/** Typedef's from superclass. */
 		typedef typename Superclass::ElastixType					ElastixType;
 		typedef typename Superclass::ElastixPointer				ElastixPointer;
 		typedef typename Superclass::ConfigurationType		ConfigurationType;
@@ -39,35 +42,42 @@ namespace elastix
 		typedef typename Superclass::RegistrationType			RegistrationType;
 		typedef typename Superclass::RegistrationPointer	RegistrationPointer;
 
-		/** Typedef's from elastix.*/
+		/** Typedef's from elastix. */
 		typedef typename ElastixType::MovingImageType			InputImageType;
 		typedef typename ElastixType::CoordRepType				CoordRepType;
 
-		/** Other typedef's.*/
+		/** Other typedef's. */
 		typedef InterpolateImageFunction< 
 			InputImageType, CoordRepType >									ITKBaseType;
 
-		/** ...*/
+		/** Cast ti ITKBaseType. */
 		virtual ITKBaseType * GetAsITKBaseType(void)
 		{
 			return dynamic_cast<ITKBaseType *>(this);
 		}
 
-		/** Methods that have to be present everywhere.*/
+		/** Execute stuff before the actual transformation:
+		 * \li nothing here
+		 */
 		virtual int BeforeAllTransformix(void){ return 0;};
 
-		/** Read/Write ResampleInterpolator specific things from/to file.*/
-		virtual void WriteToFile(void);
+		/** Function to read transform-parameters from a file. */
 		virtual void ReadFromFile(void);
+		/** Function to write transform-parameters to a file. */
+		virtual void WriteToFile(void);
 
 	protected:
 
+		/** The constructor. */
 		ResampleInterpolatorBase() {}
+		/** The destructor. */
 		virtual ~ResampleInterpolatorBase() {}
 
 	private:
 
+		/** The private constructor. */
 		ResampleInterpolatorBase( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );						// purposely not implemented
 
 	}; // end class ResampleInterpolatorBase

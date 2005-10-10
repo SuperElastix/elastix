@@ -44,11 +44,14 @@ namespace elastix
 	{
 	public:
 
-		/** Standard itk. */
-		typedef TransformBase					Self;
+		/** Standard ITK stuff. */
+		typedef TransformBase								Self;
 		typedef BaseComponentSE<TElastix>		Superclass;
 
-		/** Typedef's from Superclass.*/
+		/** Run-time type information (and related methods). */
+		itkTypeMacro( TransformBase, BaseComponentSE );
+
+		/** Typedef's from Superclass. */
 		typedef typename Superclass::ElastixType						ElastixType;
 		typedef typename Superclass::ElastixPointer					ElastixPointer;
 		typedef typename Superclass::ConfigurationType			ConfigurationType;
@@ -58,7 +61,7 @@ namespace elastix
 		typedef typename Superclass::RegistrationType				RegistrationType;
 		typedef typename Superclass::RegistrationPointer		RegistrationPointer;
 
-		/** Elastix typedef's.*/
+		/** Elastix typedef's. */
 		typedef typename ElastixType::CoordRepType								CoordRepType;		
 		typedef typename ElastixType::FixedInternalImageType			FixedImageType;
 		typedef typename ElastixType::MovingInternalImageType			MovingImageType;
@@ -68,7 +71,7 @@ namespace elastix
 		typedef typename FixedImageType::PointType								OriginType;
 		//typedef typename FixedImageType::OffsetType								OffsetType;
 
-		/** Typedef's from ComponentDatabase.*/
+		/** Typedef's from ComponentDatabase. */
 		typedef ComponentDatabase																	ComponentDatabaseType;
 		typedef ComponentDatabaseType::ComponentDescriptionType		ComponentDescriptionType;
 		typedef ComponentDatabase::PtrToCreator										PtrToCreator;
@@ -78,18 +81,18 @@ namespace elastix
 		/** Get	the dimension of the moving image. */
 		itkStaticConstMacro( MovingImageDimension, unsigned int, MovingImageType::ImageDimension );
 
-		/** Other typedef's.*/
+		/** Other typedef's. */
 		typedef itk::Object							ObjectType;
 		typedef itk::Transform<
 			CoordRepType,
 			itkGetStaticConstMacro( FixedImageDimension ),
 			itkGetStaticConstMacro( MovingImageDimension ) >					ITKBaseType;
 
-		/** Typedef's from Transform.*/
+		/** Typedef's from Transform. */
 		typedef typename ITKBaseType::ParametersType		ParametersType;
 		typedef	typename ParametersType::ValueType			ValueType;
 
-		/** Typedef's for TransformPoint.*/
+		/** Typedef's for TransformPoint. */
 		typedef typename ITKBaseType::InputPointType				InputPointType;
 		typedef typename ITKBaseType::OutputPointType				OutputPointType;		
 		typedef	itk::Image< short,
@@ -118,15 +121,18 @@ namespace elastix
 		 * \li Check the appearance of an initial transform.
 		 */
 		virtual int BeforeAllBase(void);
+
 		/** Execute stuff before the actual transformation:
 		 * \li Check the appearance of inputpoints to be transformed.
 		 */
 		virtual int BeforeAllTransformix(void);
+
 		/** Execute stuff before the actual registration:
-		 * \li stuff regarding the initial tranform.
+		 * \li Set the initial tranform and how to group transforms.
 		 */
 		virtual void BeforeRegistrationBase(void);
-		/** Execute stuff after the actual registration:
+
+		/** Execute stuff after the registration:
 		 * \li Get and set the final parameters for the resampler.
 		 */
 		virtual void AfterRegistrationBase(void);
@@ -161,7 +167,8 @@ namespace elastix
 		virtual void TransformPointsAllPoints(void);
 
 		/** Makes sure that the final parameters from the registration components
-		 * are copied, set, and stored. */
+		 * are copied, set, and stored.
+		 */
 		virtual void SetFinalParameters(void);
 
 	protected:
@@ -181,6 +188,7 @@ namespace elastix
 
 		/** The private constructor. */
 		TransformBase( const Self& );		// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );	// purposely not implemented
 
 		/** Boolean to decide whether or not the transform parameters are written. */

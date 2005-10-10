@@ -15,10 +15,10 @@ namespace elastix
 	template <class TElastix>
 		TransformBase<TElastix>::TransformBase()
 	{
-		/** Initialize.*/
+		/** Initialize. */
 		this->m_TransformParametersPointer = 0;
 		this->m_ConfigurationInitialTransform = 0;
-		this->m_ReadWriteTransformParameters = true; // default
+		this->m_ReadWriteTransformParameters = true;
 
 	} // end Constructor
 
@@ -30,7 +30,7 @@ namespace elastix
 	template <class TElastix>
 		TransformBase<TElastix>::~TransformBase()
 	{
-		/** Delete.*/
+		/** Delete. */
 		if (this->m_TransformParametersPointer)
 		{
 			delete this->m_TransformParametersPointer;
@@ -47,11 +47,11 @@ namespace elastix
 		int TransformBase<TElastix>
 		::BeforeAllBase(void)
 	{
-		/** Check Command line options and print them to the logfile.*/
+		/** Check Command line options and print them to the logfile. */
 		elxout << "Command line options from TransformBase:" << std::endl;
 		std::string check("");
 		
-		/** Check for appearance of "-t0".*/
+		/** Check for appearance of "-t0". */
 		check = this->m_Configuration->GetCommandLineArgument( "-t0" );
 		if ( check.empty() )
 		{
@@ -75,13 +75,13 @@ namespace elastix
 		int TransformBase<TElastix>
 		::BeforeAllTransformix(void)
 	{
-		/** Declare the return value and initialize it.*/
+		/** Declare the return value and initialize it. */
 		int returndummy = 0;
 
-		/** Declare check.*/
+		/** Declare check. */
 		std::string check = "";
 
-		/** Check for appearance of "-ipp".*/
+		/** Check for appearance of "-ipp". */
 		check = this->m_Configuration->GetCommandLineArgument( "-ipp" );
 		if ( check == "" )
 		{
@@ -92,7 +92,7 @@ namespace elastix
 			elxout << "-ipp\t\t" << check << std::endl;
 		}
 
-		/** Return a value.*/
+		/** Return a value. */
 		return returndummy;
 
 	} // end BeforeAllTransformix
@@ -107,12 +107,12 @@ namespace elastix
 		::BeforeRegistrationBase(void)
 	{	
 		/** Read from the configuration file how to combine the initial
-		* transform with the current transform.
-		*/
-		std::string howToCombineTransforms = "Add"; //default
+		 * transform with the current transform.
+		 */
+		std::string howToCombineTransforms = "Add";
 		this->m_Configuration->ReadParameter( howToCombineTransforms, "HowToCombineTransforms", 0, true );
 
-		/***/
+		/** Cast to transform grouper. */
 		itk::TransformGrouperInterface * thisAsGrouper = 
 			dynamic_cast< itk::TransformGrouperInterface * >(this);
 		if ( thisAsGrouper )
@@ -120,7 +120,7 @@ namespace elastix
 			thisAsGrouper->SetGrouper( howToCombineTransforms );
 		}
 
-		/***/
+		/** Set the initial transform. */
 		if ( this->m_Elastix->GetInitialTransform() )
 		{
 			this->SetInitialTransform( this->m_Elastix->GetInitialTransform() );
@@ -145,11 +145,11 @@ namespace elastix
 		typename TransformBase<TElastix>::ObjectType * 
 		TransformBase<TElastix>::GetInitialTransform(void)
 	{
-		/***/
+		/** Cast to transform grouper. */
 		itk::TransformGrouperInterface * thisAsGrouper = 
 			dynamic_cast< itk::TransformGrouperInterface * >(this);
 
-		/***/
+		/** Set the initial transform. */
 		if ( thisAsGrouper )
 		{
 			return thisAsGrouper->GetInitialTransform();
@@ -169,11 +169,11 @@ namespace elastix
 	template <class TElastix>
 		void TransformBase<TElastix>::SetInitialTransform( ObjectType * _arg )
 	{
-		/***/
+		/** Cast to transfrom grouper. */
 		itk::TransformGrouperInterface * thisAsGrouper = 
 			dynamic_cast< itk::TransformGrouperInterface * >(this);
 
-		/***/
+		/** Set initial transform. */
 		if ( thisAsGrouper )
 		{
 			thisAsGrouper->SetInitialTransform( _arg );
@@ -181,6 +181,7 @@ namespace elastix
 
 	} // end SetInitialTransform
  
+
 	/**
 	 * ******************* SetFinalParameters ********************
 	 */
@@ -210,8 +211,7 @@ namespace elastix
 		void TransformBase<TElastix>
 		::AfterRegistrationBase(void)
 	{
-		/** Set the final Parameters.*/
-		
+		/** Set the final Parameters. */
 		this->SetFinalParameters();
 
 	} // end AfterRegistrationBase
@@ -413,11 +413,11 @@ namespace elastix
 	{
 		using namespace xl;
 
-		/** Write the name of this transform.*/
+		/** Write the name of this transform. */
 		xout["transpar"] << "(Transform \""
 			<< this->elxGetClassName() << "\")" << std::endl;
 
-		/** Get the number of parameters of this transform.*/
+		/** Get the number of parameters of this transform. */
 		unsigned int nrP = param.GetSize();
 		
 		// used to be:
@@ -768,18 +768,20 @@ namespace elastix
 			++iterout;
 		}
 		
-		/** Create a name for the offsetImage file.*/
+		/** Create a name for the offsetImage file. */
+		std::string resultImageFormat = "mhd";
+		this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0 );
 		std::ostringstream makeFileName( "" );
-		makeFileName << 
-			this->m_Configuration->GetCommandLineArgument( "-out" ) << "deformationField.mhd";
+		makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
+			<< "deformationField." << resultImageFormat;
 		
-		/** Write outputImage to disk.*/
+		/** Write outputImage to disk. */
 		typename OutputFileWriterType::Pointer outputWriter
 			= OutputFileWriterType::New();
 		outputWriter->SetInput( outputImage );
 		outputWriter->SetFileName( makeFileName.str().c_str() );
 		
-		/** Do the writing.*/
+		/** Do the writing. */
 		try
 		{
 			outputWriter->Update();

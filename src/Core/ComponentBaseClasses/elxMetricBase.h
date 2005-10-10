@@ -1,7 +1,7 @@
 #ifndef __elxMetricBase_h
 #define __elxMetricBase_h
 
-/** Needed for the macros */
+/** Needed for the macros. */
 #include "elxMacro.h"
 
 #include "elxBaseComponentSE.h"
@@ -25,6 +25,12 @@ using namespace itk;
 	 * \brief This class is the base for all Metrics.
 	 *
 	 * This class contains the common functionality for all Metrics.
+	 *
+	 * The parameters used in this class are:
+	 * \parameter ErodeMask: a flag to determine if the masks should be eroded
+	 *		from one resolution level to another. Choose from {"true", "false"} \n
+	 *		example: <tt>(ErodeMask "false")</tt> \n
+	 *		The default is "true".
 	 *
 	 * The command line arguments used by this class are:
 	 * \commandlinearg -fMask: Optional argument for elastix with the file name of a mask for
@@ -109,15 +115,17 @@ using namespace itk;
 		typedef typename MovingMaskImageReaderType::Pointer		MovingMaskImageReaderPointer;
 
 		/** Execute stuff before everything else:
-		 * \li Check the appearance of masks.
+		 * \li Check the appearance of masks in the commandline.
 		 */
 		virtual int BeforeAllBase(void);
+
 		/** Execute stuff before the actual registration:
-		 * \li Read the masks.
+		 * \li Read and set the masks.
 		 */
 		virtual void BeforeRegistrationBase(void);
+
 		/** Execute stuff before each resolution:
-		 * \li Update masks.
+		 * \li Update masks with an erosion.
 		 */
 		virtual void BeforeEachResolutionBase(void);
 		
@@ -129,22 +137,24 @@ using namespace itk;
 
 	protected:
 
+		/** The constructor. */
 		MetricBase();
+		/** The destructor. */
 		virtual ~MetricBase() {}
 
-		/** Declaration of member variable, for mask support.*/
+		/** Declaration of reader, for mask support. */
 		FixedMaskImageReaderPointer		m_FixedMaskImageReader;
-		/** Declaration of member variable, for mask support.*/
+		/** Declaration of reader, for mask support.*/
 		MovingMaskImageReaderPointer	m_MovingMaskImageReader;
 
-		/** Declaration of member variable, for mask support.*/
+		/** Declaration of image, for mask support. */
 		typename FixedMaskImageType::Pointer		m_FixedMaskAsImage;
-		/** Declaration of member variable, for mask support.*/
+		/** Declaration of image, for mask support. */
 		typename MovingMaskImageType::Pointer		m_MovingMaskAsImage;
 
-		/** Declaration of member variable, for mask support.*/
+		/** Declaration of spatial object, for mask support. */
 		FixedImageMaskSpatialObjectPointer			m_FixedMaskAsSpatialObject;
-		/** Declaration of member variable, for mask support.*/
+		/** Declaration of spatial object, for mask support. */
 		MovingImageMaskSpatialObjectPointer			m_MovingMaskAsSpatialObject;
 
 		/** Function to update masks. */
@@ -152,7 +162,9 @@ using namespace itk;
 
 	private:
 
+		/** The private constructor. */
 		MetricBase( const Self& );			// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );	// purposely not implemented
 
 

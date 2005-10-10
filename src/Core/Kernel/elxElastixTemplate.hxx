@@ -17,13 +17,13 @@ namespace elastix
 	ElastixTemplate<TFixedImage, TMovingImage>
 	::ElastixTemplate()
 	{
-		/** Initialize images.*/
+		/** Initialize images. */
 		this->m_FixedImage = 0;
 		this->m_MovingImage = 0;
 		this->m_FixedInternalImage = 0;
 		this->m_MovingInternalImage = 0;
 		
-		/** Initialize the components as smartpointers to itkObjects.*/
+		/** Initialize the components as smartpointers to itkObjects. */
 		this->m_FixedImagePyramid = 0;
 		this->m_MovingImagePyramid = 0;
 		this->m_Interpolator = 0;
@@ -34,7 +34,7 @@ namespace elastix
 		this->m_ResampleInterpolator = 0;
 		this->m_Transform = 0;
 		
-		/** Initialize the components as pointers to elx...Base objects.*/
+		/** Initialize the components as pointers to elx...Base objects. */
 		this->m_elx_FixedImagePyramid = 0;
 		this->m_elx_MovingImagePyramid = 0;
 		this->m_elx_Interpolator = 0;
@@ -368,12 +368,12 @@ namespace elastix
 	int ElastixTemplate<TFixedImage, TMovingImage>
 	::ApplyTransform(void)
 	{
-		/** Tell all components where to find the ElastixTemplate.*/
+		/** Tell all components where to find the ElastixTemplate. */
 		this->m_elx_Transform->SetElastix(this);
 		this->m_elx_Resampler->SetElastix(this);
 		this->m_elx_ResampleInterpolator->SetElastix(this);
 
-		/** Call BeforeAllTransformix to do some checking.*/
+		/** Call BeforeAllTransformix to do some checking. */
 		int dummy = BeforeAllTransformix();
 		if ( dummy != 0 ) return dummy;
 
@@ -410,7 +410,7 @@ namespace elastix
 				}
 			} // end if !moving image
 
-			/** Tell the user.*/
+			/** Tell the user. */
 			elxout << "\t\t\t\tdone!" << std::endl;
 		} // end if ! inputImageFileName
 
@@ -442,31 +442,15 @@ namespace elastix
 			elxout << "Resampling image and writing to disk ...";
 			
 			/** Create a name for the final result. */
+			std::string resultImageFormat = "mhd";
+			this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0 );
 			std::ostringstream makeFileName("");
-			makeFileName << 
-				this->m_Configuration->GetCommandLineArgument( "-out" ) << "result.mhd";
+			makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
+				<< "result." << resultImageFormat;
 			
 			/** Write the resampled image to disk. */
-			typename OutputImageWriterType::Pointer writer = OutputImageWriterType::New();		
-			writer->SetInput( this->m_elx_Resampler->GetAsITKBaseType()->GetOutput() );
-			writer->SetFileName( makeFileName.str().c_str() );
+			this->m_elx_Resampler->WriteResultImage( makeFileName.str().c_str() );
 
-			/** Do the writing. */
-			try
-			{
-				writer->Update();
-			}
-			catch( itk::ExceptionObject & excp )
-			{
-				/** Add information to the exception. */
-				excp.SetLocation( "ElastixTemplate - ApplyTransform()" );
-				std::string err_str = excp.GetDescription();
-				err_str += "\nError occured while writing resampled image.\n";
-				excp.SetDescription( err_str );
-				/** Pass the exception to an higher level. */
-				throw excp;
-			}
-			
 			/** Tell the user. */
 			elxout << "\tdone!" << std::endl;
 		}

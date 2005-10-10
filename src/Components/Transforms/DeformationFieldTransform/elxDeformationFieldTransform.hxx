@@ -2,9 +2,9 @@
 #define __elxDeformationFieldTransform_HXX__
 
 #include "elxDeformationFieldTransform.h"
-//#include "math.h"
 
-//#include "itkImageFileReader.h"
+#include "itkImageFileReader.h"
+#include "itkImageFileWriter.h"
 
 namespace elastix
 {
@@ -150,44 +150,56 @@ using namespace itk;
 		 */
 		this->SetReadWriteTransformParameters( false );
 
-		/** Call the WriteToFile from the TransformBase.*/
+		/** Call the WriteToFile from the TransformBase. */
 		this->Superclass2::WriteToFile( param );
 
-		/** Add some BSplineTransform specific lines.*/
+		/** Add some DeformationFieldTransform specific lines. */
 		xout["transpar"] << std::endl << "// DeformationFieldTransform specific" << std::endl;
 
-		/** Write the filename of the deformationField image. */
+		/** Get the last part of the filename of the transformParameter-file,
+		 * which is going to be part of the filename of the deformationField image.
+		 */
+		std::string ctpfn = this->GetElastix()->GetCurrentTransformParameterFileName();
+		std::basic_string<char>::size_type pos = ctpfn.rfind( "TransformParameters." );
+		std::string lastpart = ctpfn.substr( pos + 19, ctpfn.size() - pos - 19 - 4 );
+
+		/** Create the filename of the deformationField image. */
+		std::string resultImageFormat = "mhd";
+		this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0 );
 		std::ostringstream makeFileName( "" );
 		makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
-			<< "TransformParametersDeformationFieldImage."
-			<< this->m_Configuration->GetElastixLevel()
-			<< ".mhd";
-		xout["transpar"] << "(TransformParametersDeformationFieldImageFileName \""
+			<< "DeformationFieldImage"
+			<< lastpart
+			<< "." << resultImageFormat;
+		xout["transpar"] << "(DeformationFieldFileName \""
 			<< makeFileName.str() << "\")" << std::endl;
 
-		// \todo Get the deformationField image and write it.
+		/** Create a deformationField image. */
+		VectorImagePointer deformationFieldImage;
+		this->GetCoefficientVectorImage( deformationFieldImage );
 
-		/** Write the deformation field image. *
-		typename DeformationFieldWriterType::Pointer writer
-			= DeformationFieldWriterType::New();
+		/** Write the deformation field image. */
+		typedef itk::ImageFileWriter< VectorImageType > VectorWriterType;
+		typename VectorWriterType::Pointer writer
+			= VectorWriterType::New();
 		writer->SetFileName( makeFileName.str().c_str() );
-		writer->SetInput( this->GetIntermediaryDeformationField() );
-		/** Do the writing. *
+		writer->SetInput( deformationFieldImage );
+
+		/** Do the writing. */
 		try
 		{
 			writer->Update();
 		}
 		catch( itk::ExceptionObject & excp )
 		{
-			/** Add information to the exception. *
+			/** Add information to the exception. */
 			excp.SetLocation( "DeformationFieldTransform - WriteToFile()" );
 			std::string err_str = excp.GetDescription();
-			err_str += "\nError occured while writing the deformationField image.\n";
+			err_str += "\nError while writing the deformationFieldImage.\n";
 			excp.SetDescription( err_str );
-			/** Print the exception. *
+			/** Print the exception. */
 			xl::xout["error"] << excp << std::endl;
 		}
-		*/
 
 	} // end WriteToFile
 

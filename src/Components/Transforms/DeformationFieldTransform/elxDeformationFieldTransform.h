@@ -47,7 +47,7 @@ using namespace itk;
 		typedef DeformationVectorFieldTransform<
 			typename elx::TransformBase< TElastix >::CoordRepType,
 			elx::TransformBase< TElastix >::FixedImageDimension >		Superclass1;
-		typedef elx::TransformBase< TElastix >											Superclass2;		
+		typedef elx::TransformBase< TElastix >								Superclass2;		
 		typedef SmartPointer< Self >													Pointer;
 		typedef SmartPointer< const Self >										ConstPointer;
 		

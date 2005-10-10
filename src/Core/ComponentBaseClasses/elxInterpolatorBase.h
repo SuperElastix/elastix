@@ -15,9 +15,9 @@ using namespace itk;
 
 	/**
 	 * \class InterpolatorBase
-	 * \brief This class is the base for all Interpolators
+	 * \brief This class is based on the itk::InterpolateImageFunction.
 	 *
-	 * This class contains all the common functionality for Interpolators ...
+	 * This class contains all the common functionality for Interpolators.
 	 *
 	 * \ingroup Interpolators
 	 * \ingroup ComponentBaseClasses
@@ -28,11 +28,14 @@ using namespace itk;
 	{
 	public:
 
-		/** Standard.*/
-		typedef InterpolatorBase Self;
-		typedef BaseComponentSE<TElastix> Superclass;
+		/** Standard ITK-stuff. */
+		typedef InterpolatorBase						Self;
+		typedef BaseComponentSE<TElastix>		Superclass;
 
-		/** Typedefs inherited from Elastix.*/
+		/** Run-time type information (and related methods). */
+		itkTypeMacro( InterpolatorBase, BaseComponentSE );
+
+		/** Typedefs inherited from Elastix. */
 		typedef typename Superclass::ElastixType						ElastixType;
 		typedef typename Superclass::ElastixPointer					ElastixPointer;
 		typedef typename Superclass::ConfigurationType			ConfigurationType;
@@ -40,15 +43,15 @@ using namespace itk;
 		typedef typename Superclass::RegistrationType				RegistrationType;
 		typedef typename Superclass::RegistrationPointer		RegistrationPointer;
 
-		/** Other typedef's.*/
+		/** Other typedef's. */
 		typedef typename ElastixType::MovingInternalImageType		InputImageType;
 		typedef typename ElastixType::CoordRepType							CoordRepType;
 
-		/** ITKBaseType.*/
+		/** ITKBaseType. */
 		typedef InterpolateImageFunction< 
 			InputImageType, CoordRepType>											ITKBaseType;
 
-		/** Cast to ITKBaseType.*/
+		/** Cast to ITKBaseType. */
 		virtual ITKBaseType * GetAsITKBaseType(void)
 		{
 			return dynamic_cast<ITKBaseType *>(this);
@@ -56,12 +59,16 @@ using namespace itk;
 		
 	protected:
 
+		/** The constructor. */
 		InterpolatorBase() {}
+		/** The destructor. */
 		virtual ~InterpolatorBase() {}
 
 	private:
 
+		/** The private constructor. */
 		InterpolatorBase( const Self& );	// purposely not implemented
+		/** The private copy constructor. */
 		void operator=( const Self& );		// purposely not implemented
 
 	}; // end class InterpolatorBase

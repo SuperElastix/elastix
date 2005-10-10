@@ -15,9 +15,6 @@ namespace elastix
 	template <class TElastix>
 		ResamplerBase<TElastix>::ResamplerBase()
 	{
-		/** Create caster and writer.*/
-		this->m_Caster	=	CasterType::New();
-		this->m_Writer	= WriterType::New();
 
 	} // end Constructor
 
@@ -30,16 +27,16 @@ namespace elastix
 		void ResamplerBase<TElastix>
 		::BeforeRegistrationBase(void)
 	{
-		/** Connect the components.*/
+		/** Connect the components. */
 		this->SetComponents();
 		
-		/** Set the size of the image to be produced by the resampler.*/
+		/** Set the size of the image to be produced by the resampler. */
 		
-		/** Get a pointer to the fixedImage.*/
+		/** Get a pointer to the fixedImage. */
 		OutputImageType * fixedImage = dynamic_cast<OutputImageType *>(
 			this->m_Elastix->GetFixedImage() );
 		
-		/** Set the region info to the same values as in the fixedImage.*/
+		/** Set the region info to the same values as in the fixedImage. */
 		this->GetAsITKBaseType()->SetSize( fixedImage->GetLargestPossibleRegion().GetSize() );
 		this->GetAsITKBaseType()->SetOutputStartIndex( fixedImage->GetLargestPossibleRegion().GetIndex() );
 		this->GetAsITKBaseType()->SetOutputOrigin( fixedImage->GetOrigin() );
@@ -48,10 +45,10 @@ namespace elastix
 		/** Set the DefaultPixelValue (for pixels in the resampled image
 		 * that come from outside the original (moving) image.
 		 */
-		PixelType defaultPixelValue = NumericTraits<PixelType>::Zero;
+		OutputPixelType defaultPixelValue = NumericTraits<OutputPixelType>::Zero;
 		this->m_Configuration->ReadParameter( defaultPixelValue, "DefaultPixelValue", 0 );
 		
-		/** Set the defaultPixelValue in the Superclass.*/
+		/** Set the defaultPixelValue. */
 		this->GetAsITKBaseType()->SetDefaultPixelValue( defaultPixelValue );
 
 	} // end BeforeRegistrationBase
@@ -65,43 +62,45 @@ namespace elastix
 		void ResamplerBase<TElastix>
 		::AfterRegistrationBase(void)
 	{
-		/** Call WriteToFile().
-		 * We call the overwritten WriteToFile in the derived class
-		 * (MyStandardResampler), which in turn calls the one of this Base class.
-		 */
-
-		/** Apply the final transform, and save the result.*/
-		elxout << std::endl << "Applying final transform ..." << std::endl;
-		
+		/** Set the final transform parameters. */
 		this->GetElastix()->GetElxTransformBase()->SetFinalParameters();
-		
-		this->m_Caster->SetInput( this->GetAsITKBaseType()->GetOutput() );
-		this->m_Writer->SetInput( this->m_Caster->GetOutput() );
-		
-		/** Create a name for the final result.*/
-		
+
+		/** Decide whether or not to write the result image. */
+		std::string writeResultImage = "true";
+		this->m_Configuration->ReadParameter(	writeResultImage, "WriteResultImage", 0 );
+
+		/** Create a name for the final result. */
+		std::string resultImageFormat = "mhd";
+		this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0 );
 		std::ostringstream makeFileName( "" );
 		makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
-			<< "result." << this->m_Configuration->GetElastixLevel() << ".mhd";
-		
-		/** Set the filename.*/
-		this->m_Writer->SetFileName( makeFileName.str().c_str() );
+			<< "result." << this->m_Configuration->GetElastixLevel()
+			<< "." << resultImageFormat;
 
-		/** Do the writing.*/
-		try
+		/** Writing result image. */
+		if ( writeResultImage == "true" )
 		{
-			this->m_Writer->Update();
+			/** Apply the final transform, and save the result. */
+			elxout << std::endl << "Applying final transform ..." << std::endl;
+			/** Call WriteResultImage. */
+			try
+			{
+				this->WriteResultImage( makeFileName.str().c_str() );
+			}
+			catch( itk::ExceptionObject & excp )
+			{
+				xl::xout["error"] << "Exception caught: " << std::endl;
+				xl::xout["error"] << excp
+					<< "Resuming elastix." << std::endl;
+			}
 		}
-		catch( itk::ExceptionObject & excp )
+		else
 		{
-			/** Add information to the exception. */
-			excp.SetLocation( "ResamplerBase - AfterRegistrationBase()" );
-			std::string err_str = excp.GetDescription();
-			err_str += "\nError occured while writing resampled image.\n";
-			excp.SetDescription( err_str );
-			/** Pass the exception to an higher level. */
-			throw excp;
-		}
+			/** Do not apply the final transform. */
+			elxout << std::endl
+				<< "Skipping applying final transform, no resulting output image generated."
+				<< std::endl;
+		} // end if
 
 	} // end AfterRegistrationBase
 
@@ -117,19 +116,52 @@ namespace elastix
 		/** Set the transform, the interpolator and the inputImage
 		 * (which is the moving image).
 		 */
-		this->GetAsITKBaseType()->SetTransform(		dynamic_cast<TransformType *>(
+		this->GetAsITKBaseType()->SetTransform( dynamic_cast<TransformType *>(
 			this->m_Elastix->GetTransform() ) );
 		
-		this->GetAsITKBaseType()->SetInterpolator(		dynamic_cast<InterpolatorType *>(
+		this->GetAsITKBaseType()->SetInterpolator( dynamic_cast<InterpolatorType *>(
 			this->m_Elastix->GetResampleInterpolator() ) );
 		
 		this->GetAsITKBaseType()->SetInput( dynamic_cast<InputImageType *>(
 			this->m_Elastix->GetMovingImage() ) );
 		
-		/** \todo dit zou bijvoorbeeld ook een gridplaatje kunnen zijn. */
-		
 	} // end SetComponents
 
+
+	/*
+	 * ******************* WriteResultImage ********************
+	 */
+	
+	template<class TElastix>
+		void ResamplerBase<TElastix>
+		::WriteResultImage( const char * filename )
+	{
+		/** Create writer. */
+		WriterPointer writer = WriterType::New();
+
+		/** Setup the pipeline. */
+		writer->SetInput( this->GetAsITKBaseType()->GetOutput() );
+
+		/** Set the filename. */
+		writer->SetFileName( filename );
+
+		/** Do the writing. */
+		try
+		{
+			writer->Update();
+		}
+		catch( itk::ExceptionObject & excp )
+		{
+			/** Add information to the exception. */
+			excp.SetLocation( "ResamplerBase - AfterRegistrationBase()" );
+			std::string err_str = excp.GetDescription();
+			err_str += "\nError occured while writing resampled image.\n";
+			excp.SetDescription( err_str );
+			/** Pass the exception to an higher level. */
+			throw excp;
+		}
+
+	} // WriteResultImage
 
 	/*
 	 * ************************* ReadFromFile ***********************
@@ -139,10 +171,10 @@ namespace elastix
 		void ResamplerBase<TElastix>
 		::ReadFromFile(void)
 	{
-		/** Connect the components.*/
+		/** Connect the components. */
 		this->SetComponents();
 		
-		/** Get spacing, origin and size of the image to be produced by the resampler.*/
+		/** Get spacing, origin and size of the image to be produced by the resampler. */
 		SpacingType			spacing;
 		IndexType				index;
 		OriginPointType	origin;
@@ -165,7 +197,7 @@ namespace elastix
 			this->m_Configuration->ReadParameter(	origin[ i ], "Origin", i );
 		}
 
-		/** Check for image size.*/
+		/** Check for image size. */
 		unsigned int sum = 0;
 		for ( unsigned int i = 0; i < ImageDimension; i++ )
 		{
@@ -177,7 +209,7 @@ namespace elastix
 			/** \todo quit program nicely. */
 		}
 		
-		/** Set the region info to the same values as in the fixedImage.*/
+		/** Set the region info to the same values as in the fixedImage. */
 		this->GetAsITKBaseType()->SetSize( size );
 		this->GetAsITKBaseType()->SetOutputStartIndex( index );
 		this->GetAsITKBaseType()->SetOutputOrigin( origin );
@@ -189,7 +221,7 @@ namespace elastix
 		int defaultPixelValue = 0;
 		this->m_Configuration->ReadParameter( defaultPixelValue, "DefaultPixelValue", 0 );
 		
-		/** Set the defaultPixelValue in the Superclass*/
+		/** Set the defaultPixelValue in the Superclass. */
 		this->GetAsITKBaseType()->SetDefaultPixelValue( defaultPixelValue );
 		
 	} // end ReadFromFile
@@ -203,16 +235,22 @@ namespace elastix
 		void ResamplerBase<TElastix>
 		::WriteToFile(void)
 	{
-		/** Write Resampler specific things.*/
+		/** Write Resampler specific things. */
 		xl::xout["transpar"] << std::endl << "// Resampler specific" << std::endl;
 
-		/** Write the name of the Resampler.*/
+		/** Write the name of the Resampler. */
 		xl::xout["transpar"] << "(Resampler \""
 			<< this->elxGetClassName() << "\")" << std::endl;
 
-		/** Write the DefaultPixelValue.*/
-		xl::xout["transpar"] << "(DefaultPixelValue " <<
-			this->GetAsITKBaseType()->GetDefaultPixelValue() << ")" << std::endl;
+		/** Write the DefaultPixelValue. */
+		xl::xout["transpar"] << "(DefaultPixelValue "
+			<< this->GetAsITKBaseType()->GetDefaultPixelValue() << ")" << std::endl;
+
+		/** Write the output image format. */
+		std::string resultImageFormat = "mhd";
+		this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0, true );
+		xl::xout["transpar"] << "(ResultImageFormat \""
+			<< resultImageFormat << "\")" << std::endl;
 
 	} // end WriteToFile
 

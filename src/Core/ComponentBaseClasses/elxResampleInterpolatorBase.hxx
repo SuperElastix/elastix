@@ -29,10 +29,10 @@ namespace elastix
 		void ResampleInterpolatorBase<TElastix>
 		::WriteToFile(void)
 	{
-		/** Write ResampleInterpolator specific things.*/
+		/** Write ResampleInterpolator specific things. */
 		xl::xout["transpar"] << std::endl << "// ResampleInterpolator specific" << std::endl;
 
-		/** Write the name of the resample-interpolator.*/
+		/** Write the name of the resample-interpolator. */
 		xl::xout["transpar"] << "(ResampleInterpolator \""
 			<< this->elxGetClassName() << "\")" << std::endl;		
 

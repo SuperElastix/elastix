@@ -50,7 +50,7 @@ namespace elastix
 		
 		set_xout(&g_xout);
 
-		/** Open the logfile for writing */
+		/** Open the logfile for writing. */
 		g_LogFileStream.open( logfilename );
 		if ( !g_LogFileStream.is_open() )
 		{
@@ -82,11 +82,11 @@ namespace elastix
 		returndummy |= xout.AddTargetCell( "logonly", &g_LogOnlyXout );
 		returndummy |= xout.AddTargetCell( "coutonly", &g_CoutOnlyXout );
 
-		/** Format the output */
+		/** Format the output. */
 		xout["standard"] << std::fixed;
 		xout["standard"] << std::showpoint;
 		
-		/** Return a value.*/
+		/** Return a value. */
 		return returndummy;
 
 	} // end xoutSetup
@@ -98,7 +98,7 @@ namespace elastix
 
 	ElastixMain::ElastixMain()
 	{
-		/** Initialize the components.*/
+		/** Initialize the components. */
 		this->m_Configuration = ConfigurationType::New();
 
 		this->m_Elastix = 0;
@@ -176,7 +176,7 @@ namespace elastix
 
 	int ElastixMain::Run(void)
 	{
-		/** If wanted, set the priority of this process high.*/
+		/** If wanted, set the priority of this process high or below normal. */
 		std::string processPriority = "";
 		processPriority = this->m_Configuration->GetCommandLineArgument( "-priority" );
 		if ( processPriority == "high" )
@@ -192,14 +192,14 @@ namespace elastix
 			#endif
 		}
 
-		/** Initialize database.*/		
+		/** Initialize database. */		
 		int ErrorCode = this->InitDBIndex();
 		if ( ErrorCode != 0 )
 		{
 			return ErrorCode;
 		}
 
-		/** Get the different components.*/
+		/** Get the different components. */
 		ComponentDescriptionType RegistrationName = "MultiResolutionRegistration";
 		this->m_Configuration->ReadParameter( RegistrationName, "Registration", 0 );
 		
@@ -271,7 +271,7 @@ namespace elastix
 		testcreator = this->s_CDB->GetCreator( TransformName, this->m_DBIndex );
 		this->m_Transform = testcreator ? testcreator() : NULL;
 
-		/** Check if all component could be created.*/
+		/** Check if all component could be created. */
 		if (	( this->m_Elastix.IsNull() ) |
 					( this->m_Registration.IsNull() ) |
 					( this->m_FixedImagePyramid.IsNull() ) |
@@ -292,7 +292,8 @@ namespace elastix
 		this->m_elx_Elastix = dynamic_cast<ElastixBaseType *>( this->m_Elastix.GetPointer() );
 
 		/** Set all components in the ElastixBase (so actually in
-		* the appropriate ElastixTemplate) */
+		 * the appropriate ElastixTemplate).
+		 */
 		this->m_elx_Elastix->SetConfiguration( this->m_Configuration );
 		this->m_elx_Elastix->SetComponentDatabase(this->s_CDB);
 
@@ -309,7 +310,8 @@ namespace elastix
 		this->m_elx_Elastix->SetDBIndex( this->m_DBIndex );
 
 		/** Set the images. If not set by the user, it is not a problem.
-		* ElastixTemplate!= will try to load them from disk.*/
+		 * ElastixTemplate!= will try to load them from disk.
+		 */
 		this->m_elx_Elastix->SetFixedImage( this->m_FixedImage );
 		this->m_elx_Elastix->SetMovingImage( this->m_MovingImage );
 		this->m_elx_Elastix->SetFixedInternalImage( this->m_FixedInternalImage );
@@ -336,7 +338,7 @@ namespace elastix
 		this->SetMovingInternalImage( this->m_elx_Elastix->GetMovingInternalImage() );
 		
 		/** Set processPriority to normal again. */
-		if ( processPriority == "high" )
+		if ( processPriority != "" )
 		{
 			#ifdef _WIN32
 			SetPriorityClass( GetCurrentProcess(), NORMAL_PRIORITY_CLASS );
@@ -432,7 +434,7 @@ namespace elastix
 				}
 			}
 			
-			/** Load the components */
+			/** Load the components. */
 			if (this->s_CDB.IsNull())
 			{
 				int loadReturnCode = this->LoadComponents();
@@ -445,7 +447,7 @@ namespace elastix
 
 			if (this->s_CDB.IsNotNull())
 			{
-				/** Get the DBIndex from the ComponentDatabase */
+				/** Get the DBIndex from the ComponentDatabase. */
 				this->m_DBIndex = this->s_CDB->GetIndex(
 					this->m_FixedImagePixelType,
 					this->m_FixedImageDimension,			
@@ -467,10 +469,10 @@ namespace elastix
 			return 1;
 		}
 
-		/** Return an OK value.*/
+		/** Return an OK value. */
 		return 0;
 
-	} // end InitDBIndex()
+	} // end InitDBIndex
 
 
 	/**
@@ -479,7 +481,7 @@ namespace elastix
 
 	void ElastixMain::SetElastixLevel( unsigned int level )
 	{
-		/** Call SetElastixLevel from MyConfiguration.*/
+		/** Call SetElastixLevel from MyConfiguration. */
 		this->m_Configuration->SetElastixLevel( level );
 
 	} // end SetElastixLevel
@@ -491,7 +493,7 @@ namespace elastix
 
 	unsigned int ElastixMain::GetElastixLevel(void)
 	{
-		/** Call GetElastixLevel from MyConfiguration.*/
+		/** Call GetElastixLevel from MyConfiguration. */
 		return this->m_Configuration->GetElastixLevel();
 
 	} // end GetElastixLevel
@@ -499,27 +501,30 @@ namespace elastix
 
 	/**
 	 * ********************* LoadComponents **************************
+	 *
+	 * Look for dlls, load them, and call the install function.
 	 */
 	
 	int ElastixMain::LoadComponents(void)
 	{
-		//look for dlls, load them, call the install function
-
-		if (this->s_CDB.IsNull())
+		/** Create a ComponentDatabase. */
+		if ( this->s_CDB.IsNull() )
 		{
 			this->s_CDB = ComponentDatabaseType::New();
 		}
 
-		if (this->s_ComponentLoader.IsNull())
+		/** Create a ComponentLoader and set the database. */
+		if ( this->s_ComponentLoader.IsNull() )
 		{
 			this->s_ComponentLoader = ComponentLoaderType::New();
-			this->s_ComponentLoader->SetComponentDatabase(s_CDB);
+			this->s_ComponentLoader->SetComponentDatabase( s_CDB );
 		}
 
+		/** Get the current program. */
+		const char * argv0 = this->m_Configuration->GetCommandLineArgument( "-argv0" );
 
-		const char * argv0 = this->m_Configuration->GetCommandLineArgument("-argv0");
-
-		return this->s_ComponentLoader->LoadComponents(argv0);
+		/** Load the components. */
+		return this->s_ComponentLoader->LoadComponents( argv0 );
 		
 	} // end LoadComponents
 
@@ -533,7 +538,7 @@ namespace elastix
 	{
 				
 		s_CDB = 0;
-		s_ComponentLoader->SetComponentDatabase(0);
+		s_ComponentLoader->SetComponentDatabase( 0 );
 
 		if (s_ComponentLoader)	
 		{
