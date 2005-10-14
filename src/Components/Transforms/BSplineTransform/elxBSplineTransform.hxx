@@ -47,7 +47,7 @@ using namespace itk;
 		
 		/** Task 1 - Set the Grid. */
 
-		/** Declarations.*/
+		/** Declarations. */
 		RegionType gridregion;
 		SizeType gridsize;
 		IndexType gridindex;
@@ -86,7 +86,7 @@ using namespace itk;
 		void BSplineTransform<TElastix>
 		::BeforeEachResolution(void)
 	{
-		/** What is the current resolution level?*/
+		/** What is the current resolution level? */
 		unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
 		/** What is the UpsampleGridOption?
@@ -101,17 +101,17 @@ using namespace itk;
 		if ( upsampleBSplineGridOption == "true" ) upsampleGridOption = true;
 		else if ( upsampleBSplineGridOption == "false" ) upsampleGridOption = false;
 		
-		/** Resample the grid.*/
+		/** Resample the grid. */
 		if ( level == 0 )
 		{
-			/** Set grid equal to lowest resolution fixed image.*/
+			/** Set grid equal to lowest resolution fixed image. */
 			this->SetInitialGrid( upsampleGridOption );			
 		}	
 		else
 		{
-			/**	If wanted, we upsample the grid of control points.*/
+			/**	If wanted, we upsample the grid of control points. */
 			if ( upsampleGridOption ) this->IncreaseScale();
-			/** Otherwise, nothing is done with the BSpline-Grid.*/
+			/** Otherwise, nothing is done with the BSpline-Grid. */
 		} 
 		
 	} // end BeforeEachResolution

@@ -731,14 +731,14 @@ namespace elastix
 		dummyImage->SetOrigin( origin );
 		dummyImage->SetSpacing( spacing );
 		
-		/** Setup an outputImage of vectors and allocate memory(!).*/
+		/** Setup an outputImage of vectors and allocate memory(!). */
 		OutputImagePointer outputImage = OutputImageType::New();
 		outputImage->SetRegions( region );
 		outputImage->SetOrigin( origin );
 		outputImage->SetSpacing( spacing );
 		outputImage->Allocate();
 		
-		/** Setup an iterator over dummyImage and outputImage.*/
+		/** Setup an iterator over dummyImage and outputImage. */
 		DummyIteratorType iter( dummyImage, region );
 		OutputImageIteratorType iterout( outputImage, region );
 		
@@ -748,13 +748,13 @@ namespace elastix
 		VectorType diff_point;
 		IndexType inputIndex;
 		
-		/** Calculate the TransformPoint of all voxels of the image.*/
+		/** Calculate the TransformPoint of all voxels of the image. */
 		iter.Begin();
 		iterout.Begin();
 		while ( !iter.IsAtEnd() )
 		{
 			inputIndex = iter.GetIndex();
-			/** Transform the points to physical space.*/
+			/** Transform the points to physical space. */
 			dummyImage->TransformIndexToPhysicalPoint( inputIndex, inputPoint );
 			/** Call TransformPoint.*/
 			outputPoint = this->GetAsITKBaseType()->TransformPoint( inputPoint );
@@ -768,9 +768,9 @@ namespace elastix
 			++iterout;
 		}
 		
-		/** Create a name for the offsetImage file. */
+		/** Create a name for the deformation field file. */
 		std::string resultImageFormat = "mhd";
-		this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0 );
+		this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0, true );
 		std::ostringstream makeFileName( "" );
 		makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
 			<< "deformationField." << resultImageFormat;

@@ -968,7 +968,7 @@ using namespace itk;
 
 		/** Write the filename of the deformationField image. */
 		std::string resultImageFormat = "mhd";
-		this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0 );
+		this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0, true );
 		std::ostringstream makeFileName( "" );
 		makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
 			<< "DeformationFieldImage"
@@ -1292,7 +1292,7 @@ using namespace itk;
 		{
 			/** Create parts of the filenames. */
 			std::string resultImageFormat = "mhd";
-			this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0 );
+			this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0, true );
 			std::ostringstream makeFileName1( "" ), begin(""), end("");
 			begin << this->m_Configuration->GetCommandLineArgument( "-out" );
 			end << ".R" << this->m_Elastix->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel()

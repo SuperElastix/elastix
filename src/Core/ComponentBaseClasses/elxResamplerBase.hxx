@@ -3,6 +3,8 @@
 
 #include "elxResamplerBase.h"
 
+#include "elxTimer.h"
+
 namespace elastix
 {
 	using namespace itk;
@@ -67,11 +69,11 @@ namespace elastix
 
 		/** Decide whether or not to write the result image. */
 		std::string writeResultImage = "true";
-		this->m_Configuration->ReadParameter(	writeResultImage, "WriteResultImage", 0 );
+		this->m_Configuration->ReadParameter(	writeResultImage, "WriteResultImage", 0, true );
 
 		/** Create a name for the final result. */
 		std::string resultImageFormat = "mhd";
-		this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0 );
+		this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0, true );
 		std::ostringstream makeFileName( "" );
 		makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
 			<< "result." << this->m_Configuration->GetElastixLevel()
@@ -80,8 +82,12 @@ namespace elastix
 		/** Writing result image. */
 		if ( writeResultImage == "true" )
 		{
+			/** Time the resampling. */
+			typedef tmr::Timer TimerType;
+			TimerType::Pointer timer = TimerType::New();
+			timer->StartTimer();
 			/** Apply the final transform, and save the result. */
-			elxout << std::endl << "Applying final transform ..." << std::endl;
+			elxout << std::endl << "Applying final transform";
 			/** Call WriteResultImage. */
 			try
 			{
@@ -93,6 +99,11 @@ namespace elastix
 				xl::xout["error"] << excp
 					<< "Resuming elastix." << std::endl;
 			}
+			/** Print the elapsed time for the resampling. */
+			timer->StopTimer();
+			elxout << ", which took: "
+				<< static_cast<long>( timer->GetElapsedClockSec() )
+				<< " s." << std::endl;
 		}
 		else
 		{

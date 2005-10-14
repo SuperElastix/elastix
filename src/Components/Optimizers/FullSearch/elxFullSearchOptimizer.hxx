@@ -166,7 +166,7 @@ using namespace itk;
 					
 			/** Set the name of this image on disk. */
 			std::string resultImageFormat = "mhd";
-			this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0 );
+			this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0, true );
 			makeString.str("");
 			makeString
 				<< this->GetConfiguration()->GetCommandLineArgument("-out")
