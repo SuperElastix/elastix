@@ -241,14 +241,15 @@ namespace itk
 			//bfgs:				Hupd = ( temp.transpose() * (this->m_H * temp) + temp2) - this->m_H;
 
 			//dfp:
-			HessianMatrixType Hupd = outer_product(this->m_Step, this->m_Step) / ys -
-			  ( outer_product(Hy,Hy)/ yHy );
+			//HessianMatrixType Hupd = outer_product(this->m_Step, this->m_Step) / ys -
+			//  ( outer_product(Hy,Hy)/ yHy );
 		
 			const double H_frob = this->m_H.frobenius_norm();
 			const double Hupdate_frob = vcl_sqrt(
 				ss*ss/(ys*ys)+ HyHy*HyHy/(yHy*yHy) - 2*sHy*sHy/(ys*yHy)  );
-			
+		
 			const double frob_factor = vnl_math_min(1.0, H_frob * _1_k / Hupdate_frob);
+			std::cout << "frob_factor = " << frob_factor << std::endl;
 			const double frob_ys = frob_factor / ys;
 			const double frob_yHy = frob_factor / yHy;
 
@@ -258,7 +259,7 @@ namespace itk
 			{
 				for (unsigned int j = 0;  j< numberOfParameters; ++j)
 				{
-					H(i,j)+= ( s[i]*s[j] / frob_ys - Hy[i]*Hy[j] / frob_yHy );
+					H(i,j)+= ( s[i]*s[j] * frob_ys - Hy[i]*Hy[j] * frob_yHy );
 				} // end for j
 			} // end for i
 
