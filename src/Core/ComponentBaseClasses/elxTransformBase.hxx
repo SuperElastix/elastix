@@ -193,8 +193,10 @@ namespace elastix
     /** Make a local copy, since some transforms do not do this,
 		 * like the BSpline-transform.
 		 */
-		m_FinalParameters = this->m_Registration->GetAsITKBaseType()->
-			GetLastTransformParameters();
+		//m_FinalParameters = this->m_Registration->GetAsITKBaseType()->
+			//GetLastTransformParameters();
+		m_FinalParameters = this->GetElastix()->GetElxOptimizerBase()->GetAsITKBaseType()->
+			GetCurrentPosition();
 
 		/** Set the final Parameters for the resampler. */
 		this->GetAsITKBaseType()->SetParameters( m_FinalParameters );

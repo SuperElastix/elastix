@@ -92,6 +92,11 @@ namespace elastix
 		/** Execute stuff after the registration:
 		 * \li Write the resulting output image.
 		 */
+		virtual void AfterEachResolutionBase(void);
+
+		/** Execute stuff after the registration:
+		 * \li Write the resulting output image.
+		 */
 		virtual void AfterRegistrationBase(void);
 
 		/** Function to read transform-parameters from a file. */

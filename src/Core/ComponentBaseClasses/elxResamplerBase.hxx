@@ -57,6 +57,64 @@ namespace elastix
 
 
 	/*
+	 * ******************* AfterEachResolutionBase ********************
+	 */
+	
+	template<class TElastix>
+		void ResamplerBase<TElastix>
+		::AfterEachResolutionBase(void)
+	{
+		/** Set the final transform parameters. */
+		this->GetElastix()->GetElxTransformBase()->SetFinalParameters();
+
+		/** What is the current resolution level? */
+		unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
+
+		/** Decide whether or not to write the result image this resolution. */
+		std::string writeResultImageThisResolution = "false";
+		this->m_Configuration->ReadParameter(	
+			writeResultImageThisResolution, "WriteResultImageEachResolution", level, true );
+
+		/** Create a name for the final result. */
+		std::string resultImageFormat = "mhd";
+		this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0, true );
+		std::ostringstream makeFileName( "" );
+		makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
+			<< "result." << this->m_Configuration->GetElastixLevel()
+			<< ".R" << level
+			<< "." << resultImageFormat;
+
+		/** Writing result image. */
+		if ( writeResultImageThisResolution == "true" )
+		{
+			/** Time the resampling. */
+			typedef tmr::Timer TimerType;
+			TimerType::Pointer timer = TimerType::New();
+			timer->StartTimer();
+			/** Apply the final transform, and save the result. */
+			elxout << "Applying transform this resolution";
+			/** Call WriteResultImage. */
+			try
+			{
+				this->WriteResultImage( makeFileName.str().c_str() );
+			}
+			catch( itk::ExceptionObject & excp )
+			{
+				xl::xout["error"] << "Exception caught: " << std::endl;
+				xl::xout["error"] << excp
+					<< "Resuming elastix." << std::endl;
+			}
+			/** Print the elapsed time for the resampling. */
+			timer->StopTimer();
+			elxout << ", which took: "
+				<< static_cast<long>( timer->GetElapsedClockSec() )
+				<< " s." << std::endl;
+		} // end if
+
+	} // end AfterEachResolutionBase
+
+
+	/*
 	 * ******************* AfterRegistrationBase ********************
 	 */
 	
