@@ -20,6 +20,20 @@ namespace elastix
 	 *
 	 * This class contains all the common functionality for Resamplers.
 	 *
+	 * The parameters used in this class are:
+	 * \parameter WriteResultImage: flag to determine if the final
+	 *		result image is resampled and written. Choose from {"true", "false"} \n
+	 *		example: <tt>(WriteResultImage "false")</tt> \n
+	 *		The default is "true".
+	 * \parameter ResultImageFormat: parameter to set the image file format to
+	 *		to which the resampled image is written to.\n
+	 *		example: <tt>(ResultImageFormat "mhd")</tt> \n
+	 *		The default is "mhd".
+	 * \parameter WriteResultImageAfterEachResolution: flag to determine if the intermediate
+	 *		result image is resampled and written after each resolution. Choose from {"true", "false"} \n
+	 *		example: <tt>(WriteResultImageAfterEachResolution "true" "false" "true")</tt> \n
+	 *		The default is "false" for each resolution.
+	 *
 	 * \ingroup Resamplers
 	 * \ingroup ComponentBaseClasses
 	 */

@@ -73,7 +73,7 @@ namespace elastix
 		/** Decide whether or not to write the result image this resolution. */
 		std::string writeResultImageThisResolution = "false";
 		this->m_Configuration->ReadParameter(	
-			writeResultImageThisResolution, "WriteResultImageEachResolution", level, true );
+			writeResultImageThisResolution, "WriteResultImageAfterEachResolution", level, true );
 
 		/** Create a name for the final result. */
 		std::string resultImageFormat = "mhd";
