@@ -57,48 +57,71 @@ namespace elastix
 		 * that your registration may require translations as
 		 * large as 1/10 of the diagonal of the bounding box.
 		 */
+
+		/** Create the new scales. */
 		ScalesType newscales( this->GetNumberOfParameters() );
 		newscales.Fill( 1.0 );
 		double dummy = 100000.0;
 
-		/**
-		 * - If the Dimension is 3, the first 3 parameters represent angles.
-		 * - If the Dimension is 2, only the first parameter represent an angle.
+		/** If the Dimension is 3, the first 3 parameters represent rotations.
+		 * If the Dimension is 2, only the first parameter represent a rotation.
 		 */
-		unsigned int AnglePartEnd = 3;
-		if ( SpaceDimension == 2 ) AnglePartEnd = 1;
+		unsigned int RotationPart = 3;
+		if ( SpaceDimension == 2 ) RotationPart = 1;
 
-		/** If the scales are given for all parameters. */
-		if ( this->m_Configuration->ReadParameter( dummy, "Scaler", 1, true ) == 1 )
+		/** this->m_Configuration->ReadParameter() returns 0 if there is a value given
+		 * in the parameter-file, and returns 1 if there is no value given in the
+		 * parameter-file.
+		 * Check which option is used:
+		 * - Nothing given in the parameter-file: rotations are scaled by the default
+		 *		value 100000.0
+		 * - Only one scale given in the parameter-file: rotations are scaled by this
+		 *		value.
+		 * - All scales are given in the parameter-file: each parameter is assigned its
+		 *		own scale.
+		 */
+
+		/** Check the return values of ReadParameter. */
+		std::vector<int> returnvalues( this->GetNumberOfParameters(), 5 );
+		for ( unsigned int i = 0; i < this->GetNumberOfParameters(); i++ )
 		{
+			returnvalues[ i ] = this->m_Configuration->ReadParameter( dummy, "Scales", i, true );
+		}
+
+		/** Check which of the above options is used. */
+		if ( returnvalues[ 0 ] == 1 )
+		{
+			/** In this case the first option is used. */
+			for ( unsigned int i = 0; i < RotationPart; i++ )
+			{
+				newscales[ i ] = 100000.0;
+			}
+		}
+		else if ( returnvalues[ 0 ] == 0 && returnvalues[ 1 ] == 1 )
+		{
+			/** In this case the second option is used. */
+			double scale = 100000.0;
+			this->m_Configuration->ReadParameter( scale, "Scales", 0 );
+			for ( unsigned int i = 0; i < RotationPart; i++ )
+			{
+				newscales[ i ] = scale;
+			}
+		}
+		else if ( returnvalues[ 0 ] == 0 && returnvalues[ this->GetNumberOfParameters() - 1 ] == 0 )
+		{
+			/** In this case the third option is used. */
 			for ( unsigned int i = 0; i < this->GetNumberOfParameters(); i++ )
 			{
-				double scaler = 1.0;
-				this->m_Configuration->ReadParameter( scaler, "Scaler", i );
-				newscales[ i ] *= scaler;
+				this->m_Configuration->ReadParameter( newscales[ i ], "Scales", i );
 			}
 		}
-		/** If only the first scale is given, set the first AnglePartEnd
-		 * (1 in 2D and 3 in 3D) parameters to it.
-		 */
-		else if ( this->m_Configuration->ReadParameter( dummy, "Scaler", 0 ) == 1 )
-		{
-			double scaler = 100000.0;
-			this->m_Configuration->ReadParameter( scaler, "Scaler", 0 );
-			for ( unsigned int i = 0; i < AnglePartEnd; i++ )
-			{
-				newscales[ i ] *= scaler;
-			}
-		}
-		/** Otherwise, if nothing is given, set the first AnglePartEnd
-		 * (1 in 2D and 3 in 3D) parameters to 100000.0.
-		 */
 		else
 		{
-			for ( unsigned int i = 0; i < AnglePartEnd; i++ )
-			{
-				newscales[ i ] *= 100000.0;
-			}
+			/** In this case an error is made in the parameter-file.
+			 * An error is thrown, because using erroneous scales in the optimizer
+			 * can give unpredictable results.
+			 */
+			itkExceptionMacro( << "ERROR: The Scales-option in the parameter-file has not been set properly." );
 		}
 
 		/** And give it to the optimizer. */
