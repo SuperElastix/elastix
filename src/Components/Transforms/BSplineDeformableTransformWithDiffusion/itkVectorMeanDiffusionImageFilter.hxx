@@ -189,6 +189,7 @@ namespace itk
 		/** Loop over the number of iterations. */
 		for ( unsigned int k = 0; k < this->GetNumberOfIterations(); k++ )
 		{
+			/** Reset the iterators. */
 			nit.GoToBegin();
 			nit2.GoToBegin();
 			oit.GoToBegin();
@@ -201,11 +202,6 @@ namespace itk
 				{
 					/** Just copy input to output. */
 					oit.Set( nit.GetCenterPixel() );
-					/** Increase all iterators. */
-					++nit;
-					++nit2;
-					++oit;
-					//progress.CompletedPixel();
 				}
 				else
 				{
@@ -252,24 +248,17 @@ namespace itk
 					/** Set 'y = (1 - c) * x + c * mean' to the temporary output. */
 					InputPixelType value = nit.GetCenterPixel() * ( 1.0 -	c ) + mean * c;
 
-					/** Temporary if, so that value don't get to high! *
-					for ( j = 0; j < InputImageDimension; j++ )
-					{
-					if ( value[ j ] > 1000.0 )
-					{
-					value[ j ] = 1000.0;
-					}
-					}
-
 					/** Set it. */
 					oit.Set( value );
 
-					/** Increase all iterators. */
-					++nit;
-					++nit2;
-					++oit;
-					//progress.CompletedPixel();
 				} // end if c < 0.000001
+
+				/** Increase all iterators. */
+				++nit;
+				++nit2;
+				++oit;
+				//progress.CompletedPixel();
+				
 			} // end while
 
 			/** Copy outputtmp to output. */
@@ -346,8 +335,8 @@ namespace itk
 		this->m_Cx = DoubleImageType::New();
 		
 		/** Rescale intensity of this->m_GrayValueImage to values between
-		* 0.0 and 1.0.
-		*/
+		 * 0.0 and 1.0.
+		 */
 		this->m_RescaleFilter = RescaleImageFilterType::New();
 		this->m_RescaleFilter->SetOutputMinimum( 0.000001 );
 		this->m_RescaleFilter->SetOutputMaximum( 0.999999 );
@@ -369,7 +358,7 @@ namespace itk
 			/** Pass the exception to an higher level. */
 			throw excp;
 		}
-		
+
 	} // end FilterGrayValueImage
 
 
