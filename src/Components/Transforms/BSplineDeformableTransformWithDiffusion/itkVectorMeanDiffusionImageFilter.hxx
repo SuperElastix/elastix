@@ -116,6 +116,15 @@ namespace itk
 		VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
 		::GenerateData(void)
 	{
+		// \todo to avoid all the copying we can create a vector of
+		// outputs of size this->GetNumberOfIterations(). The last
+		// output should point to this->GetOutput(). In order to avoid
+		// a big memory footprint, at some iteration k, memory of the
+		// former iteration should be released: output[ k - 1 ] = 0,
+		// and memory of the current iteration should only now be created:
+		// output[ k ] = InputImageType::New(); ...; output[ k ]->Allocate().
+		// Only for the last iteration: output[ k ]( this->GetOutput() ).
+
 		/** Create feature image. */
 		this->FilterGrayValueImage();
 
@@ -187,81 +196,96 @@ namespace itk
 			/** The actual work. */
 			while ( !nit.IsAtEnd() )
 			{
-				/** Initialize the sum to 0. */
-				for ( j = 0; j < InputImageDimension; j++ )
+				/** Speed up: do not filter locations where c(x) = 0. */
+				if ( nit2.GetCenterPixel() < 0.000001 )
 				{
-					sum[ j ] = NumericTraits< double >::Zero;
+					/** Just copy input to output. */
+					oit.Set( nit.GetCenterPixel() );
+					/** Increase all iterators. */
+					++nit;
+					++nit2;
+					++oit;
+					//progress.CompletedPixel();
 				}
-
-				/** Initialize sumc. */
-				double sumc = 0.0;
-				
-				/** Calculate the weighted mean over the neighborhood.
-				 * mean = SUthis->m_i{ ci * x_i } / SUthis->m_i{ ci }
-				 */
-				for ( i = 0; i < neighborhoodSize; ++i )
+				else
 				{
-					/** Get current pixel in this neighborhood. */
-					InputPixelType pix = nit.GetPixel( i );
-
-					/** Get ci-value on current index. */
-					ci = nit2.GetPixel( i );
-
-					/** Calculate SUthis->m_i{ ci } and SUthis->m_i{ ci * x_i }. */
-					sumc += ci;
+					/** Initialize the sum to 0. */
 					for ( j = 0; j < InputImageDimension; j++ )
 					{
-						sum[ j ] += ci * static_cast< double >( pix[ j ] );
+						sum[ j ] = NumericTraits< double >::Zero;
 					}
-				}
-				
-				/** Get the mean value by dividing by sumc. */
-				InputPixelType mean;
-				for ( j = 0; j < InputImageDimension; j++ )
-				{
-					//if ( sumc == 0.0 ) mean[ j ] = 0.0;
-					if ( sumc < 0.001 ) mean[ j ] = 0.0;
-					else mean[ j ] = static_cast< ValueType >( sum[ j ] / sumc );
-				}
-				
-				/** Get c. */
-				c = nit2.GetCenterPixel();
 
-				/** Set 'y = (1 - c) * x + c * mean' to the temporary output. */
-				InputPixelType value = nit.GetCenterPixel() * ( 1.0 -	c ) + mean * c;
+					/** Initialize sumc. */
+					double sumc = 0.0;
 
-				/** Temporary if, so that value don't get to high! *
-				for ( j = 0; j < InputImageDimension; j++ )
-				{
+					/** Calculate the weighted mean over the neighborhood.
+					 * mean = SUthis->m_i{ ci * x_i } / SUthis->m_i{ ci }
+					 */
+					for ( i = 0; i < neighborhoodSize; ++i )
+					{
+						/** Get current pixel in this neighborhood. */
+						InputPixelType pix = nit.GetPixel( i );
+
+						/** Get ci-value on current index. */
+						ci = nit2.GetPixel( i );
+
+						/** Calculate SUthis->m_i{ ci } and SUthis->m_i{ ci * x_i }. */
+						sumc += ci;
+						for ( j = 0; j < InputImageDimension; j++ )
+						{
+							sum[ j ] += ci * static_cast< double >( pix[ j ] );
+						}
+					}
+
+					/** Get the mean value by dividing by sumc. */
+					InputPixelType mean;
+					for ( j = 0; j < InputImageDimension; j++ )
+					{
+						//if ( sumc == 0.0 ) mean[ j ] = 0.0;
+						if ( sumc < 0.00001 ) mean[ j ] = 0.0;
+						else mean[ j ] = static_cast< ValueType >( sum[ j ] / sumc );
+					}
+
+					/** Get c. */
+					c = nit2.GetCenterPixel();
+
+					/** Set 'y = (1 - c) * x + c * mean' to the temporary output. */
+					InputPixelType value = nit.GetCenterPixel() * ( 1.0 -	c ) + mean * c;
+
+					/** Temporary if, so that value don't get to high! *
+					for ( j = 0; j < InputImageDimension; j++ )
+					{
 					if ( value[ j ] > 1000.0 )
 					{
-						value[ j ] = 1000.0;
+					value[ j ] = 1000.0;
 					}
-				}
+					}
 
-				/** Set it. */
-				oit.Set( value );
-				
-				/** Increase all iterators. */
-				++nit;
-				++nit2;
-				++oit;
-				//progress.CompletedPixel();
+					/** Set it. */
+					oit.Set( value );
 
-			} // end while
-
-			/** Copy outputtmp to output. */
-			if ( this->GetNumberOfIterations() > 0 )
-			{
-				out_it.GoToBegin();
-				oit.GoToBegin();
-				while ( !out_it.IsAtEnd() )
-				{
-					out_it.Set( oit.Get() );
-					++out_it;
+					/** Increase all iterators. */
+					++nit;
+					++nit2;
 					++oit;
-				}
-			} // end if
+					//progress.CompletedPixel();
+
+				} // end while
+
+				/** Copy outputtmp to output. */
+				if ( this->GetNumberOfIterations() > 0 )
+				{
+					out_it.GoToBegin();
+					oit.GoToBegin();
+					while ( !out_it.IsAtEnd() )
+					{
+						out_it.Set( oit.Get() );
+						++out_it;
+						++oit;
+					}
+				} // end if GetNumberOfIterations
+
+			} // end if c < 0.000001
 
 		} // end for NumberOfIterations
 		
@@ -327,8 +351,8 @@ namespace itk
 		* 0.0 and 1.0.
 		*/
 		this->m_RescaleFilter = RescaleImageFilterType::New();
-		this->m_RescaleFilter->SetOutputMinimum( 0.0 );
-		this->m_RescaleFilter->SetOutputMaximum( 1.0 );
+		this->m_RescaleFilter->SetOutputMinimum( 0.000001 );
+		this->m_RescaleFilter->SetOutputMaximum( 0.999999 );
 		this->m_RescaleFilter->SetInput( this->m_GrayValueImage );
 		
 		/** First set this->m_Cx = rescaleFilter->GetOutput(). */
@@ -348,22 +372,6 @@ namespace itk
 			throw excp;
 		}
 		
-		/** Then, to avoid numerical problems, set everything
-		 * smaller than 0.00001 to 0.00001 and everything larger
-		 * than 0.99999 to 0.99999.
-		 */
-		ImageRegionIterator< DoubleImageType > it( this->m_Cx, this->m_Cx->GetLargestPossibleRegion() );
-		it.GoToBegin();
-		while ( !it.IsAtEnd() )
-		{
-			if ( it.Get() < 0.00001 ) it.Set( 0.00001 );
-			if ( it.Get() > 0.99999 ) it.Set( 0.99999 );
-			++it;
-		}
-
-		// \todo Is it possible to just use the rescale image filter with
-		// minimum and maximum values of 0.00001 and 0.99999.
-
 	} // end FilterGrayValueImage
 
 
