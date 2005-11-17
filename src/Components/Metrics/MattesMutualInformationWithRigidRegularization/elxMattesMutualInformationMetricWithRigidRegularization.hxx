@@ -44,7 +44,7 @@ using namespace itk;
 		this->GetConfiguration()->ReadParameter( numberOfResolutions, "NumberOfResolutions", 0 );
 
 		/** Get and set the rigidPenaltyWeight. */
-		std::vector< int > returnvalues( numberOfResolutions, 5.0 );
+		std::vector< int > returnvalues( numberOfResolutions, 5 );
 		double dummy = 1.0;
 		for ( unsigned int i = 0; i < numberOfResolutions; i++ )
 		{
