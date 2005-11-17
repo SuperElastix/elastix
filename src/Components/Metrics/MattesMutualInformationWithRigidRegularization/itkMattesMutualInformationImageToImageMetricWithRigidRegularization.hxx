@@ -32,25 +32,33 @@ namespace itk
 		MattesMutualInformationImageToImageMetricWithRigidRegularization<TFixedImage,TMovingImage>
 		::MattesMutualInformationImageToImageMetricWithRigidRegularization()
 	{
-		/** Initialize members. */
+		/** Initialize weights. */
 		this->m_RigidPenaltyWeight = NumericTraits<CoordinateRepresentationType>::One;
 		this->m_SecondOrderWeight = NumericTraits<CoordinateRepresentationType>::One;
 		this->m_DilationRadiusMultiplier = NumericTraits<CoordinateRepresentationType>::One;
+
+		/***/
 		this->m_UseImageSpacing = true;
 		this->m_DilateRigidityImages = true;
 		this->m_RigidRegulizer = RigidRegulizerMetricType::New();
+
+		/** Initialize rigidity images and their usage. */
+		this->m_UseFixedRigidityImage = true;
+		this->m_UseMovingRigidityImage = true;
 		this->m_FixedRigidityImage = 0;
 		this->m_MovingRigidityImage = 0;
 		this->m_RigidityCoefficientImage = RigidityImageType::New();
 
+		/** Initialize dilation filter for the rigidity images. */
 		this->m_FixedRigidityImageDilation.resize( FixedImageDimension );
 		this->m_MovingRigidityImageDilation.resize( MovingImageDimension );
 		for ( unsigned int i = 0; i < FixedImageDimension; i++ )
 		{
-			this->m_FixedRigidityImageDilation[ i ] = DilateFilterType::New();
-			this->m_MovingRigidityImageDilation[ i ] = DilateFilterType::New();
+			this->m_FixedRigidityImageDilation[ i ] = 0;
+			this->m_MovingRigidityImageDilation[ i ] = 0;
 		}
 
+		/** Initialize dilated rigidity images. */
 		this->m_FixedRigidityImageDilated = 0;
 		this->m_MovingRigidityImageDilated = 0;
 
@@ -83,6 +91,12 @@ namespace itk
 		else os << "false" << std::endl;
 		os << indent << "DilateRigidityImages: ";
 		if ( this->m_DilateRigidityImages ) os << "true" << std::endl;
+		else os << "false" << std::endl;
+		os << indent << "UseFixedRigidityImage: ";
+		if ( this->m_UseFixedRigidityImage ) os << "true" << std::endl;
+		else os << "false" << std::endl;
+		os << indent << "UseMovingRigidityImage: ";
+		if ( this->m_UseMovingRigidityImage ) os << "true" << std::endl;
 		else os << "false" << std::endl;
 		
 	} // end PrintSelf
@@ -136,8 +150,24 @@ namespace itk
 			std::vector< StructuringElementType >	structuringElement( FixedImageDimension );
 
 			/** Setup the pipeline. */
-			m_FixedRigidityImageDilation[ 0 ]->SetInput( m_FixedRigidityImage );
-			m_MovingRigidityImageDilation[ 0 ]->SetInput( m_MovingRigidityImage );
+			if ( this->m_UseFixedRigidityImage )
+			{
+				/** Create the dilation filters for the fixedRigidityImage. */
+				for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+				{
+					this->m_FixedRigidityImageDilation[ i ] = DilateFilterType::New();
+				}
+				m_FixedRigidityImageDilation[ 0 ]->SetInput( m_FixedRigidityImage );
+			}
+			if ( this->m_UseMovingRigidityImage )
+			{
+				/** Create the dilation filter for the movingRigidityImage. */
+				for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+				{
+					this->m_MovingRigidityImageDilation[ i ] = DilateFilterType::New();
+				}
+				m_MovingRigidityImageDilation[ 0 ]->SetInput( m_MovingRigidityImage );
+			}
 
 			/** Set stuff for the separate dilation. */
 			for ( unsigned int i = 0; i < FixedImageDimension; i++ )
@@ -145,7 +175,9 @@ namespace itk
 				/** Create the structuring element. */
 				radius.Fill( 0 );
 				radius.SetElement( i,
-					static_cast<unsigned long>(this->m_DilationRadiusMultiplier * this->m_BSplineTransform->GetGridSpacing()[ i ]) );
+					static_cast<unsigned long>(
+					this->m_DilationRadiusMultiplier
+					* this->m_BSplineTransform->GetGridSpacing()[ i ] ) );
 
 				structuringElement[ i ].SetRadius( radius );
 				structuringElement[ i ].CreateStructuringElement();
@@ -155,65 +187,94 @@ namespace itk
 				 * this->Modified() is automatically called, which is important,
 				 * since this changes every time Initialize() is called (every resolution).
 				 */
-				this->m_FixedRigidityImageDilation[ i ]->SetKernel( structuringElement[ i ] );
-				this->m_MovingRigidityImageDilation[ i ]->SetKernel( structuringElement[ i ] );
+				if ( this->m_UseFixedRigidityImage )
+				{
+					this->m_FixedRigidityImageDilation[ i ]->SetKernel( structuringElement[ i ] );
+				}
+				if ( this->m_UseMovingRigidityImage )
+				{
+					this->m_MovingRigidityImageDilation[ i ]->SetKernel( structuringElement[ i ] );
+				}
 
 				/** Connect the pipelines. */
 				if ( i > 0 )
 				{
-					this->m_FixedRigidityImageDilation[ i ]->SetInput(
-						m_FixedRigidityImageDilation[ i - 1 ]->GetOutput() );
-					this->m_MovingRigidityImageDilation[ i ]->SetInput(
-						m_MovingRigidityImageDilation[ i - 1 ]->GetOutput() );
+					if ( this->m_UseFixedRigidityImage )
+					{
+						this->m_FixedRigidityImageDilation[ i ]->SetInput(
+							m_FixedRigidityImageDilation[ i - 1 ]->GetOutput() );
+					}
+					if ( this->m_UseMovingRigidityImage )
+					{
+						this->m_MovingRigidityImageDilation[ i ]->SetInput(
+							m_MovingRigidityImageDilation[ i - 1 ]->GetOutput() );
+					}
+				}
+			} // end for loop
+
+			/** Do the dilation for m_FixedRigidityImage. */
+			if ( this->m_UseFixedRigidityImage )
+			{
+				try
+				{
+					this->m_FixedRigidityImageDilation[ FixedImageDimension - 1 ]->Update();
+				}
+				catch( itk::ExceptionObject & excp )
+				{
+					/** Add information to the exception. */
+					excp.SetLocation( "MattesMutualInformationImageToImageMetricWithRigidRegularization - Initialize()" );
+					std::string err_str = excp.GetDescription();
+					err_str += "\nError while dilating m_FixedRigidityImage.\n";
+					excp.SetDescription( err_str );
+					/** Pass the exception to an higher level. */
+					throw excp;
 				}
 			}
 
-			/** Do the dilation for m_FixedRigidityImage. */
-			try
-			{
-				this->m_FixedRigidityImageDilation[ FixedImageDimension - 1 ]->Update();
-			}
-			catch( itk::ExceptionObject & excp )
-			{
-				/** Add information to the exception. */
-				excp.SetLocation( "MattesMutualInformationImageToImageMetricWithRigidRegularization - Initialize()" );
-				std::string err_str = excp.GetDescription();
-				err_str += "\nError while dilating m_FixedRigidityImage.\n";
-				excp.SetDescription( err_str );
-				/** Pass the exception to an higher level. */
-				throw excp;
-			}
-
 			/** Do the dilation for m_MovingRigidityImage. */
-			try
+			if ( this->m_UseMovingRigidityImage )
 			{
-				this->m_MovingRigidityImageDilation[ MovingImageDimension - 1 ]->Update();
-			}
-			catch( itk::ExceptionObject & excp )
-			{
-				/** Add information to the exception. */
-				excp.SetLocation( "MattesMutualInformationImageToImageMetricWithRigidRegularization - Initialize()" );
-				std::string err_str = excp.GetDescription();
-				err_str += "\nError while dilating m_MovingRigidityImage.\n";
-				excp.SetDescription( err_str );
-				/** Pass the exception to an higher level. */
-				throw excp;
+				try
+				{
+					this->m_MovingRigidityImageDilation[ MovingImageDimension - 1 ]->Update();
+				}
+				catch( itk::ExceptionObject & excp )
+				{
+					/** Add information to the exception. */
+					excp.SetLocation( "MattesMutualInformationImageToImageMetricWithRigidRegularization - Initialize()" );
+					std::string err_str = excp.GetDescription();
+					err_str += "\nError while dilating m_MovingRigidityImage.\n";
+					excp.SetDescription( err_str );
+					/** Pass the exception to an higher level. */
+					throw excp;
+				}
 			}
 
 			/** Put the output of the dilation into some dilated images. */
-			this->m_FixedRigidityImageDilated =
-				this->m_FixedRigidityImageDilation[ FixedImageDimension - 1 ]->GetOutput();
-			this->m_MovingRigidityImageDilated =
-				this->m_MovingRigidityImageDilation[ MovingImageDimension - 1 ]->GetOutput();
-
+			if ( this->m_UseFixedRigidityImage )
+			{
+				this->m_FixedRigidityImageDilated =
+					this->m_FixedRigidityImageDilation[ FixedImageDimension - 1 ]->GetOutput();
+			}
+			if ( this->m_UseMovingRigidityImage )
+			{
+				this->m_MovingRigidityImageDilated =
+					this->m_MovingRigidityImageDilation[ MovingImageDimension - 1 ]->GetOutput();
+			}
 		}
 		else
 		{
 			/** Copy the pointers of the undilated images to the dilated ones
 			 * if no dilation is needed.
 			 */
-			this->m_FixedRigidityImageDilated = this->m_FixedRigidityImage;
-			this->m_MovingRigidityImageDilated = this->m_MovingRigidityImage;
+			if ( this->m_UseFixedRigidityImage )
+			{
+				this->m_FixedRigidityImageDilated = this->m_FixedRigidityImage;
+			}
+			if ( this->m_UseMovingRigidityImage )
+			{
+				this->m_MovingRigidityImageDilated = this->m_MovingRigidityImage;
+			}
 
 		} // end if rigidity images should be dilated
 	
@@ -281,12 +342,12 @@ namespace itk
 	 * Both are computed on a randomly chosen set of voxels in the
 	 * fixed image domain or on all pixels.
 	 */
-
+	 
 	 template < class TFixedImage, class TMovingImage  >
 		 void
 		 MattesMutualInformationImageToImageMetricWithRigidRegularization<TFixedImage,TMovingImage>
 		 ::GetValueAndDerivative( const ParametersType& parameters,
-			MeasureType& value, DerivativeType& derivative ) const
+		 MeasureType& value, DerivativeType& derivative ) const
 	 {
 		 /** Call FillRigidityCoefficientImage. */
 		 this->FillRigidityCoefficientImage( parameters );
@@ -371,33 +432,59 @@ namespace itk
 			 /** Get the corresponding indices in the fixed and moving RigidityImage's.
 				* NOTE: Floating point index results are truncated to integers.
 				*/
-			 isInFixedImage = this->m_FixedRigidityImageDilated
-				 ->TransformPhysicalPointToIndex( point, index1 );
-			 isInMovingImage = this->m_MovingRigidityImageDilated
-				 ->TransformPhysicalPointToIndex(
-				 this->m_BSplineTransform->TransformPoint( point ), index2 );
+			 if ( this->m_UseFixedRigidityImage )
+			 {
+				 isInFixedImage = this->m_FixedRigidityImageDilated
+					 ->TransformPhysicalPointToIndex( point, index1 );
+			 }
+			 if ( this->m_UseMovingRigidityImage )
+			 {
+				 isInMovingImage = this->m_MovingRigidityImageDilated
+					 ->TransformPhysicalPointToIndex(
+					 this->m_BSplineTransform->TransformPoint( point ), index2 );
+			 }
 
 			 /** Get the values at those positions. */
-			 if ( isInFixedImage )
+			 if ( this->m_UseFixedRigidityImage )
 			 {
-				 fixedValue = this->m_FixedRigidityImageDilated->GetPixel( index1 );
-			 }
-			 else
-			 {
-				 fixedValue = 0.0;
+				 if ( isInFixedImage )
+				 {
+					 fixedValue = this->m_FixedRigidityImageDilated->GetPixel( index1 );
+				 }
+				 else
+				 {
+					 fixedValue = 0.0;
+				 }
 			 }
 
-			 if ( isInMovingImage )
+			 if ( this->m_UseMovingRigidityImage )
 			 {
-				 movingValue = this->m_MovingRigidityImageDilated->GetPixel( index2 );
-			 }
-			 else
-			 {
-				 movingValue = 0.0;
+				 if ( isInMovingImage )
+				 {
+					 movingValue = this->m_MovingRigidityImageDilated->GetPixel( index2 );
+				 }
+				 else
+				 {
+					 movingValue = 0.0;
+				 }
 			 }
 
 			 /** Determine the maximum. */
-			 in = ( fixedValue > movingValue ? fixedValue : movingValue );
+			 if ( this->m_UseFixedRigidityImage && this->m_UseMovingRigidityImage )
+			 {
+				 in = ( fixedValue > movingValue ? fixedValue : movingValue );
+			 }
+			 else if ( this->m_UseFixedRigidityImage && !this->m_UseMovingRigidityImage )
+			 {
+				 in = fixedValue;
+			 }
+			 else if ( !this->m_UseFixedRigidityImage && this->m_UseMovingRigidityImage )
+			 {
+				 in = movingValue;
+			 }
+			 /** else{} is not happening here, because we asssume that one of them is true.
+			  * In our case we checked that in the derived class: elxMattesMIWRR.
+				*/
 			
 			 /** Set it. */
 			 it.Set( in );

@@ -22,8 +22,11 @@ using namespace itk;
 		this->m_ShowExactMetricValue = false;
 		this->m_SamplesOnUniformGrid = false;
 
-		this->m_FixedRigidityImageReader = RigidityImageReaderType::New();
-		this->m_MovingRigidityImageReader = RigidityImageReaderType::New();
+		this->m_FixedRigidityImageReader = 0;
+		this->m_MovingRigidityImageReader = 0;
+
+		/** Initialize m_RigidPenaltyWeight to be 1.0 for each resolution. */
+		this->m_RigidPenaltyWeight.resize( 3, 1.0 );
 
 	} // end Constructor
 
@@ -36,10 +39,58 @@ using namespace itk;
 		void MattesMutualInformationMetricWithRigidRegularization<TElastix>
 		::BeforeRegistration(void)
 	{
+		/** Get the number of resolution levels. */
+		unsigned int numberOfResolutions = 3;
+		this->GetConfiguration()->ReadParameter( numberOfResolutions, "NumberOfResolutions", 0 );
+
 		/** Get and set the rigidPenaltyWeight. */
-		double rigidPenaltyWeight = 1.0;
-		this->GetConfiguration()->ReadParameter( rigidPenaltyWeight, "RigidPenaltyWeight", 0 );
-		this->SetRigidPenaltyWeight( rigidPenaltyWeight );
+		std::vector< int > returnvalues( numberOfResolutions, 5.0 );
+		double dummy = 1.0;
+		for ( unsigned int i = 0; i < numberOfResolutions; i++ )
+		{
+			returnvalues[ i ] = this->GetConfiguration()->ReadParameter( dummy, "RigidPenaltyWeight", i, true );
+		}
+
+		/* Check which option is used:
+		 * - Nothing given in the parameter-file: all rigidPenaltyWeight are 1.0.
+		 * - Only one value given in the parameter-file: all rigidPenaltyWeight
+		 *   are set to this value.
+		 * - All values are given in the parameter-file: all rigidPenaltyWeights
+		 *   are assigned their own value.
+		 */
+		if ( returnvalues[ 0 ] == 1 )
+		{
+			/** In this case the first option is used. */
+			this->m_RigidPenaltyWeight.resize( numberOfResolutions, 1.0 );
+		}
+		else if ( returnvalues[ 0 ] == 0 && returnvalues[ 1 ] == 1 )
+		{
+			/** In this case the second option is used. */
+			double rigidPenaltyWeight = 1.0;
+			this->GetConfiguration()->ReadParameter( rigidPenaltyWeight, "RigidPenaltyWeight", 0 );
+			this->m_RigidPenaltyWeight.resize( numberOfResolutions, rigidPenaltyWeight );
+		}
+		else if ( returnvalues[ 0 ] == 0 && returnvalues[ numberOfResolutions - 1 ] == 0 )
+		{
+			/** In this case the third option is used. */
+			this->m_RigidPenaltyWeight.resize( numberOfResolutions );
+			for ( unsigned int i = 0; i < numberOfResolutions; i++ )
+			{
+				this->GetConfiguration()->ReadParameter(
+					this->m_RigidPenaltyWeight[ i ], "RigidPenaltyWeight", i );
+			}
+		}
+		else
+		{
+			/** In this case an error is made in the parameter-file.
+			 * An error is thrown, because using erroneous rigid penalty weights
+			 * can give unpredictable results.
+			 */
+			itkExceptionMacro( << "ERROR: The RigidPenaltyWeight-option in the parameter-file has not been set properly." );
+		}
+
+		/** Set the RigidPenaltyWeight in the superclass to the first. */
+		this->SetRigidPenaltyWeight( this->m_RigidPenaltyWeight[ 0 ] );
 
 		/** Get and set the secondOrderWeight. */
 		double secondOrderWeight = 1.0;
@@ -67,75 +118,111 @@ using namespace itk;
 		std::string outdir = this->GetConfiguration()->GetCommandLineArgument( "-out" );
 		this->SetOutputDirectoryName( outdir.c_str() );
 
-		/** Read the fixed rigidity image and set it in the right class. */
-		std::string fixedRigidityImageName = "";
-		this->GetConfiguration()->ReadParameter( fixedRigidityImageName, "FixedRigidityImageName", 0 );
-		
-		if ( fixedRigidityImageName == "" )
+		/** Get and set the useFixedRigidityImage and read the FixedRigidityImage if wanted. */
+		std::string useFixedRigidityImage = "true";
+		this->GetConfiguration()->ReadParameter( useFixedRigidityImage, "UseFixedRigidityImage", 0 );
+		if ( useFixedRigidityImage == "true" )
 		{
-			/** Create and throw an exception. */
-			itkExceptionMacro( << "ERROR: No fixed rigidity image filename specified." );
+			/** Use the FixedRigidityImage. */
+			this->SetUseFixedRigidityImage( true );
+
+			/** Read the fixed rigidity image and set it in the right class. */
+			std::string fixedRigidityImageName = "";
+			this->GetConfiguration()->ReadParameter( fixedRigidityImageName, "FixedRigidityImageName", 0 );
+
+			/** Check if a name is given. */
+			if ( fixedRigidityImageName == "" )
+			{
+				/** Create and throw an exception. */
+				itkExceptionMacro( << "ERROR: No fixed rigidity image filename specified." );
+			}
+			else
+			{
+				/** Create the reader and set the filename. */
+				this->m_FixedRigidityImageReader = RigidityImageReaderType::New();
+				this->m_FixedRigidityImageReader->SetFileName( fixedRigidityImageName.c_str() );
+
+				/** Do the reading. */
+				try
+				{
+					this->m_FixedRigidityImageReader->Update();
+				}
+				catch( ExceptionObject & excp )
+				{
+					/** Add information to the exception. */
+					excp.SetLocation( "MattesMutualInformationMetricWithRigidRegularization - BeforeEachResolution()" );
+					std::string err_str = excp.GetDescription();
+					err_str += "\nError occured while reading the FixedRigidityImage.\n";
+					excp.SetDescription( err_str );
+					/** Pass the exception to an higher level. */
+					throw excp;
+				}
+
+				/** Set the fixed rigidity image into the superclass. */
+				this->SetFixedRigidityImage( this->m_FixedRigidityImageReader->GetOutput() );
+        
+			} // end if filename
 		}
 		else
 		{
-			/** Set the filename. */
-			this->m_FixedRigidityImageReader->SetFileName( fixedRigidityImageName.c_str() );
+			this->SetUseFixedRigidityImage( false );
+		} // end if use fixedRigidityImage
 
-			/** Do the reading. */
-			try
-			{
-				this->m_FixedRigidityImageReader->Update();
-			}
-			catch( ExceptionObject & excp )
-			{
-				/** Add information to the exception. */
-				excp.SetLocation( "MattesMutualInformationMetricWithRigidRegularization - BeforeEachResolution()" );
-        std::string err_str = excp.GetDescription();
-				err_str += "\nError occured while reading the FixedRigidityImage.\n";
-				excp.SetDescription( err_str );
-				/** Pass the exception to an higher level. */
-				throw excp;
-			}
-
-			/** Set the fixed rigidity image into the superclass. */
-			this->SetFixedRigidityImage( this->m_FixedRigidityImageReader->GetOutput() );
-
-		} // end if
-
-		/** Read the moving rigidity image and set it in the right class. */
-		std::string movingRigidityImageName = "";
-		this->GetConfiguration()->ReadParameter( movingRigidityImageName, "MovingRigidityImageName", 0 );
-		
-		if ( movingRigidityImageName == "" )
+		/** Get and set the useMovingRigidityImage and read the movingRigidityImage if wanted. */
+		std::string useMovingRigidityImage = "true";
+		this->GetConfiguration()->ReadParameter( useMovingRigidityImage, "UseMovingRigidityImage", 0 );
+		if ( useMovingRigidityImage == "true" )
 		{
-			/** Create and throw an exception. */
-			itkExceptionMacro( << "ERROR: No moving rigidity image filename specified." );
+			/** Use the movingRigidityImage. */
+			this->SetUseMovingRigidityImage( true );
+			
+			/** Read the moving rigidity image and set it in the right class. */
+			std::string movingRigidityImageName = "";
+			this->GetConfiguration()->ReadParameter( movingRigidityImageName, "MovingRigidityImageName", 0 );
+      
+			/** Check if a name is given. */
+			if ( movingRigidityImageName == "" )
+			{
+				/** Create and throw an exception. */
+				itkExceptionMacro( << "ERROR: No moving rigidity image filename specified." );
+			}
+			else
+			{
+				/** Create the reader and set the filename. */
+				this->m_MovingRigidityImageReader = RigidityImageReaderType::New();
+				this->m_MovingRigidityImageReader->SetFileName( movingRigidityImageName.c_str() );
+        
+				/** Do the reading. */
+				try
+				{
+					this->m_MovingRigidityImageReader->Update();
+				}
+				catch( ExceptionObject & excp )
+				{
+					/** Add information to the exception. */
+					excp.SetLocation( "MattesMutualInformationMetricWithRigidRegularization - BeforeEachResolution()" );
+					std::string err_str = excp.GetDescription();
+					err_str += "\nError occured while reading the MovingRigidityImage.\n";
+					excp.SetDescription( err_str );
+					/** Pass the exception to an higher level. */
+					throw excp;
+				}
+
+				/** Set the moving rigidity image into the superclass. */
+				this->SetMovingRigidityImage( this->m_MovingRigidityImageReader->GetOutput() );
+
+			} // end if filename
 		}
 		else
 		{
-			/** Set the filename. */
-			this->m_MovingRigidityImageReader->SetFileName( movingRigidityImageName.c_str() );
+			this->SetUseMovingRigidityImage( false );
+		} // end if use movingRigidityImage
 
-			/** Do the reading. */
-			try
-			{
-				this->m_MovingRigidityImageReader->Update();
-			}
-			catch( ExceptionObject & excp )
-			{
-				/** Add information to the exception. */
-				excp.SetLocation( "MattesMutualInformationMetricWithRigidRegularization - BeforeEachResolution()" );
-        std::string err_str = excp.GetDescription();
-				err_str += "\nError occured while reading the MovingRigidityImage.\n";
-				excp.SetDescription( err_str );
-				/** Pass the exception to an higher level. */
-				throw excp;
-			}
-
-			/** Set the moving rigidity image into the superclass. */
-			this->SetMovingRigidityImage( this->m_MovingRigidityImageReader->GetOutput() );
-
-		} // end if
+		/** Important check: at least one rigidity image must be given. */
+		if ( useFixedRigidityImage == "false" && useMovingRigidityImage == "false" )
+		{
+			itkExceptionMacro( << "ERROR: At least one of useFixedRigidityImage and UseMovingRigidityImage must be true." );
+		}
 
 		/** Add target cells to xout["iteration"]. */
 		xout["iteration"].AddTargetCell("Metric - MI");
@@ -185,22 +272,22 @@ using namespace itk;
 		 * 	metric->SetAlpha( config.GetAlpha(level) );
 		 */
 
-		/** Get the current resolution level.*/
+		/** Get the current resolution level. */
 		unsigned int level = 
 			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 		
-		/** Set the number of histogram bins and spatial samples.*/				
+		/** Set the number of histogram bins and spatial samples. */				
 		unsigned int numberOfHistogramBins = 32;
 		unsigned int numberOfSpatialSamples = 10000;
 		/** \todo guess the default numberOfSpatialSamples from the 
 		 * imagesize, the numberOfParameters, and the number of bins...
 		 */
 		
-		/** Read the parameters from the ParameterFile.*/
+		/** Read the parameters from the ParameterFile. */
 		this->m_Configuration->ReadParameter( numberOfHistogramBins, "NumberOfHistogramBins", level );
 		this->m_Configuration->ReadParameter( numberOfSpatialSamples, "NumberOfSpatialSamples", level );
 		
-		/** Set them.*/
+		/** Set them. */
 		this->SetNumberOfHistogramBins( numberOfHistogramBins );
 		this->SetNumberOfSpatialSamples( numberOfSpatialSamples );
 
@@ -215,7 +302,7 @@ using namespace itk;
 		std::string useAllPixels = "false";
 		this->GetConfiguration()->
 			ReadParameter(useAllPixels, "UseAllPixels", level);
-		if (useAllPixels == "true")
+		if ( useAllPixels == "true" )
 		{
 			useAllPixelsBool = true;
 		}
@@ -225,7 +312,7 @@ using namespace itk;
 		}
 		this->SetUseAllPixels(useAllPixelsBool);
 
-		if (!useAllPixelsBool)
+		if ( !useAllPixelsBool )
 		{
 			/** Show the exact metric VALUE anyway? */
 			std::string showExactMetricValue = "false";
@@ -244,7 +331,7 @@ using namespace itk;
 		}
 		else	
 		{
-			/** The exact metric value is shown anyway */
+			/** The exact metric value is shown anyway. */
 			this->m_ShowExactMetricValue = false;
 		}
     
@@ -257,7 +344,7 @@ using namespace itk;
 		{
 			this->m_SamplesOnUniformGrid = true;
 	
-			/** Read the desired spacing of the samples */
+			/** Read the desired spacing of the samples. */
 			unsigned int spacing_dim;
 			for (unsigned int dim = 0; dim < FixedImageDimension; dim++)
 			{
@@ -271,6 +358,9 @@ using namespace itk;
 			}
 
 		} // end if samplesOnUniformGrid
+
+		/** Set the RigidPenaltyWeight in the superclass to the one of this level. */
+		this->SetRigidPenaltyWeight( this->m_RigidPenaltyWeight[ level ] );
 		
 	} // end BeforeEachResolution
 	
@@ -298,7 +388,7 @@ using namespace itk;
 		xl::xout["iteration"]["Metric - MI"] << this->GetMIValue();
 		xl::xout["iteration"]["Metric - RR"] << this->GetRigidValue();
 
-	}
+	} // end AfterEachIteration
 
 
 	/**

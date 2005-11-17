@@ -53,7 +53,12 @@ using namespace itk;
 	 * \parameter RigidPenaltyWeight: A parameter to weigh the rigidity penalty
 	 *		term against the mutual information metric. \n
 	 *		example: <tt>(RigidPenaltyWeight 0.1)</tt> \n
-	 *		Default is 1.0.
+	 *		example: <tt>(RigidPenaltyWeight 1.0 0.5 0.1)</tt> \n
+	 *    If only one argument is given, that value is used for all resolutions.
+	 *		If more than one argument is given, then the number of arguments should be
+	 *		equal to the number of resolutions: for each resolution its rigid penalty weight.
+	 *		If this parameter option is not used, by default the rigid penalty weight is set
+	 *		to 1.0 for each resolution.
 	 * \parameter SecondOrderWeight: A parameter to weigh the second order terms
 	 *		of the rigidity term against its first order terms. \n
 	 *		example: <tt>(SecondOrderWeight 2.0)</tt> \n
@@ -62,10 +67,18 @@ using namespace itk;
 	 *		when calculating the rigidity term. \n
 	 *		example: <tt>(UseImageSpacing "false")</tt> \n
 	 *		Default is "true".
+	 * \parameter UseFixedRigidityImage: flag to specify the use of the fixed rigidity
+	 *		image when calculating the rigidity coefficient image. \n
+	 *		example: <tt>(UseFixedRigidityImage "false")</tt> \n
+	 *		Default is "true".
 	 * \parameter FixedRigidityImageName: the name of a coefficient image to specify
 	 *		the rigidity index of voxels in the fixed image. \n
 	 *		example: <tt>(FixedRigidityImageName "fixedRigidityImage.mhd")</tt> \n
 	 *		This argument is mandatory.
+	 * \parameter UseMovingRigidityImage: flag to specify the use of the moving rigidity
+	 *		image when calculating the rigidity coefficient image. \n
+	 *		example: <tt>(UseMovingRigidityImage "false")</tt> \n
+	 *		Default is "true".
 	 * \parameter MovingRigidityImageName: the name of a coefficient image to specify
 	 *		the rigidity index of voxels in the moving image. \n
 	 *		example: <tt>(MovingRigidityImageName "movingRigidityImage.mhd")</tt> \n
@@ -172,13 +185,15 @@ using namespace itk;
 		
 		/** Execute stuff before the actual registration:
 		 * \li Set the rigid penalty weight.
-		 * \li Set the  weight of the second order term of the penalty term.
+		 * \li Set the weight of the second order term of the penalty term.
 		 * \li Set the flag to use the image spacing for calculations.
 		 * \li Set the flag to dilate the rigidity images.
 		 * \li Set the dilation radius multiplier
 		 * \li Set the output directory name.
 		 * \li Set the rigidity coefficients of the fixed image.
 		 * \li Set the rigidity coefficients of the moving image.
+		 * \li Set the flag to use a fixed rigidity image.
+		 * \li Set the flag to use a moving rigidity image.
 		 * \li Setup the output to the logfile.
 		 */
 		virtual void BeforeRegistration(void);
@@ -190,6 +205,7 @@ using namespace itk;
 		 * \li Set the flag to calculate and show the exact metric value.
 		 * \li Set the flag to take samples on a uniform grid.
 		 * \li Set the grid spacing of the sampling grid.
+		 * \li Set the rigid penalty weight of this level.
 		 */
 		virtual void BeforeEachResolution(void);
 
@@ -199,7 +215,7 @@ using namespace itk;
 		 */
 		virtual void AfterEachIteration(void);
 
-		/** Sets up a timer to measure the intialisation time and calls the Superclass'
+		/** Set up a timer to measure the intialisation time and call the Superclass'
 		 * implementation.
 		 */
 		virtual void Initialize(void) throw (ExceptionObject);
@@ -244,6 +260,8 @@ using namespace itk;
 		/** Member variables. */
 		RigidityImageReaderPointer			m_FixedRigidityImageReader;
 		RigidityImageReaderPointer			m_MovingRigidityImageReader;
+
+		std::vector< double >						m_RigidPenaltyWeight;
 
 	}; // end class MattesMutualInformationMetricWithRigidRegularization
 

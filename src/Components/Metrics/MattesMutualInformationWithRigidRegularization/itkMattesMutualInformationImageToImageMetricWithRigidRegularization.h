@@ -173,6 +173,12 @@ namespace itk
 		/** Set the moving coefficient image. */
 		itkSetMacro( MovingRigidityImage, RigidityImagePointer );
 
+		/** Set to use the FixedRigidityImage or not. */
+		itkSetMacro( UseFixedRigidityImage, bool );
+
+		/** Set to use the MovingRigidityImage or not. */
+		itkSetMacro( UseMovingRigidityImage, bool );
+
 		/** Function to fill the RigidityCoefficientImage every iteration. */
 		void FillRigidityCoefficientImage( const ParametersType& parameters ) const;
 
@@ -218,6 +224,8 @@ namespace itk
 		std::vector< DilateFilterPointer >	m_MovingRigidityImageDilation;
 		RigidityImagePointer						m_FixedRigidityImageDilated;
 		RigidityImagePointer						m_MovingRigidityImageDilated;
+		bool														m_UseFixedRigidityImage;
+		bool														m_UseMovingRigidityImage;
 
 		/** For printing purposes. */
 		mutable double m_MIValue, m_RigidValue;
