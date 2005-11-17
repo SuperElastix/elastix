@@ -269,23 +269,21 @@ namespace itk
 					++nit2;
 					++oit;
 					//progress.CompletedPixel();
+				} // end if c < 0.000001
+			} // end while
 
-				} // end while
-
-				/** Copy outputtmp to output. */
-				if ( this->GetNumberOfIterations() > 0 )
+			/** Copy outputtmp to output. */
+			if ( this->GetNumberOfIterations() > 0 )
+			{
+				out_it.GoToBegin();
+				oit.GoToBegin();
+				while ( !out_it.IsAtEnd() )
 				{
-					out_it.GoToBegin();
-					oit.GoToBegin();
-					while ( !out_it.IsAtEnd() )
-					{
-						out_it.Set( oit.Get() );
-						++out_it;
-						++oit;
-					}
-				} // end if GetNumberOfIterations
-
-			} // end if c < 0.000001
+					out_it.Set( oit.Get() );
+					++out_it;
+					++oit;
+				}
+			} // end if GetNumberOfIterations() > 0
 
 		} // end for NumberOfIterations
 		
