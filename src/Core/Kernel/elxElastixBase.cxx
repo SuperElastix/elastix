@@ -81,6 +81,8 @@ namespace elastix
 		elxout << std::setprecision(this->m_DefaultOutputPrecision);
 
 		/** Print to log file.*/
+		elxout << std::fixed;
+		elxout << std::showpoint;
 		elxout << std::setprecision(3);
 		elxout << "ELASTIX version: " << __ELASTIX_VERSION << std::endl;
 		elxout << std::setprecision( this->GetDefaultOutputPrecision() );
