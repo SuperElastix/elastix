@@ -35,6 +35,7 @@ EXCLUDE = "@elastix_SOURCE_DIR@/Common/ParameterFileParser" \
 	  "@elastix_SOURCE_DIR@/Components/Metrics/MattesMutualInformationWithRigidRegularization" \
 	  "@elastix_SOURCE_DIR@/Components/Transforms/BSplineDeformableTransformWithDiffusion" \
 	  "@elastix_SOURCE_DIR@/Components/Optimizers/QuasiNewtonLBFGS" \
+	  "@elastix_SOURCE_DIR@/Components/Optimizers/StochasticQuasiNewton" \
 	  "@elastix_SOURCE_DIR@/Components/Optimizers/ConjugateGradient"
 
 # The HTML_STYLESHEET tag can be used to specify a user defined cascading 
