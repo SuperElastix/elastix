@@ -1,7 +1,7 @@
 #ifndef __elxRegularStepGradientDescent_h
 #define __elxRegularStepGradientDescent_h
 
-#include "itkImprovedRegularStepGradientDescentOptimizer.h"
+#include "itkRegularStepGradientDescentOptimizer.h"
 #include "elxIncludes.h"
 
 namespace elastix
@@ -12,13 +12,11 @@ using namespace itk;
 	 * \class RegularStepGradientDescent
 	 * \brief An optimizer based on gradient descent...
 	 *
-	 * This optimizer is a wrap around the ImprovedRegularStepGradientDescentOptimizer,
-	 * which is almost exactly equal to the itk::RegularStepGradientDescentOptimizer.
+	 * This optimizer is a wrap around the itk::RegularStepGradientDescentOptimizer.
 	 * This wrap-around class takes care of setting parameters, and printing progress
 	 * information.
 	 * For detailed information about the optimisation method, please read the
-	 * documentation of the ImprovedRegularStepGradientDescentOptimizer class and the 
-	 * itkRegularStepGradientDescentOptimizer (in the ITK-manual).
+	 * documentation of the itkRegularStepGradientDescentOptimizer (in the ITK-manual).
 	 *
 	 * The parameters used in this class are:
 	 * \parameter Optimizer: Select this optimizer as follows:\n
@@ -50,7 +48,7 @@ using namespace itk;
 	template <class TElastix>
 		class RegularStepGradientDescent :
 		public
-			itk::ImprovedRegularStepGradientDescentOptimizer,
+			itk::RegularStepGradientDescentOptimizer,
 		public
 			OptimizerBase<TElastix>
 	{
@@ -58,7 +56,7 @@ using namespace itk;
 
 		/** Standard ITK.*/
 		typedef RegularStepGradientDescent									Self;
-		typedef ImprovedRegularStepGradientDescentOptimizer	Superclass1;
+		typedef RegularStepGradientDescentOptimizer	Superclass1;
 		typedef OptimizerBase<TElastix>											Superclass2;
 		typedef SmartPointer<Self>									Pointer;
 		typedef SmartPointer<const Self>						ConstPointer;
@@ -67,7 +65,7 @@ using namespace itk;
 		itkNewMacro( Self );
 		
 		/** Run-time type information (and related methods). */
-		itkTypeMacro( RegularStepGradientDescent, ImprovedRegularStepGradientDescentOptimizer );
+		itkTypeMacro( RegularStepGradientDescent, RegularStepGradientDescentOptimizer );
 		
 		/** Name of this class.
 		 * Use this name in the parameter file to select this specific optimizer. \n
@@ -104,7 +102,8 @@ using namespace itk;
 		 * ensure that the scales array and the parameters
 		 * array have the same size. */
 		virtual void SetInitialPosition( const ParametersType & param );
-		
+
+			
 	protected:
 
 		RegularStepGradientDescent(){};

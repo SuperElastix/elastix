@@ -51,12 +51,12 @@ using namespace itk;
 		this->SetGradientMagnitudeTolerance( minGradientMagnitude );
 
 		/** Set the MaximumStepLength.*/
-		double maxStepLength = 16.0 / pow( 2.0, static_cast<int>( level ) );
+		double maxStepLength = 16.0 / vcl_pow( 2.0, static_cast<int>( level ) );
 		this->m_Configuration->ReadParameter( maxStepLength, "MaximumStepLength", level );
 		this->SetMaximumStepLength( maxStepLength );
 
 		/** Set the MinimumStepLength.*/
-		double minStepLength = 0.5 / pow( 2.0, static_cast<int>( level ) );
+		double minStepLength = 0.5 / vcl_pow( 2.0, static_cast<int>( level ) );
 		this->m_Configuration->ReadParameter( minStepLength, "MinimumStepLength", level );
 		this->SetMinimumStepLength( minStepLength );
 
@@ -88,7 +88,7 @@ using namespace itk;
 		/** Print some information */
 		xl::xout["iteration"]["2:Metric"]		<< this->GetValue();
 		xl::xout["iteration"]["3:StepSize"] << this->GetCurrentStepLength();
-		xl::xout["iteration"]["4:||Gradient||"] << this->GetGradientMagnitude();
+		xl::xout["iteration"]["4:||Gradient||"] << this->GetGradient().magnitude();
 	} // end AfterEachIteration
 
 
@@ -103,7 +103,7 @@ using namespace itk;
 		
 		/**
 		 * enum   StopConditionType {   GradientMagnitudeTolerance = 1, StepTooSmall,
-		 * ImageNotAvailable, SamplesNotAvailable, MaximumNumberOfIterations  
+		 * ImageNotAvailable, CostFunctionError, MaximumNumberOfIterations  
 		 */
 		std::string stopcondition;
 
@@ -126,8 +126,8 @@ using namespace itk;
 			stopcondition = "No image available";	
 			break;	
 		
-		case SamplesNotAvailable :
-			stopcondition = "No samples available";	
+		case CostFunctionError :
+			stopcondition = "Error in cost function";	
 			break;	
 		
 		default:
@@ -187,7 +187,7 @@ using namespace itk;
 		/** \todo to optimizerbase? */
 
 	} // end SetInitialPosition
-	
+
 
 } // end namespace elastix
 
