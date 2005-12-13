@@ -3,8 +3,6 @@
 
 #include "itkScaledSingleValuedNonLinearOptimizer.h"
 #include "itkArray2D.h"
-#include <list>
-
 
 namespace itk
 {
@@ -64,19 +62,34 @@ namespace itk
     itkSetClampMacro(MaximumNumberOfIterations, unsigned long,
       1, NumericTraits<unsigned long>::max());
 
-    /** Setting: the minimum memory. The minimum number of iterations
-		 * that are used to estimate the Hessian. 5 by default. */
-    itkSetClampMacro(MinimumMemory,unsigned int,1,
+    /** Setting: the NumberOfInitializationSteps. The number of iterations
+		 * that are used to estimate the initial Hessian. 5 by default.
+		 *
+		 * In these iterations the search directions are computed as:
+		 * - gain *g / |g|.
+		 * where the gain is varied between the InitialStepLengthEstimate
+		 * and 1.0/InitialStepLengthEstimate.
+		 */
+    itkSetClampMacro(NumberOfInitializationSteps ,unsigned int,1,
 										NumericTraits<unsigned int>::max());
-    itkGetConstMacro(MinimumMemory,unsigned int);
+    itkGetConstMacro(NumberOfInitializationSteps ,unsigned int);
 
-		/** Setting: the initial step length estimate. If the 
-		 * number of iterations is smaller than the mininum memory,
-		 * the search direction is computed as: - steplength g / |g|
-		 * Default value: 1.0 */
+		/** Setting: the initial step length estimate. In the 
+		 * very first iteration the search direction is computed as:
+		 * - steplength g / |g|
+		 * Default value: 2.0 */
 		itkSetMacro(InitialStepLengthEstimate, double);
 		itkGetConstMacro(InitialStepLengthEstimate, double);
 
+		itkSetMacro(Beta1_min, double);
+		itkSetMacro(Beta2_max, double);
+		itkSetClampMacro(Decay_A, double, 0.0, NumericTraits<double>::max());
+		itkSetMacro(Decay_alpha, double);
+
+		itkGetConstMacro(Beta1_min, double);
+		itkGetConstMacro(Beta2_max, double);
+		itkGetConstMacro(Decay_A, double);
+		itkGetConstMacro(Decay_alpha, double);
 
   protected:
     StochasticQuasiNewtonOptimizer();
@@ -92,20 +105,24 @@ namespace itk
     double                        m_CurrentStepLength;
 
 		HessianMatrixType							m_H;
-		HessianMatrixType							m_S;
-		double												m_ss_ys;
-		double												m_ys_yy;
+		HessianMatrixType							m_B;
 		ParametersType								m_Step;
 		DerivativeType								m_GradientDifference;
-		unsigned long									m_NumberOfUpdates;
 		double												m_GainFactor;
+		double												m_Diag;
 
-    /** Compute -Hg
+    /** Compute the new step.
      *
      */    
     virtual void ComputeSearchDirection(
       const DerivativeType & gradient,
       ParametersType & searchDir);
+
+		virtual void ComputeInitialSearchDirection(
+      const DerivativeType & gradient,
+      ParametersType & searchDir);
+
+		virtual void UpdateHessianMatrix(void);
 
 
   private:
@@ -113,8 +130,13 @@ namespace itk
     void operator=(const Self&); //purposely not implemented
 
     unsigned long                 m_MaximumNumberOfIterations;
-    unsigned int                  m_MinimumMemory;
+    unsigned int                  m_NumberOfInitializationSteps;
 		double												m_InitialStepLengthEstimate;
+		double												m_Beta1_min;
+		double												m_Beta2_max;
+		double												m_Decay_A;
+		double												m_Decay_alpha;
+
 
   }; // end class StochasticQuasiNewtonOptimizer
 

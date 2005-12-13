@@ -23,13 +23,15 @@ namespace itk
     this->m_CurrentStepLength = 1.0;
       
     this->m_MaximumNumberOfIterations = 100;
-		this->m_MinimumMemory = 2;
-		this->m_InitialStepLengthEstimate = 1.0;
+		this->m_NumberOfInitializationSteps = 5;
+		this->m_InitialStepLengthEstimate = 2.0;
 
-		this->m_ss_ys = 1.0;
-		this->m_ys_yy = 0.0;
-		this->m_NumberOfUpdates = 0;
 		this->m_GainFactor = 1.0;
+		this->m_Beta1_min = 0.5;
+		this->m_Beta2_max = 2.0;
+		this->m_Decay_A = 50.0;
+		this->m_Decay_alpha = 0.602;
+		this->m_Diag = 0.0;		
 		
   } // end constructor
 
@@ -63,13 +65,11 @@ namespace itk
 		/** Initialize H,S */
 		this->m_H.SetSize(numberOfParameters, numberOfParameters);
 		this->m_H.Fill(0.0);
-		this->m_S.SetSize(numberOfParameters, numberOfParameters);
-		this->m_S.Fill(0.0);
-		this->m_ss_ys = 1.0;
-		this->m_ys_yy = 0.0;
-		this->m_NumberOfUpdates = 0;
+		this->m_B.SetSize(numberOfParameters, numberOfParameters);
+		this->m_B.Fill(0.0);
 		this->m_GainFactor = 1.0;
-		
+		this->m_Diag = 0.0;
+				
     /** Initialize the scaledCostFunction with the currently set scales */
     this->InitializeScales();
 
@@ -172,7 +172,6 @@ namespace itk
 			/** Store s and y */
 			this->m_Step = searchDir;
 			this->m_GradientDifference = this->GetCurrentGradient() - previousGradient;
-			this->m_NumberOfUpdates++;
 					  
       this->m_CurrentIteration++;
 
@@ -209,142 +208,242 @@ namespace itk
     itkDebugMacro("ComputeSearchDirection");
 		    
     const unsigned int numberOfParameters = gradient.GetSize();
-
-		if (this->m_NumberOfUpdates > 0)
+		double & gain = this->m_GainFactor;
+		 		
+		if ( this->GetCurrentIteration() ==0 )
 		{
-			const double _1_k = 1.0 / static_cast<double>(this->m_NumberOfUpdates);
-			const double kmin1_k = static_cast<double>(this->m_NumberOfUpdates - 1) /
-				static_cast<double>(this->m_NumberOfUpdates);
-		
-			const double ys = inner_product( this->m_GradientDifference, this->m_Step );
-			const double ss =  this->m_Step.squared_magnitude();
-			
-			if (this->m_NumberOfUpdates ==1)
-			{
-				const double yy=this->m_GradientDifference.squared_magnitude();
-				this->m_H.fill_diagonal( vcl_abs(ys/yy) );
-				//this->m_H.fill_diagonal(vcl_abs(this->m_Step.squared_magnitude()/ys));
-			}
-			vnl_vector<double> Hy = this->m_H * this->m_GradientDifference;
 
-			const double yHy = inner_product(this->m_GradientDifference, Hy);
-			const double HyHy = Hy.squared_magnitude();
-			const double sHy= inner_product( this->m_Step, Hy );
+			gain = this->GetInitialStepLengthEstimate();
+			searchDir = ( - gain / gradient.magnitude() ) * gradient;
+			this->m_Diag = gain / gradient.magnitude();
 
-							
-			//HessianMatrixType Hupd;
-			//HessianMatrixType temp2= outer_product(this->m_Step, this->m_Step) / ys;
-			//HessianMatrixType temp(numberOfParameters,numberOfParameters);
-			//temp.Fill(0.0);
-			//temp.fill_diagonal(1.0);
-			//temp -= (1.0/ys)*outer_product(this->m_GradientDifference, this->m_Step);
-			//bfgs:				Hupd = ( temp.transpose() * (this->m_H * temp) + temp2) - this->m_H;
-
-			//dfp:
-			//HessianMatrixType Hupd = outer_product(this->m_Step, this->m_Step) / ys -
-			//  ( outer_product(Hy,Hy)/ yHy );
-		
-			const double H_frob = this->m_H.frobenius_norm();
-			const double Hupdate_frob = vcl_sqrt(
-				ss*ss/(ys*ys)+ HyHy*HyHy/(yHy*yHy) - 2*sHy*sHy/(ys*yHy)  );
-		
-			const double frob_factor = vnl_math_min(1.0, H_frob * _1_k / Hupdate_frob);
-			std::cout << "frob_factor = " << frob_factor << std::endl;
-			const double frob_ys = frob_factor / ys;
-			const double frob_yHy = frob_factor / yHy;
-
-			HessianMatrixType & H = this->m_H;
-			const ParametersType & s = this->m_Step;
-			for (unsigned int i = 0 ; i< numberOfParameters; ++i)
-			{
-				for (unsigned int j = 0;  j< numberOfParameters; ++j)
-				{
-					H(i,j)+= ( s[i]*s[j] * frob_ys - Hy[i]*Hy[j] * frob_yHy );
-				} // end for j
-			} // end for i
-
-						
-			//if (0)//( ys > 1e-14 ) //enforce a positive definite H.
-			//{
-			//	
-			//	const double ss = this->m_Step.squared_magnitude();
-			//	const double ss_ysk = ss / ys;
-			//	
-			//	const double _1_ss = 1.0 / ss;
-			//	const double _1_ssk = _1_ss * _1_k;
-			//	const double ss_ys_old = this->m_ss_ys;
-			//	//this->m_ss_ys =	kmin1_k *	this->m_ss_ys + _1_k * ss_ysk;
-
-			//	if (1)// (ss_ysk > this->m_ss_ys)
-			//	{
-			//		this->m_ss_ys =	1.0 / (kmin1_k / this->m_ss_ys + _1_k / ss_ysk);
-			//	}
-			//	else
-			//	{
-			//		this->m_ss_ys = kmin1_k * this->m_ss_ys + _1_k * ss_ysk;
-			//	}
-			//															
-			//	const double deltac = this->m_ss_ys - ss_ys_old;
-
-			//	const double alpha = ( ss_ysk - this->m_ss_ys ) * _1_ssk; 
-			//	const double diag_update = _1_k * ss_ys_old + deltac;
-			//	const double gamma = - deltac * kmin1_k;
-			//	
-			//	HessianMatrixType & H = this->m_H;
-			//	HessianMatrixType & S = this->m_S;
-			//	const ParametersType & s = this->m_Step;
-			//
-			//	for (unsigned int i = 0 ; i< numberOfParameters; ++i)
-			//	{
-			//		for (unsigned int j = 0;  j< numberOfParameters; ++j)
-			//		{
-			//			const double si_sj = s[i]*s[j];
-			//			double & S_ij = S(i,j);
-			//			double & H_ij = H(i,j);
-			//			H_ij = kmin1_k * H_ij + alpha * si_sj + gamma * S_ij;
-			//			S_ij = kmin1_k * S_ij + si_sj * _1_ssk;
-			//		} // end for j
-			//		H(i,i) += diag_update;
-			//	} // end for i
-			//	
-			//} // end if ys> 1e-14
-			//else
-			//{
-			//  this->m_H *= kmin1_k;			
-			//}
-			      				
-		} // end if nr of updates >0
-		    		
-		if ( this->m_NumberOfUpdates < this->GetMinimumMemory() )
-		{
-			searchDir = ( - this->m_GainFactor * this->GetInitialStepLengthEstimate() /
-	      gradient.magnitude() ) * gradient;
     }
-		else // number of updates > minimummemory
+		else if  ( this->GetCurrentIteration() <= this->GetNumberOfInitializationSteps() )
 		{
-			/**vnl_symmetric_eigensystem<double> eigsys(this->m_H);
-			for (unsigned int j = 0;  j< numberOfParameters; ++j)
-			{
-				std::cout << "D[" << j << "] = \t" << eigsys.D[j] << std::endl;
-			}*/
+			
+			this->ComputeInitialSearchDirection(gradient, searchDir);
 
+		}
+		else
+		{
+
+			this->UpdateHessianMatrix();
+
+			/** Set the gain */
+			const double k = static_cast<double>(
+				this->GetCurrentIteration() - this->GetNumberOfInitializationSteps() );
+			const double decay = vcl_pow(
+				(this->m_Decay_A + k ) / (this->m_Decay_A + k + 1.0),
+				this->m_Decay_alpha );
+			gain *= decay;
+						
 			searchDir.SetSize(numberOfParameters);
 			searchDir.Fill(0.0);
 			const HessianMatrixType & H = this->m_H;
-			const double & gain = this->m_GainFactor;
+
+			/** For debugging: */
+			/**vnl_symmetric_eigensystem<double> eigsys(H);
+			for (unsigned int i = 0; i < numberOfParameters; ++i)
+			{
+				std::cout << "D[" << i << "] = " << eigsys.D[i] << std::endl;
+			}*/
+
 			for (unsigned int i = 0 ; i< numberOfParameters; ++i)
 			{
 				double & sd_i = searchDir[i];
 				for (unsigned int j = 0;  j< numberOfParameters; ++j)
 				{
 					sd_i -= H(i,j) * gradient[j];
-				} // end for j
+				}
 				sd_i *= gain;
-			} // end for i
-
-		}  //end if number of updates is enough.
+			}
+			
+		}  //end if current iteration > NumberOfInitializationSteps
 
 	} // end ComputeSearchDirection
+
+
+	/** 
+   * *********************** UpdateHessianMatrix ************************
+	 *
+	 * This function assumes that an initial hessian estimate is available,
+	 * and that m_Step and m_GradientDifference are valid.
+   */
+
+  void
+    StochasticQuasiNewtonOptimizer::
+    UpdateHessianMatrix(void)
+  {
+    itkDebugMacro("UpdateHessianMatrix");
+   
+		double & gain = this->m_GainFactor;
+
+		HessianMatrixType & H = this->m_H;
+		HessianMatrixType & B = this->m_B;
+		const ParametersType & s = this->m_Step;
+		const DerivativeType & y = this->m_GradientDifference;
+		const unsigned int numberOfParameters = s.GetSize();
+
+		const double ys = inner_product( y, s );
+		const vnl_vector<double> Bs = B * s;
+		const double sBs = inner_product( s, Bs );
+		const vnl_vector<double> Hy = H * y;
+		const double yHy = inner_product(y, Hy);
+		const vnl_vector<double> v = (s/ys) - (Hy/yHy);
+
+		double phi = 1.0 + gain;
+																		
+		double beta1 = this->m_Beta1_min;
+		double beta2 = this->m_Beta2_max;
+		//double beta1=1.0/beta2; // dit is principieel het beste denk ik...
+		
+		double update_factor = 0.0;
+		double update_factor1 = 0.0;
+		double update_factor2 = 0.0;
+		double update_factor3 = 0.0;
+					
+		const double small_number2 = 1e-10;
+		if (  ( vcl_abs(ys)< small_number2 ) || ( vcl_abs(yHy)< small_number2 ) )
+		{
+			std::cout << "Skipping update because of too small denominators." << std::endl;
+		}
+		else
+		{
+			
+			const double resolution = 1e-3;
+			bool still_valid = true;
+			do 
+			{
+				update_factor1 += resolution * ( 1.0 - beta1 );
+				update_factor2 = update_factor1;
+				update_factor3 = update_factor1;
+				const double detfac1 = 1.0 - update_factor1;
+				const double temp = 1.0 / update_factor1 - 1.0;
+				const double detfac2 = 1.0 + update_factor2 * ( sBs/ys + ys/(yHy*temp) );
+				const double detfac3 = 1.0 + update_factor3 * phi * ( 
+					-1.0 + sBs*yHy/(ys*ys) +
+					( 2.0*sBs - sBs*sBs*yHy/(ys*ys) - ys*ys/yHy ) /
+					( ys/update_factor2 + sBs + ys*ys/(temp*yHy) )   );
+
+				if ( detfac1 < beta1 )
+				{
+					still_valid = false;
+				}
+				if ( ( detfac2 < beta1 ) || ( detfac2 > beta2 ) ) 
+				{
+					still_valid = false;
+				}
+				if ( ( detfac3 < beta1 ) || ( detfac3 > beta2 ) ) 
+				{
+					still_valid = false;
+				}
+						
+			} while ( still_valid );
+
+			double small_number3 = 1e-10;
+			update_factor1 -= resolution * ( 1.0 - beta1 );
+			update_factor1 *= gain*gain;
+			update_factor1 = vnl_math_min( update_factor1, 1.0 - small_number3 );
+			update_factor2 = update_factor1;
+			update_factor3 = update_factor1;
+			update_factor  = update_factor1;
+	
+		}
+
+		double small_number4 = 1e-10;
+		if ( update_factor > small_number4 )
+		{
+	
+			const double factor_H1 = -update_factor1 / yHy;
+			const double factor_H2 = update_factor2 / ys;
+			const double factor_H3 = update_factor3 * phi * yHy;
+
+      const double temp = 1.0 / update_factor1 - 1.0;
+			const double uf2 = update_factor2;
+			const double detfac3 = 1.0 + update_factor3 * phi * ( 
+				-1.0 + sBs*yHy/(ys*ys) +
+				( 2.0*sBs - sBs*sBs*yHy/(ys*ys) - ys*ys/yHy ) /
+				( ys/uf2 + sBs + ys*ys/(temp*yHy) )   );
+			const double temp_r = (ys + uf2*sBs) / 
+				( yHy*temp*(ys + uf2*sBs) + uf2*ys*ys );
+			const double temp_t = -1.0 / ( ys/uf2 + sBs + ys*ys/(temp*yHy) );
+			const double temp_u = -1.0 / ( yHy*temp*(1.0/uf2 + sBs/ys) + ys );
+			const double temp_p = 1.0/ys + temp_t*(sBs/ys - ys/yHy);
+			const double temp_q = -1.0/yHy + temp_u*(sBs/ys - ys/yHy);
+
+			const double factor_B1 = temp_t - update_factor3*phi*temp_p*temp_p*yHy/detfac3;
+			const double factor_B2 = temp_r - update_factor3*phi*temp_q*temp_q*yHy/detfac3;
+			const double factor_B3 = temp_u - update_factor3*phi*temp_p*temp_q*yHy/detfac3;
+						
+			for (unsigned int i = 0 ; i< numberOfParameters; ++i)
+			{
+				for (unsigned int j = 0;  j< numberOfParameters; ++j)
+				{
+					H(i,j) += factor_H1 * Hy[i] * Hy[j] + factor_H2 * s[i] * s[j] + factor_H3 * v[i] * v[j];
+					B(i,j) += factor_B1 * Bs[i] * Bs[j] + factor_B2 * y[i] * y[j] + factor_B3 * ( Bs[i] * y[j] + y[i] * Bs[j] );
+				}
+			} 
+
+		} // end if updatefactor > smallnumber
+
+
+	} // end UpdateHessianMatrix
+
+
+  /** 
+   * *********************** ComputeInitialSearchDirection ************************
+   */
+
+  void
+    StochasticQuasiNewtonOptimizer::
+    ComputeInitialSearchDirection(
+      const DerivativeType & gradient,
+      ParametersType & searchDir)
+  {
+    itkDebugMacro("ComputeInitialSearchDirection");
+		
+		/** Update the initial estimate for the hessian, m_Diag. */
+
+    const unsigned int numberOfParameters = gradient.GetSize();
+		
+		const double k = static_cast<double>(this->GetCurrentIteration());
+		const double kplus1 = static_cast<double>(this->GetCurrentIteration()+1);
+		const double small_number1 = 1e-10;
+		const ParametersType & s = this->m_Step;
+		const DerivativeType & y = this->m_GradientDifference;
+		const double sy = inner_product( y, s );
+		const double yy = y.squared_magnitude() + small_number1;
+		double & h = this->m_Diag;
+								
+		double h2= sy/yy;
+		h2 = (k*h + h2) / kplus1;
+		h = vnl_math_max( 0.5 * h, vnl_math_min( 2.0 * h, h2) );
+		//we could also take the median instead....
+		    
+		double & gain = this->m_GainFactor;
+				
+		if (this->GetCurrentIteration() == this->GetNumberOfInitializationSteps())
+		{
+				this->m_H.fill_diagonal( h );
+				this->m_B.fill_diagonal( 1.0 / h );
+				
+				searchDir = ( -h ) * gradient;
+
+				/** reset the gain to 1.0 */
+				gain = 1.0;
+		}
+		else
+		{
+			/** Take a step in the direction of the normalised gradient */
+			const double isle = this->GetInitialStepLengthEstimate();
+			gain = isle - k * ( isle - 1.0/isle ) /
+				static_cast<double>( this->GetNumberOfInitializationSteps() - 1 );
+
+			searchDir = ( - gain / gradient.magnitude() ) * gradient;
+		}
+
+	} // end ComputeInitialSearchDirection
+
 
 
 

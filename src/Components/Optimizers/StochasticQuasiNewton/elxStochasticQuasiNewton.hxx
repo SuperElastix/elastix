@@ -108,14 +108,28 @@ using namespace itk;
     
 
 		/** Set the MinimumMemory
-		 * (minimum number of steps to use for estimating the hessian) */
-		unsigned int minimumMemory = 2;
-		this->m_Configuration->ReadParameter( minimumMemory,
-			"MinimumMemory", level );
-		this->SetMinimumMemory(minimumMemory);
+		 * (number of iterations to use for estimating the initial hessian) */
+		unsigned int numberOfInitializationSteps = 5;
+		this->m_Configuration->ReadParameter( numberOfInitializationSteps,
+			"NumberOfInitializationSteps", level );
+		this->SetNumberOfInitializationSteps(numberOfInitializationSteps);
 
 		this->m_SearchDirectionMagnitude = 0.0;
-				
+
+		double beta1_min = 0.5;
+		double beta2_max = 2.0;
+		double decay_A = 50;
+		double decay_alpha = 0.602;
+		this->m_Configuration->ReadParameter( beta1_min, "Beta1_min", level );
+		this->m_Configuration->ReadParameter( beta2_max, "Beta2_max", level );
+		this->m_Configuration->ReadParameter( decay_A, "Decay_A", level );
+		this->m_Configuration->ReadParameter( decay_alpha, "Decay_alpha", level );
+		this->SetBeta1_min(beta1_min);
+		this->SetBeta2_max(beta2_max);
+		this->SetDecay_A(decay_A);
+		this->SetDecay_alpha(decay_alpha);
+
+					
 	} // end BeforeEachResolution
 
 
