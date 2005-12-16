@@ -81,13 +81,13 @@ namespace itk
 		itkSetMacro(InitialStepLengthEstimate, double);
 		itkGetConstMacro(InitialStepLengthEstimate, double);
 
-		itkSetMacro(Beta1_min, double);
-		itkSetMacro(Beta2_max, double);
+		itkSetMacro(BetaMax, double);
+		itkSetMacro(DetMax, double);
 		itkSetClampMacro(Decay_A, double, 0.0, NumericTraits<double>::max());
 		itkSetMacro(Decay_alpha, double);
 
-		itkGetConstMacro(Beta1_min, double);
-		itkGetConstMacro(Beta2_max, double);
+		itkGetConstMacro(BetaMax, double);
+		itkGetConstMacro(DetMax, double);
 		itkGetConstMacro(Decay_A, double);
 		itkGetConstMacro(Decay_alpha, double);
 
@@ -132,8 +132,8 @@ namespace itk
     unsigned long                 m_MaximumNumberOfIterations;
     unsigned int                  m_NumberOfInitializationSteps;
 		double												m_InitialStepLengthEstimate;
-		double												m_Beta1_min;
-		double												m_Beta2_max;
+		double												m_BetaMax;
+		double												m_DetMax;
 		double												m_Decay_A;
 		double												m_Decay_alpha;
 

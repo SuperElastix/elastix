@@ -27,8 +27,8 @@ namespace itk
 		this->m_InitialStepLengthEstimate = 2.0;
 
 		this->m_GainFactor = 1.0;
-		this->m_Beta1_min = 0.5;
-		this->m_Beta2_max = 2.0;
+		this->m_BetaMax = 2.0;
+		this->m_DetMax = 2.0;
 		this->m_Decay_A = 50.0;
 		this->m_Decay_alpha = 0.602;
 		this->m_Diag = 0.0;		
@@ -293,28 +293,51 @@ namespace itk
 
 		double phi = 1.0 + gain;
 																		
-		double beta1 = this->m_Beta1_min;
-		double beta2 = this->m_Beta2_max;
-		//double beta1=1.0/beta2; // dit is principieel het beste denk ik...
+		double beta1 = 1.0 / (this->m_BetaMax);
+		double beta2 = this->m_BetaMax;
+		double det1 =  1.0 / (this->m_DetMax);
+		double det2 = this->m_DetMax;
+		
+		//testje:
+		/**const double yHHy = Hy.squared_magnitude();
+		const double vv = v.squared_magnitude();
+		const double ss = s.squared_magnitude();
+		const double yHv = inner_product(Hy,v);
+		const double yHs = inner_product(Hy,s);
+		const double sv = inner_product(s,v);
+		const double N = static_cast<double>(numberOfParameters);
+		const double sBBs = Bs.squared_magnitude();
+		const double yy = y.squared_magnitude();
+		const double sBy = inner_product(y,Bs);
+		const double frobH = H.frobenius_norm();
+		const double frobB = B.frobenius_norm();
+		const double frobHupdconst = vcl_sqrt( 
+			yHHy*yHHy/(yHy*yHy) + ss*ss/(ys*ys) 
+			+ vv*vv*phi*phi*yHy*yHy - 2.0*yHs*yHs/(yHy*ys) - 2.0*phi*yHv*yHv
+			+ 2.0*sv*sv*phi*yHy/ys );*/
 		
 		double update_factor = 0.0;
 		double update_factor1 = 0.0;
 		double update_factor2 = 0.0;
 		double update_factor3 = 0.0;
-					
+		const double resolution = 1e-4;		
+    					
 		const double small_number2 = 1e-10;
-		if (  ( vcl_abs(ys)< small_number2 ) || ( vcl_abs(yHy)< small_number2 ) )
+		if (  ( vcl_abs(ys)< small_number2 ) || ( vcl_abs(yHy)< small_number2 )
+			|| ((1.0-beta1)*resolution < small_number2) ||
+			((beta2-1.0)*resolution < small_number2) )
 		{
 			std::cout << "Skipping update because of too small denominators." << std::endl;
 		}
 		else
 		{
 			
-			const double resolution = 1e-3;
+			
 			bool still_valid = true;
 			do 
 			{
-				update_factor1 += resolution * ( 1.0 - beta1 );
+				//update_factor1 += resolution * ( 1.0 - beta1 );
+				update_factor1 += resolution * ( 1.0  );
 				update_factor2 = update_factor1;
 				update_factor3 = update_factor1;
 				const double detfac1 = 1.0 - update_factor1;
@@ -325,7 +348,7 @@ namespace itk
 					( 2.0*sBs - sBs*sBs*yHy/(ys*ys) - ys*ys/yHy ) /
 					( ys/update_factor2 + sBs + ys*ys/(temp*yHy) )   );
 
-				if ( detfac1 < beta1 )
+				/**if ( detfac1 < beta1 )
 				{
 					still_valid = false;
 				}
@@ -336,20 +359,95 @@ namespace itk
 				if ( ( detfac3 < beta1 ) || ( detfac3 > beta2 ) ) 
 				{
 					still_valid = false;
+				}*/
+
+				if ( (detfac1*detfac2*detfac3 > det2) || (detfac1*detfac2*detfac3 < det1) )
+				{
+					still_valid = false;
 				}
+
+				/**const double D = detfac1;
+				const double E = 1.0 + update_factor2*sBs/ys;
+				const double F = 1.0 + update_factor3*phi*(sBs*yHy/(ys*ys) - 1.0);
+        if ( D < beta1 )
+				{
+					still_valid = false;
+				}
+				if ( ( E < beta1 ) || ( E > beta2 ) ) 
+				{
+					still_valid = false;
+				}
+				if ( F > beta2  ) 
+				{
+					still_valid = false;
+				}*/
+
+				
+				const double uf2 = update_factor2;
+				const double temp_r = (ys + uf2*sBs) / 
+					( yHy*temp*(ys + uf2*sBs) + uf2*ys*ys );
+				const double temp_t = -1.0 / ( ys/uf2 + sBs + ys*ys/(temp*yHy) );
+				const double temp_u = -1.0 / ( yHy*temp*(1.0/uf2 + sBs/ys) + ys );
+				const double temp_p = 1.0/ys + temp_t*(sBs/ys - ys/yHy);
+				const double temp_q = -1.0/yHy + temp_u*(sBs/ys - ys/yHy);
+
+				const double factor_B1 = temp_r - update_factor3*phi*temp_q*temp_q*yHy/detfac3;
+				const double factor_B2 = temp_t - update_factor3*phi*temp_p*temp_p*yHy/detfac3;
+				const double factor_B3 = temp_u - update_factor3*phi*temp_p*temp_q*yHy/detfac3;
+					
+				/**const double frobHupd = update_factor1*frobHupdconst;
+				const double frobBupd = vcl_sqrt(
+					factor_B1*factor_B1*yy*yy +
+					factor_B2*factor_B2*sBBs*sBBs +
+					factor_B3*factor_B3*2.0*(sBBs*yy + sBs*sBy) +
+					factor_B1*factor_B2*2.0*sBy*sBy +
+					factor_B1*factor_B3*4.0*yy*sBy +
+					factor_B2*factor_B3*4.0*sBBs*sBy );*/
+
+				if ( update_factor > (1.0 - resolution) )
+				{
+					still_valid = false;
+				}
+				/**if ( frobHupd > (beta2*frobH / vcl_sqrt(N)) )
+				{
+					still_valid = false;
+				}
+				if ( frobBupd > (beta2*frobB / vcl_sqrt(N)) )
+				{
+					still_valid = false;
+				}*/
+
+				const double yHynieuw = yHy + update_factor1*(ys-yHy);
+				const double sBsnieuw = sBs + factor_B1*ys*ys + factor_B2*sBs*sBs +
+					factor_B3*2.0*ys*sBs;
+				
+				if ( (yHynieuw > (beta2*yHy)) || (yHynieuw < (beta1*yHy)) )
+				{
+					still_valid = false;
+				}
+				if ( (sBsnieuw > (beta2*sBs)) || (sBsnieuw < (beta1*sBs)) )
+				{
+					still_valid = false;
+				}
+							
 						
 			} while ( still_valid );
 
 			double small_number3 = 1e-10;
-			update_factor1 -= resolution * ( 1.0 - beta1 );
+			//update_factor1 -= resolution * ( 1.0 - beta1 );
+			update_factor1 -= resolution * ( 1.0 );
+			update_factor1 = vnl_math_min( update_factor1, 1.0 - small_number3 );
+			std::cout << "UpdateFactorPreGain: " << update_factor1 << std::endl; 
 			update_factor1 *= gain*gain;
+			
 			update_factor1 = vnl_math_min( update_factor1, 1.0 - small_number3 );
 			update_factor2 = update_factor1;
 			update_factor3 = update_factor1;
 			update_factor  = update_factor1;
 	
 		}
-
+		std::cout << "UpdateFactor:        " << update_factor << std::endl; 
+		
 		double small_number4 = 1e-10;
 		if ( update_factor > small_number4 )
 		{
@@ -371,8 +469,8 @@ namespace itk
 			const double temp_p = 1.0/ys + temp_t*(sBs/ys - ys/yHy);
 			const double temp_q = -1.0/yHy + temp_u*(sBs/ys - ys/yHy);
 
-			const double factor_B1 = temp_t - update_factor3*phi*temp_p*temp_p*yHy/detfac3;
-			const double factor_B2 = temp_r - update_factor3*phi*temp_q*temp_q*yHy/detfac3;
+			const double factor_B1 = temp_r - update_factor3*phi*temp_q*temp_q*yHy/detfac3;
+			const double factor_B2 = temp_t - update_factor3*phi*temp_p*temp_p*yHy/detfac3;
 			const double factor_B3 = temp_u - update_factor3*phi*temp_p*temp_q*yHy/detfac3;
 						
 			for (unsigned int i = 0 ; i< numberOfParameters; ++i)
@@ -380,7 +478,7 @@ namespace itk
 				for (unsigned int j = 0;  j< numberOfParameters; ++j)
 				{
 					H(i,j) += factor_H1 * Hy[i] * Hy[j] + factor_H2 * s[i] * s[j] + factor_H3 * v[i] * v[j];
-					B(i,j) += factor_B1 * Bs[i] * Bs[j] + factor_B2 * y[i] * y[j] + factor_B3 * ( Bs[i] * y[j] + y[i] * Bs[j] );
+					B(i,j) += factor_B1 * y[i] * y[j] + factor_B2 * Bs[i] * Bs[j] + factor_B3 * ( Bs[i] * y[j] + y[i] * Bs[j] );
 				}
 			} 
 
@@ -424,10 +522,10 @@ namespace itk
 				
 		if (this->GetCurrentIteration() == this->GetNumberOfInitializationSteps())
 		{
-				this->m_H.fill_diagonal( h );
-				this->m_B.fill_diagonal( 1.0 / h );
+				this->m_H.fill_diagonal( vcl_abs(h) );
+				this->m_B.fill_diagonal( 1.0 / vcl_abs(h) );
 				
-				searchDir = ( -h ) * gradient;
+				searchDir = ( - vcl_abs(h) ) * gradient;
 
 				/** reset the gain to 1.0 */
 				gain = 1.0;
