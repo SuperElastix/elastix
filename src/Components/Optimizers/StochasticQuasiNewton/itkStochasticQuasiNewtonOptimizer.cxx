@@ -3,7 +3,7 @@
 
 #include "itkStochasticQuasiNewtonOptimizer.h"
 #include "vnl/vnl_math.h"
-#include "vnl/algo/vnl_symmetric_eigensystem.h"
+//#include "vnl/algo/vnl_symmetric_eigensystem.h"
 
 namespace itk
 {
