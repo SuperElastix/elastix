@@ -438,7 +438,8 @@ namespace itk
 			update_factor1 -= resolution * ( 1.0 );
 			update_factor1 = vnl_math_min( update_factor1, 1.0 - small_number3 );
 			std::cout << "UpdateFactorPreGain: " << update_factor1 << std::endl; 
-			update_factor1 *= gain*gain;
+			//update_factor1 *= gain*gain;
+			update_factor1*=gain;
 			
 			update_factor1 = vnl_math_min( update_factor1, 1.0 - small_number3 );
 			update_factor2 = update_factor1;
