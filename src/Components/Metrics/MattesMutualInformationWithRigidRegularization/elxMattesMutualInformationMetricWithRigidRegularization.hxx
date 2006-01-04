@@ -68,7 +68,12 @@ using namespace itk;
 			/** In this case the second option is used. */
 			double rigidPenaltyWeight = 1.0;
 			this->GetConfiguration()->ReadParameter( rigidPenaltyWeight, "RigidPenaltyWeight", 0 );
-			this->m_RigidPenaltyWeight.resize( numberOfResolutions, rigidPenaltyWeight );
+			this->m_RigidPenaltyWeight.resize( numberOfResolutions );
+			for ( unsigned int i = 0; i < numberOfResolutions; i++ )
+			{
+				this->m_RigidPenaltyWeight[ i ] = rigidPenaltyWeight;
+			}
+			//this->m_RigidPenaltyWeight.resize( numberOfResolutions, rigidPenaltyWeight );
 		}
 		else if ( returnvalues[ 0 ] == 0 && returnvalues[ numberOfResolutions - 1 ] == 0 )
 		{
