@@ -16,7 +16,6 @@
 /** Needed by most transforms: */
 #include "itkTransformGrouper.h"
 
-//#include <fstream>
 #include <fstream>
 #include <iomanip>
 

@@ -303,7 +303,7 @@ namespace elastix
 		/** Task 2 - Get the InitialTransform.*/
 
 		/** Get the InitialTransformName. */
-		std::string fileName = "";
+		std::string fileName = "NoInitialTransform";
 		this->m_Configuration->ReadParameter( fileName,
 			"InitialTransformParametersFileName", 0 );
 		

@@ -1802,57 +1802,69 @@ namespace itk
 			if ( dim == 0 && part == 0 )
 			{
 				/** In this case we calculate the derivative of S^rigid_2D to
-				* the first component of the parameter mu: mu_k,1. This
-				* calcultes only one part of the total derivative to mu_k,1:
-				* i.e. only the part that is later filtered with F_A (again).
-			 */
-				answer = 2.0 * vcl_pow( static_cast<double>( 1.0 + mu1_A ), 3.0 )
+				 * the first component of the parameter mu: mu_k,1. This
+				 * calcultes only one part of the total derivative to mu_k,1:
+				 * i.e. only the part that is later filtered with F_A (again).
+				 */
+				answer =
+					+ 2.0 * ( 1.0 + mu1_A ) * ( 1.0 + mu1_A ) * ( 1.0 + mu1_A )
 					+ ( 1.0 + mu1_A ) * (
-					2.0 * vcl_pow( static_cast<double>( mu2_A ), 2.0 )
-					-2.0 + vcl_pow( static_cast<double>( mu1_B ), 2.0 )
-					+ vcl_pow( static_cast<double>( 1.0 + mu2_B ), 2.0 ) )
+						+ 2.0 * mu2_A * mu2_A
+						- 2.0
+						+ mu1_B * mu1_B
+						+ ( 1.0 + mu2_B ) * ( 1.0 + mu2_B )
+						)
 					- ( 1.0 + mu2_B );
 			}
 			else if ( dim == 0 && part == 1 )
 			{
 				/** In this case we calculate the derivative of S^rigid_2D to
-				* the first component of the parameter mu: mu_k,1. This
-				* calcultes only one part of the total derivative to mu_k,1:
-				* i.e. only the part that is later filtered with F_B (again).
-			 */
-				answer = 2.0 * vcl_pow( static_cast<double>( mu1_B ), 3.0 )
+				 * the first component of the parameter mu: mu_k,1. This
+				 * calcultes only one part of the total derivative to mu_k,1:
+				 * i.e. only the part that is later filtered with F_B (again).
+				 */
+				answer =
+					+ 2.0 * mu1_B * mu1_B * mu1_B
 					+ mu1_B * (
-					2.0 * vcl_pow( static_cast<double>( 1.0 + mu2_B ), 2.0 )
-					- 2.0 + vcl_pow( static_cast<double>( 1.0 + mu1_A ), 2.0 ) 
-					+ vcl_pow( static_cast<double>( mu2_A ), 2.0 ) )
+						+ 2.0 * ( 1.0 + mu2_B ) * ( 1.0 + mu2_B )
+						- 2.0
+						+ ( 1.0 + mu1_A ) * ( 1.0 + mu1_A )
+						+ mu2_A * mu2_A
+						)
 					+ mu2_A;
 			}
 			else if ( dim == 1 && part == 0 )
 			{
 				/** In this case we calculate the derivative of S^rigid_2D to
-				* the second component of the parameter mu: mu_k,2. This
-				* calcultes only one part of the total derivative to mu_k,2:
-				* i.e. only the part that is later filtered with F_A (again).
-			 */
-				answer = 2.0 * vcl_pow( static_cast<double>( mu2_A ), 3.0 )
+				 * the second component of the parameter mu: mu_k,2. This
+				 * calcultes only one part of the total derivative to mu_k,2:
+				 * i.e. only the part that is later filtered with F_A (again).
+				 */
+				answer =
+					+ 2.0 * mu2_A * mu2_A * mu2_A
 					+ mu2_A * (
-					2.0 * vcl_pow( static_cast<double>( 1.0 + mu1_A ), 2.0 )
-					- 2.0 + vcl_pow( static_cast<double>( mu1_B ), 2.0 )
-					+ vcl_pow( static_cast<double>( 1.0 + mu2_B ), 2.0 ) )
+						+ 2.0 * ( 1.0 + mu1_A ) * ( 1.0 + mu1_A )
+						- 2.0
+						+ mu1_B * mu1_B
+						+ ( 1.0 + mu2_B ) * ( 1.0 + mu2_B )
+						)
 					+ mu1_B;
 			}
 			else if ( dim == 1 && part == 1 )
 			{
 				/** In this case we calculate the derivative of S^rigid_2D to
-				* the second component of the parameter mu: mu_k,2. This
-				* calcultes only one part of the total derivative to mu_k,2:
-				* i.e. only the part that is later filtered with F_B (again).
-			 */
-				answer = 2.0 * vcl_pow( 1.0 + static_cast<double>( mu2_B ), 3.0 )
+				 * the second component of the parameter mu: mu_k,2. This
+				 * calcultes only one part of the total derivative to mu_k,2:
+				 * i.e. only the part that is later filtered with F_B (again).
+				 */
+				answer =
+					+ 2.0 * ( 1.0 + mu2_B ) * ( 1.0 + mu2_B ) * ( 1.0 + mu2_B )
 					+ ( 1.0 + mu2_B ) * (
-					2.0 * vcl_pow( static_cast<double>( mu1_B ), 2.0 )
-					- 2.0 + vcl_pow( static_cast<double>( 1.0 + mu1_A ), 2.0 )
-					+ vcl_pow( static_cast<double>( mu2_A ), 2.0 ) )
+						+ 2.0 * mu1_B * mu1_B
+						- 2.0
+						+ ( 1.0 + mu1_A ) * ( 1.0 + mu1_A )
+						+ mu2_A * mu2_A
+						)
 					- ( 1.0 + mu1_A );
 			}
 			else
@@ -1866,218 +1878,351 @@ namespace itk
 			if ( dim == 0 && part == 0 )
 			{
 				/** In this case we calculate the derivative of S^rigid_3D to
-				* the first component of the parameter mu: mu_k,1. This
-				* calcultes only one part of the total derivative to mu_k,1:
-				* i.e. only the part that is later filtered with F_A (again).
-			 */
+				 * the first component of the parameter mu: mu_k,1. This
+				 * calcultes only one part of the total derivative to mu_k,1:
+				 * i.e. only the part that is later filtered with F_A (again).
+				 */
 				answer =
-					2.0 * vcl_pow( static_cast<double>( 1.0 + mu1_A ), 3.0 )
+					+ 2.0 * ( 1.0 + mu1_A ) * ( 1.0 + mu1_A ) * ( 1.0 + mu1_A )
 					+ ( 1.0 + mu1_A ) * (
-					+ 2.0 * vcl_pow( static_cast<double>( mu2_A ), 2.0 )
-					+ 2.0 * vcl_pow( static_cast<double>( mu3_A ), 2.0 )
-					- 2.0
-					+ vcl_pow( static_cast<double>( mu1_B ), 2.0 )
-					+ vcl_pow( static_cast<double>( mu1_C ), 2.0 )
-					+ vcl_pow( static_cast<double>( mu2_C ), 2.0 )
-					* vcl_pow( static_cast<double>( mu3_B ), 2.0 )
-					+ vcl_pow( static_cast<double>( 1.0 + mu2_B ), 2.0 )
-					* vcl_pow( static_cast<double>( 1.0 + mu3_C ), 2.0 )
-					- 2.0 * ( 1.0 + mu2_B ) * ( mu2_C )
-					* ( mu3_B ) * ( 1.0 + mu3_C )
-					)
-					+ ( mu1_B ) * (
-					+ ( mu2_A ) * ( 1.0 + mu2_B )
-					+ ( mu3_A ) * ( mu3_B )
-					- vcl_pow( static_cast<double>( mu2_C ), 2.0 )
-					* ( mu3_A ) * ( mu3_B )
-					+ ( 1.0 + mu2_B ) * ( mu2_C )
-					* ( mu3_A ) * ( 1.0 + mu3_C )
-					+ ( mu2_A ) * ( mu2_C )
-					* ( mu3_B ) * ( 1.0 + mu3_C )
-					- ( mu2_A ) * ( 1.0 + mu2_B )
-					* vcl_pow( static_cast<double>( 1.0 + mu3_C ), 2.0 )
-					)
-					+ ( mu1_C ) * (
-					+ ( mu2_A ) * ( mu2_C )
-					+ ( mu3_A ) * ( 1.0 + mu3_C )
-					+ ( 1.0 + mu2_B ) * ( mu2_C )
-					* ( mu3_A ) * ( mu3_B )
-					- vcl_pow( static_cast<double>( 1.0 + mu2_B ), 2.0 )
-					* ( mu3_A ) * ( 1.0 + mu3_C )
-					- ( mu2_A ) * ( mu2_C )
-					* vcl_pow( static_cast<double>( mu3_B ), 2.0 )
-					+ ( mu2_A ) * ( 1.0 + mu2_B )
-					* ( mu3_B ) * ( 1.0 + mu3_C )
-					)
-					+ ( mu2_C ) * ( mu3_B )
+						+ 2.0 * mu2_A * mu2_A
+						+ 2.0 * mu3_A * mu3_A
+						- 2.0
+						+ mu1_B * mu1_B
+						+ mu1_C * mu1_C
+						+ mu2_C * mu2_C * mu3_B * mu3_B
+						+ ( 1.0 + mu2_B ) * ( 1.0 + mu2_B ) * ( 1.0 + mu3_C ) * ( 1.0 + mu3_C )
+						- 2.0 * ( 1.0 + mu2_B ) * mu2_C * mu3_B * ( 1.0 + mu3_C )
+						)
+					+ mu1_B * (
+						+ mu2_A * ( 1.0 + mu2_B )
+						+ mu3_A * mu3_B
+						- mu2_C * mu2_C * mu3_A * mu3_B
+						+ ( 1.0 + mu2_B ) * mu2_C * mu3_A * ( 1.0 + mu3_C )
+						+ mu2_A * mu2_C * mu3_B * ( 1.0 + mu3_C )
+						- mu2_A * ( 1.0 + mu2_B )	* ( 1.0 + mu3_C ) * ( 1.0 + mu3_C )
+            )
+					+ mu1_C * (
+						+ mu2_A * mu2_C
+						+ mu3_A * ( 1.0 + mu3_C )
+						+ ( 1.0 + mu2_B ) * mu2_C * mu3_A * mu3_B
+						- ( 1.0 + mu2_B ) * ( 1.0 + mu2_B ) * mu3_A * ( 1.0 + mu3_C )
+						- mu2_A * mu2_C * mu3_B * mu3_B
+						+ mu2_A * ( 1.0 + mu2_B ) * mu3_B * ( 1.0 + mu3_C )
+						)
+					+ mu2_C * mu3_B
 					- ( 1.0 + mu2_B ) * ( 1.0 + mu3_C );
 			}
 			else if ( dim == 0 && part == 1 )
 			{
 				/** In this case we calculate the derivative of S^rigid_3D to
-				* the first component of the parameter mu: mu_k,1. This
-				* calcultes only one part of the total derivative to mu_k,1:
-				* i.e. only the part that is later filtered with F_B (again).
-			 */
+				 * the first component of the parameter mu: mu_k,1. This
+				 * calcultes only one part of the total derivative to mu_k,1:
+				 * i.e. only the part that is later filtered with F_B (again).
+				 */
 				answer = 
 					( 1.0 + mu1_A ) * (
-						( 1.0 + mu1_A ) * ( mu1_B )
-						+ ( mu2_A ) * ( 1.0 + mu2_B )
-						+ ( mu3_A ) * ( mu3_B )
-						- vcl_pow( static_cast<double>( mu2_C ), 2.0 )
-							* ( mu3_A ) * ( mu3_B )
-						+ ( 1.0 + mu2_B ) * ( mu2_C ) * ( mu3_A ) * ( 1.0 + mu3_C )
-						+ ( mu2_A ) * ( mu2_C ) * ( mu3_B ) * ( 1.0 + mu3_C )
-						- ( mu2_A ) * ( 1.0 + mu2_B ) * vcl_pow( static_cast<double>( 1.0 + mu3_C ), 2.0 )
+						+ ( 1.0 + mu1_A ) * mu1_B
+						+ mu2_A * ( 1.0 + mu2_B )
+						+ mu3_A * mu3_B
+						- mu2_C * mu2_C * mu3_A * mu3_B
+						+ ( 1.0 + mu2_B ) * mu2_C * mu3_A * ( 1.0 + mu3_C )
+						+ mu2_A * mu2_C * mu3_B * ( 1.0 + mu3_C )
+						- mu2_A * ( 1.0 + mu2_B ) * ( 1.0 + mu3_C ) * ( 1.0 + mu3_C )
 						)
-					+ 2.0 * vcl_pow( static_cast<double>( mu1_B ), 3.0 )
-					+ ( mu1_B ) * (
-						+ 2.0 * vcl_pow( static_cast<double>( 1.0 + mu2_B ), 2.0 )
-						+ 2.0 * vcl_pow( static_cast<double>( mu3_B ), 2.0 )
+					+ 2.0 * mu1_B * mu1_B
+					+ mu1_B * (
+						+ 2.0 * ( 1.0 + mu2_B ) * ( 1.0 + mu2_B )
+						+ 2.0 * mu3_B * mu3_B
 						- 2.0
-						+ vcl_pow( static_cast<double>( mu1_C ), 2.0 )
-						+ vcl_pow( static_cast<double>( mu2_C ), 2.0 ) *
-							vcl_pow( static_cast<double>( mu3_A ), 2.0 )
-						+ vcl_pow( static_cast<double>( mu2_A ), 2.0 ) *
-							vcl_pow( static_cast<double>( 1.0 + mu3_C ), 2.0 )
-						- 2.0 * ( mu2_A ) * ( mu2_C ) * ( mu3_A ) * ( 1.0 + mu3_C )
+						+ mu1_C * mu1_C
+						+ mu2_C * mu2_C * mu3_A * mu3_A
+						+ mu2_A * mu2_A * ( 1.0 + mu3_C ) * ( 1.0 + mu3_C )
+						- 2.0 * mu2_A * mu2_C * mu3_A * ( 1.0 + mu3_C )
 						)
-					+ ( mu1_C ) * (
-						+ ( 1.0 + mu2_B ) * ( mu2_C )
-						+ ( mu3_B ) * ( 1.0 + mu3_C )
-						- ( 1.0 + mu2_B ) * ( mu2_C ) * vcl_pow( static_cast<double>( mu3_A ), 2.0 )
-						+ ( mu2_A ) * ( 1.0 + mu2_B ) * ( mu3_A ) * ( 1.0 + mu3_C )
-						+ ( mu2_A ) * ( mu2_C ) * ( mu3_A ) * ( mu3_B )
-						- vcl_pow( static_cast<double>( mu2_A ), 2.0 )
-							* ( mu3_B ) * ( 1.0 + mu3_C )
+					+ mu1_C * (
+						+ ( 1.0 + mu2_B ) * mu2_C
+						+ mu3_B * ( 1.0 + mu3_C )
+						- ( 1.0 + mu2_B ) * mu2_C * mu3_A * mu3_A
+						+ mu2_A * ( 1.0 + mu2_B ) * mu3_A * ( 1.0 + mu3_C )
+						+ mu2_A * mu2_C * mu3_A * mu3_B
+						- mu2_A * mu2_A * mu3_B * ( 1.0 + mu3_C )
 						)
-					- ( mu2_C ) * ( mu3_A )
-					+ ( mu2_A ) * ( 1.0 + mu3_C );
+					- mu2_C * mu3_A
+					+ mu2_A * ( 1.0 + mu3_C );
 			}
 			else if ( dim == 0 && part == 2 )
 			{
 				/** In this case we calculate the derivative of S^rigid_3D to
-				* the first component of the parameter mu: mu_k,1. This
-				* calcultes only one part of the total derivative to mu_k,1:
-				* i.e. only the part that is later filtered with F_C (again).
-			 */
+				 * the first component of the parameter mu: mu_k,1. This
+				 * calcultes only one part of the total derivative to mu_k,1:
+				 * i.e. only the part that is later filtered with F_C (again).
+				 */
 				answer =
 					( 1.0 + mu1_A ) * (
-						( 1.0 + mu1_A ) * ( mu1_C )
-						+ ( mu2_A ) * ( mu2_C )
-						+ ( mu3_A ) * ( 1.0 + mu3_C )
-						+ ( 1.0 + mu1_A ) * ( mu2_C ) * vcl_pow( static_cast<double>( mu3_B ), 2.0 )
-						+ ( mu1_C ) * ( 1.0 + mu2_B ) * ( mu3_A ) * ( mu3_B )
-						- 2.0 * ( mu1_B ) * ( mu2_C ) * ( mu3_A ) * ( mu3_B )
-						+ ( mu1_B ) * ( 1.0 + mu2_B ) * ( mu3_A ) * ( 1.0 + mu3_C )
-						- ( mu1_C ) * ( mu2_A ) * vcl_pow( static_cast<double>( mu3_B ), 2.0 )
-						+ ( mu1_B ) * ( mu2_A ) * ( mu3_B ) * ( 1.0 + mu3_C )
-						- ( 1.0 + mu1_A ) * ( 1.0 + mu2_B ) * ( mu3_B ) * ( 1.0 + mu3_C )
-						+ ( mu3_B )
+						+ ( 1.0 + mu1_A ) * mu1_C
+						+ mu2_A * mu2_C
+						+ mu3_A * ( 1.0 + mu3_C )
+						+ ( 1.0 + mu1_A ) * mu2_C * mu3_B * mu3_B
+						+ mu1_C * ( 1.0 + mu2_B ) * mu3_A * mu3_B
+						- 2.0 * mu1_B * mu2_C * mu3_A * mu3_B
+						+ mu1_B * ( 1.0 + mu2_B ) * mu3_A * ( 1.0 + mu3_C )
+						- mu1_C * mu2_A * mu3_B * mu3_B
+						+ mu1_B * mu2_A * mu3_B * ( 1.0 + mu3_C )
+						- ( 1.0 + mu1_A ) * ( 1.0 + mu2_B ) * mu3_B * ( 1.0 + mu3_C )
+						+ mu3_B
 						)
-					+ ( mu1_B ) * (
-						+ ( mu1_B ) * ( mu1_C )
-						+ ( 1.0 + mu2_B ) * ( mu2_C )
-						+ ( mu3_B ) * ( 1.0 + mu3_C )
-						+ ( mu1_B ) * ( mu2_C ) * vcl_pow( static_cast<double>( mu3_A ), 2.0 )
-						- ( mu1_C ) * ( 1.0 + mu2_B ) * vcl_pow( static_cast<double>( mu3_A ), 2.0 )
-						+ ( mu1_C ) * ( mu2_A ) * ( mu3_A ) * ( mu3_B )
-						- ( mu1_B ) * ( mu2_A ) * ( mu3_A ) * ( 1.0 + mu3_C )
-						- ( mu3_A )
+					+ mu1_B * (
+						+ mu1_B * mu1_C
+						+ ( 1.0 + mu2_B ) * mu2_C
+						+ mu3_B * ( 1.0 + mu3_C )
+						+ mu1_B * mu2_C * mu3_A * mu3_A
+						- mu1_C * ( 1.0 + mu2_B ) * mu3_A * mu3_A
+						+ mu1_C * mu2_A * mu3_A * mu3_B
+						- mu1_B * mu2_A * mu3_A * ( 1.0 + mu3_C )
+						- mu3_A
 						)
-					+ ( mu1_C ) * (
-						+ 2.0 * vcl_pow( static_cast<double>( mu1_C ), 2.0 )
-						+ 2.0 * vcl_pow( static_cast<double>( mu2_C ), 2.0 )
-						+ 2.0 * vcl_pow( static_cast<double>( 1.0 + mu3_C ), 2.0 )
+					+ mu1_C * (
+						+ 2.0 * mu1_C * mu1_C
+						+ 2.0 * mu2_C * mu2_C
+						+ 2.0 * ( 1.0 + mu3_C ) * ( 1.0 + mu3_C )
 						- 2.0
 						);
 			}
 			else if ( dim == 1 && part == 0 )
 			{
 				/** In this case we calculate the derivative of S^rigid_3D to
-				* the second component of the parameter mu: mu_k,2. This
-				* calcultes only one part of the total derivative to mu_k,2:
-				* i.e. only the part that is later filtered with F_A (again).
-			 */
+				 * the second component of the parameter mu: mu_k,2. This
+				 * calcultes only one part of the total derivative to mu_k,2:
+				 * i.e. only the part that is later filtered with F_A (again).
+				 */
 				answer =
-					2.0 * vcl_pow( static_cast<double>( mu2_A ), 3.0 )
+					+ 2.0 * mu2_A * mu2_A * mu2_A
 					+ ( 1.0 + mu1_A ) * (
-						+ 2.0 * ( 1.0 + mu1_A ) * ( mu2_A )
-						+ ( mu1_B ) * ( 1.0 + mu2_B )
-						+ ( mu1_C ) * ( mu2_C )
-						- ( mu1_C ) * ( mu2_C ) * vcl_pow( static_cast<double>( mu3_B ), 2.0 )
-						+ ( mu1_C ) * ( 1.0 + mu2_B ) * ( mu3_B ) * ( 1.0 + mu3_C )
-						+ ( mu1_B ) * ( mu2_C ) * ( mu3_B ) * ( 1.0 + mu3_C )
-						- ( mu1_B ) * ( 1.0 + mu2_B ) * vcl_pow( static_cast<double>( 1.0 + mu3_C ), 2.0 )
+						+ 2.0 * ( 1.0 + mu1_A ) * mu2_A
+						+ mu1_B * ( 1.0 + mu2_B )
+						+ mu1_C * mu2_C
+						- mu1_C * mu2_C * mu3_B * mu3_B
+						+ mu1_C * ( 1.0 + mu2_B ) * mu3_B * ( 1.0 + mu3_C )
+						+ mu1_B * mu2_C * mu3_B * ( 1.0 + mu3_C )
+						- mu1_B * ( 1.0 + mu2_B ) * ( 1.0 + mu3_C ) * ( 1.0 + mu3_C )
 						)
-					+ ( mu1_B ) * (
-						+ ( mu1_B ) * ( mu2_A ) * vcl_pow( static_cast<double>( 1.0 + mu3_C ), 2.0 )
-						+ ( mu1_C ) * ( 1.0 + mu2_B ) * ( mu3_A ) * ( 1.0 + mu3_C )
-						+ ( mu1_C ) * ( mu2_C ) * ( mu3_A ) * ( mu3_B )
-						- ( mu1_B ) * ( mu2_C ) * ( mu3_A ) * ( 1.0 + mu3_C )
-						- 2.0 * ( mu1_C ) * ( mu2_A ) * ( mu3_B ) * ( 1.0 + mu3_C )
+					+ mu1_B * (
+						+ mu1_B * mu2_A * ( 1.0 + mu3_C ) * ( 1.0 + mu3_C )
+						+ mu1_C * ( 1.0 + mu2_B ) * mu3_A * ( 1.0 + mu3_C )
+						+ mu1_C * mu2_C * mu3_A * mu3_B
+						- mu1_B * mu2_C * mu3_A * ( 1.0 + mu3_C )
+						- 2.0 * mu1_C * mu2_A * mu3_B * ( 1.0 + mu3_C )
             + ( 1.0 + mu3_C )
 						)
-					+ ( mu1_C ) * (
-						+ ( mu1_C ) * ( mu2_A ) * 
-							vcl_pow( static_cast<double>( mu3_B ), 2.0 )
-						- ( mu1_C ) * ( 1.0 + mu2_B ) * ( mu3_A ) * ( mu3_B )
-						- ( mu3_B )
+					+ mu1_C * (
+						+ mu1_C * mu2_A * mu3_B * mu3_B
+						- mu1_C * ( 1.0 + mu2_B ) * mu3_A * mu3_B
+						- mu3_B
 						)
-          + ( mu2_A ) * (
-						+ 2.0 * vcl_pow( static_cast<double>( mu3_A ), 2.0 )
+          + mu2_A * (
+						+ 2.0 * mu3_A * mu3_A
 						- 2.0
-						+ vcl_pow( static_cast<double>( 1.0 + mu2_B ), 2.0 )
-						+ vcl_pow( static_cast<double>( mu3_C ), 2.0 )
+						+ ( 1.0 + mu2_B ) * ( 1.0 + mu2_B )
+						+ mu3_C * mu3_C
 						)
-					+ ( 1.0 + mu2_B ) * ( mu3_A ) * ( mu3_B )
-					+ ( mu2_C ) * ( mu3_A ) * ( 1.0 + mu3_C );
+					+ ( 1.0 + mu2_B ) * mu3_A * mu3_B
+					+ mu2_C * mu3_A * ( 1.0 + mu3_C );
 			}
 			else if ( dim == 1 && part == 1 )
 			{
 				/** In this case we calculate the derivative of S^rigid_3D to
-				* the second component of the parameter mu: mu_k,2. This
-				* calcultes only one part of the total derivative to mu_k,2:
-				* i.e. only the part that is later filtered with F_B (again).
-			 */
-				answer = 0.0;
+				 * the second component of the parameter mu: mu_k,2. This
+				 * calcultes only one part of the total derivative to mu_k,2:
+				 * i.e. only the part that is later filtered with F_B (again).
+				 */
+				answer = 
+					+ mu2_A * mu2_A * ( 1.0 + mu2_B )
+					+ mu2_A * (
+						+ ( 1.0 + mu1_A ) * mu1_B
+						+ mu3_A * mu3_B
+						- mu1_C * mu1_C * mu3_A * mu3_B
+						+ mu1_B * mu1_C * mu3_A * ( 1.0 + mu3_C )
+						+ ( 1.0 + mu1_A ) * mu1_C * mu3_B * ( 1.0 + mu3_C )
+						- ( 1.0 + mu1_A ) * mu1_B * ( 1.0 + mu3_C ) * ( 1.0 + mu3_C )
+						)
+					+ ( 1.0 + mu2_B ) * (
+						+ ( 1.0 + mu2_B ) * ( 1.0 + mu2_B )
+						+ mu1_B * mu1_B
+						+ mu3_B * mu3_B
+						- 1.0
+						+ mu2_C * mu2_C
+						+ mu1_C * mu1_C * mu3_A * mu3_A
+						+ ( 1.0 + mu1_A ) * ( 1.0 + mu1_A ) * ( 1.0 + mu3_C ) * ( 1.0 + mu3_C )
+						- 2.0 * ( 1.0 + mu1_A ) * mu1_C * mu3_A * ( 1.0 + mu3_C )
+						)
+					+ mu2_C * (
+						+ mu1_B * mu1_C
+						+ mu3_B * ( 1.0 + mu3_C )
+						- mu1_B * mu1_C * mu3_A * mu3_A
+						+ ( 1.0 + mu1_A ) * mu1_C * mu3_A * mu3_B
+						+ ( 1.0 + mu1_A ) * mu1_B * mu3_A * ( 1.0 + mu3_C )
+						- ( 1.0 + mu1_A ) * ( 1.0 + mu1_A ) * mu3_B * ( 1.0 + mu3_C )
+						)
+					+ mu1_C * mu3_A
+					+ ( 1.0 + mu1_A ) * ( 1.0 + mu3_C );
 			}
 			else if ( dim == 1 && part == 2 )
 			{
 				/** In this case we calculate the derivative of S^rigid_3D to
-				* the second component of the parameter mu: mu_k,2. This
-				* calcultes only one part of the total derivative to mu_k,2:
-				* i.e. only the part that is later filtered with F_C (again).
-			 */
-				answer = 0.0;
+				 * the second component of the parameter mu: mu_k,2. This
+				 * calcultes only one part of the total derivative to mu_k,2:
+				 * i.e. only the part that is later filtered with F_C (again).
+				 */
+				answer =
+					+ mu2_A * mu2_A * mu2_C
+					+ mu2_A * (
+						+ ( 1.0 + mu1_A ) * mu1_C
+						+ mu3_A * ( 1.0 + mu3_C )
+						+ mu1_B * mu1_C * mu3_A * mu3_B
+						- mu1_B * mu1_B * mu3_A * ( 1.0 + mu3_C )
+						- ( 1.0 + mu1_A ) * mu1_C * mu3_B * mu3_B
+						+ ( 1.0 + mu1_A ) * mu1_B * mu3_B * ( 1.0 + mu3_C )
+						)
+					+ mu2_C * (
+						+ ( 1.0 + mu2_B ) * ( 1.0 + mu2_B )
+						+ mu2_C * mu2_C
+						+ mu1_C * mu1_C
+						+ ( 1.0 + mu3_C ) * ( 1.0 + mu3_C )
+						- 1.0
+						+ mu1_B * mu1_B * mu3_A * mu3_A
+						+ ( 1.0 + mu1_A ) * ( 1.0 + mu1_A ) * mu3_B * mu3_B
+						- 2.0 * ( 1.0 + mu1_A ) * mu1_B * mu3_A * mu3_B
+						)
+					+ ( 1.0 + mu2_B ) * (
+						+ mu3_B * ( 1.0 + mu3_C )
+						- mu1_B * mu1_C * mu3_A * mu3_A
+						+ ( 1.0 + mu1_A ) * mu1_C * mu3_A * mu3_B
+						+ ( 1.0 + mu1_A ) * mu1_B * mu3_A * ( 1.0 + mu3_C )
+						- ( 1.0 + mu1_A ) * ( 1.0 + mu1_A ) * mu3_B * ( 1.0 + mu3_C )
+						)
+					+ mu1_B * (
+						+ mu1_C * mu2_B
+						- mu3_A
+						)
+					+ ( 1.0 + mu1_A ) * mu3_B;
 			}
 
 			else if ( dim == 2 && part == 0 )
 			{
 				/** In this case we calculate the derivative of S^rigid_3D to
-				* the third component of the parameter mu: mu_k,3. This
-				* calcultes only one part of the total derivative to mu_k,3:
-				* i.e. only the part that is later filtered with F_A (again).
-			 */
-				answer = 0.0;
+				 * the third component of the parameter mu: mu_k,3. This
+				 * calcultes only one part of the total derivative to mu_k,3:
+				 * i.e. only the part that is later filtered with F_A (again).
+				 */
+				answer =
+					mu3_A * (
+						+ 2.0 * mu3_A * mu3_A
+						+ 2.0 * ( 1.0 + mu1_A ) * ( 1.0 + mu1_A )
+						+ 2.0 * mu2_A * mu2_A
+						- 2.0
+						+ mu3_B * mu3_B
+						+ ( 1.0 + mu3_C ) * ( 1.0 + mu3_C )
+						+ mu1_C * mu1_C * ( 1.0 + mu2_B ) * ( 1.0 + mu2_B )
+						+ mu1_B * mu1_B * mu2_C * mu2_C
+						- 2.0 * mu1_B * mu1_C * ( 1.0 + mu2_B ) * mu2_C
+						)
+					+ ( 1.0 + mu2_B ) * (
+						+ mu2_A * mu3_B
+						- mu1_C * mu1_C * mu2_A * mu3_B
+						+ ( 1.0 + mu1_A ) * mu1_C * mu2_C * mu3_B
+						+ mu1_B * mu1_C * mu2_A * ( 1.0 + mu3_C )
+						- ( 1.0 + mu1_A ) * mu1_C * ( 1.0 + mu2_B ) * ( 1.0 + mu3_C )
+						+ mu1_C
+						+ ( 1.0 + mu1_A ) * mu1_B * mu2_C * ( 1.0 + mu3_C )
+						)
+					+ ( 1.0 + mu1_A ) * (
+						+ mu1_B * mu3_B
+						+ mu1_C * ( 1.0 + mu3_C )
+						- mu1_B * mu2_C * mu2_C * mu3_B
+						)
+					+ mu2_C * (
+						+ mu2_A * ( 1.0 + mu3_C )
+						+ mu1_B * mu1_C * mu2_A * mu3_B
+						- mu1_B * mu1_B * mu2_A * ( 1.0 + mu3_C )
+						+ mu1_B
+						);
 			}
 			else if ( dim == 2 && part == 1 )
 			{
 				/** In this case we calculate the derivative of S^rigid_3D to
-				* the third component of the parameter mu: mu_k,3. This
-				* calcultes only one part of the total derivative to mu_k,3:
-				* i.e. only the part that is later filtered with F_B (again).
-			 */
-				answer = 0.0;
+				 * the third component of the parameter mu: mu_k,3. This
+				 * calcultes only one part of the total derivative to mu_k,3:
+				 * i.e. only the part that is later filtered with F_B (again).
+				 */
+				answer =
+					mu3_A * (
+						+ mu3_A * mu3_B
+						+ ( 1.0 + mu1_A ) * mu1_B
+						+ mu2_A * ( 1.0 + mu2_B )
+						- mu1_C * mu1_C * mu2_A * ( 1.0 + mu2_B )
+						+ ( 1.0 + mu1_A ) * mu1_C * ( 1.0 + mu2_B ) * mu2_C
+						+ mu1_B * mu1_C * mu2_A * mu2_C
+						- ( 1.0 + mu1_A ) * mu1_B * mu2_C * mu2_C
+						)
+					+ mu3_B * (
+						+ mu3_B * mu3_B
+						+ mu1_B * mu1_B
+						+ ( 1.0 + mu2_B ) * ( 1.0 + mu2_B )
+						- 1.0
+						+ ( 1.0 + mu3_C ) * ( 1.0 + mu3_C )
+						+ mu1_C * mu1_C * mu2_A * mu2_A
+						+ ( 1.0 + mu1_A ) * ( 1.0 + mu1_A ) * mu2_C * mu2_C
+						- 2.0 * ( 1.0 + mu1_A ) * mu1_C * mu2_A * mu2_C
+						)
+					+ ( 1.0 + mu3_C ) * (
+						+ mu1_B * mu1_C
+						+ ( 1.0 + mu2_B ) * mu2_C
+						- mu1_B * mu1_C * mu2_A * mu2_A
+						+ ( 1.0 + mu1_A ) * mu1_C * mu2_A * ( 1.0 + mu2_B )
+						+ ( 1.0 + mu1_A ) * mu1_B * mu2_A * mu2_C
+						- ( 1.0 + mu1_A ) * ( 1.0 + mu1_A ) * ( 1.0 + mu2_B ) * mu2_C
+						)
+					- mu1_C * mu2_A
+					+ ( 1.0 + mu1_A ) * mu2_C;
 			}
 			else if ( dim == 2 && part == 2 )
 			{
 				/** In this case we calculate the derivative of S^rigid_3D to
-				* the third component of the parameter mu: mu_k,3. This
-				* calcultes only one part of the total derivative to mu_k,3:
-				* i.e. only the part that is later filtered with F_C (again).
-			 */
-				answer = 0.0;
+				 * the third component of the parameter mu: mu_k,3. This
+				 * calcultes only one part of the total derivative to mu_k,3:
+				 * i.e. only the part that is later filtered with F_C (again).
+				 */
+				answer =
+					mu3_A * (
+						+ mu3_A * ( 1.0 + mu3_C )
+						+ ( 1.0 + mu1_A ) * mu1_C
+						+ mu2_A * mu2_C
+						+ mu1_B * mu1_C * mu2_A * ( 1.0 + mu2_B )
+						- ( 1.0 + mu1_A ) * mu1_C * ( 1.0 + mu2_B ) * ( 1.0 + mu2_B )
+						- mu1_B * mu1_B * mu2_A * mu2_C
+						+ ( 1.0 + mu1_A ) * mu1_B * ( 1.0 + mu2_B ) * mu2_C
+						)
+					+ mu3_B * (
+						+ mu3_B * ( 1.0 + mu3_C )
+						+ mu1_B * mu1_C
+						+ ( 1.0 + mu2_B ) * mu2_C
+						- mu1_B * mu1_C * mu2_A * mu2_A
+						+ ( 1.0 + mu1_A ) * mu1_C * mu2_A * ( 1.0 + mu2_B )
+						+ ( 1.0 + mu1_A ) * mu1_B * mu2_A * mu2_C
+						+ ( 1.0 + mu1_A ) * ( 1.0 + mu1_A ) * ( 1.0 + mu2_B ) * mu2_C
+						)
+					+ ( 1.0 + mu3_C ) * (
+						+ ( 1.0 + mu3_C ) * ( 1.0 + mu3_C )
+						+ mu1_C * mu1_C
+						+ mu2_C * mu2_C
+						- 1.0
+						+ mu1_B * mu1_B * mu2_A * mu2_A
+						+ ( 1.0 + mu1_A ) * ( 1.0 + mu1_A ) * ( 1.0 + mu2_B ) * ( 1.0 + mu2_B )
+						- 2.0 * ( 1.0 + mu1_A ) * mu1_B * mu2_A * ( 1.0 + mu2_B )
+						)
+					+ mu1_B * mu2_A
+					- ( 1.0 + mu1_A ) * ( 1.0 + mu2_B );
 			}
 			else
 			{
