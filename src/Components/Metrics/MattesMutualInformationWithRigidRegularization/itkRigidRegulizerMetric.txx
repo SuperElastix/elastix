@@ -10,6 +10,7 @@
 
 // tmp
 #include "itkImageFileWriter.h"
+#include "itkVectorCastImageFilter.h"
 
 namespace itk
 {
@@ -26,6 +27,8 @@ namespace itk
 		this->m_RigidityImage = 0;
 		m_UseImageSpacing = true;
 		m_SecondOrderWeight = NumericTraits<ScalarType>::One;
+		m_OrthonormalityWeight = NumericTraits<ScalarType>::One;
+		m_PropernessWeight = NumericTraits<ScalarType>::One;
 
   } // end constructor
 
@@ -97,7 +100,7 @@ namespace itk
 		coefVectorImage = combiner->GetOutput();
 		coefVectorImage->Update();
 
-		// tmp write
+		/** tmp write *
 		typedef ImageFileWriter< CoefficientVectorImageType > WriterType;
 		typename WriterType::Pointer writer = WriterType::New();
 		writer->SetFileName( "coefImage.mhd" );
@@ -111,6 +114,8 @@ namespace itk
 		/** Set stuff into the filter. */
 		rigidDerivativeFilter->SetUseImageSpacing( this->m_UseImageSpacing );
 		rigidDerivativeFilter->SetSecondOrderWeight( this->m_SecondOrderWeight );
+		rigidDerivativeFilter->SetOrthonormalityWeight( this->m_OrthonormalityWeight );
+		rigidDerivativeFilter->SetPropernessWeight( this->m_PropernessWeight );
 		rigidDerivativeFilter->SetRigidityImage( this->m_RigidityImage );
 		rigidDerivativeFilter->SetOutputDirectoryName( this->m_OutputDirectoryName.c_str() );
 
@@ -161,11 +166,11 @@ namespace itk
 		/** Calculate the derivative of this penalty term. *
 		this->GetDerivative( parameters, derivative );*/
 	
-	//\todo seperate value and derivative.
+		//\todo seperate value and derivative.
 
-	// temp with todo
-	typedef ScalarToArrayCastImageFilter<
-	CoefficientImageType, CoefficientVectorImageType >		ScalarImageCombineType;
+		// temp with todo
+		typedef ScalarToArrayCastImageFilter<
+		CoefficientImageType, CoefficientVectorImageType >		ScalarImageCombineType;
 
 		/** Set the parameters in the transform.
 		 * In this function, also the dimensions of the parameters-array
@@ -187,12 +192,12 @@ namespace itk
 		coefVectorImage = combiner->GetOutput();
 		coefVectorImage->Update();
 
-		// tmp write
-		/*typedef ImageFileWriter< CoefficientVectorImageType > WriterType;
+		/** tmp write *
+		typedef ImageFileWriter< CoefficientVectorImageType > WriterType;
 		typename WriterType::Pointer writer = WriterType::New();
 		writer->SetFileName( "coefImage.mhd" );
 		writer->SetInput( coefVectorImage );
-		writer->Update();*/
+		writer->Update();
 
 		/** Create the RigidDerivative filter and image. */
 		RigidDerivativeFilterPointer	rigidDerivativeFilter = RigidDerivativeFilterType::New();
@@ -201,11 +206,13 @@ namespace itk
 		/** Set stuff into the filter. */
 		rigidDerivativeFilter->SetUseImageSpacing( this->m_UseImageSpacing );
 		rigidDerivativeFilter->SetSecondOrderWeight( this->m_SecondOrderWeight );
+		rigidDerivativeFilter->SetOrthonormalityWeight( this->m_OrthonormalityWeight );
+		rigidDerivativeFilter->SetPropernessWeight( this->m_PropernessWeight );
 		rigidDerivativeFilter->SetRigidityImage( this->m_RigidityImage );
 		rigidDerivativeFilter->SetOutputDirectoryName( this->m_OutputDirectoryName.c_str() );
 
     /** Set the pipeline. */
-		// \todo Let the derivativeFilter  accept an array of coefficient images,
+		// \todo Let the derivativeFilter accept an array of coefficient images,
 		// so that the combining and splitting can be skipped.
 		//derivativeFilter->SetInput( this->m_BSplineTransform->GetCoefficientImage() );
 		rigidDerivativeFilter->SetInput( coefVectorImage );
@@ -213,6 +220,20 @@ namespace itk
 
 		/** Execute the pipeline. */
 		rigidDerivativeImage->Update();
+
+		/** tmp write *
+		typedef Vector< float,
+			itkGetStaticConstMacro( ImageDimension ) >					CoefficientVectorTypetmp;
+		typedef Image< CoefficientVectorTypetmp,
+			itkGetStaticConstMacro( ImageDimension ) >					CoefficientVectorImageTypetmp;
+		typedef ImageFileWriter< CoefficientVectorImageTypetmp > WriterTypetmp;
+		typedef VectorCastImageFilter< CoefficientVectorImageType, CoefficientVectorImageTypetmp > CastTypetmp;
+		typename CastTypetmp::Pointer caster = CastTypetmp::New();
+		typename WriterTypetmp::Pointer writer = WriterTypetmp::New();
+		caster->SetInput( rigidDerivativeImage );
+		writer->SetFileName( "rigidDerivativeImage.mhd" );
+		writer->SetInput( caster->GetOutput() );
+		writer->Update();
 
 		/** Create the derivative in parameter-form from the derivativeImage. */
 		typedef ImageRegionIterator< CoefficientVectorImageType >	IteratorType;
@@ -250,6 +271,10 @@ namespace itk
 		/** Add debugging information. */
 		os << indent << "SecondOrderWeight: "
 			<< this->m_SecondOrderWeight << std::endl;
+		os << indent << "OrthonormalityWeight: "
+			<< this->m_OrthonormalityWeight << std::endl;
+		os << indent << "PropernessWeight: "
+			<< this->m_PropernessWeight << std::endl;
 		os << indent << "UseImageSpacing: "
 			<< this->m_UseImageSpacing << std::endl;
 		os << indent << "RigidityImage: "

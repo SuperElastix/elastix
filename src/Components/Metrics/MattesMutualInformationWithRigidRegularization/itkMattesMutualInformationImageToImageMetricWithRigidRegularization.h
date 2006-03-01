@@ -151,10 +151,18 @@ namespace itk
 			0.0, NumericTraits<CoordinateRepresentationType>::max() );
 		itkGetMacro( RigidPenaltyWeight, CoordinateRepresentationType );
 
-		/** Set the weighting between the first and second order
-		 * information of the rigid penalty term.
+		/** Set the weighting of the second order information 
+		 * term of the rigid penalty term.
 		 */
 		itkSetClampMacro( SecondOrderWeight, CoordinateRepresentationType,
+			0.0, NumericTraits<CoordinateRepresentationType>::max() );
+
+		/** Set the weighting of the orthonormality term of the rigid penalty term. */
+		itkSetClampMacro( OrthonormalityWeight, CoordinateRepresentationType,
+			0.0, NumericTraits<CoordinateRepresentationType>::max() );
+
+		/** Set the weighting of the properness term of the rigid penalty term. */
+		itkSetClampMacro( PropernessWeight, CoordinateRepresentationType,
 			0.0, NumericTraits<CoordinateRepresentationType>::max() );
 
 		/** Set if the image spacing is used. */
@@ -209,6 +217,8 @@ namespace itk
 		/** Weightings. */
 		CoordinateRepresentationType		m_RigidPenaltyWeight;
 		CoordinateRepresentationType		m_SecondOrderWeight;
+		CoordinateRepresentationType		m_OrthonormalityWeight;
+		CoordinateRepresentationType		m_PropernessWeight;
 		CoordinateRepresentationType		m_DilationRadiusMultiplier;
 		bool														m_UseImageSpacing;
 		bool														m_DilateRigidityImages;

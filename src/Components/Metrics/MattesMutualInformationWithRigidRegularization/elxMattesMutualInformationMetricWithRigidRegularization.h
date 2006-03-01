@@ -178,7 +178,9 @@ using namespace itk;
 		typedef FixedImageIndexType															SampleGridIndexType;
 		typedef typename FixedImageType::SizeType 							FixedImageSizeType;
 
-		/** Typedefs for the rigidity image. */
+		/** Typedefs for the rigidity image. The rigidity images are scalar double
+		 * images of dimension (Fixed/Moving)ImageDimension.
+		 */
 		typedef typename Superclass1::RigidityImageType					RigidityImageType;
 		typedef ImageFileReader< RigidityImageType >						RigidityImageReaderType;
 		typedef typename RigidityImageReaderType::Pointer				RigidityImageReaderPointer;
@@ -186,6 +188,8 @@ using namespace itk;
 		/** Execute stuff before the actual registration:
 		 * \li Set the rigid penalty weight.
 		 * \li Set the weight of the second order term of the penalty term.
+		 * \li Set the weight of the orthonormality term.
+		 * \li Set the weight of the properness term.
 		 * \li Set the flag to use the image spacing for calculations.
 		 * \li Set the flag to dilate the rigidity images.
 		 * \li Set the dilation radius multiplier

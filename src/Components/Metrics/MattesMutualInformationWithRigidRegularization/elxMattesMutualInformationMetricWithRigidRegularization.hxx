@@ -94,13 +94,23 @@ using namespace itk;
 			itkExceptionMacro( << "ERROR: The RigidPenaltyWeight-option in the parameter-file has not been set properly." );
 		}
 
-		/** Set the RigidPenaltyWeight in the superclass to the first. */
+		/** Set the RigidPenaltyWeight in the superclass to the first resolution weight. */
 		this->SetRigidPenaltyWeight( this->m_RigidPenaltyWeight[ 0 ] );
 
 		/** Get and set the secondOrderWeight. */
 		double secondOrderWeight = 1.0;
 		this->GetConfiguration()->ReadParameter( secondOrderWeight, "SecondOrderWeight", 0 );
 		this->SetSecondOrderWeight( secondOrderWeight );
+
+		/** Get and set the orthonormalityWeight. */
+		double orthonormalityWeight = 1.0;
+		this->GetConfiguration()->ReadParameter( orthonormalityWeight, "OrthonormalityWeight", 0 );
+		this->SetOrthonormalityWeight( orthonormalityWeight );
+
+		/** Get and set the propernessWeight. */
+		double propernessWeight = 1.0;
+		this->GetConfiguration()->ReadParameter( propernessWeight, "PropernessWeight", 0 );
+		this->SetPropernessWeight( propernessWeight );
 
 		/** Get and set the useImageSpacing. */
 		std::string useImageSpacing = "true";
@@ -271,12 +281,6 @@ using namespace itk;
 		void MattesMutualInformationMetricWithRigidRegularization<TElastix>
 		::BeforeEachResolution(void)
 	{
-		/** \todo Adapt SecondOrderRegularisationMetric.
-		 * Set alpha, which balances the similarity and deformation energy
-		 * E_total = (1-alpha)*E_sim + alpha*E_def.
-		 * 	metric->SetAlpha( config.GetAlpha(level) );
-		 */
-
 		/** Get the current resolution level. */
 		unsigned int level = 
 			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
@@ -380,7 +384,8 @@ using namespace itk;
 		::AfterEachIteration(void)
 	{
 		/** Show the mutual information computed on all voxels,
-		 * if the user wanted it */
+		 * if the user wanted it.
+		 */
 		if (this->m_ShowExactMetricValue)
 		{
 			xl::xout["iteration"]["ExactMetric"] << this->GetExactValue(
@@ -405,9 +410,8 @@ using namespace itk;
 		::SelectNewSamples(void)
 	{
 
-		/** Select new spatial samples; only if we do not use ALL pixels
-		 * anyway */
-		if ( (!this->GetUseAllPixels())  && (!this->m_SamplesOnUniformGrid) )
+		/** Select new spatial samples; only if we do not use ALL pixels anyway. */
+		if ( (!this->GetUseAllPixels()) && (!this->m_SamplesOnUniformGrid) )
 		{
 			/**
 			* Allocate memory for the fixed image sample container.

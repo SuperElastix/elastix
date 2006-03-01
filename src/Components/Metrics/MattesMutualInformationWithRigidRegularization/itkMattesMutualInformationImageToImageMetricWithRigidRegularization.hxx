@@ -35,11 +35,15 @@ namespace itk
 		/** Initialize weights. */
 		this->m_RigidPenaltyWeight = NumericTraits<CoordinateRepresentationType>::One;
 		this->m_SecondOrderWeight = NumericTraits<CoordinateRepresentationType>::One;
+		this->m_OrthonormalityWeight = NumericTraits<CoordinateRepresentationType>::One;
+		this->m_PropernessWeight = NumericTraits<CoordinateRepresentationType>::One;
 		this->m_DilationRadiusMultiplier = NumericTraits<CoordinateRepresentationType>::One;
 
-		/***/
+		/** Initialize some booleans. */
 		this->m_UseImageSpacing = true;
 		this->m_DilateRigidityImages = true;
+
+		/** Create member variable RigidRegulizerMetric. */
 		this->m_RigidRegulizer = RigidRegulizerMetricType::New();
 
 		/** Initialize rigidity images and their usage. */
@@ -86,6 +90,10 @@ namespace itk
 			<< this->m_RigidPenaltyWeight << std::endl;
 		os << indent << "SecondOrderWeight: "
 			<< this->m_SecondOrderWeight << std::endl;
+		os << indent << "OrthonormalityWeight: "
+			<< this->m_OrthonormalityWeight << std::endl;
+		os << indent << "PropernessWeight: "
+			<< this->m_PropernessWeight << std::endl;
 		os << indent << "UseImageSpacing: ";
 		if ( this->m_UseImageSpacing ) os << "true" << std::endl;
 		else os << "false" << std::endl;
@@ -126,6 +134,8 @@ namespace itk
 
 		/** Initialize the rigid regulizer metric. */
 		this->m_RigidRegulizer->SetSecondOrderWeight( this->m_SecondOrderWeight );
+		this->m_RigidRegulizer->SetOrthonormalityWeight( this->m_OrthonormalityWeight );
+		this->m_RigidRegulizer->SetPropernessWeight( this->m_PropernessWeight );
 		this->m_RigidRegulizer->SetUseImageSpacing( this->m_UseImageSpacing );
 
 		/** Allocate the RigidityCoefficientImage, so that it matches the B-spline grid.
@@ -491,30 +501,13 @@ namespace itk
 			
 			 /** Increase iterator. */
 			 ++it;
-		 }
+		 } // end while loop over rigidity coefficient image
 
      /** Set the rigidity coefficients image into the rigid regulizer metric. */
 		 this->m_RigidRegulizer->SetRigidityImage( this->m_RigidityCoefficientImage );
 
-		 // tmp
-		 if (0)
-		 {
-			 unsigned int level = 0;
-				 //( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
-			 std::ostringstream makeFileName("");
-			 makeFileName << "RigidityCoefficientImage."
-//				 << this->m_Configuration->GetElastixLevel()
-				 << ".R" << level
-				 << ".mhd";
-			 std::string FileName = makeFileName.str();
-			 typedef ImageFileWriter<RigidityImageType>	RigidityImageWriterType;
-			 typename RigidityImageWriterType::Pointer rigwriter = RigidityImageWriterType::New();
-			 rigwriter->SetFileName( FileName.c_str() );
-			 rigwriter->SetInput( this->m_RigidityCoefficientImage );
-			 rigwriter->Update();
-		 }
-
 	 } // end FillRigidityCoefficientImage
+
 
 	/**
 	 * ******************** SetOutputDirectoryName ******************

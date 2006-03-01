@@ -116,6 +116,12 @@ namespace itk
 		/** Set macro for the weight of the second order term. */
 		itkSetMacro( SecondOrderWeight, ScalarType );
 
+		/** Set macro for the weight of the orthonormality term. */
+		itkSetMacro( OrthonormalityWeight, ScalarType );
+
+		/** Set macro for the weight of the properness term. */
+		itkSetMacro( PropernessWeight, ScalarType );
+
 		/** Set the OutputDirectoryName. */
 		itkSetStringMacro( OutputDirectoryName );
 
@@ -142,6 +148,8 @@ namespace itk
 
 		bool				m_UseImageSpacing;
 		ScalarType	m_SecondOrderWeight;
+		ScalarType	m_OrthonormalityWeight;
+		ScalarType	m_PropernessWeight;
 
 		/** Name of the output directory. */
 		std::string m_OutputDirectoryName;

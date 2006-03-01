@@ -45,6 +45,8 @@ namespace itk
 	{
 		this->m_UseImageSpacing = true;
 		this->m_SecondOrderWeight = 1.0;
+		this->m_OrthonormalityWeight = 1.0;
+		this->m_PropernessWeight = 1.0;
 		this->m_RigidRegulizerValue = NumericTraits<InputVectorValueType>::Zero;
 		this->m_GenerateDataCalled = false;
 		this->m_RigidityImage = 0;
@@ -75,6 +77,10 @@ namespace itk
 		os << std::endl;
 		os << indent << "SecondOrderWeight: "
 			<< this->m_SecondOrderWeight << std::endl;
+		os << indent << "OrthonormalityWeight: "
+			<< this->m_OrthonormalityWeight << std::endl;
+		os << indent << "PropernessWeight: "
+			<< this->m_PropernessWeight << std::endl;
 		os << indent << "RigidityImage: "
 			<< this->m_RigidityImage << std::endl;
 		os << indent << "OutputDirectoryName: "
@@ -97,7 +103,8 @@ namespace itk
 		::GenerateInputRequestedRegion() throw( InvalidRequestedRegionError )
 	{
 		/** Call the superclass' implementation of this method. This should
-		 * copy the output requested region to the input requested region. */
+		 * copy the output requested region to the input requested region.
+		 */
 		Superclass::GenerateInputRequestedRegion();
 
 		/** Get pointers to the input and output. */
@@ -176,7 +183,8 @@ namespace itk
 		}
 
 		/** Set m_ImageSpacingUsed to the input image spacing if
-		 * requested and to 1.0 otherwise. */
+		 * requested and to 1.0 otherwise.
+		 */
 		if ( this->GetUseImageSpacing() )
 		{
 			for ( unsigned int i = 0; i < ImageDimension; i++ ) m_ImageSpacingUsed[ i ] = s[ i ];
@@ -262,7 +270,7 @@ namespace itk
 		InputVectorImagePointer inputImage = const_cast< InputVectorImageType * >( this->GetInput() );
 
 		//tmp
-		if(0)
+		if(1)
 		{
 			typedef Vector< float, ImageDimension >		FloatVecType;
 			typedef Image<FloatVecType, ImageDimension >	FloatVecImageType;
@@ -278,10 +286,14 @@ namespace itk
 			//writere->SetInput( inputImage );
 			writere->Update();
 
-			typedef ImageFileWriter<InputScalarImageType>	ScallWriterType;
+			typedef Image< float, ImageDimension > FloatImage;
+			typedef CastImageFilter< InputScalarImageType, FloatImage > CasterrrrType;
+			typedef ImageFileWriter<FloatImage>	ScallWriterType;
+			typename CasterrrrType::Pointer caster = CasterrrrType::New();
 			typename ScallWriterType::Pointer writersc = ScallWriterType::New();
+			caster->SetInput( m_RigidityImage );
 			writersc->SetFileName( "rigidity.mhd" );
-			writersc->SetInput( m_RigidityImage );
+			writersc->SetInput( caster->GetOutput() );
 			writersc->Update();
 		}
 
@@ -332,7 +344,7 @@ namespace itk
 		}
 
 		// tmp
-		if (0)
+		if (1)
 		{
 			typedef Image< float, ImageDimension > FloatImage;
 			typedef ImageFileWriter< FloatImage >		FloatWriterType;
@@ -350,6 +362,7 @@ namespace itk
 			}
 			inputWriter[ 0 ]->SetFileName( "input1.mhd" );
 			inputWriter[ 1 ]->SetFileName( "input2.mhd" );
+			inputWriter[ 2 ]->SetFileName( "input3.mhd" );
 			for ( unsigned int i = 0; i < ImageDimension; i++ )
 			{
 				inputCaster[ i ]->SetInput( inputImages[ i ] );
@@ -396,7 +409,7 @@ namespace itk
 		}
 
 		// tmp
-		if (0)
+		if (1)
 		{
 			typedef Image< float, ImageDimension > FloatImage;
 			typedef ImageFileWriter< FloatImage >		FloatWriterType;
@@ -414,6 +427,7 @@ namespace itk
 			}
 			ui_FAWriter[ 0 ]->SetFileName( "u1_FA.mhd" );
 			ui_FAWriter[ 1 ]->SetFileName( "u2_FA.mhd" );
+			ui_FAWriter[ 2 ]->SetFileName( "u3_FA.mhd" );
 			for ( unsigned int i = 0; i < ImageDimension; i++ )
 			{
 				ui_FACaster[ i ]->SetInput( ui_FA[ i ] );
@@ -431,6 +445,7 @@ namespace itk
 			}
 			ui_FBWriter[ 0 ]->SetFileName( "u1_FB.mhd" );
 			ui_FBWriter[ 1 ]->SetFileName( "u2_FB.mhd" );
+			ui_FBWriter[ 2 ]->SetFileName( "u3_FB.mhd" );
 			for ( unsigned int i = 0; i < ImageDimension; i++ )
 			{
 				ui_FBCaster[ i ]->SetInput( ui_FB[ i ] );
@@ -541,7 +556,7 @@ namespace itk
 		} // end while
 
 		// tmp
-		if (0)
+		if (1)
 		{
 			typedef Image< float, ImageDimension > FloatImage;
 			typedef ImageFileWriter< FloatImage >		FloatWriterType;
@@ -560,12 +575,22 @@ namespace itk
 			}
 			SdmuWriter[ 0 ]->SetFileName( "Sdmu_00.mhd" );
 			SdmuWriter[ 1 ]->SetFileName( "Sdmu_01.mhd" );
-			SdmuWriter[ 2 ]->SetFileName( "Sdmu_10.mhd" );
-			SdmuWriter[ 3 ]->SetFileName( "Sdmu_11.mhd" );
+			SdmuWriter[ 2 ]->SetFileName( "Sdmu_02.mhd" );
+			SdmuWriter[ 3 ]->SetFileName( "Sdmu_10.mhd" );
+			SdmuWriter[ 4 ]->SetFileName( "Sdmu_11.mhd" );
+			SdmuWriter[ 5 ]->SetFileName( "Sdmu_12.mhd" );
+			SdmuWriter[ 6 ]->SetFileName( "Sdmu_20.mhd" );
+			SdmuWriter[ 7 ]->SetFileName( "Sdmu_21.mhd" );
+			SdmuWriter[ 8 ]->SetFileName( "Sdmu_22.mhd" );
 			SdmuCaster[ 0 ]->SetInput( Sdmu_ij[ 0 ][ 0 ] );
 			SdmuCaster[ 1 ]->SetInput( Sdmu_ij[ 0 ][ 1 ] );
-			SdmuCaster[ 2 ]->SetInput( Sdmu_ij[ 1 ][ 0 ] );
-			SdmuCaster[ 3 ]->SetInput( Sdmu_ij[ 1 ][ 1 ] );
+			SdmuCaster[ 2 ]->SetInput( Sdmu_ij[ 0 ][ 2 ] );
+			SdmuCaster[ 3 ]->SetInput( Sdmu_ij[ 1 ][ 0 ] );
+			SdmuCaster[ 4 ]->SetInput( Sdmu_ij[ 1 ][ 1 ] );
+			SdmuCaster[ 5 ]->SetInput( Sdmu_ij[ 1 ][ 2 ] );
+			SdmuCaster[ 6 ]->SetInput( Sdmu_ij[ 2 ][ 0 ] );
+			SdmuCaster[ 7 ]->SetInput( Sdmu_ij[ 2 ][ 1 ] );
+			SdmuCaster[ 8 ]->SetInput( Sdmu_ij[ 2 ][ 2 ] );
 			for ( unsigned int i = 0; i < tot; i++ )
 			{
 				SdmuWriter[ i ]->SetInput( SdmuCaster[ i ]->GetOutput() );
@@ -687,7 +712,7 @@ namespace itk
 		} // end while
 
 		// tmp
-		if(0)
+		if(1)
 		{
 			typedef Image< float, ImageDimension > FloatImage;
 			typedef ImageFileWriter< FloatImage >		FloatWriterType;
@@ -705,6 +730,7 @@ namespace itk
 			}
 			FOWriter[ 0 ]->SetFileName( "FO_0.mhd" );
 			FOWriter[ 1 ]->SetFileName( "FO_1.mhd" );
+			FOWriter[ 2 ]->SetFileName( "FO_2.mhd" );
 			for ( unsigned int i = 0; i < ImageDimension; i++ )
 			{
 				FOCaster[ i ]->SetInput( FOParts[ i ] );
@@ -963,7 +989,7 @@ namespace itk
 		} // end while
 
 		// tmp
-		if(0)
+		if(1)
 		{
 			typedef Image< float, ImageDimension > FloatImage;
 			typedef ImageFileWriter< FloatImage >		FloatWriterType;
@@ -981,6 +1007,7 @@ namespace itk
 			}
 			SOWriter[ 0 ]->SetFileName( "SO_0.mhd" );
 			SOWriter[ 1 ]->SetFileName( "SO_1.mhd" );
+			SOWriter[ 2 ]->SetFileName( "SO_2.mhd" );
 			for ( unsigned int i = 0; i < ImageDimension; i++ )
 			{
 				SOCaster[ i ]->SetInput( SOParts[ i ] );
@@ -1542,13 +1569,24 @@ namespace itk
 			if ( ImageDimension == 2 )
 			{
 				/** Fill the operator. */
-				F[ 0 ] = 1.0 / 12.0 / s[ 0 ];	F[ 1 ] = 0.0;	F[ 2 ] = -1.0/ 12.0 / s[ 0 ];
-				F[ 3 ] = 1.0 / 3.0 / s[ 0 ];	F[ 4 ] = 0.0;	F[ 5 ] = -1.0/ 3.0 / s[ 0 ];
-				F[ 6 ] = 1.0 / 12.0 / s[ 0 ];	F[ 7 ] = 0.0;	F[ 8 ] = -1.0/ 12.0 / s[ 0 ];
+				F[ 0 ] = 1.0 / 12.0 / s[ 0 ]; F[ 1 ] = 0.0;	F[ 2 ] = -1.0 / 12.0 / s[ 0 ];
+				F[ 3 ] = 1.0 /  3.0 / s[ 0 ]; F[ 4 ] = 0.0;	F[ 5 ] = -1.0 / 3.0 / s[ 0 ];
+				F[ 6 ] = 1.0 / 12.0 / s[ 0 ]; F[ 7 ] = 0.0;	F[ 8 ] = -1.0 / 12.0 / s[ 0 ];
 			}
 			else if ( ImageDimension == 3 )
 			{
-				/** Fill the operator. */
+				/** Fill the operator. First slice. */
+				F[ 0 ] = 1.0 / 72.0 / s[ 0 ];	F[ 1 ] = 0.0;	F[ 2 ] = -1.0 / 72.0 / s[ 0 ];
+				F[ 3 ] = 1.0 / 18.0 / s[ 0 ];	F[ 4 ] = 0.0;	F[ 5 ] = -1.0 / 18.0 / s[ 0 ];
+				F[ 6 ] = 1.0 / 72.0 / s[ 0 ];	F[ 7 ] = 0.0;	F[ 8 ] = -1.0 / 72.0 / s[ 0 ];
+				/** Second slice. */
+				F[  9 ] = 1.0 / 18.0 / s[ 0 ];	F[ 10 ] = 0.0; F[ 11 ] = -1.0 / 18.0 / s[ 0 ];
+				F[ 12 ] = 2.0 /  9.0 / s[ 0 ];	F[ 13 ] = 0.0; F[ 14 ] = -2.0 /  9.0 / s[ 0 ];
+				F[ 15 ] = 1.0 / 18.0 / s[ 0 ];	F[ 16 ] = 0.0; F[ 17 ] = -1.0 / 18.0 / s[ 0 ];
+				/** Third slice. */
+				F[ 18 ] = 1.0 / 72.0 / s[ 0 ];	F[ 19 ] = 0.0;	F[ 20 ] = -1.0 / 72.0 / s[ 0 ];
+				F[ 21 ] = 1.0 / 18.0 / s[ 0 ];	F[ 22 ] = 0.0;	F[ 23 ] = -1.0 / 18.0 / s[ 0 ];
+				F[ 24 ] = 1.0 / 72.0 / s[ 0 ];	F[ 25 ] = 0.0;	F[ 26 ] = -1.0 / 72.0 / s[ 0 ];
 			}
 		}
 		else if ( WhichF == "FB" )
@@ -1556,46 +1594,81 @@ namespace itk
 			if ( ImageDimension == 2 )
 			{
 				/** Fill the operator. */
-				F[ 0 ] = 1.0 / 12.0 / s[ 1 ];		F[ 1 ] = 1.0 / 3.0 / s[ 1 ];		F[ 2 ] = 1.0 / 12.0 / s[ 1 ];
-				F[ 3 ] = 0.0;										F[ 4 ] = 0.0;										F[ 5 ] = 0.0;
+				F[ 0 ] =  1.0 / 12.0 / s[ 1 ];	F[ 1 ] =  1.0 / 3.0 / s[ 1 ];		F[ 2 ] =  1.0 / 12.0 / s[ 1 ];
+				F[ 3 ] =  0.0;									F[ 4 ] =  0.0;									F[ 5 ] =  0.0;
 				F[ 6 ] = -1.0 / 12.0 / s[ 1 ];	F[ 7 ] = -1.0 / 3.0 / s[ 1 ];		F[ 8 ] = -1.0 / 12.0 / s[ 1 ];
 			}
 			else if ( ImageDimension == 3 )
 			{
-				/** Fill the operator. */
+				/** Fill the operator. First slice. */
+				F[ 0 ] =  1.0 / 72.0 / s[ 1 ];	F[ 1 ] =  1.0 / 18.0 / s[ 1 ];	F[ 2 ] =  1.0 / 72.0 / s[ 1 ];
+				F[ 3 ] =  0.0;									F[ 4 ] =  0.0;									F[ 5 ] =  0.0;
+				F[ 6 ] = -1.0 / 72.0 / s[ 1 ];	F[ 7 ] = -1.0 / 18.0 / s[ 1 ];	F[ 8 ] = -1.0 / 72.0 / s[ 1 ];
+				/** Second slice. */
+				F[  9 ] =  1.0 / 18.0 / s[ 1 ];	F[ 10 ] =  2.0 / 9.0 / s[ 1 ];	F[ 11 ] =  1.0 / 18.0 / s[ 1 ];
+				F[ 12 ] =  0.0;									F[ 13 ] =  0.0;									F[ 14 ] =  0.0;
+				F[ 15 ] = -1.0 / 18.0 / s[ 1 ];	F[ 16 ] = -2.0 / 9.0 / s[ 1 ];	F[ 17 ] = -1.0 / 18.0 / s[ 1 ];
+				/** Third slice. */
+				F[ 18 ] =  1.0 / 72.0 / s[ 1 ];	F[ 19 ] =  1.0 / 18.0 / s[ 1 ];	F[ 20 ] =  1.0 / 72.0 / s[ 1 ];
+				F[ 21 ] =  0.0;									F[ 22 ] =  0.0;									F[ 23 ] =  0.0;
+				F[ 24 ] = -1.0 / 72.0 / s[ 1 ];	F[ 25 ] = -1.0 / 18.0 / s[ 1 ];	F[ 26 ] = -1.0 / 72.0 / s[ 1 ];
 			}
 		}
 		else if ( WhichF == "FC" )
 		{
 			if ( ImageDimension == 2 )
 			{
-				/** Not appropiate. */
+				/** Not appropriate. Throw an exception. */
+				itkExceptionMacro( << "This type of operator (FC) is not appropriate in 2D." );
 			}
 			else if ( ImageDimension == 3 )
 			{
-				/** Fill the operator. */
+				/** Fill the operator. First slice. */
+				F[ 0 ] = 1.0 / 72.0 / s[ 2 ];	F[ 1 ] = 1.0 / 18.0 / s[ 2 ];	F[ 2 ] = 1.0 / 72.0 / s[ 2 ];
+				F[ 3 ] = 1.0 / 18.0 / s[ 2 ];	F[ 4 ] = 2.0 /  9.0 / s[ 2 ];	F[ 5 ] = 1.0 / 18.0 / s[ 2 ];
+				F[ 6 ] = 1.0 / 72.0 / s[ 2 ];	F[ 7 ] = 1.0 / 18.0 / s[ 2 ];	F[ 8 ] = 1.0 / 72.0 / s[ 2 ];
+				/** Second slice. */
+				F[  9 ] = 0.0; F[ 10 ] = 0.0; F[ 11 ] = 0.0;
+				F[ 12 ] = 0.0; F[ 13 ] = 0.0; F[ 14 ] = 0.0;
+				F[ 15 ] = 0.0; F[ 16 ] = 0.0; F[ 17 ] = 0.0;
+				/** Third slice. */
+				F[ 18 ] = -1.0 / 72.0 / s[ 2 ]; F[ 19 ] = -1.0 / 18.0 / s[ 2 ];	F[ 20 ] = -1.0 / 72.0 / s[ 2 ];
+				F[ 21 ] = -1.0 / 18.0 / s[ 2 ]; F[ 22 ] = -2.0 /  9.0 / s[ 2 ];	F[ 23 ] = -1.0 / 18.0 / s[ 2 ];
+				F[ 24 ] = -1.0 / 72.0 / s[ 2 ]; F[ 25 ] = -1.0 / 18.0 / s[ 2 ];	F[ 26 ] = -1.0 / 72.0 / s[ 2 ];
 			}
 		}
 		else if ( WhichF == "FD" )
 		{
 			if ( ImageDimension == 2 )
 			{
-				InputVectorValueType sp = s[ 0 ] / s[ 0 ];
+				InputVectorValueType sp = s[ 0 ] * s[ 0 ];
 				/** Fill the operator. */
 				F[ 0 ] = 1.0 / 12.0 / sp;		F[ 1 ] = -1.0 / 6.0 / sp;		F[ 2 ] = 1.0 / 12.0 / sp;
-				F[ 3 ] = 1.0 / 3.0 / sp;		F[ 4 ] = -2.0 / 3.0 / sp;		F[ 5 ] = 1.0 / 3.0 / sp;
+				F[ 3 ] = 1.0 /  3.0 / sp;		F[ 4 ] = -2.0 / 3.0 / sp;		F[ 5 ] = 1.0 /  3.0 / sp;
 				F[ 6 ] = 1.0 / 12.0 / sp;		F[ 7 ] = -1.0 / 6.0 / sp;		F[ 8 ] = 1.0 / 12.0 / sp;
 			}
 			else if ( ImageDimension == 3 )
 			{
-				/** Fill the operator. */
+				InputVectorValueType sp = s[ 0 ] * s[ 0 ];
+				/** Fill the operator. First slice. */
+				F[ 0 ]  = 1.0 / 72.0 / sp; F[ 1 ]  = -1.0 / 36.0 / sp; F[ 2 ]  = 1.0 / 72.0 / sp;
+				F[ 3 ]  = 1.0 / 18.0 / sp; F[ 4 ]  = -1.0 /  9.0 / sp; F[ 5 ]  = 1.0 / 18.0 / sp;
+				F[ 6 ]  = 1.0 / 72.0 / sp; F[ 7 ]  = -1.0 / 36.0 / sp; F[ 8 ]  = 1.0 / 72.0 / sp;
+				/** Second slice. */
+				F[  9 ] = 1.0 / 18.0 / sp; F[ 10 ] = -1.0 / 9.0 / sp;  F[ 11 ] = 1.0 / 18.0 / sp;
+				F[ 12 ] = 2.0 /  9.0 / sp; F[ 13 ] = -4.0 / 9.0 / sp;  F[ 14 ] = 2.0 /  9.0 / sp;
+				F[ 15 ] = 1.0 / 18.0 / sp; F[ 16 ] = -1.0 / 9.0 / sp;  F[ 17 ] = 1.0 / 18.0 / sp;
+				/** Third slice. */
+				F[ 18 ] = 1.0 / 72.0 / sp; F[ 19 ] = -1.0 / 36.0 / sp; F[ 20 ] = 1.0 / 72.0 / sp;
+				F[ 21 ] = 1.0 / 18.0 / sp; F[ 22 ] = -1.0 /  9.0 / sp; F[ 23 ] = 1.0 / 18.0 / sp;
+				F[ 24 ] = 1.0 / 72.0 / sp; F[ 25 ] = -1.0 / 36.0 / sp; F[ 26 ] = 1.0 / 72.0 / sp;
 			}
 		}
 		else if ( WhichF == "FE" )
 		{
 			if ( ImageDimension == 2 )
 			{
-				InputVectorValueType sp = s[ 1 ] / s[ 1 ];
+				InputVectorValueType sp = s[ 1 ] * s[ 1 ];
 				/** Fill the operator. */
 				F[ 0 ] = 1.0 / 12.0 / sp;		F[ 1 ] = 1.0 / 3.0 / sp;		F[ 2 ] = 1.0 / 12.0 / sp;
 				F[ 3 ] = -1.0 / 6.0 / sp;		F[ 4 ] = -2.0 / 3.0 / sp;		F[ 5 ] = -1.0 / 6.0 / sp;
@@ -1603,70 +1676,118 @@ namespace itk
 			}
 			else if ( ImageDimension == 3 )
 			{
-				/** Fill the operator. */
+				InputVectorValueType sp = s[ 1 ] * s[ 1 ];
+				/** Fill the operator. First slice. */
+				F[ 0 ] =  1.0 / 72.0 / sp;	F[ 1 ] =  1.0 / 18.0 / sp; F[ 2 ] =  1.0 / 72.0 / sp;
+				F[ 3 ] = -1.0 / 36.0 / sp;	F[ 4 ] = -1.0 /  9.0 / sp; F[ 5 ] = -1.0 / 36.0 / sp;
+				F[ 6 ] =  1.0 / 72.0 / sp;	F[ 7 ] =  1.0 / 18.0 / sp; F[ 8 ] =  1.0 / 72.0 / sp;
+				/** Second slice. */
+				F[  9 ] =  1.0 / 18.0 / sp;	F[ 10 ] =  2.0 / 9.0 / sp; F[ 11 ] =  1.0 / 18.0 / sp;
+				F[ 12 ] = -1.0 /  9.0 / sp;	F[ 13 ] = -4.0 / 9.0 / sp; F[ 14 ] = -1.0 /  9.0 / sp;
+				F[ 15 ] =  1.0 / 18.0 / sp;	F[ 16 ] =  2.0 / 9.0 / sp; F[ 17 ] =  1.0 / 18.0 / sp;
+				/** Third slice. */
+				F[ 18 ] =  1.0 / 72.0 / sp;	F[ 19 ] =  1.0 / 18.0 / sp;	F[ 20 ] =  1.0 / 72.0 / sp;
+				F[ 21 ] = -1.0 / 36.0 / sp;	F[ 22 ] = -1.0 /  9.0 / sp;	F[ 23 ] = -1.0 / 36.0 / sp;
+				F[ 24 ] =  1.0 / 72.0 / sp;	F[ 25 ] =  1.0 / 18.0 / sp;	F[ 26 ] =  1.0 / 72.0 / sp;
 			}
 		}
 		else if ( WhichF == "FF" )
 		{
 			if ( ImageDimension == 2 )
 			{
-				/** not appropiate. */
-				InputVectorValueType sp = s[ 2 ] / s[ 2 ];
-				/** Fill the operator. */
-				//F[ 0 ] = 1.0 / 36.0 / sp;		F[ 1 ] = 1.0 / 9.0 / sp;		F[ 2 ] = 1.0 / 36.0 / sp;
-				//F[ 3 ] = 1.0 / 9.0 / sp;		F[ 4 ] = 4.0 / 9.0 / sp;		F[ 5 ] = 1.0 / 9.0 / sp;
-				//F[ 6 ] = 1.0 / 36.0 / sp;		F[ 7 ] = 1.0 / 9.0 / sp;		F[ 8 ] = 1.0 / 36.0 / sp;
+				/** Not appropriate. Throw an exception. */
+				itkExceptionMacro( << "This type of operator (FF) is not appropriate in 2D." );
 			}
 			else if ( ImageDimension == 3 )
 			{
-				/** Fill the operator. */
+				InputVectorValueType sp = s[ 2 ] * s[ 2 ];
+				/** Fill the operator. First slice. */
+				F[ 0 ] = 1.0 / 72.0 / sp;	F[ 1 ] = 1.0 / 18.0 / sp;	F[ 2 ] = 1.0 / 72.0 / sp;
+				F[ 3 ] = 1.0 / 18.0 / sp;	F[ 4 ] = 2.0 /  9.0 / sp;	F[ 5 ] = 1.0 / 18.0 / sp;
+				F[ 6 ] = 1.0 / 72.0 / sp;	F[ 7 ] = 1.0 / 18.0 / sp;	F[ 8 ] = 1.0 / 72.0 / sp;
+				/** Second slice. */
+				F[  9 ] = -1.0 / 39.0 / sp; F[ 10 ] = -1.0 / 9.0 / sp;	F[ 11 ] = -1.0 / 36.0 / sp;
+				F[ 12 ] = -1.0 /  9.0 / sp; F[ 13 ] = -4.0 / 9.0 / sp;	F[ 14 ] = -1.0 /  9.0 / sp;
+				F[ 15 ] = -1.0 / 36.0 / sp; F[ 16 ] = -1.0 / 9.0 / sp;	F[ 17 ] = -1.0 / 36.0 / sp;
+				/** Third slice. */
+				F[ 18 ] = 1.0 / 72.0 / sp; F[ 19 ] = 1.0 / 18.0 / sp;	F[ 20 ] = 1.0 / 72.0 / sp;
+				F[ 21 ] = 1.0 / 18.0 / sp; F[ 22 ] = 2.0 /  9.0 / sp;	F[ 23 ] = 1.0 / 18.0 / sp;
+				F[ 24 ] = 1.0 / 72.0 / sp; F[ 25 ] = 1.0 / 18.0 / sp;	F[ 26 ] = 1.0 / 72.0 / sp;
 			}
 		}
 		else if ( WhichF == "FG" )
 		{
 			if ( ImageDimension == 2 )
 			{
-				InputVectorValueType sp = s[ 0 ] / s[ 1 ];
+				InputVectorValueType sp = s[ 0 ] * s[ 1 ];
 				/** Fill the operator. */
-				F[ 0 ] = 1.0 / 4.0 / sp;		F[ 1 ] = 0.0;		F[ 2 ] = -1.0/ 4.0 / sp;
-				F[ 3 ] = 0.0;								F[ 4 ] = 0.0;		F[ 5 ] = 0.0;
-				F[ 6 ] = -1.0 / 4.0 / sp;		F[ 7 ] = 0.0;		F[ 8 ] = 1.0/ 4.0 / sp;
+				F[ 0 ] =  1.0 / 4.0 / sp;		F[ 1 ] = 0.0;		F[ 2 ] = -1.0 / 4.0 / sp;
+				F[ 3 ] =  0.0;							F[ 4 ] = 0.0;		F[ 5 ] =  0.0;
+				F[ 6 ] = -1.0 / 4.0 / sp;		F[ 7 ] = 0.0;		F[ 8 ] =  1.0 / 4.0 / sp;
 			}
 			else if ( ImageDimension == 3 )
 			{
-				/** Fill the operator. */
+				InputVectorValueType sp = s[ 0 ] * s[ 1 ];
+				/** Fill the operator. First slice. */
+				F[ 0 ] =  1.0 / 24.0 / sp;	F[ 1 ] = 0.0;		F[ 2 ] = -1.0 / 24.0 / sp;
+				F[ 3 ] =  0.0;							F[ 4 ] = 0.0;		F[ 5 ] =  0.0;
+				F[ 6 ] = -1.0 / 24.0 / sp;	F[ 7 ] = 0.0;		F[ 8 ] =  1.0 / 24.0 / sp;
+				/** Second slice. */
+				F[  9 ] =  1.0 / 6.0 / sp;	F[ 10 ] = 0.0;	F[ 11 ] = -1.0 / 6.0 / sp;
+				F[ 12 ] =  0.0;							F[ 13 ] = 0.0;	F[ 14 ] =  0.0;
+				F[ 15 ] = -1.0 / 6.0 / sp;	F[ 16 ] = 0.0;	F[ 17 ] =  1.0 / 6.0 / sp;
+				/** Third slice. */
+				F[ 18 ] =  1.0 / 24.0 / sp;	F[ 19 ] = 0.0;	F[ 20 ] = -1.0 / 24.0 / sp;
+				F[ 21 ] =  0.0;							F[ 22 ] = 0.0;	F[ 23 ] =  0.0;
+				F[ 24 ] = -1.0 / 24.0 / sp;	F[ 25 ] = 0.0;	F[ 26 ] =  1.0 / 24.0 / sp;
 			}
 		}
 		else if ( WhichF == "FH" )
 		{
 			if ( ImageDimension == 2 )
 			{
-				/** not appropiate. */
-				InputVectorValueType sp = s[ 0 ] / s[ 2 ];
-				/** Fill the operator. */
-				//F[ 0 ] = -1.0 / 12.0 / sp;		F[ 1 ] = 0.0;		F[ 2 ] = 1.0/ 12.0 / sp;
-				//F[ 3 ] = -1.0 / 3.0 / sp;			F[ 4 ] = 0.0;		F[ 5 ] = 1.0/ 3.0 / sp;
-				//F[ 6 ] = -1.0 / 12.0 / sp;		F[ 7 ] = 0.0;		F[ 8 ] = 1.0/ 12.0 / sp;
+				/** Not appropriate. Throw an exception. */
+				itkExceptionMacro( << "This type of operator (FH) is not appropriate in 2D." );
 			}
 			else if ( ImageDimension == 3 )
 			{
-				/** Fill the operator. */
+				InputVectorValueType sp = s[ 0 ] * s[ 2 ];
+				/** Fill the operator. First slice. */
+				F[ 0 ] = 1.0 / 24.0 / sp;	F[ 1 ] = 0.0;	F[ 2 ] = -1.0 / 24.0 / sp;
+				F[ 3 ] = 1.0 /  6.0 / sp;	F[ 4 ] = 0.0;	F[ 5 ] = -1.0 /  6.0 / sp;
+				F[ 6 ] = 1.0 / 24.0 / sp;	F[ 7 ] = 0.0;	F[ 8 ] = -1.0 / 24.0 / sp;
+				/** Second slice. */
+				F[  9 ] = 0.0;	F[ 10 ] = 0.0; F[ 11 ] = 0.0;
+				F[ 12 ] = 0.0;	F[ 13 ] = 0.0; F[ 14 ] = 0.0;
+				F[ 15 ] = 0.0;	F[ 16 ] = 0.0; F[ 17 ] = 0.0;
+				/** Third slice. */
+				F[ 18 ] = -1.0 / 24.0 / sp;	F[ 19 ] = 0.0;	F[ 20 ] = 1.0 / 24.0 / sp;
+				F[ 21 ] = -1.0 /  6.0 / sp;	F[ 22 ] = 0.0;	F[ 23 ] = 1.0 /  6.0 / sp;
+				F[ 24 ] = -1.0 / 24.0 / sp;	F[ 25 ] = 0.0;	F[ 26 ] = 1.0 / 24.0 / sp;
 			}
 		}
 		else if ( WhichF == "FI" )
 		{
 			if ( ImageDimension == 2 )
 			{
-				/** not appropiate. */
-				InputVectorValueType sp = s[ 1 ] / s[ 2 ];
-				/** Fill the operator. */
-				//F[ 0 ] = -1.0 / 12.0 / sp;	F[ 1 ] = -1.0 / 3.0 / sp;		F[ 2 ] = -1.0/ 12.0 / sp;
-				//F[ 3 ] = 0.0;								F[ 4 ] = 0.0;								F[ 5 ] = 0.0;
-				//F[ 6 ] = 1.0 / 12.0 / sp;		F[ 7 ] = 1.0 / 3.0 / sp;		F[ 8 ] = 1.0/ 12.0 / sp;
+				/** Not appropriate. Throw an exception. */
+				itkExceptionMacro( << "This type of operator (FI) is not appropriate in 2D." );
 			}
 			else if ( ImageDimension == 3 )
 			{
-				/** Fill the operator. */
+				InputVectorValueType sp = s[ 1 ] * s[ 2 ];
+				/** Fill the operator. First slice. */
+				F[ 0 ] =  1.0 / 24.0 / sp;	F[ 1 ] =  1.0 / 6.0 / sp;	F[ 2 ] =  1.0 / 24.0 / sp;
+				F[ 3 ] =  0.0;							F[ 4 ] =  0.0;						F[ 5 ] =  0.0;
+				F[ 6 ] = -1.0 / 24.0 / sp;	F[ 7 ] = -1.0 / 6.0 / sp;	F[ 8 ] = -1.0 / 24.0 / sp;
+				/** Second slice. */
+				F[  9 ] = 0.0;	F[ 10 ] = 0.0; F[ 11 ] = 0.0;
+				F[ 12 ] = 0.0;	F[ 13 ] = 0.0; F[ 14 ] = 0.0;
+				F[ 15 ] = 0.0;	F[ 16 ] = 0.0; F[ 17 ] = 0.0;
+				/** Third slice. */
+				F[ 18 ] = -1.0 / 24.0 / sp;	F[ 19 ] = -1.0 / 6.0 / sp;	F[ 20 ] = -1.0 / 24.0 / sp;
+				F[ 21 ] =  0.0;							F[ 22 ] =  0.0;							F[ 23 ] =  0.0;
+				F[ 24 ] =  1.0 / 24.0 / sp;	F[ 25 ] =  1.0 / 6.0 / sp;	F[ 26 ] =  1.0 / 24.0 / sp;
 			}
 		}
 		else
@@ -2065,7 +2186,7 @@ namespace itk
 						- ( 1.0 + mu1_A ) * ( 1.0 + mu1_A ) * mu3_B * ( 1.0 + mu3_C )
 						)
 					+ mu1_C * mu3_A
-					+ ( 1.0 + mu1_A ) * ( 1.0 + mu3_C );
+					- ( 1.0 + mu1_A ) * ( 1.0 + mu3_C );
 			}
 			else if ( dim == 1 && part == 2 )
 			{
@@ -2107,7 +2228,6 @@ namespace itk
 						)
 					+ ( 1.0 + mu1_A ) * mu3_B;
 			}
-
 			else if ( dim == 2 && part == 0 )
 			{
 				/** In this case we calculate the derivative of S^rigid_3D to

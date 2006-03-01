@@ -32,7 +32,7 @@ namespace itk
   /**
 	 * \class RigidRegularizationDerivativeImageFilter
 	 * \brief This filter computes the derivative of a penalty term on a 
-	 * vector-valued image. This penalty term is an isotropic measure of the
+	 * vector-valued image. This penalty term is a function of the
 	 * 1st and 2nd order spatial derivatives of an image.
 	 *
 	 * The intended use for this filter is to filter a B-spline coefficient
@@ -122,14 +122,14 @@ namespace itk
 		typedef ImageRegionIterator< OutputScalarImageType >	OutputScalarImageIteratorType;
 
 		/** RigidRegularizationImageFilter needs a larger
-		* input requested region than the output requested region (larger
-		* in the direction of the derivative). As such,
-		* SecondOrderRegularizationNonSeparableImageFilter needs to provide an
-		* implementation for GenerateInputRequestedRegion() in order to
-		* inform the pipeline execution model.
-		*
-		* \sa ImageToImageFilter::GenerateInputRequestedRegion()
-		*/
+		 * input requested region than the output requested region (larger
+		 * in the direction of the derivative). As such,
+		 * SecondOrderRegularizationNonSeparableImageFilter needs to provide an
+		 * implementation for GenerateInputRequestedRegion() in order to
+		 * inform the pipeline execution model.
+		 *
+		 * \sa ImageToImageFilter::GenerateInputRequestedRegion()
+		 */
 		virtual void GenerateInputRequestedRegion() throw(InvalidRequestedRegionError);
 
 		/** Use the image spacing information in calculations. Use this option if you
@@ -148,12 +148,22 @@ namespace itk
 		itkGetMacro( UseImageSpacing, bool );
 		itkGetMacro( ImageSpacingUsed, double * );
 
-		/** Set/Get the weight of the second order part. */
+		/** Set/Get the weight of the second order part: the linearity condition. */
 		itkSetClampMacro( SecondOrderWeight, InputVectorValueType,
 			0.0, NumericTraits<InputVectorValueType>::max() );
 		itkGetMacro( SecondOrderWeight, InputVectorValueType );
 
-		/** Set the coefficient matrix C. */
+		/** Set/Get the weight of the orthonormality part: the orthonormality condition. */
+		itkSetClampMacro( OrthonormalityWeight, InputVectorValueType,
+			0.0, NumericTraits<InputVectorValueType>::max() );
+		itkGetMacro( OrthonormalityWeight, InputVectorValueType );
+
+		/** Set/Get the weight of the properness part: the incompressibility condition. */
+		itkSetClampMacro( PropernessWeight, InputVectorValueType,
+			0.0, NumericTraits<InputVectorValueType>::max() );
+		itkGetMacro( PropernessWeight, InputVectorValueType );
+
+		/** Set the rigidity coefficient matrix C. */
 		itkSetMacro( RigidityImage, InputScalarImagePointer );
 
 		/** Get the value of the rigid regulizer. */
@@ -170,11 +180,11 @@ namespace itk
 		virtual ~RigidRegularizationDerivativeImageFilter(){}
 
 		/** Standard pipeline method. While this class does not implement a
-		* ThreadedGenerateData(), its GenerateData() delegates all
-		* calculations to an NeighborhoodOperatorImageFilter.  Since the
-		* NeighborhoodOperatorImageFilter is multithreaded, this filter is
-		* multithreaded by default.
-		*/
+		 * ThreadedGenerateData(), its GenerateData() delegates all
+		 * calculations to an NeighborhoodOperatorImageFilter.  Since the
+		 * NeighborhoodOperatorImageFilter is multithreaded, this filter is
+		 * multithreaded by default.
+		 */
 		void GenerateData();
 
 		/** PrintSelf. */
@@ -185,7 +195,7 @@ namespace itk
 		/** The private constructor. */
 		RigidRegularizationDerivativeImageFilter( const Self& );	// purposely not implemented
 		/** The private copy constructor. */
-		void operator=( const Self& );									// purposely not implemented
+		void operator=( const Self& );														// purposely not implemented
 
 		/** Some private functions used for the filtering. */
 		void Create1DOperator( NeighborhoodType & F, std::string WhichF, unsigned int WhichDimension );
@@ -203,6 +213,12 @@ namespace itk
 
 		/** A private variable to store the weighting of the second order part. */
 		InputVectorValueType			m_SecondOrderWeight;
+
+		/** A private variable to store the weighting of the second order part. */
+		InputVectorValueType			m_OrthonormalityWeight;
+
+		/** A private variable to store the weighting of the second order part. */
+		InputVectorValueType			m_PropernessWeight;
 
 		/** A private variable to store if GenerateDate() has been called. */
 		bool			m_GenerateDataCalled;
