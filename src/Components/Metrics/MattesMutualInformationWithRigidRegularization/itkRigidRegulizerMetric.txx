@@ -201,7 +201,7 @@ namespace itk
 
 		/** Create the RigidDerivative filter and image. */
 		RigidDerivativeFilterPointer rigidDerivativeFilter = RigidDerivativeFilterType::New();
-		rigidDerivativeFilter->DebugOn();
+		//rigidDerivativeFilter->DebugOn();
 		CoefficientVectorImagePointer	rigidDerivativeImage;// = CoefficientVectorImageType::New();
 
 		/** Set stuff into the filter. */
