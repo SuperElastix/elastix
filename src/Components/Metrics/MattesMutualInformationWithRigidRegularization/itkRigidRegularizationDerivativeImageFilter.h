@@ -164,7 +164,7 @@ namespace itk
 		itkGetMacro( PropernessWeight, InputVectorValueType );
 
 		/** Set the rigidity coefficient matrix C. */
-		itkSetMacro( RigidityImage, InputScalarImagePointer );
+		itkSetObjectMacro( RigidityImage, InputScalarImageType );
 
 		/** Get the value of the rigid regulizer. */
 		InputVectorValueType GetRigidRegulizerValue(void);

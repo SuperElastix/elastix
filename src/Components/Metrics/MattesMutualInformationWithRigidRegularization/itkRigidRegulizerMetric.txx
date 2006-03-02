@@ -200,8 +200,9 @@ namespace itk
 		writer->Update();
 
 		/** Create the RigidDerivative filter and image. */
-		RigidDerivativeFilterPointer	rigidDerivativeFilter = RigidDerivativeFilterType::New();
-		CoefficientVectorImagePointer	rigidDerivativeImage = CoefficientVectorImageType::New();
+		RigidDerivativeFilterPointer rigidDerivativeFilter = RigidDerivativeFilterType::New();
+		rigidDerivativeFilter->DebugOn();
+		CoefficientVectorImagePointer	rigidDerivativeImage;// = CoefficientVectorImageType::New();
 
 		/** Set stuff into the filter. */
 		rigidDerivativeFilter->SetUseImageSpacing( this->m_UseImageSpacing );

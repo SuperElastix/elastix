@@ -105,10 +105,10 @@ namespace itk
 		/** Set the BSpline transform in this class.
 		 * This class expects a BSplineTransform! It is not suited for others.
 		 */
-		itkSetMacro( BSplineTransform, BSplineTransformPointer );
+		itkSetObjectMacro( BSplineTransform, BSplineTransformType );
 
 		/** Set the RigidityImage in this class. */
-		itkSetMacro( RigidityImage, RigidityImagePointer );
+		itkSetObjectMacro( RigidityImage, RigidityImageType );
 
 		/** Set macro for using the spacing. */
 		itkSetMacro( UseImageSpacing, bool );

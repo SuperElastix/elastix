@@ -176,10 +176,10 @@ namespace itk
 			0.1, NumericTraits<CoordinateRepresentationType>::max() );
 
 		/** Set the fixed coefficient image. */
-		itkSetMacro( FixedRigidityImage, RigidityImagePointer );
+		itkSetObjectMacro( FixedRigidityImage, RigidityImageType );
 
 		/** Set the moving coefficient image. */
-		itkSetMacro( MovingRigidityImage, RigidityImagePointer );
+		itkSetObjectMacro( MovingRigidityImage, RigidityImageType );
 
 		/** Set to use the FixedRigidityImage or not. */
 		itkSetMacro( UseFixedRigidityImage, bool );

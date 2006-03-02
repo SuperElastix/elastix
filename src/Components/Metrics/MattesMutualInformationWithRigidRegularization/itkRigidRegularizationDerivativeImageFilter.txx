@@ -270,7 +270,7 @@ namespace itk
 		InputVectorImagePointer inputImage = const_cast< InputVectorImageType * >( this->GetInput() );
 
 		//tmp
-		if(1)
+		if(0)
 		{
 			typedef Vector< float, ImageDimension >		FloatVecType;
 			typedef Image<FloatVecType, ImageDimension >	FloatVecImageType;
@@ -344,7 +344,7 @@ namespace itk
 		}
 
 		// tmp
-		if (1)
+		if (0)
 		{
 			typedef Image< float, ImageDimension > FloatImage;
 			typedef ImageFileWriter< FloatImage >		FloatWriterType;
@@ -409,7 +409,7 @@ namespace itk
 		}
 
 		// tmp
-		if (1)
+		if (0)
 		{
 			typedef Image< float, ImageDimension > FloatImage;
 			typedef ImageFileWriter< FloatImage >		FloatWriterType;
@@ -556,7 +556,7 @@ namespace itk
 		} // end while
 
 		// tmp
-		if (1)
+		if (0)
 		{
 			typedef Image< float, ImageDimension > FloatImage;
 			typedef ImageFileWriter< FloatImage >		FloatWriterType;
@@ -712,7 +712,7 @@ namespace itk
 		} // end while
 
 		// tmp
-		if(1)
+		if(0)
 		{
 			typedef Image< float, ImageDimension > FloatImage;
 			typedef ImageFileWriter< FloatImage >		FloatWriterType;
@@ -989,7 +989,7 @@ namespace itk
 		} // end while
 
 		// tmp
-		if(1)
+		if(0)
 		{
 			typedef Image< float, ImageDimension > FloatImage;
 			typedef ImageFileWriter< FloatImage >		FloatWriterType;
