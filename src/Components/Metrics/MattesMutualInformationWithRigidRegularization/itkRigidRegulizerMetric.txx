@@ -192,17 +192,9 @@ namespace itk
 		coefVectorImage = combiner->GetOutput();
 		coefVectorImage->Update();
 
-		/** tmp write *
-		typedef ImageFileWriter< CoefficientVectorImageType > WriterType;
-		typename WriterType::Pointer writer = WriterType::New();
-		writer->SetFileName( "coefImage.mhd" );
-		writer->SetInput( coefVectorImage );
-		writer->Update();
-
 		/** Create the RigidDerivative filter and image. */
 		RigidDerivativeFilterPointer rigidDerivativeFilter = RigidDerivativeFilterType::New();
-		//rigidDerivativeFilter->DebugOn();
-		CoefficientVectorImagePointer	rigidDerivativeImage;// = CoefficientVectorImageType::New();
+		CoefficientVectorImagePointer	rigidDerivativeImage;
 
 		/** Set stuff into the filter. */
 		rigidDerivativeFilter->SetUseImageSpacing( this->m_UseImageSpacing );

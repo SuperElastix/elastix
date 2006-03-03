@@ -107,14 +107,6 @@ namespace itk
 		typedef typename NeighborhoodIteratorOutputType
 			::RadiusType																				RadiusOutputType;
 		typedef	typename NeighborhoodType::SizeType						SizeType;
-		//typedef SecondOrderRegularizationNonSeparableOperator<
-			//OutputVectorValueType,
-			//itkGetStaticConstMacro( ImageDimension ) >					SOOperatorType;
-
-		/** Typedef support for B-spline kernel functions. *
-		typedef BSplineKernelFunction< 1 >	BSplineKernelFunctionOrder1Type;
-		typedef BSplineKernelFunction< 2 >	BSplineKernelFunctionOrder2Type;
-		typedef BSplineKernelFunction< 3 >	BSplineKernelFunctionOrder3Type;
 
 		/** Typedef support for iterators. */
 		typedef typename NeighborhoodType::Iterator						NIType;
@@ -197,12 +189,23 @@ namespace itk
 		/** The private copy constructor. */
 		void operator=( const Self& );														// purposely not implemented
 
-		/** Some private functions used for the filtering. */
-		void Create1DOperator( NeighborhoodType & F, std::string WhichF, unsigned int WhichDimension );
-		void CreateNDOperator( NeighborhoodType & F, std::string WhichF );
-		InputScalarImagePointer FilterNonSeparable( const InputScalarImageType *, NeighborhoodType );
-		InputScalarImagePointer FilterSeparable( const InputScalarImageType *, std::vector< NeighborhoodType > Operators );
-		double CalculateSubPart( const unsigned int dim, const unsigned int part, const std::vector<OutputVectorValueType> &values );
+		/** Private function used for the filtering. It creates 1D separable operators F. */
+		void Create1DOperator( NeighborhoodType & F, const std::string WhichF,
+			const unsigned int WhichDimension );
+
+		/** Private function used for the filtering. It creates ND unseparable operators F. */
+		void CreateNDOperator( NeighborhoodType & F, const std::string WhichF );
+
+		/** Private function used for the filtering. It performs 1D separable filtering. */
+		InputScalarImagePointer FilterSeparable( const InputScalarImageType *,
+			const std::vector< NeighborhoodType > &Operators );
+
+		/** Private function used for the filtering. It performs ND unseparable filtering. */
+		InputScalarImagePointer FilterNonSeparable( const InputScalarImageType *, const NeighborhoodType );
+
+		/** Private function used for the filtering. It calculates subparts. */
+		double CalculateSubPart( const unsigned int dim, const unsigned int part,
+			const std::vector<OutputVectorValueType> &values );
 
 		/** What image spacing to use. */
 		void SetImageSpacingUsed( void );

@@ -1090,7 +1090,8 @@ namespace itk
 	template< class TInputImage, class TOutputImage >
 		void
 		RigidRegularizationDerivativeImageFilter< TInputImage, TOutputImage >
-		::Create1DOperator( NeighborhoodType & F, std::string WhichF, unsigned int WhichDimension )
+		::Create1DOperator( NeighborhoodType & F, const std::string WhichF,
+			const unsigned int WhichDimension )
 	{
 		/** Sanity check. */
 		if ( WhichDimension > ImageDimension + 1 )
@@ -1296,7 +1297,7 @@ namespace itk
 	template< class TInputImage, class TOutputImage >
 		void
 		RigidRegularizationDerivativeImageFilter< TInputImage, TOutputImage >
-		::CreateNDOperator( NeighborhoodType & F, std::string WhichF )
+		::CreateNDOperator( NeighborhoodType & F, const std::string WhichF )
 	{
 		/** Create an operator size and set it in the operator. */
 		SizeType r;
@@ -1553,7 +1554,8 @@ namespace itk
 		typename RigidRegularizationDerivativeImageFilter< TInputImage, TOutputImage >
 		::InputScalarImagePointer
 		RigidRegularizationDerivativeImageFilter< TInputImage, TOutputImage >
-		::FilterSeparable( const InputScalarImageType * image, std::vector< NeighborhoodType > Operators )
+		::FilterSeparable( const InputScalarImageType * image,
+			const std::vector< NeighborhoodType > &Operators )
 	{
 		/** Sanity check. */
 		if ( Operators.size() != ImageDimension )
@@ -1603,7 +1605,7 @@ namespace itk
 		typename RigidRegularizationDerivativeImageFilter< TInputImage, TOutputImage >
 		::InputScalarImagePointer
 		RigidRegularizationDerivativeImageFilter< TInputImage, TOutputImage >
-		::FilterNonSeparable( const InputScalarImageType * image, NeighborhoodType oper )
+		::FilterNonSeparable( const InputScalarImageType * image, const NeighborhoodType oper )
 	{
 		/** Create a filter ... */
 		typename NOIFType::Pointer filter = NOIFType::New();
