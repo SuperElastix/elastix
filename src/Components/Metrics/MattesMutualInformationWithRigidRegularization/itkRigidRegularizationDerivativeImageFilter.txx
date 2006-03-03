@@ -302,7 +302,6 @@ namespace itk
 		std::vector< VectorImageSplitterPointer >	splitters( ImageDimension );
 		for ( unsigned int i = 0; i < ImageDimension; i++ )
 		{
-			//inputImages[ i ] = InputScalarImageType::New();
 			splitters[ i ] = VectorImageSplitterType::New();
 			splitters[ i ]->SetInput( inputImage );
 			splitters[ i ]->SetIndex( i );
@@ -375,14 +374,6 @@ namespace itk
 		/** TASK 1:
 		 * Create the one time filtered images ui_FA, ui_FB and ui_FC.
 		 ************************************************************************* */
-
-		/** Create operators A, B (and C in 3D). *
-		std::vector< NeighborhoodType > Operators_A( ImageDimension ),
-			Operators_B( ImageDimension ), Operators_C( ImageDimension );
-
-		/** Create scalar images that are filtered once. *
-		std::vector< InputScalarImagePointer > ui_FA( ImageDimension ),
-			ui_FB( ImageDimension ), ui_FC( ImageDimension );
 
 		/** For all dimensions ... */
 		for ( unsigned int i = 0; i < ImageDimension; i++ )
@@ -480,8 +471,6 @@ namespace itk
 
 		/** Create iterators over the subparts and one time filtered images. */
 		std::vector< std::vector< OutputScalarImageIteratorType > > it_mu_ij( ImageDimension );
-		//std::vector< OutputScalarImageIteratorType > itA( ImageDimension ),
-		//	itB( ImageDimension ), itC( ImageDimension );
 
 		for ( unsigned int i = 0; i < ImageDimension; i++ )
 		{
@@ -505,13 +494,15 @@ namespace itk
 		}
 
 		/** Create the subparts. */
+		std::vector<OutputVectorValueType> values( ImageDimension * ImageDimension, 0.0 );
+		std::vector< std::vector< double > > answer( ImageDimension );
+		for ( unsigned int i = 0; i < ImageDimension; i++ )
+		{
+			answer[ i ].resize( ImageDimension, 0.0 );
+		}
 		while ( !it_mu_ij[ 0 ][ 0 ].IsAtEnd() )
 		{
 			/** Fill values with the neccesary information. */
-			std::vector<OutputVectorValueType> values( ImageDimension * ImageDimension );
-			/*values = {{ itA[ 0 ].Get(), itA[ 1 ].Get(), itA[ 2 ].Get(),
-			itB[ 0 ].Get(), itB[ 1 ].Get(), itB[ 2 ].Get(),
-			itC[ 0 ].Get(), itC[ 1 ].Get(), itC[ 2 ].Get() }};*/
 			if ( ImageDimension == 2 )
 			{
 				values[ 0 ] = itA[ 0 ].Get();
@@ -531,12 +522,12 @@ namespace itk
 				values[ 7 ] = itC[ 1 ].Get();
 				values[ 8 ] = itC[ 2 ].Get();
 			}
-			/** Resize the vector. */
+			/** Resize the vector. * This vector is not destroyed!! Resulting in really!! a lot of memory consumption!!!
 			std::vector< std::vector< double > > answer( ImageDimension );
 			/** Calculate all subparts. */
 			for ( unsigned int i = 0; i < ImageDimension; i++ )
 			{
-				answer[ i ].resize( ImageDimension );
+				//answer[ i ].resize( ImageDimension );
 				for ( unsigned int j = 0; j < ImageDimension; j++ )
 				{
 					answer[ i ][ j ] = this->CalculateSubPart( i, j, values );
@@ -605,7 +596,6 @@ namespace itk
 		 ************************************************************************* */
 
 		/** Create the first order parts. */
-		//std::vector< OutputScalarImagePointer > FOParts( ImageDimension );
 		for ( unsigned int i = 0; i < ImageDimension; i++ )
 		{
 			/** Resize the vector. */
@@ -616,7 +606,6 @@ namespace itk
 
 		/** Create (neighborhood) iterators over the first order parts
 		 * and over the subparts Sdmu_ij. Also reset them. */
-		//std::vector< OutputScalarImageIteratorType > foit( ImageDimension );
 		std::vector< std::vector< NeighborhoodIteratorOutputType > >	nit1_sp( ImageDimension );
 		RadiusOutputType radiusOut;
 		radiusOut.Fill( 1 );
@@ -638,14 +627,10 @@ namespace itk
 		}
 
 		/** Create neighborhood iterator over m_RigidityImage and reset it. */
-		//RadiusInputType radiusIn;
-		//radiusIn.Fill( 1 );
-		//NeighborhoodIteratorInputType nit_RI( radiusIn, m_RigidityImage, m_RigidityImage->GetLargestPossibleRegion() );
 		nit_RI.GoToBegin();
 		unsigned int neighborhoodSize = nit_RI.Size();
 
 		/** Create the ND filters A, B and C. */
-		//NeighborhoodType Operator_A, Operator_B, Operator_C;
 		this->CreateNDOperator( Operator_A, "FA" );
 		this->CreateNDOperator( Operator_B, "FB" );
 		if ( ImageDimension == 3 ) this->CreateNDOperator( Operator_C, "FC" );
@@ -662,22 +647,6 @@ namespace itk
         /** Loop over the neighborhood. */
 				for ( unsigned int k = 0; k < neighborhoodSize; ++k )
 				{
-					/*typedef typename NeighborhoodIteratorOutputType::IndexType NIndexType;
-					NIndexType ind = nit1_sp[ i ][ 0 ].GetIndex();
-					double opA, opB, sp0, sp1, ck;
-					if ( ind[0]==60 && ind[1]==60 )
-					{
-						opA = Operator_A.GetElement( k );
-						opB = Operator_B.GetElement( k );
-						sp0 = nit1_sp[ i ][ 0 ].GetPixel( k );
-						sp1 = nit1_sp[ i ][ 1 ].GetPixel( k );
-						ck = nit_RI.GetPixel( k );
-					}
-					double ck = nit_RI.GetPixel( k );
-					if ( ck < 0.0 || ck > 1.0 )
-					{
-						std::cerr << "ERROR: rigidity smaller than 0.0 or larger than 1.0" << std::endl;
-					}*/
 					/** Calculation of the inner product. */
 					tmp[ i ] += Operator_A.GetElement( k ) *		// FA *
 						nit1_sp[ i ][ 0 ].GetPixel( k ) *					// subpart[ i ][ 0 ]
@@ -739,104 +708,17 @@ namespace itk
 			}
 		}
 
-		/** Filter the subparts. *
-		for ( unsigned int i = 0; i < ImageDimension; i++ )
-		{
-			majorParts[ i ][ 0 ] = this->FilterSeparable( Sdmu_ij[ i ][ 0 ], Operators_A );
-			majorParts[ i ][ 1 ] = this->FilterSeparable( Sdmu_ij[ i ][ 1 ], Operators_B );
-			if ( ImageDimension == 3 )
-			{
-				majorParts[ i ][ 2 ] = this->FilterSeparable( Sdmu_ij[ i ][ 2 ], Operators_C );
-			}
-		}
-
 		/** TASK 4:
-		 * Create the first order parts Sdmu_i,
-		 * which is an addition of the major parts over j.
-		 ************************************************************************* *
-
-		/** Create the first order parts Sdmu_i. *
-		std::vector< OutputScalarImagePointer > Sdmu_i( ImageDimension );
-		for ( unsigned int i = 0; i < ImageDimension; i++ )
-		{
-			Sdmu_i[ i ] = OutputScalarImageType::New();
-			Sdmu_i[ i ]->SetRegions( inputImages[ 0 ]->GetLargestPossibleRegion() );
-			Sdmu_i[ i ]->Allocate();
-		}
-
-		/** Create iterators over the majorParts and Sdmu_i. *
-		std::vector< std::vector< OutputScalarImageIteratorType > > it_majorP_ij( ImageDimension );
-		std::vector< OutputScalarImageIteratorType > foit( ImageDimension );
-		for ( unsigned int i = 0; i < ImageDimension; i++ )
-		{
-			/** Create iterators over the first order parts Sdmu_i images. *
-			foit[ i ] = OutputScalarImageIteratorType( Sdmu_i[ i ],
-				Sdmu_i[ i ]->GetLargestPossibleRegion() );
-			/** Reset iterators. *
-			foit[ i ].GoToBegin();
-			/** Resize the vector with iterators over the majorParts. *
-			it_majorP_ij[ i ].resize( ImageDimension );
-			/** Create iterators over the major parts. *
-			for ( unsigned int j = 0; j < ImageDimension; j++ )
-			{
-				it_majorP_ij[ i ][ j ] = OutputScalarImageIteratorType( majorParts[ i ][ j ],
-					majorParts[ i ][ j ]->GetLargestPossibleRegion() );					
-				/** Reset iterators. *
-				it_majorP_ij[ i ][ j ].GoToBegin();
-			}
-		}
-
-		/** Create the first order parts Sdmu_i. *
-		while ( !it_majorP_ij[ 0 ][ 0 ].IsAtEnd() )
-		{
-			/** Add all major parts to form the first order parts. *
-			for ( unsigned int i = 0; i < ImageDimension; i++ )
-			{
-				OutputVectorValueType temp = 0.0;
-				for ( unsigned int j = 0; j < ImageDimension; j++ )
-				{
-					temp += it_majorP_ij[ i ][ j ].Get();
-					/** Increase iterator. *
-					++it_majorP_ij[ i ][ j ];
-				}
-				foit[ i ].Set( -2.0 * temp );
-				/** Increase iterator. *
-				++foit[ i ];
-			}
-		} // end while
-
-		/** TASK 5:
-		* Create the SecondOrder part.
-		************************************************************************* */
-
-		/** For the 2D case we use a non-separable filter; for the 3D
-		* case a separable one.
-		*/
-		
-		/** Create the SecondOrderRegularizationNonSeparableOperator operator,
-		 * which is implemented in another class. *
-		std::vector< SOOperatorType>							SOoper( ImageDimension );
+		 * Create the SecondOrder part.
+		 ************************************************************************* */
 
 		/** Create second order part images. */
-		//std::vector< OutputScalarImagePointer >		SOParts( ImageDimension );
 		for ( unsigned int i = 0; i < ImageDimension; i++ )
 		{
 			SOParts[ i ] = OutputScalarImageType::New();
 			SOParts[ i ]->SetRegions( inputImages[ i ]->GetLargestPossibleRegion() );
 			SOParts[ i ]->Allocate();
 		}
-
-		/** Create operators D, E, F, G, H and I. *
-		std::vector< NeighborhoodType > Operators_D( ImageDimension ),
-			Operators_E( ImageDimension ), Operators_F( ImageDimension ),
-			Operators_G( ImageDimension ), Operators_H( ImageDimension ),
-			Operators_I( ImageDimension );
-
-		/** Create scalar images that are filtered once. *
-		std::vector< InputScalarImagePointer > ui_FD( ImageDimension ),
-			ui_FE( ImageDimension ), ui_FF( ImageDimension ),
-			ui_FG( ImageDimension ), ui_FH( ImageDimension ),
-			ui_FI( ImageDimension );
 
 		/** D, E and G correspond in 2D to C, D and E from the paper. */
 
@@ -879,8 +761,6 @@ namespace itk
 			}
 		}
 
-		/** Create iterators over the second order parts. *
-		std::vector< OutputScalarImageIteratorType > soit( ImageDimension );
 		/** Initialize them. */
 		for ( unsigned int i = 0; i < ImageDimension; i++ )
 		{
@@ -889,11 +769,6 @@ namespace itk
 			soit[ i ].GoToBegin();
 		}
 
-		/** Create neighborhood iterators over the second order subparts. *
-		std::vector< NeighborhoodIteratorOutputType >
-			nit1_FD( ImageDimension ), nit1_FE( ImageDimension ),
-			nit1_FF( ImageDimension ), nit1_FG( ImageDimension ),
-			nit1_FH( ImageDimension ), nit1_FI( ImageDimension );
 		/** Initialize them. */
 		for ( unsigned int i = 0; i < ImageDimension; i++ )
 		{
@@ -924,8 +799,6 @@ namespace itk
 		nit_RI.GoToBegin();
 
 		/** Create the ND filters D - I. */
-		//NeighborhoodType Operator_D, Operator_E, Operator_F,
-			//Operator_G, Operator_H, Operator_I;
 		this->CreateNDOperator( Operator_D, "FD" );
 		this->CreateNDOperator( Operator_E, "FE" );
 		this->CreateNDOperator( Operator_G, "FG" );
@@ -1016,132 +889,9 @@ namespace itk
 			}
 		}
 
-		/** Create an iterator over the second order image. *
-		std::vector< OutputScalarImageIteratorType >	soit( ImageDimension );
-
-		/** The 2D case: create the operator and do the filtering. *
-		if ( ImageDimension == 2 )
-		{
-			for ( unsigned int i = 0; i < ImageDimension; i++ )
-			{
-				SOoper[ i ].SetSpacingScalings( this->GetImageSpacingUsed() );
-				SOoper[ i ].CreateOperator();
-				SOpart[ i ] = this->FilterNonSeparable( inputImages[ i ], SOoper[ i ] );
-			}
-		}
-		/** The 3D case: the filtering is performed separable. *
-		else if ( ImageDimension == 3 )
-		{
-			/** Create operators D, E, F, G, H and I. *
-			std::vector< NeighborhoodType > Operators_D( ImageDimension ),
-				Operators_E( ImageDimension ), Operators_F( ImageDimension ),
-				Operators_G( ImageDimension ), Operators_H( ImageDimension ),
-				Operators_I( ImageDimension );
-
-			/** Create scalar images that are filtered once. *
-			std::vector< InputScalarImagePointer > ui_FD( ImageDimension ),
-				ui_FE( ImageDimension ), ui_FF( ImageDimension ),
-				ui_FG( ImageDimension ), ui_FH( ImageDimension ),
-				ui_FI( ImageDimension );
-
-			/** Create scalar images that are filtered twice. *
-			std::vector< InputScalarImagePointer > ui_FD_FD( ImageDimension ),
-				ui_FE_FE( ImageDimension ), ui_FF_FF( ImageDimension ),
-				ui_FG_FG( ImageDimension ), ui_FH_FH( ImageDimension ),
-				ui_FI_FI( ImageDimension );
-
-			/** For all dimensions ... *
-			for ( unsigned int i = 0; i < ImageDimension; i++ )
-			{
-				/** ... create the filtered images ... *
-				ui_FD[ i ] = InputScalarImageType::New();
-				ui_FD_FD[ i ] = InputScalarImageType::New();
-				ui_FE[ i ] = InputScalarImageType::New();
-				ui_FE_FE[ i ] = InputScalarImageType::New();
-				ui_FF[ i ] = InputScalarImageType::New();
-				ui_FF_FF[ i ] = InputScalarImageType::New();
-				ui_FG[ i ] = InputScalarImageType::New();
-				ui_FG_FG[ i ] = InputScalarImageType::New();
-				ui_FH[ i ] = InputScalarImageType::New();
-				ui_FH_FH[ i ] = InputScalarImageType::New();
-				ui_FI[ i ] = InputScalarImageType::New();
-				ui_FI_FI[ i ] = InputScalarImageType::New();
-				/** ... and the apropiate operators. *
-				this->Create1DOperator( Operators_D[ i ], "FD_xi", i + 1 );
-				this->Create1DOperator( Operators_E[ i ], "FE_xi", i + 1 );
-				this->Create1DOperator( Operators_F[ i ], "FF_xi", i + 1 );
-				this->Create1DOperator( Operators_G[ i ], "FG_xi", i + 1 );
-				this->Create1DOperator( Operators_H[ i ], "FH_xi", i + 1 );
-				this->Create1DOperator( Operators_I[ i ], "FI_xi", i + 1 );
-			}
-
-			/** Filter the inputImages twice. *
-			for ( unsigned int i = 0; i < ImageDimension; i++ )
-			{
-				ui_FD[ i ] = this->FilterSeparable( inputImages[ i ], Operators_D );
-				ui_FD_FD[ i ] = this->FilterSeparable( ui_FD[ i ], Operators_D );
-				ui_FE[ i ] = this->FilterSeparable( inputImages[ i ], Operators_E );
-				ui_FE_FE[ i ] = this->FilterSeparable( ui_FE[ i ], Operators_E );
-				ui_FF[ i ] = this->FilterSeparable( inputImages[ i ], Operators_F );
-				ui_FF_FF[ i ] = this->FilterSeparable( ui_FF[ i ], Operators_F );
-				ui_FG[ i ] = this->FilterSeparable( inputImages[ i ], Operators_G );
-				ui_FG_FG[ i ] = this->FilterSeparable( ui_FG[ i ], Operators_G );
-				ui_FH[ i ] = this->FilterSeparable( inputImages[ i ], Operators_H );
-				ui_FH_FH[ i ] = this->FilterSeparable( ui_FH[ i ], Operators_H );
-				ui_FI[ i ] = this->FilterSeparable( inputImages[ i ], Operators_I );
-				ui_FI_FI[ i ] = this->FilterSeparable( ui_FI[ i ], Operators_I );
-			}
-
-			/** Allocate memory for second order part images. *
-			for ( unsigned int i = 0; i < ImageDimension; i++ )
-			{
-				SOpart[ i ]->SetRegions( inputImages[ i ]->GetLargestPossibleRegion() );
-				SOpart[ i ]->Allocate();
-			}
-
-			/** Create iterators. *
-			std::vector< OutputScalarImageIteratorType >
-				itD( ImageDimension ), itE( ImageDimension ), itF( ImageDimension ),
-				itG( ImageDimension ), itH( ImageDimension ), itI( ImageDimension );
-			for ( unsigned int i = 0; i < ImageDimension; i++ )
-			{
-				/** Create iterators. *
-				soit[ i ] = OutputScalarImageIteratorType( SOpart[ i ], SOpart[ i ]->GetLargestPossibleRegion() );
-				itD[ i ] = OutputScalarImageIteratorType( ui_FD_FD[ i ], ui_FD_FD[ i ]->GetLargestPossibleRegion() );
-				itE[ i ] = OutputScalarImageIteratorType( ui_FE_FE[ i ], ui_FE_FE[ i ]->GetLargestPossibleRegion() );
-				itF[ i ] = OutputScalarImageIteratorType( ui_FF_FF[ i ], ui_FF_FF[ i ]->GetLargestPossibleRegion() );
-				itG[ i ] = OutputScalarImageIteratorType( ui_FG_FG[ i ], ui_FG_FG[ i ]->GetLargestPossibleRegion() );
-				itH[ i ] = OutputScalarImageIteratorType( ui_FH_FH[ i ], ui_FH_FH[ i ]->GetLargestPossibleRegion() );
-				itI[ i ] = OutputScalarImageIteratorType( ui_FI_FI[ i ], ui_FI_FI[ i ]->GetLargestPossibleRegion() );
-				/** Reset iterators. *
-				soit[ i ].GoToBegin();
-				itD[ i ].GoToBegin(); itE[ i ].GoToBegin(); itF[ i ].GoToBegin();
-				itG[ i ].GoToBegin(); itH[ i ].GoToBegin(); itI[ i ].GoToBegin();
-			}
-
-			/** Do the addition. *
-			while ( !soit[ 0 ].IsAtEnd() )
-			{
-				for ( unsigned int i = 0; i < ImageDimension; i++ )
-				{
-					/** Add all parts. *
-					soit[ i ].Set( -2.0 * ( itD[ i ].Get() + itE[ i ].Get()
-						+ itF[ i ].Get() + itG[ i ].Get() + itH[ i ].Get() + itI[ i ].Get() ) );
-					/** Increase all iterators. *
-					++soit[ i ];
-					++itD[ i ];++itE[ i ];++itF[ i ];++itG[ i ];++itH[ i ];++itI[ i ];
-				}
-			} // end while
-		} // end if the 3D case
-
-		/** TASK 6:
+		/** TASK 5:
 		 * Add it all to create the final outputImages.
 		 ************************************************************************* */
-
-		/** Create iterators. */
-		//std::vector< OutputScalarImageIteratorType >	oit( ImageDimension );
-		//std::vector< OutputScalarImageIteratorType >	foit( ImageDimension );
-		//std::vector< OutputScalarImageIteratorType >	soit( ImageDimension );
 
 		/** Create the outputimages. */
 		for ( unsigned int i = 0; i < ImageDimension; i++ )
@@ -1149,10 +899,6 @@ namespace itk
 			/** Create iterators. */
 			oit[ i ] = OutputScalarImageIteratorType( outputImages[ i ],
 				outputImages[ i ]->GetLargestPossibleRegion() );
-			//foit[ i ] = OutputScalarImageIteratorType( FOParts[ i ],
-//				FOParts[ i ]->GetLargestPossibleRegion() );
-	//		soit[ i ] = OutputScalarImageIteratorType( SOParts[ i ],
-		//		SOParts[ i ]->GetLargestPossibleRegion() );
 			/** Reset output iterator, first order iterators and second order iterators. */
 			oit[ i ].GoToBegin();
 			foit[ i ].GoToBegin();
@@ -1176,7 +922,7 @@ namespace itk
 			}
 		} // end while
 
-		/** TASK 7:
+		/** TASK 6:
 		 * Combine the final outputImages to get an output vector image.
 		 ************************************************************************* */
 
@@ -1193,7 +939,7 @@ namespace itk
 		 */
     this->GraftOutput( combiner->GetOutput() );
 
-		/** TASK 8:
+		/** TASK 7:
 		 * Calculate the VALUE of the rigid regulizer.
 		 * \todo seperate this from the calculation of the derivative, so that
 		 * it is not necessary to do that heavy calculation stuff if just the
@@ -1890,7 +1636,8 @@ namespace itk
 	template< class TInputImage, class TOutputImage >
 		double
 		RigidRegularizationDerivativeImageFilter< TInputImage, TOutputImage >
-		::CalculateSubPart( unsigned int dim, unsigned int part, std::vector<OutputVectorValueType> values )
+		::CalculateSubPart( const unsigned int dim, const unsigned int part,
+			const std::vector<OutputVectorValueType> &values )
 	{
 		/** Initialize the return value. */
 		double answer = 0.0;

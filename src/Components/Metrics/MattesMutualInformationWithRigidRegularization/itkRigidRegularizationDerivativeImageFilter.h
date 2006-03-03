@@ -202,7 +202,7 @@ namespace itk
 		void CreateNDOperator( NeighborhoodType & F, std::string WhichF );
 		InputScalarImagePointer FilterNonSeparable( const InputScalarImageType *, NeighborhoodType );
 		InputScalarImagePointer FilterSeparable( const InputScalarImageType *, std::vector< NeighborhoodType > Operators );
-		double CalculateSubPart( unsigned int dim, unsigned int part, std::vector<OutputVectorValueType> values );
+		double CalculateSubPart( const unsigned int dim, const unsigned int part, const std::vector<OutputVectorValueType> &values );
 
 		/** What image spacing to use. */
 		void SetImageSpacingUsed( void );
