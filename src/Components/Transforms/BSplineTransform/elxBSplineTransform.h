@@ -31,7 +31,8 @@ using namespace itk;
 	 * \parameter UpsampleGridOption: a flag to determine if the B-spline grid should
 	 *		be upsampled from one resolution level to another. Choose from {true, false}. \n
 	 *		example: <tt>(UpsampleGridOption "true")</tt>
-	 *		The default is "true".
+	 *		example: <tt>(UpsampleGridOption "true" "false" "true")</tt>
+	 *		The default is "true" inbetween all resolutions.
 	 * 
 	 * The transform parameters necessary for transformix, additionally defined by this class, are:
 	 * \transformparameter GridSize: stores the size of the B-spline grid. \n
@@ -140,7 +141,8 @@ using namespace itk;
 		virtual void BeforeEachResolution(void);
 		
 		/** Method to set the initial BSpline grid, called by BeforeEachResolution(). */
-		virtual void SetInitialGrid( bool upsampleGridOption );
+		virtual void SetInitialGrid(void);
+
 		/** Method to increase the density of the BSpline grid,
 		 * called by BeforeEachResolution().
 		 */
@@ -159,7 +161,8 @@ using namespace itk;
 		virtual ~BSplineTransform() {}
 		
 		/** Member variables. */
-		SpacingType		m_GridSpacingFactor;
+		SpacingType						m_GridSpacingFactor;
+		std::vector< bool >		m_UpsampleBSplineGridOption;
 
 	private:
 
