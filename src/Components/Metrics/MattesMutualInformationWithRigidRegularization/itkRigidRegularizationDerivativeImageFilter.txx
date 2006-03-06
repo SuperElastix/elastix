@@ -1055,7 +1055,7 @@ namespace itk
 
 			} // end while
 
-			/** Write the penalty image to file. */
+			/** Write the penalty image to file. *
 			typedef ImageFileWriter< OutputScalarImageType >		PenaltyWriterType;
 			typename PenaltyWriterType::Pointer penaltywriter = PenaltyWriterType::New();
 			std::string filename1 = this->m_OutputDirectoryName + "penaltyImage.mhd";
@@ -1063,13 +1063,13 @@ namespace itk
 			penaltywriter->SetInput( pim );
 			penaltywriter->Update();
 
-			/** Write the penalty image to file. */
+			/** Write the penalty image to file. *
 			typedef ImageFileWriter< InputScalarImageType >			RigidityWriterType;
 			typename RigidityWriterType::Pointer rigiditywriter = RigidityWriterType::New();
 			std::string filename2 = this->m_OutputDirectoryName + "rigidityImage.mhd";
 			rigiditywriter->SetFileName( filename2.c_str() );
 			rigiditywriter->SetInput( this->m_RigidityImage );
-			rigiditywriter->Update();
+			rigiditywriter->Update();*/
 
 		} // end if the 2D case
 		else if ( ImageDimension == 3 )
