@@ -48,9 +48,9 @@ using namespace itk;
 
 		/** Get and set the RigidPenaltyWeight. */
 		this->GetConfiguration()->ReadParameter( this->m_RigidPenaltyWeightVector[ 0 ], "RigidPenaltyWeight", 0 );
+		this->m_RigidPenaltyWeightVector.resize( numberOfResolutions, this->m_RigidPenaltyWeightVector[ 0 ] );
 		for ( unsigned int i = 1; i < numberOfResolutions; i++ )
 		{
-			this->m_RigidPenaltyWeightVector[ i ] = this->m_RigidPenaltyWeightVector[ 0 ];
       this->m_Configuration->ReadParameter( this->m_RigidPenaltyWeightVector[ i ], "RigidPenaltyWeight", i );
 		}
 		/** Set the RigidPenaltyWeight in the superclass to the first resolution weight. */
@@ -81,6 +81,7 @@ using namespace itk;
 		std::string tmp = "true";
 		this->GetConfiguration()->ReadParameter( tmp, "DilateRigidityImages", 0 );
 		std::vector< std::string > dilateRigidityImagesVector( numberOfResolutions, tmp );
+		this->m_DilateRigidityImagesVector.resize( numberOfResolutions );
 		for ( unsigned int i = 1; i < numberOfResolutions; i++ )
 		{
       this->m_Configuration->ReadParameter( dilateRigidityImagesVector[ i ], "DilateRigidityImages", i );
