@@ -25,8 +25,11 @@ using namespace itk;
 		this->m_FixedRigidityImageReader = 0;
 		this->m_MovingRigidityImageReader = 0;
 
-		/** Initialize m_RigidPenaltyWeight to be 1.0 for each resolution. */
-		this->m_RigidPenaltyWeight.resize( 3, 1.0 );
+		/** Initialize m_RigidPenaltyWeightVector to be 1.0 for each resolution. */
+		this->m_RigidPenaltyWeightVector.resize( 1, 1.0 );
+
+		/** Initialize m_DilateRigidityImagesVector to be true for each resolution. */
+		this->m_DilateRigidityImagesVector.resize( 1, true );
 
 	} // end Constructor
 
@@ -43,59 +46,15 @@ using namespace itk;
 		unsigned int numberOfResolutions = 3;
 		this->GetConfiguration()->ReadParameter( numberOfResolutions, "NumberOfResolutions", 0 );
 
-		/** Get and set the rigidPenaltyWeight. */
-		std::vector< int > returnvalues( numberOfResolutions, 5 );
-		double dummy = 1.0;
-		for ( unsigned int i = 0; i < numberOfResolutions; i++ )
+		/** Get and set the RigidPenaltyWeight. */
+		this->GetConfiguration()->ReadParameter( this->m_RigidPenaltyWeightVector[ 0 ], "RigidPenaltyWeight", 0 );
+		for ( unsigned int i = 1; i < numberOfResolutions; i++ )
 		{
-			returnvalues[ i ] = this->GetConfiguration()->ReadParameter( dummy, "RigidPenaltyWeight", i, true );
+			this->m_RigidPenaltyWeightVector[ i ] = this->m_RigidPenaltyWeightVector[ 0 ];
+      this->m_Configuration->ReadParameter( this->m_RigidPenaltyWeightVector[ i ], "RigidPenaltyWeight", i );
 		}
-
-		/* Check which option is used:
-		 * - Nothing given in the parameter-file: all rigidPenaltyWeight are 1.0.
-		 * - Only one value given in the parameter-file: all rigidPenaltyWeight
-		 *   are set to this value.
-		 * - All values are given in the parameter-file: all rigidPenaltyWeights
-		 *   are assigned their own value.
-		 */
-		if ( returnvalues[ 0 ] == 1 )
-		{
-			/** In this case the first option is used. */
-			this->m_RigidPenaltyWeight.resize( numberOfResolutions, 1.0 );
-		}
-		else if ( returnvalues[ 0 ] == 0 && returnvalues[ 1 ] == 1 )
-		{
-			/** In this case the second option is used. */
-			double rigidPenaltyWeight = 1.0;
-			this->GetConfiguration()->ReadParameter( rigidPenaltyWeight, "RigidPenaltyWeight", 0 );
-			this->m_RigidPenaltyWeight.resize( numberOfResolutions );
-			for ( unsigned int i = 0; i < numberOfResolutions; i++ )
-			{
-				this->m_RigidPenaltyWeight[ i ] = rigidPenaltyWeight;
-			}
-			//this->m_RigidPenaltyWeight.resize( numberOfResolutions, rigidPenaltyWeight );
-		}
-		else if ( returnvalues[ 0 ] == 0 && returnvalues[ numberOfResolutions - 1 ] == 0 )
-		{
-			/** In this case the third option is used. */
-			this->m_RigidPenaltyWeight.resize( numberOfResolutions );
-			for ( unsigned int i = 0; i < numberOfResolutions; i++ )
-			{
-				this->GetConfiguration()->ReadParameter(
-					this->m_RigidPenaltyWeight[ i ], "RigidPenaltyWeight", i );
-			}
-		}
-		else
-		{
-			/** In this case an error is made in the parameter-file.
-			 * An error is thrown, because using erroneous rigid penalty weights
-			 * can give unpredictable results.
-			 */
-			itkExceptionMacro( << "ERROR: The RigidPenaltyWeight-option in the parameter-file has not been set properly." );
-		}
-
 		/** Set the RigidPenaltyWeight in the superclass to the first resolution weight. */
-		this->SetRigidPenaltyWeight( this->m_RigidPenaltyWeight[ 0 ] );
+		this->SetRigidPenaltyWeight( this->m_RigidPenaltyWeightVector[ 0 ] );
 
 		/** Get and set the secondOrderWeight. */
 		double secondOrderWeight = 1.0;
@@ -118,11 +77,18 @@ using namespace itk;
 		if ( useImageSpacing == "true" ) this->SetUseImageSpacing( true );
 		else this->SetUseImageSpacing( false );
 
-		/** Get and set the dilateRigidityImages. */
-		std::string dilateRigidityImages = "true";
-		this->GetConfiguration()->ReadParameter( dilateRigidityImages, "DilateRigidityImages", 0 );
-		if ( dilateRigidityImages == "true" ) this->SetDilateRigidityImages( true );
-		else this->SetDilateRigidityImages( false );
+		/** Get and set the m_DilateRigidityImagesVector. */
+		std::string tmp = "true";
+		this->GetConfiguration()->ReadParameter( tmp, "DilateRigidityImages", 0 );
+		std::vector< std::string > dilateRigidityImagesVector( numberOfResolutions, tmp );
+		for ( unsigned int i = 1; i < numberOfResolutions; i++ )
+		{
+      this->m_Configuration->ReadParameter( dilateRigidityImagesVector[ i ], "DilateRigidityImages", i );
+			if ( dilateRigidityImagesVector[ i ] == "true" ) this->m_DilateRigidityImagesVector[ i ] = true;
+			else this->m_DilateRigidityImagesVector[ i ] = false;
+		}
+		/** Set the DilateRigidityImages in the superclass to the first resolution option. */
+		this->SetDilateRigidityImages( this->m_DilateRigidityImagesVector[ 0 ] );
 
 		/** Get and set the dilationRadiusMultiplier. */
 		double dilationRadiusMultiplier = 1.0;
@@ -369,11 +335,13 @@ using namespace itk;
 		} // end if samplesOnUniformGrid
 
 		/** Set the RigidPenaltyWeight in the superclass to the one of this level. */
-		this->SetRigidPenaltyWeight( this->m_RigidPenaltyWeight[ level ] );
+		this->SetRigidPenaltyWeight( this->m_RigidPenaltyWeightVector[ level ] );
+
+		/** Set the DilateRigidityImages in the superclass to the one of this level. */
+		this->SetDilateRigidityImages( this->m_DilateRigidityImagesVector[ level ] );
 		
 	} // end BeforeEachResolution
 	
-
 
 	/**
 	 * ***************AfterEachIteration ****************************
@@ -561,7 +529,6 @@ using namespace itk;
 			".\n" << std::endl;
 		 
 	} // end SampleFixedImageDomain.
-
 
 } // end namespace elastix
 

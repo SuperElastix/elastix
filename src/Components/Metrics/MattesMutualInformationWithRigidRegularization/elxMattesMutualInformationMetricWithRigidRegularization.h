@@ -265,7 +265,8 @@ using namespace itk;
 		RigidityImageReaderPointer			m_FixedRigidityImageReader;
 		RigidityImageReaderPointer			m_MovingRigidityImageReader;
 
-		std::vector< double >						m_RigidPenaltyWeight;
+		std::vector< double >						m_RigidPenaltyWeightVector;
+		std::vector< bool >							m_DilateRigidityImagesVector;
 
 	}; // end class MattesMutualInformationMetricWithRigidRegularization
 
