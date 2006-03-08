@@ -81,6 +81,7 @@ using namespace itk;
 		std::string tmp = "true";
 		this->GetConfiguration()->ReadParameter( tmp, "DilateRigidityImages", 0 );
 		std::vector< std::string > dilateRigidityImagesVector( numberOfResolutions, tmp );
+		if ( tmp == "false" ) this->m_DilateRigidityImagesVector[ 0 ] = false;
 		this->m_DilateRigidityImagesVector.resize( numberOfResolutions );
 		for ( unsigned int i = 1; i < numberOfResolutions; i++ )
 		{
@@ -90,6 +91,12 @@ using namespace itk;
 		}
 		/** Set the DilateRigidityImages in the superclass to the first resolution option. */
 		this->SetDilateRigidityImages( this->m_DilateRigidityImagesVector[ 0 ] );
+
+		for ( unsigned int i = 0; i < numberOfResolutions; i++ )
+		{
+			if ( this->m_DilateRigidityImagesVector[ i ] ) std::cout << "true ";
+			else std::cout << "false ";
+		}
 
 		/** Get and set the dilationRadiusMultiplier. */
 		double dilationRadiusMultiplier = 1.0;
