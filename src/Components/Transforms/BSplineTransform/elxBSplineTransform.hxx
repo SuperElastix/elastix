@@ -189,59 +189,32 @@ using namespace itk;
 		int nrOfResolutions = static_cast<int>(
 			this->GetRegistration()->GetAsITKBaseType()->GetNumberOfLevels() );
 
-		/** Check how many true's or false's are given in the parameter-file. */
-		std::vector< int > returnvalues( nrOfResolutions, 5 );
-		std::string dummy = "temp";
-		for ( unsigned int i = 0; i < nrOfResolutions - 1; i++ )
+		/** Fill m_UpsampleBSplineGridOption. */
+		std::string tmp = "true";
+		this->GetConfiguration()->ReadParameter( tmp, "UpsampleGridOption", 0 );
+		unsigned int size = vnl_math_max( 1, nrOfResolutions - 1 );
+		std::vector< std::string > upsampleGridOptionVector( size, tmp );
+		if ( tmp == "false" ) this->m_UpsampleBSplineGridOption[ 0 ] = false;
+		this->m_UpsampleBSplineGridOption.resize( size );
+		for ( unsigned int i = 1; i < nrOfResolutions - 1; i++ )
 		{
-			returnvalues[ i ] = this->GetConfiguration()
-				->ReadParameter( dummy, "UpsampleGridOption", i, true );
+      this->m_Configuration->ReadParameter( upsampleGridOptionVector[ i ], "UpsampleGridOption", i );
+			if ( upsampleGridOptionVector[ i ] == "true" ) this->m_UpsampleBSplineGridOption[ i ] = true;
+			else this->m_UpsampleBSplineGridOption[ i ] = false;
 		}
 
-		/** Now we can determine which option is used by the user and act accordingly. */
-		std::string upsampleGridOption = "true";
-		this->m_UpsampleBSplineGridOption.resize( nrOfResolutions - 1, true );
-		if ( returnvalues[ 0 ] == 1 )
-		{
-			/** Default behaviour: upsample every time. */
-			this->m_GridSpacingFactor *= vcl_pow( 2.0,
-				static_cast<double>( nrOfResolutions - 1 ) );
-		}
-		else if ( returnvalues[ 0 ] == 0 && returnvalues[ 1 ] == 1 )
-		{
-			/** Upsample every time, or not at all. */
-			this->GetConfiguration()->ReadParameter( upsampleGridOption, "UpsampleGridOption", 0 );
-			if ( upsampleGridOption == "true" )
-			{
-				this->m_GridSpacingFactor *= vcl_pow( 2.0,
-					static_cast<double>( nrOfResolutions - 1 ) );
-			}
-			else
-			{
-				for ( unsigned int i = 0; i < nrOfResolutions - 1; i++ )
-				{
-					this->m_UpsampleBSplineGridOption[ i ] = false;
-				}
-			}
-		}
-		else if ( returnvalues[ 0 ] == 0 && returnvalues[ nrOfResolutions - 2 ] == 0 )
+		/** Multiply with the m_GridSpacingFactor. */
+		if ( nrOfResolutions != 1 )
 		{
 			/** Upsample only if true for this level. */
-			double numberOfTrues = 0;
+			double numberOfTrues = 0.0;
 			for ( unsigned int i = 0; i < nrOfResolutions - 1; i++ )
 			{
-				this->GetConfiguration()->ReadParameter( upsampleGridOption, "UpsampleGridOption", i );
-				if ( upsampleGridOption == "true" ) numberOfTrues++;
-				else this->m_UpsampleBSplineGridOption[ i ] = false;
+				if ( this->m_UpsampleBSplineGridOption[ i ] ) numberOfTrues++;
 			}
 			this->m_GridSpacingFactor *= vcl_pow( 2.0, numberOfTrues );
 		}
-		else
-		{
-			/** In this case an error is made in the parameter-file. */
-			itkExceptionMacro( << "ERROR: The UpsampleGridOption in the parameter-file has not been set properly." );
-		}
-		
+
 		/** Determine the correct grid size. */
 		for ( unsigned int j = 0; j < SpaceDimension; j++ )
 		{
