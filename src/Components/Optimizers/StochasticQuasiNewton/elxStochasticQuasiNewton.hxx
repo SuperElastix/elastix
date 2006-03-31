@@ -21,6 +21,8 @@ using namespace itk;
 	{
 
 		this->m_SearchDirectionMagnitude = 0.0;
+		this->m_SinusScalesAmplitude = 0.0;
+		this->m_SinusScalesFrequency = 1.0;
 
 	} // end Constructor
 	
@@ -34,11 +36,21 @@ using namespace itk;
 		StartOptimization(void)
 	{
 
+		unsigned long numberOfParameters = this->GetInitialPosition().GetSize();
+		double small_number1 = 1e-5;
+		
+		if (this->m_SinusScalesAmplitude > small_number1)
+		{
+			this->SetSinusScales(this->m_SinusScalesAmplitude, 
+				this->m_SinusScalesFrequency, numberOfParameters);
+		}
+		
+		
 		/** Check if the entered scales are correct and != [ 1 1 1 ...] */
 
 		this->SetUseScales(false);
 		const ScalesType & scales = this->GetScales();
-		if ( scales.GetSize() == this->GetInitialPosition().GetSize() )
+		if ( scales.GetSize() == numberOfParameters )
 		{
       ScalesType unit_scales( scales.GetSize() );
 			unit_scales.Fill(1.0);
@@ -47,6 +59,7 @@ using namespace itk;
 				/** only then: */
 				this->SetUseScales(true);
 			}
+
 		}
 
 		this->Superclass1::StartOptimization();
@@ -70,12 +83,14 @@ using namespace itk;
 		xout["iteration"].AddTargetCell("3:StepLength");
 		xout["iteration"].AddTargetCell("4a:||Gradient||");
 		xout["iteration"].AddTargetCell("4b:||SearchDir||");
+		xout["iteration"].AddTargetCell("5:UpdateFactor");
 	
 		/** Format the metric and stepsize as floats */			
 		xout["iteration"]["2:Metric"]		<< std::showpoint << std::fixed;
 		xout["iteration"]["3:StepLength"] << std::showpoint << std::fixed;
 		xout["iteration"]["4a:||Gradient||"] << std::showpoint << std::fixed;
 		xout["iteration"]["4b:||SearchDir||"] << std::showpoint << std::fixed;
+		xout["iteration"]["5:UpdateFactor"] << std::showpoint << std::fixed;
 
 				
 	} // end BeforeRegistration
@@ -100,6 +115,7 @@ using namespace itk;
 		
 		/** Set the length of the initial step, used if no Hessian estimate
 		 * is available yet: searchdir = - steplength * g / |g|
+		 * |g| optional, see NormalizeInitialGradients option
 		 */ 
 		double stepLength = 1.0; 
 		this->m_Configuration->ReadParameter( stepLength,
@@ -108,7 +124,9 @@ using namespace itk;
     
 
 		/** Set the number of initialization steps
-		 * (number of iterations to use for estimating the initial hessian) */
+		 * (number of iterations to use for estimating the initial hessian)
+		 * If 0, the initial hessian will be set to the initial step length estimate.
+		 */
 		unsigned int numberOfInitializationSteps = 5;
 		this->m_Configuration->ReadParameter( numberOfInitializationSteps,
 			"NumberOfInitializationSteps", level );
@@ -128,6 +146,35 @@ using namespace itk;
 		this->SetDetMax(detMax);
 		this->SetDecay_A(decay_A);
 		this->SetDecay_alpha(decay_alpha);
+
+		/** Setting: whether to normalize the initial gradients or not */
+		bool normalizeInitialGradientsBool = true;
+		std::string normalizeInitialGradients = "true";
+		this->GetConfiguration()->
+			ReadParameter(normalizeInitialGradients, "NormalizeInitialGradients", level);
+		if (normalizeInitialGradients == "true")
+		{
+			normalizeInitialGradientsBool = true;
+		}
+		else
+		{
+			normalizeInitialGradientsBool = false;
+		}
+		this->SetNormalizeInitialGradients(normalizeInitialGradientsBool);
+
+		/** Setting: the amplitude and frequency of a sinus that controls the scales */
+		this->m_SinusScalesAmplitude = 0.0;
+		this->m_SinusScalesFrequency = 1.0;
+		this->GetConfiguration()->
+			ReadParameter(this->m_SinusScalesAmplitude, "SinusScalesAmplitude", level);
+		this->GetConfiguration()->
+			ReadParameter(this->m_SinusScalesFrequency, "SinusScalesFrequency", level);
+
+		/** Set the NumberOfGradientDescentIterations.*/
+		unsigned int numberOfGradientDescentIterations = 50;
+		this->m_Configuration->ReadParameter( numberOfGradientDescentIterations , "NumberOfGradientDescentIterations", level );
+		this->SetNumberOfGradientDescentIterations( numberOfGradientDescentIterations );
+		
 
 					
 	} // end BeforeEachResolution
@@ -152,9 +199,11 @@ using namespace itk;
 			this->GetCurrentStepLength(); 
 		xout["iteration"]["4a:||Gradient||"] << 
 	    this->GetCurrentGradient().magnitude();
-	
 		xout["iteration"]["4b:||SearchDir||"] << 
 			this->m_SearchDirectionMagnitude ;
+		xout["iteration"]["5:UpdateFactor"] << 
+			this->GetUpdateFactor();
+	
 		
 		/** If new samples: */
 		if ( this->GetNewSamplesEveryIteration() )
@@ -232,6 +281,10 @@ using namespace itk;
 		
 	} // end AfterRegistration
 
+
+	/**
+	 * ******************* ComputeSearchDirection **********************
+	 */
 
 	template <class TElastix>
 	void StochasticQuasiNewton<TElastix>

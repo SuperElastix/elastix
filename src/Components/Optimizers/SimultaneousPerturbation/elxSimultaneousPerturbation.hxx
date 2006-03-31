@@ -145,7 +145,10 @@ using namespace itk;
 		xl::xout["iteration"]["3:Gain a_k"] << this->GetLearningRate();
 		xl::xout["iteration"]["4:||Gradient||"] << this->GetGradientMagnitude();
 		
-		/** Select new spatial samples for the computation of the metric */
+		/** Select new spatial samples for the computation of the metric
+		 * \todo You may also choose to select new samples upon every evaluation
+		 * of the metric value 
+		 */
 		if ( this->GetNewSamplesEveryIteration() )
 		{
 			this->SelectNewSamples();

@@ -72,6 +72,12 @@ using namespace itk;
 		 */
 		virtual void BeforeEachResolutionBase();
 
+		/** Method that sets the scales defined by a sinus 
+		 * scale[i] = amplitude^( sin(i/nrofparam*2pi*frequency) ) 
+		 */
+		virtual void SetSinusScales(double amplitude, double frequency,
+			unsigned long numberOfParameters);
+
 	protected:
 
 		/** The constructor. */

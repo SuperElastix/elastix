@@ -86,6 +86,8 @@ using namespace itk;
 		void operator=( const Self& );							// purposely not implemented
 
 		double											m_SearchDirectionMagnitude;
+		double											m_SinusScalesAmplitude;
+		double											m_SinusScalesFrequency;
 			
 	}; // end class StochasticQuasiNewton
 	

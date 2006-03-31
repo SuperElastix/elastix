@@ -94,6 +94,30 @@ namespace elastix
 	} // end GetNewSamplesEveryIteration
 
 
+	/**
+	 * ****************** SetSinusScales ********************
+	 */
+	
+	template <class TElastix>
+	void OptimizerBase<TElastix>::SetSinusScales(
+	  double amplitude, double frequency, unsigned long numberOfParameters)
+	{
+		typedef typename ITKBaseType::ScalesType ScalesType;
+
+		
+		const double nrofpar = static_cast<double>(numberOfParameters);
+		ScalesType scales(numberOfParameters);
+		    
+		for (unsigned long i = 0; i < numberOfParameters; ++i)
+		{
+			const double x = static_cast<double>(i) / nrofpar * 2.0 * vnl_math::pi * frequency;
+			scales[i] = vcl_pow( amplitude, vcl_sin(x) );
+		}
+		this->GetAsITKBaseType()->SetScales(scales);
+    
+	} //end SetSinusScales
+
+
 } // end namespace elastix
 
 #endif // end #ifndef __elxOptimizerBase_hxx

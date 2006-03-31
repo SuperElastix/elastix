@@ -56,6 +56,7 @@ namespace itk
     itkGetConstReferenceMacro(StopCondition, StopConditionType);
     itkGetConstMacro(CurrentStepLength, double);
 		itkGetConstMacro(GainFactor, double);
+		itkGetConstMacro(UpdateFactor, double);
     
     /** Setting: the maximum number of iterations */
     itkGetConstMacro(MaximumNumberOfIterations, unsigned long);
@@ -70,7 +71,7 @@ namespace itk
 		 * where the gain is varied between the InitialStepLengthEstimate
 		 * and 1.0/InitialStepLengthEstimate.
 		 */
-    itkSetClampMacro(NumberOfInitializationSteps ,unsigned int,1,
+    itkSetClampMacro(NumberOfInitializationSteps ,unsigned int,0,
 										NumericTraits<unsigned int>::max());
     itkGetConstMacro(NumberOfInitializationSteps ,unsigned int);
 
@@ -91,6 +92,15 @@ namespace itk
 		itkGetConstMacro(Decay_A, double);
 		itkGetConstMacro(Decay_alpha, double);
 
+		itkSetMacro(NormalizeInitialGradients, bool);
+		itkGetConstMacro(NormalizeInitialGradients, bool);
+
+		itkSetMacro(NumberOfGradientDescentIterations, unsigned int);
+		itkGetConstMacro(NumberOfGradientDescentIterations, unsigned int);
+
+		itkGetConstMacro(UseHessian, bool);
+
+
   protected:
     StochasticQuasiNewtonOptimizer();
     virtual ~StochasticQuasiNewtonOptimizer(){};
@@ -110,6 +120,8 @@ namespace itk
 		DerivativeType								m_GradientDifference;
 		double												m_GainFactor;
 		double												m_Diag;
+		double												m_UpdateFactor;
+		bool													m_UseHessian;
 
     /** Compute the new step.
      *
@@ -136,6 +148,8 @@ namespace itk
 		double												m_DetMax;
 		double												m_Decay_A;
 		double												m_Decay_alpha;
+		bool													m_NormalizeInitialGradients;
+		unsigned int									m_NumberOfGradientDescentIterations;
 
 
   }; // end class StochasticQuasiNewtonOptimizer
