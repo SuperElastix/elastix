@@ -35,12 +35,12 @@
 #include "itkBSplineDeformableTransform.h"
 
 /** Original itkRandomIterator. */
-//#include "itkImageRandomConstIteratorWithIndex.h"
+#include "itkImageRandomConstIteratorWithIndex.h"
 /** elastix random iterator (that behaves the same in linux and windows) */
 //#include "itkImageNotSoRandomConstIteratorWithIndex.h"
 /** improved elastix random iterator (that behaves the same in linux and windows)
  * and is more random. */
-#include "itkImageMoreRandomConstIteratorWithIndex.h"
+//#include "itkImageMoreRandomConstIteratorWithIndex.h"
 
 
 namespace itk
@@ -411,7 +411,7 @@ namespace itk
 
 		 /** Set up a random interator within the user specified fixed image region.*/
 		 		 
-		 typedef ImageMoreRandomConstIteratorWithIndex<FixedImageType> RandomIterator;
+		 typedef ImageRandomConstIteratorWithIndex<FixedImageType> RandomIterator;
 		 RandomIterator randIter( this->m_FixedImage, this->GetFixedImageRegion() );
 		 randIter.GoToBegin();
 		 
@@ -1098,6 +1098,7 @@ namespace itk
 		for( unsigned int fixedIndex = 0; fixedIndex < this->m_NumberOfHistogramBins; ++fixedIndex )
     {
 			jointPDFIndex[0] = fixedIndex;
+			jointPDFDerivativesIndex[0] = fixedIndex;
 			double fixedImagePDFValue = this->m_FixedImageMarginalPDF[fixedIndex];
 			for( unsigned int movingIndex = 0; movingIndex < this->m_NumberOfHistogramBins; ++movingIndex )      
       {
@@ -1112,11 +1113,12 @@ namespace itk
 					double pRatio = log( jointPDFValue / movingImagePDFValue );
 					if( fixedImagePDFValue > 1e-16)
 						sum += jointPDFValue * ( pRatio - log( fixedImagePDFValue ) );
+
+					jointPDFDerivativesIndex[1] = movingIndex;
 					
 					for( unsigned int parameter=0; parameter < this->m_NumberOfParameters; ++parameter )
           {
-						jointPDFDerivativesIndex[0] = fixedIndex;
-						jointPDFDerivativesIndex[1] = movingIndex;
+												
 						jointPDFDerivativesIndex[2] = parameter;
 						double jointPDFDerivativesValue = 
 							this->m_JointPDFDerivatives->GetPixel( jointPDFDerivativesIndex );
@@ -1359,7 +1361,7 @@ namespace itk
 				 this->m_AllFixedImagePixels );
 		 }
 
-		 /** Remember the state of the m_UseAllPixels flagand the number of spatial samples */
+		 /** Remember the state of the m_UseAllPixels flag and the number of spatial samples */
 		 bool useAllPixelsBackup = this->GetUseAllPixels();
 		 unsigned long numberOfSpatialSamplesBackup = this->GetNumberOfSpatialSamples();
 
@@ -1384,14 +1386,12 @@ namespace itk
 	  * Method to reinitialize the seed of the random number generator
 	  */
 
-	 template < class TFixedImage, class TMovingImage  >
-		 void MattesMutualInformationImageToImageMetricWithMask< TFixedImage, TMovingImage >
-		 ::ReinitializeSeed()
+	 template < class TFixedImage, class TMovingImage  > void
+	 MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+	 ::ReinitializeSeed()
 	 {
-		 // This method should be the same used in the ImageRandomIterator
-		 elx_sample_reseed();
-
-	 } // end ReinitializeSeed
+		 Statistics::MersenneTwisterRandomVariateGenerator::GetInstance()->SetSeed();
+	 } //end ReinitializeSeed
 
 
 	 /**
@@ -1400,14 +1400,14 @@ namespace itk
 	  * Method to reinitialize the seed of the random number generator
 	  */
 
-	 template < class TFixedImage, class TMovingImage  >
-		 void MattesMutualInformationImageToImageMetricWithMask< TFixedImage, TMovingImage >
-		 ::ReinitializeSeed(int seed)
+	 template < class TFixedImage, class TMovingImage  > void
+	 MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+	 ::ReinitializeSeed(int seed)
 	 {
-		 // This method should be the same used in the ImageRandomIterator
-		 elx_sample_reseed(seed);
+	   Statistics::MersenneTwisterRandomVariateGenerator::GetInstance()->SetSeed(seed);
+	 } //end ReinitializeSeed
 
-	 } // end ReinitializeSeed
+
 
 
 } // end namespace itk
