@@ -1,9 +1,7 @@
 /**
  * This file is an adapted version of the original itk-class.
  * For Elastix the following things have been added
- *  - Mask-support
  *  - New random samples every iteration (optionally)
- *	- Random generator that gives the same output in linux and windows.
  *  - GetExactValue and GetExactValueAndDerivative methods, that 
  *		compute the mutual information/its derivative using the full images
  *
@@ -120,12 +118,9 @@ namespace itk
 	 *	NB:
 	 * This file declares the itk::MattesMutualInformationImageToImageMetricWithMask.
 	 * It is largely the same as itk::MattesMutualInformationImageToImageMetric,
-	 * but, as you might expect from the name, it allows entering masks for the 
-	 * fixed and the moving image, which can exclude some pixels from being used
-	 * in the calculation of the MutualInformation. 
-	 * Besides, it adds the function SampleFixedImageDomain, which allows the user
+	 * but it adds the function SampleFixedImageDomain, which allows the user
 	 * to force a new sample set to be created.
-	 * Finally, it adds the GetExactValue method and the GetExactValueAndDerivative
+	 * Besides, it adds the GetExactValue method and the GetExactValueAndDerivative
 	 * methods, that compute the mutual information/its derivative using all voxels
 	 * of the images.
 	 *
@@ -325,6 +320,10 @@ namespace itk
 		typename BSplineTransformType::Pointer m_BSplineTransform;
 		mutable BSplineTransformWeightsType    m_BSplineTransformWeights;
 		mutable BSplineTransformIndexArrayType m_BSplineTransformIndices;
+
+		typedef FixedArray< unsigned long, 
+			::itk::GetImageDimension<FixedImageType>::ImageDimension> ParametersOffsetType;
+		ParametersOffsetType                   m_ParametersOffset;
   
 
 	private:

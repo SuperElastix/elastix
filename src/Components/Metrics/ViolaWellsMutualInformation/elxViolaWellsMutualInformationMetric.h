@@ -2,7 +2,7 @@
 #define __elxViolaWellsMutualInformationMetric_H__
 
 #include "elxIncludes.h"
-#include "itkMutualInformationImageToImageMetricMoreRandom.h"
+#include "itkMutualInformationImageToImageMetric.h"
 
 #include "elxTimer.h"
 
@@ -12,10 +12,8 @@ using namespace itk;
 
 	/**
 	 * \class ViolaWellsMutualInformationMetric
-	 * \brief An metric based on the itk::MutualInformationImageToImageMetricMoreRandom.
+	 * \brief An metric based on the itk::MutualInformationImageToImageMetric.
 	 *
-	 * This metric changes the itk::MutualInformationImageToImageMetric such that it
-	 * uses a better random number generator.
 	 *
 	 * The parameters used in this class are:
 	 * \parameter Metric: Select this metric as follows:\n
@@ -33,14 +31,14 @@ using namespace itk;
 	 *		example: <tt>(MovingImageStandardDeviation 1.3 1.9 1.0)</tt> \n
 	 *		The default is 0.4 for each resolution.
 	 *
-	 * \sa MutualInformationImageToImageMetricMoreRandom
+	 * \sa MutualInformationImageToImageMetric
 	 * \ingroup Metrics
 	 */
 
 	template <class TElastix >	
 		class ViolaWellsMutualInformationMetric :
 		public
-			MutualInformationImageToImageMetricMoreRandom<
+			MutualInformationImageToImageMetric<
 				ITK_TYPENAME MetricBase<TElastix>::FixedImageType,
 				ITK_TYPENAME MetricBase<TElastix>::MovingImageType >,
 		public MetricBase<TElastix>
@@ -49,7 +47,7 @@ using namespace itk;
 
 		/** Standard ITK-stuff. */
 		typedef ViolaWellsMutualInformationMetric							Self;
-		typedef MutualInformationImageToImageMetricMoreRandom<
+		typedef MutualInformationImageToImageMetric<
 			typename MetricBase<TElastix>::FixedImageType,
 			typename MetricBase<TElastix>::MovingImageType >		Superclass1;
 		typedef MetricBase<TElastix>													Superclass2;
@@ -61,7 +59,7 @@ using namespace itk;
 		
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( ViolaWellsMutualInformationMetric,
-			MutualInformationImageToImageMetricMoreRandom );
+			MutualInformationImageToImageMetric );
 		
 		/** Name of this class.
 		 * Use this name in the parameter file to select this specific metric. \n

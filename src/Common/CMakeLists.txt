@@ -28,13 +28,6 @@ TransformGrouper/itkTransformGrouper.h
 TransformGrouper/itkTransformGrouper.hxx
 TransformGrouper/itkTransformGrouperInterface.h )
 
-SET( MoreRandomFiles
-MoreRandom/elx_sample.h
-MoreRandom/elx_sample.cxx
-MoreRandom/itkImageMoreRandomConstIteratorWithIndex.h
-MoreRandom/itkImageMoreRandomConstIteratorWithIndex.txx
-MoreRandom/itkImageMoreRandomIteratorWithIndex.h
-MoreRandom/itkImageMoreRandomIteratorWithIndex.txx)
 
 SET( LineSearchOptimizersFiles
 LineSearchOptimizers/itkMoreThuenteLineSearchOptimizer.h
@@ -44,7 +37,6 @@ LineSearchOptimizers/itkLineSearchOptimizer.cxx)
 
 
 SOURCE_GROUP("TransformGrouper" FILES ${TransformGrouperFiles} )
-SOURCE_GROUP("MoreRandom" FILES ${MoreRandomFiles} )
 SOURCE_GROUP("LineSearchOptimizers" FILES ${LineSearchOptimizersFiles} )
 
 IF(CMAKE_COMPILER_IS_GNUCXX)
@@ -57,7 +49,6 @@ ENDIF(CMAKE_COMPILER_IS_GNUCXX)
 ADD_LIBRARY(elxCommon
   ${CommonFiles}
 	${TransformGrouperFiles}
-	${MoreRandomFiles}
 	${LineSearchOptimizersFiles} )
 
 TARGET_LINK_LIBRARIES(elxCommon
