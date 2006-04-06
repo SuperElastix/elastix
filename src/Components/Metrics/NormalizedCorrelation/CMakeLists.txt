@@ -3,7 +3,8 @@
 ADD_ELXCOMPONENT( elxNormalizedCorrelationMetric
  elxNormalizedCorrelationMetric.h
  elxNormalizedCorrelationMetric.hxx
- elxNormalizedCorrelationMetric.cxx )
-
+ elxNormalizedCorrelationMetric.cxx
+ itkNormalizedCorrelationImageToImageMetric2.h
+ itkNormalizedCorrelationImageToImageMetric2.txx )
 
 

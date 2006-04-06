@@ -2,7 +2,7 @@
 #define __elxNormalizedCorrelationMetric_H__
 
 #include "elxIncludes.h"
-#include "itkNormalizedCorrelationImageToImageMetric.h"
+#include "itkNormalizedCorrelationImageToImageMetric2.h"
 
 #include "elxTimer.h"
 
@@ -12,7 +12,7 @@ using namespace itk;
 
 	/**
 	 * \class NormalizedCorrelationMetric
-	 * \brief An metric based on the itk::NormalizedCorrelationImageToImageMetric.
+	 * \brief An metric based on the itk::NormalizedCorrelationImageToImageMetric2.
 	 *
 	 * The parameters used in this class are:
 	 * \parameter Metric: Select this metric as follows:\n
@@ -25,7 +25,7 @@ using namespace itk;
 	template <class TElastix >
 		class NormalizedCorrelationMetric:
 		public
-			NormalizedCorrelationImageToImageMetric<
+			NormalizedCorrelationImageToImageMetric2<
 				ITK_TYPENAME MetricBase<TElastix>::FixedImageType,
 				ITK_TYPENAME MetricBase<TElastix>::MovingImageType >,
 		public MetricBase<TElastix>
@@ -34,7 +34,7 @@ using namespace itk;
 
 		/** Standard ITK-stuff. */
 		typedef NormalizedCorrelationMetric										Self;
-		typedef NormalizedCorrelationImageToImageMetric<
+		typedef NormalizedCorrelationImageToImageMetric2<
 			typename MetricBase<TElastix>::FixedImageType,
 			typename MetricBase<TElastix>::MovingImageType >		Superclass1;
 		typedef MetricBase<TElastix>													Superclass2;
@@ -45,7 +45,7 @@ using namespace itk;
 		itkNewMacro( Self );
 		
 		/** Run-time type information (and related methods). */
-		itkTypeMacro( NormalizedCorrelationMetric, NormalizedCorrelationImageToImageMetric );
+		itkTypeMacro( NormalizedCorrelationMetric, NormalizedCorrelationImageToImageMetric2 );
 		
 		/** Name of this class.
 		 * Use this name in the parameter file to select this specific metric. \n
