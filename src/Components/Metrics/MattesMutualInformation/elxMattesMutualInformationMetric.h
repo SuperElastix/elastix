@@ -2,7 +2,7 @@
 #define __elxMattesMutualInformationMetric_H__
 
 #include "elxIncludes.h"
-#include "itkMattesMutualInformationImageToImageMetricWithMask.h"
+#include "itkMattesMutualInformationImageToImageMetric2.h"
 
 #include "elxTimer.h"
 
@@ -12,7 +12,7 @@ using namespace itk;
 
 	/**
 	 * \class MattesMutualInformationMetric
-	 * \brief A metric based on the itk::MattesMutualInformationImageToImageMetricWithMask.
+	 * \brief A metric based on the itk::MattesMutualInformationImageToImageMetric2.
 	 *
 	 * This metric is based on an adapted version of the
 	 * itk::MattesMutualInformationImageToImageMetric.
@@ -49,14 +49,14 @@ using namespace itk;
 	 *		Default is 2 in each dimension.
 	 *
 	 *
-   * \sa MattesMutualInformationImageToImageMetricWithMask
+   * \sa MattesMutualInformationImageToImageMetric2
 	 * \ingroup Metrics
 	 */
 	
 	template <class TElastix >	
 		class MattesMutualInformationMetric :
 		public
-			MattesMutualInformationImageToImageMetricWithMask<
+			MattesMutualInformationImageToImageMetric2<
 				ITK_TYPENAME MetricBase<TElastix>::FixedImageType,
 				ITK_TYPENAME MetricBase<TElastix>::MovingImageType >,
 		public MetricBase<TElastix>
@@ -65,7 +65,7 @@ using namespace itk;
 
 		/** Standard ITK-stuff. */
 		typedef MattesMutualInformationMetric									Self;
-		typedef MattesMutualInformationImageToImageMetricWithMask<
+		typedef MattesMutualInformationImageToImageMetric2<
 			typename MetricBase<TElastix>::FixedImageType,
 			typename MetricBase<TElastix>::MovingImageType >		Superclass1;
 		typedef MetricBase<TElastix>													Superclass2;
@@ -77,7 +77,7 @@ using namespace itk;
 		
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( MattesMutualInformationMetric,
-			MattesMutualInformationImageToImageMetricWithMask );
+			MattesMutualInformationImageToImageMetric2 );
 		
 		/** Name of this class.
 		 * Use this name in the parameter file to select this specific metric. \n

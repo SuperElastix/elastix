@@ -24,8 +24,8 @@
 			PURPOSE.  See the above copyright notices for more information.
 			
 =========================================================================*/
-#ifndef __itkMattesMutualInformationImageToImageMetricWithMask_H__
-#define __itkMattesMutualInformationImageToImageMetricWithMask_H__
+#ifndef __itkMattesMutualInformationImageToImageMetric2_H__
+#define __itkMattesMutualInformationImageToImageMetric2_H__
 
 #include "itkImageToImageMetric.h"
 #include "itkCovariantVector.h"
@@ -41,7 +41,7 @@ namespace itk
 {
 	
 	/**
-	 * \class MattesMutualInformationImageToImageMetricWithMask
+	 * \class MattesMutualInformationImageToImageMetric2
 	 * \brief Computes the mutual information between two images to be 
 	 * registered using the methof of Mattes et al.
 	 *
@@ -116,7 +116,7 @@ namespace itk
 	 *
 	 *
 	 *	NB:
-	 * This file declares the itk::MattesMutualInformationImageToImageMetricWithMask.
+	 * This file declares the itk::MattesMutualInformationImageToImageMetric2.
 	 * It is largely the same as itk::MattesMutualInformationImageToImageMetric,
 	 * but it adds the function SampleFixedImageDomain, which allows the user
 	 * to force a new sample set to be created.
@@ -128,13 +128,13 @@ namespace itk
 	 */
 
 	template <class TFixedImage,class TMovingImage >
-		class MattesMutualInformationImageToImageMetricWithMask :
+		class MattesMutualInformationImageToImageMetric2 :
 	public ImageToImageMetric< TFixedImage, TMovingImage >
 	{
 	public:
 		
 		/** Standard class typedefs. */
-		typedef MattesMutualInformationImageToImageMetricWithMask		Self;
+		typedef MattesMutualInformationImageToImageMetric2					Self;
 		typedef ImageToImageMetric< TFixedImage, TMovingImage >			Superclass;
 		typedef SmartPointer<Self>																	Pointer;
 		typedef SmartPointer<const Self>														ConstPointer;
@@ -143,7 +143,7 @@ namespace itk
 		itkNewMacro( Self );
 		
 		/** Run-time type information (and related methods). */
-		itkTypeMacro( MattesMutualInformationImageToImageMetricWithMask, ImageToImageMetric );
+		itkTypeMacro( MattesMutualInformationImageToImageMetric2, ImageToImageMetric );
 		
 		/** Types inherited from Superclass. */
 		typedef typename Superclass::TransformType            TransformType;
@@ -224,9 +224,9 @@ namespace itk
 	protected:
 		
 		/** The constructor. */
-		MattesMutualInformationImageToImageMetricWithMask();
+		MattesMutualInformationImageToImageMetric2();
 		/** The destructor. */
-		virtual ~MattesMutualInformationImageToImageMetricWithMask() {};
+		virtual ~MattesMutualInformationImageToImageMetric2() {};
 
 		/** Print Self. */
 		void PrintSelf( std::ostream& os, Indent indent ) const;
@@ -329,9 +329,9 @@ namespace itk
 	private:
 		
 		/** The private constructor. */
-		MattesMutualInformationImageToImageMetricWithMask( const Self& );	// purposely not implemented
+		MattesMutualInformationImageToImageMetric2( const Self& );	// purposely not implemented
 		/** The private copy constructor. */
-		void operator=( const Self& );																		// purposely not implemented
+		void operator=( const Self& );															// purposely not implemented
 		
 		bool m_UseAllPixels;
 				
@@ -419,13 +419,13 @@ namespace itk
 			const ImageDerivativesType& movingImageGradientValue,
 			double cubicBSplineDerivativeValue ) const;
 		
-	}; // end class MattesMutualInformationImageToImageMetricWithMask
+	}; // end class MattesMutualInformationImageToImageMetric2
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMattesMutualInformationImageToImageMetricWithMask.hxx"
+#include "itkMattesMutualInformationImageToImageMetric2.hxx"
 #endif
 
-#endif // end #ifndef __itkMattesMutualInformationImageToImageMetricWithMask_H__
+#endif // end #ifndef __itkMattesMutualInformationImageToImageMetric2_H__
 

@@ -21,10 +21,10 @@
 			PURPOSE.  See the above copyright notices for more information.
 			
 =========================================================================*/
-#ifndef _itkMattesMutualInformationImageToImageMetricWithMask_HXX__
-#define _itkMattesMutualInformationImageToImageMetricWithMask_HXX__
+#ifndef _itkMattesMutualInformationImageToImageMetric2_HXX__
+#define _itkMattesMutualInformationImageToImageMetric2_HXX__
 
-#include "itkMattesMutualInformationImageToImageMetricWithMask.h"
+#include "itkMattesMutualInformationImageToImageMetric2.h"
 
 #include "itkBSplineInterpolateImageFunction.h"
 #include "itkCovariantVector.h"
@@ -47,8 +47,8 @@ namespace itk
 	 */
 
 	template < class TFixedImage, class TMovingImage >
-		MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
-		::MattesMutualInformationImageToImageMetricWithMask()
+		MattesMutualInformationImageToImageMetric2<TFixedImage,TMovingImage>
+		::MattesMutualInformationImageToImageMetric2()
 	{
 		/** Initialize.*/
 		this->m_NumberOfSpatialSamples = 500;
@@ -100,7 +100,7 @@ namespace itk
 
 	template < class TFixedImage, class TMovingImage  >
 		void
-		MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+		MattesMutualInformationImageToImageMetric2<TFixedImage,TMovingImage>
 		::PrintSelf( std::ostream& os, Indent indent ) const
 	{
 		/** Call the superclass' PrintSelf. */
@@ -142,7 +142,7 @@ namespace itk
 
 	template <class TFixedImage, class TMovingImage> 
 		void
-		MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+		MattesMutualInformationImageToImageMetric2<TFixedImage,TMovingImage>
 		::Initialize(void) throw ( ExceptionObject )
 	{
 		
@@ -412,7 +412,7 @@ namespace itk
 	 
 	 template < class TFixedImage, class TMovingImage >
 		 void
-		 MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+		 MattesMutualInformationImageToImageMetric2<TFixedImage,TMovingImage>
 		 ::SampleFixedImageDomain( FixedImageSpatialSampleContainer& samples )
 	 {		 
 
@@ -484,7 +484,7 @@ namespace itk
 	 
 	 template < class TFixedImage, class TMovingImage >
 		 void
-		 MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+		 MattesMutualInformationImageToImageMetric2<TFixedImage,TMovingImage>
 		 ::SampleFullFixedImageDomain( FixedImageSpatialSampleContainer& samples )
 	 {		 
 
@@ -555,9 +555,9 @@ namespace itk
 	 */
 
 	 template < class TFixedImage, class TMovingImage  >
-		 typename MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+		 typename MattesMutualInformationImageToImageMetric2<TFixedImage,TMovingImage>
 		 ::MeasureType
-		 MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+		 MattesMutualInformationImageToImageMetric2<TFixedImage,TMovingImage>
 		 ::GetValue( const ParametersType& parameters ) const
 	 {		 
 		 // Reset marginal pdf to all zeros.
@@ -831,7 +831,7 @@ namespace itk
 
 	 template < class TFixedImage, class TMovingImage  >
 		 void
-		 MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+		 MattesMutualInformationImageToImageMetric2<TFixedImage,TMovingImage>
 		 ::GetValueAndDerivative(
 		 const ParametersType& parameters,
 		 MeasureType& value,
@@ -1160,7 +1160,7 @@ namespace itk
 
 	template < class TFixedImage, class TMovingImage  >
 	void
-	MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+	MattesMutualInformationImageToImageMetric2<TFixedImage,TMovingImage>
 	::GetDerivative( const ParametersType& parameters, DerivativeType & derivative ) const
 	{
 		MeasureType value;
@@ -1180,7 +1180,7 @@ namespace itk
 
 	template < class TFixedImage, class TMovingImage >
 		void
-		MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+		MattesMutualInformationImageToImageMetric2<TFixedImage,TMovingImage>
 		::ComputeImageDerivatives( 
 		const MovingImagePointType& mappedPoint, 
 		ImageDerivativesType& gradient ) const
@@ -1208,7 +1208,7 @@ namespace itk
 
 	template < class TFixedImage, class TMovingImage >
 		void
-		MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+		MattesMutualInformationImageToImageMetric2<TFixedImage,TMovingImage>
 		::TransformPoint( 
 		const FixedImagePointType& fixedImagePoint, 
 		MovingImagePointType& mappedPoint,
@@ -1271,7 +1271,7 @@ namespace itk
 
 	template < class TFixedImage, class TMovingImage >
 		void
-		MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+		MattesMutualInformationImageToImageMetric2<TFixedImage,TMovingImage>
 		::ComputePDFDerivatives( 
 		const FixedImagePointType& fixedImagePoint, 
 		int fixedImageParzenWindowIndex,
@@ -1351,9 +1351,9 @@ namespace itk
 	 */
 
 	 template < class TFixedImage, class TMovingImage  >
-		 typename MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+		 typename MattesMutualInformationImageToImageMetric2<TFixedImage,TMovingImage>
 		 ::MeasureType
-		 MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+		 MattesMutualInformationImageToImageMetric2<TFixedImage,TMovingImage>
 		 ::GetExactValue( const ParametersType& parameters )
 	 {		 
 
@@ -1390,7 +1390,7 @@ namespace itk
 	  */
 
 	 template < class TFixedImage, class TMovingImage  > void
-	 MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+	 MattesMutualInformationImageToImageMetric2<TFixedImage,TMovingImage>
 	 ::ReinitializeSeed()
 	 {
 		 Statistics::MersenneTwisterRandomVariateGenerator::GetInstance()->SetSeed();
@@ -1404,7 +1404,7 @@ namespace itk
 	  */
 
 	 template < class TFixedImage, class TMovingImage  > void
-	 MattesMutualInformationImageToImageMetricWithMask<TFixedImage,TMovingImage>
+	 MattesMutualInformationImageToImageMetric2<TFixedImage,TMovingImage>
 	 ::ReinitializeSeed(int seed)
 	 {
 	   Statistics::MersenneTwisterRandomVariateGenerator::GetInstance()->SetSeed(seed);
@@ -1416,5 +1416,5 @@ namespace itk
 } // end namespace itk
 
 
-#endif // end #ifndef _itkMattesMutualInformationImageToImageMetricWithMask_HXX__
+#endif // end #ifndef _itkMattesMutualInformationImageToImageMetric2_HXX__
 

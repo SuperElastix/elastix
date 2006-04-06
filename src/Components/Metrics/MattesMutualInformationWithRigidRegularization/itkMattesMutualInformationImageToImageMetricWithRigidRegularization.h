@@ -17,7 +17,7 @@
 #ifndef __itkMattesMutualInformationImageToImageMetricWithRigidRegularization_H__
 #define __itkMattesMutualInformationImageToImageMetricWithRigidRegularization_H__
 
-#include "../MattesMutualInformation/itkMattesMutualInformationImageToImageMetricWithMask.h"
+#include "../MattesMutualInformation/itkMattesMutualInformationImageToImageMetric2.h"
 
 /** Include the penalty term. */
 #include "itkRigidRegulizerMetric.h"
@@ -39,7 +39,7 @@ namespace itk
 	* rigid penalty term. The rigid penalty term penalizes deviations from a rigid
 	* transformation at regions specified by the so-called rigidity images.
 	*
-	* This class is derived from MattesMutualInformationImageToImageMetricWithMask,
+	* This class is derived from MattesMutualInformationImageToImageMetric2,
 	* which is the itk::MattesMutualInformationImageToImageMetric with some
 	* contributions of our own. This class changes the GetValue() and 
 	* GetValueAndDerivative() methods, such that it adds a rigid penalty
@@ -47,7 +47,7 @@ namespace itk
 	*
 	* This metric only works with B-splines as a transformation model.
 	*
-	* \sa MattesMutualInformationImageToImageMetricWithMask
+	* \sa MattesMutualInformationImageToImageMetric2
 	* \sa MattesMutualInformationMetricWithRigidRegularization
 	* \sa RigidRegulizerMetric
 	* \sa BSplineTransform
@@ -56,14 +56,14 @@ namespace itk
 
 	template < class TFixedImage, class TMovingImage >
 		class MattesMutualInformationImageToImageMetricWithRigidRegularization :
-	public MattesMutualInformationImageToImageMetricWithMask< TFixedImage, TMovingImage >
+	public MattesMutualInformationImageToImageMetric2< TFixedImage, TMovingImage >
 	{
 
 	public:
 		
 		/** Standard class typedefs. */
 		typedef MattesMutualInformationImageToImageMetricWithRigidRegularization		Self;
-		typedef MattesMutualInformationImageToImageMetricWithMask<
+		typedef MattesMutualInformationImageToImageMetric2<
 			TFixedImage, TMovingImage >													Superclass;
 		typedef SmartPointer<Self>														Pointer;
 		typedef SmartPointer<const Self>											ConstPointer;
@@ -73,7 +73,7 @@ namespace itk
 		
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( MattesMutualInformationImageToImageMetricWithRigidRegularization,
-			MattesMutualInformationImageToImageMetricWithMask );
+			MattesMutualInformationImageToImageMetric2 );
 		
 		/** Types inherited from Superclass. */
 		typedef typename Superclass::TransformType            TransformType;
