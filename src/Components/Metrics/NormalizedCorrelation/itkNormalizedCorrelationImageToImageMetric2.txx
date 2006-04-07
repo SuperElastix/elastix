@@ -94,7 +94,7 @@ namespace itk
 		this->m_NumberOfPixelsCounted = 0;
 
 		/** Some typedefs. */
-		typedef itk::ImageRegionConstIteratorWithIndex<FixedImageType>				FixedIteratorType;
+		typedef ImageRegionConstIteratorWithIndex<FixedImageType>				FixedIteratorType;
 		typedef typename NumericTraits< MeasureType >::AccumulateType		AccumulateType;
 		typedef typename Superclass::InputPointType			InputPointType;
 		typedef typename Superclass::OutputPointType		OutputPointType;
@@ -114,7 +114,7 @@ namespace itk
 		AccumulateType sf  = NumericTraits< AccumulateType >::Zero;
 		AccumulateType sm  = NumericTraits< AccumulateType >::Zero;
 
-		/** Loop over the fixed image to calculate the normalized correlation matric NC. */
+		/** Loop over the fixed image to calculate the normalized correlation metric NC. */
 		while( !ti.IsAtEnd() )
 		{
 			/** Get the current inputpoint. */
@@ -470,7 +470,7 @@ namespace itk
 				/** Get the gradient by NearestNeighboorInterpolation:
 				 * which is equivalent to round up the point components.*/
 				this->m_MovingImage->TransformPhysicalPointToContinuousIndex( transformedPoint, tempIndex );
-				for( unsigned int j = 0; j < MovingImageType::ImageDimension; j++ )
+				for( unsigned int j = 0; j < MovingImageDimension; j++ )
 				{
 					mappedIndex[ j ] = static_cast<long>( vnl_math_rnd( tempIndex[ j ] ) );
 				}

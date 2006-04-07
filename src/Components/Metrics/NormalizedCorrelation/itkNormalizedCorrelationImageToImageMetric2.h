@@ -137,7 +137,7 @@ public:
 	itkStaticConstMacro( MovingImageDimension, unsigned int,
 		MovingImageType::ImageDimension );
 
-  /**  Get the value for single valued optimizers. */
+  /** Get the value for single valued optimizers. */
   MeasureType GetValue( const TransformParametersType & parameters ) const;
 	MeasureType GetValueUsingAllPixels( const TransformParametersType & parameters ) const;
 	MeasureType GetValueUsingSomePixels( const TransformParametersType & parameters ) const;
@@ -146,7 +146,7 @@ public:
   void GetDerivative( const TransformParametersType & parameters,
 		DerivativeType & Derivative ) const;
 
-  /**  Get value and derivatives for multiple valued optimizers. */
+  /** Get value and derivatives for multiple valued optimizers. */
   void GetValueAndDerivative( const TransformParametersType & parameters,
 		MeasureType& Value, DerivativeType& Derivative ) const;
 	void GetValueAndDerivativeUsingAllPixels( const TransformParametersType & parameters,
