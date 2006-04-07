@@ -21,14 +21,14 @@ using namespace itk;
 	 *    sample values in the cross correlation formula. This typically results in narrower
 	 *    valleys in the cost fucntion. Default value is true.\n
 	 *		example: <tt>(SubtractMean "false")</tt> \n
-	 * \parameter NumberOfSpatialSamples: The number of image voxels used for computing the
-	 *		metric value and its derivative in each iteration. Must be given for each resolution.\n
-	 *		example: <tt>(NumberOfSpatialSamples 2048 2048 4000)</tt> \n
-	 *		The default is 5000.
 	 * \parameter	UseAllPixels: Flag to force the metric to use ALL voxels for 
 	 *		computing the metric value and its derivative in each iteration.
 	 *    Choose one of {"true", "false"}. Default is "true". \n
 	 *		example: <tt>(UseAllPixels "false")</tt> \n
+	 * \parameter NumberOfSpatialSamples: The number of image voxels used for computing the
+	 *		metric value and its derivative in each iteration. Must be given for each resolution.\n
+	 *		example: <tt>(NumberOfSpatialSamples 2048 2048 4000)</tt> \n
+	 *		The default is 5000.
 	 *
 	 * \ingroup Metrics
 	 *
