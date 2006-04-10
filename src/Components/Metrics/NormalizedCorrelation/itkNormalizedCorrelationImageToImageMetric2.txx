@@ -204,12 +204,12 @@ namespace itk
 		FixedImageConstPointer fixedImage = this->m_FixedImage;
 		if( !fixedImage ) 
 		{
-			itkExceptionMacro( << "Fixed image has not been assigned" );
+			itkExceptionMacro( << "Fixed image has not been assigned." );
 		}
 
 		if( this->m_NumberOfSpatialSamples == 0 ) 
 		{
-			itkExceptionMacro( << "NumberOfSpatialSamples has not been set" );
+			itkExceptionMacro( << "NumberOfSpatialSamples has not been set." );
 		}
 
 		/** Make sure the transform parameters are up to date. */
