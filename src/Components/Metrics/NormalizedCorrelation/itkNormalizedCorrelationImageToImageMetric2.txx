@@ -143,14 +143,13 @@ namespace itk
 			{
 				/** Get the fixedValue = f(x) and the movingValue = m(x+u(x)). */
 				const RealType movingValue  = this->m_Interpolator->Evaluate( transformedPoint );
-				const RealType fixedValue   = ti.Get();
-				//const RealType fixedValue   = ti.Value();//is this faster?
+				const RealType & fixedValue = ti.Value();
 
 				/** Update some sums needed to calculate NC. */
 				sff += fixedValue  * fixedValue;
 				smm += movingValue * movingValue;
 				sfm += fixedValue  * movingValue;
-				if ( this->m_SubtractMean ) // get rid of the if?
+				if ( this->m_SubtractMean ) // faster to get rid of the if?
 				{
 					sf += fixedValue;
 					sm += movingValue;
@@ -267,14 +266,13 @@ namespace itk
 			{
 				/** Get the fixedValue = f(x) and the movingValue = m(x+u(x)). */
 				const RealType movingValue  = this->m_Interpolator->Evaluate( transformedPoint );
-				const RealType fixedValue   = ti.Get();
-				//const RealType fixedValue   = ti.Value();//is this faster?
+				const RealType & fixedValue = ti.Value();
 
 				/** Update some sums needed to calculate NC. */
 				sff += fixedValue  * fixedValue;
 				smm += movingValue * movingValue;
 				sfm += fixedValue  * movingValue;
-				if ( this->m_SubtractMean ) // get rid of the if?
+				if ( this->m_SubtractMean ) // faster to get rid of the if?
 				{
 					sf += fixedValue;
 					sm += movingValue;
@@ -451,8 +449,7 @@ namespace itk
 			{
 				/** Get the fixedValue = f(x) and the movingValue = m(x+u(x)). */
 				const RealType movingValue = this->m_Interpolator->Evaluate( transformedPoint );
-				const RealType fixedValue  = ti.Get();
-				//const RealType fixedValue  = ti.Value();//is this faster?
+				const RealType & fixedValue = ti.Value();
 
 				/** Update some sums needed to calculate NC. */
 				sff += fixedValue  * fixedValue;
@@ -643,8 +640,7 @@ namespace itk
 			{
 				/** Get the fixedValue = f(x) and the movingValue = m(x+u(x)). */
 				const RealType movingValue = this->m_Interpolator->Evaluate( transformedPoint );
-				const RealType fixedValue  = ti.Get();
-				//const RealType fixedValue  = ti.Value();//is this faster?
+				const RealType & fixedValue = ti.Value();
 
 				/** Update some sums needed to calculate NC. */
 				sff += fixedValue  * fixedValue;

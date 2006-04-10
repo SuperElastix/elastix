@@ -140,8 +140,7 @@ namespace itk
 			{
 				/** Get the fixedValue = f(x) and the movingValue = m(x+u(x)). */
 				const RealType movingValue  = this->m_Interpolator->Evaluate( transformedPoint );
-				const RealType fixedValue   = ti.Get();
-				//const RealType fixedValue   = ti.Value();// is this faster?
+				const RealType & fixedValue  = ti.Value();
 
 				/** The difference squared. */
 				const RealType diff = movingValue - fixedValue; 
@@ -243,8 +242,7 @@ namespace itk
 			{
 				/** Get the fixedValue = f(x) and the movingValue = m(x+u(x)). */
 				const RealType movingValue  = this->m_Interpolator->Evaluate( transformedPoint );
-				const RealType fixedValue   = ti.Get();
-				//const RealType fixedValue   = ti.Value();// is this faster?
+				const RealType & fixedValue  = ti.Value();
 
 				/** The difference squared. */
 				const RealType diff = movingValue - fixedValue; 
@@ -399,7 +397,7 @@ namespace itk
 			{
 				/** Get the fixedValue = f(x) and the movingValue = m(x+u(x)). */
 				const RealType movingValue = this->m_Interpolator->Evaluate( transformedPoint );
-				const RealType fixedValue  = ti.Value();
+				const RealType & fixedValue  = ti.Value();
 
 				/** Get the Jacobian. */
 				const TransformJacobianType & jacobian =
@@ -544,7 +542,7 @@ namespace itk
 			{
 				/** Get the fixedValue = f(x) and the movingValue = m(x+u(x)). */
 				const RealType movingValue = this->m_Interpolator->Evaluate( transformedPoint );
-				const RealType fixedValue  = ti.Value();
+				const RealType & fixedValue  = ti.Value();
 
 				/** Get the Jacobian. */
 				const TransformJacobianType & jacobian =
