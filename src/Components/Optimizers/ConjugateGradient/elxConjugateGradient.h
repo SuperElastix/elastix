@@ -14,12 +14,60 @@ using namespace itk;
 	 * \class ConjugateGradient
 	 * \brief An optimizer based on the itk::GenericConjugateGradientOptimizer.
 	 *
-	 * The ConjugateGradient class ....
-	 *
+	 * A ConjugateGradient optimizer, using the itk::MoreThuenteLineSearchOptimizer. 
+	 * Different conjugate gradient methods can be selected with this optimizer.
+	 * 
+	 * This optimizer support the NewSamplesEveryIteration option. It requests
+	 * new samples for the computation of each search direction (not during
+	 * the line search). Actually this makes no sense for a conjugate gradient optimizer.
+	 * So, think twice before using the NewSamplesEveryIteration option.
+   *
 	 * The parameters used in this class are:
 	 * \parameter Optimizer: Select this optimizer as follows:\n
 	 *		<tt>(Optimizer "ConjugateGradient")</tt>
-	 * \parameter alotofothers: ???
+	 * \parameter GenerateLineSearchIterations: Whether line search iteration
+	 *   should be counted as elastix-iterations.\n
+	 *   example: <tt>(GenerateLineSearchIterations "true")</tt>\n
+	 *   Can only be specified for all resolutions at once. \n
+	 *   Default value: "false".\n
+	 * \parameter MaximumNumberOfIterations: The maximum number of iterations in each resolution. \n
+	 *		example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
+	 *    Default value: 100.\n
+	 * \parameter MaximumNumberOfLineSearchIterations: The maximum number of iterations in each resolution. \n
+	 *		example: <tt>(MaximumNumberOfIterations 10 10 5)</tt> \n
+	 *    Default value: 10.\n
+	 * \parameter StepLength: Set the length of the initial step tried by the
+	 *    itk::MoreThuenteLineSearchOptimizer.\n
+	 *		example: <tt>(StepLength 2.0 1.0 0.5)</tt> \n
+	 *    Default value: 1.0.\n
+	 * \parameter LineSearchValueTolerance: Determine the Wolfe conditions that the
+	 *    itk::MoreThuenteLineSearchOptimizer tries to satisfy.\n
+	 *		example: <tt>(LineSearchValueTolerance 0.0001 0.0001 0.0001)</tt> \n
+	 *    Default value: 0.0001.\n
+	 * \parameter LineSearchGradientTolerance: Determine the Wolfe conditions that the
+	 *    itk::MoreThuenteLineSearchOptimizer tries to satisfy.\n
+	 *		example: <tt>(LineSearchGradientTolerance 0.9 0.9 0.9)</tt> \n
+	 *    Default value: 0.9.\n
+	 * \parameter ValueTolerance: Stopping criterion. See the documentation of the 
+	 *    itk::GenericConjugateGradientOptimizer for more information.\n
+	 *		example: <tt>(ValueTolerance 0.001 0.0001 0.000001)</tt> \n
+	 *	  Default value: 0.00001.\n
+	 * \parameter GradientMagnitudeTolerance: Stopping criterion. See the documentation of the 
+	 *    itk::GenericConjugateGradientOptimizer for more information.\n
+	 *		example: <tt>(GradientMagnitudeTolerance 0.001 0.0001 0.000001)</tt> \n
+	 *	  Default value: 0.000001.\n
+	 * \parameter ConjugateGradientType: a string that defines how 'beta' is computed.
+	 *    The following methods are implemented: "FletcherReeves", "PolakRibiere", 
+	 *    "DaiYuan", "HestenesStiefel", and "DaiYuanHestenesStiefel".
+	 *    See the source code of the GenericConjugateGradientOptimizer for more information.\n
+	 *		example: <tt>(ConjugateGradientType "FletcherReeves" "PolakRibiere")</tt> \n
+	 *    Default value: "DaiYuanHestenesStiefel".\n
+   * \parameter StopIfWolfeNotSatisfied: Whether to stop the optimisation if in one iteration 
+	 *    the Wolfe conditions can not be satisfied by the itk::MoreThuenteLineSearchOptimizer.\n
+	 *    In general it is wise to do so.\n
+	 *    example: <tt>(StopIfWolfeNotSatisfied "true" "false")</tt> \n
+	 *    Default value: "true".\n
+	 *
 	 *
 	 * \ingroup Optimizers
 	 */

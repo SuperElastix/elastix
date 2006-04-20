@@ -19,7 +19,9 @@ itkDeformationVectorFieldTransform.txx
 itkScaledSingleValuedCostFunction.h
 itkScaledSingleValuedCostFunction.cxx
 itkScaledSingleValuedNonLinearOptimizer.h
-itkScaledSingleValuedNonLinearOptimizer.cxx )
+itkScaledSingleValuedNonLinearOptimizer.cxx
+itkTranslationTransformInitializer.h
+itkTranslationTransformInitializer.hxx)
 
 SET( TransformGrouperFiles 
 TransformGrouper/itkBSplineTransformGrouper.h

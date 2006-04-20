@@ -25,6 +25,7 @@ using namespace itk;
 	 *		computing the metric value and its derivative in each iteration.
 	 *    Choose one of {"true", "false"}. Default is "true". \n
 	 *		example: <tt>(UseAllPixels "false")</tt> \n
+	 *    note: the NewSamplesEveryIteration parameter is ignored by this metric.\n
 	 * \parameter NumberOfSpatialSamples: The number of image voxels used for computing the
 	 *		metric value and its derivative in each iteration. Must be given for each resolution.\n
 	 *		example: <tt>(NumberOfSpatialSamples 2048 2048 4000)</tt> \n
@@ -117,6 +118,23 @@ using namespace itk;
 		 * calls the Superclass' implementation.
 		 */
 		virtual void Initialize(void) throw (ExceptionObject);
+
+		/**
+		 * Force the metric to base its computation on a new subset of image samples.
+		 *
+		 * This metric cannot respond to this function correctly. It is meant for stochastic
+     * optimizers, to allow them to request a refreshment of the sample set.
+		 * However, this metric can not deal with such a request.
+		 * 
+		 * It has two modes of operation, defined by the (UseAllPixels ...) option. If this
+     * parameter is set to true, all voxels in the image are used. If set to false,
+		 * every derivative/value calculation is based on a new, randomly selected subset
+		 * of voxels. So, if you want to combine the metric with a stochastic optimizer,
+		 * simply set the UseAllPixels parameter to false.
+		 *
+		 * Therefore, this metric just silently ignores the request.
+		 */
+		virtual void SelectNewSamples(void){};
 
 	protected:
 

@@ -14,12 +14,57 @@ using namespace itk;
 	 * \class QuasiNewtonLBFGS
 	 * \brief An optimizer based on the itk::QuasiNewtonLBFGSOptimizer.
 	 *
-	 * The QuasiNewtonLBFGS class is a wrap around the QuasiNewtonLBFGSOptimizer. 
-	 * Please read the documentation of this class to find out more about it.
+	 * The QuasiNewtonLBFGS class is a wrap around the QuasiNewtonLBFGSOptimizer.
+	 * It uses the itk::MoreThuenteLineSearchOptimizer.
+	 * Please read the documentation of these classes to find out more about it.
 	 * 
+	 * This optimizer supports the NewSamplesEveryIteration option. It requests
+	 * new samples for the computation of each search direction (not during
+	 * the line search). Actually this makes no sense for a QuasiNewton optimizer.
+	 * So, think twice before using the NewSamplesEveryIteration option.
+	 *
 	 * The parameters used in this class are:
 	 * \parameter Optimizer: Select this optimizer as follows:\n
 	 *		<tt>(Optimizer "QuasiNewtonLBFGS")</tt>
+	 * \parameter GenerateLineSearchIterations: Whether line search iteration
+	 *   should be counted as elastix-iterations.\n
+	 *   example: <tt>(GenerateLineSearchIterations "true")</tt>\n
+	 *   Can only be specified for all resolutions at once. \n
+	 *   Default value: "false".\n
+	 * \parameter MaximumNumberOfIterations: The maximum number of iterations in each resolution. \n
+	 *		example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
+	 *    Default value: 100.\n
+	 * \parameter MaximumNumberOfLineSearchIterations: The maximum number of iterations in each resolution. \n
+	 *		example: <tt>(MaximumNumberOfIterations 10 10 5)</tt> \n
+	 *    Default value: 10.\n
+	 * \parameter StepLength: Set the length of the initial step tried by the
+	 *    itk::MoreThuenteLineSearchOptimizer.\n
+	 *		example: <tt>(StepLength 2.0 1.0 0.5)</tt> \n
+	 *    Default value: 1.0.\n
+	 * \parameter LineSearchValueTolerance: Determine the Wolfe conditions that the
+	 *    itk::MoreThuenteLineSearchOptimizer tries to satisfy.\n
+	 *		example: <tt>(LineSearchValueTolerance 0.0001 0.0001 0.0001)</tt> \n
+	 *    Default value: 0.0001.\n
+	 * \parameter LineSearchGradientTolerance: Determine the Wolfe conditions that the
+	 *    itk::MoreThuenteLineSearchOptimizer tries to satisfy.\n
+	 *		example: <tt>(LineSearchGradientTolerance 0.9 0.9 0.9)</tt> \n
+	 *    Default value: 0.9.\n
+	 * \parameter GradientMagnitudeTolerance: Stopping criterion. See the documentation of the 
+	 *    itk::QuasiNewtonLBFGSOptimizer for more information.\n
+	 *		example: <tt>(GradientMagnitudeTolerance 0.001 0.0001 0.000001)</tt> \n
+	 *	  Default value: 0.000001.\n
+	 * \parameter LBFGSUpdateAccuracy: The "memory" of the optimizer. This determines
+	 *    how many past iterations are used to construct the Hessian approximation.
+	 *    The higher, the more memory is used, but the better the Hessian approximation.
+	 *    If set to zero, The QuasiNewtonLBFGS equals a gradient descent method with
+	 *    line search.\n
+	 *		example: <tt>(LBFGSUpdateAccuracy 5 10 20)</tt> \n
+	 *    Default value: 5.\n
+   * \parameter StopIfWolfeNotSatisfied: Whether to stop the optimisation if in one iteration 
+	 *    the Wolfe conditions can not be satisfied by the itk::MoreThuenteLineSearchOptimizer.\n
+	 *    In general it is wise to do so.\n
+	 *    example: <tt>(StopIfWolfeNotSatisfied "true" "false")</tt> \n
+	 *    Default value: "true".\n
 	 *
 	 * \ingroup Optimizers
 	 */

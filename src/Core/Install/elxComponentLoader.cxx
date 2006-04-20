@@ -163,6 +163,7 @@ namespace elastix
 					this->m_LibLoader->LibExtension() );
 		std::string libprefix = itksys::SystemTools::LowerCase(
 					this->m_LibLoader->LibPrefix() );
+		std::string elxprefix("elx"); //all elxComponents should start with 'elx'.
 		std::string currentLibName("");
 		LibHandleType currentLib;
 		void* addressOfInstallComponentFunction = 0;
@@ -172,6 +173,7 @@ namespace elastix
 		std::string fullFileName("");
 		bool fileIsDir;
 		std::string extension("");
+		std::string prefix("");
 		std::string elxCoreLibName(libprefix + "elxCore" + libextension);
 		std::string elxCommonLibName(libprefix + "elxCommon" + libextension);
 
@@ -180,48 +182,45 @@ namespace elastix
 		for (unsigned int i = 0; i< nrOfFiles; i++)
 		{
 			fileIsLib = false;
-			
 			fileName = componentDir->GetFile(i);
 			fullFileName = pathToExe + std::string("/") + fileName;
-			
+		
+			/** Check if the file might be a elxComponent, based on the naming conventions
+			 * 
+			 * An elxComponent's file name should have the following structure:
+			 *
+			 * {libprefix}{elxprefix}{name}.{libextension}
+			 */
 			fileIsDir =
 				itksys::SystemTools::FileIsDirectory( fullFileName.c_str() );
-
 			if (!fileIsDir)
 			{
 				extension = itksys::SystemTools::LowerCase(
 					itksys::SystemTools::GetFilenameLastExtension( fullFileName.c_str() ) );
-				
-				if ( extension == libextension )
+				prefix = fileName.substr( 0, libprefix.size() );
+				if ( ( extension == libextension ) && ( prefix == libprefix ) )
 				{
-					/** file may be lib, but check the prefix, to be sure: */
-					// \todo : some smart string stuff, with string::compare(prefix::size() ofzo)
-
-					if ( (fileName==elxCoreLibName) || (fileName==elxCommonLibName) )
+					if ( fileName.compare( prefix.size(), elxprefix.size(), elxprefix ) == 0 )
 					{
-					  /** Not a component */
-						fileIsLib = false;
-					}
-					else
-					{
-						fileIsLib = true;
-						currentLibName = fullFileName;
-					}
-				}
-
-			}
+						if ( (fileName!=elxCoreLibName) && (fileName!=elxCommonLibName) )
+						{
+							fileIsLib = true;
+							currentLibName = fullFileName;
+						} //not elxCore or elxCommon
+					} // the file name starts with elxprefix, possibly after the libprefix.
+				} // the file name starts with libprefix and has a libextension
+			} // the file is not a dir.
 			
 			/** Load the lib, check if it's a elxComponent, and install it. */
       if (fileIsLib)
 			{			
 		
-				/** Open the lib */
+				/** Open the lib, and store the handle to the lib,
+				 * because we need it for closing the lib later.
+				 */
 				this->m_LibHandleContainer.push( this->m_LibLoader->OpenLibrary( currentLibName.c_str() ) );
-				//currentLib = this->m_LibLoader->OpenLibrary( currentLibName.c_str() );
 				currentLib = this->m_LibHandleContainer.top();
-				/** Store the handle to the lib, because we need it for closing the lib later. */
-				//LibHandleContainer.push(currentLib);
-				
+			
 				/** Look for the InstallComponent function */
 				addressOfInstallComponentFunction	=
 					this->m_LibLoader->GetSymbolAddress(currentLib, "InstallComponent");
@@ -258,6 +257,9 @@ namespace elastix
 						<< "No InstallComponent function found in: "
 						<< currentLibName
 						<< std::endl;
+					/** 
+					* \todo Close the lib and remove its handle from the LibHandleContainer
+					*/
 	
 				}
 

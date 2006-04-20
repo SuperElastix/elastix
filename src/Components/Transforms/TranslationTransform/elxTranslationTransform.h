@@ -2,6 +2,7 @@
 #define __elxTranslationTransform_H_
 
 #include "itkTranslationTransform.h"
+#include "itkTranslationTransformInitializer.h"
 #include "elxIncludes.h"
 
 namespace elastix
@@ -17,6 +18,10 @@ namespace elastix
 	 * The parameters used in this class are:
 	 * \parameter Transform: Select this transform as follows:\n
 	 *		<tt>(Transform "TranslationTransform")</tt>
+	 * \parameter AutomaticTransformInitialization: whether or not the initial translation
+	 *    between images should be estimated as the distance between their centers.\n
+	 *    example: <tt>(AutomaticTransformInitialization "true")</tt> \n
+	 *    By default "false" is assumed. So, no initial translation.
 	 *
 	 * \ingroup Transforms
 	 */
@@ -80,15 +85,29 @@ namespace elastix
 		typedef typename Superclass2::MovingImageType						MovingImageType;
 		typedef typename Superclass2::ITKBaseType								ITKBaseType;
 		
+		/** Extra typedefs */
+		typedef TranslationTransformInitializer<
+			Self, FixedImageType, MovingImageType>								TransformInitializerType;
+		typedef typename TransformInitializerType::Pointer			TransformInitializerPointer;
+
+
 		/** Execute stuff before the actual registration:
-		 * \li Create initial registration parameters.
+		 * \li Call InitializeTransform.
 		 */
 		virtual void BeforeRegistration(void);
+
+		/** Initialize Transform.
+		 * \li Set all parameters to zero. 
+		 * \li Set initial translation:
+		 *  the initial translation between fixed and moving image is guessed,
+		 *  if the user has set (AutomaticTransformInitialization "true"). 
+		 */
+		virtual void InitializeTransform(void);
 
 	protected:
 
 		/** The constructor. */
-		TranslationTransformElastix();
+		TranslationTransformElastix() {};
 		/** The destructor. */
 		virtual ~TranslationTransformElastix() {};
 		
