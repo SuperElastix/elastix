@@ -61,11 +61,22 @@ MARK_AS_ADVANCED(LIBRARY_OUTPUT_PATH EXECUTABLE_OUTPUT_PATH)
 SET(elastix_LIBRARY_PATH "${LIBRARY_OUTPUT_PATH}")
 SET(elastix_EXECUTABLE_PATH "${EXECUTABLE_OUTPUT_PATH}")
 
+#---------------------------------------------------------------------
 # Set correct Linker options for GCC. Only tested for Linux.
+
 IF(CMAKE_COMPILER_IS_GNUCXX)
   # -W1,-E means that the dynamic symbol table is exported. The component can now
 	# access the symbols of the executable.
   SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}	-W1,-E")
+ENDIF(CMAKE_COMPILER_IS_GNUCXX)
+
+#--------------------------------------------------------------------
+# Make sure the GDCM lib is not used. It causes segmentation faults.
+
+IF(CMAKE_COMPILER_IS_GNUCXX)
+  SET(ELX_GDCMHACK ${elastix_SOURCE_DIR}/Common/itkGDCMImageIOFactory.cxx   CACHE INTERNAL "Hack to avoid the GDCMlib")
+ELSE(CMAKE_COMPILER_IS_GNUCXX)
+  SET(ELX_GDCMHACK CACHE INTERNAL "Hack to avoid the GDCMlib")
 ENDIF(CMAKE_COMPILER_IS_GNUCXX)
 
 #---------------------------------------------------------------------

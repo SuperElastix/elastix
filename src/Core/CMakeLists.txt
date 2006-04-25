@@ -77,7 +77,8 @@ IF(CMAKE_COMPILER_IS_GNUCXX)
   SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
 ENDIF(CMAKE_COMPILER_IS_GNUCXX)
 
-ADD_LIBRARY(elxCore 
+ADD_LIBRARY(elxCore
+${ELX_GDCMHACK} 
 ${KernelFilesForComponents}
 ${InstallFilesForComponents}
 ${ConfigurationFiles}
@@ -93,6 +94,7 @@ ITKCommon )
 #param
 
 ADD_EXECUTABLE(elastix
+${ELX_GDCMHACK} 
 Main/elastix.cxx
 Main/elastix.h
 Kernel/elxElastixMain.cxx
@@ -100,6 +102,7 @@ Kernel/elxElastixMain.h
 ${InstallFilesForExecutables} )
 
 ADD_EXECUTABLE(transformix
+${ELX_GDCMHACK} 
 Main/transformix.cxx
 Main/transformix.h
 Kernel/elxElastixMain.cxx

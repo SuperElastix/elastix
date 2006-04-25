@@ -49,6 +49,7 @@ IF(CMAKE_COMPILER_IS_GNUCXX)
 ENDIF(CMAKE_COMPILER_IS_GNUCXX)
 
 ADD_LIBRARY(elxCommon
+  ${ELX_GDCMHACK}
   ${CommonFiles}
 	${TransformGrouperFiles}
 	${LineSearchOptimizersFiles} )
