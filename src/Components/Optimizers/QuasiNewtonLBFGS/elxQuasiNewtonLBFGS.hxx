@@ -1,5 +1,3 @@
-/** nog een test */
-
 #ifndef __elxQuasiNewtonLBFGS_hxx
 #define __elxQuasiNewtonLBFGS_hxx
 
