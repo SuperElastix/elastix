@@ -1,4 +1,3 @@
-/** test3 */
 #ifndef __elxFullSearchOptimizer_hxx
 #define __elxFullSearchOptimizer_hxx
 
