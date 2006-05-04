@@ -92,6 +92,7 @@ namespace elastix
 		typedef typename Superclass2::FixedImageType						FixedImageType;
 		typedef typename Superclass2::MovingImageType						MovingImageType;
 		typedef typename Superclass2::ITKBaseType								ITKBaseType;
+		typedef typename Superclass2::CombinationTransformType	CombinationTransformType;
 		
 		/** Extra typedefs */
 		typedef TranslationTransformInitializer<

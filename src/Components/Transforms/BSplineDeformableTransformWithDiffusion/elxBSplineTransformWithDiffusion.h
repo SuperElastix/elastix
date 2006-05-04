@@ -228,6 +228,7 @@ using namespace itk;
 		typedef typename Superclass2::FixedImageType						FixedImageType;
 		typedef typename Superclass2::MovingImageType						MovingImageType;
 		typedef typename Superclass2::ITKBaseType								ITKBaseType;
+		typedef typename Superclass2::CombinationTransformType	CombinationTransformType;
 
 		/** Other typedef's inherited from Superclass1. */
 		typedef typename Superclass1::IntermediaryDFTransformType					IntermediaryDFTransformType;

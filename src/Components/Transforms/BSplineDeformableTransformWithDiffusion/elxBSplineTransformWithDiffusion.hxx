@@ -923,7 +923,7 @@ using namespace itk;
 		std::string howToCombineTransforms = "Add"; // default
 		this->m_Configuration->ReadParameter( howToCombineTransforms, "HowToCombineTransforms", 0, true );
 		
-		/** Convert 'this' to a pointer to a TransformGrouperInterface and set how
+		/** Convert 'this' to a pointer to a CombinationTransformType and set how
 		 * to combine the current transform with the initial transform */
 		/** Cast to transform grouper. */
 		CombinationTransformType * thisAsGrouper = 
