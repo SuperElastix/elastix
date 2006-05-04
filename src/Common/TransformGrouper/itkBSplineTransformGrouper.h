@@ -74,7 +74,11 @@ namespace itk
 				return this->Superclass::TransformPoint( point );
 			}
 
-			/** TransformPoint with 5 input argument. */
+			/** TransformPoint with 5 input argument. 
+			 * \warning: Concatenate is not supported! 
+			 * but anyway, this class is replaced by the BSplineCombinationTransform,
+			 * where this is fixed.
+			 */
 			virtual void TransformPoint ( const InputPointType &inputPoint,
 				OutputPointType &outputPoint, WeightsType &weights,
 				ParameterIndexArrayType &indices, bool &inside) const

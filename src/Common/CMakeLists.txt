@@ -3,8 +3,11 @@ PROJECT(elxCommon)
 SUBDIRS(ParameterFileParser)
 SUBDIRS(xout)
 
-
 SET(CommonFiles
+itkCombinationTransform.h
+itkCombinationTransform.hxx
+itkBSplineCombinationTransform.h
+itkBSplineCombinationTransform.hxx
 elxTimer.cxx
 elxTimer.h
 itkNDImageBase.h
@@ -23,22 +26,12 @@ itkScaledSingleValuedNonLinearOptimizer.cxx
 itkTranslationTransformInitializer.h
 itkTranslationTransformInitializer.hxx)
 
-SET( TransformGrouperFiles 
-TransformGrouper/itkBSplineTransformGrouper.h
-TransformGrouper/itkBSplineTransformGrouper.hxx
-TransformGrouper/itkTransformGrouper.h
-TransformGrouper/itkTransformGrouper.hxx
-TransformGrouper/itkTransformGrouperInterface.h )
-
-
 SET( LineSearchOptimizersFiles
 LineSearchOptimizers/itkMoreThuenteLineSearchOptimizer.h
 LineSearchOptimizers/itkMoreThuenteLineSearchOptimizer.cxx
 LineSearchOptimizers/itkLineSearchOptimizer.h
 LineSearchOptimizers/itkLineSearchOptimizer.cxx)
 
-
-SOURCE_GROUP("TransformGrouper" FILES ${TransformGrouperFiles} )
 SOURCE_GROUP("LineSearchOptimizers" FILES ${LineSearchOptimizersFiles} )
 
 IF(CMAKE_COMPILER_IS_GNUCXX)
@@ -51,7 +44,6 @@ ENDIF(CMAKE_COMPILER_IS_GNUCXX)
 ADD_LIBRARY(elxCommon
   ${ELX_GDCMHACK}
   ${CommonFiles}
-	${TransformGrouperFiles}
 	${LineSearchOptimizersFiles} )
 
 TARGET_LINK_LIBRARIES(elxCommon
@@ -59,3 +51,4 @@ ITKBasicFilters
 ITKNumerics
 ITKIO
 ITKCommon )
+
