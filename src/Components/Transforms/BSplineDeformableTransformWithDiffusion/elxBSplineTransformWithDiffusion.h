@@ -5,7 +5,7 @@
 #define __VSplineOrder 3
 
 #include "itkBSplineDeformableTransform.h"
-#include "itkBSplineTransformGrouper.h"
+#include "itkBSplineCombinationTransform.h"
 #include "itkBSplineResampleImageFilterBase.h"
 #include "itkBSplineUpsampleImageFilter.h"
 
@@ -138,12 +138,10 @@ using namespace itk;
 		class BSplineTransformWithDiffusion:
 	public
 	DeformationFieldRegulizerForBSpline<
-		BSplineTransformGrouper<
-			BSplineDeformableTransform<
-			  ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,
-				elx::TransformBase<TElastix>::FixedImageDimension,
-				__VSplineOrder
-			>
+		BSplineCombinationTransform<
+			ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,
+			elx::TransformBase<TElastix>::FixedImageDimension,
+			__VSplineOrder
 		>
 	>,
 	public
@@ -153,13 +151,22 @@ using namespace itk;
 
 		/** Standard ITK-stuff. */
 		typedef BSplineTransformWithDiffusion				Self;
+
 		typedef DeformationFieldRegulizerForBSpline<
-			BSplineTransformGrouper<
-				BSplineDeformableTransform<
-				  typename elx::TransformBase<TElastix>::CoordRepType,
-					elx::TransformBase<TElastix>::FixedImageDimension,
-					__VSplineOrder > > >									Superclass1;
+			BSplineCombinationTransform<
+				typename elx::TransformBase<TElastix>::CoordRepType,
+				elx::TransformBase<TElastix>::FixedImageDimension,
+				__VSplineOrder > >											Superclass1;
+		
 		typedef elx::TransformBase<TElastix>				Superclass2;
+
+		/** The ITK-class that provides most of the functionality, and
+		 * that is set as the "CurrentTransform" in the CombinationTransform */
+		typedef BSplineDeformableTransform<
+		  typename elx::TransformBase<TElastix>::CoordRepType,
+			elx::TransformBase<TElastix>::FixedImageDimension,
+			__VSplineOrder > 													BSplineTransformType;
+
 		typedef SmartPointer<Self>									Pointer;
 		typedef SmartPointer<const Self>						ConstPointer;
 		
@@ -195,20 +202,20 @@ using namespace itk;
 		typedef typename Superclass1::OutputPointType						OutputPointType;
 		
 		/** Typedef's specific for the BSplineTransform. */
-		typedef typename Superclass1::PixelType									PixelType;
-		typedef typename Superclass1::ImageType									ImageType;
-		typedef typename Superclass1::ImagePointer							ImagePointer;
-		typedef typename Superclass1::RegionType								RegionType;
-		typedef typename Superclass1::IndexType									IndexType;
-		typedef typename Superclass1::SizeType									SizeType;
-		typedef typename Superclass1::SpacingType								SpacingType;
-		typedef typename Superclass1::OriginType								OriginType;
-		typedef typename Superclass1::BulkTransformType					BulkTransformType;
-		typedef typename Superclass1::BulkTransformPointer			BulkTransformPointer;
-		typedef typename Superclass1::WeightsFunctionType				WeightsFunctionType;
-		typedef typename Superclass1::WeightsType								WeightsType;
-		typedef typename Superclass1::ContinuousIndexType				ContinuousIndexType;
-		typedef typename Superclass1::ParameterIndexArrayType		ParameterIndexArrayType;
+		typedef typename BSplineTransformType::PixelType									PixelType;
+		typedef typename BSplineTransformType::ImageType									ImageType;
+		typedef typename BSplineTransformType::ImagePointer								ImagePointer;
+		typedef typename BSplineTransformType::RegionType									RegionType;
+		typedef typename BSplineTransformType::IndexType									IndexType;
+		typedef typename BSplineTransformType::SizeType										SizeType;
+		typedef typename BSplineTransformType::SpacingType								SpacingType;
+		typedef typename BSplineTransformType::OriginType									OriginType;
+		typedef typename BSplineTransformType::BulkTransformType					BulkTransformType;
+		typedef typename BSplineTransformType::BulkTransformPointer				BulkTransformPointer;
+		typedef typename BSplineTransformType::WeightsFunctionType				WeightsFunctionType;
+		typedef typename BSplineTransformType::WeightsType								WeightsType;
+		typedef typename BSplineTransformType::ContinuousIndexType				ContinuousIndexType;
+		typedef typename BSplineTransformType::ParameterIndexArrayType		ParameterIndexArrayType;
 
 		/** Typedef's from TransformBase. */
 		typedef typename Superclass2::ElastixType								ElastixType;
@@ -232,9 +239,11 @@ using namespace itk;
 		
 		/** Other typedef's.*/
 		typedef	Image< short,
-			itkGetStaticConstMacro( SpaceDimension ) >	DummyImageType;
+			itkGetStaticConstMacro( SpaceDimension ) >			DummyImageType;
 		typedef ImageRegionConstIterator<
-			DummyImageType >														DummyIteratorType;
+			DummyImageType >																DummyIteratorType;
+		typedef typename BSplineTransformType::Pointer		BSplineTransformPointer;
+		typedef typename Superclass1::Superclass				  GenericDeformationFieldRegulizer;
 
 		/** Typedef's for the diffusion of the deformation field. */
 		typedef ImageFileReader< VectorImageType >				VectorReaderType;
@@ -299,6 +308,28 @@ using namespace itk;
 		/** Diffuse the deformation field. */
 		void DiffuseDeformationField(void);
 
+		/** Method to transform a point.
+		 * This method just calls the implementation from the 
+		 * GenericDeformationFieldRegulizer. This is necessary, since:
+		 * The DeformationFieldRegulizerForBSpline is used which expects
+		 * that its template argument is a BSplineDeformableTransform. This is 
+		 * not the case, because we gave it a BSplineCombinationTransform.
+		 * This last class has a slightly different behaviour of the 
+		 * TransformPoint() method (it does not call the TransformPoint() with
+		 * with 5 arguments, as the BSplineDeformableTransform does).
+		 */
+		virtual OutputPointType TransformPoint( const InputPointType  & point ) const;
+
+		/**  Method to transform a point with extra arguments. Just calls 
+		 * the Superclass1's implementation. Has to be present here since it is an
+		 * overloaded function. */
+		virtual void TransformPoint(
+			const InputPointType &inputPoint,
+			OutputPointType &outputPoint,
+			WeightsType &weights,
+			ParameterIndexArrayType &indices, 
+			bool &inside ) const;
+
 	protected:
 
 		/** The constructor. */
@@ -346,6 +377,10 @@ using namespace itk;
 
 		/** The B-spline parameters, which is going to be filled with zeros. */
 		ParametersType m_BSplineParameters;
+
+		/** The internal BSplineTransform, set as a current transform in 
+		 * the combination transform */
+		BSplineTransformPointer m_BSplineTransform;
 
 	}; // end class BSplineTransformWithDiffusion
 	

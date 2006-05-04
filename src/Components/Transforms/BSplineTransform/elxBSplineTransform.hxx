@@ -22,6 +22,9 @@ using namespace itk;
 		BSplineTransform<TElastix>::
 		BSplineTransform()
 	{
+		m_BSplineTransform =BSplineTransformType::New();
+		this->SetCurrentTransform(this->m_BSplineTransform);
+
 		/** Initialize. */
 		this->m_GridSpacingFactor.Fill( 8.0 );
 		this->m_UpsampleBSplineGridOption.push_back( true );
@@ -64,9 +67,9 @@ using namespace itk;
 		/** Set it all. */
 		gridregion.SetIndex( gridindex );
 		gridregion.SetSize( gridsize );
-		this->SetGridRegion( gridregion );
-		this->SetGridSpacing( gridspacing );
-		this->SetGridOrigin( gridorigin );
+		this->m_BSplineTransform->SetGridRegion( gridregion );
+		this->m_BSplineTransform->SetGridSpacing( gridspacing );
+		this->m_BSplineTransform->SetGridOrigin( gridorigin );
     
 		/** Task 2 - Give the registration an initial parameter-array. */
 		ParametersType dummyInitialParameters( this->GetNumberOfParameters() );
@@ -88,7 +91,8 @@ using namespace itk;
 		::BeforeEachResolution(void)
 	{
 		/** What is the current resolution level? */
-		unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
+		unsigned int level = 
+			this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
 		/** What is the UpsampleGridOption? See SetInitialGrid(). */
 		
@@ -101,7 +105,10 @@ using namespace itk;
 		else
 		{
 			/** Check if the BSpline grid should be upsampled now. */
-			if ( this->m_UpsampleBSplineGridOption[ level - 1 ] ) this->IncreaseScale();
+			if ( this->m_UpsampleBSplineGridOption[ level - 1 ] )
+			{
+				this->IncreaseScale();
+			}
 			/** Otherwise, nothing is done with the BSpline-Grid. */
 		}
 	
@@ -229,9 +236,9 @@ using namespace itk;
 		/** Set the size data in the transform. */
 		gridregion.SetSize( gridsize );
 		gridregion.SetIndex( gridindex );
-		this->SetGridRegion( gridregion );
-		this->SetGridSpacing( gridspacing );
-		this->SetGridOrigin( gridorigin );
+		this->m_BSplineTransform->SetGridRegion( gridregion );
+		this->m_BSplineTransform->SetGridSpacing( gridspacing );
+		this->m_BSplineTransform->SetGridOrigin( gridorigin );
 		
 		/** Set initial parameters to 0.0. */
 		ParametersType initialParameters( this->GetNumberOfParameters() );
@@ -264,11 +271,11 @@ using namespace itk;
 		typedef ImageRegionConstIterator<ImageType>		IteratorType;
 
 		/** The current region/spacing settings of the grid. */
-		RegionType gridregionLow = this->GetGridRegion();
+		RegionType gridregionLow = this->m_BSplineTransform->GetGridRegion();
 		SizeType gridsizeLow = gridregionLow.GetSize();
 		IndexType gridindexLow = gridregionLow.GetIndex();
-		SpacingType gridspacingLow = this->GetGridSpacing();
-		OriginType gridoriginLow = this->GetGridOrigin();
+		SpacingType gridspacingLow = this->m_BSplineTransform->GetGridSpacing();
+		OriginType gridoriginLow = this->m_BSplineTransform->GetGridOrigin();
 
 		/** Get the fixed image. */
 		typename FixedImageType::Pointer fixedimage;
@@ -305,15 +312,16 @@ using namespace itk;
 		/** Get the pointer to the data in latestParameters. */
 		PixelType * dataPointer = static_cast<PixelType *>( latestParameters.data_block() );
 		/** Get the number of pixels that should go into one coefficient image. */
-		unsigned int numberOfPixels = ( this->GetGridRegion() ).GetNumberOfPixels();
+		unsigned int numberOfPixels = 
+			( this->m_BSplineTransform->GetGridRegion() ).GetNumberOfPixels();
 		
 		/** Set the correct region/size info of the coefficient image
 		 * that will be filled with the current parameters.
 		 */
 		ImagePointer coeffs1 = ImageType::New();
-		coeffs1->SetRegions( this->GetGridRegion() );
-		coeffs1->SetOrigin( (this->GetGridOrigin()).GetDataPointer() );
-		coeffs1->SetSpacing( (this->GetGridSpacing()).GetDataPointer() );
+		coeffs1->SetRegions( this->m_BSplineTransform->GetGridRegion() );
+		coeffs1->SetOrigin( (this->m_BSplineTransform->GetGridOrigin()).GetDataPointer() );
+		coeffs1->SetSpacing( (this->m_BSplineTransform->GetGridSpacing()).GetDataPointer() );
 		//coeffs1->Allocate() not needed because the data is set by directly pointing
 		// to an existing piece of memory.
 		
@@ -403,9 +411,9 @@ using namespace itk;
 		} // end for dimension loop
 		
 		/** Set the initial parameters for the next resolution level. */
-		this->SetGridRegion( gridregionHigh );
-		this->SetGridOrigin( gridoriginHigh );
-		this->SetGridSpacing( gridspacingHigh );
+		this->m_BSplineTransform->SetGridRegion( gridregionHigh );
+		this->m_BSplineTransform->SetGridOrigin( gridoriginHigh );
+		this->m_BSplineTransform->SetGridSpacing( gridspacingHigh );
 		this->m_Registration->GetAsITKBaseType()->
 			SetInitialTransformParametersOfNextLevel( parameters_out );
 	
@@ -447,9 +455,9 @@ using namespace itk;
 		/** Set it all.*/
 		gridregion.SetIndex( gridindex );
 		gridregion.SetSize( gridsize );
-		this->SetGridRegion( gridregion );
-		this->SetGridSpacing( gridspacing );
-		this->SetGridOrigin( gridorigin );
+		this->m_BSplineTransform->SetGridRegion( gridregion );
+		this->m_BSplineTransform->SetGridSpacing( gridspacing );
+		this->m_BSplineTransform->SetGridOrigin( gridorigin );
 
 		/** Call the ReadFromFile from the TransformBase.
 		 * This must be done after setting the Grid, because later the
@@ -481,10 +489,10 @@ using namespace itk;
 		/** Get the GridSize, GridIndex, GridSpacing and
 		 * GridOrigin of this transform.
 		 */
-		SizeType size = this->GetGridRegion().GetSize();
-		IndexType index = this->GetGridRegion().GetIndex();
-		SpacingType spacing = this->GetGridSpacing();
-		OriginType origin = this->GetGridOrigin();
+		SizeType size = this->m_BSplineTransform->GetGridRegion().GetSize();
+		IndexType index = this->m_BSplineTransform->GetGridRegion().GetIndex();
+		SpacingType spacing = this->m_BSplineTransform->GetGridSpacing();
+		OriginType origin = this->m_BSplineTransform->GetGridOrigin();
 
 		/** Write the GridSize of this transform. */
 		xout["transpar"] << "(GridSize ";
@@ -524,7 +532,8 @@ using namespace itk;
 		xout["transpar"] << origin[ SpaceDimension - 1 ] << ")" << std::endl;
 
 		/** Set the precision back to default value. */
-		xout["transpar"] << std::setprecision( this->m_Elastix->GetDefaultOutputPrecision() );
+		xout["transpar"] << std::setprecision(
+			this->m_Elastix->GetDefaultOutputPrecision() );
 
 	} // end WriteToFile
 

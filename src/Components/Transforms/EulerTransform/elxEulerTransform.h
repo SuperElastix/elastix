@@ -44,23 +44,31 @@ using namespace itk;
 	 *
 	 * \ingroup Transforms
 	 */
-	
+
 	template < class TElastix >
 		class EulerTransformElastix:
-	    public 	TransformGrouper<
-		    EulerTransform<
+	    public CombinationTransform<
 		    ITK_TYPENAME elx::TransformBase< TElastix >::CoordRepType,
-			  elx::TransformBase< TElastix >::FixedImageDimension >	>,
+			  elx::TransformBase< TElastix >::FixedImageDimension >,
 			public elx::TransformBase< TElastix >
 	{
 	public:
 		
 		/** Standard ITK-stuff.*/
 		typedef EulerTransformElastix																Self;
-		typedef EulerTransform<
+		
+		typedef CombinationTransform<
 			typename elx::TransformBase< TElastix >::CoordRepType,
 			elx::TransformBase< TElastix >::FixedImageDimension >			Superclass1;
+
 		typedef elx::TransformBase< TElastix >											Superclass2;
+
+		/** The ITK-class that provides most of the functionality, and
+		 * that is set as the "CurrentTransform" in the CombinationTransform */
+		typedef EulerTransform<
+			typename elx::TransformBase< TElastix >::CoordRepType,
+			elx::TransformBase< TElastix >::FixedImageDimension >			EulerTransformType;
+
 		typedef SmartPointer<Self>																	Pointer;
 		typedef SmartPointer<const Self>														ConstPointer;
 		
@@ -68,7 +76,8 @@ using namespace itk;
 		itkNewMacro( Self );
 		
 		/** Run-time type information (and related methods). */
-		itkTypeMacro( EulerTransformElastix, EulerTransform );
+		//itkTypeMacro( EulerTransformElastix, EulerTransform );
+		itkTypeMacro( EulerTransformElastix, CombinationTransform );
 
 		/** Name of this class.
 		 * Use this name in the parameter file to select this specific transform. \n
@@ -85,7 +94,7 @@ using namespace itk;
 		typedef typename Superclass1::ScalarType									ScalarType;
 		typedef typename Superclass1::ParametersType							ParametersType;
 		typedef typename Superclass1::JacobianType								JacobianType;
-		typedef typename Superclass1::OffsetType									OffsetType;
+		
 		typedef typename Superclass1::InputPointType							InputPointType;
 		typedef typename Superclass1::OutputPointType							OutputPointType;
 		typedef typename Superclass1::InputVectorType							InputVectorType;
@@ -96,7 +105,10 @@ using namespace itk;
 		typedef typename Superclass1::OutputVnlVectorType					OutputVnlVectorType;
 		
 		/** NOTE: use this one only in 3D (otherwise it's just an int). */
-		typedef typename Superclass1::AngleType										AngleType;
+		typedef typename EulerTransformType::AngleType						AngleType;
+		
+		typedef typename EulerTransformType::Pointer							EulerTransformPointer;
+		typedef typename EulerTransformType::OffsetType						OffsetType;
 		
 		/** Typedef's inherited from TransformBase. */
 		typedef typename Superclass2::ElastixType								ElastixType;
@@ -123,7 +135,7 @@ using namespace itk;
 		typedef typename FixedImageType::RegionType							RegionType;
 
 		typedef CenteredTransformInitializer<
-			Self, FixedImageType, MovingImageType>								TransformInitializerType;
+			EulerTransformType, FixedImageType, MovingImageType>	TransformInitializerType;
 		typedef typename TransformInitializerType::Pointer			TransformInitializerPointer;
 		
 		/** Execute stuff before the actual registration:
@@ -185,6 +197,8 @@ using namespace itk;
 		EulerTransformElastix( const Self& );	// purposely not implemented
 		/** The private copy constructor. */
 		void operator=( const Self& );				// purposely not implemented
+
+		EulerTransformPointer				m_EulerTransform;
 		
 	}; // end class EulerTransformElastix
 	

@@ -28,20 +28,28 @@ namespace elastix
 
 	template < class TElastix >
 		class TranslationTransformElastix:
-			public TransformGrouper<
-				TranslationTransform<
+			public CombinationTransform<
 					ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,
-					elx::TransformBase<TElastix>::FixedImageDimension >		> ,
+					elx::TransformBase<TElastix>::FixedImageDimension > ,
 			public elx::TransformBase<TElastix>
 	{
 	public:
 		
 		/** Standard ITK-stuff. */
 		typedef TranslationTransformElastix											Self;
-		typedef TranslationTransform<
+		
+		typedef CombinationTransform<
 			typename elx::TransformBase<TElastix>::CoordRepType,
 			elx::TransformBase<TElastix>::FixedImageDimension >		Superclass1;
+		
 		typedef elx::TransformBase<TElastix>										Superclass2;
+		
+		/** The ITK-class that provides most of the functionality, and
+		 * that is set as the "CurrentTransform" in the CombinationTransform */
+		typedef TranslationTransform<
+			typename elx::TransformBase<TElastix>::CoordRepType,
+			elx::TransformBase<TElastix>::FixedImageDimension >		TranslationTransformType;
+		
 		typedef SmartPointer<Self>															Pointer;
 		typedef SmartPointer<const Self>												ConstPointer;
 		
@@ -49,7 +57,7 @@ namespace elastix
 		itkNewMacro( Self );
 		
 		/** Run-time type information (and related methods). */
-		itkTypeMacro( TranslationTransformElastix, TranslationTransform );
+		itkTypeMacro( TranslationTransformElastix, CombinationTransform );
 
 		/** Name of this class.
 		 * Use this name in the parameter file to select this specific transform. \n
@@ -87,9 +95,11 @@ namespace elastix
 		
 		/** Extra typedefs */
 		typedef TranslationTransformInitializer<
-			Self, FixedImageType, MovingImageType>								TransformInitializerType;
+			TranslationTransformType,
+			FixedImageType,
+			MovingImageType>																			TransformInitializerType;
 		typedef typename TransformInitializerType::Pointer			TransformInitializerPointer;
-
+		typedef typename TranslationTransformType::Pointer			TranslationTransformPointer;
 
 		/** Execute stuff before the actual registration:
 		 * \li Call InitializeTransform.
@@ -107,9 +117,11 @@ namespace elastix
 	protected:
 
 		/** The constructor. */
-		TranslationTransformElastix() {};
+		TranslationTransformElastix();
 		/** The destructor. */
 		virtual ~TranslationTransformElastix() {};
+
+		TranslationTransformPointer m_TranslationTransform;
 		
 	private:
 

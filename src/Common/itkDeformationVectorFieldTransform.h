@@ -64,6 +64,7 @@ namespace itk
 		
 		/** Dimension of the domain space. */
 		itkStaticConstMacro( SpaceDimension, unsigned int, NDimensions );
+		itkStaticConstMacro( SplineOrder, unsigned int, Superclass::SplineOrder );
 		
 		/** Typedef's inherited from Superclass. */
 		typedef typename Superclass::ScalarType							ScalarType;

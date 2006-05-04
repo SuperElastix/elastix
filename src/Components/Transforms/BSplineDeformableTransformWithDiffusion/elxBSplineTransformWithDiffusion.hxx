@@ -21,6 +21,10 @@ using namespace itk;
 		BSplineTransformWithDiffusion<TElastix>
 		::BSplineTransformWithDiffusion()
 	{
+		/** Set up CombinationTransform */
+		this->m_BSplineTransform = BSplineTransformType::New();
+		this->SetCurrentTransform(this->m_BSplineTransform);
+
 		/** Initialize some things. */
 		this->m_GridSpacingFactor.Fill( 8.0 );
 		this->m_Interpolator	= InterpolatorType::New();
@@ -84,9 +88,9 @@ using namespace itk;
 		/** Set it all. */
 		gridregion.SetIndex( gridindex );
 		gridregion.SetSize( gridsize );
-		this->SetGridRegion( gridregion );
-		this->SetGridSpacing( gridspacing );
-		this->SetGridOrigin( gridorigin );
+		this->m_BSplineTransform->SetGridRegion( gridregion );
+		this->m_BSplineTransform->SetGridSpacing( gridspacing );
+		this->m_BSplineTransform->SetGridOrigin( gridorigin );
     
 		/** Task 2 - Give the registration an initial parameter-array. */
 		ParametersType dummyInitialParameters( this->GetNumberOfParameters() );
@@ -618,9 +622,9 @@ using namespace itk;
 		/** Set the size data in the transform. */
 		gridregion.SetSize( gridsize );
 		gridregion.SetIndex( gridindex );
-		this->SetGridRegion( gridregion );
-		this->SetGridSpacing( gridspacing );
-		this->SetGridOrigin( gridorigin );
+		this->m_BSplineTransform->SetGridRegion( gridregion );
+		this->m_BSplineTransform->SetGridSpacing( gridspacing );
+		this->m_BSplineTransform->SetGridOrigin( gridorigin );
 		
 		/** Set initial parameters to 0.0. */
 		ParametersType initialParameters( this->GetNumberOfParameters() );
@@ -653,11 +657,11 @@ using namespace itk;
 		typedef ImageRegionConstIterator<ImageType>		IteratorType;
 
 		/** The current region/spacing settings of the grid. */
-		RegionType gridregionLow = this->GetGridRegion();
+		RegionType gridregionLow = this->m_BSplineTransform->GetGridRegion();
 		SizeType gridsizeLow = gridregionLow.GetSize();
 		IndexType gridindexLow = gridregionLow.GetIndex();
-		SpacingType gridspacingLow = this->GetGridSpacing();
-		OriginType gridoriginLow = this->GetGridOrigin();
+		SpacingType gridspacingLow = this->m_BSplineTransform->GetGridSpacing();
+		OriginType gridoriginLow = this->m_BSplineTransform->GetGridOrigin();
 
 		/** Get the fixed image. */
 		typename FixedImageType::Pointer fixedimage;
@@ -694,15 +698,16 @@ using namespace itk;
 		/** Get the pointer to the data in latestParameters. */
 		PixelType * dataPointer = static_cast<PixelType *>( latestParameters.data_block() );
 		/** Get the number of pixels that should go into one coefficient image. */
-		unsigned int numberOfPixels = ( this->GetGridRegion() ).GetNumberOfPixels();
+		unsigned int numberOfPixels = 
+			( this->m_BSplineTransform->GetGridRegion() ).GetNumberOfPixels();
 		
 		/** Set the correct region/size info of the coefficient image
 		 * that will be filled with the current parameters.
 		 */
 		ImagePointer coeffs1 = ImageType::New();
-		coeffs1->SetRegions( this->GetGridRegion() );
-		coeffs1->SetOrigin( (this->GetGridOrigin()).GetDataPointer() );
-		coeffs1->SetSpacing( (this->GetGridSpacing()).GetDataPointer() );
+		coeffs1->SetRegions( this->m_BSplineTransform->GetGridRegion() );
+		coeffs1->SetOrigin( (this->m_BSplineTransform->GetGridOrigin()).GetDataPointer() );
+		coeffs1->SetSpacing( (this->m_BSplineTransform->GetGridSpacing()).GetDataPointer() );
 		//coeffs1->Allocate() not needed because the data is set by directly pointing
 		// to an existing piece of memory.
 		
@@ -792,9 +797,9 @@ using namespace itk;
 		} // end for dimension loop
 		
 		/** Set the initial parameters for the next resolution level. */
-		this->SetGridRegion( gridregionHigh );
-		this->SetGridOrigin( gridoriginHigh );
-		this->SetGridSpacing( gridspacingHigh );
+		this->m_BSplineTransform->SetGridRegion( gridregionHigh );
+		this->m_BSplineTransform->SetGridOrigin( gridoriginHigh );
+		this->m_BSplineTransform->SetGridSpacing( gridspacingHigh );
 		this->m_Registration->GetAsITKBaseType()->
 			SetInitialTransformParametersOfNextLevel( parameters_out );
 	
@@ -880,9 +885,9 @@ using namespace itk;
 		/** Set the B-spline grid. */
 		gridregion.SetIndex( gridindex );
 		gridregion.SetSize( gridsize );
-		this->SetGridRegion( gridregion );
-		this->SetGridSpacing( gridspacing );
-		this->SetGridOrigin( gridorigin );
+		this->m_BSplineTransform->SetGridRegion( gridregion );
+		this->m_BSplineTransform->SetGridSpacing( gridspacing );
+		this->m_BSplineTransform->SetGridOrigin( gridorigin );
 
 		/** Fill and set the B-spline parameters. */
 		unsigned int nop = 0;
@@ -909,10 +914,10 @@ using namespace itk;
 		/** Call the function ReadInitialTransformFromFile.*/
 		if ( fileName != "NoInitialTransform" )
 		{			
-			this->Superclass2::ReadInitialTransformFromFile( fileName.c_str() );
+			this->ReadInitialTransformFromFile( fileName.c_str() );
 		}
 
-		/** Read from the configuration file how to combine the
+		/** Task 3 - Read from the configuration file how to combine the
 		 * initial transform with the current transform.
 		 */
 		std::string howToCombineTransforms = "Add"; // default
@@ -920,12 +925,20 @@ using namespace itk;
 		
 		/** Convert 'this' to a pointer to a TransformGrouperInterface and set how
 		 * to combine the current transform with the initial transform */
-		TransformGrouperInterface * thisAsGrouper = 
-			dynamic_cast< TransformGrouperInterface * >(this);
+		/** Cast to transform grouper. */
+		CombinationTransformType * thisAsGrouper = 
+			dynamic_cast< CombinationTransformType * >(this);
 		if ( thisAsGrouper )
 		{
-			thisAsGrouper->SetGrouper( howToCombineTransforms );
-		}		
+			if (howToCombineTransforms == "Compose" )
+			{
+				thisAsGrouper->SetUseComposition( true );
+			}
+			else
+			{
+				thisAsGrouper->SetUseComposition( false );
+			}
+		}
 
 		/** Task 4 - Remember the name of the TransformParametersFileName.
 		 * This will be needed when another transform will use this transform
@@ -1002,10 +1015,10 @@ using namespace itk;
 		/** Get the GridSize, GridIndex, GridSpacing and
 		 * GridOrigin of this transform.
 		 */
-		SizeType size = this->GetGridRegion().GetSize();
-		IndexType index = this->GetGridRegion().GetIndex();
-		SpacingType spacing = this->GetGridSpacing();
-		OriginType origin = this->GetGridOrigin();
+		SizeType size = this->m_BSplineTransform->GetGridRegion().GetSize();
+		IndexType index = this->m_BSplineTransform->GetGridRegion().GetIndex();
+		SpacingType spacing = this->m_BSplineTransform->GetGridSpacing();
+		OriginType origin = this->m_BSplineTransform->GetGridOrigin();
 
 		/** Write the GridSize of this transform.*/
 		xout["transpar"] << "(GridSize ";
@@ -1045,7 +1058,8 @@ using namespace itk;
 		xout["transpar"] << origin[ SpaceDimension - 1 ] << ")" << std::endl;
 
 		/** Set the precision back to default value.*/
-		xout["transpar"] << std::setprecision( this->m_Elastix->GetDefaultOutputPrecision() );
+		xout["transpar"] << std::setprecision(
+			this->m_Elastix->GetDefaultOutputPrecision() );
 		
 	} // end WriteToFile
 
@@ -1282,8 +1296,7 @@ using namespace itk;
 		/** Get rid of the initial transform, because this is now captured
 		 * within the DeformationFieldTransform.
 		 */
-		this->SetGrouper( "NoInitialTransform" );
-		this->Superclass1::SetInitialTransform( 0 );
+		this->Superclass2::SetInitialTransform( 0 );
 
 		/** ------------- 7: Write images. ------------- */
 
@@ -1380,6 +1393,37 @@ using namespace itk;
 		} // end if this->m_WriteDiffusionFiles
 
 	} // end DiffuseDeformationField
+
+	
+	/**
+	 * ******************* TransformPoint ******************
+	 */
+
+	template <class TElastix>
+		typename BSplineTransformWithDiffusion<TElastix>::OutputPointType
+		BSplineTransformWithDiffusion<TElastix>
+		::TransformPoint(const InputPointType  & point ) const
+	{
+		return this->GenericDeformationFieldRegulizer::TransformPoint(point);
+	} // end TransformPoint
+
+
+	/**
+	 * ******************* TransformPoint ******************
+	 */
+
+	template <class TElastix>
+		void BSplineTransformWithDiffusion<TElastix>
+		::TransformPoint(
+			const InputPointType &inputPoint,
+			OutputPointType &outputPoint,
+			WeightsType &weights,
+			ParameterIndexArrayType &indices, 
+			bool &inside ) const
+	{
+		this->Superclass1::TransformPoint(
+			inputPoint,	outputPoint, weights,	indices, inside);
+	} // end TransformPoint
 
 	
 } // end namespace elastix

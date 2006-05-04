@@ -37,6 +37,8 @@
 #include "itkBSplineInterpolateImageFunction.h"
 #include "itkBSplineDeformableTransform.h"
 
+#include "itkBSplineCombinationTransform.h"
+
 namespace itk
 {
 	
@@ -290,6 +292,7 @@ namespace itk
 		
 		/** Boolean to indicate if the transform is BSpline deformable. */
 		bool m_TransformIsBSpline;
+		bool m_TransformIsBSplineCombination;
 		
 		/** The number of BSpline parameters per image dimension. */
 		long m_NumParametersPerDim;
@@ -310,16 +313,24 @@ namespace itk
 		typedef BSplineDeformableTransform<
 			CoordinateRepresentationType,
 			::itk::GetImageDimension<FixedImageType>::ImageDimension,
-			DeformationSplineOrder> BSplineTransformType;
-		typedef typename BSplineTransformType::WeightsType 
-			BSplineTransformWeightsType;
-		typedef typename BSplineTransformType::ParameterIndexArrayType 
-			BSplineTransformIndexArrayType;
-		
+			DeformationSplineOrder>													BSplineTransformType;
+    typedef typename 
+			BSplineTransformType::WeightsType								BSplineTransformWeightsType;
+		typedef typename 
+			BSplineTransformType::ParameterIndexArrayType 	BSplineTransformIndexArrayType;
+
+		/** Typedefs for the BSplineCombinationTransform */
+		typedef itk::BSplineCombinationTransform<
+			CoordinateRepresentationType,
+			::itk::GetImageDimension<FixedImageType>::ImageDimension,
+			DeformationSplineOrder>													BSplineCombinationTransformType;
+    		
 		/** Variables used when transform is of type BSpline deformable. */
-		typename BSplineTransformType::Pointer m_BSplineTransform;
-		mutable BSplineTransformWeightsType    m_BSplineTransformWeights;
-		mutable BSplineTransformIndexArrayType m_BSplineTransformIndices;
+		typename BSplineTransformType::Pointer						m_BSplineTransform;
+		mutable BSplineTransformWeightsType								m_BSplineTransformWeights;
+		mutable BSplineTransformIndexArrayType						m_BSplineTransformIndices;
+
+		typename BSplineCombinationTransformType::Pointer m_BSplineCombinationTransform;
 
 		typedef FixedArray< unsigned long, 
 			::itk::GetImageDimension<FixedImageType>::ImageDimension> ParametersOffsetType;

@@ -122,14 +122,28 @@ namespace itk
 		/** Call the initialize of the superclass. */
 		this->Superclass::Initialize();
 
+		typename BSplineTransformType::Pointer localBSplineTransform = 0;
+
 		/** Set the B-spline transform to m_RigidRegulizer. */
 		if( this->m_TransformIsBSpline )
 		{
 			this->m_RigidRegulizer->SetBSplineTransform( this->m_BSplineTransform );
+			localBSplineTransform = this->m_BSplineTransform;
+		}
+		else if( this->m_TransformIsBSplineCombination )
+		{
+			BSplineTransformType * testPointer = dynamic_cast<BSplineTransformType *>(
+				this->m_BSplineCombinationTransform->GetCurrentTransform() );
+			if (!testPointer)
+			{
+				itkExceptionMacro(<< "The BSplineCombinationTransform is not properly configured. The CurrentTransform is not set." );
+			}
+			this->m_RigidRegulizer->SetBSplineTransform( testPointer );
+			localBSplineTransform = testPointer;
 		}
 		else
 		{
-			itkExceptionMacro( << "ERROR: this metric expects a BSpline-transform." );
+			itkExceptionMacro( << "ERROR: this metric expects a BSpline-transform or BSplineCombinationTransform." );
 		}
 
 		/** Initialize the rigid regulizer metric. */
@@ -143,13 +157,13 @@ namespace itk
 		 * this code is valid, because there the B-spline transform is set.
 		 */
 		RigidityImageRegionType region;
-		region.SetSize( this->m_BSplineTransform->GetGridRegion().GetSize() );
-		region.SetIndex( this->m_BSplineTransform->GetGridRegion().GetIndex() );
+		region.SetSize( localBSplineTransform->GetGridRegion().GetSize() );
+		region.SetIndex( localBSplineTransform->GetGridRegion().GetIndex() );
 		this->m_RigidityCoefficientImage->SetRegions( region );
 		this->m_RigidityCoefficientImage->SetSpacing(
-			this->m_BSplineTransform->GetGridSpacing() );
+			localBSplineTransform->GetGridSpacing() );
 		this->m_RigidityCoefficientImage->SetOrigin(
-			this->m_BSplineTransform->GetGridOrigin() );
+			localBSplineTransform->GetGridOrigin() );
 		this->m_RigidityCoefficientImage->Allocate();
 
 		/** Dilate m_FixedRigidityImage and m_MovingRigidityImage. */
@@ -421,7 +435,7 @@ namespace itk
 		 ::FillRigidityCoefficientImage( const ParametersType& parameters ) const
 	 {
 		 /** Make sure that the transform is up to date. */
-		 this->m_BSplineTransform->SetParameters( parameters );
+		 this->m_Transform->SetParameters( parameters );
 
 		 /** Create and reset an iterator over m_RigidityCoefficientImage. */
 		 RigidityImageIteratorType it( this->m_RigidityCoefficientImage,
@@ -451,7 +465,7 @@ namespace itk
 			 {
 				 isInMovingImage = this->m_MovingRigidityImageDilated
 					 ->TransformPhysicalPointToIndex(
-					 this->m_BSplineTransform->TransformPoint( point ), index2 );
+					 this->m_Transform->TransformPoint( point ), index2 );
 			 }
 
 			 /** Get the values at those positions. */

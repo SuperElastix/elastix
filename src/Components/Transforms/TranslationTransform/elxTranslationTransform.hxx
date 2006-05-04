@@ -7,6 +7,19 @@ namespace elastix
 {
 	using namespace itk;
 
+	/**
+	 * ********************* Constructor ****************************
+	 */
+	
+	template <class TElastix>
+		TranslationTransformElastix<TElastix>
+		::TranslationTransformElastix()
+	{
+		this->m_TranslationTransform = 
+			TranslationTransformType::New();
+		this->SetCurrentTransform( this->m_TranslationTransform );
+	} // end Constructor
+
 
 	/*
 	 * ******************* BeforeRegistration ***********************
@@ -32,7 +45,7 @@ namespace elastix
 	{
 		
 		/** Set all parameters to zero (no translation */
-		this->SetIdentity();
+		this->m_TranslationTransform->SetIdentity();
 		
 		/** Check if user wants automatic transform initialization; false by default. */
 		std::string automaticTransformInitializationString("false");
@@ -58,7 +71,7 @@ namespace elastix
 				this->m_Registration->GetAsITKBaseType()->GetFixedImage() );
 			transformInitializer->SetMovingImage(
 				this->m_Registration->GetAsITKBaseType()->GetMovingImage() );
-			transformInitializer->SetTransform(this);
+			transformInitializer->SetTransform(this->m_TranslationTransform);
 			transformInitializer->GeometryOn();
 			transformInitializer->InitializeTransform();
 		}

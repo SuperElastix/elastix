@@ -15,6 +15,8 @@ namespace elastix
 		EulerTransformElastix<TElastix>
 		::EulerTransformElastix()
 	{
+		this->m_EulerTransform = EulerTransformType::New();
+		this->SetCurrentTransform(this->m_EulerTransform);
 	} // end Constructor
 	
 	
@@ -161,7 +163,7 @@ namespace elastix
 		}
 
 		/** Set the center in this Transform.*/
-		this->SetCenter( centerOfRotationPoint );
+		this->m_EulerTransform->SetCenter( centerOfRotationPoint );
 
 		/** Call the ReadFromFile from the TransformBase.
 		 * BE AWARE: Only call Superclass2::ReadFromFile() after CenterOfRotation
@@ -190,7 +192,7 @@ namespace elastix
 		xout["transpar"] << std::setprecision(10);
 
 		/** Get the center of rotation point and write it to file */
-		InputPointType rotationPoint = this->GetCenter();
+		InputPointType rotationPoint = this->m_EulerTransform->GetCenter();
 		xout["transpar"] << "(CenterOfRotationPoint ";
 		for ( unsigned int i = 0; i < SpaceDimension - 1; i++ )
 		{
@@ -215,7 +217,7 @@ namespace elastix
 	{
 		
 		/** Set all parameters to zero (no rotations, no translation */
-		this->SetIdentity();
+		this->m_EulerTransform->SetIdentity();
 		
 		/** Try to read CenterOfRotationIndex from parameter file,
 		 * which is the rotationPoint, expressed in index-values.
@@ -276,7 +278,7 @@ namespace elastix
 				this->m_Registration->GetAsITKBaseType()->GetFixedImage() );
 			transformInitializer->SetMovingImage(
 				this->m_Registration->GetAsITKBaseType()->GetMovingImage() );
-			transformInitializer->SetTransform(this);
+			transformInitializer->SetTransform(this->m_EulerTransform);
 			transformInitializer->GeometryOn();
 			transformInitializer->InitializeTransform();
 		}
@@ -288,7 +290,7 @@ namespace elastix
 		{
 			OutputVectorType noTranslation;
 			noTranslation.Fill(0.0);
-			this->SetTranslation(noTranslation);
+			this->m_EulerTransform->SetTranslation(noTranslation);
 		}
 
 		/** Set the center of rotation if it was entered by the user */
@@ -298,7 +300,7 @@ namespace elastix
 			InputPointType centerOfRotationPoint;
 			this->m_Registration->GetAsITKBaseType()->GetFixedImage()->
 				TransformIndexToPhysicalPoint( centerOfRotationIndex, centerOfRotationPoint );
-			this->SetCenter(centerOfRotationPoint);
+			this->m_EulerTransform->SetCenter(centerOfRotationPoint);
 		}
 
 		/** Set the initial parameters in this->m_Registration.*/

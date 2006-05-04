@@ -61,19 +61,7 @@ namespace itk
 
 		/** Typedef's inherited from the BSplineTransform. */
 		typedef TBSplineTransform			BSplineTransformType;
-		typedef typename BSplineTransformType::PixelType									PixelType;
-		typedef typename BSplineTransformType::ImageType									ImageType;
-		typedef typename BSplineTransformType::ImagePointer								ImagePointer;
-		typedef typename BSplineTransformType::RegionType									RegionType;
-		typedef typename BSplineTransformType::IndexType									IndexType;
-		typedef typename BSplineTransformType::SizeType										SizeType;
-		typedef typename BSplineTransformType::SpacingType								SpacingType;
-		typedef typename BSplineTransformType::OriginType									OriginType;
-		typedef typename BSplineTransformType::BulkTransformType					BulkTransformType;
-		typedef typename BSplineTransformType::BulkTransformPointer				BulkTransformPointer;
-		typedef typename BSplineTransformType::WeightsFunctionType				WeightsFunctionType;
 		typedef typename BSplineTransformType::WeightsType								WeightsType;
-		typedef typename BSplineTransformType::ContinuousIndexType				ContinuousIndexType;
 		typedef typename BSplineTransformType::ParameterIndexArrayType		ParameterIndexArrayType;
 
 		/** Other typedef's inherited from Superclass. */

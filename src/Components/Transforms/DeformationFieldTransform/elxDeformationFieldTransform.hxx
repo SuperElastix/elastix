@@ -20,32 +20,14 @@ using namespace itk;
 		::DeformationFieldTransform()
 	{
 		/** Initialize. */
+		this->m_DeformationVectorFieldTransform = 
+			DeformationVectorFieldTransformType::New();
+		this->SetCurrentTransform(
+			this->m_DeformationVectorFieldTransform );
 
 	} // end Constructor
 	
 
-	/**
-	 * ******************* BeforeRegistration ***********************
-	 *
-
-	template <class TElastix>
-		void DeformationFieldTransform<TElastix>
-		::BeforeRegistration(void)
-	{
-		
-	} // end BeforeRegistration
-	
-
-	/**
-	 * ***************** BeforeEachResolution ***********************
-	 *
-
-	template <class TElastix>
-		void DeformationFieldTransform<TElastix>
-		::BeforeEachResolution(void)
-	{
-	} // end BeforeEachResolution
-	
 	
 	/**
 	 * ************************* ReadFromFile ************************
@@ -87,7 +69,8 @@ using namespace itk;
 		/** Set the deformationFieldImage in the
 		 * itkDeformationVectorFieldTransform.
 		 */
-		this->Superclass1::SetCoefficientImage( vectorReader->GetOutput() );
+		this->m_DeformationVectorFieldTransform->
+			SetCoefficientImage( vectorReader->GetOutput() );
 
 		/** Do not call the ReadFromFile from the TransformBase,
 		 * because that function tries to read parameters from the file,
@@ -104,7 +87,7 @@ using namespace itk;
 		/** Call the function ReadInitialTransformFromFile.*/
 		if ( fileName != "NoInitialTransform" )
 		{			
-			this->Superclass2::ReadInitialTransformFromFile( fileName.c_str() );
+			this->ReadInitialTransformFromFile( fileName.c_str() );
 		} 
 
 		/** Read from the configuration file how to combine the
@@ -113,21 +96,28 @@ using namespace itk;
 		std::string howToCombineTransforms = "Add"; // default
 		this->m_Configuration->ReadParameter( howToCombineTransforms, "HowToCombineTransforms", 0, true );
 		
-		/** Convert 'this' to a pointer to a TransformGrouperInterface and set how
+		/** Convert 'this' to a pointer to a CombinationTransform and set how
 		 * to combine the current transform with the initial transform */
-		TransformGrouperInterface * thisAsGrouper = 
-			dynamic_cast< TransformGrouperInterface * >(this);
+		CombinationTransformType * thisAsGrouper = 
+			dynamic_cast< CombinationTransformType * >(this);
 		if ( thisAsGrouper )
 		{
-			thisAsGrouper->SetGrouper( howToCombineTransforms );
-		}		
+			if (howToCombineTransforms == "Compose" )
+			{
+				thisAsGrouper->SetUseComposition( true );
+			}
+			else
+			{
+				thisAsGrouper->SetUseComposition( false );
+			}
+		}
 
 		/** Remember the name of the TransformParametersFileName.
 		 * This will be needed when another transform will use this transform
 		 * as an initial transform (see the WriteToFile method)
 		 */
-		this->Superclass2::SetTransformParametersFileName(
-			this->Superclass2::GetConfiguration()->GetCommandLineArgument( "-tp" ) );
+		this->SetTransformParametersFileName(
+			this->GetConfiguration()->GetCommandLineArgument( "-tp" ) );
 
 	} // end ReadFromFile
 
@@ -176,7 +166,8 @@ using namespace itk;
 
 		/** Create a deformationField image. */
 		VectorImagePointer deformationFieldImage;
-		this->GetCoefficientVectorImage( deformationFieldImage );
+		this->m_DeformationVectorFieldTransform->
+			GetCoefficientVectorImage( deformationFieldImage );
 
 		/** Write the deformation field image. */
 		typedef itk::ImageFileWriter< VectorImageType > VectorWriterType;

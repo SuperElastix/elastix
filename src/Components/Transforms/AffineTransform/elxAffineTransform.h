@@ -41,7 +41,7 @@ using namespace itk;
 	 * The transform parameters necessary for transformix, additionally defined by this class, are:
 	 * \transformparameter CenterOfRotation: stores the center of rotation as an index. \n
 	 *		example: <tt>(CenterOfRotation 128 128 90)</tt> 
-	 *    depecrated! From elastix version 3.402 this is changed to CenterOfRotationPoint!
+	 *    deprecated! From elastix version 3.402 this is changed to CenterOfRotationPoint!
 	 * \transformparameter CenterOfRotationPoint: stores the center of rotation, expressed in world coordinates. \n
 	 *		example: <tt>(CenterOfRotationPoint 10.555 6.666 12.345)</tt>
 	 *
@@ -50,20 +50,28 @@ using namespace itk;
 	
 	template < class TElastix >
 		class AffineTransformElastix :
-			public TransformGrouper<
-				AffineTransform<
+			public CombinationTransform<
 					ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,
-					elx::TransformBase<TElastix>::FixedImageDimension >	>,
+					elx::TransformBase<TElastix>::FixedImageDimension >	,
 			public elx::TransformBase<TElastix>
 	{
 	public:
 
 		/** Standard ITK-stuff. */
 		typedef AffineTransformElastix														Self;
-		typedef AffineTransform<
+
+		typedef CombinationTransform<
 			typename elx::TransformBase<TElastix>::CoordRepType,
 			elx::TransformBase<TElastix>::FixedImageDimension >			Superclass1;
+
 		typedef elx::TransformBase<TElastix>											Superclass2;
+
+		/** The ITK-class that provides most of the functionality, and
+		 * that is set as the "CurrentTransform" in the CombinationTransform */
+		typedef AffineTransform<
+			typename elx::TransformBase<TElastix>::CoordRepType,
+			elx::TransformBase<TElastix>::FixedImageDimension >			AffineTransformType;
+
 		typedef SmartPointer<Self>																Pointer;
 		typedef SmartPointer<const Self>													ConstPointer;
 		
@@ -71,7 +79,7 @@ using namespace itk;
 		itkNewMacro( Self );
 		
 		/** Run-time type information (and related methods). */
-		itkTypeMacro( AffineTransformElastix, AffineTransform );
+		itkTypeMacro( AffineTransformElastix, CombinationTransform );
 
 		/** Name of this class.
 		 * Use this name in the parameter file to select this specific transform. \n
@@ -120,8 +128,9 @@ using namespace itk;
 		typedef typename Superclass2::DummyImageType						DummyImageType;
 		
 		typedef CenteredTransformInitializer<
-			Self, FixedImageType, MovingImageType>								TransformInitializerType;
+			AffineTransformType, FixedImageType, MovingImageType>	TransformInitializerType;
 		typedef typename TransformInitializerType::Pointer			TransformInitializerPointer;
+		typedef typename AffineTransformType::Pointer						AffineTransformPointer;
 		
 		/** Execute stuff before the actual registration:
 		 * \li Call InitializeTransform
@@ -182,6 +191,8 @@ using namespace itk;
 		AffineTransformElastix( const Self& );	// purposely not implemented
 		/** The private copy constructor. */
 		void operator=( const Self& );					// purposely not implemented
+
+		AffineTransformPointer				m_AffineTransform;
 		
 	}; // end class AffineTransformElastix
 	

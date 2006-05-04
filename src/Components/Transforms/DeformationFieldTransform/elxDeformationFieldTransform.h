@@ -4,7 +4,7 @@
 #include "itkDeformationVectorFieldTransform.h"
 
 #include "elxIncludes.h"
-#include "itkBSplineTransformGrouper.h"
+#include "itkBSplineCombinationTransform.h"
 
 
 namespace elastix
@@ -33,10 +33,13 @@ using namespace itk;
 	template < class TElastix >
 		class DeformationFieldTransform:
 	public
-		BSplineTransformGrouper< 
+		BSplineCombinationTransform< 
+			ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,			
+			elx::TransformBase<TElastix>::FixedImageDimension,
 			DeformationVectorFieldTransform<
-			  ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,			
-				elx::TransformBase<TElastix>::FixedImageDimension > >,
+				ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,
+				elx::TransformBase<TElastix>::FixedImageDimension >::SplineOrder 
+		>,
 	public
 		TransformBase<TElastix>
 	{
@@ -44,10 +47,20 @@ using namespace itk;
 
 		/** Standard ITK-stuff. */
 		typedef DeformationFieldTransform											Self;
+
+		/** The ITK-class that provides most of the functionality, and
+		 * that is set as the "CurrentTransform" in the CombinationTransform */
 		typedef DeformationVectorFieldTransform<
-			typename elx::TransformBase< TElastix >::CoordRepType,
-			elx::TransformBase< TElastix >::FixedImageDimension >		Superclass1;
-		typedef elx::TransformBase< TElastix >								Superclass2;		
+			typename elx::TransformBase<TElastix>::CoordRepType,
+			elx::TransformBase<TElastix>::FixedImageDimension > DeformationVectorFieldTransformType;
+
+		typedef BSplineCombinationTransform< 
+			typename elx::TransformBase<TElastix>::CoordRepType,			
+			elx::TransformBase<TElastix>::FixedImageDimension,
+			DeformationVectorFieldTransformType::SplineOrder >	Superclass1;
+
+		typedef elx::TransformBase< TElastix >								Superclass2;	
+
 		typedef SmartPointer< Self >													Pointer;
 		typedef SmartPointer< const Self >										ConstPointer;
 		
@@ -55,7 +68,7 @@ using namespace itk;
 		itkNewMacro( Self );
 		
 		/** Run-time type information (and related methods). */
-		itkTypeMacro( DeformationFieldTransform, DeformationVectorFieldTransform );
+		itkTypeMacro( DeformationFieldTransform, BSplineCombinationTransform );
 
 		/** Name of this class.
 		 * Use this name in the parameter file to select this specific transform. \n
@@ -80,16 +93,13 @@ using namespace itk;
 		typedef typename Superclass1::OutputPointType						OutputPointType;
 		
 		/** Typedef's specific for the DeformationVectorFieldTransform. */
-		typedef typename Superclass1::PixelType									PixelType;
-		typedef typename Superclass1::ImageType									ImageType;
-		typedef typename Superclass1::ImagePointer							ImagePointer;
-		typedef typename Superclass1::VectorPixelType						VectorPixelType;
-		typedef typename Superclass1::VectorImageType						VectorImageType;
-		typedef typename Superclass1::VectorImagePointer				VectorImagePointer;
-
-		/** Typedef's for BulkTransform. */
-		typedef typename Superclass1::BulkTransformType					BulkTransformType;
-		typedef typename Superclass1::BulkTransformPointer			BulkTransformPointer;
+		typedef typename DeformationVectorFieldTransformType::PixelType						PixelType;
+		typedef typename DeformationVectorFieldTransformType::ImageType						ImageType;
+		typedef typename DeformationVectorFieldTransformType::ImagePointer				ImagePointer;
+		typedef typename DeformationVectorFieldTransformType::VectorPixelType			VectorPixelType;
+		typedef typename DeformationVectorFieldTransformType::VectorImageType			VectorImageType;
+		typedef typename DeformationVectorFieldTransformType::VectorImagePointer	VectorImagePointer;
+		typedef typename DeformationVectorFieldTransformType::Pointer							DeformationVectorFieldTransformPointer;
 
 		/** Typedef's from TransformBase. */
 		typedef typename Superclass2::ElastixType								ElastixType;
@@ -102,12 +112,6 @@ using namespace itk;
 		typedef typename Superclass2::FixedImageType						FixedImageType;
 		typedef typename Superclass2::MovingImageType						MovingImageType;
 		typedef typename Superclass2::ITKBaseType								ITKBaseType;
-
-		/** Execute stuff before the actual registration:
-		 * \li nothing here
-		 */
-		//virtual void BeforeRegistration(void);
-		//virtual void BeforeEachResolution(void);
 	
 		/** Function to read transform-parameters from a file. */
 		virtual void ReadFromFile(void);
@@ -127,6 +131,10 @@ using namespace itk;
 		DeformationFieldTransform( const Self& );	// purposely not implemented
 		/** The private copy constructor. */
 		void operator=( const Self& );						// purposely not implemented
+
+		/** The transform that is set as current transform in the 
+		 * CcombinationTransform */
+		DeformationVectorFieldTransformPointer m_DeformationVectorFieldTransform;
 		
 	}; // end class DeformationFieldTransform
 	

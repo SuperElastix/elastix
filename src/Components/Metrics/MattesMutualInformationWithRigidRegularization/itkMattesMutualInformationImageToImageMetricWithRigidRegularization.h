@@ -89,6 +89,10 @@ namespace itk
 		typedef typename Superclass::MovingImageConstPointer  MovingImageCosntPointer;
 		typedef typename Superclass::CoordinateRepresentationType
 			CoordinateRepresentationType;
+
+		typedef typename Superclass::BSplineTransformType			BSplineTransformType;
+		typedef typename 
+			Superclass::BSplineCombinationTransformType					BSplineCombinationTransformType;
 		
 		/** Index and Point typedef support. */
 		typedef typename FixedImageType::IndexType            FixedImageIndexType;
@@ -129,6 +133,7 @@ namespace itk
 			RigidityImageType, RigidityImageType,
 			StructuringElementType >														DilateFilterType;
 		typedef typename DilateFilterType::Pointer						DilateFilterPointer;
+	
 
 		/** Initialize the metric. */
 		void Initialize(void) throw ( ExceptionObject );

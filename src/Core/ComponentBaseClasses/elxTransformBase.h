@@ -10,11 +10,10 @@
 #include "itkVector.h"
 #include "elxBaseComponentSE.h"
 #include "itkTransform.h"
-#include "itkTransformGrouperInterface.h"
+#include "itkCombinationTransform.h"
 #include "elxComponentDatabase.h"
 
-/** Needed by most transforms: */
-#include "itkTransformGrouper.h"
+
 
 #include <fstream>
 #include <iomanip>
@@ -29,8 +28,18 @@ namespace elastix
 	 *
 	 * This class contains the common functionality for all Transforms.
 	 *
+	 * The parameters used in this class are:
+	 * \parameter HowToCombineTransforms: Indicates how to use the initial transform\n
+	 *   (given by the command-line argument -t0, or, if using multiple parameter files,
+	 *   by the result of registration using the previous parameter file). Possible options
+	 *   are "Add" and "Compose". "Add" combines the initial transform T0 and the current
+	 *   transform T1 (which is currently optimised) by addition: T(x) = T0(x) + T1(x);
+	 *   "Compose" by composition: T(x) = T1 ( T0(x) ).
+	 *   example: <tt>(HowToCombineTransforms "Add")
+	 *   Default: "Add".
+	 *
 	 * The command line arguments used by this class are:
-	 * \commandlinearg -t0: optional argument for elastix for specifying an initial tranform
+	 * \commandlinearg -t0: optional argument for elastix for specifying an initial transform
 	 *		parameter file. \n
 	 *		example: <tt>-t0 TransformParameters.txt</tt> \n
 	 *
@@ -86,6 +95,11 @@ namespace elastix
 			CoordRepType,
 			itkGetStaticConstMacro( FixedImageDimension ),
 			itkGetStaticConstMacro( MovingImageDimension ) >					ITKBaseType;
+		typedef itk::CombinationTransform<CoordRepType,
+			itkGetStaticConstMacro( FixedImageDimension ) >						CombinationTransformType;	
+		typedef typename 
+			CombinationTransformType::InitialTransformType						InitialTransformType;
+
 
 		/** Typedef's from Transform. */
 		typedef typename ITKBaseType::ParametersType		ParametersType;
@@ -137,9 +151,9 @@ namespace elastix
 		virtual void AfterRegistrationBase(void);
 
 		/** Get the initial transform. */
-		virtual ObjectType * GetInitialTransform(void);
+		virtual const InitialTransformType * GetInitialTransform(void) const;
 		/** Set the initial transform. */
-		virtual void SetInitialTransform( ObjectType * _arg );
+		virtual void SetInitialTransform( InitialTransformType * _arg );
 
 		/** Set the TransformParametersFileName. */
 		virtual void SetTransformParametersFileName( const char * filename );

@@ -26,16 +26,11 @@
 
 #include "itkMattesMutualInformationImageToImageMetric2.h"
 
-#include "itkBSplineInterpolateImageFunction.h"
-#include "itkCovariantVector.h"
-
 #include "itkImageRegionConstIterator.h"
 #include "itkImageRegionIterator.h"
 #include "itkImageRandomConstIteratorWithIndex.h"
 
-#include "itkBSplineDeformableTransform.h"
 #include "vnl/vnl_math.h"
-
 
 
 namespace itk
@@ -58,6 +53,7 @@ namespace itk
 		
 		this->m_InterpolatorIsBSpline = false;
 		this->m_TransformIsBSpline    = false;
+		this->m_TransformIsBSplineCombination    = false;
 		
 		// Initialize PDFs to NULL
 		this->m_JointPDF = NULL;
@@ -82,6 +78,7 @@ namespace itk
 		this->m_NumParametersPerDim = 0;
 		this->m_NumBSplineWeights = 0;
 		this->m_BSplineTransform = NULL;
+		this->m_BSplineCombinationTransform = NULL;
 		this->m_NumberOfParameters = 0;
 	
 		// Added for elastix
@@ -132,6 +129,8 @@ namespace itk
 		os << this->m_InterpolatorIsBSpline << std::endl;
 		os << indent << "TransformIsBSpline: ";
 		os << this->m_TransformIsBSpline << std::endl;
+		os << indent << "TransformIsBSplineCombination: ";
+		os << this->m_TransformIsBSplineCombination << std::endl;
 		
 	} // end PrintSelf
 	
@@ -389,15 +388,49 @@ namespace itk
 			this->m_NumBSplineWeights = this->m_BSplineTransform->GetNumberOfWeights();
 			itkDebugMacro( "Transform is BSplineDeformable" );
     }
+
+		/** 
+		* Check if the transform is of type BSplineCombinationTransform.
+		* If so, we can speed up derivative calculations by only inspecting
+		* the parameters in the support region of a point.
+		*
+		*/
+		this->m_TransformIsBSplineCombination = true;
 		
-		if ( this->m_TransformIsBSpline )
+		BSplineCombinationTransformType * testPtr3 = 
+			dynamic_cast<BSplineCombinationTransformType *>(this->m_Transform.GetPointer() );
+		if( !testPtr3 )
+    {
+			this->m_TransformIsBSplineCombination = false;
+			this->m_BSplineCombinationTransform = NULL;
+			itkDebugMacro( "Transform is not BSplineCombination" );
+    }
+		else
+    {
+			this->m_BSplineCombinationTransform = testPtr3;
+
+			/** The current transform in the BSplineCombinationTransform is 
+			 * always a BSplineTransform */
+			BSplineTransformType * bsplineTransform = 
+				dynamic_cast<BSplineTransformType * >(
+				this->m_BSplineCombinationTransform->GetCurrentTransform() );
+
+			if (!bsplineTransform)
+			{
+				itkExceptionMacro(<< "The BSplineCombinationTransform is not properly configured. The CurrentTransform is not set." );
+			}
+			this->m_NumParametersPerDim = bsplineTransform->GetNumberOfParametersPerDimension();
+			this->m_NumBSplineWeights = bsplineTransform->GetNumberOfWeights();
+			itkDebugMacro( "Transform is BSplineCombination" );
+    }
+		
+		if ( this->m_TransformIsBSpline || this->m_TransformIsBSplineCombination )
     {
 			this->m_BSplineTransformWeights = BSplineTransformWeightsType( this->m_NumBSplineWeights );
 			this->m_BSplineTransformIndices = BSplineTransformIndexArrayType( this->m_NumBSplineWeights );
 			for ( unsigned int j = 0; j < FixedImageDimension; j++ )
       {
-				this->m_ParametersOffset[j] = j * 
-          this->m_BSplineTransform->GetNumberOfParametersPerDimension(); 
+				this->m_ParametersOffset[j] = j * this->m_NumParametersPerDim; 
       }
     }
 		
@@ -1218,23 +1251,34 @@ namespace itk
 		
 		bool insideBSValidRegion;
 		
-		if ( !(this->m_TransformIsBSpline) )
+		if ( !(this->m_TransformIsBSpline) && !(this->m_TransformIsBSplineCombination) )
 		{
 			mappedPoint = this->m_Transform->TransformPoint( fixedImagePoint );
 		}
 		else
 		{
-			this->m_BSplineTransform->TransformPoint( fixedImagePoint,
-				mappedPoint,
-				this->m_BSplineTransformWeights,
-				this->m_BSplineTransformIndices,
-				insideBSValidRegion );
+			if (this->m_TransformIsBSpline)
+			{
+				this->m_BSplineTransform->TransformPoint( fixedImagePoint,
+					mappedPoint,
+					this->m_BSplineTransformWeights,
+					this->m_BSplineTransformIndices,
+					insideBSValidRegion );
+			}
+			else if (this->m_TransformIsBSplineCombination)
+			{
+					this->m_BSplineCombinationTransform->TransformPoint( fixedImagePoint,
+					mappedPoint,
+					this->m_BSplineTransformWeights,
+					this->m_BSplineTransformIndices,
+					insideBSValidRegion );
+			}
 		}
 		
 		// Check if mapped point inside image buffer
 		sampleOk = this->m_Interpolator->IsInsideBuffer( mappedPoint );
 		
-		if ( this->m_TransformIsBSpline )
+		if ( this->m_TransformIsBSpline ||  this->m_TransformIsBSplineCombination )
 		{
 			// Check if mapped point is within the support region of a grid point.
 			// This is neccessary for computing the metric gradient
@@ -1284,7 +1328,7 @@ namespace itk
 			( fixedImageParzenWindowIndex * this->m_JointPDFDerivatives->GetOffsetTable()[2] ) +
 			( pdfMovingIndex * this->m_JointPDFDerivatives->GetOffsetTable()[1] );
 		
-		if( !(this->m_TransformIsBSpline) )
+		if( !(this->m_TransformIsBSpline) && !(this->m_TransformIsBSplineCombination) )
 		{
 			
 			/**
@@ -1313,8 +1357,9 @@ namespace itk
 		{
 			
 			/**
-			 * If the transform is of type BSplineDeformableTransform,
-			 * we can obtain a speed up by only processing the affected parameters.
+			 * If the transform is of type BSplineDeformableTransform or of type
+			 * BSplineCombinationTransform, we can obtain a speed up by only 
+			 * processing the affected parameters.
 			 */
 			for( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
 			{

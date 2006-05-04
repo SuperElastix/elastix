@@ -5,7 +5,7 @@
 #define __VSplineOrder 3
 
 #include "itkBSplineDeformableTransform.h"
-#include "itkBSplineTransformGrouper.h"
+#include "itkBSplineCombinationTransform.h"
 
 #include "elxIncludes.h"
 
@@ -50,11 +50,10 @@ using namespace itk;
 	template < class TElastix >
 		class BSplineTransform:
 	public
-		BSplineTransformGrouper< 
-			BSplineDeformableTransform<
-			  ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,
-				elx::TransformBase<TElastix>::FixedImageDimension,
-				__VSplineOrder >		>,
+		BSplineCombinationTransform< 
+			ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,
+			elx::TransformBase<TElastix>::FixedImageDimension,
+			__VSplineOrder > ,
 	public
 		TransformBase<TElastix>
 	{
@@ -62,11 +61,19 @@ using namespace itk;
 
 		/** Standard ITK-stuff. */
 		typedef BSplineTransform 										Self;
-		typedef BSplineDeformableTransform<
+		
+		typedef BSplineCombinationTransform<
 			typename elx::TransformBase<TElastix>::CoordRepType,
 			elx::TransformBase<TElastix>::FixedImageDimension,
 			__VSplineOrder >													Superclass1;
+
 		typedef elx::TransformBase<TElastix>				Superclass2;		
+				
+		/** The ITK-class that provides most of the functionality, and
+		 * that is set as the "CurrentTransform" in the CombinationTransform */
+		typedef typename 
+			Superclass1::BSplineTransformType					BSplineTransformType;
+
 		typedef SmartPointer<Self>									Pointer;
 		typedef SmartPointer<const Self>						ConstPointer;
 		
@@ -74,7 +81,7 @@ using namespace itk;
 		itkNewMacro( Self );
 		
 		/** Run-time type information (and related methods). */
-		itkTypeMacro( BSplineTransform, BSplineDeformableTransform );
+		itkTypeMacro( BSplineTransform, BSplineCombinationTransform );
 
 		/** Name of this class.
 		 * Use this name in the parameter file to select this specific transform. \n
@@ -102,20 +109,26 @@ using namespace itk;
 		typedef typename Superclass1::OutputPointType						OutputPointType;
 		
 		/** Typedef's specific for the BSplineTransform. */
-		typedef typename Superclass1::PixelType									PixelType;
-		typedef typename Superclass1::ImageType									ImageType;
-		typedef typename Superclass1::ImagePointer							ImagePointer;
-		typedef typename Superclass1::RegionType								RegionType;
-		typedef typename Superclass1::IndexType									IndexType;
-		typedef typename Superclass1::SizeType									SizeType;
-		typedef typename Superclass1::SpacingType								SpacingType;
-		typedef typename Superclass1::OriginType								OriginType;
-		typedef typename Superclass1::BulkTransformType					BulkTransformType;
-		typedef typename Superclass1::BulkTransformPointer			BulkTransformPointer;
-		typedef typename Superclass1::WeightsFunctionType				WeightsFunctionType;
-		typedef typename Superclass1::WeightsType								WeightsType;
-		typedef typename Superclass1::ContinuousIndexType				ContinuousIndexType;
-		typedef typename Superclass1::ParameterIndexArrayType		ParameterIndexArrayType;
+		typedef typename BSplineTransformType::PixelType				PixelType;
+		typedef typename BSplineTransformType::ImageType				ImageType;
+		typedef typename BSplineTransformType::ImagePointer			ImagePointer;
+		typedef typename BSplineTransformType::RegionType				RegionType;
+		typedef typename BSplineTransformType::IndexType				IndexType;
+		typedef typename BSplineTransformType::SizeType					SizeType;
+		typedef typename BSplineTransformType::SpacingType			SpacingType;
+		typedef typename BSplineTransformType::OriginType				OriginType;
+		typedef typename 
+			BSplineTransformType::BulkTransformType								BulkTransformType;
+		typedef typename 
+			BSplineTransformType::BulkTransformPointer						BulkTransformPointer;
+		typedef typename 
+			BSplineTransformType::WeightsFunctionType							WeightsFunctionType;
+		typedef typename 
+			BSplineTransformType::WeightsType											WeightsType;
+		typedef typename 
+			BSplineTransformType::ContinuousIndexType							ContinuousIndexType;
+		typedef typename 
+			BSplineTransformType::ParameterIndexArrayType					ParameterIndexArrayType;
 
 		/** Typedef's from TransformBase. */
 		typedef typename Superclass2::ElastixType								ElastixType;
@@ -128,6 +141,9 @@ using namespace itk;
 		typedef typename Superclass2::FixedImageType						FixedImageType;
 		typedef typename Superclass2::MovingImageType						MovingImageType;
 		typedef typename Superclass2::ITKBaseType								ITKBaseType;
+
+		/** Extra typedef */
+		typedef typename BSplineTransformType::Pointer					BSplineTransformPointer;
 
 		/** Execute stuff before the actual registration:
 		 * \li Create an initial B-spline grid.
@@ -170,6 +186,8 @@ using namespace itk;
 		BSplineTransform( const Self& );	// purposely not implemented
 		/** The private copy constructor. */
 		void operator=( const Self& );		// purposely not implemented
+
+		BSplineTransformPointer	m_BSplineTransform;
 		
 	}; // end class BSplineTransform
 	

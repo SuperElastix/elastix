@@ -113,17 +113,31 @@ namespace elastix
 		this->m_Configuration->ReadParameter( howToCombineTransforms, "HowToCombineTransforms", 0, true );
 
 		/** Cast to transform grouper. */
-		itk::TransformGrouperInterface * thisAsGrouper = 
-			dynamic_cast< itk::TransformGrouperInterface * >(this);
+		CombinationTransformType * thisAsGrouper = 
+			dynamic_cast< CombinationTransformType * >(this);
 		if ( thisAsGrouper )
 		{
-			thisAsGrouper->SetGrouper( howToCombineTransforms );
+			if (howToCombineTransforms == "Compose" )
+			{
+				thisAsGrouper->SetUseComposition( true );
+			}
+			else
+			{
+				thisAsGrouper->SetUseComposition( false );
+			}
 		}
 
-		/** Set the initial transform. */
+		/** Set the initial transform. Elastix returns an itkOject, so 
+		 * try to cast it. */
 		if ( this->m_Elastix->GetInitialTransform() )
 		{
-			this->SetInitialTransform( this->m_Elastix->GetInitialTransform() );
+			InitialTransformType * testPointer =
+				dynamic_cast<InitialTransformType* >(
+				this->m_Elastix->GetInitialTransform()  );
+			if (testPointer)
+			{
+				this->SetInitialTransform( testPointer );
+			}
 		}
 		else
 		{
@@ -142,12 +156,12 @@ namespace elastix
 	 */
 
 	template <class TElastix>
-		typename TransformBase<TElastix>::ObjectType * 
-		TransformBase<TElastix>::GetInitialTransform(void)
+		const typename TransformBase<TElastix>::InitialTransformType * 
+		TransformBase<TElastix>::GetInitialTransform(void) const
 	{
 		/** Cast to transform grouper. */
-		itk::TransformGrouperInterface * thisAsGrouper = 
-			dynamic_cast< itk::TransformGrouperInterface * >(this);
+		const CombinationTransformType * thisAsGrouper = 
+			dynamic_cast< const CombinationTransformType * >(this);
 
 		/** Set the initial transform. */
 		if ( thisAsGrouper )
@@ -167,11 +181,12 @@ namespace elastix
 	 */
 
 	template <class TElastix>
-		void TransformBase<TElastix>::SetInitialTransform( ObjectType * _arg )
+		void TransformBase<TElastix>::SetInitialTransform( 
+		InitialTransformType * _arg )
 	{
 		/** Cast to transfrom grouper. */
-		itk::TransformGrouperInterface * thisAsGrouper = 
-			dynamic_cast< itk::TransformGrouperInterface * >(this);
+		CombinationTransformType * thisAsGrouper = 
+			dynamic_cast< CombinationTransformType * >(this);
 
 		/** Set initial transform. */
 		if ( thisAsGrouper )
@@ -319,14 +334,21 @@ namespace elastix
 		std::string howToCombineTransforms = "Add"; // default
 		this->m_Configuration->ReadParameter( howToCombineTransforms, "HowToCombineTransforms", 0, true );
 		
-		/** Convert 'this' to a pointer to a TransformGrouperInterface and set how
+		/** Convert 'this' to a pointer to a CombinationTransform and set how
 		 * to combine the current transform with the initial transform */
-		itk::TransformGrouperInterface * thisAsGrouper = 
-			dynamic_cast< itk::TransformGrouperInterface * >(this);
+		CombinationTransformType * thisAsGrouper = 
+			dynamic_cast< CombinationTransformType * >(this);
 		if ( thisAsGrouper )
 		{
-			thisAsGrouper->SetGrouper( howToCombineTransforms );
-		}		
+			if (howToCombineTransforms == "Compose" )
+			{
+				thisAsGrouper->SetUseComposition( true );
+			}
+			else
+			{
+				thisAsGrouper->SetUseComposition( false );
+			}
+		}
 
 		/** Task 4 - Remember the name of the TransformParametersFileName.
 		 * This will be needed when another transform will use this transform
@@ -384,7 +406,12 @@ namespace elastix
 			elx_initialTransform->ReadFromFile();
 		
 			/** Set initial transform.*/
-			this->SetInitialTransform( initialTransform );
+			InitialTransformType * testPointer =
+				dynamic_cast<InitialTransformType* >(	initialTransform.GetPointer() );
+			if (testPointer)
+			{
+				this->SetInitialTransform( testPointer );
+			}
 
 		} // end if
 
@@ -463,7 +490,7 @@ namespace elastix
 		if ( this->GetInitialTransform() )
 		{
 			xout["transpar"] << "(InitialTransformParametersFileName \""
-				<< (dynamic_cast<Self *>( this->GetInitialTransform() ))
+				<< (dynamic_cast<const Self *>( this->GetInitialTransform() ))
 				->GetTransformParametersFileName() << "\")" << std::endl;
 		}
 		else
@@ -472,10 +499,15 @@ namespace elastix
 				<< std::endl;
 		}
 		
+
 		/** Write the way Transforms are combined.*/
+		std::string combinationMethod("Add");
+		if ( ( dynamic_cast< CombinationTransformType * >(this) )->GetUseComposition() )
+		{
+			combinationMethod = "Compose";
+		}
 		xout["transpar"] << "(HowToCombineTransforms \""
-			<< (dynamic_cast< TransformGrouperInterface * >(this))
-			->GetNameOfDesiredGrouper() << "\")" << std::endl;
+			<< combinationMethod << "\")" << std::endl;
 
 		/** Write image specific things.*/
 		xout["transpar"] << std::endl << "// Image specific" << std::endl;
