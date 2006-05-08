@@ -34,7 +34,7 @@ namespace elastix
 	 *   by the result of registration using the previous parameter file). Possible options
 	 *   are "Add" and "Compose". "Add" combines the initial transform T0 and the current
 	 *   transform T1 (which is currently optimised) by addition: T(x) = T0(x) + T1(x);
-	 *   "Compose" by composition: T(x) = T1 ( T0(x) ).
+	 *   "Compose" by composition: T(x) = T1 ( T0(x) ). \n
 	 *   example: <tt>(HowToCombineTransforms "Add")
 	 *   Default: "Add".
 	 *

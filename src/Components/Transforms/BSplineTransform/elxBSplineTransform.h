@@ -30,7 +30,7 @@ using namespace itk;
 	 *		The default is 8.0 in every dimension.
 	 * \parameter UpsampleGridOption: a flag to determine if the B-spline grid should
 	 *		be upsampled from one resolution level to another. Choose from {true, false}. \n
-	 *		example: <tt>(UpsampleGridOption "true")</tt>
+	 *		example: <tt>(UpsampleGridOption "true")</tt> \n
 	 *		example: <tt>(UpsampleGridOption "true" "false" "true")</tt>
 	 *		The default is "true" inbetween all resolutions.
 	 * 
