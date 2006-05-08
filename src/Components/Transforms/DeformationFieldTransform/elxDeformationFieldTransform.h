@@ -19,7 +19,7 @@ using namespace itk;
 	 *
 	 * The parameters used in this class are:
 	 * \parameter Transform: Select this transform as follows:\n
-	 *		<tt>(Transform "DeformationFieldTransform")</tt>
+	 *		<tt>(%Transform "DeformationFieldTransform")</tt>
 	 *
 	 * The transform parameters necessary for transformix, additionally defined by this class, are:
 	 * \transformparameter DeformationFieldFileName: stores the name of the deformation field. \n

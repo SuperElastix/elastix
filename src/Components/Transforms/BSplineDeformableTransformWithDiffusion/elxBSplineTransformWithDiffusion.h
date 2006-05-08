@@ -45,7 +45,7 @@ using namespace itk;
 	 *
 	 * The parameters used in this class are:
 	 * \parameter Transform: Select this transform as follows:\n
-	 *		<tt>(Transform "BSplineTransformWithDiffusion")</tt>
+	 *		<tt>(%Transform "BSplineTransformWithDiffusion")</tt>
 	 * \parameter FinalGridSpacing: the grid spacing of the B-spline transform
 	 *		part of this transform for each dimension. \n
 	 *		example: <tt>(FinalGridSpacing 8.0 8.0 8.0)</tt>

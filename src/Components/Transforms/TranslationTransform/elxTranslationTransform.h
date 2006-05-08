@@ -17,7 +17,7 @@ namespace elastix
 	 *
 	 * The parameters used in this class are:
 	 * \parameter Transform: Select this transform as follows:\n
-	 *		<tt>(Transform "TranslationTransform")</tt>
+	 *		<tt>(%Transform "TranslationTransform")</tt>
 	 * \parameter AutomaticTransformInitialization: whether or not the initial translation
 	 *    between images should be estimated as the distance between their centers.\n
 	 *    example: <tt>(AutomaticTransformInitialization "true")</tt> \n

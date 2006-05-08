@@ -20,7 +20,7 @@ using namespace itk;
 	 *
 	 * The parameters used in this class are:
 	 * \parameter Transform: Select this transform as follows:\n
-	 *		<tt>(Transform "AffineTransform")</tt>
+	 *		<tt>(%Transform "AffineTransform")</tt>
 	 * \parameter Scales: the scale factor between the rotations and translations,
 	 *		used in the optimizer. \n
 	 *		example: <tt>(Scaler 200000.0)</tt> \n
