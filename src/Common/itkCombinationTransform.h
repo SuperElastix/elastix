@@ -136,7 +136,6 @@ namespace itk
 		* is set.
 		*/
 		virtual bool GetInverse(Self* inverse) const;
-
 					
 	protected:
 		
