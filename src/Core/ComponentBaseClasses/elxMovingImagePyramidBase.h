@@ -20,6 +20,15 @@ using namespace itk;
 	 *
 	 * This class contains all the common functionality for MovingImagePyramids.
 	 *
+	 * \parameter MovingPyramidSchedule: downsampling factors for the image pyramid.\n
+	 * For each dimension, for each resolution level, the downsampling factor of the 
+	 * moving image can be specified.\n
+	 * Syntax for 2D images: <tt> (MovingPyramidSchedule <reslevel0,dim0> <reslevel0,dim1> <reslevel1,dim0> <reslevel1,dim1> ...)</tt>
+	 * example: <tt> (MovingPyramidSchedule  4 4 2 2 1 1)</tt>
+	 * Default: isotropic, halved in each resolution, so, like in the example. If a 
+	 * FixedPyramidSchedule is given and no moving, the FixedPyramidSchedule is taken as a default for the MovingPyramidSchedule.
+	 *
+	 *
 	 * \ingroup ImagePyramids
 	 * \ingroup ComponentBaseClasses
 	 */
