@@ -47,15 +47,15 @@ namespace itk
  * the metric value with only a subset of all samples should be randomly
  * distributed with zero mean.
  *
- * The normalized correlation NC is defined as:
+ * The normalized correlation NC is defined as: \f$\frac{\pi}{3}\f$
  *
- *                 sum_x[ f(x) * m(x+u(x,p)) ]
- * NC = ------------------------------------------------
- *      sqrt[ sum_x[ f(x)^2 ] * sum_x[ m(x+u(x,p))^2 ] ]
+ *                 sum_x[ f(x) * m(x+u(x,p)) ] \n
+ * NC = ------------------------------------------------ \n
+ *      sqrt[ sum_x[ f(x)^2 ] * sum_x[ m(x+u(x,p))^2 ] ] \n
  *
- *             sfm
- *    = ----------------- ,
- *      sqrt[ sff * smm ]
+ *             sfm \n
+ *    = ----------------- , \n
+ *      sqrt[ sff * smm ] \n
  *
  * where x a voxel in the fixed image f, m the moving image, u(x,p) the
  * deformation of x depending on the transform parameters p. sfm, sff and smm
@@ -69,22 +69,22 @@ namespace itk
  * GetJacobian() of the transform. gradient * jacobian is called the differential.
  * This yields for the derivative:
  *
- *           sum_x[ f(x) * differential ] - ( sfm / smm ) * sum_x[ m(x+u(x,p)) * differential ]
- * dNC/dp = -----------------------------------------------------------------------------------
- *                                         sqrt[ sff * smm ]
+ *           sum_x[ f(x) * differential ] - ( sfm / smm ) * sum_x[ m(x+u(x,p)) * differential ] \n
+ * dNC/dp = ----------------------------------------------------------------------------------- \n
+ *                                         sqrt[ sff * smm ] \n
  *
  * This class has an option to subtract the sample mean from the sample values
  * in the cross correlation formula. This typically results in narrower valleys
  * in the cost fucntion NC. The default value is false. If SubtractMean is true,
  * the NC is defined as:
  *
- *                sum_x[ ( f(x) - Af ) * ( m(x+u(x,p)) - Am ) ]
- * NC = ------------------------------------------------------------------
- *      sqrt[ sum_x[ ( f(x) - Af )^2 ] * sum_x[ ( m(x+u(x,p)) - Am )^2 ] ]
+ *                sum_x[ ( f(x) - Af ) * ( m(x+u(x,p)) - Am ) ] \n
+ * NC = ------------------------------------------------------------------ \n
+ *      sqrt[ sum_x[ ( f(x) - Af )^2 ] * sum_x[ ( m(x+u(x,p)) - Am )^2 ] ] \n
  *
- *                       sfm - sf * sm / N
- *    = ----------------------------------------------------- ,
- *      sqrt[ ( sff - sf * sf / N ) * ( smm - sm * sm / N ) ]
+ *                       sfm - sf * sm / N \n
+ *    = ----------------------------------------------------- , \n
+ *      sqrt[ ( sff - sf * sf / N ) * ( smm - sm * sm / N ) ] \n
  *
  * where Af and Am are the average of f and m, respectively.
  *
