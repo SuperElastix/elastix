@@ -49,13 +49,10 @@ namespace itk
  *
  * The normalized correlation NC is defined as: \f$\frac{\pi}{3}\f$
  *
- *                 sum_x[ f(x) * m(x+u(x,p)) ] \n
- * NC = ------------------------------------------------ \n
- *      sqrt[ sum_x[ f(x)^2 ] * sum_x[ m(x+u(x,p))^2 ] ] \n
- *
- *             sfm \n
- *    = ----------------- , \n
- *      sqrt[ sff * smm ] \n
+ * \f{align}
+ * NC &= \frac{sum_x[ f(x) * m(x+u(x,p)) ]}{sqrt[ sum_x[ f(x)^2 ] * sum_x[ m(x+u(x,p))^2 ] ]}\\
+ *    &= \frac{sfm \ n}{sqrt[ sff * smm ]}
+ * \f}
  *
  * where x a voxel in the fixed image f, m the moving image, u(x,p) the
  * deformation of x depending on the transform parameters p. sfm, sff and smm
