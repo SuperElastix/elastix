@@ -54,6 +54,7 @@ namespace itk
  * itk::MattesMutualInformationImageToImageMetric.
  *
  * \ingroup RegistrationMetrics
+ * \ingroup Metrics
  */
 template < class TFixedImage, class TMovingImage > 
 class ITK_EXPORT MeanSquaresImageToImageMetric2 : 

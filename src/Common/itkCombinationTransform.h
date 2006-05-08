@@ -33,7 +33,7 @@ namespace itk
 	 * Note: It is mandatory to set a current transform. An initial transform
 	 * is not mandatory. 
 	 * 
-	 * \ingroup CombinationTransform
+	 * \ingroup Transforms
 	 */
 	
 	template < typename TScalarType, unsigned int NDimensions = 3 >

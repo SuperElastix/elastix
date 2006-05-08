@@ -38,7 +38,7 @@ namespace itk
 	 * is not mandatory. Make sure that the current transform is a 
 	 * itk::BSplineDeformableTransform.
 	 * 
-	 * \ingroup BSplineCombinationTransform
+	 * \ingroup Transforms
 	 */
 	
 	template <
