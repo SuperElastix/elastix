@@ -14,8 +14,8 @@ namespace itk
 	 * \brief This class combines two transforms: an 'initial transform'
 	 * with a 'current transform'.
 	 *
-	 * The CombinationTransform class combines an initial transform T0 with a
-	 * current transform T1.
+	 * The CombinationTransform class combines an initial transform \f$T_0\f$ with a
+	 * current transform \f$T_1\f$.
 	 *
 	 * Two methods of combining the transforms are supported:
 	 * \li Addition: \f$T(x) = T_0(x) + T_1(x)\f$
@@ -28,7 +28,7 @@ namespace itk
 	 * the initial transform is assumed constant, and the current
 	 * transform is assumed to be the transform that is optimised.
 	 * So, the transform parameters of the CombinationTransform are the
-	 * parameters of the CurrentTransform T1.
+	 * parameters of the CurrentTransform \f$T_1\f$.
 	 *
 	 * Note: It is mandatory to set a current transform. An initial transform
 	 * is not mandatory. 
@@ -125,11 +125,11 @@ namespace itk
 		* This method forces the transform to copy the parameters. */
 		virtual void SetParametersByValue ( const ParametersType & param );
 
-		/** Return the inverse of the transform.
+		/** Return the inverse \f$T^{-1}\f$ of the transform.
 		*  This is only possible when:
 		* - both the inverses of the initial and the current transform
 		*   are defined, and Composition is used:
-		*   \f$T^{\mathrm{inverse}}(y) = T_0^{-1} ( T_1^{-1}(y) )\f$
+		*   \f$T^{-1}(y) = T_0^{-1} ( T_1^{-1}(y) )\f$
 		* - No initial transform is used and the current transform is defined.
 		* In all other cases this function returns false and does not provide
 		* an inverse transform. An exception is thrown when no CurrentTransform
