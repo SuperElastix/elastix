@@ -18,8 +18,8 @@ namespace itk
 	 * current transform T1.
 	 *
 	 * Two methods of combining the transforms are supported:
-	 * \li Addition: T(x) = T0(x) + T1(x)
-	 * \li Composition: T(x) = T1( T0(x) )
+	 * \li Addition: \f$T(x) = T_0(x) + T_1(x)\f$
+	 * \li Composition: \f$T(x) = T_1( T_0(x) )\f$
 	 *
 	 * The TransformPoint(), the GetJacobian() and the GetInverse() methods
 	 * depend on this setting.
@@ -129,7 +129,7 @@ namespace itk
 		*  This is only possible when:
 		* - both the inverses of the initial and the current transform
 		*   are defined, and Composition is used:
-		*   Tinverse(y) = T0^{-1} ( T1^{-1}(y) )
+		*   \f$T^{\mathrm{inverse}}(y) = T_0^{-1} ( T_1^{-1}(y) )\f$
 		* - No initial transform is used and the current transform is defined.
 		* In all other cases this function returns false and does not provide
 		* an inverse transform. An exception is thrown when no CurrentTransform
@@ -172,14 +172,14 @@ namespace itk
 		/** Methods to combine the TransformPoint functions of the 
 		 * initial and the current transform.	 */
 		
-		/** ADDITION: T(x) = T0(x) + T1(x) - x */
+		/** ADDITION: \f$T(x) = T_0(x) + T_1(x) - x\f$ */
 		inline OutputPointType TransformPointUseAddition( const InputPointType  & point ) const;
 		
-		/** COMPOSITION: T(x) = T1( T0(x) ) 
+		/** COMPOSITION: \f$T(x) = T_1( T_0(x) )\f$ 
 		 * \warning: assumes that input and output point type are the same */
 		inline OutputPointType TransformPointUseComposition( const InputPointType  & point ) const;
 		
-		/** CURRENT ONLY: T(x) = T1(x) */
+		/** CURRENT ONLY: \f$T(x) = T_1(x)\f$ */
 		inline OutputPointType TransformPointNoInitialTransform( const InputPointType & point ) const;
 		
 		/** NO CURRENT TRANSFORM SET: throw an exception. */
@@ -187,14 +187,14 @@ namespace itk
 	
 		/** Methods to compute the Jacobian */
 		
-		/** ADDITION: J(x) = J1(x) */
+		/** ADDITION: \f$J(x) = J_1(x)\f$ */
 		inline const JacobianType & GetJacobianUseAddition( const InputPointType  & point ) const;
 		
-		/** COMPOSITION: J(x) = J1( T0(x) ) 
+		/** COMPOSITION: \f$J(x) = J_1( T_0(x) )\f$ 
 		 * \warning: assumes that input and output point type are the same */
 		inline const JacobianType & GetJacobianUseComposition( const InputPointType  & point ) const;
 		
-		/** CURRENT ONLY: J(x) = J1(x) */
+		/** CURRENT ONLY: \f$J(x) = J_1(x)\f$ */
 		inline const JacobianType & GetJacobianNoInitialTransform( const InputPointType & point ) const;
 		
 		/** NO CURRENT TRANSFORM SET: throw an exception */
