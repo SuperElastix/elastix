@@ -33,11 +33,8 @@ OUTPUT_DIRECTORY       = "@ELX_HELP_DIR@"
 
 EXCLUDE = "@elastix_SOURCE_DIR@/Common/ParameterFileParser" \
 	  "@elastix_SOURCE_DIR@/Components/Metrics/MattesMutualInformationWithRigidRegularization" \
-	  "@elastix_SOURCE_DIR@/Components/Transforms/BSplineDeformableTransformWithDiffusion" \
-	  "@elastix_SOURCE_DIR@/Components/Optimizers/QuasiNewtonLBFGS" \
-	  "@elastix_SOURCE_DIR@/Components/Optimizers/StochasticQuasiNewton" \
-	  "@elastix_SOURCE_DIR@/Components/Optimizers/ConjugateGradient"
-
+	  "@elastix_SOURCE_DIR@/Components/Transforms/BSplineDeformableTransformWithDiffusion"
+		
 # The HTML_STYLESHEET tag can be used to specify a user defined cascading 
 # style sheet that is used by each HTML page. It can be used to 
 # fine-tune the look of the HTML output. If the tag is left blank doxygen 
@@ -69,7 +66,7 @@ PROJECT_NAME           = elastix
 # This could be handy for archiving the generated documentation or 
 # if some version control system is used.
 
-PROJECT_NUMBER         = 3.0
+PROJECT_NUMBER         = "@ELX_VERSION@"
 
 # If the CREATE_SUBDIRS tag is set to YES, then doxygen will create
 # 4096 sub-directories (in 2 levels) under the output directory of
