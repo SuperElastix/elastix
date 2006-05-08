@@ -48,6 +48,9 @@ namespace itk
  * distributed with zero mean.
  *
  * The normalized correlation NC is defined as: \f$\frac{\pi}{3}\f$
+ * 
+ * \f{aqnarray} \frac{1}{2}
+ \f}
  *
  * \f{eqnarray}
  * NC &= \frac{sum_x[ f(x) * m(x+u(x,p)) ]}{sqrt[ sum_x[ f(x)^2 ] * sum_x[ m(x+u(x,p))^2 ] ]}\\
