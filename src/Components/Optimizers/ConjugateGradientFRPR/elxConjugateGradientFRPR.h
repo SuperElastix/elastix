@@ -52,7 +52,7 @@ using namespace itk;
 	 *		example: <tt>(LineSearchStepTolerance 0.001 0.00001 0.000001)</tt> \n
 	 *    Default value: 0.00001.\n
 	 *
-	 *
+	 * \ingroup Optimizers
 	 */
 
 	template <class TElastix>
