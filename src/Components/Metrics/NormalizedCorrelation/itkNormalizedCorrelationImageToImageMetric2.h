@@ -47,21 +47,20 @@ namespace itk
  * the metric value with only a subset of all samples should be randomly
  * distributed with zero mean.
  *
- * The normalized correlation NC is defined as: \f$\frac{\pi}{3}\f$
- * 
- * \f{aqnarray} \frac{1}{2}
- \f}
+ * The normalized correlation NC is defined as:
  *
- * \f{eqnarray}
- * NC &= \frac{sum_x[ f(x) * m(x+u(x,p)) ]}{sqrt[ sum_x[ f(x)^2 ] * sum_x[ m(x+u(x,p))^2 ] ]}\\
- *    &= \frac{sfm \ n}{sqrt[ sff * smm ]}
- * \f}
+ * \f[
+ * \mathrm{NC} = \frac{\sum_x f(x) * m(x+u(x,p))}{\sqrt{ \sum_x f(x)^2 * \sum_x m(x+u(x,p))^2}}
+ *    = \frac{\mathtt{sfm}}{\sqrt{\mathtt{sff} * \mathtt{smm}}}
+ * \f]
  *
  * where x a voxel in the fixed image f, m the moving image, u(x,p) the
  * deformation of x depending on the transform parameters p. sfm, sff and smm
  * is notation used in the source code. The derivative of NC to p equals:
- * 
- * dNC/dp = dNC/dm * dm/dx * dx/dp = dNC/dm * gradient * jacobian,
+ *
+ * \f[ 
+ *   \frac{\partial \mathrm{NC}}{\partial p} = \frac{\partial \mathrm{NC}}{\partial m} \frac{\partial m}{\partial x} \frac{\partial x}{\partial p} = \frac{\partial \mathrm{NC}}{\partial m} * \mathtt{gradient} * \mathtt{jacobian},
+ * \f]
  *
  * where gradient is the derivative of the moving image m to x, as calculated
  * in the Initialize of the itk::ImageToImageMetric, and where jacobian is the
@@ -69,22 +68,19 @@ namespace itk
  * GetJacobian() of the transform. gradient * jacobian is called the differential.
  * This yields for the derivative:
  *
- *           sum_x[ f(x) * differential ] - ( sfm / smm ) * sum_x[ m(x+u(x,p)) * differential ] \n
- * dNC/dp = ----------------------------------------------------------------------------------- \n
- *                                         sqrt[ sff * smm ] \n
+ * \f[
+ *   \frac{\partial \mathrm{NC}}{\partial p} = \frac{\sum_x[ f(x) * \mathtt{differential} ] - ( \mathtt{sfm} / \mathtt{smm} ) * \sum_x[ m(x+u(x,p)) * \mathtt{differential} ]}{\sqrt{\mathtt{sff} * \mathtt{smm}}}
+ * \f]
  *
  * This class has an option to subtract the sample mean from the sample values
  * in the cross correlation formula. This typically results in narrower valleys
  * in the cost fucntion NC. The default value is false. If SubtractMean is true,
  * the NC is defined as:
  *
- *                sum_x[ ( f(x) - Af ) * ( m(x+u(x,p)) - Am ) ] \n
- * NC = ------------------------------------------------------------------ \n
- *      sqrt[ sum_x[ ( f(x) - Af )^2 ] * sum_x[ ( m(x+u(x,p)) - Am )^2 ] ] \n
- *
- *                       sfm - sf * sm / N \n
- *    = ----------------------------------------------------- , \n
- *      sqrt[ ( sff - sf * sf / N ) * ( smm - sm * sm / N ) ] \n
+ * \f[
+ * \mathrm{NC} = \frac{\sum_x ( f(x) - \mathtt{Af} ) * ( m(x+u(x,p)) - \mathtt{Am})}{\sqrt{\sum_x (f(x) - \mathtt{Af})^2 * \sum_x (m(x+u(x,p)) - \mathtt{Am})^2}}
+ *    = \frac{\mathtt{sfm} - \mathtt{sf} * \mathtt{sm} / N}{\sqrt{(\mathtt{sff} - \mathtt{sf} * \mathtt{sf} / N) * (\mathtt{smm} - \mathtt{sm} *\mathtt{sm} / N)}},
+ * \f]
  *
  * where Af and Am are the average of f and m, respectively.
  *
