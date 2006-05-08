@@ -27,12 +27,6 @@ Timer contains functionality to time (parts of) the registration.
 */
 
 /**
-\defgroup TransformGrouper TransformGrouper
-\ingroup Common
-TransformGrouper contains functionality to combine two or more transforms.
-*/
-
-/**
 \defgroup xout xout
 \ingroup Common
 xout contains functionality to print all output of the program to whatever.
