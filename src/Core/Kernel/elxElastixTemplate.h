@@ -57,13 +57,16 @@ namespace elastix
 	
 	/**
 	 * \class ElastixTemplate
-	 * \brief The main elastix class, which connects components and invokes the BeforeRegistration(), BeforeEachResolution() etc. methods.
+	 * \brief The main elastix class, which connects components
+	 * and invokes the BeforeRegistration(), BeforeEachResolution(),
+	 * etc. methods.
 	 *
 	 * The ElastixTemplate class ...
 	 * 
-	 * \parameter WriteTransformParametersEachIteration: Controls whether to save a transform parameter file to disk in every iteration.\n
-	 * example: <tt> (WriteTransformParametersEachIteration "true") </tt>
-	 * This parameter can not be specified for each resolution apart.
+	 * \parameter WriteTransformParametersEachIteration: Controls whether
+	 * to save a transform parameter file to disk in every iteration.\n
+	 * example: <tt>(WriteTransformParametersEachIteration "true")</tt>
+	 * This parameter can not be specified for each resolution separately.
 	 * Default value: "false".
 	 *
 	 * \ingroup Kernel

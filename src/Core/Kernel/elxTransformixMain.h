@@ -9,7 +9,7 @@ namespace elastix
 	
 	/**
 	 * \class TransformixMain
-	 * \brief ???
+	 * \brief A class with all functionality to configure transformix.
 	 *
 	 * The TransformixMain class inherits from ElastixMain. We overwrite the Run()
 	 * -function. In the new Run() the Run()-function from the

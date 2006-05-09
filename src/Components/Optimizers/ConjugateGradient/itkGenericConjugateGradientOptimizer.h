@@ -9,8 +9,9 @@
 
 namespace itk
 {
-  /** \class GenericConjugateGradientOptimizer
-   * \brief A set of conjugate gradient algorithms ...
+  /**
+	 * \class GenericConjugateGradientOptimizer
+   * \brief A set of conjugate gradient algorithms.
    *
    * The steplength is determined at each iteration by means of a 
    * line search routine. The itk::MoreThuenteLineSearchOptimizer works well. 

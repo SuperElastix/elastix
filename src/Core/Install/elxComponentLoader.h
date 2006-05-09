@@ -1,12 +1,3 @@
-/**
- * This file defines the class elx::ComponentLoader. This class
- * loads .DLL's and stores pointers to the ::New() functions of
- * each component in the elx::ComponentDatabase.
- *
- * Each new component (a new metric for example should "make itself
- * known" by calling the elxInstallMacro, which is defined in
- * elxInstallFunctions.h .
- */
 
 #ifndef __elxComponentLoader_h
 #define __elxComponentLoader_h
@@ -18,6 +9,22 @@
 
 namespace elastix
 {
+
+	/**
+	* \class ComponentLoader
+	*
+	* \brief Loads in all the desired libraries, which are elastix
+	* components.
+	*
+	* This file defines the class elx::ComponentLoader. This class
+	* loads .DLL's and stores pointers to the ::New() functions of
+	* each component in the elx::ComponentDatabase.
+	*
+	* Each new component (a new metric for example should "make itself
+	* known" by calling the elxInstallMacro, which is defined in
+	* elxInstallFunctions.h .
+	*/
+
 
 	class ComponentLoader : public itk::Object
 	{

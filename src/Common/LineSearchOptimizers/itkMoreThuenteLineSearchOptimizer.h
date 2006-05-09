@@ -5,8 +5,10 @@
 
 namespace itk
 { 
-  /** \class MoreThuenteLineSearchOptimizer
-   * \brief ITK version of the MoreThuente line search algorithm ...
+  /**
+	 * \class MoreThuenteLineSearchOptimizer
+	 *
+   * \brief ITK version of the MoreThuente line search algorithm.
    *
    * This class is an ITK version of the netlib function mcsrch_. It
    * gives exactly the same results.

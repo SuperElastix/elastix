@@ -8,9 +8,9 @@ namespace elastix
 
 
 	/**
-	 * ********************** InstallFunctions **********************
+	 * \class InstallFunctions
 	 *
-	 * The InstallFunctions class ....
+	 * \brief The InstallFunctions class ....
 	 */
 
 	template<class TAnyItkObject>

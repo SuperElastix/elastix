@@ -36,9 +36,11 @@ namespace elastix
 
 	/**
 	 * \class ElastixMain
-	 * \brief ???
+	 * \brief A class with all functionality to configure elastix.
 	 *
-	 * The ElastixMain class ....
+	 * The ElastixMain initializes the MyConfiguration class with the
+	 * parameters and commandline arguments. After this, the class loads
+	 * and creates all components and sets them in ElastixTemplate.
 	 *
 	 * \ingroup Kernel
 	 */

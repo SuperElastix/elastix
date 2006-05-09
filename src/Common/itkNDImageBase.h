@@ -14,7 +14,7 @@ namespace itk
 	 * \class NDImageBase
 	 * \brief ???
 	 *
-	 * The NDImageBase class ....
+	 * The NDImageBase class is needed for the FullSearch optimizer.
 	 *
 	 * \ingroup Miscellaneous
 	 */
@@ -147,7 +147,6 @@ namespace itk
 		/** Use ::New method to create a new actual image */
 		virtual void CreateNewImage(void) = 0;
 		
-
 		/** Set/Get the Input/OutputFileName */
 		virtual void SetOutputFileName(const char *) = 0;
 		virtual void SetInputFileName(const char *) = 0;

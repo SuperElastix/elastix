@@ -10,9 +10,9 @@ namespace xoutlibrary
 
 	/**
 	 * \class xoutsimple
-	 * \brief ???
+	 * \brief xout class with only basic functionality.
 	 *
-	 * The xoutsimple class ....
+	 * The xoutsimple class just immediately prints to the desired outputs.
 	 *
 	 * \ingroup xout
 	 */
@@ -58,8 +58,7 @@ namespace xoutlibrary
 		/** Get the output maps. */
 		virtual const CStreamMapType & GetCOutputs(void);
 		virtual const XStreamMapType & GetXOutputs(void);
-		
-		
+				
 	}; // end class xoutsimple
 
 

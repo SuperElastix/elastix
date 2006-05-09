@@ -8,7 +8,7 @@ namespace itk
 
 	/**
 	 * \class RSGDEachParameterApartOptimizer
-	 * \brief An optimizer based on gradient descent...
+	 * \brief An optimizer based on gradient descent.
 	 *
 	 * This class is almost a copy of the normal
 	 * itk::RegularStepGradientDescentOptimizer. The difference 

@@ -11,9 +11,12 @@ namespace elastix
 
 
 	/**
-	 * *********************** BaseComponentSE **********************
+	 * \class BaseComponentSE
 	 *
-	 * The BaseComponentSE class is a class 
+	 * \brief The BaseComponentSE class is a base class for elastix
+	 * components that provides some basic functionality.
+	 *
+	 * 
 	 */
 
 	template <class TElastix>

@@ -26,7 +26,8 @@
 
 namespace itk
 {
-/** \class VectorMeanDiffusionImageFilter
+/**
+ * \class VectorMeanDiffusionImageFilter
  * \brief Applies an averaging filter to an image
  *
  * Computes an image where a given pixel is the mean value of the

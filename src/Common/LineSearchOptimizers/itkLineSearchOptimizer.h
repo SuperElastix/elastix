@@ -6,9 +6,10 @@
 namespace itk
 {
 
-  /** \class LineSearchOptimizer
+  /**
+	 * \class LineSearchOptimizer
    *
-   * A base class for LineSearch optimizers.
+   * \brief A base class for LineSearch optimizers.
    *
    * Scales are expected to be handled by the main optimizer.
    */
@@ -29,7 +30,6 @@ namespace itk
     typedef Superclass::ParametersType            ParametersType;
     typedef Superclass::DerivativeType            DerivativeType;
     typedef Superclass::CostFunctionType          CostFunctionType;
-
 
     /** Set/Get the LineSearchDirection */
     virtual void SetLineSearchDirection(const ParametersType & arg)

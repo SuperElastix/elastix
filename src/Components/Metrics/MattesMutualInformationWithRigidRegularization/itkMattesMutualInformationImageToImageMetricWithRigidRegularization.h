@@ -30,29 +30,30 @@
 namespace itk
 {
 	
-	/** \class MattesMutualInformationImageToImageMetricWithRigidRegularization
-	* \brief Computes the mutual information between two images to be 
-	* registered using the method of Mattes et al. and adds a rigid penalty term.
-	*
-	* MattesMutualInformationImageToImageMetricWithRigidRegularization computes the mutual 
-	* information between a fixed and moving image to be registered and adds a
-	* rigid penalty term. The rigid penalty term penalizes deviations from a rigid
-	* transformation at regions specified by the so-called rigidity images.
-	*
-	* This class is derived from MattesMutualInformationImageToImageMetric2,
-	* which is the itk::MattesMutualInformationImageToImageMetric with some
-	* contributions of our own. This class changes the GetValue() and 
-	* GetValueAndDerivative() methods, such that it adds a rigid penalty
-	* term to the Mutual Information metric of the superclass.
-	*
-	* This metric only works with B-splines as a transformation model.
-	*
-	* \sa MattesMutualInformationImageToImageMetric2
-	* \sa MattesMutualInformationMetricWithRigidRegularization
-	* \sa RigidRegulizerMetric
-	* \sa BSplineTransform
-	* \ingroup Metrics
-	*/
+	/**
+	 * \class MattesMutualInformationImageToImageMetricWithRigidRegularization
+	 * \brief Computes the mutual information between two images to be 
+	 * registered using the method of Mattes et al. and adds a rigid penalty term.
+	 *
+	 * MattesMutualInformationImageToImageMetricWithRigidRegularization computes the mutual 
+	 * information between a fixed and moving image to be registered and adds a
+	 * rigid penalty term. The rigid penalty term penalizes deviations from a rigid
+	 * transformation at regions specified by the so-called rigidity images.
+   *
+   * This class is derived from MattesMutualInformationImageToImageMetric2,
+   * which is the itk::MattesMutualInformationImageToImageMetric with some
+	 * contributions of our own. This class changes the GetValue() and 
+	 * GetValueAndDerivative() methods, such that it adds a rigid penalty
+	 * term to the Mutual Information metric of the superclass.
+	 *
+	 * This metric only works with B-splines as a transformation model.
+ 	 *
+	 * \sa MattesMutualInformationImageToImageMetric2
+	 * \sa MattesMutualInformationMetricWithRigidRegularization
+	 * \sa RigidRegulizerMetric
+	 * \sa BSplineTransform
+	 * \ingroup Metrics
+	 */
 
 	template < class TFixedImage, class TMovingImage >
 		class MattesMutualInformationImageToImageMetricWithRigidRegularization :
@@ -134,7 +135,6 @@ namespace itk
 			StructuringElementType >														DilateFilterType;
 		typedef typename DilateFilterType::Pointer						DilateFilterPointer;
 	
-
 		/** Initialize the metric. */
 		void Initialize(void) throw ( ExceptionObject );
 		

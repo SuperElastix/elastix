@@ -20,17 +20,18 @@
 #endif
 
 #include <iostream>
+
 /** The current Elastix version. */
 #define __ELASTIX_VERSION 3.501
+
 /** All Elastix components should be in namespace elastix. */
 namespace elastix
 {
-	
 
 	/**
-	 * *********************** BaseComponent ************************
+	 * \class BaseComponent
 	 *
-	 * The BaseComponent class is a class that all Elastix
+	 * \brief The BaseComponent class is a class that all Elastix
 	 * components should inherit from.
 	 */
 

@@ -12,9 +12,12 @@ namespace xoutlibrary
 
 	/**
 	 * \class xoutrow
-	 * \brief ???
+	 * \brief The xoutrow class can easily generate tables.
 	 *
-	 * The xoutrow class ....
+	 * The xoutrow class is used in elastix for printing the registration
+	 * information, such as metric value, gradient information, etc. You
+	 * can fill in all this information, and only after calling
+	 * WriteBufferedData() the entire row is printed to the desired outputs.
 	 *
 	 * \ingroup xout
 	 */
@@ -52,7 +55,7 @@ namespace xoutlibrary
 		/** Destructor */
 		virtual ~xoutrow();
 
-		/** Write the buffered cell data in a row to the outputs, separated by tabs */
+		/** Write the buffered cell data in a row to the outputs, separated by tabs. */
 		virtual void WriteBufferedData(void);
 
 		/** Writes the names of the target cells to the outputs;
@@ -60,7 +63,7 @@ namespace xoutlibrary
 		 *		xout["WriteHeaders"] */
 		virtual void WriteHeaders(void);
 
-		/** This method adds an xoutcell to the map of Targets.  */
+		/** This method adds an xoutcell to the map of Targets. */
 		virtual int AddTargetCell( const char * name );
 
 		virtual int RemoveTargetCell( const char * name );

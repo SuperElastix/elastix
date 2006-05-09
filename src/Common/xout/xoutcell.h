@@ -10,9 +10,10 @@ namespace xoutlibrary
 
 	/**
 	 * \class xoutcell
-	 * \brief ???
+	 * \brief Stores the input in a string stream.
 	 *
-	 * The xoutcell class ....
+	 * The xoutcell class is used in the xoutrow class. It stores
+	 * input for a cell in a row.
 	 *
 	 * \ingroup xout
 	 */
@@ -22,7 +23,7 @@ namespace xoutlibrary
 	{
 	public:
 		
-		/** Typdef's.*/
+		/** Typdef's. */
 		typedef xoutcell													Self;
 		typedef xoutbase<charT, traits>						Superclass;
 
@@ -49,7 +50,7 @@ namespace xoutlibrary
 		/** Destructor */
 		virtual ~xoutcell();
 
-		/** Write the buffered cell data to the outputs */
+		/** Write the buffered cell data to the outputs. */
 		virtual void WriteBufferedData(void);
 
 	protected:

@@ -20,12 +20,11 @@
 
 namespace elastix
 {
-
 	
 	/**
-	 * *********************** ComponentDatabase ********************
+	 * \class ComponentDatabase
 	 *
-	 * The ComponentDatabase class is a class that stores the 
+	 * \brief The ComponentDatabase class is a class that stores the 
 	 * ::New() functions of all components.
 	 */
 

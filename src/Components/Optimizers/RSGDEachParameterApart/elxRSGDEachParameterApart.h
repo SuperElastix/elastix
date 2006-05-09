@@ -10,7 +10,7 @@ using namespace itk;
 
 	/**
 	 * \class RSGDEachParameterApart
-	 * \brief An optimizer based on gradient descent...
+	 * \brief An optimizer based on gradient descent.
 	 *
 	 * The underlying itk class is almost a copy of the normal
 	 * RegularStepGradientDescent. The difference is that each

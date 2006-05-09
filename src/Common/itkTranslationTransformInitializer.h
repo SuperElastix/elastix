@@ -10,7 +10,10 @@
 namespace itk
 {
 
-/** \brief TranslationTransformInitializer is a helper class intended to
+/**
+ * \class TranslationTransformInitializer
+ *
+ * \brief TranslationTransformInitializer is a helper class intended to
  * initialize the translation of a TranslationTransforms 
  * 
  * This class is connected to the fixed image, moving image and transform
@@ -62,7 +65,6 @@ public:
   itkStaticConstMacro(SpaceDimension, unsigned int, TransformType::SpaceDimension);
   itkStaticConstMacro(InputSpaceDimension, unsigned int, TransformType::InputSpaceDimension);
   itkStaticConstMacro(OutputSpaceDimension, unsigned int, TransformType::OutputSpaceDimension);
-
   
   /** Image Types to use in the initialization of the transform */
   typedef   TFixedImage              FixedImageType;
@@ -92,7 +94,6 @@ public:
 
   /** Set the moving image used in the registration process */
   itkSetConstObjectMacro( MovingImage, MovingImageType );
-
 
   /** Initialize the transform using data from the images */
   virtual void InitializeTransform() const;
