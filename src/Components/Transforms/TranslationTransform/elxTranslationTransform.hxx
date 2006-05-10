@@ -53,7 +53,8 @@ namespace elastix
 		this->m_Configuration->ReadParameter(
 			automaticTransformInitializationString,
 			"AutomaticTransformInitialization", 0);
-		if (automaticTransformInitializationString == "true")
+		if ( (automaticTransformInitializationString == "true") &&
+			(this->Superclass1::GetInitialTransform() == 0) )
 		{
 			automaticTransformInitialization = true;
 		}

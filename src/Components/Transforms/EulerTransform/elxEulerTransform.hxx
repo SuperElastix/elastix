@@ -257,7 +257,8 @@ namespace elastix
 		this->m_Configuration->ReadParameter(
 			automaticTransformInitializationString,
 			"AutomaticTransformInitialization", 0);
-		if (automaticTransformInitializationString == "true")
+		if ( (automaticTransformInitializationString == "true") &&
+			(this->Superclass1::GetInitialTransform() == 0) )
 		{
 			automaticTransformInitialization = true;
 		}
@@ -301,6 +302,18 @@ namespace elastix
 			this->m_Registration->GetAsITKBaseType()->GetFixedImage()->
 				TransformIndexToPhysicalPoint( centerOfRotationIndex, centerOfRotationPoint );
 			this->m_EulerTransform->SetCenter(centerOfRotationPoint);
+		}
+
+		/** Apply the initial transform to the center of rotation, if 
+		 * composition is used to combine the initial transform with the
+		 * the current (euler) transform. */
+		if ( (this->GetUseComposition()) && (this->Superclass1::GetInitialTransform() != 0) )
+		{
+			InputPointType transformedCenterOfRotationPoint = 
+				this->Superclass1::GetInitialTransform()->TransformPoint( 
+				this->m_EulerTransform->GetCenter() );
+			this->m_EulerTransform->SetCenter(
+				transformedCenterOfRotationPoint );
 		}
 
 		/** Set the initial parameters in this->m_Registration.*/

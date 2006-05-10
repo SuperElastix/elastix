@@ -36,7 +36,8 @@ using namespace itk;
 	 * \parameter AutomaticTransformInitialization: whether or not the initial translation
 	 *    between images should be estimated as the distance between their centers.\n
 	 *    example: <tt>(AutomaticTransformInitialization "true")</tt> \n
-	 *    By default "false" is assumed. So, no initial translation.
+	 *    By default "false" is assumed. So, no initial translation.\n
+	 *    
 	 *
 	 * The transform parameters necessary for transformix, additionally defined by this class, are:
 	 * \transformparameter CenterOfRotation: stores the center of rotation as an index. \n
@@ -142,9 +143,12 @@ using namespace itk;
 		/** Initialize Transform.
 		 * \li Set all parameters to zero. 
 		 * \li Set center of rotation:
-		 *  automatically initialized to the geometric center of the image, or
+		 *   automatically initialized to the geometric center of the image, or
 		 *   assigned a user entered voxel index, given by the parameter 
-		 *   (CenterOfRotation <index-x> <index-y> ...); 
+		 *   (CenterOfRotation <index-x> <index-y> ...). 
+		 *   If an initial transform is present and HowToCombineTransforms is
+		 *   set to "Compose", the initial transform is taken into account 
+		 *   while setting the center of rotation.
 		 * \li Set initial translation:
 		 *  the initial translation between fixed and moving image is guessed,
 		 *  if the user has set (AutomaticTransformInitialization "true"). 

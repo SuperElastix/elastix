@@ -43,6 +43,12 @@ using namespace itk;
 	 * deformationfield arrow. Filtering of the deformation field is based
 	 * on some 'stiffness coefficient' image.
 	 *
+	 * \warning Using this transform in with the option
+	 * (HowToCombineTranforms "Compose"). May give unpredicable results.
+	 * Especially if the initial transformation is large. This is because
+	 * the coefficient grid is not properly initialized.
+	 * Better use (HowToCombineTranforms "Add").
+	 *
 	 * The parameters used in this class are:
 	 * \parameter Transform: Select this transform as follows:\n
 	 *		<tt>(%Transform "BSplineTransformWithDiffusion")</tt>

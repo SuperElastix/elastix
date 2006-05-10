@@ -100,11 +100,11 @@ namespace itk
 
 		/** Control the way transforms are combined. */
 		virtual void SetUseAddition(bool _arg);
-		itkGetMacro(UseAddition, bool);
+		itkGetConstMacro(UseAddition, bool);
 
 		/** Control the way transforms are combined. */
 		virtual void SetUseComposition(bool _arg);
-		itkGetMacro(UseComposition, bool);
+		itkGetConstMacro(UseComposition, bool);
 
 		/**  Method to transform a point. */
 		virtual OutputPointType TransformPoint( const InputPointType  & point ) const;

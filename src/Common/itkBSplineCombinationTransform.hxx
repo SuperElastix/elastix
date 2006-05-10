@@ -16,7 +16,7 @@ namespace itk
 		::BSplineCombinationTransform() : Superclass()
 	{
 		/** Initialize.*/
-		this->m_BSplineTransform = 0;
+		this->m_CurrentTransformAsBSplineTransform = 0;
 				
 		this->m_SelectedTransformPointBSplineFunction = 
 			&Self::TransformPointBSplineNoCurrentTransform;
@@ -74,7 +74,7 @@ namespace itk
 			if ( _arg == 0 )
 			{
 				this->m_CurrentTransform = 0;
-				this->m_BSplineTransform = 0;
+				this->m_CurrentTransformAsBSplineTransform = 0;
 				this->Modified();
 				this->UpdateCombinationMethod();
 				return;
@@ -87,7 +87,7 @@ namespace itk
 			if ( testPointer )
 			{
         this->m_CurrentTransform = _arg;
-				this->m_BSplineTransform = testPointer;
+				this->m_CurrentTransformAsBSplineTransform = testPointer;
 				this->Modified();
 				this->UpdateCombinationMethod();
 			}
@@ -153,7 +153,7 @@ namespace itk
 			this->m_InitialTransform->TransformPoint( inputPoint );
 		
 		/** The Current transform */
-		this->m_BSplineTransform->TransformPoint( 
+		this->m_CurrentTransformAsBSplineTransform->TransformPoint( 
 			inputPoint, outputPoint, weights,	indices, inside);
 		
 		/** Both added together */
@@ -178,7 +178,7 @@ namespace itk
 			ParameterIndexArrayType &indices, 
 			bool &inside ) const
 		{
-			this->m_BSplineTransform->TransformPoint( 
+			this->m_CurrentTransformAsBSplineTransform->TransformPoint( 
 				this->m_InitialTransform->TransformPoint( inputPoint ),
 				outputPoint, weights,	indices, inside);
 		} // end TransformPointBSplineUseComposition
@@ -197,7 +197,7 @@ namespace itk
 			ParameterIndexArrayType &indices, 
 			bool &inside ) const
 	{
-		this->m_BSplineTransform->TransformPoint(
+		this->m_CurrentTransformAsBSplineTransform->TransformPoint(
 			inputPoint, outputPoint, weights,	indices, inside);
 	} // end TransformPointBSplineNoInitialTransform
 

@@ -250,13 +250,16 @@ namespace elastix
 			xl::xout["warning"] << "WARNING: Center of Rotation is not within image boundaries!" << std::endl;
 		}
 
-		/** Check if user wants automatic transform initialization; false by default. */
+		/** Check if user wants automatic transform initialization; false by default.
+		 * If an initial transform is given, automatic transform initialization is 
+		 * not possible */
 		std::string automaticTransformInitializationString("false");
 		bool automaticTransformInitialization = false;
 		this->m_Configuration->ReadParameter(
 			automaticTransformInitializationString,
 			"AutomaticTransformInitialization", 0);
-		if (automaticTransformInitializationString == "true")
+		if ( (automaticTransformInitializationString == "true") &&
+			(this->Superclass1::GetInitialTransform() == 0) )
 		{
 			automaticTransformInitialization = true;
 		}
@@ -300,6 +303,18 @@ namespace elastix
 			this->m_Registration->GetAsITKBaseType()->GetFixedImage()->
 				TransformIndexToPhysicalPoint( centerOfRotationIndex, centerOfRotationPoint );
 			this->m_AffineTransform->SetCenter(centerOfRotationPoint);
+		}
+
+		/** Apply the initial transform to the center of rotation, if 
+		 * composition is used to combine the initial transform with the
+		 * the current (affine) transform. */
+		if ( (this->GetUseComposition()) && (this->Superclass1::GetInitialTransform() != 0) )
+		{
+			InputPointType transformedCenterOfRotationPoint = 
+				this->Superclass1::GetInitialTransform()->TransformPoint( 
+				this->m_AffineTransform->GetCenter() );
+			this->m_AffineTransform->SetCenter(
+				transformedCenterOfRotationPoint );
 		}
 
 		/** Set the initial parameters in this->m_Registration.*/

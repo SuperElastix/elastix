@@ -138,7 +138,7 @@ namespace itk
 		virtual ~BSplineCombinationTransform(){};
 				
 		/** The current transform casted to a BSplineTransform. */
-		BSplineTransformPointer m_BSplineTransform;
+		BSplineTransformPointer m_CurrentTransformAsBSplineTransform;
 
 		/** Set, besides the SelectedTransformPointFunction and the 
 		 * SelectedGetJacobianFunction, the SelectedTransformPointBSplineFunction. */

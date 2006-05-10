@@ -44,6 +44,8 @@ using namespace itk;
 	 * \transformparameter GridOrigin: stores the origin of the B-spline grid. \n
 	 *		example: <tt>(GridOrigin 0.0 0.0 0.0)</tt>
 	 *
+	 * \todo It is unsure what happens when one of the image dimensions has length 1. 
+	 * 
 	 * \ingroup Transforms
 	 */
 
@@ -149,22 +151,59 @@ using namespace itk;
 		/** Execute stuff before the actual registration:
 		 * \li Create an initial B-spline grid.
 		 * \li Create initial registration parameters.
+		 * Initially, the transform is set to use a 1x1x1 grid, with deformation (0,0,0).
+		 * In the method BeforeEachResolution() this will be replaced by the right grid size.
+		 * This seems not logical, but it is required, since the registration
+		 * class checks if the number of parameters in the transform is equal to
+		 * the number of parameters in the registration class. This check is done
+		 * before calling the BeforeEachResolution() methods.
 		 */
 		virtual void BeforeRegistration(void);
 
 		/** Execute stuff before each new pyramid resolution:
-		 * \li Upsample the B-spline grid.
+		 * \li In the first resolution call InitializeTransform().
+		 * \li In next resolutions upsample the B-spline grid if necessary (so, call IncreaseScale())
 		 */
 		virtual void BeforeEachResolution(void);
 		
-		/** Method to set the initial BSpline grid, called by BeforeEachResolution(). */
-		virtual void SetInitialGrid(void);
+		/** Method to set the initial BSpline grid and initialize the parameters (to 0).
+		 * \li ComputeInitialGridSpacingFactor
+		 * \li Define the initial grid region, origin and spacing, using the just computed grid spacing factor
+		 * \li Set the initial parameters to zero and set then as InitialParametersOfNextLevel in the registration object.
+		 * Called by BeforeEachResolution().
+		 */
+		virtual void InitializeTransform(void);
 
-		/** Method to increase the density of the BSpline grid,
-		 * called by BeforeEachResolution().
+		/** Method to increase the density of the BSpline grid.
+		 * \li Half the m_GridSpacingFactor
+		 * \li Define the region, origin and spacing of the new grid
+		 * \li Determine the new B-spline coefficients that describe the current deformation field.
+		 * \li Set these coefficients as InitialParametersOfNextLevel in the registration object.
+		 * Called by BeforeEachResolution().
 		 */
 		virtual void IncreaseScale(void);
 		
+		/** Method to compute m_GridSpacingFactor in the first resolution.
+		 * The initial grid spacing factor depends on:
+		 * \li The FinalGridSpacing parameter, read from the parameter file.
+		 * \li The UpsampleGridOption parameter, read from the parameter file.
+		 * \li The NumberOfResolutions, read from the parameter file
+		 * Called by SetInitialGrid() 
+		 */
+		virtual void ComputeInitialGridSpacingFactor(void);
+
+		/** Define a bspline grid, based on:
+		 * \li The current m_GridSpacingFactor,
+		 * \li FixedImage size/spacing/origin, and
+		 * \li InitialTransform; only used in case UseComposition is true.
+		 *     in this case the BSpline grid is located at the position of
+		 *     the fixed image after undergoing the initial transform.
+		 * Returns gridregion, gridorigin and gridspacing.
+		 * Called by InitializeTransform() and IncreaseScale().
+		 */
+		virtual void DefineGrid(RegionType & gridregion,
+			OriginType & gridorigin, SpacingType & gridspacing  ) const;
+
 		/** Function to read transform-parameters from a file. */
 		virtual void ReadFromFile(void);
 		/** Function to write transform-parameters to a file. */
