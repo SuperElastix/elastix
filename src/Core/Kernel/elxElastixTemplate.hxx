@@ -426,8 +426,7 @@ namespace elastix
 
 		/** Tell the user. */
 		elxout << "\t\tdone!" << std::endl;
-		elxout << "Transforming points (if called for) ...";
-
+		
 		/** Call TransformPoints. */
 		try
 		{
@@ -438,8 +437,7 @@ namespace elastix
 			xout["error"] << excp << std::endl;
 			xout["error"] << "However, transformix continues anyway with resampling." << std::endl;
 		}
-		elxout << "\t\tdone!" << std::endl;
-
+		
 		/** Resample the image. */
 		if (inputImageFileName != "")
 		{
