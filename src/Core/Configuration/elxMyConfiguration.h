@@ -126,7 +126,6 @@ namespace elastix
 		  return ReadParameter(param, name_field, entry_nr, false);
 		}
 
-
 		/** Get/Set the name of the parameterFileName.*/
 		itkGetStringMacro( ParameterFileName );
 		itkSetStringMacro( ParameterFileName );

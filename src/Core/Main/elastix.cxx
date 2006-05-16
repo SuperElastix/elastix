@@ -120,7 +120,6 @@ int main( int argc, char **argv )
 	/** The argv0 argument, required for finding the component.dll/so's. */
 	argMap.insert( ArgumentMapEntryType( "-argv0", argv[ 0 ] )  );
 
-
 	/** Check if at least once the option "-p" is given. */
 	if ( NrOfParameterFiles == 0 )
 	{
@@ -237,13 +236,11 @@ int main( int argc, char **argv )
 
 	} // end loop over registrations
 
-
 	elxout << "-------------------------------------------------------------------------" << "\n" << std::endl;	
 
 	/** Stop totaltimer and print it. */
 	totaltimer->StopTimer();
 	elxout << "Total time elapsed: " << totaltimer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
-
 
 	/** 
 	 * Make sure all the components that are defined in a Module (.DLL/.so) 

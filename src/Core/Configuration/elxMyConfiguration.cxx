@@ -31,7 +31,7 @@ namespace elastix
 	int MyConfiguration::BeforeAll(void)
 	{
 		/** Open the ParameterFile.*/
-		std::ifstream parfile( GetParameterFileName() );
+		std::ifstream parfile( this->GetParameterFileName() );
 		if ( parfile.is_open() )
 		{
 			/** Seperate clearly in log-file.*/
@@ -59,6 +59,7 @@ namespace elastix
 		return 0;
 
 	} // end BeforeAll
+
 
 	/**
 	 * ********************** Initialize ****************************

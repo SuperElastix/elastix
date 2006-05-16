@@ -76,9 +76,9 @@ namespace elastix
 		/** Declare the return value and initialize it.*/
 		int returndummy = 0;
 
-		/** Set the default precision of floating values in the output */
-		this->m_Configuration->ReadParameter(this->m_DefaultOutputPrecision, "DefaultOutputPrecision", 0, true);
-		elxout << std::setprecision(this->m_DefaultOutputPrecision);
+		/** Set the default precision of floating values in the output. */
+		this->m_Configuration->ReadParameter( this->m_DefaultOutputPrecision, "DefaultOutputPrecision", 0, true );
+		elxout << std::setprecision( this->m_DefaultOutputPrecision );
 
 		/** Print to log file.*/
 		elxout << std::fixed;
@@ -91,7 +91,7 @@ namespace elastix
 		elxout << "Command line options from ElastixBase:" << std::endl;
 		std::string check = "";
 
-		/** Check for appearance of "-f".*/
+		/** Check for appearance of "-f". */
 		check = this->GetConfiguration()->GetCommandLineArgument( "-f" );
 		if ( check == "" )
 		{
@@ -103,7 +103,7 @@ namespace elastix
 			elxout << "-f\t\t" << check << std::endl;
 		}
 		
-		/** Check for appearance of "-m".*/
+		/** Check for appearance of "-m". */
 		check = "";
 		check = this->GetConfiguration()->GetCommandLineArgument( "-m" );
 		if ( check == "" )

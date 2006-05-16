@@ -6,7 +6,7 @@
 
 int main( int argc, char **argv )
 {
-	/** Check if "-help" was asked for.*/
+	/** Check if "-help" or "--version" was asked for.*/
 	if ( argc == 1 )
 	{
 		std::cout << "Use \"transformix --help\" for information about transformix-usage." << std::endl;

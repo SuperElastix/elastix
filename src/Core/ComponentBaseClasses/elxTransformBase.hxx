@@ -598,21 +598,21 @@ namespace elastix
 		 */
 		std::string ipp = this->GetConfiguration()->GetCommandLineArgument( "-ipp" );
 
-		/** If there is an inputpoint-file?*/
+		/** If there is an inputpoint-file? */
 		if ( ipp != "" && ipp != "all" )
 		{
-			elxout << "The transform is evaluated on some points, specified in the input point file." << std::endl;
+			elxout << "  The transform is evaluated on some points, specified in the input point file." << std::endl;
 			this->TransformPointsSomePoints( ipp );
 		}
 		else if ( ipp == "all" )
 		{
-			elxout << "The transform is evaluated on all points. The result is a deformation field." << std::endl;
+			elxout << "  The transform is evaluated on all points. The result is a deformation field." << std::endl;
 			this->TransformPointsAllPoints();
 		}
 		else
 		{
 			// just a message
-			elxout << "The command-line option \"-ipp\" is not used, so no points are transformed" << std::endl;
+			elxout << "  The command-line option \"-ipp\" is not used, so no points are transformed" << std::endl;
 		}
 
 	} // end TransformPoints
@@ -633,7 +633,7 @@ namespace elastix
 		/** Open the file containing the inputpoints.*/
 		std::ifstream pointfile( filename.c_str() );
 		
-		elxout << "Opening input point file: " << filename << std::endl;
+		elxout << "  Opening input point file: " << filename << std::endl;
 
 		if ( pointfile.is_open() )
 		{
@@ -658,23 +658,23 @@ namespace elastix
 			if (indexorpoint == "point")
 			{
 				inputaspoint = true;
-				elxout << "Input points are specified in world coordinates." << std::endl;
+				elxout << "  Input points are specified in world coordinates." << std::endl;
 				pointfile >> nrofpoints;
 			}
 			else if (indexorpoint == "index")
 			{
 				inputaspoint = false;
-				elxout << "Input points are specified as image indices." << std::endl;
+				elxout << "  Input points are specified as image indices." << std::endl;
 				pointfile >> nrofpoints;
 			}
 			else 
 			{
 				inputaspoint = false;
-				elxout << "Input points are assumed to be specified as image indices." << std::endl;
+				elxout << "  Input points are assumed to be specified as image indices." << std::endl;
 				pointfile >> nrofpoints;
 				nrofpoints = atoi( indexorpoint.c_str() );				
 			}
-			elxout << "Number of specified input points: " << nrofpoints << std::endl;				
+			elxout << "  Number of specified input points: " << nrofpoints << std::endl;				
       
 			/** Create the storage classes */
 			std::vector< IndexType > inputindexvec(nrofpoints);	
@@ -719,24 +719,25 @@ namespace elastix
 				} 
 			} 
 
-			/** Apply the transform */
-			elxout << "The input points are transformed." << std::endl;
+			/** Apply the transform. */
+			elxout << "  The input points are transformed." << std::endl;
 			for ( unsigned int j = 0; j < nrofpoints; j++ )
 			{
-				/** Call TransformPoint.*/
+				/** Call TransformPoint. */
 				outputpointvec[ j ] = this->GetAsITKBaseType()->TransformPoint( inputpointvec[ j ] );
-				/** Transform back to index.*/
+				/** Transform back to index. */
 				dummyImage->TransformPhysicalPointToIndex( outputpointvec[ j ], outputindexvec[ j ] );					
 				/** Compute displacement. */
 				deformationvec[ j ].CastFrom( outputpointvec[ j ] - inputpointvec[ j ] );
 			}			
 						
-			/** Create filename and filestream.*/
+			/** Create filename and filestream. */
 			std::string outputPointsFileName = this->m_Configuration->GetCommandLineArgument( "-out" );
 			outputPointsFileName += "outputpoints.txt";
 			std::ofstream outputPointsFile( outputPointsFileName.c_str() );
 			outputPointsFile << std::showpoint << std::fixed;
-			elxout << "The transformed points are saved in: " <<	outputPointsFileName << std::endl;
+			elxout << "  The transformed points are saved in: " <<	outputPointsFileName << std::endl;
+			//\todo do not write opp to log file, but only to outputPointsFile.
 			elxout.AddOutput( "opp", &outputPointsFile );
 			
 			/** Print the results. */
@@ -780,13 +781,13 @@ namespace elastix
 				elxout << "]" << std::endl;
 			}	// end for nrofpoints	
 			
-			/** Stop writing to the output file */
+			/** Stop writing to the output file. */
 			elxout.RemoveOutput( "opp" );
 			
 		} // end if - input file is open
 		else
 		{
-			xl::xout["warning"] << "WARNING: the file \"" << filename <<
+			xl::xout["warning"] << "  WARNING: the file \"" << filename <<
 				"\" could not be opened!" << std::endl;
 		}
 		
@@ -872,6 +873,7 @@ namespace elastix
 		outputWriter->SetFileName( makeFileName.str().c_str() );
 		
 		/** Do the writing. */
+		elxout << "  Writing the deformation field" << std::endl;
 		try
 		{
 			outputWriter->Update();

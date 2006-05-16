@@ -372,6 +372,9 @@ namespace elastix
 	int ElastixTemplate<TFixedImage, TMovingImage>
 	::ApplyTransform(void)
 	{
+		/** Timer. */
+		tmr::Timer::Pointer timer = tmr::Timer::New();
+
 		/** Tell all components where to find the ElastixTemplate. */
 		this->m_elx_Transform->SetElastix(this);
 		this->m_elx_Resampler->SetElastix(this);
@@ -383,14 +386,17 @@ namespace elastix
 
 		std::string inputImageFileName =
 			this->GetConfiguration()->GetCommandLineArgument( "-in" );
-		if ( inputImageFileName != "")
+		if ( inputImageFileName != "" )
 		{
+			/** Timer. */
+			timer->StartTimer();
+
 			/** Tell the user. */
 			elxout << std::endl << "Reading input image ...";
 			
 			/** Set the inputImage == movingImage. */
-			typename InputImageReaderType::Pointer	inputImageReader;
-			if ( !(this->m_MovingImage) )
+			typename InputImageReaderType::Pointer inputImageReader;
+			if ( !this->m_MovingImage )
 			{
 				inputImageReader = InputImageReaderType::New();
 				inputImageReader->SetFileName(
@@ -415,18 +421,27 @@ namespace elastix
 			} // end if !moving image
 
 			/** Tell the user. */
-			elxout << "\t\t\t\tdone!" << std::endl;
+			timer->StopTimer();
+			elxout << "                   done, it took "
+				<< timer->PrintElapsedTimeSec()
+				<< " s" << std::endl;
 		} // end if ! inputImageFileName
 
 		/** Call all the ReadFromFile() functions. */
+		timer->StartTimer();
 		elxout << "Calling all ReadFromFile()'s ...";
 		this->m_elx_ResampleInterpolator->ReadFromFile();		
 		this->m_elx_Resampler->ReadFromFile();
 		this->m_elx_Transform->ReadFromFile();
 
 		/** Tell the user. */
-		elxout << "\t\tdone!" << std::endl;
-		
+		timer->StopTimer();
+		elxout << "          done, it took "
+			<< timer->PrintElapsedTimeSec()
+			<< " s" << std::endl;
+		timer->StartTimer();
+		elxout << "Transforming points ..." << std::endl;
+
 		/** Call TransformPoints. */
 		try
 		{
@@ -437,10 +452,15 @@ namespace elastix
 			xout["error"] << excp << std::endl;
 			xout["error"] << "However, transformix continues anyway with resampling." << std::endl;
 		}
-		
+		timer->StopTimer();
+		elxout << "  Transforming points done, it took "
+			<< timer->PrintElapsedTimeSec()
+			<< " s" << std::endl;
+
 		/** Resample the image. */
-		if (inputImageFileName != "")
+		if ( inputImageFileName != "" )
 		{
+			timer->StartTimer();
 			elxout << "Resampling image and writing to disk ...";
 			
 			/** Create a name for the final result. */
@@ -454,7 +474,10 @@ namespace elastix
 			this->m_elx_Resampler->WriteResultImage( makeFileName.str().c_str() );
 
 			/** Tell the user. */
-			elxout << "\tdone!" << std::endl;
+			timer->StopTimer();
+			elxout << "  done, it took "
+				<< timer->PrintElapsedTimeSec()
+				<< " s" << std::endl;
 		}
 
 		/** Return a value. */
@@ -542,11 +565,14 @@ namespace elastix
 		/** Print "-tp". */
 		check = this->GetConfiguration()->GetCommandLineArgument( "-tp" );
 		elxout << "-tp\t\t" << check << std::endl;
-
+		
 		/** Call all the BeforeAllTransformix() functions. */
 		returndummy |= this->m_elx_ResampleInterpolator->BeforeAllTransformix();		
 		returndummy |= this->m_elx_Resampler->BeforeAllTransformix();
 		returndummy |= this->m_elx_Transform->BeforeAllTransformix();
+
+		/** Print the Transform Parameter file. */
+		returndummy |= this->GetConfiguration()->BeforeAll();
 
 		/** Return a value. */
 		return returndummy;
@@ -890,7 +916,7 @@ namespace elastix
 	::CallInEachComponent( PtrToMemberFunction func )
 	{
 		/** Call the memberfunction 'func' of the this->m_elx_Components. */
-		( (    *( this->GetConfiguration() )    ).*func )();
+		( (*(this->GetConfiguration())).*func )();
 		( (*(this->m_elx_Registration)).*func )();
 		( (*(this->m_elx_Transform)).*func )();
 		( (*(this->m_elx_Metric)).*func )();
@@ -916,7 +942,7 @@ namespace elastix
 		int returndummy = 0;
 
 		/** Call the memberfunction 'func' of the this->m_elx_Components. */
-		returndummy |= ( (    *( this->GetConfiguration() )    ).*func )();		
+		returndummy |= ( (*( this->GetConfiguration())).*func )();		
 		returndummy |= ( (*(this->m_elx_Registration)).*func )();
 		returndummy |= ( (*(this->m_elx_Transform)).*func )();
 		returndummy |= ( (*(this->m_elx_Metric)).*func )();

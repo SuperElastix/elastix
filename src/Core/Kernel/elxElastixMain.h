@@ -144,7 +144,6 @@ namespace elastix
 
 		/** Returns the Index that is used in elx::ComponentDatabase.*/
 		itkGetConstMacro( DBIndex, DBIndexType );
-
 		
 		/** Enter the command line parameters, which were given by the user,
 		 * if elastix.exe is used to do a registration.	
