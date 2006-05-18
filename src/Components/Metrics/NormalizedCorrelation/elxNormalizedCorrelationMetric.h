@@ -19,11 +19,12 @@ using namespace itk;
 	 *		<tt>(Metric "NormalizedCorrelation")</tt>
 	 * \parameter SubtractMean: Flag to set if the sample mean is subtracted from the
 	 *    sample values in the cross correlation formula. This typically results in narrower
-	 *    valleys in the cost fucntion. Default value is true.\n
+	 *    valleys in the cost fucntion. Default value is true. Can be defined for each resolution\n
 	 *		example: <tt>(SubtractMean "false")</tt> \n
 	 * \parameter	UseAllPixels: Flag to force the metric to use ALL voxels for 
 	 *		computing the metric value and its derivative in each iteration.
-	 *    Choose one of {"true", "false"}. Default is "true". \n
+	 *    Choose one of {"true", "false"}. Default is "true". Can be defined for 
+	 *    each resolution. \n
 	 *		example: <tt>(UseAllPixels "false")</tt> \n
 	 *    note: the NewSamplesEveryIteration parameter is ignored by this metric.\n
 	 * \parameter NumberOfSpatialSamples: The number of image voxels used for computing the

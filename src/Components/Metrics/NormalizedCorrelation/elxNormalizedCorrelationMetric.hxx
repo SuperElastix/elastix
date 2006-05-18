@@ -27,17 +27,7 @@ using namespace itk;
 		void NormalizedCorrelationMetric<TElastix>
 		::BeforeRegistration(void)
 	{
-		/** Get and set SubtractMean. Default true. */
-		std::string subtractMean = "true";
-		this->GetConfiguration()->ReadParameter( subtractMean, "SubtractMean", 0 );
-		if ( subtractMean == "false" ) this->SetSubtractMean( false );
-		else this->SetSubtractMean( true );
 
-		/** Get and set UseAllPixels. Default true. */
-		std::string useAllPixels = "true";
-		this->GetConfiguration()->ReadParameter( useAllPixels, "UseAllPixels", 0 );
-		if ( useAllPixels == "false" ) this->SetUseAllPixels( false );
-		else this->SetUseAllPixels( true );
 
 	} // end BeforeRegistration
 
@@ -54,13 +44,33 @@ using namespace itk;
 		unsigned int level = 
 			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
-		/** Get and set NumberOfSpatialSamples. This only makes sense
-		 * if UseAllPixels is true. */
-		unsigned long numberOfSpatialSamples = 5000;
-		this->GetConfiguration()->ReadParameter( numberOfSpatialSamples, "NumberOfSpatialSamples", 0 );
-		this->GetConfiguration()->ReadParameter( numberOfSpatialSamples, "NumberOfSpatialSamples", level );
-		this->SetNumberOfSpatialSamples( numberOfSpatialSamples );
+		/** Get and set SubtractMean. Default true. */
+		std::string subtractMean = "true";
+		this->GetConfiguration()->ReadParameter( subtractMean, "SubtractMean", 0 );
+		this->GetConfiguration()->ReadParameter( subtractMean, "SubtractMean", level );
+		if ( subtractMean == "false" ) this->SetSubtractMean( false );
+		else this->SetSubtractMean( true );
 
+		/** Get and set UseAllPixels. Default true. */
+		std::string useAllPixels = "true";
+		this->GetConfiguration()->ReadParameter( useAllPixels, "UseAllPixels", 0 );
+		this->GetConfiguration()->ReadParameter( useAllPixels, "UseAllPixels", level );
+		if ( useAllPixels == "false" )
+		{
+			this->SetUseAllPixels( false );
+			/** Get and set NumberOfSpatialSamples. This only makes sense
+			 * if UseAllPixels is false. */
+			unsigned long numberOfSpatialSamples = 5000;
+			this->GetConfiguration()->ReadParameter( numberOfSpatialSamples, "NumberOfSpatialSamples", 0 );
+			this->GetConfiguration()->ReadParameter( numberOfSpatialSamples, "NumberOfSpatialSamples", level );
+			this->SetNumberOfSpatialSamples( numberOfSpatialSamples );
+		}
+		else
+		{
+			this->SetUseAllPixels( true );
+		}
+
+		
 	} // end BeforeEachResolution
 	
 
