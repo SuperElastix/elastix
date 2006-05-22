@@ -93,6 +93,7 @@ namespace itk
 
 		if ( this->m_CurrentTransform.IsNotNull() )
 		{
+			this->Modified();
 			this->m_CurrentTransform->SetParameters(param);
 		}
 		else
@@ -116,6 +117,7 @@ namespace itk
 
 		if ( this->m_CurrentTransform.IsNotNull() )
 		{
+			this->Modified();
 			this->m_CurrentTransform->SetParametersByValue(param);
 		}
 		else
