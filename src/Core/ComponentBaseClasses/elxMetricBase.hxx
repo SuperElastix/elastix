@@ -250,9 +250,8 @@ namespace elastix
 			 *  If more resolution levels are used, the image is subsampled. Before
 			 *  subsampling the image is smoothed with a Gaussian filter, with variance
 			 *  (schedule/2)^2. The 'schedule' depends on the resolution level.
-			 *  The lowest resolution level has a schedule of 2^(nr_of_levels-1).
 			 *  The 'radius' of the convolution filter is roughly twice the standard deviation.
-			 *	 Thus, the parts in the edge with size 'radius' are influenced by the background.
+			 *	Thus, the parts in the edge with size 'radius' are influenced by the background.
 			 */
 
 			/** Create erosion-filters. */

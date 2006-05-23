@@ -205,6 +205,9 @@ namespace elastix
 		void ResamplerBase<TElastix>
 		::WriteResultImage( const char * filename )
 	{
+		/** Make sure the resampler is updated. */
+		this->GetAsITKBaseType()->Modified();
+
 		/** Create writer. */
 		WriterPointer writer = WriterType::New();
 
