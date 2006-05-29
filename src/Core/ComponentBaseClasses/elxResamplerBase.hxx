@@ -73,6 +73,8 @@ namespace elastix
 		/** Decide whether or not to write the result image this resolution. */
 		std::string writeResultImageThisResolution = "false";
 		this->m_Configuration->ReadParameter(	
+			writeResultImageThisResolution, "WriteResultImageAfterEachResolution", 0, true );
+		this->m_Configuration->ReadParameter(	
 			writeResultImageThisResolution, "WriteResultImageAfterEachResolution", level, true );
 
 		/** Create a name for the final result. */
