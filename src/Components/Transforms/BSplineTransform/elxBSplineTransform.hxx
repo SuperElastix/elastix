@@ -554,7 +554,7 @@ using namespace itk;
 			/** The points that define the bounding box */
 			InputPointType maxPoint;
 			InputPointType minPoint;
-			maxPoint.Fill( NumericTraits< CoordRepType >::min() );
+			maxPoint.Fill( NumericTraits< CoordRepType >::NonpositiveMin() );
 			minPoint.Fill( NumericTraits< CoordRepType >::max() );
 			/** An iterator over the boundary of the fixed image */
 			BoundaryIteratorType bit(fixedImage, fixedImageRegion);
