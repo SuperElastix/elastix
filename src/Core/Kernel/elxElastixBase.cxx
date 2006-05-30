@@ -23,8 +23,6 @@ namespace elastix
 	} // end Constructor
 
 
-
-
 	/**
 	 * ********************* SetConfiguration ***********************
 	 */
@@ -197,7 +195,6 @@ namespace elastix
 	
 	void ElastixBase::AfterRegistrationBase(void)
 	{
-
 		/** Remove the "iteration" writing field */
 		xl::xout.RemoveTargetCell("iteration");
 

@@ -194,7 +194,6 @@ namespace elastix
 		this->m_Optimizer->AddObserver( itk::IterationEvent(), this->m_AfterEachIterationCommand );
 		this->m_Optimizer->AddObserver( itk::EndEvent(), this->m_AfterEachResolutionCommand );
 	
-
 		/** Start the timer for reading images. */
 		this->m_Timer0->StartTimer();
 		elxout << "\nReading images..." << std::endl;
