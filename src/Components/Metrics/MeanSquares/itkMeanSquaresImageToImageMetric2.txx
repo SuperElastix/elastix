@@ -27,6 +27,7 @@ namespace itk
 	/**
 	* ******************* Constructor *******************
 	*/
+
 	template <class TFixedImage, class TMovingImage> 
 		MeanSquaresImageToImageMetric2<TFixedImage,TMovingImage>
 		::MeanSquaresImageToImageMetric2()
@@ -41,6 +42,7 @@ namespace itk
 	/**
 	 * ******************* PrintSelf *******************
 	 */
+
 	template < class TFixedImage, class TMovingImage> 
 		void
 		MeanSquaresImageToImageMetric2<TFixedImage,TMovingImage>
@@ -56,6 +58,7 @@ namespace itk
 	/**
 	 * ******************* GetValue *******************
 	 */
+
 	template <class TFixedImage, class TMovingImage> 
 		typename MeanSquaresImageToImageMetric2<TFixedImage,TMovingImage>::MeasureType
 		MeanSquaresImageToImageMetric2<TFixedImage,TMovingImage>
@@ -77,6 +80,7 @@ namespace itk
 	/**
 	 * ******************* GetValueUsingAllPixels *******************
 	 */
+
 	template <class TFixedImage, class TMovingImage> 
 		typename MeanSquaresImageToImageMetric2<TFixedImage,TMovingImage>::MeasureType
 		MeanSquaresImageToImageMetric2<TFixedImage,TMovingImage>
@@ -86,7 +90,7 @@ namespace itk
 
 		/** Some sanity checks. */
 		FixedImageConstPointer fixedImage = this->m_FixedImage;
-		if( !fixedImage ) 
+		if ( !fixedImage ) 
 		{
 			itkExceptionMacro( << "Fixed image has not been assigned" );
 		}
@@ -112,14 +116,14 @@ namespace itk
 		MeasureType measure = NumericTraits< MeasureType >::Zero;
 
 		/** Loop over the fixed image to calculate the mean squares. */
-		while( !ti.IsAtEnd() )
+		while ( !ti.IsAtEnd() )
 		{
 			/** Get the current inputpoint. */
 			index = ti.GetIndex();
 			fixedImage->TransformIndexToPhysicalPoint( index, inputPoint );
 
 			/** Inside the fixed image mask? */
-			if( this->m_FixedImageMask && !this->m_FixedImageMask->IsInside( inputPoint ) )
+			if ( this->m_FixedImageMask && !this->m_FixedImageMask->IsInside( inputPoint ) )
 			{
 				++ti;
 				continue;
@@ -129,14 +133,14 @@ namespace itk
 			transformedPoint = this->m_Transform->TransformPoint( inputPoint );
 
 			/** Inside the moving image mask? */
-			if( this->m_MovingImageMask && !this->m_MovingImageMask->IsInside( transformedPoint ) )
+			if ( this->m_MovingImageMask && !this->m_MovingImageMask->IsInside( transformedPoint ) )
 			{
 				++ti;
 				continue;
 			}
 
 			/** In this if-statement the actual calculation of mean squares is done. */
-			if( this->m_Interpolator->IsInsideBuffer( transformedPoint ) )
+			if ( this->m_Interpolator->IsInsideBuffer( transformedPoint ) )
 			{
 				/** Get the fixedValue = f(x) and the movingValue = m(x+u(x)). */
 				const RealType movingValue  = this->m_Interpolator->Evaluate( transformedPoint );
@@ -156,13 +160,19 @@ namespace itk
 		} // end while loop over fixed image voxels
 
 		/** Calculate the measure value. */
-		if( this->m_NumberOfPixelsCounted == 0 )
+		if ( this->m_NumberOfPixelsCounted > 0 )
 		{
-			itkExceptionMacro(<<"All the points mapped to outside of the moving image");
+			measure /= this->m_NumberOfPixelsCounted;
 		}
 		else
 		{
-			measure /= this->m_NumberOfPixelsCounted;
+			measure = NumericTraits< MeasureType >::Zero;
+		}
+
+		/** Throw exceptions if necessary. */
+		if ( this->m_NumberOfPixelsCounted == 0 )
+		{
+			itkExceptionMacro( << "All the points mapped outside the moving image" );
 		}
 
 		/** Return the mean squares measure value. */
@@ -174,6 +184,7 @@ namespace itk
 	/**
 	 * ******************* GetValueUsingSomePixels *******************
 	 */
+
 	template <class TFixedImage, class TMovingImage> 
 		typename MeanSquaresImageToImageMetric2<TFixedImage,TMovingImage>::MeasureType
 		MeanSquaresImageToImageMetric2<TFixedImage,TMovingImage>
@@ -183,12 +194,12 @@ namespace itk
 
 		/** Some sanity checks. */
 		FixedImageConstPointer fixedImage = this->m_FixedImage;
-		if( !fixedImage ) 
+		if ( !fixedImage ) 
 		{
 			itkExceptionMacro( << "Fixed image has not been assigned" );
 		}
 
-		if( this->m_NumberOfSpatialSamples == 0 ) 
+		if ( this->m_NumberOfSpatialSamples == 0 ) 
 		{
 			itkExceptionMacro( << "NumberOfSpatialSamples has not been set" );
 		}
@@ -206,6 +217,11 @@ namespace itk
 		/** Create iterator over the fixed image. */
 		FixedIteratorType ti( fixedImage, this->GetFixedImageRegion() );
 
+		/** Set the maximum number of random iterator steps, so that we don't
+		 * get stuck in an infinite loop when the two images are not overlapping.
+		 */
+		ti.SetNumberOfSamples( 10 * this->m_NumberOfSpatialSamples );
+
 		/** Create variables to store intermediate results. */
 		typename FixedImageType::IndexType index;
 		InputPointType inputPoint;
@@ -214,14 +230,14 @@ namespace itk
 		MeasureType measure = NumericTraits< MeasureType >::Zero;
 
 		/** Loop over the fixed image to calculate the mean squares. */
-		while( this->m_NumberOfSpatialSamples > this->m_NumberOfPixelsCounted )
+		while ( this->m_NumberOfSpatialSamples > this->m_NumberOfPixelsCounted && !ti.IsAtEnd() )
 		{
 			/** Get the current inputpoint. */
 			index = ti.GetIndex();
 			fixedImage->TransformIndexToPhysicalPoint( index, inputPoint );
 
 			/** Inside the fixed image mask? */
-			if( this->m_FixedImageMask && !this->m_FixedImageMask->IsInside( inputPoint ) )
+			if ( this->m_FixedImageMask && !this->m_FixedImageMask->IsInside( inputPoint ) )
 			{
 				++ti;
 				continue;
@@ -231,14 +247,14 @@ namespace itk
 			transformedPoint = this->m_Transform->TransformPoint( inputPoint );
 
 			/** Inside the moving image mask? */
-			if( this->m_MovingImageMask && !this->m_MovingImageMask->IsInside( transformedPoint ) )
+			if ( this->m_MovingImageMask && !this->m_MovingImageMask->IsInside( transformedPoint ) )
 			{
 				++ti;
 				continue;
 			}
 
 			/** In this if-statement the actual calculation of mean squares is done. */
-			if( this->m_Interpolator->IsInsideBuffer( transformedPoint ) )
+			if ( this->m_Interpolator->IsInsideBuffer( transformedPoint ) )
 			{
 				/** Get the fixedValue = f(x) and the movingValue = m(x+u(x)). */
 				const RealType movingValue  = this->m_Interpolator->Evaluate( transformedPoint );
@@ -258,13 +274,25 @@ namespace itk
 		} // end while loop over fixed image voxels
 
 		/** Calculate the measure value. */
-		if( this->m_NumberOfPixelsCounted == 0 )
+		if ( this->m_NumberOfPixelsCounted > 0 )
 		{
-			itkExceptionMacro(<<"All the points mapped to outside of the moving image");
+			measure /= this->m_NumberOfPixelsCounted;
 		}
 		else
 		{
-			measure /= this->m_NumberOfPixelsCounted;
+			measure = NumericTraits< MeasureType >::Zero;
+		}
+
+		/** Throw exceptions if necessary. */
+		if ( this->m_NumberOfPixelsCounted == 0 )
+		{
+			itkExceptionMacro( << "All the points mapped outside the moving image" );
+		}
+
+		if ( this->m_NumberOfPixelsCounted < this->m_NumberOfSpatialSamples / 4 )
+		{
+			itkExceptionMacro( "Too many samples map outside the moving image buffer: "
+				<< this->m_NumberOfPixelsCounted << " / " << this->m_NumberOfSpatialSamples << std::endl );
 		}
 
 		/** Return the mean squares measure value. */
@@ -276,6 +304,7 @@ namespace itk
 	/**
 	 * ******************* GetDerivative *******************
 	 */
+
 	template < class TFixedImage, class TMovingImage> 
 		void
 		MeanSquaresImageToImageMetric2<TFixedImage,TMovingImage>
@@ -295,6 +324,7 @@ namespace itk
 	/**
 	 * ******************* GetValueAndDerivative *******************
 	 */
+
 	template <class TFixedImage, class TMovingImage>
 		void
 		MeanSquaresImageToImageMetric2<TFixedImage,TMovingImage>
@@ -318,6 +348,7 @@ namespace itk
 	/**
 	 * ******************* GetValueAndDerivativeUsingAllPixels *******************
 	 */
+
 	template <class TFixedImage, class TMovingImage> 
 		void
 		MeanSquaresImageToImageMetric2<TFixedImage,TMovingImage>
@@ -327,13 +358,13 @@ namespace itk
 		itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 
 		/** Some sanity checks. */
-		if( !this->GetGradientImage() )
+		if ( !this->GetGradientImage() )
 		{
-			itkExceptionMacro(<<"The gradient image is null, maybe you forgot to call Initialize()");
+			itkExceptionMacro( << "The gradient image is null, maybe you forgot to call Initialize()" );
 		}
 
 		FixedImageConstPointer fixedImage = this->m_FixedImage;
-		if( !fixedImage ) 
+		if ( !fixedImage ) 
 		{
 			itkExceptionMacro( << "Fixed image has not been assigned" );
 		}
@@ -369,14 +400,14 @@ namespace itk
 
 		/** Loop over the fixed image to calculate the mean squares. */
 		ti.GoToBegin();
-		while( !ti.IsAtEnd() )
+		while ( !ti.IsAtEnd() )
 		{
 			/** Get the current inputpoint. */
 			index = ti.GetIndex();
 			fixedImage->TransformIndexToPhysicalPoint( index, inputPoint );
 
 			/** Inside the fixed image mask? */
-			if( this->m_FixedImageMask && !this->m_FixedImageMask->IsInside( inputPoint ) )
+			if ( this->m_FixedImageMask && !this->m_FixedImageMask->IsInside( inputPoint ) )
 			{
 				++ti;
 				continue;
@@ -386,14 +417,14 @@ namespace itk
 			transformedPoint = this->m_Transform->TransformPoint( inputPoint );
 
 			/** Inside the moving image mask? */
-			if( this->m_MovingImageMask && !this->m_MovingImageMask->IsInside( transformedPoint ) )
+			if ( this->m_MovingImageMask && !this->m_MovingImageMask->IsInside( transformedPoint ) )
 			{
 				++ti;
 				continue;
 			}
 
 			/** In this if-statement the actual calculation of mean squares is done. */
-			if( this->m_Interpolator->IsInsideBuffer( transformedPoint ) )
+			if ( this->m_Interpolator->IsInsideBuffer( transformedPoint ) )
 			{
 				/** Get the fixedValue = f(x) and the movingValue = m(x+u(x)). */
 				const RealType movingValue = this->m_Interpolator->Evaluate( transformedPoint );
@@ -410,14 +441,14 @@ namespace itk
 				/** Get the gradient by NearestNeighboorInterpolation:
 				 * which is equivalent to round up the point components.*/
 				this->m_MovingImage->TransformPhysicalPointToContinuousIndex( transformedPoint, tempIndex );
-				for( unsigned int j = 0; j < MovingImageDimension; j++ )
+				for ( unsigned int j = 0; j < MovingImageDimension; j++ )
 				{
 					mappedIndex[ j ] = static_cast<long>( vnl_math_rnd( tempIndex[ j ] ) );
 				}
 				const GradientPixelType gradient = this->GetGradientImage()->GetPixel( mappedIndex );
 
 				/** Calculate the contributions to all parameters. */
-				for( unsigned int par = 0; par < ParametersDimension; par++ )
+				for ( unsigned int par = 0; par < ParametersDimension; par++ )
 				{
 					RealType sum = NumericTraits< RealType >::Zero;
 					for( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
@@ -437,19 +468,27 @@ namespace itk
 		} // end while loop over fixed image voxels
 
 		/** Calculate the value and the derivative. */
-		if( !this->m_NumberOfPixelsCounted )
+		if ( this->m_NumberOfPixelsCounted > 0 )
 		{
-			itkExceptionMacro( <<"All the points mapped to outside of the moving image" );
-		}
-		else
-		{
+			measure /= this->m_NumberOfPixelsCounted;
 			for( unsigned int i = 0; i < ParametersDimension; i++ )
 			{
 				derivative[ i ] /= this->m_NumberOfPixelsCounted;
 			}
-			measure /= this->m_NumberOfPixelsCounted;
+		}
+		else
+		{
+			measure = NumericTraits< MeasureType >::Zero;
+			derivative.Fill( NumericTraits<ITK_TYPENAME DerivativeType::ValueType>::Zero );
 		}
 
+		/** Throw exceptions if necessary. */
+		if ( this->m_NumberOfPixelsCounted == 0 )
+		{
+			itkExceptionMacro( << "All the points mapped outside the moving image" );
+		}
+
+		/** The return value. */
 		value = measure;
 
 	} // end GetValueAndDerivativeUsingAllPixels
@@ -458,6 +497,7 @@ namespace itk
 	/**
 	 * ******************* GetValueAndDerivativeUsingSomePixels *******************
 	 */
+
 	template <class TFixedImage, class TMovingImage>
 		void
 		MeanSquaresImageToImageMetric2<TFixedImage,TMovingImage>
@@ -467,18 +507,18 @@ namespace itk
 		itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 
 		/** Some sanity checks. */
-		if( !this->GetGradientImage() )
+		if ( !this->GetGradientImage() )
 		{
-			itkExceptionMacro(<<"The gradient image is null, maybe you forgot to call Initialize()");
+			itkExceptionMacro( << "The gradient image is null, maybe you forgot to call Initialize()" );
 		}
 
 		FixedImageConstPointer fixedImage = this->m_FixedImage;
-		if( !fixedImage ) 
+		if ( !fixedImage ) 
 		{
 			itkExceptionMacro( << "Fixed image has not been assigned" );
 		}
 
-		if( this->m_NumberOfSpatialSamples == 0 ) 
+		if ( this->m_NumberOfSpatialSamples == 0 ) 
 		{
 			itkExceptionMacro( << "NumberOfSpatialSamples has not been set" );
 		}
@@ -500,6 +540,11 @@ namespace itk
 		/** Create iterator over the fixed image. */
 		FixedIteratorType ti( fixedImage, this->GetFixedImageRegion() );
 
+		/** Set the maximum number of random iterator steps, so that we don't
+		 * get stuck in an infinite loop when the two images are not overlapping.
+		 */
+		ti.SetNumberOfSamples( 10 * this->m_NumberOfSpatialSamples );
+
 		/** Create variables to store intermediate results. */
 		typename FixedImageType::IndexType	index;
 		InputPointType	inputPoint;
@@ -514,14 +559,14 @@ namespace itk
 
 		/** Loop over the fixed image to calculate the mean squares. */
 		ti.GoToBegin();
-		while( this->m_NumberOfSpatialSamples > this->m_NumberOfPixelsCounted )
+		while ( this->m_NumberOfSpatialSamples > this->m_NumberOfPixelsCounted && !ti.IsAtEnd() )
 		{
 			/** Get the current inputpoint. */
 			index = ti.GetIndex();
 			fixedImage->TransformIndexToPhysicalPoint( index, inputPoint );
 
 			/** Inside the fixed image mask? */
-			if( this->m_FixedImageMask && !this->m_FixedImageMask->IsInside( inputPoint ) )
+			if ( this->m_FixedImageMask && !this->m_FixedImageMask->IsInside( inputPoint ) )
 			{
 				++ti;
 				continue;
@@ -531,14 +576,14 @@ namespace itk
 			transformedPoint = this->m_Transform->TransformPoint( inputPoint );
 
 			/** Inside the moving image mask? */
-			if( this->m_MovingImageMask && !this->m_MovingImageMask->IsInside( transformedPoint ) )
+			if ( this->m_MovingImageMask && !this->m_MovingImageMask->IsInside( transformedPoint ) )
 			{
 				++ti;
 				continue;
 			}
 
 			/** In this if-statement the actual calculation of mean squares is done. */
-			if( this->m_Interpolator->IsInsideBuffer( transformedPoint ) )
+			if ( this->m_Interpolator->IsInsideBuffer( transformedPoint ) )
 			{
 				/** Get the fixedValue = f(x) and the movingValue = m(x+u(x)). */
 				const RealType movingValue = this->m_Interpolator->Evaluate( transformedPoint );
@@ -555,17 +600,17 @@ namespace itk
 				/** Get the gradient by NearestNeighboorInterpolation:
 				 * which is equivalent to round up the point components.*/
 				this->m_MovingImage->TransformPhysicalPointToContinuousIndex( transformedPoint, tempIndex );
-				for( unsigned int j = 0; j < MovingImageDimension; j++ )
+				for ( unsigned int j = 0; j < MovingImageDimension; j++ )
 				{
 					mappedIndex[ j ] = static_cast<long>( vnl_math_rnd( tempIndex[ j ] ) );
 				}
 				const GradientPixelType gradient = this->GetGradientImage()->GetPixel( mappedIndex );
 
 				/** Calculate the contributions to all parameters. */
-				for( unsigned int par = 0; par < ParametersDimension; par++ )
+				for ( unsigned int par = 0; par < ParametersDimension; par++ )
 				{
 					RealType sum = NumericTraits< RealType >::Zero;
-					for( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
+					for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
 					{
 						sum += 2.0 * diff * jacobian( dim, par ) * gradient[ dim ];
 					}
@@ -582,19 +627,33 @@ namespace itk
 		} // end while loop over fixed image voxels
 
 		/** Calculate the value and the derivative. */
-		if( !this->m_NumberOfPixelsCounted )
+		if ( this->m_NumberOfPixelsCounted > 0 )
 		{
-			itkExceptionMacro( <<"All the points mapped to outside of the moving image" );
-		}
-		else
-		{
+			measure /= this->m_NumberOfPixelsCounted;
 			for( unsigned int i = 0; i < ParametersDimension; i++ )
 			{
 				derivative[ i ] /= this->m_NumberOfPixelsCounted;
 			}
-			measure /= this->m_NumberOfPixelsCounted;
+		}
+		else
+		{
+			measure = NumericTraits< MeasureType >::Zero;
+			derivative.Fill( NumericTraits<ITK_TYPENAME DerivativeType::ValueType>::Zero );
 		}
 
+		/** Throw exceptions if necessary. */
+		if ( this->m_NumberOfPixelsCounted == 0 )
+		{
+			itkExceptionMacro( << "All the points mapped outside the moving image" );
+		}
+
+		if ( this->m_NumberOfPixelsCounted < this->m_NumberOfSpatialSamples / 4 )
+		{
+			itkExceptionMacro( "Too many samples map outside the moving image buffer: "
+				<< this->m_NumberOfPixelsCounted << " / " << this->m_NumberOfSpatialSamples << std::endl );
+		}
+
+		/** The return value. */
 		value = measure;
 
 	} // end GetValueAndDerivativeUsingSomePixels
