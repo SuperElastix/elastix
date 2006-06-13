@@ -16,7 +16,13 @@ namespace elastix
 	 * \brief The BaseComponentSE class is a base class for elastix
 	 * components that provides some basic functionality.
 	 *
-	 * 
+	 * Most elastix component will not directly inherit from the 
+	 * elx::BaseComponent class but from this one, since it adds
+	 * some methods that most methods need anyway, such as 
+	 * Set/GetElastix, Set/GetConfiguration.
+	 *
+	 * \sa BaseComponent
+	 * \ingroup Install
 	 */
 
 	template <class TElastix>
@@ -36,9 +42,8 @@ namespace elastix
 		typedef typename ElastixType::ConfigurationType			ConfigurationType;
 		typedef typename ElastixType::ConfigurationPointer	ConfigurationPointer;
 
-		/** RegistrationType; NB: this is the RegistrationBASEtype,
-		 * not an itk::Object or something like that.
-		 */
+		/** RegistrationType; NB: this is the elx::RegistrationBase
+		 * not an itk::Object or something like that. */
 		typedef typename ElastixType::RegistrationBaseType	RegistrationType;
 		typedef RegistrationType *													RegistrationPointer;
 
@@ -64,7 +69,9 @@ namespace elastix
 			return this->m_Elastix.GetPointer();
 		}
 
-		/** itkGetObjectMacro(Configuration, ConfigurationType);*/
+		/** itkGetObjectMacro(Configuration, ConfigurationType);
+		 * The configuration object provides functionality to
+		 * read parameters and command line arguments. */
 		virtual ConfigurationType * GetConfiguration(void)
 		{
 			return this->m_Configuration.GetPointer();
@@ -73,7 +80,11 @@ namespace elastix
 		/** Set the configuration. Added for tranformix. */
 		virtual void SetConfiguration( ConfigurationType * _arg );
 		
-		/** Get a pointer to the Registration component.*/
+		/** Get a pointer to the Registration component. 
+		 * This is a convenience function, since the registration
+		 * component is needed often by other components.
+		 * It could be accessed also via 
+		 * GetElastix->GetRegistrationBase() */
 		virtual RegistrationPointer GetRegistration(void)
 		{
 			return this->m_Registration;

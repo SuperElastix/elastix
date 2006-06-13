@@ -10,10 +10,18 @@ namespace itk
 	
 	/**
 	 * \class NDImageTemplate
-	 * \brief ???
+	 * \brief This class is a specialization of the NDImageBase,
+	 * which acts as a wrap around an itk::Image.
 	 *
-	 * The NDImageTemplate class ....
+	 * The NDImageTemplate class is a kind of wrap around the 
+	 * itk::Image. It has an itk::Image object as an internal 
+	 * member variable. Most functions simply call the 
+	 * the corresponding function in the itk::Object. For some
+	 * functions, the in/output arguments have to be converted
+	 * from/to arrays with runtime length to/from arrays with 
+	 * compile time length.  
 	 *
+	 * \sa NDImageBase
 	 * \ingroup Miscellaneous
 	 */
 	

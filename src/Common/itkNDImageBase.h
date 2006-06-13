@@ -12,10 +12,28 @@ namespace itk
 	
 	/**
 	 * \class NDImageBase
-	 * \brief ???
+	 * \brief An image whose dimension can be specified at runtime.
 	 *
 	 * The NDImageBase class is needed for the FullSearch optimizer.
+	 * It allows run-time construction of an N-dimensional image. It 
+	 * has most of the functionality of a normal itk::Image. \todo not all!
+	 * An internal writer and reader are included for convenience. 
+	 * 
+	 * The NewNDImage function defines the dimension of the image.
+	 * CreateNewImage creates an instance of an itk::Image, with
+	 * dimension as specified by NewNDImage.
+	 * Note: the NewNDImage does not return an itk::Image, but an
+	 * elx::NDImageTemplate.
 	 *
+	 * Suggested way of using this class:
+	 * NDImageBase<short> var1 = NDImageBase::NewNDImage(3);
+	 * var1->CreateNewImage();
+	 * The result is similar as:
+	 * itk::Image<short,3>::Pointer var1 = itk::Image<short,3>::New();
+	 * except that the actual itk::Image is stored as member variable
+	 * in the NDImageTemplate.
+	 *
+	 * \sa FullSearchOptimizer, NDImageTemplate
 	 * \ingroup Miscellaneous
 	 */
 	
@@ -59,7 +77,11 @@ namespace itk
 		typedef typename ImageBase<2>::SizeValueType				SizeValueType;
 		typedef typename ImageBase<2>::OffsetValueType			OffsetValueType;
 		
-		/** ND versions of the index and sizetypes */
+		/** ND versions of the index and sizetypes. Unlike in
+		 * their counterparts in the itk::Image, their size
+		 * can be defined at runtime. The elx::NDImageTemplate
+		 * takes care of converting from/to these types to
+		 * to/from the corresponding types in itk::Image.*/
 		typedef Array<IndexValueType>										IndexType;
 		typedef Array<SizeValueType>										SizeType;
 		typedef Array<SpacingValueType>									SpacingType;

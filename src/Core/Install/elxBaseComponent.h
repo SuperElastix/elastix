@@ -33,6 +33,14 @@ namespace elastix
 	 *
 	 * \brief The BaseComponent class is a class that all Elastix
 	 * components should inherit from.
+	 *
+	 * Most elastix component inherit both from an ITK class and
+	 * from the elx::BaseComponent class. The BaseComponent class
+	 * contains some methods that each component is supposed
+	 * to have, but are not defined in itk::Object. 
+	 * 
+	 * \sa BaseComponentSE
+	 * \ingroup Install 
 	 */
 
 	class BaseComponent
@@ -63,7 +71,7 @@ namespace elastix
 		/**
 		 * Callback methods that each component of Elastix is supposed
 		 * to have. These methods can be overridden in each single
-		 * component (like MyMattesMutualInformationMetric) to achieve
+		 * component (like MattesMutualInformationMetric) to achieve
 		 * behaviour, specific for that single component.
 		 */
 		virtual void BeforeRegistration(void)	{};

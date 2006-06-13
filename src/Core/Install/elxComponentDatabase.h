@@ -1,12 +1,3 @@
-/**
- * This file defines the class elx::ComponentDatabase. This class
- * stores pointers to the ::New() functions of each component.
- *
- * Each new component (a new metric for example should "make itself
- * known" by calling the elxInstallMacro, which is defined in
- * elxInstallFunctions.h .
- */
-
 #ifndef __elxComponentDatabase_h
 #define __elxComponentDatabase_h
 
@@ -26,6 +17,19 @@ namespace elastix
 	 *
 	 * \brief The ComponentDatabase class is a class that stores the 
 	 * ::New() functions of all components.
+	 *
+	 * In elastix the metric/transform/dimension/pixeltype etc. are all selected
+	 * at runtime. To make this possible, all components (metric/transform etc) 
+	 * have to compiled for different dimension/pixeltype. The elx::ComponentDatabase
+	 * stores for each instance and ach pixeltype/dimension a pointers to a function
+	 * that creates a component of the specific type. 
+	 *
+	 * Each new component (a new metric for example should "make itself
+	 * known" by calling the elxInstallMacro, which is defined in
+	 * elxMacro.h .
+	 *
+	 * \sa elxInstallFunctions
+	 * \ingroup Install
 	 */
 
 	class ComponentDatabase :

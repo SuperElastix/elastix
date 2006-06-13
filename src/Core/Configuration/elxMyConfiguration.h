@@ -1,10 +1,3 @@
-/**
- * This header file declares the MyConfiguration class
- *	
- *	In elxConfigurationToUse.h this file can be included if this version
- * of elx::MyConfiguration is desired.
- */
-
 #ifndef	__elxMyConfiguration_H__
 #define __elxMyConfiguration_H__
 
@@ -27,10 +20,17 @@ namespace elastix
 
 	/**
 	 * \class MyConfiguration
-	 * \brief ???
+	 * \brief A class that deals with user given parameters and command line arguments.
 	 *
-	 * The MyConfiguration class ....
+	 * The MyConfiguration class provides the functions 
+	 * ReadParameter (to read parameters from the parameter file) and
+	 * ReadCommandLineArgument, and provides an easy way to get the
+	 * current elastix level.
 	 *
+	 * In elxConfigurationToUse.h this file can be included if this version
+	 * of elx::MyConfiguration is desired. Currently there are no other choices.
+	 *
+ 	 * \sa ConfigurationBase
 	 * \ingroup Configuration
 	 */
 
@@ -58,9 +58,12 @@ namespace elastix
 		/** Typedef's.*/
 		typedef VPF::ParameterFile		ParameterFileType;
 		
-		/** .*/
+		/** Pass the command line arguments as a map. 
+		 * It should contain -p <parfile> or -tp <parfile>.
+		 * The specified parameter file is read in memory. */
 		virtual int Initialize(ArgumentMapType & _arg);
 
+		/** True, if Initialize was succesfully called. */
 		virtual bool Initialized(void); //to elxconfigurationbase
 
 		/** Get and Set CommandLine arguments into the argument map.*/
