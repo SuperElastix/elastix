@@ -31,7 +31,7 @@ using namespace itk;
 	 * \parameter UpsampleGridOption: a flag to determine if the B-spline grid should
 	 *		be upsampled from one resolution level to another. Choose from {true, false}. \n
 	 *		example: <tt>(UpsampleGridOption "true")</tt> \n
-	 *		example: <tt>(UpsampleGridOption "true" "false" "true")</tt>
+	 *		example: <tt>(UpsampleGridOption "true" "false" "true")</tt> \n
 	 *		The default is "true" inbetween all resolutions.
 	 * 
 	 * The transform parameters necessary for transformix, additionally defined by this class, are:
