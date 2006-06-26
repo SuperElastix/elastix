@@ -6,21 +6,23 @@ PROJECT(elxComponents)
 #---------------------------------------------------------------------
 # Set the libraries to be linked.
 
-# linux gives an error, if param is linked.
-IF(CMAKE_COMPILER_IS_GNUCXX)
-  SET(elxLinkLibs
-    xoutlib
-    elxCommon
-    elxCore
-    ITKBasicFilters
-    ITKNumerics
-    ITKIO
-    ITKCommon
-    ITKStatistics )
-ENDIF(CMAKE_COMPILER_IS_GNUCXX)
+# Linux gives an error, if param is linked.
+IF(UNIX)
+  IF (NOT APPLE)
+    SET(elxLinkLibs
+      xoutlib
+      elxCommon
+      elxCore
+      ITKBasicFilters
+      ITKNumerics
+      ITKIO
+      ITKCommon
+      ITKStatistics )
+	ENDIF(NOT APPLE)
+ENDIF(UNIX)
 
-# interestingly, visual c++ does need param
-IF(WIN32)
+# Interestingly, visual c++ and MAC-GCC do need param
+IF(WIN32 OR APPLE)
   SET(elxLinkLibs
     param
     xoutlib
@@ -31,7 +33,7 @@ IF(WIN32)
     ITKIO
     ITKCommon
     ITKStatistics )
-ENDIF(WIN32)
+ENDIF(WIN32 OR APPLE)
 
 #---------------------------------------------------------------------
 # Macro that simplifies the addition of elx-components
