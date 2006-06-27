@@ -35,10 +35,10 @@
 // 4. Implementation for default UNIX machines.
 // if nothing has been defined then use this
 #ifndef DYNAMICLOADER_DEFINED
-#define DYNAMICLOADER_DEFINED 1
-#define __USE_RTLD_GLOBAL
-// Setup for most unix machines
-#include <dlfcn.h>
+  #define DYNAMICLOADER_DEFINED 1
+  #define __USE_RTLD_GLOBAL
+  // Setup for most unix machines
+  #include <dlfcn.h>
 #endif // end 4
 
 namespace itksys
