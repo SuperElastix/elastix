@@ -58,15 +58,12 @@ namespace elastix
 	}; // end template class specialization
 
 
-
-
 	/**
 	 * ****************** Constructor ********************************
 	 */
 		
 	ComponentLoader::ComponentLoader()
 	{
-		//this->m_LibLoader = LibLoaderType::New();
 		this->m_ImageTypeSupportInstalled = false;
 	}
 
@@ -107,7 +104,8 @@ namespace elastix
 
 		return _InstallDummy_SupportedImageTypes;
 
-	} // end function InstallSupportedImageTypes
+	} // end InstallSupportedImageTypes
+
 
 	/**
 	 * ****************** LoadComponents *****************************
@@ -160,16 +158,13 @@ namespace elastix
 		unsigned int nrOfFiles =
 			static_cast<unsigned int>( componentDir->GetNumberOfFiles() );
 		std::string libextension = itksys::SystemTools::LowerCase(
-					this->m_LibLoader.LibExtension() );
-    //this->m_LibLoader->LibExtension() );
+      this->m_LibLoader.LibExtension() );
 		std::string libprefix = itksys::SystemTools::LowerCase(
-					this->m_LibLoader.LibPrefix() );
-    //this->m_LibLoader->LibPrefix() );
+      this->m_LibLoader.LibPrefix() );
 		std::string elxprefix("elx"); //all elxComponents should start with 'elx'.
 		std::string currentLibName("");
 		LibHandleType currentLib;
 		LibSymbolPointer addressOfInstallComponentFunction = 0;
-    //void* addressOfInstallComponentFunction = 0;
 		InstallFunctionPointer installer;
 		bool fileIsLib;
 		std::string fileName("");
@@ -221,24 +216,18 @@ namespace elastix
 				/** Open the lib, and store the handle to the lib,
 				 * because we need it for closing the lib later.
 				 */
-        //this->m_LibHandleContainer.push( this->m_LibLoader->OpenLibrary( currentLibName.c_str() ) );
 				this->m_LibHandleContainer.push( this->m_LibLoader.OpenLibraryGlobal( currentLibName.c_str() ) );
 				currentLib = this->m_LibHandleContainer.top();
 			
 				/** Look for the InstallComponent function */
 				addressOfInstallComponentFunction	=
 					this->m_LibLoader.GetSymbolAddress(currentLib, "InstallComponent");
-        //this->m_LibLoader->GetSymbolAddress(currentLib, "InstallComponent");
 				
 				/** If it exists, execute it */
 				if (addressOfInstallComponentFunction)
 				{
-					/** Cast the void* to a function pointer */
-					//this does not work in Linux:
-					//InstallFunctionPointer fp = static_cast<InstallFunctionPointer>(adres);
-					//but this does (with the C-style cast):
+					/** Cast the void(*)(void) to a install function pointer. */
           installer =	reinterpret_cast<InstallFunctionPointer>(addressOfInstallComponentFunction);
-					//installer =	(InstallFunctionPointer)(addressOfInstallComponentFunction);
 					
 					/** Execute it */
 					/** \todo : How to check if the conversion went alright? */
@@ -272,18 +261,15 @@ namespace elastix
 			} //end if fileIsLib
 
 		} // end for <loop over file-list>
-	
 		elxout << std::endl;
 
 		return 0;
 
-
-	} //end function LoadComponents
-
+	} // end LoadComponents
 	
 	
 	/**
-	 * ****************** UnloadComponents****************************
+	 * ****************** UnloadComponents ****************************
 	 */
 
 	void ComponentLoader::UnloadComponents()
@@ -301,7 +287,6 @@ namespace elastix
 		{
 			
 			currentLib = this->m_LibHandleContainer.top();
-			//this->m_LibLoader->CloseLibrary(currentLib);
       this->m_LibLoader.CloseLibrary(currentLib);
 			this->m_LibHandleContainer.pop();
 
@@ -310,7 +295,7 @@ namespace elastix
 		//Not necessary I think:
 		//this->m_ComponentDatabase = 0;
 
-	}
+	} // end UnloadComponents
 
 
 } //end namespace elastix

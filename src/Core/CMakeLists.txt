@@ -18,8 +18,6 @@ Install/elxComponentLoader.cxx
 Install/elxComponentLoader.h
 Install/itksysDynamicLoaderGlobal.cxx
 Install/itksysDynamicLoaderGlobal.h)
-#Install/elxDynamicLoader.h
-#Install/elxDynamicLoader.cxx)
 
 SET(InstallFilesForComponents
 Install/elxComponentDatabase.cxx
@@ -136,3 +134,4 @@ ITKCommon )
 
 INSTALL_TARGETS(/. elastix)
 INSTALL_TARGETS(/. transformix)
+

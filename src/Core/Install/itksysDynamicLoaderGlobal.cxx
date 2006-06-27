@@ -16,7 +16,6 @@
   #define DYNAMICLOADER_DEFINED 1
 #endif //__hpux
 
-
 // ---------------------------------------------------------------
 // 2. Implementation for Mac OS X 10.2.x and earlier
 #ifdef __APPLE__
@@ -45,7 +44,10 @@ namespace itksys
 {
 
 DynamicLoaderGlobal::LibraryHandle DynamicLoaderGlobal::OpenLibraryGlobal(const char* libname )
-{ 
+{
+  /** Use RTLD_GLOBAL for UNIX like machines and the 
+   * standard itk implementation otherwise.
+   */
   #ifdef __USE_RTLD_GLOBAL
     return dlopen(libname, RTLD_LAZY | RTLD_GLOBAL );
   #else
@@ -53,7 +55,6 @@ DynamicLoaderGlobal::LibraryHandle DynamicLoaderGlobal::OpenLibraryGlobal(const 
   #endif
 
 } // end OpenLibraryGlobal
-
 
 } // end namespace itksys
 

@@ -10,10 +10,13 @@ namespace itksys
   class DynamicLoaderGlobal : public DynamicLoader
   {
   public:
+
+    /** Typedef's. */
     typedef DynamicLoader Superclass;
     typedef Superclass::LibraryHandle LibraryHandle;
     typedef Superclass::SymbolPointer SymbolPointer;
 
+    /** Constructor and destructor. */
     DynamicLoaderGlobal(){};
     ~DynamicLoaderGlobal(){};
 
@@ -24,14 +27,9 @@ namespace itksys
      * library. */
     static LibraryHandle OpenLibraryGlobal(const char*);
 
-
   }; // end class DynamicLoaderGlobal
 
-
-
 } // end namespace itksys
-
-
 
 #endif //#ifndef __itksysDynamicLoaderGlobal_h
 
