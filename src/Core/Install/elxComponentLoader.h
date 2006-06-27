@@ -4,7 +4,7 @@
 
 #include "elxComponentDatabase.h"
 //#include "elxDynamicLoader.h"
-#include <itksys/DynamicLoader.hxx>
+#include "itksysDynamicLoaderGlobal.h"
 #include "xoutmain.h"
 #include <stack>
 
@@ -44,7 +44,7 @@ namespace elastix
 		typedef ComponentDatabaseType::Pointer	ComponentDatabasePointer;
 
 		//typedef DynamicLoader							LibLoaderType;
-    typedef itksys::DynamicLoader						LibLoaderType;
+    typedef itksys::DynamicLoaderGlobal			LibLoaderType;
     typedef LibLoaderType::SymbolPointer    LibSymbolPointer;
 		//typedef LibLoaderType::Pointer					LibLoaderPointer;
 		//typedef LibHandle									LibHandleType;

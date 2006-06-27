@@ -16,7 +16,8 @@ Kernel/elxElastixTemplate.hxx)
 SET(InstallFilesForExecutables
 Install/elxComponentLoader.cxx
 Install/elxComponentLoader.h
-Install/DynamicLoader.cxx)
+Install/itksysDynamicLoaderGlobal.cxx
+Install/itksysDynamicLoaderGlobal.h)
 #Install/elxDynamicLoader.h
 #Install/elxDynamicLoader.cxx)
 

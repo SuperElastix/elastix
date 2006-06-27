@@ -222,7 +222,7 @@ namespace elastix
 				 * because we need it for closing the lib later.
 				 */
         //this->m_LibHandleContainer.push( this->m_LibLoader->OpenLibrary( currentLibName.c_str() ) );
-				this->m_LibHandleContainer.push( this->m_LibLoader.OpenLibrary( currentLibName.c_str() ) );
+				this->m_LibHandleContainer.push( this->m_LibLoader.OpenLibraryGlobal( currentLibName.c_str() ) );
 				currentLib = this->m_LibHandleContainer.top();
 			
 				/** Look for the InstallComponent function */
