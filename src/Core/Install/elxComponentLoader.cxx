@@ -168,7 +168,8 @@ namespace elastix
 		std::string elxprefix("elx"); //all elxComponents should start with 'elx'.
 		std::string currentLibName("");
 		LibHandleType currentLib;
-		void* addressOfInstallComponentFunction = 0;
+		LibSymbolPointer addressOfInstallComponentFunction = 0;
+    //void* addressOfInstallComponentFunction = 0;
 		InstallFunctionPointer installer;
 		bool fileIsLib;
 		std::string fileName("");
@@ -236,7 +237,8 @@ namespace elastix
 					//this does not work in Linux:
 					//InstallFunctionPointer fp = static_cast<InstallFunctionPointer>(adres);
 					//but this does (with the C-style cast):
-					installer =	(InstallFunctionPointer)(addressOfInstallComponentFunction);
+          installer =	reinterpret_cast<InstallFunctionPointer>(addressOfInstallComponentFunction);
+					//installer =	(InstallFunctionPointer)(addressOfInstallComponentFunction);
 					
 					/** Execute it */
 					/** \todo : How to check if the conversion went alright? */

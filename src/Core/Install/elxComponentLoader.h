@@ -45,6 +45,7 @@ namespace elastix
 
 		//typedef DynamicLoader							LibLoaderType;
     typedef itksys::DynamicLoader						LibLoaderType;
+    typedef LibLoaderType::SymbolPointer    LibSymbolPointer;
 		//typedef LibLoaderType::Pointer					LibLoaderPointer;
 		//typedef LibHandle									LibHandleType;
     typedef LibLoaderType::LibraryHandle			LibHandleType;
