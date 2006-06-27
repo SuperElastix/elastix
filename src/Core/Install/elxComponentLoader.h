@@ -3,7 +3,8 @@
 #define __elxComponentLoader_h
 
 #include "elxComponentDatabase.h"
-#include "elxDynamicLoader.h"
+//#include "elxDynamicLoader.h"
+#include <itksys/DynamicLoader.hxx>
 #include "xoutmain.h"
 #include <stack>
 
@@ -42,9 +43,11 @@ namespace elastix
 		typedef ComponentDatabase								ComponentDatabaseType;
 		typedef ComponentDatabaseType::Pointer	ComponentDatabasePointer;
 
-		typedef DynamicLoader							LibLoaderType;
-		typedef LibLoaderType::Pointer					LibLoaderPointer;
-		typedef LibHandle									LibHandleType;
+		//typedef DynamicLoader							LibLoaderType;
+    typedef itksys::DynamicLoader						LibLoaderType;
+		//typedef LibLoaderType::Pointer					LibLoaderPointer;
+		//typedef LibHandle									LibHandleType;
+    typedef LibLoaderType::LibraryHandle			LibHandleType;
 		typedef int (*InstallFunctionPointer)(ComponentDatabaseType *, xl::xoutbase_type *);
 
 		typedef std::stack<LibHandleType>			  LibHandleContainerType;
@@ -62,7 +65,8 @@ namespace elastix
 
 		ComponentDatabasePointer m_ComponentDatabase;
 
-		LibLoaderType::Pointer m_LibLoader; 
+		//LibLoaderType::Pointer m_LibLoader;
+    LibLoaderType   m_LibLoader;
 		LibHandleContainerType m_LibHandleContainer;
 
 		bool m_ImageTypeSupportInstalled;
