@@ -29,10 +29,11 @@ using namespace itk;
 	 * \parameter Optimizer: Select this optimizer as follows:\n
 	 *		<tt>(Optimizer "FullSearch")</tt>
 	 * \parameter FullSearchSpace<r>: Defines for resolution r a range of parameters to scan.\n
-	 *   Full syntax: (FullSearchSpace<r> <parameter_nr> <min> <max> <stepsize> [...] ) \n
-	 *   example: <tt>(FullSearchSpace0 2 -4.0 3.0 1.0 3 -1.0 1.0 0.5)</tt> \n
+	 *   Full syntax: (FullSearchSpace<r> <parameter_name> <parameter_nr> <min> <max> <stepsize> [...] ) \n
+	 *   example: <tt>(FullSearchSpace0 "translation_x" 2 -4.0 3.0 1.0 "rotation_y" 3 -1.0 1.0 0.5)</tt> \n
 	 *   This varies the second transform parameter in the range [-4.0 3.0] with steps of 1.0
-	 *   and the third parameter in the range [-1.0 1.0] with steps of 0.5.
+	 *   and the third parameter in the range [-1.0 1.0] with steps of 0.5. The names are used
+   *   as column headers in the screen output. 
 	 *   
 	 * \ingroup Optimizers
 	 * \sa FullSearchOptimizer
