@@ -20,35 +20,40 @@ ENDIF(ITK_FOUND)
 # Include directories
 
 SET( elxCommon_INCLUDE_DIRECTORIES
-${elastix_SOURCE_DIR}/Common
-${elastix_SOURCE_DIR}/Common/TransformGrouper
-${elastix_SOURCE_DIR}/Common/ParameterFileParser
-${elastix_SOURCE_DIR}/Common/xout
-${elastix_SOURCE_DIR}/Common/LineSearchOptimizers)
+ ${elastix_SOURCE_DIR}/Common
+ ${elastix_SOURCE_DIR}/Common/TransformGrouper
+ ${elastix_SOURCE_DIR}/Common/ParameterFileParser
+ ${elastix_SOURCE_DIR}/Common/xout
+ ${elastix_SOURCE_DIR}/Common/LineSearchOptimizers
+ ${elastix_SOURCE_DIR}/Common/ImageSamplers
+)
 
 SET( elxCore_INCLUDE_DIRECTORIES
-${elastix_SOURCE_DIR}/Core
-${elastix_SOURCE_DIR}/Core/Install
-${elastix_SOURCE_DIR}/Core/Kernel
-${elastix_SOURCE_DIR}/Core/ComponentBaseClasses
-${elastix_SOURCE_DIR}/Core/Configuration 
-${elastix_SOURCE_DIR}/Core/Main )
+ ${elastix_SOURCE_DIR}/Core
+ ${elastix_SOURCE_DIR}/Core/Install
+ ${elastix_SOURCE_DIR}/Core/Kernel
+ ${elastix_SOURCE_DIR}/Core/ComponentBaseClasses
+ ${elastix_SOURCE_DIR}/Core/Configuration 
+ ${elastix_SOURCE_DIR}/Core/Main
+)
 
 SET( elxComponents_INCLUDE_DIRECTORIES
-${elastix_SOURCE_DIR}/Components/FixedImagePyramids
-${elastix_SOURCE_DIR}/Components/Interpolators
-${elastix_SOURCE_DIR}/Components/Metrics
-${elastix_SOURCE_DIR}/Components/MovingImagePyramids
-${elastix_SOURCE_DIR}/Components/Optimizers
-${elastix_SOURCE_DIR}/Components/Registrations
-${elastix_SOURCE_DIR}/Components/ResampleInterpolators
-${elastix_SOURCE_DIR}/Components/Resamplers
-${elastix_SOURCE_DIR}/Components/Transforms )
+ ${elastix_SOURCE_DIR}/Components/FixedImagePyramids
+ ${elastix_SOURCE_DIR}/Components/Interpolators
+ ${elastix_SOURCE_DIR}/Components/Metrics
+ ${elastix_SOURCE_DIR}/Components/MovingImagePyramids
+ ${elastix_SOURCE_DIR}/Components/Optimizers
+ ${elastix_SOURCE_DIR}/Components/Registrations
+ ${elastix_SOURCE_DIR}/Components/ResampleInterpolators
+ ${elastix_SOURCE_DIR}/Components/Resamplers
+ ${elastix_SOURCE_DIR}/Components/Transforms
+)
 
 SET( elxINCLUDE_DIRECTORIES 
-${elxCommon_INCLUDE_DIRECTORIES}
-${elxCore_INCLUDE_DIRECTORIES}
-${elxComponents_INCLUDE_DIRECTORIES} )
+ ${elxCommon_INCLUDE_DIRECTORIES}
+ ${elxCore_INCLUDE_DIRECTORIES}
+ ${elxComponents_INCLUDE_DIRECTORIES}
+)
 
 INCLUDE_DIRECTORIES( ${elxINCLUDE_DIRECTORIES} )
 
