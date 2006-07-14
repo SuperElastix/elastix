@@ -17,7 +17,7 @@
 #ifndef __itkMeanSquaresImageToImageMetric2_h
 #define __itkMeanSquaresImageToImageMetric2_h
 
-#include "itkImageToImageMetric.h"
+#include "itkImageToImageMetricWithSampling.h"
 #include "itkCovariantVector.h"
 #include "itkPoint.h"
 
@@ -58,22 +58,22 @@ namespace itk
  */
 template < class TFixedImage, class TMovingImage > 
 class ITK_EXPORT MeanSquaresImageToImageMetric2 : 
-    public ImageToImageMetric< TFixedImage, TMovingImage>
+    public ImageToImageMetricWithSampling< TFixedImage, TMovingImage>
 {
 public:
 
   /** Standard class typedefs. */
-  typedef MeanSquaresImageToImageMetric2								  Self;
-  typedef ImageToImageMetric<TFixedImage, TMovingImage >  Superclass;
-
-  typedef SmartPointer<Self>         Pointer;
-  typedef SmartPointer<const Self>   ConstPointer;
+  typedef MeanSquaresImageToImageMetric2		Self;
+  typedef ImageToImageMetricWithSampling<
+    TFixedImage, TMovingImage >             Superclass;
+  typedef SmartPointer<Self>                Pointer;
+  typedef SmartPointer<const Self>          ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro(Self);
+  itkNewMacro( Self );
  
   /** Run-time type information (and related methods). */
-  itkTypeMacro(MeanSquaresImageToImageMetric2, ImageToImageMetric);
+  itkTypeMacro( MeanSquaresImageToImageMetric2, ImageToImageMetricWithSampling );
 
   /** Types transferred from the base class */
   typedef typename Superclass::RealType                 RealType;
@@ -82,13 +82,18 @@ public:
   typedef typename Superclass::TransformParametersType  TransformParametersType;
   typedef typename Superclass::TransformJacobianType    TransformJacobianType;
   typedef typename Superclass::GradientPixelType        GradientPixelType;
-
   typedef typename Superclass::MeasureType              MeasureType;
   typedef typename Superclass::DerivativeType           DerivativeType;
   typedef typename Superclass::FixedImageType           FixedImageType;
   typedef typename Superclass::MovingImageType          MovingImageType;
   typedef typename Superclass::FixedImageConstPointer   FixedImageConstPointer;
   typedef typename Superclass::MovingImageConstPointer  MovingImageConstPointer;
+  typedef typename Superclass::InputPointType			      InputPointType;
+  typedef typename Superclass::OutputPointType		      OutputPointType;
+  typedef typename Superclass::ImageSamplerType         ImageSamplerType;
+  typedef typename Superclass::ImageSamplerPointer      ImageSamplerPointer;
+  typedef typename Superclass::ImageSampleContainerType      ImageSampleContainerType;
+  typedef typename Superclass::ImageSampleContainerPointer   ImageSampleContainerPointer;
 
 	/** The fixed image dimension. */
 	itkStaticConstMacro( FixedImageDimension, unsigned int,
@@ -100,33 +105,14 @@ public:
 
 	/** Get the value for single valued optimizers. */
 	MeasureType GetValue( const TransformParametersType & parameters ) const;
-	MeasureType GetValueUsingAllPixels( const TransformParametersType & parameters ) const;
-	MeasureType GetValueUsingSomePixels( const TransformParametersType & parameters ) const;
 
   /** Get the derivatives of the match measure. */
   void GetDerivative( const TransformParametersType & parameters,
-                      DerivativeType & derivative ) const;
+    DerivativeType & derivative ) const;
 
   /** Get value and derivatives for multiple valued optimizers. */
   void GetValueAndDerivative( const TransformParametersType & parameters,
 		MeasureType& Value, DerivativeType& Derivative ) const;
-	void GetValueAndDerivativeUsingAllPixels( const TransformParametersType & parameters,
-		MeasureType& Value, DerivativeType& Derivative ) const;
-	void GetValueAndDerivativeUsingSomePixels( const TransformParametersType & parameters,
-		MeasureType& Value, DerivativeType& Derivative ) const;
-
-	/** Set/Get UseAllPixels boolean. If false, a random set of samples
-	 * is used for calculating the value and derivative. If true, all
-	 * pixels are used for this. Default value is true. */
-	itkSetMacro( UseAllPixels, bool );
-  itkGetConstReferenceMacro( UseAllPixels, bool );
-  itkBooleanMacro( UseAllPixels );
-
-	/** Set/Get NumberOfSpatialSamples long. This number defines how much
-	 * samples are used to calculate the value and derivative. This number
-	 * is only relevant if UseAllPixels is false. */
-	itkSetMacro( NumberOfSpatialSamples, unsigned long );
-	itkGetConstReferenceMacro( NumberOfSpatialSamples, unsigned long );
 
 protected:
   MeanSquaresImageToImageMetric2();
@@ -136,9 +122,6 @@ protected:
 private:
   MeanSquaresImageToImageMetric2(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
-
-	bool		m_UseAllPixels;
-	unsigned long		m_NumberOfSpatialSamples;
 
 }; // end class MeanSquaresImageToImageMetric2
 

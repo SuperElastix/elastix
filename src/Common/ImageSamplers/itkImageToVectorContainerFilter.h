@@ -63,7 +63,7 @@ namespace itk
     OutputVectorContainerType * GetOutput( void );
 
     /** Prepare the output. */
-    virtual void GenerateOutputInformation( void );
+    //virtual void GenerateOutputInformation( void );
 
   protected:
 

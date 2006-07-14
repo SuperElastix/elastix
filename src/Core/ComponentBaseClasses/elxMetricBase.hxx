@@ -7,6 +7,8 @@
 #include "itkBinaryBallStructuringElement.h"
 #include "itkGrayscaleErodeImageFilter.h"
 
+#include "itkImageSamplerBase.h"
+#include "itkImageRandomSampler.h"
 
 namespace elastix
 {
@@ -210,6 +212,9 @@ namespace elastix
 			}
 		}
 
+    /** Configure the image sampler. */
+    this->ConfigureImageSampler();
+
 	} // end BeforeEachResolutionBase
 
 
@@ -394,6 +399,74 @@ namespace elastix
 	} // end UpdateMasks
 
 
+  /**
+	 * ********************* ConfigureImageSampler ************************
+	 */
+
+	template <class TElastix>
+    void
+    MetricBase<TElastix>
+    ::ConfigureImageSampler( void )
+  {
+    /** Cast this to MetricWithSamplingType. */
+    MetricWithSamplingType * thisAsMetricWithSampler
+      = dynamic_cast< MetricWithSamplingType * >( this );
+
+    if ( thisAsMetricWithSampler )
+    {
+      /** Typedefs of all available image samplers. */
+      typedef ImageSamplerBase< FixedImageType >      ImageSamplerBaseType;
+      typedef ImageRandomSampler< FixedImageType >    ImageRandomSamplerType;
+
+      /** Create an imageSampler of ImageSamplerBaseType. */
+      typename ImageSamplerBaseType::Pointer imageSampler = 0;
+
+      /** Get the desired sampler type from the parameter file. */
+      unsigned int level =
+			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+      std::string imageSamplerType = "Random";
+      this->m_Configuration->ReadParameter( imageSamplerType, "ImageSampler", level );
+
+      /** Get and set NumberOfSpatialSamples. This doesn't make sense for the ImageFullSampler. */
+      unsigned long numberOfSpatialSamples = 5000;
+      this->GetConfiguration()->ReadParameter( numberOfSpatialSamples, "NumberOfSpatialSamples", 0 );
+      this->GetConfiguration()->ReadParameter( numberOfSpatialSamples, "NumberOfSpatialSamples", level );
+
+      /** Set the imageSampler to the correct one. */
+      if ( imageSamplerType == "Random" )
+      {
+        typename ImageRandomSamplerType::Pointer randomSampler
+          = ImageRandomSamplerType::New();
+        randomSampler->SetNumberOfSamples( numberOfSpatialSamples );
+        imageSampler = randomSampler;
+      }
+      else
+      {
+        itkExceptionMacro( << "ERROR: There exists no ImageSampler \"" << imageSamplerType << "\"." );
+      }
+   		
+      /** Set the image sampler in the metric. */
+      thisAsMetricWithSampler->SetImageSampler( imageSampler );
+
+      /** Check if NewSamplesEveryIteration is possible with the selected ImageSampler. */
+      std::string newSamples = "false";
+      this->m_Configuration->ReadParameter( newSamples, "NewSamplesEveryIteration", 0, true );
+      this->m_Configuration->ReadParameter( newSamples, "NewSamplesEveryIteration", level, true );
+
+      if ( newSamples == "true" )
+      {
+        bool ret = thisAsMetricWithSampler->GetImageSampler()->SelectNewSamplesOnUpdate();
+        if ( !ret )
+        {
+          xl::xout["warning"]  << "WARNING: You want to select new samples every iteration, \
+                                  but the selected ImageSampler is not suited for that." << std::endl;
+        }
+      }
+    } // end if
+
+  } // end ConfigureImageSampler
+
+
 	/**
 	 * ********************* SelectNewSamples ************************
 	 */
@@ -401,16 +474,27 @@ namespace elastix
 	template <class TElastix>
   void MetricBase<TElastix>::SelectNewSamples(void)
 	{
-		/**
-		 * Force the metric to base its computation on a new subset of image samples.
-		 * Not every metric may have implemented this, so invoke an exception if this
-		 * method is called, without being overrided by a subclass.
-		 */
+    /** Cast this to MetricWithSamplingType. */
+    MetricWithSamplingType * thisAsMetricWithSampler
+      = dynamic_cast< MetricWithSamplingType * >( this );
 
-		xl::xout["error"] << "ERROR: The SelectNewSamples function should be overridden or just not used." << std::endl;
-		itkExceptionMacro(<< "ERROR: The SelectNewSamples method is not implemented in your metric.");
+    if ( thisAsMetricWithSampler )
+    {
+      thisAsMetricWithSampler->GetImageSampler()->SelectNewSamplesOnUpdate();
+    }
+    else
+    {
+      /**
+      * Force the metric to base its computation on a new subset of image samples.
+      * Not every metric may have implemented this, so invoke an exception if this
+      * method is called, without being overrided by a subclass.
+      */
+      xl::xout["error"]  << "ERROR: The SelectNewSamples function should be overridden or just not used." << std::endl;
+      itkExceptionMacro( << "ERROR: The SelectNewSamples method is not implemented in your metric." );
+    }
 
 	} // end SelectNewSamples
+
 
 } // end namespace elastix
 

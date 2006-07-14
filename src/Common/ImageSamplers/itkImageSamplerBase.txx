@@ -75,6 +75,22 @@ namespace itk
 
 
   /**
+	 * ******************* SelectNewSamplesOnUpdate *******************
+	 */
+  
+  template< class TInputImage >
+    bool
+    ImageSamplerBase< TInputImage >
+    ::SelectNewSamplesOnUpdate( void )
+  {
+    /** The default behaviour is to select new samples after every update. */
+    this->Modified();
+    return true;
+
+  } // end SelectNewSamplesOnUpdate
+
+
+  /**
 	 * ******************* PrintSelf *******************
 	 */
   

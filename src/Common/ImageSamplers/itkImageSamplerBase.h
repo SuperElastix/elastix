@@ -78,6 +78,9 @@ namespace itk
     /** Get the region over which the samples will be taken. */
     itkGetConstReferenceMacro( InputImageRegion, InputImageRegionType );
 
+    /** SelectNewSamplesOnUpdate. */
+    virtual bool SelectNewSamplesOnUpdate( void );
+
   protected:
 
     /** The constructor. */

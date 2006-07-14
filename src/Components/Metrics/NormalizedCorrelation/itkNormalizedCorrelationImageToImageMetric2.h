@@ -17,7 +17,7 @@
 #ifndef __itkNormalizedCorrelationImageToImageMetric2_h
 #define __itkNormalizedCorrelationImageToImageMetric2_h
 
-#include "itkImageToImageMetric.h"
+#include "itkImageToImageMetricWithSampling.h"
 #include "itkCovariantVector.h"
 #include "itkPoint.h"
 
@@ -94,13 +94,13 @@ namespace itk
  */
 template < class TFixedImage, class TMovingImage > 
 class ITK_EXPORT NormalizedCorrelationImageToImageMetric2 : 
-    public ImageToImageMetric< TFixedImage, TMovingImage >
+    public ImageToImageMetricWithSampling< TFixedImage, TMovingImage >
 {
 public:
 
   /** Standard class typedefs. */
   typedef NormalizedCorrelationImageToImageMetric2				Self;
-  typedef ImageToImageMetric<TFixedImage, TMovingImage >  Superclass;
+  typedef ImageToImageMetricWithSampling<TFixedImage, TMovingImage >  Superclass;
 
   typedef SmartPointer<Self>         Pointer;
   typedef SmartPointer<const Self>   ConstPointer;
@@ -109,7 +109,7 @@ public:
   itkNewMacro( Self );
  
   /** Run-time type information (and related methods). */
-  itkTypeMacro( NormalizedCorrelationImageToImageMetric2, Object );
+  itkTypeMacro( NormalizedCorrelationImageToImageMetric2, ImageToImageMetricWithSampling );
  
   /** Types transferred from the base class */
   typedef typename Superclass::RealType                 RealType;

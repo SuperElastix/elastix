@@ -27,7 +27,7 @@
 #ifndef __itkMattesMutualInformationImageToImageMetric2_H__
 #define __itkMattesMutualInformationImageToImageMetric2_H__
 
-#include "itkImageToImageMetric.h"
+#include "itkImageToImageMetricWithSampling.h"
 #include "itkCovariantVector.h"
 #include "itkPoint.h"
 #include "itkIndex.h"
@@ -131,13 +131,13 @@ namespace itk
 
 	template <class TFixedImage,class TMovingImage >
 		class MattesMutualInformationImageToImageMetric2 :
-	public ImageToImageMetric< TFixedImage, TMovingImage >
+	public ImageToImageMetricWithSampling< TFixedImage, TMovingImage >
 	{
 	public:
 		
 		/** Standard class typedefs. */
 		typedef MattesMutualInformationImageToImageMetric2					Self;
-		typedef ImageToImageMetric< TFixedImage, TMovingImage >			Superclass;
+		typedef ImageToImageMetricWithSampling< TFixedImage, TMovingImage >			Superclass;
 		typedef SmartPointer<Self>																	Pointer;
 		typedef SmartPointer<const Self>														ConstPointer;
 		
@@ -145,7 +145,7 @@ namespace itk
 		itkNewMacro( Self );
 		
 		/** Run-time type information (and related methods). */
-		itkTypeMacro( MattesMutualInformationImageToImageMetric2, ImageToImageMetric );
+		itkTypeMacro( MattesMutualInformationImageToImageMetric2, ImageToImageMetricWithSampling );
 		
 		/** Types inherited from Superclass. */
 		typedef typename Superclass::TransformType            TransformType;

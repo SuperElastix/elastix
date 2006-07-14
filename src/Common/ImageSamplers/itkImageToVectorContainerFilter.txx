@@ -128,7 +128,7 @@ namespace itk
    * Copy information from first input to all outputs.
    * This is a void implementation to prevent the 
    * ProcessObject version to be called.
-	 */
+	 *
   
   template< class TInputImage, class TOutputVectorContainer >
     void
@@ -136,7 +136,7 @@ namespace itk
     ::GenerateOutputInformation( void )
   {
   } // end GenerateOutputInformation
-
+*/
 
 } // end namespace itk
 

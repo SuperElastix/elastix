@@ -27,12 +27,6 @@ using namespace itk;
 		void MeanSquaresMetric<TElastix>
 		::BeforeRegistration(void)
 	{
-		/** Get and set UseAllPixels. Default true. */
-		std::string useAllPixels = "true";
-		this->GetConfiguration()->ReadParameter( useAllPixels, "UseAllPixels", 0 );
-		if ( useAllPixels == "false" ) this->SetUseAllPixels( false );
-		else this->SetUseAllPixels( true );
-
 	} // end BeforeRegistration
 
 
@@ -44,17 +38,6 @@ using namespace itk;
 		void MeanSquaresMetric<TElastix>
 		::BeforeEachResolution(void)
 	{
-		/** Get the current resolution level. */
-		unsigned int level = 
-			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
-
-		/** Get and set NumberOfSpatialSamples. This only makes sense
-		 * if UseAllPixels is true. */
-		unsigned long numberOfSpatialSamples = 5000;
-		this->GetConfiguration()->ReadParameter( numberOfSpatialSamples, "NumberOfSpatialSamples", 0 );
-		this->GetConfiguration()->ReadParameter( numberOfSpatialSamples, "NumberOfSpatialSamples", level );
-		this->SetNumberOfSpatialSamples( numberOfSpatialSamples );
-
 	} // end BeforeEachResolution
 	
 

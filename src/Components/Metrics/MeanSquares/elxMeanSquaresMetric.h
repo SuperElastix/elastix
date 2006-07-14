@@ -114,23 +114,6 @@ using namespace itk;
 		 */
 		virtual void Initialize(void) throw (ExceptionObject);
 
-		/**
-		 * Force the metric to base its computation on a new subset of image samples.
-		 *
-		 * This metric cannot respond to this function correctly. It is meant for stochastic
-     * optimizers, to allow them to request a refreshment of the sample set.
-		 * However, this metric can not deal with such a request.
-		 * 
-		 * It has two modes of operation, defined by the (UseAllPixels ...) option. If this
-     * parameter is set to true, all voxels in the image are used. If set to false,
-		 * every derivative/value calculation is based on a new, randomly selected subset
-		 * of voxels. So, if you want to combine the metric with a stochastic optimizer,
-		 * simply set the UseAllPixels parameter to false.
-		 *
-		 * Therefore, this metric just silently ignores the request.
-		 */
-		virtual void SelectNewSamples(void){};
-
 	protected:
 
 		/** The constructor. */

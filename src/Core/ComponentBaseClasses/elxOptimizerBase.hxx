@@ -52,8 +52,10 @@ namespace elastix
 
 		/** Check if after every iteration a new sample set should be created. */
 		std::string newSamplesEveryIteration = "false";
+    this->GetConfiguration()->
+			ReadParameter( newSamplesEveryIteration, "NewSamplesEveryIteration", 0 );
 		this->GetConfiguration()->
-			ReadParameter(newSamplesEveryIteration, "NewSamplesEveryIteration", level);
+			ReadParameter( newSamplesEveryIteration, "NewSamplesEveryIteration", level );
 		if ( newSamplesEveryIteration == "true" )
 		{
 			this->m_NewSamplesEveryIteration = true;
