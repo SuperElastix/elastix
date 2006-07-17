@@ -14,7 +14,6 @@ namespace itk
     ImageSamplerBase< TInputImage >
     ::ImageSamplerBase()
   {
-    this->m_NumberOfSamples = 0;
     this->m_Mask = 0;
   } // end Constructor
 

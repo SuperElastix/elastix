@@ -65,13 +65,6 @@ namespace itk
     typedef SpatialObject<
       itkGetStaticConstMacro( InputImageDimension ) > 	MaskType;
 
-    /** Set the number of samples. */
-    itkSetClampMacro( NumberOfSamples, unsigned long,
-			1, NumericTraits<unsigned long>::max() );
-
-    /** Get the number of samples. */
-		itkGetConstMacro( NumberOfSamples, unsigned long );
-
     /** Set the mask. */
     itkSetObjectMacro( Mask, MaskType );
 
@@ -108,7 +101,6 @@ namespace itk
     void operator=( const Self& );				    // purposely not implemented
 
     /** Member variables. */
-    unsigned long                 m_NumberOfSamples;
     typename MaskType::Pointer    m_Mask;
     InputImageRegionType          m_InputImageRegion;
 

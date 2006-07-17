@@ -41,10 +41,12 @@ SET( ImageSamplersFiles
  ImageSamplers/itkImageFullSampler.txx
  ImageSamplers/itkImageGridSampler.h
  ImageSamplers/itkImageGridSampler.txx
-# ImageSamplers/itkImageRandomCoordinateSampler.h
-# ImageSamplers/itkImageRandomCoordinateSampler.txx
+ ImageSamplers/itkImageRandomCoordinateSampler.h
+ ImageSamplers/itkImageRandomCoordinateSampler.txx
  ImageSamplers/itkImageRandomSampler.h
  ImageSamplers/itkImageRandomSampler.txx
+ ImageSamplers/itkImageRandomSamplerSparseMask.h
+ ImageSamplers/itkImageRandomSamplerSparseMask.txx
  ImageSamplers/itkImageSample.h
  ImageSamplers/itkImageSamplerBase.h
  ImageSamplers/itkImageSamplerBase.txx

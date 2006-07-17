@@ -8,6 +8,17 @@
 namespace itk
 {
 
+  /**
+	 * ******************* Constructor ********************
+	 */
+  
+  template< class TInputImage >
+    ImageRandomSampler< TInputImage > ::
+    ImageRandomSampler()
+  {
+    this->m_NumberOfSamples = 100;
+  } // end constructor 
+
 
   /**
 	 * ******************* GenerateData *******************
@@ -49,6 +60,7 @@ namespace itk
         (*iter).Value().m_ImageValue = randIter.Get();
         /** Jump to a random position. */
         ++randIter;
+        
       } // end for loop
     } // end if no mask
     else
@@ -58,8 +70,8 @@ namespace itk
         mask->GetSource()->Update();
       }
       InputImagePointType inputPoint;
-      /** No real meaning in this: */
-      randIter.SetNumberOfSamples( this->GetNumberOfSamples() );
+      /** Make sure we are not eternally trying to find samples: */
+      randIter.SetNumberOfSamples( 10 * this->GetNumberOfSamples() );
       /** Loop over the sample container. */
       for ( iter = sampleContainer->Begin(); iter != end; ++iter )
       {
@@ -68,6 +80,16 @@ namespace itk
         {
           /** Jump to a random position. */
           ++randIter;
+          /** Check if we are not trying eternally to find a valid point. */
+          if ( randIter.IsAtEnd() )
+          {
+            /** Squeeze the sample container to the size that is still valid */
+            ImageSampleContainerType::iterator stlnow = sampleContainer->begin();
+            ImageSampleContainerType::iterator stlend = sampleContainer->end();
+            stlnow += iter.Index();
+            sampleContainer->erase( stlnow, stlend);
+            itkExceptionMacro( << "Could not find enough image samples within reasonable time. Probably the mask is too small" );
+          }
           /** Get the index, and transform it to the physical coordinates. */
           InputImageIndexType index = randIter.GetIndex();
           inputImage->TransformIndexToPhysicalPoint( index,
@@ -76,6 +98,7 @@ namespace itk
         /** Put the coordinates and the value in the sample. */
         (*iter).Value().m_ImageCoordinates = inputPoint;
         (*iter).Value().m_ImageValue = randIter.Get();
+        
       } // end for loop
     } // end if mask
 
