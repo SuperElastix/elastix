@@ -9,6 +9,9 @@
 
 #include "itkImageSamplerBase.h"
 #include "itkImageRandomSampler.h"
+#include "itkImageFullSampler.h"
+//#include "itkImageRandomCoordinateSampler.h"
+#include "itkImageGridSampler.h"
 
 namespace elastix
 {
@@ -417,6 +420,9 @@ namespace elastix
       /** Typedefs of all available image samplers. */
       typedef ImageSamplerBase< FixedImageType >      ImageSamplerBaseType;
       typedef ImageRandomSampler< FixedImageType >    ImageRandomSamplerType;
+      typedef ImageFullSampler< FixedImageType >      ImageFullSamplerType;
+      //typedef ImageRandomCoordinateSampler< FixedImageType >      ImageRandomCoordinateSamplerType;
+      typedef ImageGridSampler< FixedImageType >      ImageGridSamplerType;
 
       /** Create an imageSampler of ImageSamplerBaseType. */
       typename ImageSamplerBaseType::Pointer imageSampler = 0;
@@ -425,6 +431,7 @@ namespace elastix
       unsigned int level =
 			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
       std::string imageSamplerType = "Random";
+      this->m_Configuration->ReadParameter( imageSamplerType, "ImageSampler", 0 );
       this->m_Configuration->ReadParameter( imageSamplerType, "ImageSampler", level );
 
       /** Get and set NumberOfSpatialSamples. This doesn't make sense for the ImageFullSampler. */
@@ -439,6 +446,41 @@ namespace elastix
           = ImageRandomSamplerType::New();
         randomSampler->SetNumberOfSamples( numberOfSpatialSamples );
         imageSampler = randomSampler;
+      }
+      else if ( imageSamplerType == "Full" )
+      {
+        typename ImageFullSamplerType::Pointer fullSampler
+          = ImageFullSamplerType::New();
+        imageSampler = fullSampler;
+      }
+      /*else if ( imageSamplerType == "RandomCoordinate" )
+      {
+        typename ImageRandomCoordinateSamplerType::Pointer randomcoordinateSampler
+          = ImageRandomCoordinateSamplerType::New();
+        randomcoordinateSampler->SetNumberOfSamples( numberOfSpatialSamples );
+        imageSampler = randomcoordinateSampler;
+      }*/
+      else if ( imageSamplerType == "Grid" )
+      {
+        /** Create the gridSampler and the gridspacing. */
+        typedef typename ImageGridSamplerType::SampleGridSpacingType        GridSpacingType;
+        typedef typename ImageGridSamplerType::SampleGridSpacingValueType   SampleGridSpacingValueType;
+
+        typename ImageGridSamplerType::Pointer gridSampler
+          = ImageGridSamplerType::New();
+        GridSpacingType gridspacing;
+
+        /** Read the desired grid spacing of the samples. */
+        unsigned int spacing_dim;
+        for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
+        {
+          spacing_dim = 2;
+          this->GetConfiguration()->ReadParameter(
+            spacing_dim, "SampleGridSpacing", level * FixedImageDimension + dim );
+          gridspacing[ dim ] = static_cast<SampleGridSpacingValueType>( spacing_dim );
+        }
+        gridSampler->SetSampleGridSpacing( gridspacing );
+        imageSampler = gridSampler;
       }
       else
       {
