@@ -18,8 +18,7 @@
 #define _itkMeanSquaresImageToImageMetric2_txx
 
 #include "itkMeanSquaresImageToImageMetric2.h"
-//#include "itkImageRegionConstIteratorWithIndex.h"
-//#include "itkImageRandomConstIteratorWithIndex.h"
+
 
 namespace itk
 {
@@ -100,7 +99,7 @@ namespace itk
 			{
 				/** Get the fixedValue = f(x) and the movingValue = m(x+u(x)). */
 				const RealType movingValue  = this->m_Interpolator->Evaluate( transformedPoint );
-        const RealType & fixedValue  = (*iter).Value().m_ImageValue;
+        const RealType & fixedValue = (*iter).Value().m_ImageValue;
 
 				/** The difference squared. */
 				const RealType diff = movingValue - fixedValue; 
@@ -165,7 +164,6 @@ namespace itk
 		::GetValueAndDerivative( const TransformParametersType & parameters, 
 		MeasureType & value, DerivativeType & derivative ) const
 	{
-	
 		itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 
 		/** Some sanity checks. */
@@ -195,8 +193,8 @@ namespace itk
 			MovingImageType::ImageDimension>							MovingImageContinuousIndexType;
 
 		/** Create variables to store intermediate results. */
-		InputPointType	inputPoint;
-		OutputPointType transformedPoint;
+		InputPointType	                    inputPoint;
+		OutputPointType                     transformedPoint;
 		MovingImageContinuousIndexType			tempIndex;
 		typename MovingImageType::IndexType	mappedIndex;
 
@@ -224,8 +222,8 @@ namespace itk
 			if ( this->m_Interpolator->IsInsideBuffer( transformedPoint ) )
 			{
 				/** Get the fixedValue = f(x) and the movingValue = m(x+u(x)). */
-				const RealType movingValue = this->m_Interpolator->Evaluate( transformedPoint );
-        const RealType & fixedValue  = (*iter).Value().m_ImageValue;
+				const RealType movingValue  = this->m_Interpolator->Evaluate( transformedPoint );
+        const RealType & fixedValue = (*iter).Value().m_ImageValue;
 
 				/** Get the Jacobian. */
 				const TransformJacobianType & jacobian =

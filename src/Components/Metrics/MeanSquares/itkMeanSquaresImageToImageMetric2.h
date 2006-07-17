@@ -18,8 +18,6 @@
 #define __itkMeanSquaresImageToImageMetric2_h
 
 #include "itkImageToImageMetricWithSampling.h"
-#include "itkCovariantVector.h"
-#include "itkPoint.h"
 
 
 namespace itk

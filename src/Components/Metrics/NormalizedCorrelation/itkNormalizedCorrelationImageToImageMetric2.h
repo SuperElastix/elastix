@@ -18,8 +18,6 @@
 #define __itkNormalizedCorrelationImageToImageMetric2_h
 
 #include "itkImageToImageMetricWithSampling.h"
-#include "itkCovariantVector.h"
-#include "itkPoint.h"
 
 
 namespace itk
@@ -99,11 +97,11 @@ class ITK_EXPORT NormalizedCorrelationImageToImageMetric2 :
 public:
 
   /** Standard class typedefs. */
-  typedef NormalizedCorrelationImageToImageMetric2				Self;
-  typedef ImageToImageMetricWithSampling<TFixedImage, TMovingImage >  Superclass;
-
-  typedef SmartPointer<Self>         Pointer;
-  typedef SmartPointer<const Self>   ConstPointer;
+  typedef NormalizedCorrelationImageToImageMetric2			Self;
+  typedef ImageToImageMetricWithSampling<
+    TFixedImage, TMovingImage >                         Superclass;
+  typedef SmartPointer<Self>                            Pointer;
+  typedef SmartPointer<const Self>                      ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -126,6 +124,13 @@ public:
   typedef typename Superclass::FixedImageConstPointer   FixedImageConstPointer;
   typedef typename Superclass::MovingImageConstPointer  MovingImageConstPointer;
 
+  typedef typename Superclass::InputPointType			      InputPointType;
+  typedef typename Superclass::OutputPointType		      OutputPointType;
+  typedef typename Superclass::ImageSamplerType         ImageSamplerType;
+  typedef typename Superclass::ImageSamplerPointer      ImageSamplerPointer;
+  typedef typename Superclass::ImageSampleContainerType      ImageSampleContainerType;
+  typedef typename Superclass::ImageSampleContainerPointer   ImageSampleContainerPointer;
+
 	/** The fixed image dimension. */
 	itkStaticConstMacro( FixedImageDimension, unsigned int,
 		FixedImageType::ImageDimension );
@@ -136,8 +141,6 @@ public:
 
   /** Get the value for single valued optimizers. */
   MeasureType GetValue( const TransformParametersType & parameters ) const;
-	MeasureType GetValueUsingAllPixels( const TransformParametersType & parameters ) const;
-	MeasureType GetValueUsingSomePixels( const TransformParametersType & parameters ) const;
 
 	/** Get the derivatives of the match measure. */
   void GetDerivative( const TransformParametersType & parameters,
@@ -145,10 +148,6 @@ public:
 
   /** Get value and derivatives for multiple valued optimizers. */
   void GetValueAndDerivative( const TransformParametersType & parameters,
-		MeasureType& Value, DerivativeType& Derivative ) const;
-	void GetValueAndDerivativeUsingAllPixels( const TransformParametersType & parameters,
-		MeasureType& Value, DerivativeType& Derivative ) const;
-	void GetValueAndDerivativeUsingSomePixels( const TransformParametersType & parameters,
 		MeasureType& Value, DerivativeType& Derivative ) const;
 
   /** Set/Get SubtractMean boolean. If true, the sample mean is subtracted 
@@ -158,19 +157,6 @@ public:
   itkSetMacro( SubtractMean, bool );
   itkGetConstReferenceMacro( SubtractMean, bool );
   itkBooleanMacro( SubtractMean );
-
-	/** Set/Get UseAllPixels boolean. If false, a random set of samples
-	 * is used for calculating the value and derivative. If true, all
-	 * pixels are used for this. Default value is true. */
-	itkSetMacro( UseAllPixels, bool );
-  itkGetConstReferenceMacro( UseAllPixels, bool );
-  itkBooleanMacro( UseAllPixels );
-
-	/** Set/Get NumberOfSpatialSamples long. This number defines how much
-	 * samples are used to calculate the value and derivative. This number
-	 * is only relevant if UseAllPixels is false. */
-	itkSetMacro( NumberOfSpatialSamples, unsigned long );
-	itkGetConstReferenceMacro( NumberOfSpatialSamples, unsigned long );
 
 protected:
   NormalizedCorrelationImageToImageMetric2();
@@ -182,8 +168,6 @@ private:
   void operator=(const Self&); //purposely not implemented
 
   bool    m_SubtractMean;
-	bool		m_UseAllPixels;
-	unsigned long		m_NumberOfSpatialSamples;
 
 }; // end class NormalizedCorrelationImageToImageMetric2
 

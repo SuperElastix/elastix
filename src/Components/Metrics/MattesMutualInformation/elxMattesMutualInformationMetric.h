@@ -42,11 +42,6 @@ using namespace itk;
 	 * \parameter SamplesOnUniformGrid: Flag to choose the samples on a uniform grid. \n
 	 *		example: <tt>(SamplesOnUniformGrid "true")</tt> \n
 	 *		Default is "false".
-	 * \parameter SampleGridSpacing: if the SamplesOnUniformGrid is set to "true", this parameter
-	 *		controls the spacing of the uniform grid in all dimensions. This should be given in
-	 *		index coordinates. \n
-	 *		example: <tt>(SampleGridSpacing 4 4 4)</tt> \n
-	 *		Default is 2 in each dimension.
 	 *
 	 *
    * \sa MattesMutualInformationImageToImageMetric2

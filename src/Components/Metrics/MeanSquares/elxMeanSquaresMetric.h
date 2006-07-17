@@ -17,15 +17,6 @@ using namespace itk;
 	 * The parameters used in this class are:
 	 * \parameter Metric: Select this metric as follows:\n
 	 *		<tt>(Metric "MeanSquares")</tt>
-	 * \parameter NumberOfSpatialSamples: The number of image voxels used for computing the
-	 *		metric value and its derivative in each iteration. Must be given for each resolution.\n
-	 *		example: <tt>(NumberOfSpatialSamples 2048 2048 4000)</tt> \n
-	 *		The default is 5000.
-	 * \parameter	UseAllPixels: Flag to force the metric to use ALL voxels for 
-	 *		computing the metric value and its derivative in each iteration.
-	 *    Choose one of {"true", "false"}. Default is "true". \n
-	 *		example: <tt>(UseAllPixels "false")</tt> \n
-	 *    note: the NewSamplesEveryIteration parameter is ignored by this metric.\n
 	 *
 	 * \ingroup Metrics
 	 *

@@ -27,8 +27,6 @@ using namespace itk;
 		void NormalizedCorrelationMetric<TElastix>
 		::BeforeRegistration(void)
 	{
-
-
 	} // end BeforeRegistration
 
 
@@ -50,26 +48,6 @@ using namespace itk;
 		this->GetConfiguration()->ReadParameter( subtractMean, "SubtractMean", level );
 		if ( subtractMean == "false" ) this->SetSubtractMean( false );
 		else this->SetSubtractMean( true );
-
-		/** Get and set UseAllPixels. Default true. */
-		std::string useAllPixels = "true";
-		this->GetConfiguration()->ReadParameter( useAllPixels, "UseAllPixels", 0 );
-		this->GetConfiguration()->ReadParameter( useAllPixels, "UseAllPixels", level );
-		if ( useAllPixels == "false" )
-		{
-			this->SetUseAllPixels( false );
-			/** Get and set NumberOfSpatialSamples. This only makes sense
-			 * if UseAllPixels is false. */
-			unsigned long numberOfSpatialSamples = 5000;
-			this->GetConfiguration()->ReadParameter( numberOfSpatialSamples, "NumberOfSpatialSamples", 0 );
-			this->GetConfiguration()->ReadParameter( numberOfSpatialSamples, "NumberOfSpatialSamples", level );
-			this->SetNumberOfSpatialSamples( numberOfSpatialSamples );
-		}
-		else
-		{
-			this->SetUseAllPixels( true );
-		}
-
 		
 	} // end BeforeEachResolution
 	
