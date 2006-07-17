@@ -1,0 +1,92 @@
+#ifndef __ImageFullSampler_txx
+#define __ImageFullSampler_txx
+
+#include "itkImageFullSampler.h"
+
+#include "itkImageRegionConstIteratorWithIndex.h"
+
+namespace itk
+{
+
+  /**
+	 * ******************* GenerateData *******************
+	 */
+  
+  template< class TInputImage >
+    void
+    ImageFullSampler< TInputImage >
+    ::GenerateData( void )
+  {
+    /** Get handles to the input image, output sample container, and the mask. */
+    InputImageConstPointer inputImage = this->GetInput();
+    typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
+    typename MaskType::ConstPointer mask = this->GetMask();
+    
+		/** Set up a region interator within the user specified image region.*/
+	  typedef ImageRegionConstIteratorWithIndex<InputImageType> InputImageIterator;
+		InputImageIterator iter( inputImage, this->GetInputImageRegion() );
+
+    /** Fill the sample container. */
+		if ( mask.IsNull() )
+		{
+			/** Simply loop over the image and store all samples in the container. */		 
+			for( iter.GoToBegin(); ! iter.IsAtEnd(); ++iter )
+			{
+				ImageSampleType tempsample;
+				/** Get sampled index */
+				InputImageIndexType index = iter.GetIndex();
+				/** Translate index to point */
+				inputImage->TransformIndexToPhysicalPoint( index,
+					tempsample.m_ImageCoordinates );
+				/** Get sampled image value */
+				tempsample.m_ImageValue = iter.Get();
+				/** Store in container */
+				sampleContainer->push_back(tempsample);
+			} // end for
+		} // end if no mask
+		else
+		{
+      if ( mask->GetSource() )
+      {
+        mask->GetSource()->Update();
+      }
+      /** Loop over the image and check if the points falls within the mask. */
+			for( iter.GoToBegin(); ! iter.IsAtEnd(); ++iter )
+			{
+				ImageSampleType tempsample;
+				/** Get sampled index */
+				InputImageIndexType index = iter.GetIndex();
+  			/** Translate index to point */
+				inputImage->TransformIndexToPhysicalPoint( index,
+					tempsample.m_ImageCoordinates );
+				if ( mask->IsInside( tempsample.m_ImageCoordinates ) )
+				{
+ 				  /** Get sampled image value */
+	 			  tempsample.m_ImageValue = iter.Get();
+				  /**  Store in container */
+				  sampleContainer->push_back(tempsample);
+				} // end if
+			} // end for
+  	} // end else (if mask exists)
+ 
+  } // end GenerateData
+
+
+  /**
+	 * ******************* PrintSelf *******************
+	 */
+  
+  template< class TInputImage >
+    void
+    ImageFullSampler< TInputImage >
+    ::PrintSelf( std::ostream& os, Indent indent ) const
+  {
+    Superclass::PrintSelf( os, indent );
+  } // end PrintSelf
+
+
+
+} // end namespace itk
+
+#endif // end #ifndef __ImageFullSampler_txx
+
