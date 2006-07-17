@@ -28,7 +28,6 @@
 
 #include "itkImageRegionConstIterator.h"
 #include "itkImageRegionIterator.h"
-#include "itkImageRandomConstIteratorWithIndex.h"
 
 #include "vnl/vnl_math.h"
 
@@ -46,7 +45,7 @@ namespace itk
 		::MattesMutualInformationImageToImageMetric2()
 	{
 		/** Initialize.*/
-		this->m_NumberOfSpatialSamples = 500;
+		
 		this->m_NumberOfHistogramBins = 50;
 		
 		this->SetComputeGradient(false); // don't use the default gradient for now
@@ -81,9 +80,6 @@ namespace itk
 		this->m_BSplineCombinationTransform = NULL;
 		this->m_NumberOfParameters = 0;
 	
-		// Added for elastix
-		this->m_UseAllPixels = false;
-		this->m_AllFixedImagePixelsStoredInContainer = false;
 		
 	} // end Constructor
 	
@@ -104,13 +100,9 @@ namespace itk
 		Superclass::PrintSelf( os, indent );
 		
 		/** Add debugging information. */
-		os << indent << "NumberOfSpatialSamples: ";
-		os << this->m_NumberOfSpatialSamples << std::endl;
 		os << indent << "NumberOfHistogramBins: ";
 		os << this->m_NumberOfHistogramBins << std::endl;
-	  os << indent << "UseAllPixels: ";
-	  os << m_UseAllPixels << std::endl;
-
+	  
 		os << indent << "NumberOfParameters: ";
 		os << this->m_NumberOfParameters << std::endl;
 		os << indent << "FixedImageNormalizedMin: ";
@@ -251,12 +243,6 @@ namespace itk
 		itkDebugMacro( "MovingImageBinSize; " << this->m_MovingImageBinSize );
 		
 		/**
-		* Allocate memory for the fixed image sample containers.
-		*/
-		this->m_FixedImageSamples.resize( this->m_NumberOfSpatialSamples);
-		this->m_AllFixedImagePixels.clear();
-
-		/**
 		* Allocate memory for the marginal PDF and initialize values
 		* to zero. The marginal PDFs are stored as std::vector.
 		*/
@@ -316,23 +302,6 @@ namespace itk
 		*/
 		this->m_CubicBSplineKernel = CubicBSplineFunctionType::New();
 		this->m_CubicBSplineDerivativeKernel = CubicBSplineDerivativeFunctionType::New();    
-		
-		
-		/** 
-		* Uniformly sample the fixed image (within the fixed image region)
-		* to create the sample points list.
-		*/
-		this->m_AllFixedImagePixelsStoredInContainer = false;
-		if (this->GetUseAllPixels())
-		{
-			this->SampleFullFixedImageDomain( this->m_AllFixedImagePixels );
-			this->SetNumberOfSpatialSamples( this->m_AllFixedImagePixels.size() );
-		}
-		else
-		{
-		  this->SampleFixedImageDomain( this->m_FixedImageSamples );
-		}
-
 		
 		/**
 		* Check if the interpolator is of type BSplineInterpolateImageFunction.
@@ -438,150 +407,6 @@ namespace itk
 
 
 	/**
-	 * ******************* SampleFixedImageDomain *******************
-	 *
-	 * Uniformly sample the fixed image domain using a random walk.
-	 */
-	 
-	 template < class TFixedImage, class TMovingImage >
-		 void
-		 MattesMutualInformationImageToImageMetric2<TFixedImage,TMovingImage>
-		 ::SampleFixedImageDomain( FixedImageSpatialSampleContainer& samples )
-	 {		 
-
-		 /** Set up a random interator within the user specified fixed image region.*/
-		 		 
-		 typedef ImageRandomConstIteratorWithIndex<FixedImageType> RandomIterator;
-		 RandomIterator randIter( this->m_FixedImage, this->GetFixedImageRegion() );
-		 randIter.GoToBegin();
-		 
-		 typename FixedImageSpatialSampleContainer::iterator iter;
-		 typename FixedImageSpatialSampleContainer::const_iterator end=samples.end();
-		 
-		 if (!(this->m_FixedImageMask))
-		 {
-			 randIter.SetNumberOfSamples( this->m_NumberOfSpatialSamples );
-			 
-			 for( iter=samples.begin(); iter != end; ++iter )
-			 {
-				 // Get sampled index
-				 FixedImageIndexType index = randIter.GetIndex();
-				 // Get sampled fixed image value
-				 (*iter).FixedImageValue = randIter.Get();
-				 // Translate index to point
-				 this->m_FixedImage->TransformIndexToPhysicalPoint( index,
-					 (*iter).FixedImagePointValue );
-				 // Jump to random position
-				 ++randIter;
-			 }
-		 }
-		 else
-		 {
-			 FixedImagePointType inputPoint;
-			 // No real meaning in this:
-			 randIter.SetNumberOfSamples( this->m_NumberOfSpatialSamples );
-			 
-			 for( iter=samples.begin(); iter != end; ++iter )
-			 {
-				 //added for mask support.
-				 do 
-				 {
-					 //Jump to random position
-					 ++randIter;
-					 
-					 // Get sampled index
-					 FixedImageIndexType index = randIter.GetIndex();
-					 
-					 // Translate index to point
-					 this->m_FixedImage->TransformIndexToPhysicalPoint( index,
-						 inputPoint );
-					 
-				 } while ( !(this->m_FixedImageMask->IsInside(inputPoint)) );
-				 
-				 // Get sampled fixed image value and position
-				 (*iter).FixedImagePointValue = inputPoint;
-				 (*iter).FixedImageValue = randIter.Get();
-				 
-			 } // end for iter=samples...
-			 
-		 } // end else (if mask exists)
-		 
-	 } // end SampleFixedImageDomain
-	 
-
-	/**
-	 * ******************* SampleFullFixedImageDomain *********************
-	 *
-	 * Store all pixels in the fixed image domain in a container
-	 */
-	 
-	 template < class TFixedImage, class TMovingImage >
-		 void
-		 MattesMutualInformationImageToImageMetric2<TFixedImage,TMovingImage>
-		 ::SampleFullFixedImageDomain( FixedImageSpatialSampleContainer& samples )
-	 {		 
-
-		 samples.clear();
-
-		 /** Set up a region interator within the user specified fixed image region.*/
-	   typedef ImageRegionConstIteratorWithIndex<FixedImageType> FixedImageIterator;
-		 FixedImageIterator fiter( this->m_FixedImage, this->GetFixedImageRegion() );
-			 
-		 if (!(this->m_FixedImageMask))
-		 {
-			 		 
-			 for( fiter.GoToBegin(); ! fiter.IsAtEnd(); ++fiter )
-			 {
-				 FixedImageSpatialSample tempsample;
-
-				 // Get sampled index
-				 FixedImageIndexType index = fiter.GetIndex();
-
-				 // Translate index to point
-				 this->m_FixedImage->TransformIndexToPhysicalPoint( index,
-					 tempsample.FixedImagePointValue );
-
-				 // Get sampled fixed image value
-				 tempsample.FixedImageValue = fiter.Get();
-
-				 // Store in container
-				 samples.push_back(tempsample);
-			 }
-
-		 }
-		 else
-		 {
-			
-			 for( fiter.GoToBegin(); ! fiter.IsAtEnd(); ++fiter )
-			 {
-				 FixedImageSpatialSample tempsample;
-
-				 // Get sampled index
-				 FixedImageIndexType index = fiter.GetIndex();
-				 
-				 // Translate index to point
-				 this->m_FixedImage->TransformIndexToPhysicalPoint( index,
-					 tempsample.FixedImagePointValue );
-
-				 if ( this->m_FixedImageMask->IsInside( tempsample.FixedImagePointValue ) )
-				 {
- 				   // Get sampled fixed image value
-	 			   tempsample.FixedImageValue = fiter.Get();
-
-				   // Store in container
-				   samples.push_back(tempsample);
-				 }
-			 }
-			 
-		 } // end else (if mask exists)
-
-		 this->m_AllFixedImagePixelsStoredInContainer = true;
-		 
-	 } // end SampleFullFixedImageDomain
-	 
-
-	 
-	/**
 	 * ************************** GetValue **************************
 	 *
 	 * Get the match Measure.
@@ -607,25 +432,16 @@ namespace itk
 		 
 		 // Set up the parameters in the transform
 		 this->m_Transform->SetParameters( parameters );
-		 
-		 // Declare iterators for iteration over the sample container
-		 typename FixedImageSpatialSampleContainer::const_iterator fiter;
-		 typename FixedImageSpatialSampleContainer::const_iterator fbegin;
-		 typename FixedImageSpatialSampleContainer::const_iterator fend;
 
-		 // Decide which sample container to use */
-     if ( this->GetUseAllPixels() )
-		 {
-       fbegin = this->m_AllFixedImagePixels.begin();
-		   fend = this->m_AllFixedImagePixels.end();
-		 }
-		 else
-		 {
-			 fbegin = this->m_FixedImageSamples.begin();
-		   fend = this->m_FixedImageSamples.end();
-		 }
+  	 /** Update the imageSampler and get a handle to the sample container. */
+     this->GetImageSampler()->Update();
+     ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
-		 
+     /** Create iterator over the sample container. */
+     typename ImageSampleContainerType::ConstIterator fiter;
+     typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
+     typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+
 		 unsigned long nSamples=0;
 		 unsigned long nFixedImageSamples=0;
 		 		 
@@ -638,7 +454,7 @@ namespace itk
 			 bool sampleOk;
 			 double movingImageValue;
 			 
-			 this->TransformPoint( (*fiter).FixedImagePointValue, mappedPoint, 
+			 this->TransformPoint( (*fiter).Value().m_ImageCoordinates, mappedPoint, 
 				 sampleOk, movingImageValue );
 			 
 			 if( sampleOk )
@@ -658,7 +474,7 @@ namespace itk
 					 static_cast<unsigned int>( vcl_floor( movingImageParzenWindowTerm ) );
 				 
 				 double fixedImageParzenWindowTerm = 
-					 static_cast<double>( (*fiter).FixedImageValue ) / this->m_FixedImageBinSize -
+					 static_cast<double>( (*fiter).Value().m_ImageValue ) / this->m_FixedImageBinSize -
 					 this->m_FixedImageNormalizedMin;
 				 unsigned int fixedImageParzenWindowIndex =
 					 static_cast<unsigned int>( vcl_floor( fixedImageParzenWindowTerm ) );
@@ -730,12 +546,12 @@ namespace itk
 		 } // end iterating over fixed image spatial sample container for loop
 		 
 		 itkDebugMacro( "Ratio of voxels mapping into moving image buffer: " 
-			 << nSamples << " / " << this->m_NumberOfSpatialSamples << std::endl );
+			 << nSamples << " / " << sampleContainer->Size() << std::endl );
 		 
-		 if( nSamples < this->m_NumberOfSpatialSamples / 4 )
+		 if( nSamples < sampleContainer->Size() / 4 )
 		 {
 			 itkExceptionMacro( "Too many samples map outside moving image buffer: "
-				 << nSamples << " / " << this->m_NumberOfSpatialSamples << std::endl );
+				 << nSamples << " / " << sampleContainer->Size() << std::endl );
 		 }	
 
 		 this->m_NumberOfPixelsCounted = nSamples;
@@ -892,25 +708,15 @@ namespace itk
 		 
 		 // Set up the parameters in the transform
 		 this->m_Transform->SetParameters( parameters );
-		 
-		 
-		 // Declare iterators for iteration over the sample container
-		 typename FixedImageSpatialSampleContainer::const_iterator fiter;
-		 typename FixedImageSpatialSampleContainer::const_iterator fbegin;
-		 typename FixedImageSpatialSampleContainer::const_iterator fend;
 
-		 // Decide which sample container to use */
-     if ( this->GetUseAllPixels() )
-		 {
-       fbegin = this->m_AllFixedImagePixels.begin();
-		   fend = this->m_AllFixedImagePixels.end();
-		 }
-		 else
-		 {
-			 fbegin = this->m_FixedImageSamples.begin();
-		   fend = this->m_FixedImageSamples.end();
-		 }
+   	 /** Update the imageSampler and get a handle to the sample container. */
+     this->GetImageSampler()->Update();
+     ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
+     /** Create iterator over the sample container. */
+     typename ImageSampleContainerType::ConstIterator fiter;
+     typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
+     typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
 
 		 unsigned long nSamples=0;
 		 unsigned long nFixedImageSamples=0;
@@ -925,7 +731,7 @@ namespace itk
 			 bool sampleOk;
 			 double movingImageValue;
 			 
-			 this->TransformPoint( (*fiter).FixedImagePointValue, mappedPoint, 
+			 this->TransformPoint( (*fiter).Value().m_ImageCoordinates, mappedPoint, 
 				 sampleOk, movingImageValue );
 			 
 			 
@@ -950,7 +756,7 @@ namespace itk
 					 static_cast<unsigned int>( vcl_floor( movingImageParzenWindowTerm ) );
 				 
 				 double fixedImageParzenWindowTerm = 
-					 static_cast<double>( (*fiter).FixedImageValue ) / this->m_FixedImageBinSize -
+					 static_cast<double>( (*fiter).Value().m_ImageValue ) / this->m_FixedImageBinSize -
 					 this->m_FixedImageNormalizedMin;
 				 unsigned int fixedImageParzenWindowIndex =
 					 static_cast<unsigned int>( vcl_floor( fixedImageParzenWindowTerm ) );
@@ -1019,7 +825,7 @@ namespace itk
 							this->m_CubicBSplineDerivativeKernel->Evaluate( movingImageParzenWindowArg );
 						 
 					 // Compute PDF derivative contribution.
-		 		 	 this->ComputePDFDerivatives( (*fiter).FixedImagePointValue, fixedImageParzenWindowIndex,
+		 		 	 this->ComputePDFDerivatives( (*fiter).Value().m_ImageCoordinates, fixedImageParzenWindowIndex,
 						 pdfMovingIndex, movingImageGradientValue, cubicBSplineDerivativeValue );
 										 
 				 }  //end parzen windowing for loop
@@ -1029,12 +835,12 @@ namespace itk
     } // end iterating over fixed image spatial sample container for loop
 		
 		itkDebugMacro( "Ratio of voxels mapping into moving image buffer: " 
-			<< nSamples << " / " << this->m_NumberOfSpatialSamples << std::endl );
+			<< nSamples << " / " << sampleContainer->Size() << std::endl );
 		
-		if( nSamples < this->m_NumberOfSpatialSamples / 4 )
+		if( nSamples < sampleContainer->Size() / 4 )
     {
 			itkExceptionMacro( "Too many samples map outside moving image buffer: "
-				<< nSamples << " / " << this->m_NumberOfSpatialSamples << std::endl );
+				<< nSamples << " / " << sampleContainer->Size() << std::endl );
     }
 	  
 		this->m_NumberOfPixelsCounted = nSamples;
@@ -1385,78 +1191,6 @@ namespace itk
 		
 	} // end ComputePDFDerivatives
 	
-
-	/**
-	 * ************************** GetExactValue **************************
-	 *
-	 * Get the match Measure, computed on all voxels.
-	 * This method is meant for users that want to do optimisation using
-	 * just a subset of the samples, but want to know the exact value
-	 * of the metric.
-	 */
-
-	 template < class TFixedImage, class TMovingImage  >
-		 typename MattesMutualInformationImageToImageMetric2<TFixedImage,TMovingImage>
-		 ::MeasureType
-		 MattesMutualInformationImageToImageMetric2<TFixedImage,TMovingImage>
-		 ::GetExactValue( const ParametersType& parameters )
-	 {		 
-
-		 /** The AllFixedImagePixelsContainer may not be initialised */
-		 if ( !(this->m_AllFixedImagePixelsStoredInContainer) )
-		 {
-			 this->SampleFullFixedImageDomain(
-				 this->m_AllFixedImagePixels );
-		 }
-
-		 /** Remember the state of the m_UseAllPixels flag and the number of spatial samples */
-		 bool useAllPixelsBackup = this->GetUseAllPixels();
-		 unsigned long numberOfSpatialSamplesBackup = this->GetNumberOfSpatialSamples();
-
-		 /** Compute the value using all voxels */
-		 this->SetUseAllPixels(true);
-		 this->SetNumberOfSpatialSamples( this->m_AllFixedImagePixels.size() );
-		 double returnvalue = this->GetValue(parameters);
-
-		 /** Restore the the UseAllPixels flag and the number of spatial samples */
-		 this->SetUseAllPixels(useAllPixelsBackup);
-		 this->SetNumberOfSpatialSamples(numberOfSpatialSamplesBackup);
-
-		 /** Return the metric value */
-		 return returnvalue;
-			 
-	 } // end GetExactValue
-
-
-	 /**
-	  * *********************** ReinitializeSeed ********************
-	  *
-	  * Method to reinitialize the seed of the random number generator
-	  */
-
-	 template < class TFixedImage, class TMovingImage  > void
-	 MattesMutualInformationImageToImageMetric2<TFixedImage,TMovingImage>
-	 ::ReinitializeSeed()
-	 {
-		 Statistics::MersenneTwisterRandomVariateGenerator::GetInstance()->SetSeed();
-	 } //end ReinitializeSeed
-
-
-	 /**
-	  * *********************** ReinitializeSeed ********************
-	  *
-	  * Method to reinitialize the seed of the random number generator
-	  */
-
-	 template < class TFixedImage, class TMovingImage  > void
-	 MattesMutualInformationImageToImageMetric2<TFixedImage,TMovingImage>
-	 ::ReinitializeSeed(int seed)
-	 {
-	   Statistics::MersenneTwisterRandomVariateGenerator::GetInstance()->SetSeed(seed);
-	 } //end ReinitializeSeed
-
-
-
 
 } // end namespace itk
 

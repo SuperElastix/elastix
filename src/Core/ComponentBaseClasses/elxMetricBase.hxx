@@ -5,12 +5,13 @@
 
 /** Mask support. */
 #include "itkBinaryBallStructuringElement.h"
-#include "itkGrayscaleErodeImageFilter.h"
+#include "itkBinaryErodeImageFilter.h"
 
 #include "itkImageSamplerBase.h"
 #include "itkImageRandomSampler.h"
+#include "itkImageRandomSamplerSparseMask.h"
 #include "itkImageFullSampler.h"
-//#include "itkImageRandomCoordinateSampler.h"
+#include "itkImageRandomCoordinateSampler.h"
 #include "itkImageGridSampler.h"
 
 namespace elastix
@@ -31,6 +32,8 @@ namespace elastix
 		this->m_MovingMaskAsImage = 0;
 		this->m_FixedMaskAsSpatialObject = 0;
 		this->m_MovingMaskAsSpatialObject = 0;
+    this->m_ShowExactMetricValue = 0;
+    this->m_ExactMetricSampler = 0;
 
 	} // end Constructor
 
@@ -218,7 +221,52 @@ namespace elastix
     /** Configure the image sampler. */
     this->ConfigureImageSampler();
 
+    /** Check if the exact metric value, computed on all pixels, should be shown, 
+		 * and whether the all pixels should be used during optimisation */
+
+    /** Remove the ExactMetric-column, if it already existed. */
+		xl::xout["iteration"].RemoveTargetCell("ExactMetric");
+    /** Read the parameter file: Show the exact metric in every iteration? */ 
+		std::string showExactMetricValue = "false";
+    this->GetConfiguration()->
+		  ReadParameter(showExactMetricValue, "ShowExactMetricValue", 0, true);
+		this->GetConfiguration()->
+			ReadParameter(showExactMetricValue, "ShowExactMetricValue", level);
+		if (showExactMetricValue == "true")
+		{
+      /** Create a new column in the iteration info table */
+			xl::xout["iteration"].AddTargetCell("ExactMetric");
+			xl::xout["iteration"]["ExactMetric"] << std::showpoint << std::fixed;
+      /** Remember that we want to show the exact metric value */
+      this->m_ShowExactMetricValue = true;
+		}
+		else
+		{
+			this->m_ShowExactMetricValue = false;
+		}
+  
 	} // end BeforeEachResolutionBase
+
+
+  /**
+	 * ******************* AfterEachIterationBase ******************
+	 */
+
+	template <class TElastix>
+		void MetricBase<TElastix>
+		::AfterEachIterationBase(void)
+	{ 
+		/** Show the metric value computed on all voxels,
+		 * if the user wanted it */
+		if (this->m_ShowExactMetricValue)
+		{
+			xl::xout["iteration"]["ExactMetric"] << this->GetExactValue(
+				this->GetElastix()->
+				GetElxOptimizerBase()->GetAsITKBaseType()->
+				GetCurrentPosition() );
+		}
+
+  } // end AfterEachIterationBase
 
 
 	/**
@@ -234,20 +282,20 @@ namespace elastix
 		/** Some typedef's. */
 		typedef BinaryBallStructuringElement<
 			MaskFilePixelType,
-			FixedImageDimension >							StructuringElementTypeF;
+			FixedImageDimension >							                    StructuringElementTypeF;
 		typedef typename StructuringElementTypeF::RadiusType		RadiusTypeF;
-		typedef GrayscaleErodeImageFilter<
+		typedef BinaryErodeImageFilter<
 			FixedMaskImageType,
 			FixedMaskImageType,
-			StructuringElementTypeF >					ErodeFilterTypeF;
+			StructuringElementTypeF >					                    ErodeFilterTypeF;
 		typedef BinaryBallStructuringElement<
 			MaskFilePixelType,
-			MovingImageDimension >							StructuringElementTypeM;
+			MovingImageDimension >							                  StructuringElementTypeM;
 		typedef typename StructuringElementTypeM::RadiusType		RadiusTypeM;
-		typedef GrayscaleErodeImageFilter<
+		typedef BinaryErodeImageFilter<
 			MovingMaskImageType,
 			MovingMaskImageType,
-			StructuringElementTypeM >					ErodeFilterTypeM;
+			StructuringElementTypeM >					                    ErodeFilterTypeM;
 
 		/** Erode and set the fixed mask if necessary. ****************************
 		 **************************************************************************
@@ -288,6 +336,8 @@ namespace elastix
 				S_ballF.SetRadius( radiusarrayF );
 				S_ballF.CreateStructuringElement();
 				erosionF[ i ]->SetKernel( S_ballF );
+        erosionF[ i ]->SetForegroundValue( itk::NumericTraits<MaskFilePixelType>::One );
+        erosionF[ i ]->SetBackgroundValue( itk::NumericTraits<MaskFilePixelType>::Zero );
 								
 				/** Connect the pipeline. */
 				if ( i > 0 ) erosionF[ i ]->SetInput( erosionF[ i - 1 ]->GetOutput() );			
@@ -362,6 +412,8 @@ namespace elastix
 				S_ballM.SetRadius( radiusarrayM );
 				S_ballM.CreateStructuringElement();
 				erosionM[ i ]->SetKernel( S_ballM );
+        erosionM[ i ]->SetForegroundValue( itk::NumericTraits<MaskFilePixelType>::One );
+        erosionM[ i ]->SetBackgroundValue( itk::NumericTraits<MaskFilePixelType>::Zero );
 								
 				/** Connect the pipeline. */
 				if ( i > 0 ) erosionM[ i ]->SetInput( erosionM[ i - 1 ]->GetOutput() );			
@@ -417,12 +469,12 @@ namespace elastix
 
     if ( thisAsMetricWithSampler )
     {
-      /** Typedefs of all available image samplers. */
-      typedef ImageSamplerBase< FixedImageType >      ImageSamplerBaseType;
-      typedef ImageRandomSampler< FixedImageType >    ImageRandomSamplerType;
-      typedef ImageFullSampler< FixedImageType >      ImageFullSamplerType;
-      //typedef ImageRandomCoordinateSampler< FixedImageType >      ImageRandomCoordinateSamplerType;
-      typedef ImageGridSampler< FixedImageType >      ImageGridSamplerType;
+      /** Typedefs of all available image samplers.
+       * ImageFullSamplerType and ImageSamplerBaseType are already declared in the header. */
+      typedef ImageRandomSampler< FixedImageType >              ImageRandomSamplerType;
+      typedef ImageRandomSamplerSparseMask< FixedImageType >    ImageRandomSamplerSparseMaskType;
+      typedef ImageRandomCoordinateSampler< FixedImageType >    ImageRandomCoordinateSamplerType;
+      typedef ImageGridSampler< FixedImageType >                ImageGridSamplerType;
 
       /** Create an imageSampler of ImageSamplerBaseType. */
       typename ImageSamplerBaseType::Pointer imageSampler = 0;
@@ -431,12 +483,12 @@ namespace elastix
       unsigned int level =
 			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
       std::string imageSamplerType = "Random";
-      this->m_Configuration->ReadParameter( imageSamplerType, "ImageSampler", 0 );
+      this->m_Configuration->ReadParameter( imageSamplerType, "ImageSampler", 0, true );
       this->m_Configuration->ReadParameter( imageSamplerType, "ImageSampler", level );
 
       /** Get and set NumberOfSpatialSamples. This doesn't make sense for the ImageFullSampler. */
       unsigned long numberOfSpatialSamples = 5000;
-      this->GetConfiguration()->ReadParameter( numberOfSpatialSamples, "NumberOfSpatialSamples", 0 );
+      this->GetConfiguration()->ReadParameter( numberOfSpatialSamples, "NumberOfSpatialSamples", 0, true );
       this->GetConfiguration()->ReadParameter( numberOfSpatialSamples, "NumberOfSpatialSamples", level );
 
       /** Set the imageSampler to the correct one. */
@@ -447,19 +499,26 @@ namespace elastix
         randomSampler->SetNumberOfSamples( numberOfSpatialSamples );
         imageSampler = randomSampler;
       }
+      else if ( imageSamplerType == "RandomSparseMask" )
+      {
+        typename ImageRandomSamplerSparseMaskType::Pointer randomSamplerSparseMask
+          = ImageRandomSamplerSparseMaskType::New();
+        randomSamplerSparseMask->SetNumberOfSamples( numberOfSpatialSamples );
+        imageSampler = randomSamplerSparseMask;
+      }
       else if ( imageSamplerType == "Full" )
       {
         typename ImageFullSamplerType::Pointer fullSampler
           = ImageFullSamplerType::New();
         imageSampler = fullSampler;
       }
-      /*else if ( imageSamplerType == "RandomCoordinate" )
+      else if ( imageSamplerType == "RandomCoordinate" )
       {
-        typename ImageRandomCoordinateSamplerType::Pointer randomcoordinateSampler
+        typename ImageRandomCoordinateSamplerType::Pointer randomCoordinateSampler
           = ImageRandomCoordinateSamplerType::New();
-        randomcoordinateSampler->SetNumberOfSamples( numberOfSpatialSamples );
-        imageSampler = randomcoordinateSampler;
-      }*/
+        randomCoordinateSampler->SetNumberOfSamples( numberOfSpatialSamples );
+        imageSampler = randomCoordinateSampler;
+      }
       else if ( imageSamplerType == "Grid" )
       {
         /** Create the gridSampler and the gridspacing. */
@@ -504,6 +563,7 @@ namespace elastix
                                   but the selected ImageSampler is not suited for that." << std::endl;
         }
       }
+
     } // end if
 
   } // end ConfigureImageSampler
@@ -514,7 +574,7 @@ namespace elastix
 	 */
 
 	template <class TElastix>
-  void MetricBase<TElastix>::SelectNewSamples(void)
+    void MetricBase<TElastix>::SelectNewSamples(void)
 	{
     /** Cast this to MetricWithSamplingType. */
     MetricWithSamplingType * thisAsMetricWithSampler
@@ -536,6 +596,65 @@ namespace elastix
     }
 
 	} // end SelectNewSamples
+
+  
+  /**
+	 * ********************* GetExactValue ************************
+	 */
+
+	template <class TElastix>
+    typename MetricBase<TElastix>::MeasureType
+    MetricBase<TElastix>::GetExactValue( const ParametersType& parameters )
+  {
+    /** Cast this to MetricWithSamplingType. */
+    MetricWithSamplingType * thisAsMetricWithSampler
+      = dynamic_cast< MetricWithSamplingType * >( this );
+
+    if ( thisAsMetricWithSampler == 0 )
+    {
+      /** Useless implementation; we may as well throw an error, but the
+       * ShowExactMetricValue is not really essential for good registration... */
+      return itk::NumericTraits<MeasureType>::Zero;
+    }
+
+    /** Get the current image sampler */
+    typename ImageSamplerBaseType::Pointer currentSampler = 
+      thisAsMetricWithSampler->GetImageSampler();
+    if ( currentSampler.IsNull() )
+    {
+      /** Again just a dummy implementation */
+      return itk::NumericTraits<MeasureType>::Zero;
+    }
+    
+    /** Try to cast the current Sampler to a FullSampler */
+    typename ImageFullSamplerType * testPointer = 
+      dynamic_cast<ImageFullSamplerType *>( currentSampler.GetPointer() );
+    if ( testPointer != 0 )
+    {
+      /** GetValue gives us the exact value! */
+      return this->GetAsITKBaseType()->GetValue(parameters);
+    }
+    
+    /** We have to provide the metric a full sampler, calls its GetValue
+     * and set back its original sampler */
+    if ( this->m_ExactMetricSampler.IsNull() )
+    {
+      this->m_ExactMetricSampler = ImageFullSamplerType::New();
+    }
+    this->m_ExactMetricSampler->SetInput( currentSampler->GetInput() );
+    this->m_ExactMetricSampler->SetMask( 
+      const_cast< FixedImageMaskSpatialObjectType * >( 
+      dynamic_cast< const FixedImageMaskSpatialObjectType * >(
+      this->GetAsITKBaseType()->GetFixedImageMask() ) ) );
+    this->m_ExactMetricSampler->SetInputImageRegion(
+      currentSampler->GetInputImageRegion() );
+    thisAsMetricWithSampler->SetImageSampler( this->m_ExactMetricSampler );
+    MeasureType exactValue = 
+      this->GetAsITKBaseType()->GetValue(parameters);
+    thisAsMetricWithSampler->SetImageSampler( currentSampler );
+    return exactValue;
+        
+  } // end GetExactValue
 
 
 } // end namespace elastix

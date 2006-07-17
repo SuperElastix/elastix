@@ -1,9 +1,10 @@
 /**
  * This file is an adapted version of the original itk-class.
- * For Elastix the following things have been added
- *  - New random samples every iteration (optionally)
- *  - GetExactValue and GetExactValueAndDerivative methods, that 
- *		compute the mutual information/its derivative using the full images
+ * For Elastix the following things have been added/changed
+ *  - It inherits from ImageToImageMetricWithSampling, which
+ *    replaces/enhances the SampleFixedImageDomain functionality.
+ *  - It is not only optimised for BSplineTransforms, but also
+ *    for the BSplineCombinationTransform.
  *
  * The original itk-copyright message is stated below:
  */
@@ -119,13 +120,13 @@ namespace itk
 	 *
 	 *	NB:
 	 * This file declares the itk::MattesMutualInformationImageToImageMetric2.
-	 * It is largely the same as itk::MattesMutualInformationImageToImageMetric,
-	 * but it adds the function SampleFixedImageDomain, which allows the user
-	 * to force a new sample set to be created.
-	 * Besides, it adds the GetExactValue method and the GetExactValueAndDerivative
-	 * methods, that compute the mutual information/its derivative using all voxels
-	 * of the images.
-	 *
+	 * It is largely the same as itk::MattesMutualInformationImageToImageMetric.
+   * For Elastix the following things have been added/changed
+   *  - It inherits from ImageToImageMetricWithSampling, which
+   *    replaces/enhances the SampleFixedImageDomain functionality.
+   *  - It is not only optimised for BSplineTransforms, but also
+   *    for the BSplineCombinationTransform.
+ 	 *
 	 * \ingroup Metrics
 	 */
 
@@ -168,6 +169,13 @@ namespace itk
 		typedef typename MovingImageType::IndexType           MovingImageIndexType;
 		typedef typename TransformType::InputPointType        FixedImagePointType;
 		typedef typename TransformType::OutputPointType       MovingImagePointType;
+
+    /** Sample container support */
+    typedef typename Superclass::ImageSamplerType         ImageSamplerType;
+    typedef typename Superclass::ImageSamplerPointer      ImageSamplerPointer;
+    typedef typename Superclass::ImageSampleContainerType      ImageSampleContainerType;
+    typedef typename Superclass::ImageSampleContainerPointer   ImageSampleContainerPointer;
+
 		
 		/** The moving image dimension. */
 		itkStaticConstMacro( MovingImageDimension, unsigned int,
@@ -176,9 +184,7 @@ namespace itk
 		/** Initialize the Metric by
 		 * (1) making sure that all the components are present and plugged
 		 *     together correctly,
-		 * (2) uniformly select NumberOfSpatialSamples within
-		 *     the FixedImageRegion, and
-		 * (3) allocate memory for pdf data structures.
+		 * (2) allocate memory for pdf data structures.
 		 */
 		void Initialize(void) throw ( ExceptionObject );
 				
@@ -194,35 +200,12 @@ namespace itk
 		void GetValueAndDerivative( const ParametersType& parameters, 
 			MeasureType& Value, DerivativeType& Derivative ) const;
 		
-		/** Number of spatial samples to used to compute metric. */
-		itkSetClampMacro( NumberOfSpatialSamples, unsigned long,
-			1, NumericTraits<unsigned long>::max() );
-		itkGetMacro( NumberOfSpatialSamples, unsigned long); 
-		
 		/** Number of bins to used in the histogram. Typical value is 50. */
 		itkSetClampMacro( NumberOfHistogramBins, unsigned long,
 			1, NumericTraits<unsigned long>::max() );
 		itkGetMacro( NumberOfHistogramBins, unsigned long);   
-		
-		/**  Get the exact value. Mutual information computed over all points.
-		 * This method does not need the UseAllPixels flag to be set true. It is
-		 * meant in situations when you optimise using just a subset of pixels, 
-		 * but are interested in the exact value of the metric. */
-		virtual MeasureType GetExactValue( const ParametersType& parameters );
-
-		/** \todo the method GetExactDerivative could as well be added here. */
 	
-    /** Provide API to reinitialize the seed of the random number generator. */
-		static void ReinitializeSeed();
-		static void ReinitializeSeed(int);
-
-		/** UseAllPixels flag. Determines whether the value and derivative are computed
-		 * on all pixels or just a randomly sampled subset. Make sure to set it true
-		 * before calling Initialize().
-		 */
-		itkSetMacro( UseAllPixels, bool );
-		itkGetConstMacro( UseAllPixels, bool );
-
+	
 	protected:
 		
 		/** The constructor. */
@@ -233,50 +216,7 @@ namespace itk
 		/** Print Self. */
 		void PrintSelf( std::ostream& os, Indent indent ) const;
 		
-    /**
-		 * ************** FixedImageSpatialSample *********************
-		 *
-		 * A fixed image spatial sample consists of the fixed domain point
-		 * and the fixed image value at that point.
-		 */
-		class FixedImageSpatialSample
-		{
-		public:
-
-			FixedImageSpatialSample():FixedImageValue(0.0)
-			{ FixedImagePointValue.Fill(0.0); }
-			~FixedImageSpatialSample() {};
-			
-			FixedImagePointType           FixedImagePointValue;
-			double                        FixedImageValue;
-
-		}; // end class FixedImageSpatialSample
-		
-		/** FixedImageSpatialSample typedef support. */
-		typedef std::vector<FixedImageSpatialSample>  
-			FixedImageSpatialSampleContainer;
-		
-		/** Container to store a set of points and fixed image values. */
-	  FixedImageSpatialSampleContainer    m_FixedImageSamples;
-
-		/** Added for elastix: a container that holds all fixed image pixels.
-		 * If the m_UseAllPixels is set before the Initialize method is called,
-		 * the container is filled in this method. If not, it is filled
-		 * the first time that GetExactValue is invoked.
-		 */
-		FixedImageSpatialSampleContainer		m_AllFixedImagePixels;
-
-	  /** Uniformly select a sample set from the fixed image domain. */
-		virtual void SampleFixedImageDomain( 
-			FixedImageSpatialSampleContainer& samples );
-
-		/** Added for elastix: store all fixed image pixels that are within the mask. */
-		virtual void SampleFullFixedImageDomain(
-			FixedImageSpatialSampleContainer& samples );
-
-		bool m_AllFixedImagePixelsStoredInContainer;
-
-		/** Transform a point from FixedImage domain to MovingImage domain.
+ 		/** Transform a point from FixedImage domain to MovingImage domain.
 		 * This function also checks if mapped point is within support region.
 		 */
 		virtual void TransformPoint( const FixedImagePointType& fixedImagePoint,
@@ -343,8 +283,6 @@ namespace itk
 		MattesMutualInformationImageToImageMetric2( const Self& );	// purposely not implemented
 		/** The private copy constructor. */
 		void operator=( const Self& );															// purposely not implemented
-		
-		bool m_UseAllPixels;
 				
 		/** The marginal PDFs are stored as std::vector. */
 		typedef float PDFValueType;
@@ -371,9 +309,8 @@ namespace itk
 		/** The joint PDF and PDF derivatives. */
 		typename JointPDFType::Pointer								m_JointPDF;
 		typename JointPDFDerivativesType::Pointer			m_JointPDFDerivatives;
-		
-		unsigned long m_NumberOfSpatialSamples;
-		unsigned long m_NumberOfParameters;
+
+    unsigned long m_NumberOfParameters;
 		
 		/** Variables to define the marginal and joint histograms. */
 		unsigned long m_NumberOfHistogramBins;

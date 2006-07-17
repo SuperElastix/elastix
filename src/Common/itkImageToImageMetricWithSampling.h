@@ -84,8 +84,10 @@ public:
   itkSetObjectMacro( ImageSampler, ImageSamplerType );
 
   /** Get the image sampler. */
-  ImageSamplerType * GetImageSampler( void ) const
-  { return this->m_ImageSampler; };
+  virtual ImageSamplerType * GetImageSampler(void) const
+  {
+    return this->m_ImageSampler.GetPointer();
+  };
 
   /** Initialize the Metric by making sure that all the components
    *  are present and plugged together correctly. */

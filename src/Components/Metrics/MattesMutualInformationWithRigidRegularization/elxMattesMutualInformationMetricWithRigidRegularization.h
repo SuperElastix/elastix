@@ -27,29 +27,6 @@ using namespace itk;
 	 *		resolution. \n
 	 *		example: <tt>(NumberOfHistogramBins 32 32 64)</tt> \n
 	 *		The default is 32 for each resolution.
-	 * \parameter NumberOfSpatialSamples: The number of image voxels used for computing the
-	 *		metric value and its derivative in each iteration. Must be given for each resolution.\n
-	 *		example: <tt>(NumberOfSpatialSamples 2048 2048 4000)</tt> \n
-	 *		The default is 10000.
-	 * \parameter	UseAllPixels: Flag to force the metric to use ALL voxels for 
-	 *		computing the metric value and its derivative in each iteration. Must be given for each
-	 *		resolution. Choose one of {"true", "false"}. \n
-	 *		example: <tt>(UseAllPixels "true" "false" "true")</tt> \n
-	 *		Default is "false" for all resolutions.
-	 * \parameter ShowExactMetricValue: Flag that can set to "true" or "false". If "true" the 
-	 *		metric computes the exact metric value (computed on all voxels rather than on the set of
-	 *		spatial samples) and shows it each iteration. Must be given for each resolution. \n
-	 *		NB: If the UseallPixels flag is set to "true", this option is ignored. \n
-	 *		example: <tt>(ShowExactMetricValue "true" "true" "false")</tt> \n
-	 *		Default is "false" for all resolutions.
-	 * \parameter SamplesOnUniformGrid: Flag to choose the samples on a uniform grid. \n
-	 *		example: <tt>(SamplesOnUniformGrid "true")</tt> \n
-	 *		Default is "false".
-	 * \parameter SampleGridSpacing: if the SamplesOnUniformGrid is set to "true", this parameter
-	 *		controls the spacing of the uniform grid in all dimensions. This should be given in
-	 *		index coordinates. \n
-	 *		example: <tt>(SampleGridSpacing 4 4 4)</tt> \n
-	 *		Default is 2 in each dimension.
 	 * \parameter RigidPenaltyWeight: A parameter to weigh the rigidity penalty
 	 *		term against the mutual information metric. \n
 	 *		example: <tt>(RigidPenaltyWeight 0.1)</tt> \n
@@ -171,13 +148,6 @@ using namespace itk;
 		/** Typedef for timer. */
 		typedef TimerType::Pointer	TimerPointer;
 
-		/** Typedefs for support of user defined grid spacing for the spatial samples. */
-		typedef typename FixedImageType::OffsetType							SampleGridSpacingType;
-		typedef typename SampleGridSpacingType::OffsetValueType SampleGridSpacingValueType;
-		typedef typename FixedImageType::SizeType								SampleGridSizeType;
-		typedef FixedImageIndexType															SampleGridIndexType;
-		typedef typename FixedImageType::SizeType 							FixedImageSizeType;
-
 		/** Typedefs for the rigidity image. The rigidity images are scalar double
 		 * images of dimension (Fixed/Moving)ImageDimension.
 		 */
@@ -224,9 +194,6 @@ using namespace itk;
 		 */
 		virtual void Initialize(void) throw (ExceptionObject);
 
-		/** Select a new sample set on request. */
-		virtual void SelectNewSamples(void);
-		
 	protected:
 
 		/** The constructor. */
@@ -234,26 +201,7 @@ using namespace itk;
 		/** The destructor. */
 		virtual ~MattesMutualInformationMetricWithRigidRegularization() {}
 
-		/** Uniformly select a sample set from the fixed image domain.
-		 * This version adds the functionality to select the samples on a 
-		 * uniform grid.
-		 *
-		 * Mainly for testing purposes. Does not take spacings into account. */
-		typedef typename Superclass1::FixedImageSpatialSampleContainer
-			FixedImageSpatialSampleContainer;
-		virtual void SampleFixedImageDomain( 
-			FixedImageSpatialSampleContainer& samples );
 		
-		/** Flag. */
-		bool m_ShowExactMetricValue;
-
-		/** The grid spacing of the spatial samples. Only used when the user asked
-		 * for a regular sampling grid, instead of randomly placed samples. */
-		SampleGridSpacingType			m_SampleGridSpacing;
-
-		/** Flag, whether to put the spatial sample son a uniform grid. */
-		bool											m_SamplesOnUniformGrid;
-				
 	private:
 
 		/** The private constructor. */

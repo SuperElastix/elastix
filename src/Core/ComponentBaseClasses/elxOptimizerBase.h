@@ -20,10 +20,11 @@ using namespace itk;
 	 *
 	 * The parameters used in this class are:
 	 * \parameter NewSamplesEveryIteration: if this flag is set to "true" some
-	 *		optimizers force the metric to (randomly) select a new set of spatial samples in
+	 *		optimizers ask the metric to select a new set of spatial samples in
 	 *		every iteration. This, if used in combination with the correct optimizer (such as the
-	 *		StandardGradientDescent), allows for a very low number of spatial samples (around 2000),
-	 *		even with large images and transforms with a large number of parameters.
+	 *		StandardGradientDescent), and ImageSampler (Random, RandomCoordinate, or RandomSparseMask),
+   *    allows for a very low number of spatial samples (around 2000), even with large images
+   *    and transforms with a large number of parameters.\n
 	 *		Choose one from {"true", "false"} for every resolution.\n
 	 *		example: <tt>(NewSamplesEveryIteration "true" "true" "true")</tt> \n
 	 *		Default is "false" for every resolution.\n
