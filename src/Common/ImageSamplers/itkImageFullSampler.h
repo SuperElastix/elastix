@@ -13,7 +13,7 @@ namespace itk
    * This ImageSampler samples all voxels in the InputImageRegion.
    * If a mask is given: only those voxels within the mask AND the
    * InputImageRegion.
-   * 
+   *
    */
 
   template < class TInputImage >
