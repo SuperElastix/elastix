@@ -18,7 +18,9 @@ SET(CommonFiles
  itkDeformationFieldRegulizerForBSpline.h
  itkDeformationFieldRegulizerForBSpline.hxx
  itkDeformationVectorFieldTransform.h
- itkDeformationVectorFieldTransform.txx 
+ itkDeformationVectorFieldTransform.txx
+ itkImageToImageMetricWithSampling.h
+ itkImageToImageMetricWithSampling.txx
  itkScaledSingleValuedCostFunction.h
  itkScaledSingleValuedCostFunction.cxx
  itkScaledSingleValuedNonLinearOptimizer.h
