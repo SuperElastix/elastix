@@ -8,16 +8,6 @@
 namespace itk
 {
 
-  /**
-	 * ******************* Constructor *******************
-	 */
-
-  template< class TInputImage >
-    ImageRandomSampler< TInputImage >
-    ::ImageRandomSampler()
-  {
-  } // end Constructor
-
 
   /**
 	 * ******************* GenerateData *******************
@@ -28,9 +18,10 @@ namespace itk
     ImageRandomSampler< TInputImage >
     ::GenerateData( void )
   {
-    /** Get handles to the input image and output sample container. */
+    /** Get handles to the input image, output sample container, and mask. */
     InputImageConstPointer inputImage = this->GetInput();
     typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
+    typename MaskType::ConstPointer mask = this->GetMask();
 
     /** Reserve memory for the output. */
     sampleContainer->Reserve( this->GetNumberOfSamples() );
@@ -45,10 +36,9 @@ namespace itk
     typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
 
     /** Fill the sample container. */
-    if ( !this->GetMask() )
+    if ( mask.IsNull() )
     {
       randIter.SetNumberOfSamples( this->GetNumberOfSamples() );
-
       for ( iter = sampleContainer->Begin(); iter != end; ++iter )
       {
         /** Get the index, transform it to the physical coordinates and put it in the sample. */
@@ -59,14 +49,17 @@ namespace itk
         (*iter).Value().m_ImageValue = randIter.Get();
         /** Jump to a random position. */
         ++randIter;
-      }
+      } // end for loop
     } // end if no mask
     else
     {
+      if ( mask->GetSource() )
+      {
+        mask->GetSource()->Update();
+      }
       InputImagePointType inputPoint;
       /** No real meaning in this: */
       randIter.SetNumberOfSamples( this->GetNumberOfSamples() );
-
       /** Loop over the sample container. */
       for ( iter = sampleContainer->Begin(); iter != end; ++iter )
       {
@@ -75,17 +68,14 @@ namespace itk
         {
           /** Jump to a random position. */
           ++randIter;
-
           /** Get the index, and transform it to the physical coordinates. */
           InputImageIndexType index = randIter.GetIndex();
           inputImage->TransformIndexToPhysicalPoint( index,
             inputPoint );
-        } while ( !this->GetMask()->IsInside( inputPoint ) );
-
+        } while ( !mask->IsInside( inputPoint ) );
         /** Put the coordinates and the value in the sample. */
         (*iter).Value().m_ImageCoordinates = inputPoint;
         (*iter).Value().m_ImageValue = randIter.Get();
-
       } // end for loop
     } // end if mask
 

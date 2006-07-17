@@ -35,10 +35,10 @@ SET( LineSearchOptimizersFiles
 )
 
 SET( ImageSamplersFiles
-# ImageSamplers/itkImageFullSampler.h
-# ImageSamplers/itkImageFullSampler.txx
-# ImageSamplers/itkImageGridSampler.h
-# ImageSamplers/itkImageGridSampler.txx
+ ImageSamplers/itkImageFullSampler.h
+ ImageSamplers/itkImageFullSampler.txx
+ ImageSamplers/itkImageGridSampler.h
+ ImageSamplers/itkImageGridSampler.txx
 # ImageSamplers/itkImageRandomCoordinateSampler.h
 # ImageSamplers/itkImageRandomCoordinateSampler.txx
  ImageSamplers/itkImageRandomSampler.h

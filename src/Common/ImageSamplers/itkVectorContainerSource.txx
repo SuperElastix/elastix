@@ -15,7 +15,7 @@ namespace itk
     ::VectorContainerSource()
   {
     // Create the output. We use static_cast<> here because we know the default
-    // output must be of type TOutputMesh
+    // output must be of type TOutputVectorContainer
     OutputVectorContainerPointer output
       = static_cast< TOutputVectorContainer * >( this->MakeOutput(0).GetPointer() );
 

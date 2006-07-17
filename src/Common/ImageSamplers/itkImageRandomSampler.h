@@ -2,16 +2,20 @@
 #define __ImageRandomSampler_h
 
 #include "itkImageSamplerBase.h"
-//#include "itkImageSample.h"
-//#include "itkVectorContainer.h"
-
 
 namespace itk
 {
 
   /** \class ImageRandomSampler
    *
-   * \brief 
+   * \brief Samples randomly some voxels of an image.
+   *
+   * This image sampler randomly samples 'NumberOfSamples' voxels in 
+   * the InputImageRegion. Voxels may be selected multiple times.
+   * If a mask is given, the sampler tries to find samples within the 
+   * mask. If the mask is very sparse, this may take some time. In this case,
+   * consider using the ImageRandomSamplerSparseMask.
+   * 
    */
 
   template < class TInputImage >
@@ -45,14 +49,18 @@ namespace itk
     typedef typename Superclass::ImageSampleContainerType     ImageSampleContainerType;
     typedef typename Superclass::MaskType                     MaskType;
 
-    /** Other typdefs. */
+    /** Other typedefs. */
     typedef typename InputImageType::IndexType    InputImageIndexType;
     typedef typename InputImageType::PointType    InputImagePointType;
-    
+
+    /** Set/Get the number of samples */
+    itkGetConstMacro(NumberOfSamples, unsigned long);
+    itkSetClampMacro(NumberOfSamples, unsigned long, 1, NumericTraits<unsigned long>::max() );
+       
   protected:
 
     /** The constructor. */
-    ImageRandomSampler();
+    ImageRandomSampler() {};
     /** The destructor. */
     virtual ~ImageRandomSampler() {};
 
@@ -68,6 +76,8 @@ namespace itk
     ImageRandomSampler( const Self& );	        // purposely not implemented
 		/** The private copy constructor. */
     void operator=( const Self& );				    // purposely not implemented
+
+    unsigned long m_NumberOfSamples;
 
   }; // end class ImageRandomSampler
 
