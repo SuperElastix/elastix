@@ -84,8 +84,8 @@ namespace itk
           if ( randIter.IsAtEnd() )
           {
             /** Squeeze the sample container to the size that is still valid */
-            ImageSampleContainerType::iterator stlnow = sampleContainer->begin();
-            ImageSampleContainerType::iterator stlend = sampleContainer->end();
+            typename ImageSampleContainerType::iterator stlnow = sampleContainer->begin();
+            typename ImageSampleContainerType::iterator stlend = sampleContainer->end();
             stlnow += iter.Index();
             sampleContainer->erase( stlnow, stlend);
             itkExceptionMacro( << "Could not find enough image samples within reasonable time. Probably the mask is too small" );

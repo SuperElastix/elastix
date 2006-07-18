@@ -627,7 +627,7 @@ namespace elastix
     }
     
     /** Try to cast the current Sampler to a FullSampler */
-    typename ImageFullSamplerType * testPointer = 
+    ImageFullSamplerType * testPointer = 
       dynamic_cast<ImageFullSamplerType *>( currentSampler.GetPointer() );
     if ( testPointer != 0 )
     {

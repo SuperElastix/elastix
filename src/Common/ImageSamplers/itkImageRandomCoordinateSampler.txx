@@ -110,8 +110,8 @@ namespace itk
           if ( numberOfSamplesTried > maximumNumberOfSamplesToTry )
           {
             /** Squeeze the sample container to the size that is still valid */
-            ImageSampleContainerType::iterator stlnow = sampleContainer->begin();
-            ImageSampleContainerType::iterator stlend = sampleContainer->end();
+            typename ImageSampleContainerType::iterator stlnow = sampleContainer->begin();
+            typename ImageSampleContainerType::iterator stlend = sampleContainer->end();
             stlnow += iter.Index();
             sampleContainer->erase( stlnow, stlend);
             /** Throw an error */

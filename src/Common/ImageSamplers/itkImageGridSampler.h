@@ -52,6 +52,10 @@ namespace itk
     typedef typename Superclass::ImageSampleContainerType     ImageSampleContainerType;
     typedef typename Superclass::MaskType                     MaskType;
 
+    /** The input image dimension. */
+    itkStaticConstMacro( InputImageDimension, unsigned int,
+			Superclass::InputImageDimension );
+
     /** Other typdefs. */
     typedef typename InputImageType::IndexType    InputImageIndexType;
     typedef typename InputImageType::PointType    InputImagePointType;
