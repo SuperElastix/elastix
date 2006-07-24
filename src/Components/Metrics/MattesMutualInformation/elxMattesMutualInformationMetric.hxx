@@ -41,17 +41,15 @@ using namespace itk;
 		 * 	metric->SetAlpha( config.GetAlpha(level) );
 		 */
 
-		/** Get the current resolution level.*/
+		/** Get the current resolution level. */
 		unsigned int level = 
 			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 		
-		/** Set the number of histogram bins and spatial samples.*/				
+		/** Get and set the number of histogram bins. */
 		unsigned int numberOfHistogramBins = 32;
-	
-		/** Read the parameters from the ParameterFile.*/
-		this->m_Configuration->ReadParameter( numberOfHistogramBins, "NumberOfHistogramBins", level );
+    this->m_Configuration->ReadParameter( numberOfHistogramBins, "NumberOfHistogramBins", 0 );
+		this->m_Configuration->ReadParameter( numberOfHistogramBins, "NumberOfHistogramBins", level, true );
 		
-		/** Set them.*/
 		this->SetNumberOfHistogramBins( numberOfHistogramBins );
 
 	} // end BeforeEachResolution

@@ -61,7 +61,7 @@ using namespace itk;
 		 */
 		elxClassNameMacro( "MattesMutualInformation" );
 
-		/** Typedefs inherited from the superclass.*/
+		/** Typedefs inherited from the superclass. */
 		typedef typename Superclass1::TransformType							TransformType;
 		typedef typename Superclass1::TransformPointer 					TransformPointer;
 		typedef typename Superclass1::TransformJacobianType			TransformJacobianType;
@@ -79,7 +79,7 @@ using namespace itk;
 		typedef typename Superclass1::FixedImagePointType				FixedImagePointType;
 		typedef typename Superclass1::MovingImagePointType 			MovingImagePointType;
 		
-		/** The fixed image dimension */
+		/** The fixed image dimension. */
 		itkStaticConstMacro (FixedImageDimension, unsigned int,
 			FixedImageType::ImageDimension);
 		/** The moving image dimension. */
@@ -102,19 +102,13 @@ using namespace itk;
 
 		/** Execute stuff before each new pyramid resolution:
 		 * \li Set the number of histogram bins.
-		 * \li Set the number of spatial samples.
-		 * \li Set the flag to use all samples.
-		 * \li Set the flag to calculate and show the exact metric value.
-		 * \li Set the flag to take samples on a uniform grid.
-		 * \li Set the grid spacing of the sampling grid.
 		 */
-		virtual void BeforeEachResolution(void);
+		virtual void BeforeEachResolution( void );
 	
 		/** Sets up a timer to measure the intialisation time and
 		 * calls the Superclass' implementation.
 		 */
 		virtual void Initialize(void) throw (ExceptionObject);
-
 	
 	protected:
 
