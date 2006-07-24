@@ -59,7 +59,7 @@ namespace itk
     ::PrintSelf(std::ostream& os, Indent indent) const
   {
     Superclass::PrintSelf( os, indent );
-    os << indent << "ImageSampler: " << m_ImageSampler.GetPointer() << std::endl;
+    os << indent << "ImageSampler: " << this->m_ImageSampler.GetPointer() << std::endl;
   } // end PrintSelf
 
 
