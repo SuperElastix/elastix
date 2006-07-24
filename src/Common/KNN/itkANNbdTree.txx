@@ -1,0 +1,109 @@
+#ifndef __itkANNbdTree_txx
+#define __itkANNbdTree_txx
+
+#include "itkANNbdTree.h"
+
+namespace itk
+{
+	
+	/**
+	 * ************************ Constructor	*************************
+	 */
+
+	template < class TListSample >
+		ANNbdTree<TListSample>
+		::ANNbdTree()
+	{
+    this->m_ShrinkingRule = ANN_BD_SIMPLE;
+    
+  } // end Constructor
+
+
+  /**
+	 * ************************ Destructor *************************
+	 */
+
+	template < class TListSample >
+		ANNbdTree<TListSample>
+		::~ANNbdTree()
+	{
+  } // end Destructor
+
+
+  /**
+	 * ************************ SetShrinkingRule *************************
+	 */
+
+	template < class TListSample >
+    void ANNbdTree<TListSample>
+		::SetShrinkingRule( std::string rule )
+	{
+    if ( rule == "ANN_BD_NONE" )
+    {
+      this->m_ShrinkingRule = ANN_BD_NONE;
+    }
+    else if ( rule == "ANN_BD_SIMPLE" )
+    {
+      this->m_ShrinkingRule = ANN_BD_SIMPLE;
+    }
+    else if ( rule == "ANN_BD_CENTROID" )
+    {
+      this->m_ShrinkingRule = ANN_BD_CENTROID;
+    }
+    else if ( rule == "ANN_BD_SUGGEST" )
+    {
+      this->m_ShrinkingRule = ANN_BD_SUGGEST;
+    }
+    else
+    {
+      itkWarningMacro( << "WARNING: No such shrinking rule." );
+    }
+
+  } // end SetShrinkingRule
+
+
+  /**
+	 * ************************ GetShrinkingRule *************************
+	 */
+
+	template < class TListSample >
+    std::string ANNbdTree<TListSample>
+		::GetShrinkingRule( void )
+	{
+    switch ( this->m_ShrinkingRule )
+    {
+      case ANN_BD_NONE:     return "ANN_BD_NONE";
+      case ANN_BD_SIMPLE:   return "ANN_BD_SIMPLE";
+      case ANN_BD_CENTROID: return "ANN_BD_CENTROID";
+      case ANN_BD_SUGGEST:  return "ANN_BD_SUGGEST";
+    }
+  } // end GetShrinkingRule
+
+
+  /**
+	 * ************************ GenerateTree *************************
+	 */
+
+	template < class TListSample >
+    void ANNbdTree<TListSample>
+		::GenerateTree( void )
+	{
+    int dim = static_cast< int >( this->GetDataDimension() );
+    int nop = static_cast< int >( this->GetActualNumberOfDataPoints() );
+    int bcs = static_cast< int >( this->m_BucketSize );
+    
+    ANNBinaryTreeCreator::DeleteANNkDTree( this->m_ANNTree );
+
+    this->m_ANNTree = ANNBinaryTreeCreator::CreateANNbdTree(
+      this->GetSample()->GetInternalContainer(), nop, dim, bcs,
+      this->m_SplittingRule, this->m_ShrinkingRule );
+    
+
+  } // end GenerateTree
+  
+
+} // end namespace itk
+
+
+#endif // end #ifndef __itkANNbdTree_txx
+

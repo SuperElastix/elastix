@@ -1,5 +1,6 @@
 PROJECT(elxCommon)
 
+SUBDIRS(KNN)
 SUBDIRS(ParameterFileParser)
 SUBDIRS(xout)
 
