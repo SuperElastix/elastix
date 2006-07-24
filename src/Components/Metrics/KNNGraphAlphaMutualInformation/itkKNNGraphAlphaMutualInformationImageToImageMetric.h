@@ -177,7 +177,7 @@ protected:
   typename BinaryKNNTreeSearchType::Pointer m_BinaryKNNTreeSearcherMovingIntensity;
   typename BinaryKNNTreeSearchType::Pointer m_BinaryKNNTreeSearcherJointIntensity;
 
-  double    m_Alpha;
+  double   m_Alpha;
 
 private:
   KNNGraphAlphaMutualInformationImageToImageMetric(const Self&);  //purposely not implemented

@@ -221,16 +221,16 @@ namespace itk
 		/** Cache the number of transformation parameters.*/
 		this->m_NumberOfParameters = this->m_Transform->GetNumberOfParameters();
 
-    /** Check if the kNN tree is set. */
+    /** Check if the kNN trees are set. */
     if ( !this->m_BinaryKNNTreeFixedIntensity )
     {
-      itkExceptionMacro( << "ERROR: The kNN tree is not set. " );
+      itkExceptionMacro( << "ERROR: The kNN trees are not set." );
     }
 
-    /** Check if the kNN tree searcher is set. */
+    /** Check if the kNN tree searchers are set. */
     if ( !this->m_BinaryKNNTreeSearcherFixedIntensity )
     {
-      itkExceptionMacro( << "ERROR: The kNN tree searcher is not set. " );
+      itkExceptionMacro( << "ERROR: The kNN tree searchers are not set." );
     }
 				
 	} // end Initialize
@@ -429,107 +429,6 @@ namespace itk
     ::GetDerivative( const TransformParametersType & parameters,
     DerivativeType & derivative ) const
   {
-    /*
-    if( !this->GetGradientImage() )
-    {
-    itkExceptionMacro(<<"The gradient image is null, maybe you forgot to call Initialize()");
-    }
-
-    FixedImageConstPointer fixedImage = this->m_FixedImage;
-
-    if( !fixedImage ) 
-    {
-    itkExceptionMacro( << "Fixed image has not been assigned" );
-    }
-
-    const unsigned int dimension = FixedImageType::ImageDimension;
-
-    typedef  itk::ImageRegionConstIteratorWithIndex<FixedImageType> FixedIteratorType;
-
-    FixedIteratorType ti( fixedImage, this->GetFixedImageRegion() );
-
-    typename FixedImageType::IndexType index;
-
-    this->m_NumberOfPixelsCounted = 0;
-
-    this->SetTransformParameters( parameters );
-
-    typedef  typename NumericTraits< MeasureType >::AccumulateType AccumulateType;
-
-    const unsigned int ParametersDimension = this->GetNumberOfParameters();
-    derivative = DerivativeType( ParametersDimension );
-    derivative.Fill( NumericTraits<ITK_TYPENAME DerivativeType::ValueType>::Zero );
-
-    ti.GoToBegin();
-    while(!ti.IsAtEnd())
-    {
-    index = ti.GetIndex();
-
-    typename Superclass::InputPointType inputPoint;
-    fixedImage->TransformIndexToPhysicalPoint( index, inputPoint );
-
-    if( this->m_FixedImageMask && !this->m_FixedImageMask->IsInside( inputPoint ) )
-    {
-    ++ti;
-    continue;
-    }
-
-    typename Superclass::OutputPointType transformedPoint = this->m_Transform->TransformPoint( inputPoint );
-
-    if( this->m_MovingImageMask && !this->m_MovingImageMask->IsInside( transformedPoint ) )
-    {
-    ++ti;
-    continue;
-    }
-
-    if( this->m_Interpolator->IsInsideBuffer( transformedPoint ) )
-    {
-    const RealType movingValue  = this->m_Interpolator->Evaluate( transformedPoint );
-    const RealType fixedValue   = ti.Get();
-    this->m_NumberOfPixelsCounted++;
-    }
-
-    ++ti;
-    }
-
-    // Compute contributions to derivatives
-    ti.GoToBegin();
-    while(!ti.IsAtEnd())
-    {
-
-    index = ti.GetIndex();
-
-    typename Superclass::InputPointType inputPoint;
-    fixedImage->TransformIndexToPhysicalPoint( index, inputPoint );
-
-    if ( this->m_FixedImageMask && !this->m_FixedImageMask->IsInside( inputPoint ) )
-    {
-    ++ti;
-    continue;
-    }
-
-    typename Superclass::OutputPointType transformedPoint = this->m_Transform->TransformPoint( inputPoint );
-
-    if ( this->m_MovingImageMask && !this->m_MovingImageMask->IsInside( transformedPoint ) )
-    {
-    ++ti;
-    continue;
-    }
-
-    if( this->m_Interpolator->IsInsideBuffer( transformedPoint ) )
-    {
-    const RealType movingValue  = this->m_Interpolator->Evaluate( transformedPoint );
-    const RealType fixedValue     = ti.Get();
-
-    const TransformJacobianType & jacobian =
-    this->m_Transform->GetJacobian( inputPoint ); 
-
-    const GradientPixelType gradient = 
-    this->GetGradientImage()->GetPixel( mappedIndex );
-
-    ++ti;
-    }
-    */
   } // end GetDerivative
 
 
@@ -556,6 +455,24 @@ namespace itk
     ::PrintSelf(std::ostream& os, Indent indent) const
   {
     Superclass::PrintSelf(os, indent);
+    
+    os << indent << "NumberOfParameters: " << this->m_NumberOfParameters << std::endl;
+    os << indent << "Alpha: " << this->m_Alpha << std::endl;
+
+    os << indent << "BinaryKNNTreeFixedIntensity: "
+      << this->m_BinaryKNNTreeFixedIntensity.GetPointer() << std::endl;
+    os << indent << "BinaryKNNTreeMovingIntensity: "
+      << this->m_BinaryKNNTreeMovingIntensity.GetPointer() << std::endl;
+    os << indent << "BinaryKNNTreeJointIntensity: "
+      << this->m_BinaryKNNTreeJointIntensity.GetPointer() << std::endl;
+
+    os << indent << "BinaryKNNTreeSearcherFixedIntensity: "
+      << this->m_BinaryKNNTreeSearcherFixedIntensity.GetPointer() << std::endl;
+    os << indent << "BinaryKNNTreeSearcherMovingIntensity: "
+      << this->m_BinaryKNNTreeSearcherMovingIntensity.GetPointer() << std::endl;
+    os << indent << "BinaryKNNTreeSearcherJointIntensity: "
+      << this->m_BinaryKNNTreeSearcherJointIntensity.GetPointer() << std::endl;
+
   } // end PrintSelf
 
 
