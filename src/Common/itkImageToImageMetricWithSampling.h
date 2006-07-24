@@ -18,7 +18,7 @@ namespace itk
  *
  */
 
-template <class TFixedImage,  class TMovingImage>
+template <class TFixedImage, class TMovingImage>
 class ImageToImageMetricWithSampling :
   public ImageToImageMetric< TFixedImage, TMovingImage >
 {

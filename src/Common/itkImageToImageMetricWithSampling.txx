@@ -31,7 +31,7 @@ namespace itk
     /** Initialize transform, interpolator, etc. */
     Superclass::Initialize();
 
-    /** Chech if the ImageSampler is set. */
+    /** Check if the ImageSampler is set. */
     if( !this->m_ImageSampler )
     {
       itkExceptionMacro( << "ImageSampler is not present" );
