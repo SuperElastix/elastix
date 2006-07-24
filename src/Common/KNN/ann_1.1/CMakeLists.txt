@@ -32,6 +32,4 @@ ADD_LIBRARY(ANNlib SHARED ${ANN_SRCS})
 # dll, but dll_import for using it in a program.
 SET_TARGET_PROPERTIES(ANNlib PROPERTIES DEFINE_SYMBOL DLL_EXPORTS)
 
-# Make sure that the lib is copied to the same place as the executable.
-INSTALL_TARGETS(/. ANNlib)
 
