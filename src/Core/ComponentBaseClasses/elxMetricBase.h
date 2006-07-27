@@ -110,9 +110,7 @@ using namespace itk;
 		{
 			return dynamic_cast<ITKBaseType *>(this);
 		}
-
     
-
 		/** Get	the dimension of the fixed image. */
 		itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
 		/** Get	the dimension of the moving image. */
