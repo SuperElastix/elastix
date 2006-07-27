@@ -290,6 +290,30 @@ namespace itk
 
     os << indent << "NumberOfFixedFeatureImages: "  << this->m_NumberOfFixedFeatureImages << std::endl;
     os << indent << "NumberOfMovingFeatureImages: " << this->m_NumberOfMovingFeatureImages << std::endl;
+
+    /** Print the feature image pointers. */
+    for ( unsigned int i = 0; i < this->m_NumberOfFixedFeatureImages; i++ )
+    {
+      os << indent << "FixedFeatureImages[" << i << "]: "
+        << this->m_FixedFeatureImages[ i ].GetPointer() << std::endl;
+    }
+    for ( unsigned int i = 0; i < this->m_NumberOfMovingFeatureImages; i++ )
+    {
+      os << indent << "MovingFeatureImages[" << i << "]: "
+        << this->m_MovingFeatureImages[ i ].GetPointer() << std::endl;
+    }
+
+    /** Print the feature interpolators pointers. */
+    for ( unsigned int i = 0; i < this->m_NumberOfFixedFeatureImages; i++ )
+    {
+      os << indent << "FixedFeatureInterpolators[" << i << "]: "
+        << this->m_FixedFeatureInterpolators[ i ].GetPointer() << std::endl;
+    }
+    for ( unsigned int i = 0; i < this->m_NumberOfMovingFeatureImages; i++ )
+    {
+      os << indent << "MovingFeatureInterpolators[" << i << "]: "
+        << this->m_MovingFeatureInterpolators[ i ].GetPointer() << std::endl;
+    }
  
   } // end PrintSelf
 
