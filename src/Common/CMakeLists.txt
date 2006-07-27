@@ -20,6 +20,8 @@ SET(CommonFiles
  itkDeformationFieldRegulizerForBSpline.hxx
  itkDeformationVectorFieldTransform.h
  itkDeformationVectorFieldTransform.txx
+ itkImageToImageMetricWithFeatures.h
+ itkImageToImageMetricWithFeatures.txx
  itkImageToImageMetricWithSampling.h
  itkImageToImageMetricWithSampling.txx
  itkScaledSingleValuedCostFunction.h
