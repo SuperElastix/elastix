@@ -218,7 +218,7 @@ namespace itk
 		/** Call the superclass. */
 		this->Superclass::Initialize();
 		
-		/** Cache the number of transformation parameters.*/
+		/** Cache the number of transformation parameters. */
 		this->m_NumberOfParameters = this->m_Transform->GetNumberOfParameters();
 
     /** Check if the kNN trees are set. */
@@ -292,7 +292,6 @@ namespace itk
 			{
 				continue;
 			}
-
       /** In this if-statement the actual addition to the list samples is done. */
       if ( this->m_Interpolator->IsInsideBuffer( transformedPoint ) )
 			{
@@ -376,6 +375,9 @@ namespace itk
 
     /** Search for the nearest neighbours over all query points, i.e.
      * all (joint) intensities in the listsamples.
+     * gamma = d * (1 - this->m_Alpha ), with d the feature size dimension,
+     * which is just 1 in this case. It is assumed here that the mutual
+     * information of two feature sets of equal dimension is calculated.
      */
     double gamma = 1 - this->m_Alpha;
     for ( unsigned long i = 0; i < this->m_NumberOfPixelsCounted; i++ )
@@ -401,7 +403,6 @@ namespace itk
         }
       }
     } // end searching over all query points
-
 
     /** Calculate the metric value. */
     MeasureType measure = NumericTraits< AccumulateType >::Zero;

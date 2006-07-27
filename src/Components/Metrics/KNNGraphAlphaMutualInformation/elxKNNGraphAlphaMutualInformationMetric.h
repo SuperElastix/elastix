@@ -149,7 +149,6 @@ using namespace itk;
 		 * calls the Superclass' implementation.
 		 */
 		virtual void Initialize(void) throw (ExceptionObject);
-
 	
 	protected:
 
