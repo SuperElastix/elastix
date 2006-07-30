@@ -219,35 +219,32 @@ using namespace itk;
 
 
 	/**
-	 * ******************* SetInitialPosition ***********************
+	 * ******************* StartOptimization ***********************
 	 */
 
-	template <class TElastix>
-		void FiniteDifferenceGradientDescent<TElastix>
-		::SetInitialPosition( const ParametersType & param )
+  template <class TElastix>
+    void FiniteDifferenceGradientDescent<TElastix>
+    ::StartOptimization(void)
 	{
-		/** Override the implementation in itkOptimizer.h, to
-		 * ensure that the scales array and the parameters
-		 * array have the same size.
-		 */
 
-		/** Call the Superclass' implementation. */
-		this->Superclass1::SetInitialPosition( param );
+		/** Check if the entered scales are correct and != [ 1 1 1 ...] */
 
-		/** Set the scales array to the same size if the size has been changed */
-		ScalesType scales = this->GetScales();
-		unsigned int paramsize = param.Size();
-
-		if ( ( scales.Size() ) != paramsize )
+		this->SetUseScales(false);
+		const ScalesType & scales = this->GetScales();
+		if ( scales.GetSize() == this->GetInitialPosition().GetSize() )
 		{
-			ScalesType newscales( paramsize );
-			newscales.Fill(1.0);
-			this->SetScales( newscales );
+      ScalesType unit_scales( scales.GetSize() );
+			unit_scales.Fill(1.0);
+			if (scales != unit_scales)
+			{
+				/** only then: */
+				this->SetUseScales(true);
+			}
 		}
-		
-		/** \todo to optimizerbase? */
 
-	} // end SetInitialPosition
+		this->Superclass1::StartOptimization();
+
+	} //end StartOptimization
 	
 
 } // end namespace elastix

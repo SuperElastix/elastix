@@ -1,7 +1,7 @@
 #ifndef __itkFiniteDifferenceGradientDescentOptimizer_h
 #define __itkFiniteDifferenceGradientDescentOptimizer_h
 
-#include "itkSingleValuedNonLinearOptimizer.h"
+#include "itkScaledSingleValuedNonLinearOptimizer.h"
 
 
 namespace itk
@@ -36,13 +36,13 @@ namespace itk
 	 */
 	
 	class FiniteDifferenceGradientDescentOptimizer
-		: public SingleValuedNonLinearOptimizer
-	{
+		: public ScaledSingleValuedNonLinearOptimizer
+  {
 	public:
 		
 		/** Standard class typedefs. */
 		typedef FiniteDifferenceGradientDescentOptimizer		Self;
-		typedef SingleValuedNonLinearOptimizer			Superclass;
+		typedef ScaledSingleValuedNonLinearOptimizer	   		Superclass;
 		typedef SmartPointer<Self>									Pointer;
 		typedef SmartPointer<const Self>						ConstPointer;
 		
@@ -50,7 +50,7 @@ namespace itk
 		itkNewMacro( Self );
 		
 		/** Run-time type information (and related methods). */
-		itkTypeMacro( FiniteDifferenceGradientDescentOptimizer, SingleValuedNonLinearOptimizer );
+		itkTypeMacro( FiniteDifferenceGradientDescentOptimizer, ScaledSingleValuedNonLinearOptimizer );
 		
 		/** Codes of stopping conditions */
 		typedef enum {
@@ -58,19 +58,7 @@ namespace itk
 				MetricError
 		} StopConditionType;
 		
-		/** Methods to configure the cost function. */
-		itkGetConstMacro( Maximize, bool );
-		itkSetMacro( Maximize, bool );
-		itkBooleanMacro( Maximize );
-		bool GetMinimize( ) const
-		{ return !m_Maximize; }
-		void SetMinimize(bool v)
-		{ this->SetMaximize(!v); }
-		void MinimizeOn()
-		{ this->MaximizeOff(); }
-		void MinimizeOff()
-		{ this->MaximizeOn(); }
-		
+	
 		/** Advance one step following the gradient direction. */
 		virtual void AdvanceOneStep( void );
 		

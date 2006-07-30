@@ -23,20 +23,20 @@ namespace itk
 	{
 		itkDebugMacro( "Constructor" );
 		
-		m_NumberOfIterations = 100;
-		m_CurrentIteration = 0;
-		m_Maximize = false;
-		m_Value = 0.0;
-		m_StopCondition = MaximumNumberOfIterations;
+		this->m_NumberOfIterations = 100;
+		this->m_CurrentIteration = 0;
+		this->m_Maximize = false;
+		this->m_Value = 0.0;
+		this->m_StopCondition = MaximumNumberOfIterations;
 		
-		m_GradientMagnitude = 0.0;
-		m_LearningRate = 0.0;
-		m_ComputeCurrentValue = false;
-		m_Param_a = 1.0;
-		m_Param_c = 1.0;
-		m_Param_A = 1.0;
-		m_Param_alpha = 0.602;
-		m_Param_gamma = 0.101;		
+		this->m_GradientMagnitude = 0.0;
+		this->m_LearningRate = 0.0;
+		this->m_ComputeCurrentValue = false;
+		this->m_Param_a = 1.0;
+		this->m_Param_c = 1.0;
+		this->m_Param_A = 1.0;
+		this->m_Param_alpha = 0.602;
+		this->m_Param_gamma = 0.101;		
 		
 	} // end Constructor
 	
@@ -52,22 +52,22 @@ namespace itk
 		Superclass::PrintSelf( os, indent );
 		
 		os << indent << "LearningRate: "
-		   << m_LearningRate << std::endl;
+		   << this->m_LearningRate << std::endl;
 		os << indent << "NunberOfIterations: "
-			<< m_NumberOfIterations << std::endl;
+			<< this->m_NumberOfIterations << std::endl;
 		os << indent << "Maximize: "
-			<< m_Maximize << std::endl;
+			<< this->m_Maximize << std::endl;
 		os << indent << "CurrentIteration: "
-			<< m_CurrentIteration;
+			<< this->m_CurrentIteration;
 		os << indent << "Value: "
-			<< m_Value;
-		if ( m_CostFunction )
+			<< this->m_Value;
+		if ( this->m_CostFunction )
     {
 			os << indent << "CostFunction: "
-				<< m_CostFunction;
+				<< this->m_CostFunction;
     }
 		os << indent << "StopCondition: "
-			<< m_StopCondition;
+			<< this->m_StopCondition;
 		os << std::endl;
 		
 	} // end PrintSelf
@@ -82,11 +82,25 @@ namespace itk
 	{		
 		itkDebugMacro( "StartOptimization" );
 		
-		m_CurrentIteration = 0;
-		
-		this->SetCurrentPosition( this->GetInitialPosition() );
-		this->ResumeOptimization();
-		
+		this->m_CurrentIteration = 0;
+    this->m_Stop = false;
+
+    /** Get the number of parameters; checks also if a cost function has been set at all.
+     * if not: an exception is thrown */
+    const unsigned int numberOfParameters =
+      this->GetScaledCostFunction()->GetNumberOfParameters();
+
+    /** Initialize the scaledCostFunction with the currently set scales */
+    this->InitializeScales();
+
+    /** Set the current position as the scaled initial position */
+    this->SetCurrentPosition( this->GetInitialPosition() );
+
+    if ( !this->m_Stop )
+    {
+      this->ResumeOptimization();
+    }
+			
 	} // end StartOptimization	
 	
 	
@@ -100,7 +114,7 @@ namespace itk
 	{		
 		itkDebugMacro( "ResumeOptimization" );
 		
-		m_Stop = false;
+		this->m_Stop = false;
 		double ck = 1.0;
 		unsigned int spaceDimension = 1;
 		
@@ -109,28 +123,28 @@ namespace itk
 		double valuemin;
 		
 		InvokeEvent( StartEvent() );
-		while( !m_Stop ) 
+		while( ! this->m_Stop ) 
 		{
 			/** Get the Number of parameters.*/
-			spaceDimension = m_CostFunction->GetNumberOfParameters();
+			spaceDimension = this->GetScaledCostFunction()->GetNumberOfParameters();
 			
 			/** Initialisation.*/
-			ck					= this->Compute_c( m_CurrentIteration );
-			m_Gradient	=	DerivativeType( spaceDimension );
-			param = this->GetCurrentPosition();
+			ck	= this->Compute_c( m_CurrentIteration );
+			this->m_Gradient	=	DerivativeType( spaceDimension );
+			param = this->GetScaledCurrentPosition();
 		
 			/** Compute the current value, if desired by interested users */
-			if ( m_ComputeCurrentValue )
+			if ( this->m_ComputeCurrentValue )
 			{
 				try
 				{
-					m_Value = m_CostFunction->GetValue( param );
+					this->m_Value = this->GetScaledValue( param );
 				}
 				catch( ExceptionObject& err )
 				{
 					// An exception has occurred. 
 					// Terminate immediately.
-					m_StopCondition = MetricError;
+					this->m_StopCondition = MetricError;
 					StopOptimization();
 					
 					// Pass exception to caller
@@ -150,13 +164,13 @@ namespace itk
 				for ( unsigned int j = 0; j < spaceDimension; j++ )
 				{
 					param[j] += ck;
-					valueplus = m_CostFunction->GetValue( param );
+					valueplus = this->GetScaledValue( param );
 					param[j] -= 2.0*ck;
-					valuemin = m_CostFunction->GetValue( param );
+					valuemin = this->GetScaledValue( param );
 					param[j] += ck;
 								
 					const double gradient = (valueplus - valuemin) / (2.0 * ck);
-					m_Gradient[j] = gradient;
+					this->m_Gradient[j] = gradient;
 					
 					sumOfSquaredGradients += ( gradient * gradient );
 					
@@ -166,7 +180,7 @@ namespace itk
 			{
 				// An exception has occurred. 
 				// Terminate immediately.
-				m_StopCondition = MetricError;
+				this->m_StopCondition = MetricError;
 				StopOptimization();
 				
 				// Pass exception to caller
@@ -180,15 +194,15 @@ namespace itk
 			
 			/** Save the gradient magnitude; 
 			 * only for interested users... */
-			m_GradientMagnitude = vcl_sqrt( sumOfSquaredGradients );
+			this->m_GradientMagnitude = vcl_sqrt( sumOfSquaredGradients );
 			
-			AdvanceOneStep();
+			this->AdvanceOneStep();
 			
-			m_CurrentIteration++;
+			this->m_CurrentIteration++;
 			
-			if( m_CurrentIteration >= m_NumberOfIterations )
+			if( this->m_CurrentIteration >= this->m_NumberOfIterations )
 			{
-				m_StopCondition = MaximumNumberOfIterations;
+				this->m_StopCondition = MaximumNumberOfIterations;
 				StopOptimization();
 				break;
 			}
@@ -209,7 +223,7 @@ namespace itk
 	{		
 		itkDebugMacro( "StopOptimization" );
 		
-		m_Stop = true;
+		this->m_Stop = true;
 		InvokeEvent( EndEvent() );
 
 	} // end StopOptimization
@@ -230,33 +244,24 @@ namespace itk
 		else direction = -1.0;
 		
 		const unsigned int spaceDimension = 
-			m_CostFunction->GetNumberOfParameters();
+			this->GetScaledCostFunction()->GetNumberOfParameters();
 		
 		/** Compute the gain */
-		double ak = this->Compute_a( m_CurrentIteration );
+		double ak = this->Compute_a( this->m_CurrentIteration );
 
 		/** Save it for users that are interested */
-		m_LearningRate = ak;
+		this->m_LearningRate = ak;
 		
-		const ParametersType & currentPosition = this->GetCurrentPosition();
-		
-		ScalesType scales = this->GetScales();
-		
-		DerivativeType transformedGradient( spaceDimension ); 
-		
-		for ( unsigned int j = 0; j < spaceDimension; j++ )
-    {
-			transformedGradient[ j ] = m_Gradient[ j ] / scales[ j ];
-    }
+		const ParametersType & currentPosition = this->GetScaledCurrentPosition();
 		
 		ParametersType newPosition( spaceDimension );
 		for ( unsigned int j = 0; j < spaceDimension; j++ )
     {
 			newPosition[ j ] = currentPosition[ j ] + 
-				direction * ak * transformedGradient[ j ];
+				direction * ak * this->m_Gradient[ j ];
     }
 		
-		this->SetCurrentPosition( newPosition );
+		this->SetScaledCurrentPosition( newPosition );
 		
 		this->InvokeEvent( IterationEvent() );
 		
@@ -276,7 +281,7 @@ namespace itk
 		::Compute_a( unsigned long k ) const
 	{ 
 		return static_cast<double>(
-			m_Param_a / pow( m_Param_A + k + 1, m_Param_alpha ) );
+			this->m_Param_a / vcl_pow( this->m_Param_A + k + 1, this->m_Param_alpha ) );
 		
 	} // end Compute_a
 	
@@ -293,7 +298,7 @@ namespace itk
 		::Compute_c( unsigned long k ) const
 	{ 
 		return static_cast<double>(
-			m_Param_c / pow( k + 1, m_Param_gamma ) );
+			this->m_Param_c / vcl_pow( k + 1, this->m_Param_gamma ) );
 		
 	} // end Compute_c
 
