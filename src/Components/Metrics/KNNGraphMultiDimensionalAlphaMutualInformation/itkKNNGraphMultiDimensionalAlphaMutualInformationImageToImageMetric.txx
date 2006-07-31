@@ -41,6 +41,21 @@ namespace itk
       TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
     ::SetANNkDTree( unsigned int bucketSize = 2, std::string splittingRule = "ANN_KD_SL_MIDPT" )
   {
+    this->SetANNkDTree( bucketSize, splittingRule, splittingRule, splittingRule );
+  } // end SetANNkDTree
+
+
+  /**
+	 * ************************ SetANNkDTree *************************
+	 */
+  
+  template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
+    void
+    KNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric<
+      TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
+    ::SetANNkDTree( unsigned int bucketSize = 2, std::string splittingRuleFixed = "ANN_KD_SL_MIDPT",
+    std::string splittingRuleMoving = "ANN_KD_SL_MIDPT", std::string splittingRuleJoint = "ANN_KD_SL_MIDPT" )
+  {
     typename ANNkDTreeType::Pointer tmpPtrF = ANNkDTreeType::New();
     typename ANNkDTreeType::Pointer tmpPtrM = ANNkDTreeType::New();
     typename ANNkDTreeType::Pointer tmpPtrJ = ANNkDTreeType::New();
@@ -49,9 +64,9 @@ namespace itk
     tmpPtrM->SetBucketSize( bucketSize );
     tmpPtrJ->SetBucketSize( bucketSize );
 
-    tmpPtrF->SetSplittingRule( splittingRule );
-    tmpPtrM->SetSplittingRule( splittingRule );
-    tmpPtrJ->SetSplittingRule( splittingRule );
+    tmpPtrF->SetSplittingRule( splittingRuleFixed );
+    tmpPtrM->SetSplittingRule( splittingRuleMoving );
+    tmpPtrJ->SetSplittingRule( splittingRuleJoint );
 
     this->m_BinaryKNNTreeFixedIntensity  = tmpPtrF;
     this->m_BinaryKNNTreeMovingIntensity = tmpPtrM;
@@ -71,6 +86,22 @@ namespace itk
     ::SetANNbdTree( unsigned int bucketSize = 2, std::string splittingRule = "ANN_KD_SL_MIDPT",
     std::string shrinkingRule = "ANN_BD_SIMPLE" )
   {
+    this->SetANNbdTree( bucketSize, splittingRule, splittingRule, splittingRule, shrinkingRule );
+  } // end SetANNbdTree
+
+
+  /**
+	 * ************************ SetANNbdTree *************************
+	 */
+  
+  template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
+    void
+    KNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric<
+      TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
+    ::SetANNbdTree( unsigned int bucketSize = 2, std::string splittingRuleFixed = "ANN_KD_SL_MIDPT",
+    std::string splittingRuleMoving = "ANN_KD_SL_MIDPT", std::string splittingRuleJoint = "ANN_KD_SL_MIDPT",
+    std::string shrinkingRule = "ANN_BD_SIMPLE" )
+  {
     typename ANNbdTreeType::Pointer tmpPtrF = ANNbdTreeType::New();
     typename ANNbdTreeType::Pointer tmpPtrM = ANNbdTreeType::New();
     typename ANNbdTreeType::Pointer tmpPtrJ = ANNbdTreeType::New();
@@ -79,9 +110,9 @@ namespace itk
     tmpPtrM->SetBucketSize( bucketSize );
     tmpPtrJ->SetBucketSize( bucketSize );
 
-    tmpPtrF->SetSplittingRule( splittingRule );
-    tmpPtrM->SetSplittingRule( splittingRule );
-    tmpPtrJ->SetSplittingRule( splittingRule );
+    tmpPtrF->SetSplittingRule( splittingRuleFixed );
+    tmpPtrM->SetSplittingRule( splittingRuleMoving );
+    tmpPtrJ->SetSplittingRule( splittingRuleJoint );
 
     tmpPtrF->SetShrinkingRule( shrinkingRule );
     tmpPtrM->SetShrinkingRule( shrinkingRule );
@@ -292,8 +323,8 @@ namespace itk
     /** Create variables to store intermediate results. */
     InputPointType  inputPoint;
     OutputPointType transformedPoint;
-    std::vector<double> fixedFeatureValues( this->m_NumberOfFixedFeatureImages );
-    std::vector<double> movingFeatureValues( this->m_NumberOfMovingFeatureImages );
+    double fixedFeatureValue = 0.0;
+    double movingFeatureValue = 0.0;
 
     /** Loop over the fixed image samples to calculate list samples. */
     for ( unsigned long i = 0; i < size; i++ )
@@ -327,23 +358,23 @@ namespace itk
         /** Get and set the values of the fixed feature images. */
         for ( unsigned int j = 0; j < this->m_NumberOfFixedFeatureImages; j++ )
         {
-          fixedFeatureValues[ j ] = this->m_FixedFeatureInterpolators[ j ]->Evaluate( inputPoint );
+          fixedFeatureValue = this->m_FixedFeatureInterpolators[ j ]->Evaluate( inputPoint );
           listSampleFixedIntensity->SetMeasurement(
-            this->m_NumberOfPixelsCounted, j + 1, fixedFeatureValues[ j ] );
+            this->m_NumberOfPixelsCounted, j + 1, fixedFeatureValue );
           listSampleJointIntensity->SetMeasurement(
-            this->m_NumberOfPixelsCounted, j + 1, fixedFeatureValues[ j ] );
+            this->m_NumberOfPixelsCounted, j + 1, fixedFeatureValue );
         }
 
         /** Get and set the values of the moving feature images. */
         for ( unsigned int j = 0; j < this->m_NumberOfMovingFeatureImages; j++ )
         {
-          movingFeatureValues[ j ] = this->m_MovingFeatureInterpolators[ j ]->Evaluate( inputPoint );
+          movingFeatureValue = this->m_MovingFeatureInterpolators[ j ]->Evaluate( inputPoint );
           listSampleMovingIntensity->SetMeasurement(
-            this->m_NumberOfPixelsCounted, j + 1, movingFeatureValues[ j ] );
+            this->m_NumberOfPixelsCounted, j + 1, movingFeatureValue );
           listSampleJointIntensity->SetMeasurement(
             this->m_NumberOfPixelsCounted,
             j + 1 + this->m_NumberOfFixedFeatureImages,
-            movingFeatureValues[ j ]
+            movingFeatureValue
             );
         }
 

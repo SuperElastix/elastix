@@ -150,8 +150,8 @@ using namespace itk;
       this->SetMovingFeatureInterpolator( i, interpolatorsMFI[ i ] );
     }
 
-
   } // end BeforeRegistration
+
 
 	/**
 	 * ***************** BeforeEachResolution ***********************
@@ -161,7 +161,7 @@ using namespace itk;
 		void KNNGraphMultiDimensionalAlphaMutualInformationMetric<TElastix>
 		::BeforeEachResolution(void)
 	{
-		/** Get the current resolution level.*/
+		/** Get the current resolution level. */
 		unsigned int level = 
 			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
@@ -191,10 +191,25 @@ using namespace itk;
     this->m_Configuration->ReadParameter( bucketSize, "BucketSize", 0, silentBS );
 		this->m_Configuration->ReadParameter( bucketSize, "BucketSize", level, true );
 
-    /** Get the splitting rule. */
+    /** Get the splitting rule for all trees. */
     std::string splittingRule = "ANN_KD_SL_MIDPT";
     this->m_Configuration->ReadParameter( splittingRule, "SplittingRule", 0, silentSplit );
 		this->m_Configuration->ReadParameter( splittingRule, "SplittingRule", level, true );
+
+    /** Get the splitting rule for the fixed tree. */
+    std::string fixedSplittingRule = "ANN_KD_SL_MIDPT";
+    this->m_Configuration->ReadParameter( fixedSplittingRule, "FixedSplittingRule", 0, silentSplit );
+		this->m_Configuration->ReadParameter( fixedSplittingRule, "FixedSplittingRule", level, true );
+
+    /** Get the splitting rule for the moving tree. */
+    std::string movingSplittingRule = "ANN_KD_SL_MIDPT";
+    this->m_Configuration->ReadParameter( movingSplittingRule, "MovingSplittingRule", 0, silentSplit );
+		this->m_Configuration->ReadParameter( movingSplittingRule, "MovingSplittingRule", level, true );
+
+    /** Get the splitting rule for the joint tree. */
+    std::string jointSplittingRule = "ANN_KD_SL_MIDPT";
+    this->m_Configuration->ReadParameter( jointSplittingRule, "JointSplittingRule", 0, silentSplit );
+		this->m_Configuration->ReadParameter( jointSplittingRule, "JointSplittingRule", level, true );
 
     /** Get the shrinking rule. */
     std::string shrinkingRule = "ANN_BD_SIMPLE";
@@ -204,11 +219,31 @@ using namespace itk;
     /** Set the tree. */
     if ( treeType == "KDTree" )
     {
-      this->SetANNkDTree( bucketSize, splittingRule );
+      /** If "SplittingRule" is given then all spiting rules are the same. */
+      std::string tmp;
+      if ( !this->m_Configuration->ReadParameter( tmp, "SplittingRule", 0, true ) )
+      {
+        this->SetANNkDTree( bucketSize, splittingRule );
+      }
+      else
+      {
+        this->SetANNkDTree( bucketSize, fixedSplittingRule, movingSplittingRule, jointSplittingRule );
+      }
     }
     else if ( treeType == "BDTree" )
     {
-      this->SetANNbdTree( bucketSize, splittingRule, shrinkingRule );
+      /** If "SplittingRule" is given then all spiting rules are the same. */
+      std::string tmp;
+      if ( !this->m_Configuration->ReadParameter( tmp, "SplittingRule", 0, true ) )
+      {
+        this->SetANNbdTree( bucketSize, splittingRule, shrinkingRule );
+      }
+      else
+      {
+        this->SetANNbdTree( bucketSize, fixedSplittingRule, movingSplittingRule,
+          jointSplittingRule, shrinkingRule );
+      }
+      
     }
     else if ( treeType == "BruteForceTree" )
     {
