@@ -156,7 +156,8 @@ public:
   /** Set ANNbdTree. */
   void SetANNbdTree( unsigned int bucketSize, std::string splittingRuleFixed,
     std::string splittingRuleMoving, std::string splittingRuleJoint,
-    std::string shrinkingRule );
+    std::string shrinkingRuleFixed, std::string shrinkingRuleMoving,
+    std::string shrinkingRuleJoint );
 
   /** Set ANNBruteForceTree. */
   void SetANNBruteForceTree( void );

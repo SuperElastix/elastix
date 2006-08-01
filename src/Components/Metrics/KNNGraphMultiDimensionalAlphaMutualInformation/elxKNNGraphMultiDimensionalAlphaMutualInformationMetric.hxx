@@ -211,15 +211,30 @@ using namespace itk;
     this->m_Configuration->ReadParameter( jointSplittingRule, "JointSplittingRule", 0, silentSplit );
 		this->m_Configuration->ReadParameter( jointSplittingRule, "JointSplittingRule", level, true );
 
-    /** Get the shrinking rule. */
+    /** Get the shrinking rule for all trees. */
     std::string shrinkingRule = "ANN_BD_SIMPLE";
     this->m_Configuration->ReadParameter( shrinkingRule, "ShrinkingRule", 0, silentShrink );
 		this->m_Configuration->ReadParameter( shrinkingRule, "ShrinkingRule", level, true );
 
+    /** Get the shrinking rule for the fixed tree. */
+    std::string fixedShrinkingRule = "ANN_BD_SIMPLE";
+    this->m_Configuration->ReadParameter( fixedShrinkingRule, "FixedShrinkingRule", 0, silentShrink );
+		this->m_Configuration->ReadParameter( fixedShrinkingRule, "FixedShrinkingRule", level, true );
+
+    /** Get the shrinking rule for the moving tree. */
+    std::string movingShrinkingRule = "ANN_BD_SIMPLE";
+    this->m_Configuration->ReadParameter( movingShrinkingRule, "MovingShrinkingRule", 0, silentShrink );
+		this->m_Configuration->ReadParameter( movingShrinkingRule, "MovingShrinkingRule", level, true );
+
+    /** Get the shrinking rule for the joint tree. */
+    std::string jointShrinkingRule = "ANN_BD_SIMPLE";
+    this->m_Configuration->ReadParameter( jointShrinkingRule, "JointShrinkingRule", 0, silentShrink );
+		this->m_Configuration->ReadParameter( jointShrinkingRule, "JointShrinkingRule", level, true );
+
     /** Set the tree. */
     if ( treeType == "KDTree" )
     {
-      /** If "SplittingRule" is given then all spiting rules are the same. */
+      /** If "SplittingRule" is given then all splitting rules are the same. */
       std::string tmp;
       if ( !this->m_Configuration->ReadParameter( tmp, "SplittingRule", 0, true ) )
       {
@@ -232,16 +247,34 @@ using namespace itk;
     }
     else if ( treeType == "BDTree" )
     {
-      /** If "SplittingRule" is given then all spiting rules are the same. */
+      /** If "SplittingRule" is given then all splitting rules are the same. */
       std::string tmp;
       if ( !this->m_Configuration->ReadParameter( tmp, "SplittingRule", 0, true ) )
       {
-        this->SetANNbdTree( bucketSize, splittingRule, shrinkingRule );
+        /** If "ShrinkingRule" is given then all shrinking rules are the same. */
+        if ( !this->m_Configuration->ReadParameter( tmp, "ShrinkingRule", 0, true ) )
+        {
+          this->SetANNbdTree( bucketSize, splittingRule, shrinkingRule );
+        }
+        else
+        {
+          this->SetANNbdTree( bucketSize, splittingRule, splittingRule, splittingRule,
+            fixedShrinkingRule, movingShrinkingRule, jointShrinkingRule );
+        }
       }
       else
       {
-        this->SetANNbdTree( bucketSize, fixedSplittingRule, movingSplittingRule,
-          jointSplittingRule, shrinkingRule );
+        /** If "ShrinkingRule" is given then all shrinking rules are the same. */
+        if ( !this->m_Configuration->ReadParameter( tmp, "ShrinkingRule", 0, true ) )
+        {
+          this->SetANNbdTree( bucketSize, fixedSplittingRule, movingSplittingRule,
+            jointSplittingRule, shrinkingRule, shrinkingRule, shrinkingRule );
+        }
+        else
+        {
+          this->SetANNbdTree( bucketSize, fixedSplittingRule, movingSplittingRule,
+            jointSplittingRule, fixedShrinkingRule, movingShrinkingRule, jointShrinkingRule );
+        }
       }
       
     }
