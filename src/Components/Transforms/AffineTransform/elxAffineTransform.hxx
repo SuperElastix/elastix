@@ -222,19 +222,31 @@ namespace elastix
 		 * which is the rotationPoint, expressed in index-values.
 		 */
     IndexType centerOfRotationIndex;
-		bool CORInImage = true;
-		bool centerGiven = true;
+    InputPointType centerOfRotationPoint;
+    bool CORIndexInImage = true;
+    bool CORPointInImage = true;
+		bool centerGivenAsIndex = true;
+    bool centerGivenAsPoint = true;
 		SizeType fixedImageSize = this->m_Registration->GetAsITKBaseType()->
 			GetFixedImage()->GetLargestPossibleRegion().GetSize();
 		for ( unsigned int i = 0; i < SpaceDimension; i++ )
 		{
+      /** Initilialize. */
 			centerOfRotationIndex[ i ] = 0;
-			/** Returns zero when parameter was in the parameter file */
-			int returncode = this->m_Configuration->ReadParameter(
+      centerOfRotationPoint[ i ] = 0.0;
+			/** Check COR index: Returns zero when parameter was in the parameter file. */
+			int returncodeI = this->m_Configuration->ReadParameter(
 				centerOfRotationIndex[ i ], "CenterOfRotation", i, true );
-			if ( returncode != 0 )
+			if ( returncodeI != 0 )
 			{
-				centerGiven &= false;
+				centerGivenAsIndex &= false;
+			}
+      /** Check COR point: Returns zero when parameter was in the parameter file. */
+      int returncodeP = this->m_Configuration->ReadParameter(
+				centerOfRotationPoint[ i ], "CenterOfRotationPoint", i, true );
+			if ( returncodeP != 0 )
+			{
+				centerGivenAsPoint &= false;
 			}
 			/** Check if CenterOfRotation has index-values within image.*/
 			if ( centerOfRotationIndex[ i ] < 0 ||
@@ -242,18 +254,37 @@ namespace elastix
 			{
 				CORInImage = false;
 			}
-		}
-		
-		/** Give a warning if necessary.*/
-		if ( !CORInImage && centerGiven )
+		} // end loop over SpaceDimension
+
+    /** Check if centerOfRotationPoint is within image. */
+    IndexType indexOfPoint;
+    this->m_Registration->GetAsITKBaseType()->GetFixedImage()->
+      TransformPhysicalPointToIndex( centerOfRotationPoint, indexOfPoint );
+    for ( unsigned int i = 0; i < SpaceDimension; i++ )
 		{
-			xl::xout["warning"] << "WARNING: Center of Rotation is not within image boundaries!" << std::endl;
+      if ( centerOfRotationPoint[ i ] < 0 ||
+				centerOfRotationPoint[ i ] > fixedImageSize[ i ] )
+			{
+				CORPointInImage = false;
+			}
+    }
+		
+		/** Give a warning if necessary. */
+		if ( !CORIndexInImage && centerGivenAsIndex )
+		{
+			xl::xout["warning"] << "WARNING: Center of Rotation (index) is not within image boundaries!" << std::endl;
+		}
+
+    /** Give a warning if necessary. */
+		if ( !CORPointInImage && centerGivenAsPoint && !centerGivenAsIndex )
+		{
+			xl::xout["warning"] << "WARNING: Center of Rotation (point) is not within image boundaries!" << std::endl;
 		}
 
 		/** Check if user wants automatic transform initialization; false by default.
 		 * If an initial transform is given, automatic transform initialization is 
 		 * not possible */
-		std::string automaticTransformInitializationString("false");
+		std::string automaticTransformInitializationString( "false" );
 		bool automaticTransformInitialization = false;
 		this->m_Configuration->ReadParameter(
 			automaticTransformInitializationString,
@@ -269,6 +300,7 @@ namespace elastix
 		 * - No center of rotation was given, or
 		 * - The user asked for AutomaticTransformInitialization
 		 */
+    bool centerGiven = centerGivenAsIndex || centerGivenAsPoint;
 		if ( !centerGiven || automaticTransformInitialization ) 
 		{
 	   
@@ -286,23 +318,25 @@ namespace elastix
 		}
 
 		/** Set the translation to zero, if no AutomaticTransformInitialization
-		 * was desired 
+		 * was desired.
 		 */
     if ( !automaticTransformInitialization )
 		{
 			OutputVectorType noTranslation;
 			noTranslation.Fill(0.0);
-			this->m_AffineTransform->SetTranslation(noTranslation);
+			this->m_AffineTransform->SetTranslation( noTranslation );
 		}
 
-		/** Set the center of rotation if it was entered by the user */
+		/** Set the center of rotation if it was entered by the user. */
 		if ( centerGiven )
 		{
-			/** Convert from index-value to physical-point-value.*/
-			InputPointType centerOfRotationPoint;
-			this->m_Registration->GetAsITKBaseType()->GetFixedImage()->
-				TransformIndexToPhysicalPoint( centerOfRotationIndex, centerOfRotationPoint );
-			this->m_AffineTransform->SetCenter(centerOfRotationPoint);
+			if ( centerGivenAsIndex )
+      {
+        /** Convert from index-value to physical-point-value.*/
+        this->m_Registration->GetAsITKBaseType()->GetFixedImage()->
+          TransformIndexToPhysicalPoint( centerOfRotationIndex, centerOfRotationPoint );
+      }
+			this->m_AffineTransform->SetCenter( centerOfRotationPoint );
 		}
 
 		/** Apply the initial transform to the center of rotation, if 
