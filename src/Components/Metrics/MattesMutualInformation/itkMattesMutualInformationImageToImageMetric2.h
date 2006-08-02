@@ -204,7 +204,10 @@ namespace itk
 		itkSetClampMacro( NumberOfHistogramBins, unsigned long,
 			1, NumericTraits<unsigned long>::max() );
 		itkGetMacro( NumberOfHistogramBins, unsigned long);   
-	
+
+    /** Setting whether to check if enough samples map inside the moving image. Default: true */
+    itkSetMacro(CheckNumberOfSamples, bool);  
+    itkGetConstMacro(CheckNumberOfSamples, bool);  
 	
 	protected:
 		
@@ -283,7 +286,7 @@ namespace itk
 		MattesMutualInformationImageToImageMetric2( const Self& );	// purposely not implemented
 		/** The private copy constructor. */
 		void operator=( const Self& );															// purposely not implemented
-				
+    				
 		/** The marginal PDFs are stored as std::vector. */
 		typedef float PDFValueType;
 		typedef std::vector<PDFValueType> MarginalPDFType;
@@ -320,6 +323,9 @@ namespace itk
 		double m_MovingImageTrueMax;
 		double m_FixedImageBinSize;
 		double m_MovingImageBinSize;
+
+    /** Setting whether to check if enough samples map inside the moving image */
+    bool m_CheckNumberOfSamples;
 		
 		/** Typedefs for BSpline kernel and derivative functions. */
 		typedef BSplineKernelFunction<3> CubicBSplineFunctionType;

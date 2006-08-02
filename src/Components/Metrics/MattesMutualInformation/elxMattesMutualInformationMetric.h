@@ -21,9 +21,15 @@ using namespace itk;
 	 * \parameter Metric: Select this metric as follows:\n
 	 *		<tt>(Metric "MattesMutualInformation")</tt>
 	 * \parameter NumberOfHistogramBins: The size of the histogram. Must be given for each 
-	 *		resolution. \n
+	 *		resolution, or for all resolutions at once. \n
 	 *		example: <tt>(NumberOfHistogramBins 32 32 64)</tt> \n
 	 *		The default is 32 for each resolution.
+   * \parameter CheckNumberOfSamples: Whether the metric checks if at least 1/4 of the 
+   *    samples map inside the moving image. Must be given for each resolution or for all
+   *    resolutions at once. \n
+   *    example: <tt>(CheckNumberOfSamples "false" "true" "false")</tt> \n
+   *    The default is true. In general it is wise to set this to true, since it detects
+   *    if the registration is going really bad.
    *
    * \sa MattesMutualInformationImageToImageMetric2
 	 * \ingroup Metrics
@@ -102,6 +108,7 @@ using namespace itk;
 
 		/** Execute stuff before each new pyramid resolution:
 		 * \li Set the number of histogram bins.
+     * \li Set the CheckNumberOfSamples option.
 		 */
 		virtual void BeforeEachResolution( void );
 	

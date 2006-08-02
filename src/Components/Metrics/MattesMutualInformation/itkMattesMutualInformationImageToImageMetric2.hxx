@@ -79,6 +79,7 @@ namespace itk
 		this->m_BSplineTransform = NULL;
 		this->m_BSplineCombinationTransform = NULL;
 		this->m_NumberOfParameters = 0;
+    this->m_CheckNumberOfSamples = true;
 	
 		
 	} // end Constructor
@@ -547,12 +548,15 @@ namespace itk
 		 
 		 itkDebugMacro( "Ratio of voxels mapping into moving image buffer: " 
 			 << nSamples << " / " << sampleContainer->Size() << std::endl );
-		 
-		 if( nSamples < sampleContainer->Size() / 4 )
-		 {
-			 itkExceptionMacro( "Too many samples map outside moving image buffer: "
-				 << nSamples << " / " << sampleContainer->Size() << std::endl );
-		 }	
+    
+     if ( this->GetCheckNumberOfSamples() ) 
+     {
+		   if( nSamples < sampleContainer->Size() / 4 )
+  		 {
+  			 itkExceptionMacro( "Too many samples map outside moving image buffer: "
+  				 << nSamples << " / " << sampleContainer->Size() << std::endl );
+  		 }	
+     }
 
 		 this->m_NumberOfPixelsCounted = nSamples;
 		 
@@ -837,10 +841,13 @@ namespace itk
 		itkDebugMacro( "Ratio of voxels mapping into moving image buffer: " 
 			<< nSamples << " / " << sampleContainer->Size() << std::endl );
 		
-		if( nSamples < sampleContainer->Size() / 4 )
+    if ( this->GetCheckNumberOfSamples() ) 
     {
-			itkExceptionMacro( "Too many samples map outside moving image buffer: "
-				<< nSamples << " / " << sampleContainer->Size() << std::endl );
+		  if( nSamples < sampleContainer->Size() / 4 )
+      {
+  			itkExceptionMacro( "Too many samples map outside moving image buffer: "
+  				<< nSamples << " / " << sampleContainer->Size() << std::endl );
+      }
     }
 	  
 		this->m_NumberOfPixelsCounted = nSamples;

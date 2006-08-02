@@ -47,10 +47,23 @@ using namespace itk;
 		
 		/** Get and set the number of histogram bins. */
 		unsigned int numberOfHistogramBins = 32;
-    this->m_Configuration->ReadParameter( numberOfHistogramBins, "NumberOfHistogramBins", 0 );
-		this->m_Configuration->ReadParameter( numberOfHistogramBins, "NumberOfHistogramBins", level, true );
+    this->GetConfiguration()->ReadParameter( numberOfHistogramBins, "NumberOfHistogramBins", 0 );
+		this->GetConfiguration()->ReadParameter( numberOfHistogramBins, "NumberOfHistogramBins", level, true );
 		
 		this->SetNumberOfHistogramBins( numberOfHistogramBins );
+
+    /** Get and set whether the metric should check if enough samples map inside the moving image. */
+    std::string checkNumberOfSamples = "true";
+    this->GetConfiguration()->ReadParameter( checkNumberOfSamples, "CheckNumberOfSamples", 0 );
+    this->GetConfiguration()->ReadParameter( checkNumberOfSamples, "CheckNumberOfSamples", level, true );
+    if ( checkNumberOfSamples == "false" )
+    {
+      this->SetCheckNumberOfSamples(false);
+    }
+    else
+    {
+      this->SetCheckNumberOfSamples(true);
+    }
 
 	} // end BeforeEachResolution
 	
