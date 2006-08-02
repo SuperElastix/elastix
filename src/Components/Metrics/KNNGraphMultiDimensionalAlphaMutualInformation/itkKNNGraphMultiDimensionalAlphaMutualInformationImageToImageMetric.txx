@@ -53,8 +53,8 @@ namespace itk
     void
     KNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric<
       TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
-    ::SetANNkDTree( unsigned int bucketSize = 2, std::string splittingRuleFixed = "ANN_KD_SL_MIDPT",
-    std::string splittingRuleMoving = "ANN_KD_SL_MIDPT", std::string splittingRuleJoint = "ANN_KD_SL_MIDPT" )
+    ::SetANNkDTree( unsigned int bucketSize, std::string splittingRuleFixed,
+    std::string splittingRuleMoving, std::string splittingRuleJoint )
   {
     typename ANNkDTreeType::Pointer tmpPtrF = ANNkDTreeType::New();
     typename ANNkDTreeType::Pointer tmpPtrM = ANNkDTreeType::New();
