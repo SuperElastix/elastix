@@ -252,7 +252,7 @@ namespace elastix
 			if ( centerOfRotationIndex[ i ] < 0 ||
 				centerOfRotationIndex[ i ] > fixedImageSize[ i ] )
 			{
-				CORInImage = false;
+				CORIndexInImage = false;
 			}
 		} // end loop over SpaceDimension
 
