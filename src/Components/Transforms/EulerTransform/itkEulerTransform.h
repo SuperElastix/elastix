@@ -178,7 +178,13 @@ namespace itk
     {
       if ( SpaceDimension == 3 )
       {
-        this->SetComputeZYX( arg );
+        typedef Euler3DTransform< ScalarType >  Euler3DTransformType;
+        typename Euler3DTransformType::Pointer transform
+          = dynamic_cast< Euler3DTransformType * >( this );
+        if ( transform )
+        {
+          transform->Euler3DTransformType::SetComputeZYX( arg );
+        }
       }
     };
 
@@ -189,7 +195,13 @@ namespace itk
     {
       if ( SpaceDimension == 3 )
       {
-        return this->GetComputeZYX();
+        typedef Euler3DTransform< ScalarType >  Euler3DTransformType;
+        typename Euler3DTransformType::ConstPointer transform
+          = dynamic_cast< const Euler3DTransformType * >( this );
+        if ( transform )
+        {
+          return transform->Euler3DTransformType::GetComputeZYX();
+        }
       }
       return false;
     };
