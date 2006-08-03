@@ -135,9 +135,9 @@ namespace elastix
 	void EulerTransformElastix<TElastix>::
 		ReadFromFile(void)
 	{
-		
+		/** Variables. */
 		InputPointType centerOfRotationPoint;
-		centerOfRotationPoint.Fill(0.0);
+		centerOfRotationPoint.Fill( 0.0 );
 		bool pointRead = false;
 		bool indexRead = false;
 
@@ -145,18 +145,18 @@ namespace elastix
 		 * transform parameter file, this is the new, and preferred
 		 * way, since elastix 3.402.
 		 */		 
-		pointRead = ReadCenterOfRotationPoint(centerOfRotationPoint);
+		pointRead = ReadCenterOfRotationPoint( centerOfRotationPoint );
 
 		/** If this did not succeed, probably a transform parameter file
 		 * is trying to be read that was generated using an older elastix
 		 * version. Try to read it as an index, and convert to point.
 		 */
-		if (!pointRead)
+		if ( !pointRead )
 		{
-      indexRead = ReadCenterOfRotationIndex(centerOfRotationPoint);
+      indexRead = ReadCenterOfRotationIndex( centerOfRotationPoint );
 		}
 
-		if (!pointRead && !indexRead)
+		if ( !pointRead && !indexRead )
 		{
 			xl::xout["error"] << "ERROR: No center of rotation is specified in the transform parameter file" << std::endl;
 			itkExceptionMacro(<< "Transform parameter file is corrupt.")
@@ -164,6 +164,17 @@ namespace elastix
 
 		/** Set the center in this Transform.*/
 		this->m_EulerTransform->SetCenter( centerOfRotationPoint );
+
+    /** Read the ComputeZYX. */
+    if ( SpaceDimension == 3 )
+    {
+      std::string computeZYX = "false";
+      this->m_Configuration->ReadParameter( computeZYX, "ComputeZYX", 0 );
+      if ( computeZYX == "true" )
+      {
+        this->m_EulerTransform->SetComputeZYX( true );
+      }
+    }
 
 		/** Call the ReadFromFile from the TransformBase.
 		 * BE AWARE: Only call Superclass2::ReadFromFile() after CenterOfRotation
@@ -182,16 +193,16 @@ namespace elastix
 		void EulerTransformElastix<TElastix>
 		::WriteToFile( const ParametersType & param )
 	{
-		/** Call the WriteToFile from the TransformBase.*/
+		/** Call the WriteToFile from the TransformBase. */
 		this->Superclass2::WriteToFile( param );
 
-		/** Write EulerTransform specific things.*/
+		/** Write EulerTransform specific things. */
 		xout["transpar"] << std::endl << "// EulerTransform specific" << std::endl;
 
 		/** Set the precision of cout to 10. */
-		xout["transpar"] << std::setprecision(10);
+		xout["transpar"] << std::setprecision( 10 );
 
-		/** Get the center of rotation point and write it to file */
+		/** Get the center of rotation point and write it to file. */
 		InputPointType rotationPoint = this->m_EulerTransform->GetCenter();
 		xout["transpar"] << "(CenterOfRotationPoint ";
 		for ( unsigned int i = 0; i < SpaceDimension - 1; i++ )
@@ -200,9 +211,19 @@ namespace elastix
 		}
 		xout["transpar"] << rotationPoint[ SpaceDimension - 1 ] << ")" << std::endl;
 
-		/** Set the precision back to default value.*/
+		/** Set the precision back to default value. */
 		xout["transpar"] << std::setprecision( this->m_Elastix->GetDefaultOutputPrecision() );
 
+    /** Write the ComputeZYX to file. */
+    if ( SpaceDimension == 3 )
+    {
+      std::string computeZYX = "false";
+      if ( this->m_EulerTransform->GetComputeZYX() )
+      {
+        computeZYX = "true";
+      }
+      xout["transpar"] << "(ComputeZYX \"" << computeZYX << "\")" << std::endl;
+    }
 	
 	} // end WriteToFile
 

@@ -52,7 +52,7 @@ namespace itk
 			/** Typedef's.*/
 			typedef Euler2DTransform< TScalarType >			EulerTransform_tmp;
 			typedef int	AngleType;
-			
+		
 		}; // end class Dummy
 		
 	}; // end class EulerGroup<2>
@@ -170,6 +170,29 @@ namespace itk
 		typedef typename EulerGroupTemplate<
 			TScalarType, Dimension >::EulerDummy										EulerDummy;
 		typedef typename EulerDummy::AngleType										AngleType;
+
+    /** Make sure SetComputeZYX() is available, also in 2D,
+     * in which case, its just a dummy function.
+     */
+    virtual void SetComputeZYX( const bool arg )
+    {
+      if ( SpaceDimension == 3 )
+      {
+        this->SetComputeZYX( arg );
+      }
+    };
+
+    /** Make sure GetComputeZYX() is available, also in 2D,
+     * in which case, it just returns false.
+     */
+    virtual bool GetComputeZYX( void ) const
+    {
+      if ( SpaceDimension == 3 )
+      {
+        return this->GetComputeZYX();
+      }
+      return false;
+    };
 		
 	protected:
 
