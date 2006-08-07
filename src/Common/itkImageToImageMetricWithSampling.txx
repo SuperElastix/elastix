@@ -44,7 +44,8 @@ namespace itk
 
     // If there are any observers on the metric, call them to give the
     // user code a chance to set parameters on the metric
-    this->InvokeEvent( InitializeEvent() );
+    //this->InvokeEvent( InitializeEvent() );
+    // this is already done in the superclass
 
   } // end Initialize
 
