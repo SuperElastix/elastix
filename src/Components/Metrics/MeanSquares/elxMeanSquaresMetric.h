@@ -90,16 +90,6 @@ using namespace itk;
 		/** Typedef for timer. */
 		typedef TimerType::Pointer	TimerPointer;
 
-		/** Execute stuff before registration:
-		 * \li Set the flag to use all samples.
-		 */
-		virtual void BeforeRegistration(void);
-
-		/** Execute stuff before each new pyramid resolution:
-		 * \li Set the number of spatial samples.
-		 */
-		virtual void BeforeEachResolution(void);
-
 		/** Sets up a timer to measure the intialisation time and
 		 * calls the Superclass' implementation.
 		 */
@@ -108,7 +98,7 @@ using namespace itk;
 	protected:
 
 		/** The constructor. */
-		MeanSquaresMetric();
+    MeanSquaresMetric(){};
 		/** The destructor. */
 		virtual ~MeanSquaresMetric() {}
 

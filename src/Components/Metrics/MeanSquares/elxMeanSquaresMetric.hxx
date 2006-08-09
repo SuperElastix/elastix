@@ -8,39 +8,6 @@ namespace elastix
 {
 using namespace itk;
 
-
-	/**
-	 * ********************* Constructor ****************************
-	 */
-
-	template <class TElastix>
-		MeanSquaresMetric<TElastix>::MeanSquaresMetric()
-	{
-	} // end Constructor
-
-
-	/**
-	 * ************************ BeforeRegistration ***************************
-	 */
-	
-	template <class TElastix>
-		void MeanSquaresMetric<TElastix>
-		::BeforeRegistration(void)
-	{
-	} // end BeforeRegistration
-
-
-	/**
-	 * ***************** BeforeEachResolution ***********************
-	 */
-
-	template <class TElastix>
-		void MeanSquaresMetric<TElastix>
-		::BeforeEachResolution(void)
-	{
-	} // end BeforeEachResolution
-	
-
 	/**
 	 * ******************* Initialize ***********************
 	 */
