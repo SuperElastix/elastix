@@ -351,6 +351,11 @@ namespace itk
      *
      *  \alpha MI = 1 / ( \alpha - 1 ) * \log 1/n^\alpha * \sum_{i=1}^n \sum_{p=1}^k
      *              ( jointLength / \sqrt( fixedLength * movingLength ) )^(2 \gamma),
+     *or
+     *  \alpha MI = 1 / ( \alpha - 1 ) * \log 1/n^\alpha * \sum_{i=1}^n
+     *              \frac{ \sum_{p=1}^k jointLength }
+                         {\sqrt{ \sum_{p=1}^k fixedLength \cdot \sum_{p=1}^k movingLength } }
+     *              ^(2 \gamma),
      *
      * where
      *  \alpha is set by the user and refers to \alpha - mutual information
@@ -379,7 +384,7 @@ namespace itk
      * which is just 1 in this case. It is assumed here that the mutual
      * information of two feature sets of equal dimension is calculated.
      */
-    double gamma = 1 - this->m_Alpha;
+    double twoGamma = 2.0 * ( 1.0 - this->m_Alpha );
     for ( unsigned long i = 0; i < this->m_NumberOfPixelsCounted; i++ )
     {
       /** Get the i-th query point. */
@@ -392,15 +397,28 @@ namespace itk
       this->m_BinaryKNNTreeSearcherMovingIntensity->Search( queryM, indicesM, distsM );
       this->m_BinaryKNNTreeSearcherJointIntensity->Search( queryJ, indicesJ, distsJ );
 
-      /** Add the distances between the points to get the total graph length. */
+      /** Add the distances of all neighbours of the query point, for the three graphs. */
+      AccumulateType totalDistsF = NumericTraits< AccumulateType >::Zero;
+      AccumulateType totalDistsM = NumericTraits< AccumulateType >::Zero;
+      AccumulateType totalDistsJ = NumericTraits< AccumulateType >::Zero;
       for ( unsigned int j = 0; j < K; j++ )
       {
-        enumerator = vcl_sqrt( distsJ[ j ] );
-        denominator = vcl_sqrt( vcl_sqrt( distsF[ j ] ) * vcl_sqrt( distsM[ j ] ) );
-        if ( denominator > 1e-14 )
-        {
-          contribution += vcl_pow( enumerator / denominator, 2 * gamma );
-        }
+        //enumerator = vcl_sqrt( distsJ[ j ] );
+        //denominator = vcl_sqrt( vcl_sqrt( distsF[ j ] ) * vcl_sqrt( distsM[ j ] ) );
+        //if ( denominator > 1e-14 )
+        //{
+//          contribution += vcl_pow( enumerator / denominator, 2.0 * gamma );
+  //      }
+        totalDistsJ += vcl_sqrt( distsJ[ j ] );
+        totalDistsF += vcl_sqrt( distsF[ j ] );
+        totalDistsM += vcl_sqrt( distsM[ j ] );
+      } // end loop over the K neighbours
+      
+      /** Calculate the contribution of this query point. */
+      denominator = vcl_sqrt( totalDistsF * totalDistsM );
+      if ( denominator > 1e-14 )
+      {
+        contribution += vcl_pow( totalDistsJ / denominator, twoGamma );
       }
     } // end searching over all query points
 

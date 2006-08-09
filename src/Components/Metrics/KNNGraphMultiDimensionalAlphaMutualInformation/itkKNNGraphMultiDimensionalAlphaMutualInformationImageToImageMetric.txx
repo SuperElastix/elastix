@@ -458,7 +458,7 @@ namespace itk
      * different dimensions of the two feature sets. So,
      *    gamma = ( d1 + d2 ) * ( 1 - alpha ) / 2.
      */
-    double twoGamma = jointSize * ( 1 - this->m_Alpha );
+    double twoGamma = jointSize * ( 1.0 - this->m_Alpha );
     for ( unsigned long i = 0; i < this->m_NumberOfPixelsCounted; i++ )
     {
       /** Get the i-th query point. */
@@ -470,8 +470,8 @@ namespace itk
       this->m_BinaryKNNTreeSearcherFixedIntensity->Search( queryF, indicesF, distsF );
       this->m_BinaryKNNTreeSearcherMovingIntensity->Search( queryM, indicesM, distsM );
       this->m_BinaryKNNTreeSearcherJointIntensity->Search( queryJ, indicesJ, distsJ );
-
-      /** Add the distances between the points to get the total graph length. */
+      
+      /** Add the distances between the points to get the total graph length. *
       for ( unsigned int j = 0; j < K; j++ )
       {
         enumerator = vcl_sqrt( distsJ[ j ] );
@@ -480,9 +480,25 @@ namespace itk
         {
           contribution += vcl_pow( enumerator / denominator, twoGamma );
         }
+      }*/
+      /** Add the distances of all neighbours of the query point, for the three graphs. */
+      AccumulateType totalDistsF = NumericTraits< AccumulateType >::Zero;
+      AccumulateType totalDistsM = NumericTraits< AccumulateType >::Zero;
+      AccumulateType totalDistsJ = NumericTraits< AccumulateType >::Zero;
+      for ( unsigned int j = 0; j < K; j++ )
+      {
+        totalDistsJ += vcl_sqrt( distsJ[ j ] );
+        totalDistsF += vcl_sqrt( distsF[ j ] );
+        totalDistsM += vcl_sqrt( distsM[ j ] );
+      } // end loop over the K neighbours
+      
+      /** Calculate the contribution of this query point. */
+      denominator = vcl_sqrt( totalDistsF * totalDistsM );
+      if ( denominator > 1e-14 )
+      {
+        contribution += vcl_pow( totalDistsJ / denominator, twoGamma );
       }
     } // end searching over all query points
-
 
     /** Calculate the metric value. */
     MeasureType measure = NumericTraits< AccumulateType >::Zero;
