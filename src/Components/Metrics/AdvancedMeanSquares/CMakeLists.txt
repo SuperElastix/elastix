@@ -1,0 +1,10 @@
+
+
+ADD_ELXCOMPONENT( elxAdvancedMeanSquaresMetric
+ elxAdvancedMeanSquaresMetric.h
+ elxAdvancedMeanSquaresMetric.hxx
+ elxAdvancedMeanSquaresMetric.cxx
+ itkAdvancedMeanSquaresImageToImageMetric.h
+ itkAdvancedMeanSquaresImageToImageMetric.hxx )
+
+
