@@ -231,8 +231,8 @@ const ANNdist	ANN_DIST_INF = ANN_DBL_MAX;
 //	strictly positive.
 //----------------------------------------------------------------------
 
-const ANNbool	ANN_ALLOW_SELF_MATCH	= ANNtrue;
-//const ANNbool	ANN_ALLOW_SELF_MATCH	= ANNfalse;
+//const ANNbool	ANN_ALLOW_SELF_MATCH	= ANNtrue;
+const ANNbool	ANN_ALLOW_SELF_MATCH	= ANNfalse;
 
 //----------------------------------------------------------------------
 //	Norms and metrics:
