@@ -282,6 +282,10 @@ using namespace itk;
     {
       this->SetANNBruteForceTree();
     }
+    else
+    {
+      itkExceptionMacro( << "ERROR: there is no tree type \"" << treeType << "\" implemented." );
+    }
 
     /** Get the parameters for the search tree. */
 
@@ -323,6 +327,10 @@ using namespace itk;
     else if ( treeSearchType == "Priority" )
     {
       this->SetANNPriorityTreeSearch( kNearestNeighbours, errorBound );
+    }
+    else
+    {
+      itkExceptionMacro( << "ERROR: there is no tree searcher type \"" << treeSearchType << "\" implemented." );
     }
 
 	} // end BeforeEachResolution

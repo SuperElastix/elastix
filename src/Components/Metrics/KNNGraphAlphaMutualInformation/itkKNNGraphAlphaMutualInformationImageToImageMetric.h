@@ -102,8 +102,18 @@ public:
   /** Set ANNkDTree. */
   void SetANNkDTree( unsigned int bucketSize, std::string splittingRule );
 
+  /** Set ANNkDTree. */
+  void SetANNkDTree( unsigned int bucketSize, std::string splittingRuleFixed,
+    std::string splittingRuleMoving, std::string splittingRuleJoint );
+
   /** Set ANNbdTree. */
   void SetANNbdTree( unsigned int bucketSize, std::string splittingRule, std::string shrinkingRule );
+
+  /** Set ANNbdTree. */
+  void SetANNbdTree( unsigned int bucketSize, std::string splittingRuleFixed,
+    std::string splittingRuleMoving, std::string splittingRuleJoint,
+    std::string shrinkingRuleFixed, std::string shrinkingRuleMoving,
+    std::string shrinkingRuleJoint );
 
   /** Set ANNBruteForceTree. */
   void SetANNBruteForceTree( void );

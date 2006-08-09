@@ -39,6 +39,20 @@ namespace itk
     KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     ::SetANNkDTree( unsigned int bucketSize = 2, std::string splittingRule = "ANN_KD_SL_MIDPT" )
   {
+    this->SetANNkDTree( bucketSize, splittingRule, splittingRule, splittingRule );
+  } // end SetANNkDTree
+
+
+  /**
+	 * ************************ SetANNkDTree *************************
+	 */
+  
+  template <class TFixedImage, class TMovingImage>
+    void
+    KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+    ::SetANNkDTree( unsigned int bucketSize, std::string splittingRuleFixed,
+    std::string splittingRuleMoving, std::string splittingRuleJoint )
+  {
     typename ANNkDTreeType::Pointer tmpPtrF = ANNkDTreeType::New();
     typename ANNkDTreeType::Pointer tmpPtrM = ANNkDTreeType::New();
     typename ANNkDTreeType::Pointer tmpPtrJ = ANNkDTreeType::New();
@@ -47,9 +61,9 @@ namespace itk
     tmpPtrM->SetBucketSize( bucketSize );
     tmpPtrJ->SetBucketSize( bucketSize );
 
-    tmpPtrF->SetSplittingRule( splittingRule );
-    tmpPtrM->SetSplittingRule( splittingRule );
-    tmpPtrJ->SetSplittingRule( splittingRule );
+    tmpPtrF->SetSplittingRule( splittingRuleFixed );
+    tmpPtrM->SetSplittingRule( splittingRuleMoving );
+    tmpPtrJ->SetSplittingRule( splittingRuleJoint );
 
     this->m_BinaryKNNTreeFixedIntensity  = tmpPtrF;
     this->m_BinaryKNNTreeMovingIntensity = tmpPtrM;
@@ -68,6 +82,23 @@ namespace itk
     ::SetANNbdTree( unsigned int bucketSize = 2, std::string splittingRule = "ANN_KD_SL_MIDPT",
     std::string shrinkingRule = "ANN_BD_SIMPLE" )
   {
+    this->SetANNbdTree( bucketSize, splittingRule, splittingRule, splittingRule,
+      shrinkingRule, shrinkingRule, shrinkingRule );
+  } // end SetANNbdTree
+
+
+  /**
+	 * ************************ SetANNbdTree *************************
+	 */
+  
+  template <class TFixedImage, class TMovingImage>
+    void
+    KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+    ::SetANNbdTree( unsigned int bucketSize, std::string splittingRuleFixed,
+    std::string splittingRuleMoving, std::string splittingRuleJoint,
+    std::string shrinkingRuleFixed, std::string shrinkingRuleMoving,
+    std::string shrinkingRuleJoint )
+  {
     typename ANNbdTreeType::Pointer tmpPtrF = ANNbdTreeType::New();
     typename ANNbdTreeType::Pointer tmpPtrM = ANNbdTreeType::New();
     typename ANNbdTreeType::Pointer tmpPtrJ = ANNbdTreeType::New();
@@ -76,13 +107,13 @@ namespace itk
     tmpPtrM->SetBucketSize( bucketSize );
     tmpPtrJ->SetBucketSize( bucketSize );
 
-    tmpPtrF->SetSplittingRule( splittingRule );
-    tmpPtrM->SetSplittingRule( splittingRule );
-    tmpPtrJ->SetSplittingRule( splittingRule );
+    tmpPtrF->SetSplittingRule( splittingRuleFixed );
+    tmpPtrM->SetSplittingRule( splittingRuleMoving );
+    tmpPtrJ->SetSplittingRule( splittingRuleJoint );
 
-    tmpPtrF->SetShrinkingRule( shrinkingRule );
-    tmpPtrM->SetShrinkingRule( shrinkingRule );
-    tmpPtrJ->SetShrinkingRule( shrinkingRule );
+    tmpPtrF->SetShrinkingRule( shrinkingRuleFixed );
+    tmpPtrM->SetShrinkingRule( shrinkingRuleMoving );
+    tmpPtrJ->SetShrinkingRule( shrinkingRuleJoint );
 
     this->m_BinaryKNNTreeFixedIntensity  = tmpPtrF;
     this->m_BinaryKNNTreeMovingIntensity = tmpPtrM;
