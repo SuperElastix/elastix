@@ -84,21 +84,6 @@ public:
   typedef typename Superclass::MovingImageMaskType        MovingImageMaskType;
   typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
   
-  typedef typename MovingImageType::SpacingType           MovingImageSpacingType;
-  typedef typename MovingImageMaskType::OutputVectorType  MovingMaskDerivativeType;
-  typedef MovingImageSpacingType                          MovingRealOffsetType;
-  typedef itk::Neighborhood<
-    MovingRealOffsetType, MovingImageDimension>           MovingMaskNeighborhoodOffsetsType;
-  typedef itk::Neighborhood<
-    double, MovingImageDimension>                         MovingMaskDerivativeOperatorType;
-  typedef itk::FixedArray<
-    MovingMaskNeighborhoodOffsetsType>                    MovingMaskNeighborhoodOffsetsArrayType;
-  typedef itk::FixedArray<
-    MovingMaskDerivativeOperatorType>                     MovingMaskDerivativeOperatorArrayType;
-  typedef itk::DerivativeOperator<
-    double, MovingImageDimension>                         DefaultMovingMaskDerivativeOperatorType;
-
-  
 	/** The fixed image dimension. */
 	itkStaticConstMacro( FixedImageDimension, unsigned int,
 		FixedImageType::ImageDimension );
@@ -106,6 +91,24 @@ public:
 	/** The moving image dimension. */
 	itkStaticConstMacro( MovingImageDimension, unsigned int,
 		MovingImageType::ImageDimension );
+
+  typedef typename MovingImageType::SpacingType           MovingImageSpacingType;
+  typedef typename MovingImageMaskType::OutputVectorType  MovingMaskDerivativeType;
+  typedef MovingImageSpacingType                          MovingRealOffsetType;
+  typedef itk::Neighborhood<
+    MovingRealOffsetType, 
+    itkGetStaticConstMacro(MovingImageDimension)>         MovingMaskNeighborhoodOffsetsType;
+  typedef itk::Neighborhood<
+    double, 
+    itkGetStaticConstMacro(MovingImageDimension)>         MovingMaskDerivativeOperatorType;
+  typedef itk::FixedArray<
+    MovingMaskNeighborhoodOffsetsType>                    MovingMaskNeighborhoodOffsetsArrayType;
+  typedef itk::FixedArray<
+    MovingMaskDerivativeOperatorType>                     MovingMaskDerivativeOperatorArrayType;
+  typedef itk::DerivativeOperator<
+    double, 
+    itkGetStaticConstMacro(MovingImageDimension)>         DefaultMovingMaskDerivativeOperatorType;
+  
 
 	/** Get the value for single valued optimizers. */
 	virtual MeasureType GetValue( const TransformParametersType & parameters ) const;

@@ -94,7 +94,7 @@ namespace itk
 
     if ( this->m_InternalMovingImageMask.IsNull() )
     {
-      BoxType::Pointer box = BoxType::New();
+      typename BoxType::Pointer box = BoxType::New();
 
       /** Determine max derivative operator radius for each dimension */
       SizeType derivopMaxRadius;
