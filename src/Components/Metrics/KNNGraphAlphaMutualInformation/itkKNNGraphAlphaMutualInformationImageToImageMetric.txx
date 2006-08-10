@@ -342,6 +342,13 @@ namespace itk
 			} // end if IsInsideBuffer()
     }
 
+    /** Check if there is enough overlap. */
+    if ( this->m_NumberOfPixelsCounted < size / 4 )
+    {
+      itkExceptionMacro( "Too many samples map outside moving image buffer: "
+        << this->m_NumberOfPixelsCounted << " / " << size << std::endl );
+    }
+
     /** The listSamples are of size sampleContainer->Size(). However, not all of
      * those points made it to the respective list samples. Therefore, we set
      * the actual number of pixels in the sample container, so that the binary
