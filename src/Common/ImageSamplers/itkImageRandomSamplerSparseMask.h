@@ -56,10 +56,10 @@ namespace itk
     typedef typename InputImageType::IndexType    InputImageIndexType;
     typedef typename InputImageType::PointType    InputImagePointType;
 
-    /** The random number generator used to generate random indices */
+    /** The random number generator used to generate random indices. */
     typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
     
-    /** Set/Get the number of samples */
+    /** Set/Get the number of samples. */
     itkGetConstMacro(NumberOfSamples, unsigned long);
     itkSetClampMacro(NumberOfSamples, unsigned long, 1, NumericTraits<unsigned long>::max() );
        

@@ -100,7 +100,8 @@ namespace itk
   {
     Superclass::PrintSelf( os, indent );
 
-    os << indent << "Mask: " << this->m_Mask << std::endl;
+    os << indent << "Mask: " << this->m_Mask.GetPointer() << std::endl;
+
   } // end PrintSelf
 
 

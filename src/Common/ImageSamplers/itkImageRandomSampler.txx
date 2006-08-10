@@ -83,7 +83,7 @@ namespace itk
           /** Check if we are not trying eternally to find a valid point. */
           if ( randIter.IsAtEnd() )
           {
-            /** Squeeze the sample container to the size that is still valid */
+            /** Squeeze the sample container to the size that is still valid. */
             typename ImageSampleContainerType::iterator stlnow = sampleContainer->begin();
             typename ImageSampleContainerType::iterator stlend = sampleContainer->end();
             stlnow += iter.Index();
@@ -115,6 +115,9 @@ namespace itk
     ::PrintSelf( std::ostream& os, Indent indent ) const
   {
     Superclass::PrintSelf( os, indent );
+
+    os << indent << "NumberOfSamples: " << this->m_NumberOfSamples << std::endl;
+
   } // end PrintSelf
 
 

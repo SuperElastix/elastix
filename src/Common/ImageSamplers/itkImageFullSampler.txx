@@ -54,16 +54,16 @@ namespace itk
 			for( iter.GoToBegin(); ! iter.IsAtEnd(); ++iter )
 			{
 				ImageSampleType tempsample;
-				/** Get sampled index */
+				/** Get sampled index. */
 				InputImageIndexType index = iter.GetIndex();
-  			/** Translate index to point */
+  			/** Translate index to point. */
 				inputImage->TransformIndexToPhysicalPoint( index,
 					tempsample.m_ImageCoordinates );
 				if ( mask->IsInside( tempsample.m_ImageCoordinates ) )
 				{
- 				  /** Get sampled image value */
+ 				  /** Get sampled image value. */
 	 			  tempsample.m_ImageValue = iter.Get();
-				  /**  Store in container */
+				  /**  Store in container. */
 				  sampleContainer->push_back(tempsample);
 				} // end if
 			} // end for

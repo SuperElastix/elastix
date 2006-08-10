@@ -60,17 +60,17 @@ namespace itk
     typedef typename ImageSampleType::RealType      ImageSampleValueType;
 
     /** This image sampler samples the image on physical coordinates and thus
-     * needs an interpolator */
+     * needs an interpolator. */
     typedef double                                              CoordRepType;
     typedef InterpolateImageFunction< 
       InputImageType, CoordRepType >                            InterpolatorType;
     typedef BSplineInterpolateImageFunction<
       InputImageType, CoordRepType, double>                     DefaultInterpolatorType;
 
-    /** The random number generator used to generate random coordinates */
+    /** The random number generator used to generate random coordinates. */
     typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
 
-    /** Set/Get the number of samples */
+    /** Set/Get the number of samples. */
     itkGetConstMacro(NumberOfSamples, unsigned long);
     itkSetMacro(NumberOfSamples, unsigned long);
 
@@ -98,7 +98,7 @@ namespace itk
       const InputImagePointType & largestPoint,
       InputImagePointType &       randomPoint);
 
-    typename InterpolatorType::Pointer  m_Interpolator;
+    typename InterpolatorType::Pointer    m_Interpolator;
     typename RandomGeneratorType::Pointer m_RandomGenerator;
             
   private:

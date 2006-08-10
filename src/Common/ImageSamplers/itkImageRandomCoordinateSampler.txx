@@ -45,10 +45,10 @@ namespace itk
     typename MaskType::ConstPointer mask = this->GetMask();
     typename InterpolatorType::Pointer interpolator = this->GetInterpolator();
 
-    /** Set up the interpolator */
+    /** Set up the interpolator. */
     interpolator->SetInputImage( inputImage );
 
-    /** Convert inputImageRegion to bounding box in physical space */
+    /** Convert inputImageRegion to bounding box in physical space. */
     InputImageIndexType smallestIndex = this->GetInputImageRegion().GetIndex();
     InputImageIndexType largestIndex = smallestIndex + this->GetInputImageRegion().GetSize();
     InputImagePointType smallestPoint;
@@ -68,38 +68,38 @@ namespace itk
     /** Fill the sample container. */
     if ( mask.IsNull() )
     {
-      /** Start looping over the sample container */
+      /** Start looping over the sample container. */
       for ( iter = sampleContainer->Begin(); iter != end; ++iter )
       {
-        /** Make a reference to the current sample in the container */
+        /** Make a reference to the current sample in the container. */
         InputImagePointType & samplePoint = (*iter).Value().m_ImageCoordinates;
         ImageSampleValueType & sampleValue = (*iter).Value().m_ImageValue;
-        /** Walk over the image until we find a valid point */
+        /** Walk over the image until we find a valid point. */
         do 
         {
-          /** Generate a point in the input image region */
+          /** Generate a point in the input image region. */
           this->GenerateRandomCoordinate( smallestPoint, largestPoint, samplePoint );
         } while ( !interpolator->IsInsideBuffer( samplePoint ) );
-        /** Compute the value at the point */
+        /** Compute the value at the point. */
         sampleValue = static_cast<ImageSampleValueType>(
           this->m_Interpolator->Evaluate( samplePoint ) );
       } // end for loop
     } // end if no mask
     else
     {
-      /** Update the mask */
+      /** Update the mask. */
       if ( mask->GetSource() )
       {
         mask->GetSource()->Update();
       }
       /** Set up some variable that are used to make sure we are not forever
-       * walking around on this image, trying to look for valid samples */
+       * walking around on this image, trying to look for valid samples. */
       unsigned long numberOfSamplesTried = 0;
       unsigned long maximumNumberOfSamplesToTry = 10 * this->GetNumberOfSamples();
       /** Start looping over the sample container */
       for ( iter = sampleContainer->Begin(); iter != end; ++iter )
       {
-        /** Make a reference to the current sample in the container */
+        /** Make a reference to the current sample in the container. */
         InputImagePointType & samplePoint = (*iter).Value().m_ImageCoordinates;
         ImageSampleValueType & sampleValue = (*iter).Value().m_ImageValue;
         /** Walk over the image until we find a valid point */
@@ -109,19 +109,19 @@ namespace itk
           ++numberOfSamplesTried;
           if ( numberOfSamplesTried > maximumNumberOfSamplesToTry )
           {
-            /** Squeeze the sample container to the size that is still valid */
+            /** Squeeze the sample container to the size that is still valid. */
             typename ImageSampleContainerType::iterator stlnow = sampleContainer->begin();
             typename ImageSampleContainerType::iterator stlend = sampleContainer->end();
             stlnow += iter.Index();
             sampleContainer->erase( stlnow, stlend);
-            /** Throw an error */
+            /** Throw an error. */
             itkExceptionMacro( << "Could not find enough image samples within reasonable time. Probably the mask is too small" );
           }
-          /** Generate a point in the input image region */
+          /** Generate a point in the input image region. */
           this->GenerateRandomCoordinate( smallestPoint, largestPoint, samplePoint );
         } while ( !interpolator->IsInsideBuffer( samplePoint ) || 
                   !mask->IsInside( samplePoint ) );
-        /** Compute the value at the point */
+        /** Compute the value at the point. */
         sampleValue = static_cast<ImageSampleValueType>( 
           this->m_Interpolator->Evaluate( samplePoint ) );
       } // end for loop
@@ -144,9 +144,9 @@ namespace itk
   {
     for ( unsigned int i = 0; i < InputImageDimension; ++i)
     {
-      randomPoint[i] = static_cast<InputImagePointValueType>( 
+      randomPoint[ i ] = static_cast<InputImagePointValueType>( 
         this->m_RandomGenerator->GetUniformVariate(
-        smallestPoint[i], largestPoint[i] ) );
+        smallestPoint[ i ], largestPoint[ i ] ) );
     }
   } // end GenerateRandomCoordinate   
 
@@ -161,8 +161,12 @@ namespace itk
     ::PrintSelf( std::ostream& os, Indent indent ) const
   {
     Superclass::PrintSelf( os, indent );
-  } // end PrintSelf
 
+    os << indent << "NumberOfSamples: " << this->m_NumberOfSamples << std::endl;
+    os << indent << "Interpolator: " << this->m_Interpolator.GetPointer() << std::endl;
+    os << indent << "RandomGenerator: " << this->m_RandomGenerator.GetPointer() << std::endl;
+
+  } // end PrintSelf
 
 
 } // end namespace itk
