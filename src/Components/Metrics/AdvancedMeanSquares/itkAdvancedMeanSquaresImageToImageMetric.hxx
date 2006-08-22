@@ -227,7 +227,7 @@ namespace itk
       double & value,
       MovingImageMaskDerivativeType & derivative) const
   {
-    typedef MovingImageMaskDerivativeType::ValueType DerivativeValueType;
+    typedef typename MovingImageMaskDerivativeType::ValueType DerivativeValueType;
     
     /** NB: a spelling error in the itkImageFunction class! Continous... */
     MovingImageContinuousIndexType cindex;
