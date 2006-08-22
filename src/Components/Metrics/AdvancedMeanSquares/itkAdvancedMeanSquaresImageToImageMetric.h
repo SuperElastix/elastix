@@ -4,7 +4,8 @@
 
 #include "itkImageToImageMetricWithSampling.h"
 #include "itkDerivativeOperator.h"
-
+#include "itkBSplineInterpolateImageFunction.h"
+#include "itkImage.h"
 
 namespace itk
 {
@@ -76,14 +77,16 @@ public:
   typedef typename Superclass::OutputPointType		      OutputPointType;
   typedef typename Superclass::ImageSamplerType         ImageSamplerType;
   typedef typename Superclass::ImageSamplerPointer      ImageSamplerPointer;
-  typedef typename Superclass::ImageSampleContainerType      ImageSampleContainerType;
-  typedef typename Superclass::ImageSampleContainerPointer   ImageSampleContainerPointer;
+  typedef typename 
+    Superclass::ImageSampleContainerType                ImageSampleContainerType;
+  typedef typename 
+    Superclass::ImageSampleContainerPointer             ImageSampleContainerPointer;
+  typedef typename Superclass::FixedImageMaskType       FixedImageMaskType;
+  typedef typename Superclass::MovingImageMaskType      MovingImageMaskType;
   
-  typedef typename Superclass::FixedImageMaskType         FixedImageMaskType;
-  typedef typename Superclass::FixedImageMaskPointer      FixedImageMaskPointer;
-  typedef typename Superclass::MovingImageMaskType        MovingImageMaskType;
-  typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
-  
+  typedef typename 
+    Superclass::CoordinateRepresentationType            CoordinateRepresentationType;
+     
 	/** The fixed image dimension. */
 	itkStaticConstMacro( FixedImageDimension, unsigned int,
 		FixedImageType::ImageDimension );
@@ -92,24 +95,19 @@ public:
 	itkStaticConstMacro( MovingImageDimension, unsigned int,
 		MovingImageType::ImageDimension );
 
+  typedef unsigned char                                   InternalMaskPixelType;
+  typedef typename itk::Image<
+    InternalMaskPixelType, MovingImageDimension >         InternalMovingImageMaskType;
   typedef typename MovingImageType::SpacingType           MovingImageSpacingType;
-  typedef typename MovingImageMaskType::OutputVectorType  MovingMaskDerivativeType;
-  typedef MovingImageSpacingType                          MovingRealOffsetType;
-  typedef itk::Neighborhood<
-    MovingRealOffsetType, 
-    itkGetStaticConstMacro(MovingImageDimension)>         MovingMaskNeighborhoodOffsetsType;
-  typedef itk::Neighborhood<
-    double, 
-    itkGetStaticConstMacro(MovingImageDimension)>         MovingMaskDerivativeOperatorType;
-  typedef itk::FixedArray<
-    MovingMaskNeighborhoodOffsetsType>                    MovingMaskNeighborhoodOffsetsArrayType;
-  typedef itk::FixedArray<
-    MovingMaskDerivativeOperatorType>                     MovingMaskDerivativeOperatorArrayType;
-  typedef itk::DerivativeOperator<
-    double, 
-    itkGetStaticConstMacro(MovingImageDimension)>         DefaultMovingMaskDerivativeOperatorType;
-  
-
+  typedef itk::BSplineInterpolateImageFunction<
+    InternalMovingImageMaskType,
+    CoordinateRepresentationType,
+    double >                                              MovingImageMaskInterpolatorType;
+  typedef typename 
+    MovingImageMaskInterpolatorType::CovariantVectorType  MovingImageMaskDerivativeType;
+  typedef typename 
+    MovingImageMaskInterpolatorType::ContinuousIndexType  MovingImageContinuousIndexType;
+    
 	/** Get the value for single valued optimizers. */
 	virtual MeasureType GetValue( const TransformParametersType & parameters ) const;
 
@@ -124,58 +122,37 @@ public:
   /** Initialize the Metric by making sure that all the components
    *  are present and plugged together correctly.
    * \li set the internal moving mask
-   * \li set the moving mask derivative scales
    */
   virtual void Initialize(void) throw ( ExceptionObject );
 
   /** Get the internal moving image mask. Equals the movingimage mask if set, and 
    * otherwise it's a box with size equal to the moving image's largest possible region */
-  itkGetConstObjectMacro(InternalMovingImageMask, MovingImageMaskType);
+  itkGetConstObjectMacro(InternalMovingImageMask, InternalMovingImageMaskType);
 
-  /** Set an operator used to take the derivative of the moving mask;
-   * for each dimension
-   * Watch out, in the Initialize method the derivative operators are 
-   * replaced by the default operator, currently...
-   * This is maybe not really convenient.
-   */
-  virtual void SetMovingMaskDerivativeOperator(unsigned int dim, 
-    const MovingMaskDerivativeOperatorType & op)
-  { 
-    this->m_MovingMaskDerivativeOperatorArray[dim] = op;
-  };
-
-  /** Get the operator used to take the derivative of the moving mask;
-   * for each dimension */
-  virtual const MovingMaskDerivativeOperatorType & GetMovingMaskDerivativeOperator(
-    unsigned int dim) const
-  {
-    return this->m_MovingMaskDerivativeOperatorArray[dim];
-  };
-
+  /** Get the interpolator of the internal moving image mask */
+  itkGetConstObjectMacro(MovingImageMaskInterpolator, MovingImageMaskInterpolatorType);
+  
 protected:
   AdvancedMeanSquaresImageToImageMetric();
   virtual ~AdvancedMeanSquaresImageToImageMetric() {};
 	void PrintSelf( std::ostream& os, Indent indent ) const;
-
-  /** A copy of the mask, that is set to a boxspatialobject if the 
-   * user has not entered any mask */
-  MovingImageMaskPointer m_InternalMovingImageMask;
-
-  /** The operators that are used to take the derivative of the moving mask */
-  MovingMaskDerivativeOperatorArrayType   m_MovingMaskDerivativeOperatorArray;
-  MovingMaskNeighborhoodOffsetsArrayType  m_MovingMaskNeighborhoodOffsetsArray;
   
   /** Estimate value and spatial derivative of internal moving mask */
   virtual void EvaluateMovingMaskValueAndDerivative(
     const OutputPointType & point,
     double & value,
-    MovingMaskDerivativeType & derivative) const;
+    MovingImageMaskDerivativeType & derivative) const;
+  
+  /** Estimate value of internal moving mask */
+  virtual void EvaluateMovingMaskValue(
+    const OutputPointType & point,
+    double & value ) const;
 
   /** Functions called from Initialize, to split up that function a bit. */
-  virtual void InitializeDerivativeOperators(void);
   virtual void InitializeInternalMasks(void);
-  virtual void InitializeNeighborhoodOffsets(void);
 
+  typename InternalMovingImageMaskType::Pointer      m_InternalMovingImageMask;
+  typename MovingImageMaskInterpolatorType::Pointer  m_MovingImageMaskInterpolator;
 
 private:
   AdvancedMeanSquaresImageToImageMetric(const Self&); //purposely not implemented

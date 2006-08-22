@@ -2,7 +2,11 @@
 #define _itkAdvancedMeanSquaresImageToImageMetric_txx
 
 #include "itkAdvancedMeanSquaresImageToImageMetric.h"
-#include "itkBoxSpatialObject.h"
+#include "itkImageRegionExclusionIteratorWithIndex.h"
+#include "itkImageRegionIteratorWithIndex.h"
+#include "itkBinaryErodeImageFilter.h"
+#include "itkBinaryBallStructuringElement.h"
+
 
 
 namespace itk
@@ -19,6 +23,10 @@ namespace itk
     //this->ComputeGradientOff();
 
     this->m_InternalMovingImageMask = 0;
+    this->m_MovingImageMaskInterpolator = 
+      MovingImageMaskInterpolatorType::New();
+    this->m_MovingImageMaskInterpolator->SetSplineOrder(2);
+    
     
 	} // end constructor
 
@@ -34,41 +42,11 @@ namespace itk
   {
     /** Initialize transform, interpolator, etc. */
     Superclass::Initialize();
-
-    /** Initialize the derivative operators */
-    this->InitializeDerivativeOperators();
-
+    
     /** Initialize the internal moving image mask */
     this->InitializeInternalMasks();
     
-    /** Prepare some stuff for computing derivatives on the internal masks */
-    this->InitializeNeighborhoodOffsets();
-    
   } // end Initialize
-
-
-  /**
-	 * ********************* InitializeDerivativeOperators *****************
-	 */
-
-  template <class TFixedImage, class TMovingImage>
-    void
-    AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-    ::InitializeDerivativeOperators(void)
-  {
-    MovingImageSpacingType  spacing = this->GetMovingImage()->GetSpacing();
-
-    DefaultMovingMaskDerivativeOperatorType defaultDerivativeOperator;
-    defaultDerivativeOperator.SetOrder(1);
-    for (unsigned int i = 0; i < MovingImageDimension; ++i)
-    {
-      defaultDerivativeOperator.SetDirection(i);
-      defaultDerivativeOperator.CreateDirectional();
-      defaultDerivativeOperator.FlipAxes();
-      defaultDerivativeOperator.ScaleCoefficients( 1.0 / spacing[i] );
-      this->SetMovingMaskDerivativeOperator(i, defaultDerivativeOperator );
-    }
-  } // end InitializeDerivativeOperator
 
 
   /**
@@ -82,120 +60,158 @@ namespace itk
   {
     /** Initialize the internal moving image mask */
 
-    typedef itk::BoxSpatialObject<MovingImageDimension>          BoxType;
-    typedef typename BoxType::SizeType                           BoxSizeType;
-    typedef typename BoxType::TransformType                      SpatialObjectTransformType;
-    typedef typename SpatialObjectTransformType::OffsetType      SpatialObjectOffsetType;
-    typedef typename MovingImageType::PointType                  MovingImageOriginType;
-    typedef typename MovingMaskDerivativeOperatorType::SizeType  SizeType;
-    
-    this->m_InternalMovingImageMask = 
-      const_cast<MovingImageMaskType *>( this->GetMovingImageMask() );    
+    typedef typename MovingImageType::PointType                  MovingOriginType;
+    typedef typename MovingImageType::SizeType                   MovingSizeType;
+    typedef typename MovingImageType::IndexType                  MovingIndexType;
+    typedef typename MovingImageType::RegionType                 MovingRegionType;
+    typedef itk::ImageRegionExclusionIteratorWithIndex<
+      InternalMovingImageMaskType>                               MovingEdgeIteratorType;
+    typedef itk::ImageRegionIteratorWithIndex<
+      InternalMovingImageMaskType>                               MovingIteratorType;
+    typedef itk::BinaryBallStructuringElement<
+      InternalMaskPixelType, MovingImageDimension >              ErosionKernelType;
+    typedef itk::BinaryErodeImageFilter<
+      InternalMovingImageMaskType,
+      InternalMovingImageMaskType, 
+      ErosionKernelType >                                        ErodeImageFilterType;
+      
+    this->m_InternalMovingImageMask = InternalMovingImageMaskType::New();
+    this->m_InternalMovingImageMask->SetRegions( 
+      this->GetMovingImage()->GetLargestPossibleRegion() );
+    this->m_InternalMovingImageMask->Allocate();
+    this->m_InternalMovingImageMask->SetOrigin(
+      this->GetMovingImage()->GetOrigin() );
+    this->m_InternalMovingImageMask->SetSpacing(
+      this->GetMovingImage()->GetSpacing() );
 
-    if ( this->m_InternalMovingImageMask.IsNull() )
+    /** Radius to erode masks */
+    const unsigned int radius = 2;
+
+    /** Determine inner region */
+    MovingRegionType innerRegion =
+      this->m_InternalMovingImageMask->GetLargestPossibleRegion();
+    for (unsigned int i=0; i < MovingImageDimension; ++i)
     {
-      typename BoxType::Pointer box = BoxType::New();
-
-      /** Determine max derivative operator radius for each dimension */
-      SizeType derivopMaxRadius;
-      derivopMaxRadius.Fill(0);
-      /** Loop over all derivative operators */
-      for ( unsigned int d1 = 0; d1 < MovingImageDimension; ++d1)
+      if ( innerRegion.GetSize()[i] >= 2*radius )
       {
-        /** Loop over the dimensions of this derivative operator */
-        for ( unsigned int d2 = 0; d2 < MovingImageDimension; ++d2)
-        {
-          const unsigned int derivopRadius_d2 = static_cast<unsigned int>(
-            this->GetMovingMaskDerivativeOperator(d1).GetRadius(d2) );
-          derivopMaxRadius[d2] = vnl_math_max( 
-            derivopRadius_d2, static_cast<unsigned int>(derivopMaxRadius[d2]) );
-        }
+        /** region is large enough to crop; adjust size and index */
+        innerRegion.SetSize( i, innerRegion.GetSize()[i] - 2*radius );
+        innerRegion.SetIndex( i, innerRegion.GetIndex()[i] + radius );
       }
+      else
+      {
+         innerRegion.SetSize( i, 0);
+      }
+    }
+      
+    if ( this->GetMovingImageMask() == 0 )
+    {
+      /** Fill the internal moving mask with ones */
+      this->m_InternalMovingImageMask->FillBuffer(
+        itk::NumericTraits<InternalMaskPixelType>::One );
     
-      /** define the box its size and position */
-      SizeType movingImageSize =
-        this->GetMovingImage()->GetLargestPossibleRegion().GetSize();
-      BoxSizeType boxSize;
-      SpatialObjectOffsetType offset; 
-      MovingImageOriginType   origin = this->GetMovingImage()->GetOrigin(); 
-      MovingImageSpacingType  spacing = this->GetMovingImage()->GetSpacing(); 
-      for( unsigned int d=0; d < MovingImageDimension; d++) 
-      { 
-        /** Size is a continuous offset; points on the edge are considered Inside */
-        boxSize[d] = movingImageSize[d] - 2 * derivopMaxRadius[d] - 1;
-        offset[d] = origin[d] + derivopMaxRadius[d] * spacing[d]; 
-      } 
-      box->SetSize( boxSize );
-      box->SetSpacing( spacing.GetDataPointer() );
-      box->GetIndexToObjectTransform()->SetOffset( offset );
-      box->ComputeObjectToWorldTransform(); 
-
-      /** Is this necessary? I copied it from the SetImage implementation of ImageSpatialObject */
-      box->ComputeBoundingBox(); 
-
-      /** Assign the box to the m_InternalMovingImageMask */
-      this->m_InternalMovingImageMask = box.GetPointer();
-
-      //test: 
-      OutputPointType midden;
-      OutputPointType neterin;
-      OutputPointType neteruit;
-      OutputPointType neternietuit;
-      midden.Fill(128.0);
-      neterin.Fill(1.0);
-      neteruit.Fill(255.0);
-      neternietuit.Fill(254.0);
-
+      MovingEdgeIteratorType edgeIterator( this->m_InternalMovingImageMask, 
+        this->m_InternalMovingImageMask->GetLargestPossibleRegion() );
+      edgeIterator.SetExclusionRegion( innerRegion );
+      
+      /** Set the edges to zero */
+      for( edgeIterator.GoToBegin(); ! edgeIterator.IsAtEnd(); ++ edgeIterator )
+      {
+        edgeIterator.Value() = itk::NumericTraits<InternalMaskPixelType>::Zero;
+      }
+      
     } // end if no moving mask
+    else
+    {
+      /** Fill the internal moving mask with zeros */
+      this->m_InternalMovingImageMask->FillBuffer(
+        itk::NumericTraits<InternalMaskPixelType>::Zero );
 
-    
+      MovingIteratorType iterator( this->m_InternalMovingImageMask, innerRegion);
+      OutputPointType point;
+
+      /** Set the pixel 1 if inside the mask and to 0 if outside */
+      for( iterator.GoToBegin(); ! iterator.IsAtEnd(); ++ iterator )
+      {
+        const MovingIndexType & index = iterator.GetIndex();
+        this->m_InternalMovingImageMask->TransformIndexToPhysicalPoint(index, point);
+        iterator.Value() = static_cast<InternalMaskPixelType>(
+          this->m_MovingImageMask->IsInside(point) );
+      }
+
+      /** Erode it with a radius of 2 */
+      typename InternalMovingImageMaskType::Pointer tempImage = 0;
+      ErosionKernelType kernel;
+      kernel.SetRadius(radius);
+      kernel.CreateStructuringElement();
+      typename ErodeImageFilterType::Pointer eroder = ErodeImageFilterType::New();
+      eroder->SetKernel( kernel );
+      eroder->SetForegroundValue( itk::NumericTraits< InternalMaskPixelType >::One  );
+	    eroder->SetBackgroundValue( itk::NumericTraits< InternalMaskPixelType >::Zero );
+      eroder->SetInput( this->m_InternalMovingImageMask );
+      eroder->Update();
+      tempImage = eroder->GetOutput();
+      tempImage->DisconnectPipeline();
+      this->m_InternalMovingImageMask = tempImage;
+        
+    }
+        
+    /** Set the internal mask into the interpolator */
+    this->m_MovingImageMaskInterpolator->SetInputImage( this->m_InternalMovingImageMask );
+
+    //test: 
+    /**OutputPointType midden;
+    OutputPointType neterin;
+    OutputPointType neteruit;
+    OutputPointType neternietuit;
+    midden.Fill(128.0);
+    neterin.Fill(4.0);
+    neteruit.Fill(253.0);
+    neternietuit.Fill(251.0);
+
+    double tempje;
+    MovingImageMaskDerivativeType deriv;
+    this->EvaluateMovingMaskValueAndDerivative(midden, tempje, deriv);
+    std::cout << "midden: " << tempje << " " << deriv << std::endl;
+    this->EvaluateMovingMaskValueAndDerivative(neterin, tempje, deriv);
+    std::cout << "neterin: " << tempje << " " << deriv << std::endl;
+    this->EvaluateMovingMaskValueAndDerivative(neteruit, tempje, deriv);
+    std::cout << "neteruit: " << tempje << " " << deriv << std::endl;
+    this->EvaluateMovingMaskValueAndDerivative(neternietuit, tempje, deriv);
+    std::cout << "neternietuit: " << tempje << " " << deriv << std::endl;
+*/
 
   } // end InitializeInternalMasks
 
 
   /**
-	 * ********************* InitializeNeighborhoodOffsets *********************
-   * Prepare stuff for computing derivatives on the moving mask
-	 */
+	 * **************** EvaluateMovingMaskValue *******************
+   * Estimate value of internal moving mask 
+   */
 
-  template <class TFixedImage, class TMovingImage>
-    void
-    AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-    ::InitializeNeighborhoodOffsets(void)
+	template < class TFixedImage, class TMovingImage> 
+		void
+		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+    ::EvaluateMovingMaskValue(
+      const OutputPointType & point,
+      double & value) const
   {
+    /** NB: a spelling error in the itkImageFunction class! Continous... */
+    MovingImageContinuousIndexType cindex;
+    this->m_MovingImageMaskInterpolator->ConvertPointToContinousIndex( point, cindex);
 
-    typedef typename MovingMaskDerivativeOperatorType::OffsetType 
-      MovingDiscreteOffsetType;
-    MovingRealOffsetType spacing = this->GetMovingImage()->GetSpacing();
-
-    for (unsigned int d = 0; d < MovingImageDimension; ++d)
+    /** Compute the value of the mask */
+    if ( this->m_MovingImageMaskInterpolator->IsInsideBuffer( cindex ) )
     {
-      /** For readability: some aliases */
-      MovingMaskNeighborhoodOffsetsType & realoffsets =
-        this->m_MovingMaskNeighborhoodOffsetsArray[d];
-      const MovingMaskDerivativeOperatorType & derivop =
-        this->GetMovingMaskDerivativeOperator(d);
-              
-      /** Set the size of the realoffsets neighborhood */
-      realoffsets.SetRadius( derivop.GetRadius() );
-      
-      /** populate the realoffsets neighborhood with physical offsets 
-       * to the center element. */
-      for (unsigned int i = 0; i < realoffsets.Size(); ++i)
-      {
-        /** The discrete offset of this neighborhood element */
-        const MovingDiscreteOffsetType & discreteOffset = 
-          derivop.GetOffset(i);
-        /** Convert it to an offset in physical spacing */
-        for (unsigned j = 0; j < MovingImageDimension; ++j)
-        {
-          realoffsets[i][j] = discreteOffset[j] * spacing[j];
-        } // end for j
-      } // end for i
-
-    } // end for d
-
-  } // end InitializeNeighborhoodOffsets
+      value = static_cast<double>(
+        this->m_MovingImageMaskInterpolator->EvaluateAtContinuousIndex(cindex) );
+    }
+    else
+    {
+      value = 0.0;
+    }
+  
+  } // end EvaluateMovingMaskValue
 
 
 	/**
@@ -209,37 +225,28 @@ namespace itk
     ::EvaluateMovingMaskValueAndDerivative(
       const OutputPointType & point,
       double & value,
-      MovingMaskDerivativeType & derivative) const
+      MovingImageMaskDerivativeType & derivative) const
   {
-    /** get the internal mask */
-    typename MovingImageMaskType::ConstPointer movingMask =
-      this->GetInternalMovingImageMask();
-
-    /** Compute the value of the mask */
-    movingMask->ValueAt(point, value);
-
-    /** compute the spatial derivative in each dimension */
-    derivative.Fill(0.0);
-    for ( unsigned int d = 0; d < MovingImageDimension; ++d)
-    {
-      /** For readability: some aliases */
-      const MovingMaskNeighborhoodOffsetsType & realoffsets =
-        this->m_MovingMaskNeighborhoodOffsetsArray[d];
-      const MovingMaskDerivativeOperatorType & derivop =
-        this->GetMovingMaskDerivativeOperator(d);
-      
-      /** Calculate inner product of mask neighbourhood with derivative operator */
-      double derivative_d = 0.0;
-      for (unsigned int i = 0; i < realoffsets.Size(); ++i)
-      {
-         OutputPointType currentPoint = point + realoffsets[i];
-         double currentValue;
-         movingMask->ValueAt(currentPoint, currentValue);
-         derivative_d += currentValue * derivop[i];
-      }  
-      derivative[d] = derivative_d;      
-    }
+    typedef MovingImageMaskDerivativeType::ValueType DerivativeValueType;
     
+    /** NB: a spelling error in the itkImageFunction class! Continous... */
+    MovingImageContinuousIndexType cindex;
+    this->m_MovingImageMaskInterpolator->ConvertPointToContinousIndex( point, cindex);
+    
+    /** Compute the value and derivative of the mask */
+    if ( this->m_MovingImageMaskInterpolator->IsInsideBuffer( cindex ) )
+    {
+      value = static_cast<double>(
+        this->m_MovingImageMaskInterpolator->EvaluateAtContinuousIndex(cindex) );
+      derivative = 
+        this->m_MovingImageMaskInterpolator->EvaluateDerivativeAtContinuousIndex(cindex);
+    }
+    else
+    {
+      value = 0.0;
+      derivative.Fill( itk::NumericTraits<DerivativeValueType>::Zero );
+    }
+  
   } // end EvaluateMovingMaskValueAndDerivative
 
 
@@ -272,6 +279,7 @@ namespace itk
 		this->SetTransformParameters( parameters );
 
 		this->m_NumberOfPixelsCounted = 0;
+    double normalizationFactor = 0.0;
 
 		/** Update the imageSampler and get a handle to the sample container. */
     this->GetImageSampler()->Update();
@@ -282,27 +290,28 @@ namespace itk
     typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
     typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
 
-		/** Create variables to store intermediate results. */
-		InputPointType  inputPoint;
-		OutputPointType transformedPoint;
-
 		MeasureType measure = NumericTraits< MeasureType >::Zero;
 
 		/** Loop over the fixed image samples to calculate the mean squares. */
     for ( iter = begin; iter != end; ++iter )
 		{
 			/** Get the current inputpoint. */
-      inputPoint = (*iter).Value().m_ImageCoordinates;
+      const InputPointType & inputPoint = (*iter).Value().m_ImageCoordinates;
 
 			/** Transform the inputpoint to get the transformed point. */
-			transformedPoint = this->m_Transform->TransformPoint( inputPoint );
+			const OutputPointType transformedPoint = this->m_Transform->TransformPoint( inputPoint );
+
+      double movingMaskValue = 0.0;
+      this->EvaluateMovingMaskValue( transformedPoint, movingMaskValue );
+      const double smallNumber1 = 1e-10;
 
 			/** Inside the moving image mask? */
-			if ( this->m_MovingImageMask && !this->m_MovingImageMask->IsInside( transformedPoint ) )
+			if ( movingMaskValue < smallNumber1 )
 			{
+        /** no? then go to next sample */
 				continue;
 			}
-
+			
 			/** In this if-statement the actual calculation of mean squares is done. */
 			if ( this->m_Interpolator->IsInsideBuffer( transformedPoint ) )
 			{
@@ -312,7 +321,8 @@ namespace itk
 
 				/** The difference squared. */
 				const RealType diff = movingValue - fixedValue; 
-				measure += diff * diff;
+				measure += movingMaskValue * diff * diff;
+        normalizationFactor += movingMaskValue;
 
 				/** Update the NumberOfPixelsCounted. */
 				this->m_NumberOfPixelsCounted++;
@@ -321,19 +331,15 @@ namespace itk
 
 		} // end for loop over the image sample container
 
-		/** Calculate the measure value. */
-		if ( this->m_NumberOfPixelsCounted > 0 )
+    /** Calculate the value */
+    const double smallNumber2 = 1e-10;
+		if ( this->m_NumberOfPixelsCounted > 0 &&  normalizationFactor > smallNumber2 )
 		{
-			measure /= this->m_NumberOfPixelsCounted;
-		}
+			measure /= normalizationFactor;
+    }
 		else
 		{
 			measure = NumericTraits< MeasureType >::Zero;
-		}
-
-		/** Throw exceptions if necessary. */
-		if ( this->m_NumberOfPixelsCounted == 0 )
-		{
 			itkExceptionMacro( << "All the points mapped outside the moving image" );
 		}
 
@@ -426,7 +432,7 @@ namespace itk
 			const OutputPointType transformedPoint = this->m_Transform->TransformPoint( inputPoint );
 
       double movingMaskValue = 0.0;
-      MovingMaskDerivativeType movingMaskDerivative; 
+      MovingImageMaskDerivativeType movingMaskDerivative; 
       this->EvaluateMovingMaskValueAndDerivative(
         transformedPoint, movingMaskValue, movingMaskDerivative);
       const double movingMaskDerivativeMagnitude = movingMaskDerivative.GetNorm();
