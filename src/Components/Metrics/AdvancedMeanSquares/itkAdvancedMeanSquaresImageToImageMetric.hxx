@@ -26,6 +26,8 @@ namespace itk
     this->m_MovingImageMaskInterpolator = 
       MovingImageMaskInterpolatorType::New();
     this->m_MovingImageMaskInterpolator->SetSplineOrder(2);
+
+    this->m_BSplineInterpolator = 0;
     
     
 	} // end constructor
@@ -40,6 +42,32 @@ namespace itk
     AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
     ::Initialize(void) throw ( ExceptionObject )
   {
+
+    /** Check if the interpolator can be cast to a bspline interpolator */
+    if ( this->m_Interpolator.IsNotNull() )
+    {
+      BSplineInterpolatorType * testptr = 
+        dynamic_cast< BSplineInterpolatorType * >(
+        this->m_Interpolator.GetPointer() );
+      if ( testptr )
+      {
+        this->m_BSplineInterpolator = testptr;
+        this->ComputeGradientOff();
+      }
+      else
+      {
+        this->m_BSplineInterpolator = 0;
+        this->ComputeGradientOn();
+      }
+    }
+    else
+    {
+      /** An exception will be thrown anyway in the superclass:Initialize()
+       * but just to be sure: */
+      this->m_BSplineInterpolator = 0;
+      this->ComputeGradientOn();
+    }
+
     /** Initialize transform, interpolator, etc. */
     Superclass::Initialize();
     
@@ -180,7 +208,7 @@ namespace itk
     this->EvaluateMovingMaskValueAndDerivative(neternietuit, tempje, deriv);
     std::cout << "neternietuit: " << tempje << " " << deriv << std::endl;
 */
-
+ 
   } // end InitializeInternalMasks
 
 
@@ -246,8 +274,62 @@ namespace itk
       value = 0.0;
       derivative.Fill( itk::NumericTraits<DerivativeValueType>::Zero );
     }
-  
+   
   } // end EvaluateMovingMaskValueAndDerivative
+
+
+	/**
+	 * ************** EvaluateMovingImageValueAndDerivative *****************
+	 */
+
+	template < class TFixedImage, class TMovingImage> 
+		bool
+		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+		::EvaluateMovingImageValueAndDerivative(
+      const OutputPointType & point,
+      RealType & value,
+      GradientPixelType & derivative) const
+  {
+
+    /** NB: a spelling error in the itkImageFunction class! Continous... */
+    MovingImageContinuousIndexType cindex;
+    this->m_Interpolator->ConvertPointToContinousIndex( point, cindex);
+    
+    /** Compute the value and derivative of the mask */
+    if ( this->m_Interpolator->IsInsideBuffer( cindex ) )
+    {
+      /** Evaluate the value */
+      value  = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
+  
+      /** Evaluate the derivative */
+      if ( this->m_BSplineInterpolator.IsNotNull() )
+      {
+        /** Use the BSplineInterpolator */
+        derivative = 
+          this->m_BSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
+      }
+      else
+      {
+        /** Use the precomputed gradient image */
+        /** Get the gradient by NearestNeighboorInterpolation:
+			  * which is equivalent to round up the point components.
+        * The itk::ImageFunction provides a function to do this.
+        */
+		    typename MovingImageType::IndexType	mappedIndex;
+			  this->m_Interpolator->ConvertContinuousIndexToNearestIndex( cindex, mappedIndex );
+			  derivative = this->GetGradientImage()->GetPixel( mappedIndex );
+      }
+
+      /** the point was inside the buffer; value and derivative are valid. */
+      return true;
+    }
+    else
+    {
+      /** do not change the value or derivative; just return false */
+      return false;
+    }
+
+  } // end EvaluateMovingImageValueAndDerivative
 
 
 	/**
@@ -384,12 +466,6 @@ namespace itk
     typedef typename DerivativeType::ValueType        DerivativeValueType;
     typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
  
-		/** Some sanity checks. */
-		if ( !this->GetGradientImage() )
-		{
-			itkExceptionMacro( << "The gradient image is null, maybe you forgot to call Initialize()" );
-		}
-
 		/** Make sure the transform parameters are up to date. */
 		this->SetTransformParameters( parameters );
 		const unsigned int ParametersDimension = this->GetNumberOfParameters();
@@ -409,9 +485,6 @@ namespace itk
 		/** Some typedefs. */
 		typedef typename OutputPointType::CoordRepType	CoordRepType;
 		
-    /** Create variable to store intermediate results. */
-		typename MovingImageType::IndexType	mappedIndex;
-
 		MeasureType measure = NumericTraits< MeasureType >::Zero;
 		
 		derivative = DerivativeType( ParametersDimension );
@@ -444,13 +517,18 @@ namespace itk
 				continue;
 			}
 
-			/** In this if-statement the actual calculation of mean squares is done. */
-			if ( this->m_Interpolator->IsInsideBuffer( transformedPoint ) )
-			{
-				/** Get the fixedValue = f(x) and the movingValue = m(x+u(x)). */
-				const RealType movingValue  = this->m_Interpolator->Evaluate( transformedPoint );
-        const RealType & fixedValue = (*iter).Value().m_ImageValue;
+      RealType movingValue;
+      GradientPixelType gradient;
 
+			/** In this if-block the actual calculation of mean squares is done. */
+      /** Try to get the movingValue = m(x+u(x)) and the derivative at that point;
+       * returns false if the point is not inside the image buffer. */
+			if ( this->EvaluateMovingImageValueAndDerivative(
+          transformedPoint, movingValue, gradient) )
+			{
+				/** Get the fixedValue = f(x) */
+        const RealType & fixedValue = (*iter).Value().m_ImageValue;
+ 
 				/** Get the Jacobian. */
 				const TransformJacobianType & jacobian =
 					this->m_Transform->GetJacobian( inputPoint ); 
@@ -460,14 +538,7 @@ namespace itk
         const RealType diffdiff = diff * diff;
 				measure += movingMaskValue * diffdiff;
         normalizationFactor += movingMaskValue;
-
-				/** Get the gradient by NearestNeighboorInterpolation:
-				 * which is equivalent to round up the point components.
-         * The itk::ImageFunction provides a function to do this.
-         */
-				this->m_Interpolator->ConvertPointToNearestIndex( transformedPoint, mappedIndex );
-				const GradientPixelType gradient = this->GetGradientImage()->GetPixel( mappedIndex );
-        
+	      
 				/** Calculate the contributions to the derivatives with respect to each parameter. */
         const RealType movmask_diff_2 = movingMaskValue * diff * 2.0;
 				for ( unsigned int par = 0; par < ParametersDimension; par++ )

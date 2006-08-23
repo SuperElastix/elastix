@@ -5,6 +5,7 @@
 #include "itkImageToImageMetricWithSampling.h"
 #include "itkDerivativeOperator.h"
 #include "itkBSplineInterpolateImageFunction.h"
+#include "itkBSplineResampleImageFunction.h"
 #include "itkImage.h"
 
 namespace itk
@@ -86,7 +87,7 @@ public:
   
   typedef typename 
     Superclass::CoordinateRepresentationType            CoordinateRepresentationType;
-     
+ 
 	/** The fixed image dimension. */
 	itkStaticConstMacro( FixedImageDimension, unsigned int,
 		FixedImageType::ImageDimension );
@@ -99,16 +100,20 @@ public:
   typedef typename itk::Image<
     InternalMaskPixelType, MovingImageDimension >         InternalMovingImageMaskType;
   typedef typename MovingImageType::SpacingType           MovingImageSpacingType;
-  typedef itk::BSplineInterpolateImageFunction<
+  typedef itk::BSplineResampleImageFunction<
     InternalMovingImageMaskType,
-    CoordinateRepresentationType,
-    double >                                              MovingImageMaskInterpolatorType;
+    CoordinateRepresentationType >                        MovingImageMaskInterpolatorType;
   typedef typename 
     MovingImageMaskInterpolatorType::CovariantVectorType  MovingImageMaskDerivativeType;
   typedef typename 
     MovingImageMaskInterpolatorType::ContinuousIndexType  MovingImageContinuousIndexType;
-    
-	/** Get the value for single valued optimizers. */
+
+  typedef itk::BSplineInterpolateImageFunction<
+    MovingImageType,
+    CoordinateRepresentationType,
+    double>                                               BSplineInterpolatorType;
+  
+  /** Get the value for single valued optimizers. */
 	virtual MeasureType GetValue( const TransformParametersType & parameters ) const;
 
   /** Get the derivatives of the match measure. */
@@ -148,11 +153,21 @@ protected:
     const OutputPointType & point,
     double & value ) const;
 
+  /** Get the moving image value and derivative; if a bspline interpolator is used
+   * it is used to compute the derivative. If not, the precomputed GradientImage is used.
+   * Returns true if the value and derivative are valid. 
+   */
+  virtual bool EvaluateMovingImageValueAndDerivative(
+    const OutputPointType & point,
+    RealType & value,
+    GradientPixelType & derivative) const;
+
   /** Functions called from Initialize, to split up that function a bit. */
   virtual void InitializeInternalMasks(void);
 
   typename InternalMovingImageMaskType::Pointer      m_InternalMovingImageMask;
   typename MovingImageMaskInterpolatorType::Pointer  m_MovingImageMaskInterpolator;
+  typename BSplineInterpolatorType::Pointer          m_BSplineInterpolator;
 
 private:
   AdvancedMeanSquaresImageToImageMetric(const Self&); //purposely not implemented
