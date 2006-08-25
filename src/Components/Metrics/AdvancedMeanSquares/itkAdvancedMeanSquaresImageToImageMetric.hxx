@@ -28,6 +28,8 @@ namespace itk
     this->m_MovingImageMaskInterpolator->SetSplineOrder(2);
 
     this->m_BSplineInterpolator = 0;
+
+    this->m_UseDifferentiableOverlap = true;
     
     
 	} // end constructor
@@ -102,7 +104,15 @@ namespace itk
       InternalMovingImageMaskType,
       InternalMovingImageMaskType, 
       ErosionKernelType >                                        ErodeImageFilterType;
-      
+    
+    /** Check if the user wants to use a differentiable overlap */
+    if ( ! this->m_UseDifferentiableOverlap )
+    {
+      this->m_InternalMovingImageMask = 0;
+      return;
+    }
+
+    /** Prepare the internal mask image */
     this->m_InternalMovingImageMask = InternalMovingImageMaskType::New();
     this->m_InternalMovingImageMask->SetRegions( 
       this->GetMovingImage()->GetLargestPossibleRegion() );
@@ -224,19 +234,35 @@ namespace itk
       const OutputPointType & point,
       double & value) const
   {
-    /** NB: a spelling error in the itkImageFunction class! Continous... */
-    MovingImageContinuousIndexType cindex;
-    this->m_MovingImageMaskInterpolator->ConvertPointToContinousIndex( point, cindex);
-
-    /** Compute the value of the mask */
-    if ( this->m_MovingImageMaskInterpolator->IsInsideBuffer( cindex ) )
+    if ( this->m_UseDifferentiableOverlap )
     {
-      value = static_cast<double>(
-        this->m_MovingImageMaskInterpolator->EvaluateAtContinuousIndex(cindex) );
+      /** NB: a spelling error in the itkImageFunction class! Continous... */
+      MovingImageContinuousIndexType cindex;
+      this->m_MovingImageMaskInterpolator->ConvertPointToContinousIndex( point, cindex);
+  
+      /** Compute the value of the mask */
+      if ( this->m_MovingImageMaskInterpolator->IsInsideBuffer( cindex ) )
+      {
+        value = static_cast<double>(
+          this->m_MovingImageMaskInterpolator->EvaluateAtContinuousIndex(cindex) );
+      }
+      else
+      {
+        value = 0.0;
+      }
     }
     else
     {
-      value = 0.0;
+       /** Use the original mask */
+      if ( this->m_MovingImageMask.IsNotNull() )
+      {
+        value = static_cast<double>(
+          static_cast<unsigned char>( this->m_MovingImageMask->IsInside( point ) ) );
+      }
+      else
+      {
+        value = 1.0;
+      }
     }
   
   } // end EvaluateMovingMaskValue
@@ -256,24 +282,43 @@ namespace itk
       MovingImageMaskDerivativeType & derivative) const
   {
     typedef typename MovingImageMaskDerivativeType::ValueType DerivativeValueType;
-    
-    /** NB: a spelling error in the itkImageFunction class! Continous... */
-    MovingImageContinuousIndexType cindex;
-    this->m_MovingImageMaskInterpolator->ConvertPointToContinousIndex( point, cindex);
-    
+       
     /** Compute the value and derivative of the mask */
-    if ( this->m_MovingImageMaskInterpolator->IsInsideBuffer( cindex ) )
+
+    if ( this->m_UseDifferentiableOverlap )
     {
-      value = static_cast<double>(
-        this->m_MovingImageMaskInterpolator->EvaluateAtContinuousIndex(cindex) );
-      derivative = 
-        this->m_MovingImageMaskInterpolator->EvaluateDerivativeAtContinuousIndex(cindex);
+      /** NB: a spelling error in the itkImageFunction class! Continous... */
+      MovingImageContinuousIndexType cindex;
+      this->m_MovingImageMaskInterpolator->ConvertPointToContinousIndex( point, cindex);
+
+      if ( this->m_MovingImageMaskInterpolator->IsInsideBuffer( cindex ) )
+      {
+        value = static_cast<double>(
+          this->m_MovingImageMaskInterpolator->EvaluateAtContinuousIndex(cindex) );
+        derivative = 
+          this->m_MovingImageMaskInterpolator->EvaluateDerivativeAtContinuousIndex(cindex);
+      }
+      else
+      {
+        value = 0.0;
+        derivative.Fill( itk::NumericTraits<DerivativeValueType>::Zero );
+      }
     }
     else
     {
-      value = 0.0;
+      /** Just ignore the derivative of the mask */
+      if ( this->m_MovingImageMask.IsNotNull() )
+      {
+        value = static_cast<double>(
+          static_cast<unsigned char>( this->m_MovingImageMask->IsInside( point ) ) );
+      }
+      else
+      {
+        value = 1.0;
+      }
       derivative.Fill( itk::NumericTraits<DerivativeValueType>::Zero );
     }
+      
    
   } // end EvaluateMovingMaskValueAndDerivative
 

@@ -95,6 +95,12 @@ using namespace itk;
 		 */
 		virtual void Initialize(void) throw (ExceptionObject);
 
+    /** 
+     * Do some things before each resolution:
+     * \li Set the UseDifferentiableOverlap setting
+     */
+    virtual void BeforeEachResolution(void);
+
 	protected:
 
 		/** The constructor. */

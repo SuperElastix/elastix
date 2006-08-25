@@ -26,6 +26,35 @@ using namespace itk;
 	} // end Initialize
 
 
+  /**
+	 * ***************** BeforeEachResolution ***********************
+	 */
+
+	template <class TElastix>
+		void AdvancedMeanSquaresMetric<TElastix>
+		::BeforeEachResolution(void)
+	{
+    /** Get the current resolution level. */
+		unsigned int level = 
+			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+
+    /** Set whether a differentiable overlap should be used */
+    std::string useDifferentiableOverlap = "true";
+    this->GetConfiguration()->ReadParameter( useDifferentiableOverlap, "UseDifferentiableOverlap", 0 );
+    this->GetConfiguration()->ReadParameter( useDifferentiableOverlap, "UseDifferentiableOverlap", level, true );
+    if ( useDifferentiableOverlap == "false" )
+    {
+      this->SetUseDifferentiableOverlap(false);
+    }
+    else
+    {
+      this->SetUseDifferentiableOverlap(true);
+    }
+		
+  } // end BeforeEachResolution
+
+
+
 } // end namespace elastix
 
 

@@ -137,6 +137,11 @@ public:
 
   /** Get the interpolator of the internal moving image mask */
   itkGetConstObjectMacro(MovingImageMaskInterpolator, MovingImageMaskInterpolatorType);
+
+  /** Set/Get whether the overlap should be taken into account while computing the derivative
+   * This setting also affects the value of the metric. Default: true; */
+  itkSetMacro(UseDifferentiableOverlap, bool);
+  itkGetConstMacro(UseDifferentiableOverlap, bool);
   
 protected:
   AdvancedMeanSquaresImageToImageMetric();
@@ -173,6 +178,8 @@ protected:
 private:
   AdvancedMeanSquaresImageToImageMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
+
+  bool m_UseDifferentiableOverlap;
 
 }; // end class AdvancedMeanSquaresImageToImageMetric
 
