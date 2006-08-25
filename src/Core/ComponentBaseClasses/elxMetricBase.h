@@ -12,7 +12,7 @@
 
 /** Mask support. */
 #include "itkImageFileReader.h"
-#include "itkImageMaskSpatialObject.h"
+#include "itkImageMaskSpatialObject2.h"
 
 /** For easy changing the pixel type of the mask images: */
 #define __MaskFilePixelType unsigned char
@@ -122,10 +122,10 @@ using namespace itk;
 		typedef TimerType::Pointer	TimerPointer;
 
 		/** Typedef's for fixed mask support. */
-		typedef ImageMaskSpatialObject<
+		typedef ImageMaskSpatialObject2<
 			itkGetStaticConstMacro( FixedImageDimension ) >			FixedImageMaskSpatialObjectType;
 		/** Typedef's for moving mask support. */
-		typedef ImageMaskSpatialObject<
+		typedef ImageMaskSpatialObject2<
 			itkGetStaticConstMacro( MovingImageDimension ) >		MovingImageMaskSpatialObjectType;
 		/** Typedef's for fixed mask support. */
 		typedef typename FixedImageMaskSpatialObjectType::Pointer

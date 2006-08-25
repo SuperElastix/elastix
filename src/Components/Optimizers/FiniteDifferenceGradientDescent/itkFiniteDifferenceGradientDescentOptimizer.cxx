@@ -25,7 +25,6 @@ namespace itk
 		
 		this->m_NumberOfIterations = 100;
 		this->m_CurrentIteration = 0;
-		this->m_Maximize = false;
 		this->m_Value = 0.0;
 		this->m_StopCondition = MaximumNumberOfIterations;
 		
@@ -53,19 +52,12 @@ namespace itk
 		
 		os << indent << "LearningRate: "
 		   << this->m_LearningRate << std::endl;
-		os << indent << "NunberOfIterations: "
+		os << indent << "NumberOfIterations: "
 			<< this->m_NumberOfIterations << std::endl;
-		os << indent << "Maximize: "
-			<< this->m_Maximize << std::endl;
 		os << indent << "CurrentIteration: "
 			<< this->m_CurrentIteration;
 		os << indent << "Value: "
 			<< this->m_Value;
-		if ( this->m_CostFunction )
-    {
-			os << indent << "CostFunction: "
-				<< this->m_CostFunction;
-    }
 		os << indent << "StopCondition: "
 			<< this->m_StopCondition;
 		os << std::endl;
@@ -239,10 +231,6 @@ namespace itk
 	{		
 		itkDebugMacro( "AdvanceOneStep" );
 		
-		double direction;
-		if( this->m_Maximize ) direction = 1.0;
-		else direction = -1.0;
-		
 		const unsigned int spaceDimension = 
 			this->GetScaledCostFunction()->GetNumberOfParameters();
 		
@@ -257,8 +245,7 @@ namespace itk
 		ParametersType newPosition( spaceDimension );
 		for ( unsigned int j = 0; j < spaceDimension; j++ )
     {
-			newPosition[ j ] = currentPosition[ j ] + 
-				direction * ak * this->m_Gradient[ j ];
+			newPosition[ j ] = currentPosition[ j ] - ak * this->m_Gradient[ j ];
     }
 		
 		this->SetScaledCurrentPosition( newPosition );

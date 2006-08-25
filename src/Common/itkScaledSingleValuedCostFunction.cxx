@@ -2,6 +2,7 @@
 #define __itkScaledSingleValuedCostFunction_cxx
 
 #include "itkScaledSingleValuedCostFunction.h"
+#include "vnl/vnl_math.h"
 
 namespace itk
 {
@@ -175,8 +176,31 @@ namespace itk
   {
     itkDebugMacro("setting scales to " <<  scales);
     this->m_Scales = scales;
+    this->m_SquaredScales.SetSize( scales.GetSize() );
+    for (unsigned int i = 0; i < scales.Size(); ++i)
+    {
+      this->m_SquaredScales[i] = vnl_math_sqr( scales[i] );
+    }
     this->Modified();
   } // end SetScales
+
+  
+  /**
+   * **************** SetSquaredScales *****************************
+   */
+
+  void
+    ScaledSingleValuedCostFunction::SetSquaredScales(const ScalesType & squaredScales)
+  {
+    itkDebugMacro("setting squared scales to " <<  squaredScales);
+    this->m_SquaredScales = squaredScales;
+    this->m_Scales.SetSize( squaredScales.GetSize() );
+    for (unsigned int i = 0; i < squaredScales.Size(); ++i)
+    {
+      this->m_Scales[i] = vcl_sqrt( squaredScales[i] );
+    }
+    this->Modified();
+  } // end SetSquaredScales
 
 
   /**

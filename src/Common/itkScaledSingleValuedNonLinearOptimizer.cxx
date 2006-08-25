@@ -26,7 +26,9 @@ namespace itk
   void
     ScaledSingleValuedNonLinearOptimizer::InitializeScales()
   {
-    this->m_ScaledCostFunction->SetScales( this->GetScales() );
+    /** NB: we assume the scales entered by the user are meant
+     * as squared scales (following the ITK convention)! */
+    this->m_ScaledCostFunction->SetSquaredScales( this->GetScales() );
     this->Modified();
   } // end InitializeScales
   

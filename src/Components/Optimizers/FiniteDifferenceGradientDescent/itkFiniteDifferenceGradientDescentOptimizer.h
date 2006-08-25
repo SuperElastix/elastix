@@ -126,7 +126,6 @@ namespace itk
 		
 		// made protected so subclass can access
 		DerivativeType                m_Gradient; 
-		bool                          m_Maximize;
 		double												m_LearningRate;
 		double												m_GradientMagnitude;
 		

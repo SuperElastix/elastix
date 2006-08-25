@@ -36,6 +36,9 @@ namespace itk
    * - It is NOT necessary to set the CurrentPosition!! In fact, it is 
    * not possible anymore: the SetCurrentPosition(param) method is overrided
    * and calls SetScaledCurrentPositon(param*scales).
+   * - The ITK convention is to set the squared scales in the optimizer.
+   * So, if you want a scaling s, you must call SetScales(s.*s) (where .* 
+   * symbolises the element-wise product of s with s)
    *
    */
 
@@ -69,6 +72,8 @@ namespace itk
 
     /** Configure the scaled cost function. This function 
      * sets the current scales in the ScaledCostFunction.
+     * NB: it assumes that the scales entered by the user
+     * are the squared scales (following the ITK convention).
      * Call this method in StartOptimization() and after
      * entering new scales.
 		 */

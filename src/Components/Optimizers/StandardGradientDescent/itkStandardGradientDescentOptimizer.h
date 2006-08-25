@@ -1,7 +1,7 @@
 #ifndef __itkStandardGradientDescentOptimizer_h
 #define __itkStandardGradientDescentOptimizer_h
 
-#include "itkGradientDescentOptimizer.h"
+#include "itkGradientDescentOptimizer2.h"
 
 namespace itk
 {
@@ -39,13 +39,13 @@ namespace itk
 	 */
 
 	class StandardGradientDescentOptimizer :
-		public GradientDescentOptimizer
+		public GradientDescentOptimizer2
 	{
 	public:
 
 		/** Standard ITK.*/
 		typedef StandardGradientDescentOptimizer		Self;
-		typedef GradientDescentOptimizer						Superclass;
+		typedef GradientDescentOptimizer2						Superclass;
 		
 		typedef SmartPointer<Self>									Pointer;
 		typedef SmartPointer<const Self>						ConstPointer;
@@ -54,7 +54,7 @@ namespace itk
 		itkNewMacro( Self );
 		
 		/** Run-time type information (and related methods). */
-		itkTypeMacro( StandardGradientDescentOptimizer, GradientDescentOptimizer );
+		itkTypeMacro( StandardGradientDescentOptimizer, GradientDescentOptimizer2 );
 				
 		/** Typedef's inherited from Superclass.*/
 	  typedef Superclass::CostFunctionType			CostFunctionType;

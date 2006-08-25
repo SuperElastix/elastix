@@ -30,6 +30,10 @@ SET(CommonFiles
  itkScaledSingleValuedNonLinearOptimizer.cxx
  itkTranslationTransformInitializer.h
  itkTranslationTransformInitializer.hxx
+ itkImageSpatialObject2.h
+ itkImageSpatialObject2.txx
+ itkImageMaskSpatialObject2.h
+ itkImageMaskSpatialObject2.txx
 )
 
 SET( LineSearchOptimizersFiles

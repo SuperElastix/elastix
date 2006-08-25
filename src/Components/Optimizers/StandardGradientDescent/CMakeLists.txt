@@ -5,7 +5,10 @@ ADD_ELXCOMPONENT( elxStandardGradientDescent
  elxStandardGradientDescent.hxx
  elxStandardGradientDescent.cxx
  itkStandardGradientDescentOptimizer.h 
- itkStandardGradientDescentOptimizer.cxx )
+ itkStandardGradientDescentOptimizer.cxx
+ itkGradientDescentOptimizer2.h 
+ itkGradientDescentOptimizer2.cxx 
+)
 
 
 

@@ -69,10 +69,19 @@ namespace itk
 		/** Get the cost function that needs scaling. */
     itkGetObjectMacro( UnscaledCostFunction, Superclass );
 
-    /** Set the scales. */
+    /** Set the scales. Also computes the squared scales, just in case users 
+     * call GetSquaredScales (for compatibility with the ITK convention). */
     virtual void SetScales( const ScalesType & scales );
 		/** Get the scales. */
     itkGetConstReferenceMacro( Scales, ScalesType );
+
+    /** The ITK convention is to use the squared scales. This function
+     * takes the square root of the input scales and sets them as the 
+     * the actual scales */
+    virtual void SetSquaredScales( const ScalesType & squaredScales);
+    /** The ITK convention is to use the squared scales. This function
+     * returns the squared actual scales. */     
+    itkGetConstReferenceMacro( SquaredScales, ScalesType );
 
     /** Set the flag to use scales or not. */
     itkSetMacro( UseScales, bool );
@@ -111,6 +120,7 @@ namespace itk
 
 		/** Member variables. */
     ScalesType                            m_Scales;
+    ScalesType                            m_SquaredScales;
     SingleValuedCostFunctionPointer       m_UnscaledCostFunction;
     bool                                  m_UseScales;      
     bool                                  m_NegateCostFunction;

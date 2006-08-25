@@ -97,12 +97,9 @@ using namespace itk;
 		virtual void AfterEachIteration(void);
 		virtual void AfterRegistration(void);		
 		
-		/** Override the SetInitialPosition.
-		 * Override the implementation in itkOptimizer.h, to
-		 * ensure that the scales array and the parameters
-		 * array have the same size.
-		 */
-		virtual void SetInitialPosition( const ParametersType & param );
+   /** Check if any scales are set, and set the UseScales flag on or off; 
+		 * after that call the superclass' implementation */
+		virtual void StartOptimization(void);
 
 		/** Add SetCurrentPositionPublic, which calls the protected
 		 * SetCurrentPosition of the itkStandardGradientDescentOptimizer class.
@@ -114,13 +111,13 @@ using namespace itk;
 		
 	protected:
 
-		  StandardGradientDescent();
-			virtual ~StandardGradientDescent() {};
+    StandardGradientDescent(){};
+		virtual ~StandardGradientDescent() {};
 				
 	private:
 
-		  StandardGradientDescent( const Self& );	// purposely not implemented
-			void operator=( const Self& );							// purposely not implemented
+		StandardGradientDescent( const Self& );	// purposely not implemented
+		void operator=( const Self& );							// purposely not implemented
 			
 	}; // end class StandardGradientDescent
 	

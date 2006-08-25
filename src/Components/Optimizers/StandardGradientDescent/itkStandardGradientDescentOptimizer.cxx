@@ -59,7 +59,7 @@ namespace itk
 		::GetGradientMagnitude(void) const
 	{
 		const unsigned int spaceDimension =
-			m_CostFunction->GetNumberOfParameters();
+			this->GetScaledCostFunction()->GetNumberOfParameters();
 
 		double squared_gradient_sum = 0;
 		for (unsigned int j = 0; j < spaceDimension; j++)
