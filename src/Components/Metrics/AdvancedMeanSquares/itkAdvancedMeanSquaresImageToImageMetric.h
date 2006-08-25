@@ -98,7 +98,8 @@ public:
 
   typedef unsigned char                                   InternalMaskPixelType;
   typedef typename itk::Image<
-    InternalMaskPixelType, MovingImageDimension >         InternalMovingImageMaskType;
+    InternalMaskPixelType, 
+    itkGetStaticConstMacro(MovingImageDimension) >        InternalMovingImageMaskType;
   typedef typename MovingImageType::SpacingType           MovingImageSpacingType;
   typedef itk::BSplineResampleImageFunction<
     InternalMovingImageMaskType,
