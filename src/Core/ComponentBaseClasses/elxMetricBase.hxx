@@ -517,7 +517,7 @@ namespace elastix
         typename ImageRandomCoordinateSamplerType::Pointer randomCoordinateSampler
           = ImageRandomCoordinateSamplerType::New();
         randomCoordinateSampler->SetNumberOfSamples( numberOfSpatialSamples );
-        typedef ImageRandomCoordinateSamplerType::DefaultInterpolatorType
+        typedef typename ImageRandomCoordinateSamplerType::DefaultInterpolatorType
           FixedImageInterpolatorType;
         typename FixedImageInterpolatorType::Pointer fixedImageInterpolator =
           FixedImageInterpolatorType::New();
