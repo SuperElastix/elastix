@@ -9,39 +9,30 @@ using namespace itk;
 
 
 	/**
-	 * ******************* BeforeRegistration ***********************
-	 */
-		
-	template <class TElastix>
-		void BSplineInterpolator<TElastix>::
-		BeforeRegistration(void)
-	{
-		/** Set the SplineOrder, default value = 1. */
-		unsigned int splineOrder = 1;
-		
-		/** Read the desired splineOrder from the parameterFile. */
-		( this->GetConfiguration() )->
-			ReadParameter( splineOrder, "BSplineInterpolationOrder", 0 );
-
-		/** Set the splineOrder. */
-		this->SetSplineOrder( splineOrder );
-		
-	} // end BeforeRegistration
-
-
-	/**
 	 * ***************** BeforeEachResolution ***********************
-	 *
+	 */
 
 	template <class TElastix>
 		void BSplineInterpolator<TElastix>::
 		BeforeEachResolution(void)
 	{
-		/** \todo Make it possible to set the spline order here
-		 * May be hard, because it's not possible after setting the 
-		 * input image, according to the help.
-		 *
-	}*/
+		/** Get the current resolution level. */
+		unsigned int level = 
+			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+
+    /** Set the SplineOrder, default value = 1. */
+		unsigned int splineOrder = 1;
+		
+		/** Read the desired splineOrder from the parameterFile. */
+		this->GetConfiguration()->
+			ReadParameter( splineOrder, "BSplineInterpolationOrder", 0, true );
+    this->GetConfiguration()->
+			ReadParameter( splineOrder, "BSplineInterpolationOrder", level );
+
+		/** Set the splineOrder. */
+		this->SetSplineOrder( splineOrder );
+		 
+	} // end BeforeEachResolution
 
 
 } // end namespace elastix

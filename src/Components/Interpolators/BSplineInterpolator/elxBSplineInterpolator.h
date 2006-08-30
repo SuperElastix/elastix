@@ -19,8 +19,9 @@ using namespace itk;
 	 * \parameter Interpolator: Select this interpolator as follows:\n
 	 *		<tt>(Interpolator "BSplineInterpolator")</tt>
 	 * \parameter BSplineInterpolationOrder: the order of the B-spline polynomial. \n
-	 *		example: <tt>(BSplineInterpolationOrder 3)</tt> \n
-	 *		The default order is 1.
+   *		example: <tt>(BSplineInterpolationOrder 3 2 3 )</tt> \n
+	 *		The default order is 1. The parameter can be specified for each resolution.\n
+   *    If only given for one resolution, that value is used for the other resolutions as well.
 	 *
 	 * \ingroup Interpolators
 	 */
@@ -84,15 +85,10 @@ using namespace itk;
 		typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
 		typedef typename Superclass2::ITKBaseType								ITKBaseType;
 
-		/** Execute stuff before the actual registration:
+		/** Execute stuff before each new pyramid resolution:
 		 * \li Set the spline order.
 		 */
-		virtual void BeforeRegistration(void);
-
-		/** Execute stuff before each new pyramid resolution:
-		 * \li nothing done here.
-		 */
-		//virtual void BeforeEachResolution(void);
+		virtual void BeforeEachResolution(void);
 
 	protected:
 

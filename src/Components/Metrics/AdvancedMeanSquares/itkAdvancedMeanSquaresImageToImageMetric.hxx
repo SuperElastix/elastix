@@ -25,7 +25,8 @@ namespace itk
     this->m_InternalMovingImageMask = 0;
     this->m_MovingImageMaskInterpolator = 
       MovingImageMaskInterpolatorType::New();
-    this->m_MovingImageMaskInterpolator->SetSplineOrder(2);
+    const unsigned int defaultMaskInterpolationOrder = 2;
+    this->m_MovingImageMaskInterpolator->SetSplineOrder( defaultMaskInterpolationOrder );
 
     this->m_BSplineInterpolator = 0;
 

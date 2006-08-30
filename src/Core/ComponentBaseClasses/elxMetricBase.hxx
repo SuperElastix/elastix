@@ -517,6 +517,18 @@ namespace elastix
         typename ImageRandomCoordinateSamplerType::Pointer randomCoordinateSampler
           = ImageRandomCoordinateSamplerType::New();
         randomCoordinateSampler->SetNumberOfSamples( numberOfSpatialSamples );
+        typedef ImageRandomCoordinateSamplerType::DefaultInterpolatorType
+          FixedImageInterpolatorType;
+        typename FixedImageInterpolatorType::Pointer fixedImageInterpolator =
+          FixedImageInterpolatorType::New();
+        /** Set the SplineOrder, default value = 3. */
+	      unsigned int splineOrder = 3;
+		    this->GetConfiguration()->
+			    ReadParameter( splineOrder, "FixedImageBSplineInterpolationOrder", 0, true );
+        this->GetConfiguration()->
+			    ReadParameter( splineOrder, "FixedImageBSplineInterpolationOrder", level );
+        fixedImageInterpolator->SetSplineOrder( splineOrder );
+    		randomCoordinateSampler->SetInterpolator(fixedImageInterpolator);
         imageSampler = randomCoordinateSampler;
       }
       else if ( imageSamplerType == "Grid" )

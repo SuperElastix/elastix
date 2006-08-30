@@ -49,7 +49,7 @@ using namespace itk;
 		
 		/** Name of this class.
 		 * Use this name in the parameter file to select this specific metric. \n
-		 * example: <tt>(Metric "MeanSquares")</tt>\n
+		 * example: <tt>(Metric "AdvancedMeanSquares")</tt>\n
 		 */
 		elxClassNameMacro( "AdvancedMeanSquares" );
 
@@ -98,6 +98,7 @@ using namespace itk;
     /** 
      * Do some things before each resolution:
      * \li Set the UseDifferentiableOverlap setting
+     * \li Set the MovingMaskInterpolationOrder setting
      */
     virtual void BeforeEachResolution(void);
 

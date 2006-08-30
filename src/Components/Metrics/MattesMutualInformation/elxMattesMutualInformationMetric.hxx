@@ -2,7 +2,6 @@
 #define __elxMattesMutualInformationMetric_HXX__
 
 #include "elxMattesMutualInformationMetric.h"
-#include "vnl/vnl_math.h"
 #include <string>
 
 namespace elastix

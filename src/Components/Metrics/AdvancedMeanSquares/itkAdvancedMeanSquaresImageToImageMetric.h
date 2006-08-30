@@ -3,7 +3,6 @@
 #define __itkAdvancedMeanSquaresImageToImageMetric_h
 
 #include "itkImageToImageMetricWithSampling.h"
-#include "itkDerivativeOperator.h"
 #include "itkBSplineInterpolateImageFunction.h"
 #include "itkBSplineResampleImageFunction.h"
 #include "itkImage.h"
@@ -142,6 +141,18 @@ public:
    * This setting also affects the value of the metric. Default: true; */
   itkSetMacro(UseDifferentiableOverlap, bool);
   itkGetConstMacro(UseDifferentiableOverlap, bool);
+
+  /** Set the interpolation spline order for the moving image mask; default: 2
+   * Make sure to call this before calling Initialize(), if you want to change it. */
+  virtual void SetMovingImageMaskInterpolationOrder(unsigned int order)
+  {
+    this->m_MovingImageMaskInterpolator->SetSplineOrder( order );
+  };
+  /** Get the interpolation spline order for the moving image mask */
+  virtual const unsigned int GetMovingImageMaskInterpolationOrder(void) const
+  {
+    return this->m_MovingImageMaskInterpolator->GetSplineOrder();
+  };
   
 protected:
   AdvancedMeanSquaresImageToImageMetric();

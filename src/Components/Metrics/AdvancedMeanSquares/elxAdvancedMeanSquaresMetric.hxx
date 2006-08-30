@@ -20,7 +20,7 @@ using namespace itk;
 		timer->StartTimer();
 		this->Superclass1::Initialize();
 		timer->StopTimer();
-		elxout << "Initialization of MeanSquares metric took: "
+		elxout << "Initialization of AdvancedMeanSquares metric took: "
 			<< static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
 
 	} // end Initialize
@@ -50,6 +50,15 @@ using namespace itk;
     {
       this->SetUseDifferentiableOverlap(true);
     }
+
+    /** Get and set the mask interpolation order */
+		unsigned int movingMaskInterpolationOrder = 2;
+    this->GetConfiguration()->ReadParameter( 
+      movingMaskInterpolationOrder, "MovingMaskInterpolationOrder", 0 );
+		this->GetConfiguration()->ReadParameter( 
+      movingMaskInterpolationOrder, "MovingMaskInterpolationOrder", level, true );
+		this->SetMovingImageMaskInterpolationOrder( 
+      movingMaskInterpolationOrder );
 		
   } // end BeforeEachResolution
 
