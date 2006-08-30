@@ -1,26 +1,3 @@
-/**
- * This file is an adapted version of the original itk-class.
- *
- * The original itk-copyright message is stated below:
- */
-
-
-/*=========================================================================
-
-  Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile$
-  Language:  C++
-  Date:      $Date$
-  Version:   $Revision$
-	
-		Copyright (c) Insight Software Consortium. All rights reserved.
-		See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
-		
-			This software is distributed WITHOUT ANY WARRANTY; without even 
-			the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-			PURPOSE.  See the above copyright notices for more information.
-			
-=========================================================================*/
 #ifndef _itkMattesMutualInformationImageToImageMetric3_HXX__
 #define _itkMattesMutualInformationImageToImageMetric3_HXX__
 
@@ -436,7 +413,7 @@ namespace itk
   {
     /** Initialize the internal moving image mask */
 
-    typedef typename MovingImageType::PointType                  MovingOriginType;
+    typedef MovingImagePointType                                 MovingOriginType;
     typedef typename MovingImageType::SizeType                   MovingSizeType;
     typedef typename MovingImageType::IndexType                  MovingIndexType;
     typedef typename MovingImageType::RegionType                 MovingRegionType;
@@ -512,7 +489,7 @@ namespace itk
         itk::NumericTraits<InternalMaskPixelType>::Zero );
 
       MovingIteratorType iterator( this->m_InternalMovingImageMask, innerRegion);
-      OutputPointType point;
+      MovingImagePointType point;
 
       /** Set the pixel 1 if inside the mask and to 0 if outside */
       for( iterator.GoToBegin(); ! iterator.IsAtEnd(); ++ iterator )
