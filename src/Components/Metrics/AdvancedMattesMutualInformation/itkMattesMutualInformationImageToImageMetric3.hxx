@@ -30,7 +30,7 @@ namespace itk
 		
 		this->m_NumberOfHistogramBins = 50;
 		
-		this->SetComputeGradient(false); // don't use the default gradient for now
+		this->SetComputeGradient(false); // don't use the default gradient
 		
 		this->m_InterpolatorIsBSpline = false;
 		this->m_TransformIsBSpline    = false;
@@ -71,7 +71,18 @@ namespace itk
     this->m_MovingImageMaskInterpolator->SetSplineOrder( defaultMaskInterpolationOrder );
     this->m_UseDifferentiableOverlap = true;
 
-    this->m_UseGrayValueLimiter = true;
+    this->m_HardLimitMovingGrayValues = false;
+    this->m_SoftLimitMovingGrayValues = true;
+    this->m_LimitRangeRatio = 0.01;
+    /** Some dummy values */
+    this->m_SoftMaxLimit_a = -1.0;
+    this->m_SoftMaxLimit_A = 0.0;
+    this->m_SoftMinLimit_a = 1.0;
+    this->m_SoftMinLimit_A = 0.0;
+    this->m_MovingImageMinLimit = 0.0;
+    this->m_MovingImageMaxLimit = 1.0;
+    
+
     		
 	} // end Constructor
 	
@@ -194,12 +205,48 @@ namespace itk
 		
 		this->m_MovingImageTrueMin = movingImageMin;
 		this->m_MovingImageTrueMax = movingImageMax;
+
+    /** We assume that the image does not contain values close to 
+     * the max(double) or min(double). */
+    this->m_MovingImageMaxLimit = 
+      this->m_MovingImageTrueMax + this->m_LimitRangeRatio *
+      ( this->m_MovingImageTrueMax - this->m_MovingImageTrueMin );
+    this->m_MovingImageMinLimit = 
+      this->m_MovingImageTrueMin - this->m_LimitRangeRatio *
+      ( this->m_MovingImageTrueMax - this->m_MovingImageTrueMin );
 		
 		itkDebugMacro( " FixedImageMin: " << fixedImageMin << 
 			" FixedImageMax: " << fixedImageMax << std::endl );
 		itkDebugMacro( " MovingImageMin: " << movingImageMin << 
 			" MovingImageMax: " << movingImageMax << std::endl );
-		
+
+    /** Compute settings for the soft limiter */
+    if ( (this->m_MovingImageTrueMax - this->m_MovingImageMaxLimit) > 1e-10 )
+    {
+      this->m_SoftMaxLimit_a = 1.0 / 
+        ( this->m_MovingImageTrueMax - this->m_MovingImageMaxLimit );
+      this->m_SoftMaxLimit_A = 1.0 / ( 
+        this->m_SoftMaxLimit_a * vcl_exp(
+        this->m_SoftMaxLimit_a * this->m_MovingImageTrueMax ) );
+    }
+    else
+    {
+      this->m_SoftMaxLimit_a = -1.0;  //dummy value
+      this->m_SoftMaxLimit_A = 0.0;
+    }
+    if ( (this->m_MovingImageTrueMax - this->m_MovingImageMaxLimit) > 1e-10 )
+    {
+      this->m_SoftMinLimit_a = 1.0 / 
+        ( this->m_MovingImageTrueMin - this->m_MovingImageMinLimit );
+      this->m_SoftMinLimit_A = 1.0 / ( 
+      this->m_SoftMinLimit_a * vcl_exp(
+      this->m_SoftMinLimit_a * this->m_MovingImageTrueMin ) );
+    }
+    else
+    {
+      this->m_SoftMinLimit_a = 1.0;  //dummy value
+      this->m_SoftMinLimit_A = 0.0;
+    }
 		
 		/**
 		 * Compute binsize for the histograms.
@@ -217,19 +264,18 @@ namespace itk
 		 * window.
 		 */
 		const int padding = 2;  // this will pad by 2 bins
-    
-		
+    		
 		this->m_FixedImageBinSize = ( fixedImageMax - fixedImageMin ) /
 			static_cast<double>( this->m_NumberOfHistogramBins - 2 * padding );
 		this->m_FixedImageNormalizedMin = fixedImageMin / this->m_FixedImageBinSize - 
 			static_cast<double>( padding );
 		
-		this->m_MovingImageBinSize = ( movingImageMax - movingImageMin ) /
+		this->m_MovingImageBinSize = 
+      ( this->m_MovingImageMaxLimit - this->m_MovingImageMinLimit ) /
 			static_cast<double>( this->m_NumberOfHistogramBins - 2 * padding );
-		this->m_MovingImageNormalizedMin = movingImageMin / this->m_MovingImageBinSize -
-			static_cast<double>( padding );
-		
-		
+		this->m_MovingImageNormalizedMin = this->m_MovingImageMinLimit /
+      this->m_MovingImageBinSize - static_cast<double>( padding );
+				
 		itkDebugMacro( "FixedImageNormalizedMin: " << this->m_FixedImageNormalizedMin );
 		itkDebugMacro( "MovingImageNormalizedMin: " << this->m_MovingImageNormalizedMin );
 		itkDebugMacro( "FixedImageBinSize: " << this->m_FixedImageBinSize );
@@ -689,7 +735,8 @@ namespace itk
         * inside the moving image buffer */
        if ( sampleOk )
        {
-         this->EvaluateMovingImageValue( mappedPoint, sampleOk, movingImageValue );
+         this->EvaluateMovingImageValueAndDerivative(
+           mappedPoint, sampleOk, movingImageValue, 0 );
        }
 			 
 			 if( sampleOk )
@@ -715,7 +762,8 @@ namespace itk
 					 static_cast<unsigned int>( vcl_floor( fixedImageParzenWindowTerm ) );
 				 
 				 
-				 // Make sure the extreme values are in valid bins
+				 /** Make sure the extreme values are in valid bins;
+          * This effectively applies a HardLimit to the fixed image gray values. */
 				 if ( fixedImageParzenWindowIndex < 2 )
 				 {
 					 fixedImageParzenWindowIndex = 2;
@@ -971,6 +1019,7 @@ namespace itk
 			 MovingImagePointType mappedPoint;
 			 bool sampleOk;
 			 double movingImageValue;
+       ImageDerivativesType movingImageGradientValue;
 			 
        /** Transform the point and check if it's within the bspline transform support region */
 			 this->TransformPoint( (*fiter).Value().m_ImageCoordinates, mappedPoint, sampleOk);
@@ -988,11 +1037,13 @@ namespace itk
            ( movingMaskDerivativeMagnitude > smallNumber1 );
 		   }
      
-			 /** Compute the moving image value and check if the point is
+			 /** Compute the moving image value and derivative and check if the point is
         * inside the moving image buffer */
+       
        if ( sampleOk )
        {
-         this->EvaluateMovingImageValue( mappedPoint, sampleOk, movingImageValue );
+         this->EvaluateMovingImageValueAndDerivative( 
+           mappedPoint, sampleOk, movingImageValue, &movingImageGradientValue );
        }
 			 			 
 			 if( sampleOk )
@@ -1000,8 +1051,8 @@ namespace itk
          ++nSamples; 
          sumOfMovingMaskValues += movingMaskValue;
 				 
-				 ImageDerivativesType movingImageGradientValue;
-				 this->ComputeImageDerivatives( mappedPoint, movingImageGradientValue );
+				 
+				 //this->ComputeImageDerivatives( mappedPoint, movingImageGradientValue );
 
          				 				 
 				 /**
@@ -1300,24 +1351,27 @@ namespace itk
 	 * Compute image derivatives using a central difference function
 	 * if we are not using a BSplineInterpolator, which includes
 	 * derivatives. 
+   * This function is called by EvaluateMovingImageValueAndDerivative 
    */
 
 	template < class TFixedImage, class TMovingImage >
 		void
 		MattesMutualInformationImageToImageMetric3<TFixedImage,TMovingImage>
 		::ComputeImageDerivatives( 
-		const MovingImagePointType & mappedPoint, 
+		const MovingImageContinuousIndexType & cindex, 
 		ImageDerivativesType& gradient ) const
 	{		
 		if( this->m_InterpolatorIsBSpline )
 		{
 			// Computed moving image gradient using derivative BSpline kernel.
-			gradient = this->m_BSplineInterpolator->EvaluateDerivative( mappedPoint );
+			gradient = 
+        this->m_BSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
 		}
 		else
 		{
 			// For all generic interpolator use central differencing.
-			gradient = this->m_DerivativeCalculator->Evaluate( mappedPoint );
+			gradient =
+        this->m_DerivativeCalculator->EvaluateAtContinuousIndex( cindex );
 		}
 		
 	} // end ComputeImageDerivatives
@@ -1373,18 +1427,19 @@ namespace itk
 
   	
 	/**
-	 * ******************* EvaluateMovingImageValue ******************
+	 * ******************* EvaluateMovingImageValueAndDerivative ******************
 	 *
-	 * Compute image value at a transformed point
+	 * Compute image value and possibly derivative at a transformed point
 	 */
 
   template < class TFixedImage, class TMovingImage >
 		void
 		MattesMutualInformationImageToImageMetric3<TFixedImage,TMovingImage>
-    ::EvaluateMovingImageValue( 
+    ::EvaluateMovingImageValueAndDerivative( 
     const MovingImagePointType & mappedPoint,
     bool & sampleOk,
-    double & movingImageValue ) const
+    double & movingImageValue,
+    ImageDerivativesType * gradient) const
   {
     // Check if mapped point inside image buffer
     MovingImageContinuousIndexType cindex;
@@ -1394,13 +1449,52 @@ namespace itk
 		
 		if ( sampleOk )
     {
+      /** Compute value and possibly derivative */
       movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
+      if ( gradient )
+      {    
+        this->ComputeImageDerivatives( cindex, *gradient);
+      }
 
-      if ( this->m_UseGrayValueLimiter )
+      if ( this->m_SoftLimitMovingGrayValues )
+      {
+        /** Apply a soft limit */
+        if ( movingImageValue > this->m_MovingImageTrueMax )
+        {
+          const double temp = 
+            this->m_SoftMaxLimit_A * vcl_exp( this->m_SoftMaxLimit_a * movingImageValue );
+          movingImageValue = temp + this->m_MovingImageMaxLimit;
+          if (gradient)
+          {
+            const double gradientfactor = this->m_SoftMaxLimit_a * temp;
+            for (unsigned int i = 0; i < MovingImageDimension; ++i)
+            {
+              (*gradient)[i] = (*gradient)[i] * gradientfactor;
+            }
+          }
+        }
+        if ( movingImageValue < this->m_MovingImageTrueMin )
+        {
+          const double temp = 
+            this->m_SoftMinLimit_A * vcl_exp( this->m_SoftMinLimit_a * movingImageValue );
+          movingImageValue = temp + this->m_MovingImageMinLimit;
+          if (gradient)
+          {
+            const double gradientfactor = this->m_SoftMinLimit_a * temp;
+            for (unsigned int i = 0; i < MovingImageDimension; ++i)
+            {
+              (*gradient)[i] = (*gradient)[i] * gradientfactor;
+            }
+          }
+        }
+      }
+      else if ( this->m_HardLimitMovingGrayValues )
 			{ 
         /** Limit the image value to the image's maximum and minimum */
-        movingImageValue = vnl_math_min( movingImageValue, this->m_MovingImageTrueMax );
-        movingImageValue = vnl_math_max( movingImageValue, this->m_MovingImageTrueMin );
+        movingImageValue = vnl_math_min( movingImageValue, this->m_MovingImageMaxLimit );
+        movingImageValue = vnl_math_max( movingImageValue, this->m_MovingImageMinLimit );
+        /** The gradient is rather undefined now, so just leave it as it is.
+         * We may set it to zero? */
       }
       else
       { 
@@ -1409,7 +1503,8 @@ namespace itk
           ( movingImageValue > this->m_MovingImageTrueMax ) ); 
       }
     }
-	} // end EvaluateMovingImageValue 
+
+	} // end EvaluateMovingImageValueAndDerivative
 
  
 	/**

@@ -220,6 +220,47 @@ namespace itk
     {
       return this->m_MovingImageMaskInterpolator->GetSplineOrder();
     };
+
+    /** Use a hard limiter for the moving gray values; default: false;
+     * Make sure to set either HardLimitMovingGrayValues or SoftLimitGrayValue
+     * to true, or both to false; both true yields a soft limiter.
+     * If you use a neirest neighbor or linear interpolator, set the LimitRangeRatio
+     * to zero and use a hard limiter, or no limiter at all.
+     * The hardlimiter does the following to the moving image values:
+     * imagevalue = min( imagevalue, maxlimit )
+     * imagevalue = max( imagevalue, minlimit )
+     * where max/minlimit are defined by the limitrangeratio.
+     */
+    itkSetMacro(HardLimitMovingGrayValues, bool);
+    itkGetConstMacro(HardLimitMovingGrayValues, bool);
+
+    /** Use a soft limiter for the moving gray values; default: true;
+     * Make sure to set either HardLimitMovingGrayValues or SoftLimitGrayValue
+     * to true, or both to false; both true yields a soft limiter.
+     * If you use a neirest neighbor or linear interpolator, set the LimitRangeRatio
+     * to zero and use a hard limiter, or no limiter at all.
+     * the softlimiter applies the following intensity transform to the 
+     * moving image values, if it's above/under the true image maximum or minimum T:
+     * T = true image maximum or minimum
+     * L = max or minlimit (as defined by the LimitRangeRatio)
+     * a = 1.0 / (T-L)
+     * A = 1.0 / ( a e^(aT) )
+     * imagevalue = A e ^(a*imagevalue) + L
+     * and adapts the image derivatives correspondingly.
+     */
+    itkSetMacro(SoftLimitMovingGrayValues, bool);
+    itkGetConstMacro(SoftLimitMovingGrayValues, bool);
+
+    /** A percentage that defines how much the moving gray value range is extended
+     * maxlimit = max + LimitRangeRatio * (max - min)
+     * minlimit = min - LimitRangeRatio * (max - min)
+     * Default: 0.01;
+     * If you use a neirest neighbor or linear interpolator, set it to zero and
+     * use a hard limiter, or no limiter at all.
+     */
+    itkSetMacro(LimitRangeRatio, double);
+    itkGetConstMacro(LimitRangeRatio, double);
+	
 	
 	protected:
 		
@@ -230,6 +271,56 @@ namespace itk
 
 		/** Print Self. */
 		void PrintSelf( std::ostream& os, Indent indent ) const;
+
+    /** Types and variables related to image derivative calculations.
+		 * If a BSplineInterpolationFunction is used, this class obtain
+		 * image derivatives from the BSpline interpolator. Otherwise, 
+		 * image derivatives are computed using central differencing.
+		 */
+	
+		/** Boolean to indicate if the interpolator BSpline. */
+		bool m_InterpolatorIsBSpline;
+		
+		/** Typedefs for using BSpline interpolator. */
+		typedef
+			BSplineInterpolateImageFunction<MovingImageType,
+			CoordinateRepresentationType> BSplineInterpolatorType;
+		
+		/** Pointer to BSplineInterpolator. */
+		typename BSplineInterpolatorType::Pointer m_BSplineInterpolator;
+		
+		/** Typedefs for using central difference calculator. */
+		typedef CentralDifferenceImageFunction<MovingImageType,
+			CoordinateRepresentationType> DerivativeFunctionType;
+
+    typedef typename BSplineInterpolatorType::CovariantVectorType ImageDerivativesType;
+			
+		/** Pointer to central difference calculator. */
+		typename DerivativeFunctionType::Pointer m_DerivativeCalculator;
+
+    /** Compute image derivatives at a point. */
+		virtual void ComputeImageDerivatives( 
+      const MovingImageContinuousIndexType & cindex,
+			ImageDerivativesType& gradient ) const;
+
+    /** Compute the image value (and possibly derivative) at a transformed point.
+     * Checks if the point lies within the moving image buffer.
+     * If no gradient is wanted, set the gradient argument to 0.
+     */
+    virtual void EvaluateMovingImageValueAndDerivative( 
+      const MovingImagePointType & mappedPoint,
+      bool & sampleOk,
+      double & movingImageValue,
+      ImageDerivativesType * gradient) const;
+				
+		/** Compute PDF derivative contribution for each parameter. */
+		virtual void ComputePDFDerivatives( const FixedImagePointType& fixedImagePoint,
+			int fixedImageParzenWindowIndex, int movingImageParzenWindowIndex,
+			const ImageDerivativesType& movingImageGradientValue,
+      const MovingImageMaskDerivativeType & movingMaskDerivative,
+			const double & movingImageParzenWindowValue,
+      const double & movingImageParzenWindowDerivative,
+      const double & movingMaskValue ) const;
 		
  		/** Transform a point from FixedImage domain to MovingImage domain.
 		 * This function also checks if mapped point is within support region.
@@ -237,14 +328,6 @@ namespace itk
 		virtual void TransformPoint( const FixedImagePointType& fixedImagePoint,
 			MovingImagePointType& mappedPoint, bool& sampleWithinSupportRegion ) const;
 
-    /** Compute the image value at a transformed point. Checks if the point lies
-     * within the moving image buffer. */
-    virtual void EvaluateMovingImageValue( 
-      const MovingImagePointType & mappedPoint,
-      bool & sampleOk,
-      double & movingImageValue ) const;
-
-		
 		/** Types and variables related to BSpline deformable transforms.
 		 * If the transform is of type third order BSplineDeformableTransform,
 		 * then we can speed up the metric derivative calculation by
@@ -298,7 +381,7 @@ namespace itk
 			::itk::GetImageDimension<FixedImageType>::ImageDimension> ParametersOffsetType;
 		ParametersOffsetType                   m_ParametersOffset;
 
-      /** Estimate value and spatial derivative of internal moving mask */
+    /** Estimate value and spatial derivative of internal moving mask */
     virtual void EvaluateMovingMaskValueAndDerivative(
       const MovingImagePointType & point,
       double & value,
@@ -314,6 +397,16 @@ namespace itk
 
     typename InternalMovingImageMaskType::Pointer      m_InternalMovingImageMask;
     typename MovingImageMaskInterpolatorType::Pointer  m_MovingImageMaskInterpolator;
+    
+    /** Parameters for the soft gray value limiter */
+    double m_SoftMaxLimit_a;
+    double m_SoftMaxLimit_A;
+    double m_SoftMinLimit_a;
+    double m_SoftMinLimit_A;
+
+    /** The minimum and maximum gray values that fit in the histogram */
+    double m_MovingImageMinLimit;
+    double m_MovingImageMaxLimit;
 
 	private:
 		
@@ -379,46 +472,10 @@ namespace itk
 		typename CubicBSplineDerivativeFunctionType::Pointer 
 			m_CubicBSplineDerivativeKernel;
 		
-		/** Types and variables related to image derivative calculations.
-		 * If a BSplineInterpolationFunction is used, this class obtain
-		 * image derivatives from the BSpline interpolator. Otherwise, 
-		 * image derivatives are computed using central differencing.
-		 */
-		typedef CovariantVector< double,
-			itkGetStaticConstMacro( MovingImageDimension ) > ImageDerivativesType;
-		
-		/** Compute image derivatives at a point. */
-		virtual void ComputeImageDerivatives( const MovingImagePointType& mappedPoint,
-			ImageDerivativesType& gradient ) const;
-		
-		/** Boolean to indicate if the interpolator BSpline. */
-		bool m_InterpolatorIsBSpline;
-		
-		/** Typedefs for using BSpline interpolator. */
-		typedef
-			BSplineInterpolateImageFunction<MovingImageType,
-			CoordinateRepresentationType> BSplineInterpolatorType;
-		
-		/** Pointer to BSplineInterpolator. */
-		typename BSplineInterpolatorType::Pointer m_BSplineInterpolator;
-		
-		/** Typedefs for using central difference calculator. */
-		typedef CentralDifferenceImageFunction<MovingImageType,
-			CoordinateRepresentationType> DerivativeFunctionType;
-		
-		/** Pointer to central difference calculator. */
-		typename DerivativeFunctionType::Pointer m_DerivativeCalculator;
-		
-		/** Compute PDF derivative contribution for each parameter. */
-		virtual void ComputePDFDerivatives( const FixedImagePointType& fixedImagePoint,
-			int fixedImageParzenWindowIndex, int movingImageParzenWindowIndex,
-			const ImageDerivativesType& movingImageGradientValue,
-      const MovingImageMaskDerivativeType & movingMaskDerivative,
-			const double & movingImageParzenWindowValue,
-      const double & movingImageParzenWindowDerivative,
-      const double & movingMaskValue ) const;
-
     bool m_UseDifferentiableOverlap;
+    bool m_HardLimitMovingGrayValues;
+    bool m_SoftLimitMovingGrayValues;
+    double m_LimitRangeRatio;
 		
 	}; // end class MattesMutualInformationImageToImageMetric3
 

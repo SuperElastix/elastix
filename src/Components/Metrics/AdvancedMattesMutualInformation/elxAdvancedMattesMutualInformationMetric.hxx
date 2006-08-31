@@ -85,6 +85,34 @@ using namespace itk;
       this->SetCheckNumberOfSamples(true);
     }
 
+    /** Set the limiter */
+    std::string limiter = "Soft";
+    this->GetConfiguration()->ReadParameter( limiter, "GrayValueLimiter", 0, true );
+    this->GetConfiguration()->ReadParameter( limiter, "GrayValueLimiter", level );
+    if ( limiter == "Hard" )
+    {
+      this->SetHardLimitMovingGrayValues(true);
+      this->SetSoftLimitMovingGrayValues(false);
+    }
+    else if ( limiter == "No" )
+    {
+      this->SetHardLimitMovingGrayValues(false);
+      this->SetSoftLimitMovingGrayValues(false);
+    }
+    else
+    {
+      /** assume soft limiter */
+      this->SetHardLimitMovingGrayValues(false);
+      this->SetSoftLimitMovingGrayValues(true);
+    }
+
+    /** Get and set the number of histogram bins. */
+		double limitRangeRatio = 0.01;
+    this->GetConfiguration()->ReadParameter( limitRangeRatio, "LimitRangeRatio", 0, true);
+		this->GetConfiguration()->ReadParameter( limitRangeRatio, "LimitRangeRatio", level );
+		this->SetLimitRangeRatio( limitRangeRatio );
+  
+
 	} // end BeforeEachResolution
 	
   
