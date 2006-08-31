@@ -70,6 +70,8 @@ namespace itk
       MovingImageMaskInterpolatorType::New();
     this->m_MovingImageMaskInterpolator->SetSplineOrder( defaultMaskInterpolationOrder );
     this->m_UseDifferentiableOverlap = true;
+
+    this->m_UseGrayValueLimiter = true;
     		
 	} // end Constructor
 	
@@ -215,6 +217,7 @@ namespace itk
 		 * window.
 		 */
 		const int padding = 2;  // this will pad by 2 bins
+    
 		
 		this->m_FixedImageBinSize = ( fixedImageMax - fixedImageMin ) /
 			static_cast<double>( this->m_NumberOfHistogramBins - 2 * padding );
@@ -1392,13 +1395,19 @@ namespace itk
 		if ( sampleOk )
     {
       movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
-			
-		  if ( movingImageValue < this->m_MovingImageTrueMin || 
-  			movingImageValue > this->m_MovingImageTrueMax )
-		  {
-  			// need to throw out this sample as it will not fall into a valid bin
-			  sampleOk = false;
-		  }
+
+      if ( this->m_UseGrayValueLimiter )
+			{ 
+        /** Limit the image value to the image's maximum and minimum */
+        movingImageValue = vnl_math_min( movingImageValue, this->m_MovingImageTrueMax );
+        movingImageValue = vnl_math_max( movingImageValue, this->m_MovingImageTrueMin );
+      }
+      else
+      { 
+        /** Throw out the sample */
+        sampleOk = ! ( (movingImageValue < this->m_MovingImageTrueMin) ||
+          ( movingImageValue > this->m_MovingImageTrueMax ) ); 
+      }
     }
 	} // end EvaluateMovingImageValue 
 
