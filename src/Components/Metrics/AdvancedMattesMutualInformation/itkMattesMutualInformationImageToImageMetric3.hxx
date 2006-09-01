@@ -81,8 +81,6 @@ namespace itk
     this->m_SoftMinLimit_A = 0.0;
     this->m_MovingImageMinLimit = 0.0;
     this->m_MovingImageMaxLimit = 1.0;
-    
-
     		
 	} // end Constructor
 	
@@ -245,15 +243,7 @@ namespace itk
       this->m_SoftMinLimit_a = 0.0;
       this->m_SoftMinLimit_A = 0.0;
     }
-   
-
-    std::cerr << "minlimit = " << this->m_MovingImageMinLimit << std::endl;
-    std::cerr << "maxlimit = " << this->m_MovingImageMaxLimit << std::endl;
-    std::cerr << "min a = " << this->m_SoftMinLimit_a << std::endl;
-    std::cerr << "min A = " << this->m_SoftMinLimit_A << std::endl;
-    std::cerr << "max a = " << this->m_SoftMaxLimit_a << std::endl;
-    std::cerr << "max A = " << this->m_SoftMaxLimit_A << std::endl;
-		
+	
 		/**
 		 * Compute binsize for the histograms.
 		 *
