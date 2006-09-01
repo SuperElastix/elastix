@@ -75,9 +75,9 @@ namespace itk
     this->m_SoftLimitMovingGrayValues = true;
     this->m_LimitRangeRatio = 0.01;
     /** Some dummy values */
-    this->m_SoftMaxLimit_a = -1.0;
+    this->m_SoftMaxLimit_a = 0.0;
     this->m_SoftMaxLimit_A = 0.0;
-    this->m_SoftMinLimit_a = 1.0;
+    this->m_SoftMinLimit_a = 0.0;
     this->m_SoftMinLimit_A = 0.0;
     this->m_MovingImageMinLimit = 0.0;
     this->m_MovingImageMaxLimit = 1.0;
@@ -221,32 +221,38 @@ namespace itk
 			" MovingImageMax: " << movingImageMax << std::endl );
 
     /** Compute settings for the soft limiter */
-    if ( (this->m_MovingImageTrueMax - this->m_MovingImageMaxLimit) > 1e-10 )
+    if ( (this->m_MovingImageTrueMax - this->m_MovingImageMaxLimit) < -1e-10 )
     {
-      this->m_SoftMaxLimit_a = 1.0 / 
-        ( this->m_MovingImageTrueMax - this->m_MovingImageMaxLimit );
-      this->m_SoftMaxLimit_A = 1.0 / ( 
-        this->m_SoftMaxLimit_a * vcl_exp(
-        this->m_SoftMaxLimit_a * this->m_MovingImageTrueMax ) );
+      this->m_SoftMaxLimit_A = 
+        this->m_MovingImageTrueMax - this->m_MovingImageMaxLimit;
+      this->m_SoftMaxLimit_a = 1.0 / this->m_SoftMaxLimit_A;
     }
     else
     {
-      this->m_SoftMaxLimit_a = -1.0;  //dummy value
+      /** The result is hard limiter */
+      this->m_SoftMaxLimit_a = 0.0;
       this->m_SoftMaxLimit_A = 0.0;
     }
-    if ( (this->m_MovingImageTrueMax - this->m_MovingImageMaxLimit) > 1e-10 )
+    if ( (this->m_MovingImageTrueMin - this->m_MovingImageMinLimit) > 1e-10 )
     {
-      this->m_SoftMinLimit_a = 1.0 / 
-        ( this->m_MovingImageTrueMin - this->m_MovingImageMinLimit );
-      this->m_SoftMinLimit_A = 1.0 / ( 
-      this->m_SoftMinLimit_a * vcl_exp(
-      this->m_SoftMinLimit_a * this->m_MovingImageTrueMin ) );
+      this->m_SoftMinLimit_A = 
+        this->m_MovingImageTrueMin - this->m_MovingImageMinLimit;
+      this->m_SoftMinLimit_a = 1.0 / this->m_SoftMinLimit_A;
     }
     else
     {
-      this->m_SoftMinLimit_a = 1.0;  //dummy value
+      /** The result is hard limiter */
+      this->m_SoftMinLimit_a = 0.0;
       this->m_SoftMinLimit_A = 0.0;
     }
+   
+
+    std::cerr << "minlimit = " << this->m_MovingImageMinLimit << std::endl;
+    std::cerr << "maxlimit = " << this->m_MovingImageMaxLimit << std::endl;
+    std::cerr << "min a = " << this->m_SoftMinLimit_a << std::endl;
+    std::cerr << "min A = " << this->m_SoftMinLimit_A << std::endl;
+    std::cerr << "max a = " << this->m_SoftMaxLimit_a << std::endl;
+    std::cerr << "max A = " << this->m_SoftMaxLimit_A << std::endl;
 		
 		/**
 		 * Compute binsize for the histograms.
@@ -1455,14 +1461,15 @@ namespace itk
       {    
         this->ComputeImageDerivatives( cindex, *gradient);
       }
-
+      
       if ( this->m_SoftLimitMovingGrayValues )
       {
         /** Apply a soft limit */
-        if ( movingImageValue > this->m_MovingImageTrueMax )
+        const double diff =  movingImageValue - this->m_MovingImageTrueMax;
+        if ( diff > 1e-10 )
         {
-          const double temp = 
-            this->m_SoftMaxLimit_A * vcl_exp( this->m_SoftMaxLimit_a * movingImageValue );
+          const double temp = this->m_SoftMaxLimit_A *
+            vcl_exp( this->m_SoftMaxLimit_a * diff );
           movingImageValue = temp + this->m_MovingImageMaxLimit;
           if (gradient)
           {
@@ -1473,28 +1480,34 @@ namespace itk
             }
           }
         }
-        if ( movingImageValue < this->m_MovingImageTrueMin )
+        else
         {
-          const double temp = 
-            this->m_SoftMinLimit_A * vcl_exp( this->m_SoftMinLimit_a * movingImageValue );
-          movingImageValue = temp + this->m_MovingImageMinLimit;
-          if (gradient)
+          const double diff = movingImageValue - this->m_MovingImageTrueMin;
+          if ( diff < -1e-10 )
           {
-            const double gradientfactor = this->m_SoftMinLimit_a * temp;
-            for (unsigned int i = 0; i < MovingImageDimension; ++i)
+            const double temp = this->m_SoftMinLimit_A * vcl_exp( 
+              this->m_SoftMinLimit_a * ( movingImageValue - this->m_MovingImageTrueMin )  );
+            movingImageValue = temp + this->m_MovingImageMinLimit;
+            if (gradient)
             {
-              (*gradient)[i] = (*gradient)[i] * gradientfactor;
-            }
-          }
-        }
-      }
+              const double gradientfactor = this->m_SoftMinLimit_a * temp;
+              for (unsigned int i = 0; i < MovingImageDimension; ++i)
+              {
+                (*gradient)[i] = (*gradient)[i] * gradientfactor;
+              } // end for
+            } // end if gradient
+          } // end if diff < -1e10            
+        } // end else
+      } //end if softlimit
       else if ( this->m_HardLimitMovingGrayValues )
 			{ 
         /** Limit the image value to the image's maximum and minimum */
         movingImageValue = vnl_math_min( movingImageValue, this->m_MovingImageMaxLimit );
         movingImageValue = vnl_math_max( movingImageValue, this->m_MovingImageMinLimit );
-        /** The gradient is rather undefined now, so just leave it as it is.
-         * We may set it to zero? */
+        if ( gradient )
+        {
+          (*gradient).Fill(0.0); 
+        }
       }
       else
       { 
