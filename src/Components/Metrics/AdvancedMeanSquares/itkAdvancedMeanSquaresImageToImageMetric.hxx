@@ -221,7 +221,7 @@ namespace itk
         }
         r = static_cast<float>( vcl_sqrt( r ) );
         r = static_cast<float>( vnl_math_max( r, itk::NumericTraits<float>::One ) );
-        it.Value() /= r;
+        it.Value() = 1.0/r;
       }
     }
           
