@@ -212,14 +212,14 @@ namespace itk
       {
         const MovingIndexType & index = it.GetIndex();
         MovingOffsetType offset = index - centerIndex;
-        double r;
+        float r;
         for (unsigned int i = 0; i < MovingImageDimension; ++i)
         {
-          r += static_cast<double>(
+          r += static_cast<float>(
             vnl_math_sqr( static_cast<int>( offset[i] ) ) );
         }
-        r = vcl_sqrt( r );
-        r = vnl_math_max( r, 1.0 );
+        r = static_cast<float>( vcl_sqrt( r ) );
+        r = static_cast<float>( vnl_math_max( r, itk::NumericTraits<float>::One ) );
         it.Value() /= r;
       }
     }

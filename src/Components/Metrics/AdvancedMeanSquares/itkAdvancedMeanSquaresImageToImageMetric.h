@@ -95,7 +95,7 @@ public:
 	itkStaticConstMacro( MovingImageDimension, unsigned int,
 		MovingImageType::ImageDimension );
 
-  typedef unsigned char                                   InternalMaskPixelType;
+  typedef float                                          InternalMaskPixelType;
   typedef typename itk::Image<
     InternalMaskPixelType, 
     itkGetStaticConstMacro(MovingImageDimension) >        InternalMovingImageMaskType;
