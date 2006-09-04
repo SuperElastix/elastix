@@ -208,6 +208,7 @@ namespace itk
         centerIndex[i] +=
           this->m_InternalMovingImageMask->GetLargestPossibleRegion().GetSize()[i] /2;
       }
+      MovingImageSpacingType spacing = this->m_InternalMovingImageMask->GetSpacing();
       for( it.GoToBegin(); ! it.IsAtEnd(); ++it )
       {
         const MovingIndexType & index = it.GetIndex();
@@ -216,7 +217,7 @@ namespace itk
         for (unsigned int i = 0; i < MovingImageDimension; ++i)
         {
           r += static_cast<float>(
-            vnl_math_sqr( static_cast<int>( offset[i] ) ) );
+            vnl_math_sqr( static_cast<float>( offset[i]*spacing[i] ) ) );
         }
         r = static_cast<float>( vcl_sqrt( r ) );
         r = static_cast<float>( vnl_math_max( r, itk::NumericTraits<float>::One ) );
