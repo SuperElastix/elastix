@@ -31,6 +31,7 @@ namespace itk
     this->m_BSplineInterpolator = 0;
 
     this->m_UseDifferentiableOverlap = true;
+    this->m_UseDecayingMask = false;
     
     
 	} // end constructor
@@ -94,6 +95,7 @@ namespace itk
     typedef typename MovingImageType::PointType                  MovingOriginType;
     typedef typename MovingImageType::SizeType                   MovingSizeType;
     typedef typename MovingImageType::IndexType                  MovingIndexType;
+    typedef typename MovingImageType::OffsetType                 MovingOffsetType;
     typedef typename MovingImageType::RegionType                 MovingRegionType;
     typedef itk::ImageRegionExclusionIteratorWithIndex<
       InternalMovingImageMaskType>                               MovingEdgeIteratorType;
@@ -194,7 +196,34 @@ namespace itk
       this->m_InternalMovingImageMask = tempImage;
         
     }
-        
+
+    if ( this->GetUseDecayingMask() )
+    {
+      MovingIteratorType it( this->m_InternalMovingImageMask, 
+        this->m_InternalMovingImageMask->GetLargestPossibleRegion() );
+      MovingIndexType centerIndex = 
+        this->m_InternalMovingImageMask->GetLargestPossibleRegion().GetIndex();
+      for (unsigned int i = 0; i < MovingImageDimension; ++i)
+      {
+        centerIndex[i] +=
+          this->m_InternalMovingImageMask->GetLargestPossibleRegion().GetSize()[i] /2;
+      }
+      for( it.GoToBegin(); ! it.IsAtEnd(); ++it )
+      {
+        const MovingIndexType & index = it.GetIndex();
+        MovingOffsetType offset = index - centerIndex;
+        double r;
+        for (unsigned int i = 0; i < MovingImageDimension; ++i)
+        {
+          r += static_cast<double>(
+            vnl_math_sqr( static_cast<int>( offset[i] ) ) );
+        }
+        r = vcl_sqrt( r );
+        r = vnl_math_max( r, 1.0 );
+        it.Value() /= r;
+      }
+    }
+          
     /** Set the internal mask into the interpolator */
     this->m_MovingImageMaskInterpolator->SetInputImage( this->m_InternalMovingImageMask );
 

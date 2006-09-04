@@ -142,6 +142,10 @@ public:
   itkSetMacro(UseDifferentiableOverlap, bool);
   itkGetConstMacro(UseDifferentiableOverlap, bool);
 
+  /** Multiply mask at each pixel by 1/r with r = distance to the center */
+  itkSetMacro(UseDecayingMask, bool);
+  itkGetConstMacro(UseDecayingMask, bool);
+
   /** Set the interpolation spline order for the moving image mask; default: 2
    * Make sure to call this before calling Initialize(), if you want to change it. */
   virtual void SetMovingImageMaskInterpolationOrder(unsigned int order)
@@ -191,6 +195,7 @@ private:
   void operator=(const Self&); //purposely not implemented
 
   bool m_UseDifferentiableOverlap;
+  bool m_UseDecayingMask;
 
 }; // end class AdvancedMeanSquaresImageToImageMetric
 
