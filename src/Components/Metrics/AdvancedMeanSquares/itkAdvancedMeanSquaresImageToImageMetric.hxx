@@ -212,7 +212,7 @@ namespace itk
           this->m_InternalMovingImageMask->GetLargestPossibleRegion().GetSize()[i] /2;
         maxlength = static_cast<int>(vnl_math_max( static_cast<int>(centerIndex[i]),static_cast<int>(
           this->m_InternalMovingImageMask->GetLargestPossibleRegion().GetSize()[i]- centerIndex[i]) ));
-        one_maxlength = static_cast<double>(vnl_math_max(one_maxlength, static_cast<double>(spacing[i] / maxlength)));
+        one_maxlength = static_cast<double>(vnl_math_max(one_maxlength, static_cast<double>(1.0/(spacing[i] * maxlength))));
 
       }
       
