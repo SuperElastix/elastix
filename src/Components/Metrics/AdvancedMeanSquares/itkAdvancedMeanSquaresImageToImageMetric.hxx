@@ -203,12 +203,20 @@ namespace itk
         this->m_InternalMovingImageMask->GetLargestPossibleRegion() );
       MovingIndexType centerIndex = 
         this->m_InternalMovingImageMask->GetLargestPossibleRegion().GetIndex();
+      MovingImageSpacingType spacing = this->m_InternalMovingImageMask->GetSpacing();
+      int maxlength = 0;
+      double one_maxlength;
       for (unsigned int i = 0; i < MovingImageDimension; ++i)
       {
         centerIndex[i] +=
           this->m_InternalMovingImageMask->GetLargestPossibleRegion().GetSize()[i] /2;
+        maxlength = static_cast<int>(vnl_math_max( static_cast<int>(centerIndex[i]),static_cast<int>(
+          this->m_InternalMovingImageMask->GetLargestPossibleRegion().GetSize()[i]- centerIndex[i]) ));
+        one_maxlength = static_cast<double>(vnl_math_max(one_maxlength, static_cast<double>(spacing[i] / maxlength)));
+
       }
-      MovingImageSpacingType spacing = this->m_InternalMovingImageMask->GetSpacing();
+      
+            
       for( it.GoToBegin(); ! it.IsAtEnd(); ++it )
       {
         const MovingIndexType & index = it.GetIndex();
@@ -221,7 +229,8 @@ namespace itk
         }
         r = static_cast<float>( vcl_sqrt( r ) );
         r = static_cast<float>( vnl_math_max( r, itk::NumericTraits<float>::One ) );
-        it.Value() = 1.0/r;
+        it.Value() = static_cast<InternalMaskPixelType>(
+          vnl_math_max(itk::NumericTraits<float>::Zero, static_cast<float>(1.0/r - one_maxlength) ));
       }
     }
           
