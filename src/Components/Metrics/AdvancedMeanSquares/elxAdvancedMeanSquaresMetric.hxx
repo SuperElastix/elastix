@@ -51,19 +51,6 @@ using namespace itk;
       this->SetUseDifferentiableOverlap(true);
     }
 
-    /** Set whether a differentiable overlap should be used */
-    std::string useDecayingMask = "false";
-    this->GetConfiguration()->ReadParameter( useDecayingMask, "UseDecayingMask", 0 );
-    this->GetConfiguration()->ReadParameter( useDecayingMask, "UseDecayingMask", level, true );
-    if ( useDecayingMask == "true" )
-    {
-      this->SetUseDecayingMask(true);
-    }
-    else
-    {
-      this->SetUseDecayingMask(false);
-    }
-
     /** Get and set the mask interpolation order */
 		unsigned int movingMaskInterpolationOrder = 2;
     this->GetConfiguration()->ReadParameter( 

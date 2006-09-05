@@ -31,9 +31,7 @@ namespace itk
     this->m_BSplineInterpolator = 0;
 
     this->m_UseDifferentiableOverlap = true;
-    this->m_UseDecayingMask = false;
-    
-    
+     
 	} // end constructor
 
 
@@ -196,68 +194,9 @@ namespace itk
       this->m_InternalMovingImageMask = tempImage;
         
     }
-
-    if ( this->GetUseDecayingMask() )
-    {
-      MovingIteratorType it( this->m_InternalMovingImageMask, 
-        this->m_InternalMovingImageMask->GetLargestPossibleRegion() );
-      MovingIndexType centerIndex = 
-        this->m_InternalMovingImageMask->GetLargestPossibleRegion().GetIndex();
-      MovingImageSpacingType spacing = this->m_InternalMovingImageMask->GetSpacing();
-      int maxlength = 0;
-      double one_maxlength;
-      for (unsigned int i = 0; i < MovingImageDimension; ++i)
-      {
-        centerIndex[i] +=
-          this->m_InternalMovingImageMask->GetLargestPossibleRegion().GetSize()[i] /2;
-        maxlength = static_cast<int>(vnl_math_max( static_cast<int>(centerIndex[i]),static_cast<int>(
-          this->m_InternalMovingImageMask->GetLargestPossibleRegion().GetSize()[i]- centerIndex[i]) ));
-        one_maxlength = static_cast<double>(vnl_math_max(one_maxlength, static_cast<double>(1.0/(spacing[i] * maxlength))));
-
-      }
-      
-            
-      for( it.GoToBegin(); ! it.IsAtEnd(); ++it )
-      {
-        const MovingIndexType & index = it.GetIndex();
-        MovingOffsetType offset = index - centerIndex;
-        float r;
-        for (unsigned int i = 0; i < MovingImageDimension; ++i)
-        {
-          r += static_cast<float>(
-            vnl_math_sqr( static_cast<float>( offset[i]*spacing[i] ) ) );
-        }
-        r = static_cast<float>( vcl_sqrt( r ) );
-        r = static_cast<float>( vnl_math_max( r, itk::NumericTraits<float>::One ) );
-        it.Value() = static_cast<InternalMaskPixelType>(
-          vnl_math_max(itk::NumericTraits<float>::Zero, static_cast<float>(1.0/r - one_maxlength) ));
-      }
-    }
-          
+              
     /** Set the internal mask into the interpolator */
     this->m_MovingImageMaskInterpolator->SetInputImage( this->m_InternalMovingImageMask );
-
-    //test: 
-    /**OutputPointType midden;
-    OutputPointType neterin;
-    OutputPointType neteruit;
-    OutputPointType neternietuit;
-    midden.Fill(128.0);
-    neterin.Fill(4.0);
-    neteruit.Fill(253.0);
-    neternietuit.Fill(251.0);
-
-    double tempje;
-    MovingImageMaskDerivativeType deriv;
-    this->EvaluateMovingMaskValueAndDerivative(midden, tempje, deriv);
-    std::cout << "midden: " << tempje << " " << deriv << std::endl;
-    this->EvaluateMovingMaskValueAndDerivative(neterin, tempje, deriv);
-    std::cout << "neterin: " << tempje << " " << deriv << std::endl;
-    this->EvaluateMovingMaskValueAndDerivative(neteruit, tempje, deriv);
-    std::cout << "neteruit: " << tempje << " " << deriv << std::endl;
-    this->EvaluateMovingMaskValueAndDerivative(neternietuit, tempje, deriv);
-    std::cout << "neternietuit: " << tempje << " " << deriv << std::endl;
-*/
  
   } // end InitializeInternalMasks
 
