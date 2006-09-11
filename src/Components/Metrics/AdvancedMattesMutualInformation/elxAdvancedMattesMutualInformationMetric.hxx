@@ -48,7 +48,18 @@ using namespace itk;
 		unsigned int numberOfHistogramBins = 32;
     this->GetConfiguration()->ReadParameter( numberOfHistogramBins, "NumberOfHistogramBins", 0, true);
 		this->GetConfiguration()->ReadParameter( numberOfHistogramBins, "NumberOfHistogramBins", level );
-		this->SetNumberOfHistogramBins( numberOfHistogramBins );
+		this->SetNumberOfFixedHistogramBins( numberOfHistogramBins );
+    this->SetNumberOfMovingHistogramBins( numberOfHistogramBins );
+
+    unsigned int numberOfFixedHistogramBins = numberOfHistogramBins;
+    unsigned int numberOfMovingHistogramBins = numberOfHistogramBins;
+    this->GetConfiguration()->ReadParameter( numberOfFixedHistogramBins, "NumberOfFixedHistogramBins", 0, true);
+		this->GetConfiguration()->ReadParameter( numberOfFixedHistogramBins, "NumberOfFixedHistogramBins", level );
+    this->GetConfiguration()->ReadParameter( numberOfMovingHistogramBins, "NumberOfMovingHistogramBins", 0, true);
+		this->GetConfiguration()->ReadParameter( numberOfMovingHistogramBins, "NumberOfMovingHistogramBins", level );
+		this->SetNumberOfFixedHistogramBins( numberOfFixedHistogramBins );
+    this->SetNumberOfMovingHistogramBins( numberOfMovingHistogramBins );
+
 
     /** Set whether a differentiable overlap should be used */
     std::string useDifferentiableOverlap = "true";
@@ -107,11 +118,25 @@ using namespace itk;
     }
 
     /** Get and set the number of histogram bins. */
-		double limitRangeRatio = 0.01;
-    this->GetConfiguration()->ReadParameter( limitRangeRatio, "LimitRangeRatio", 0, true);
-		this->GetConfiguration()->ReadParameter( limitRangeRatio, "LimitRangeRatio", level );
-		this->SetLimitRangeRatio( limitRangeRatio );
-  
+		double fixedLimitRangeRatio = 0.01;
+    double movingLimitRangeRatio = 0.01;
+    this->GetConfiguration()->ReadParameter( fixedLimitRangeRatio, "FixedLimitRangeRatio", 0, true);
+    this->GetConfiguration()->ReadParameter( fixedLimitRangeRatio, "FixedLimitRangeRatio", level);
+    this->GetConfiguration()->ReadParameter( movingLimitRangeRatio, "MovingLimitRangeRatio", 0, true );
+		this->GetConfiguration()->ReadParameter( movingLimitRangeRatio, "MovingLimitRangeRatio", level );
+		this->SetFixedLimitRangeRatio( fixedLimitRangeRatio );
+    this->SetMovingLimitRangeRatio( movingLimitRangeRatio );
+
+    unsigned int fixedKernelBSplineOrder = 0;
+    unsigned int movingKernelBSplineOrder = 3;
+    this->GetConfiguration()->ReadParameter( fixedKernelBSplineOrder, "FixedKernelBSplineOrder", 0, true);
+		this->GetConfiguration()->ReadParameter( fixedKernelBSplineOrder, "FixedKernelBSplineOrder", level );
+    this->GetConfiguration()->ReadParameter( movingKernelBSplineOrder, "MovingKernelBSplineOrder", 0, true);
+		this->GetConfiguration()->ReadParameter( movingKernelBSplineOrder, "MovingKernelBSplineOrder", level );
+		this->SetFixedKernelBSplineOrder( fixedKernelBSplineOrder );
+    this->SetMovingKernelBSplineOrder( movingKernelBSplineOrder );
+
+ 
 
 	} // end BeforeEachResolution
 	

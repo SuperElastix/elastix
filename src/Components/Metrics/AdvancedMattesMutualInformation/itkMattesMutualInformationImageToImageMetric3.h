@@ -11,7 +11,6 @@
 #include "itkBSplineInterpolateImageFunction.h"
 #include "itkBSplineDeformableTransform.h"
 #include "itkBSplineResampleImageFunction.h"
-
 #include "itkBSplineCombinationTransform.h"
 
 namespace itk
@@ -133,28 +132,32 @@ namespace itk
 		typedef typename Superclass::FixedImageType           FixedImageType;
 		typedef typename Superclass::MovingImageType          MovingImageType;
 		typedef typename Superclass::FixedImageConstPointer   FixedImageConstPointer;
-		typedef typename Superclass::MovingImageConstPointer  MovingImageCosntPointer;
+		typedef typename Superclass::MovingImageConstPointer  MovingImageConstPointer;
 		typedef typename Superclass::CoordinateRepresentationType
 			CoordinateRepresentationType;
-		
-		/** Index and Point typedef support. */
+
+    /** Typedefs for indices and points */
 		typedef typename FixedImageType::IndexType            FixedImageIndexType;
 		typedef typename FixedImageIndexType::IndexValueType  FixedImageIndexValueType;
 		typedef typename MovingImageType::IndexType           MovingImageIndexType;
 		typedef typename TransformType::InputPointType        FixedImagePointType;
 		typedef typename TransformType::OutputPointType       MovingImagePointType;
 
-    /** Sample container support */
+    /** Typedefs for ImageSampler support */
     typedef typename Superclass::ImageSamplerType              ImageSamplerType;
     typedef typename Superclass::ImageSamplerPointer           ImageSamplerPointer;
     typedef typename Superclass::ImageSampleContainerType      ImageSampleContainerType;
     typedef typename Superclass::ImageSampleContainerPointer   ImageSampleContainerPointer;
-
 		
+    /** The fixed image dimension. */
+		itkStaticConstMacro( FixedImageDimension, unsigned int,
+			FixedImageType::ImageDimension );
+
 		/** The moving image dimension. */
 		itkStaticConstMacro( MovingImageDimension, unsigned int,
 			MovingImageType::ImageDimension );
 
+    /** Typedefs for mask support */
     typedef unsigned char                                   InternalMaskPixelType;
     typedef typename itk::Image<
       InternalMaskPixelType, 
@@ -167,7 +170,6 @@ namespace itk
       MovingImageMaskInterpolatorType::CovariantVectorType  MovingImageMaskDerivativeType;
     typedef typename 
       MovingImageMaskInterpolatorType::ContinuousIndexType  MovingImageContinuousIndexType;
-
 		
 		/** Initialize the Metric by
 		 * (1) making sure that all the components are present and plugged
@@ -200,10 +202,15 @@ namespace itk
     itkSetMacro(UseDifferentiableOverlap, bool);
     itkGetConstMacro(UseDifferentiableOverlap, bool);
 		
-		/** Number of bins to used in the histogram. Typical value is 50. */
-		itkSetClampMacro( NumberOfHistogramBins, unsigned long,
+		/** Number of bins to use for the fixed image in the histogram. Typical value is 50. */
+		itkSetClampMacro( NumberOfFixedHistogramBins, unsigned long,
 			1, NumericTraits<unsigned long>::max() );
-		itkGetMacro( NumberOfHistogramBins, unsigned long);   
+		itkGetMacro( NumberOfFixedHistogramBins, unsigned long);   
+
+    /** Number of bins for the moving image to use in the histogram. Typical value is 50. */
+		itkSetClampMacro( NumberOfMovingHistogramBins, unsigned long,
+			1, NumericTraits<unsigned long>::max() );
+		itkGetMacro( NumberOfMovingHistogramBins, unsigned long);   
 
     /** Setting whether to check if enough samples map inside the moving image. Default: true */
     itkSetMacro(CheckNumberOfSamples, bool);  
@@ -230,6 +237,8 @@ namespace itk
      * imagevalue = min( imagevalue, maxlimit )
      * imagevalue = max( imagevalue, minlimit )
      * where max/minlimit are defined by the limitrangeratio.
+     *
+     * NB: For the fixed image always a hard limiter is used.
      */
     itkSetMacro(HardLimitMovingGrayValues, bool);
     itkGetConstMacro(HardLimitMovingGrayValues, bool);
@@ -247,140 +256,176 @@ namespace itk
      * A = 1.0 / ( a e^(aT) )
      * imagevalue = A e ^(a*imagevalue) + L
      * and adapts the image derivatives correspondingly.
+     *
+     * NB: For the fixed image always a hard limiter is used
      */
     itkSetMacro(SoftLimitMovingGrayValues, bool);
     itkGetConstMacro(SoftLimitMovingGrayValues, bool);
 
-    /** A percentage that defines how much the moving gray value range is extended
+    /** A percentage that defines how much the gray value range is extended
      * maxlimit = max + LimitRangeRatio * (max - min)
      * minlimit = min - LimitRangeRatio * (max - min)
      * Default: 0.01;
      * If you use a neirest neighbor or linear interpolator, set it to zero and
      * use a hard limiter, or no limiter at all.
+     * For the fixed image always a hard limiter is used.
      */
-    itkSetMacro(LimitRangeRatio, double);
-    itkGetConstMacro(LimitRangeRatio, double);
-	
-	
+    itkSetMacro(MovingLimitRangeRatio, double);
+    itkGetConstMacro(MovingLimitRangeRatio, double);
+    itkSetMacro(FixedLimitRangeRatio, double);
+    itkGetConstMacro(FixedLimitRangeRatio, double);
+
+
+    /** The bspline order of the fixed parzen window; default: 0 */
+    itkSetMacro(FixedKernelBSplineOrder, unsigned int);
+    itkGetConstMacro(FixedKernelBSplineOrder, unsigned int);
+    
+    /** The bspline order of the moving bspline order; default: 3 */
+    itkSetMacro(MovingKernelBSplineOrder, unsigned int);
+    itkGetConstMacro(MovingKernelBSplineOrder, unsigned int);
+
 	protected:
 		
 		/** The constructor. */
 		MattesMutualInformationImageToImageMetric3();
+
 		/** The destructor. */
 		virtual ~MattesMutualInformationImageToImageMetric3() {};
 
 		/** Print Self. */
 		void PrintSelf( std::ostream& os, Indent indent ) const;
-
-    /** Types and variables related to image derivative calculations.
-		 * If a BSplineInterpolationFunction is used, this class obtain
-		 * image derivatives from the BSpline interpolator. Otherwise, 
-		 * image derivatives are computed using central differencing.
-		 */
-	
-		/** Boolean to indicate if the interpolator BSpline. */
-		bool m_InterpolatorIsBSpline;
-		
-		/** Typedefs for using BSpline interpolator. */
-		typedef
-			BSplineInterpolateImageFunction<MovingImageType,
-			CoordinateRepresentationType> BSplineInterpolatorType;
-		
-		/** Pointer to BSplineInterpolator. */
-		typename BSplineInterpolatorType::Pointer m_BSplineInterpolator;
-		
-		/** Typedefs for using central difference calculator. */
-		typedef CentralDifferenceImageFunction<MovingImageType,
-			CoordinateRepresentationType> DerivativeFunctionType;
-
+  
+    /** Typedefs used for computing image derivatives */
+		typedef	BSplineInterpolateImageFunction<
+      MovingImageType, CoordinateRepresentationType>              BSplineInterpolatorType;
+  	typedef CentralDifferenceImageFunction<
+      MovingImageType, CoordinateRepresentationType>              DerivativeFunctionType;
     typedef typename BSplineInterpolatorType::CovariantVectorType ImageDerivativesType;
-			
-		/** Pointer to central difference calculator. */
-		typename DerivativeFunctionType::Pointer m_DerivativeCalculator;
 
-    /** Compute image derivatives at a point. */
+    /** Typedefs for BSplineTransform */
+    enum { DeformationSplineOrder = 3 };
+		typedef BSplineDeformableTransform<
+			CoordinateRepresentationType,
+			::itk::GetImageDimension<FixedImageType>::ImageDimension,
+			DeformationSplineOrder>													            BSplineTransformType;
+    typedef typename 
+			BSplineTransformType::WeightsType								            BSplineTransformWeightsType;
+		typedef typename 
+			BSplineTransformType::ParameterIndexArrayType 	            BSplineTransformIndexArrayType;
+		typedef itk::BSplineCombinationTransform<
+			CoordinateRepresentationType,
+			::itk::GetImageDimension<FixedImageType>::ImageDimension,
+			DeformationSplineOrder>													            BSplineCombinationTransformType;
+ 		typedef FixedArray< unsigned long, 
+			::itk::GetImageDimension<FixedImageType>::ImageDimension>   ParametersOffsetType;
+
+    /** Typedefs for the PDFs and PDF derivatives.  */
+    typedef float                                 PDFValueType;
+		typedef Array<PDFValueType>                   MarginalPDFType;
+    typedef Image<PDFValueType,2>									JointPDFType;
+		typedef Image<PDFValueType,3>									JointPDFDerivativesType;
+		typedef JointPDFType::IndexType               JointPDFIndexType;
+    typedef JointPDFType::PixelType               JointPDFValueType;
+		typedef JointPDFType::RegionType              JointPDFRegionType;
+		typedef JointPDFType::SizeType                JointPDFSizeType;
+		typedef JointPDFDerivativesType::IndexType    JointPDFDerivativesIndexType;
+    typedef JointPDFDerivativesType::PixelType    JointPDFDerivativesValueType;
+		typedef JointPDFDerivativesType::RegionType   JointPDFDerivativesRegionType;
+		typedef JointPDFDerivativesType::SizeType     JointPDFDerivativesSizeType;
+    typedef Array<double>                         ParzenValueContainerType;
+    
+    /** Typedefs for parzen kernel . */
+    typedef KernelFunction KernelFunctionType;
+
+    /** Array type for holding parameter indices */
+    typedef Array<unsigned int>                   ParameterIndexArrayType;
+    		
+    /** Variables for image derivative computation */
+		bool m_InterpolatorIsBSpline;
+		typename BSplineInterpolatorType::Pointer m_BSplineInterpolator;
+		typename DerivativeFunctionType::Pointer  m_DerivativeCalculator;
+
+    /** Variables used when the transform is a bspline transform */
+    bool m_TransformIsBSpline;
+		bool m_TransformIsBSplineCombination;
+    typename BSplineTransformType::Pointer						m_BSplineTransform;
+		mutable BSplineTransformWeightsType								m_BSplineTransformWeights;
+		mutable BSplineTransformIndexArrayType						m_BSplineTransformIndices;
+		typename BSplineCombinationTransformType::Pointer m_BSplineCombinationTransform;
+		ParametersOffsetType                              m_ParametersOffset;
+		/** The number of BSpline parameters per image dimension. */
+		long m_NumParametersPerDim;
+		/** The number of BSpline transform weights is the number of
+		* of parameter in the support region (per dimension ). */   
+		unsigned long m_NumBSplineWeights;
+
+    /** Variables for the internal mask */
+    typename InternalMovingImageMaskType::Pointer      m_InternalMovingImageMask;
+    typename MovingImageMaskInterpolatorType::Pointer  m_MovingImageMaskInterpolator;
+
+    /** Some arrays for computing derivatives */
+    mutable DerivativeType                        m_AlphaDerivatives;
+    mutable DerivativeType                        m_ImageJacobian;
+    mutable DerivativeType                        m_MaskJacobian;
+    mutable ParameterIndexArrayType               m_NonZeroJacobian;
+
+    /** Variables for the pdfs */
+    mutable MarginalPDFType                       m_FixedImageMarginalPDF;
+		mutable MarginalPDFType                       m_MovingImageMarginalPDF;
+    typename JointPDFType::Pointer								m_JointPDF;
+		typename JointPDFDerivativesType::Pointer			m_JointPDFDerivatives;
+    mutable JointPDFRegionType                    m_JointPDFWindow;
+    double m_MovingImageNormalizedMin;
+		double m_FixedImageNormalizedMin;
+    double m_FixedImageTrueMin;
+		double m_FixedImageTrueMax;
+		double m_MovingImageTrueMin;
+		double m_MovingImageTrueMax;
+		double m_FixedImageBinSize;
+		double m_MovingImageBinSize;
+    unsigned long m_NumberOfParameters;
+    double m_FixedParzenTermToIndexOffset;
+    double m_MovingParzenTermToIndexOffset;
+    
+    /** Kernels for computing Parzen histograms and derivatives. */
+		typename KernelFunctionType::Pointer m_FixedKernel;
+    typename KernelFunctionType::Pointer m_MovingKernel;
+		typename KernelFunctionType::Pointer m_DerivativeMovingKernel;
+				    
+    /** Parameters for the soft gray value limiter */
+    double m_SoftMaxLimit_a;
+    double m_SoftMaxLimit_A;
+    double m_SoftMinLimit_a;
+    double m_SoftMinLimit_A;
+
+    /** The minimum and maximum gray values that fit in the histogram */
+    double m_MovingImageMinLimit;
+    double m_MovingImageMaxLimit;
+    double m_FixedImageMinLimit;
+    double m_FixedImageMaxLimit;
+
+    /** Compute image derivatives at a point.
+     * If a BSplineInterpolationFunction is used, this class obtain
+		 * image derivatives from the BSpline interpolator. Otherwise, 
+		 * image derivatives are computed using central differencing. */
 		virtual void ComputeImageDerivatives( 
       const MovingImageContinuousIndexType & cindex,
 			ImageDerivativesType& gradient ) const;
 
     /** Compute the image value (and possibly derivative) at a transformed point.
      * Checks if the point lies within the moving image buffer.
-     * If no gradient is wanted, set the gradient argument to 0.
-     */
+     * If no gradient is wanted, set the gradient argument to 0. */
     virtual void EvaluateMovingImageValueAndDerivative( 
       const MovingImagePointType & mappedPoint,
       bool & sampleOk,
       double & movingImageValue,
       ImageDerivativesType * gradient) const;
 				
-		/** Compute PDF derivative contribution for each parameter. */
-		virtual void ComputePDFDerivatives( const FixedImagePointType& fixedImagePoint,
-			int fixedImageParzenWindowIndex, int movingImageParzenWindowIndex,
-			const ImageDerivativesType& movingImageGradientValue,
-      const MovingImageMaskDerivativeType & movingMaskDerivative,
-			const double & movingImageParzenWindowValue,
-      const double & movingImageParzenWindowDerivative,
-      const double & movingMaskValue ) const;
-		
  		/** Transform a point from FixedImage domain to MovingImage domain.
-		 * This function also checks if mapped point is within support region.
-		 */
+		 * This function also checks if mapped point is within support region. */
 		virtual void TransformPoint( const FixedImagePointType& fixedImagePoint,
 			MovingImagePointType& mappedPoint, bool& sampleWithinSupportRegion ) const;
-
-		/** Types and variables related to BSpline deformable transforms.
-		 * If the transform is of type third order BSplineDeformableTransform,
-		 * then we can speed up the metric derivative calculation by
-		 * only inspecting the parameters within the support region
-		 * of a mapped point.
-		 */
-		
-		/** Boolean to indicate if the transform is BSpline deformable. */
-		bool m_TransformIsBSpline;
-		bool m_TransformIsBSplineCombination;
-		
-		/** The number of BSpline parameters per image dimension. */
-		long m_NumParametersPerDim;
-		
-		/** 
-		* The number of BSpline transform weights is the number of
-		* of parameter in the support region (per dimension ). */   
-		unsigned long m_NumBSplineWeights;
-		
-		/** The fixed image dimension. */
-		itkStaticConstMacro( FixedImageDimension, unsigned int,
-			FixedImageType::ImageDimension );
-		
-		/** Enum of the deformabtion field spline order. */
-		enum { DeformationSplineOrder = 3 };
-		
-		/** Typedefs for the BSplineDeformableTransform. */
-		typedef BSplineDeformableTransform<
-			CoordinateRepresentationType,
-			::itk::GetImageDimension<FixedImageType>::ImageDimension,
-			DeformationSplineOrder>													BSplineTransformType;
-    typedef typename 
-			BSplineTransformType::WeightsType								BSplineTransformWeightsType;
-		typedef typename 
-			BSplineTransformType::ParameterIndexArrayType 	BSplineTransformIndexArrayType;
-
-		/** Typedefs for the BSplineCombinationTransform */
-		typedef itk::BSplineCombinationTransform<
-			CoordinateRepresentationType,
-			::itk::GetImageDimension<FixedImageType>::ImageDimension,
-			DeformationSplineOrder>													BSplineCombinationTransformType;
     		
-		/** Variables used when transform is of type BSpline deformable. */
-		typename BSplineTransformType::Pointer						m_BSplineTransform;
-		mutable BSplineTransformWeightsType								m_BSplineTransformWeights;
-		mutable BSplineTransformIndexArrayType						m_BSplineTransformIndices;
-
-		typename BSplineCombinationTransformType::Pointer m_BSplineCombinationTransform;
-
-		typedef FixedArray< unsigned long, 
-			::itk::GetImageDimension<FixedImageType>::ImageDimension> ParametersOffsetType;
-		ParametersOffsetType                   m_ParametersOffset;
-
     /** Estimate value and spatial derivative of internal moving mask */
     virtual void EvaluateMovingMaskValueAndDerivative(
       const MovingImagePointType & point,
@@ -392,21 +437,71 @@ namespace itk
       const MovingImagePointType & point,
       double & value ) const;
 
-    /** Functions called from Initialize, to split up that function a bit. */
-    virtual void InitializeInternalMasks(void);
-
-    typename InternalMovingImageMaskType::Pointer      m_InternalMovingImageMask;
-    typename MovingImageMaskInterpolatorType::Pointer  m_MovingImageMaskInterpolator;
+    /** Compute the parzen values given an image value and a starting histogram index
+     * Compute the values at (parzenWindowIndex - parzenWindowTerm + k) for 
+     * k = 0 ... kernelsize-1
+     * Returns the values in a ParzenValueContainer, which is supposed to have
+     * the right size already **/
+    void ComputeParzenValues(
+      double parzenWindowTerm, int parzenWindowIndex,
+      const KernelFunctionType * kernel, ParzenValueContainerType & parzenValues) const;
     
-    /** Parameters for the soft gray value limiter */
-    double m_SoftMaxLimit_a;
-    double m_SoftMaxLimit_A;
-    double m_SoftMinLimit_a;
-    double m_SoftMinLimit_A;
+    /** Update the joint PDF with a pixel pair; on demand also updates the 
+     * pdf derivatives */
+    virtual void UpdateJointPDFAndDerivatives(
+      double fixedImageValue, double movingImageValue, double movingMaskValue,
+      bool updateDerivatives) const;
 
-    /** The minimum and maximum gray values that fit in the histogram */
-    double m_MovingImageMinLimit;
-    double m_MovingImageMaxLimit;
+    /** Update the pdf derivatives
+     * adds -grad_jac[mu]*factor_a + mask_jac[mu]*factor_b to the bin 
+     * with index [ mu, pdfIndex[0], pdfIndex[1] ] for all mu.
+     * This function should only be called from UpdateJointPDFAndDerivatives */
+    void UpdateJointPDFDerivatives(
+      const JointPDFIndexType & pdfIndex, double factor_a, double factor_b) const;
+
+    /** Computes the innerproduct of transform jacobian with moving image gradient
+     * and transform jacobian with the derivative of the movingMask
+     * The results are stored in m_ImageJacobian and
+     * m_MaskJacobian; m_NonZeroJacobian contains a list of 
+     * parameter numbers that have a nonzero transformJacobian. If it's empty
+     * it means that all parameter numbers have a nonzero jacobian. */
+    virtual void ComputeTransformJacobianInnerProducts(
+      const FixedImagePointType & fixedImagePoint, 
+		  const ImageDerivativesType & movingImageGradientValue,
+      const MovingImageMaskDerivativeType & movingMaskDerivative) const;
+
+    /** Adds the MaskJacobian to the alpha derivative vector */
+    virtual void UpdateAlphaDerivatives(void) const;	
+
+    /** Check if enough samples have been found to compute a reliable 
+     * estimate of the value/derivative; throws an exception if not */
+    virtual void CheckNumberOfSamples(
+      unsigned long wanted, unsigned long found, double sumOfMaskValues) const;
+
+    /** Multiply the pdf entries by the given normalization factor */
+    virtual void NormalizeJointPDF(
+      JointPDFType * pdf, double factor ) const;
+
+    /** Multiply the pdf derivatives entries by the given normalization factor */
+    virtual void NormalizeJointPDFDerivatives(
+      JointPDFDerivativesType * pdf, double factor ) const;
+
+    /** Compute marginal pdfs by summing over the joint pdf
+     * direction = 0: fixed marginal pdf
+     * direction = 1: moving marginal pdf */
+    virtual void ComputeMarginalPDF( 
+      const JointPDFType * jointPDF, MarginalPDFType & marginalPDF, unsigned int direction ) const;
+
+    /** Functions called from Initialize, to split up that function a bit. */
+    virtual void ComputeImageExtrema(
+      double & fixedImageMin, double & fixedImageMax,
+      double & movingImageMin, double & movingImageMax) const;   
+    virtual void InitializeLimiter(void);
+    virtual void InitializeHistograms(void);
+    virtual void InitializeKernels(void);
+    virtual void CheckForBSplineInterpolator(void);
+    virtual void CheckForBSplineTransform(void);
+    virtual void InitializeInternalMasks(void);
 
 	private:
 		
@@ -415,67 +510,16 @@ namespace itk
 		/** The private copy constructor. */
 		void operator=( const Self& );															// purposely not implemented
     				
-		/** The marginal PDFs are stored as std::vector. */
-		typedef float PDFValueType;
-		typedef std::vector<PDFValueType> MarginalPDFType;
-
-    /** The alpha derivatives are stored as a DerivativeType */
-    typedef DerivativeType AlphaDerivativeType;
-		
-		/** The fixed image marginal PDF. */
-		mutable MarginalPDFType m_FixedImageMarginalPDF;
-		
-		/** The moving image marginal PDF. */
-		mutable MarginalPDFType m_MovingImageMarginalPDF;
-
-    /** The alpha derivatives */
-    mutable AlphaDerivativeType m_AlphaDerivative;
-		
-		/** Typedef for the joint PDF and PDF derivatives are stored as ITK Images. */
-		typedef Image<PDFValueType,2>									JointPDFType;
-		typedef Image<PDFValueType,3>									JointPDFDerivativesType;
-		typedef JointPDFType::IndexType               JointPDFIndexType;
-		typedef JointPDFType::PixelType               JointPDFValueType;
-		typedef JointPDFType::RegionType              JointPDFRegionType;
-		typedef JointPDFType::SizeType                JointPDFSizeType;
-		typedef JointPDFDerivativesType::IndexType    JointPDFDerivativesIndexType;
-		typedef JointPDFDerivativesType::PixelType    JointPDFDerivativesValueType;
-		typedef JointPDFDerivativesType::RegionType   JointPDFDerivativesRegionType;
-		typedef JointPDFDerivativesType::SizeType     JointPDFDerivativesSizeType;
-		
-		/** The joint PDF and PDF derivatives. */
-		typename JointPDFType::Pointer								m_JointPDF;
-		typename JointPDFDerivativesType::Pointer			m_JointPDFDerivatives;
-    
-
-    unsigned long m_NumberOfParameters;
-		
-		/** Variables to define the marginal and joint histograms. */
-		unsigned long m_NumberOfHistogramBins;
-		double m_MovingImageNormalizedMin;
-		double m_FixedImageNormalizedMin;
-		double m_MovingImageTrueMin;
-		double m_MovingImageTrueMax;
-		double m_FixedImageBinSize;
-		double m_MovingImageBinSize;
-
-    /** Setting whether to check if enough samples map inside the moving image */
+		unsigned long m_NumberOfFixedHistogramBins;
+    unsigned long m_NumberOfMovingHistogramBins;
     bool m_CheckNumberOfSamples;
-		
-		/** Typedefs for BSpline kernel and derivative functions. */
-		typedef BSplineKernelFunction<3> CubicBSplineFunctionType;
-		typedef BSplineDerivativeKernelFunction<3> 
-			CubicBSplineDerivativeFunctionType;
-		
-		/** Cubic BSpline kernel for computing Parzen histograms. */
-		typename CubicBSplineFunctionType::Pointer m_CubicBSplineKernel;
-		typename CubicBSplineDerivativeFunctionType::Pointer 
-			m_CubicBSplineDerivativeKernel;
-		
     bool m_UseDifferentiableOverlap;
     bool m_HardLimitMovingGrayValues;
     bool m_SoftLimitMovingGrayValues;
-    double m_LimitRangeRatio;
+    double m_FixedLimitRangeRatio;
+    double m_MovingLimitRangeRatio;
+    unsigned int m_FixedKernelBSplineOrder;
+    unsigned int m_MovingKernelBSplineOrder;
 		
 	}; // end class MattesMutualInformationImageToImageMetric3
 
