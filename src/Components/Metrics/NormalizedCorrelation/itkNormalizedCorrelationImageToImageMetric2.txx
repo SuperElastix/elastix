@@ -32,6 +32,8 @@ namespace itk
 		::NormalizedCorrelationImageToImageMetric2()
 	{
 		this->m_SubtractMean = false;
+    this->SetUseImageSampler(true);
+    this->SetComputeGradient(true);
 	} // end constructor
 
 

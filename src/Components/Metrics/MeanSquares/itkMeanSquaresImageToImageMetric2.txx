@@ -31,6 +31,9 @@ namespace itk
 		MeanSquaresImageToImageMetric2<TFixedImage,TMovingImage>
 		::MeanSquaresImageToImageMetric2()
 	{
+    this->SetUseImageSampler(true);
+    this->SetComputeGradient(true);
+    
 	} // end constructor
 
 

@@ -2,12 +2,6 @@
 #define _itkAdvancedMeanSquaresImageToImageMetric_txx
 
 #include "itkAdvancedMeanSquaresImageToImageMetric.h"
-#include "itkImageRegionExclusionIteratorWithIndex.h"
-#include "itkImageRegionIteratorWithIndex.h"
-#include "itkBinaryErodeImageFilter.h"
-#include "itkBinaryBallStructuringElement.h"
-
-
 
 namespace itk
 {
@@ -20,18 +14,13 @@ namespace itk
 		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 		::AdvancedMeanSquaresImageToImageMetric()
 	{
-    //this->ComputeGradientOff();
+    this->SetUseImageSampler(true);
+    this->SetUseFixedImageLimiter(false);
+    this->SetUseMovingImageLimiter(false);
 
-    this->m_InternalMovingImageMask = 0;
-    this->m_MovingImageMaskInterpolator = 
-      MovingImageMaskInterpolatorType::New();
-    const unsigned int defaultMaskInterpolationOrder = 2;
-    this->m_MovingImageMaskInterpolator->SetSplineOrder( defaultMaskInterpolationOrder );
+    this->m_UseNormalization = false;
+    this->m_NormalizationFactor = 1.0;
 
-    this->m_BSplineInterpolator = 0;
-
-    this->m_UseDifferentiableOverlap = true;
-     
 	} // end constructor
 
 
@@ -44,316 +33,55 @@ namespace itk
     AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
     ::Initialize(void) throw ( ExceptionObject )
   {
-
-    /** Check if the interpolator can be cast to a bspline interpolator */
-    if ( this->m_Interpolator.IsNotNull() )
-    {
-      BSplineInterpolatorType * testptr = 
-        dynamic_cast< BSplineInterpolatorType * >(
-        this->m_Interpolator.GetPointer() );
-      if ( testptr )
-      {
-        this->m_BSplineInterpolator = testptr;
-        this->ComputeGradientOff();
-      }
-      else
-      {
-        this->m_BSplineInterpolator = 0;
-        this->ComputeGradientOn();
-      }
-    }
-    else
-    {
-      /** An exception will be thrown anyway in the superclass:Initialize()
-       * but just to be sure: */
-      this->m_BSplineInterpolator = 0;
-      this->ComputeGradientOn();
-    }
-
     /** Initialize transform, interpolator, etc. */
     Superclass::Initialize();
-    
-    /** Initialize the internal moving image mask */
-    this->InitializeInternalMasks();
-    
-  } // end Initialize
 
-
-  /**
-	 * ********************* InitializeInternalMasks *********************
-	 */
-
-  template <class TFixedImage, class TMovingImage>
-    void
-    AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-    ::InitializeInternalMasks(void)
-  {
-    /** Initialize the internal moving image mask */
-
-    typedef typename MovingImageType::PointType                  MovingOriginType;
-    typedef typename MovingImageType::SizeType                   MovingSizeType;
-    typedef typename MovingImageType::IndexType                  MovingIndexType;
-    typedef typename MovingImageType::OffsetType                 MovingOffsetType;
-    typedef typename MovingImageType::RegionType                 MovingRegionType;
-    typedef itk::ImageRegionExclusionIteratorWithIndex<
-      InternalMovingImageMaskType>                               MovingEdgeIteratorType;
-    typedef itk::ImageRegionIteratorWithIndex<
-      InternalMovingImageMaskType>                               MovingIteratorType;
-    typedef itk::BinaryBallStructuringElement<
-      InternalMaskPixelType, MovingImageDimension >              ErosionKernelType;
-    typedef itk::BinaryErodeImageFilter<
-      InternalMovingImageMaskType,
-      InternalMovingImageMaskType, 
-      ErosionKernelType >                                        ErodeImageFilterType;
-    
-    /** Check if the user wants to use a differentiable overlap */
-    if ( ! this->m_UseDifferentiableOverlap )
+    if ( this->GetUseNormalization() )
     {
-      this->m_InternalMovingImageMask = 0;
-      return;
-    }
+      /** Try to guess a normalization factor */
+      FixedImagePixelType fixedImageTrueMin;
+      FixedImagePixelType fixedImageTrueMax;
+      FixedImageLimiterOutputType fixedImageMaxLimit;
+      FixedImageLimiterOutputType fixedImageMinLimit;
 
-    /** Prepare the internal mask image */
-    this->m_InternalMovingImageMask = InternalMovingImageMaskType::New();
-    this->m_InternalMovingImageMask->SetRegions( 
-      this->GetMovingImage()->GetLargestPossibleRegion() );
-    this->m_InternalMovingImageMask->Allocate();
-    this->m_InternalMovingImageMask->SetOrigin(
-      this->GetMovingImage()->GetOrigin() );
-    this->m_InternalMovingImageMask->SetSpacing(
-      this->GetMovingImage()->GetSpacing() );
+      this->ComputeFixedImageExtrema(
+        this->GetFixedImage(),
+        this->GetFixedImageRegion(),
+        fixedImageTrueMin,
+        fixedImageTrueMax,
+        fixedImageMinLimit,
+        fixedImageMaxLimit );
 
-    /** Radius to erode masks */
-    const unsigned int radius = 2;
+      MovingImagePixelType movingImageTrueMin;
+      MovingImagePixelType movingImageTrueMax;
+      MovingImageLimiterOutputType movingImageMaxLimit;
+      MovingImageLimiterOutputType movingImageMinLimit;
 
-    /** Determine inner region */
-    MovingRegionType innerRegion =
-      this->m_InternalMovingImageMask->GetLargestPossibleRegion();
-    for (unsigned int i=0; i < MovingImageDimension; ++i)
-    {
-      if ( innerRegion.GetSize()[i] >= 2*radius )
-      {
-        /** region is large enough to crop; adjust size and index */
-        innerRegion.SetSize( i, innerRegion.GetSize()[i] - 2*radius );
-        innerRegion.SetIndex( i, innerRegion.GetIndex()[i] + radius );
-      }
-      else
-      {
-         innerRegion.SetSize( i, 0);
-      }
-    }
+      this->ComputeMovingImageExtrema(
+        this->GetMovingImage(),
+        this->GetMovingImage()->GetBufferedRegion(),
+        movingImageTrueMin,
+        movingImageTrueMax,
+        movingImageMinLimit,
+        movingImageMaxLimit );
+
+      const double diff1 = fixedImageTrueMax - movingImageTrueMin;
+      const double diff2 = movingImageTrueMax - fixedImageTrueMin;
+      const double maxdiff = vnl_math_max( diff1, diff2 ); 
+
+      /** We guess that maxdiff/10 is the maximum average difference 
+       * that will be observed.
+       * \todo We may involve the standard derivation of the image into
+       * this estimate.  */
+      this->m_NormalizationFactor = 100.0 / maxdiff / maxdiff;
       
-    if ( this->GetMovingImageMask() == 0 )
-    {
-      /** Fill the internal moving mask with ones */
-      this->m_InternalMovingImageMask->FillBuffer(
-        itk::NumericTraits<InternalMaskPixelType>::One );
-    
-      MovingEdgeIteratorType edgeIterator( this->m_InternalMovingImageMask, 
-        this->m_InternalMovingImageMask->GetLargestPossibleRegion() );
-      edgeIterator.SetExclusionRegion( innerRegion );
-      
-      /** Set the edges to zero */
-      for( edgeIterator.GoToBegin(); ! edgeIterator.IsAtEnd(); ++ edgeIterator )
-      {
-        edgeIterator.Value() = itk::NumericTraits<InternalMaskPixelType>::Zero;
-      }
-      
-    } // end if no moving mask
-    else
-    {
-      /** Fill the internal moving mask with zeros */
-      this->m_InternalMovingImageMask->FillBuffer(
-        itk::NumericTraits<InternalMaskPixelType>::Zero );
-
-      MovingIteratorType iterator( this->m_InternalMovingImageMask, innerRegion);
-      OutputPointType point;
-
-      /** Set the pixel 1 if inside the mask and to 0 if outside */
-      for( iterator.GoToBegin(); ! iterator.IsAtEnd(); ++ iterator )
-      {
-        const MovingIndexType & index = iterator.GetIndex();
-        this->m_InternalMovingImageMask->TransformIndexToPhysicalPoint(index, point);
-        iterator.Value() = static_cast<InternalMaskPixelType>(
-          this->m_MovingImageMask->IsInside(point) );
-      }
-
-      /** Erode it with a radius of 2 */
-      typename InternalMovingImageMaskType::Pointer tempImage = 0;
-      ErosionKernelType kernel;
-      kernel.SetRadius(radius);
-      kernel.CreateStructuringElement();
-      typename ErodeImageFilterType::Pointer eroder = ErodeImageFilterType::New();
-      eroder->SetKernel( kernel );
-      eroder->SetForegroundValue( itk::NumericTraits< InternalMaskPixelType >::One  );
-	    eroder->SetBackgroundValue( itk::NumericTraits< InternalMaskPixelType >::Zero );
-      eroder->SetInput( this->m_InternalMovingImageMask );
-      eroder->Update();
-      tempImage = eroder->GetOutput();
-      tempImage->DisconnectPipeline();
-      this->m_InternalMovingImageMask = tempImage;
-        
-    }
-              
-    /** Set the internal mask into the interpolator */
-    this->m_MovingImageMaskInterpolator->SetInputImage( this->m_InternalMovingImageMask );
- 
-  } // end InitializeInternalMasks
-
-
-  /**
-	 * **************** EvaluateMovingMaskValue *******************
-   * Estimate value of internal moving mask 
-   */
-
-	template < class TFixedImage, class TMovingImage> 
-		void
-		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-    ::EvaluateMovingMaskValue(
-      const OutputPointType & point,
-      double & value) const
-  {
-    if ( this->m_UseDifferentiableOverlap )
-    {
-      /** NB: a spelling error in the itkImageFunction class! Continous... */
-      MovingImageContinuousIndexType cindex;
-      this->m_MovingImageMaskInterpolator->ConvertPointToContinousIndex( point, cindex);
-  
-      /** Compute the value of the mask */
-      if ( this->m_MovingImageMaskInterpolator->IsInsideBuffer( cindex ) )
-      {
-        value = static_cast<double>(
-          this->m_MovingImageMaskInterpolator->EvaluateAtContinuousIndex(cindex) );
-      }
-      else
-      {
-        value = 0.0;
-      }
     }
     else
     {
-       /** Use the original mask */
-      if ( this->m_MovingImageMask.IsNotNull() )
-      {
-        value = static_cast<double>(
-          static_cast<unsigned char>( this->m_MovingImageMask->IsInside( point ) ) );
-      }
-      else
-      {
-        value = 1.0;
-      }
+      this->m_NormalizationFactor = 1.0;
     }
-  
-  } // end EvaluateMovingMaskValue
-
-
-	/**
-	 * **************** EvaluateMovingMaskValueAndDerivative *******************
-   * Estimate value and spatial derivative of internal moving mask 
-   */
-
-	template < class TFixedImage, class TMovingImage> 
-		void
-		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-    ::EvaluateMovingMaskValueAndDerivative(
-      const OutputPointType & point,
-      double & value,
-      MovingImageMaskDerivativeType & derivative) const
-  {
-    typedef typename MovingImageMaskDerivativeType::ValueType DerivativeValueType;
-       
-    /** Compute the value and derivative of the mask */
-
-    if ( this->m_UseDifferentiableOverlap )
-    {
-      /** NB: a spelling error in the itkImageFunction class! Continous... */
-      MovingImageContinuousIndexType cindex;
-      this->m_MovingImageMaskInterpolator->ConvertPointToContinousIndex( point, cindex);
-
-      if ( this->m_MovingImageMaskInterpolator->IsInsideBuffer( cindex ) )
-      {
-        value = static_cast<double>(
-          this->m_MovingImageMaskInterpolator->EvaluateAtContinuousIndex(cindex) );
-        derivative = 
-          this->m_MovingImageMaskInterpolator->EvaluateDerivativeAtContinuousIndex(cindex);
-      }
-      else
-      {
-        value = 0.0;
-        derivative.Fill( itk::NumericTraits<DerivativeValueType>::Zero );
-      }
-    }
-    else
-    {
-      /** Just ignore the derivative of the mask */
-      if ( this->m_MovingImageMask.IsNotNull() )
-      {
-        value = static_cast<double>(
-          static_cast<unsigned char>( this->m_MovingImageMask->IsInside( point ) ) );
-      }
-      else
-      {
-        value = 1.0;
-      }
-      derivative.Fill( itk::NumericTraits<DerivativeValueType>::Zero );
-    }
-      
    
-  } // end EvaluateMovingMaskValueAndDerivative
-
-
-	/**
-	 * ************** EvaluateMovingImageValueAndDerivative *****************
-	 */
-
-	template < class TFixedImage, class TMovingImage> 
-		bool
-		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-		::EvaluateMovingImageValueAndDerivative(
-      const OutputPointType & point,
-      RealType & value,
-      GradientPixelType & derivative) const
-  {
-
-    /** NB: a spelling error in the itkImageFunction class! Continous... */
-    MovingImageContinuousIndexType cindex;
-    this->m_Interpolator->ConvertPointToContinousIndex( point, cindex);
-    
-    /** Compute the value and derivative of the mask */
-    if ( this->m_Interpolator->IsInsideBuffer( cindex ) )
-    {
-      /** Evaluate the value */
-      value  = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
-  
-      /** Evaluate the derivative */
-      if ( this->m_BSplineInterpolator.IsNotNull() )
-      {
-        /** Use the BSplineInterpolator */
-        derivative = 
-          this->m_BSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
-      }
-      else
-      {
-        /** Use the precomputed gradient image */
-        /** Get the gradient by NearestNeighboorInterpolation:
-			  * which is equivalent to round up the point components.
-        * The itk::ImageFunction provides a function to do this.
-        */
-		    typename MovingImageType::IndexType	mappedIndex;
-			  this->m_Interpolator->ConvertContinuousIndexToNearestIndex( cindex, mappedIndex );
-			  derivative = this->GetGradientImage()->GetPixel( mappedIndex );
-      }
-
-      /** the point was inside the buffer; value and derivative are valid. */
-      return true;
-    }
-    else
-    {
-      /** do not change the value or derivative; just return false */
-      return false;
-    }
-
-  } // end EvaluateMovingImageValueAndDerivative
+  } // end Initialize
 
 
 	/**
@@ -370,6 +98,45 @@ namespace itk
 	} // end PrintSelf
 
 
+  /**
+	 * *************** EvaluateTransformJacobianInnerProducts ****************
+	 */
+
+	template < class TFixedImage, class TMovingImage >
+		void
+		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+		::EvaluateTransformJacobianInnerProducts( 
+		const TransformJacobianType & jacobian, 
+		const MovingImageDerivativeType & movingImageDerivative,
+    const MovingImageMaskDerivativeType & movingMaskDerivative,
+    DerivativeType & imageJacobian,
+    DerivativeType & maskJacobian) const
+	{
+    typedef typename TransformJacobianType::const_iterator JacobianIteratorType;
+    typedef typename DerivativeType::iterator              DerivativeIteratorType;
+    JacobianIteratorType jac = jacobian.begin();
+    imageJacobian.Fill(0.0);
+    maskJacobian.Fill(0.0);
+    const unsigned int sizeImageJacobian = imageJacobian.GetSize();
+    for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
+    {
+      const double imDeriv = movingImageDerivative[dim];
+      const double maskDeriv = movingMaskDerivative[dim];
+      DerivativeIteratorType imjac = imageJacobian.begin();
+      DerivativeIteratorType maskjac = maskJacobian.begin();
+      
+      for ( unsigned int mu = 0; mu < sizeImageJacobian ; mu++ )
+      {
+        (*imjac) += (*jac) * imDeriv;
+        (*maskjac) += (*jac) * maskDeriv;
+        ++imjac;
+        ++maskjac;
+        ++jac;
+      }
+    }
+	} // end EvaluateTransformJacobianInnerProducts
+
+
 	/**
 	 * ******************* GetValue *******************
 	 */
@@ -380,74 +147,73 @@ namespace itk
 		::GetValue( const TransformParametersType & parameters ) const
 	{
 		itkDebugMacro( "GetValue( " << parameters << " ) " );
-
-		/** Make sure the transform parameters are up to date. */
-		this->SetTransformParameters( parameters );
-
+		
+    /** Initialize some variables */
 		this->m_NumberOfPixelsCounted = 0;
-    double normalizationFactor = 0.0;
+    double sumOfMovingMaskValues = 0.0;
+    MeasureType measure = NumericTraits< MeasureType >::Zero;
+
+    /** Make sure the transform parameters are up to date. */
+		this->SetTransformParameters( parameters );
 
 		/** Update the imageSampler and get a handle to the sample container. */
     this->GetImageSampler()->Update();
     ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
     /** Create iterator over the sample container. */
-    typename ImageSampleContainerType::ConstIterator iter;
-    typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
-    typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
-
-		MeasureType measure = NumericTraits< MeasureType >::Zero;
+    typename ImageSampleContainerType::ConstIterator fiter;
+    typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
+    typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
 
 		/** Loop over the fixed image samples to calculate the mean squares. */
-    for ( iter = begin; iter != end; ++iter )
+    for ( fiter = fbegin; fiter != fend; ++fiter )
 		{
-			/** Get the current inputpoint. */
-      const InputPointType & inputPoint = (*iter).Value().m_ImageCoordinates;
+	    /** Read fixed coordinates and initialize some variables */
+      const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+      RealType movingImageValue; 
+      MovingImagePointType mappedPoint;
+                  
+      /** Transform point and check if it is inside the bspline support region */
+      bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint);
 
-			/** Transform the inputpoint to get the transformed point. */
-			const OutputPointType transformedPoint = this->m_Transform->TransformPoint( inputPoint );
+      /** Check if point is inside mask */
+      RealType movingMaskValue = 0.0;
+      if ( sampleOk ) 
+      {
+        this->EvaluateMovingMaskValueAndDerivative( mappedPoint, movingMaskValue, 0 );
+        const double smallNumber1 = 1e-10;
+        sampleOk = movingMaskValue > smallNumber1;
+      }
 
-      double movingMaskValue = 0.0;
-      this->EvaluateMovingMaskValue( transformedPoint, movingMaskValue );
-      const double smallNumber1 = 1e-10;
+      /** Compute the moving image value and check if the point is
+      * inside the moving image buffer */
+      if ( sampleOk )
+      {
+        sampleOk = this->EvaluateMovingImageValueAndDerivative(
+          mappedPoint, movingImageValue, 0 );
+      }
+      
+      if( sampleOk )
+      {
+        this->m_NumberOfPixelsCounted++; 
+        sumOfMovingMaskValues += movingMaskValue;
 
-			/** Inside the moving image mask? */
-			if ( movingMaskValue < smallNumber1 )
-			{
-        /** no? then go to next sample */
-				continue;
-			}
-			
-			/** In this if-statement the actual calculation of mean squares is done. */
-			if ( this->m_Interpolator->IsInsideBuffer( transformedPoint ) )
-			{
-				/** Get the fixedValue = f(x) and the movingValue = m(x+u(x)). */
-				const RealType movingValue  = this->m_Interpolator->Evaluate( transformedPoint );
-        const RealType & fixedValue = (*iter).Value().m_ImageValue;
+        /** Get the fixed image value */
+        RealType fixedImageValue = static_cast<double>( (*fiter).Value().m_ImageValue );
 
 				/** The difference squared. */
-				const RealType diff = movingValue - fixedValue; 
+				const RealType diff = movingImageValue - fixedImageValue; 
 				measure += movingMaskValue * diff * diff;
-        normalizationFactor += movingMaskValue;
-
-				/** Update the NumberOfPixelsCounted. */
-				this->m_NumberOfPixelsCounted++;
-
-			} // end if IsInsideBuffer()
+        
+			} // end if samplOk
 
 		} // end for loop over the image sample container
 
-    /** Calculate the value */
-    const double smallNumber2 = 1e-10;
-		if ( this->m_NumberOfPixelsCounted > 0 &&  normalizationFactor > smallNumber2 )
-		{
-			measure /= normalizationFactor;
-    }
-		else
-		{
-			measure = NumericTraits< MeasureType >::Zero;
-			itkExceptionMacro( << "All the points mapped outside the moving image" );
-		}
+    /** Check if enough samples were valid */
+    this->CheckNumberOfSamples(
+      sampleContainer->Size(), this->m_NumberOfPixelsCounted, sumOfMovingMaskValues );
+    
+	  measure *= this->m_NormalizationFactor / sumOfMovingMaskValues;
 
 		/** Return the mean squares measure value. */
 		return measure;
@@ -489,128 +255,169 @@ namespace itk
 
     typedef typename DerivativeType::ValueType        DerivativeValueType;
     typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
+
+    /** Initialize some variables */
+    this->m_NumberOfPixelsCounted = 0;
+    double sumOfMovingMaskValues = 0.0;
+    MeasureType measure = NumericTraits< MeasureType >::Zero;
+    derivative = DerivativeType( this->m_NumberOfParameters );
+		derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+
+    /** Arrays that store dM(x)/dmu and dMask(x)/dmu */
+    DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.GetSize() );
+    DerivativeType maskJacobian( this->m_NonZeroJacobianIndices.GetSize() );
+   
+    DerivativeType numDerivative( this->m_NumberOfParameters );
+    DerivativeType denDerivative( this->m_NumberOfParameters );
+    numDerivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+    denDerivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+    
  
 		/** Make sure the transform parameters are up to date. */
 		this->SetTransformParameters( parameters );
-		const unsigned int ParametersDimension = this->GetNumberOfParameters();
-		
-		this->m_NumberOfPixelsCounted = 0;
-    double normalizationFactor = 0.0;
-
+				
     /** Update the imageSampler and get a handle to the sample container. */
     this->GetImageSampler()->Update();
     ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
     /** Create iterator over the sample container. */
-    typename ImageSampleContainerType::ConstIterator iter;
-    typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
-    typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
-
-		/** Some typedefs. */
-		typedef typename OutputPointType::CoordRepType	CoordRepType;
+    typename ImageSampleContainerType::ConstIterator fiter;
+    typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
+    typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
 		
-		MeasureType measure = NumericTraits< MeasureType >::Zero;
-		
-		derivative = DerivativeType( ParametersDimension );
-		derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
-
-    DerivativeType ddendmu( ParametersDimension );
-    DerivativeType dnumdmu( ParametersDimension );
-    ddendmu.Fill( NumericTraits< DerivativeValueType >::Zero );
-    dnumdmu.Fill( NumericTraits< DerivativeValueType >::Zero );
-
 		/** Loop over the fixed image to calculate the mean squares. */
-		for ( iter = begin; iter != end; ++iter )
+		for ( fiter = fbegin; fiter != fend; ++fiter )
 		{
-			/** Get the current inputpoint. */
-      const InputPointType & inputPoint = (*iter).Value().m_ImageCoordinates;
-
-			/** Transform the inputpoint to get the transformed point. */
-			const OutputPointType transformedPoint = this->m_Transform->TransformPoint( inputPoint );
-
-      double movingMaskValue = 0.0;
+      /** Read fixed coordinates and initialize some variables */
+      const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+      RealType movingImageValue; 
+      MovingImagePointType mappedPoint;
+      MovingImageDerivativeType movingImageDerivative;
+            
+      /** Transform point and check if it is inside the bspline support region */
+      bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint);
+      
+      /** Check if point is inside mask */
+      RealType movingMaskValue = 0.0;
       MovingImageMaskDerivativeType movingMaskDerivative; 
-      this->EvaluateMovingMaskValueAndDerivative(
-        transformedPoint, movingMaskValue, movingMaskDerivative);
-      const double movingMaskDerivativeMagnitude = movingMaskDerivative.GetNorm();
-      const double smallNumber1 = 1e-10;
+      if ( sampleOk ) 
+      {
+        this->EvaluateMovingMaskValueAndDerivative(
+          mappedPoint, movingMaskValue, &movingMaskDerivative );
+        const double movingMaskDerivativeMagnitude = movingMaskDerivative.GetNorm();
+        const double smallNumber1 = 1e-10;
+        sampleOk = ( movingMaskValue > smallNumber1 ) ||
+          ( movingMaskDerivativeMagnitude > smallNumber1 );
+      }
+    
+      /** Compute the moving image value M(T(x)) and derivative dM/dx and check if
+       * the point is inside the moving image buffer */
+      if ( sampleOk )
+      {
+        sampleOk = this->EvaluateMovingImageValueAndDerivative( 
+          mappedPoint, movingImageValue, &movingImageDerivative );
+      }
+            
+      if( sampleOk )
+      {
+        this->m_NumberOfPixelsCounted++; 
+        sumOfMovingMaskValues += movingMaskValue;
 
-			/** Inside the moving image mask? */
-			if ( movingMaskValue < smallNumber1 && movingMaskDerivativeMagnitude < smallNumber1)
-			{
-				continue;
-			}
+        /** Get the fixed image value */
+        RealType fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
 
-      RealType movingValue;
-      GradientPixelType gradient;
-
-			/** In this if-block the actual calculation of mean squares is done. */
-      /** Try to get the movingValue = m(x+u(x)) and the derivative at that point;
-       * returns false if the point is not inside the image buffer. */
-			if ( this->EvaluateMovingImageValueAndDerivative(
-          transformedPoint, movingValue, gradient) )
-			{
-				/** Get the fixedValue = f(x) */
-        const RealType & fixedValue = (*iter).Value().m_ImageValue;
- 
-				/** Get the Jacobian. */
-				const TransformJacobianType & jacobian =
-					this->m_Transform->GetJacobian( inputPoint ); 
-
-				/** The difference squared. */
-				const RealType diff = movingValue - fixedValue; 
-        const RealType diffdiff = diff * diff;
-				measure += movingMaskValue * diffdiff;
-        normalizationFactor += movingMaskValue;
-	      
-				/** Calculate the contributions to the derivatives with respect to each parameter. */
-        const RealType movmask_diff_2 = movingMaskValue * diff * 2.0;
-				for ( unsigned int par = 0; par < ParametersDimension; par++ )
-				{
-          /** compute inproduct of image gradient and transform jacobian */
-					RealType grad_jac = NumericTraits< RealType >::Zero;
-          RealType maskderiv_jac = NumericTraits< RealType >::Zero;
-          for( unsigned int dim = 0; dim < MovingImageDimension; dim++ )
-					{
-            const TransformJacobianValueType & jacdimpar = jacobian( dim, par );
-						grad_jac += static_cast<RealType>(
-              gradient[ dim ] * jacdimpar );
-            maskderiv_jac += static_cast<RealType> (
-              movingMaskDerivative[ dim ] * jacdimpar );
-					}
-          dnumdmu[ par ] += movmask_diff_2 * grad_jac + diffdiff * maskderiv_jac;
-          ddendmu[ par ] += maskderiv_jac;
-				}
+        /** Get the TransformJacobian dT/dmu*/
+        const TransformJacobianType & jacobian = 
+          this->EvaluateTransformJacobian( fixedPoint );
         
-				/** Update the NumberOfPixelsCounted. */
-				this->m_NumberOfPixelsCounted++;
+        /** compute the innerproducts (dM/dx)^T (dT/dmu) and (dMask/dx)^T (dT/dmu) */
+        this->EvaluateTransformJacobianInnerProducts( 
+          jacobian, movingImageDerivative, movingMaskDerivative, imageJacobian, maskJacobian );
 
-			} // end if IsInsideBuffer()
+        /** Compute this pixel's contribution to the measure and derivatives */
+        this->UpdateValueAndDerivativeTerms( 
+          fixedImageValue, movingImageValue, movingMaskValue,
+          imageJacobian, maskJacobian, 
+          measure, numDerivative, denDerivative );
+
+			} // end if sampleOk
 
 		} // end for loop over the image sample container
 
-		/** Calculate the value and the derivative. */
-    const double smallNumber2 = 1e-10;
-		if ( this->m_NumberOfPixelsCounted > 0 &&  normalizationFactor > smallNumber2 )
-		{
-			measure /= normalizationFactor;
-      MeasureType measure_N = measure / normalizationFactor;
-      for( unsigned int i = 0; i < ParametersDimension; i++ )
-			{
-				derivative[ i ] = dnumdmu[i] / normalizationFactor - ddendmu[i] * measure_N ;
-			}
-		}
-		else
-		{
-			measure = NumericTraits< MeasureType >::Zero;
-			derivative.Fill( NumericTraits<ITK_TYPENAME DerivativeType::ValueType>::Zero );
-			itkExceptionMacro( << "All the points mapped outside the moving image" );
-		}
+    /** Check if enough samples were valid */
+    this->CheckNumberOfSamples(
+      sampleContainer->Size(), this->m_NumberOfPixelsCounted, sumOfMovingMaskValues );
+       
+    const double normal_sum = this->m_NormalizationFactor / sumOfMovingMaskValues;
+    measure *= normal_sum;
+    const MeasureType measure_N = measure / sumOfMovingMaskValues;
 
+    for( unsigned int i = 0; i < this->m_NumberOfParameters ; i++ )
+  	{
+	  	derivative[ i ] = numDerivative[i] * normal_sum - denDerivative[i] * measure_N;
+		}
+		
 		/** The return value. */
 		value = measure;
 
 	} // end GetValueAndDerivative
+
+
+  /**
+	 * *************** UpdateValueAndDerivativeTerms ***************************
+	 */
+
+	template < class TFixedImage, class TMovingImage >
+		void
+		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+		::UpdateValueAndDerivativeTerms( 
+    RealType fixedImageValue,
+    RealType movingImageValue,
+    RealType movingMaskValue,
+    const DerivativeType & imageJacobian,
+    const DerivativeType & maskJacobian,
+    MeasureType & measure,
+    DerivativeType & numderiv,
+    DerivativeType & denderiv  ) const
+  {
+    typedef typename DerivativeType::ValueType        DerivativeValueType;
+
+    /** The difference squared. */
+		const RealType diff = movingImageValue - fixedImageValue; 
+    const RealType diffdiff = diff * diff;
+		measure += movingMaskValue * diffdiff;
+        	  
+		/** Calculate the contributions to the derivatives with respect to each parameter. */
+    const RealType movmask_diff_2 = movingMaskValue * diff * 2.0;
+    if( this->m_NonZeroJacobianIndices.GetSize() == this->m_NumberOfParameters )
+		{
+      /** Loop over all jacobians */
+      typename DerivativeType::const_iterator imjacit = imageJacobian.begin();
+      typename DerivativeType::const_iterator maskjacit = maskJacobian.begin();
+      typename DerivativeType::iterator numderivit = numderiv.begin();
+      typename DerivativeType::iterator denderivit = denderiv.begin();
+      for ( unsigned int mu = 0; mu < this->m_NumberOfParameters; ++mu )
+      {
+        (*numderivit) += movmask_diff_2 * (*imjacit) + diffdiff * (*maskjacit);
+        (*denderivit) += (*maskjacit);
+        ++imjacit;
+        ++maskjacit;
+        ++numderivit;
+        ++denderivit;
+      }
+    }
+    else
+    {
+      /** Only pick the nonzero jacobians */
+      for ( unsigned int i = 0; i < imageJacobian.GetSize(); ++i)
+      {
+        const unsigned int index = this->m_NonZeroJacobianIndices[i];
+        const DerivativeValueType maskjac = maskJacobian[i];
+        numderiv[ index ] += movmask_diff_2 * imageJacobian[i] + diffdiff * maskjac;
+        denderiv[ index ] += maskjac;
+      }
+    }
+  } // end UpdateValueAndDerivativeTerms
 
 
 } // end namespace itk

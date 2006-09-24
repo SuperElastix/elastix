@@ -17,7 +17,7 @@
 #ifndef __itkMeanSquaresImageToImageMetric2_h
 #define __itkMeanSquaresImageToImageMetric2_h
 
-#include "itkImageToImageMetricWithSampling.h"
+#include "itkAdvancedImageToImageMetric.h"
 
 
 namespace itk
@@ -56,13 +56,13 @@ namespace itk
  */
 template < class TFixedImage, class TMovingImage > 
 class ITK_EXPORT MeanSquaresImageToImageMetric2 : 
-    public ImageToImageMetricWithSampling< TFixedImage, TMovingImage>
+    public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
 {
 public:
 
   /** Standard class typedefs. */
   typedef MeanSquaresImageToImageMetric2		Self;
-  typedef ImageToImageMetricWithSampling<
+  typedef AdvancedImageToImageMetric<
     TFixedImage, TMovingImage >             Superclass;
   typedef SmartPointer<Self>                Pointer;
   typedef SmartPointer<const Self>          ConstPointer;
@@ -71,28 +71,57 @@ public:
   itkNewMacro( Self );
  
   /** Run-time type information (and related methods). */
-  itkTypeMacro( MeanSquaresImageToImageMetric2, ImageToImageMetricWithSampling );
+  itkTypeMacro( MeanSquaresImageToImageMetric2, AdvancedImageToImageMetric );
 
-  /** Types transferred from the base class */
-  typedef typename Superclass::RealType                 RealType;
-  typedef typename Superclass::TransformType            TransformType;
-  typedef typename Superclass::TransformPointer         TransformPointer;
-  typedef typename Superclass::TransformParametersType  TransformParametersType;
-  typedef typename Superclass::TransformJacobianType    TransformJacobianType;
-  typedef typename Superclass::GradientPixelType        GradientPixelType;
-  typedef typename Superclass::MeasureType              MeasureType;
-  typedef typename Superclass::DerivativeType           DerivativeType;
-  typedef typename Superclass::FixedImageType           FixedImageType;
-  typedef typename Superclass::MovingImageType          MovingImageType;
-  typedef typename Superclass::FixedImageConstPointer   FixedImageConstPointer;
-  typedef typename Superclass::MovingImageConstPointer  MovingImageConstPointer;
-  typedef typename Superclass::InputPointType			      InputPointType;
-  typedef typename Superclass::OutputPointType		      OutputPointType;
-  typedef typename Superclass::ImageSamplerType         ImageSamplerType;
-  typedef typename Superclass::ImageSamplerPointer      ImageSamplerPointer;
-  typedef typename Superclass::ImageSampleContainerType      ImageSampleContainerType;
-  typedef typename Superclass::ImageSampleContainerPointer   ImageSampleContainerPointer;
-
+    /** Typedefs from the superclass. */
+  typedef typename 
+    Superclass::CoordinateRepresentationType              CoordinateRepresentationType;
+  typedef typename Superclass::MovingImageType            MovingImageType;
+  typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
+  typedef typename Superclass::MovingImageConstPointer    MovingImageConstPointer;
+  typedef typename Superclass::FixedImageType             FixedImageType;
+  typedef typename Superclass::FixedImageConstPointer     FixedImageConstPointer;
+  typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
+  typedef typename Superclass::TransformType              TransformType;
+  typedef typename Superclass::TransformPointer           TransformPointer;
+  typedef typename Superclass::InputPointType             InputPointType;
+  typedef typename Superclass::OutputPointType            OutputPointType;
+  typedef typename Superclass::TransformParametersType    TransformParametersType;
+  typedef typename Superclass::TransformJacobianType      TransformJacobianType;
+  typedef typename Superclass::InterpolatorType           InterpolatorType;
+  typedef typename Superclass::InterpolatorPointer        InterpolatorPointer;
+  typedef typename Superclass::RealType                   RealType;
+  typedef typename Superclass::GradientPixelType          GradientPixelType;
+  typedef typename Superclass::GradientImageType          GradientImageType;
+  typedef typename Superclass::GradientImagePointer       GradientImagePointer;
+  typedef typename Superclass::GradientImageFilterType    GradientImageFilterType;
+  typedef typename Superclass::GradientImageFilterPointer GradientImageFilterPointer;
+  typedef typename Superclass::FixedImageMaskType         FixedImageMaskType;
+  typedef typename Superclass::FixedImageMaskPointer      FixedImageMaskPointer;
+  typedef typename Superclass::MovingImageMaskType        MovingImageMaskType;
+  typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
+  typedef typename Superclass::MeasureType                MeasureType;
+  typedef typename Superclass::DerivativeType             DerivativeType;
+  typedef typename Superclass::ParametersType             ParametersType;
+  typedef typename Superclass::FixedImagePixelType        FixedImagePixelType;
+  typedef typename Superclass::MovingImageRegionType      MovingImageRegionType;
+  typedef typename Superclass::ImageSamplerType           ImageSamplerType;
+  typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
+  typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
+  typedef typename 
+    Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
+  typedef typename Superclass::InternalMaskPixelType      InternalMaskPixelType;
+  typedef typename
+    Superclass::InternalMovingImageMaskType               InternalMovingImageMaskType;
+  typedef typename 
+    Superclass::MovingImageMaskInterpolatorType           MovingImageMaskInterpolatorType;
+  typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
+  typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
+  typedef typename
+    Superclass::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
+  typedef typename
+    Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
+	
 	/** The fixed image dimension. */
 	itkStaticConstMacro( FixedImageDimension, unsigned int,
 		FixedImageType::ImageDimension );

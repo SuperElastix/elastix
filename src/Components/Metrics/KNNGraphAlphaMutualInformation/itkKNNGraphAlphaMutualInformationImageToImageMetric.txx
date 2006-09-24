@@ -16,7 +16,7 @@ namespace itk
     ::KNNGraphAlphaMutualInformationImageToImageMetric()
   {
     this->SetComputeGradient(false); // don't use the default gradient for now
-    this->m_NumberOfParameters = 0;
+    this->SetUseImageSampler(true);
     this->m_Alpha = 0.5;
 
     this->m_BinaryKNNTreeFixedIntensity = 0;
@@ -249,10 +249,7 @@ namespace itk
 		/** Call the superclass. */
 		this->Superclass::Initialize();
 		
-		/** Cache the number of transformation parameters. */
-		this->m_NumberOfParameters = this->m_Transform->GetNumberOfParameters();
-
-    /** Check if the kNN trees are set. */
+		/** Check if the kNN trees are set. */
     if ( !this->m_BinaryKNNTreeFixedIntensity )
     {
       itkExceptionMacro( << "ERROR: The kNN trees are not set." );

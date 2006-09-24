@@ -5,35 +5,42 @@ SUBDIRS(ParameterFileParser)
 SUBDIRS(xout)
 
 SET(CommonFiles
- itkCombinationTransform.h
- itkCombinationTransform.hxx
- itkBSplineCombinationTransform.h
- itkBSplineCombinationTransform.hxx
  elxTimer.cxx
  elxTimer.h
- itkNDImageBase.h
- itkNDImageTemplate.h
- itkNDImageTemplate.hxx
+ itkAdvancedImageToImageMetric.h
+ itkAdvancedImageToImageMetric.hxx
+ itkBSplineCombinationTransform.h
+ itkBSplineCombinationTransform.hxx
+ itkCombinationTransform.h
+ itkCombinationTransform.hxx
  itkDeformationFieldRegulizer.h
  itkDeformationFieldRegulizer.hxx
  itkDeformationFieldRegulizerForBSpline.h
  itkDeformationFieldRegulizerForBSpline.hxx
  itkDeformationVectorFieldTransform.h
  itkDeformationVectorFieldTransform.txx
- itkImageToImageMetricWithFeatures.h
- itkImageToImageMetricWithFeatures.txx
- itkImageToImageMetricWithSampling.h
- itkImageToImageMetricWithSampling.txx
- itkScaledSingleValuedCostFunction.h
- itkScaledSingleValuedCostFunction.cxx
- itkScaledSingleValuedNonLinearOptimizer.h
- itkScaledSingleValuedNonLinearOptimizer.cxx
- itkTranslationTransformInitializer.h
- itkTranslationTransformInitializer.hxx
- itkImageSpatialObject2.h
- itkImageSpatialObject2.txx
+ itkExponentialLimiterFunction.h
+ itkExponentialLimiterFunction.hxx
  itkImageMaskSpatialObject2.h
  itkImageMaskSpatialObject2.txx
+ itkImageSpatialObject2.h
+ itkImageSpatialObject2.txx
+ itkImageToImageMetricWithFeatures.h
+ itkImageToImageMetricWithFeatures.txx
+ itkHardLimiterFunction.h
+ itkHardLimiterFunction.hxx
+ itkLimiterFunctionBase.h
+ itkNDImageBase.h
+ itkNDImageTemplate.h
+ itkNDImageTemplate.hxx
+ itkParzenWindowHistogramImageToImageMetric.h
+ itkParzenWindowHistogramImageToImageMetric.hxx
+ itkScaledSingleValuedCostFunction.cxx
+ itkScaledSingleValuedCostFunction.h
+ itkScaledSingleValuedNonLinearOptimizer.cxx
+ itkScaledSingleValuedNonLinearOptimizer.h
+ itkTranslationTransformInitializer.h
+ itkTranslationTransformInitializer.hxx
 )
 
 SET( LineSearchOptimizersFiles

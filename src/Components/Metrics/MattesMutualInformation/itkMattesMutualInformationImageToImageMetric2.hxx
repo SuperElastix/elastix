@@ -49,6 +49,7 @@ namespace itk
 		this->m_NumberOfHistogramBins = 50;
 		
 		this->SetComputeGradient(false); // don't use the default gradient for now
+    this->SetUseImageSampler(true);
 		
 		this->m_InterpolatorIsBSpline = false;
 		this->m_TransformIsBSpline    = false;

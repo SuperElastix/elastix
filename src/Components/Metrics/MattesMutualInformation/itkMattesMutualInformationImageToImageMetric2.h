@@ -1,7 +1,7 @@
 /**
  * This file is an adapted version of the original itk-class.
  * For Elastix the following things have been added/changed
- *  - It inherits from ImageToImageMetricWithSampling, which
+ *  - It inherits from AdvancedImageToImageMetric, which
  *    replaces/enhances the SampleFixedImageDomain functionality.
  *  - It is not only optimised for BSplineTransforms, but also
  *    for the BSplineCombinationTransform.
@@ -28,7 +28,7 @@
 #ifndef __itkMattesMutualInformationImageToImageMetric2_H__
 #define __itkMattesMutualInformationImageToImageMetric2_H__
 
-#include "itkImageToImageMetricWithSampling.h"
+#include "itkAdvancedImageToImageMetric.h"
 #include "itkCovariantVector.h"
 #include "itkPoint.h"
 #include "itkIndex.h"
@@ -122,7 +122,7 @@ namespace itk
 	 * This file declares the itk::MattesMutualInformationImageToImageMetric2.
 	 * It is largely the same as itk::MattesMutualInformationImageToImageMetric.
    * For Elastix the following things have been added/changed
-   *  - It inherits from ImageToImageMetricWithSampling, which
+   *  - It inherits from AdvancedImageToImageMetric, which
    *    replaces/enhances the SampleFixedImageDomain functionality.
    *  - It is not only optimised for BSplineTransforms, but also
    *    for the BSplineCombinationTransform.
@@ -132,13 +132,13 @@ namespace itk
 
 	template <class TFixedImage,class TMovingImage >
 		class MattesMutualInformationImageToImageMetric2 :
-	public ImageToImageMetricWithSampling< TFixedImage, TMovingImage >
+	public AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 	{
 	public:
 		
 		/** Standard class typedefs. */
 		typedef MattesMutualInformationImageToImageMetric2					Self;
-		typedef ImageToImageMetricWithSampling< TFixedImage, TMovingImage >			Superclass;
+		typedef AdvancedImageToImageMetric< TFixedImage, TMovingImage >			Superclass;
 		typedef SmartPointer<Self>																	Pointer;
 		typedef SmartPointer<const Self>														ConstPointer;
 		
@@ -146,7 +146,7 @@ namespace itk
 		itkNewMacro( Self );
 		
 		/** Run-time type information (and related methods). */
-		itkTypeMacro( MattesMutualInformationImageToImageMetric2, ImageToImageMetricWithSampling );
+		itkTypeMacro( MattesMutualInformationImageToImageMetric2, AdvancedImageToImageMetric );
 		
 		/** Types inherited from Superclass. */
 		typedef typename Superclass::TransformType            TransformType;

@@ -2,13 +2,11 @@
 #ifndef __itkAdvancedMeanSquaresImageToImageMetric_h
 #define __itkAdvancedMeanSquaresImageToImageMetric_h
 
-#include "itkImageToImageMetricWithSampling.h"
-#include "itkBSplineInterpolateImageFunction.h"
-#include "itkBSplineResampleImageFunction.h"
-#include "itkImage.h"
+#include "itkAdvancedImageToImageMetric.h"
 
 namespace itk
 {
+
 /** \class AdvancedMeanSquaresImageToImageMetric
  * \brief Computes similarity between two objects to be registered
  *
@@ -21,72 +19,80 @@ namespace itk
  * taken from the Moving image. Their positions are mapped to the Fixed image
  * and result in general in non-grid position on it. Values at these non-grid
  * position of the Fixed image are interpolated using a user-selected Interpolator.
- *
- * This class provides functionality to calculate (the derivative of) the
- * mean squares metric on only a subset of the fixed image voxels. This
- * option is controlled by the boolean UseAllPixels, which is by default true.
- * Substantial speedup can be accomplished by setting it to false and specifying
- * the NumberOfSpacialSamples to some small portion of the total number of fixed
- * image samples. The samples are randomly chosen using an
- * itk::ImageRandomConstIteratorWithIndex Every iteration a new set of those
- * samples are used. This is important, because the error made by calculating
- * the metric value with only a subset of all samples should be randomly
- * distributed with zero mean.
- *
- * \todo In the while loop in GetValue and GetValueAndDerivative another for
- * loop is made over all parameters. In case of a B-spline transform advantage
- * can be taken from the fact that it has compact support, similar to the
- * itk::MattesMutualInformationImageToImageMetric.
+ * 
  *
  * \ingroup RegistrationMetrics
  * \ingroup Metrics
  */
+
 template < class TFixedImage, class TMovingImage > 
 class AdvancedMeanSquaresImageToImageMetric : 
-    public ImageToImageMetricWithSampling< TFixedImage, TMovingImage>
+    public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
 {
 public:
 
   /** Standard class typedefs. */
   typedef AdvancedMeanSquaresImageToImageMetric		Self;
-  typedef ImageToImageMetricWithSampling<
-    TFixedImage, TMovingImage >             Superclass;
-  typedef SmartPointer<Self>                Pointer;
-  typedef SmartPointer<const Self>          ConstPointer;
+  typedef AdvancedImageToImageMetric<
+    TFixedImage, TMovingImage >                   Superclass;
+  typedef SmartPointer<Self>                      Pointer;
+  typedef SmartPointer<const Self>                ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
  
   /** Run-time type information (and related methods). */
-  itkTypeMacro( AdvancedMeanSquaresImageToImageMetric, ImageToImageMetricWithSampling );
+  itkTypeMacro( AdvancedMeanSquaresImageToImageMetric, AdvancedImageToImageMetric );
 
-  /** Types transferred from the base class */
-  typedef typename Superclass::RealType                 RealType;
-  typedef typename Superclass::TransformType            TransformType;
-  typedef typename Superclass::TransformPointer         TransformPointer;
-  typedef typename Superclass::TransformParametersType  TransformParametersType;
-  typedef typename Superclass::TransformJacobianType    TransformJacobianType;
-  typedef typename Superclass::GradientPixelType        GradientPixelType;
-  typedef typename Superclass::MeasureType              MeasureType;
-  typedef typename Superclass::DerivativeType           DerivativeType;
-  typedef typename Superclass::FixedImageType           FixedImageType;
-  typedef typename Superclass::MovingImageType          MovingImageType;
-  typedef typename Superclass::FixedImageConstPointer   FixedImageConstPointer;
-  typedef typename Superclass::MovingImageConstPointer  MovingImageConstPointer;
-  typedef typename Superclass::InputPointType			      InputPointType;
-  typedef typename Superclass::OutputPointType		      OutputPointType;
-  typedef typename Superclass::ImageSamplerType         ImageSamplerType;
-  typedef typename Superclass::ImageSamplerPointer      ImageSamplerPointer;
+  /** Typedefs from the superclass. */
   typedef typename 
-    Superclass::ImageSampleContainerType                ImageSampleContainerType;
+    Superclass::CoordinateRepresentationType              CoordinateRepresentationType;
+  typedef typename Superclass::MovingImageType            MovingImageType;
+  typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
+  typedef typename Superclass::MovingImageConstPointer    MovingImageConstPointer;
+  typedef typename Superclass::FixedImageType             FixedImageType;
+  typedef typename Superclass::FixedImageConstPointer     FixedImageConstPointer;
+  typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
+  typedef typename Superclass::TransformType              TransformType;
+  typedef typename Superclass::TransformPointer           TransformPointer;
+  typedef typename Superclass::InputPointType             InputPointType;
+  typedef typename Superclass::OutputPointType            OutputPointType;
+  typedef typename Superclass::TransformParametersType    TransformParametersType;
+  typedef typename Superclass::TransformJacobianType      TransformJacobianType;
+  typedef typename Superclass::InterpolatorType           InterpolatorType;
+  typedef typename Superclass::InterpolatorPointer        InterpolatorPointer;
+  typedef typename Superclass::RealType                   RealType;
+  typedef typename Superclass::GradientPixelType          GradientPixelType;
+  typedef typename Superclass::GradientImageType          GradientImageType;
+  typedef typename Superclass::GradientImagePointer       GradientImagePointer;
+  typedef typename Superclass::GradientImageFilterType    GradientImageFilterType;
+  typedef typename Superclass::GradientImageFilterPointer GradientImageFilterPointer;
+  typedef typename Superclass::FixedImageMaskType         FixedImageMaskType;
+  typedef typename Superclass::FixedImageMaskPointer      FixedImageMaskPointer;
+  typedef typename Superclass::MovingImageMaskType        MovingImageMaskType;
+  typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
+  typedef typename Superclass::MeasureType                MeasureType;
+  typedef typename Superclass::DerivativeType             DerivativeType;
+  typedef typename Superclass::ParametersType             ParametersType;
+  typedef typename Superclass::FixedImagePixelType        FixedImagePixelType;
+  typedef typename Superclass::MovingImageRegionType      MovingImageRegionType;
+  typedef typename Superclass::ImageSamplerType           ImageSamplerType;
+  typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
+  typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
   typedef typename 
-    Superclass::ImageSampleContainerPointer             ImageSampleContainerPointer;
-  typedef typename Superclass::FixedImageMaskType       FixedImageMaskType;
-  typedef typename Superclass::MovingImageMaskType      MovingImageMaskType;
-  
+    Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
+  typedef typename Superclass::InternalMaskPixelType      InternalMaskPixelType;
+  typedef typename
+    Superclass::InternalMovingImageMaskType               InternalMovingImageMaskType;
   typedef typename 
-    Superclass::CoordinateRepresentationType            CoordinateRepresentationType;
- 
+    Superclass::MovingImageMaskInterpolatorType           MovingImageMaskInterpolatorType;
+  typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
+  typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
+  typedef typename
+    Superclass::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
+  typedef typename
+    Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
+
 	/** The fixed image dimension. */
 	itkStaticConstMacro( FixedImageDimension, unsigned int,
 		FixedImageType::ImageDimension );
@@ -94,24 +100,6 @@ public:
 	/** The moving image dimension. */
 	itkStaticConstMacro( MovingImageDimension, unsigned int,
 		MovingImageType::ImageDimension );
-
-  typedef unsigned char                                   InternalMaskPixelType;
-  typedef typename itk::Image<
-    InternalMaskPixelType, 
-    itkGetStaticConstMacro(MovingImageDimension) >        InternalMovingImageMaskType;
-  typedef typename MovingImageType::SpacingType           MovingImageSpacingType;
-  typedef itk::BSplineResampleImageFunction<
-    InternalMovingImageMaskType,
-    CoordinateRepresentationType >                        MovingImageMaskInterpolatorType;
-  typedef typename 
-    MovingImageMaskInterpolatorType::CovariantVectorType  MovingImageMaskDerivativeType;
-  typedef typename 
-    MovingImageMaskInterpolatorType::ContinuousIndexType  MovingImageContinuousIndexType;
-
-  typedef itk::BSplineInterpolateImageFunction<
-    MovingImageType,
-    CoordinateRepresentationType,
-    double>                                               BSplineInterpolatorType;
   
   /** Get the value for single valued optimizers. */
 	virtual MeasureType GetValue( const TransformParametersType & parameters ) const;
@@ -126,71 +114,75 @@ public:
 
   /** Initialize the Metric by making sure that all the components
    *  are present and plugged together correctly.
-   * \li set the internal moving mask
-   */
+   * \li Call the superclass' implementation
+   * \li Estimate the normalization factor, if asked for.  */
   virtual void Initialize(void) throw ( ExceptionObject );
 
-  /** Get the internal moving image mask. Equals the movingimage mask if set, and 
-   * otherwise it's a box with size equal to the moving image's largest possible region */
-  itkGetConstObjectMacro(InternalMovingImageMask, InternalMovingImageMaskType);
-
-  /** Get the interpolator of the internal moving image mask */
-  itkGetConstObjectMacro(MovingImageMaskInterpolator, MovingImageMaskInterpolatorType);
-
-  /** Set/Get whether the overlap should be taken into account while computing the derivative
-   * This setting also affects the value of the metric. Default: true; */
-  itkSetMacro(UseDifferentiableOverlap, bool);
-  itkGetConstMacro(UseDifferentiableOverlap, bool);
-
-  /** Set the interpolation spline order for the moving image mask; default: 2
-   * Make sure to call this before calling Initialize(), if you want to change it. */
-  virtual void SetMovingImageMaskInterpolationOrder(unsigned int order)
-  {
-    this->m_MovingImageMaskInterpolator->SetSplineOrder( order );
-  };
-  /** Get the interpolation spline order for the moving image mask */
-  virtual const unsigned int GetMovingImageMaskInterpolationOrder(void) const
-  {
-    return this->m_MovingImageMaskInterpolator->GetSplineOrder();
-  };
-  
+  /** Set/Get whether to normalize the mean squares measure.
+   * This divides the MeanSquares by a factor (range/10)^2,
+   * where range represents the maximum gray value range of the
+   * images. Based on the ad hoc assumption that range/10 is the
+   * maximum average difference that will be observed. 
+   * Dividing by range^2 sounds less ad hoc, but will yield
+   * very small values. */
+  itkSetMacro(UseNormalization, bool);
+  itkGetConstMacro(UseNormalization, bool);
+   
 protected:
   AdvancedMeanSquaresImageToImageMetric();
   virtual ~AdvancedMeanSquaresImageToImageMetric() {};
 	void PrintSelf( std::ostream& os, Indent indent ) const;
-  
-  /** Estimate value and spatial derivative of internal moving mask */
-  virtual void EvaluateMovingMaskValueAndDerivative(
-    const OutputPointType & point,
-    double & value,
-    MovingImageMaskDerivativeType & derivative) const;
-  
-  /** Estimate value of internal moving mask */
-  virtual void EvaluateMovingMaskValue(
-    const OutputPointType & point,
-    double & value ) const;
 
-  /** Get the moving image value and derivative; if a bspline interpolator is used
-   * it is used to compute the derivative. If not, the precomputed GradientImage is used.
-   * Returns true if the value and derivative are valid. 
-   */
-  virtual bool EvaluateMovingImageValueAndDerivative(
-    const OutputPointType & point,
-    RealType & value,
-    GradientPixelType & derivative) const;
+  /** Protected Typedefs ******************/
 
-  /** Functions called from Initialize, to split up that function a bit. */
-  virtual void InitializeInternalMasks(void);
+  /** Typedefs inherited from superclass */
+  typedef typename Superclass::FixedImageIndexType                FixedImageIndexType;
+	typedef typename Superclass::FixedImageIndexValueType           FixedImageIndexValueType;
+	typedef typename Superclass::MovingImageIndexType               MovingImageIndexType;
+	typedef typename Superclass::FixedImagePointType                FixedImagePointType;
+	typedef typename Superclass::MovingImagePointType               MovingImagePointType;
+  typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
+  typedef	typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
+  typedef typename Superclass::MovingImageDerivativeFunctionType  MovingImageDerivativeFunctionType;
+  typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
+  typedef typename Superclass::BSplineTransformType               BSplineTransformType;
+  typedef typename Superclass::BSplineTransformWeightsType        BSplineTransformWeightsType;
+	typedef typename Superclass::BSplineTransformIndexArrayType     BSplineTransformIndexArrayType;
+	typedef typename Superclass::BSplineCombinationTransformType    BSplineCombinationTransformType;
+ 	typedef typename Superclass::BSplineParametersOffsetType        BSplineParametersOffsetType;
+  typedef typename Superclass::ParameterIndexArrayType            ParameterIndexArrayType;
+  typedef typename Superclass::MovingImageMaskDerivativeType      MovingImageMaskDerivativeType;
 
-  typename InternalMovingImageMaskType::Pointer      m_InternalMovingImageMask;
-  typename MovingImageMaskInterpolatorType::Pointer  m_MovingImageMaskInterpolator;
-  typename BSplineInterpolatorType::Pointer          m_BSplineInterpolator;
+  double m_NormalizationFactor;
+     
+  /** Computes the innerproduct of transform jacobian with moving image gradient
+   * and transform jacobian with the derivative of the movingMask
+   * The results are stored in imageJacobian and maskJacobian, which are supposed
+   * to have the right size (same length as jacobian's number of columns). */
+  void EvaluateTransformJacobianInnerProducts(
+    const TransformJacobianType & jacobian, 
+		const MovingImageDerivativeType & movingImageDerivative,
+    const MovingImageMaskDerivativeType & movingMaskDerivative,
+    DerivativeType & imageJacobian,
+    DerivativeType & maskJacobian) const;
 
+  /** Compute a pixel's contribution to the measure and derivatives;
+   * Called by GetValueAndDerivative() */
+  void UpdateValueAndDerivativeTerms( 
+    RealType fixedImageValue,
+    RealType movingImageValue,
+    RealType movingMaskValue,
+    const DerivativeType & imageJacobian,
+    const DerivativeType & maskJacobian,
+    MeasureType & measure,
+    DerivativeType & numderiv,
+    DerivativeType & denderiv  ) const;
+ 
 private:
   AdvancedMeanSquaresImageToImageMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
-  bool m_UseDifferentiableOverlap;
+  bool m_UseNormalization;
 
 }; // end class AdvancedMeanSquaresImageToImageMetric
 

@@ -59,6 +59,19 @@ using namespace itk;
       movingMaskInterpolationOrder, "MovingMaskInterpolationOrder", level, true );
 		this->SetMovingImageMaskInterpolationOrder( 
       movingMaskInterpolationOrder );
+
+    /** Get and set whether the metric should check if enough samples map inside the moving image. */
+    std::string checkNumberOfSamples = "true";
+    this->GetConfiguration()->ReadParameter( checkNumberOfSamples, "CheckNumberOfSamples", 0, true );
+    this->GetConfiguration()->ReadParameter( checkNumberOfSamples, "CheckNumberOfSamples", level );
+    if ( checkNumberOfSamples == "false" )
+    {
+      this->SetRequiredRatioOfValidSamples(0.0);
+    }
+    else
+    {
+      this->SetRequiredRatioOfValidSamples(0.25);
+    }
 		
   } // end BeforeEachResolution
 

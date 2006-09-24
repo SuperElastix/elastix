@@ -2,7 +2,7 @@
 #define __elxAdvancedMattesMutualInformationMetric_H__
 
 #include "elxIncludes.h"
-#include "itkMattesMutualInformationImageToImageMetric3.h"
+#include "itkParzenWindowMutualInformationImageToImageMetric.h"
 
 #include "elxTimer.h"
 
@@ -12,7 +12,7 @@ using namespace itk;
 
 	/**
 	 * \class AdvancedMattesMutualInformationMetric
-	 * \brief A metric based on the itk::MattesMutualInformationImageToImageMetric3.
+	 * \brief A metric based on the itk::ParzenWindowMutualInformationImageToImageMetric.
 	 *
 	 * This metric is based on an adapted version of the
 	 * itk::MattesMutualInformationImageToImageMetric.
@@ -31,14 +31,14 @@ using namespace itk;
    *    The default is true. In general it is wise to set this to true, since it detects
    *    if the registration is going really bad.
    *
-   * \sa MattesMutualInformationImageToImageMetric3
+   * \sa ParzenWindowMutualInformationImageToImageMetric
 	 * \ingroup Metrics
 	 */
 	
 	template <class TElastix >	
 		class AdvancedMattesMutualInformationMetric :
 		public
-			MattesMutualInformationImageToImageMetric3<
+			ParzenWindowMutualInformationImageToImageMetric<
 				ITK_TYPENAME MetricBase<TElastix>::FixedImageType,
 				ITK_TYPENAME MetricBase<TElastix>::MovingImageType >,
 		public MetricBase<TElastix>
@@ -47,7 +47,7 @@ using namespace itk;
 
 		/** Standard ITK-stuff. */
 		typedef AdvancedMattesMutualInformationMetric					Self;
-		typedef MattesMutualInformationImageToImageMetric3<
+		typedef ParzenWindowMutualInformationImageToImageMetric<
 			typename MetricBase<TElastix>::FixedImageType,
 			typename MetricBase<TElastix>::MovingImageType >		Superclass1;
 		typedef MetricBase<TElastix>													Superclass2;
@@ -59,7 +59,7 @@ using namespace itk;
 		
 		/** Run-time type information (and related methods). */
 		itkTypeMacro( AdvancedMattesMutualInformationMetric,
-			MattesMutualInformationImageToImageMetric3 );
+			ParzenWindowMutualInformationImageToImageMetric );
 		
 		/** Name of this class.
 		 * Use this name in the parameter file to select this specific metric. \n
@@ -67,27 +67,59 @@ using namespace itk;
 		 */
 		elxClassNameMacro( "AdvancedMattesMutualInformation" );
 
-		/** Typedefs inherited from the superclass. */
-		typedef typename Superclass1::TransformType							TransformType;
-		typedef typename Superclass1::TransformPointer 					TransformPointer;
-		typedef typename Superclass1::TransformJacobianType			TransformJacobianType;
-		typedef typename Superclass1::InterpolatorType 					InterpolatorType;
-		typedef typename Superclass1::MeasureType								MeasureType;
-		typedef typename Superclass1::DerivativeType 						DerivativeType;
-		typedef typename Superclass1::ParametersType 						ParametersType;
-		typedef typename Superclass1::FixedImageType 						FixedImageType;
-		typedef typename Superclass1::MovingImageType						MovingImageType;
-		typedef typename Superclass1::FixedImageConstPointer 		FixedImageConstPointer;
-		typedef typename Superclass1::MovingImageConstPointer		MovingImageConstPointer;
-		typedef typename Superclass1::FixedImageIndexType				FixedImageIndexType;
-		typedef typename Superclass1::FixedImageIndexValueType 	FixedImageIndexValueType;
-		typedef typename Superclass1::MovingImageIndexType 			MovingImageIndexType;
-		typedef typename Superclass1::FixedImagePointType				FixedImagePointType;
-		typedef typename Superclass1::MovingImagePointType 			MovingImagePointType;
+		/** Typedefs from the superclass. */
+    typedef typename 
+      Superclass::CoordinateRepresentationType              CoordinateRepresentationType;
+    typedef typename Superclass::MovingImageType            MovingImageType;
+    typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
+    typedef typename Superclass::MovingImageConstPointer    MovingImageConstPointer;
+    typedef typename Superclass::FixedImageType             FixedImageType;
+    typedef typename Superclass::FixedImageConstPointer     FixedImageConstPointer;
+    typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
+    typedef typename Superclass::TransformType              TransformType;
+    typedef typename Superclass::TransformPointer           TransformPointer;
+    typedef typename Superclass::InputPointType             InputPointType;
+    typedef typename Superclass::OutputPointType            OutputPointType;
+    typedef typename Superclass::TransformParametersType    TransformParametersType;
+    typedef typename Superclass::TransformJacobianType      TransformJacobianType;
+    typedef typename Superclass::InterpolatorType           InterpolatorType;
+    typedef typename Superclass::InterpolatorPointer        InterpolatorPointer;
+    typedef typename Superclass::RealType                   RealType;
+    typedef typename Superclass::GradientPixelType          GradientPixelType;
+    typedef typename Superclass::GradientImageType          GradientImageType;
+    typedef typename Superclass::GradientImagePointer       GradientImagePointer;
+    typedef typename Superclass::GradientImageFilterType    GradientImageFilterType;
+    typedef typename Superclass::GradientImageFilterPointer GradientImageFilterPointer;
+    typedef typename Superclass::FixedImageMaskType         FixedImageMaskType;
+    typedef typename Superclass::FixedImageMaskPointer      FixedImageMaskPointer;
+    typedef typename Superclass::MovingImageMaskType        MovingImageMaskType;
+    typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
+    typedef typename Superclass::MeasureType                MeasureType;
+    typedef typename Superclass::DerivativeType             DerivativeType;
+    typedef typename Superclass::ParametersType             ParametersType;
+    typedef typename Superclass::FixedImagePixelType        FixedImagePixelType;
+    typedef typename Superclass::MovingImageRegionType      MovingImageRegionType;
+    typedef typename Superclass::ImageSamplerType           ImageSamplerType;
+    typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
+    typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
+    typedef typename 
+      Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
+    typedef typename Superclass::InternalMaskPixelType      InternalMaskPixelType;
+    typedef typename
+      Superclass::InternalMovingImageMaskType               InternalMovingImageMaskType;
+    typedef typename 
+      Superclass::MovingImageMaskInterpolatorType           MovingImageMaskInterpolatorType;
+    typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
+    typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
+    typedef typename
+      Superclass::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
+    typedef typename
+      Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
 		
-		/** The fixed image dimension. */
-		itkStaticConstMacro (FixedImageDimension, unsigned int,
-			FixedImageType::ImageDimension);
+    /** The fixed image dimension. */
+		itkStaticConstMacro( FixedImageDimension, unsigned int,
+			FixedImageType::ImageDimension );
+
 		/** The moving image dimension. */
 		itkStaticConstMacro( MovingImageDimension, unsigned int,
 			MovingImageType::ImageDimension );
@@ -111,12 +143,12 @@ using namespace itk;
      * \li Set the CheckNumberOfSamples option.
      * \li Set the UseDifferentiableOverlap setting
      * \li Set the MovingMaskInterpolationOrder setting
-		 */
+     * \li Set the fixed/moving LimitRangeRatio
+     * \li Set the fixed/moving limiter. */
 		virtual void BeforeEachResolution( void );
 	
-		/** Sets up a timer to measure the intialisation time and
-		 * calls the Superclass' implementation.
-		 */
+		/** Set up a timer to measure the intialisation time and
+		 * call the Superclass' implementation. */
 		virtual void Initialize(void) throw (ExceptionObject);
 	
 	protected:

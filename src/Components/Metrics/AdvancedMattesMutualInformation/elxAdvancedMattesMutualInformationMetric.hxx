@@ -2,6 +2,8 @@
 #define __elxAdvancedMattesMutualInformationMetric_HXX__
 
 #include "elxAdvancedMattesMutualInformationMetric.h"
+#include "itkHardLimiterFunction.h"
+#include "itkExponentialLimiterFunction.h"
 #include <string>
 
 namespace elastix
@@ -37,8 +39,7 @@ using namespace itk;
 		/** \todo Adapt SecondOrderRegularisationMetric.
 		 * Set alpha, which balances the similarity and deformation energy
 		 * E_total = (1-alpha)*E_sim + alpha*E_def.
-		 * 	metric->SetAlpha( config.GetAlpha(level) );
-		 */
+		 * 	metric->SetAlpha( config.GetAlpha(level) );	 */
 
 		/** Get the current resolution level. */
 		unsigned int level = 
@@ -59,7 +60,6 @@ using namespace itk;
 		this->GetConfiguration()->ReadParameter( numberOfMovingHistogramBins, "NumberOfMovingHistogramBins", level );
 		this->SetNumberOfFixedHistogramBins( numberOfFixedHistogramBins );
     this->SetNumberOfMovingHistogramBins( numberOfMovingHistogramBins );
-
 
     /** Set whether a differentiable overlap should be used */
     std::string useDifferentiableOverlap = "true";
@@ -89,34 +89,19 @@ using namespace itk;
     this->GetConfiguration()->ReadParameter( checkNumberOfSamples, "CheckNumberOfSamples", level );
     if ( checkNumberOfSamples == "false" )
     {
-      this->SetCheckNumberOfSamples(false);
+      this->SetRequiredRatioOfValidSamples(0.0);
     }
     else
     {
-      this->SetCheckNumberOfSamples(true);
+      this->SetRequiredRatioOfValidSamples(0.25);
     }
 
-    /** Set the limiter */
-    std::string limiter = "Soft";
-    this->GetConfiguration()->ReadParameter( limiter, "GrayValueLimiter", 0, true );
-    this->GetConfiguration()->ReadParameter( limiter, "GrayValueLimiter", level );
-    if ( limiter == "Hard" )
-    {
-      this->SetHardLimitMovingGrayValues(true);
-      this->SetSoftLimitMovingGrayValues(false);
-    }
-    else if ( limiter == "No" )
-    {
-      this->SetHardLimitMovingGrayValues(false);
-      this->SetSoftLimitMovingGrayValues(false);
-    }
-    else
-    {
-      /** assume soft limiter */
-      this->SetHardLimitMovingGrayValues(false);
-      this->SetSoftLimitMovingGrayValues(true);
-    }
-
+    /** Set limiters */
+    typedef HardLimiterFunction< FixedImagePixelType, FixedImageDimension > FixedLimiterType;
+    typedef ExponentialLimiterFunction< MovingImagePixelType, MovingImageDimension > MovingLimiterType;
+    this->SetFixedImageLimiter( FixedLimiterType::New() );
+    this->SetMovingImageLimiter( MovingLimiterType::New() );
+    
     /** Get and set the number of histogram bins. */
 		double fixedLimitRangeRatio = 0.01;
     double movingLimitRangeRatio = 0.01;
@@ -127,6 +112,7 @@ using namespace itk;
 		this->SetFixedLimitRangeRatio( fixedLimitRangeRatio );
     this->SetMovingLimitRangeRatio( movingLimitRangeRatio );
 
+    /** Set bspline parzen kernel orders */
     unsigned int fixedKernelBSplineOrder = 0;
     unsigned int movingKernelBSplineOrder = 3;
     this->GetConfiguration()->ReadParameter( fixedKernelBSplineOrder, "FixedKernelBSplineOrder", 0, true);
@@ -135,8 +121,6 @@ using namespace itk;
 		this->GetConfiguration()->ReadParameter( movingKernelBSplineOrder, "MovingKernelBSplineOrder", level );
 		this->SetFixedKernelBSplineOrder( fixedKernelBSplineOrder );
     this->SetMovingKernelBSplineOrder( movingKernelBSplineOrder );
-
- 
 
 	} // end BeforeEachResolution
 	

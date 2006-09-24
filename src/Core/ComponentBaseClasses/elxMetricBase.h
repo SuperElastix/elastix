@@ -5,7 +5,7 @@
 #include "elxMacro.h"
 
 #include "elxBaseComponentSE.h"
-#include "itkImageToImageMetricWithSampling.h"
+#include "itkAdvancedImageToImageMetric.h"
 #include "itkImageFullSampler.h"
 
 #include "elxTimer.h"
@@ -102,7 +102,7 @@ using namespace itk;
 		/** ITKBaseType. */
 		typedef ImageToImageMetric<
 			FixedImageType, MovingImageType >				ITKBaseType;
-    typedef ImageToImageMetricWithSampling<
+    typedef AdvancedImageToImageMetric<
 			FixedImageType, MovingImageType >				MetricWithSamplingType;
 
     /** Cast to ITKBaseType. */
