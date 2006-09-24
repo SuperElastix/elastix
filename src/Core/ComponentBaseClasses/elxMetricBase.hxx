@@ -469,112 +469,116 @@ namespace elastix
 
     if ( thisAsMetricWithSampler )
     {
-      /** Typedefs of all available image samplers.
-       * ImageFullSamplerType and ImageSamplerBaseType are already declared in the header. */
-      typedef ImageRandomSampler< FixedImageType >              ImageRandomSamplerType;
-      typedef ImageRandomSamplerSparseMask< FixedImageType >    ImageRandomSamplerSparseMaskType;
-      typedef ImageRandomCoordinateSampler< FixedImageType >    ImageRandomCoordinateSamplerType;
-      typedef ImageGridSampler< FixedImageType >                ImageGridSamplerType;
-
-      /** Create an imageSampler of ImageSamplerBaseType. */
-      typename ImageSamplerBaseType::Pointer imageSampler = 0;
-
-      /** Get the desired sampler type from the parameter file. */
-      unsigned int level =
-			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
-      std::string imageSamplerType = "Random";
-      this->m_Configuration->ReadParameter( imageSamplerType, "ImageSampler", 0, true );
-      this->m_Configuration->ReadParameter( imageSamplerType, "ImageSampler", level );
-
-      /** Get and set NumberOfSpatialSamples. This doesn't make sense for the ImageFullSampler. */
-      unsigned long numberOfSpatialSamples = 5000;
-      this->GetConfiguration()->ReadParameter( numberOfSpatialSamples, "NumberOfSpatialSamples", 0, true );
-      this->GetConfiguration()->ReadParameter( numberOfSpatialSamples, "NumberOfSpatialSamples", level );
-
-      /** Set the imageSampler to the correct one. */
-      if ( imageSamplerType == "Random" )
+      if ( thisAsMetricWithSampler->GetUseImageSampler() )
       {
-        typename ImageRandomSamplerType::Pointer randomSampler
-          = ImageRandomSamplerType::New();
-        randomSampler->SetNumberOfSamples( numberOfSpatialSamples );
-        imageSampler = randomSampler;
-      }
-      else if ( imageSamplerType == "RandomSparseMask" )
-      {
-        typename ImageRandomSamplerSparseMaskType::Pointer randomSamplerSparseMask
-          = ImageRandomSamplerSparseMaskType::New();
-        randomSamplerSparseMask->SetNumberOfSamples( numberOfSpatialSamples );
-        imageSampler = randomSamplerSparseMask;
-      }
-      else if ( imageSamplerType == "Full" )
-      {
-        typename ImageFullSamplerType::Pointer fullSampler
-          = ImageFullSamplerType::New();
-        imageSampler = fullSampler;
-      }
-      else if ( imageSamplerType == "RandomCoordinate" )
-      {
-        typename ImageRandomCoordinateSamplerType::Pointer randomCoordinateSampler
-          = ImageRandomCoordinateSamplerType::New();
-        randomCoordinateSampler->SetNumberOfSamples( numberOfSpatialSamples );
-        typedef typename ImageRandomCoordinateSamplerType::DefaultInterpolatorType
-          FixedImageInterpolatorType;
-        typename FixedImageInterpolatorType::Pointer fixedImageInterpolator =
-          FixedImageInterpolatorType::New();
-        /** Set the SplineOrder, default value = 3. */
-	      unsigned int splineOrder = 3;
-		    this->GetConfiguration()->
-			    ReadParameter( splineOrder, "FixedImageBSplineInterpolationOrder", 0, true );
-        this->GetConfiguration()->
-			    ReadParameter( splineOrder, "FixedImageBSplineInterpolationOrder", level );
-        fixedImageInterpolator->SetSplineOrder( splineOrder );
-    		randomCoordinateSampler->SetInterpolator(fixedImageInterpolator);
-        imageSampler = randomCoordinateSampler;
-      }
-      else if ( imageSamplerType == "Grid" )
-      {
-        /** Create the gridSampler and the gridspacing. */
-        typedef typename ImageGridSamplerType::SampleGridSpacingType        GridSpacingType;
-        typedef typename ImageGridSamplerType::SampleGridSpacingValueType   SampleGridSpacingValueType;
+        /** Typedefs of all available image samplers.
+        * ImageFullSamplerType and ImageSamplerBaseType are already declared in the header. */
+        typedef ImageRandomSampler< FixedImageType >              ImageRandomSamplerType;
+        typedef ImageRandomSamplerSparseMask< FixedImageType >    ImageRandomSamplerSparseMaskType;
+        typedef ImageRandomCoordinateSampler< FixedImageType >    ImageRandomCoordinateSamplerType;
+        typedef ImageGridSampler< FixedImageType >                ImageGridSamplerType;
 
-        typename ImageGridSamplerType::Pointer gridSampler
-          = ImageGridSamplerType::New();
-        GridSpacingType gridspacing;
+        /** Create an imageSampler of ImageSamplerBaseType. */
+        typename ImageSamplerBaseType::Pointer imageSampler = 0;
 
-        /** Read the desired grid spacing of the samples. */
-        unsigned int spacing_dim;
-        for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
+        /** Get the desired sampler type from the parameter file. */
+        unsigned int level =
+			  ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+        std::string imageSamplerType = "Random";
+        this->m_Configuration->ReadParameter( imageSamplerType, "ImageSampler", 0, true );
+        this->m_Configuration->ReadParameter( imageSamplerType, "ImageSampler", level );
+
+        /** Get and set NumberOfSpatialSamples. This doesn't make sense for the ImageFullSampler. */
+        unsigned long numberOfSpatialSamples = 5000;
+        this->GetConfiguration()->ReadParameter( numberOfSpatialSamples, "NumberOfSpatialSamples", 0, true );
+        this->GetConfiguration()->ReadParameter( numberOfSpatialSamples, "NumberOfSpatialSamples", level );
+
+        /** Set the imageSampler to the correct one. */
+        if ( imageSamplerType == "Random" )
         {
-          spacing_dim = 2;
-          this->GetConfiguration()->ReadParameter(
-            spacing_dim, "SampleGridSpacing", level * FixedImageDimension + dim );
-          gridspacing[ dim ] = static_cast<SampleGridSpacingValueType>( spacing_dim );
+          typename ImageRandomSamplerType::Pointer randomSampler
+            = ImageRandomSamplerType::New();
+          randomSampler->SetNumberOfSamples( numberOfSpatialSamples );
+          imageSampler = randomSampler;
         }
-        gridSampler->SetSampleGridSpacing( gridspacing );
-        imageSampler = gridSampler;
-      }
-      else
-      {
-        itkExceptionMacro( << "ERROR: There exists no ImageSampler \"" << imageSamplerType << "\"." );
-      }
-   		
-      /** Set the image sampler in the metric. */
-      thisAsMetricWithSampler->SetImageSampler( imageSampler );
-
-      /** Check if NewSamplesEveryIteration is possible with the selected ImageSampler. */
-      std::string newSamples = "false";
-      this->m_Configuration->ReadParameter( newSamples, "NewSamplesEveryIteration", 0, true );
-      this->m_Configuration->ReadParameter( newSamples, "NewSamplesEveryIteration", level, true );
-
-      if ( newSamples == "true" )
-      {
-        bool ret = thisAsMetricWithSampler->GetImageSampler()->SelectNewSamplesOnUpdate();
-        if ( !ret )
+        else if ( imageSamplerType == "RandomSparseMask" )
         {
-          xl::xout["warning"]  << "WARNING: You want to select new samples every iteration, \
-                                  but the selected ImageSampler is not suited for that." << std::endl;
+          typename ImageRandomSamplerSparseMaskType::Pointer randomSamplerSparseMask
+            = ImageRandomSamplerSparseMaskType::New();
+          randomSamplerSparseMask->SetNumberOfSamples( numberOfSpatialSamples );
+          imageSampler = randomSamplerSparseMask;
         }
-      }
+        else if ( imageSamplerType == "Full" )
+        {
+          typename ImageFullSamplerType::Pointer fullSampler
+            = ImageFullSamplerType::New();
+          imageSampler = fullSampler;
+        }
+        else if ( imageSamplerType == "RandomCoordinate" )
+        {
+          typename ImageRandomCoordinateSamplerType::Pointer randomCoordinateSampler
+            = ImageRandomCoordinateSamplerType::New();
+          randomCoordinateSampler->SetNumberOfSamples( numberOfSpatialSamples );
+          typedef typename ImageRandomCoordinateSamplerType::DefaultInterpolatorType
+            FixedImageInterpolatorType;
+          typename FixedImageInterpolatorType::Pointer fixedImageInterpolator =
+            FixedImageInterpolatorType::New();
+          /** Set the SplineOrder, default value = 3. */
+	        unsigned int splineOrder = 3;
+		      this->GetConfiguration()->
+			      ReadParameter( splineOrder, "FixedImageBSplineInterpolationOrder", 0, true );
+          this->GetConfiguration()->
+			      ReadParameter( splineOrder, "FixedImageBSplineInterpolationOrder", level );
+          fixedImageInterpolator->SetSplineOrder( splineOrder );
+    		  randomCoordinateSampler->SetInterpolator(fixedImageInterpolator);
+          imageSampler = randomCoordinateSampler;
+        }
+        else if ( imageSamplerType == "Grid" )
+        {
+          /** Create the gridSampler and the gridspacing. */
+          typedef typename ImageGridSamplerType::SampleGridSpacingType        GridSpacingType;
+          typedef typename ImageGridSamplerType::SampleGridSpacingValueType   SampleGridSpacingValueType;
+
+          typename ImageGridSamplerType::Pointer gridSampler
+            = ImageGridSamplerType::New();
+          GridSpacingType gridspacing;
+
+          /** Read the desired grid spacing of the samples. */
+          unsigned int spacing_dim;
+          for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
+          {
+            spacing_dim = 2;
+            this->GetConfiguration()->ReadParameter(
+              spacing_dim, "SampleGridSpacing", level * FixedImageDimension + dim );
+            gridspacing[ dim ] = static_cast<SampleGridSpacingValueType>( spacing_dim );
+          }
+          gridSampler->SetSampleGridSpacing( gridspacing );
+          imageSampler = gridSampler;
+        }
+        else
+        {
+          itkExceptionMacro( << "ERROR: There exists no ImageSampler \"" << imageSamplerType << "\"." );
+        }
+     		
+        /** Set the image sampler in the metric. */
+        thisAsMetricWithSampler->SetImageSampler( imageSampler );
+
+        /** Check if NewSamplesEveryIteration is possible with the selected ImageSampler. */
+        std::string newSamples = "false";
+        this->m_Configuration->ReadParameter( newSamples, "NewSamplesEveryIteration", 0, true );
+        this->m_Configuration->ReadParameter( newSamples, "NewSamplesEveryIteration", level, true );
+
+        if ( newSamples == "true" )
+        {
+          bool ret = thisAsMetricWithSampler->GetImageSampler()->SelectNewSamplesOnUpdate();
+          if ( !ret )
+          {
+            xl::xout["warning"]  << "WARNING: You want to select new samples every iteration, \
+                                    but the selected ImageSampler is not suited for that." << std::endl;
+          }
+        }
+
+      } // end if GetUseImageSampler
 
     } // end if
 
@@ -592,11 +596,17 @@ namespace elastix
     MetricWithSamplingType * thisAsMetricWithSampler
       = dynamic_cast< MetricWithSamplingType * >( this );
 
+    bool useSampler = false;
+
     if ( thisAsMetricWithSampler )
     {
-      thisAsMetricWithSampler->GetImageSampler()->SelectNewSamplesOnUpdate();
+      if ( thisAsMetricWithSampler->GetUseImageSampler() )
+      {
+        thisAsMetricWithSampler->GetImageSampler()->SelectNewSamplesOnUpdate();
+        useSampler = true;
+      }
     }
-    else
+    if ( !useSampler )
     {
       /**
       * Force the metric to base its computation on a new subset of image samples.
@@ -622,10 +632,15 @@ namespace elastix
     MetricWithSamplingType * thisAsMetricWithSampler
       = dynamic_cast< MetricWithSamplingType * >( this );
 
+    /** Useless implementation if no image sampler is used; we may as
+     * well throw an error, but the ShowExactMetricValue is not really
+     * essential for good registration... */
     if ( thisAsMetricWithSampler == 0 )
     {
-      /** Useless implementation; we may as well throw an error, but the
-       * ShowExactMetricValue is not really essential for good registration... */
+      return itk::NumericTraits<MeasureType>::Zero;
+    }
+    if ( thisAsMetricWithSampler->GetUseImageSampler() == false )
+    {
       return itk::NumericTraits<MeasureType>::Zero;
     }
 
