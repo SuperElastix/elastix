@@ -248,6 +248,7 @@ namespace itk
 
   } // end GetValueAndDerivative
 
+
 	/**
 	 * ********************* PrintSelf ******************************
 	 *
