@@ -69,52 +69,52 @@ using namespace itk;
 
 		/** Typedefs from the superclass. */
     typedef typename 
-      Superclass::CoordinateRepresentationType              CoordinateRepresentationType;
-    typedef typename Superclass::MovingImageType            MovingImageType;
-    typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
-    typedef typename Superclass::MovingImageConstPointer    MovingImageConstPointer;
-    typedef typename Superclass::FixedImageType             FixedImageType;
-    typedef typename Superclass::FixedImageConstPointer     FixedImageConstPointer;
-    typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
-    typedef typename Superclass::TransformType              TransformType;
-    typedef typename Superclass::TransformPointer           TransformPointer;
-    typedef typename Superclass::InputPointType             InputPointType;
-    typedef typename Superclass::OutputPointType            OutputPointType;
-    typedef typename Superclass::TransformParametersType    TransformParametersType;
-    typedef typename Superclass::TransformJacobianType      TransformJacobianType;
-    typedef typename Superclass::InterpolatorType           InterpolatorType;
-    typedef typename Superclass::InterpolatorPointer        InterpolatorPointer;
-    typedef typename Superclass::RealType                   RealType;
-    typedef typename Superclass::GradientPixelType          GradientPixelType;
-    typedef typename Superclass::GradientImageType          GradientImageType;
-    typedef typename Superclass::GradientImagePointer       GradientImagePointer;
-    typedef typename Superclass::GradientImageFilterType    GradientImageFilterType;
-    typedef typename Superclass::GradientImageFilterPointer GradientImageFilterPointer;
-    typedef typename Superclass::FixedImageMaskType         FixedImageMaskType;
-    typedef typename Superclass::FixedImageMaskPointer      FixedImageMaskPointer;
-    typedef typename Superclass::MovingImageMaskType        MovingImageMaskType;
-    typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
-    typedef typename Superclass::MeasureType                MeasureType;
-    typedef typename Superclass::DerivativeType             DerivativeType;
-    typedef typename Superclass::ParametersType             ParametersType;
-    typedef typename Superclass::FixedImagePixelType        FixedImagePixelType;
-    typedef typename Superclass::MovingImageRegionType      MovingImageRegionType;
-    typedef typename Superclass::ImageSamplerType           ImageSamplerType;
-    typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
-    typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
+      Superclass1::CoordinateRepresentationType              CoordinateRepresentationType;
+    typedef typename Superclass1::MovingImageType            MovingImageType;
+    typedef typename Superclass1::MovingImagePixelType       MovingImagePixelType;
+    typedef typename Superclass1::MovingImageConstPointer    MovingImageConstPointer;
+    typedef typename Superclass1::FixedImageType             FixedImageType;
+    typedef typename Superclass1::FixedImageConstPointer     FixedImageConstPointer;
+    typedef typename Superclass1::FixedImageRegionType       FixedImageRegionType;
+    typedef typename Superclass1::TransformType              TransformType;
+    typedef typename Superclass1::TransformPointer           TransformPointer;
+    typedef typename Superclass1::InputPointType             InputPointType;
+    typedef typename Superclass1::OutputPointType            OutputPointType;
+    typedef typename Superclass1::TransformParametersType    TransformParametersType;
+    typedef typename Superclass1::TransformJacobianType      TransformJacobianType;
+    typedef typename Superclass1::InterpolatorType           InterpolatorType;
+    typedef typename Superclass1::InterpolatorPointer        InterpolatorPointer;
+    typedef typename Superclass1::RealType                   RealType;
+    typedef typename Superclass1::GradientPixelType          GradientPixelType;
+    typedef typename Superclass1::GradientImageType          GradientImageType;
+    typedef typename Superclass1::GradientImagePointer       GradientImagePointer;
+    typedef typename Superclass1::GradientImageFilterType    GradientImageFilterType;
+    typedef typename Superclass1::GradientImageFilterPointer GradientImageFilterPointer;
+    typedef typename Superclass1::FixedImageMaskType         FixedImageMaskType;
+    typedef typename Superclass1::FixedImageMaskPointer      FixedImageMaskPointer;
+    typedef typename Superclass1::MovingImageMaskType        MovingImageMaskType;
+    typedef typename Superclass1::MovingImageMaskPointer     MovingImageMaskPointer;
+    typedef typename Superclass1::MeasureType                MeasureType;
+    typedef typename Superclass1::DerivativeType             DerivativeType;
+    typedef typename Superclass1::ParametersType             ParametersType;
+    typedef typename Superclass1::FixedImagePixelType        FixedImagePixelType;
+    typedef typename Superclass1::MovingImageRegionType      MovingImageRegionType;
+    typedef typename Superclass1::ImageSamplerType           ImageSamplerType;
+    typedef typename Superclass1::ImageSamplerPointer        ImageSamplerPointer;
+    typedef typename Superclass1::ImageSampleContainerType   ImageSampleContainerType;
     typedef typename 
-      Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
-    typedef typename Superclass::InternalMaskPixelType      InternalMaskPixelType;
+      Superclass1::ImageSampleContainerPointer               ImageSampleContainerPointer;
+    typedef typename Superclass1::InternalMaskPixelType      InternalMaskPixelType;
     typedef typename
-      Superclass::InternalMovingImageMaskType               InternalMovingImageMaskType;
+      Superclass1::InternalMovingImageMaskType               InternalMovingImageMaskType;
     typedef typename 
-      Superclass::MovingImageMaskInterpolatorType           MovingImageMaskInterpolatorType;
-    typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
-    typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
+      Superclass1::MovingImageMaskInterpolatorType           MovingImageMaskInterpolatorType;
+    typedef typename Superclass1::FixedImageLimiterType      FixedImageLimiterType;
+    typedef typename Superclass1::MovingImageLimiterType     MovingImageLimiterType;
     typedef typename
-      Superclass::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
+      Superclass1::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
     typedef typename
-      Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
+      Superclass1::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
 		
     /** The fixed image dimension. */
 		itkStaticConstMacro( FixedImageDimension, unsigned int,

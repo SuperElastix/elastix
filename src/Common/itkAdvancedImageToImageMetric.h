@@ -395,5 +395,3 @@ private:
 
 #endif // end #ifndef __itkAdvancedImageToImageMetric_h
 
-
-
