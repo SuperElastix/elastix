@@ -344,20 +344,18 @@ protected:
   /** Methods for the support of gray value limiters. ***************/
 
   /** Compute the extrema of fixed image over a region 
+   * Initializes the m_Fixed[True]{Max,Min}[Limit]
    * This method is called by InitializeLimiters() and uses the FixedLimitRangeRatio */
   virtual void ComputeFixedImageExtrema(
     const FixedImageType * image,
-    const FixedImageRegionType & region,
-    FixedImagePixelType & trueMin, FixedImagePixelType & trueMax,
-    FixedImageLimiterOutputType & minLimit, FixedImageLimiterOutputType & maxLimit ) const;   
+    const FixedImageRegionType & region );   
 
   /** Compute the extrema of the moving image over a region
+   * Initializes the m_Moving[True]{Max,Min}[Limit]
    * This method is called by InitializeLimiters() and uses the MovingLimitRangeRatio; */
   virtual void ComputeMovingImageExtrema(
     const MovingImageType * image,
-    const MovingImageRegionType & region,
-    MovingImagePixelType & trueMin, MovingImagePixelType & trueMax,
-    MovingImageLimiterOutputType & minLimit, MovingImageLimiterOutputType & maxLimit ) const;   
+    const MovingImageRegionType & region );   
 
   /** Initialize the {Fixed,Moving}[True]{Max,Min}[Limit] and the {Fixed,Moving}ImageLimiter 
    * Only does something when Use{Fixed,Moving}Limiter is set to true; */

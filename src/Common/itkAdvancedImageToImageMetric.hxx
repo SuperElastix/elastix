@@ -107,9 +107,7 @@ namespace itk
 		AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 		::ComputeFixedImageExtrema(
     const FixedImageType * image,
-    const FixedImageRegionType & region,
-    FixedImagePixelType & trueMin, FixedImagePixelType & trueMax,
-    FixedImageLimiterOutputType & minLimit, FixedImageLimiterOutputType & maxLimit ) const
+    const FixedImageRegionType & region )
   {
  		/** NB: We can't use StatisticsImageFilter to do this because
 		 * the filter computes the min/max for the largest possible region. */
@@ -124,13 +122,13 @@ namespace itk
       trueMinTemp = vnl_math_min( trueMinTemp, sample );
       trueMaxTemp = vnl_math_max( trueMaxTemp, sample );
     }
-    trueMin = trueMinTemp;
-    trueMax = trueMaxTemp;
+    this->m_FixedImageTrueMin = trueMinTemp;
+    this->m_FixedImageTrueMax = trueMaxTemp;
 
-    minLimit = static_cast<FixedImageLimiterOutputType>(
-      trueMin - this->m_FixedLimitRangeRatio * ( trueMax - trueMin ) );
-    maxLimit = static_cast<FixedImageLimiterOutputType>(
-      trueMax + this->m_FixedLimitRangeRatio * ( trueMax - trueMin ) );
+    this->m_FixedImageMinLimit = static_cast<FixedImageLimiterOutputType>(
+      trueMinTemp - this->m_FixedLimitRangeRatio * ( trueMaxTemp - trueMinTemp ) );
+    this->m_FixedImageMaxLimit = static_cast<FixedImageLimiterOutputType>(
+      trueMaxTemp + this->m_FixedLimitRangeRatio * ( trueMaxTemp - trueMinTemp ) );
   } // end ComputeFixedImageExtrema    
 		
   
@@ -143,9 +141,7 @@ namespace itk
 		AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 		::ComputeMovingImageExtrema(
     const MovingImageType * image,
-    const MovingImageRegionType & region,
-    MovingImagePixelType & trueMin, MovingImagePixelType & trueMax,
-    MovingImageLimiterOutputType & minLimit, MovingImageLimiterOutputType & maxLimit ) const
+    const MovingImageRegionType & region )
   {
  		/** NB: We can't use StatisticsImageFilter to do this because
 		 * the filter computes the min/max for the largest possible region. */
@@ -160,13 +156,13 @@ namespace itk
       trueMinTemp = vnl_math_min( trueMinTemp, sample );
       trueMaxTemp = vnl_math_max( trueMaxTemp, sample );
     }
-    trueMin = trueMinTemp;
-    trueMax = trueMaxTemp;
+    this->m_MovingImageTrueMin = trueMinTemp;
+    this->m_MovingImageTrueMax = trueMaxTemp;
 
-    minLimit = static_cast<MovingImageLimiterOutputType>(
-      trueMin - this->m_MovingLimitRangeRatio * ( trueMax - trueMin ) );
-    maxLimit = static_cast<MovingImageLimiterOutputType>(
-      trueMax + this->m_MovingLimitRangeRatio * ( trueMax - trueMin ) );
+    this->m_MovingImageMinLimit = static_cast<MovingImageLimiterOutputType>(
+      trueMinTemp - this->m_MovingLimitRangeRatio * ( trueMaxTemp - trueMinTemp ) );
+    this->m_MovingImageMaxLimit = static_cast<MovingImageLimiterOutputType>(
+      trueMaxTemp + this->m_MovingLimitRangeRatio * ( trueMaxTemp - trueMinTemp ) );
   } // end ComputeMovingImageExtrema    
 		
 	
@@ -189,11 +185,7 @@ namespace itk
       
       this->ComputeFixedImageExtrema(
         this->GetFixedImage(),
-        this->GetFixedImageRegion(),
-        this->m_FixedImageTrueMin,
-        this->m_FixedImageTrueMax,
-        this->m_FixedImageMinLimit,
-        this->m_FixedImageMaxLimit );
+        this->GetFixedImageRegion() );
 
       this->m_FixedImageLimiter->SetLowerThreshold( this->m_FixedImageTrueMin );
       this->m_FixedImageLimiter->SetUpperThreshold( this->m_FixedImageTrueMax );
@@ -213,11 +205,7 @@ namespace itk
       
       this->ComputeMovingImageExtrema(
         this->GetMovingImage(),
-        this->GetMovingImage()->GetBufferedRegion(),
-        this->m_MovingImageTrueMin,
-        this->m_MovingImageTrueMax,
-        this->m_MovingImageMinLimit,
-        this->m_MovingImageMaxLimit );
+        this->GetMovingImage()->GetBufferedRegion() );
 
       this->m_MovingImageLimiter->SetLowerThreshold( this->m_MovingImageTrueMin );
       this->m_MovingImageLimiter->SetUpperThreshold( this->m_MovingImageTrueMax );

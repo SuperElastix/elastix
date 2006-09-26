@@ -39,34 +39,16 @@ namespace itk
     if ( this->GetUseNormalization() )
     {
       /** Try to guess a normalization factor */
-      FixedImagePixelType fixedImageTrueMin;
-      FixedImagePixelType fixedImageTrueMax;
-      FixedImageLimiterOutputType fixedImageMaxLimit;
-      FixedImageLimiterOutputType fixedImageMinLimit;
-
       this->ComputeFixedImageExtrema(
         this->GetFixedImage(),
-        this->GetFixedImageRegion(),
-        fixedImageTrueMin,
-        fixedImageTrueMax,
-        fixedImageMinLimit,
-        fixedImageMaxLimit );
-
-      MovingImagePixelType movingImageTrueMin;
-      MovingImagePixelType movingImageTrueMax;
-      MovingImageLimiterOutputType movingImageMaxLimit;
-      MovingImageLimiterOutputType movingImageMinLimit;
+        this->GetFixedImageRegion() );
 
       this->ComputeMovingImageExtrema(
         this->GetMovingImage(),
-        this->GetMovingImage()->GetBufferedRegion(),
-        movingImageTrueMin,
-        movingImageTrueMax,
-        movingImageMinLimit,
-        movingImageMaxLimit );
+        this->GetMovingImage()->GetBufferedRegion() );
 
-      const double diff1 = fixedImageTrueMax - movingImageTrueMin;
-      const double diff2 = movingImageTrueMax - fixedImageTrueMin;
+      const double diff1 = this->m_FixedImageTrueMax - this->m_MovingImageTrueMin;
+      const double diff2 = this->m_MovingImageTrueMax - this->m_FixedImageTrueMin;
       const double maxdiff = vnl_math_max( diff1, diff2 ); 
 
       /** We guess that maxdiff/10 is the maximum average difference 
