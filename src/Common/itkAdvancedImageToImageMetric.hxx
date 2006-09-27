@@ -187,8 +187,10 @@ namespace itk
         this->GetFixedImage(),
         this->GetFixedImageRegion() );
 
-      this->m_FixedImageLimiter->SetLowerThreshold( this->m_FixedImageTrueMin );
-      this->m_FixedImageLimiter->SetUpperThreshold( this->m_FixedImageTrueMax );
+      this->m_FixedImageLimiter->SetLowerThreshold(
+        static_cast<RealType>( this->m_FixedImageTrueMin ) );
+      this->m_FixedImageLimiter->SetUpperThreshold(
+        static_cast<RealType>( this->m_FixedImageTrueMax ) );
       this->m_FixedImageLimiter->SetLowerBound( this->m_FixedImageMinLimit );
       this->m_FixedImageLimiter->SetUpperBound( this->m_FixedImageMaxLimit );
       
@@ -207,8 +209,10 @@ namespace itk
         this->GetMovingImage(),
         this->GetMovingImage()->GetBufferedRegion() );
 
-      this->m_MovingImageLimiter->SetLowerThreshold( this->m_MovingImageTrueMin );
-      this->m_MovingImageLimiter->SetUpperThreshold( this->m_MovingImageTrueMax );
+      this->m_MovingImageLimiter->SetLowerThreshold(
+        static_cast<RealType>( this->m_MovingImageTrueMin ) );
+      this->m_MovingImageLimiter->SetUpperThreshold(
+        static_cast<RealType>( this->m_MovingImageTrueMax ) );
       this->m_MovingImageLimiter->SetLowerBound( this->m_MovingImageMinLimit );
       this->m_MovingImageLimiter->SetUpperBound( this->m_MovingImageMaxLimit );
       

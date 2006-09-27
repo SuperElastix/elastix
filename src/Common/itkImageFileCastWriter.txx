@@ -47,7 +47,7 @@ ImageFileCastWriter<TInputImage>
 ::GetDefaultOutputComponentType(void) const
 {
   /** Make a dummy imageIO object, which has some handy functions */
-  ImageIOBase::Pointer dummyImageIO = MetaImageIO::New();
+  MetaImageIO::Pointer dummyImageIO = MetaImageIO::New();
   /** Set the pixeltype */
   typedef typename InputImageType::InternalPixelType ScalarType;
   dummyImageIO->SetPixelTypeInfo(typeid(ScalarType));  

@@ -18,6 +18,7 @@
 #include <string>
 #include <vector>
 #include "itk_hash_map.h"
+#include "itkMacro.h"
 
 #ifndef __VISParameterFile_h__
 #define __VISParameterFile_h__

@@ -97,8 +97,8 @@ using namespace itk;
     }
 
     /** Set limiters */
-    typedef HardLimiterFunction< FixedImagePixelType, FixedImageDimension > FixedLimiterType;
-    typedef ExponentialLimiterFunction< MovingImagePixelType, MovingImageDimension > MovingLimiterType;
+    typedef HardLimiterFunction< RealType, FixedImageDimension > FixedLimiterType;
+    typedef ExponentialLimiterFunction< RealType, MovingImageDimension > MovingLimiterType;
     this->SetFixedImageLimiter( FixedLimiterType::New() );
     this->SetMovingImageLimiter( MovingLimiterType::New() );
     

@@ -99,10 +99,10 @@ public:
 
   /** Typedefs for Limiter support */
   typedef LimiterFunctionBase<
-    FixedImagePixelType, FixedImageDimension>             FixedImageLimiterType;
+    RealType, FixedImageDimension>                        FixedImageLimiterType;
   typedef typename FixedImageLimiterType::OutputType      FixedImageLimiterOutputType;
   typedef LimiterFunctionBase<
-    MovingImagePixelType, MovingImageDimension>           MovingImageLimiterType;
+    RealType, MovingImageDimension>                       MovingImageLimiterType;
   typedef typename MovingImageLimiterType::OutputType     MovingImageLimiterOutputType;
 
   /** Public methods ********************/
