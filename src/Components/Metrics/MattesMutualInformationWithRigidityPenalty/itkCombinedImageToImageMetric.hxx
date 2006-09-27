@@ -362,7 +362,7 @@ namespace itk
   template <class TFixedImage, class TMovingImage>
     void
     CombinedImageToImageMetric<TFixedImage,TMovingImage>
-    ::Initialize( void )
+    ::Initialize( void ) throw ( ExceptionObject )
   {
     this->Superclass::Initialize();
 
