@@ -87,9 +87,9 @@ namespace itk
 		typedef typename Superclass::CoordinateRepresentationType
 			CoordinateRepresentationType;
 
-		typedef typename Superclass::BSplineTransformType			BSplineTransformType;
-		typedef typename 
-			Superclass::BSplineCombinationTransformType					BSplineCombinationTransformType;
+		typedef typename Superclass::BSplineTransformType			        BSplineTransformType;
+		typedef typename Superclass::BSplineCombinationTransformType	BSplineCombinationTransformType;
+    typedef typename BSplineTransformType::SpacingType            GridSpacingType;
 		
 		/** Index and Point typedef support. */
 		typedef typename FixedImageType::IndexType            FixedImageIndexType;

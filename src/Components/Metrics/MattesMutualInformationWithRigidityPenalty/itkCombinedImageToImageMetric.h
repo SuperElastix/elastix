@@ -154,6 +154,9 @@ public:
   /** Pass the image sampler to all sub metrics. */
   virtual void SetImageSampler( ImageSamplerType * _arg );
 
+  /** If one of the sub metrics needs a sampler, return true. */
+  virtual bool GetUseImageSampler( void ) const;
+  
   /** Pass this ratio to all sub metrics. */
   virtual void SetRequiredRatioOfValidSamples( const double _arg );
 

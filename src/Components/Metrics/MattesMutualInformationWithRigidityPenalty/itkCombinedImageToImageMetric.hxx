@@ -399,6 +399,33 @@ namespace itk
     }
   } // end SetImageSampler
 
+
+  /**
+	 * ********************* GetUseImageSampler ****************************
+	 */
+
+  template <class TFixedImage, class TMovingImage>
+    bool
+    CombinedImageToImageMetric<TFixedImage,TMovingImage>
+    ::GetUseImageSampler( void ) const
+  {
+    /** If one of the sub metrics needs an image sampler, return true. */
+    bool returnValue = false;
+    for ( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
+    {
+      AdvancedMetricType * testPtr =
+        dynamic_cast<AdvancedMetricType *>( this->m_Metrics[ i ].GetPointer() );
+      if ( testPtr )
+      {
+        returnValue |= testPtr->GetUseImageSampler();
+      }
+    }
+
+    /** Return value. */
+    return returnValue;
+
+  } // end GetUseImageSampler
+
   
   /**
 	 * ********************* SetRequiredRatioOfValidSamples ****************************
