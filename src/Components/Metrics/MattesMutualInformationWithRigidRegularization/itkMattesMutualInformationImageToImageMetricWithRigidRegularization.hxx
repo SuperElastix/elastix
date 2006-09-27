@@ -193,6 +193,19 @@ namespace itk
 				m_MovingRigidityImageDilation[ 0 ]->SetInput( m_MovingRigidityImage );
 			}
 
+      /** Get the B-spline grid spacing. */
+      GridSpacingType spacing;
+      if ( this->m_TransformIsBSpline )
+      {
+        spacing = this->m_BSplineTransform->GetGridSpacing();
+      }
+      else if ( this->m_TransformIsBSplineCombination )
+      {
+        BSplineTransformType * localBSpline =
+          dynamic_cast<BSplineTransformType *>( this->m_BSplineCombinationTransform->GetCurrentTransform() );
+        spacing = localBSpline->GetGridSpacing();
+      }
+
 			/** Set stuff for the separate dilation. */
 			for ( unsigned int i = 0; i < FixedImageDimension; i++ )
 			{
@@ -201,7 +214,7 @@ namespace itk
 				radius.SetElement( i,
 					static_cast<unsigned long>(
 					this->m_DilationRadiusMultiplier
-					* this->m_BSplineTransform->GetGridSpacing()[ i ] ) );
+					* spacing[ i ] ) );
 
 				structuringElement[ i ].SetRadius( radius );
 				structuringElement[ i ].CreateStructuringElement();
