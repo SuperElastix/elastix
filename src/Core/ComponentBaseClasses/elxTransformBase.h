@@ -71,8 +71,8 @@ namespace elastix
 
 		/** Elastix typedef's. */
 		typedef typename ElastixType::CoordRepType								CoordRepType;		
-		typedef typename ElastixType::FixedInternalImageType			FixedImageType;
-		typedef typename ElastixType::MovingInternalImageType			MovingImageType;
+		typedef typename ElastixType::FixedImageType			        FixedImageType;
+		typedef typename ElastixType::MovingImageType			        MovingImageType;
 		typedef typename FixedImageType::SizeType									SizeType;
 		typedef typename FixedImageType::IndexType								IndexType;
 		typedef typename FixedImageType::SpacingType							SpacingType;

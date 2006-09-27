@@ -20,8 +20,6 @@ namespace elastix
 		/** Initialize images. */
 		this->m_FixedImage = 0;
 		this->m_MovingImage = 0;
-		this->m_FixedInternalImage = 0;
-		this->m_MovingInternalImage = 0;
 		
 		/** Initialize the components as smartpointers to itkObjects. */
 		this->m_FixedImagePyramid = 0;
@@ -48,9 +46,7 @@ namespace elastix
 		/** Initialize the Readers and Casters. */
 		this->m_FixedImageReader = 0;
 		this->m_MovingImageReader = 0;
-		this->m_FixedImageCaster = 0;
-		this->m_MovingImageCaster = 0;
-		
+	
 		/** Initialize this->m_InitialTransform. */
 		this->m_InitialTransform = 0;
 		
@@ -117,42 +113,6 @@ namespace elastix
 		}
 		
 	} // end SetMovingImage
-	
-
-		/**
-	 * ********************** SetFixedInternalImage *************************
-	 */
-	
-	template <class TFixedInternalImage, class TMovingInternalImage>
-	void ElastixTemplate<TFixedInternalImage, TMovingInternalImage>
-	::SetFixedInternalImage( DataObjectType * _arg )
-	{
-		/** Cast DataObjectType to FixedInternalImageType and assign to this->m_FixedInternalImage. */
-		if ( this->m_FixedInternalImage != _arg )
-		{
-			this->m_FixedInternalImage = dynamic_cast<FixedInternalImageType *>( _arg );
-			this->Modified();
-		}
-		
-	} // end SetFixedInternalImage
-	
-	
-	/**
-	 * ********************** SetMovingInternalImage ************************
-	 */
-	
-	template <class TFixedInternalImage, class TMovingInternalImage>
-	void ElastixTemplate<TFixedInternalImage, TMovingInternalImage>
-	::SetMovingInternalImage( DataObjectType * _arg )
-	{
-		/** Cast DataObjectType to MovingInternalImageType and assign to this->m_MovingInternalImage. */
-		if ( this->m_MovingInternalImage != _arg )
-		{
-			this->m_MovingInternalImage = dynamic_cast<MovingInternalImageType *>( _arg );
-			this->Modified();
-		}
-		
-	} // end SetMovingInternalImage
 	
 
 	/**
@@ -224,33 +184,10 @@ namespace elastix
 				throw excp;
 			}
 		}
-
-		if ( !(this->m_FixedInternalImage) )
-		{
-			this->m_FixedImageCaster = FixedImageCasterType::New();
-			this->m_FixedImageCaster->SetInput( this->m_FixedImage );
-			this->m_FixedInternalImage = this->m_FixedImageCaster->GetOutput();
-
-			/** Do the casting. */
-			try
-			{
-				this->m_FixedInternalImage->Update();
-			}
-			catch( itk::ExceptionObject & excp )
-			{
-				/** Add information to the exception. */
-				excp.SetLocation( "ElastixTemplate - Run()" );
-				std::string err_str = excp.GetDescription();
-				err_str += "\nError occured while casting fixed image to InternalImageType.\n";
-				excp.SetDescription( err_str );
-				/** Pass the exception to an higher level. */
-				throw excp;
-			}
-		}
-
+		
 		/** Set the fixed image pointer in this registration. */
 		this->m_elx_Registration->GetAsITKBaseType()->
-			SetFixedImage( this->m_FixedInternalImage );		
+			SetFixedImage( this->m_FixedImage );		
 
 		/** Set the movingImage. */
 		if ( !(this->m_MovingImage) )
@@ -277,32 +214,9 @@ namespace elastix
 			}
 		}
 
-		if ( !(this->m_MovingInternalImage) )
-		{
-			this->m_MovingImageCaster = MovingImageCasterType::New();
-			this->m_MovingImageCaster->SetInput( this->m_MovingImage );
-			this->m_MovingInternalImage = this->m_MovingImageCaster->GetOutput();
-
-			/** Do the casting. */
-			try
-			{
-				this->m_MovingInternalImage->Update();
-			}
-			catch( itk::ExceptionObject & excp )
-			{
-				/** Add information to the exception. */
-				excp.SetLocation( "ElastixTemplate - Run()" );
-				std::string err_str = excp.GetDescription();
-				err_str += "\nError occured while casting moving image to InternalImageType.\n";
-				excp.SetDescription( err_str );
-				/** Pass the exception to an higher level. */
-				throw excp;
-			}
-		}
-
 		/** Set the moving image pointer in this registration. */
 		this->m_elx_Registration->GetAsITKBaseType()->
-			SetMovingImage( this->m_MovingInternalImage );
+			SetMovingImage( this->m_MovingImage );
 		
 		/** Print the time spent on reading images. */
 		this->m_Timer0->StopTimer();

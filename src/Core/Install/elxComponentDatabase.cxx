@@ -52,7 +52,7 @@ namespace elastix
 		/** Make a key with the input arguments */
 		CreatorMapKeyType key( name, i );
 
-		/** Check if this key has been defined already.
+    /** Check if this key has been defined already.
 		 * If not, insert the key + creator in the map.
 		 */
 		if ( map.count( key ) ) //==1

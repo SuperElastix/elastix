@@ -85,8 +85,8 @@ using namespace itk;
 	 */
 	
 
-/** Note that FixedImageType is of FixedInternalImageType, which is float.
- * This is exactly what we need for the feature images.
+/** Note that we assume the FixedFeatureImageType to have the same
+ * pixeltype as the FixedImageType 
  */
 	template <class TElastix >
   class KNNGraphMultiDimensionalAlphaMutualInformationMetric :

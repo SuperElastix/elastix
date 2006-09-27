@@ -521,11 +521,12 @@ namespace elastix
 			<< MovDim << ")" << std::endl;
 
 		/** Write image pixel types.*/
-		std::string fixpix, movpix;
-		this->m_Configuration->ReadParameter( fixpix, "FixedImagePixelType", 0 );
-		this->m_Configuration->ReadParameter( movpix, "MovingImagePixelType", 0 );
-		xout["transpar"] << "(FixedImagePixelType \""	<< fixpix << "\")" << std::endl;
-		xout["transpar"] << "(MovingImagePixelType \""	<< movpix << "\")" << std::endl;
+		std::string fixpix = "float";
+    std::string movpix = "float";
+		this->m_Configuration->ReadParameter( fixpix, "FixedInternalImagePixelType", 0 );
+		this->m_Configuration->ReadParameter( movpix, "MovingInternalImagePixelType", 0 );
+		xout["transpar"] << "(FixedInternalImagePixelType \""	<< fixpix << "\")" << std::endl;
+		xout["transpar"] << "(MovingInternalImagePixelType \""	<< movpix << "\")" << std::endl;
 
 		/** Get the Size, Spacing and Origin of the fixed image.*/
 		/** \todo we get it now from the resampler, but maybe from an inputimage?? */

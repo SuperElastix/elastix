@@ -184,40 +184,27 @@ namespace elastix
 	
 	int TransformixMain::InitDBIndex(void)
 	{
-		/** .*/
+		/** Check if configuration object was already initialized.*/
 		if ( m_Configuration->Initialized() )
 		{			
-			/** InputImagePixelType */
+			/** MovingImagePixelType */
 			m_MovingImagePixelType = m_Configuration->GetCommandLineArgument( "-ipt" );
 
 			if ( m_MovingImagePixelType.empty() )
 			{
 				/** Try to read it from the parameterfile. */
-				//GetMovingImage();
-				m_Configuration->ReadParameter( m_MovingImagePixelType,	"MovingImagePixelType", 0 );
-				
-				if ( m_MovingImagePixelType.empty() ) // not found in parameterfile
-				{
-					xl::xout["error"] << "ERROR:" << std::endl;
-					xl::xout["error"] << "The MovingImagePixelType is not given." << std::endl;
-					return 1;
-				}
+				m_MovingImagePixelType = "float";
+				m_Configuration->ReadParameter( m_MovingImagePixelType,	"MovingInternalImagePixelType", 0 );
 			}
 
-			/** OutputImagePixelType */
+			/** FixedImagePixelType */
 			m_FixedImagePixelType = m_Configuration->GetCommandLineArgument( "-opt" );
 
 			if ( m_FixedImagePixelType.empty() )
 			{
 				/** Try to read it from the parameterfile. */
-				m_Configuration->ReadParameter( m_FixedImagePixelType, "FixedImagePixelType", 0 );
-
-				if ( m_FixedImagePixelType.empty() )
-				{
-					xl::xout["error"] << "ERROR:" << std::endl;
-					xl::xout["error"] << "The OutputImagePixelType is not given." << std::endl;
-					return 1;
-				}
+        m_FixedImagePixelType = "float";
+				m_Configuration->ReadParameter( m_FixedImagePixelType, "FixedInternalImagePixelType", 0 );
 			}
 
 			/** MovingImageDimension */

@@ -105,11 +105,6 @@ namespace elastix
 		itkGetObjectMacro( FixedImage,	DataObjectType );
 		itkGetObjectMacro( MovingImage,	DataObjectType );
 
-		itkSetObjectMacro( FixedInternalImage,	DataObjectType );
-		itkSetObjectMacro( MovingInternalImage,	DataObjectType );
-		itkGetObjectMacro( FixedInternalImage,	DataObjectType );
-		itkGetObjectMacro( MovingInternalImage,	DataObjectType );
-
 		/**
 		 * Functions to get pointers to the elastix components. 
 		 * The components are returned as Object::Pointer.
@@ -208,8 +203,6 @@ namespace elastix
 
 		DataObjectPointer						m_FixedImage;
 		DataObjectPointer						m_MovingImage;
-		DataObjectPointer						m_FixedInternalImage;
-		DataObjectPointer						m_MovingInternalImage;
 
 		ObjectPointer	m_FixedImagePyramid;
 		ObjectPointer m_MovingImagePyramid;

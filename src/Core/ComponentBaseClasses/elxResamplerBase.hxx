@@ -2,6 +2,7 @@
 #define __elxResamplerBase_hxx
 
 #include "elxResamplerBase.h"
+#include "itkImageFileCastWriter.h"
 
 #include "elxTimer.h"
 
@@ -47,11 +48,27 @@ namespace elastix
 		/** Set the DefaultPixelValue (for pixels in the resampled image
 		 * that come from outside the original (moving) image.
 		 */
-		OutputPixelType defaultPixelValue = NumericTraits<OutputPixelType>::Zero;
-		this->m_Configuration->ReadParameter( defaultPixelValue, "DefaultPixelValue", 0 );
-		
-		/** Set the defaultPixelValue. */
-		this->GetAsITKBaseType()->SetDefaultPixelValue( defaultPixelValue );
+		double defaultPixelValueDouble = NumericTraits<double>::Zero;
+    int defaultPixelValueInt = NumericTraits<int>::Zero;
+		int retd = this->m_Configuration->ReadParameter( defaultPixelValueDouble, "DefaultPixelValue", 0, true );
+    int reti = this->m_Configuration->ReadParameter( defaultPixelValueInt, "DefaultPixelValue", 0, true );
+    
+    /** Set the defaultPixelValue. int values overrule double values. */
+    if ( retd == 0 )
+    {
+      this->GetAsITKBaseType()->SetDefaultPixelValue(
+        static_cast<OutputPixelType>( defaultPixelValueDouble ) );
+    }
+    if ( reti == 0 )
+    {
+      this->GetAsITKBaseType()->SetDefaultPixelValue(
+        static_cast<OutputPixelType>( defaultPixelValueInt ) );
+    }
+    if ( reti !=0 && retd !=0 )
+    {
+      this->GetAsITKBaseType()->SetDefaultPixelValue(
+        static_cast<OutputPixelType>( defaultPixelValueInt ) );
+    }
 
 	} // end BeforeRegistrationBase
 
@@ -210,14 +227,23 @@ namespace elastix
 		/** Make sure the resampler is updated. */
 		this->GetAsITKBaseType()->Modified();
 
-		/** Create writer. */
+    /** Read output pixeltype from parameter file */
+    std::string resultImagePixelType = "short";
+    this->m_Configuration->ReadParameter(	resultImagePixelType, "ResultImagePixelType", 0, true );
+    
+    /** Typedef's for writing the output image. */
+		typedef ImageFileCastWriter< OutputImageType >		WriterType;
+		typedef typename WriterType::Pointer					WriterPointer;
+
+    /** Create writer. */
 		WriterPointer writer = WriterType::New();
 
 		/** Setup the pipeline. */
 		writer->SetInput( this->GetAsITKBaseType()->GetOutput() );
 
-		/** Set the filename. */
+		/** Set the filename and output componenttype. */
 		writer->SetFileName( filename );
+    writer->SetOutputComponentType( resultImagePixelType.c_str() );
 
 		/** Do the writing. */
 		try
@@ -289,14 +315,31 @@ namespace elastix
 		this->GetAsITKBaseType()->SetOutputOrigin( origin );
 		this->GetAsITKBaseType()->SetOutputSpacing( spacing );
 		
-		/** Set the DefaultPixelValue (for pixels in the resampled image
+	  /** Set the DefaultPixelValue (for pixels in the resampled image
 		 * that come from outside the original (moving) image.
 		 */
-		int defaultPixelValue = 0;
-		this->m_Configuration->ReadParameter( defaultPixelValue, "DefaultPixelValue", 0 );
-		
-		/** Set the defaultPixelValue in the Superclass. */
-		this->GetAsITKBaseType()->SetDefaultPixelValue( defaultPixelValue );
+		double defaultPixelValueDouble = NumericTraits<double>::Zero;
+    int defaultPixelValueInt = NumericTraits<int>::Zero;
+		int retd = this->m_Configuration->ReadParameter( defaultPixelValueDouble, "DefaultPixelValue", 0, true );
+    int reti = this->m_Configuration->ReadParameter( defaultPixelValueInt, "DefaultPixelValue", 0, true );
+    
+    /** Set the defaultPixelValue. int values overrule double values in case
+     * both have been supplied. */
+    if ( retd == 0 )
+    {
+      this->GetAsITKBaseType()->SetDefaultPixelValue(
+        static_cast<OutputPixelType>( defaultPixelValueDouble ) );
+    }
+    if ( reti == 0 )
+    {
+      this->GetAsITKBaseType()->SetDefaultPixelValue(
+        static_cast<OutputPixelType>( defaultPixelValueInt ) );
+    }
+    if ( reti !=0 && retd !=0 )
+    {
+      this->GetAsITKBaseType()->SetDefaultPixelValue(
+        static_cast<OutputPixelType>( defaultPixelValueInt ) );
+    }
 		
 	} // end ReadFromFile
 
@@ -325,6 +368,13 @@ namespace elastix
 		this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0, true );
 		xl::xout["transpar"] << "(ResultImageFormat \""
 			<< resultImageFormat << "\")" << std::endl;
+
+    /** Read output pixeltype from parameter file */
+    std::string resultImagePixelType = "short";
+    this->m_Configuration->ReadParameter(	resultImagePixelType, "ResultImagePixelType", 0, true );
+    xl::xout["transpar"] << "(ResultImagePixelType \""
+			<< resultImagePixelType << "\")" << std::endl;
+    
 
 	} // end WriteToFile
 

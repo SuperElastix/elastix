@@ -142,8 +142,6 @@ namespace elastix
 		
 		virtual void SetFixedImage( DataObjectType * _arg ) = 0;
 		virtual void SetMovingImage( DataObjectType * _arg ) = 0;
-		virtual void SetFixedInternalImage( DataObjectType * _arg ) = 0;
-		virtual void SetMovingInternalImage( DataObjectType * _arg ) = 0;
 
 		virtual ObjectType * GetRegistration(void) = 0;
 		virtual ObjectType * GetFixedImagePyramid(void) = 0;
@@ -157,8 +155,6 @@ namespace elastix
 
 		virtual DataObjectType * GetFixedImage(void) = 0;
 		virtual DataObjectType * GetMovingImage(void) = 0;
-		virtual DataObjectType * GetFixedInternalImage(void) = 0;
-		virtual DataObjectType * GetMovingInternalImage(void) = 0;
 
 		virtual ObjectType * GetInitialTransform(void) = 0;
 		virtual void SetInitialTransform( ObjectType * _arg ) = 0;

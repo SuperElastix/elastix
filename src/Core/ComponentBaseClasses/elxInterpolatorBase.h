@@ -44,7 +44,7 @@ using namespace itk;
 		typedef typename Superclass::RegistrationPointer		RegistrationPointer;
 
 		/** Other typedef's. */
-		typedef typename ElastixType::MovingInternalImageType		InputImageType;
+		typedef typename ElastixType::MovingImageType		        InputImageType;
 		typedef typename ElastixType::CoordRepType							CoordRepType;
 
 		/** ITKBaseType. */

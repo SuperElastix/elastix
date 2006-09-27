@@ -91,10 +91,25 @@ namespace elastix
 		int ReadParameter( T & param, const char * name_field, const unsigned int entry_nr, bool silent = false )
 		{			
 			/** \todo make a standard parameter file with the default values. */
-			
+      VPF::ReturnStatusType ret = VPF::INVALID;
+			try 
+      {
+        ret = VPF::set(param, m_ParameterFile[name_field][entry_nr]);
+      }
+      catch ( itk::ExceptionObject & excp )
+      {
+        if ( !silent )
+        {
+          xl::xout["error"] << "ERROR: Unexpected error while reading parameter file.\n" 
+            << "Parameter file reader reports:\n"
+            << excp 
+            << "\nDefault value will be assumed."
+            << std::endl;
+        }
+      }
+
 			/** Very basic error-checking.*/
-			if (VPF::set(param, m_ParameterFile[name_field][entry_nr])
-				== VPF::INVALID)
+			if ( ret == VPF::INVALID)
 			{
 				if (!silent)
 				{

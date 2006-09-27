@@ -127,7 +127,9 @@ using namespace itk;
 		this->m_Configuration->ReadParameter( thresholdbooltmp, "ThresholdBool", 0 );
 		if ( thresholdbooltmp == "false" ) this->m_ThresholdBool = false;
 
-		this->m_Configuration->ReadParameter( this->m_ThresholdHU, "ThresholdHU", 0 );
+    float tempThresholdHU = this->m_ThresholdHU;
+		this->m_Configuration->ReadParameter( tempThresholdHU, "ThresholdHU", 0 );
+    this->m_ThresholdHU = static_cast< GrayValuePixelType >( tempThresholdHU );
 
 		/** Get diffusion information: is it wanted to also take the
 		 * fixed image into account for the derivation of the GrayValueImage.
@@ -323,16 +325,18 @@ using namespace itk;
 		}
 
 		/** Get the default pixel value. */
-		GrayValuePixelType defaultPixelValueForGVI = NumericTraits<GrayValuePixelType>::Zero;
+		float defaultPixelValueForGVI = NumericTraits<float>::Zero;
 		if ( this->m_UseMovingSegmentation && !this->m_ThresholdBool )
 		{
 			this->m_Configuration->ReadParameter( defaultPixelValueForGVI, "DefaultPixelValueForGVI", 0 );
-			this->m_Resampler2->SetDefaultPixelValue( defaultPixelValueForGVI );
+			this->m_Resampler2->SetDefaultPixelValue( 
+        static_cast<GrayValuePixelType>(defaultPixelValueForGVI) );
 		}
 		else
 		{
 			this->m_Configuration->ReadParameter( defaultPixelValueForGVI, "DefaultPixelValue", 0 );
-			this->m_Resampler1->SetDefaultPixelValue( defaultPixelValueForGVI );
+			this->m_Resampler1->SetDefaultPixelValue(
+        static_cast<GrayValuePixelType>(defaultPixelValueForGVI) );
 		}
 
 		/** Set other stuff. */

@@ -104,23 +104,11 @@ namespace elastix
 		typedef typename FixedImageType::Pointer													FixedImagePointer;
 		typedef typename MovingImageType::Pointer													MovingImagePointer;
 		
-		/** PixelType for internal calculations.*/
-		typedef float																											FixedInternalPixelType;
-		typedef float																											MovingInternalPixelType;
-		
 		/** For using the Dimensions.*/
 		itkStaticConstMacro( Dimension,				unsigned int, FixedImageType::ImageDimension );
 		itkStaticConstMacro( FixedDimension,	unsigned int, FixedImageType::ImageDimension );
 		itkStaticConstMacro( MovingDimension, unsigned int, MovingImageType::ImageDimension );
-		
-		/** ImageType for internal calculations.*/
-		typedef Image<	FixedInternalPixelType,
-			::itk::GetImageDimension<FixedImageType>::ImageDimension >			FixedInternalImageType;
-		typedef Image<	MovingInternalPixelType,
-			::itk::GetImageDimension<MovingImageType>::ImageDimension >			MovingInternalImageType;
-		typedef typename FixedInternalImageType::Pointer									FixedInternalImagePointer;
-		typedef typename MovingInternalImageType::Pointer									MovingInternalImagePointer;
-		
+				
 		/** Type for representation of the transform coordinates.*/
 		typedef CostFunction::ParametersValueType		CoordRepType; // double
 		
@@ -129,15 +117,7 @@ namespace elastix
 		typedef ImageFileReader< MovingImageType >												MovingImageReaderType;
 		typedef typename FixedImageReaderType::Pointer										FixedImageReaderPointer;
 		typedef typename MovingImageReaderType::Pointer										MovingImageReaderPointer;
-		
-		/** Casters, to cast the 'DiskImageTypes' to the InternalImageType.*/
-		typedef CastImageFilter< 
-			FixedImageType, FixedInternalImageType >												FixedImageCasterType;
-		typedef CastImageFilter< 
-			MovingImageType, MovingInternalImageType >											MovingImageCasterType;
-		typedef typename FixedImageCasterType::Pointer										FixedImageCasterPointer;
-		typedef typename MovingImageCasterType::Pointer										MovingImageCasterPointer;
-		
+				
 		/** A Pointer to a memberfunction of and elx::BaseComponent.*/
 		typedef void (BaseComponent::*PtrToMemberFunction)(void);
 		typedef int (BaseComponent::*PtrToMemberFunction2)(void);
@@ -171,10 +151,9 @@ namespace elastix
 		
 		/** Typedef's for ApplyTransform.*/
 		typedef TMovingImage																							InputImageType;
-		typedef TFixedImage																								OutputImageType;
+		typedef TMovingImage  																						OutputImageType;
 		typedef ImageFileReader< InputImageType >													InputImageReaderType;
-		typedef ImageFileWriter< OutputImageType >												OutputImageWriterType;
-		
+				
 
 		/** Functions to set/get pointers to the elastix components.
 		 *
@@ -219,12 +198,7 @@ namespace elastix
 		virtual void SetMovingImage( DataObjectType * _arg );
 		itkGetObjectMacro( FixedImage, DataObjectType );
 		itkGetObjectMacro( MovingImage, DataObjectType );
-		
-		virtual void SetFixedInternalImage( DataObjectType * _arg );
-		virtual void SetMovingInternalImage( DataObjectType * _arg );
-		itkGetObjectMacro( FixedInternalImage, DataObjectType );
-		itkGetObjectMacro( MovingInternalImage, DataObjectType );
-
+				
 		/** Set/Get the initial transform
 		 *
 		 * The type is ObjectType, but the pointer should actually point 
@@ -260,8 +234,6 @@ namespace elastix
 		
 		FixedImagePointer	 m_FixedImage;
 		MovingImagePointer m_MovingImage;
-		FixedInternalImagePointer	 m_FixedInternalImage;
-		MovingInternalImagePointer m_MovingInternalImage;
 		
 		/** The components as smartpointers to itkObjects.*/
 		ObjectPointer m_FixedImagePyramid;
@@ -288,8 +260,6 @@ namespace elastix
 		/** Readers and casters.*/
 		FixedImageReaderPointer		m_FixedImageReader;
 		MovingImageReaderPointer	m_MovingImageReader;
-		FixedImageCasterPointer		m_FixedImageCaster;
-		MovingImageCasterPointer	m_MovingImageCaster;
 		
 		/** The initial transform.*/
 		ObjectPointer m_InitialTransform;

@@ -26,8 +26,9 @@ namespace VISParameterFile
 
 inline void DIE(const char *s)
 {
-  std::cerr << "VPF fatal error: " << s << std::endl;
-  exit(-1);
+  itkGenericExceptionMacro(<< "VPF fatal error: " << s );
+  //std::cerr << "VPF fatal error: " << s << std::endl;
+  //exit(-1);
 }
   
 typedef enum { VALID, INVALID } ReturnStatusType;

@@ -21,6 +21,8 @@ SET(CommonFiles
  itkDeformationVectorFieldTransform.txx
  itkExponentialLimiterFunction.h
  itkExponentialLimiterFunction.hxx
+ itkImageFileCastWriter.h
+ itkImageFileCastWriter.txx
  itkImageMaskSpatialObject2.h
  itkImageMaskSpatialObject2.txx
  itkImageSpatialObject2.h

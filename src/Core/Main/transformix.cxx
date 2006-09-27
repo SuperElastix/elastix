@@ -52,7 +52,6 @@ int main( int argc, char **argv )
 	/** Initialize.*/
 	ObjectPointer						transform = 0;
 	DataObjectPointer				inputImage = 0;
-	DataObjectPointer				outputImage = 0;
 	int											returndummy = 0;
 	ArgumentMapType					argMap;
 	bool										outFolderPresent = false;
@@ -199,8 +198,8 @@ void PrintHelp(void)
 	std::cout << "\t\tthe point are transformed according to the specified transform-parameter file" << std::endl;
 	std::cout << "\t\tuse \"-ipp all\" to transform all points from the input-image" << std::endl;
 	std::cout << "-priority\tset the process priority to high or belownormal (Windows only)"	<< std::endl;
-	std::cout << "-ipt\t\tInput pixel type" << std::endl;
-	std::cout << "-opt\t\tOutput pixel type" << std::endl;
+	std::cout << "-ipt\t\t Moving internal pixel type" << std::endl;
+	std::cout << "-opt\t\t Fixed internal pixel type" << std::endl;
 	std::cout << "If \"-ipt\" and/or \"-opt\" are not given, transformix attempts to read them from the transform-parameter file"
 		<< std::endl << std::endl;
 	

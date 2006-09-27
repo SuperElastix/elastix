@@ -43,8 +43,8 @@ using namespace itk;
 		typedef typename Superclass::RegistrationPointer		RegistrationPointer;
 	
 		/** Other typedef's. */
-		typedef typename ElastixType::FixedInternalImageType		FixedImageType;
-		typedef typename ElastixType::MovingInternalImageType		MovingImageType;
+		typedef typename ElastixType::FixedImageType		FixedImageType;
+		typedef typename ElastixType::MovingImageType		MovingImageType;
 
 		/** Typedef for ITKBaseType. */
 		typedef itk::MultiResolutionImageRegistrationMethod<

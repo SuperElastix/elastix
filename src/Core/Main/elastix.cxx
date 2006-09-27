@@ -59,8 +59,6 @@ int main( int argc, char **argv )
 	ObjectPointer transform = 0;
 	DataObjectPointer fixedImage = 0;
 	DataObjectPointer movingImage = 0;
-	DataObjectPointer fixedInternalImage = 0;
-	DataObjectPointer movingInternalImage = 0;
 	int returndummy = 0;
 	unsigned long NrOfParameterFiles = 0;
 	ArgumentMapType argMap;
@@ -173,8 +171,6 @@ int main( int argc, char **argv )
 		elastices[ i ]->SetInitialTransform( transform );
 		elastices[ i ]->SetFixedImage( fixedImage );
 		elastices[ i ]->SetMovingImage( movingImage );
-		elastices[ i ]->SetFixedInternalImage( fixedInternalImage );
-		elastices[ i ]->SetMovingInternalImage( movingInternalImage );
 
 		/** Set the current elastix-level. */
 		elastices[ i ]->SetElastixLevel( i );
@@ -218,8 +214,6 @@ int main( int argc, char **argv )
 		transform						= elastices[ i ]->GetTransform();	
 		fixedImage					= elastices[ i ]->GetFixedImage();
 		movingImage					= elastices[ i ]->GetMovingImage();
-		fixedInternalImage	= elastices[ i ]->GetFixedInternalImage();
-		movingInternalImage = elastices[ i ]->GetMovingInternalImage();
 		
 		/** Print a finish message. */
 		elxout << "Running Elastix with parameter file " << i
@@ -255,8 +249,6 @@ int main( int argc, char **argv )
 	transform = 0;
 	fixedImage = 0;
 	movingImage = 0;
-	fixedInternalImage = 0;
-	movingInternalImage = 0;
 	
 	/** Close the modules. */
 	ElastixType::UnloadComponents();

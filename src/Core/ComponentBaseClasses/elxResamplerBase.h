@@ -7,9 +7,6 @@
 #include "elxBaseComponentSE.h"
 #include "itkResampleImageFilter.h"
 
-#include "itkCastImageFilter.h"
-#include "itkImageFileWriter.h"
-
 namespace elastix
 {
 	using namespace itk;
@@ -58,9 +55,11 @@ namespace elastix
 		typedef typename Superclass::RegistrationType			RegistrationType;
 		typedef typename Superclass::RegistrationPointer	RegistrationPointer;
 		
-		/** Typedef's from elastix. */
+		/** Typedef's from elastix. 
+     * NB: it is assumed that fixed and moving image dimension are equal!  */
 		typedef typename ElastixType::MovingImageType			InputImageType;
-		typedef typename ElastixType::FixedImageType			OutputImageType;
+    typedef typename ElastixType::MovingImageType	    OutputImageType;
+		//typedef typename ElastixType::FixedImageType			OutputImageType;
 		typedef typename ElastixType::CoordRepType				CoordRepType;
 		
 		/** Other typedef's. */
@@ -79,10 +78,6 @@ namespace elastix
 		/** Get the ImageDimension. */
 		itkStaticConstMacro( ImageDimension, unsigned int,
 			OutputImageType::ImageDimension );
-
-		/** Typedef's for wrinting the output image. */
-		typedef ImageFileWriter< OutputImageType >		WriterType;
-		typedef typename WriterType::Pointer					WriterPointer;
 
 		/** Cast to ITKBaseType. */
 		virtual ITKBaseType * GetAsITKBaseType(void)

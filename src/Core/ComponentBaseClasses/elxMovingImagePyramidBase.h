@@ -54,11 +54,11 @@ using namespace itk;
 		typedef typename Superclass::RegistrationPointer		RegistrationPointer;
 
 		/** Typedefs inherited from Elastix. */
-		typedef typename ElastixType::MovingInternalImageType		InputImageType;
-		typedef typename ElastixType::MovingInternalImageType		OutputImageType;
+		typedef typename ElastixType::MovingImageType		InputImageType;
+		typedef typename ElastixType::MovingImageType		OutputImageType;
 
 		/** Typedef used by the function GetMovingSchedule. */
-		typedef typename ElastixType::FixedInternalImageType		FixedImageType;
+		typedef typename ElastixType::FixedImageType		FixedImageType;
 		
 		/** Other typedef's. */
 		typedef MultiResolutionPyramidImageFilter<

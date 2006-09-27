@@ -114,9 +114,7 @@ namespace elastix
 
 		this->m_FixedImage = 0;
 		this->m_MovingImage = 0;
-		this->m_FixedInternalImage = 0;
-		this->m_MovingInternalImage = 0;
-
+	
 		this->m_Registration = 0;
 		this->m_FixedImagePyramid = 0;
 		this->m_MovingImagePyramid = 0;
@@ -314,8 +312,6 @@ namespace elastix
 		 */
 		this->m_elx_Elastix->SetFixedImage( this->m_FixedImage );
 		this->m_elx_Elastix->SetMovingImage( this->m_MovingImage );
-		this->m_elx_Elastix->SetFixedInternalImage( this->m_FixedInternalImage );
-		this->m_elx_Elastix->SetMovingInternalImage( this->m_MovingInternalImage );
 
 		this->m_elx_Elastix->SetInitialTransform( this->m_InitialTransform );
 
@@ -334,8 +330,6 @@ namespace elastix
 		/** Store the images in ElastixMain. */
 		this->SetFixedImage( this->m_elx_Elastix->GetFixedImage() );
 		this->SetMovingImage( this->m_elx_Elastix->GetMovingImage() );
-		this->SetFixedInternalImage( this->m_elx_Elastix->GetFixedInternalImage() );
-		this->SetMovingInternalImage( this->m_elx_Elastix->GetMovingInternalImage() );
 		
 		/** Set processPriority to normal again. */
 		if ( processPriority != "" )
@@ -375,35 +369,23 @@ namespace elastix
 
 	int ElastixMain::InitDBIndex(void)
 	{
-		/** .*/
+		/** Only do something when the configuration object wasn't initialized yet.*/
 		if ( this->m_Configuration->Initialized() )
 		{			
 			/** FixedImagePixelType */
 			if ( this->m_FixedImagePixelType.empty() )
 			{
 				/** Try to read it from the parameterfile. */
-				this->m_Configuration->ReadParameter( this->m_FixedImagePixelType,	"FixedImagePixelType", 0 );
-				
-				if ( this->m_FixedImagePixelType.empty() ) // not found in parameterfile
-				{
-					xout["error"] << "ERROR:" << std::endl;
-					xout["error"] << "The FixedImagePixelType is not given." << std::endl;
-					return 1;
-				}
-			}
+        this->m_FixedImagePixelType = "float";
+				this->m_Configuration->ReadParameter( this->m_FixedImagePixelType,	"FixedInternalImagePixelType", 0 );
+      }
 
 			/** MovingImagePixelType */
 			if ( this->m_MovingImagePixelType.empty() )
 			{
 				/** Try to read it from the parameterfile. */
-				this->m_Configuration->ReadParameter( this->m_MovingImagePixelType, "MovingImagePixelType", 0 );
-
-				if ( this->m_MovingImagePixelType.empty() )
-				{
-					xout["error"] << "ERROR:" << std::endl;
-					xout["error"] << "The MovingImagePixelType is not given." << std::endl;
-					return 1;
-				}
+        this->m_MovingImagePixelType = "float";
+				this->m_Configuration->ReadParameter( this->m_MovingImagePixelType, "MovingInternalImagePixelType", 0 );
 			}
 
 			/** FixedImageDimension */
