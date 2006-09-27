@@ -192,7 +192,7 @@ namespace itk
       }
       else if ( this->m_TransformIsBSplineCombination )
       {
-        typename BSplineTransformType * localBSpline =
+        BSplineTransformType * localBSpline =
           dynamic_cast<BSplineTransformType *>( this->m_BSplineCombinationTransform->GetCurrentTransform() );
         spacing = localBSpline->GetGridSpacing();
       }
