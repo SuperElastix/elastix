@@ -240,18 +240,18 @@ using namespace itk;
 		}
 
 		/** Add target cells to xout["iteration"]. */
-		xout["iteration"].AddTargetCell("Metric - MI");
-		xout["iteration"].AddTargetCell("Metric - RP");
-    xout["iteration"].AddTargetCell("Metric - LC");
-    xout["iteration"].AddTargetCell("Metric - OC");
-    xout["iteration"].AddTargetCell("Metric - PC");
+		xout["iteration"].AddTargetCell("Metric-MI");
+		xout["iteration"].AddTargetCell("Metric-RP");
+    xout["iteration"].AddTargetCell("Metric-LC");
+    xout["iteration"].AddTargetCell("Metric-OC");
+    xout["iteration"].AddTargetCell("Metric-PC");
 
 		/** Format the metric as floats. */
-		xl::xout["iteration"]["Metric - MI"] << std::showpoint << std::fixed;
-		xl::xout["iteration"]["Metric - RP"] << std::showpoint << std::fixed;
-    xl::xout["iteration"]["Metric - LC"] << std::showpoint << std::fixed;
-    xl::xout["iteration"]["Metric - OC"] << std::showpoint << std::fixed;
-    xl::xout["iteration"]["Metric - PC"] << std::showpoint << std::fixed;
+		xl::xout["iteration"]["Metric-MI"] << std::showpoint << std::fixed;
+		xl::xout["iteration"]["Metric-RP"] << std::showpoint << std::fixed;
+    xl::xout["iteration"]["Metric-LC"] << std::showpoint << std::fixed;
+    xl::xout["iteration"]["Metric-OC"] << std::showpoint << std::fixed;
+    xl::xout["iteration"]["Metric-PC"] << std::showpoint << std::fixed;
 
 	} // end BeforeRegistration
 
@@ -339,14 +339,14 @@ using namespace itk;
 		::AfterEachIteration(void)
 	{
 		/** Print some information. */
-		xl::xout["iteration"]["Metric - MI"] << this->GetMetricValue( 0 );
-		xl::xout["iteration"]["Metric - RP"] <<
+		xl::xout["iteration"]["Metric-MI"] << this->GetMetricValue( 0 );
+		xl::xout["iteration"]["Metric-RP"] <<
       this->m_RigidityPenaltyTermMetric->GetRigidityPenaltyTermValue();
-    xl::xout["iteration"]["Metric - LC"] <<
+    xl::xout["iteration"]["Metric-LC"] <<
       this->m_RigidityPenaltyTermMetric->GetLinearityConditionValue();
-    xl::xout["iteration"]["Metric - OC"] <<
+    xl::xout["iteration"]["Metric-OC"] <<
       this->m_RigidityPenaltyTermMetric->GetOrthonormalityConditionValue();
-    xl::xout["iteration"]["Metric - PC"] <<
+    xl::xout["iteration"]["Metric-PC"] <<
       this->m_RigidityPenaltyTermMetric->GetPropernessConditionValue();
 
 	} // end AfterEachIteration
