@@ -1055,21 +1055,31 @@ namespace itk
 
 			} // end while
 
-			/** Write the penalty image to file. *
-			typedef ImageFileWriter< OutputScalarImageType >		PenaltyWriterType;
-			typename PenaltyWriterType::Pointer penaltywriter = PenaltyWriterType::New();
-			std::string filename1 = this->m_OutputDirectoryName + "penaltyImage.mhd";
-			penaltywriter->SetFileName( filename1.c_str() );
-			penaltywriter->SetInput( pim );
-			penaltywriter->Update();
+      if (0)
+      {
+        /** Write the penalty image to file. *
+        typedef ImageFileWriter< OutputScalarImageType >		PenaltyWriterType;
+        typename PenaltyWriterType::Pointer penaltywriter = PenaltyWriterType::New();
+        std::string filename1 = "penaltyImage.mhd";
+        penaltywriter->SetFileName( filename1.c_str() );
+        penaltywriter->SetInput( pim );
+        penaltywriter->Update();*/
 
-			/** Write the penalty image to file. *
-			typedef ImageFileWriter< InputScalarImageType >			RigidityWriterType;
-			typename RigidityWriterType::Pointer rigiditywriter = RigidityWriterType::New();
-			std::string filename2 = this->m_OutputDirectoryName + "rigidityImage.mhd";
-			rigiditywriter->SetFileName( filename2.c_str() );
-			rigiditywriter->SetInput( this->m_RigidityImage );
-			rigiditywriter->Update();*/
+        /** Write the rigidity coefficient image to file. */
+        typedef Image< float, ImageDimension > FloatImage;
+        typedef ImageFileWriter< FloatImage >		FloatWriterType;
+        typedef	typename FloatWriterType::Pointer		FloatWriterPointer;
+        typedef CastImageFilter< InputScalarImageType, FloatImage > CasterrrrType;
+        typedef typename CasterrrrType::Pointer			CasterrrrPointer;
+
+        CasterrrrPointer caster = CasterrrrType::New();
+        typename FloatWriterType::Pointer rigiditywriter = FloatWriterType::New();
+        std::string filename2 = "rigidityImage.mhd";
+        rigiditywriter->SetFileName( filename2.c_str() );
+        caster->SetInput( this->m_RigidityImage );
+        rigiditywriter->SetInput( caster->GetOutput() );
+        rigiditywriter->Update();
+      }
 
 		} // end if the 2D case
 		else if ( ImageDimension == 3 )

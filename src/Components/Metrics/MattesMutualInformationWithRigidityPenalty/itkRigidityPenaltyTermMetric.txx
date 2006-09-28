@@ -5,9 +5,6 @@
 
 #include "itkZeroFluxNeumannBoundaryCondition.h"
 
-//tmp
-//#include "itkImageFileWriter.h"
-//#include "itkCastImageFilter.h"
 
 namespace itk
 {
@@ -1460,71 +1457,6 @@ namespace itk
       } // end while
     } // end if do linearity
 
-
-    /*///////////////////////////////// tmp
-    if(0)
-		{
-			typedef Image< float, ImageDimension >          FloatImage;
-			typedef ImageFileWriter< FloatImage >		        FloatWriterType;
-			typedef	typename FloatWriterType::Pointer		    FloatWriterPointer;
-			typedef CastImageFilter< CoefficientImageType, FloatImage > CasterType;
-			typedef typename CasterType::Pointer			      CasterPointer;
-
-			// OC, PC parts
-			std::vector< FloatWriterPointer > OCWriter( ImageDimension );
-			std::vector< CasterPointer >      OCCaster( ImageDimension );
-      std::vector< FloatWriterPointer > PCWriter( ImageDimension );
-			std::vector< CasterPointer >      PCCaster( ImageDimension );
-			for ( unsigned int i = 0; i < ImageDimension; i++ )
-			{
-				OCWriter[ i ] = FloatWriterType::New();
-				OCCaster[ i ] = CasterType::New();
-        PCWriter[ i ] = FloatWriterType::New();
-				PCCaster[ i ] = CasterType::New();
-			}
-			OCWriter[ 0 ]->SetFileName( "OC_0.mhd" );
-			OCWriter[ 1 ]->SetFileName( "OC_1.mhd" );
-			//SOWriter[ 2 ]->SetFileName( "SO_2.mhd" );
-      PCWriter[ 0 ]->SetFileName( "PC_0.mhd" );
-			PCWriter[ 1 ]->SetFileName( "PC_1.mhd" );
-			for ( unsigned int i = 0; i < ImageDimension; i++ )
-			{
-				OCCaster[ i ]->SetInput( OCpartsF[ i ] );
-				OCWriter[ i ]->SetInput( OCCaster[ i ]->GetOutput() );
-				OCWriter[ i ]->Update();
-        PCCaster[ i ]->SetInput( PCpartsF[ i ] );
-				PCWriter[ i ]->SetInput( PCCaster[ i ]->GetOutput() );
-				PCWriter[ i ]->Update();
-			}
-		}
-    ////////////////////////////////// tmp
-    if(0)
-		{
-			typedef Image< float, ImageDimension >          FloatImage;
-			typedef ImageFileWriter< FloatImage >		        FloatWriterType;
-			typedef	typename FloatWriterType::Pointer		    FloatWriterPointer;
-			typedef CastImageFilter< CoefficientImageType, FloatImage > CasterType;
-			typedef typename CasterType::Pointer			      CasterPointer;
-
-			// LCparts
-			std::vector< FloatWriterPointer > LCWriter( ImageDimension );
-			std::vector< CasterPointer >      LCCaster( ImageDimension );
-			for ( unsigned int i = 0; i < ImageDimension; i++ )
-			{
-				LCWriter[ i ] = FloatWriterType::New();
-				LCCaster[ i ] = CasterType::New();
-			}
-			LCWriter[ 0 ]->SetFileName( "LC_0.mhd" );
-			LCWriter[ 1 ]->SetFileName( "LC_1.mhd" );
-			//SOWriter[ 2 ]->SetFileName( "SO_2.mhd" );
-			for ( unsigned int i = 0; i < ImageDimension; i++ )
-			{
-				LCCaster[ i ]->SetInput( LCpartsF[ i ] );
-				LCWriter[ i ]->SetInput( LCCaster[ i ]->GetOutput() );
-				LCWriter[ i ]->Update();
-			}
-		}
-
     /** TASK 7:
 		 * Add it all to create the final derivative images.
 		 ************************************************************************* */
@@ -2698,70 +2630,6 @@ namespace itk
       } // end while
     } // end if do linearity
 
-    /*///////////////////////////////// tmp
-    if(0)
-		{
-			typedef Image< float, ImageDimension >          FloatImage;
-			typedef ImageFileWriter< FloatImage >		        FloatWriterType;
-			typedef	typename FloatWriterType::Pointer		    FloatWriterPointer;
-			typedef CastImageFilter< CoefficientImageType, FloatImage > CasterType;
-			typedef typename CasterType::Pointer			      CasterPointer;
-
-			// OC, PC parts
-			std::vector< FloatWriterPointer > OCWriter( ImageDimension );
-			std::vector< CasterPointer >      OCCaster( ImageDimension );
-      std::vector< FloatWriterPointer > PCWriter( ImageDimension );
-			std::vector< CasterPointer >      PCCaster( ImageDimension );
-			for ( unsigned int i = 0; i < ImageDimension; i++ )
-			{
-				OCWriter[ i ] = FloatWriterType::New();
-				OCCaster[ i ] = CasterType::New();
-        PCWriter[ i ] = FloatWriterType::New();
-				PCCaster[ i ] = CasterType::New();
-			}
-			OCWriter[ 0 ]->SetFileName( "OC_0.mhd" );
-			OCWriter[ 1 ]->SetFileName( "OC_1.mhd" );
-			//SOWriter[ 2 ]->SetFileName( "SO_2.mhd" );
-      PCWriter[ 0 ]->SetFileName( "PC_0.mhd" );
-			PCWriter[ 1 ]->SetFileName( "PC_1.mhd" );
-			for ( unsigned int i = 0; i < ImageDimension; i++ )
-			{
-				OCCaster[ i ]->SetInput( OCpartsF[ i ] );
-				OCWriter[ i ]->SetInput( OCCaster[ i ]->GetOutput() );
-				OCWriter[ i ]->Update();
-        PCCaster[ i ]->SetInput( PCpartsF[ i ] );
-				PCWriter[ i ]->SetInput( PCCaster[ i ]->GetOutput() );
-				PCWriter[ i ]->Update();
-			}
-		}
-    ////////////////////////////////// tmp
-    if(0)
-		{
-			typedef Image< float, ImageDimension >          FloatImage;
-			typedef ImageFileWriter< FloatImage >		        FloatWriterType;
-			typedef	typename FloatWriterType::Pointer		    FloatWriterPointer;
-			typedef CastImageFilter< CoefficientImageType, FloatImage > CasterType;
-			typedef typename CasterType::Pointer			      CasterPointer;
-
-			// LCparts
-			std::vector< FloatWriterPointer > LCWriter( ImageDimension );
-			std::vector< CasterPointer >      LCCaster( ImageDimension );
-			for ( unsigned int i = 0; i < ImageDimension; i++ )
-			{
-				LCWriter[ i ] = FloatWriterType::New();
-				LCCaster[ i ] = CasterType::New();
-			}
-			LCWriter[ 0 ]->SetFileName( "LC_0.mhd" );
-			LCWriter[ 1 ]->SetFileName( "LC_1.mhd" );
-			//SOWriter[ 2 ]->SetFileName( "SO_2.mhd" );
-			for ( unsigned int i = 0; i < ImageDimension; i++ )
-			{
-				LCCaster[ i ]->SetInput( LCpartsF[ i ] );
-				LCWriter[ i ]->SetInput( LCCaster[ i ]->GetOutput() );
-				LCWriter[ i ]->Update();
-			}
-		}
-
     /** TASK 8:
 		 * Add it all to create the final derivative images.
 		 ************************************************************************* */
@@ -2823,7 +2691,7 @@ namespace itk
 				j++;
 			} // end while
 		} // end for
-	
+ 
   } // end GetValueAndDerivative
 
 
