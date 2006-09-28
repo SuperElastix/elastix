@@ -248,10 +248,10 @@ using namespace itk;
 
 		/** Format the metric as floats. */
     xl::xout["iteration"]["5:Metric-MI"] << std::showpoint << std::fixed;
-    xl::xout["iteration"]["6:Metric-RP"] << std::showpoint << std::fixed;
-    xl::xout["iteration"]["7:Metric-LC"] << std::showpoint << std::fixed;
-    xl::xout["iteration"]["8:Metric-OC"] << std::showpoint << std::fixed;
-    xl::xout["iteration"]["9:Metric-PC"] << std::showpoint << std::fixed;
+    xl::xout["iteration"]["6:Metric-RP"] << std::showpoint << std::fixed << std::setprecision( 10 );
+    xl::xout["iteration"]["7:Metric-LC"] << std::showpoint << std::fixed << std::setprecision( 10 );
+    xl::xout["iteration"]["8:Metric-OC"] << std::showpoint << std::fixed << std::setprecision( 10 );
+    xl::xout["iteration"]["9:Metric-PC"] << std::showpoint << std::fixed << std::setprecision( 10 );
 
 	} // end BeforeRegistration
 
