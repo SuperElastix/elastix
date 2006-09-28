@@ -678,8 +678,7 @@ namespace itk
       sampleContainer->Size(), this->m_NumberOfPixelsCounted, sumOfMovingMaskValues);
 
     /** Compute alpha */
-    this->m_Alpha =
-      this->m_FixedImageBinSize * this->m_MovingImageBinSize / sumOfMovingMaskValues;
+    this->m_Alpha = 1.0 / sumOfMovingMaskValues;
     
   } // end ComputePDFs
 
@@ -787,10 +786,8 @@ namespace itk
       sampleContainer->Size(), this->m_NumberOfPixelsCounted, sumOfMovingMaskValues );
 
     /** Compute alpha and its derivatives */
-    this->m_Alpha =
-      this->m_FixedImageBinSize * this->m_MovingImageBinSize / sumOfMovingMaskValues;
-    this->m_AlphaDerivatives *= - this->m_Alpha * this->m_Alpha /
-      this->m_FixedImageBinSize / this->m_MovingImageBinSize;
+    this->m_Alpha = 1.0 / sumOfMovingMaskValues;
+    this->m_AlphaDerivatives *= - this->m_Alpha * this->m_Alpha;
     
   } // end ComputePDFsAndPDFDerivatives
 

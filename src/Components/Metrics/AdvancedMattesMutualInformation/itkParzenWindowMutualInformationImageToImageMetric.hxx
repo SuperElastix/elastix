@@ -42,9 +42,8 @@ namespace itk
     /** Construct the JointPDF and Alpha */
     this->ComputePDFs(parameters);          
 
-    /** Normalize the pdfs: p = alpha h / e_T e_R */
-    this->NormalizeJointPDF( this->m_JointPDF, 
-      this->m_Alpha / this->m_FixedImageBinSize / this->m_MovingImageBinSize );
+    /** Normalize the pdfs: p = alpha h  */
+    this->NormalizeJointPDF( this->m_JointPDF, this->m_Alpha );
     
     /** Compute the fixed and moving marginal pdfs, by summing over the joint pdf */
     this->ComputeMarginalPDF( this->m_JointPDF, this->m_FixedImageMarginalPDF, 0 );
@@ -66,7 +65,7 @@ namespace itk
     const MarginalPDFIteratorType movingPDFend = this->m_MovingImageMarginalPDF.end();
        
     /** Loop over histogram */
-    double sum = 0.0;
+    double MI = 0.0;
     while ( fixedPDFit != fixedPDFend )
     {
       const double fixedImagePDFValue = *fixedPDFit;
@@ -79,7 +78,7 @@ namespace itk
         /** check for non-zero bin contribution */
         if( jointPDFValue > 1e-16 && fixPDFmovPDF > 1e-16 )
         {
-          sum += jointPDFValue * vcl_log( jointPDFValue / fixPDFmovPDF );
+          MI += jointPDFValue * vcl_log( jointPDFValue / fixPDFmovPDF );
         }  
         ++movingPDFit;
         ++jointPDFit;
@@ -88,7 +87,7 @@ namespace itk
       jointPDFit.NextLine();
     }  // end while-loop over fixed index
     
-    return static_cast<MeasureType>( -1.0 * sum );
+    return static_cast<MeasureType>( -1.0 * MI );
     
   } // end GetValue
 
@@ -114,14 +113,9 @@ namespace itk
     /** Construct the JointPDF, JointPDFDerivatives, Alpha and its derivatives. */
     this->ComputePDFsAndPDFDerivatives( parameters );
 
-    /** Normalize the pdfs: p = alpha h / e_T e_R */
-    this->NormalizeJointPDF(
-      this->m_JointPDF,
-      this->m_Alpha / this->m_FixedImageBinSize / this->m_MovingImageBinSize );
-    this->NormalizeJointPDFDerivatives(
-      this->m_JointPDFDerivatives, 
-      this->m_Alpha / this->m_FixedImageBinSize / this->m_MovingImageBinSize );
-
+    /** Normalize the pdfs: p = alpha h  */
+    this->NormalizeJointPDF( this->m_JointPDF, this->m_Alpha  );
+    
     /** Compute the fixed and moving marginal pdf by summing over the histogram */
     this->ComputeMarginalPDF( this->m_JointPDF, this->m_FixedImageMarginalPDF, 0 );
     this->ComputeMarginalPDF( this->m_JointPDF, this->m_MovingImageMarginalPDF, 1 );
@@ -152,7 +146,7 @@ namespace itk
     DerivativeIteratorType derivit = derivative.begin();
     const DerivativeConstIteratorType derivend = derivative.end();
     
-    double sum = 0.0;
+    double MI = 0.0;
     while ( fixedPDFit != fixedPDFend )
     {
       const double fixedImagePDFValue = *fixedPDFit;
@@ -167,11 +161,12 @@ namespace itk
         {
           derivit = derivative.begin();
           const double pRatio = vcl_log( jointPDFValue / fixPDFmovPDF );
-          sum += jointPDFValue * pRatio;
+          const double pRatioAlpha = this->m_Alpha * pRatio;
+          MI += jointPDFValue * pRatio;
           while ( derivit != derivend )
           {                    
             /**  Ref: eqn 23 of Thevenaz & Unser paper [3] */
-            (*derivit) -= jointPDFDerivativesit.Get() * pRatio;
+            (*derivit) -= jointPDFDerivativesit.Get() * pRatioAlpha;
             ++derivit;
             ++jointPDFDerivativesit;
           }  // end while-loop over parameters
@@ -184,12 +179,12 @@ namespace itk
       jointPDFit.NextLine();
     }  // end while-loop over fixed index
     
-    value = static_cast<MeasureType>( -1.0 * sum );
+    value = static_cast<MeasureType>( -1.0 * MI);
 
     /** Add -1/alpha * dalpha/dmu * sum_i sum_k p log( p / pT pR) ) 
      * sum = sum_i sum_k alpha p log( p / (p / pT pR) )
      * so we have divide by -alpha */            
-    const double alphaDerivativeFactor = - sum / this->m_Alpha;
+    const double alphaDerivativeFactor = - MI / this->m_Alpha;
     derivit = derivative.begin();
     DerivativeConstIteratorType alphaDerivit = this->m_AlphaDerivatives.begin();
     while ( derivit != derivend )

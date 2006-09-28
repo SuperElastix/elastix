@@ -286,8 +286,8 @@ namespace itk
     /** Compute PDFs and pdf derivatives; Loops over the fixed image samples and constructs
      * the m_JointPDF, m_JointPDFDerivatives, m_Alpha and m_AlphaDerivatives
      * The JointPDF and Alpha and its derivatives are related as follows:
-     * p = m_Alpha * m_JointPDF / e_T e_R 
-     * dp/dmu = m_AlphaDerivatives * m_JointPDF / e_T e_R + m_Alpha * m_JointPDFDerivatives / e_T e_R
+     * p = m_Alpha * m_JointPDF
+     * dp/dmu = m_AlphaDerivatives * m_JointPDF + m_Alpha * m_JointPDFDerivatives
      * So, the JointPDF is more like a histogram than a true pdf...
      * The histograms are left unnormalised since it may be faster to 
      * not do this explicitly. */
@@ -296,7 +296,7 @@ namespace itk
     /** Compute PDFs; Loops over the fixed image samples and constructs
      * the m_JointPDF and m_Alpha
      * The JointPDF and Alpha are related as follows:
-     * p = m_Alpha * m_JointPDF / e_T e_R 
+     * p = m_Alpha * m_JointPDF 
      * So, the JointPDF is more like a histogram than a true pdf...
      * The histogram is left unnormalised since it may be faster to 
      * not do this explicitly. */

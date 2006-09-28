@@ -1,0 +1,12 @@
+
+
+ADD_ELXCOMPONENT( elxNormalizedMutualInformationMetric
+ elxNormalizedMutualInformationMetric.h
+ elxNormalizedMutualInformationMetric.hxx
+ elxNormalizedMutualInformationMetric.cxx
+ itkParzenWindowNormalizedMutualInformationImageToImageMetric.h 
+ itkParzenWindowNormalizedMutualInformationImageToImageMetric.hxx )
+
+
+
+
