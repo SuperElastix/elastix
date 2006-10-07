@@ -5,6 +5,11 @@
 #include "itkPointSet.h"
 #include "itkDefaultStaticMeshTraits.h"
 #include "itkTransformixInputPointFileReader.h"
+#include "vnl/vnl_math.h"
+
+#include "itkImageRegionIteratorWithIndex.h"
+#include "itkImageFileWriter.h"
+#include "itkVector.h"
 
 namespace elastix
 {
@@ -659,6 +664,7 @@ namespace elastix
     typedef typename FixedImageType::PointType          FixedImageOriginType;
     typedef typename FixedImageType::SpacingType        FixedImageSpacingType;
     typedef typename FixedImageType::IndexType          FixedImageIndexType;
+    typedef typename FixedImageIndexType::IndexValueType FixedImageIndexValueType;
       
     typedef bool                                        DummyIPPPixelType;
     typedef itk::DefaultStaticMeshTraits<
@@ -696,11 +702,6 @@ namespace elastix
     elxout << "  Number of specified input points: " << nrofpoints << std::endl;
 
     typename PointSetType::Pointer inputPointSet = ippReader->GetOutput();
-    for (unsigned int i = 0; i < nrofpoints; ++i)
-    {
-      InputPointType point;
-      inputPointSet->GetPoint(i, &point);
-    }
   
 		/** Create the storage classes */
 		std::vector< FixedImageIndexType > inputindexvec(nrofpoints);	
@@ -746,7 +747,8 @@ namespace elastix
 				inputPointSet->GetPoint(j, &point);
 				for ( unsigned int i = 0; i < FixedImageDimension; i++ )
 				{
-					inputindexvec[ j ][ i ] = point[i];
+					inputindexvec[ j ][ i ] = static_cast<FixedImageIndexValueType>(
+            vnl_math_rnd( point[i] ) );
 				}
 				dummyImage->TransformIndexToPhysicalPoint(
 					inputindexvec[ j ], inputpointvec[ j ] );					

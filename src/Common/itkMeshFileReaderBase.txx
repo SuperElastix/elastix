@@ -34,7 +34,7 @@ namespace itk
     itkDebugMacro(<<"Reading file for GenerateOutputInformation()" << m_FileName);
     
     /** Check to see if we can read the file given the name or prefix */
-    if ( m_FileName == "" )
+    if ( this->m_FileName == "" )
     {
       throw MeshFileReaderException(__FILE__, __LINE__, "FileName must be specified", ITK_LOCATION);
     }
@@ -70,7 +70,7 @@ namespace itk
       MeshFileReaderException e(__FILE__, __LINE__);
       OStringStream msg;
       msg <<"The file doesn't exists. "
-          << std::endl << "Filename = " << m_FileName
+          << std::endl << "Filename = " << this->m_FileName
           << std::endl;
       e.SetDescription(msg.str().c_str());
       throw e;
@@ -85,7 +85,7 @@ namespace itk
       readTester.close();
       OStringStream msg;
       msg <<"The file couldn't be opened for reading. "
-          << std::endl << "Filename: " << m_FileName
+          << std::endl << "Filename: " << this->m_FileName
           << std::endl;
       MeshFileReaderException e(__FILE__, __LINE__,msg.str().c_str(),ITK_LOCATION);
       throw e;

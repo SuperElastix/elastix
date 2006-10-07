@@ -4,16 +4,11 @@
 /** Needed for the macros */
 #include "elxMacro.h"
 
-#include "itkImageRegionConstIteratorWithIndex.h"
-#include "itkImageRegionIteratorWithIndex.h"
-#include "itkImageFileWriter.h"
-#include "itkVector.h"
+
 #include "elxBaseComponentSE.h"
 #include "itkTransform.h"
 #include "itkCombinationTransform.h"
 #include "elxComponentDatabase.h"
-
-
 
 #include <fstream>
 #include <iomanip>

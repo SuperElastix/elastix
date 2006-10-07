@@ -117,7 +117,7 @@ namespace itk
           {
             OStringStream msg;
             msg <<"The file is not large enough. "
-              << std::endl << "Filename: " << m_FileName
+              << std::endl << "Filename: " << this->m_FileName
               << std::endl;
             MeshFileReaderException e(__FILE__, __LINE__,msg.str().c_str(),ITK_LOCATION);
             throw e;
@@ -132,7 +132,7 @@ namespace itk
     {
       OStringStream msg;
       msg <<"The file has unexpectedly been closed. "
-          << std::endl << "Filename: " << m_FileName
+          << std::endl << "Filename: " << this->m_FileName
           << std::endl;
       MeshFileReaderException e(__FILE__, __LINE__,msg.str().c_str(),ITK_LOCATION);
       throw e;
