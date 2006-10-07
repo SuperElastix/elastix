@@ -2,6 +2,9 @@
 #define __elxTransformBase_hxx
 
 #include "elxTransformBase.h"
+#include "itkPointSet.h"
+#include "itkDefaultStaticMeshTraits.h"
+#include "itkTransformixInputPointFileReader.h"
 
 namespace elastix
 {
@@ -275,41 +278,54 @@ namespace elastix
 			else
 			{
 				std::ifstream input( this->GetConfiguration()->GetCommandLineArgument( "-tp" ) );
-				if ( input.is_open() )
+        if ( input.is_open() )
 				{
-					/** p the getline->streamsize are set to have length 1000.
-					* BEWARE: if somewhere before TransformParameters, there
-					* exists a line with more then 1000 characters, the
-					* getline can not get beyond that line, and this will FAIL.
-					* It can be 'solved' by setting 1000 to a larger number.
-				 */
-					char p[ 1000 ];
-					bool nextline = true;				
-					while ( nextline )
-					{
-						/** Get a line, put it in a string, and compare it
-						* with "// (TransformParameters)".
-					 */
-						input.getline( p, 1000 );
-						std::string ps( p );
-						int pos = ps.find( "// (TransformParameters)" );
-						/** If we have correspondence, we are at the right line.*/
-						if ( pos == 0 )
-						{
-							/** First read the "// " into tmp.*/
-							std::string tmp;
-							input >> tmp;
-							/** Now read the TransformParameters.*/
-							for ( unsigned int i = 0; i < NumberOfParameters; i++ )
-							{
-								input >> (*(this->m_TransformParametersPointer))[ i ];
-							}
-							/** We are done, so no need for reading more lines.*/
-							nextline = false;
-						} // end if at the right position
-					} // end while reading lines
-				} // end if input-file is open
-			} // end else
+          /** Search for the following pattern:
+           *
+           * // (TransformParameters)
+           * // 1.0 435.0 etc... 
+           *
+           */
+					bool found = false;
+          std::string teststring;
+          while ( !found && !input.eof() )
+          {
+            input >> teststring;
+            if ( teststring == "//" )
+            {
+              input >> teststring;
+              if ( teststring == "(TransformParameters)" )
+              { 
+                input >> teststring;
+                if ( teststring == "//" )
+                {
+                  found = true;
+                }
+              }
+            }
+          } // end while
+          if ( found )
+          {
+					  for ( unsigned int i = 0; i < NumberOfParameters; i++ )
+					  {
+  						input >> (*(this->m_TransformParametersPointer))[ i ];
+					  }
+          }
+          else
+          {
+            xl::xout["error"] << 
+              "Invalid transform parameter file! The parameters could not be found." << std::endl;
+            itkGenericExceptionMacro(<< "Error during reading the transform parameter file!"); 
+          }
+          input.close();
+    		} // end if input-file is open
+        else
+        {
+          xl::xout["error"] <<
+            "The transform parameter file could not opened!" << std::endl;
+          itkGenericExceptionMacro( << "Error during reading the transform parameter file!");
+        }
+	    } // end else
 
 			/** Set the parameters into this transform.*/
 			this->GetAsITKBaseType()->SetParameters( *(this->m_TransformParametersPointer) );
@@ -529,14 +545,17 @@ namespace elastix
 		xout["transpar"] << "(MovingInternalImagePixelType \""	<< movpix << "\")" << std::endl;
 
 		/** Get the Size, Spacing and Origin of the fixed image.*/
-		/** \todo we get it now from the resampler, but maybe from an inputimage?? */
-		SizeType size = dynamic_cast<typename ElastixType::FixedImageType *>(
+		typedef typename FixedImageType::SizeType									FixedImageSizeType;
+		typedef typename FixedImageType::IndexType								FixedImageIndexType;
+		typedef typename FixedImageType::SpacingType							FixedImageSpacingType;
+		typedef typename FixedImageType::PointType								FixedImageOriginType;
+		FixedImageSizeType size = dynamic_cast<FixedImageType *>(
 			this->m_Elastix->GetFixedImage() )->GetLargestPossibleRegion().GetSize();
-		IndexType index = dynamic_cast<typename ElastixType::FixedImageType *>(
+		FixedImageIndexType index = dynamic_cast<FixedImageType *>(
 			this->m_Elastix->GetFixedImage() )->GetLargestPossibleRegion().GetIndex();
-		SpacingType spacing = dynamic_cast<typename ElastixType::FixedImageType *>(
+		FixedImageSpacingType spacing = dynamic_cast<FixedImageType *>(
 			this->m_Elastix->GetFixedImage() )->GetSpacing();
-		OriginType origin = dynamic_cast<typename ElastixType::FixedImageType *>(
+		FixedImageOriginType origin = dynamic_cast<FixedImageType *>(
 			this->m_Elastix->GetFixedImage() )->GetOrigin();
 
 		/** Write image Size.*/
@@ -625,173 +644,180 @@ namespace elastix
 	 * This function reads points from a file and transforms
 	 * these fixed-image coordinates to moving-image
 	 * coordinates.
+   *
+   * Reads the inputpoints from a text file, either as index or as point.
+   * Computes the transformed points, converts them back to an index and compute
+	 * the deformation vector as the difference between the outputpoint and
+	 * the input point. Save the results.
 	 */
 
 	template <class TElastix>
 		void TransformBase<TElastix>
 		::TransformPointsSomePoints( std::string filename )
 	{
-		/** Open the file containing the inputpoints.*/
-		std::ifstream pointfile( filename.c_str() );
-		
-		elxout << "  Opening input point file: " << filename << std::endl;
-
-		if ( pointfile.is_open() )
-		{
-			/** Read the inputpoints from a text file, either as index or as point.
-			 * Compute the transformed point, convert it back to an index and compute
-			 * the deformation vector as the difference between the outputpoint and
-			 * the input point. Save the results. */
-
-			/* The first word in the text file indicates whether the input points 
-			 * are given as an integer image index or as a point (world coordinates). 
-			 * If the file does not start with "index" or "point" it is assumed 
-			 * that the points are entered as indices, for compatibility with 
-			 * elastix versions < 3.503. 
-			 *
-			 * The second word in the text file represents the number of points that
-			 * should be read.
-			 */
-			unsigned int nrofpoints = 0;
-			bool inputaspoint = false;
-			std::string indexorpoint;
-			pointfile >> indexorpoint;
-			if (indexorpoint == "point")
-			{
-				inputaspoint = true;
-				elxout << "  Input points are specified in world coordinates." << std::endl;
-				pointfile >> nrofpoints;
-			}
-			else if (indexorpoint == "index")
-			{
-				inputaspoint = false;
-				elxout << "  Input points are specified as image indices." << std::endl;
-				pointfile >> nrofpoints;
-			}
-			else 
-			{
-				inputaspoint = false;
-				elxout << "  Input points are assumed to be specified as image indices." << std::endl;
-				pointfile >> nrofpoints;
-				nrofpoints = atoi( indexorpoint.c_str() );				
-			}
-			elxout << "  Number of specified input points: " << nrofpoints << std::endl;				
+    typedef typename FixedImageType::RegionType					FixedImageRegionType;
+    typedef typename FixedImageType::PointType          FixedImageOriginType;
+    typedef typename FixedImageType::SpacingType        FixedImageSpacingType;
+    typedef typename FixedImageType::IndexType          FixedImageIndexType;
       
-			/** Create the storage classes */
-			std::vector< IndexType > inputindexvec(nrofpoints);	
-			std::vector< InputPointType > inputpointvec(nrofpoints);
-			std::vector< OutputPointType > outputpointvec( nrofpoints );
-			std::vector< IndexType > outputindexvec( nrofpoints );
-			std::vector< VectorType > deformationvec( nrofpoints );
-			
-			/** Make a temporary image with the right region info,
-			* which we can use to convert between points and indices.	*/
-			typename DummyImageType::Pointer dummyImage = DummyImageType::New();
-			RegionType region;
-			region.SetIndex( this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputStartIndex() );
-			region.SetSize( this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize() );
-			dummyImage->SetRegions( region );
-			dummyImage->SetOrigin( this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputOrigin() );
-			dummyImage->SetSpacing( this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputSpacing() );
-			
-			/** Read the input points, as index or as point */
-			if (inputaspoint)
-			{
-				for ( unsigned int j = 0; j < nrofpoints; j++ )
-				{
-					for ( unsigned int i = 0; i < MovingImageDimension; i++ )
-					{
-						pointfile >> inputpointvec[ j ][ i ];
-					} 
-					dummyImage->TransformPhysicalPointToIndex(
-						inputpointvec[ j ], inputindexvec[ j ] );					
-				} 
-			} 
-			else //so: inputasindex
-			{
-				for ( unsigned int j = 0; j < nrofpoints; j++ )
-				{
-					for ( unsigned int i = 0; i < MovingImageDimension; i++ )
-					{
-						pointfile >> inputindexvec[ j ][ i ];
-					}
-					dummyImage->TransformIndexToPhysicalPoint(
-						inputindexvec[ j ], inputpointvec[ j ] );					
-				} 
-			} 
+    typedef bool                                        DummyIPPPixelType;
+    typedef itk::DefaultStaticMeshTraits<
+      DummyIPPPixelType, FixedImageDimension,
+      FixedImageDimension, CoordRepType>                MeshTraitsType;
+    typedef itk::PointSet< DummyIPPPixelType, 
+      FixedImageDimension, MeshTraitsType>              PointSetType;
+    typedef itk::TransformixInputPointFileReader<
+      PointSetType >                                    IPPReaderType;
+    typedef itk::Vector< float, FixedImageDimension >  	DeformationVectorType;
 
-			/** Apply the transform. */
-			elxout << "  The input points are transformed." << std::endl;
-			for ( unsigned int j = 0; j < nrofpoints; j++ )
-			{
-				/** Call TransformPoint. */
-				outputpointvec[ j ] = this->GetAsITKBaseType()->TransformPoint( inputpointvec[ j ] );
-				/** Transform back to index. */
-				dummyImage->TransformPhysicalPointToIndex( outputpointvec[ j ], outputindexvec[ j ] );					
-				/** Compute displacement. */
-				deformationvec[ j ].CastFrom( outputpointvec[ j ] - inputpointvec[ j ] );
-			}			
-						
-			/** Create filename and filestream. */
-			std::string outputPointsFileName = this->m_Configuration->GetCommandLineArgument( "-out" );
-			outputPointsFileName += "outputpoints.txt";
-			std::ofstream outputPointsFile( outputPointsFileName.c_str() );
-			outputPointsFile << std::showpoint << std::fixed;
-			elxout << "  The transformed points are saved in: " <<	outputPointsFileName << std::endl;
-			//\todo do not write opp to log file, but only to outputPointsFile.
-			elxout.AddOutput( "opp", &outputPointsFile );
-			
-			/** Print the results. */
-			for ( unsigned int j = 0; j < nrofpoints; j++ )
-			{
-				//the input index
-				elxout << "Point\t" << j << "\t; InputIndex = [ "; 
-				for ( unsigned int i = 0; i < MovingImageDimension; i++ )
-				{
-					elxout << inputindexvec[ j ][ i ] << " ";
-				}
+    typename IPPReaderType::Pointer ippReader = IPPReaderType::New();
 
-				//the input point
-				elxout << "]\t; InputPoint = [ "; 
-				for ( unsigned int i = 0; i < MovingImageDimension; i++ )
-				{
-					elxout << inputpointvec[ j ][ i ] << " ";
-				}
+    ippReader->SetFileName( filename.c_str() );
+    elxout << "  Reading input point file: " << filename << std::endl;
+    try
+    {
+      ippReader->Update();
+    }
+    catch (itk::ExceptionObject & err)
+    { 
+      xl::xout["error"] << "  Error while opening input point file." << std::endl;
+      xl::xout["error"] << err << std::endl;      
+    }
 
-				//the output index
-				elxout << "]\t; OutputIndex = [ "; 
-				for ( unsigned int i = 0; i < MovingImageDimension; i++ )
-				{
-					elxout << outputindexvec[ j ][ i ] << " ";
-				}
-				
-				//the output point
-				elxout << "]\t; OutputPoint = [ "; 
-				for ( unsigned int i = 0; i < MovingImageDimension; i++ )
-				{
-					elxout << outputpointvec[ j ][ i ] << " ";
-				}
-				
-				//the output point minus the input point
-				elxout << "]\t; Deformation = [ "; 
-				for ( unsigned int i = 0; i < MovingImageDimension; i++ )
-				{
-					elxout << deformationvec[ j ][ i ] << " ";
-				}
+    if ( ippReader->GetPointsAreIndices() )
+    {
+      elxout << "  Input points are specified as image indices." << std::endl;
+    }
+    else
+    {
+      elxout << "  Input points are specified in world coordinates." << std::endl;
+    }
+    unsigned int nrofpoints = ippReader->GetNumberOfPoints();
+    elxout << "  Number of specified input points: " << nrofpoints << std::endl;
 
-				elxout << "]" << std::endl;
-			}	// end for nrofpoints	
+    typename PointSetType::Pointer inputPointSet = ippReader->GetOutput();
+    for (unsigned int i = 0; i < nrofpoints; ++i)
+    {
+      InputPointType point;
+      inputPointSet->GetPoint(i, &point);
+    }
+  
+		/** Create the storage classes */
+		std::vector< FixedImageIndexType > inputindexvec(nrofpoints);	
+		std::vector< InputPointType > inputpointvec(nrofpoints);
+		std::vector< OutputPointType > outputpointvec( nrofpoints );
+		std::vector< FixedImageIndexType > outputindexvec( nrofpoints );
+		std::vector< DeformationVectorType > deformationvec( nrofpoints );
 			
-			/** Stop writing to the output file. */
-			elxout.RemoveOutput( "opp" );
-			
-		} // end if - input file is open
-		else
-		{
-			xl::xout["warning"] << "  WARNING: the file \"" << filename <<
-				"\" could not be opened!" << std::endl;
-		}
+		/** Make a temporary image with the right region info,
+		* which we can use to convert between points and indices.	*/
+    FixedImageRegionType region;
+		FixedImageOriginType origin = 
+      this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputOrigin();
+		FixedImageSpacingType spacing =
+      this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputSpacing();
+		region.SetIndex(
+      this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputStartIndex() );
+		region.SetSize(
+      this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize() );
+
+    typename FixedImageType::Pointer dummyImage = FixedImageType::New();
+		dummyImage->SetRegions( region );
+		dummyImage->SetOrigin( origin );
+		dummyImage->SetSpacing( spacing );
 		
+		/** Read the input points, as index or as point */
+		if ( !(ippReader->GetPointsAreIndices()) )
+		{
+			for ( unsigned int j = 0; j < nrofpoints; j++ )
+			{
+        InputPointType point;
+        inputPointSet->GetPoint(j, &point);
+				inputpointvec[ j ] = point;
+				dummyImage->TransformPhysicalPointToIndex(
+					point, inputindexvec[ j ] );					
+			} 
+		} 
+		else //so: inputasindex
+		{
+			for ( unsigned int j = 0; j < nrofpoints; j++ )
+			{
+        InputPointType point;
+				inputPointSet->GetPoint(j, &point);
+				for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+				{
+					inputindexvec[ j ][ i ] = point[i];
+				}
+				dummyImage->TransformIndexToPhysicalPoint(
+					inputindexvec[ j ], inputpointvec[ j ] );					
+			} 
+		} 
+
+		/** Apply the transform. */
+		elxout << "  The input points are transformed." << std::endl;
+		for ( unsigned int j = 0; j < nrofpoints; j++ )
+		{
+			/** Call TransformPoint. */
+			outputpointvec[ j ] = this->GetAsITKBaseType()->TransformPoint( inputpointvec[ j ] );
+			/** Transform back to index. */
+			dummyImage->TransformPhysicalPointToIndex( outputpointvec[ j ], outputindexvec[ j ] );					
+			/** Compute displacement. */
+			deformationvec[ j ].CastFrom( outputpointvec[ j ] - inputpointvec[ j ] );
+		}			
+					
+		/** Create filename and filestream. */
+		std::string outputPointsFileName = this->m_Configuration->GetCommandLineArgument( "-out" );
+		outputPointsFileName += "outputpoints.txt";
+		std::ofstream outputPointsFile( outputPointsFileName.c_str() );
+		outputPointsFile << std::showpoint << std::fixed;
+		elxout << "  The transformed points are saved in: " <<	outputPointsFileName << std::endl;
+		//\todo do not write opp to log file, but only to outputPointsFile.
+		elxout.AddOutput( "opp", &outputPointsFile );
+		
+		/** Print the results. */
+		for ( unsigned int j = 0; j < nrofpoints; j++ )
+		{
+			//the input index
+			elxout << "Point\t" << j << "\t; InputIndex = [ "; 
+			for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+			{
+				elxout << inputindexvec[ j ][ i ] << " ";
+			}
+
+			//the input point
+			elxout << "]\t; InputPoint = [ "; 
+			for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+			{
+				elxout << inputpointvec[ j ][ i ] << " ";
+			}
+
+			//the output index
+			elxout << "]\t; OutputIndex = [ "; 
+			for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+			{
+				elxout << outputindexvec[ j ][ i ] << " ";
+			}
+			
+			//the output point
+			elxout << "]\t; OutputPoint = [ "; 
+			for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+			{
+				elxout << outputpointvec[ j ][ i ] << " ";
+			}
+			
+			//the output point minus the input point
+			elxout << "]\t; Deformation = [ "; 
+			for ( unsigned int i = 0; i < MovingImageDimension; i++ )
+			{
+				elxout << deformationvec[ j ][ i ] << " ";
+			}
+
+			elxout << "]" << std::endl;
+		}	// end for nrofpoints	
+		
+		/** Stop writing to the output file. */
+		elxout.RemoveOutput( "opp" );
+				
 	} // end TransformPointsSomePoints
 	
 	
@@ -806,48 +832,54 @@ namespace elastix
 	template <class TElastix>
 		void TransformBase<TElastix>
 		::TransformPointsAllPoints(void)
-	{
-		/** First, make a dummyImage with the right region info, so
-		 * that the TransformIndexToPhysicalPoint-functions will be right.
-		 */
-		typename DummyImageType::Pointer dummyImage = DummyImageType::New();
-		RegionType region;
-		OriginType origin = this->m_Elastix->GetElxResamplerBase()
-			->GetAsITKBaseType()->GetOutputOrigin();
-		SpacingType spacing = this->m_Elastix->GetElxResamplerBase()
-			->GetAsITKBaseType()->GetOutputSpacing();
-		
-		region.SetIndex( this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputStartIndex() );
-		region.SetSize( this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize() );
-		dummyImage->SetRegions( region );
-		dummyImage->SetOrigin( origin );
-		dummyImage->SetSpacing( spacing );
+	{		
+    typedef typename FixedImageType::RegionType					FixedImageRegionType;
+    typedef typename FixedImageType::PointType          FixedImageOriginType;
+    typedef typename FixedImageType::SpacingType        FixedImageSpacingType;
+    typedef typename FixedImageType::IndexType          FixedImageIndexType;
+
+   	typedef itk::Vector< float, FixedImageDimension >		DeformationVectorType;
+		typedef itk::Image<
+			DeformationVectorType,
+			itkGetStaticConstMacro( FixedImageDimension ) >		DeformationFieldType;
+		typedef typename DeformationFieldType::Pointer  		DeformationFieldPointer;
+		typedef itk::ImageRegionIteratorWithIndex<
+			DeformationFieldType >														DeformationFieldIteratorType;
+		typedef itk::ImageFileWriter<
+      DeformationFieldType >                        		DeformationFieldWriterType;
+
+		FixedImageRegionType region;
+		FixedImageOriginType origin = 
+      this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputOrigin();
+		FixedImageSpacingType spacing =
+      this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputSpacing();
+		region.SetIndex(
+      this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputStartIndex() );
+		region.SetSize(
+      this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize() );
 		
 		/** Setup an outputImage of vectors and allocate memory(!). */
-		OutputImagePointer outputImage = OutputImageType::New();
-		outputImage->SetRegions( region );
-		outputImage->SetOrigin( origin );
-		outputImage->SetSpacing( spacing );
-		outputImage->Allocate();
+		DeformationFieldPointer deformationField = DeformationFieldType::New();
+		deformationField->SetRegions( region );
+		deformationField->SetOrigin( origin );
+		deformationField->SetSpacing( spacing );
+		deformationField->Allocate();
 		
-		/** Setup an iterator over dummyImage and outputImage. */
-		DummyIteratorType iter( dummyImage, region );
-		OutputImageIteratorType iterout( outputImage, region );
+		/** Setup an iterator over the deformationField. */
+		DeformationFieldIteratorType iter( deformationField, region );
 		
 		/** Declare stuff.*/
 		InputPointType inputPoint;
 		OutputPointType outputPoint;
-		VectorType diff_point;
-		IndexType inputIndex;
-		
+		DeformationVectorType diff_point;
+				
 		/** Calculate the TransformPoint of all voxels of the image. */
 		iter.Begin();
-		iterout.Begin();
 		while ( !iter.IsAtEnd() )
 		{
-			inputIndex = iter.GetIndex();
+			const FixedImageIndexType & inputIndex = iter.GetIndex();
 			/** Transform the points to physical space. */
-			dummyImage->TransformIndexToPhysicalPoint( inputIndex, inputPoint );
+			deformationField->TransformIndexToPhysicalPoint( inputIndex, inputPoint );
 			/** Call TransformPoint.*/
 			outputPoint = this->GetAsITKBaseType()->TransformPoint( inputPoint );
 			/** Calculate the difference.*/
@@ -855,9 +887,8 @@ namespace elastix
 			{
 				diff_point[ i ] = outputPoint[ i ] - inputPoint[ i ];
 			}
-			iterout.Set( diff_point );
+			iter.Set( diff_point );
 			++iter;
-			++iterout;
 		}
 		
 		/** Create a name for the deformation field file. */
@@ -868,16 +899,16 @@ namespace elastix
 			<< "deformationField." << resultImageFormat;
 		
 		/** Write outputImage to disk. */
-		typename OutputFileWriterType::Pointer outputWriter
-			= OutputFileWriterType::New();
-		outputWriter->SetInput( outputImage );
-		outputWriter->SetFileName( makeFileName.str().c_str() );
+		typename DeformationFieldWriterType::Pointer deformationFieldWriter
+			= DeformationFieldWriterType::New();
+		deformationFieldWriter->SetInput( deformationField );
+		deformationFieldWriter->SetFileName( makeFileName.str().c_str() );
 		
 		/** Do the writing. */
 		elxout << "  Writing the deformation field" << std::endl;
 		try
 		{
-			outputWriter->Update();
+			deformationFieldWriter->Update();
 		}
 		catch( itk::ExceptionObject & excp )
 		{

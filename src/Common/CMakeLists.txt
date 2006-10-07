@@ -32,6 +32,10 @@ SET(CommonFiles
  itkHardLimiterFunction.h
  itkHardLimiterFunction.hxx
  itkLimiterFunctionBase.h
+ itkMeshFileReaderBase.h
+ itkMeshFileReaderBase.txx
+ itkTransformixInputPointFileReader.h
+ itkTransformixInputPointFileReader.hxx
  itkNDImageBase.h
  itkNDImageTemplate.h
  itkNDImageTemplate.hxx

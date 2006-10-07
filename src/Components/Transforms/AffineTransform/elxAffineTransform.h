@@ -127,8 +127,7 @@ using namespace itk;
 		typedef typename RegistrationType::ITKBaseType					ITKRegistrationType;
 		typedef typename ITKRegistrationType::OptimizerType			OptimizerType;
 		typedef typename OptimizerType::ScalesType							ScalesType;
-		typedef typename Superclass2::DummyImageType						DummyImageType;
-		
+				
 		typedef CenteredTransformInitializer<
 			AffineTransformType, FixedImageType, MovingImageType>	TransformInitializerType;
 		typedef typename TransformInitializerType::Pointer			TransformInitializerPointer;

@@ -73,12 +73,7 @@ namespace elastix
 		typedef typename ElastixType::CoordRepType								CoordRepType;		
 		typedef typename ElastixType::FixedImageType			        FixedImageType;
 		typedef typename ElastixType::MovingImageType			        MovingImageType;
-		typedef typename FixedImageType::SizeType									SizeType;
-		typedef typename FixedImageType::IndexType								IndexType;
-		typedef typename FixedImageType::SpacingType							SpacingType;
-		typedef typename FixedImageType::PointType								OriginType;
-		//typedef typename FixedImageType::OffsetType								OffsetType;
-
+		
 		/** Typedef's from ComponentDatabase. */
 		typedef ComponentDatabase																	ComponentDatabaseType;
 		typedef ComponentDatabaseType::ComponentDescriptionType		ComponentDescriptionType;
@@ -90,7 +85,7 @@ namespace elastix
 		itkStaticConstMacro( MovingImageDimension, unsigned int, MovingImageType::ImageDimension );
 
 		/** Other typedef's. */
-		typedef itk::Object							ObjectType;
+		typedef itk::Object							                            ObjectType;
 		typedef itk::Transform<
 			CoordRepType,
 			itkGetStaticConstMacro( FixedImageDimension ),
@@ -100,30 +95,14 @@ namespace elastix
 		typedef typename 
 			CombinationTransformType::InitialTransformType						InitialTransformType;
 
-
 		/** Typedef's from Transform. */
 		typedef typename ITKBaseType::ParametersType		ParametersType;
 		typedef	typename ParametersType::ValueType			ValueType;
 
-		/** Typedef's for TransformPoint. */
+ 		/** Typedef's for TransformPoint. */
 		typedef typename ITKBaseType::InputPointType				InputPointType;
 		typedef typename ITKBaseType::OutputPointType				OutputPointType;		
-		typedef	itk::Image< short,
-			itkGetStaticConstMacro( FixedImageDimension ) >		DummyImageType;
-		typedef typename DummyImageType::RegionType					RegionType;
-		typedef itk::Vector<
-			float,
-			itkGetStaticConstMacro( FixedImageDimension ) >		VectorType;
-		typedef itk::Image<
-			VectorType,
-			itkGetStaticConstMacro( FixedImageDimension ) >		OutputImageType;
-		typedef typename OutputImageType::Pointer						OutputImagePointer;
-		typedef itk::ImageRegionConstIteratorWithIndex<
-			DummyImageType >																	DummyIteratorType;
-		typedef itk::ImageRegionIteratorWithIndex<
-			OutputImageType >																	OutputImageIteratorType;
-		typedef itk::ImageFileWriter< OutputImageType >			OutputFileWriterType;
-
+		
 		/** Cast to ITKBaseType. */
 		virtual ITKBaseType * GetAsITKBaseType(void)
 		{
