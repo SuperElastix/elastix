@@ -1507,17 +1507,20 @@ namespace itk
 		} // end while
 
     /** Rearrange to create a derivative. */
-    unsigned int j = 0;
-    for ( unsigned int i = 0; i < ImageDimension; i++ )
-		{
-			itDIs[ i ].GoToBegin();
-			while ( !itDIs[ i ].IsAtEnd() )
-			{
-				derivative[ j ] = itDIs[ i ].Get() / rigidityCoefficientSum;
-				++itDIs[ i ];
-				j++;
-			} // end while
-		} // end for
+    if ( rigidityCoefficientSum > 1e-14 )
+    {
+      unsigned int j = 0;
+      for ( unsigned int i = 0; i < ImageDimension; i++ )
+      {
+        itDIs[ i ].GoToBegin();
+        while ( !itDIs[ i ].IsAtEnd() )
+        {
+          derivative[ j ] = itDIs[ i ].Get() / rigidityCoefficientSum;
+          ++itDIs[ i ];
+          j++;
+        } // end while
+      } // end for
+    } // end if
 	
   } // end GetDerivative
 
@@ -2680,17 +2683,20 @@ namespace itk
 		} // end while
 
     /** Rearrange to create a derivative. */
-    unsigned int j = 0;
-    for ( unsigned int i = 0; i < ImageDimension; i++ )
-		{
-			itDIs[ i ].GoToBegin();
-			while ( !itDIs[ i ].IsAtEnd() )
-			{
-				derivative[ j ] = itDIs[ i ].Get() / rigidityCoefficientSum;
-				++itDIs[ i ];
-				j++;
-			} // end while
-		} // end for
+    if ( rigidityCoefficientSum > 1e-14 )
+    {
+      unsigned int j = 0;
+      for ( unsigned int i = 0; i < ImageDimension; i++ )
+      {
+        itDIs[ i ].GoToBegin();
+        while ( !itDIs[ i ].IsAtEnd() )
+        {
+          derivative[ j ] = itDIs[ i ].Get() / rigidityCoefficientSum;
+          ++itDIs[ i ];
+          j++;
+        } // end while
+      } // end for
+    } // end if 
  
   } // end GetValueAndDerivative
 
