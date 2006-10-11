@@ -16,7 +16,7 @@ namespace elastix
 		::EulerTransformElastix()
 	{
 		this->m_EulerTransform = EulerTransformType::New();
-		this->SetCurrentTransform(this->m_EulerTransform);
+		this->SetCurrentTransform( this->m_EulerTransform );
 	} // end Constructor
 	
 	

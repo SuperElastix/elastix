@@ -84,23 +84,33 @@ namespace itk
 		typedef typename Superclass::BulkTransformPointer		BulkTransformPointer;
 
 		/** Parameters as SpaceDimension number of images. */
-		typedef typename ParametersType::ValueType		PixelType;
-		typedef Image< PixelType,
-			itkGetStaticConstMacro( SpaceDimension ) >	ImageType;
-		typedef typename ImageType::Pointer						ImagePointer;
+    typedef typename Superclass::PixelType              CoefficientImagePixelType; 
+    typedef typename Superclass::ImageType              CoefficientImageType;
+    typedef typename Superclass::ImagePointer           CoefficientImagePointer;
 
 		/** Typedef's for VectorImage. */
 		typedef Vector< float,
-			itkGetStaticConstMacro( SpaceDimension ) >	VectorPixelType;
-		typedef Image< VectorPixelType,
-			itkGetStaticConstMacro( SpaceDimension ) >	VectorImageType;
-		typedef typename VectorImageType::Pointer			VectorImagePointer;
+			itkGetStaticConstMacro( SpaceDimension ) >	        CoefficientVectorPixelType;
+		typedef Image< CoefficientVectorPixelType,
+			itkGetStaticConstMacro( SpaceDimension ) >	        CoefficientVectorImageType;
+		typedef typename CoefficientVectorImageType::Pointer	CoefficientVectorImagePointer;
 		
-		/** Set the coefficient image as a deformation field. */
-		virtual void SetCoefficientImage( VectorImagePointer vecImage );
+		/** Set the coefficient image as a deformation field.
+     * The superclass provides a similar function (SetCoeffficientImage),
+     * but this function expects an array of nr_of_dim scalar images.
+     * The SetCoefficientVectorImage method accepts a VectorImage,
+     * which is often more convenient.
+     * The method internally just converts this vector image to 
+     * nr_of_dim scalar images and passes it on to the 
+     * SetCoefficientImage function. */
+		virtual void SetCoefficientVectorImage( const CoefficientVectorImageType * vecImage );
 
-		/** Get the coefficient image as a deformation field. */
-		virtual void GetCoefficientVectorImage( VectorImagePointer & vecImage );
+		/** Get the coefficient image as a vector image.
+     * The vector image is created only on demand. The caller is
+     * expected to provide a smart pointer to the resulting image;
+     * this stresses the fact that this method does not return a member 
+     * variable, like most Get... methods. */
+		virtual void GetCoefficientVectorImage( CoefficientVectorImagePointer & vecImage ) const;
 		
 	protected:
 		
@@ -117,7 +127,7 @@ namespace itk
 		void operator=( const Self& );									// purposely not implemented
 
 		/** Member variables. */
-		ImagePointer m_Images[ SpaceDimension ];
+		CoefficientImagePointer m_Images[ SpaceDimension ];
 	
 	}; // end class DeformationVectorFieldTransform
 

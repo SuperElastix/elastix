@@ -60,7 +60,7 @@ namespace itk
 			ScalarType,
 			itkGetStaticConstMacro( InputSpaceDimension ) >				IntermediaryDFTransformType;
 		typedef typename IntermediaryDFTransformType
-			::VectorImageType																			VectorImageType;
+			::CoefficientVectorImageType													VectorImageType;
 		typedef typename VectorImageType::PixelType							VectorPixelType;
 		typedef ImageRegionIterator< VectorImageType >					IteratorType;
 

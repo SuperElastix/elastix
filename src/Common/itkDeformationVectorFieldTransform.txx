@@ -51,11 +51,16 @@ namespace itk
 		DeformationVectorFieldTransform< TScalarType, NDimensions >
 		::~DeformationVectorFieldTransform()
 	{
+    /** Initialize m_Images. */
+		for ( unsigned int i = 0; i < SpaceDimension; i++ )
+		{
+			this->m_Images[ i ] = 0;
+		}
 	} // end Destructor
 	
 		
 	/**
-	 * ******************* SetCoefficientImage **********************
+	 * ******************* SetCoefficientVectorImage **********************
 	 *
 	 * Convert VectorImage (= deformation field) to series of images.
 	 * Set the B-Spline coefficients using a deformation field
@@ -65,18 +70,17 @@ namespace itk
 	template< class TScalarType, unsigned int NDimensions >
 		void
 		DeformationVectorFieldTransform< TScalarType, NDimensions >
-		::SetCoefficientImage( VectorImagePointer vecImage )
+		::SetCoefficientVectorImage( const CoefficientVectorImageType * vecImage )
 	{
 		/** Typedef's for iterators. */
 		typedef ImageRegionConstIterator< VectorImageType >		VectorIteratorType;
 		typedef ImageRegionIterator< ImageType >							IteratorType;		
 
 		/** Create array of images representing the B-spline
-		 * coefficients in each dimension.
-		 */
+		 * coefficients in each dimension. */
 		for ( unsigned int i = 0; i < SpaceDimension; i++ )
 		{
-			this->m_Images[ i ] = ImageType::New();
+			this->m_Images[ i ] = CoefficientImageType::New();
 			this->m_Images[ i ]->SetRegions(	vecImage->GetLargestPossibleRegion() );
 			this->m_Images[ i ]->SetOrigin(		vecImage->GetOrigin() );
 			this->m_Images[ i ]->SetSpacing(	vecImage->GetSpacing() );
@@ -94,26 +98,26 @@ namespace itk
 		}
 
 		/** Copy one element of a vector to an image. */
-		VectorPixelType vect;
+		CoefficientVectorPixelType vect;
 		while ( !vecit.IsAtEnd() )
 		{
 			vect = vecit.Get();
 			for ( unsigned int i = 0; i < SpaceDimension; i++ )
 			{
-				it[ i ].Set( vect[ i ] );
+				it[ i ].Set( static_cast<CoefficientPixelType>( vect[ i ] ) );
 				++it[ i ];
 			}
 			++vecit;
 		}
 
 		/** Put it in the Superclass. */
-		this->Superclass::SetCoefficientImage( this->m_Images );
+		this->SetCoefficientImage( this->m_Images );
 
 	} // end SetCoefficientImage
 
 
 	/**
-	 * ******************* GetCoefficientImage **********************
+	 * ******************* GetCoefficientVectorImage **********************
 	 *
 	 * Convert series of coefficient images to VectorImage (= deformation field).
 	 * 
@@ -122,15 +126,18 @@ namespace itk
 	template< class TScalarType, unsigned int NDimensions >
 		void
 		DeformationVectorFieldTransform< TScalarType, NDimensions >
-		::GetCoefficientVectorImage( VectorImagePointer & vecImage )
+		::GetCoefficientVectorImage( CoefficientVectorImagePointer & vecImage ) const
 	{
 		/** Typedef for the combiner. */
 		typedef ScalarToArrayCastImageFilter<
-			ImageType, VectorImageType >			ScalarImageCombineType;
+			CoefficientImageType, CoefficientVectorImageType >			ScalarImageCombineType;
 
-		/** Get a handle to the series of coefficient images. */
-		ImagePointer * coefImage;
-		coefImage = this->GetCoefficientImage();
+ 		/** Get a handle to the series of coefficient images.
+     * we have to apply a painful hack, because the GetCoefficientImage method
+     * is not const. */
+		CoefficientImagePointer * coefImage;
+    thisNonConst = const_cast<Self *>(this);
+		coefImage = thisNonConst->GetCoefficientImage();
 
 		/** Combine the coefficient images to a vector image. */
 		typename ScalarImageCombineType::Pointer combiner = ScalarImageCombineType::New();

@@ -12,17 +12,6 @@ namespace elastix
 
 
 	/*
-	 * ********************* Constructor ****************************
-	 */
-	
-	template <class TElastix>
-		ResamplerBase<TElastix>::ResamplerBase()
-	{
-
-	} // end Constructor
-
-
-	/*
 	 * ******************* BeforeRegistrationBase *******************
 	 */
 	
@@ -35,8 +24,11 @@ namespace elastix
 		
 		/** Set the size of the image to be produced by the resampler. */
 		
-		/** Get a pointer to the fixedImage. */
-		OutputImageType * fixedImage = dynamic_cast<OutputImageType *>(
+		/** Get a pointer to the fixedImage. 
+     * \todo make it a cast to the fixed image type
+     */
+    typedef typename ElastixType::FixedImageType FixedImageType;
+		FixedImageType * fixedImage = dynamic_cast<FixedImageType *>(
 			this->m_Elastix->GetFixedImage() );
 		
 		/** Set the region info to the same values as in the fixedImage. */

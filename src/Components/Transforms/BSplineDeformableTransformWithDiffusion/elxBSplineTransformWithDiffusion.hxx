@@ -23,7 +23,7 @@ using namespace itk;
 	{
 		/** Set up CombinationTransform */
 		this->m_BSplineTransform = BSplineTransformType::New();
-		this->SetCurrentTransform(this->m_BSplineTransform);
+		this->SetCurrentTransform( this->m_BSplineTransform );
 
 		/** Initialize some things. */
 		this->m_GridSpacingFactor.Fill( 8.0 );

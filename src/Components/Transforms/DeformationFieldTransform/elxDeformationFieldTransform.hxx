@@ -39,8 +39,15 @@ using namespace itk;
 	{
 		// \todo Test this ReadFromFile function.
 
+    /** Make sure that the Transformbase::WriteToFile() does
+		 * not read the transformParameters in the file. */
+		this->SetReadWriteTransformParameters( false );
+    
+		/** Call the ReadFromFile from the TransformBase. */
+		this->Superclass2::ReadFromFile();
+
 		/** Setup VectorImageReader. */
-		typedef ImageFileReader< VectorImageType >	VectorReaderType;
+		typedef ImageFileReader< CoefficientVectorImageType >	VectorReaderType;
 		typename VectorReaderType::Pointer vectorReader
 			= VectorReaderType::New();
 
@@ -48,6 +55,11 @@ using namespace itk;
 		std::string fileName = "";
 		this->m_Configuration->ReadParameter( fileName,
 			"DeformationFieldFileName", 0 );
+    if ( fileName = "" )
+    {
+      xl::xout["error"] << "ERROR: the entry (DeformationFieldFileName \"...\") is missing in the transform parameter file!" << std::endl;
+      itkExceptionMacro( << "Error while reading transform parameter file!" );
+    }
 
 		/** Read deformationFieldImage from file. */
 		vectorReader->SetFileName( fileName.c_str() );
@@ -70,55 +82,8 @@ using namespace itk;
 		 * itkDeformationVectorFieldTransform.
 		 */
 		this->m_DeformationVectorFieldTransform->
-			SetCoefficientImage( vectorReader->GetOutput() );
-
-		/** Do not call the ReadFromFile from the TransformBase,
-		 * because that function tries to read parameters from the file,
-		 * which is not necessary in this case, because the parameters are
-		 * in the vectorImage.
-		 * However, we have to copy the rest of the functionality:
-		 */
+			SetCoefficientVectorImage( vectorReader->GetOutput() );
 		
-		/** Get the InitialTransformName. */
-		fileName = "";
-		this->m_Configuration->ReadParameter( fileName,
-			"InitialTransformParametersFileName", 0 );
-		
-		/** Call the function ReadInitialTransformFromFile.*/
-		if ( fileName != "NoInitialTransform" )
-		{			
-			this->ReadInitialTransformFromFile( fileName.c_str() );
-		} 
-
-		/** Read from the configuration file how to combine the
-		 * initial transform with the current transform.
-		 */
-		std::string howToCombineTransforms = "Add"; // default
-		this->m_Configuration->ReadParameter( howToCombineTransforms, "HowToCombineTransforms", 0, true );
-		
-		/** Convert 'this' to a pointer to a CombinationTransform and set how
-		 * to combine the current transform with the initial transform */
-		CombinationTransformType * thisAsGrouper = 
-			dynamic_cast< CombinationTransformType * >(this);
-		if ( thisAsGrouper )
-		{
-			if (howToCombineTransforms == "Compose" )
-			{
-				thisAsGrouper->SetUseComposition( true );
-			}
-			else
-			{
-				thisAsGrouper->SetUseComposition( false );
-			}
-		}
-
-		/** Remember the name of the TransformParametersFileName.
-		 * This will be needed when another transform will use this transform
-		 * as an initial transform (see the WriteToFile method)
-		 */
-		this->SetTransformParametersFileName(
-			this->GetConfiguration()->GetCommandLineArgument( "-tp" ) );
-
 	} // end ReadFromFile
 
 
@@ -136,8 +101,7 @@ using namespace itk;
 		// \todo Finish and Test this WriteToFile function.
 
     /** Make sure that the Transformbase::WriteToFile() does
-		 * not write the transformParameters in the file.
-		 */
+		 * not write the transformParameters in the file. */
 		this->SetReadWriteTransformParameters( false );
 
 		/** Call the WriteToFile from the TransformBase. */
@@ -165,12 +129,12 @@ using namespace itk;
 			<< makeFileName.str() << "\")" << std::endl;
 
 		/** Create a deformationField image. */
-		VectorImagePointer deformationFieldImage;
+		CoefficientVectorImagePointer deformationFieldImage;
 		this->m_DeformationVectorFieldTransform->
 			GetCoefficientVectorImage( deformationFieldImage );
 
 		/** Write the deformation field image. */
-		typedef itk::ImageFileWriter< VectorImageType > VectorWriterType;
+		typedef itk::ImageFileWriter< CoefficientVectorImageType > VectorWriterType;
 		typename VectorWriterType::Pointer writer
 			= VectorWriterType::New();
 		writer->SetFileName( makeFileName.str().c_str() );

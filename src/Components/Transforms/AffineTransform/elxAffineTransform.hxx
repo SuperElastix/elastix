@@ -15,7 +15,7 @@ namespace elastix
 		AffineTransformElastix<TElastix>
 		::AffineTransformElastix()
 	{
-		m_AffineTransform = AffineTransformType::New();
+		this->m_AffineTransform = AffineTransformType::New();
 		this->SetCurrentTransform( this->m_AffineTransform );
 	} // end Constructor
 	

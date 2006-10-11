@@ -23,8 +23,8 @@ using namespace itk;
 		BSplineTransform<TElastix>::
 		BSplineTransform()
 	{
-		m_BSplineTransform =BSplineTransformType::New();
-		this->SetCurrentTransform(this->m_BSplineTransform);
+		this->m_BSplineTransform = BSplineTransformType::New();
+		this->SetCurrentTransform( this->m_BSplineTransform );
 
 		/** Initialize. */
 		this->m_GridSpacingFactor.Fill( 8.0 );

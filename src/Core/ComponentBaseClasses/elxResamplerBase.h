@@ -119,7 +119,7 @@ namespace elastix
 	protected:
 
 		/** The constructor. */
-		ResamplerBase();
+    ResamplerBase(){};
 		/** The destructor. */
 		virtual ~ResamplerBase() {}
 

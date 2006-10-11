@@ -93,12 +93,13 @@ using namespace itk;
 		typedef typename Superclass1::OutputPointType						OutputPointType;
 		
 		/** Typedef's specific for the DeformationVectorFieldTransform. */
-		typedef typename DeformationVectorFieldTransformType::PixelType						PixelType;
-		typedef typename DeformationVectorFieldTransformType::ImageType						ImageType;
-		typedef typename DeformationVectorFieldTransformType::ImagePointer				ImagePointer;
-		typedef typename DeformationVectorFieldTransformType::VectorPixelType			VectorPixelType;
-		typedef typename DeformationVectorFieldTransformType::VectorImageType			VectorImageType;
-		typedef typename DeformationVectorFieldTransformType::VectorImagePointer	VectorImagePointer;
+		typedef typename DeformationVectorFieldTransformType::CoefficientPixelType		      CoefficientPixelType;
+		typedef typename DeformationVectorFieldTransformType::CoefficientImageType		      CoefficientImageType;
+		typedef typename DeformationVectorFieldTransformType::CoefficientImagePointer	      CoefficientImagePointer;
+		typedef typename DeformationVectorFieldTransformType::CoefficientVectorPixelType    CoefficientVectorPixelType;
+		typedef typename DeformationVectorFieldTransformType::CoefficientVectorImageType	  CoefficientVectorImageType;
+		typedef typename DeformationVectorFieldTransformType::CoefficientVectorImagePointer	CoefficientVectorImagePointer;
+
 		typedef typename DeformationVectorFieldTransformType::Pointer							DeformationVectorFieldTransformPointer;
 
 		/** Typedef's from TransformBase. */
