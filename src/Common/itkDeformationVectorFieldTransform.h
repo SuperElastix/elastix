@@ -84,7 +84,7 @@ namespace itk
 		typedef typename Superclass::BulkTransformPointer		BulkTransformPointer;
 
 		/** Parameters as SpaceDimension number of images. */
-    typedef typename Superclass::PixelType              CoefficientImagePixelType; 
+    typedef typename Superclass::PixelType              CoefficientPixelType; 
     typedef typename Superclass::ImageType              CoefficientImageType;
     typedef typename Superclass::ImagePointer           CoefficientImagePointer;
 

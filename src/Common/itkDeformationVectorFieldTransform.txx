@@ -73,8 +73,8 @@ namespace itk
 		::SetCoefficientVectorImage( const CoefficientVectorImageType * vecImage )
 	{
 		/** Typedef's for iterators. */
-		typedef ImageRegionConstIterator< VectorImageType >		VectorIteratorType;
-		typedef ImageRegionIterator< ImageType >							IteratorType;		
+		typedef ImageRegionConstIterator< CoefficientVectorImageType >	VectorIteratorType;
+		typedef ImageRegionIterator< CoefficientImageType >	  					IteratorType;		
 
 		/** Create array of images representing the B-spline
 		 * coefficients in each dimension. */
@@ -136,7 +136,7 @@ namespace itk
      * we have to apply a painful hack, because the GetCoefficientImage method
      * is not const. */
 		CoefficientImagePointer * coefImage;
-    thisNonConst = const_cast<Self *>(this);
+    Self * thisNonConst = const_cast<Self *>(this);
 		coefImage = thisNonConst->GetCoefficientImage();
 
 		/** Combine the coefficient images to a vector image. */

@@ -64,7 +64,7 @@ namespace itk
 		}
 
 		/** Set the deformation field in the transform. */
-		this->m_IntermediaryDeformationFieldTransform->SetCoefficientImage( intermediaryDeformationField );
+		this->m_IntermediaryDeformationFieldTransform->SetCoefficientVectorImage( intermediaryDeformationField );
 
 		/** Set to initialized. */
 		this->m_Initialized = true;
@@ -109,7 +109,7 @@ namespace itk
 		/** Set the vecImage (which is allocated elsewhere) and put it in
 		 * IntermediaryDeformationFieldTransform (where it is copied and split up).
 		 */
-		this->m_IntermediaryDeformationFieldTransform->SetCoefficientImage( vecImage );
+		this->m_IntermediaryDeformationFieldTransform->SetCoefficientVectorImage( vecImage );
 
 	} // end UpdateIntermediaryDeformationFieldTransform
 

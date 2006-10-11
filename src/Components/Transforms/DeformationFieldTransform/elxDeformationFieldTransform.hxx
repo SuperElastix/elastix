@@ -55,7 +55,7 @@ using namespace itk;
 		std::string fileName = "";
 		this->m_Configuration->ReadParameter( fileName,
 			"DeformationFieldFileName", 0 );
-    if ( fileName = "" )
+    if ( fileName == "" )
     {
       xl::xout["error"] << "ERROR: the entry (DeformationFieldFileName \"...\") is missing in the transform parameter file!" << std::endl;
       itkExceptionMacro( << "Error while reading transform parameter file!" );
