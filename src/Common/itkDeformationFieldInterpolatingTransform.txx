@@ -47,7 +47,7 @@ DeformationFieldInterpolatingTransform<TScalarType, NDimensions,  TComponentType
 
   if ( this->m_DeformationFieldInterpolator->IsInsideBuffer(cindex) )
   {
-    DeformationFieldVectorType vec = 
+    InterpolatorOutputType vec = 
      this->m_DeformationFieldInterpolator->EvaluateAtContinuousIndex( cindex);
     OutputPointType outpoint;
     for ( unsigned int i = 0; i < InputSpaceDimension; ++i)

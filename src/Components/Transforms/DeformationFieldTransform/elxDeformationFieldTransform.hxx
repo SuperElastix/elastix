@@ -6,8 +6,8 @@
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 
-#include "itkNearestNeighborInterpolateImageFunction.h"
-#include "itkLinearInterpolateImageFunction.h"
+#include "itkVectorNearestNeighborInterpolateImageFunction.h"
+#include "itkVectorLinearInterpolateImageFunction.h"
 
 namespace elastix
 {
@@ -89,9 +89,9 @@ using namespace itk;
 
     typedef typename DeformationFieldInterpolatingTransformType::
       DeformationFieldInterpolatorType InterpolatorType;
-    typedef NearestNeighborInterpolateImageFunction<
+    typedef VectorNearestNeighborInterpolateImageFunction<
       DeformationFieldType, CoordRepType>  NNInterpolatorType;
-    typedef LinearInterpolateImageFunction<
+    typedef VectorLinearInterpolateImageFunction<
       DeformationFieldType, CoordRepType>  LinInterpolatorType;
     
     typename InterpolatorType::Pointer interpolator = 0;

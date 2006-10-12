@@ -96,6 +96,7 @@ using namespace itk;
 		
 		/** Typedef's specific for the DeformationFieldInterpolatingTransform. */
     typedef typename DeformationFieldInterpolatingTransformType::DeformationFieldType DeformationFieldType;
+    typedef typename DeformationFieldInterpolatingTransformType::DeformationFieldVectorType DeformationFieldVectorType;
 		
 		typedef typename DeformationFieldInterpolatingTransformType::Pointer
       DeformationFieldInterpolatingTransformPointer;

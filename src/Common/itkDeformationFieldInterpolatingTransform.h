@@ -5,8 +5,8 @@
 #include "itkTransform.h"
 #include "itkExceptionObject.h"
 #include "itkImage.h"
-#include "itkInterpolateImageFunction.h"
-#include "itkNearestNeighborInterpolateImageFunction.h"
+#include "itkVectorInterpolateImageFunction.h"
+#include "itkVectorNearestNeighborInterpolateImageFunction.h"
 
 
 namespace itk
@@ -63,18 +63,20 @@ namespace itk
     typedef TComponentType                            DeformationFieldComponentType;
     typedef Vector<DeformationFieldComponentType, 
       itkGetStaticConstMacro(OutputSpaceDimension) >  DeformationFieldVectorType;
-    typedef Image< DeformationFieldComponentType,
+    typedef Image< DeformationFieldVectorType,
       itkGetStaticConstMacro(InputSpaceDimension) >   DeformationFieldType;
 
-    typedef InterpolateImageFunction<
-      DeformationFieldType, ScalarType >              DeformationFieldInterpolatorType;
-    typedef NearestNeighborInterpolateImageFunction<
-      DeformationFieldType, ScalarType >              DefaultDeformationFieldInterpolatorType;
+    typedef VectorInterpolateImageFunction<
+      DeformationFieldType, ScalarType > 
+                        DeformationFieldInterpolatorType;
+    typedef VectorNearestNeighborInterpolateImageFunction<
+      DeformationFieldType, ScalarType >               
+                        DefaultDeformationFieldInterpolatorType;
     
-  
+      
     /** Transform a point
-    * This method adds a displacement to a given point,
-    * returning the transformed point */
+     * This method adds a displacement to a given point,
+     * returning the transformed point */
     OutputPointType TransformPoint(const InputPointType  &point ) const;
 
     /** Make this an identity transform ( the deformation field is replaced
@@ -96,7 +98,8 @@ namespace itk
     /** Typedef which is used internally */
     typedef typename DeformationFieldInterpolatorType::ContinuousIndexType 
       InputContinuousIndexType;
-
+    typedef typename DeformationFieldInterpolatorType::OutputType InterpolatorOutputType;
+    
     /** Print contents of an DeformationFieldInterpolatingTransform. */
     void PrintSelf(std::ostream &os, Indent indent) const;
 
