@@ -6,6 +6,9 @@
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 
+#include "itkNearestNeighborInterpolateImageFunction.h"
+#include "itkLinearInterpolateImageFunction.h"
+
 namespace elastix
 {
 using namespace itk;
@@ -20,10 +23,10 @@ using namespace itk;
 		::DeformationFieldTransform()
 	{
 		/** Initialize. */
-		this->m_DeformationVectorFieldTransform = 
-			DeformationVectorFieldTransformType::New();
+		this->m_DeformationFieldInterpolatingTransform = 
+			DeformationFieldInterpolatingTransformType::New();
 		this->SetCurrentTransform(
-			this->m_DeformationVectorFieldTransform );
+			this->m_DeformationFieldInterpolatingTransform );
 
 	} // end Constructor
 	
@@ -47,7 +50,7 @@ using namespace itk;
 		this->Superclass2::ReadFromFile();
 
 		/** Setup VectorImageReader. */
-		typedef ImageFileReader< CoefficientVectorImageType >	VectorReaderType;
+		typedef ImageFileReader< DeformationFieldType >	VectorReaderType;
 		typename VectorReaderType::Pointer vectorReader
 			= VectorReaderType::New();
 
@@ -79,10 +82,38 @@ using namespace itk;
 		}		
 
 		/** Set the deformationFieldImage in the
-		 * itkDeformationVectorFieldTransform.
+		 * itkDeformationFieldInterpolatingTransform.
 		 */
-		this->m_DeformationVectorFieldTransform->
-			SetCoefficientVectorImage( vectorReader->GetOutput() );
+		this->m_DeformationFieldInterpolatingTransform->
+			SetDeformationField( vectorReader->GetOutput() );
+
+    typedef typename DeformationFieldInterpolatingTransformType::
+      DeformationFieldInterpolatorType InterpolatorType;
+    typedef NearestNeighborInterpolateImageFunction<
+      DeformationFieldType, CoordRepType>  NNInterpolatorType;
+    typedef LinearInterpolateImageFunction<
+      DeformationFieldType, CoordRepType>  LinInterpolatorType;
+    
+    typename InterpolatorType::Pointer interpolator = 0;
+    unsigned int interpolationOrder = 0;
+    this->m_Configuration->ReadParameter( interpolationOrder,
+			"DeformationFieldInterpolationOrder", 0 );
+    if ( interpolationOrder == 0 )
+    {
+      interpolator = NNInterpolatorType::New(); 
+    }
+    else if ( interpolationOrder == 1 )
+    {
+      interpolator = LinInterpolatorType::New(); 
+    }
+    else
+    {
+      xl::xout["error"] << "Error while reading DeformationFieldInterpolationOrder from the parameter file" << std::endl;
+      xl::xout["error"] << "DeformationFieldInterpolationOrder can only be 0 or 1!" << std::endl;
+      itkExceptionMacro( << "Invalid deformation field interpolation order selected!" );
+    }
+    this->m_DeformationFieldInterpolatingTransform->
+      SetDeformationFieldInterpolator( interpolator );
 		
 	} // end ReadFromFile
 
@@ -128,17 +159,29 @@ using namespace itk;
 		xout["transpar"] << "(DeformationFieldFileName \""
 			<< makeFileName.str() << "\")" << std::endl;
 
-		/** Create a deformationField image. */
-		CoefficientVectorImagePointer deformationFieldImage;
-		this->m_DeformationVectorFieldTransform->
-			GetCoefficientVectorImage( deformationFieldImage );
+    /** Write the interpolation order to file */
+    std::string interpolatorName = 
+      this->m_DeformationFieldInterpolatingTransform->
+      GetDeformationFieldInterpolator()->GetNameOfClass();
 
-		/** Write the deformation field image. */
-		typedef itk::ImageFileWriter< CoefficientVectorImageType > VectorWriterType;
+    unsigned int interpolationOrder = 0;
+    if ( interpolatorName == "NearestNeighborInterpolateImageFunction" )
+    {
+      interpolationOrder = 0;
+    }
+    else if ( interpolatorName == "LinearInterpolateImageFunction" )
+    {
+       interpolationOrder = 1;
+    }
+    xout["transpar"] << "(DeformationFieldInterpolationOrder "
+			<<  interpolationOrder << ")" << std::endl;
+
+    /** Write the deformation field image. */
+		typedef itk::ImageFileWriter< DeformationFieldType > VectorWriterType;
 		typename VectorWriterType::Pointer writer
 			= VectorWriterType::New();
 		writer->SetFileName( makeFileName.str().c_str() );
-		writer->SetInput( deformationFieldImage );
+		writer->SetInput( this->m_DeformationFieldInterpolatingTransform->GetDeformationField() );
 
 		/** Do the writing. */
 		try

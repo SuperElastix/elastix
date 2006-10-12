@@ -13,6 +13,8 @@ SET(CommonFiles
  itkBSplineCombinationTransform.hxx
  itkCombinationTransform.h
  itkCombinationTransform.hxx
+ itkDeformationFieldInterpolatingTransform.h
+ itkDeformationFieldInterpolatingTransform.txx
  itkDeformationFieldRegulizer.h
  itkDeformationFieldRegulizer.hxx
  itkDeformationFieldRegulizerForBSpline.h

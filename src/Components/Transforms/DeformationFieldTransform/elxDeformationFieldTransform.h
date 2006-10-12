@@ -1,10 +1,10 @@
 #ifndef __elxDeformationFieldTransform_H__
 #define __elxDeformationFieldTransform_H__
 
-#include "itkDeformationVectorFieldTransform.h"
+#include "itkDeformationFieldInterpolatingTransform.h"
 
 #include "elxIncludes.h"
-#include "itkBSplineCombinationTransform.h"
+#include "itkCombinationTransform.h"
 
 
 namespace elastix
@@ -13,19 +13,25 @@ using namespace itk;
 
 	/**
 	 * \class DeformationFieldTransform
-	 * \brief A transform based on a DeformationVectorField.
+	 * \brief A transform based on a DeformationField.
 	 *
 	 * This transform models the transformation by a deformation vector field.
+   * This transform is meant to be used for optimisation. Just use it as an initial
+   * transform, or with transformix.
 	 *
 	 * The parameters used in this class are:
 	 * \parameter Transform: Select this transform as follows:\n
 	 *		<tt>(%Transform "DeformationFieldTransform")</tt>
-	 *
+   *
 	 * The transform parameters necessary for transformix, additionally defined by this class, are:
 	 * \transformparameter DeformationFieldFileName: stores the name of the deformation field. \n
 	 *		example: <tt>(DeformationFieldFileName "defField.mhd")</tt>
+   * \transformparameter DeformationFieldInterpolationOrder: The interpolation order used for interpolating the deformation field:\n
+	 *		example: <tt>(DeformationFieldInterpolationOrder 0)</tt>
+   *    default: 0; allowed: 0 or 1.
+   *
 	 *
-	 * \sa DeformationVectorFieldTransform
+	 * \sa DeformationFieldInterpolatingTransform
 	 *
 	 * \ingroup Transforms
 	 */
@@ -33,13 +39,9 @@ using namespace itk;
 	template < class TElastix >
 		class DeformationFieldTransform:
 	public
-		BSplineCombinationTransform< 
+		CombinationTransform< 
 			ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,			
-			elx::TransformBase<TElastix>::FixedImageDimension,
-			DeformationVectorFieldTransform<
-				ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,
-				elx::TransformBase<TElastix>::FixedImageDimension >::SplineOrder 
-		>,
+			elx::TransformBase<TElastix>::FixedImageDimension >,
 	public
 		TransformBase<TElastix>
 	{
@@ -50,14 +52,14 @@ using namespace itk;
 
 		/** The ITK-class that provides most of the functionality, and
 		 * that is set as the "CurrentTransform" in the CombinationTransform */
-		typedef DeformationVectorFieldTransform<
+		typedef DeformationFieldInterpolatingTransform<
 			typename elx::TransformBase<TElastix>::CoordRepType,
-			elx::TransformBase<TElastix>::FixedImageDimension > DeformationVectorFieldTransformType;
-
-		typedef BSplineCombinationTransform< 
-			typename elx::TransformBase<TElastix>::CoordRepType,			
 			elx::TransformBase<TElastix>::FixedImageDimension,
-			DeformationVectorFieldTransformType::SplineOrder >	Superclass1;
+      float >                                             DeformationFieldInterpolatingTransformType;
+
+		typedef CombinationTransform< 
+			typename elx::TransformBase<TElastix>::CoordRepType,			
+			elx::TransformBase<TElastix>::FixedImageDimension >	Superclass1;
 
 		typedef elx::TransformBase< TElastix >								Superclass2;	
 
@@ -68,7 +70,7 @@ using namespace itk;
 		itkNewMacro( Self );
 		
 		/** Run-time type information (and related methods). */
-		itkTypeMacro( DeformationFieldTransform, BSplineCombinationTransform );
+		itkTypeMacro( DeformationFieldTransform, CombinationTransform );
 
 		/** Name of this class.
 		 * Use this name in the parameter file to select this specific transform. \n
@@ -92,15 +94,11 @@ using namespace itk;
 		typedef typename Superclass1::InputPointType 						InputPointType;
 		typedef typename Superclass1::OutputPointType						OutputPointType;
 		
-		/** Typedef's specific for the DeformationVectorFieldTransform. */
-		typedef typename DeformationVectorFieldTransformType::CoefficientPixelType		      CoefficientPixelType;
-		typedef typename DeformationVectorFieldTransformType::CoefficientImageType		      CoefficientImageType;
-		typedef typename DeformationVectorFieldTransformType::CoefficientImagePointer	      CoefficientImagePointer;
-		typedef typename DeformationVectorFieldTransformType::CoefficientVectorPixelType    CoefficientVectorPixelType;
-		typedef typename DeformationVectorFieldTransformType::CoefficientVectorImageType	  CoefficientVectorImageType;
-		typedef typename DeformationVectorFieldTransformType::CoefficientVectorImagePointer	CoefficientVectorImagePointer;
-
-		typedef typename DeformationVectorFieldTransformType::Pointer							DeformationVectorFieldTransformPointer;
+		/** Typedef's specific for the DeformationFieldInterpolatingTransform. */
+    typedef typename DeformationFieldInterpolatingTransformType::DeformationFieldType DeformationFieldType;
+		
+		typedef typename DeformationFieldInterpolatingTransformType::Pointer
+      DeformationFieldInterpolatingTransformPointer;
 
 		/** Typedef's from TransformBase. */
 		typedef typename Superclass2::ElastixType								ElastixType;
@@ -136,7 +134,7 @@ using namespace itk;
 
 		/** The transform that is set as current transform in the 
 		 * CcombinationTransform */
-		DeformationVectorFieldTransformPointer m_DeformationVectorFieldTransform;
+		DeformationFieldInterpolatingTransformPointer m_DeformationFieldInterpolatingTransform;
 		
 	}; // end class DeformationFieldTransform
 	
