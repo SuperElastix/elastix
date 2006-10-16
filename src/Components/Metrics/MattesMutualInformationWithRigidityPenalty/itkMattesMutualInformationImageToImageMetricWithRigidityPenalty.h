@@ -131,7 +131,6 @@ namespace itk
 			RigidityPixelType,
 			itkGetStaticConstMacro( FixedImageDimension ) >			StructuringElementType;
 		typedef typename StructuringElementType::RadiusType		SERadiusType;
-		//typedef typename RadiusType::SizeValueType					RadiusValueType;
 		typedef GrayscaleDilateImageFilter<
 			RigidityImageType, RigidityImageType,
 			StructuringElementType >														DilateFilterType;
@@ -185,10 +184,6 @@ namespace itk
 		/** Function to fill the RigidityCoefficientImage every iteration. */
 		void FillRigidityCoefficientImage( const ParametersType& parameters ) const;
 
-		/** For printing purposes. *
-		itkGetMacro( MIValue, double );
-		itkGetMacro( RigidValue, double );
-
 		/** Set the OutputDirectoryName. *
 		void SetOutputDirectoryName( const char * _arg );*/
 
@@ -225,9 +220,6 @@ namespace itk
 		RigidityImagePointer						m_MovingRigidityImageDilated;
 		bool														m_UseFixedRigidityImage;
 		bool														m_UseMovingRigidityImage;
-
-		/** For printing purposes. *
-		mutable double m_MIValue, m_RigidValue;
 
 		/** Name of the output directory. *
 		std::string m_OutputDirectoryName;*/
