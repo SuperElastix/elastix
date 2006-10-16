@@ -306,6 +306,12 @@ using namespace itk;
 		/** Set the DilateRigidityImages in the superclass to the one of this level. */
 		this->SetDilateRigidityImages( this->m_DilateRigidityImagesVector[ level ] );
 
+    /** Get and set the dilationRadiusMultiplier. */
+		double dilationRadiusMultiplier = 1.0;
+		this->GetConfiguration()->ReadParameter( dilationRadiusMultiplier, "DilationRadiusMultiplier", 0 );
+    this->GetConfiguration()->ReadParameter( dilationRadiusMultiplier, "DilationRadiusMultiplier", level );
+		this->SetDilationRadiusMultiplier( dilationRadiusMultiplier );
+
     /** Set the RigidityPenaltyWeight in the superclass to the one of this level. */
 		this->SetMetricWeight( this->m_RigidityPenaltyWeightVector[ level ], 1 );
 
