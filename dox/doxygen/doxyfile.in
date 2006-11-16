@@ -33,10 +33,10 @@ OUTPUT_DIRECTORY       = "@ELX_HELP_DIR@"
 
 EXCLUDE = "@elastix_SOURCE_DIR@/Common/ParameterFileParser" \
 	  "@elastix_SOURCE_DIR@/Components/Transforms/BSplineDeformableTransformWithDiffusion" \
-	  "@elastix_SOURCE_DIR@/Components/Metrics/KNNGraphAlphaMutualInformationMetric" \
-	  "@elastix_SOURCE_DIR@/Components/Metrics/KNNGraphMultiDimensionalAlphaMutualInformationMetric" \
-	  "@elastix_SOURCE_DIR@/Components/Metrics/MattesMutualInformationMetricWithRigidRegularization" \
-	  "@elastix_SOURCE_DIR@/Components/Metrics/MattesMutualInformationMetricWithRigidityPenalty"
+	  "@elastix_SOURCE_DIR@/Components/Metrics/KNNGraphAlphaMutualInformation" \
+	  "@elastix_SOURCE_DIR@/Components/Metrics/KNNGraphMultiDimensionalAlphaMutualInformation" \
+	  "@elastix_SOURCE_DIR@/Components/Metrics/MattesMutualInformationWithRigidRegularization" \
+	  "@elastix_SOURCE_DIR@/Components/Metrics/MattesMutualInformationWithRigidityPenalty"
 		
 # The HTML_STYLESHEET tag can be used to specify a user defined cascading 
 # style sheet that is used by each HTML page. It can be used to 
