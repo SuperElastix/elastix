@@ -23,22 +23,22 @@ namespace itk
    * Construction of the PDFs is implemented in the superclass
    * ParzenWindowHistogramImageToImageMetric.
 	 *
-	 * Notes: 
-	 * 1. This class returns the negative mutual information value.
+	 * Notes:\n
+	 * 1. This class returns the negative mutual information value.\n
 	 * 2. This class in not thread safe due the private data structures
 	 *     used to the store the marginal and joint pdfs.
 	 *
-	 * References:
-	 * [1] "Nonrigid multimodality image registration"
-	 *      D. Mattes, D. R. Haynor, H. Vesselle, T. Lewellen and W. Eubank
-	 *      Medical Imaging 2001: Image Processing, 2001, pp. 1609-1620.
-	 * [2] "PET-CT Image Registration in the Chest Using Free-form Deformations"
-	 *      D. Mattes, D. R. Haynor, H. Vesselle, T. Lewellen and W. Eubank
-	 *      IEEE Transactions in Medical Imaging. To Appear.
+	 * References:\n
+	 * [1] "Nonrigid multimodality image registration"\n
+	 *      D. Mattes, D. R. Haynor, H. Vesselle, T. Lewellen and W. Eubank\n
+	 *      Medical Imaging 2001: Image Processing, 2001, pp. 1609-1620.\n
+	 * [2] "PET-CT Image Registration in the Chest Using Free-form Deformations"\n
+	 *      D. Mattes, D. R. Haynor, H. Vesselle, T. Lewellen and W. Eubank\n
+	 *      IEEE Transactions in Medical Imaging. To Appear.\n
 	 * [3] "Optimization of Mutual Information for MultiResolution Image
-	 *      Registration"
-	 *      P. Thevenaz and M. Unser
-	 *      IEEE Transactions in Image Processing, 9(12) December 2000.
+	 *      Registration"\n
+	 *      P. Thevenaz and M. Unser\n
+	 *      IEEE Transactions in Image Processing, 9(12) December 2000.\n
    *
 	 * \ingroup Metrics
    * \sa ParzenWindowHistogramImageToImageMetric
