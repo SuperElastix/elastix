@@ -32,6 +32,7 @@ OUTPUT_DIRECTORY       = "@ELX_HELP_DIR@"
 # subdirectory from a directory tree whose root is specified with the INPUT tag. 
 
 EXCLUDE = "@elastix_SOURCE_DIR@/Common/ParameterFileParser" \
+	  "@elastix_SOURCE_DIR@/Common/KNN" \
 	  "@elastix_SOURCE_DIR@/Components/Transforms/BSplineDeformableTransformWithDiffusion" \
 	  "@elastix_SOURCE_DIR@/Components/Metrics/KNNGraphAlphaMutualInformation" \
 	  "@elastix_SOURCE_DIR@/Components/Metrics/KNNGraphMultiDimensionalAlphaMutualInformation" \
