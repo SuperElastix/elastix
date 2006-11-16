@@ -22,14 +22,23 @@ namespace elastix
 	 *		result image is resampled and written. Choose from {"true", "false"} \n
 	 *		example: <tt>(WriteResultImage "false")</tt> \n
 	 *		The default is "true".
+   * \parameter WriteResultImageAfterEachResolution: flag to determine if the intermediate
+	 *		result image is resampled and written after each resolution. Choose from {"true", "false"} \n
+	 *		example: <tt>(WriteResultImageAfterEachResolution "true" "false" "true")</tt> \n
+	 *		The default is "false" for each resolution.
 	 * \parameter ResultImageFormat: parameter to set the image file format to
 	 *		to which the resampled image is written to.\n
 	 *		example: <tt>(ResultImageFormat "mhd")</tt> \n
 	 *		The default is "mhd".
-	 * \parameter WriteResultImageAfterEachResolution: flag to determine if the intermediate
-	 *		result image is resampled and written after each resolution. Choose from {"true", "false"} \n
-	 *		example: <tt>(WriteResultImageAfterEachResolution "true" "false" "true")</tt> \n
-	 *		The default is "false" for each resolution.
+   * \parameter ResultImagePixelType: parameter to set the pixel type,
+   *    used for resampling the moving image. If this is different from
+   *    the input pixel type you are casting your data. This is done
+   *    using standard c-style casts, so TAKE CARE that you are not
+   *    throwing away data (for example when going from unsigned to signed,
+   *    or from float to char).\n
+   *    Choose from (unsigned) char, (unsigned) short, float, double, etc.\n
+   *		example: <tt>(ResultImagePixelType "unsigned short")</tt> \n
+	 *		The default is "short".
 	 *
 	 * \ingroup Resamplers
 	 * \ingroup ComponentBaseClasses
