@@ -267,7 +267,11 @@ int main( int argc, char **argv )
 
 void PrintHelp(void)
 {
-	std::cout << "*********** elastix help: ***********\n\n";
+  /** Print the version. */
+  std::cout << std::fixed;
+  std::cout << std::showpoint;
+  std::cout << std::setprecision(3);
+  std::cout << "elastix version: " << __ELASTIX_VERSION << std::endl << std::endl;
 
 	/** What is elastix? */
 	std::cout << "Elastix registers a moving image to a fixed image." << std::endl;
