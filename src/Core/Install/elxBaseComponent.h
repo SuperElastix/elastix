@@ -22,7 +22,7 @@
 #include <iostream>
 
 /** The current Elastix version. */
-#define __ELASTIX_VERSION 3.600
+#define __ELASTIX_VERSION 3.601
 
 /** All Elastix components should be in namespace elastix. */
 namespace elastix
