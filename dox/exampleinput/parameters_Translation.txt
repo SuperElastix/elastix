@@ -1,51 +1,128 @@
-//Description of the ImageTypes
-(FixedImagePixelType "short")
+// Example parameter file for rigid registration
+// C-style comments: //
+
+// The internal pixel type, used for computations
+// Leave to float in general
+(FixedInternalImagePixelType "float")
+(MovingInternalImagePixelType "float")
+
+// The dimensions of the fixed and moving image
 (FixedImageDimension 2)
-(MovingImagePixelType "short")
 (MovingImageDimension 2)
 
-//Which Components to use
+//Components
+
+// The following components should be left as they are:
 (Registration "MultiResolutionRegistration")
 (FixedImagePyramid "FixedRecursiveImagePyramid")
 (MovingImagePyramid "MovingRecursiveImagePyramid")
 (Interpolator "BSplineInterpolator")
-(Metric "MattesMutualInformation")
-(Optimizer "RegularStepGradientDescent")
 (ResampleInterpolator "FinalBSplineInterpolator")
 (Resampler "DefaultResampler")
+
+// You may change these:
+// The optimizer StandardGradientDescent works quite ok 
+// in general. The Transform and Metric are important and
+// need to be chosen careful for each application.
+(Optimizer "StandardGradientDescent")
 (Transform "TranslationTransform")
+(Metric "AdvancedMattesMutualInformation")
 
-//The number of resolutions, the downsampling schedules of the pyramids are
-//determined automatically
+// Automatically guess an initial translation. This option
+// works for the TranslationTransform, EulerTransform, and
+// AffineTransform. It guesses the initial translation by 
+// placing the centers of the images on eachother.
+(AutomaticTransformInitialization "true")
+
+// The number of resolutions. 1 Is only enough if the expected
+// deformations are small. 3 or 4 mostly works fine.
 (NumberOfResolutions 3)
-//It is also possible to give the schedules manually, like this:
-//(FixedPyramidSchedule 8 8 8 4 4 4 2 2 2)
-//(MovingPyramidSchedule 8 8 8 4 4 4 2 2 2)
-//See itk website for more details
 
-//Maximum number of iterations in each resolution level:
-(MaximumNumberOfIterations 100 100 100)
+// The pixel type of the resulting image
+(ResultImagePixelType "short")
 
-//Number of grey level bins in each resolution level for mutual information:
+// If you use a mask, this option is important. You can 
+// set it for each resolution differently.
+// If the mask serves as region of interest, set it to false.
+// If the mask indicates which pixels are valid, then set it to true.
+// If you do not use a mask, the option doesn't matter.
+(ErodeMask "false" "false" "false")
+
+// Whether transforms are combined by composition or by addition.
+// In generally, Compose is the best option in most cases.
+// It does not influence the results very much.
+(HowToCombineTransforms "Compose")
+
+//Number of grey level bins in each resolution level,
+// for the mutual information. 16 or 32 usually works fine.
 (NumberOfHistogramBins 16 32 32)
 
-//Number of spatial samples used to compute the mutual information in each resolution level:
-(NumberOfSpatialSamples 500 2000 8000)
+// Number of spatial samples used to compute the mutual
+// information in each resolution level.
+// With a StandardGradientDescent optimizer, in combination with
+// the two options below, around 2000 samples may already suffice.
+(NumberOfSpatialSamples 2048 2048 2048)
 
-//Maximum step size of the optimizer for each resolution level:
-(MaximumStepLength 8.0 4.0 2.0)
+// Refresh these spatial samples in every iteration
+(NewSamplesEveryIteration "true" "true" "true")
 
-//Minimum step size of the optimizer for each resolution level:
-(MinimumStepLength 0.5 0.2 0.2)
+// Select the samples randomly. Use "Random" if you want to use
+// only exact voxel positions. Use "RandomCoordinate" if you also
+// want to select samples inbetween voxels. This tends to smooth
+// the image metric surface a little. Use "Full" if you want to 
+// use all voxels. Then the previous 2 options make no sense of course.
+(ImageSampler "RandomCoordinate")
 
-//Minimum magnitude of the gradient (stopping criterion) of the optimizer:
-(MinimumGradientMagnitude 0.00000001 0.00000001 0.00000001)
+//The BSplineInterpolationOrder for the fixed image. Normally, you
+// only need an interpolator for the moving image (see below), but
+// if you use "RandomCoordinate" in the previous option, you also
+// need to specify an interpolator for the fixed image. Linear 
+// interpolation (1) works usually fine.
+(FixedBSplineInterpolationOrder 1 1 1 )
 
 //Order of B-Spline interpolation used in each resolution level:
-(BSplineInterpolationOrder 1)
+// It may improve accuracy if you set this to 3. Never use 0.
+(BSplineInterpolationOrder 1 1 1)
 
-//Order of B-Spline interpolation used for applying the final deformation:
+//Order of B-Spline interpolation used for applying the final
+// deformation.
+// 3 gives good accuracy.
+// 1 gives worse accuracy (linear interpolation)
+// 0 gives worst accuracy, but may be appropriate for 
+// binary images; this would be equivalent to nearest neighbor
+// interpolation.
 (FinalBSplineInterpolationOrder 3)
 
 //Default pixel value for pixels that come from outside the picture:
 (DefaultPixelValue 0)
+
+// The following parameters are for the StandardGradientDescent
+// optimizer. They determine the step size.
+// Especially SP_a needs to be tuned for each specific application.
+// The number of iterations is also important.
+
+//Maximum number of iterations in each resolution level:
+// 100-500 works usually fine.
+(MaximumNumberOfIterations 100 100 100)
+
+//SP: Param_a in each resolution level. a_k = a/(A+k+1)^alpha
+// If you have the feeling that the registration is 'too careful'
+// and progress towards the solution is made very slowly, you may
+// have to increase this parameters. If elastix crashes after a
+// few iterations, with the message that all samples map outside
+// the moving image buffer, you may have to decrease this parameter.
+// It means that the optimisation was performed too 'agressive'.
+// Think in orders of magnitude. 3200.0 or 3210.0 will not matter.
+// 3200.0 vs 6400.0 starts to be interesting.
+(SP_a 1600.0 800.0 400.0)
+
+//SP: Param_A in each resolution level. a_k = a/(A+k+1)^alpha
+// Usually 50.0 or 100.0 works fine.
+(SP_A 50.0 50.0 50.0)
+
+//SP: Param_alpha in each resolution level. a_k = a/(A+k+1)^alpha
+// usually 0.602 works fine.
+(SP_alpha 0.602 0.602 0.602)
+
+
+

@@ -1,50 +1,73 @@
-//Description of the ImageTypes
-(FixedImagePixelType "short")
+// Example parameter file for nonrigid B-spline registration
+// C-style comments: //
+
+// The internal pixel type, used for computations
+// Leave to float in general
+(FixedInternalImagePixelType "float")
+(MovingInternalImagePixelType "float")
+
+// The dimensions of the fixed and moving image
 (FixedImageDimension 2)
-(MovingImagePixelType "short")
 (MovingImageDimension 2)
 
-//Which Components to use
+//Components
+
+// The following components should be left as they are:
 (Registration "MultiResolutionRegistration")
 (FixedImagePyramid "FixedRecursiveImagePyramid")
 (MovingImagePyramid "MovingRecursiveImagePyramid")
 (Interpolator "BSplineInterpolator")
-(Metric "MattesMutualInformation")
-(Optimizer "StandardGradientDescent")
 (ResampleInterpolator "FinalBSplineInterpolator")
 (Resampler "DefaultResampler")
+
+// You may change these:
+// The optimizer StandardGradientDescent works quite ok 
+// in general. The Transform and Metric are important and
+// need to be chosen careful for each application.
+(Optimizer "StandardGradientDescent")
 (Transform "BSplineTransform")
+(Metric "AdvancedMattesMutualInformation")
 
-//Final spacing of B-Spline grid (unit = size of 1 voxel):
-//Higher in the pyramid the gridspacing is doubled each resolution, when the 
-//UpsampleGridOption is set to "true"
-(UpsampleGridOption "true")
-(FinalGridSpacing 16.0)
-
-//The number of resolutions, the downsampling schedules of the pyramids are determined automatically
+// The number of resolutions. 1 Is only enough if the expected
+// deformations are small. 3 or 4 mostly works fine.
 (NumberOfResolutions 3)
-//It is also possible to give the schedules manually, like this:
-//(FixedPyramidSchedule 8 8 8 4 4 4 2 2 2)
-//(MovingPyramidSchedule 8 8 8 4 4 4 2 2 2)
-//See itk website for more details
 
-//Maximum number of iterations in each resolution level:
-(MaximumNumberOfIterations 200 200 200)
+// The pixel type of the resulting image
+(ResultImagePixelType "short")
 
-//Number of grey level bins in each resolution level for the mutual information:
-(NumberOfHistogramBins 16 32 32)
+// If you use a mask, this option is important. You can 
+// set it for each resolution differently.
+// If the mask serves as region of interest, set it to false.
+// If the mask indicates which pixels are valid, then set it to true.
+// If you do not use a mask, the option doesn't matter.
+(ErodeMask "false" "false" "false")
 
-//Number of spatial samples used to compute the mutual information in each resolution level:
+// Whether transforms are combined by composition or by addition.
+// In generally, Compose is the best option in most cases.
+// It does not influence the results very much.
+(HowToCombineTransforms "Compose")
+
+// This is an important option. It defines the complexity of
+// the deformation field.
+// Final spacing of B-Spline grid (unit = size of 1 voxel)
+// You can give it for each dimension differently, or for 
+// all dimensions the same.
+(FinalGridSpacing 16.0 16.0 )
+
+// Number of spatial samples used to compute the mutual
+// information in each resolution level.
+// With a StandardGradientDescent optimizer, in combination with
+// the two options below, around 2000 samples may already suffice.
 (NumberOfSpatialSamples 2048 2048 2048)
 
-//Settings for the StandardGradientDescent optimizer, to determine the gain
-//a_k at each iteration k: a_k = a/(A+k+1)^alpha. This optimizer works
-//especially well in combination with using a new set of randomly chosen image
-//samples in each iteration.
-(SP_a 3200.0 3200.0 3200.0)
-(SP_A 50.0 50.0 50.0)
-(SP_alpha 0.602 0.602 0.602)
+// Refresh these spatial samples in every iteration, and select
+// them randomly.
 (NewSamplesEveryIteration "true" "true" "true")
+(ImageSampler "Random")
+
+//Number of grey level bins in each resolution level,
+// for the mutual information. 16 or 32 usually works fine.
+(NumberOfHistogramBins 16 32 32)
 
 //Order of B-Spline interpolation used in each resolution level:
 (BSplineInterpolationOrder 1 1 1)
@@ -54,3 +77,31 @@
 
 //Default pixel value for pixels that come from outside the picture:
 (DefaultPixelValue 0)
+
+// The following parameters are for the StandardGradientDescent
+// optimizer. They determine the step size.
+// Especially SP_a needs to be tuned for each specific application.
+// The number of iterations is also important.
+
+//Maximum number of iterations in each resolution level:
+(MaximumNumberOfIterations 100 100 100)
+
+//SP: Param_a in each resolution level. a_k = a/(A+k+1)^alpha
+// If you have the feeling that the registration is 'too careful'
+// and progress towards the solution is made very slowly, you may
+// have to increase this parameters. If elastix crashes after a
+// few iterations, with the message that all samples map outside
+// the moving image buffer, you may have to decrease this parameter.
+// It means that the optimisation was performed too 'agressive'.
+// Think in orders of magnitude. 3200.0 or 3210.0 will not matter.
+// 3200.0 vs 6400.0 starts to be interesting.
+(SP_a 3200.0 3200.0 3200.0)
+
+//SP: Param_A in each resolution level. a_k = a/(A+k+1)^alpha
+(SP_A 50.0 50.0 50.0)
+
+//SP: Param_alpha in each resolution level. a_k = a/(A+k+1)^alpha
+(SP_alpha 0.602 0.602 0.602)
+
+
+
