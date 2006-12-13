@@ -21,6 +21,8 @@ SET(CommonFiles
  itkDeformationFieldRegulizerForBSpline.hxx
  itkDeformationVectorFieldTransform.h
  itkDeformationVectorFieldTransform.txx
+ itkErodeMaskImageFilter.h
+ itkErodeMaskImageFilter.txx
  itkExponentialLimiterFunction.h
  itkExponentialLimiterFunction.hxx
  itkImageFileCastWriter.h

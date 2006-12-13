@@ -2,10 +2,10 @@
 #define __elxMultiResolutionRegistration_H__
 
 #include "itkMultiResolutionImageRegistrationMethod.h"
+
 /** Mask support. */
 #include "itkImageMaskSpatialObject2.h"
-#include "itkBinaryBallStructuringElement.h"
-#include "itkBinaryErodeImageFilter.h"
+#include "itkErodeMaskImageFilter.h"
 
 #include "elxIncludes.h"
 
@@ -128,6 +128,8 @@ using namespace itk;
     typedef typename ElastixType::MaskPixelType           MaskPixelType;
     typedef typename ElastixType::FixedMaskType           FixedMaskImageType;
     typedef typename ElastixType::MovingMaskType          MovingMaskImageType;
+    typedef typename FixedMaskImageType::Pointer          FixedMaskImagePointer;
+    typedef typename MovingMaskImageType::Pointer         MovingMaskImagePointer;
 		typedef ImageMaskSpatialObject2<
 			itkGetStaticConstMacro( FixedImageDimension ) >			FixedMaskSpatialObjectType;
 		typedef ImageMaskSpatialObject2<
@@ -161,20 +163,10 @@ using namespace itk;
 		typedef TimerType::Pointer	TimerPointer;
     
 		/** Some typedef's used for eroding the masks*/
-		typedef BinaryBallStructuringElement<
-			MaskPixelType, FixedImageDimension >		              StructuringElementTypeF;
-		typedef typename StructuringElementTypeF::RadiusType		RadiusTypeF;
-		typedef BinaryErodeImageFilter<
-			FixedMaskImageType,
-			FixedMaskImageType,
-			StructuringElementTypeF >					                    ErodeFilterTypeF;
-		typedef BinaryBallStructuringElement<
-			MaskPixelType, MovingImageDimension >                 StructuringElementTypeM;
-		typedef typename StructuringElementTypeM::RadiusType		RadiusTypeM;
-		typedef BinaryErodeImageFilter<
-			MovingMaskImageType,
-			MovingMaskImageType,
-			StructuringElementTypeM >					                    ErodeFilterTypeM;
+    typedef ErodeMaskImageFilter< FixedMaskImageType >   FixedMaskErodeFilterType;
+    typedef typename FixedMaskErodeFilterType::Pointer   FixedMaskErodeFilterPointer;
+    typedef ErodeMaskImageFilter< MovingMaskImageType >  MovingMaskErodeFilterType;
+    typedef typename MovingMaskErodeFilterType::Pointer  MovingMaskErodeFilterPointer;
 
     /** Function to update masks. */
 		void UpdateMasks( unsigned int level );
