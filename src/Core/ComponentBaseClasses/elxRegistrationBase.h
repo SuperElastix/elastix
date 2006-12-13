@@ -46,6 +46,11 @@ using namespace itk;
 		typedef typename ElastixType::FixedImageType		FixedImageType;
 		typedef typename ElastixType::MovingImageType		MovingImageType;
 
+    /** Get	the dimension of the fixed image. */
+		itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
+		/** Get	the dimension of the moving image. */
+		itkStaticConstMacro( MovingImageDimension, unsigned int, MovingImageType::ImageDimension );
+
 		/** Typedef for ITKBaseType. */
 		typedef itk::MultiResolutionImageRegistrationMethod<
 			FixedImageType,	MovingImageType >				ITKBaseType;

@@ -10,12 +10,6 @@
 
 #include "elxTimer.h"
 
-/** Mask support. */
-#include "itkImageFileReader.h"
-#include "itkImageMaskSpatialObject2.h"
-
-/** For easy changing the pixel type of the mask images: */
-#define __MaskFilePixelType unsigned char
 
 namespace elastix
 {
@@ -28,10 +22,6 @@ using namespace itk;
 	 * This class contains the common functionality for all Metrics.
 	 *
 	 * The parameters used in this class are:
-	 * \parameter ErodeMask: a flag to determine if the masks should be eroded
-	 *		from one resolution level to another. Choose from {"true", "false"} \n
-	 *		example: <tt>(ErodeMask "false")</tt> \n
-	 *		The default is "true".
    * \parameter ShowExactMetricValue: Flag that can set to "true" or "false". If "true" the 
 	 *		metric computes the exact metric value (computed on all voxels rather than on the set of
 	 *		spatial samples) and shows it each iteration. Must be given for each resolution. \n
@@ -60,16 +50,6 @@ using namespace itk;
    *    Default is 2 for each dimension for each resolution. \n
    *    NB: a Grid ImageSampler is NOT RECOMMENDED!\n
 	 *
-	 * The command line arguments used by this class are:
-	 * \commandlinearg -fMask: Optional argument for elastix with the file name of a mask for
-	 *		the fixed image. The mask image should contain of zeros and ones, zeros indicating 
-	 *		pixels that are not used for the registration. \n
-	 *		example: <tt>-fMask fixedmask.mhd</tt> \n
-	 * \commandlinearg -mMask: Optional argument for elastix with the file name of a mask for
-	 *		the moving image. The mask image should contain of zeros and ones, zeros indicating 
-	 *		pixels that are not used for the registration. \n
-	 *		example: <tt>-mMask movingmask.mhd</tt> \n
-
 	 *
 	 * \ingroup Metrics
 	 * \ingroup ComponentBaseClasses
@@ -116,61 +96,18 @@ using namespace itk;
 		/** Get	the dimension of the moving image. */
 		itkStaticConstMacro( MovingImageDimension, unsigned int, MovingImageType::ImageDimension );
 
-		/** Typedef for timer.*/
-		typedef tmr::Timer					TimerType;
-		/** Typedef for timer.*/
-		typedef TimerType::Pointer	TimerPointer;
-
-		/** Typedef's for fixed mask support. */
-		typedef ImageMaskSpatialObject2<
-			itkGetStaticConstMacro( FixedImageDimension ) >			FixedImageMaskSpatialObjectType;
-		/** Typedef's for moving mask support. */
-		typedef ImageMaskSpatialObject2<
-			itkGetStaticConstMacro( MovingImageDimension ) >		MovingImageMaskSpatialObjectType;
-		/** Typedef's for fixed mask support. */
-		typedef typename FixedImageMaskSpatialObjectType::Pointer
-			FixedImageMaskSpatialObjectPointer;
-		/** Typedef's for moving mask support. */
-		typedef typename MovingImageMaskSpatialObjectType::Pointer
-			MovingImageMaskSpatialObjectPointer;
-
-		/** Typedef's for mask support. */
-		typedef __MaskFilePixelType	MaskFilePixelType; // defined at the top of this file
-		typedef Image< MaskFilePixelType,
-			itkGetStaticConstMacro( FixedImageDimension ) >			FixedMaskImageType;
-		typedef Image< MaskFilePixelType,
-			itkGetStaticConstMacro( MovingImageDimension ) >		MovingMaskImageType;
-		typedef ImageFileReader< FixedMaskImageType >					FixedMaskImageReaderType;
-		typedef ImageFileReader< MovingMaskImageType >				MovingMaskImageReaderType;
-		typedef typename FixedMaskImageReaderType::Pointer		FixedMaskImageReaderPointer;
-		typedef typename MovingMaskImageReaderType::Pointer		MovingMaskImageReaderPointer;
-
-		/** Execute stuff before everything else:
-		 * \li Check the appearance of masks in the commandline.
-		 */
-		virtual int BeforeAllBase(void);
-
-		/** Execute stuff before the actual registration:
-		 * \li Read and set the masks.
-		 */
-		virtual void BeforeRegistrationBase(void);
-
 		/** Execute stuff before each resolution:
-		 * \li Update masks with an erosion.
-     * \li Configure the image sampler
-     * \li Check if the exact metric value should be computed (to monitor the progress of the registration)
-		 */
+	   * \li Configure the image sampler
+     * \li Check if the exact metric value should be computed
+     * (to monitor the progress of the registration) */
 		virtual void BeforeEachResolutionBase(void);
 
     /** Execute stuff after each iteration:
-     * \li Optionally compute the exact metric value and plot it to screen
-     */
+     * \li Optionally compute the exact metric value and plot it to screen */
     virtual void AfterEachIterationBase(void);
 		
-		/**
-		 * Force the metric to base its computation on a new subset of image samples.
-		 * Not every metric may have implemented this.
-		 */
+		/*** Force the metric to base its computation on a new subset of image samples.
+		 * Not every metric may have implemented this. */
 		virtual void SelectNewSamples(void);
 
 	protected:
@@ -186,24 +123,6 @@ using namespace itk;
 		MetricBase();
 		/** The destructor. */
 		virtual ~MetricBase() {}
-
-		/** Declaration of reader, for mask support. */
-		FixedMaskImageReaderPointer		m_FixedMaskImageReader;
-		/** Declaration of reader, for mask support.*/
-		MovingMaskImageReaderPointer	m_MovingMaskImageReader;
-
-		/** Declaration of image, for mask support. */
-		typename FixedMaskImageType::Pointer		m_FixedMaskAsImage;
-		/** Declaration of image, for mask support. */
-		typename MovingMaskImageType::Pointer		m_MovingMaskAsImage;
-
-		/** Declaration of spatial object, for mask support. */
-		FixedImageMaskSpatialObjectPointer			m_FixedMaskAsSpatialObject;
-		/** Declaration of spatial object, for mask support. */
-		MovingImageMaskSpatialObjectPointer			m_MovingMaskAsSpatialObject;
-
-		/** Function to update masks. */
-		void UpdateMasks( unsigned int level );
 
     /** ConfigureImageSampler. */
     void ConfigureImageSampler( void );

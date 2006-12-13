@@ -28,8 +28,7 @@ namespace elastix
      * \todo make it a cast to the fixed image type
      */
     typedef typename ElastixType::FixedImageType FixedImageType;
-		FixedImageType * fixedImage = dynamic_cast<FixedImageType *>(
-			this->m_Elastix->GetFixedImage() );
+		FixedImageType * fixedImage =	this->m_Elastix->GetFixedImage();
 		
 		/** Set the region info to the same values as in the fixedImage. */
 		this->GetAsITKBaseType()->SetSize( fixedImage->GetLargestPossibleRegion().GetSize() );
@@ -197,10 +196,10 @@ namespace elastix
 		 * (which is the moving image).
 		 */
 		this->GetAsITKBaseType()->SetTransform( dynamic_cast<TransformType *>(
-			this->m_Elastix->GetTransform() ) );
+			this->m_Elastix->GetElxTransformBase() ) );
 		
 		this->GetAsITKBaseType()->SetInterpolator( dynamic_cast<InterpolatorType *>(
-			this->m_Elastix->GetResampleInterpolator() ) );
+			this->m_Elastix->GetElxResampleInterpolatorBase() ) );
 		
 		this->GetAsITKBaseType()->SetInput( dynamic_cast<InputImageType *>(
 			this->m_Elastix->GetMovingImage() ) );

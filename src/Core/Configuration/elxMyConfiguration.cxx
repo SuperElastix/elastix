@@ -22,15 +22,14 @@ namespace elastix
 	} // end Constructor
 	
 
-	/**
-	 * ************************ BeforeAll ***************************
-	 *
+  /**
+	 * ******************** PrintParameterFile ***************************
 	 * This function prints the ParameterFile to the log-file.
 	 */
 	
-	int MyConfiguration::BeforeAll(void)
+	int MyConfiguration::PrintParameterFile(void)
 	{
-		/** Open the ParameterFile.*/
+    /** Open the ParameterFile.*/
 		std::ifstream parfile( this->GetParameterFileName() );
 		if ( parfile.is_open() )
 		{
@@ -51,14 +50,39 @@ namespace elastix
 		}
 		else
 		{
-			xl::xout["warning"] << "WARNING: the file \"" << GetParameterFileName() <<
+			xl::xout["error"] << "ERROR: the file \"" << GetParameterFileName() <<
 				"\" could not be opened!" << std::endl;
+      return 1;
 		}		
 
 		/** Return a value.*/
 		return 0;
 
+  } // end PrintParameterFile
+	
+
+	/**
+	 * ************************ BeforeAll ***************************
+	 *
+	 * This function prints the ParameterFile to the log-file.
+	 */
+	
+	int MyConfiguration::BeforeAll(void)
+	{
+    return this->PrintParameterFile();
 	} // end BeforeAll
+
+  
+	/**
+	 * ************************ BeforeAllTransformix ***************************
+	 *
+	 * This function prints the ParameterFile to the log-file.
+	 */
+	
+	int MyConfiguration::BeforeAllTransformix(void)
+	{
+    return this->PrintParameterFile();
+	} // end BeforeAllTransformix
 
 
 	/**
@@ -135,10 +159,10 @@ namespace elastix
 
 	const char * MyConfiguration::GetCommandLineArgument( const char * key ) const
 	{
-		/** .*/
+		/** Check if the argument was given. If yes return it. If no return "".*/
 		if ( this->m_ArgumentMap.count( key ) == 0 )
 		{
-			return "";
+      return this->m_EmptyString.c_str();
 		}
 		else
 		{

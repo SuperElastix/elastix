@@ -17,10 +17,47 @@
 #include "itkDataObject.h"
 #include "elxMacro.h"
 #include "xoutmain.h"
+#include "itkVectorContainer.h"
+#include "itkImageFileReader.h"
 
 #include <fstream>
 #include <iomanip>
 
+/** Like itkGet/SetObjectMacro, but in these macros the itkDebugMacro is
+ * not called. Besides, they are not virtual, since 
+ * for now we do not need to override them somewhere.
+ * 
+ * These macros are undef'd at the end of this file
+*/
+#define elxGetObjectMacro(_name,_type) \
+	virtual _type * Get##_name (void) const \
+	{ \
+    return this->m_##_name .GetPointer(); \
+	}
+//end elxGetObjectMacro
+
+#define elxSetObjectMacro(_name,_type) \
+	virtual void Set##_name (_type * _arg) \
+	{ \
+    if ( this->m_##_name != _arg ) \
+    { \
+      this->m_##_name = _arg; \
+      this->GetAsITKBaseType()->Modified(); \
+    } \
+	}
+//end elxSetObjectMacro
+
+/** defines for example: GetNumberOfMetrics() */
+#define elxGetNumberOfMacro(_name) \
+  virtual unsigned int GetNumberOf##_name##s(void) const \
+  { \
+    if ( this->Get##_name##Container() != 0 ) \
+    { \
+      return this->Get##_name##Container()->Size(); \
+    } \
+    return 0; \
+  }
+// end elxGetNumberOfMacro
 
 namespace elastix
 {
@@ -49,6 +86,14 @@ namespace elastix
 	 *		Multiple parameter files are allowed. It means that multiple registrations
 	 *		are runned in sequence, with the output of some registration as input
 	 *		to the next.
+	 * \commandlinearg -fMask: Optional argument for elastix with the file name of a mask for
+	 *		the fixed image. The mask image should contain of zeros and ones, zeros indicating 
+	 *		pixels that are not used for the registration. \n
+	 *		example: <tt>-fMask fixedmask.mhd</tt> \n
+	 * \commandlinearg -mMask: Optional argument for elastix with the file name of a mask for
+	 *		the moving image. The mask image should contain of zeros and ones, zeros indicating 
+	 *		pixels that are not used for the registration. \n
+	 *		example: <tt>-mMask movingmask.mhd</tt> \n
 	 * \commandlinearg -tp: mandatory argument for transformix with the name of
 	 *		the transform parameter file. \n
 	 *		example: <tt>-tp TransformParameters.txt</tt> \n
@@ -75,31 +120,41 @@ namespace elastix
 		typedef BaseComponent			Superclass;
 	
 		/** Typedefs used in this class */
-		typedef MyConfiguration							ConfigurationType;
-		typedef ConfigurationType::Pointer	ConfigurationPointer;
-		typedef itk::Object									ObjectType; //for the components
-		typedef itk::DataObject							DataObjectType; //for the images
-
+		typedef MyConfiguration							        ConfigurationType;
+		typedef ConfigurationType::Pointer	        ConfigurationPointer;
+		typedef itk::Object									        ObjectType; //for the components
+    typedef ObjectType::Pointer                 ObjectPointer;
+		typedef itk::DataObject							        DataObjectType; //for the images
+    typedef DataObjectType::Pointer			        DataObjectPointer;
+    typedef itk::VectorContainer<
+      unsigned int, ObjectPointer>              ObjectContainerType;
+    typedef ObjectContainerType::Pointer        ObjectContainerPointer;
+    typedef itk::VectorContainer<
+      unsigned int, DataObjectPointer>          DataObjectContainerType;
+    typedef DataObjectContainerType::Pointer    DataObjectContainerPointer;
+    typedef itk::VectorContainer<
+      unsigned int, std::string >               FileNameContainerType;
+    typedef FileNameContainerType::Pointer      FileNameContainerPointer;
+    
 		/** Other typedef's.*/
-		typedef ComponentDatabase																ComponentDatabaseType;
-		typedef ComponentDatabaseType::Pointer									ComponentDatabasePointer;
-		typedef ComponentDatabaseType::IndexType								DBIndexType;
+		typedef ComponentDatabase   								ComponentDatabaseType;
+		typedef ComponentDatabaseType::Pointer			ComponentDatabasePointer;
+		typedef ComponentDatabaseType::IndexType		DBIndexType;
 
-		/** Set/Get the Configuration Object.
-		 *
-		 * The Set-functions cannot be defined with the itkSetObjectMacro,
-		 * since this class does not derive from itk::Object and 
-		 * thus does not have a ::Modified() method.
-		 *
-		 * This method checks if this instance of the class can be casted
-		 * (dynamically) to an itk::Object. If yes, it calls ::Modified().
-		 */
-		virtual void SetConfiguration( ConfigurationType * _arg );
-		virtual ConfigurationType * GetConfiguration(void)
+    /** The itk class that ElastixTemplate is expected to inherit from
+     * Of course ElastixTemplate also inherits from this class (ElastixBase)  */
+    typedef Object      ITKBaseType;
+
+    /** Cast to ITKBaseType. */
+		virtual ITKBaseType * GetAsITKBaseType(void)
 		{
-			return this->m_Configuration.GetPointer();
+			return dynamic_cast<ITKBaseType *>(this);
 		}
 
+		/** Set/Get the Configuration Object. */
+		elxGetObjectMacro(Configuration, ConfigurationType);
+    elxSetObjectMacro(Configuration, ConfigurationType);
+		
 		/** Set the database index of the instantiated elastix object */
 		virtual void SetDBIndex( DBIndexType _arg );
 		virtual DBIndexType GetDBIndex(void)
@@ -109,55 +164,97 @@ namespace elastix
 
 		/** 
 		 * Functions to get/set the ComponentDatabase
-		 */
-		virtual ComponentDatabase * GetComponentDatabase(void)
-		{
-			return this->m_CDB.GetPointer();
-		}
+     * The component database contains pointers to functions
+     * that create components */
+    elxGetObjectMacro( ComponentDatabase, ComponentDatabaseType );
+    elxSetObjectMacro( ComponentDatabase, ComponentDatabaseType );
+				
+		/** Get the component containers.
+     * The component containers store components, such as 
+     * the metric, in the form of an itk::Object::Pointer. */
+    elxGetObjectMacro(RegistrationContainer, ObjectContainerType);
+    elxGetObjectMacro(FixedImagePyramidContainer, ObjectContainerType);
+    elxGetObjectMacro(MovingImagePyramidContainer, ObjectContainerType);
+    elxGetObjectMacro(InterpolatorContainer, ObjectContainerType);
+    elxGetObjectMacro(MetricContainer, ObjectContainerType);
+    elxGetObjectMacro(OptimizerContainer, ObjectContainerType);
+    elxGetObjectMacro(ResamplerContainer, ObjectContainerType);
+    elxGetObjectMacro(ResampleInterpolatorContainer, ObjectContainerType);
+    elxGetObjectMacro(TransformContainer, ObjectContainerType);
 
-		virtual void SetComponentDatabase(ComponentDatabase * arg)
-		{
-			if ( this->m_CDB != arg )
-			{
-				this->m_CDB = arg;
-			}
-		}
+    /** Set the component containers.
+     * The component containers store components, such as 
+     * the metric, in the form of an itk::Object::Pointer. */
+    elxSetObjectMacro(RegistrationContainer, ObjectContainerType);
+    elxSetObjectMacro(FixedImagePyramidContainer, ObjectContainerType);
+    elxSetObjectMacro(MovingImagePyramidContainer, ObjectContainerType);
+    elxSetObjectMacro(InterpolatorContainer, ObjectContainerType);
+    elxSetObjectMacro(MetricContainer, ObjectContainerType);
+    elxSetObjectMacro(OptimizerContainer, ObjectContainerType);
+    elxSetObjectMacro(ResamplerContainer, ObjectContainerType);
+    elxSetObjectMacro(ResampleInterpolatorContainer, ObjectContainerType);
+    elxSetObjectMacro(TransformContainer, ObjectContainerType);
+        		
+    /** Set/Get the fixed/moving image containers */
+    elxGetObjectMacro( FixedImageContainer, DataObjectContainerType);
+    elxGetObjectMacro( MovingImageContainer, DataObjectContainerType);
+    elxSetObjectMacro( FixedImageContainer, DataObjectContainerType);
+    elxSetObjectMacro( MovingImageContainer, DataObjectContainerType);
 
+    /** Set/Get the fixed/moving mask containers */
+    elxGetObjectMacro( FixedMaskContainer, DataObjectContainerType);
+    elxGetObjectMacro( MovingMaskContainer, DataObjectContainerType);
+    elxSetObjectMacro( FixedMaskContainer, DataObjectContainerType);
+    elxSetObjectMacro( MovingMaskContainer, DataObjectContainerType);
 
-		/**
-		 * Pure virtual functions for setting/getting the components
-		 * of a registration method. Declaring these functions here
-		 * ensures that they can be used in ElastixMain. Implementation
-		 * must be done in ElastixTemplate<>.
-		 */
-		virtual void SetRegistration( ObjectType * _arg ) = 0;
-		virtual void SetFixedImagePyramid( ObjectType * _arg ) = 0;
-		virtual void SetMovingImagePyramid( ObjectType * _arg ) = 0;
-		virtual void SetInterpolator( ObjectType * _arg ) = 0;
-		virtual void SetMetric( ObjectType * _arg ) = 0;
-		virtual void SetOptimizer( ObjectType * _arg ) = 0;
-		virtual void SetResampler( ObjectType * _arg ) = 0;
-		virtual void SetResampleInterpolator( ObjectType * _arg ) = 0;
-		virtual void SetTransform( ObjectType * _arg ) = 0;
-		
-		virtual void SetFixedImage( DataObjectType * _arg ) = 0;
-		virtual void SetMovingImage( DataObjectType * _arg ) = 0;
+    /** Set/Get The Image FileName containers. Normally, these are filled in the BeforeAllBase function. */
+    elxGetObjectMacro( FixedImageFileNameContainer, FileNameContainerType);
+    elxGetObjectMacro( MovingImageFileNameContainer, FileNameContainerType);
+    elxSetObjectMacro( FixedImageFileNameContainer, FileNameContainerType);
+    elxSetObjectMacro( MovingImageFileNameContainer, FileNameContainerType);
 
-		virtual ObjectType * GetRegistration(void) = 0;
-		virtual ObjectType * GetFixedImagePyramid(void) = 0;
-		virtual ObjectType * GetMovingImagePyramid(void) = 0;
-		virtual ObjectType * GetInterpolator(void) = 0;
-		virtual ObjectType * GetMetric(void) = 0;
-		virtual ObjectType * GetOptimizer(void) = 0;
-		virtual ObjectType * GetResampler(void) = 0;
-		virtual ObjectType * GetResampleInterpolator(void) = 0;
-		virtual ObjectType * GetTransform(void) = 0;
+    /** Set/Get The Mask FileName containers. Normally, these are filled in the BeforeAllBase function. */
+    elxGetObjectMacro( FixedMaskFileNameContainer, FileNameContainerType);
+    elxGetObjectMacro( MovingMaskFileNameContainer, FileNameContainerType);
+    elxSetObjectMacro( FixedMaskFileNameContainer, FileNameContainerType);
+    elxSetObjectMacro( MovingMaskFileNameContainer, FileNameContainerType);
 
-		virtual DataObjectType * GetFixedImage(void) = 0;
-		virtual DataObjectType * GetMovingImage(void) = 0;
+    /** Define some convenience functions: GetNumberOfMetrics() for example */
+    elxGetNumberOfMacro(Registration);
+    elxGetNumberOfMacro(FixedImagePyramid);
+    elxGetNumberOfMacro(MovingImagePyramid);
+    elxGetNumberOfMacro(Interpolator);
+    elxGetNumberOfMacro(Metric);
+    elxGetNumberOfMacro(Optimizer);
+    elxGetNumberOfMacro(Resampler);
+    elxGetNumberOfMacro(ResampleInterpolator);
+    elxGetNumberOfMacro(Transform);
 
-		virtual ObjectType * GetInitialTransform(void) = 0;
-		virtual void SetInitialTransform( ObjectType * _arg ) = 0;
+    /** Define some convenience functions: GetNumberOfFixedImages() for example */      
+    elxGetNumberOfMacro(FixedImage);
+    elxGetNumberOfMacro(MovingImage);
+    elxGetNumberOfMacro(FixedImageFileName);
+    elxGetNumberOfMacro(MovingImageFileName);
+
+    /** Define some convenience functions: GetNumberOfFixedMasks() for example */      
+    elxGetNumberOfMacro(FixedMask);
+    elxGetNumberOfMacro(MovingMask);
+    elxGetNumberOfMacro(FixedMaskFileName);
+    elxGetNumberOfMacro(MovingMaskFileName);
+
+		/** Set/Get the initial transform
+		 * The type is ObjectType, but the pointer should actually point 
+		 * to an itk::Transform type (or inherited from that one). */
+		elxSetObjectMacro( InitialTransform, ObjectType );
+		elxGetObjectMacro( InitialTransform, ObjectType );
+
+    /** Set/Get the final transform
+		 * The type is ObjectType, but the pointer should actually point 
+		 * to an itk::Transform type (or inherited from that one).
+     * You can use this to set it as an initial transform in another
+     * ElastixBase instantation. */
+		elxSetObjectMacro( FinalTransform, ObjectType );
+		elxGetObjectMacro( FinalTransform, ObjectType );
 
 		/** Empty Run()-function to be overridden.*/
 		virtual int Run(void) = 0;
@@ -165,19 +262,23 @@ namespace elastix
 		/** Empty ApplyTransform()-function to be overridden.*/
 		virtual int ApplyTransform(void) = 0;
 
-
 		/** Function that is called at the very beginning of ElastixTemplate::Run().
-		 * It checks the command line input arguments
-		 */
+		 * It checks the command line input arguments */
 		virtual int BeforeAllBase(void);
+
+    /** Function that is called at the very beginning of ElastixTemplate::ApplyTransform().
+     * It checks the command line input arguments */
+    virtual int BeforeAllTransformixBase(void);
+
+    /** Functions called before and after registration.
+     * They install/uninstall the xout["iteration"] field. */
 		virtual void BeforeRegistrationBase(void);
 		virtual void AfterRegistrationBase(void);
 
 		/** Get the default precision of xout.
 		 * (The value assumed when no DefaultOutputPrecision is given in the 
-		 * parameter file 
-		 */
-		virtual int GetDefaultOutputPrecision(void)
+		 * parameter file */
+		virtual int GetDefaultOutputPrecision(void) const
 		{
 			return this->m_DefaultOutputPrecision;
 		}
@@ -188,9 +289,62 @@ namespace elastix
 		ElastixBase();
 		virtual ~ElastixBase() {};
 		
-		ConfigurationPointer	m_Configuration;
-		DBIndexType						m_DBIndex;
-		ComponentDatabasePointer m_CDB;
+		ConfigurationPointer	    m_Configuration;
+		DBIndexType						    m_DBIndex;
+		ComponentDatabasePointer  m_ComponentDatabase;
+
+    /** Convenient mini class to load the files specified by a filename container
+     * The function GenerateImageContainer can be used without instantiating an 
+     * object of this class, since it is static. It has 2 arguments: the 
+     * fileNameContainer, and a string containing a short description of the images
+     * to be loaded. In case of errors, an itk::ExceptionObject is thrown that
+     * includes this short description and the fileName which caused the error.
+     * See ElastixTemplate::Run() for an example of usage.
+     */
+    template < class TImage >
+    class MultipleImageLoader
+    {
+    public:
+      typedef TImage                              ImageType;
+      typedef typename ImageType::Pointer         ImagePointer;
+      typedef ImageFileReader<ImageType>          ImageReaderType;
+      typedef typename ImageReaderType::Pointer   ImageReaderPointer;
+
+      static DataObjectContainerPointer GenerateImageContainer(
+        FileNameContainerType * fileNameContainer, const std::string & imageDescription )
+      {
+        DataObjectContainerPointer imageContainer = DataObjectContainerType::New();
+        /** loop over all image filenames */
+        for ( unsigned int i = 0; i < fileNameContainer->Size(); ++i )
+        {
+          /** Setup reader */
+          ImageReaderPointer imageReader = ImageReaderType::New();
+          imageReader->SetFileName( fileNameContainer->ElementAt( i ).c_str() );
+          /** Do the reading. */
+			    try
+			    {
+    				imageReader->Update();
+			    }
+			    catch( itk::ExceptionObject & excp )
+			    {
+  				  /** Add information to the exception. */
+				    std::string err_str = excp.GetDescription();
+            err_str += "\nError occured while reading the image described as " 
+              + imageDescription + ", with file name " + imageReader->GetFileName() + "\n";
+				    excp.SetDescription( err_str );
+				    /** Pass the exception to the caller of this function. */
+				    throw excp;
+			    }
+          /** Store loaded image in the image container, as a DataObject* */
+          ImagePointer image = imageReader->GetOutput();
+          imageContainer->CreateElementAt(i) = image.GetPointer();
+        } // end for i
+        return imageContainer;
+      } // end static method GenerateImageContainer
+
+      MultipleImageLoader(){};
+      ~MultipleImageLoader(){};         
+    }; // end class MultipleImageLoader
 
 	private:
 
@@ -201,11 +355,52 @@ namespace elastix
 		
 		int m_DefaultOutputPrecision;
 
+    /** The component containers. These containers contain
+     * smartpointers to itk::Object.*/
+    ObjectContainerPointer m_FixedImagePyramidContainer;
+		ObjectContainerPointer m_MovingImagePyramidContainer;
+		ObjectContainerPointer m_InterpolatorContainer;
+		ObjectContainerPointer m_MetricContainer;
+		ObjectContainerPointer m_OptimizerContainer;
+		ObjectContainerPointer m_RegistrationContainer;
+		ObjectContainerPointer m_ResamplerContainer;
+		ObjectContainerPointer m_ResampleInterpolatorContainer;
+		ObjectContainerPointer m_TransformContainer;
+
+    /** The Image and Mask containers. These are stored as pointers to itk::DataObject. */
+    DataObjectContainerPointer m_FixedImageContainer;
+    DataObjectContainerPointer m_MovingImageContainer;
+    DataObjectContainerPointer m_FixedMaskContainer;
+    DataObjectContainerPointer m_MovingMaskContainer;
+
+    /** The image and mask FileNameContainers */
+    FileNameContainerPointer    m_FixedImageFileNameContainer;
+    FileNameContainerPointer    m_MovingImageFileNameContainer;
+    FileNameContainerPointer    m_FixedMaskFileNameContainer;
+    FileNameContainerPointer    m_MovingMaskFileNameContainer;
+
+    /** The initial and final transform.*/
+		ObjectPointer m_InitialTransform;
+    ObjectPointer m_FinalTransform;
+
+    /** Read a series of commandline options that satisfy the following syntax:
+     * {-f,-f0} <filename0> [-f1 <filename1> [ -f2 <filename2> ... ] ]
+     *
+     * This function is used by BeforeAllBase, and is not meant be used
+     * at other locations. The errorcode remains the input value if no errors
+     * occur. It is set to errorcode | 1 if the option was not given.
+     */
+    FileNameContainerPointer GenerateFileNameContainer(
+      const std::string & optionkey, int & errorcode, bool printerrors, bool printinfo ) const;
+
 	};  // end class ElastixBase
 
 
 } // end namespace elastix
 
+#undef elxGetObjectMacro
+#undef elxSetObjectMacro
+#undef elxGetNumberOfMacro
 
 #endif // end #ifndef __elxElastixBase_h
 

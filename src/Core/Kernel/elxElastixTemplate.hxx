@@ -17,39 +17,6 @@ namespace elastix
 	ElastixTemplate<TFixedImage, TMovingImage>
 	::ElastixTemplate()
 	{
-		/** Initialize images. */
-		this->m_FixedImage = 0;
-		this->m_MovingImage = 0;
-		
-		/** Initialize the components as smartpointers to itkObjects. */
-		this->m_FixedImagePyramid = 0;
-		this->m_MovingImagePyramid = 0;
-		this->m_Interpolator = 0;
-		this->m_Metric = 0;
-		this->m_Optimizer = 0;
-		this->m_Registration = 0;
-		this->m_Resampler = 0;
-		this->m_ResampleInterpolator = 0;
-		this->m_Transform = 0;
-		
-		/** Initialize the components as pointers to elx...Base objects. */
-		this->m_elx_FixedImagePyramid = 0;
-		this->m_elx_MovingImagePyramid = 0;
-		this->m_elx_Interpolator = 0;
-		this->m_elx_Metric = 0;
-		this->m_elx_Optimizer = 0;
-		this->m_elx_Registration = 0;
-		this->m_elx_Resampler = 0;
-		this->m_elx_ResampleInterpolator = 0;
-		this->m_elx_Transform = 0;
-		
-		/** Initialize the Readers and Casters. */
-		this->m_FixedImageReader = 0;
-		this->m_MovingImageReader = 0;
-	
-		/** Initialize this->m_InitialTransform. */
-		this->m_InitialTransform = 0;
-		
 		/** Initialize CallBack commands. */
 		this->m_BeforeEachResolutionCommand = 0;
 		this->m_AfterEachIterationCommand = 0;
@@ -67,52 +34,77 @@ namespace elastix
 		
 	} // end Constructor
 	
-	
-	/**
-	 * ********************** Destructor ****************************
-	 */
-	
-	template <class TFixedImage, class TMovingImage>
-	ElastixTemplate<TFixedImage, TMovingImage>
-	::~ElastixTemplate()
-	{
-	} // end Destructor
-	
-	
-	/**
-	 * ********************** SetFixedImage *************************
-	 */
-	
-	template <class TFixedImage, class TMovingImage>
-	void ElastixTemplate<TFixedImage, TMovingImage>
-	::SetFixedImage( DataObjectType * _arg )
-	{
-		/** Cast DataObjectType to FixedImageType and assign to this->m_FixedImage. */
-		if ( this->m_FixedImage != _arg )
-		{
-			this->m_FixedImage = dynamic_cast<FixedImageType *>( _arg );
-			this->Modified();
-		}
 		
+	/**
+	 * ********************** GetFixedImage *************************
+	 */
+	
+	template <class TFixedImage, class TMovingImage>
+  typename ElastixTemplate<TFixedImage, TMovingImage>::FixedImageType *
+  ElastixTemplate<TFixedImage, TMovingImage>
+	::GetFixedImage( unsigned int idx ) const
+	{
+		if ( idx < this->GetNumberOfFixedImages() ) 
+    { 
+      return dynamic_cast< FixedImageType *>( 
+        this->GetFixedImageContainer()->ElementAt(idx).GetPointer() );
+    } 
+    return 0; 		
 	} // end SetFixedImage
-	
-	
+
+
 	/**
-	 * ********************** SetMovingImage ************************
+	 * ********************** GetMovingImage *************************
 	 */
 	
 	template <class TFixedImage, class TMovingImage>
-	void ElastixTemplate<TFixedImage, TMovingImage>
-	::SetMovingImage( DataObjectType * _arg )
+  typename ElastixTemplate<TFixedImage, TMovingImage>::MovingImageType *
+  ElastixTemplate<TFixedImage, TMovingImage>
+	::GetMovingImage( unsigned int idx ) const
 	{
-		/** Cast DataObjectType to MovingImageType and assign to this->m_MovingImage. */
-		if ( this->m_MovingImage != _arg )
-		{
-			this->m_MovingImage = dynamic_cast<MovingImageType *>( _arg );
-			this->Modified();
-		}
-		
+		if ( idx < this->GetNumberOfMovingImages() ) 
+    { 
+      return dynamic_cast< MovingImageType *>( 
+        this->GetMovingImageContainer()->ElementAt(idx).GetPointer() );
+    } 
+    return 0; 		
 	} // end SetMovingImage
+
+
+  /**
+	 * ********************** GetFixedMask *************************
+	 */
+	
+	template <class TFixedImage, class TMovingImage>
+  typename ElastixTemplate<TFixedImage, TMovingImage>::FixedMaskType *
+  ElastixTemplate<TFixedImage, TMovingImage>
+	::GetFixedMask( unsigned int idx ) const
+	{
+		if ( idx < this->GetNumberOfFixedMasks() ) 
+    { 
+      return dynamic_cast< FixedMaskType *>( 
+        this->GetFixedMaskContainer()->ElementAt(idx).GetPointer() );
+    } 
+    return 0; 		
+	} // end SetFixedMask
+
+
+	/**
+	 * ********************** GetMovingMask *************************
+	 */
+	
+	template <class TFixedImage, class TMovingImage>
+  typename ElastixTemplate<TFixedImage, TMovingImage>::MovingMaskType *
+  ElastixTemplate<TFixedImage, TMovingImage>
+	::GetMovingMask( unsigned int idx ) const
+	{
+		if ( idx < this->GetNumberOfMovingMasks() ) 
+    { 
+      return dynamic_cast< MovingMaskType *>( 
+        this->GetMovingMaskContainer()->ElementAt(idx).GetPointer() );
+    } 
+    return 0; 		
+	} // end SetMovingMask
 	
 
 	/**
@@ -123,17 +115,9 @@ namespace elastix
 	int ElastixTemplate<TFixedImage, TMovingImage>
 	::Run(void)
 	{
-		/** Tell all components where to find the ElastixTemplate. */
-		this->m_elx_Registration->SetElastix(this);
-		this->m_elx_Transform->SetElastix(this);
-		this->m_elx_Metric->SetElastix(this);
-		this->m_elx_Interpolator->SetElastix(this);
-		this->m_elx_Optimizer->SetElastix(this);
-		this->m_elx_FixedImagePyramid->SetElastix(this);
-		this->m_elx_MovingImagePyramid->SetElastix(this);
-		this->m_elx_Resampler->SetElastix(this);
-		this->m_elx_ResampleInterpolator->SetElastix(this);
-
+		/** Tell all components where to find the ElastixTemplate and 
+     * set there ComponentLabel. */
+    this->ConfigureComponents( this );
 
 		/** Call BeforeAll to do some checking. */
 		int dummy = this->BeforeAll();
@@ -141,7 +125,11 @@ namespace elastix
 
 		/** Setup Callbacks. This makes sure that the BeforeEachResolution()
 		 * and AfterEachIteration() functions are called.
-		 */
+     *
+     * NB: it is not yet clear what should happen when multiple registration
+     * or optimizer components are used simultaneously. We won't use this
+     * in the near future anyway, probably. */
+
 		this->m_BeforeEachResolutionCommand = BeforeEachResolutionCommandType::New();
 		this->m_AfterEachResolutionCommand = AfterEachResolutionCommandType::New();
 		this->m_AfterEachIterationCommand = AfterEachIterationCommandType::New();
@@ -150,74 +138,43 @@ namespace elastix
 		this->m_AfterEachResolutionCommand->SetCallbackFunction( this, &Self::AfterEachResolution );
 		this->m_AfterEachIterationCommand->SetCallbackFunction( this, &Self::AfterEachIteration );
 		
-		this->m_Registration->AddObserver( itk::IterationEvent(), this->m_BeforeEachResolutionCommand );
-		this->m_Optimizer->AddObserver( itk::IterationEvent(), this->m_AfterEachIterationCommand );
-		this->m_Optimizer->AddObserver( itk::EndEvent(), this->m_AfterEachResolutionCommand );
+		this->GetElxRegistrationBase()->GetAsITKBaseType()->
+      AddObserver( itk::IterationEvent(), this->m_BeforeEachResolutionCommand );
+		this->GetElxOptimizerBase()->GetAsITKBaseType()->
+      AddObserver( itk::IterationEvent(), this->m_AfterEachIterationCommand );
+		this->GetElxOptimizerBase()->GetAsITKBaseType()->
+      AddObserver( itk::EndEvent(), this->m_AfterEachResolutionCommand );
 	
 		/** Start the timer for reading images. */
 		this->m_Timer0->StartTimer();
 		elxout << "\nReading images..." << std::endl;
 
-		/** \todo Multithreaden? Reading the fixed and moving images could be two threads. */
-
-		/** Set the fixedImage. */
-		if ( !(this->m_FixedImage) )
-		{
-			this->m_FixedImageReader = FixedImageReaderType::New();
-			this->m_FixedImageReader->SetFileName(
-				this->GetConfiguration()->GetCommandLineArgument( "-f" )  );
-			this->m_FixedImage = this->m_FixedImageReader->GetOutput();
-
-			/** Do the reading. */
-			try
-			{
-				this->m_FixedImage->Update();
-			}
-			catch( itk::ExceptionObject & excp )
-			{
-				/** Add information to the exception. */
-				excp.SetLocation( "ElastixTemplate - Run()" );
-				std::string err_str = excp.GetDescription();
-				err_str += "\nError occured while reading fixed image.\n";
-				excp.SetDescription( err_str );
-				/** Pass the exception to an higher level. */
-				throw excp;
-			}
-		}
-		
-		/** Set the fixed image pointer in this registration. */
-		this->m_elx_Registration->GetAsITKBaseType()->
-			SetFixedImage( this->m_FixedImage );		
-
-		/** Set the movingImage. */
-		if ( !(this->m_MovingImage) )
-		{
-			this->m_MovingImageReader = MovingImageReaderType::New();
-			this->m_MovingImageReader->SetFileName(
-				this->GetConfiguration()->GetCommandLineArgument( "-m" )  );
-			this->m_MovingImage = this->m_MovingImageReader->GetOutput();
-
-			/** Do the reading. */
-			try
-			{
-				this->m_MovingImage->Update();
-			}
-			catch( itk::ExceptionObject & excp )
-			{
-				/** Add information to the exception. */
-				excp.SetLocation( "ElastixTemplate - Run()" );
-				std::string err_str = excp.GetDescription();
-				err_str += "\nError occured while reading moving image.\n";
-				excp.SetDescription( err_str );
-				/** Pass the exception to an higher level. */
-				throw excp;
-			}
-		}
-
-		/** Set the moving image pointer in this registration. */
-		this->m_elx_Registration->GetAsITKBaseType()->
-			SetMovingImage( this->m_MovingImage );
-		
+    /** Read images and masks, if not set already. */
+    if ( this->GetFixedImage() == 0 )
+    {
+      this->SetFixedImageContainer( 
+        FixedImageLoaderType::GenerateImageContainer(
+          this->GetFixedImageFileNameContainer(), "Fixed Image" )  );
+    }
+    if ( this->GetMovingImage() == 0 )
+    {
+      this->SetMovingImageContainer( 
+        MovingImageLoaderType::GenerateImageContainer(
+          this->GetMovingImageFileNameContainer(), "Moving Image" )  );
+    }
+    if ( this->GetFixedMask() == 0 )
+    {
+      this->SetFixedMaskContainer( 
+        FixedMaskLoaderType::GenerateImageContainer(
+          this->GetFixedMaskFileNameContainer(), "Fixed Mask" )  );
+    }
+    if ( this->GetMovingMask() == 0 )
+    {
+      this->SetMovingMaskContainer( 
+        MovingMaskLoaderType::GenerateImageContainer(
+          this->GetMovingMaskFileNameContainer(), "Moving Mask" )  );
+    }
+				
 		/** Print the time spent on reading images. */
 		this->m_Timer0->StopTimer();
 		elxout << "Reading images took " <<	static_cast<unsigned long>(
@@ -229,7 +186,7 @@ namespace elastix
 		/** START! */
 		try
 		{
-			( this->m_elx_Registration->GetAsITKBaseType() )->StartRegistration();
+			( this->GetElxRegistrationBase()->GetAsITKBaseType() )->StartRegistration();
 		}
 		catch( itk::ExceptionObject & excp )
 		{
@@ -256,20 +213,17 @@ namespace elastix
 		 * For now we leave it commented, since there is only Resampler, which 
 		 * already calls this method. Calling it again would just take time.
 		 */
-		//this->m_elx_Transform->SetFinalParameters();
+		//this->GetElxTransformBase()->SetFinalParameters();
+
+    /** Set the first transform as the final transform. This means that 
+     * the other transforms should be set as an initial transform of this
+     * transforms. However, up to now, multiple transforms are not really
+     * supported yet. */
+    this->SetFinalTransform( this->GetTransformContainer()->ElementAt(0) );
 
 		/** Decouple the components from Elastix. This increases the chance that
-		 * some memory is released.
-		 */				
-		this->m_elx_Registration->SetElastix( 0 );
-		this->m_elx_Transform->SetElastix( 0 );
-		this->m_elx_Metric->SetElastix( 0 );
-		this->m_elx_Interpolator->SetElastix( 0 );
-		this->m_elx_Optimizer->SetElastix( 0 );
-		this->m_elx_FixedImagePyramid->SetElastix( 0 );
-		this->m_elx_MovingImagePyramid->SetElastix( 0 );
-		this->m_elx_Resampler->SetElastix( 0 );
-		this->m_elx_ResampleInterpolator->SetElastix( 0 );
+		 * some memory is released. */				
+		this->ConfigureComponents( 0 );
 
 		/** Return a value. */
 		return 0;
@@ -289,17 +243,15 @@ namespace elastix
 		tmr::Timer::Pointer timer = tmr::Timer::New();
 
 		/** Tell all components where to find the ElastixTemplate. */
-		this->m_elx_Transform->SetElastix(this);
-		this->m_elx_Resampler->SetElastix(this);
-		this->m_elx_ResampleInterpolator->SetElastix(this);
+    this->ConfigureComponents( this );
 
 		/** Call BeforeAllTransformix to do some checking. */
-		int dummy = BeforeAllTransformix();
+		int dummy = this->BeforeAllTransformix();
 		if ( dummy != 0 ) return dummy;
 
-		std::string inputImageFileName =
-			this->GetConfiguration()->GetCommandLineArgument( "-in" );
-		if ( inputImageFileName != "" )
+    /** Set the inputImage (=movingImage).
+     * If "-in" was given or an input image was given in some other way, load the image. */
+    if ( (this->GetNumberOfMovingImageFileNames() > 0) || (this->GetMovingImage() != 0) )
 		{
 			/** Timer. */
 			timer->StartTimer();
@@ -307,45 +259,28 @@ namespace elastix
 			/** Tell the user. */
 			elxout << std::endl << "Reading input image ...";
 			
-			/** Set the inputImage == movingImage. */
-			typename InputImageReaderType::Pointer inputImageReader;
-			if ( !this->m_MovingImage )
-			{
-				inputImageReader = InputImageReaderType::New();
-				inputImageReader->SetFileName(
-					this->GetConfiguration()->GetCommandLineArgument( "-in" ) );
-				this->m_MovingImage = inputImageReader->GetOutput();
-
-				/** Do the reading. */
-				try
-				{
-					this->m_MovingImage->Update();
-				}
-				catch( itk::ExceptionObject & excp )
-				{
-					/** Add information to the exception. */
-					excp.SetLocation( "ElastixTemplate - ApplyTransform()" );
-					std::string err_str = excp.GetDescription();
-					err_str += "\nError occured while reading moving image.\n";
-					excp.SetDescription( err_str );
-					/** Pass the exception to an higher level. */
-					throw excp;
-				}
-			} // end if !moving image
+			/** Load the image from disk, if it wasn't set already by the user */
+      if ( this->GetMovingImage() == 0 )
+      {
+        this->SetMovingImageContainer( 
+          MovingImageLoaderType::GenerateImageContainer(
+            this->GetMovingImageFileNameContainer(), "Input Image" )  );
+      } // end if !moving image
 
 			/** Tell the user. */
 			timer->StopTimer();
 			elxout << "                   done, it took "
 				<< timer->PrintElapsedTimeSec()
 				<< " s" << std::endl;
-		} // end if ! inputImageFileName
+
+		} // end if inputImageFileName
 
 		/** Call all the ReadFromFile() functions. */
 		timer->StartTimer();
 		elxout << "Calling all ReadFromFile()'s ...";
-		this->m_elx_ResampleInterpolator->ReadFromFile();		
-		this->m_elx_Resampler->ReadFromFile();
-		this->m_elx_Transform->ReadFromFile();
+		this->GetElxResampleInterpolatorBase()->ReadFromFile();		
+		this->GetElxResamplerBase()->ReadFromFile();
+		this->GetElxTransformBase()->ReadFromFile();
 
 		/** Tell the user. */
 		timer->StopTimer();
@@ -355,10 +290,12 @@ namespace elastix
 		timer->StartTimer();
 		elxout << "Transforming points ..." << std::endl;
 
-		/** Call TransformPoints. */
+		/** Call TransformPoints.
+     * Actually we could loop over all transforms.
+     * But for now, there seems to be no use yet for that.  */
 		try
 		{
-      this->m_elx_Transform->TransformPoints();
+      this->GetElxTransformBase()->TransformPoints();
 		}
 		catch( itk::ExceptionObject & excp )
 		{
@@ -371,20 +308,22 @@ namespace elastix
 			<< " s" << std::endl;
 
 		/** Resample the image. */
-		if ( inputImageFileName != "" )
+		if ( this->GetMovingImage() != 0 )
 		{
 			timer->StartTimer();
 			elxout << "Resampling image and writing to disk ...";
 			
 			/** Create a name for the final result. */
 			std::string resultImageFormat = "mhd";
-			this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0, true );
+			this->GetConfiguration()->ReadParameter(	resultImageFormat, "ResultImageFormat", 0, true );
 			std::ostringstream makeFileName("");
-			makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
+			makeFileName << this->GetConfiguration()->GetCommandLineArgument( "-out" )
 				<< "result." << resultImageFormat;
 			
-			/** Write the resampled image to disk. */
-			this->m_elx_Resampler->WriteResultImage( makeFileName.str().c_str() );
+			/** Write the resampled image to disk. 
+       * Actually we could loop over all resamplers.
+       * But for now, there seems to be no use yet for that.  */
+			this->GetElxResamplerBase()->WriteResultImage( makeFileName.str().c_str() );
 
 			/** Tell the user. */
 			timer->StopTimer();
@@ -432,61 +371,23 @@ namespace elastix
 		/** Declare the return value and initialize it. */
 		int returndummy = 0;
 
-		/** Print to log file. */
-		elxout << std::fixed;
-		elxout << std::showpoint;
-		elxout << std::setprecision(3);
-		elxout << "ELASTIX version: " << __ELASTIX_VERSION << std::endl;
-		elxout << std::setprecision( this->GetDefaultOutputPrecision() );
-
-		/** Check Command line options and print them to the logfile. */
-		elxout << "Command line options from ElastixTemplate:" << std::endl;
-		std::string check = "";
-
-		/** Check for appearance of "-in". */
-		check = this->GetConfiguration()->GetCommandLineArgument( "-in" );
-		if ( check == "" )
-		{
-			//xl::xout["error"] << "ERROR: No CommandLine option \"-in\" given!" << std::endl;
-			//returndummy |= -1;
-			elxout << "-in\t\tn.a." << std::endl;
-		}
-		else
-		{
-			elxout << "-in\t\t" << check << std::endl;
-		}
-
-		/** Check for appearance of "-out". */
-		check = this->GetConfiguration()->GetCommandLineArgument( "-out" );
-		if ( check == "" )
-		{
-			xl::xout["error"] << "ERROR: No CommandLine option \"-out\" given!" << std::endl;
-			returndummy |= -1;
-		}
-		else
-		{
-			/** Make sure that last character of -out equals a '/'. */
-			std::string folder( check );
-			if ( folder.find_last_of( "/" ) != folder.size() - 1 )
-			{
-				folder.append( "/" );
-				this->GetConfiguration()->SetCommandLineArgument( "-out", folder.c_str() );
-			}
-			elxout << "-out\t\t" << check << std::endl;
-		}		
-
-		/** Print "-tp". */
-		check = this->GetConfiguration()->GetCommandLineArgument( "-tp" );
-		elxout << "-tp\t\t" << check << std::endl;
+    /** Call the BeforeAllTransformixBase function in ElastixBase.
+     * It checks most of the parameters. For now, it is the only
+     * component that has a BeforeAllTranformixBase() method. */
+		returndummy |= this->BeforeAllTransformixBase();
 		
-		/** Call all the BeforeAllTransformix() functions. */
-		returndummy |= this->m_elx_ResampleInterpolator->BeforeAllTransformix();		
-		returndummy |= this->m_elx_Resampler->BeforeAllTransformix();
-		returndummy |= this->m_elx_Transform->BeforeAllTransformix();
+		/** Call all the BeforeAllTransformix() functions. 
+     * Actually we could loop over all resample interpolators, resamplers,
+     * and transforms etc. But for now, there seems to be no use yet for that.  */
+		returndummy |= this->GetElxResampleInterpolatorBase()->BeforeAllTransformix();		
+		returndummy |= this->GetElxResamplerBase()->BeforeAllTransformix();
+		returndummy |= this->GetElxTransformBase()->BeforeAllTransformix();
 
-		/** Print the Transform Parameter file. */
-		returndummy |= this->GetConfiguration()->BeforeAll();
-
+		/** The GetConfiguration also has a BeforeAllTransformix, 
+     * It print the Transform Parameter file to the log file. That's
+     * why we call it after the other components. */
+    returndummy |= this->GetConfiguration()->BeforeAllTransformix();
+    
 		/** Return a value. */
 		return returndummy;
 
@@ -538,7 +439,7 @@ namespace elastix
 	{
 		/** Get current resolution level. */
 		unsigned long level =
-			this->m_elx_Registration->GetAsITKBaseType()->GetCurrentLevel();
+			this->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel();
 
 		if ( level == 0 )
 		{
@@ -589,7 +490,7 @@ namespace elastix
 	{
 		/** Get current resolution level. */
 		unsigned long level =
-			this->m_elx_Registration->GetAsITKBaseType()->GetCurrentLevel();
+			this->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel();
 		
 		/** Print the total iteration time. */
 		elxout << std::setprecision(3);
@@ -609,15 +510,15 @@ namespace elastix
 
 		/** Create a TransformParameter-file for the current resolution. */
 		std::string TranParOptionRes = "false";
-		this->m_Configuration->ReadParameter( TranParOptionRes, "WriteTransformParametersEachResolution", 0, true );
+		this->GetConfiguration()->ReadParameter( TranParOptionRes, "WriteTransformParametersEachResolution", 0, true );
 		if ( TranParOptionRes == "true" )
 		{
 			/** Create the TransformParameters filename for this resolution. */
 			std::ostringstream makeFileName("");
 			makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
 				<< "TransformParameters."
-				<< this->m_Configuration->GetElastixLevel()
-				<< ".R" << this->m_elx_Registration->GetAsITKBaseType()->GetCurrentLevel()
+				<< this->GetConfiguration()->GetElastixLevel()
+				<< ".R" << this->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel()
 				<< ".txt";
 			std::string FileName = makeFileName.str();
 			
@@ -665,12 +566,13 @@ namespace elastix
 		xout["iteration"].WriteBufferedData();
 
 		std::string TranParOption;
-		this->m_Configuration->ReadParameter( TranParOption, "WriteTransformParametersEachIteration", 0, true );
+		this->GetConfiguration()->ReadParameter( TranParOption, "WriteTransformParametersEachIteration", 0, true );
 		if ( TranParOption == "true" )
 		{
 			/** Add zeros to the number of iterations, to make sure 
-			 * it always consists of 7 digits.
-			 */
+			 * it always consists of 7 digits. 
+       * \todo: use sprintf for this. it's much easier. or a formatting string for the 
+       * ostringstream, if that's possible somehow.  */
 			std::ostringstream makeIterationString("");
 			unsigned int border = 1000000;
 			while (border > 1)
@@ -690,16 +592,16 @@ namespace elastix
 
 			/** Create the TransformParameters filename for this iteration. */
 			std::ostringstream makeFileName("");
-			makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
+			makeFileName << this->GetConfiguration()->GetCommandLineArgument( "-out" )
 				<< "TransformParameters."
-				<< this->m_Configuration->GetElastixLevel()
-				<< ".R" << this->m_elx_Registration->GetAsITKBaseType()->GetCurrentLevel()
+				<< this->GetConfiguration()->GetElastixLevel()
+				<< ".R" << this->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel()
 				<< ".It" << makeIterationString.str()
 				<< ".txt";
-			std::string FileName = makeFileName.str();
+			std::string tpFileName = makeFileName.str();
 			
 			/** Create a TransformParameterFile for this iteration. */
-			this->CreateTransformParameterFile( FileName, false );
+			this->CreateTransformParameterFile( tpFileName, false );
 		}
 		
 		/** Count the number of iterations. */
@@ -724,9 +626,9 @@ namespace elastix
 		
 		/** Create the final TransformParameters filename. */
 		std::ostringstream makeFileName("");
-		makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
+		makeFileName << this->GetConfiguration()->GetCommandLineArgument( "-out" )
 			<< "TransformParameters."
-			<< this->m_Configuration->GetElastixLevel() << ".txt";
+			<< this->GetConfiguration()->GetElastixLevel() << ".txt";
 		std::string FileName = makeFileName.str();
 
 		/** Create a final TransformParameterFile. */
@@ -772,7 +674,7 @@ namespace elastix
 		xout.AddTargetCell( "transpar", &transformationParameterInfo );
 		
 		/** Set it in the Transform, for later use. */
-		this->m_elx_Transform->SetTransformParametersFileName( FileName.c_str() );
+		this->GetElxTransformBase()->SetTransformParametersFileName( FileName.c_str() );
 		
 		/** Open the TransformParameter file. */
 		transformParameterFile.open( FileName.c_str() );
@@ -801,11 +703,13 @@ namespace elastix
 				"\n=============== start of TransformParameterFile ==============="	<< std::endl;
 		}
 
-		/** Call all the WriteToFile() functions. */
-		this->m_elx_Transform->WriteToFile(
-			this->m_elx_Optimizer->GetAsITKBaseType()->GetCurrentPosition() );
-		this->m_elx_ResampleInterpolator->WriteToFile();
-		this->m_elx_Resampler->WriteToFile();
+		/** Call all the WriteToFile() functions. 
+     * Actually we could loop over all resample interpolators, resamplers,
+     * and transforms etc. But for now, there seems to be no use yet for that.  */
+		this->GetElxTransformBase()->WriteToFile(
+			this->GetElxOptimizerBase()->GetAsITKBaseType()->GetCurrentPosition() );
+		this->GetElxResampleInterpolatorBase()->WriteToFile();
+		this->GetElxResamplerBase()->WriteToFile();
 		
 		/** Separate clearly in log-file. */
 		if ( ToLog )
@@ -828,17 +732,27 @@ namespace elastix
 	void ElastixTemplate<TFixedImage, TMovingImage>
 	::CallInEachComponent( PtrToMemberFunction func )
 	{
-		/** Call the memberfunction 'func' of the this->m_elx_Components. */
-		( (*(this->GetConfiguration())).*func )();
-		( (*(this->m_elx_Registration)).*func )();
-		( (*(this->m_elx_Transform)).*func )();
-		( (*(this->m_elx_Metric)).*func )();
-		( (*(this->m_elx_Interpolator)).*func )();
-		( (*(this->m_elx_Optimizer)).*func )();
-		( (*(this->m_elx_FixedImagePyramid)).*func )();
-		( (*(this->m_elx_MovingImagePyramid)).*func )();
-		( (*(this->m_elx_ResampleInterpolator)).*func )();		
-		( (*(this->m_elx_Resampler)).*func )();
+		/** Call the memberfunction 'func' of all components. */
+		(  ( *(this->GetConfiguration()) ).*func  )();
+
+    for (unsigned int i = 0; i < this->GetNumberOfRegistrations(); ++i)
+    {  (  ( *(this->GetElxRegistrationBase(i)) ).*func  )(); }
+    for (unsigned int i = 0; i < this->GetNumberOfTransforms(); ++i)
+    {  (  ( *(this->GetElxTransformBase(i)) ).*func  )(); }
+    for (unsigned int i = 0; i < this->GetNumberOfMetrics(); ++i)
+    {  (  ( *(this->GetElxMetricBase(i)) ).*func  )(); }
+    for (unsigned int i = 0; i < this->GetNumberOfInterpolators(); ++i)
+    {  (  ( *(this->GetElxInterpolatorBase(i)) ).*func  )(); }
+    for (unsigned int i = 0; i < this->GetNumberOfOptimizers(); ++i)
+    {  (  ( *(this->GetElxOptimizerBase(i)) ).*func  )(); }
+    for (unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i)
+    {  (  ( *(this->GetElxFixedImagePyramidBase(i)) ).*func  )(); }
+    for (unsigned int i = 0; i < this->GetNumberOfMovingImagePyramids(); ++i)
+    {  (  ( *(this->GetElxMovingImagePyramidBase(i)) ).*func  )(); }
+    for (unsigned int i = 0; i < this->GetNumberOfResampleInterpolators(); ++i)
+    {  (  ( *(this->GetElxResampleInterpolatorBase(i)) ).*func  )(); }
+    for (unsigned int i = 0; i < this->GetNumberOfResamplers(); ++i)
+    {  (  ( *(this->GetElxResamplerBase(i)) ).*func  )(); }
 		
 	} // end CallInEachComponent
 	
@@ -854,22 +768,83 @@ namespace elastix
 		/** Declare the return value and initialize it. */
 		int returndummy = 0;
 
-		/** Call the memberfunction 'func' of the this->m_elx_Components. */
-		returndummy |= ( (*( this->GetConfiguration())).*func )();		
-		returndummy |= ( (*(this->m_elx_Registration)).*func )();
-		returndummy |= ( (*(this->m_elx_Transform)).*func )();
-		returndummy |= ( (*(this->m_elx_Metric)).*func )();
-		returndummy |= ( (*(this->m_elx_Interpolator)).*func )();
-		returndummy |= ( (*(this->m_elx_Optimizer)).*func )();
-		returndummy |= ( (*(this->m_elx_FixedImagePyramid)).*func )();
-		returndummy |= ( (*(this->m_elx_MovingImagePyramid)).*func )();
-		returndummy |= ( (*(this->m_elx_ResampleInterpolator)).*func )();		
-		returndummy |= ( (*(this->m_elx_Resampler)).*func )();
+		/** Call the memberfunction 'func' of all components. */
+		returndummy |= (  ( *( this->GetConfiguration()) ).*func  )();		
+    
+    for (unsigned int i = 0; i < this->GetNumberOfRegistrations(); ++i)
+    {  returndummy |= (  ( *(this->GetElxRegistrationBase(i)) ).*func  )(); }
+    for (unsigned int i = 0; i < this->GetNumberOfTransforms(); ++i)
+    {  returndummy |= (  ( *(this->GetElxTransformBase(i)) ).*func  )(); }
+    for (unsigned int i = 0; i < this->GetNumberOfMetrics(); ++i)
+    {  returndummy |= (  ( *(this->GetElxMetricBase(i)) ).*func  )(); }
+    for (unsigned int i = 0; i < this->GetNumberOfInterpolators(); ++i)
+    {  returndummy |= (  ( *(this->GetElxInterpolatorBase(i)) ).*func  )(); }
+    for (unsigned int i = 0; i < this->GetNumberOfOptimizers(); ++i)
+    {  returndummy |= (  ( *(this->GetElxOptimizerBase(i)) ).*func  )(); }
+    for (unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i)
+    {  returndummy |= (  ( *(this->GetElxFixedImagePyramidBase(i)) ).*func  )(); }
+    for (unsigned int i = 0; i < this->GetNumberOfMovingImagePyramids(); ++i)
+    {  returndummy |= (  ( *(this->GetElxMovingImagePyramidBase(i)) ).*func  )(); }
+    for (unsigned int i = 0; i < this->GetNumberOfResampleInterpolators(); ++i)
+    {  returndummy |= (  ( *(this->GetElxResampleInterpolatorBase(i)) ).*func  )(); }
+    for (unsigned int i = 0; i < this->GetNumberOfResamplers(); ++i)
+    {  returndummy |= (  ( *(this->GetElxResamplerBase(i)) ).*func  )(); }
 
 		/** Return a value. */
 		return returndummy;
 				
 	} // end CallInEachComponent
+
+
+	/**
+	 * ****************** ConfigureComponents *******************
+   */
+	
+	template <class TFixedImage, class TMovingImage>
+	void ElastixTemplate<TFixedImage, TMovingImage>
+	::ConfigureComponents( Self * This )
+	{
+    this->GetConfiguration()->SetComponentLabel("Configuration", 0);
+
+    for (unsigned int i = 0; i < this->GetNumberOfRegistrations(); ++i)
+    { this->GetElxRegistrationBase(i)->SetComponentLabel( "Registration", i );
+      this->GetElxRegistrationBase(i)->SetElastix( This ); }
+
+    for (unsigned int i = 0; i < this->GetNumberOfTransforms(); ++i)
+    { this->GetElxTransformBase(i)->SetComponentLabel( "Transform", i );
+      this->GetElxTransformBase(i)->SetElastix( This ); }
+
+    for (unsigned int i = 0; i < this->GetNumberOfMetrics(); ++i)
+    { this->GetElxMetricBase(i)->SetComponentLabel( "Metric", i );
+      this->GetElxMetricBase(i)->SetElastix( This ); }
+
+    for (unsigned int i = 0; i < this->GetNumberOfInterpolators(); ++i)
+    { this->GetElxInterpolatorBase(i)->SetComponentLabel( "Interpolator", i );
+      this->GetElxInterpolatorBase(i)->SetElastix( This ); }
+
+    for (unsigned int i = 0; i < this->GetNumberOfOptimizers(); ++i)
+    { this->GetElxOptimizerBase(i)->SetComponentLabel( "Optimizer", i );
+      this->GetElxOptimizerBase(i)->SetElastix( This ); }
+
+    for (unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i)
+    { this->GetElxFixedImagePyramidBase(i)->SetComponentLabel( "FixedImagePyramid", i );
+      this->GetElxFixedImagePyramidBase(i)->SetElastix( This ); }
+
+    for (unsigned int i = 0; i < this->GetNumberOfMovingImagePyramids(); ++i)
+    { this->GetElxMovingImagePyramidBase(i)->SetComponentLabel( "MovingImagePyramid", i );
+      this->GetElxMovingImagePyramidBase(i)->SetElastix( This ); }
+
+    for (unsigned int i = 0; i < this->GetNumberOfResampleInterpolators(); ++i)
+    { this->GetElxResampleInterpolatorBase(i)->SetComponentLabel( "ResampleInterpolator", i );
+      this->GetElxResampleInterpolatorBase(i)->SetElastix( This ); }
+
+    for (unsigned int i = 0; i < this->GetNumberOfResamplers(); ++i)
+    { this->GetElxResamplerBase(i)->SetComponentLabel( "Resampler", i );
+      this->GetElxResamplerBase(i)->SetElastix( This ); }
+				
+	} // end ConfigureComponents
+
+
 
 
 	/**
@@ -898,7 +873,7 @@ namespace elastix
 		makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
 			<< "IterationInfo."
 			<< this->m_Configuration->GetElastixLevel()
-			<< ".R" << this->m_elx_Registration->GetAsITKBaseType()->GetCurrentLevel()
+			<< ".R" << this->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel()
 			<< ".txt";
 		std::string FileName = makeFileName.str();
 

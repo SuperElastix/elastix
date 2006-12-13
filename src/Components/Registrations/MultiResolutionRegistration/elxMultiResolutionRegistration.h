@@ -2,6 +2,11 @@
 #define __elxMultiResolutionRegistration_H__
 
 #include "itkMultiResolutionImageRegistrationMethod.h"
+/** Mask support. */
+#include "itkImageMaskSpatialObject2.h"
+#include "itkBinaryBallStructuringElement.h"
+#include "itkBinaryErodeImageFilter.h"
+
 #include "elxIncludes.h"
 
 namespace elastix
@@ -21,6 +26,18 @@ using namespace itk;
 	 * \parameter NumberOfResolutions: the number of resolutions used. \n
 	 *		example: <tt>(NumberOfResolutions 4)</tt> \n
 	 *		The default is 3.
+   * \parameter ErodeMask: a flag to determine if the masks should be eroded
+	 *		from one resolution level to another. Choose from {"true", "false"} \n
+	 *		example: <tt>(ErodeMask "false")</tt> \n
+	 *		The default is "true". The parameter may be specified for each
+   *    resolution differently, but that's not obliged. \n
+   *    Erosion of the mask prevents the border / edge of the mask taken into account.
+	 *    This can be useful for example for ultrasound images,
+	 *    where you don't want to take into account values outside
+	 *    the US-beam, but where you also don't want to match the
+	 *    edge / border of this beam.
+	 *    For example for MRI's of the head, the borders of the head
+	 *    may be wanted to match, and there erosion should be avoided.
 	 *
 	 * \ingroup Registrations
 	 */
@@ -102,19 +119,65 @@ using namespace itk;
 		typedef typename Superclass2::RegistrationPointer		RegistrationPointer;
 		typedef typename Superclass2::ITKBaseType						ITKBaseType;
 
+    /** Get	the dimension of the fixed image. */
+		itkStaticConstMacro( FixedImageDimension, unsigned int, Superclass2::FixedImageDimension );
+		/** Get	the dimension of the moving image. */
+		itkStaticConstMacro( MovingImageDimension, unsigned int, Superclass2::MovingImageDimension );
+
+    /** Typedef's for mask support. */
+    typedef typename ElastixType::MaskPixelType           MaskPixelType;
+    typedef typename ElastixType::FixedMaskType           FixedMaskImageType;
+    typedef typename ElastixType::MovingMaskType          MovingMaskImageType;
+		typedef ImageMaskSpatialObject2<
+			itkGetStaticConstMacro( FixedImageDimension ) >			FixedMaskSpatialObjectType;
+		typedef ImageMaskSpatialObject2<
+			itkGetStaticConstMacro( MovingImageDimension ) >		MovingMaskSpatialObjectType;
+		typedef typename 
+      FixedMaskSpatialObjectType::Pointer             		FixedMaskSpatialObjectPointer;
+		typedef typename 
+      MovingMaskSpatialObjectType::Pointer      	    		MovingMaskSpatialObjectPointer;
+
 		/** Execute stuff before the actual registration:
 		 * \li Connect all components to the registration framework.
 		 * \li Set the number of resolution levels.
 		 * \li Set the fixed image region.
 		 */
 		virtual void BeforeRegistration(void);
+
+    /** Execute stuff before each resolution:
+		 * \li Update masks with an erosion. */
+    virtual void BeforeEachResolution(void);
 				
 	protected:
 
 		/** The constructor. */
-		MultiResolutionRegistration();
+    MultiResolutionRegistration(){};
 		/** The destructor. */
 		virtual ~MultiResolutionRegistration() {};
+    
+    /** Typedef for timer.*/
+		typedef tmr::Timer					TimerType;
+		/** Typedef for timer.*/
+		typedef TimerType::Pointer	TimerPointer;
+    
+		/** Some typedef's used for eroding the masks*/
+		typedef BinaryBallStructuringElement<
+			MaskPixelType, FixedImageDimension >		              StructuringElementTypeF;
+		typedef typename StructuringElementTypeF::RadiusType		RadiusTypeF;
+		typedef BinaryErodeImageFilter<
+			FixedMaskImageType,
+			FixedMaskImageType,
+			StructuringElementTypeF >					                    ErodeFilterTypeF;
+		typedef BinaryBallStructuringElement<
+			MaskPixelType, MovingImageDimension >                 StructuringElementTypeM;
+		typedef typename StructuringElementTypeM::RadiusType		RadiusTypeM;
+		typedef BinaryErodeImageFilter<
+			MovingMaskImageType,
+			MovingMaskImageType,
+			StructuringElementTypeM >					                    ErodeFilterTypeM;
+
+    /** Function to update masks. */
+		void UpdateMasks( unsigned int level );
 
 		/** Read the components from m_Elastix and set them in the Registration class. */
 		virtual void SetComponents(void);		

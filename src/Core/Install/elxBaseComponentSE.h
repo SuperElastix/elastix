@@ -64,7 +64,7 @@ namespace elastix
 		/** itkGetObjectMacro( Elastix, ElastixType );
 		 * without the itkDebug call.
 		 */
-		virtual ElastixType * GetElastix(void)
+		virtual ElastixType * GetElastix(void) const
 		{
 			return this->m_Elastix.GetPointer();
 		}
@@ -72,7 +72,7 @@ namespace elastix
 		/** itkGetObjectMacro(Configuration, ConfigurationType);
 		 * The configuration object provides functionality to
 		 * read parameters and command line arguments. */
-		virtual ConfigurationType * GetConfiguration(void)
+		virtual ConfigurationType * GetConfiguration(void) const
 		{
 			return this->m_Configuration.GetPointer();
 		}
@@ -85,7 +85,7 @@ namespace elastix
 		 * component is needed often by other components.
 		 * It could be accessed also via 
 		 * GetElastix->GetRegistrationBase() */
-		virtual RegistrationPointer GetRegistration(void)
+		virtual RegistrationPointer GetRegistration(void) const
 		{
 			return this->m_Registration;
 		}

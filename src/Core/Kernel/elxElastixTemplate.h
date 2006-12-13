@@ -25,29 +25,34 @@
 #include <sstream>
 #include <fstream>
 
-/** Like itkSetObjectMacro, but in this macro also the m_elx_... member 
- * is set (to the same value, but casted to a pointer to _elxtype).
+/** 
+ * Macro that defines to functions. In the case of 
+ *   _name = Metric and _elxBaseType = MetricBaseType
+ * this results in:
+ * MetricBaseType * GetElxMetricBase(void) const;
+ * MetricBaseType * GetElxMetricBase(unsigned int idx) const;
+ * 
+ * The first function simply calls the second with argument = 0.
+ * The second retrieves the metric component from the MetricContainer
+ * and casts it to a MetricBaseType*;
+ *
  * This macro is #undef'ed at the end of this header file.
  */
 
-#define elxSetObjectMacro(_name,_type,_elxtype) \
-	virtual void Set##_name (_type * _arg) \
-	{ \
-		if (this->m_##_name != _arg) \
-			{ \
-			this->m_##_name = _arg; \
-			this->m_elx_##_name = dynamic_cast<_elxtype *>( m_##_name .GetPointer() ); \
-			this->Modified(); \
-			} \
-	}
-// end elxSetObjectMacro
-
-
 #define elxGetBaseMacro(_name,_elxbasetype) \
-	virtual _elxbasetype * GetElx##_name##Base (void) \
+	virtual _elxbasetype * GetElx##_name##Base (void) const \
 	{ \
-	  return this->m_elx_##_name ; \
-	}
+    return this->GetElx##_name##Base( 0 );\
+	}\
+  _elxbasetype * GetElx##_name##Base ( unsigned int idx ) const \
+	{ \
+    if ( idx < this->GetNumberOf##_name##s() ) \
+    { \
+      return dynamic_cast<_elxbasetype *>( \
+        this->Get##_name##Container()->ElementAt(idx).GetPointer() );\
+    } \
+    return 0; \
+  }
 //end elxGetBaseMacro
 
 
@@ -95,9 +100,15 @@ namespace elastix
 		typedef Superclass2::ConfigurationPointer													ConfigurationPointer;
 		typedef Superclass2::ObjectType																		ObjectType; //for the components
 		typedef Superclass2::DataObjectType																DataObjectType; //for the images
-		typedef ObjectType::Pointer																				ObjectPointer;
-		typedef DataObjectType::Pointer																		DataObjectPointer;
-		
+    typedef Superclass2::ObjectPointer																ObjectPointer;
+    typedef Superclass2::DataObjectPointer  													DataObjectPointer;
+    typedef Superclass2::ObjectContainerType                          ObjectContainerType;      
+    typedef Superclass2::DataObjectContainerType                      DataObjectContainerType;
+    typedef Superclass2::FileNameContainerType                        FileNameContainerType;
+    typedef Superclass2::ObjectContainerPointer                       ObjectContainerPointer;      
+    typedef Superclass2::DataObjectContainerPointer                   DataObjectContainerPointer;
+    typedef Superclass2::FileNameContainerPointer                     FileNameContainerPointer;
+				
 		/** Typedef's for this class.*/
 		typedef TFixedImage																								FixedImageType;
 		typedef TMovingImage																							MovingImageType;
@@ -108,19 +119,23 @@ namespace elastix
 		itkStaticConstMacro( Dimension,				unsigned int, FixedImageType::ImageDimension );
 		itkStaticConstMacro( FixedDimension,	unsigned int, FixedImageType::ImageDimension );
 		itkStaticConstMacro( MovingDimension, unsigned int, MovingImageType::ImageDimension );
+
+    /** Types for the masks */
+    typedef unsigned char                                             MaskPixelType;
+    typedef Image<MaskPixelType, FixedDimension>                      FixedMaskType;
+    typedef Image<MaskPixelType, MovingDimension>                     MovingMaskType;
+    typedef typename FixedMaskType::Pointer                           FixedMaskPointer;    
+    typedef typename MovingMaskType::Pointer                          MovingMaskPointer;
 				
 		/** Type for representation of the transform coordinates.*/
 		typedef CostFunction::ParametersValueType		CoordRepType; // double
-		
-		/** Image File Readers.*/
-		typedef ImageFileReader< FixedImageType  >												FixedImageReaderType;
-		typedef ImageFileReader< MovingImageType >												MovingImageReaderType;
-		typedef typename FixedImageReaderType::Pointer										FixedImageReaderPointer;
-		typedef typename MovingImageReaderType::Pointer										MovingImageReaderPointer;
-				
-		/** A Pointer to a memberfunction of and elx::BaseComponent.*/
-		typedef void (BaseComponent::*PtrToMemberFunction)(void);
-		typedef int (BaseComponent::*PtrToMemberFunction2)(void);
+		    
+    /** BaseComponent.*/
+		typedef BaseComponent																							BaseComponentType;
+						
+		/** A Pointer to a memberfunction of a BaseComponentType.*/
+		typedef void (BaseComponentType::*PtrToMemberFunction)(void);
+		typedef int (BaseComponentType::*PtrToMemberFunction2)(void);
 		
 		/** Commands that react on Events and call Self::Function(void).*/
 		typedef SimpleMemberCommand<Self>																	BeforeEachResolutionCommandType;
@@ -129,10 +144,7 @@ namespace elastix
 		typedef typename BeforeEachResolutionCommandType::Pointer					BeforeEachResolutionCommandPointer;
 		typedef typename AfterEachResolutionCommandType::Pointer					AfterEachResolutionCommandPointer;
 		typedef typename AfterEachIterationCommandType::Pointer						AfterEachIterationCommandPointer;
-		
-		
-		/** BaseComponent.*/
-		typedef BaseComponent																							BaseComponentType;
+				
 		
 		/** The elastix basecomponent types.*/
 		typedef FixedImagePyramidBase<Self> 															FixedImagePyramidBaseType;
@@ -149,41 +161,14 @@ namespace elastix
 		typedef tmr::Timer																								TimerType;
 		typedef TimerType::Pointer																				TimerPointer;
 		
-		/** Typedef's for ApplyTransform.*/
-		typedef TMovingImage																							InputImageType;
-		typedef TMovingImage  																						OutputImageType;
-		typedef ImageFileReader< InputImageType >													InputImageReaderType;
+		/** Typedef's for ApplyTransform. 
+     * \todo How useful is this? It is not consequently supported, since the
+     * the input image is stored in the MovingImageContainer anyway. */
+		typedef MovingImageType																						InputImageType;
+		typedef MovingImageType 																					OutputImageType;
 				
-
 		/** Functions to set/get pointers to the elastix components.
-		 *
-		 * These macros override the pure virtual get/set functions,
-		 * which were declared in the class ElastixBase:
-		 * virtual ObjectType * GetRegistration(void) = 0;
-		 * etc.
-		 */
-		elxSetObjectMacro( FixedImagePyramid, ObjectType, FixedImagePyramidBaseType );
-		elxSetObjectMacro( MovingImagePyramid, ObjectType, MovingImagePyramidBaseType );
-		elxSetObjectMacro( Interpolator, ObjectType, InterpolatorBaseType );
-		elxSetObjectMacro( Metric, ObjectType, MetricBaseType );
-		elxSetObjectMacro( Optimizer, ObjectType, OptimizerBaseType );
-		elxSetObjectMacro( Registration, ObjectType, RegistrationBaseType );
-		elxSetObjectMacro( Resampler, ObjectType, ResamplerBaseType );
-		elxSetObjectMacro( ResampleInterpolator, ObjectType, ResampleInterpolatorBaseType );
-		elxSetObjectMacro( Transform, ObjectType, TransformBaseType );
-		
-		/** Get the components as pointers to ObjectType */
-		itkGetObjectMacro( FixedImagePyramid, ObjectType );
-		itkGetObjectMacro( MovingImagePyramid, ObjectType );
-		itkGetObjectMacro( Interpolator, ObjectType );
-		itkGetObjectMacro( Metric, ObjectType );
-		itkGetObjectMacro( Optimizer, ObjectType );
-		itkGetObjectMacro( Registration, ObjectType );
-		itkGetObjectMacro( Resampler, ObjectType );
-		itkGetObjectMacro( ResampleInterpolator, ObjectType );
-		itkGetObjectMacro( Transform, ObjectType );
-
-		/** Get the components as pointers to elxBaseType */
+		 * Get the components as pointers to elxBaseType */
 		elxGetBaseMacro( FixedImagePyramid, FixedImagePyramidBaseType );
 		elxGetBaseMacro( MovingImagePyramid, MovingImagePyramidBaseType );
 		elxGetBaseMacro( Interpolator, InterpolatorBaseType );
@@ -193,20 +178,33 @@ namespace elastix
 		elxGetBaseMacro( Resampler, ResamplerBaseType );
 		elxGetBaseMacro( ResampleInterpolator, ResampleInterpolatorBaseType );
 		elxGetBaseMacro( Transform, TransformBaseType );
-		
-		virtual void SetFixedImage( DataObjectType * _arg );
-		virtual void SetMovingImage( DataObjectType * _arg );
-		itkGetObjectMacro( FixedImage, DataObjectType );
-		itkGetObjectMacro( MovingImage, DataObjectType );
-				
-		/** Set/Get the initial transform
-		 *
-		 * The type is ObjectType, but the pointer should actually point 
-		 * to an itk::Transform type (or inherited from that one).
-		 */
-		itkSetObjectMacro( InitialTransform, ObjectType );
-		itkGetObjectMacro( InitialTransform, ObjectType );
-		
+    
+    /** Get pointers to the images. They are obtained from the 
+     * {Fixed,Moving}ImageContainer and casted to the appropriate type */
+    virtual FixedImageType * GetFixedImage( void ) const
+    {
+      return this->GetFixedImage(0);
+    }
+    virtual FixedImageType * GetFixedImage( unsigned int idx) const;
+    virtual MovingImageType * GetMovingImage( void ) const
+    {
+      return this->GetMovingImage(0);
+    }
+    virtual MovingImageType * GetMovingImage( unsigned int idx) const;
+
+    /** Get pointers to the masks. They are obtained from the 
+     * {Fixed,Moving}MaskContainer and casted to the appropriate type */
+    virtual FixedMaskType * GetFixedMask( void ) const
+    {
+      return this->GetFixedMask(0);
+    }
+    virtual FixedMaskType * GetFixedMask( unsigned int idx) const;
+    virtual MovingMaskType * GetMovingMask( void ) const
+    {
+      return this->GetMovingMask(0);
+    }
+    virtual MovingMaskType * GetMovingMask( unsigned int idx) const;
+	
 		/** Main functions:
 		 * Run() for registration, and ApplyTransform() for just
 		 * applying a transform to an image.
@@ -230,40 +228,14 @@ namespace elastix
 	protected:
 
 		ElastixTemplate(); 
-		virtual ~ElastixTemplate(); 
-		
-		FixedImagePointer	 m_FixedImage;
-		MovingImagePointer m_MovingImage;
-		
-		/** The components as smartpointers to itkObjects.*/
-		ObjectPointer m_FixedImagePyramid;
-		ObjectPointer m_MovingImagePyramid;
-		ObjectPointer m_Interpolator;
-		ObjectPointer m_Metric;
-		ObjectPointer m_Optimizer;
-		ObjectPointer m_Registration;
-		ObjectPointer m_Resampler;
-		ObjectPointer m_ResampleInterpolator;
-		ObjectPointer m_Transform;
-		
-		/** The components as pointers to elx...Base objects.*/
-		FixedImagePyramidBaseType *			m_elx_FixedImagePyramid;
-		MovingImagePyramidBaseType *		m_elx_MovingImagePyramid;
-		InterpolatorBaseType *					m_elx_Interpolator;
-		MetricBaseType *								m_elx_Metric;
-		OptimizerBaseType *							m_elx_Optimizer;
-		RegistrationBaseType *					m_elx_Registration;
-		ResamplerBaseType *							m_elx_Resampler;
-		ResampleInterpolatorBaseType *	m_elx_ResampleInterpolator;
-		TransformBaseType *							m_elx_Transform;
-			
-		/** Readers and casters.*/
-		FixedImageReaderPointer		m_FixedImageReader;
-		MovingImageReaderPointer	m_MovingImageReader;
-		
-		/** The initial transform.*/
-		ObjectPointer m_InitialTransform;
-		
+    virtual ~ElastixTemplate(){}; 
+
+    /** Classes that contain a function to load multiple images, given a filename container */
+    typedef typename Superclass2::MultipleImageLoader<FixedImageType>   FixedImageLoaderType;
+    typedef typename Superclass2::MultipleImageLoader<MovingImageType>  MovingImageLoaderType;
+    typedef typename Superclass2::MultipleImageLoader<FixedMaskType>    FixedMaskLoaderType;
+    typedef typename Superclass2::MultipleImageLoader<MovingMaskType>   MovingMaskLoaderType;
+				
 		/** CallBack commands.*/
 		BeforeEachResolutionCommandPointer	m_BeforeEachResolutionCommand;
 		AfterEachIterationCommandPointer		m_AfterEachIterationCommand;
@@ -290,7 +262,12 @@ namespace elastix
 		/** Used by the callback functions, beforeeachresolution() etc.).*/
 		void CallInEachComponent( PtrToMemberFunction func );
 		int CallInEachComponentInt( PtrToMemberFunction2 func );
-		
+
+    /** Call in each component SetElastix(This) and set its ComponentLabel
+     * (for example "Metric1"). This makes sure that the component knows its
+     * own function in the registration process. */
+    virtual void ConfigureComponents( Self * This );
+    		
 	private:
 
 		ElastixTemplate( const Self& );	// purposely not implemented
@@ -301,7 +278,7 @@ namespace elastix
 
 } // end namespace elastix
 
-#undef elxSetObjectMacro
+
 #undef elxGetBaseMacro
 
 #ifndef ITK_MANUAL_INSTANTIATION

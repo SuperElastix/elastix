@@ -36,26 +36,19 @@ int main( int argc, char **argv )
 	}
 
 	/** Some typedef's.*/
-	typedef elx::TransformixMain									TransformixType;
-	typedef TransformixType::Pointer							TransformixPointer;
-	typedef TransformixType::ObjectType						ObjectType;
-	typedef TransformixType::DataObjectType				DataObjectType;
-	typedef TransformixType::ObjectPointer				ObjectPointer;
-	typedef TransformixType::DataObjectPointer		DataObjectPointer;
-
-	typedef TransformixType::ArgumentMapType			ArgumentMapType;
-	typedef ArgumentMapType::value_type						ArgumentMapEntryType;
+	typedef elx::TransformixMain									    TransformixMainType;
+	typedef TransformixMainType::Pointer							TransformixMainPointer;
+	typedef TransformixMainType::ArgumentMapType			ArgumentMapType;
+	typedef ArgumentMapType::value_type						    ArgumentMapEntryType;
 
 	/** Declare an instance of the Transformix class.*/
-	TransformixPointer	transformix;
+	TransformixMainPointer	transformix;
 
 	/** Initialize.*/
-	ObjectPointer						transform = 0;
-	DataObjectPointer				inputImage = 0;
-	int											returndummy = 0;
-	ArgumentMapType					argMap;
-	bool										outFolderPresent = false;
-	std::string							logFileName;
+	int											    returndummy = 0;
+	ArgumentMapType					    argMap;
+	bool										    outFolderPresent = false;
+	std::string							    logFileName;
 
 
 	/** Put command line parameters into parameterFileList.*/
@@ -137,11 +130,9 @@ int main( int argc, char **argv )
 	 */
 
 	/** Set transformix.*/
-	transformix = elx::TransformixMain::New();
-	transformix->SetInitialTransform( transform );
-	transformix->SetInputImage( inputImage );
+	transformix = TransformixMainType::New();
 	
-	/** Print a start message.*/
+  /** Print a start message.*/
 	elxout << "Running Transformix with parameter file \""
 			<< argMap[ "-tp" ] << "\".\n" << std::endl;
 
@@ -163,9 +154,8 @@ int main( int argc, char **argv )
 		totaltimer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
 
 	/** Clean up */
-	inputImage = 0;
 	transformix = 0;
-	elx::TransformixMain::UnloadComponents();
+	TransformixMainType::UnloadComponents();
 
 	/** Exit and return the error code */
 	return returndummy;

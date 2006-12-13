@@ -102,8 +102,7 @@ namespace elastix
 		this->m_Configuration = ConfigurationType::New();
 
 		this->m_Elastix = 0;
-		this->m_elx_Elastix = 0;
-
+		
 		this->m_FixedImagePixelType = "";
 		this->m_FixedImageDimension = 0;
 
@@ -112,19 +111,10 @@ namespace elastix
 
 		this->m_DBIndex = 0;
 
-		this->m_FixedImage = 0;
-		this->m_MovingImage = 0;
+		this->m_FixedImageContainer = 0;
+		this->m_MovingImageContainer = 0;
 	
-		this->m_Registration = 0;
-		this->m_FixedImagePyramid = 0;
-		this->m_MovingImagePyramid = 0;
-		this->m_Interpolator = 0;
-		this->m_Metric = 0;
-		this->m_Optimizer = 0;
-		this->m_Resampler = 0;
-		this->m_ResampleInterpolator = 0;
-		this->m_Transform = 0;
-
+		this->m_FinalTransform = 0;
 		this->m_InitialTransform = 0;
 
 	} // end Constructor
@@ -191,145 +181,97 @@ namespace elastix
 		}
 
 		/** Initialize database. */		
-		int ErrorCode = this->InitDBIndex();
-		if ( ErrorCode != 0 )
+		int errorCode = this->InitDBIndex();
+		if ( errorCode != 0 )
 		{
-			return ErrorCode;
+			return errorCode;
 		}
 
-		/** Get the different components. */
-		ComponentDescriptionType RegistrationName = "MultiResolutionRegistration";
-		this->m_Configuration->ReadParameter( RegistrationName, "Registration", 0 );
-		
-		ComponentDescriptionType FixedImagePyramidName = "FixedRecursiveImagePyramid";
-		this->m_Configuration->ReadParameter( FixedImagePyramidName, "FixedImagePyramid", 0 );
+    /** Create the Elastix component */
+    try 
+    {
+      /** Key "Elastix", see elxComponentLoader::InstallSupportedImageTypes(). */
+      this->m_Elastix = this->CreateComponent( "Elastix" );
+    }
+		catch( itk::ExceptionObject & excp )
+		{
+			/** We just print the exception and let the programm quit. */
+			xl::xout["error"] << excp << std::endl;
+			errorCode = 1;
+      return errorCode;
+		}
 
-		ComponentDescriptionType MovingImagePyramidName = "MovingRecursiveImagePyramid";
-		this->m_Configuration->ReadParameter( MovingImagePyramidName, "MovingImagePyramid", 0 );
-		
-		ComponentDescriptionType InterpolatorName = "BSplineInterpolator";
-		this->m_Configuration->ReadParameter( InterpolatorName, "Interpolator", 0 );
+    /** Set some information in the ElastixBase */
+		this->GetElastixBase()->SetConfiguration( this->m_Configuration );
+		this->GetElastixBase()->SetComponentDatabase(this->s_CDB);
+		this->GetElastixBase()->SetDBIndex( this->m_DBIndex );
 
-		ComponentDescriptionType MetricName = "MattesMutualInformation";
-		this->m_Configuration->ReadParameter( MetricName, "Metric", 0 );
+    /** Populate the component containers */
+    this->GetElastixBase()->SetRegistrationContainer(
+      this->CreateComponents( "Registration", "MultiResolutionRegistration", errorCode) );
 
-		ComponentDescriptionType OptimizerName = "RegularStepGradientDescent";
-		this->m_Configuration->ReadParameter( OptimizerName, "Optimizer", 0 );
-		
-		ComponentDescriptionType ResampleInterpolatorName = "FinalBSplineInterpolator";
-		this->m_Configuration->ReadParameter( ResampleInterpolatorName, "ResampleInterpolator", 0 );
+    this->GetElastixBase()->SetFixedImagePyramidContainer(
+      this->CreateComponents( "FixedImagePyramid", "FixedRecursiveImagePyramid", errorCode) );
 
-		ComponentDescriptionType ResamplerName = "DefaultResampler";
-		this->m_Configuration->ReadParameter( ResamplerName, "Resampler", 0 );
+    this->GetElastixBase()->SetMovingImagePyramidContainer( 
+      this->CreateComponents( "MovingImagePyramid", "MovingRecursiveImagePyramid", errorCode) );
+      
+    this->GetElastixBase()->SetInterpolatorContainer(
+      this->CreateComponents( "Interpolator", "BSplineInterpolator", errorCode) );
 
-		ComponentDescriptionType TransformName = "BSplineTransform";
-		this->m_Configuration->ReadParameter( TransformName, "Transform", 0 );
+    this->GetElastixBase()->SetMetricContainer(
+      this->CreateComponents( "Metric", "MattesMutualInformation", errorCode) );
 
-		/** Create the components! */
-		PtrToCreator testcreator;
+    this->GetElastixBase()->SetOptimizerContainer(    
+      this->CreateComponents( "Optimizer", "RegularStepGradientDescent", errorCode) );
 
-		/** Key "Elastix", see elxComponentLoader::InstallSupportedImageTypes(). */
-		testcreator = 0;
-		testcreator = this->s_CDB->GetCreator( "Elastix", this->m_DBIndex );
-		this->m_Elastix	= testcreator ? testcreator() : NULL;
-		
-		testcreator = 0;
-		testcreator = this->s_CDB->GetCreator( RegistrationName,	this->m_DBIndex );
-		this->m_Registration = testcreator ? testcreator() : NULL;
-
-		testcreator = 0;
-		testcreator = this->s_CDB->GetCreator( FixedImagePyramidName, this->m_DBIndex );
-		this->m_FixedImagePyramid = testcreator ? testcreator() : NULL;
-
-		testcreator = 0;
-		testcreator = this->s_CDB->GetCreator( MovingImagePyramidName, this->m_DBIndex );
-		this->m_MovingImagePyramid = testcreator ? testcreator() : NULL;
-
-		testcreator = 0;
-		testcreator = this->s_CDB->GetCreator( InterpolatorName, this->m_DBIndex );
-		this->m_Interpolator = testcreator ? testcreator() : NULL;
-
-		testcreator = 0;
-		testcreator = this->s_CDB->GetCreator( MetricName, this->m_DBIndex );
-		this->m_Metric = testcreator ? testcreator() : NULL;
-
-		testcreator = 0;
-		testcreator = this->s_CDB->GetCreator( OptimizerName, this->m_DBIndex );
-		this->m_Optimizer = testcreator ? testcreator() : NULL;
-
-		testcreator = 0;
-		testcreator = this->s_CDB->GetCreator( ResamplerName, this->m_DBIndex );
-		this->m_Resampler = testcreator ? testcreator() : NULL;
-
-		testcreator = 0;
-		testcreator = this->s_CDB->GetCreator( ResampleInterpolatorName, this->m_DBIndex );
-		this->m_ResampleInterpolator	= testcreator ? testcreator() : NULL;
-
-		testcreator = 0;
-		testcreator = this->s_CDB->GetCreator( TransformName, this->m_DBIndex );
-		this->m_Transform = testcreator ? testcreator() : NULL;
-
-		/** Check if all component could be created. */
-		if (	( this->m_Elastix.IsNull() ) |
-					( this->m_Registration.IsNull() ) |
-					( this->m_FixedImagePyramid.IsNull() ) |
-					( this->m_MovingImagePyramid.IsNull() ) |
-					( this->m_Interpolator.IsNull() ) |
-					( this->m_Metric.IsNull() ) |
-					( this->m_Optimizer.IsNull() ) |
-					( this->m_Resampler.IsNull() ) |
-					( this->m_ResampleInterpolator.IsNull() ) |
-					( this->m_Transform.IsNull() ) )
+    this->GetElastixBase()->SetResampleInterpolatorContainer(
+      this->CreateComponents( "ResampleInterpolator", "FinalBSplineInterpolator", errorCode) );
+      
+    this->GetElastixBase()->SetResamplerContainer(
+      this->CreateComponents( "Resampler", "DefaultResampler", errorCode) );
+      
+    this->GetElastixBase()->SetTransformContainer(
+      this->CreateComponents( "Transform", "TranslationTransform", errorCode) );
+      
+    /** Check if all component could be created. */
+		if ( errorCode != 0 )
 		{
 			xout["error"] << "ERROR:" << std::endl;
 			xout["error"] << "One or more components could not be created." << std::endl;
 			return 1;
 		}
 		
-		/** Convert ElastixAsObject to a pointer to an ElastixBaseType. */
-		this->m_elx_Elastix = dynamic_cast<ElastixBaseType *>( this->m_Elastix.GetPointer() );
+		/** Set the images and masks. If not set by the user, it is not a problem.
+		 * ElastixTemplate will try to load them from disk. */
+		this->GetElastixBase()->SetFixedImageContainer( this->GetFixedImageContainer() );
+		this->GetElastixBase()->SetMovingImageContainer( this->GetMovingImageContainer() );
+    this->GetElastixBase()->SetFixedMaskContainer( this->GetFixedMaskContainer() );
+		this->GetElastixBase()->SetMovingMaskContainer( this->GetMovingMaskContainer() );
 
-		/** Set all components in the ElastixBase (so actually in
-		 * the appropriate ElastixTemplate).
-		 */
-		this->m_elx_Elastix->SetConfiguration( this->m_Configuration );
-		this->m_elx_Elastix->SetComponentDatabase(this->s_CDB);
-
-		this->m_elx_Elastix->SetRegistration( this->m_Registration );
-		this->m_elx_Elastix->SetFixedImagePyramid( this->m_FixedImagePyramid );
-		this->m_elx_Elastix->SetMovingImagePyramid( this->m_MovingImagePyramid );
-		this->m_elx_Elastix->SetInterpolator( this->m_Interpolator );
-		this->m_elx_Elastix->SetMetric( this->m_Metric );
-		this->m_elx_Elastix->SetOptimizer( this->m_Optimizer );
-		this->m_elx_Elastix->SetResampler( this->m_Resampler );
-		this->m_elx_Elastix->SetResampleInterpolator( this->m_ResampleInterpolator );
-		this->m_elx_Elastix->SetTransform( this->m_Transform );
-
-		this->m_elx_Elastix->SetDBIndex( this->m_DBIndex );
-
-		/** Set the images. If not set by the user, it is not a problem.
-		 * ElastixTemplate!= will try to load them from disk.
-		 */
-		this->m_elx_Elastix->SetFixedImage( this->m_FixedImage );
-		this->m_elx_Elastix->SetMovingImage( this->m_MovingImage );
-
-		this->m_elx_Elastix->SetInitialTransform( this->m_InitialTransform );
-
+    /** Set the initial transform, if it happens to be there */
+		this->GetElastixBase()->SetInitialTransform( this->GetInitialTransform() );
+    
 		/** Run elastix! */
 		try
 		{
-			ErrorCode = this->m_elx_Elastix->Run();
+			errorCode = this->GetElastixBase()->Run();
 		}
 		catch( itk::ExceptionObject & excp )
 		{
 			/** We just print the exception and let the programm quit. */
 			xl::xout["error"] << excp << std::endl;
-			ErrorCode = 1;
+			errorCode = 1;
 		}
 
+    /** Return the final transform */
+    this->m_FinalTransform = this->GetElastixBase()->GetFinalTransform();
+
 		/** Store the images in ElastixMain. */
-		this->SetFixedImage( this->m_elx_Elastix->GetFixedImage() );
-		this->SetMovingImage( this->m_elx_Elastix->GetMovingImage() );
+		this->SetFixedImageContainer(  this->GetElastixBase()->GetFixedImageContainer() );
+		this->SetMovingImageContainer( this->GetElastixBase()->GetMovingImageContainer() );
+    this->SetFixedMaskContainer(  this->GetElastixBase()->GetFixedMaskContainer() );
+		this->SetMovingMaskContainer( this->GetElastixBase()->GetMovingMaskContainer() );
 		
 		/** Set processPriority to normal again. */
 		if ( processPriority != "" )
@@ -340,7 +282,7 @@ namespace elastix
 		}
 
 		/** Return a value. */
-		return ErrorCode;
+		return errorCode;
 
 	} // end Run
 
@@ -526,10 +468,111 @@ namespace elastix
 		{
 			s_ComponentLoader->UnloadComponents();
 		}
-	}
+	} // end UnloadComponents
+
+
+  /**
+   * ************************* GetElastixBase ***************************
+   */
+
+  ElastixMain::ElastixBaseType * ElastixMain::GetElastixBase(void) const
+  {
+    ElastixBaseType * testpointer;
+    /** Convert ElastixAsObject to a pointer to an ElastixBaseType. */
+		testpointer = dynamic_cast<ElastixBaseType *>( this->m_Elastix.GetPointer() );
+    if ( !testpointer )
+    {
+      itkExceptionMacro( << "Probably GetElastixBase() is called before having called Run()");
+    }
+    return testpointer;
+  } // end GetElastixBase
+
+
+  /**
+   * ************************* CreateComponent ***************************
+   */
+
+  ElastixMain::ObjectPointer ElastixMain::CreateComponent( const ComponentDescriptionType & name )
+  {
+    /** A pointer to the ::New() function */
+    PtrToCreator testcreator = 0;
+    ObjectPointer testpointer = 0;
+ 		testcreator = this->s_CDB->GetCreator( name,	this->m_DBIndex );
+		testpointer = testcreator ? testcreator() : NULL;
+    if ( testpointer.IsNull() )
+    {
+      itkExceptionMacro( << "The following component could not be created: " << name );
+    }
+    return testpointer;
+
+  } // end CreateComponent
+
+
+  /** 
+   * *********************** CreateComponents *****************************
+   */
+
+  ElastixMain::ObjectContainerPointer ElastixMain::CreateComponents(
+    const std::string & key,
+    const ComponentDescriptionType & defaultComponentName,
+    int & errorcode )
+  {
+    ComponentDescriptionType componentName = defaultComponentName;
+    unsigned int componentnr = 0;
+    int returncode = 0;
+    ObjectContainerPointer objectContainer = ObjectContainerType::New();
+    objectContainer->Initialize();
+
+    /** If the user hasn't specified any component names, use
+     * the default, and give a warning */
+    returncode = this->m_Configuration->ReadParameter(
+      componentName, key.c_str(), componentnr, false );
+    try
+    {
+      objectContainer->CreateElementAt( componentnr ) = 
+        this->CreateComponent( componentName );
+    }
+    catch ( itk::ExceptionObject & excp )
+    {
+      xout["error"] 
+        << "ERROR: error occured while creating " 
+        << key << " "
+        << componentnr  << "."  << std::endl;
+      xout["error"] << excp << std::endl;
+      errorcode = 1;
+      return objectContainer;
+    }
+        
+    /** Check if more than one component name is given.  */
+    while ( returncode == 0 )
+    {
+      ++componentnr;
+      returncode = this->m_Configuration->ReadParameter(
+        componentName, key.c_str() , componentnr, true );
+      if ( returncode == 0 )   
+      {
+        try
+        {
+          objectContainer->CreateElementAt( componentnr ) = 
+            this->CreateComponent( componentName );
+        }
+        catch ( itk::ExceptionObject & excp )
+        {
+          xout["error"] 
+            << "ERROR: error occured while creating " 
+            << key << " "
+            << componentnr  << "."  << std::endl;
+          xout["error"] << excp << std::endl;
+          errorcode = 1;
+          return objectContainer;
+        } 
+      }  // end if
+    } // end while
+
+    return objectContainer;
+  } // end CreateComponents
 	
-	
-	
+		
 } // end namespace elastix
 
 #endif // end #ifndef __elxElastixMain_cxx

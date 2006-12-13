@@ -64,7 +64,7 @@ namespace elastix
 		/** Typedef's.*/
 
 		/** itk base objects.*/
-		typedef Object									ObjectType;
+    typedef Object									ObjectType;
 		typedef ObjectType::Pointer			ObjectPointer;
 		typedef DataObject							DataObjectType;
 		typedef DataObjectType::Pointer	DataObjectPointer;
@@ -74,6 +74,13 @@ namespace elastix
 		typedef ElastixBase::ConfigurationType									ConfigurationType;
 		typedef ConfigurationType::ArgumentMapType							ArgumentMapType;
 		typedef ConfigurationType::Pointer											ConfigurationPointer;
+    typedef ElastixBase::ObjectContainerType                ObjectContainerType;
+    typedef ElastixBase::DataObjectContainerType            DataObjectContainerType;
+    typedef ElastixBase::ObjectContainerPointer             ObjectContainerPointer;
+    typedef ElastixBase::DataObjectContainerPointer         DataObjectContainerPointer;
+
+    /** Typedefs for the database that holds pointers to ::New() functions.
+     * Those functions are used to instantiate components, such as the metric etc. */
 		typedef ComponentDatabase																ComponentDatabaseType;
 		typedef ComponentDatabaseType::Pointer									ComponentDatabasePointer;
 		typedef ComponentDatabaseType::PtrToCreator							PtrToCreator;
@@ -81,10 +88,11 @@ namespace elastix
 		typedef ComponentDatabaseType::PixelTypeDescriptionType	PixelTypeDescriptionType;
 		typedef ComponentDatabaseType::ImageDimensionType				ImageDimensionType;
 		typedef ComponentDatabaseType::IndexType								DBIndexType;
-
-		typedef ComponentLoader																	ComponentLoaderType;
-		typedef ComponentLoaderType::Pointer										ComponentLoaderPointer;
 		
+    /** Typedef for class that populates a ComponentDatabase */
+    typedef ComponentLoader																	ComponentLoaderType;
+		typedef ComponentLoaderType::Pointer										ComponentLoaderPointer;
+  		
 		/** Set/Get functions for the description of the imagetype.*/
 		itkSetMacro( FixedImagePixelType,		PixelTypeDescriptionType );
 		itkSetMacro( MovingImagePixelType,	PixelTypeDescriptionType );
@@ -95,41 +103,44 @@ namespace elastix
 		itkGetMacro( FixedImageDimension,		ImageDimensionType );
 		itkGetMacro( MovingImageDimension,	ImageDimensionType );
 
-		/**
-		 * Set/Get functions for the fixed and moving images
+		/** Set/Get functions for the fixed and moving images
 		 * (if these are not used, elastix tries to read them from disk,
-		 * according to the commandline parameters).
-		 */
-		itkSetObjectMacro( FixedImage,	DataObjectType );
-		itkSetObjectMacro( MovingImage,	DataObjectType );
-		itkGetObjectMacro( FixedImage,	DataObjectType );
-		itkGetObjectMacro( MovingImage,	DataObjectType );
+		 * according to the commandline parameters). */
+		itkSetObjectMacro( FixedImageContainer,	 DataObjectContainerType );
+		itkSetObjectMacro( MovingImageContainer, DataObjectContainerType );
+		itkGetObjectMacro( FixedImageContainer,	 DataObjectContainerType );
+		itkGetObjectMacro( MovingImageContainer, DataObjectContainerType );
 
-		/**
-		 * Functions to get pointers to the elastix components. 
-		 * The components are returned as Object::Pointer.
-		 * Before calling this functions, call run().
-		 */
-		itkGetObjectMacro( Elastix,								ObjectType );
-		itkGetObjectMacro( FixedImagePyramid,			ObjectType );
-		itkGetObjectMacro( MovingImagePyramid,		ObjectType );
-		itkGetObjectMacro( Interpolator,					ObjectType );
-		itkGetObjectMacro( Metric,								ObjectType );
-		itkGetObjectMacro( Optimizer,							ObjectType );
-		itkGetObjectMacro( Registration,					ObjectType );
-		itkGetObjectMacro( Resampler,							ObjectType );
-		itkGetObjectMacro( ResampleInterpolator,	ObjectType );
-		itkGetObjectMacro( Transform,							ObjectType );
+    /** Set/Get functions for the fixed and moving masks
+		 * (if these are not used, elastix tries to read them from disk,
+		 * according to the commandline parameters). */
+		itkSetObjectMacro( FixedMaskContainer, DataObjectContainerType );
+		itkSetObjectMacro( MovingMaskContainer, DataObjectContainerType );
+		itkGetObjectMacro( FixedMaskContainer, DataObjectContainerType );
+		itkGetObjectMacro( MovingMaskContainer, DataObjectContainerType );
 
-		/** Set/Get the configuration object.*/
+    /** Set/Get the configuration object.*/
 		itkSetObjectMacro( Configuration, ConfigurationType );
 		itkGetObjectMacro( Configuration, ConfigurationType );
 
+		/** Functions to get pointers to the elastix components. 
+		 * The components are returned as Object::Pointer.
+		 * Before calling this functions, call run(). */
+		itkGetObjectMacro( Elastix,	ObjectType );
+
+    /** Convenience function that returns the Elastix component as
+     * a pointer to an ElastixBaseType. Use only after having called run()!  */
+    virtual ElastixBaseType * GetElastixBase(void) const;
+
+    /** Get the final transform (the result of running elastix).
+     * You may pass this as an InitialTransform in an other instantiation
+     * of ElastixMain.
+     * Only valid after calling Run()!  */
+		itkGetObjectMacro( FinalTransform, ObjectType );
+		
 		/** Set/Get the initial transform
-		 *
 		 * the type is ObjectType, but the pointer should actually point 
-		 * to an itk::Transform type (or inherited from that one).
-		 */
+		 * to an itk::Transform type (or inherited from that one). */
 		itkSetObjectMacro( InitialTransform, ObjectType );
 		itkGetObjectMacro( InitialTransform, ObjectType );
 
@@ -142,26 +153,21 @@ namespace elastix
 		
 		/** Enter the command line parameters, which were given by the user,
 		 * if elastix.exe is used to do a registration.	
-		 * The Configuration object will be initialized in this way.
-		 */
+		 * The Configuration object will be initialized in this way. */
 		virtual void EnterCommandLineArguments( ArgumentMapType & argmap );
 
 		/** Start the registration
 		 * run() without commandline parameters; it assumes that 
 		 * EnterCommandLineParameters has been invoked already, or that
-		 * m_Configuration is initialised in a different way.
-		 */
+		 * m_Configuration is initialised in a different way. */
 		virtual int Run(void);
 
 		/** Start the registration
 		 * this version of 'run' first calls this->EnterCommandLineParameters(argc,argv)
-		 * and then calls run().
-		 */
+		 * and then calls run(). */
 		virtual int Run( ArgumentMapType & argmap );
 
-		/** 
-		 * Functions to get/set the ComponentDatabase
-		 */
+		/** Functions to get/set the ComponentDatabase */
 		static ComponentDatabase * GetComponentDatabase(void)
 		{
 			return s_CDB.GetPointer();
@@ -182,15 +188,11 @@ namespace elastix
 		ElastixMain();
 		virtual ~ElastixMain();
 
-		/** A pointer to elastix as an itk::object. In run() this
-		 * pointer will be assigned to an ElastixTemplate<>.
-		 */
+    /** A pointer to elastix as an itk::object. In run() this
+		 * pointer will be assigned to an ElastixTemplate<>. */
 		ObjectPointer m_Elastix;
 
-		/** The same pointer, but casted to an ElastixBaseType
-		 * (from which all ElastixTemplates should inherit).
-		 */
-		ElastixBaseType *			m_elx_Elastix;
+    /** The configuratio object, containing the parameters and command-line arguments */
 		ConfigurationPointer	m_Configuration;
 
 		/** Description of the ImageTypes.*/
@@ -201,18 +203,14 @@ namespace elastix
 
 		DBIndexType									m_DBIndex;
 
-		DataObjectPointer						m_FixedImage;
-		DataObjectPointer						m_MovingImage;
+    /** The images and masks */
+		DataObjectContainerPointer	m_FixedImageContainer;
+		DataObjectContainerPointer	m_MovingImageContainer;
+    DataObjectContainerPointer	m_FixedMaskContainer;
+		DataObjectContainerPointer	m_MovingMaskContainer;
 
-		ObjectPointer	m_FixedImagePyramid;
-		ObjectPointer m_MovingImagePyramid;
-		ObjectPointer m_Interpolator;
-		ObjectPointer m_Metric;
-		ObjectPointer m_Optimizer;
-		ObjectPointer m_Registration;
-		ObjectPointer m_Resampler;
-		ObjectPointer m_ResampleInterpolator;
-		ObjectPointer m_Transform;
+    /** A transform that is the result of registration. */
+		ObjectPointer m_FinalTransform;
 
 		/** The initial transform.*/
 		ObjectPointer m_InitialTransform;
@@ -221,12 +219,26 @@ namespace elastix
 		static ComponentLoaderPointer s_ComponentLoader;
 		virtual int LoadComponents(void);
 		
-
-		/**
-		 * InitDBIndex sets m_DBIndex to the value obtained from the
-		 * ComponentDatabase.
-		 */
+		/** InitDBIndex sets m_DBIndex by asking the ImageTypes
+     * from the Configuration object and obtaining the corresponding
+     * DB index from the ComponentDatabase.	*/
     virtual int InitDBIndex(void);
+
+    /** Create a component. Make sure InitDBIndex has been called before.
+     * The input is a string, like MattesMutualInformation */
+    virtual ObjectPointer CreateComponent( const ComponentDescriptionType & name );
+
+    /** Create components. Reads from the configuration object (using the provided key)
+     * the names of the components to create and store their instantations in the 
+     * provided ObjectContainer.
+     * The errorcode remains what it was if no error occured. Otherwise it's set to 1.
+     * The 'key' is the entry inspected in the parameter file
+     * A component named 'defaultComponentName' is used when the key is not found
+     * in the parameter file.  */
+    virtual ObjectContainerPointer CreateComponents(
+      const ComponentDescriptionType & key,
+      const ComponentDescriptionType & defaultComponentName,
+      int & errorcode );
 
 	private:
 

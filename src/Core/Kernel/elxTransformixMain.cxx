@@ -15,25 +15,6 @@ namespace elastix
 	
 	
 	/**
-	 * ********************* Constructor ****************************
-	 */
-	
-	TransformixMain::TransformixMain()
-	{
-		/** Initialize the components.*/
-	} // end Constructor
-	
-	
-	/**
-	 * ********************** Destructor ****************************
-	 */
-	
-	TransformixMain::~TransformixMain()
-	{
-	} // end Destructor
-	
-	
-	/**
 	 * **************************** Run *****************************
 	 *
 	 * Assuming EnterCommandLineParameters has already been invoked.
@@ -59,75 +40,63 @@ namespace elastix
 		}
 
 		/** Initialize database.*/		
-		int ErrorCode = this->InitDBIndex();
-		if (ErrorCode != 0)
+		int errorCode = this->InitDBIndex();
+		if (errorCode != 0)
 		{
-			return ErrorCode;
+			return errorCode;
 		}
 
-		/** Get the different components.*/
-		ComponentDescriptionType ResampleInterpolatorName = "FinalBSplineInterpolator";
-		m_Configuration->ReadParameter( ResampleInterpolatorName, "ResampleInterpolator", 0 );
-		
-		ComponentDescriptionType ResamplerName = "DefaultResampler";
-		m_Configuration->ReadParameter( ResamplerName, "Resampler", 0 );
-		
-		ComponentDescriptionType TransformName = "BSplineTransform";
-		m_Configuration->ReadParameter( TransformName, "Transform", 0 );
-		
-		/** Create the components!*/
-		PtrToCreator testcreator;
-		
-		/** Key "Elastix", see elxSupportedImageTypes.cxx.*/
-		testcreator = 0;
-		testcreator = this->s_CDB->GetCreator( "Elastix", m_DBIndex );
-		m_Elastix	= testcreator ? testcreator() : NULL;
-		
-		testcreator = 0;
-		testcreator = this->s_CDB->GetCreator( ResamplerName, m_DBIndex );
-		m_Resampler = testcreator ? testcreator() : NULL;
-		
-		testcreator = 0;
-		testcreator = this->s_CDB->GetCreator( ResampleInterpolatorName, m_DBIndex );
-		m_ResampleInterpolator	= testcreator ? testcreator() : NULL;
-		
-		testcreator = 0;
-		testcreator = this->s_CDB->GetCreator( TransformName, m_DBIndex );
-		m_Transform = testcreator ? testcreator() : NULL;
-		
-		/** Check if all components could be created.*/
-		if (	( m_Elastix.IsNull() ) |
-				( m_Resampler.IsNull() ) |
-				( m_ResampleInterpolator.IsNull() ) |
-				( m_Transform.IsNull() ) )
+        /** Create the Elastix component */
+    try 
+    {
+      /** Key "Elastix", see elxComponentLoader::InstallSupportedImageTypes(). */
+      this->m_Elastix = this->CreateComponent( "Elastix" );
+    }
+		catch( itk::ExceptionObject & excp )
 		{
-			xl::xout["error"] << "ERROR:" << std::endl;
-			xl::xout["error"] << "One or more components could not be created." << std::endl;
-			return 1;
-		}	
-		
-		/** Convert m_Elastix to a pointer to an ElastixBaseType.*/
-		m_elx_Elastix = dynamic_cast<ElastixBaseType *>( m_Elastix.GetPointer() );
-		
-		/** Set all components in the ElastixBase (so actually in
-		 * the appropriate ElastixTemplate).
-		 */
-		m_elx_Elastix->SetComponentDatabase(this->s_CDB);
-		m_elx_Elastix->SetConfiguration( m_Configuration );
-		m_elx_Elastix->SetResampler( m_Resampler );
-		m_elx_Elastix->SetResampleInterpolator( m_ResampleInterpolator );
-		m_elx_Elastix->SetTransform( m_Transform );
+			/** We just print the exception and let the programm quit. */
+			xl::xout["error"] << excp << std::endl;
+			errorCode = 1;
+      return errorCode;
+		}
 
-		m_elx_Elastix->SetDBIndex( m_DBIndex );
-		
-		/** Set the images. If not set by the user, it is not a problem:
-		 * ElastixTemplate will try to load them from disk.
-		 */
-		m_elx_Elastix->SetMovingImage( this->GetMovingImage() );
-		m_elx_Elastix->SetInitialTransform( m_InitialTransform );
+    /** Set some information in the ElastixBase */
+		this->GetElastixBase()->SetConfiguration( this->m_Configuration );
+		this->GetElastixBase()->SetComponentDatabase(this->s_CDB);
+		this->GetElastixBase()->SetDBIndex( this->m_DBIndex );
+
+    /** Populate the component containers */
+   this->GetElastixBase()->SetResampleInterpolatorContainer(
+      this->CreateComponents( "ResampleInterpolator", "FinalBSplineInterpolator", errorCode) );
+      
+    this->GetElastixBase()->SetResamplerContainer(
+      this->CreateComponents( "Resampler", "DefaultResampler", errorCode) );
+      
+    this->GetElastixBase()->SetTransformContainer(
+      this->CreateComponents( "Transform", "TranslationTransform", errorCode) );
+      
+    /** Check if all component could be created. */
+		if ( errorCode != 0 )
+		{
+      xl::xout["error"] << "ERROR:" << std::endl;
+      xl::xout["error"] << "One or more components could not be created." << std::endl;
+			return 1;
+		}
+			
+		/** Set the images. If not set by the user, it is not a problem.
+		 * ElastixTemplate will try to load them from disk. */
+		this->GetElastixBase()->SetMovingImageContainer( this->GetMovingImageContainer() );
+
+    /** Set the initial transform, if it happens to be there 
+     * \todo: Does this make sense for transformix?
+     */
+		this->GetElastixBase()->SetInitialTransform( this->GetInitialTransform() );
 		
 		/** ApplyTransform! */
-		try { ErrorCode = m_elx_Elastix->ApplyTransform(); }
+		try 
+    {
+      errorCode = this->GetElastixBase()->ApplyTransform();
+    }
 		catch( itk::ExceptionObject & excp )
 		{
 			/** We just print the exception and let the programm quit. */
@@ -135,9 +104,12 @@ namespace elastix
 				<< "--------------- Exception ---------------"
 				<< std::endl << excp
 				<< "-----------------------------------------" << std::endl;
-			ErrorCode = 1;
+			errorCode = 1;
 		}
-		
+
+    /** Save the image container */
+    this->SetMovingImageContainer( this->GetElastixBase()->GetMovingImageContainer() );
+				
 		/** Set processPriority to normal again. */
 		if ( processPriority == "high" )
 		{
@@ -146,7 +118,7 @@ namespace elastix
 			#endif
 		}
 
-		return ErrorCode;
+		return errorCode;
 
 	} // end Run
 
@@ -160,7 +132,7 @@ namespace elastix
 	int TransformixMain::Run( ArgumentMapType & argmap )
 	{
 
-		this->Superclass::EnterCommandLineArguments( argmap );
+		this->EnterCommandLineArguments( argmap );
 		return this->Run();
 
 	} // end Run
@@ -170,10 +142,10 @@ namespace elastix
 	 * ********************* SetInputImage **************************
 	 */
 	
-	void TransformixMain::SetInputImage( DataObjectType * inputImage )
+	void TransformixMain::SetInputImageContainer( DataObjectContainerType * inputImageContainer )
 	{
 		/** InputImage == MovingImage.*/
-		this->Superclass::SetMovingImage( inputImage );
+		this->SetMovingImageContainer( inputImageContainer );
 		
 	} // end SetInputImage
 	

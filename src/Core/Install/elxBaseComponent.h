@@ -20,9 +20,10 @@
 #endif
 
 #include <iostream>
+#include <sstream>
 
 /** The current Elastix version. */
-#define __ELASTIX_VERSION 3.601
+#define __ELASTIX_VERSION 3.602
 
 /** All Elastix components should be in namespace elastix. */
 namespace elastix
@@ -89,6 +90,26 @@ namespace elastix
 		{
 			return "BaseComponent";
 		}
+
+    /** Set the component label, which consists of a label 
+     * ( "Metric", "Transform") and an index number. In case
+     * more metrics are used simultaneously each metric will have
+     * its own index number. This can be used when reading the
+     * parameter file for example, to distinguish between options
+     * meant for Metric0 and for Metric1.
+     */
+    virtual void SetComponentLabel( const char * label, unsigned int idx)
+    {
+      std::ostringstream makestring(label);
+      makestring << idx;
+      this->m_ComponentLabel = makestring.str();
+    }
+
+    /** Get the componentlabel as a string: "Metric0" for example. */
+    virtual const char * GetComponentLabel( void ) const
+    {
+      return this->m_ComponentLabel.c_str();
+    }
 		
 	protected:
 
@@ -99,6 +120,8 @@ namespace elastix
 
 		BaseComponent( const BaseComponent & );		// purposely not implemented
 		void operator=( const BaseComponent & );	// purposely not implemented
+
+    std::string m_ComponentLabel;
 
 	}; // end class BaseComponent
 	

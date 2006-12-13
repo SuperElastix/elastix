@@ -152,9 +152,15 @@ namespace elastix
 		itkSetMacro( ElastixLevel, unsigned int );
 		itkGetMacro( ElastixLevel, unsigned int );
 
-		/** Methods that have to be present everywhere.*/
+		/** Methods that is called at the very beginning of elastixTemplate::Run.
+     * \li Prints the parameter file  */
 		virtual int BeforeAll(void);
 
+    /** Methods that is called at the very beginning of elastixTemplate::ApplyTransform.
+     * \li Prints the parameter file  */
+    virtual int BeforeAllTransformix(void);
+
+    
 	protected:
 
 		MyConfiguration(); 
@@ -166,11 +172,19 @@ namespace elastix
 		std::string								m_ParameterFileName;
 		bool											m_Initialized;
 		unsigned int							m_ElastixLevel;
+
+    /** Print the parameter file to the logfile. Called by BeforeAll()
+     * This function is not really generic. It's just added because it needs to be
+     * called by both BeforeAll and BeforeAllTransformix   */
+    virtual int PrintParameterFile(void);
+    
 		
 	private:
 
 		MyConfiguration( const Self& );	// purposely not implemented
 		void operator=( const Self& );	// purposely not implemented
+
+    std::string m_EmptyString;
 		
 	}; // end class MyConfiguration
 	

@@ -37,30 +37,29 @@ int main( int argc, char **argv )
 	}
 
 	/** Some typedef's. */
-	typedef elx::ElastixMain												ElastixType;
-	typedef ElastixType::Pointer										ElastixPointer;
-	typedef std::vector<ElastixPointer>							ElastixVectorType;
+	typedef elx::ElastixMain												    ElastixMainType;
+	typedef ElastixMainType::Pointer								    ElastixMainPointer;
+	typedef std::vector<ElastixMainPointer>					    ElastixMainVectorType;
+	typedef ElastixMainType::ObjectPointer							ObjectPointer;
+	typedef ElastixMainType::DataObjectContainerPointer	DataObjectContainerPointer;
 
-	typedef ElastixType::ObjectType									ObjectType;
-	typedef ElastixType::DataObjectType							DataObjectType;
-	typedef ElastixType::ObjectPointer							ObjectPointer;
-	typedef ElastixType::DataObjectPointer					DataObjectPointer;
+	typedef ElastixMainType::ArgumentMapType						ArgumentMapType;
+	typedef ArgumentMapType::value_type							    ArgumentMapEntryType;
 
-	typedef ElastixType::ArgumentMapType						ArgumentMapType;
-	typedef ArgumentMapType::value_type							ArgumentMapEntryType;
-
-	typedef std::pair< std::string, std::string >		ArgPairType;
-	typedef std::queue< ArgPairType >								ParameterFileListType;
-	typedef ParameterFileListType::value_type				ParameterFileListEntryType;
+	typedef std::pair< std::string, std::string >		    ArgPairType;
+	typedef std::queue< ArgPairType >								    ParameterFileListType;
+	typedef ParameterFileListType::value_type				    ParameterFileListEntryType;
 	
 	/** Some declarations and initialisations. */
-	ElastixVectorType elastices;
+	ElastixMainVectorType elastices;
 	
 	ObjectPointer transform = 0;
-	DataObjectPointer fixedImage = 0;
-	DataObjectPointer movingImage = 0;
+	DataObjectContainerPointer fixedImageContainer = 0;
+	DataObjectContainerPointer movingImageContainer = 0;
+  DataObjectContainerPointer fixedMaskContainer = 0;
+	DataObjectContainerPointer movingMaskContainer = 0;
 	int returndummy = 0;
-	unsigned long NrOfParameterFiles = 0;
+	unsigned long nrOfParameterFiles = 0;
 	ArgumentMapType argMap;
 	ParameterFileListType parameterFileList;
 	bool outFolderPresent = false;
@@ -75,13 +74,13 @@ int main( int argc, char **argv )
 		if ( key == "-p" )
 		{
 			/** Queue the ParameterFileNames */
-			NrOfParameterFiles++;
+			nrOfParameterFiles++;
 			parameterFileList.push( 
 				ParameterFileListEntryType( key.c_str(), value.c_str() ) );
 			/** The different '-p' are stored in the argMap, with
 			 * keys p(1), p(2), etc. */
 			std::ostringstream tempPname("");
-			tempPname << "-p(" << NrOfParameterFiles << ")";
+			tempPname << "-p(" << nrOfParameterFiles << ")";
 			std::string tempPName = tempPname.str();
 			argMap.insert( ArgumentMapEntryType( tempPName.c_str(), value.c_str() ) );
 		}
@@ -119,7 +118,7 @@ int main( int argc, char **argv )
 	argMap.insert( ArgumentMapEntryType( "-argv0", argv[ 0 ] )  );
 
 	/** Check if at least once the option "-p" is given. */
-	if ( NrOfParameterFiles == 0 )
+	if ( nrOfParameterFiles == 0 )
 	{
 		std::cerr << "ERROR: No CommandLine option \"-p\" given!" << std::endl;
 		returndummy |= -1;
@@ -162,15 +161,17 @@ int main( int argc, char **argv )
 	 * Do the (possibly multiple) registration(s).
 	 */
 
-	for ( unsigned int i = 0; i < NrOfParameterFiles; i++ )
+	for ( unsigned int i = 0; i < nrOfParameterFiles; i++ )
 	{
 		/** Create another instance of ElastixMain. */
-		elastices.push_back( elx::ElastixMain::New() );
+		elastices.push_back( ElastixMainType::New() );
 		
 		/** Set stuff we get from a former registration. */
 		elastices[ i ]->SetInitialTransform( transform );
-		elastices[ i ]->SetFixedImage( fixedImage );
-		elastices[ i ]->SetMovingImage( movingImage );
+		elastices[ i ]->SetFixedImageContainer( fixedImageContainer );
+		elastices[ i ]->SetMovingImageContainer( movingImageContainer );
+    elastices[ i ]->SetFixedMaskContainer( fixedMaskContainer );
+		elastices[ i ]->SetMovingMaskContainer( movingMaskContainer );
 
 		/** Set the current elastix-level. */
 		elastices[ i ]->SetElastixLevel( i );
@@ -211,9 +212,11 @@ int main( int argc, char **argv )
 		/** Get the transform, the fixedImage and the movingImage
 		 * in order to put it in the (possibly) next registration.
 		 */
-		transform						= elastices[ i ]->GetTransform();	
-		fixedImage					= elastices[ i ]->GetFixedImage();
-		movingImage					= elastices[ i ]->GetMovingImage();
+		transform						 = elastices[ i ]->GetFinalTransform();	
+		fixedImageContainer	 = elastices[ i ]->GetFixedImageContainer();
+		movingImageContainer = elastices[ i ]->GetMovingImageContainer();
+    fixedMaskContainer	 = elastices[ i ]->GetFixedMaskContainer();
+		movingMaskContainer  = elastices[ i ]->GetMovingMaskContainer();
 		
 		/** Print a finish message. */
 		elxout << "Running Elastix with parameter file " << i
@@ -241,17 +244,19 @@ int main( int argc, char **argv )
 	 * are deleted before the modules are closed.
 	 */
 
-	for ( unsigned int i = 0; i < NrOfParameterFiles; i++ )
+	for ( unsigned int i = 0; i < nrOfParameterFiles; i++ )
 	{
 		elastices[ i ] = 0;
 	}	
 
 	transform = 0;
-	fixedImage = 0;
-	movingImage = 0;
+	fixedImageContainer = 0;
+	movingImageContainer = 0;
+  fixedMaskContainer = 0;
+	movingMaskContainer = 0;
 	
 	/** Close the modules. */
-	ElastixType::UnloadComponents();
+	ElastixMainType::UnloadComponents();
 	
 	/** Exit and return the error code. */
 	return returndummy;
@@ -298,7 +303,7 @@ void PrintHelp(void)
 	std::cout << "It must also contain information specific for the metric, optimizer, transform,..." << std::endl;
 	std::cout << "For a usable parameter-file, ask us." << std::endl << std::endl;
 
-	std::cout << "Need further help? Ask Marius and/or Stefan. :-)" << std::endl;
+  std::cout << "Need further help? Check the website http://www.isi.uu.nl/Elastix, or ask Marius and/or Stefan. :-)" << std::endl;
 
 } // end PrintHelp
 

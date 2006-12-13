@@ -3,6 +3,8 @@
 
 #include "elxElastixBase.h"
 
+#include <sstream>
+
 namespace elastix
 {
 
@@ -14,34 +16,39 @@ namespace elastix
 	{
 		/** Initialize.*/
 		this->m_Configuration = 0;
-		this->m_CDB= 0;
+		this->m_ComponentDatabase = 0;
 		this->m_DBIndex = 0;
 
 		/** The default output precision of elxout is set to 6 */
 		this->m_DefaultOutputPrecision = 6;
 
-	} // end Constructor
+    /** Create the component containers */
+    this->m_FixedImagePyramidContainer = ObjectContainerType::New();
+		this->m_MovingImagePyramidContainer = ObjectContainerType::New();
+		this->m_InterpolatorContainer = ObjectContainerType::New();
+		this->m_MetricContainer = ObjectContainerType::New();
+		this->m_OptimizerContainer = ObjectContainerType::New();
+		this->m_RegistrationContainer = ObjectContainerType::New();
+		this->m_ResamplerContainer = ObjectContainerType::New();
+		this->m_ResampleInterpolatorContainer = ObjectContainerType::New();
+		this->m_TransformContainer = ObjectContainerType::New();
 
+    /** Create image and mask containers */
+    this->m_FixedImageContainer = DataObjectContainerType::New();
+    this->m_MovingImageContainer = DataObjectContainerType::New();
+    this->m_FixedImageFileNameContainer = FileNameContainerType::New();
+    this->m_MovingImageFileNameContainer = FileNameContainerType::New();
 
-	/**
-	 * ********************* SetConfiguration ***********************
-	 */
+    this->m_FixedMaskContainer = DataObjectContainerType::New();
+    this->m_MovingMaskContainer = DataObjectContainerType::New();
+    this->m_FixedMaskFileNameContainer = FileNameContainerType::New();
+    this->m_MovingMaskFileNameContainer = FileNameContainerType::New();
 
-	void ElastixBase::SetConfiguration( ConfigurationType * _arg )
-	{
-		/** If configuration is not set, set it.*/
-		if ( this->m_Configuration != _arg )
-		{
-			this->m_Configuration = _arg;
+ 		/** Initialize initialTransform and final transform. */
+		this->m_InitialTransform = 0;
+    this->m_FinalTransform = 0;
 
-			Object * thisasobject = dynamic_cast<Object *>(this);
-			if ( thisasobject )
-			{	
-				thisasobject->Modified();
-			}
-		}
-
-	} // end SetConfiguration
+   } // end Constructor
 
 
 	/**
@@ -75,7 +82,8 @@ namespace elastix
 		int returndummy = 0;
 
 		/** Set the default precision of floating values in the output. */
-		this->m_Configuration->ReadParameter( this->m_DefaultOutputPrecision, "DefaultOutputPrecision", 0, true );
+		this->m_Configuration->ReadParameter(
+      this->m_DefaultOutputPrecision, "DefaultOutputPrecision", 0, true );
 		elxout << std::setprecision( this->m_DefaultOutputPrecision );
 
 		/** Print to log file.*/
@@ -89,41 +97,41 @@ namespace elastix
 		elxout << "Command line options from ElastixBase:" << std::endl;
 		std::string check = "";
 
-		/** Check for appearance of "-f". */
-		check = this->GetConfiguration()->GetCommandLineArgument( "-f" );
-		if ( check == "" )
-		{
-			xl::xout["error"] << "ERROR: No CommandLine option \"-f\" given!" << std::endl;
-			returndummy |= -1;
-		}
-		else
-		{
-			elxout << "-f\t\t" << check << std::endl;
-		}
-		
-		/** Check for appearance of "-m". */
-		check = "";
-		check = this->GetConfiguration()->GetCommandLineArgument( "-m" );
-		if ( check == "" )
-		{
-			xl::xout["error"] << "ERROR: No CommandLine option \"-m\" given!" << std::endl;
-			returndummy |= -1;
-		}
-		else
-		{
-			elxout << "-m\t\t" << check << std::endl;
-		}
+    /** Read the fixed and moving image filenames. These are obliged options,
+     * so print an error if they are not present.
+     * Print also some info (second boolean = true) */
+    this->m_FixedImageFileNameContainer = this->GenerateFileNameContainer(
+      "-f", returndummy, true, true);
+    this->m_MovingImageFileNameContainer = this->GenerateFileNameContainer(
+      "-m", returndummy, true, true);
 
+    /** Read the fixed and moving mask filenames. These are not obliged options,
+     * so do not print any errors if they are not present. 
+     * Do print some info (second boolean = true) */
+    int maskreturndummy = 0;
+    this->m_FixedMaskFileNameContainer = this->GenerateFileNameContainer(
+      "-fMask", maskreturndummy, false, true);
+    if ( maskreturndummy != 0 )
+    {
+      elxout << "-fMask\t\tunspecified, so no fixed mask used" << std::endl;
+    }
+    maskreturndummy = 0;
+    this->m_MovingMaskFileNameContainer = this->GenerateFileNameContainer(
+      "-mMask", maskreturndummy, false, true);
+    if ( maskreturndummy != 0 )
+    {
+      elxout << "-mMask\t\tunspecified, so no moving mask used" << std::endl;
+    }
+   
 		/** Check for appearance of "-out".
-		 * This check has allready been performed in elastix.cxx,
-		 * so here we do it again.
-		 */
+		 * This check has already been performed in elastix.cxx,
+		 * Here we do it again. */
 		check = "";
 		check = this->GetConfiguration()->GetCommandLineArgument( "-out" );
 		if ( check == "" )
 		{
 			xl::xout["error"] << "ERROR: No CommandLine option \"-out\" given!" << std::endl;
-			returndummy |= -1;
+			returndummy |= 1;
 		}
 		else
 		{
@@ -140,16 +148,16 @@ namespace elastix
 		/** Print all "-p". */
 		unsigned int i = 1;
 		bool loop = true;
+    std::ostringstream tempPname("");
 		while ( loop )
 		{
 			check = "";
-			std::ostringstream tempPname("");
+			tempPname.clear();
 			tempPname << "-p(" << i << ")";
-			std::string tempPName = tempPname.str();
-			check = this->GetConfiguration()->GetCommandLineArgument( tempPName.c_str() );
+			check = this->GetConfiguration()->GetCommandLineArgument( tempPname.str().c_str() );
 			if ( check == "" ) loop = false;
 			else elxout << "-p\t\t" << check << std::endl;
-			i++;
+			++i;
 		}
 
 		/** Check for appearance of "-priority", if this is a Windows station. */
@@ -170,6 +178,64 @@ namespace elastix
 		return returndummy;
 
 	} // end BeforeAllBase
+
+	/**
+	 * ************************ BeforeAllTransformixBase ***************************
+	 */
+	
+	int ElastixBase::BeforeAllTransformixBase(void)
+	{
+		/** Declare the return value and initialize it.*/
+		int returndummy = 0;
+
+    /** Print to log file. */
+		elxout << std::fixed;
+		elxout << std::showpoint;
+		elxout << std::setprecision(3);
+		elxout << "ELASTIX version: " << __ELASTIX_VERSION << std::endl;
+		elxout << std::setprecision( this->GetDefaultOutputPrecision() );
+
+		/** Check Command line options and print them to the logfile. */
+		elxout << "Command line options from ElastixBase:" << std::endl;
+		std::string check = "";
+
+    /** Read the input image filenames. These are not obliged options,
+     * so do not print an error if they are not present.
+     * Print also some info (second boolean = true)
+     * Save the result in the moving image file name container */
+    int inreturndummy = 0;
+    this->m_MovingImageFileNameContainer = this->GenerateFileNameContainer(
+      "-in", inreturndummy, false, true);
+    if ( inreturndummy != 0 )
+    {
+      elxout << "-in\t\tunspecified, so no input image specified" << std::endl;
+    }
+    
+		/** Check for appearance of "-out". */
+		check = this->GetConfiguration()->GetCommandLineArgument( "-out" );
+		if ( check == "" )
+		{
+			xl::xout["error"] << "ERROR: No CommandLine option \"-out\" given!" << std::endl;
+			returndummy |= 1;
+		}
+		else
+		{
+			/** Make sure that last character of -out equals a '/'. */
+			std::string folder( check );
+			if ( folder.find_last_of( "/" ) != folder.size() - 1 )
+			{
+				folder.append( "/" );
+				this->GetConfiguration()->SetCommandLineArgument( "-out", folder.c_str() );
+			}
+			elxout << "-out\t\t" << check << std::endl;
+		}		
+
+		/** Print "-tp". */
+		check = this->GetConfiguration()->GetCommandLineArgument( "-tp" );
+		elxout << "-tp\t\t" << check << std::endl;
+
+    return returndummy;
+  } // end BeforeAllTransformixBase
 
 
 	/**
@@ -200,6 +266,82 @@ namespace elastix
 
 	} // end AfterRegistrationBase
 
+
+  /** 
+   * ********************* GenerateFileNameContainer ******************
+   */
+
+  ElastixBase::FileNameContainerPointer 
+    ElastixBase::GenerateFileNameContainer(
+    const std::string & optionkey, int & errorcode,
+    bool printerrors, bool printinfo ) const
+  {
+    FileNameContainerPointer fileNameContainer = FileNameContainerType::New();
+    std::string check = "";
+    std::string argused("");
+    		
+    /** Try optionkey0 */
+    std::ostringstream argusedss("");
+    argusedss << optionkey << 0;
+    argused = argusedss.str();
+		check = this->GetConfiguration()->GetCommandLineArgument( argused.c_str() );
+		if ( check == "" )
+		{
+      /** Try optionkey */
+      std::ostringstream argusedss2("");
+      argusedss2 << optionkey;
+      argused = argusedss2.str();
+      check = this->GetConfiguration()->GetCommandLineArgument( argused.c_str() );
+      if ( check == "" )
+		  {
+        /** Both failed; return an error message, if desired */
+        if ( printerrors )
+        {
+  			  xl::xout["error"] 
+            << "ERROR: No CommandLine option \"" 
+            << optionkey << "\" or \""
+            << optionkey << 0 << "\" given!" << std::endl;
+        }
+			  errorcode |= 1;
+        return fileNameContainer;
+      }
+		}
+    /** Optionkey or optionkey0 is found */
+    if ( check != "" )
+    {
+      /** Print info, if desired */
+      if ( printinfo )
+      {
+		    elxout << argused << "\t\t" << check << std::endl;
+      }
+      fileNameContainer->CreateElementAt(0) = check;
+      /** loop over all optionkey<i> options given with i > 0 */
+      unsigned int i = 1;
+      bool readsuccess = true;
+      while ( readsuccess )
+      {
+        std::ostringstream argusedss2("");
+        argusedss2 << optionkey << i;
+        argused = argusedss2.str();
+        check = this->GetConfiguration()->GetCommandLineArgument( argused.c_str() );
+        if ( check == "" )
+        {
+          readsuccess = false;
+        }
+        else
+        {
+          if ( printinfo )
+          {
+            elxout << argused << "\t\t" << check << std::endl;
+          }
+          fileNameContainer->CreateElementAt(i) = check;
+          ++i;
+        }
+      } // end while
+    } // end if
+
+    return fileNameContainer;
+  } // end GenerateFileNameContainer
 
 
 } // end namespace elastix
