@@ -1,7 +1,7 @@
-#ifndef __elxMultiResolutionRegistration_H__
-#define __elxMultiResolutionRegistration_H__
+#ifndef __elxMultiMetricMultiResolutionRegistration_H__
+#define __elxMultiMetricMultiResolutionRegistration_H__
 
-#include "itkMultiResolutionImageRegistrationMethod.h"
+#include "itkMultiMetricMultiResolutionImageRegistrationMethod.h"
 
 #include "elxIncludes.h"
 
@@ -10,36 +10,58 @@ namespace elastix
 using namespace itk;
 
 	/**
-	 * \class MultiResolutionRegistration
-	 * \brief A registration framework based on the itk::MultiResolutionImageRegistrationMethod.
+	 * \class MultiMetricMultiResolutionRegistration
+	 * \brief A registration framework based on the itk::MultiMetricMultiResolutionImageRegistrationMethod.
 	 *
-	 * This MultiResolutionRegistration givees a framework for registration with a
-	 * multi-resolution approach.
+	 * This MultiMetricMultiResolutionRegistration gives a framework for registration with a
+	 * multi-resolution approach, using multiple metrics. The metrics can use the same pair of images/
+   * image pyramids/interpolators/masks, but also different pairs of fixed/moving images etc. 
+   * If the metrics use the same moving image and the same moving image pyramid, they can use the
+   * same interpolator. If multiple moving images are used, enter multiple interpolators, possibly 
+   * of the same type:
+   * Like this for example:
+   * (Interpolator "BSplineInterpolator" "BSplineInterpolator")
+   *
+   * Note, that the number of metrics should always be larger than or equal to the number
+   * if fixed/moving images, interpolators, image pyramids etc.
+   *
 	 *
 	 * The parameters used in this class are:
 	 * \parameter Registration: Select this registration framework as follows:\n
-	 *		<tt>(Registration "MultiResolutionRegistration")</tt>
+	 *		<tt>(Registration "MultiMetricMultiResolutionRegistration")</tt>
 	 * \parameter NumberOfResolutions: the number of resolutions used. \n
 	 *		example: <tt>(NumberOfResolutions 4)</tt> \n
 	 *		The default is 3.
-	 *
+   * \parameter MetricWeight<i>: The weight for the i-th metric, in each resolution \n
+	 *		example: <tt>(MetricWeight0 0.5 0.5 0.8)</tt> \n
+   *		example: <tt>(MetricWeight1 0.5 0.5 0.2)</tt> \n
+	 *		The default is 1.0.
+   *
 	 * \ingroup Registrations
 	 */
 
 	template <class TElastix>
-		class MultiResolutionRegistration :
+		class MultiMetricMultiResolutionRegistration :
 		public	
-			RegistrationBase<TElastix>::ITKBaseType,
+			MultiMetricMultiResolutionImageRegistrationMethod<
+      ITK_TYPENAME RegistrationBase<TElastix>::FixedImageType,
+      ITK_TYPENAME RegistrationBase<TElastix>::MovingImageType >,
 		public
 			RegistrationBase<TElastix>
 	{
 	public:
 
-		/** Standard ITK. */
-		typedef MultiResolutionRegistration									Self;
-		typedef	typename RegistrationBase<TElastix>
-			::ITKBaseType																			Superclass1;
+		/** Standard ITK: Self */
+		typedef MultiMetricMultiResolutionRegistration			Self;
+
+    /** Standard ITK: Superclasses */
+		typedef	MultiMetricMultiResolutionImageRegistrationMethod<
+      typename RegistrationBase<TElastix>::FixedImageType,
+      typename RegistrationBase<TElastix>::MovingImageType >
+                                                        Superclass1;
 		typedef RegistrationBase<TElastix>									Superclass2;
+
+    /** Standard ITK: SmartPointers */
 		typedef SmartPointer<Self>													Pointer;
 		typedef SmartPointer<const Self>										ConstPointer;
 		
@@ -47,13 +69,14 @@ using namespace itk;
 		itkNewMacro(Self);
 		
 		/** Run-time type information (and related methods). */
-		itkTypeMacro( MultiResolutionRegistration, MultiResolutionImageRegistrationMethod );
+		itkTypeMacro( MultiMetricMultiResolutionRegistration,
+      MultiMetricMultiResolutionImageRegistrationMethod );
 
 		/** Name of this class.
 		 * Use this name in the parameter file to select this specific registration framework. \n
-		 * example: <tt>(Registration "MultiResolutionRegistration")</tt>\n
+		 * example: <tt>(Registration "MultiMetricMultiResolutionRegistration")</tt>\n
 		 */
-		elxClassNameMacro( "MultiResolutionRegistration" );
+		elxClassNameMacro( "MultiMetricMultiResolutionRegistration" );
 		
 		/** Typedef's inherited from Superclass1. */
 		
@@ -80,6 +103,7 @@ using namespace itk;
 		
 		/**  Type of the optimizer. */
 		typedef typename Superclass1::OptimizerType							OptimizerType;
+    typedef typename Superclass1::OptimizerPointer					OptimizerPointer;
 		
 		/** Type of the Fixed image multiresolution pyramid. */
 		typedef typename Superclass1::FixedImagePyramidType			FixedImagePyramidType;
@@ -90,9 +114,12 @@ using namespace itk;
 		typedef typename Superclass1::MovingImagePyramidPointer	MovingImagePyramidPointer;
 		
 		/** Type of the Transformation parameters. This is the same type used to
-		 *  represent the search space of the optimization algorithm.
-		 */
+		 *  represent the search space of the optimization algorithm. */
 		typedef typename Superclass1::ParametersType						ParametersType;
+
+    /** The CombinationMetric type, which is used internally by the Superclass1 */
+    typedef typename Superclass1::CombinationMetricType	 	  CombinationMetricType;
+		typedef typename Superclass1::CombinationMetricPointer  CombinationMetricPointer;
 		
 		/** Typedef's from Elastix. */
 		typedef typename Superclass2::ElastixType						ElastixType;
@@ -109,22 +136,23 @@ using namespace itk;
 		/** Get	the dimension of the moving image. */
 		itkStaticConstMacro( MovingImageDimension, unsigned int, Superclass2::MovingImageDimension );
 
-		/** Execute stuff before the actual registration:
+    /** Execute stuff before the actual registration:
 		 * \li Connect all components to the registration framework.
 		 * \li Set the number of resolution levels.
-		 * \li Set the fixed image region. */
+		 * \li Set the fixed image regions. */
 		virtual void BeforeRegistration(void);
 
     /** Execute stuff before each resolution:
-		 * \li Update masks with an erosion. */
+		 * \li Update masks with an erosion. 
+     * \li Set the metric weights */
     virtual void BeforeEachResolution(void);
-				
+		
 	protected:
 
 		/** The constructor. */
-    MultiResolutionRegistration(){};
+    MultiMetricMultiResolutionRegistration(){};
 		/** The destructor. */
-		virtual ~MultiResolutionRegistration() {};
+		virtual ~MultiMetricMultiResolutionRegistration() {};
     
     /** Typedef for timer.*/
 		typedef tmr::Timer					TimerType;
@@ -142,8 +170,9 @@ using namespace itk;
 		typedef typename Superclass2::FixedMaskSpatialObjectPointer   FixedMaskSpatialObjectPointer;
 		typedef typename Superclass2::MovingMaskSpatialObjectPointer  MovingMaskSpatialObjectPointer;
     
-    /** Function to update fixed and moving masks. */
-		void UpdateMasks( unsigned int level );
+    /** Function to update masks. */
+		void UpdateFixedMasks( unsigned int level );
+    void UpdateMovingMasks( unsigned int level );
 
 		/** Read the components from m_Elastix and set them in the Registration class. */
 		virtual void SetComponents(void);		
@@ -151,17 +180,17 @@ using namespace itk;
 	private:
 
 		/** The private constructor. */
-		MultiResolutionRegistration( const Self& );	// purposely not implemented
+		MultiMetricMultiResolutionRegistration( const Self& );	// purposely not implemented
 		/** The private copy constructor. */
 		void operator=( const Self& );							// purposely not implemented
 
-	}; // end class MultiResolutionRegistration
+	}; // end class MultiMetricMultiResolutionRegistration
 
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxMultiResolutionRegistration.hxx"
+#include "elxMultiMetricMultiResolutionRegistration.hxx"
 #endif
 
-#endif // end #ifndef __elxMultiResolutionRegistration_H__
+#endif // end #ifndef __elxMultiMetricMultiResolutionRegistration_H__

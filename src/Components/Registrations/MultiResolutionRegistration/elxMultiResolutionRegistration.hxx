@@ -2,7 +2,7 @@
 #define __elxMultiResolutionRegistration_HXX__
 
 #include "elxMultiResolutionRegistration.h"
-
+#include "vnl/vnl_math.h"
 
 namespace elastix
 {
@@ -98,20 +98,6 @@ using namespace itk;
     this->SetTransform( this->GetElastix()->
       GetElxTransformBase()->GetAsITKBaseType() );
 
-    if ( this->GetElastix()->GetFixedMask() )
-    {
-      FixedMaskSpatialObjectPointer fixedMask = FixedMaskSpatialObjectType::New();
-      fixedMask->SetImage( this->GetElastix()->GetFixedMask() );
-      this->GetMetric()->SetFixedImageMask( fixedMask );
-    }
-
-    if ( this->GetElastix()->GetMovingMask() )
-    {
-      MovingMaskSpatialObjectPointer movingMask = MovingMaskSpatialObjectType::New();
-      movingMask->SetImage( this->GetElastix()->GetMovingMask() );
-      this->GetMetric()->SetMovingImageMask( movingMask );
-    }
-
 	} // end SetComponents
 
 
@@ -123,123 +109,59 @@ using namespace itk;
 		void MultiResolutionRegistration<TElastix>
     ::UpdateMasks( unsigned int level )
 	{
-    if ( ( ! this->GetElastix()->GetFixedMask()  ) && 
-         ( ! this->GetElastix()->GetMovingMask() )    )
-    {
-      return;
-    }
-
-    /** Read whether mask erosion is wanted */
-    std::string erosionOrNot = "true";
-		this->m_Configuration->ReadParameter( erosionOrNot, "ErodeMask", 0, true );
-    this->m_Configuration->ReadParameter( erosionOrNot, "ErodeMask", level );
-
-    if ( erosionOrNot != "true" )
-    {
-      /** Set the original masks again, in case they were replaced by
-       * eroded versions in the previous resolution */
-      if ( this->GetElastix()->GetFixedMask() )
-      {
-        FixedMaskSpatialObjectPointer fixedMask = FixedMaskSpatialObjectType::New();
-        fixedMask->SetImage( this->GetElastix()->GetFixedMask() );
-        this->GetMetric()->SetFixedImageMask( fixedMask );
-      }
-
-      if ( this->GetElastix()->GetMovingMask() )
-      {
-        MovingMaskSpatialObjectPointer movingMask = MovingMaskSpatialObjectType::New();
-        movingMask->SetImage( this->GetElastix()->GetMovingMask() );
-        this->GetMetric()->SetMovingImageMask( movingMask );
-      }
-
-      return ;
-    }
+    /** some shortcuts */
+    const unsigned int nrOfFixedMasks = this->GetElastix()->GetNumberOfFixedMasks();
+    const unsigned int nrOfMovingMasks = this->GetElastix()->GetNumberOfMovingMasks();
+    const unsigned int oneOrNoFixedMasks = vnl_math_min( static_cast<unsigned int>(1),
+      nrOfFixedMasks);
+    const unsigned int oneOrNoMovingMasks = vnl_math_min( static_cast<unsigned int>(1),
+      nrOfMovingMasks);
     
-    /** Create and start timer, to time the erosion. */
+    /** Array of bools, that remembers for each mask if erosion is wanted.
+     * dummy, we will not use it */
+    UseMaskErosionArrayType useMaskErosionArray;
+
+    /** Bool that remembers if mask erosion is wanted in any of the masks 
+     * remains false when no masks are used */
+    bool useFixedMaskErosion;
+    bool useMovingMaskErosion;
+
+    /** Read whether mask erosion is wanted, if any masks were supplied
+     * Only one mask is taken into account */
+    useFixedMaskErosion = this->ReadMaskParameters( useMaskErosionArray,
+      oneOrNoFixedMasks, "Fixed", level);
+    useMovingMaskErosion = this->ReadMaskParameters( useMaskErosionArray,
+      oneOrNoMovingMasks, "Moving", level);
+
+    /** Create and start timer, to time the whole fixed mask configuration procedure. */
     TimerPointer timer = TimerType::New();
     timer->StartTimer();
-
-		/** Erode and set the fixed mask if necessary.  */
-		if ( this->GetElastix()->GetFixedMask() )
-		{	
-      FixedMaskErodeFilterPointer erosion = FixedMaskErodeFilterType::New();
-      erosion->SetInput( this->GetElastix()->GetFixedMask() );
-      erosion->SetSchedule( this->GetFixedImagePyramid()->GetSchedule() );
-      erosion->SetIsMovingMask( false );
-      erosion->SetResolutionLevel( level );
-
-			/** Set output of the erosion to fixedImageMaskAsImage. */
-      FixedMaskImagePointer fixedMaskAsImage = erosion->GetOutput();
-						
-			/** Do the erosion. */
-			try
-			{
-				fixedMaskAsImage->Update();
-			}
-			catch( itk::ExceptionObject & excp )
-			{
-				/** Add information to the exception. */
-				excp.SetLocation( "MultiResolutionRegistration - UpdateMasks()" );
-				std::string err_str = excp.GetDescription();
-				err_str += "\nError while eroding the fixed mask.\n";
-				excp.SetDescription( err_str );
-				/** Pass the exception to an higher level. */
-				throw excp;
-			}
-
-      /** Release some memory */
-      fixedMaskAsImage->DisconnectPipeline();
-     
-      /** Convert image to spatial object and put it in the metric. */
-      FixedMaskSpatialObjectPointer fixedMask = FixedMaskSpatialObjectType::New();
-      fixedMask->SetImage( fixedMaskAsImage );
-      this->GetMetric()->SetFixedImageMask( fixedMask );
-	
-		} // end if fixed mask present
-
-    /** Erode and set the moving mask if necessary.  */
-		if ( this->GetElastix()->GetMovingMask() )
-		{	
-      MovingMaskErodeFilterPointer erosion = MovingMaskErodeFilterType::New();
-      erosion->SetInput( this->GetElastix()->GetMovingMask() );
-      erosion->SetSchedule( this->GetMovingImagePyramid()->GetSchedule() );
-      erosion->SetIsMovingMask( true );
-      erosion->SetResolutionLevel( level );
-
-			/** Set output of the erosion to movingImageMaskAsImage. */
-      MovingMaskImagePointer movingMaskAsImage = erosion->GetOutput();
-						
-			/** Do the erosion. */
-			try
-			{
-				movingMaskAsImage->Update();
-			}
-			catch( itk::ExceptionObject & excp )
-			{
-				/** Add information to the exception. */
-				excp.SetLocation( "MultiResolutionRegistration - UpdateMasks()" );
-				std::string err_str = excp.GetDescription();
-				err_str += "\nError while eroding the moving mask.\n";
-				excp.SetDescription( err_str );
-				/** Pass the exception to an higher level. */
-				throw excp;
-			}
-
-      /** Release some memory */
-      movingMaskAsImage->DisconnectPipeline();
-     
-      /** Convert image to spatial object and put it in the metric. */
-      MovingMaskSpatialObjectPointer movingMask = MovingMaskSpatialObjectType::New();
-      movingMask->SetImage( movingMaskAsImage );
-      this->GetMetric()->SetMovingImageMask( movingMask );
-	
-		} // end if moving mask present
-
+        
+    FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject( 
+      this->GetElastix()->GetFixedMask(), useFixedMaskErosion,
+      this->GetFixedImagePyramid(), level );
+    this->GetMetric()->SetFixedImageMask( fixedMask );
+        
     /** Stop timer and print the elapsed time. */
 		timer->StopTimer();
-		elxout << "Eroding the masks took: "
-		  << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
-		
+    elxout << "Setting the fixed masks took: "
+		  << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) 
+      << " ms." << std::endl;
+
+    /** start timer, to time the whole moving mask configuration procedure. */
+    timer->StartTimer();
+        
+    MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject( 
+      this->GetElastix()->GetMovingMask(), useMovingMaskErosion,
+      this->GetMovingImagePyramid(), level );
+    this->GetMetric()->SetMovingImageMask( movingMask );
+        
+    /** Stop timer and print the elapsed time. */
+		timer->StopTimer();
+    elxout << "Setting the moving masks took: "
+		  << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) 
+      << " ms." << std::endl;
+
 	} // end UpdateMasks
 
 
