@@ -12,6 +12,8 @@ echo "#  3) a bspline-registration"
 echo "# We write all output in the exampleoutput directory."
 echo "#"
 
+mkdir -p exampleoutput
+
 elastix -f exampleinput/fixed.mhd -m exampleinput/moving.mhd  -out exampleoutput -p exampleinput/parameters_Translation.txt -p exampleinput/parameters_Affine.txt -p exampleinput/parameters_BSpline.txt
 
 echo "#" 
