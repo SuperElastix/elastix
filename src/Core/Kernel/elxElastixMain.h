@@ -41,7 +41,22 @@ namespace elastix
 	 * The ElastixMain initializes the MyConfiguration class with the
 	 * parameters and commandline arguments. After this, the class loads
 	 * and creates all components and sets them in ElastixTemplate.
-	 *
+   * 
+   * \parameter FixedImageDimension: the dimension of the fixed image. \n
+   * example: <tt>(FixedImageDimension 2)</tt>\n
+   * \parameter MovingImageDimension: the dimension of the fixed image. \n
+   * example: <tt>(MovingImageDimension 2)</tt>\n
+   * \parameter FixedInternalImagePixelType: the pixel type of the internal
+   * fixed image representation. The fixed image is automatically converted
+   * to this type.\n
+   * example: <tt>(FixedInternalImagePixelType "float")</tt>\n
+   * Default/recommended: "float"\n
+   * \parameter MovingInternalImagePixelType: the pixel type of the internal
+   * moving image representation. The moving image is automatically converted
+   * to this type.\n
+   * example: <tt>(MovingInternalImagePixelType "float")</tt>\n
+   * Default/recommended: "float"\n
+   * 
 	 * \ingroup Kernel
 	 */
 
