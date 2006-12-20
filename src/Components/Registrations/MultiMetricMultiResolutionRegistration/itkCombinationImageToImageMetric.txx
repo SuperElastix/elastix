@@ -440,9 +440,10 @@ namespace itk
     MeasureType measure = NumericTraits< MeasureType >::Zero;
     for ( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
     {
-      this->m_MetricValues[ i ] =
-        this->m_MetricWeights[ i ] * this->m_Metrics[ i ]->GetValue( parameters );
-      measure += this->m_MetricValues[ i ];
+      MeasureType tmpValue = this->m_Metrics[ i ]->GetValue( parameters );
+      measure += this->m_MetricWeights[ i ] * tmpValue;
+      /** Store for later, for interested users */
+      this->m_MetricValues[ i ] = tmpValue;
     }
 
     /** Return a value. */
@@ -501,10 +502,12 @@ namespace itk
       tmpValue = NumericTraits< MeasureType >::Zero;
       tmpDerivative.Fill( NumericTraits< MeasureType >::Zero );
       this->m_Metrics[ i ]->GetValueAndDerivative( parameters, tmpValue, tmpDerivative );
-      this->m_MetricValues[ i ] = this->m_MetricWeights[ i ] * tmpValue;
-      value += this->m_MetricValues[ i ];
+
+      value += this->m_MetricWeights[ i ] * tmpValue;
       derivative += this->m_MetricWeights[ i ] * tmpDerivative;
+
       /** Store for later, for interested users */
+      this->m_MetricValues[ i ] = tmpValue;
       this->m_MetricDerivatives[i] = tmpDerivative;
     }
 
