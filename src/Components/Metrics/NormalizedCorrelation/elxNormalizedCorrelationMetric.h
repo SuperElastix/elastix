@@ -94,14 +94,8 @@ using namespace itk;
 		/** Typedef for timer. */
 		typedef TimerType::Pointer	TimerPointer;
 
-		/** Execute stuff before registration:
-		 * \li Set the flag to subtract the mean.
-		 * \li Set the flag to use all samples.
-		 */
-		virtual void BeforeRegistration(void);
-
 		/** Execute stuff before each new pyramid resolution:
-		 * \li Set the number of spatial samples.
+		 * \li Set the flag to subtract the mean.
 		 */
 		virtual void BeforeEachResolution(void);
 

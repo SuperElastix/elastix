@@ -122,13 +122,14 @@ namespace elastix
         unsigned int level =
 			  ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
         std::string imageSamplerType = "Random";
-        this->m_Configuration->ReadParameter( imageSamplerType, "ImageSampler", 0, true );
-        this->m_Configuration->ReadParameter( imageSamplerType, "ImageSampler", level );
+        
+        this->m_Configuration->ReadParameter( imageSamplerType, "ImageSampler",
+          this->GetComponentLabel(), level, 0 );
 
         /** Get and set NumberOfSpatialSamples. This doesn't make sense for the ImageFullSampler. */
         unsigned long numberOfSpatialSamples = 5000;
-        this->GetConfiguration()->ReadParameter( numberOfSpatialSamples, "NumberOfSpatialSamples", 0, true );
-        this->GetConfiguration()->ReadParameter( numberOfSpatialSamples, "NumberOfSpatialSamples", level );
+        this->GetConfiguration()->ReadParameter( numberOfSpatialSamples, "NumberOfSpatialSamples",
+            this->GetComponentLabel(), level, 0 );
 
         /** Set the imageSampler to the correct one. */
         if ( imageSamplerType == "Random" )
@@ -162,10 +163,8 @@ namespace elastix
             FixedImageInterpolatorType::New();
           /** Set the SplineOrder, default value = 3. */
 	        unsigned int splineOrder = 3;
-		      this->GetConfiguration()->
-			      ReadParameter( splineOrder, "FixedImageBSplineInterpolationOrder", 0, true );
-          this->GetConfiguration()->
-			      ReadParameter( splineOrder, "FixedImageBSplineInterpolationOrder", level );
+		      this->GetConfiguration()->ReadParameter( splineOrder,
+            "FixedImageBSplineInterpolationOrder", this->GetComponentLabel(), level, 0 );
           fixedImageInterpolator->SetSplineOrder( splineOrder );
     		  randomCoordinateSampler->SetInterpolator(fixedImageInterpolator);
           imageSampler = randomCoordinateSampler;
@@ -185,8 +184,8 @@ namespace elastix
           for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
           {
             spacing_dim = 2;
-            this->GetConfiguration()->ReadParameter(
-              spacing_dim, "SampleGridSpacing", level * FixedImageDimension + dim );
+            this->GetConfiguration()->ReadParameter( spacing_dim, "SampleGridSpacing", 
+              this->GetComponentLabel(), level * FixedImageDimension + dim, -1 );
             gridspacing[ dim ] = static_cast<SampleGridSpacingValueType>( spacing_dim );
           }
           gridSampler->SetSampleGridSpacing( gridspacing );
@@ -202,8 +201,8 @@ namespace elastix
 
         /** Check if NewSamplesEveryIteration is possible with the selected ImageSampler. */
         std::string newSamples = "false";
-        this->m_Configuration->ReadParameter( newSamples, "NewSamplesEveryIteration", 0, true );
-        this->m_Configuration->ReadParameter( newSamples, "NewSamplesEveryIteration", level, true );
+        this->m_Configuration->ReadParameter( newSamples, "NewSamplesEveryIteration",
+          this->GetComponentLabel(), level, 0, true );
 
         if ( newSamples == "true" )
         {
@@ -211,7 +210,7 @@ namespace elastix
           if ( !ret )
           {
             xl::xout["warning"]  << "WARNING: You want to select new samples every iteration, \
-                                    but the selected ImageSampler is not suited for that." << std::endl;
+              but the selected ImageSampler is not suited for that." << std::endl;
           }
         }
 

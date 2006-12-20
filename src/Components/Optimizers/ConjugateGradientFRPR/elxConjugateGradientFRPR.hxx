@@ -97,19 +97,21 @@ using namespace itk;
 				
 		/** Set the maximumNumberOfIterations.*/
 		unsigned int maximumNumberOfIterations = 100;
-		this->m_Configuration->ReadParameter( maximumNumberOfIterations , "MaximumNumberOfIterations", level );
+		this->m_Configuration->ReadParameter( maximumNumberOfIterations,
+      "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0 );
 		this->SetMaximumIteration( maximumNumberOfIterations );
 		
 		/** Set the maximumNumberOfIterations used for a line search.*/
 		unsigned int maximumNumberOfLineSearchIterations = 20;
-		this->m_Configuration->ReadParameter( maximumNumberOfLineSearchIterations , "MaximumNumberOfLineSearchIterations", level );
+		this->m_Configuration->ReadParameter( maximumNumberOfLineSearchIterations,
+      "MaximumNumberOfLineSearchIterations", this->GetComponentLabel(), level, 0 );
 		this->SetMaximumLineIteration( maximumNumberOfLineSearchIterations );
 		
 
 		/** Set the length of the initial step, used to bracket the minimum. */
 		double stepLength = 1.0; 
 		this->m_Configuration->ReadParameter( stepLength,
-			"StepLength", level );
+			"StepLength", this->GetComponentLabel(), level, 0 );
 		this->SetStepLength(stepLength);
     
 		/** Set the ValueTolerance; convergence is declared if:
@@ -117,7 +119,7 @@ using namespace itk;
 		 */
 		double valueTolerance = 0.00001;
 		this->m_Configuration->ReadParameter( valueTolerance,
-			"ValueTolerance", level );
+			"ValueTolerance", this->GetComponentLabel(), level, 0 );
 		this->SetValueTolerance(valueTolerance);
 
     /** Set the LineSearchStepTolerance; convergence of the line search is declared if:
@@ -130,7 +132,7 @@ using namespace itk;
 		 */
     double stepTolerance = 0.00001;
 		this->m_Configuration->ReadParameter( stepTolerance,
-			"LineSearchStepTolerance", level );
+			"LineSearchStepTolerance", this->GetComponentLabel(), level, 0 );
 		this->SetStepTolerance(stepTolerance);
 				
 	} // end BeforeEachResolution

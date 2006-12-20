@@ -172,36 +172,38 @@ using namespace itk;
 				
 		/** Set the maximumNumberOfIterations.*/
 		unsigned int maximumNumberOfIterations = 100;
-		this->m_Configuration->ReadParameter( maximumNumberOfIterations , "MaximumNumberOfIterations", level );
+		this->m_Configuration->ReadParameter( maximumNumberOfIterations ,
+      "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0 );
 		this->SetMaximumNumberOfIterations( maximumNumberOfIterations );
 		
 		/** Set the maximumNumberOfIterations used for a line search.*/
 		unsigned int maximumNumberOfLineSearchIterations = 20;
-		this->m_Configuration->ReadParameter( maximumNumberOfLineSearchIterations , "MaximumNumberOfLineSearchIterations", level );
+		this->m_Configuration->ReadParameter( maximumNumberOfLineSearchIterations,
+      "MaximumNumberOfLineSearchIterations", this->GetComponentLabel(), level, 0 );
 		this->m_LineOptimizer->SetMaximumNumberOfIterations( maximumNumberOfLineSearchIterations );
 		
 		/** Set the length of the initial step, used to bracket the minimum. */
 		double stepLength = 1.0; 
 		this->m_Configuration->ReadParameter( stepLength,
-			"StepLength", level );
+			"StepLength", this->GetComponentLabel(), level, 0 );
 		this->m_LineOptimizer->SetInitialStepLengthEstimate(stepLength);
     
 		/** Set the LineSearchValueTolerance */
 		double lineSearchValueTolerance = 0.0001;
 		this->m_Configuration->ReadParameter( lineSearchValueTolerance,
-			"LineSearchValueTolerance", level );
+			"LineSearchValueTolerance", this->GetComponentLabel(), level, 0 );
 		this->m_LineOptimizer->SetValueTolerance(lineSearchValueTolerance);
 
 		/** Set the LineSearchGradientTolerance */
 		double lineSearchGradientTolerance = 0.9;
 		this->m_Configuration->ReadParameter( lineSearchGradientTolerance,
-			"LineSearchGradientTolerance", level );
+			"LineSearchGradientTolerance", this->GetComponentLabel(), level, 0 );
 		this->m_LineOptimizer->SetGradientTolerance(lineSearchGradientTolerance);
 
 		/** Set the GradientMagnitudeTolerance */
 		double gradientMagnitudeTolerance = 0.000001;
 		this->m_Configuration->ReadParameter( gradientMagnitudeTolerance,
-			"GradientMagnitudeTolerance", level );
+			"GradientMagnitudeTolerance", this->GetComponentLabel(), level, 0 );
 		this->SetGradientMagnitudeTolerance(gradientMagnitudeTolerance);
 
 		/** Set the Memory */
@@ -214,7 +216,7 @@ using namespace itk;
 		this->m_StopIfWolfeNotSatisfied = true;
 		std::string stopIfWolfeNotSatisfied = "true";
 		this->m_Configuration->ReadParameter( stopIfWolfeNotSatisfied,
-			"StopIfWolfeNotSatisfied", level );
+			"StopIfWolfeNotSatisfied", this->GetComponentLabel(), level, 0 );
 		if ( stopIfWolfeNotSatisfied == "false")
 		{
 			this->m_StopIfWolfeNotSatisfied = false;

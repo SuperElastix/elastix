@@ -72,40 +72,22 @@ using namespace itk;
 				
 		/** Set the maximumNumberOfIterations.*/
 		unsigned int maximumNumberOfIterations = 100;
-		this->m_Configuration->ReadParameter( maximumNumberOfIterations , "MaximumNumberOfIterations", level );
+		this->m_Configuration->ReadParameter( maximumNumberOfIterations,
+      "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0 );
 		this->SetNumberOfIterations( maximumNumberOfIterations );
 
-		double a;
-		double c;
-		double A;
-		double alpha;
-		double gamma;
-
-		if (level == 0)
-		{
-			a = 400;
-			c = 1.0;
-			A = 50.0;
-			alpha = 0.602;
-			gamma = 0.101;
-		}
-		else 
-		{
-			/** If only one parameter is set, then this parameter
-			 * is used in each resolution.
-			 */
-			a = this->GetParam_a();
-			c = this->GetParam_c();
-			A = this->GetParam_A();
-			alpha = this->GetParam_alpha();
-			gamma = this->GetParam_gamma();
-		}
-
-		this->GetConfiguration()->ReadParameter(a, "SP_a", level);
-		this->GetConfiguration()->ReadParameter(c, "SP_c", level);
-		this->GetConfiguration()->ReadParameter(A, "SP_A", level);
-		this->GetConfiguration()->ReadParameter(alpha, "SP_alpha", level);
-		this->GetConfiguration()->ReadParameter(gamma, "SP_gamma", level);
+		/** \todo  GuessParameters function */
+		double a = 400.0;
+		double c = 1.0;
+		double A = 50.0;
+		double alpha = 0.602;
+		double gamma = 0.101;
+		
+		this->GetConfiguration()->ReadParameter(a, "SP_a", this->GetComponentLabel(), level, 0 );
+		this->GetConfiguration()->ReadParameter(c, "SP_c", this->GetComponentLabel(), level, 0 );
+		this->GetConfiguration()->ReadParameter(A, "SP_A", this->GetComponentLabel(), level, 0 );
+		this->GetConfiguration()->ReadParameter(alpha, "SP_alpha", this->GetComponentLabel(), level, 0 );
+		this->GetConfiguration()->ReadParameter(gamma, "SP_gamma", this->GetComponentLabel(), level, 0 );
 
 		this->SetParam_a(	a );
 		this->SetParam_c( c );

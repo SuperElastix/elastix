@@ -46,15 +46,14 @@ using namespace itk;
 		
 		/** Get and set the number of histogram bins. */
 		unsigned int numberOfHistogramBins = 32;
-    this->GetConfiguration()->ReadParameter( numberOfHistogramBins, "NumberOfHistogramBins", 0 );
-		this->GetConfiguration()->ReadParameter( numberOfHistogramBins, "NumberOfHistogramBins", level, true );
-		
+    this->GetConfiguration()->ReadParameter( numberOfHistogramBins,
+      "NumberOfHistogramBins", this->GetComponentLabel(), level, 0 );
 		this->SetNumberOfHistogramBins( numberOfHistogramBins );
 
     /** Get and set whether the metric should check if enough samples map inside the moving image. */
     std::string checkNumberOfSamples = "true";
-    this->GetConfiguration()->ReadParameter( checkNumberOfSamples, "CheckNumberOfSamples", 0 );
-    this->GetConfiguration()->ReadParameter( checkNumberOfSamples, "CheckNumberOfSamples", level, true );
+    this->GetConfiguration()->ReadParameter( checkNumberOfSamples, 
+      "CheckNumberOfSamples", this->GetComponentLabel(), level, 0 );
     if ( checkNumberOfSamples == "false" )
     {
       this->SetCheckNumberOfSamples(false);

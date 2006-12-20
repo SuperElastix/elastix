@@ -97,6 +97,8 @@ using namespace itk;
 	 *		gridspacing of the B-spline transform. \n
 	 *		example: <tt>(DilationRadiusMultiplier 2.0)</tt> \n
 	 *		Default is 1.0.
+   *
+   * \todo: read these parameters using the new ReadParameter command
 	 *
    * \sa MattesMutualInformationImageToImageMetricWithMask
 	 * \sa MattesMutualInformationImageToImageMetricWithRigidRegularization

@@ -37,12 +37,12 @@ namespace elastix
     /** Read the parameters */
     if ( nrOfMasks > 0 )
     {
-      /** Default values for all masks */
+      /** Default values for all masks. Look for ErodeMask, or Erode<Fixed,Moving>Mask */
       std::string erosionOrNot = "true";
-		  this->GetConfiguration()->ReadParameter( erosionOrNot, "ErodeMask", 0, true );
-      this->GetConfiguration()->ReadParameter( erosionOrNot, "ErodeMask", level, true );
-      this->GetConfiguration()->ReadParameter( erosionOrNot, whichErodeMaskOption.c_str(), 0, true );
-      this->GetConfiguration()->ReadParameter( erosionOrNot, whichErodeMaskOption.c_str(), level );
+		  this->GetConfiguration()->ReadParameter( erosionOrNot,
+        "ErodeMask", "", level, 0, true);
+      this->GetConfiguration()->ReadParameter( erosionOrNot,
+        whichErodeMaskOption.c_str(), "", level, 0);
       if ( erosionOrNot == "true" )
       {
         /** fill with 'true's */
@@ -55,8 +55,8 @@ namespace elastix
         std::ostringstream makestring;
         makestring << whichErodeMaskOption << i; // key for parameter file
         std::string erosionOrNot_i = erosionOrNot; // default value
-        this->GetConfiguration()->ReadParameter( erosionOrNot_i, makestring.str().c_str(), 0, true );
-        this->GetConfiguration()->ReadParameter( erosionOrNot_i, makestring.str().c_str(), level, true );
+        this->GetConfiguration()->ReadParameter( erosionOrNot_i,
+          makestring.str().c_str(), "", level, 0, true );
         if ( erosionOrNot_i == "true" )
         {
           useMaskErosionArray[i] = true;

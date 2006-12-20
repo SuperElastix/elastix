@@ -58,8 +58,8 @@ using namespace itk;
 
     /** Get the tree type. */
     std::string treeType = "KDTree";
-    this->m_Configuration->ReadParameter( treeType, "TreeType", 0 );
-		this->m_Configuration->ReadParameter( treeType, "TreeType", level, true );
+    this->m_Configuration->ReadParameter( treeType, "TreeType",
+       this->GetComponentLabel(), level, 0 );
 
     bool silentBS = false;
     bool silentSplit = false;
@@ -77,48 +77,48 @@ using namespace itk;
 
     /** Get the bucket size. */
 		unsigned int bucketSize = 50;
-    this->m_Configuration->ReadParameter( bucketSize, "BucketSize", 0, silentBS );
-		this->m_Configuration->ReadParameter( bucketSize, "BucketSize", level, true );
+    this->m_Configuration->ReadParameter( bucketSize, "BucketSize",
+       this->GetComponentLabel(), level, 0, silentBS );
 
     /** Get the splitting rule for all trees. */
     std::string splittingRule = "ANN_KD_SL_MIDPT";
-    this->m_Configuration->ReadParameter( splittingRule, "SplittingRule", 0, silentSplit );
-		this->m_Configuration->ReadParameter( splittingRule, "SplittingRule", level, true );
+    this->m_Configuration->ReadParameter( splittingRule, "SplittingRule", 
+      this->GetComponentLabel(), level, 0, silentSplit );
 
     /** Get the splitting rule for the fixed tree. */
     std::string fixedSplittingRule = "ANN_KD_SL_MIDPT";
-    this->m_Configuration->ReadParameter( fixedSplittingRule, "FixedSplittingRule", 0, silentSplit );
-		this->m_Configuration->ReadParameter( fixedSplittingRule, "FixedSplittingRule", level, true );
+    this->m_Configuration->ReadParameter( fixedSplittingRule, "FixedSplittingRule", 
+      this->GetComponentLabel(), level, 0, silentSplit );
 
     /** Get the splitting rule for the moving tree. */
     std::string movingSplittingRule = "ANN_KD_SL_MIDPT";
-    this->m_Configuration->ReadParameter( movingSplittingRule, "MovingSplittingRule", 0, silentSplit );
-		this->m_Configuration->ReadParameter( movingSplittingRule, "MovingSplittingRule", level, true );
+    this->m_Configuration->ReadParameter( movingSplittingRule, "MovingSplittingRule",
+      this->GetComponentLabel(), level, 0, silentSplit );
 
     /** Get the splitting rule for the joint tree. */
     std::string jointSplittingRule = "ANN_KD_SL_MIDPT";
-    this->m_Configuration->ReadParameter( jointSplittingRule, "JointSplittingRule", 0, silentSplit );
-		this->m_Configuration->ReadParameter( jointSplittingRule, "JointSplittingRule", level, true );
+    this->m_Configuration->ReadParameter( jointSplittingRule, "JointSplittingRule",
+      this->GetComponentLabel(), level, 0, silentSplit );
 
     /** Get the shrinking rule for all trees. */
     std::string shrinkingRule = "ANN_BD_SIMPLE";
-    this->m_Configuration->ReadParameter( shrinkingRule, "ShrinkingRule", 0, silentShrink );
-		this->m_Configuration->ReadParameter( shrinkingRule, "ShrinkingRule", level, true );
+    this->m_Configuration->ReadParameter( shrinkingRule, "ShrinkingRule", 
+      this->GetComponentLabel(), level, 0, silentShrink );
 
     /** Get the shrinking rule for the fixed tree. */
     std::string fixedShrinkingRule = "ANN_BD_SIMPLE";
-    this->m_Configuration->ReadParameter( fixedShrinkingRule, "FixedShrinkingRule", 0, silentShrink );
-		this->m_Configuration->ReadParameter( fixedShrinkingRule, "FixedShrinkingRule", level, true );
+    this->m_Configuration->ReadParameter( fixedShrinkingRule, "FixedShrinkingRule", 
+      this->GetComponentLabel(), level, 0, silentShrink );
 
     /** Get the shrinking rule for the moving tree. */
     std::string movingShrinkingRule = "ANN_BD_SIMPLE";
-    this->m_Configuration->ReadParameter( movingShrinkingRule, "MovingShrinkingRule", 0, silentShrink );
-		this->m_Configuration->ReadParameter( movingShrinkingRule, "MovingShrinkingRule", level, true );
+    this->m_Configuration->ReadParameter( movingShrinkingRule, "MovingShrinkingRule",
+      this->GetComponentLabel(), level, 0, silentShrink );
 
     /** Get the shrinking rule for the joint tree. */
     std::string jointShrinkingRule = "ANN_BD_SIMPLE";
-    this->m_Configuration->ReadParameter( jointShrinkingRule, "JointShrinkingRule", 0, silentShrink );
-		this->m_Configuration->ReadParameter( jointShrinkingRule, "JointShrinkingRule", level, true );
+    this->m_Configuration->ReadParameter( jointShrinkingRule, "JointShrinkingRule",
+      this->GetComponentLabel(), level, 0, silentShrink );
 
     /** Set the tree. */
     if ( treeType == "KDTree" )
@@ -179,8 +179,8 @@ using namespace itk;
 
     /** Get the tree search type. */
     std::string treeSearchType = "Standard";
-    this->m_Configuration->ReadParameter( treeSearchType, "TreeSearchType", 0 );
-		this->m_Configuration->ReadParameter( treeSearchType, "TreeSearchType", level, true );
+    this->m_Configuration->ReadParameter( treeSearchType, "TreeSearchType",
+      this->GetComponentLabel(), level, 0);
 
     bool silentSR = true;
     if ( treeSearchType == "FixedRadius" )
@@ -190,18 +190,18 @@ using namespace itk;
 
     /** Get the k nearest neighbours. */
 		unsigned int kNearestNeighbours = 20;
-    this->m_Configuration->ReadParameter( kNearestNeighbours, "KNearestNeighbours", 0 );
-		this->m_Configuration->ReadParameter( kNearestNeighbours, "KNearestNeighbours", level, true );
+    this->m_Configuration->ReadParameter( kNearestNeighbours, "KNearestNeighbours",
+      this->GetComponentLabel(), level, 0);
 
     /** Get the error bound. */
     double errorBound = 0.0;
-    this->m_Configuration->ReadParameter( errorBound, "ErrorBound", 0 );
-		this->m_Configuration->ReadParameter( errorBound, "ErrorBound", level, true );
+    this->m_Configuration->ReadParameter( errorBound, "ErrorBound",
+      this->GetComponentLabel(), level, 0);
 
     /** Get the squared search radius. */
     double squaredSearchRadius = 0.0;
-    this->m_Configuration->ReadParameter( squaredSearchRadius, "SquaredSearchRadius", 0, silentSR );
-		this->m_Configuration->ReadParameter( squaredSearchRadius, "SquaredSearchRadius", level, true );
+    this->m_Configuration->ReadParameter( squaredSearchRadius, "SquaredSearchRadius",
+      this->GetComponentLabel(), level, 0, silentSR);
   
     /** Set the tree searcher. */
     if ( treeSearchType == "Standard" )

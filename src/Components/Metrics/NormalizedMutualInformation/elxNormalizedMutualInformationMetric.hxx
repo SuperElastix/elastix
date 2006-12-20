@@ -47,24 +47,24 @@ using namespace itk;
 		
 		/** Get and set the number of histogram bins. */
 		unsigned int numberOfHistogramBins = 32;
-    this->GetConfiguration()->ReadParameter( numberOfHistogramBins, "NumberOfHistogramBins", 
-      this->GetComponentLabel(), level, 0 );
+    this->GetConfiguration()->ReadParameter( numberOfHistogramBins,
+      "NumberOfHistogramBins", this->GetComponentLabel(), level, 0 );
 		this->SetNumberOfFixedHistogramBins( numberOfHistogramBins );
     this->SetNumberOfMovingHistogramBins( numberOfHistogramBins );
 
     unsigned int numberOfFixedHistogramBins = numberOfHistogramBins;
     unsigned int numberOfMovingHistogramBins = numberOfHistogramBins;
-    this->GetConfiguration()->ReadParameter( numberOfFixedHistogramBins, "NumberOfFixedHistogramBins", 0, true);
-		this->GetConfiguration()->ReadParameter( numberOfFixedHistogramBins, "NumberOfFixedHistogramBins", level );
-    this->GetConfiguration()->ReadParameter( numberOfMovingHistogramBins, "NumberOfMovingHistogramBins", 0, true);
-		this->GetConfiguration()->ReadParameter( numberOfMovingHistogramBins, "NumberOfMovingHistogramBins", level );
+  	this->GetConfiguration()->ReadParameter( numberOfFixedHistogramBins,
+      "NumberOfFixedHistogramBins", this->GetComponentLabel(), level, 0 );
+		this->GetConfiguration()->ReadParameter( numberOfMovingHistogramBins,
+      "NumberOfMovingHistogramBins", this->GetComponentLabel(), level, 0 );
 		this->SetNumberOfFixedHistogramBins( numberOfFixedHistogramBins );
     this->SetNumberOfMovingHistogramBins( numberOfMovingHistogramBins );
 
     /** Set whether a differentiable overlap should be used */
     std::string useDifferentiableOverlap = "true";
-    this->GetConfiguration()->ReadParameter( useDifferentiableOverlap, "UseDifferentiableOverlap", 0, true );
-    this->GetConfiguration()->ReadParameter( useDifferentiableOverlap, "UseDifferentiableOverlap", level );
+    this->GetConfiguration()->ReadParameter( useDifferentiableOverlap,
+      "UseDifferentiableOverlap", this->GetComponentLabel(), level, 0 );
     if ( useDifferentiableOverlap == "false" )
     {
       this->SetUseDifferentiableOverlap(false);
@@ -76,17 +76,14 @@ using namespace itk;
 
     /** Get and set the mask interpolation order */
 		unsigned int movingMaskInterpolationOrder = 2;
-    this->GetConfiguration()->ReadParameter( 
-      movingMaskInterpolationOrder, "MovingMaskInterpolationOrder", 0, true );
-		this->GetConfiguration()->ReadParameter( 
-      movingMaskInterpolationOrder, "MovingMaskInterpolationOrder", level );
-		this->SetMovingImageMaskInterpolationOrder( 
-      movingMaskInterpolationOrder );
+    this->GetConfiguration()->ReadParameter( movingMaskInterpolationOrder,
+      "MovingMaskInterpolationOrder",  this->GetComponentLabel(), level, 0 );
+		this->SetMovingImageMaskInterpolationOrder( movingMaskInterpolationOrder );
 
     /** Get and set whether the metric should check if enough samples map inside the moving image. */
     std::string checkNumberOfSamples = "true";
-    this->GetConfiguration()->ReadParameter( checkNumberOfSamples, "CheckNumberOfSamples", 0, true );
-    this->GetConfiguration()->ReadParameter( checkNumberOfSamples, "CheckNumberOfSamples", level );
+    this->GetConfiguration()->ReadParameter( checkNumberOfSamples,
+      "CheckNumberOfSamples", this->GetComponentLabel(), level, 0 );
     if ( checkNumberOfSamples == "false" )
     {
       this->SetRequiredRatioOfValidSamples(0.0);
@@ -105,20 +102,20 @@ using namespace itk;
     /** Get and set the number of histogram bins. */
 		double fixedLimitRangeRatio = 0.01;
     double movingLimitRangeRatio = 0.01;
-    this->GetConfiguration()->ReadParameter( fixedLimitRangeRatio, "FixedLimitRangeRatio", 0, true);
-    this->GetConfiguration()->ReadParameter( fixedLimitRangeRatio, "FixedLimitRangeRatio", level);
-    this->GetConfiguration()->ReadParameter( movingLimitRangeRatio, "MovingLimitRangeRatio", 0, true );
-		this->GetConfiguration()->ReadParameter( movingLimitRangeRatio, "MovingLimitRangeRatio", level );
+    this->GetConfiguration()->ReadParameter( fixedLimitRangeRatio,
+      "FixedLimitRangeRatio", this->GetComponentLabel(), level, 0 );
+    this->GetConfiguration()->ReadParameter( movingLimitRangeRatio, 
+      "MovingLimitRangeRatio", this->GetComponentLabel(), level, 0 );
 		this->SetFixedLimitRangeRatio( fixedLimitRangeRatio );
     this->SetMovingLimitRangeRatio( movingLimitRangeRatio );
 
     /** Set bspline parzen kernel orders */
     unsigned int fixedKernelBSplineOrder = 0;
     unsigned int movingKernelBSplineOrder = 3;
-    this->GetConfiguration()->ReadParameter( fixedKernelBSplineOrder, "FixedKernelBSplineOrder", 0, true);
-		this->GetConfiguration()->ReadParameter( fixedKernelBSplineOrder, "FixedKernelBSplineOrder", level );
-    this->GetConfiguration()->ReadParameter( movingKernelBSplineOrder, "MovingKernelBSplineOrder", 0, true);
-		this->GetConfiguration()->ReadParameter( movingKernelBSplineOrder, "MovingKernelBSplineOrder", level );
+    this->GetConfiguration()->ReadParameter( fixedKernelBSplineOrder,
+      "FixedKernelBSplineOrder", this->GetComponentLabel(), level, 0 );
+    this->GetConfiguration()->ReadParameter( movingKernelBSplineOrder,
+      "MovingKernelBSplineOrder", this->GetComponentLabel(), level, 0 );
 		this->SetFixedKernelBSplineOrder( fixedKernelBSplineOrder );
     this->SetMovingKernelBSplineOrder( movingKernelBSplineOrder );
 

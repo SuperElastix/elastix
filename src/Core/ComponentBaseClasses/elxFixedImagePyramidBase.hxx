@@ -31,9 +31,8 @@ namespace elastix
 		::SetFixedSchedule(void)
 	{
 		/** Get the ImageDimension. */
-		unsigned int FixedImageDimension = InputImageType::ImageDimension;
-		unsigned int MovingImageDimension = MovingImageType::ImageDimension;
-
+		const unsigned int FixedImageDimension = InputImageType::ImageDimension;
+		
 		/** Read numberOfResolutions. */
 		unsigned int numberOfResolutions = 0;
 		this->m_Configuration->ReadParameter( numberOfResolutions, "NumberOfResolutions", 0, true );
@@ -44,79 +43,53 @@ namespace elastix
 		/** \todo quit program? Actually this check should be in the ::BeforeAll() method. */
 
 		/** Create a fixedSchedule. */
-		ScheduleType fixedSchedule( numberOfResolutions, FixedImageDimension );
-		fixedSchedule.Fill( 0 );
+		//ScheduleType fixedSchedule( numberOfResolutions, FixedImageDimension );
+    this->GetAsITKBaseType()->SetNumberOfLevels( numberOfResolutions );
+    ScheduleType fixedSchedule = this->GetAsITKBaseType()->GetSchedule();
+		
+		/** Always set the numberOfLevels first. */
+		this->GetAsITKBaseType()->SetNumberOfLevels( numberOfResolutions );
 
-		/** Are FixedPyramidSchedule and/or MovingPyramidSchedule available
-		 * in the parameter-file?
-		 */
-		unsigned int temp_fix = 0;
-		unsigned int temp_mov = 0;
-		this->m_Configuration->ReadParameter( temp_fix, "FixedPyramidSchedule", 0, true );
-		this->m_Configuration->ReadParameter( temp_mov, "MovingPyramidSchedule", 0, true );
-
-		/** If the FixedPyramidSchedule exists: */
-		if ( temp_fix != 0 )
+		/** Set the fixedPyramidSchedule to the FixedImagePyramidSchedule given 
+     * in the parameter-file.	The following parameter file fields can be used:
+     * MovingPyramidSchedule (deprecated)
+     * FixedPyramidSchedule  (deprecated)
+     * ImagePyramidSchedule
+     * FixedImagePyramidSchedule
+     * FixedImagePyramid<i>Schedule, for the i-th fixed image pyramid used. 
+     */
+    int ret = 0;
+		for ( unsigned int i = 0; i < numberOfResolutions; i++ )
 		{
-			/** Always set the numberOfLevels first. */
-			this->GetAsITKBaseType()->SetNumberOfLevels( numberOfResolutions );
-
-			/** In this case set the fixedPyramidSchedule to the
-			 * FixedPyramidSchedule given in the parameter-file.
-			 */
-			for ( unsigned int i = 0; i < numberOfResolutions; i++ )
+			for ( unsigned int j = 0; j < FixedImageDimension; j++ )
 			{
-				for ( unsigned int j = 0; j < FixedImageDimension; j++ )
-				{
-					this->m_Configuration->ReadParameter(
-						fixedSchedule[ i ][ j ],
-						"FixedPyramidSchedule",
-						i * FixedImageDimension + j );
-				} // end for FixedImageDimension
-			} // end for numberOfResolutions
-
-			/** Set the schedule into this class. */
-			this->GetAsITKBaseType()->SetSchedule( fixedSchedule );
-
-		}
-		/** If only the MovingPyramidSchedule exists: */
-		else if ( temp_fix == 0 && temp_mov != 0 && FixedImageDimension == MovingImageDimension )
-		{
-			/** Always set the numberOfLevels first. */
-			this->GetAsITKBaseType()->SetNumberOfLevels( numberOfResolutions );
-
-			/** In this case set the fixedPyramidSchedule to the
-			 * MovingPyramidSchedule given in the parameter-file.
-			 */
-			for ( unsigned int i = 0; i < numberOfResolutions; i++ )
-			{
-				for ( unsigned int j = 0; j < FixedImageDimension; j++ )
-				{
-					this->m_Configuration->ReadParameter(
-						fixedSchedule[ i ][ j ],
-						"MovingPyramidSchedule",
-						i * FixedImageDimension + j );
-				} // end for FixedImageDimension
-			} // end for numberOfResolutions
-
-			/** Set the schedule into this class. */
-			this->GetAsITKBaseType()->SetSchedule( fixedSchedule );
-		}
-		else if ( temp_fix == 0 && temp_mov != 0 && FixedImageDimension != MovingImageDimension )
-		{
-			xl::xout["warning"] << "WARNING: FixedImagePyramidSchedule is not specified!" << std::endl;
-			xl::xout["warning"] << "A default schedule is assumed. " << std::endl;
-		}
-		/** If both PyramidSchedule's don't exist: */
-		else
-		{
-			/** In this case set the fixedPyramidSchedule to the
-			 * default schedule.
-			 */
-			this->GetAsITKBaseType()->SetNumberOfLevels( numberOfResolutions );
-
-		} // end if
-
+        int ijret = 1;
+        const unsigned int entrynr = i * FixedImageDimension + j;
+        ijret &= this->m_Configuration->ReadParameter( fixedSchedule[ i ][ j ],
+					"MovingPyramidSchedule", entrynr, true ); //deprecated
+        ijret &= this->m_Configuration->ReadParameter( fixedSchedule[ i ][ j ],
+					"FixedPyramidSchedule", entrynr, true ); // deprecated
+				ijret &= this->m_Configuration->ReadParameter( fixedSchedule[ i ][ j ],
+					"ImagePyramidSchedule", entrynr, true );
+        ijret &= this->m_Configuration->ReadParameter( fixedSchedule[ i ][ j ],
+					"FixedImagePyramidSchedule", entrynr, true );
+        ijret &= this->m_Configuration->ReadParameter( fixedSchedule[ i ][ j ],
+					"Schedule", this->GetComponentLabel(), entrynr, -1, true );
+        /** remember if for at least one schedule element no value could be found */
+        ret |= ijret;
+      } // end for FixedImageDimension
+		} // end for numberOfResolutions
+    if (ret && !this->GetConfiguration()->GetSilent() )
+    {
+      xl::xout["warning"] << "WARNING: the fixed pyramid schedule is not fully specified!" << std::endl;
+      xl::xout["warning"] << "A default pyramid schedule is used." << std::endl;
+    }
+    else
+    {
+      /** Set the schedule into this class. */
+		  this->GetAsITKBaseType()->SetSchedule( fixedSchedule );
+    }
+		
 	} // end SetFixedSchedule
 
 

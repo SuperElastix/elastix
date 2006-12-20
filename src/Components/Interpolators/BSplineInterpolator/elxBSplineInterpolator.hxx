@@ -24,11 +24,9 @@ using namespace itk;
 		unsigned int splineOrder = 1;
 		
 		/** Read the desired splineOrder from the parameterFile. */
-		this->GetConfiguration()->
-			ReadParameter( splineOrder, "BSplineInterpolationOrder", 0, true );
-    this->GetConfiguration()->
-			ReadParameter( splineOrder, "BSplineInterpolationOrder", level );
-
+		this->GetConfiguration()->ReadParameter( splineOrder,
+      "BSplineInterpolationOrder", this->GetComponentLabel(), level, 0 );
+    
 		/** Set the splineOrder. */
 		this->SetSplineOrder( splineOrder );
 		 

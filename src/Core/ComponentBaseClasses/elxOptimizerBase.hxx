@@ -48,14 +48,12 @@ namespace elastix
 	{
 		/** Get the current resolution level. */
 		unsigned int level = 
-			( this->GetRegistration()->GetAsITKBaseType() )->GetCurrentLevel();
+      this->GetRegistration()->GetAsITKBaseType()->GetCurrentLevel();
 
 		/** Check if after every iteration a new sample set should be created. */
 		std::string newSamplesEveryIteration = "false";
-    this->GetConfiguration()->
-			ReadParameter( newSamplesEveryIteration, "NewSamplesEveryIteration", 0 );
-		this->GetConfiguration()->
-			ReadParameter( newSamplesEveryIteration, "NewSamplesEveryIteration", level );
+    this->GetConfiguration()->ReadParameter( newSamplesEveryIteration,
+      "NewSamplesEveryIteration", this->GetComponentLabel(), level, 0 );
 		if ( newSamplesEveryIteration == "true" )
 		{
 			this->m_NewSamplesEveryIteration = true;

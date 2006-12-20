@@ -71,8 +71,7 @@ using namespace itk;
       double weight = 1.0;
       std::ostringstream makestring;
       makestring << "Metric" << metricnr << "Weight";
-      this->GetConfiguration()->ReadParameter(weight, makestring.str().c_str(), 0, true);
-      this->GetConfiguration()->ReadParameter(weight, makestring.str().c_str(), level);
+      this->GetConfiguration()->ReadParameter(weight, makestring.str().c_str(), "", level, 0);
       this->GetCombinationMetric()->SetMetricWeight( weight, metricnr );
     }
 

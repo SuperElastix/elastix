@@ -20,14 +20,17 @@ using namespace itk;
 	 *
 	 * This class contains all the common functionality for MovingImagePyramids.
 	 *
-	 * \parameter MovingPyramidSchedule: downsampling factors for the image pyramid.\n
+	 * \parameter MovingImagePyramidSchedule: downsampling factors for the image pyramid.\n
 	 * For each dimension, for each resolution level, the downsampling factor of the 
 	 * moving image can be specified.\n
-	 * Syntax for 2D images: <tt> (MovingPyramidSchedule <reslevel0,dim0> <reslevel0,dim1> <reslevel1,dim0> <reslevel1,dim1> ...)</tt>
-	 * example: <tt> (MovingPyramidSchedule  4 4 2 2 1 1)</tt>
-	 * Default: isotropic, halved in each resolution, so, like in the example. If a 
-	 * FixedPyramidSchedule is given and no moving, the FixedPyramidSchedule is taken as a default for the MovingPyramidSchedule.
-	 *
+	 * Syntax for 2D images: <tt> (MovingImagePyramidSchedule <reslevel0,dim0> <reslevel0,dim1> <reslevel1,dim0> <reslevel1,dim1> ...)</tt>
+	 * example: <tt> (MovingImagePyramidSchedule  4 4 2 2 1 1)</tt>
+	 * Default: isotropic, halved in each resolution, so, like in the example. If
+   * ImagePyramidSchedule is specified, that schedule is used for both fixed and moving image pyramid.
+   * \parameter ImagePyramidSchedule: downsampling factors for fixed and moving image pyramids.\n
+	 * example: <tt> (ImagePyramidSchedule  4 4 2 2 1 1)</tt> \n
+   * Used as a default when MovingImagePyramidSchedule is not specified. If both are omitted,
+   * a default schedule is assumed: isotropic, halved in each resolution, so, like in the example.
 	 *
 	 * \ingroup ImagePyramids
 	 * \ingroup ComponentBaseClasses
@@ -56,9 +59,6 @@ using namespace itk;
 		/** Typedefs inherited from Elastix. */
 		typedef typename ElastixType::MovingImageType		InputImageType;
 		typedef typename ElastixType::MovingImageType		OutputImageType;
-
-		/** Typedef used by the function GetMovingSchedule. */
-		typedef typename ElastixType::FixedImageType		FixedImageType;
 		
 		/** Other typedef's. */
 		typedef MultiResolutionPyramidImageFilter<

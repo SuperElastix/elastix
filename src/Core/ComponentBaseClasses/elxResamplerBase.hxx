@@ -80,23 +80,21 @@ namespace elastix
 
 		/** Decide whether or not to write the result image this resolution. */
 		std::string writeResultImageThisResolution = "false";
-		this->m_Configuration->ReadParameter(	
-			writeResultImageThisResolution, "WriteResultImageAfterEachResolution", 0, true );
-		this->m_Configuration->ReadParameter(	
-			writeResultImageThisResolution, "WriteResultImageAfterEachResolution", level, true );
+		this->m_Configuration->ReadParameter(	writeResultImageThisResolution,
+      "WriteResultImageAfterEachResolution", "", level, 0);
 
-		/** Create a name for the final result. */
-		std::string resultImageFormat = "mhd";
-		this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0, true );
-		std::ostringstream makeFileName( "" );
-		makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
-			<< "result." << this->m_Configuration->GetElastixLevel()
-			<< ".R" << level
-			<< "." << resultImageFormat;
-
-		/** Writing result image. */
+    /** Writing result image. */
 		if ( writeResultImageThisResolution == "true" )
 		{
+		  /** Create a name for the final result. */
+		  std::string resultImageFormat = "mhd";
+		  this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0);
+		  std::ostringstream makeFileName( "" );
+		  makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
+  			<< "result." << this->m_Configuration->GetElastixLevel()
+			  << ".R" << level
+			  << "." << resultImageFormat;
+
 			/** Time the resampling. */
 			typedef tmr::Timer TimerType;
 			TimerType::Pointer timer = TimerType::New();
@@ -137,19 +135,19 @@ namespace elastix
 
 		/** Decide whether or not to write the result image. */
 		std::string writeResultImage = "true";
-		this->m_Configuration->ReadParameter(	writeResultImage, "WriteResultImage", 0, true );
-
-		/** Create a name for the final result. */
-		std::string resultImageFormat = "mhd";
-		this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0, true );
-		std::ostringstream makeFileName( "" );
-		makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
-			<< "result." << this->m_Configuration->GetElastixLevel()
-			<< "." << resultImageFormat;
-
+		this->m_Configuration->ReadParameter(	writeResultImage, "WriteResultImage", 0 );
+    
 		/** Writing result image. */
 		if ( writeResultImage == "true" )
 		{
+		  /** Create a name for the final result. */
+		  std::string resultImageFormat = "mhd";
+		  this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0);
+		  std::ostringstream makeFileName( "" );
+		  makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
+			  << "result." << this->m_Configuration->GetElastixLevel()
+			  << "." << resultImageFormat;
+
 			/** Time the resampling. */
 			typedef tmr::Timer TimerType;
 			TimerType::Pointer timer = TimerType::New();
@@ -220,7 +218,7 @@ namespace elastix
 
     /** Read output pixeltype from parameter file */
     std::string resultImagePixelType = "short";
-    this->m_Configuration->ReadParameter(	resultImagePixelType, "ResultImagePixelType", 0, true );
+    this->m_Configuration->ReadParameter(	resultImagePixelType, "ResultImagePixelType", 0 );
     
     /** Typedef's for writing the output image. */
 		typedef ImageFileCastWriter< OutputImageType >		WriterType;

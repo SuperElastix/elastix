@@ -78,6 +78,7 @@ using namespace itk;
    *    The default is 1 for all interpolators. If one argument is supplied, then this \n
    *    spline order is used for all interpolators.
    *
+   * \todo: read these parameters using the new ReadParameter command
    *
    * \sa KNNGraphAlphaMutualInformationImageToImageMetric
    * \sa MattesMutualInformationImageToImageMetric2

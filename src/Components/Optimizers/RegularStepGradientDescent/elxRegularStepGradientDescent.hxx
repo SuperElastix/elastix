@@ -47,32 +47,36 @@ using namespace itk;
 		
 		/** Set the Gradient Magnitude Stopping Criterion.*/
 		double minGradientMagnitude = 1e-8;
-		this->m_Configuration->ReadParameter( minGradientMagnitude, "MinimumGradientMagnitude", level );
+		this->m_Configuration->ReadParameter( minGradientMagnitude,
+      "MinimumGradientMagnitude", this->GetComponentLabel(), level, 0 );
 		this->SetGradientMagnitudeTolerance( minGradientMagnitude );
 
 		/** Set the MaximumStepLength.*/
 		double maxStepLength = 16.0 / vcl_pow( 2.0, static_cast<int>( level ) );
-		this->m_Configuration->ReadParameter( maxStepLength, "MaximumStepLength", level );
+		this->m_Configuration->ReadParameter( maxStepLength,
+      "MaximumStepLength", this->GetComponentLabel(), level, 0 );
 		this->SetMaximumStepLength( maxStepLength );
 
 		/** Set the MinimumStepLength.*/
 		double minStepLength = 0.5 / vcl_pow( 2.0, static_cast<int>( level ) );
-		this->m_Configuration->ReadParameter( minStepLength, "MinimumStepLength", level );
+		this->m_Configuration->ReadParameter( minStepLength,
+      "MinimumStepLength", this->GetComponentLabel(), level, 0 );
 		this->SetMinimumStepLength( minStepLength );
 
 		/** Set the Relaxation factor 
 		 */
 		double relaxationFactor = 0.5;
-		this->m_Configuration->ReadParameter( relaxationFactor, "RelaxationFactor", level );
+		this->m_Configuration->ReadParameter( relaxationFactor, 
+      "RelaxationFactor", this->GetComponentLabel(), level, 0 );
 		this->SetRelaxationFactor( relaxationFactor );
 
 		/** \todo max and min steplength should maybe depend on the imagespacing or on something else... */
 		
 		/** Set the maximumNumberOfIterations.*/
 		unsigned int maximumNumberOfIterations = 100;
-		this->m_Configuration->ReadParameter( maximumNumberOfIterations , "MaximumNumberOfIterations", level );
+		this->m_Configuration->ReadParameter( maximumNumberOfIterations,
+      "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0 );
 		this->SetNumberOfIterations( maximumNumberOfIterations );
-
 		
 	} // end BeforeEachResolution
 

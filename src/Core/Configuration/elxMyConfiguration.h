@@ -29,6 +29,11 @@ namespace elastix
 	 *
 	 * In elxConfigurationToUse.h this file can be included if this version
 	 * of elx::MyConfiguration is desired. Currently there are no other choices.
+   *
+   * \parameter Silent: defines if warnings should be printed to screen, when 
+   * a parameter cannot be found and the default is used.
+   * example: <tt>(Silent "true")</tt>
+   * Default: "false"
 	 *
  	 * \sa ConfigurationBase
 	 * \ingroup Configuration
@@ -64,7 +69,7 @@ namespace elastix
 		virtual int Initialize(ArgumentMapType & _arg);
 
 		/** True, if Initialize was succesfully called. */
-		virtual bool Initialized(void); //to elxconfigurationbase
+		virtual bool Initialized(void) const; //to elxconfigurationbase
 
 		/** Get and Set CommandLine arguments into the argument map.*/
 		const char * GetCommandLineArgument( const char * key ) const;
@@ -81,17 +86,22 @@ namespace elastix
 		* file.
 		* - 'entry_nr' indicates which entry to take in the desired
 		* field (start with 0).
+    * - 'silent' (optional): if true, warnings and errors are not printed to screen.
+    * if false, errors are always printed, and warnings are only printed when the m_Silent
+    * is also false;
 		*
 		* The function returns 0 if everything went well. In case
 		* of an error: 1.
 		* In case of errors, param still contains the value as during
 		* the calling stage of this function.
+    *
+    * \todo make a standard parameter file with the default values, based on the
+    * the calls to this function
 		*/
 		template <class T>
 		int ReadParameter( T & param, const char * name_field, const unsigned int entry_nr, bool silent = false )
 		{			
-			/** \todo make a standard parameter file with the default values. */
-      VPF::ReturnStatusType ret = VPF::INVALID;
+			VPF::ReturnStatusType ret = VPF::INVALID;
 			try 
       {
         ret = VPF::set(param, m_ParameterFile[name_field][entry_nr]);
@@ -106,12 +116,13 @@ namespace elastix
             << "\nDefault value will be assumed."
             << std::endl;
         }
+        return 1;
       }
 
 			/** Very basic error-checking.*/
 			if ( ret == VPF::INVALID)
 			{
-				if (!silent)
+				if (!silent && !this->GetSilent() )
 				{
 					xl::xout["warning"] << "WARNING: Cannot find entry " << entry_nr <<
 						" in the field " << name_field << "." << std::endl;
@@ -140,6 +151,36 @@ namespace elastix
 		} // end ReadParameter
 
 		int ReadParameter(double & param, const char * name_field, const unsigned int entry_nr)
+		{
+		  return ReadParameter(param, name_field, entry_nr, false);
+		}
+
+    /** Provide 'support' for bools, by using strings and checking for "true" and "false" */
+		int ReadParameter(bool & param, const char * name_field, const unsigned int entry_nr, bool silent)
+		{
+      std::string stringparam;
+      if (param)
+      {
+        stringparam = "true";
+      }
+      else
+      {
+        stringparam = "false";
+      }
+			int dummy =  this->ReadParameter( stringparam, name_field, entry_nr, silent );
+      if ( stringparam == "true" )
+      {
+        param = true;
+      }
+      else
+      {
+        param = false;
+      }
+			return dummy;
+
+		} // end ReadParameter
+
+    int ReadParameter(bool & param, const char * name_field, const unsigned int entry_nr)
 		{
 		  return ReadParameter(param, name_field, entry_nr, false);
 		}
@@ -189,7 +230,11 @@ namespace elastix
 
 		/** Get and Set the elastix-level.*/
 		itkSetMacro( ElastixLevel, unsigned int );
-		itkGetMacro( ElastixLevel, unsigned int );
+		itkGetConstMacro( ElastixLevel, unsigned int );
+
+    /** Set/Get whether warnings are allowed to be printed, when reading a parameter */
+    itkSetMacro(Silent, bool);
+    itkGetConstMacro(Silent, bool);
 
 		/** Methods that is called at the very beginning of elastixTemplate::Run.
      * \li Prints the parameter file  */
@@ -198,8 +243,7 @@ namespace elastix
     /** Methods that is called at the very beginning of elastixTemplate::ApplyTransform.
      * \li Prints the parameter file  */
     virtual int BeforeAllTransformix(void);
-
-    
+   
 	protected:
 
 		MyConfiguration(); 
@@ -211,6 +255,7 @@ namespace elastix
 		std::string								m_ParameterFileName;
 		bool											m_Initialized;
 		unsigned int							m_ElastixLevel;
+    bool                      m_Silent;
 
     /** Print the parameter file to the logfile. Called by BeforeAll()
      * This function is not really generic. It's just added because it needs to be

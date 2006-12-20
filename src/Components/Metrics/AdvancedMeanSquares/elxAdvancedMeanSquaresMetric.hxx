@@ -40,8 +40,8 @@ using namespace itk;
 
     /** Set whether a differentiable overlap should be used */
     std::string useDifferentiableOverlap = "true";
-    this->GetConfiguration()->ReadParameter( useDifferentiableOverlap, "UseDifferentiableOverlap", 0 );
-    this->GetConfiguration()->ReadParameter( useDifferentiableOverlap, "UseDifferentiableOverlap", level, true );
+    this->GetConfiguration()->ReadParameter( useDifferentiableOverlap,
+      "UseDifferentiableOverlap", this->GetComponentLabel(), level, 0 );
     if ( useDifferentiableOverlap == "false" )
     {
       this->SetUseDifferentiableOverlap(false);
@@ -53,17 +53,15 @@ using namespace itk;
 
     /** Get and set the mask interpolation order */
 		unsigned int movingMaskInterpolationOrder = 2;
-    this->GetConfiguration()->ReadParameter( 
-      movingMaskInterpolationOrder, "MovingMaskInterpolationOrder", 0 );
-		this->GetConfiguration()->ReadParameter( 
-      movingMaskInterpolationOrder, "MovingMaskInterpolationOrder", level, true );
+    this->GetConfiguration()->ReadParameter( movingMaskInterpolationOrder, 
+      "MovingMaskInterpolationOrder", this->GetComponentLabel(), level, 0 );
 		this->SetMovingImageMaskInterpolationOrder( 
       movingMaskInterpolationOrder );
 
     /** Get and set whether the metric should check if enough samples map inside the moving image. */
     std::string checkNumberOfSamples = "true";
-    this->GetConfiguration()->ReadParameter( checkNumberOfSamples, "CheckNumberOfSamples", 0, true );
-    this->GetConfiguration()->ReadParameter( checkNumberOfSamples, "CheckNumberOfSamples", level );
+    this->GetConfiguration()->ReadParameter( checkNumberOfSamples,
+      "CheckNumberOfSamples", this->GetComponentLabel(), level, 0 );
     if ( checkNumberOfSamples == "false" )
     {
       this->SetRequiredRatioOfValidSamples(0.0);

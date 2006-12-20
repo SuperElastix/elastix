@@ -19,14 +19,17 @@ using namespace itk;
 	 *
 	 * This class contains all the common functionality for FixedImagePyramids.
 	 *
-	 * \parameter FixedPyramidSchedule: downsampling factors for the image pyramid.\n
+	 * \parameter FixedImagePyramidSchedule: downsampling factors for the fixed image pyramid.\n
 	 * For each dimension, for each resolution level, the downsampling factor of the 
 	 * fixed image can be specified.\n
-	 * Syntax for 2D images: <tt> (FixedPyramidSchedule <reslevel0,dim0> <reslevel0,dim1> <reslevel1,dim0> <reslevel1,dim1> ...)</tt>
-	 * example: <tt> (FixedPyramidSchedule  4 4 2 2 1 1)</tt>
-	 * Default: isotropic, halved in each resolution, so, like in the example. If a 
-	 * MovingPyramidSchedule is given and no fixed, the MovingPyramidSchedule is taken as a default for the FixedPyramidSchedule.
-	 *
+	 * Syntax for 2D images: <tt> (FixedImagePyramidSchedule <reslevel0,dim0> <reslevel0,dim1> <reslevel1,dim0> <reslevel1,dim1> ...)</tt>
+	 * example: <tt> (FixedImagePyramidSchedule 4 4 2 2 1 1)</tt>
+	 * Default: isotropic, halved in each resolution, so, like in the example. If
+   * ImagePyramidSchedule is specified, that schedule is used for both fixed and moving image pyramid.
+   * \parameter ImagePyramidSchedule: downsampling factors for fixed and moving image pyramids.\n
+	 * example: <tt> (ImagePyramidSchedule 4 4 2 2 1 1)</tt> \n
+   * Used as a default when FixedImagePyramidSchedule is not specified. If both are omitted,
+   * a default schedule is assumed: isotropic, halved in each resolution, so, like in the example.
 	 *
 	 * \ingroup ImagePyramids
 	 * \ingroup ComponentBaseClasses
@@ -55,10 +58,7 @@ using namespace itk;
 		/** Typedefs inherited from Elastix. */
 		typedef typename ElastixType::FixedImageType	InputImageType;
 		typedef typename ElastixType::FixedImageType	OutputImageType;
-			
-		/** Used in the function GetFixedSchedule. */
-		typedef typename ElastixType::MovingImageType MovingImageType;
-		
+					
 		/** Other typedef's. */
 		typedef MultiResolutionPyramidImageFilter<
 			InputImageType, OutputImageType >									ITKBaseType;

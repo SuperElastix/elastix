@@ -47,32 +47,18 @@ using namespace itk;
 				
 		/** Set the maximumNumberOfIterations.*/
 		unsigned int maximumNumberOfIterations = 100;
-		this->m_Configuration->ReadParameter( maximumNumberOfIterations , "MaximumNumberOfIterations", level );
+		this->GetConfiguration()->ReadParameter( maximumNumberOfIterations,
+      "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0 );
 		this->SetNumberOfIterations( maximumNumberOfIterations );
 
-		double a;
-		double A;
-		double alpha;
-		
-		if (level == 0)
-		{
-			a = 400;
-			A = 50.0;
-			alpha = 0.602;
-		}
-		else 
-		{
-			/** If only one parameter is set, then this parameter
-			 * is used in each resolution.
-			 */
-			a = this->GetParam_a();
-			A = this->GetParam_A();
-			alpha = this->GetParam_alpha();
-		}
+    /** Set the gain parameters */
+		double a = 400.0;
+		double A = 50.0;
+		double alpha = 0.602;
 
-		this->GetConfiguration()->ReadParameter(a, "SP_a", level);
-		this->GetConfiguration()->ReadParameter(A, "SP_A", level);
-		this->GetConfiguration()->ReadParameter(alpha, "SP_alpha", level);
+		this->GetConfiguration()->ReadParameter(a, "SP_a", this->GetComponentLabel(), level, 0 );
+		this->GetConfiguration()->ReadParameter(A, "SP_A", this->GetComponentLabel(), level, 0 );
+		this->GetConfiguration()->ReadParameter(alpha, "SP_alpha", this->GetComponentLabel(), level, 0 );
 		
 		this->SetParam_a(	a );
 		this->SetParam_A( A );

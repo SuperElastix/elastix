@@ -20,17 +20,6 @@ using namespace itk;
 
 
 	/**
-	 * ************************ BeforeRegistration ***************************
-	 */
-	
-	template <class TElastix>
-		void NormalizedCorrelationMetric<TElastix>
-		::BeforeRegistration(void)
-	{
-	} // end BeforeRegistration
-
-
-	/**
 	 * ***************** BeforeEachResolution ***********************
 	 */
 
@@ -44,8 +33,8 @@ using namespace itk;
 
 		/** Get and set SubtractMean. Default true. */
 		std::string subtractMean = "true";
-		this->GetConfiguration()->ReadParameter( subtractMean, "SubtractMean", 0 );
-		this->GetConfiguration()->ReadParameter( subtractMean, "SubtractMean", level );
+		this->GetConfiguration()->ReadParameter( subtractMean, "SubtractMean",
+      this->GetComponentLabel(), level, 0 );
 		if ( subtractMean == "false" ) this->SetSubtractMean( false );
 		else this->SetSubtractMean( true );
 		

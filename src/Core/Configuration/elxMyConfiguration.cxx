@@ -18,6 +18,7 @@ namespace elastix
 		this->m_ParameterFileName = "";
 		this->m_Initialized = false;
 		this->m_ElastixLevel = 0;
+    this->m_Silent = false;
 
 	} // end Constructor
 	
@@ -134,6 +135,11 @@ namespace elastix
 
 		this->m_Initialized = true;
 
+    /** Check in the parameter file if silence is desired (less warnings) */
+    bool silence = false;
+    this->ReadParameter( silence, "Silent", 0, true);
+    this->SetSilent(silence);
+
 		/** Return a value.*/
 		return 0;
 
@@ -146,7 +152,7 @@ namespace elastix
 	 * Check if Initialized.
 	 */
 
-	bool MyConfiguration::Initialized(void)
+	bool MyConfiguration::Initialized(void) const
 	{
 		return this->m_Initialized;
 

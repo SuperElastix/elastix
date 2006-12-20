@@ -45,23 +45,14 @@ using namespace itk;
 		void ViolaWellsMutualInformationMetric<TElastix>::
 		BeforeEachResolution(void)
 	{
-		/** \todo adapt SecondOrderRegularisationMetric.
-		 * Set alpha, which balances the similarity and deformation energy
-		 * E_total = (1-alpha)*E_sim + alpha*E_def.
-		 * metric->SetAlpha( config.GetAlpha(level) );
-		 */
-
 		/** Get the current resolution level. */
 		unsigned int level = 
 			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 		
 		/** Set the number of histogram bins and spatial samples. */
 		unsigned int numberOfSpatialSamples = 10000;
-		/** \todo guess the default numberOfSpatialSamples from the 
-		 * imagesize, the numberOfParameters, and the number of bins....
-		 */
 
-		/** Set the intensity standard deviation of the fixed
+    /** Set the intensity standard deviation of the fixed
 		 * and moving images. This defines the kernel bandwidth
 		 * used in the joint probability distribution calculation.
 		 * Default value is 0.4 which works well for image intensities
@@ -73,12 +64,12 @@ using namespace itk;
 		/** \todo calculate them??? */
 		
 		/** Read the parameters from the ParameterFile. */
-		this->m_Configuration->ReadParameter(
-			numberOfSpatialSamples, "NumberOfSpatialSamples", level );
-		this->m_Configuration->ReadParameter(
-			fixedImageStandardDeviation, "FixedImageStandardDeviation", level );
-		this->m_Configuration->ReadParameter(
-			movingImageStandardDeviation, "MovingImageStandardDeviation", level );
+		this->m_Configuration->ReadParameter(	numberOfSpatialSamples,
+      "NumberOfSpatialSamples", this->GetComponentLabel(), level, 0 );
+		this->m_Configuration->ReadParameter( fixedImageStandardDeviation,
+      "FixedImageStandardDeviation", this->GetComponentLabel(), level, 0 );
+		this->m_Configuration->ReadParameter( movingImageStandardDeviation,
+      "MovingImageStandardDeviation", this->GetComponentLabel(), level, 0 );
 		
 		/** Set them. */
 		this->SetNumberOfSpatialSamples( numberOfSpatialSamples );
