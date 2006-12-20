@@ -47,8 +47,8 @@ using namespace itk;
 		
 		/** Get and set the number of histogram bins. */
 		unsigned int numberOfHistogramBins = 32;
-    this->GetConfiguration()->ReadParameter( numberOfHistogramBins, "NumberOfHistogramBins", 0, true);
-		this->GetConfiguration()->ReadParameter( numberOfHistogramBins, "NumberOfHistogramBins", level );
+    this->GetConfiguration()->ReadParameter( numberOfHistogramBins, "NumberOfHistogramBins", 
+      this->GetComponentLabel(), level, 0 );
 		this->SetNumberOfFixedHistogramBins( numberOfHistogramBins );
     this->SetNumberOfMovingHistogramBins( numberOfHistogramBins );
 

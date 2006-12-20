@@ -100,8 +100,8 @@ namespace elastix
      */
     virtual void SetComponentLabel( const char * label, unsigned int idx)
     {
-      std::ostringstream makestring(label);
-      makestring << idx;
+      std::ostringstream makestring;
+      makestring << label << idx;
       this->m_ComponentLabel = makestring.str();
     }
 

@@ -116,8 +116,8 @@ SET(ELX_HELP_DIR ${elastix_SOURCE_DIR}/../help CACHE PATH "path to the doxygen g
 
 IF(WIN32)
   CONFIGURE_FILE(
-	  ${ELX_DOX_DIR}/example_windows.bat
-		${ELX_HELP_DIR}/example_windows.bat
+	  ${ELX_DOX_DIR}/example.bat
+		${ELX_HELP_DIR}/example.bat
 		COPYONLY )
 ELSE(WIN32)
   CONFIGURE_FILE(

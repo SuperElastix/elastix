@@ -144,6 +144,45 @@ namespace elastix
 		  return ReadParameter(param, name_field, entry_nr, false);
 		}
 
+    /** Convenience function to read parameters while specifying some more defaults.
+     * This method adds two arguments: the prefix and the default_entry_nr.
+     * prefix: try first to read <prefix><name_field> from the parameter file.
+     * If that fails, try <name_field>. 
+     * default_entry_nr: if set to a value <0, it is ignored. if >=0, it indicates
+     * the entry_nr used as a default when the entry_nr cannot be found. 
+     */     
+    template <class T>
+		int ReadParameter( T & param, const char * name_field, const char * prefix,
+      const unsigned int entry_nr, int default_entry_nr, bool silent = false )
+		{
+      std::string fullname(prefix);
+      fullname += name_field;
+      int ret = 1;
+      /** silently try to read the parameter */
+      if (default_entry_nr >=0)
+      {
+        /** try the default_entry_nr if the entry_nr is not found */
+        unsigned int uintdefault = static_cast<unsigned int>( default_entry_nr );
+        ret &= this->ReadParameter( param, name_field, uintdefault, true );
+        ret &= this->ReadParameter( param, name_field, entry_nr, true );
+        ret &= this->ReadParameter( param, fullname.c_str(), uintdefault, true );
+        ret &= this->ReadParameter( param, fullname.c_str(), entry_nr, true );
+      }
+      else
+      {
+        /** just try the entry_nr */
+        ret &= this->ReadParameter( param, name_field, entry_nr, true );
+        ret &= this->ReadParameter( param, fullname.c_str(), entry_nr, true );
+      }
+      if ( ret && (!silent) )
+      {
+        /** we haven't found anything, give a warning that the default value
+         * provided by the caller is used */
+        return this->ReadParameter( param, name_field, entry_nr, silent );
+      }
+      return ret;
+    } // end ReadParameter
+
 		/** Get/Set the name of the parameterFileName.*/
 		itkGetStringMacro( ParameterFileName );
 		itkSetStringMacro( ParameterFileName );
