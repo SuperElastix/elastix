@@ -218,6 +218,7 @@ namespace itk
       this->m_Metrics.resize( count );
       this->m_MetricWeights.resize( count );
       this->m_MetricValues.resize( count );
+      this->m_MetricDerivatives.resize( count );
       this->Modified();
     }
 
@@ -329,6 +330,28 @@ namespace itk
     else
     {
       return this->m_MetricValues[ pos ];
+    }
+    
+  } // end GetMetricValue
+
+
+  /**
+	 * ********************* GetMetricDerivative ****************************
+	 */
+
+  template <class TFixedImage, class TMovingImage>
+    const typename CombinationImageToImageMetric<TFixedImage,TMovingImage>
+    ::DerivativeType &
+    CombinationImageToImageMetric<TFixedImage,TMovingImage>
+    ::GetMetricDerivative( unsigned int pos ) const
+  {
+    if ( pos >= this->GetNumberOfMetrics() )
+    {
+      return this->m_NullDerivative;
+    }
+    else
+    {
+      return this->m_MetricDerivatives[ pos ];
     }
     
   } // end GetMetricValue
@@ -447,6 +470,8 @@ namespace itk
       tmpDerivative.Fill( NumericTraits< MeasureType >::Zero );
       this->m_Metrics[ i ]->GetDerivative( parameters, tmpDerivative );
       derivative += this->m_MetricWeights[ i ] * tmpDerivative;
+      /** Store for later, for interested users */
+      this->m_MetricDerivatives[i] = tmpDerivative;
     }
 
   } // end GetDerivative
@@ -479,6 +504,8 @@ namespace itk
       this->m_MetricValues[ i ] = this->m_MetricWeights[ i ] * tmpValue;
       value += this->m_MetricValues[ i ];
       derivative += this->m_MetricWeights[ i ] * tmpDerivative;
+      /** Store for later, for interested users */
+      this->m_MetricDerivatives[i] = tmpDerivative;
     }
 
   } // end GetValueAndDerivative

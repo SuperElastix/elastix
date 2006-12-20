@@ -36,11 +36,6 @@ using namespace itk;
 		void AdvancedMattesMutualInformationMetric<TElastix>
 		::BeforeEachResolution(void)
 	{
-		/** \todo Adapt SecondOrderRegularisationMetric.
-		 * Set alpha, which balances the similarity and deformation energy
-		 * E_total = (1-alpha)*E_sim + alpha*E_def.
-		 * 	metric->SetAlpha( config.GetAlpha(level) );	 */
-
 		/** Get the current resolution level. */
 		unsigned int level = 
 			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
@@ -62,18 +57,11 @@ using namespace itk;
     this->SetNumberOfMovingHistogramBins( numberOfMovingHistogramBins );
 
     /** Set whether a differentiable overlap should be used */
-    std::string useDifferentiableOverlap = "true";
+    bool useDifferentiableOverlap = false;
     this->GetConfiguration()->ReadParameter( useDifferentiableOverlap,
       "UseDifferentiableOverlap", this->GetComponentLabel(), level, 0 );
-    if ( useDifferentiableOverlap == "false" )
-    {
-      this->SetUseDifferentiableOverlap(false);
-    }
-    else
-    {
-      this->SetUseDifferentiableOverlap(true);
-    }
-
+    this->SetUseDifferentiableOverlap( useDifferentiableOverlap );
+    
     /** Get and set the mask interpolation order */
 		unsigned int movingMaskInterpolationOrder = 2;
 		this->GetConfiguration()->ReadParameter( movingMaskInterpolationOrder,

@@ -139,13 +139,18 @@ using namespace itk;
     /** Execute stuff before the actual registration:
 		 * \li Connect all components to the registration framework.
 		 * \li Set the number of resolution levels.
-		 * \li Set the fixed image regions. */
+		 * \li Set the fixed image regions. 
+     * \li Add the sub metric columns to the iteration info object  */
 		virtual void BeforeRegistration(void);
 
     /** Execute stuff before each resolution:
 		 * \li Update masks with an erosion. 
      * \li Set the metric weights */
     virtual void BeforeEachResolution(void);
+
+    /** Execute stuff after each iteration 
+     * \li Print the latest computed submetric values to screen  */
+    virtual void AfterEachIteration(void);
 		
 	protected:
 

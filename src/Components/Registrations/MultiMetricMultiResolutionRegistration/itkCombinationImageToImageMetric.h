@@ -127,8 +127,11 @@ public:
   /** Get the weight for metric i. */
   double GetMetricWeight( unsigned int pos ) const;
 
-  /** Get the value for metric i. */
+  /** Get the last computed value for metric i. */
   MeasureType GetMetricValue( unsigned int pos ) const;
+
+  /** Get the last computed derivative for metric i. */
+  const DerivativeType & GetMetricDerivative( unsigned int pos ) const;
 
   /**
    * Set/Get functions for the metric components
@@ -308,9 +311,11 @@ protected:
   std::vector< SingleValuedCostFunctionPointer >    m_Metrics;
   std::vector< double >                             m_MetricWeights;
   mutable std::vector< MeasureType >                m_MetricValues;
+  mutable std::vector< DerivativeType >             m_MetricDerivatives;
     
-  /** dummy image region */
+  /** dummy image region and derivatives */
   FixedImageRegionType        m_NullFixedImageRegion;
+  DerivativeType              m_NullDerivative;
    
 private:
   CombinationImageToImageMetric(const Self&); //purposely not implemented

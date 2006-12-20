@@ -46,27 +46,24 @@ namespace elastix
     /** Check if the exact metric value, computed on all pixels, should be shown, 
 		 * and whether the all pixels should be used during optimisation */
 
+    /** Define the name of the ExactMetric column */
+    std::string exactMetricColumn = "Exact";
+    exactMetricColumn += this->GetComponentLabel();
+
     /** Remove the ExactMetric-column, if it already existed. */
-		xl::xout["iteration"].RemoveTargetCell("ExactMetric");
+		xl::xout["iteration"].RemoveTargetCell( exactMetricColumn.c_str() );
     /** Read the parameter file: Show the exact metric in every iteration? */ 
-		std::string showExactMetricValue = "false";
-    this->GetConfiguration()->
-		  ReadParameter(showExactMetricValue, "ShowExactMetricValue", 0, true);
-		this->GetConfiguration()->
-			ReadParameter(showExactMetricValue, "ShowExactMetricValue", level);
-		if (showExactMetricValue == "true")
+		bool showExactMetricValue = false;
+    this->GetConfiguration()->ReadParameter(showExactMetricValue,
+      "ShowExactMetricValue", this->GetComponentLabel(), level, 0);
+    this->m_ShowExactMetricValue = showExactMetricValue;
+		if ( showExactMetricValue )
 		{
       /** Create a new column in the iteration info table */
-			xl::xout["iteration"].AddTargetCell("ExactMetric");
-			xl::xout["iteration"]["ExactMetric"] << std::showpoint << std::fixed;
-      /** Remember that we want to show the exact metric value */
-      this->m_ShowExactMetricValue = true;
-		}
-		else
-		{
-			this->m_ShowExactMetricValue = false;
-		}
-  
+			xl::xout["iteration"].AddTargetCell( exactMetricColumn.c_str() );
+			xl::xout["iteration"][ exactMetricColumn.c_str() ] << std::showpoint << std::fixed;
+    }
+		  
 	} // end BeforeEachResolutionBase
 
 
@@ -80,12 +77,15 @@ namespace elastix
 	{ 
 		/** Show the metric value computed on all voxels,
 		 * if the user wanted it */
+
+    /** Define the name of the ExactMetric column (ExactMetric<i>) */
+    std::string exactMetricColumn = "Exact";
+    exactMetricColumn += this->GetComponentLabel();
+
 		if (this->m_ShowExactMetricValue)
 		{
-			xl::xout["iteration"]["ExactMetric"] << this->GetExactValue(
-				this->GetElastix()->
-				GetElxOptimizerBase()->GetAsITKBaseType()->
-				GetCurrentPosition() );
+			xl::xout["iteration"][ exactMetricColumn.c_str() ] << this->GetExactValue(
+        this->GetElastix()->GetElxOptimizerBase()->GetAsITKBaseType()->GetCurrentPosition() );
 		}
 
   } // end AfterEachIterationBase

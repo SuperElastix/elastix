@@ -74,9 +74,11 @@ namespace elastix
 		void OptimizerBase<TElastix>::SelectNewSamples(void)
 	{
 		/** Force the metric to base its computation on a new subset of image samples.
-		 * Not every metric may have implemented this.
-		 */
-		this->GetElastix()->GetElxMetricBase()->SelectNewSamples();
+		 * Not every metric may have implemented this. */
+    for (unsigned int i = 0; i < this->GetElastix()->GetNumberOfMetrics(); ++i )
+    {
+		  this->GetElastix()->GetElxMetricBase(i)->SelectNewSamples();
+    }
 
 	} // end SelectNewSamples
 

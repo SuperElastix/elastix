@@ -62,18 +62,11 @@ using namespace itk;
     this->SetNumberOfMovingHistogramBins( numberOfMovingHistogramBins );
 
     /** Set whether a differentiable overlap should be used */
-    std::string useDifferentiableOverlap = "true";
+    bool useDifferentiableOverlap = false;
     this->GetConfiguration()->ReadParameter( useDifferentiableOverlap,
       "UseDifferentiableOverlap", this->GetComponentLabel(), level, 0 );
-    if ( useDifferentiableOverlap == "false" )
-    {
-      this->SetUseDifferentiableOverlap(false);
-    }
-    else
-    {
-      this->SetUseDifferentiableOverlap(true);
-    }
-
+    this->SetUseDifferentiableOverlap( useDifferentiableOverlap );
+    
     /** Get and set the mask interpolation order */
 		unsigned int movingMaskInterpolationOrder = 2;
     this->GetConfiguration()->ReadParameter( movingMaskInterpolationOrder,
