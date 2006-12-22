@@ -167,6 +167,23 @@ namespace elastix
             "FixedImageBSplineInterpolationOrder", this->GetComponentLabel(), level, 0 );
           fixedImageInterpolator->SetSplineOrder( splineOrder );
     		  randomCoordinateSampler->SetInterpolator(fixedImageInterpolator);
+          /** Set the UseRandomSampleRegion bool */
+          bool useRandomSampleRegion = false;
+          this->GetConfiguration()->ReadParameter( useRandomSampleRegion,
+            "UseRandomSampleRegion", this->GetComponentLabel(), level, 0);
+          randomCoordinateSampler->SetUseRandomSampleRegion( useRandomSampleRegion );
+          if (useRandomSampleRegion)
+          {
+            /** Set the SampleRegionSize */
+            typename ImageRandomCoordinateSamplerType::InputImageSpacingType sampleRegionSize;
+            sampleRegionSize.Fill(1.0);
+            for (unsigned int i = 0; i < FixedImageDimension; ++i)
+            {
+              this->GetConfiguration()->ReadParameter( sampleRegionSize[i], "SampleRegionSize", 
+                this->GetComponentLabel(), level*FixedImageDimension + i, 0);
+            }
+            randomCoordinateSampler->SetSampleRegionSize( sampleRegionSize );
+          }
           imageSampler = randomCoordinateSampler;
         }
         else if ( imageSamplerType == "Grid" )

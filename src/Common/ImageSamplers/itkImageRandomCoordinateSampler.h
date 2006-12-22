@@ -48,6 +48,7 @@ namespace itk
     typedef typename Superclass::ImageSampleType              ImageSampleType;
     typedef typename Superclass::ImageSampleContainerType     ImageSampleContainerType;
     typedef typename Superclass::MaskType                     MaskType;
+    typedef typename InputImageType::SpacingType              InputImageSpacingType;
 
     /** The input image dimension. */
     itkStaticConstMacro( InputImageDimension, unsigned int,
@@ -77,6 +78,16 @@ namespace itk
     /** Set/Get the interpolator. A 3rd order BSpline interpolator is used by default. */
     itkSetObjectMacro(Interpolator, InterpolatorType);
     itkGetObjectMacro(Interpolator, InterpolatorType);
+
+    /** Set/Get the sample region size (in mm). Only needed when UseRandomSampleRegion==true;
+     * default: filled with ones.  */
+    itkSetMacro( SampleRegionSize, InputImageSpacingType );
+    itkGetConstReferenceMacro( SampleRegionSize, InputImageSpacingType );
+
+    /** Set/Get whether to use randomly selected sample regions, or just the whole image
+     * Default: false. */
+    itkGetConstMacro(UseRandomSampleRegion, bool);
+    itkSetMacro(UseRandomSampleRegion, bool);
     
   protected:
 
@@ -100,6 +111,18 @@ namespace itk
 
     typename InterpolatorType::Pointer    m_Interpolator;
     typename RandomGeneratorType::Pointer m_RandomGenerator;
+    InputImageSpacingType                 m_SampleRegionSize;
+
+    /** Generate the two corners of a sampling region, given the two corners
+     * of an image. If UseRandomSampleRegion=false, the smallesPoint and largestPoint
+     * are just copies of the smallestImagePoint and largestImagePoint 
+     * Otherwise, the midpoint of the sample region is randomly selected and 
+     * the two corners are computed using the SampleRegionSize */
+    virtual void GenerateSampleRegion(
+      const InputImagePointType & smallestImagePoint,
+      const InputImagePointType & largestImagePoint,
+      InputImagePointType & smallestPoint,
+      InputImagePointType & largestPoint );
             
   private:
 
@@ -109,7 +132,8 @@ namespace itk
     void operator=( const Self& );				    // purposely not implemented
 
     unsigned long m_NumberOfSamples;
-
+    bool          m_UseRandomSampleRegion;
+    
   }; // end class ImageRandomCoordinateSampler
 
 

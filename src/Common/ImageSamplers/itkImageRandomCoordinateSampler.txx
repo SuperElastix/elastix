@@ -27,6 +27,9 @@ namespace itk
     this->m_RandomGenerator = RandomGeneratorType::New();
     //this->m_RandomGenerator->Initialize();
 
+    this->m_UseRandomSampleRegion = false;
+    this->m_SampleRegionSize.Fill(1.0);
+
   } // end constructor 
 
 
@@ -51,12 +54,16 @@ namespace itk
     /** Convert inputImageRegion to bounding box in physical space. */
     InputImageIndexType smallestIndex = this->GetInputImageRegion().GetIndex();
     InputImageIndexType largestIndex = smallestIndex + this->GetInputImageRegion().GetSize();
+    InputImagePointType smallestImagePoint;
+    InputImagePointType largestImagePoint;
+    inputImage->TransformIndexToPhysicalPoint(
+      smallestIndex, smallestImagePoint);
+    inputImage->TransformIndexToPhysicalPoint(
+      largestIndex, largestImagePoint);
     InputImagePointType smallestPoint;
     InputImagePointType largestPoint;
-    inputImage->TransformIndexToPhysicalPoint(
-      smallestIndex, smallestPoint);
-    inputImage->TransformIndexToPhysicalPoint(
-      largestIndex, largestPoint);
+    this->GenerateSampleRegion( smallestImagePoint, largestImagePoint, 
+      smallestPoint, largestPoint );
     
     /** Reserve memory for the output. */
     sampleContainer->Reserve( this->GetNumberOfSamples() );
@@ -148,6 +155,35 @@ namespace itk
         this->m_RandomGenerator->GetUniformVariate(
         smallestPoint[ i ], largestPoint[ i ] ) );
     }
+  } // end GenerateRandomCoordinate   
+
+
+  /**
+	 * ******************* GenerateSampleRegion *******************
+	 */
+  
+  template< class TInputImage >
+    void
+    ImageRandomCoordinateSampler< TInputImage >::
+    GenerateSampleRegion(
+      const InputImagePointType & smallestImagePoint,
+      const InputImagePointType & largestImagePoint,
+      InputImagePointType &       smallestPoint,
+      InputImagePointType &       largestPoint )
+  {
+    if ( !this->GetUseRandomSampleRegion() )
+    {
+      smallestPoint = smallestImagePoint;
+      largestPoint = largestImagePoint;
+      // \todo: create bounding box around mask...
+      return;
+    }
+    InputImagePointType maxSmallestPoint = largestImagePoint - this->GetSampleRegionSize();
+    this->GenerateRandomCoordinate(smallestImagePoint, maxSmallestPoint, smallestPoint);
+    largestPoint = smallestPoint + this->GetSampleRegionSize();
+    // \todo: check if in mask, maybe separate function in imagesamplerbase:
+    // ComputeMaskBoundingBox!
+    
   } // end GenerateRandomCoordinate   
 
 
