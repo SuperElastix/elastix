@@ -21,21 +21,21 @@ namespace itk
    * uncertainty is initially chosen so that it contains a
    * minimizer of the modified function
    *
-   *      f(x+stp*s) - f(x) - ValueTolerance*stp*(gradf(x)'s).
+   *    \f[ f(x+stp*s) - f(x) - ValueTolerance*stp*(gradf(x)'s). \f]
    *
    * If a step is obtained for which the modified function
    * has a nonpositive function value and nonnegative derivative,
    * then the interval of uncertainty is chosen so that it
-   * contains a minimizer of f(x+stp*s).
+   * contains a minimizer of \f$f(x+stp*s)\f$.
    *
    * The algorithm is designed to find a step which satisfies
    * the sufficient decrease condition
    *
-   *      f(x+stp*s) <= f(x) + ValueTolerance*stp*(gradf(x)'s),
+   *    \f[ f(x+stp*s) <= f(x) + ValueTolerance*stp*(gradf(x)'s), \f]
    *
    * and the curvature condition
    *
-   *      abs(gradf(x+stp*s)'s)) <= GradientTolerance*abs(gradf(x)'s).
+   *    \f[ \| gradf(x+stp*s)'s) \| <= GradientTolerance * \| gradf(x)'s \|. \f]
    *
    * (together also called the Strong Wolfe Conditions)
    * 

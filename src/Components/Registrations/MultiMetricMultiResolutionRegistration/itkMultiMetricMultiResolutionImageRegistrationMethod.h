@@ -44,13 +44,13 @@ namespace itk
  * of multiple metrics, which are summed, multiple images,
  * multiple interpolators, and/or multiple image pyramids.
  *
- * Make sure the following is true:
- *   nrofmetrics >= nrofinterpolators >= nrofmovingpyramids >= nrofmovingimages
- *   nrofmetrics >= nroffixedpyramids >= nroffixedimages
- *   nroffixedregions == nroffixedimages 
+ * Make sure the following is true:\n
+ *   nrofmetrics >= nrofinterpolators >= nrofmovingpyramids >= nrofmovingimages\n
+ *   nrofmetrics >= nroffixedpyramids >= nroffixedimages\n
+ *   nroffixedregions == nroffixedimages\n
  *
- *   nrofinterpolators==nrofmetrics OR nrofinterpolators==1.
- *   nroffixedimages==nrofmetrics OR nroffixedimages==1.
+ *   nrofinterpolators == nrofmetrics OR nrofinterpolators == 1\n
+ *   nroffixedimages == nrofmetrics OR nroffixedimages == 1\n
  *   etc...
  *
  * You may also set an interpolator/fixedimage/etc to NULL, if you

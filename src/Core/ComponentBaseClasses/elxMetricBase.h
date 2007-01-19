@@ -35,6 +35,7 @@ using namespace itk;
    *    \li RandomSparseMask: Same as random, but more efficient when the FixedMask is sparse (many 0s);
    *    \li RandomCoordinate: Random coordinates are selected (so not only at voxel locations);
    *    \li Grid: Voxels are selected on a uniform regular grid; this ImageSampler is NOT RECOMMENDED; The grid size can be specified by the parameter SampleGridSpacing;
+   *
    *    Can be specified for each resolution, or for all resolutions at once.\n
    *    example: <tt>(ImageSampler "Random" "Full")</tt> \n
    *    Default is "Random".\n

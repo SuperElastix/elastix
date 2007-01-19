@@ -27,9 +27,11 @@ namespace elastix
 	 * \parameter HowToCombineTransforms: Indicates how to use the initial transform\n
 	 *   (given by the command-line argument -t0, or, if using multiple parameter files,
 	 *   by the result of registration using the previous parameter file). Possible options
-	 *   are "Add" and "Compose". "Add" combines the initial transform T0 and the current
-	 *   transform T1 (which is currently optimised) by addition: T(x) = T0(x) + T1(x);
-	 *   "Compose" by composition: T(x) = T1 ( T0(x) ). \n
+	 *   are "Add" and "Compose".\n
+   *   "Add" combines the initial transform \f$T_0\f$ and the current
+	 *   transform \f$T_1\f$ (which is currently optimised) by
+   *   addition: \f$T(x) = T_0(x) + T_1(x)\f$;\n
+	 *   "Compose" by composition: \f$T(x) = T_1 ( T_0(x) )\f$.\n
 	 *   example: <tt>(HowToCombineTransforms "Add")
 	 *   Default: "Add".
 	 *

@@ -25,11 +25,11 @@ namespace itk
 	 * Note: the NewNDImage does not return an itk::Image, but an
 	 * elx::NDImageTemplate.
 	 *
-	 * Suggested way of using this class:
-	 * NDImageBase<short> var1 = NDImageBase::NewNDImage(3);
-	 * var1->CreateNewImage();
-	 * The result is similar as:
-	 * itk::Image<short,3>::Pointer var1 = itk::Image<short,3>::New();
+	 * Suggested way of using this class:\n
+	 * NDImageBase<short> var1 = NDImageBase::NewNDImage(3);\n
+	 * var1->CreateNewImage();\n
+	 * The result is similar as:\n
+	 * itk::Image<short,3>::Pointer var1 = itk::Image<short,3>::New();\n
 	 * except that the actual itk::Image is stored as member variable
 	 * in the NDImageTemplate.
 	 *

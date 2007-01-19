@@ -16,7 +16,12 @@ using namespace itk;
 	 *
 	 * The parameters used in this class are:
 	 * \parameter Metric: Select this metric as follows:\n
-	 *		<tt>(Metric "AdvancedMeanSquares")</tt>
+	 *	  <tt>(Metric "AdvancedMeanSquares")</tt>
+   * \parameter UseNormalization: Bool to use normalization or not.\n
+   *    If true, the MeanSquares is divided by a factor (range/10)^2,
+   *    where range represents the maximum gray value range of the images.\n
+   *    <tt>(UseNormalization "true")</tt>\n
+   *    The default value is false.
 	 *
 	 * \ingroup Metrics
 	 *

@@ -14,7 +14,7 @@ namespace itk
    *
    * \brief This class is a base class for any image sampler.
    *
-   * \parameter : ImageSampler: The way samples are taken from the fixed image in
+   * \parameter ImageSampler: The way samples are taken from the fixed image in
    *    order to compute the metric value and its derivative in each iteration.
    *    Can be given for each resolution. Select one of {Random, Full, Grid, RandomCoordinate}.\n
 	 *		example: <tt>(ImageSampler "Random")</tt> \n

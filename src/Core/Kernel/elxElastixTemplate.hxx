@@ -509,9 +509,10 @@ namespace elastix
 		CallInEachComponent( &BaseComponentType::AfterEachResolution );
 
 		/** Create a TransformParameter-file for the current resolution. */
-		std::string TranParOptionRes = "false";
-		this->GetConfiguration()->ReadParameter( TranParOptionRes, "WriteTransformParametersEachResolution", 0, true );
-		if ( TranParOptionRes == "true" )
+    bool writeTransformParameterEachResolution = false;
+    this->GetConfiguration()->ReadParameter( writeTransformParameterEachResolution,
+      "WriteTransformParametersEachResolution", 0, true );
+		if ( writeTransformParameterEachResolution )
 		{
 			/** Create the TransformParameters filename for this resolution. */
 			std::ostringstream makeFileName("");
@@ -544,7 +545,7 @@ namespace elastix
 	::AfterEachIteration(void)
 	{
 		/** Write the headers of the colums that are printed each iteration. */
-		if (this->m_IterationCounter==0)
+		if ( this->m_IterationCounter == 0 )
 		{
 			xout["iteration"]["WriteHeaders"];
 		}
@@ -565,9 +566,13 @@ namespace elastix
 		/** Write the iteration info of this iteration. */
 		xout["iteration"].WriteBufferedData();
 
-		std::string TranParOption;
-		this->GetConfiguration()->ReadParameter( TranParOption, "WriteTransformParametersEachIteration", 0, true );
-		if ( TranParOption == "true" )
+    /** Create a TransformParameter-file for the current iteration. */
+    bool writeTansformParametersThisIteration = false;
+    this->GetConfiguration()->ReadParameter( writeTansformParametersThisIteration,
+      "WriteTransformParametersEachIteration", 0, true );
+    //this->GetConfiguration()->ReadParameter( writeTansformParametersThisIteration,
+      //"WriteTransformParametersEachIteration", level, true );
+		if ( writeTansformParametersThisIteration )
 		{
 			/** Add zeros to the number of iterations, to make sure 
 			 * it always consists of 7 digits. 
@@ -575,9 +580,9 @@ namespace elastix
        * ostringstream, if that's possible somehow.  */
 			std::ostringstream makeIterationString("");
 			unsigned int border = 1000000;
-			while (border > 1)
+			while ( border > 1 )
 			{
-				if (this->m_IterationCounter < border )
+				if ( this->m_IterationCounter < border )
 				{
 					makeIterationString << "0";
 					border /= 10;

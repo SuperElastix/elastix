@@ -16,15 +16,16 @@ namespace itk
    *
    * The optimizer solves the unconstrained minimization problem 
    *
-   *                min F(x),    x= (x1,x2,...,xN), 
+   *      \f[ min F(x), \quad x = ( x_1,x_2,\ldots,x_N ), \f]
    *
    * using the limited memory BFGS method. The routine is especially 
    * effective on problems involving a large number of variables. In 
-   * a typical iteration of this method an approximation Hk to the 
-   * inverse of the Hessian is obtained by applying M BFGS updates to 
-   * a diagonal matrix H0, using information from the previous M steps.  
-   * The user specifies the number M(emory), which determines the amount of 
-   * storage required by the routine. 
+   * a typical iteration of this method an approximation \f$H_k\f$ to the 
+   * inverse of the Hessian is obtained by applying \f$M\f$ BFGS updates to 
+   * a diagonal matrix \f$H_0\f$, using information from the previous \f$M\f$ steps.
+   * The user specifies the number \f$M\f$ (Memory), which determines the amount of 
+   * storage required by the routine.
+   *
    * The algorithm is described in "On the limited memory BFGS method 
    * for large scale optimization", by D. Liu and J. Nocedal, 
    * Mathematical Programming B 45 (1989) 503-528. 

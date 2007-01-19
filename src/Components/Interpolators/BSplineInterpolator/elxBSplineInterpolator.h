@@ -20,7 +20,7 @@ using namespace itk;
 	 * \parameter Interpolator: Select this interpolator as follows:\n
 	 *		<tt>(Interpolator "BSplineInterpolator")</tt>
 	 * \parameter BSplineInterpolationOrder: the order of the B-spline polynomial. \n
-   *		example: <tt>(BSplineInterpolationOrder 3 2 3 )</tt> \n
+   *		example: <tt>(BSplineInterpolationOrder 3 2 3)</tt> \n
 	 *		The default order is 1. The parameter can be specified for each resolution.\n
    *    If only given for one resolution, that value is used for the other resolutions as well.
 	 *

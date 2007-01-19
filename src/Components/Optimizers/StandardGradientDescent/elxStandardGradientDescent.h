@@ -24,18 +24,18 @@ using namespace itk;
 	 * \parameter MaximumNumberOfIterations: The maximum number of iterations in each resolution. \n
 	 *		example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
 	 *    Default value: 100.
-	 * \parameter SP_a: The gain \a a(k) at each iteration \a k is defined by \n
-	 *   <em>a(k) =  SP_a / (SP_A + k + 1)^SP_alpha</em>. \n
+	 * \parameter SP_a: The gain \f$a(k)\f$ at each iteration \f$k\f$ is defined by \n
+	 *   \f$a(k) =  SP_a / (SP_A + k + 1)^SP_alpha\f$. \n
 	 *   SP_a can be defined for each resolution. \n
 	 *   example: <tt>(SP_a 3200.0 3200.0 1600.0)</tt> \n
 	 *   The default value is 400.0. Tuning this variable for you specific problem is recommended.
-	 * \parameter SP_A: The gain \a a(k) at each iteration \a k is defined by \n
-	 *   <em>a(k) =  SP_a / (SP_A + k + 1)^SP_alpha</em>. \n
+	 * \parameter SP_A: The gain \f$a(k)\f$ at each iteration \f$k\f$ is defined by \n
+	 *   \f$a(k) =  SP_a / (SP_A + k + 1)^SP_alpha\f$. \n
 	 *   SP_A can be defined for each resolution. \n
 	 *   example: <tt>(SP_A 50.0 50.0 100.0)</tt> \n
 	 *   The default/recommended value is 50.0.
-   * \parameter SP_alpha: The gain \a a(k) at each iteration \a k is defined by \n
-	 *   <em>a(k) =  SP_a / (SP_A + k + 1)^SP_alpha</em>. \n
+   * \parameter SP_alpha: The gain \f$a(k)\f$ at each iteration \f$k\f$ is defined by \n
+	 *   \f$a(k) =  SP_a / (SP_A + k + 1)^SP_alpha\f$. \n
 	 *   SP_alpha can be defined for each resolution. \n
 	 *   example: <tt>(SP_alpha 0.602 0.602 0.602)</tt> \n
 	 *   The default/recommended value is 0.602.

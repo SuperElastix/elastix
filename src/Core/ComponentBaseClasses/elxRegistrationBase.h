@@ -42,11 +42,11 @@ using namespace itk;
 	 *		from one resolution level to another. Choose from {"true", "false"} \n
 	 *		example: <tt>(ErodeMovingMask "true" "false")</tt>
    *    This setting overrules ErodeMask.\n
-   * \parameter ErodeFixedMask<i>: a flag to determine if the i-th fixed mask should be eroded
+   * \parameter ErodeFixedMask\<i\>: a flag to determine if the i-th fixed mask should be eroded
 	 *		from one resolution level to another. Choose from {"true", "false"} \n
 	 *		example: <tt>(ErodeFixedMask2 "true" "false")</tt>
    *    This setting overrules ErodeMask and ErodeFixedMask.\n
-   * \parameter ErodeMovingMask<i>: a flag to determine if the i-th moving mask should be eroded
+   * \parameter ErodeMovingMask\<i\>: a flag to determine if the i-th moving mask should be eroded
 	 *		from one resolution level to another. Choose from {"true", "false"} \n
 	 *		example: <tt>(ErodeMovingMask2 "true" "false")</tt>
    *    This setting overrules ErodeMask and ErodeMovingMask.\n   

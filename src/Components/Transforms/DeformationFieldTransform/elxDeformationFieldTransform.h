@@ -27,8 +27,8 @@ using namespace itk;
 	 * \transformparameter DeformationFieldFileName: stores the name of the deformation field. \n
 	 *		example: <tt>(DeformationFieldFileName "defField.mhd")</tt>
    * \transformparameter DeformationFieldInterpolationOrder: The interpolation order used for interpolating the deformation field:\n
-	 *		example: <tt>(DeformationFieldInterpolationOrder 0)</tt>
-   *    default: 0; allowed: 0 or 1.
+	 *		example: <tt>(DeformationFieldInterpolationOrder 0)</tt>\n
+   *    The default value is 0. Choose from the allowed values 0 or 1.
    *
 	 *
 	 * \sa DeformationFieldInterpolatingTransform

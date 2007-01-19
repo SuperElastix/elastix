@@ -15,7 +15,7 @@ namespace itk
  * diminished/increased, such that it never will exceed the UpperBound/LowerBound.
  * It does this in a smooth manner, with an exponential function.
  *
- * L(f(x)) = (T-B) e^{(f-T)/(T-B)} + B
+ * \f[ L(f(x)) = (T-B) e^{(f-T)/(T-B)} + B, \f]
  * where B is the upper/lower bound and T the upper/lower threshold 
  * 
  * \ingroup Functions

@@ -69,11 +69,17 @@ namespace elastix
 	 * The ElastixTemplate class ...
 	 * 
 	 * \parameter WriteTransformParametersEachIteration: Controls whether
-	 * to save a transform parameter file to disk in every iteration.\n
-	 * example: <tt>(WriteTransformParametersEachIteration "true")</tt>
-	 * This parameter can not be specified for each resolution separately.
-	 * Default value: "false".
-	 *
+	 *    to save a transform parameter file to disk in every iteration.\n
+	 *    example: <tt>(WriteTransformParametersEachIteration "true")</tt>\n
+	 *    This parameter can not be specified for each resolution separately.
+	 *    Default value: "false".
+	 * \parameter WriteTransformParametersEachResolution: Controls whether
+	 *    to save a transform parameter file to disk in every resolution.\n
+	 *    example: <tt>(WriteTransformParametersEachResolution "true")</tt>\n
+	 *    This parameter can not be specified for each resolution separately.
+	 *    Default value: "false".
+   *
+   *
 	 * \ingroup Kernel
 	 */
 	
@@ -144,7 +150,6 @@ namespace elastix
 		typedef typename BeforeEachResolutionCommandType::Pointer					BeforeEachResolutionCommandPointer;
 		typedef typename AfterEachResolutionCommandType::Pointer					AfterEachResolutionCommandPointer;
 		typedef typename AfterEachIterationCommandType::Pointer						AfterEachIterationCommandPointer;
-				
 		
 		/** The elastix basecomponent types.*/
 		typedef FixedImagePyramidBase<Self> 															FixedImagePyramidBaseType;
@@ -221,8 +226,10 @@ namespace elastix
 		virtual void AfterEachIteration(void);
 		virtual void AfterRegistration(void);
 
+    /** Get the iteration number. */
 		itkGetConstMacro(IterationCounter, unsigned int);
 
+    /** Get the name of the current transform parameter file. */
 		itkGetStringMacro( CurrentTransformParameterFileName );
 		
 	protected:

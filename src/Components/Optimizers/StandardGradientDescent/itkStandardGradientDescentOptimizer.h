@@ -10,18 +10,18 @@ namespace itk
 	 * \class StandardGradientDescentOptimizer
 	 * \brief This class implements a gradient descent optimizer with a decaying gain.
 	 *
-	 * If \a C(x) is a costfunction that has to be minimised, the following iterative
-	 * algorithm is used to find the optimal parameters \a x:
+	 * If \f$C(x)\f$ is a costfunction that has to be minimised, the following iterative
+	 * algorithm is used to find the optimal parameters \f$x\f$:
 	 * 
-	 * x(k+1) = x(k) - a(k) dC/dx
+	 *     \f[ x(k+1) = x(k) - a(k) dC/dx \f]
 	 *
-   * The gain \a a(k) at each iteration \a k is defined by:
+   * The gain \f$a(k)\f$ at each iteration \f$k\f$ is defined by:
 	 *
-	 * <em>a(k) =  a / (A + k + 1)^alpha</em>.
+	 *     \f[ a(k) =  a / (A + k + 1)^alpha \f].
 	 * 
 	 * It is very suitable to be used in combination with a stochastic estimate
-	 * of the gradient \a dC/dx. For example, in image registration problems it is
-	 * often advantageous to compute the metric derivative (\a dC/dx) on a new set 
+	 * of the gradient \f$dC/dx\f$. For example, in image registration problems it is
+	 * often advantageous to compute the metric derivative (\f$dC/dx\f$) on a new set 
 	 * of randomly selected image samples in each iteration. You may set the parameter
 	 * \c NewSamplesEveryIteration to \c "true" to achieve this effect.
 	 * For more information on this strategy, you may have a look at:

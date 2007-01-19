@@ -32,7 +32,7 @@ namespace elastix
    *
    * \parameter Silent: defines if warnings should be printed to screen, when 
    * a parameter cannot be found and the default is used.
-   * example: <tt>(Silent "true")</tt>
+   * example: <tt>(Silent "true")</tt>\n
    * Default: "false"
 	 *
  	 * \sa ConfigurationBase

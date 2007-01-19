@@ -19,20 +19,20 @@ using namespace itk;
    * If the metrics use the same moving image and the same moving image pyramid, they can use the
    * same interpolator. If multiple moving images are used, enter multiple interpolators, possibly 
    * of the same type:
-   * Like this for example:
-   * (Interpolator "BSplineInterpolator" "BSplineInterpolator")
+   * Like this for example:\n
+   * <tt>(Interpolator "BSplineInterpolator" "BSplineInterpolator")</tt>
    *
    * Note, that the number of metrics should always be larger than or equal to the number
    * if fixed/moving images, interpolators, image pyramids etc.
    *
 	 *
-	 * The parameters used in this class are:
+	 * The parameters used in this class are:\n
 	 * \parameter Registration: Select this registration framework as follows:\n
 	 *		<tt>(Registration "MultiMetricMultiResolutionRegistration")</tt>
 	 * \parameter NumberOfResolutions: the number of resolutions used. \n
 	 *		example: <tt>(NumberOfResolutions 4)</tt> \n
-	 *		The default is 3.
-   * \parameter MetricWeight<i>: The weight for the i-th metric, in each resolution \n
+	 *		The default is 3.\n
+   * \parameter MetricWeight: The weight for the i-th metric, in each resolution \n
 	 *		example: <tt>(MetricWeight0 0.5 0.5 0.8)</tt> \n
    *		example: <tt>(MetricWeight1 0.5 0.5 0.2)</tt> \n
 	 *		The default is 1.0.

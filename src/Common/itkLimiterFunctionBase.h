@@ -18,10 +18,10 @@ namespace itk
  * The derivative of a function that is limited also changes. 
  *
  * In formula:
- * L(y) = L(f(x))
- * where f(x) is the original function. and L(f(x)) the limited version.
+ * \f[ L(y) = L(f(x)), \f]
+ * where \f$f(x)\f$ is the original function. and \f$L(f(x))\f$ the limited version.
  * The derivative with respect to x should satisfy:
- * dL/dx = (dL/df).(df/dx)
+ * \f[ dL/dx = (dL/df).(df/dx) \f]
  * 
  * Subclasses must override Evaluate(value) and Evaluate(value, derivative) .
  * 

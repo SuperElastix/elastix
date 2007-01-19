@@ -11,22 +11,22 @@ namespace itk
 	 * \class FiniteDifferenceGradientDescentOptimizer
 	 * \brief An optimizer based on gradient descent ...
 	 *
-	 * If \a C(x) is a costfunction that has to be minimised, the following iterative
+	 * If \f$C(x)\f$ is a costfunction that has to be minimised, the following iterative
 	 * algorithm is used to find the optimal parameters \a x:
 	 * 
-	 * x(k+1)_j = x(k)_j - a(k) [ C(x(k)_j + c(k)) - C(x(k)_j - c(k)) ] / 2c(k)
-	 * for all parameters \a j
+	 * \f[ x(k+1)_j = x(k)_j - a(k) [ C(x(k)_j + c(k)) - C(x(k)_j - c(k)) ] / 2c(k), \f]
+	 * for all parameters \f$j\f$.
 	 *
 	 * From this equation it is clear that it a gradient descent optimizer, using
 	 * a finite difference approximation of the gradient.
 	 *
-   * The gain \a a(k) at each iteration \a k is defined by:
+   * The gain \f$a(k)\f$ at each iteration \f$k\f$ is defined by:
 	 *
-	 * <em>a(k) =  a / (A + k + 1)^alpha</em>.
+	 * \f[ a(k) =  a / (A + k + 1)^{\alpha}. \f]
 	 *
-	 * The perturbation size \a c(k) at each iteration \a k is defined by:
+	 * The perturbation size \f$c(k)\f$ at each iteration \f$k\f$ is defined by:
 	 *
-	 * <em>c(k) =  c / (k + 1)^gamma</em>.
+	 * \f[ c(k) =  c / (k + 1)^{\gamma}. \f]
 	 *
 	 * Note the similarities to the SimultaneousPerturbation optimizer and
 	 * the StandardGradientDescent optimizer.

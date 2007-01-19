@@ -63,6 +63,12 @@ using namespace itk;
     {
       this->SetRequiredRatioOfValidSamples(0.25);
     }
+
+    /** Get and set the normalization. */
+    bool useNormalization = false;
+    this->GetConfiguration()->ReadParameter( useNormalization,
+      "UseNormalization", this->GetComponentLabel(), level, 0 );
+    this->SetUseNormalization( useNormalization );
 		
   } // end BeforeEachResolution
 

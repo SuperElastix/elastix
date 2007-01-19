@@ -22,34 +22,35 @@ using namespace itk;
 	 * \parameter MaximumNumberOfIterations: The maximum number of iterations in each resolution. \n
 	 *		example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
 	 *    Default value: 100.
-	 * \parameter NumberOfPerturbations: The number of perturbation used to construct a gradient estimate g_k. \n
-	 *    q = NumberOfPerturbations \n
-   *    g_k = 1/q sum_{j=1..q} g^(j)_k \n
+	 * \parameter NumberOfPerturbations: The number of perturbation used to
+   *    construct a gradient estimate \f$g_k\f$. \n
+	 *    \f$q =\f$ NumberOfPerturbations \n
+   *    \f$g_k = 1/q \sum_{j = 1..q} g^(j)_k\f$ \n
 	 *		This parameter can be defined for each resolution. \n
 	 *		example: <tt>(NumberOfPerturbations 1 1 2)</tt> \n
 	 *    Default value: 1.
-	 * \parameter SP_a: The gain \a a(k) at each iteration \a k is defined by \n
-	 *   <em>a(k) =  SP_a / (SP_A + k + 1)^SP_alpha</em>. \n
+	 * \parameter SP_a: The gain \f$a(k)\f$ at each iteration \f$k\f$ is defined by \n
+	 *   \f$a(k) =  SP_a / (SP_A + k + 1)^SP_alpha\f$. \n
 	 *   SP_a can be defined for each resolution. \n
 	 *   example: <tt>(SP_a 3200.0 3200.0 1600.0)</tt> \n
 	 *   The default value is 400.0. Tuning this variable for you specific problem is recommended.
-	 * \parameter SP_A: The gain \a a(k) at each iteration \a k is defined by \n
-	 *   <em>a(k) =  SP_a / (SP_A + k + 1)^SP_alpha</em>. \n
+	 * \parameter SP_A: The gain \f$a(k)\f$ at each iteration \f$k\f$ is defined by \n
+	 *   \f$a(k) =  SP_a / (SP_A + k + 1)^SP_alpha\f$. \n
 	 *   SP_A can be defined for each resolution. \n
 	 *   example: <tt>(SP_A 50.0 50.0 100.0)</tt> \n
 	 *   The default/recommended value is 50.0.
-   * \parameter SP_alpha: The gain \a a(k) at each iteration \a k is defined by \n
-	 *   <em>a(k) =  SP_a / (SP_A + k + 1)^SP_alpha</em>. \n
+   * \parameter SP_alpha: The gain \f$a(k)\f$ at each iteration \f$k\f$ is defined by \n
+	 *   \f$a(k) =  SP_a / (SP_A + k + 1)^SP_alpha\f$. \n
 	 *   SP_alpha can be defined for each resolution. \n
 	 *   example: <tt>(SP_alpha 0.602 0.602 0.602)</tt> \n
 	 *   The default/recommended value is 0.602.
-	 * \parameter SP_c: The perturbation step size \a c(k) at each iteration \a k is defined by \n
-	 *   <em>c(k) =  SP_c / ( k + 1)^SP_gamma</em>. \n
+	 * \parameter SP_c: The perturbation step size \f$c(k)\f$ at each iteration \f$k\f$ is defined by \n
+	 *   \f$c(k) =  SP_c / ( k + 1)^SP_gamma\f$. \n
 	 *   SP_c can be defined for each resolution. \n
 	 *   example: <tt>(SP_c 2.0 1.0 1.0)</tt> \n
 	 *   The default value is 1.0.
-	 * \parameter SP_gamma: The perturbation step size \a c(k) at each iteration \a k is defined by \n
-	 *   <em>c(k) =  SP_c / ( k + 1)^SP_gamma</em>. \n
+	 * \parameter SP_gamma: The perturbation step size \f$c(k)\f$ at each iteration \f$k\f$ is defined by \n
+	 *   \f$c(k) =  SP_c / ( k + 1)^SP_gamma\f$. \n
 	 *   SP_gamma can be defined for each resolution. \n
 	 *   example: <tt>(SP_gamma 0.101 0.101 0.101)</tt> \n
 	 *   The default/recommended value is 0.101.

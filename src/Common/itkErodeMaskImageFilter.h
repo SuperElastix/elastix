@@ -22,18 +22,18 @@ namespace itk
  * as the input image. This restriction is not really necessary,
  * but easier for coding ;-).
  *
- * If IsMovingMask == false:
+ * If IsMovingMask == false:\n
  *   If more resolution levels are used, the image is subsampled. Before
  *   subsampling the image is smoothed with a Gaussian filter, with variance
  *   (schedule/2)^2. The 'schedule' depends on the resolution level.
  *   The 'radius' of the convolution filter is roughly twice the standard deviation.
- *   Thus, the parts in the edge with size 'radius' are influenced by the background.
+ *   Thus, the parts in the edge with size 'radius' are influenced by the background.\n
  *   --> radius = static_cast<unsigned long>( schedule + 1 );
  *
- * If IsMovingMask == true:
+ * If IsMovingMask == true:\n
  *	 Same story as before. Now the size the of the eroding element is doubled.
  *   This is because the gradient of the moving image is used for calculating
- *   the derivative of the metric. 
+ *   the derivative of the metric.\n
  *   --> radius = static_cast<unsigned long>( 2 * schedule + 1 );
  *
  *

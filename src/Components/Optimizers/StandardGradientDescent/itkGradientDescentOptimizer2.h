@@ -22,7 +22,7 @@ namespace itk
  * The optimizer steps through a user defined number of iterations;
  * no convergence checking is done.
  *
- * Additionally, user can scale each component of the df / dp
+ * Additionally, user can scale each component of the \f$\partial f / \partial p\f$
  * but setting a scaling vector using method SetScale().
  *
  * The difference of this class with the itk::GradientDescentOptimizer
