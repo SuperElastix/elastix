@@ -29,17 +29,17 @@ using namespace itk;
 	 *		This parameter can be defined for each resolution. \n
 	 *		example: <tt>(NumberOfPerturbations 1 1 2)</tt> \n
 	 *    Default value: 1.
-	 * \parameter SP\_a: The gain \f$a(k)\f$ at each iteration \f$k\f$ is defined by \n
+	 * \parameter SP_a: The gain \f$a(k)\f$ at each iteration \f$k\f$ is defined by \n
 	 *   \f$a(k) =  SP\_a / (SP\_A + k + 1)^{SP\_alpha}\f$. \n
-	 *   SP\_a can be defined for each resolution. \n
+	 *   SP_a can be defined for each resolution. \n
 	 *   example: <tt>(SP_a 3200.0 3200.0 1600.0)</tt> \n
 	 *   The default value is 400.0. Tuning this variable for you specific problem is recommended.
-	 * \parameter SP\_A: The gain \f$a(k)\f$ at each iteration \f$k\f$ is defined by \n
+	 * \parameter SP_A: The gain \f$a(k)\f$ at each iteration \f$k\f$ is defined by \n
 	 *   \f$a(k) =  SP\_a / (SP\_A + k + 1)^{SP\_alpha}\f$. \n
 	 *   SP\_A can be defined for each resolution. \n
 	 *   example: <tt>(SP_A 50.0 50.0 100.0)</tt> \n
 	 *   The default/recommended value is 50.0.
-   * \parameter SP\_alpha: The gain \f$a(k)\f$ at each iteration \f$k\f$ is defined by \n
+   * \parameter SP_alpha: The gain \f$a(k)\f$ at each iteration \f$k\f$ is defined by \n
 	 *   \f$a(k) =  SP\_a / (SP\_A + k + 1)^{SP\_alpha}\f$. \n
 	 *   SP\_alpha can be defined for each resolution. \n
 	 *   example: <tt>(SP_alpha 0.602 0.602 0.602)</tt> \n
