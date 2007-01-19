@@ -33,6 +33,7 @@ OUTPUT_DIRECTORY       = "@ELX_HELP_DIR@"
 
 EXCLUDE = "@elastix_SOURCE_DIR@/Common/ParameterFileParser" \
 	  "@elastix_SOURCE_DIR@/Common/KNN" \
+    "@elastix_SOURCE_DIR@/Components/Transforms/EulerTransform/itkEulerTransform.h" \
 	  "@elastix_SOURCE_DIR@/Components/Transforms/BSplineDeformableTransformWithDiffusion" \
 	  "@elastix_SOURCE_DIR@/Components/Metrics/KNNGraphAlphaMutualInformation" \
 	  "@elastix_SOURCE_DIR@/Components/Metrics/KNNGraphMultiDimensionalAlphaMutualInformation" \
