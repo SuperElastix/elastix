@@ -40,11 +40,11 @@ using namespace itk;
 	 *		example: <tt>(StepLength 2.0 1.0 0.5)</tt> \n
 	 *    Default value: 1.0.\n
 	 * \parameter ValueTolerance: Convergence is declared if:
-	 *    \f[ 2.0 * \| f2 - f1 \| \le  ValueTolerance * ( \| f2 \| + \| f1 \| ) \f]
+	 *    \f[ 2.0 * | f_2 - f_1 | \le  ValueTolerance * ( | f_1 | + | f_2 | ) \f]
 	 *		example: <tt>(ValueTolerance 0.001 0.00001 0.000001)</tt> \n
 	 *  	Default value: 0.00001.\n
 	 * \parameter LineSearchStepTolerance: Convergence of the line search is declared if:
-	 *		\f[ \| x - x_m \| \le tol * \|x\| - ( b - a ) / 2 \f],
+	 *		\f[ | x - x_m | \le tol * |x| - ( b - a ) / 2, \f]
    *    where:\n
 	 *    \f$x\f$ = current mininum of the gain\n
 	 *    \f$a, b\f$ = current brackets around the minimum\n

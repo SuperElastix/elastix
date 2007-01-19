@@ -16,7 +16,7 @@ namespace itk
  * It does this in a smooth manner, with an exponential function.
  *
  * \f[ L(f(x)) = (T-B) e^{(f-T)/(T-B)} + B, \f]
- * where B is the upper/lower bound and T the upper/lower threshold 
+ * where \f$B\f$ is the upper/lower bound and \f$T\f$ the upper/lower threshold 
  * 
  * \ingroup Functions
  * \sa LimiterFunctionBase, HardLimiterFunction
