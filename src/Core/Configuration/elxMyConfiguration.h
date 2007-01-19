@@ -64,7 +64,7 @@ namespace elastix
 		typedef VPF::ParameterFile		ParameterFileType;
 		
 		/** Pass the command line arguments as a map. 
-		 * It should contain -p <parfile> or -tp <parfile>.
+		 * It should contain -p \<parfile\> or -tp \<parfile\>.
 		 * The specified parameter file is read in memory. */
 		virtual int Initialize(ArgumentMapType & _arg);
 
@@ -187,8 +187,8 @@ namespace elastix
 
     /** Convenience function to read parameters while specifying some more defaults.
      * This method adds two arguments: the prefix and the default_entry_nr.
-     * prefix: try first to read <prefix><name_field> from the parameter file.
-     * If that fails, try <name_field>. 
+     * prefix: try first to read \<prefix\>\<name_field\> from the parameter file.
+     * If that fails, try \<name_field\>. 
      * default_entry_nr: if set to a value <0, it is ignored. if >=0, it indicates
      * the entry_nr used as a default when the entry_nr cannot be found. 
      */     

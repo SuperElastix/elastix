@@ -88,7 +88,7 @@ namespace itk
      * 
      * The optimizer stops when:
      * \f$ \|CurrentGradient\| < 
-		 *   GradientMagnitudeTolerance * \max(1, \|CurrentPosition\| )
+		 *   GradientMagnitudeTolerance * \max(1, \|CurrentPosition\| ) \f$
      */
     itkGetConstMacro(GradientMagnitudeTolerance, double);
     itkSetMacro(GradientMagnitudeTolerance, double)
@@ -109,7 +109,7 @@ namespace itk
 		virtual void SetMaxNrOfItWithoutImprovement(unsigned long arg);
 		itkGetConstMacro(MaxNrOfItWithoutImprovement, unsigned long);
 
-		/** Setting: the definition of \beta, by default "DaiYuanHestenesStiefel" */
+		/** Setting: the definition of \f$\beta\f$, by default "DaiYuanHestenesStiefel" */
 		virtual void SetBetaDefinition(const BetaDefinitionType & arg);
 		itkGetConstReferenceMacro(BetaDefinition, BetaDefinitionType);
 		    
@@ -188,7 +188,7 @@ namespace itk
       const DerivativeType & gradient,
 			const ParametersType & previousSearchDir);
 
-		/** Different definitions of \beta */
+		/** Different definitions of \f$\beta\f$ */
 
 		/** "FletcherReeves" */
 		double ComputeBetaFR(

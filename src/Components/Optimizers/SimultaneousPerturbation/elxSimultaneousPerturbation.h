@@ -36,12 +36,12 @@ using namespace itk;
 	 *   The default value is 400.0. Tuning this variable for you specific problem is recommended.
 	 * \parameter SP_A: The gain \f$a(k)\f$ at each iteration \f$k\f$ is defined by \n
 	 *   \f$a(k) =  SP\_a / (SP\_A + k + 1)^{SP\_alpha}\f$. \n
-	 *   SP\_A can be defined for each resolution. \n
+	 *   SP_A can be defined for each resolution. \n
 	 *   example: <tt>(SP_A 50.0 50.0 100.0)</tt> \n
 	 *   The default/recommended value is 50.0.
    * \parameter SP_alpha: The gain \f$a(k)\f$ at each iteration \f$k\f$ is defined by \n
 	 *   \f$a(k) =  SP\_a / (SP\_A + k + 1)^{SP\_alpha}\f$. \n
-	 *   SP\_alpha can be defined for each resolution. \n
+	 *   SP_alpha can be defined for each resolution. \n
 	 *   example: <tt>(SP_alpha 0.602 0.602 0.602)</tt> \n
 	 *   The default/recommended value is 0.602.
 	 * \parameter SP_c: The perturbation step size \f$c(k)\f$ at each iteration \f$k\f$ is defined by \n

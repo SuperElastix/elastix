@@ -110,9 +110,9 @@ using namespace itk;
      * \li The useMaskErosionArray, which indicates for each mask whether it should be eroded.
      * If the number of masks is zero, this array will be empty. 
      * 
-     * The function first checks Erode<Fixed,Moving>Mask<i>, with i the mask number, 
+     * The function first checks Erode<Fixed,Moving>Mask\<i\>, with i the mask number, 
      * then Erode<Fixed,Moving>Mask, and finally ErodeMask. So, if you do not specify
-     * Erode<Fixed,Moving>Mask<i>, Erode<Fixed,Moving>Mask is tried, and then ErodeMask.
+     * Erode<Fixed,Moving>Mask\<i\>, Erode<Fixed,Moving>Mask is tried, and then ErodeMask.
      * If you specify ErodeMask, that option will be used for all masks, fixed and moving!
      * All options can be specified for each resolution specifically, or at once for all 
      * resolutions.
