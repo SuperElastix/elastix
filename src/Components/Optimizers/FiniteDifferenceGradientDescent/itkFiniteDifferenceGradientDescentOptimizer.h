@@ -14,7 +14,7 @@ namespace itk
 	 * If \f$C(x)\f$ is a costfunction that has to be minimised, the following iterative
 	 * algorithm is used to find the optimal parameters \a x:
 	 * 
-	 * \f[ x(k+1)_j = x(k)_j - a(k) [ C(x(k)_j + c(k)) - C(x(k)_j - c(k)) ] / 2c(k), \f]
+	 * \f[ x(k+1)_j = x(k)_j - a(k) \left[ C(x(k)_j + c(k)) - C(x(k)_j - c(k)) \right] / 2c(k), \f]
 	 * for all parameters \f$j\f$.
 	 *
 	 * From this equation it is clear that it a gradient descent optimizer, using

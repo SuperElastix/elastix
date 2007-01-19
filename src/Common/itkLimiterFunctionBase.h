@@ -20,12 +20,12 @@ namespace itk
  * In formula:
  * \f[ L(y) = L(f(x)), \f]
  * where \f$f(x)\f$ is the original function. and \f$L(f(x))\f$ the limited version.
- * The derivative with respect to x should satisfy:
- * \f[ dL/dx = (dL/df).(df/dx) \f]
+ * The derivative with respect to \f$x\f$ should satisfy:
+ * \f[ dL/dx = \frac{dL}{df} \cdot \frac{df}{dx} \f]
  * 
  * Subclasses must override Evaluate(value) and Evaluate(value, derivative) .
  * 
- * This class is template over the input type and the dimension of x.
+ * This class is template over the input type and the dimension of \f$x\f$.
  * 
  * \ingroup Functions
  * 

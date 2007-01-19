@@ -44,7 +44,7 @@ namespace itk
     typedef LineSearchOptimizer                   LineSearchOptimizerType;
     typedef LineSearchOptimizerType::Pointer      LineSearchOptimizerPointer;
 		
-    /** Typedef for a function that computes \beta, given the previousGradient,
+    /** Typedef for a function that computes \f$\beta\f$, given the previousGradient,
 		 * the current gradient, and the previous search direction */
 		typedef double (Self::*												ComputeBetaFunctionType
 			)( const DerivativeType & ,
@@ -87,19 +87,17 @@ namespace itk
 		/** Setting: the mininum gradient magnitude. By default 1e-5.
      * 
      * The optimizer stops when:
-     * ||CurrentGradient|| < 
-		 *   GradientMagnitudeTolerance * max(1, ||CurrentPosition||)
+     * \f$ \|CurrentGradient\| < 
+		 *   GradientMagnitudeTolerance * \max(1, \|CurrentPosition\| )
      */
     itkGetConstMacro(GradientMagnitudeTolerance, double);
     itkSetMacro(GradientMagnitudeTolerance, double)
 
     /** Setting: a stopping criterion, the value tolerance. By default 1e-5.
      * 
-     * The optimizer stops when:
-		 *
-		 * 2.0 * abs( f_k - f_k-1 ) <= 
-		 *   ValueTolerance * ( abs(f_k) + abs(f_k-1) + 1e-20 )
-		 *
+     * The optimizer stops when
+		 * \f[ 2.0 * | f_k - f_{k-1} | \le 
+		 *   ValueTolerance * ( |f_k| + |f_{k-1}| + 1e-20 ) \f]
 		 * is satisfied MaxNrOfItWithoutImprovement times in a row.
      */
     itkGetConstMacro(ValueTolerance, double);
@@ -146,12 +144,12 @@ namespace itk
 		BetaDefinitionType  					m_BetaDefinition;
 		
 		/** A mapping that links the names of the BetaDefinitions to functions that
-		 * compute \beta. */
+		 * compute \f$\beta\f$. */
 		BetaDefinitionMapType					m_BetaDefinitionMap;
 		
 		/** Function to add a new beta definition. The first argument should be a name 
-		 * via which a user can select this beta definition. The second argument is a 
-		 * pointer to a method that computes \beta.
+		 * via which a user can select this \f$\beta\f$ definition. The second argument is a 
+		 * pointer to a method that computes \f$\beta\f$.
 		 * Called in the constructor of this class, and possibly by subclasses.
 		 */
 		virtual void AddBetaDefinition(
@@ -160,23 +158,23 @@ namespace itk
    	    
     /** 
 		 * Compute the search direction:
-		 *  d_{k} = - g_{k} + \beta_{k} d_{k-1}
+		 *    \f[ d_{k} = - g_{k} + \beta_{k} d_{k-1} \f]
 		 *
 		 * In the first iteration the search direction is computed as:
-		 *  d_{0} = - g_{0}
+		 *    \f[ d_{0} = - g_{0} \f]
 		 *
-		 * On calling, searchDir should equal d_{k-1}. On return searchDir 
-		 * equals d_{k}.
+		 * On calling, searchDir should equal \f$d_{k-1}\f$. On return searchDir 
+		 * equals \f$d_{k}\f$.
 		 */
     virtual void ComputeSearchDirection(
 			const DerivativeType & previousGradient,
       const DerivativeType & gradient,
 			ParametersType & searchDir);
 
-    /** Perform a line search along the search direction. On calling, x, f, and g should
+    /** Perform a line search along the search direction. On calling, \f$x, f\f$, and \f$g\f$ should
      * contain the current position, the cost function value at this position, and 
-     * the derivative. On return the step, x (new position), f (value at x), and g
-     * (derivative at x) are updated. */
+     * the derivative. On return the step, \f$x\f$ (new position), \f$f\f$ (value at \f$x\f$), and \f$g\f$
+     * (derivative at \f$x\f$) are updated. */
     virtual void LineSearch(
       const ParametersType searchDir,
       double & step,
@@ -184,7 +182,7 @@ namespace itk
       MeasureType & f,
       DerivativeType & g );
 
-		/** Compute \beta according to the user set \beta-definition */
+		/** Compute \f$\beta\f$ according to the user set \f$\beta\f$-definition */
 		virtual double ComputeBeta(
 			const DerivativeType & previousGradient,
       const DerivativeType & gradient,

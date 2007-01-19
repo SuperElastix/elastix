@@ -384,7 +384,7 @@ namespace elastix
     ObjectPointer m_FinalTransform;
 
     /** Read a series of commandline options that satisfy the following syntax:
-     * {-f,-f0} <filename0> [-f1 <filename1> [ -f2 <filename2> ... ] ]
+     * {-f,-f0} \<filename0\> [-f1 \<filename1\> [ -f2 \<filename2\> ... ] ]
      *
      * This function is used by BeforeAllBase, and is not meant be used
      * at other locations. The errorcode remains the input value if no errors
