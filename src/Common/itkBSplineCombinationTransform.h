@@ -14,16 +14,16 @@ namespace itk
 	 * \brief This class combines two transforms: an 'initial transform'
 	 * with a 'current transform'.
 	 *
-	 * The itk::BSplineCombinationTransform class combines an initial transform T0 with a
-	 * current transform T1. The current transform is expected to be 
+	 * The itk::BSplineCombinationTransform class combines an initial transform \f$T_0\f$ with a
+	 * current transform \f$T_1\f$. The current transform is expected to be 
 	 * a itk::BSplineDeformableTransform. This extra class, specific for BSplineTransforms
 	 * is necessary because the itk::BSplineDeformableTransform has an extra 
 	 * TransformPoint() method, with extra arguments, used by the 
 	 * itk::MattesMutualInformationImageToImageMetric to speed up registration.
 	 *
 	 * Two methods of combining the transforms are supported:
-	 * \li Addition: T(x) = T0(x) + T1(x)
-	 * \li Composition: T(x) = T1( T0(x) )
+	 * \li Addition: \f$T(x) = T_0(x) + T_1(x)\f$
+	 * \li Composition: \f$T(x) = T_1( T_0(x) )\f$
 	 *
 	 * The TransformPoint(), the GetJacobian() and the GetInverse() methods
 	 * depend on this setting.
