@@ -9,22 +9,20 @@ namespace itk
 	/**
 	 * \class ParzenWindowNormalizedMutualInformationImageToImageMetric
 	 * \brief Computes the normalized mutual information between two images to be 
-	 * registered using a method based on Mattes et al.
+	 * registered using a method based on Thevenaz&Unser [3].
 	 *
 	 * ParzenWindowNormalizedMutualInformationImageToImageMetric computes the
    * normalized mutual information between a fixed and moving image to be registered.
-	 *
 	 * The calculations are based on the method of Mattes et al [1,2]
-	 * where the probability density distribution are estimated using
-	 * Parzen histograms. Once the PDF's have been contructed, the
-   * mutual information is obtained by double summing over the
-   * discrete PDF values.
+   * and Thevenaz&Unser [3], where the probability density distribution
+   * are estimated using Parzen histograms. The expression for the 
+   * derivative is derived following [3]. 
    *
    * Construction of the PDFs is implemented in the superclass
    * ParzenWindowHistogramImageToImageMetric.
 	 *
 	 * Notes:\n
-	 * 1. This class returns the negative mutual information value.\n
+	 * 1. This class returns the negative normalized mutual information value.\n
 	 * 2. This class in not thread safe due the private data structures
 	 *     used to the store the marginal and joint pdfs.
 	 *
