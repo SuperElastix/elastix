@@ -122,7 +122,7 @@ namespace itk
 		itkStaticConstMacro( MovingImageDimension, unsigned int,
 			MovingImageType::ImageDimension );
  					
-		/**  Get the value: the negative normalized mutual information */
+		/**  Get the value: the negative normalized mutual information. */
 		MeasureType GetValue( const ParametersType& parameters ) const;
 
 		/**  Get the value and derivatives for single valued optimizers. */

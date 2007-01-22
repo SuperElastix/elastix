@@ -59,10 +59,15 @@ namespace itk
 		Superclass::PrintSelf( os, indent );
 		
 		/** Add debugging information. */
-		os << indent << "NumberOfHistogramBins: ";
-		os << this->m_NumberOfFixedHistogramBins << std::endl;
-    os << this->m_NumberOfMovingHistogramBins << std::endl;
-
+    os << indent << "NumberOfFixedHistogramBins: "
+      << this->m_NumberOfFixedHistogramBins << std::endl;
+    os << indent << "NumberOfMovingHistogramBins: "
+      << this->m_NumberOfMovingHistogramBins << std::endl;
+    os << indent << "FixedKernelBSplineOrder: "
+      << this->m_FixedKernelBSplineOrder << std::endl;
+    os << indent << "MovingKernelBSplineOrder: "
+      << this->m_MovingKernelBSplineOrder << std::endl;
+    
     /** This function is not complete, but we don't use it anyway. */
 		
 	} // end PrintSelf
