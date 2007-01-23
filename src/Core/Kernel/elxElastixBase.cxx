@@ -148,11 +148,10 @@ namespace elastix
 		/** Print all "-p". */
 		unsigned int i = 1;
 		bool loop = true;
-    std::ostringstream tempPname("");
-		while ( loop )
+    while ( loop )
 		{
 			check = "";
-			tempPname.clear();
+			std::ostringstream tempPname("");
 			tempPname << "-p(" << i << ")";
 			check = this->GetConfiguration()->GetCommandLineArgument( tempPname.str().c_str() );
 			if ( check == "" ) loop = false;
