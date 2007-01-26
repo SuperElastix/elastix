@@ -181,6 +181,12 @@ namespace itk
       ParametersType & x,
       MeasureType & f,
       DerivativeType & g );
+    
+    /** Check if convergence has occured;
+     * The firstLineSearchDone bool allows the implementation of TestConvergence to
+     * decide to skip a few convergence checks when no line search has performed yet
+     * (so, before the actual optimisation begins)  */
+    virtual bool TestConvergence(bool firstLineSearchDone);
 
 		/** Compute \f$\beta\f$ according to the user set \f$\beta\f$-definition */
 		virtual double ComputeBeta(

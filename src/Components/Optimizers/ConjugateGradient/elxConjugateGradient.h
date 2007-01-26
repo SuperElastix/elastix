@@ -152,6 +152,11 @@ using namespace itk;
 		 * (line search, main) */
 		virtual std::string DeterminePhase(void) const;
 
+    /** Reimplement the superclass. Calls the superclass' implementation
+     * and checks if the MoreThuente line search routine has stopped with
+     * Wolfe conditions satisfied. */
+    virtual bool TestConvergence( bool firstLineSearchDone );
+
 	private:
 
 		ConjugateGradient( const Self& );	// purposely not implemented
@@ -164,6 +169,7 @@ using namespace itk;
 		bool												m_StartLineSearch;
 		bool												m_GenerateLineSearchIterations;
 		bool												m_StopIfWolfeNotSatisfied;
+    bool                        m_WolfeIsStopCondition;
 			
 	}; // end class ConjugateGradient
 	

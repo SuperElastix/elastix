@@ -491,8 +491,8 @@ namespace elastix
 		/** Get current resolution level. */
 		unsigned long level =
 			this->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel();
-		
-		/** Print the total iteration time. */
+
+    /** Print the total iteration time. */
 		elxout << std::setprecision(3);
 		this->m_ResolutionTimer->StopTimer();
 		elxout 
@@ -626,8 +626,8 @@ namespace elastix
 	void ElastixTemplate<TFixedImage, TMovingImage>
 	::AfterRegistration(void)
 	{
-		/** No iteration info needed anymore. */
-		xl::xout.RemoveTargetCell("iteration");
+		/** A white line */
+    elxout << std::endl;
 		
 		/** Create the final TransformParameters filename. */
 		std::ostringstream makeFileName("");

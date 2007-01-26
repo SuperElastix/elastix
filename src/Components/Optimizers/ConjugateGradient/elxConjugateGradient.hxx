@@ -30,6 +30,7 @@ using namespace itk;
 		this->m_StartLineSearch = false;	
 		this->m_GenerateLineSearchIterations = false;
 		this->m_StopIfWolfeNotSatisfied = true;
+    this->m_WolfeIsStopCondition = false;
 
 	} // end Constructor
 	
@@ -231,7 +232,8 @@ using namespace itk;
 		{
 			this->m_StopIfWolfeNotSatisfied = false;
 		}
-		
+
+    this->m_WolfeIsStopCondition = false;		
 		this->m_SearchDirectionMagnitude = 0.0;
 		this->m_StartLineSearch = false;
 				
@@ -314,20 +316,6 @@ using namespace itk;
 			xout["iteration"]["6b:Wolfe2"] << "false";
 		}
 
-		/** Stop if the Wolfe conditions are not satisfied */
-		if ( this->m_StopIfWolfeNotSatisfied)
-		{
-			if ( 
-				(!(this->m_LineOptimizer->GetCurvatureConditionSatisfied()))
-				||
-				(!(this->m_LineOptimizer->GetSufficientDecreaseConditionSatisfied()))   )
-			{
-				/** Stop the optimisation; do not use StopOptimization because it will generate
-				 * an end event while we are still in the iteration event phase. */
-				this->m_Stop = true;
-			}
-		}
-
 		if ( !(this->GetInLineSearch()) )
 		{
 			/** Set the initial step length estimate for the next line search
@@ -378,38 +366,45 @@ using namespace itk;
 			*/
 		
 		std::string stopcondition;
-		
-		switch( this->GetStopCondition() )
-		{
-	
-			case MetricError :
-			  stopcondition = "Error in metric";	
-			  break;	
 
-			case LineSearchError :
-				stopcondition = "Error in LineSearch";
-    		break;
-	  
-			case MaximumNumberOfIterations :
-			  stopcondition = "Maximum number of iterations has been reached";	
-			  break;	
-	
-			case GradientMagnitudeTolerance :
-			  stopcondition = "The gradient magnitude has (nearly) vanished";	
-			  break;	
+    if ( this->m_WolfeIsStopCondition )
+    {
+      stopcondition = "Wolfe conditions are not satisfied";
+    }
+    else
+    {
+		  switch( this->GetStopCondition() )
+		  {
+  	
+			  case MetricError :
+			    stopcondition = "Error in metric";	
+			    break;	
 
-			case ValueTolerance :
-				stopcondition = "Almost no decrease in function value anymore";
-				break;
+			  case LineSearchError :
+				  stopcondition = "Error in LineSearch";
+    		  break;
+  	  
+			  case MaximumNumberOfIterations :
+			    stopcondition = "Maximum number of iterations has been reached";	
+			    break;	
+  	
+			  case GradientMagnitudeTolerance :
+			    stopcondition = "The gradient magnitude has (nearly) vanished";	
+			    break;	
 
-			case InfiniteBeta :
-				stopcondition = "The beta factor became infinite";
-				break;
-					
-		  default:
-			  stopcondition = "Unknown";
-			  break;
-		}
+			  case ValueTolerance :
+				  stopcondition = "Almost no decrease in function value anymore";
+				  break;
+
+			  case InfiniteBeta :
+				  stopcondition = "The beta factor became infinite";
+				  break;
+  					
+		    default:
+			    stopcondition = "Unknown";
+			    break;
+		  }
+    } // end else
 
 		/** Print the stopping condition */
 		elxout << "Stopping condition: " << stopcondition << "." << std::endl;
@@ -434,6 +429,36 @@ using namespace itk;
 			<< std::endl;
 		
 	} // end AfterRegistration
+
+    
+   /**
+	 * *********************** TestConvergence *****************
+	 */
+
+	template <class TElastix>
+		bool ConjugateGradient<TElastix>
+    ::TestConvergence( bool firstLineSearchDone )
+  {
+    bool convergence = this->Superclass1::TestConvergence( firstLineSearchDone );
+
+    /** Stop if the Wolfe conditions are not satisfied
+     * NB: this check is only done when 'convergence' wasn't true already */
+		if ( this->m_StopIfWolfeNotSatisfied && !convergence && firstLineSearchDone)
+		{
+			if ( 
+				(!(this->m_LineOptimizer->GetCurvatureConditionSatisfied()))
+				||
+				(!(this->m_LineOptimizer->GetSufficientDecreaseConditionSatisfied()))   )
+			{
+				/** Stop the optimisation */
+        this->m_WolfeIsStopCondition = true;
+				convergence = true;
+			}
+		}
+
+    return convergence;
+
+  } // end TestConvergence
 
 
 	/**

@@ -168,6 +168,11 @@ namespace itk
       const ParametersType & step,
       const DerivativeType & grad_dif);
 
+    /** Check if convergence has occured;
+     * The firstLineSearchDone bool allows the implementation of TestConvergence to
+     * decide to skip a few convergence checks when no line search has performed yet
+     * (so, before the actual optimisation begins)  */
+    virtual bool TestConvergence(bool firstLineSearchDone);
     
   private:
     QuasiNewtonLBFGSOptimizer(const Self&); //purposely not implemented

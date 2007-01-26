@@ -94,12 +94,14 @@ namespace itk
 
     this->m_Stop = false;
     this->m_StopCondition = Unknown;
+    this->m_CurrentStepLength = 0.0;
     
     ParametersType searchDir;
     DerivativeType previousGradient;
 
     this->InvokeEvent( StartEvent() );
 
+    /** Get initial value and derivative */
     try
     {
       this->GetScaledValueAndDerivative(
@@ -114,28 +116,17 @@ namespace itk
       throw err;
     }
 
+    /** Test if the gradient was not zero already by chance */
+    bool convergence = false;
+    convergence = this->TestConvergence(false);
+    if ( convergence )
+    {
+      this->StopOptimization();
+    }
+
     /** Start iterating */
     while ( !this->m_Stop )
     {
-    
-      /** Check if the maximum number of iterations has not been exceeded */
-      if ( this->GetCurrentIteration() >= this->GetMaximumNumberOfIterations() )
-      {
-        this->m_StopCondition = MaximumNumberOfIterations;
-        this->StopOptimization();
-        break;
-      }
-
-      /** Check for convergence */
-      const double gnorm = this->GetCurrentGradient().magnitude();
-      const double xnorm = this->GetScaledCurrentPosition().magnitude();
-      if ( gnorm / vnl_math_max(1.0, xnorm ) <= this->GetGradientMagnitudeTolerance() )
-      {
-        this->m_StopCondition = GradientMagnitudeTolerance;
-        this->StopOptimization();
-        break;
-      }
-
       /** Compute the new search direction, using the current gradient */
       this->ComputeSearchDirection(this->GetCurrentGradient(), searchDir );
 
@@ -188,6 +179,16 @@ namespace itk
         break;
       }
 
+      /** Test if convergence has occured */
+      convergence = false;
+      convergence = this->TestConvergence(true);
+      if ( convergence )
+      {
+        this->StopOptimization();
+        break;
+      }
+
+      /** Update the index of m_S and m_Y for the next iteration */
       this->m_PreviousPoint = this->m_Point;
       this->m_Point++;
       if ( this->m_Point >= this->m_Memory )
@@ -382,12 +383,6 @@ namespace itk
       this->StopOptimization();
       throw err;
     }
-
-		if ( step < NumericTraits<double>::epsilon() )
-		{
-			this->m_StopCondition = ZeroStep;
-			this->StopOptimization();
-		}; 
     
   } // end LineSearch
 
@@ -411,8 +406,44 @@ namespace itk
   } // end StoreCurrentPoint
 
 
+  /** 
+   * ********************* TestConvergence ************************
+   */
 
+  bool QuasiNewtonLBFGSOptimizer::
+    TestConvergence(bool firstLineSearchDone)
+  {
+    itkDebugMacro("TestConvergence");
 
+    /** Check for zero step length */
+    if ( firstLineSearchDone )
+    {
+   	  if ( this->m_CurrentStepLength < NumericTraits<double>::epsilon() )
+		  {
+  			this->m_StopCondition = ZeroStep;
+			  return true;
+		  }; 
+    }
+
+    /** Check if the maximum number of iterations will not be exceeded in the following iteration */
+    if ( (this->GetCurrentIteration()+1) >= this->GetMaximumNumberOfIterations() )
+    {
+      this->m_StopCondition = MaximumNumberOfIterations;
+      return true;
+    }
+
+    /** Check for convergence of gradient magnitude */
+    const double gnorm = this->GetCurrentGradient().magnitude();
+    const double xnorm = this->GetScaledCurrentPosition().magnitude();
+    if ( gnorm / vnl_math_max(1.0, xnorm ) <= this->GetGradientMagnitudeTolerance() )
+    {
+      this->m_StopCondition = GradientMagnitudeTolerance;
+      return true;
+    }
+
+    return false;
+    
+  } // end TestConvergence
 
 } // end namespace itk
 

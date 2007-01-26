@@ -131,28 +131,17 @@ namespace itk
       throw err;
     }
 
+    /** Test if not by chance we are already converged */
+    bool convergence = false;
+    convergence = this->TestConvergence(false);
+    if ( convergence )
+    {
+      this->StopOptimization();
+    }
+
     /** Start iterating */
     while ( !this->m_Stop )
     {
-    
-      /** Check if the maximum number of iterations has not been exceeded */
-      if ( this->GetCurrentIteration() >= this->GetMaximumNumberOfIterations() )
-      {
-        this->m_StopCondition = MaximumNumberOfIterations;
-        this->StopOptimization();
-        break;
-      }
-
-			/** Check for convergence */
-      const double gnorm = this->GetCurrentGradient().magnitude();
-      const double xnorm = this->GetScaledCurrentPosition().magnitude();
-      if ( gnorm / vnl_math_max(1.0, xnorm ) <= this->GetGradientMagnitudeTolerance() )
-      {
-        this->m_StopCondition = GradientMagnitudeTolerance;
-        this->StopOptimization();
-        break;
-      }
-
 			/** Store the current search direction */
 			previousSearchDir = searchDir;
 
@@ -194,7 +183,8 @@ namespace itk
         break;
       }
 
-			/** Check for convergence */
+			/** Check for convergence
+       * \todo: move this code to TestConvergence() */
 			if ( 2.0 * vcl_abs( this->GetCurrentValue() - previousValue ) <= 
         this->GetValueTolerance() *
 				( vcl_abs(this->GetCurrentValue()) +
@@ -217,6 +207,15 @@ namespace itk
       else
       {
 				limitCount = 0;
+      }
+
+      /** Test if convergence has occured in some other sense */
+      convergence = false;
+      convergence = this->TestConvergence(true);
+      if ( convergence )
+      {
+        this->StopOptimization();
+        break;
       }
         
 			/** Next iteration */
@@ -578,6 +577,36 @@ namespace itk
 		this->m_MaxNrOfItWithoutImprovement = arg; 
 		this->Modified();
 	} // end SetMaxNrOfItWithoutImprovement
+
+  
+  /** 
+   * ********************* TestConvergence ************************
+   */
+
+  bool GenericConjugateGradientOptimizer::
+    TestConvergence(bool firstLineSearchDone)
+  {
+    itkDebugMacro("TestConvergence");
+
+    /** Check if the maximum number of iterations will not be exceeded in the following iteration */
+    if ( (this->GetCurrentIteration()+1) >= this->GetMaximumNumberOfIterations() )
+    {
+      this->m_StopCondition = MaximumNumberOfIterations;
+      return true;
+    }
+
+    /** Check for convergence of gradient magnitude */
+    const double gnorm = this->GetCurrentGradient().magnitude();
+    const double xnorm = this->GetScaledCurrentPosition().magnitude();
+    if ( gnorm / vnl_math_max(1.0, xnorm ) <= this->GetGradientMagnitudeTolerance() )
+    {
+      this->m_StopCondition = GradientMagnitudeTolerance;
+      return true;
+    }
+
+    return false;
+    
+  } // end TestConvergence
 
 
 } // end namespace itk
