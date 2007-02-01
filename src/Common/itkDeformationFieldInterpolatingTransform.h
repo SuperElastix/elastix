@@ -90,6 +90,8 @@ namespace itk
     /** Set/Get the deformation field interpolator */
     virtual void SetDeformationFieldInterpolator( DeformationFieldInterpolatorType * _arg );
     itkGetObjectMacro(DeformationFieldInterpolator, DeformationFieldInterpolatorType);
+
+    virtual bool IsLinear( void ) const { return false; };
          
   protected:
     DeformationFieldInterpolatingTransform();

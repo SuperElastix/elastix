@@ -136,6 +136,10 @@ namespace itk
 		* is set.
 		*/
 		virtual bool GetInverse(Self* inverse) const;
+
+    /** Return whether the transform is linear (or actually: affine)
+     * Returns true when both initial and current transform are linear */
+    virtual bool IsLinear( void ) const;
 					
 	protected:
 		

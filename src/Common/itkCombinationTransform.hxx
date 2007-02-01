@@ -54,6 +54,29 @@ namespace itk
 
 	} //end GetNumberOfParameters
 
+  /**
+   * ***************** IsLinear **************************
+	 */
+
+	template <typename TScalarType, unsigned int NDimensions>
+		bool CombinationTransform<TScalarType, NDimensions>::	
+		IsLinear(void) const
+	{ 
+		bool currentLinear = true;
+		if ( this->m_CurrentTransform.IsNotNull() )
+		{
+	 	  currentLinear = this->m_CurrentTransform->IsLinear();
+		}
+		
+    bool initialLinear = true;
+    if ( this->m_InitialTransform.IsNotNull() )
+    {
+      initialLinear = this->m_InitialTransform->IsLinear();
+    }
+
+    return ( currentLinear && initialLinear ); 
+  } //end IsLinear
+
 
 	/**
    * ***************** GetParameters **************************
