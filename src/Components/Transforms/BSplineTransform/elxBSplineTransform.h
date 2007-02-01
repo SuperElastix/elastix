@@ -33,6 +33,14 @@ using namespace itk;
 	 *		example: <tt>(UpsampleGridOption "true")</tt> \n
 	 *		example: <tt>(UpsampleGridOption "true" "false" "true")</tt> \n
 	 *		The default is "true" inbetween all resolutions.
+   * \parameter PassiveEdgeWidth: the width of a band of control points at the border of the
+   *   BSpline coefficient image that should remain passive during optimisation. \n
+   *   Can be specified for each resolution. \n
+   *   example: <tt>(PassiveEdgeWidth 0 1 2)</tt> \n
+   *   The default is zero for all resolutions. A value of 4 will avoid all deformations
+   *   at the edge of the image. Make sure that 2*PassiveEdgeWidth < ControlPointGridSize
+   *   in each dimension.
+   *   
 	 * 
 	 * The transform parameters necessary for transformix, additionally defined by this class, are:
 	 * \transformparameter GridSize: stores the size of the B-spline grid. \n
@@ -208,6 +216,9 @@ using namespace itk;
 		virtual void ReadFromFile(void);
 		/** Function to write transform-parameters to a file. */
 		virtual void WriteToFile( const ParametersType & param );
+
+    /** Set the scales of the edge bspline coefficients to zero */
+    virtual void SetOptimizerScales( unsigned int edgeWidth);
 		
 	protected:
 

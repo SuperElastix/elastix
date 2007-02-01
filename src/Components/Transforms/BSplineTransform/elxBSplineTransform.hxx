@@ -109,6 +109,12 @@ using namespace itk;
 			}
 			/** Otherwise, nothing is done with the BSpline-Grid. */
 		}
+
+    /** Get the PassiveEdgeWidth and use it to set the OptimizerScales. */
+    unsigned int passiveEdgeWidth = 0;
+    this->GetConfiguration()->ReadParameter( passiveEdgeWidth,
+      "PassiveEdgeWidth", this->GetComponentLabel(), level, 0 );
+		this->SetOptimizerScales( passiveEdgeWidth );
 	
 	} // end BeforeEachResolution
 	
@@ -293,9 +299,14 @@ using namespace itk;
 		this->m_BSplineTransform->SetGridOrigin( gridoriginHigh );
 		this->m_BSplineTransform->SetGridSpacing( gridspacingHigh );
 
-		/** Set the initial parameters for the next level */
+    /** Set the initial parameters for the next level */
 		this->m_Registration->GetAsITKBaseType()->
 			SetInitialTransformParametersOfNextLevel( parameters_out );
+
+    /** Set the parameters in the BsplineTransform */
+    this->m_BSplineTransform->SetParameters(
+      this->m_Registration->GetAsITKBaseType()->
+      GetInitialTransformParametersOfNextLevel() );
 	
 	}  // end IncreaseScale
 	
@@ -628,13 +639,108 @@ using namespace itk;
 			gridorigin[ j ]  = fixedImageOrigin[ j ] - 
 				gridspacing[ j ] * vcl_floor( static_cast<double>( SplineOrder ) / 2.0 );
 			gridindex[ j ]   = 0; // \todo: isn't this always the case anyway?
+      /** The grid size without the extra grid points at the edges. */
+      const unsigned int bareGridSize = static_cast<unsigned int>( 
+        vcl_ceil( fixedImageSize[ j ] / this->m_GridSpacingFactor[ j ] )   );
 			gridsize[ j ]    = static_cast< typename RegionType::SizeValueType >(
-				vcl_ceil( fixedImageSize[ j ] / this->m_GridSpacingFactor[ j ] ) + SplineOrder );
+				bareGridSize + SplineOrder );
+      /** Shift the origin a little to the left, to place the grid symmetrically on the image */       
+      gridorigin[ j ] -= 
+        ( gridspacing[j] * bareGridSize - fixedImageSpacing[j] * (fixedImageSize[j]-1) ) / 2.0;
 		}
 		gridregion.SetSize( gridsize );
 		gridregion.SetIndex( gridindex );
 				
 	} //end DefineGrid
+
+
+  /**
+	 * *********************** SetOptimizerScales ***********************
+	 * Set the optimizer scales of the edge coefficients to infinity.
+	 */
+
+	template <class TElastix>
+		void BSplineTransform<TElastix>::
+		SetOptimizerScales(unsigned int edgeWidth )
+	{
+    typedef ImageRegionExclusionConstIteratorWithIndex<ImageType>		IteratorType;
+    typedef typename RegistrationType::ITKBaseType					ITKRegistrationType;
+		typedef typename ITKRegistrationType::OptimizerType			OptimizerType;
+		typedef typename OptimizerType::ScalesType							ScalesType;
+    typedef typename ScalesType::ValueType                  ScalesValueType;
+
+    /** Define new scales */
+    const unsigned long numberOfParameters =  this->m_BSplineTransform->GetNumberOfParameters();
+    const unsigned long offset = numberOfParameters / SpaceDimension;
+    ScalesType newScales( numberOfParameters );
+    newScales.Fill( NumericTraits<ScalesValueType>::One );
+    const ScalesValueType infScale = 10000.0;
+    
+    if ( edgeWidth == 0 )
+    { 
+      /** Just set the unit scales into the optimizer. */
+		  this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newScales );
+      return;
+    }
+
+		/** Get the grid region information and create a fake coefficient image */
+    RegionType gridregion = this->m_BSplineTransform->GetGridRegion();
+    SizeType gridsize = gridregion.GetSize();
+    IndexType gridindex = gridregion.GetIndex();
+    ImagePointer coeff = ImageType::New();
+    coeff->SetRegions( gridregion );
+    coeff->Allocate();    
+    
+    /** Determine inset region. (so, the region with active parameters) */
+    RegionType insetgridregion;
+    SizeType insetgridsize;
+    IndexType insetgridindex;
+    for (unsigned int i = 0; i < SpaceDimension; ++i)
+    {
+      insetgridsize[i] = static_cast<unsigned int>( vnl_math_max( 0, 
+        static_cast<int>(gridsize[i] - 2 * edgeWidth )) );
+      if ( insetgridsize[i] == 0 )
+      {
+        xl::xout["error"] 
+          << "ERROR: you specified a PassiveEdgeWidth of "
+          << edgeWidth
+          << " while the total grid size in dimension " 
+          << i
+          << " is only "
+          << gridsize[i]
+          << "."
+          << std::endl;
+        itkExceptionMacro( << "ERROR: the PassiveEdgeWidth is too large!" );
+      }
+      insetgridindex[i] = gridindex[i] + edgeWidth;
+    }
+    insetgridregion.SetSize( insetgridsize );
+    insetgridregion.SetIndex( insetgridindex );
+
+    /** Set up iterator over the coefficient image */
+    IteratorType cIt( coeff, coeff->GetLargestPossibleRegion() );
+    cIt.SetExclusionRegion( insetgridregion );
+    cIt.GoToBegin();   
+    
+    /** Set the scales to infinity that correspond to edge coefficients
+     * This (hopefully) makes sure they are not optimised during registration */
+    while ( !cIt.IsAtEnd() )
+    {
+      const IndexType & index = cIt.GetIndex();
+      const unsigned long baseOffset = coeff->ComputeOffset( index );
+      for (unsigned int i = 0; i < SpaceDimension; ++i)
+      {
+        const unsigned int scalesIndex = static_cast<unsigned int>(
+          baseOffset + i * offset );
+        newScales[ scalesIndex ] = infScale;
+      }
+      ++cIt;
+    }
+
+    /** Set the scales into the optimizer. */
+		this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newScales );
+
+  } // end SetOptimizerScales
 
 	
 } // end namespace elastix

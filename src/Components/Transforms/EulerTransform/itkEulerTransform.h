@@ -205,8 +205,8 @@ namespace itk
       }
       return false;
     };
-		
-	protected:
+
+ 	protected:
 
 		EulerTransform(){};
 		~EulerTransform(){};
