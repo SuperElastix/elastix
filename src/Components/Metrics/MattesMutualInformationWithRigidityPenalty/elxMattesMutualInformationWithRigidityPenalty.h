@@ -75,19 +75,21 @@ using namespace itk;
 	 * \parameter UseFixedRigidityImage: flag to specify the use of the fixed rigidity
 	 *		image when calculating the rigidity coefficient image. \n
 	 *		example: <tt>(UseFixedRigidityImage "false")</tt> \n
-	 *		Default is "true".
+	 *		Default is "true". If neither UseFixedRigidityImage nor UseMovingRigidityImage
+   *    are true, the RigidityPenaltyTerm is evaluated on the whole transform input domain.
 	 * \parameter FixedRigidityImageName: the name of a coefficient image to specify
 	 *		the rigidity index of voxels in the fixed image. \n
 	 *		example: <tt>(FixedRigidityImageName "fixedRigidityImage.mhd")</tt> \n
-	 *		This argument is mandatory.
+	 *		This argument is mandatory whenever UseFixedRigidityImage is "true".
 	 * \parameter UseMovingRigidityImage: flag to specify the use of the moving rigidity
 	 *		image when calculating the rigidity coefficient image. \n
 	 *		example: <tt>(UseMovingRigidityImage "false")</tt> \n
-	 *		Default is "true".
+	 *		Default is "true". If neither UseFixedRigidityImage nor UseMovingRigidityImage
+   *    are true, the RigidityPenaltyTerm is evaluated on the whole transform input domain.
 	 * \parameter MovingRigidityImageName: the name of a coefficient image to specify
 	 *		the rigidity index of voxels in the moving image. \n
 	 *		example: <tt>(MovingRigidityImageName "movingRigidityImage.mhd")</tt> \n
-	 *		This argument is mandatory.
+	 *		This argument is mandatory whenever UseMovingRigidityImage is "true".
 	 * \parameter DilateRigidityImages: flag to specify the dilation of the rigidity
 	 *		coefficient images. With this the region of rigidity can be extended to
 	 *		force rigidity of the inner region. \n

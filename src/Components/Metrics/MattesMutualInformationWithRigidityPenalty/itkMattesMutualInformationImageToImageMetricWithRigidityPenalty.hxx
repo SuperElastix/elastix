@@ -157,6 +157,17 @@ namespace itk
 			localBSplineTransform->GetGridOrigin() );
 		this->m_RigidityCoefficientImage->Allocate();
 
+    if ( !this->m_UseFixedRigidityImage && !this->m_UseMovingRigidityImage )
+    {
+      /** Fill the rigidity coefficient image with ones */
+      this->m_RigidityCoefficientImage->FillBuffer( 1.0 );
+      /** Set the rigidity coefficients image into the rigid regulizer metric. */
+  		this->m_RigidityPenaltyTermMetric->SetRigidityCoefficientImage(
+        this->m_RigidityCoefficientImage );
+      /** Skip the rest of this function */
+      return;
+    }
+
 		/** Dilate m_FixedRigidityImage and m_MovingRigidityImage. */
 		if ( this->m_DilateRigidityImages )
 		{
@@ -318,6 +329,10 @@ namespace itk
 		 MattesMutualInformationImageToImageMetricWithRigidityPenalty<TFixedImage,TMovingImage>
 		 ::FillRigidityCoefficientImage( const ParametersType& parameters ) const
 	 {
+     if ( !this->m_UseFixedRigidityImage && !this->m_UseMovingRigidityImage )
+     {
+       return;
+     }
 		 /** Make sure that the transform is up to date. */
 		 this->m_Transform->SetParameters( parameters );
 

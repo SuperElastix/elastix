@@ -236,7 +236,7 @@ using namespace itk;
 		/** Important check: at least one rigidity image must be given. */
 		if ( useFixedRigidityImage == "false" && useMovingRigidityImage == "false" )
 		{
-			itkExceptionMacro( << "ERROR: At least one of useFixedRigidityImage and UseMovingRigidityImage must be true." );
+      xl::xout["warning"] << "WARNING: UseFixedRigidityImage and UseMovingRigidityImage are both true. The rigidity penalty term is evaluated on entire input transform domain.";
 		}
 
 		/** Add target cells to xout["iteration"]. */
