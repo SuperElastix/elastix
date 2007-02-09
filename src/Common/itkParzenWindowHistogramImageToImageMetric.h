@@ -11,13 +11,13 @@ namespace itk
 	/**
 	 * \class ParzenWindowHistogramImageToImageMetric
 	 * \brief A base class for image metrics based on a joint histogram 
-   * computed using Parzen Windowing
+   * computed using Parzen Windowing.
 	 *
-	 * The calculations are based on the method of Mattes/Thevenaz/Unser [1,2,3]
+	 * The calculations are based on the method of Mattes/Thevenaz/Unser [1,2,3],
 	 * where the probability density distribution are estimated using
-	 * Parzen histograms. 
+	 * Parzen histograms.
    *
-	 * One the PDF's have been contructed, the metric value and derivative
+	 * Once the PDF's have been contructed, the metric value and derivative
    * can be computed. Inheriting classes should make sure to call
    * the function ComputePDFs(AndPDFDerivatives) before using m_JointPDF and m_Alpha
    * (and m_JointPDFDerivatives and m_AlphaDerivatives).
@@ -208,11 +208,11 @@ namespace itk
 
     /** Protected variables **************************** */
    		
-    /** Variables for Alpha and dAlpha/dmu (the normalization factor of the histogram) */
+    /** Variables for Alpha and dAlpha/dmu (the normalization factor of the histogram). */
     mutable double                                m_Alpha;
     mutable DerivativeType                        m_AlphaDerivatives;
    
-    /** Variables for the pdfs */
+    /** Variables for the pdfs. */
     mutable MarginalPDFType                       m_FixedImageMarginalPDF;
 		mutable MarginalPDFType                       m_MovingImageMarginalPDF;
     typename JointPDFType::Pointer								m_JointPDF;
@@ -245,13 +245,13 @@ namespace itk
      * Compute the values at (parzenWindowIndex - parzenWindowTerm + k) for 
      * k = 0 ... kernelsize-1
      * Returns the values in a ParzenValueContainer, which is supposed to have
-     * the right size already **/
+     * the right size already. **/
     void EvaluateParzenValues(
       double parzenWindowTerm, int parzenWindowIndex,
       const KernelFunctionType * kernel, ParzenValueContainerType & parzenValues) const;
     
     /** Update the joint PDF with a pixel pair; on demand also updates the 
-     * pdf derivatives (if the jacobian pointers are nonzero) */
+     * pdf derivatives (if the jacobian pointers are nonzero). */
     virtual void UpdateJointPDFAndDerivatives(
       RealType fixedImageValue, RealType movingImageValue, RealType movingMaskValue,
       const DerivativeType * imageJacobian, const DerivativeType * maskJacobian) const;
@@ -259,19 +259,19 @@ namespace itk
     /** Update the pdf derivatives
      * adds -image_jac[mu]*factor_a + mask_jac[mu]*factor_b to the bin 
      * with index [ mu, pdfIndex[0], pdfIndex[1] ] for all mu.
-     * This function should only be called from UpdateJointPDFAndDerivatives */
+     * This function should only be called from UpdateJointPDFAndDerivatives. */
     void UpdateJointPDFDerivatives(
       const JointPDFIndexType & pdfIndex, double factor_a, double factor_b,
       const DerivativeType & imageJacobian, const DerivativeType & maskJacobian) const;
 
-    /** Adds the MaskJacobian to the alpha derivative vector */
+    /** Adds the MaskJacobian to the alpha derivative vector. */
     virtual void UpdateAlphaDerivatives(const DerivativeType & maskJacobian) const;	
 
-    /** Multiply the pdf entries by the given normalization factor */
+    /** Multiply the pdf entries by the given normalization factor. */
     virtual void NormalizeJointPDF(
       JointPDFType * pdf, double factor ) const;
 
-    /** Multiply the pdf derivatives entries by the given normalization factor */
+    /** Multiply the pdf derivatives entries by the given normalization factor. */
     virtual void NormalizeJointPDFDerivatives(
       JointPDFDerivativesType * pdf, double factor ) const;
 
