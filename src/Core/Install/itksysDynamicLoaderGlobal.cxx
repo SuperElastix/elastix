@@ -5,8 +5,9 @@
 // This file is actually 3 different implementations.
 // 1. HP machines which uses shl_load
 // 2. Mac OS X 10.2.x and earlier which uses NSLinkModule
-// 3. Windows which uses LoadLibrary
-// 4. Most unix systems (including Mac OS X 10.3 and later) which use dlopen
+// 3. Windows which uses LoadLibrary. Not Cygwin!
+// 4. BEOS
+// 5. Most unix systems (including Mac OS X 10.3 and later) which use dlopen
 // (default) Each part of the ifdef contains a complete implementation for
 // the static methods of DynamicLoader.
 
@@ -25,13 +26,19 @@
 #endif // __APPLE__
 
 // ---------------------------------------------------------------
-// 3. Implementation for Windows win32 code
-#ifdef _WIN32
+// 3. Implementation for Windows win32 code but not cygwin
+#if defined(_WIN32) && !defined(__CYGWIN__)
   #define DYNAMICLOADER_DEFINED 1
 #endif //_WIN32
 
 // ---------------------------------------------------------------
-// 4. Implementation for default UNIX machines.
+// 4. Implementation for BeOS
+#ifdef __BEOS__
+#define DYNAMICLOADER_DEFINED 1
+#endif
+
+// ---------------------------------------------------------------
+// 5. Implementation for default UNIX machines.
 // if nothing has been defined then use this
 #ifndef DYNAMICLOADER_DEFINED
   #define DYNAMICLOADER_DEFINED 1

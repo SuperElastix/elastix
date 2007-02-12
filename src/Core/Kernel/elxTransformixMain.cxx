@@ -1,9 +1,11 @@
 #ifndef __elxTransformixMain_CXX_
 #define __elxTransformixMain_CXX_
 
-/** If running on a Windows-system, include "windows.h".*/
-#ifdef _WIN32
-#include <windows.h>
+/** If running on a Windows-system, include "windows.h".
+ *  This is to set the priority, but which does not work on cygwin */
+
+#if defined(_WIN32) && !defined(__CYGWIN__)
+  #include <windows.h>
 #endif
 
 
@@ -28,13 +30,13 @@ namespace elastix
 		processPriority = m_Configuration->GetCommandLineArgument( "-priority" );
 		if ( processPriority == "high" )
 		{
-			#ifdef _WIN32
+		  #if defined(_WIN32) && !defined(__CYGWIN__)
 			SetPriorityClass( GetCurrentProcess(), HIGH_PRIORITY_CLASS );
 			#endif
 		}
 		else if ( processPriority == "belownormal" )
 		{
-			#ifdef _WIN32
+      #if defined(_WIN32) && !defined(__CYGWIN__)
 			SetPriorityClass( GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS );
 			#endif
 		}
@@ -113,7 +115,7 @@ namespace elastix
 		/** Set processPriority to normal again. */
 		if ( processPriority == "high" )
 		{
-			#ifdef _WIN32
+			#if defined(_WIN32) && !defined(__CYGWIN__)
 			SetPriorityClass( GetCurrentProcess(), NORMAL_PRIORITY_CLASS );
 			#endif
 		}
