@@ -183,7 +183,11 @@ using namespace itk;
 	protected:
 
 		/** The constructor. */
-    NormalizedMutualInformationMetric() {}; 
+    NormalizedMutualInformationMetric()
+    {
+      this->SetUseDerivative(true);
+    }; 
+
     /** The destructor. */ 
 		virtual ~NormalizedMutualInformationMetric() {}
 	

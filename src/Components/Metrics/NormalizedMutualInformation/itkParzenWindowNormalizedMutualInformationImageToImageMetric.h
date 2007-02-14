@@ -161,13 +161,12 @@ namespace itk
 		typedef typename Superclass::MarginalPDFType                    MarginalPDFType;
     typedef typename Superclass::JointPDFType                       JointPDFType;
 		typedef typename Superclass::JointPDFDerivativesType            JointPDFDerivativesType;
+    typedef typename Superclass::IncrementalMarginalPDFType         IncrementalMarginalPDFType;
 		typedef typename Superclass::JointPDFIndexType                  JointPDFIndexType;
-    typedef typename Superclass::JointPDFValueType                  JointPDFValueType;
-		typedef typename Superclass::JointPDFRegionType                 JointPDFRegionType;
+    typedef typename Superclass::JointPDFRegionType                 JointPDFRegionType;
 		typedef typename Superclass::JointPDFSizeType                   JointPDFSizeType;
 		typedef typename Superclass::JointPDFDerivativesIndexType       JointPDFDerivativesIndexType;
-    typedef typename Superclass::JointPDFDerivativesValueType       JointPDFDerivativesValueType;
-		typedef typename Superclass::JointPDFDerivativesRegionType      JointPDFDerivativesRegionType;
+    typedef typename Superclass::JointPDFDerivativesRegionType      JointPDFDerivativesRegionType;
 		typedef typename Superclass::JointPDFDerivativesSizeType        JointPDFDerivativesSizeType;
     typedef typename Superclass::ParzenValueContainerType           ParzenValueContainerType;
     typedef typename Superclass::KernelFunctionType                 KernelFunctionType;

@@ -60,6 +60,7 @@ using namespace itk;
    *    if the registration is going really bad.
    * \parameter UseDifferentiableOverlap: Experimental feature, do not use.
    * \parameter MovingMaskInterpolationOrder: Experimental feature, do not use.
+   * \parameter FiniteDifferenceDerivative: Experimental feature, do not use.
    *
    * \sa ParzenWindowMutualInformationImageToImageMetric
 	 * \ingroup Metrics
@@ -176,24 +177,54 @@ using namespace itk;
      * \li Set the fixed/moving LimitRangeRatio
      * \li Set the fixed/moving limiter. */
 		virtual void BeforeEachResolution( void );
+
+    /** Update the CurrenIteration. This is only important
+     * if a finite difference derivative estimation is used
+     * (selected by the experimental parameter FiniteDifferenceDerivative)  */
+    virtual void AfterEachIteration( void );
 	
 		/** Set up a timer to measure the intialisation time and
 		 * call the Superclass' implementation. */
 		virtual void Initialize(void) throw (ExceptionObject);
+
+    /** Set/Get c. For finite difference derivative estimation */
+		itkSetMacro( Param_c, double );
+		itkGetConstMacro( Param_c, double );
+				
+		/** Set/Get gamma. For finite difference derivative estimation */
+		itkSetMacro( Param_gamma, double );
+		itkGetConstMacro( Param_gamma, double );
+
+    /** Set/Get the current iteration. For finite difference derivative estimation */
+    itkSetMacro( CurrentIteration, unsigned int );
+    itkGetConstMacro( CurrentIteration, unsigned int );
+
+    
 	
 	protected:
 
 		/** The constructor. */
-    AdvancedMattesMutualInformationMetric() {}; 
+    AdvancedMattesMutualInformationMetric();
+
     /** The destructor. */ 
-		virtual ~AdvancedMattesMutualInformationMetric() {}
-	
+		virtual ~AdvancedMattesMutualInformationMetric() {};
+
+    unsigned long                 m_CurrentIteration;
+
+    /** A function to compute the finite difference perturbation in each iteration */
+    double Compute_c( unsigned long k ) const;
+    
 	private:
 
 		/** The private constructor. */
 		AdvancedMattesMutualInformationMetric( const Self& );	// purposely not implemented
 		/** The private copy constructor. */
 		void operator=( const Self& );								// purposely not implemented
+
+    double												m_Param_c;
+    double												m_Param_gamma;
+    
+	
 		
 	}; // end class AdvancedMattesMutualInformationMetric
 

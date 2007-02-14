@@ -5,10 +5,25 @@
 #include "itkHardLimiterFunction.h"
 #include "itkExponentialLimiterFunction.h"
 #include <string>
+#include "vnl/vnl_math.h"
 
 namespace elastix
 {
 using namespace itk;
+
+	/**
+	 * ****************** Constructor ***********************
+	 */
+
+	template <class TElastix>
+		AdvancedMattesMutualInformationMetric<TElastix>
+		::AdvancedMattesMutualInformationMetric()
+	{
+	  this->m_Param_c = 1.0;
+		this->m_Param_gamma = 0.101;		
+    this->SetUseDerivative(true);
+  } // end constructor
+
 
 	/**
 	 * ******************* Initialize ***********************
@@ -107,7 +122,58 @@ using namespace itk;
 		this->SetFixedKernelBSplineOrder( fixedKernelBSplineOrder );
     this->SetMovingKernelBSplineOrder( movingKernelBSplineOrder );
 
+    /** Set whether a finite difference derivative should be used */
+    bool useFiniteDifferenceDerivative = false;
+    this->GetConfiguration()->ReadParameter( useFiniteDifferenceDerivative,
+      "FiniteDifferenceDerivative", this->GetComponentLabel(), level, 0 );
+    this->SetUseFiniteDifferenceDerivative( useFiniteDifferenceDerivative );
+    /** Prepare for computing the perturbation gain c_k */
+    this->SetCurrentIteration( 0 );
+    if ( useFiniteDifferenceDerivative )
+    {
+      double c = 1.0;
+			double gamma = 0.101;
+		  this->GetConfiguration()->ReadParameter(c, "SP_c", this->GetComponentLabel(), level, 0 );
+		  this->GetConfiguration()->ReadParameter(gamma, "SP_gamma", this->GetComponentLabel(), level, 0 );
+		  this->SetParam_c( c );
+	    this->SetParam_gamma( gamma );
+      this->SetFiniteDifferencePerturbation( this->Compute_c( 0 ) );
+    }
+
 	} // end BeforeEachResolution
+
+  
+  /**
+	 * ***************** AfterEachIteration ***********************
+	 */
+
+	template <class TElastix>
+		void AdvancedMattesMutualInformationMetric<TElastix>
+		::AfterEachIteration(void)
+	{
+    if ( this->GetUseFiniteDifferenceDerivative() )
+    {
+      this->m_CurrentIteration++;
+      this->SetFiniteDifferencePerturbation( 
+        this->Compute_c( this->m_CurrentIteration )  );
+    }
+  }  // end AfterEachIteration
+
+  	
+	/**
+	 * ************************** Compute_c *************************
+	 *
+	 * This function computes the parameter a at iteration k, as
+	 * in the finite difference optimizer.
+	 */
+	
+	template <class TElastix>
+		double AdvancedMattesMutualInformationMetric<TElastix>
+		::Compute_c( unsigned long k ) const
+	{ 
+		return static_cast<double>(
+			this->m_Param_c / vcl_pow( k + 1, this->m_Param_gamma ) );
+	} // end Compute_c
 	
   
 } // end namespace elastix

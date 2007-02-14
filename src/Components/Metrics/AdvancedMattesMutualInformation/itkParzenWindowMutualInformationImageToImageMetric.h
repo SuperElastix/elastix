@@ -125,14 +125,10 @@ namespace itk
 		/**  Get the value. */
 		MeasureType GetValue( const ParametersType& parameters ) const;
 
-		/**  Get the value and derivatives for single valued optimizers. */
-		void GetValueAndDerivative( const ParametersType& parameters, 
-			MeasureType& Value, DerivativeType& Derivative ) const;
- 		
 	protected:
 		
 		/** The constructor. */
-    ParzenWindowMutualInformationImageToImageMetric() {};
+    ParzenWindowMutualInformationImageToImageMetric(){};
 
 		/** The destructor. */
 		virtual ~ParzenWindowMutualInformationImageToImageMetric() {};
@@ -163,17 +159,27 @@ namespace itk
 		typedef typename Superclass::MarginalPDFType                    MarginalPDFType;
     typedef typename Superclass::JointPDFType                       JointPDFType;
 		typedef typename Superclass::JointPDFDerivativesType            JointPDFDerivativesType;
+    typedef typename Superclass::IncrementalMarginalPDFType         IncrementalMarginalPDFType;
 		typedef typename Superclass::JointPDFIndexType                  JointPDFIndexType;
-    typedef typename Superclass::JointPDFValueType                  JointPDFValueType;
-		typedef typename Superclass::JointPDFRegionType                 JointPDFRegionType;
+    typedef typename Superclass::JointPDFRegionType                 JointPDFRegionType;
 		typedef typename Superclass::JointPDFSizeType                   JointPDFSizeType;
 		typedef typename Superclass::JointPDFDerivativesIndexType       JointPDFDerivativesIndexType;
-    typedef typename Superclass::JointPDFDerivativesValueType       JointPDFDerivativesValueType;
-		typedef typename Superclass::JointPDFDerivativesRegionType      JointPDFDerivativesRegionType;
+    typedef typename Superclass::JointPDFDerivativesRegionType      JointPDFDerivativesRegionType;
 		typedef typename Superclass::JointPDFDerivativesSizeType        JointPDFDerivativesSizeType;
     typedef typename Superclass::ParzenValueContainerType           ParzenValueContainerType;
     typedef typename Superclass::KernelFunctionType                 KernelFunctionType;
-   
+
+    /**  Get the value and analytic derivatives for single valued optimizers.
+     * Called by GetValueAndDerivative if UseFiniteDifferenceDerivative == false */
+    virtual void GetValueAndAnalyticDerivative( const ParametersType& parameters, 
+			MeasureType& value, DerivativeType& derivative ) const;
+
+    /**  Get the value and finite difference derivatives for single valued optimizers.
+     * Called by GetValueAndDerivative if UseFiniteDifferenceDerivative == true */
+		virtual void GetValueAndFiniteDifferenceDerivative( const ParametersType& parameters, 
+			MeasureType& value, DerivativeType& derivative ) const;   
+
+  
  	private:
 		
 		/** The private constructor. */
