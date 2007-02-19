@@ -236,7 +236,8 @@ using namespace itk;
 		/** Important check: at least one rigidity image must be given. */
 		if ( useFixedRigidityImage == "false" && useMovingRigidityImage == "false" )
 		{
-      xl::xout["warning"] << "WARNING: UseFixedRigidityImage and UseMovingRigidityImage are both true. The rigidity penalty term is evaluated on entire input transform domain.";
+      xl::xout["warning"] << "WARNING: UseFixedRigidityImage and UseMovingRigidityImage are both true.\n";
+      xl::xout["warning"] << "         The rigidity penalty term is evaluated on entire input transform domain." << std::endl;
 		}
 
 		/** Add target cells to xout["iteration"]. */
