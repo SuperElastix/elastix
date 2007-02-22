@@ -25,6 +25,8 @@ SET(CommonFiles
  itkErodeMaskImageFilter.txx
  itkExponentialLimiterFunction.h
  itkExponentialLimiterFunction.hxx
+ itkForwardGradientImageFilter.h
+ itkForwardGradientImageFilter.txx
  itkImageFileCastWriter.h
  itkImageFileCastWriter.txx
  itkImageMaskSpatialObject2.h

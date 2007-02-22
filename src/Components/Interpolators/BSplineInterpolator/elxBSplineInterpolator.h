@@ -14,7 +14,11 @@ using namespace itk;
 	 * \brief An interpolator based on the itkBSplineInterpolateImageFunction.
 	 *
 	 * This interpolator interpolates images with an underlying B-spline
-	 * polynomial.
+	 * polynomial. 
+   *
+   * NB: BSplineInterpolation with order 1 is slower than using a LinearInterpolator,
+   * but it determines the derivative slightly more accurate at grid points. That's
+   * why the registration results can be slightly different.
 	 *
 	 * The parameters used in this class are:
 	 * \parameter Interpolator: Select this interpolator as follows:\n

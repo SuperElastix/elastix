@@ -9,6 +9,7 @@
 #include "itkBinaryErodeImageFilter.h"
 #include "itkBinaryBallStructuringElement.h"
 
+
 namespace itk
 {
 
@@ -27,9 +28,9 @@ namespace itk
     this->m_RequiredRatioOfValidSamples = 0.25;
 
     this->m_BSplineInterpolator = 0;
-		this->m_MovingImageDerivativeCalculator = 0;
-    this->m_InterpolatorIsBSpline = false;
-
+		this->m_InterpolatorIsBSpline = false;
+    this->m_ForwardDifferenceFilter = 0;
+    
  		this->m_BSplineTransform = 0;
 		this->m_BSplineCombinationTransform = 0;
     this->m_NumBSplineParametersPerDim = 0;
@@ -257,23 +258,28 @@ namespace itk
   {
     /** Check if the interpolator is of type BSplineInterpolateImageFunction.
 		* If so, we can make use of its EvaluateDerivatives method.
-		* Otherwise, we instantiate an external central difference
-		* derivative calculator. */
+		* Otherwise, we use a (forward) finite difference scheme,
+    * which is exactly right for linear interpolation. */
 		this->m_InterpolatorIsBSpline = false;
 		BSplineInterpolatorType * testPtr = 
       dynamic_cast<BSplineInterpolatorType *>( this->m_Interpolator.GetPointer() );
 		if ( !testPtr )
     {
-			this->m_MovingImageDerivativeCalculator = MovingImageDerivativeFunctionType::New();
-			this->m_MovingImageDerivativeCalculator->SetInputImage( this->m_MovingImage );
+      this->m_ForwardDifferenceFilter = ForwardDifferenceFilterType::New();
+      this->m_ForwardDifferenceFilter->SetUseImageSpacing(true);
+      this->m_ForwardDifferenceFilter->SetInput( this->m_MovingImage );
+      this->m_ForwardDifferenceFilter->Update();
+      this->m_GradientImage = this->m_ForwardDifferenceFilter->GetOutput();
+		
 			this->m_BSplineInterpolator = 0;
 			itkDebugMacro( "Interpolator is not BSpline" );
     } 
 		else
     {
+      this->m_ForwardDifferenceFilter = 0;
+      this->m_GradientImage = 0;
       this->m_InterpolatorIsBSpline = true;
 			this->m_BSplineInterpolator = testPtr;
-			this->m_MovingImageDerivativeCalculator = 0;
 			itkDebugMacro( "Interpolator is BSpline" );
     }
   } // end CheckForBSplineInterpolator
@@ -520,10 +526,15 @@ namespace itk
 		    }
 		    else
 		    {
-			    /** For all generic interpolator use central differencing. */
-			    (*gradient) =
-            this->m_MovingImageDerivativeCalculator->EvaluateAtContinuousIndex( cindex );
-		    } 
+			    /** Get the gradient from the precomputed forward difference image, by 
+            * truncating the transformed continuous index */
+          MovingImageIndexType index;
+				  for ( unsigned int j = 0; j < MovingImageDimension; j++ )
+				  {
+  					index[ j ] = static_cast<long>( cindex[ j ] );
+          }
+          (*gradient) = this->m_GradientImage->GetPixel( index );
+			  } 
       } // end if gradient
     } // end if sampleOk
     return sampleOk;

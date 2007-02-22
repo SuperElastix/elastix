@@ -143,7 +143,7 @@ protected:
 	typedef typename Superclass::MovingImagePointType               MovingImagePointType;
   typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
   typedef	typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
-  typedef typename Superclass::MovingImageDerivativeFunctionType  MovingImageDerivativeFunctionType;
+  typedef typename Superclass::ForwardDifferenceFilterType        ForwardDifferenceFilterType;
   typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
   typedef typename Superclass::BSplineTransformType               BSplineTransformType;
   typedef typename Superclass::BSplineTransformWeightsType        BSplineTransformWeightsType;

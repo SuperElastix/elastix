@@ -4,12 +4,13 @@
 #include "itkImageToImageMetric.h"
 
 #include "itkImageSamplerBase.h"
-#include "itkCentralDifferenceImageFunction.h"
+#include "itkForwardGradientImageFilter.h"
 #include "itkBSplineInterpolateImageFunction.h"
 #include "itkBSplineDeformableTransform.h"
 #include "itkBSplineResampleImageFunction.h"
 #include "itkBSplineCombinationTransform.h"
 #include "itkLimiterFunctionBase.h"
+
 
 namespace itk
 {
@@ -199,10 +200,10 @@ protected:
   /** Typedefs used for computing image derivatives */
 	typedef	BSplineInterpolateImageFunction<
     MovingImageType, CoordinateRepresentationType>              BSplineInterpolatorType;
-  typedef CentralDifferenceImageFunction<
-    MovingImageType, CoordinateRepresentationType>              MovingImageDerivativeFunctionType;
   typedef typename BSplineInterpolatorType::CovariantVectorType MovingImageDerivativeType;
-
+  typedef ForwardGradientImageFilter<
+    MovingImageType, RealType, RealType>                        ForwardDifferenceFilterType;
+      
   /** Typedefs for support of sparse jacobians and BSplineTransforms */
   enum { DeformationSplineOrder = 3 };
 	typedef BSplineDeformableTransform<
@@ -235,7 +236,7 @@ protected:
   /** Variables for image derivative computation */
 	bool m_InterpolatorIsBSpline;
 	typename BSplineInterpolatorType::Pointer             m_BSplineInterpolator;
-	typename MovingImageDerivativeFunctionType::Pointer   m_MovingImageDerivativeCalculator;
+	typename ForwardDifferenceFilterType::Pointer         m_ForwardDifferenceFilter;
 
   /** Variables used when the transform is a bspline transform */
   bool m_TransformIsBSpline;
@@ -300,7 +301,7 @@ protected:
    * If no gradient is wanted, set the gradient argument to 0.
    * If a BSplineInterpolationFunction is used, this class obtain
 	 * image derivatives from the BSpline interpolator. Otherwise, 
-	 * image derivatives are computed using central differencing. */
+	 * image derivatives are computed using (forward) finite differencing. */
   virtual bool EvaluateMovingImageValueAndDerivative( 
     const MovingImagePointType & mappedPoint,
     RealType & movingImageValue,
