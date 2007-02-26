@@ -226,8 +226,10 @@ namespace elastix
           bool ret = thisAsMetricWithSampler->GetImageSampler()->SelectNewSamplesOnUpdate();
           if ( !ret )
           {
-            xl::xout["warning"]  << "WARNING: You want to select new samples every iteration, \
-              but the selected ImageSampler is not suited for that." << std::endl;
+            xl::xout["warning"]
+              << "WARNING: You want to select new samples every iteration,\n"
+              << "but the selected ImageSampler is not suited for that." 
+              << std::endl;
           }
         }
 
