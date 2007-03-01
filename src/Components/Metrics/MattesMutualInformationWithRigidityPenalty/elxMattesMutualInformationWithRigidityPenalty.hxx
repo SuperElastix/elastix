@@ -47,7 +47,7 @@ using namespace itk;
 		this->m_RigidityPenaltyWeightVector.resize( numberOfResolutions, this->m_RigidityPenaltyWeightVector[ 0 ] );
 		for ( unsigned int i = 1; i < numberOfResolutions; i++ )
 		{
-      this->m_Configuration->ReadParameter( this->m_RigidityPenaltyWeightVector[ i ], "RigidityPenaltyWeight", i );
+      this->m_Configuration->ReadParameter( this->m_RigidityPenaltyWeightVector[ i ], "RigidityPenaltyWeight", i, true );
 		}
 		/** Set the RigidityPenaltyWeight in the superclass to the first resolution weight. */
     this->SetMetricWeight( this->m_RigidityPenaltyWeightVector[ 0 ], 1 );
