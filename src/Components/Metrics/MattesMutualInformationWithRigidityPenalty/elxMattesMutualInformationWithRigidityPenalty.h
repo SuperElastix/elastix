@@ -188,13 +188,6 @@ using namespace itk;
 		typedef typename RigidityImageReaderType::Pointer				RigidityImageReaderPointer;
 		
 		/** Execute stuff before the actual registration:
-		 * \li Set the rigidity penalty term weight.
-		 * \li Set the weight of the linearity condition.
-		 * \li Set the weight of the orthonormality condition.
-		 * \li Set the weight of the properness condition.
-		 * \li Set the flag to dilate the rigidity images.
-		 * \li Set the dilation radius multiplier
-		 * \li Set the output directory name.
 		 * \li Set the rigidity coefficients of the fixed image.
 		 * \li Set the rigidity coefficients of the moving image.
 		 * \li Set the flag to use a fixed rigidity image.
@@ -205,16 +198,12 @@ using namespace itk;
 
 		/** Execute stuff before each new pyramid resolution:
 		 * \li Set the number of histogram bins.
-		 * \li Set the number of spatial samples.                               ?
-		 * \li Set the flag to use all samples.                                 ?
-		 * \li Set the flag to calculate and show the exact metric value.       ?
-		 * \li Set the flag to take samples on a uniform grid.                  ?
-		 * \li Set the grid spacing of the sampling grid.                       ?
-     * \li dilate rigidity images
+		 * \li Set the flag to dilate the rigidity images.
+		 * \li Set the dilation radius multiplier
 		 * \li Set the rigidity penalty weight of this level.
-     * \li Set the weight of the linearity condition of this level.
-		 * \li Set the weight of the orthonormality condition of this level.
-		 * \li Set the weight of the properness condition of this level.
+     * \li Set the weight, usage and calculation of the linearity condition of this level.
+		 * \li Set the weight, usage and calculation of the orthonormality condition of this level.
+		 * \li Set the weight, usage and calculation of the properness condition of this level.
 		 */
 		virtual void BeforeEachResolution(void);
 
@@ -246,9 +235,6 @@ using namespace itk;
 		/** Member variables. */
 		RigidityImageReaderPointer			m_FixedRigidityImageReader;
 		RigidityImageReaderPointer			m_MovingRigidityImageReader;
-
-		std::vector< double >						m_RigidityPenaltyWeightVector;
-		std::vector< bool >							m_DilateRigidityImagesVector;
 
 	}; // end class MattesMutualInformationWithRigidityPenalty
 
