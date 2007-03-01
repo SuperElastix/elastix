@@ -131,7 +131,16 @@ namespace elastix
 		}
 
 		/** Open the ParameterFile.*/
-		this->m_ParameterFile.Initialize( this->m_ParameterFileName.c_str() );
+    try 
+    {
+		  this->m_ParameterFile.Initialize( this->m_ParameterFileName.c_str() );
+    }
+    catch ( itk::ExceptionObject & excp )
+    {
+      xl::xout["error"] << "ERROR: Reading the parameter file failed: "
+        << this->m_ParameterFileName << std::endl;
+      return 1;
+    }
 
 		this->m_Initialized = true;
 
