@@ -1068,7 +1068,6 @@ namespace itk
     
     this->m_NumberOfPixelsCounted = 0;
     double sumOfMovingMaskValues = 0.0;
-    bool maskIsGradientMask = this->GetMaskIsGradientMask();
         
     /** Arrays that store dM(x)/dmu and dMask(x)/dmu */
     DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.GetSize() );

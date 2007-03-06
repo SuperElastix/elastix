@@ -51,8 +51,8 @@ namespace itk
 		this->SetComputeGradient(false); // don't use the default gradient for now
     this->SetUseImageSampler(true);
 		
-		this->m_InterpolatorIsBSpline = false;
-		this->m_TransformIsBSpline    = false;
+    //this->m_InterpolatorIsBSpline = false;
+    this->m_TransformIsBSpline    = false;
 		this->m_TransformIsBSplineCombination    = false;
 		
 		// Initialize PDFs to NULL
@@ -73,8 +73,8 @@ namespace itk
 		this->m_FixedImageBinSize = 0.0;
 		this->m_MovingImageBinSize = 0.0;
 		this->m_CubicBSplineDerivativeKernel = NULL;
-		this->m_BSplineInterpolator = NULL;
-		this->m_DerivativeCalculator = NULL;
+		//this->m_BSplineInterpolator = NULL;
+		//this->m_DerivativeCalculator = NULL;
 		this->m_NumParametersPerDim = 0;
 		this->m_NumBSplineWeights = 0;
 		this->m_BSplineTransform = NULL;
@@ -315,26 +315,31 @@ namespace itk
 		/** \todo Also add it the possibility of using the default gradient
 		 * provided by the superclass.
 		 */
-		this->m_InterpolatorIsBSpline = true;
+		/** already done in superclass:
+    this->m_InterpolatorIsBSpline = false;
 		
 		BSplineInterpolatorType * testPtr = dynamic_cast<BSplineInterpolatorType *>(
 			this->m_Interpolator.GetPointer() );
 		if ( !testPtr )
     {
-			this->m_InterpolatorIsBSpline = false;
-			
-			this->m_DerivativeCalculator = DerivativeFunctionType::New();
-			this->m_DerivativeCalculator->SetInputImage( this->m_MovingImage );
-			
-			this->m_BSplineInterpolator = NULL;
+      this->m_ForwardDifferenceFilter = ForwardDifferenceFilterType::New();
+      this->m_ForwardDifferenceFilter->SetUseImageSpacing(true);
+      this->m_ForwardDifferenceFilter->SetInput( this->m_MovingImage );
+      this->m_ForwardDifferenceFilter->Update();
+      this->m_GradientImage = this->m_ForwardDifferenceFilter->GetOutput();
+		
+			this->m_BSplineInterpolator = 0;
 			itkDebugMacro( "Interpolator is not BSpline" );
     } 
 		else
     {
+      this->m_ForwardDifferenceFilter = 0;
+      this->m_GradientImage = 0;
+      this->m_InterpolatorIsBSpline = true;
 			this->m_BSplineInterpolator = testPtr;
-			this->m_DerivativeCalculator = NULL;
 			itkDebugMacro( "Interpolator is BSpline" );
     }
+    */
 		
 		/** 
 		* Check if the transform is of type BSplineDeformableTransform.
@@ -1039,8 +1044,21 @@ namespace itk
 		}
 		else
 		{
-			// For all generic interpolator use central differencing.
-			gradient = this->m_DerivativeCalculator->Evaluate( mappedPoint );
+      // old code:
+      //gradient = this->m_DerivativeCalculator->Evaluate( mappedPoint );
+
+			/** For all generic interpolator use forward differencing. */
+      typename Superclass::MovingImageContinuousIndexType cindex;
+      this->m_Interpolator->ConvertPointToContinousIndex( mappedPoint, cindex);
+
+      /** Get the gradient from the precomputed forward difference image, by 
+       * truncating the transformed continuous index */
+      MovingImageIndexType index;
+			for ( unsigned int j = 0; j < MovingImageDimension; j++ )
+			{
+  		  index[ j ] = static_cast<long>( cindex[ j ] );
+      }
+      gradient = this->m_GradientImage->GetPixel( index );
 		}
 		
 	} // end ComputeImageDerivatives

@@ -350,22 +350,23 @@ namespace itk
 			ImageDerivativesType& gradient ) const;
 		
 		/** Boolean to indicate if the interpolator BSpline. */
-		bool m_InterpolatorIsBSpline;
+		//bool m_InterpolatorIsBSpline;
 		
 		/** Typedefs for using BSpline interpolator. */
-		typedef
-			BSplineInterpolateImageFunction<MovingImageType,
-			CoordinateRepresentationType> BSplineInterpolatorType;
+		//typedef
+		//	BSplineInterpolateImageFunction<MovingImageType,
+		//	CoordinateRepresentationType> BSplineInterpolatorType;
 		
 		/** Pointer to BSplineInterpolator. */
-		typename BSplineInterpolatorType::Pointer m_BSplineInterpolator;
+		//typename BSplineInterpolatorType::Pointer m_BSplineInterpolator;
 		
+    // old code:
 		/** Typedefs for using central difference calculator. */
-		typedef CentralDifferenceImageFunction<MovingImageType,
-			CoordinateRepresentationType> DerivativeFunctionType;
+		//typedef CentralDifferenceImageFunction<MovingImageType,
+		//	CoordinateRepresentationType> DerivativeFunctionType;
 		
 		/** Pointer to central difference calculator. */
-		typename DerivativeFunctionType::Pointer m_DerivativeCalculator;
+		//typename DerivativeFunctionType::Pointer m_DerivativeCalculator;
 		
 		/** Compute PDF derivative contribution for each parameter. */
 		virtual void ComputePDFDerivatives( const FixedImagePointType& fixedImagePoint,
