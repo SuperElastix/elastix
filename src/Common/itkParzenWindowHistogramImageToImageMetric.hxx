@@ -48,7 +48,7 @@ namespace itk
     this->SetUseImageSampler(true);
     this->SetUseFixedImageLimiter(true);
     this->SetUseMovingImageLimiter(true);
-
+   
 	} // end Constructor
 
 
@@ -1068,6 +1068,7 @@ namespace itk
     
     this->m_NumberOfPixelsCounted = 0;
     double sumOfMovingMaskValues = 0.0;
+    bool maskIsGradientMask = this->GetMaskIsGradientMask();
         
     /** Arrays that store dM(x)/dmu and dMask(x)/dmu */
     DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.GetSize() );
@@ -1117,7 +1118,7 @@ namespace itk
         sampleOk = this->EvaluateMovingImageValueAndDerivative( 
           mappedPoint, movingImageValue, &movingImageDerivative );
       }
-            
+                  
       if( sampleOk )
       {
         this->m_NumberOfPixelsCounted++; 

@@ -139,7 +139,7 @@ using namespace itk;
 	    this->SetParam_gamma( gamma );
       this->SetFiniteDifferencePerturbation( this->Compute_c( 0 ) );
     }
-
+    
 	} // end BeforeEachResolution
 
   

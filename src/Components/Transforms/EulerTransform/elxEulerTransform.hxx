@@ -159,7 +159,7 @@ namespace elastix
 		if ( !pointRead && !indexRead )
 		{
 			xl::xout["error"] << "ERROR: No center of rotation is specified in the transform parameter file" << std::endl;
-			itkExceptionMacro(<< "Transform parameter file is corrupt.")
+   		itkExceptionMacro(<< "Transform parameter file is corrupt.")
 		}
 
 		/** Set the center in this Transform.*/
