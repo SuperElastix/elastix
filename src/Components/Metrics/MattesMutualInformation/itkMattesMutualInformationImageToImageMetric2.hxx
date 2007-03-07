@@ -62,8 +62,9 @@ namespace itk
 		typename BSplineTransformType::Pointer transformer = BSplineTransformType::New();
 		this->SetTransform (transformer);
 		
-		typename BSplineInterpolatorType::Pointer interpolator = BSplineInterpolatorType::New();
-		this->SetInterpolator (interpolator);
+    // old code:
+    //typename BSplineInterpolatorType::Pointer interpolator = BSplineInterpolatorType::New();
+		//this->SetInterpolator (interpolator);
 		
 		// Initialize memory
 		this->m_MovingImageNormalizedMin = 0.0;
