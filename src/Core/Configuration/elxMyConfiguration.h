@@ -196,30 +196,30 @@ namespace elastix
 		int ReadParameter( T & param, const char * name_field, const char * prefix,
       const unsigned int entry_nr, int default_entry_nr, bool silent = false )
 		{
-      std::string fullname(prefix);
+      std::string fullname( prefix );
       fullname += name_field;
       int ret = 1;
-      /** silently try to read the parameter */
-      if (default_entry_nr >=0)
+      /** Silently try to read the parameter. */
+      if ( default_entry_nr >= 0 )
       {
-        /** try the default_entry_nr if the entry_nr is not found */
+        /** Try the default_entry_nr if the entry_nr is not found. */
         unsigned int uintdefault = static_cast<unsigned int>( default_entry_nr );
-        ret &= this->ReadParameter( param, name_field, uintdefault, true );
-        ret &= this->ReadParameter( param, name_field, entry_nr, true );
-        ret &= this->ReadParameter( param, fullname.c_str(), uintdefault, true );
-        ret &= this->ReadParameter( param, fullname.c_str(), entry_nr, true );
+        ret |= this->ReadParameter( param, name_field, uintdefault, true );
+        ret |= this->ReadParameter( param, name_field, entry_nr, true );
+        ret |= this->ReadParameter( param, fullname.c_str(), uintdefault, true );
+        ret |= this->ReadParameter( param, fullname.c_str(), entry_nr, true );
       }
       else
       {
-        /** just try the entry_nr */
-        ret &= this->ReadParameter( param, name_field, entry_nr, true );
-        ret &= this->ReadParameter( param, fullname.c_str(), entry_nr, true );
+        /** Just try the entry_nr. */
+        ret |= this->ReadParameter( param, name_field, entry_nr, true );
+        ret |= this->ReadParameter( param, fullname.c_str(), entry_nr, true );
       }
-      if ( ret && (!silent) )
+      if ( ret && !silent )
       {
-        /** we haven't found anything, give a warning that the default value
-         * provided by the caller is used */
-        return this->ReadParameter( param, name_field, entry_nr, silent );
+        /** We haven't found anything, give a warning that the default value
+         * provided by the caller is used. */
+        return this->ReadParameter( param, name_field, entry_nr, false );
       }
       return ret;
     } // end ReadParameter
