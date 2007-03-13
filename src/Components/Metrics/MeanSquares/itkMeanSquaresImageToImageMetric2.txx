@@ -8,8 +8,8 @@ namespace itk
 {
 
 	/**
-	* ******************* Constructor *******************
-	*/
+ 	 * ******************* Constructor *******************
+	 */
 
 	template <class TFixedImage, class TMovingImage> 
 		MeanSquaresImageToImageMetric2<TFixedImage,TMovingImage>
@@ -205,7 +205,7 @@ namespace itk
 				continue;
 			}
 
-			/** In this if-statement the actual calculation of mean squares is done. */
+			/** In this if-statement the actual calculation of the mean squares is done. */
 			if ( this->m_Interpolator->IsInsideBuffer( transformedPoint ) )
 			{
 				/** Get the fixedValue = f(x) and the movingValue = m(x+u(x)). */

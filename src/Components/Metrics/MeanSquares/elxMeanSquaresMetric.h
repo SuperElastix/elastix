@@ -17,7 +17,7 @@ using namespace itk;
 	 * The parameters used in this class are:
 	 * \parameter Metric: Select this metric as follows:\n
 	 *		<tt>(Metric "MeanSquares")</tt>
-	 *
+   *
 	 * \ingroup Metrics
 	 *
 	 */
@@ -94,7 +94,7 @@ using namespace itk;
 		 * calls the Superclass' implementation.
 		 */
 		virtual void Initialize(void) throw (ExceptionObject);
-
+  
 	protected:
 
 		/** The constructor. */

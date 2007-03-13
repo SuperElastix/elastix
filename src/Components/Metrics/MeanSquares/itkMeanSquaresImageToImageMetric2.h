@@ -57,7 +57,7 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro( MeanSquaresImageToImageMetric2, AdvancedImageToImageMetric );
 
-    /** Typedefs from the superclass. */
+  /** Typedefs from the superclass. */
   typedef typename 
     Superclass::CoordinateRepresentationType              CoordinateRepresentationType;
   typedef typename Superclass::MovingImageType            MovingImageType;

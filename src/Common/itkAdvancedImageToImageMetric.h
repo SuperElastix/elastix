@@ -117,44 +117,44 @@ public:
 
   /** Inheriting classes can specify whether they use the image sampler functionality;
    * This method allows the user to inspect this setting. */ 
-  itkGetConstMacro(UseImageSampler, bool);
+  itkGetConstMacro( UseImageSampler, bool );
 
   /** Set/Get the required ratio of valid samples; default 0.25.
    * When less than this ratio*numberOfSamplesTried samples map 
    * inside the moving image buffer, an exception will be thrown. */
-  itkSetMacro(RequiredRatioOfValidSamples, double);
-  itkGetConstMacro(RequiredRatioOfValidSamples, double);
+  itkSetMacro( RequiredRatioOfValidSamples, double );
+  itkGetConstMacro( RequiredRatioOfValidSamples, double );
 
   /** Set/Get whether the overlap should be taken into account while computing the derivative
    * This setting also affects the value of the metric. Default: false; */
-  itkSetMacro(UseDifferentiableOverlap, bool);
-  itkGetConstMacro(UseDifferentiableOverlap, bool);
+  itkSetMacro( UseDifferentiableOverlap, bool );
+  itkGetConstMacro( UseDifferentiableOverlap, bool );
 
   /** Set the interpolation spline order for the moving image mask; default: 2
    * Make sure to call this before calling Initialize(), if you want to change it. */
-  virtual void SetMovingImageMaskInterpolationOrder(unsigned int order)
+  virtual void SetMovingImageMaskInterpolationOrder( unsigned int order )
   {
     this->m_MovingImageMaskInterpolator->SetSplineOrder( order );
   };
-  /** Get the interpolation spline order for the moving image mask */
-  virtual const unsigned int GetMovingImageMaskInterpolationOrder(void) const
+  /** Get the interpolation spline order for the moving image mask. */
+  virtual const unsigned int GetMovingImageMaskInterpolationOrder( void ) const
   {
     return this->m_MovingImageMaskInterpolator->GetSplineOrder();
   };
 
   /** Get the internal moving image mask. Equals the movingimage mask if set, and 
-   * otherwise it's a box with size equal to the moving image's largest possible region */
-  itkGetConstObjectMacro(InternalMovingImageMask, InternalMovingImageMaskType);
+   * otherwise it's a box with size equal to the moving image's largest possible region. */
+  itkGetConstObjectMacro( InternalMovingImageMask, InternalMovingImageMaskType );
 
-  /** Get the interpolator of the internal moving image mask */
-  itkGetConstObjectMacro(MovingImageMaskInterpolator, MovingImageMaskInterpolatorType);
+  /** Get the interpolator of the internal moving image mask. */
+  itkGetConstObjectMacro( MovingImageMaskInterpolator, MovingImageMaskInterpolatorType );
 
   /** Set/Get the Moving/Fixed limiter. Its thresholds and bounds are set by the metric. 
-   * Setting a limiter is only mandatory if GetUse{Fixed,Moving}Limiter() returns true */ 
-  itkSetObjectMacro(MovingImageLimiter, MovingImageLimiterType);
-  itkGetConstObjectMacro(MovingImageLimiter, MovingImageLimiterType);
-  itkSetObjectMacro(FixedImageLimiter, FixedImageLimiterType);
-  itkGetConstObjectMacro(FixedImageLimiter, FixedImageLimiterType);
+   * Setting a limiter is only mandatory if GetUse{Fixed,Moving}Limiter() returns true. */ 
+  itkSetObjectMacro( MovingImageLimiter, MovingImageLimiterType );
+  itkGetConstObjectMacro( MovingImageLimiter, MovingImageLimiterType );
+  itkSetObjectMacro( FixedImageLimiter, FixedImageLimiterType );
+  itkGetConstObjectMacro( FixedImageLimiter, FixedImageLimiterType );
 
   /** A percentage that defines how much the gray value range is extended
    * maxlimit = max + LimitRangeRatio * (max - min)
@@ -162,14 +162,14 @@ public:
    * Default: 0.01;
    * If you use a nearest neighbor or linear interpolator,
    * set it to zero and use a hard limiter. */
-  itkSetMacro(MovingLimitRangeRatio, double);
-  itkGetConstMacro(MovingLimitRangeRatio, double);
-  itkSetMacro(FixedLimitRangeRatio, double);
-  itkGetConstMacro(FixedLimitRangeRatio, double);
+  itkSetMacro( MovingLimitRangeRatio, double );
+  itkGetConstMacro( MovingLimitRangeRatio, double );
+  itkSetMacro( FixedLimitRangeRatio, double );
+  itkGetConstMacro( FixedLimitRangeRatio, double );
   
   /** Inheriting classes can specify whether they use the image limiter functionality.
    * This method allows the user to inspect this setting. */ 
-  itkGetConstMacro(UseFixedImageLimiter, bool);
+  itkGetConstMacro( UseFixedImageLimiter, bool );
   itkGetConstMacro(UseMovingImageLimiter, bool);
   
   /** Initialize the Metric by making sure that all the components
@@ -238,7 +238,7 @@ protected:
 	typename BSplineInterpolatorType::Pointer             m_BSplineInterpolator;
 	typename ForwardDifferenceFilterType::Pointer         m_ForwardDifferenceFilter;
 
-  /** Variables used when the transform is a bspline transform */
+  /** Variables used when the transform is a bspline transform. */
   bool m_TransformIsBSpline;
 	bool m_TransformIsBSplineCombination;
   typename BSplineTransformType::Pointer						m_BSplineTransform;
@@ -246,23 +246,25 @@ protected:
 	mutable BSplineTransformIndexArrayType						m_BSplineTransformIndices;
 	typename BSplineCombinationTransformType::Pointer m_BSplineCombinationTransform;
 	BSplineParametersOffsetType                       m_BSplineParametersOffset;
+
 	/** The number of BSpline parameters per image dimension. */
 	long                                              m_NumBSplineParametersPerDim;
+
 	/** The number of BSpline transform weights is the number of
 	* of parameter in the support region (per dimension ). */   
 	unsigned long                                     m_NumBSplineWeights;
 
-  /** The number of transform parameters */
+  /** The number of transform parameters. */
   unsigned int m_NumberOfParameters;
   
-  /** the parameter indices that have a nonzero jacobian */
+  /** the parameter indices that have a nonzero jacobian. */
   mutable ParameterIndexArrayType                    m_NonZeroJacobianIndices;
 
-  /** Variables for the internal mask */
+  /** Variables for the internal mask. */
   typename InternalMovingImageMaskType::Pointer      m_InternalMovingImageMask;
   typename MovingImageMaskInterpolatorType::Pointer  m_MovingImageMaskInterpolator;
 
-  /** Variables for the Limiters */
+  /** Variables for the Limiters. */
   typename FixedImageLimiterType::Pointer            m_FixedImageLimiter;
   typename MovingImageLimiterType::Pointer           m_MovingImageLimiter;
   FixedImagePixelType                                m_FixedImageTrueMin;
@@ -278,23 +280,23 @@ protected:
 
   /** Methods for image sampler support **********/
 
-  /** Initialize variables related to the image sampler; called by Initialize */
-  virtual void InitializeImageSampler(void) throw ( ExceptionObject );
+  /** Initialize variables related to the image sampler; called by Initialize. */
+  virtual void InitializeImageSampler( void ) throw ( ExceptionObject );
   
   /** Inheriting classes can specify whether they use the image sampler functionality
-   * Make sure to set it before calling Initialize; default: false */
-  itkSetMacro(UseImageSampler, bool);
+   * Make sure to set it before calling Initialize; default: false. */
+  itkSetMacro( UseImageSampler, bool );
 
   /** Check if enough samples have been found to compute a reliable 
    * estimate of the value/derivative; throws an exception if not. */
   virtual void CheckNumberOfSamples(
-    unsigned long wanted, unsigned long found, double sumOfMaskValues) const;
+    unsigned long wanted, unsigned long found, double sumOfMaskValues ) const;
   
   /** Methods for image derivative evaluation support **********/
 
   /** Initialize variables for image derivative computation; this 
-   * method is called by Initialize */
-  virtual void CheckForBSplineInterpolator(void);
+   * method is called by Initialize. */
+  virtual void CheckForBSplineInterpolator( void );
 
   /** Compute the image value (and possibly derivative) at a transformed point.
    * Checks if the point lies within the moving image buffer (bool return).
@@ -305,12 +307,12 @@ protected:
   virtual bool EvaluateMovingImageValueAndDerivative( 
     const MovingImagePointType & mappedPoint,
     RealType & movingImageValue,
-    MovingImageDerivativeType * gradient) const;
+    MovingImageDerivativeType * gradient ) const;
 
   /** Methods to support transforms with sparse jacobians, like the BSplineTransform **********/
 
   /** Check if the transform is a bspline transform. Called by Initialize. */
-  virtual void CheckForBSplineTransform(void);
+  virtual void CheckForBSplineTransform( void );
 
   /** Transform a point from FixedImage domain to MovingImage domain.
 	 * This function also checks if mapped point is within support region of the transform.
@@ -333,14 +335,14 @@ protected:
   /** Methods for support of smooth differentiable masks **********/
 
   /** Initialize the internal mask; Called by Initialize */
-  virtual void InitializeInternalMasks(void);
+  virtual void InitializeInternalMasks( void );
 
   /** Estimate value and possibly spatial derivative of internal moving mask;
    * a zero pointer for the derivative will prevent computation of the derivative. */
   virtual void EvaluateMovingMaskValueAndDerivative(
     const MovingImagePointType & point,
     RealType & value,
-    MovingImageMaskDerivativeType * derivative) const;
+    MovingImageMaskDerivativeType * derivative ) const;
 
   /** Methods for the support of gray value limiters. ***************/
 
@@ -360,29 +362,28 @@ protected:
 
   /** Initialize the {Fixed,Moving}[True]{Max,Min}[Limit] and the {Fixed,Moving}ImageLimiter 
    * Only does something when Use{Fixed,Moving}Limiter is set to true; */
-  virtual void InitializeLimiters(void);
+  virtual void InitializeLimiters( void );
 
   /** Inheriting classes can specify whether they use the image limiter functionality
-   * Make sure to set it before calling Initialize; default: false */
-  itkSetMacro(UseFixedImageLimiter, bool);
-  itkSetMacro(UseMovingImageLimiter, bool);
+   * Make sure to set it before calling Initialize; default: false. */
+  itkSetMacro( UseFixedImageLimiter, bool );
+  itkSetMacro( UseMovingImageLimiter, bool );
     
 private:
   AdvancedImageToImageMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
-  bool m_UseImageSampler;
-  bool m_UseDifferentiableOverlap;
-  double m_FixedLimitRangeRatio;
-  double m_MovingLimitRangeRatio;
-  bool m_UseFixedImageLimiter;
-  bool m_UseMovingImageLimiter;
-  double m_RequiredRatioOfValidSamples;
+  bool    m_UseImageSampler;
+  bool    m_UseDifferentiableOverlap;
+  double  m_FixedLimitRangeRatio;
+  double  m_MovingLimitRangeRatio;
+  bool    m_UseFixedImageLimiter;
+  bool    m_UseMovingImageLimiter;
+  double  m_RequiredRatioOfValidSamples;
     
   /** This member should only be directly accessed by the
    * EvaluateTransformJacobian method */
   mutable TransformJacobianType m_InternalTransformJacobian;
-
   
 }; // end class AdvancedImageToImageMetric
 
