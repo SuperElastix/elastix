@@ -73,7 +73,6 @@ using namespace itk;
   } // end BeforeEachResolution
 
 
-
 } // end namespace elastix
 
 
