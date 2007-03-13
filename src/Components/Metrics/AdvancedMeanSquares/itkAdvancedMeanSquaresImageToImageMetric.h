@@ -125,8 +125,8 @@ public:
    * maximum average difference that will be observed. 
    * Dividing by range^2 sounds less ad hoc, but will yield
    * very small values. */
-  itkSetMacro(UseNormalization, bool);
-  itkGetConstMacro(UseNormalization, bool);
+  itkSetMacro( UseNormalization, bool );
+  itkGetConstMacro( UseNormalization, bool );
    
 protected:
   AdvancedMeanSquaresImageToImageMetric();
@@ -167,16 +167,16 @@ protected:
     DerivativeType & maskJacobian) const;
 
   /** Compute a pixel's contribution to the measure and derivatives;
-   * Called by GetValueAndDerivative() */
+   * Called by GetValueAndDerivative(). */
   void UpdateValueAndDerivativeTerms( 
-    RealType fixedImageValue,
-    RealType movingImageValue,
-    RealType movingMaskValue,
+    const RealType fixedImageValue,
+    const RealType movingImageValue,
+    const RealType movingMaskValue,
     const DerivativeType & imageJacobian,
     const DerivativeType & maskJacobian,
     MeasureType & measure,
     DerivativeType & numderiv,
-    DerivativeType & denderiv  ) const;
+    DerivativeType & denderiv ) const;
  
 private:
   AdvancedMeanSquaresImageToImageMetric(const Self&); //purposely not implemented
