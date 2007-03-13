@@ -16,10 +16,18 @@ namespace itk
 {
   
 /** \class AdvancedImageToImageMetric
- * \brief An extension of the ITK ImageToImageMetric.
  *
- * It is possible to set an ImageSampler, which selects the
- * fixed image samples over which the metric is evaluated.
+ * \brief An extension of the ITK ImageToImageMetric. It is the intended base
+ * class for all elastix metrics.
+ *
+ * This class inherits from the itk::ImageToImageMetric. The additional features of
+ * this class that makes it an AdvancedImageToImageMetric are:
+ * - the use of an ImageSampler, which selects the fixed image samples over which
+ *   the metric is evaluated. In the derived metric you simply need to loop over
+ *   the image sample container, instead over the fixed image. This way it is easy
+ *   to create different samplers, without the derived metric needing to know.
+ * - limiters
+ * - differential overlap
  *
  * \ingroup RegistrationMetrics
  *
@@ -40,7 +48,7 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro( AdvancedImageToImageMetric, ImageToImageMetric );
 
-  /** Constants for the image dimensions */
+  /** Constants for the image dimensions. */
   itkStaticConstMacro( MovingImageDimension, unsigned int,
     TMovingImage::ImageDimension );
   itkStaticConstMacro( FixedImageDimension, unsigned int,
@@ -77,7 +85,7 @@ public:
   typedef typename Superclass::DerivativeType             DerivativeType;
   typedef typename Superclass::ParametersType             ParametersType;
 
-  /** Some useful extra typedefs */
+  /** Some useful extra typedefs. */
   typedef typename FixedImageType::PixelType              FixedImagePixelType;
   typedef typename MovingImageType::RegionType            MovingImageRegionType;
 
@@ -89,7 +97,7 @@ public:
   typedef typename 
     ImageSamplerType::OutputVectorContainerPointer        ImageSampleContainerPointer;
   
-  /** Typedefs for smooth differentiable mask support */
+  /** Typedefs for smooth differentiable mask support. */
   typedef unsigned char                                   InternalMaskPixelType;
   typedef typename itk::Image<
     InternalMaskPixelType, 
@@ -98,7 +106,7 @@ public:
     InternalMovingImageMaskType,
     CoordinateRepresentationType >                        MovingImageMaskInterpolatorType;
 
-  /** Typedefs for Limiter support */
+  /** Typedefs for Limiter support. */
   typedef LimiterFunctionBase<
     RealType, FixedImageDimension>                        FixedImageLimiterType;
   typedef typename FixedImageLimiterType::OutputType      FixedImageLimiterOutputType;
@@ -110,7 +118,7 @@ public:
 
   /** Set/Get the image sampler. */
   itkSetObjectMacro( ImageSampler, ImageSamplerType );
-  virtual ImageSamplerType * GetImageSampler(void) const
+  virtual ImageSamplerType * GetImageSampler( void ) const
   {
     return this->m_ImageSampler.GetPointer();
   };
@@ -170,7 +178,7 @@ public:
   /** Inheriting classes can specify whether they use the image limiter functionality.
    * This method allows the user to inspect this setting. */ 
   itkGetConstMacro( UseFixedImageLimiter, bool );
-  itkGetConstMacro(UseMovingImageLimiter, bool);
+  itkGetConstMacro( UseMovingImageLimiter, bool );
   
   /** Initialize the Metric by making sure that all the components
    *  are present and plugged together correctly.
@@ -189,7 +197,7 @@ protected:
 
   /** Protected Typedefs ******************/
   
-  /** Typedefs for indices and points */
+  /** Typedefs for indices and points. */
 	typedef typename FixedImageType::IndexType                    FixedImageIndexType;
 	typedef typename FixedImageIndexType::IndexValueType          FixedImageIndexValueType;
 	typedef typename MovingImageType::IndexType                   MovingImageIndexType;
@@ -197,14 +205,14 @@ protected:
 	typedef typename TransformType::OutputPointType               MovingImagePointType;
   typedef typename InterpolatorType::ContinuousIndexType        MovingImageContinuousIndexType;
 	
-  /** Typedefs used for computing image derivatives */
+  /** Typedefs used for computing image derivatives. */
 	typedef	BSplineInterpolateImageFunction<
     MovingImageType, CoordinateRepresentationType>              BSplineInterpolatorType;
   typedef typename BSplineInterpolatorType::CovariantVectorType MovingImageDerivativeType;
   typedef ForwardGradientImageFilter<
     MovingImageType, RealType, RealType>                        ForwardDifferenceFilterType;
       
-  /** Typedefs for support of sparse jacobians and BSplineTransforms */
+  /** Typedefs for support of sparse jacobians and BSplineTransforms. */
   enum { DeformationSplineOrder = 3 };
 	typedef BSplineDeformableTransform<
 		CoordinateRepresentationType,
@@ -223,7 +231,7 @@ protected:
   /** Array type for holding parameter indices */
   typedef Array<unsigned int>                                   ParameterIndexArrayType;
   
-  /** Typedefs for smooth differentiable mask support */
+  /** Typedefs for smooth differentiable mask support. */
   typedef typename 
     MovingImageMaskInterpolatorType::CovariantVectorType        MovingImageMaskDerivativeType;
   
@@ -233,7 +241,7 @@ protected:
    * changed in the GetValue(), etc, which are const function. */
   mutable ImageSamplerPointer   m_ImageSampler;
 
-  /** Variables for image derivative computation */
+  /** Variables for image derivative computation. */
 	bool m_InterpolatorIsBSpline;
 	typename BSplineInterpolatorType::Pointer             m_BSplineInterpolator;
 	typename ForwardDifferenceFilterType::Pointer         m_ForwardDifferenceFilter;
@@ -382,7 +390,7 @@ private:
   double  m_RequiredRatioOfValidSamples;
     
   /** This member should only be directly accessed by the
-   * EvaluateTransformJacobian method */
+   * EvaluateTransformJacobian method. */
   mutable TransformJacobianType m_InternalTransformJacobian;
   
 }; // end class AdvancedImageToImageMetric

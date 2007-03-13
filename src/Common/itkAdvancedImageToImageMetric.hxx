@@ -21,7 +21,7 @@ namespace itk
     AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     ::AdvancedImageToImageMetric()
   {
-    this->SetComputeGradient(false); // don't use the default gradient
+    this->SetComputeGradient( false ); // don't use the default gradient
 
     this->m_ImageSampler = 0;
     this->m_UseImageSampler = false;
@@ -78,22 +78,22 @@ namespace itk
 
     /** Cache the number of transformation parameters. This line 
      * emphasises that a user has to call Initialize again if the number
-     * of parameters is changed */
+     * of parameters is changed. */
 		this->m_NumberOfParameters = this->m_Transform->GetNumberOfParameters();
 
-    /** Setup the parameters for the gray value limiters */
+    /** Setup the parameters for the gray value limiters. */
     this->InitializeLimiters();
 	
     /** Connect the image sampler */
     this->InitializeImageSampler();
 
-    /** Check if the interpolator is a bspline interpolator */
+    /** Check if the interpolator is a bspline interpolator. */
     this->CheckForBSplineInterpolator();
 
-    /** Check if the transform is a BSplineTransform or a BSplineCombinationTransform */
+    /** Check if the transform is a BSplineTransform or a BSplineCombinationTransform. */
     this->CheckForBSplineTransform();
     
-    /** Initialize the internal moving image mask */
+    /** Initialize the internal moving image mask. */
     this->InitializeInternalMasks();
 	
   } // end Initialize
@@ -176,7 +176,7 @@ namespace itk
 		AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 		::InitializeLimiters(void)
   {
-    /** Set up fixed limiter */
+    /** Set up fixed limiter. */
     if ( this->GetUseFixedImageLimiter() )
     {
       if ( this->GetFixedImageLimiter() == 0 )
@@ -239,6 +239,7 @@ namespace itk
       {
         itkExceptionMacro( << "ImageSampler is not present" );
       }
+
       /** Initialize the Image Sampler. */
       this->m_ImageSampler->SetInput( this->m_FixedImage );
       this->m_ImageSampler->SetMask( this->m_FixedImageMask );
@@ -257,16 +258,17 @@ namespace itk
 		::CheckForBSplineInterpolator(void)
   {
     /** Check if the interpolator is of type BSplineInterpolateImageFunction.
-		* If so, we can make use of its EvaluateDerivatives method.
-		* Otherwise, we use a (forward) finite difference scheme,
-    * which is exactly right for linear interpolation. */
+		 * If so, we can make use of its EvaluateDerivatives method.
+		 * Otherwise, we use a (forward) finite difference scheme,
+     * which is exactly right for linear interpolation.
+     */
 		this->m_InterpolatorIsBSpline = false;
 		BSplineInterpolatorType * testPtr = 
       dynamic_cast<BSplineInterpolatorType *>( this->m_Interpolator.GetPointer() );
 		if ( !testPtr )
     {
       this->m_ForwardDifferenceFilter = ForwardDifferenceFilterType::New();
-      this->m_ForwardDifferenceFilter->SetUseImageSpacing(true);
+      this->m_ForwardDifferenceFilter->SetUseImageSpacing( true );
       this->m_ForwardDifferenceFilter->SetInput( this->m_MovingImage );
       this->m_ForwardDifferenceFilter->Update();
       this->m_GradientImage = this->m_ForwardDifferenceFilter->GetOutput();
@@ -295,13 +297,13 @@ namespace itk
 	template <class TFixedImage, class TMovingImage> 
 		void
 		AdvancedImageToImageMetric<TFixedImage,TMovingImage>
-		::CheckForBSplineTransform(void)
+		::CheckForBSplineTransform( void )
   {
 		this->m_TransformIsBSpline = false;
 		
 		BSplineTransformType * testPtr1 = dynamic_cast<BSplineTransformType *>(
 			this->m_Transform.GetPointer() );
-		if( !testPtr1 )
+		if ( !testPtr1 )
     {
 			this->m_BSplineTransform = 0;
 			itkDebugMacro( "Transform is not BSplineDeformable" );
@@ -320,8 +322,8 @@ namespace itk
 		this->m_TransformIsBSplineCombination = false;
 		
 		BSplineCombinationTransformType * testPtr2 = 
-			dynamic_cast<BSplineCombinationTransformType *>(this->m_Transform.GetPointer() );
-		if( !testPtr2 )
+			dynamic_cast<BSplineCombinationTransformType *>( this->m_Transform.GetPointer() );
+		if ( !testPtr2 )
     {
 			this->m_BSplineCombinationTransform = 0;
 			itkDebugMacro( "Transform is not BSplineCombination" );
@@ -332,12 +334,12 @@ namespace itk
 			this->m_BSplineCombinationTransform = testPtr2;
 
 			/** The current transform in the BSplineCombinationTransform is 
-			 * always a BSplineTransform */
+			 * always a BSplineTransform. */
 			BSplineTransformType * bsplineTransform = 
 				dynamic_cast<BSplineTransformType * >(
 				this->m_BSplineCombinationTransform->GetCurrentTransform() );
 
-			if (!bsplineTransform)
+			if ( !bsplineTransform )
 			{
 				itkExceptionMacro(<< "The BSplineCombinationTransform is not properly configured. The CurrentTransform is not set." );
 			}
@@ -347,7 +349,7 @@ namespace itk
 			itkDebugMacro( "Transform is BSplineCombination" );
     }
 
-    /** Resize the weights and transform index arrays and compute the parameters offset */
+    /** Resize the weights and transform index arrays and compute the parameters offset. */
 		if ( this->m_TransformIsBSpline || this->m_TransformIsBSplineCombination )
     {
 			this->m_BSplineTransformWeights =
@@ -356,22 +358,22 @@ namespace itk
         BSplineTransformIndexArrayType( this->m_NumBSplineWeights );
 			for ( unsigned int j = 0; j < FixedImageDimension; j++ )
       {
-				this->m_BSplineParametersOffset[j] = j * this->m_NumBSplineParametersPerDim; 
+				this->m_BSplineParametersOffset[ j ] = j * this->m_NumBSplineParametersPerDim; 
       }
       this->m_NonZeroJacobianIndices.SetSize(
         FixedImageDimension * this->m_NumBSplineWeights );
       this->m_InternalTransformJacobian.SetSize( 
         FixedImageDimension, FixedImageDimension * this->m_NumBSplineWeights );
-      this->m_InternalTransformJacobian.Fill(0.0);
+      this->m_InternalTransformJacobian.Fill( 0.0 );
     }
     else
     {   
       this->m_NonZeroJacobianIndices.SetSize( this->m_NumberOfParameters );
-      for ( unsigned int i = 0; i < this->m_NumberOfParameters; ++i)
+      for ( unsigned int i = 0; i < this->m_NumberOfParameters; ++i )
       {
-        this->m_NonZeroJacobianIndices[i] = i;
+        this->m_NonZeroJacobianIndices[ i ] = i;
       }
-      m_InternalTransformJacobian.SetSize( 0, 0 );
+      this->m_InternalTransformJacobian.SetSize( 0, 0 );
     }
     		
   } // end CheckForBSplineTransform
@@ -385,7 +387,7 @@ namespace itk
   template <class TFixedImage, class TMovingImage>
     void
     AdvancedImageToImageMetric<TFixedImage,TMovingImage>
-    ::InitializeInternalMasks(void)
+    ::InitializeInternalMasks( void )
   {
     typedef typename MovingImageType::RegionType                 MovingRegionType;
     typedef itk::ImageRegionExclusionIteratorWithIndex<
@@ -399,14 +401,14 @@ namespace itk
       InternalMovingImageMaskType, 
       ErosionKernelType >                                        ErodeImageFilterType;
     
-    /** Check if the user wants to use a differentiable overlap */
-    if ( ! this->m_UseDifferentiableOverlap )
+    /** Check if the user wants to use a differentiable overlap. */
+    if ( !this->m_UseDifferentiableOverlap )
     {
       this->m_InternalMovingImageMask = 0;
       return;
     }
 
-    /** Prepare the internal mask image */
+    /** Prepare the internal mask image. */
     this->m_InternalMovingImageMask = InternalMovingImageMaskType::New();
     this->m_InternalMovingImageMask->SetRegions( 
       this->GetMovingImage()->GetLargestPossibleRegion() );
@@ -416,29 +418,29 @@ namespace itk
     this->m_InternalMovingImageMask->SetSpacing(
       this->GetMovingImage()->GetSpacing() );
 
-    /** Radius to erode masks */
+    /** Radius to erode masks. */
     const unsigned int radius = this->GetMovingImageMaskInterpolationOrder();
 
     /** Determine inner region */
     MovingRegionType innerRegion =
       this->m_InternalMovingImageMask->GetLargestPossibleRegion();
-    for (unsigned int i=0; i < MovingImageDimension; ++i)
+    for ( unsigned int i=0; i < MovingImageDimension; ++i )
     {
-      if ( innerRegion.GetSize()[i] >= 2*radius )
+      if ( innerRegion.GetSize()[ i ] >= 2 * radius )
       {
-        /** region is large enough to crop; adjust size and index */
-        innerRegion.SetSize( i, innerRegion.GetSize()[i] - 2*radius );
-        innerRegion.SetIndex( i, innerRegion.GetIndex()[i] + radius );
+        /** region is large enough to crop; adjust size and index. */
+        innerRegion.SetSize( i, innerRegion.GetSize()[ i ] - 2 * radius );
+        innerRegion.SetIndex( i, innerRegion.GetIndex()[ i ] + radius );
       }
       else
       {
-         innerRegion.SetSize( i, 0);
+         innerRegion.SetSize( i, 0 );
       }
     }
       
     if ( this->GetMovingImageMask() == 0 )
     {
-      /** Fill the internal moving mask with ones */
+      /** Fill the internal moving mask with ones. */
       this->m_InternalMovingImageMask->FillBuffer(
         itk::NumericTraits<InternalMaskPixelType>::One );
     
@@ -446,7 +448,7 @@ namespace itk
         this->m_InternalMovingImageMask->GetLargestPossibleRegion() );
       edgeIterator.SetExclusionRegion( innerRegion );
       
-      /** Set the edges to zero */
+      /** Set the edges to zero. */
       for( edgeIterator.GoToBegin(); ! edgeIterator.IsAtEnd(); ++ edgeIterator )
       {
         edgeIterator.Value() = itk::NumericTraits<InternalMaskPixelType>::Zero;
@@ -455,26 +457,26 @@ namespace itk
     } // end if no moving mask
     else
     {
-      /** Fill the internal moving mask with zeros */
+      /** Fill the internal moving mask with zeros. */
       this->m_InternalMovingImageMask->FillBuffer(
         itk::NumericTraits<InternalMaskPixelType>::Zero );
 
-      MovingIteratorType iterator( this->m_InternalMovingImageMask, innerRegion);
+      MovingIteratorType iterator( this->m_InternalMovingImageMask, innerRegion );
       MovingImagePointType point;
 
-      /** Set the pixel 1 if inside the mask and to 0 if outside */
-      for( iterator.GoToBegin(); ! iterator.IsAtEnd(); ++ iterator )
+      /** Set the pixel 1 if inside the mask and to 0 if outside. */
+      for ( iterator.GoToBegin(); !iterator.IsAtEnd(); ++iterator )
       {
         const MovingImageIndexType & index = iterator.GetIndex();
-        this->m_InternalMovingImageMask->TransformIndexToPhysicalPoint(index, point);
+        this->m_InternalMovingImageMask->TransformIndexToPhysicalPoint( index, point );
         iterator.Value() = static_cast<InternalMaskPixelType>(
-          this->m_MovingImageMask->IsInside(point) );
+          this->m_MovingImageMask->IsInside( point ) );
       }
 
-      /** Erode it with a radius of 2 */
+      /** Erode it with a radius of 2. */
       typename InternalMovingImageMaskType::Pointer tempImage = 0;
       ErosionKernelType kernel;
-      kernel.SetRadius(radius);
+      kernel.SetRadius( radius );
       kernel.CreateStructuringElement();
       typename ErodeImageFilterType::Pointer eroder = ErodeImageFilterType::New();
       eroder->SetKernel( kernel );
@@ -488,7 +490,7 @@ namespace itk
         
     } // end else (if moving mask)
         
-    /** Set the internal mask into the interpolator */
+    /** Set the internal mask into the interpolator. */
     this->m_MovingImageMaskInterpolator->SetInputImage( this->m_InternalMovingImageMask );
  
   } // end InitializeInternalMasks
@@ -506,38 +508,41 @@ namespace itk
     ::EvaluateMovingImageValueAndDerivative( 
     const MovingImagePointType & mappedPoint,
     RealType & movingImageValue,
-    MovingImageDerivativeType * gradient) const
+    MovingImageDerivativeType * gradient ) const
   {
-    /** Check if mapped point inside image buffer */
+    /** Check if mapped point inside image buffer. */
     MovingImageContinuousIndexType cindex;
-    this->m_Interpolator->ConvertPointToContinousIndex( mappedPoint, cindex);
+    this->m_Interpolator->ConvertPointToContinousIndex( mappedPoint, cindex );
     bool sampleOk = this->m_Interpolator->IsInsideBuffer( cindex );
 		if ( sampleOk )
     {
-      /** Compute value and possibly derivative */
+      /** Compute value and possibly derivative. */
       movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
       if ( gradient )
       {    
         if( this->m_InterpolatorIsBSpline )
 		    {
-			    /** Computed moving image gradient using derivative BSpline kernel.*/
+			    /** Computed moving image gradient using derivative BSpline kernel. */
 	    		(*gradient) = 
             this->m_BSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
 		    }
 		    else
 		    {
 			    /** Get the gradient from the precomputed forward difference image, by 
-            * truncating the transformed continuous index */
+           * truncating the transformed continuous index.
+           */
           MovingImageIndexType index;
 				  for ( unsigned int j = 0; j < MovingImageDimension; j++ )
 				  {
   					index[ j ] = static_cast<long>( cindex[ j ] );
           }
           (*gradient) = this->m_GradientImage->GetPixel( index );
-			  } 
+			  }
       } // end if gradient
     } // end if sampleOk
+
     return sampleOk;
+
 	} // end EvaluateMovingImageValueAndDerivative
 
 
@@ -557,14 +562,14 @@ namespace itk
 		MovingImagePointType & mappedPoint ) const
 	{
     bool sampleOk = true;
-		if ( !(this->m_TransformIsBSpline) && !(this->m_TransformIsBSplineCombination) )
+		if ( !this->m_TransformIsBSpline && !this->m_TransformIsBSplineCombination )
 		{
 			mappedPoint = this->m_Transform->TransformPoint( fixedImagePoint );
       sampleOk = true;      
 		}
 		else
 		{
-			if (this->m_TransformIsBSpline)
+			if ( this->m_TransformIsBSpline )
 			{
 				this->m_BSplineTransform->TransformPoint( 
           fixedImagePoint,
@@ -573,7 +578,7 @@ namespace itk
 					this->m_BSplineTransformIndices,
 					sampleOk );
 			}
-			else if (this->m_TransformIsBSplineCombination)
+			else if ( this->m_TransformIsBSplineCombination )
 			{
 				this->m_BSplineCombinationTransform->TransformPoint( 
           fixedImagePoint,
@@ -583,7 +588,9 @@ namespace itk
 				  sampleOk );
 			}
 		}
+
     return sampleOk;
+
 	} // end TransformPoint
 
 
@@ -597,7 +604,7 @@ namespace itk
 		::EvaluateTransformJacobian( 
 		const FixedImagePointType & fixedImagePoint) const
   {
-    if( !(this->m_TransformIsBSpline) && !(this->m_TransformIsBSplineCombination) )
+    if( !this->m_TransformIsBSpline && !this->m_TransformIsBSplineCombination )
 		{
 			/** Generic version which works for all transforms. */
 			return this->m_Transform->GetJacobian( fixedImagePoint );
@@ -612,25 +619,27 @@ namespace itk
        * m_NonZeroJacobianIndices have already been set; Also we assume
        * that the InternalTransformJacobian is not 'touched' by other
        * functions (some elements always stay zero). */      
-			for( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
+			for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
 			{
-        for( unsigned int mu = 0; mu < this->m_NumBSplineWeights; mu++ )
+        for ( unsigned int mu = 0; mu < this->m_NumBSplineWeights; mu++ )
 				{
 				  /* The array weights contains the Jacobian values in a 1-D array 
 					 * (because for each parameter the Jacobian is non-zero in only 1 of the
 					 * possible dimensions) which is multiplied by the moving image gradient. */
-          this->m_InternalTransformJacobian[dim][i] = this->m_BSplineTransformWeights[mu];
+          this->m_InternalTransformJacobian[ dim ][ i ] = this->m_BSplineTransformWeights[ mu ];
 				
           /** The parameter number to which this partial derivative corresponds */
 					const unsigned int parameterNumber = 
-            this->m_BSplineTransformIndices[mu] + this->m_BSplineParametersOffset[dim];
-          this->m_NonZeroJacobianIndices[i] = parameterNumber;
+            this->m_BSplineTransformIndices[ mu ] + this->m_BSplineParametersOffset[ dim ];
+          this->m_NonZeroJacobianIndices[ i ] = parameterNumber;
 
           /** Go to next column in m_InternalTransformJacobian */
           ++i;
   			} //end mu for loop
 			} //end dim for loop
+
       return this->m_InternalTransformJacobian;
+
 		} // end if-block transform is BSpline
 
   } // end EvaluateTransformJacobian
@@ -651,28 +660,28 @@ namespace itk
   {
     typedef typename MovingImageMaskDerivativeType::ValueType DerivativeValueType;
        
-    /** Compute the value and derivative of the mask */
+    /** Compute the value and derivative of the mask. */
 
     if ( this->m_UseDifferentiableOverlap )
     {
       /** NB: a spelling error in the itkImageFunction class! Continous... */
       MovingImageContinuousIndexType cindex;
-      this->m_MovingImageMaskInterpolator->ConvertPointToContinousIndex( point, cindex);
+      this->m_MovingImageMaskInterpolator->ConvertPointToContinousIndex( point, cindex );
 
       if ( this->m_MovingImageMaskInterpolator->IsInsideBuffer( cindex ) )
       {
         value = static_cast<RealType>(
-          this->m_MovingImageMaskInterpolator->EvaluateAtContinuousIndex(cindex) );
-        if (derivative)
+          this->m_MovingImageMaskInterpolator->EvaluateAtContinuousIndex( cindex ) );
+        if ( derivative )
         {
           (*derivative) = this->m_MovingImageMaskInterpolator->
-            EvaluateDerivativeAtContinuousIndex(cindex);
+            EvaluateDerivativeAtContinuousIndex( cindex );
         }
       }
       else
       {
         value = 0.0;
-        if (derivative)
+        if ( derivative )
         {
           derivative->Fill( itk::NumericTraits<DerivativeValueType>::Zero );
         }
@@ -690,7 +699,7 @@ namespace itk
       {
         value = 1.0;
       }
-      if (derivative)
+      if ( derivative )
       {
         derivative->Fill( itk::NumericTraits<DerivativeValueType>::Zero );
       }
@@ -706,7 +715,7 @@ namespace itk
 		void
 		AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     ::CheckNumberOfSamples(
-      unsigned long wanted, unsigned long found, double sumOfMaskValues) const
+      unsigned long wanted, unsigned long found, double sumOfMaskValues ) const
   {
     const double smallNumber2 = 1e-10;
     if( found < wanted * this->GetRequiredRatioOfValidSamples() || sumOfMaskValues < smallNumber2 )
