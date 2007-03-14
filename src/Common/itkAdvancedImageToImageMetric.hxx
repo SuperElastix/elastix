@@ -265,25 +265,39 @@ namespace itk
 		this->m_InterpolatorIsBSpline = false;
 		BSplineInterpolatorType * testPtr = 
       dynamic_cast<BSplineInterpolatorType *>( this->m_Interpolator.GetPointer() );
-		if ( !testPtr )
+    if ( testPtr )
     {
-      this->m_ForwardDifferenceFilter = ForwardDifferenceFilterType::New();
-      this->m_ForwardDifferenceFilter->SetUseImageSpacing( true );
-      this->m_ForwardDifferenceFilter->SetInput( this->m_MovingImage );
-      this->m_ForwardDifferenceFilter->Update();
-      this->m_GradientImage = this->m_ForwardDifferenceFilter->GetOutput();
-		
-			this->m_BSplineInterpolator = 0;
-			itkDebugMacro( "Interpolator is not BSpline" );
-    } 
-		else
-    {
-      this->m_ForwardDifferenceFilter = 0;
-      this->m_GradientImage = 0;
       this->m_InterpolatorIsBSpline = true;
-			this->m_BSplineInterpolator = testPtr;
-			itkDebugMacro( "Interpolator is BSpline" );
+      this->m_BSplineInterpolator = testPtr;
+      itkDebugMacro( "Interpolator is BSpline" );
     }
+    else
+    {
+      this->m_BSplineInterpolator = 0;
+			itkDebugMacro( "Interpolator is not BSpline" );
+    }
+
+    /** Don't overwrite the gradient image if GetComputeGradient() == true.
+     * Otherwise we can use a forward difference derivative, or the derivative
+     * provided by the BSpline interpolator.
+     */
+    if ( !this->GetComputeGradient() )
+    {
+      if ( !this->m_InterpolatorIsBSpline )
+      {
+        this->m_ForwardDifferenceFilter = ForwardDifferenceFilterType::New();
+        this->m_ForwardDifferenceFilter->SetUseImageSpacing( true );
+        this->m_ForwardDifferenceFilter->SetInput( this->m_MovingImage );
+        this->m_ForwardDifferenceFilter->Update();
+        this->m_GradientImage = this->m_ForwardDifferenceFilter->GetOutput();
+      } 
+      else
+      {
+        this->m_ForwardDifferenceFilter = 0;
+        this->m_GradientImage = 0;
+      }
+    }
+
   } // end CheckForBSplineInterpolator
 
   
@@ -520,24 +534,39 @@ namespace itk
       movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
       if ( gradient )
       {    
-        if( this->m_InterpolatorIsBSpline )
-		    {
-			    /** Computed moving image gradient using derivative BSpline kernel. */
-	    		(*gradient) = 
-            this->m_BSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
-		    }
-		    else
-		    {
-			    /** Get the gradient from the precomputed forward difference image, by 
-           * truncating the transformed continuous index.
+        if ( !this->GetComputeGradient() )
+        {
+          if ( this->m_InterpolatorIsBSpline )
+          {
+            /** Computed moving image gradient using derivative BSpline kernel. */
+            (*gradient) = 
+              this->m_BSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
+          }
+          else
+          {
+            /** Get the gradient from the precomputed forward difference image, by 
+             * truncating the transformed continuous index.
+             */
+            MovingImageIndexType index;
+            for ( unsigned int j = 0; j < MovingImageDimension; j++ )
+            {
+              index[ j ] = static_cast<long>( cindex[ j ] );
+            }
+            (*gradient) = this->m_GradientImage->GetPixel( index );
+          }
+        }
+        else
+        {
+          /** Get the gradient by NearestNeighboorInterpolation:
+           * which is equivalent to round up the point components.
            */
           MovingImageIndexType index;
-				  for ( unsigned int j = 0; j < MovingImageDimension; j++ )
-				  {
-  					index[ j ] = static_cast<long>( cindex[ j ] );
+          for ( unsigned int j = 0; j < MovingImageDimension; j++ )
+          {
+            index[ j ] = static_cast<long>( vnl_math_rnd( cindex[ j ] ) );
           }
           (*gradient) = this->m_GradientImage->GetPixel( index );
-			  }
+        }
       } // end if gradient
     } // end if sampleOk
 
@@ -656,7 +685,7 @@ namespace itk
     ::EvaluateMovingMaskValueAndDerivative(
       const MovingImagePointType & point,
       RealType & value,
-      MovingImageMaskDerivativeType * derivative) const
+      MovingImageMaskDerivativeType * derivative ) const
   {
     typedef typename MovingImageMaskDerivativeType::ValueType DerivativeValueType;
        
@@ -689,7 +718,7 @@ namespace itk
     }
     else
     {
-      /** Just ignore the derivative of the mask */
+      /** Just ignore the derivative of the mask. */
       if ( this->m_MovingImageMask.IsNotNull() )
       {
         value = static_cast<RealType>(
@@ -718,7 +747,7 @@ namespace itk
       unsigned long wanted, unsigned long found, double sumOfMaskValues ) const
   {
     const double smallNumber2 = 1e-10;
-    if( found < wanted * this->GetRequiredRatioOfValidSamples() || sumOfMaskValues < smallNumber2 )
+    if ( found < wanted * this->GetRequiredRatioOfValidSamples() || sumOfMaskValues < smallNumber2 )
     {
       itkExceptionMacro( "Too many samples map outside moving image buffer: "
         << found << " / " << wanted << std::endl );
