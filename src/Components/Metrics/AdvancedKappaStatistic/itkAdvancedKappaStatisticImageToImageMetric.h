@@ -1,0 +1,212 @@
+
+#ifndef __itkAdvancedKappaStatisticImageToImageMetric_h
+#define __itkAdvancedKappaStatisticImageToImageMetric_h
+
+#include "itkAdvancedImageToImageMetric.h"
+
+namespace itk
+{
+
+/** \class AdvancedKappaStatisticImageToImageMetric
+ * \brief Computes similarity between two objects to be registered
+ *
+ * This Class is templated over the type of the fixed and moving
+ * images to be compared.  The metric here is designed for matching 
+ * pixels in two images with the same exact value.  Only one value can 
+ * be considered (the default is 255) and can be specified with the 
+ * SetForegroundValue method.  In the computation of the metric, only 
+ * foreground pixels are considered.  The metric value is given 
+ * by 2*|A&B|/(|A|+|B|), where A is the foreground region in the moving 
+ * image, B is the foreground region in the fixed image, & is intersection, 
+ * and |.| indicates the area of the enclosed set.  The metric is 
+ * described in "Morphometric Analysis of White Matter Lesions in MR 
+ * Images: Method and Validation", A. P. Zijdenbos, B. M. Dawant, R. A. 
+ * Margolin, A. C. Palmer.
+ *
+ * This metric is especially useful when considering the similarity between
+ * binary images.  Given the nature of binary images, a nearest neighbor 
+ * interpolator is the preferred interpolator.
+ *
+ * Metric values range from 0.0 (no foreground alignment) to 1.0
+ * (perfect foreground alignment).  When dealing with optimizers that can
+ * only minimize a metric, use the ComplementOn() method.
+ * 
+ *
+ * \ingroup RegistrationMetrics
+ * \ingroup Metrics
+ */
+
+template < class TFixedImage, class TMovingImage > 
+class AdvancedKappaStatisticImageToImageMetric : 
+    public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
+{
+public:
+
+  /** Standard class typedefs. */
+  typedef AdvancedKappaStatisticImageToImageMetric		Self;
+  typedef AdvancedImageToImageMetric<
+    TFixedImage, TMovingImage >                   Superclass;
+  typedef SmartPointer<Self>                      Pointer;
+  typedef SmartPointer<const Self>                ConstPointer;
+
+  /** Method for creation through the object factory. */
+  itkNewMacro( Self );
+ 
+  /** Run-time type information (and related methods). */
+  itkTypeMacro( AdvancedKappaStatisticImageToImageMetric, AdvancedImageToImageMetric );
+
+  /** Typedefs from the superclass. */
+  typedef typename 
+    Superclass::CoordinateRepresentationType              CoordinateRepresentationType;
+  typedef typename Superclass::MovingImageType            MovingImageType;
+  typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
+  typedef typename Superclass::MovingImageConstPointer    MovingImageConstPointer;
+  typedef typename Superclass::FixedImageType             FixedImageType;
+  typedef typename Superclass::FixedImageConstPointer     FixedImageConstPointer;
+  typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
+  typedef typename Superclass::TransformType              TransformType;
+  typedef typename Superclass::TransformPointer           TransformPointer;
+  typedef typename Superclass::InputPointType             InputPointType;
+  typedef typename Superclass::OutputPointType            OutputPointType;
+  typedef typename Superclass::TransformParametersType    TransformParametersType;
+  typedef typename Superclass::TransformJacobianType      TransformJacobianType;
+  typedef typename Superclass::InterpolatorType           InterpolatorType;
+  typedef typename Superclass::InterpolatorPointer        InterpolatorPointer;
+  typedef typename Superclass::RealType                   RealType;
+  typedef typename Superclass::GradientPixelType          GradientPixelType;
+  typedef typename Superclass::GradientImageType          GradientImageType;
+  typedef typename Superclass::GradientImagePointer       GradientImagePointer;
+  typedef typename Superclass::GradientImageFilterType    GradientImageFilterType;
+  typedef typename Superclass::GradientImageFilterPointer GradientImageFilterPointer;
+  typedef typename Superclass::FixedImageMaskType         FixedImageMaskType;
+  typedef typename Superclass::FixedImageMaskPointer      FixedImageMaskPointer;
+  typedef typename Superclass::MovingImageMaskType        MovingImageMaskType;
+  typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
+  typedef typename Superclass::MeasureType                MeasureType;
+  typedef typename Superclass::DerivativeType             DerivativeType;
+  typedef typename Superclass::ParametersType             ParametersType;
+  typedef typename Superclass::FixedImagePixelType        FixedImagePixelType;
+  typedef typename Superclass::MovingImageRegionType      MovingImageRegionType;
+  typedef typename Superclass::ImageSamplerType           ImageSamplerType;
+  typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
+  typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
+  typedef typename 
+    Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
+  typedef typename Superclass::InternalMaskPixelType      InternalMaskPixelType;
+  typedef typename
+    Superclass::InternalMovingImageMaskType               InternalMovingImageMaskType;
+  typedef typename 
+    Superclass::MovingImageMaskInterpolatorType           MovingImageMaskInterpolatorType;
+  typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
+  typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
+  typedef typename
+    Superclass::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
+  typedef typename
+    Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
+
+	/** The fixed image dimension. */
+	itkStaticConstMacro( FixedImageDimension, unsigned int,
+		FixedImageType::ImageDimension );
+
+	/** The moving image dimension. */
+	itkStaticConstMacro( MovingImageDimension, unsigned int,
+		MovingImageType::ImageDimension );
+  
+  /** Get the value for single valued optimizers. */
+	virtual MeasureType GetValue( const TransformParametersType & parameters ) const;
+
+  /** Get the derivatives of the match measure. */
+  virtual void GetDerivative( const TransformParametersType & parameters,
+    DerivativeType & derivative ) const;
+
+  /** Get value and derivatives for multiple valued optimizers. */
+  virtual void GetValueAndDerivative( const TransformParametersType & parameters,
+		MeasureType& Value, DerivativeType& Derivative ) const;
+
+  /** Computes the moving gradient image dM/dx. */
+  void ComputeGradient();
+
+  /** This method allows the user to set the foreground value. The default value is 1.0. */
+  itkSetMacro( ForegroundValue, RealType ); 
+  itkGetConstMacro( ForegroundValue, RealType );
+
+  /** If this boolean is set to true, everything that is nonzero is treated as
+   * the object. The default is false.
+   */
+  itkSetMacro( ForegroundIsNonZero, bool );
+  itkGetConstMacro( ForegroundIsNonZero, bool );
+  itkBooleanMacro( ForegroundIsNonZero );
+
+  /** Set/Get whether this metric returns 2*|A&B|/(|A|+|B|) 
+   * (ComplementOff, the default) or 1.0 - 2*|A&B|/(|A|+|B|) 
+   * (ComplementOn). When using an optimizer that minimizes
+   * metric values use ComplementOn().  */
+  itkSetMacro( Complement, bool );
+  itkGetConstMacro( Complement, bool );
+  itkBooleanMacro( Complement );
+   
+protected:
+  AdvancedKappaStatisticImageToImageMetric();
+  virtual ~AdvancedKappaStatisticImageToImageMetric() {};
+	void PrintSelf( std::ostream& os, Indent indent ) const;
+
+  /** Protected Typedefs ******************/
+
+  /** Typedefs inherited from superclass */
+  typedef typename Superclass::FixedImageIndexType                FixedImageIndexType;
+	typedef typename Superclass::FixedImageIndexValueType           FixedImageIndexValueType;
+	typedef typename Superclass::MovingImageIndexType               MovingImageIndexType;
+	typedef typename Superclass::FixedImagePointType                FixedImagePointType;
+	typedef typename Superclass::MovingImagePointType               MovingImagePointType;
+  typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
+  typedef	typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
+  typedef typename Superclass::ForwardDifferenceFilterType        ForwardDifferenceFilterType;
+  typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
+  typedef typename Superclass::BSplineTransformType               BSplineTransformType;
+  typedef typename Superclass::BSplineTransformWeightsType        BSplineTransformWeightsType;
+	typedef typename Superclass::BSplineTransformIndexArrayType     BSplineTransformIndexArrayType;
+	typedef typename Superclass::BSplineCombinationTransformType    BSplineCombinationTransformType;
+ 	typedef typename Superclass::BSplineParametersOffsetType        BSplineParametersOffsetType;
+  typedef typename Superclass::ParameterIndexArrayType            ParameterIndexArrayType;
+  typedef typename Superclass::MovingImageMaskDerivativeType      MovingImageMaskDerivativeType;
+  
+  /** Computes the innerproduct of transform jacobian with moving image gradient
+   * and transform jacobian with the derivative of the movingMask
+   * The results are stored in imageJacobian and maskJacobian, which are supposed
+   * to have the right size (same length as jacobian's number of columns). */
+  void EvaluateMovingImageAndTransformJacobianInnerProduct(
+		const TransformJacobianType & jacobian, 
+		const MovingImageDerivativeType & movingImageDerivative,
+    DerivativeType & innerProduct ) const;
+
+  /** Compute a pixel's contribution to the measure and derivatives;
+   * Called by GetValueAndDerivative(). */
+  void UpdateValueAndDerivativeTerms( 
+    const RealType fixedImageValue,
+    const RealType movingImageValue,
+    MeasureType & fixedForegroundArea,
+    MeasureType & movingForegroundArea,
+    MeasureType & intersection,
+    const DerivativeType & imageJacobian,
+    DerivativeType & sum1,
+    DerivativeType & sum2 ) const;
+ 
+private:
+  AdvancedKappaStatisticImageToImageMetric(const Self&); //purposely not implemented
+  void operator=(const Self&); //purposely not implemented
+
+  RealType   m_ForegroundValue;
+  bool       m_Complement;
+  bool       m_ForegroundIsNonZero;
+
+
+}; // end class AdvancedKappaStatisticImageToImageMetric
+
+} // end namespace itk
+
+#ifndef ITK_MANUAL_INSTANTIATION
+#include "itkAdvancedKappaStatisticImageToImageMetric.hxx"
+#endif
+
+#endif // end #ifndef __itkAdvancedKappaStatisticImageToImageMetric_h
+
