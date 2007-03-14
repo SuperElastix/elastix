@@ -107,7 +107,7 @@ namespace itk
       DerivativeIteratorType imjac = imageJacobian.begin();
       DerivativeIteratorType maskjac = maskJacobian.begin();
       
-      for ( unsigned int mu = 0; mu < sizeImageJacobian ; mu++ )
+      for ( unsigned int mu = 0; mu < sizeImageJacobian; mu++ )
       {
         (*imjac) += (*jac) * imDeriv;
         (*maskjac) += (*jac) * maskDeriv;
@@ -373,7 +373,7 @@ namespace itk
         	  
 		/** Calculate the contributions to the derivatives with respect to each parameter. */
     const RealType movmask_diff_2 = movingMaskValue * diff * 2.0;
-    if( this->m_NonZeroJacobianIndices.GetSize() == this->m_NumberOfParameters )
+    if ( this->m_NonZeroJacobianIndices.GetSize() == this->m_NumberOfParameters )
 		{
       /** Loop over all jacobians. */
       typename DerivativeType::const_iterator imjacit = imageJacobian.begin();

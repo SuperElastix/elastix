@@ -127,6 +127,7 @@ using namespace itk;
     this->GetConfiguration()->ReadParameter( useFiniteDifferenceDerivative,
       "FiniteDifferenceDerivative", this->GetComponentLabel(), level, 0 );
     this->SetUseFiniteDifferenceDerivative( useFiniteDifferenceDerivative );
+
     /** Prepare for computing the perturbation gain c_k */
     this->SetCurrentIteration( 0 );
     if ( useFiniteDifferenceDerivative )
