@@ -500,6 +500,7 @@ namespace itk
           double plusVal  = static_cast<double>( this->m_MovingImage->GetPixel( plusIndex ) );
 
           /** Calculate the gradient. */
+          // \todo also use the ForegroundIsNonZero boolean.
           if ( minusVal != this->m_ForegroundValue && plusVal == this->m_ForegroundValue )
           {
             tempGradPixel[ i ] = 1.0;
