@@ -20,8 +20,8 @@ using namespace itk;
 	 *		<tt>(%Transform "EulerTransform")</tt>
 	 * \parameter Scales: the scale factor between the rotations and translations,
 	 *		used in the optimizer. \n
-	 *		example: <tt>(Scaler 200000.0)</tt> \n
-	 *		example: <tt>(Scaler 100000.0 60000.0 ... 80000.0)</tt> \n
+	 *		example: <tt>(Scales 200000.0)</tt> \n
+	 *		example: <tt>(Scales 100000.0 60000.0 ... 80000.0)</tt> \n
 	 *    If only one argument is given, that factor is used for the rotations.
 	 *		If more than one argument is given, then the number of arguments should be
 	 *		equal to the number of parameters: for each parameter its scale factor.
