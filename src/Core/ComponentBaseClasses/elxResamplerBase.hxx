@@ -216,9 +216,12 @@ namespace elastix
 		/** Make sure the resampler is updated. */
 		this->GetAsITKBaseType()->Modified();
 
-    /** Read output pixeltype from parameter file */
+    /** Read output pixeltype from parameter file. Replace possible " " with "_". */
     std::string resultImagePixelType = "short";
     this->m_Configuration->ReadParameter(	resultImagePixelType, "ResultImagePixelType", 0, true );
+    std::basic_string<char>::size_type pos = resultImagePixelType.find( " " );
+    const std::basic_string<char>::size_type npos = std::basic_string<char>::npos;
+    if ( pos != npos ) resultImagePixelType.replace( pos, 1, "_" );
     
     /** Typedef's for writing the output image. */
 		typedef ImageFileCastWriter< OutputImageType >		WriterType;
