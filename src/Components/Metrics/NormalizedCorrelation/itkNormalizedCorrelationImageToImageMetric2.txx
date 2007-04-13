@@ -137,7 +137,7 @@ namespace itk
 		}
 
 		/** The denominator of the NC. */
-		const RealType denom = -1.0 * sqrt( sff * smm );
+		const RealType denom = -1.0 * vcl_sqrt( sff * smm );
 
 		/** Calculate the measure value. */
 		if ( this->m_NumberOfPixelsCounted > 0 && denom < -1e-14 )
