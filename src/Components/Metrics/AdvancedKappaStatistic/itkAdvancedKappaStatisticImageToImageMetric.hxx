@@ -327,26 +327,18 @@ namespace itk
     value = measure;
 
     /** Calculate the derivative. */
-    if ( !this->m_Complement )
+    double direction = 1.0;
+    if ( this->m_Complement )
     {
-      if ( areaSum > 1e-14 )
-      {
-        for ( unsigned int par = 0; par < this->m_NumberOfParameters; par++ )
-        {
-          derivative[ par ] = -( areaSum * sum1[ par ] - 2.0 * intersection * sum2[ par ] )
-            / ( areaSum * areaSum );
-        }
-      }
+      direction = -1.0;
     }
-    else
+    
+    if ( areaSum > 1e-14 )
     {
-      if ( areaSum > 1e-14 )
+      for ( unsigned int par = 0; par < this->m_NumberOfParameters; par++ )
       {
-        for ( unsigned int par = 0; par < this->m_NumberOfParameters; par++ )
-        {
-          derivative[ par ] = ( areaSum * sum1[ par ] - 2.0 * intersection * sum2[ par ] )
-            / ( areaSum * areaSum );
-        }
+        derivative[ par ] = direction * ( areaSum * sum1[ par ] - 2.0 * intersection * sum2[ par ] )
+          / ( areaSum * areaSum );
       }
     }
 

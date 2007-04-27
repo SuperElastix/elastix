@@ -35,7 +35,7 @@ using namespace itk;
 		::BeforeRegistration(void)
 	{
     /** Get and set taking the complement. */
-    bool useComplement = false;
+    bool useComplement = true;
     this->GetConfiguration()->ReadParameter( useComplement,
       "UseComplement", this->GetComponentLabel(), 0, -1 );
     this->SetComplement( useComplement );
