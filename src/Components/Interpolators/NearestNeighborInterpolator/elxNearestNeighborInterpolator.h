@@ -13,7 +13,8 @@ using namespace itk;
 	 * \class NearestNeighborInterpolator
 	 * \brief An interpolator based on the itkNearestNeighborInterpolateImageFunction.
 	 *
-	 * This interpolator interpolates images using linear interpolation.
+	 * This interpolator interpolates images using nearest neighbour interpolation.
+   * The image derivatives are computed using a central difference scheme.
 	 *
 	 * The parameters used in this class are:
 	 * \parameter Interpolator: Select this interpolator as follows:\n

@@ -29,7 +29,7 @@ namespace itk
 
     this->m_BSplineInterpolator = 0;
 		this->m_InterpolatorIsBSpline = false;
-    this->m_ForwardDifferenceFilter = 0;
+    this->m_CentralDifferenceGradientFilter = 0;
     
  		this->m_BSplineTransform = 0;
 		this->m_BSplineCombinationTransform = 0;
@@ -259,8 +259,8 @@ namespace itk
   {
     /** Check if the interpolator is of type BSplineInterpolateImageFunction.
 		 * If so, we can make use of its EvaluateDerivatives method.
-		 * Otherwise, we use a (forward) finite difference scheme,
-     * which is exactly right for linear interpolation.
+		 * Otherwise, we precompute the gradients using a central difference scheme,
+     * and do evaluate the gradient using nearest neighbour interpolation
      */
 		this->m_InterpolatorIsBSpline = false;
 		BSplineInterpolatorType * testPtr = 
@@ -285,15 +285,15 @@ namespace itk
     {
       if ( !this->m_InterpolatorIsBSpline )
       {
-        this->m_ForwardDifferenceFilter = ForwardDifferenceFilterType::New();
-        this->m_ForwardDifferenceFilter->SetUseImageSpacing( true );
-        this->m_ForwardDifferenceFilter->SetInput( this->m_MovingImage );
-        this->m_ForwardDifferenceFilter->Update();
-        this->m_GradientImage = this->m_ForwardDifferenceFilter->GetOutput();
+        this->m_CentralDifferenceGradientFilter = CentralDifferenceGradientFilterType::New();
+        this->m_CentralDifferenceGradientFilter->SetUseImageSpacing( true );
+        this->m_CentralDifferenceGradientFilter->SetInput( this->m_MovingImage );
+        this->m_CentralDifferenceGradientFilter->Update();
+        this->m_GradientImage = this->m_CentralDifferenceGradientFilter->GetOutput();
       } 
       else
       {
-        this->m_ForwardDifferenceFilter = 0;
+        this->m_CentralDifferenceGradientFilter = 0;
         this->m_GradientImage = 0;
       }
     }
@@ -533,33 +533,17 @@ namespace itk
       /** Compute value and possibly derivative. */
       movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
       if ( gradient )
-      {    
-        if ( !this->GetComputeGradient() )
+      { 
+        if ( this->m_InterpolatorIsBSpline && !this->GetComputeGradient() )
         {
-          if ( this->m_InterpolatorIsBSpline )
-          {
-            /** Computed moving image gradient using derivative BSpline kernel. */
-            (*gradient) = 
-              this->m_BSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
-          }
-          else
-          {
-            /** Get the gradient from the precomputed forward difference image, by 
-             * truncating the transformed continuous index.
-             */
-            MovingImageIndexType index;
-            for ( unsigned int j = 0; j < MovingImageDimension; j++ )
-            {
-              index[ j ] = static_cast<long>( cindex[ j ] );
-            }
-            (*gradient) = this->m_GradientImage->GetPixel( index );
-          }
+          /** Computed moving image gradient using derivative BSpline kernel. */
+          (*gradient) = 
+            this->m_BSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
         }
         else
         {
-          /** Get the gradient by NearestNeighboorInterpolation:
-           * which is equivalent to round up the point components.
-           */
+          /** Get the gradient by NearestNeighboorInterpolation of the gradient image.
+           * It is assumed that the gradient image is computed.  */
           MovingImageIndexType index;
           for ( unsigned int j = 0; j < MovingImageDimension; j++ )
           {

@@ -323,18 +323,18 @@ namespace itk
 			this->m_Interpolator.GetPointer() );
 		if ( !testPtr )
     {
-      this->m_ForwardDifferenceFilter = ForwardDifferenceFilterType::New();
-      this->m_ForwardDifferenceFilter->SetUseImageSpacing(true);
-      this->m_ForwardDifferenceFilter->SetInput( this->m_MovingImage );
-      this->m_ForwardDifferenceFilter->Update();
-      this->m_GradientImage = this->m_ForwardDifferenceFilter->GetOutput();
+      this->m_CentralDifferenceGradientFilter = CentralDifferenceGradientFilterType::New();
+      this->m_CentralDifferenceGradientFilter->SetUseImageSpacing(true);
+      this->m_CentralDifferenceGradientFilter->SetInput( this->m_MovingImage );
+      this->m_CentralDifferenceGradientFilter->Update();
+      this->m_GradientImage = this->m_CentralDifferenceGradientFilter->GetOutput();
 		
 			this->m_BSplineInterpolator = 0;
 			itkDebugMacro( "Interpolator is not BSpline" );
     } 
 		else
     {
-      this->m_ForwardDifferenceFilter = 0;
+      this->m_CentralDifferenceGradientFilter = 0;
       this->m_GradientImage = 0;
       this->m_InterpolatorIsBSpline = true;
 			this->m_BSplineInterpolator = testPtr;

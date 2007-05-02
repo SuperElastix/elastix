@@ -4,7 +4,7 @@
 #include "itkImageToImageMetric.h"
 
 #include "itkImageSamplerBase.h"
-#include "itkForwardGradientImageFilter.h"
+#include "itkGradientImageFilter.h"
 #include "itkBSplineInterpolateImageFunction.h"
 #include "itkBSplineDeformableTransform.h"
 #include "itkBSplineResampleImageFunction.h"
@@ -209,8 +209,8 @@ protected:
 	typedef	BSplineInterpolateImageFunction<
     MovingImageType, CoordinateRepresentationType>              BSplineInterpolatorType;
   typedef typename BSplineInterpolatorType::CovariantVectorType MovingImageDerivativeType;
-  typedef ForwardGradientImageFilter<
-    MovingImageType, RealType, RealType>                        ForwardDifferenceFilterType;
+  typedef GradientImageFilter<
+    MovingImageType, RealType, RealType>                        CentralDifferenceGradientFilterType;
       
   /** Typedefs for support of sparse jacobians and BSplineTransforms. */
   enum { DeformationSplineOrder = 3 };
@@ -244,7 +244,7 @@ protected:
   /** Variables for image derivative computation. */
 	bool m_InterpolatorIsBSpline;
 	typename BSplineInterpolatorType::Pointer             m_BSplineInterpolator;
-	typename ForwardDifferenceFilterType::Pointer         m_ForwardDifferenceFilter;
+	typename CentralDifferenceGradientFilterType::Pointer m_CentralDifferenceGradientFilter;
 
   /** Variables used when the transform is a bspline transform. */
   bool m_TransformIsBSpline;

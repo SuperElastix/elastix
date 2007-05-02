@@ -14,6 +14,24 @@ using namespace itk;
 	 * \brief An interpolator based on the itkLinearInterpolateImageFunction.
 	 *
 	 * This interpolator interpolates images using linear interpolation.
+   * In principle, this is the same as using the BSplineInterpolator with
+   * the setting (BSplineInterpolationOrder 1). However, the LinearInterpolator
+   * is slightly faster. If you use an optimizer that does not use the 
+   * image derivatives (such as the FullSearch, or the 
+   * FiniteDifferenceGradientDescent) you can safely use the LinearInterpolator.
+   * With other optimizer that do use the image derivatives, you may also use
+   * the LinearInterpolator, but the results may be slightly different than
+   * those obtained with the BSplineInterpolator. This is due to a different
+   * implementation of the computation of the image derivatives. The
+   * BSplineInterpolator does it correct. The LinearInterpolator uses a 
+   * central differencing scheme in combination with a nearest neighbor
+   * interpolation, which is not entirely consistent with the linear image
+   * model that is assumed, but it is somewhat faster, and works reasonable.
+   *
+   * So: if you are in a hurry, you may use the LinearInterpolator, but keep
+   * in mind that you are doing something tricky. Once again, with optimizers 
+   * that do not use image derivatives, the results should be exactly equal 
+   * to those obtained using a BSplineInterpolator.
 	 *
 	 * The parameters used in this class are:
 	 * \parameter Interpolator: Select this interpolator as follows:\n
