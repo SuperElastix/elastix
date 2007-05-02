@@ -1,7 +1,7 @@
 #ifndef __elxMultiResolutionRegistration_H__
 #define __elxMultiResolutionRegistration_H__
 
-#include "itkMultiResolutionImageRegistrationMethod.h"
+#include "itkMultiResolutionImageRegistrationMethod2.h"
 
 #include "elxIncludes.h"
 

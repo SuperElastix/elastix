@@ -1,7 +1,7 @@
 #ifndef __itkMultiMetricMultiResolutionImageRegistrationMethod_h
 #define __itkMultiMetricMultiResolutionImageRegistrationMethod_h
 
-#include "itkMultiResolutionImageRegistrationMethod.h"
+#include "itkMultiResolutionImageRegistrationMethod2.h"
 #include "itkCombinationImageToImageMetric.h"
 #include <vector>
 

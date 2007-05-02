@@ -3,6 +3,10 @@
 
 #include "itkMultiMetricMultiResolutionImageRegistrationMethod.h"
 
+#include "itkContinuousIndex.h"
+#include "vnl/vnl_math.h"
+
+
 /** macro that implements the set methods */
 #define itkImplementationSetMacro(_name,_type) \
   template < typename TFixedImage, typename TMovingImage > \
@@ -338,35 +342,54 @@ namespace itk
         }
         SizeType  inputSize  = fixedImageRegion.GetSize();
         IndexType inputStart = fixedImageRegion.GetIndex();
+        IndexType inputEnd = inputStart;
+        for ( unsigned int dim = 0; dim < TFixedImage::ImageDimension; dim++)
+        {
+          inputEnd[dim] += ( inputSize[dim]-1 );
+        }
 
         this->m_FixedImageRegionPyramids[i].reserve( this->GetNumberOfLevels() );
         this->m_FixedImageRegionPyramids[i].resize( this->GetNumberOfLevels() );
         
         // Compute the FixedImageRegion corresponding to each level of the 
-        // pyramid. This uses the same algorithm of the ShrinkImageFilter 
-        // since the regions should be compatible. 
-        // \todo: better would be to set the region corners to the same 
-        // physical coordinates as the fixed image region.
+        // pyramid. 
+        //
+        // In the ITK implementation this uses the same algorithm of the ShrinkImageFilter 
+        // since the regions should be compatible. However, we inherited another
+        // Multiresolution pyramid, which does not use the same shrinking pattern.
+        // Instead of copying the shrinking code, we compute image regions from
+        // the result of the fixed image pyramid.
+        typedef typename FixedImageType::PointType PointType;
+        typedef typename PointType::CoordRepType CoordRepType;
+        typedef typename IndexType::IndexValueType IndexValueType;
+        typedef typename SizeType::SizeValueType SizeValueType;
+        typedef ContinuousIndex<CoordRepType, TFixedImage::ImageDimension> CIndexType;
+
+        PointType inputStartPoint;
+        PointType inputEndPoint;
+        fixpyr->GetInput()->TransformIndexToPhysicalPoint(inputStart, inputStartPoint);
+        fixpyr->GetInput()->TransformIndexToPhysicalPoint(inputEnd, inputEndPoint);
+
         for ( unsigned int level=0; level < this->GetNumberOfLevels(); level++ )
         {
           SizeType  size;
           IndexType start;
-          for ( unsigned int dim = 0; dim < FixedImageType::ImageDimension; dim++)
+          CIndexType startcindex;
+          IndexType endindex;
+          FixedImageType * fixedImageAtLevel = fixpyr->GetOutput(level);
+          /** map the original fixed image region to the image resulting from the 
+           * FixedImagePyramid at level l. */
+          fixedImageAtLevel->TransformPhysicalPointToContinuousIndex(inputStartPoint, startcindex);
+          fixedImageAtLevel->TransformPhysicalPointToIndex(inputEndPoint, endindex);
+          for ( unsigned int dim = 0; dim < TFixedImage::ImageDimension; dim++)
           {
-            const float scaleFactor = static_cast<float>( schedule[ level ][ dim ] );
-
-            size[ dim ] = static_cast<typename SizeType::SizeValueType>(
-              vcl_floor(static_cast<float>( inputSize[ dim ] ) / scaleFactor ) );
-            if( size[ dim ] < 1 )
-            {
-              size[ dim ] = 1;
-            }
-            
-            start[ dim ] = static_cast<typename IndexType::IndexValueType>(
-              vcl_ceil(static_cast<float>( inputStart[ dim ] ) / scaleFactor ) ); 
+            start[dim] = static_cast<IndexValueType>( vnl_math_rnd( startcindex[dim] ) );
+            size[dim] = static_cast<SizeValueType>( endindex[dim] - start[dim] + 1 );
           }
+
           this->m_FixedImageRegionPyramids[ i ][ level ].SetSize( size );
           this->m_FixedImageRegionPyramids[ i ][ level ].SetIndex( start );
+          
         } // end for loop over res levels
 
       } // end if fixpyr!=0

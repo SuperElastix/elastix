@@ -38,6 +38,10 @@ SET(CommonFiles
  itkLimiterFunctionBase.h
  itkMeshFileReaderBase.h
  itkMeshFileReaderBase.txx
+ itkMultiResolutionGaussianSmoothingPyramidImageFilter.h
+ itkMultiResolutionGaussianSmoothingPyramidImageFilter.txx
+ itkMultiResolutionImageRegistrationMethod2.h
+ itkMultiResolutionImageRegistrationMethod2.txx
  itkTransformixInputPointFileReader.h
  itkTransformixInputPointFileReader.hxx
  itkNDImageBase.h

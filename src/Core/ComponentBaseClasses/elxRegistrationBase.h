@@ -5,7 +5,7 @@
 #include "elxMacro.h"
 
 #include "elxBaseComponentSE.h"
-#include "itkMultiResolutionImageRegistrationMethod.h"
+#include "itkMultiResolutionImageRegistrationMethod2.h"
 
 /** Mask support. */
 #include "itkImageMaskSpatialObject2.h"
