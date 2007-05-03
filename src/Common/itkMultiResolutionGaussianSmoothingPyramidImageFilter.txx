@@ -110,7 +110,7 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>
   caster->SetInput( inputPtr );
   
   smootherArray[0]->SetInput( caster->GetOutput() );
-  for ( i = 1; i < ImageDimension; ++i)
+  for ( unsigned int i = 1; i < ImageDimension; ++i)
   {
     smootherArray[i]->SetInput( smootherArray[i-1]->GetOutput() );
   } 

@@ -383,7 +383,7 @@ namespace itk
           fixedImageAtLevel->TransformPhysicalPointToIndex(inputEndPoint, endindex);
           for ( unsigned int dim = 0; dim < TFixedImage::ImageDimension; dim++)
           {
-            start[dim] = static_cast<IndexValueType>( vnl_math_rnd( startcindex[dim] ) );
+            start[dim] = static_cast<IndexValueType>( vcl_ceil( startcindex[dim] ) );
             size[dim] = static_cast<SizeValueType>( endindex[dim] - start[dim] + 1 );
           }
 
