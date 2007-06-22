@@ -272,7 +272,7 @@ namespace itk
     ::UpdateListSample(void)
   {
     /** Index typedefs */
-    typedef InputImageIndexType::IndexValueType    IndexValueType;
+    typedef typename InputImageIndexType::IndexValueType  IndexValueType;
     typedef ContinuousIndex<double, InputImageDimension>  CIndexType;
 
     /** Iterator typedefs */    
