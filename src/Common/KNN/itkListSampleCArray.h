@@ -11,9 +11,14 @@ namespace Statistics
 	/**
 	 * \class ListSampleCArray
 	 *
-	 * \brief 
-	 *
+	 * \brief A ListSampleBase that internally uses a CArray, which can be accessed 
+   * 
+	 * This class is useful if some function expects a c-array, but you would
+   * like to keep things as much as possible in the itk::Statistics-framework.
 	 * 
+   * \todo: the second template argument should be removed, since the GetMeasurementVector
+   * method is incorrect when TMeasurementVector::ValueType != TInternalValue.
+   *  
 	 * \ingroup Metrics?
 	 */
 	
@@ -71,11 +76,12 @@ namespace Statistics
       return static_cast<unsigned int>( this->m_InternalContainerSize );
     }
     
-    /** Function to get a point from the data container. Do not use this one. */
-    const MeasurementVectorType & GetMeasurementVector( const InstanceIdentifier &id ) const
-    {
-      return m_Dummy;
-    };
+    /** Function to get a point from the data container. 
+     * NB: the reference to the returned value remains only valid until the next
+     * call to this function.
+     * The method GetMeasurementVector( const InstanceIdentifier &id, MeasurementVectorType & mv)
+     * is actually a preferred way to get a measurement vector. */
+    const MeasurementVectorType & GetMeasurementVector( const InstanceIdentifier &id ) const;    
 
     /** Function to get a point from the data container. */
     void GetMeasurementVector( const InstanceIdentifier &id, MeasurementVectorType & mv ) const;
@@ -111,8 +117,8 @@ namespace Statistics
     InstanceIdentifier          m_InternalContainerSize;
     InstanceIdentifier          m_ActualSize;
 
-    /** Dummy needed for GetMeasurementVector(), which we don't use. */
-    MeasurementVectorType m_Dummy;
+    /** Dummy needed for GetMeasurementVector(). */
+    mutable MeasurementVectorType m_TemporaryMeasurementVector;
 
     /** Functions to (de)allocate the memory of the data container. */
     void AllocateInternalContainer( unsigned long size, unsigned int dim );

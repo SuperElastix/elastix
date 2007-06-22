@@ -31,6 +31,8 @@ namespace itk
     this->m_LineSearchOptimizer = 0;
 		this->m_PreviousGradientAndSearchDirValid = false;
 		
+    this->AddBetaDefinition(
+			"SteepestDescent", &Self::ComputeBetaSD );
 		this->AddBetaDefinition(
 			"FletcherReeves", &Self::ComputeBetaFR );
 		this->AddBetaDefinition(
@@ -369,6 +371,23 @@ namespace itk
 			previousGradient, gradient, previousSearchDir );
 		
 	} // end ComputeBeta
+
+
+  /** 
+	 * ********************** ComputeBetaSD ******************************
+	 */
+
+	double 
+		GenericConjugateGradientOptimizer::
+		ComputeBetaSD(
+	    const DerivativeType & previousGradient,
+      const DerivativeType & gradient,
+		  const ParametersType & previousSearchDir)
+	{
+    /** A simple hack that makes the conjugate gradient equal to
+     * a steepest descent method */
+		return 0.0;
+	} // end ComputeBetaSD
 
 
 	/** 

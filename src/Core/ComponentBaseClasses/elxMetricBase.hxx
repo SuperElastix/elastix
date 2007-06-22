@@ -6,6 +6,7 @@
 #include "itkImageSamplerBase.h"
 #include "itkImageRandomSampler.h"
 #include "itkImageRandomSamplerSparseMask.h"
+#include "itkImageRandomSamplerFeatureControlled.h"
 #include "itkImageFullSampler.h"
 #include "itkImageRandomCoordinateSampler.h"
 #include "itkImageGridSampler.h"
@@ -112,9 +113,10 @@ namespace elastix
         * ImageFullSamplerType and ImageSamplerBaseType are already declared in the header. */
         typedef ImageRandomSampler< FixedImageType >              ImageRandomSamplerType;
         typedef ImageRandomSamplerSparseMask< FixedImageType >    ImageRandomSamplerSparseMaskType;
+        typedef ImageRandomSamplerFeatureControlled<FixedImageType> ImageRandomSamplerFeatureControlledType;
         typedef ImageRandomCoordinateSampler< FixedImageType >    ImageRandomCoordinateSamplerType;
         typedef ImageGridSampler< FixedImageType >                ImageGridSamplerType;
-
+        
         /** Create an imageSampler of ImageSamplerBaseType. */
         typename ImageSamplerBaseType::Pointer imageSampler = 0;
 
@@ -185,6 +187,37 @@ namespace elastix
             randomCoordinateSampler->SetSampleRegionSize( sampleRegionSize );
           }
           imageSampler = randomCoordinateSampler;
+        }
+        else if ( imageSamplerType == "RandomFeatureControlled" )
+        {
+          typename ImageRandomSamplerFeatureControlledType::Pointer randomSamplerFeatureControlled
+            = ImageRandomSamplerFeatureControlledType::New();
+          randomSamplerFeatureControlled->SetNumberOfSamples( numberOfSpatialSamples );
+          /** Set the feature images, these are fixed image 1...end */
+          const unsigned int nrFixIm = this->GetElastix()->GetNumberOfFixedImages();
+          randomSamplerFeatureControlled->SetNumberOfFeatureImages( nrFixIm - 1 );
+          for ( unsigned int f = 1; f < nrFixIm; ++f )
+          {
+            randomSamplerFeatureControlled->SetFeatureImage( f-1, 
+              this->GetElastix()->GetFixedImage( f ) );
+          }
+          /** Set the UseXYZAsFeatures setting */
+          bool useXYZAsFeatures = false;
+          this->GetConfiguration()->ReadParameter( useXYZAsFeatures,
+            "UseXYZAsFeatures", this->GetComponentLabel(), level, 0);
+          randomSamplerFeatureControlled->SetUseXYZAsFeatures( useXYZAsFeatures );
+          /** Set the BucketSize setting */
+          unsigned int bucketSize = 5;
+          this->GetConfiguration()->ReadParameter( bucketSize,
+            "BucketSize", this->GetComponentLabel(), level, 0);
+          randomSamplerFeatureControlled->SetBucketSize( bucketSize );
+          /** Set the ErrorBound setting */
+          double errorBound = 1.0;
+          this->GetConfiguration()->ReadParameter( errorBound,
+            "ErrorBound", this->GetComponentLabel(), level, 0);
+          randomSamplerFeatureControlled->SetErrorBound( errorBound );
+          /** Store the image sampler pointer into the imageSampler variable */
+          imageSampler = randomSamplerFeatureControlled;
         }
         else if ( imageSamplerType == "Grid" )
         {

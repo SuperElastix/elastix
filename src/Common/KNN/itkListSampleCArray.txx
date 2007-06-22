@@ -17,7 +17,6 @@ namespace Statistics{
     this->m_InternalContainer = 0;
     this->m_InternalContainerSize = 0;
     this->m_ActualSize = 0;
-    this->m_Dummy.Fill( NumericTraits< typename MeasurementVectorType::ValueType >::Zero );
   } // end Constructor
 
   /**
@@ -33,6 +32,7 @@ namespace Statistics{
 
   /**
 	 * ************************ GetMeasurementVector *************************
+   * Return value in input var.
 	 */
 
   template< class TMeasurementVector, class TInternalValue >
@@ -45,7 +45,32 @@ namespace Statistics{
       mv = MeasurementVectorType( this->m_InternalContainer[ id ], this->GetMeasurementVectorSize(), false );
       return;
     }
-    throw ExceptionObject( __FILE__, __LINE__ );
+    itkExceptionMacro( << "The requested index is larger than the container size." );
+     
+  } // end GetMeasurementVector
+
+
+  /**
+	 * ************************ GetMeasurementVector *************************
+   * Return value as output var.
+	 */
+
+  template< class TMeasurementVector, class TInternalValue >
+    const typename ListSampleCArray< TMeasurementVector, TInternalValue >
+    ::MeasurementVectorType &
+    ListSampleCArray< TMeasurementVector, TInternalValue >
+    ::GetMeasurementVector( const InstanceIdentifier &id ) const
+  {
+    if ( id < this->m_InternalContainerSize )
+    {
+      this->m_TemporaryMeasurementVector = MeasurementVectorType(
+        this->m_InternalContainer[ id ], this->GetMeasurementVectorSize(), false );
+      return this->m_TemporaryMeasurementVector;
+    }
+    itkExceptionMacro( << "The requested index is larger than the container size." );
+    /** dummy return; */
+    return this->m_TemporaryMeasurementVector;
+    
   } // end GetMeasurementVector
 
 

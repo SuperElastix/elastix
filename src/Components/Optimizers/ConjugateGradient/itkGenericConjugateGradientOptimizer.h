@@ -196,8 +196,13 @@ namespace itk
 
 		/** Different definitions of \f$\beta\f$ */
 
+    /** "SteepestDescent: beta=0 */
+    double ComputeBetaSD(
+			const DerivativeType & previousGradient,
+      const DerivativeType & gradient,
+			const ParametersType & previousSearchDir);
 		/** "FletcherReeves" */
-		double ComputeBetaFR(
+    double ComputeBetaFR(
 			const DerivativeType & previousGradient,
       const DerivativeType & gradient,
 			const ParametersType & previousSearchDir);

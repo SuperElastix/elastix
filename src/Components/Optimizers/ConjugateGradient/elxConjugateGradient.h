@@ -57,8 +57,8 @@ using namespace itk;
 	 *		example: <tt>(GradientMagnitudeTolerance 0.001 0.0001 0.000001)</tt> \n
 	 *	  Default value: 0.000001.\n
 	 * \parameter ConjugateGradientType: a string that defines how 'beta' is computed in each resolution.
-	 *    The following methods are implemented: "FletcherReeves", "PolakRibiere", 
-	 *    "DaiYuan", "HestenesStiefel", and "DaiYuanHestenesStiefel".
+	 *    The following methods are implemented: "SteepestDescent", "FletcherReeves", "PolakRibiere", 
+	 *    "DaiYuan", "HestenesStiefel", and "DaiYuanHestenesStiefel". "SteepestDescent" simply sets beta=0.
 	 *    See the source code of the GenericConjugateGradientOptimizer for more information.\n
 	 *		example: <tt>(ConjugateGradientType "FletcherReeves" "PolakRibiere")</tt> \n
 	 *    Default value: "DaiYuanHestenesStiefel".\n

@@ -39,6 +39,7 @@ namespace itk
     /** Make sure the internal full sampler is up-to-date. */
     this->m_InternalFullSampler->SetInput(inputImage);
     this->m_InternalFullSampler->SetMask(mask);
+    this->m_InternalFullSampler->SetInputImageRegion( this->GetInputImageRegion() );
     this->m_InternalFullSampler->Update();
     typename ImageSampleContainerType::Pointer allValidSamples =
       this->m_InternalFullSampler->GetOutput();

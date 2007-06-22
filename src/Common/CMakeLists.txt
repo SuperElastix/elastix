@@ -73,6 +73,8 @@ SET( ImageSamplersFiles
  ImageSamplers/itkImageRandomCoordinateSampler.txx
  ImageSamplers/itkImageRandomSampler.h
  ImageSamplers/itkImageRandomSampler.txx
+ ImageSamplers/itkImageRandomSamplerFeatureControlled.h
+ ImageSamplers/itkImageRandomSamplerFeatureControlled.txx
  ImageSamplers/itkImageRandomSamplerSparseMask.h
  ImageSamplers/itkImageRandomSamplerSparseMask.txx
  ImageSamplers/itkImageSample.h

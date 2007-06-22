@@ -17,7 +17,9 @@ IF(UNIX)
       ITKNumerics
       ITKIO
       ITKCommon
-      ITKStatistics )
+      ITKStatistics 
+      KNNlib
+      ANNlib )
 	ENDIF(NOT APPLE)
 ENDIF(UNIX)
 
@@ -32,7 +34,9 @@ IF(WIN32 OR APPLE)
     ITKNumerics
     ITKIO
     ITKCommon
-    ITKStatistics )
+    ITKStatistics
+    KNNlib
+    ANNlib )
 ENDIF(WIN32 OR APPLE)
 
 #---------------------------------------------------------------------

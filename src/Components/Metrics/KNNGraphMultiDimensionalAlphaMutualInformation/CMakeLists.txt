@@ -8,6 +8,6 @@ ADD_ELXCOMPONENT( elxKNNGraphMultiDimensionalAlphaMutualInformationMetric
  itkKNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric.txx
 )
 
-TARGET_LINK_LIBRARIES(elxKNNGraphMultiDimensionalAlphaMutualInformationMetric KNNlib ANNlib)
+TARGET_LINK_LIBRARIES(elxKNNGraphMultiDimensionalAlphaMutualInformationMetric)
 
 

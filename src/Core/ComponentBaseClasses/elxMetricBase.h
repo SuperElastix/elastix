@@ -33,6 +33,7 @@ using namespace itk;
    *    \li Full: All pixels of the fixed image;
    *    \li Random: Random pixels are selected; the parameter NumberOfSpatialSamples says how many;
    *    \li RandomSparseMask: Same as random, but more efficient when the FixedMask is sparse (many 0s);
+   *    \li RandomFeatureControlled: Random pixels are selected, which have similar properties;
    *    \li RandomCoordinate: Random coordinates are selected (so not only at voxel locations);
    *    \li Grid: Voxels are selected on a uniform regular grid; this ImageSampler is NOT RECOMMENDED; The grid size can be specified by the parameter SampleGridSpacing;
    *
