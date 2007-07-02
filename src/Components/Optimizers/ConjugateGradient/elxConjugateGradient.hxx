@@ -91,6 +91,48 @@ using namespace itk;
 
 	} //end StartOptimization
 
+  
+	/**
+	 * ***************** LineSearch ************************
+	 */
+
+  template <class TElastix>
+		void ConjugateGradient<TElastix>::
+    LineSearch(
+      const ParametersType searchDir,
+      double & step,
+      ParametersType & x,
+      MeasureType & f,
+      DerivativeType & g )
+  {
+    /** Call the superclass's implementation and ignore a
+     * LineSearchError. Just report the error and assume convergence. */
+    try
+    {
+      this->Superclass1::LineSearch(searchDir, step, x, f, g);
+    }
+    catch ( ExceptionObject& err )
+    {
+      if ( this->GetLineSearchOptimizer() == 0 )
+      {
+        throw err;
+      }
+      else if ( this->GetStopCondition() != LineSearchError )    
+      {
+        throw err;
+      }
+      else
+      {
+        xl::xout["error"] << err << std::endl;
+        xl::xout["error"] << "The error is ignored and convergence is assumed." << std::endl;
+        step = 0.0;
+        x = this->GetScaledCurrentPosition();
+        f = this->GetCurrentValue();
+        g = this->GetCurrentGradient();
+      }      
+    }
+  } // end LineSearch
+
 
 	/**
 	 * ***************** DeterminePhase *****************************

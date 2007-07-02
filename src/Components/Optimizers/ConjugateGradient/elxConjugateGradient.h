@@ -157,6 +157,17 @@ using namespace itk;
      * Wolfe conditions satisfied. */
     virtual bool TestConvergence( bool firstLineSearchDone );
 
+    /** Call the superclass' implementation. If an ExceptionObject is caught,
+     * because the line search optimizer tried a too big step, the exception
+     * is printed, but ignored further. The optimizer stops, but elastix
+     * just goes on to the next resolution. */
+    virtual void LineSearch(
+      const ParametersType searchDir,
+      double & step,
+      ParametersType & x,
+      MeasureType & f,
+      DerivativeType & g );
+
 	private:
 
 		ConjugateGradient( const Self& );	// purposely not implemented
