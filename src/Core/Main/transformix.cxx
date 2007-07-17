@@ -178,18 +178,18 @@ void PrintHelp(void)
 
 	/** Mandatory argments.*/
 	std::cout << "Call transformix from the command line with mandatory arguments:" << std::endl;
-	std::cout << "-out\t\toutput directory" << std::endl;
-	std::cout << "-tp\t\ttransform-parameter file, only 1" << std::endl << std::endl;
+	std::cout << "-out      output directory" << std::endl;
+	std::cout << "-tp       transform-parameter file, only 1" << std::endl << std::endl;
 
 	/** Optional arguments.*/
 	std::cout << "Optional extra commands:" << std::endl;
-	std::cout << "-in\t\tinput image to deform" << std::endl;
-	std::cout << "-ipp\t\tfile containing input-image points" << std::endl;
-	std::cout << "\t\tthe point are transformed according to the specified transform-parameter file" << std::endl;
-	std::cout << "\t\tuse \"-ipp all\" to transform all points from the input-image" << std::endl;
-	std::cout << "-priority\tset the process priority to high or belownormal (Windows only)"	<< std::endl;
-	std::cout << "-ipt\t\t Moving internal pixel type" << std::endl;
-	std::cout << "-opt\t\t Fixed internal pixel type" << std::endl;
+	std::cout << "-in       input image to deform" << std::endl;
+	std::cout << "-ipp      file containing input-image points" << std::endl;
+	std::cout << "          the point are transformed according to the specified transform-parameter file" << std::endl;
+	std::cout << "          use \"-ipp all\" to transform all points from the input-image" << std::endl;
+	std::cout << "-priority set the process priority to high or belownormal (Windows only)"	<< std::endl;
+	std::cout << "-ipt      Moving internal pixel type" << std::endl;
+	std::cout << "-opt      Fixed internal pixel type" << std::endl;
 	std::cout << "If \"-ipt\" and/or \"-opt\" are not given, transformix attempts to read them from the transform-parameter file"
 		<< std::endl << std::endl;
 	

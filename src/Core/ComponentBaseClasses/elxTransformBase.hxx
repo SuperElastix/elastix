@@ -57,17 +57,17 @@ namespace elastix
 	{
 		/** Check Command line options and print them to the logfile. */
 		elxout << "Command line options from TransformBase:" << std::endl;
-		std::string check("");
+		std::string check( "" );
 		
 		/** Check for appearance of "-t0". */
 		check = this->m_Configuration->GetCommandLineArgument( "-t0" );
 		if ( check.empty() )
 		{
-			elxout << "-t0\t\tunspecified, so no initial transform used" << std::endl;
+			elxout << "-t0       unspecified, so no initial transform used" << std::endl;
 		}
 		else
 		{
-			elxout << "-t0\t\t" << check << std::endl;
+			elxout << "-t0       " << check << std::endl;
 		}
 
 		return 0;
@@ -93,11 +93,11 @@ namespace elastix
 		check = this->m_Configuration->GetCommandLineArgument( "-ipp" );
 		if ( check == "" )
 		{
-			elxout << "-ipp\t\tunspecified, so no inputpoints transformed" << std::endl;
+			elxout << "-ipp      unspecified, so no inputpoints transformed" << std::endl;
 		}
 		else
 		{
-			elxout << "-ipp\t\t" << check << std::endl;
+			elxout << "-ipp      " << check << std::endl;
 		}
 
 		/** Return a value. */

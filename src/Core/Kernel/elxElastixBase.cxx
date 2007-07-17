@@ -113,14 +113,14 @@ namespace elastix
       "-fMask", maskreturndummy, false, true);
     if ( maskreturndummy != 0 )
     {
-      elxout << "-fMask\t\tunspecified, so no fixed mask used" << std::endl;
+      elxout << "-fMask    unspecified, so no fixed mask used" << std::endl;
     }
     maskreturndummy = 0;
     this->m_MovingMaskFileNameContainer = this->GenerateFileNameContainer(
       "-mMask", maskreturndummy, false, true);
     if ( maskreturndummy != 0 )
     {
-      elxout << "-mMask\t\tunspecified, so no moving mask used" << std::endl;
+      elxout << "-mMask    unspecified, so no moving mask used" << std::endl;
     }
    
 		/** Check for appearance of "-out".
@@ -142,7 +142,7 @@ namespace elastix
 				folder.append( "/" );
 				this->GetConfiguration()->SetCommandLineArgument( "-out", folder.c_str() );
 			}
-			elxout << "-out\t\t" << check << std::endl;
+			elxout << "-out      " << check << std::endl;
 		}
 
 		/** Print all "-p". */
@@ -155,7 +155,7 @@ namespace elastix
 			tempPname << "-p(" << i << ")";
 			check = this->GetConfiguration()->GetCommandLineArgument( tempPname.str().c_str() );
 			if ( check == "" ) loop = false;
-			else elxout << "-p\t\t" << check << std::endl;
+			else elxout << "-p        " << check << std::endl;
 			++i;
 		}
 
@@ -165,11 +165,11 @@ namespace elastix
 			check = this->GetConfiguration()->GetCommandLineArgument( "-priority" );
 			if ( check == "" )
 			{
-				elxout << "-priority\tunspecified, so NORMAL process priority" << std::endl;
+				elxout << "-priority unspecified, so NORMAL process priority" << std::endl;
 			}
 			else
 			{
-				elxout << "-priority\t" << check << std::endl;
+				elxout << "-priority " << check << std::endl;
 			}
 		#endif
 
@@ -207,7 +207,7 @@ namespace elastix
       "-in", inreturndummy, false, true);
     if ( inreturndummy != 0 )
     {
-      elxout << "-in\t\tunspecified, so no input image specified" << std::endl;
+      elxout << "-in      unspecified, so no input image specified" << std::endl;
     }
     
 		/** Check for appearance of "-out". */
@@ -226,12 +226,12 @@ namespace elastix
 				folder.append( "/" );
 				this->GetConfiguration()->SetCommandLineArgument( "-out", folder.c_str() );
 			}
-			elxout << "-out\t\t" << check << std::endl;
+			elxout << "-out      " << check << std::endl;
 		}		
 
 		/** Print "-tp". */
 		check = this->GetConfiguration()->GetCommandLineArgument( "-tp" );
-		elxout << "-tp\t\t" << check << std::endl;
+		elxout << "-tp       " << check << std::endl;
 
     return returndummy;
   } // end BeforeAllTransformixBase
@@ -277,17 +277,17 @@ namespace elastix
   {
     FileNameContainerPointer fileNameContainer = FileNameContainerType::New();
     std::string check = "";
-    std::string argused("");
+    std::string argused( "" );
     		
     /** Try optionkey0 */
-    std::ostringstream argusedss("");
+    std::ostringstream argusedss( "" );
     argusedss << optionkey << 0;
     argused = argusedss.str();
 		check = this->GetConfiguration()->GetCommandLineArgument( argused.c_str() );
 		if ( check == "" )
 		{
       /** Try optionkey */
-      std::ostringstream argusedss2("");
+      std::ostringstream argusedss2( "" );
       argusedss2 << optionkey;
       argused = argusedss2.str();
       check = this->GetConfiguration()->GetCommandLineArgument( argused.c_str() );
@@ -305,21 +305,27 @@ namespace elastix
         return fileNameContainer;
       }
 		}
-    /** Optionkey or optionkey0 is found */
+    /** Optionkey or optionkey0 is found. */
     if ( check != "" )
     {
-      /** Print info, if desired */
+      /** Print info, if desired. */
       if ( printinfo )
       {
-		    elxout << argused << "\t\t" << check << std::endl;
+        /** Print the option, with some spaces, followed by the value.*/
+        int nrSpaces0 = 10 - argused.length();
+        unsigned int nrSpaces = nrSpaces0 > 1 ? nrSpaces0 : 1;
+        std::string spaces = "";
+        spaces.resize( nrSpaces, ' ' );
+		    elxout << argused << spaces << check << std::endl;
       }
-      fileNameContainer->CreateElementAt(0) = check;
+      fileNameContainer->CreateElementAt( 0 ) = check;
+
       /** loop over all optionkey<i> options given with i > 0 */
       unsigned int i = 1;
       bool readsuccess = true;
       while ( readsuccess )
       {
-        std::ostringstream argusedss2("");
+        std::ostringstream argusedss2( "" );
         argusedss2 << optionkey << i;
         argused = argusedss2.str();
         check = this->GetConfiguration()->GetCommandLineArgument( argused.c_str() );
@@ -331,7 +337,12 @@ namespace elastix
         {
           if ( printinfo )
           {
-            elxout << argused << "\t\t" << check << std::endl;
+            /** Print the option, with some spaces, followed by the value.*/
+            int nrSpaces0 = 10 - argused.length();
+            unsigned int nrSpaces = nrSpaces0 > 1 ? nrSpaces0 : 1;
+            std::string spaces = "";
+            spaces.resize( nrSpaces, ' ' );
+            elxout << argused << spaces << check << std::endl;
           }
           fileNameContainer->CreateElementAt(i) = check;
           ++i;

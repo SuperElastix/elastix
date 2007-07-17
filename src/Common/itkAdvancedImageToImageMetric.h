@@ -312,7 +312,7 @@ protected:
    * If a BSplineInterpolationFunction is used, this class obtain
 	 * image derivatives from the BSpline interpolator. Otherwise, 
 	 * image derivatives are computed using (forward) finite differencing. */
-  virtual bool EvaluateMovingImageValueAndDerivative( 
+  virtual bool EvaluateMovingImageValueAndDerivative(
     const MovingImagePointType & mappedPoint,
     RealType & movingImageValue,
     MovingImageDerivativeType * gradient ) const;
