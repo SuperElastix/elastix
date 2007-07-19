@@ -207,7 +207,7 @@ namespace elastix
       "-in", inreturndummy, false, true);
     if ( inreturndummy != 0 )
     {
-      elxout << "-in      unspecified, so no input image specified" << std::endl;
+      elxout << "-in       unspecified, so no input image specified" << std::endl;
     }
     
 		/** Check for appearance of "-out". */
