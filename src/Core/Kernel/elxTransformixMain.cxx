@@ -48,7 +48,7 @@ namespace elastix
 			return errorCode;
 		}
 
-        /** Create the Elastix component */
+    /** Create the Elastix component */
     try 
     {
       /** Key "Elastix", see elxComponentLoader::InstallSupportedImageTypes(). */

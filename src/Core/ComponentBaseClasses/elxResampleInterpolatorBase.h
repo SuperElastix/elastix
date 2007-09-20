@@ -59,12 +59,12 @@ namespace elastix
 		/** Execute stuff before the actual transformation:
 		 * \li nothing here
 		 */
-		virtual int BeforeAllTransformix(void){ return 0;};
+		virtual int BeforeAllTransformix( void ){ return 0;};
 
 		/** Function to read transform-parameters from a file. */
-		virtual void ReadFromFile(void);
+		virtual void ReadFromFile( void );
 		/** Function to write transform-parameters to a file. */
-		virtual void WriteToFile(void);
+		virtual void WriteToFile( void );
 
 	protected:
 
@@ -84,8 +84,6 @@ namespace elastix
 
 
 } //end namespace elastix
-
-
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "elxResampleInterpolatorBase.hxx"

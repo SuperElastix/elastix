@@ -189,6 +189,7 @@ protected:
   typedef typename Superclass::BSplineInterpolatorType    BSplineInterpolatorType;
   typedef typename BSplineInterpolatorType::Pointer       BSplineInterpolatorPointer;
   typedef std::vector<BSplineInterpolatorPointer>         BSplineFeatureInterpolatorVectorType;
+  typedef typename Superclass::MovingImagePointType       MovingImagePointType;
   
   /** Member variables. */
   unsigned int                          m_NumberOfFixedFeatureImages;

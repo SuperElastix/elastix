@@ -241,6 +241,7 @@ private:
   void operator=(const Self&);                                  //purposely not implemented
 
   /** Typedef's for the computation of the derivative. */
+  typedef typename Superclass::MovingImagePointType MovingImagePointType;
   typedef std::vector<TransformJacobianType>        TransformJacobianContainerType;
   typedef std::vector<ParameterIndexArrayType>      TransformJacobianIndicesContainerType;
   typedef Array2D<double>                           SpatialDerivativeType;
