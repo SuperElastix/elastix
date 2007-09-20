@@ -17,6 +17,7 @@ namespace itk
   {
     this->m_NumberOfFixedFeatureImages = 0;
     this->m_NumberOfMovingFeatureImages = 0;
+
   } // end Constructor
 
 
@@ -65,8 +66,11 @@ namespace itk
       /** Connect the feature image to the interpolator. */
       this->m_MovingFeatureInterpolators[ i ]->SetInputImage( this->m_MovingFeatureImages[ i ] );
     }
+
+    /** Check if the moving feature image interpolators are B-spline interpolators. */
+    this->CheckForBSplineFeatureInterpolators();
 				
-	} // end Initialize
+	} // end Initialize()
 
 
   /**
@@ -275,6 +279,46 @@ namespace itk
   {
     return this->m_MovingFeatureInterpolators[ i ].GetPointer();
   } // end GetMovingFeatureInterpolator
+
+
+  /**
+   * ****************** CheckForBSplineFeatureInterpolators **********************
+	 */
+
+  template <class TFixedImage, class TMovingImage,
+    class TFixedFeatureImage, class TMovingFeatureImage>
+	void
+  ImageToImageMetricWithFeatures<TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
+		::CheckForBSplineFeatureInterpolators( void )
+  {
+    /** Check if the interpolators are of type BSplineInterpolateImageFunction.
+		 * If so, we can make use of its EvaluateDerivatives method.
+		 * Otherwise, an exception is thrown.
+     */
+    this->m_FeatureInterpolatorsIsBSpline.resize( this->m_NumberOfMovingFeatureImages, false );
+    this->m_FeatureInterpolatorsAreBSpline = true;
+    this->m_MovingFeatureBSplineInterpolators.resize( this->m_NumberOfMovingFeatureImages );
+    for ( unsigned int i = 0; i < this->m_NumberOfMovingFeatureImages; ++i )
+    {
+      BSplineInterpolatorType * testPtr = 
+        dynamic_cast<BSplineInterpolatorType *>(
+        this->m_MovingFeatureInterpolators[ i ].GetPointer() );
+      
+      if ( testPtr )
+      {
+        this->m_FeatureInterpolatorsIsBSpline[ i ] = true;
+        this->m_FeatureInterpolatorsAreBSpline &= true;
+        this->m_MovingFeatureBSplineInterpolators[ i ] = testPtr;
+        itkDebugMacro( << "Interpolator " << i << " is B-spline." );
+      }
+      else
+      {
+        itkDebugMacro( << "Interpolator " << i << " is NOT B-spline." );
+        itkExceptionMacro( << "Interpolator " << i << " is NOT B-spline." );
+      }
+    } // end for-loop
+
+  } // end CheckForBSplineFeatureInterpolators()
 
 
   /**

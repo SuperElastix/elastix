@@ -82,6 +82,7 @@ public:
     Superclass::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
   typedef typename
     Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
+  typedef typename Superclass::ParameterIndexArrayType    ParameterIndexArrayType;
 	
   /** The fixed image dimension. */
 	itkStaticConstMacro( FixedImageDimension, unsigned int,
@@ -184,6 +185,10 @@ protected:
   ImageToImageMetricWithFeatures();
   virtual ~ImageToImageMetricWithFeatures() {};
   void PrintSelf( std::ostream& os, Indent indent ) const;
+
+  typedef typename Superclass::BSplineInterpolatorType    BSplineInterpolatorType;
+  typedef typename BSplineInterpolatorType::Pointer       BSplineInterpolatorPointer;
+  typedef std::vector<BSplineInterpolatorPointer>         BSplineFeatureInterpolatorVectorType;
   
   /** Member variables. */
   unsigned int                          m_NumberOfFixedFeatureImages;
@@ -192,6 +197,15 @@ protected:
   MovingFeatureImageVectorType          m_MovingFeatureImages;
   FixedFeatureInterpolatorVectorType    m_FixedFeatureInterpolators;
   MovingFeatureInterpolatorVectorType   m_MovingFeatureInterpolators;
+
+  std::vector<bool>                     m_FeatureInterpolatorsIsBSpline;
+  bool                                  m_FeatureInterpolatorsAreBSpline;
+  BSplineFeatureInterpolatorVectorType  m_MovingFeatureBSplineInterpolators;
+
+  /** Initialize variables for image derivative computation; this 
+   * method is called by Initialize.
+   */
+  virtual void CheckForBSplineFeatureInterpolators( void );
 
 private:
   ImageToImageMetricWithFeatures(const Self&); //purposely not implemented
