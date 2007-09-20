@@ -1,0 +1,8 @@
+
+
+ADD_ELXCOMPONENT( elxBSplineResampleInterpolatorFloat
+ elxBSplineResampleInterpolatorFloat.h
+ elxBSplineResampleInterpolatorFloat.hxx
+ elxBSplineResampleInterpolatorFloat.cxx )
+
+
