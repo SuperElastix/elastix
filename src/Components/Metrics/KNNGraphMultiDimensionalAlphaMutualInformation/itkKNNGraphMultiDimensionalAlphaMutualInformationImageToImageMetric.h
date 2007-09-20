@@ -1,6 +1,7 @@
 #ifndef __itkKNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric_h
 #define __itkKNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric_h
 
+/** Includes for the Superclass. */
 #include "itkImageToImageMetricWithFeatures.h"
 
 /** Includes for the kNN trees. */
@@ -18,6 +19,9 @@
 #include "itkANNStandardTreeSearch.h"
 #include "itkANNFixedRadiusTreeSearch.h"
 #include "itkANNPriorityTreeSearch.h"
+
+/** Include for the spatial derivatives. */
+#include "itkArray2D.h"
 
 
 namespace itk
@@ -108,6 +112,7 @@ public:
     Superclass::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
   typedef typename
     Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
+  typedef typename Superclass::ParameterIndexArrayType    ParameterIndexArrayType;
 	
   typedef typename Superclass::FixedFeatureImageType        FixedFeatureImageType;
   typedef typename Superclass::FixedFeatureImagePointer     FixedFeatureImagePointer;
@@ -131,6 +136,7 @@ public:
   typedef typename MeasurementVectorType::ValueType   MeasurementVectorValueType;
   typedef typename Statistics::ListSampleCArray<
     MeasurementVectorType, double >                   ListSampleType;
+  typedef typename ListSampleType::Pointer            ListSamplePointer;
   
   /** Typedefs for trees. */
   typedef BinaryTreeBase< ListSampleType >            BinaryKNNTreeType;
@@ -160,7 +166,8 @@ public:
     std::string splittingRuleMoving, std::string splittingRuleJoint );
 
   /** Set ANNbdTree. */
-  void SetANNbdTree( unsigned int bucketSize, std::string splittingRule, std::string shrinkingRule );
+  void SetANNbdTree( unsigned int bucketSize, std::string splittingRule,
+    std::string shrinkingRule );
 
   /** Set ANNbdTree. */
   void SetANNbdTree( unsigned int bucketSize, std::string splittingRuleFixed,
@@ -177,13 +184,16 @@ public:
    */
 
   /** Set ANNStandardTreeSearch. */
-  void SetANNStandardTreeSearch( unsigned int kNearestNeighbors, double errorBound );
+  void SetANNStandardTreeSearch( unsigned int kNearestNeighbors,
+    double errorBound );
 
   /** Set ANNFixedRadiusTreeSearch. */
-  void SetANNFixedRadiusTreeSearch( unsigned int kNearestNeighbors, double errorBound, double squaredRadius );
+  void SetANNFixedRadiusTreeSearch( unsigned int kNearestNeighbors,
+    double errorBound, double squaredRadius );
 
   /** Set ANNPriorityTreeSearch. */
-  void SetANNPriorityTreeSearch( unsigned int kNearestNeighbors, double errorBound );
+  void SetANNPriorityTreeSearch( unsigned int kNearestNeighbors,
+    double errorBound );
 
   /**
    * *** Standard metric stuff: ***
@@ -216,19 +226,59 @@ protected:
   void PrintSelf(std::ostream& os, Indent indent) const;
 
   /** Member variables. */
-  typename BinaryKNNTreeType::Pointer       m_BinaryKNNTreeFixedIntensity;
-  typename BinaryKNNTreeType::Pointer       m_BinaryKNNTreeMovingIntensity;
-  typename BinaryKNNTreeType::Pointer       m_BinaryKNNTreeJointIntensity;
+  typename BinaryKNNTreeType::Pointer       m_BinaryKNNTreeFixed;
+  typename BinaryKNNTreeType::Pointer       m_BinaryKNNTreeMoving;
+  typename BinaryKNNTreeType::Pointer       m_BinaryKNNTreeJoint;
 
-  typename BinaryKNNTreeSearchType::Pointer m_BinaryKNNTreeSearcherFixedIntensity;
-  typename BinaryKNNTreeSearchType::Pointer m_BinaryKNNTreeSearcherMovingIntensity;
-  typename BinaryKNNTreeSearchType::Pointer m_BinaryKNNTreeSearcherJointIntensity;
+  typename BinaryKNNTreeSearchType::Pointer m_BinaryKNNTreeSearcherFixed;
+  typename BinaryKNNTreeSearchType::Pointer m_BinaryKNNTreeSearcherMoving;
+  typename BinaryKNNTreeSearchType::Pointer m_BinaryKNNTreeSearcherJoint;
 
   double   m_Alpha;
 
 private:
   KNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric(const Self&);  //purposely not implemented
   void operator=(const Self&);                                  //purposely not implemented
+
+  /** Typedef's for the computation of the derivative. */
+  typedef std::vector<TransformJacobianType>        TransformJacobianContainerType;
+  typedef std::vector<ParameterIndexArrayType>      TransformJacobianIndicesContainerType;
+  typedef Array2D<double>                           SpatialDerivativeType;
+  typedef std::vector<SpatialDerivativeType>        SpatialDerivativeContainerType;
+
+  /** This function takes the fixed image samples from the ImageSampler
+   * and puts them in the listSampleFixed, together with the fixed feature
+   * image samples. Also the corresponding moving image values and moving
+   * feature values are computed and put into listSampleMoving. The
+   * concatenation is put into listSampleJoint.
+   * If desired, i.e. if doDerivative is true, then also things needed to
+   * compute the derivative of the cost function to the transform parameters
+   * are computed:
+   * - The sparse Jacobian of the transformation (dT/dmu).
+   * - The spatial derivatives of the moving (feature) images (dm/dx).
+   */
+  virtual void ComputeListSampleValuesAndDerivativePlusJacobian(
+    const ListSamplePointer & listSampleFixed,
+    const ListSamplePointer & listSampleMoving,
+    const ListSamplePointer & listSampleJoint,
+    const bool & doDerivative,
+    TransformJacobianContainerType & jacobians,
+    TransformJacobianIndicesContainerType & jacobiansIndices,
+    SpatialDerivativeContainerType & spatialDerivatives ) const;
+
+  /** This function calculates the spatial derivative of the 
+   * featureNr feature image at the point mappedPoint.
+   */
+  virtual void EvaluateMovingFeatureImageDerivatives(
+    const MovingImagePointType & mappedPoint,
+    SpatialDerivativeType & featureGradients ) const;
+
+  virtual void ComputeImageJacobianDifference(
+    SpatialDerivativeType & D1sparse,
+    SpatialDerivativeType & D2sparse,
+    ParameterIndexArrayType & D1indices,
+    ParameterIndexArrayType & D2indices,
+    SpatialDerivativeType & Dfull ) const;
 
  }; // end class KNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric
 
