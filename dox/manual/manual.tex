@@ -1,0 +1,100 @@
+\documentclass[]{report}
+
+% Define page
+\usepackage[top=2cm, bottom=1cm, left=1in, right=1in]{geometry}
+
+
+\newcommand{\elastix}{\texttt{elastix}}
+\newcommand{\transformix}{\texttt{transformix}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\title{Manual for \elastix}
+\author{Marius Staring and Stefan Klein}
+\date{}
+\maketitle
+
+\setcounter{page}{1} \pagenumbering{roman} \tableofcontents
+%\newpage
+%\listoffigures
+%\newpage
+%\listoftables
+\newpage
+\pagenumbering{arabic} \setcounter{page}{1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% main text
+
+\chapter{Image Registration}
+
+\section{Introduction}
+
+\section{Images}
+
+they have voxels with spacings and an origin
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Basic registration components}
+
+\section{Metrics}
+
+\section{Transforms}
+
+\section{Optimisers}
+
+\section{Interpolators}
+
+\section{Multiresolution}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{\elastix}
+
+\section{Introduction}
+
+History, website, where to find stuff, cvs place, where to find the
+FAQ
+
+general code layout
+
+\section{How to use \elastix}
+
+\section{The parameter file}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{\transformix}
+
+\section{Introduction}
+
+\section{How to use \transformix}
+
+\section{The transform parameter file}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Tutorial}
+
+
+\section{General advice}
+
+\section{Important parameters}
+
+what to tune and what not to tune
+
+\section{Trouble shooting}
+
+\section{Masks}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Developers guide}
+
+\section{Setup of the code}
+
+\section{Creating new modules}
+
+\end{document}
