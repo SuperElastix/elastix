@@ -129,7 +129,8 @@ public:
   typedef typename Superclass::MovingFeatureInterpolatorVectorType  MovingFeatureInterpolatorVectorType;
 
   /** The fixed image dimension. */
-	itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
+  itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
+  itkStaticConstMacro( MovingImageDimension, unsigned int, MovingImageType::ImageDimension );
 
   /** Typedefs for the samples. */
   typedef Array< double >                             MeasurementVectorType;
@@ -241,11 +242,14 @@ private:
   void operator=(const Self&);                                  //purposely not implemented
 
   /** Typedef's for the computation of the derivative. */
-  typedef typename Superclass::MovingImagePointType MovingImagePointType;
-  typedef std::vector<TransformJacobianType>        TransformJacobianContainerType;
-  typedef std::vector<ParameterIndexArrayType>      TransformJacobianIndicesContainerType;
-  typedef Array2D<double>                           SpatialDerivativeType;
-  typedef std::vector<SpatialDerivativeType>        SpatialDerivativeContainerType;
+  typedef typename Superclass::FixedImagePointType       FixedImagePointType;
+  typedef typename Superclass::MovingImagePointType      MovingImagePointType;
+  typedef typename Superclass::MovingImageDerivativeType MovingImageDerivativeType;
+  typedef typename Superclass::MovingImageContinuousIndexType MovingImageContinuousIndexType;
+  typedef std::vector<TransformJacobianType>             TransformJacobianContainerType;
+  typedef std::vector<ParameterIndexArrayType>           TransformJacobianIndicesContainerType;
+  typedef Array2D<double>                                SpatialDerivativeType;
+  typedef std::vector<SpatialDerivativeType>             SpatialDerivativeContainerType;
 
   /** This function takes the fixed image samples from the ImageSampler
    * and puts them in the listSampleFixed, together with the fixed feature
