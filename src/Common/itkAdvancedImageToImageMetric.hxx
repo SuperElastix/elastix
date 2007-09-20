@@ -14,8 +14,8 @@ namespace itk
 {
 
   /**
-	 * ********************* Constructor ****************************
-	 */
+   * ********************* Constructor ****************************
+   */
 
   template <class TFixedImage, class TMovingImage>
     AdvancedImageToImageMetric<TFixedImage,TMovingImage>
@@ -28,16 +28,16 @@ namespace itk
     this->m_RequiredRatioOfValidSamples = 0.25;
 
     this->m_BSplineInterpolator = 0;
-		this->m_InterpolatorIsBSpline = false;
+    this->m_InterpolatorIsBSpline = false;
     this->m_CentralDifferenceGradientFilter = 0;
     
- 		this->m_BSplineTransform = 0;
-		this->m_BSplineCombinationTransform = 0;
+    this->m_BSplineTransform = 0;
+    this->m_BSplineCombinationTransform = 0;
     this->m_NumBSplineParametersPerDim = 0;
-		this->m_NumBSplineWeights = 0;
-		this->m_NumberOfParameters = 0;
+    this->m_NumBSplineWeights = 0;
+    this->m_NumberOfParameters = 0;
     this->m_TransformIsBSpline = false;
-		this->m_TransformIsBSplineCombination = false;
+    this->m_TransformIsBSplineCombination = false;
     
     const unsigned int defaultMaskInterpolationOrder = 2;
     this->m_InternalMovingImageMask = 0;
@@ -53,9 +53,9 @@ namespace itk
     this->m_FixedLimitRangeRatio = 0.01;
     this->m_MovingLimitRangeRatio = 0.01;
     this->m_FixedImageTrueMin   = NumericTraits< FixedImagePixelType  >::Zero;
-		this->m_FixedImageTrueMax   = NumericTraits< FixedImagePixelType  >::One;
-		this->m_MovingImageTrueMin  = NumericTraits< MovingImagePixelType >::Zero;
-		this->m_MovingImageTrueMax  = NumericTraits< MovingImagePixelType >::One;
+    this->m_FixedImageTrueMax   = NumericTraits< FixedImagePixelType  >::One;
+    this->m_MovingImageTrueMin  = NumericTraits< MovingImagePixelType >::Zero;
+    this->m_MovingImageTrueMax  = NumericTraits< MovingImagePixelType >::One;
     this->m_FixedImageMinLimit  = NumericTraits< FixedImageLimiterOutputType  >::Zero;
     this->m_FixedImageMaxLimit  = NumericTraits< FixedImageLimiterOutputType  >::One;
     this->m_MovingImageMinLimit = NumericTraits< MovingImageLimiterOutputType >::Zero;
@@ -65,8 +65,8 @@ namespace itk
 
 
   /**
-	 * ********************* Initialize ****************************
-	 */
+   * ********************* Initialize ****************************
+   */
 
   template <class TFixedImage, class TMovingImage>
     void
@@ -79,11 +79,11 @@ namespace itk
     /** Cache the number of transformation parameters. This line 
      * emphasises that a user has to call Initialize again if the number
      * of parameters is changed. */
-		this->m_NumberOfParameters = this->m_Transform->GetNumberOfParameters();
+    this->m_NumberOfParameters = this->m_Transform->GetNumberOfParameters();
 
     /** Setup the parameters for the gray value limiters. */
     this->InitializeLimiters();
-	
+  
     /** Connect the image sampler */
     this->InitializeImageSampler();
 
@@ -95,31 +95,31 @@ namespace itk
     
     /** Initialize the internal moving image mask. */
     this->InitializeInternalMasks();
-	
+  
   } // end Initialize
 
   
   /**
-	 * ****************** ComputeFixedImageExtrema ***************************
-	 */
+   * ****************** ComputeFixedImageExtrema ***************************
+   */
 
-	template <class TFixedImage, class TMovingImage> 
-		void
-		AdvancedImageToImageMetric<TFixedImage,TMovingImage>
-		::ComputeFixedImageExtrema(
+  template <class TFixedImage, class TMovingImage> 
+    void
+    AdvancedImageToImageMetric<TFixedImage,TMovingImage>
+    ::ComputeFixedImageExtrema(
     const FixedImageType * image,
     const FixedImageRegionType & region )
   {
- 		/** NB: We can't use StatisticsImageFilter to do this because
-		 * the filter computes the min/max for the largest possible region. */
-		FixedImagePixelType trueMinTemp = NumericTraits<FixedImagePixelType>::max();
-		FixedImagePixelType trueMaxTemp = NumericTraits<FixedImagePixelType>::NonpositiveMin();
+    /** NB: We can't use StatisticsImageFilter to do this because
+     * the filter computes the min/max for the largest possible region. */
+    FixedImagePixelType trueMinTemp = NumericTraits<FixedImagePixelType>::max();
+    FixedImagePixelType trueMaxTemp = NumericTraits<FixedImagePixelType>::NonpositiveMin();
 
-		typedef ImageRegionConstIterator<FixedImageType> IteratorType;
-		IteratorType iterator( image, region );
-		for ( iterator.GoToBegin(); !iterator.IsAtEnd(); ++iterator )
+    typedef ImageRegionConstIterator<FixedImageType> IteratorType;
+    IteratorType iterator( image, region );
+    for ( iterator.GoToBegin(); !iterator.IsAtEnd(); ++iterator )
     {
-			const FixedImagePixelType sample = iterator.Get();
+      const FixedImagePixelType sample = iterator.Get();
       trueMinTemp = vnl_math_min( trueMinTemp, sample );
       trueMaxTemp = vnl_math_max( trueMaxTemp, sample );
     }
@@ -131,29 +131,29 @@ namespace itk
     this->m_FixedImageMaxLimit = static_cast<FixedImageLimiterOutputType>(
       trueMaxTemp + this->m_FixedLimitRangeRatio * ( trueMaxTemp - trueMinTemp ) );
   } // end ComputeFixedImageExtrema    
-		
+    
   
   /**
-	 * ****************** ComputeMovingImageExtrema ***************************
-	 */
+   * ****************** ComputeMovingImageExtrema ***************************
+   */
 
-	template <class TFixedImage, class TMovingImage> 
-		void
-		AdvancedImageToImageMetric<TFixedImage,TMovingImage>
-		::ComputeMovingImageExtrema(
+  template <class TFixedImage, class TMovingImage> 
+    void
+    AdvancedImageToImageMetric<TFixedImage,TMovingImage>
+    ::ComputeMovingImageExtrema(
     const MovingImageType * image,
     const MovingImageRegionType & region )
   {
- 		/** NB: We can't use StatisticsImageFilter to do this because
-		 * the filter computes the min/max for the largest possible region. */
-		MovingImagePixelType trueMinTemp = NumericTraits<MovingImagePixelType>::max();
-		MovingImagePixelType trueMaxTemp = NumericTraits<MovingImagePixelType>::NonpositiveMin();
+    /** NB: We can't use StatisticsImageFilter to do this because
+     * the filter computes the min/max for the largest possible region. */
+    MovingImagePixelType trueMinTemp = NumericTraits<MovingImagePixelType>::max();
+    MovingImagePixelType trueMaxTemp = NumericTraits<MovingImagePixelType>::NonpositiveMin();
 
-		typedef ImageRegionConstIterator<MovingImageType> IteratorType;
-		IteratorType iterator( image, region );
-		for ( iterator.GoToBegin(); !iterator.IsAtEnd(); ++iterator )
+    typedef ImageRegionConstIterator<MovingImageType> IteratorType;
+    IteratorType iterator( image, region );
+    for ( iterator.GoToBegin(); !iterator.IsAtEnd(); ++iterator )
     {
-			const MovingImagePixelType sample = iterator.Get();
+      const MovingImagePixelType sample = iterator.Get();
       trueMinTemp = vnl_math_min( trueMinTemp, sample );
       trueMaxTemp = vnl_math_max( trueMaxTemp, sample );
     }
@@ -165,16 +165,16 @@ namespace itk
     this->m_MovingImageMaxLimit = static_cast<MovingImageLimiterOutputType>(
       trueMaxTemp + this->m_MovingLimitRangeRatio * ( trueMaxTemp - trueMinTemp ) );
   } // end ComputeMovingImageExtrema    
-		
-	
+    
+  
   /**
    * ****************** InitializeLimiter *****************************
    */
 
-	template <class TFixedImage, class TMovingImage> 
-		void
-		AdvancedImageToImageMetric<TFixedImage,TMovingImage>
-		::InitializeLimiters(void)
+  template <class TFixedImage, class TMovingImage> 
+    void
+    AdvancedImageToImageMetric<TFixedImage,TMovingImage>
+    ::InitializeLimiters(void)
   {
     /** Set up fixed limiter. */
     if ( this->GetUseFixedImageLimiter() )
@@ -224,8 +224,8 @@ namespace itk
 
 
   /**
-	 * ********************* InitializeImageSampler ****************************
-	 */
+   * ********************* InitializeImageSampler ****************************
+   */
 
   template <class TFixedImage, class TMovingImage>
     void
@@ -250,20 +250,20 @@ namespace itk
 
   /**
    * ****************** CheckForBSplineInterpolator **********************
-	 */
+   */
 
-	template <class TFixedImage, class TMovingImage> 
-		void
-		AdvancedImageToImageMetric<TFixedImage,TMovingImage>
-		::CheckForBSplineInterpolator(void)
+  template <class TFixedImage, class TMovingImage> 
+    void
+    AdvancedImageToImageMetric<TFixedImage,TMovingImage>
+    ::CheckForBSplineInterpolator(void)
   {
     /** Check if the interpolator is of type BSplineInterpolateImageFunction.
-		 * If so, we can make use of its EvaluateDerivatives method.
-		 * Otherwise, we precompute the gradients using a central difference scheme,
+     * If so, we can make use of its EvaluateDerivatives method.
+     * Otherwise, we precompute the gradients using a central difference scheme,
      * and do evaluate the gradient using nearest neighbour interpolation
      */
-		this->m_InterpolatorIsBSpline = false;
-		BSplineInterpolatorType * testPtr = 
+    this->m_InterpolatorIsBSpline = false;
+    BSplineInterpolatorType * testPtr = 
       dynamic_cast<BSplineInterpolatorType *>( this->m_Interpolator.GetPointer() );
     if ( testPtr )
     {
@@ -274,7 +274,7 @@ namespace itk
     else
     {
       this->m_BSplineInterpolator = 0;
-			itkDebugMacro( "Interpolator is not BSpline" );
+      itkDebugMacro( "Interpolator is not BSpline" );
     }
 
     /** Don't overwrite the gradient image if GetComputeGradient() == true.
@@ -304,75 +304,75 @@ namespace itk
   /**
    * ****************** CheckForBSplineTransform **********************
    * Check if the transform is of type BSplineDeformableTransform.
-	 * If so, we can speed up derivative calculations by only inspecting
-	 * the parameters in the support region of a point. 
-	 */
+   * If so, we can speed up derivative calculations by only inspecting
+   * the parameters in the support region of a point. 
+   */
 
-	template <class TFixedImage, class TMovingImage> 
-		void
-		AdvancedImageToImageMetric<TFixedImage,TMovingImage>
-		::CheckForBSplineTransform( void )
+  template <class TFixedImage, class TMovingImage> 
+    void
+    AdvancedImageToImageMetric<TFixedImage,TMovingImage>
+    ::CheckForBSplineTransform( void )
   {
-		this->m_TransformIsBSpline = false;
-		
-		BSplineTransformType * testPtr1 = dynamic_cast<BSplineTransformType *>(
-			this->m_Transform.GetPointer() );
-		if ( !testPtr1 )
+    this->m_TransformIsBSpline = false;
+    
+    BSplineTransformType * testPtr1 = dynamic_cast<BSplineTransformType *>(
+      this->m_Transform.GetPointer() );
+    if ( !testPtr1 )
     {
-			this->m_BSplineTransform = 0;
-			itkDebugMacro( "Transform is not BSplineDeformable" );
+      this->m_BSplineTransform = 0;
+      itkDebugMacro( "Transform is not BSplineDeformable" );
     }
-		else
+    else
     {
       this->m_TransformIsBSpline = true;
-			this->m_BSplineTransform = testPtr1;
-			this->m_NumBSplineParametersPerDim = 
+      this->m_BSplineTransform = testPtr1;
+      this->m_NumBSplineParametersPerDim = 
         this->m_BSplineTransform->GetNumberOfParametersPerDimension();
-			this->m_NumBSplineWeights = this->m_BSplineTransform->GetNumberOfWeights();
-			itkDebugMacro( "Transform is BSplineDeformable" );
+      this->m_NumBSplineWeights = this->m_BSplineTransform->GetNumberOfWeights();
+      itkDebugMacro( "Transform is BSplineDeformable" );
     }
 
-		/** Check if the transform is of type BSplineCombinationTransform. */
-		this->m_TransformIsBSplineCombination = false;
-		
-		BSplineCombinationTransformType * testPtr2 = 
-			dynamic_cast<BSplineCombinationTransformType *>( this->m_Transform.GetPointer() );
-		if ( !testPtr2 )
+    /** Check if the transform is of type BSplineCombinationTransform. */
+    this->m_TransformIsBSplineCombination = false;
+    
+    BSplineCombinationTransformType * testPtr2 = 
+      dynamic_cast<BSplineCombinationTransformType *>( this->m_Transform.GetPointer() );
+    if ( !testPtr2 )
     {
-			this->m_BSplineCombinationTransform = 0;
-			itkDebugMacro( "Transform is not BSplineCombination" );
+      this->m_BSplineCombinationTransform = 0;
+      itkDebugMacro( "Transform is not BSplineCombination" );
     }
-		else
+    else
     {
       this->m_TransformIsBSplineCombination = true;
-			this->m_BSplineCombinationTransform = testPtr2;
+      this->m_BSplineCombinationTransform = testPtr2;
 
-			/** The current transform in the BSplineCombinationTransform is 
-			 * always a BSplineTransform. */
-			BSplineTransformType * bsplineTransform = 
-				dynamic_cast<BSplineTransformType * >(
-				this->m_BSplineCombinationTransform->GetCurrentTransform() );
+      /** The current transform in the BSplineCombinationTransform is 
+       * always a BSplineTransform. */
+      BSplineTransformType * bsplineTransform = 
+        dynamic_cast<BSplineTransformType * >(
+        this->m_BSplineCombinationTransform->GetCurrentTransform() );
 
-			if ( !bsplineTransform )
-			{
-				itkExceptionMacro(<< "The BSplineCombinationTransform is not properly configured. The CurrentTransform is not set." );
-			}
-			this->m_NumBSplineParametersPerDim = 
+      if ( !bsplineTransform )
+      {
+        itkExceptionMacro(<< "The BSplineCombinationTransform is not properly configured. The CurrentTransform is not set." );
+      }
+      this->m_NumBSplineParametersPerDim = 
         bsplineTransform->GetNumberOfParametersPerDimension();
-			this->m_NumBSplineWeights = bsplineTransform->GetNumberOfWeights();
-			itkDebugMacro( "Transform is BSplineCombination" );
+      this->m_NumBSplineWeights = bsplineTransform->GetNumberOfWeights();
+      itkDebugMacro( "Transform is BSplineCombination" );
     }
 
     /** Resize the weights and transform index arrays and compute the parameters offset. */
-		if ( this->m_TransformIsBSpline || this->m_TransformIsBSplineCombination )
+    if ( this->m_TransformIsBSpline || this->m_TransformIsBSplineCombination )
     {
-			this->m_BSplineTransformWeights =
+      this->m_BSplineTransformWeights =
         BSplineTransformWeightsType( this->m_NumBSplineWeights );
-			this->m_BSplineTransformIndices =
+      this->m_BSplineTransformIndices =
         BSplineTransformIndexArrayType( this->m_NumBSplineWeights );
-			for ( unsigned int j = 0; j < FixedImageDimension; j++ )
+      for ( unsigned int j = 0; j < FixedImageDimension; j++ )
       {
-				this->m_BSplineParametersOffset[ j ] = j * this->m_NumBSplineParametersPerDim; 
+        this->m_BSplineParametersOffset[ j ] = j * this->m_NumBSplineParametersPerDim; 
       }
       this->m_NonZeroJacobianIndices.SetSize(
         FixedImageDimension * this->m_NumBSplineWeights );
@@ -389,14 +389,14 @@ namespace itk
       }
       this->m_InternalTransformJacobian.SetSize( 0, 0 );
     }
-    		
+        
   } // end CheckForBSplineTransform
 
 
   /**
-	 * ********************* InitializeInternalMasks *********************
+   * ********************* InitializeInternalMasks *********************
    * Initialize the internal moving image mask
-	 */
+   */
 
   template <class TFixedImage, class TMovingImage>
     void
@@ -495,7 +495,7 @@ namespace itk
       typename ErodeImageFilterType::Pointer eroder = ErodeImageFilterType::New();
       eroder->SetKernel( kernel );
       eroder->SetForegroundValue( itk::NumericTraits< InternalMaskPixelType >::One  );
-	    eroder->SetBackgroundValue( itk::NumericTraits< InternalMaskPixelType >::Zero );
+      eroder->SetBackgroundValue( itk::NumericTraits< InternalMaskPixelType >::Zero );
       eroder->SetInput( this->m_InternalMovingImageMask );
       eroder->Update();
       tempImage = eroder->GetOutput();
@@ -511,14 +511,14 @@ namespace itk
 
 
   /**
-	 * ******************* EvaluateMovingImageValueAndDerivative ******************
-	 *
-	 * Compute image value and possibly derivative at a transformed point
-	 */
+   * ******************* EvaluateMovingImageValueAndDerivative ******************
+   *
+   * Compute image value and possibly derivative at a transformed point
+   */
 
   template < class TFixedImage, class TMovingImage >
-		bool
-		AdvancedImageToImageMetric<TFixedImage,TMovingImage>
+    bool
+    AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     ::EvaluateMovingImageValueAndDerivative( 
     const MovingImagePointType & mappedPoint,
     RealType & movingImageValue,
@@ -528,7 +528,7 @@ namespace itk
     MovingImageContinuousIndexType cindex;
     this->m_Interpolator->ConvertPointToContinousIndex( mappedPoint, cindex );
     bool sampleOk = this->m_Interpolator->IsInsideBuffer( cindex );
-		if ( sampleOk )
+    if ( sampleOk )
     {
       /** Compute value and possibly derivative. */
       movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
@@ -556,116 +556,116 @@ namespace itk
 
     return sampleOk;
 
-	} // end EvaluateMovingImageValueAndDerivative
+  } // end EvaluateMovingImageValueAndDerivative
 
 
   /**
-	 * ********************** TransformPoint ************************
-	 *
-	 * Transform a point from FixedImage domain to MovingImage domain.
-	 * This function also checks if mapped point is within support region
+   * ********************** TransformPoint ************************
+   *
+   * Transform a point from FixedImage domain to MovingImage domain.
+   * This function also checks if mapped point is within support region
    * and mask.
-	 */
+   */
 
-	template < class TFixedImage, class TMovingImage >
-		bool
-		AdvancedImageToImageMetric<TFixedImage,TMovingImage>
-		::TransformPoint( 
-		const FixedImagePointType & fixedImagePoint, 
-		MovingImagePointType & mappedPoint ) const
-	{
+  template < class TFixedImage, class TMovingImage >
+    bool
+    AdvancedImageToImageMetric<TFixedImage,TMovingImage>
+    ::TransformPoint( 
+    const FixedImagePointType & fixedImagePoint, 
+    MovingImagePointType & mappedPoint ) const
+  {
     bool sampleOk = true;
-		if ( !this->m_TransformIsBSpline && !this->m_TransformIsBSplineCombination )
-		{
-			mappedPoint = this->m_Transform->TransformPoint( fixedImagePoint );
+    if ( !this->m_TransformIsBSpline && !this->m_TransformIsBSplineCombination )
+    {
+      mappedPoint = this->m_Transform->TransformPoint( fixedImagePoint );
       sampleOk = true;      
-		}
-		else
-		{
-			if ( this->m_TransformIsBSpline )
-			{
-				this->m_BSplineTransform->TransformPoint( 
+    }
+    else
+    {
+      if ( this->m_TransformIsBSpline )
+      {
+        this->m_BSplineTransform->TransformPoint( 
           fixedImagePoint,
-					mappedPoint,
-					this->m_BSplineTransformWeights,
-					this->m_BSplineTransformIndices,
-					sampleOk );
-			}
-			else if ( this->m_TransformIsBSplineCombination )
-			{
-				this->m_BSplineCombinationTransform->TransformPoint( 
+          mappedPoint,
+          this->m_BSplineTransformWeights,
+          this->m_BSplineTransformIndices,
+          sampleOk );
+      }
+      else if ( this->m_TransformIsBSplineCombination )
+      {
+        this->m_BSplineCombinationTransform->TransformPoint( 
           fixedImagePoint,
-				  mappedPoint,
-				  this->m_BSplineTransformWeights,
-				  this->m_BSplineTransformIndices,
-				  sampleOk );
-			}
-		}
+          mappedPoint,
+          this->m_BSplineTransformWeights,
+          this->m_BSplineTransformIndices,
+          sampleOk );
+      }
+    }
 
     return sampleOk;
 
-	} // end TransformPoint
+  } // end TransformPoint
 
 
   /**
-	 * *************** EvaluateTransformJacobian ****************
-	 */
+   * *************** EvaluateTransformJacobian ****************
+   */
 
-	template < class TFixedImage, class TMovingImage >
+  template < class TFixedImage, class TMovingImage >
     const typename AdvancedImageToImageMetric<TFixedImage,TMovingImage>::TransformJacobianType &
-		AdvancedImageToImageMetric<TFixedImage,TMovingImage>
-		::EvaluateTransformJacobian( 
-		const FixedImagePointType & fixedImagePoint) const
+    AdvancedImageToImageMetric<TFixedImage,TMovingImage>
+    ::EvaluateTransformJacobian( 
+    const FixedImagePointType & fixedImagePoint) const
   {
     if( !this->m_TransformIsBSpline && !this->m_TransformIsBSplineCombination )
-		{
-			/** Generic version which works for all transforms. */
-			return this->m_Transform->GetJacobian( fixedImagePoint );
-		} // end if no bspline transform
-		else
-		{
-			/** If the transform is of type BSplineDeformableTransform or of type
-			 * BSplineCombinationTransform, we can obtain a speed up by only 
-			 * processing the affected parameters. */
+    {
+      /** Generic version which works for all transforms. */
+      return this->m_Transform->GetJacobian( fixedImagePoint );
+    } // end if no bspline transform
+    else
+    {
+      /** If the transform is of type BSplineDeformableTransform or of type
+       * BSplineCombinationTransform, we can obtain a speed up by only 
+       * processing the affected parameters. */
       unsigned int i = 0;
       /** We assume the sizes of the m_InternalTransformJacobian and the
        * m_NonZeroJacobianIndices have already been set; Also we assume
        * that the InternalTransformJacobian is not 'touched' by other
        * functions (some elements always stay zero). */      
-			for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
-			{
+      for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
+      {
         for ( unsigned int mu = 0; mu < this->m_NumBSplineWeights; mu++ )
-				{
-				  /* The array weights contains the Jacobian values in a 1-D array 
-					 * (because for each parameter the Jacobian is non-zero in only 1 of the
-					 * possible dimensions) which is multiplied by the moving image gradient. */
+        {
+          /* The array weights contains the Jacobian values in a 1-D array 
+           * (because for each parameter the Jacobian is non-zero in only 1 of the
+           * possible dimensions) which is multiplied by the moving image gradient. */
           this->m_InternalTransformJacobian[ dim ][ i ] = this->m_BSplineTransformWeights[ mu ];
-				
+        
           /** The parameter number to which this partial derivative corresponds */
-					const unsigned int parameterNumber = 
+          const unsigned int parameterNumber = 
             this->m_BSplineTransformIndices[ mu ] + this->m_BSplineParametersOffset[ dim ];
           this->m_NonZeroJacobianIndices[ i ] = parameterNumber;
 
           /** Go to next column in m_InternalTransformJacobian */
           ++i;
-  			} //end mu for loop
-			} //end dim for loop
+        } //end mu for loop
+      } //end dim for loop
 
       return this->m_InternalTransformJacobian;
 
-		} // end if-block transform is BSpline
+    } // end if-block transform is BSpline
 
   } // end EvaluateTransformJacobian
 
  
   /**
-	 * **************** EvaluateMovingMaskValueAndDerivative *******************
+   * **************** EvaluateMovingMaskValueAndDerivative *******************
    * Estimate value and possibly spatial derivative of internal moving mask 
    */
 
-	template < class TFixedImage, class TMovingImage> 
-		void
-		AdvancedImageToImageMetric<TFixedImage,TMovingImage>
+  template < class TFixedImage, class TMovingImage> 
+    void
+    AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     ::EvaluateMovingMaskValueAndDerivative(
       const MovingImagePointType & point,
       RealType & value,
@@ -725,8 +725,8 @@ namespace itk
    */
 
   template < class TFixedImage, class TMovingImage >
-		void
-		AdvancedImageToImageMetric<TFixedImage,TMovingImage>
+    void
+    AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     ::CheckNumberOfSamples(
       unsigned long wanted, unsigned long found, double sumOfMaskValues ) const
   {
@@ -741,8 +741,8 @@ namespace itk
 
 
   /**
-	 * ********************* PrintSelf ****************************
-	 */
+   * ********************* PrintSelf ****************************
+   */
 
   template <class TFixedImage, class TMovingImage>
     void

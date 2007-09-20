@@ -198,15 +198,15 @@ protected:
   /** Protected Typedefs ******************/
   
   /** Typedefs for indices and points. */
-	typedef typename FixedImageType::IndexType                    FixedImageIndexType;
-	typedef typename FixedImageIndexType::IndexValueType          FixedImageIndexValueType;
-	typedef typename MovingImageType::IndexType                   MovingImageIndexType;
-	typedef typename TransformType::InputPointType                FixedImagePointType;
-	typedef typename TransformType::OutputPointType               MovingImagePointType;
+  typedef typename FixedImageType::IndexType                    FixedImageIndexType;
+  typedef typename FixedImageIndexType::IndexValueType          FixedImageIndexValueType;
+  typedef typename MovingImageType::IndexType                   MovingImageIndexType;
+  typedef typename TransformType::InputPointType                FixedImagePointType;
+  typedef typename TransformType::OutputPointType               MovingImagePointType;
   typedef typename InterpolatorType::ContinuousIndexType        MovingImageContinuousIndexType;
-	
+  
   /** Typedefs used for computing image derivatives. */
-	typedef	BSplineInterpolateImageFunction<
+  typedef BSplineInterpolateImageFunction<
     MovingImageType, CoordinateRepresentationType>              BSplineInterpolatorType;
   typedef typename BSplineInterpolatorType::CovariantVectorType MovingImageDerivativeType;
   typedef GradientImageFilter<
@@ -214,20 +214,20 @@ protected:
       
   /** Typedefs for support of sparse jacobians and BSplineTransforms. */
   enum { DeformationSplineOrder = 3 };
-	typedef BSplineDeformableTransform<
-		CoordinateRepresentationType,
-		itkGetStaticConstMacro(FixedImageDimension),
-		DeformationSplineOrder>													            BSplineTransformType;
+  typedef BSplineDeformableTransform<
+    CoordinateRepresentationType,
+    itkGetStaticConstMacro(FixedImageDimension),
+    DeformationSplineOrder>                                     BSplineTransformType;
   typedef typename 
-		BSplineTransformType::WeightsType								            BSplineTransformWeightsType;
-	typedef typename 
-		BSplineTransformType::ParameterIndexArrayType 	            BSplineTransformIndexArrayType;
-	typedef itk::BSplineCombinationTransform<
-		CoordinateRepresentationType,
-		itkGetStaticConstMacro(FixedImageDimension),
-		DeformationSplineOrder>													            BSplineCombinationTransformType;
- 	typedef FixedArray< unsigned long, 
-		itkGetStaticConstMacro(FixedImageDimension)>                BSplineParametersOffsetType;
+    BSplineTransformType::WeightsType                           BSplineTransformWeightsType;
+  typedef typename 
+    BSplineTransformType::ParameterIndexArrayType               BSplineTransformIndexArrayType;
+  typedef itk::BSplineCombinationTransform<
+    CoordinateRepresentationType,
+    itkGetStaticConstMacro(FixedImageDimension),
+    DeformationSplineOrder>                                     BSplineCombinationTransformType;
+  typedef FixedArray< unsigned long, 
+    itkGetStaticConstMacro(FixedImageDimension)>                BSplineParametersOffsetType;
   /** Array type for holding parameter indices */
   typedef Array<unsigned int>                                   ParameterIndexArrayType;
   
@@ -242,25 +242,25 @@ protected:
   mutable ImageSamplerPointer   m_ImageSampler;
 
   /** Variables for image derivative computation. */
-	bool m_InterpolatorIsBSpline;
-	typename BSplineInterpolatorType::Pointer             m_BSplineInterpolator;
-	typename CentralDifferenceGradientFilterType::Pointer m_CentralDifferenceGradientFilter;
+  bool m_InterpolatorIsBSpline;
+  typename BSplineInterpolatorType::Pointer             m_BSplineInterpolator;
+  typename CentralDifferenceGradientFilterType::Pointer m_CentralDifferenceGradientFilter;
 
   /** Variables used when the transform is a bspline transform. */
   bool m_TransformIsBSpline;
-	bool m_TransformIsBSplineCombination;
-  typename BSplineTransformType::Pointer						m_BSplineTransform;
-	mutable BSplineTransformWeightsType								m_BSplineTransformWeights;
-	mutable BSplineTransformIndexArrayType						m_BSplineTransformIndices;
-	typename BSplineCombinationTransformType::Pointer m_BSplineCombinationTransform;
-	BSplineParametersOffsetType                       m_BSplineParametersOffset;
+  bool m_TransformIsBSplineCombination;
+  typename BSplineTransformType::Pointer            m_BSplineTransform;
+  mutable BSplineTransformWeightsType               m_BSplineTransformWeights;
+  mutable BSplineTransformIndexArrayType            m_BSplineTransformIndices;
+  typename BSplineCombinationTransformType::Pointer m_BSplineCombinationTransform;
+  BSplineParametersOffsetType                       m_BSplineParametersOffset;
 
-	/** The number of BSpline parameters per image dimension. */
-	long                                              m_NumBSplineParametersPerDim;
+  /** The number of BSpline parameters per image dimension. */
+  long                                              m_NumBSplineParametersPerDim;
 
-	/** The number of BSpline transform weights is the number of
-	* of parameter in the support region (per dimension ). */   
-	unsigned long                                     m_NumBSplineWeights;
+  /** The number of BSpline transform weights is the number of
+  * of parameter in the support region (per dimension ). */   
+  unsigned long                                     m_NumBSplineWeights;
 
   /** The number of transform parameters. */
   unsigned int m_NumberOfParameters;
@@ -276,9 +276,9 @@ protected:
   typename FixedImageLimiterType::Pointer            m_FixedImageLimiter;
   typename MovingImageLimiterType::Pointer           m_MovingImageLimiter;
   FixedImagePixelType                                m_FixedImageTrueMin;
-	FixedImagePixelType                                m_FixedImageTrueMax;
-	MovingImagePixelType                               m_MovingImageTrueMin;
-	MovingImagePixelType                               m_MovingImageTrueMax;
+  FixedImagePixelType                                m_FixedImageTrueMax;
+  MovingImagePixelType                               m_MovingImageTrueMin;
+  MovingImagePixelType                               m_MovingImageTrueMax;
   FixedImageLimiterOutputType                        m_FixedImageMinLimit;
   FixedImageLimiterOutputType                        m_FixedImageMaxLimit;
   MovingImageLimiterOutputType                       m_MovingImageMinLimit;
@@ -310,8 +310,8 @@ protected:
    * Checks if the point lies within the moving image buffer (bool return).
    * If no gradient is wanted, set the gradient argument to 0.
    * If a BSplineInterpolationFunction is used, this class obtain
-	 * image derivatives from the BSpline interpolator. Otherwise, 
-	 * image derivatives are computed using (forward) finite differencing. */
+   * image derivatives from the BSpline interpolator. Otherwise, 
+   * image derivatives are computed using (forward) finite differencing. */
   virtual bool EvaluateMovingImageValueAndDerivative(
     const MovingImagePointType & mappedPoint,
     RealType & movingImageValue,
@@ -323,13 +323,13 @@ protected:
   virtual void CheckForBSplineTransform( void );
 
   /** Transform a point from FixedImage domain to MovingImage domain.
-	 * This function also checks if mapped point is within support region of the transform.
+   * This function also checks if mapped point is within support region of the transform.
    * It returns true if so, and false otherwise
    * If the transform is a bspline transform some data is stored (BSplineWeights
    * and BSplineIndices) that speedup EvaluateTransformJacobian. */
   virtual bool TransformPoint( 
     const FixedImagePointType & fixedImagePoint,
-	  MovingImagePointType & mappedPoint ) const;
+    MovingImagePointType & mappedPoint ) const;
  
   /** This function returns a reference to the transform jacobian.
    * This is either a reference to the full TransformJacobian or
