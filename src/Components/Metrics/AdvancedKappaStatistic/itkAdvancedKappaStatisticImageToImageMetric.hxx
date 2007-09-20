@@ -100,7 +100,7 @@ namespace itk
     typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
 
     /** Some variables. */
-    RealType movingImageValue, movingMaskValue; 
+    RealType movingImageValue, movingMaskValue;
     MovingImagePointType mappedPoint;
     MeasureType fixedForegroundArea  = NumericTraits< MeasureType >::Zero;
     MeasureType movingForegroundArea = NumericTraits< MeasureType >::Zero;
@@ -116,7 +116,7 @@ namespace itk
       bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
       /** Check if point is inside moving mask. */
-      if ( sampleOk ) 
+      if ( sampleOk )
       {
         this->EvaluateMovingMaskValueAndDerivative( mappedPoint, movingMaskValue, 0 );
         const double smallNumber1 = 1e-10;
@@ -160,8 +160,8 @@ namespace itk
 		} // end for loop over the image sample container
 
     /** Check if enough samples were valid. */
-    this->CheckNumberOfSamples(
-      sampleContainer->Size(), this->m_NumberOfPixelsCounted, this->m_NumberOfPixelsCounted );
+    this->CheckNumberOfSamples( sampleContainer->Size(),
+      this->m_NumberOfPixelsCounted, this->m_NumberOfPixelsCounted );
     
     /** Compute the final metric value. */
     MeasureType areaSum = fixedForegroundArea + movingForegroundArea;
