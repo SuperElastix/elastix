@@ -2,6 +2,7 @@
 #define __elxEulerTransform_HXX_
 
 #include "elxEulerTransform.h"
+#include "itkImageRandomConstIteratorWithIndex.h"
 
 namespace elastix
 {
@@ -28,101 +29,11 @@ namespace elastix
 		void EulerTransformElastix<TElastix>
 		::BeforeRegistration(void)
 	{
-		/** Task 1 - Set center of rotation and initial translation */
+		/** Set center of rotation and initial translation */
 		this->InitializeTransform();
-		
-		/** Task 2 - Set the scales.*/
-		/** Here is an heuristic rule for estimating good values for
-		 * the rotation/translation scales.
-		 *
-		 * 1) Estimate the bounding box of your points (in physical units).
-		 * 2) Take the 3D Diagonal of that bounding box
-		 * 3) Multiply that by 10.0.
-		 * 4) use 1.0 /[ value from (3) ] as the translation scaling value.
-		 * 5) use 1.0 as the rotation scaling value.
-		 *
-		 * With this operation you bring the translation units
-		 * to the range of rotations (e.g. around -1 to 1).
-		 * After that, all your registration parameters are
-		 * in the relaxed range of -1:1. At that point you
-		 * can start setting your optimizer with step lengths
-		 * in the ranges of 0.001 if you are conservative, or
-		 * in the range of 0.1 if you want to live dangerously.
-		 * (0.1 radians is about 5.7 degrees).
-		 * 
-		 * This heuristic rule is based on the naive assumption
-		 * that your registration may require translations as
-		 * large as 1/10 of the diagonal of the bounding box.
-		 */
 
-		/** Create the new scales. */
-		ScalesType newscales( this->GetNumberOfParameters() );
-		newscales.Fill( 1.0 );
-		double dummy = 100000.0;
-
-		/** If the Dimension is 3, the first 3 parameters represent rotations.
-		 * If the Dimension is 2, only the first parameter represent a rotation.
-		 */
-		unsigned int RotationPart = 3;
-		if ( SpaceDimension == 2 ) RotationPart = 1;
-
-		/** this->m_Configuration->ReadParameter() returns 0 if there is a value given
-		 * in the parameter-file, and returns 1 if there is no value given in the
-		 * parameter-file.
-		 * Check which option is used:
-		 * - Nothing given in the parameter-file: rotations are scaled by the default
-		 *		value 100000.0
-		 * - Only one scale given in the parameter-file: rotations are scaled by this
-		 *		value.
-		 * - All scales are given in the parameter-file: each parameter is assigned its
-		 *		own scale.
-		 */
-
-		/** Check the return values of ReadParameter. */
-		std::vector<int> returnvalues( this->GetNumberOfParameters(), 5 );
-		for ( unsigned int i = 0; i < this->GetNumberOfParameters(); i++ )
-		{
-			returnvalues[ i ] = this->m_Configuration->ReadParameter( dummy, "Scales", i, true );
-		}
-
-		/** Check which of the above options is used. */
-		if ( returnvalues[ 0 ] == 1 )
-		{
-			/** In this case the first option is used. */
-			for ( unsigned int i = 0; i < RotationPart; i++ )
-			{
-				newscales[ i ] = 100000.0;
-			}
-		}
-		else if ( returnvalues[ 0 ] == 0 && returnvalues[ 1 ] == 1 )
-		{
-			/** In this case the second option is used. */
-			double scale = 100000.0;
-			this->m_Configuration->ReadParameter( scale, "Scales", 0 );
-			for ( unsigned int i = 0; i < RotationPart; i++ )
-			{
-				newscales[ i ] = scale;
-			}
-		}
-		else if ( returnvalues[ 0 ] == 0 && returnvalues[ this->GetNumberOfParameters() - 1 ] == 0 )
-		{
-			/** In this case the third option is used. */
-			for ( unsigned int i = 0; i < this->GetNumberOfParameters(); i++ )
-			{
-				this->m_Configuration->ReadParameter( newscales[ i ], "Scales", i );
-			}
-		}
-		else
-		{
-			/** In this case an error is made in the parameter-file.
-			 * An error is thrown, because using erroneous scales in the optimizer
-			 * can give unpredictable results.
-			 */
-			itkExceptionMacro( << "ERROR: The Scales-option in the parameter-file has not been set properly." );
-		}
-
-		/** Set the scales into the optimizer. */
-		this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newscales );
+    /** Set the scales */
+    this->SetScales();
 		
 	} // end BeforeRegistration
 
@@ -378,6 +289,168 @@ namespace elastix
 
 	} // end InitializeTransform
 	
+
+  /**
+	 * ************************* SetScales *********************
+	 */
+	
+	template <class TElastix>
+		void EulerTransformElastix<TElastix>
+		::SetScales( void )
+	{  
+    /** Create the new scales. */
+    const unsigned int N = this->GetNumberOfParameters();
+		ScalesType newscales( N );
+		newscales.Fill( 1.0 );
+
+    /** Check if automatic scales estimation is desired */
+    bool automaticScalesEstimation = false;
+    this->m_Configuration->ReadParameter( automaticScalesEstimation,
+      "AutomaticScalesEstimation", 0 );
+    if ( automaticScalesEstimation )
+    {
+      elxout << "Scales are estimed automatically." << std::endl;
+
+      typedef itk::ImageRandomConstIteratorWithIndex<FixedImageType>
+                                                          FixedImageIteratorType;
+      const unsigned int outdim = this->GetOutputSpaceDimension();
+
+      /** Get fixed image and region */
+      typename FixedImageType::ConstPointer fixedImage = this->GetRegistration()->
+        GetAsITKBaseType()->GetFixedImage();
+      RegionType fixedRegion = this->GetRegistration()->
+        GetAsITKBaseType()->GetFixedImageRegion();
+
+      /** Setup random iterator on fixed image */
+      FixedImageIteratorType iter( fixedImage, fixedRegion );
+      unsigned long nrofsamples = 10000;
+      iter.SetNumberOfSamples( nrofsamples );
+      iter.GoToBegin();
+
+      PointType point;
+      newscales.Fill(0.0);
+
+      /** Loop over image and compute jacobian */
+      while ( !iter.IsAtEnd() )
+      {
+        double step= 0.0;
+        
+        const IndexType & index = iter.GetIndex();
+
+        fixedImage->TransformIndexToPhysicalPoint( index, point );
+        const JacobianType & jacobian = this->GetJacobian( point );
+
+        /** Square each element of the jacobian and add each row
+         * to the newscales */
+        for( unsigned int d = 0; d < outdim; ++d )
+        {
+          ScalesType jacd(jacobian[d], N, false);
+          newscales += element_product( jacd, jacd );
+        }
+
+        /** Next sample */
+        ++iter;
+      }
+      newscales /= static_cast<double>( nrofsamples );
+    
+    }
+    else
+    {
+
+      /** Here is an heuristic rule for estimating good values for
+      * the rotation/translation scales.
+      *
+      * 1) Estimate the bounding box of your points (in physical units).
+      * 2) Take the 3D Diagonal of that bounding box
+      * 3) Multiply that by 10.0.
+      * 4) use 1.0 /[ value from (3) ] as the translation scaling value.
+      * 5) use 1.0 as the rotation scaling value.
+      *
+      * With this operation you bring the translation units
+      * to the range of rotations (e.g. around -1 to 1).
+      * After that, all your registration parameters are
+      * in the relaxed range of -1:1. At that point you
+      * can start setting your optimizer with step lengths
+      * in the ranges of 0.001 if you are conservative, or
+      * in the range of 0.1 if you want to live dangerously.
+      * (0.1 radians is about 5.7 degrees).
+      * 
+      * This heuristic rule is based on the naive assumption
+      * that your registration may require translations as
+      * large as 1/10 of the diagonal of the bounding box.
+      */
+
+      double dummy = 100000.0;
+
+      /** If the Dimension is 3, the first 3 parameters represent rotations.
+      * If the Dimension is 2, only the first parameter represent a rotation.
+      */
+      unsigned int RotationPart = 3;
+      if ( SpaceDimension == 2 ) RotationPart = 1;
+
+      /** this->m_Configuration->ReadParameter() returns 0 if there is a value given
+      * in the parameter-file, and returns 1 if there is no value given in the
+      * parameter-file.
+      * Check which option is used:
+      * - Nothing given in the parameter-file: rotations are scaled by the default
+      *		value 100000.0
+      * - Only one scale given in the parameter-file: rotations are scaled by this
+      *		value.
+      * - All scales are given in the parameter-file: each parameter is assigned its
+      *		own scale.
+      */
+
+      /** Check the return values of ReadParameter. */
+      std::vector<int> returnvalues( this->GetNumberOfParameters(), 5 );
+      for ( unsigned int i = 0; i < this->GetNumberOfParameters(); i++ )
+      {
+        returnvalues[ i ] = this->m_Configuration->ReadParameter( dummy, "Scales", i, true );
+      }
+
+      /** Check which of the above options is used. */
+      if ( returnvalues[ 0 ] == 1 )
+      {
+        /** In this case the first option is used. */
+        for ( unsigned int i = 0; i < RotationPart; i++ )
+        {
+          newscales[ i ] = 100000.0;
+        }
+      }
+      else if ( returnvalues[ 0 ] == 0 && returnvalues[ 1 ] == 1 )
+      {
+        /** In this case the second option is used. */
+        double scale = 100000.0;
+        this->m_Configuration->ReadParameter( scale, "Scales", 0 );
+        for ( unsigned int i = 0; i < RotationPart; i++ )
+        {
+          newscales[ i ] = scale;
+        }
+      }
+      else if ( returnvalues[ 0 ] == 0 && returnvalues[ this->GetNumberOfParameters() - 1 ] == 0 )
+      {
+        /** In this case the third option is used. */
+        for ( unsigned int i = 0; i < this->GetNumberOfParameters(); i++ )
+        {
+          this->m_Configuration->ReadParameter( newscales[ i ], "Scales", i );
+        }
+      }
+      else
+      {
+        /** In this case an error is made in the parameter-file.
+        * An error is thrown, because using erroneous scales in the optimizer
+        * can give unpredictable results.
+        */
+        itkExceptionMacro( << "ERROR: The Scales-option in the parameter-file has not been set properly." );
+      }
+       
+    } // end else: no automatic scales estimation
+
+    elxout << "Scales for transform parameters are: " << newscales << std::endl;
+
+		/** Set the scales into the optimizer. */
+		this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newscales );
+		
+  } // end SetScales
 
 	/**
 	 * ******************** ReadCenterOfRotationIndex *********************

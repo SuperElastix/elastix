@@ -1,0 +1,8 @@
+
+
+ADD_ELXCOMPONENT( elxNearestNeighborResampleInterpolator
+ elxNearestNeighborResampleInterpolator.h
+ elxNearestNeighborResampleInterpolator.hxx
+ elxNearestNeighborResampleInterpolator.cxx )
+
+

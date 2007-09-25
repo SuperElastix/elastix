@@ -26,7 +26,11 @@ using namespace itk;
 	 *		If more than one argument is given, then the number of arguments should be
 	 *		equal to the number of parameters: for each parameter its scale factor.
 	 *		If this parameter option is not used, by default the rotations are scaled
-	 *		by a factor of 100000.0.
+	 *		by a factor of 100000.0. See also the AutomaticScalesEstimation parameter.
+   * \parameter AutomaticScalesEstimation: if this parameter is set to "true" the Scales
+   *    parameter is ignored and the scales are determined automatically. \n
+   *    example: <tt>( AutomaticScalesEstimation "true" ) </tt> \n
+   *    Default: "false".
 	 * \parameter CenterOfRotation: an index around which the image is rotated. \n
 	 *		example: <tt>(CenterOfRotation 128 128 90)</tt> \n
 	 *		By default the CenterOfRotation is set to the geometric center of the image.
@@ -161,6 +165,14 @@ using namespace itk;
 		 * It is not yet possible to enter an initial rotation angle.
 		 */
 		virtual void InitializeTransform(void);
+
+    /** Set the scales
+     * \li If AutomaticScalesEstimation is "true" estimate scales
+     * \li If scales are provided by the user use those,
+     * \li Otherwise use some default value
+     * This function is called by BeforeRegistration, after
+     * the InitializeTransform function is called */
+    virtual void SetScales(void);
 
 		/** Function to read transform-parameters from a file. 
 		 * 

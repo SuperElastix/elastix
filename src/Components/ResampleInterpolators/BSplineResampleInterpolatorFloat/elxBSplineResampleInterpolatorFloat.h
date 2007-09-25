@@ -6,109 +6,120 @@
 
 namespace elastix
 {
-	using namespace itk;
-	
-	/**
-	 * \class BSplineResampleInterpolatorFloat
-	 * \brief A resample-interpolator based on B-splines.
-	 *
-   * Compared to the BSplineResampleInterpolator this class uses
-   * a float CoefficientType, instead of double. You can select
-   * this resample interpolator if memory burden is an issue.
-   *
-	 * The parameters used in this class are:
-	 * \parameter ResampleInterpolator: Select this resample interpolator as follows:\n
-	 *		<tt>(ResampleInterpolator "FinalBSplineInterpolatorFloat")</tt>
-	 *
-	 * \ingroup ResampleInterpolators
-	 */
+  using namespace itk;
 
-	template < class TElastix	>
-		class BSplineResampleInterpolatorFloat :
-	public
-		BSplineInterpolateImageFunction<
-		ITK_TYPENAME ResampleInterpolatorBase<TElastix>::InputImageType,
-		ITK_TYPENAME ResampleInterpolatorBase<TElastix>::CoordRepType,
-		float >, //CoefficientType
-	public ResampleInterpolatorBase<TElastix>
-	{
-	public:
+  /**
+  * \class BSplineResampleInterpolatorFloat
+  * \brief A resample-interpolator based on B-splines.
+  *
+  * Compared to the BSplineResampleInterpolator this class uses
+  * a float CoefficientType, instead of double. You can select
+  * this resample interpolator if memory burden is an issue.
+  *
+  * The parameters used in this class are:
+  * \parameter ResampleInterpolator: Select this resample interpolator as follows:\n
+  *   <tt>(ResampleInterpolator "FinalBSplineInterpolatorFloat")</tt>
+  * \parameter FinalBSplineInterpolationOrder: the order of the b-spline used to resample 
+  *    the deformed moving image; possible values: (0-5) \n
+  *    example: <tt>(FinalBSplineInterpolationOrder 3 ) </tt> \n
+  *    Default: 3.
+  *
+  * The transform parameters necessary for transformix, additionally defined by this class, are:
+  * \transformparameter FinalBSplineInterpolationOrder: the order of the b-spline used to resample 
+  *    the deformed moving image; possible values: (0-5) \n
+  *    example: <tt>(FinalBSplineInterpolationOrder 3) </tt> \n
+  *    Default: 3.
+  *
+  * \ingroup ResampleInterpolators
+  * \sa BSplineResampleInterpolator
+  */
 
-		/** Standard ITK-stuff. */
-		typedef BSplineResampleInterpolatorFloat			Self;
-		typedef BSplineInterpolateImageFunction<
-			typename ResampleInterpolatorBase<TElastix>::InputImageType,
-			typename ResampleInterpolatorBase<TElastix>::CoordRepType,
-			float >																		  Superclass1;
-		typedef ResampleInterpolatorBase<TElastix>		Superclass2;
-		typedef SmartPointer<Self>										Pointer;
-		typedef SmartPointer<const Self>						  ConstPointer;
-		
-		/** Method for creation through the object factory. */
-		itkNewMacro( Self );
-		
-		/** Run-time type information (and related methods). */
-		itkTypeMacro( BSplineResampleInterpolatorFloat, BSplineInterpolateImageFunction );
-		
-		/** Name of this class.
-		 * Use this name in the parameter file to select this specific resample interpolator. \n
-		 * example: <tt>(ResampleInterpolator "FinalBSplineInterpolatorFloat")</tt>\n
-		 */
-		elxClassNameMacro( "FinalBSplineInterpolatorFloat" );
+  template < class TElastix >
+  class BSplineResampleInterpolatorFloat :
+    public
+    BSplineInterpolateImageFunction<
+    ITK_TYPENAME ResampleInterpolatorBase<TElastix>::InputImageType,
+    ITK_TYPENAME ResampleInterpolatorBase<TElastix>::CoordRepType,
+    float >, //CoefficientType
+    public ResampleInterpolatorBase<TElastix>
+  {
+  public:
 
-		/** Dimension of the image. */
-		itkStaticConstMacro( ImageDimension, unsigned int,Superclass1::ImageDimension );
-		
-		/** Typedef's inherited from the superclass. */
-		typedef typename Superclass1::OutputType	 							OutputType;
-		typedef typename Superclass1::InputImageType						InputImageType;
-		typedef typename Superclass1::IndexType									IndexType;
-		typedef typename Superclass1::ContinuousIndexType				ContinuousIndexType;
-		typedef typename Superclass1::PointType									PointType;
-		typedef typename Superclass1::Iterator									Iterator;
-		typedef typename Superclass1::CoefficientDataType				CoefficientDataType;
-		typedef typename Superclass1::CoefficientImageType			CoefficientImageType;
-		typedef typename Superclass1::CoefficientFilter					CoefficientFilter;
-		typedef typename Superclass1::CoefficientFilterPointer	CoefficientFilterPointer;
-		typedef typename Superclass1::CovariantVectorType				CovariantVectorType;
-		
-		/** Typedef's from ResampleInterpolatorBase. */
-		typedef typename Superclass2::ElastixType								ElastixType;
-		typedef typename Superclass2::ElastixPointer						ElastixPointer;
-		typedef typename Superclass2::ConfigurationType					ConfigurationType;
-		typedef typename Superclass2::ConfigurationPointer			ConfigurationPointer;
-		typedef typename Superclass2::RegistrationType					RegistrationType;
-		typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
-		typedef typename Superclass2::ITKBaseType								ITKBaseType;
-		
-		/** Execute stuff before the actual registration:
-		 * \li Set the spline order.
-		 */
-		virtual void BeforeRegistration( void );
+    /** Standard ITK-stuff. */
+    typedef BSplineResampleInterpolatorFloat      Self;
+    typedef BSplineInterpolateImageFunction<
+      typename ResampleInterpolatorBase<TElastix>::InputImageType,
+      typename ResampleInterpolatorBase<TElastix>::CoordRepType,
+      float >                                     Superclass1;
+    typedef ResampleInterpolatorBase<TElastix>    Superclass2;
+    typedef SmartPointer<Self>                    Pointer;
+    typedef SmartPointer<const Self>              ConstPointer;
 
-		/** Function to read transform-parameters from a file. */
-		virtual void ReadFromFile( void );
+    /** Method for creation through the object factory. */
+    itkNewMacro( Self );
 
-		/** Function to write transform-parameters to a file. */
-		virtual void WriteToFile( void );
+    /** Run-time type information (and related methods). */
+    itkTypeMacro( BSplineResampleInterpolatorFloat, BSplineInterpolateImageFunction );
 
-	protected:
+    /** Name of this class.
+    * Use this name in the parameter file to select this specific resample interpolator. \n
+    * example: <tt>(ResampleInterpolator "FinalBSplineInterpolatorFloat")</tt>\n
+    */
+    elxClassNameMacro( "FinalBSplineInterpolatorFloat" );
 
-		/** The constructor. */
-		BSplineResampleInterpolatorFloat() {}
-		/** The destructor. */
-		virtual ~BSplineResampleInterpolatorFloat() {}
-						
-	private:
+    /** Dimension of the image. */
+    itkStaticConstMacro( ImageDimension, unsigned int,Superclass1::ImageDimension );
 
-		/** The private constructor. */
-		BSplineResampleInterpolatorFloat( const Self& );	// purposely not implemented
-		/** The private copy constructor. */
-		void operator=( const Self& );							// purposely not implemented
-			
-	}; // end class BSplineResampleInterpolatorFloat
-	
-	
+    /** Typedef's inherited from the superclass. */
+    typedef typename Superclass1::OutputType                OutputType;
+    typedef typename Superclass1::InputImageType            InputImageType;
+    typedef typename Superclass1::IndexType                 IndexType;
+    typedef typename Superclass1::ContinuousIndexType       ContinuousIndexType;
+    typedef typename Superclass1::PointType                 PointType;
+    typedef typename Superclass1::Iterator                  Iterator;
+    typedef typename Superclass1::CoefficientDataType       CoefficientDataType;
+    typedef typename Superclass1::CoefficientImageType      CoefficientImageType;
+    typedef typename Superclass1::CoefficientFilter         CoefficientFilter;
+    typedef typename Superclass1::CoefficientFilterPointer  CoefficientFilterPointer;
+    typedef typename Superclass1::CovariantVectorType       CovariantVectorType;
+
+    /** Typedef's from ResampleInterpolatorBase. */
+    typedef typename Superclass2::ElastixType               ElastixType;
+    typedef typename Superclass2::ElastixPointer            ElastixPointer;
+    typedef typename Superclass2::ConfigurationType         ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType          RegistrationType;
+    typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
+    typedef typename Superclass2::ITKBaseType               ITKBaseType;
+
+    /** Execute stuff before the actual registration:
+    * \li Set the spline order.
+    */
+    virtual void BeforeRegistration( void );
+
+    /** Function to read transform-parameters from a file. */
+    virtual void ReadFromFile( void );
+
+    /** Function to write transform-parameters to a file. */
+    virtual void WriteToFile( void );
+
+  protected:
+
+    /** The constructor. */
+    BSplineResampleInterpolatorFloat() {}
+    /** The destructor. */
+    virtual ~BSplineResampleInterpolatorFloat() {}
+
+  private:
+
+    /** The private constructor. */
+    BSplineResampleInterpolatorFloat( const Self& );  // purposely not implemented
+    /** The private copy constructor. */
+    void operator=( const Self& );              // purposely not implemented
+
+  }; // end class BSplineResampleInterpolatorFloat
+
+
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION

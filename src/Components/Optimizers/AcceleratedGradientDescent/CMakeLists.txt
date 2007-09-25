@@ -6,7 +6,7 @@ ADD_ELXCOMPONENT( elxAcceleratedGradientDescent
  elxAcceleratedGradientDescent.cxx
  itkAcceleratedGradientDescentOptimizer.h 
  itkAcceleratedGradientDescentOptimizer.cxx
- ../StandardGradientDescent/itkGradientDescentOptimizer2.h 
+ ../StandardGradientDescent/itkStandardGradientDescentOptimizer.cxx 
  ../StandardGradientDescent/itkGradientDescentOptimizer2.cxx 
 )
 

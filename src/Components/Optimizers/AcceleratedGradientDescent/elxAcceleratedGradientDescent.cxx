@@ -1,3 +1,3 @@
-#include "elxStandardGradientDescent.h"
+#include "elxAcceleratedGradientDescent.h"
 
-elxInstallMacro( StandardGradientDescent );
+elxInstallMacro( AcceleratedGradientDescent );

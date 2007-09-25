@@ -4,7 +4,7 @@
 #include "elxStandardGradientDescent.h"
 #include <iomanip>
 #include <string>
-#include "vnl/vnl_math.h"
+
 
 namespace elastix
 {
@@ -63,6 +63,7 @@ using namespace itk;
 		this->SetParam_a(	a );
 		this->SetParam_A( A );
 		this->SetParam_alpha( alpha );
+  
 				
 	} // end BeforeEachResolution
 
@@ -78,7 +79,7 @@ using namespace itk;
 		/** Print some information */
 		xl::xout["iteration"]["2:Metric"]		<< this->GetValue();
 		xl::xout["iteration"]["3:StepSize"] << this->GetLearningRate();
-		xl::xout["iteration"]["4:||Gradient||"] << this->GetGradientMagnitude();
+		xl::xout["iteration"]["4:||Gradient||"] << this->GetGradient().magnitude();
 
 		/** Select new spatial samples for the computation of the metric */
 		if ( this->GetNewSamplesEveryIteration() )
@@ -147,6 +148,10 @@ using namespace itk;
 	} // end AfterRegistration
 
 
+  /**
+   * ****************** StartOptimization *************************
+   */
+
   template <class TElastix>
     void StandardGradientDescent<TElastix>
     ::StartOptimization(void)
@@ -171,7 +176,7 @@ using namespace itk;
 
 	} //end StartOptimization
 	
-	
+ 
 
 } // end namespace elastix
 

@@ -1,7 +1,7 @@
-#ifndef __elxStandardGradientDescent_hxx
-#define __elxStandardGradientDescent_hxx
+#ifndef __elxAcceleratedGradientDescent_hxx
+#define __elxAcceleratedGradientDescent_hxx
 
-#include "elxStandardGradientDescent.h"
+#include "elxAcceleratedGradientDescent.h"
 #include <iomanip>
 #include <string>
 #include <vector>
@@ -18,8 +18,8 @@ using namespace itk;
 	 */
 
 	template <class TElastix>
-		StandardGradientDescent<TElastix>::
-		StandardGradientDescent()
+		AcceleratedGradientDescent<TElastix>::
+		AcceleratedGradientDescent()
   {
     this->m_AutomaticGainEstimation = false;
     this->m_InitialStepSize = 1.0;
@@ -31,7 +31,7 @@ using namespace itk;
 	 */
 
 	template <class TElastix>
-		void StandardGradientDescent<TElastix>::
+		void AcceleratedGradientDescent<TElastix>::
 		BeforeRegistration(void)
 	{
 		
@@ -53,7 +53,7 @@ using namespace itk;
 	 */
 
 	template <class TElastix>
-		void StandardGradientDescent<TElastix>
+		void AcceleratedGradientDescent<TElastix>
 		::BeforeEachResolution(void)
 	{
 		/** Get the current resolution level.*/
@@ -138,7 +138,7 @@ using namespace itk;
 	 */
 
 	template <class TElastix>
-		void StandardGradientDescent<TElastix>
+		void AcceleratedGradientDescent<TElastix>
 		::AfterEachIteration(void)
 	{
 		/** Print some information */
@@ -160,7 +160,7 @@ using namespace itk;
 	 */
 
 	template <class TElastix>
-		void StandardGradientDescent<TElastix>
+		void AcceleratedGradientDescent<TElastix>
 		::AfterEachResolution(void)
 	{
 		
@@ -198,7 +198,7 @@ using namespace itk;
 	 */
 
 	template <class TElastix>
-		void StandardGradientDescent<TElastix>
+		void AcceleratedGradientDescent<TElastix>
 		::AfterRegistration(void)
 	{
 	  /** Print the best metric value */
@@ -218,7 +218,7 @@ using namespace itk;
    */
 
   template <class TElastix>
-    void StandardGradientDescent<TElastix>
+    void AcceleratedGradientDescent<TElastix>
     ::StartOptimization(void)
 	{
 
@@ -247,7 +247,7 @@ using namespace itk;
    */
 
     template <class TElastix>
-    void StandardGradientDescent<TElastix>
+    void AcceleratedGradientDescent<TElastix>
     ::AdvanceOneStep(void)
 	{
     typedef typename RegistrationType::FixedImageType   FixedImageType;
@@ -275,6 +275,8 @@ using namespace itk;
      *   B = dT/dmu = the transform jacobian at a voxel x
      *   z = a random variable ~ N(0,I)
      *   max = over the fixed image domain, 10000 samples.
+     *
+     * \todo: this description is not correct anymore
      */
     if ( this->m_AutomaticGainEstimation && (this->GetCurrentIteration()==0) )
     {
@@ -313,13 +315,11 @@ using namespace itk;
       JacobianVectorType jacvec(nrofsamples);
       unsigned int s = 0;
      
-      /** Loop over image and compute jacobian */
+      /** Loop over image and compute jacobian. Save the jacobians in a vector. */
       while ( !iter.IsAtEnd() )
       {
-        //double step= 0.0;
-        
+           
         const FixedImageIndexType & index = iter.GetIndex();
-
         fixedImage->TransformIndexToPhysicalPoint( index, point );
         jacvec[s] = transform->GetJacobian( point );
 
@@ -330,37 +330,7 @@ using namespace itk;
             jacvec[s].scale_column( p, 1.0/scales[p] );
           }
         }        
-        
-        ///** Compute squared frobenius norm */
      
-        //  /** Compute expectation of y'B'By = trace(B'B) = 
-        //   * squared frobenius norm of B (B = jac) 
-        //   * and add to average */
-        //  const double fro = jacobian.frobenius_norm();
-        //  step += fro * fro;
-        //  /** Compute variance of y'B'By = 2 Trace( B'BB'B) = 
-        //   * 2 * squared frobenius norm of BB' = 2*frofrojacjac
-        //   * and add 2*sqrt of this to step. */
-        //  double frofrojacjac = 0.0;
-        //  for( unsigned int d = 0; d < outdim; ++d )
-        //  {
-        //    /** diagonal elements of BB'*/
-        //    ParametersType rowd( jacobian[d], N, false );
-        //    frofrojacjac += vnl_math_sqr( rowd.squared_magnitude() );
-        //    /** upper half of BB' times 2 */
-        //    for (unsigned int D = d+1; D < outdim; ++D)
-        //    {
-        //      ParametersType rowD( jacobian[D], N, false );
-        //      frofrojacjac += 2.0 * vnl_math_sqr( dot_product( rowd, rowD ) );
-        //    }
-        //  }
-        //  step += 3.0 * vcl_sqrt( 2.0 * frofrojacjac );
-        //
-
-        ///** Take the maximum of all sampled voxel displacement estimations */
-        ///** better: mean + 3 * sigma */
-        //maxstep = vnl_math_max( step, maxstep );
-
         ++iter;
         ++s;
       } // end while     
@@ -492,5 +462,5 @@ using namespace itk;
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxStandardGradientDescent_hxx
+#endif // end #ifndef __elxAcceleratedGradientDescent_hxx
 
