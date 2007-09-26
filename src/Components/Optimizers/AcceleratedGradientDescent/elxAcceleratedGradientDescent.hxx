@@ -8,6 +8,8 @@
 #include "vnl/vnl_math.h"
 #include "itkImageRandomConstIteratorWithIndex.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
+#include "itkAdvancedImageToImageMetric.h"
+#include "itkImageRandomSampler.h"
 
 namespace elastix
 {
@@ -251,6 +253,7 @@ using namespace itk;
     ::AdvanceOneStep(void)
 	{
     typedef typename RegistrationType::FixedImageType   FixedImageType;
+    typedef typename RegistrationType::MovingImageType  MovingImageType;
     typedef typename FixedImageType::RegionType         FixedImageRegionType;
     typedef typename FixedImageType::IndexType          FixedImageIndexType;
     typedef typename FixedImageType::PointType          FixedImagePointType;
@@ -263,6 +266,11 @@ using namespace itk;
     typedef itk::Statistics::MersenneTwisterRandomVariateGenerator 
                                                         RandomGeneratorType;
     typedef typename JacobianType::ValueType            JacobianValueType;
+    typedef itk::AdvancedImageToImageMetric<
+      FixedImageType, MovingImageType>                  AdvancedMetricType;
+    typedef typename AdvancedMetricType::Pointer        AdvancedMetricPointer;
+    typedef itk::ImageRandomSampler<FixedImageType>     ImageSamplerType;
+    typedef typename ImageSamplerType::Pointer          ImageSamplerPointer;
 
     /** If the first step, and automatic gain estimation is desired,
      * then estimate the gain (Param_a) parameter automatically.
@@ -389,7 +397,7 @@ using namespace itk;
 
       maxstep = vcl_sqrt( maxstep );    
       
-      /** perturbation gain = a, such that mu = a*N(0,I), and E(deltaT^2) = t^2 */
+      /** perturbation gain = a, such that, if delta_mu = a*N(0,BB/n/n), then E(deltaT^2) = t^2 */
       const double perturbationgain = t / maxstep;
       
       /** Number of gradients to estimate the average square magnitude 
@@ -399,59 +407,125 @@ using namespace itk;
       const unsigned int numberofgradients = static_cast<unsigned int>(
         vcl_ceil( 50.0 / Nd ) );
 
-      /** One we have already */
-      double gg = this->GetGradient().squared_magnitude();
-      double maxg = this->GetGradient().inf_norm();
+      /** Measure magnitude of approximate gradient and exact gradient */
+
+      bool stochasticgradients = this->GetNewSamplesEveryIteration();
+      ImageSamplerPointer sampler = 0;
+      AdvancedMetricPointer advmetric = 0;
+      unsigned int normalnumberofsamples = 0;
+      const unsigned int allsamples = 100000;
+      double dummyvalue = 0.0;
+      DerivativeType approxgradient;
+      DerivativeType exactgradient;
+      DerivativeType diffgradient;
+      double approxgg = 0;
+      double exactgg = 0.0;
+      double diffgg = 0.0;
       
-      /** Compute gg for some random parameters */  
-      double dummyval = 0.0;
-      DerivativeType gradient;
-      typename RandomGeneratorType::Pointer randomgenerator = RandomGeneratorType::New();
-      for ( unsigned int i = 1 ; i < numberofgradients; ++i)
+      /** Find the sampler */
+      if ( stochasticgradients )
       {
-      	/** Select new spatial samples for the computation of the metric */
-		    if ( this->GetNewSamplesEveryIteration() )
+        advmetric = dynamic_cast<AdvancedMetricType * >(
+          this->GetElastix()->GetElxMetricBase() );
+        if (advmetric)
         {
-			    this->SelectNewSamples();
-		    }
-                
-        /** Generate a perturbation */
+          sampler = dynamic_cast<ImageSamplerType*>( advmetric->GetImageSampler() );
+          if ( (!advmetric->GetUseImageSampler()) || sampler.IsNull() )
+          {
+            stochasticgradients = false;
+            
+          }
+          else
+          {
+            normalnumberofsamples = sampler->GetNumberOfSamples();
+          }
+        }
+        else
+        {
+          stochasticgradients = false;
+        }
+      }     
+            
+      
+      /** Compute gg for some random parameters */      
+      typename RandomGeneratorType::Pointer randomgenerator = RandomGeneratorType::New();
+      for ( unsigned int i = 0 ; i < numberofgradients; ++i)
+      {
+        /** Generate a perturbation; actually we should generate a perturbation 
+         * with the same expected sqr magnitude as E||g||^2 = frofrojac 
+         * The expected sqr magnitude of a N-D normal distribution N(0,I) is N,
+         * so, the perturbation gain needs to be multiplied by frofrojac/Nd.  */
         ParametersType perturbation = this->GetScaledCurrentPosition();
         for (unsigned int p = 0; p < N; ++p)
         {
-          perturbation[p] += perturbationgain * 
+          perturbation[p] += perturbationgain * vcl_sqrt(frofrojac/Nd) *
             randomgenerator->GetNormalVariate(0.0, 1.0);
         }
 
-        /** Get derivative and magnitude */
-        this->GetScaledValueAndDerivative( perturbation, dummyval, gradient );
-        gg += gradient.squared_magnitude();
-        maxg = vnl_math_max( maxg, gradient.inf_norm() );
-      }
-      gg /= numberofgradients;
+      	/** Select new spatial samples for the computation of the metric */
+        if ( stochasticgradients )
+        {
+          sampler->SetNumberOfSamples( normalnumberofsamples );
+			    this->SelectNewSamples();
+		    }
 
-      /** We would like this gain at the first iteration (time0): */
+        /** Get approximate derivative and its magnitude */
+        this->GetScaledValueAndDerivative( perturbation, dummyvalue, approxgradient );
+        approxgg += approxgradient.squared_magnitude();
+
+        /** Get exact gradient and its magnitude */
+        if ( stochasticgradients )
+        {
+          sampler->SetNumberOfSamples( allsamples );
+          this->SelectNewSamples();
+          this->GetScaledValueAndDerivative( perturbation, dummyvalue, exactgradient );
+          exactgg += exactgradient.squared_magnitude();
+          diffgradient = exactgradient - approxgradient;
+          diffgg += diffgradient.squared_magnitude();
+        }
+        else
+        {
+          exactgg = approxgg;
+          diffgg = 0.0;
+        }
+      } // end for
+      approxgg /= numberofgradients;
+      exactgg /= numberofgradients;
+      diffgg /= numberofgradients;
+      double noisefactor = exactgg / (exactgg + diffgg);
+        
+      if (stochasticgradients)
+      {
+        /** Set back to what it was */
+        sampler->SetNumberOfSamples( normalnumberofsamples );
+      }    
+
+      /** We would like this gain as a maximum: */
       //double gain = perturbationgain * vcl_sqrt(Nd) / vcl_sqrt(gg);
       //double gain = perturbationgain * 1.0 / maxg;
-      double gain = perturbationgain * vcl_sqrt(frofrojac) / vcl_sqrt(gg);
-      elxout << "perturbgain = " << perturbationgain << std::endl;
+      //double gain = perturbationgain * vcl_sqrt(frofrojac) / vcl_sqrt(gg);
+      double gain = perturbationgain * vcl_sqrt(frofrojac) / vcl_sqrt(exactgg);
+      gain *= noisefactor;
+
+      
+      elxout << "aantal jacobians gemeten = " << n << std::endl;
       elxout << "sqrtfrofrojac = " << vcl_sqrt(frofrojac) << std::endl;
-      elxout << "sqrtgg = " << vcl_sqrt(gg) << std::endl;
-      elxout << "n = " << n << std::endl;
+      elxout << "normaltogradientdistributionfactor: " << vcl_sqrt(frofrojac/Nd) << std::endl;
+      elxout << "perturbgain = " << perturbationgain << std::endl;      
+      elxout << "sqrtexactgg = " << vcl_sqrt(exactgg) << std::endl;
+      elxout << "sqrtapproxgg = " << vcl_sqrt(approxgg) << std::endl;
+      elxout << "sqrtdiffgg = " << vcl_sqrt(diffgg) << std::endl;
+      elxout << "noisefactor = " << noisefactor << std::endl;
+      elxout << "gain = " << gain << std::endl;      
 
       /** With a=1 we would get the following gain: */
-      double time0 = 0.0;
-      if ( this->GetUseCruzAcceleration() )
-      {
-        time0 = this->GetInitialTime();
-      }      
       this->SetParam_a(1.0);
-      const double tempgain = this->Compute_a( time0 );
+      const double tempgain = this->Compute_a( 0.0 );
       /** So we have to set Param_a to gain/tempgain */
       this->SetParam_a( gain/tempgain );
 
       /** Print to log file */
-      elxout << "Estimated value for SP_a (gain): " << gain/tempgain << std::endl;
+      elxout << "Estimated value for SP_a: " << gain/tempgain << std::endl;
             
     } // end if automatic gain estimation
 
