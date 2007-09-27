@@ -312,7 +312,8 @@ using namespace itk;
       const double maxmem = 200e6;
       if ( outdim * N * nrofsamples * sizeof(JacobianValueType) > maxmem )
       {
-        nrofsamples = maxmem / outdimd / Nd / static_cast<double>( sizeof(JacobianValueType) );
+        nrofsamples = static_cast<unsigned int>( vcl_floor(
+          maxmem / outdimd / Nd / static_cast<double>( sizeof(JacobianValueType) )   ) );
       }
       iter.SetNumberOfSamples( nrofsamples );
       iter.GoToBegin();
