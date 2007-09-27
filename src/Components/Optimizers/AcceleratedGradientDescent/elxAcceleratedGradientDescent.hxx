@@ -304,6 +304,7 @@ using namespace itk;
         GetAsITKBaseType()->GetTransform();
       transform->SetParameters( this->GetCurrentPosition() );
       const unsigned int outdim = transform->GetOutputSpaceDimension();
+      const double outdimd = static_cast<double>( outdim );
 
       /** Setup random iterator on fixed image */
       FixedImageIteratorType iter( fixedImage, fixedRegion );
@@ -311,7 +312,7 @@ using namespace itk;
       const double maxmem = 200e6;
       if ( outdim * N * nrofsamples * sizeof(JacobianValueType) > maxmem )
       {
-        nrofsamples = maxmem / outdim / N / sizeof(JacobianValueType);
+        nrofsamples = maxmem / outdimd / Nd / static_cast<double>( sizeof(JacobianValueType) );
       }
       iter.SetNumberOfSamples( nrofsamples );
       iter.GoToBegin();
