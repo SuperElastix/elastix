@@ -644,7 +644,9 @@ namespace itk
 
       SpatialDerivativeType D1sparse, D2sparse;
       D1sparse = spatialDerivativesContainer[ i ] * jacobianContainer[ i ];
-      SpatialDerivativeType Dfull( MovingImageDimension, this->m_NumberOfParameters );
+      //SpatialDerivativeType Dfull( MovingImageDimension, this->m_NumberOfParameters );
+      SpatialDerivativeType Dfull( 1 + this->m_NumberOfMovingFeatureImages,
+        this->m_NumberOfParameters );
       Dfull.Fill( NumericTraits<DerivativeValueType>::Zero );
 
       dGamma_M.Fill( NumericTraits< DerivativeValueType >::Zero );
