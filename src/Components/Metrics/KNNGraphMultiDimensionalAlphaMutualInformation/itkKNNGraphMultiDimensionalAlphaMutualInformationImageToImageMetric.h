@@ -154,6 +154,9 @@ public:
   typedef typename BinaryKNNTreeSearchType::IndexArrayType      IndexArrayType;
   typedef typename BinaryKNNTreeSearchType::DistanceArrayType   DistanceArrayType;
 
+  typedef typename DerivativeType::ValueType          DerivativeValueType;
+  typedef typename TransformJacobianType::ValueType   TransformJacobianValueType;
+
   /**
    * *** Set trees: ***
    * Currently kd, bd, and brute force trees are supported.
@@ -278,12 +281,19 @@ private:
     const MovingImagePointType & mappedPoint,
     SpatialDerivativeType & featureGradients ) const;
 
+  /** This function essentially computes D1 - D2, but also takes
+   * care of going from a sparse matrix (hence the indices) to a
+   * full sized matrix.
+   */
   virtual void ComputeImageJacobianDifference(
     SpatialDerivativeType & D1sparse,
-    SpatialDerivativeType & D2sparse,
+    SpatialDerivativeType & D2sparse_M,
+    SpatialDerivativeType & D2sparse_J,
     ParameterIndexArrayType & D1indices,
-    ParameterIndexArrayType & D2indices,
-    SpatialDerivativeType & Dfull ) const;
+    ParameterIndexArrayType & D2indices_M,
+    ParameterIndexArrayType & D2indices_J,
+    SpatialDerivativeType & Dfull_M,
+    SpatialDerivativeType & Dfull_J ) const;
 
  }; // end class KNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric
 

@@ -506,10 +506,6 @@ namespace itk
     ::GetValueAndDerivative( const TransformParametersType & parameters,
     MeasureType & value, DerivativeType & derivative ) const
   {
-    /** Some typedefs. */
-    typedef typename DerivativeType::ValueType        DerivativeValueType;
-    typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
-
     /** Initialize some variables. */
     MeasureType measure = NumericTraits< MeasureType >::Zero;
     derivative = DerivativeType( this->m_NumberOfParameters );
@@ -601,13 +597,12 @@ namespace itk
  
     /** Temporary variables. */
     typedef typename NumericTraits< MeasureType >::AccumulateType AccumulateType;
-    MeasurementVectorType z_F, z_M, z_J, z_M_ip, diff;
+    MeasurementVectorType z_F, z_M, z_J, z_M_ip, z_J_ip, diff_M, diff_J;
     IndexArrayType indices_F, indices_M, indices_J;
     DistanceArrayType distances_F, distances_M, distances_J;
     MeasureType distance_F, distance_M, distance_J;
 
     MeasureType H, G, Gpow;
-    AccumulateType sumH = NumericTraits< AccumulateType >::Zero;
     AccumulateType sumG = NumericTraits< AccumulateType >::Zero;
 
     DerivativeType contribution( this->GetNumberOfParameters() );
@@ -642,13 +637,11 @@ namespace itk
       AccumulateType Gamma_M = NumericTraits< AccumulateType >::Zero;
       AccumulateType Gamma_J = NumericTraits< AccumulateType >::Zero;
 
-      SpatialDerivativeType D1sparse, D2sparse;
+      SpatialDerivativeType D1sparse, D2sparse_M, D2sparse_J;
       D1sparse = spatialDerivativesContainer[ i ] * jacobianContainer[ i ];
-      //SpatialDerivativeType Dfull( MovingImageDimension, this->m_NumberOfParameters );
-      SpatialDerivativeType Dfull( 1 + this->m_NumberOfMovingFeatureImages,
-        this->m_NumberOfParameters );
-      Dfull.Fill( NumericTraits<DerivativeValueType>::Zero );
-
+      SpatialDerivativeType Dfull_M( movingSize, this->m_NumberOfParameters );
+      SpatialDerivativeType Dfull_J( movingSize, this->m_NumberOfParameters );
+      
       dGamma_M.Fill( NumericTraits< DerivativeValueType >::Zero );
       dGamma_J.Fill( NumericTraits< DerivativeValueType >::Zero );
 
@@ -657,7 +650,9 @@ namespace itk
       {
         /** Get the neighbour point z_ip^M and the difference with z_i^M. */
         listSampleMoving->GetMeasurementVector( indices_M[ p ], z_M_ip );
-        diff = z_M - z_M_ip;
+        listSampleMoving->GetMeasurementVector( indices_J[ p ], z_J_ip );
+        diff_M = z_M - z_M_ip;
+        diff_J = z_J - z_J_ip;
 
         /** Get the distances. */
         distance_F = vcl_sqrt( distances_F[ p ] );
@@ -670,16 +665,21 @@ namespace itk
         Gamma_J += distance_J;
 
         /** Compute derivatives. */
-        D2sparse = spatialDerivativesContainer[ indices_M[ p ] ]
+        D2sparse_M = spatialDerivativesContainer[ indices_M[ p ] ]
           * jacobianContainer[ indices_M[ p ] ];
+        D2sparse_J = spatialDerivativesContainer[ indices_J[ p ] ]
+          * jacobianContainer[ indices_J[ p ] ];
+      
         this->ComputeImageJacobianDifference(
-          D1sparse, D2sparse,
+          D1sparse, D2sparse_M, D2sparse_J,
           jacobianIndicesContainer[ i ],
           jacobianIndicesContainer[ indices_M[ p ] ],
-          Dfull );
-        diff.post_multiply( Dfull );
-        dGamma_M += diff / distance_M;
-        dGamma_J += diff / distance_J;
+          jacobianIndicesContainer[ indices_J[ p ] ],
+          Dfull_M, Dfull_J );
+        diff_M.post_multiply( Dfull_M );
+        diff_J.post_multiply( Dfull_J );
+        dGamma_M += diff_M / distance_M;
+        dGamma_J += diff_J / distance_J;
 
       } // end loop over the K neighbours
 
@@ -688,7 +688,6 @@ namespace itk
       if ( H > 1e-14 ) G = Gamma_J / H;
       else G = NumericTraits< MeasureType >::Zero;
 
-      sumH  += H;
       sumG += vcl_pow( G, twoGamma );
       Gpow = vcl_pow( G, twoGamma - 1.0 );
 
@@ -711,8 +710,7 @@ namespace itk
     }
     value = -measure;
 
-    /** Compute the derivative. */
-    // -2.0 * d = -jointSize
+    /** Compute the derivative (-2.0 * d = -jointSize). */
     derivative = ( -jointSize / sumG ) * contribution;
   
   } // end GetValueAndDerivative()
@@ -973,25 +971,38 @@ namespace itk
     TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
     ::ComputeImageJacobianDifference(
     SpatialDerivativeType & D1sparse,
-    SpatialDerivativeType & D2sparse,
+    SpatialDerivativeType & D2sparse_M,
+    SpatialDerivativeType & D2sparse_J,
     ParameterIndexArrayType & D1indices,
-    ParameterIndexArrayType & D2indices,
-    SpatialDerivativeType & Dfull ) const
+    ParameterIndexArrayType & D2indices_M,
+    ParameterIndexArrayType & D2indices_J,
+    SpatialDerivativeType & Dfull_M,
+    SpatialDerivativeType & Dfull_J ) const
   {
-    /** Set Dfull = D1sparse. */
+    /** Set Dfull_M = Dfull_J = D1sparse. */
+    Dfull_M.Fill( NumericTraits<DerivativeValueType>::Zero );
     for ( unsigned int i = 0; i < D1indices.GetSize(); ++i )
     {
-      Dfull.set_column( D1indices[ i ], D1sparse.get_column( i ) );
+      Dfull_M.set_column( D1indices[ i ], D1sparse.get_column( i ) );
     }
+    Dfull_J = Dfull_M;
     
-    /** Subtract D2sparse. */
-    for ( unsigned int i = 0; i < D2indices.GetSize(); ++i )
+    /** Subtract D2sparse_M from Dfull_M. */
+    for ( unsigned int i = 0; i < D2indices_M.GetSize(); ++i )
     {
-      Dfull.set_column( D2indices[ i ],
-        Dfull.get_column( D2indices[ i ] ) - D2sparse.get_column( i ) );
+      Dfull_M.set_column( D2indices_M[ i ],
+        Dfull_M.get_column( D2indices_M[ i ] ) - D2sparse_M.get_column( i ) );
+    }
+
+    /** Subtract D2sparse_J from Dfull_J. */
+    for ( unsigned int i = 0; i < D2indices_J.GetSize(); ++i )
+    {
+      Dfull_J.set_column( D2indices_J[ i ],
+        Dfull_J.get_column( D2indices_J[ i ] ) - D2sparse_J.get_column( i ) );
     }
 
   } // end ComputeImageJacobianDifference()
+
 
   /**
 	 * ************************ PrintSelf *************************
