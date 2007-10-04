@@ -652,7 +652,7 @@ namespace itk
         listSampleMoving->GetMeasurementVector( indices_M[ p ], z_M_ip );
         listSampleMoving->GetMeasurementVector( indices_J[ p ], z_J_ip );
         diff_M = z_M - z_M_ip;
-        diff_J = z_J - z_J_ip;
+        diff_J = z_M - z_J_ip;
 
         /** Get the distances. */
         distance_F = vcl_sqrt( distances_F[ p ] );
