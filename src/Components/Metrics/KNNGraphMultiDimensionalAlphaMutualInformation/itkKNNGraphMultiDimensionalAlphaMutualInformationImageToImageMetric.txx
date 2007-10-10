@@ -711,7 +711,7 @@ namespace itk
     value = -measure;
 
     /** Compute the derivative (-2.0 * d = -jointSize). */
-    derivative = ( -jointSize / sumG ) * contribution;
+    derivative = ( -static_cast<AccumulateType>( jointSize ) / sumG ) * contribution;
   
   } // end GetValueAndDerivative()
 
@@ -841,7 +841,7 @@ namespace itk
             movingFeatureValue );
           listSampleJoint->SetMeasurement(
             this->m_NumberOfPixelsCounted,
-            j + 1 + this->m_NumberOfFixedFeatureImages,
+            j + 2 + this->m_NumberOfFixedFeatureImages,
             movingFeatureValue );
         }
 
