@@ -648,12 +648,10 @@ namespace itk
       /** Loop over the neighbours. */
       for ( unsigned int p = 0; p < k; p++ )
       {
-        /** Get the neighbour point z_ip^M and the difference with z_i^M. */
+        /** Get the neighbour point z_ip^M. */
         listSampleMoving->GetMeasurementVector( indices_M[ p ], z_M_ip );
         listSampleMoving->GetMeasurementVector( indices_J[ p ], z_J_ip );
-        diff_M = z_M - z_M_ip;
-        diff_J = z_M - z_J_ip;
-
+        
         /** Get the distances. */
         distance_F = vcl_sqrt( distances_F[ p ] );
         distance_M = vcl_sqrt( distances_M[ p ] );
@@ -663,6 +661,10 @@ namespace itk
         Gamma_F += distance_F;
         Gamma_M += distance_M;
         Gamma_J += distance_J;
+        
+        /** Get the difference of z_ip^M with z_i^M. */
+        diff_M = z_M - z_M_ip;
+        diff_J = z_M - z_J_ip;
 
         /** Compute derivatives. */
         D2sparse_M = spatialDerivativesContainer[ indices_M[ p ] ]
@@ -670,22 +672,35 @@ namespace itk
         D2sparse_J = spatialDerivativesContainer[ indices_J[ p ] ]
           * jacobianContainer[ indices_J[ p ] ];
       
+        /** Compute ( D1sparse - D2sparse_M ) and ( D1sparse - D2sparse_J ).
+         * The function returns the full matrices.
+         */
         this->ComputeImageJacobianDifference(
           D1sparse, D2sparse_M, D2sparse_J,
           jacobianIndicesContainer[ i ],
           jacobianIndicesContainer[ indices_M[ p ] ],
           jacobianIndicesContainer[ indices_J[ p ] ],
           Dfull_M, Dfull_J );
+
         diff_M.post_multiply( Dfull_M );
         diff_J.post_multiply( Dfull_J );
-        dGamma_M += diff_M / distance_M;
-        dGamma_J += diff_J / distance_J;
+
+        /** Only compute stuff if all distances are large enough. */
+        MeasureType smallNumber = 1e-10;
+        if ( distance_M > smallNumber )
+        {
+          dGamma_M += diff_M / distance_M;
+        }
+        if ( distance_J > smallNumber )
+        {
+          dGamma_J += diff_J / distance_J;
+        }
 
       } // end loop over the K neighbours
       
       /** Compute contributions. */
       H = vcl_sqrt( Gamma_F * Gamma_M );
-      if ( H > 1e-14 )
+      if ( H > 1e-10 )
       {
         /** Compute some sums. */
         G = Gamma_J / H;
