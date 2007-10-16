@@ -299,6 +299,9 @@ namespace itk
     TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
     ::GetValue( const TransformParametersType & parameters ) const
   {
+    /** Initialize some variables. */
+    MeasureType measure = NumericTraits< MeasureType >::Zero;
+
     /** Make sure the transform parameters are up to date. */
 		this->SetTransformParameters( parameters );
 
@@ -312,12 +315,13 @@ namespace itk
     ListSamplePointer listSampleJoint  = ListSampleType::New();
 
     /** Compute the three list samples. */
-    TransformJacobianContainerType dummyJacobians;
-    TransformJacobianIndicesContainerType dummyJacobiansIndices;
-    SpatialDerivativeContainerType dummySpatialDerivatives;
+    TransformJacobianContainerType dummyJacobianContainer;
+    TransformJacobianIndicesContainerType dummyJacobianIndicesContainer;
+    SpatialDerivativeContainerType dummySpatialDerivativesContainer;
     this->ComputeListSampleValuesAndDerivativePlusJacobian(
       listSampleFixed, listSampleMoving, listSampleJoint,
-      false, dummyJacobians, dummyJacobiansIndices, dummySpatialDerivatives );
+      false, dummyJacobianContainer, dummyJacobianIndicesContainer,
+      dummySpatialDerivativesContainer );
   
     /** Check if enough samples were valid. */
     unsigned long size = this->GetImageSampler()->GetOutput()->Size();
@@ -385,34 +389,34 @@ namespace itk
  
     /** Temporary variables. */
     typedef typename NumericTraits< MeasureType >::AccumulateType AccumulateType;
-    MeasurementVectorType queryF, queryM, queryJ;
-    IndexArrayType indicesF, indicesM, indicesJ;
-    DistanceArrayType distsF, distsM, distsJ;
-    MeasureType enumerator = NumericTraits< MeasureType >::Zero;
-    MeasureType denominator = NumericTraits< MeasureType >::Zero;
-    AccumulateType contribution = NumericTraits< AccumulateType >::Zero;
+    MeasurementVectorType z_F, z_M, z_J;
+    IndexArrayType indices_F, indices_M, indices_J;
+    DistanceArrayType distances_F, distances_M, distances_J;
 
+    MeasureType H, G;
+    AccumulateType sumG = NumericTraits< AccumulateType >::Zero;
+    
     /** Get the size of the feature vectors. */
     unsigned int fixedSize  = 1 + this->m_NumberOfFixedFeatureImages;
     unsigned int movingSize = 1 + this->m_NumberOfMovingFeatureImages;
     unsigned int jointSize  = fixedSize + movingSize;
 
     /** Get the number of neighbours and \gamma. */
-    unsigned int K = this->m_BinaryKNNTreeSearcherFixed->GetKNearestNeighbors();
+    unsigned int k = this->m_BinaryKNNTreeSearcherFixed->GetKNearestNeighbors();
     double twoGamma = jointSize * ( 1.0 - this->m_Alpha );
 
     /** Loop over all query points, i.e. all samples. */
     for ( unsigned long i = 0; i < this->m_NumberOfPixelsCounted; i++ )
     {
       /** Get the i-th query point. */
-      listSampleFixed->GetMeasurementVector( i, queryF );
-      listSampleMoving->GetMeasurementVector( i, queryM );
-      listSampleJoint->GetMeasurementVector( i, queryJ );
+      listSampleFixed->GetMeasurementVector(  i, z_F );
+      listSampleMoving->GetMeasurementVector( i, z_M );
+      listSampleJoint->GetMeasurementVector(  i, z_J );
 
       /** Search for the K nearest neighbours of the current query point. */
-      this->m_BinaryKNNTreeSearcherFixed->Search( queryF, indicesF, distsF );
-      this->m_BinaryKNNTreeSearcherMoving->Search( queryM, indicesM, distsM );
-      this->m_BinaryKNNTreeSearcherJoint->Search( queryJ, indicesJ, distsJ );
+      this->m_BinaryKNNTreeSearcherFixed->Search(  z_F, indices_F, distances_F );
+      this->m_BinaryKNNTreeSearcherMoving->Search( z_M, indices_M, distances_M );
+      this->m_BinaryKNNTreeSearcherJoint->Search(  z_J, indices_J, distances_J );
       
       /** Add the distances between the points to get the total graph length.
        * The outcommented implementation calculates: sum J/sqrt(F*M)
@@ -431,35 +435,41 @@ namespace itk
        * for the three graphs:
        * sum M / sqrt( sum F * sum M)
        */
-      AccumulateType totalDistsF = NumericTraits< AccumulateType >::Zero;
-      AccumulateType totalDistsM = NumericTraits< AccumulateType >::Zero;
-      AccumulateType totalDistsJ = NumericTraits< AccumulateType >::Zero;
-      for ( unsigned int j = 0; j < K; j++ )
+
+      /** Variables to compute the measure. */
+      AccumulateType Gamma_F = NumericTraits< AccumulateType >::Zero;
+      AccumulateType Gamma_M = NumericTraits< AccumulateType >::Zero;
+      AccumulateType Gamma_J = NumericTraits< AccumulateType >::Zero;
+
+      /** Loop over the neighbours. */
+      for ( unsigned int p = 0; p < k; p++ )
       {
-        totalDistsJ += vcl_sqrt( distsJ[ j ] );
-        totalDistsF += vcl_sqrt( distsF[ j ] );
-        totalDistsM += vcl_sqrt( distsM[ j ] );
-      } // end loop over the K neighbours
+        Gamma_F += vcl_sqrt( distances_F[ p ] );
+        Gamma_M += vcl_sqrt( distances_M[ p ] );
+        Gamma_J += vcl_sqrt( distances_J[ p ] );
+      } // end loop over the k neighbours
       
       /** Calculate the contribution of this query point. */
-      denominator = vcl_sqrt( totalDistsF * totalDistsM );
-      if ( denominator > 1e-14 )
+      H = vcl_sqrt( Gamma_F * Gamma_M );
+      if ( H > 1e-10 )
       {
-        contribution += vcl_pow( totalDistsJ / denominator, twoGamma );
+        /** Compute some sums. */
+        G = Gamma_J / H;
+        sumG += vcl_pow( G, twoGamma );
       }
-    } // end searching over all query points
+    } // end looping over all query points
 
     /**
      * *************** Finally, calculate the metric value \alpha MI ******************
      */
 
-    MeasureType measure = NumericTraits< AccumulateType >::Zero;
     double n, number;
-    if ( contribution > 1e-14 )
+    if ( sumG > 1e-10 )
     {
+      /** Compute the measure. */
       n = static_cast<double>( this->m_NumberOfPixelsCounted );
       number = vcl_pow( n, this->m_Alpha );
-      measure = vcl_log( contribution / number ) / ( this->m_Alpha - 1.0 );
+      measure = vcl_log( sumG / number ) / ( this->m_Alpha - 1.0 );
     }
 
     /** Return the negative alpha - mutual information. */
@@ -696,7 +706,7 @@ namespace itk
           dGamma_J += diff_J / distance_J;
         }
 
-      } // end loop over the K neighbours
+      } // end loop over the k neighbours
       
       /** Compute contributions. */
       H = vcl_sqrt( Gamma_F * Gamma_M );
@@ -719,16 +729,17 @@ namespace itk
 
     /** Compute the value. */
     double n, number;
-    if ( sumG > 1e-14 )
+    if ( sumG > 1e-10 )
     {
+      /** Compute the measure. */
       n = static_cast<double>( this->m_NumberOfPixelsCounted );
       number = vcl_pow( n, this->m_Alpha );
       measure = vcl_log( sumG / number ) / ( this->m_Alpha - 1.0 );
+
+      /** Compute the derivative (-2.0 * d = -jointSize). */
+      derivative = ( -static_cast<AccumulateType>( jointSize ) / sumG ) * contribution;
     }
     value = -measure;
-
-    /** Compute the derivative (-2.0 * d = -jointSize). */
-    derivative = ( -static_cast<AccumulateType>( jointSize ) / sumG ) * contribution;
   
   } // end GetValueAndDerivative()
 
