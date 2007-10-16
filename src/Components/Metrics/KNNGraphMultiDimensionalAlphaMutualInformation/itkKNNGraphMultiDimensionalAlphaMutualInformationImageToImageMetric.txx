@@ -682,17 +682,19 @@ namespace itk
         dGamma_J += diff_J / distance_J;
 
       } // end loop over the K neighbours
-
-      /** Compute some sums. */
+      
+      /** Compute contributions. */
       H = vcl_sqrt( Gamma_F * Gamma_M );
-      if ( H > 1e-14 ) G = Gamma_J / H;
-      else G = NumericTraits< MeasureType >::Zero;
-
-      sumG += vcl_pow( G, twoGamma );
-      Gpow = vcl_pow( G, twoGamma - 1.0 );
-
-      /** Compute the contribution to the derivative. */
-      contribution += ( Gpow / H ) * ( dGamma_J - ( 0.5 * Gamma_J * Gamma_M ) * dGamma_M );
+      if ( H > 1e-14 )
+      {
+        /** Compute some sums. */
+        G = Gamma_J / H;
+        sumG += vcl_pow( G, twoGamma );
+        
+        /** Compute the contribution to the derivative. */
+        Gpow = vcl_pow( G, twoGamma - 1.0 );
+        contribution += ( Gpow / H ) * ( dGamma_J - ( 0.5 * Gamma_J / Gamma_M ) * dGamma_M );
+      }
       
     } // end looping over all query points
 
