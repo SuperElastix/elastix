@@ -80,6 +80,7 @@ SET( ImageSamplersFiles
  ImageSamplers/itkImageSample.h
  ImageSamplers/itkImageSamplerBase.h
  ImageSamplers/itkImageSamplerBase.txx
+ ImageSamplers/itkImageRandomSamplerBase.h
  ImageSamplers/itkImageToVectorContainerFilter.h
  ImageSamplers/itkImageToVectorContainerFilter.txx
  ImageSamplers/itkVectorContainerSource.h

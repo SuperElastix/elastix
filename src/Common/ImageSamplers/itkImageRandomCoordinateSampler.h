@@ -1,7 +1,7 @@
 #ifndef __ImageRandomCoordinateSampler_h
 #define __ImageRandomCoordinateSampler_h
 
-#include "itkImageSamplerBase.h"
+#include "itkImageRandomSamplerBase.h"
 #include "itkInterpolateImageFunction.h"
 #include "itkBSplineInterpolateImageFunction.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
@@ -20,13 +20,13 @@ namespace itk
 
   template < class TInputImage >
   class ImageRandomCoordinateSampler :
-    public ImageSamplerBase< TInputImage >
+    public ImageRandomSamplerBase< TInputImage >
   {
   public:
 
 		/** Standard ITK-stuff. */
     typedef ImageRandomCoordinateSampler                Self;
-    typedef ImageSamplerBase< TInputImage >   Superclass;
+    typedef ImageRandomSamplerBase< TInputImage >       Superclass;
     typedef SmartPointer<Self>                Pointer;
     typedef SmartPointer<const Self>          ConstPointer;
 
@@ -34,7 +34,7 @@ namespace itk
     itkNewMacro( Self );
 
 		/** Run-time type information (and related methods). */
-    itkTypeMacro( ImageRandomCoordinateSampler, ImageSamplerBase );
+    itkTypeMacro( ImageRandomCoordinateSampler, ImageRandomSamplerBase );
 
 		/** Typedefs inherited from the superclass. */
     typedef typename Superclass::DataObjectPointer            DataObjectPointer;
@@ -70,10 +70,6 @@ namespace itk
 
     /** The random number generator used to generate random coordinates. */
     typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
-
-    /** Set/Get the number of samples. */
-    itkGetConstMacro(NumberOfSamples, unsigned long);
-    itkSetMacro(NumberOfSamples, unsigned long);
 
     /** Set/Get the interpolator. A 3rd order BSpline interpolator is used by default. */
     itkSetObjectMacro(Interpolator, InterpolatorType);
@@ -130,8 +126,7 @@ namespace itk
     ImageRandomCoordinateSampler( const Self& );	        // purposely not implemented
 		/** The private copy constructor. */
     void operator=( const Self& );				    // purposely not implemented
-
-    unsigned long m_NumberOfSamples;
+    
     bool          m_UseRandomSampleRegion;
     
   }; // end class ImageRandomCoordinateSampler

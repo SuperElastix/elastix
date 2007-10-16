@@ -15,8 +15,6 @@ namespace itk
     ImageRandomCoordinateSampler< TInputImage > ::
     ImageRandomCoordinateSampler()
   {
-    this->m_NumberOfSamples = 100;
-
     /** Set default interpolator */
     typename DefaultInterpolatorType::Pointer bsplineInterpolator =
       DefaultInterpolatorType::New();
@@ -198,7 +196,6 @@ namespace itk
   {
     Superclass::PrintSelf( os, indent );
 
-    os << indent << "NumberOfSamples: " << this->m_NumberOfSamples << std::endl;
     os << indent << "Interpolator: " << this->m_Interpolator.GetPointer() << std::endl;
     os << indent << "RandomGenerator: " << this->m_RandomGenerator.GetPointer() << std::endl;
 

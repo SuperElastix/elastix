@@ -66,7 +66,7 @@ namespace itk
       itkGetStaticConstMacro( InputImageDimension ) > 	MaskType;
 
     /** Set the mask. */
-    itkSetObjectMacro( Mask, MaskType );
+    itkSetConstObjectMacro( Mask, MaskType );
 
     /** Get the mask. */
     itkGetConstObjectMacro( Mask, MaskType );
@@ -101,8 +101,8 @@ namespace itk
     void operator=( const Self& );				    // purposely not implemented
 
     /** Member variables. */
-    typename MaskType::Pointer    m_Mask;
-    InputImageRegionType          m_InputImageRegion;
+    typename MaskType::ConstPointer  m_Mask;
+    InputImageRegionType             m_InputImageRegion;
 
   }; // end class ImageSamplerBase
 

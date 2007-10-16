@@ -52,7 +52,7 @@ namespace itk
         /** Formula (2) in Cruz */
         const double inprod = inner_product(
           this->m_PreviousGradient, this->GetGradient() );
-        this->m_CurrentTime = this->m_CurrentTime + sigmoid(-inprod);
+        this->m_CurrentTime += sigmoid(-inprod);
         this->m_CurrentTime = vnl_math_max( 0.0, this->m_CurrentTime );        
       }
 
@@ -61,8 +61,10 @@ namespace itk
     }
     else
     {
-      /** Simply Robbins-Monro: time=iterationnr. */
-      this->Superclass::UpdateCurrentTime();
+      /** Almost Robbins-Monro: time = time + E_0. 
+       * If you want the parameter estimation but no adaptive stuff, 
+       * this may be use useful:  */
+      this->m_CurrentTime += ( this->GetSigmoidMax() + this->GetSigmoidMin() / 2.0 );
     }
 
   } // end UpdateCurrentTime

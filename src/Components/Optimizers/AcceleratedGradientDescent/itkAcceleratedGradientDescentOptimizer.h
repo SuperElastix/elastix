@@ -100,7 +100,7 @@ namespace itk
 
     /** Function to update the current time
     * If UseCruzAcceleration is false this function just increments
-    * the CurrentTime by 1. 
+    * the CurrentTime by E_0. 
     * Else, the CurrentTime is updated according to:
     * time = max[0, time + sigmoid( -gradient*previousgradient) ]
     * In that case, also updates the previous gradient.

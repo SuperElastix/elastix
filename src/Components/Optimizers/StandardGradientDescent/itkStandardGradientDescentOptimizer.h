@@ -99,6 +99,10 @@ namespace itk
     itkSetMacro(InitialTime, double);
     itkGetConstMacro(InitialTime, double);
 
+    /** Get the current time. This equals the CurrentIteration in this base class
+     * but may be different in inheriting classes, such as the AccelerateGradientDescent */
+    itkGetConstMacro(CurrentTime, double);
+
   protected:
 
     StandardGradientDescentOptimizer();

@@ -9,18 +9,6 @@ namespace itk
 {
 
   /**
-	 * ******************* Constructor ********************
-	 */
-  
-  template< class TInputImage >
-    ImageRandomSampler< TInputImage > ::
-    ImageRandomSampler()
-  {
-    this->m_NumberOfSamples = 100;
-  } // end constructor 
-
-
-  /**
 	 * ******************* GenerateData *******************
 	 */
   
@@ -103,23 +91,6 @@ namespace itk
     } // end if mask
 
   } // end GenerateData
-
-
-  /**
-	 * ******************* PrintSelf *******************
-	 */
-  
-  template< class TInputImage >
-    void
-    ImageRandomSampler< TInputImage >
-    ::PrintSelf( std::ostream& os, Indent indent ) const
-  {
-    Superclass::PrintSelf( os, indent );
-
-    os << indent << "NumberOfSamples: " << this->m_NumberOfSamples << std::endl;
-
-  } // end PrintSelf
-
 
 
 } // end namespace itk

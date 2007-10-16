@@ -14,7 +14,6 @@ namespace itk
     ImageRandomSamplerSparseMask< TInputImage >
     ::ImageRandomSamplerSparseMask()
   {
-    this->m_NumberOfSamples = 100;
     /** Setup random generator. */
     this->m_RandomGenerator = RandomGeneratorType::New();
     //this->m_RandomGenerator->Initialize();
@@ -34,11 +33,10 @@ namespace itk
     /** Get handles to the input image and output sample container. */
     InputImageConstPointer inputImage = this->GetInput();
     typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
-    typename MaskType::Pointer mask = const_cast<MaskType *>( this->GetMask() );
-
+    
     /** Make sure the internal full sampler is up-to-date. */
-    this->m_InternalFullSampler->SetInput(inputImage);
-    this->m_InternalFullSampler->SetMask(mask);
+    this->m_InternalFullSampler->SetInput( inputImage );
+    this->m_InternalFullSampler->SetMask(  this->GetMask() );
     this->m_InternalFullSampler->SetInputImageRegion( this->GetInputImageRegion() );
     this->m_InternalFullSampler->Update();
     typename ImageSampleContainerType::Pointer allValidSamples =
@@ -67,7 +65,6 @@ namespace itk
   {
     Superclass::PrintSelf( os, indent );
 
-    os << indent << "NumberOfSamples: " << this->m_NumberOfSamples << std::endl;
     os << indent << "InternalFullSampler: " << this->m_InternalFullSampler.GetPointer() << std::endl;
     os << indent << "RandomGenerator: " << this->m_RandomGenerator.GetPointer() << std::endl;
 

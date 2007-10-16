@@ -1,7 +1,7 @@
 #ifndef __ImageRandomSamplerFeatureControlled_h
 #define __ImageRandomSamplerFeatureControlled_h
 
-#include "itkImageSamplerBase.h"
+#include "itkImageRandomSamplerBase.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "itkImageFullSampler.h"
 
@@ -39,13 +39,13 @@ namespace itk
 
   template < class TInputImage >
   class ImageRandomSamplerFeatureControlled :
-    public ImageSamplerBase< TInputImage >
+    public ImageRandomSamplerBase< TInputImage >
   {
   public:
 
 		/** Standard ITK-stuff. */
-    typedef ImageRandomSamplerFeatureControlled                Self;
-    typedef ImageSamplerBase< TInputImage >   Superclass;
+    typedef ImageRandomSamplerFeatureControlled     Self;
+    typedef ImageRandomSamplerBase< TInputImage >   Superclass;
     typedef SmartPointer<Self>                Pointer;
     typedef SmartPointer<const Self>          ConstPointer;
 
@@ -53,7 +53,7 @@ namespace itk
     itkNewMacro( Self );
 
 		/** Run-time type information (and related methods). */
-    itkTypeMacro( ImageRandomSamplerFeatureControlled, ImageSamplerBase );
+    itkTypeMacro( ImageRandomSamplerFeatureControlled, ImageRandomSamplerBase );
 
 		/** Typedefs inherited from the superclass. */
     typedef typename Superclass::DataObjectPointer            DataObjectPointer;
@@ -110,9 +110,6 @@ namespace itk
       return this->GetFeatureImage( 0 );
     }
     
-    /** Set/Get the number of samples. Default: 100 */
-    itkGetConstMacro(NumberOfSamples, unsigned long);
-    itkSetClampMacro(NumberOfSamples, unsigned long, 1, NumericTraits<unsigned long>::max() );
     
     /** Set/Get the error bound, a floating point number >= 0.0.
      * Default: 1.0 */
@@ -216,8 +213,7 @@ namespace itk
     void operator=( const Self& );				    // purposely not implemented
 
     /** Member variables */
-    unsigned long m_NumberOfSamples;
-    std::string m_SplittingRule;
+     std::string m_SplittingRule;
     std::string m_ShrinkingRule;
     unsigned int m_BucketSize;
     double m_ErrorBound;

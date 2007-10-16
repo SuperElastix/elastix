@@ -1,7 +1,7 @@
 #ifndef __ImageRandomSampler_h
 #define __ImageRandomSampler_h
 
-#include "itkImageSamplerBase.h"
+#include "itkImageRandomSamplerBase.h"
 
 
 namespace itk
@@ -27,21 +27,21 @@ namespace itk
 
   template < class TInputImage >
   class ImageRandomSampler :
-    public ImageSamplerBase< TInputImage >
+    public ImageRandomSamplerBase< TInputImage >
   {
   public:
 
 		/** Standard ITK-stuff. */
-    typedef ImageRandomSampler                Self;
-    typedef ImageSamplerBase< TInputImage >   Superclass;
-    typedef SmartPointer<Self>                Pointer;
-    typedef SmartPointer<const Self>          ConstPointer;
+    typedef ImageRandomSampler                     Self;
+    typedef ImageRandomSamplerBase< TInputImage >  Superclass;
+    typedef SmartPointer<Self>                     Pointer;
+    typedef SmartPointer<const Self>               ConstPointer;
 
 		/** Method for creation through the object factory. */
     itkNewMacro( Self );
 
 		/** Run-time type information (and related methods). */
-    itkTypeMacro( ImageRandomSampler, ImageSamplerBase );
+    itkTypeMacro( ImageRandomSampler, ImageRandomSamplerBase );
 
 		/** Typedefs inherited from the superclass. */
     typedef typename Superclass::DataObjectPointer            DataObjectPointer;
@@ -63,22 +63,13 @@ namespace itk
     /** Other typedefs. */
     typedef typename InputImageType::IndexType    InputImageIndexType;
     typedef typename InputImageType::PointType    InputImagePointType;
-
-    /** Set the number of samples. */
-    itkSetClampMacro( NumberOfSamples, unsigned long, 1, NumericTraits<unsigned long>::max() );
-
-    /** Get the number of samples. */
-    itkGetConstMacro( NumberOfSamples, unsigned long );
-    
+        
   protected:
 
     /** The constructor. */
-    ImageRandomSampler();
+    ImageRandomSampler(){};
     /** The destructor. */
     virtual ~ImageRandomSampler() {};
-
-    /** PrintSelf. */
-    void PrintSelf( std::ostream& os, Indent indent ) const;
 
     /** Function that does the work. */
     virtual void GenerateData( void );
@@ -89,8 +80,6 @@ namespace itk
     ImageRandomSampler( const Self& );	        // purposely not implemented
 		/** The private copy constructor. */
     void operator=( const Self& );				    // purposely not implemented
-
-    unsigned long m_NumberOfSamples;
 
   }; // end class ImageRandomSampler
 

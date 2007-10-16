@@ -1,7 +1,7 @@
 #ifndef __ImageRandomSamplerSparseMask_h
 #define __ImageRandomSamplerSparseMask_h
 
-#include "itkImageSamplerBase.h"
+#include "itkImageRandomSamplerBase.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "itkImageFullSampler.h"
 
@@ -19,13 +19,13 @@ namespace itk
 
   template < class TInputImage >
   class ImageRandomSamplerSparseMask :
-    public ImageSamplerBase< TInputImage >
+    public ImageRandomSamplerBase< TInputImage >
   {
   public:
 
 		/** Standard ITK-stuff. */
     typedef ImageRandomSamplerSparseMask                Self;
-    typedef ImageSamplerBase< TInputImage >   Superclass;
+    typedef ImageRandomSamplerBase< TInputImage >       Superclass;
     typedef SmartPointer<Self>                Pointer;
     typedef SmartPointer<const Self>          ConstPointer;
 
@@ -33,7 +33,7 @@ namespace itk
     itkNewMacro( Self );
 
 		/** Run-time type information (and related methods). */
-    itkTypeMacro( ImageRandomSamplerSparseMask, ImageSamplerBase );
+    itkTypeMacro( ImageRandomSamplerSparseMask, ImageRandomSamplerBase );
 
 		/** Typedefs inherited from the superclass. */
     typedef typename Superclass::DataObjectPointer            DataObjectPointer;
@@ -58,12 +58,7 @@ namespace itk
 
     /** The random number generator used to generate random indices. */
     typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
-    
-    /** Set/Get the number of samples. */
-    itkGetConstMacro(NumberOfSamples, unsigned long);
-    itkSetClampMacro(NumberOfSamples, unsigned long, 1, NumericTraits<unsigned long>::max() );
-       
-
+        
   protected:
 
     typedef itk::ImageFullSampler<InputImageType>           InternalFullSamplerType;
@@ -89,8 +84,7 @@ namespace itk
 		/** The private copy constructor. */
     void operator=( const Self& );				    // purposely not implemented
 
-    unsigned long m_NumberOfSamples;
-
+    
   }; // end class ImageRandomSamplerSparseMask
 
 

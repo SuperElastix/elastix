@@ -68,15 +68,15 @@ namespace itk
     virtual void AdvanceOneStep( void );
 
     /** Start optimization. */
-    void StartOptimization( void );
+    virtual void StartOptimization( void );
 
     /** Resume previously stopped optimization with current parameters
     * \sa StopOptimization. */
-    void ResumeOptimization( void );
+    virtual void ResumeOptimization( void );
 
     /** Stop optimization.
     * \sa ResumeOptimization */
-    void StopOptimization( void );
+    virtual void StopOptimization( void );
 
     /** Set the learning rate. */
     itkSetMacro( LearningRate, double );
