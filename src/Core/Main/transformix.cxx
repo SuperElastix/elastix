@@ -188,6 +188,7 @@ void PrintHelp(void)
 	std::cout << "          the point are transformed according to the specified transform-parameter file" << std::endl;
 	std::cout << "          use \"-ipp all\" to transform all points from the input-image" << std::endl;
 	std::cout << "-priority set the process priority to high or belownormal (Windows only)"	<< std::endl;
+	std::cout << "-threads  set the maximum number of threads of transformix"	<< std::endl;
 	std::cout << "-ipt      Moving internal pixel type" << std::endl;
 	std::cout << "-opt      Fixed internal pixel type" << std::endl;
 	std::cout << "If \"-ipt\" and/or \"-opt\" are not given, transformix attempts to read them from the transform-parameter file"

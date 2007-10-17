@@ -173,6 +173,18 @@ namespace elastix
 			}
 		#endif
 
+    /** Check for appearance of -threads, which specifies the maximum number of threads */
+    check = "";
+		check = this->GetConfiguration()->GetCommandLineArgument( "-threads" );
+		if ( check == "" )
+		{
+			elxout << "-threads  unspecified, so any threads available are used" << std::endl;
+		}
+		else
+		{
+			elxout << "-threads  " << check << std::endl;
+		}
+
 		/** Return a value.*/
 		return returndummy;
 

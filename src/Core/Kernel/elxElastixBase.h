@@ -104,6 +104,9 @@ namespace elastix
 	 *		example: <tt>-priority high</tt> \n
 	 *		This argument is only valid for running under Windows. For Linux, run
 	 *		elastix with "nice".
+   * \commandlinearg -threads: optional argument for both elastix and transformix to
+	 *		specify the maximum number of threads used by this process. Default: no maximum. \n
+	 *		example: <tt>-threads 2</tt> \n
 	 * \commandlinearg -in: optional argument for transformix with the file name of an input image. \n
 	 *		example: <tt>-in inputImage.mhd</tt> \n
 	 *		If this option is skipped, a deformation field of the transform will be generated.

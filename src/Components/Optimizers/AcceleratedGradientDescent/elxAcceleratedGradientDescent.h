@@ -193,6 +193,10 @@ namespace elastix
     bool m_AutomaticParameterEstimation;
     double m_MaximumStepLength;      
 
+    unsigned int m_NumberOfGradientMeasurements;
+    unsigned int m_NumberOfJacobianMeasurements;
+    unsigned int m_NumberOfSamplesForExactGradient;
+
   }; // end class AcceleratedGradientDescent
 
 

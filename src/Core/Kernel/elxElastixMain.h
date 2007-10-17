@@ -182,6 +182,18 @@ namespace elastix
 		 * and then calls run(). */
 		virtual int Run( ArgumentMapType & argmap );
 
+    /** Set process priority, which is read from the command line arguments. 
+     * Syntax:
+     * -priority <high, belownormal>
+     */
+    virtual void SetProcessPriority(void);
+
+    /** Set maximum number of threads, which is read from the command line arguments. 
+     * Syntax:
+     * -threads <int>
+     */
+    virtual void SetMaximumNumberOfThreads(void);
+
 		/** Functions to get/set the ComponentDatabase */
 		static ComponentDatabase * GetComponentDatabase(void)
 		{

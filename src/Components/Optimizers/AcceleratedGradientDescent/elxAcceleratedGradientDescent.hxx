@@ -25,6 +25,10 @@ namespace elastix
   {
     this->m_AutomaticParameterEstimation = false;
     this->m_MaximumStepLength = 1.0;
+
+    this->m_NumberOfGradientMeasurements = 0;
+    this->m_NumberOfJacobianMeasurements = 0;
+    this->m_NumberOfSamplesForExactGradient = 100000;
     
   } // Constructor
 
@@ -140,9 +144,29 @@ namespace elastix
           this->m_MaximumStepLength,
           this->GetElastix()->GetFixedImage()->GetSpacing()[d] );
       }
-      /** Read user setting */
+      /** Read user setting. */
       this->GetConfiguration()->ReadParameter( this->m_MaximumStepLength,
         "MaximumStepLength", this->GetComponentLabel(), level, 0 );
+
+      /** Read some parameters which are interesting for research only: */
+      this->m_NumberOfGradientMeasurements = 0;
+      this->GetConfiguration()->ReadParameter(
+        this->m_NumberOfGradientMeasurements,
+        "NumberOfGradientMeasurements",
+        this->GetComponentLabel(), level, 0 );
+
+      this->m_NumberOfJacobianMeasurements = 0;
+      this->GetConfiguration()->ReadParameter(
+        this->m_NumberOfJacobianMeasurements,
+        "NumberOfJacobianMeasurements",
+        this->GetComponentLabel(), level, 0 );
+
+      this->m_NumberOfSamplesForExactGradient = 100000;
+      this->GetConfiguration()->ReadParameter(
+        this->m_NumberOfSamplesForExactGradient,
+        "NumberOfSamplesForExactGradient ",
+        this->GetComponentLabel(), level, 0 );   
+
     }
 
 
@@ -376,18 +400,22 @@ namespace elastix
     const unsigned int P = static_cast<unsigned int>( mu0.GetSize() );
     const double Pd = static_cast<double>( P );
 
-    /** Number of gradients to estimate the average square magnitude 
+    /** Number of gradients N to estimate the average square magnitude.
+     * Use the user entered value or a default if the user specified 0.
      * N * nrofparams = 500
      * This gives a probability of ~1 that the average square magnitude
      * does not exceed twice the real expected square magnitude, or half.  */
-    const unsigned int numberofgradients = static_cast<unsigned int>(
-      vcl_ceil( 500.0 / Pd ) );
+    unsigned int numberofgradients = this->m_NumberOfGradientMeasurements;
+    if ( numberofgradients == 0 )
+    {
+      numberofgradients = static_cast<unsigned int>( vcl_ceil( 500.0 / Pd ) );
+    }
 
     bool stochasticgradients = this->GetNewSamplesEveryIteration();
     ImageRandomSamplerPointer sampler = 0;
     AdvancedMetricPointer advmetric = 0;
     unsigned int normalnumberofsamples = 0;
-    const unsigned int allsamples = 100000;
+    const unsigned int allsamples = this->m_NumberOfSamplesForExactGradient;
     double dummyvalue = 0.0;
     DerivativeType approxgradient;
     DerivativeType exactgradient;
@@ -533,12 +561,18 @@ namespace elastix
     sampler->SetInputImageRegion( fixedRegion );
     sampler->SetMask( this->GetElastix()->GetElxMetricBase()->
       GetAsITKBaseType()->GetFixedImageMask() );
+    /** Number of jacobian measurements */
     unsigned long nrofsamples = 100;
     const double maxmem = 400e6;
     if ( outdim * P * nrofsamples * sizeof(JacobianValueType) > maxmem )
     {
       nrofsamples = static_cast<unsigned int>( vcl_floor(
         maxmem / outdimd / Pd / static_cast<double>( sizeof(JacobianValueType) )   ) );
+    }
+    if ( this->m_NumberOfJacobianMeasurements != 0 )
+    {
+      /** The user overrules everything! */
+      nrofsamples = this->m_NumberOfJacobianMeasurements;
     }
     sampler->SetNumberOfSamples( nrofsamples );
     sampler->Update();

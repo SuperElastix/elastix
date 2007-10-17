@@ -296,6 +296,8 @@ void PrintHelp(void)
 	std::cout << "-mMask    mask for moving image" << std::endl;
 	std::cout << "-t0       parameter file for initial transform" << std::endl;
 	std::cout << "-priority set the process priority to high or belownormal (Windows only)"
+		<< std::endl;
+	std::cout << "-threads  set the maximum number of threads of elastix"
 		<< std::endl << std::endl;
 	
 	/** The parameter file.*/

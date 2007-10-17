@@ -11,6 +11,7 @@
 
 #include "elxElastixMain.h"
 #include "elxMacro.h"
+#include "itkMultiThreader.h"
 
 
 
@@ -167,21 +168,9 @@ namespace elastix
 
 	int ElastixMain::Run(void)
 	{
-		/** If wanted, set the priority of this process high or below normal. */
-		std::string processPriority = "";
-		processPriority = this->m_Configuration->GetCommandLineArgument( "-priority" );
-		if ( processPriority == "high" )
-		{
-      #if defined(_WIN32) && !defined(__CYGWIN__)
-			SetPriorityClass( GetCurrentProcess(), HIGH_PRIORITY_CLASS );
-			#endif
-		}
-		else if ( processPriority == "belownormal" )
-		{
-      #if defined(_WIN32) && !defined(__CYGWIN__)
-			SetPriorityClass( GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS );
-			#endif
-		}
+    /** Set process properties. */
+    this->SetProcessPriority();
+    this->SetMaximumNumberOfThreads();
 
 		/** Initialize database. */		
 		int errorCode = this->InitDBIndex();
@@ -276,14 +265,6 @@ namespace elastix
     this->SetFixedMaskContainer(  this->GetElastixBase()->GetFixedMaskContainer() );
 		this->SetMovingMaskContainer( this->GetElastixBase()->GetMovingMaskContainer() );
 		
-		/** Set processPriority to normal again. */
-		if ( processPriority != "" )
-		{
-      #if defined(_WIN32) && !defined(__CYGWIN__)
-			SetPriorityClass( GetCurrentProcess(), NORMAL_PRIORITY_CLASS );
-			#endif
-		}
-
 		/** Return a value. */
 		return errorCode;
 
@@ -574,6 +555,52 @@ namespace elastix
 
     return objectContainer;
   } // end CreateComponents
+
+
+  /**
+   * *********************** SetProcessPriority *************************
+   */
+
+  void ElastixMain::SetProcessPriority(void)
+  {
+    /** If wanted, set the priority of this process high or below normal. */
+		std::string processPriority = "";
+		processPriority = this->m_Configuration->GetCommandLineArgument( "-priority" );
+		if ( processPriority == "high" )
+		{
+      #if defined(_WIN32) && !defined(__CYGWIN__)
+			SetPriorityClass( GetCurrentProcess(), HIGH_PRIORITY_CLASS );
+			#endif
+		}
+		else if ( processPriority == "belownormal" )
+		{
+      #if defined(_WIN32) && !defined(__CYGWIN__)
+			SetPriorityClass( GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS );
+			#endif
+		}   
+
+  } // end SetProcessPriority
+
+
+  /**
+   * *********************** SetMaximumNumberOfThreads *************************
+   */
+
+  void ElastixMain::SetMaximumNumberOfThreads(void)
+  {
+    /** If wanted, set the priority of this process high or below normal. */
+    std::string maximumNumberOfThreadsString = "";
+		maximumNumberOfThreadsString = this->m_Configuration->GetCommandLineArgument( "-threads" );
+
+    if ( maximumNumberOfThreadsString != "" )
+    {
+      const int maximumNumberOfThreads =
+        atoi( maximumNumberOfThreadsString.c_str() );
+      itk::MultiThreader::SetGlobalMaximumNumberOfThreads(
+        maximumNumberOfThreads );
+    }
+
+  } // end SetMaximumNumberOfThreads
 	
 		
 } // end namespace elastix

@@ -25,21 +25,9 @@ namespace elastix
 	
 	int TransformixMain::Run(void)
 	{
-		/** If wanted, set the priority of this process high.*/
-		std::string processPriority = "";
-		processPriority = m_Configuration->GetCommandLineArgument( "-priority" );
-		if ( processPriority == "high" )
-		{
-		  #if defined(_WIN32) && !defined(__CYGWIN__)
-			SetPriorityClass( GetCurrentProcess(), HIGH_PRIORITY_CLASS );
-			#endif
-		}
-		else if ( processPriority == "belownormal" )
-		{
-      #if defined(_WIN32) && !defined(__CYGWIN__)
-			SetPriorityClass( GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS );
-			#endif
-		}
+    /** Set process properties. */
+    this->SetProcessPriority();
+    this->SetMaximumNumberOfThreads();
 
 		/** Initialize database.*/		
 		int errorCode = this->InitDBIndex();
@@ -112,14 +100,6 @@ namespace elastix
     /** Save the image container */
     this->SetMovingImageContainer( this->GetElastixBase()->GetMovingImageContainer() );
 				
-		/** Set processPriority to normal again. */
-		if ( processPriority == "high" )
-		{
-			#if defined(_WIN32) && !defined(__CYGWIN__)
-			SetPriorityClass( GetCurrentProcess(), NORMAL_PRIORITY_CLASS );
-			#endif
-		}
-
 		return errorCode;
 
 	} // end Run
