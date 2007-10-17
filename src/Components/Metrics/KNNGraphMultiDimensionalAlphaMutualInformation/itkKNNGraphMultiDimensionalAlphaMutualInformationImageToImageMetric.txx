@@ -862,7 +862,7 @@ namespace itk
         /** Get and set the values of the moving feature images. */
         for ( unsigned int j = 0; j < this->m_NumberOfMovingFeatureImages; j++ )
         {
-          movingFeatureValue = this->m_MovingFeatureInterpolators[ j ]->Evaluate( fixedPoint );
+          movingFeatureValue = this->m_MovingFeatureInterpolators[ j ]->Evaluate( mappedPoint );
           listSampleMoving->SetMeasurement(
             this->m_NumberOfPixelsCounted,
             j + 1,
