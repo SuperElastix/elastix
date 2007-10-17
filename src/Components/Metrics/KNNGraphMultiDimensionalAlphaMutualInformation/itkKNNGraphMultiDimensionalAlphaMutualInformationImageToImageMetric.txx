@@ -737,7 +737,7 @@ namespace itk
       measure = vcl_log( sumG / number ) / ( this->m_Alpha - 1.0 );
 
       /** Compute the derivative (-2.0 * d = -jointSize). */
-      derivative = ( -static_cast<AccumulateType>( jointSize ) / sumG ) * contribution;
+      derivative = ( static_cast<AccumulateType>( jointSize ) / sumG ) * contribution;
     }
     value = -measure;
   
