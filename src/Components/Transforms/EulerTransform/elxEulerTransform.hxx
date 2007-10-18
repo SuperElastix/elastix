@@ -2,7 +2,7 @@
 #define __elxEulerTransform_HXX_
 
 #include "elxEulerTransform.h"
-#include "itkImageRandomConstIteratorWithIndex.h"
+#include "itkImageGridSampler.h"
 
 namespace elastix
 {
@@ -309,10 +309,14 @@ namespace elastix
       "AutomaticScalesEstimation", 0 );
     if ( automaticScalesEstimation )
     {
-      elxout << "Scales are estimed automatically." << std::endl;
+      elxout << "Scales are estimated automatically." << std::endl;
 
-      typedef itk::ImageRandomConstIteratorWithIndex<FixedImageType>
-                                                          FixedImageIteratorType;
+      typedef itk::ImageGridSampler< FixedImageType >     ImageSamplerType;
+      typedef typename ImageSamplerType::Pointer          ImageSamplerPointer;
+      typedef typename 
+        ImageSamplerType::ImageSampleContainerType        ImageSampleContainerType;
+      typedef typename ImageSampleContainerType::Pointer  ImageSampleContainerPointer;
+     
       const unsigned int outdim = this->GetOutputSpaceDimension();
 
       /** Get fixed image and region */
@@ -320,39 +324,58 @@ namespace elastix
         GetAsITKBaseType()->GetFixedImage();
       RegionType fixedRegion = this->GetRegistration()->
         GetAsITKBaseType()->GetFixedImageRegion();
+      const double fixdimd = static_cast<double>( fixedRegion.GetImageDimension() );
 
-      /** Setup random iterator on fixed image */
-      FixedImageIteratorType iter( fixedImage, fixedRegion );
+      /** Set up grid sampler */
+      ImageSamplerPointer sampler = ImageSamplerType::New();
+      sampler->SetInput( fixedImage );
+      sampler->SetInputImageRegion( fixedRegion );
+      
+      /** Compute the grid spacing */
       unsigned long nrofsamples = 10000;
-      iter.SetNumberOfSamples( nrofsamples );
-      iter.GoToBegin();
+      const double fraction = 
+        static_cast<double>( fixedRegion.GetNumberOfPixels() ) /
+        static_cast<double>( nrofsamples );
+      int gridspacing = static_cast<int>( 
+        vnl_math_rnd( vcl_pow(fraction, 1.0/fixdimd) )   );
+      gridspacing = vnl_math_max( 1, gridspacing );
+      typename ImageSamplerType::SampleGridSpacingType gridspacings;
+      gridspacings.Fill( gridspacing );
+      sampler->SetSampleGridSpacing( gridspacings );
+  
+      /** get samples and check the actually obtained number of samples */
+      sampler->Update();
+      ImageSampleContainerPointer sampleContainer = sampler->GetOutput();
+      nrofsamples = sampleContainer->Size();
+      if ( nrofsamples == 0 )
+      {
+        itkExceptionMacro( << "No valid voxels found to estimate the scales." );
+      }
 
-      PointType point;
+      /** Create iterator over the sample container. */
+      typename ImageSampleContainerType::ConstIterator iter;
+      typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
+      typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
+
+      /** initialize */
       newscales.Fill(0.0);
 
-      /** Loop over image and compute jacobian */
-      while ( !iter.IsAtEnd() )
-      {
-        double step= 0.0;
-        
-        const IndexType & index = iter.GetIndex();
-
-        fixedImage->TransformIndexToPhysicalPoint( index, point );
-        const JacobianType & jacobian = this->GetJacobian( point );
-
+      /** Read fixed coordinates and get jacobian. */
+      for ( iter = begin; iter != end; ++iter )
+		  {      
+        const PointType & point = (*iter).Value().m_ImageCoordinates;
+        const JacobianType & jacobian = this->GetJacobian( point );   
+       
         /** Square each element of the jacobian and add each row
-         * to the newscales */
+        * to the newscales */
         for( unsigned int d = 0; d < outdim; ++d )
         {
           ScalesType jacd(jacobian[d], N, false);
           newscales += element_product( jacd, jacd );
         }
-
-        /** Next sample */
-        ++iter;
       }
       newscales /= static_cast<double>( nrofsamples );
-    
+
     }
     else
     {

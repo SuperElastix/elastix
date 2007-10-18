@@ -29,6 +29,8 @@ namespace elastix
     this->m_NumberOfGradientMeasurements = 0;
     this->m_NumberOfJacobianMeasurements = 0;
     this->m_NumberOfSamplesForExactGradient = 100000;
+
+    this->m_UseGenericLinearMethod = true;
     
   } // Constructor
 
@@ -167,7 +169,11 @@ namespace elastix
         "NumberOfSamplesForExactGradient ",
         this->GetComponentLabel(), level, 0 );   
 
-    }
+      this->m_UseGenericLinearMethod = true;
+       this->GetConfiguration()->ReadParameter( this->m_UseGenericLinearMethod,
+         "UseGenericLinearMethod", this->GetComponentLabel(), level, 0 );
+
+    } // end if automatic parameter estimation
 
 
   } // end BeforeEachResolution
@@ -250,7 +256,7 @@ namespace elastix
     tempSettingsVector.push_back( settings );
     elxout 
       << "Settings of " << this->elxGetClassName() 
-      << "in resolution " << level << ":" << std::endl;
+      << " in resolution " << level << ":" << std::endl;
     this->PrintSettingsVector( tempSettingsVector );
 
   } // end AfterEachResolution
@@ -275,7 +281,7 @@ namespace elastix
 
     elxout
       << "Settings of " << this->elxGetClassName()
-      << "for all resolutions:" << std::endl;
+      << " for all resolutions:" << std::endl;
     this->PrintSettingsVector( this->m_SettingsVector );
 
   } // end AfterRegistration
@@ -515,27 +521,36 @@ namespace elastix
     ::ComputeJacobianTerms(double & TrC, double & TrCC, 
     double & maxJJ, double & maxJCJ )
   {
-    this->ComputeJacobianTermsGenericApproximation(
-      TrC, TrCC, maxJJ, maxJCJ );
-
+    if ( this->m_UseGenericLinearMethod ) 
+    {
+      this->ComputeJacobianTermsGenericLinear(
+        TrC, TrCC, maxJJ, maxJCJ );
+    }
+    else
+    {
+      this->ComputeJacobianTermsGenericQuadratic(
+        TrC, TrCC, maxJJ, maxJCJ );
+    }
+    
   } // end ComputeJacobianTerms
 
 
   /** 
-  * *********** ComputeJacobianTermsGenericApproximation ************
+  * *********** ComputeJacobianTermsGenericQuadratic ************
   */
 
   template <class TElastix>
     void AcceleratedGradientDescent<TElastix>
-    ::ComputeJacobianTermsGenericApproximation(double & TrC, double & TrCC, 
+    ::ComputeJacobianTermsGenericQuadratic(double & TrC, double & TrCC, 
     double & maxJJ, double & maxJCJ )
   {
     typedef std::vector< JacobianType >                 JacobianVectorType;
-    typedef itk::ImageRandomSamplerSparseMask<
-      FixedImageType>                                   ImageSamplerType;
-    typedef typename ImageSamplerType::Pointer          ImageSamplerPointer;
-    typedef typename 
-      ImageSamplerType::ImageSampleContainerType        ImageSampleContainerType;
+
+    /** Get samples */
+    ImageSampleContainerPointer sampleContainer = 0;
+    this->SampleFixedImageForJacobianTerms( sampleContainer );
+    unsigned int nrofsamples = sampleContainer->Size();
+    const double n = static_cast<double>(nrofsamples);
 
     /** Get the number of parameters */
     const unsigned int P = static_cast<unsigned int>( 
@@ -548,36 +563,6 @@ namespace elastix
     transform->SetParameters( this->GetCurrentPosition() );
     const unsigned int outdim = transform->GetOutputSpaceDimension();
     const double outdimd = static_cast<double>( outdim );
-
-    /** Get fixed image and region */
-    typename FixedImageType::ConstPointer fixedImage = this->GetElastix()->
-      GetElxMetricBase()->GetAsITKBaseType()->GetFixedImage();
-    FixedImageRegionType fixedRegion = this->GetElastix()->
-      GetElxMetricBase()->GetAsITKBaseType()->GetFixedImageRegion();
-
-    /** Set up random sampler and update */
-    ImageSamplerPointer sampler = ImageSamplerType::New();
-    sampler->SetInput( fixedImage );
-    sampler->SetInputImageRegion( fixedRegion );
-    sampler->SetMask( this->GetElastix()->GetElxMetricBase()->
-      GetAsITKBaseType()->GetFixedImageMask() );
-    /** Number of jacobian measurements */
-    unsigned long nrofsamples = 100;
-    const double maxmem = 400e6;
-    if ( outdim * P * nrofsamples * sizeof(JacobianValueType) > maxmem )
-    {
-      nrofsamples = static_cast<unsigned int>( vcl_floor(
-        maxmem / outdimd / Pd / static_cast<double>( sizeof(JacobianValueType) )   ) );
-    }
-    if ( this->m_NumberOfJacobianMeasurements != 0 )
-    {
-      /** The user overrules everything! */
-      nrofsamples = this->m_NumberOfJacobianMeasurements;
-    }
-    sampler->SetNumberOfSamples( nrofsamples );
-    sampler->Update();
-    typename ImageSampleContainerType::Pointer sampleContainer = sampler->GetOutput();
-    nrofsamples = sampleContainer->Size();
     
     /** Get scales vector */
     const ScalesType & scales = this->m_ScaledCostFunction->GetScales();
@@ -608,23 +593,20 @@ namespace elastix
           jacvec[s].scale_column( p, 1.0/scales[p] );
         }
       }        
-
-      /** Next */
       ++s;
-    } // end for
+    } // end for loop over samples
 
     /** Compute the stuff in a double loop over the jacobians 
      * \li TrC = 1/n \sum_j ||J_j||_F^2
-     * \li maxJJ = max_j ||J_j||_F^2 + 2\sqrt{2} || J_j J_j^T ||_F
-     * \li maxJCJ = max_j [ 1/n \sum_i ||J_j J_i^T||_F^2 ] + 
-     *   2\sqrt{2} 1/n || \sum_i (J_j J_i^T) (J_j J_i^T)^T ||_F
+     * \li maxJJ = max_j [ ||J_j||_F^2 + 2\sqrt{2} || J_j J_j^T ||_F ]
+     * \li maxJCJ = max_j [ 1/n \sum_i ||J_j J_i^T||_F^2 + 
+     *   2\sqrt{2} 1/n || \sum_i (J_j J_i^T) (J_j J_i^T)^T ||_F ]
      * \li TrCC = 1/n^2 sum_i sum_j || J_j J_i^T ||_F^2
      */
     TrC = 0.0;
     TrCC = 0.0;
     maxJJ = 0.0;
     maxJCJ = 0.0;
-    const double n = static_cast<double>(nrofsamples);
     const double sqrt2 = vcl_sqrt(static_cast<double>(2.0));
     for ( unsigned int j = 0 ; j < nrofsamples; ++j)
     {      
@@ -666,13 +648,11 @@ namespace elastix
         JacobianType jacjjaci(outdim,outdim); // J_j J_i^T
         for( unsigned int dx = 0; dx < outdim; ++dx )
         {
+          ParametersType jacjdx(jacj[dx], P, false);
           for( unsigned int dy = 0; dy < outdim; ++dy )
           {
-            jacjjaci(dx,dy)=0.0;
-            for (unsigned int p = 0; p < P; ++p)
-            {
-              jacjjaci[dx][dy] += jacj[dx][p] * jaci[dy][p];
-            } // p
+            ParametersType jacidy(jaci[dy], outdim, false);
+            jacjjaci(dx,dy)= dot_product(jacjdx, jacidy);
           } // dy
         } // dx
 
@@ -694,7 +674,6 @@ namespace elastix
             jac4[dx][dy] += dot_product(jacjjacidx, jacjjacidy);
           }
         } 
-
         
       }  // next i
 
@@ -710,18 +689,184 @@ namespace elastix
     /** Clean up */
     jacvec.clear();
 
-  } // end ComputeJacobianTermsGenericApproximation
+  } // end ComputeJacobianTermsGenericQuadratic
 
 
   /** 
-  * ************* ComputeJacobianTermsGenericExact ****************
+  * ************* ComputeJacobianTermsGenericLinear ****************
   */
 
   template <class TElastix>
     void AcceleratedGradientDescent<TElastix>
-    ::ComputeJacobianTermsGenericExact(double & TrC, double & TrCC, 
+    ::ComputeJacobianTermsGenericLinear(double & TrC, double & TrCC, 
     double & maxJJ, double & maxJCJ )
-  {} // end ComputeJacobianTermsGenericExact
+  {
+    typedef itk::Array2D<double>                        CovarianceMatrixType;   
+    typedef CovarianceMatrixType::iterator              CovarianceMatrixIteratorType;
+    typedef JacobianType::const_iterator                JacobianConstIteratorType;
+    typedef vnl_vector<double>                          JacobianColumnType;
+
+    /** Get samples */
+    ImageSampleContainerPointer sampleContainer = 0;
+    this->SampleFixedImageForJacobianTerms( sampleContainer );
+    unsigned int nrofsamples = sampleContainer->Size();
+    const double n = static_cast<double>(nrofsamples);
+
+    /** Get the number of parameters */
+    const unsigned int P = static_cast<unsigned int>( 
+      this->GetScaledCurrentPosition().GetSize() );
+    const double Pd = static_cast<double>( P );
+
+    /** Get transform and set current position */
+    typename TransformType::Pointer transform = this->GetRegistration()->
+      GetAsITKBaseType()->GetTransform();
+    transform->SetParameters( this->GetCurrentPosition() );
+    const unsigned int outdim = transform->GetOutputSpaceDimension();
+    const double outdimd = static_cast<double>( outdim );
+
+    /** Get scales vector */
+    const ScalesType & scales = this->m_ScaledCostFunction->GetScales();
+                
+    /** Create iterator over the sample container. */
+    typename ImageSampleContainerType::ConstIterator iter;
+    typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
+    typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
+
+    /** Initialize */
+    CovarianceMatrixType cov(P,P);
+    cov.Fill(0.0);    
+    
+		/** Loop over image and compute jacobian. Possibly apply scaling.
+     * Compute C = 1/n \sum_i J_i^T J_i */
+    std::vector<JacobianConstIteratorType> jacit(outdim);
+    CovarianceMatrixIteratorType covit;
+    for ( iter = begin; iter != end; ++iter )
+		{
+	    /** Read fixed coordinates and get jacobian. 
+       * \todo: extend for sparse jacobians */
+      const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
+      const JacobianType & jac = transform->GetJacobian( point );   
+     
+      /** Update covariance matrix */
+      covit = cov.begin();
+      for ( unsigned int p = 0; p < P; ++p )
+      {        
+        const JacobianColumnType jaccolp = jac.get_column(p);
+        /** Initialize iterators at first column of jacobian */
+        for ( unsigned int d = 0; d < outdim; ++d)
+        {
+          jacit[d] = jac.begin() + d * P;
+        }
+        for ( unsigned int q = 0; q < P; ++q )
+        {          
+          for ( unsigned int d = 0; d < outdim; ++d)
+          {
+            *covit += jaccolp[d] * (*jacit[d]) / n;
+            ++jacit[d];
+          }          
+          ++covit;
+        } // q
+      } // p       
+        
+    } // end computation of covariance matrix
+
+    /** Apply scales. */
+    if ( this->GetUseScales() )
+    {
+      for (unsigned int p = 0; p < P; ++p)
+      {
+        cov.scale_column( p, 1.0/scales[p] );
+        cov.scale_row( p, 1.0/scales[p] );
+      }
+    }
+
+    /** Compute TrC = trace(C) */
+    for (unsigned int p = 0; p < P; ++p)
+    {
+      TrC += cov[p][p];
+    }
+
+    /** Compute TrCC = ||C||_F^2 */
+    TrCC = vnl_math_sqr( cov.frobenius_norm() );
+
+    /** Compute maxJJ and maxJCJ
+     * \li maxJJ = max_j [ ||J_j||_F^2 + 2\sqrt{2} || J_j J_j^T ||_F ]
+     * \li maxJCJ = max_j [ Tr( J_j C J_j^T ) + 2\sqrt{2} || J_j C J_j^T ||_F ]
+     */
+    maxJJ = 0.0;
+    maxJCJ = 0.0;    
+    const double sqrt2 = vcl_sqrt(static_cast<double>(2.0));
+    JacobianType jacj;
+    for ( iter = begin; iter != end; ++iter )
+		{
+	    /** Read fixed coordinates and get jacobian. */      
+      const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
+      jacj = transform->GetJacobian( point );
+
+      /** Apply scales, if necessary */
+      if ( this->GetUseScales() )
+      {
+        for (unsigned int p = 0; p < P; ++p)
+        {
+          jacj.scale_column( p, 1.0/scales[p] );
+        }
+      } 
+  
+      /** Compute 1st part of JJ: ||J_j||_F^2 */
+      double JJ_j = vnl_math_sqr( jacj.frobenius_norm() );
+
+      /** Compute 2nd part of JJ: 2\sqrt{2} || J_j J_j^T ||_F */
+      JacobianType jacjjacj(outdim,outdim); // J_j J_j^T
+      for( unsigned int dx = 0; dx < outdim; ++dx )
+      {
+        for( unsigned int dy = 0; dy < outdim; ++dy )
+        {
+          jacjjacj(dx,dy)=0.0;
+          for (unsigned int p = 0; p < P; ++p)
+          {
+            jacjjacj[dx][dy] += jacj[dx][p] * jacj[dy][p];
+          } // p
+        } // dy
+      } // dx
+      JJ_j += 2.0 * sqrt2 * jacjjacj.frobenius_norm();
+
+      /** Max_j [JJ] */
+      maxJJ = vnl_math_max( maxJJ, JJ_j);
+
+      /** Compute JCJ */
+      double JCJ_j = 0.0;
+      
+      /** J_j C */
+      JacobianType jacjC(outdim, P);
+      jacjC = jacj * cov;
+     
+      /** J_j C J_j^T */
+      JacobianType jacjCjacj(outdim, outdim);
+      for( unsigned int dx = 0; dx < outdim; ++dx )
+      {
+        ParametersType jacjCdx(jacjC[dx], P, false);
+        for( unsigned int dy = 0; dy < outdim; ++dy )
+        {
+          ParametersType jacjdy(jacj[dy], outdim, false);
+          jacjCjacj(dx,dy) = dot_product(jacjCdx, jacjdy);
+        } // dy
+      } // dx
+      
+      /** Compute 1st part of JCJ: Tr( J_j C J_j^T ) */
+      for (unsigned int d = 0; d < outdim; ++d)
+      {
+        JCJ_j += jacjCjacj[d][d];
+      }
+
+      /** Compute 2nd part of JCJ: 2\sqrt{2} || J_j C J_j^T ||_F */
+      JCJ_j += 2.0 * sqrt2 * jacjCjacj.frobenius_norm();
+      
+      /** Max_j [JCJ]*/
+      maxJCJ = vnl_math_max( maxJCJ, JCJ_j);
+
+    } // next sample from sample container     
+
+  } // end ComputeJacobianTermsGenericLinear
 
 
   /** 
@@ -755,6 +900,67 @@ namespace elastix
     ::ComputeJacobianTermsBSpline(double & TrC, double & TrCC, 
     double & maxJJ, double & maxJCJ )
   {} // end ComputeJacobianTermsBSpline
+
+
+  /** 
+  * **************** SampleFixedImageForJacobianTerms *******************
+  */
+
+  template <class TElastix>
+    void AcceleratedGradientDescent<TElastix>
+    ::SampleFixedImageForJacobianTerms(
+    ImageSampleContainerPointer & sampleContainer )
+  {
+    /** Get fixed image and region */
+    typename FixedImageType::ConstPointer fixedImage = this->GetElastix()->
+      GetElxMetricBase()->GetAsITKBaseType()->GetFixedImage();
+    FixedImageRegionType fixedRegion = this->GetElastix()->
+      GetElxMetricBase()->GetAsITKBaseType()->GetFixedImageRegion();
+    const double fixdimd = static_cast<double>( fixedRegion.GetImageDimension() );
+
+    /** Set up grid sampler */
+    ImageSamplerPointer sampler = ImageSamplerType::New();
+    sampler->SetInput( fixedImage );
+    sampler->SetInputImageRegion( fixedRegion );
+    sampler->SetMask( this->GetElastix()->GetElxMetricBase()->
+      GetAsITKBaseType()->GetFixedImageMask() );
+    
+    /** Determine grid spacing of sampler for each dimension
+     * gridspacing = round[
+     *  (nrofpixelsinfixedregion / desirednumberofjacobianmeasurements)^(1/D) ]
+     * and at least 1. 
+     * Note that the actual number of samples may be lower, due to masks */
+
+    unsigned int nrofsamples = 200;
+    
+    /** Check user input; an input of 0 means that the default is used. */
+    if ( this->m_NumberOfJacobianMeasurements != 0 )
+    {
+      nrofsamples = this->m_NumberOfJacobianMeasurements;
+    }
+
+    /** Compute the grid spacing */
+    const double fraction = 
+      static_cast<double>( fixedRegion.GetNumberOfPixels() ) /
+      static_cast<double>( nrofsamples );
+    int gridspacing = static_cast<int>( 
+      vnl_math_rnd( vcl_pow(fraction, 1.0/fixdimd) )   );
+    gridspacing = vnl_math_max( 1, gridspacing );
+    typename ImageSamplerType::SampleGridSpacingType gridspacings;
+    gridspacings.Fill( gridspacing );
+    sampler->SetSampleGridSpacing( gridspacings );
+
+    /** get samples and check the actually obtained number of samples */
+    sampler->Update();
+    sampleContainer = sampler->GetOutput();
+    nrofsamples = sampleContainer->Size();
+    if ( nrofsamples == 0 )
+    {
+      itkExceptionMacro(
+        << "No valid voxels found to estimate the AcceleratedGradientDescent parameters." );
+    }
+    
+  } // end SampleFixedImageForJacobianTerms
 
 
   /** 

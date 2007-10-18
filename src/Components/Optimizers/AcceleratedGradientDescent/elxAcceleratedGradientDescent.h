@@ -2,6 +2,7 @@
 #define __elxAcceleratedGradientDescent_h
 
 #include "itkAcceleratedGradientDescentOptimizer.h"
+#include "itkImageGridSampler.h"
 #include "elxIncludes.h"
 
 namespace elastix
@@ -141,11 +142,24 @@ namespace elastix
     struct SettingsType { double a, A, alpha, fmax, fmin, omega; };
     typedef typename std::vector<SettingsType>          SettingsVectorType;
     
+    typedef itk::ImageGridSampler< FixedImageType >     ImageSamplerType;
+    typedef typename ImageSamplerType::Pointer          ImageSamplerPointer;
+    typedef typename 
+      ImageSamplerType::ImageSampleContainerType        ImageSampleContainerType;
+    typedef typename ImageSampleContainerType::Pointer  ImageSampleContainerPointer;
+    
     AcceleratedGradientDescent();
     virtual ~AcceleratedGradientDescent() {};
     
     /** Variable to store the automatically determined settings for each resolution */
     SettingsVectorType m_SettingsVector;
+
+    /** Some options for automatic parameter estimation */
+    unsigned int m_NumberOfGradientMeasurements;
+    unsigned int m_NumberOfJacobianMeasurements;
+    unsigned int m_NumberOfSamplesForExactGradient;
+    bool m_UseGenericLinearMethod;
+
 
     /** Print the contents of the settings vector to elxout */
     virtual void PrintSettingsVector( const SettingsVectorType & settings ) const;
@@ -164,15 +178,35 @@ namespace elastix
     virtual void SampleGradients(const ParametersType & mu0,
       double perturbationSigma, double & gg, double & ee);
 
+    /** Returns a comtainer of fixed image samples, sampled using a grid sampler
+     * The grid size is determined from the user entered number of jacobian measurements,
+     * or a default value of 200 is used.
+     * The actual number of samples depends on the presence of masks, and 
+     * the restriction that the gridspacing of the gridsampler must be integer.
+     * The samples input variable contains the sample container after execution.
+     * It does not have to be initialised/allocated before.
+     */
+    virtual void SampleFixedImageForJacobianTerms(
+      ImageSampleContainerPointer & sampleContainer );
+
+
     /** Functions to compute the jacobian terms needed for the automatic
      * parameter estimation */
     virtual void ComputeJacobianTerms(double & TrC, double & TrCC, 
       double & maxJJ, double & maxJCJ );
 
-    virtual void ComputeJacobianTermsGenericApproximation(double & TrC, double & TrCC, 
+    /** Implementation of the jacobian terms, using a method that is
+     * quadratically complex regarding the number of jacobian measurements.
+     * The memory usage is linear proportional to the number of jacobian measurements
+     * and linear proportional to the number of parameters. */
+    virtual void ComputeJacobianTermsGenericQuadratic(double & TrC, double & TrCC, 
       double & maxJJ, double & maxJCJ );
 
-    virtual void ComputeJacobianTermsGenericExact(double & TrC, double & TrCC, 
+    /** Implementation of the jacobian terms, using a method that is
+     * linearly complex regarding the number of jacobian measurements.
+     * The memory usage is independent on the number of jacobian measurements
+     * and quadratically proportional to the number of parameters. */
+    virtual void ComputeJacobianTermsGenericLinear(double & TrC, double & TrCC, 
       double & maxJJ, double & maxJCJ );
     
     virtual void ComputeJacobianTermsAffine(double & TrC, double & TrCC, 
@@ -183,7 +217,6 @@ namespace elastix
 
     virtual void ComputeJacobianTermsBSpline(double & TrC, double & TrCC, 
       double & maxJJ, double & maxJCJ );
-
     
   private:
 
@@ -192,10 +225,6 @@ namespace elastix
 
     bool m_AutomaticParameterEstimation;
     double m_MaximumStepLength;      
-
-    unsigned int m_NumberOfGradientMeasurements;
-    unsigned int m_NumberOfJacobianMeasurements;
-    unsigned int m_NumberOfSamplesForExactGradient;
 
   }; // end class AcceleratedGradientDescent
 
