@@ -521,7 +521,16 @@ namespace elastix
     ::ComputeJacobianTerms(double & TrC, double & TrCC, 
     double & maxJJ, double & maxJCJ )
   {
-    if ( this->m_UseGenericLinearMethod ) 
+    std::string transformName = this->GetElastix()->
+      GetElxTransformBase()->GetNameOfClass();
+
+    const std::string translationName = "TranslationTransformElastix";
+    if ( transformName == translationName )
+    {
+      this->ComputeJacobianTermsTranslation(
+        TrC, TrCC, maxJJ, maxJCJ );
+    }
+    else if ( this->m_UseGenericLinearMethod ) 
     {
       this->ComputeJacobianTermsGenericLinear(
         TrC, TrCC, maxJJ, maxJCJ );
@@ -888,7 +897,22 @@ namespace elastix
     void AcceleratedGradientDescent<TElastix>
     ::ComputeJacobianTermsTranslation(double & TrC, double & TrCC, 
     double & maxJJ, double & maxJCJ )
-  {} // end ComputeJacobianTermsTranslation
+  {
+    /** Get the number of parameters */
+    const unsigned int P = static_cast<unsigned int>( 
+      this->GetScaledCurrentPosition().GetSize() );
+    const double Pd = static_cast<double>( P );
+
+    const double sqrt2 = vcl_sqrt(static_cast<double>(2.0));
+
+    /** For translation transforms the Jacobian dT/dmu equals I
+     * at every voxel. The Jacobian terms are simplified in this case: */
+    TrC = Pd;
+    TrCC = Pd;
+    maxJJ = Pd + 2.0 * sqrt2 * vcl_sqrt(Pd);
+    maxJCJ = maxJJ;
+
+  } // end ComputeJacobianTermsTranslation
 
 
   /** 
