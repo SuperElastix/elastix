@@ -7,6 +7,8 @@
 #include "elxBaseComponentSE.h"
 #include "itkResampleImageFilter.h"
 
+#include "elxProgressCommand.h"
+
 namespace elastix
 {
 	using namespace itk;
@@ -76,13 +78,16 @@ namespace elastix
 			InputImageType, OutputImageType, CoordRepType>	ITKBaseType;
 
 		/** Typedef's from ResampleImageFiler. */
-		typedef typename ITKBaseType::TransformType							TransformType;
-		typedef typename ITKBaseType::InterpolatorType					InterpolatorType;
-		typedef typename ITKBaseType::SizeType									SizeType;
-		typedef typename ITKBaseType::IndexType									IndexType;
-		typedef typename ITKBaseType::SpacingType								SpacingType;
-		typedef typename ITKBaseType::OriginPointType						OriginPointType;
-		typedef typename ITKBaseType::PixelType									OutputPixelType;
+		typedef typename ITKBaseType::TransformType				TransformType;
+		typedef typename ITKBaseType::InterpolatorType		InterpolatorType;
+		typedef typename ITKBaseType::SizeType						SizeType;
+		typedef typename ITKBaseType::IndexType						IndexType;
+		typedef typename ITKBaseType::SpacingType					SpacingType;
+		typedef typename ITKBaseType::OriginPointType			OriginPointType;
+		typedef typename ITKBaseType::PixelType						OutputPixelType;
+
+    /***/
+    typedef elx::ProgressCommand          ProgressCommandType;
 
 		/** Get the ImageDimension. */
 		itkStaticConstMacro( ImageDimension, unsigned int,
@@ -119,6 +124,7 @@ namespace elastix
 
 		/** Function to read transform-parameters from a file. */
 		virtual void ReadFromFile(void);
+
 		/** Function to write transform-parameters to a file. */
 		virtual void WriteToFile(void);
 

@@ -152,9 +152,10 @@ namespace elastix
 			typedef tmr::Timer TimerType;
 			TimerType::Pointer timer = TimerType::New();
 			timer->StartTimer();
-			/** Apply the final transform, and save the result. */
-			elxout << std::endl << "Applying final transform";
-			/** Call WriteResultImage. */
+
+			/** Apply the final transform, and save the result,
+       * by calling WriteResultImage. */
+      elxout << "\nApplying final transform ..." << std::endl;
 			try
 			{
 				this->WriteResultImage( makeFileName.str().c_str() );
@@ -165,9 +166,10 @@ namespace elastix
 				xl::xout["error"] << excp
 					<< "Resuming elastix." << std::endl;
 			}
+
 			/** Print the elapsed time for the resampling. */
 			timer->StopTimer();
-			elxout << ", which took: "
+			elxout << "Applying final transform took "
 				<< static_cast<long>( timer->GetElapsedClockSec() )
 				<< " s." << std::endl;
 		}
@@ -216,6 +218,12 @@ namespace elastix
 		/** Make sure the resampler is updated. */
 		this->GetAsITKBaseType()->Modified();
 
+    /** Add a progress observer to the resampler. */
+    ProgressCommandType::Pointer command = ProgressCommandType::New();
+    command->ConnectObserver( this->GetAsITKBaseType() );
+    command->SetStartString( "Progress: " );
+    command->SetEndString( "%" );
+
     /** Read output pixeltype from parameter file. Replace possible " " with "_". */
     std::string resultImagePixelType = "short";
     this->m_Configuration->ReadParameter(	resultImagePixelType, "ResultImagePixelType", 0, true );
@@ -224,8 +232,8 @@ namespace elastix
     if ( pos != npos ) resultImagePixelType.replace( pos, 1, "_" );
     
     /** Typedef's for writing the output image. */
-		typedef ImageFileCastWriter< OutputImageType >		WriterType;
-		typedef typename WriterType::Pointer					WriterPointer;
+		typedef ImageFileCastWriter< OutputImageType >	WriterType;
+		typedef typename WriterType::Pointer					  WriterPointer;
 
     /** Create writer. */
 		WriterPointer writer = WriterType::New();
@@ -254,6 +262,7 @@ namespace elastix
 		}
 
 	} // WriteResultImage
+
 
 	/*
 	 * ************************* ReadFromFile ***********************
@@ -366,7 +375,6 @@ namespace elastix
     this->m_Configuration->ReadParameter(	resultImagePixelType, "ResultImagePixelType", 0, true );
     xl::xout["transpar"] << "(ResultImagePixelType \""
 			<< resultImagePixelType << "\")" << std::endl;
-    
 
 	} // end WriteToFile
 
