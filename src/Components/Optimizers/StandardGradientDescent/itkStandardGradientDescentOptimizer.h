@@ -34,8 +34,8 @@ namespace itk
   * Or:
   *
   * S. Klein, M. Staring, J.P.W. Pluim,
-  * "Evaluation of Optimisation Methods for Nonrigid Medical Image Registration using Mutual Information and B-splines"
-  * IEEE Transactions on Image Processing, 2007, In press.
+  * "Evaluation of Optimization Methods for Nonrigid Medical Image Registration using Mutual Information and B-Splines"
+  * IEEE Transactions on Image Processing, 2007, nr. 16(12), December.
   * 
   * This class also serves as a base class for other GradientDescent type
   * algorithms, like the AcceleratedGradientDescentOptimizer.

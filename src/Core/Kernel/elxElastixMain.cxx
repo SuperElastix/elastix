@@ -436,7 +436,6 @@ namespace elastix
 		
 	} // end LoadComponents
 
-
 		
 	/**
 	 * ********************* UnloadComponents **************************
@@ -561,7 +560,7 @@ namespace elastix
    * *********************** SetProcessPriority *************************
    */
 
-  void ElastixMain::SetProcessPriority(void)
+  void ElastixMain::SetProcessPriority(void) const
   {
     /** If wanted, set the priority of this process high or below normal. */
 		std::string processPriority = "";
@@ -586,7 +585,7 @@ namespace elastix
    * *********************** SetMaximumNumberOfThreads *************************
    */
 
-  void ElastixMain::SetMaximumNumberOfThreads(void)
+  void ElastixMain::SetMaximumNumberOfThreads(void) const
   {
     /** If wanted, set the priority of this process high or below normal. */
     std::string maximumNumberOfThreadsString = "";

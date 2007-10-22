@@ -25,12 +25,13 @@ namespace elastix
   {
     this->m_AutomaticParameterEstimation = false;
     this->m_MaximumStepLength = 1.0;
+    this->m_MinimumStepLength = 0.0;
 
     this->m_NumberOfGradientMeasurements = 0;
     this->m_NumberOfJacobianMeasurements = 0;
     this->m_NumberOfSamplesForExactGradient = 100000;
 
-    this->m_UseGenericLinearMethod = true;
+    this->m_JacobianTermComputationMethod = "Linear";
     
   } // Constructor
 
@@ -43,7 +44,6 @@ namespace elastix
     void AcceleratedGradientDescent<TElastix>::
     BeforeRegistration(void)
   {
-
     /** Add the target cell "stepsize" to xout["iteration"].*/
     xout["iteration"].AddTargetCell("2:Metric");
     xout["iteration"].AddTargetCell("3a:Time");
@@ -150,6 +150,11 @@ namespace elastix
       this->GetConfiguration()->ReadParameter( this->m_MaximumStepLength,
         "MaximumStepLength", this->GetComponentLabel(), level, 0 );
 
+      /** Read minimum step length. Default = 0.1 * maxsteplength. */
+      this->m_MinimumStepLength = 0.1 * this->m_MaximumStepLength;
+      this->GetConfiguration()->ReadParameter( this->m_MinimumStepLength,
+        "MinimumStepLength", this->GetComponentLabel(), level, 0 );
+
       /** Read some parameters which are interesting for research only: */
       this->m_NumberOfGradientMeasurements = 0;
       this->GetConfiguration()->ReadParameter(
@@ -169,9 +174,11 @@ namespace elastix
         "NumberOfSamplesForExactGradient ",
         this->GetComponentLabel(), level, 0 );   
 
-      this->m_UseGenericLinearMethod = true;
-       this->GetConfiguration()->ReadParameter( this->m_UseGenericLinearMethod,
-         "UseGenericLinearMethod", this->GetComponentLabel(), level, 0 );
+      this->m_JacobianTermComputationMethod = "Linear";
+       this->GetConfiguration()->ReadParameter( 
+         this->m_JacobianTermComputationMethod,
+         "JacobianTermComputationMethod",
+         this->GetComponentLabel(), level, 0 );
 
     } // end if automatic parameter estimation
 
@@ -192,7 +199,6 @@ namespace elastix
     xl::xout["iteration"]["3a:Time"] << this->GetCurrentTime();
     xl::xout["iteration"]["3b:StepSize"] << this->GetLearningRate();
     xl::xout["iteration"]["4:||Gradient||"] << this->GetGradient().magnitude();
-
 
     /** Select new spatial samples for the computation of the metric */
     if ( this->GetNewSamplesEveryIteration() )
@@ -216,10 +222,12 @@ namespace elastix
       this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
 
     /**
-    * enum   StopConditionType {  MaximumNumberOfIterations, MetricError }  
+    * typedef enum {
+    *   MaximumNumberOfIterations,
+    *   MetricError,
+    *   MinimumStepSize } StopConditionType;
     */
     std::string stopcondition;
-
 
     switch( this->GetStopCondition() )
     {
@@ -232,10 +240,13 @@ namespace elastix
       stopcondition = "Error in metric";	
       break;	
 
+    case MinimumStepSize :
+      stopcondition = "The minimum step length has been reached";	
+      break;
+
     default:
       stopcondition = "Unknown";
       break;
-
     }
 
     /** Print the stopping condition */
@@ -332,6 +343,33 @@ namespace elastix
 
   } //end ResumeOptimization
 
+  
+  /** 
+  * ********************** AdvanceOneStep **********************
+  */
+
+  template <class TElastix>
+    void AcceleratedGradientDescent<TElastix>
+    ::AdvanceOneStep(void)
+  {
+    /** Call the superclass' implementation */
+    this->Superclass1::AdvanceOneStep();
+
+    const double minGainFraction = 
+      this->GetMinimumStepLength() / this->GetMaximumStepLength();
+
+    const double gain0 = this->Compute_a( 0.0 );
+    const double gainNextIt = this->Compute_a( this->GetCurrentTime() );
+
+    /** Stop the optimization when the gain is too small */
+    if ( gainNextIt/gain0 < minGainFraction )
+    {
+      this->m_StopCondition = MinimumStepSize;
+      this->StopOptimization();
+    }
+
+  } // end AdvanceOneStep
+  
 
   /** 
   * ******************* AutomaticParameterEstimation **********************
@@ -343,6 +381,10 @@ namespace elastix
     void AcceleratedGradientDescent<TElastix>
     ::AutomaticParameterEstimation( void )
   {
+    /** temp test message */
+    elxout << "maxthreads = " 
+      << itk::MultiThreader::GetGlobalMaximumNumberOfThreads() << std::endl;
+
     /** Get the user input */
     const double delta = this->GetMaximumStepLength();
 
@@ -418,10 +460,10 @@ namespace elastix
     }
 
     bool stochasticgradients = this->GetNewSamplesEveryIteration();
-    ImageRandomSamplerPointer sampler = 0;
+    ImageRandomSamplerPointer randomsampler = 0;
     AdvancedMetricPointer advmetric = 0;
     unsigned int normalnumberofsamples = 0;
-    const unsigned int allsamples = this->m_NumberOfSamplesForExactGradient;
+    
     double dummyvalue = 0.0;
     DerivativeType approxgradient;
     DerivativeType exactgradient;
@@ -437,15 +479,15 @@ namespace elastix
         this->GetElastix()->GetElxMetricBase() );
       if (advmetric)
       {
-        sampler = dynamic_cast<ImageRandomSamplerType*>( advmetric->GetImageSampler() );
-        if ( (!advmetric->GetUseImageSampler()) || sampler.IsNull() )
+        randomsampler = dynamic_cast<ImageRandomSamplerType*>( advmetric->GetImageSampler() );
+        if ( (!advmetric->GetUseImageSampler()) || randomsampler.IsNull() )
         {
           stochasticgradients = false;
         }
-        else
-        {
-          normalnumberofsamples = sampler->GetNumberOfSamples();
-        }
+        //else
+        //{
+         // normalnumberofsamples = randomsampler->GetNumberOfSamples();
+        //}
       }
       else
       {
@@ -453,10 +495,57 @@ namespace elastix
       }
     }     
 
+    /** Set up the grid samper for the "exact" gradients */
+    ImageSamplerPointer gridsampler = 0;
+    
+    if (stochasticgradients)
+    {
+      gridsampler = ImageSamplerType::New();
+      gridsampler->SetInput( randomsampler->GetInput() );
+      gridsampler->SetInputImageRegion( randomsampler->GetInputImageRegion() );
+      gridsampler->SetMask( randomsampler->GetMask() );
+      /** Compute the grid spacing */
+      unsigned int allsamples = this->m_NumberOfSamplesForExactGradient;
+      const double fixdimd = static_cast<double>( 
+        randomsampler->GetInputImageRegion().GetImageDimension() );
+      const double fraction = 
+      static_cast<double>( randomsampler->GetInputImageRegion().GetNumberOfPixels() ) /
+      static_cast<double>( allsamples );
+      int gridspacing = static_cast<int>( 
+        vnl_math_rnd( vcl_pow(fraction, 1.0/fixdimd) )   );
+      gridspacing = vnl_math_max( 1, gridspacing );
+      typename ImageSamplerType::SampleGridSpacingType gridspacings;
+      gridspacings.Fill( gridspacing );
+      gridsampler->SetSampleGridSpacing( gridspacings );
+      gridsampler->Update();
+    }
+
+    /** Check if cout is console */
+    bool coutisconsole = false;
+    std::string coutstr = "cout";
+    int currentpos = xl::xout["coutonly"].GetCOutputs().find(coutstr)->second->tellp();
+    if (currentpos == -1 )
+    {
+      coutisconsole = true;
+    }
+
     /** Compute gg for some random parameters */      
     typename RandomGeneratorType::Pointer randomgenerator = RandomGeneratorType::New();
     for ( unsigned int i = 0 ; i < numberofgradients; ++i)
     {
+      /** Show progress 0-100% */
+      if (coutisconsole)
+      {
+        int progress = static_cast<int>( vnl_math_rnd( 
+          static_cast<double>(i*100)/static_cast<double>(numberofgradients) ) );
+        xl::xout["coutonly"] 
+          << "\rSampling gradients for " 
+          << this->elxGetClassName()
+          << " configuration: " 
+          << progress
+          << "%" ;
+      }
+
       /** Generate a perturbation; actually we should generate a perturbation 
       * with the same expected sqr magnitude as E||g||^2 = frofrojac 
       * The expected sqr magnitude of a N-D normal distribution N(0,I) is N,
@@ -471,8 +560,9 @@ namespace elastix
       /** Select new spatial samples for the computation of the metric */
       if ( stochasticgradients )
       {
-        sampler->SetNumberOfSamples( normalnumberofsamples );
+        //randomsampler->SetNumberOfSamples( normalnumberofsamples );
         this->SelectNewSamples();
+        advmetric->SetImageSampler( randomsampler );
       }
 
       /** Get approximate derivative and its magnitude */
@@ -482,8 +572,9 @@ namespace elastix
       /** Get exact gradient and its magnitude */
       if ( stochasticgradients )
       {
-        sampler->SetNumberOfSamples( allsamples );
-        this->SelectNewSamples();
+        advmetric->SetImageSampler( gridsampler );
+        //randomsampler->SetNumberOfSamples( allsamples );
+        //this->SelectNewSamples();
         this->GetScaledValueAndDerivative( perturbation, dummyvalue, exactgradient );
         exactgg += exactgradient.squared_magnitude();
         diffgradient = exactgradient - approxgradient;
@@ -495,6 +586,18 @@ namespace elastix
         diffgg = 0.0;
       }
     } // end for
+    
+    /** Cleanup progress information */
+    if (coutisconsole)
+    {
+      xl::xout["coutonly"] 
+        << "\rSampling gradients for " 
+        << this->elxGetClassName()
+        << " configuration: " 
+        << 100
+        << "%" << std::endl;
+    }
+
     approxgg /= numberofgradients;
     exactgg /= numberofgradients;
     diffgg /= numberofgradients;
@@ -502,7 +605,8 @@ namespace elastix
     if (stochasticgradients)
     {
       /** Set back to what it was */
-      sampler->SetNumberOfSamples( normalnumberofsamples );
+      //randomsampler->SetNumberOfSamples( normalnumberofsamples );
+      advmetric->SetImageSampler( randomsampler );
     }    
 
     /** For output: */
@@ -525,12 +629,15 @@ namespace elastix
       GetElxTransformBase()->GetNameOfClass();
 
     const std::string translationName = "TranslationTransformElastix";
+    const std::string linearMethod = "Linear";
+    const std::string quadraticMethod = "Quadratic";
+
     if ( transformName == translationName )
     {
       this->ComputeJacobianTermsTranslation(
         TrC, TrCC, maxJJ, maxJCJ );
     }
-    else if ( this->m_UseGenericLinearMethod ) 
+    else if ( this->m_JacobianTermComputationMethod == linearMethod ) 
     {
       this->ComputeJacobianTermsGenericLinear(
         TrC, TrCC, maxJJ, maxJCJ );
@@ -587,9 +694,30 @@ namespace elastix
     /** Initialize */
     unsigned int s = 0;    
 
+    /** Check if cout is console */
+    bool coutisconsole = false;
+    std::string coutstr = "cout";
+    int currentpos = xl::xout["coutonly"].GetCOutputs().find(coutstr)->second->tellp();
+    if (currentpos == -1 )
+    {
+      coutisconsole = true;
+    }
+
 		/** Loop over image and compute jacobian. Save the jacobians in a vector. */
     for ( iter = begin; iter != end; ++iter )
 		{
+      if (coutisconsole)
+      {
+        int progress = static_cast<int>( vnl_math_rnd( 
+          static_cast<double>(s*100)/static_cast<double>(nrofsamples) ) );
+        xl::xout["coutonly"] 
+          << "\rSampling Jacobians for "
+          << this->elxGetClassName()
+          << " configuration: " 
+          << progress
+          << "%" ;
+      }
+
 	    /** Read fixed coordinates and get jacobian. */
       const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
       jacvec[s] = transform->GetJacobian( point );
@@ -604,6 +732,16 @@ namespace elastix
       }        
       ++s;
     } // end for loop over samples
+    /** Cleanup progress information */
+    if (coutisconsole)
+    {
+      xl::xout["coutonly"] 
+        << "\rSampling Jacobians for "
+        << this->elxGetClassName()
+        << " configuration: " 
+        << 100
+        << "%" << std::endl;
+    }
 
     /** Compute the stuff in a double loop over the jacobians 
      * \li TrC = 1/n \sum_j ||J_j||_F^2
@@ -618,7 +756,21 @@ namespace elastix
     maxJCJ = 0.0;
     const double sqrt2 = vcl_sqrt(static_cast<double>(2.0));
     for ( unsigned int j = 0 ; j < nrofsamples; ++j)
-    {      
+    { 
+      /** Print progress */
+      if (coutisconsole)
+      {
+        int progress = static_cast<int>( vnl_math_rnd( 
+          static_cast<double>(j*100)/static_cast<double>(nrofsamples) ) );
+        xl::xout["coutonly"] 
+          << "\rComputing JacobianTerms for "
+          << this->elxGetClassName()
+          << " configuration: " 
+          << progress
+          << "%" ;
+      }
+        
+      /** Get jacobian */
       const JacobianType & jacj = jacvec[j];
 
       /** TrC = 1/n \sum_j ||J_j||_F^2 */
@@ -632,12 +784,13 @@ namespace elastix
       JacobianType jacjjacj(outdim,outdim); // J_j J_j^T
       for( unsigned int dx = 0; dx < outdim; ++dx )
       {
+        ParametersType jacjdx(jacj[dx], P, false);
         for( unsigned int dy = 0; dy < outdim; ++dy )
         {
-          jacjjacj(dx,dy)=0.0;
           for (unsigned int p = 0; p < P; ++p)
           {
-            jacjjacj[dx][dy] += jacj[dx][p] * jacj[dy][p];
+            ParametersType jacjdy(jacj[dy], outdim, false);
+            jacjjacj(dx,dy)= dot_product(jacjdx, jacjdy);
           } // p
         } // dy
       } // dx
@@ -685,7 +838,7 @@ namespace elastix
         } 
         
       }  // next i
-
+      
       /** Update 2nd part of JCJ: 
        * 2\sqrt{2} 1/n || \sum_i (J_j J_i^T) (J_j J_i^T)^T ||_F */
       JCJ_j += 2.0 * sqrt2 * jac4.frobenius_norm() / n;
@@ -694,6 +847,17 @@ namespace elastix
       maxJCJ = vnl_math_max( maxJCJ, JCJ_j);
 
     } // next j
+
+    /** Cleanup progress information */
+    if ( coutisconsole )
+    {
+      xl::xout["coutonly"] 
+        << "\rComputing JacobianTerms for "
+        << this->elxGetClassName()
+        << " configuration: " 
+        << 100
+        << "%" << std::endl;
+    }
     
     /** Clean up */
     jacvec.clear();
@@ -748,9 +912,34 @@ namespace elastix
 		/** Loop over image and compute jacobian. Possibly apply scaling.
      * Compute C = 1/n \sum_i J_i^T J_i */
     std::vector<JacobianConstIteratorType> jacit(outdim);
+    unsigned int samplenr = 0;
     CovarianceMatrixIteratorType covit;
+
+    bool coutisconsole = false;
+    std::string coutstr = "cout";
+    int currentpos = xl::xout["coutonly"].GetCOutputs().find(coutstr)->second->tellp();
+    if (currentpos == -1 )
+    {
+      coutisconsole = true;
+    }
+    
     for ( iter = begin; iter != end; ++iter )
 		{
+      /** Print progress 0-50% */
+      if ( coutisconsole )
+      {
+        int progress = static_cast<int>( vnl_math_rnd( 
+          static_cast<double>(samplenr*50)/static_cast<double>(nrofsamples) ) );
+            
+        xl::xout["coutonly"] 
+          << "\rComputing JacobianTerms for "
+          << this->elxGetClassName()
+          << " configuration: " 
+          << progress
+          << "%" ;
+      }
+      ++samplenr;
+
 	    /** Read fixed coordinates and get jacobian. 
        * \todo: extend for sparse jacobians */
       const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
@@ -806,8 +995,23 @@ namespace elastix
     maxJCJ = 0.0;    
     const double sqrt2 = vcl_sqrt(static_cast<double>(2.0));
     JacobianType jacj;
+    samplenr = 0;
     for ( iter = begin; iter != end; ++iter )
 		{
+      /** Show progress 50-100% */
+      if (coutisconsole)
+      {
+        int progress = 50 + static_cast<int>( vnl_math_rnd( 
+          static_cast<double>(samplenr*50)/static_cast<double>(nrofsamples) ) );
+        xl::xout["coutonly"] 
+          << "\rComputing JacobianTerms for "
+          << this->elxGetClassName()
+          << " configuration: " 
+          << progress
+          << "%" ;
+      }
+      ++samplenr;
+
 	    /** Read fixed coordinates and get jacobian. */      
       const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
       jacj = transform->GetJacobian( point );
@@ -873,7 +1077,18 @@ namespace elastix
       /** Max_j [JCJ]*/
       maxJCJ = vnl_math_max( maxJCJ, JCJ_j);
 
-    } // next sample from sample container     
+    } // next sample from sample container  
+
+    /** Cleanup progress information */
+    if (coutisconsole)
+    {
+      xl::xout["coutonly"] 
+        << "\rComputing JacobianTerms for "
+        << this->elxGetClassName()
+        << " configuration: " 
+        << 100
+        << "%" << std::endl;
+    }
 
   } // end ComputeJacobianTermsGenericLinear
 

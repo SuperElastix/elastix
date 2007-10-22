@@ -9,172 +9,179 @@
 namespace itk
 {
 
-/**
- * Constructor
- */
-GradientDescentOptimizer2
-::GradientDescentOptimizer2()
-{
-  itkDebugMacro("Constructor");
+  /**
+  * ****************** Constructor ************************
+  */
 
-  m_LearningRate = 1.0;
-  m_NumberOfIterations = 100;
-  m_CurrentIteration = 0;
-  m_Value = 0.0;
-  m_StopCondition = MaximumNumberOfIterations;
-}
+  GradientDescentOptimizer2
+    ::GradientDescentOptimizer2()
+  {
+    itkDebugMacro("Constructor");
 
-
-
-void
-GradientDescentOptimizer2
-::PrintSelf(std::ostream& os, Indent indent) const
-{
-  Superclass::PrintSelf(os,indent);
-
-  os << indent << "LearningRate: "
-     << m_LearningRate << std::endl;
-  os << indent << "NumberOfIterations: "
-     << m_NumberOfIterations << std::endl;
-  os << indent << "CurrentIteration: "
-     << m_CurrentIteration;
-  os << indent << "Value: "
-     << m_Value;
-  os << indent << "StopCondition: "
-     << m_StopCondition;
-  os << std::endl;
-  os << indent << "Gradient: "
-     << m_Gradient;
-  os << std::endl;
-}
+    this->m_LearningRate = 1.0;
+    this->m_NumberOfIterations = 100;
+    this->m_CurrentIteration = 0;
+    this->m_Value = 0.0;
+    this->m_StopCondition = MaximumNumberOfIterations;
+  } // end Constructor
 
 
-/**
- * Start the optimization
- */
-void
-GradientDescentOptimizer2
-::StartOptimization( void )
-{
-  itkDebugMacro("StartOptimization");
-   
-  m_CurrentIteration   = 0;
+  /** 
+   * *************** PrintSelf *************************
+   */
 
-  /** Get the number of parameters; checks also if a cost function has been set at all.
-   * if not: an exception is thrown */
-  const unsigned int numberOfParameters =
-    this->GetScaledCostFunction()->GetNumberOfParameters();
+  void
+    GradientDescentOptimizer2
+    ::PrintSelf(std::ostream& os, Indent indent) const
+  {
+    this->Superclass::PrintSelf(os,indent);
 
-  /** Initialize the scaledCostFunction with the currently set scales */
-  this->InitializeScales();
+    os << indent << "LearningRate: "
+      << this->m_LearningRate << std::endl;
+    os << indent << "NumberOfIterations: "
+      << this->m_NumberOfIterations << std::endl;
+    os << indent << "CurrentIteration: "
+      << this->m_CurrentIteration;
+    os << indent << "Value: "
+      << this->m_Value;
+    os << indent << "StopCondition: "
+      << this->m_StopCondition;
+    os << std::endl;
+    os << indent << "Gradient: "
+      << this->m_Gradient;
+    os << std::endl;
+  } // end PrintSelf
 
-  /** Set the current position as the scaled initial position */
-  this->SetCurrentPosition( this->GetInitialPosition() );
 
-  this->ResumeOptimization();
-}
+  /**
+  * **************** Start the optimization ********************
+  */
+
+  void
+    GradientDescentOptimizer2
+    ::StartOptimization( void )
+  {
+    itkDebugMacro("StartOptimization");
+
+    this->m_CurrentIteration   = 0;
+
+    /** Get the number of parameters; checks also if a cost function has been set at all.
+    * if not: an exception is thrown */
+    const unsigned int numberOfParameters =
+      this->GetScaledCostFunction()->GetNumberOfParameters();
+
+    /** Initialize the scaledCostFunction with the currently set scales */
+    this->InitializeScales();
+
+    /** Set the current position as the scaled initial position */
+    this->SetCurrentPosition( this->GetInitialPosition() );
+
+    this->ResumeOptimization();
+  } // end StartOptimization
 
 
-/**
- * Resume the optimization
- */
-void
-GradientDescentOptimizer2
-::ResumeOptimization( void )
-{
-  
-  itkDebugMacro("ResumeOptimization");
+  /**
+  * ************************ Resume the optimization *************
+  */
 
-  m_Stop = false;
+  void
+    GradientDescentOptimizer2
+    ::ResumeOptimization( void )
+  {
+    itkDebugMacro("ResumeOptimization");
 
-  InvokeEvent( StartEvent() );
-  while( !m_Stop ) 
+    this->m_Stop = false;
+
+    InvokeEvent( StartEvent() );
+    while( ! this->m_Stop ) 
     {
 
-    try
+      try
       {
-      this->GetScaledValueAndDerivative( 
-        this->GetScaledCurrentPosition(), m_Value, m_Gradient );
+        this->GetScaledValueAndDerivative( 
+          this->GetScaledCurrentPosition(), m_Value, m_Gradient );
       }
-    catch( ExceptionObject& err )
+      catch( ExceptionObject& err )
       {
-      // An exception has occurred. 
-      // Terminate immediately.
-      m_StopCondition = MetricError;
-      StopOptimization();
+        // An exception has occurred. 
+        // Terminate immediately.
+        this->m_StopCondition = MetricError;
+        this->StopOptimization();
 
-      // Pass exception to caller
-      throw err;
+        // Pass exception to caller
+        throw err;
       }
 
-
-    if( m_Stop )
+      /** StopOptimization may have been called */
+      if( this->m_Stop )
       {
-      break;
+        break;
       }
-  
-    AdvanceOneStep();
 
-    m_CurrentIteration++;
+      this->AdvanceOneStep();
 
-    if( m_CurrentIteration >= m_NumberOfIterations )
+      /** StopOptimization may have been called */
+      if( this->m_Stop )
       {
-      m_StopCondition = MaximumNumberOfIterations;
-      StopOptimization();
-      break;
+        break;
       }
-    
-    }
-    
 
-}
+      this->m_CurrentIteration++;
 
+      if( m_CurrentIteration >= m_NumberOfIterations )
+      {
+        this->m_StopCondition = MaximumNumberOfIterations;
+        this->StopOptimization();
+        break;
+      }
 
-/**
- * Stop optimization
- */
-void
-GradientDescentOptimizer2
-::StopOptimization( void )
-{
+    } // end while
 
-  itkDebugMacro("StopOptimization");
-
-  m_Stop = true;
-  InvokeEvent( EndEvent() );
-}
+  } // end ResumeOptimization
 
 
+  /**
+  * ***************** Stop optimization ************************
+  */
+
+  void
+    GradientDescentOptimizer2
+    ::StopOptimization( void )
+  {
+    itkDebugMacro("StopOptimization");
+
+    this->m_Stop = true;
+    this->InvokeEvent( EndEvent() );
+  } // end StopOptimization
 
 
+  /**
+  * ************ AdvanceOneStep ****************************
+  * following the gradient direction
+  */
 
-/**
- * Advance one Step following the gradient direction
- */
-void
-GradientDescentOptimizer2
-::AdvanceOneStep( void )
-{ 
+  void
+    GradientDescentOptimizer2
+    ::AdvanceOneStep( void )
+  { 
+    itkDebugMacro("AdvanceOneStep");
 
-  itkDebugMacro("AdvanceOneStep");
+    const unsigned int spaceDimension = 
+      this->GetScaledCostFunction()->GetNumberOfParameters();
 
-  const unsigned int spaceDimension = 
-    this->GetScaledCostFunction()->GetNumberOfParameters();
+    const ParametersType & currentPosition = this->GetScaledCurrentPosition();
 
-  const ParametersType & currentPosition = this->GetScaledCurrentPosition();
- 
-  ParametersType newPosition( spaceDimension );
-  for(unsigned int j = 0; j < spaceDimension; j++)
+    ParametersType newPosition( spaceDimension );
+    for(unsigned int j = 0; j < spaceDimension; j++)
     {
-    newPosition[j] = currentPosition[j] - m_LearningRate * this->m_Gradient[j];
+      newPosition[j] = currentPosition[j] - this->m_LearningRate * this->m_Gradient[j];
     }
 
-  this->SetScaledCurrentPosition( newPosition );
+    this->SetScaledCurrentPosition( newPosition );
 
-  this->InvokeEvent( IterationEvent() );
+    this->InvokeEvent( IterationEvent() );
 
-}
-
+  } // end AdvanceOneStep
 
 
 } // end namespace itk

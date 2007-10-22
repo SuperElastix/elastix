@@ -106,8 +106,12 @@ namespace elastix
 
     /** If automatic gain estimation is desired, then estimate SP_a, SP_alpha
      * SigmoidScale, SigmoidMax, SigmoidMin.
-    * After that call Superclass' implementation.  */
+     * After that call Superclass' implementation.  */
     virtual void ResumeOptimization(void);
+
+    /** Call the superclass' implementation and check if the minimum step length
+     * stopping condition is satisfied. */
+    virtual void AdvanceOneStep(void);
 
     /** Set/Get whether automatic parameter estimation is desired. 
      * If true, make sure to set the maximum step length.
@@ -123,10 +127,16 @@ namespace elastix
     itkSetMacro(AutomaticParameterEstimation, bool);
     itkGetConstMacro(AutomaticParameterEstimation, bool);
 
-    /** Set/Get maximum step length; default: voxel size */
+    /** Set/Get maximum step length */
     itkSetMacro( MaximumStepLength, double );
     itkGetConstMacro( MaximumStepLength, double );
 
+    /** Set/Get minimum step length; this is used as a stopping criterion.
+     * When the gain falls below minsteplength/maxsteplength * gain(0)
+     * the optimisation is stopped. Set it to zero if you do not want to
+     * use this stopping criterion. */
+    itkSetMacro( MinimumStepLength, double );
+    itkGetConstMacro( MinimumStepLength, double );
 
   protected:
 
@@ -158,7 +168,7 @@ namespace elastix
     unsigned int m_NumberOfGradientMeasurements;
     unsigned int m_NumberOfJacobianMeasurements;
     unsigned int m_NumberOfSamplesForExactGradient;
-    bool m_UseGenericLinearMethod;
+    std::string  m_JacobianTermComputationMethod;
 
 
     /** Print the contents of the settings vector to elxout */
@@ -225,6 +235,7 @@ namespace elastix
 
     bool m_AutomaticParameterEstimation;
     double m_MaximumStepLength;      
+    double m_MinimumStepLength;
 
   }; // end class AcceleratedGradientDescent
 

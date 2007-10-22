@@ -24,10 +24,12 @@ namespace elastix
 	/// NB: not part of the ElastixMain class.
 	///
 
-	/** Configure the xl::xout variable, which has to be used for 
+	/**
+   * \function xoutSetup
+   * Configure the xl::xout variable, which has to be used for 
 	 * for writing messages. The function adds some default fields,
-	 * such as "warning", "error", "standard", and it sets the outputs
-	 * to std::cout and a logfile.
+	 * such as "warning", "error", "standard", "logonly" and "coutonly",
+   * and it sets the outputs to std::cout and/or a logfile.
 	 * 
 	 * The method takes a logfile name as its input argument.
 	 * It returns 0 if everything went ok. 1 otherwise.
@@ -186,13 +188,13 @@ namespace elastix
      * Syntax:
      * -priority <high, belownormal>
      */
-    virtual void SetProcessPriority(void);
+    virtual void SetProcessPriority(void) const;
 
     /** Set maximum number of threads, which is read from the command line arguments. 
      * Syntax:
      * -threads <int>
      */
-    virtual void SetMaximumNumberOfThreads(void);
+    virtual void SetMaximumNumberOfThreads(void) const;
 
 		/** Functions to get/set the ComponentDatabase */
 		static ComponentDatabase * GetComponentDatabase(void)

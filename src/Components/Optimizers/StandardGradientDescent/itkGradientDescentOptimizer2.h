@@ -57,11 +57,13 @@ namespace itk
     typedef Superclass::ScaledCostFunctionType    ScaledCostFunctionType;
     typedef Superclass::ScaledCostFunctionPointer ScaledCostFunctionPointer;
 
-    /** Codes of stopping conditions */
+    /** Codes of stopping conditions 
+     * The MinimumStepSize stopcondition never occurs, but may
+     * be implemented in inheriting classes */
     typedef enum {
       MaximumNumberOfIterations,
-      MetricError
-    } StopConditionType;
+      MetricError,
+      MinimumStepSize } StopConditionType;
 
 
     /** Advance one step following the gradient direction. */
@@ -111,14 +113,15 @@ namespace itk
     // made protected so subclass can access
     DerivativeType                m_Gradient; 
     double                        m_LearningRate;
+    StopConditionType             m_StopCondition;
 
   private:
     GradientDescentOptimizer2(const Self&); //purposely not implemented
     void operator=(const Self&); //purposely not implemented
 
     bool                          m_Stop;
-    double                        m_Value;
-    StopConditionType             m_StopCondition;
+    double                        m_Value; 
+    
     unsigned long                 m_NumberOfIterations;
     unsigned long                 m_CurrentIteration;
 
