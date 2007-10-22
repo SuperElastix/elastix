@@ -89,7 +89,7 @@ using namespace itk;
 			FixedImageType,	MovingImageType >				ITKBaseType;
 
     /** Typedef for mask erosion options */
-    typedef std::vector<bool>                             UseMaskErosionArrayType;
+    typedef std::vector<bool>                 UseMaskErosionArrayType;
 
 		/** Cast to ITKBaseType. */
 		virtual ITKBaseType * GetAsITKBaseType(void)
