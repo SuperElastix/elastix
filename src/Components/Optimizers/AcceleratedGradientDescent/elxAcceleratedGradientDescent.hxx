@@ -875,8 +875,8 @@ namespace elastix
     double & maxJJ, double & maxJCJ )
   {
     typedef itk::Array2D<double>                        CovarianceMatrixType;   
-    typedef CovarianceMatrixType::iterator              CovarianceMatrixIteratorType;
-    typedef JacobianType::const_iterator                JacobianConstIteratorType;
+    typedef typename CovarianceMatrixType::iterator     CovarianceMatrixIteratorType;
+    typedef typename JacobianType::const_iterator       JacobianConstIteratorType;
     typedef vnl_vector<double>                          JacobianColumnType;
 
     /** Get samples */
