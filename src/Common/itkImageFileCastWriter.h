@@ -107,7 +107,9 @@ protected:
     /** cast the input image */
     typename CasterType::Pointer caster = CasterType::New();
     this->m_Caster = caster;
-    caster->SetInput( dynamic_cast<const ScalarInputImageType *>(inputImage) );
+    typename ScalarInputImageType::Pointer localInputImage = ScalarInputImageType::New();
+    localInputImage->Graft( inputImage );
+    caster->SetInput( localInputImage );
     caster->Update();
 
     /** return the pixel buffer of the casted image */
