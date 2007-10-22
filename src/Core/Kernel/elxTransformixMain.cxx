@@ -65,7 +65,7 @@ namespace elastix
     this->GetElastixBase()->SetTransformContainer(
       this->CreateComponents( "Transform", "TranslationTransform", errorCode) );
       
-    /** Check if all component could be created. */
+    /** Check if all components could be created. */
 		if ( errorCode != 0 )
 		{
       xl::xout["error"] << "ERROR:" << std::endl;
