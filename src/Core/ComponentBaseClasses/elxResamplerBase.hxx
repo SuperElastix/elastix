@@ -100,7 +100,7 @@ namespace elastix
 			TimerType::Pointer timer = TimerType::New();
 			timer->StartTimer();
 			/** Apply the final transform, and save the result. */
-			elxout << "Applying transform this resolution";
+      elxout << "Applying transform this resolution ..." << std::endl;
 			/** Call WriteResultImage. */
 			try
 			{
@@ -114,7 +114,7 @@ namespace elastix
 			}
 			/** Print the elapsed time for the resampling. */
 			timer->StopTimer();
-			elxout << ", which took: "
+			elxout << "  Applying transform took "
 				<< static_cast<long>( timer->GetElapsedClockSec() )
 				<< " s." << std::endl;
 		} // end if
@@ -169,7 +169,7 @@ namespace elastix
 
 			/** Print the elapsed time for the resampling. */
 			timer->StopTimer();
-			elxout << "Applying final transform took "
+			elxout << "  Applying final transform took "
 				<< static_cast<long>( timer->GetElapsedClockSec() )
 				<< " s." << std::endl;
 		}
@@ -221,7 +221,7 @@ namespace elastix
     /** Add a progress observer to the resampler. */
     ProgressCommandType::Pointer command = ProgressCommandType::New();
     command->ConnectObserver( this->GetAsITKBaseType() );
-    command->SetStartString( "Progress: " );
+    command->SetStartString( "  Progress: " );
     command->SetEndString( "%" );
 
     /** Read output pixeltype from parameter file. Replace possible " " with "_". */

@@ -311,7 +311,7 @@ namespace elastix
 		if ( this->GetMovingImage() != 0 )
 		{
 			timer->StartTimer();
-			elxout << "Resampling image and writing to disk ...";
+      elxout << "Resampling image and writing to disk ..." << std::endl;
 			
 			/** Create a name for the final result. */
 			std::string resultImageFormat = "mhd";
@@ -327,7 +327,7 @@ namespace elastix
 
 			/** Tell the user. */
 			timer->StopTimer();
-			elxout << "  done, it took "
+			elxout << "  Resampling took "
 				<< timer->PrintElapsedTimeSec()
 				<< " s" << std::endl;
 		}
