@@ -261,6 +261,9 @@ namespace elastix
 			throw excp;
 		}
 
+    /** Disconnect from the rsmapler. */
+    command->DisconnectObserver( this->GetAsITKBaseType() );
+
 	} // WriteResultImage
 
 

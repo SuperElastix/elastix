@@ -6,7 +6,6 @@
 
 #include "elxBaseComponentSE.h"
 #include "itkResampleImageFilter.h"
-
 #include "elxProgressCommand.h"
 
 namespace elastix
@@ -86,7 +85,7 @@ namespace elastix
 		typedef typename ITKBaseType::OriginPointType			OriginPointType;
 		typedef typename ITKBaseType::PixelType						OutputPixelType;
 
-    /***/
+    /** Typedef for the ProgressCommand. */
     typedef elx::ProgressCommand          ProgressCommandType;
 
 		/** Get the ImageDimension. */

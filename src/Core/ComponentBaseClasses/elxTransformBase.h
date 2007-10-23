@@ -9,6 +9,7 @@
 #include "itkTransform.h"
 #include "itkCombinationTransform.h"
 #include "elxComponentDatabase.h"
+#include "elxProgressCommand.h"
 
 #include <fstream>
 #include <iomanip>
@@ -75,6 +76,9 @@ namespace elastix
 		typedef ComponentDatabase																	ComponentDatabaseType;
 		typedef ComponentDatabaseType::ComponentDescriptionType		ComponentDescriptionType;
 		typedef ComponentDatabase::PtrToCreator										PtrToCreator;
+
+    /** Typedef for the ProgressCommand. */
+    typedef elx::ProgressCommand          ProgressCommandType;
 		
 		/** Get	the dimension of the fixed image. */
 		itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );

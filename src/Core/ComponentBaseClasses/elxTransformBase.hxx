@@ -28,7 +28,7 @@ namespace elastix
 		this->m_ConfigurationInitialTransform = 0;
 		this->m_ReadWriteTransformParameters = true;
 
-	} // end Constructor
+	} // end Constructor()
 
 
 	/**
@@ -44,7 +44,7 @@ namespace elastix
 			delete this->m_TransformParametersPointer;
 		}
 
-	} // end Destructor
+	} // end Destructor()
 	
 
 	/**
@@ -72,7 +72,7 @@ namespace elastix
 
 		return 0;
 
-	} // end BeforeAllBase	
+	} // end BeforeAllBase()
 
 
 	/**
@@ -103,7 +103,7 @@ namespace elastix
 		/** Return a value. */
 		return returndummy;
 
-	} // end BeforeAllTransformix
+	} // end BeforeAllTransformix()
 
 
 	/**
@@ -156,7 +156,7 @@ namespace elastix
 			}
 		}
 		
-	} // end BeforeRegistrationBase
+	} // end BeforeRegistrationBase()
 
 
 	/**
@@ -181,7 +181,7 @@ namespace elastix
 			return 0;
 		}
 
-	} // end GetInitialTransform
+	} // end GetInitialTransform()
 
 
 	/**
@@ -202,7 +202,7 @@ namespace elastix
 			thisAsGrouper->SetInitialTransform( _arg );
 		}
 
-	} // end SetInitialTransform
+	} // end SetInitialTransform()
  
 
 	/**
@@ -224,8 +224,7 @@ namespace elastix
 		/** Set the final Parameters for the resampler. */
 		this->GetAsITKBaseType()->SetParameters( m_FinalParameters );
 
-	} // end SetFinalParameters
-
+	} // end SetFinalParameters()
 
 
 	/**
@@ -239,7 +238,7 @@ namespace elastix
 		/** Set the final Parameters. */
 		this->SetFinalParameters();
 
-	} // end AfterRegistrationBase
+	} // end AfterRegistrationBase()
 
 
 	/**
@@ -378,7 +377,7 @@ namespace elastix
 		this->SetTransformParametersFileName(
 			this->GetConfiguration()->GetCommandLineArgument( "-tp" ) );
 		
-	} // end ReadFromFile
+	} // end ReadFromFile()
 
 
 	/**
@@ -436,7 +435,7 @@ namespace elastix
 
 		} // end if
 
-	} // end ReadInitialTransformFromFile
+	} // end ReadInitialTransformFromFile()
 
 
 	/**
@@ -450,7 +449,7 @@ namespace elastix
 		/** Write the current set parameters to file.*/
 		this->WriteToFile( this->GetAsITKBaseType()->GetParameters() );
  
-	} // end WriteToFile
+	} // end WriteToFile()
 
 
 	/**
@@ -470,11 +469,6 @@ namespace elastix
 		/** Get the number of parameters of this transform. */
 		unsigned int nrP = param.GetSize();
 		
-		// used to be:
-		//unsigned int nrP = this->m_Registration->GetAsITKBaseType()->GetTransform()
-		//	->GetNumberOfParameters();
-		// but this is much simpler, or do I miss something?
-
 		/** Write the number of parameters of this transform.*/
 		xout["transpar"] << "(NumberOfParameters "
 			<< nrP << ")" << std::endl;
@@ -519,7 +513,6 @@ namespace elastix
 			xout["transpar"] << "(InitialTransformParametersFileName \"NoInitialTransform\")"
 				<< std::endl;
 		}
-		
 
 		/** Write the way Transforms are combined.*/
 		std::string combinationMethod("Add");
@@ -603,7 +596,7 @@ namespace elastix
 		/** Set the precision back to default value.*/
 		xout["transpar"] << std::setprecision( this->m_Elastix->GetDefaultOutputPrecision() );
 
-	} // end WriteToFile
+	} // end WriteToFile()
 
 
 	/**
@@ -640,7 +633,7 @@ namespace elastix
 			elxout << "  The command-line option \"-ipp\" is not used, so no points are transformed" << std::endl;
 		}
 
-	} // end TransformPoints
+	} // end TransformPoints()
 
 
 	/**
@@ -660,6 +653,7 @@ namespace elastix
 		void TransformBase<TElastix>
 		::TransformPointsSomePoints( std::string filename )
 	{
+    /** Typedef's. */
     typedef typename FixedImageType::RegionType					FixedImageRegionType;
     typedef typename FixedImageType::PointType          FixedImageOriginType;
     typedef typename FixedImageType::SpacingType        FixedImageSpacingType;
@@ -676,9 +670,11 @@ namespace elastix
       PointSetType >                                    IPPReaderType;
     typedef itk::Vector< float, FixedImageDimension >  	DeformationVectorType;
 
+    /** Construct an ipp-file reader. */
     typename IPPReaderType::Pointer ippReader = IPPReaderType::New();
-
     ippReader->SetFileName( filename.c_str() );
+
+    /** Read the input points. */
     elxout << "  Reading input point file: " << filename << std::endl;
     try
     {
@@ -690,6 +686,7 @@ namespace elastix
       xl::xout["error"] << err << std::endl;      
     }
 
+    /** Some user-feedback. */
     if ( ippReader->GetPointsAreIndices() )
     {
       elxout << "  Input points are specified as image indices." << std::endl;
@@ -701,17 +698,19 @@ namespace elastix
     unsigned int nrofpoints = ippReader->GetNumberOfPoints();
     elxout << "  Number of specified input points: " << nrofpoints << std::endl;
 
+    /** Get the set of input points. */
     typename PointSetType::Pointer inputPointSet = ippReader->GetOutput();
   
 		/** Create the storage classes */
-		std::vector< FixedImageIndexType > inputindexvec(nrofpoints);	
-		std::vector< InputPointType > inputpointvec(nrofpoints);
-		std::vector< OutputPointType > outputpointvec( nrofpoints );
-		std::vector< FixedImageIndexType > outputindexvec( nrofpoints );
-		std::vector< DeformationVectorType > deformationvec( nrofpoints );
+		std::vector< FixedImageIndexType >    inputindexvec(  nrofpoints );	
+		std::vector< InputPointType >         inputpointvec(  nrofpoints );
+		std::vector< OutputPointType >        outputpointvec( nrofpoints );
+		std::vector< FixedImageIndexType >    outputindexvec( nrofpoints );
+		std::vector< DeformationVectorType >  deformationvec( nrofpoints );
 			
 		/** Make a temporary image with the right region info,
-		* which we can use to convert between points and indices.	*/
+		* which we can use to convert between points and indices.
+    */
     FixedImageRegionType region;
 		FixedImageOriginType origin = 
       this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputOrigin();
@@ -727,7 +726,7 @@ namespace elastix
 		dummyImage->SetOrigin( origin );
 		dummyImage->SetSpacing( spacing );
 		
-		/** Read the input points, as index or as point */
+		/** Read the input points, as index or as point. */
 		if ( !(ippReader->GetPointsAreIndices()) )
 		{
 			for ( unsigned int j = 0; j < nrofpoints; j++ )
@@ -820,7 +819,7 @@ namespace elastix
 		/** Stop writing to the output file. */
 		elxout.RemoveOutput( "opp" );
 				
-	} // end TransformPointsSomePoints
+	} // end TransformPointsSomePoints()
 	
 	
 	/**
@@ -834,7 +833,8 @@ namespace elastix
 	template <class TElastix>
 		void TransformBase<TElastix>
 		::TransformPointsAllPoints(void)
-	{		
+	{
+    /** Typedef's. */
     typedef typename FixedImageType::RegionType					FixedImageRegionType;
     typedef typename FixedImageType::PointType          FixedImageOriginType;
     typedef typename FixedImageType::SpacingType        FixedImageSpacingType;
@@ -850,6 +850,7 @@ namespace elastix
 		typedef itk::ImageFileWriter<
       DeformationFieldType >                        		DeformationFieldWriterType;
 
+    /** Get information for the output deformation field. */
 		FixedImageRegionType region;
 		FixedImageOriginType origin = 
       this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputOrigin();
@@ -869,29 +870,50 @@ namespace elastix
 		
 		/** Setup an iterator over the deformationField. */
 		DeformationFieldIteratorType iter( deformationField, region );
+
+    /** Track the progress of the generation of the deformation field. */
+    ProgressCommandType::Pointer command = ProgressCommandType::New();
+    command->SetUpdateFrequency( region.GetNumberOfPixels(), 100 );
+    command->SetStartString( "  Progress: " );
+    command->SetEndString( "%" );
 		
-		/** Declare stuff.*/
+		/** Declare stuff. */
 		InputPointType inputPoint;
 		OutputPointType outputPoint;
 		DeformationVectorType diff_point;
+    unsigned long currentVoxelNumber = 0;
 				
 		/** Calculate the TransformPoint of all voxels of the image. */
 		iter.Begin();
 		while ( !iter.IsAtEnd() )
 		{
+      /** Get the index. */
 			const FixedImageIndexType & inputIndex = iter.GetIndex();
+
 			/** Transform the points to physical space. */
 			deformationField->TransformIndexToPhysicalPoint( inputIndex, inputPoint );
-			/** Call TransformPoint.*/
+
+			/** Call TransformPoint. */
 			outputPoint = this->GetAsITKBaseType()->TransformPoint( inputPoint );
-			/** Calculate the difference.*/
+
+			/** Calculate the difference. */
 			for ( unsigned int i = 0; i < FixedImageDimension; i++ )
 			{
 				diff_point[ i ] = outputPoint[ i ] - inputPoint[ i ];
 			}
 			iter.Set( diff_point );
+
+      /** Print the progress to screen. */
+      command->PrintProgress( currentVoxelNumber );
+      
+      /** Increase iterators. */
 			++iter;
-		}
+      currentVoxelNumber++;
+
+		} // end while
+
+    /** Indicate end of generating the deformation field. */
+    command->PrintProgress( 1.0f );
 		
 		/** Create a name for the deformation field file. */
 		std::string resultImageFormat = "mhd";
@@ -923,7 +945,7 @@ namespace elastix
 			throw excp;
 		}
 		
-	} // end TransformPointsAllPoints
+	} // end TransformPointsAllPoints()
 	
 	
 	/**

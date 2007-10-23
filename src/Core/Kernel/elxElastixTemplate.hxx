@@ -257,7 +257,7 @@ namespace elastix
 			timer->StartTimer();
 
 			/** Tell the user. */
-			elxout << std::endl << "Reading input image ...";
+      elxout << std::endl << "Reading input image ..." << std::endl;
 			
 			/** Load the image from disk, if it wasn't set already by the user */
       if ( this->GetMovingImage() == 0 )
@@ -269,7 +269,7 @@ namespace elastix
 
 			/** Tell the user. */
 			timer->StopTimer();
-			elxout << "                   done, it took "
+			elxout << "  Reading input image took "
 				<< timer->PrintElapsedTimeSec()
 				<< " s" << std::endl;
 
@@ -277,14 +277,14 @@ namespace elastix
 
 		/** Call all the ReadFromFile() functions. */
 		timer->StartTimer();
-		elxout << "Calling all ReadFromFile()'s ...";
+    elxout << "Calling all ReadFromFile()'s ..." << std::endl;
 		this->GetElxResampleInterpolatorBase()->ReadFromFile();		
 		this->GetElxResamplerBase()->ReadFromFile();
 		this->GetElxTransformBase()->ReadFromFile();
 
 		/** Tell the user. */
 		timer->StopTimer();
-		elxout << "          done, it took "
+		elxout << "  Calling all ReadFromFile()'s took "
 			<< timer->PrintElapsedTimeSec()
 			<< " s" << std::endl;
 		timer->StartTimer();
