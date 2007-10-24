@@ -1,8 +1,8 @@
-#ifndef __elxKNNGraphMultiDimensionalAlphaMutualInformationMetric_H__
-#define __elxKNNGraphMultiDimensionalAlphaMutualInformationMetric_H__
+#ifndef __elxKNNGraphAlphaMutualInformationMetric_H__
+#define __elxKNNGraphAlphaMutualInformationMetric_H__
 
 #include "elxIncludes.h"
-#include "itkKNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric.h"
+#include "itkKNNGraphAlphaMutualInformationImageToImageMetric.h"
 
 #include "elxTimer.h"
 
@@ -11,13 +11,13 @@ namespace elastix
 using namespace itk;
 
 	/**
-	 * \class KNNGraphMultiDimensionalAlphaMutualInformationMetric
+	 * \class KNNGraphAlphaMutualInformationMetric
 	 * \brief A metric based on the
-   * itk::KNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric.
+   * itk::KNNGraphAlphaMutualInformationImageToImageMetric.
 	 *
 	 * The parameters used in this class are:
 	 * \parameter Metric: Select this metric as follows:\n
-	 *		<tt>(Metric "KNNGraphMultiDimensionalAlphaMutualInformation")</tt>
+	 *		<tt>(Metric "KNNGraphAlphaMutualInformation")</tt>
    * \parameter Alpha: since this metric calculates alpha - mutual information. \n
    *    <tt>(Alpha 0.5)</tt> \n
    *    Choose a value between 0.0 and 1.0. The default is 0.5.
@@ -90,9 +90,9 @@ using namespace itk;
  * pixeltype as the FixedImageType 
  */
 	template <class TElastix >
-  class KNNGraphMultiDimensionalAlphaMutualInformationMetric :
+  class KNNGraphAlphaMutualInformationMetric :
     public
-			KNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric<
+			KNNGraphAlphaMutualInformationImageToImageMetric<
 				ITK_TYPENAME MetricBase<TElastix>::FixedImageType,
 				ITK_TYPENAME MetricBase<TElastix>::MovingImageType,
         ITK_TYPENAME MetricBase<TElastix>::FixedImageType,
@@ -102,8 +102,8 @@ using namespace itk;
 	public:
 
 		/** Standard ITK-stuff. */
-		typedef KNNGraphMultiDimensionalAlphaMutualInformationMetric					Self;
-		typedef KNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric<
+		typedef KNNGraphAlphaMutualInformationMetric					Self;
+		typedef KNNGraphAlphaMutualInformationImageToImageMetric<
 			typename MetricBase<TElastix>::FixedImageType,
 			typename MetricBase<TElastix>::MovingImageType,
       typename MetricBase<TElastix>::FixedImageType,
@@ -116,14 +116,14 @@ using namespace itk;
 		itkNewMacro( Self );
 		
 		/** Run-time type information (and related methods). */
-		itkTypeMacro( KNNGraphMultiDimensionalAlphaMutualInformationMetric,
-			KNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric );
+		itkTypeMacro( KNNGraphAlphaMutualInformationMetric,
+			KNNGraphAlphaMutualInformationImageToImageMetric );
 		
 		/** Name of this class.
 		 * Use this name in the parameter file to select this specific metric. \n
-		 * example: <tt>(Metric "KNNGraphMultiDimensionalAlphaMutualInformation")</tt>\n
+		 * example: <tt>(Metric "KNNGraphAlphaMutualInformation")</tt>\n
 		 */
-		elxClassNameMacro( "KNNGraphMultiDimensionalAlphaMutualInformation" );
+		elxClassNameMacro( "KNNGraphAlphaMutualInformation" );
 
 		/** Typedefs inherited from the superclass.*/
 		typedef typename Superclass1::TransformType							TransformType;
@@ -199,25 +199,25 @@ using namespace itk;
 	protected:
 
 		/** The constructor. */
-    KNNGraphMultiDimensionalAlphaMutualInformationMetric() {}; 
+    KNNGraphAlphaMutualInformationMetric() {}; 
     /** The destructor. */ 
-		virtual ~KNNGraphMultiDimensionalAlphaMutualInformationMetric() {}
+		virtual ~KNNGraphAlphaMutualInformationMetric() {}
 	
 	private:
 
 		/** The private constructor. */
-		KNNGraphMultiDimensionalAlphaMutualInformationMetric( const Self& );	// purposely not implemented
+		KNNGraphAlphaMutualInformationMetric( const Self& );	// purposely not implemented
 		/** The private copy constructor. */
 		void operator=( const Self& );								  // purposely not implemented
 		
-	}; // end class KNNGraphMultiDimensionalAlphaMutualInformationMetric
+	}; // end class KNNGraphAlphaMutualInformationMetric
 
 
 } // end namespace elastix
 
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxKNNGraphMultiDimensionalAlphaMutualInformationMetric.hxx"
+#include "elxKNNGraphAlphaMutualInformationMetric.hxx"
 #endif
 
-#endif // end #ifndef __elxKNNGraphMultiDimensionalAlphaMutualInformationMetric_H__
+#endif // end #ifndef __elxKNNGraphAlphaMutualInformationMetric_H__

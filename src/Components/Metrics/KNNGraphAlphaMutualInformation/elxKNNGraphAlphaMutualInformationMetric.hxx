@@ -1,7 +1,7 @@
-#ifndef __elxKNNGraphMultiDimensionalAlphaMutualInformationMetric_HXX__
-#define __elxKNNGraphMultiDimensionalAlphaMutualInformationMetric_HXX__
+#ifndef __elxKNNGraphAlphaMutualInformationMetric_HXX__
+#define __elxKNNGraphAlphaMutualInformationMetric_HXX__
 
-#include "elxKNNGraphMultiDimensionalAlphaMutualInformationMetric.h"
+#include "elxKNNGraphAlphaMutualInformationMetric.h"
 
 #include "itkImageFileReader.h"
 #include "itkBSplineInterpolateImageFunction.h"
@@ -18,7 +18,7 @@ using namespace itk;
 	 */
 
 	template <class TElastix>
-		void KNNGraphMultiDimensionalAlphaMutualInformationMetric<TElastix>
+		void KNNGraphAlphaMutualInformationMetric<TElastix>
 		::Initialize(void) throw (ExceptionObject)
 	{
 		TimerPointer timer = TimerType::New();
@@ -36,7 +36,7 @@ using namespace itk;
 	 */
 
 	template <class TElastix>
-		void KNNGraphMultiDimensionalAlphaMutualInformationMetric<TElastix>
+		void KNNGraphAlphaMutualInformationMetric<TElastix>
 		::BeforeRegistration(void)
 	{
     /** Get and set alpha, from alpha - MI. */
@@ -158,7 +158,7 @@ using namespace itk;
 	 */
 
 	template <class TElastix>
-		void KNNGraphMultiDimensionalAlphaMutualInformationMetric<TElastix>
+		void KNNGraphAlphaMutualInformationMetric<TElastix>
 		::BeforeEachResolution(void)
 	{
 		/** Get the current resolution level. */
@@ -339,5 +339,5 @@ using namespace itk;
 } // end namespace elastix
 
 
-#endif // end #ifndef __elxKNNGraphMultiDimensionalAlphaMutualInformationMetric_HXX__
+#endif // end #ifndef __elxKNNGraphAlphaMutualInformationMetric_HXX__
 

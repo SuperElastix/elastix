@@ -1,5 +1,5 @@
-#ifndef __itkKNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric_h
-#define __itkKNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric_h
+#ifndef __itkKNNGraphAlphaMutualInformationImageToImageMetric_h
+#define __itkKNNGraphAlphaMutualInformationImageToImageMetric_h
 
 /** Includes for the Superclass. */
 #include "itkImageToImageMetricWithFeatures.h"
@@ -27,7 +27,7 @@
 namespace itk
 {
 /**
- * \class KNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric
+ * \class KNNGraphAlphaMutualInformationImageToImageMetric
  *
  * \brief Computes similarity between two images to be registered.
  *
@@ -44,13 +44,13 @@ namespace itk
   
 template < class TFixedImage, class TMovingImage,
   class TFixedFeatureImage = TFixedImage, class TMovingFeatureImage = TMovingImage>
-class KNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric :
+class KNNGraphAlphaMutualInformationImageToImageMetric :
   public ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixedFeatureImage, TMovingFeatureImage>
 {
 public:
 
   /** Standard itk. */
-  typedef KNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric  Self;
+  typedef KNNGraphAlphaMutualInformationImageToImageMetric  Self;
   typedef ImageToImageMetricWithFeatures<
     TFixedImage, TMovingImage,
     TFixedFeatureImage, TMovingFeatureImage >                         Superclass;
@@ -61,7 +61,7 @@ public:
   itkNewMacro( Self );
  
   /** Run-time type information (and related methods). */
-  itkTypeMacro( KNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric,
+  itkTypeMacro( KNNGraphAlphaMutualInformationImageToImageMetric,
     ImageToImageMetricWithFeatures );
  
   /** Typedefs from the superclass. */
@@ -225,8 +225,8 @@ public:
   itkGetConstReferenceMacro( Alpha, double );
   
 protected:
-  KNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric();
-  virtual ~KNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric() {};
+  KNNGraphAlphaMutualInformationImageToImageMetric();
+  virtual ~KNNGraphAlphaMutualInformationImageToImageMetric() {};
   void PrintSelf(std::ostream& os, Indent indent) const;
 
   /** Member variables. */
@@ -241,7 +241,7 @@ protected:
   double   m_Alpha;
 
 private:
-  KNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric(const Self&);  //purposely not implemented
+  KNNGraphAlphaMutualInformationImageToImageMetric(const Self&);  //purposely not implemented
   void operator=(const Self&);                                  //purposely not implemented
 
   /** Typedef's for the computation of the derivative. */
@@ -295,13 +295,13 @@ private:
     SpatialDerivativeType & Dfull_M,
     SpatialDerivativeType & Dfull_J ) const;
 
- }; // end class KNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric
+ }; // end class KNNGraphAlphaMutualInformationImageToImageMetric
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkKNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric.txx"
+#include "itkKNNGraphAlphaMutualInformationImageToImageMetric.txx"
 #endif
 
-#endif // end #ifndef __itkKNNGraphMultiDimensionalAlphaMutualInformationImageToImageMetric_h
+#endif // end #ifndef __itkKNNGraphAlphaMutualInformationImageToImageMetric_h
 
