@@ -153,13 +153,14 @@ namespace elastix
     struct SettingsType { double a, A, alpha, fmax, fmin, omega; };
     typedef typename std::vector<SettingsType>          SettingsVectorType;
     
-    typedef itk::ImageGridSampler< FixedImageType >     ImageSamplerType;
+    typedef ImageGridSampler< FixedImageType >          ImageSamplerType;
     typedef typename ImageSamplerType::Pointer          ImageSamplerPointer;
     typedef typename 
       ImageSamplerType::ImageSampleContainerType        ImageSampleContainerType;
     typedef typename ImageSampleContainerType::Pointer  ImageSampleContainerPointer;
     typedef ProgressCommand                             ProgressCommandType;
     typedef typename ProgressCommand::Pointer           ProgressCommandPointer;
+    typedef Array2D<double>                             CovarianceMatrixType; 
     
     AcceleratedGradientDescent();
     virtual ~AcceleratedGradientDescent() {};
@@ -172,7 +173,7 @@ namespace elastix
     unsigned int m_NumberOfJacobianMeasurements;
     unsigned int m_NumberOfSamplesForExactGradient;
     std::string  m_JacobianTermComputationMethod;
-
+    CovarianceMatrixType m_CovarianceMatrix;
 
     /** Print the contents of the settings vector to elxout */
     virtual void PrintSettingsVector( const SettingsVectorType & settings ) const;

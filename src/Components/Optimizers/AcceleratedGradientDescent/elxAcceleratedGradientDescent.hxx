@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include "vnl/vnl_math.h"
+#include "vnl/algo/vnl_cholesky.h"
 #include "itkImageRandomConstIteratorWithIndex.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "itkAdvancedImageToImageMetric.h"
@@ -381,6 +382,10 @@ namespace elastix
     void AcceleratedGradientDescent<TElastix>
     ::AutomaticParameterEstimation( void )
   {
+    const unsigned int P = static_cast<unsigned int>( 
+      this->GetScaledCurrentPosition().GetSize() );
+    const double Pd = static_cast<double>( P );
+
     /** Get the user input */
     const double delta = this->GetMaximumStepLength();
 
@@ -389,6 +394,7 @@ namespace elastix
     double TrCC = 0.0;
     double maxJJ = 0.0;
     double maxJCJ = 0.0;
+    this->m_CovarianceMatrix.SetSize(0,0);
     this->ComputeJacobianTerms(TrC, TrCC, maxJJ, maxJCJ);
 
     /** Measure square magnitude of exact gradient and approximation error */
@@ -398,8 +404,27 @@ namespace elastix
     this->SampleGradients( this->GetScaledCurrentPosition(), sigma4, gg, ee );
 
     /** Determine parameter settings */
-    const double sigma1 = vcl_sqrt( gg / TrC );
-    const double sigma3 = vcl_sqrt( ee / TrC );
+    double sigma1;
+    double sigma3;
+    if ( this->m_CovarianceMatrix.size() == 0 )
+    {
+      /** estimate of sigma such that empirical norm^2 equals theoretical:
+       * gg = 1/N sum_n g_n' g_n
+       * sigma = gg / TrC */
+      sigma1 = vcl_sqrt( gg / TrC );
+      sigma3 = vcl_sqrt( ee / TrC );
+    }
+    else
+    {
+      /** maximum likelihood estimator of sigma: 
+       * gg = 1/N sum_n g_n^T C^{-1} g_n 
+       * sigma1 = gg / P */
+      sigma1 = vcl_sqrt( gg / Pd );
+      sigma3 = vcl_sqrt( ee / Pd );      
+    }
+    /** Clean up */
+    this->m_CovarianceMatrix.SetSize(0,0);
+    
 
     const double alpha = 1.0;
     const double A = this->GetParam_A();
@@ -441,8 +466,28 @@ namespace elastix
     typedef itk::Statistics::MersenneTwisterRandomVariateGenerator 
                                                         RandomGeneratorType;
 
+    /** Some shortcuts */
     const unsigned int P = static_cast<unsigned int>( mu0.GetSize() );
     const double Pd = static_cast<double>( P );
+    CovarianceMatrixType & cov = this->m_CovarianceMatrix;
+
+    /** Prepare for maximum likelihood estimation of sigmas. In that case we 
+     * need a cholesky matrix decomposition */
+    vnl_cholesky * cholesky = 0;
+    bool maxlik = false;
+    if ( cov.size() != 0 )
+    {
+      maxlik = true;
+      cholesky = new vnl_cholesky(cov, vnl_cholesky::estimate_condition);
+      if ( cholesky->rcond() < 1e-7 )
+      {
+        xl::xout["warning"] << "WARNING: Covariance matrix is singular!" << std::endl;
+        maxlik = false;
+        delete cholesky;
+        cholesky = 0;
+        cov.SetSize(0,0);
+      }      
+    }
 
     /** Number of gradients N to estimate the average square magnitude.
      * Use the user entered value or a default if the user specified 0.
@@ -464,6 +509,7 @@ namespace elastix
     DerivativeType approxgradient;
     DerivativeType exactgradient;
     DerivativeType diffgradient;
+    DerivativeType choloutput;
     double exactgg = 0.0;
     double diffgg = 0.0;
     double approxgg = 0.0; 
@@ -549,7 +595,6 @@ namespace elastix
       /** Select new spatial samples for the computation of the metric */
       if ( stochasticgradients )
       {
-        //randomsampler->SetNumberOfSamples( normalnumberofsamples );
         this->SelectNewSamples();
         advmetric->SetImageSampler( randomsampler );
       }
@@ -562,12 +607,22 @@ namespace elastix
       if ( stochasticgradients )
       {
         advmetric->SetImageSampler( gridsampler );
-        //randomsampler->SetNumberOfSamples( allsamples );
-        //this->SelectNewSamples();
         this->GetScaledValueAndDerivative( perturbation, dummyvalue, exactgradient );
-        exactgg += exactgradient.squared_magnitude();
         diffgradient = exactgradient - approxgradient;
-        diffgg += diffgradient.squared_magnitude();
+
+        if ( !maxlik )
+        {
+          exactgg += exactgradient.squared_magnitude();
+          diffgg += diffgradient.squared_magnitude();
+        }
+        else
+        {
+          /** compute g^T C^{-1} g */
+          cholesky->solve( exactgradient, &choloutput );
+          exactgg += dot_product( exactgradient, choloutput);
+          cholesky->solve( diffgradient, &choloutput );
+          diffgg += dot_product( diffgradient, choloutput);
+        }
       }
       else
       {
@@ -591,6 +646,12 @@ namespace elastix
     /** For output: */
     gg = exactgg;
     ee = diffgg;
+
+    if (cholesky)
+    {
+      delete cholesky;
+      cholesky = 0;
+    }
 
   } // end SampleGradients
 
@@ -813,11 +874,10 @@ namespace elastix
     ::ComputeJacobianTermsGenericLinear(double & TrC, double & TrCC, 
     double & maxJJ, double & maxJCJ )
   {
-    typedef itk::Array2D<double>                        CovarianceMatrixType;   
     typedef typename CovarianceMatrixType::iterator     CovarianceMatrixIteratorType;
     typedef typename JacobianType::const_iterator       JacobianConstIteratorType;
     typedef vnl_vector<double>                          JacobianColumnType;
-
+    
     /** Get samples */
     ImageSampleContainerPointer sampleContainer = 0;
     this->SampleFixedImageForJacobianTerms( sampleContainer );
@@ -844,8 +904,9 @@ namespace elastix
     typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
     typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
 
-    /** Initialize */
-    CovarianceMatrixType cov(P,P);
+    /** Initialize covariance matrix */
+    this->m_CovarianceMatrix.SetSize( P,P );
+    CovarianceMatrixType & cov = this->m_CovarianceMatrix;
     cov.Fill(0.0);    
     
 		/** Loop over image and compute jacobian. Possibly apply scaling.
@@ -871,7 +932,7 @@ namespace elastix
        * \todo: extend for sparse jacobians */
       const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
       const JacobianType & jac = transform->GetJacobian( point );   
-     
+
       /** Update covariance matrix */
       covit = cov.begin();
       for ( unsigned int p = 0; p < P; ++p )
