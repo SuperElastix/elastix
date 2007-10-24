@@ -9,7 +9,7 @@
 #include "itkImageRandomConstIteratorWithIndex.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "itkAdvancedImageToImageMetric.h"
-#include "itkImageRandomSamplerSparseMask.h"
+
 
 namespace elastix
 {
@@ -381,10 +381,6 @@ namespace elastix
     void AcceleratedGradientDescent<TElastix>
     ::AutomaticParameterEstimation( void )
   {
-    /** temp test message */
-    elxout << "maxthreads = " 
-      << itk::MultiThreader::GetGlobalMaximumNumberOfThreads() << std::endl;
-
     /** Get the user input */
     const double delta = this->GetMaximumStepLength();
 
@@ -408,7 +404,7 @@ namespace elastix
     const double alpha = 1.0;
     const double A = this->GetParam_A();
     const double a_max = A * delta / sigma1  / vcl_sqrt( maxJCJ );
-    const double noisefactor = gg / ( gg + ee + 1e-14 );
+    const double noisefactor = sigma1*sigma1 / ( sigma1*sigma1 + sigma3*sigma3 + 1e-14 );
     const double a = a_max * noisefactor;
 
     const double omega = 0.1 * sigma3 * sigma3 * vcl_sqrt( TrCC );
@@ -472,7 +468,7 @@ namespace elastix
     double diffgg = 0.0;
     double approxgg = 0.0; 
 
-    /** Find the sampler; does not work for multimetric! */
+    /** Find the sampler; in case of multimetric, uses only the first metric! */
     if ( stochasticgradients )
     {
       advmetric = dynamic_cast<AdvancedMetricType * >( 
@@ -484,10 +480,6 @@ namespace elastix
         {
           stochasticgradients = false;
         }
-        //else
-        //{
-         // normalnumberofsamples = randomsampler->GetNumberOfSamples();
-        //}
       }
       else
       {
@@ -509,8 +501,8 @@ namespace elastix
       const double fixdimd = static_cast<double>( 
         randomsampler->GetInputImageRegion().GetImageDimension() );
       const double fraction = 
-      static_cast<double>( randomsampler->GetInputImageRegion().GetNumberOfPixels() ) /
-      static_cast<double>( allsamples );
+        static_cast<double>( randomsampler->GetInputImageRegion().GetNumberOfPixels() ) /
+        static_cast<double>( allsamples );
       int gridspacing = static_cast<int>( 
         vnl_math_rnd( vcl_pow(fraction, 1.0/fixdimd) )   );
       gridspacing = vnl_math_max( 1, gridspacing );
@@ -529,22 +521,19 @@ namespace elastix
       coutisconsole = true;
     }
 
+    /** Prepare for progress printing */
+    ProgressCommandPointer progressObserver = ProgressCommandType::New();
+    progressObserver->SetUpdateFrequency( numberofgradients, numberofgradients );
+    progressObserver->SetStartString( "  Progress: " );
+    elxout << "Sampling gradients for " << this->elxGetClassName() 
+      << " configuration... " << std::endl;
+
     /** Compute gg for some random parameters */      
     typename RandomGeneratorType::Pointer randomgenerator = RandomGeneratorType::New();
     for ( unsigned int i = 0 ; i < numberofgradients; ++i)
     {
       /** Show progress 0-100% */
-      if (coutisconsole)
-      {
-        int progress = static_cast<int>( vnl_math_rnd( 
-          static_cast<double>(i*100)/static_cast<double>(numberofgradients) ) );
-        xl::xout["coutonly"] 
-          << "\rSampling gradients for " 
-          << this->elxGetClassName()
-          << " configuration: " 
-          << progress
-          << "%" ;
-      }
+      progressObserver->UpdateAndPrintProgress( i );
 
       /** Generate a perturbation; actually we should generate a perturbation 
       * with the same expected sqr magnitude as E||g||^2 = frofrojac 
@@ -586,17 +575,8 @@ namespace elastix
         diffgg = 0.0;
       }
     } // end for
-    
-    /** Cleanup progress information */
-    if (coutisconsole)
-    {
-      xl::xout["coutonly"] 
-        << "\rSampling gradients for " 
-        << this->elxGetClassName()
-        << " configuration: " 
-        << 100
-        << "%" << std::endl;
-    }
+
+    progressObserver->PrintProgress( 1.0 );    
 
     approxgg /= numberofgradients;
     exactgg /= numberofgradients;
@@ -605,7 +585,6 @@ namespace elastix
     if (stochasticgradients)
     {
       /** Set back to what it was */
-      //randomsampler->SetNumberOfSamples( normalnumberofsamples );
       advmetric->SetImageSampler( randomsampler );
     }    
 
@@ -691,32 +670,18 @@ namespace elastix
     typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
     typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
 
-    /** Initialize */
-    unsigned int s = 0;    
-
-    /** Check if cout is console */
-    bool coutisconsole = false;
-    std::string coutstr = "cout";
-    int currentpos = xl::xout["coutonly"].GetCOutputs().find(coutstr)->second->tellp();
-    if (currentpos == -1 )
-    {
-      coutisconsole = true;
-    }
+    /** Prepare for progress printing */
+    ProgressCommandPointer progressObserver = ProgressCommandType::New();
+    progressObserver->SetUpdateFrequency( nrofsamples, 100 );
+    progressObserver->SetStartString( "  Progress: " );
+    elxout << "Sampling Jacobians for " << this->elxGetClassName() 
+      << " configuration... " << std::endl;
 
 		/** Loop over image and compute jacobian. Save the jacobians in a vector. */
+    unsigned int s = 0;
     for ( iter = begin; iter != end; ++iter )
 		{
-      if (coutisconsole)
-      {
-        int progress = static_cast<int>( vnl_math_rnd( 
-          static_cast<double>(s*100)/static_cast<double>(nrofsamples) ) );
-        xl::xout["coutonly"] 
-          << "\rSampling Jacobians for "
-          << this->elxGetClassName()
-          << " configuration: " 
-          << progress
-          << "%" ;
-      }
+      progressObserver->UpdateAndPrintProgress( s );
 
 	    /** Read fixed coordinates and get jacobian. */
       const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
@@ -732,16 +697,10 @@ namespace elastix
       }        
       ++s;
     } // end for loop over samples
-    /** Cleanup progress information */
-    if (coutisconsole)
-    {
-      xl::xout["coutonly"] 
-        << "\rSampling Jacobians for "
-        << this->elxGetClassName()
-        << " configuration: " 
-        << 100
-        << "%" << std::endl;
-    }
+    progressObserver->PrintProgress( 1.0 );
+
+    elxout << "Computing JacobianTerms for " << this->elxGetClassName() 
+      << " configuration... " << std::endl;
 
     /** Compute the stuff in a double loop over the jacobians 
      * \li TrC = 1/n \sum_j ||J_j||_F^2
@@ -757,18 +716,7 @@ namespace elastix
     const double sqrt2 = vcl_sqrt(static_cast<double>(2.0));
     for ( unsigned int j = 0 ; j < nrofsamples; ++j)
     { 
-      /** Print progress */
-      if (coutisconsole)
-      {
-        int progress = static_cast<int>( vnl_math_rnd( 
-          static_cast<double>(j*100)/static_cast<double>(nrofsamples) ) );
-        xl::xout["coutonly"] 
-          << "\rComputing JacobianTerms for "
-          << this->elxGetClassName()
-          << " configuration: " 
-          << progress
-          << "%" ;
-      }
+      progressObserver->UpdateAndPrintProgress( j );
         
       /** Get jacobian */
       const JacobianType & jacj = jacvec[j];
@@ -848,17 +796,8 @@ namespace elastix
 
     } // next j
 
-    /** Cleanup progress information */
-    if ( coutisconsole )
-    {
-      xl::xout["coutonly"] 
-        << "\rComputing JacobianTerms for "
-        << this->elxGetClassName()
-        << " configuration: " 
-        << 100
-        << "%" << std::endl;
-    }
-    
+    progressObserver->PrintProgress( 1.0 );
+       
     /** Clean up */
     jacvec.clear();
 
@@ -915,29 +854,17 @@ namespace elastix
     unsigned int samplenr = 0;
     CovarianceMatrixIteratorType covit;
 
-    bool coutisconsole = false;
-    std::string coutstr = "cout";
-    int currentpos = xl::xout["coutonly"].GetCOutputs().find(coutstr)->second->tellp();
-    if (currentpos == -1 )
-    {
-      coutisconsole = true;
-    }
-    
+    /** Prepare for progress printing */
+    ProgressCommandPointer progressObserver = ProgressCommandType::New();
+    progressObserver->SetUpdateFrequency( nrofsamples*2, 100 );
+    progressObserver->SetStartString( "  Progress: " );
+    elxout << "Computing JacobianTerms for " << this->elxGetClassName() 
+      << " configuration... " << std::endl;
+
     for ( iter = begin; iter != end; ++iter )
 		{
       /** Print progress 0-50% */
-      if ( coutisconsole )
-      {
-        int progress = static_cast<int>( vnl_math_rnd( 
-          static_cast<double>(samplenr*50)/static_cast<double>(nrofsamples) ) );
-            
-        xl::xout["coutonly"] 
-          << "\rComputing JacobianTerms for "
-          << this->elxGetClassName()
-          << " configuration: " 
-          << progress
-          << "%" ;
-      }
+      progressObserver->UpdateAndPrintProgress( samplenr );
       ++samplenr;
 
 	    /** Read fixed coordinates and get jacobian. 
@@ -999,17 +926,7 @@ namespace elastix
     for ( iter = begin; iter != end; ++iter )
 		{
       /** Show progress 50-100% */
-      if (coutisconsole)
-      {
-        int progress = 50 + static_cast<int>( vnl_math_rnd( 
-          static_cast<double>(samplenr*50)/static_cast<double>(nrofsamples) ) );
-        xl::xout["coutonly"] 
-          << "\rComputing JacobianTerms for "
-          << this->elxGetClassName()
-          << " configuration: " 
-          << progress
-          << "%" ;
-      }
+      progressObserver->UpdateAndPrintProgress( samplenr + nrofsamples );
       ++samplenr;
 
 	    /** Read fixed coordinates and get jacobian. */      
@@ -1079,16 +996,8 @@ namespace elastix
 
     } // next sample from sample container  
 
-    /** Cleanup progress information */
-    if (coutisconsole)
-    {
-      xl::xout["coutonly"] 
-        << "\rComputing JacobianTerms for "
-        << this->elxGetClassName()
-        << " configuration: " 
-        << 100
-        << "%" << std::endl;
-    }
+    /** Finalize progress information */
+    progressObserver->PrintProgress( 1.0 );
 
   } // end ComputeJacobianTermsGenericLinear
 

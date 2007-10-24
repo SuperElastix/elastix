@@ -219,10 +219,10 @@ namespace elastix
 		this->GetAsITKBaseType()->Modified();
 
     /** Add a progress observer to the resampler. */
-    ProgressCommandType::Pointer command = ProgressCommandType::New();
-    command->ConnectObserver( this->GetAsITKBaseType() );
-    command->SetStartString( "  Progress: " );
-    command->SetEndString( "%" );
+    ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
+    progressObserver->ConnectObserver( this->GetAsITKBaseType() );
+    progressObserver->SetStartString( "  Progress: " );
+    progressObserver->SetEndString( "%" );
 
     /** Read output pixeltype from parameter file. Replace possible " " with "_". */
     std::string resultImagePixelType = "short";
@@ -261,8 +261,8 @@ namespace elastix
 			throw excp;
 		}
 
-    /** Disconnect from the rsmapler. */
-    command->DisconnectObserver( this->GetAsITKBaseType() );
+    /** Disconnect from the resampler. */
+    progressObserver->DisconnectObserver( this->GetAsITKBaseType() );
 
 	} // WriteResultImage
 

@@ -185,7 +185,7 @@ namespace elastix
 	 */
 
   void ProgressCommand
-    ::PrintProgress( const unsigned long & currentVoxelNumber ) const
+    ::UpdateAndPrintProgress( const unsigned long & currentVoxelNumber ) const
   {
     if ( this->m_StreamOutputIsConsole )
     {

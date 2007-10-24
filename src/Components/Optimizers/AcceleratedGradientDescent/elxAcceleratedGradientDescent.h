@@ -4,6 +4,7 @@
 #include "itkAcceleratedGradientDescentOptimizer.h"
 #include "itkImageGridSampler.h"
 #include "elxIncludes.h"
+#include "elxProgressCommand.h"
 
 namespace elastix
 {
@@ -157,6 +158,8 @@ namespace elastix
     typedef typename 
       ImageSamplerType::ImageSampleContainerType        ImageSampleContainerType;
     typedef typename ImageSampleContainerType::Pointer  ImageSampleContainerPointer;
+    typedef ProgressCommand                             ProgressCommandType;
+    typedef typename ProgressCommand::Pointer           ProgressCommandPointer;
     
     AcceleratedGradientDescent();
     virtual ~AcceleratedGradientDescent() {};

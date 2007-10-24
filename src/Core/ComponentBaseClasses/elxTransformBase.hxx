@@ -872,10 +872,10 @@ namespace elastix
 		DeformationFieldIteratorType iter( deformationField, region );
 
     /** Track the progress of the generation of the deformation field. */
-    ProgressCommandType::Pointer command = ProgressCommandType::New();
-    command->SetUpdateFrequency( region.GetNumberOfPixels(), 100 );
-    command->SetStartString( "  Progress: " );
-    command->SetEndString( "%" );
+    ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
+    progressObserver->SetUpdateFrequency( region.GetNumberOfPixels(), 100 );
+    progressObserver->SetStartString( "  Progress: " );
+    progressObserver->SetEndString( "%" );
 		
 		/** Declare stuff. */
 		InputPointType inputPoint;
@@ -904,7 +904,7 @@ namespace elastix
 			iter.Set( diff_point );
 
       /** Print the progress to screen. */
-      command->PrintProgress( currentVoxelNumber );
+      progressObserver->UpdateAndPrintProgress( currentVoxelNumber );
       
       /** Increase iterators. */
 			++iter;
@@ -913,7 +913,7 @@ namespace elastix
 		} // end while
 
     /** Indicate end of generating the deformation field. */
-    command->PrintProgress( 1.0f );
+    progressObserver->PrintProgress( 1.0 );
 		
 		/** Create a name for the deformation field file. */
 		std::string resultImageFormat = "mhd";

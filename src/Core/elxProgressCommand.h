@@ -13,7 +13,9 @@ namespace elastix
 	 * \brief A specialized Command object for updating the progress of a
    *  filter.
 	 *
-   * Whenever a filter, such as the itk::ResampleImageFilter, supports
+   * There are 3 ways to use this class. 
+   *
+   * \li Whenever a filter, such as the itk::ResampleImageFilter, supports
    * a ProgressReporter, this class can be employed. This class makes
    * sure that the progress of a filter is printed to screen. It works
    * as follows:
@@ -22,11 +24,44 @@ namespace elastix
    *   command->ConnectObserver( filterpointer );
    *   command->SetStartString( "  Progress: " );
    *   command->SetEndString( "%" );
+   *   filterpointer->Update(); // run the filter, progress messages are printed now
+   *   command->DisconnectObserver( filterPointer );
    *
    * So, first an instantiation of this class is created, then it is
    * connected to a filter, and some options are set. Whenever the filter
    * throws a ProgressEvent(), this class asks for the progress and prints
    * the percentage of progress.
+   *
+   * \li In manually written loops, a call to UpdateAndPrintProgress() can be included.
+   * Before the loop, the user should set the total number of loops, and the frequency
+   * that the progress message should be printed with. For example
+   * 
+   *   ProgressCommandType::Pointer command = ProgressCommandType::New();
+   *   command->SetUpdateFrequency( maxnrofvoxels, 100 );
+   *   command->SetStartString( "  Progress: " );
+   *   command->SetEndString( "%" );
+   *   elxout << "Looping over voxels... " << std::endl;
+   *   for ( unsigned int i =0; i < maxnrofvoxels; ++i )
+   *   {
+   *     command->UpdateAndPrintProgress( i );
+   *   }
+   *   command->PrintProgress(1.0); // make sure the 100% is reached
+   * 
+   * \li The last possibility is to directly use the PrintProgress function:
+   * 
+   *   ProgressCommandType::Pointer command = ProgressCommandType::New();
+   *   command->SetStartString( "  Progress: " );
+   *   command->SetEndString( "%" );
+   *   elxout << "Reading, casting, writing..."
+   *   command->PrintProgress( 0.0 );
+   *   reader->Update();
+   *   command->PrintProgress( 0.33 );
+   *   caster->Update();
+   *   command->PrintProgress( 0.67 );
+   *   writer->Update();
+   *   command->PrintProgress( 1.0 );
+   *   // example assumes reader, caster and writer have been configured before
+   *   
    *
 	 * //\ingroup Resamplers
 	 */
@@ -64,11 +99,15 @@ public:
   virtual void Execute( Object *caller, const EventObject &event );
   virtual void Execute( const Object *caller, const EventObject &event );
 
-  /** Print the progress to screen. */
+  /** Print the progress to screen. A float value between 0.0 and 1.0 
+   * is expected as input */
   virtual void PrintProgress( const float & progress ) const;
 
-  /** Print the progress to screen. */
-  virtual void PrintProgress( const unsigned long & currentVoxelNumber ) const;
+  /** Update and possibly print the progress to screen. 
+   * The progress information on screen is refreshed according to the 
+   * UpdateFrequency, which is assumed being specified beforehand using the 
+   * SetUpdateFrequency function. */
+  virtual void UpdateAndPrintProgress( const unsigned long & currentVoxelNumber ) const;
 
   /** Set and get the string starting each progress report. */
   itkSetStringMacro( StartString );
