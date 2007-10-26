@@ -43,6 +43,7 @@ namespace elastix
   *   The default/recommended value is 0.602.
   *
   * \todo: document extra parameters
+  * \todo: this class contains a lot of functional code, which actually does not belong here.
   *
   * \sa AcceleratedGradientDescentOptimizer
   * \ingroup Optimizers
@@ -174,6 +175,7 @@ namespace elastix
     unsigned int m_NumberOfSamplesForExactGradient;
     std::string  m_JacobianTermComputationMethod;
     CovarianceMatrixType m_CovarianceMatrix;
+    bool m_UseMaximumLikelihoodMethod;
 
     /** Print the contents of the settings vector to elxout */
     virtual void PrintSettingsVector( const SettingsVectorType & settings ) const;
@@ -188,8 +190,10 @@ namespace elastix
      * Needed for the automatic parameter estimation.
      * Gradients are measured at position mu_n, which are generated according to:
      * mu_n - mu_0 ~ N(0, perturbationSigma^2 I );
+     * The value returned indicates whether a maximum likelihood method was
+     * used. In case of true, gg=g^T C^{-1} g. else gg = g^T g
      */
-    virtual void SampleGradients(const ParametersType & mu0,
+    virtual bool SampleGradients(const ParametersType & mu0,
       double perturbationSigma, double & gg, double & ee);
 
     /** Returns a comtainer of fixed image samples, sampled using a grid sampler
@@ -240,7 +244,7 @@ namespace elastix
     bool m_AutomaticParameterEstimation;
     double m_MaximumStepLength;      
     double m_MinimumStepLength;
-
+    
   }; // end class AcceleratedGradientDescent
 
 

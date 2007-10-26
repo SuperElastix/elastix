@@ -5,11 +5,17 @@
 #include <iomanip>
 #include <string>
 #include <vector>
+#include <sstream>
+#include <fstream>
 #include "vnl/vnl_math.h"
 #include "vnl/algo/vnl_cholesky.h"
+#include "vnl/algo/vnl_svd.h"
+#include "vnl/vnl_matlab_filewrite.h"
 #include "itkImageRandomConstIteratorWithIndex.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "itkAdvancedImageToImageMetric.h"
+
+
 
 
 namespace elastix
@@ -33,6 +39,7 @@ namespace elastix
     this->m_NumberOfSamplesForExactGradient = 100000;
 
     this->m_JacobianTermComputationMethod = "Linear";
+    this->m_UseMaximumLikelihoodMethod = false;
     
   } // Constructor
 
@@ -176,11 +183,20 @@ namespace elastix
         this->GetComponentLabel(), level, 0 );   
 
       this->m_JacobianTermComputationMethod = "Linear";
-       this->GetConfiguration()->ReadParameter( 
-         this->m_JacobianTermComputationMethod,
-         "JacobianTermComputationMethod",
-         this->GetComponentLabel(), level, 0 );
+      this->GetConfiguration()->ReadParameter( 
+        this->m_JacobianTermComputationMethod,
+        "JacobianTermComputationMethod",
+        this->GetComponentLabel(), level, 0 );
 
+      if ( this->m_JacobianTermComputationMethod == "Linear" )
+      {
+        this->m_UseMaximumLikelihoodMethod = false;
+        this->GetConfiguration()->ReadParameter( 
+          this->m_UseMaximumLikelihoodMethod,
+          "UseMaximumLikelihoodMethod",
+          this->GetComponentLabel(), level, 0 );
+      }      
+ 
     } // end if automatic parameter estimation
 
 
@@ -401,20 +417,13 @@ namespace elastix
     const double sigma4 = delta / vcl_sqrt( maxJJ );
     double gg = 0.0;
     double ee = 0.0;
-    this->SampleGradients( this->GetScaledCurrentPosition(), sigma4, gg, ee );
+    bool maxlik = 
+      this->SampleGradients( this->GetScaledCurrentPosition(), sigma4, gg, ee );
 
     /** Determine parameter settings */
     double sigma1;
     double sigma3;
-    if ( this->m_CovarianceMatrix.size() == 0 )
-    {
-      /** estimate of sigma such that empirical norm^2 equals theoretical:
-       * gg = 1/N sum_n g_n' g_n
-       * sigma = gg / TrC */
-      sigma1 = vcl_sqrt( gg / TrC );
-      sigma3 = vcl_sqrt( ee / TrC );
-    }
-    else
+    if ( maxlik )
     {
       /** maximum likelihood estimator of sigma: 
        * gg = 1/N sum_n g_n^T C^{-1} g_n 
@@ -422,10 +431,52 @@ namespace elastix
       sigma1 = vcl_sqrt( gg / Pd );
       sigma3 = vcl_sqrt( ee / Pd );      
     }
+    else
+    {
+      /** estimate of sigma such that empirical norm^2 equals theoretical:
+       * gg = 1/N sum_n g_n' g_n
+       * sigma = gg / TrC */
+      sigma1 = vcl_sqrt( gg / TrC );
+      sigma3 = vcl_sqrt( ee / TrC );
+    }
+
+    /** Store covariance matrix in matlab format */
+    unsigned int level = static_cast<unsigned int>(
+			this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
+
+    /** Make filenames */
+    std::ostringstream makeFileName("");
+    makeFileName
+		  << this->GetConfiguration()->GetCommandLineArgument("-out")
+			<< "EstimatedCovarianceMatrix."
+			<< this->GetConfiguration()->GetElastixLevel()
+			<< ".R" << level
+			<< ".mat";
+    std::ostringstream makeCovName("");
+    makeCovName
+		  << "EstCovE"
+			<< this->GetConfiguration()->GetElastixLevel()
+			<< "R" << level;   
+    std::ostringstream makeSigma1VarName("");
+    makeSigma1VarName
+      << "Sigma1E"
+			<< this->GetConfiguration()->GetElastixLevel()
+			<< "R" << level;   
+    std::ostringstream makeSigma3VarName("");
+    makeSigma3VarName
+      << "Sigma3E"
+			<< this->GetConfiguration()->GetElastixLevel()
+			<< "R" << level;   
+
+    /** Write to file */
+    vnl_matlab_filewrite matlabWriter( makeFileName.str().c_str() );
+    matlabWriter.write(this->m_CovarianceMatrix, makeCovName.str().c_str() );
+    matlabWriter.write(sigma1, makeSigma1VarName.str().c_str() );
+    matlabWriter.write(sigma3, makeSigma3VarName.str().c_str() );
+
     /** Clean up */
     this->m_CovarianceMatrix.SetSize(0,0);
     
-
     const double alpha = 1.0;
     const double A = this->GetParam_A();
     const double a_max = A * delta / sigma1  / vcl_sqrt( maxJCJ );
@@ -454,7 +505,7 @@ namespace elastix
   * the squared magnitude of the gradient and approximation error.
   * Needed for the automatic parameter estimation */
   template <class TElastix>
-    void AcceleratedGradientDescent<TElastix>
+    bool AcceleratedGradientDescent<TElastix>
     ::SampleGradients(const ParametersType & mu0,
     double perturbationSigma, double & gg, double & ee)
   {
@@ -465,6 +516,7 @@ namespace elastix
     typedef typename ImageRandomSamplerType::Pointer    ImageRandomSamplerPointer;
     typedef itk::Statistics::MersenneTwisterRandomVariateGenerator 
                                                         RandomGeneratorType;
+    typedef vnl_svd<double>                             SVDType;
 
     /** Some shortcuts */
     const unsigned int P = static_cast<unsigned int>( mu0.GetSize() );
@@ -474,18 +526,22 @@ namespace elastix
     /** Prepare for maximum likelihood estimation of sigmas. In that case we 
      * need a cholesky matrix decomposition */
     vnl_cholesky * cholesky = 0;
+    SVDType * svd = 0;
     bool maxlik = false;
-    if ( cov.size() != 0 )
+    bool useSVD = false;
+    if ( (cov.size() != 0) && this->m_UseMaximumLikelihoodMethod )
     {
       maxlik = true;
       cholesky = new vnl_cholesky(cov, vnl_cholesky::estimate_condition);
-      if ( cholesky->rcond() < 1e-7 )
+      if ( cholesky->rcond() < 1e-6 // sqrt(machineprecision)
+        || cholesky->rcond() > 1.1  // happens when some eigenvalues are 0 or -0
+        || cholesky->rank_deficiency() ) // if !=0 something is wrong
       {
-        xl::xout["warning"] << "WARNING: Covariance matrix is singular!" << std::endl;
-        maxlik = false;
+        xl::xout["warning"] << "WARNING: Covariance matrix is singular! Using SVD instead of Cholesky." << std::endl;
         delete cholesky;
-        cholesky = 0;
-        cov.SetSize(0,0);
+        cholesky = 0;   
+        useSVD = true;
+        svd = new SVDType( cov, -1e-6 );
       }      
     }
 
@@ -509,7 +565,7 @@ namespace elastix
     DerivativeType approxgradient;
     DerivativeType exactgradient;
     DerivativeType diffgradient;
-    DerivativeType choloutput;
+    DerivativeType solveroutput;
     double exactgg = 0.0;
     double diffgg = 0.0;
     double approxgg = 0.0; 
@@ -556,15 +612,6 @@ namespace elastix
       gridspacings.Fill( gridspacing );
       gridsampler->SetSampleGridSpacing( gridspacings );
       gridsampler->Update();
-    }
-
-    /** Check if cout is console */
-    bool coutisconsole = false;
-    std::string coutstr = "cout";
-    int currentpos = xl::xout["coutonly"].GetCOutputs().find(coutstr)->second->tellp();
-    if (currentpos == -1 )
-    {
-      coutisconsole = true;
     }
 
     /** Prepare for progress printing */
@@ -618,10 +665,20 @@ namespace elastix
         else
         {
           /** compute g^T C^{-1} g */
-          cholesky->solve( exactgradient, &choloutput );
-          exactgg += dot_product( exactgradient, choloutput);
-          cholesky->solve( diffgradient, &choloutput );
-          diffgg += dot_product( diffgradient, choloutput);
+          if ( useSVD )
+          {            
+            solveroutput = svd->solve( exactgradient );
+            exactgg += dot_product( exactgradient, solveroutput);
+            solveroutput = svd->solve( diffgradient );
+            diffgg += dot_product( diffgradient, solveroutput);
+          }
+          else
+          {
+            cholesky->solve( exactgradient, &solveroutput );
+            exactgg += dot_product( exactgradient, solveroutput);
+            cholesky->solve( diffgradient, &solveroutput );
+            diffgg += dot_product( diffgradient, solveroutput);
+          }
         }
       }
       else
@@ -647,11 +704,19 @@ namespace elastix
     gg = exactgg;
     ee = diffgg;
 
+    /** clean up */
     if (cholesky)
     {
       delete cholesky;
       cholesky = 0;
     }
+    if (svd)
+    {
+      delete svd;
+      svd = 0;
+    }
+
+    return maxlik;
 
   } // end SampleGradients
 
