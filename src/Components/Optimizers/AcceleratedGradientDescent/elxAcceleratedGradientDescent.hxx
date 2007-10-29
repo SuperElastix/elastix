@@ -40,6 +40,7 @@ namespace elastix
 
     this->m_JacobianTermComputationMethod = "Linear";
     this->m_UseMaximumLikelihoodMethod = false;
+    this->m_SaveCovarianceMatrix = false;
 
     this->m_BSplineTransform = 0;
     this->m_BSplineCombinationTransform = 0;
@@ -204,6 +205,11 @@ namespace elastix
           "UseMaximumLikelihoodMethod",
           this->GetComponentLabel(), level, 0 );
       }      
+
+      this->m_SaveCovarianceMatrix = false;
+      this->GetConfiguration()->ReadParameter( 
+        this->m_SaveCovarianceMatrix, "SaveCovarianceMatrix",
+        this->GetComponentLabel(), level, 0 );
 
     } // end if automatic parameter estimation
 
@@ -448,39 +454,8 @@ namespace elastix
       sigma3 = vcl_sqrt( ee / TrC );
     }
 
-    /** Store covariance matrix in matlab format */
-    unsigned int level = static_cast<unsigned int>(
-      this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
-
-    /** Make filenames */
-    std::ostringstream makeFileName("");
-    makeFileName
-      << this->GetConfiguration()->GetCommandLineArgument("-out")
-      << "EstimatedCovarianceMatrix."
-      << this->GetConfiguration()->GetElastixLevel()
-      << ".R" << level
-      << ".mat";
-    std::ostringstream makeCovName("");
-    makeCovName
-      << "EstCovE"
-      << this->GetConfiguration()->GetElastixLevel()
-      << "R" << level;   
-    std::ostringstream makeSigma1VarName("");
-    makeSigma1VarName
-      << "Sigma1E"
-      << this->GetConfiguration()->GetElastixLevel()
-      << "R" << level;   
-    std::ostringstream makeSigma3VarName("");
-    makeSigma3VarName
-      << "Sigma3E"
-      << this->GetConfiguration()->GetElastixLevel()
-      << "R" << level;   
-
-    /** Write to file */
-    vnl_matlab_filewrite matlabWriter( makeFileName.str().c_str() );
-    matlabWriter.write(this->m_CovarianceMatrix, makeCovName.str().c_str() );
-    matlabWriter.write(sigma1, makeSigma1VarName.str().c_str() );
-    matlabWriter.write(sigma3, makeSigma3VarName.str().c_str() );
+    /** Save covariance matrix if desired */
+    this->SaveCovarianceMatrix( sigma1, sigma3, this->m_CovarianceMatrix );
 
     /** Clean up */
     this->m_CovarianceMatrix.SetSize(0,0);
@@ -545,7 +520,7 @@ namespace elastix
         || cholesky->rcond() > 1.1  // happens when some eigenvalues are 0 or -0
         || cholesky->rank_deficiency() ) // if !=0 something is wrong
       {
-        xl::xout["warning"] << "WARNING: Covariance matrix is singular! Using SVD instead of Cholesky." << std::endl;
+        xl::xout["warning"] << "WARNING: Covariance matrix is (nearly) singular! Using SVD instead of Cholesky." << std::endl;
         delete cholesky;
         cholesky = 0;   
         useSVD = true;
@@ -1511,6 +1486,58 @@ namespace elastix
     elxout << std::endl;
 
   } // end PrintSettingsVector
+
+
+  /**
+  * ****************** SaveCovarianceMatrix **********************
+  */
+
+  template <class TElastix>
+    void AcceleratedGradientDescent<TElastix>
+    ::SaveCovarianceMatrix( double sigma1, double sigma3, 
+    const CovarianceMatrixType & cov )
+  {
+    if ( this->m_SaveCovarianceMatrix == false )
+    {
+      return;
+    }
+
+    /** Store covariance matrix in matlab format */
+    unsigned int level = static_cast<unsigned int>(
+      this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
+    unsigned int elevel = this->GetConfiguration()->GetElastixLevel();
+
+    /** Make filenames */
+    std::ostringstream makeFileName("");
+    makeFileName
+      << this->GetConfiguration()->GetCommandLineArgument("-out")
+      << "EstimatedCovarianceMatrix."
+      << elevel
+      << ".R" << level
+      << ".mat";
+    std::ostringstream makeCovName("");
+    makeCovName
+      << "EstCovE"
+      << elevel
+      << "R" << level;   
+    std::ostringstream makeSigma1VarName("");
+    makeSigma1VarName
+      << "Sigma1E"
+      << elevel
+      << "R" << level;   
+    std::ostringstream makeSigma3VarName("");
+    makeSigma3VarName
+      << "Sigma3E"
+      << elevel
+      << "R" << level;   
+
+    /** Write to file */
+    vnl_matlab_filewrite matlabWriter( makeFileName.str().c_str() );
+    matlabWriter.write(cov, makeCovName.str().c_str() );
+    matlabWriter.write(sigma1, makeSigma1VarName.str().c_str() );
+    matlabWriter.write(sigma3, makeSigma3VarName.str().c_str() );
+
+  } // end SaveCovarianceMatrix
 
 
   /**

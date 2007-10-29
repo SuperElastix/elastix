@@ -199,6 +199,7 @@ namespace elastix
     std::string  m_JacobianTermComputationMethod;
     CovarianceMatrixType m_CovarianceMatrix;
     bool m_UseMaximumLikelihoodMethod;
+    bool m_SaveCovarianceMatrix;
 
     /** Variables used when the transform is a bspline transform. */
     bool m_TransformIsBSpline;
@@ -237,6 +238,10 @@ namespace elastix
 
     /** Print the contents of the settings vector to elxout */
     virtual void PrintSettingsVector( const SettingsVectorType & settings ) const;
+
+    /** Save the covariance matrix in matlab format, if desired */
+    virtual void SaveCovarianceMatrix( double sigma1, double sigma3, 
+      const CovarianceMatrixType & cov );
 
     /** Estimates some reasonable values for the parameters
     * SP_a, SP_alpha (=1), SigmoidMin, SigmoidMax (=1), and
