@@ -64,7 +64,7 @@ namespace itk
       /** Almost Robbins-Monro: time = time + E_0. 
        * If you want the parameter estimation but no adaptive stuff, 
        * this may be use useful:  */
-      this->m_CurrentTime += ( this->GetSigmoidMax() + this->GetSigmoidMin() / 2.0 );
+      this->m_CurrentTime += ( this->GetSigmoidMax() + this->GetSigmoidMin() ) / 2.0;
     }
 
   } // end UpdateCurrentTime
