@@ -94,8 +94,6 @@ using namespace itk;
     public
 			KNNGraphAlphaMutualInformationImageToImageMetric<
 				ITK_TYPENAME MetricBase<TElastix>::FixedImageType,
-				ITK_TYPENAME MetricBase<TElastix>::MovingImageType,
-        ITK_TYPENAME MetricBase<TElastix>::FixedImageType,
 				ITK_TYPENAME MetricBase<TElastix>::MovingImageType >,
 		public MetricBase<TElastix>
 	{
@@ -105,8 +103,6 @@ using namespace itk;
 		typedef KNNGraphAlphaMutualInformationMetric					Self;
 		typedef KNNGraphAlphaMutualInformationImageToImageMetric<
 			typename MetricBase<TElastix>::FixedImageType,
-			typename MetricBase<TElastix>::MovingImageType,
-      typename MetricBase<TElastix>::FixedImageType,
 			typename MetricBase<TElastix>::MovingImageType >		Superclass1;
 		typedef MetricBase<TElastix>													Superclass2;
 		typedef SmartPointer<Self>														Pointer;

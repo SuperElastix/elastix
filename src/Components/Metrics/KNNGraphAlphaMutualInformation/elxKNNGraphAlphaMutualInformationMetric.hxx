@@ -28,7 +28,7 @@ using namespace itk;
 		elxout << "Initialization of KNNGraphAlphaMutualInformation metric took: "
 			<< static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
 
-	} // end Initialize
+	} // end Initialize()
 
 	
   /**
@@ -44,113 +44,7 @@ using namespace itk;
     this->m_Configuration->ReadParameter( alpha, "Alpha", 0 );
 		this->SetAlpha( alpha );
 
-    /** Get and set the number of fixed feature images. */
-    unsigned int noFFI = 0;
-    this->m_Configuration->ReadParameter( noFFI, "NumberOfFixedFeatureImages", 0 );
-    this->SetNumberOfFixedFeatureImages( noFFI );
-
-    /** Get and set the number of moving feature images. */
-    unsigned int noMFI = 0;
-    this->m_Configuration->ReadParameter( noMFI, "NumberOfMovingFeatureImages", 0 );
-    this->SetNumberOfMovingFeatureImages( noMFI );
-
-    /** Get the filenames of the fixed feature images. */
-    std::vector< std::string > filenamesFFI( noFFI );
-    for ( unsigned int i = 0; i < noFFI; i++ )
-    {
-      /** Get the i-th filename. */
-      unsigned int ret = this->m_Configuration->ReadParameter(
-        filenamesFFI[ i ], "FixedFeatureImageFileNames", i );
-      /** It must be given. */
-      if ( ret )
-      {
-        itkExceptionMacro( << "ERROR: No filename for fixed feature image " << i << " given." );
-      }
-    }
-
-    /** Get the filenames of the moving feature images. */
-    std::vector< std::string > filenamesMFI( noMFI );
-    for ( unsigned int i = 0; i < noMFI; i++ )
-    {
-      /** Get the i-th filename. */
-      unsigned int ret = this->m_Configuration->ReadParameter(
-        filenamesMFI[ i ], "MovingFeatureImageFileNames", i );
-      /** It must be given. */
-      if ( ret )
-      {
-        itkExceptionMacro( << "ERROR: No filename for moving feature image " << i << " given." );
-      }
-    }
-
-    /** Read and set the fixed feature images. */
-    typedef ImageFileReader< FixedFeatureImageType >                FixedFeatureReaderType;
-    typedef std::vector< typename FixedFeatureReaderType::Pointer > FixedFeatureVectorReaderType;
-    FixedFeatureVectorReaderType readersFFI( noFFI );
-    for ( unsigned int i = 0; i < noFFI; i++ )
-    {
-      readersFFI[ i ] = FixedFeatureReaderType::New();
-      readersFFI[ i ]->SetFileName( filenamesFFI[ i ].c_str() );
-      readersFFI[ i ]->Update();
-      this->SetFixedFeatureImage( i, readersFFI[ i ]->GetOutput() );
-    }
-
-    /** Read and set the moving feature images. */
-    typedef ImageFileReader< MovingFeatureImageType >                 MovingFeatureReaderType;
-    typedef std::vector< typename MovingFeatureReaderType::Pointer >  MovingFeatureVectorReaderType;
-    MovingFeatureVectorReaderType readersMFI( noMFI );
-    for ( unsigned int i = 0; i < noMFI; i++ )
-    {
-      readersMFI[ i ] = MovingFeatureReaderType::New();
-      readersMFI[ i ]->SetFileName( filenamesMFI[ i ].c_str() );
-      readersMFI[ i ]->Update();
-      this->SetMovingFeatureImage( i, readersMFI[ i ]->GetOutput() );
-    }
-
-    /** Get the spline order of the fixed feature image interpolators. */
-    unsigned int splineOrder = 1;
-    this->m_Configuration->ReadParameter(
-      splineOrder, "FixedFeatureInterpolatorBSplineOrder", 0 );
-    std::vector< unsigned int > soFFII( noFFI, splineOrder);
-    for ( unsigned int i = 1; i < noFFI; i++ )
-    {
-      this->m_Configuration->ReadParameter( 
-        soFFII[ i ], "FixedFeatureInterpolatorBSplineOrder", i, true );
-    }
-
-    /** Get the spline order of the moving feature image interpolators. */
-    splineOrder = 1;
-    this->m_Configuration->ReadParameter(
-      splineOrder, "MovingFeatureInterpolatorBSplineOrder", 0 );
-    std::vector< unsigned int > soMFII( noMFI, splineOrder);
-    for ( unsigned int i = 1; i < noMFI; i++ )
-    {
-      this->m_Configuration->ReadParameter(
-        soMFII[ i ], "MovingFeatureInterpolatorBSplineOrder", i, true );
-    }
-
-    /** Create and set interpolators for the fixed feature images. */
-    typedef BSplineInterpolateImageFunction< FixedFeatureImageType >        FixedFeatureInterpolatorType;
-    typedef std::vector< typename FixedFeatureInterpolatorType::Pointer >   FixedFeatureInterpolatorVectorType;
-    FixedFeatureInterpolatorVectorType interpolatorsFFI( noFFI );
-    for ( unsigned int i = 0; i < noFFI; i++ )
-    {
-      interpolatorsFFI[ i ] = FixedFeatureInterpolatorType::New();
-      interpolatorsFFI[ i ]->SetSplineOrder( soFFII[ i ] );
-      this->SetFixedFeatureInterpolator( i, interpolatorsFFI[ i ] );
-    }
-
-    /** Create and set interpolators for the moving feature images. */
-    typedef BSplineInterpolateImageFunction< MovingFeatureImageType >       MovingFeatureInterpolatorType;
-    typedef std::vector< typename MovingFeatureInterpolatorType::Pointer >  MovingFeatureInterpolatorVectorType;
-    MovingFeatureInterpolatorVectorType interpolatorsMFI( noMFI );
-    for ( unsigned int i = 0; i < noMFI; i++ )
-    {
-      interpolatorsMFI[ i ] = MovingFeatureInterpolatorType::New();
-      interpolatorsMFI[ i ]->SetSplineOrder( soMFII[ i ] );
-      this->SetMovingFeatureInterpolator( i, interpolatorsMFI[ i ] );
-    }
-
-  } // end BeforeRegistration
+  } // end BeforeRegistration()
 
 
 	/**
@@ -333,7 +227,7 @@ using namespace itk;
       itkExceptionMacro( << "ERROR: there is no tree searcher type \"" << treeSearchType << "\" implemented." );
     }
 
-	} // end BeforeEachResolution
+	} // end BeforeEachResolution()
 	
   
 } // end namespace elastix
