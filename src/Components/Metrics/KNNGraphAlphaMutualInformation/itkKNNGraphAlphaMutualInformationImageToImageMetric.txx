@@ -3,6 +3,7 @@
 
 #include "itkKNNGraphAlphaMutualInformationImageToImageMetric.h"
 
+#include <iomanip>
 
 namespace itk
 {
@@ -11,10 +12,8 @@ namespace itk
 	 * ************************ Constructor *************************
 	 */
   
-  template <class TFixedImage, class TMovingImage,
-    class TFixedFeatureImage, class TMovingFeatureImage>
-  KNNGraphAlphaMutualInformationImageToImageMetric<
-    TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
+  template <class TFixedImage, class TMovingImage>
+  KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     ::KNNGraphAlphaMutualInformationImageToImageMetric()
   {
     this->SetComputeGradient(false); // don't use the default gradient for now
@@ -29,21 +28,21 @@ namespace itk
     this->m_BinaryKNNTreeSearcherMoving = 0;
     this->m_BinaryKNNTreeSearcherJoint = 0;
 
-  } // end Constructor
+  } // end Constructor()
 
 
   /**
 	 * ************************ SetANNkDTree *************************
 	 */
   
-  template <class TFixedImage, class TMovingImage,
-    class TFixedFeatureImage, class TMovingFeatureImage>
+  template <class TFixedImage, class TMovingImage>
   void
-  KNNGraphAlphaMutualInformationImageToImageMetric<
-    TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
-    ::SetANNkDTree( unsigned int bucketSize = 2, std::string splittingRule = "ANN_KD_SL_MIDPT" )
+  KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+    //::SetANNkDTree( unsigned int bucketSize = 2, std::string splittingRule = "ANN_KD_SL_MIDPT" )
+    ::SetANNkDTree( unsigned int bucketSize, std::string splittingRule )
   {
     this->SetANNkDTree( bucketSize, splittingRule, splittingRule, splittingRule );
+
   } // end SetANNkDTree()
 
 
@@ -51,13 +50,11 @@ namespace itk
 	 * ************************ SetANNkDTree *************************
 	 */
   
-  template <class TFixedImage, class TMovingImage,
-    class TFixedFeatureImage, class TMovingFeatureImage>
+  template <class TFixedImage, class TMovingImage>
   void
-  KNNGraphAlphaMutualInformationImageToImageMetric<
-    TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
+  KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     ::SetANNkDTree( unsigned int bucketSize, std::string splittingRuleFixed,
-    std::string splittingRuleMoving, std::string splittingRuleJoint )
+      std::string splittingRuleMoving, std::string splittingRuleJoint )
   {
     typename ANNkDTreeType::Pointer tmpPtrF = ANNkDTreeType::New();
     typename ANNkDTreeType::Pointer tmpPtrM = ANNkDTreeType::New();
@@ -82,16 +79,18 @@ namespace itk
 	 * ************************ SetANNbdTree *************************
 	 */
   
-  template <class TFixedImage, class TMovingImage,
-    class TFixedFeatureImage, class TMovingFeatureImage>
+  template <class TFixedImage, class TMovingImage>
   void
-  KNNGraphAlphaMutualInformationImageToImageMetric<
-    TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
-    ::SetANNbdTree( unsigned int bucketSize = 2, std::string splittingRule = "ANN_KD_SL_MIDPT",
-    std::string shrinkingRule = "ANN_BD_SIMPLE" )
+  KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+    //::SetANNbdTree( unsigned int bucketSize = 2, std::string splittingRule = "ANN_KD_SL_MIDPT",
+    //std::string shrinkingRule = "ANN_BD_SIMPLE" )
+    ::SetANNbdTree( unsigned int bucketSize,
+      std::string splittingRule,
+      std::string shrinkingRule )
   {
     this->SetANNbdTree( bucketSize, splittingRule, splittingRule, splittingRule,
       shrinkingRule, shrinkingRule, shrinkingRule );
+
   } // end SetANNbdTree()
 
 
@@ -99,15 +98,13 @@ namespace itk
 	 * ************************ SetANNbdTree *************************
 	 */
   
-  template <class TFixedImage, class TMovingImage,
-    class TFixedFeatureImage, class TMovingFeatureImage>
+  template <class TFixedImage, class TMovingImage>
   void
-  KNNGraphAlphaMutualInformationImageToImageMetric<
-    TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
+  KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     ::SetANNbdTree( unsigned int bucketSize, std::string splittingRuleFixed,
-    std::string splittingRuleMoving, std::string splittingRuleJoint,
-    std::string shrinkingRuleFixed, std::string shrinkingRuleMoving,
-    std::string shrinkingRuleJoint )
+      std::string splittingRuleMoving, std::string splittingRuleJoint,
+      std::string shrinkingRuleFixed, std::string shrinkingRuleMoving,
+      std::string shrinkingRuleJoint )
   {
     typename ANNbdTreeType::Pointer tmpPtrF = ANNbdTreeType::New();
     typename ANNbdTreeType::Pointer tmpPtrM = ANNbdTreeType::New();
@@ -136,11 +133,9 @@ namespace itk
 	 * ************************ SetANNBruteForceTree *************************
 	 */
   
-  template <class TFixedImage, class TMovingImage,
-    class TFixedFeatureImage, class TMovingFeatureImage>
+  template <class TFixedImage, class TMovingImage>
   void
-  KNNGraphAlphaMutualInformationImageToImageMetric<
-    TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
+  KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     ::SetANNBruteForceTree( void )
   {
     this->m_BinaryKNNTreeFixed  = ANNBruteForceTreeType::New();
@@ -154,13 +149,14 @@ namespace itk
 	 * ************************ SetANNStandardTreeSearch *************************
 	 */
   
-  template <class TFixedImage, class TMovingImage,
-    class TFixedFeatureImage, class TMovingFeatureImage>
+  template <class TFixedImage, class TMovingImage>
   void
-  KNNGraphAlphaMutualInformationImageToImageMetric<
-    TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
-    ::SetANNStandardTreeSearch( unsigned int kNearestNeighbors = 5,
-    double errorBound = 0.0 )
+  KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+    //::SetANNStandardTreeSearch( unsigned int kNearestNeighbors = 5,
+    ///double errorBound = 0.0 )
+    ::SetANNStandardTreeSearch(
+      unsigned int kNearestNeighbors,
+      double errorBound )
   {
     typename ANNStandardTreeSearchType::Pointer tmpPtrF
       = ANNStandardTreeSearchType::New();
@@ -188,13 +184,15 @@ namespace itk
 	 * ************************ SetANNFixedRadiusTreeSearch *************************
 	 */
   
-  template <class TFixedImage, class TMovingImage,
-    class TFixedFeatureImage, class TMovingFeatureImage>
+  template <class TFixedImage, class TMovingImage>
   void
-  KNNGraphAlphaMutualInformationImageToImageMetric<
-    TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
-    ::SetANNFixedRadiusTreeSearch( unsigned int kNearestNeighbors = 5,
-    double errorBound = 0.0, double squaredRadius = 0.0 )
+  KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+    //::SetANNFixedRadiusTreeSearch( unsigned int kNearestNeighbors = 5,
+    //double errorBound = 0.0, double squaredRadius = 0.0 )
+    ::SetANNFixedRadiusTreeSearch(
+      unsigned int kNearestNeighbors,
+      double errorBound,
+      double squaredRadius )
   {
     typename ANNFixedRadiusTreeSearchType::Pointer tmpPtrF
       = ANNFixedRadiusTreeSearchType::New();
@@ -226,13 +224,14 @@ namespace itk
 	 * ************************ SetANNPriorityTreeSearch *************************
 	 */
   
-  template <class TFixedImage, class TMovingImage,
-    class TFixedFeatureImage, class TMovingFeatureImage>
+  template <class TFixedImage, class TMovingImage>
   void
-  KNNGraphAlphaMutualInformationImageToImageMetric<
-    TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
-    ::SetANNPriorityTreeSearch( unsigned int kNearestNeighbors = 5,
-    double errorBound = 0.0 )
+  KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+    //::SetANNPriorityTreeSearch( unsigned int kNearestNeighbors = 5,
+    //double errorBound = 0.0 )
+    ::SetANNPriorityTreeSearch(
+      unsigned int kNearestNeighbors,
+      double errorBound )
   {
     typename ANNPriorityTreeSearchType::Pointer tmpPtrF
       = ANNPriorityTreeSearchType::New();
@@ -260,11 +259,9 @@ namespace itk
 	 * ********************* Initialize *****************************
 	 */
 
-	template <class TFixedImage, class TMovingImage,
-    class TFixedFeatureImage, class TMovingFeatureImage> 
+	template <class TFixedImage, class TMovingImage>
 	void
-  KNNGraphAlphaMutualInformationImageToImageMetric<
-    TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
+  KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 		::Initialize(void) throw ( ExceptionObject )
 	{
 		/** Call the superclass. */
@@ -291,13 +288,10 @@ namespace itk
    * Get the match Measure
 	 */
 
-  template <class TFixedImage, class TMovingImage,
-    class TFixedFeatureImage, class TMovingFeatureImage>
-  typename KNNGraphAlphaMutualInformationImageToImageMetric<
-    TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>::MeasureType
-  KNNGraphAlphaMutualInformationImageToImageMetric<
-    TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
-    ::GetValue( const TransformParametersType & parameters ) const
+  template <class TFixedImage, class TMovingImage>
+  typename KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>::MeasureType
+  KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+  ::GetValue( const TransformParametersType & parameters ) const
   {
     /** Initialize some variables. */
     MeasureType measure = NumericTraits< MeasureType >::Zero;
@@ -397,8 +391,8 @@ namespace itk
     AccumulateType sumG = NumericTraits< AccumulateType >::Zero;
     
     /** Get the size of the feature vectors. */
-    unsigned int fixedSize  = 1 + this->m_NumberOfFixedFeatureImages;
-    unsigned int movingSize = 1 + this->m_NumberOfMovingFeatureImages;
+    unsigned int fixedSize  = this->GetNumberOfFixedImages();
+    unsigned int movingSize = this->GetNumberOfMovingImages();
     unsigned int jointSize  = fixedSize + movingSize;
 
     /** Get the number of neighbours and \gamma. */
@@ -484,12 +478,11 @@ namespace itk
    * Get the Derivative Measure
 	 */
 
-  template <class TFixedImage, class TMovingImage,
-    class TFixedFeatureImage, class TMovingFeatureImage>
+  template <class TFixedImage, class TMovingImage>
   void
-  KNNGraphAlphaMutualInformationImageToImageMetric<
-    TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
-    ::GetDerivative( const TransformParametersType & parameters,
+  KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+  ::GetDerivative(
+    const TransformParametersType & parameters,
     DerivativeType & derivative ) const
   {
     /** When the derivative is calculated, all information for calculating
@@ -508,13 +501,13 @@ namespace itk
    * Get both the match Measure and theDerivative Measure
 	 */
 
-  template <class TFixedImage, class TMovingImage,
-    class TFixedFeatureImage, class TMovingFeatureImage>
+  template <class TFixedImage, class TMovingImage>
   void
-  KNNGraphAlphaMutualInformationImageToImageMetric<
-    TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
-    ::GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType & value, DerivativeType & derivative ) const
+  KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+  ::GetValueAndDerivative(
+    const TransformParametersType & parameters,
+    MeasureType & value,
+    DerivativeType & derivative ) const
   {
     /** Initialize some variables. */
     MeasureType measure = NumericTraits< MeasureType >::Zero;
@@ -621,13 +614,26 @@ namespace itk
     DerivativeType dGamma_J( this->GetNumberOfParameters() );
 
     /** Get the size of the feature vectors. */
-    unsigned int fixedSize  = 1 + this->m_NumberOfFixedFeatureImages;
-    unsigned int movingSize = 1 + this->m_NumberOfMovingFeatureImages;
+    unsigned int fixedSize  = this->GetNumberOfFixedImages();
+    unsigned int movingSize = this->GetNumberOfMovingImages();
     unsigned int jointSize  = fixedSize + movingSize;
 
     /** Get the number of neighbours and \gamma. */
     unsigned int k = this->m_BinaryKNNTreeSearcherFixed->GetKNearestNeighbors();
     double twoGamma = jointSize * ( 1.0 - this->m_Alpha );
+
+// tmp
+    std::cout << std::setprecision( 4 );
+    std::cout << std::showpoint;
+    for ( unsigned long i = 0; i < this->m_NumberOfPixelsCounted; i++ )
+    {
+      listSampleFixed->GetMeasurementVector(  i, z_F );
+      listSampleMoving->GetMeasurementVector( i, z_M );
+      listSampleJoint->GetMeasurementVector(  i, z_J );
+
+      std::cout << i << " " << z_F << " " << z_M << " " << z_J << std::endl;
+    }
+    std::cout << std::endl;
 
     /** Loop over all query points, i.e. all samples. */
     for ( unsigned long i = 0; i < this->m_NumberOfPixelsCounted; i++ )
@@ -750,19 +756,17 @@ namespace itk
    * 
 	 */
 
-  template <class TFixedImage, class TMovingImage,
-    class TFixedFeatureImage, class TMovingFeatureImage>
+  template <class TFixedImage, class TMovingImage>
   void
-  KNNGraphAlphaMutualInformationImageToImageMetric<
-    TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
-    ::ComputeListSampleValuesAndDerivativePlusJacobian(
-      const ListSamplePointer & listSampleFixed,
-      const ListSamplePointer & listSampleMoving,
-      const ListSamplePointer & listSampleJoint,
-      const bool & doDerivative,
-      TransformJacobianContainerType & jacobianContainer,
-      TransformJacobianIndicesContainerType & jacobianIndicesContainer,
-      SpatialDerivativeContainerType & spatialDerivativesContainer ) const
+  KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+  ::ComputeListSampleValuesAndDerivativePlusJacobian(
+    const ListSamplePointer & listSampleFixed,
+    const ListSamplePointer & listSampleMoving,
+    const ListSamplePointer & listSampleJoint,
+    const bool & doDerivative,
+    TransformJacobianContainerType & jacobianContainer,
+    TransformJacobianIndicesContainerType & jacobianIndicesContainer,
+    SpatialDerivativeContainerType & spatialDerivativesContainer ) const
   {
     /** Initialize. */
     this->m_NumberOfPixelsCounted = 0;
@@ -781,8 +785,8 @@ namespace itk
     typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
 
     /** Get the size of the feature vectors. */
-    unsigned int fixedSize  = 1 + this->m_NumberOfFixedFeatureImages;
-    unsigned int movingSize = 1 + this->m_NumberOfMovingFeatureImages;
+    unsigned int fixedSize  = this->GetNumberOfFixedImages();
+    unsigned int movingSize = this->GetNumberOfMovingImages();
     unsigned int jointSize  = fixedSize + movingSize;
 
     /** Resize the list samples so that enough memory is allocated. */
@@ -800,12 +804,13 @@ namespace itk
     double movingFeatureValue = 0.0;
 
     /** Loop over the fixed image samples to calculate the list samples. */
+    unsigned int ii = 0;
     for ( fiter = fbegin; fiter != fend; ++fiter )
     {
       /** Read fixed coordinates and initialize some variables. */
       const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
 
-      /** Transform point and check if it is inside the bspline support region. */
+      /** Transform point and check if it is inside the B-spline support region. */
       bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
       /** Check if point is inside moving mask. */
@@ -838,6 +843,8 @@ namespace itk
        */
       if ( sampleOk )
 			{
+        std::cout << ii << " " << fixedPoint << std::endl;
+
         /** Get the fixed image value. */
         const RealType & fixedImageValue = static_cast<RealType>(
           (*fiter).Value().m_ImageValue );
@@ -847,29 +854,29 @@ namespace itk
         listSampleMoving->SetMeasurement( this->m_NumberOfPixelsCounted, 0, movingImageValue );
         listSampleJoint->SetMeasurement(  this->m_NumberOfPixelsCounted, 0, fixedImageValue );
         listSampleJoint->SetMeasurement(  this->m_NumberOfPixelsCounted,
-          1 + this->m_NumberOfFixedFeatureImages, movingImageValue );
+          this->GetNumberOfFixedImages(), movingImageValue );
 
         /** Get and set the values of the fixed feature images. */
-        for ( unsigned int j = 0; j < this->m_NumberOfFixedFeatureImages; j++ )
+        for ( unsigned int j = 1; j < this->GetNumberOfFixedImages(); j++ )
         {
-          fixedFeatureValue = this->m_FixedFeatureInterpolators[ j ]->Evaluate( fixedPoint );
+          fixedFeatureValue = this->m_FixedImageInterpolatorVector[ j ]->Evaluate( fixedPoint );
           listSampleFixed->SetMeasurement(
-            this->m_NumberOfPixelsCounted, j + 1, fixedFeatureValue );
+            this->m_NumberOfPixelsCounted, j, fixedFeatureValue );
           listSampleJoint->SetMeasurement(
-            this->m_NumberOfPixelsCounted, j + 1, fixedFeatureValue );
+            this->m_NumberOfPixelsCounted, j, fixedFeatureValue );
         }
 
         /** Get and set the values of the moving feature images. */
-        for ( unsigned int j = 0; j < this->m_NumberOfMovingFeatureImages; j++ )
+        for ( unsigned int j = 1; j < this->GetNumberOfMovingImages(); j++ )
         {
-          movingFeatureValue = this->m_MovingFeatureInterpolators[ j ]->Evaluate( mappedPoint );
+          movingFeatureValue = this->m_InterpolatorVector[ j ]->Evaluate( mappedPoint );
           listSampleMoving->SetMeasurement(
             this->m_NumberOfPixelsCounted,
-            j + 1,
+            j,
             movingFeatureValue );
           listSampleJoint->SetMeasurement(
             this->m_NumberOfPixelsCounted,
-            j + 2 + this->m_NumberOfFixedFeatureImages,
+            j + this->GetNumberOfFixedImages(),
             movingFeatureValue );
         }
 
@@ -885,13 +892,13 @@ namespace itk
 
           /** Get the spatial derivative of the moving image. */
           SpatialDerivativeType spatialDerivatives(
-            1 + this->m_NumberOfMovingFeatureImages,
+            this->GetNumberOfMovingImages(),
             this->FixedImageDimension );
           spatialDerivatives.set_row( 0, movingImageDerivative.GetDataPointer() );
 
           /** Get the spatial derivatives of the moving feature images. */
           SpatialDerivativeType movingFeatureImageDerivatives(
-            this->m_NumberOfMovingFeatureImages,
+            this->GetNumberOfMovingImages() - 1,
             this->FixedImageDimension );
           this->EvaluateMovingFeatureImageDerivatives(
             mappedPoint, movingFeatureImageDerivatives );
@@ -904,6 +911,8 @@ namespace itk
        
 				/** Update the NumberOfPixelsCounted. */
 				this->m_NumberOfPixelsCounted++;
+
+        ii++;
 
 			} // end if sampleOk
 
@@ -925,12 +934,10 @@ namespace itk
 	 * ************************ EvaluateMovingFeatureImageDerivatives *************************
 	 */
   
-  template <class TFixedImage, class TMovingImage,
-    class TFixedFeatureImage, class TMovingFeatureImage>
+  template <class TFixedImage, class TMovingImage>
   void
-  KNNGraphAlphaMutualInformationImageToImageMetric<
-    TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
-    ::EvaluateMovingFeatureImageDerivatives(
+  KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+  ::EvaluateMovingFeatureImageDerivatives(
     const MovingImagePointType & mappedPoint,
     SpatialDerivativeType & featureGradients ) const
   {
@@ -945,19 +952,19 @@ namespace itk
      *   pre-computed gradient images.
      * \todo: for now we only implement the first option.
      */
-    if ( this->m_FeatureInterpolatorsAreBSpline && !this->GetComputeGradient() )
+    if ( this->m_InterpolatorsAreBSpline && !this->GetComputeGradient() )
     {
       /** Computed moving image gradient using derivative BSpline kernel. */
       MovingImageDerivativeType gradient;
-      for ( unsigned int i = 0; i < this->m_NumberOfMovingFeatureImages; ++i )
+      for ( unsigned int i = 1; i < this->GetNumberOfMovingImages(); ++i )
       {
         /** Compute the gradient at feature image i. */
         gradient = this
-          ->m_MovingFeatureBSplineInterpolators[ i ]
+          ->m_BSplineInterpolatorVector[ i ]
           ->EvaluateDerivativeAtContinuousIndex( cindex );
 
         /** Set the gradient into the Array2D. */
-        featureGradients.set_row( i, gradient.GetDataPointer() );
+        featureGradients.set_row( i - 1, gradient.GetDataPointer() );
       } // end for-loop
     } // end if
     /*
@@ -992,12 +999,10 @@ namespace itk
 	 * ************************ ComputeImageJacobianDifference *************************
 	 */
   
-  template <class TFixedImage, class TMovingImage,
-    class TFixedFeatureImage, class TMovingFeatureImage>
+  template <class TFixedImage, class TMovingImage>
   void
-  KNNGraphAlphaMutualInformationImageToImageMetric<
-    TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
-    ::ComputeImageJacobianDifference(
+  KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+  ::ComputeImageJacobianDifference(
     SpatialDerivativeType & D1sparse,
     SpatialDerivativeType & D2sparse_M,
     SpatialDerivativeType & D2sparse_J,
@@ -1036,12 +1041,10 @@ namespace itk
 	 * ************************ PrintSelf *************************
 	 */
   
-  template <class TFixedImage, class TMovingImage,
-    class TFixedFeatureImage, class TMovingFeatureImage>
+  template <class TFixedImage, class TMovingImage>
   void
-  KNNGraphAlphaMutualInformationImageToImageMetric<
-    TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
-    ::PrintSelf( std::ostream& os, Indent indent ) const
+  KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+  ::PrintSelf( std::ostream& os, Indent indent ) const
   {
     Superclass::PrintSelf( os, indent );
 
