@@ -2,7 +2,8 @@
 #define __itkKNNGraphAlphaMutualInformationImageToImageMetric_h
 
 /** Includes for the Superclass. */
-#include "itkImageToImageMetricWithFeatures.h"
+//#include "itkImageToImageMetricWithFeatures.h"
+#include "itkMultiInputImageToImageMetricBase.h"
 
 /** Includes for the kNN trees. */
 #include "itkArray.h"
@@ -42,27 +43,25 @@ namespace itk
  * \ingroup RegistrationMetrics
  */
   
-template < class TFixedImage, class TMovingImage,
-  class TFixedFeatureImage = TFixedImage, class TMovingFeatureImage = TMovingImage>
+template < class TFixedImage, class TMovingImage>
 class KNNGraphAlphaMutualInformationImageToImageMetric :
-  public ImageToImageMetricWithFeatures< TFixedImage, TMovingImage, TFixedFeatureImage, TMovingFeatureImage>
+  public MultiInputImageToImageMetricBase< TFixedImage, TMovingImage>
 {
 public:
 
   /** Standard itk. */
   typedef KNNGraphAlphaMutualInformationImageToImageMetric  Self;
-  typedef ImageToImageMetricWithFeatures<
-    TFixedImage, TMovingImage,
-    TFixedFeatureImage, TMovingFeatureImage >                         Superclass;
-  typedef SmartPointer<Self>                                          Pointer;
-  typedef SmartPointer<const Self>                                    ConstPointer;
+  typedef MultiInputImageToImageMetricBase<
+    TFixedImage, TMovingImage >                             Superclass;
+  typedef SmartPointer<Self>                                Pointer;
+  typedef SmartPointer<const Self>                          ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
  
   /** Run-time type information (and related methods). */
   itkTypeMacro( KNNGraphAlphaMutualInformationImageToImageMetric,
-    ImageToImageMetricWithFeatures );
+    MultiInputImageToImageMetricBase );
  
   /** Typedefs from the superclass. */
   typedef typename 
@@ -113,20 +112,15 @@ public:
   typedef typename
     Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
   typedef typename Superclass::ParameterIndexArrayType    ParameterIndexArrayType;
-	
-  typedef typename Superclass::FixedFeatureImageType        FixedFeatureImageType;
-  typedef typename Superclass::FixedFeatureImagePointer     FixedFeatureImagePointer;
-  typedef typename Superclass::MovingFeatureImageType       MovingFeatureImageType;
-  typedef typename Superclass::MovingFeatureImagePointer    MovingFeatureImagePointer;
-  typedef typename Superclass::FixedFeatureImageVectorType  FixedFeatureImageVectorType;
-  typedef typename Superclass::MovingFeatureImageVectorType MovingFeatureImageVectorType;
 
-  typedef typename Superclass::FixedFeatureInterpolatorType         FixedFeatureInterpolatorType;
-  typedef typename Superclass::MovingFeatureInterpolatorType        MovingFeatureInterpolatorType;
-  typedef typename Superclass::FixedFeatureInterpolatorPointer      FixedFeatureInterpolatorPointer;
-  typedef typename Superclass::MovingFeatureInterpolatorPointer     MovingFeatureInterpolatorPointer;
-  typedef typename Superclass::FixedFeatureInterpolatorVectorType   FixedFeatureInterpolatorVectorType;
-  typedef typename Superclass::MovingFeatureInterpolatorVectorType  MovingFeatureInterpolatorVectorType;
+  /** Typedef's for storing multiple inputs. */
+  typedef typename Superclass::FixedImageVectorType       FixedImageVectorType;
+  typedef typename Superclass::FixedImageMaskVectorType   FixedImageMaskVectorType;
+  typedef typename Superclass::FixedImageRegionVectorType FixedImageRegionVectorType;
+  typedef typename Superclass::MovingImageVectorType      MovingImageVectorType;
+  typedef typename Superclass::MovingImageMaskVectorType  MovingImageMaskVectorType;
+  typedef typename Superclass::InterpolatorVectorType     InterpolatorVectorType;
+  typedef typename Superclass::FixedImageInterpolatorVectorType FixedImageInterpolatorVectorType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
@@ -276,6 +270,7 @@ private:
 
   /** This function calculates the spatial derivative of the 
    * featureNr feature image at the point mappedPoint.
+   * \todo move this to base class.
    */
   virtual void EvaluateMovingFeatureImageDerivatives(
     const MovingImagePointType & mappedPoint,
