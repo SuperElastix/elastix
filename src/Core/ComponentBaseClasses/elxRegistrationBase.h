@@ -85,7 +85,7 @@ using namespace itk;
 		itkStaticConstMacro( MovingImageDimension, unsigned int, MovingImageType::ImageDimension );
 
 		/** Typedef for ITKBaseType. */
-		typedef itk::MultiResolutionImageRegistrationMethod<
+		typedef itk::MultiResolutionImageRegistrationMethod2<
 			FixedImageType,	MovingImageType >				ITKBaseType;
 
     /** Typedef for mask erosion options */
