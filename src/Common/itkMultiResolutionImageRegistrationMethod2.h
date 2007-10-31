@@ -14,8 +14,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkMultiResolutionImageRegistrationMethod_h
-#define __itkMultiResolutionImageRegistrationMethod_h
+#ifndef __itkMultiResolutionImageRegistrationMethod2_h
+#define __itkMultiResolutionImageRegistrationMethod2_h
 
 #include "itkProcessObject.h"
 #include "itkImageToImageMetric.h"
@@ -27,7 +27,7 @@
 namespace itk
 {
 
-/** \class MultiResolutionImageRegistrationMethod
+/** \class MultiResolutionImageRegistrationMethod2
  * \brief Base class for multi-resolution image registration methods
  *
  * This class provides a generic interface for multi-resolution 
@@ -64,25 +64,26 @@ namespace itk
  * \ingroup RegistrationFilters
  */
 template <typename TFixedImage, typename TMovingImage>
-class MultiResolutionImageRegistrationMethod : public ProcessObject 
+class MultiResolutionImageRegistrationMethod2 : public ProcessObject 
 {
 public:
   /** Standard class typedefs. */
-  typedef MultiResolutionImageRegistrationMethod  Self;
-  typedef ProcessObject  Superclass;
-  typedef SmartPointer<Self>   Pointer;
-  typedef SmartPointer<const Self>  ConstPointer;
+  typedef MultiResolutionImageRegistrationMethod2   Self;
+  typedef ProcessObject                             Superclass;
+  typedef SmartPointer<Self>                        Pointer;
+  typedef SmartPointer<const Self>                  ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro(Self);
+  itkNewMacro( Self );
   
   /** Run-time type information (and related methods). */
-  itkTypeMacro(MultiResolutionImageRegistrationMethod, ProcessObject);
+  itkTypeMacro( MultiResolutionImageRegistrationMethod2, ProcessObject );
 
   /**  Type of the Fixed image. */
   typedef          TFixedImage                     FixedImageType;
   typedef typename FixedImageType::ConstPointer    FixedImageConstPointer;
   typedef typename FixedImageType::RegionType      FixedImageRegionType;
+  typedef std::vector<FixedImageRegionType>        FixedImageRegionPyramidType;
 
   /**  Type of the Moving image. */
   typedef          TMovingImage                    MovingImageType;
@@ -98,10 +99,11 @@ public:
   typedef typename TransformType::Pointer          TransformPointer;
 
   /** Type for the output: Using Decorator pattern for enabling
-   *  the Transform to be passed in the data pipeline */
+   * the Transform to be passed in the data pipeline.
+   */
   typedef  DataObjectDecorator< TransformType >    TransformOutputType;
   typedef typename TransformOutputType::Pointer    TransformOutputPointer;
-  typedef typename TransformOutputType::ConstPointer    TransformOutputConstPointer;
+  typedef typename TransformOutputType::ConstPointer  TransformOutputConstPointer;
   
   /**  Type of the Interpolator. */
   typedef typename MetricType::InterpolatorType    InterpolatorType;
@@ -115,7 +117,7 @@ public:
                                              FixedImageType >
   FixedImagePyramidType;
   typedef typename FixedImagePyramidType::Pointer  FixedImagePyramidPointer;
-
+  
   /** Type of the moving image multiresolution pyramid. */
   typedef MultiResolutionPyramidImageFilter< MovingImageType,
                                              MovingImageType >
@@ -123,17 +125,18 @@ public:
   typedef typename MovingImagePyramidType::Pointer MovingImagePyramidPointer;
 
   /** Type of the Transformation parameters This is the same type used to
-   *  represent the search space of the optimization algorithm */
+   *  represent the search space of the optimization algorithm.
+   */
   typedef  typename MetricType::TransformParametersType    ParametersType;
 
   /** Smart Pointer type to a DataObject. */
   typedef typename DataObject::Pointer DataObjectPointer;
 
   /** Method that initiates the registration. */
-  void StartRegistration();
+  virtual void StartRegistration();
 
   /** Method to stop the registration. */
-  void StopRegistration();
+  virtual void StopRegistration();
 
   /** Set/Get the Fixed image. */
   itkSetConstObjectMacro( FixedImage, FixedImageType );
@@ -144,8 +147,8 @@ public:
   itkGetConstObjectMacro( MovingImage, MovingImageType );
 
   /** Set/Get the Optimizer. */
-  itkSetObjectMacro( Optimizer,  OptimizerType );
-  itkGetObjectMacro( Optimizer,  OptimizerType );
+  itkSetObjectMacro( Optimizer, OptimizerType );
+  itkGetObjectMacro( Optimizer, OptimizerType );
 
   /** Set/Get the Metric. */
   itkSetObjectMacro( Metric, MetricType );
@@ -184,76 +187,89 @@ public:
   itkGetConstReferenceMacro( InitialTransformParameters, ParametersType );
 
   /** Set/Get the initial transformation parameters of the next resolution
-   level to be processed. The default is the last set of parameters of
-   the last resolution level. */
+   * level to be processed. The default is the last set of parameters of
+   * the last resolution level.
+   */
   itkSetMacro( InitialTransformParametersOfNextLevel, ParametersType );
   itkGetConstReferenceMacro( InitialTransformParametersOfNextLevel, ParametersType );
 
   /** Get the last transformation parameters visited by 
-   * the optimizer. */
+   * the optimizer.
+   */
   itkGetConstReferenceMacro( LastTransformParameters, ParametersType );  
 
-  /** Returns the transform resulting from the registration process  */
+  /** Returns the transform resulting from the registration process. */
   const TransformOutputType * GetOutput() const;
 
   /** Make a DataObject of the correct type to be used as the specified
-   * output. */
+   * output.
+   */
   virtual DataObjectPointer MakeOutput(unsigned int idx);
 
   /** Method to return the latest modified time of this object or
-   * any of its cached ivars */
+   * any of its cached ivars.
+   */
   unsigned long GetMTime() const;  
   
 protected:
-  MultiResolutionImageRegistrationMethod();
-  virtual ~MultiResolutionImageRegistrationMethod() {};
-  void PrintSelf(std::ostream& os, Indent indent) const;
+
+  /** Constructor. */
+  MultiResolutionImageRegistrationMethod2();
+
+  /** Destructor. */
+  virtual ~MultiResolutionImageRegistrationMethod2() {};
+
+  /** PrintSelf. */
+  virtual void PrintSelf(std::ostream& os, Indent indent) const;
 
   /** Method invoked by the pipeline in order to trigger the computation of 
    * the registration. */
-  void  GenerateData ();
+  virtual void GenerateData ();
 
   /** Initialize by setting the interconnects between the components.
       This method is executed at every level of the pyramid with the
       values corresponding to this resolution
    */
-  void Initialize() throw (ExceptionObject);
+  virtual void Initialize() throw (ExceptionObject);
 
   /** Compute the size of the fixed region for each level of the pyramid. */
-  void PreparePyramids( void );
+  virtual void PreparePyramids( void );
 
   /** Set the current level to be processed */  
   itkSetMacro( CurrentLevel, unsigned long );
 
+  /** The last transform parameters. Compared to the ITK class
+   * itk::MultiResolutionImageRegistrationMethod these member variables
+   * are made protected, so they can be accessed by children classes.
+   */
+  ParametersType                   m_LastTransformParameters;
+  bool                             m_Stop;
+
 private:
-  MultiResolutionImageRegistrationMethod(const Self&); //purposely not implemented
+  MultiResolutionImageRegistrationMethod2(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
   
+  /** Member variables. */
   MetricPointer                    m_Metric;
   OptimizerType::Pointer           m_Optimizer;
-
-  MovingImageConstPointer          m_MovingImage;
-  FixedImageConstPointer           m_FixedImage;
-
   TransformPointer                 m_Transform;
   InterpolatorPointer              m_Interpolator;
 
-  MovingImagePyramidPointer        m_MovingImagePyramid;
-  FixedImagePyramidPointer         m_FixedImagePyramid;
-
   ParametersType                   m_InitialTransformParameters;
   ParametersType                   m_InitialTransformParametersOfNextLevel;
-  ParametersType                   m_LastTransformParameters;
 
-  FixedImageRegionType               m_FixedImageRegion;
-  std::vector<FixedImageRegionType>  m_FixedImageRegionPyramid;
+  MovingImageConstPointer          m_MovingImage;
+  FixedImageConstPointer           m_FixedImage;
+  MovingImagePyramidPointer        m_MovingImagePyramid;
+  FixedImagePyramidPointer         m_FixedImagePyramid;
+  
+  FixedImageRegionType             m_FixedImageRegion;
+  FixedImageRegionPyramidType      m_FixedImageRegionPyramid;
 
   unsigned long                    m_NumberOfLevels;
   unsigned long                    m_CurrentLevel;
-
-  bool                             m_Stop;
   
-};
+}; // end class MultiResolutionImageRegistrationMethod2
 
 
 } // end namespace itk
@@ -263,7 +279,5 @@ private:
 #include "itkMultiResolutionImageRegistrationMethod2.txx"
 #endif
 
-#endif
-
-
+#endif // end #ifndef __itkMultiResolutionImageRegistrationMethod2_h
 

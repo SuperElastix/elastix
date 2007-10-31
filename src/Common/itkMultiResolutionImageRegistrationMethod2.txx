@@ -14,8 +14,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef _itkMultiResolutionImageRegistrationMethod_txx
-#define _itkMultiResolutionImageRegistrationMethod_txx
+#ifndef _itkMultiResolutionImageRegistrationMethod2_txx
+#define _itkMultiResolutionImageRegistrationMethod2_txx
 
 #include "itkMultiResolutionImageRegistrationMethod2.h"
 #include "itkRecursiveMultiResolutionPyramidImageFilter.h"
@@ -29,8 +29,8 @@ namespace itk
  * Constructor
  */
 template < typename TFixedImage, typename TMovingImage >
-MultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
-::MultiResolutionImageRegistrationMethod()
+MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
+::MultiResolutionImageRegistrationMethod2()
 {
   this->SetNumberOfRequiredOutputs( 1 );  // for the Transform
 
@@ -73,7 +73,7 @@ MultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
  */
 template < typename TFixedImage, typename TMovingImage >
 void
-MultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
+MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
 ::Initialize() throw (ExceptionObject)
 {
 
@@ -126,7 +126,7 @@ MultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
  */
 template < typename TFixedImage, typename TMovingImage >
 void
-MultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
+MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
 ::StopRegistration( void )
 {
   this->m_Stop = true;
@@ -141,7 +141,7 @@ MultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
  */
 template < typename TFixedImage, typename TMovingImage >
 void
-MultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
+MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
 ::PreparePyramids( void )
 {
 
@@ -254,7 +254,7 @@ MultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
  */
 template < typename TFixedImage, typename TMovingImage >
 void
-MultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
+MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
 ::StartRegistration( void )
 { 
 
@@ -344,7 +344,7 @@ MultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
  */
 template < typename TFixedImage, typename TMovingImage >
 void
-MultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
+MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
 ::PrintSelf(std::ostream& os, Indent indent) const
 {
   Superclass::PrintSelf( os, indent );
@@ -387,7 +387,7 @@ MultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
  */
 template < typename TFixedImage, typename TMovingImage >
 void
-MultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
+MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
 ::GenerateData()
 {
   this->StartRegistration();
@@ -397,7 +397,7 @@ MultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
 
 template < typename TFixedImage, typename TMovingImage >
 unsigned long
-MultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
+MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
 ::GetMTime() const
 {
   unsigned long mtime = Superclass::GetMTime();
@@ -451,8 +451,8 @@ MultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
  *  Get Output
  */
 template < typename TFixedImage, typename TMovingImage >
-const typename MultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>::TransformOutputType *
-MultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
+const typename MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>::TransformOutputType *
+MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
 ::GetOutput() const
 {
   return static_cast< const TransformOutputType * >( this->ProcessObject::GetOutput(0) );
@@ -462,7 +462,7 @@ MultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
 
 template < typename TFixedImage, typename TMovingImage >
 DataObject::Pointer
-MultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
+MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
 ::MakeOutput(unsigned int output)
 {
   switch (output)
