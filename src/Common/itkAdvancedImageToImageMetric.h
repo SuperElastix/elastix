@@ -59,8 +59,10 @@ public:
     Superclass::CoordinateRepresentationType              CoordinateRepresentationType;
   typedef typename Superclass::MovingImageType            MovingImageType;
   typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
+  typedef typename MovingImageType::Pointer               MovingImagePointer;
   typedef typename Superclass::MovingImageConstPointer    MovingImageConstPointer;
   typedef typename Superclass::FixedImageType             FixedImageType;
+  typedef typename FixedImageType::Pointer                FixedImagePointer;
   typedef typename Superclass::FixedImageConstPointer     FixedImageConstPointer;
   typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
   typedef typename Superclass::TransformType              TransformType;
