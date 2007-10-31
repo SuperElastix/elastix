@@ -16,15 +16,15 @@ using namespace itk;
 		void MultiResolutionRegistration<TElastix>
 		::BeforeRegistration(void)
 	{	
-		/** Get the components from this->m_Elastix and set them.*/
+		/** Get the components from this->m_Elastix and set them. */
 		this->SetComponents();
 
-		/** Set the number of resolutions.*/		
+		/** Set the number of resolutions. */		
 		unsigned int numberOfResolutions = 3;
 		this->m_Configuration->ReadParameter( numberOfResolutions, "NumberOfResolutions", 0 );
 		this->SetNumberOfLevels( numberOfResolutions );
 				
-		/** Set the FixedImageRegion.*/
+		/** Set the FixedImageRegion. */
 		
 		/** Make sure the fixed image is up to date. */
 		try
@@ -45,7 +45,7 @@ using namespace itk;
 		/** Set the fixedImageRegion. */
 		this->SetFixedImageRegion( this->GetElastix()->GetFixedImage()->GetBufferedRegion() );
 		
-	} // end BeforeRegistration
+	} // end BeforeRegistration()
 
 
   /**
@@ -60,8 +60,9 @@ using namespace itk;
 		unsigned int level = this->GetCurrentLevel();
 
     /** Do erosion, or just reset the original masks in the metric, or
-     * do nothing when no masks are used */
-    this->UpdateMasks(level);		
+     * do nothing when no masks are used.
+     */
+    this->UpdateMasks( level );		
 
   } // end BeforeEachResolution
 	
