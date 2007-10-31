@@ -66,12 +66,12 @@ namespace itk
 
 template <typename TFixedImage, typename TMovingImage>
 class ITK_EXPORT MultiMetricMultiResolutionImageRegistrationMethod : 
-  public MultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>
+  public MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>
 {
 public:
   /** Standard class typedefs. */
   typedef MultiMetricMultiResolutionImageRegistrationMethod  Self;
-  typedef MultiResolutionImageRegistrationMethod<
+  typedef MultiResolutionImageRegistrationMethod2<
     TFixedImage, TMovingImage>                               Superclass;
   typedef SmartPointer<Self>                                 Pointer;
   typedef SmartPointer<const Self>                           ConstPointer;
@@ -81,7 +81,7 @@ public:
   
   /** Run-time type information (and related methods). */
   itkTypeMacro(MultiMetricMultiResolutionImageRegistrationMethod,
-    MultiResolutionImageRegistrationMethod );
+    MultiResolutionImageRegistrationMethod2 );
 
   /**  Superclass types */
   typedef typename Superclass::FixedImageType           FixedImageType;
