@@ -55,7 +55,7 @@
 /** Macro for getting objects. */
 #define itkImplementationGetObjectMacro(_name, _type ) \
   template <class TFixedImage, class TMovingImage> \
-  typename MultiInputImageToImageMetricBase<TFixedImage,TMovingImage>::##_type \
+  typename MultiInputImageToImageMetricBase<TFixedImage,TMovingImage>:: _type \
     MultiInputImageToImageMetricBase<TFixedImage,TMovingImage> \
     ::Get##_name ( unsigned int pos ) const \
   { \
@@ -69,7 +69,7 @@
 /** Macro for getting const objects. */
 #define itkImplementationGetConstObjectMacro(_name, _type ) \
   template <class TFixedImage, class TMovingImage> \
-  typename const MultiInputImageToImageMetricBase<TFixedImage,TMovingImage>::##_type \
+  const typename MultiInputImageToImageMetricBase<TFixedImage,TMovingImage>:: _type \
     MultiInputImageToImageMetricBase<TFixedImage,TMovingImage> \
     ::Get##_name ( unsigned int pos ) const \
   { \
@@ -114,6 +114,8 @@ namespace itk
   itkImplementationSetObjectMacro2( FixedImageInterpolator, FixedImageInterpolatorType * );
 
   /** Get components. */
+  /** \todo: commentaar van stefan: waarom verwerk je die * niet in de macro?
+   * Dat is het consequenter als je het vergelijkt met de normal itkGetObjectMacro. */   
   itkImplementationGetConstObjectMacro( FixedImage, FixedImageType * );
   itkImplementationGetObjectMacro( FixedImageMask, FixedImageMaskType * );
   itkImplementationGetConstObjectMacro( MovingImage, MovingImageType * );
@@ -154,7 +156,7 @@ namespace itk
   */
 
   template <class TFixedImage, class TMovingImage>
-    typename const MultiInputImageToImageMetricBase<TFixedImage,TMovingImage>
+    const typename MultiInputImageToImageMetricBase<TFixedImage,TMovingImage>
     ::FixedImageRegionType & 
     MultiInputImageToImageMetricBase<TFixedImage,TMovingImage>
     ::GetFixedImageRegion( unsigned int pos ) const
