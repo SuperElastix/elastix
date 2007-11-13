@@ -147,7 +147,7 @@ using namespace itk;
     typedef typename
       Superclass1::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
     typedef typename
-      Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
+      Superclass1::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
 		
     /** The fixed image dimension. */
 		itkStaticConstMacro( FixedImageDimension, unsigned int,
