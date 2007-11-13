@@ -91,7 +91,7 @@ public:
   /** Some useful extra typedefs. */
   typedef typename FixedImageType::PixelType              FixedImagePixelType;
   typedef typename MovingImageType::RegionType            MovingImageRegionType;
-  typedef typename FixedArray< double,
+  typedef FixedArray< double,
     itkGetStaticConstMacro(MovingImageDimension) >        MovingImageDerivativeScalesType;
 
   /** Typedefs for the ImageSampler. */
