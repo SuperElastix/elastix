@@ -9,7 +9,6 @@
 #include "itkBinaryErodeImageFilter.h"
 #include "itkBinaryBallStructuringElement.h"
 
-
 namespace itk
 {
 
@@ -45,6 +44,8 @@ namespace itk
       MovingImageMaskInterpolatorType::New();
     this->m_MovingImageMaskInterpolator->SetSplineOrder( defaultMaskInterpolationOrder );
     this->m_UseDifferentiableOverlap = false;
+
+    this->m_UseMovingImageDerivativeScales = false;
 
     this->m_FixedImageLimiter = 0;
     this->m_MovingImageLimiter = 0;
@@ -550,6 +551,13 @@ namespace itk
             index[ j ] = static_cast<long>( vnl_math_rnd( cindex[ j ] ) );
           }
           (*gradient) = this->m_GradientImage->GetPixel( index );
+        }
+        if ( this->m_UseMovingImageDerivativeScales )
+        {
+          for ( unsigned int i = 0; i < MovingImageDimension; ++i)
+          {
+            (*gradient)[i] *= this->m_MovingImageDerivativeScales[i]; 
+          }
         }
       } // end if gradient
     } // end if sampleOk

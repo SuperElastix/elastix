@@ -10,6 +10,7 @@
 #include "itkBSplineResampleImageFunction.h"
 #include "itkBSplineCombinationTransform.h"
 #include "itkLimiterFunctionBase.h"
+#include "itkFixedArray.h"
 
 
 namespace itk
@@ -90,6 +91,8 @@ public:
   /** Some useful extra typedefs. */
   typedef typename FixedImageType::PixelType              FixedImagePixelType;
   typedef typename MovingImageType::RegionType            MovingImageRegionType;
+  typedef typename FixedArray< double,
+    itkGetStaticConstMacro(MovingImageDimension) >        MovingImageDerivativeScalesType;
 
   /** Typedefs for the ImageSampler. */
   typedef ImageSamplerBase< FixedImageType >              ImageSamplerType;
@@ -181,6 +184,17 @@ public:
    * This method allows the user to inspect this setting. */ 
   itkGetConstMacro( UseFixedImageLimiter, bool );
   itkGetConstMacro( UseMovingImageLimiter, bool );
+
+  /** You may specify a scaling vector for the moving image derivatives.
+   * If the UseMovingImageDerivativeScales is true, the moving image derivatives
+   * are multiplied by the moving image derivative scales (elementwise)
+   * You may use this to avoid deformations in the z-dimension, for example,
+   * by setting the moving image derivative scales to (1,1,0).
+   * This is a rather experimental feature. In most cases you do not need it. */
+  itkSetMacro( UseMovingImageDerivativeScales, bool );
+  itkGetConstMacro( UseMovingImageDerivativeScales, bool );
+  itkSetMacro( MovingImageDerivativeScales, MovingImageDerivativeScalesType );
+  itkGetConstReferenceMacro( MovingImageDerivativeScales, MovingImageDerivativeScalesType );
   
   /** Initialize the Metric by making sure that all the components
    *  are present and plugged together correctly.
@@ -390,6 +404,8 @@ private:
   bool    m_UseFixedImageLimiter;
   bool    m_UseMovingImageLimiter;
   double  m_RequiredRatioOfValidSamples;
+  bool    m_UseMovingImageDerivativeScales;
+  MovingImageDerivativeScalesType m_MovingImageDerivativeScales;
     
   /** This member should only be directly accessed by the
    * EvaluateTransformJacobian method. */

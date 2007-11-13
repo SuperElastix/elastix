@@ -204,16 +204,16 @@ namespace elastix
       {
         /** Try the default_entry_nr if the entry_nr is not found. */
         unsigned int uintdefault = static_cast<unsigned int>( default_entry_nr );
-        ret |= this->ReadParameter( param, name_field, uintdefault, true );
-        ret |= this->ReadParameter( param, name_field, entry_nr, true );
-        ret |= this->ReadParameter( param, fullname.c_str(), uintdefault, true );
-        ret |= this->ReadParameter( param, fullname.c_str(), entry_nr, true );
+        ret &= this->ReadParameter( param, name_field, uintdefault, true );
+        ret &= this->ReadParameter( param, name_field, entry_nr, true );
+        ret &= this->ReadParameter( param, fullname.c_str(), uintdefault, true );
+        ret &= this->ReadParameter( param, fullname.c_str(), entry_nr, true );
       }
       else
       {
         /** Just try the entry_nr. */
-        ret |= this->ReadParameter( param, name_field, entry_nr, true );
-        ret |= this->ReadParameter( param, fullname.c_str(), entry_nr, true );
+        ret &= this->ReadParameter( param, name_field, entry_nr, true );
+        ret &= this->ReadParameter( param, fullname.c_str(), entry_nr, true );
       }
       if ( ret && !silent )
       {
