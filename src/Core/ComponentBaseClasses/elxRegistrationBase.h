@@ -119,9 +119,9 @@ using namespace itk;
      */
     virtual bool ReadMaskParameters(
       UseMaskErosionArrayType & useMaskErosionArray,
-      unsigned int nrOfMasks,
+      const unsigned int nrOfMasks,
       const std::string & whichMask,
-      unsigned int level ) const;
+      const unsigned int level ) const;
 		
 	protected:
 
