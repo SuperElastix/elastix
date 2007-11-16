@@ -17,62 +17,66 @@ namespace elastix
 		bool RegistrationBase<TElastix>
     ::ReadMaskParameters( 
     UseMaskErosionArrayType & useMaskErosionArray,
-    unsigned int nrOfMasks, const std::string & whichMask,
-    unsigned int level ) const
+    const unsigned int nrOfMasks,
+    const std::string & whichMask,
+    const unsigned int level ) const
 	{    
-    /** Read whether mask erosion is wanted, if any masks were supplied */
+    /** Read whether mask erosion is wanted, if any masks were supplied. */
 
     /** Bool that remembers if mask erosion is wanted in any of the masks 
-     * remains false when no masks are used. This bool will be output. */
+     * remains false when no masks are used. This bool will be output.
+     */
     bool useMaskErosion = false; 
 
-    /** Array of bools, that remembers for each mask if erosion is wanted */
+    /** Array of bools, that remembers for each mask if erosion is wanted. */
     useMaskErosionArray.resize( nrOfMasks, false );
     
-    /** "ErodeFixedMask" or "ErodeMovingMask" */
-    std::string whichErodeMaskOption("Erode");
+    /** "ErodeFixedMask" or "ErodeMovingMask". */
+    std::string whichErodeMaskOption( "Erode" );
     whichErodeMaskOption += whichMask;
     whichErodeMaskOption += "Mask";
 
-    /** Read the parameters */
+    /** Read the parameters. */
     if ( nrOfMasks > 0 )
     {
-      /** Default values for all masks. Look for ErodeMask, or Erode<Fixed,Moving>Mask */
-      std::string erosionOrNot = "true";
+      /** Default values for all masks. Look for ErodeMask, or Erode<Fixed,Moving>Mask. */
+      bool erosionOrNot = true;
 		  this->GetConfiguration()->ReadParameter( erosionOrNot,
-        "ErodeMask", "", level, 0, true);
+        "ErodeMask", "", level, 0, true );
       this->GetConfiguration()->ReadParameter( erosionOrNot,
-        whichErodeMaskOption.c_str(), "", level, 0);
-      if ( erosionOrNot == "true" )
+        whichErodeMaskOption.c_str(), "", level, 0 );
+      if ( erosionOrNot )
       {
-        /** fill with 'true's */
+        /** fill with 'true's. */
+        useMaskErosionArray.clear();
         useMaskErosionArray.resize( nrOfMasks, true );
       }
       /** Try to read an erode mask parameter given for a specified mask only:
-       * (ErodeFixedMask0 "true" "false" ) for example */
-      for (unsigned int i = 0; i < nrOfMasks; ++i )
+       * (ErodeFixedMask0 "true" "false" ) for example.
+       */
+      for ( unsigned int i = 0; i < nrOfMasks; ++i )
       {
         std::ostringstream makestring;
         makestring << whichErodeMaskOption << i; // key for parameter file
-        std::string erosionOrNot_i = erosionOrNot; // default value
+        bool erosionOrNot_i = erosionOrNot; // default value
         this->GetConfiguration()->ReadParameter( erosionOrNot_i,
           makestring.str().c_str(), "", level, 0, true );
-        if ( erosionOrNot_i == "true" )
+        if ( erosionOrNot_i )
         {
-          useMaskErosionArray[i] = true;
+          useMaskErosionArray[ i ] = true;
         }
         else
         {
-          useMaskErosionArray[i] = false;
+          useMaskErosionArray[ i ] = false;
         }
-        /** Check if mask erosion is wanted in any of the masks */
-        useMaskErosion |= useMaskErosionArray[i];
+        /** Check if mask erosion is wanted in any of the masks. */
+        useMaskErosion |= useMaskErosionArray[ i ];
       }
-    } // end if nrOfMasks >0
+    } // end if nrOfMasks > 0
 
     return useMaskErosion;
 
-  } // end ReadMaskParameters
+  } // end ReadMaskParameters()
 
 
   /**
