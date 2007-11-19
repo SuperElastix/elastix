@@ -8,6 +8,7 @@
 #include <queue>
 #include "itkObject.h"
 #include "itkDataObject.h"
+#include <itksys/SystemTools.hxx>
 
 #include "elxTimer.h"
 

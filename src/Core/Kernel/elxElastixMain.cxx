@@ -58,7 +58,6 @@ namespace elastix
 		if ( !g_LogFileStream.is_open() )
 		{
 			std::cerr << "ERROR: LogFile cannot be opened!" << std::endl;
-      std::cerr << "Did you create the output directory?" << std::endl;
 			return 1;
 		}
 

@@ -1,7 +1,6 @@
 #ifndef __elastix_cxx
 #define __elastix_cxx
 
-
 #include "elastix.h"
 
 int main( int argc, char **argv )
@@ -63,7 +62,8 @@ int main( int argc, char **argv )
 	ArgumentMapType argMap;
 	ParameterFileListType parameterFileList;
 	bool outFolderPresent = false;
-	std::string logFileName;
+  std::string outFolder = "";
+	std::string logFileName = "";
 
 	/** Put command line parameters into parameterFileList. */
 	for ( unsigned int i = 1; i < ( argc - 1 ); i += 2 )
@@ -73,7 +73,7 @@ int main( int argc, char **argv )
 		
 		if ( key == "-p" )
 		{
-			/** Queue the ParameterFileNames */
+			/** Queue the ParameterFileNames. */
 			nrOfParameterFiles++;
 			parameterFileList.push( 
 				ParameterFileListEntryType( key.c_str(), value.c_str() ) );
@@ -88,13 +88,16 @@ int main( int argc, char **argv )
 		{
 			if ( key == "-out" )
 			{
-				outFolderPresent = true;
-
 				/** Make sure that last character of the outputfolder equals a '/'. */
 				if ( value.find_last_of( "/" ) != value.size() - 1 )
 				{
 					value.append( "/" );
-				} 
+				}
+
+        /** Save this information. */
+        outFolderPresent = true;
+        outFolder = value;
+
 			} // end if key == "-out"
 			
 			/** Attempt to save the arguments in the ArgumentMap. */
@@ -127,14 +130,25 @@ int main( int argc, char **argv )
 	/** Check if the -out option is given. */
 	if ( outFolderPresent )
 	{
-		/** Setup xout. */
-    logFileName = argMap[ "-out" ] + "elastix.log";
-		int returndummy2 = elx::xoutSetup( logFileName.c_str() );
-		if ( returndummy2 )
-		{
-			std::cerr << "ERROR while setting up xout." << std::endl;
-		}
-		returndummy |= returndummy2;
+    /** Check if the output directory exists. */
+    bool outFolderExists = itksys::SystemTools::FileIsDirectory( outFolder.c_str() );
+    if ( !outFolderExists )
+    {
+      std::cerr << "ERROR: the output directory does not exist." << std::endl;
+      std::cerr << "You are responsible for creating it." << std::endl;
+      returndummy |= -2;
+    }
+    else
+    {
+      /** Setup xout. */
+      logFileName = outFolder + "elastix.log";
+      int returndummy2 = elx::xoutSetup( logFileName.c_str() );
+      if ( returndummy2 )
+      {
+        std::cerr << "ERROR while setting up xout." << std::endl;
+      }
+      returndummy |= returndummy2;
+    }
 	}
 	else
 	{
