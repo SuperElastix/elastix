@@ -41,17 +41,18 @@ int main( int argc, char **argv )
 	typedef TransformixMainType::ArgumentMapType			ArgumentMapType;
 	typedef ArgumentMapType::value_type						    ArgumentMapEntryType;
 
-	/** Declare an instance of the Transformix class.*/
+	/** Declare an instance of the Transformix class. */
 	TransformixMainPointer	transformix;
 
-	/** Initialize.*/
-	int											    returndummy = 0;
-	ArgumentMapType					    argMap;
-	bool										    outFolderPresent = false;
-	std::string							    logFileName;
+	/** Initialize. */
+	int								returndummy = 0;
+	ArgumentMapType		argMap;
+	bool							outFolderPresent = false;
+  std::string       outFolder = "";
+	std::string				logFileName = "";
 
 
-	/** Put command line parameters into parameterFileList.*/
+	/** Put command line parameters into parameterFileList. */
 	for ( unsigned int i = 1; i < argc - 1; i += 2 )
 	{	
 		std::string key( argv[ i ] );
@@ -61,21 +62,21 @@ int main( int argc, char **argv )
 		{
 			outFolderPresent = true;
 
-			/** Make sure that last character of the outputfolder equals a '/'.*/
+			/** Make sure that last character of the outputfolder equals a '/'. */
 			if ( value.find_last_of( "/" ) != value.size() - 1 )
 			{
 				value.append( "/" );
 			} 
 		} // end if key == "-out"
 
-		/** Attempt to save the arguments in the ArgumentMap.*/
+		/** Attempt to save the arguments in the ArgumentMap. */
 		if ( argMap.count( key ) == 0 )
 		{	
 			argMap.insert( ArgumentMapEntryType( key.c_str(), value.c_str() ) );
 		}
 		else
 		{
-			/** duplicate argument */
+			/** Duplicate arguments. */
 			std::cerr << "WARNING!" << std::endl;
 			std::cerr << "Argument "<< key.c_str() << "is only required once." << std::endl;
 			std::cerr << "Arguments " << key.c_str() << " " << value.c_str() << "are ignored" << std::endl;
@@ -84,26 +85,44 @@ int main( int argc, char **argv )
 	} // end for loop
 
 	/** The argv0 argument, required for finding the component.dll/so's. */
-	argMap.insert( ArgumentMapEntryType( "-argv0", argv[0] )  );
+	argMap.insert( ArgumentMapEntryType( "-argv0", argv[ 0 ] )  );
 
-	/** Check that the option "-p" is given.*/
+	/** Check that the option "-tp" is given. */
 	if ( argMap.count( "-tp" ) == 0 )
 	{
 		std::cerr << "ERROR: No CommandLine option \"-tp\" given!" << std::endl;
 		returndummy |= -1;
 	}
 
+  /** Check that at least one of the options "-in" or "-ipp" is given. */
+	if ( argMap.count( "-in" ) == 0 && argMap.count( "-ipp" ) == 0 )
+	{
+    std::cerr << "ERROR: At least one of the CommandLine options \"-in\" pr \"-ipp\" should be given!" << std::endl;
+		returndummy |= -1;
+	}
+
 	/** Check if the -out option is given and setup xout. */
 	if ( outFolderPresent )
 	{
-		/** Setup xout */
-    logFileName = argMap[ "-out" ] + "transformix.log" ;
-		int returndummy2 = elx::xoutSetup( logFileName.c_str() );
-		if ( returndummy2 )
-		{
-			std::cerr << "ERROR while setting up xout." << std::endl;
-		}
-		returndummy |= returndummy2;
+    /** Check if the output directory exists. */
+    bool outFolderExists = itksys::SystemTools::FileIsDirectory( outFolder.c_str() );
+    if ( !outFolderExists )
+    {
+      std::cerr << "ERROR: the output directory does not exist." << std::endl;
+      std::cerr << "You are responsible for creating it." << std::endl;
+      returndummy |= -2;
+    }
+    else
+    {
+      /** Setup xout. */
+      logFileName = argMap[ "-out" ] + "transformix.log" ;
+      int returndummy2 = elx::xoutSetup( logFileName.c_str() );
+      if ( returndummy2 )
+      {
+        std::cerr << "ERROR while setting up xout." << std::endl;
+      }
+      returndummy |= returndummy2;
+    }
 	}
 	else
 	{
@@ -111,7 +130,7 @@ int main( int argc, char **argv )
 		std::cerr << "ERROR: No CommandLine option \"-out\" given!" << std::endl;
 	}
 
-	/** Stop if some fatal errors occured */
+	/** Stop if some fatal errors occured. */
 	if ( returndummy )
 	{
 		return returndummy;
@@ -119,7 +138,7 @@ int main( int argc, char **argv )
 
 	elxout << std::endl;
 
-	/** Declare a timer, start it and print the start time.*/
+	/** Declare a timer, start it and print the start time. */
 	tmr::Timer::Pointer totaltimer = tmr::Timer::New();
 	totaltimer->StartTimer();
 	elxout << "Transformix is started at " <<
@@ -129,35 +148,35 @@ int main( int argc, char **argv )
 	 * ********************* START TRANSFORMATION *******************
 	 */
 
-	/** Set transformix.*/
+	/** Set transformix. */
 	transformix = TransformixMainType::New();
 	
-  /** Print a start message.*/
+  /** Print a start message. */
 	elxout << "Running Transformix with parameter file \""
 			<< argMap[ "-tp" ] << "\".\n" << std::endl;
 
-	/** Run transformix.*/
+	/** Run transformix. */
 	returndummy = transformix->Run( argMap );
 	
-	/** Check if runned without errors.*/
+	/** Check if runned without errors. */
 	if ( returndummy != 0 )
 	{
 		xl::xout["error"] << "Errors occured" << std::endl;
 		return returndummy;
 	}
 
-	/** Stop timer and print it.*/
+	/** Stop timer and print it. */
 	totaltimer->StopTimer();
 	elxout << "\nTransformix has finished at " <<
 		totaltimer->PrintStopTime() << "." << std::endl;
 	elxout << "Elapsed time: " <<
 		totaltimer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
 
-	/** Clean up */
+	/** Clean up. */
 	transformix = 0;
 	TransformixMainType::UnloadComponents();
 
-	/** Exit and return the error code */
+	/** Exit and return the error code. */
 	return returndummy;
 
 } // end main
@@ -171,17 +190,17 @@ void PrintHelp(void)
 {
 	std::cout << "*********** transformix help: ***********\n\n";
 
-	/** What is transformix?*/
+	/** What is transformix? */
 	std::cout << "Transformix applies a transform on an input image." << std::endl;
 	std::cout << "The transform is specified in the transform-parameter file."
 		<< std::endl << std::endl;
 
-	/** Mandatory argments.*/
+	/** Mandatory argments. */
 	std::cout << "Call transformix from the command line with mandatory arguments:" << std::endl;
 	std::cout << "-out      output directory" << std::endl;
 	std::cout << "-tp       transform-parameter file, only 1" << std::endl << std::endl;
 
-	/** Optional arguments.*/
+	/** Optional arguments. */
 	std::cout << "Optional extra commands:" << std::endl;
 	std::cout << "-in       input image to deform" << std::endl;
 	std::cout << "-ipp      file containing input-image points" << std::endl;
@@ -191,16 +210,17 @@ void PrintHelp(void)
 	std::cout << "-threads  set the maximum number of threads of transformix"	<< std::endl;
 	std::cout << "-ipt      Moving internal pixel type" << std::endl;
 	std::cout << "-opt      Fixed internal pixel type" << std::endl;
+  std::cout << "At least one of the options \"-in\" or \"-ipp\" should be given." << std::endl;
 	std::cout << "If \"-ipt\" and/or \"-opt\" are not given, transformix attempts to read them from the transform-parameter file"
 		<< std::endl << std::endl;
 	
-	/** The parameter file.*/
+	/** The parameter file. */
 	std::cout << "The transform-parameter file must contain all the information necessary for transformix to run properly. That includes which transform to use, with which parameters, etc." << std::endl;
 	std::cout << "For a usable transform-parameter file, ask us." << std::endl << std::endl;
 
 	std::cout << "Need further help? Ask Marius and/or Stefan. :-)" << std::endl;
 
-} // end PrintHelp
+} // end PrintHelp()
 
 
 #endif // end #ifndef __transformix_CXX_

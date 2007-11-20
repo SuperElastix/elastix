@@ -150,7 +150,7 @@ namespace elastix
 		 * command line parameters entered by the user.
 		 */		
 		int dummy = this->m_Configuration->Initialize( argmap );
-		if (dummy)
+		if ( dummy )
 		{
 			xout["error"] << "ERROR: Something went wrong during initialisation of the configuration object." << std::endl;
 		}
