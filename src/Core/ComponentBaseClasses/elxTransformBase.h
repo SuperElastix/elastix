@@ -40,6 +40,16 @@ namespace elastix
 	 * \commandlinearg -t0: optional argument for elastix for specifying an initial transform
 	 *		parameter file. \n
 	 *		example: <tt>-t0 TransformParameters.txt</tt> \n
+   * \commandlinearg -ipp: optional argument for transformix for specifying a set of points
+   *    that have to be transformed.\n
+   *		example: <tt>-ipp inputPoints.txt</tt> \n
+   *    The inputPoints.txt file should be structured: first line should be "index" or
+   *    "point", depending if the user supplies voxel indices or real world coordinates.
+   *    The second line should be the number of points that should be transformed. The
+   *    third and following lines give the indices or points.\n
+   *    It is also possible to deform all points, thereby generating a deformation field
+   *    image. This is done by:\n
+   *		example: <tt>-ipp all</tt> \n
 	 *
 	 * \ingroup Transforms
 	 * \ingroup ComponentBaseClasses
