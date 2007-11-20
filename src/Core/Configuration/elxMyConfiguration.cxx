@@ -5,8 +5,8 @@
 
 namespace elastix
 {
-	
 	using namespace itk;
+
 
 	/**
 	 * ********************* Constructor ****************************
@@ -20,7 +20,7 @@ namespace elastix
 		this->m_ElastixLevel = 0;
     this->m_Silent = false;
 
-	} // end Constructor
+	} // end Constructor()
 	
 
   /**
@@ -59,7 +59,7 @@ namespace elastix
 		/** Return a value.*/
 		return 0;
 
-  } // end PrintParameterFile
+  } // end PrintParameterFile()
 	
 
 	/**
@@ -71,7 +71,7 @@ namespace elastix
 	int MyConfiguration::BeforeAll(void)
 	{
     return this->PrintParameterFile();
-	} // end BeforeAll
+	} // end BeforeAll()
 
   
 	/**
@@ -83,7 +83,7 @@ namespace elastix
 	int MyConfiguration::BeforeAllTransformix(void)
 	{
     return this->PrintParameterFile();
-	} // end BeforeAllTransformix
+	} // end BeforeAllTransformix()
 
 
 	/**
@@ -107,12 +107,12 @@ namespace elastix
 
 		if ( p != "" && tp == "" )
 		{
-			/** elastix called Initialize().*/
+			/** elastix called Initialize(). */
 			this->SetParameterFileName( p.c_str() );
 		}
 		else if ( p == "" && tp != "" )
 		{
-			/** transformix called Initialize().*/
+			/** transformix called Initialize(). */
 			this->SetParameterFileName( tp.c_str() );
 		}
 		else if ( p == "" && tp == "" )
@@ -124,13 +124,13 @@ namespace elastix
 		}
 		else
 		{
-			/** Both "p" and "tp" are used, which is prohibited.*/
+			/** Both "p" and "tp" are used, which is prohibited. */
 			xl::xout["error"] << "ERROR: Both \"-p\" and \"-tp\" are used, which is prohibited."
 				<< std::endl;
 			return 1;
 		}
 
-		/** Open the ParameterFile.*/
+		/** Open the ParameterFile. */
     try 
     {
 		  this->m_ParameterFile.Initialize( this->m_ParameterFileName.c_str() );
@@ -144,15 +144,15 @@ namespace elastix
 
 		this->m_Initialized = true;
 
-    /** Check in the parameter file if silence is desired (less warnings) */
+    /** Check in the parameter file if silence is desired (less warnings). */
     bool silence = false;
-    this->ReadParameter( silence, "Silent", 0, true);
-    this->SetSilent(silence);
+    this->ReadParameter( silence, "Silent", 0, true );
+    this->SetSilent( silence );
 
 		/** Return a value.*/
 		return 0;
 
-	} // end Initialize
+	} // end Initialize()
 
 
 	/**
@@ -161,11 +161,11 @@ namespace elastix
 	 * Check if Initialized.
 	 */
 
-	bool MyConfiguration::Initialized(void) const
+	bool MyConfiguration::Initialized( void ) const
 	{
 		return this->m_Initialized;
 
-	} // end Initialized
+	} // end Initialized()
 
 
 	/**
@@ -184,7 +184,7 @@ namespace elastix
 			return this->m_ArgumentMap[ key ].c_str();
 		}
 
-	} // end GetCommandLineArgument
+	} // end GetCommandLineArgument()
 
 
 	/**
@@ -199,8 +199,50 @@ namespace elastix
 		this->m_ArgumentMap.erase( key );
 		this->m_ArgumentMap.insert( EntryType( key, value ) );
 
-	} // end SetCommandLineArgument
+	} // end SetCommandLineArgument()
 
+
+  /**
+	 * ****************** ReadParameter ********************
+   * Provide 'support' for doubles, by converting them to float.
+	 */
+
+  int MyConfiguration::ReadParameter( double & param,
+    const char * name_field,
+    const unsigned int entry_nr,
+    bool silent )
+   {
+     float floatparam = static_cast<float>( param );
+     int dummy =  this->ReadParameter( floatparam, name_field, entry_nr, silent );
+     param = static_cast<double>( floatparam );
+
+     return dummy;
+
+   } // end ReadParameter()
+
+
+  /**
+	 * ****************** ReadParameter ********************
+   * Provide 'support' for bools, by using strings and checking for "true" and "false".
+	 */
+
+  int MyConfiguration::ReadParameter( bool & param,
+    const char * name_field,
+    const unsigned int entry_nr,
+    bool silent )
+  {
+    std::string stringparam;
+    if ( param ) stringparam = "true";
+    else stringparam = "false";
+    
+    int dummy =  this->ReadParameter( stringparam, name_field, entry_nr, silent );
+    
+    if ( stringparam == "true" ) param = true;
+    else param = false;
+
+		return dummy;
+
+  } // end ReadParameter()
 
 
 } // end namespace elastix

@@ -60,22 +60,22 @@ namespace elastix
 		/** Standard part of all itk objects. */
 		itkTypeMacro( MyConfiguration, Object );
 		
-		/** Typedef's.*/
+		/** Typedef's. */
 		typedef VPF::ParameterFile		ParameterFileType;
 		
 		/** Pass the command line arguments as a map. 
 		 * It should contain -p \<parfile\> or -tp \<parfile\>.
-		 * The specified parameter file is read in memory. */
-		virtual int Initialize(ArgumentMapType & _arg);
+		 * The specified parameter file is read in memory.
+     */
+		virtual int Initialize( ArgumentMapType & _arg );
 
 		/** True, if Initialize was succesfully called. */
-		virtual bool Initialized(void) const; //to elxconfigurationbase
+		virtual bool Initialized( void ) const; //to elxconfigurationbase
 
 		/** Get and Set CommandLine arguments into the argument map.*/
 		const char * GetCommandLineArgument( const char * key ) const;
 		void SetCommandLineArgument( const char * key, const char * value );
 
-//		int ReadParameter(double param, const char * name_field, const unsigned int entry_nr);
 		/**
 		* Use this function to read a parameter from the parameter
 		* file. 
@@ -99,90 +99,73 @@ namespace elastix
     * the calls to this function
 		*/
 		template <class T>
-		int ReadParameter( T & param, const char * name_field, const unsigned int entry_nr, bool silent = false )
-		{			
-			VPF::ReturnStatusType ret = VPF::INVALID;
-			try 
+		int ReadParameter( T & param, const char * name_field,
+      const unsigned int entry_nr, bool silent )
+    {
+      VPF::ReturnStatusType ret = VPF::INVALID;
+      try
       {
-        ret = VPF::set(param, m_ParameterFile[name_field][entry_nr]);
+        ret = VPF::set( param, m_ParameterFile[ name_field ][ entry_nr ] );
       }
       catch ( itk::ExceptionObject & excp )
       {
         if ( !silent )
         {
-          xl::xout["error"] << "ERROR: Unexpected error while reading parameter file.\n" 
+          xl::xout["error"] << "ERROR: Unexpected error while reading parameter file.\n"
             << "Parameter file reader reports:\n"
-            << excp 
+            << excp
             << "\nDefault value will be assumed."
             << std::endl;
         }
         return 1;
       }
 
-			/** Very basic error-checking.*/
-			if ( ret == VPF::INVALID)
-			{
-				if (!silent && !this->GetSilent() )
-				{
-					xl::xout["warning"] << "WARNING: Cannot find entry " << entry_nr <<
-						" in the field " << name_field << "." << std::endl;
-					xl::xout["warning"] << "         Default value " << param <<
-						" is assumed." << std::endl;
-				}
-				
-				/* param now still contains its original value!*/
-				return 1;
-			}
+      /** Very basic error-checking. */
+      if ( ret == VPF::INVALID )
+      {
+        if ( !silent && !this->GetSilent() )
+        {
+          xl::xout["warning"] << "WARNING: Cannot find entry " << entry_nr
+            << " in the field " << name_field << "." << std::endl;
+          xl::xout["warning"] << "         Default value " << param
+            << " is assumed." << std::endl;
+        }
 
-			/* param now contains the value from the parameterfile!*/
-			
-			return 0;
+        /* param now still contains its original value. */
+        return 1;
+      }
 
-		} // end ReadParameter; this function must be defined here, otherwise the compiler cannot find it (because it's a template)
+      /* param now contains the value from the parameterfile. */
+      return 0;
+
+    } // end ReadParameter()
+
+    /** ReadParameter: with three inputs. */
+    template <class T>
+		int ReadParameter( T & param, const char * name_field,
+      const unsigned int entry_nr )
+    {
+		  return ReadParameter( param, name_field, entry_nr, false );
+		}
 		
-		/** Provide 'support' for doubles, by converting them to float */
-		int ReadParameter(double & param, const char * name_field, const unsigned int entry_nr, bool silent)
-		{
-			float floatparam = static_cast<float>( param );
-			int dummy =  this->ReadParameter( floatparam, name_field, entry_nr, silent );
-			param = static_cast<double>( floatparam );
-			return dummy;
+		/** Provide 'support' for doubles. */
+		int ReadParameter( double & param, const char * name_field,
+      const unsigned int entry_nr, bool silent );
 
-		} // end ReadParameter
-
-		int ReadParameter(double & param, const char * name_field, const unsigned int entry_nr)
+		int ReadParameter( double & param, const char * name_field,
+      const unsigned int entry_nr )
 		{
-		  return ReadParameter(param, name_field, entry_nr, false);
+		  return ReadParameter( param, name_field, entry_nr, false );
 		}
 
-    /** Provide 'support' for bools, by using strings and checking for "true" and "false" */
-		int ReadParameter(bool & param, const char * name_field, const unsigned int entry_nr, bool silent)
+    /** Provide 'support' for bools. */
+		int ReadParameter( bool & param, const char * name_field,
+      const unsigned int entry_nr, bool silent );
+		
+    int ReadParameter( bool & param, const char * name_field,
+      const unsigned int entry_nr )
 		{
-      std::string stringparam;
-      if (param)
-      {
-        stringparam = "true";
-      }
-      else
-      {
-        stringparam = "false";
-      }
-			int dummy =  this->ReadParameter( stringparam, name_field, entry_nr, silent );
-      if ( stringparam == "true" )
-      {
-        param = true;
-      }
-      else
-      {
-        param = false;
-      }
-			return dummy;
-
-		} // end ReadParameter
-
-    int ReadParameter(bool & param, const char * name_field, const unsigned int entry_nr)
-		{
-		  return ReadParameter(param, name_field, entry_nr, false);
+		  return ReadParameter( param, name_field, entry_nr, false );
 		}
 
     /** Convenience function to read parameters while specifying some more defaults.
@@ -193,12 +176,14 @@ namespace elastix
      * the entry_nr used as a default when the entry_nr cannot be found. 
      */     
     template <class T>
-		int ReadParameter( T & param, const char * name_field, const char * prefix,
-      const unsigned int entry_nr, int default_entry_nr, bool silent = false )
-		{
+		int ReadParameter( T & param, const char * name_field,
+      const char * prefix, const unsigned int entry_nr,
+      int default_entry_nr, bool silent )
+    {
       std::string fullname( prefix );
       fullname += name_field;
       int ret = 1;
+
       /** Silently try to read the parameter. */
       if ( default_entry_nr >= 0 )
       {
@@ -215,16 +200,29 @@ namespace elastix
         ret &= this->ReadParameter( param, name_field, entry_nr, true );
         ret &= this->ReadParameter( param, fullname.c_str(), entry_nr, true );
       }
+
+      /** If we haven't found anything, give a warning that the default value
+      * provided by the caller is used.
+      */
       if ( ret && !silent )
       {
-        /** We haven't found anything, give a warning that the default value
-         * provided by the caller is used. */
         return this->ReadParameter( param, name_field, entry_nr, false );
       }
-      return ret;
-    } // end ReadParameter
 
-		/** Get/Set the name of the parameterFileName.*/
+      return ret;
+
+    } // end ReadParameter()
+
+    /** ReadParameter: with five inputs. */
+    template <class T>
+		int ReadParameter( T & param, const char * name_field,
+      const char * prefix, const unsigned int entry_nr,
+      int default_entry_nr )
+    {
+      return ReadParameter( param, name_field, prefix, entry_nr, default_entry_nr, false );
+    }
+
+    /** Get/Set the name of the parameterFileName.*/
 		itkGetStringMacro( ParameterFileName );
 		itkSetStringMacro( ParameterFileName );
 
@@ -233,16 +231,16 @@ namespace elastix
 		itkGetConstMacro( ElastixLevel, unsigned int );
 
     /** Set/Get whether warnings are allowed to be printed, when reading a parameter */
-    itkSetMacro(Silent, bool);
-    itkGetConstMacro(Silent, bool);
+    itkSetMacro( Silent, bool );
+    itkGetConstMacro( Silent, bool );
 
 		/** Methods that is called at the very beginning of elastixTemplate::Run.
      * \li Prints the parameter file  */
-		virtual int BeforeAll(void);
+		virtual int BeforeAll( void );
 
     /** Methods that is called at the very beginning of elastixTemplate::ApplyTransform.
      * \li Prints the parameter file  */
-    virtual int BeforeAllTransformix(void);
+    virtual int BeforeAllTransformix( void );
    
 	protected:
 
@@ -257,12 +255,12 @@ namespace elastix
 		unsigned int							m_ElastixLevel;
     bool                      m_Silent;
 
-    /** Print the parameter file to the logfile. Called by BeforeAll()
+    /** Print the parameter file to the logfile. Called by BeforeAll().
      * This function is not really generic. It's just added because it needs to be
-     * called by both BeforeAll and BeforeAllTransformix   */
-    virtual int PrintParameterFile(void);
-    
-		
+     * called by both BeforeAll and BeforeAllTransformix.
+     */
+    virtual int PrintParameterFile( void );
+
 	private:
 
 		MyConfiguration( const Self& );	// purposely not implemented
