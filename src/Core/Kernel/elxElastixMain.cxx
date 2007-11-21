@@ -14,7 +14,6 @@
 #include "itkMultiThreader.h"
 
 
-
 namespace elastix
 {
 	using namespace xl;
@@ -192,38 +191,38 @@ namespace elastix
       return errorCode;
 		}
 
-    /** Set some information in the ElastixBase */
+    /** Set some information in the ElastixBase. */
 		this->GetElastixBase()->SetConfiguration( this->m_Configuration );
 		this->GetElastixBase()->SetComponentDatabase(this->s_CDB);
 		this->GetElastixBase()->SetDBIndex( this->m_DBIndex );
 
-    /** Populate the component containers */
+    /** Populate the component containers. */
     this->GetElastixBase()->SetRegistrationContainer(
-      this->CreateComponents( "Registration", "MultiResolutionRegistration", errorCode) );
+      this->CreateComponents( "Registration", "MultiResolutionRegistration", errorCode ) );
 
     this->GetElastixBase()->SetFixedImagePyramidContainer(
-      this->CreateComponents( "FixedImagePyramid", "FixedRecursiveImagePyramid", errorCode) );
+      this->CreateComponents( "FixedImagePyramid", "FixedRecursiveImagePyramid", errorCode ) );
 
-    this->GetElastixBase()->SetMovingImagePyramidContainer( 
-      this->CreateComponents( "MovingImagePyramid", "MovingRecursiveImagePyramid", errorCode) );
+    this->GetElastixBase()->SetMovingImagePyramidContainer(
+      this->CreateComponents( "MovingImagePyramid", "MovingRecursiveImagePyramid", errorCode ) );
       
     this->GetElastixBase()->SetInterpolatorContainer(
-      this->CreateComponents( "Interpolator", "BSplineInterpolator", errorCode) );
+      this->CreateComponents( "Interpolator", "BSplineInterpolator", errorCode ) );
 
     this->GetElastixBase()->SetMetricContainer(
-      this->CreateComponents( "Metric", "MattesMutualInformation", errorCode) );
+      this->CreateComponents( "Metric", "MattesMutualInformation", errorCode ) );
 
-    this->GetElastixBase()->SetOptimizerContainer(    
-      this->CreateComponents( "Optimizer", "RegularStepGradientDescent", errorCode) );
+    this->GetElastixBase()->SetOptimizerContainer(
+      this->CreateComponents( "Optimizer", "RegularStepGradientDescent", errorCode ) );
 
     this->GetElastixBase()->SetResampleInterpolatorContainer(
-      this->CreateComponents( "ResampleInterpolator", "FinalBSplineInterpolator", errorCode) );
+      this->CreateComponents( "ResampleInterpolator", "FinalBSplineInterpolator", errorCode ) );
       
     this->GetElastixBase()->SetResamplerContainer(
-      this->CreateComponents( "Resampler", "DefaultResampler", errorCode) );
+      this->CreateComponents( "Resampler", "DefaultResampler", errorCode ) );
       
     this->GetElastixBase()->SetTransformContainer(
-      this->CreateComponents( "Transform", "TranslationTransform", errorCode) );
+      this->CreateComponents( "Transform", "TranslationTransform", errorCode ) );
       
     /** Check if all component could be created. */
 		if ( errorCode != 0 )
@@ -234,13 +233,14 @@ namespace elastix
 		}
 		
 		/** Set the images and masks. If not set by the user, it is not a problem.
-		 * ElastixTemplate will try to load them from disk. */
+		 * ElastixTemplate will try to load them from disk.
+     */
 		this->GetElastixBase()->SetFixedImageContainer( this->GetFixedImageContainer() );
 		this->GetElastixBase()->SetMovingImageContainer( this->GetMovingImageContainer() );
     this->GetElastixBase()->SetFixedMaskContainer( this->GetFixedMaskContainer() );
 		this->GetElastixBase()->SetMovingMaskContainer( this->GetMovingMaskContainer() );
 
-    /** Set the initial transform, if it happens to be there */
+    /** Set the initial transform, if it happens to be there. */
 		this->GetElastixBase()->SetInitialTransform( this->GetInitialTransform() );
     
 		/** Run elastix! */
@@ -255,7 +255,7 @@ namespace elastix
 			errorCode = 1;
 		}
 
-    /** Return the final transform */
+    /** Return the final transform. */
     this->m_FinalTransform = this->GetElastixBase()->GetFinalTransform();
 
 		/** Store the images in ElastixMain. */
@@ -267,7 +267,7 @@ namespace elastix
 		/** Return a value. */
 		return errorCode;
 
-	} // end Run
+	} // end Run()
 
 
 	/**
@@ -282,7 +282,8 @@ namespace elastix
 		this->EnterCommandLineArguments( argmap );
 		return this->Run();
 
-	} // end Run
+	} // end Run()
+
 
 	/**
 	 * ************************** InitDBIndex ***********************
@@ -294,7 +295,7 @@ namespace elastix
 
 	int ElastixMain::InitDBIndex(void)
 	{
-		/** Only do something when the configuration object wasn't initialized yet.*/
+		/** Only do something when the configuration object wasn't initialized yet. */
 		if ( this->m_Configuration->Initialized() )
 		{			
 			/** FixedImagePixelType */
@@ -379,7 +380,7 @@ namespace elastix
 		/** Return an OK value. */
 		return 0;
 
-	} // end InitDBIndex
+	} // end InitDBIndex()
 
 
 	/**
@@ -391,7 +392,7 @@ namespace elastix
 		/** Call SetElastixLevel from MyConfiguration. */
 		this->m_Configuration->SetElastixLevel( level );
 
-	} // end SetElastixLevel
+	} // end SetElastixLevel()
 
 
 	/**
@@ -403,7 +404,7 @@ namespace elastix
 		/** Call GetElastixLevel from MyConfiguration. */
 		return this->m_Configuration->GetElastixLevel();
 
-	} // end GetElastixLevel
+	} // end GetElastixLevel()
 
 
 	/**
@@ -412,7 +413,7 @@ namespace elastix
 	 * Look for dlls, load them, and call the install function.
 	 */
 	
-	int ElastixMain::LoadComponents(void)
+	int ElastixMain::LoadComponents( void )
 	{
 		/** Create a ComponentDatabase. */
 		if ( this->s_CDB.IsNull() )
@@ -433,31 +434,31 @@ namespace elastix
 		/** Load the components. */
 		return this->s_ComponentLoader->LoadComponents( argv0 );
 		
-	} // end LoadComponents
+	} // end LoadComponents()
 
 		
 	/**
 	 * ********************* UnloadComponents **************************
 	 */
 	
-	void ElastixMain::UnloadComponents(void)
+	void ElastixMain::UnloadComponents( void )
 	{
-				
 		s_CDB = 0;
 		s_ComponentLoader->SetComponentDatabase( 0 );
 
-		if (s_ComponentLoader)	
+		if ( s_ComponentLoader )
 		{
 			s_ComponentLoader->UnloadComponents();
 		}
-	} // end UnloadComponents
+
+	} // end UnloadComponents()
 
 
   /**
    * ************************* GetElastixBase ***************************
    */
 
-  ElastixMain::ElastixBaseType * ElastixMain::GetElastixBase(void) const
+  ElastixMain::ElastixBaseType * ElastixMain::GetElastixBase( void ) const
   {
     ElastixBaseType * testpointer;
     /** Convert ElastixAsObject to a pointer to an ElastixBaseType. */
@@ -467,16 +468,17 @@ namespace elastix
       itkExceptionMacro( << "Probably GetElastixBase() is called before having called Run()");
     }
     return testpointer;
-  } // end GetElastixBase
+  } // end GetElastixBase()
 
 
   /**
    * ************************* CreateComponent ***************************
    */
 
-  ElastixMain::ObjectPointer ElastixMain::CreateComponent( const ComponentDescriptionType & name )
+  ElastixMain::ObjectPointer ElastixMain::CreateComponent(
+    const ComponentDescriptionType & name )
   {
-    /** A pointer to the ::New() function */
+    /** A pointer to the ::New() function. */
     PtrToCreator testcreator = 0;
     ObjectPointer testpointer = 0;
  		testcreator = this->s_CDB->GetCreator( name,	this->m_DBIndex );
@@ -487,7 +489,7 @@ namespace elastix
     }
     return testpointer;
 
-  } // end CreateComponent
+  } // end CreateComponent()
 
 
   /** 
@@ -506,7 +508,8 @@ namespace elastix
     objectContainer->Initialize();
 
     /** If the user hasn't specified any component names, use
-     * the default, and give a warning */
+     * the default, and give a warning.
+     */
     returncode = this->m_Configuration->ReadParameter(
       componentName, key.c_str(), componentnr, false );
     try
@@ -524,13 +527,13 @@ namespace elastix
       errorcode = 1;
       return objectContainer;
     }
-        
-    /** Check if more than one component name is given.  */
+
+    /** Check if more than one component name is given. */
     while ( returncode == 0 )
     {
       ++componentnr;
       returncode = this->m_Configuration->ReadParameter(
-        componentName, key.c_str() , componentnr, true );
+        componentName, key.c_str(), componentnr, true );
       if ( returncode == 0 )   
       {
         try
@@ -552,14 +555,14 @@ namespace elastix
     } // end while
 
     return objectContainer;
-  } // end CreateComponents
+  } // end CreateComponents()
 
 
   /**
    * *********************** SetProcessPriority *************************
    */
 
-  void ElastixMain::SetProcessPriority(void) const
+  void ElastixMain::SetProcessPriority( void ) const
   {
     /** If wanted, set the priority of this process high or below normal. */
 		std::string processPriority = "";
@@ -577,19 +580,20 @@ namespace elastix
 			#endif
 		}   
 
-  } // end SetProcessPriority
+  } // end SetProcessPriority()
 
 
   /**
    * *********************** SetMaximumNumberOfThreads *************************
    */
 
-  void ElastixMain::SetMaximumNumberOfThreads(void) const
+  void ElastixMain::SetMaximumNumberOfThreads( void ) const
   {
-    /** If wanted, set the priority of this process high or below normal. */
+    /** Get the number of threads from the command line. */
     std::string maximumNumberOfThreadsString = "";
 		maximumNumberOfThreadsString = this->m_Configuration->GetCommandLineArgument( "-threads" );
 
+    /** If supplied, set the maximum number of threads. */
     if ( maximumNumberOfThreadsString != "" )
     {
       const int maximumNumberOfThreads =
@@ -598,7 +602,7 @@ namespace elastix
         maximumNumberOfThreads );
     }
 
-  } // end SetMaximumNumberOfThreads
+  } // end SetMaximumNumberOfThreads()
 	
 		
 } // end namespace elastix

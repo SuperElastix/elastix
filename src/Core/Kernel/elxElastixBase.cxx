@@ -173,7 +173,7 @@ namespace elastix
 			}
 		#endif
 
-    /** Check for appearance of -threads, which specifies the maximum number of threads */
+    /** Check for appearance of -threads, which specifies the maximum number of threads. */
     check = "";
 		check = this->GetConfiguration()->GetCommandLineArgument( "-threads" );
 		if ( check == "" )
@@ -305,7 +305,7 @@ namespace elastix
       check = this->GetConfiguration()->GetCommandLineArgument( argused.c_str() );
       if ( check == "" )
 		  {
-        /** Both failed; return an error message, if desired */
+        /** Both failed; return an error message, if desired. */
         if ( printerrors )
         {
   			  xl::xout["error"] 
