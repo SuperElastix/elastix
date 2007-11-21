@@ -163,26 +163,29 @@ namespace elastix
             FixedImageInterpolatorType;
           typename FixedImageInterpolatorType::Pointer fixedImageInterpolator =
             FixedImageInterpolatorType::New();
+
           /** Set the SplineOrder, default value = 3. */
 	        unsigned int splineOrder = 3;
 		      this->GetConfiguration()->ReadParameter( splineOrder,
             "FixedImageBSplineInterpolationOrder", this->GetComponentLabel(), level, 0 );
           fixedImageInterpolator->SetSplineOrder( splineOrder );
-    		  randomCoordinateSampler->SetInterpolator(fixedImageInterpolator);
-          /** Set the UseRandomSampleRegion bool */
+    		  randomCoordinateSampler->SetInterpolator( fixedImageInterpolator );
+
+          /** Set the UseRandomSampleRegion bool. */
           bool useRandomSampleRegion = false;
           this->GetConfiguration()->ReadParameter( useRandomSampleRegion,
             "UseRandomSampleRegion", this->GetComponentLabel(), level, 0);
           randomCoordinateSampler->SetUseRandomSampleRegion( useRandomSampleRegion );
-          if (useRandomSampleRegion)
+          if ( useRandomSampleRegion )
           {
-            /** Set the SampleRegionSize */
+            /** Set the SampleRegionSize. */
             typename ImageRandomCoordinateSamplerType::InputImageSpacingType sampleRegionSize;
-            sampleRegionSize.Fill(1.0);
-            for (unsigned int i = 0; i < FixedImageDimension; ++i)
+            sampleRegionSize.Fill( 1.0 );
+            for ( unsigned int i = 0; i < FixedImageDimension; ++i )
             {
-              this->GetConfiguration()->ReadParameter( sampleRegionSize[i], "SampleRegionSize", 
-                this->GetComponentLabel(), level*FixedImageDimension + i, 0);
+              this->GetConfiguration()->ReadParameter(
+                sampleRegionSize[ i ], "SampleRegionSize", 
+                this->GetComponentLabel(), level * FixedImageDimension + i, 0 );
             }
             randomCoordinateSampler->SetSampleRegionSize( sampleRegionSize );
           }
@@ -193,30 +196,35 @@ namespace elastix
           typename ImageRandomSamplerFeatureControlledType::Pointer randomSamplerFeatureControlled
             = ImageRandomSamplerFeatureControlledType::New();
           randomSamplerFeatureControlled->SetNumberOfSamples( numberOfSpatialSamples );
-          /** Set the feature images, these are fixed image 1...end */
+
+          /** Set the feature images, these are fixed image 1...end. */
           const unsigned int nrFixIm = this->GetElastix()->GetNumberOfFixedImages();
           randomSamplerFeatureControlled->SetNumberOfFeatureImages( nrFixIm - 1 );
           for ( unsigned int f = 1; f < nrFixIm; ++f )
           {
-            randomSamplerFeatureControlled->SetFeatureImage( f-1, 
+            randomSamplerFeatureControlled->SetFeatureImage( f - 1, 
               this->GetElastix()->GetFixedImage( f ) );
           }
-          /** Set the UseXYZAsFeatures setting */
+
+          /** Set the UseXYZAsFeatures setting. */
           bool useXYZAsFeatures = false;
           this->GetConfiguration()->ReadParameter( useXYZAsFeatures,
-            "UseXYZAsFeatures", this->GetComponentLabel(), level, 0);
+            "UseXYZAsFeatures", this->GetComponentLabel(), level, 0 );
           randomSamplerFeatureControlled->SetUseXYZAsFeatures( useXYZAsFeatures );
-          /** Set the BucketSize setting */
+
+          /** Set the BucketSize setting. */
           unsigned int bucketSize = 5;
           this->GetConfiguration()->ReadParameter( bucketSize,
-            "BucketSize", this->GetComponentLabel(), level, 0);
+            "BucketSize", this->GetComponentLabel(), level, 0 );
           randomSamplerFeatureControlled->SetBucketSize( bucketSize );
-          /** Set the ErrorBound setting */
+
+          /** Set the ErrorBound setting. */
           double errorBound = 1.0;
           this->GetConfiguration()->ReadParameter( errorBound,
-            "ErrorBound", this->GetComponentLabel(), level, 0);
+            "ErrorBound", this->GetComponentLabel(), level, 0 );
           randomSamplerFeatureControlled->SetErrorBound( errorBound );
-          /** Store the image sampler pointer into the imageSampler variable */
+
+          /** Store the image sampler pointer into the imageSampler variable. */
           imageSampler = randomSamplerFeatureControlled;
         }
         else if ( imageSamplerType == "Grid" )
@@ -234,7 +242,8 @@ namespace elastix
           for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
           {
             spacing_dim = 2;
-            this->GetConfiguration()->ReadParameter( spacing_dim, "SampleGridSpacing", 
+            this->GetConfiguration()->ReadParameter(
+              spacing_dim, "SampleGridSpacing", 
               this->GetComponentLabel(), level * FixedImageDimension + dim, -1 );
             gridspacing[ dim ] = static_cast<SampleGridSpacingValueType>( spacing_dim );
           }
@@ -270,7 +279,7 @@ namespace elastix
 
     } // end if
 
-  } // end ConfigureImageSampler
+  } // end ConfigureImageSampler()
 
 
 	/**
@@ -278,7 +287,7 @@ namespace elastix
 	 */
 
 	template <class TElastix>
-    void MetricBase<TElastix>::SelectNewSamples(void)
+    void MetricBase<TElastix>::SelectNewSamples( void )
 	{
     /** Cast this to MetricWithSamplingType. */
     MetricWithSamplingType * thisAsMetricWithSampler
@@ -305,7 +314,7 @@ namespace elastix
       itkExceptionMacro( << "ERROR: The SelectNewSamples method is not implemented in your metric." );
     }
 
-	} // end SelectNewSamples
+	} // end SelectNewSamples()
 
   
   /**
@@ -332,16 +341,16 @@ namespace elastix
       return itk::NumericTraits<MeasureType>::Zero;
     }
 
-    /** Get the current image sampler */
+    /** Get the current image sampler. */
     typename ImageSamplerBaseType::Pointer currentSampler = 
       thisAsMetricWithSampler->GetImageSampler();
     if ( currentSampler.IsNull() )
     {
-      /** Again just a dummy implementation */
+      /** Again just a dummy implementation. */
       return itk::NumericTraits<MeasureType>::Zero;
     }
     
-    /** Try to cast the current Sampler to a FullSampler */
+    /** Try to cast the current Sampler to a FullSampler. */
     ImageFullSamplerType * testPointer = 
       dynamic_cast<ImageFullSamplerType *>( currentSampler.GetPointer() );
     if ( testPointer != 0 )
@@ -351,7 +360,8 @@ namespace elastix
     }
     
     /** We have to provide the metric a full sampler, calls its GetValue
-     * and set back its original sampler */
+     * and set back its original sampler.
+     */
     typedef typename ITKBaseType::FixedImageMaskType FixedImageMaskType;
     if ( this->m_ExactMetricSampler.IsNull() )
     {
@@ -366,16 +376,16 @@ namespace elastix
       currentSampler->GetInputImageRegion() );
     thisAsMetricWithSampler->SetImageSampler( this->m_ExactMetricSampler );
     
-    /** Compute the metric value on the full images */
+    /** Compute the metric value on the full images. */
     MeasureType exactValue = 
       this->GetAsITKBaseType()->GetValue(parameters);
     
-    /** reset the original sampler */
+    /** reset the original sampler. */
     thisAsMetricWithSampler->SetImageSampler( currentSampler );
 
     return exactValue;
         
-  } // end GetExactValue
+  } // end GetExactValue()
 
 
 } // end namespace elastix
