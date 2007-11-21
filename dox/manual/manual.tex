@@ -43,7 +43,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % main text
 
-\chapter{Image Registration}
+\chapter{Image Registration}\label{chp:Registration}
 
 \section{Introduction}
 
@@ -138,7 +138,7 @@ able to store the relevant information (e.g. mhd, DICOM).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Basic registration components}
+\chapter{Basic registration components}\label{chp:components}
 
 From the basic registration problem formulated as in Equation
 (\ref{eq:registration1}) and (\ref{eq:registration2}), several
@@ -463,38 +463,171 @@ introducing the capability to match smaller structures.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{\elastix}
+\chapter{\elastix}\label{chp:elastix}
 
 \section{Introduction}
 
-The development of \elastix started half to late 2003, and was
+The development of \elastix\ started half to late 2003, and was
 intended to facilitate our registration research. After some initial
-versions we decided to put the separate components of \elastix in
+versions we decided to put the separate components of \elastix\ in
 separate libraries. This resulted in major version 3.0 in November
-2004. \elastix 3.0 was also the first version that was made publicly
-available on the \elastix website, around the same time. The
+2004. \elastix\ 3.0 was also the first version that was made publicly
+available on the \elastix\ website, around the same time. The
 continued development brings us today (November 2007) to version 3.7.
 
-The website: \texttt{www.isi.uu.nl/Elastix}
+\begin{tabular}{l|l}
+what & where \\
+\hline
+website        & \texttt{http://www.isi.uu.nl/Elastix} \\
+CVS repository & \texttt{/shared/CVS/elastix/} (hosted at the ISI) \\
+WIKI           & \texttt{https://wiki.isi.uu.nl/bin/view/CADweb/ElastiX} \\
+FAQ            & \texttt{https://wiki.isi.uu.nl/bin/view/CADweb/ElastixFAQ}
+\end{tabular}
 
-CVS repository (hosted at the ISI): \texttt{/user/port/??}
+The website also contains a
+doxygen\footnote{\texttt{www.doxygen.org}} generated part that
+provides documentation of the source code. An overview of all
+available classes can be found at
+\texttt{www.isi.uu.nl/Elastix/doxygen/classes.html}. For each class a
+description of this class is given, together with information on how
+to use it in \elastix.
 
-History, website, where to find stuff, cvs place, where to find the
-FAQ
+\section{How to call \elastix}
 
-general code layout
+\elastix\ is a command line program. This means that you have to open
+a command line interface (a DOS-box, a shell) and type in an
+appropriate elastix command. This also means that there is no
+graphical user interface. Help on using the program can be acquired
+as follows:
+\begin{quote}
+\texttt{elastix --help}
+\end{quote}
+which will give a list of mandatory and optional arguments. The most
+basic command to run a registration is as follows:
+\begin{quote}
+\texttt{elastix -f fixedImage.ext -m movingImage.ext -out
+outputDirectory -p parameterFile.txt}
+\end{quote}
+where `\texttt{ext}' is the extension of the image files. The above
+arguments are mandatory. These are minimally needed to run \elastix.
+All output of \elastix\ is written to the output directory, which
+needs to be created before running \elastix. The output consists of a
+log file (\texttt{elastix.log}), and optionally the resulting
+registered image (\texttt{result.?.mhd}), the parameters of the
+transformation that relate the fixed and the moving image
+(\texttt{TransformParameters.?.txt}). The parameter file is an
+important file: in it is defined, in normal text, what kind of
+registration is performed (i.e. what metric, optimizer, etc.) and
+what the parameters are that define the registration. It gives a high
+amount of flexibility and control over the process. More information
+about the parameter file is given in Section \ref{sec:elastix:param}.
 
-\section{How to use \elastix}
+The use of masks is supported. They can be provided by adding
+\texttt{-fMask fixedMask.ext} and/or \texttt{-mMask movingMask.ext}
+to the command line. An initial transformation can be provided with a
+valid transform parameter file by adding \texttt{-t0
+TransformParameters.txt} to the command line. With the command line
+option \texttt{-threads unsigned\_int} the user can specify the
+maximum number of threads that \elastix\ will use.
 
-\section{The parameter file}
+On the \elastix\-website, in the `About' section, you can find an
+example on how to use the program. Maybe now is the time to try the
+example and see a registration in action.
+
+Running multiple registrations in succession, each possibly of a
+different type, and with the output of a previous registration as
+input to the next, can be done with \elastix\ in several ways. The
+first one is to run \elastix\ once with the first registration, and
+use its output (the \texttt{TransformParameter.0.txt} that can be
+found in the output directory) as input for a new run of \elastix\
+with the command line argument \texttt{-t0}. So:
+\begin{quote}
+\texttt{elastix -f ... -m ... -out out1 -p param1.txt} \\
+\texttt{elastix -f ... -m ... -out out2 -p param2.txt -t0
+out1/TransformParameters.0.txt} \\
+\texttt{elastix -f ... -m ... -out out3 -p param3.txt -t0
+out2/TransformParameters.0.txt}
+\end{quote}
+and so on. Another possibility is combine the registrations with one
+run of \elastix:
+\begin{quote}
+\texttt{elastix ... -p param1.txt -p param2.txt -p param3.txt}
+\end{quote}
+The transformations from each of the registrations are automatically
+combined.
+
+\section{General code layout}
+
+\section{The parameter file}\label{sec:elastix:param}
+
+The parameter file is a text file that defines the components of the
+registration and their parameter values. Supplying a parameter works
+as follows:
+\begin{quote}
+\texttt{(ParameterName value(s))}
+\end{quote}
+So parameters are provided between brackets, first the name, followed
+by one or more values. If the value if of type string then the values
+need to be quoted: \texttt{(ParameterName "value1" ... "valueN")}. If
+the values are of floating type, then at least one value behind the
+comma need to be given: \texttt{(ParameterName 1.3 3.0)}. Comments
+can be provided by adding `\texttt{//}' before a line. A minimal
+example of a valid parameter file is given in Appendix \ref{chp:ExampleParam}.
+A list of available parameters for each class is given at
+\texttt{www.isi.uu.nl/Elastix/doxygen/parameter.html}.
+
+Since the choice of the several components and the parameter values
+define the registration, it is very important to set them wisely.
+These choices is what makes the registration a success or a disaster.
+Therefore, a separate chapter is dedicated to the fine art of tuning
+a registration, see Chapter \ref{chp:Tutorial}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{\transformix}
+\chapter{\transformix}\label{chp:transformix}
 
 \section{Introduction}
 
-the time \transformix takes is built up of the following parts:
+By now you are able to at least run a registration, by calling
+\elastix\ correctly. It is often also useful to apply the
+transformation as found by the registration to another image. Maybe
+you want to apply the transformation to an original larger image to
+gain resolution. Or maybe you need the transformation to apply it to
+an atlas image. For those purposes a program called \transformix\ is
+available. It was developed simultaneously with \elastix.
+
+\section{How to call \transformix}
+
+Like \elastix\, \transformix is a command line driven program. You
+can get basic help on how to call it, by:
+\begin{quote}
+\texttt{transformix --help}
+\end{quote}
+which will give a list of mandatory and optional arguments. The most
+basic command is as follows:
+\begin{quote}
+\texttt{transformix -in inputImage.ext -out outputDirectory -tp
+TransformParameters.txt}
+\end{quote}
+This call will transform the input image and write it, together with
+a log file, to the output directory. The transformation you want to
+apply is defined in the so-called transform parameter file, see
+Section \ref{sec:transformix:tp}. If you want to deform a set or all
+points, the appropriate call is:
+\begin{quote}
+\texttt{transformix -ipp inputPoints.txt -out outputDirectory -tp
+TransformParameters.txt} \\
+\texttt{transformix -ipp all -out outputDirectory -tp
+TransformParameters.txt}
+\end{quote}
+This will create a file the deformed output points or a deformation
+field vector image. With the command line option \texttt{-threads
+unsigned\_int} the user can specify the maximum number of threads
+that \transformix\ will use.
+
+\section{Details}
+
+The run-time of \transformix is built up of the following parts:
 
 1. computing the b-spline decomposition 2. computing the deformation
 for each voxel 3. interpolating the input image for each voxel.
@@ -509,19 +642,17 @@ Step 1. is avoided by using a linear interpolator of course.
 Step 3 is faster when using linear interpolation instead of cubic
 interpolation. I don't know how much exactly.
 
-
 What is the complexity of FinalBSplineInterpolator? And of
 FinalLinearInterpolator? In required operations per voxel. Is that
 described in the docs, in some papers, or on the wiki?
 
+Memory consumption, see the wiki
 
-\section{How to use \transformix}
-
-\section{The transform parameter file}
+\section{The transform parameter file}\label{sec:transformix:tp}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Tutorial}
+\chapter{Tutorial}\label{chp:Tutorial}
 
 
 \section{General advice}
@@ -541,6 +672,94 @@ what to tune and what not to tune
 \section{Setup of the code}
 
 \section{Creating new modules}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\appendix
+
+\chapter{Example parameter file}\label{chp:ExampleParam}
+
+\begin{verbatim}
+//ImageTypes
+(FixedInternalImagePixelType "float")
+(FixedImageDimension 2)
+(MovingInternalImagePixelType "float")
+(MovingImageDimension 2)
+
+//Components
+(Registration "MultiResolutionRegistration")
+(FixedImagePyramid "FixedRecursiveImagePyramid")
+(MovingImagePyramid "MovingRecursiveImagePyramid")
+(Interpolator "BSplineInterpolator")
+(Metric "AdvancedMattesMutualInformation")
+(Optimizer "StandardGradientDescent")
+(ResampleInterpolator "FinalBSplineInterpolator")
+(Resampler "DefaultResampler")
+(Transform "EulerTransform")
+
+// ********** Pyramid
+
+// Total number of resolutions
+(NumberOfResolutions 3)
+
+
+// ********** Transform
+
+//(CenterOfRotation 128 128) center by default
+(AutomaticTransformInitialization "true")
+(HowToCombineTransforms "Compose")
+
+
+// ********** Optimizer
+
+// Maximum number of iterations in each resolution level:
+(MaximumNumberOfIterations 300 300 600)
+
+//SP: Param_a in each resolution level. a_k = a/(A+k+1)^alpha
+(SP_a 0.001)
+
+//SP: Param_alpha in each resolution level. a_k = a/(A+k+1)^alpha
+(SP_alpha 0.602)
+
+//SP: Param_A in each resolution level. a_k = a/(A+k+1)^alpha
+(SP_A 50.0)
+
+
+// ********** Metric
+
+//Number of grey level bins in each resolution level:
+(NumberOfHistogramBins 32)
+(FixedKernelBSplineOrder 1)
+(MovingKernelBSplineOrder 3)
+
+
+// ********** Several
+
+(WriteTransformParametersEachIteration "false")
+(WriteTransformParametersEachResolution "false")
+(ShowExactMetricValue "false")
+(ErodeMask "true")
+
+
+// ********** ImageSampler
+
+//Number of spatial samples used to compute the mutual information in each resolution level:
+(ImageSampler "RandomCoordinate")
+(NumberOfSpatialSamples 2048)
+(NewSamplesEveryIteration "true")
+
+
+// ********** Interpolator and Resampler
+
+//Order of B-Spline interpolation used in each resolution level:
+(BSplineInterpolationOrder 1)
+
+//Order of B-Spline interpolation used for applying the final deformation:
+(FinalBSplineInterpolationOrder 3)
+
+//Default pixel value for pixels that come from outside the picture:
+(DefaultPixelValue 0)
+\end{verbatim}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
