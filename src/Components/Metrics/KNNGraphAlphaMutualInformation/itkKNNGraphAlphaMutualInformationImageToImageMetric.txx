@@ -16,8 +16,8 @@ namespace itk
   KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     ::KNNGraphAlphaMutualInformationImageToImageMetric()
   {
-    this->SetComputeGradient(false); // don't use the default gradient for now
-    this->SetUseImageSampler(true);
+    this->SetComputeGradient( false ); // don't use the default gradient for now
+    this->SetUseImageSampler( true );
     this->m_Alpha = 0.5;
 
     this->m_BinaryKNNTreeFixed = 0;
@@ -38,7 +38,6 @@ namespace itk
   template <class TFixedImage, class TMovingImage>
   void
   KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
-    //::SetANNkDTree( unsigned int bucketSize = 2, std::string splittingRule = "ANN_KD_SL_MIDPT" )
     ::SetANNkDTree( unsigned int bucketSize, std::string splittingRule )
   {
     this->SetANNkDTree( bucketSize, splittingRule, splittingRule, splittingRule );
@@ -82,8 +81,6 @@ namespace itk
   template <class TFixedImage, class TMovingImage>
   void
   KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
-    //::SetANNbdTree( unsigned int bucketSize = 2, std::string splittingRule = "ANN_KD_SL_MIDPT",
-    //std::string shrinkingRule = "ANN_BD_SIMPLE" )
     ::SetANNbdTree( unsigned int bucketSize,
       std::string splittingRule,
       std::string shrinkingRule )
@@ -152,8 +149,6 @@ namespace itk
   template <class TFixedImage, class TMovingImage>
   void
   KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
-    //::SetANNStandardTreeSearch( unsigned int kNearestNeighbors = 5,
-    ///double errorBound = 0.0 )
     ::SetANNStandardTreeSearch(
       unsigned int kNearestNeighbors,
       double errorBound )
@@ -187,8 +182,6 @@ namespace itk
   template <class TFixedImage, class TMovingImage>
   void
   KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
-    //::SetANNFixedRadiusTreeSearch( unsigned int kNearestNeighbors = 5,
-    //double errorBound = 0.0, double squaredRadius = 0.0 )
     ::SetANNFixedRadiusTreeSearch(
       unsigned int kNearestNeighbors,
       double errorBound,
@@ -227,8 +220,6 @@ namespace itk
   template <class TFixedImage, class TMovingImage>
   void
   KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
-    //::SetANNPriorityTreeSearch( unsigned int kNearestNeighbors = 5,
-    //double errorBound = 0.0 )
     ::SetANNPriorityTreeSearch(
       unsigned int kNearestNeighbors,
       double errorBound )
@@ -622,19 +613,6 @@ namespace itk
     unsigned int k = this->m_BinaryKNNTreeSearcherFixed->GetKNearestNeighbors();
     double twoGamma = jointSize * ( 1.0 - this->m_Alpha );
 
-// tmp
-    std::cout << std::setprecision( 4 );
-    std::cout << std::showpoint;
-    for ( unsigned long i = 0; i < this->m_NumberOfPixelsCounted; i++ )
-    {
-      listSampleFixed->GetMeasurementVector(  i, z_F );
-      listSampleMoving->GetMeasurementVector( i, z_M );
-      listSampleJoint->GetMeasurementVector(  i, z_J );
-
-      std::cout << i << " " << z_F << " " << z_M << " " << z_J << std::endl;
-    }
-    std::cout << std::endl;
-
     /** Loop over all query points, i.e. all samples. */
     for ( unsigned long i = 0; i < this->m_NumberOfPixelsCounted; i++ )
     {
@@ -752,8 +730,6 @@ namespace itk
  
   /**
 	 * ************************ ComputeListSampleValuesAndDerivativePlusJacobian *************************
-   *
-   * 
 	 */
 
   template <class TFixedImage, class TMovingImage>
@@ -843,8 +819,6 @@ namespace itk
        */
       if ( sampleOk )
 			{
-        std::cout << ii << " " << fixedPoint << std::endl;
-
         /** Get the fixed image value. */
         const RealType & fixedImageValue = static_cast<RealType>(
           (*fiter).Value().m_ImageValue );
