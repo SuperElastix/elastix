@@ -52,8 +52,6 @@ namespace elastix
 
 		/** Set the fixedPyramidSchedule to the FixedImagePyramidSchedule given 
      * in the parameter-file.	The following parameter file fields can be used:
-     * MovingPyramidSchedule (deprecated)
-     * FixedPyramidSchedule  (deprecated)
      * ImagePyramidSchedule
      * FixedImagePyramidSchedule
      * FixedImagePyramid<i>Schedule, for the i-th fixed image pyramid used. 
@@ -65,21 +63,18 @@ namespace elastix
 			{
         int ijret = 1;
         const unsigned int entrynr = i * FixedImageDimension + j;
-        ijret &= this->m_Configuration->ReadParameter( fixedSchedule[ i ][ j ],
-					"MovingPyramidSchedule", entrynr, true ); //deprecated
-        ijret &= this->m_Configuration->ReadParameter( fixedSchedule[ i ][ j ],
-					"FixedPyramidSchedule", entrynr, true ); // deprecated
 				ijret &= this->m_Configuration->ReadParameter( fixedSchedule[ i ][ j ],
 					"ImagePyramidSchedule", entrynr, true );
         ijret &= this->m_Configuration->ReadParameter( fixedSchedule[ i ][ j ],
 					"FixedImagePyramidSchedule", entrynr, true );
         ijret &= this->m_Configuration->ReadParameter( fixedSchedule[ i ][ j ],
 					"Schedule", this->GetComponentLabel(), entrynr, -1, true );
-        /** remember if for at least one schedule element no value could be found */
+
+        /** Remember if for at least one schedule element no value could be found. */
         ret |= ijret;
       } // end for FixedImageDimension
 		} // end for numberOfResolutions
-    if (ret && !this->GetConfiguration()->GetSilent() )
+    if ( ret && !this->GetConfiguration()->GetSilent() )
     {
       xl::xout["warning"] << "WARNING: the fixed pyramid schedule is not fully specified!" << std::endl;
       xl::xout["warning"] << "A default pyramid schedule is used." << std::endl;
@@ -90,7 +85,7 @@ namespace elastix
 		  this->GetAsITKBaseType()->SetSchedule( fixedSchedule );
     }
 		
-	} // end SetFixedSchedule
+	} // end SetFixedSchedule()
 
 
 } // end namespace elastix

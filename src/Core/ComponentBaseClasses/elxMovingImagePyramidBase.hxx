@@ -52,8 +52,6 @@ namespace elastix
 
 		/** Set the movingPyramidSchedule to the MovingImagePyramidSchedule given 
      * in the parameter-file.	The following parameter file fields can be used:
-     * FixedPyramidSchedule (deprecated)
-     * MovingPyramidSchedule  (deprecated)
      * ImagePyramidSchedule
      * MovingImagePyramidSchedule
      * MovingImagePyramid<i>Schedule, for the i-th moving image pyramid used. 
@@ -65,17 +63,14 @@ namespace elastix
 			{
         int ijret = 1;
         const unsigned int entrynr = i * MovingImageDimension + j;
-        ijret &= this->m_Configuration->ReadParameter( movingSchedule[ i ][ j ],
-					"FixedPyramidSchedule", entrynr, true ); //deprecated
-        ijret &= this->m_Configuration->ReadParameter( movingSchedule[ i ][ j ],
-					"MovingPyramidSchedule", entrynr, true ); // deprecated
 				ijret &= this->m_Configuration->ReadParameter( movingSchedule[ i ][ j ],
 					"ImagePyramidSchedule", entrynr, true );
         ijret &= this->m_Configuration->ReadParameter( movingSchedule[ i ][ j ],
 					"MovingImagePyramidSchedule", entrynr, true );
         ijret &= this->m_Configuration->ReadParameter( movingSchedule[ i ][ j ],
 					"Schedule", this->GetComponentLabel(), entrynr, -1, true );
-        /** remember if for at least one schedule element no value could be found */
+
+        /** Remember if for at least one schedule element no value could be found. */
         ret |= ijret;
       } // end for MovingImageDimension
 		} // end for numberOfResolutions
@@ -90,7 +85,7 @@ namespace elastix
 		  this->GetAsITKBaseType()->SetSchedule( movingSchedule );
     }
 		
-	} // end SetMovingSchedule
+	} // end SetMovingSchedule()
 
 
 } // end namespace elastix
