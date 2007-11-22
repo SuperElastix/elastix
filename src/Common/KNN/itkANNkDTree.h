@@ -72,8 +72,14 @@ namespace itk
    
 	protected:
 		
+    /** Constructor. */
 		ANNkDTree();
-		virtual ~ANNkDTree();
+
+    /** Destructor. */
+    virtual ~ANNkDTree();
+
+    /** PrintSelf. */
+    virtual void PrintSelf( std::ostream& os, Indent indent ) const;
 
     /** Member variables. */
     ANNkDTreeType *         m_ANNTree;

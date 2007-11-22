@@ -16,18 +16,7 @@ namespace itk
 	{
     this->m_ShrinkingRule = ANN_BD_SIMPLE;
     
-  } // end Constructor
-
-
-  /**
-	 * ************************ Destructor *************************
-	 */
-
-	template < class TListSample >
-		ANNbdTree<TListSample>
-		::~ANNbdTree()
-	{
-  } // end Destructor
+  } // end Constructor()
 
 
   /**
@@ -59,7 +48,7 @@ namespace itk
       itkWarningMacro( << "WARNING: No such shrinking rule." );
     }
 
-  } // end SetShrinkingRule
+  } // end SetShrinkingRule()
 
 
   /**
@@ -77,7 +66,8 @@ namespace itk
       case ANN_BD_CENTROID: return "ANN_BD_CENTROID";
       case ANN_BD_SUGGEST:  return "ANN_BD_SUGGEST";
     }
-  } // end GetShrinkingRule
+
+  } // end GetShrinkingRule()
 
 
   /**
@@ -99,7 +89,23 @@ namespace itk
       this->m_SplittingRule, this->m_ShrinkingRule );
     
 
-  } // end GenerateTree
+  } // end GenerateTree()
+
+
+  /**
+	 * ************************ PrintSelf *************************
+	 */
+
+	template < class TListSample >
+    void
+    ANNbdTree<TListSample>
+		::PrintSelf( std::ostream& os, Indent indent ) const
+	{
+    Superclass::PrintSelf( os, indent );
+
+    os << indent << "ShrinkingRule: " << this->m_ShrinkingRule << std::endl;
+
+  } // end PrintSelf()
   
 
 } // end namespace itk

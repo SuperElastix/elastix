@@ -44,8 +44,11 @@ namespace itk
 
 	protected:
 		
+    /** Constructor. */
 		BinaryANNTreeBase();
-		virtual ~BinaryANNTreeBase();
+
+    /** Destructor. */
+    virtual ~BinaryANNTreeBase() {};
     
 	private:
 		

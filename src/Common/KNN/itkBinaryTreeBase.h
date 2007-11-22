@@ -42,42 +42,27 @@ namespace itk
     itkGetConstObjectMacro( Sample, SampleType );
 
     /** Get the number of data points. */
-    TotalFrequencyType GetNumberOfDataPoints(void) const
-    {
-      if ( this->m_Sample )
-      {
-        return this->m_Sample->GetTotalFrequency();
-      }
-      return NumericTraits< TotalFrequencyType >::Zero;
-    };
+    TotalFrequencyType GetNumberOfDataPoints( void ) const;
 
     /** Get the actual number of data points. */
-    TotalFrequencyType GetActualNumberOfDataPoints(void) const
-    {
-      if ( this->m_Sample )
-      {
-        return this->m_Sample->GetActualSize();
-      }
-      return NumericTraits< TotalFrequencyType >::Zero;
-    };
+    TotalFrequencyType GetActualNumberOfDataPoints( void ) const;
 
     /** Get the dimension of the input data. */
-    MeasurementVectorSizeType GetDataDimension( void ) const
-    {
-      if ( this->m_Sample )
-      {
-        return this->m_Sample->GetMeasurementVectorSize();
-      }
-      return NumericTraits< MeasurementVectorSizeType >::Zero;
-    }
+    MeasurementVectorSizeType GetDataDimension( void ) const;
     
     /** Generate the tree. */
-    virtual void GenerateTree(void) = 0;
+    virtual void GenerateTree( void ) = 0;
    
 	protected:
 		
+    /** Constructor. */
 		BinaryTreeBase();
-		virtual ~BinaryTreeBase();
+
+    /** Destructor. */
+    virtual ~BinaryTreeBase() {};
+
+    /** PrintSelf. */
+    virtual void PrintSelf( std::ostream& os, Indent indent ) const;
     
 	private:
 		

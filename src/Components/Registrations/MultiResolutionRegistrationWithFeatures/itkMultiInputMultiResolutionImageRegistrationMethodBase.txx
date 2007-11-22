@@ -698,7 +698,7 @@ namespace itk
   template < typename TFixedImage, typename TMovingImage >
   void
   MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage,TMovingImage>
-  ::PrintSelf(std::ostream& os, Indent indent) const
+  ::PrintSelf( std::ostream& os, Indent indent ) const
   {
     Superclass::PrintSelf( os, indent );
 
@@ -722,6 +722,18 @@ namespace itk
       os << this->m_FixedImageRegions[ i ] << " ";
     }
     os << "]" << std::endl;
+
+    os << indent << "FixedImageRegionPyramids: [ ";
+    for ( unsigned int i = 0; i < this->GetNumberOfFixedImageRegions(); ++i )
+    {
+      os << " [ ";
+      for ( unsigned int j = 0; j < this->m_FixedImageRegionPyramids[ i ].size(); ++j )
+      {
+        os << this->m_FixedImageRegionPyramids[ i ][ j ] << " ";
+      }
+      os << "]";
+    }
+    os << " ]" << std::endl;
     
     os << indent << "FixedImagePyramids: [ ";
     for ( unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i )
@@ -741,6 +753,13 @@ namespace itk
     for ( unsigned int i = 0; i < this->GetNumberOfInterpolators(); ++i )
     {
       os << this->m_Interpolators[ i ] << " ";
+    }
+    os << "]" << std::endl;
+
+    os << indent << "FixedImageInterpolators: [ ";
+    for ( unsigned int i = 0; i < this->GetNumberOfFixedImageInterpolators(); ++i )
+    {
+      os << this->m_FixedImageInterpolators[ i ] << " ";
     }
     os << "]" << std::endl;
 

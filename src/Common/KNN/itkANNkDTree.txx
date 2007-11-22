@@ -19,7 +19,7 @@ namespace itk
     this->m_SplittingRule = ANN_KD_SL_MIDPT;
     this->m_BucketSize = 1;
     
-  } // end Constructor
+  } // end Constructor()
 
 
   /**
@@ -31,7 +31,8 @@ namespace itk
 		::~ANNkDTree()
 	{
     ANNBinaryTreeCreator::DeleteANNkDTree( this->m_ANNTree );
-  } // end Destructor
+
+  } // end Destructor()
 
 
   /**
@@ -71,7 +72,7 @@ namespace itk
       itkWarningMacro( << "WARNING: No such spliting rule." );
     }
 
-  } // end SetSplittingRule
+  } // end SetSplittingRule()
 
 
   /**
@@ -91,7 +92,8 @@ namespace itk
       case ANN_KD_SL_FAIR:  return "ANN_KD_SL_FAIR";
       case ANN_KD_SUGGEST:  return "ANN_KD_SUGGEST";
     }
-  } // end GetSplittingRule
+
+  } // end GetSplittingRule()
 
 
   /**
@@ -111,8 +113,26 @@ namespace itk
     this->m_ANNTree = ANNBinaryTreeCreator::CreateANNkDTree(
       this->GetSample()->GetInternalContainer(), nop, dim, bcs, this->m_SplittingRule );
 
-  } // end GenerateTree
+  } // end GenerateTree()
   
+
+  /**
+	 * ************************ PrintSelf *************************
+	 */
+
+	template < class TListSample >
+    void
+    ANNkDTree<TListSample>
+		::PrintSelf( std::ostream& os, Indent indent ) const
+	{
+    Superclass::PrintSelf( os, indent );
+
+    os << indent << "ANNTree: " << this->m_ANNTree << std::endl;
+    os << indent << "SplittingRule: " << this->m_SplittingRule << std::endl;
+    os << indent << "BucketSize: " << this->m_BucketSize << std::endl;
+
+  } // end PrintSelf()
+
 
 } // end namespace itk
 

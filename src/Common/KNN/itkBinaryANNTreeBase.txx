@@ -17,16 +17,6 @@ namespace itk
   } // end Constructor
 
 
-  /**
-	 * ************************ Destructor *************************
-	 */
-
-	template < class TListSample >
-		BinaryANNTreeBase<TListSample>
-		::~BinaryANNTreeBase()
-	{
-  } // end Destructor
-
 } // end namespace itk
 
 

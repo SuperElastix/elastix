@@ -55,8 +55,14 @@ namespace itk
    
 	protected:
 		
+    /** Constructor. */
 		ANNbdTree();
-		virtual ~ANNbdTree();
+
+    /** Destructor. */
+    virtual ~ANNbdTree() {};
+
+    /** PrintSelf. */
+    virtual void PrintSelf( std::ostream& os, Indent indent ) const;
 
     /** Member variables. */
     ShrinkingRuleType   m_ShrinkingRule;
