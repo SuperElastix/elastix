@@ -217,11 +217,23 @@ public:
 
   /** Get alpha from alpha - mutual information. */
   itkGetConstReferenceMacro( Alpha, double );
+
+  /** Avoid division by a small number. */
+  itkSetClampMacro( AvoidDivisionBy, double, 0.0, 1.0 );
+
+  /** Avoid division by a small number. */
+  itkGetConstReferenceMacro( AvoidDivisionBy, double );
   
 protected:
+
+  /** Constructor. */
   KNNGraphAlphaMutualInformationImageToImageMetric();
+
+  /** Destructor. */
   virtual ~KNNGraphAlphaMutualInformationImageToImageMetric() {};
-  void PrintSelf(std::ostream& os, Indent indent) const;
+
+  /** PrintSelf. */
+  virtual void PrintSelf( std::ostream& os, Indent indent ) const;
 
   /** Member variables. */
   typename BinaryKNNTreeType::Pointer       m_BinaryKNNTreeFixed;
@@ -233,6 +245,7 @@ protected:
   typename BinaryKNNTreeSearchType::Pointer m_BinaryKNNTreeSearcherJoint;
 
   double   m_Alpha;
+  double   m_AvoidDivisionBy;
 
 private:
   KNNGraphAlphaMutualInformationImageToImageMetric(const Self&);  //purposely not implemented

@@ -19,7 +19,7 @@ using namespace itk;
 
 	template <class TElastix>
 		void KNNGraphAlphaMutualInformationMetric<TElastix>
-		::Initialize(void) throw (ExceptionObject)
+		::Initialize( void ) throw (ExceptionObject)
 	{
 		TimerPointer timer = TimerType::New();
 		timer->StartTimer();
@@ -43,6 +43,11 @@ using namespace itk;
 		double alpha = 0.5;
     this->m_Configuration->ReadParameter( alpha, "Alpha", 0 );
 		this->SetAlpha( alpha );
+
+    /** Get the small number that avoids division by that number. */
+    double smallNumber = 1e-5;
+    this->m_Configuration->ReadParameter( smallNumber, "AvoidDivisionBy", 0, true );
+    this->SetAvoidDivisionBy( smallNumber );
 
   } // end BeforeRegistration()
 

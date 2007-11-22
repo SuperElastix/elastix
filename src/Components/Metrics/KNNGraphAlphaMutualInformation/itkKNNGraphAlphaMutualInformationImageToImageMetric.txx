@@ -3,7 +3,6 @@
 
 #include "itkKNNGraphAlphaMutualInformationImageToImageMetric.h"
 
-#include <iomanip>
 
 namespace itk
 {
@@ -19,6 +18,7 @@ namespace itk
     this->SetComputeGradient( false ); // don't use the default gradient for now
     this->SetUseImageSampler( true );
     this->m_Alpha = 0.5;
+    this->m_AvoidDivisionBy = 1e-5;
 
     this->m_BinaryKNNTreeFixed = 0;
     this->m_BinaryKNNTreeMoving = 0;
@@ -436,7 +436,7 @@ namespace itk
       
       /** Calculate the contribution of this query point. */
       H = vcl_sqrt( Gamma_F * Gamma_M );
-      if ( H > 1e-10 )
+      if ( H > this->m_AvoidDivisionBy )
       {
         /** Compute some sums. */
         G = Gamma_J / H;
@@ -449,7 +449,7 @@ namespace itk
      */
 
     double n, number;
-    if ( sumG > 1e-10 )
+    if ( sumG > this->m_AvoidDivisionBy )
     {
       /** Compute the measure. */
       n = static_cast<double>( this->m_NumberOfPixelsCounted );
@@ -680,12 +680,11 @@ namespace itk
         diff_J.post_multiply( Dfull_J );
 
         /** Only compute stuff if all distances are large enough. */
-        MeasureType smallNumber = 1e-10;
-        if ( distance_M > smallNumber )
+        if ( distance_M > this->m_AvoidDivisionBy )
         {
           dGamma_M += diff_M / distance_M;
         }
-        if ( distance_J > smallNumber )
+        if ( distance_J > this->m_AvoidDivisionBy )
         {
           dGamma_J += diff_J / distance_J;
         }
@@ -694,7 +693,7 @@ namespace itk
       
       /** Compute contributions. */
       H = vcl_sqrt( Gamma_F * Gamma_M );
-      if ( H > 1e-10 )
+      if ( H > this->m_AvoidDivisionBy )
       {
         /** Compute some sums. */
         G = Gamma_J / H;
@@ -704,7 +703,7 @@ namespace itk
         Gpow = vcl_pow( G, twoGamma - 1.0 );
         contribution += ( Gpow / H ) * ( dGamma_J - ( 0.5 * Gamma_J / Gamma_M ) * dGamma_M );
       }
-      
+     
     } // end looping over all query points
 
     /**
@@ -713,7 +712,7 @@ namespace itk
 
     /** Compute the value. */
     double n, number;
-    if ( sumG > 1e-10 )
+    if ( sumG > this->m_AvoidDivisionBy )
     {
       /** Compute the measure. */
       n = static_cast<double>( this->m_NumberOfPixelsCounted );
