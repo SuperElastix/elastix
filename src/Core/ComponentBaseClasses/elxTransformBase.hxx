@@ -732,7 +732,7 @@ namespace elastix
 			for ( unsigned int j = 0; j < nrofpoints; j++ )
 			{
         InputPointType point;
-        inputPointSet->GetPoint(j, &point);
+        inputPointSet->GetPoint( j, &point );
 				inputpointvec[ j ] = point;
 				dummyImage->TransformPhysicalPointToIndex(
 					point, inputindexvec[ j ] );					
@@ -743,16 +743,16 @@ namespace elastix
 			for ( unsigned int j = 0; j < nrofpoints; j++ )
 			{
         InputPointType point;
-				inputPointSet->GetPoint(j, &point);
+				inputPointSet->GetPoint( j, &point );
 				for ( unsigned int i = 0; i < FixedImageDimension; i++ )
 				{
 					inputindexvec[ j ][ i ] = static_cast<FixedImageIndexValueType>(
-            vnl_math_rnd( point[i] ) );
+            vnl_math_rnd( point[ i ] ) );
 				}
 				dummyImage->TransformIndexToPhysicalPoint(
-					inputindexvec[ j ], inputpointvec[ j ] );					
-			} 
-		} 
+					inputindexvec[ j ], inputpointvec[ j ] );
+			}
+		}
 
 		/** Apply the transform. */
 		elxout << "  The input points are transformed." << std::endl;
@@ -760,12 +760,14 @@ namespace elastix
 		{
 			/** Call TransformPoint. */
 			outputpointvec[ j ] = this->GetAsITKBaseType()->TransformPoint( inputpointvec[ j ] );
+
 			/** Transform back to index. */
 			dummyImage->TransformPhysicalPointToIndex( outputpointvec[ j ], outputindexvec[ j ] );					
+
 			/** Compute displacement. */
 			deformationvec[ j ].CastFrom( outputpointvec[ j ] - inputpointvec[ j ] );
-		}			
-					
+		}
+
 		/** Create filename and filestream. */
 		std::string outputPointsFileName = this->m_Configuration->GetCommandLineArgument( "-out" );
 		outputPointsFileName += "outputpoints.txt";
@@ -778,35 +780,35 @@ namespace elastix
 		/** Print the results. */
 		for ( unsigned int j = 0; j < nrofpoints; j++ )
 		{
-			//the input index
+			/** The input index. */
 			elxout << "Point\t" << j << "\t; InputIndex = [ "; 
 			for ( unsigned int i = 0; i < FixedImageDimension; i++ )
 			{
 				elxout << inputindexvec[ j ][ i ] << " ";
 			}
 
-			//the input point
+			/** The input point. */
 			elxout << "]\t; InputPoint = [ "; 
 			for ( unsigned int i = 0; i < FixedImageDimension; i++ )
 			{
 				elxout << inputpointvec[ j ][ i ] << " ";
 			}
 
-			//the output index
+			/** The output index. */
 			elxout << "]\t; OutputIndex = [ "; 
 			for ( unsigned int i = 0; i < FixedImageDimension; i++ )
 			{
 				elxout << outputindexvec[ j ][ i ] << " ";
 			}
 			
-			//the output point
+			/** The output point. */
 			elxout << "]\t; OutputPoint = [ "; 
 			for ( unsigned int i = 0; i < FixedImageDimension; i++ )
 			{
 				elxout << outputpointvec[ j ][ i ] << " ";
 			}
 			
-			//the output point minus the input point
+			/** The output point minus the input point. */
 			elxout << "]\t; Deformation = [ "; 
 			for ( unsigned int i = 0; i < MovingImageDimension; i++ )
 			{
