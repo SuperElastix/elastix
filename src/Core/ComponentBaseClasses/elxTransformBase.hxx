@@ -497,7 +497,7 @@ namespace elastix
 				{
 					xout["transpar"] << param[ i ] << " ";
 				}
-				xout["transpar"] << std::endl;
+				xout["transpar"] << param[ nrP -1 ] << std::endl;
 			}
 		} // end if this->m_WriteTransformParameters
 
