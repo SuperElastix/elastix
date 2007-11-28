@@ -138,30 +138,18 @@ namespace elastix
 	
 	int TransformixMain::InitDBIndex(void)
 	{
-		/** Check if configuration object was already initialized.*/
+		/** Check if configuration object was already initialized. */
 		if ( m_Configuration->Initialized() )
 		{			
-			/** MovingImagePixelType */
-			m_MovingImagePixelType = m_Configuration->GetCommandLineArgument( "-ipt" );
+			/** Try to read MovingImagePixelType from the parameterfile. */
+      m_MovingImagePixelType = "float";
+      m_Configuration->ReadParameter( m_MovingImagePixelType,	"MovingInternalImagePixelType", 0 );
 
-			if ( m_MovingImagePixelType.empty() )
-			{
-				/** Try to read it from the parameterfile. */
-				m_MovingImagePixelType = "float";
-				m_Configuration->ReadParameter( m_MovingImagePixelType,	"MovingInternalImagePixelType", 0 );
-			}
+      /** Try to read FixedImagePixelType from the parameterfile. */
+      m_FixedImagePixelType = "float";
+      m_Configuration->ReadParameter( m_FixedImagePixelType, "FixedInternalImagePixelType", 0 );
 
-			/** FixedImagePixelType */
-			m_FixedImagePixelType = m_Configuration->GetCommandLineArgument( "-opt" );
-
-			if ( m_FixedImagePixelType.empty() )
-			{
-				/** Try to read it from the parameterfile. */
-        m_FixedImagePixelType = "float";
-				m_Configuration->ReadParameter( m_FixedImagePixelType, "FixedInternalImagePixelType", 0 );
-			}
-
-			/** MovingImageDimension */
+			/** MovingImageDimension. */
 			if ( m_MovingImageDimension == 0 )
 			{
 				/** Try to read it from the parameterfile. */
@@ -175,7 +163,7 @@ namespace elastix
 				}
 			}
 
-			/** FixedImageDimension */
+			/** FixedImageDimension. */
 			if ( m_FixedImageDimension == 0 )
 			{
 				/** Try to read it from the parameterfile. */
@@ -189,20 +177,20 @@ namespace elastix
 				}
 			}
 			
-			/** Load the components */
-			if (this->s_CDB.IsNull())
+			/** Load the components. */
+			if ( this->s_CDB.IsNull() )
 			{
 				int loadReturnCode = this->LoadComponents();
-				if (loadReturnCode !=0)
+				if ( loadReturnCode !=0 )
 				{
 					xl::xout["error"] << "Loading components failed" << std::endl;
 					return loadReturnCode;
 				}
 			}
 
-			if (this->s_CDB.IsNotNull())
+			if ( this->s_CDB.IsNotNull() )
 			{
-				/** Get the DBIndex from the ComponentDatabase */
+				/** Get the DBIndex from the ComponentDatabase. */
 				m_DBIndex = this->s_CDB->GetIndex(
 					m_FixedImagePixelType,
 					m_FixedImageDimension,			
@@ -211,7 +199,7 @@ namespace elastix
 				if ( m_DBIndex == 0 )
 				{
 					xl::xout["error"] << "ERROR:" << std::endl;
-					xl::xout["error"] << "Something went wrong in the ComponentDatabase" << std::endl;
+					xl::xout["error"] << "Something went wrong in the ComponentDatabase." << std::endl;
 					return 1;
 				}
 			} //end if s_CDB!=0
@@ -227,7 +215,7 @@ namespace elastix
 		/** Everything is OK! */
 		return 0;
 		
-	} // end InitDBIndex
+	} // end InitDBIndex()
 	
 
 } // end namespace elastix
