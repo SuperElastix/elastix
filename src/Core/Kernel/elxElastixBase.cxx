@@ -178,7 +178,7 @@ namespace elastix
 		check = this->GetConfiguration()->GetCommandLineArgument( "-threads" );
 		if ( check == "" )
 		{
-			elxout << "-threads  unspecified, so any threads available are used" << std::endl;
+			elxout << "-threads  unspecified, so all available threads are used" << std::endl;
 		}
 		else
 		{
@@ -239,7 +239,19 @@ namespace elastix
 				this->GetConfiguration()->SetCommandLineArgument( "-out", folder.c_str() );
 			}
 			elxout << "-out      " << check << std::endl;
-		}		
+		}
+
+    /** Check for appearance of -threads, which specifies the maximum number of threads. */
+    check = "";
+		check = this->GetConfiguration()->GetCommandLineArgument( "-threads" );
+		if ( check == "" )
+		{
+			elxout << "-threads  unspecified, so all available threads are used" << std::endl;
+		}
+		else
+		{
+			elxout << "-threads  " << check << std::endl;
+		}
 
 		/** Print "-tp". */
 		check = this->GetConfiguration()->GetCommandLineArgument( "-tp" );
