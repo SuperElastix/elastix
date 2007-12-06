@@ -76,6 +76,26 @@ namespace elastix
 		const char * GetCommandLineArgument( const char * key ) const;
 		void SetCommandLineArgument( const char * key, const char * value );
 
+    /** Get/Set the name of the parameterFileName. */
+		itkGetStringMacro( ParameterFileName );
+		itkSetStringMacro( ParameterFileName );
+
+		/** Get and Set the elastix-level.*/
+		itkSetMacro( ElastixLevel, unsigned int );
+		itkGetConstMacro( ElastixLevel, unsigned int );
+
+    /** Set/Get whether warnings are allowed to be printed, when reading a parameter */
+    itkSetMacro( Silent, bool );
+    itkGetConstMacro( Silent, bool );
+
+		/** Methods that is called at the very beginning of elastixTemplate::Run.
+     * \li Prints the parameter file  */
+		virtual int BeforeAll( void );
+
+    /** Methods that is called at the very beginning of elastixTemplate::ApplyTransform.
+     * \li Prints the parameter file  */
+    virtual int BeforeAllTransformix( void );
+
 		/**
 		* Use this function to read a parameter from the parameter
 		* file. 
@@ -222,25 +242,21 @@ namespace elastix
       return ReadParameter( param, name_field, prefix, entry_nr, default_entry_nr, false );
     }
 
-    /** Get/Set the name of the parameterFileName.*/
-		itkGetStringMacro( ParameterFileName );
-		itkSetStringMacro( ParameterFileName );
+    /** Get the number of user supplied parameters. */
+    template <class T>
+		unsigned int CountNumberOfParameters( T & param, const char * name_field )
+    {
+      int ret = 0;
+      unsigned int count = 0;
+      while ( ret == 0 )
+      {
+        ret = this->ReadParameter( param, name_field, count, true );
+        count++;
+      }
 
-		/** Get and Set the elastix-level.*/
-		itkSetMacro( ElastixLevel, unsigned int );
-		itkGetConstMacro( ElastixLevel, unsigned int );
+      return count - 1;
 
-    /** Set/Get whether warnings are allowed to be printed, when reading a parameter */
-    itkSetMacro( Silent, bool );
-    itkGetConstMacro( Silent, bool );
-
-		/** Methods that is called at the very beginning of elastixTemplate::Run.
-     * \li Prints the parameter file  */
-		virtual int BeforeAll( void );
-
-    /** Methods that is called at the very beginning of elastixTemplate::ApplyTransform.
-     * \li Prints the parameter file  */
-    virtual int BeforeAllTransformix( void );
+    } // end CountNumberOfParameters()
    
 	protected:
 
