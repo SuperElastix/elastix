@@ -6,6 +6,7 @@
 
 #include "itkBSplineDeformableTransform.h"
 #include "itkBSplineCombinationTransform.h"
+#include "itkGridScheduleComputer.h"
 
 #include "elxIncludes.h"
 
@@ -71,21 +72,20 @@ using namespace itk;
 
 		/** Standard ITK-stuff. */
 		typedef BSplineTransform 										Self;
-		
 		typedef BSplineCombinationTransform<
 			typename elx::TransformBase<TElastix>::CoordRepType,
 			elx::TransformBase<TElastix>::FixedImageDimension,
 			__VSplineOrder >													Superclass1;
-
-		typedef elx::TransformBase<TElastix>				Superclass2;		
+		typedef elx::TransformBase<TElastix>				Superclass2;
+    typedef SmartPointer<Self>									Pointer;
+		typedef SmartPointer<const Self>						ConstPointer;
 				
 		/** The ITK-class that provides most of the functionality, and
-		 * that is set as the "CurrentTransform" in the CombinationTransform */
+		 * that is set as the "CurrentTransform" in the CombinationTransform.
+     */
 		typedef typename 
-			Superclass1::BSplineTransformType					BSplineTransformType;
-
-		typedef SmartPointer<Self>									Pointer;
-		typedef SmartPointer<const Self>						ConstPointer;
+			Superclass1::BSplineTransformType					    BSplineTransformType;
+    typedef typename BSplineTransformType::Pointer	BSplineTransformPointer;
 		
 		/** Method for creation through the object factory. */
 		itkNewMacro( Self );
@@ -153,8 +153,11 @@ using namespace itk;
 		typedef typename Superclass2::ITKBaseType								ITKBaseType;
 		typedef typename Superclass2::CombinationTransformType	CombinationTransformType;
 
-		/** Extra typedef */
-		typedef typename BSplineTransformType::Pointer					BSplineTransformPointer;
+		/** Typedef's for the GridScheduleComputer. */
+    typedef GridScheduleComputer< SpaceDimension >          GridScheduleComputerType;
+    typedef typename GridScheduleComputerType::Pointer      GridScheduleComputerPointer;
+    typedef typename GridScheduleComputerType
+      ::VectorSpacingType                                   GridScheduleType;
 
 		/** Execute stuff before the actual registration:
 		 * \li Create an initial B-spline grid.
@@ -166,13 +169,13 @@ using namespace itk;
 		 * the number of parameters in the registration class. This check is done
 		 * before calling the BeforeEachResolution() methods.
 		 */
-		virtual void BeforeRegistration(void);
+		virtual void BeforeRegistration( void );
 
 		/** Execute stuff before each new pyramid resolution:
 		 * \li In the first resolution call InitializeTransform().
 		 * \li In next resolutions upsample the B-spline grid if necessary (so, call IncreaseScale())
 		 */
-		virtual void BeforeEachResolution(void);
+		virtual void BeforeEachResolution( void );
 		
 		/** Method to set the initial BSpline grid and initialize the parameters (to 0).
 		 * \li ComputeInitialGridSpacingFactor
@@ -180,7 +183,7 @@ using namespace itk;
 		 * \li Set the initial parameters to zero and set then as InitialParametersOfNextLevel in the registration object.
 		 * Called by BeforeEachResolution().
 		 */
-		virtual void InitializeTransform(void);
+		virtual void InitializeTransform( void );
 
 		/** Method to increase the density of the BSpline grid.
 		 * \li Half the m_GridSpacingFactor
@@ -189,7 +192,7 @@ using namespace itk;
 		 * \li Set these coefficients as InitialParametersOfNextLevel in the registration object.
 		 * Called by BeforeEachResolution().
 		 */
-		virtual void IncreaseScale(void);
+		virtual void IncreaseScale( void );
 		
 		/** Method to compute m_GridSpacingFactor in the first resolution.
 		 * The initial grid spacing factor depends on:
@@ -198,7 +201,7 @@ using namespace itk;
 		 * \li The NumberOfResolutions, read from the parameter file
 		 * Called by SetInitialGrid() 
 		 */
-		virtual void ComputeInitialGridSpacingFactor(void);
+		virtual bool ComputeInitialGridSpacing_Deprecated( void );
 
 		/** Define a bspline grid, based on:
 		 * \li The current m_GridSpacingFactor,
@@ -209,27 +212,29 @@ using namespace itk;
 		 * Returns gridregion, gridorigin and gridspacing.
 		 * Called by InitializeTransform() and IncreaseScale().
 		 */
-		virtual void DefineGrid(RegionType & gridregion,
-			OriginType & gridorigin, SpacingType & gridspacing  ) const;
+		virtual void DefineGrid( RegionType & gridregion,
+			OriginType & gridorigin, SpacingType & gridspacing ) const;
 
 		/** Function to read transform-parameters from a file. */
-		virtual void ReadFromFile(void);
+		virtual void ReadFromFile( void );
+
 		/** Function to write transform-parameters to a file. */
 		virtual void WriteToFile( const ParametersType & param );
 
-    /** Set the scales of the edge bspline coefficients to zero */
-    virtual void SetOptimizerScales( unsigned int edgeWidth);
+    /** Set the scales of the edge bspline coefficients to zero. */
+    virtual void SetOptimizerScales( unsigned int edgeWidth );
 		
 	protected:
 
 		/** The constructor. */
 		BSplineTransform();
+
 		/** The destructor. */
 		virtual ~BSplineTransform() {}
 		
 		/** Member variables. */
-		SpacingType						m_GridSpacingFactor;
-		std::vector< bool >		m_UpsampleBSplineGridOption;
+		//SpacingType						m_GridSpacingFactor;
+		//std::vector< bool >		m_UpsampleBSplineGridOption;
 
 	private:
 
@@ -238,7 +243,12 @@ using namespace itk;
 		/** The private copy constructor. */
 		void operator=( const Self& );		// purposely not implemented
 
-		BSplineTransformPointer	m_BSplineTransform;
+    /** Private helper functions. */
+    virtual void PreComputeGridInformation( void );
+
+    /** Private variables. */
+		BSplineTransformPointer	    m_BSplineTransform;
+    GridScheduleComputerPointer m_GridScheduleComputer;
 		
 	}; // end class BSplineTransform
 	
