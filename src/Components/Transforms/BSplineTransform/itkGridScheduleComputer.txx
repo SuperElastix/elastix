@@ -138,18 +138,14 @@ namespace itk
         this->m_GridOrigins[ i ][ j ] = this->m_Origin[ j ] -
           this->m_GridSpacingSchedule[ i ][ j ]
           * vcl_floor( static_cast<double>( this->m_BSplineOrder ) / 2.0 );
-          //gridorigin[ j ]  = fixedImageOrigin[ j ] - 
-				//gridspacing[ j ] * vcl_floor( static_cast<double>( SplineOrder ) / 2.0 );
 
         /** Shift the origin a little to the left, to place the grid
          * symmetrically on the image.
          */
-        //gridorigin[ j ] -= ( gridspacing[ j ] * bareGridSize
-          //- fixedImageSpacing[ j ] * ( fixedImageSize[ j ] - 1 ) ) / 2.0;
         this->m_GridOrigins[ i ][ j ] -=
           ( this->m_GridSpacingSchedule[ i ][ j ] * bareGridSize
           - this->m_Spacing[ j ] * ( size[ j ] - 1 ) ) / 2.0;
-        // todo: don't get Stefans code. Is it wrong?
+        // todo: I don't get Stefans code at this point. Is it wrong?
       }
 
       /** Set the grid region. */
@@ -158,6 +154,86 @@ namespace itk
     
   } // end ComputeBSplineGrid()
   
+	/** Take into account the initial transform, if composition is used to 
+		 * combine it with the current (bspline) transform *
+		if ( (this->GetUseComposition()) && (this->Superclass1::GetInitialTransform() != 0) )
+		{
+			/** We have to determine a bounding box around the fixed image after
+			 * applying the initial transform. This is done by iterating over the
+			 * the boundary of the fixed image, evaluating the initial transform
+			 * at those points, and keeping track of the minimum/maximum transformed
+			 * coordinate in each dimension 
+			 */
+
+			/** Make a temporary copy; who knows, maybe some speedup can be achieved... *
+			InitialTransformConstPointer initialTransform = 
+				this->Superclass1::GetInitialTransform();
+			/** The points that define the bounding box *
+			InputPointType maxPoint;
+			InputPointType minPoint;
+			maxPoint.Fill( NumericTraits< CoordRepType >::NonpositiveMin() );
+			minPoint.Fill( NumericTraits< CoordRepType >::max() );
+			/** An iterator over the boundary of the fixed image *
+			BoundaryIteratorType bit(fixedImage, fixedImageRegion);
+			bit.SetExclusionRegionToInsetRegion();
+			bit.GoToBegin();
+			/** start loop over boundary; determines minPoint and maxPoint *
+			while ( !bit.IsAtEnd() )
+			{
+				/** Get index, transform to physical point, apply initial transform
+				 * NB: the OutputPointType of the initial transform by definition equals
+				 * the InputPointType of this transform. *
+        IndexType inputIndex = bit.GetIndex();
+				InputPointType inputPoint;
+				fixedImage->TransformIndexToPhysicalPoint(inputIndex, inputPoint);
+				InputPointType outputPoint = 
+					initialTransform->TransformPoint(	inputPoint );
+				/** update minPoint and maxPoint *
+				for ( unsigned int i = 0; i < SpaceDimension; i++ )
+				{
+					CoordRepType & outi = outputPoint[i];
+					CoordRepType & maxi = maxPoint[i];
+					CoordRepType & mini = minPoint[i];
+					if ( outi > maxi )
+					{
+						maxi = outi;
+					}
+					if ( outi < mini )
+					{
+						mini = outi;
+					}
+				}
+				/** step to next voxel *
+				++bit;
+			} //end while loop over fixed image boundary
+
+			/** Set minPoint as new "fixedImageOrigin" (between quotes, since it
+			 * is not really the origin of the fixedImage anymore) *
+			fixedImageOrigin = minPoint;
+
+			/** Compute the new "fixedImageSpacing" in each dimension *
+			const double smallnumber = NumericTraits<double>::epsilon();
+			for ( unsigned int i = 0; i < SpaceDimension; i++ )
+			{
+				/** Compute the length of the fixed image (in mm) for dimension i *
+				double oldLength_i = 
+					fixedImageSpacing[i] * static_cast<double>( fixedImageSize[i] - 1 );
+				/** Compute the length of the bounding box (in mm) for dimension i *
+        double newLength_i = static_cast<double>( maxPoint[i] - minPoint[i] );
+				/** Scale the fixedImageSpacing by their ratio. *
+				if (oldLength_i > smallnumber)
+				{
+					fixedImageSpacing[i] *= ( newLength_i / oldLength_i );
+				}				
+			}
+
+		  /** We have now adapted the fixedImageOrigin and fixedImageSpacing.
+			 * This makes sure that the BSpline grid is located at the position
+			 * of the fixed image after undergoing the initial transform.  *
+		     		  
+		} // end if UseComposition && InitialTransform!=0
+
+
 
   /**
 	 * ********************* GetBSplineGrid ****************************

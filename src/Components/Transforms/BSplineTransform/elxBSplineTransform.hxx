@@ -3,10 +3,6 @@
 
 #include "elxBSplineTransform.h"
 
-#include "itkBSplineResampleImageFunction.h"
-#include "itkBSplineDecompositionImageFilter.h"
-#include "itkResampleImageFilter.h"
-#include "itkImageRegionConstIterator.h"
 #include "itkImageRegionExclusionConstIteratorWithIndex.h"
 #include "vnl/vnl_math.h"
 
@@ -29,10 +25,11 @@ using namespace itk;
 		/** Initialize. */
     this->m_GridScheduleComputer = GridScheduleComputerType::New();
     this->m_GridScheduleComputer->SetBSplineOrder( SplineOrder );
-		//this->m_GridSpacingFactor.Fill( 8.0 );
-		//this->m_UpsampleBSplineGridOption.push_back( true );
 
-	} // end Constructor
+    this->m_GridUpsampler = GridUpsamplerType::New();
+    this->m_GridUpsampler->SetBSplineOrder( SplineOrder );
+
+	} // end Constructor()
 	
 
 	/**
@@ -111,7 +108,6 @@ using namespace itk;
 			{
 				this->IncreaseScale();
 			}
-			/** Otherwise, nothing is done with the BSpline-Grid. */
 		}
 
     /** Get the PassiveEdgeWidth and use it to set the OptimizerScales. */
@@ -208,7 +204,7 @@ using namespace itk;
       for ( unsigned int i = 1; i < SpaceDimension; ++i )
       {
         this->m_Configuration->ReadParameter(
-          finalGridSpacing[ i ], "GridSpacingSchedule", i, true );
+          finalGridSpacing[ i ], "GridSpacingSchedule", i, false );
       }
 
       /** Way 2: the upsample factor. */
@@ -229,7 +225,7 @@ using namespace itk;
     {
       itkExceptionMacro(
         << "ERROR: You should specify "
-        << "EITHER \"GridSpacingSchedule\" and \"GridSpacingUpsampleFactor\""
+        << "EITHER \"GridSpacingSchedule\" and \"GridSpacingUpsampleFactor\" "
         << "OR \"GridSpacingScheduleFull\"."
         );
     }
@@ -259,16 +255,10 @@ using namespace itk;
 		void BSplineTransform<TElastix>::
 		InitializeTransform( void )
 	{
-		/** Compute for each dimension the grid spacing factor and 
-		 * store it in the array m_GridSpacingFactor.
-     *
-		this->ComputeInitialGridSpacing_Deprecated();
-
 		/** Compute the B-spline grid region, origin, and spacing. */
 		RegionType gridRegion;
 		OriginType gridOrigin;
 		SpacingType gridSpacing;
-		//this->DefineGrid( gridregion, gridorigin, gridspacing );
     this->m_GridScheduleComputer->GetBSplineGrid( 0,
       gridRegion, gridSpacing, gridOrigin );
 
@@ -296,153 +286,48 @@ using namespace itk;
 		void BSplineTransform<TElastix>::
 		IncreaseScale( void )
 	{
-		/** Typedefs. */
-		typedef itk::ResampleImageFilter<
-      ImageType, ImageType >                      UpsampleFilterType;
-		typedef itk::IdentityTransform<
-      CoordRepType, SpaceDimension >   			      IdentityTransformType;
-		typedef itk::BSplineResampleImageFunction<
-      ImageType, CoordRepType >  			            CoefficientUpsampleFunctionType;
-		typedef itk::BSplineDecompositionImageFilter<
-      ImageType, ImageType >			                DecompositionFilterType;
-		typedef ImageRegionConstIterator<
-      ImageType >		                              IteratorType;
-		
     /** What is the current resolution level? */
 		unsigned int level = 
 			this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
 		/** The current grid. */
-		RegionType  gridRegionLow  = this->m_BSplineTransform->GetGridRegion();
-		SpacingType gridSpacingLow = this->m_BSplineTransform->GetGridSpacing();
-		OriginType  gridOriginLow  = this->m_BSplineTransform->GetGridOrigin();
+    OriginType  currentGridOrigin  = this->m_BSplineTransform->GetGridOrigin();
+		SpacingType currentGridSpacing = this->m_BSplineTransform->GetGridSpacing();
+    RegionType  currentGridRegion  = this->m_BSplineTransform->GetGridRegion();
 
-		/** We want a twice as dense grid as the current grid: */
-		//this->m_GridSpacingFactor /= 2.0;
-		
-		/** The new grid. */
-		RegionType  gridRegionHigh;
-		OriginType  gridOriginHigh;
-		SpacingType gridSpacingHigh;
-		//this->DefineGrid( gridregionHigh, gridoriginHigh, gridspacingHigh );
+		/** The new required grid. */
+    OriginType  requiredGridOrigin;
+		SpacingType requiredGridSpacing;
+    RegionType  requiredGridRegion;
     this->m_GridScheduleComputer->GetBSplineGrid( level,
-      gridRegionHigh, gridSpacingHigh, gridOriginHigh );
-		IndexType gridIndexHigh	=	gridRegionHigh.GetIndex();
-		SizeType  gridSizeHigh	=	gridRegionHigh.GetSize();
+      requiredGridRegion, requiredGridSpacing, requiredGridOrigin );
 
 		/** Get the latest transform parameters. */
 		ParametersType latestParameters =
 			this->m_Registration->GetAsITKBaseType()->GetLastTransformParameters();
-		
-		/** Get the pointer to the data in latestParameters. */
-		PixelType * dataPointer = static_cast<PixelType *>( latestParameters.data_block() );
-		/** Get the number of pixels that should go into one coefficient image. */
-		unsigned int numberOfPixels = 
-			( this->m_BSplineTransform->GetGridRegion() ).GetNumberOfPixels();
-		
-		/** Set the correct region/size info of the coefficient image
-		 * that will be filled with the current parameters.	 */
-		ImagePointer coeffs1 = ImageType::New();
-		coeffs1->SetRegions( gridRegionLow );
-		coeffs1->SetOrigin(  gridOriginLow );
-		coeffs1->SetSpacing( gridSpacingLow );
-		//coeffs1->Allocate() not needed because the data is set by directly pointing
-		// to an existing piece of memory.
-		
-		/** Create the new vector of parameters, with the 
-		 * correct size (which is now approx 2^dim as big as the
-		 * size in the previous resolution!). */
-		ParametersType parameters_out(
-			gridRegionHigh.GetNumberOfPixels() * SpaceDimension );
 
-		/** initialise iterator in the parameters_out. */
-		unsigned int i = 0; 
-		
-		/** Loop over dimension. */
-		for ( unsigned int j = 0; j < SpaceDimension; j++ )
-		{
-			/** Fill the coeff image with parameter data (displacements
-			 * of the control points in the direction of dimension j).
-			 */		
-			coeffs1->GetPixelContainer()->
-				SetImportPointer( dataPointer, numberOfPixels );
-			dataPointer += numberOfPixels;
-				
-			/*
-			 * Set this image as the input of the upsampler filter. The 
-			 * upsampler samples the deformation field at the locations
-			 * of the new control points, given the current coefficients
-			 * (note: it does not just interpolate the coefficient image,
-			 * which would be wrong). The b-spline coefficients that
-			 * describe the resulting image are computed by the 
-			 * decomposition filter.
-			 * 
-			 * This code is copied from the itk-example
-			 * DeformableRegistration6.cxx .
-			 */
-			
-			typename UpsampleFilterType::Pointer upsampler
-				= UpsampleFilterType::New();
-			typename IdentityTransformType::Pointer identity
-				= IdentityTransformType::New();
-			typename CoefficientUpsampleFunctionType::Pointer coeffUpsampleFunction
-				= CoefficientUpsampleFunctionType::New();
-			typename DecompositionFilterType::Pointer decompositionFilter
-				= DecompositionFilterType::New();
+    /** Setup the GridUpsampler. */
+    this->m_GridUpsampler->SetCurrentGridOrigin( currentGridOrigin );
+    this->m_GridUpsampler->SetCurrentGridSpacing( currentGridSpacing );
+    this->m_GridUpsampler->SetCurrentGridRegion( currentGridRegion );
+    this->m_GridUpsampler->SetRequiredGridOrigin( requiredGridOrigin );
+    this->m_GridUpsampler->SetRequiredGridSpacing( requiredGridSpacing );
+    this->m_GridUpsampler->SetRequiredGridRegion( requiredGridRegion );
+    this->m_GridUpsampler->SetInputParameters( latestParameters );
 
-			upsampler->SetInterpolator( coeffUpsampleFunction );
-			upsampler->SetTransform( identity );
-      upsampler->SetSize( gridSizeHigh );
-			upsampler->SetOutputStartIndex( gridIndexHigh );
-			upsampler->SetOutputSpacing( gridSpacingHigh );
-			upsampler->SetOutputOrigin( gridOriginHigh );
-		  upsampler->SetInput( coeffs1 );
-						
-			decompositionFilter->SetSplineOrder( SplineOrder );
-			decompositionFilter->SetInput( upsampler->GetOutput() );
-
-			/** Do the upsampling. */
-			try
-			{
-				decompositionFilter->UpdateLargestPossibleRegion();
-			}
-			catch( itk::ExceptionObject & excp )
-			{
-				/** Add information to the exception. */
-				excp.SetLocation( "BSplineTransform - IncreaseScale()" );
-				std::string err_str = excp.GetDescription();
-				err_str += "\nError occured while using decompositionFilter.\n";
-				excp.SetDescription( err_str );
-				/** Pass the exception to an higher level. */
-				throw excp;
-			}
-			
-			/** Create an upsampled image. */
-			ImagePointer coeffs2 = decompositionFilter->GetOutput();
-					
-			/** Create an iterator on the new coefficient image. */
-			IteratorType iterator( coeffs2, gridRegionHigh );
-			iterator.GoToBegin();
-			while ( !iterator.IsAtEnd() )
-			{
-				/** Copy the contents of coeffs2 in a ParametersType array. */
-				parameters_out[ i ] = iterator.Get();
-				++iterator;
-				++i;
-			} // end while coeff2 iterator loop
-			
-		} // end for dimension loop
+    /** Compute the upsampled B-spline parameters. */
+		ParametersType upsampledParameters = this->m_GridUpsampler->ComputeOutput();
 		
 		/** Set the new grid definition in the BSplineTransform. */
-		this->m_BSplineTransform->SetGridRegion( gridRegionHigh );
-		this->m_BSplineTransform->SetGridOrigin( gridOriginHigh );
-		this->m_BSplineTransform->SetGridSpacing( gridSpacingHigh );
+    this->m_BSplineTransform->SetGridOrigin( requiredGridOrigin );
+		this->m_BSplineTransform->SetGridSpacing( requiredGridSpacing );
+    this->m_BSplineTransform->SetGridRegion( requiredGridRegion );
 
-    /** Set the initial parameters for the next level */
+    /** Set the initial parameters for the next level. */
 		this->m_Registration->GetAsITKBaseType()->
-			SetInitialTransformParametersOfNextLevel( parameters_out );
+			SetInitialTransformParametersOfNextLevel( upsampledParameters );
 
-    /** Set the parameters in the BsplineTransform */
+    /** Set the parameters in the BsplineTransform. */
     this->m_BSplineTransform->SetParameters(
       this->m_Registration->GetAsITKBaseType()->
       GetInitialTransformParametersOfNextLevel() );
@@ -468,10 +353,10 @@ using namespace itk;
 		OriginType	gridorigin;
 		
 		/** Fill everything with default values. */
-		gridsize.Fill(1);
-		gridindex.Fill(0);
-		gridspacing.Fill(1.0);
-		gridorigin.Fill(0.0);
+		gridsize.Fill( 1 );
+		gridindex.Fill( 0 );
+		gridspacing.Fill( 1.0 );
+		gridorigin.Fill( 0.0 );
 
 		/** Get GridSize, GridIndex, GridSpacing and GridOrigin. */
 		for ( unsigned int i = 0; i < SpaceDimension; i++ )
@@ -677,160 +562,6 @@ using namespace itk;
     return true;
 
 	} // end ComputeInitialGridSpacing_Deprecated()
-
-	
-	/**
-	 * *********************** DefineGrid ************************
-	 *
-	 * Defines the grid region, origin and spacing.
-	 * 
-	 */
-
-	template <class TElastix>
-		void BSplineTransform<TElastix>::
-		DefineGrid(RegionType & gridregion,
-			OriginType & gridorigin, SpacingType & gridspacing ) const
-	{
-		/** Typedefs. *
-		typedef ImageRegionExclusionConstIteratorWithIndex<FixedImageType>
-			BoundaryIteratorType;
-		typedef typename Superclass1::InitialTransformConstPointer 
-			InitialTransformConstPointer;
-				
-		/** Declarations. *
-		RegionType  fixedImageRegion;
-		SizeType    fixedImageSize;
-		IndexType   fixedImageIndex;
-		OriginType  fixedImageOrigin;
-		SpacingType fixedImageSpacing;
-		SizeType		gridsize;
-		IndexType		gridindex;
-		typename FixedImageType::ConstPointer fixedImage;
-				
-		/** Get the fixed image. *
-		fixedImage = this->m_Registration->GetAsITKBaseType()->GetFixedImage();
-		
-		/** Get the region (size and index), spacing, and origin  of this image. */
-
-		/** In elastix <=3.001: fixedImageRegion	=	fixedimage->GetRequestedRegion();  */
-		/** later (because requested regions were not supported anyway consistently: *
-		fixedImageRegion = fixedImage->GetLargestPossibleRegion();
-		/** \todo: allow the user to enter a region of interest for the registration. 
-		 * Especially the boundary conditions have to be dealt with carefully then. *
-		fixedImageIndex		=	fixedImageRegion.GetIndex();
-		/** \todo: always 0? doesn't a largestpossible region have an index 0 by definition? *
-		fixedImageSize		=	fixedImageRegion.GetSize();
-		fixedImageSpacing	=	fixedImage->GetSpacing();
-		fixedImageOrigin	=	fixedImage->GetOrigin();
-		
-		/** Take into account the initial transform, if composition is used to 
-		 * combine it with the current (bspline) transform *
-		if ( (this->GetUseComposition()) && (this->Superclass1::GetInitialTransform() != 0) )
-		{
-			/** We have to determine a bounding box around the fixed image after
-			 * applying the initial transform. This is done by iterating over the
-			 * the boundary of the fixed image, evaluating the initial transform
-			 * at those points, and keeping track of the minimum/maximum transformed
-			 * coordinate in each dimension 
-			 */
-
-			/** Make a temporary copy; who knows, maybe some speedup can be achieved... *
-			InitialTransformConstPointer initialTransform = 
-				this->Superclass1::GetInitialTransform();
-			/** The points that define the bounding box *
-			InputPointType maxPoint;
-			InputPointType minPoint;
-			maxPoint.Fill( NumericTraits< CoordRepType >::NonpositiveMin() );
-			minPoint.Fill( NumericTraits< CoordRepType >::max() );
-			/** An iterator over the boundary of the fixed image *
-			BoundaryIteratorType bit(fixedImage, fixedImageRegion);
-			bit.SetExclusionRegionToInsetRegion();
-			bit.GoToBegin();
-			/** start loop over boundary; determines minPoint and maxPoint *
-			while ( !bit.IsAtEnd() )
-			{
-				/** Get index, transform to physical point, apply initial transform
-				 * NB: the OutputPointType of the initial transform by definition equals
-				 * the InputPointType of this transform. *
-        IndexType inputIndex = bit.GetIndex();
-				InputPointType inputPoint;
-				fixedImage->TransformIndexToPhysicalPoint(inputIndex, inputPoint);
-				InputPointType outputPoint = 
-					initialTransform->TransformPoint(	inputPoint );
-				/** update minPoint and maxPoint *
-				for ( unsigned int i = 0; i < SpaceDimension; i++ )
-				{
-					CoordRepType & outi = outputPoint[i];
-					CoordRepType & maxi = maxPoint[i];
-					CoordRepType & mini = minPoint[i];
-					if ( outi > maxi )
-					{
-						maxi = outi;
-					}
-					if ( outi < mini )
-					{
-						mini = outi;
-					}
-				}
-				/** step to next voxel *
-				++bit;
-			} //end while loop over fixed image boundary
-
-			/** Set minPoint as new "fixedImageOrigin" (between quotes, since it
-			 * is not really the origin of the fixedImage anymore) *
-			fixedImageOrigin = minPoint;
-
-			/** Compute the new "fixedImageSpacing" in each dimension *
-			const double smallnumber = NumericTraits<double>::epsilon();
-			for ( unsigned int i = 0; i < SpaceDimension; i++ )
-			{
-				/** Compute the length of the fixed image (in mm) for dimension i *
-				double oldLength_i = 
-					fixedImageSpacing[i] * static_cast<double>( fixedImageSize[i] - 1 );
-				/** Compute the length of the bounding box (in mm) for dimension i *
-        double newLength_i = static_cast<double>( maxPoint[i] - minPoint[i] );
-				/** Scale the fixedImageSpacing by their ratio. *
-				if (oldLength_i > smallnumber)
-				{
-					fixedImageSpacing[i] *= ( newLength_i / oldLength_i );
-				}				
-			}
-
-		  /** We have now adapted the fixedImageOrigin and fixedImageSpacing.
-			 * This makes sure that the BSpline grid is located at the position
-			 * of the fixed image after undergoing the initial transform.  *
-		     		  
-		} // end if UseComposition && InitialTransform!=0
-
-		/** Determine the grid region (size and index), origin and spacing.
-		 * \li The fixed image spacing is multiplied by the m_GridSpacingFactor
-		 *     to compute the gridspacing.
-		 * \li Some extra grid points are put at the edges, to take into account 
-		 *     the support region of the B-splines.
-		 *
-		for ( unsigned int j = 0; j < SpaceDimension; j++ )
-		{
-			gridspacing[ j ] = fixedImageSpacing[ j ] * this->m_GridSpacingFactor[ j ];
-			gridorigin[ j ]  = fixedImageOrigin[ j ] - 
-				gridspacing[ j ] * vcl_floor( static_cast<double>( SplineOrder ) / 2.0 );
-			gridindex[ j ]   = 0; // \todo: isn't this always the case anyway?
-
-      /** The grid size without the extra grid points at the edges. *
-      const unsigned int bareGridSize = static_cast<unsigned int>( 
-        vcl_ceil( fixedImageSize[ j ] / this->m_GridSpacingFactor[ j ] ) );
-			gridsize[ j ] = static_cast< typename RegionType::SizeValueType >(
-				bareGridSize + SplineOrder );
-
-      /** Shift the origin a little to the left, to place the grid
-       * symmetrically on the image.
-       *
-      gridorigin[ j ] -= ( gridspacing[ j ] * bareGridSize
-        - fixedImageSpacing[ j ] * ( fixedImageSize[ j ] - 1 ) ) / 2.0;
-		}
-		gridregion.SetSize( gridsize );
-		gridregion.SetIndex( gridindex );
-				*/
-	} // end DefineGrid()
 
 
   /**

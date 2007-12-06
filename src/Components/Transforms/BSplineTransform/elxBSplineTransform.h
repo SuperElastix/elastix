@@ -4,9 +4,10 @@
 /* For easy changing the BSplineOrder: */
 #define __VSplineOrder 3
 
-#include "itkBSplineDeformableTransform.h"
 #include "itkBSplineCombinationTransform.h"
+
 #include "itkGridScheduleComputer.h"
+#include "itkUpsampleBSplineParametersFilter.h"
 
 #include "elxIncludes.h"
 
@@ -24,12 +25,32 @@ using namespace itk;
 	 * The parameters used in this class are:
 	 * \parameter Transform: Select this transform as follows:\n
 	 *		<tt>(%Transform "BSplineTransform")</tt>
-	 * \parameter FinalGridSpacing: the grid spacing of the B-spline transform for each dimension. \n
+   * \parameter GridSpacingScheduleFull: the grid spacing in mm of the B-spline transform
+   *    for each dimension and each resolution. \n
+	 *		example: <tt>(GridSpacingScheduleFull 32.0 32.0 16.0 16.0 8.0 8.0)</tt> \n
+   *    Which is an example for a 2D image, using 3 resolutions.
+   * \parameter GridSpacingSchedule: the grid spacing of the B-spline transform
+   *    for each dimension and the last resolution. The grid spacing for the other
+   *    resolutions is determined by the "GridSpacingUpsampleFactor". \n
+	 *		example: <tt>(GridSpacingSchedule 16.0)</tt> \n
+   *    example: <tt>(GridSpacingSchedule 16.0 18.0)</tt> \n
+   *    The first is an example for an ND image. For all directions the grid spacing is
+   *    set to 16.0 mm. \n
+   *    The second is an example for an 2D image. For the x-direction the grid spacing is
+   *    set to 16.0 mm, for the y-direction it is set to 18.0 mm.
+   * \parameter GridSpacingUpsampleFactor: The factor with which the grid spacing is
+   *    upsampled in other resolutions then the last. Used in combination with the
+   *    "GridSpacingSchedule" option. \n
+   *		example: <tt>(GridSpacingUpsampleFactor 1.5)</tt> \n
+   *    The default is 2.0. For three resolutions and when "GridSpacingSchedule" is set
+   *    to 8.0 mm in all directions, the following full schedule is derived for a 3D image:
+   *    32.0 32.0 32.0 16.0 16.0 16.0 8.0 8.0 8.0.
+	 * \parameter FinalGridSpacing: DEPRECATED. the grid spacing of the B-spline transform for each dimension. \n
 	 *		example: <tt>(FinalGridSpacing 8.0 8.0 8.0)</tt> \n
 	 *    If only one argument is given, that factor is used for each dimension. The spacing
 	 *    is not in millimeters, but in "voxel size units".
 	 *		The default is 8.0 in every dimension.
-	 * \parameter UpsampleGridOption: a flag to determine if the B-spline grid should
+	 * \parameter UpsampleGridOption: DEPRECATED. a flag to determine if the B-spline grid should
 	 *		be upsampled from one resolution level to another. Choose from {true, false}. \n
 	 *		example: <tt>(UpsampleGridOption "true")</tt> \n
 	 *		example: <tt>(UpsampleGridOption "true" "false" "true")</tt> \n
@@ -71,14 +92,14 @@ using namespace itk;
 	public:
 
 		/** Standard ITK-stuff. */
-		typedef BSplineTransform 										Self;
+		typedef BSplineTransform 										    Self;
 		typedef BSplineCombinationTransform<
 			typename elx::TransformBase<TElastix>::CoordRepType,
 			elx::TransformBase<TElastix>::FixedImageDimension,
-			__VSplineOrder >													Superclass1;
-		typedef elx::TransformBase<TElastix>				Superclass2;
-    typedef SmartPointer<Self>									Pointer;
-		typedef SmartPointer<const Self>						ConstPointer;
+			__VSplineOrder >													    Superclass1;
+		typedef elx::TransformBase<TElastix>				    Superclass2;
+    typedef SmartPointer<Self>									    Pointer;
+		typedef SmartPointer<const Self>						    ConstPointer;
 				
 		/** The ITK-class that provides most of the functionality, and
 		 * that is set as the "CurrentTransform" in the CombinationTransform.
@@ -133,8 +154,7 @@ using namespace itk;
 			BSplineTransformType::BulkTransformPointer						BulkTransformPointer;
 		typedef typename 
 			BSplineTransformType::WeightsFunctionType							WeightsFunctionType;
-		typedef typename 
-			BSplineTransformType::WeightsType											WeightsType;
+		typedef typename BSplineTransformType::WeightsType			WeightsType;
 		typedef typename 
 			BSplineTransformType::ContinuousIndexType							ContinuousIndexType;
 		typedef typename 
@@ -153,11 +173,14 @@ using namespace itk;
 		typedef typename Superclass2::ITKBaseType								ITKBaseType;
 		typedef typename Superclass2::CombinationTransformType	CombinationTransformType;
 
-		/** Typedef's for the GridScheduleComputer. */
+		/** Typedef's for the GridScheduleComputer and the UpsampleBSplineParametersFilter. */
     typedef GridScheduleComputer< SpaceDimension >          GridScheduleComputerType;
     typedef typename GridScheduleComputerType::Pointer      GridScheduleComputerPointer;
     typedef typename GridScheduleComputerType
       ::VectorSpacingType                                   GridScheduleType;
+    typedef UpsampleBSplineParametersFilter<
+      ParametersType, ImageType >                           GridUpsamplerType;
+    typedef typename GridUpsamplerType::Pointer             GridUpsamplerPointer;
 
 		/** Execute stuff before the actual registration:
 		 * \li Create an initial B-spline grid.
@@ -186,8 +209,6 @@ using namespace itk;
 		virtual void InitializeTransform( void );
 
 		/** Method to increase the density of the BSpline grid.
-		 * \li Half the m_GridSpacingFactor
-		 * \li Define the region, origin and spacing of the new grid
 		 * \li Determine the new B-spline coefficients that describe the current deformation field.
 		 * \li Set these coefficients as InitialParametersOfNextLevel in the registration object.
 		 * Called by BeforeEachResolution().
@@ -202,18 +223,6 @@ using namespace itk;
 		 * Called by SetInitialGrid() 
 		 */
 		virtual bool ComputeInitialGridSpacing_Deprecated( void );
-
-		/** Define a bspline grid, based on:
-		 * \li The current m_GridSpacingFactor,
-		 * \li FixedImage size/spacing/origin, and
-		 * \li InitialTransform; only used in case UseComposition is true.
-		 *     in this case the BSpline grid is located at the position of
-		 *     the fixed image after undergoing the initial transform.
-		 * Returns gridregion, gridorigin and gridspacing.
-		 * Called by InitializeTransform() and IncreaseScale().
-		 */
-		virtual void DefineGrid( RegionType & gridregion,
-			OriginType & gridorigin, SpacingType & gridspacing ) const;
 
 		/** Function to read transform-parameters from a file. */
 		virtual void ReadFromFile( void );
@@ -231,10 +240,6 @@ using namespace itk;
 
 		/** The destructor. */
 		virtual ~BSplineTransform() {}
-		
-		/** Member variables. */
-		//SpacingType						m_GridSpacingFactor;
-		//std::vector< bool >		m_UpsampleBSplineGridOption;
 
 	private:
 
@@ -249,6 +254,7 @@ using namespace itk;
     /** Private variables. */
 		BSplineTransformPointer	    m_BSplineTransform;
     GridScheduleComputerPointer m_GridScheduleComputer;
+    GridUpsamplerPointer        m_GridUpsampler;
 		
 	}; // end class BSplineTransform
 	

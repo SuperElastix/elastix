@@ -6,6 +6,8 @@ ADD_ELXCOMPONENT( elxBSplineTransform
  elxBSplineTransform.cxx
  itkGridScheduleComputer.h
  itkGridScheduleComputer.txx
+ itkUpsampleBSplineParametersFilter.h
+ itkUpsampleBSplineParametersFilter.txx
 )
 
 
