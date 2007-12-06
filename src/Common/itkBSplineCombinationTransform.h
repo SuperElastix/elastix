@@ -95,13 +95,14 @@ namespace itk
 		/** Typedefs for the BSplineTransform. */
 		typedef itk::BSplineDeformableTransform<
 			ScalarType,
-			itkGetStaticConstMacro(SpaceDimension),
-			itkGetStaticConstMacro(SplineOrder) >										BSplineTransformType;
+			itkGetStaticConstMacro( SpaceDimension ),
+			itkGetStaticConstMacro( SplineOrder ) >									BSplineTransformType;
 		typedef typename BSplineTransformType::Pointer						BSplineTransformPointer;
 		typedef typename BSplineTransformType::WeightsType				WeightsType;
 		typedef typename 
 			BSplineTransformType::ParameterIndexArrayType						ParameterIndexArrayType;
-		
+    typedef typename BSplineTransformType::ImageType          CoefficientImageType;
+    typedef typename BSplineTransformType::ImagePointer       CoefficientImagePointer;
     
 		/** A pointer to a function that looks like the TransformPoint function 
 		 * with 5 arguments, as defined in the BSplineTransform. */
