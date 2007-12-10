@@ -80,13 +80,13 @@ namespace itk
 		typedef const JacobianType & (Self::*GetJacobianFunctionPointer)( const InputPointType & ) const;
 		
 		/** Typedefs for the InitialTransform */
-		typedef Superclass																				InitialTransformType;
-		typedef typename InitialTransformType::Pointer						InitialTransformPointer;
-		typedef typename InitialTransformType::ConstPointer				InitialTransformConstPointer;
+		typedef Superclass																			InitialTransformType;
+		typedef typename InitialTransformType::Pointer					InitialTransformPointer;
+		typedef typename InitialTransformType::ConstPointer			InitialTransformConstPointer;
 		
 		/** Typedefs for the CurrentTransform */
-		typedef Superclass																				CurrentTransformType;
-		typedef typename CurrentTransformType::Pointer						CurrentTransformPointer;
+		typedef Superclass																			CurrentTransformType;
+		typedef typename CurrentTransformType::Pointer					CurrentTransformPointer;
 				
 		/** Set/Get a pointer to the InitialTransform */
 		itkGetConstObjectMacro( InitialTransform, InitialTransformType );
@@ -99,24 +99,24 @@ namespace itk
 		virtual void SetCurrentTransform( CurrentTransformType * _arg );
 
 		/** Control the way transforms are combined. */
-		virtual void SetUseAddition(bool _arg);
-		itkGetConstMacro(UseAddition, bool);
+		virtual void SetUseAddition( bool _arg );
+		itkGetConstMacro( UseAddition, bool );
 
 		/** Control the way transforms are combined. */
-		virtual void SetUseComposition(bool _arg);
-		itkGetConstMacro(UseComposition, bool);
+		virtual void SetUseComposition( bool _arg );
+		itkGetConstMacro( UseComposition, bool );
 
 		/**  Method to transform a point. */
 		virtual OutputPointType TransformPoint( const InputPointType  & point ) const;
 		
 		/** Compute the Jacobian of the transformation */
-		virtual const JacobianType & GetJacobian(const InputPointType & point ) const;
+		virtual const JacobianType & GetJacobian( const InputPointType & point ) const;
 
 		/** Return the number of parameters that completely define the CurrentTransform  */
-		virtual unsigned int GetNumberOfParameters(void) const;
+		virtual unsigned int GetNumberOfParameters( void ) const;
 		
 		/** Get the Transformation Parameters from the CurrentTransform. */
-		virtual const ParametersType& GetParameters(void) const;
+		virtual const ParametersType& GetParameters( void ) const;
 
 		/** Set the transformation parameters in the CurrentTransform	*/
 		virtual void SetParameters( const ParametersType & param);
@@ -135,7 +135,7 @@ namespace itk
 		* an inverse transform. An exception is thrown when no CurrentTransform
 		* is set.
 		*/
-		virtual bool GetInverse(Self* inverse) const;
+		virtual bool GetInverse( Self* inverse ) const;
 
     /** Return whether the transform is linear (or actually: affine)
      * Returns true when both initial and current transform are linear */
@@ -143,25 +143,29 @@ namespace itk
 					
 	protected:
 		
+    /** Constructor. */
 		CombinationTransform();
+
+    /** Destructor. */
 		virtual ~CombinationTransform(){};
 				
 		/** Declaration of members.*/
-		InitialTransformConstPointer m_InitialTransform;
-		CurrentTransformPointer m_CurrentTransform;
+		InitialTransformConstPointer  m_InitialTransform;
+		CurrentTransformPointer       m_CurrentTransform;
 
 		/** Set the SelectedTransformPointFunction and the 
-		 * SelectedGetJacobianFunction */
-		virtual void UpdateCombinationMethod(void);
+		 * SelectedGetJacobianFunction.
+     */
+		virtual void UpdateCombinationMethod( void );
 
 		/** Throw an exception. */
-		virtual void NoCurrentTransformSet(void) const throw (ExceptionObject);
+		virtual void NoCurrentTransformSet( void ) const throw (ExceptionObject);
 
 	  /**  A pointer to one of the following functions:
 		 * - TransformPointUseAddition,
 		 * - TransformPointUseComposition,
 		 * - TransformPointNoCurrentTransform
-		 * - TransformPointNoInitialTransform. 
+		 * - TransformPointNoInitialTransform.
 		 */
 		TransformPointFunctionPointer m_SelectedTransformPointFunction;
 
@@ -204,15 +208,15 @@ namespace itk
 		/** NO CURRENT TRANSFORM SET: throw an exception */
 		inline const JacobianType & GetJacobianNoCurrentTransform( const InputPointType & point ) const;
 	
-		/** How to combine the transforms.  */
+		/** How to combine the transforms. */
 		bool m_UseAddition;
 		bool m_UseComposition;
 				
 	private:
 		
 		CombinationTransform( const Self& );	// purposely not implemented
-		void operator=( const Self& );		// purposely not implemented
-				
+		void operator=( const Self& );		    // purposely not implemented
+
 	}; // end class CombinationTransform
 		
 		
