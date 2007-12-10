@@ -1,6 +1,7 @@
 #ifndef __itkGridScheduleComputer_TXX__
 #define __itkGridScheduleComputer_TXX__
 
+#include "itkImageRegionExclusionConstIteratorWithIndex.h"
 
 namespace itk
 {
@@ -9,11 +10,12 @@ namespace itk
 	 * ********************* Constructor ****************************
 	 */
 	
-	template <unsigned int VImageDimension>
-  GridScheduleComputer<VImageDimension>
+	template < typename TTransformScalarType, unsigned int VImageDimension >
+  GridScheduleComputer<TTransformScalarType, VImageDimension>
   ::GridScheduleComputer()
 	{
     this->m_BSplineOrder = 3;
+    this->m_InitialTransform = 0;
     this->SetDefaultGridSpacingSchedule( 3, 16.0, 2.0 );
 
 	} // end Constructor()
@@ -23,9 +25,9 @@ namespace itk
 	 * ********************* SetDefaultGridSpacingSchedule ****************************
 	 */
 	
-	template <unsigned int VImageDimension>
+	template < typename TTransformScalarType, unsigned int VImageDimension >
   void
-  GridScheduleComputer<VImageDimension>
+  GridScheduleComputer<TTransformScalarType, VImageDimension>
   ::SetDefaultGridSpacingSchedule(
     const unsigned int & levels,
     const SpacingType & finalGridSpacing,
@@ -34,7 +36,6 @@ namespace itk
     /** Set member variables. */
     this->m_NumberOfLevels = levels;
     this->SetUpsamplingFactor( upsamplingFactor );
-    this->m_GridSpacingScheduleIsDownwardsDivisible = true;
 
     /** Initialize the schedule. */
     this->m_GridSpacingSchedule.clear();
@@ -48,17 +49,6 @@ namespace itk
       factor *= factor;
     }
 
-    /** Determine if upsampling is required. */
-    this->m_DoUpsampling.clear();
-    if ( this->m_UpsamplingFactor > 1.0 )
-    {
-      this->m_DoUpsampling.resize( levels - 1, true );
-    }
-    else
-    {
-      this->m_DoUpsampling.resize( levels - 1, false );
-    }
-
   } // end SetDefaultGridSpacingSchedule()
 
   
@@ -66,26 +56,14 @@ namespace itk
 	 * ********************* SetGridSpacingSchedule ****************************
 	 */
 	
-	template <unsigned int VImageDimension>
+	template < typename TTransformScalarType, unsigned int VImageDimension >
   void
-  GridScheduleComputer<VImageDimension>
+  GridScheduleComputer<TTransformScalarType, VImageDimension>
   ::SetGridSpacingSchedule( const VectorSpacingType & schedule )
 	{
     /** Set member variables. */
     this->m_GridSpacingSchedule = schedule;
     this->m_NumberOfLevels = schedule.size();
-    this->m_GridSpacingScheduleIsDownwardsDivisible = false;
-
-    /** Determine if upsampling is required. */
-    this->m_DoUpsampling.clear();
-    this->m_DoUpsampling.resize( this->m_NumberOfLevels - 1, false );
-    for ( unsigned int i = 0; i < this->m_NumberOfLevels - 1; ++i )
-    {
-      if ( schedule[ i ] != schedule[ i + 1 ] )
-      {
-        this->m_DoUpsampling[ i ] = true;
-      }
-    }
 
   } // end SetGridSpacingSchedule()
 
@@ -94,9 +72,9 @@ namespace itk
 	 * ********************* GetGridSpacingSchedule ****************************
 	 */
 	
-	template <unsigned int VImageDimension>
+	template < typename TTransformScalarType, unsigned int VImageDimension >
   void
-  GridScheduleComputer<VImageDimension>
+  GridScheduleComputer<TTransformScalarType, VImageDimension>
   ::GetGridSpacingSchedule( VectorSpacingType & schedule ) const
 	{
     schedule = this->m_GridSpacingSchedule;
@@ -108,11 +86,14 @@ namespace itk
 	 * ********************* ComputeBSplineGrid ****************************
 	 */
 	
-	template <unsigned int VImageDimension>
+	template < typename TTransformScalarType, unsigned int VImageDimension >
   void
-  GridScheduleComputer<VImageDimension>
+  GridScheduleComputer<TTransformScalarType, VImageDimension>
   ::ComputeBSplineGrid( void )
 	{
+    /** Apply the initial transform. */
+    this->ApplyInitialTransform();
+
     /** Set the appropriate sizes. */
     this->m_GridOrigins.resize( this->m_NumberOfLevels );
     this->m_GridRegions.resize( this->m_NumberOfLevels );
@@ -121,13 +102,15 @@ namespace itk
     for ( unsigned int i = 0; i < this->m_NumberOfLevels; ++i )
 		{
       /** For all dimensions ... */
-      SizeType size = this->m_Region.GetSize();
+      SizeType size = this->m_ImageRegion.GetSize();
       SizeType gridsize;
       for ( unsigned int j = 0; j < Dimension; ++j )
       {
+        double gridSpacing = this->m_GridSpacingSchedule[ i ][ j ];
+
         /** Compute the grid size without the extra grid points at the edges. */
         const unsigned int bareGridSize = static_cast<unsigned int>(
-          vcl_ceil( size[ j ] * this->m_Spacing[ j ] / this->m_GridSpacingSchedule[ i ][ j ] ) );
+          vcl_ceil( size[ j ] * this->m_ImageSpacing[ j ] / gridSpacing ) );
 
         /** The number of B-spline grid nodes is the bareGridSize plus the
          * B-spline order more grid nodes.
@@ -135,17 +118,9 @@ namespace itk
         gridsize[ j ] = static_cast<SizeValueType>( bareGridSize + this->m_BSplineOrder );
 
         /** Compute the origin of the B-spline grid. */
-        this->m_GridOrigins[ i ][ j ] = this->m_Origin[ j ] -
-          this->m_GridSpacingSchedule[ i ][ j ]
-          * vcl_floor( static_cast<double>( this->m_BSplineOrder ) / 2.0 );
-
-        /** Shift the origin a little to the left, to place the grid
-         * symmetrically on the image.
-         */
-        this->m_GridOrigins[ i ][ j ] -=
-          ( this->m_GridSpacingSchedule[ i ][ j ] * bareGridSize
-          - this->m_Spacing[ j ] * ( size[ j ] - 1 ) ) / 2.0;
-        // todo: I don't get Stefans code at this point. Is it wrong?
+        this->m_GridOrigins[ i ][ j ] = this->m_ImageOrigin[ j ] -
+          ( ( gridsize[ i ] - 1 ) * gridSpacing
+          - ( size[ i ] - 1 ) * this->m_ImageSpacing[ i ] ) / 2.0;
       }
 
       /** Set the grid region. */
@@ -154,94 +129,122 @@ namespace itk
     
   } // end ComputeBSplineGrid()
   
-	/** Take into account the initial transform, if composition is used to 
-		 * combine it with the current (bspline) transform *
-		if ( (this->GetUseComposition()) && (this->Superclass1::GetInitialTransform() != 0) )
-		{
-			/** We have to determine a bounding box around the fixed image after
-			 * applying the initial transform. This is done by iterating over the
-			 * the boundary of the fixed image, evaluating the initial transform
-			 * at those points, and keeping track of the minimum/maximum transformed
-			 * coordinate in each dimension 
-			 */
 
-			/** Make a temporary copy; who knows, maybe some speedup can be achieved... *
-			InitialTransformConstPointer initialTransform = 
-				this->Superclass1::GetInitialTransform();
-			/** The points that define the bounding box *
-			InputPointType maxPoint;
-			InputPointType minPoint;
-			maxPoint.Fill( NumericTraits< CoordRepType >::NonpositiveMin() );
-			minPoint.Fill( NumericTraits< CoordRepType >::max() );
-			/** An iterator over the boundary of the fixed image *
-			BoundaryIteratorType bit(fixedImage, fixedImageRegion);
-			bit.SetExclusionRegionToInsetRegion();
-			bit.GoToBegin();
-			/** start loop over boundary; determines minPoint and maxPoint *
-			while ( !bit.IsAtEnd() )
-			{
-				/** Get index, transform to physical point, apply initial transform
-				 * NB: the OutputPointType of the initial transform by definition equals
-				 * the InputPointType of this transform. *
-        IndexType inputIndex = bit.GetIndex();
-				InputPointType inputPoint;
-				fixedImage->TransformIndexToPhysicalPoint(inputIndex, inputPoint);
-				InputPointType outputPoint = 
-					initialTransform->TransformPoint(	inputPoint );
-				/** update minPoint and maxPoint *
-				for ( unsigned int i = 0; i < SpaceDimension; i++ )
-				{
-					CoordRepType & outi = outputPoint[i];
-					CoordRepType & maxi = maxPoint[i];
-					CoordRepType & mini = minPoint[i];
-					if ( outi > maxi )
-					{
-						maxi = outi;
-					}
-					if ( outi < mini )
-					{
-						mini = outi;
-					}
-				}
-				/** step to next voxel *
-				++bit;
-			} //end while loop over fixed image boundary
+  /**
+	 * ********************* ApplyInitialTransform ****************************
+   *
+   * This function adapts the m_ImageOrigin and m_ImageSpacing.
+   * This makes sure that the BSpline grid is located at the position
+   * of the fixed image after undergoing the initial transform.
+   */
+	
+	template < typename TTransformScalarType, unsigned int VImageDimension >
+  void
+  GridScheduleComputer<TTransformScalarType, VImageDimension>
+  ::ApplyInitialTransform( void )
+	{
+    /** Check for the existence of an initial transform. */
+    if ( this->m_InitialTransform.IsNull() )
+    {
+      return;
+    }
 
-			/** Set minPoint as new "fixedImageOrigin" (between quotes, since it
-			 * is not really the origin of the fixedImage anymore) *
-			fixedImageOrigin = minPoint;
+    /** We have to determine a bounding box around the fixed image after
+     * applying the initial transform. This is done by iterating over the
+     * the boundary of the fixed image, evaluating the initial transform
+     * at those points, and keeping track of the minimum/maximum transformed
+     * coordinate in each dimension.
+     */
 
-			/** Compute the new "fixedImageSpacing" in each dimension *
-			const double smallnumber = NumericTraits<double>::epsilon();
-			for ( unsigned int i = 0; i < SpaceDimension; i++ )
-			{
-				/** Compute the length of the fixed image (in mm) for dimension i *
-				double oldLength_i = 
-					fixedImageSpacing[i] * static_cast<double>( fixedImageSize[i] - 1 );
-				/** Compute the length of the bounding box (in mm) for dimension i *
-        double newLength_i = static_cast<double>( maxPoint[i] - minPoint[i] );
-				/** Scale the fixedImageSpacing by their ratio. *
-				if (oldLength_i > smallnumber)
-				{
-					fixedImageSpacing[i] *= ( newLength_i / oldLength_i );
-				}				
-			}
+    /** Create a temporary image. As small as possible, for memory savings. */
+    typedef Image< unsigned char, Dimension >     ImageType;//bool??
+    typename ImageType::Pointer image = ImageType::New();
+    image->SetOrigin( this->m_ImageOrigin );
+    image->SetSpacing( this->m_ImageSpacing );
+    image->SetRegions( this->m_ImageRegion );
+    image->Allocate();
 
-		  /** We have now adapted the fixedImageOrigin and fixedImageSpacing.
-			 * This makes sure that the BSpline grid is located at the position
-			 * of the fixed image after undergoing the initial transform.  *
-		     		  
-		} // end if UseComposition && InitialTransform!=0
+    /** The points that define the bounding box. */
+    OriginType maxPoint;
+    OriginType minPoint;
+    maxPoint.Fill( NumericTraits< TransformScalarType >::NonpositiveMin() );
+    minPoint.Fill( NumericTraits< TransformScalarType >::max() );
+    
+    /** An iterator over the boundary of the image. */
+    typedef ImageRegionExclusionConstIteratorWithIndex<
+      ImageType >                               BoundaryIteratorType;
+    BoundaryIteratorType bit( image, this->m_ImageRegion );
+    bit.SetExclusionRegionToInsetRegion();
+    bit.GoToBegin();
+    
+    /** Start loop over boundary; determines minPoint and maxPoint. */
+    typedef typename ImageType::IndexType IndexType;
+    while ( !bit.IsAtEnd() )
+    {
+      /** Get index, transform to physical point, apply initial transform.
+       * NB: the OutputPointType of the initial transform by definition equals
+       * the InputPointType of this transform.
+       */
+      IndexType inputIndex = bit.GetIndex();
+      OriginType inputPoint;
+      image->TransformIndexToPhysicalPoint( inputIndex, inputPoint );
+      typename TransformType::OutputPointType outputPoint = 
+        this->m_InitialTransform->TransformPoint(	inputPoint );
+      
+      /** Update minPoint and maxPoint. */
+      for ( unsigned int i = 0; i < Dimension; i++ )
+      {
+        TransformScalarType & outi = outputPoint[ i ];
+        TransformScalarType & maxi = maxPoint[ i ];
+        TransformScalarType & mini = minPoint[ i ];
+        if ( outi > maxi )
+        {
+          maxi = outi;
+        }
+        if ( outi < mini )
+        {
+          mini = outi;
+        }
+      }
+      
+      /** Step to next voxel. */
+      ++bit;
 
+    } // end while loop over image boundary
+
+    /** Set minPoint as the new "ImageOrigin" (between quotes, since it
+     * is not really the origin of the fixedImage anymore).
+     */
+    this->m_ImageOrigin = minPoint;
+
+    /** Compute the new "ImageSpacing" in each dimension. */
+    const double smallnumber = NumericTraits<double>::epsilon();
+    for ( unsigned int i = 0; i < Dimension; i++ )
+    {
+      /** Compute the length of the fixed image (in mm) for dimension i. */
+      double oldLength_i = 
+        this->m_ImageSpacing[ i ] * static_cast<double>( this->m_ImageRegion.GetSize()[ i ] - 1 );
+      
+      /** Compute the length of the bounding box (in mm) for dimension i. */
+      double newLength_i = static_cast<double>( maxPoint[ i ] - minPoint[ i ] );
+      
+      /** Scale the fixedImageSpacing by their ratio. */
+      if ( oldLength_i > smallnumber )
+      {
+        this->m_ImageSpacing[ i ] *= ( newLength_i / oldLength_i );
+      }
+    }
+
+  } // end ApplyInitialTransform()
 
 
   /**
 	 * ********************* GetBSplineGrid ****************************
 	 */
 	
-	template <unsigned int VImageDimension>
+	template < typename TTransformScalarType, unsigned int VImageDimension >
   void
-  GridScheduleComputer<VImageDimension>
+  GridScheduleComputer<TTransformScalarType, VImageDimension>
   ::GetBSplineGrid(
     unsigned int level,
     RegionType & gridRegion,
@@ -268,30 +271,12 @@ namespace itk
   
 
   /**
-	 * ********************* GetDoUpsampling ****************************
-	 */
-	
-	template <unsigned int VImageDimension>
-  bool
-  GridScheduleComputer<VImageDimension>
-  ::GetDoUpsampling( const unsigned int & level ) const
-	{
-    if ( level > this->m_NumberOfLevels - 1 )
-    {
-      return true;
-    }
-    return this->m_DoUpsampling[ level ];
-
-  } // end GetDoUpsampling()
-
-
-  /**
 	 * ********************* PrintSelf ****************************
 	 */
 	
-	template <unsigned int VImageDimension>
+	template < typename TTransformScalarType, unsigned int VImageDimension >
   void
-  GridScheduleComputer<VImageDimension>
+  GridScheduleComputer<TTransformScalarType, VImageDimension>
   ::PrintSelf( std::ostream & os, Indent indent ) const
 	{
     Superclass::PrintSelf( os, indent );
@@ -299,10 +284,10 @@ namespace itk
     os << indent << "B-spline order: " << this->m_BSplineOrder << std::endl;
     os << indent << "NumberOfLevels: " << this->m_NumberOfLevels << std::endl;
 
-    os << indent << "Spacing: " << this->m_Spacing << std::endl;
-    os << indent << "Origin: " << this->m_Origin << std::endl;
-    os << indent << "Region: " << std::endl;
-    this->m_Region.Print( os, indent.GetNextIndent() );
+    os << indent << "ImageSpacing: " << this->m_ImageSpacing << std::endl;
+    os << indent << "ImageOrigin: " << this->m_ImageOrigin << std::endl;
+    os << indent << "ImageRegion: " << std::endl;
+    this->m_ImageRegion.Print( os, indent.GetNextIndent() );
 
     os << indent << "GridSpacingSchedule: " << std::endl;
     for ( unsigned int i = 0; i < this->m_NumberOfLevels; ++i )
@@ -323,10 +308,9 @@ namespace itk
     }
 
     os << indent << "UpsamplingFactor: " << this->m_UpsamplingFactor << std::endl;
-    os << indent << "GridSpacingScheduleIsDownwardsDivisible: "
-      << this->m_GridSpacingScheduleIsDownwardsDivisible << std::endl;
 
   } // end PrintSelf()
+
 
 } // end namespace itk
 
