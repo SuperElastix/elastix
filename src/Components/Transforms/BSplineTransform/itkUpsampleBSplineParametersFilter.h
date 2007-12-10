@@ -69,11 +69,11 @@ namespace itk
 		/** Set the B-spline order. */
 		itkSetMacro( BSplineOrder, unsigned int );
 
-		/** Set the input parameter array. */
+		/** Set the input parameter array. *
 		itkSetMacro( InputParameters, ArrayType );
 
 		/** Compute the output parameter array. */
-		virtual ArrayType ComputeOutput( void );
+		virtual void UpsampleParameters( const ArrayType & param_in, ArrayType & param_out );
 
 	protected:
 
@@ -85,6 +85,9 @@ namespace itk
 
 		/** PrintSelf. */
 		virtual void PrintSelf( std::ostream& os, Indent indent ) const;
+
+    /** Function that checks if upsampling is required. */
+    virtual bool DoUpsampling( void );
   
 	private:
 
@@ -99,7 +102,6 @@ namespace itk
 		SpacingType		m_RequiredGridSpacing;
 		RegionType		m_RequiredGridRegion;
 		unsigned int	m_BSplineOrder;
-		ArrayType			m_InputParameters;
 
 }; // end class UpsampleBSplineParametersFilter
 

@@ -26,14 +26,21 @@ namespace itk
 
 
 	/**
-	 * ******************* ComputeOutput *******************
+	 * ******************* UpsampleParameters *******************
 	 */
 
 	template< class TArray, class TImage >
-		typename UpsampleBSplineParametersFilter<TArray,TImage>::ArrayType
+		void
 		UpsampleBSplineParametersFilter<TArray,TImage>
-		::ComputeOutput( void )
+		::UpsampleParameters( const ArrayType & parameters_in, ArrayType & parameters_out )
 	{
+    /** Determine if upsampling is required. */
+    if ( !this->DoUpsampling() )
+    {
+      parameters_out = parameters_in;
+      return;
+    }
+
 		/** Typedefs. */
 		typedef itk::ResampleImageFilter<
 			ImageType, ImageType >											  UpsampleFilterType;
@@ -44,14 +51,14 @@ namespace itk
 		typedef ImageRegionConstIterator< ImageType >		IteratorType;
 
 		/** Get the pointer to the data of the input parameters. */
-		PixelType * inputDataPointer = static_cast<PixelType *>( this->m_InputParameters.data_block() );
+		PixelType * inputDataPointer = const_cast<PixelType *>( parameters_in.data_block() );
 
 		/** Get the number of parameters. */
 		const unsigned int currentNumberOfPixels = 
       this->m_CurrentGridRegion.GetNumberOfPixels();
 
 		/** Create the new vector of output parameters, with the correct size. */
-		ArrayType parameters_out(
+		parameters_out.SetSize(
 			this->m_RequiredGridRegion.GetNumberOfPixels() * Dimension );
 
 		/** The input parameters are represented as a coefficient image. */
@@ -133,10 +140,25 @@ namespace itk
 			
 		} // end for dimension loop
 
-		/** Return the upsampled B-spline parameters. */
-		return parameters_out;
+	} // end UpsampleParameters()
 
-	} // end ComputeOutput()
+
+  /**
+	 * ******************* DoUpsampling *******************
+	 */
+
+	template< class TArray, class TImage >
+		bool
+		UpsampleBSplineParametersFilter<TArray,TImage>
+		::DoUpsampling( void )
+	{
+    bool ret = ( this->m_CurrentGridOrigin != this->m_RequiredGridOrigin );
+    ret |= ( this->m_CurrentGridSpacing != this->m_RequiredGridSpacing );
+    ret |= ( this->m_CurrentGridRegion != this->m_RequiredGridRegion );
+
+    return ret;
+
+  } // end DoUpsampling()
 
 
   /**
@@ -148,6 +170,8 @@ namespace itk
 		UpsampleBSplineParametersFilter<TArray,TImage>
 		::PrintSelf( std::ostream& os, Indent indent ) const
 	{
+    this->Superclass::PrintSelf( os, indent );
+
     os << indent << "CurrentGridOrigin: "  << this->m_CurrentGridOrigin << std::endl;
     os << indent << "CurrentGridSpacing: " << this->m_CurrentGridSpacing << std::endl;
     os << indent << "CurrentGridRegion: "  << this->m_CurrentGridRegion << std::endl;
@@ -157,7 +181,6 @@ namespace itk
     os << indent << "RequiredGridRegion: "  << this->m_RequiredGridRegion << std::endl;
 
     os << indent << "BSplineOrder: " << this->m_BSplineOrder << std::endl;
-    os << indent << "InputParameters: " << this->m_InputParameters << std::endl;
 
   } // end PrintSelf()
 
