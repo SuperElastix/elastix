@@ -32,7 +32,7 @@ using namespace itk;
 	 * \parameter NumberOfResolutions: the number of resolutions used. \n
 	 *		example: <tt>(NumberOfResolutions 4)</tt> \n
 	 *		The default is 3.\n
-   * \parameter Metric<i>Weight: The weight for the i-th metric, in each resolution \n
+   * \parameter Metric\<i\>Weight: The weight for the i-th metric, in each resolution \n
 	 *		example: <tt>(Metric0Weight 0.5 0.5 0.8)</tt> \n
    *		example: <tt>(Metric1Weight 0.5 0.5 0.2)</tt> \n
 	 *		The default is 1.0.

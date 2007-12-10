@@ -30,7 +30,7 @@ using namespace itk;
    * \parameter AutomaticScalesEstimation: if this parameter is set to "true" the Scales
    *    parameter is ignored and the scales are determined automatically. \n
    *    example: <tt>( AutomaticScalesEstimation "true" ) </tt> \n
-   *    Default: "false".
+   *    Default: "false" (for backwards compatibility). Recommended: "true".
 	 * \parameter CenterOfRotation: an index around which the image is rotated. \n
 	 *		example: <tt>(CenterOfRotation 128 128 90)</tt> \n
 	 *		By default the CenterOfRotation is set to the geometric center of the image.
@@ -171,7 +171,13 @@ using namespace itk;
      * \li If scales are provided by the user use those,
      * \li Otherwise use some default value
      * This function is called by BeforeRegistration, after
-     * the InitializeTransform function is called */
+     * the InitializeTransform function is called 
+     *
+     * AutomaticScalesEstimation works like this:
+     * \li N=10000 points are sampled on a uniform grid on the fixed image.
+     * \li Jacobians dT/dmu are computed
+     * \li Scales_i = 1/N sum_x || dT / dmu_i ||^2
+     */
     virtual void SetScales(void);
 
 		/** Function to read transform-parameters from a file. 
