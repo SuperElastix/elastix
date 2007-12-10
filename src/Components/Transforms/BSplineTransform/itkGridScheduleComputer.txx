@@ -16,7 +16,7 @@ namespace itk
 	{
     this->m_BSplineOrder = 3;
     this->m_InitialTransform = 0;
-    this->SetDefaultGridSpacingSchedule( 3, 16.0, 2.0 );
+    this->SetDefaultSchedule( 3, 2.0 );
 
 	} // end Constructor()
 	
@@ -28,24 +28,23 @@ namespace itk
 	template < typename TTransformScalarType, unsigned int VImageDimension >
   void
   GridScheduleComputer<TTransformScalarType, VImageDimension>
-  ::SetDefaultGridSpacingSchedule(
-    const unsigned int & levels,
-    const SpacingType & finalGridSpacing,
-    const float & upsamplingFactor )
+  ::SetDefaultSchedule(
+    unsigned int levels,
+    double upsamplingFactor )
 	{
     /** Set member variables. */
     this->m_NumberOfLevels = levels;
     this->SetUpsamplingFactor( upsamplingFactor );
 
     /** Initialize the schedule. */
-    this->m_GridSpacingSchedule.clear();
-    this->m_GridSpacingSchedule.resize( levels, finalGridSpacing );
+    this->m_GridSpacingFactors.clear();
+    this->m_GridSpacingFactors.resize( levels, factors );
 
     /** Setup a default schedule. */
     float factor = this->m_UpsamplingFactor;
     for ( int i = levels - 2; i > -1; --i )
     {
-      this->m_GridSpacingSchedule[ i ] *= factor;
+      this->m_GridSpacingFactors[ i ] *= factor;
       factor *= factor;
     }
 
@@ -59,10 +58,10 @@ namespace itk
 	template < typename TTransformScalarType, unsigned int VImageDimension >
   void
   GridScheduleComputer<TTransformScalarType, VImageDimension>
-  ::SetGridSpacingSchedule( const VectorSpacingType & schedule )
+  ::SetSchedule( const VectorGridSpacingFactorType & schedule )
 	{
     /** Set member variables. */
-    this->m_GridSpacingSchedule = schedule;
+    this->m_GridSpacingFactors = schedule;
     this->m_NumberOfLevels = schedule.size();
 
   } // end SetGridSpacingSchedule()
@@ -75,9 +74,9 @@ namespace itk
 	template < typename TTransformScalarType, unsigned int VImageDimension >
   void
   GridScheduleComputer<TTransformScalarType, VImageDimension>
-  ::GetGridSpacingSchedule( VectorSpacingType & schedule ) const
+  ::GetSchedule( VectorGridSpacingFactorType & schedule ) const
 	{
-    schedule = this->m_GridSpacingSchedule;
+    schedule = this->m_GridSpacingFactors;
 
   } // end GetGridSpacingSchedule()
 
@@ -106,12 +105,15 @@ namespace itk
       SizeType gridsize;
       for ( unsigned int j = 0; j < Dimension; ++j )
       {
-        double gridSpacing = this->m_GridSpacingSchedule[ i ][ j ];
+        /** Compute the grid spacings. */
+        double gridSpacing
+          = this->m_FinalGridSpacing[ j ] * this->m_GridSpacingFactors[ i ][ j ];
+        this->m_GridSpacings[ i ][ j ] = gridSpacing;
 
         /** Compute the grid size without the extra grid points at the edges. */
         const unsigned int bareGridSize = static_cast<unsigned int>(
           vcl_ceil( size[ j ] * this->m_ImageSpacing[ j ] / gridSpacing ) );
-
+        
         /** The number of B-spline grid nodes is the bareGridSize plus the
          * B-spline order more grid nodes.
          */
@@ -264,7 +266,7 @@ namespace itk
 
     /** Return values. */
     gridRegion  = this->m_GridRegions[ level ];
-    gridSpacing = this->m_GridSpacingSchedule[ level ];
+    gridSpacing = this->m_GridSpacings[ level ];
     gridOrigin  = this->m_GridOrigins[ level ];
 
   } // end GetBSplineGrid()
@@ -289,10 +291,17 @@ namespace itk
     os << indent << "ImageRegion: " << std::endl;
     this->m_ImageRegion.Print( os, indent.GetNextIndent() );
 
-    os << indent << "GridSpacingSchedule: " << std::endl;
+    os << indent << "FinalGridSpacing: " << this->m_FinalGridSpacing << std::endl;
+    os << indent << "GridSpacingFactors: " << std::endl;
     for ( unsigned int i = 0; i < this->m_NumberOfLevels; ++i )
     {
-      os << indent.GetNextIndent() << this->m_GridSpacingSchedule[ i ] << std::endl;
+      os << indent.GetNextIndent() << this->m_GridSpacingFactors[ i ] << std::endl;
+    }
+
+    os << indent << "GridSpacings: " << std::endl;
+    for ( unsigned int i = 0; i < this->m_NumberOfLevels; ++i )
+    {
+      os << indent.GetNextIndent() << this->m_GridSpacings[ i ] << std::endl;
     }
 
     os << indent << "GridOrigins: " << std::endl;
