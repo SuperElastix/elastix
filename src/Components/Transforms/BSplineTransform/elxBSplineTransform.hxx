@@ -19,10 +19,10 @@ using namespace itk;
 		BSplineTransform<TElastix>::
 		BSplineTransform()
 	{
+    /** Initialize. */
 		this->m_BSplineTransform = BSplineTransformType::New();
 		this->SetCurrentTransform( this->m_BSplineTransform );
 
-		/** Initialize. */
     this->m_GridScheduleComputer = GridScheduleComputerType::New();
     this->m_GridScheduleComputer->SetBSplineOrder( SplineOrder );
 
@@ -99,15 +99,12 @@ using namespace itk;
 		/** Define the grid. */
 		if ( level == 0 )
 		{
-			this->InitializeTransform();			
+			this->InitializeTransform();
 		}	
 		else
 		{
-			/** Check if the BSpline grid should be upsampled now. */
-      if ( this->m_GridScheduleComputer->GetDoUpsampling( level - 1 ) )
-			{
-				this->IncreaseScale();
-			}
+			/** Upsample the B-spline grid, if required. */
+			this->IncreaseScale();
 		}
 
     /** Get the PassiveEdgeWidth and use it to set the OptimizerScales. */
@@ -150,7 +147,7 @@ using namespace itk;
     /** Way 1: the complete schedule. */
     float dummy = 1.0;
     unsigned int count = this->m_Configuration
-      ->CountNumberOfParameters( dummy, "GridSpacingScheduleFull" );
+      ->CountNumberOfParameterEntries( dummy, "GridSpacingScheduleFull" );
     bool invalidCount = false;
 
     GridScheduleType schedule( nrOfResolutions );
@@ -231,12 +228,18 @@ using namespace itk;
     }
 
     /** Set other required information. */
-    this->m_GridScheduleComputer->SetOrigin(
+    this->m_GridScheduleComputer->SetImageOrigin(
       this->GetElastix()->GetFixedImage()->GetOrigin() );
-    this->m_GridScheduleComputer->SetSpacing(
+    this->m_GridScheduleComputer->SetImageSpacing(
       this->GetElastix()->GetFixedImage()->GetSpacing() );
-    this->m_GridScheduleComputer->SetRegion(
+    this->m_GridScheduleComputer->SetImageRegion(
       this->GetElastix()->GetFixedImage()->GetLargestPossibleRegion() );
+
+    /** Take the initial transform only into account, if composition is used. */
+    if ( this->GetUseComposition() )
+		{
+      this->m_GridScheduleComputer->SetInitialTransform( this->Superclass1::GetInitialTransform() );
+    }
 
     /** Compute the necessary information. */
     this->m_GridScheduleComputer->ComputeBSplineGrid();
@@ -313,10 +316,10 @@ using namespace itk;
     this->m_GridUpsampler->SetRequiredGridOrigin( requiredGridOrigin );
     this->m_GridUpsampler->SetRequiredGridSpacing( requiredGridSpacing );
     this->m_GridUpsampler->SetRequiredGridRegion( requiredGridRegion );
-    this->m_GridUpsampler->SetInputParameters( latestParameters );
 
     /** Compute the upsampled B-spline parameters. */
-		ParametersType upsampledParameters = this->m_GridUpsampler->ComputeOutput();
+		ParametersType upsampledParameters;
+    this->m_GridUpsampler->UpsampleParameters( latestParameters, upsampledParameters );
 		
 		/** Set the new grid definition in the BSplineTransform. */
     this->m_BSplineTransform->SetGridOrigin( requiredGridOrigin );
@@ -548,11 +551,11 @@ using namespace itk;
     this->m_GridScheduleComputer->SetGridSpacingSchedule( schedule );
 
     /** Set other required information. */
-    this->m_GridScheduleComputer->SetOrigin(
+    this->m_GridScheduleComputer->SetImageOrigin(
       this->GetElastix()->GetFixedImage()->GetOrigin() );
-    this->m_GridScheduleComputer->SetSpacing(
+    this->m_GridScheduleComputer->SetImageSpacing(
       this->GetElastix()->GetFixedImage()->GetSpacing() );
-    this->m_GridScheduleComputer->SetRegion(
+    this->m_GridScheduleComputer->SetImageRegion(
       this->GetElastix()->GetFixedImage()->GetLargestPossibleRegion() );
 
     /** Compute the necessary information. */

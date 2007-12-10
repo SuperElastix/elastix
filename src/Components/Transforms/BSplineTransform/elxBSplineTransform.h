@@ -174,7 +174,8 @@ using namespace itk;
 		typedef typename Superclass2::CombinationTransformType	CombinationTransformType;
 
 		/** Typedef's for the GridScheduleComputer and the UpsampleBSplineParametersFilter. */
-    typedef GridScheduleComputer< SpaceDimension >          GridScheduleComputerType;
+    typedef GridScheduleComputer<
+      CoordRepType, SpaceDimension >                        GridScheduleComputerType;
     typedef typename GridScheduleComputerType::Pointer      GridScheduleComputerPointer;
     typedef typename GridScheduleComputerType
       ::VectorSpacingType                                   GridScheduleType;
