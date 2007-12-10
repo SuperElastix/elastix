@@ -24,37 +24,36 @@ using namespace itk;
 	 *
 	 * The parameters used in this class are:
 	 * \parameter Transform: Select this transform as follows:\n
-	 *		<tt>(%Transform "BSplineTransform")</tt>
-   * \parameter GridSpacingScheduleFull: the grid spacing in mm of the B-spline transform
-   *    for each dimension and each resolution. \n
-	 *		example: <tt>(GridSpacingScheduleFull 32.0 32.0 16.0 16.0 8.0 8.0)</tt> \n
-   *    Which is an example for a 2D image, using 3 resolutions.
-   * \parameter GridSpacingSchedule: the grid spacing of the B-spline transform
-   *    for each dimension and the last resolution. The grid spacing for the other
-   *    resolutions is determined by the "GridSpacingUpsampleFactor". \n
-	 *		example: <tt>(GridSpacingSchedule 16.0)</tt> \n
-   *    example: <tt>(GridSpacingSchedule 16.0 18.0)</tt> \n
-   *    The first is an example for an ND image. For all directions the grid spacing is
-   *    set to 16.0 mm. \n
-   *    The second is an example for an 2D image. For the x-direction the grid spacing is
-   *    set to 16.0 mm, for the y-direction it is set to 18.0 mm.
-   * \parameter GridSpacingUpsampleFactor: The factor with which the grid spacing is
-   *    upsampled in other resolutions then the last. Used in combination with the
-   *    "GridSpacingSchedule" option. \n
-   *		example: <tt>(GridSpacingUpsampleFactor 1.5)</tt> \n
-   *    The default is 2.0. For three resolutions and when "GridSpacingSchedule" is set
-   *    to 8.0 mm in all directions, the following full schedule is derived for a 3D image:
-   *    32.0 32.0 32.0 16.0 16.0 16.0 8.0 8.0 8.0.
-	 * \parameter FinalGridSpacing: DEPRECATED. the grid spacing of the B-spline transform for each dimension. \n
+	 *		<tt>(%Transform "BSplineTransform")</tt>  
+   * \parameter FinalGridSpacing: DEPRECATED. the grid spacing of the B-spline transform for each dimension. \n
 	 *		example: <tt>(FinalGridSpacing 8.0 8.0 8.0)</tt> \n
 	 *    If only one argument is given, that factor is used for each dimension. The spacing
 	 *    is not in millimeters, but in "voxel size units".
+	 *		The default is 8.0 in every dimension. The option is deprecated. Use either FinalGridSpacingInVoxels
+   *    or FinalGridSpacingInPhysicalUnits.
+   * \parameter FinalGridSpacingInVoxels: the grid spacing of the B-spline transform for each dimension. \n
+	 *		example: <tt>(FinalGridSpacingInVoxels 8.0 8.0 8.0)</tt> \n
+	 *    If only one argument is given, that factor is used for each dimension. The spacing
+	 *    is not in millimeters, but in "voxel size units".
+	 *		The default is 8.0 in every dimension.
+   * \parameter FinalGridSpacingInPhysicalUnits: the grid spacing of the B-spline transform for each dimension. \n
+	 *		example: <tt>(FinalGridSpacingInPhysicalUnits 8.0 8.0 8.0)</tt> \n
+	 *    If only one argument is given, that factor is used for each dimension. The spacing
+	 *    is specified in millimeters.
 	 *		The default is 8.0 in every dimension.
 	 * \parameter UpsampleGridOption: DEPRECATED. a flag to determine if the B-spline grid should
 	 *		be upsampled from one resolution level to another. Choose from {true, false}. \n
 	 *		example: <tt>(UpsampleGridOption "true")</tt> \n
 	 *		example: <tt>(UpsampleGridOption "true" "false" "true")</tt> \n
-	 *		The default is "true" inbetween all resolutions.
+	 *		The default is "true" inbetween all resolutions. The option is depecrated. Better use
+   *    the GridSpacingSchedule.
+   * \parameter GridSpacingSchedule: the grid spacing downsampling factors for the B-spline transform
+   *    for each dimension and each resolution. \n
+	 *		example: <tt>(GridSpacingSchedule 4.0 4.0 2.0 2.0 1.0 1.0)</tt> \n
+   *    Which is an example for a 2D image, using 3 resolutions. \n
+   *    For convenience, you may also specify only one value for each resolution:\n
+   *		example: <tt>(GridSpacingSchedule 4.0 2.0 1.0 )</tt> \n
+   *    which is equivalent to the example above.
    * \parameter PassiveEdgeWidth: the width of a band of control points at the border of the
    *   BSpline coefficient image that should remain passive during optimisation. \n
    *   Can be specified for each resolution. \n
@@ -178,7 +177,7 @@ using namespace itk;
       CoordRepType, SpaceDimension >                        GridScheduleComputerType;
     typedef typename GridScheduleComputerType::Pointer      GridScheduleComputerPointer;
     typedef typename GridScheduleComputerType
-      ::VectorSpacingType                                   GridScheduleType;
+      ::VectorGridSpacingFactorType                         GridScheduleType;
     typedef UpsampleBSplineParametersFilter<
       ParametersType, ImageType >                           GridUpsamplerType;
     typedef typename GridUpsamplerType::Pointer             GridUpsamplerPointer;
@@ -186,6 +185,7 @@ using namespace itk;
 		/** Execute stuff before the actual registration:
 		 * \li Create an initial B-spline grid.
 		 * \li Create initial registration parameters.
+     * \li PrecomputeGridInformation
 		 * Initially, the transform is set to use a 1x1x1 grid, with deformation (0,0,0).
 		 * In the method BeforeEachResolution() this will be replaced by the right grid size.
 		 * This seems not logical, but it is required, since the registration
@@ -202,8 +202,7 @@ using namespace itk;
 		virtual void BeforeEachResolution( void );
 		
 		/** Method to set the initial BSpline grid and initialize the parameters (to 0).
-		 * \li ComputeInitialGridSpacingFactor
-		 * \li Define the initial grid region, origin and spacing, using the just computed grid spacing factor
+		 * \li Define the initial grid region, origin and spacing, using the precomputed grid information.
 		 * \li Set the initial parameters to zero and set then as InitialParametersOfNextLevel in the registration object.
 		 * Called by BeforeEachResolution().
 		 */
@@ -214,17 +213,8 @@ using namespace itk;
 		 * \li Set these coefficients as InitialParametersOfNextLevel in the registration object.
 		 * Called by BeforeEachResolution().
 		 */
-		virtual void IncreaseScale( void );
+		virtual void IncreaseScale( void );		
 		
-		/** Method to compute m_GridSpacingFactor in the first resolution.
-		 * The initial grid spacing factor depends on:
-		 * \li The FinalGridSpacing parameter, read from the parameter file.
-		 * \li The UpsampleGridOption parameter, read from the parameter file.
-		 * \li The NumberOfResolutions, read from the parameter file
-		 * Called by SetInitialGrid() 
-		 */
-		virtual bool ComputeInitialGridSpacing_Deprecated( void );
-
 		/** Function to read transform-parameters from a file. */
 		virtual void ReadFromFile( void );
 
@@ -242,6 +232,13 @@ using namespace itk;
 		/** The destructor. */
 		virtual ~BSplineTransform() {}
 
+    /** Read user-specified gridspacing and call the itkGridScheduleComputer. */
+    virtual void PreComputeGridInformation( void );
+
+    /** Method to determine a schedule based on the UpsampleGridOption */
+		virtual void ComputeGridSchedule_Deprecated( GridScheduleType & schedule );
+
+
 	private:
 
 		/** The private constructor. */
@@ -249,8 +246,6 @@ using namespace itk;
 		/** The private copy constructor. */
 		void operator=( const Self& );		// purposely not implemented
 
-    /** Private helper functions. */
-    virtual void PreComputeGridInformation( void );
 
     /** Private variables. */
 		BSplineTransformPointer	    m_BSplineTransform;

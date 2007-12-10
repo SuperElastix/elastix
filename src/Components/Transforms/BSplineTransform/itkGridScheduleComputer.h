@@ -126,7 +126,10 @@ namespace itk
 		void PrintSelf( std::ostream& os, Indent indent ) const;
 
     /** Function to apply the initial transform, if it exists. */
-    virtual void ApplyInitialTransform( void );
+    virtual void ApplyInitialTransform(
+      OriginType & imageOrigin,
+      SpacingType & imageSpacing,
+      SpacingType & finalGridSpacing ) const;
 		
 	private:
 

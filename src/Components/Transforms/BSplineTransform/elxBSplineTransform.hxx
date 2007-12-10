@@ -124,110 +124,11 @@ using namespace itk;
 		void BSplineTransform<TElastix>::
 		PreComputeGridInformation( void )
 	{
-    /** The old deprecated way. */
-    if ( this->ComputeInitialGridSpacing_Deprecated() ) return;
-
     /** Get the total number of resolution levels. */
     unsigned int nrOfResolutions = 
 			this->m_Registration->GetAsITKBaseType()->GetNumberOfLevels();
 
-    /** Get the grid spacing schedule from the parameter file.
-     * Way 1: The user suplies the "GridSpacingScheduleFull".
-     *        - When nrOfResolutions spacings are specified, then it is
-     *          assumed that an isotropic grid spacing is desired.
-     *        - When nrOfResolutions * SpaceDimension spacings are
-     *          specified, then the grid spacing is fully specified.
-     *        - When another number of spacing is specified, then it is
-     *          assumed that an error is made.
-     * Way 2: The user supplies the "GridSpacingSchedule" and the
-     *        "GridSpacingUpsampleFactor".
-     * One of these two options is required; way 1 overrides way 2.
-     */
-
-    /** Way 1: the complete schedule. */
-    float dummy = 1.0;
-    unsigned int count = this->m_Configuration
-      ->CountNumberOfParameterEntries( dummy, "GridSpacingScheduleFull" );
-    bool invalidCount = false;
-
-    GridScheduleType schedule( nrOfResolutions );
-    if ( count == nrOfResolutions )
-    {
-      for ( unsigned int i = 0; i < nrOfResolutions; ++i )
-      {
-        float spacing;
-        this->m_Configuration->ReadParameter(
-          spacing, "GridSpacingScheduleFull", i );
-        schedule[ i ].Fill( spacing );
-      }
-    }
-    else if ( count == SpaceDimension * nrOfResolutions )
-    {
-      for ( unsigned int i = 0; i < nrOfResolutions; ++i )
-      {
-        for ( unsigned int j = 0; j < SpaceDimension; ++j )
-        {
-          this->m_Configuration->ReadParameter(
-            schedule[ i ][ j ], "GridSpacingScheduleFull", i * SpaceDimension + j  );
-        }
-      }
-    }
-    else
-    {
-      invalidCount = true;
-    }
-
-    /** Check validity of this option. */
-    int way1;
-    if ( count > 0 )
-    {
-      if ( invalidCount )
-      {
-        itkExceptionMacro( << "ERROR: \"GridSpacingScheduleFull\" not fully specified." );
-      }
-      else
-      {
-        this->m_GridScheduleComputer->SetGridSpacingSchedule( schedule );
-      }
-    }
-    else
-    {
-      /** Way 2: the final grid spacing. */
-      SpacingType finalGridSpacing;
-      finalGridSpacing[ 0 ] = 8.0;
-      way1 = this->m_Configuration->ReadParameter(
-        finalGridSpacing[ 0 ], "GridSpacingSchedule", 0, true );
-      finalGridSpacing.Fill( finalGridSpacing[ 0 ] );
-      for ( unsigned int i = 1; i < SpaceDimension; ++i )
-      {
-        this->m_Configuration->ReadParameter(
-          finalGridSpacing[ i ], "GridSpacingSchedule", i, false );
-      }
-
-      /** Way 2: the upsample factor. */
-      float upsampleFactor = 2.0;
-      this->m_Configuration->ReadParameter(
-        upsampleFactor, "GridSpacingUpsampleFactor", 0, true );
-
-      /** If this option is used. */
-      if ( way1 == 0 )
-      {
-        this->m_GridScheduleComputer
-          ->SetDefaultGridSpacingSchedule( nrOfResolutions, finalGridSpacing, upsampleFactor );
-      }
-    }
-
-    /** Which option was selected by the user? */
-    if ( way1 == 1 && count == 0 )
-    {
-      itkExceptionMacro(
-        << "ERROR: You should specify "
-        << "EITHER \"GridSpacingSchedule\" and \"GridSpacingUpsampleFactor\" "
-        << "OR \"GridSpacingScheduleFull\"."
-        );
-    }
-
-    /** Set other required information. */
+    /** Set up grid schedule computer with image info */
     this->m_GridScheduleComputer->SetImageOrigin(
       this->GetElastix()->GetFixedImage()->GetOrigin() );
     this->m_GridScheduleComputer->SetImageSpacing(
@@ -241,9 +142,150 @@ using namespace itk;
       this->m_GridScheduleComputer->SetInitialTransform( this->Superclass1::GetInitialTransform() );
     }
 
+    /** Get the grid spacing schedule from the parameter file.
+     *
+     * Method 1: The user specifies "FinalGridSpacingInVoxels"
+     * Method 2: The user specifies "FinalGridSpacingInPhysicalUnits"
+     * Method 3: The user specifies "FinalGridSpacing"
+     *
+     * Method 1 and 2 additionally take the "GridSpacingSchedule".
+     * The GridSpacingSchedule is defined by downsampling factors 
+     * for each resolution, for each dimension (just like the image
+     * pyramid schedules). So, for 2D images, and 3 resulutions,
+     * we can specify:
+     * (GridSpacingSchedule 4.0 4.0 2.0 2.0 1.0 1.0)
+     * Which is the default schedule, if no GridSpacingSchedule is supplied.
+     *
+     * Method 3 additionally takes the "UpsampleGridOption".
+     * Method 3 is deprecated, but will be supported for a long while.
+     * The "FinalGridSpacingInVoxels" has the same meaning as the former
+     * "FinalGridSpacing".
+     */
+
+    /** determine method */
+    bool method3 = false;
+    double dummy = 1.0;
+    unsigned int count = this->m_Configuration->
+      CountNumberOfParameterEntries( dummy, "FinalGridSpacing" );
+    if ( count != 0 )
+    {
+      method3 = true;
+    }
+    bool method2 = false;
+    count = this->m_Configuration->
+      CountNumberOfParameterEntries( dummy, "FinalGridSpacingInPhysicalUnits" );
+    if ( count != 0 )
+    {
+      method2 = true;
+    }
+        
+    /** Declare vars */
+    SpacingType finalGridSpacingInVoxels;
+    SpacingType finalGridSpacingInPhysicalUnits;
+    finalGridSpacingInVoxels.Fill( 8.0 );		
+    finalGridSpacingInPhysicalUnits.Fill( 8.0 );
+
+    if ( method2 )
+    {
+      /** Method 2:
+       * Read the FinalGridSpacingInPhysicalUnits */
+		  for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+  		{
+        this->m_Configuration->ReadParameter(
+          finalGridSpacingInPhysicalUnits[ dim ], "FinalGridSpacingInPhysicalUnits",
+          this->GetComponentLabel(), dim , 0, false);
+		  }
+    }
+    else
+    {
+
+      /** Method 3:
+      * Silently try to read the deprecated FinalGridSpacing (in voxels). */		 
+      for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+      {
+        this->m_Configuration->ReadParameter(
+          finalGridSpacingInVoxels[ dim ], "FinalGridSpacing",
+          this->GetComponentLabel(), dim , 0, true );
+      }    
+
+      /** Method 1:
+      * Read the FinalGridSpacingInVoxels */
+      for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+      {
+        this->m_Configuration->ReadParameter(
+          finalGridSpacingInVoxels[ dim ], "FinalGridSpacingInVoxels",
+          this->GetComponentLabel(), dim , 0, false);
+      }
+
+      /** Compute grid spacing in physical units */
+      for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+  		{
+        finalGridSpacingInPhysicalUnits[ dim ] = 
+          finalGridSpacingInVoxels[ dim ] *
+          this->GetElastix()->GetFixedImage()->GetSpacing()[ dim ];
+      }
+
+    } // method 1 or 3
+
+    /** Set up a default grid spacing schedule */
+    this->m_GridScheduleComputer->SetDefaultSchedule(
+      nrOfResolutions, 2.0);
+    GridScheduleType gridSchedule;
+    this->m_GridScheduleComputer->GetSchedule( gridSchedule );
+    
+    /** Get the deprecated UpsampleGridOption */
+    this->ComputeGridSchedule_Deprecated( gridSchedule );
+    
+    /** Read what the user has specified. This overrules everything. */
+    count = this->m_Configuration->
+      CountNumberOfParameterEntries( dummy, "GridSpacingSchedule" );
+    unsigned int entry_nr = 0;
+    if ( count == 0 )
+    {
+      // keep the default schedule
+    }
+    else if ( count == nrOfResolutions )
+    {
+      for ( unsigned int res = 0; res < nrOfResolutions; ++res )
+      {
+        for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+        {
+          this->m_Configuration->ReadParameter( gridSchedule[res][dim],
+            "GridSpacingSchedule", entry_nr, true );       
+        }
+        ++entry_nr;
+      }
+    }
+    else if ( count == nrOfResolutions*SpaceDimension )
+    {
+      for ( unsigned int res = 0; res < nrOfResolutions; ++res )
+      {
+        for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+        {
+          this->m_Configuration->ReadParameter( gridSchedule[res][dim],
+            "GridSpacingSchedule", entry_nr, true );
+          ++entry_nr;
+        }
+      }
+    }
+    else
+    {
+      xl::xout["error"] 
+        << "ERROR: Invalid GridSpacingSchedule! The number of entries"
+        << " behind the GridSpacingSchedule option should equal the"
+        << " numberOfResolutions, or the numberOfResolutions*imageDimension."
+        << std::endl;
+      itkExceptionMacro( << "ERROR: Invalid GridSpacingSchedule!" );
+    }
+
+    /** Set the grid schedule and final grid spacing in the schedule computer */
+    this->m_GridScheduleComputer->SetFinalGridSpacing( 
+      finalGridSpacingInPhysicalUnits );
+    this->m_GridScheduleComputer->SetSchedule( gridSchedule );
+
     /** Compute the necessary information. */
     this->m_GridScheduleComputer->ComputeBSplineGrid();
-		
+    		
   } // end PreComputeGridInformation()
 
 	
@@ -457,42 +499,22 @@ using namespace itk;
 
 	
 	/**
-	 * ******************** ComputeInitialGridSpacing_Deprecated *********************
+	 * ******************** ComputeGridSchedule_Deprecated *********************
 	 *
-	 * Computes m_GridSpacingFactor for the first resolution.
+	 * Computes schedule using UpsampleGridOption.
 	 */
 
 	template <class TElastix>
-		bool
+		void
     BSplineTransform<TElastix>
-    ::ComputeInitialGridSpacing_Deprecated( void )
+    ::ComputeGridSchedule_Deprecated( GridScheduleType & schedule )
 	{
-		/** Read the desired grid spacing for each dimension for the final resolution.
-		 * If only one gridspacing factor is given, that one is used for each dimension.
-		 */
-    SpacingType finalGridSpacing;
-    finalGridSpacing[ 0 ] = 8.0;
-		int ret = this->m_Configuration->ReadParameter(
-      finalGridSpacing[ 0 ], "FinalGridSpacing", 0 );
-    finalGridSpacing.Fill( finalGridSpacing[ 0 ] );
-		for ( unsigned int i = 1; i < SpaceDimension; ++i )
-		{
-      this->m_Configuration->ReadParameter(
-        finalGridSpacing[ i ], "FinalGridSpacing", i );
-		}
-
-    /** If ret is 1, then the parameter file did NOT contain "FinalGridSpacing". */
-    if ( ret == 1 )
+    bool dummy = false;
+    unsigned int count = this->m_Configuration->
+      CountNumberOfParameterEntries( dummy, "UpsampleGridOption" );
+    if ( count == 0 )
     {
-      /** This deprecated option is not used, and we let the caller know. */
-      return false;
-    }
-    else
-    {
-      /** This option is deprecated, issue a warning. */
-      elxout["warning"] << "WARNING: the option \"FinalGridSpacing\" is deprecated." << std::endl;
-      elxout["warning"] << "Use EITHER \"GridSpacingSchedule\" together with \"GridSpacingUpsampleFactor\"" << std::endl;
-      elxout["warning"] << "OR \"GridSpacingScheduleFull\" instead." << std::endl;
+      return;
     }
     
 		/** If multigrid, then start with a lower resolution grid.
@@ -529,42 +551,21 @@ using namespace itk;
       this->m_Configuration->ReadParameter(
         tmp, "UpsampleGridOption", i );
       upsampleGridOption[ i ] = tmp;
-      // strangely the following does not compile??
-      //this->m_Configuration->ReadParameter( upsampleGridOption[ i ], "UpsampleGridOption", i );
-		}
-
-    /** Create a B-spline grid schedule. */
-    GridScheduleType schedule( nrOfResolutions, finalGridSpacing );
-    float factor = 2.0;
-    unsigned int j = 0;
-    for ( int i = nrOfResolutions - 2; i > -1; --i )
-    {
-      if ( upsampleGridOption[ j ] )
-      {
-        schedule[ i ] *= factor;
-        factor *= factor;
-      }
-      j++;
     }
 
-    /** Set the grid spacing schedule. */
-    this->m_GridScheduleComputer->SetGridSpacingSchedule( schedule );
+    /** Create a B-spline grid schedule using the upsample-grid-options. */
+    schedule[ nrOfResolutions - 1 ].Fill( 1.0 );
+    float factor = 1.0;
+    for ( int res = nrOfResolutions - 2; res > -1; --res )
+    {
+      if ( upsampleGridOption[ res ] )
+      {        
+        factor *= 2.0;
+      }      
+      schedule[ res ].Fill( factor );
+    }
 
-    /** Set other required information. */
-    this->m_GridScheduleComputer->SetImageOrigin(
-      this->GetElastix()->GetFixedImage()->GetOrigin() );
-    this->m_GridScheduleComputer->SetImageSpacing(
-      this->GetElastix()->GetFixedImage()->GetSpacing() );
-    this->m_GridScheduleComputer->SetImageRegion(
-      this->GetElastix()->GetFixedImage()->GetLargestPossibleRegion() );
-
-    /** Compute the necessary information. */
-    this->m_GridScheduleComputer->ComputeBSplineGrid();
-
-    /** Return true. */
-    return true;
-
-	} // end ComputeInitialGridSpacing_Deprecated()
+	} // end ComputeGridSchedule_Deprecated()
 
 
   /**

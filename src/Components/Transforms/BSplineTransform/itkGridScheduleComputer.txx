@@ -37,6 +37,8 @@ namespace itk
     this->SetUpsamplingFactor( upsamplingFactor );
 
     /** Initialize the schedule. */
+    GridSpacingFactorType factors;
+    factors.Fill( 1.0 );
     this->m_GridSpacingFactors.clear();
     this->m_GridSpacingFactors.resize( levels, factors );
 
@@ -45,7 +47,7 @@ namespace itk
     for ( int i = levels - 2; i > -1; --i )
     {
       this->m_GridSpacingFactors[ i ] *= factor;
-      factor *= factor;
+      factor *= this->m_UpsamplingFactor;
     }
 
   } // end SetDefaultGridSpacingSchedule()
@@ -90,43 +92,47 @@ namespace itk
   GridScheduleComputer<TTransformScalarType, VImageDimension>
   ::ComputeBSplineGrid( void )
 	{
-    /** Apply the initial transform. */
-    this->ApplyInitialTransform();
+    OriginType imageOrigin;
+    SpacingType imageSpacing, finalGridSpacing;
+
+    /** Apply the initial transform. */    
+    this->ApplyInitialTransform( imageOrigin, imageSpacing, finalGridSpacing );
 
     /** Set the appropriate sizes. */
     this->m_GridOrigins.resize( this->m_NumberOfLevels );
     this->m_GridRegions.resize( this->m_NumberOfLevels );
+    this->m_GridSpacings.resize( this->m_NumberOfLevels );
 
     /** For all levels ... */
-    for ( unsigned int i = 0; i < this->m_NumberOfLevels; ++i )
+    for ( unsigned int res = 0; res < this->m_NumberOfLevels; ++res )
 		{
       /** For all dimensions ... */
       SizeType size = this->m_ImageRegion.GetSize();
       SizeType gridsize;
-      for ( unsigned int j = 0; j < Dimension; ++j )
+      for ( unsigned int dim = 0; dim < Dimension; ++dim )
       {
         /** Compute the grid spacings. */
         double gridSpacing
-          = this->m_FinalGridSpacing[ j ] * this->m_GridSpacingFactors[ i ][ j ];
-        this->m_GridSpacings[ i ][ j ] = gridSpacing;
+          = finalGridSpacing[ dim ] * this->m_GridSpacingFactors[ res ][ dim ];
+        this->m_GridSpacings[ res ][ dim ] = gridSpacing;
 
         /** Compute the grid size without the extra grid points at the edges. */
         const unsigned int bareGridSize = static_cast<unsigned int>(
-          vcl_ceil( size[ j ] * this->m_ImageSpacing[ j ] / gridSpacing ) );
+          vcl_ceil( size[ dim ] * imageSpacing[ dim ] / gridSpacing ) );
         
         /** The number of B-spline grid nodes is the bareGridSize plus the
          * B-spline order more grid nodes.
          */
-        gridsize[ j ] = static_cast<SizeValueType>( bareGridSize + this->m_BSplineOrder );
+        gridsize[ dim ] = static_cast<SizeValueType>( bareGridSize + this->m_BSplineOrder );
 
         /** Compute the origin of the B-spline grid. */
-        this->m_GridOrigins[ i ][ j ] = this->m_ImageOrigin[ j ] -
-          ( ( gridsize[ i ] - 1 ) * gridSpacing
-          - ( size[ i ] - 1 ) * this->m_ImageSpacing[ i ] ) / 2.0;
+        this->m_GridOrigins[ res ][ dim ] = imageOrigin[ dim ] -
+          ( ( gridsize[ dim ] - 1 ) * gridSpacing
+          - ( size[ dim ] - 1 ) * imageSpacing[ dim ] ) / 2.0;
       }
 
       /** Set the grid region. */
-      this->m_GridRegions[ i ].SetSize( gridsize );
+      this->m_GridRegions[ res ].SetSize( gridsize );
     }
     
   } // end ComputeBSplineGrid()
@@ -143,11 +149,17 @@ namespace itk
 	template < typename TTransformScalarType, unsigned int VImageDimension >
   void
   GridScheduleComputer<TTransformScalarType, VImageDimension>
-  ::ApplyInitialTransform( void )
+  ::ApplyInitialTransform( 
+    OriginType & imageOrigin,
+    SpacingType & imageSpacing,
+    SpacingType & finalGridSpacing ) const
 	{
     /** Check for the existence of an initial transform. */
     if ( this->m_InitialTransform.IsNull() )
     {
+      imageOrigin = this->m_ImageOrigin;
+      imageSpacing = this->m_ImageSpacing;
+      finalGridSpacing = this->m_FinalGridSpacing;
       return;
     }
 
@@ -217,7 +229,7 @@ namespace itk
     /** Set minPoint as the new "ImageOrigin" (between quotes, since it
      * is not really the origin of the fixedImage anymore).
      */
-    this->m_ImageOrigin = minPoint;
+    imageOrigin = minPoint;
 
     /** Compute the new "ImageSpacing" in each dimension. */
     const double smallnumber = NumericTraits<double>::epsilon();
@@ -233,7 +245,8 @@ namespace itk
       /** Scale the fixedImageSpacing by their ratio. */
       if ( oldLength_i > smallnumber )
       {
-        this->m_ImageSpacing[ i ] *= ( newLength_i / oldLength_i );
+        imageSpacing[ i ] = this->m_ImageSpacing[ i ] * ( newLength_i / oldLength_i );
+        finalGridSpacing[ i ] = this->m_FinalGridSpacing[ i ] * ( newLength_i / oldLength_i );
       }
     }
 
