@@ -244,13 +244,13 @@ namespace elastix
 
     /** Get the number of user supplied parameters. */
     template <class T>
-		unsigned int CountNumberOfParameters( T & param, const char * name_field )
+		unsigned int CountNumberOfParameterEntries( T dummy, const char * name_field )
     {
       int ret = 0;
       unsigned int count = 0;
       while ( ret == 0 )
       {
-        ret = this->ReadParameter( param, name_field, count, true );
+        ret = this->ReadParameter( dummy, name_field, count, true );
         count++;
       }
 
