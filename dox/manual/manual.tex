@@ -329,7 +329,7 @@ descent (GD), and Robbins-Monro (RM).
 \item[Gradient descent:] Gradient descent optimisation methods take the
 search direction as the negative gradient of the cost function:
 \begin{align}
-\vmu_{k+1} &= \vmu_k - a_k \bm{g}(\vmu_k),
+\vmu_{k+1} &= \vmu_k - a_k \bm{g}(\vmu_k),\label{eq:gd}
 \end{align}
 with $\bm{g}(\vmu_k) = \partial \mathcal{C} / \partial \vmu$
 evaluated at the current position $\vmu_k$. Several choices exist for
@@ -473,7 +473,7 @@ versions we decided to put the separate components of \elastix\ in
 separate libraries. This resulted in major version 3.0 in November
 2004. \elastix\ 3.0 was also the first version that was made publicly
 available on the \elastix\ website, around the same time. The
-continued development brings us today (November 2007) to version 3.7.
+continued development brings us today (December 2007) to version 3.8.
 
 \begin{tabular}{l|l}
 what & where \\
@@ -488,9 +488,11 @@ The website also contains a
 doxygen\footnote{\texttt{www.doxygen.org}} generated part that
 provides documentation of the source code. An overview of all
 available classes can be found at
-\texttt{www.isi.uu.nl/Elastix/doxygen/classes.html}. For each class a
-description of this class is given, together with information on how
-to use it in \elastix.
+\begin{quote}
+\texttt{www.isi.uu.nl/Elastix/doxygen/classes.html}.
+\end{quote}
+For each class a description of this class is given, together with
+information on how to use it in \elastix.
 
 \section{How to call \elastix}
 
@@ -650,6 +652,20 @@ Memory consumption, see the wiki
 
 \section{The transform parameter file}\label{sec:transformix:tp}
 
+The result of a registration is the transformation relating the fixed
+and moving image. The parameters of this transformation are stored in
+a \texttt{TransformParameters.?.txt}-file. An example of its
+structure for a 2D rigid transformation is given in Appendix
+\ref{chp:ExampleTransformParam}. The text file contains all
+information necessary to resample an input image (the moving image)
+to the region specified in the file (by default the fixed image
+region).
+
+The transform parameter file can be manually edited or created as is
+convenient for the user. Multiple transformations are composed by
+iteratively supplying another transform parameter file with the
+\texttt{InitialTransformParametersFileName} tag.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Tutorial}\label{chp:Tutorial}
@@ -657,9 +673,66 @@ Memory consumption, see the wiki
 
 \section{General advice}
 
-\section{Important parameters}
+Generally speaking, you first want to perform a rigid transformation,
+before doing a nonrigid one. When doing a registration one carefully
+has to choose the several components, as specified in Chapter
+\ref{chp:components}. In Table \ref{table:recom:components} some
+recommendations are given.
 
-what to tune and what not to tune
+\begin{table}
+\centering
+\begin{tabular*}{15cm}{@{\extracolsep{\fill}} p{3.5cm} | p{11cm} }
+\textbf{Component} & \textbf{Recommendation} \\
+\hline
+Registration & \texttt{MultiResolutionRegistration}: Multiple image
+resolutions is what you need, 3 or more is a good starting point. And
+if you think you don't need all this multi-resolution, you can always
+set the \texttt{NumberOfResolutions} to 1. \\
+FixedImagePyramid & \texttt{FixedRecursiveImagePyramid}: this pyramid
+will smooth and down-sample the fixed image for you, according to the
+\texttt{FixedImageSchedule} you provide. If you only set the
+\texttt{NumberOfResolutions}, a default schedule will be used that
+down-samples the fixed image by 2. \\
+MovingImagePyramid & See the FixedImagePyramid. \\
+Metric    & \texttt{AdvancedMattesMutualInformation}: usually works
+well, both for mono- and multi-modal images. \\
+Optimizer & \texttt{StandardGradientDescent}: see Equations
+(\ref{eq:gd}) and (\ref{eq:gain}). Offers the possibility to perform
+fast registration, see \cite{KleinEA07}. The problem is to tune the
+parameters of the gain factor $a_k$, see Section
+\ref{sec:Tutorial:importantparam}. \\
+Transform & Depends on the application. For rigid choose
+\texttt{EulerTransform}, for affine \texttt{AffineTransform}, for
+nonrigid registration problems \elastix\ has the
+\texttt{BSplineTransform}. The latter requires setting the
+\texttt{FinalGridSpacing}. \\
+Interpolator & \texttt{BSplineInterpolator}: first order is usually
+enough during the registration: \texttt{(BSplineInterpolationOrder
+1)}. \\
+ResampleInterpolator & \texttt{FinalBSplineInterpolator}: the
+interpolator that is used for generating the resulting deformed
+moving image. We recommend a third order B-spline for this:
+\texttt{(FinalBSplineInterpolationOrder 3)}.
+\end{tabular*}
+\caption{Some recommendations for the several components.}\label{table:recom:components}
+\end{table}
+
+\section{Important parameters}\label{sec:Tutorial:importantparam}
+
+choose transformation
+
+number of resolutions
+
+B-spline grid spacing
+
+An important parameter to tune is, as said before, the gain factor.
+,combo with number of iterations
+
+
+
+\section{Overview of all parameters}
+
+see the elastix website
 
 \section{Trouble shooting}
 
@@ -759,6 +832,41 @@ what to tune and what not to tune
 
 //Default pixel value for pixels that come from outside the picture:
 (DefaultPixelValue 0)
+\end{verbatim}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Example transform parameter file}\label{chp:ExampleTransformParam}
+
+\begin{verbatim}
+(Transform "EulerTransform")
+(NumberOfParameters 3)
+(TransformParameters -0.000000 -4.564513 -2.091174)
+(InitialTransformParametersFileName "NoInitialTransform")
+(HowToCombineTransforms "Compose")
+
+// Image specific
+(FixedImageDimension 2)
+(MovingImageDimension 2)
+(FixedInternalImagePixelType "float")
+(MovingInternalImagePixelType "float")
+(Size 256 256)
+(Index 0 0)
+(Spacing 1.0000000000 1.0000000000)
+(Origin 0.0000000000 0.0000000000)
+
+// EulerTransform specific
+(CenterOfRotationPoint 128.0000000000 128.0000000000)
+
+// ResampleInterpolator specific
+(ResampleInterpolator "FinalBSplineInterpolator")
+(FinalBSplineInterpolationOrder 3)
+
+// Resampler specific
+(Resampler "DefaultResampler")
+(DefaultPixelValue 0.000000)
+(ResultImageFormat "mhd")
+(ResultImagePixelType "short")
 \end{verbatim}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
