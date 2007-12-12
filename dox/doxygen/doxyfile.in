@@ -32,12 +32,12 @@ OUTPUT_DIRECTORY       = "@ELX_HELP_DIR@"
 # subdirectory from a directory tree whose root is specified with the INPUT tag. 
 
 EXCLUDE = "@elastix_SOURCE_DIR@/Common/ParameterFileParser" \
-	  "@elastix_SOURCE_DIR@/Common/KNN" \
-    "@elastix_SOURCE_DIR@/Components/Transforms/EulerTransform/itkEulerTransform.h" \
-    "@elastix_SOURCE_DIR@/Components/Transforms/SimilarityTransform/itkSimilarityTransform.h" \
-	  "@elastix_SOURCE_DIR@/Components/Metrics/KNNGraphAlphaMutualInformation" \
-    "@elastix_SOURCE_DIR@/Components/Optimizers/AcceleratedGradientDescent"
-		
+  "@elastix_SOURCE_DIR@/Common/KNN" \
+  "@elastix_SOURCE_DIR@/Components/Transforms/EulerTransform/itkEulerTransform.h" \
+  "@elastix_SOURCE_DIR@/Components/Transforms/SimilarityTransform/itkSimilarityTransform.h" \
+  "@elastix_SOURCE_DIR@/Components/Metrics/KNNGraphAlphaMutualInformation" \
+  "@elastix_SOURCE_DIR@/Components/Optimizers/AcceleratedGradientDescent"
+
 # The HTML_STYLESHEET tag can be used to specify a user defined cascading 
 # style sheet that is used by each HTML page. It can be used to 
 # fine-tune the look of the HTML output. If the tag is left blank doxygen 
