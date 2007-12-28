@@ -73,6 +73,8 @@ SET( ImageSamplersFiles
  ImageSamplers/itkImageGridSampler.txx
  ImageSamplers/itkImageRandomCoordinateSampler.h
  ImageSamplers/itkImageRandomCoordinateSampler.txx
+ ImageSamplers/itkMultiInputImageRandomCoordinateSampler.h
+ ImageSamplers/itkMultiInputImageRandomCoordinateSampler.txx
  ImageSamplers/itkImageRandomSampler.h
  ImageSamplers/itkImageRandomSampler.txx
  ImageSamplers/itkImageRandomSamplerSparseMask.h
