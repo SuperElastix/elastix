@@ -451,52 +451,6 @@ namespace itk
 
 
   /**
-	 * ********************* SetUseDifferentiableOverlap ****************************
-	 */
-
-  template <class TFixedImage, class TMovingImage>
-    void
-    CombinedImageToImageMetric<TFixedImage,TMovingImage>
-    ::SetUseDifferentiableOverlap( const bool _arg )
-  {
-    this->Superclass::SetUseDifferentiableOverlap( _arg );
-
-    for ( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
-    {
-      AdvancedMetricType * testPtr =
-        dynamic_cast<AdvancedMetricType *>( this->m_Metrics[ i ].GetPointer() );
-      if ( testPtr )
-      {
-        testPtr->SetUseDifferentiableOverlap( _arg );
-      }
-    }
-  } // end SetUseDifferentiableOverlap
-
-
-  /**
-	 * ********************* SetMovingImageMaskInterpolationOrder ****************************
-	 */
-
-  template <class TFixedImage, class TMovingImage>
-    void
-    CombinedImageToImageMetric<TFixedImage,TMovingImage>
-    ::SetMovingImageMaskInterpolationOrder( unsigned int _arg )
-  {
-    this->Superclass::SetMovingImageMaskInterpolationOrder( _arg );
-
-    for ( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
-    {
-      AdvancedMetricType * testPtr =
-        dynamic_cast<AdvancedMetricType *>( this->m_Metrics[ i ].GetPointer() );
-      if ( testPtr )
-      {
-        testPtr->SetMovingImageMaskInterpolationOrder( _arg );
-      }
-    }
-  } // end SetMovingImageMaskInterpolationOrder
-
-
-  /**
 	 * ********************* SetFixedImageLimiter ****************************
 	 */
 

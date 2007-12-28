@@ -7,7 +7,6 @@
 #include "itkGradientImageFilter.h"
 #include "itkBSplineInterpolateImageFunction.h"
 #include "itkBSplineDeformableTransform.h"
-#include "itkBSplineResampleImageFunction.h"
 #include "itkBSplineCombinationTransform.h"
 #include "itkLimiterFunctionBase.h"
 #include "itkFixedArray.h"
@@ -23,12 +22,24 @@ namespace itk
  *
  * This class inherits from the itk::ImageToImageMetric. The additional features of
  * this class that makes it an AdvancedImageToImageMetric are:
- * - the use of an ImageSampler, which selects the fixed image samples over which
+ * \li The use of an ImageSampler, which selects the fixed image samples over which
  *   the metric is evaluated. In the derived metric you simply need to loop over
  *   the image sample container, instead over the fixed image. This way it is easy
  *   to create different samplers, without the derived metric needing to know.
- * - limiters
- * - differential overlap
+ * \li Gray value limiters: for some metrics it is important to know the range of expected
+ *   gray values in the fixed and moving image, beforehand. However, when a third order
+ *   B-spline interpolator is used to interpolate the images, the interpolated values may
+ *   be larger than the range of voxel values, because of so-called overshoot. The 
+ *   gray-value limiters make sure this doesn't happen. 
+ * \li Fast implementation when a B-spline transform is used. The B-spline transform
+ *   has a sparse jacobian. The AdvancedImageToImageMetric provides functions that make
+ *   it easier for inheriting metrics to exploit this fact.
+ * \li MovingImageDerivativeScales: an experimental option, which allows scaling of the
+ *   moving image derivatives. This is a kind of fast hack, which makes it possible to 
+ *   avoid transformation in one direction (x, y, or z). Do not use this functionality
+ *   unless you have a good reason for it...
+ * \li Some convenience functions are provided, such as the IsInsideMovingMask
+ *   and CheckNumberOfSamples.
  *
  * \ingroup RegistrationMetrics
  *
@@ -101,16 +112,7 @@ public:
     ImageSamplerType::OutputVectorContainerType           ImageSampleContainerType;
   typedef typename 
     ImageSamplerType::OutputVectorContainerPointer        ImageSampleContainerPointer;
-  
-  /** Typedefs for smooth differentiable mask support. */
-  typedef unsigned char                                   InternalMaskPixelType;
-  typedef typename itk::Image<
-    InternalMaskPixelType, 
-    itkGetStaticConstMacro(MovingImageDimension) >        InternalMovingImageMaskType;
-  typedef itk::BSplineResampleImageFunction<
-    InternalMovingImageMaskType,
-    CoordinateRepresentationType >                        MovingImageMaskInterpolatorType;
-
+    
   /** Typedefs for Limiter support. */
   typedef LimiterFunctionBase<
     RealType, FixedImageDimension>                        FixedImageLimiterType;
@@ -137,30 +139,6 @@ public:
    * inside the moving image buffer, an exception will be thrown. */
   itkSetMacro( RequiredRatioOfValidSamples, double );
   itkGetConstMacro( RequiredRatioOfValidSamples, double );
-
-  /** Set/Get whether the overlap should be taken into account while computing the derivative
-   * This setting also affects the value of the metric. Default: false; */
-  itkSetMacro( UseDifferentiableOverlap, bool );
-  itkGetConstMacro( UseDifferentiableOverlap, bool );
-
-  /** Set the interpolation spline order for the moving image mask; default: 2
-   * Make sure to call this before calling Initialize(), if you want to change it. */
-  virtual void SetMovingImageMaskInterpolationOrder( unsigned int order )
-  {
-    this->m_MovingImageMaskInterpolator->SetSplineOrder( order );
-  };
-  /** Get the interpolation spline order for the moving image mask. */
-  virtual const unsigned int GetMovingImageMaskInterpolationOrder( void ) const
-  {
-    return this->m_MovingImageMaskInterpolator->GetSplineOrder();
-  };
-
-  /** Get the internal moving image mask. Equals the movingimage mask if set, and 
-   * otherwise it's a box with size equal to the moving image's largest possible region. */
-  itkGetConstObjectMacro( InternalMovingImageMask, InternalMovingImageMaskType );
-
-  /** Get the interpolator of the internal moving image mask. */
-  itkGetConstObjectMacro( MovingImageMaskInterpolator, MovingImageMaskInterpolatorType );
 
   /** Set/Get the Moving/Fixed limiter. Its thresholds and bounds are set by the metric. 
    * Setting a limiter is only mandatory if GetUse{Fixed,Moving}Limiter() returns true. */ 
@@ -202,8 +180,7 @@ public:
    * \li Cache the number of transform parameters
    * \li Initialize the image sampler, if used.
    * \li Check if a bspline interpolator has been set
-   * \li Check if a BSplineTransform or a BSplineCombinationTransform has been set
-   * \li Initialize the internal (smooth) mask, if used. */
+   * \li Check if a BSplineTransform or a BSplineCombinationTransform has been set */
   virtual void Initialize(void) throw ( ExceptionObject );
 
 protected:
@@ -252,15 +229,11 @@ protected:
     itkGetStaticConstMacro(FixedImageDimension)>                BSplineParametersOffsetType;
   /** Array type for holding parameter indices */
   typedef Array<unsigned int>                                   ParameterIndexArrayType;
-  
-  /** Typedefs for smooth differentiable mask support. */
-  typedef typename 
-    MovingImageMaskInterpolatorType::CovariantVectorType        MovingImageMaskDerivativeType;
-  
+    
   /** Protected Variables **************/
 
   /** Variables for ImageSampler support. m_ImageSampler is mutable, because it is
-   * changed in the GetValue(), etc, which are const function. */
+   * changed in the GetValue(), etc, which are const functions. */
   mutable ImageSamplerPointer   m_ImageSampler;
 
   /** Variables for image derivative computation. */
@@ -289,11 +262,7 @@ protected:
   
   /** the parameter indices that have a nonzero jacobian. */
   mutable ParameterIndexArrayType                    m_NonZeroJacobianIndices;
-
-  /** Variables for the internal mask. */
-  typename InternalMovingImageMaskType::Pointer      m_InternalMovingImageMask;
-  typename MovingImageMaskInterpolatorType::Pointer  m_MovingImageMaskInterpolator;
-
+  
   /** Variables for the Limiters. */
   typename FixedImageLimiterType::Pointer            m_FixedImageLimiter;
   typename MovingImageLimiterType::Pointer           m_MovingImageLimiter;
@@ -320,7 +289,7 @@ protected:
   /** Check if enough samples have been found to compute a reliable 
    * estimate of the value/derivative; throws an exception if not. */
   virtual void CheckNumberOfSamples(
-    unsigned long wanted, unsigned long found, double sumOfMaskValues ) const;
+    unsigned long wanted, unsigned long found ) const;
   
   /** Methods for image derivative evaluation support **********/
 
@@ -333,7 +302,8 @@ protected:
    * If no gradient is wanted, set the gradient argument to 0.
    * If a BSplineInterpolationFunction is used, this class obtain
    * image derivatives from the BSpline interpolator. Otherwise, 
-   * image derivatives are computed using (forward) finite differencing. */
+   * image derivatives are computed using nearest neighbor interpolation
+   * of a precomputed (central difference) gradient image. */
   virtual bool EvaluateMovingImageValueAndDerivative(
     const MovingImagePointType & mappedPoint,
     RealType & movingImageValue,
@@ -361,19 +331,9 @@ protected:
    * function. */ 
   virtual const TransformJacobianType & EvaluateTransformJacobian(
     const FixedImagePointType & fixedImagePoint ) const;
-   
-  /** Methods for support of smooth differentiable masks **********/
-
-  /** Initialize the internal mask; Called by Initialize */
-  virtual void InitializeInternalMasks( void );
-
-  /** Estimate value and possibly spatial derivative of internal moving mask;
-   * a zero pointer for the derivative will prevent computation of the derivative.
-   */
-  virtual void EvaluateMovingMaskValueAndDerivative(
-    const MovingImagePointType & point,
-    RealType & value,
-    MovingImageMaskDerivativeType * derivative ) const;
+  
+  /** Convenience method: check if point is inside the moving mask. *****************/
+  virtual bool IsInsideMovingMask( const MovingImagePointType & point ) const;
 
   /** Methods for the support of gray value limiters. ***************/
 
@@ -405,7 +365,6 @@ private:
   void operator=(const Self&); //purposely not implemented
 
   bool    m_UseImageSampler;
-  bool    m_UseDifferentiableOverlap;
   double  m_FixedLimitRangeRatio;
   double  m_MovingLimitRangeRatio;
   bool    m_UseFixedImageLimiter;

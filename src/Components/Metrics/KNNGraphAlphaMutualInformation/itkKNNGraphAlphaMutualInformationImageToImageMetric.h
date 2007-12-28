@@ -106,11 +106,6 @@ public:
   typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
   typedef typename 
     Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
-  typedef typename Superclass::InternalMaskPixelType      InternalMaskPixelType;
-  typedef typename
-    Superclass::InternalMovingImageMaskType               InternalMovingImageMaskType;
-  typedef typename 
-    Superclass::MovingImageMaskInterpolatorType           MovingImageMaskInterpolatorType;
   typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
   typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
   typedef typename

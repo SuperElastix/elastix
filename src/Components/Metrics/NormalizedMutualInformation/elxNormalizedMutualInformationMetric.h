@@ -56,9 +56,6 @@ using namespace itk;
    *    example: <tt>(CheckNumberOfSamples "false" "true" "false")</tt> \n
    *    The default is true. In general it is wise to set this to true, since it detects
    *    if the registration is going really bad.
-   * \parameter UseDifferentiableOverlap: Experimental feature, do not use.
-   * \parameter MovingMaskInterpolationOrder: Experimental feature, do not use.
-   *
    *
    * \sa ParzenWindowNormalizedMutualInformationImageToImageMetric
 	 * \ingroup Metrics
@@ -133,11 +130,6 @@ using namespace itk;
     typedef typename Superclass1::ImageSampleContainerType   ImageSampleContainerType;
     typedef typename 
       Superclass1::ImageSampleContainerPointer               ImageSampleContainerPointer;
-    typedef typename Superclass1::InternalMaskPixelType      InternalMaskPixelType;
-    typedef typename
-      Superclass1::InternalMovingImageMaskType               InternalMovingImageMaskType;
-    typedef typename 
-      Superclass1::MovingImageMaskInterpolatorType           MovingImageMaskInterpolatorType;
     typedef typename Superclass1::FixedImageLimiterType      FixedImageLimiterType;
     typedef typename Superclass1::MovingImageLimiterType     MovingImageLimiterType;
     typedef typename
@@ -170,8 +162,6 @@ using namespace itk;
 		/** Execute stuff before each new pyramid resolution:
 		 * \li Set the number of histogram bins.
      * \li Set the CheckNumberOfSamples option.
-     * \li Set the UseDifferentiableOverlap setting
-     * \li Set the MovingMaskInterpolationOrder setting
      * \li Set the fixed/moving LimitRangeRatio
      * \li Set the fixed/moving limiter. */
 		virtual void BeforeEachResolution( void );

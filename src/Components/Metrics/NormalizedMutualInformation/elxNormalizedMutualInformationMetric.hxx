@@ -36,11 +36,6 @@ using namespace itk;
 		void NormalizedMutualInformationMetric<TElastix>
 		::BeforeEachResolution(void)
 	{
-		/** \todo Adapt SecondOrderRegularisationMetric.
-		 * Set alpha, which balances the similarity and deformation energy
-		 * E_total = (1-alpha)*E_sim + alpha*E_def.
-		 * 	metric->SetAlpha( config.GetAlpha(level) );	 */
-
 		/** Get the current resolution level. */
 		unsigned int level = 
 			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
@@ -60,18 +55,6 @@ using namespace itk;
       "NumberOfMovingHistogramBins", this->GetComponentLabel(), level, 0 );
 		this->SetNumberOfFixedHistogramBins( numberOfFixedHistogramBins );
     this->SetNumberOfMovingHistogramBins( numberOfMovingHistogramBins );
-
-    /** Set whether a differentiable overlap should be used */
-    bool useDifferentiableOverlap = false;
-    this->GetConfiguration()->ReadParameter( useDifferentiableOverlap,
-      "UseDifferentiableOverlap", this->GetComponentLabel(), level, 0 );
-    this->SetUseDifferentiableOverlap( useDifferentiableOverlap );
-    
-    /** Get and set the mask interpolation order */
-		unsigned int movingMaskInterpolationOrder = 2;
-    this->GetConfiguration()->ReadParameter( movingMaskInterpolationOrder,
-      "MovingMaskInterpolationOrder",  this->GetComponentLabel(), level, 0 );
-		this->SetMovingImageMaskInterpolationOrder( movingMaskInterpolationOrder );
 
     /** Get and set whether the metric should check if enough samples map inside the moving image. */
     std::string checkNumberOfSamples = "true";

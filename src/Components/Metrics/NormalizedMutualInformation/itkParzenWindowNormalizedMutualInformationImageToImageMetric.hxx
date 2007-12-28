@@ -168,7 +168,7 @@ namespace itk
     derivative = DerivativeType( this->GetNumberOfParameters() );
     derivative.Fill( NumericTraits<double>::Zero );
 
-    /** Construct the JointPDF, JointPDFDerivatives, Alpha and its derivatives. */
+    /** Construct the JointPDF, JointPDFDerivatives, and Alpha. */
     this->ComputePDFsAndPDFDerivatives( parameters );
 
     /** Normalize the pdfs: p = alpha h*/
@@ -192,14 +192,13 @@ namespace itk
      *      sum_k sum_i dpdmu(i,k) ( NMI log(p(i,k)) - log(pf(k)) - log(pm(i)) ) ]
      *           = - 1/Ej [ sum_k sum_i dpdmu(i,k) pRatio ]
      * where:
-     * dpdmu(i,k) = alpha dhdmu(i,k) + h(i,k) dalphadmu
+     * dpdmu(i,k) = alpha dhdmu(i,k)
      *
      * m_JointPDFDerivatives reflects dhdmu(i,k) at this point in the code. 
      * p = m_JointPDF reflects [alpha h(i,k)]
      *
      * So, we can write, following more or less the source code below:
-     * -dNMI/dmu = [ - sum_k sum_i dhdmu(i,k) alpha*pRatio/Ej ] 
-     *             + dalphadmu (1/alpha) [ - sum_k sum_i p(i,k) pRatio/Ej ]
+     * -dNMI/dmu = - sum_k sum_i dhdmu(i,k) alpha*pRatio/Ej
      **/
 
     /** Typedefs for iterators */
@@ -230,7 +229,6 @@ namespace itk
     const MarginalPDFConstIteratorType movingPDFend = this->m_MovingImageMarginalPDF.end();
        
     /** Compute the derivatives */
-    double alphaDerivativeFactor = 0.0;
     while ( fixedPDFconstit != fixedPDFend )
     {
       const double logFixedImagePDFValue = *fixedPDFconstit;
@@ -244,7 +242,6 @@ namespace itk
           const double pRatio = ( nMI * vcl_log( jointPDFValue ) 
               - logFixedImagePDFValue - logMovingImagePDFValue ) / jointEntropy;
           const double pRatioAlpha = this->m_Alpha * pRatio;
-          alphaDerivativeFactor -= jointPDFValue * pRatio;
           /** check for non-zero bin contribution */
           derivit = derivative.begin();
           while ( derivit != derivend )
@@ -261,18 +258,6 @@ namespace itk
       ++fixedPDFconstit;
       jointPDFconstit.NextLine();
     }  // end while-loop over fixed index
-        
-
-    /** We only still have to divide the alpha derivative factor by alpha */            
-    alphaDerivativeFactor /= this->m_Alpha;
-    derivit = derivative.begin();
-    DerivativeConstIteratorType alphaDerivit = this->m_AlphaDerivatives.begin();
-    while ( derivit != derivend )
-    {                    
-      (*derivit) += (*alphaDerivit) * alphaDerivativeFactor;
-      ++derivit;
-      ++alphaDerivit;
-    }
         
   } // end GetValueAndDerivative
 

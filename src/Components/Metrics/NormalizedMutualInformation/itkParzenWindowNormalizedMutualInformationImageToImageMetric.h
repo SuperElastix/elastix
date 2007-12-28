@@ -100,11 +100,6 @@ namespace itk
     typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
     typedef typename 
       Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
-    typedef typename Superclass::InternalMaskPixelType      InternalMaskPixelType;
-    typedef typename
-      Superclass::InternalMovingImageMaskType               InternalMovingImageMaskType;
-    typedef typename 
-      Superclass::MovingImageMaskInterpolatorType           MovingImageMaskInterpolatorType;
     typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
     typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
     typedef typename
@@ -156,7 +151,6 @@ namespace itk
 	  typedef typename Superclass::BSplineCombinationTransformType    BSplineCombinationTransformType;
  	  typedef typename Superclass::BSplineParametersOffsetType        BSplineParametersOffsetType;
     typedef typename Superclass::ParameterIndexArrayType            ParameterIndexArrayType;
-    typedef typename Superclass::MovingImageMaskDerivativeType      MovingImageMaskDerivativeType;
     typedef typename Superclass::PDFValueType                       PDFValueType;
 		typedef typename Superclass::MarginalPDFType                    MarginalPDFType;
     typedef typename Superclass::JointPDFType                       JointPDFType;

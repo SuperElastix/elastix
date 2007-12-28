@@ -2,12 +2,7 @@
 #define _itkAdvancedImageToImageMetric_txx
 
 #include "itkAdvancedImageToImageMetric.h"
-
-#include "itkImageRegionExclusionIteratorWithIndex.h"
-#include "itkImageRegionIteratorWithIndex.h"
-#include "itkImageRegionConstIteratorWithIndex.h"
-#include "itkBinaryErodeImageFilter.h"
-#include "itkBinaryBallStructuringElement.h"
+#include "itkImageRegionConstIterator.h"
 
 namespace itk
 {
@@ -20,7 +15,12 @@ namespace itk
     AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     ::AdvancedImageToImageMetric()
   {
-    this->SetComputeGradient( false ); // don't use the default gradient
+    /** don't use the default gradient image as implemented by ITK.
+     * It uses a gaussian derivative, which introduces extra smoothing,
+     * which may not always be desired. Also, when the derivatives are 
+     * computed using Gaussian filtering, the grey-values should also be
+     * blurred, to have a consistent 'image model' */
+    this->SetComputeGradient( false ); 
 
     this->m_ImageSampler = 0;
     this->m_UseImageSampler = false;
@@ -37,14 +37,7 @@ namespace itk
     this->m_NumberOfParameters = 0;
     this->m_TransformIsBSpline = false;
     this->m_TransformIsBSplineCombination = false;
-    
-    const unsigned int defaultMaskInterpolationOrder = 2;
-    this->m_InternalMovingImageMask = 0;
-    this->m_MovingImageMaskInterpolator = 
-      MovingImageMaskInterpolatorType::New();
-    this->m_MovingImageMaskInterpolator->SetSplineOrder( defaultMaskInterpolationOrder );
-    this->m_UseDifferentiableOverlap = false;
-
+        
     this->m_UseMovingImageDerivativeScales = false;
 
     this->m_FixedImageLimiter = 0;
@@ -93,9 +86,6 @@ namespace itk
 
     /** Check if the transform is a BSplineTransform or a BSplineCombinationTransform. */
     this->CheckForBSplineTransform();
-    
-    /** Initialize the internal moving image mask. */
-    this->InitializeInternalMasks();
   
   } // end Initialize
 
@@ -395,123 +385,6 @@ namespace itk
 
 
   /**
-   * ********************* InitializeInternalMasks *********************
-   * Initialize the internal moving image mask
-   */
-
-  template <class TFixedImage, class TMovingImage>
-    void
-    AdvancedImageToImageMetric<TFixedImage,TMovingImage>
-    ::InitializeInternalMasks( void )
-  {
-    typedef typename MovingImageType::RegionType                 MovingRegionType;
-    typedef itk::ImageRegionExclusionIteratorWithIndex<
-      InternalMovingImageMaskType>                               MovingEdgeIteratorType;
-    typedef itk::ImageRegionIteratorWithIndex<
-      InternalMovingImageMaskType>                               MovingIteratorType;
-    typedef itk::BinaryBallStructuringElement<
-      InternalMaskPixelType, MovingImageDimension >              ErosionKernelType;
-    typedef itk::BinaryErodeImageFilter<
-      InternalMovingImageMaskType,
-      InternalMovingImageMaskType, 
-      ErosionKernelType >                                        ErodeImageFilterType;
-    
-    /** Check if the user wants to use a differentiable overlap. */
-    if ( !this->m_UseDifferentiableOverlap )
-    {
-      this->m_InternalMovingImageMask = 0;
-      return;
-    }
-
-    /** Prepare the internal mask image. */
-    this->m_InternalMovingImageMask = InternalMovingImageMaskType::New();
-    this->m_InternalMovingImageMask->SetRegions( 
-      this->GetMovingImage()->GetLargestPossibleRegion() );
-    this->m_InternalMovingImageMask->Allocate();
-    this->m_InternalMovingImageMask->SetOrigin(
-      this->GetMovingImage()->GetOrigin() );
-    this->m_InternalMovingImageMask->SetSpacing(
-      this->GetMovingImage()->GetSpacing() );
-
-    /** Radius to erode masks. */
-    const unsigned int radius = this->GetMovingImageMaskInterpolationOrder();
-
-    /** Determine inner region */
-    MovingRegionType innerRegion =
-      this->m_InternalMovingImageMask->GetLargestPossibleRegion();
-    for ( unsigned int i=0; i < MovingImageDimension; ++i )
-    {
-      if ( innerRegion.GetSize()[ i ] >= 2 * radius )
-      {
-        /** region is large enough to crop; adjust size and index. */
-        innerRegion.SetSize( i, innerRegion.GetSize()[ i ] - 2 * radius );
-        innerRegion.SetIndex( i, innerRegion.GetIndex()[ i ] + radius );
-      }
-      else
-      {
-         innerRegion.SetSize( i, 0 );
-      }
-    }
-      
-    if ( this->GetMovingImageMask() == 0 )
-    {
-      /** Fill the internal moving mask with ones. */
-      this->m_InternalMovingImageMask->FillBuffer(
-        itk::NumericTraits<InternalMaskPixelType>::One );
-    
-      MovingEdgeIteratorType edgeIterator( this->m_InternalMovingImageMask, 
-        this->m_InternalMovingImageMask->GetLargestPossibleRegion() );
-      edgeIterator.SetExclusionRegion( innerRegion );
-      
-      /** Set the edges to zero. */
-      for( edgeIterator.GoToBegin(); ! edgeIterator.IsAtEnd(); ++ edgeIterator )
-      {
-        edgeIterator.Value() = itk::NumericTraits<InternalMaskPixelType>::Zero;
-      }
-      
-    } // end if no moving mask
-    else
-    {
-      /** Fill the internal moving mask with zeros. */
-      this->m_InternalMovingImageMask->FillBuffer(
-        itk::NumericTraits<InternalMaskPixelType>::Zero );
-
-      MovingIteratorType iterator( this->m_InternalMovingImageMask, innerRegion );
-      MovingImagePointType point;
-
-      /** Set the pixel 1 if inside the mask and to 0 if outside. */
-      for ( iterator.GoToBegin(); !iterator.IsAtEnd(); ++iterator )
-      {
-        const MovingImageIndexType & index = iterator.GetIndex();
-        this->m_InternalMovingImageMask->TransformIndexToPhysicalPoint( index, point );
-        iterator.Value() = static_cast<InternalMaskPixelType>(
-          this->m_MovingImageMask->IsInside( point ) );
-      }
-
-      /** Erode it with a radius of 2. */
-      typename InternalMovingImageMaskType::Pointer tempImage = 0;
-      ErosionKernelType kernel;
-      kernel.SetRadius( radius );
-      kernel.CreateStructuringElement();
-      typename ErodeImageFilterType::Pointer eroder = ErodeImageFilterType::New();
-      eroder->SetKernel( kernel );
-      eroder->SetForegroundValue( itk::NumericTraits< InternalMaskPixelType >::One  );
-      eroder->SetBackgroundValue( itk::NumericTraits< InternalMaskPixelType >::Zero );
-      eroder->SetInput( this->m_InternalMovingImageMask );
-      eroder->Update();
-      tempImage = eroder->GetOutput();
-      tempImage->DisconnectPipeline();
-      this->m_InternalMovingImageMask = tempImage;
-        
-    } // end else (if moving mask)
-        
-    /** Set the internal mask into the interpolator. */
-    this->m_MovingImageMaskInterpolator->SetInputImage( this->m_InternalMovingImageMask );
- 
-  } // end InitializeInternalMasks
-
-
-  /**
    * ******************* EvaluateMovingImageValueAndDerivative ******************
    *
    * Compute image value and possibly derivative at a transformed point
@@ -667,65 +540,25 @@ namespace itk
 
  
   /**
-   * **************** EvaluateMovingMaskValueAndDerivative *******************
-   * Estimate value and possibly spatial derivative of internal moving mask 
+   * ************************** IsInsideMovingMask *************************
+   * Check if point is inside moving mask
    */
 
   template < class TFixedImage, class TMovingImage> 
-    void
+    bool
     AdvancedImageToImageMetric<TFixedImage,TMovingImage>
-    ::EvaluateMovingMaskValueAndDerivative(
-      const MovingImagePointType & point,
-      RealType & value,
-      MovingImageMaskDerivativeType * derivative ) const
+    ::IsInsideMovingMask( const MovingImagePointType & point ) const
   {
-    typedef typename MovingImageMaskDerivativeType::ValueType DerivativeValueType;
-       
-    /** Compute the value and derivative of the mask. */
-
-    if ( this->m_UseDifferentiableOverlap )
+    /** If a mask has been set: */
+    if ( this->m_MovingImageMask.IsNotNull() )
     {
-      /** NB: a spelling error in the itkImageFunction class! Continous... */
-      MovingImageContinuousIndexType cindex;
-      this->m_MovingImageMaskInterpolator->ConvertPointToContinousIndex( point, cindex );
-
-      if ( this->m_MovingImageMaskInterpolator->IsInsideBuffer( cindex ) )
-      {
-        value = static_cast<RealType>(
-          this->m_MovingImageMaskInterpolator->EvaluateAtContinuousIndex( cindex ) );
-        if ( derivative )
-        {
-          (*derivative) = this->m_MovingImageMaskInterpolator->
-            EvaluateDerivativeAtContinuousIndex( cindex );
-        }
-      }
-      else
-      {
-        value = 0.0;
-        if ( derivative )
-        {
-          derivative->Fill( itk::NumericTraits<DerivativeValueType>::Zero );
-        }
-      }
+      return this->m_MovingImageMask->IsInside( point );
     }
-    else
-    {
-      /** Just ignore the derivative of the mask. */
-      if ( this->m_MovingImageMask.IsNotNull() )
-      {
-        value = static_cast<RealType>(
-          static_cast<unsigned char>( this->m_MovingImageMask->IsInside( point ) ) );
-      }
-      else
-      {
-        value = 1.0;
-      }
-      if ( derivative )
-      {
-        derivative->Fill( itk::NumericTraits<DerivativeValueType>::Zero );
-      }
-    }
-  } // end EvaluateMovingMaskValueAndDerivative
+    
+    /** If no mask has been set, just return true. */
+    return true;
+    
+  } // end IsInsideMovingMask
 
 
   /**
@@ -736,15 +569,14 @@ namespace itk
     void
     AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     ::CheckNumberOfSamples(
-      unsigned long wanted, unsigned long found, double sumOfMaskValues ) const
-  {
-    const double smallNumber2 = 1e-10;
-    if ( found < wanted * this->GetRequiredRatioOfValidSamples() || sumOfMaskValues < smallNumber2 )
+      unsigned long wanted, unsigned long found ) const
+  { 
+    this->m_NumberOfPixelsCounted = found;
+    if ( found < wanted * this->GetRequiredRatioOfValidSamples() )
     {
       itkExceptionMacro( "Too many samples map outside moving image buffer: "
         << found << " / " << wanted << std::endl );
-    }
-    this->m_NumberOfPixelsCounted = found;
+    }    
   } // end CheckNumberOfSamples
 
 
@@ -758,7 +590,56 @@ namespace itk
     ::PrintSelf(std::ostream& os, Indent indent) const
   {
     Superclass::PrintSelf( os, indent );
-    os << indent << "ImageSampler: " << this->m_ImageSampler.GetPointer() << std::endl;
+
+    /** Variables related to the Sampler */
+    os << indent << "Variables related to the Sampler: " << std::endl;
+    os << indent.GetNextIndent() << "ImageSampler: " << this->m_ImageSampler.GetPointer() << std::endl;
+    os << indent.GetNextIndent() << "UseImageSampler: " << this->m_UseImageSampler << std::endl;
+
+    /** Variables for the Limiters. */
+    os << indent << "Variables related to the Limiters: " << std::endl;
+    os << indent.GetNextIndent() << "FixedLimitRangeRatio: " << this->m_FixedLimitRangeRatio << std::endl;
+    os << indent.GetNextIndent() << "MovingLimitRangeRatio: " << this->m_MovingLimitRangeRatio << std::endl;
+    os << indent.GetNextIndent() << "UseFixedImageLimiter: " << this->m_UseFixedImageLimiter << std::endl;
+    os << indent.GetNextIndent() << "UseMovingImageLimiter: " << this->m_UseMovingImageLimiter << std::endl;
+    os << indent.GetNextIndent() << "FixedImageLimiter: " << this->m_FixedImageLimiter.GetPointer() << std::endl;
+    os << indent.GetNextIndent() << "MovingImageLimiter: " << this->m_MovingImageLimiter.GetPointer() << std::endl;
+    os << indent.GetNextIndent() << "FixedImageTrueMin: " << this->m_FixedImageTrueMin << std::endl;
+    os << indent.GetNextIndent() << "MovingImageTrueMin: " << this->m_MovingImageTrueMin << std::endl;
+    os << indent.GetNextIndent() << "FixedImageTrueMax: " << this->m_FixedImageTrueMax << std::endl;
+    os << indent.GetNextIndent() << "MovingImageTrueMax: " << this->m_MovingImageTrueMax << std::endl;
+    os << indent.GetNextIndent() << "FixedImageMinLimit: " << this->m_FixedImageMinLimit << std::endl;
+    os << indent.GetNextIndent() << "MovingImageMinLimit: " << this->m_MovingImageMinLimit << std::endl;
+    os << indent.GetNextIndent() << "FixedImageMaxLimit: " << this->m_FixedImageMaxLimit << std::endl;
+    os << indent.GetNextIndent() << "MovingImageMaxLimit: " << this->m_MovingImageMaxLimit << std::endl;
+
+    /** Variables related to image derivative computation. */
+    os << indent << "Variables related to image derivative computation: " << std::endl;
+    os << indent.GetNextIndent() << "InterpolatorIsBSpline: " << this->m_InterpolatorIsBSpline << std::endl;
+    os << indent.GetNextIndent() << "BSplineInterpolator: " << this->m_BSplineInterpolator.GetPointer() << std::endl;
+    os << indent.GetNextIndent() << "CentralDifferenceGradientFilter: " << this->m_CentralDifferenceGradientFilter.GetPointer() << std::endl;
+    
+    /** Variables used when the transform is a bspline transform. */
+    os << indent << "Variables used when the transform is a B-spline transform: " << std::endl;
+    os << indent.GetNextIndent() << "InternalTransformJacobian: " << this->m_InternalTransformJacobian << std::endl;
+    os << indent.GetNextIndent() << "NonZeroJacobianIndices: " << this->m_NonZeroJacobianIndices << std::endl;
+    os << indent.GetNextIndent() << "TransformIsBSpline: " << this->m_TransformIsBSpline << std::endl;
+    os << indent.GetNextIndent() << "TransformIsBSplineCombination: " << this->m_TransformIsBSplineCombination << std::endl;
+    os << indent.GetNextIndent() << "BSplineTransform: " << this->m_BSplineTransform.GetPointer() << std::endl;
+    os << indent.GetNextIndent() << "BSplineCombinationTransform: " << this->m_BSplineCombinationTransform.GetPointer() << std::endl;
+    os << indent.GetNextIndent() << "BSplineTransformWeights: " << this->m_BSplineTransformWeights << std::endl;
+    os << indent.GetNextIndent() << "BSplineTransformIndices: " << this->m_BSplineTransformIndices << std::endl;
+    os << indent.GetNextIndent() << "BSplineParametersOffset: " << this->m_BSplineParametersOffset << std::endl;
+    os << indent.GetNextIndent() << "NumBSplineParametersPerDim: " << this->m_NumBSplineParametersPerDim << std::endl;
+    os << indent.GetNextIndent() << "NumBSplineWeights: " << this->m_NumBSplineWeights << std::endl;
+       
+    /** Other variables. */
+    os << indent << "Other variables of the AdvancedImageToImageMetric: " << std::endl;
+    os << indent.GetNextIndent() << "NumberOfParameters: " << this->m_NumberOfParameters << std::endl;
+    os << indent.GetNextIndent() << "RequiredRatioOfValidSamples: " << this->m_RequiredRatioOfValidSamples << std::endl;
+    os << indent.GetNextIndent() << "UseMovingImageDerivativeScales: " << this->m_UseMovingImageDerivativeScales << std::endl;
+    os << indent.GetNextIndent() << "MovingImageDerivativeScales: " << this->m_MovingImageDerivativeScales << std::endl;
+
   } // end PrintSelf
 
 

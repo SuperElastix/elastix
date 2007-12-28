@@ -19,7 +19,7 @@ using namespace itk;
 	 *		<tt>(Metric "NormalizedCorrelation")</tt>
 	 * \parameter SubtractMean: Flag to set if the sample mean is subtracted from the
 	 *    sample values in the cross correlation formula. This typically results in narrower
-	 *    valleys in the cost fucntion. Default value is true. Can be defined for each resolution\n
+	 *    valleys in the cost function. Default value is true. Can be defined for each resolution\n
 	 *		example: <tt>(SubtractMean "false")</tt> \n
 	 *
 	 * \ingroup Metrics

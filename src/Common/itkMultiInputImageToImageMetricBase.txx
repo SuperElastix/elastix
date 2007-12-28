@@ -344,35 +344,36 @@ namespace itk
 
 
   /**
-	 * ************************ EvaluateMovingMaskValue *************************
+	 * ************************ IsInsideMovingMask *************************
 	 */
   
   template <class TFixedImage, class TMovingImage>
-	void
+	bool
   MultiInputImageToImageMetricBase<TFixedImage,TMovingImage>
-  ::EvaluateMovingMaskValue(
-    const MovingImagePointType & mappedPoint,
-    RealType & movingMaskValue ) const
+  ::IsInsideMovingMask( const MovingImagePointType & mappedPoint ) const
   {
-    /** If no moving image masks are present the value 1.0 is returned,
+    /** If no moving image masks are present the 'true' is returned,
      * meaning that this sample is taken into account. Otherwise, the
-     * minimum mask value is returned, i.e. the sample should be inside
+     * AND of all masks is returned, i.e. the sample should be inside
      * all masks.
      */
-    movingMaskValue = 1.0;
+    bool inside = true;
     for ( unsigned int i = 0; i < this->GetNumberOfMovingImageMasks(); ++i )
     {
       MovingImageMaskPointer movingImageMask = this->GetMovingImageMask( i );
       if ( movingImageMask.IsNotNull() )
       {
-        RealType tmp = static_cast<RealType>(
-          static_cast<unsigned char>(
-          movingImageMask ->IsInside( mappedPoint ) ) );
-        movingMaskValue = movingMaskValue < tmp ? movingMaskValue : tmp;
+        inside &= movingImageMask->IsInside( mappedPoint );        
+      }
+      /** If the point falls outside one mask, we can skip the rest */
+      if (!inside)
+      {
+        return false;
       }
     }
+    return inside;
 
-  } // end EvaluateMovingMaskValue()
+  } // end IsInsideMovingMask()
 
 
 } // end namespace itk

@@ -20,7 +20,7 @@ namespace itk
 	 * One the PDF's have been contructed, the metric value and derivative
    * can be computed. Inheriting classes should make sure to call
    * the function ComputePDFs(AndPDFDerivatives) before using m_JointPDF and m_Alpha
-   * (and m_JointPDFDerivatives and m_AlphaDerivatives).
+   * (and m_JointPDFDerivatives).
    *
    * This class does not define the GetValue/GetValueAndDerivative methods.
    * This is the task of inheriting classes.
@@ -35,7 +35,7 @@ namespace itk
    *  - More use of iterators instead of raw buffer pointers.
    *  - An optional FiniteDifference derivative estimation. 
    *
-   * \warning This class in not thread safe due the member data structures
+   * \warning This class is not thread safe due the member data structures
 	 *  used to the store the sampled points and the marginal and joint pdfs.
 	 *
 	 * References:\n
@@ -61,7 +61,7 @@ namespace itk
 	public:
 		
 		/** Standard class typedefs. */
-		typedef ParzenWindowHistogramImageToImageMetric					        Self;
+		typedef ParzenWindowHistogramImageToImageMetric					            Self;
 		typedef AdvancedImageToImageMetric< TFixedImage, TMovingImage >			Superclass;
 		typedef SmartPointer<Self>																	        Pointer;
 		typedef SmartPointer<const Self>														        ConstPointer;
@@ -106,11 +106,6 @@ namespace itk
     typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
     typedef typename 
       Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
-    typedef typename Superclass::InternalMaskPixelType      InternalMaskPixelType;
-    typedef typename
-      Superclass::InternalMovingImageMaskType               InternalMovingImageMaskType;
-    typedef typename 
-      Superclass::MovingImageMaskInterpolatorType           MovingImageMaskInterpolatorType;
     typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
     typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
     typedef typename
@@ -206,15 +201,14 @@ namespace itk
     typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
   	typedef	typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
     typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
-    typedef typename Superclass::CentralDifferenceGradientFilterType        CentralDifferenceGradientFilterType;
+    typedef typename Superclass::CentralDifferenceGradientFilterType CentralDifferenceGradientFilterType;
     typedef typename Superclass::BSplineTransformType               BSplineTransformType;
     typedef typename Superclass::BSplineTransformWeightsType        BSplineTransformWeightsType;
 	  typedef typename Superclass::BSplineTransformIndexArrayType     BSplineTransformIndexArrayType;
 	  typedef typename Superclass::BSplineCombinationTransformType    BSplineCombinationTransformType;
  	  typedef typename Superclass::BSplineParametersOffsetType        BSplineParametersOffsetType;
     typedef typename Superclass::ParameterIndexArrayType            ParameterIndexArrayType;
-    typedef typename Superclass::MovingImageMaskDerivativeType      MovingImageMaskDerivativeType;
-        
+            
     /** Typedefs for the PDFs and PDF derivatives.  */
     typedef float                                   PDFValueType;
 		typedef Array<PDFValueType>                     MarginalPDFType;
@@ -237,9 +231,8 @@ namespace itk
 
     /** Protected variables **************************** */
    		
-    /** Variables for Alpha and dAlpha/dmu (the normalization factor of the histogram) */
+    /** Variables for Alpha (the normalization factor of the histogram) */
     mutable double                                m_Alpha;
-    mutable DerivativeType                        m_AlphaDerivatives;
     mutable DerivativeType                        m_PerturbedAlphaRight;
     mutable DerivativeType                        m_PerturbedAlphaLeft;
    
@@ -268,15 +261,12 @@ namespace itk
 		typename KernelFunctionType::Pointer m_DerivativeMovingKernel;
 
     /** Computes the innerproduct of transform jacobian with moving image gradient
-     * and transform jacobian with the derivative of the movingMask
-     * The results are stored in imageJacobian and maskJacobian, which are supposed
-     * to have the right size (same length as jacobian's number of columns). */
-    void EvaluateTransformJacobianInnerProducts(
+     * The results are stored in imageJacobian, which is supposed to have the
+     * right size (same length as jacobian's number of columns). */
+    void EvaluateTransformJacobianInnerProduct(
       const TransformJacobianType & jacobian, 
 		  const MovingImageDerivativeType & movingImageDerivative,
-      const MovingImageMaskDerivativeType & movingMaskDerivative,
-      DerivativeType & imageJacobian,
-      DerivativeType & maskJacobian) const;
+      DerivativeType & imageJacobian ) const;
  
     /** Compute the parzen values given an image value and a starting histogram index
      * Compute the values at (parzenWindowIndex - parzenWindowTerm + k) for 
@@ -290,15 +280,18 @@ namespace itk
     /** Update the joint PDF with a pixel pair; on demand also updates the 
      * pdf derivatives (if the jacobian pointers are nonzero) */
     virtual void UpdateJointPDFAndDerivatives(
-      RealType fixedImageValue, RealType movingImageValue, RealType movingMaskValue,
-      const DerivativeType * imageJacobian, const DerivativeType * maskJacobian) const;
+      RealType fixedImageValue, RealType movingImageValue,
+      const DerivativeType * imageJacobian) const;
 
     /** Update the joint PDF and the incremental pdfs.
      * The input is a pixel pair (fixed, moving, moving mask) and
      * a set of moving image/mask values when using mu+delta*e_k, for 
      * each k that has a nonzero jacobian. And for mu-delta*e_k of course.
-     * Also updates the PerturbedAlpha's/
-     */
+     * Also updates the PerturbedAlpha's
+     * This function is used when UseFiniteDifferenceDerivative is true.
+     *
+     * \todo The IsInsideMovingMask return bools are converted to doubles (1 or 0) to 
+     * simplify the computation. But this may not be necessary. */
     virtual void UpdateJointPDFAndIncrementalPDFs(
       RealType fixedImageValue, RealType movingImageValue, RealType movingMaskValue,
       const DerivativeType & movingImageValuesRight,
@@ -307,16 +300,13 @@ namespace itk
       const DerivativeType & movingMaskValuesLeft ) const;
 
     /** Update the pdf derivatives
-     * adds -image_jac[mu]*factor_a + mask_jac[mu]*factor_b to the bin 
+     * adds -image_jac[mu]*factor to the bin 
      * with index [ mu, pdfIndex[0], pdfIndex[1] ] for all mu.
      * This function should only be called from UpdateJointPDFAndDerivatives */
     void UpdateJointPDFDerivatives(
-      const JointPDFIndexType & pdfIndex, double factor_a, double factor_b,
-      const DerivativeType & imageJacobian, const DerivativeType & maskJacobian) const;
-
-    /** Adds the MaskJacobian to the alpha derivative vector */
-    virtual void UpdateAlphaDerivatives(const DerivativeType & maskJacobian) const;	
-
+      const JointPDFIndexType & pdfIndex, double factor,
+      const DerivativeType & imageJacobian) const;
+    
     /** Multiply the pdf entries by the given normalization factor */
     virtual void NormalizeJointPDF(
       JointPDFType * pdf, double factor ) const;
@@ -341,10 +331,10 @@ namespace itk
       IncrementalMarginalPDFType * movingIncrementalMarginalPDF ) const;   
 
     /** Compute PDFs and pdf derivatives; Loops over the fixed image samples and constructs
-     * the m_JointPDF, m_JointPDFDerivatives, m_Alpha and m_AlphaDerivatives
+     * the m_JointPDF, m_JointPDFDerivatives, and m_Alpha.
      * The JointPDF and Alpha and its derivatives are related as follows:
      * p = m_Alpha * m_JointPDF
-     * dp/dmu = m_AlphaDerivatives * m_JointPDF + m_Alpha * m_JointPDFDerivatives
+     * dp/dmu = m_Alpha * m_JointPDFDerivatives
      * So, the JointPDF is more like a histogram than a true pdf...
      * The histograms are left unnormalised since it may be faster to 
      * not do this explicitly. */

@@ -181,20 +181,7 @@ namespace itk
     }  // end while-loop over fixed index
     
     value = static_cast<MeasureType>( -1.0 * MI);
-
-    /** Add -1/alpha * dalpha/dmu * sum_i sum_k p log( p / pT pR) ) 
-     * MI = sum_i sum_k alpha p log( p / (p / pT pR) )
-     * so we have divide by -alpha */            
-    const double alphaDerivativeFactor = - MI / this->m_Alpha;
-    derivit = derivative.begin();
-    DerivativeConstIteratorType alphaDerivit = this->m_AlphaDerivatives.begin();
-    while ( derivit != derivend )
-    {                    
-      (*derivit) += (*alphaDerivit) * alphaDerivativeFactor;
-      ++derivit;
-      ++alphaDerivit;
-    }
-        
+       
   } // end GetValueAndAnalyticDerivative
 
 
@@ -398,10 +385,6 @@ namespace itk
     }
         
   } // end GetValueAndFiniteDifferenceDerivative
-
- 
-
-
 
 } // end namespace itk 
 

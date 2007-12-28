@@ -325,12 +325,9 @@ protected:
     RealType & movingImageValue,
     MovingImageDerivativeType * gradient ) const;
 
-  /** EvaluateMovingMaskValue: Returns the minimum value of all
-   * moving image masks.
-   */
-  virtual void EvaluateMovingMaskValue(
-    const MovingImagePointType & mappedPoint,
-    RealType & movingMaskValue ) const;
+  /** IsInsideMovingMask: Returns the AND of all moving image masks. */
+  virtual bool IsInsideMovingMask(
+    const MovingImagePointType & mappedPoint ) const;
 
   /** Protected member variables. */
   FixedImageVectorType        m_FixedImageVector;

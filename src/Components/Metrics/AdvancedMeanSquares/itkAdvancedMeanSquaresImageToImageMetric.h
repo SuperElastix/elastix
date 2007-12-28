@@ -20,7 +20,6 @@ namespace itk
  * and result in general in non-grid position on it. Values at these non-grid
  * position of the Fixed image are interpolated using a user-selected Interpolator.
  * 
- *
  * \ingroup RegistrationMetrics
  * \ingroup Metrics
  */
@@ -81,11 +80,6 @@ public:
   typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
   typedef typename 
     Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
-  typedef typename Superclass::InternalMaskPixelType      InternalMaskPixelType;
-  typedef typename
-    Superclass::InternalMovingImageMaskType               InternalMovingImageMaskType;
-  typedef typename 
-    Superclass::MovingImageMaskInterpolatorType           MovingImageMaskInterpolatorType;
   typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
   typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
   typedef typename
@@ -151,32 +145,25 @@ protected:
 	typedef typename Superclass::BSplineCombinationTransformType    BSplineCombinationTransformType;
  	typedef typename Superclass::BSplineParametersOffsetType        BSplineParametersOffsetType;
   typedef typename Superclass::ParameterIndexArrayType            ParameterIndexArrayType;
-  typedef typename Superclass::MovingImageMaskDerivativeType      MovingImageMaskDerivativeType;
 
   double m_NormalizationFactor;
      
-  /** Computes the innerproduct of transform jacobian with moving image gradient
-   * and transform jacobian with the derivative of the movingMask
-   * The results are stored in imageJacobian and maskJacobian, which are supposed
+  /** Computes the innerproduct of transform jacobian with moving image gradient.
+   * The results are stored in imageJacobian, which is supposed
    * to have the right size (same length as jacobian's number of columns). */
-  void EvaluateTransformJacobianInnerProducts(
+  void EvaluateTransformJacobianInnerProduct(
     const TransformJacobianType & jacobian, 
 		const MovingImageDerivativeType & movingImageDerivative,
-    const MovingImageMaskDerivativeType & movingMaskDerivative,
-    DerivativeType & imageJacobian,
-    DerivativeType & maskJacobian) const;
+    DerivativeType & imageJacobian) const;
 
   /** Compute a pixel's contribution to the measure and derivatives;
    * Called by GetValueAndDerivative(). */
   void UpdateValueAndDerivativeTerms( 
     const RealType fixedImageValue,
-    const RealType movingImageValue,
-    const RealType movingMaskValue,
-    const DerivativeType & imageJacobian,
-    const DerivativeType & maskJacobian,
+    const RealType movingImageValue,    
+    const DerivativeType & imageJacobian,    
     MeasureType & measure,
-    DerivativeType & numderiv,
-    DerivativeType & denderiv ) const;
+    DerivativeType & deriv ) const;
  
 private:
   AdvancedMeanSquaresImageToImageMetric(const Self&); //purposely not implemented

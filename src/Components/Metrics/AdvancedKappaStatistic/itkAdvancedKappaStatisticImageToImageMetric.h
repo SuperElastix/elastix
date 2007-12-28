@@ -92,11 +92,6 @@ public:
   typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
   typedef typename 
     Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
-  typedef typename Superclass::InternalMaskPixelType      InternalMaskPixelType;
-  typedef typename
-    Superclass::InternalMovingImageMaskType               InternalMovingImageMaskType;
-  typedef typename 
-    Superclass::MovingImageMaskInterpolatorType           MovingImageMaskInterpolatorType;
   typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
   typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
   typedef typename
@@ -168,11 +163,9 @@ protected:
 	typedef typename Superclass::BSplineCombinationTransformType    BSplineCombinationTransformType;
  	typedef typename Superclass::BSplineParametersOffsetType        BSplineParametersOffsetType;
   typedef typename Superclass::ParameterIndexArrayType            ParameterIndexArrayType;
-  typedef typename Superclass::MovingImageMaskDerivativeType      MovingImageMaskDerivativeType;
-  
-  /** Computes the innerproduct of transform jacobian with moving image gradient
-   * and transform jacobian with the derivative of the movingMask
-   * The results are stored in imageJacobian and maskJacobian, which are supposed
+    
+  /** Computes the innerproduct of transform jacobian with moving image gradient.
+   * The results are stored in the imageJacobian, which is supposed
    * to have the right size (same length as jacobian's number of columns). */
   void EvaluateMovingImageAndTransformJacobianInnerProduct(
 		const TransformJacobianType & jacobian, 

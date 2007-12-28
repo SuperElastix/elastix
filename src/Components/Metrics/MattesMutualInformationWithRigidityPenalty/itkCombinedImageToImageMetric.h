@@ -160,12 +160,6 @@ public:
   /** Pass this ratio to all sub metrics. */
   virtual void SetRequiredRatioOfValidSamples( const double _arg );
 
-  /** Pass this option to all sub metrics. */
-  virtual void SetUseDifferentiableOverlap( const bool _arg );
-
-  /** Pass the MovingImageMaskInterpolationOrder to all sub metrics. */
-  virtual void SetMovingImageMaskInterpolationOrder( unsigned int _arg );
-
   /** Pass the fixed image limiter to all sub metrics. */
   virtual void SetFixedImageLimiter( FixedImageLimiterType * _arg );
 

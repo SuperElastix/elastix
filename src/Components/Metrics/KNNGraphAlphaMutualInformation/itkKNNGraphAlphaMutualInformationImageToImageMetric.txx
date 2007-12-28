@@ -311,7 +311,7 @@ namespace itk
     /** Check if enough samples were valid. */
     unsigned long size = this->GetImageSampler()->GetOutput()->Size();
     this->CheckNumberOfSamples( size,
-      this->m_NumberOfPixelsCounted, this->m_NumberOfPixelsCounted );
+      this->m_NumberOfPixelsCounted );
 
     /**
      * *************** Generate the three trees ******************
@@ -527,8 +527,7 @@ namespace itk
   
     /** Check if enough samples were valid. */
     unsigned long size = this->GetImageSampler()->GetOutput()->Size();
-    this->CheckNumberOfSamples( size,
-      this->m_NumberOfPixelsCounted, this->m_NumberOfPixelsCounted );
+    this->CheckNumberOfSamples( size, this->m_NumberOfPixelsCounted );
 
     /**
      * *************** Generate the three trees ******************
@@ -773,7 +772,7 @@ namespace itk
     listSampleJoint->Resize( size );
 
     /** Create variables to store intermediate results. */
-    RealType movingImageValue, movingMaskValue;
+    RealType movingImageValue;
     MovingImagePointType mappedPoint;
     double fixedFeatureValue = 0.0;
     double movingFeatureValue = 0.0;
@@ -791,8 +790,7 @@ namespace itk
       /** Check if point is inside all moving masks. */
       if ( sampleOk )
       {
-        this->EvaluateMovingMaskValue( mappedPoint, movingMaskValue );
-        sampleOk = movingMaskValue > 1e-10;
+        sampleOk = this->IsInsideMovingMask( mappedPoint );        
       }
 
       /** Compute the moving image value M(T(x)) and possibly the

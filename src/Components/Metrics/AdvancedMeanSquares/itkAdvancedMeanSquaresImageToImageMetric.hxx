@@ -81,42 +81,35 @@ namespace itk
 
 
   /**
-	 * *************** EvaluateTransformJacobianInnerProducts ****************
+	 * *************** EvaluateTransformJacobianInnerProduct ****************
 	 */
 
 	template < class TFixedImage, class TMovingImage >
 		void
 		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-		::EvaluateTransformJacobianInnerProducts( 
+		::EvaluateTransformJacobianInnerProduct( 
 		const TransformJacobianType & jacobian, 
 		const MovingImageDerivativeType & movingImageDerivative,
-    const MovingImageMaskDerivativeType & movingMaskDerivative,
-    DerivativeType & imageJacobian,
-    DerivativeType & maskJacobian ) const
+    DerivativeType & imageJacobian ) const
 	{
     typedef typename TransformJacobianType::const_iterator JacobianIteratorType;
     typedef typename DerivativeType::iterator              DerivativeIteratorType;
     JacobianIteratorType jac = jacobian.begin();
     imageJacobian.Fill( 0.0 );
-    maskJacobian.Fill(  0.0 );
     const unsigned int sizeImageJacobian = imageJacobian.GetSize();
     for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
     {
       const double imDeriv = movingImageDerivative[ dim ];
-      const double maskDeriv = movingMaskDerivative[ dim ];
       DerivativeIteratorType imjac = imageJacobian.begin();
-      DerivativeIteratorType maskjac = maskJacobian.begin();
-      
+            
       for ( unsigned int mu = 0; mu < sizeImageJacobian; mu++ )
       {
         (*imjac) += (*jac) * imDeriv;
-        (*maskjac) += (*jac) * maskDeriv;
         ++imjac;
-        ++maskjac;
         ++jac;
       }
     }
-	} // end EvaluateTransformJacobianInnerProducts
+	} // end EvaluateTransformJacobianInnerProduct
 
 
 	/**
@@ -132,7 +125,6 @@ namespace itk
 		
     /** Initialize some variables */
 		this->m_NumberOfPixelsCounted = 0;
-    double sumOfMovingMaskValues = 0.0;
     MeasureType measure = NumericTraits< MeasureType >::Zero;
 
     /** Make sure the transform parameters are up to date. */
@@ -159,12 +151,9 @@ namespace itk
       bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
       /** Check if point is inside mask. */
-      RealType movingMaskValue = 0.0;
       if ( sampleOk ) 
       {
-        this->EvaluateMovingMaskValueAndDerivative( mappedPoint, movingMaskValue, 0 );
-        const double smallNumber1 = 1e-10;
-        sampleOk = movingMaskValue > smallNumber1;
+        sampleOk = this->IsInsideMovingMask( mappedPoint );        
       }
 
       /** Compute the moving image value and check if the point is
@@ -178,14 +167,13 @@ namespace itk
       if ( sampleOk )
       {
         this->m_NumberOfPixelsCounted++; 
-        sumOfMovingMaskValues += movingMaskValue;
-
+      
         /** Get the fixed image value. */
         const RealType & fixedImageValue = static_cast<double>( (*fiter).Value().m_ImageValue );
 
 				/** The difference squared. */
 				const RealType diff = movingImageValue - fixedImageValue; 
-				measure += movingMaskValue * diff * diff;
+				measure += diff * diff;
         
 			} // end if sampleOk
 
@@ -193,10 +181,11 @@ namespace itk
 
     /** Check if enough samples were valid. */
     this->CheckNumberOfSamples(
-      sampleContainer->Size(), this->m_NumberOfPixelsCounted, sumOfMovingMaskValues );
+      sampleContainer->Size(), this->m_NumberOfPixelsCounted );
     
     /** Update measure value. */
-	  measure *= this->m_NormalizationFactor / sumOfMovingMaskValues;
+	  measure *= this->m_NormalizationFactor / 
+      static_cast<double>( this->m_NumberOfPixelsCounted );
 
 		/** Return the mean squares measure value. */
 		return measure;
@@ -241,19 +230,12 @@ namespace itk
 
     /** Initialize some variables. */
     this->m_NumberOfPixelsCounted = 0;
-    double sumOfMovingMaskValues = 0.0;
     MeasureType measure = NumericTraits< MeasureType >::Zero;
     derivative = DerivativeType( this->m_NumberOfParameters );
 		derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
 
     /** Arrays that store dM(x)/dmu and dMask(x)/dmu. */
     DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.GetSize() );
-    DerivativeType maskJacobian( this->m_NonZeroJacobianIndices.GetSize() );
-   
-    DerivativeType numDerivative( this->m_NumberOfParameters );
-    DerivativeType denDerivative( this->m_NumberOfParameters );
-    numDerivative.Fill( NumericTraits< DerivativeValueType >::Zero );
-    denDerivative.Fill( NumericTraits< DerivativeValueType >::Zero );
  
 		/** Make sure the transform parameters are up to date. */
 		this->SetTransformParameters( parameters );
@@ -280,16 +262,9 @@ namespace itk
       bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint);
       
       /** Check if point is inside mask. */
-      RealType movingMaskValue = 0.0;
-      MovingImageMaskDerivativeType movingMaskDerivative; 
       if ( sampleOk ) 
       {
-        this->EvaluateMovingMaskValueAndDerivative(
-          mappedPoint, movingMaskValue, &movingMaskDerivative );
-        const double movingMaskDerivativeMagnitude = movingMaskDerivative.GetNorm();
-        const double smallNumber1 = 1e-10;
-        sampleOk = ( movingMaskValue > smallNumber1 ) ||
-          ( movingMaskDerivativeMagnitude > smallNumber1 );
+        sampleOk = this->IsInsideMovingMask( mappedPoint );        
       }
     
       /** Compute the moving image value M(T(x)) and derivative dM/dx and check if
@@ -303,8 +278,7 @@ namespace itk
       if ( sampleOk )
       {
         this->m_NumberOfPixelsCounted++; 
-        sumOfMovingMaskValues += movingMaskValue;
-
+        
         /** Get the fixed image value. */
         const RealType & fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
 
@@ -313,14 +287,14 @@ namespace itk
           this->EvaluateTransformJacobian( fixedPoint );
         
         /** Compute the innerproducts (dM/dx)^T (dT/dmu) and (dMask/dx)^T (dT/dmu). */
-        this->EvaluateTransformJacobianInnerProducts( 
-          jacobian, movingImageDerivative, movingMaskDerivative, imageJacobian, maskJacobian );
+        this->EvaluateTransformJacobianInnerProduct( 
+          jacobian, movingImageDerivative, imageJacobian );
 
         /** Compute this pixel's contribution to the measure and derivatives. */
         this->UpdateValueAndDerivativeTerms( 
-          fixedImageValue, movingImageValue, movingMaskValue,
-          imageJacobian, maskJacobian, 
-          measure, numDerivative, denDerivative );
+          fixedImageValue, movingImageValue,
+          imageJacobian,
+          measure, derivative );
 
 			} // end if sampleOk
 
@@ -328,19 +302,14 @@ namespace itk
 
     /** Check if enough samples were valid. */
     this->CheckNumberOfSamples(
-      sampleContainer->Size(), this->m_NumberOfPixelsCounted, sumOfMovingMaskValues );
+      sampleContainer->Size(), this->m_NumberOfPixelsCounted );
        
-    /** Compute the measure value. */
-    const double normal_sum = this->m_NormalizationFactor / sumOfMovingMaskValues;
+    /** Compute the measure value and derivative. */
+    const double normal_sum = this->m_NormalizationFactor / 
+      static_cast<double>( this->m_NumberOfPixelsCounted );
     measure *= normal_sum;
-
-    /** Compute the derivative. */
-    const MeasureType measure_N = measure / sumOfMovingMaskValues;
-    for ( unsigned int i = 0; i < this->m_NumberOfParameters; i++ )
-  	{
-	  	derivative[ i ] = numDerivative[ i ] * normal_sum - denDerivative[ i ] * measure_N;
-		}
-		
+    derivative *= normal_sum;
+   
 		/** The return value. */
 		value = measure;
 
@@ -357,37 +326,29 @@ namespace itk
 		::UpdateValueAndDerivativeTerms( 
     const RealType fixedImageValue,
     const RealType movingImageValue,
-    const RealType movingMaskValue,
     const DerivativeType & imageJacobian,
-    const DerivativeType & maskJacobian,
     MeasureType & measure,
-    DerivativeType & numderiv,
-    DerivativeType & denderiv  ) const
+    DerivativeType & deriv ) const
   {
     typedef typename DerivativeType::ValueType        DerivativeValueType;
 
     /** The difference squared. */
 		const RealType diff = movingImageValue - fixedImageValue; 
     const RealType diffdiff = diff * diff;
-		measure += movingMaskValue * diffdiff;
+		measure += diffdiff;
         	  
 		/** Calculate the contributions to the derivatives with respect to each parameter. */
-    const RealType movmask_diff_2 = movingMaskValue * diff * 2.0;
+    const RealType diff_2 = diff * 2.0;
     if ( this->m_NonZeroJacobianIndices.GetSize() == this->m_NumberOfParameters )
 		{
       /** Loop over all jacobians. */
       typename DerivativeType::const_iterator imjacit = imageJacobian.begin();
-      typename DerivativeType::const_iterator maskjacit = maskJacobian.begin();
-      typename DerivativeType::iterator numderivit = numderiv.begin();
-      typename DerivativeType::iterator denderivit = denderiv.begin();
+      typename DerivativeType::iterator derivit = deriv.begin();
       for ( unsigned int mu = 0; mu < this->m_NumberOfParameters; ++mu )
       {
-        (*numderivit) += movmask_diff_2 * (*imjacit) + diffdiff * (*maskjacit);
-        (*denderivit) += (*maskjacit);
+        (*derivit) += diff_2 * (*imjacit);        
         ++imjacit;
-        ++maskjacit;
-        ++numderivit;
-        ++denderivit;
+        ++derivit;   
       }
     }
     else
@@ -396,9 +357,7 @@ namespace itk
       for ( unsigned int i = 0; i < imageJacobian.GetSize(); ++i )
       {
         const unsigned int index = this->m_NonZeroJacobianIndices[ i ];
-        const DerivativeValueType maskjac = maskJacobian[ i ];
-        numderiv[ index ] += movmask_diff_2 * imageJacobian[ i ] + diffdiff * maskjac;
-        denderiv[ index ] += maskjac;
+        deriv[ index ] += diff_2 * imageJacobian[ i ];       
       }
     }
   } // end UpdateValueAndDerivativeTerms

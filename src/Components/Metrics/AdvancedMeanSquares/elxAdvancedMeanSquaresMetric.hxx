@@ -38,19 +38,6 @@ using namespace itk;
 		unsigned int level = 
 			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
-    /** Set whether a differentiable overlap should be used */
-    bool useDifferentiableOverlap = false;
-    this->GetConfiguration()->ReadParameter( useDifferentiableOverlap,
-      "UseDifferentiableOverlap", this->GetComponentLabel(), level, 0 );
-    this->SetUseDifferentiableOverlap( useDifferentiableOverlap );
-    
-    /** Get and set the mask interpolation order */
-		unsigned int movingMaskInterpolationOrder = 2;
-    this->GetConfiguration()->ReadParameter( movingMaskInterpolationOrder, 
-      "MovingMaskInterpolationOrder", this->GetComponentLabel(), level, 0 );
-		this->SetMovingImageMaskInterpolationOrder( 
-      movingMaskInterpolationOrder );
-
     /** Get and set whether the metric should check if enough samples map inside the moving image. */
     std::string checkNumberOfSamples = "true";
     this->GetConfiguration()->ReadParameter( checkNumberOfSamples,

@@ -99,33 +99,20 @@ namespace itk
     /** Set up the Parzen windows */
     this->InitializeKernels();
     
-    /** If the user plans to use a derivative, allocate some memory for
-     * the alpha derivatives.
+    /** If the user plans to use a finite difference derivative,
+     * allocate some memory for the perturbed alpha variables.
      * Assume the superclass has set the m_NumberOfParameters */
-    if ( this->GetUseDerivative()  )
+    if ( this->GetUseDerivative() && this->GetUseFiniteDifferenceDerivative() )
     {
-      if ( this->GetUseFiniteDifferenceDerivative() )
-      {
-        this->m_AlphaDerivatives.SetSize( 0 );
-        this->m_PerturbedAlphaRight.SetSize( this->m_NumberOfParameters );
-        this->m_PerturbedAlphaLeft.SetSize( this->m_NumberOfParameters );
-      }
-      else
-      {
-        
-        this->m_AlphaDerivatives.SetSize( this->m_NumberOfParameters );
-        this->m_PerturbedAlphaRight.SetSize( 0 );
-        this->m_PerturbedAlphaLeft.SetSize( 0 );
-      }
+      this->m_PerturbedAlphaRight.SetSize( this->m_NumberOfParameters );
+      this->m_PerturbedAlphaLeft.SetSize( this->m_NumberOfParameters );
     }
     else
     {
-      this->m_AlphaDerivatives.SetSize( 0 );
       this->m_PerturbedAlphaRight.SetSize( 0 );
       this->m_PerturbedAlphaLeft.SetSize( 0 );
     }
-
-         
+            
 	} // end Initialize
 
 
@@ -447,8 +434,8 @@ namespace itk
 		void
 		ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
 		::UpdateJointPDFAndDerivatives(
-      RealType fixedImageValue, RealType movingImageValue, RealType movingMaskValue, 
-      const DerivativeType * imageJacobian, const DerivativeType * maskJacobian) const
+      RealType fixedImageValue, RealType movingImageValue, 
+      const DerivativeType * imageJacobian ) const
   {
     typedef ImageSliceIteratorWithIndex< JointPDFType >  PDFIteratorType;
 
@@ -487,15 +474,15 @@ namespace itk
     it.SetFirstDirection(0);
     it.SetSecondDirection(1);
     
-    if ( !imageJacobian || !maskJacobian )
+    if ( !imageJacobian )
     {  
       /** Loop over the parzen window region and increment the values */    
       for ( unsigned int f = 0; f < fixedParzenValues.GetSize(); ++f )
       {
-        const double fv_mask = fixedParzenValues[f] * movingMaskValue;
+        const double fv = fixedParzenValues[f];
         for ( unsigned int m = 0; m < movingParzenValues.GetSize(); ++m )
         {
-          it.Value() += static_cast<PDFValueType>( fv_mask * movingParzenValues[m] );
+          it.Value() += static_cast<PDFValueType>( fv * movingParzenValues[m] );
           ++it;
         }
         it.NextLine();
@@ -510,21 +497,20 @@ namespace itk
         movingImageParzenWindowTerm, movingImageParzenWindowIndex,
         this->m_DerivativeMovingKernel, derivativeMovingParzenValues);
 
-      const double mask_et = movingMaskValue / this->m_MovingImageBinSize;
+      const double et = static_cast<double>( this->m_MovingImageBinSize );
 
       /** Loop over the parzen window region and increment the values
        * Also update the pdf derivatives */    
       for ( unsigned int f = 0; f < fixedParzenValues.GetSize(); ++f )
       {
         const double fv = fixedParzenValues[f];
-        const double fv_mask_et = fv * mask_et;
+        const double fv_et = fv / et;
         for ( unsigned int m = 0; m < movingParzenValues.GetSize(); ++m )
-        {
-          const double fv_mv = fv * movingParzenValues[m];
-          it.Value() += static_cast<PDFValueType>( fv_mv * movingMaskValue );
+        {          
+          it.Value() += static_cast<PDFValueType>( fv * movingParzenValues[m] );
           this->UpdateJointPDFDerivatives( 
-            it.GetIndex(), fv_mask_et * derivativeMovingParzenValues[m], fv_mv,
-            *imageJacobian, *maskJacobian);
+            it.GetIndex(), fv_et * derivativeMovingParzenValues[m],
+            *imageJacobian );
           ++it;
         }
         it.NextLine();
@@ -542,8 +528,8 @@ namespace itk
 		void
 		ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
 		::UpdateJointPDFDerivatives(
-    const JointPDFIndexType & pdfIndex, double factor_a, double factor_b,
-    const DerivativeType & imageJacobian, const DerivativeType & maskJacobian) const
+    const JointPDFIndexType & pdfIndex, double factor,
+    const DerivativeType & imageJacobian) const
 	{
 		/** Get the pointer to the element with index [0, pdfIndex[0], pdfIndex[1]]*/
 		PDFValueType * derivPtr = this->m_JointPDFDerivatives->GetBufferPointer() +
@@ -554,25 +540,21 @@ namespace itk
 		{
 			/** Loop over all jacobians */
       typename DerivativeType::const_iterator imjac = imageJacobian.begin();
-      typename DerivativeType::const_iterator maskjac = maskJacobian.begin();
-			for ( unsigned int mu = 0; mu < this->m_NumberOfParameters; ++mu )
+      for ( unsigned int mu = 0; mu < this->m_NumberOfParameters; ++mu )
 			{
-				*(derivPtr) += static_cast<PDFValueType>(
-          (*maskjac) * factor_b - (*imjac) * factor_a );
+				*(derivPtr) -= static_cast<PDFValueType>( (*imjac) * factor );
         ++derivPtr;
-        ++imjac;
-        ++maskjac;
+        ++imjac;       
 			}
 		} 
 		else
 		{
 			/** Loop only over the non-zero jacobians */
-			for ( unsigned int i = 0; i < maskJacobian.GetSize(); ++i)
+			for ( unsigned int i = 0; i < imageJacobian.GetSize(); ++i)
       {
 				const unsigned int mu = this->m_NonZeroJacobianIndices[i];
         PDFValueType * ptr = derivPtr + mu;
-				*(ptr) += static_cast<PDFValueType>(
-          maskJacobian[i] * factor_b - imageJacobian[i] * factor_a );
+				*(ptr) -= static_cast<PDFValueType>( imageJacobian[i] * factor );
 			}
 		}
 		
@@ -580,42 +562,35 @@ namespace itk
  
  
 	/**
-	 * *************** EvaluateTransformJacobianInnerProducts ****************
+	 * *************** EvaluateTransformJacobianInnerProduct ****************
 	 */
 
 	template < class TFixedImage, class TMovingImage >
 		void
 		ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
-		::EvaluateTransformJacobianInnerProducts( 
+		::EvaluateTransformJacobianInnerProduct( 
 		const TransformJacobianType & jacobian, 
 		const MovingImageDerivativeType & movingImageDerivative,
-    const MovingImageMaskDerivativeType & movingMaskDerivative,
-    DerivativeType & imageJacobian,
-    DerivativeType & maskJacobian) const
+    DerivativeType & imageJacobian ) const
 	{
     typedef typename TransformJacobianType::const_iterator JacobianIteratorType;
     typedef typename DerivativeType::iterator              DerivativeIteratorType;
     JacobianIteratorType jac = jacobian.begin();
     imageJacobian.Fill(0.0);
-    maskJacobian.Fill(0.0);
     const unsigned int sizeImageJacobian = imageJacobian.GetSize();
     for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
     {
       const double imDeriv = movingImageDerivative[dim];
-      const double maskDeriv = movingMaskDerivative[dim];
       DerivativeIteratorType imjac = imageJacobian.begin();
-      DerivativeIteratorType maskjac = maskJacobian.begin();
-      
+         
       for ( unsigned int mu = 0; mu < sizeImageJacobian ; mu++ )
       {
         (*imjac) += (*jac) * imDeriv;
-        (*maskjac) += (*jac) * maskDeriv;
         ++imjac;
-        ++maskjac;
         ++jac;
       }
     }
-	} // end EvaluateTransformJacobianInnerProducts
+	} // end EvaluateTransformJacobianInnerProduct
 
 
   /**
@@ -750,38 +725,6 @@ namespace itk
     }
     
   } // end ComputeIncrementalMarginalPDFs
-
-
-  /**
-	 * *************** UpdateAlphaDerivatives ***************************
-	 */
-
-	template < class TFixedImage, class TMovingImage >
-		void
-		ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
-		::UpdateAlphaDerivatives( const DerivativeType & maskJacobian ) const
-  {
-    if( this->m_NonZeroJacobianIndices.GetSize() == this->m_NumberOfParameters )
-		{
-      /** Loop over all jacobians */
-      typename DerivativeType::const_iterator maskjacit = maskJacobian.begin();
-      typename DerivativeType::iterator alphaderivit = this->m_AlphaDerivatives.begin();
-      for ( unsigned int mu = 0; mu < this->m_NumberOfParameters; ++mu )
-      {
-        (*alphaderivit) += (*maskjacit);
-        ++alphaderivit;
-        ++maskjacit;
-      }
-    }
-    else
-    {
-      /** Only pick the nonzero jacobians */
-      for ( unsigned int i = 0; i < maskJacobian.GetSize(); ++i)
-      {
-        this->m_AlphaDerivatives[ this->m_NonZeroJacobianIndices[i] ] += maskJacobian[i];
-      }
-    }
-  } // end UpdateAlphaDerivatives
 
 
   /**
@@ -980,8 +923,7 @@ namespace itk
     this->m_JointPDF->FillBuffer( 0.0 );
     this->m_NumberOfPixelsCounted = 0;
     this->m_Alpha = 0.0;
-    double sumOfMovingMaskValues = 0.0;
-        
+            
     /** Set up the parameters in the transform */
     this->SetTransformParameters( parameters );
 
@@ -1006,12 +948,9 @@ namespace itk
       bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint);
 
       /** Check if point is inside mask */
-      RealType movingMaskValue = 0.0;
       if ( sampleOk ) 
       {
-        this->EvaluateMovingMaskValueAndDerivative( mappedPoint, movingMaskValue, 0 );
-        const double smallNumber1 = 1e-10;
-        sampleOk = movingMaskValue > smallNumber1;
+        sampleOk = this->IsInsideMovingMask( mappedPoint );
       }
 
       /** Compute the moving image value and check if the point is
@@ -1025,8 +964,7 @@ namespace itk
       if( sampleOk )
       {
         this->m_NumberOfPixelsCounted++; 
-        sumOfMovingMaskValues += movingMaskValue;
-
+        
         /** Get the fixed image value */
         RealType fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
 
@@ -1036,17 +974,16 @@ namespace itk
         
         /** Compute this sample's contribution to the joint distributions. */
         this->UpdateJointPDFAndDerivatives( 
-          fixedImageValue, movingImageValue, movingMaskValue, 0, 0);
+          fixedImageValue, movingImageValue, 0 );
       }       
 
     } // end iterating over fixed image spatial sample container for loop
     
     /** Check if enough samples were valid */
-    this->CheckNumberOfSamples(
-      sampleContainer->Size(), this->m_NumberOfPixelsCounted, sumOfMovingMaskValues);
+    this->CheckNumberOfSamples( sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
     /** Compute alpha */
-    this->m_Alpha = 1.0 / sumOfMovingMaskValues;
+    this->m_Alpha = 1.0 / static_cast<double>( this->m_NumberOfPixelsCounted );
     
   } // end ComputePDFs
 
@@ -1064,15 +1001,11 @@ namespace itk
     this->m_JointPDF->FillBuffer( 0.0 );
     this->m_JointPDFDerivatives->FillBuffer( 0.0 );
     this->m_Alpha = 0.0;
-    this->m_AlphaDerivatives.Fill(0.0);
-    
     this->m_NumberOfPixelsCounted = 0;
-    double sumOfMovingMaskValues = 0.0;
-        
+            
     /** Arrays that store dM(x)/dmu and dMask(x)/dmu */
     DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.GetSize() );
-    DerivativeType maskJacobian( this->m_NonZeroJacobianIndices.GetSize() );
-       
+           
     /** Set up the parameters in the transform */
     this->SetTransformParameters( parameters );
 
@@ -1098,16 +1031,9 @@ namespace itk
       bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint);
       
       /** Check if point is inside mask */
-      RealType movingMaskValue = 0.0;
-      MovingImageMaskDerivativeType movingMaskDerivative; 
       if ( sampleOk ) 
       {
-        this->EvaluateMovingMaskValueAndDerivative(
-          mappedPoint, movingMaskValue, &movingMaskDerivative );
-        const double movingMaskDerivativeMagnitude = movingMaskDerivative.GetNorm();
-        const double smallNumber1 = 1e-10;
-        sampleOk = ( movingMaskValue > smallNumber1 ) ||
-          ( movingMaskDerivativeMagnitude > smallNumber1 );
+        sampleOk = this->IsInsideMovingMask( mappedPoint );
       }
     
       /** Compute the moving image value M(T(x)) and derivative dM/dx and check if
@@ -1121,8 +1047,7 @@ namespace itk
       if( sampleOk )
       {
         this->m_NumberOfPixelsCounted++; 
-        sumOfMovingMaskValues += movingMaskValue;
-
+    
         /** Get the fixed image value */
         RealType fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
 
@@ -1135,28 +1060,24 @@ namespace itk
         const TransformJacobianType & jacobian = 
           this->EvaluateTransformJacobian( fixedPoint );
         
-        /** compute the innerproducts (dM/dx)^T (dT/dmu) and (dMask/dx)^T (dT/dmu) */
-        this->EvaluateTransformJacobianInnerProducts( 
-          jacobian, movingImageDerivative, movingMaskDerivative, imageJacobian, maskJacobian );
-
-        /** Add the maskjacobian to dAlpha/dmu */
-        this->UpdateAlphaDerivatives(maskJacobian);
+        /** compute the innerproduct (dM/dx)^T (dT/dmu) */
+        this->EvaluateTransformJacobianInnerProduct( 
+          jacobian, movingImageDerivative, imageJacobian );
         
         /** Update the joint pdf and the joint pdf derivatives */
         this->UpdateJointPDFAndDerivatives(
-          fixedImageValue, movingImageValue, movingMaskValue, &imageJacobian, &maskJacobian );
+          fixedImageValue, movingImageValue, &imageJacobian );
                               
       } //end if-block check sampleOk
     } // end iterating over fixed image spatial sample container for loop
     
     /** Check if enough samples were valid */
     this->CheckNumberOfSamples(
-      sampleContainer->Size(), this->m_NumberOfPixelsCounted, sumOfMovingMaskValues );
+      sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
-    /** Compute alpha and its derivatives */
-    this->m_Alpha = 1.0 / sumOfMovingMaskValues;
-    this->m_AlphaDerivatives *= - this->m_Alpha * this->m_Alpha;
-    
+    /** Compute alpha */
+    this->m_Alpha = 1.0 / static_cast<double>( this->m_NumberOfPixelsCounted );
+        
   } // end ComputePDFsAndPDFDerivatives
 
 
@@ -1216,12 +1137,10 @@ namespace itk
         RealType fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
         fixedImageValue = this->GetFixedImageLimiter()->Evaluate(fixedImageValue);
 
-        /** Check if point is inside mask */
-        RealType movingMaskValue = 0.0;
-        this->EvaluateMovingMaskValueAndDerivative(
-          mappedPoint, movingMaskValue, 0 );
-        const double smallNumber1 = 1e-10;
-        sampleOk = movingMaskValue > smallNumber1;
+        /** Check if point is inside mask */        
+        sampleOk = this->IsInsideMovingMask( mappedPoint );
+        RealType movingMaskValue = 
+          static_cast<RealType>( static_cast<unsigned char>( sampleOk ) );
               
         /** Compute the moving image value M(T(x)) and check if
          * the point is inside the moving image buffer */
@@ -1276,11 +1195,10 @@ namespace itk
             mappedPointLeft[j] = mappedPoint[j] - delta_jac;            
           }
           
-          /** Compute the moving mask and moving image value at the right perturbed positions */
-          RealType movingMaskValueRight = 0.0;
-          this->EvaluateMovingMaskValueAndDerivative(
-            mappedPointRight, movingMaskValueRight, 0 );
-          sampleOk = movingMaskValueRight > smallNumber1;
+          /** Compute the moving mask 'value' and moving image value at the right perturbed positions */
+          sampleOk = this->IsInsideMovingMask( mappedPointRight );
+          RealType movingMaskValueRight = 
+            static_cast<RealType>( static_cast<unsigned char>( sampleOk ) );
           if (sampleOk)
           {
             RealType movingImageValueRight = 0.0;
@@ -1301,10 +1219,9 @@ namespace itk
           movingMaskValuesRight[i] = movingMaskValueRight;
 
           /** Compute the moving mask and moving image value at the left perturbed positions */
-          RealType movingMaskValueLeft = 0.0;
-          this->EvaluateMovingMaskValueAndDerivative(
-            mappedPointLeft, movingMaskValueLeft, 0 );
-          sampleOk = movingMaskValueLeft > smallNumber1;
+          sampleOk = this->IsInsideMovingMask( mappedPointLeft );
+          RealType movingMaskValueLeft = 
+            static_cast<RealType>( static_cast<unsigned char>( sampleOk ) );          
           if (sampleOk)
           {
             RealType movingImageValueLeft = 0.0;
@@ -1338,7 +1255,7 @@ namespace itk
     
     /** Check if enough samples were valid */
     this->CheckNumberOfSamples(
-      sampleContainer->Size(), this->m_NumberOfPixelsCounted, sumOfMovingMaskValues );
+      sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
     /** Compute alpha and its perturbed versions */
     this->m_Alpha = 1.0 / sumOfMovingMaskValues;

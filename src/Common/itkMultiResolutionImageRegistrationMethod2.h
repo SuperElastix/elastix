@@ -1,3 +1,10 @@
+
+/** This class is a slight modification of the original ITK class:
+ * MultiResolutionImageRegistrationMethod.
+ * The original copyright message is pasted here, which includes also
+ * the version information:
+ */
+
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
@@ -14,6 +21,7 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+
 #ifndef __itkMultiResolutionImageRegistrationMethod2_h
 #define __itkMultiResolutionImageRegistrationMethod2_h
 
@@ -30,6 +38,15 @@ namespace itk
 /** \class MultiResolutionImageRegistrationMethod2
  * \brief Base class for multi-resolution image registration methods
  *
+ * This class is a slight modification of the original ITK class:
+ * MultiResolutionImageRegistrationMethod. Compared to that one, some
+ * variables are made protected, instead of private. Also, this class
+ * makes less assumptions about the image pyramids.
+ *
+ * ---------------------------
+ *
+ * Original ITK documentation:
+ * 
  * This class provides a generic interface for multi-resolution 
  * registration using components of the registration framework.
  * See documentation for ImageRegistrationMethod for a description
