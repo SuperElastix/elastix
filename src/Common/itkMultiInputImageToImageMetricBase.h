@@ -104,7 +104,7 @@ public:
   /** Set the first fixed image. */
   virtual void SetFixedImage( const FixedImageType *_arg )
   {
-    return this->SetFixedImage( _arg, 0 );
+    this->SetFixedImage( _arg, 0 );
   };
 
   /** Get the fixed images. */
@@ -124,13 +124,13 @@ public:
 
   /** ******************** Fixed image masks ******************** */
 
-  /** Set the fixed images. */
+  /** Set the fixed image masks. */
   virtual void SetFixedImageMask( FixedImageMaskType *_arg, unsigned int pos );
 
-  /** Set the first fixed image. */
+  /** Set the first fixed image mask. */
   virtual void SetFixedImageMask( FixedImageMaskType *_arg )
   {
-    return this->SetFixedImageMask( _arg, 0 );
+    this->SetFixedImageMask( _arg, 0 );
   };
 
   /** Get the fixed image masks. */
@@ -150,19 +150,19 @@ public:
 
   /** ******************** Fixed image regions ******************** */
 
-  /** Set the fixed images. */
+  /** Set the fixed image regions. */
   virtual void SetFixedImageRegion( const FixedImageRegionType _arg, unsigned int pos );
 
-  /** Set the first fixed image. */
+  /** Set the first fixed image region. */
   virtual void SetFixedImageRegion( const FixedImageRegionType _arg )
   {
-    return this->SetFixedImageRegion( _arg, 0 );
+    this->SetFixedImageRegion( _arg, 0 );
   };
 
-  /** Get the fixed images. */
+  /** Get the fixed image regions. */
   virtual const FixedImageRegionType & GetFixedImageRegion( unsigned int pos ) const;
 
-  /** Get the first fixed image. */
+  /** Get the first fixed image region. */
   virtual const FixedImageRegionType & GetFixedImageRegion( void ) const
   {
     return this->GetFixedImageRegion( 0 );
@@ -182,7 +182,7 @@ public:
   /** Set the first moving image. */
   virtual void SetMovingImage( const MovingImageType *_arg )
   {
-    return this->SetMovingImage( _arg, 0 );
+    this->SetMovingImage( _arg, 0 );
   };
 
   /** Get the moving images. */
@@ -202,19 +202,19 @@ public:
 
   /** ******************** Moving image masks ******************** */
 
-  /** Set the moving images. */
+  /** Set the moving image masks. */
   virtual void SetMovingImageMask( MovingImageMaskType *_arg, unsigned int pos );
 
-  /** Set the first moving image. */
+  /** Set the first moving image mask. */
   virtual void SetMovingImageMask( MovingImageMaskType *_arg )
   {
-    return this->SetMovingImageMask( _arg, 0 );
+    this->SetMovingImageMask( _arg, 0 );
   };
 
-  /** Get the moving images. */
+  /** Get the moving image masks. */
   virtual MovingImageMaskType * GetMovingImageMask( unsigned int pos ) const;
 
-  /** Get the first moving image. */
+  /** Get the first moving image mask. */
   virtual MovingImageMaskType * GetMovingImageMask( void ) const
   {
     return this->GetMovingImageMask( 0 );
@@ -261,28 +261,28 @@ public:
    * These interpolators are used for the fixed images.
    */
 
-  /** Set the interpolators. */
+  /** Set the fixed image interpolators. */
   virtual void SetFixedImageInterpolator( FixedImageInterpolatorType *_arg, unsigned int pos );
 
-  /** Set the first interpolator. */
+  /** Set the first fixed image interpolator. */
   virtual void SetFixedImageInterpolator( FixedImageInterpolatorType *_arg )
   {
     return this->SetFixedImageInterpolator( _arg, 0 );
   };
 
-  /** Get the interpolators. */
+  /** Get the fixed image interpolators. */
   virtual FixedImageInterpolatorType * GetFixedImageInterpolator( unsigned int pos ) const;
 
-  /** Get the first interpolator. */
+  /** Get the first fixed image interpolator. */
   virtual FixedImageInterpolatorType * GetFixedImageInterpolator( void ) const
   {
     return this->GetFixedImageInterpolator( 0 );
   };
 
-  /** Set the number of interpolators. */
+  /** Set the number of fixed image interpolators. */
   itkSetNumberOfMacro( FixedImageInterpolator );
 
-  /** Get the number of interpolators. */
+  /** Get the number of fixed image interpolators. */
   itkGetConstMacro( NumberOfFixedImageInterpolators, unsigned int );
 
   /** ******************** Other public functions ******************** */
@@ -303,10 +303,28 @@ protected:
   typedef typename BSplineInterpolatorType::Pointer       BSplineInterpolatorPointer;
   typedef std::vector<BSplineInterpolatorPointer>         BSplineInterpolatorVectorType;
 
+  /** Initialize variables related to the image sampler; called by Initialize. */
+  virtual void InitializeImageSampler( void ) throw ( ExceptionObject );
+
   /** Check if all interpolators (for the moving image) are of type
    * BSplineInterpolateImageFunction.
    */
   virtual void CheckForBSplineInterpolators( void );
+
+  /** Check if mappedPoint is inside all moving images.
+   * If so, the moving image value and possibly derivative are computed.
+   */
+  virtual bool EvaluateMovingImageValueAndDerivative( 
+    const MovingImagePointType & mappedPoint,
+    RealType & movingImageValue,
+    MovingImageDerivativeType * gradient ) const;
+
+  /** EvaluateMovingMaskValue: Returns the minimum value of all
+   * moving image masks.
+   */
+  virtual void EvaluateMovingMaskValue(
+    const MovingImagePointType & mappedPoint,
+    RealType & movingMaskValue ) const;
 
   /** Protected member variables. */
   FixedImageVectorType        m_FixedImageVector;

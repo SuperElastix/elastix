@@ -236,6 +236,145 @@ namespace itk
 
   } // end Initialize()
 
+
+  /**
+   * ********************* InitializeImageSampler ****************************
+   */
+
+  template <class TFixedImage, class TMovingImage>
+    void
+    MultiInputImageToImageMetricBase<TFixedImage,TMovingImage>
+    ::InitializeImageSampler( void ) throw ( ExceptionObject )
+  {
+    if ( this->GetUseImageSampler() )
+    {
+      /** Check if the ImageSampler is set. */
+      if( !this->m_ImageSampler )
+      {
+        itkExceptionMacro( << "ImageSampler is not present" );
+      }
+
+      /** Initialize the Image Sampler: set the fixed images. */
+      for ( unsigned int i = 0; i < this->GetNumberOfFixedImages(); ++i )
+      {
+        this->m_ImageSampler->SetInput( i, this->m_FixedImageVector[ i ] );
+      }
+
+      /** Initialize the Image Sampler: set the fixed image masks. */
+      for ( unsigned int i = 0; i < this->GetNumberOfFixedImageMasks(); ++i )
+      {
+        this->m_ImageSampler->SetMask( this->m_FixedImageMaskVector[ i ], i );
+      }
+
+      /** Initialize the Image Sampler: set the fixed image regions. */
+      for ( unsigned int i = 0; i < this->GetNumberOfFixedImages(); ++i )
+      {
+        this->m_ImageSampler->SetInputImageRegion( this->m_FixedImageRegionVector[ i ], i );
+      }
+    }
+
+  } // end InitializeImageSampler()
+
+
+  /**
+   * ******************* EvaluateMovingImageValueAndDerivative ******************
+   */
+
+  template <class TFixedImage, class TMovingImage>
+	bool
+  MultiInputImageToImageMetricBase<TFixedImage,TMovingImage>
+  ::EvaluateMovingImageValueAndDerivative( 
+    const MovingImagePointType & mappedPoint,
+    RealType & movingImageValue,
+    MovingImageDerivativeType * gradient ) const
+  {
+    /** Convert mappedPoint. */
+    MovingImageContinuousIndexType cindex;
+    this->m_Interpolator->ConvertPointToContinousIndex( mappedPoint, cindex );
+
+    /** Check if the mapped point is inside all moving image buffers. */
+    bool sampleOk = true;
+    for ( unsigned int i = 0; i < this->GetNumberOfInterpolators(); ++i )
+    {
+      sampleOk &= this->GetInterpolator( i )->IsInsideBuffer( cindex );
+    }
+
+    /** Compute value and possibly derivative. */
+    if ( sampleOk )
+    {
+      /** Compute value. */
+      movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
+
+      /** Compute derivative, but only if gradient != 0. */
+      if ( gradient )
+      {
+        if ( this->m_InterpolatorIsBSpline && !this->GetComputeGradient() )
+        {
+          /** Computed moving image gradient using derivative BSpline kernel. */
+          (*gradient) = 
+            this->m_BSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
+        }
+        else
+        {
+          /** Get the gradient by NearestNeighboorInterpolation of the gradient image.
+           * It is assumed that the gradient image is computed.
+           */
+          MovingImageIndexType index;
+          for ( unsigned int i = 0; i < MovingImageDimension; i++ )
+          {
+            index[ i ] = static_cast<long>( vnl_math_rnd( cindex[ i ] ) );
+          }
+          (*gradient) = this->m_GradientImage->GetPixel( index );
+        }
+
+        /** Rescale the derivative, if desired. */
+        if ( this->GetUseMovingImageDerivativeScales() )
+        {
+          for ( unsigned int i = 0; i < MovingImageDimension; ++i )
+          {
+            (*gradient)[ i ] *= this->GetMovingImageDerivativeScales()[ i ]; 
+          }
+        }
+      } // end if gradient
+    } // end if sampleOk
+
+    return sampleOk;
+
+  } // end EvaluateMovingImageValueAndDerivative()
+
+
+  /**
+	 * ************************ EvaluateMovingMaskValue *************************
+	 */
+  
+  template <class TFixedImage, class TMovingImage>
+	void
+  MultiInputImageToImageMetricBase<TFixedImage,TMovingImage>
+  ::EvaluateMovingMaskValue(
+    const MovingImagePointType & mappedPoint,
+    RealType & movingMaskValue ) const
+  {
+    /** If no moving image masks are present the value 1.0 is returned,
+     * meaning that this sample is taken into account. Otherwise, the
+     * minimum mask value is returned, i.e. the sample should be inside
+     * all masks.
+     */
+    movingMaskValue = 1.0;
+    for ( unsigned int i = 0; i < this->GetNumberOfMovingImageMasks(); ++i )
+    {
+      MovingImageMaskPointer movingImageMask = this->GetMovingImageMask( i );
+      if ( movingImageMask.IsNotNull() )
+      {
+        RealType tmp = static_cast<RealType>(
+          static_cast<unsigned char>(
+          movingImageMask ->IsInside( mappedPoint ) ) );
+        movingMaskValue = movingMaskValue < tmp ? movingMaskValue : tmp;
+      }
+    }
+
+  } // end EvaluateMovingMaskValue()
+
+
 } // end namespace itk
 
 #undef itkImplementationSetObjectMacro
