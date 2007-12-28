@@ -17,7 +17,7 @@ namespace elastix
 	
 	template<class TElastix>
 		void ResamplerBase<TElastix>
-		::BeforeRegistrationBase(void)
+		::BeforeRegistrationBase( void )
 	{
 		/** Connect the components. */
 		this->SetComponents();
@@ -41,8 +41,10 @@ namespace elastix
 		 */
 		double defaultPixelValueDouble = NumericTraits<double>::Zero;
     int defaultPixelValueInt = NumericTraits<int>::Zero;
-		int retd = this->m_Configuration->ReadParameter( defaultPixelValueDouble, "DefaultPixelValue", 0, true );
-    int reti = this->m_Configuration->ReadParameter( defaultPixelValueInt, "DefaultPixelValue", 0, true );
+		int retd = this->m_Configuration->ReadParameter(
+      defaultPixelValueDouble, "DefaultPixelValue", 0, true );
+    int reti = this->m_Configuration->ReadParameter(
+      defaultPixelValueInt, "DefaultPixelValue", 0, true );
     
     /** Set the defaultPixelValue. int values overrule double values. */
     if ( retd == 0 )
@@ -55,7 +57,7 @@ namespace elastix
       this->GetAsITKBaseType()->SetDefaultPixelValue(
         static_cast<OutputPixelType>( defaultPixelValueInt ) );
     }
-    if ( reti !=0 && retd !=0 )
+    if ( reti != 0 && retd != 0 )
     {
       this->GetAsITKBaseType()->SetDefaultPixelValue(
         static_cast<OutputPixelType>( defaultPixelValueInt ) );
@@ -70,7 +72,7 @@ namespace elastix
 	
 	template<class TElastix>
 		void ResamplerBase<TElastix>
-		::AfterEachResolutionBase(void)
+		::AfterEachResolutionBase( void )
 	{
 		/** Set the final transform parameters. */
 		this->GetElastix()->GetElxTransformBase()->SetFinalParameters();
@@ -79,12 +81,12 @@ namespace elastix
 		unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
 		/** Decide whether or not to write the result image this resolution. */
-		std::string writeResultImageThisResolution = "false";
+    bool writeResultImageThisResolution = false;
 		this->m_Configuration->ReadParameter(	writeResultImageThisResolution,
-      "WriteResultImageAfterEachResolution", "", level, 0, true);
+      "WriteResultImageAfterEachResolution", "", level, 0, true );
 
     /** Writing result image. */
-		if ( writeResultImageThisResolution == "true" )
+		if ( writeResultImageThisResolution )
 		{
 		  /** Create a name for the final result. */
 		  std::string resultImageFormat = "mhd";
@@ -99,9 +101,9 @@ namespace elastix
 			typedef tmr::Timer TimerType;
 			TimerType::Pointer timer = TimerType::New();
 			timer->StartTimer();
+
 			/** Apply the final transform, and save the result. */
       elxout << "Applying transform this resolution ..." << std::endl;
-			/** Call WriteResultImage. */
 			try
 			{
 				this->WriteResultImage( makeFileName.str().c_str() );
@@ -112,14 +114,16 @@ namespace elastix
 				xl::xout["error"] << excp
 					<< "Resuming elastix." << std::endl;
 			}
+
 			/** Print the elapsed time for the resampling. */
 			timer->StopTimer();
 			elxout << "  Applying transform took "
 				<< static_cast<long>( timer->GetElapsedClockSec() )
 				<< " s." << std::endl;
+
 		} // end if
 
-	} // end AfterEachResolutionBase
+	} // end AfterEachResolutionBase()
 
 
 	/*
@@ -181,7 +185,7 @@ namespace elastix
 				<< std::endl;
 		} // end if
 
-	} // end AfterRegistrationBase
+	} // end AfterRegistrationBase()
 
 
 	/*
@@ -204,7 +208,7 @@ namespace elastix
 		this->GetAsITKBaseType()->SetInput( dynamic_cast<InputImageType *>(
 			this->m_Elastix->GetMovingImage() ) );
 		
-	} // end SetComponents
+	} // end SetComponents()
 
 
 	/*
@@ -224,12 +228,17 @@ namespace elastix
     progressObserver->SetStartString( "  Progress: " );
     progressObserver->SetEndString( "%" );
 
-    /** Read output pixeltype from parameter file. Replace possible " " with "_". */
+    /** Read output pixeltype from parameter the file. Replace possible " " with "_". */
     std::string resultImagePixelType = "short";
     this->m_Configuration->ReadParameter(	resultImagePixelType, "ResultImagePixelType", 0, true );
     std::basic_string<char>::size_type pos = resultImagePixelType.find( " " );
     const std::basic_string<char>::size_type npos = std::basic_string<char>::npos;
     if ( pos != npos ) resultImagePixelType.replace( pos, 1, "_" );
+
+    /** Read from the parameter file if compression is desired. */
+    bool doCompression = false;
+    this->m_Configuration->ReadParameter(
+      doCompression, "CompressResultImage", 0, true );
     
     /** Typedef's for writing the output image. */
 		typedef ImageFileCastWriter< OutputImageType >	WriterType;
@@ -240,10 +249,9 @@ namespace elastix
 
 		/** Setup the pipeline. */
 		writer->SetInput( this->GetAsITKBaseType()->GetOutput() );
-
-		/** Set the filename and output componenttype. */
 		writer->SetFileName( filename );
     writer->SetOutputComponentType( resultImagePixelType.c_str() );
+    writer->SetUseCompression( doCompression );
 
 		/** Do the writing. */
 		try
@@ -264,7 +272,7 @@ namespace elastix
     /** Disconnect from the resampler. */
     progressObserver->DisconnectObserver( this->GetAsITKBaseType() );
 
-	} // WriteResultImage
+	} // end WriteResultImage()
 
 
 	/*
@@ -273,7 +281,7 @@ namespace elastix
 	
 	template<class TElastix>
 		void ResamplerBase<TElastix>
-		::ReadFromFile(void)
+		::ReadFromFile( void )
 	{
 		/** Connect the components. */
 		this->SetComponents();
@@ -328,7 +336,8 @@ namespace elastix
     int reti = this->m_Configuration->ReadParameter( defaultPixelValueInt, "DefaultPixelValue", 0, true );
     
     /** Set the defaultPixelValue. int values overrule double values in case
-     * both have been supplied. */
+     * both have been supplied.
+     */
     if ( retd == 0 )
     {
       this->GetAsITKBaseType()->SetDefaultPixelValue(
@@ -339,13 +348,13 @@ namespace elastix
       this->GetAsITKBaseType()->SetDefaultPixelValue(
         static_cast<OutputPixelType>( defaultPixelValueInt ) );
     }
-    if ( reti !=0 && retd !=0 )
+    if ( reti != 0 && retd != 0 )
     {
       this->GetAsITKBaseType()->SetDefaultPixelValue(
         static_cast<OutputPixelType>( defaultPixelValueInt ) );
     }
 		
-	} // end ReadFromFile
+	} // end ReadFromFile()
 
 
 	/**
@@ -354,7 +363,7 @@ namespace elastix
 
 	template <class TElastix>
 		void ResamplerBase<TElastix>
-		::WriteToFile(void)
+		::WriteToFile( void )
 	{
 		/** Write Resampler specific things. */
 		xl::xout["transpar"] << std::endl << "// Resampler specific" << std::endl;
@@ -369,17 +378,26 @@ namespace elastix
 
 		/** Write the output image format. */
 		std::string resultImageFormat = "mhd";
-		this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0, true );
+		this->m_Configuration->ReadParameter(
+      resultImageFormat, "ResultImageFormat", 0, true );
 		xl::xout["transpar"] << "(ResultImageFormat \""
 			<< resultImageFormat << "\")" << std::endl;
 
-    /** Read output pixeltype from parameter file */
+    /** Write output pixeltype. */
     std::string resultImagePixelType = "short";
-    this->m_Configuration->ReadParameter(	resultImagePixelType, "ResultImagePixelType", 0, true );
+    this->m_Configuration->ReadParameter(
+      resultImagePixelType, "ResultImagePixelType", 0, true );
     xl::xout["transpar"] << "(ResultImagePixelType \""
 			<< resultImagePixelType << "\")" << std::endl;
 
-	} // end WriteToFile
+    /** Write compression flag. */
+    std::string doCompression = "false";
+    this->m_Configuration->ReadParameter(
+      doCompression, "CompressResultImage", 0, true );
+    xl::xout["transpar"] << "(CompressResultImage \""
+			<< doCompression << "\")" << std::endl;
+
+	} // end WriteToFile()
 
 
 } // end namespace elastix

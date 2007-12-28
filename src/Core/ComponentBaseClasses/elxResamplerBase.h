@@ -40,6 +40,10 @@ namespace elastix
    *    Choose from (unsigned) char, (unsigned) short, float, double, etc.\n
    *		example: <tt>(ResultImagePixelType "unsigned short")</tt> \n
 	 *		The default is "short".
+   * \parameter CompressResultImage: parameter to set if (lossless) compression
+	 *		of the written image is desired.\n
+	 *		example: <tt>(CompressResultImage "true")</tt> \n
+	 *		The default is "false".
 	 *
 	 * \ingroup Resamplers
 	 * \ingroup ComponentBaseClasses
