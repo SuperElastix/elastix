@@ -2,7 +2,6 @@
 #define __itkKNNGraphAlphaMutualInformationImageToImageMetric_h
 
 /** Includes for the Superclass. */
-//#include "itkImageToImageMetricWithFeatures.h"
 #include "itkMultiInputImageToImageMetricBase.h"
 
 /** Includes for the kNN trees. */
@@ -32,8 +31,15 @@ namespace itk
  *
  * \brief Computes similarity between two images to be registered.
  *
- * alpha mutual information, calculation based on binary trees. See
- * Neemuchwala.
+ * This metric computes the alpha-Mutual Information (aMI) between
+ * two multi-channeled data sets. Said otherwise, given two sets of
+ * features, the aMI between them is calculated.
+ * Since for higher dimensional aMI it is infeasible to compute high
+ * dimensional joint histograms, here we adopt a framework based on
+ * the length of certain graphs, see Neemuchwala. Specifically, we use
+ * the k-Nearest Neighbour (kNN) graph, using an implementation provided
+ * by the Approximate Nearest Neighbour (ANN) software package.
+ * 
  *
  * Note that the feature image are given beforehand, and that values
  * are calculated by interpolation on the transformed point. For some
