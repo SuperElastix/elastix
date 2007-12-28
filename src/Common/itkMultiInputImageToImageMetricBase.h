@@ -298,6 +298,12 @@ protected:
   /** Destructor. */
   virtual ~MultiInputImageToImageMetricBase() {};
 
+  /** Typedef's from the Superclass. */
+  typedef typename Superclass::MovingImagePointType       MovingImagePointType;
+  typedef typename Superclass::MovingImageIndexType       MovingImageIndexType;
+  typedef typename Superclass::MovingImageDerivativeType  MovingImageDerivativeType; 
+  typedef typename Superclass::MovingImageContinuousIndexType MovingImageContinuousIndexType;
+  
   /** Typedef's for the moving image interpolators. */
   typedef typename Superclass::BSplineInterpolatorType    BSplineInterpolatorType;
   typedef typename BSplineInterpolatorType::Pointer       BSplineInterpolatorPointer;
