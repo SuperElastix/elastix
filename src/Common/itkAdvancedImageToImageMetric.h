@@ -207,8 +207,14 @@ public:
   virtual void Initialize(void) throw ( ExceptionObject );
 
 protected:
+
+  /** Constructor. */
   AdvancedImageToImageMetric();
+
+  /** Destructor. */
   virtual ~AdvancedImageToImageMetric() {};
+
+  /** PrintSelf. */
   void PrintSelf( std::ostream& os, Indent indent ) const;
 
   /** Protected Typedefs ******************/
@@ -362,7 +368,8 @@ protected:
   virtual void InitializeInternalMasks( void );
 
   /** Estimate value and possibly spatial derivative of internal moving mask;
-   * a zero pointer for the derivative will prevent computation of the derivative. */
+   * a zero pointer for the derivative will prevent computation of the derivative.
+   */
   virtual void EvaluateMovingMaskValueAndDerivative(
     const MovingImagePointType & point,
     RealType & value,

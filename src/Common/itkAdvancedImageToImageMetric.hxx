@@ -246,7 +246,7 @@ namespace itk
       this->m_ImageSampler->SetMask( this->m_FixedImageMask );
       this->m_ImageSampler->SetInputImageRegion( this->GetFixedImageRegion() );
     }
-  } // end InitializeImageSampler
+  } // end InitializeImageSampler()
 
 
   /**
@@ -625,7 +625,7 @@ namespace itk
     ::EvaluateTransformJacobian( 
     const FixedImagePointType & fixedImagePoint) const
   {
-    if( !this->m_TransformIsBSpline && !this->m_TransformIsBSplineCombination )
+    if ( !this->m_TransformIsBSpline && !this->m_TransformIsBSplineCombination )
     {
       /** Generic version which works for all transforms. */
       return this->m_Transform->GetJacobian( fixedImagePoint );
