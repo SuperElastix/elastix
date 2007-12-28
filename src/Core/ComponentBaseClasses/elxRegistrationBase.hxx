@@ -153,14 +153,14 @@ namespace elastix
       const MovingImagePyramidType * pyramid, unsigned int level ) const
 	{
     MovingMaskSpatialObjectPointer movingMaskSpatialObject = 0;
-    if ( !maskImage)
+    if ( !maskImage )
     {
       return movingMaskSpatialObject;
     }
     movingMaskSpatialObject = MovingMaskSpatialObjectType::New();
 
     /** Just convert to spatial object if no erosion is needed */
-    if ( !useMaskErosion || !pyramid)
+    if ( !useMaskErosion || !pyramid )
     {
       movingMaskSpatialObject->SetImage( maskImage );
       return movingMaskSpatialObject;
