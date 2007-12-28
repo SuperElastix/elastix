@@ -8,6 +8,7 @@
 #include "itkImageRandomSamplerSparseMask.h"
 #include "itkImageFullSampler.h"
 #include "itkImageRandomCoordinateSampler.h"
+#include "itkMultiInputImageRandomCoordinateSampler.h"
 #include "itkImageGridSampler.h"
 
 namespace elastix
@@ -114,6 +115,8 @@ namespace elastix
         typedef ImageRandomSampler< FixedImageType >              ImageRandomSamplerType;
         typedef ImageRandomSamplerSparseMask< FixedImageType >    ImageRandomSamplerSparseMaskType;
         typedef ImageRandomCoordinateSampler< FixedImageType >    ImageRandomCoordinateSamplerType;
+        typedef MultiInputImageRandomCoordinateSampler<
+          FixedImageType >                              MultiInputImageRandomCoordinateSamplerType;
         typedef ImageGridSampler< FixedImageType >                ImageGridSamplerType;
         
         /** Create an imageSampler of ImageSamplerBaseType. */
@@ -189,6 +192,43 @@ namespace elastix
             randomCoordinateSampler->SetSampleRegionSize( sampleRegionSize );
           }
           imageSampler = randomCoordinateSampler;
+        }
+        else if ( imageSamplerType == "MultiInputRandomCoordinate" )
+        {
+          typename MultiInputImageRandomCoordinateSamplerType::Pointer sampler
+            = MultiInputImageRandomCoordinateSamplerType::New();
+          sampler->SetNumberOfSamples( numberOfSpatialSamples );
+          typedef typename MultiInputImageRandomCoordinateSamplerType::DefaultInterpolatorType
+            FixedImageInterpolatorType;
+          typename FixedImageInterpolatorType::Pointer fixedImageInterpolator =
+            FixedImageInterpolatorType::New();
+
+          /** Set the SplineOrder, default value = 3. */
+	        unsigned int splineOrder = 3;
+		      this->GetConfiguration()->ReadParameter( splineOrder,
+            "FixedImageBSplineInterpolationOrder", this->GetComponentLabel(), level, 0 );
+          fixedImageInterpolator->SetSplineOrder( splineOrder );
+    		  sampler->SetInterpolator( fixedImageInterpolator );
+
+          /** Set the UseRandomSampleRegion bool. */
+          bool useRandomSampleRegion = false;
+          this->GetConfiguration()->ReadParameter( useRandomSampleRegion,
+            "UseRandomSampleRegion", this->GetComponentLabel(), level, 0 );
+          sampler->SetUseRandomSampleRegion( useRandomSampleRegion );
+          if ( useRandomSampleRegion )
+          {
+            /** Set the SampleRegionSize. */
+            typename MultiInputImageRandomCoordinateSamplerType::InputImageSpacingType sampleRegionSize;
+            sampleRegionSize.Fill( 1.0 );
+            for ( unsigned int i = 0; i < FixedImageDimension; ++i )
+            {
+              this->GetConfiguration()->ReadParameter(
+                sampleRegionSize[ i ], "SampleRegionSize", 
+                this->GetComponentLabel(), level * FixedImageDimension + i, 0 );
+            }
+            sampler->SetSampleRegionSize( sampleRegionSize );
+          }
+          imageSampler = sampler;
         }
         else if ( imageSamplerType == "Grid" )
         {
