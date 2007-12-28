@@ -53,7 +53,7 @@ namespace itk
 	 */
   
   template< class TInputImage >
-    typename const ImageSamplerBase< TInputImage >::MaskType *
+    const typename ImageSamplerBase< TInputImage >::MaskType *
     ImageSamplerBase< TInputImage >
     ::GetMask( unsigned int pos ) const
   {
@@ -117,7 +117,7 @@ namespace itk
 	 */
   
   template< class TInputImage >
-    typename const ImageSamplerBase< TInputImage >::InputImageRegionType &
+    const typename ImageSamplerBase< TInputImage >::InputImageRegionType &
     ImageSamplerBase< TInputImage >
     ::GetInputImageRegion( unsigned int pos ) const
   {
