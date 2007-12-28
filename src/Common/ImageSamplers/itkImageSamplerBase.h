@@ -62,20 +62,71 @@ namespace itk
     typedef ImageSample< InputImageType >               ImageSampleType;
     typedef VectorDataContainer< unsigned long,
       ImageSampleType >                                 ImageSampleContainerType;
+    typedef typename InputImageType::SizeType           InputImageSizeType;
+    typedef typename InputImageType::IndexType          InputImageIndexType;
+    typedef typename InputImageType::PointType          InputImagePointType;
+    typedef typename InputImagePointType::ValueType     InputImagePointValueType;
+    typedef typename ImageSampleType::RealType          ImageSampleValueType;
     typedef SpatialObject<
       itkGetStaticConstMacro( InputImageDimension ) > 	MaskType;
+    typedef typename MaskType::Pointer                  MaskPointer;
+    typedef typename MaskType::ConstPointer             MaskConstPointer;
+    typedef std::vector< MaskConstPointer >             MaskVectorType;
+    typedef std::vector< InputImageRegionType >         InputImageRegionVectorType;
 
-    /** Set the mask. */
-    itkSetConstObjectMacro( Mask, MaskType );
+    /** ******************** Masks ******************** */
 
-    /** Get the mask. */
-    itkGetConstObjectMacro( Mask, MaskType );
+    /** Set the masks. */
+    virtual void SetMask( const MaskType *_arg, unsigned int pos );
+
+    /** Set the first mask. */
+    virtual void SetMask( const MaskType *_arg )
+    {
+      this->SetMask( _arg, 0 );
+    }
+
+    /** Get the masks. */
+    virtual const MaskType * GetMask( unsigned int pos ) const;
+
+    /** Get the first mask. */
+    virtual const MaskType * GetMask( void ) const
+    {
+      return this->GetMask( 0 );
+    };
+
+    /** Set the number of masks. */
+    virtual void SetNumberOfMasks( const unsigned int _arg );
+    
+    /** Get the number of masks. */
+    itkGetConstMacro( NumberOfMasks, unsigned int );
    
-    /** Set the region over which the samples will be taken. */
-    itkSetMacro( InputImageRegion, InputImageRegionType );
+    /** ******************** Regions ******************** */
 
-    /** Get the region over which the samples will be taken. */
-    itkGetConstReferenceMacro( InputImageRegion, InputImageRegionType );
+    /** Set the region over which the samples will be taken. */
+    virtual void SetInputImageRegion( const InputImageRegionType _arg, unsigned int pos );
+
+    /** Set the region over which the samples will be taken. */
+    virtual void SetInputImageRegion( const InputImageRegionType _arg )
+    {
+      this->SetInputImageRegion( _arg, 0 );
+    }
+
+    /** Get the input image regions. */
+    virtual const InputImageRegionType & GetInputImageRegion( unsigned int pos ) const;
+
+    /** Get the first input image region. */
+    virtual const InputImageRegionType & GetInputImageRegion( void ) const
+    {
+      return this->GetInputImageRegion( 0 );
+    };
+
+    /** Set the number of input image regions. */
+    virtual void SetNumberOfInputImageRegions( const unsigned int _arg );
+    
+    /** Get the number of input image regions. */
+    itkGetConstMacro( NumberOfInputImageRegions, unsigned int );
+
+    /** ******************** Other ******************** */
 
     /** SelectNewSamplesOnUpdate. */
     virtual bool SelectNewSamplesOnUpdate( void );
@@ -84,6 +135,7 @@ namespace itk
 
     /** The constructor. */
     ImageSamplerBase();
+
     /** The destructor. */
     virtual ~ImageSamplerBase() {};
 
@@ -92,6 +144,17 @@ namespace itk
 
     /** GenerateInputRequestedRegion. */
     virtual void GenerateInputRequestedRegion( void );
+
+    /** IsInsideAllMasks. */
+    virtual bool IsInsideAllMasks( const InputImagePointType & point ) const;
+
+    /** UpdateAllMasks. */
+    virtual void UpdateAllMasks( void );
+
+    /** Checks if the InputImageRegions are a subregion of the
+     * LargestPossibleRegions.
+     */
+    virtual bool CheckInputImageRegions( void );
     
   private:
 
@@ -101,8 +164,14 @@ namespace itk
     void operator=( const Self& );				    // purposely not implemented
 
     /** Member variables. */
-    typename MaskType::ConstPointer  m_Mask;
-    InputImageRegionType             m_InputImageRegion;
+    MaskConstPointer                  m_Mask;
+    MaskVectorType                    m_MaskVector;
+    unsigned int                      m_NumberOfMasks;
+    InputImageRegionType              m_InputImageRegion;
+    InputImageRegionVectorType        m_InputImageRegionVector;
+    unsigned int                      m_NumberOfInputImageRegions;
+
+    InputImageRegionType              m_DummyInputImageRegion;
 
   }; // end class ImageSamplerBase
 
