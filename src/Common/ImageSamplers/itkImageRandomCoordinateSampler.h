@@ -48,17 +48,16 @@ namespace itk
     typedef typename Superclass::ImageSampleType              ImageSampleType;
     typedef typename Superclass::ImageSampleContainerType     ImageSampleContainerType;
     typedef typename Superclass::MaskType                     MaskType;
+    typedef typename Superclass::InputImageSizeType           InputImageSizeType;
     typedef typename InputImageType::SpacingType              InputImageSpacingType;
+    typedef typename Superclass::InputImageIndexType          InputImageIndexType;
+    typedef typename Superclass::InputImagePointType          InputImagePointType;
+    typedef typename Superclass::InputImagePointValueType     InputImagePointValueType;
+    typedef typename Superclass::ImageSampleValueType         ImageSampleValueType;
 
     /** The input image dimension. */
     itkStaticConstMacro( InputImageDimension, unsigned int,
 			Superclass::InputImageDimension );
-
-    /** Other typdefs. */
-    typedef typename InputImageType::IndexType      InputImageIndexType;
-    typedef typename InputImageType::PointType      InputImagePointType;
-    typedef typename InputImagePointType::ValueType InputImagePointValueType;
-    typedef typename ImageSampleType::RealType      ImageSampleValueType;
 
     /** This image sampler samples the image on physical coordinates and thus
      * needs an interpolator. */

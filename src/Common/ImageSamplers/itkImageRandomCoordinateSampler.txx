@@ -50,14 +50,18 @@ namespace itk
     interpolator->SetInputImage( inputImage );
 
     /** Convert inputImageRegion to bounding box in physical space. */
-    InputImageIndexType smallestIndex = this->GetInputImageRegion().GetIndex();
-    InputImageIndexType largestIndex = smallestIndex + this->GetInputImageRegion().GetSize();
+    InputImageSizeType unitSize;
+    unitSize.Fill( 1 );
+    InputImageIndexType smallestIndex
+      = this->GetInputImageRegion().GetIndex();
+    InputImageIndexType largestIndex
+      = smallestIndex + this->GetInputImageRegion().GetSize() - unitSize;
     InputImagePointType smallestImagePoint;
     InputImagePointType largestImagePoint;
     inputImage->TransformIndexToPhysicalPoint(
-      smallestIndex, smallestImagePoint);
+      smallestIndex, smallestImagePoint );
     inputImage->TransformIndexToPhysicalPoint(
-      largestIndex, largestImagePoint);
+      largestIndex, largestImagePoint );
     InputImagePointType smallestPoint;
     InputImagePointType largestPoint;
     this->GenerateSampleRegion( smallestImagePoint, largestImagePoint, 
