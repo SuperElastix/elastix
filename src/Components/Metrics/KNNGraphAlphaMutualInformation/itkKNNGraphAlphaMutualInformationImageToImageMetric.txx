@@ -15,10 +15,10 @@ namespace itk
   KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     ::KNNGraphAlphaMutualInformationImageToImageMetric()
   {
-    this->SetComputeGradient( false ); // don't use the default gradient for now
+    this->SetComputeGradient( false ); // don't use the default gradient
     this->SetUseImageSampler( true );
-    this->m_Alpha = 0.5;
-    this->m_AvoidDivisionBy = 1e-5;
+    this->m_Alpha = 0.99;
+    this->m_AvoidDivisionBy = 1e-10;
 
     this->m_BinaryKNNTreeFixed = 0;
     this->m_BinaryKNNTreeMoving = 0;
@@ -253,18 +253,18 @@ namespace itk
 	template <class TFixedImage, class TMovingImage>
 	void
   KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
-		::Initialize(void) throw ( ExceptionObject )
+		::Initialize( void ) throw ( ExceptionObject )
 	{
 		/** Call the superclass. */
 		this->Superclass::Initialize();
 		
-	  /** Check if the kNN tree is set. */
+	  /** Check if the kNN trees are set. We only need to check the fixed tree. */
     if ( !this->m_BinaryKNNTreeFixed )
     {
       itkExceptionMacro( << "ERROR: The kNN tree is not set. " );
     }
 
-    /** Check if the kNN tree searcher is set. */
+    /** Check if the kNN tree searchers are set. We only need to check the fixed searcher. */
     if ( !this->m_BinaryKNNTreeSearcherFixed )
     {
       itkExceptionMacro( << "ERROR: The kNN tree searcher is not set. " );
@@ -788,16 +788,17 @@ namespace itk
       /** Transform point and check if it is inside the B-spline support region. */
       bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
-      /** Check if point is inside moving mask. */
+      /** Check if point is inside all moving masks. */
       if ( sampleOk )
       {
-        this->EvaluateMovingMaskValueAndDerivative( mappedPoint, movingMaskValue, 0 );
+        this->EvaluateMovingMaskValue( mappedPoint, movingMaskValue );
         sampleOk = movingMaskValue > 1e-10;
       }
 
       /** Compute the moving image value M(T(x)) and possibly the
-       * derivative dM/dx and check if the point is inside the
-       * moving image buffer. */
+       * derivative dM/dx and check if the point is inside all
+       * moving images buffers.
+       */
       MovingImageDerivativeType movingImageDerivative;
       if ( sampleOk )
       {
