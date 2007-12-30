@@ -1,7 +1,7 @@
-#ifndef __elxAcceleratedGradientDescent_hxx
-#define __elxAcceleratedGradientDescent_hxx
+#ifndef __elxAdaptiveStochasticGradientDescent_hxx
+#define __elxAdaptiveStochasticGradientDescent_hxx
 
-#include "elxAcceleratedGradientDescent.h"
+#include "elxAdaptiveStochasticGradientDescent.h"
 #include <iomanip>
 #include <string>
 #include <vector>
@@ -27,8 +27,8 @@ namespace elastix
   */
 
   template <class TElastix>
-    AcceleratedGradientDescent<TElastix>::
-    AcceleratedGradientDescent()
+    AdaptiveStochasticGradientDescent<TElastix>::
+    AdaptiveStochasticGradientDescent()
   {
     this->m_AutomaticParameterEstimation = false;
     this->m_MaximumStepLength = 1.0;
@@ -58,7 +58,7 @@ namespace elastix
   */
 
   template <class TElastix>
-    void AcceleratedGradientDescent<TElastix>::
+    void AdaptiveStochasticGradientDescent<TElastix>::
     BeforeRegistration(void)
   {
     /** Add the target cell "stepsize" to xout["iteration"].*/
@@ -83,7 +83,7 @@ namespace elastix
   */
 
   template <class TElastix>
-    void AcceleratedGradientDescent<TElastix>
+    void AdaptiveStochasticGradientDescent<TElastix>
     ::BeforeEachResolution(void)
   {
     /** Get the current resolution level.*/
@@ -222,7 +222,7 @@ namespace elastix
   */
 
   template <class TElastix>
-    void AcceleratedGradientDescent<TElastix>
+    void AdaptiveStochasticGradientDescent<TElastix>
     ::AfterEachIteration(void)
   {
     /** Print some information */
@@ -245,7 +245,7 @@ namespace elastix
   */
 
   template <class TElastix>
-    void AcceleratedGradientDescent<TElastix>
+    void AdaptiveStochasticGradientDescent<TElastix>
     ::AfterEachResolution(void)
   {
     /** Get the current resolution level.*/
@@ -309,7 +309,7 @@ namespace elastix
   */
 
   template <class TElastix>
-    void AcceleratedGradientDescent<TElastix>
+    void AdaptiveStochasticGradientDescent<TElastix>
     ::AfterRegistration(void)
   {
     /** Print the best metric value */
@@ -334,7 +334,7 @@ namespace elastix
   */
 
   template <class TElastix>
-    void AcceleratedGradientDescent<TElastix>
+    void AdaptiveStochasticGradientDescent<TElastix>
     ::StartOptimization(void)
   {
     /** Check if the entered scales are correct and != [ 1 1 1 ...] */
@@ -362,7 +362,7 @@ namespace elastix
   */
 
   template <class TElastix>
-    void AcceleratedGradientDescent<TElastix>
+    void AdaptiveStochasticGradientDescent<TElastix>
     ::ResumeOptimization(void)
   {
     if ( this->GetAutomaticParameterEstimation() )
@@ -380,7 +380,7 @@ namespace elastix
   */
 
   template <class TElastix>
-    void AcceleratedGradientDescent<TElastix>
+    void AdaptiveStochasticGradientDescent<TElastix>
     ::AdvanceOneStep(void)
   {
     /** Call the superclass' implementation */
@@ -409,7 +409,7 @@ namespace elastix
   */
 
   template <class TElastix>
-    void AcceleratedGradientDescent<TElastix>
+    void AdaptiveStochasticGradientDescent<TElastix>
     ::AutomaticParameterEstimation( void )
   {
     const unsigned int P = static_cast<unsigned int>( 
@@ -488,7 +488,7 @@ namespace elastix
   * the squared magnitude of the gradient and approximation error.
   * Needed for the automatic parameter estimation */
   template <class TElastix>
-    bool AcceleratedGradientDescent<TElastix>
+    bool AdaptiveStochasticGradientDescent<TElastix>
     ::SampleGradients(const ParametersType & mu0,
     double perturbationSigma, double & gg, double & ee)
   {
@@ -709,7 +709,7 @@ namespace elastix
   */
 
   template <class TElastix>
-    void AcceleratedGradientDescent<TElastix>
+    void AdaptiveStochasticGradientDescent<TElastix>
     ::ComputeJacobianTerms(double & TrC, double & TrCC, 
     double & maxJJ, double & maxJCJ )
   {
@@ -751,7 +751,7 @@ namespace elastix
   */
 
   template <class TElastix>
-    void AcceleratedGradientDescent<TElastix>
+    void AdaptiveStochasticGradientDescent<TElastix>
     ::ComputeJacobianTermsGenericQuadratic(double & TrC, double & TrCC, 
     double & maxJJ, double & maxJCJ )
   {
@@ -925,7 +925,7 @@ namespace elastix
   */
 
   template <class TElastix>
-    void AcceleratedGradientDescent<TElastix>
+    void AdaptiveStochasticGradientDescent<TElastix>
     ::ComputeJacobianTermsGenericLinear(double & TrC, double & TrCC, 
     double & maxJJ, double & maxJCJ )
   {
@@ -1123,7 +1123,7 @@ namespace elastix
   */
 
   template <class TElastix>
-    void AcceleratedGradientDescent<TElastix>
+    void AdaptiveStochasticGradientDescent<TElastix>
     ::ComputeJacobianTermsAffine(double & TrC, double & TrCC, 
     double & maxJJ, double & maxJCJ )
   {} // end ComputeJacobianTermsAffine
@@ -1134,7 +1134,7 @@ namespace elastix
   */
 
   template <class TElastix>
-    void AcceleratedGradientDescent<TElastix>
+    void AdaptiveStochasticGradientDescent<TElastix>
     ::ComputeJacobianTermsTranslation(double & TrC, double & TrCC, 
     double & maxJJ, double & maxJCJ )
   {
@@ -1160,7 +1160,7 @@ namespace elastix
   */
 
   template <class TElastix>
-    void AcceleratedGradientDescent<TElastix>
+    void AdaptiveStochasticGradientDescent<TElastix>
     ::ComputeJacobianTermsBSpline(double & TrC, double & TrCC, 
     double & maxJJ, double & maxJCJ )
   {
@@ -1374,7 +1374,7 @@ namespace elastix
   */
 
   template <class TElastix>
-    void AcceleratedGradientDescent<TElastix>
+    void AdaptiveStochasticGradientDescent<TElastix>
     ::SampleFixedImageForJacobianTerms(
     ImageSampleContainerPointer & sampleContainer )
   {
@@ -1424,7 +1424,7 @@ namespace elastix
     if ( nrofsamples == 0 )
     {
       itkExceptionMacro(
-        << "No valid voxels found to estimate the AcceleratedGradientDescent parameters." );
+        << "No valid voxels found to estimate the AdaptiveStochasticGradientDescent parameters." );
     }
 
   } // end SampleFixedImageForJacobianTerms
@@ -1435,7 +1435,7 @@ namespace elastix
   */
 
   template <class TElastix>
-    void AcceleratedGradientDescent<TElastix>
+    void AdaptiveStochasticGradientDescent<TElastix>
     ::PrintSettingsVector( const SettingsVectorType & settings ) const
   {
     const unsigned long nrofres = settings.size();
@@ -1493,7 +1493,7 @@ namespace elastix
   */
 
   template <class TElastix>
-    void AcceleratedGradientDescent<TElastix>
+    void AdaptiveStochasticGradientDescent<TElastix>
     ::SaveCovarianceMatrix( double sigma1, double sigma3, 
     const CovarianceMatrixType & cov )
   {
@@ -1548,7 +1548,7 @@ namespace elastix
   */
 
   template <class TElastix>
-    void AcceleratedGradientDescent<TElastix>
+    void AdaptiveStochasticGradientDescent<TElastix>
     ::CheckForBSplineTransform( void )
   {
     this->m_TransformIsBSpline = false;
@@ -1639,8 +1639,8 @@ namespace elastix
   */
 
   template <class TElastix>
-    const typename AcceleratedGradientDescent<TElastix>::TransformJacobianType &
-    AcceleratedGradientDescent<TElastix>
+    const typename AdaptiveStochasticGradientDescent<TElastix>::TransformJacobianType &
+    AdaptiveStochasticGradientDescent<TElastix>
     ::EvaluateBSplineTransformJacobian( 
     const FixedImagePointType & fixedImagePoint) const
   {
@@ -1704,5 +1704,5 @@ namespace elastix
 
 } // end namespace elastix
 
-#endif // end #ifndef __elxAcceleratedGradientDescent_hxx
+#endif // end #ifndef __elxAdaptiveStochasticGradientDescent_hxx
 

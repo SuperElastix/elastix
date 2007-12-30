@@ -22,8 +22,16 @@ namespace itk
    *
    * Construction of the PDFs is implemented in the superclass
    * ParzenWindowHistogramImageToImageMetric.
-	 *
-	 * Notes:\n
+   *
+   * This implementation of the MattesMutualInformation is based on the 
+   * AdvancedImageToImageMetric, which means that:
+   * \li It uses the ImageSampler-framework
+   * \li It makes use of the compact support of B-splines, in case of B-spline transforms.
+   * \li Image derivatives are computed using either the B-spline interpolator's implementation
+   * or by nearest neighbor interpolation of a precomputed central difference image.
+   * \li A minimum number of samples that should map within the moving image (mask) can be specified.
+   *
+   * Notes:\n
 	 * 1. This class returns the negative mutual information value.\n
 	 * 2. This class in not thread safe due the private data structures
 	 *     used to the store the marginal and joint pdfs.

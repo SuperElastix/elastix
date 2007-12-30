@@ -1,69 +1,27 @@
-#ifndef _itkAdvancedMeanSquaresImageToImageMetric_txx
-#define _itkAdvancedMeanSquaresImageToImageMetric_txx
+#ifndef _itkAdvancedNormalizedCorrelationImageToImageMetric_txx
+#define _itkAdvancedNormalizedCorrelationImageToImageMetric_txx
 
-#include "itkAdvancedMeanSquaresImageToImageMetric.h"
+#include "itkAdvancedNormalizedCorrelationImageToImageMetric.h"
+
 
 namespace itk
 {
 
 	/**
-	* ******************* Constructor *******************
-	*/
+	 * ******************* Constructor *******************
+	 */
 
 	template <class TFixedImage, class TMovingImage> 
-		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-		::AdvancedMeanSquaresImageToImageMetric()
+		AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
+		::AdvancedNormalizedCorrelationImageToImageMetric()
 	{
+		this->m_SubtractMean = false;
+    
     this->SetUseImageSampler( true );
     this->SetUseFixedImageLimiter( false );
     this->SetUseMovingImageLimiter( false );
-
-    this->m_UseNormalization = false;
-    this->m_NormalizationFactor = 1.0;
-
+    
 	} // end constructor
-
-
-  /**
-	 * ********************* Initialize ****************************
-	 */
-
-  template <class TFixedImage, class TMovingImage>
-    void
-    AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-    ::Initialize(void) throw ( ExceptionObject )
-  {
-    /** Initialize transform, interpolator, etc. */
-    Superclass::Initialize();
-
-    if ( this->GetUseNormalization() )
-    {
-      /** Try to guess a normalization factor. */
-      this->ComputeFixedImageExtrema(
-        this->GetFixedImage(),
-        this->GetFixedImageRegion() );
-
-      this->ComputeMovingImageExtrema(
-        this->GetMovingImage(),
-        this->GetMovingImage()->GetBufferedRegion() );
-
-      const double diff1 = this->m_FixedImageTrueMax - this->m_MovingImageTrueMin;
-      const double diff2 = this->m_MovingImageTrueMax - this->m_FixedImageTrueMin;
-      const double maxdiff = vnl_math_max( diff1, diff2 ); 
-
-      /** We guess that maxdiff/10 is the maximum average difference 
-       * that will be observed.
-       * \todo We may involve the standard derivation of the image into
-       * this estimate.  */
-      this->m_NormalizationFactor = 100.0 / maxdiff / maxdiff;
-      
-    }
-    else
-    {
-      this->m_NormalizationFactor = 1.0;
-    }
-   
-  } // end Initialize
 
 
 	/**
@@ -72,10 +30,11 @@ namespace itk
 
 	template < class TFixedImage, class TMovingImage> 
 		void
-		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+		AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 		::PrintSelf(std::ostream& os, Indent indent) const
 	{
 		Superclass::PrintSelf( os, indent );
+		os << indent << "SubtractMean: " << this->m_SubtractMean << std::endl;
 
 	} // end PrintSelf
 
@@ -86,7 +45,7 @@ namespace itk
 
 	template < class TFixedImage, class TMovingImage >
 		void
-		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+		AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 		::EvaluateTransformJacobianInnerProduct( 
 		const TransformJacobianType & jacobian, 
 		const MovingImageDerivativeType & movingImageDerivative,
@@ -112,25 +71,78 @@ namespace itk
 	} // end EvaluateTransformJacobianInnerProduct
 
 
+  /**
+	 * *************** UpdateDerivativeTerms ***************************
+	 */
+
+	template < class TFixedImage, class TMovingImage >
+		void
+		AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
+		::UpdateDerivativeTerms( 
+    const RealType fixedImageValue,
+    const RealType movingImageValue,
+    const DerivativeType & imageJacobian,
+    DerivativeType & derivativeF,
+    DerivativeType & derivativeM,
+    DerivativeType & differential ) const
+  {
+    typedef typename DerivativeType::ValueType        DerivativeValueType;
+        	  
+		/** Calculate the contributions to the derivatives with respect to each parameter. */
+    if ( this->m_NonZeroJacobianIndices.GetSize() == this->m_NumberOfParameters )
+		{
+      /** Loop over all jacobians. */
+      typename DerivativeType::const_iterator imjacit = imageJacobian.begin();
+      typename DerivativeType::iterator derivativeFit = derivativeF.begin();
+      typename DerivativeType::iterator derivativeMit = derivativeM.begin();
+      typename DerivativeType::iterator differentialit = differential.begin();
+
+      for ( unsigned int mu = 0; mu < this->m_NumberOfParameters; ++mu )
+      {
+        (*derivativeFit) += fixedImageValue * (*imjacit);
+        (*derivativeMit) += movingImageValue * (*imjacit);
+        (*differentialit) += (*imjacit);
+        ++imjacit;
+        ++derivativeFit;
+        ++derivativeMit;
+        ++differentialit;
+      }
+    }
+    else
+    {
+      /** Only pick the nonzero jacobians. */
+      for ( unsigned int i = 0; i < imageJacobian.GetSize(); ++i )
+      {
+        const unsigned int index = this->m_NonZeroJacobianIndices[ i ];
+        const RealType differentialtmp = imageJacobian[ i ];
+			  derivativeF[ index ] += fixedImageValue  * differentialtmp;
+				derivativeM[ index ] += movingImageValue * differentialtmp;
+				differential[ index ] += differentialtmp;
+      }
+    }
+
+  } // end UpdateValueAndDerivativeTerms
+
+
 	/**
 	 * ******************* GetValue *******************
 	 */
 
 	template <class TFixedImage, class TMovingImage> 
-		typename AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>::MeasureType
-		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+		typename AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>::MeasureType
+		AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 		::GetValue( const TransformParametersType & parameters ) const
 	{
-		itkDebugMacro( "GetValue( " << parameters << " ) " );
-		
+    itkDebugMacro( "GetValue( " << parameters << " ) " );
+
     /** Initialize some variables */
 		this->m_NumberOfPixelsCounted = 0;
     MeasureType measure = NumericTraits< MeasureType >::Zero;
 
-    /** Make sure the transform parameters are up to date. */
+		/** Make sure the transform parameters are up to date. */
 		this->SetTransformParameters( parameters );
 
-		/** Update the imageSampler and get a handle to the sample container. */
+    /** Update the imageSampler and get a handle to the sample container. */
     this->GetImageSampler()->Update();
     ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
@@ -138,8 +150,16 @@ namespace itk
     typename ImageSampleContainerType::ConstIterator fiter;
     typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
     typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+		
+		/** Create variables to store intermediate results. */
+    typedef typename NumericTraits< MeasureType >::AccumulateType		AccumulateType;
+		AccumulateType sff = NumericTraits< AccumulateType >::Zero;
+		AccumulateType smm = NumericTraits< AccumulateType >::Zero;
+		AccumulateType sfm = NumericTraits< AccumulateType >::Zero;
+		AccumulateType sf  = NumericTraits< AccumulateType >::Zero;
+		AccumulateType sm  = NumericTraits< AccumulateType >::Zero;
 
-		/** Loop over the fixed image samples to calculate the mean squares. */
+    		/** Loop over the fixed image samples to calculate the mean squares. */
     for ( fiter = fbegin; fiter != fend; ++fiter )
 		{
 	    /** Read fixed coordinates and initialize some variables. */
@@ -171,9 +191,15 @@ namespace itk
         /** Get the fixed image value. */
         const RealType & fixedImageValue = static_cast<double>( (*fiter).Value().m_ImageValue );
 
-				/** The difference squared. */
-				const RealType diff = movingImageValue - fixedImageValue; 
-				measure += diff * diff;
+ 				/** Update some sums needed to calculate NC. */
+				sff += fixedImageValue  * fixedImageValue;
+				smm += movingImageValue * movingImageValue;
+				sfm += fixedImageValue  * movingImageValue;
+				if ( this->m_SubtractMean ) 
+				{
+					sf += fixedImageValue;
+					sm += movingImageValue;
+				}
         
 			} // end if sampleOk
 
@@ -182,16 +208,34 @@ namespace itk
     /** Check if enough samples were valid. */
     this->CheckNumberOfSamples(
       sampleContainer->Size(), this->m_NumberOfPixelsCounted );
-    
-    /** Update measure value. */
-	  measure *= this->m_NormalizationFactor / 
-      static_cast<double>( this->m_NumberOfPixelsCounted );
+ 
+		/** If SubtractMean, then subtract things from sff, smm and sfm. */
+    const RealType N = static_cast<RealType>( this->m_NumberOfPixelsCounted );
+		if ( this->m_SubtractMean && this->m_NumberOfPixelsCounted > 0 )
+		{
+			sff -= ( sf * sf / N );
+			smm -= ( sm * sm / N );
+			sfm -= ( sf * sm / N );
+		}
 
-		/** Return the mean squares measure value. */
+		/** The denominator of the NC. */
+		const RealType denom = -1.0 * vcl_sqrt( sff * smm );
+
+		/** Calculate the measure value. */
+		if ( this->m_NumberOfPixelsCounted > 0 && denom < -1e-14 )
+		{
+			measure = sfm / denom;
+		}
+    else
+    {
+      measure = NumericTraits< MeasureType >::Zero;
+    }
+		
+		/** Return the NC measure value. */
 		return measure;
 
 	} // end GetValue
-	
+
 
 	/**
 	 * ******************* GetDerivative *******************
@@ -199,7 +243,7 @@ namespace itk
 
 	template < class TFixedImage, class TMovingImage> 
 		void
-		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+		AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 		::GetDerivative( const TransformParametersType & parameters,
 		DerivativeType & derivative ) const
 	{
@@ -219,7 +263,7 @@ namespace itk
 
 	template <class TFixedImage, class TMovingImage>
 		void
-		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+		AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 		::GetValueAndDerivative( const TransformParametersType & parameters, 
 		MeasureType & value, DerivativeType & derivative ) const
 	{
@@ -233,9 +277,23 @@ namespace itk
     MeasureType measure = NumericTraits< MeasureType >::Zero;
     derivative = DerivativeType( this->m_NumberOfParameters );
 		derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+    DerivativeType derivativeF = DerivativeType( this->m_NumberOfParameters );
+		derivativeF.Fill( NumericTraits< DerivativeValueType >::Zero );
+		DerivativeType derivativeM = DerivativeType( this->m_NumberOfParameters );
+		derivativeM.Fill( NumericTraits< DerivativeValueType >::Zero );
+		DerivativeType differential = DerivativeType( this->m_NumberOfParameters );
+		differential.Fill( NumericTraits< DerivativeValueType >::Zero );
 
     /** Arrays that store dM(x)/dmu. */
     DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.GetSize() );
+    
+		/** Initialize some variables for intermediate results. */
+    typedef typename NumericTraits< MeasureType >::AccumulateType		AccumulateType;
+		AccumulateType sff = NumericTraits< AccumulateType >::Zero;
+		AccumulateType smm = NumericTraits< AccumulateType >::Zero;
+		AccumulateType sfm = NumericTraits< AccumulateType >::Zero;
+		AccumulateType sf  = NumericTraits< AccumulateType >::Zero;
+		AccumulateType sm  = NumericTraits< AccumulateType >::Zero;
  
 		/** Make sure the transform parameters are up to date. */
 		this->SetTransformParameters( parameters );
@@ -290,11 +348,22 @@ namespace itk
         this->EvaluateTransformJacobianInnerProduct( 
           jacobian, movingImageDerivative, imageJacobian );
 
-        /** Compute this pixel's contribution to the measure and derivatives. */
-        this->UpdateValueAndDerivativeTerms( 
-          fixedImageValue, movingImageValue,
-          imageJacobian,
-          measure, derivative );
+   			/** Update some sums needed to calculate the value of NC. */
+				sff += fixedImageValue  * fixedImageValue;
+				smm += movingImageValue * movingImageValue;
+				sfm += fixedImageValue  * movingImageValue;
+				if ( this->m_SubtractMean )
+				{
+					sf += fixedImageValue;
+					sm += movingImageValue;
+				}
+
+
+
+        /** Compute this pixel's contribution to the derivative terms. */
+        this->UpdateDerivativeTerms( 
+          fixedImageValue, movingImageValue, imageJacobian,
+          derivativeF, derivativeM, differential );
 
 			} // end if sampleOk
 
@@ -303,68 +372,46 @@ namespace itk
     /** Check if enough samples were valid. */
     this->CheckNumberOfSamples(
       sampleContainer->Size(), this->m_NumberOfPixelsCounted );
-       
-    /** Compute the measure value and derivative. */
-    const double normal_sum = this->m_NormalizationFactor / 
-      static_cast<double>( this->m_NumberOfPixelsCounted );
-    measure *= normal_sum;
-    derivative *= normal_sum;
-   
-		/** The return value. */
-		value = measure;
 
-	} // end GetValueAndDerivative
-
-
-  /**
-	 * *************** UpdateValueAndDerivativeTerms ***************************
-	 */
-
-	template < class TFixedImage, class TMovingImage >
-		void
-		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-		::UpdateValueAndDerivativeTerms( 
-    const RealType fixedImageValue,
-    const RealType movingImageValue,
-    const DerivativeType & imageJacobian,
-    MeasureType & measure,
-    DerivativeType & deriv ) const
-  {
-    typedef typename DerivativeType::ValueType        DerivativeValueType;
-
-    /** The difference squared. */
-		const RealType diff = movingImageValue - fixedImageValue; 
-    const RealType diffdiff = diff * diff;
-		measure += diffdiff;
-        	  
-		/** Calculate the contributions to the derivatives with respect to each parameter. */
-    const RealType diff_2 = diff * 2.0;
-    if ( this->m_NonZeroJacobianIndices.GetSize() == this->m_NumberOfParameters )
+		/** If SubtractMean, then subtract things from sff, smm, sfm,
+		 * derivativeF and derivativeM. */
+    const RealType N = static_cast<RealType>( this->m_NumberOfPixelsCounted );
+		if ( this->m_SubtractMean && this->m_NumberOfPixelsCounted > 0 )
 		{
-      /** Loop over all jacobians. */
-      typename DerivativeType::const_iterator imjacit = imageJacobian.begin();
-      typename DerivativeType::iterator derivit = deriv.begin();
-      for ( unsigned int mu = 0; mu < this->m_NumberOfParameters; ++mu )
-      {
-        (*derivit) += diff_2 * (*imjacit);        
-        ++imjacit;
-        ++derivit;   
-      }
-    }
-    else
-    {
-      /** Only pick the nonzero jacobians. */
-      for ( unsigned int i = 0; i < imageJacobian.GetSize(); ++i )
-      {
-        const unsigned int index = this->m_NonZeroJacobianIndices[ i ];
-        deriv[ index ] += diff_2 * imageJacobian[ i ];       
-      }
-    }
-  } // end UpdateValueAndDerivativeTerms
+			sff -= ( sf * sf / N );
+			smm -= ( sm * sm / N );
+			sfm -= ( sf * sm / N );
+
+			for( unsigned int i = 0; i < this->m_NumberOfParameters; i++ )
+			{
+				derivativeF[ i ] -= sf * differential[ i ] / N;
+				derivativeM[ i ] -= sm * differential[ i ] / N;
+			}
+		}
+
+		/** The denominator of the value and the derivative. */
+		const RealType denom = -1.0 * vcl_sqrt( sff * smm );
+
+		/** Calculate the value and the derivative. */
+		if ( this->m_NumberOfPixelsCounted > 0 && denom < -1e-14 )
+		{
+			value = sfm / denom;
+			for ( unsigned int i = 0; i < this->m_NumberOfParameters; i++ )
+			{
+				derivative[ i ] = ( derivativeF[ i ] - ( sfm / smm ) * derivativeM[ i ] ) / denom;
+			}
+		}
+		else
+		{
+			value = NumericTraits< MeasureType >::Zero;
+			derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+		}
+	
+	} // end GetValueAndDerivative
 
 
 } // end namespace itk
 
 
-#endif // end #ifndef _itkAdvancedMeanSquaresImageToImageMetric_txx
+#endif // end #ifndef _itkAdvancedNormalizedCorrelationImageToImageMetric_txx
 

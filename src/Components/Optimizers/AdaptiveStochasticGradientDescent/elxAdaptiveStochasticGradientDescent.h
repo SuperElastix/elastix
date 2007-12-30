@@ -1,7 +1,7 @@
-#ifndef __elxAcceleratedGradientDescent_h
-#define __elxAcceleratedGradientDescent_h
+#ifndef __elxAdaptiveStochasticGradientDescent_h
+#define __elxAdaptiveStochasticGradientDescent_h
 
-#include "itkAcceleratedGradientDescentOptimizer.h"
+#include "itkAdaptiveStochasticGradientDescentOptimizer.h"
 #include "itkImageGridSampler.h"
 #include "elxIncludes.h"
 #include "elxProgressCommand.h"
@@ -13,17 +13,17 @@ namespace elastix
 
 
   /**
-  * \class AcceleratedGradientDescent
+  * \class AdaptiveStochasticGradientDescent
   * \brief A gradient descent optimizer with an adaptive gain.
   *
-  * This class is a wrap around the AcceleratedGradientDescentOptimizer class.
+  * This class is a wrap around the AdaptiveStochasticGradientDescentOptimizer class.
   * It takes care of setting parameters and printing progress information.
   * For more information about the optimisation method, please read the documentation
-  * of the AcceleratedGradientDescentOptimizer class.
+  * of the AdaptiveStochasticGradientDescentOptimizer class.
   *
   * The parameters used in this class are:
   * \parameter Optimizer: Select this optimizer as follows:\n
-  *   <tt>(Optimizer "AcceleratedGradientDescent")</tt>
+  *   <tt>(Optimizer "AdaptiveStochasticGradientDescent")</tt>
   * \parameter MaximumNumberOfIterations: The maximum number of iterations in each resolution. \n
   *   example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
   *    Default value: 100.
@@ -46,22 +46,22 @@ namespace elastix
   * \todo: document extra parameters
   * \todo: this class contains a lot of functional code, which actually does not belong here.
   *
-  * \sa AcceleratedGradientDescentOptimizer
+  * \sa AdaptiveStochasticGradientDescentOptimizer
   * \ingroup Optimizers
   */
 
   template <class TElastix>
-  class AcceleratedGradientDescent :
+  class AdaptiveStochasticGradientDescent :
     public
-    itk::AcceleratedGradientDescentOptimizer,
+    itk::AdaptiveStochasticGradientDescentOptimizer,
     public
     OptimizerBase<TElastix>
   {
   public:
 
     /** Standard ITK.*/
-    typedef AcceleratedGradientDescent          Self;
-    typedef AcceleratedGradientDescentOptimizer Superclass1;
+    typedef AdaptiveStochasticGradientDescent          Self;
+    typedef AdaptiveStochasticGradientDescentOptimizer Superclass1;
     typedef OptimizerBase<TElastix>             Superclass2;
     typedef SmartPointer<Self>                  Pointer;
     typedef SmartPointer<const Self>            ConstPointer;
@@ -70,15 +70,15 @@ namespace elastix
     itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( AcceleratedGradientDescent, AcceleratedGradientDescentOptimizer );
+    itkTypeMacro( AdaptiveStochasticGradientDescent, AdaptiveStochasticGradientDescentOptimizer );
 
     /** Name of this class.
     * Use this name in the parameter file to select this specific optimizer.
-    * example: <tt>(Optimizer "AcceleratedGradientDescent")</tt>\n
+    * example: <tt>(Optimizer "AdaptiveStochasticGradientDescent")</tt>\n
     */
-    elxClassNameMacro( "AcceleratedGradientDescent" );
+    elxClassNameMacro( "AdaptiveStochasticGradientDescent" );
 
-    /** Typedef's inherited from Superclass1, the AcceleratedGradientDescentOptimizer.*/
+    /** Typedef's inherited from Superclass1, the AdaptiveStochasticGradientDescentOptimizer.*/
     typedef Superclass1::CostFunctionType     CostFunctionType;
     typedef Superclass1::CostFunctionPointer  CostFunctionPointer;
     typedef Superclass1::StopConditionType    StopConditionType;
@@ -186,8 +186,8 @@ namespace elastix
     /** Array type for holding parameter indices */
     typedef Array<unsigned int>                                   ParameterIndexArrayType;
 
-    AcceleratedGradientDescent();
-    virtual ~AcceleratedGradientDescent() {};
+    AdaptiveStochasticGradientDescent();
+    virtual ~AdaptiveStochasticGradientDescent() {};
 
     /** Variable to store the automatically determined settings for each resolution */
     SettingsVectorType m_SettingsVector;
@@ -301,7 +301,7 @@ namespace elastix
 
   private:
 
-    AcceleratedGradientDescent( const Self& );  // purposely not implemented
+    AdaptiveStochasticGradientDescent( const Self& );  // purposely not implemented
     void operator=( const Self& );              // purposely not implemented
 
     bool m_AutomaticParameterEstimation;
@@ -313,13 +313,13 @@ namespace elastix
     mutable TransformJacobianType m_InternalTransformJacobian;
 
 
-  }; // end class AcceleratedGradientDescent
+  }; // end class AdaptiveStochasticGradientDescent
 
 
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxAcceleratedGradientDescent.hxx"
+#include "elxAdaptiveStochasticGradientDescent.hxx"
 #endif
 
-#endif // end #ifndef __elxAcceleratedGradientDescent_h
+#endif // end #ifndef __elxAdaptiveStochasticGradientDescent_h

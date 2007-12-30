@@ -12,9 +12,16 @@ using namespace itk;
 
 	/**
 	 * \class ViolaWellsMutualInformationMetric
-	 * \brief An metric based on the itk::MutualInformationImageToImageMetric.
+	 * \brief A metric based on the itk::MutualInformationImageToImageMetric.
 	 *
-	 *
+   * \warning: this metric is not very well tested in elastix.
+   * \warning: this metric is not based on the AdvancedImageToImageMetric so 
+   * does not support the ImageSampler framework and might be very slow in 
+   * combination with B-spline transform.
+   * \warning: this metric uses stochastic sampling of the images. Do not use
+   * a quasi-Newton optimizer or a conjugate gradient. The StandardGradientDescent
+   * is a better choice.
+   *
 	 * The parameters used in this class are:
 	 * \parameter Metric: Select this metric as follows:\n
 	 *		<tt>(Metric "ViolaWellsMutualInformation")</tt>

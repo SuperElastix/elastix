@@ -1,0 +1,10 @@
+
+
+ADD_ELXCOMPONENT( elxAdvancedNormalizedCorrelationMetric
+ elxAdvancedNormalizedCorrelationMetric.h
+ elxAdvancedNormalizedCorrelationMetric.hxx
+ elxAdvancedNormalizedCorrelationMetric.cxx
+ itkAdvancedNormalizedCorrelationImageToImageMetric.h
+ itkAdvancedNormalizedCorrelationImageToImageMetric.txx )
+
+

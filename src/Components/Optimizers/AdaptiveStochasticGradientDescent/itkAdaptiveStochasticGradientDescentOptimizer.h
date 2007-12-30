@@ -1,5 +1,5 @@
-#ifndef __itkAcceleratedGradientDescentOptimizer_h
-#define __itkAcceleratedGradientDescentOptimizer_h
+#ifndef __itkAdaptiveStochasticGradientDescentOptimizer_h
+#define __itkAdaptiveStochasticGradientDescentOptimizer_h
 
 #include "../StandardGradientDescent/itkStandardGradientDescentOptimizer.h"
 
@@ -7,7 +7,7 @@ namespace itk
 {
 
   /**
-  * \class AcceleratedGradientDescentOptimizer
+  * \class AdaptiveStochasticGradientDescentOptimizer
   * \brief This class implements a gradient descent optimizer with adaptive gain.
   *
   * If \f$C(x)\f$ is a costfunction that has to be minimised, the following iterative
@@ -42,17 +42,17 @@ namespace itk
   * \c NewSamplesEveryIteration to \c "true" to achieve this effect.
   * For more information on this strategy, you may have a look at:
   * 
-  * \sa AcceleratedGradientDescent, StandardGradientDescentOptimizer
+  * \sa AdaptiveStochasticGradientDescent, StandardGradientDescentOptimizer
   * \ingroup Optimizers
   */
 
-  class AcceleratedGradientDescentOptimizer :
+  class AdaptiveStochasticGradientDescentOptimizer :
     public StandardGradientDescentOptimizer
   {
   public:
 
     /** Standard ITK.*/
-    typedef AcceleratedGradientDescentOptimizer   Self;
+    typedef AdaptiveStochasticGradientDescentOptimizer   Self;
     typedef StandardGradientDescentOptimizer      Superclass;
 
     typedef SmartPointer<Self>                  Pointer;
@@ -62,7 +62,7 @@ namespace itk
     itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( AcceleratedGradientDescentOptimizer, StandardGradientDescentOptimizer );
+    itkTypeMacro( AdaptiveStochasticGradientDescentOptimizer, StandardGradientDescentOptimizer );
 
     /** Typedefs inherited from the superclass. */
     typedef Superclass::MeasureType               MeasureType;
@@ -95,8 +95,8 @@ namespace itk
 
   protected:
 
-    AcceleratedGradientDescentOptimizer();
-    virtual ~AcceleratedGradientDescentOptimizer() {};
+    AdaptiveStochasticGradientDescentOptimizer();
+    virtual ~AdaptiveStochasticGradientDescentOptimizer() {};
 
     /** Function to update the current time
     * If UseCruzAcceleration is false this function just increments
@@ -112,7 +112,7 @@ namespace itk
 
   private:
 
-    AcceleratedGradientDescentOptimizer( const Self& ); // purposely not implemented
+    AdaptiveStochasticGradientDescentOptimizer( const Self& ); // purposely not implemented
     void operator=( const Self& );              // purposely not implemented
 
     /** Settings */
@@ -122,12 +122,12 @@ namespace itk
     double                        m_SigmoidScale;
 
 
-  }; // end class AcceleratedGradientDescentOptimizer
+  }; // end class AdaptiveStochasticGradientDescentOptimizer
 
 
 } // end namespace itk
 
 
-#endif // end #ifndef __itkAcceleratedGradientDescentOptimizer_h
+#endif // end #ifndef __itkAdaptiveStochasticGradientDescentOptimizer_h
 
 

@@ -1,55 +1,88 @@
-
-#ifndef __itkAdvancedMeanSquaresImageToImageMetric_h
-#define __itkAdvancedMeanSquaresImageToImageMetric_h
+#ifndef __itkAdvancedNormalizedCorrelationImageToImageMetric_h
+#define __itkAdvancedNormalizedCorrelationImageToImageMetric_h
 
 #include "itkAdvancedImageToImageMetric.h"
 
+
 namespace itk
 {
-
-/** \class AdvancedMeanSquaresImageToImageMetric
- * \brief Compute Mean square difference between two images, based on AdvancedImageToImageMetric...
+/** \class AdvancedNormalizedCorrelationImageToImageMetric
+ * \brief Computes normalized correlation between two images, based on AdvancedImageToImageMetric...
  *
- * This Class is templated over the type of the fixed and moving
- * images to be compared.
+ * This metric computes the correlation between pixels in the fixed image
+ * and pixels in the moving image. The spatial correspondance between 
+ * fixed and moving image is established through a Transform. Pixel values are
+ * taken from the fixed image, their positions are mapped to the moving
+ * image and result in general in non-grid position on it. Values at these
+ * non-grid position of the moving image are interpolated using a user-selected
+ * Interpolator. The correlation is normalized by the autocorrelations of both
+ * the fixed and moving images.
  *
- * This metric computes the sum of squared differenced between pixels in
- * the moving image and pixels in the fixed image. The spatial correspondance 
- * between both images is established through a Transform. Pixel values are
- * taken from the Moving image. Their positions are mapped to the Fixed image
- * and result in general in non-grid position on it. Values at these non-grid
- * position of the Fixed image are interpolated using a user-selected Interpolator.
- *
- * This implementation of the MeanSquareDifference is based on the 
+ * This implementation of the NormalizedCorrelation is based on the 
  * AdvancedImageToImageMetric, which means that:
  * \li It uses the ImageSampler-framework
  * \li It makes use of the compact support of B-splines, in case of B-spline transforms.
  * \li Image derivatives are computed using either the B-spline interpolator's implementation
  * or by nearest neighbor interpolation of a precomputed central difference image.
  * \li A minimum number of samples that should map within the moving image (mask) can be specified.
- * 
+ *
+ * The normalized correlation NC is defined as:
+ *
+ * \f[
+ * \mathrm{NC} = \frac{\sum_x f(x) * m(x+u(x,p))}{\sqrt{ \sum_x f(x)^2 * \sum_x m(x+u(x,p))^2}}
+ *    = \frac{\mathtt{sfm}}{\sqrt{\mathtt{sff} * \mathtt{smm}}}
+ * \f]
+ *
+ * where x a voxel in the fixed image f, m the moving image, u(x,p) the
+ * deformation of x depending on the transform parameters p. sfm, sff and smm
+ * is notation used in the source code. The derivative of NC to p equals:
+ *
+ * \f[ 
+ *   \frac{\partial \mathrm{NC}}{\partial p} = \frac{\partial \mathrm{NC}}{\partial m} \frac{\partial m}{\partial x} \frac{\partial x}{\partial p} = \frac{\partial \mathrm{NC}}{\partial m} * \mathtt{gradient} * \mathtt{jacobian},
+ * \f]
+ *
+ * where gradient is the derivative of the moving image m to x, and where jacobian is the
+ * derivative of the transformation to its parameters. gradient * jacobian is called the differential.
+ * This yields for the derivative:
+ *
+ * \f[
+ *   \frac{\partial \mathrm{NC}}{\partial p} = \frac{\sum_x[ f(x) * \mathtt{differential} ] - ( \mathtt{sfm} / \mathtt{smm} ) * \sum_x[ m(x+u(x,p)) * \mathtt{differential} ]}{\sqrt{\mathtt{sff} * \mathtt{smm}}}
+ * \f]
+ *
+ * This class has an option to subtract the sample mean from the sample values
+ * in the cross correlation formula. This typically results in narrower valleys
+ * in the cost fucntion NC. The default value is false. If SubtractMean is true,
+ * the NC is defined as:
+ *
+ * \f[
+ * \mathrm{NC} = \frac{\sum_x ( f(x) - \mathtt{Af} ) * ( m(x+u(x,p)) - \mathtt{Am})}{\sqrt{\sum_x (f(x) - \mathtt{Af})^2 * \sum_x (m(x+u(x,p)) - \mathtt{Am})^2}}
+ *    = \frac{\mathtt{sfm} - \mathtt{sf} * \mathtt{sm} / N}{\sqrt{(\mathtt{sff} - \mathtt{sf} * \mathtt{sf} / N) * (\mathtt{smm} - \mathtt{sm} *\mathtt{sm} / N)}},
+ * \f]
+ *
+ * where Af and Am are the average of f and m, respectively.
+ *
+ *
  * \ingroup RegistrationMetrics
  * \ingroup Metrics
  */
-
 template < class TFixedImage, class TMovingImage > 
-class AdvancedMeanSquaresImageToImageMetric : 
-    public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
+class AdvancedNormalizedCorrelationImageToImageMetric : 
+    public AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 {
 public:
 
   /** Standard class typedefs. */
-  typedef AdvancedMeanSquaresImageToImageMetric		Self;
+  typedef AdvancedNormalizedCorrelationImageToImageMetric			Self;
   typedef AdvancedImageToImageMetric<
-    TFixedImage, TMovingImage >                   Superclass;
-  typedef SmartPointer<Self>                      Pointer;
-  typedef SmartPointer<const Self>                ConstPointer;
+    TFixedImage, TMovingImage >                         Superclass;
+  typedef SmartPointer<Self>                            Pointer;
+  typedef SmartPointer<const Self>                      ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
  
   /** Run-time type information (and related methods). */
-  itkTypeMacro( AdvancedMeanSquaresImageToImageMetric, AdvancedImageToImageMetric );
+  itkTypeMacro( AdvancedNormalizedCorrelationImageToImageMetric, AdvancedImageToImageMetric );
 
   /** Typedefs from the superclass. */
   typedef typename 
@@ -94,7 +127,7 @@ public:
     Superclass::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
   typedef typename
     Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
-
+	
 	/** The fixed image dimension. */
 	itkStaticConstMacro( FixedImageDimension, unsigned int,
 		FixedImageType::ImageDimension );
@@ -102,38 +135,30 @@ public:
 	/** The moving image dimension. */
 	itkStaticConstMacro( MovingImageDimension, unsigned int,
 		MovingImageType::ImageDimension );
-  
-  /** Get the value for single valued optimizers. */
-	virtual MeasureType GetValue( const TransformParametersType & parameters ) const;
 
-  /** Get the derivatives of the match measure. */
-  virtual void GetDerivative( const TransformParametersType & parameters,
-    DerivativeType & derivative ) const;
+  /** Get the value for single valued optimizers. */
+  MeasureType GetValue( const TransformParametersType & parameters ) const;
+
+	/** Get the derivatives of the match measure. */
+  void GetDerivative( const TransformParametersType & parameters,
+		DerivativeType & Derivative ) const;
 
   /** Get value and derivatives for multiple valued optimizers. */
-  virtual void GetValueAndDerivative( const TransformParametersType & parameters,
+  void GetValueAndDerivative( const TransformParametersType & parameters,
 		MeasureType& Value, DerivativeType& Derivative ) const;
 
-  /** Initialize the Metric by making sure that all the components
-   *  are present and plugged together correctly.
-   * \li Call the superclass' implementation
-   * \li Estimate the normalization factor, if asked for.  */
-  virtual void Initialize(void) throw ( ExceptionObject );
+  /** Set/Get SubtractMean boolean. If true, the sample mean is subtracted 
+   * from the sample values in the cross-correlation formula and
+   * typically results in narrower valleys in the cost fucntion.
+   * Default value is false. */
+  itkSetMacro( SubtractMean, bool );
+  itkGetConstReferenceMacro( SubtractMean, bool );
+  itkBooleanMacro( SubtractMean );
 
-  /** Set/Get whether to normalize the mean squares measure.
-   * This divides the MeanSquares by a factor (range/10)^2,
-   * where range represents the maximum gray value range of the
-   * images. Based on the ad hoc assumption that range/10 is the
-   * maximum average difference that will be observed. 
-   * Dividing by range^2 sounds less ad hoc, but will yield
-   * very small values. */
-  itkSetMacro( UseNormalization, bool );
-  itkGetConstMacro( UseNormalization, bool );
-   
 protected:
-  AdvancedMeanSquaresImageToImageMetric();
-  virtual ~AdvancedMeanSquaresImageToImageMetric() {};
-	void PrintSelf( std::ostream& os, Indent indent ) const;
+  AdvancedNormalizedCorrelationImageToImageMetric();
+  virtual ~AdvancedNormalizedCorrelationImageToImageMetric() {};
+  void PrintSelf( std::ostream& os, Indent indent ) const;
 
   /** Protected Typedefs ******************/
 
@@ -154,8 +179,6 @@ protected:
  	typedef typename Superclass::BSplineParametersOffsetType        BSplineParametersOffsetType;
   typedef typename Superclass::ParameterIndexArrayType            ParameterIndexArrayType;
 
-  double m_NormalizationFactor;
-     
   /** Computes the innerproduct of transform jacobian with moving image gradient.
    * The results are stored in imageJacobian, which is supposed
    * to have the right size (same length as jacobian's number of columns). */
@@ -164,28 +187,29 @@ protected:
 		const MovingImageDerivativeType & movingImageDerivative,
     DerivativeType & imageJacobian) const;
 
-  /** Compute a pixel's contribution to the measure and derivatives;
+  /** Compute a pixel's contribution to the derivative terms;
    * Called by GetValueAndDerivative(). */
-  void UpdateValueAndDerivativeTerms( 
+  void UpdateDerivativeTerms( 
     const RealType fixedImageValue,
     const RealType movingImageValue,    
     const DerivativeType & imageJacobian,    
-    MeasureType & measure,
-    DerivativeType & deriv ) const;
- 
+    DerivativeType & derivativeF,
+    DerivativeType & derivativeM,
+    DerivativeType & differential ) const;
+
 private:
-  AdvancedMeanSquaresImageToImageMetric(const Self&); //purposely not implemented
+  AdvancedNormalizedCorrelationImageToImageMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
-  bool m_UseNormalization;
+  bool    m_SubtractMean;
 
-}; // end class AdvancedMeanSquaresImageToImageMetric
+}; // end class AdvancedNormalizedCorrelationImageToImageMetric
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAdvancedMeanSquaresImageToImageMetric.hxx"
+#include "itkAdvancedNormalizedCorrelationImageToImageMetric.txx"
 #endif
 
-#endif // end #ifndef __itkAdvancedMeanSquaresImageToImageMetric_h
+#endif // end #ifndef __itkAdvancedNormalizedCorrelationImageToImageMetric_h
 

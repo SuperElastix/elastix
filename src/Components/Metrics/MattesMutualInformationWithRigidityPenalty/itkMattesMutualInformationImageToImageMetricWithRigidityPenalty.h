@@ -37,6 +37,10 @@ namespace itk
 	 * \brief Computes the mutual information between two images to be
 	 * registered using the method of Mattes et al. and adds a rigidity penalty term.
 	 *
+   * \todo: use ParzenWindowMutualInformationImageToImageMetric instead of 
+   * MattesMutualInformationImageToImageMetric
+   * \todo: incorporate regularisation terms in a more generic way.
+   * 
 	 * MattesMutualInformationImageToImageMetricWithRigidityPenalty computes the mutual 
 	 * information between a fixed and moving image to be registered and adds a
 	 * rigidity penalty term. The rigidity penalty term penalizes deviations from a rigid

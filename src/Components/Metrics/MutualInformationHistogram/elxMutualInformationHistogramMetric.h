@@ -12,9 +12,14 @@ using namespace itk;
 
 	/**
 	 * \class MutualInformationHistogramMetric
-	 * \brief An metric based on the itk::MutualInformationHistogramImageToImageMetric.
+	 * \brief A metric based on the itk::MutualInformationHistogramImageToImageMetric.
 	 *
 	 * This metric is not yet fully supported. But with a little effort it is!
+   *
+   * \warning: this metric is not very well tested in elastix.
+   * \warning: this metric is not based on the AdvancedImageToImageMetric so 
+   * does not support the ImageSampler framework and might be very slow in 
+   * combination with B-spline transform.
 	 *
 	 * The parameters used in this class are:
 	 * \parameter Metric: Select this metric as follows:\n

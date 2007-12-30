@@ -1,7 +1,7 @@
-#ifndef __elxNormalizedCorrelationMetric_HXX__
-#define __elxNormalizedCorrelationMetric_HXX__
+#ifndef __elxAdvancedNormalizedCorrelationMetric_HXX__
+#define __elxAdvancedNormalizedCorrelationMetric_HXX__
 
-#include "elxNormalizedCorrelationMetric.h"
+#include "elxAdvancedNormalizedCorrelationMetric.h"
 
 
 namespace elastix
@@ -10,26 +10,29 @@ using namespace itk;
 
 
 	/**
-	 * ********************* Constructor ****************************
-	 */
-
-	template <class TElastix>
-		NormalizedCorrelationMetric<TElastix>::NormalizedCorrelationMetric()
-	{
-	} // end Constructor
-
-
-	/**
 	 * ***************** BeforeEachResolution ***********************
 	 */
 
 	template <class TElastix>
-		void NormalizedCorrelationMetric<TElastix>
+		void AdvancedNormalizedCorrelationMetric<TElastix>
 		::BeforeEachResolution(void)
 	{
 		/** Get the current resolution level. */
 		unsigned int level = 
 			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+
+    /** Get and set whether the metric should check if enough samples map inside the moving image. */
+    std::string checkNumberOfSamples = true;
+    this->GetConfiguration()->ReadParameter( checkNumberOfSamples,
+      "CheckNumberOfSamples", this->GetComponentLabel(), level, 0 );
+    if ( !checkNumberOfSamples )
+    {
+      this->SetRequiredRatioOfValidSamples(0.0);
+    }
+    else
+    {
+      this->SetRequiredRatioOfValidSamples(0.25);
+    }
 
 		/** Get and set SubtractMean. Default true. */
 		std::string subtractMean = true;
@@ -45,14 +48,14 @@ using namespace itk;
 	 */
 
 	template <class TElastix>
-		void NormalizedCorrelationMetric<TElastix>
+		void AdvancedNormalizedCorrelationMetric<TElastix>
 		::Initialize(void) throw (ExceptionObject)
 	{
 		TimerPointer timer = TimerType::New();
 		timer->StartTimer();
 		this->Superclass1::Initialize();
 		timer->StopTimer();
-		elxout << "Initialization of NormalizedCorrelation metric took: "
+		elxout << "Initialization of AdvancedNormalizedCorrelation metric took: "
 			<< static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
 
 	} // end Initialize
@@ -61,5 +64,5 @@ using namespace itk;
 } // end namespace elastix
 
 
-#endif // end #ifndef __elxNormalizedCorrelationMetric_HXX__
+#endif // end #ifndef __elxAdvancedNormalizedCorrelationMetric_HXX__
 

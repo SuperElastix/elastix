@@ -1,7 +1,7 @@
-#ifndef __itkAcceleratedGradientDescentOptimizer_cxx
-#define __itkAcceleratedGradientDescentOptimizer_cxx
+#ifndef __itkAdaptiveStochasticGradientDescentOptimizer_cxx
+#define __itkAdaptiveStochasticGradientDescentOptimizer_cxx
 
-#include "itkAcceleratedGradientDescentOptimizer.h"
+#include "itkAdaptiveStochasticGradientDescentOptimizer.h"
 #include "vnl/vnl_math.h"
 #include "itkSigmoidImageFilter.h"
 
@@ -12,8 +12,8 @@ namespace itk
 	 * ************************* Constructor ************************
 	 */
 
-	AcceleratedGradientDescentOptimizer
-		::AcceleratedGradientDescentOptimizer()
+	AdaptiveStochasticGradientDescentOptimizer
+		::AdaptiveStochasticGradientDescentOptimizer()
 	{
     this->m_UseCruzAcceleration = false;
     this->m_SigmoidMax = 1.0;
@@ -29,7 +29,7 @@ namespace itk
 	 * This function computes the input for the Compute_a function.
 	 */
 
-  void AcceleratedGradientDescentOptimizer
+  void AdaptiveStochasticGradientDescentOptimizer
 		::UpdateCurrentTime( void )
   {
     typedef itk::Function::Sigmoid<double, double> SigmoidType;
@@ -72,5 +72,5 @@ namespace itk
 
 } // end namespace itk
 
-#endif // end #ifndef __itkAcceleratedGradientDescentOptimizer_cxx
+#endif // end #ifndef __itkAdaptiveStochasticGradientDescentOptimizer_cxx
 

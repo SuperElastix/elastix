@@ -16,6 +16,8 @@ using namespace itk;
 	 *
 	 * This metric is based on an adapted version of the
 	 * itk::MattesMutualInformationImageToImageMetric.
+   *
+   * This metric is deprecated. Please use the AdvancedMattesMutualInformationMetric.
 	 *
 	 * The parameters used in this class are:
 	 * \parameter Metric: Select this metric as follows:\n
