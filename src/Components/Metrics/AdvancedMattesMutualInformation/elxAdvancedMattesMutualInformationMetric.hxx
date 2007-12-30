@@ -72,7 +72,7 @@ using namespace itk;
     this->SetNumberOfMovingHistogramBins( numberOfMovingHistogramBins );
 
     /** Get and set whether the metric should check if enough samples map inside the moving image. */
-    std::string checkNumberOfSamples = true;
+    bool checkNumberOfSamples = true;
     this->GetConfiguration()->ReadParameter( checkNumberOfSamples, 
       "CheckNumberOfSamples", this->GetComponentLabel(), level, 0 );
     if ( !checkNumberOfSamples )
