@@ -35,7 +35,7 @@ using namespace itk;
     }
 
 		/** Get and set SubtractMean. Default true. */
-		std::string subtractMean = true;
+		bool subtractMean = true;
 		this->GetConfiguration()->ReadParameter( subtractMean, "SubtractMean",
       this->GetComponentLabel(), level, 0 );
 		this->SetSubtractMean( subtractMean );
