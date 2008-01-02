@@ -352,7 +352,7 @@ namespace itk
   MultiInputImageToImageMetricBase<TFixedImage,TMovingImage>
   ::IsInsideMovingMask( const MovingImagePointType & mappedPoint ) const
   {
-    /** If no moving image masks are present the 'true' is returned,
+    /** If no moving image masks are present 'true' is returned,
      * meaning that this sample is taken into account. Otherwise, the
      * AND of all masks is returned, i.e. the sample should be inside
      * all masks.
@@ -365,8 +365,9 @@ namespace itk
       {
         inside &= movingImageMask->IsInside( mappedPoint );        
       }
-      /** If the point falls outside one mask, we can skip the rest */
-      if (!inside)
+
+      /** If the point falls outside one mask, we can skip the rest. */
+      if ( !inside )
       {
         return false;
       }
