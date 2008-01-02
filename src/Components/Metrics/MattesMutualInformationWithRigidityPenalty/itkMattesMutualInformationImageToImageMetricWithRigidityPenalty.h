@@ -21,7 +21,8 @@
 #include "itkCombinedImageToImageMetric.h"
 
 /** Include the two metrics we want to combine. */
-#include "../MattesMutualInformation/itkMattesMutualInformationImageToImageMetric2.h"
+//#include "../MattesMutualInformation/itkMattesMutualInformationImageToImageMetric2.h"
+#include "../AdvancedMattesMutualInformation/itkParzenWindowMutualInformationImageToImageMetric.h"
 #include "itkRigidityPenaltyTermMetric.h"
 
 /** Include stuff needed for the construction of the rigidity coefficient image. */
@@ -37,10 +38,6 @@ namespace itk
 	 * \brief Computes the mutual information between two images to be
 	 * registered using the method of Mattes et al. and adds a rigidity penalty term.
 	 *
-   * \todo: use ParzenWindowMutualInformationImageToImageMetric instead of 
-   * MattesMutualInformationImageToImageMetric
-   * \todo: incorporate regularisation terms in a more generic way.
-   * 
 	 * MattesMutualInformationImageToImageMetricWithRigidityPenalty computes the mutual 
 	 * information between a fixed and moving image to be registered and adds a
 	 * rigidity penalty term. The rigidity penalty term penalizes deviations from a rigid
@@ -111,7 +108,7 @@ namespace itk
 			MovingImageType::ImageDimension );
 		
     /** Typedefs for the two metrics we combine. */
-    typedef MattesMutualInformationImageToImageMetric2<
+    typedef ParzenWindowMutualInformationImageToImageMetric<
 			FixedImageType,MovingImageType >                      MattesMutualInformationMetricType;
     typedef typename MattesMutualInformationMetricType
       ::Pointer                                             MattesMutualInformationPointer;
@@ -188,9 +185,6 @@ namespace itk
 		/** Function to fill the RigidityCoefficientImage every iteration. */
 		void FillRigidityCoefficientImage( const ParametersType& parameters ) const;
 
-		/** Set the OutputDirectoryName. *
-		void SetOutputDirectoryName( const char * _arg );*/
-
 	protected:
 		
 		/** The constructor. */
@@ -209,9 +203,13 @@ namespace itk
 		
 		/** The private constructor. */
 		MattesMutualInformationImageToImageMetricWithRigidityPenalty( const Self& );	// purposely not implemented
+
 		/** The private copy constructor. */
 		void operator=( const Self& );																		// purposely not implemented
 		
+    /** Internal function to dilate the rigidity images. */
+    virtual void DilateRigidityImages( void );
+
 		/** Rigidity image variables. */
     CoordinateRepresentationType		m_DilationRadiusMultiplier;
 		bool														m_DilateRigidityImages;
@@ -224,9 +222,6 @@ namespace itk
 		RigidityImagePointer						m_MovingRigidityImageDilated;
 		bool														m_UseFixedRigidityImage;
 		bool														m_UseMovingRigidityImage;
-
-		/** Name of the output directory. *
-		std::string m_OutputDirectoryName;*/
 		
 	}; // end class MattesMutualInformationImageToImageMetricWithRigidityPenalty
 

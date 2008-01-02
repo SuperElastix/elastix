@@ -65,7 +65,7 @@ namespace itk
 		this->m_FixedRigidityImageDilated = 0;
 		this->m_MovingRigidityImageDilated = 0;
 	
-	} // end Constructor
+	} // end Constructor()
 	
 	
 	/**
@@ -80,7 +80,7 @@ namespace itk
 		::PrintSelf( std::ostream& os, Indent indent ) const
 	{
 		
-		this->Superclass::PrintSelf(os, indent);
+		this->Superclass::PrintSelf( os, indent );
 		
 		/*os << indent << "RigidPenaltyWeight: "
 			<< this->m_RigidPenaltyWeight << std::endl;
@@ -103,7 +103,7 @@ namespace itk
 		if ( this->m_UseMovingRigidityImage ) os << "true" << std::endl;
 		else os << "false" << std::endl;
 		
-	} // end PrintSelf
+	} // end PrintSelf()
 	
 	
 	/**
@@ -121,16 +121,16 @@ namespace itk
 		typename BSplineTransformType::Pointer localBSplineTransform = 0;
 
 		/** Set the B-spline transform to m_RigidityPenaltyTermMetric. */
-		if( this->m_TransformIsBSpline )
+		if ( this->m_TransformIsBSpline )
 		{
 			this->m_RigidityPenaltyTermMetric->SetBSplineTransform( this->m_BSplineTransform );
 			localBSplineTransform = this->m_BSplineTransform;
 		}
-		else if( this->m_TransformIsBSplineCombination )
+		else if ( this->m_TransformIsBSplineCombination )
 		{
 			BSplineTransformType * testPointer = dynamic_cast<BSplineTransformType *>(
 				this->m_BSplineCombinationTransform->GetCurrentTransform() );
-			if (!testPointer)
+			if ( !testPointer )
 			{
 				itkExceptionMacro(<< "The BSplineCombinationTransform is not properly configured. The CurrentTransform is not set." );
 			}
@@ -159,165 +159,180 @@ namespace itk
 
     if ( !this->m_UseFixedRigidityImage && !this->m_UseMovingRigidityImage )
     {
-      /** Fill the rigidity coefficient image with ones */
+      /** Fill the rigidity coefficient image with ones. */
       this->m_RigidityCoefficientImage->FillBuffer( 1.0 );
+
       /** Set the rigidity coefficients image into the rigid regulizer metric. */
   		this->m_RigidityPenaltyTermMetric->SetRigidityCoefficientImage(
         this->m_RigidityCoefficientImage );
-      /** Skip the rest of this function */
-      return;
     }
-
-		/** Dilate m_FixedRigidityImage and m_MovingRigidityImage. */
-		if ( this->m_DilateRigidityImages )
-		{
-			/** Some declarations. */
-			SERadiusType						radius;
-			std::vector< StructuringElementType >	structuringElement( FixedImageDimension );
-
-			/** Setup the pipeline. */
-			if ( this->m_UseFixedRigidityImage )
-			{
-				/** Create the dilation filters for the fixedRigidityImage. */
-				for ( unsigned int i = 0; i < FixedImageDimension; i++ )
-				{
-					this->m_FixedRigidityImageDilation[ i ] = DilateFilterType::New();
-				}
-				m_FixedRigidityImageDilation[ 0 ]->SetInput( m_FixedRigidityImage );
-			}
-			if ( this->m_UseMovingRigidityImage )
-			{
-				/** Create the dilation filter for the movingRigidityImage. */
-				for ( unsigned int i = 0; i < FixedImageDimension; i++ )
-				{
-					this->m_MovingRigidityImageDilation[ i ] = DilateFilterType::New();
-				}
-				m_MovingRigidityImageDilation[ 0 ]->SetInput( m_MovingRigidityImage );
-			}
-
-      /** Get the B-spline grid spacing. */
-      GridSpacingType spacing;
-      if ( this->m_TransformIsBSpline )
-      {
-        spacing = this->m_BSplineTransform->GetGridSpacing();
-      }
-      else if ( this->m_TransformIsBSplineCombination )
-      {
-        BSplineTransformType * localBSpline =
-          dynamic_cast<BSplineTransformType *>( this->m_BSplineCombinationTransform->GetCurrentTransform() );
-        spacing = localBSpline->GetGridSpacing();
-      }
-
-			/** Set stuff for the separate dilation. */
-			for ( unsigned int i = 0; i < FixedImageDimension; i++ )
-			{
-				/** Create the structuring element. */
-				radius.Fill( 0 );
-				radius.SetElement( i,
-					static_cast<unsigned long>(
-					this->m_DilationRadiusMultiplier
-					* spacing[ i ] ) );
-
-				structuringElement[ i ].SetRadius( radius );
-				structuringElement[ i ].CreateStructuringElement();
-
-				/** Set the kernel into all dilation filters.
-				 * The SetKernel() is implemented using a itkSetMacro, so a
-				 * this->Modified() is automatically called, which is important,
-				 * since this changes every time Initialize() is called (every resolution).
-				 */
-				if ( this->m_UseFixedRigidityImage )
-				{
-					this->m_FixedRigidityImageDilation[ i ]->SetKernel( structuringElement[ i ] );
-				}
-				if ( this->m_UseMovingRigidityImage )
-				{
-					this->m_MovingRigidityImageDilation[ i ]->SetKernel( structuringElement[ i ] );
-				}
-
-				/** Connect the pipelines. */
-				if ( i > 0 )
-				{
-					if ( this->m_UseFixedRigidityImage )
-					{
-						this->m_FixedRigidityImageDilation[ i ]->SetInput(
-							m_FixedRigidityImageDilation[ i - 1 ]->GetOutput() );
-					}
-					if ( this->m_UseMovingRigidityImage )
-					{
-						this->m_MovingRigidityImageDilation[ i ]->SetInput(
-							m_MovingRigidityImageDilation[ i - 1 ]->GetOutput() );
-					}
-				}
-			} // end for loop
-
-			/** Do the dilation for m_FixedRigidityImage. */
-			if ( this->m_UseFixedRigidityImage )
-			{
-				try
-				{
-					this->m_FixedRigidityImageDilation[ FixedImageDimension - 1 ]->Update();
-				}
-				catch( itk::ExceptionObject & excp )
-				{
-					/** Add information to the exception. */
-					excp.SetLocation( "MattesMutualInformationImageToImageMetricWithRigidityPenalty - Initialize()" );
-					std::string err_str = excp.GetDescription();
-					err_str += "\nError while dilating m_FixedRigidityImage.\n";
-					excp.SetDescription( err_str );
-					/** Pass the exception to an higher level. */
-					throw excp;
-				}
-			}
-
-			/** Do the dilation for m_MovingRigidityImage. */
-			if ( this->m_UseMovingRigidityImage )
-			{
-				try
-				{
-					this->m_MovingRigidityImageDilation[ MovingImageDimension - 1 ]->Update();
-				}
-				catch( itk::ExceptionObject & excp )
-				{
-					/** Add information to the exception. */
-					excp.SetLocation( "MattesMutualInformationImageToImageMetricWithRigidityPenalty - Initialize()" );
-					std::string err_str = excp.GetDescription();
-					err_str += "\nError while dilating m_MovingRigidityImage.\n";
-					excp.SetDescription( err_str );
-					/** Pass the exception to an higher level. */
-					throw excp;
-				}
-			}
-
-			/** Put the output of the dilation into some dilated images. */
-			if ( this->m_UseFixedRigidityImage )
-			{
-				this->m_FixedRigidityImageDilated =
-					this->m_FixedRigidityImageDilation[ FixedImageDimension - 1 ]->GetOutput();
-			}
-			if ( this->m_UseMovingRigidityImage )
-			{
-				this->m_MovingRigidityImageDilated =
-					this->m_MovingRigidityImageDilation[ MovingImageDimension - 1 ]->GetOutput();
-			}
-		}
-		else
-		{
-			/** Copy the pointers of the undilated images to the dilated ones
-			 * if no dilation is needed.
-			 */
-			if ( this->m_UseFixedRigidityImage )
-			{
-				this->m_FixedRigidityImageDilated = this->m_FixedRigidityImage;
-			}
-			if ( this->m_UseMovingRigidityImage )
-			{
-				this->m_MovingRigidityImageDilated = this->m_MovingRigidityImage;
-			}
-
-		} // end if rigidity images should be dilated
+    else
+    {
+      this->DilateRigidityImages();
+    }
 	
-	} // end Initialize
+	} // end Initialize()
+
+
+  /**
+	  * **************** DilateRigidityImages *****************
+	  */
+
+	 template < class TFixedImage, class TMovingImage  >
+		 void
+		 MattesMutualInformationImageToImageMetricWithRigidityPenalty<TFixedImage,TMovingImage>
+		 ::DilateRigidityImages( void )
+   {
+     /** Dilate m_FixedRigidityImage and m_MovingRigidityImage. */
+     if ( this->m_DilateRigidityImages )
+     {
+       /** Some declarations. */
+       SERadiusType radius;
+       std::vector< StructuringElementType >	structuringElement( FixedImageDimension );
+
+       /** Setup the pipeline. */
+       if ( this->m_UseFixedRigidityImage )
+       {
+         /** Create the dilation filters for the fixedRigidityImage. */
+         for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+         {
+           this->m_FixedRigidityImageDilation[ i ] = DilateFilterType::New();
+         }
+         m_FixedRigidityImageDilation[ 0 ]->SetInput( m_FixedRigidityImage );
+       }
+       if ( this->m_UseMovingRigidityImage )
+       {
+         /** Create the dilation filter for the movingRigidityImage. */
+         for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+         {
+           this->m_MovingRigidityImageDilation[ i ] = DilateFilterType::New();
+         }
+         m_MovingRigidityImageDilation[ 0 ]->SetInput( m_MovingRigidityImage );
+       }
+
+       /** Get the B-spline grid spacing. */
+       GridSpacingType spacing;
+       if ( this->m_TransformIsBSpline )
+       {
+         spacing = this->m_BSplineTransform->GetGridSpacing();
+       }
+       else if ( this->m_TransformIsBSplineCombination )
+       {
+         BSplineTransformType * localBSpline =
+           dynamic_cast<BSplineTransformType *>( this->m_BSplineCombinationTransform->GetCurrentTransform() );
+         spacing = localBSpline->GetGridSpacing();
+       }
+
+       /** Set stuff for the separate dilation. */
+       for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+       {
+         /** Create the structuring element. */
+         radius.Fill( 0 );
+         radius.SetElement( i,
+           static_cast<unsigned long>(
+           this->m_DilationRadiusMultiplier
+           * spacing[ i ] ) );
+
+         structuringElement[ i ].SetRadius( radius );
+         structuringElement[ i ].CreateStructuringElement();
+
+         /** Set the kernel into all dilation filters.
+         * The SetKernel() is implemented using a itkSetMacro, so a
+         * this->Modified() is automatically called, which is important,
+         * since this changes every time Initialize() is called (every resolution).
+         */
+         if ( this->m_UseFixedRigidityImage )
+         {
+           this->m_FixedRigidityImageDilation[ i ]->SetKernel( structuringElement[ i ] );
+         }
+         if ( this->m_UseMovingRigidityImage )
+         {
+           this->m_MovingRigidityImageDilation[ i ]->SetKernel( structuringElement[ i ] );
+         }
+
+         /** Connect the pipelines. */
+         if ( i > 0 )
+         {
+           if ( this->m_UseFixedRigidityImage )
+           {
+             this->m_FixedRigidityImageDilation[ i ]->SetInput(
+               m_FixedRigidityImageDilation[ i - 1 ]->GetOutput() );
+           }
+           if ( this->m_UseMovingRigidityImage )
+           {
+             this->m_MovingRigidityImageDilation[ i ]->SetInput(
+               m_MovingRigidityImageDilation[ i - 1 ]->GetOutput() );
+           }
+         }
+       } // end for loop
+
+       /** Do the dilation for m_FixedRigidityImage. */
+       if ( this->m_UseFixedRigidityImage )
+       {
+         try
+         {
+           this->m_FixedRigidityImageDilation[ FixedImageDimension - 1 ]->Update();
+         }
+         catch( itk::ExceptionObject & excp )
+         {
+           /** Add information to the exception. */
+           excp.SetLocation( "MattesMutualInformationImageToImageMetricWithRigidityPenalty - Initialize()" );
+           std::string err_str = excp.GetDescription();
+           err_str += "\nError while dilating m_FixedRigidityImage.\n";
+           excp.SetDescription( err_str );
+           /** Pass the exception to an higher level. */
+           throw excp;
+         }
+       }
+
+       /** Do the dilation for m_MovingRigidityImage. */
+       if ( this->m_UseMovingRigidityImage )
+       {
+         try
+         {
+           this->m_MovingRigidityImageDilation[ MovingImageDimension - 1 ]->Update();
+         }
+         catch( itk::ExceptionObject & excp )
+         {
+           /** Add information to the exception. */
+           excp.SetLocation( "MattesMutualInformationImageToImageMetricWithRigidityPenalty - Initialize()" );
+           std::string err_str = excp.GetDescription();
+           err_str += "\nError while dilating m_MovingRigidityImage.\n";
+           excp.SetDescription( err_str );
+           /** Pass the exception to an higher level. */
+           throw excp;
+         }
+       }
+
+       /** Put the output of the dilation into some dilated images. */
+       if ( this->m_UseFixedRigidityImage )
+       {
+         this->m_FixedRigidityImageDilated =
+           this->m_FixedRigidityImageDilation[ FixedImageDimension - 1 ]->GetOutput();
+       }
+       if ( this->m_UseMovingRigidityImage )
+       {
+         this->m_MovingRigidityImageDilated =
+           this->m_MovingRigidityImageDilation[ MovingImageDimension - 1 ]->GetOutput();
+       }
+     } // end if rigidity images should be dilated
+     else
+     {
+       /** Copy the pointers of the undilated images to the dilated ones
+       * if no dilation is needed.
+       */
+       if ( this->m_UseFixedRigidityImage )
+       {
+         this->m_FixedRigidityImageDilated = this->m_FixedRigidityImage;
+       }
+       if ( this->m_UseMovingRigidityImage )
+       {
+         this->m_MovingRigidityImageDilated = this->m_MovingRigidityImage;
+       }
+
+     } // end else if
+
+   } // end DilateRigidityImages()
 
 
    /**
@@ -419,38 +434,9 @@ namespace itk
      /** Set the rigidity coefficients image into the rigid regulizer metric. */
 		 this->m_RigidityPenaltyTermMetric->SetRigidityCoefficientImage( this->m_RigidityCoefficientImage );
 
-	 } // end FillRigidityCoefficientImage
+	 } // end FillRigidityCoefficientImage()
 
 
-	/**
-	 * ******************** SetOutputDirectoryName ******************
-	 *
-	 * This is a copy of the itkSetStringMacro, but with the additional
-	 * pass of the OutputDirectoryName to the rigidregulizer metric.
-	 *
-
-	 template < class TFixedImage, class TMovingImage  >
-		 void
-		 MattesMutualInformationImageToImageMetricWithRigidityPenalty<TFixedImage,TMovingImage>
-		 ::SetOutputDirectoryName( const char * _arg )
-	 {
-		 /** Set the pointer in this class. *
-		 if ( _arg && ( _arg == this->m_OutputDirectoryName ) ) { return; }
-		 if ( _arg )
-		 {
-			 this->m_OutputDirectoryName = _arg;
-		 }
-		 else
-		 {
-			 this->m_OutputDirectoryName = "";
-		 }
-		 this->Modified();
-
-		 /** Set the pointer in the RigidRegulizerMetric class. *
-		 this->m_RigidRegulizer->SetOutputDirectoryName( this->m_OutputDirectoryName.c_str() );
-
-	 } // end SetOutputDirectoryName
-*/
 } // end namespace itk
 
 
