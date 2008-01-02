@@ -200,7 +200,8 @@ using namespace itk;
     {
 
       /** Method 3:
-      * Silently try to read the deprecated FinalGridSpacing (in voxels). */		 
+       * Silently try to read the deprecated FinalGridSpacing (in voxels).
+       */
       for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
       {
         this->m_Configuration->ReadParameter(
@@ -209,7 +210,8 @@ using namespace itk;
       }    
 
       /** Method 1:
-      * Read the FinalGridSpacingInVoxels */
+       * Read the FinalGridSpacingInVoxels
+       */
       for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
       {
         this->m_Configuration->ReadParameter(
@@ -227,13 +229,13 @@ using namespace itk;
 
     } // method 1 or 3
 
-    /** Set up a default grid spacing schedule */
+    /** Set up a default grid spacing schedule. */
     this->m_GridScheduleComputer->SetDefaultSchedule(
-      nrOfResolutions, 2.0);
+      nrOfResolutions, 2.0 );
     GridScheduleType gridSchedule;
     this->m_GridScheduleComputer->GetSchedule( gridSchedule );
     
-    /** Get the deprecated UpsampleGridOption */
+    /** Get the deprecated UpsampleGridOption. */
     this->ComputeGridSchedule_Deprecated( gridSchedule );
     
     /** Read what the user has specified. This overrules everything. */
@@ -262,7 +264,7 @@ using namespace itk;
       {
         for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
         {
-          this->m_Configuration->ReadParameter( gridSchedule[res][dim],
+          this->m_Configuration->ReadParameter( gridSchedule[ res ][ dim ],
             "GridSpacingSchedule", entry_nr, true );
           ++entry_nr;
         }
@@ -278,7 +280,7 @@ using namespace itk;
       itkExceptionMacro( << "ERROR: Invalid GridSpacingSchedule!" );
     }
 
-    /** Set the grid schedule and final grid spacing in the schedule computer */
+    /** Set the grid schedule and final grid spacing in the schedule computer. */
     this->m_GridScheduleComputer->SetFinalGridSpacing( 
       finalGridSpacingInPhysicalUnits );
     this->m_GridScheduleComputer->SetSchedule( gridSchedule );
