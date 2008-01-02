@@ -192,8 +192,6 @@ using namespace itk;
     itkSetMacro( CurrentIteration, unsigned int );
     itkGetConstMacro( CurrentIteration, unsigned int );
 
-    
-	
 	protected:
 
 		/** The constructor. */
