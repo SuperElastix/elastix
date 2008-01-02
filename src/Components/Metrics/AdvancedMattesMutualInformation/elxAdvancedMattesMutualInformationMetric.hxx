@@ -20,9 +20,10 @@ using namespace itk;
 		::AdvancedMattesMutualInformationMetric()
 	{
 	  this->m_Param_c = 1.0;
-		this->m_Param_gamma = 0.101;		
-    this->SetUseDerivative(true);
-  } // end constructor
+		this->m_Param_gamma = 0.101;
+    this->SetUseDerivative( true );
+
+  } // end Constructor()
 
 
 	/**
@@ -31,7 +32,7 @@ using namespace itk;
 
 	template <class TElastix>
 		void AdvancedMattesMutualInformationMetric<TElastix>
-		::Initialize(void) throw (ExceptionObject)
+		::Initialize( void ) throw (ExceptionObject)
 	{
 		TimerPointer timer = TimerType::New();
 		timer->StartTimer();
@@ -40,7 +41,7 @@ using namespace itk;
 		elxout << "Initialization of AdvancedMattesMutualInformation metric took: "
 			<< static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
 
-	} // end Initialize
+	} // end Initialize()
 
 	
 	/**
@@ -49,7 +50,7 @@ using namespace itk;
 
 	template <class TElastix>
 		void AdvancedMattesMutualInformationMetric<TElastix>
-		::BeforeEachResolution(void)
+		::BeforeEachResolution( void )
 	{
 		/** Get the current resolution level. */
 		unsigned int level = 
@@ -77,11 +78,11 @@ using namespace itk;
       "CheckNumberOfSamples", this->GetComponentLabel(), level, 0 );
     if ( !checkNumberOfSamples )
     {
-      this->SetRequiredRatioOfValidSamples(0.0);
+      this->SetRequiredRatioOfValidSamples( 0.0 );
     }
     else
     {
-      this->SetRequiredRatioOfValidSamples(0.25);
+      this->SetRequiredRatioOfValidSamples( 0.25 );
     }
 
     /** Set limiters */
@@ -90,7 +91,7 @@ using namespace itk;
     this->SetFixedImageLimiter( FixedLimiterType::New() );
     this->SetMovingImageLimiter( MovingLimiterType::New() );
     
-    /** Get and set the number of histogram bins. */
+    /** Get and set the limit range ratios. */
 		double fixedLimitRangeRatio = 0.01;
     double movingLimitRangeRatio = 0.01;
     this->GetConfiguration()->ReadParameter( fixedLimitRangeRatio,
@@ -100,7 +101,7 @@ using namespace itk;
 		this->SetFixedLimitRangeRatio( fixedLimitRangeRatio );
     this->SetMovingLimitRangeRatio( movingLimitRangeRatio );
 
-    /** Set bspline parzen kernel orders */
+    /** Set B-spline parzen kernel orders */
     unsigned int fixedKernelBSplineOrder = 0;
     unsigned int movingKernelBSplineOrder = 3;
     this->GetConfiguration()->ReadParameter( fixedKernelBSplineOrder,
@@ -137,14 +138,14 @@ using namespace itk;
       usescales |= this->GetConfiguration()->ReadParameter( movingImageDerivativeScales[i],
         "MovingImageDerivativeScales", this->GetComponentLabel(), i, -1, true );
     }
-    if ( usescales == 0 )\
+    if ( usescales == 0 )
     {
       this->SetUseMovingImageDerivativeScales( true );
       this->SetMovingImageDerivativeScales( movingImageDerivativeScales );
       elxout << "Multiplying moving image derivatives by: " << movingImageDerivativeScales << std::endl;
     }
     
-	} // end BeforeEachResolution
+	} // end BeforeEachResolution()
 
   
   /**
@@ -161,7 +162,7 @@ using namespace itk;
       this->SetFiniteDifferencePerturbation( 
         this->Compute_c( this->m_CurrentIteration )  );
     }
-  }  // end AfterEachIteration
+  }  // end AfterEachIteration()
 
   	
 	/**
@@ -177,7 +178,8 @@ using namespace itk;
 	{ 
 		return static_cast<double>(
 			this->m_Param_c / vcl_pow( k + 1, this->m_Param_gamma ) );
-	} // end Compute_c
+
+	} // end Compute_c()
 	
   
 } // end namespace elastix
