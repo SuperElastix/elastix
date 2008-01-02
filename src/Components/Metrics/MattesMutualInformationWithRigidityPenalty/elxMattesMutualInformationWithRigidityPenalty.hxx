@@ -2,6 +2,9 @@
 #define __elxMattesMutualInformationWithRigidityPenalty_HXX__
 
 #include "elxMattesMutualInformationWithRigidityPenalty.h"
+
+#include "itkHardLimiterFunction.h"
+#include "itkExponentialLimiterFunction.h"
 #include "vnl/vnl_math.h"
 #include <string>
 
@@ -21,7 +24,10 @@ using namespace itk;
 		this->m_FixedRigidityImageReader = 0;
 		this->m_MovingRigidityImageReader = 0;
 
-	} // end Constructor
+    this->m_MattesMutualInformationMetric
+      ->SetUseDerivative( true );
+
+	} // end Constructor()
 
 
 	/**
@@ -30,7 +36,7 @@ using namespace itk;
 	
 	template <class TElastix>
 		void MattesMutualInformationWithRigidityPenalty<TElastix>
-		::BeforeRegistration(void)
+		::BeforeRegistration( void )
 	{
 		/** Get and set the useFixedRigidityImage and read the FixedRigidityImage if wanted. */
 		bool useFixedRigidityImage = true;
@@ -157,7 +163,7 @@ using namespace itk;
     xl::xout["iteration"]["8:Metric-OC"] << std::showpoint << std::fixed << std::setprecision( 10 );
     xl::xout["iteration"]["9:Metric-PC"] << std::showpoint << std::fixed << std::setprecision( 10 );
 
-	} // end BeforeRegistration
+	} // end BeforeRegistration()
 
 
 	/**
@@ -166,7 +172,7 @@ using namespace itk;
 
 	template <class TElastix>
 		void MattesMutualInformationWithRigidityPenalty<TElastix>
-		::Initialize(void) throw (ExceptionObject)
+		::Initialize( void ) throw (ExceptionObject)
 	{
 		/** Create and start a timer. */
 		TimerPointer timer = TimerType::New();
@@ -183,7 +189,7 @@ using namespace itk;
 		elxout << "Initialization of MattesMutualInformationWithRigidityPenalty metric took: "
 			<< static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
 
-	} // end Initialize
+	} // end Initialize()
 
 	
 	/**
@@ -198,11 +204,80 @@ using namespace itk;
 		unsigned int level = 
 			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 		
-		/** Get and set the number of histogram bins. */				
+    /**
+     *  Set options for the Mattes mutual information metric.
+     */
+
+    /** Get and set the number of histogram bins. */
 		unsigned int numberOfHistogramBins = 32;
     this->GetConfiguration()->ReadParameter( numberOfHistogramBins,
       "NumberOfHistogramBins", this->GetComponentLabel(), level, 0 );
-		this->m_MattesMutualInformationMetric->SetNumberOfHistogramBins( numberOfHistogramBins );
+		this->m_MattesMutualInformationMetric
+      ->SetNumberOfFixedHistogramBins( numberOfHistogramBins );
+    this->m_MattesMutualInformationMetric
+      ->SetNumberOfMovingHistogramBins( numberOfHistogramBins );
+
+    unsigned int numberOfFixedHistogramBins = numberOfHistogramBins;
+    unsigned int numberOfMovingHistogramBins = numberOfHistogramBins;
+    this->GetConfiguration()->ReadParameter( numberOfFixedHistogramBins,
+      "NumberOfFixedHistogramBins", this->GetComponentLabel(), level, 0 );
+		this->GetConfiguration()->ReadParameter( numberOfMovingHistogramBins,
+      "NumberOfMovingHistogramBins", this->GetComponentLabel(), level, 0 );
+		this->m_MattesMutualInformationMetric
+      ->SetNumberOfFixedHistogramBins( numberOfFixedHistogramBins );
+    this->m_MattesMutualInformationMetric
+      ->SetNumberOfMovingHistogramBins( numberOfMovingHistogramBins );
+
+    /** Get and set whether the metric should check if enough samples map inside the moving image. */
+    bool checkNumberOfSamples = true;
+    this->GetConfiguration()->ReadParameter( checkNumberOfSamples, 
+      "CheckNumberOfSamples", this->GetComponentLabel(), level, 0 );
+    if ( !checkNumberOfSamples )
+    {
+      this->m_MattesMutualInformationMetric
+        ->SetRequiredRatioOfValidSamples( 0.0 );
+    }
+    else
+    {
+      this->m_MattesMutualInformationMetric
+        ->SetRequiredRatioOfValidSamples( 0.25 );
+    }
+		
+    /** Set limiters. */
+    typedef HardLimiterFunction< RealType, FixedImageDimension > FixedLimiterType;
+    typedef ExponentialLimiterFunction< RealType, MovingImageDimension > MovingLimiterType;
+    this->m_MattesMutualInformationMetric
+      ->SetFixedImageLimiter( FixedLimiterType::New() );
+    this->m_MattesMutualInformationMetric
+      ->SetMovingImageLimiter( MovingLimiterType::New() );
+    
+    /** Get and set the limit range ratios. */
+		double fixedLimitRangeRatio = 0.01;
+    double movingLimitRangeRatio = 0.01;
+    this->GetConfiguration()->ReadParameter( fixedLimitRangeRatio,
+      "FixedLimitRangeRatio", this->GetComponentLabel(), level, 0 );
+    this->GetConfiguration()->ReadParameter( movingLimitRangeRatio,
+      "MovingLimitRangeRatio", this->GetComponentLabel(), level, 0 );
+		this->m_MattesMutualInformationMetric
+      ->SetFixedLimitRangeRatio( fixedLimitRangeRatio );
+    this->m_MattesMutualInformationMetric
+      ->SetMovingLimitRangeRatio( movingLimitRangeRatio );
+
+    /** Set B-spline parzen kernel orders. */
+    unsigned int fixedKernelBSplineOrder = 0;
+    unsigned int movingKernelBSplineOrder = 3;
+    this->GetConfiguration()->ReadParameter( fixedKernelBSplineOrder,
+      "FixedKernelBSplineOrder", this->GetComponentLabel(), level, 0 );
+    this->GetConfiguration()->ReadParameter( movingKernelBSplineOrder, 
+      "MovingKernelBSplineOrder", this->GetComponentLabel(), level, 0 );
+		this->m_MattesMutualInformationMetric
+      ->SetFixedKernelBSplineOrder( fixedKernelBSplineOrder );
+    this->m_MattesMutualInformationMetric
+      ->SetMovingKernelBSplineOrder( movingKernelBSplineOrder );
+
+    /**
+     *  Set options for the rigidity penalty term metric.
+     */
 
     /** Get and set the dilateRigidityImages. */
     bool dilateRigidityImages = true;
@@ -276,7 +351,7 @@ using namespace itk;
       "PropernessConditionWeight", this->GetComponentLabel(), level, 0 );
     this->m_RigidityPenaltyTermMetric->SetPropernessConditionWeight( propernessConditionWeight );
 		
-	} // end BeforeEachResolution
+	} // end BeforeEachResolution()
 	
 
 	/**
@@ -298,7 +373,7 @@ using namespace itk;
     xl::xout["iteration"]["9:Metric-PC"] <<
       this->m_RigidityPenaltyTermMetric->GetPropernessConditionValue();
 
-	} // end AfterEachIteration
+	} // end AfterEachIteration()
 
 
 } // end namespace elastix
