@@ -47,10 +47,14 @@ ENDIF(WIN32 OR APPLE)
 #
 
 MACRO(ADD_ELXCOMPONENT name)
-  PROJECT(${name})
-  ADD_LIBRARY(${name} MODULE ${ARGN} ${ELX_GDCMHACK} )
-  TARGET_LINK_LIBRARIES( ${name} ${elxLinkLibs} )
-  INSTALL_TARGETS(/. ${name})
+  MARK_AS_ADVANCED( USE_${name} )
+  OPTION( USE_${name} "Compile this component." ON )
+  IF( USE_${name} )
+    PROJECT(${name})
+    ADD_LIBRARY(${name} MODULE ${ARGN} ${ELX_GDCMHACK} )
+    TARGET_LINK_LIBRARIES( ${name} ${elxLinkLibs} )
+    INSTALL_TARGETS(/. ${name})
+  ENDIF( USE_${name} )
 ENDMACRO(ADD_ELXCOMPONENT)
 
 #---------------------------------------------------------------------
