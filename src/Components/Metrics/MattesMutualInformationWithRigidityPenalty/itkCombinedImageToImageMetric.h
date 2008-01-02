@@ -10,6 +10,7 @@ namespace itk
  * \brief Combines multiple metrics.
  *
  *
+ *
  * \ingroup RegistrationMetrics
  *
  */

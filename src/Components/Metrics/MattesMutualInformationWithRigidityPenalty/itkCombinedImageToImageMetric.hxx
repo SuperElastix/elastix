@@ -34,6 +34,7 @@ namespace itk
 		/** Add debugging information. */
 		os << indent << "NumberOfMetrics: "
 			<< this->m_NumberOfMetrics << std::endl;
+
     os << indent << "Metric pointer, weight, value:" << std::endl;
     for ( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
     {
