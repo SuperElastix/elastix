@@ -23,10 +23,46 @@ using namespace itk;
 	 * The parameters used in this class are:
 	 * \parameter Metric: Select this metric as follows:\n
 	 *		<tt>(Metric "MattesMutualInformationWithRigidityPenalty")</tt>
-	 * \parameter NumberOfHistogramBins: The size of the histogram. Must be given for each 
-	 *		resolution. \n
+   *
+   * \parameter NumberOfHistogramBins: The size of the histogram. Must be given for each 
+	 *		resolution, or for all resolutions at once. \n
 	 *		example: <tt>(NumberOfHistogramBins 32 32 64)</tt> \n
 	 *		The default is 32 for each resolution.
+   * \parameter NumberOfFixedHistogramBins: The size of the histogram in the fixed dimension. Can be given for each 
+	 *		resolution, or for all resolutions at once. If not given, NumberOfHistograms is used.\n
+	 *		example: <tt>(NumberOfFixedHistogramBins 32 32 64)</tt> \n
+	 *		The default is the value of NumberOfHistograms.
+   * \parameter NumberOfMovingHistogramBins: The size of the histogram in the fixed dimension. Can be given for each 
+	 *		resolution, or for all resolutions at once. If not given, NumberOfHistograms is used.\n
+	 *		example: <tt>(NumberOfMovingHistogramBins 32 32 64)</tt> \n
+	 *		The default is the value of NumberOfHistograms.
+   * \parameter FixedKernelBSplineOrder: The bspline order of the Parzen window, used to estimate
+   *    the joint histogram. Can be given for each resolution, or for all resolutions at once. \n
+	 *		example: <tt>(FixedKernelBSplineOrder 0 1 1)</tt> \n
+	 *		The default value is 0.
+   * \parameter MovingKernelBSplineOrder: The bspline order of the Parzen window, used to estimate
+   *    the joint histogram. Can be given for each resolution, or for all resolutions at once. \n
+	 *		example: <tt>(MovingKernelBSplineOrder 3 3 3)</tt> \n
+	 *		The default value is 3.
+   * \parameter FixedLimitRangeRatio: The relative extension of the intensity range of the fixed image.\n
+   *    If your image has grey values from 0 to 1000 and the FixedLimitRangeRatio is 0.001, the
+   *    joint histogram will expect fixed image grey values from -0.001 to 1000.001. This may be 
+   *    usefull if you use high order bspline interpolator for the fixed image.\n
+   *		example: <tt>(FixedLimitRangeRatio 0.001 0.01 0.01)</tt> \n
+	 *		The default value is 0.01. Can be given for each resolution, or for all resolutions at once.
+   * \parameter MovingLimitRangeRatio: The relative extension of the intensity range of the moving image.\n
+   *    If your image has grey values from 0 to 1000 and the MovingLimitRangeRatio is 0.001, the
+   *    joint histogram will expect moving image grey values from -0.001 to 1000.001. This may be 
+   *    usefull if you use high order bspline interpolator for the moving image.\n
+   *		example: <tt>(MovingLimitRangeRatio 0.001 0.01 0.01)</tt> \n
+	 *		The default value is 0.01. Can be given for each resolution, or for all resolutions at once. 
+   * \parameter CheckNumberOfSamples: Whether the metric checks if at least 1/4 of the 
+   *    samples map inside the moving image. Must be given for each resolution or for all
+   *    resolutions at once. \n
+   *    example: <tt>(CheckNumberOfSamples "false" "true" "false")</tt> \n
+   *    The default is true. In general it is wise to set this to true, since it detects
+   *    if the registration is going really bad.
+   *
 	 * \parameter RigidityPenaltyWeight: A parameter to weigh the rigidity penalty
 	 *		term against the mutual information metric. \n
 	 *		example: <tt>(RigidityPenaltyWeight 0.1)</tt> \n
@@ -194,7 +230,7 @@ using namespace itk;
 		 * \li Set the flag to use a moving rigidity image.
 		 * \li Setup the output to the logfile.
 		 */
-		virtual void BeforeRegistration(void);
+		virtual void BeforeRegistration( void );
 
 		/** Execute stuff before each new pyramid resolution:
 		 * \li Set the number of histogram bins.
@@ -205,23 +241,24 @@ using namespace itk;
 		 * \li Set the weight, usage and calculation of the orthonormality condition of this level.
 		 * \li Set the weight, usage and calculation of the properness condition of this level.
 		 */
-		virtual void BeforeEachResolution(void);
+		virtual void BeforeEachResolution( void );
 
 		/** Execute stuff after each iteration:
 		 * \li Show the exact metric value if desired.
 		 * \li Show the metric values of the MI and the rigidity term.
 		 */
-		virtual void AfterEachIteration(void);
+		virtual void AfterEachIteration( void );
 
 		/** Set up a timer to measure the intialisation time and call the Superclass'
 		 * implementation.
 		 */
-		virtual void Initialize(void) throw (ExceptionObject);
+		virtual void Initialize( void ) throw (ExceptionObject);
 
 	protected:
 
 		/** The constructor. */
 		MattesMutualInformationWithRigidityPenalty();
+
 		/** The destructor. */
 		virtual ~MattesMutualInformationWithRigidityPenalty() {}
 		
