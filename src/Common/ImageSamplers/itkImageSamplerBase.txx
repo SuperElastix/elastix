@@ -159,7 +159,7 @@ namespace itk
     ::GenerateInputRequestedRegion( void )
   {
     /** Check if input image was set. */
-    if ( this->GetNumberOfInputs() != 1 )
+    if ( this->GetNumberOfInputs() == 0 )
     {
       itkExceptionMacro( << "ERROR: Input image not set" );
       return;
