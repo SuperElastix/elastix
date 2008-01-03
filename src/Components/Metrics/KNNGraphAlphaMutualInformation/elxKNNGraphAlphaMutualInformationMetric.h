@@ -53,35 +53,13 @@ using namespace itk;
    *    This option is only appropiate for FixedRadius search. \n
    *    <tt>(SquaredSearchRadius 32.0 8.0 8.0)</tt> \n
    *    The default is 0.0 for all resolutions, which means no radius.
-   * \parameter NumberOfFixedFeatureImages: the number of fixed feature images. \n
-   *    <tt>(NumberOfFixedFeatureImages 2)</tt> \n
-   *    The default is 0.
-   * \parameter NumberOfMovingFeatureImages: the number of moving feature images. \n
-   *    <tt>(NumberOfMovingFeatureImages 3)</tt> \n
-   *    The default is 0.
-   * \parameter FixedFeatureImageFileNames: the fixed feature images filenames. \n
-   *    Supply the program with NumberOfFixedFeatureImages filenames. \n
-   *    <tt>(FixedFeatureImageFileNames "feature1.mhd" "feature2.mhd")</tt>
-   * \parameter MovingFeatureImageFileNames: the moving feature images filenames. \n
-   *    Supply the program with NumberOfMovingFeatureImages filenames. \n
-   *    <tt>(MovingFeatureImageFileNames "feature1.mhd" "feature2.mhd" "feature3.mhd")</tt>
-   * \parameter FixedFeatureInterpolatorBSplineOrder: the interpolator of the fixed \n
-   *    feature image is of BSplineInterpolationFunction type. This parameter defines \n
-   *    the spline order. \n
-   *    <tt>(FixedFeatureInterpolatorBSplineOrder 2 1)</tt>
-   *    The default is 1 for all interpolators. If one argument is supplied, then this \n
-   *    spline order is used for all interpolators.
-   * \parameter MovingFeatureInterpolatorBSplineOrder: the interpolator of the moving \n
-   *    feature image is of BSplineInterpolationFunction type. This parameter defines \n
-   *    the spline order. \n
-   *    <tt>(MovingFeatureInterpolatorBSplineOrder 2 1)</tt>
-   *    The default is 1 for all interpolators. If one argument is supplied, then this \n
-   *    spline order is used for all interpolators.
+   * \parameter AvoidDivisionBy: a small number to avoid division by zero in the implentation. \n
+   *    <tt>(AvoidDivisionBy 0.000000001)</tt> \n
+   *    The default is 1e-5.
    *
-   * \todo: read these parameters using the new ReadParameter command
    *
    * \sa KNNGraphAlphaMutualInformationImageToImageMetric
-   * \sa MattesMutualInformationImageToImageMetric2
+   * \sa ParzenWindowMutualInformationImageToImageMetric
 	 * \ingroup Metrics
 	 */
 	
