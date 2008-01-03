@@ -288,57 +288,19 @@ namespace itk
     RealType & movingImageValue,
     MovingImageDerivativeType * gradient ) const
   {
-    /** Convert mappedPoint. */
-    MovingImageContinuousIndexType cindex;
-    this->m_Interpolator->ConvertPointToContinousIndex( mappedPoint, cindex );
-
-    /** Check if the mapped point is inside all moving image buffers. */
+    /** Check if the mapped point is inside the moving image buffers of the feature images. */
     bool sampleOk = true;
-    for ( unsigned int i = 0; i < this->GetNumberOfInterpolators(); ++i )
+    for ( unsigned int i = 1; i < this->GetNumberOfInterpolators(); ++i )
     {
-      sampleOk &= this->GetInterpolator( i )->IsInsideBuffer( cindex );
+      sampleOk &= this->GetInterpolator( i )->IsInsideBuffer( mappedPoint );
+
+      /** If not inside this buffer we can quit. */
+      if ( !sampleOk ) return false;
     }
 
-    /** Compute value and possibly derivative. */
-    if ( sampleOk )
-    {
-      /** Compute value. */
-      movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
-
-      /** Compute derivative, but only if gradient != 0. */
-      if ( gradient )
-      {
-        if ( this->m_InterpolatorIsBSpline && !this->GetComputeGradient() )
-        {
-          /** Computed moving image gradient using derivative BSpline kernel. */
-          (*gradient) = 
-            this->m_BSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
-        }
-        else
-        {
-          /** Get the gradient by NearestNeighboorInterpolation of the gradient image.
-           * It is assumed that the gradient image is computed.
-           */
-          MovingImageIndexType index;
-          for ( unsigned int i = 0; i < MovingImageDimension; i++ )
-          {
-            index[ i ] = static_cast<long>( vnl_math_rnd( cindex[ i ] ) );
-          }
-          (*gradient) = this->m_GradientImage->GetPixel( index );
-        }
-
-        /** Rescale the derivative, if desired. */
-        if ( this->GetUseMovingImageDerivativeScales() )
-        {
-          for ( unsigned int i = 0; i < MovingImageDimension; ++i )
-          {
-            (*gradient)[ i ] *= this->GetMovingImageDerivativeScales()[ i ]; 
-          }
-        }
-      } // end if gradient
-    } // end if sampleOk
-
-    return sampleOk;
+    /** Compute value and possibly derivative of the moving image. */
+    return this->Superclass::EvaluateMovingImageValueAndDerivative(
+      mappedPoint, movingImageValue, gradient );
 
   } // end EvaluateMovingImageValueAndDerivative()
 
