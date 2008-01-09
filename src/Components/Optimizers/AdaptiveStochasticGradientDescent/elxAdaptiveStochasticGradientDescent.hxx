@@ -466,7 +466,7 @@ namespace elastix
     const double noisefactor = sigma1*sigma1 / ( sigma1*sigma1 + sigma3*sigma3 + 1e-14 );
     const double a = a_max * noisefactor;
 
-    const double omega = 0.1 * sigma3 * sigma3 * vcl_sqrt( TrCC );
+    const double omega = vnl_math_max( 1e-14, 0.1 * sigma3 * sigma3 * vcl_sqrt( TrCC ) );
     const double fmax = 1.0;
     const double fmin = -0.99+ 0.98*noisefactor;
 
@@ -629,17 +629,47 @@ namespace elastix
         advmetric->SetImageSampler( randomsampler );
       }
 
-      /** Get approximate derivative and its magnitude */
-      this->GetScaledValueAndDerivative( perturbation, dummyvalue, approxgradient );
+      /** Get approximate derivative
+       * In fact, we don't really need the magnitude of the approximate gradient.  */
+      try
+      {
+        this->GetScaledValueAndDerivative( perturbation, dummyvalue, approxgradient );      
+      }
+      catch( ExceptionObject& err )
+      {
+        this->m_StopCondition = MetricError;
+        this->StopOptimization();
+        throw err;
+      }
+      
+      /* Compute magnitude.
+       * In fact, we don't really need the magnitude of the approximate gradient. 
+       * It was useful for debugging and is used later on now, but that's not really
+       * necessary. */
       approxgg += approxgradient.squared_magnitude();
 
       /** Get exact gradient and its magnitude */
       if ( stochasticgradients )
       {
+        /** Set grid sampler */
         advmetric->SetImageSampler( gridsampler );
-        this->GetScaledValueAndDerivative( perturbation, dummyvalue, exactgradient );
+
+        /** Get derivative */
+        try
+        {
+          this->GetScaledValueAndDerivative( perturbation, dummyvalue, exactgradient );      
+        }
+        catch( ExceptionObject& err )
+        {
+          this->m_StopCondition = MetricError;
+          this->StopOptimization();
+          throw err;
+        }
+
+        /** Compute error vector */
         diffgradient = exactgradient - approxgradient;
 
+        /** Compute gg or g^T C^{-1}g, and ee or e^T C^{-1}e */
         if ( !maxlik )
         {
           exactgg += exactgradient.squared_magnitude();
@@ -666,9 +696,27 @@ namespace elastix
       }
       else
       {
-        exactgg = approxgg;
+        /** exact gradient equals approximate gradient */
         diffgg = 0.0;
-      }
+        if ( !maxlik )
+        {
+          exactgg = approxgg;          
+        }
+        else
+        {
+          /** compute g^T C^{-1} g */
+          if ( useSVD )
+          {            
+            solveroutput = svd->solve( approxgradient );
+            exactgg += dot_product( approxgradient, solveroutput);            
+          }
+          else
+          {
+            cholesky->solve( approxgradient, &solveroutput );
+            exactgg += dot_product( approxgradient, solveroutput);            
+          }
+        } // end else: maxlik
+      } // end else: no stochastic gradients
     } // end for
 
     progressObserver->PrintProgress( 1.0 );    
