@@ -428,7 +428,7 @@ namespace elastix
     this->ComputeJacobianTerms(TrC, TrCC, maxJJ, maxJCJ);
 
     /** Measure square magnitude of exact gradient and approximation error */
-    const double sigma4factor = 5.0; 
+    const double sigma4factor = 1.0; 
     const double sigma4 = sigma4factor * delta / vcl_sqrt( maxJJ );
     double gg = 0.0;
     double ee = 0.0;
@@ -744,6 +744,8 @@ namespace elastix
     }
     if (svd)
     {
+      gg *= Pd / svd->rank();
+      ee *= Pd / svd->rank();
       delete svd;
       svd = 0;
     }
