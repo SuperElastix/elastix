@@ -428,7 +428,8 @@ namespace elastix
     this->ComputeJacobianTerms(TrC, TrCC, maxJJ, maxJCJ);
 
     /** Measure square magnitude of exact gradient and approximation error */
-    const double sigma4 = delta / vcl_sqrt( maxJJ );
+    const double sigma4factor = 5.0; 
+    const double sigma4 = sigma4factor * delta / vcl_sqrt( maxJJ );
     double gg = 0.0;
     double ee = 0.0;
     bool maxlik = 
@@ -516,7 +517,7 @@ namespace elastix
     {
       maxlik = true;
       cholesky = new vnl_cholesky(cov, vnl_cholesky::estimate_condition);
-      if ( cholesky->rcond() < 1e-10 // sqrt(machineprecision)
+      if ( cholesky->rcond() < 1e-8 // sqrt(machineprecision)
         || cholesky->rcond() > 1.1  // happens when some eigenvalues are 0 or -0
         || cholesky->rank_deficiency() ) // if !=0 something is wrong
       {
@@ -524,7 +525,7 @@ namespace elastix
         delete cholesky;
         cholesky = 0;   
         useSVD = true;
-        svd = new SVDType( cov, -1e-10 );
+        svd = new SVDType( cov, -1e-8 );
       }      
     }
 
