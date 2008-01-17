@@ -10,6 +10,7 @@
 #include "vnl/vnl_math.h"
 #include "vnl/algo/vnl_cholesky.h"
 #include "vnl/algo/vnl_svd.h"
+#include "vnl/algo/vnl_symmetric_eigensystem.h"
 #include "vnl/vnl_matlab_filewrite.h"
 #include "itkImageRandomConstIteratorWithIndex.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
@@ -501,6 +502,7 @@ namespace elastix
     typedef itk::Statistics::MersenneTwisterRandomVariateGenerator 
       RandomGeneratorType;
     typedef vnl_svd<double>                             SVDType;
+    typedef vnl_symmetric_eigensystem<double>           eigType;
 
     /** Some shortcuts */
     const unsigned int P = static_cast<unsigned int>( mu0.GetSize() );
@@ -511,23 +513,49 @@ namespace elastix
     * need a cholesky matrix decomposition */
     vnl_cholesky * cholesky = 0;
     SVDType * svd = 0;
+    eigType * eig = 0;
     bool maxlik = false;
     bool useSVD = false;
+    bool useeig = true;
+    unsigned int rank = P;
     if ( (cov.size() != 0) && this->m_UseMaximumLikelihoodMethod )
     {
       maxlik = true;
-      cholesky = new vnl_cholesky(cov, vnl_cholesky::estimate_condition);
-      if ( cholesky->rcond() < 1e-8 // sqrt(machineprecision)
-        || cholesky->rcond() > 1.1  // happens when some eigenvalues are 0 or -0
-        || cholesky->rank_deficiency() ) // if !=0 something is wrong
+      if (useeig)
       {
-        xl::xout["warning"] << "WARNING: Covariance matrix is (nearly) singular! Using SVD instead of Cholesky." << std::endl;
-        delete cholesky;
-        cholesky = 0;   
-        useSVD = true;
-        svd = new SVDType( cov, -1e-8 );
-      }      
+        eig = new eigType( cov );
+        for ( unsigned int i = 0; i < P; ++i )
+        {
+          const double tmp = eig->D(i);
+          if ( tmp > 1e-16)
+          {
+            eig->D(i) = 1.0 / vcl_sqrt(tmp);
+          }
+          else
+          {
+            eig->D(i) = 0.0;
+            --rank;
+          }
+        }
+      }
+      else
+      {
+        cholesky = new vnl_cholesky(cov, vnl_cholesky::estimate_condition);
+        if ( cholesky->rcond() < 1e-8 // sqrt(machineprecision)
+          || cholesky->rcond() > 1.1  // happens when some eigenvalues are 0 or -0
+          || cholesky->rank_deficiency() ) // if !=0 something is wrong
+        {
+          xl::xout["warning"] << "WARNING: Covariance matrix is (nearly) singular! Using SVD instead of Cholesky." << std::endl;
+          delete cholesky;
+          cholesky = 0;   
+          useSVD = true;
+          svd = new SVDType( cov, -1e-8 );
+          rank = svd->rank();          
+        }      
+      }
+      elxout << "Rank of covariance matrix is: " << rank << std::endl;
     }
+    
 
     /** Number of gradients N to estimate the average square magnitude.
     * Use the user entered value or a default if the user specified 0.
@@ -686,6 +714,13 @@ namespace elastix
             solveroutput = svd->solve( diffgradient );
             diffgg += dot_product( diffgradient, solveroutput);
           }
+          else if (useeig)
+          {
+            solveroutput = eig->D * ( exactgradient * eig->V );
+            exactgg += solveroutput.squared_magnitude();
+            solveroutput = eig->D * ( diffgradient * eig->V );
+            diffgg += solveroutput.squared_magnitude();
+          }
           else
           {
             cholesky->solve( exactgradient, &solveroutput );
@@ -710,6 +745,11 @@ namespace elastix
           {            
             solveroutput = svd->solve( approxgradient );
             exactgg += dot_product( approxgradient, solveroutput);            
+          }
+          else if (useeig)
+          {
+            solveroutput = eig->D * ( approxgradient * eig->V );
+            exactgg += solveroutput.squared_magnitude();
           }
           else
           {
@@ -743,12 +783,18 @@ namespace elastix
       cholesky = 0;
     }
     if (svd)
-    {
-      gg *= Pd / svd->rank();
-      ee *= Pd / svd->rank();
+    {      
       delete svd;
       svd = 0;
     }
+    if (eig)
+    {
+      delete eig;
+      eig = 0;
+    }
+
+    gg *= Pd / static_cast<double>(rank);
+    ee *= Pd / static_cast<double>(rank);
 
     return maxlik;
 
