@@ -15,7 +15,7 @@ namespace elastix
   /**
   * \class AdaptiveStochasticGradientDescent
   * \brief A gradient descent optimizer with an adaptive gain.
-  * 
+  *
   * This class is a wrap around the AdaptiveStochasticGradientDescentOptimizer class.
   * It takes care of setting parameters and printing progress information.
   * For more information about the optimisation method, please read the documentation
