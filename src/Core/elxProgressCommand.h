@@ -63,7 +63,7 @@ namespace elastix
    *   // example assumes reader, caster and writer have been configured before
    *   
    *
-	 * //\ingroup Resamplers
+	 * //\ingroup ?
 	 */
 
 class ProgressCommand : public Command
