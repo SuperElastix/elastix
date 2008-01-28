@@ -44,9 +44,8 @@ namespace elastix
 
   template <class TElastix>
     void AffineTransformElastix<TElastix>::
-    ReadFromFile(void)
+    ReadFromFile( void )
   {
-
     InputPointType centerOfRotationPoint;
     centerOfRotationPoint.Fill(0.0);
     bool pointRead = false;
@@ -62,12 +61,12 @@ namespace elastix
     * is trying to be read that was generated using an older elastix
     * version. Try to read it as an index, and convert to point.
     */
-    if (!pointRead)
+    if ( !pointRead )
     {
-      indexRead = ReadCenterOfRotationIndex(centerOfRotationPoint);
+      indexRead = ReadCenterOfRotationIndex( centerOfRotationPoint );
     }
 
-    if (!pointRead && !indexRead)
+    if ( !pointRead && !indexRead )
     {
       xl::xout["error"] << "ERROR: No center of rotation is specified in the transform parameter file" << std::endl;
       itkExceptionMacro(<< "Transform parameter file is corrupt.")
@@ -82,7 +81,7 @@ namespace elastix
     */
     this->Superclass2::ReadFromFile();
 
-  } // end ReadFromFile
+  } // end ReadFromFile()
 
 
   /**
