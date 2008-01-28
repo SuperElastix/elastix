@@ -6,6 +6,7 @@
 #include "itkDefaultStaticMeshTraits.h"
 #include "itkTransformixInputPointFileReader.h"
 #include "vnl/vnl_math.h"
+#include <itksys/SystemTools.hxx>
 
 #include "itkImageRegionIteratorWithIndex.h"
 #include "itkImageFileWriter.h"
@@ -53,7 +54,7 @@ namespace elastix
 	
 	template <class TElastix>
 		int TransformBase<TElastix>
-		::BeforeAllBase(void)
+		::BeforeAllBase( void )
 	{
 		/** Check Command line options and print them to the logfile. */
 		elxout << "Command line options from TransformBase:" << std::endl;
@@ -70,6 +71,7 @@ namespace elastix
 			elxout << "-t0       " << check << std::endl;
 		}
 
+    /** Return a value. */
 		return 0;
 
 	} // end BeforeAllBase()
@@ -112,7 +114,7 @@ namespace elastix
 
 	template <class TElastix>
 		void TransformBase<TElastix>
-		::BeforeRegistrationBase(void)
+		::BeforeRegistrationBase( void )
 	{	
 		/** Read from the configuration file how to combine the initial
 		 * transform with the current transform.
@@ -135,14 +137,15 @@ namespace elastix
 			}
 		}
 
-		/** Set the initial transform. Elastix returns an itkOject, so 
-		 * try to cast it. */
+		/** Set the initial transform. Elastix returns an itkObject, so 
+		 * try to cast it.
+     */
 		if ( this->m_Elastix->GetInitialTransform() )
 		{
 			InitialTransformType * testPointer =
 				dynamic_cast<InitialTransformType* >(
 				this->m_Elastix->GetInitialTransform()  );
-			if (testPointer)
+			if ( testPointer )
 			{
 				this->SetInitialTransform( testPointer );
 			}
@@ -152,7 +155,14 @@ namespace elastix
 			std::string fileName =  this->m_Configuration->GetCommandLineArgument( "-t0" );
 			if ( !fileName.empty() )
 			{
-				this->ReadInitialTransformFromFile(	fileName.c_str() );
+        if ( itksys::SystemTools::FileExists( fileName.c_str() ) )
+        {
+          this->ReadInitialTransformFromFile(	fileName.c_str() );
+        }
+        else
+        {
+          itkExceptionMacro( << "ERROR: the file " << fileName << " does not exist!" );
+        }
 			}
 		}
 		
@@ -165,7 +175,7 @@ namespace elastix
 
 	template <class TElastix>
 		const typename TransformBase<TElastix>::InitialTransformType * 
-		TransformBase<TElastix>::GetInitialTransform(void) const
+		TransformBase<TElastix>::GetInitialTransform( void ) const
 	{
 		/** Cast to transform grouper. */
 		const CombinationTransformType * thisAsGrouper = 
@@ -194,7 +204,7 @@ namespace elastix
 	{
 		/** Cast to transfrom grouper. */
 		CombinationTransformType * thisAsGrouper = 
-			dynamic_cast< CombinationTransformType * >(this);
+			dynamic_cast< CombinationTransformType * >( this );
 
 		/** Set initial transform. */
 		if ( thisAsGrouper )
@@ -211,7 +221,7 @@ namespace elastix
 
 	template <class TElastix>
 		void TransformBase<TElastix>
-		::SetFinalParameters(void)
+		::SetFinalParameters( void )
 	{
     /** Make a local copy, since some transforms do not do this,
 		 * like the BSpline-transform.
@@ -233,7 +243,7 @@ namespace elastix
 
 	template <class TElastix>
 		void TransformBase<TElastix>
-		::AfterRegistrationBase(void)
+		::AfterRegistrationBase( void )
 	{
 		/** Set the final Parameters. */
 		this->SetFinalParameters();
@@ -247,16 +257,16 @@ namespace elastix
 
 	template <class TElastix>
 		void TransformBase<TElastix>
-		::ReadFromFile(void)
+		::ReadFromFile( void )
 	{
-		/** 
+		/**
 		 * This method assumes this->m_Configuration is initialised with a
 		 * transformparameterfile, so not an elastix parameter file!!
 		 */
-						
-		/** Task 1 - Read the parameters from file.*/
+					
+		/** Task 1 - Read the parameters from file. */
 
-		/** Get the number of TransformParameters.*/
+		/** Get the number of TransformParameters. */
 		unsigned int NumberOfParameters = 0;
 		this->m_Configuration->ReadParameter( NumberOfParameters, "NumberOfParameters", 0 );
 
@@ -266,7 +276,7 @@ namespace elastix
 			if ( this->m_TransformParametersPointer ) delete this->m_TransformParametersPointer;
 			this->m_TransformParametersPointer = new ParametersType( NumberOfParameters );
 
-			/** If NumberOfParameters < 20, we read in the normal way.*/
+			/** If NumberOfParameters < 20, we read in the normal way. */
 			if ( NumberOfParameters < 20 )
 			{			
 				for ( unsigned int i = 0; i < NumberOfParameters; i++ )
@@ -276,9 +286,9 @@ namespace elastix
 				}
 			}
 			/** Else, do the reading more 'manually'.
-			* This is neccesary, because the ReadParameter can not handle
-			* many parameters.
-			*/
+       * This is neccesary, because the ReadParameter can not handle
+       * many parameters.
+       */
 			else
 			{
 				std::ifstream input( this->GetConfiguration()->GetCommandLineArgument( "-tp" ) );
@@ -317,9 +327,10 @@ namespace elastix
           }
           else
           {
-            xl::xout["error"] << 
-              "Invalid transform parameter file! The parameters could not be found." << std::endl;
-            itkGenericExceptionMacro(<< "Error during reading the transform parameter file!"); 
+            xl::xout["error"]
+              << "Invalid transform parameter file! The parameters could not be found."
+              << std::endl;
+            itkGenericExceptionMacro( << "Error during reading the transform parameter file!" );
           }
           input.close();
     		} // end if input-file is open
@@ -327,24 +338,37 @@ namespace elastix
         {
           xl::xout["error"] <<
             "The transform parameter file could not opened!" << std::endl;
-          itkGenericExceptionMacro( << "Error during reading the transform parameter file!");
+          itkGenericExceptionMacro( << "Error during reading the transform parameter file!" );
         }
 	    } // end else
 
-			/** Set the parameters into this transform.*/
+			/** Set the parameters into this transform. */
 			this->GetAsITKBaseType()->SetParameters( *(this->m_TransformParametersPointer) );
 		} // end if this->m_ReadWriteTransformParameters
 
-		/** Task 2 - Get the InitialTransform.*/
+		/** Task 2 - Get the InitialTransform. */
 
 		/** Get the InitialTransformName. */
 		std::string fileName = "NoInitialTransform";
 		this->m_Configuration->ReadParameter( fileName,
 			"InitialTransformParametersFileName", 0 );
 		
-		/** Call the function ReadInitialTransformFromFile.*/
+		/** Call the function ReadInitialTransformFromFile. */
 		if ( fileName != "NoInitialTransform" )
-		{			
+		{
+      /** Check if the initial transform of this transform parameter file
+       * is not the same as this transform parameter file. Otherwise,
+       * we will have an infinite loop.
+       */
+      std::string fullFileName1 = itksys::SystemTools::CollapseFullPath( fileName.c_str() );
+      std::string fullFileName2 = itksys::SystemTools::CollapseFullPath( 
+        this->GetConfiguration()->GetCommandLineArgument( "-tp" ) );
+      if ( fullFileName1 == fullFileName2 )
+      {
+        itkExceptionMacro( << "ERROR: The InitialTransformParametersFileName is identical to the current TransformParameters filename! An infinite loop is not allowed." );
+      }
+
+      /** We can safely read the initial transform. */
 			this->ReadInitialTransformFromFile( fileName.c_str() );
 		} 
 
@@ -425,10 +449,10 @@ namespace elastix
 			elx_initialTransform->SetConfiguration( this->m_ConfigurationInitialTransform );			
 			elx_initialTransform->ReadFromFile();
 		
-			/** Set initial transform.*/
+			/** Set initial transform. */
 			InitialTransformType * testPointer =
 				dynamic_cast<InitialTransformType* >(	initialTransform.GetPointer() );
-			if (testPointer)
+			if ( testPointer )
 			{
 				this->SetInitialTransform( testPointer );
 			}
@@ -514,7 +538,7 @@ namespace elastix
 				<< std::endl;
 		}
 
-		/** Write the way Transforms are combined.*/
+		/** Write the way Transforms are combined. */
 		std::string combinationMethod("Add");
 		if ( ( dynamic_cast< CombinationTransformType * >(this) )->GetUseComposition() )
 		{
@@ -523,10 +547,10 @@ namespace elastix
 		xout["transpar"] << "(HowToCombineTransforms \""
 			<< combinationMethod << "\")" << std::endl;
 
-		/** Write image specific things.*/
+		/** Write image specific things. */
 		xout["transpar"] << std::endl << "// Image specific" << std::endl;
 
-		/** Write image dimensions.*/
+		/** Write image dimensions. */
 		unsigned int FixDim = FixedImageDimension;
 		unsigned int MovDim = MovingImageDimension;
 		xout["transpar"] << "(FixedImageDimension "
@@ -534,7 +558,7 @@ namespace elastix
 		xout["transpar"] << "(MovingImageDimension "
 			<< MovDim << ")" << std::endl;
 
-		/** Write image pixel types.*/
+		/** Write image pixel types. */
 		std::string fixpix = "float";
     std::string movpix = "float";
 		this->m_Configuration->ReadParameter( fixpix, "FixedInternalImagePixelType", 0 );
@@ -542,7 +566,7 @@ namespace elastix
 		xout["transpar"] << "(FixedInternalImagePixelType \""	<< fixpix << "\")" << std::endl;
 		xout["transpar"] << "(MovingInternalImagePixelType \""	<< movpix << "\")" << std::endl;
 
-		/** Get the Size, Spacing and Origin of the fixed image.*/
+		/** Get the Size, Spacing and Origin of the fixed image. */
 		typedef typename FixedImageType::SizeType									FixedImageSizeType;
 		typedef typename FixedImageType::IndexType								FixedImageIndexType;
 		typedef typename FixedImageType::SpacingType							FixedImageSpacingType;
@@ -556,7 +580,7 @@ namespace elastix
 		FixedImageOriginType origin = dynamic_cast<FixedImageType *>(
 			this->m_Elastix->GetFixedImage() )->GetOrigin();
 
-		/** Write image Size.*/
+		/** Write image Size. */
 		xout["transpar"] << "(Size ";
 		for ( unsigned int i = 0; i < FixedImageDimension - 1; i++ )
 		{
@@ -564,7 +588,7 @@ namespace elastix
 		}
 		xout["transpar"] << size[ FixedImageDimension - 1 ] << ")" << std::endl;
 
-		/** Write image Index.*/
+		/** Write image Index. */
 		xout["transpar"] << "(Index ";
 		for ( unsigned int i = 0; i < FixedImageDimension - 1; i++ )
 		{
@@ -577,7 +601,7 @@ namespace elastix
 		 */
 		xout["transpar"] << std::setprecision(10);
 
-		/** Write image Spacing.*/
+		/** Write image Spacing. */
 		xout["transpar"] << "(Spacing ";
 		for ( unsigned int i = 0; i < FixedImageDimension - 1; i++ )
 		{
@@ -585,7 +609,7 @@ namespace elastix
 		}
 		xout["transpar"] << spacing[ FixedImageDimension - 1 ] << ")" << std::endl;
 
-		/** Write image Origin.*/
+		/** Write image Origin. */
 		xout["transpar"] << "(Origin ";
 		for ( unsigned int i = 0; i < FixedImageDimension - 1; i++ )
 		{
@@ -593,7 +617,7 @@ namespace elastix
 		}
 		xout["transpar"] << origin[ FixedImageDimension - 1 ] << ")" << std::endl;
 
-		/** Set the precision back to default value.*/
+		/** Set the precision back to default value. */
 		xout["transpar"] << std::setprecision( this->m_Elastix->GetDefaultOutputPrecision() );
 
 	} // end WriteToFile()
