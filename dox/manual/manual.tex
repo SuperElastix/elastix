@@ -95,7 +95,7 @@ of which a general registration method consists. After that, in
 Sections~\ref{sec:comp:metric}-\ref{sec:comp:multiresolution},
 each component is discussed in more detail.
 
-\section{Registration framework}]\label{sec:framework}
+\section{Registration framework}\label{sec:framework}
 
 \begin{figure}
 \centering
@@ -168,10 +168,10 @@ Figure~\ref{fig:registrationcomponents} shows the general
 components of a parametric registration algorithm in a block
 scheme. The scheme is a slightly extended version of the scheme
 introduced in \cite{ITKSoftwareGuideSecondEdition}. Several
-components can be recognised from
-Equations~(\ref{eq:registration1})-(\ref{eq:parametric}); some
-will be introduced later. First of all, we have the images. The
-concept of an image needs to be defined. This is done in
+components can be recognised from Equations
+(\ref{eq:registration1})-(\ref{eq:parametric}); some will be
+introduced later. First of all, we have the images. The concept of
+an image needs to be defined. This is done in
 Section~\ref{sec:comp:image}. Then we have the cost function
 $\CC$, or ``metric'', which defines the quality of alignment. As
 mentioned earlier, the cost function consists of a similarity
@@ -189,7 +189,7 @@ The optimisation procedure to actually solve the problem
 $I_M(\vT_{\vmu}(\vx))$ is evaluated at non-voxel positions, for
 which intensity interpolation is needed. Choices for the
 interpolator are described in Section \ref{sec:comp:interpolator}.
-Another thing, not immediately clear from Equation
+Another thing, not immediately clear from Equations
 (\ref{eq:registration1})-(\ref{eq:parametric}), is the use of
 multi-resolution strategies to speed-up registration, and to make
 it more robust, see Section \ref{sec:comp:multiresolution}.
@@ -238,7 +238,9 @@ Adopted from \citet{ITKSoftwareGuideSecondEdition}.}
 \end{figure}
 
 Therefore, you should take care that you use an image format that
-is able to store the relevant information (e.g. mhd, DICOM).
+is able to store the relevant information (e.g. \texttt{mhd},
+DICOM). Some image formats, like \texttt{vpx}, do no store the
+origin and spacing. This may cause serious problems!
 
 \section{Metrics}\label{sec:comp:metric}
 
@@ -273,11 +275,11 @@ of $I_F(\vx)$ and $I_M(\vT_{\vmu}(\vx))$, respectively.
 \item[Mutual Information (MI):] For MI \citep{MaesEA97,ViolaEA97,MattesEA03} we
 use a definition given by \citet{ThevenazEA00a}:
 \begin{align}
-  MI(\vmu; I_F, I_M) &=
-   \sum\limits_{m\in L_M} \sum\limits_{f\in L_F}
-  p(f,m;\vmu) \log_2
-  \left( \frac{ p(f,m;\vmu) }{ p_F(f) p_M(m;\vmu)  }
-  \right),
+ MI(\vmu; I_F, I_M) &=
+ \sum\limits_{m\in L_M} \sum\limits_{f\in L_F}
+ p(f,m;\vmu) \log_2
+ \left( \frac{ p(f,m;\vmu) }{ p_F(f) p_M(m;\vmu)  }
+ \right),\label{eq:MI}
 \end{align}
 where $L_F$ and $L_M$ are sets of regularly spaced intensity bin
 centres, $p$ is the discrete joint probability, and $p_F$ and
@@ -287,11 +289,10 @@ respectively. The joint probabilities are estimated using B-spline
 Parzen windows:
 \begin{align}
 \begin{split}
-  p(f,m;\vmu)
-  &=  \frac{1}{|I_F|} \sum\limits_{\vx_i \in I_F}
-    w_F( f/\sigma_F - I_F(\vx_i)/\sigma_F ) \\
-     &\relphantom{=}\times w_M( m/\sigma_M - I_M(\vT_{\vmu}(\vx_i))/\sigma_M ),
-\end{split}
+ p(f,m;\vmu) &=  \frac{1}{|I_F|} \sum\limits_{\vx_i \in I_F}
+ w_F( f/\sigma_F - I_F(\vx_i)/\sigma_F ) \\
+ &\relphantom{=}\times w_M( m/\sigma_M - I_M(\vT_{\vmu}(\vx_i))/\sigma_M ),
+\end{split} \label{eq:histogram}
 \end{align}
 where $w_F$ and $w_M$ represent the fixed and moving B-spline
 Parzen windows. The scaling constants $\sigma_F$ and $\sigma_M$
@@ -315,13 +316,56 @@ general: only a relation between the probability distributions of
 the intensities of the fixed and moving image is assumed. For MI
 it is well-known that it is suited not only for mono-modal, but
 also for multi-modal image pairs. This measure is often a good
-choice for image registration. The NMI measure is just like MI
+choice for image registration. The NMI measure is, just like MI,
 suitable for mono- and multi-modality registration. In our
-experience it gives results very similar to MI. The KS measure is
-specifically meant to register binary images (segmentations). It
-measures the ``overlap'' between the segmentations.
+experience it gives results very similar to MI, but literature
+\cite{//} seems to indicate better performance than MI in some
+cases. The KS measure is specifically meant to register binary
+images (segmentations). It measures the ``overlap'' between the
+segmentations.
 
 \section{Sampler}\label{sec:comp:sampler}
+
+In Equations (\ref{eq:ssd})-(\ref{eq:histogram}) we observe a loop
+over the fixed image: $\sum_{\vx_i \in I_F}$. Until now, we
+assumed that the loop goes over \emph{all} voxels of the fixed
+image. In general, this is not necessary. A subset may suffice
+\cite{ThevenazEA00a,KleinEA07}. The subset may be selected in
+different ways: random, on a grid, etc. The sampler component
+represents this process.
+
+The following samplers are often used:
+\begin{description}
+\item[Full:] A full sampler simply selects all voxel coordinates $\vx_i$ of the
+fixed image.
+
+\item[Grid:] The grid sampler defines a regular grid on the fixed
+image and selects the coordinates $\vx_i$ on the grid.
+Effectively, the grid sampler thus downsamples the fixed image
+(not preceded by smoothing, as one would usual do). The dimension
+of the grid (or equivalently, the downsampling factor) is a user
+input.
+
+\item[Random:] A random sampler randomly selects a user-specified number of
+voxels from the fixed image, whose coordinates form $\vx_i$. Every
+voxel has equal chance to be selected.
+
+\item[Random Coordinate:] A random coordinate sampler is similar
+to a random sampler. It also randomly selects a user-specified
+number of coordinates $\vx_i$. However, the random coordinate
+sampler is not limited to voxel positions. Also coordinates
+inbetween voxels are selected. The grey value $I_F(\vx_i)$ at
+those locations must of course be obtained by some interpolation
+method.
+
+\end{description}
+
+While at first sight the full sampler seems the most obvious
+choice, in practice it is not always used, because of its
+computational costs in large images. The random samplers are
+especially useful in combination with a stochastic optimisation
+method \cite{KleinEA07}. See also
+Section~\ref{sec:comp:optimiser}.
 
 
 
