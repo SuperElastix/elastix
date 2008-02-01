@@ -554,10 +554,20 @@ common one, and we have used it all our papers.
 
 \begin{figure}
 \centering
-\subfigure[]{\includegraphics[width=5cm]{images/moving_pd.eps}}\label{sfig:mres:1}
-\subfigure[]{\includegraphics[width=2.5cm]{images/res2_2.eps}}\label{sfig:mres:2}
-\subfigure[]{\includegraphics[width=1.25cm]{images/res1_4.eps}}\label{sfig:mres:bs3}
-\caption{Multi-resolution with a Gaussian pyramid.} \label{fig:multiresolution}
+\subfigure[resolution 0]{\includegraphics[width=3cm]{images/moving_pd.R0d.eps}}
+\subfigure[resolution 1]{\includegraphics[width=3cm]{images/moving_pd.R1d.eps}}
+\subfigure[resolution 2]{\includegraphics[width=3cm]{images/moving_pd.R2d.eps}}
+\subfigure[original]{\includegraphics[width=3cm]{images/moving_pd.128.eps}} \\
+\subfigure[resolution 0]{\includegraphics[width=3cm]{images/moving_pd.R0.eps}}
+\subfigure[resolution 1]{\includegraphics[width=3cm]{images/moving_pd.R1.eps}}
+\subfigure[resolution 2]{\includegraphics[width=3cm]{images/moving_pd.R2.eps}}
+\subfigure[original]{\includegraphics[width=3cm]{images/moving_pd.128.eps}}
+\caption{Two multi-resolution strategies using a Gaussian pyramid ($\sigma = 8.0, 4.0, 2.0$
+voxels). The first row shows multi-resolution with down-sampling, the
+second row without. Note that for the first row the image size is
+halved every resolution, but that the voxel size increases with a
+factor 2, so physically the images are of the same size every
+resolution.} \label{fig:multiresolution}
 \end{figure}
 
 \subsection{Transformation complexity}
