@@ -526,26 +526,51 @@ continued development brings us today (December 2007) to version 3.8.
 \begin{tabular}{l|l}
 what & where \\
 \hline
-website        & \texttt{http://www.isi.uu.nl/Elastix} \\
-CVS repository & \texttt{/shared/CVS/elastix/} (hosted at the ISI) \\
-WIKI           & \texttt{https://wiki.isi.uu.nl/bin/view/CADweb/ElastiX} \\
-FAQ            & \texttt{https://wiki.isi.uu.nl/bin/view/CADweb/ElastixFAQ}
+website        & \url{www.isi.uu.nl/Elastix} \\
+CVS repository & \url{/shared/CVS/elastix/} (hosted at the ISI) \\
+WIKI           & \url{https://wiki.isi.uu.nl/bin/view/CADweb/ElastiX} \\
+FAQ            &
+\url{https://wiki.isi.uu.nl/bin/view/CADweb/ElastixFAQ}
 \end{tabular}
 
-The website also contains a
-doxygen\footnote{\texttt{www.doxygen.org}} generated part that
-provides documentation of the source code. An overview of all
-available classes can be found at
+The website also contains a doxygen\footnote{\url{www.doxygen.org}}
+generated part that provides documentation of the source code. An
+overview of all available classes can be found at
 \begin{quote}
-\texttt{www.isi.uu.nl/Elastix/doxygen/classes.html}.
+\url{www.isi.uu.nl/Elastix/doxygen/classes.html}.
 \end{quote}
 For each class a description of this class is given, together with
 information on how to use it in \elastix. See
 \begin{quote}
-\texttt{www.isi.uu.nl/Elastix/doxygen/modules.html}
+\url{www.isi.uu.nl/Elastix/doxygen/modules.html}
 \end{quote}
 for an overview of all available components.
 
+\subsection{Key features}
+
+\elastix\ is
+\begin{itemize}
+\item open source, freely available from \url{www.isi.uu.nl/Elastix};
+
+\item based on the ITK, so the code base is thoroughly tested, nightly.
+But with some improvements.
+
+\item multi-platform (at least Windows, Linux, Mac OS ??), multi-compiler
+(at least Visual C++ 2003, gcc 3.2, gcc 4.02), and supports 32 and 64
+bit systems. So, it is highly portable to the platform of the users
+choice;
+
+\item highly configurable, which is easy thanks to human
+readable/edible parameter file;
+
+\item easy to use for large amounts of data, since \elastix can be
+called easily in a script;
+
+\item fast, thanks to subsampling, if desired;
+
+\item relatively easy to extend, i.e. to add new components, so it is
+very suited for research also.
+\end{itemize}
 
 \section{How to call \elastix}
 
@@ -682,9 +707,9 @@ that \transformix\ will use.
 
 \section{Details}
 
-The run-time of \transformix is built up of the following parts:
+The run-time of \transformix\ is built up of the following parts:
 
-1. computing the b-spline decomposition 2. computing the deformation
+1. computing the B-spline decomposition 2. computing the deformation
 for each voxel 3. interpolating the input image for each voxel.
 
 I'm not sure, but I guess step 2 is the most time-consuming task, in
@@ -727,10 +752,10 @@ iteratively supplying another transform parameter file with the
 \section{General advice}
 
 When performing registration one carefully has to choose the several
-components, as specified in Chapter \ref{chp:components}. In Table
-\ref{table:recom:components} some recommendations are given.
+components, as specified in Chapter \ref{chp:Registration}. In Table
+\ref{table:tutorial:components} some recommendations are given.
 
-\begin{table}
+\begin{table}[htb]
 \centering
 \begin{tabular*}{15cm}{@{\extracolsep{\fill}} p{3.5cm} | p{11cm} }
 \textbf{Component} & \textbf{Recommendation} \\
@@ -774,8 +799,20 @@ interpolator that is used for generating the resulting deformed
 moving image. We recommend a third order B-spline for this:
 \texttt{(FinalBSplineInterpolationOrder 3)}.
 \end{tabular*}
-\caption{Some recommendations for the several components.}\label{table:recom:components}
+\caption{Some recommendations for the several components.}\label{table:tutorial:components}
 \end{table}
+
+\section{Overview of all parameters}
+
+A list of all parameters that can be specified for each registration
+component can be found at the \elastix\ website:
+\begin{quote}
+\url{www.isi.uu.nl/Elastix/doxygen/parameter.html}
+\end{quote}
+At that site you can find how to specify a parameter and what the
+default value is. We have tried to come up with sensible defaults,
+although the defaults will not work in all cases.
+
 
 \section{Important parameters}\label{sec:Tutorial:importantparam}
 
@@ -890,22 +927,23 @@ computation time per iteration.
 \item[On the optimiser:] The \texttt{StandardGradientDescent} method
 (\ref{eq:RM}) needs a choice for the step size $a_k$, which is in
 \elastix\ defined as in Equation (\ref{eq:gain}). For the parameter
-$\alpha$ we recommend the value 0.602. For $A$ use something in the
+$\alpha$ we recommend the value 0.602. For $A$, use something in the
 order of 50. This leaves the parameter $a$ as the most important
-parameter to tune. If $a$ is set too high, the iterative solving
-algorithm (\ref{eq:RM}) becomes unstable, and you may deform your
-image beyond recognition. If $a$ is set too low, you will never make
-it to the optimum, or may get stuck in a very small nearby local
-optimum. Too complicate things further, a good choice for $a$ is
-dependent on the cost function that is used for registration: the $a$
-that will give you a good result for SSD is not the same as the one
-that gives a good result for MI. Finally, $a$ also depends on the
-amount of deformation that you expect between the fixed and the
-moving image. So again, recommendations are hard to give. In general
-we advise you to think in orders of magnitude, if $a = 10$ is too
-small, try $a = 100$ and not $a = 11$. For mutual information you
-could start around $a = 1000.0$. For the mean squared difference
-metric you could try something smaller than 1 ???
+parameter to tune. And it is an important parameter, it can mean
+success for a good choice and failure if not! If $a$ is set too high,
+the iterative solving algorithm (\ref{eq:RM}) becomes unstable, and
+you may deform your image beyond recognition. If $a$ is set too low,
+you will never make it to the optimum, or may get stuck in a very
+small nearby local optimum. Too complicate things further, a good
+choice for $a$ is dependent on the cost function that is used for
+registration: the $a$ that will give you a good result for SSD is not
+the same as the one that gives a good result for MI. Finally, $a$
+also depends on the amount of deformation that you expect between the
+fixed and the moving image. So again, recommendations are hard to
+give. In general we advise you to think in orders of magnitude, if $a
+= 10$ is too small, try $a = 100$ and not $a = 11$. For mutual
+information you could start around $a = 1000.0$. For the mean squared
+difference metric you could try something smaller than 1 ???
 \begin{quote}
 \texttt{(SP\_a 1000.0 500.0 500.0)} \\
 \texttt{(SP\_alpha 0.602)} \\
@@ -924,36 +962,85 @@ no other appropriate stopping condition for this optimiser.
 \end{description}
 
 
-\section{Overview of all parameters}
-
-A list of all parameters that can be specified for each registration
-component can be found at the \elastix\ website:
-\begin{quote}
-\url{www.isi.uu.nl/Elastix/doxygen/parameter.html}
-\end{quote}
-At that site you can find how to specify a parameter and what the
-default value is. We have tried to come up with sensible defaults,
-although the defaults will not work in all cases.
-
 \section{Masks}
+
+when to use masks
+
+when not to use masks
+
+when to use erosion during multi-resolution and when not
+
+Common errors when drawing samples from the fixed image with small
+mask.
 
 
 \section{Trouble shooting}
 
-initial alignment not good, rotation parameter scales, large steps,
-multi-resolution
+\subsection{Bad initial alignment}
 
-\subsection{Memory}
+\begin{figure}
+\centering \psfrag{k}[tc][tc]{$k$} \psfrag{ak}[tc][tc]{$a_k$}
+\includegraphics[width=8cm]{images/ak.eps}
+\caption{Sequence 1: $a = 1000$, $A = 50$, $\alpha = 0.602$.
+Sequence 2: $a = 400$, $A = 10$, $\alpha = 0.602$. Both sequences
+start with the same step size, but sequence 2 decays much
+faster.}\label{fig:ak}
+\end{figure}
+
+
+When the initial alignment between two images is very off, you cannot
+start a nonrigid registration. And sometimes it can be a hassle to
+get it right. What factors can help to get it right?
+
+\begin{itemize}
+\item So you choose a transformation with a low degree of freedom,
+i.e. the translation, rigid, similarity or affine transform.
+
+\item You need a good multi-resolution strategy, i.e.
+quite a bit of resolution levels. This way a lot of smoothing is
+going on, blurring away all the details and thereby focussing the
+registration on the major structures.
+
+\item You can afford to take large steps now, so do it. Set the
+parameter $a$ so high that the translation component of the
+transformation takes a step of several voxels in each iteration, up
+to 10. Maybe it will work, and in that case you will get alignment
+pretty quick, but the step size $a$ is still large, so you
+immediately jump away from alignment again. If that happens, you
+should let the sequence $a_k = a / (A+k)^{\alpha}$ decay relatively
+fast. This can be achieved by setting both $a$ and $A$ a bit lower,
+see Figure \ref{fig:ak}.
+
+\item In case you need to find a large rotation, you might want to
+take larger steps for the rotation, but not for the translation. This
+can be achieved by modifying the scales parameter, see Section ???:
+\begin{quote}
+\texttt{(Scales 10000.0)}
+\end{quote}
+You can set it lower to take larger rotation steps. If it is set to
+1.0 you take as large steps for the rotation as for the translation
+(but the rotation is defined in radials). If you set it really high
+($> 10^6$) you won't rotate at all. You probably don't need to go
+lower than 1000.0.
+
+\end{itemize}
+
+\subsection{Memory consumption}
 
 The typical size of clinical images increases as a function of time.
-Therefore, memory efficiency will become more of an issue. What to do
-with large images?
+Therefore, memory efficiency will become more of an issue. \elastix\
+consumes $\approx$ 100 MB of memory for small images, for larger
+image pairs ($256^3$) and some common components, consumption can be
+about 1 - 1.5 GB. With very large images ($400^3$ and above) memory
+consumption can rise above the 2 GB limit of most Windows systems.
+What to do with large images?
 \begin{itemize}
 \item Buy yourself a brand new computer with a lot of memory. Make
 sure that this computer is 64 bit, otherwise you cannot address this
-much memory. Also make sure that you operating system support 64 bit.
+much memory. Also make sure that your operating system supports 64
+bit.
 
-\item Images in \elastix\ are internally by default represented by as a bunch of
+\item Images in \elastix\ are internally by default represented as a bunch of
 voxels of floating type. You can modify this to short images:
 \begin{quote}
 \texttt{(FixedInternalImagePixelType "short")} \\
@@ -962,14 +1049,40 @@ voxels of floating type. You can modify this to short images:
 This way you save half the amount of memory that is used to store the
 fixed and moving images, and their multi-resolution pyramids. This
 will come at the cost of a loss of precision, but may not be that
-harmful.
+harmful. This option is useful both for \elastix\ and \transformix.
 
-\item
+\item Change the interpolator that is used during registration. By default a B-spline
+interpolator is used, which stores a coefficient image internally in
+double type. You can also specify a float version:
+\begin{quote}
+\texttt{(Interpolator "BSplineInterpolatorFloat")}
+\end{quote}
+which saves you another bit of memory the size of a short image. This
+option is useful for \elastix\ only.
+
+\item Change the interpolator that is used when resampling an image:
+\begin{quote}
+\texttt{(ResampleInterpolator "FinalBSplineInterpolatorFloat")}
+\end{quote}
+This option is useful both for \elastix\ and \transformix. However,
+for \elastix\ it will only save you some memory at the very end of
+the registration.
+
 \end{itemize}
+
+\subsection{Common errors}
+
+Some common sources of confusion and questions have been gathered in
+a FAQ, which can be found at
+\begin{quote}
+\url{www.isi.uu.nl/Elastix/FAQ.php}
+\end{quote}
 
 
 \section{Example}
 
+Step-by-step example where we give a look into our head, what magical
+thoughts we think when tuning the registration.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
