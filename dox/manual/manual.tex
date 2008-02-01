@@ -6,7 +6,7 @@
 
 % For math
 \usepackage{amsmath,amsthm,amssymb}
-\usepackage{bm}
+\usepackage{bm,url}
 
 % For figures
 \usepackage{graphicx,subfigure,psfrag}
@@ -397,7 +397,7 @@ specific.
 the derivative of the cost function $\bm{g}(\vmu_k)$ by an
 approximation $\widetilde{\bm{g}}_k$.
 \begin{align}
-\vmu_{k+1} &= \vmu_k - a_k \widetilde{\bm{g}}_k,
+\vmu_{k+1} &= \vmu_k - a_k \widetilde{\bm{g}}_k,\label{eq:RM}
 \end{align}
 The approximation is potentially faster to compute, but might
 deteriorate convergence properties of the GD scheme.
@@ -756,6 +756,9 @@ Optimizer & \texttt{StandardGradientDescent}: see Equations
 fast registration, see \cite{KleinEA07}. The problem is to tune the
 parameters of the gain factor $a_k$, see Section
 \ref{sec:Tutorial:importantparam}. \\
+Sampler & \texttt{RandomCoordinate}: works well in conjunction with
+the \texttt{StandardGradientDescent} optimiser. Set the
+\texttt{NumberOfSpatialSamples} to 3000. \\
 Transform & Depends on the application. For rigid choose
 \texttt{EulerTransform}, for affine \texttt{AffineTransform}, for
 nonrigid registration problems \elastix\ has the
@@ -808,41 +811,166 @@ for a 3D image with 3 resolution levels, where less smoothing is
 performed in the $z$-direction.
 
 \item[On multi-grid:] The B-spline nonrigid transformation is defined
-by a uniform grid of control points. This grid is overlaid on the
-fixed image and defined by the spacing between the grid nodes. [show
-figure with a grid] The spacing defines how dense the grid is, or
-what the locality is of the transformation you can model. For each
-resolution level you can define a different grid spacing. This is
-what we call multi-grid. In general, we recommend to start with a
-coarse B-spline grid, i.e. a more global transformation. This way
-first the larger structures are matched, for the same reason as why
-you should start with a rigid or affine transformation. In later
-resolutions you can stepwise refine the transformation; the idea is
-that you then match smaller structures, up to the final
+by a uniform grid of control points. This grid is defined by the
+spacing between the grid nodes. The spacing defines how dense the
+grid is, or what the locality is of the transformation you can model.
+For each resolution level you can define a different grid spacing.
+This is what we call multi-grid. In general, we recommend to start
+with a coarse B-spline grid, i.e. a more global transformation. This
+way first the larger structures are matched, for the same reason as
+why you should start with a rigid or affine transformation. In later
+resolutions you can refine the transformation in a stepwise fashion;
+the idea is that you subsequently match smaller structures, up to the
+final precision. The final grid spacing is specified with:
+\begin{quote}
+\texttt{(FinalGridSpacingInPhysicalUnits 10.0 10.0 10.0)}
+\end{quote}
+with as much numbers as there are dimensions in your image. The
+spacing is in most medical images specified in millimetres. It is
+also possible to specify the grid in voxel units:
+\begin{quote}
+\texttt{(FinalGridSpacingInVoxels 16.0 16.0 16.0)}
+\end{quote}
+If the final B-spline grid spacing is chosen high, then you cannot
+match small structures. On the other hand, if the grid spacing is
+chosen very low, then small structures can be matched, but you
+possibly allow the transformation too have too much freedom. This can
+result in irregular transformations, especially on homogenous parts
+of your image, since there are no edges (or other information) at
+such areas that can guide the registration. A penalty or
+regularisation term, see Equation (\ref{eq:registration2}), can help
+to avoid these problems. It is hard to recommend a value for the
+final grid spacing, since it depends on the desired accuracy. But we
+can try: if you are interested in somewhat larger structures, you
+could set it too 32 voxels, for matching smaller structures you could
+go down to 16 or 8 voxels, or even up to 4. The last choice will
+maybe require some regularisation term, unless maybe if you have
+carefully and gradually refined the grid spacing.
 
-\item[On the step-size:]
-An important parameter to tune is, as said before, the gain factor.
-,combo with number of iterations
+To specify a multi-grid schedule use the \texttt{GridSpacingSchedule}
+command:
+\begin{quote}
+\texttt{(NumberOfResolutions 4)} \\
+\texttt{(FinalGridSpacingInVoxels 8.0 8.0)} \\
+\texttt{(GridSpacingSchedule 6.0 6.0 4.0 4.0 2.5 2.5 1.0 1.0)}
+\end{quote}
+In case of 2D images, this schedule specifies a grid spacing of $6
+\times 8 = 48$ voxels in resolution level 0, via 32 and 20 voxels, to
+8 voxels in the final resolution level.
+
+As a side-note: the number of parameters that are minimised in
+(\ref{eq:registration1}) is determined by the size of $\vmu$, i.e. in
+case of the B-spline deformable transform by the control point grid
+spacing. If you double the spacing, the number of parameters are
+increased by a factor 8 for a 3D image. For a $256^3$ image and a
+grid spacing of 16 voxels this will result in approximately
+$(256/16)^3 \times 3 \approx 12.000$ parameters; for a grid spacing
+of 8 voxels this is almost 100.000 parameters. The amount of
+parameters is directly related to memory consumption and registration
+time.
+
+\item[On the sampler:] The recommended optimisation routine is the
+\texttt{StandardGradientDescent} method. This method can be used with
+a small amount of samples, randomly selected in every iteration, see
+Section ???, which significantly decreases registration time. We
+recommend:
+\begin{quote}
+\texttt{(ImageSampler "RandomCoordinate")} \\
+\texttt{(NumberOfSpatialSamples 3000)}
+\end{quote}
+The first line selects a sampler that draws samples from the fixed
+image. These samples are not necessarily on voxel locations (on the
+voxel grid), but are mostly from points between voxels, so
+interpolation is needed. This specific sampler avoids what is known
+as the grid-effect [citations]. The second line specifies that 3000
+samples are drawn, which is enough to get a convergence as fast as
+using all samples, but of course with a significantly reduced
+computation time per iteration.
+
+\item[On the optimiser:] The \texttt{StandardGradientDescent} method
+(\ref{eq:RM}) needs a choice for the step size $a_k$, which is in
+\elastix\ defined as in Equation (\ref{eq:gain}). For the parameter
+$\alpha$ we recommend the value 0.602. For $A$ use something in the
+order of 50. This leaves the parameter $a$ as the most important
+parameter to tune. If $a$ is set too high, the iterative solving
+algorithm (\ref{eq:RM}) becomes unstable, and you may deform your
+image beyond recognition. If $a$ is set too low, you will never make
+it to the optimum, or may get stuck in a very small nearby local
+optimum. Too complicate things further, a good choice for $a$ is
+dependent on the cost function that is used for registration: the $a$
+that will give you a good result for SSD is not the same as the one
+that gives a good result for MI. Finally, $a$ also depends on the
+amount of deformation that you expect between the fixed and the
+moving image. So again, recommendations are hard to give. In general
+we advise you to think in orders of magnitude, if $a = 10$ is too
+small, try $a = 100$ and not $a = 11$. For mutual information you
+could start around $a = 1000.0$. For the mean squared difference
+metric you could try something smaller than 1 ???
+\begin{quote}
+\texttt{(SP\_a 1000.0 500.0 500.0)} \\
+\texttt{(SP\_alpha 0.602)} \\
+\texttt{(SP\_A 50.0)}
+\end{quote}
+$a$ equally large for every resolution level? or start with large
+steps end with small steps?
+
+number of iterations
+\begin{quote}
+\texttt{(MaximumNumberOfIterations 500)}
+\end{quote}
+which is not only the maximum, but also the minimum, since there is
+no other appropriate stopping condition for this optimiser.
+
 \end{description}
 
 
 \section{Overview of all parameters}
 
-see the elastix website:
-http://www.isi.uu.nl/Elastix/doxygen/parameter.html
+A list of all parameters that can be specified for each registration
+component can be found at the \elastix\ website:
+\begin{quote}
+\url{www.isi.uu.nl/Elastix/doxygen/parameter.html}
+\end{quote}
+At that site you can find how to specify a parameter and what the
+default value is. We have tried to come up with sensible defaults,
+although the defaults will not work in all cases.
+
+\section{Masks}
 
 
 \section{Trouble shooting}
 
-initial alignment not good, rotation parameter, large steps
+initial alignment not good, rotation parameter scales, large steps,
+multi-resolution
 
-\section{Masks}
+\subsection{Memory}
+
+The typical size of clinical images increases as a function of time.
+Therefore, memory efficiency will become more of an issue. What to do
+with large images?
+\begin{itemize}
+\item Buy yourself a brand new computer with a lot of memory. Make
+sure that this computer is 64 bit, otherwise you cannot address this
+much memory. Also make sure that you operating system support 64 bit.
+
+\item Images in \elastix\ are internally by default represented by as a bunch of
+voxels of floating type. You can modify this to short images:
+\begin{quote}
+\texttt{(FixedInternalImagePixelType "short")} \\
+\texttt{(MovingInternalImagePixelType "short")}
+\end{quote}
+This way you save half the amount of memory that is used to store the
+fixed and moving images, and their multi-resolution pyramids. This
+will come at the cost of a loss of precision, but may not be that
+harmful.
+
+\item
+\end{itemize}
+
 
 \section{Example}
 
-\section{Memory}
 
-what todo with large images.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
