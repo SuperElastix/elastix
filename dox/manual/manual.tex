@@ -43,9 +43,30 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % main text
 
-\chapter{Image Registration}\label{chp:Registration}
+\chapter{Introduction}\label{chp:Introduction}
 
-\section{Introduction}
+This manual describes a software package for image registration:
+\elastix. The software consists of a collection of algorithms that
+are commonly used to solve medical image registration problems.
+The modular design of \elastix\ allows the user to quickly test
+and compare different registration methods for his/her specific
+application. The command-line interface simplifies the processing
+of large amounts of data sets, using scripting.
+
+Chapter~\ref{chp:Registration} discusses some general theory of
+image registration. Also, the different components of which a
+registration method consists are treated. In
+Chapter~\ref{chp:elastix}, \elastix\ is described and its usage is
+explained. Chapter~\ref{chp:transformix} is dedicated to
+\transformix, a program accompanying \elastix\. A tutorial is
+given in Chapter~\ref{chp:Tutorial}, including many
+recommendations based on the authors' own experiences.
+Chapter~\ref{chp:develop} provides more details about the source
+code and explains how to create extensions of \elastix.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Image registration}\label{chp:Registration}
 
 Image registration is an important tool in the field of medical
 imaging. In many clinical situations several images of a patient are
@@ -90,55 +111,36 @@ $\vT$:
 \mathcal{C}(\vT; I_F,I_M) &= -\mathcal{S}(\vT; I_F,I_M) + \gamma
 \mathcal{P}(\vT),\label{eq:registration2}
 \end{align}
-where $\gamma$ weighs similarity against regularity.
-
-\section{Images}
-
-Since image registration is all about images, we have to be careful
-with what is meant by an image. We adopt the notion of an image from
-the Insight Toolkit \citep[p. 40]{ITKSoftwareGuideSecondEdition}:
-
-\begin{quote}
-Additional information about the images is considered mandatory. In
-particular the information associated with the physical spacing
-between pixels and the position of the image in space with respect to
-some world coordinate system are extremely important. Image origin
-and spacing are fundamental to many applications. Registration, for
-example, is performed in physical coordinates. Improperly defined
-spacing and origins will result in inconsistent results in such
-processes. Medical images with no spatial information should not be
-used for medical diagnosis, image analysis, feature extraction,
-assisted radiation therapy or image guided surgery. In other words,
-medical images lacking spatial information are not only useless but
-also hazardous.
-
-Figure \ref{fig:image} illustrates the main geometrical concepts
-associated with the itk::Image. In this figure, circles are used to
-represent the centre of pixels. The value of the pixel is assumed to
-exist as a Dirac Delta Function located at the pixel centre. Pixel
-spacing is measured between the pixel centres and can be different
-along each dimension. The image origin is associated with the
-coordinates of the first pixel in the image. A pixel is considered to
-be the rectangular region surrounding the pixel centre holding the
-data value. This can be viewed as the Voronoi region of the image
-grid, as illustrated in the right side of the figure. Linear
-interpolation of image values is performed inside the Delaunay region
-whose corners are pixel centres.
-\end{quote}
-
-\begin{figure}
-\centering
-\includegraphics[width=12cm]{images/ImageOriginAndSpacing.eps}
-\caption{Geometrical concepts associated with the ITK image. Adopted from
-\citet{ITKSoftwareGuideSecondEdition}.} \label{fig:image}
-\end{figure}
-
-Therefore, you should take care that you use an image format that is
-able to store the relevant information (e.g. mhd, DICOM).
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\chapter{Basic registration components}\label{chp:components}
+where $\gamma$ weighs similarity against regularity. To solve the
+above minimisation problem, there are basically two approaches:
+parametric and nonparametric. The reader is referred to
+\cite{Fis04:Unified} for an overview on nonparametric methods.
+Nonparametric methods are further not discussed in this manual.
+The \elastix\ software is based on the parametric approach. In
+parametric methods, the number of possible transformations is
+limited by introducing a parameterisation (model) of the
+transformation. The original optimisation problem becomes thus:
+\begin{align}
+\hat \vT_{\vmu} &= \arg \min_{\vT_{\vmu}}
+ \mathcal{C}(\vT_{\vmu} ; I_F,I_M), \label{eq:towardsparametric}
+\end{align}
+where the subscript $\vmu$ indicates that the transform has been
+parameterised. The vector $\vmu$ contains the values of the
+``transformation parameters''. For example, when the
+transformation is modelled as a 2D rigid transformation, the
+parameter vector $\vmu$ contains one rotation angle and the
+translations in $x$ and $y$ direction. We may write Equation
+(\ref{eq:towardsparametric}) also as:
+\begin{align}
+\hat\vmu &= \arg \min_{\vmu} \mathcal{C}(\vmu; I_F,I_M).
+\label{eq:parametric}
+\end{align}
+From this equation it becomes clear that the original problem
+(\ref{eq:registration1}) has been simplified. Instead of
+optimising over a ``space of functions $\vT$'', we now optimise
+over the three elements of $\vmu$. Examples of other
+transformation models are given in
+Section~\ref{sec:comp:transform}.
 
 From the basic registration problem formulated as in Equation
 (\ref{eq:registration1}) and (\ref{eq:registration2}), several
@@ -156,6 +158,52 @@ is the use of multi-resolution strategies to speed-up registration,
 and to make it more robust, see Section
 \ref{sec:comp:multiresolution}. The regularisation term $\mathcal{P}$
 is not discussed in this manual.
+
+\section{Images}
+
+Since image registration is all about images, we have to be
+careful with what is meant by an image. We adopt the notion of an
+image from the Insight Toolkit \citep[p.
+40]{ITKSoftwareGuideSecondEdition}:
+
+\begin{quote}
+Additional information about the images is considered mandatory.
+In particular the information associated with the physical spacing
+between pixels and the position of the image in space with respect
+to some world coordinate system are extremely important. Image
+origin and spacing are fundamental to many applications.
+Registration, for example, is performed in physical coordinates.
+Improperly defined spacing and origins will result in inconsistent
+results in such processes. Medical images with no spatial
+information should not be used for medical diagnosis, image
+analysis, feature extraction, assisted radiation therapy or image
+guided surgery. In other words, medical images lacking spatial
+information are not only useless but also hazardous.
+
+Figure \ref{fig:image} illustrates the main geometrical concepts
+associated with the itk::Image. In this figure, circles are used
+to represent the centre of pixels. The value of the pixel is
+assumed to exist as a Dirac Delta Function located at the pixel
+centre. Pixel spacing is measured between the pixel centres and
+can be different along each dimension. The image origin is
+associated with the coordinates of the first pixel in the image. A
+pixel is considered to be the rectangular region surrounding the
+pixel centre holding the data value. This can be viewed as the
+Voronoi region of the image grid, as illustrated in the right side
+of the figure. Linear interpolation of image values is performed
+inside the Delaunay region whose corners are pixel centres.
+\end{quote}
+
+\begin{figure}
+\centering
+\includegraphics[width=12cm]{images/ImageOriginAndSpacing.eps}
+\caption{Geometrical concepts associated with the ITK image.
+Adopted from \citet{ITKSoftwareGuideSecondEdition}.}
+\label{fig:image}
+\end{figure}
+
+Therefore, you should take care that you use an image format that
+is able to store the relevant information (e.g. mhd, DICOM).
 
 \section{Metrics}\label{sec:comp:metric}
 
@@ -798,7 +846,7 @@ what todo with large images.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Developers guide}
+\chapter{Developers guide}\label{chp:develop}
 
 \section{Setup of the code}
 
