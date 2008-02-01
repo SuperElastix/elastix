@@ -492,7 +492,12 @@ available classes can be found at
 \texttt{www.isi.uu.nl/Elastix/doxygen/classes.html}.
 \end{quote}
 For each class a description of this class is given, together with
-information on how to use it in \elastix.
+information on how to use it in \elastix. See
+\begin{quote}
+\texttt{www.isi.uu.nl/Elastix/doxygen/modules.html}
+\end{quote}
+for an overview of all available components.
+
 
 \section{How to call \elastix}
 
@@ -673,14 +678,9 @@ iteratively supplying another transform parameter file with the
 
 \section{General advice}
 
-Generally speaking, you first want to perform a rigid transformation,
-before doing a nonrigid one. When doing a registration one carefully
-has to choose the several components, as specified in Chapter
-\ref{chp:components}. In Table \ref{table:recom:components} some
-recommendations are given.
-
-See http://www.isi.uu.nl/Elastix/doxygen/modules.html for an overview
-of all available components.
+When performing registration one carefully has to choose the several
+components, as specified in Chapter \ref{chp:components}. In Table
+\ref{table:recom:components} some recommendations are given.
 
 \begin{table}
 \centering
@@ -691,14 +691,18 @@ Registration & \texttt{MultiResolutionRegistration}: Multiple image
 resolutions is what you need, 3 or more is a good starting point. And
 if you think you don't need all this multi-resolution, you can always
 set the \texttt{NumberOfResolutions} to 1. \\
-FixedImagePyramid & \texttt{FixedRecursiveImagePyramid}: this pyramid
-will smooth and down-sample the fixed image for you, according to the
-\texttt{FixedImageSchedule} you provide. If you only set the
+FixedImagePyramid & \texttt{FixedSmoothingImagePyramid}: this pyramid
+will smooth, but not down-sample the fixed image for you, according
+to the \texttt{FixedImageSchedule} you provide. If you only set the
 \texttt{NumberOfResolutions}, a default schedule will be used that
-down-samples the fixed image by 2. \\
+down-samples the fixed image by 2. That schedule is usually fine. In
+case you have highly anisotropic data, you might want to blur less in
+the direction of the largest spacing. \\
 MovingImagePyramid & See the FixedImagePyramid. \\
 Metric    & \texttt{AdvancedMattesMutualInformation}: usually works
-well, both for mono- and multi-modal images. \\
+well, both for mono- and multi-modal images. It supports fast
+computation of the metric value and derivative in case the transform
+is a B-spline. \\
 Optimizer & \texttt{StandardGradientDescent}: see Equations
 (\ref{eq:gd}) and (\ref{eq:gain}). Offers the possibility to perform
 fast registration, see \cite{KleinEA07}. The problem is to tune the
@@ -708,7 +712,9 @@ Transform & Depends on the application. For rigid choose
 \texttt{EulerTransform}, for affine \texttt{AffineTransform}, for
 nonrigid registration problems \elastix\ has the
 \texttt{BSplineTransform}. The latter requires setting the
-\texttt{FinalGridSpacing}. \\
+\texttt{FinalGridSpacing}. Always start with a rigid or affine
+transformation before doing a nonrigid one, to get a good initial
+alignment. \\
 Interpolator & \texttt{BSplineInterpolator}: first order is usually
 enough during the registration: \texttt{(BSplineInterpolationOrder
 1)}. \\
@@ -722,15 +728,54 @@ moving image. We recommend a third order B-spline for this:
 
 \section{Important parameters}\label{sec:Tutorial:importantparam}
 
-choose transformation
+\begin{description}
+\item[On multi-resolution:] Two parameters have to be set to define
+the multi-resolution strategy: the number of resolutions and the
+specific down-sampling schedule that is used in each resolution.
 
-number of resolutions
+In general 3 resolutions is a good starting point. If the fixed and
+moving image are initially far away, you can increase the number of
+resolution levels to, say, 5 or 6. This way the images are more
+blurred and more attention is paid to register large, dominant
+structures.
 
-B-spline grid spacing
+The pyramid schedule defines the amount of blurring, and
+down-sampling in case of a FixedRecursiveImagePyramid is used, in
+each direction $x,y,z$ and for each resolution level. It can be
+specified as follows:
+\begin{quote}
+\texttt{(FixedImagePyramidSchedule 8 8 4 4 2 2 1 1)}
+\end{quote}
+In this example 4 resolutions for a 2D image are used. At resolution
+level 0 the image is, possibly, downsampled by a factor 8 and blurred
+with $\sigma = 8/2$ voxels in each direction. At level 1 a factor 4
+is used, and finally at the last level, level 4, the original images
+are used for registration. Specifying the fixed and moving image
+pyramids with an identical schedule can be done with one command,
+e.g.:
+\begin{quote}
+\texttt{(ImagePyramidSchedule 4 4 2 2 2 1 1 1 1)}
+\end{quote}
+for a 3D image with 3 resolution levels, where less smoothing is
+performed in the $z$-direction.
 
+\item[On multi-grid:] The B-spline nonrigid transformation is defined
+by a uniform grid of control points. This grid is overlaid on the
+fixed image and defined by the spacing between the grid nodes. [show
+figure with a grid] The spacing defines how dense the grid is, or
+what the locality is of the transformation you can model. For each
+resolution level you can define a different grid spacing. This is
+what we call multi-grid. In general, we recommend to start with a
+coarse B-spline grid, i.e. a more global transformation. This way
+first the larger structures are matched, for the same reason as why
+you should start with a rigid or affine transformation. In later
+resolutions you can stepwise refine the transformation; the idea is
+that you then match smaller structures, up to the final
+
+\item[On the step-size:]
 An important parameter to tune is, as said before, the gain factor.
 ,combo with number of iterations
-
+\end{description}
 
 
 \section{Overview of all parameters}
@@ -741,7 +786,15 @@ http://www.isi.uu.nl/Elastix/doxygen/parameter.html
 
 \section{Trouble shooting}
 
+initial alignment not good, rotation parameter, large steps
+
 \section{Masks}
+
+\section{Example}
+
+\section{Memory}
+
+what todo with large images.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
