@@ -22,6 +22,12 @@
 \newcommand{\vmu}{\bm{\mu}}
 \newcommand{\vT}{\bm{T}}
 \newcommand{\vTx}{\bm{T}(\bm{x})}
+\newcommand{\CC}{\mathcal{C}}
+\newcommand{\Sim}{\mathcal{S}}
+\newcommand{\Pen}{\mathcal{P}}
+
+% see page474 latex manual:
+\newcommand\relphantom[1]{\mathrel{\phantom{#1}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -58,29 +64,38 @@ image registration. Also, the different components of which a
 registration method consists are treated. In
 Chapter~\ref{chp:elastix}, \elastix\ is described and its usage is
 explained. Chapter~\ref{chp:transformix} is dedicated to
-\transformix, a program accompanying \elastix\. A tutorial is
-given in Chapter~\ref{chp:Tutorial}, including many
-recommendations based on the authors' own experiences.
-Chapter~\ref{chp:develop} provides more details about the source
-code and explains how to create extensions of \elastix.
+\transformix, a program accompanying \elastix. A tutorial is given
+in Chapter~\ref{chp:Tutorial}, including many recommendations
+based on the authors' own experiences. Chapter~\ref{chp:develop}
+provides more details about the source code and explains how to
+create extensions of \elastix.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Image registration}\label{chp:Registration}
 
 Image registration is an important tool in the field of medical
-imaging. In many clinical situations several images of a patient are
-made in order to analyse the patient’s situation. These images are
-acquired with, for example, X-ray scanners, Magnetic Resonance
+imaging. In many clinical situations several images of a patient
+are made in order to analyse the patient’s situation. These images
+are acquired with, for example, X-ray scanners, Magnetic Resonance
 Imaging (MRI) scanners, Computed Tomography (CT) scanners, and
-Ultrasound scanners, which provide knowledge about the anatomy of the
-subject. Combination of patient data, mono- or multi-modal, often
-yields additional clinical information not apparent in the separate
-images. For this purpose, the spatial relation between the images has
-to be found. Image registration is the task of finding a spatial
-one-to-one mapping from voxels in one image to voxels in the other
-image, see Figure \ref{fig:concept}. Good reviews on the subject are
-given in \citet{HillEA01,LesterEA99,MaintzEA98}.
+Ultrasound scanners, which provide knowledge about the anatomy of
+the subject. Combination of patient data, mono- or multi-modal,
+often yields additional clinical information not apparent in the
+separate images. For this purpose, the spatial relation between
+the images has to be found. Image registration is the task of
+finding a spatial one-to-one mapping from voxels in one image to
+voxels in the other image, see Figure \ref{fig:concept}. Good
+reviews on the subject are given in
+\citet{HillEA01,LesterEA99,MaintzEA98}.
+
+The following section introduces the mathematical formulation of
+the registration process and gives an overview of the components
+of which a general registration method consists. After that, in
+Sections~\ref{sec:comp:metric}-\ref{sec:comp:multiresolution},
+each component is discussed in more detail.
+
+\section{Registration framework}]\label{sec:framework}
 
 \begin{figure}
 \centering
@@ -90,26 +105,27 @@ transformation mapping one image to another. Adopted from
 \citet{ITKSoftwareGuideSecondEdition}.} \label{fig:concept}
 \end{figure}
 
-In registration one image, what we call the \emph{moving image}
-$I_M(\vx)$, is deformed to fit the other image, the \emph{fixed
-image} $I_F(\vx)$. Registration is the problem of finding a
-\emph{displacement} $\vux$ that makes $I_M(\vx + \vux)$ spatially
-aligned to $I_F(\vx)$. An equivalent formulation is to say that
-registration is the problem of finding a \emph{transformation}
-$\vT(\vx) = \vx + \vux $ that makes $I_M(\vT(\vx))$ spatially aligned
-to $I_F(\vx)$. The quality of alignment is defined by a distance or
-similarity measure $\mathcal{S}$, such as the sum of squared
-differences (SSD), the correlation ratio, or the mutual information
-(MI) measure. Because this problem is ill-posed, a regularisation or
-penalty term $\mathcal{P}$ is often introduced that constrains $\vT$.
+Two images are involved in the registration process. One image,
+the \emph{moving image} $I_M(\vx)$, is deformed to fit the other
+image, the \emph{fixed image} $I_F(\vx)$. Registration is the
+problem of finding a \emph{displacement} $\vux$ that makes
+$I_M(\vx + \vux)$ spatially aligned to $I_F(\vx)$. An equivalent
+formulation is to say that registration is the problem of finding
+a \emph{transformation} $\vT(\vx) = \vx + \vux $ that makes
+$I_M(\vT(\vx))$ spatially aligned to $I_F(\vx)$. The quality of
+alignment is defined by a distance or similarity measure $\Sim$,
+such as the sum of squared differences (SSD), the correlation
+ratio, or the mutual information (MI) measure. Because this
+problem is ill-posed, a regularisation or penalty term $\Pen$ is
+often introduced that constrains $\vT$.
 
 Commonly, the registration problem is formulated as an optimisation
 problem in which the cost function $\mathcal{C}$ is minimised w.r.t.
 $\vT$:
 \begin{align}
-\hat \vT &= \arg \min_{\vT} \mathcal{C}(\vT; I_F,I_M), \qquad \text{with} \label{eq:registration1}\\
-\mathcal{C}(\vT; I_F,I_M) &= -\mathcal{S}(\vT; I_F,I_M) + \gamma
-\mathcal{P}(\vT),\label{eq:registration2}
+\hat \vT &= \arg \min_{\vT} \CC (\vT; I_F,I_M), \qquad \text{with} \label{eq:registration1}\\
+\CC(\vT; I_F,I_M) &= -\Sim(\vT; I_F,I_M) + \gamma
+\Pen(\vT),\label{eq:registration2}
 \end{align}
 where $\gamma$ weighs similarity against regularity. To solve the
 above minimisation problem, there are basically two approaches:
@@ -122,7 +138,7 @@ limited by introducing a parameterisation (model) of the
 transformation. The original optimisation problem becomes thus:
 \begin{align}
 \hat \vT_{\vmu} &= \arg \min_{\vT_{\vmu}}
- \mathcal{C}(\vT_{\vmu} ; I_F,I_M), \label{eq:towardsparametric}
+ \CC(\vT_{\vmu} ; I_F,I_M), \label{eq:towardsparametric}
 \end{align}
 where the subscript $\vmu$ indicates that the transform has been
 parameterised. The vector $\vmu$ contains the values of the
@@ -132,7 +148,7 @@ parameter vector $\vmu$ contains one rotation angle and the
 translations in $x$ and $y$ direction. We may write Equation
 (\ref{eq:towardsparametric}) also as:
 \begin{align}
-\hat\vmu &= \arg \min_{\vmu} \mathcal{C}(\vmu; I_F,I_M).
+\hat\vmu &= \arg \min_{\vmu} \CC(\vmu; I_F,I_M).
 \label{eq:parametric}
 \end{align}
 From this equation it becomes clear that the original problem
@@ -142,24 +158,43 @@ over the three elements of $\vmu$. Examples of other
 transformation models are given in
 Section~\ref{sec:comp:transform}.
 
-From the basic registration problem formulated as in Equation
-(\ref{eq:registration1}) and (\ref{eq:registration2}), several
-components can be recognised. First, we have the similarity measure
-$\mathcal{S}$ that defines the quality of alignment. These metrics
-are discussed in Section \ref{sec:comp:metric}. Second, the
-transformation model $\vT$ that defines the spatial relation, see
-Section. Third, the optimisation procedure to actually solve the
-problem, see Section \ref{sec:comp:optimiser}. Then, during the
-optimisation the value $I_M(\vTx)$ is evaluated at non-voxel
-positions, for which intensity interpolation is needed, see Section
-\ref{sec:comp:interpolator}. Another thing, not immediately clear
-from Equation (\ref{eq:registration1}) and (\ref{eq:registration2}),
-is the use of multi-resolution strategies to speed-up registration,
-and to make it more robust, see Section
-\ref{sec:comp:multiresolution}. The regularisation term $\mathcal{P}$
-is not discussed in this manual.
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{images/registrationcomponents.eps}
+\caption{The basic registration components.}
+\label{fig:registrationcomponents}
+\end{figure}
+Figure~\ref{fig:registrationcomponents} shows the general
+components of a parametric registration algorithm in a block
+scheme. The scheme is a slightly extended version of the scheme
+introduced in \cite{ITKSoftwareGuideSecondEdition}. Several
+components can be recognised from
+Equations~(\ref{eq:registration1})-(\ref{eq:parametric}); some
+will be introduced later. First of all, we have the images. The
+concept of an image needs to be defined. This is done in
+Section~\ref{sec:comp:image}. Then we have the cost function
+$\CC$, or ``metric'', which defines the quality of alignment. As
+mentioned earlier, the cost function consists of a similarity
+measure $\Sim$ and a regularisation term $\Pen$. The
+regularisation term $\Pen$ is not discussed in this manual, since
+it is often not required in the parametric registration approach.
+The similarity measure $\Sim$ is discussed in
+Section~\ref{sec:comp:metric}. The definition of the similarity
+measure introduces the sampler component, which is treated in
+Section~\ref{sec:comp:sampler}. Some examples of transformation
+models $\vT_{\vmu}$ are given in Section~\ref{sec:comp:transform}.
+The optimisation procedure to actually solve the problem
+(\ref{eq:parametric}) is explained in Section
+\ref{sec:comp:optimiser}. During the optimisation, the value
+$I_M(\vT_{\vmu}(\vx))$ is evaluated at non-voxel positions, for
+which intensity interpolation is needed. Choices for the
+interpolator are described in Section \ref{sec:comp:interpolator}.
+Another thing, not immediately clear from Equation
+(\ref{eq:registration1})-(\ref{eq:parametric}), is the use of
+multi-resolution strategies to speed-up registration, and to make
+it more robust, see Section \ref{sec:comp:multiresolution}.
 
-\section{Images}
+\section{Images}\label{sec:comp:image}
 
 Since image registration is all about images, we have to be
 careful with what is meant by an image. We adopt the notion of an
@@ -208,58 +243,87 @@ is able to store the relevant information (e.g. mhd, DICOM).
 \section{Metrics}\label{sec:comp:metric}
 
 Several choices for the similarity measure can be found in the
-literature. The three most common choices are the Sum of Squared
-Differences (SSD), the Normalised Correlation Coefficient (NCC), and
-the Mutual Information measure (MI).
+literature. Some common choices are described here:
 
 \begin{description}
-\item[Sum of Squared Differences:] The SSD is defined as:
+\item[Sum of Squared Differences (SSD):] The SSD is defined as:
 \begin{align}
-\mathrm{SSD}(\vT;I_F,I_M) &= \frac{1}{N} \sum_{i=0}^N \left(
-I_F(\vx_i) - I_M(\vT(\vx_i)) \right)^2,\label{eq:ssd}
+\mathrm{SSD}(\vmu;I_F,I_M) &= \frac{1}{|I_F|} \sum\limits_{\vx_i
+\in I_F} \left( I_F(\vx_i) - I_M(\vT_{\vmu}(\vx_i))
+\right)^2,\label{eq:ssd}
 \end{align}
 with $N$ the number of voxels in the fixed image. Given an
 transformation $\vT$, this measure can easily be implemented by
 looping over the voxels in the fixed image, taking $I_F(\vx_i)$,
-calculating $I_M(\vT(\vx_i))$ by interpolation, and adding the
-squared difference to the sum.
+calculating $I_M(\vT_{\vmu}(\vx_i))$ by interpolation, and adding
+the squared difference to the sum.
 
-\item[Normalised Correlation Coefficient:] The NCC is defined as:
+\item[Normalised Correlation Coefficient (NCC):] The NCC is defined as:
 \begin{align}
-\mathrm{NCC}(\vT;I_F,I_M) &= \frac{ \sum_{i=0}^N \left( I_F(\vx_i) -
-\overline{I_F} \right) \left( I_M(\vT(\vx_i)) - \overline{I_M}
-\right) }{ \sqrt{\sum_{i=0}^N \left( I_F(\vx_i) - \overline{I_F}
-\right)^2 \sum_{i=0}^N \left( I_M(\vT(\vx_i)) - \overline{I_M}
-\right)^2} },\label{eq:ncc}
+\mathrm{NCC}(\vmu;I_F,I_M) &= \frac{ \sum_{\vx_i \in I_F} \left(
+I_F(\vx_i) - \overline{I_F} \right) \left( I_M(\vT_{\vmu}(\vx_i))
+- \overline{I_M} \right) }{ \sqrt{\sum_{\vx_i \in I_F} \left(
+I_F(\vx_i) - \overline{I_F} \right)^2 \sum_{\vx_i \in I_F} \left(
+I_M(\vT_{\vmu}(\vx_i)) - \overline{I_M} \right)^2}
+},\label{eq:ncc}
 \end{align}
-with $\overline{I_F}$ and $\overline{I_M}$ the average grey-value of
-$I_F(\vx)$ and $I_M(\vT(\vx))$, respectively.
+with $\overline{I_F}$ and $\overline{I_M}$ the average grey-value
+of $I_F(\vx)$ and $I_M(\vT_{\vmu}(\vx))$, respectively.
 
-\item[Mutual Information:] For MI \citep{MaesEA97,ViolaEA97,MattesEA03} we
+\item[Mutual Information (MI):] For MI \citep{MaesEA97,ViolaEA97,MattesEA03} we
 use a definition given by \citet{ThevenazEA00a}:
 \begin{align}
-\mathrm{MI}(\vT; I_F, I_M) &= \sum\limits_{\iota \in L_M}
-\sum\limits_{\kappa \in L_F} p(\iota, \kappa; \vT) \log_2 \left(
-\frac{ p(\iota, \kappa; \vT) }{ p_F(\kappa) p_M(\iota; \vT) }
-\right),\label{eq:MI}
+  MI(\vmu; I_F, I_M) &=
+   \sum\limits_{m\in L_M} \sum\limits_{f\in L_F}
+  p(f,m;\vmu) \log_2
+  \left( \frac{ p(f,m;\vmu) }{ p_F(f) p_M(m;\vmu)  }
+  \right),
 \end{align}
-where $L_F$ and $L_M$ are the sets of histogram bin centres of the
-fixed and moving image, respectively, $p$ is the joint discrete
-probability, and $p_F$ and $p_M$ are the marginal discrete
-probabilities. The probabilities are modelled with B-spline Parzen
-windows.
+where $L_F$ and $L_M$ are sets of regularly spaced intensity bin
+centres, $p$ is the discrete joint probability, and $p_F$ and
+$p_M$ are the marginal discrete probabilities of the fixed and
+moving image, obtained by summing $p$ over $m$ and $f$,
+respectively. The joint probabilities are estimated using B-spline
+Parzen windows:
+\begin{align}
+\begin{split}
+  p(f,m;\vmu)
+  &=  \frac{1}{|I_F|} \sum\limits_{\vx_i \in I_F}
+    w_F( f/\sigma_F - I_F(\vx_i)/\sigma_F ) \\
+     &\relphantom{=}\times w_M( m/\sigma_M - I_M(\vT_{\vmu}(\vx_i))/\sigma_M ),
+\end{split}
+\end{align}
+where $w_F$ and $w_M$ represent the fixed and moving B-spline
+Parzen windows. The scaling constants $\sigma_F$ and $\sigma_M$
+must equal the intensity bin widths defined by $L_F$ and $L_M$.
+These follow directly from the grey-value ranges of $I_F$ and
+$I_M$ and the user-specified number of histogram bins $|L_F|$ and
+$|L_M|$.
+
+\item[Normalized Mutual Information (NMI):] //add description
+
+\item[Kappa Statistic (KS):] //add description
+
 \end{description}
 
-The SSD measure is a measure that is only suited for two images with
-an equal intensity distribution, i.e. for images from the same
-modality. NCC is less strict, it assumes a linear relation between
-the intensity values of the fixed and moving image, and can therefore
-be used more often. The MI measure is the most general of the three:
-only a relation between the probability distributions of the
-intensities of the fixed and moving image is assumed. For the mutual
-information measure it is well-known that it is suited not only for
-mono-modal, but also for multi-modal image pairs. This measure is
-your first choice for image registration.
+The SSD measure is a measure that is only suited for two images
+with an equal intensity distribution, i.e. for images from the
+same modality. NCC is less strict, it assumes a linear relation
+between the intensity values of the fixed and moving image, and
+can therefore be used more often. The MI measure is even more
+general: only a relation between the probability distributions of
+the intensities of the fixed and moving image is assumed. For MI
+it is well-known that it is suited not only for mono-modal, but
+also for multi-modal image pairs. This measure is often a good
+choice for image registration. The NMI measure is just like MI
+suitable for mono- and multi-modality registration. In our
+experience it gives results very similar to MI. The KS measure is
+specifically meant to register binary images (segmentations). It
+measures the ``overlap'' between the segmentations.
+
+\section{Sampler}\label{sec:comp:sampler}
+
+
 
 \section{Transforms}\label{sec:comp:transform}
 
