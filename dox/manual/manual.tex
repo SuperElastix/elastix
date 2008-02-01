@@ -21,8 +21,10 @@
 \newcommand{\vux}{\bm{u}(\bm{x})}
 \newcommand{\vmu}{\bm{\mu}}
 \newcommand{\vT}{\bm{T}}
-\newcommand{\vTx}{\bm{T}(\bm{x})}
+\newcommand{\vTm}{\bm{T}_{\vmu}}
+\newcommand{\vTmx}{\bm{T}_{\vmu}(\bm{x})}
 \newcommand{\CC}{\mathcal{C}}
+\newcommand{\NN}{\mathcal{N}}
 \newcommand{\Sim}{\mathcal{S}}
 \newcommand{\Pen}{\mathcal{P}}
 
@@ -137,8 +139,8 @@ parametric methods, the number of possible transformations is
 limited by introducing a parameterisation (model) of the
 transformation. The original optimisation problem becomes thus:
 \begin{align}
-\hat \vT_{\vmu} &= \arg \min_{\vT_{\vmu}}
- \CC(\vT_{\vmu} ; I_F,I_M), \label{eq:towardsparametric}
+\hat\vTm &= \arg \min_{\vTm}
+ \CC(\vTm ; I_F,I_M), \label{eq:towardsparametric}
 \end{align}
 where the subscript $\vmu$ indicates that the transform has been
 parameterised. The vector $\vmu$ contains the values of the
@@ -263,11 +265,10 @@ the squared difference to the sum.
 \item[Normalised Correlation Coefficient (NCC):] The NCC is defined as:
 \begin{align}
 \mathrm{NCC}(\vmu;I_F,I_M) &= \frac{ \sum_{\vx_i \in I_F} \left(
-I_F(\vx_i) - \overline{I_F} \right) \left( I_M(\vT_{\vmu}(\vx_i))
-- \overline{I_M} \right) }{ \sqrt{\sum_{\vx_i \in I_F} \left(
+I_F(\vx_i) - \overline{I_F} \right) \left( I_M(\vTm(\vx_i)) -
+\overline{I_M} \right) }{ \sqrt{\sum_{\vx_i \in I_F} \left(
 I_F(\vx_i) - \overline{I_F} \right)^2 \sum_{\vx_i \in I_F} \left(
-I_M(\vT_{\vmu}(\vx_i)) - \overline{I_M} \right)^2}
-},\label{eq:ncc}
+I_M(\vTm(\vx_i)) - \overline{I_M} \right)^2} },\label{eq:ncc}
 \end{align}
 with $\overline{I_F}$ and $\overline{I_M}$ the average grey-value
 of $I_F(\vx)$ and $I_M(\vT_{\vmu}(\vx))$, respectively.
@@ -291,7 +292,7 @@ Parzen windows:
 \begin{split}
  p(f,m;\vmu) &=  \frac{1}{|I_F|} \sum\limits_{\vx_i \in I_F}
  w_F( f/\sigma_F - I_F(\vx_i)/\sigma_F ) \\
- &\relphantom{=}\times w_M( m/\sigma_M - I_M(\vT_{\vmu}(\vx_i))/\sigma_M ),
+ &\relphantom{=}\times w_M( m/\sigma_M - I_M(\vTm(\vx_i))/\sigma_M ),
 \end{split} \label{eq:histogram}
 \end{align}
 where $w_F$ and $w_M$ represent the fixed and moving B-spline
@@ -302,6 +303,7 @@ $I_M$ and the user-specified number of histogram bins $|L_F|$ and
 $|L_M|$.
 
 \item[Normalized Mutual Information (NMI):] //add description
+\cite{Stu99:NMI}
 
 \item[Kappa Statistic (KS):] //add description
 
@@ -317,12 +319,11 @@ the intensities of the fixed and moving image is assumed. For MI
 it is well-known that it is suited not only for mono-modal, but
 also for multi-modal image pairs. This measure is often a good
 choice for image registration. The NMI measure is, just like MI,
-suitable for mono- and multi-modality registration. In our
-experience it gives results very similar to MI, but literature
-\cite{//} seems to indicate better performance than MI in some
-cases. The KS measure is specifically meant to register binary
-images (segmentations). It measures the ``overlap'' between the
-segmentations.
+suitable for mono- and multi-modality registration. Literature
+\cite{Stu99:NMI} seems to indicate better performance than MI in
+some cases. The KS measure is specifically meant to register
+binary images (segmentations). It measures the ``overlap'' between
+the segmentations.
 
 \section{Sampler}\label{sec:comp:sampler}
 
@@ -354,9 +355,8 @@ voxel has equal chance to be selected.
 to a random sampler. It also randomly selects a user-specified
 number of coordinates $\vx_i$. However, the random coordinate
 sampler is not limited to voxel positions. Also coordinates
-inbetween voxels are selected. The grey value $I_F(\vx_i)$ at
-those locations must of course be obtained by some interpolation
-method.
+between voxels are selected. The grey value $I_F(\vx_i)$ at those
+locations must of course be obtained by some interpolation method.
 
 \end{description}
 
@@ -365,58 +365,74 @@ choice, in practice it is not always used, because of its
 computational costs in large images. The random samplers are
 especially useful in combination with a stochastic optimisation
 method \cite{KleinEA07}. See also
-Section~\ref{sec:comp:optimiser}.
-
-
+Section~\ref{sec:comp:optimiser}. The use of the random coordinate
+sampler makes the cost function $\CC$ a more smooth function of
+$\vmu$, which makes the optimisation problem (\ref{eq:parametric})
+easier to solve. This has been shown in \cite{The08:Halton}.
 
 \section{Transforms}\label{sec:comp:transform}
 
-The flexibility of the transformation $\vT$ determines how much
-deformation between the fixed and moving image you can handle. From
-less flexibility to more we list the translation, the rigid
-transformation, the affine, and finally the so-called
-\emph{non-rigid} transformation. The last category covers a fast
-amount of transformations, all capable to model local deformations.
+The transformation model used for $\vT_{\vmu}$ determines what
+type of deformations between the fixed and moving image you can
+handle. From less flexibility to more we list the translation, the
+rigid, the affine, and the nonrigid B-spline transformations.
 
 \begin{description}
 \item[Translation:] The translation is defined as:
 \begin{align}
-\vTx &= \vx + \bm{t},
+\vTmx &= \vx + \bm{t},
 \end{align}
-with $\bm{t}$ a vector.
+with $\bm{t}$ the translation vector. The parameter vector is
+simply defined by $\vmu=\bm{t}$.
 
 \item[Rigid:] A rigid transformation is defined as:
 \begin{align}
-\vTx &= R \vx + \bm{t},
+\vTmx &= R \vx + \bm{t},
 \end{align}
 with the matrix $R$ a rotation matrix, so it is orthonormal and
-proper.
+proper. This means that the image is treated as a rigid body,
+which can translate and rotate, but cannot be scaled/stretched.
+The rotation matrix is parameterised by the Euler angles (one in
+2D, three in 3D). The parameter vector $\vmu$ consists of the
+Euler angles and the translation vector. In 2D, this gives a
+vector of length 3. In 3D, this gives a vector of length 6.
 
 \item[Affine:] An affine transformation is defined as:
 \begin{align}
-\vTx &= A \vx + \bm{t},
+\vTmx &= A \vx + \bm{t},
 \end{align}
-where the matrix $A$ has no restrictions.
+where the matrix $A$ has no restrictions. This means that the
+image can be translated, rotated, scaled, and sheared. The
+parameter vector $\vmu$ is formed by the matrix elements $a_{ij}$
+and the translation vector.
 
 \item[B-splines:] For the category of non-rigid transformations, we focus on a
 transformation that is parameterised by B-splines
 \citep{RueckertEA99}. In 2D:
 \begin{align}
-\vT_i(\vx) &= \vx_i + \sum_{l \in V_{\vx}} \mu_{li} \beta^3(x_1 -
-x_{l1}) \beta^3(x_2 - x_{l2}), \qquad \forall i \in
-\{1,2\},\label{eq:bspline}
+\vTmx = \vx + \sum_{\vx_k \in \NN_{\vx}} \bm{c}_k \bm{\beta}^3(\vx
+- \vx_k),\label{eq:bspline}
 \end{align}
-with $\vx = (x_1,x_2)$, $\beta^3(x)$ the cubic B-spline polynomial
-\citep{Unser99}, $\mu_{li}$ the B-spline coefficients, and $V_{\vx}$
-the set of all control points within the compact support of the
-B-spline at $\vx$. In this context we talk about `the control point
-grid that is put on the fixed image', and about `control points that
-are moved around'. The control point grid is defined by the amount of
+with $\vx_k$ the control points, $\bm{\beta}^3(x)$ the cubic
+multidimensional B-spline polynomial \citep{Unser99}, $\bm{c}_k$
+the B-spline coefficient vectors (loosely speaking, the control
+point displacements), and $\NN_{\vx}$ the set of all control
+points within the compact support of the B-spline at $\vx$. The
+control points  $\vx_k$ are defined on a regular grid, overlayed
+on the fixed image. In this context we talk about `the control
+point grid that is put on the fixed image', and about `control
+points that are moved around'. Note that $\vTm(\vx_k)\neq \vx_k +
+\bm{c}_k$, a common misunderstanding. Calling $\bm{c}_k$ the
+control point displacements is, therefore, actually somewhat
+misleading. The control point grid is defined by the amount of
 space between the control points, which can be different for each
-direction. B-splines have local support, which is beneficial both for
-modelling local transformations, and for fast computation. See Figure
-\ref{fig:bspline} for an illustration of the use of B-splines in
-image registration.
+direction. B-splines have local support ($|\NN_{\vx}|$ is small),
+which is beneficial both for modelling local transformations, and
+for fast computation. See Figure \ref{fig:bspline} for an
+illustration of the use of B-splines in image registration. The
+parameters $\vmu$ are formed by the B-spline coefficient
+$\bm{c}_k$. The number of control points determines the number of
+parameters. $\approx 10000$ parameters is not an unusual case.
 \end{description}
 
 \begin{figure}
@@ -424,27 +440,29 @@ image registration.
 \subfigure[]{\includegraphics[width=4.5cm,height=4.5cm]{images/fixed.eps}}\label{sfig:bspline:a}
 \subfigure[]{\includegraphics[width=4.5cm,height=4.5cm]{images/moving.eps}}\label{sfig:bspline:b}
 \subfigure[]{\includegraphics[width=4.5cm,height=4.5cm]{images/deformed.eps}}\label{sfig:bspline:c}
-\caption{B-spline transformation. (a) the fixed image. (b) the
-moving image with the B-spline grid overlayed. (c) the control points
-are moved around until $I_M(\vTx)$ resembles $I_F(\vx)$. The new
-deformed B-spline grid defines the deformed image.}
-\label{fig:bspline}
+\caption{B-spline transformation. (a) the fixed image, (b) the
+moving image with a grid overlayed (this is NOT the B-spline
+control point grid, since that one is defined on the fixed image),
+and (c) the control points were moved around until $I_M(\vTmx)$
+resembles $I_F(\vx)$; the overlay grid gives an indication of the
+deformation imposed on the moving image.} \label{fig:bspline}
 \end{figure}
 
-The attentive reader will notice that in Figure \ref{fig:bspline} the
-B-spline grid is depicted on top of the moving image, instead of the
-fixed image as stated above. This brings us to a technicality
-concerning the \emph{implementation} of transformations. If a
-transformation would be implemented by a so-called forward-transform,
-then points from the moving image would be mapped to the fixed image
-domain. However, when it comes to creating the deformed image
-$I_M(\vTx)$, possibly, due to the nature of a nonrigid
-transformation, none of the voxels in $I_M$ maps to a point $\bm{y}$
-in the domain of $I_F$. This would result in a `gap' in the deformed
-image. To avoid this, transformations are implemented using a
-backward-transform. The transformation maps from the fixed image
-domain to the moving image domain, and therefore the B-spline grid is
-actually (`in the code') put on the fixed image.
+The attentive reader will notice that in Figure \ref{fig:bspline}
+the B-spline grid is depicted on top of the moving image, instead
+of the fixed image as stated above. This brings us to a
+technicality concerning the \emph{implementation} of
+transformations. If a transformation would be implemented by a
+so-called forward-transform, then points from the moving image
+would be mapped to the fixed image domain. However, when it comes
+to creating the deformed image $I_M(\vTmx)$, possibly, due to the
+nature of a nonrigid transformation, none of the voxels in $I_M$
+maps to a point $\bm{y}$ in the domain of $I_F$. This would result
+in a `gap' in the deformed image. To avoid this, transformations
+are implemented using a backward-transform. The transformation
+maps from the fixed image domain to the moving image domain, and
+therefore the B-spline grid is actually (`in the code') put on the
+fixed image.
 
 Choose the transformation that fits your needs: only choose a
 nonrigid transformation if you expect that the underlying problem
@@ -462,8 +480,8 @@ $a_k \bm{d}_k$ taken in the direction of the optimum, which is in the
 centre.} \label{fig:optimisation}
 \end{figure}
 
-To solve the optimisation problem \ref{eq:registration1}, i.e. to
-obtain the optimal transformation $\vT$, commonly an iterative
+To solve the optimisation problem (\ref{eq:registration1}), i.e.
+to obtain the optimal transformation $\vT$, commonly an iterative
 optimisation strategy is employed:
 \begin{align}
 \vmu_{k+1} &= \vmu_k + a_k \bm{d}_k, \quad k = 0, 1, 2, \cdots,
@@ -525,10 +543,10 @@ parameter that is to be tuned for your application.
 
 \section{Interpolators}\label{sec:comp:interpolator}
 
-As stated above, during the optimisation the value $I_M(\vTx)$ is
-evaluated at non-voxel positions, for which intensity interpolation
-is needed. Several methods for interpolation exist, varying in
-quality and speed. Some examples are given in Figure
+As stated above, during the optimisation the value $I_M(\vTmx)$ is
+evaluated at non-voxel positions, for which intensity
+interpolation is needed. Several methods for interpolation exist,
+varying in quality and speed. Some examples are given in Figure
 \ref{fig:interpolation}.
 
 \begin{description}
