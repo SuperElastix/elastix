@@ -25,7 +25,7 @@ using namespace itk;
 	 *		<tt>(Optimizer "CMAEvolutionStrategy")</tt>
 	 * \parameter MaximumNumberOfIterations: The maximum number of iterations in each resolution. \n
 	 *		example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
-	 *    Default value: 100.\n
+	 *    Default value: 500.\n
 	 * \parameter StepLength: Set the length of the initial step ( = Sigma0 = InitialSigma).\n
 	 *		example: <tt>(StepLength 2.0 1.0 0.5)</tt> \n
    *    Recommended value: 1/3 of the expected parameter range.\n

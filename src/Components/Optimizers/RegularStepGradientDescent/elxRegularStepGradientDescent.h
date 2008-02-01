@@ -23,7 +23,7 @@ using namespace itk;
 	 *		<tt>(Optimizer "RegularStepGradientDescent")</tt>
 	 * \parameter MaximumNumberOfIterations: the maximum number of iterations in each resolution. \n
 	 *	 example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
-	 *   Default value: 100.
+	 *   Default value: 500.
 	 * \parameter MinimumGradientMagnitude: stopping criterion. If the magnitude of the derivative
 	 *   of the cost function is below this value, optimisation is stopped. \n
 	 *	 example: <tt>(MinimumGradientMagnitude 0.0001 0.0001 0.001)</tt> \n
@@ -33,7 +33,7 @@ using namespace itk;
 	 *	 example: <tt>(MinimumStepLength 1.0 0.5 0.1)</tt> \n
 	 *   Default value: <em>0.5 / 2^resolutionlevel</em>
 	 * \parameter MaximumStepLength: the starting steplength.  \n
-	 *	 example: <tt>(MaxiumStepLength 16.0 8.0 4.0)</tt> \n
+	 *	 example: <tt>(MaximumStepLength 16.0 8.0 4.0)</tt> \n
 	 *   Default value: <em>16 / 2^resolutionlevel</em>. 
 	 * \parameter RelaxationFactor: the factor with which the steplength is multiplied,
 	 *   if the optimiser notices that a smaller steplength is needed. \n

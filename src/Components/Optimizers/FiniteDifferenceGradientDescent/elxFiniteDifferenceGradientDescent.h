@@ -24,7 +24,7 @@ using namespace itk;
 	 *		<tt>(Optimizer "FiniteDifferenceGradientDescent")</tt>
 	 * \parameter MaximumNumberOfIterations: The maximum number of iterations in each resolution. \n
 	 *		example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
-	 *    Default value: 100.
+	 *    Default value: 500.
 	 * \parameter SP_a: The gain \f$a(k)\f$ at each iteration \f$k\f$ is defined by \n
 	 *   \f$\quad a(k) =  SP\_a / (SP\_A + k + 1)^{SP\_alpha}\f$. \n
 	 *   SP_a can be defined for each resolution. \n

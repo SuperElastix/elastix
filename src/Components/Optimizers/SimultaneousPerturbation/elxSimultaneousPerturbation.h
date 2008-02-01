@@ -21,7 +21,7 @@ using namespace itk;
 	 *		<tt>(Optimizer "SimultaneousPerturbation")</tt>
 	 * \parameter MaximumNumberOfIterations: The maximum number of iterations in each resolution. \n
 	 *		example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
-	 *    Default value: 100.
+	 *    Default value: 500.
 	 * \parameter NumberOfPerturbations: The number of perturbation used to
    *    construct a gradient estimate \f$g_k\f$. \n
 	 *    \f$q =\f$ NumberOfPerturbations \n

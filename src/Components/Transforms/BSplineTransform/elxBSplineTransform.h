@@ -29,18 +29,20 @@ using namespace itk;
 	 *		example: <tt>(FinalGridSpacing 8.0 8.0 8.0)</tt> \n
 	 *    If only one argument is given, that factor is used for each dimension. The spacing
 	 *    is not in millimeters, but in "voxel size units".
-	 *		The default is 8.0 in every dimension. The option is deprecated. Use either FinalGridSpacingInVoxels
+	 *		The default is 16.0 in every dimension. The option is deprecated. Use either FinalGridSpacingInVoxels
    *    or FinalGridSpacingInPhysicalUnits.
    * \parameter FinalGridSpacingInVoxels: the grid spacing of the B-spline transform for each dimension. \n
 	 *		example: <tt>(FinalGridSpacingInVoxels 8.0 8.0 8.0)</tt> \n
 	 *    If only one argument is given, that factor is used for each dimension. The spacing
 	 *    is not in millimeters, but in "voxel size units".
-	 *		The default is 8.0 in every dimension.
+	 *		The default is 16.0 in every dimension.
    * \parameter FinalGridSpacingInPhysicalUnits: the grid spacing of the B-spline transform for each dimension. \n
 	 *		example: <tt>(FinalGridSpacingInPhysicalUnits 8.0 8.0 8.0)</tt> \n
 	 *    If only one argument is given, that factor is used for each dimension. The spacing
 	 *    is specified in millimeters.
-	 *		The default is 8.0 in every dimension.
+	 *		If not specified, the FinalGridSpacingInVoxels is used, or the FinalGridSpacing,
+   *    to compute a FinalGridSpacingInPhysicalUnits. If those are not specified, the default 
+   *    value for FinalGridSpacingInVoxels is used to compute a FinalGridSpacingInPhysicalUnits.
 	 * \parameter UpsampleGridOption: DEPRECATED. a flag to determine if the B-spline grid should
 	 *		be upsampled from one resolution level to another. Choose from {true, false}. \n
 	 *		example: <tt>(UpsampleGridOption "true")</tt> \n

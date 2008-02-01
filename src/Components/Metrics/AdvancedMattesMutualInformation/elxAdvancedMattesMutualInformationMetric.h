@@ -10,48 +10,48 @@ namespace elastix
 {
 using namespace itk;
 
-	/**
-	 * \class AdvancedMattesMutualInformationMetric
-	 * \brief A metric based on the itk::ParzenWindowMutualInformationImageToImageMetric.
-	 *
-	 * This metric is based on an adapted version of the
-	 * itk::MattesMutualInformationImageToImageMetric.
-	 *
-	 * The parameters used in this class are:
-	 * \parameter Metric: Select this metric as follows:\n
-	 *		<tt>(Metric "AdvancedMattesMutualInformation")</tt>
-	 * \parameter NumberOfHistogramBins: The size of the histogram. Must be given for each 
-	 *		resolution, or for all resolutions at once. \n
-	 *		example: <tt>(NumberOfHistogramBins 32 32 64)</tt> \n
-	 *		The default is 32 for each resolution.
+  /**
+   * \class AdvancedMattesMutualInformationMetric
+   * \brief A metric based on the itk::ParzenWindowMutualInformationImageToImageMetric.
+   *
+   * This metric is based on an adapted version of the
+   * itk::MattesMutualInformationImageToImageMetric.
+   *
+   * The parameters used in this class are:
+   * \parameter Metric: Select this metric as follows:\n
+   *    <tt>(Metric "AdvancedMattesMutualInformation")</tt>
+   * \parameter NumberOfHistogramBins: The size of the histogram. Must be given for each 
+   *    resolution, or for all resolutions at once. \n
+   *    example: <tt>(NumberOfHistogramBins 32 32 64)</tt> \n
+   *    The default is 32 for each resolution.
    * \parameter NumberOfFixedHistogramBins: The size of the histogram in the fixed dimension. Can be given for each 
-	 *		resolution, or for all resolutions at once. If not given, NumberOfHistograms is used.\n
-	 *		example: <tt>(NumberOfFixedHistogramBins 32 32 64)</tt> \n
-	 *		The default is the value of NumberOfHistograms.
+   *    resolution, or for all resolutions at once. If not given, NumberOfHistograms is used.\n
+   *    example: <tt>(NumberOfFixedHistogramBins 32 32 64)</tt> \n
+   *    The default is the value of NumberOfHistograms, or, if that one is also not given, 32.
    * \parameter NumberOfMovingHistogramBins: The size of the histogram in the fixed dimension. Can be given for each 
-	 *		resolution, or for all resolutions at once. If not given, NumberOfHistograms is used.\n
-	 *		example: <tt>(NumberOfMovingHistogramBins 32 32 64)</tt> \n
-	 *		The default is the value of NumberOfHistograms.
+   *    resolution, or for all resolutions at once. If not given, NumberOfHistograms is used.\n
+   *    example: <tt>(NumberOfMovingHistogramBins 32 32 64)</tt> \n
+   *    The default is the value of NumberOfHistograms, or, if that one is also not given, 32.
    * \parameter FixedKernelBSplineOrder: The bspline order of the Parzen window, used to estimate
    *    the joint histogram. Can be given for each resolution, or for all resolutions at once. \n
-	 *		example: <tt>(FixedKernelBSplineOrder 0 1 1)</tt> \n
-	 *		The default value is 0.
+   *    example: <tt>(FixedKernelBSplineOrder 0 1 1)</tt> \n
+   *    The default value is 0.
    * \parameter MovingKernelBSplineOrder: The bspline order of the Parzen window, used to estimate
    *    the joint histogram. Can be given for each resolution, or for all resolutions at once. \n
-	 *		example: <tt>(MovingKernelBSplineOrder 3 3 3)</tt> \n
-	 *		The default value is 3.
+   *    example: <tt>(MovingKernelBSplineOrder 3 3 3)</tt> \n
+   *    The default value is 3.
    * \parameter FixedLimitRangeRatio: The relative extension of the intensity range of the fixed image.\n
    *    If your image has grey values from 0 to 1000 and the FixedLimitRangeRatio is 0.001, the
    *    joint histogram will expect fixed image grey values from -0.001 to 1000.001. This may be 
    *    usefull if you use high order bspline interpolator for the fixed image.\n
-   *		example: <tt>(FixedLimitRangeRatio 0.001 0.01 0.01)</tt> \n
-	 *		The default value is 0.01. Can be given for each resolution, or for all resolutions at once.
+   *    example: <tt>(FixedLimitRangeRatio 0.001 0.01 0.01)</tt> \n
+   *    The default value is 0.01. Can be given for each resolution, or for all resolutions at once.
    * \parameter MovingLimitRangeRatio: The relative extension of the intensity range of the moving image.\n
    *    If your image has grey values from 0 to 1000 and the MovingLimitRangeRatio is 0.001, the
    *    joint histogram will expect moving image grey values from -0.001 to 1000.001. This may be 
    *    usefull if you use high order bspline interpolator for the moving image.\n
-   *		example: <tt>(MovingLimitRangeRatio 0.001 0.01 0.01)</tt> \n
-	 *		The default value is 0.01. Can be given for each resolution, or for all resolutions at once. 
+   *    example: <tt>(MovingLimitRangeRatio 0.001 0.01 0.01)</tt> \n
+   *    The default value is 0.01. Can be given for each resolution, or for all resolutions at once. 
    * \parameter CheckNumberOfSamples: Whether the metric checks if at least 1/4 of the 
    *    samples map inside the moving image. Must be given for each resolution or for all
    *    resolutions at once. \n
@@ -61,42 +61,42 @@ using namespace itk;
    * \parameter FiniteDifferenceDerivative: Experimental feature, do not use.
    *
    * \sa ParzenWindowMutualInformationImageToImageMetric
-	 * \ingroup Metrics
-	 */
-	
-	template <class TElastix >	
-		class AdvancedMattesMutualInformationMetric :
-		public
-			ParzenWindowMutualInformationImageToImageMetric<
-				ITK_TYPENAME MetricBase<TElastix>::FixedImageType,
-				ITK_TYPENAME MetricBase<TElastix>::MovingImageType >,
-		public MetricBase<TElastix>
-	{
-	public:
+   * \ingroup Metrics
+   */
+  
+  template <class TElastix >  
+    class AdvancedMattesMutualInformationMetric :
+    public
+      ParzenWindowMutualInformationImageToImageMetric<
+        ITK_TYPENAME MetricBase<TElastix>::FixedImageType,
+        ITK_TYPENAME MetricBase<TElastix>::MovingImageType >,
+    public MetricBase<TElastix>
+  {
+  public:
 
-		/** Standard ITK-stuff. */
-		typedef AdvancedMattesMutualInformationMetric					Self;
-		typedef ParzenWindowMutualInformationImageToImageMetric<
-			typename MetricBase<TElastix>::FixedImageType,
-			typename MetricBase<TElastix>::MovingImageType >		Superclass1;
-		typedef MetricBase<TElastix>													Superclass2;
-		typedef SmartPointer<Self>														Pointer;
-		typedef SmartPointer<const Self>											ConstPointer;
-		
-		/** Method for creation through the object factory. */
-		itkNewMacro( Self );
-		
-		/** Run-time type information (and related methods). */
-		itkTypeMacro( AdvancedMattesMutualInformationMetric,
-			ParzenWindowMutualInformationImageToImageMetric );
-		
-		/** Name of this class.
-		 * Use this name in the parameter file to select this specific metric. \n
-		 * example: <tt>(Metric "AdvancedMattesMutualInformation")</tt>\n
-		 */
-		elxClassNameMacro( "AdvancedMattesMutualInformation" );
+    /** Standard ITK-stuff. */
+    typedef AdvancedMattesMutualInformationMetric         Self;
+    typedef ParzenWindowMutualInformationImageToImageMetric<
+      typename MetricBase<TElastix>::FixedImageType,
+      typename MetricBase<TElastix>::MovingImageType >    Superclass1;
+    typedef MetricBase<TElastix>                          Superclass2;
+    typedef SmartPointer<Self>                            Pointer;
+    typedef SmartPointer<const Self>                      ConstPointer;
+    
+    /** Method for creation through the object factory. */
+    itkNewMacro( Self );
+    
+    /** Run-time type information (and related methods). */
+    itkTypeMacro( AdvancedMattesMutualInformationMetric,
+      ParzenWindowMutualInformationImageToImageMetric );
+    
+    /** Name of this class.
+     * Use this name in the parameter file to select this specific metric. \n
+     * example: <tt>(Metric "AdvancedMattesMutualInformation")</tt>\n
+     */
+    elxClassNameMacro( "AdvancedMattesMutualInformation" );
 
-		/** Typedefs from the superclass. */
+    /** Typedefs from the superclass. */
     typedef typename 
       Superclass1::CoordinateRepresentationType              CoordinateRepresentationType;
     typedef typename Superclass1::MovingImageType            MovingImageType;
@@ -141,83 +141,83 @@ using namespace itk;
       Superclass1::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
     typedef typename
       Superclass1::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
-		
+    
     /** The fixed image dimension. */
-		itkStaticConstMacro( FixedImageDimension, unsigned int,
-			FixedImageType::ImageDimension );
+    itkStaticConstMacro( FixedImageDimension, unsigned int,
+      FixedImageType::ImageDimension );
 
-		/** The moving image dimension. */
-		itkStaticConstMacro( MovingImageDimension, unsigned int,
-			MovingImageType::ImageDimension );
-		
-		/** Typedef's inherited from Elastix. */
-		typedef typename Superclass2::ElastixType								ElastixType;
-		typedef typename Superclass2::ElastixPointer						ElastixPointer;
-		typedef typename Superclass2::ConfigurationType					ConfigurationType;
-		typedef typename Superclass2::ConfigurationPointer			ConfigurationPointer;
-		typedef typename Superclass2::RegistrationType					RegistrationType;
-		typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
-		typedef typename Superclass2::ITKBaseType								ITKBaseType;
-			
-		/** Typedef for timer. */
-		typedef tmr::Timer					TimerType;
-		/** Typedef for timer. */
-		typedef TimerType::Pointer	TimerPointer;
+    /** The moving image dimension. */
+    itkStaticConstMacro( MovingImageDimension, unsigned int,
+      MovingImageType::ImageDimension );
+    
+    /** Typedef's inherited from Elastix. */
+    typedef typename Superclass2::ElastixType               ElastixType;
+    typedef typename Superclass2::ElastixPointer            ElastixPointer;
+    typedef typename Superclass2::ConfigurationType         ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType          RegistrationType;
+    typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
+    typedef typename Superclass2::ITKBaseType               ITKBaseType;
+      
+    /** Typedef for timer. */
+    typedef tmr::Timer          TimerType;
+    /** Typedef for timer. */
+    typedef TimerType::Pointer  TimerPointer;
 
-		/** Execute stuff before each new pyramid resolution:
-		 * \li Set the number of histogram bins.
+    /** Execute stuff before each new pyramid resolution:
+     * \li Set the number of histogram bins.
      * \li Set the CheckNumberOfSamples option.
      * \li Set the fixed/moving LimitRangeRatio
      * \li Set the fixed/moving limiter. */
-		virtual void BeforeEachResolution( void );
+    virtual void BeforeEachResolution( void );
 
     /** Update the CurrenIteration. This is only important
      * if a finite difference derivative estimation is used
      * (selected by the experimental parameter FiniteDifferenceDerivative)  */
     virtual void AfterEachIteration( void );
-	
-		/** Set up a timer to measure the intialisation time and
-		 * call the Superclass' implementation. */
-		virtual void Initialize(void) throw (ExceptionObject);
+  
+    /** Set up a timer to measure the intialisation time and
+     * call the Superclass' implementation. */
+    virtual void Initialize(void) throw (ExceptionObject);
 
     /** Set/Get c. For finite difference derivative estimation */
-		itkSetMacro( Param_c, double );
-		itkGetConstMacro( Param_c, double );
-				
-		/** Set/Get gamma. For finite difference derivative estimation */
-		itkSetMacro( Param_gamma, double );
-		itkGetConstMacro( Param_gamma, double );
+    itkSetMacro( Param_c, double );
+    itkGetConstMacro( Param_c, double );
+        
+    /** Set/Get gamma. For finite difference derivative estimation */
+    itkSetMacro( Param_gamma, double );
+    itkGetConstMacro( Param_gamma, double );
 
     /** Set/Get the current iteration. For finite difference derivative estimation */
     itkSetMacro( CurrentIteration, unsigned int );
     itkGetConstMacro( CurrentIteration, unsigned int );
 
-	protected:
+  protected:
 
-		/** The constructor. */
+    /** The constructor. */
     AdvancedMattesMutualInformationMetric();
 
     /** The destructor. */ 
-		virtual ~AdvancedMattesMutualInformationMetric() {};
+    virtual ~AdvancedMattesMutualInformationMetric() {};
 
     unsigned long                 m_CurrentIteration;
 
     /** A function to compute the finite difference perturbation in each iteration */
     double Compute_c( unsigned long k ) const;
     
-	private:
+  private:
 
-		/** The private constructor. */
-		AdvancedMattesMutualInformationMetric( const Self& );	// purposely not implemented
-		/** The private copy constructor. */
-		void operator=( const Self& );								// purposely not implemented
+    /** The private constructor. */
+    AdvancedMattesMutualInformationMetric( const Self& ); // purposely not implemented
+    /** The private copy constructor. */
+    void operator=( const Self& );                // purposely not implemented
 
-    double												m_Param_c;
-    double												m_Param_gamma;
+    double                        m_Param_c;
+    double                        m_Param_gamma;
     
-	
-		
-	}; // end class AdvancedMattesMutualInformationMetric
+  
+    
+  }; // end class AdvancedMattesMutualInformationMetric
 
 
 } // end namespace elastix

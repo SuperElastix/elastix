@@ -71,7 +71,7 @@ using namespace itk;
 			this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
 				
 		/** Set the maximumNumberOfIterations.*/
-		unsigned int maximumNumberOfIterations = 100;
+		unsigned int maximumNumberOfIterations = 500;
 		this->m_Configuration->ReadParameter( maximumNumberOfIterations,
       "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0 );
 		this->SetNumberOfIterations( maximumNumberOfIterations );

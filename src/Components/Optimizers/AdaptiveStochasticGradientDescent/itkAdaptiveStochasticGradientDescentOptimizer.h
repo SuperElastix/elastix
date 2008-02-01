@@ -74,7 +74,7 @@ namespace itk
     typedef Superclass::ScaledCostFunctionPointer ScaledCostFunctionPointer;
     typedef Superclass::StopConditionType         StopConditionType;
 
-    /** Set/Get whether CruzAcceleration is desired. Default: false */
+    /** Set/Get whether CruzAcceleration is desired. Default:true */
     itkSetMacro( UseCruzAcceleration, bool );
     itkGetConstMacro( UseCruzAcceleration, bool );
 

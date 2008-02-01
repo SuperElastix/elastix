@@ -73,7 +73,7 @@ using namespace itk;
 		/** \todo max and min steplength should maybe depend on the imagespacing or on something else... */
 		
 		/** Set the maximumNumberOfIterations.*/
-		unsigned int maximumNumberOfIterations = 100;
+		unsigned int maximumNumberOfIterations = 500;
 		this->m_Configuration->ReadParameter( maximumNumberOfIterations,
       "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0 );
 		this->SetNumberOfIterations( maximumNumberOfIterations );

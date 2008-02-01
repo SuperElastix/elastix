@@ -182,8 +182,8 @@ using namespace itk;
     /** Declare vars */
     SpacingType finalGridSpacingInVoxels;
     SpacingType finalGridSpacingInPhysicalUnits;
-    finalGridSpacingInVoxels.Fill( 8.0 );		
-    finalGridSpacingInPhysicalUnits.Fill( 8.0 );
+    finalGridSpacingInVoxels.Fill( 16.0 );		
+    finalGridSpacingInPhysicalUnits.Fill( 8.0 ); // this default is never used
 
     if ( method2 )
     {
@@ -193,7 +193,7 @@ using namespace itk;
   		{
         this->m_Configuration->ReadParameter(
           finalGridSpacingInPhysicalUnits[ dim ], "FinalGridSpacingInPhysicalUnits",
-          this->GetComponentLabel(), dim , 0, false);
+          this->GetComponentLabel(), dim , 0, false );
 		  }
     }
     else
@@ -202,12 +202,24 @@ using namespace itk;
       /** Method 3:
        * Silently try to read the deprecated FinalGridSpacing (in voxels).
        */
+      int deprecatedused = 1;
       for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
       {
-        this->m_Configuration->ReadParameter(
+        deprecatedused &= this->m_Configuration->ReadParameter(
           finalGridSpacingInVoxels[ dim ], "FinalGridSpacing",
-          this->GetComponentLabel(), dim , 0, true );
+          this->GetComponentLabel(), dim , 0, true );        
       }    
+      if ( deprecatedused==0 )
+      {
+        /** This message was introduced in elastix 3.9. Actual deprecation can only be done
+         * after elastix 4.1 at least.
+         */
+        xl::xout["warning"] << "WARNING: deprecated parameter \"FinalGridSpacing\" used!\n"
+          << "This parameter is scheduled to be removed in a future release!\n"
+          << "Better use \"FinalGridSpacingInVoxels\", which has the same meaning, "
+          << "or \"FinalGridSpacingInPhysicalUnits\"."
+          << std::endl;
+      }
 
       /** Method 1:
        * Read the FinalGridSpacingInVoxels
@@ -216,7 +228,7 @@ using namespace itk;
       {
         this->m_Configuration->ReadParameter(
           finalGridSpacingInVoxels[ dim ], "FinalGridSpacingInVoxels",
-          this->GetComponentLabel(), dim , 0, false);
+          this->GetComponentLabel(), dim , 0, false );
       }
 
       /** Compute grid spacing in physical units */
@@ -545,14 +557,26 @@ using namespace itk;
 
 		/** Fill upsampleBSplineGridOption. */
 		bool tmp = true;
+    int deprecatedused = 1;
 		this->GetConfiguration()->ReadParameter( tmp, "UpsampleGridOption", 0 );
 		std::vector< bool > upsampleGridOption( size, tmp );
 		for ( unsigned int i = 1; i < nrOfResolutions - 1; ++i )
 		{
       tmp = upsampleGridOption[ i ];
-      this->m_Configuration->ReadParameter(
+      deprecatedused &= this->m_Configuration->ReadParameter(
         tmp, "UpsampleGridOption", i );
       upsampleGridOption[ i ] = tmp;
+    }
+
+    if ( deprecatedused==0 )
+    {
+      /** This message was introduced in elastix 3.9. Actual deprecation can only be done
+       * after elastix 4.1 at least.
+       */
+      xl::xout["warning"] << "WARNING: deprecated parameter \"UpsampleGridOption\" used!\n"
+        << "This parameter is scheduled to be removed in a future release!\n"
+        << "Better use \"GridSpacingSchedule\" instead."
+        << std::endl;
     }
 
     /** Create a B-spline grid schedule using the upsample-grid-options. */

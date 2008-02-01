@@ -26,7 +26,7 @@ namespace elastix
   *   <tt>(Optimizer "AdaptiveStochasticGradientDescent")</tt>
   * \parameter MaximumNumberOfIterations: The maximum number of iterations in each resolution. \n
   *   example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
-  *    Default value: 100.
+  *    Default/recommended value: 500.
   * \parameter SP_a: The gain \f$a(k)\f$ at each iteration \f$k\f$ is defined by \n
   *   \f$a(k) =  SP\_a / (SP\_A + k + 1)^{SP\_alpha}\f$. \n
   *   SP_a can be defined for each resolution. \n
@@ -36,12 +36,12 @@ namespace elastix
   *   \f$a(k) =  SP\_a / (SP\_A + k + 1)^{SP\_alpha}\f$. \n
   *   SP_A can be defined for each resolution. \n
   *   example: <tt>(SP_A 50.0 50.0 100.0)</tt> \n
-  *   The default/recommended value is 50.0.
+  *   The default/recommended value for this particular optimizer is 20.0.
   * \parameter SP_alpha: The gain \f$a(k)\f$ at each iteration \f$k\f$ is defined by \n
   *   \f$a(k) =  SP\_a / (SP\_A + k + 1)^{SP\_alpha}\f$. \n
   *   SP_alpha can be defined for each resolution. \n
   *   example: <tt>(SP_alpha 0.602 0.602 0.602)</tt> \n
-  *   The default/recommended value is 0.602.
+  *   The default/recommended value for this particular optimizer is 1.0.
   *
   * \todo: document extra parameters
   * \todo: this class contains a lot of functional code, which actually does not belong here.
@@ -112,10 +112,6 @@ namespace elastix
     * After that call Superclass' implementation.  */
     virtual void ResumeOptimization(void);
 
-    /** Call the superclass' implementation and check if the minimum step length
-    * stopping condition is satisfied. */
-    virtual void AdvanceOneStep(void);
-
     /** Set/Get whether automatic parameter estimation is desired. 
     * If true, make sure to set the maximum step length.
     *
@@ -133,13 +129,6 @@ namespace elastix
     /** Set/Get maximum step length */
     itkSetMacro( MaximumStepLength, double );
     itkGetConstMacro( MaximumStepLength, double );
-
-    /** Set/Get minimum step length; this is used as a stopping criterion.
-    * When the gain falls below minsteplength/maxsteplength * gain(0)
-    * the optimisation is stopped. Set it to zero if you do not want to
-    * use this stopping criterion. */
-    itkSetMacro( MinimumStepLength, double );
-    itkGetConstMacro( MinimumStepLength, double );
 
   protected:
 
@@ -196,7 +185,6 @@ namespace elastix
     unsigned int m_NumberOfGradientMeasurements;
     unsigned int m_NumberOfJacobianMeasurements;
     unsigned int m_NumberOfSamplesForExactGradient;
-    std::string  m_JacobianTermComputationMethod;
     CovarianceMatrixType m_CovarianceMatrix;
     bool m_UseMaximumLikelihoodMethod;
     bool m_SaveCovarianceMatrix;
@@ -277,25 +265,19 @@ namespace elastix
       double & maxJJ, double & maxJCJ );
 
     /** Implementation of the jacobian terms, using a method that is
-    * quadratically complex regarding the number of jacobian measurements.
-    * The memory usage is linear proportional to the number of jacobian measurements
-    * and linear proportional to the number of parameters. */
-    virtual void ComputeJacobianTermsGenericQuadratic(double & TrC, double & TrCC, 
-      double & maxJJ, double & maxJCJ );
-
-    /** Implementation of the jacobian terms, using a method that is
     * linearly complex regarding the number of jacobian measurements.
     * The memory usage is independent on the number of jacobian measurements
     * and quadratically proportional to the number of parameters. */
-    virtual void ComputeJacobianTermsGenericLinear(double & TrC, double & TrCC, 
+    virtual void ComputeJacobianTermsGeneric(double & TrC, double & TrCC, 
       double & maxJJ, double & maxJCJ );
 
-    virtual void ComputeJacobianTermsAffine(double & TrC, double & TrCC, 
-      double & maxJJ, double & maxJCJ );
-
+    /** For translation transforms, things become much simpler, since 
+     * analytic expressions can be derived */
     virtual void ComputeJacobianTermsTranslation(double & TrC, double & TrCC, 
       double & maxJJ, double & maxJCJ );
 
+    /** For B-splines, a speed up can be realised by using the compact support
+     * of the B-splines, resulting in sparse jacobians */
     virtual void ComputeJacobianTermsBSpline(double & TrC, double & TrCC, 
       double & maxJJ, double & maxJCJ );
 
@@ -306,7 +288,6 @@ namespace elastix
 
     bool m_AutomaticParameterEstimation;
     double m_MaximumStepLength;      
-    double m_MinimumStepLength;
 
     /** This member should only be directly accessed by the
     * EvaluateBSplineTransformJacobian method. */
