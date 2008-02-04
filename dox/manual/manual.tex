@@ -401,6 +401,19 @@ The rotation matrix is parameterised by the Euler angles (one in
 Euler angles and the translation vector. In 2D, this gives a
 vector of length 3. In 3D, this gives a vector of length 6.
 
+\item[Similarity:] A similarity transformation is defined as
+\begin{align}
+\vTmx &= s R \vx + \bm{t},
+\end{align}
+with $s$ a scalar and $R$ a rotation matrix. This means that the
+image is treated as an object, which can translate, rotate, and
+isotropically scaled. The rotation matrix is parameterised by an
+angle in 2D, and by a so-called ``versor'' in 3D. The parameter
+vector $\vmu$ consists of the angle/versor, the translation
+vector, and the isotropic scaling factor. In 2D, this gives a
+vector of length 4. In 3D, this gives a vector of length 7. There
+are few cases when you need this transform.
+
 \item[Affine:] An affine transformation is defined as:
 \begin{align}
 \vTmx &= A \vx + \bm{t},
@@ -460,20 +473,23 @@ B-spline control point grid, since that one is defined on the
 fixed image!} \label{fig:transformexample}
 \end{figure}
 See Figure \ref{fig:transformexample} for an illustration of the
-different transforms. Choose the transformation that fits your
-needs: only choose a nonrigid transformation if you expect that
-the underlying problem contains local deformations, choose a rigid
-transformation if you only need to compensate for differences in
-pose. To initialise a nonrigid registration problem, perform a
-rigid or affine one first. The result of the initial rigid or
-affine registration is combined with the nonrigid B-spline
-transformation in one of the following two ways:
+different transforms (except for the similarity transformation).
+Choose the transformation that fits your needs: only choose a
+nonrigid transformation if you expect that the underlying problem
+contains local deformations, choose a rigid transformation if you
+only need to compensate for differences in pose. To initialise a
+nonrigid registration problem, perform a rigid or affine one
+first. The result of the initial rigid or affine registration is
+combined with the nonrigid B-spline transformation in one of the
+following two ways:
 \begin{align}
   \text{addition: }\quad    & \vTmx = \vTm^\mathrm{BS}(\vx) + \vT_{\hat\vmu_0}(\vx) \\
   \text{composition: }\quad & \vTmx = \vTm^\mathrm{BS}\left( \vT_{\hat\vmu_0}(\vx) \right)
   = ( \vTm^\mathrm{BS} \circ \vT_{\hat\vmu_0})(\vx)
 \end{align}
 The latter method is in general to be preferred.
+
+%// iets over scales?
 
 
 \section{Optimisers}\label{sec:comp:optimiser}
