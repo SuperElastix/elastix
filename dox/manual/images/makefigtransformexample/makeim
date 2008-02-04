@@ -1,0 +1,33 @@
+#!/bin/bash
+
+#
+# register and transform orig/resgrid.mhd
+#
+# usage:
+#   makeim <initialtransformtype> <transformtype>
+#
+# with transformtype and initialtransformtype both 
+# one of {tran,rig,aff,bsp} 
+#
+
+# transformtype:
+tt="$2"
+# initial transformtype
+tt0="$1"
+
+if [ "$tt0" = "orig" ]
+then
+  inittp=""
+else
+  inittp="-t0 res/$tt0/TransformParameters.0.txt"
+fi
+
+elastix -out res/$tt -f im/fixed_t1.mhd -m im/newmoving.mhd -p par/par$tt.txt $inittp
+
+transformix -in res/orig/resgrid.mhd -tp res/$tt/TransformParameters.0.txt -out res/$tt
+
+pxcastconvert -in res/$tt/result.mhd -out res/$tt/resgrid.mhd -z
+
+
+
+

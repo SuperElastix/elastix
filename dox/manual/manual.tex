@@ -55,9 +55,10 @@
 
 This manual describes a software package for image registration:
 \elastix. The software consists of a collection of algorithms that
-are commonly used to solve medical image registration problems.
-The modular design of \elastix\ allows the user to quickly test
-and compare different registration methods for his/her specific
+are commonly used to solve medical image registration problems. A
+large part of the code is based on the Insight Toolkit (ITK). The
+modular design of \elastix\ allows the user to quickly test and
+compare different registration methods for his/her specific
 application. The command-line interface simplifies the processing
 of large amounts of data sets, using scripting.
 
@@ -404,7 +405,8 @@ vector of length 3. In 3D, this gives a vector of length 6.
 where the matrix $A$ has no restrictions. This means that the
 image can be translated, rotated, scaled, and sheared. The
 parameter vector $\vmu$ is formed by the matrix elements $a_{ij}$
-and the translation vector.
+and the translation vector. In 2D, this gives a vector of length
+6. In 3D, this gives a vector of length 12.
 
 \item[B-splines:] For the category of non-rigid transformations, we focus on a
 transformation that is parameterised by B-splines
@@ -428,98 +430,88 @@ misleading. The control point grid is defined by the amount of
 space between the control points, which can be different for each
 direction. B-splines have local support ($|\NN_{\vx}|$ is small),
 which is beneficial both for modelling local transformations, and
-for fast computation. See Figure \ref{fig:bspline} for an
-illustration of the use of B-splines in image registration. The
-parameters $\vmu$ are formed by the B-spline coefficient
-$\bm{c}_k$. The number of control points determines the number of
-parameters. $\approx 10000$ parameters is not an unusual case.
+for fast computation. The parameters $\vmu$ are formed by the
+B-spline coefficient $\bm{c}_k$. The number of control points
+determines the number of parameters. $\approx 10000$ parameters is
+not an unusual case.
 \end{description}
 
 \begin{figure}
 \centering
-\subfigure[]{\includegraphics[width=4.5cm,height=4.5cm]{images/fixed.eps}}\label{sfig:bspline:a}
-\subfigure[]{\includegraphics[width=4.5cm,height=4.5cm]{images/moving.eps}}\label{sfig:bspline:b}
-\subfigure[]{\includegraphics[width=4.5cm,height=4.5cm]{images/deformed.eps}}\label{sfig:bspline:c}
-\caption{B-spline transformation. (a) the fixed image, (b) the
-moving image with a grid overlayed (this is NOT the B-spline
-control point grid, since that one is defined on the fixed image),
-and (c) the control points were moved around until $I_M(\vTmx)$
-resembles $I_F(\vx)$; the overlay grid gives an indication of the
-deformation imposed on the moving image.} \label{fig:bspline}
+% was fixed.eps, moving.eps, deformed.eps
+\subfigure[fixed]{\includegraphics[width=4.5cm,height=4.5cm]{images/transformexample_fixed.eps}}\label{sfig:transformexample:a}
+\subfigure[moving]{\includegraphics[width=4.5cm,height=4.5cm]{images/transformexample_orig.eps}}\label{sfig:transformexample:b}
+\subfigure[translation]{\includegraphics[width=4.5cm,height=4.5cm]{images/transformexample_tran.eps}}\label{sfig:transformexample:c}
+\subfigure[rigid]{\includegraphics[width=4.5cm,height=4.5cm]{images/transformexample_rig.eps}}\label{sfig:transformexample:d}
+\subfigure[affine]{\includegraphics[width=4.5cm,height=4.5cm]{images/transformexample_aff.eps}}\label{sfig:transformexample:e}
+\subfigure[B-spline]{\includegraphics[width=4.5cm,height=4.5cm]{images/transformexample_bsp.eps}}\label{sfig:transformexample:f}
+\caption{Different transformations. (a) the fixed image, (b) the
+moving image with a grid overlayed, (c) the deformed moving image
+$I_M(\vTmx)$ with a translation transformation, (d) a rigid
+transformation, (e) an affine transformation, and (f) a B-spline
+transformation. The deformed moving image nicely resembles the
+fixed image $I_F(\vx)$ using the B-spline transformation. The
+overlay grids give an indication of the deformations imposed on
+the moving image. NB: the overlayed grid in (f) is NOT the
+B-spline control point grid, since that one is defined on the
+fixed image!} \label{fig:transformexample}
 \end{figure}
+See Figure \ref{fig:transformexample} for an illustration of the
+different transforms. Choose the transformation that fits your
+needs: only choose a nonrigid transformation if you expect that
+the underlying problem contains local deformations, choose a rigid
+transformation if you only need to compensate for differences in
+pose. To initialise a nonrigid registration problem, perform a
+rigid or affine one first. The result of the initial rigid or
+affine registration is combined with the nonrigid B-spline
+transformation in one of the following two ways:
+\begin{align}
+  \text{addition: }\quad    & \vTmx = \vTm^\mathrm{BS}(\vx) + \vT_{\hat\vmu_0}(\vx) \\
+  \text{composition: }\quad & \vTmx = \vTm^\mathrm{BS}\left( \vT_{\hat\vmu_0}(\vx) \right)
+  = ( \vTm^\mathrm{BS} \circ \vT_{\hat\vmu_0})(\vx)
+\end{align}
+The latter method is in general to be preferred.
 
-The attentive reader will notice that in Figure \ref{fig:bspline}
-the B-spline grid is depicted on top of the moving image, instead
-of the fixed image as stated above. This brings us to a
-technicality concerning the \emph{implementation} of
-transformations. If a transformation would be implemented by a
-so-called forward-transform, then points from the moving image
-would be mapped to the fixed image domain. However, when it comes
-to creating the deformed image $I_M(\vTmx)$, possibly, due to the
-nature of a nonrigid transformation, none of the voxels in $I_M$
-maps to a point $\bm{y}$ in the domain of $I_F$. This would result
-in a `gap' in the deformed image. To avoid this, transformations
-are implemented using a backward-transform. The transformation
-maps from the fixed image domain to the moving image domain, and
-therefore the B-spline grid is actually (`in the code') put on the
-fixed image.
-
-Choose the transformation that fits your needs: only choose a
-nonrigid transformation if you expect that the underlying problem
-contains local deformations, choose a rigid transformation if you
-only need to compensate for differences in pose. To initialise a
-nonrigid registration problem, perform a rigid or affine one first.
 
 \section{Optimisers}\label{sec:comp:optimiser}
 
 \begin{figure}
 \centering
-\includegraphics[width=5cm]{images/Gradient_descent.eps}
-\caption{Iterative optimisation. The arrows indicate the steps
-$a_k \bm{d}_k$ taken in the direction of the optimum, which is in the
-centre.} \label{fig:optimisation}
+% was: Gradient_descent.eps
+\includegraphics[width=0.8\textwidth]{images/gd_example.eps}
+\caption{Iterative optimisation. Example for registration with a
+translation transformation model. The arrows indicate the steps
+$a_k \bm{d}_k$ taken in the direction of the optimum, which is the
+minimum of the cost function.} \label{fig:optimisation}
 \end{figure}
-
-To solve the optimisation problem (\ref{eq:registration1}), i.e.
-to obtain the optimal transformation $\vT$, commonly an iterative
-optimisation strategy is employed:
+To solve the optimisation problem (\ref{eq:parametric}), i.e. to
+obtain the optimal transformation parameter vector $\hat\vmu$,
+commonly an iterative optimisation strategy is employed:
 \begin{align}
 \vmu_{k+1} &= \vmu_k + a_k \bm{d}_k, \quad k = 0, 1, 2, \cdots,
 \end{align}
 with $\bm{d}_k$ the `search direction' at iteration $k$, $a_k$ a
 scalar gain factor controlling the step size along the search
-direction, and $\vmu_k$ the parameters that define the
-transformation. For example, for rigid registration the parameter
-vector $\vmu$ is of size 6 in 3D: the three Euler angles and the
-three translations, and for B-splines this parameters vector contains
-the set of B-spline coefficients ($\mu$ in Equation
-(\ref{eq:bspline}). The optimisation process is illustrated in Figure
-\ref{fig:optimisation}. \citet{KleinEA07} give an overview of various
-optimisation routines the literature offers. Examples are
+direction. The optimisation process is illustrated in Figure
+\ref{fig:optimisation}. \citet{KleinEA07} give an overview of
+various optimisation routines the literature offers. Examples are
 quasi-Newton (QN), nonlinear conjugate gradient (NCG), gradient
-descent (GD), and Robbins-Monro (RM).
+descent (GD), and Robbins-Monro (RM). Gradient descent and
+Robbins-Monro are discussed below. For details on other
+optimisation methods we refer to \citep{KleinEA07,NocedalEA99}.
 
 \begin{description}
-\item[Gradient descent:] Gradient descent optimisation methods take the
+\item[Gradient descent (GD):] Gradient descent optimisation methods take the
 search direction as the negative gradient of the cost function:
 \begin{align}
 \vmu_{k+1} &= \vmu_k - a_k \bm{g}(\vmu_k),\label{eq:gd}
 \end{align}
 with $\bm{g}(\vmu_k) = \partial \mathcal{C} / \partial \vmu$
-evaluated at the current position $\vmu_k$. Several choices exist for
-the gain factor $a_k$, such as a determined by a line search or
-defined by a decaying function of $k$, e.g.:
-\begin{align}
-a_k &= \frac{a}{(k+A)^{\alpha}},\label{eq:gain}
-\end{align}
-where $a > 0$, $A \ge 1$, and $0 \le \alpha \le 1$ are user-defined
-constants. \cite{Spall98} suggests the use of $\alpha = 0.602$ and
-$A$ approximately 10\% of the user-defined maximum number of
-iterations, or less. The choice of the overall gain, $a$, depends on
-the expected ranges of $\vmu$ and $\bm{g}$ and is thus problem
-specific.
+evaluated at the current position $\vmu_k$. Several choices exist
+for the gain factor $a_k$, such as a determined by a line search
+or using a predefined function of $k$.
 
-\item[Robbins-Monro:] The RM optimisation method replace the calculation of
+\item[Robbins-Monro (RM):] The RM optimisation method replace the calculation of
 the derivative of the cost function $\bm{g}(\vmu_k)$ by an
 approximation $\widetilde{\bm{g}}_k$.
 \begin{align}
@@ -528,17 +520,30 @@ approximation $\widetilde{\bm{g}}_k$.
 The approximation is potentially faster to compute, but might
 deteriorate convergence properties of the GD scheme.
 \citet{KleinEA07} showed that using only a small random subset of
-voxels from the fixed image accelerates registration significantly,
-without compromising registration accuracy. It is important that a
-new subset of fixed image voxels is selected every iteration $k$, so
-that the approximation error has zero mean.
+voxels ($\approx 2000$) from the fixed image accelerates
+registration significantly, without compromising registration
+accuracy. The Random or RandomCoordinate samplers, described in
+Section~\ref{sec:comp:sampler}, are examples of samplers that pick
+voxels randomly. It is important that a new subset of fixed image
+voxels is selected every iteration $k$, so that the approximation
+error has zero mean. The RM method is usually combined with $a_k$
+as a predefined decaying function of $k$:
+\begin{align}
+a_k &= \frac{a}{(k+A)^{\alpha}},\label{eq:gain}
+\end{align}
+where $a > 0$, $A \ge 1$, and $0 \le \alpha \le 1$ are
+user-defined constants. In our experience, a reasonable choice is
+$\alpha = 0.602$ and $A$ approximately 10\% of the user-defined
+maximum number of iterations, or less. The choice of the overall
+gain, $a$, depends on the expected ranges of $\vmu$ and $\bm{g}$
+and is thus problem specific.
 \end{description}
 
-For details on other optimisation methods we refer to
-\citep{KleinEA07,NocedalEA99}.
-
-We recommend the use of RM over GD, since it is so much faster,
-without compromising on accuracy. In that case the parameter $a$ is
+Note that GD and RM are in fact very similar. Running RM with a
+Full sampler (see Section~\ref{sec:comp:sampler}), instead of a
+Random sampler, is equivalent to performing GD. We recommend the
+use of RM over GD, since it is so much faster, without
+compromising on accuracy. In that case, the parameter $a$ is
 parameter that is to be tuned for your application.
 
 \section{Interpolators}\label{sec:comp:interpolator}
@@ -583,37 +588,32 @@ interpolation is usually required, for which we recommend $N=3$.
 \section{Multi-resolution}\label{sec:comp:multiresolution}
 
 For a good overview of multi-resolution strategies see
-\citet{LesterEA99}. Part of this section is taken from the paper with
-minor modifications. Two hierarchical methods are distinguished:
+\citet{LesterEA99}. Two hierarchical methods are distinguished:
 reduction of data complexity, and reduction of transformation
 complexity.
 
 \subsection{Data complexity}
 
-``To reduce the number of local optima, initially the information
-content within the images to be matched is reduced, so that only the
-coarsest, most global structures remain. The absence of finer detail
-ensures avoidance of local minima traps by virtue of their
-eradication. Ideally the optimisation surface initially contains only
-one maximum, in the region of the optimal global match. The
-optimisation can then be improved by gradual reintroduction of
-structural details at the same rate in both the images and the
-concurrent updating of the registering deformation to match
-corresponding re-introduced structures or features.''
-
-``Such hierarchies of decreasing data complexity are provided by
-scale spaces, where the image size is constant in all levels, or by
-pyramids, where image size is also reduced in each successive level.
-In the latter case, an additional advantage for pixel-based matching
-schemes is that computation of optimal parameters is speeded up in
-the higher level (lower resolution) images due to the reduction in
-the amount of data to be processed.''
-
-Several scale spaces or pyramids are found in the literature, amongst
-others Gaussian and Laplacian pyramids, morphological scale space,
-and spline and wavelet pyramids. The Gaussian pyramid is the most
-common one, and we have used it all our papers.
-
+It is common to start the registration process using images that
+have lower complexity, e.g., images that are smoothed and possibly
+downsampled. This increases the chance of successful registration.
+A series of images with increasing amount of smoothing is called a
+scale space. If the images are not only smoothed, but also
+downsampled the data is not only less complex, but the
+\emph{amount} of data is actually reduced. In that case, we talk
+about an ``pyramid''. However, confusingly, the word pyramid is
+used by us also to refer to a scale space. Several scale spaces or
+pyramids are found in the literature, amongst others Gaussian and
+Laplacian pyramids, morphological scale space, and spline and
+wavelet pyramids. The Gaussian pyramid is the most common one.
+Figure~\ref{fig:multiresolution} shows the Gaussian pyramid with
+and without downsampling. In combination with a Full sampler (see
+Section~\ref{sec:comp:sampler}), using a pyramid with downsampling
+will save a lot of times in the first resolution levels, because
+the image contains much less voxels. In combination with a Random
+sampler, or RandomCoordinate, the downsampling step is not
+necessary, since the random samplers anyway select a user-defined
+number of samples, independent of the image size.
 \begin{figure}
 \centering
 \subfigure[resolution 0]{\includegraphics[width=3cm]{images/moving_pd.R0d.eps}}
@@ -632,18 +632,26 @@ factor 2, so physically the images are of the same size every
 resolution.} \label{fig:multiresolution}
 \end{figure}
 
+
 \subsection{Transformation complexity}
 
-``The second hierarchical method is to increase the complexity of the
-transformation within a particular algorithm.''
+The second multiresolution strategy is to start the registration
+with fewer degrees of freedom for the transformation model. The
+degrees of freedom of the transformation equals the length (number
+of elements) of the parameter vector $\vmu$.
 
-This is also typically used in registration, if only a rigid
-registration is performed prior to nonrigid registration. Also for
-the nonrigid registration part we often, but not always, apply this
-technique. Registration is then started with a coarse B-spline grid,
-only capable of modelling coarse deformations. In subsequent
-resolutions the B-spline grid is gradually refined, thereby
-introducing the capability to match smaller structures.
+An example of this was already mentioned in
+Section~\ref{sec:comp:transform}: the use of a rigid
+transformation prior to nonrigid B-spline registration. We may
+even use a three-level strategy: first rigid, then affine, then
+nonrigid B-spline.
+
+Another example is to increase the number of degrees of freedom
+within the transformation model. With a B-spline transformation,
+it is often good practice to start registration with a coarse
+control point grid, only capable of modelling coarse deformations.
+In subsequent resolutions the B-spline grid is gradually refined,
+thereby introducing the capability to match smaller structures.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

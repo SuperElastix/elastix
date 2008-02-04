@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# run this script to do generate fig:transformexample
+
+mkdir -p res/orig
+mkdir -p res/tran
+mkdir -p res/rig
+mkdir -p res/aff
+mkdir -p res/bsp
+
+./makegrid32
+
+./makeorig
+
+./makeim orig tran
+./makeim tran rig
+./makeim rig aff
+./makeim aff bsp
+
+./makealleps
+
+
