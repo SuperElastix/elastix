@@ -407,12 +407,13 @@ vector of length 3. In 3D, this gives a vector of length 6.
 \end{align}
 with $s$ a scalar and $R$ a rotation matrix. This means that the
 image is treated as an object, which can translate, rotate, and
-isotropically scaled. The rotation matrix is parameterised by an
-angle in 2D, and by a so-called ``versor'' in 3D. The parameter
-vector $\vmu$ consists of the angle/versor, the translation
-vector, and the isotropic scaling factor. In 2D, this gives a
-vector of length 4. In 3D, this gives a vector of length 7. There
-are few cases when you need this transform.
+scale isotropically. The rotation matrix is parameterised by an
+angle in 2D, and by a so-called ``versor'' in 3D (Euler angles
+could have been used as well). The parameter vector $\vmu$
+consists of the angle/versor, the translation vector, and the
+isotropic scaling factor. In 2D, this gives a vector of length 4.
+In 3D, this gives a vector of length 7. There are few cases when
+you need this transform.
 
 \item[Affine:] An affine transformation is defined as:
 \begin{align}
