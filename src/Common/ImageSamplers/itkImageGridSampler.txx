@@ -132,6 +132,35 @@ namespace itk
 
 
   /**
+	 * ******************* SetNumberOfSamples *******************
+	 */
+
+  template< class TInputImage >
+    void
+    ImageGridSampler< TInputImage >
+    ::SetNumberOfSamples( unsigned long nrofsamples )
+  {
+    /** Compute the grid spacing needed to achieve the NumberOfSamplesForExactGradient. */
+    const unsigned long allvoxels = this->GetInputImageRegion().GetNumberOfPixels();
+    const double allvoxelsd = static_cast<double>( allvoxels );
+    const double nrofsamplesd = static_cast<double>( nrofsamples );
+    const double indimd = static_cast<double>( InputImageDimension );
+
+    /** compute isotropic gridspacing */
+    const double fraction = allvoxelsd / nrofsamplesd;
+    int gridspacing = static_cast<int>( 
+      vnl_math_rnd( vcl_pow( fraction, 1.0/indimd ) )   );
+    gridspacing = vnl_math_max( 1, gridspacing );
+
+    /** Set gridspacings for all dimensions */
+    SampleGridSpacingType gridspacings;
+    gridspacings.Fill( gridspacing );
+    this->SetSampleGridSpacing( gridspacings );
+
+  } // end SetNumberOfSamples
+
+
+  /**
 	 * ******************* PrintSelf *******************
 	 */
   

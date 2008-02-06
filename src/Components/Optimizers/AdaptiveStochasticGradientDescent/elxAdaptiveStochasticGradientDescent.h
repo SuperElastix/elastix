@@ -21,17 +21,49 @@ namespace elastix
   * For more information about the optimisation method, please read the documentation
   * of the AdaptiveStochasticGradientDescentOptimizer class.
   *
+  * This optimizer is very suitable to be used in combination with the Random image sampler,
+  * or with the RandomCoordinate image sampler, with the setting (NewSamplesEveryIteration "true"). 
+  * Much effort has been spent on providing reasonable default values for all parameters, to 
+  * simplify usage. In most registration problems, good results should be obtained without specifying
+  * any of the parameters described below (except the first of course, which defines the optimizer
+  * to use).
+  *
   * The parameters used in this class are:
   * \parameter Optimizer: Select this optimizer as follows:\n
   *   <tt>(Optimizer "AdaptiveStochasticGradientDescent")</tt>
   * \parameter MaximumNumberOfIterations: The maximum number of iterations in each resolution. \n
   *   example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
-  *    Default/recommended value: 500.
+  *    Default/recommended value: 500. When you are in a hurry, you may go down to 250 for example.
+  *    When you have plenty of time, and want to be absolutely sure of the best results, a setting
+  *    of 2000 is reasonable. In general, 500 gives satisfactory results.
+  * \parameter AutomaticParameterEstimation: When this parameter is set to "true",
+  *   many other parameters are calculated automatically: SP_a, SP_alpha, SigmoidMax,
+  *   SigmoidMin, and SigmoidScale. In the elastix.log file the actually chosen values for
+  *   these parameters can be found. \n
+  *   example: <tt>(AutomaticParameterEstimation "true")</tt>\n
+  *   Default/recommended value: "true". The parameter can be specified for each resolution,
+  *   or for all resolutions at once.
+  * \parameter UseAdaptiveStepSizes: When this parameter is set to "true", the adaptive
+  *   step size mechanism described in the documentation of 
+  *   itk::AdaptiveStochasticGradientDescentOptimizer is used.
+  *   The parameter can be specified for each resolution, or for all resolutions at once.\n
+  *   example: <tt>(UseAdaptiveStepSizes "true")</tt>\n
+  *   Default/recommend value: "true", because it makes the registration more robust. In case
+  *   of using a RandomCoordinate sampler, with (UseRandomSampleRegion "true"), the adaptive
+  *   step size mechanism is turned off, no matter the user setting.
+  * \parameter MaximumStepLength: Also called "delta". This parameter can be considered as 
+  *   the maximum voxel displacement between two iterations. 
+  *   The parameter can be specified for each resolution, or for all resolutions at once.\n
+  *   example: <tt>(MaximumStepLength 1.0)</tt>\n
+  *   Default: mean voxel spacing of fixed and moving image. This seems to work well in general.
+  *   This parameter only has influence when AutomaticParameterEstimation is used.
   * \parameter SP_a: The gain \f$a(k)\f$ at each iteration \f$k\f$ is defined by \n
   *   \f$a(k) =  SP\_a / (SP\_A + k + 1)^{SP\_alpha}\f$. \n
   *   SP_a can be defined for each resolution. \n
   *   example: <tt>(SP_a 3200.0 3200.0 1600.0)</tt> \n
   *   The default value is 400.0. Tuning this variable for you specific problem is recommended.
+  *   Alternatively set the AutomaticParameterEstimation to "true". In that case, you do not
+  *   need to specify SP_a. SP_a has no influence when AutomaticParameterEstimation is used.
   * \parameter SP_A: The gain \f$a(k)\f$ at each iteration \f$k\f$ is defined by \n
   *   \f$a(k) =  SP\_a / (SP\_A + k + 1)^{SP\_alpha}\f$. \n
   *   SP_A can be defined for each resolution. \n
@@ -42,8 +74,38 @@ namespace elastix
   *   SP_alpha can be defined for each resolution. \n
   *   example: <tt>(SP_alpha 0.602 0.602 0.602)</tt> \n
   *   The default/recommended value for this particular optimizer is 1.0.
+  *   Alternatively set the AutomaticParameterEstimation to "true". In that case, you do not
+  *   need to specify SP_alpha. SP_alpha has no influence when AutomaticParameterEstimation is used.
+  * \parameter UseMaximumLikelihoodMethod: Experimental parameter. Leave to default setting.
+  *   example: <tt>(UseMaximumLikelihood "false")</tt>\n
+  *   Default/recommended value: "false".
+  * \parameter SaveCovarianceMatrix: Experimental parameter. Leave to default setting. 
+  *   example: <tt>(SaveCovarianceMatrix "false")</tt>\n
+  *   Default/recommended value: "false".
+  * \parameter NumberOfGradientMeasurements: Number of gradients N to estimate the
+  *   average square magnitudes of the exact gradient and the approximation error.
+  *   The parameter can be specified for each resolution, or for all resolutions at once.\n
+  *   example: <tt>(NumberOfGradientMeasurements 10)</tt>\n
+  *   Default value: N = max( 2, min(5, 500 / nrofparams) ), with nrofparams the 
+  *   number of transform parameters. The maximum value N=5 seems to be sufficient in practice. 
+  *   In principle, the more the better, but the slower.
+  *   The parameter has only influence when AutomaticParameterEstimation is used.
+  * \parameter NumberOfJacobianMeasurements: The number of voxels M where the jacobian is measured,
+  *   which is used to estimate the covariance matrix. 
+  *   The parameter can be specified for each resolution, or for all resolutions at once.\n
+  *   example: <tt>(NumberOfJacobianMeasurements 5000 10000 20000)</tt>\n
+  *   Default value: M = max( 1000, nrofparams*3 ), with nrofparams the 
+  *   number of transform parameters. This is a rather crude rule of thumb,
+  *   which seems to work in practice. In principle, the more the better, but the slower.
+  *   The parameter has only influence when AutomaticParameterEstimation is used.
+  * \parameter NumberOfSamplesForExactGradient: The number of image samples used to compute
+  *   the 'exact' gradient. The samples are chosen on a uniform grid. 
+  *   The parameter can be specified for each resolution, or for all resolutions at once.\n
+  *   example: <tt>(NumberOfSamplesForExactGradient 100000)</tt>\n
+  *   Default/recommended: 100000. This works in general. If the image is smaller, the number
+  *   of samples is automatically reduced. In principle, the more the better, but the slower.
+  *   The parameter has only influence when AutomaticParameterEstimation is used.
   *
-  * \todo: document extra parameters
   * \todo: this class contains a lot of functional code, which actually does not belong here.
   *
   * \sa AdaptiveStochasticGradientDescentOptimizer

@@ -30,17 +30,15 @@ using namespace itk;
 	 *		Default is "false" for all resolutions.\n
    * \parameter ImageSampler: The name of the image sampler that is used to select voxels in the fixed image. \n
    *    Choose one of: Full, Random, RandomSparseMask, RandomCoordinate, Grid.\n
-   *    \li Full: All pixels of the fixed image;
-   *    \li Random: Random pixels are selected; the parameter NumberOfSpatialSamples says how many;
-   *    \li RandomSparseMask: Same as random, but more efficient when the FixedMask is sparse (many 0s);
-   *    \li RandomFeatureControlled: Random pixels are selected, which have similar properties;
-   *    \li RandomCoordinate: Random coordinates are selected (so not only at voxel locations);
-   *    \li Grid: Voxels are selected on a uniform regular grid; this ImageSampler is NOT RECOMMENDED; The grid size can be specified by the parameter SampleGridSpacing;
-   *
    *    Can be specified for each resolution, or for all resolutions at once.\n
    *    example: <tt>(ImageSampler "Random" "Full")</tt> \n
    *    Default is "Random".\n
    *    See also the NewSamplesEveryIteration parameter (defined in the elx::OptimizerBase)\n
+   *    \li Full: All pixels of the fixed image;
+   *    \li Random: Random pixels are selected; the parameter NumberOfSpatialSamples says how many;
+   *    \li RandomSparseMask: Same as random, but more efficient when the FixedMask is sparse (many 0s);
+   *    \li RandomCoordinate: Random coordinates are selected (so not only at voxel locations);
+   *    \li Grid: Voxels are selected on a uniform regular grid; this ImageSampler is NOT RECOMMENDED; The grid size can be specified by the parameter SampleGridSpacing;
    * \parameter NumberOfSpatialSamples: The number of image voxels used for computing the \n
 	 *		metric value and its derivative in each iteration. Must be given for each resolution.\n
    *    this parameter makes sense with a Random, RandomSparseMask, and RandomCoordinate ImageSampler.\n
@@ -91,6 +89,12 @@ using namespace itk;
 		virtual ITKBaseType * GetAsITKBaseType(void)
 		{
 			return dynamic_cast<ITKBaseType *>(this);
+		}
+
+    /** Cast to ITKBaseType, to use in const functions. */
+		virtual const ITKBaseType * GetAsITKBaseType(void) const
+		{
+			return dynamic_cast<const ITKBaseType *>(this);
 		}
     
 		/** Get	the dimension of the fixed image. */

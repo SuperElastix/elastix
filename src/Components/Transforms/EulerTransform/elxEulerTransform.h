@@ -127,11 +127,7 @@ using namespace itk;
 		typedef typename Superclass2::ITKBaseType								ITKBaseType;
 		typedef typename Superclass2::CombinationTransformType	CombinationTransformType;
 		
-		/** Other typedef's. */
-		typedef typename RegistrationType::ITKBaseType					ITKRegistrationType;
-		typedef typename ITKRegistrationType::OptimizerType			OptimizerType;
-		typedef typename OptimizerType::ScalesType							ScalesType;
-
+		/** Other typedef's. */		
 		typedef typename FixedImageType::IndexType							IndexType;
 		typedef typename IndexType::IndexValueType							IndexValueType;
 		typedef typename FixedImageType::SizeType								SizeType;
@@ -142,6 +138,9 @@ using namespace itk;
 		typedef CenteredTransformInitializer<
 			EulerTransformType, FixedImageType, MovingImageType>	TransformInitializerType;
 		typedef typename TransformInitializerType::Pointer			TransformInitializerPointer;
+
+    /** For scales setting in the optimizer */
+    typedef typename Superclass2::ScalesType                ScalesType;
 		
 		/** Execute stuff before the actual registration:
 		 * \li Call InitializeTransform
@@ -171,12 +170,7 @@ using namespace itk;
      * \li If scales are provided by the user use those,
      * \li Otherwise use some default value
      * This function is called by BeforeRegistration, after
-     * the InitializeTransform function is called 
-     *
-     * AutomaticScalesEstimation works like this:
-     * \li N=10000 points are sampled on a uniform grid on the fixed image.
-     * \li Jacobians dT/dmu are computed
-     * \li Scales_i = 1/N sum_x || dT / dmu_i ||^2
+     * the InitializeTransform function is called    
      */
     virtual void SetScales(void);
 

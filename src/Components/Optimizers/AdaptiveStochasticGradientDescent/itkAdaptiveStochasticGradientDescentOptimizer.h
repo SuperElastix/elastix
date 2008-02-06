@@ -74,16 +74,16 @@ namespace itk
     typedef Superclass::ScaledCostFunctionPointer ScaledCostFunctionPointer;
     typedef Superclass::StopConditionType         StopConditionType;
 
-    /** Set/Get whether CruzAcceleration is desired. Default:true */
-    itkSetMacro( UseCruzAcceleration, bool );
-    itkGetConstMacro( UseCruzAcceleration, bool );
+    /** Set/Get whether the adaptive step size mechanism is desired. Default: true */
+    itkSetMacro( UseAdaptiveStepSizes, bool );
+    itkGetConstMacro( UseAdaptiveStepSizes, bool );
 
-    /** Set/Get the maximum of the sigmoid use by CruzAcceleration. 
+    /** Set/Get the maximum of the sigmoid. 
     * Should be >0. Default: 1.0 */     
     itkSetMacro(SigmoidMax, double);
     itkGetConstMacro(SigmoidMax, double);
 
-    /** Set/Get the maximum of the sigmoid use by CruzAcceleration. 
+    /** Set/Get the maximum of the sigmoid. 
     * Should be <0. Default: -0.8 */     
     itkSetMacro(SigmoidMin, double);
     itkGetConstMacro(SigmoidMin, double);
@@ -99,11 +99,11 @@ namespace itk
     virtual ~AdaptiveStochasticGradientDescentOptimizer() {};
 
     /** Function to update the current time
-    * If UseCruzAcceleration is false this function just increments
-    * the CurrentTime by E_0. 
-    * Else, the CurrentTime is updated according to:
-    * time = max[0, time + sigmoid( -gradient*previousgradient) ]
-    * In that case, also updates the previous gradient.
+    * If UseAdaptiveStepSizes is false this function just increments
+    * the CurrentTime by \f$E_0 = (sigmoid_{max} + sigmoid_{min})/2\f$. 
+    * Else, the CurrentTime is updated according to:\n
+    * time = max[ 0, time + sigmoid( -gradient*previousgradient) ]\n
+    * In that case, also the m_PreviousGradient is updated.
     */
     virtual void UpdateCurrentTime( void );
 
@@ -116,7 +116,7 @@ namespace itk
     void operator=( const Self& );              // purposely not implemented
 
     /** Settings */
-    bool                          m_UseCruzAcceleration;
+    bool                          m_UseAdaptiveStepSizes;
     double                        m_SigmoidMax;
     double                        m_SigmoidMin;
     double                        m_SigmoidScale;

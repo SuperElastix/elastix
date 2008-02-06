@@ -65,6 +65,12 @@ using namespace itk;
 			return dynamic_cast<ITKBaseType *>(this);
 		}
 
+    /** Cast to ITKBaseType, to use in const functions. */
+		virtual const ITKBaseType * GetAsITKBaseType(void) const
+		{
+			return dynamic_cast<const ITKBaseType *>(this);
+		}
+
 		/** Add empty SetCurrentPositionPublic, so this function is known in every inherited class. */
 		virtual void SetCurrentPositionPublic( const ParametersType &param );
 

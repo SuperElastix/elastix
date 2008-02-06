@@ -14,20 +14,29 @@ using namespace itk;
    * \brief A transform based on the itk SimilarityTransforms.
    *
    * This transform is a rigid body transformation, with an isotropic scaling.
-   *
+   * In 2D, the order of parameters is:\n
+   *   [scale, rotation angle, translationx, translationy]\n
+   * In 3D, the order of parameters is: \n
+   *   [versor1 versor2 versor3 translationx translationy translationz scale]\n
+   * Make sure, when specifying the Scales manually that you keep in mind this order!
+   * 
    * The parameters used in this class are:
    * \parameter Transform: Select this transform as follows:\n
    *    <tt>(%Transform "SimilarityTransform")</tt>
    * \parameter Scales: the scale factor between the rotations, translations,
    *    and the isotropic scaling, used in the optimizer. \n
-   *    example: <tt>(Scales 200000.0)</tt> \n
    *    example: <tt>(Scales 100000.0 60000.0 ... 80000.0)</tt> \n
-   *    If only one argument is given, that factor is used both for the rotations
-   *    and the isotropic scaling.
-   *    If more than one argument is given, then the number of arguments should be
+   *    With this transform, the number of arguments should be
    *    equal to the number of parameters: for each parameter its scale factor.
    *    If this parameter option is not used, by default the rotations are scaled
-   *    by a factor of 100000.0.
+   *    by a factor of 100000.0 and the scale by a factor 10000.0. 
+   *    These are rather arbitrary values. See also the AutomaticScalesEstimation parameter.
+   *    See also the comment in the documentation of SimilarityTransformElastix about
+   *    the order of the parameters in 2D and 3D.
+   * \parameter AutomaticScalesEstimation: if this parameter is set to "true" the Scales
+   *    parameter is ignored and the scales are determined automatically. \n
+   *    example: <tt>( AutomaticScalesEstimation "true" ) </tt> \n
+   *    Default: "false" (for backwards compatibility). Recommended: "true".
    * \parameter CenterOfRotation: an index around which the image is rotated. \n
    *    example: <tt>(CenterOfRotation 128 128 90)</tt> \n
    *    By default the CenterOfRotation is set to the geometric center of the image.
@@ -120,10 +129,6 @@ using namespace itk;
     typedef typename Superclass2::CombinationTransformType  CombinationTransformType;
     
     /** Other typedef's. */
-    typedef typename RegistrationType::ITKBaseType          ITKRegistrationType;
-    typedef typename ITKRegistrationType::OptimizerType     OptimizerType;
-    typedef typename OptimizerType::ScalesType              ScalesType;
-
     typedef typename FixedImageType::IndexType              IndexType;
     typedef typename IndexType::IndexValueType              IndexValueType;
     typedef typename FixedImageType::SizeType               SizeType;
@@ -134,6 +139,9 @@ using namespace itk;
     typedef CenteredTransformInitializer<
       SimilarityTransformType, FixedImageType, MovingImageType> TransformInitializerType;
     typedef typename TransformInitializerType::Pointer      TransformInitializerPointer;
+
+    /** For scales setting in the optimizer */
+    typedef typename Superclass2::ScalesType                ScalesType;
     
     /** Execute stuff before the actual registration:
      * \li Call InitializeTransform
@@ -157,6 +165,15 @@ using namespace itk;
      * It is not yet possible to enter an initial rotation angle.
      */
     virtual void InitializeTransform( void );
+
+    /** Set the scales
+     * \li If AutomaticScalesEstimation is "true" estimate scales
+     * \li If scales are provided by the user use those,
+     * \li Otherwise use some default value
+     * This function is called by BeforeRegistration, after
+     * the InitializeTransform function is called 
+     */
+    virtual void SetScales(void);
 
     /** Function to read transform-parameters from a file. 
      * 

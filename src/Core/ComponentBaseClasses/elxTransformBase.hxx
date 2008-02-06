@@ -11,6 +11,7 @@
 #include "itkImageRegionIteratorWithIndex.h"
 #include "itkImageFileWriter.h"
 #include "itkVector.h"
+#include "itkImageGridSampler.h"
 
 namespace elastix
 {
@@ -1018,6 +1019,75 @@ namespace elastix
 		}
 
 	} // end SetReadWriteTransformParameters
+
+
+	/**
+	 * ************** AutomaticScalesEstimation ***************
+	 */
+	
+	template <class TElastix>
+		void TransformBase<TElastix>
+		::AutomaticScalesEstimation( ScalesType & scales ) const
+	{
+    typedef itk::ImageGridSampler< FixedImageType >     ImageSamplerType;
+    typedef typename ImageSamplerType::Pointer          ImageSamplerPointer;
+    typedef typename 
+      ImageSamplerType::ImageSampleContainerType        ImageSampleContainerType;
+    typedef typename ImageSampleContainerType::Pointer  ImageSampleContainerPointer;
+    typedef typename ITKBaseType::JacobianType          JacobianType;
+
+    const ITKBaseType * const thisITK = this->GetAsITKBaseType();
+    const unsigned int outdim = MovingImageDimension;
+    const unsigned int N = thisITK->GetNumberOfParameters();
+    scales = ScalesType( N );
+
+    /** Set up grid sampler */
+    ImageSamplerPointer sampler = ImageSamplerType::New();
+    sampler->SetInput( 
+      this->GetRegistration()->GetAsITKBaseType()->GetFixedImage() );
+    sampler->SetInputImageRegion( 
+      this->GetRegistration()->GetAsITKBaseType()->GetFixedImageRegion() );
+
+    /** Compute the grid spacing */
+    unsigned long nrofsamples = 10000;
+    sampler->SetNumberOfSamples( nrofsamples );
+
+    /** get samples and check the actually obtained number of samples */
+    sampler->Update();
+    ImageSampleContainerPointer sampleContainer = sampler->GetOutput();
+    nrofsamples = sampleContainer->Size();
+    if ( nrofsamples == 0 )
+    {
+      /** \todo: should we demand a minimum number (~100) of voxels? */
+      itkExceptionMacro( << "No valid voxels found to estimate the scales." );
+    }
+
+    /** Create iterator over the sample container. */
+    typename ImageSampleContainerType::ConstIterator iter;
+    typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
+    typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
+
+    /** initialize */
+    scales.Fill(0.0);
+
+    /** Read fixed coordinates and get jacobian. */
+    for ( iter = begin; iter != end; ++iter )
+    {      
+      const InputPointType & point = (*iter).Value().m_ImageCoordinates;
+      const JacobianType & jacobian = thisITK->GetJacobian( point );   
+
+      /** Square each element of the jacobian and add each row
+      * to the newscales */
+      for( unsigned int d = 0; d < outdim; ++d )
+      {
+        ScalesType jacd(jacobian[d], N, false);
+        scales += element_product( jacd, jacd );
+      }
+    }
+    scales /= static_cast<double>( nrofsamples );	
+
+  } // end AutomaticScalesEstimation
+
 
 
 } // end namespace elastix

@@ -67,9 +67,22 @@ namespace itk
 		typedef InputImageIndexType															SampleGridIndexType;
 		typedef typename InputImageType::SizeType 							InputImageSizeType;
 		   
-    /** Set/Get the sample grid spacing for each dimension (only integer factors) */
+    /** Set/Get the sample grid spacing for each dimension (only integer factors)
+     * This function overrules and previous calls to SetNumberOfSamples. */
     itkSetMacro(SampleGridSpacing, SampleGridSpacingType);
     itkGetConstMacro(SampleGridSpacing, SampleGridSpacingType);
+
+    /** Define an isotropic SampleGridSpacing such that the desired number
+     * of samples is approximately realised. The following formula is used:
+     *
+     * spacing = max[ 1, round( (availablevoxels/nrofsamples)^(1/dimension) ) ],
+     * with
+     * availablevoxels = nr of voxels in input image region.
+     * 
+     * The InputImageRegion needs to be specified beforehand. A mask is ignored,
+     * so the realised number of samples could be significantly lower than expected.
+     * This function overrules any previous calls to SetSampleGridSpacing.  */
+    virtual void SetNumberOfSamples( unsigned long nrofsamples );
 
     /** Selecting new samples makes no sense if nothing changed. The same
      * samples would be selected anyway. */

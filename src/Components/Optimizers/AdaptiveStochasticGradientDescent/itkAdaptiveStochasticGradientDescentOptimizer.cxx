@@ -15,7 +15,7 @@ namespace itk
 	AdaptiveStochasticGradientDescentOptimizer
 		::AdaptiveStochasticGradientDescentOptimizer()
 	{
-    this->m_UseCruzAcceleration = true;
+    this->m_UseAdaptiveStepSizes = true;
     this->m_SigmoidMax = 1.0;
     this->m_SigmoidMin = -0.8;
     this->m_SigmoidScale = 1e-8;
@@ -34,7 +34,7 @@ namespace itk
   {
     typedef itk::Function::Sigmoid<double, double> SigmoidType;
 
-    if ( this->m_UseCruzAcceleration )
+    if ( this->m_UseAdaptiveStepSizes )
     {
       if ( this->GetCurrentIteration() > 0 )
       {

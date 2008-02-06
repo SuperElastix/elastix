@@ -13,8 +13,7 @@
 #include "itkImageRandomConstIteratorWithIndex.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "itkAdvancedImageToImageMetric.h"
-
-
+#include "itkImageRandomCoordinateSampler.h"
 
 
 namespace elastix
@@ -108,11 +107,15 @@ namespace elastix
       "SigmoidInitialTime", this->GetComponentLabel(), level, 0 );
     this->SetInitialTime( initialTime );
 
-    /** Set/Get whether CruzzAcceleration is desired. Default: true */
-    bool usecruz = true;
-    this->GetConfiguration()->ReadParameter( usecruz,
-      "UseCruzAcceleration", this->GetComponentLabel(), level, 0 );
-    this->SetUseCruzAcceleration( usecruz );
+    /** Set/Get whether the adaptive step size mechanism is desired. Default: true 
+     * NB: the setting is turned of in case of UseRandomSampleRegion=true. 
+     * Depecrated alias UseCruzAcceleration is also still supported. */
+    bool useAdaptiveStepSizes = true;
+    this->GetConfiguration()->ReadParameter( useAdaptiveStepSizes,
+      "UseCruzAcceleration", this->GetComponentLabel(), level, 0, true );
+    this->GetConfiguration()->ReadParameter( useAdaptiveStepSizes,
+      "UseAdaptiveStepSizes", this->GetComponentLabel(), level, 0 );
+    this->SetUseAdaptiveStepSizes( useAdaptiveStepSizes );
  
     /** Set whether automatic gain estimation is required; default: true */
     this->m_AutomaticParameterEstimation = true;
@@ -202,14 +205,14 @@ namespace elastix
       this->SetParam_a(	a );
       this->SetParam_alpha( alpha );
 
-      /** Set/Get the maximum of the sigmoid use by CruzAcceleration. 
+      /** Set/Get the maximum of the sigmoid. 
       * Should be >0. Default: 1.0 */     
       double sigmoidMax = 1.0;
       this->GetConfiguration()->ReadParameter( sigmoidMax,
         "SigmoidMax", this->GetComponentLabel(), level, 0 );
       this->SetSigmoidMax( sigmoidMax );
 
-      /** Set/Get the minimum of the sigmoid use by CruzAcceleration. 
+      /** Set/Get the minimum of the sigmoid. 
       * Should be <0. Default: -0.8 */     
       double sigmoidMin = -0.8;
       this->GetConfiguration()->ReadParameter( sigmoidMin,
@@ -481,6 +484,10 @@ namespace elastix
     typedef typename AdvancedMetricType::Pointer        AdvancedMetricPointer;
     typedef itk::ImageRandomSamplerBase<FixedImageType> ImageRandomSamplerType;
     typedef typename ImageRandomSamplerType::Pointer    ImageRandomSamplerPointer;
+    typedef 
+      itk::ImageRandomCoordinateSampler<FixedImageType> ImageRandomCoordinateSamplerType;
+    typedef typename 
+      ImageRandomCoordinateSamplerType::Pointer         ImageRandomCoordinateSamplerPointer;
     typedef itk::Statistics::MersenneTwisterRandomVariateGenerator 
       RandomGeneratorType;
     typedef vnl_symmetric_eigensystem<double>           eigType;
@@ -524,6 +531,8 @@ namespace elastix
 
     bool stochasticgradients = this->GetNewSamplesEveryIteration();
     ImageRandomSamplerPointer randomsampler = 0;
+    ImageRandomCoordinateSamplerPointer randomCoordinateSampler = 0;
+    bool useRandomSampleRegion = false;
     AdvancedMetricPointer advmetric = 0;
     double dummyvalue = 0.0;
     DerivativeType approxgradient;
@@ -546,37 +555,39 @@ namespace elastix
         randomsampler = dynamic_cast<ImageRandomSamplerType*>( advmetric->GetImageSampler() );
         if ( advmetric->GetUseImageSampler() && randomsampler.IsNotNull() )
         {
+          /** The metric has a sampler and the user set new samples every iteration: */
           stochasticgradients = true;
-        }
-      } 
-    }     
+
+          /** If the sampler is a randomCoordinateSampler set the UseRandomSampleRegion
+           * property to false temporarily. It disturbs the parameter estimation.
+           * At the end of this function the original setting is set back. 
+           * Also, the AdaptiveStepSize mechanism is turned off.
+           * \todo Extend ASGD to really take into account random region sampling. */
+          randomCoordinateSampler = dynamic_cast<ImageRandomCoordinateSamplerType *>(
+            advmetric->GetImageSampler() );
+          if ( randomCoordinateSampler.IsNotNull() )
+          {
+            useRandomSampleRegion = randomCoordinateSampler->GetUseRandomSampleRegion();
+            if (useRandomSampleRegion)
+            {
+              this->SetUseAdaptiveStepSizes( false );
+            }
+            randomCoordinateSampler->SetUseRandomSampleRegion( false );
+          }          
+        } // end if random sampler
+      } // end if advmetric
+    } // end if stochasticgradients
 
     /** Set up the grid samper for the "exact" gradients */
     ImageSamplerPointer gridsampler = 0;
     if (stochasticgradients)
     {
-      /** Copy settings from the random sampler */
+      /** Copy settings from the random sampler and update */
       gridsampler = ImageSamplerType::New();
       gridsampler->SetInput( randomsampler->GetInput() );
       gridsampler->SetInputImageRegion( randomsampler->GetInputImageRegion() );
       gridsampler->SetMask( randomsampler->GetMask() );
-           
-      /** Compute the grid spacing needed to achieve the NumberOfSamplesForExactGradient. */
-      unsigned int availablevoxels =
-        randomsampler->GetInputImageRegion().GetNumberOfPixels();
-      const double fixdimd = static_cast<double>( 
-        randomsampler->GetInputImageRegion().GetImageDimension() );
-      const double fraction = 
-        static_cast<double>( availablevoxels ) /
-        static_cast<double>( this->m_NumberOfSamplesForExactGradient );
-      int gridspacing = static_cast<int>( 
-        vnl_math_rnd( vcl_pow(fraction, 1.0/fixdimd) )   );
-      gridspacing = vnl_math_max( 1, gridspacing );
-      typename ImageSamplerType::SampleGridSpacingType gridspacings;
-      gridspacings.Fill( gridspacing );
-      gridsampler->SetSampleGridSpacing( gridspacings );
-
-      /** Update the sampler */
+      gridsampler->SetNumberOfSamples( this->m_NumberOfSamplesForExactGradient );
       gridsampler->Update();
     }
 
@@ -607,7 +618,7 @@ namespace elastix
       if ( stochasticgradients )
       {
         advmetric->SetImageSampler( randomsampler );
-        this->SelectNewSamples();       
+        this->SelectNewSamples();
       }
 
       /** Get approximate derivative */       
@@ -691,6 +702,12 @@ namespace elastix
       /** Set back to what it was */
       advmetric->SetImageSampler( randomsampler );
     }    
+
+    if ( randomCoordinateSampler.IsNotNull() )
+    {
+      /** Set back to what it was */
+      randomCoordinateSampler->SetUseRandomSampleRegion( useRandomSampleRegion );
+    }
 
     /** clean up */
     if (eig)
@@ -1191,39 +1208,22 @@ namespace elastix
     ::SampleFixedImageForJacobianTerms(
     ImageSampleContainerPointer & sampleContainer )
   {
-    /** Get fixed image and region */
-    typename FixedImageType::ConstPointer fixedImage = this->GetElastix()->
-      GetElxMetricBase()->GetAsITKBaseType()->GetFixedImage();
-    FixedImageRegionType fixedRegion = this->GetElastix()->
-      GetElxMetricBase()->GetAsITKBaseType()->GetFixedImageRegion();
-    const double fixdimd = static_cast<double>( fixedRegion.GetImageDimension() );
-
     /** Set up grid sampler */
     ImageSamplerPointer sampler = ImageSamplerType::New();
-    sampler->SetInput( fixedImage );
-    sampler->SetInputImageRegion( fixedRegion );
-    sampler->SetMask( this->GetElastix()->GetElxMetricBase()->
-      GetAsITKBaseType()->GetFixedImageMask() );
+    sampler->SetInput( this->GetElastix()->
+      GetElxMetricBase()->GetAsITKBaseType()->GetFixedImage() );
+    sampler->SetInputImageRegion( this->GetElastix()->
+      GetElxMetricBase()->GetAsITKBaseType()->GetFixedImageRegion() );
+    sampler->SetMask( this->GetElastix()->
+      GetElxMetricBase()->GetAsITKBaseType()->GetFixedImageMask() );
 
-    /** Determine grid spacing of sampler for each dimension
-    * gridspacing = round[
-    *  (nrofpixelsinfixedregion / desirednumberofjacobianmeasurements)^(1/D) ]
-    * and at least 1. 
+    /** Determine grid spacing of sampler such that the desired 
+    * NumberOfJacobianMeasurements is achieved approximately.
     * Note that the actually obtained number of samples may be lower, due to masks.
     * This is taken into account at the end of this function. */
     unsigned int nrofsamples = this->m_NumberOfJacobianMeasurements;
-
-    /** Compute the grid spacing */
-    const double fraction = 
-      static_cast<double>( fixedRegion.GetNumberOfPixels() ) /
-      static_cast<double>( nrofsamples );
-    int gridspacing = static_cast<int>( 
-      vnl_math_rnd( vcl_pow(fraction, 1.0/fixdimd) )   );
-    gridspacing = vnl_math_max( 1, gridspacing );
-    typename ImageSamplerType::SampleGridSpacingType gridspacings;
-    gridspacings.Fill( gridspacing );
-    sampler->SetSampleGridSpacing( gridspacings );
-
+    sampler->SetNumberOfSamples( nrofsamples );
+    
     /** get samples and check the actually obtained number of samples */
     sampler->Update();
     sampleContainer = sampler->GetOutput();

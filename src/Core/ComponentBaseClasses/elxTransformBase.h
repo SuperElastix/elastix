@@ -112,12 +112,23 @@ namespace elastix
 
  		/** Typedef's for TransformPoint. */
 		typedef typename ITKBaseType::InputPointType				InputPointType;
-		typedef typename ITKBaseType::OutputPointType				OutputPointType;		
+		typedef typename ITKBaseType::OutputPointType				OutputPointType;	
+    
+    /** Typedefs needed for AutomaticScalesEstimation function */
+    typedef typename RegistrationType::ITKBaseType					ITKRegistrationType;
+		typedef typename ITKRegistrationType::OptimizerType			OptimizerType;
+		typedef typename OptimizerType::ScalesType							ScalesType;
 		
 		/** Cast to ITKBaseType. */
 		virtual ITKBaseType * GetAsITKBaseType(void)
 		{
 			return dynamic_cast<ITKBaseType *>(this);
+		}
+
+    /** Cast to ITKBaseType, to use in const functions. */
+		virtual const ITKBaseType * GetAsITKBaseType(void) const
+		{
+			return dynamic_cast<const ITKBaseType *>(this);
 		}
 
 		/** Execute stuff before everything else:
@@ -180,6 +191,14 @@ namespace elastix
 		TransformBase();
 		/** The destructor. */
 		virtual ~TransformBase();
+
+    /** Estimate a scales vector 
+     * AutomaticScalesEstimation works like this:
+     * \li N=10000 points are sampled on a uniform grid on the fixed image.
+     * \li Jacobians dT/dmu are computed
+     * \li Scales_i = 1/N sum_x || dT / dmu_i ||^2
+     */
+    void AutomaticScalesEstimation( ScalesType & scales ) const;
 
 		/** Member variables.*/
 		ParametersType *			m_TransformParametersPointer;

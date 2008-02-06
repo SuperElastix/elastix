@@ -56,6 +56,12 @@ namespace elastix
 			return dynamic_cast<ITKBaseType *>(this);
 		}
 
+    /** Cast to ITKBaseType, to use in const functions. */
+		virtual const ITKBaseType * GetAsITKBaseType(void) const
+		{
+			return dynamic_cast<const ITKBaseType *>(this);
+		}
+
 		/** Execute stuff before the actual transformation:
 		 * \li nothing here
 		 */

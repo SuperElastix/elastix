@@ -31,42 +31,11 @@ namespace elastix
   {
     /** Task 1 - Set center of rotation and initial translation. */
     this->InitializeTransform();
-    
-    /** Task 2 - Set the scales.
-     *
-     * If the dimension is 2, then the first parameter represents the
-     * isotropic scaling, the the second the rotation, and the third and
-     * fourth the translation.
-     * If the dimension is 3, then the first three represent rotations,
-     * the second three translations, and the last parameter the isotropic
-     * scaling.
-     */
+            
+    /** Task 2 - Set the scales. */
+    this->SetScales();
 
-    /** Create the scales and set to default values. */
-    ScalesType scales( this->GetNumberOfParameters() );
-    scales.Fill( 1.0 );
-    if ( SpaceDimension == 2 )
-    {
-      scales[ 0 ] = 10000.0;
-      scales[ 1 ] = 100000.0;
-    }
-    else if ( SpaceDimension == 3 )
-    {
-      scales[ 6 ] = 10000.0;
-      for ( unsigned int i = 0; i < 3; i++ ) scales[ i ] = 100000.0;
-    }
-    
-    // as it is now you should supply all scales.
-    /** Get the scales from the parameter file. */
-    for ( unsigned int i = 0; i < this->GetNumberOfParameters(); i++ )
-    {
-      this->GetConfiguration()->ReadParameter( scales[ i ],
-        "Scales", this->GetComponentLabel(), i, -1 );
-    }
 
-    /** Set the scales into the optimizer. */
-    this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( scales );
-    
   } // end BeforeRegistration()
 
   
@@ -296,6 +265,68 @@ namespace elastix
       SetInitialTransformParameters( this->GetParameters() );
 
   } // end InitializeTransform()
+
+  
+  /**
+   * ************************* SetScales *********************
+   */
+
+  template <class TElastix>
+    void SimilarityTransformElastix<TElastix>
+    ::SetScales( void )
+  {
+    /** Create the new scales. */
+    const unsigned int N = this->GetNumberOfParameters();
+    ScalesType newscales( N );
+    newscales.Fill( 1.0 );
+
+    /** Check if automatic scales estimation is desired */
+    bool automaticScalesEstimation = false;
+    this->m_Configuration->ReadParameter( automaticScalesEstimation,
+      "AutomaticScalesEstimation", 0 );
+
+    if ( automaticScalesEstimation )
+    {
+      elxout << "Scales are estimated automatically." << std::endl;
+      this->AutomaticScalesEstimation( newscales );
+    }
+    else
+    {
+      /** If the dimension is 2, then the first parameter represents the
+      * isotropic scaling, the the second the rotation, and the third and
+      * fourth the translation.
+      * If the dimension is 3, then the first three represent rotations,
+      * the second three translations, and the last parameter the isotropic
+      * scaling.
+      */
+
+      /** Create the scales and set to default values. */    
+      if ( SpaceDimension == 2 )
+      {
+        newscales[ 0 ] = 10000.0;
+        newscales[ 1 ] = 100000.0;
+      }
+      else if ( SpaceDimension == 3 )
+      {
+        newscales[ 6 ] = 10000.0;
+        for ( unsigned int i = 0; i < 3; i++ ) newscales[ i ] = 100000.0;
+      }
+
+      // as it is now you should supply all scales.
+      /** Get the scales from the parameter file. */
+      for ( unsigned int i = 0; i < N; i++ )
+      {
+        this->GetConfiguration()->ReadParameter( newscales[ i ],
+          "Scales", this->GetComponentLabel(), i, -1 );
+      }      
+    }  // end else: no automatic parameter estimation
+
+    elxout << "Scales for transform parameters are: " << newscales << std::endl;
+
+    /** Set the scales into the optimizer. */
+    this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newscales );    
+
+  } // end SetScales
   
 
   /**

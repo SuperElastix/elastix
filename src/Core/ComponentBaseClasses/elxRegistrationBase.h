@@ -97,6 +97,12 @@ using namespace itk;
 			return dynamic_cast<ITKBaseType *>(this);
 		}
 
+    /** Cast to ITKBaseType, to use in const functions. */
+		virtual const ITKBaseType * GetAsITKBaseType(void) const
+		{
+			return dynamic_cast<const ITKBaseType *>(this);
+		}
+
     /** Function to read the mask parameters from the configuration object.
      * \todo: move to RegistrationBase
      * Input: 

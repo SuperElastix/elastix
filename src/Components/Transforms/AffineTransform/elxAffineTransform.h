@@ -128,14 +128,14 @@ using namespace itk;
 		typedef typename FixedImageType::PointType							PointType;
 		typedef typename FixedImageType::SpacingType						SpacingType;
 		typedef typename FixedImageType::RegionType							RegionType;
-		typedef typename RegistrationType::ITKBaseType					ITKRegistrationType;
-		typedef typename ITKRegistrationType::OptimizerType			OptimizerType;
-		typedef typename OptimizerType::ScalesType							ScalesType;
-				
+    
 		typedef CenteredTransformInitializer<
 			AffineTransformType, FixedImageType, MovingImageType>	TransformInitializerType;
 		typedef typename TransformInitializerType::Pointer			TransformInitializerPointer;
 		typedef typename AffineTransformType::Pointer						AffineTransformPointer;
+
+    /** For scales setting in the optimizer */
+    typedef typename Superclass2::ScalesType                ScalesType;
 		
 		/** Execute stuff before the actual registration:
 		 * \li Call InitializeTransform
@@ -166,11 +166,6 @@ using namespace itk;
      * \li Otherwise use some default value
      * This function is called by BeforeRegistration, after
      * the InitializeTransform function is called 
-     *
-     * AutomaticScalesEstimation works like this:
-     * \li N=10000 points are sampled on a uniform grid on the fixed image.
-     * \li Jacobians dT/dmu are computed
-     * \li Scales_i = 1/N sum_x || dT / dmu_i ||^2
      */
     virtual void SetScales(void);
 		
@@ -187,6 +182,8 @@ using namespace itk;
 		virtual void WriteToFile( const ParametersType & param );
 
 	protected:
+
+    
 
 		/** The constructor. */
 		AffineTransformElastix();

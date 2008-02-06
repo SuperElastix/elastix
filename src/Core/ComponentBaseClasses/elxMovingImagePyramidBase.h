@@ -74,6 +74,12 @@ using namespace itk;
 			return dynamic_cast<ITKBaseType *>(this);
 		}
 
+    /** Cast to ITKBaseType, to use in const functions. */
+		virtual const ITKBaseType * GetAsITKBaseType(void) const
+		{
+			return dynamic_cast<const ITKBaseType *>(this);
+		}
+
 		/** Execute stuff before the actual registration:
 		 * \li Set the schedule of the moving image pyramid.
 		 */
