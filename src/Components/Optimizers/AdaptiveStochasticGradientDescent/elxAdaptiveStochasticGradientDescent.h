@@ -51,8 +51,9 @@ namespace elastix
   *   Default/recommend value: "true", because it makes the registration more robust. In case
   *   of using a RandomCoordinate sampler, with (UseRandomSampleRegion "true"), the adaptive
   *   step size mechanism is turned off, no matter the user setting.
-  * \parameter MaximumStepLength: Also called "delta". This parameter can be considered as 
-  *   the maximum voxel displacement between two iterations. 
+  * \parameter MaximumStepLength: Also called \f$\delta\f$. This parameter can be considered as 
+  *   the maximum voxel displacement between two iterations. The larger this parameter, the 
+  *   more agressive the optimization. 
   *   The parameter can be specified for each resolution, or for all resolutions at once.\n
   *   example: <tt>(MaximumStepLength 1.0)</tt>\n
   *   Default: mean voxel spacing of fixed and moving image. This seems to work well in general.
@@ -76,6 +77,30 @@ namespace elastix
   *   The default/recommended value for this particular optimizer is 1.0.
   *   Alternatively set the AutomaticParameterEstimation to "true". In that case, you do not
   *   need to specify SP_alpha. SP_alpha has no influence when AutomaticParameterEstimation is used.
+  * \parameter SigmoidMax: The maximum of the sigmoid function (\f$f_{max}\f$). Must be larger than 0.
+  *   The parameter can be specified for each resolution, or for all resolutions at once.\n
+  *   example: <tt>(SigmoidMax 1.0)</tt>\n
+  *   Default/recommended value: 1.0. This parameter has no influence when AutomaticParameterEstimation
+  *   is used. In that case, always a value 1.0 is used.   
+  * \parameter SigmoidMin: The minimum of the sigmoid function (\f$f_{min}\f$). Must be smaller than 0.
+  *   The parameter can be specified for each resolution, or for all resolutions at once.\n
+  *   example: <tt>(SigmoidMin -0.8)</tt>\n
+  *   Default value: -0.8. This parameter has no influence when AutomaticParameterEstimation
+  *   is used. In that case, the value is automatically determined, depending on the images,
+  *   metric etc.
+  * \parameter SigmoidScale: The scale/width of the sigmoid function (\f$\omega\f$). 
+  *   The parameter can be specified for each resolution, or for all resolutions at once.\n
+  *   example: <tt>(SigmoidMin 0.00001)</tt>\n
+  *   Default value: 1e-8. This parameter has no influence when AutomaticParameterEstimation
+  *   is used. In that case, the value is automatically determined, depending on the images,
+  *   metric etc.
+  * \parameter SigmoidInitialTime: the initial time input for the sigmoid (\f$t_0\f$). Must be
+  *   larger than 0.0.
+  *   The parameter can be specified for each resolution, or for all resolutions at once.\n
+  *   example: <tt>(SigmoidInitialTime 0.0 5.0 5.0)</tt>\n
+  *   Default value: 0.0. When increased, the optimization starts with smaller steps, leaving
+  *   the possibility to increase the steps when necessary. If set to 0.0, the method starts with
+  *   with the largest step allowed. 
   * \parameter UseMaximumLikelihoodMethod: Experimental parameter. Leave to default setting.
   *   example: <tt>(UseMaximumLikelihood "false")</tt>\n
   *   Default/recommended value: "false".
