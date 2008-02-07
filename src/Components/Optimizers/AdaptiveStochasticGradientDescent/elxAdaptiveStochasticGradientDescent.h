@@ -8,6 +8,7 @@
 #include "elxProgressCommand.h"
 #include "itkBSplineCombinationTransform.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
+#include "vnl/algo/vnl_symmetric_eigensystem.h"
 
 namespace elastix
 {
@@ -207,11 +208,8 @@ namespace elastix
     * The following parameters are automatically determined:
     * SP_a, SP_alpha (=1), SigmoidMin, SigmoidMax (=1),
     * SigmoidScale. 
-    * A usually suitable value for SP_A is 25. This has
-    * to be set manually though.
-    * \todo: AutomaticParameterEstimation does not work in combination
-    * with the MultiMetricMultiResolutionRegistration component.
-    */
+    * A usually suitable value for SP_A is 20, which is the 
+    * default setting, if not specified by the user. */
     itkSetMacro(AutomaticParameterEstimation, bool);
     itkGetConstMacro(AutomaticParameterEstimation, bool);
 
@@ -254,6 +252,7 @@ namespace elastix
     typedef ProgressCommand                             ProgressCommandType;
     typedef typename ProgressCommand::Pointer           ProgressCommandPointer;
     typedef Array2D<double>                             CovarianceMatrixType; 
+    typedef vnl_symmetric_eigensystem<double>           EigenSystemType;
     typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
 
     /** Typedefs for support of sparse jacobians and BSplineTransforms. */
@@ -393,9 +392,15 @@ namespace elastix
       const ParametersType & parameters, DerivativeType & derivative );
 
     /** Helper function that adds a random perturbation delta to the input
-     * parameters, with delta ~ sigma * N(0,I) */ 
+     * parameters, with delta ~ sigma * N(0,I). Used by SampleGradients. */ 
     virtual void AddRandomPerturbation( 
       ParametersType & parameters, double sigma );
+
+    /** Helper function that takes the inverse square root of the eigenvalues of a
+     * an eigensystem. If ~0, then the eigenvalue is set to 0 and the rank is reduced.
+     * The rank is returned by reference. NB: the eigensystem is modified by this
+     * function! */
+    virtual void PrepareEigenSystem( EigenSystemType * eig, unsigned int & rank ) const;
 
   private:
 

@@ -6,9 +6,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
-//#include <fstream>
 #include "vnl/vnl_math.h"
-#include "vnl/algo/vnl_symmetric_eigensystem.h"
 #include "vnl/vnl_matlab_filewrite.h"
 
 #include "itkAdvancedImageToImageMetric.h"
@@ -478,97 +476,92 @@ namespace elastix
     bool AdaptiveStochasticGradientDescent<TElastix>
     ::SampleGradients(const ParametersType & mu0,
     double perturbationSigma, double & gg, double & ee)
-  {    
-    typedef vnl_symmetric_eigensystem<double>           eigType;
-
+  {
     /** Some shortcuts */
     const unsigned int P = static_cast<unsigned int>( mu0.GetSize() );
     const double Pd = static_cast<double>( P );
+    const unsigned int M = this->GetElastix()->GetNumberOfMetrics();
     CovarianceMatrixType & cov = this->m_CovarianceMatrix;
 
     /** Prepare for maximum likelihood estimation of sigmas.
      * In that case we need a matrix eigendecomposition */
-    eigType * eig = 0;
     bool maxlik = false;
+    EigenSystemType * eig = 0;    
     unsigned int rank = P;
     if ( (cov.size() != 0) && this->m_UseMaximumLikelihoodMethod )
-    {
-      /** Remember that we are using the maximum likelihood method */
-      maxlik = true;
-            
-      /** Do an eigendecomposition of the covariance matrix C 
-       * and compute D^{-1/2}
+    {       
+      /** Do an eigendecomposition of the covariance matrix C and compute D^{-1/2}.
        * This result will be used to compute g^T C^{-1} g, using
-       * g^T C^{-1} g = x^T x, with x = D^{-1/2} V^T g */
-      eig = new eigType( cov );
-      for ( unsigned int i = 0; i < P; ++i )
-      {
-        const double tmp = eig->D(i);
-        if ( tmp > 1e-16)
-        {
-          eig->D(i) = 1.0 / vcl_sqrt(tmp);
-        }
-        else
-        {
-          eig->D(i) = 0.0;
-          --rank;
-        }
-      }
-      /** Print rank */
-      elxout << "Rank of covariance matrix is: " << rank << std::endl;
+       * g^T C^{-1} g = x^T x, with x = D^{-1/2} V^T g.
+       * The rank is needed at the end of this function. 
+       * Also, remember that we are really using the maximum likelihood method. */
+      maxlik = true;
+      eig = new EigenSystemType( cov );
+      this->PrepareEigenSystem( eig, rank );
     }   
 
-    /** Variables for sampler support */
-    bool stochasticgradients = false;
-    ImageSamplerBasePointer sampler = 0;
-    ImageRandomSamplerBasePointer randomSampler = 0;
-    ImageRandomCoordinateSamplerPointer randomCoordinateSampler = 0;
-    ImageGridSamplerPointer gridSampler = 0;
-    bool useRandomSampleRegion = false;
+    /** Variables for sampler support. Each metric may have a sampler */    
+    std::vector< bool >                                   useRandomSampleRegionVec( M, false );
+    std::vector< ImageRandomSamplerBasePointer >          randomSamplerVec( M, 0 );
+    std::vector< ImageRandomCoordinateSamplerPointer >    randomCoordinateSamplerVec( M, 0 );
+    std::vector< ImageGridSamplerPointer >                gridSamplerVec( M, 0 );
 
-    /** If new samples every iteration, get the sampler, and check if it is
-     * indeed a kind of random sampler. If yes, prepare an additional grid
-     * sampler for the exact gradients.
-     * \todo: in case of multimetric, uses only the first metric! */
+    /** If new samples every iteration, get each sampler, and check if it is
+    * a kind of random sampler. If yes, prepare an additional grid sampler
+    * for the exact gradients, and set the stochasticgradients flag to true. */
+    bool stochasticgradients = false;
     if ( this->GetNewSamplesEveryIteration() )
     {
-      /** Get the sampler */
-      sampler = this->GetElastix()->GetElxMetricBase()->GetAdvancedMetricImageSampler();      
-      randomSampler = dynamic_cast< ImageRandomSamplerBaseType * >( sampler.GetPointer() );
-      randomCoordinateSampler = 
-        dynamic_cast< ImageRandomCoordinateSamplerType * >( sampler.GetPointer() );
-
-      if ( randomSampler.IsNotNull() )
+      for ( unsigned int m = 0; m < M; ++m )
       {
-        /** The metric has a random sampler, so setting new samples every iteration make sense. */
-        stochasticgradients = true;
+        /** Get the sampler */
+        ImageSamplerBasePointer sampler =
+          this->GetElastix()->GetElxMetricBase( m )->GetAdvancedMetricImageSampler();      
+        randomSamplerVec[m] = 
+          dynamic_cast< ImageRandomSamplerBaseType * >( sampler.GetPointer() );
+        randomCoordinateSamplerVec[m] = 
+          dynamic_cast< ImageRandomCoordinateSamplerType * >( sampler.GetPointer() );
 
-        /** If the sampler is a randomCoordinateSampler set the UseRandomSampleRegion
-         * property to false temporarily. It disturbs the parameter estimation.
-         * At the end of this function the original setting is set back. 
-         * Also, the AdaptiveStepSize mechanism is turned off.
-         * \todo Extend ASGD to really take into account random region sampling. */
-        if ( randomCoordinateSampler.IsNotNull() )
+        if ( randomSamplerVec[m].IsNotNull() )
         {
-          useRandomSampleRegion = randomCoordinateSampler->GetUseRandomSampleRegion();
-          if (useRandomSampleRegion)
+          /** At least one of the metric has a random sampler. */
+          stochasticgradients |= true;
+
+          /** If the sampler is a randomCoordinateSampler set the UseRandomSampleRegion
+          * property to false temporarily. It disturbs the parameter estimation.
+          * At the end of this function the original setting is set back. 
+          * Also, the AdaptiveStepSize mechanism is turned off when any of the samplers
+          * has UseRandomSampleRegion==true.
+          * \todo Extend ASGD to really take into account random region sampling. */
+          if ( randomCoordinateSamplerVec[m].IsNotNull() )
           {
-            this->SetUseAdaptiveStepSizes( false );
-          }
-          randomCoordinateSampler->SetUseRandomSampleRegion( false );
-        } // end if random coordinate sampler
+            useRandomSampleRegionVec[m] = randomCoordinateSamplerVec[m]->GetUseRandomSampleRegion();
+            if ( useRandomSampleRegionVec[m] )
+            {
+              if ( this->GetUseAdaptiveStepSizes() )
+              {
+                xl::xout["warning"] 
+                  << "WARNING: UseAdaptiveStepSizes is turned off, "
+                  << "because UseRandomSampleRegion is set to \"true\"." 
+                  << std::endl;
+                this->SetUseAdaptiveStepSizes( false );
+              }
+            }
+            randomCoordinateSamplerVec[m]->SetUseRandomSampleRegion( false );
+          } // end if random coordinate sampler
 
-        /** Set up the grid samper for the "exact" gradients.
-         * Copy settings from the random sampler and update. */
-        gridSampler = ImageGridSamplerType::New();
-        gridSampler->SetInput( randomSampler->GetInput() );
-        gridSampler->SetInputImageRegion( randomSampler->GetInputImageRegion() );
-        gridSampler->SetMask( randomSampler->GetMask() );
-        gridSampler->SetNumberOfSamples( this->m_NumberOfSamplesForExactGradient );
-        gridSampler->Update();
+          /** Set up the grid samper for the "exact" gradients.
+          * Copy settings from the random sampler and update. */
+          gridSamplerVec[m] = ImageGridSamplerType::New();
+          gridSamplerVec[m]->SetInput( randomSamplerVec[m]->GetInput() );
+          gridSamplerVec[m]->SetInputImageRegion( randomSamplerVec[m]->GetInputImageRegion() );
+          gridSamplerVec[m]->SetMask( randomSamplerVec[m]->GetMask() );
+          gridSamplerVec[m]->SetNumberOfSamples( this->m_NumberOfSamplesForExactGradient );
+          gridSamplerVec[m]->Update();
+        } // end if random sampler  
 
-      } // end if random sampler      
-    } // end if NewSamplersEveryIteration.
+      } // end for loop over metrics
+    } // end if NewSamplesEveryIteration.
   
     /** Prepare for progress printing */
     ProgressCommandPointer progressObserver = ProgressCommandType::New();
@@ -584,8 +577,7 @@ namespace elastix
     DerivativeType diffgradient;
     DerivativeType solveroutput;
     double exactgg = 0.0;
-    double diffgg = 0.0;
-    double approxgg = 0.0; 
+    double diffgg = 0.0;    
 
     /** Compute gg for some random parameters */      
     for ( unsigned int i = 0 ; i < this->m_NumberOfGradientMeasurements; ++i)
@@ -593,32 +585,36 @@ namespace elastix
       /** Show progress 0-100% */
       progressObserver->UpdateAndPrintProgress( i );
 
-      /** Generate a perturbation, according to \mu_n ~ N( \mu_0, perturbationsigma^2 I )  */
+      /** Generate a perturbation, according to \mu_i ~ N( \mu_0, perturbationsigma^2 I )  */
       ParametersType perturbedMu0 = mu0;
       this->AddRandomPerturbation( perturbedMu0, perturbationSigma );
-      
-      /** Select new spatial samples for the computation of the metric */
+
+      /** Compute contribution to exactgg and diffgg. */
       if ( stochasticgradients )
       {
-        this->GetElastix()->GetElxMetricBase()->SetAdvancedMetricImageSampler( randomSampler );        
-        this->SelectNewSamples();
-      }
-
-      /** Get approximate derivative */
-      this->GetScaledDerivativeWithExceptionHandling( perturbedMu0, approxgradient );
-      
-      /* Compute magnitude. */
-      approxgg += approxgradient.squared_magnitude();
-
-      /** Get exact gradient and its magnitude */
-      if ( stochasticgradients )
-      {
-        /** Set grid sampler */
-        this->GetElastix()->GetElxMetricBase()->SetAdvancedMetricImageSampler( gridSampler );
-
-        /** Get derivative */
+        /** Set grid sampler(s) and get exact derivative. */
+        for ( unsigned int m = 0; m < M; ++m )
+        {
+          if ( gridSamplerVec[m].IsNotNull() )
+          {
+            this->GetElastix()->GetElxMetricBase( m )->
+              SetAdvancedMetricImageSampler( gridSamplerVec[m] );
+          }
+        }
         this->GetScaledDerivativeWithExceptionHandling( perturbedMu0, exactgradient );        
 
+        /** Set random sampler(s), select new spatial samples and get approximate derivative. */
+        for ( unsigned int m = 0; m < M; ++m )
+        {
+          if ( randomSamplerVec[m].IsNotNull() )
+          {
+            this->GetElastix()->GetElxMetricBase( m )->
+              SetAdvancedMetricImageSampler( randomSamplerVec[m] );
+          }
+        }
+        this->SelectNewSamples();
+        this->GetScaledDerivativeWithExceptionHandling( perturbedMu0, approxgradient );
+        
         /** Compute error vector */
         diffgradient = exactgradient - approxgradient;
 
@@ -640,54 +636,54 @@ namespace elastix
       }
       else // no stochastic gradients
       {
-        /** exact gradient equals approximate gradient */
-        diffgg = 0.0;
+        /** Get exact gradient. */
+        this->GetScaledDerivativeWithExceptionHandling( perturbedMu0, exactgradient );
+        
+        /** Compute g^T g or g^T C^{-1}g. NB: diffgg=0. */        
         if ( !maxlik )
         {
-          exactgg = approxgg;          
+          exactgg += exactgradient.squared_magnitude();
         }
         else
         {
           /** compute g^T C^{-1} g */
-          solveroutput = eig->D * ( approxgradient * eig->V );
+          solveroutput = eig->D * ( exactgradient * eig->V );
           exactgg += solveroutput.squared_magnitude();          
-        } // end else: maxlik
+        }
       } // end else: no stochastic gradients
-    } // end for
+
+    } // end for loop over gradient measurements
 
     progressObserver->PrintProgress( 1.0 );    
 
-    /** Compute means */
-    approxgg /= this->m_NumberOfGradientMeasurements;
+    /** Compute means */    
     exactgg /= this->m_NumberOfGradientMeasurements;
     diffgg /= this->m_NumberOfGradientMeasurements;
 
-    if (stochasticgradients)
-    {
-      /** Set back to what it was */
-      this->GetElastix()->GetElxMetricBase()->SetAdvancedMetricImageSampler( randomSampler );
-    }    
-
-    if ( randomCoordinateSampler.IsNotNull() )
-    {
-      /** Set back to what it was */
-      randomCoordinateSampler->SetUseRandomSampleRegion( useRandomSampleRegion );
-    }
-
-    /** clean up */
-    if (eig)
-    {
-      delete eig;
-      eig = 0;
-    }
-    
     /** For output: gg and ee. 
      * gg and ee will be divided by Pd, but actually need to be divided by
      * the rank, in case of maximum likelihood. In case of no maximum likelihood,
      * the rank equals Pd. */
     gg = exactgg * Pd / static_cast<double>(rank);
     ee = diffgg * Pd / static_cast<double>(rank);
-    
+   
+    /** Set back useRandomSampleRegion flag to what it was. */
+    for ( unsigned int m = 0; m < M; ++m )
+    {
+      if ( randomCoordinateSamplerVec[m].IsNotNull() )
+      {     
+        randomCoordinateSamplerVec[m]->SetUseRandomSampleRegion( useRandomSampleRegionVec[m] );
+      }
+    }
+
+    /** Clean up eigensystem. */
+    if (eig)
+    {     
+      delete eig;
+      eig = 0;
+    }   
+ 
+    /** Return whether the maxlik approach was used. */
     return maxlik;
 
   } // end SampleGradients
@@ -1514,6 +1510,37 @@ namespace elastix
       parameters[p] += sigma * this->m_RandomGenerator->GetNormalVariate(0.0, 1.0);
     }
   } // end AddRandomPerturbation
+
+
+  /**
+   * *************** PrepareEigenSystem ***************
+   * Helper function, used by SampleGradients.
+   */
+
+  template <class TElastix>
+    void AdaptiveStochasticGradientDescent<TElastix>
+    ::PrepareEigenSystem( EigenSystemType * eig, unsigned int & rank ) const
+  {
+    /** compute D^{-1/2} */
+    const unsigned int P = eig->D.size();
+    rank = P;
+    for ( unsigned int i = 0; i < P; ++i )
+    {
+      const double tmp = eig->D(i);
+      if ( tmp > 1e-16)
+      {
+        eig->D(i) = 1.0 / vcl_sqrt(tmp);
+      }
+      else
+      {
+        eig->D(i) = 0.0;
+        --rank;
+      }
+    }
+    /** Print rank */
+    elxout << "Rank of covariance matrix is: " << rank << std::endl;
+
+  } // end PrepareEigenSystem
 
 } // end namespace elastix
 
