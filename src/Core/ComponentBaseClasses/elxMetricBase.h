@@ -25,7 +25,6 @@ using namespace itk;
    * \parameter ShowExactMetricValue: Flag that can set to "true" or "false". If "true" the 
 	 *		metric computes the exact metric value (computed on all voxels rather than on the set of
 	 *		spatial samples) and shows it each iteration. Must be given for each resolution. \n
-	 *		NB: If the UseallPixels flag is set to "true", this option is ignored. \n
 	 *		example: <tt>(ShowExactMetricValue "true" "true" "false")</tt> \n
 	 *		Default is "false" for all resolutions.\n
    * \parameter ImageSampler: The name of the image sampler that is used to select voxels in the fixed image. \n
@@ -49,8 +48,28 @@ using namespace itk;
    *    example: <tt>(SampleGridSpacing 4 4 2 2)</tt>\n
    *    Default is 2 for each dimension for each resolution. \n
    *    NB: a Grid ImageSampler is NOT RECOMMENDED!\n
-	 *
-	 *
+   * \parameter UseRandomSampleRegion: Defines whether to randomly select a subregion of the image
+   *    in each iteration. This option is only recognised by the RandomCoordinate sampler and
+   *    the MultiInputRandomCoordinate. When set to "true", also specify the SampleRegionSize.
+   *    By setting this option to "true", in combination with the NewSamplesEveryIteration parameter,
+   *    a "localised" similarity measure is obtained.\n
+   *    example: <tt>(UseRandomSampleRegion "true")</tt>\n
+   *    Default: false.
+   * \parameter SampleRegionSize: the size of the subregions that are selected when using 
+   *    the UseRandomSampleRegion option. The size should be specified in mm, for each dimension.
+   *    As a rule of thumb, you may try a value ~1/3 of the image size.\n
+   *    example: <tt>(SampleRegionSize 50.0 50.0 50.0)</tt>\n    
+   *    You can also specify one number, which will be used for all dimensions. Also, you
+   *    can specify different values for each resolution:\n
+   *    example: <tt>(SampleRegionSize 50.0 50.0 50.0 30.0 30.0 30.0)</tt>\n    
+   *    In this example, in the first resolution 50mm is used for each of the 3 dimensions,
+   *    and in the second resolution 30mm.
+   * \parameter FixedImageBSplineInterpolationOrder: When using a RandomCoordinate or 
+   *    MultiInputRandomCoordinate sampler, the fixed image needs to be interpolated. This
+   *    is done using B-spline interpolator. With this option you can specify the order of interpolation.\n
+   *    example: <tt>(FixedImageBSplineInterpolationOrder 0 0 1)</tt>\n
+   *    Default value: 1. The parameter can be specified for each resolution.
+   *   
 	 * \ingroup Metrics
 	 * \ingroup ComponentBaseClasses
 	 */
@@ -83,7 +102,10 @@ using namespace itk;
 		typedef ImageToImageMetric<
 			FixedImageType, MovingImageType >				ITKBaseType;
     typedef AdvancedImageToImageMetric<
-			FixedImageType, MovingImageType >				MetricWithSamplingType;
+			FixedImageType, MovingImageType >				AdvancedMetricType;
+
+    /** Typedefs for sampler support. */
+    typedef typename AdvancedMetricType::ImageSamplerType   ImageSamplerBaseType;
 
     /** Cast to ITKBaseType. */
 		virtual ITKBaseType * GetAsITKBaseType(void)
@@ -116,13 +138,27 @@ using namespace itk;
 		 * Not every metric may have implemented this. */
 		virtual void SelectNewSamples(void);
 
+    /** Returns whether the metric uses a sampler. When the metric is not of
+     * AdvancedMetricType, the function returns false immediately. */
+    virtual bool GetAdvancedMetricUseImageSampler( void ) const;
+
+    /** Method to set the image sampler. The image sampler is only used when
+     * the metric is of type AdvancedMetricType, and has UseImageSampler set
+     * to true. In other cases, the function does nothing. */
+    virtual void SetAdvancedMetricImageSampler( ImageSamplerBaseType * sampler );
+
+    /** Methods to get the image sampler. The image sampler is only used when
+     * the metric is of type AdvancedMetricType, and has UseImageSampler set
+     * to true. In other cases, the function returns 0. */
+    virtual ImageSamplerBaseType * GetAdvancedMetricImageSampler( void ) const;
+
 	protected:
 
     /** The type returned by the GetValue methods. Used by the GetExactValue method. */
     typedef typename ITKBaseType::MeasureType       MeasureType;
     typedef typename ITKBaseType::ParametersType    ParametersType;
-    /** The full sampler used by the GetExactValue method */
-    typedef itk::ImageSamplerBase<FixedImageType>   ImageSamplerBaseType;
+
+    /** The full sampler used by the GetExactValue method */    
     typedef itk::ImageFullSampler<FixedImageType>   ImageFullSamplerType;
     
 		/** The constructor. */
@@ -138,7 +174,7 @@ using namespace itk;
 		 * but are interested in the exact value of the metric. 
      *
      * This method only works when the itkYourMetric inherits from 
-     * the itkImageToImageMetricWithSampling
+     * the AdvancedMetricType.
      * In other cases it returns 0. You may reimplement this method in 
      * the elxYourMetric, if you like. 
      */

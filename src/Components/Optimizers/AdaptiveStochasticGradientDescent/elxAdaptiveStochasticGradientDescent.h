@@ -3,9 +3,11 @@
 
 #include "itkAdaptiveStochasticGradientDescentOptimizer.h"
 #include "itkImageGridSampler.h"
+#include "itkImageRandomCoordinateSampler.h"
 #include "elxIncludes.h"
 #include "elxProgressCommand.h"
 #include "itkBSplineCombinationTransform.h"
+#include "itkMersenneTwisterRandomVariateGenerator.h"
 
 namespace elastix
 {
@@ -219,6 +221,7 @@ namespace elastix
 
   protected:
 
+    /** Protected typedefs */
     typedef typename RegistrationType::FixedImageType   FixedImageType;
     typedef typename RegistrationType::MovingImageType  MovingImageType;
     typedef typename FixedImageType::RegionType         FixedImageRegionType;
@@ -231,14 +234,27 @@ namespace elastix
     struct SettingsType { double a, A, alpha, fmax, fmin, omega; };
     typedef typename std::vector<SettingsType>          SettingsVectorType;
 
-    typedef ImageGridSampler< FixedImageType >          ImageSamplerType;
-    typedef typename ImageSamplerType::Pointer          ImageSamplerPointer;
+    /** Samplers: */
+    typedef itk::ImageSamplerBase<FixedImageType>       ImageSamplerBaseType;
+    typedef typename ImageSamplerBaseType::Pointer      ImageSamplerBasePointer;
+    typedef itk::ImageRandomSamplerBase<FixedImageType> ImageRandomSamplerBaseType;
     typedef typename 
-      ImageSamplerType::ImageSampleContainerType        ImageSampleContainerType;
+      ImageRandomSamplerBaseType::Pointer               ImageRandomSamplerBasePointer;
+    typedef 
+      itk::ImageRandomCoordinateSampler<FixedImageType> ImageRandomCoordinateSamplerType;
+    typedef typename 
+      ImageRandomCoordinateSamplerType::Pointer         ImageRandomCoordinateSamplerPointer;
+    typedef ImageGridSampler< FixedImageType >          ImageGridSamplerType;
+    typedef typename ImageGridSamplerType::Pointer      ImageGridSamplerPointer;
+    typedef typename 
+      ImageGridSamplerType::ImageSampleContainerType    ImageSampleContainerType;
     typedef typename ImageSampleContainerType::Pointer  ImageSampleContainerPointer;
+
+    /** Other protected typedefs */
     typedef ProgressCommand                             ProgressCommandType;
     typedef typename ProgressCommand::Pointer           ProgressCommandPointer;
     typedef Array2D<double>                             CovarianceMatrixType; 
+    typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
 
     /** Typedefs for support of sparse jacobians and BSplineTransforms. */
     typedef JacobianType                                          TransformJacobianType;
@@ -296,7 +312,10 @@ namespace elastix
     unsigned int m_NumberOfParameters;
 
     /** the parameter indices that have a nonzero jacobian. */
-    mutable ParameterIndexArrayType                    m_NonZeroJacobianIndices;
+    mutable ParameterIndexArrayType                   m_NonZeroJacobianIndices;
+
+    /** RandomGenerator for AddRandomPerturbation */
+    typename RandomGeneratorType::Pointer             m_RandomGenerator;
 
 
     /** Check if the transform is a bspline transform. Called by Initialize. */
@@ -367,6 +386,16 @@ namespace elastix
      * of the B-splines, resulting in sparse jacobians */
     virtual void ComputeJacobianTermsBSpline(double & TrC, double & TrCC, 
       double & maxJJ, double & maxJCJ );
+
+    /** Helper function, which calls GetScaledValueAndDerivative and does
+     * some exception handling. Used by SampleGradients. */
+    virtual void GetScaledDerivativeWithExceptionHandling( 
+      const ParametersType & parameters, DerivativeType & derivative );
+
+    /** Helper function that adds a random perturbation delta to the input
+     * parameters, with delta ~ sigma * N(0,I) */ 
+    virtual void AddRandomPerturbation( 
+      ParametersType & parameters, double sigma );
 
   private:
 

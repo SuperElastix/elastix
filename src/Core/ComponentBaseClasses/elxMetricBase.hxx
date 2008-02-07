@@ -101,9 +101,9 @@ namespace elastix
     MetricBase<TElastix>
     ::ConfigureImageSampler( void )
   {
-    /** Cast this to MetricWithSamplingType. */
-    MetricWithSamplingType * thisAsMetricWithSampler
-      = dynamic_cast< MetricWithSamplingType * >( this );
+    /** Cast this to AdvancedMetricType. */
+    AdvancedMetricType * thisAsMetricWithSampler
+      = dynamic_cast< AdvancedMetricType * >( this );
 
     if ( thisAsMetricWithSampler )
     {
@@ -166,8 +166,8 @@ namespace elastix
           typename FixedImageInterpolatorType::Pointer fixedImageInterpolator =
             FixedImageInterpolatorType::New();
 
-          /** Set the SplineOrder, default value = 3. */
-	        unsigned int splineOrder = 3;
+          /** Set the SplineOrder, default value = 1. */
+	        unsigned int splineOrder = 1;
 		      this->GetConfiguration()->ReadParameter( splineOrder,
             "FixedImageBSplineInterpolationOrder", this->GetComponentLabel(), level, 0 );
           fixedImageInterpolator->SetSplineOrder( splineOrder );
@@ -203,8 +203,8 @@ namespace elastix
           typename FixedImageInterpolatorType::Pointer fixedImageInterpolator =
             FixedImageInterpolatorType::New();
 
-          /** Set the SplineOrder, default value = 3. */
-	        unsigned int splineOrder = 3;
+          /** Set the SplineOrder, default value = 1. */
+	        unsigned int splineOrder = 1;
 		      this->GetConfiguration()->ReadParameter( splineOrder,
             "FixedImageBSplineInterpolationOrder", this->GetComponentLabel(), level, 0 );
           fixedImageInterpolator->SetSplineOrder( splineOrder );
@@ -292,9 +292,9 @@ namespace elastix
 	template <class TElastix>
     void MetricBase<TElastix>::SelectNewSamples( void )
 	{
-    /** Cast this to MetricWithSamplingType. */
-    MetricWithSamplingType * thisAsMetricWithSampler
-      = dynamic_cast< MetricWithSamplingType * >( this );
+    /** Cast this to AdvancedMetricType. */
+    AdvancedMetricType * thisAsMetricWithSampler
+      = dynamic_cast< AdvancedMetricType * >( this );
 
     bool useSampler = false;
 
@@ -327,29 +327,16 @@ namespace elastix
 	template <class TElastix>
     typename MetricBase<TElastix>::MeasureType
     MetricBase<TElastix>::GetExactValue( const ParametersType& parameters )
-  {
-    /** Cast this to MetricWithSamplingType. */
-    MetricWithSamplingType * thisAsMetricWithSampler
-      = dynamic_cast< MetricWithSamplingType * >( this );
+  { 
+    /** Get the current image sampler. */
+    typename ImageSamplerBaseType::Pointer currentSampler = 
+      this->GetAdvancedMetricImageSampler();
 
     /** Useless implementation if no image sampler is used; we may as
      * well throw an error, but the ShowExactMetricValue is not really
      * essential for good registration... */
-    if ( thisAsMetricWithSampler == 0 )
-    {
-      return itk::NumericTraits<MeasureType>::Zero;
-    }
-    if ( thisAsMetricWithSampler->GetUseImageSampler() == false )
-    {
-      return itk::NumericTraits<MeasureType>::Zero;
-    }
-
-    /** Get the current image sampler. */
-    typename ImageSamplerBaseType::Pointer currentSampler = 
-      thisAsMetricWithSampler->GetImageSampler();
     if ( currentSampler.IsNull() )
-    {
-      /** Again just a dummy implementation. */
+    {      
       return itk::NumericTraits<MeasureType>::Zero;
     }
     
@@ -363,32 +350,110 @@ namespace elastix
     }
     
     /** We have to provide the metric a full sampler, calls its GetValue
-     * and set back its original sampler.
-     */
-    typedef typename ITKBaseType::FixedImageMaskType FixedImageMaskType;
+     * and set back its original sampler. */
     if ( this->m_ExactMetricSampler.IsNull() )
     {
       this->m_ExactMetricSampler = ImageFullSamplerType::New();
     }
+
+    /** Copy settings from current sampler */
     this->m_ExactMetricSampler->SetInput( currentSampler->GetInput() );
-    this->m_ExactMetricSampler->SetMask( 
-      const_cast< FixedImageMaskType * >( 
-      dynamic_cast< const FixedImageMaskType * >(
-      this->GetAsITKBaseType()->GetFixedImageMask() ) ) );
-    this->m_ExactMetricSampler->SetInputImageRegion(
-      currentSampler->GetInputImageRegion() );
-    thisAsMetricWithSampler->SetImageSampler( this->m_ExactMetricSampler );
+    this->m_ExactMetricSampler->SetMask( currentSampler->GetMask() );      
+    this->m_ExactMetricSampler->SetInputImageRegion( currentSampler->GetInputImageRegion() );
+    this->SetAdvancedMetricImageSampler( this->m_ExactMetricSampler );
     
     /** Compute the metric value on the full images. */
     MeasureType exactValue = 
       this->GetAsITKBaseType()->GetValue(parameters);
     
     /** reset the original sampler. */
-    thisAsMetricWithSampler->SetImageSampler( currentSampler );
+    this->SetAdvancedMetricImageSampler( currentSampler );
 
     return exactValue;
         
   } // end GetExactValue()
+
+  
+  /**
+	 * ******************* GetAdvancedMetricUseImageSampler ********************
+	 */
+
+	template <class TElastix>
+    bool MetricBase<TElastix>
+    ::GetAdvancedMetricUseImageSampler( void ) const
+  {
+    /** Cast this to AdvancedMetricType. */
+    const AdvancedMetricType * thisAsMetricWithSampler
+      = dynamic_cast< const AdvancedMetricType * >( this );
+    
+    /** If no AdvancedMetricType, return false */
+    if ( thisAsMetricWithSampler == 0 )
+    {
+      return false;
+    }
+
+    return thisAsMetricWithSampler->GetUseImageSampler();
+    
+  } // end GetAdvancedMetricUseImageSampler
+
+
+  /**
+	 * ******************* SetAdvancedMetricImageSampler ********************
+	 */
+
+	template <class TElastix>
+    void MetricBase<TElastix>
+    ::SetAdvancedMetricImageSampler( ImageSamplerBaseType * sampler )
+  {
+    /** Cast this to AdvancedMetricType. */
+    AdvancedMetricType * thisAsMetricWithSampler
+      = dynamic_cast< AdvancedMetricType * >( this );
+    
+    /** If no AdvancedMetricType, or if the MetricWithSampler does not
+     * utilize the sampler, return. */
+    if ( thisAsMetricWithSampler == 0 )
+    {
+      return;
+    }
+    if ( thisAsMetricWithSampler->GetUseImageSampler() == false )
+    {
+      return;
+    }
+
+    /** Set the sampler */
+    thisAsMetricWithSampler->SetImageSampler( sampler );
+
+  } // end SetAdvancedMetricImageSampler
+
+
+  /**
+	 * ******************* GetAdvancedMetricImageSampler ********************
+	 */
+
+	template <class TElastix>
+    typename MetricBase<TElastix>::ImageSamplerBaseType *
+    MetricBase<TElastix>
+    ::GetAdvancedMetricImageSampler( void ) const
+  {
+    /** Cast this to AdvancedMetricType. */
+    const AdvancedMetricType * thisAsMetricWithSampler
+      = dynamic_cast< const AdvancedMetricType * >( this );
+    
+    /** If no AdvancedMetricType, or if the MetricWithSampler does not
+     * utilize the sampler, return 0 */
+    if ( thisAsMetricWithSampler == 0 )
+    {
+      return 0;
+    }
+    if ( thisAsMetricWithSampler->GetUseImageSampler() == false )
+    {
+      return 0;
+    }
+
+    /** Return the sampler */
+    return thisAsMetricWithSampler->GetImageSampler();
+
+  } // end GetAdvancedMetricImageSampler
 
 
 } // end namespace elastix
