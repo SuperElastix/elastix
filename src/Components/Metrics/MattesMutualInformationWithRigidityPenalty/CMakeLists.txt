@@ -1,6 +1,6 @@
 
 
-ADD_ELXCOMPONENT( elxMattesMutualInformationWithRigidityPenalty
+ADD_ELXCOMPONENT( MattesMutualInformationWithRigidityPenalty
  elxMattesMutualInformationWithRigidityPenalty.h
  elxMattesMutualInformationWithRigidityPenalty.hxx
  elxMattesMutualInformationWithRigidityPenalty.cxx

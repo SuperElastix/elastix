@@ -128,8 +128,16 @@ namespace itk
 
     /** ******************** Other ******************** */
 
-    /** SelectNewSamplesOnUpdate. */
+    /** SelectNewSamplesOnUpdate. When this function is called, the sampler
+     * will generate a new sample set after calling Update(). The return bool
+     * is false when this feature is not supported by the sampler. */
     virtual bool SelectNewSamplesOnUpdate( void );
+
+    /** Returns whether the sampler supports SelectNewSamplesOnUpdate() */
+    virtual bool SelectingNewSamplesOnUpdateSupported( void ) const
+    {
+      return true;
+    }
 
   protected:
 

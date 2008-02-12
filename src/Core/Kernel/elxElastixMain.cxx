@@ -196,24 +196,29 @@ namespace elastix
 		this->GetElastixBase()->SetComponentDatabase(this->s_CDB);
 		this->GetElastixBase()->SetDBIndex( this->m_DBIndex );
 
-    /** Populate the component containers. */
+    /** Populate the component containers. ImageSampler is not mandatory. 
+     * No defaults are specified for ImageSampler, Metric, Transform
+     * and Optimizer. */
     this->GetElastixBase()->SetRegistrationContainer(
       this->CreateComponents( "Registration", "MultiResolutionRegistration", errorCode ) );
 
     this->GetElastixBase()->SetFixedImagePyramidContainer(
-      this->CreateComponents( "FixedImagePyramid", "FixedRecursiveImagePyramid", errorCode ) );
+      this->CreateComponents( "FixedImagePyramid", "FixedSmoothingImagePyramid", errorCode ) );
 
     this->GetElastixBase()->SetMovingImagePyramidContainer(
-      this->CreateComponents( "MovingImagePyramid", "MovingRecursiveImagePyramid", errorCode ) );
+      this->CreateComponents( "MovingImagePyramid", "MovingSmoothingImagePyramid", errorCode ) );
       
+    this->GetElastixBase()->SetImageSamplerContainer(
+      this->CreateComponents( "ImageSampler", "", errorCode, false ) );
+
     this->GetElastixBase()->SetInterpolatorContainer(
       this->CreateComponents( "Interpolator", "BSplineInterpolator", errorCode ) );
 
     this->GetElastixBase()->SetMetricContainer(
-      this->CreateComponents( "Metric", "MattesMutualInformation", errorCode ) );
+      this->CreateComponents( "Metric", "", errorCode ) );
 
     this->GetElastixBase()->SetOptimizerContainer(
-      this->CreateComponents( "Optimizer", "RegularStepGradientDescent", errorCode ) );
+      this->CreateComponents( "Optimizer", "", errorCode ) );
 
     this->GetElastixBase()->SetResampleInterpolatorContainer(
       this->CreateComponents( "ResampleInterpolator", "FinalBSplineInterpolator", errorCode ) );
@@ -222,7 +227,7 @@ namespace elastix
       this->CreateComponents( "Resampler", "DefaultResampler", errorCode ) );
       
     this->GetElastixBase()->SetTransformContainer(
-      this->CreateComponents( "Transform", "TranslationTransform", errorCode ) );
+      this->CreateComponents( "Transform", "", errorCode ) );
       
     /** Check if all component could be created. */
 		if ( errorCode != 0 )
@@ -410,7 +415,8 @@ namespace elastix
 	/**
 	 * ********************* LoadComponents **************************
 	 *
-	 * Look for dlls, load them, and call the install function.
+	 * Store the install function of each component in the 
+   * component database.
 	 */
 	
 	int ElastixMain::LoadComponents( void )
@@ -499,19 +505,33 @@ namespace elastix
   ElastixMain::ObjectContainerPointer ElastixMain::CreateComponents(
     const std::string & key,
     const ComponentDescriptionType & defaultComponentName,
-    int & errorcode )
+    int & errorcode, bool mandatoryComponent )
   {
     ComponentDescriptionType componentName = defaultComponentName;
     unsigned int componentnr = 0;
     int returncode = 0;
     ObjectContainerPointer objectContainer = ObjectContainerType::New();
     objectContainer->Initialize();
-
-    /** If the user hasn't specified any component names, use
-     * the default, and give a warning.
-     */
+    
+    /** Read the component name
+     * If the user hasn't specified any component names, use
+     * the default, and give a warning. */
     returncode = this->m_Configuration->ReadParameter(
       componentName, key.c_str(), componentnr, false );
+
+    /** If the default equals "" (so no default), the mandatoryComponent
+     * flag is true, and not component was given by the user,
+     * then elastix quits. */
+    if ( returncode && (defaultComponentName == "") && mandatoryComponent )
+    {
+      xout["error"]
+        << "ERROR: the following component has not been specified: "
+        << key << std::endl;
+      errorcode = 1;
+      return objectContainer;
+    }
+
+    /** Try creating the specified component */
     try
     {
       objectContainer->CreateElementAt( componentnr ) = 

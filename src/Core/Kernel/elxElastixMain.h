@@ -3,7 +3,6 @@
 
 #include "elxComponentDatabase.h"
 #include "elxComponentLoader.h"
-//#include "elxSupportedImageTypes.h"
 
 #include "elxBaseComponent.h"
 #include "elxElastixBase.h"
@@ -263,11 +262,20 @@ namespace elastix
      * The errorcode remains what it was if no error occured. Otherwise it's set to 1.
      * The 'key' is the entry inspected in the parameter file
      * A component named 'defaultComponentName' is used when the key is not found
-     * in the parameter file.  */
+     * in the parameter file. If "" is used, no default is assumed, and an error
+     * is given when the component was not specified. If the flag mandatoryComponent
+     * is set to false, no error is given, because the component may not be needed
+     * anyway.
+     *
+     * NB: this function should never be called with:
+     * ( !mandatoryComponent && defaultComponentName != "" ) == true
+     * 
+     */
     virtual ObjectContainerPointer CreateComponents(
       const ComponentDescriptionType & key,
       const ComponentDescriptionType & defaultComponentName,
-      int & errorcode );
+      int & errorcode,
+      bool mandatoryComponent = true);
 
 	private:
 

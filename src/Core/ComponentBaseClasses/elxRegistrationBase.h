@@ -17,7 +17,7 @@ using namespace itk;
 
 	/**
 	 * \class RegistrationBase
-	 * \brief This class is the base for all Registrations.
+	 * \brief This class is the elastix base class for all Registration schemes.
 	 *
 	 * This class contains all the common functionality for Registrations.
    *

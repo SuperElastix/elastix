@@ -179,6 +179,7 @@ namespace elastix
     elxGetObjectMacro(FixedImagePyramidContainer, ObjectContainerType);
     elxGetObjectMacro(MovingImagePyramidContainer, ObjectContainerType);
     elxGetObjectMacro(InterpolatorContainer, ObjectContainerType);
+    elxGetObjectMacro(ImageSamplerContainer, ObjectContainerType);
     elxGetObjectMacro(MetricContainer, ObjectContainerType);
     elxGetObjectMacro(OptimizerContainer, ObjectContainerType);
     elxGetObjectMacro(ResamplerContainer, ObjectContainerType);
@@ -192,6 +193,7 @@ namespace elastix
     elxSetObjectMacro(FixedImagePyramidContainer, ObjectContainerType);
     elxSetObjectMacro(MovingImagePyramidContainer, ObjectContainerType);
     elxSetObjectMacro(InterpolatorContainer, ObjectContainerType);
+    elxSetObjectMacro(ImageSamplerContainer, ObjectContainerType);
     elxSetObjectMacro(MetricContainer, ObjectContainerType);
     elxSetObjectMacro(OptimizerContainer, ObjectContainerType);
     elxSetObjectMacro(ResamplerContainer, ObjectContainerType);
@@ -227,6 +229,7 @@ namespace elastix
     elxGetNumberOfMacro(FixedImagePyramid);
     elxGetNumberOfMacro(MovingImagePyramid);
     elxGetNumberOfMacro(Interpolator);
+    elxGetNumberOfMacro(ImageSampler);
     elxGetNumberOfMacro(Metric);
     elxGetNumberOfMacro(Optimizer);
     elxGetNumberOfMacro(Resampler);
@@ -363,6 +366,7 @@ namespace elastix
     ObjectContainerPointer m_FixedImagePyramidContainer;
 		ObjectContainerPointer m_MovingImagePyramidContainer;
 		ObjectContainerPointer m_InterpolatorContainer;
+    ObjectContainerPointer m_ImageSamplerContainer;
 		ObjectContainerPointer m_MetricContainer;
 		ObjectContainerPointer m_OptimizerContainer;
 		ObjectContainerPointer m_RegistrationContainer;

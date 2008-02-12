@@ -55,7 +55,7 @@ namespace elastix
 		this->GetElastixBase()->SetComponentDatabase(this->s_CDB);
 		this->GetElastixBase()->SetDBIndex( this->m_DBIndex );
 
-    /** Populate the component containers */
+    /** Populate the component containers. No default is specified for the Transform. */
    this->GetElastixBase()->SetResampleInterpolatorContainer(
       this->CreateComponents( "ResampleInterpolator", "FinalBSplineInterpolator", errorCode) );
       
@@ -63,7 +63,7 @@ namespace elastix
       this->CreateComponents( "Resampler", "DefaultResampler", errorCode) );
       
     this->GetElastixBase()->SetTransformContainer(
-      this->CreateComponents( "Transform", "TranslationTransform", errorCode) );
+      this->CreateComponents( "Transform", "", errorCode) );
       
     /** Check if all components could be created. */
 		if ( errorCode != 0 )

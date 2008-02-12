@@ -21,11 +21,23 @@ using namespace itk;
    * of the same type:
    * Like this for example:\n
    * <tt>(Interpolator "BSplineInterpolator" "BSplineInterpolator")</tt>
-   *
+   * For each metric a different instance of an image sampler can be used:
+   * <tt>(ImageSampler "Random" "Random")</tt>\n
+   * or:
+   * <tt>(ImageSampler "Random" "Full")</tt>\n
+   * 
    * Note, that the number of metrics should always be larger than or equal to the number
    * if fixed/moving images, interpolators, image pyramids etc.
+   * Also, when all metrics need an image sampler, for each fixed image pyramid, 
+   * an image sampler must be provided. In some cases, one sampler can be used for all 
+   * metrics. This is the case when multiple metrics are desired, but 
+   * \li 1 fixed image is used, and
+   * \li 1 fixed image pyramid is used.
+   * This will save a bit of memory and computation time.
+   * In general however, it is better to use the same number of samplers as metrics.
+   * Note that some metrics (ViolaWellsMutualInformation for example) do not support 
+   * the image sampler functionality (yet).
    *
-	 *
 	 * The parameters used in this class are:\n
 	 * \parameter Registration: Select this registration framework as follows:\n
 	 *		<tt>(Registration "MultiMetricMultiResolutionRegistration")</tt>

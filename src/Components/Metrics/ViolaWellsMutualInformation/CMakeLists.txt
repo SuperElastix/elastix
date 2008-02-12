@@ -1,6 +1,6 @@
 
 
-ADD_ELXCOMPONENT( elxViolaWellsMutualInformationMetric
+ADD_ELXCOMPONENT( ViolaWellsMutualInformationMetric
  elxViolaWellsMutualInformationMetric.h
  elxViolaWellsMutualInformationMetric.hxx
  elxViolaWellsMutualInformationMetric.cxx

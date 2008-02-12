@@ -3,9 +3,7 @@
 #define __elxComponentLoader_h
 
 #include "elxComponentDatabase.h"
-#include "itksysDynamicLoaderGlobal.h"
 #include "xoutmain.h"
-#include <stack>
 
 namespace elastix
 {
@@ -13,16 +11,14 @@ namespace elastix
 	/**
 	* \class ComponentLoader
 	*
-	* \brief Loads in all the desired libraries, which are elastix
-	* components.
+	* \brief Determines which components (metrics, transforms, etc.) are available.
 	*
 	* This file defines the class elx::ComponentLoader. This class
-	* loads .DLL's and stores pointers to the ::New() functions of
+	* stores pointers to the ::New() functions of
 	* each component in the elx::ComponentDatabase.
 	*
 	* Each new component (a new metric for example should "make itself
-	* known" by calling the elxInstallMacro, which is defined in
-	* elxInstallFunctions.h .
+	* known" by calling the elxInstallMacro, which is defined in elxMacro.h.
 	*/
 
 	class ComponentLoader : public itk::Object
@@ -42,19 +38,16 @@ namespace elastix
     /** Typedef's. */
 		typedef ComponentDatabase								ComponentDatabaseType;
 		typedef ComponentDatabaseType::Pointer	ComponentDatabasePointer;
-
-    typedef itksys::DynamicLoaderGlobal			LibLoaderType;
-    typedef LibLoaderType::SymbolPointer    LibSymbolPointer;
-    typedef LibLoaderType::LibraryHandle		LibHandleType;
-		typedef int (*InstallFunctionPointer)(ComponentDatabaseType *, xl::xoutbase_type *);
-		typedef std::stack<LibHandleType>			  LibHandleContainerType;
-
+    
     /** Set and get the ComponentDatabase. */
 		itkSetObjectMacro( ComponentDatabase, ComponentDatabaseType);
 		itkGetObjectMacro( ComponentDatabase, ComponentDatabaseType);
 
-    /** Functions to (un)load libraries. */
+    /** Function to load components. The argv0 used to be useful
+     * to find the program directory, but is not used anymore. */
 		virtual int LoadComponents(const char * argv0);
+
+    /** Function to unload components. */
 		virtual void UnloadComponents(void);
 
 	protected:
@@ -63,9 +56,7 @@ namespace elastix
 		virtual ~ComponentLoader();
 
 		ComponentDatabasePointer  m_ComponentDatabase;
-    LibLoaderType             m_LibLoader;
-		LibHandleContainerType    m_LibHandleContainer;
-
+    
 		bool          m_ImageTypeSupportInstalled;
 		virtual int   InstallSupportedImageTypes(void);
 

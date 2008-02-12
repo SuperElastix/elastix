@@ -213,7 +213,11 @@ namespace itk
     ImageSamplerBase< TInputImage >
     ::SelectNewSamplesOnUpdate( void )
   {
-    /** The default behaviour is to select new samples after every update. */
+    /** Set the Modified flag, such that on calling Update(), 
+     * the GenerateData method is executed again. 
+     * Return true to indicate that indeed new samples will be selected.
+     * Inheriting subclasses may just return false and do nothing.
+     */
     this->Modified();
     return true;
 

@@ -16,12 +16,6 @@ namespace itk
    * If a mask is given, the sampler tries to find samples within the 
    * mask. If the mask is very sparse, this may take some time. In this case,
    * consider using the ImageRandomSamplerSparseMask.
-   *
-	 * \parameter NumberOfSpatialSamples: The number of image voxels used for computing the
-	 *		metric value and its derivative in each iteration. Must be given for each resolution.\n
-	 *		example: <tt>(NumberOfSpatialSamples 2048 2048 4000)</tt> \n
-	 *		The default is 5000.
-   *
    * 
    */
 

@@ -1,6 +1,6 @@
 
 
-ADD_ELXCOMPONENT( elxAdaptiveStochasticGradientDescent
+ADD_ELXCOMPONENT( AdaptiveStochasticGradientDescent
  elxAdaptiveStochasticGradientDescent.h
  elxAdaptiveStochasticGradientDescent.hxx
  elxAdaptiveStochasticGradientDescent.cxx

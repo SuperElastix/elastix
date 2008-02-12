@@ -1,6 +1,6 @@
 
 
-ADD_ELXCOMPONENT( elxRSGDEachParameterApart
+ADD_ELXCOMPONENT( RSGDEachParameterApart
  elxRSGDEachParameterApart.h
  elxRSGDEachParameterApart.hxx
  elxRSGDEachParameterApart.cxx 

@@ -15,7 +15,7 @@ using namespace itk;
 
 	/**
 	 * \class InterpolatorBase
-	 * \brief This class is based on the itk::InterpolateImageFunction.
+	 * \brief This class is the elastix base class for all Interpolators.
 	 *
 	 * This class contains all the common functionality for Interpolators.
 	 *
@@ -44,8 +44,8 @@ using namespace itk;
 		typedef typename Superclass::RegistrationPointer		RegistrationPointer;
 
 		/** Other typedef's. */
-		typedef typename ElastixType::MovingImageType		        InputImageType;
-		typedef typename ElastixType::CoordRepType							CoordRepType;
+		typedef typename ElastixType::MovingImageType		    InputImageType;
+		typedef typename ElastixType::CoordRepType					CoordRepType;
 
 		/** ITKBaseType. */
 		typedef InterpolateImageFunction< 

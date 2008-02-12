@@ -744,6 +744,8 @@ namespace elastix
     {  (  ( *(this->GetElxRegistrationBase(i)) ).*func  )(); }
     for (unsigned int i = 0; i < this->GetNumberOfTransforms(); ++i)
     {  (  ( *(this->GetElxTransformBase(i)) ).*func  )(); }
+    for (unsigned int i = 0; i < this->GetNumberOfImageSamplers(); ++i)
+    {  (  ( *(this->GetElxImageSamplerBase(i)) ).*func  )(); }
     for (unsigned int i = 0; i < this->GetNumberOfMetrics(); ++i)
     {  (  ( *(this->GetElxMetricBase(i)) ).*func  )(); }
     for (unsigned int i = 0; i < this->GetNumberOfInterpolators(); ++i)
@@ -780,6 +782,8 @@ namespace elastix
     {  returndummy |= (  ( *(this->GetElxRegistrationBase(i)) ).*func  )(); }
     for (unsigned int i = 0; i < this->GetNumberOfTransforms(); ++i)
     {  returndummy |= (  ( *(this->GetElxTransformBase(i)) ).*func  )(); }
+    for (unsigned int i = 0; i < this->GetNumberOfImageSamplers(); ++i)
+    {  returndummy |= (  ( *(this->GetElxImageSamplerBase(i)) ).*func  )(); }
     for (unsigned int i = 0; i < this->GetNumberOfMetrics(); ++i)
     {  returndummy |= (  ( *(this->GetElxMetricBase(i)) ).*func  )(); }
     for (unsigned int i = 0; i < this->GetNumberOfInterpolators(); ++i)
@@ -819,6 +823,10 @@ namespace elastix
     { this->GetElxTransformBase(i)->SetComponentLabel( "Transform", i );
       this->GetElxTransformBase(i)->SetElastix( This ); }
 
+    for (unsigned int i = 0; i < this->GetNumberOfImageSamplers(); ++i)
+    { this->GetElxImageSamplerBase(i)->SetComponentLabel( "ImageSampler", i );
+      this->GetElxImageSamplerBase(i)->SetElastix( This ); }
+
     for (unsigned int i = 0; i < this->GetNumberOfMetrics(); ++i)
     { this->GetElxMetricBase(i)->SetComponentLabel( "Metric", i );
       this->GetElxMetricBase(i)->SetElastix( This ); }
@@ -848,8 +856,6 @@ namespace elastix
       this->GetElxResamplerBase(i)->SetElastix( This ); }
 				
 	} // end ConfigureComponents
-
-
 
 
 	/**

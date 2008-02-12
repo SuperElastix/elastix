@@ -1,6 +1,6 @@
 
 
-ADD_ELXCOMPONENT( elxQuasiNewtonLBFGS
+ADD_ELXCOMPONENT( QuasiNewtonLBFGS
  elxQuasiNewtonLBFGS.h
  elxQuasiNewtonLBFGS.hxx
  elxQuasiNewtonLBFGS.cxx

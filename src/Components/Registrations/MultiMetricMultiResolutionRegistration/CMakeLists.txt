@@ -1,6 +1,6 @@
 
 
-ADD_ELXCOMPONENT( elxMultiMetricMultiResolutionRegistration
+ADD_ELXCOMPONENT( MultiMetricMultiResolutionRegistration
  elxMultiMetricMultiResolutionRegistration.h
  elxMultiMetricMultiResolutionRegistration.hxx
  elxMultiMetricMultiResolutionRegistration.cxx

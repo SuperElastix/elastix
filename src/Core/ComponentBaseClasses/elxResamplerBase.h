@@ -14,7 +14,7 @@ namespace elastix
 	
 	/**
 	 * \class ResampleBase
-	 * \brief This class is the base for all Resamplers.
+	 * \brief This class is the elastix base class for all Resamplers.
 	 *
 	 * This class contains all the common functionality for Resamplers.
 	 *

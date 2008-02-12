@@ -1,22 +1,15 @@
 #ifndef __elxMacro_h
 #define __elxMacro_h
 
-/** Some header files that may be needed for the macros to function correctly */
-
-//#include "elxMacro.h"
-//#include "elxInstallFunctions.h"
-//#include "elxComponentDatabase.h"
-//#include "elxBaseComponent.h"
-//#include "elxElastixTemplate.h"
-//#include "itkImage.h"
-//#include "elxSupportedImageTypes.h"
-
 /** 
  * Macro for creating function in .DLL's
  * 
  * Windows needs __declspec stuff. Unix does not need anything.
  *
- * usage: see elxInstallMacro for an example.
+ * usage: 
+ *  extern "C" __ELX_DLLEXPORT void FunctionToExport(void);
+ * 
+ * Currently not used anymore in elastix.
  */
 #ifdef _WIN32
 #	define __ELX_DLLEXPORT __declspec(dllexport)
@@ -59,6 +52,13 @@
 * // elxMyMetric.cxx //
 * #include elxMyMetric.h
 *	elxInstallMacro(MyMetric);
+*
+* // CMakeLists.txt //
+* ADD_ELXCOMPONENT( MyMetric
+*   elxMyMetric.h
+*   elxMyMetric.hxx
+*   elxMyMetric.cxx
+*   [<any other source files needed>] )
 *	
 * 
 * The class to be installed should inherit from the appropriate base class.
@@ -67,12 +67,11 @@
 * IMPORTANT: only one template argument <class TElastix> is allowed. Not more, 
 * not less.
 *
-* Details: a function "int InstallComponent(_cdb, _xout)" is defined.
+* Details: a function "int _classname##InstallComponent( _cdb )" is defined.
 * In this function a template is defined, _classname##_install<VIndex>.
 * It contains the ElastixTypedef<VIndex>, and recursive function DO(cdb).
 * DO installs the component for all defined ElastixTypedefs (so for all
 * supported image types).
-* Additionally xout is prepared for use by calling set_xout(_xout).
 *
 */
 #define elxInstallMacro(_classname) \
@@ -99,15 +98,55 @@
 		static int DO(::elx::ComponentDatabase * cdb) \
 		{ return 0; } \
 	}; \
-	extern "C" __ELX_DLLEXPORT int InstallComponent( \
-		::elx::ComponentDatabase * _cdb, \
-		::xl::xoutbase_type * _xout ) \
+  extern "C" int _classname##InstallComponent( \
+		::elx::ComponentDatabase * _cdb ) \
 	{ \
 		int _InstallDummy##_classname = _classname##_install<1>::DO( _cdb  ); \
-		::xl::set_xout( _xout ); \
-		return _InstallDummy##_classname ; \
+	  return _InstallDummy##_classname ; \
 	}//ignore semicolon
 
+
+/** 
+ * elxInstallComponentFunctionDeclarationMacro
+ *
+ * Usage example:
+ *   elxInstallComponentFunctionDeclarationMacro( BSplineTransform );
+ *
+ * This macro declares the function implemented by 
+ * the elxInstallMacro. This macro is used by the
+ * CMake generated file
+ * elxInstallComponentFunctionDeclarations.h
+ * only.
+ *
+ * Details: the declaration of InstallComponent function defined
+ * by elxInstallMacro is simply repeated.
+ *
+ * See also elxInstallAllComponents.h.
+ */
+#define elxInstallComponentFunctionDeclarationMacro(_classname)\
+extern "C" int _classname##InstallComponent( \
+		::elx::ComponentDatabase * _cdb )
+
+
+/** 
+ * elxInstallComponentFunctionCallMacro
+ *
+ * Usage example:
+ *   elxInstallComponentFunctionCallMacro( BSplineTransform );
+ *
+ * This macro calls the function implemented by 
+ * the elxInstallMacro. This macro is used by the
+ * CMake generated file
+ * elxInstallComponentFunctionCalls.h
+ * only.
+ *
+ * Details: the InstallComponent function defined
+ * by elxInstallMacro is called.
+ *
+ * See also elxInstallAllComponents.h.
+ */
+#define elxInstallComponentFunctionCallMacro(_classname)\
+  ret |= _classname##InstallComponent( _cdb )
 
 
 /**
@@ -188,9 +227,6 @@
 		static bool Defined(void) \
 		{	return true; }  \
 	} 
-
-
-
 
 
 /**

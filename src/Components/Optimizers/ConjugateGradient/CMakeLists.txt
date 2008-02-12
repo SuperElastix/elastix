@@ -1,6 +1,6 @@
 
 
-ADD_ELXCOMPONENT( elxConjugateGradient
+ADD_ELXCOMPONENT( ConjugateGradient
  elxConjugateGradient.h
  elxConjugateGradient.hxx
  elxConjugateGradient.cxx

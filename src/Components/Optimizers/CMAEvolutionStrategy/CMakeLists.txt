@@ -1,6 +1,6 @@
 
 
-ADD_ELXCOMPONENT( elxCMAEvolutionStrategy
+ADD_ELXCOMPONENT( CMAEvolutionStrategy
  elxCMAEvolutionStrategy.h
  elxCMAEvolutionStrategy.hxx
  elxCMAEvolutionStrategy.cxx

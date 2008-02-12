@@ -1,6 +1,7 @@
 #ifndef __ImageSample_h
 #define __ImageSample_h
 
+#include "itkNumericTraits.h"
 
 namespace itk
 {

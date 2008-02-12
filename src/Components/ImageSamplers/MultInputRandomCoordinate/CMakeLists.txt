@@ -1,0 +1,8 @@
+
+ADD_ELXCOMPONENT( MultiInputRandomCoordinateSampler
+ elxMultiInputRandomCoordinateSampler.h
+ elxMultiInputRandomCoordinateSampler.hxx
+ elxMultiInputRandomCoordinateSampler.cxx )
+
+
+

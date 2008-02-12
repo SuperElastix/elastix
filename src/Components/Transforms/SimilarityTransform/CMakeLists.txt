@@ -1,6 +1,6 @@
 
 
-ADD_ELXCOMPONENT( elxSimilarityTransform
+ADD_ELXCOMPONENT( SimilarityTransformElastix
  elxSimilarityTransform.h
  elxSimilarityTransform.hxx
  elxSimilarityTransform.cxx

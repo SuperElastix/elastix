@@ -26,6 +26,7 @@ namespace elastix
     this->m_FixedImagePyramidContainer = ObjectContainerType::New();
 		this->m_MovingImagePyramidContainer = ObjectContainerType::New();
 		this->m_InterpolatorContainer = ObjectContainerType::New();
+    this->m_ImageSamplerContainer = ObjectContainerType::New();
 		this->m_MetricContainer = ObjectContainerType::New();
 		this->m_OptimizerContainer = ObjectContainerType::New();
 		this->m_RegistrationContainer = ObjectContainerType::New();

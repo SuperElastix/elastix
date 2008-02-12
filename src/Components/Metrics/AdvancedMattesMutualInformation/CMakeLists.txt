@@ -1,6 +1,6 @@
 
 
-ADD_ELXCOMPONENT( elxAdvancedMattesMutualInformationMetric
+ADD_ELXCOMPONENT( AdvancedMattesMutualInformationMetric
  elxAdvancedMattesMutualInformationMetric.h
  elxAdvancedMattesMutualInformationMetric.hxx
  elxAdvancedMattesMutualInformationMetric.cxx

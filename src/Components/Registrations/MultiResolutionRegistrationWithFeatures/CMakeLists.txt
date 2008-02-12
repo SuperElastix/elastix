@@ -1,6 +1,6 @@
 
 
-ADD_ELXCOMPONENT( elxMultiResolutionRegistrationWithFeatures
+ADD_ELXCOMPONENT( MultiResolutionRegistrationWithFeatures
  elxMultiResolutionRegistrationWithFeatures.h
  elxMultiResolutionRegistrationWithFeatures.hxx
  elxMultiResolutionRegistrationWithFeatures.cxx

@@ -15,7 +15,7 @@ using namespace itk;
 
 	/**
 	 * \class FixedImagePyramidBase
-	 * \brief This class is based on the itk::MultiResolutionPyramidImageFilter.
+	 * \brief This class is the elastix base class for all FixedImagePyramids.
 	 *
 	 * This class contains all the common functionality for FixedImagePyramids.
 	 *

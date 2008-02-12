@@ -1,6 +1,6 @@
 
 
-ADD_ELXCOMPONENT( elxFiniteDifferenceGradientDescent
+ADD_ELXCOMPONENT( FiniteDifferenceGradientDescent
  elxFiniteDifferenceGradientDescent.h
  elxFiniteDifferenceGradientDescent.hxx
  elxFiniteDifferenceGradientDescent.cxx

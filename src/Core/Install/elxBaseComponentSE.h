@@ -99,13 +99,6 @@ namespace elastix
 		ConfigurationPointer	m_Configuration;
 		RegistrationPointer		m_Registration;
 
-    /** Set maximum number of threads, which is read from the command line arguments. 
-     * Syntax:
-     * -threads <int>
-     * The function is called by SetElastix
-     */
-    virtual void SetMaximumNumberOfThreads(void) const;
-
 	private:
 
 		BaseComponentSE( const Self& );		// purposely not implemented

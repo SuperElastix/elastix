@@ -51,17 +51,9 @@ namespace elastix
       this->GetRegistration()->GetAsITKBaseType()->GetCurrentLevel();
 
 		/** Check if after every iteration a new sample set should be created. */
-		std::string newSamplesEveryIteration = "false";
-    this->GetConfiguration()->ReadParameter( newSamplesEveryIteration,
+		this->m_NewSamplesEveryIteration = false;
+    this->GetConfiguration()->ReadParameter( this->m_NewSamplesEveryIteration,
       "NewSamplesEveryIteration", this->GetComponentLabel(), level, 0 );
-		if ( newSamplesEveryIteration == "true" )
-		{
-			this->m_NewSamplesEveryIteration = true;
-		}
-		else
-		{
-			this->m_NewSamplesEveryIteration = false;
-		}
 
 	} // end BeforeEachResolutionBase
 

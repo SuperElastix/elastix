@@ -1,6 +1,6 @@
 
 
-ADD_ELXCOMPONENT( elxAdvancedMeanSquaresMetric
+ADD_ELXCOMPONENT( AdvancedMeanSquaresMetric
  elxAdvancedMeanSquaresMetric.h
  elxAdvancedMeanSquaresMetric.hxx
  elxAdvancedMeanSquaresMetric.cxx

@@ -16,7 +16,7 @@ using namespace itk;
 
 	/**
 	 * \class MovingImagePyramidBase
-	 * \brief This class is based on the itk::MultiResolutionPyramidImageFilter.
+	 * \brief This class is the elastix base class for all MovingImagePyramids.
 	 *
 	 * This class contains all the common functionality for MovingImagePyramids.
 	 *

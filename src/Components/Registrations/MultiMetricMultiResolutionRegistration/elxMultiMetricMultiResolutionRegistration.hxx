@@ -167,7 +167,47 @@ using namespace itk;
 
     this->SetTransform( this->GetElastix()->
       GetElxTransformBase()->GetAsITKBaseType() );
-    
+
+    /** Samplers are not always needed: */
+    for (unsigned int i = 0; i < nrOfMetrics; ++i )
+    {
+      if ( this->GetElastix()->GetElxMetricBase( i )->GetAdvancedMetricUseImageSampler() )
+      {
+        /** Try the i-th sampler for the i-th metric */
+        if ( this->GetElastix()->GetElxImageSamplerBase( i ) )
+        {
+          this->GetElastix()->GetElxMetricBase( i )->SetAdvancedMetricImageSampler(
+            this->GetElastix()->GetElxImageSamplerBase( i )->GetAsITKBaseType() );
+        }
+        else
+        {
+          /** When a different fixed image pyramid is used for each metric,
+           * using one sampler for all metrics makes no sense. */
+          if ( this->GetElastix()->GetElxFixedImagePyramidBase( i ) )            
+          {
+            xl::xout["error"] 
+              << "ERROR: An ImageSamper for metric " 
+              << i
+              << " must be provided!" << std::endl;
+            itkExceptionMacro( << "Not enough ImageSamplers provided!" );
+          }
+
+          /** Try the zeroth image sampler for each metric. */
+          if ( this->GetElastix()->GetElxImageSamplerBase( 0 ) )
+          {
+            this->GetElastix()->GetElxMetricBase( i )->SetAdvancedMetricImageSampler(
+              this->GetElastix()->GetElxImageSamplerBase( 0 )->GetAsITKBaseType() );
+          } 
+          else
+          {
+            xl::xout["error"] << "ERROR: No ImageSampler has been specified." << std::endl;
+            itkExceptionMacro( << "One of the metrics requires an ImageSampler, but it is not available!" );
+          }
+        } 
+
+      } // if sampler required by metric
+    } // for loop over metrics
+
 	} // end SetComponents
 
 

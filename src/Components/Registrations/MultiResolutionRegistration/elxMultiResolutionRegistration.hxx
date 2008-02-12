@@ -99,6 +99,21 @@ using namespace itk;
     this->SetTransform( this->GetElastix()->
       GetElxTransformBase()->GetAsITKBaseType() );
 
+    /** Samplers are not always needed: */
+    if ( this->GetElastix()->GetElxMetricBase()->GetAdvancedMetricUseImageSampler() )
+    {
+      if ( this->GetElastix()->GetElxImageSamplerBase() )
+      {
+        this->GetElastix()->GetElxMetricBase()->SetAdvancedMetricImageSampler(
+          this->GetElastix()->GetElxImageSamplerBase()->GetAsITKBaseType() );
+      }
+      else
+      {
+        xl::xout["error"] << "No ImageSampler has been specified." << std::endl;
+        itkExceptionMacro( << "The metric requires an ImageSampler, but it is not available!" );
+      }
+    }
+
 	} // end SetComponents
 
 

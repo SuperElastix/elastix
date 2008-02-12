@@ -14,7 +14,7 @@ using namespace itk;
 
 	/**
 	 * \class OptimizerBase
-	 * \brief This class is based on the itk::Optimizer.
+	 * \brief This class is the elastix base class for all Optimizers.
 	 *
 	 * This class contains all the common functionality for Optimizers.
 	 *

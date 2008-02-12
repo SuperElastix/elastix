@@ -1,6 +1,6 @@
 
 
-ADD_ELXCOMPONENT( elxAdvancedNormalizedCorrelationMetric
+ADD_ELXCOMPONENT( AdvancedNormalizedCorrelationMetric
  elxAdvancedNormalizedCorrelationMetric.h
  elxAdvancedNormalizedCorrelationMetric.hxx
  elxAdvancedNormalizedCorrelationMetric.cxx

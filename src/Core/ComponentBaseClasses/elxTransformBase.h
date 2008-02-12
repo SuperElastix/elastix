@@ -20,7 +20,7 @@ namespace elastix
 
 	/**
 	 * \class TransformBase
-	 * \brief This class is the base for all Transforms.
+	 * \brief This class is the elastix base class for all Transforms.
 	 *
 	 * This class contains the common functionality for all Transforms.
 	 *

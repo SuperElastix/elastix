@@ -1,6 +1,6 @@
 
 
-ADD_ELXCOMPONENT( elxStandardGradientDescent
+ADD_ELXCOMPONENT( StandardGradientDescent
  elxStandardGradientDescent.h
  elxStandardGradientDescent.hxx
  elxStandardGradientDescent.cxx

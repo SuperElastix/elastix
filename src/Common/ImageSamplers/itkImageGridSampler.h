@@ -90,6 +90,12 @@ namespace itk
     {
       return false;
     };
+
+    /** Returns whether the sampler supports SelectNewSamplesOnUpdate() */
+    virtual bool SelectingNewSamplesOnUpdateSupported( void ) const
+    {
+      return false;
+    }
     
   protected:
 

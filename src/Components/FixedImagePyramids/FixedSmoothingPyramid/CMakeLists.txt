@@ -1,6 +1,6 @@
 
 
-ADD_ELXCOMPONENT( elxFixedSmoothingPyramid
+ADD_ELXCOMPONENT( FixedSmoothingPyramid
  elxFixedSmoothingPyramid.h
  elxFixedSmoothingPyramid.hxx
  elxFixedSmoothingPyramid.cxx )

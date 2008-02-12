@@ -105,7 +105,6 @@ IF(NOT WIN32)
 ENDIF(NOT WIN32)
 
 ADD_LIBRARY(elxCommon
-  ${ELX_GDCMHACK}
   ${CommonFiles}
 	${LineSearchOptimizersFiles}
 	${ImageSamplersFiles})

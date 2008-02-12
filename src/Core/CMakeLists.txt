@@ -18,8 +18,6 @@ SET(KernelFilesForComponents
 SET(InstallFilesForExecutables
  Install/elxComponentLoader.cxx
  Install/elxComponentLoader.h
- Install/itksysDynamicLoaderGlobal.cxx
- Install/itksysDynamicLoaderGlobal.h
 )
 
 SET(InstallFilesForComponents
@@ -28,6 +26,7 @@ SET(InstallFilesForComponents
  Install/elxBaseComponent.h
  Install/elxBaseComponentSE.h
  Install/elxBaseComponentSE.hxx
+ Install/elxInstallAllComponents.h
  Install/elxInstallFunctions.h
  Install/elxMacro.h
  Install/elxIncludes.h
@@ -44,6 +43,7 @@ SET(ConfigurationFiles
 
 SET(ComponentBaseClassFiles
  ComponentBaseClasses/elxFixedImagePyramidBase.h
+ ComponentBaseClasses/elxImageSamplerBase.h
  ComponentBaseClasses/elxInterpolatorBase.h
  ComponentBaseClasses/elxMetricBase.h
  ComponentBaseClasses/elxMovingImagePyramidBase.h
@@ -53,6 +53,7 @@ SET(ComponentBaseClassFiles
  ComponentBaseClasses/elxResamplerBase.h
  ComponentBaseClasses/elxTransformBase.h
  ComponentBaseClasses/elxFixedImagePyramidBase.hxx
+ ComponentBaseClasses/elxImageSamplerBase.hxx
  ComponentBaseClasses/elxInterpolatorBase.hxx
  ComponentBaseClasses/elxMetricBase.hxx
  ComponentBaseClasses/elxMovingImagePyramidBase.hxx
@@ -93,7 +94,6 @@ IF ( NOT WIN32 )
 ENDIF(NOT WIN32)
 
 ADD_LIBRARY(elxCore
- ${ELX_GDCMHACK} 
  ${KernelFilesForComponents}
  ${InstallFilesForComponents}
  ${ConfigurationFiles}
@@ -112,7 +112,6 @@ TARGET_LINK_LIBRARIES(elxCore
 #param
 
 ADD_EXECUTABLE(elastix
- ${ELX_GDCMHACK} 
  Main/elastix.cxx
  Main/elastix.h
  Kernel/elxElastixMain.cxx
@@ -121,7 +120,6 @@ ADD_EXECUTABLE(elastix
 )
 
 ADD_EXECUTABLE(transformix
- ${ELX_GDCMHACK} 
  Main/transformix.cxx
  Main/transformix.h
  Kernel/elxElastixMain.cxx
@@ -140,6 +138,7 @@ TARGET_LINK_LIBRARIES(elastix
  ITKNumerics
  ITKIO
  ITKCommon
+ ${AllComponentLibs}
 )
 
 TARGET_LINK_LIBRARIES(transformix
@@ -151,6 +150,7 @@ TARGET_LINK_LIBRARIES(transformix
  ITKNumerics
  ITKIO
  ITKCommon
+ ${AllComponentLibs}
 )
 
 INSTALL_TARGETS(/. elastix)

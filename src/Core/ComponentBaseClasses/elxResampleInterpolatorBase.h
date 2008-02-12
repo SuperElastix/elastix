@@ -14,7 +14,7 @@ namespace elastix
 
 	/**
 	 * \class ResampleInterpolatorBase
-	 * \brief This class is the base for all ResampleInterpolators.
+	 * \brief This class is the elastix base class for all ResampleInterpolators.
 	 *
 	 * This class contains all the common functionality for ResampleInterpolators.
 	 *

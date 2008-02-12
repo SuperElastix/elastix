@@ -1,6 +1,6 @@
 #---------------------------------------------------------------------
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.2)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.4)
 # This project is intended to be built outside the Insight source tree
 
 #---------------------------------------------------------------------
@@ -55,6 +55,7 @@ SET( elxINCLUDE_DIRECTORIES
  ${elxCommon_INCLUDE_DIRECTORIES}
  ${elxCore_INCLUDE_DIRECTORIES}
  ${elxComponents_INCLUDE_DIRECTORIES}
+ ${elastix_BINARY_DIR}
 )
 
 INCLUDE_DIRECTORIES( ${elxINCLUDE_DIRECTORIES} )
@@ -69,38 +70,7 @@ SET(elastix_LIBRARY_PATH "${LIBRARY_OUTPUT_PATH}")
 SET(elastix_EXECUTABLE_PATH "${EXECUTABLE_OUTPUT_PATH}")
 
 #---------------------------------------------------------------------
-# Set correct Linker options for GCC. Only tested for Linux.
-
-IF(CMAKE_COMPILER_IS_GNUCXX)
-  # -W1,-E means that the dynamic symbol table is exported. The component can now
-	# access the symbols of the executable.
-  SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}	-W1,-E")
-ENDIF(CMAKE_COMPILER_IS_GNUCXX)
-
-#--------------------------------------------------------------------
-# Make sure the GDCM lib is not used. It causes segmentation faults.
-
-IF(CMAKE_COMPILER_IS_GNUCXX)
-  SET(ELX_GDCMHACK ${elastix_SOURCE_DIR}/Common/itkGDCMImageIOFactory.cxx   CACHE INTERNAL "Hack to avoid the GDCMlib")
-ELSE(CMAKE_COMPILER_IS_GNUCXX)
-  SET(ELX_GDCMHACK CACHE INTERNAL "Hack to avoid the GDCMlib")
-ENDIF(CMAKE_COMPILER_IS_GNUCXX)
-
-#---------------------------------------------------------------------
-# Make sure the MS VC compiler has enough memory 
-# stil necessary?? No, it doesn't seem so.
-
-#IF(CMAKE_BUILD_TOOL MATCHES "(msdev|devenv|nmake)")
-# IF(CMAKE_CXX_FLAGS MATCHES "/Zm(0|1|2|3|4|5|6|7|8|9)*[^ ]")
-#   STRING(REGEX REPLACE "/Zm(0|1|2|3|4|5|6|7|8|9)*[^ ]" "/Zm1600 " CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-# ELSE(CMAKE_CXX_FLAGS MATCHES "/Zm(0|1|2|3|4|5|6|7|8|9)*[^ ]")
-#   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zm1600 ")
-# ENDIF(CMAKE_CXX_FLAGS MATCHES "/Zm(0|1|2|3|4|5|6|7|8|9)*[^ ]")
-#ENDIF(CMAKE_BUILD_TOOL MATCHES "(msdev|devenv|nmake)")
-
-#---------------------------------------------------------------------
 # process the sub-directories
-
 
 SUBDIRS(Common)
 SUBDIRS(Core)

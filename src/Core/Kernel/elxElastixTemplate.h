@@ -14,6 +14,7 @@
 #include "elxFixedImagePyramidBase.h"
 #include "elxMovingImagePyramidBase.h"
 #include "elxInterpolatorBase.h"
+#include "elxImageSamplerBase.h"
 #include "elxMetricBase.h"
 #include "elxOptimizerBase.h"
 #include "elxResamplerBase.h"
@@ -155,6 +156,7 @@ namespace elastix
 		typedef FixedImagePyramidBase<Self> 															FixedImagePyramidBaseType;
 		typedef MovingImagePyramidBase<Self>															MovingImagePyramidBaseType;
 		typedef InterpolatorBase<Self>																		InterpolatorBaseType;
+    typedef elx::ImageSamplerBase<Self>																ImageSamplerBaseType;
 		typedef MetricBase<Self>																					MetricBaseType;
 		typedef OptimizerBase<Self> 																			OptimizerBaseType;
 		typedef RegistrationBase<Self>																		RegistrationBaseType;
@@ -177,6 +179,7 @@ namespace elastix
 		elxGetBaseMacro( FixedImagePyramid, FixedImagePyramidBaseType );
 		elxGetBaseMacro( MovingImagePyramid, MovingImagePyramidBaseType );
 		elxGetBaseMacro( Interpolator, InterpolatorBaseType );
+    elxGetBaseMacro( ImageSampler, ImageSamplerBaseType );
 		elxGetBaseMacro( Metric, MetricBaseType );
 		elxGetBaseMacro( Optimizer, OptimizerBaseType );
 		elxGetBaseMacro( Registration, RegistrationBaseType );
@@ -266,7 +269,19 @@ namespace elastix
 		virtual void OpenIterationInfoFile(void);
 		std::ofstream m_IterationInfoFile;
 
-		/** Used by the callback functions, beforeeachresolution() etc.).*/
+		/** Used by the callback functions, beforeeachresolution() etc.).
+     * This method calls a function in each component, in the following order:
+     * \li Registration
+     * \li Transform
+     * \li ImageSampler
+     * \li Metric
+     * \li Interpolator
+     * \li Optimizer
+     * \li FixedImagePyramid
+     * \li MovingImagePyramid
+     * \li ResampleInterpolator
+     * \li Resampler 
+     */
 		void CallInEachComponent( PtrToMemberFunction func );
 		int CallInEachComponentInt( PtrToMemberFunction2 func );
 

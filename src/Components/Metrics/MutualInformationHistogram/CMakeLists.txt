@@ -1,6 +1,6 @@
 
 
-ADD_ELXCOMPONENT( elxMutualInformationHistogramMetric
+ADD_ELXCOMPONENT( MutualInformationHistogramMetric
  elxMutualInformationHistogramMetric.h
  elxMutualInformationHistogramMetric.hxx
  elxMutualInformationHistogramMetric.cxx )

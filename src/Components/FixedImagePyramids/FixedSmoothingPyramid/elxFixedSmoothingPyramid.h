@@ -70,6 +70,8 @@ using namespace itk;
 		typedef typename Superclass2::RegistrationType			RegistrationType;
 		typedef typename Superclass2::RegistrationPointer		RegistrationPointer;
 		typedef typename Superclass2::ITKBaseType						ITKBaseType;
+
+
 		
 	protected:
 
