@@ -141,7 +141,7 @@ using namespace itk;
 		 * \li Call InitializeTransform
 		 * \li Set the scales.
 		 */
-		virtual void BeforeRegistration(void);
+		virtual void BeforeRegistration( void );
 		
 		/** Initialize Transform.
 		 * \li Set all parameters to zero. 
@@ -158,7 +158,7 @@ using namespace itk;
 		 * 
 		 * It is not yet possible to enter an initial rotation angle or scaling.
 		 */
-		virtual void InitializeTransform(void);
+		virtual void InitializeTransform( void );
     
     /** Set the scales
      * \li If AutomaticScalesEstimation is "true" estimate scales
@@ -167,13 +167,13 @@ using namespace itk;
      * This function is called by BeforeRegistration, after
      * the InitializeTransform function is called 
      */
-    virtual void SetScales(void);
+    virtual void SetScales( void );
 		
 		/** Function to read transform-parameters from a file. 
 		 * 
 		 * It reads the center of rotation and calls the superclass' implementation.
 		 */
-		virtual void ReadFromFile(void);
+		virtual void ReadFromFile( void );
 		
 		/** Function to write transform-parameters to a file. 
 		 *
@@ -182,8 +182,6 @@ using namespace itk;
 		virtual void WriteToFile( const ParametersType & param );
 
 	protected:
-
-    
 
 		/** The constructor. */
 		AffineTransformElastix();
