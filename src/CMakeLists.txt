@@ -41,6 +41,7 @@ SET( elxCore_INCLUDE_DIRECTORIES
 
 SET( elxComponents_INCLUDE_DIRECTORIES
  ${elastix_SOURCE_DIR}/Components/FixedImagePyramids
+ ${elastix_SOURCE_DIR}/Components/ImageSamplers
  ${elastix_SOURCE_DIR}/Components/Interpolators
  ${elastix_SOURCE_DIR}/Components/Metrics
  ${elastix_SOURCE_DIR}/Components/MovingImagePyramids
