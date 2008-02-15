@@ -2,6 +2,7 @@
 #define __elxSimilarityTransform_HXX_
 
 #include "elxSimilarityTransform.h"
+#include "itkContinuousIndex.h"
 
 namespace elastix
 {
@@ -134,8 +135,6 @@ namespace elastix
      */
     IndexType centerOfRotationIndex;
     InputPointType centerOfRotationPoint;
-    bool CORIndexInImage = true;
-    bool CORPointInImage = true;
     bool centerGivenAsIndex = true;
     bool centerGivenAsPoint = true;
     SizeType fixedImageSize = this->m_Registration->GetAsITKBaseType()->
@@ -159,25 +158,22 @@ namespace elastix
       {
         centerGivenAsPoint &= false;
       }
-      /** Check if centerOfRotationIndex is within image. */
-      if ( centerOfRotationIndex[ i ] < 0 ||
-        centerOfRotationIndex[ i ] > fixedImageSize[ i ] )
-      {
-        CORIndexInImage = false;
-      }
     } // end loop over SpaceDimension
 
-    /** Check if centerOfRotationPoint is within image. */
-    IndexType indexOfPoint;
-    this->m_Registration->GetAsITKBaseType()->GetFixedImage()->
-      TransformPhysicalPointToIndex( centerOfRotationPoint, indexOfPoint );
-    for ( unsigned int i = 0; i < SpaceDimension; i++ )
-    {
-      if ( centerOfRotationPoint[ i ] < 0 ||
-        centerOfRotationPoint[ i ] > fixedImageSize[ i ] )
-      {
-        CORPointInImage = false;
-      }
+    /** Check if CenterOfRotation has index-values within image.*/
+    bool CORIndexInImage = true;
+    bool CORPointInImage = true;
+    if ( centerGivenAsIndex )
+    {      
+      CORIndexInImage =  this->m_Registration->GetAsITKBaseType()->
+        GetFixedImage()->GetLargestPossibleRegion().IsInside( centerOfRotationIndex );
+    }    
+    if ( centerGivenAsPoint )
+    {     
+      typedef ContinuousIndex< double, SpaceDimension > ContinuousIndexType;
+      ContinuousIndexType cindex;
+      CORPointInImage = this->m_Registration->GetAsITKBaseType()->GetFixedImage()->
+        TransformPhysicalPointToContinuousIndex( centerOfRotationPoint, cindex );
     }
     
     /** Give a warning if necessary. */

@@ -3,6 +3,7 @@
 
 #include "elxAffineTransform.h"
 #include "itkImageGridSampler.h"
+#include "itkContinuousIndex.h"
 
 namespace elastix
 {
@@ -124,7 +125,7 @@ namespace elastix
   template <class TElastix>
     void AffineTransformElastix<TElastix>
     ::InitializeTransform( void )
-  {
+  {    
     /** Set all parameters to zero (no rotations, no translation */
     this->m_AffineTransform->SetIdentity();
 
@@ -133,8 +134,7 @@ namespace elastix
     */
     IndexType centerOfRotationIndex;
     InputPointType centerOfRotationPoint;
-    bool CORIndexInImage = true;
-    bool CORPointInImage = true;
+
     bool centerGivenAsIndex = true;
     bool centerGivenAsPoint = true;
     SizeType fixedImageSize = this->m_Registration->GetAsITKBaseType()->
@@ -157,28 +157,25 @@ namespace elastix
       if ( returncodeP != 0 )
       {
         centerGivenAsPoint &= false;
-      }
-      /** Check if CenterOfRotation has index-values within image.*/
-      if ( centerOfRotationIndex[ i ] < 0 ||
-        centerOfRotationIndex[ i ] > fixedImageSize[ i ] )
-      {
-        CORIndexInImage = false;
-      }
+      }           
     } // end loop over SpaceDimension
 
-    /** Check if centerOfRotationPoint is within image. */
-    IndexType indexOfPoint;
-    this->m_Registration->GetAsITKBaseType()->GetFixedImage()->
-      TransformPhysicalPointToIndex( centerOfRotationPoint, indexOfPoint );
-    for ( unsigned int i = 0; i < SpaceDimension; i++ )
-    {
-      if ( centerOfRotationPoint[ i ] < 0 ||
-        centerOfRotationPoint[ i ] > fixedImageSize[ i ] )
-      {
-        CORPointInImage = false;
-      }
+    /** Check if CenterOfRotation has index-values within image.*/
+    bool CORIndexInImage = true;
+    bool CORPointInImage = true;
+    if ( centerGivenAsIndex )
+    {      
+      CORIndexInImage =  this->m_Registration->GetAsITKBaseType()->
+        GetFixedImage()->GetLargestPossibleRegion().IsInside( centerOfRotationIndex );
+    }    
+    if ( centerGivenAsPoint )
+    {     
+      typedef ContinuousIndex< double, SpaceDimension > ContinuousIndexType;
+      ContinuousIndexType cindex;
+      CORPointInImage = this->m_Registration->GetAsITKBaseType()->GetFixedImage()->
+        TransformPhysicalPointToContinuousIndex( centerOfRotationPoint, cindex );
     }
-
+    
     /** Give a warning if necessary. */
     if ( !CORIndexInImage && centerGivenAsIndex )
     {

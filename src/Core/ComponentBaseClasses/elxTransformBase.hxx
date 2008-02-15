@@ -2,16 +2,17 @@
 #define __elxTransformBase_hxx
 
 #include "elxTransformBase.h"
+
 #include "itkPointSet.h"
 #include "itkDefaultStaticMeshTraits.h"
 #include "itkTransformixInputPointFileReader.h"
 #include "vnl/vnl_math.h"
 #include <itksys/SystemTools.hxx>
-
 #include "itkImageRegionIteratorWithIndex.h"
 #include "itkImageFileWriter.h"
 #include "itkVector.h"
 #include "itkImageGridSampler.h"
+#include "itkContinuousIndex.h"
 
 namespace elastix
 {
@@ -684,6 +685,12 @@ namespace elastix
     typedef typename FixedImageType::SpacingType        FixedImageSpacingType;
     typedef typename FixedImageType::IndexType          FixedImageIndexType;
     typedef typename FixedImageIndexType::IndexValueType FixedImageIndexValueType;
+    typedef typename MovingImageType::IndexType         MovingImageIndexType;
+    typedef typename MovingImageIndexType::IndexValueType MovingImageIndexValueType;
+    typedef
+      itk::ContinuousIndex<double, FixedImageDimension> FixedImageContinuousIndexType;
+    typedef 
+      itk::ContinuousIndex<double, MovingImageDimension> MovingImageContinuousIndexType;
       
     typedef bool                                        DummyIPPPixelType;
     typedef itk::DefaultStaticMeshTraits<
@@ -730,7 +737,8 @@ namespace elastix
 		std::vector< FixedImageIndexType >    inputindexvec(  nrofpoints );	
 		std::vector< InputPointType >         inputpointvec(  nrofpoints );
 		std::vector< OutputPointType >        outputpointvec( nrofpoints );
-		std::vector< FixedImageIndexType >    outputindexvec( nrofpoints );
+		std::vector< FixedImageIndexType >    outputindexfixedvec( nrofpoints );
+    std::vector< MovingImageIndexType >   outputindexmovingvec( nrofpoints );
 		std::vector< DeformationVectorType >  deformationvec( nrofpoints );
 			
 		/** Make a temporary image with the right region info,
@@ -750,23 +758,43 @@ namespace elastix
 		dummyImage->SetRegions( region );
 		dummyImage->SetOrigin( origin );
 		dummyImage->SetSpacing( spacing );
+
+    /** Temp vars */
+    FixedImageContinuousIndexType fixedcindex;
+    MovingImageContinuousIndexType movingcindex;
+
+    /** Also output moving image indices if a moving image was supplied. */
+    bool alsoMovingIndices = false;
+    typename MovingImageType::Pointer movingImage = this->GetElastix()->GetMovingImage();
+    if ( movingImage.IsNotNull() )
+    {
+      alsoMovingIndices = true;
+    }
 		
 		/** Read the input points, as index or as point. */
 		if ( !(ippReader->GetPointsAreIndices()) )
 		{
 			for ( unsigned int j = 0; j < nrofpoints; j++ )
 			{
+        /** Compute index of nearest voxel in fixed image. */
         InputPointType point;
         inputPointSet->GetPoint( j, &point );
 				inputpointvec[ j ] = point;
-				dummyImage->TransformPhysicalPointToIndex(
-					point, inputindexvec[ j ] );					
+				dummyImage->TransformPhysicalPointToContinuousIndex( 
+          point, fixedcindex );
+        for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+		    {
+          inputindexvec[ j ][ i ] = static_cast<FixedImageIndexValueType>(
+            vnl_math_rnd( fixedcindex[ i ] ) );
+        }
 			} 
 		} 
 		else //so: inputasindex
 		{
 			for ( unsigned int j = 0; j < nrofpoints; j++ )
 			{
+        /** The read point from the inutPointSet is actually an index
+         * Cast to the proper type. */
         InputPointType point;
 				inputPointSet->GetPoint( j, &point );
 				for ( unsigned int i = 0; i < FixedImageDimension; i++ )
@@ -774,6 +802,7 @@ namespace elastix
 					inputindexvec[ j ][ i ] = static_cast<FixedImageIndexValueType>(
             vnl_math_rnd( point[ i ] ) );
 				}
+        /** Compute the input point in physical coordinates */
 				dummyImage->TransformIndexToPhysicalPoint(
 					inputindexvec[ j ], inputpointvec[ j ] );
 			}
@@ -786,8 +815,26 @@ namespace elastix
 			/** Call TransformPoint. */
 			outputpointvec[ j ] = this->GetAsITKBaseType()->TransformPoint( inputpointvec[ j ] );
 
-			/** Transform back to index. */
-			dummyImage->TransformPhysicalPointToIndex( outputpointvec[ j ], outputindexvec[ j ] );					
+			/** Transform back to index in fixed image domain. */
+			dummyImage->TransformPhysicalPointToContinuousIndex( 
+        outputpointvec[ j ], fixedcindex );
+      for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+		  {
+        outputindexfixedvec[ j ][ i ] = static_cast<FixedImageIndexValueType>(
+          vnl_math_rnd( fixedcindex[ i ] ) );
+      }
+
+      if ( alsoMovingIndices )
+      {
+        /** Transform back to index in moving image domain. */
+			  movingImage->TransformPhysicalPointToContinuousIndex( 
+          outputpointvec[ j ], movingcindex );
+        for ( unsigned int i = 0; i < MovingImageDimension; i++ )
+  		  {
+          outputindexmovingvec[ j ][ i ] = static_cast<MovingImageIndexValueType>(
+            vnl_math_rnd( movingcindex[ i ] ) );
+        }
+      }
 
 			/** Compute displacement. */
 			deformationvec[ j ].CastFrom( outputpointvec[ j ] - inputpointvec[ j ] );
@@ -819,11 +866,11 @@ namespace elastix
 				elxout << inputpointvec[ j ][ i ] << " ";
 			}
 
-			/** The output index. */
-			elxout << "]\t; OutputIndex = [ "; 
+			/** The output index in fixed image. */
+			elxout << "]\t; OutputIndexFixed = [ "; 
 			for ( unsigned int i = 0; i < FixedImageDimension; i++ )
 			{
-				elxout << outputindexvec[ j ][ i ] << " ";
+				elxout << outputindexfixedvec[ j ][ i ] << " ";
 			}
 			
 			/** The output point. */
@@ -839,6 +886,16 @@ namespace elastix
 			{
 				elxout << deformationvec[ j ][ i ] << " ";
 			}
+
+      if ( alsoMovingIndices )
+      {
+        /** The output index in moving image. */
+        elxout << "]\t; OutputIndexMoving = [ "; 
+        for ( unsigned int i = 0; i < MovingImageDimension; i++ )
+        {
+          elxout << outputindexmovingvec[ j ][ i ] << " ";
+        }
+      }
 
 			elxout << "]" << std::endl;
 		}	// end for nrofpoints	

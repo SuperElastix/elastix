@@ -424,17 +424,19 @@ namespace itk
           SizeType  size;
           IndexType start;
           CIndexType startcindex;
-          IndexType endindex;
+          CIndexType endcindex;
           FixedImageType * fixedImageAtLevel = fixpyr->GetOutput( level );
           /** Map the original fixed image region to the image resulting from the 
            * FixedImagePyramid at level l.
-           */
+           * To be on the safe side, the start point is ceiled, and the end point is
+           * floored. To see why, consider an image of 4 by 4, and its downsampled version of 2 by 2. */
           fixedImageAtLevel->TransformPhysicalPointToContinuousIndex( inputStartPoint, startcindex );
-          fixedImageAtLevel->TransformPhysicalPointToIndex( inputEndPoint, endindex );
+          fixedImageAtLevel->TransformPhysicalPointToContinuousIndex( inputEndPoint, endcindex );
           for ( unsigned int dim = 0; dim < TFixedImage::ImageDimension; dim++ )
           {
             start[ dim ] = static_cast<IndexValueType>( vcl_ceil( startcindex[ dim ] ) );
-            size[ dim ]  = static_cast<SizeValueType>( endindex[ dim ] - start[ dim ] + 1 );
+            size[ dim ]  = static_cast<SizeValueType>( 
+              static_cast<SizeValueType>( vcl_floor( endcindex[ dim ] ) ) - start[ dim ] + 1 );
           }
 
           this->m_FixedImageRegionPyramids[ i ][ level ].SetSize( size );
