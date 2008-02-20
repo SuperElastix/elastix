@@ -1,7 +1,7 @@
 %!PS-Adobe-2.0 EPSF-2.0
-%%Title: schedule.fig
+%%Title: registrationcomponents.fig
 %%Creator: fig2dev Version 3.2 Patchlevel 3d
-%%CreationDate: Wed Jan 23 18:32:44 2008
+%%CreationDate: Wed Feb 20 12:00:05 2008
 %%For: marius@goliath.rrn.azu.nl (Marius Staring (mstaring))
 %%BoundingBox: 0 0 582 173
 %%Magnification: 1.0000
@@ -239,6 +239,12 @@ n 7650 1125 m 9300 1125 l
 n 9255 1380 m 9300 1545 l 9345 1380 l  col0 s
 % Polyline
 7.500 slw
+n 6555 2625 m 6450 2625 6450 3120 105 arcto 4 {pop} repeat
+  6450 3225 7545 3225 105 arcto 4 {pop} repeat
+  7650 3225 7650 2730 105 arcto 4 {pop} repeat
+  7650 2625 6555 2625 105 arcto 4 {pop} repeat
+ cp gs col0 s gr 
+% Polyline
 gs  clippath
 7635 2880 m 7635 2970 l 7845 2970 l 7680 2925 l 7845 2880 l cp
 eoclip
@@ -248,16 +254,6 @@ n 9300 2175 m 9300 2925 l
 % arrowhead
 15.000 slw
 n 7845 2880 m 7680 2925 l 7845 2970 l  col0 s
-% Polyline
-7.500 slw
-n 6555 2625 m 6450 2625 6450 3120 105 arcto 4 {pop} repeat
-  6450 3225 7545 3225 105 arcto 4 {pop} repeat
-  7650 3225 7650 2730 105 arcto 4 {pop} repeat
-  7650 2625 6555 2625 105 arcto 4 {pop} repeat
- cp gs col0 s gr 
-/Times-Roman ff 210.00 scf sf
-375 750 m
-gs 1 -1 sc (fixed image) col0 sh gr
 /Times-Roman ff 210.00 scf sf
 375 1650 m
 gs 1 -1 sc (moving image) col0 sh gr
@@ -268,19 +264,22 @@ gs 1 -1 sc (pyramid) col0 sh gr
 2400 1650 m
 gs 1 -1 sc (pyramid) col0 sh gr
 /Times-Roman ff 210.00 scf sf
-4275 750 m
-gs 1 -1 sc (sampler) col0 sh gr
-/Times-Roman ff 210.00 scf sf
 4275 1650 m
 gs 1 -1 sc (interpolator) col0 sh gr
+/Times-Roman ff 210.00 scf sf
+8925 1950 m
+gs 1 -1 sc (optimiser) col0 sh gr
+/Times-Roman ff 210.00 scf sf
+450 750 m
+gs 1 -1 sc (fixed image) col0 sh gr
 /Times-Roman ff 210.00 scf sf
 6600 3000 m
 gs 1 -1 sc (transform) col0 sh gr
 /Times-Roman ff 210.00 scf sf
+4350 750 m
+gs 1 -1 sc (sampler) col0 sh gr
+/Times-Roman ff 210.00 scf sf
 6750 1200 m
 gs 1 -1 sc (metric) col0 sh gr
-/Times-Roman ff 210.00 scf sf
-8925 1950 m
-gs 1 -1 sc (optimiser) col0 sh gr
 $F2psEnd
 rs

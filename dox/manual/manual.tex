@@ -9,7 +9,8 @@
 \usepackage{bm,url}
 
 % For figures
-\usepackage{graphicx,subfigure,psfrag}
+\usepackage{graphicx,subfigure,psfrag,epsfig}
+\graphicspath{{images/}}
 
 \usepackage{natbib}
 
@@ -35,7 +36,7 @@
 
 \begin{document}
 
-\title{\includegraphics[width=8cm]{images/elastixLogo.eps}\\\vspace{1cm}the manual\vspace{1cm}}
+\title{\includegraphics[width=8cm]{elastixLogo.eps}\\\vspace{1cm}the manual\vspace{1cm}}
 \author{Stefan Klein and Marius Staring}
 %\date{}
 \maketitle
@@ -62,22 +63,23 @@ compare different registration methods for his/her specific
 application. The command-line interface simplifies the processing
 of large amounts of data sets, using scripting.
 
-Chapter~\ref{chp:Registration} discusses some general theory of
-image registration. Also, the different components of which a
-registration method consists are treated. In
-Chapter~\ref{chp:elastix}, \elastix\ is described and its usage is
-explained. Chapter~\ref{chp:transformix} is dedicated to
-\transformix, a program accompanying \elastix. A tutorial is given
-in Chapter~\ref{chp:Tutorial}, including many recommendations
-based on the authors' own experiences. Chapter~\ref{chp:develop}
-provides more details about the source code and explains how to
-create extensions of \elastix.
+In Chapter~\ref{chp:Registration} quite an extensive introduction to
+some general theory of image registration is given. Also, the
+different components of which a registration method consists, are
+treated. In Chapter~\ref{chp:elastix}, \elastix\ is described and its
+usage is explained. Chapter~\ref{chp:transformix} is dedicated to
+\transformix, a program accompanying \elastix. A tutorial is given in
+Chapter~\ref{chp:Tutorial}, including many recommendations based on
+the authors' own experiences. Chapter~\ref{chp:develop} provides more
+details about the source code and explains how to create extensions
+of \elastix.
 
 \section{Quick start}
 
 \begin{itemize}
 \item Download \elastix\ from
-\url{www.isi.uu.nl/Elastix/download.php}.
+\url{www.isi.uu.nl/Elastix/download.php}. See Section
+\ref{sec:elastix:install} for details about the installation.
 
 \item Read some basics about the program at
 \url{www.isi.uu.nl/Elastix/about.php} and in this manual.
@@ -114,49 +116,49 @@ for some common problems.
 \chapter{Image registration}\label{chp:Registration}
 
 Image registration is an important tool in the field of medical
-imaging. In many clinical situations several images of a patient
-are made in order to analyse the patient’s situation. These images
-are acquired with, for example, X-ray scanners, Magnetic Resonance
+imaging. In many clinical situations several images of a patient are
+made in order to analyse the patient's situation. These images are
+acquired with, for example, X-ray scanners, Magnetic Resonance
 Imaging (MRI) scanners, Computed Tomography (CT) scanners, and
-Ultrasound scanners, which provide knowledge about the anatomy of
-the subject. Combination of patient data, mono- or multi-modal,
-often yields additional clinical information not apparent in the
-separate images. For this purpose, the spatial relation between
-the images has to be found. Image registration is the task of
-finding a spatial one-to-one mapping from voxels in one image to
-voxels in the other image, see Figure \ref{fig:concept}. Good
-reviews on the subject are given in
-\citet{HillEA01,LesterEA99,MaintzEA98}.
+Ultrasound scanners, which provide knowledge about the anatomy of the
+subject. Combination of patient data, mono- or multi-modal, often
+yields additional clinical information not apparent in the separate
+images. For this purpose, the spatial relation between the images has
+to be found. Image registration is the task of finding a spatial
+one-to-one mapping from voxels in one image to voxels in the other
+image, see Figure \ref{fig:concept}. Good reviews on the subject are
+given in \citet{MaintzEA98,LesterEA99,HillEA01,Hajnal01}.
 
-The following section introduces the mathematical formulation of
-the registration process and gives an overview of the components
-of which a general registration method consists. After that, in
-Sections~\ref{sec:comp:metric}-\ref{sec:comp:multiresolution},
-each component is discussed in more detail.
+The following section introduces the mathematical formulation of the
+registration process and gives an overview of the components of which
+a general registration method consists. After that, in
+Sections~\ref{sec:comp:metric}-\ref{sec:comp:multiresolution}, each
+component is discussed in more detail. The name of the corresponding
+component in \elastix\ is also give.
 
 \section{Registration framework}\label{sec:framework}
 
 \begin{figure}
 \centering
-\includegraphics[width=8cm]{images/ImageRegistrationConcept.eps}
+\includegraphics[width=8cm]{ImageRegistrationConcept.eps}
 \caption{Image registration is the task of finding a spatial
 transformation mapping one image to another. Adopted from
 \citet{ITKSoftwareGuideSecondEdition}.} \label{fig:concept}
 \end{figure}
 
-Two images are involved in the registration process. One image,
-the \emph{moving image} $I_M(\vx)$, is deformed to fit the other
-image, the \emph{fixed image} $I_F(\vx)$. Registration is the
-problem of finding a \emph{displacement} $\vux$ that makes
-$I_M(\vx + \vux)$ spatially aligned to $I_F(\vx)$. An equivalent
-formulation is to say that registration is the problem of finding
-a \emph{transformation} $\vT(\vx) = \vx + \vux $ that makes
-$I_M(\vT(\vx))$ spatially aligned to $I_F(\vx)$. The quality of
-alignment is defined by a distance or similarity measure $\Sim$,
-such as the sum of squared differences (SSD), the correlation
-ratio, or the mutual information (MI) measure. Because this
-problem is ill-posed, a regularisation or penalty term $\Pen$ is
-often introduced that constrains $\vT$.
+Two images are involved in the registration process. One image, the
+\emph{moving image} $I_M(\vx)$, is deformed to fit the other image,
+the \emph{fixed image} $I_F(\vx)$. Registration is the problem of
+finding a \emph{displacement} $\vux$ that makes $I_M(\vx + \vux)$
+spatially aligned to $I_F(\vx)$. An equivalent formulation is to say
+that registration is the problem of finding a \emph{transformation}
+$\vT(\vx) = \vx + \vux $ that makes $I_M(\vT(\vx))$ spatially aligned
+to $I_F(\vx)$. The quality of alignment is defined by a distance or
+similarity measure $\Sim$, such as the sum of squared differences
+(SSD), the correlation ratio, or the mutual information (MI) measure.
+Because this problem is ill-posed for nonrigid transformations $\vT$,
+a regularisation or penalty term $\Pen$ is often introduced that
+constrains $\vT$.
 
 Commonly, the registration problem is formulated as an optimisation
 problem in which the cost function $\mathcal{C}$ is minimised w.r.t.
@@ -169,12 +171,12 @@ $\vT$:
 where $\gamma$ weighs similarity against regularity. To solve the
 above minimisation problem, there are basically two approaches:
 parametric and nonparametric. The reader is referred to
-\cite{Fis04:Unified} for an overview on nonparametric methods.
-Nonparametric methods are further not discussed in this manual.
-The \elastix\ software is based on the parametric approach. In
-parametric methods, the number of possible transformations is
-limited by introducing a parameterisation (model) of the
-transformation. The original optimisation problem becomes thus:
+\cite{Fis04:Unified} for an overview on nonparametric methods, which
+are not discussed in this manual. The \elastix\ software is based on
+the parametric approach. In parametric methods, the number of
+possible transformations is limited by introducing a parameterisation
+(model) of the transformation. The original optimisation problem
+becomes thus:
 \begin{align}
 \hat\vTm &= \arg \min_{\vTm}
  \CC(\vTm ; I_F,I_M), \label{eq:towardsparametric}
@@ -191,18 +193,19 @@ translations in $x$ and $y$ direction. We may write Equation
 \label{eq:parametric}
 \end{align}
 From this equation it becomes clear that the original problem
-(\ref{eq:registration1}) has been simplified. Instead of
-optimising over a ``space of functions $\vT$'', we now optimise
-over the three elements of $\vmu$. Examples of other
-transformation models are given in
-Section~\ref{sec:comp:transform}.
+(\ref{eq:registration1}) has been simplified. Instead of optimising
+over a ``space of functions $\vT$'', we now optimise over the
+elements of $\vmu$. Examples of other transformation models are given
+in Section~\ref{sec:comp:transform}.
 
 \begin{figure}
 \centering
+%\resizebox{\textwidth}{!}{\input{images/registrationcomponents.pstex_t}}
 \includegraphics[width=\textwidth]{images/registrationcomponents.eps}
 \caption{The basic registration components.}
 \label{fig:registrationcomponents}
 \end{figure}
+
 Figure~\ref{fig:registrationcomponents} shows the general
 components of a parametric registration algorithm in a block
 scheme. The scheme is a slightly extended version of the scheme
@@ -270,7 +273,7 @@ inside the Delaunay region whose corners are pixel centres.
 
 \begin{figure}
 \centering
-\includegraphics[width=12cm]{images/ImageOriginAndSpacing.eps}
+\includegraphics[width=12cm]{ImageOriginAndSpacing.eps}
 \caption{Geometrical concepts associated with the ITK image.
 Adopted from \citet{ITKSoftwareGuideSecondEdition}.}
 \label{fig:image}
@@ -284,33 +287,35 @@ origin and spacing. This may cause serious problems!
 \section{Metrics}\label{sec:comp:metric}
 
 Several choices for the similarity measure can be found in the
-literature. Some common choices are described here:
+literature. Some common choices are described below. Between brackets
+the name of the metric in \elastix\ is given:
 
 \begin{description}
-\item[Sum of Squared Differences (SSD):] The SSD is defined as:
+\item[Sum of Squared Differences (SSD):] (\texttt{AdvancedMeanSquaresMetric}) The SSD is defined as:
 \begin{align}
-\mathrm{SSD}(\vmu;I_F,I_M) &= \frac{1}{|I_F|} \sum\limits_{\vx_i
-\in I_F} \left( I_F(\vx_i) - I_M(\vT_{\vmu}(\vx_i))
+\mathrm{SSD}(\vmu;I_F,I_M) &= \frac{1}{|I_F|} \sum\limits_{\vx_i \in
+\Omega_F} \left( I_F(\vx_i) - I_M(\vT_{\vmu}(\vx_i))
 \right)^2,\label{eq:ssd}
 \end{align}
-with $N$ the number of voxels in the fixed image. Given an
+with $\Omega_F$ the domain of the fixed image $I_F$. Given a
 transformation $\vT$, this measure can easily be implemented by
 looping over the voxels in the fixed image, taking $I_F(\vx_i)$,
-calculating $I_M(\vT_{\vmu}(\vx_i))$ by interpolation, and adding
-the squared difference to the sum.
+calculating $I_M(\vT_{\vmu}(\vx_i))$ by interpolation, and adding the
+squared difference to the sum.
 
-\item[Normalised Correlation Coefficient (NCC):] The NCC is defined as:
+\item[Normalised Correlation Coefficient (NCC):] (\texttt{AdvancedNormalizedCorrelationMetric}) The NCC is defined as:
 \begin{align}
-\mathrm{NCC}(\vmu;I_F,I_M) &= \frac{ \sum_{\vx_i \in I_F} \left(
-I_F(\vx_i) - \overline{I_F} \right) \left( I_M(\vTm(\vx_i)) -
-\overline{I_M} \right) }{ \sqrt{\sum_{\vx_i \in I_F} \left(
-I_F(\vx_i) - \overline{I_F} \right)^2 \sum_{\vx_i \in I_F} \left(
-I_M(\vTm(\vx_i)) - \overline{I_M} \right)^2} },\label{eq:ncc}
+\mathrm{NCC}(\vmu;I_F,I_M) &= \frac{ \sum\limits_{\vx_i \in \Omega_F}
+\left( I_F(\vx_i) - \overline{I_F} \right) \left( I_M(\vTm(\vx_i)) -
+\overline{I_M} \right) }{ \sqrt{\sum\limits_{\vx_i \in \Omega_F}
+\left( I_F(\vx_i) - \overline{I_F} \right)^2 \sum\limits_{\vx_i \in
+\Omega_F} \left( I_M(\vTm(\vx_i)) - \overline{I_M} \right)^2}
+},\label{eq:ncc}
 \end{align}
 with $\overline{I_F}$ and $\overline{I_M}$ the average grey-value
 of $I_F(\vx)$ and $I_M(\vT_{\vmu}(\vx))$, respectively.
 
-\item[Mutual Information (MI):] For MI \citep{MaesEA97,ViolaEA97,MattesEA03} we
+\item[Mutual Information (MI):] (\texttt{AdvancedMattesMutualInformationMetric}) For MI \citep{MaesEA97,ViolaEA97,MattesEA03} we
 use a definition given by \citet{ThevenazEA00a}:
 \begin{align}
  MI(\vmu; I_F, I_M) &=
@@ -327,7 +332,7 @@ respectively. The joint probabilities are estimated using B-spline
 Parzen windows:
 \begin{align}
 \begin{split}
- p(f,m;\vmu) &=  \frac{1}{|I_F|} \sum\limits_{\vx_i \in I_F}
+ p(f,m;\vmu) &=  \frac{1}{|I_F|} \sum\limits_{\vx_i \in \Omega_F}
  w_F( f/\sigma_F - I_F(\vx_i)/\sigma_F ) \\
  &\relphantom{=}\times w_M( m/\sigma_M - I_M(\vTm(\vx_i))/\sigma_M ),
 \end{split} \label{eq:histogram}
@@ -339,61 +344,61 @@ These follow directly from the grey-value ranges of $I_F$ and
 $I_M$ and the user-specified number of histogram bins $|L_F|$ and
 $|L_M|$.
 
-\item[Normalized Mutual Information (NMI):] //add description
+\item[Normalized Mutual Information (NMI):] (\texttt{NormalizedMutualInformationMetric}) //add description
 \cite{Stu99:NMI}
 
-\item[Kappa Statistic (KS):] //add description
+\item[Kappa Statistic (KS):] (\texttt{AdvancedKappaStatisticMetric}) //add description
 
 \end{description}
 
-The SSD measure is a measure that is only suited for two images
-with an equal intensity distribution, i.e. for images from the
-same modality. NCC is less strict, it assumes a linear relation
-between the intensity values of the fixed and moving image, and
-can therefore be used more often. The MI measure is even more
-general: only a relation between the probability distributions of
-the intensities of the fixed and moving image is assumed. For MI
-it is well-known that it is suited not only for mono-modal, but
-also for multi-modal image pairs. This measure is often a good
-choice for image registration. The NMI measure is, just like MI,
-suitable for mono- and multi-modality registration. Literature
-\cite{Stu99:NMI} seems to indicate better performance than MI in
-some cases. The KS measure is specifically meant to register
-binary images (segmentations). It measures the ``overlap'' between
-the segmentations.
+The SSD measure is a measure that is only suited for two images with
+an equal intensity distribution, i.e. for images from the same
+modality. NCC is less strict, it assumes a linear relation between
+the intensity values of the fixed and moving image, and can therefore
+be used more often. The MI measure is even more general: only a
+relation between the probability distributions of the intensities of
+the fixed and moving image is assumed. For MI it is well-known that
+it is suited not only for mono-modal, but also for multi-modal image
+pairs. This measure is often a good choice for image registration.
+The NMI measure is, just like MI, suitable for mono- and
+multi-modality registration. \cite{Stu99:NMI} seems to indicate
+better performance than MI in some cases. The KS measure is
+specifically meant to register binary images (segmentations). It
+measures the ``overlap'' of the segmentations.
 
 \section{Sampler}\label{sec:comp:sampler}
 
 In Equations (\ref{eq:ssd})-(\ref{eq:histogram}) we observe a loop
-over the fixed image: $\sum_{\vx_i \in I_F}$. Until now, we
-assumed that the loop goes over \emph{all} voxels of the fixed
-image. In general, this is not necessary. A subset may suffice
+over the fixed image: $\sum_{\vx_i \in \Omega_F}$. Until now, we
+assumed that the loop goes over \emph{all} voxels of the fixed image.
+In general, this is not necessary. A subset may suffice
 \cite{ThevenazEA00a,KleinEA07}. The subset may be selected in
 different ways: random, on a grid, etc. The sampler component
 represents this process.
 
 The following samplers are often used:
 \begin{description}
-\item[Full:] A full sampler simply selects all voxel coordinates $\vx_i$ of the
+\item[Full:] (\texttt{Full}) A full sampler simply selects all voxel coordinates $\vx_i$ of the
 fixed image.
 
-\item[Grid:] The grid sampler defines a regular grid on the fixed
-image and selects the coordinates $\vx_i$ on the grid.
-Effectively, the grid sampler thus downsamples the fixed image
-(not preceded by smoothing, as one would usual do). The dimension
-of the grid (or equivalently, the downsampling factor) is a user
-input.
+\item[Grid:] (\texttt{Grid}) The grid sampler defines a regular grid on the fixed
+image and selects the coordinates $\vx_i$ on the grid. Effectively,
+the grid sampler thus downsamples the fixed image (not preceded by
+smoothing). The size of the grid (or equivalently, the downsampling
+factor, which is the original fixed image size divided by the grid
+size) is a user input.
 
-\item[Random:] A random sampler randomly selects a user-specified number of
+\item[Random:] (\texttt{Random}) A random sampler randomly selects a user-specified number of
 voxels from the fixed image, whose coordinates form $\vx_i$. Every
-voxel has equal chance to be selected.
+voxel has equal chance to be selected. A sample is not necessarily
+selected only once.
 
-\item[Random Coordinate:] A random coordinate sampler is similar
-to a random sampler. It also randomly selects a user-specified
-number of coordinates $\vx_i$. However, the random coordinate
-sampler is not limited to voxel positions. Also coordinates
-between voxels are selected. The grey value $I_F(\vx_i)$ at those
-locations must of course be obtained by some interpolation method.
+\item[Random Coordinate:] (\texttt{RandomCoordinate}) A random coordinate sampler is similar
+to a random sampler. It also randomly selects a user-specified number
+of coordinates $\vx_i$. However, the random coordinate sampler is not
+limited to voxel positions. Coordinates \emph{between} voxels can
+also be selected. The grey-value $I_F(\vx_i)$ at those locations must
+of course be obtained by interpolation.
 
 \end{description}
 
@@ -407,34 +412,79 @@ sampler makes the cost function $\CC$ a more smooth function of
 $\vmu$, which makes the optimisation problem (\ref{eq:parametric})
 easier to solve. This has been shown in \cite{The08:Halton}.
 
+\section{Interpolators}\label{sec:comp:interpolator}
+
+As stated previously, during the optimisation the value $I_M(\vTmx)$
+is evaluated at non-voxel positions, for which intensity
+interpolation is needed. Several methods for interpolation exist,
+varying in quality and speed. Some examples are given in Figure
+\ref{fig:interpolation}.
+
+\begin{description}
+\item[Nearest neighbour:] (\texttt{NearestNeighborInterpolator}) This is the most simple technique, low in
+quality, requiring little resources. The intensity of the voxel
+nearest in distance is returned.
+
+\item[Linear:] (\texttt{LinearInterpolator}) The returned value is a weighted
+average of the surrounding voxels, with the distance to each voxel
+taken as weight.
+
+\item[$N$-th order B-spline:] (\texttt{BSplineInterpolator} or
+\texttt{BSplineInterpolatorFloat} for a memory efficient version) The
+higher the order, the better the quality, but also requiring more
+computation time. Nearest neighbour ($N=0$) and linear interpolation
+($N=1$) also fall in this category. See \citet{Unser99} for more
+details.
+\end{description}
+
+During registration a first-order B-spline interpolation, i.e. linear
+interpolation, often gives satisfactory results. It is a good
+trade-off between quality and speed. To generate the final result,
+i.e. the deformed result of the registration, a higher order
+interpolation is usually required, for which we recommend $N=3$. The
+final result is generated in \elastix\ by a so-called resample
+interpolator. Any one of the above can be used, but you need to
+prepend with \texttt{Final}.
+
+\begin{figure}
+\centering
+\subfigure[]{\includegraphics[width=2.5cm]{nn.eps}}\label{sfig:interpolation:nn}
+\subfigure[]{\includegraphics[width=2.5cm]{linear.eps}}\label{sfig:interpolation:lin}
+\subfigure[]{\includegraphics[width=2.5cm]{bs2.eps}}\label{sfig:interpolation:bs2}
+\subfigure[]{\includegraphics[width=2.5cm]{bs3.eps}}\label{sfig:interpolation:bs3}
+\subfigure[]{\includegraphics[width=2.5cm]{bs5.eps}}\label{sfig:interpolation:bs5}
+\caption{Interpolation. (a) nearest neighbour, (b) linear, (c) B-spline $N=2$,
+(d) B-spline $N=3$, (e) B-spline $N=5$.} \label{fig:interpolation}
+\end{figure}
+
 \section{Transforms}\label{sec:comp:transform}
 
-The transformation model used for $\vT_{\vmu}$ determines what
-type of deformations between the fixed and moving image you can
-handle. From less flexibility to more we list the translation, the
+The transformation model used for $\vT_{\vmu}$ determines what type
+of deformations between the fixed and moving image you can handle. In
+order of increasing flexibility, these are the translation, the
 rigid, the affine, and the nonrigid B-spline transformations.
 
 \begin{description}
-\item[Translation:] The translation is defined as:
+\item[Translation:] (\texttt{TranslationTransform}) The translation is defined as:
 \begin{align}
 \vTmx &= \vx + \bm{t},
 \end{align}
 with $\bm{t}$ the translation vector. The parameter vector is
 simply defined by $\vmu=\bm{t}$.
 
-\item[Rigid:] A rigid transformation is defined as:
+\item[Rigid:] (\texttt{EulerTransform}) A rigid transformation is defined as:
 \begin{align}
 \vTmx &= R \vx + \bm{t},
 \end{align}
-with the matrix $R$ a rotation matrix, so it is orthonormal and
-proper. This means that the image is treated as a rigid body,
-which can translate and rotate, but cannot be scaled/stretched.
-The rotation matrix is parameterised by the Euler angles (one in
-2D, three in 3D). The parameter vector $\vmu$ consists of the
-Euler angles and the translation vector. In 2D, this gives a
-vector of length 3. In 3D, this gives a vector of length 6.
+with the matrix $R$ a rotation matrix (i.e. orthonormal and proper)
+and $\bm{t}$ translation again. The image is treated as a rigid body,
+which can translate and rotate, but cannot be scaled/stretched. The
+rotation matrix is parameterised by the Euler angles (one in 2D,
+three in 3D). The parameter vector $\vmu$ consists of the Euler
+angles and the translation vector. In 2D, this gives a vector of
+length 3. In 3D, this gives a vector of length 6.
 
-\item[Similarity:] A similarity transformation is defined as
+\item[Similarity:] (\texttt{SimilarityTransform}) A similarity transformation is defined as
 \begin{align}
 \vTmx &= s R \vx + \bm{t},
 \end{align}
@@ -448,7 +498,7 @@ isotropic scaling factor. In 2D, this gives a vector of length 4.
 In 3D, this gives a vector of length 7. There are few cases when
 you need this transform.
 
-\item[Affine:] An affine transformation is defined as:
+\item[Affine:] (\texttt{AffineTransform}) An affine transformation is defined as:
 \begin{align}
 \vTmx &= A \vx + \bm{t},
 \end{align}
@@ -458,9 +508,9 @@ parameter vector $\vmu$ is formed by the matrix elements $a_{ij}$
 and the translation vector. In 2D, this gives a vector of length
 6. In 3D, this gives a vector of length 12.
 
-\item[B-splines:] For the category of non-rigid transformations, we focus on a
+\item[B-splines:] (\texttt{BSplineTransform}) For the category of non-rigid transformations, we focus on a
 transformation that is parameterised by B-splines
-\citep{RueckertEA99}. In 2D:
+\citep{RueckertEA99}:
 \begin{align}
 \vTmx = \vx + \sum_{\vx_k \in \NN_{\vx}} \bm{c}_k \bm{\beta}^3(\vx
 - \vx_k),\label{eq:bspline}
@@ -476,25 +526,28 @@ point grid that is put on the fixed image', and about `control
 points that are moved around'. Note that $\vTm(\vx_k)\neq \vx_k +
 \bm{c}_k$, a common misunderstanding. Calling $\bm{c}_k$ the
 control point displacements is, therefore, actually somewhat
-misleading. The control point grid is defined by the amount of
-space between the control points, which can be different for each
-direction. B-splines have local support ($|\NN_{\vx}|$ is small),
-which is beneficial both for modelling local transformations, and
-for fast computation. The parameters $\vmu$ are formed by the
-B-spline coefficient $\bm{c}_k$. The number of control points
-determines the number of parameters. $\approx 10000$ parameters is
-not an unusual case.
+misleading.
+
+The control point grid is defined by the amount of space between the
+control points, which can be different for each direction. B-splines
+have local support ($|\NN_{\vx}|$ is small), which means that the
+transformation of a point can be computed from only a couple of
+surrounding control points. This is beneficial both for modelling
+local transformations, and for fast computation. The parameters
+$\vmu$ are formed by the B-spline coefficient $\bm{c}_k$. The number
+of control points determines the number of parameters. $\approx
+10000$ parameters is not an unusual case.
 \end{description}
 
 \begin{figure}
 \centering
 % was fixed.eps, moving.eps, deformed.eps
-\subfigure[fixed]{\includegraphics[width=4.5cm,height=4.5cm]{images/transformexample_fixed.eps}}\label{sfig:transformexample:a}
-\subfigure[moving]{\includegraphics[width=4.5cm,height=4.5cm]{images/transformexample_orig.eps}}\label{sfig:transformexample:b}
-\subfigure[translation]{\includegraphics[width=4.5cm,height=4.5cm]{images/transformexample_tran.eps}}\label{sfig:transformexample:c}
-\subfigure[rigid]{\includegraphics[width=4.5cm,height=4.5cm]{images/transformexample_rig.eps}}\label{sfig:transformexample:d}
-\subfigure[affine]{\includegraphics[width=4.5cm,height=4.5cm]{images/transformexample_aff.eps}}\label{sfig:transformexample:e}
-\subfigure[B-spline]{\includegraphics[width=4.5cm,height=4.5cm]{images/transformexample_bsp.eps}}\label{sfig:transformexample:f}
+\subfigure[fixed]{\includegraphics[width=4.5cm,height=4.5cm]{transformexample_fixed.eps}}\label{sfig:transformexample:a}
+\subfigure[moving]{\includegraphics[width=4.5cm,height=4.5cm]{transformexample_orig.eps}}\label{sfig:transformexample:b}
+\subfigure[translation]{\includegraphics[width=4.5cm,height=4.5cm]{transformexample_tran.eps}}\label{sfig:transformexample:c}
+\subfigure[rigid]{\includegraphics[width=4.5cm,height=4.5cm]{transformexample_rig.eps}}\label{sfig:transformexample:d}
+\subfigure[affine]{\includegraphics[width=4.5cm,height=4.5cm]{transformexample_aff.eps}}\label{sfig:transformexample:e}
+\subfigure[B-spline]{\includegraphics[width=4.5cm,height=4.5cm]{transformexample_bsp.eps}}\label{sfig:transformexample:f}
 \caption{Different transformations. (a) the fixed image, (b) the
 moving image with a grid overlayed, (c) the deformed moving image
 $I_M(\vTmx)$ with a translation transformation, (d) a rigid
@@ -521,17 +574,16 @@ following two ways:
   \text{composition: }\quad & \vTmx = \vTm^\mathrm{BS}\left( \vT_{\hat\vmu_0}(\vx) \right)
   = ( \vTm^\mathrm{BS} \circ \vT_{\hat\vmu_0})(\vx)
 \end{align}
-The latter method is in general to be preferred.
+The latter method is in general to be preferred. [Give reason]
 
 %// iets over scales?
-
 
 \section{Optimisers}\label{sec:comp:optimiser}
 
 \begin{figure}
 \centering
 % was: Gradient_descent.eps
-\includegraphics[width=0.8\textwidth]{images/gd_example.eps}
+\includegraphics[width=0.8\textwidth]{gd_example.eps}
 \caption{Iterative optimisation. Example for registration with a
 translation transformation model. The arrows indicate the steps
 $a_k \bm{d}_k$ taken in the direction of the optimum, which is the
@@ -554,89 +606,62 @@ Robbins-Monro are discussed below. For details on other
 optimisation methods we refer to \citep{KleinEA07,NocedalEA99}.
 
 \begin{description}
-\item[Gradient descent (GD):] Gradient descent optimisation methods take the
-search direction as the negative gradient of the cost function:
+\item[Gradient descent (GD):] (\texttt{StandardGradientDescent}
+or \texttt{RegularStepGradientDescent}) Gradient descent optimisation
+methods take the search direction as the negative gradient of the
+cost function:
 \begin{align}
 \vmu_{k+1} &= \vmu_k - a_k \bm{g}(\vmu_k),\label{eq:gd}
 \end{align}
 with $\bm{g}(\vmu_k) = \partial \mathcal{C} / \partial \vmu$
-evaluated at the current position $\vmu_k$. Several choices exist
-for the gain factor $a_k$, such as a determined by a line search
-or using a predefined function of $k$.
+evaluated at the current position $\vmu_k$. Several choices exist for
+the gain factor $a_k$. It can for example be determined by a line
+search or by using a predefined function of $k$.
 
-\item[Robbins-Monro (RM):] The RM optimisation method replace the calculation of
-the derivative of the cost function $\bm{g}(\vmu_k)$ by an
-approximation $\widetilde{\bm{g}}_k$.
+\item[Robbins-Monro (RM):] (\texttt{StandardGradientDescent}
+or \texttt{FiniteDifferenceGradientDescent}) The RM optimisation
+method replaces the calculation of the derivative of the cost
+function $\bm{g}(\vmu_k)$ by an approximation $\widetilde{\bm{g}}_k$.
 \begin{align}
 \vmu_{k+1} &= \vmu_k - a_k \widetilde{\bm{g}}_k,\label{eq:RM}
 \end{align}
 The approximation is potentially faster to compute, but might
-deteriorate convergence properties of the GD scheme.
-\citet{KleinEA07} showed that using only a small random subset of
-voxels ($\approx 2000$) from the fixed image accelerates
-registration significantly, without compromising registration
-accuracy. The Random or RandomCoordinate samplers, described in
-Section~\ref{sec:comp:sampler}, are examples of samplers that pick
-voxels randomly. It is important that a new subset of fixed image
-voxels is selected every iteration $k$, so that the approximation
-error has zero mean. The RM method is usually combined with $a_k$
-as a predefined decaying function of $k$:
+deteriorate convergence properties of the GD scheme, since every
+iteration an approximation error $\bm{g}(\vmu_k) -
+\widetilde{\bm{g}}_k$ is made. \citet{KleinEA07} showed that using
+only a small random subset of voxels ($\approx 2000$) from the fixed
+image accelerates registration significantly, without compromising
+registration accuracy. The Random or RandomCoordinate samplers,
+described in Section~\ref{sec:comp:sampler}, are examples of samplers
+that pick voxels randomly. It is important that a new subset of fixed
+image voxels is selected every iteration $k$, so that the
+approximation error has zero mean. The RM method is usually combined
+with $a_k$ as a predefined decaying function of $k$:
 \begin{align}
 a_k &= \frac{a}{(k+A)^{\alpha}},\label{eq:gain}
 \end{align}
-where $a > 0$, $A \ge 1$, and $0 \le \alpha \le 1$ are
-user-defined constants. In our experience, a reasonable choice is
-$\alpha = 0.602$ and $A$ approximately 10\% of the user-defined
-maximum number of iterations, or less. The choice of the overall
-gain, $a$, depends on the expected ranges of $\vmu$ and $\bm{g}$
-and is thus problem specific.
+where $a > 0$, $A \ge 1$, and $0 \le \alpha \le 1$ are user-defined
+constants. In our experience, a reasonable choice is $\alpha \approx
+0.602$ and $A$ approximately 10\% of the user-defined maximum number
+of iterations, or less. The choice of the overall gain, $a$, depends
+on the expected ranges of $\vmu$ and $\bm{g}$ and is thus
+problem-specific. In our experience, the registration result is not
+very sensitive to small perturbations of these parameters. [explain
+where these numbers come from.] [Don't scare the users too much:
+tuning is not too hard.]
 \end{description}
 
-Note that GD and RM are in fact very similar. Running RM with a
-Full sampler (see Section~\ref{sec:comp:sampler}), instead of a
-Random sampler, is equivalent to performing GD. We recommend the
-use of RM over GD, since it is so much faster, without
-compromising on accuracy. In that case, the parameter $a$ is
-parameter that is to be tuned for your application.
+Note that GD and RM are in fact very similar. Running RM with a Full
+sampler (see Section~\ref{sec:comp:sampler}), instead of a Random
+sampler, is equivalent to performing GD. We recommend the use of RM
+over GD, since it is so much faster, without compromising on
+accuracy. In that case, the parameter $a$ is the parameter that is to
+be tuned for your application.
 
-\section{Interpolators}\label{sec:comp:interpolator}
-
-As stated above, during the optimisation the value $I_M(\vTmx)$ is
-evaluated at non-voxel positions, for which intensity
-interpolation is needed. Several methods for interpolation exist,
-varying in quality and speed. Some examples are given in Figure
-\ref{fig:interpolation}.
-
-\begin{description}
-\item[Nearest neighbour:] This is the most simple technique, low in
-quality, requiring little resources. The intensity of the nearest
-voxel is returned.
-
-\item[Linear:] Still very simple. The returned value is a weighted
-average of the surrounding voxels, with the distance to each voxel
-taken as weight.
-
-\item[$N$-th order B-spline:] The higher the order, the better the
-quality, but also requiring more computation time. See
-\citet{Unser99} for more details.
-\end{description}
-
-During registration a first order B-spline interpolation, i.e. linear
-interpolation, often gives satisfactory results. It is a good
-trade-off between quality and speed. To generate the final result,
-i.e. the deformed result of the registration, a higher order
-interpolation is usually required, for which we recommend $N=3$.
-
-\begin{figure}
-\centering
-\subfigure[]{\includegraphics[width=2.5cm]{images/nn.eps}}\label{sfig:interpolation:nn}
-\subfigure[]{\includegraphics[width=2.5cm]{images/linear.eps}}\label{sfig:interpolation:lin}
-\subfigure[]{\includegraphics[width=2.5cm]{images/bs2.eps}}\label{sfig:interpolation:bs2}
-\subfigure[]{\includegraphics[width=2.5cm]{images/bs3.eps}}\label{sfig:interpolation:bs3}
-\subfigure[]{\includegraphics[width=2.5cm]{images/bs5.eps}}\label{sfig:interpolation:bs5}
-\caption{Interpolation. (a) nearest neighbour, (b) linear, (c) B-spline $N=2$,
-(d) B-spline $N=3$, (e) B-spline $N=5$.} \label{fig:interpolation}
-\end{figure}
+Other optimisers available in \elastix\ are: \texttt{FullSearch},
+\texttt{ConjugateGradient}, \texttt{ConjugateGradientFRPR},
+\texttt{QuasiNewtonLBFGS}, \texttt{RSGDEachParameterApart},
+\texttt{SimultaneousPerturbation}, \texttt{CMAEvolutionStrategy}.
 
 \section{Multi-resolution}\label{sec:comp:multiresolution}
 
@@ -647,44 +672,55 @@ complexity.
 
 \subsection{Data complexity}
 
-It is common to start the registration process using images that
-have lower complexity, e.g., images that are smoothed and possibly
-downsampled. This increases the chance of successful registration.
-A series of images with increasing amount of smoothing is called a
+It is common to start the registration process using images that have
+lower complexity, e.g., images that are smoothed and possibly
+downsampled. This increases the chance of successful registration. A
+series of images with increasing amount of smoothing is called a
 scale space. If the images are not only smoothed, but also
-downsampled the data is not only less complex, but the
-\emph{amount} of data is actually reduced. In that case, we talk
-about an ``pyramid''. However, confusingly, the word pyramid is
-used by us also to refer to a scale space. Several scale spaces or
-pyramids are found in the literature, amongst others Gaussian and
-Laplacian pyramids, morphological scale space, and spline and
-wavelet pyramids. The Gaussian pyramid is the most common one.
-Figure~\ref{fig:multiresolution} shows the Gaussian pyramid with
-and without downsampling. In combination with a Full sampler (see
+downsampled, the data is not only less complex, but the \emph{amount}
+of data is actually reduced. In that case, we talk about a
+``pyramid''. However, confusingly, the word pyramid is used by us
+also to refer to a scale space. Several scale spaces or pyramids are
+found in the literature, amongst others Gaussian and Laplacian
+pyramids, morphological scale space, and spline and wavelet pyramids.
+The Gaussian pyramid is the most common one. In \elastix\ we have:
+\begin{description}
+\item[Gaussian pyramid:] (\texttt{FixedRecursivePyramid} and
+\texttt{MovingRecursivePyramid}) Applies smoothing and down-sampling.
+
+\item[Gaussian scale space:] (\texttt{FixedSmoothingPyramid} and
+\texttt{MovingSmoothingPyramid}) Applies smoothing and \emph{no}
+down-sampling.
+\end{description}
+
+Figure~\ref{fig:multiresolution} shows the Gaussian pyramid with and
+without downsampling. In combination with a Full sampler (see
 Section~\ref{sec:comp:sampler}), using a pyramid with downsampling
-will save a lot of times in the first resolution levels, because
-the image contains much less voxels. In combination with a Random
-sampler, or RandomCoordinate, the downsampling step is not
-necessary, since the random samplers anyway select a user-defined
-number of samples, independent of the image size.
+will save a lot of time in the first resolution levels, because the
+image contains much fewer voxels. In combination with a Random
+sampler, or RandomCoordinate, the downsampling step is not necessary,
+since the random samplers select a user-defined number of samples
+anyway, independent of the image size.
+
 \begin{figure}
 \centering
-\subfigure[resolution 0]{\includegraphics[width=3cm]{images/moving_pd.R0d.eps}}
-\subfigure[resolution 1]{\includegraphics[width=3cm]{images/moving_pd.R1d.eps}}
-\subfigure[resolution 2]{\includegraphics[width=3cm]{images/moving_pd.R2d.eps}}
-\subfigure[original]{\includegraphics[width=3cm]{images/moving_pd.128.eps}} \\
-\subfigure[resolution 0]{\includegraphics[width=3cm]{images/moving_pd.R0.eps}}
-\subfigure[resolution 1]{\includegraphics[width=3cm]{images/moving_pd.R1.eps}}
-\subfigure[resolution 2]{\includegraphics[width=3cm]{images/moving_pd.R2.eps}}
-\subfigure[original]{\includegraphics[width=3cm]{images/moving_pd.128.eps}}
-\caption{Two multi-resolution strategies using a Gaussian pyramid ($\sigma = 8.0, 4.0, 2.0$
-voxels). The first row shows multi-resolution with down-sampling, the
-second row without. Note that for the first row the image size is
-halved every resolution, but that the voxel size increases with a
-factor 2, so physically the images are of the same size every
-resolution.} \label{fig:multiresolution}
+\subfigure[resolution 0]{\includegraphics[width=3cm]{moving_pd.R0d.eps}}
+\subfigure[resolution 1]{\includegraphics[width=3cm]{moving_pd.R1d.eps}}
+\subfigure[resolution 2]{\includegraphics[width=3cm]{moving_pd.R2d.eps}}
+\subfigure[original]{\includegraphics[width=3cm]{moving_pd.128.eps}} \\
+\subfigure[resolution 0]{\includegraphics[width=3cm]{moving_pd.R0.eps}}
+\subfigure[resolution 1]{\includegraphics[width=3cm]{moving_pd.R1.eps}}
+\subfigure[resolution 2]{\includegraphics[width=3cm]{moving_pd.R2.eps}}
+\subfigure[original]{\includegraphics[width=3cm]{moving_pd.128.eps}}
+\caption{Two multi-resolution strategies using a Gaussian pyramid
+($\sigma = 8.0, 4.0, 2.0$ voxels). The first row shows
+multi-resolution with down-sampling (\texttt{FixedRecursivePyramid}),
+the second row without (\texttt{FixedSmoothingPyramid}). Note that
+for the first row for each dimension the image size is halved every
+resolution, but that the voxel size increases with a factor 2, so
+physically the images are of the same size every resolution.}
+\label{fig:multiresolution}
 \end{figure}
-
 
 \subsection{Transformation complexity}
 
@@ -700,17 +736,42 @@ even use a three-level strategy: first rigid, then affine, then
 nonrigid B-spline.
 
 Another example is to increase the number of degrees of freedom
-within the transformation model. With a B-spline transformation,
-it is often good practice to start registration with a coarse
-control point grid, only capable of modelling coarse deformations.
-In subsequent resolutions the B-spline grid is gradually refined,
-thereby introducing the capability to match smaller structures.
+within the transformation model. With a B-spline transformation, it
+is often good practice to start registration with a coarse control
+point grid, only capable of modelling coarse deformations. In
+subsequent resolutions the B-spline grid is gradually refined,
+thereby introducing the capability to match smaller structures. See
+Section \ref{}
+
+\section{Evaluating registration}
+
+How to follow the registration result through time? what are big
+steps, what are small steps.
+
+fixed, deformed moving
+
+\begin{itemize}
+\item Compare images side by side in a viewer. deformed should
+be similar to fixed. Also deformed image should have same texture as
+moving image, so no sudden blurred areas in deformed.
+
+\item Compute a difference image if monomodal
+
+\item Compute distance between manually clicked corresponding points
+
+\item Compute overlap of anatomical structures
+
+\item check deformation field by determinant of the Jacobian <1,1,>1
+
+\item show exact metric value, and plot it. For example with Matlab
+(give Matlab code)
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{\elastix}\label{chp:elastix}
 
-\section{Introduction}
+\section{Introduction}\label{sec:elastix:intro}
 
 The development of \elastix\ started half to late 2003, and was
 intended to facilitate our registration research. After some initial
@@ -720,6 +781,7 @@ separate libraries. This resulted in major version 3.0 in November
 available on the \elastix\ website, around the same time. The
 continued development brings us today (December 2007) to version 3.8.
 
+\begin{table}[h!]
 \begin{tabular}{l|l}
 what & where \\
 \hline
@@ -729,6 +791,7 @@ WIKI           & \url{https://wiki.isi.uu.nl/bin/view/CADweb/ElastiX} \\
 FAQ            &
 \url{https://wiki.isi.uu.nl/bin/view/CADweb/ElastixFAQ}
 \end{tabular}
+\end{table}
 
 The website also contains a doxygen\footnote{\url{www.doxygen.org}}
 generated part that provides documentation of the source code. An
@@ -743,22 +806,25 @@ information on how to use it in \elastix. See
 \end{quote}
 for an overview of all available components.
 
-\subsection{Key features}
+\subsection{Key features}\label{sec:elastix:key}
 
 \elastix\ is
 \begin{itemize}
 \item open source, freely available from \url{www.isi.uu.nl/Elastix};
 
-\item based on the ITK, so the code base is thoroughly tested, nightly.
-But with some improvements.
+\item based on the ITK, so the code base is thoroughly tested.
+But with some improvements, such as the use of samplers, a
+transformation class that combines multiple transformation using
+concatenation or addition, and more.
 
-\item multi-platform (at least Windows, Linux, Mac OS ??), multi-compiler
-(at least Visual C++ 2003, gcc 3.2, gcc 4.02), and supports 32 and 64
-bit systems. So, it is highly portable to the platform of the users
-choice;
+\item multi-platform (at least Windows and Linux. A previous version
+was reported to work on Mac OS.), multi-compiler (at least Visual C++
+2003, gcc 3.2, gcc 4.02), and supports 32 and 64 bit systems. So, it
+is highly portable to the platform of the user's choice;
 
-\item highly configurable, which is easy thanks to human
-readable/edible parameter file;
+\item highly configurable: there is a lot of choice for all the registration
+components. Choosing the configuration that suits your needs is easy
+thanks to human readable and editable parameter file;
 
 \item easy to use for large amounts of data, since \elastix\ can be
 called easily in a script;
@@ -769,7 +835,82 @@ called easily in a script;
 very suited for research also.
 \end{itemize}
 
-\section{How to call \elastix}
+\section{Getting started}\label{sec:elastix:install}
+
+This section describes how you can install \elastix, either directly
+from the binaries, or by compiling \elastix\ yourself.
+
+\subsection{Getting started the really easy way}
+
+The easiest way to get started with \elastix\ is to use the
+pre-compiled binaries.
+\begin{enumerate}
+\item Download the compressed archive from the website:
+    \begin{quote}
+    \url{www.isi.uu.nl/Elastix/download.php}
+    \end{quote}
+
+\item Extract the archive to a \texttt{folder} of your choice.
+
+\item Make sure your operating system can find the program:
+    \begin{enumerate}
+    \item Windows XP: Go to the control panel, go to ``System'', go to
+    the tab ``Advanced'', click ``Environmental variables'', add \texttt{folder}
+    to the variable ``path''.
+
+    \item Linux: Add \texttt{folder} to the path by adding the line
+    ``\texttt{PATH=folder:\$PATH}'' to your \texttt{.bashrc} file.
+    \end{enumerate}
+    or call \elastix\ with the full path:
+    \texttt{fullPathToFolder$\backslash$folder$\backslash$elastix}
+\end{enumerate}
+
+\subsection{Getting started the easy way}
+
+It is also possible to compile \elastix\ yourself, since the source
+code is freely available. In this section, we assume you use the
+Microsoft Visual C++ 2003 compiler under Windows, and the GCC
+compiler under Linux.
+
+\begin{enumerate}
+\item Download and install CMake: \url{www.cmake.org}.
+
+\item Download and compile the ITK: \url{www.itk.org}. For 64 bit
+Linux systems, add the option \texttt{-fPIC} to the following flags:
+\texttt{CMAKE\_CXX\_FLAGS} and \texttt{CMAKE\_C\_FLAGS}.
+
+\item Download the compressed sources from the website.
+
+\item Extract the archive to a \texttt{folderSrc} of your choice.
+
+\item Run CMake on \elastix:
+    \begin{enumerate}
+    \item Windows: start CMake. Find the \texttt{folderSrc} with the
+    source code. Set the folder where you want the binaries to be
+    created. Click ``Configure'' and select the compiler that you
+    use. Set the \texttt{CMAKE\_INSTALL\_PREFIX} to the directory
+    where you want \elastix\ installed. Click ``Configure'' until
+    all cache values are no longer red, and click OK.
+
+    \item Linux: run CMake from the folder where you want the
+    binaries to be created, with as command line argument the folder
+    in which the sources were extracted: \texttt{ccmake folderSrc}.
+    Set the \texttt{CMAKE\_BUILD\_TYPE} to ``Release'' and the
+    \texttt{CMAKE\_INSTALL\_PREFIX} to the directory where you want
+    \elastix\ installed.
+    \end{enumerate}
+CMake will create a project or solution or make file for your
+compiler.
+
+\item Compile \elastix\ by opening the project and selecting
+``compile'' in release mode, or on Linux by running \texttt{make
+install}. Your compiler will now create the \elastix\ binaries.
+
+\item Make sure your operating system can find the program, see
+above.
+\end{enumerate}
+
+\section{How to call \elastix}\label{sec:elastix:call}
 
 \elastix\ is a command line program. This means that you have to open
 a command line interface (a DOS-box, a shell) and type in an
@@ -790,11 +931,11 @@ arguments are mandatory. These are minimally needed to run \elastix.
 All output of \elastix\ is written to the output directory, which
 needs to be created before running \elastix. The output consists of a
 log file (\texttt{elastix.log}), and optionally the resulting
-registered image (\texttt{result.?.mhd}), the parameters of the
+registered image (\texttt{result.?.mhd}), and the parameters of the
 transformation that relate the fixed and the moving image
 (\texttt{TransformParameters.?.txt}). The parameter file is an
-important file: in it is defined, in normal text, what kind of
-registration is performed (i.e. what metric, optimizer, etc.) and
+important file: it contains, in normal text, what kind of
+registration is performed (i.e. what metric, optimiser, etc.) and
 what the parameters are that define the registration. It gives a high
 amount of flexibility and control over the process. More information
 about the parameter file is given in Section \ref{sec:elastix:param}.
@@ -807,7 +948,7 @@ TransformParameters.txt} to the command line. With the command line
 option \texttt{-threads unsigned\_int} the user can specify the
 maximum number of threads that \elastix\ will use.
 
-On the \elastix\-website, in the `About' section, you can find an
+On the \elastix-website, in the `About' section, you can find an
 example on how to use the program. Maybe now is the time to try the
 example and see a registration in action.
 
@@ -833,8 +974,6 @@ run of \elastix:
 The transformations from each of the registrations are automatically
 combined.
 
-\section{General code layout}
-
 \section{The parameter file}\label{sec:elastix:param}
 
 The parameter file is a text file that defines the components of the
@@ -844,20 +983,23 @@ as follows:
 \texttt{(ParameterName value(s))}
 \end{quote}
 So parameters are provided between brackets, first the name, followed
-by one or more values. If the value if of type string then the values
+by one or more values. If the value is of type string then the values
 need to be quoted: \texttt{(ParameterName "value1" ... "valueN")}. If
 the values are of floating type, then at least one value behind the
-comma need to be given: \texttt{(ParameterName 1.3 3.0)}. Comments
-can be provided by adding `\texttt{//}' before a line. A minimal
-example of a valid parameter file is given in Appendix \ref{chp:ExampleParam}.
-A list of available parameters for each class is given at
-\texttt{www.isi.uu.nl/Elastix/doxygen/parameter.html}.
+decimal point need to be given: \texttt{(ParameterName 1.3 3.0)}.
+Comments can be provided by starting the line with `\texttt{//}'. A
+minimal example of a valid parameter file is given in Appendix
+\ref{chp:ExampleParam}. A list of available parameters for each class
+is given at \texttt{www.isi.uu.nl/Elastix/doxygen/parameter.html}.
 
 Since the choice of the several components and the parameter values
 define the registration, it is very important to set them wisely.
-These choices is what makes the registration a success or a disaster.
+These choices are what make the registration a success or a disaster.
 Therefore, a separate chapter is dedicated to the fine art of tuning
 a registration, see Chapter \ref{chp:Tutorial}.
+
+\section{General code layout}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -868,14 +1010,14 @@ a registration, see Chapter \ref{chp:Tutorial}.
 By now you are able to at least run a registration, by calling
 \elastix\ correctly. It is often also useful to apply the
 transformation as found by the registration to another image. Maybe
-you want to apply the transformation to an original larger image to
+you want to apply the transformation to an original (larger) image to
 gain resolution. Or maybe you need the transformation to apply it to
 an atlas image. For those purposes a program called \transformix\ is
 available. It was developed simultaneously with \elastix.
 
 \section{How to call \transformix}
 
-Like \elastix\, \transformix is a command line driven program. You
+Like \elastix\, \transformix\ is a command line driven program. You
 can get basic help on how to call it, by:
 \begin{quote}
 \texttt{transformix --help}
@@ -897,10 +1039,36 @@ TransformParameters.txt} \\
 \texttt{transformix -ipp all -out outputDirectory -tp
 TransformParameters.txt}
 \end{quote}
-This will create a file the deformed output points or a deformation
-field vector image. With the command line option \texttt{-threads
-unsigned\_int} the user can specify the maximum number of threads
-that \transformix\ will use.
+This will create a file of the deformed output points, or with the
+second call a deformation field vector image. Note that both the
+input and output points are specified in the fixed image domain. If
+you want the output points specified in the moving image domain you
+additionally need to supply the moving image to the call of
+\transformix:
+\begin{quote}
+\texttt{transformix -in movingImage.ext -ipp inputPoints.txt -out
+outputDirectory -tp TransformParameters.txt}
+\end{quote}
+Currently, the downside of this call is that the moving image is also
+deformed, which consumes time. With the command line option
+\texttt{-threads unsigned\_int} the user can specify the maximum
+number of threads that \transformix\ will use.
+
+\section{The transform parameter file}\label{sec:transformix:tp}
+
+The result of a registration is the transformation relating the fixed
+and moving image. The parameters of this transformation are stored in
+a \texttt{TransformParameters.?.txt}-file. An example of its
+structure for a 2D rigid transformation is given in Appendix
+\ref{chp:ExampleTransformParam}. The text file contains all
+information necessary to resample an input image (the moving image)
+to the region specified in the file (by default the fixed image
+region).
+
+The transform parameter file can be manually edited or created as is
+convenient for the user. Multiple transformations are composed by
+iteratively supplying another transform parameter file with the
+\texttt{InitialTransformParametersFileName} tag.
 
 \section{Details}
 
@@ -925,21 +1093,9 @@ described in the docs, in some papers, or on the wiki?
 
 Memory consumption, see the wiki
 
-\section{The transform parameter file}\label{sec:transformix:tp}
+\section{\transformix\ tutorial}
 
-The result of a registration is the transformation relating the fixed
-and moving image. The parameters of this transformation are stored in
-a \texttt{TransformParameters.?.txt}-file. An example of its
-structure for a 2D rigid transformation is given in Appendix
-\ref{chp:ExampleTransformParam}. The text file contains all
-information necessary to resample an input image (the moving image)
-to the region specified in the file (by default the fixed image
-region).
-
-The transform parameter file can be manually edited or created as is
-convenient for the user. Multiple transformations are composed by
-iteratively supplying another transform parameter file with the
-\texttt{InitialTransformParametersFileName} tag.
+a la the \elastix\ tutorial in the next chapter.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -954,53 +1110,28 @@ components, as specified in Chapter \ref{chp:Registration}. In Table
 
 \begin{table}[htb]
 \centering
-\begin{tabular*}{15cm}{@{\extracolsep{\fill}} p{3.5cm} | p{11cm} }
+\begin{tabular}{l|l}
 \textbf{Component} & \textbf{Recommendation} \\
 \hline
-Registration & \texttt{MultiResolutionRegistration}: Multiple image
-resolutions is what you need, 3 or more is a good starting point. And
-if you think you don't need all this multi-resolution, you can always
-set the \texttt{NumberOfResolutions} to 1. \\
-FixedImagePyramid & \texttt{FixedSmoothingImagePyramid}: this pyramid
-will smooth, but not down-sample the fixed image for you, according
-to the \texttt{FixedImageSchedule} you provide. If you only set the
-\texttt{NumberOfResolutions}, a default schedule will be used that
-down-samples the fixed image by 2. That schedule is usually fine. In
-case you have highly anisotropic data, you might want to blur less in
-the direction of the largest spacing. \\
-MovingImagePyramid & See the FixedImagePyramid. \\
-Metric    & \texttt{AdvancedMattesMutualInformation}: usually works
-well, both for mono- and multi-modal images. It supports fast
-computation of the metric value and derivative in case the transform
-is a B-spline. \\
-Optimizer & \texttt{StandardGradientDescent}: see Equations
-(\ref{eq:gd}) and (\ref{eq:gain}). Offers the possibility to perform
-fast registration, see \cite{KleinEA07}. The problem is to tune the
-parameters of the gain factor $a_k$, see Section
-\ref{sec:Tutorial:importantparam}. \\
-Sampler & \texttt{RandomCoordinate}: works well in conjunction with
-the \texttt{StandardGradientDescent} optimiser. Set the
-\texttt{NumberOfSpatialSamples} to 3000. \\
-Transform & Depends on the application. For rigid choose
-\texttt{EulerTransform}, for affine \texttt{AffineTransform}, for
-nonrigid registration problems \elastix\ has the
-\texttt{BSplineTransform}. The latter requires setting the
-\texttt{FinalGridSpacing}. Always start with a rigid or affine
-transformation before doing a nonrigid one, to get a good initial
-alignment. \\
-Interpolator & \texttt{BSplineInterpolator}: first order is usually
-enough during the registration: \texttt{(BSplineInterpolationOrder
-1)}. \\
-ResampleInterpolator & \texttt{FinalBSplineInterpolator}: the
-interpolator that is used for generating the resulting deformed
-moving image. We recommend a third order B-spline for this:
-\texttt{(FinalBSplineInterpolationOrder 3)}.
-\end{tabular*}
+Registration & \texttt{MultiResolutionRegistration} \\
+Metric       & \texttt{AdvancedMattesMutualInformation} \\
+Sampler      & \texttt{RandomCoordinate} \\
+Interpolator & \texttt{BSplineInterpolator} \\
+ResampleInterpolator & \texttt{FinalBSplineInterpolator} \\
+Transform    & Depends on the application \\
+Optimizer    & \texttt{StandardGradientDescent} \\
+FixedImagePyramid   & \texttt{FixedSmoothingImagePyramid} \\
+MovingImagePyramid  & \texttt{MovingSmoothingImagePyramid} \\
+\end{tabular}
 \caption{Some recommendations for the several components.}\label{table:tutorial:components}
 \end{table}
 
 \section{Overview of all parameters}
 
+A list of all available components of \elastix\ can be found at:
+\begin{quote}
+\url{www.isi.uu.nl/Elastix/doxygen/modules.html}
+\end{quote}
 A list of all parameters that can be specified for each registration
 component can be found at the \elastix\ website:
 \begin{quote}
@@ -1013,40 +1144,75 @@ although the defaults will not work in all cases.
 
 \section{Important parameters}\label{sec:Tutorial:importantparam}
 
-\begin{description}
-\item[On multi-resolution:] Two parameters have to be set to define
-the multi-resolution strategy: the number of resolutions and the
-specific down-sampling schedule that is used in each resolution.
+In the same order as in Section \ref{sec:comp:metric} we discuss only
+the important parameters for each component.
 
-In general 3 resolutions is a good starting point. If the fixed and
-moving image are initially far away, you can increase the number of
-resolution levels to, say, 5 or 6. This way the images are more
-blurred and more attention is paid to register large, dominant
-structures.
+\subsection{Registration}
 
-The pyramid schedule defines the amount of blurring, and
-down-sampling in case of a FixedRecursiveImagePyramid is used, in
-each direction $x,y,z$ and for each resolution level. It can be
-specified as follows:
+Just use the \texttt{MultiResolutionRegistration} method, since
+multi-resolution is a good idea. And if you still think you don't
+need all this multi-resolution, you can always set the
+\texttt{NumberOfResolutions} to 1. You don't have to set anything
+else.
+
+\subsection{Metric}
+
+The \texttt{AdvancedMattesMutualInformation} usually works well, both
+for mono- and multi-modal images. It supports fast computation of the
+metric value and derivative in case the transform is a B-spline. You
+need to set the number of histogram bins, which is needed to compute
+the joint histogram. A good value for this depends on the dynamic
+range of your input images, but in our experience 32 is usually ok:
 \begin{quote}
-\texttt{(FixedImagePyramidSchedule 8 8 4 4 2 2 1 1)}
+\texttt{(NumberOfHistogramBins 32)}
 \end{quote}
-In this example 4 resolutions for a 2D image are used. At resolution
-level 0 the image is, possibly, downsampled by a factor 8 and blurred
-with $\sigma = 8/2$ voxels in each direction. At level 1 a factor 4
-is used, and finally at the last level, level 4, the original images
-are used for registration. Specifying the fixed and moving image
-pyramids with an identical schedule can be done with one command,
-e.g.:
-\begin{quote}
-\texttt{(ImagePyramidSchedule 4 4 2 2 2 1 1 1 1)}
-\end{quote}
-for a 3D image with 3 resolution levels, where less smoothing is
-performed in the $z$-direction.
 
-\item[On multi-grid:] The B-spline nonrigid transformation is defined
-by a uniform grid of control points. This grid is defined by the
-spacing between the grid nodes. The spacing defines how dense the
+\subsection{Sampler}
+
+The \texttt{RandomCoordinate} works well in conjunction with the
+\texttt{StandardGradientDescent} optimiser, which is the recommended
+optimisation routine. This optimisation method can be used with a
+small amount of samples, randomly selected in every iteration, see
+Section \ref{sec:comp:optimiser}, which significantly decreases
+registration time. Set the \texttt{NumberOfSpatialSamples} to 3000.
+Don't go lower than 2000. The \texttt{RandomCoordinate} sampler
+avoids what is known as the grid-effect [citations].
+
+\subsection{Interpolator}
+
+During the registration, use the \texttt{BSplineInterpolator} with
+first order interpolation: \texttt{(BSplineInterpolationOrder 1)}. We
+recommend this over the \texttt{LinearInterpolator}, since the
+\texttt{BSplineInterpolator} has a dedicated function to compute the
+derivative of the moving image.
+
+We recommend a third order B-spline interpolator for generating the
+resulting deformed moving image:
+\begin{quote}
+\texttt{(ResampleInterpolator "FinalBSplineInterpolator")} \\
+\texttt{(FinalBSplineInterpolationOrder 3)}
+\end{quote}
+
+\subsection{Transform}
+
+This choice depends on the application at hand. For images of the
+same patient where you expect no nonrigid deformation you can
+consider a rigid transformation, i.e. choose the
+\texttt{EulerTransform}. If you want to compensate for differences in
+scale, consider the affine transformation: \texttt{AffineTransform}.
+These two transformations require a centre of rotation, which can be
+set by the user. By default the geometric centre of the fixed image
+is taken, which is recommended. Another parameter that needs to be
+set is the scales, see Section \ref{sec:comp:transform}. We recommend
+to let \elastix\ compute it automatically:
+\texttt{(AutomaticScalesEstimation "true")}. Always start with a
+rigid or affine transformation before doing a nonrigid one, to get a
+good initial alignment.
+
+For nonrigid registration problems \elastix\ has the
+\texttt{BSplineTransform}. The B-spline nonrigid transformation is
+defined by a uniform grid of control points. This grid is defined by
+the spacing between the grid nodes. The spacing defines how dense the
 grid is, or what the locality is of the transformation you can model.
 For each resolution level you can define a different grid spacing.
 This is what we call multi-grid. In general, we recommend to start
@@ -1103,44 +1269,32 @@ of 8 voxels this is almost 100.000 parameters. The amount of
 parameters is directly related to memory consumption and registration
 time.
 
-\item[On the sampler:] The recommended optimisation routine is the
-\texttt{StandardGradientDescent} method. This method can be used with
-a small amount of samples, randomly selected in every iteration, see
-Section ???, which significantly decreases registration time. We
-recommend:
-\begin{quote}
-\texttt{(ImageSampler "RandomCoordinate")} \\
-\texttt{(NumberOfSpatialSamples 3000)}
-\end{quote}
-The first line selects a sampler that draws samples from the fixed
-image. These samples are not necessarily on voxel locations (on the
-voxel grid), but are mostly from points between voxels, so
-interpolation is needed. This specific sampler avoids what is known
-as the grid-effect [citations]. The second line specifies that 3000
-samples are drawn, which is enough to get a convergence as fast as
-using all samples, but of course with a significantly reduced
-computation time per iteration.
+\subsection{Optimiser}
 
-\item[On the optimiser:] The \texttt{StandardGradientDescent} method
-(\ref{eq:RM}) needs a choice for the step size $a_k$, which is in
-\elastix\ defined as in Equation (\ref{eq:gain}). For the parameter
-$\alpha$ we recommend the value 0.602. For $A$, use something in the
-order of 50. This leaves the parameter $a$ as the most important
-parameter to tune. And it is an important parameter, it can mean
-success for a good choice and failure if not! If $a$ is set too high,
-the iterative solving algorithm (\ref{eq:RM}) becomes unstable, and
-you may deform your image beyond recognition. If $a$ is set too low,
-you will never make it to the optimum, or may get stuck in a very
-small nearby local optimum. Too complicate things further, a good
-choice for $a$ is dependent on the cost function that is used for
-registration: the $a$ that will give you a good result for SSD is not
-the same as the one that gives a good result for MI. Finally, $a$
-also depends on the amount of deformation that you expect between the
-fixed and the moving image. So again, recommendations are hard to
-give. In general we advise you to think in orders of magnitude, if $a
-= 10$ is too small, try $a = 100$ and not $a = 11$. For mutual
-information you could start around $a = 1000.0$. For the mean squared
-difference metric you could try something smaller than 1 ???
+The \texttt{StandardGradientDescent} method, see Equations
+(\ref{eq:gd}) and (\ref{eq:gain}) offers the possibility to perform
+fast registration, see \cite{KleinEA07}. The problem is to tune the
+parameters of the gain factor $a_k$, see Section
+\ref{sec:Tutorial:importantparam}. Equation (\ref{eq:RM}) needs a
+choice for the step size $a_k$, which is in \elastix\ defined as in
+Equation (\ref{eq:gain}). For the parameter $\alpha$ we recommend the
+value 0.602. For $A$, use something in the order of 50. This leaves
+the parameter $a$ as the most important parameter to tune. And it is
+an important parameter, it can mean success for a good choice and
+failure if not! If $a$ is set too high, the iterative solving
+algorithm (\ref{eq:RM}) becomes unstable, and you may deform your
+image beyond recognition. If $a$ is set too low, you will never make
+it to the optimum, or may get stuck in a very small nearby local
+optimum. Too complicate things further, a good choice for $a$ is
+dependent on the cost function that is used for registration: the $a$
+that will give you a good result for SSD is not the same as the one
+that gives a good result for MI. Finally, $a$ also depends on the
+amount of deformation that you expect between the fixed and the
+moving image. So again, recommendations are hard to give. In general
+we advise you to think in orders of magnitude, if $a = 10$ is too
+small, try $a = 100$ and not $a = 11$. For mutual information you
+could start around $a = 1000.0$. For the mean squared difference
+metric you could try something smaller than 1 ???
 \begin{quote}
 \texttt{(SP\_a 1000.0 500.0 500.0)} \\
 \texttt{(SP\_alpha 0.602)} \\
@@ -1156,10 +1310,51 @@ number of iterations
 which is not only the maximum, but also the minimum, since there is
 no other appropriate stopping condition for this optimiser.
 
-\end{description}
+\subsection{Image pyramids}
 
+Use the \texttt{FixedSmoothingImagePyramid}, since it will not throw
+away valuable information, and since you are not using the
+\texttt{FullSampler} anyway down-sampling will not save you any time.
+Two parameters have to be set to define the multi-resolution
+strategy: the number of resolutions (\texttt{NumberOfResolutions})
+and the specific down-sampling schedule that is used in each
+resolution (\texttt{FixedImageSchedule}). If you only set the
+\texttt{NumberOfResolutions}, a default schedule will be used that
+smoothes the fixed image by a factor of 2 in each dimension, starting
+from $\sigma = 0.5$ in the last resolution. That schedule is usually
+fine. In case you have highly anisotropic data, you might want to
+blur less in the direction of the largest spacing.
+
+In general 3 resolutions is a good starting point. If the fixed and
+moving image are initially far away, you can increase the number of
+resolution levels to, say, 5 or 6. This way the images are more
+blurred and more attention is paid to register large, dominant
+structures.
+
+The pyramid schedule defines the amount of blurring (and
+down-sampling in case a FixedRecursiveImagePyramid is used), in each
+direction $x,y,z$ and for each resolution level. It can be specified
+as follows:
+\begin{quote}
+\texttt{(NumberOfResolutions 4)} \\
+\texttt{(FixedImagePyramidSchedule 8 8 4 4 2 2 1 1)}
+\end{quote}
+In this example 4 resolutions for a 2D image are used. At resolution
+level 0 the image is blurred with $\sigma = 8/2$ voxels in each
+direction (always halved). At level 1 $\sigma = 4/2$ is used, and
+finally at the last level, level 4, the original images are used for
+registration. Specifying the fixed and moving image pyramids with an
+identical schedule can be done with one command:
+\begin{quote}
+\texttt{(ImagePyramidSchedule 4 4 2 2 2 1 1 1 1)}
+\end{quote}
+for a 3D image with 3 resolution levels, where less smoothing is
+performed in the $z$-direction.
 
 \section{Masks}
+
+when you use masks you only perform registration on the part of the
+image that is within the masks.
 
 when to use masks
 
@@ -1170,6 +1365,7 @@ when to use erosion during multi-resolution and when not
 Common errors when drawing samples from the fixed image with small
 mask.
 
+How does the use of masks influence your results
 
 \section{Trouble shooting}
 
@@ -1177,7 +1373,7 @@ mask.
 
 \begin{figure}
 \centering \psfrag{k}[tc][tc]{$k$} \psfrag{ak}[tc][tc]{$a_k$}
-\includegraphics[width=8cm]{images/ak.eps}
+\includegraphics[width=8cm]{ak.eps}
 \caption{Sequence 1: $a = 1000$, $A = 50$, $\alpha = 0.602$.
 Sequence 2: $a = 400$, $A = 10$, $\alpha = 0.602$. Both sequences
 start with the same step size, but sequence 2 decays much
