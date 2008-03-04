@@ -64,9 +64,9 @@ INCLUDE_DIRECTORIES( ${elxINCLUDE_DIRECTORIES} )
 #---------------------------------------------------------------------
 # Output directories.
 
+MARK_AS_ADVANCED(LIBRARY_OUTPUT_PATH EXECUTABLE_OUTPUT_PATH)
 SET (LIBRARY_OUTPUT_PATH ${elastix_BINARY_DIR}/bin CACHE INTERNAL "Single output directory for building all libraries.")
 SET (EXECUTABLE_OUTPUT_PATH ${elastix_BINARY_DIR}/bin CACHE INTERNAL "Single output directory for building all executables.")
-MARK_AS_ADVANCED(LIBRARY_OUTPUT_PATH EXECUTABLE_OUTPUT_PATH)
 SET(elastix_LIBRARY_PATH "${LIBRARY_OUTPUT_PATH}")
 SET(elastix_EXECUTABLE_PATH "${EXECUTABLE_OUTPUT_PATH}")
 

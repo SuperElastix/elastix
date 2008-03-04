@@ -8,6 +8,8 @@ ADD_ELXCOMPONENT( KNNGraphAlphaMutualInformationMetric
  itkKNNGraphAlphaMutualInformationImageToImageMetric.txx
 )
 
-TARGET_LINK_LIBRARIES( KNNGraphAlphaMutualInformationMetric KNNlib ANNlib)
+IF( USE_KNNGraphAlphaMutualInformationMetric )
+  TARGET_LINK_LIBRARIES( KNNGraphAlphaMutualInformationMetric KNNlib ANNlib)
+ENDIF( USE_KNNGraphAlphaMutualInformationMetric )
 
 

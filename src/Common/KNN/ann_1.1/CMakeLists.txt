@@ -24,9 +24,9 @@ SET(ANN_SRCS
  src/perf.cpp
 )
 
+
 # Create the ANNlib library
 ADD_LIBRARY(ANNlib SHARED ${ANN_SRCS})
-# STATIC, SHARED of MODULE
 
 # Necessary, because in windows dll_export is needed for creating the
 # dll, but dll_import for using it in a program.
@@ -34,6 +34,11 @@ SET_TARGET_PROPERTIES(ANNlib PROPERTIES DEFINE_SYMBOL DLL_EXPORTS)
 
 # Install
 INSTALL(TARGETS ANNlib
-	RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/.
-	LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/.
-)
+	RUNTIME DESTINATION .
+	LIBRARY DESTINATION .  )
+    
+
+
+
+
+

@@ -153,6 +153,5 @@ TARGET_LINK_LIBRARIES(transformix
  ${AllComponentLibs}
 )
 
-INSTALL_TARGETS(/. elastix)
-INSTALL_TARGETS(/. transformix)
+INSTALL( TARGETS elastix transformix RUNTIME DESTINATION . )
 
