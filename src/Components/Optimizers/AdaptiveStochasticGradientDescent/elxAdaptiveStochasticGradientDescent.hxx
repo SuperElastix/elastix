@@ -155,18 +155,9 @@ namespace elastix
         this->GetComponentLabel(), level, 0 );
 
       /** Number of gradients N to estimate the average square magnitudes
-       * of the exact gradient and the approximation error.
-       * Use the following default, if nothing is specified by the user:
-       * N = max( 2, min(5, 500 / nrofparams) );
-       * This gives a probability of ~1 that the average square magnitude
-       * does not exceed twice the real expected square magnitude, or half.  
-       * The maximum value N=5 seems to be sufficient in practice. */
-      const unsigned int minNrOfGradients = 2;
-      const unsigned int maxNrOfGradients = 5;
-      const unsigned int estimatedNrOfGradients = 
-        static_cast<unsigned int>( vcl_ceil( 500.0 / Pd ) );
-      this->m_NumberOfGradientMeasurements = vnl_math_max( 
-        minNrOfGradients, vnl_math_min(maxNrOfGradients, estimatedNrOfGradients) );
+       * of the exact gradient and the approximation error. 
+       * A value of 0 (default) means automatic estimation. */
+      this->m_NumberOfGradientMeasurements = 0;
       this->GetConfiguration()->ReadParameter(
         this->m_NumberOfGradientMeasurements,
         "NumberOfGradientMeasurements",
@@ -411,6 +402,24 @@ namespace elastix
     this->m_CovarianceMatrix.SetSize(0,0);
     this->ComputeJacobianTerms(TrC, TrCC, maxJJ, maxJCJ);
 
+    /** Determine number of gradient measurements such that
+     * E + 2\sqrt(Var) < K E
+     * with
+     * E = E(1/N \sum_n g_n^T g_n) = sigma_1^2 TrC
+     * Var = Var(1/N \sum_n g_n^T g_n) = 2 sigma_1^4 TrCC / N
+     * K = 1.5
+     * We enforce a minimum of 2.
+     */
+    if ( this->m_NumberOfGradientMeasurements == 0 )
+    {
+      const double K = 1.5;
+      this->m_NumberOfGradientMeasurements = static_cast<unsigned int>( 
+        vcl_ceil( 8.0*TrCC/TrC/TrC/(K-1)/(K-1) )    );
+      this->m_NumberOfGradientMeasurements = vnl_math_max( static_cast<unsigned int>(2),
+        this->m_NumberOfGradientMeasurements );
+      elxout << "NumberOfGradientMeasurements to estimate sigma_i: " << this->m_NumberOfGradientMeasurements << std::endl;
+    }
+     
     /** Measure square magnitude of exact gradient and approximation error */
     const double sigma4factor = 1.0; 
     const double sigma4 = sigma4factor * delta / vcl_sqrt( maxJJ );

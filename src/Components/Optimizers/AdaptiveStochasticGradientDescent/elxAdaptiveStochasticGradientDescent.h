@@ -114,10 +114,10 @@ namespace elastix
   *   average square magnitudes of the exact gradient and the approximation error.
   *   The parameter can be specified for each resolution, or for all resolutions at once.\n
   *   example: <tt>(NumberOfGradientMeasurements 10)</tt>\n
-  *   Default value: N = max( 2, min(5, 500 / nrofparams) ), with nrofparams the 
-  *   number of transform parameters. The maximum value N=5 seems to be sufficient in practice. 
-  *   In principle, the more the better, but the slower.
-  *   The parameter has only influence when AutomaticParameterEstimation is used.
+  *   Default value: 0, which means that the value is automatically estimated. 
+  *   In principle, the more the better, but the slower. In practice N=10 is usually sufficient.
+  *   But the automatic estimation achieved by N=0 also works good.
+  *   The parameter has only influence when AutomaticParameterEstimation is used.   
   * \parameter NumberOfJacobianMeasurements: The number of voxels M where the jacobian is measured,
   *   which is used to estimate the covariance matrix. 
   *   The parameter can be specified for each resolution, or for all resolutions at once.\n
@@ -362,7 +362,6 @@ namespace elastix
     */
     virtual void SampleFixedImageForJacobianTerms(
       ImageSampleContainerPointer & sampleContainer );
-
 
     /** Functions to compute the jacobian terms needed for the automatic
     * parameter estimation */
