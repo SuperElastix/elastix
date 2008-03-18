@@ -21,19 +21,6 @@ using namespace itk;
 		unsigned int level = 
 			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
-    /** Get and set whether the metric should check if enough samples map inside the moving image. */
-    bool checkNumberOfSamples = true;
-    this->GetConfiguration()->ReadParameter( checkNumberOfSamples,
-      "CheckNumberOfSamples", this->GetComponentLabel(), level, 0 );
-    if ( !checkNumberOfSamples )
-    {
-      this->SetRequiredRatioOfValidSamples(0.0);
-    }
-    else
-    {
-      this->SetRequiredRatioOfValidSamples(0.25);
-    }
-
 		/** Get and set SubtractMean. Default true. */
 		bool subtractMean = true;
 		this->GetConfiguration()->ReadParameter( subtractMean, "SubtractMean",

@@ -27,7 +27,7 @@ namespace elastix
 
 	template <class TElastix>
 		void MetricBase<TElastix>
-		::BeforeEachResolutionBase(void)
+		::BeforeEachResolutionBase( void )
 	{
 		/** Get the current resolution level. */
 		unsigned int level = 
@@ -53,8 +53,29 @@ namespace elastix
 			xl::xout["iteration"].AddTargetCell( exactMetricColumn.c_str() );
 			xl::xout["iteration"][ exactMetricColumn.c_str() ] << std::showpoint << std::fixed;
     }
+
+    /** Cast this to AdvancedMetricType. */
+    AdvancedMetricType * thisAsAdvanced
+      = dynamic_cast< AdvancedMetricType * >( this );
+    
+    /** For advanced metrics several other things can be set. */
+    if ( thisAsAdvanced != 0 )
+    {
+      /** Get and set whether the metric should check if enough samples map inside the moving image. */
+      bool checkNumberOfSamples = true;
+      this->GetConfiguration()->ReadParameter( checkNumberOfSamples, 
+        "CheckNumberOfSamples", this->GetComponentLabel(), level, 0 );
+      if ( !checkNumberOfSamples )
+      {
+        thisAsAdvanced->SetRequiredRatioOfValidSamples( 0.0 );
+      }
+      else
+      {
+        thisAsAdvanced->SetRequiredRatioOfValidSamples( 0.25 );
+      }
+    }
 		  
-	} // end BeforeEachResolutionBase
+	} // end BeforeEachResolutionBase()
 
 
   /**

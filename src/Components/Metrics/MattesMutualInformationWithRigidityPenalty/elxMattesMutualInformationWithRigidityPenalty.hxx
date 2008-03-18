@@ -227,21 +227,6 @@ using namespace itk;
       ->SetNumberOfFixedHistogramBins( numberOfFixedHistogramBins );
     this->m_MattesMutualInformationMetric
       ->SetNumberOfMovingHistogramBins( numberOfMovingHistogramBins );
-
-    /** Get and set whether the metric should check if enough samples map inside the moving image. */
-    bool checkNumberOfSamples = true;
-    this->GetConfiguration()->ReadParameter( checkNumberOfSamples, 
-      "CheckNumberOfSamples", this->GetComponentLabel(), level, 0 );
-    if ( !checkNumberOfSamples )
-    {
-      this->m_MattesMutualInformationMetric
-        ->SetRequiredRatioOfValidSamples( 0.0 );
-    }
-    else
-    {
-      this->m_MattesMutualInformationMetric
-        ->SetRequiredRatioOfValidSamples( 0.25 );
-    }
 		
     /** Set limiters. */
     typedef HardLimiterFunction< RealType, FixedImageDimension > FixedLimiterType;

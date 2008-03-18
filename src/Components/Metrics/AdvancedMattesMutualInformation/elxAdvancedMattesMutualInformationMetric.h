@@ -52,12 +52,6 @@ using namespace itk;
    *    usefull if you use high order bspline interpolator for the moving image.\n
    *    example: <tt>(MovingLimitRangeRatio 0.001 0.01 0.01)</tt> \n
    *    The default value is 0.01. Can be given for each resolution, or for all resolutions at once. 
-   * \parameter CheckNumberOfSamples: Whether the metric checks if at least 1/4 of the 
-   *    samples map inside the moving image. Must be given for each resolution or for all
-   *    resolutions at once. \n
-   *    example: <tt>(CheckNumberOfSamples "false" "true" "false")</tt> \n
-   *    The default is true. In general it is wise to set this to true, since it detects
-   *    if the registration is going really bad.
    * \parameter FiniteDifferenceDerivative: Experimental feature, do not use.
    *
    * \sa ParzenWindowMutualInformationImageToImageMetric

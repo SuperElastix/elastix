@@ -72,19 +72,6 @@ using namespace itk;
 		this->SetNumberOfFixedHistogramBins( numberOfFixedHistogramBins );
     this->SetNumberOfMovingHistogramBins( numberOfMovingHistogramBins );
 
-    /** Get and set whether the metric should check if enough samples map inside the moving image. */
-    bool checkNumberOfSamples = true;
-    this->GetConfiguration()->ReadParameter( checkNumberOfSamples, 
-      "CheckNumberOfSamples", this->GetComponentLabel(), level, 0 );
-    if ( !checkNumberOfSamples )
-    {
-      this->SetRequiredRatioOfValidSamples( 0.0 );
-    }
-    else
-    {
-      this->SetRequiredRatioOfValidSamples( 0.25 );
-    }
-
     /** Set limiters */
     typedef HardLimiterFunction< RealType, FixedImageDimension > FixedLimiterType;
     typedef ExponentialLimiterFunction< RealType, MovingImageDimension > MovingLimiterType;
