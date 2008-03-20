@@ -117,25 +117,27 @@ for some common problems.
 \chapter{Image registration}\label{chp:Registration}
 
 Image registration is an important tool in the field of medical
-imaging. In many clinical situations several images of a patient are
-made in order to analyse the patient's situation. These images are
-acquired with, for example, X-ray scanners, Magnetic Resonance
+imaging. In many clinical situations several images of a patient
+are made in order to analyse the patient's situation. These images
+are acquired with, for example, X-ray scanners, Magnetic Resonance
 Imaging (MRI) scanners, Computed Tomography (CT) scanners, and
-Ultrasound scanners, which provide knowledge about the anatomy of the
-subject. Combination of patient data, mono- or multi-modal, often
-yields additional clinical information not apparent in the separate
-images. For this purpose, the spatial relation between the images has
-to be found. Image registration is the task of finding a spatial
-one-to-one mapping from voxels in one image to voxels in the other
-image, see Figure \ref{fig:concept}. Good reviews on the subject are
-given in \citet{MaintzEA98,LesterEA99,HillEA01,Hajnal01}.
+Ultrasound scanners, which provide knowledge about the anatomy of
+the subject. Combination of patient data, mono- or multi-modal,
+often yields additional clinical information not apparent in the
+separate images. For this purpose, the spatial relation between
+the images has to be found. Image registration is the task of
+finding a spatial one-to-one mapping from voxels in one image to
+voxels in the other image, see Figure \ref{fig:concept}. Good
+reviews on the subject are given in
+\citet{MaintzEA98,LesterEA99,HillEA01,Hajnal01,Zit03:Image,
+Modersitzki04:Numerical}.
 
-The following section introduces the mathematical formulation of the
-registration process and gives an overview of the components of which
-a general registration method consists. After that, in
-Sections~\ref{sec:comp:metric}-\ref{sec:comp:multiresolution}, each
-component is discussed in more detail. The name of the corresponding
-component in \elastix\ is also give.
+The following section introduces the mathematical formulation of
+the registration process and gives an overview of the components
+of which a general registration method consists. After that, in
+Sections~\ref{sec:comp:metric}-\ref{sec:comp:multiresolution},
+each component is discussed in more detail. For each component,
+the name used by \elastix\ is given, in \texttt{typewriter} style.
 
 \section{Registration framework}\label{sec:framework}
 
@@ -282,7 +284,7 @@ Adopted from \citet{ITKSoftwareGuideSecondEdition}.}
 
 Therefore, you should take care that you use an image format that
 is able to store the relevant information (e.g. \texttt{mhd},
-DICOM). Some image formats, like \texttt{vpx}, do no store the
+DICOM). Some image formats, like \texttt{vpx}, do not store the
 origin and spacing. This may cause serious problems!
 
 \section{Metrics}\label{sec:comp:metric}
@@ -294,15 +296,16 @@ the name of the metric in \elastix\ is given:
 \begin{description}
 \item[Sum of Squared Differences (SSD):] (\texttt{AdvancedMeanSquaresMetric}) The SSD is defined as:
 \begin{align}
-\mathrm{SSD}(\vmu;I_F,I_M) &= \frac{1}{|I_F|} \sum\limits_{\vx_i \in
-\Omega_F} \left( I_F(\vx_i) - I_M(\vT_{\vmu}(\vx_i))
-\right)^2,\label{eq:ssd}
+\mathrm{SSD}(\vmu;I_F,I_M) &= \frac{1}{|\Omega_F|}
+\sum\limits_{\vx_i \in \Omega_F} \left( I_F(\vx_i) -
+I_M(\vT_{\vmu}(\vx_i)) \right)^2,\label{eq:ssd}
 \end{align}
-with $\Omega_F$ the domain of the fixed image $I_F$. Given a
-transformation $\vT$, this measure can easily be implemented by
-looping over the voxels in the fixed image, taking $I_F(\vx_i)$,
-calculating $I_M(\vT_{\vmu}(\vx_i))$ by interpolation, and adding the
-squared difference to the sum.
+with $\Omega_F$ the domain of the fixed image $I_F$, and
+$|\Omega_F|$ the number of voxels. Given a transformation $\vT$,
+this measure can easily be implemented by looping over the voxels
+in the fixed image, taking $I_F(\vx_i)$, calculating
+$I_M(\vT_{\vmu}(\vx_i))$ by interpolation, and adding the squared
+difference to the sum.
 
 \item[Normalised Correlation Coefficient (NCC):] (\texttt{AdvancedNormalizedCorrelationMetric}) The NCC is defined as:
 \begin{align}
@@ -313,8 +316,11 @@ squared difference to the sum.
 \Omega_F} \left( I_M(\vTm(\vx_i)) - \overline{I_M} \right)^2}
 },\label{eq:ncc}
 \end{align}
-with $\overline{I_F}$ and $\overline{I_M}$ the average grey-value
-of $I_F(\vx)$ and $I_M(\vT_{\vmu}(\vx))$, respectively.
+with the average grey-values
+$\overline{I_F}=\frac{1}{|\Omega_F|}\sum\limits_{\vx_i \in
+\Omega_F} I_F(\vx_i)$ and
+$\overline{I_M}=\frac{1}{|\Omega_F|}\sum\limits_{\vx_i \in
+\Omega_F} I_M(\vT_{\vmu}(\vx_i))$.
 
 \item[Mutual Information (MI):] (\texttt{AdvancedMattesMutualInformationMetric}) For MI \citep{MaesEA97,ViolaEA97,MattesEA03} we
 use a definition given by \citet{ThevenazEA00a}:
@@ -333,7 +339,7 @@ respectively. The joint probabilities are estimated using B-spline
 Parzen windows:
 \begin{align}
 \begin{split}
- p(f,m;\vmu) &=  \frac{1}{|I_F|} \sum\limits_{\vx_i \in \Omega_F}
+ p(f,m;\vmu) &=  \frac{1}{|\Omega_F|} \sum\limits_{\vx_i \in \Omega_F}
  w_F( f/\sigma_F - I_F(\vx_i)/\sigma_F ) \\
  &\relphantom{=}\times w_M( m/\sigma_M - I_M(\vTm(\vx_i))/\sigma_M ),
 \end{split} \label{eq:histogram}
@@ -346,11 +352,11 @@ $I_M$ and the user-specified number of histogram bins $|L_F|$ and
 $|L_M|$.
 
 \item[Normalized Mutual Information (NMI):]
-(\texttt{NormalizedMutualInformationMetric}) Where MI can be written
-as $\mathrm{MI} = H(I_F) + H(I_M) - H(I_F,I_M)$, NMI can be written
-as $\mathrm{NMI} = ( H(I_F) + H(I_M) ) / H(I_F,I_M)$
-\cite{Stu99:NMI}. Again with the use of B-spline Parzen windows it
-can be defined as:
+(\texttt{NormalizedMutualInformationMetric}) Where MI can be
+written as $\mathrm{MI} = H(I_F) + H(I_M) - H(I_F,I_M)$, with $H$
+denoting entropy, NMI can be written as $\mathrm{NMI} = ( H(I_F) +
+H(I_M) ) / H(I_F,I_M)$ \cite{Stu99:NMI}. Again with the use of
+B-spline Parzen windows it can be defined as:
 \begin{align}
 \mathrm{NMI}(\vmu; I_F, I_M) &=
  \frac{\sum\limits_{m\in L_M} \sum\limits_{f\in L_F} p(f,m;\vmu) \log_2
@@ -389,9 +395,9 @@ measures the ``overlap'' of the segmentations.
 
 In Equations (\ref{eq:ssd})-(\ref{eq:histogram}) we observe a loop
 over the fixed image: $\sum_{\vx_i \in \Omega_F}$. Until now, we
-assumed that the loop goes over \emph{all} voxels of the fixed image.
-In general, this is not necessary. A subset may suffice
-\cite{ThevenazEA00a,KleinEA07}. The subset may be selected in
+assumed that the loop goes over \emph{all} voxels of the fixed
+image. In general, this is not necessary. A subset may suffice
+\citep{ThevenazEA00a,KleinEA07}. The subset may be selected in
 different ways: random, on a grid, etc. The sampler component
 represents this process.
 
@@ -425,7 +431,7 @@ While at first sight the full sampler seems the most obvious
 choice, in practice it is not always used, because of its
 computational costs in large images. The random samplers are
 especially useful in combination with a stochastic optimisation
-method \cite{KleinEA07}. See also
+method \citep{KleinEA07}. See also
 Section~\ref{sec:comp:optimiser}. The use of the random coordinate
 sampler makes the cost function $\CC$ a more smooth function of
 $\vmu$, which makes the optimisation problem (\ref{eq:parametric})
@@ -449,21 +455,22 @@ average of the surrounding voxels, with the distance to each voxel
 taken as weight.
 
 \item[$N$-th order B-spline:] (\texttt{BSplineInterpolator} or
-\texttt{BSplineInterpolatorFloat} for a memory efficient version) The
-higher the order, the better the quality, but also requiring more
-computation time. Nearest neighbour ($N=0$) and linear interpolation
-($N=1$) also fall in this category. See \citet{Unser99} for more
-details.
+\texttt{BSplineInterpolatorFloat} for a memory efficient version)
+The higher the order, the better the quality, but also requiring
+more computation time. In fact, nearest neighbour ($N=0$) and
+linear interpolation ($N=1$) also fall in this category. See
+\citet{Unser99} for more details.
 \end{description}
 
-During registration a first-order B-spline interpolation, i.e. linear
-interpolation, often gives satisfactory results. It is a good
-trade-off between quality and speed. To generate the final result,
-i.e. the deformed result of the registration, a higher order
-interpolation is usually required, for which we recommend $N=3$. The
-final result is generated in \elastix\ by a so-called resample
-interpolator. Any one of the above can be used, but you need to
-prepend with \texttt{Final}.
+During registration a first-order B-spline interpolation, i.e.
+linear interpolation, often gives satisfactory results. It is a
+good trade-off between quality and speed. To generate the final
+result, i.e. the deformed result of the registration, a higher
+order interpolation is usually required, for which we recommend
+$N=3$. The final result is generated in \elastix\ by a so-called
+resample interpolator. Any one of the above can be used, but you
+need to prepend the name with \texttt{Final}, for example:
+\texttt{FinalLinearInterpolator}.
 
 \begin{figure}
 \centering
@@ -493,19 +500,24 @@ simply defined by $\vmu=\bm{t}$.
 
 \item[Rigid:] (\texttt{EulerTransform}) A rigid transformation is defined as:
 \begin{align}
-\vTmx &= R \vx + \bm{t},
+\vTmx &= R (\vx - \bm{c}) + \bm{t} + \bm{c},
 \end{align}
-with the matrix $R$ a rotation matrix (i.e. orthonormal and proper)
-and $\bm{t}$ translation again. The image is treated as a rigid body,
-which can translate and rotate, but cannot be scaled/stretched. The
-rotation matrix is parameterised by the Euler angles (one in 2D,
-three in 3D). The parameter vector $\vmu$ consists of the Euler
-angles and the translation vector. In 2D, this gives a vector of
-length 3. In 3D, this gives a vector of length 6.
+with the matrix $R$ a rotation matrix (i.e. orthonormal and
+proper), $\bm{c}$ the center of rotation, and $\bm{t}$ translation
+again. The image is treated as a rigid body, which can translate
+and rotate, but cannot be scaled/stretched. The rotation matrix is
+parameterised by the Euler angles (one in 2D, three in 3D). The
+parameter vector $\vmu$ consists of the Euler angles and the
+translation vector. In 2D, this gives a vector of length 3: $\vmu
+= (\theta_z, t_x, t_y)^T$, where $\theta_z$ denotes the rotation
+around the axis normal to the image. In 3D, this gives a vector of
+length 6: $\vmu = (\theta_x, \theta_y, \theta_z, t_x, t_y,
+t_z)^T$. The center of rotation is not part of $\vmu$; it is a
+fixed setting, usually the centre of the image.
 
 \item[Similarity:] (\texttt{SimilarityTransform}) A similarity transformation is defined as
 \begin{align}
-\vTmx &= s R \vx + \bm{t},
+\vTmx &= s R (\vx - \bm{c}) + \bm{t} + \bm{c},
 \end{align}
 with $s$ a scalar and $R$ a rotation matrix. This means that the
 image is treated as an object, which can translate, rotate, and
@@ -513,29 +525,32 @@ scale isotropically. The rotation matrix is parameterised by an
 angle in 2D, and by a so-called ``versor'' in 3D (Euler angles
 could have been used as well). The parameter vector $\vmu$
 consists of the angle/versor, the translation vector, and the
-isotropic scaling factor. In 2D, this gives a vector of length 4.
-In 3D, this gives a vector of length 7. There are few cases when
-you need this transform.
+isotropic scaling factor. In 2D, this gives a vector of length 4:
+$\vmu = (s, \theta_z, t_x, t_y)^T$. In 3D, this gives a vector of
+length 7: $\vmu = (q_1, q_2, q_3, t_x, t_y, t_z, s)^T$, where
+$q_1$, $q_2$, and $q_3$ are the elements of the versor. There are
+few cases when you need this transform.
 
 \item[Affine:] (\texttt{AffineTransform}) An affine transformation is defined as:
 \begin{align}
-\vTmx &= A \vx + \bm{t},
+\vTmx &= A (\vx - \bm{c}) + \bm{t} + \bm{c},
 \end{align}
 where the matrix $A$ has no restrictions. This means that the
 image can be translated, rotated, scaled, and sheared. The
 parameter vector $\vmu$ is formed by the matrix elements $a_{ij}$
 and the translation vector. In 2D, this gives a vector of length
-6. In 3D, this gives a vector of length 12.
+6: $\vmu=(a_{11}, a_{12}, a_{21}, a_{22}, t_x, t_y)^T$. In 3D,
+this gives a vector of length 12.
 
 \item[B-splines:] (\texttt{BSplineTransform}) For the category of non-rigid transformations, we focus on a
 transformation that is parameterised by B-splines
 \citep{RueckertEA99}:
 \begin{align}
-\vTmx = \vx + \sum_{\vx_k \in \NN_{\vx}} \bm{c}_k \bm{\beta}^3(\vx
+\vTmx = \vx + \sum_{\vx_k \in \NN_{\vx}} \bm{p}_k \bm{\beta}^3(\vx
 - \vx_k),\label{eq:bspline}
 \end{align}
 with $\vx_k$ the control points, $\bm{\beta}^3(x)$ the cubic
-multidimensional B-spline polynomial \citep{Unser99}, $\bm{c}_k$
+multidimensional B-spline polynomial \citep{Unser99}, $\bm{p}_k$
 the B-spline coefficient vectors (loosely speaking, the control
 point displacements), and $\NN_{\vx}$ the set of all control
 points within the compact support of the B-spline at $\vx$. The
@@ -543,19 +558,24 @@ control points  $\vx_k$ are defined on a regular grid, overlayed
 on the fixed image. In this context we talk about `the control
 point grid that is put on the fixed image', and about `control
 points that are moved around'. Note that $\vTm(\vx_k)\neq \vx_k +
-\bm{c}_k$, a common misunderstanding. Calling $\bm{c}_k$ the
+\bm{p}_k$, a common misunderstanding. Calling $\bm{p}_k$ the
 control point displacements is, therefore, actually somewhat
-misleading.
+misleading. Also note that the control point grid is entirely
+unrelated to the grid used by the grid image sampler, see
+Section~\ref{sec:comp:sampler}.
 
-The control point grid is defined by the amount of space between the
-control points, which can be different for each direction. B-splines
-have local support ($|\NN_{\vx}|$ is small), which means that the
-transformation of a point can be computed from only a couple of
-surrounding control points. This is beneficial both for modelling
-local transformations, and for fast computation. The parameters
-$\vmu$ are formed by the B-spline coefficient $\bm{c}_k$. The number
-of control points determines the number of parameters. $\approx
-10000$ parameters is not an unusual case.
+The control point grid is defined by the amount of space between
+the control points, which can be different for each direction.
+B-splines have local support ($|\NN_{\vx}|$ is small), which means
+that the transformation of a point can be computed from only a
+couple of surrounding control points. This is beneficial both for
+modelling local transformations, and for fast computation. The
+parameters $\vmu$ are formed by the B-spline coefficients
+$\bm{p}_k$. The number of control points $P$ determines the number
+of parameters. For 3D images, $\approx 10000$ parameters is not an
+unusual case. The parameter vector is (for 2D images) composed as
+follows: $\vmu = (p_{1x}, p_{2x}, \ldots, p_{Px}, p_{1y}, p_{2y},
+\ldots, p_{Py} )^T$.
 \end{description}
 
 \begin{figure}
@@ -593,7 +613,9 @@ following two ways:
   \text{composition: }\quad & \vTmx = \vTm^\mathrm{BS}\left( \vT_{\hat\vmu_0}(\vx) \right)
   = ( \vTm^\mathrm{BS} \circ \vT_{\hat\vmu_0})(\vx)
 \end{align}
-The latter method is in general to be preferred. [Give reason]
+The latter method is in general to be preferred, because it makes
+several postregistration analysis tasks somewhat more
+straightforward.
 
 %// iets over scales?
 
@@ -637,10 +659,12 @@ evaluated at the current position $\vmu_k$. Several choices exist for
 the gain factor $a_k$. It can for example be determined by a line
 search or by using a predefined function of $k$.
 
-\item[Robbins-Monro (RM):] (\texttt{StandardGradientDescent}
-or \texttt{FiniteDifferenceGradientDescent}) The RM optimisation
+\item[Robbins-Monro (RM):]
+(\texttt{StandardGradientDescent} or\\
+\texttt{FiniteDifferenceGradientDescent}) The RM optimisation
 method replaces the calculation of the derivative of the cost
-function $\bm{g}(\vmu_k)$ by an approximation $\widetilde{\bm{g}}_k$.
+function $\bm{g}(\vmu_k)$ by an approximation
+$\widetilde{\bm{g}}_k$.
 \begin{align}
 \vmu_{k+1} &= \vmu_k - a_k \widetilde{\bm{g}}_k,\label{eq:RM}
 \end{align}
@@ -659,15 +683,15 @@ with $a_k$ as a predefined decaying function of $k$:
 \begin{align}
 a_k &= \frac{a}{(k+A)^{\alpha}},\label{eq:gain}
 \end{align}
-where $a > 0$, $A \ge 1$, and $0 \le \alpha \le 1$ are user-defined
-constants. In our experience, a reasonable choice is $\alpha \approx
-0.602$ and $A$ approximately 10\% of the user-defined maximum number
-of iterations, or less. The choice of the overall gain, $a$, depends
-on the expected ranges of $\vmu$ and $\bm{g}$ and is thus
-problem-specific. In our experience, the registration result is not
-very sensitive to small perturbations of these parameters. [explain
-where these numbers come from.] [Don't scare the users too much:
-tuning is not too hard.]
+where $a > 0$, $A \ge 1$, and $0 \le \alpha \le 1$ are
+user-defined constants. In our experience, a reasonable choice is
+$\alpha \approx 0.6$ and $A$ approximately 10\% of the
+user-defined maximum number of iterations, or less. The choice of
+the overall gain, $a$, depends on the expected ranges of $\vmu$
+and $\bm{g}$ and is thus problem-specific. In our experience, the
+registration result is not very sensitive to small perturbations
+of these parameters. Section~\ref{sec:optimizertuning} gives some
+more advice.
 \end{description}
 
 Note that GD and RM are in fact very similar. Running RM with a Full
@@ -678,8 +702,9 @@ accuracy. In that case, the parameter $a$ is the parameter that is to
 be tuned for your application.
 
 Other optimisers available in \elastix\ are: \texttt{FullSearch},
-\texttt{ConjugateGradient}, \texttt{ConjugateGradientFRPR},
-\texttt{QuasiNewtonLBFGS}, \texttt{RSGDEachParameterApart},
+\texttt{ConjugateGradient},\linebreak
+\texttt{ConjugateGradientFRPR}, \texttt{QuasiNewtonLBFGS},
+\texttt{RSGDEachParameterApart},\linebreak
 \texttt{SimultaneousPerturbation}, \texttt{CMAEvolutionStrategy}.
 
 \section{Multi-resolution}\label{sec:comp:multiresolution}
