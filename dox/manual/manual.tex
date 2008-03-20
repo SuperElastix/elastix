@@ -804,7 +804,7 @@ same texture as the moving image. Sudden blurred areas in the
 deformed image may indicate that the deformation at that region is
 too large.
 
-\item For monomodal image data you can inspect the difference image.
+\item For mono-modal image data you can inspect the difference image.
 
 \item Check the deformation field by looking at the determinant of
 the Jacobian. Values smaller than 1 indicate local compression,
@@ -816,18 +816,16 @@ transformation, and you definitely should be worried.
 
 \item To follow the registration success, compute for each iteration
 the exact metric value (and not an approximated value, when you do
-random sampling), and plot it. For example
+random sampling), and plot it. For example for the SSD measure, the
+lower the metric value, the better the registration.
 
 \item Compute the distance between manually clicked corresponding
 points. Ideally, the registration has found the same correspondence.
 
-\item Compute the overlap of segmented anatomical structures
-
+\item Compute the overlap of segmented anatomical structures. The
+better the overlap, the better the registration ...
 
 \end{itemize}
-
-How to follow the registration result through time? what are big
-steps, what are small steps.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -882,8 +880,10 @@ concatenation or addition, and more.
 
 \item multi-platform (at least Windows and Linux. A previous version
 was reported to work on Mac OS.), multi-compiler (at least Visual C++
-2003, gcc 3.2, gcc 4.02), and supports 32 and 64 bit systems. So, it
-is highly portable to the platform of the user's choice;
+2003, gcc 3.2, gcc 4.02), and supports 32 and 64 bit systems. The
+underlying ITK code builds on many more platforms, see
+\url{www.itk.org/Wiki/ITK_Prerequisites}. So, it is highly portable
+to the platform of the user's choice;
 
 \item highly configurable: there is a lot of choice for all the registration
 components. Choosing the configuration that suits your needs is easy
