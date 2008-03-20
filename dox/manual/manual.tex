@@ -138,6 +138,8 @@ of which a general registration method consists. After that, in
 Sections~\ref{sec:comp:metric}-\ref{sec:comp:multiresolution},
 each component is discussed in more detail. For each component,
 the name used by \elastix\ is given, in \texttt{typewriter} style.
+In Section~\ref{sec:evaluation}, methods to evaluate the
+registration results are discussed.
 
 \section{Registration framework}\label{sec:framework}
 
@@ -352,15 +354,17 @@ $I_M$ and the user-specified number of histogram bins $|L_F|$ and
 $|L_M|$.
 
 \item[Normalized Mutual Information (NMI):]
-(\texttt{NormalizedMutualInformationMetric}) Where MI can be
-written as $\mathrm{MI} = H(I_F) + H(I_M) - H(I_F,I_M)$, with $H$
-denoting entropy, NMI can be written as $\mathrm{NMI} = ( H(I_F) +
-H(I_M) ) / H(I_F,I_M)$ \cite{Stu99:NMI}. Again with the use of
-B-spline Parzen windows it can be defined as:
+(\texttt{NormalizedMutualInformationMetric})\\ NMI is defined by
+$\mathrm{NMI} = ( H(I_F) + H(I_M) ) / H(I_F,I_M)$, with $H$
+denoting entropy. This expression can be compared to the
+definition of MI in terms of $H$: $\mathrm{MI} = H(I_F) + H(I_M) -
+H(I_F,I_M)$. Again, with the joint probabilities defined by
+\ref{eq:histogram} (using B-spline Parzen windows), NMI can be
+written as:
 \begin{align}
 \mathrm{NMI}(\vmu; I_F, I_M) &=
  \frac{\sum\limits_{m\in L_M} \sum\limits_{f\in L_F} p(f,m;\vmu) \log_2
- \left( p_F(f) + p_M(m;\vmu) \right)}{ \sum\limits_{m\in L_M} \sum\limits_{f\in L_F}
+ \left( p_F(f) p_M(m;\vmu) \right)}{ \sum\limits_{m\in L_M} \sum\limits_{f\in L_F}
  p(f,m;\vmu) \log_2 \left( p(f,m;\vmu) \right) }. \label{eq:NMI}
 \end{align}
 
@@ -465,11 +469,11 @@ linear interpolation ($N=1$) also fall in this category. See
 During registration a first-order B-spline interpolation, i.e.
 linear interpolation, often gives satisfactory results. It is a
 good trade-off between quality and speed. To generate the final
-result, i.e. the deformed result of the registration, a higher
-order interpolation is usually required, for which we recommend
-$N=3$. The final result is generated in \elastix\ by a so-called
-resample interpolator. Any one of the above can be used, but you
-need to prepend the name with \texttt{Final}, for example:
+result, i.e. the deformed result of the registration, a
+higher-order interpolation is usually required, for which we
+recommend $N=3$. The final result is generated in \elastix\ by a
+so-called resample interpolator. Any one of the above can be used,
+but you need to prepend the name with \texttt{Final}, for example:
 \texttt{FinalLinearInterpolator}.
 
 \begin{figure}
@@ -561,7 +565,7 @@ points that are moved around'. Note that $\vTm(\vx_k)\neq \vx_k +
 \bm{p}_k$, a common misunderstanding. Calling $\bm{p}_k$ the
 control point displacements is, therefore, actually somewhat
 misleading. Also note that the control point grid is entirely
-unrelated to the grid used by the grid image sampler, see
+unrelated to the grid used by the Grid image sampler, see
 Section~\ref{sec:comp:sampler}.
 
 The control point grid is defined by the amount of space between
@@ -609,9 +613,10 @@ first. The result of the initial rigid or affine registration is
 combined with the nonrigid B-spline transformation in one of the
 following two ways:
 \begin{align}
-  \text{addition: }\quad    & \vTmx = \vTm^\mathrm{BS}(\vx) + \vT_{\hat\vmu_0}(\vx) \\
+  \text{addition: }\quad    & \vTmx = \vTm^\mathrm{BS}(\vx) + \vT_{\hat\vmu_0}(\vx)\label{eq:addition} \\
   \text{composition: }\quad & \vTmx = \vTm^\mathrm{BS}\left( \vT_{\hat\vmu_0}(\vx) \right)
-  = ( \vTm^\mathrm{BS} \circ \vT_{\hat\vmu_0})(\vx)
+  = ( \vTm^\mathrm{BS} \circ
+  \vT_{\hat\vmu_0})(\vx)\label{eq:composition}
 \end{align}
 The latter method is in general to be preferred, because it makes
 several postregistration analysis tasks somewhat more
@@ -660,7 +665,7 @@ the gain factor $a_k$. It can for example be determined by a line
 search or by using a predefined function of $k$.
 
 \item[Robbins-Monro (RM):]
-(\texttt{StandardGradientDescent} or\\
+(\texttt{StandardGradientDescent} or
 \texttt{FiniteDifferenceGradientDescent}) The RM optimisation
 method replaces the calculation of the derivative of the cost
 function $\bm{g}(\vmu_k)$ by an approximation
@@ -672,14 +677,15 @@ The approximation is potentially faster to compute, but might
 deteriorate convergence properties of the GD scheme, since every
 iteration an approximation error $\bm{g}(\vmu_k) -
 \widetilde{\bm{g}}_k$ is made. \citet{KleinEA07} showed that using
-only a small random subset of voxels ($\approx 2000$) from the fixed
-image accelerates registration significantly, without compromising
-registration accuracy. The Random or RandomCoordinate samplers,
-described in Section~\ref{sec:comp:sampler}, are examples of samplers
-that pick voxels randomly. It is important that a new subset of fixed
-image voxels is selected every iteration $k$, so that the
-approximation error has zero mean. The RM method is usually combined
-with $a_k$ as a predefined decaying function of $k$:
+only a small random subset of voxels (\mbox{$\approx 2000$}) from
+the fixed image accelerates registration significantly, without
+compromising registration accuracy. The Random or RandomCoordinate
+samplers, described in Section~\ref{sec:comp:sampler}, are
+examples of samplers that pick voxels randomly. It is important
+that a new subset of fixed image voxels is selected every
+iteration $k$, so that the approximation error has zero mean. The
+RM method is usually combined with $a_k$ as a predefined decaying
+function of $k$:
 \begin{align}
 a_k &= \frac{a}{(k+A)^{\alpha}},\label{eq:gain}
 \end{align}
@@ -729,12 +735,13 @@ found in the literature, amongst others Gaussian and Laplacian
 pyramids, morphological scale space, and spline and wavelet pyramids.
 The Gaussian pyramid is the most common one. In \elastix\ we have:
 \begin{description}
-\item[Gaussian pyramid:] (\texttt{FixedRecursivePyramid} and
-\texttt{MovingRecursivePyramid}) Applies smoothing and down-sampling.
-
-\item[Gaussian scale space:] (\texttt{FixedSmoothingPyramid} and
-\texttt{MovingSmoothingPyramid}) Applies smoothing and \emph{no}
+\item[Gaussian pyramid:] (\texttt{FixedRecursiveImagePyramid} and
+\texttt{MovingRecursiveImagePyramid}) Applies smoothing and
 down-sampling.
+
+\item[Gaussian scale space:] (\texttt{FixedSmoothingImagePyramid} and
+\texttt{MovingSmoothingImagePyramid}) Applies smoothing and
+\emph{no} down-sampling.
 \end{description}
 
 Figure~\ref{fig:multiresolution} shows the Gaussian pyramid with and
@@ -752,17 +759,21 @@ anyway, independent of the image size.
 \subfigure[resolution 1]{\includegraphics[width=3cm]{moving_pd.R1d.eps}}
 \subfigure[resolution 2]{\includegraphics[width=3cm]{moving_pd.R2d.eps}}
 \subfigure[original]{\includegraphics[width=3cm]{moving_pd.128.eps}} \\
-\subfigure[resolution 0]{\includegraphics[width=3cm]{moving_pd.R0.eps}}
-\subfigure[resolution 1]{\includegraphics[width=3cm]{moving_pd.R1.eps}}
-\subfigure[resolution 2]{\includegraphics[width=3cm]{moving_pd.R2.eps}}
+\subfigure[resolution
+0]{\includegraphics[width=3cm]{moving_pd.R0.eps}}
+\subfigure[resolution
+1]{\includegraphics[width=3cm]{moving_pd.R1.eps}}
+\subfigure[resolution
+2]{\includegraphics[width=3cm]{moving_pd.R2.eps}}
 \subfigure[original]{\includegraphics[width=3cm]{moving_pd.128.eps}}
 \caption{Two multi-resolution strategies using a Gaussian pyramid
 ($\sigma = 8.0, 4.0, 2.0$ voxels). The first row shows
-multi-resolution with down-sampling (\texttt{FixedRecursivePyramid}),
-the second row without (\texttt{FixedSmoothingPyramid}). Note that
-for the first row for each dimension the image size is halved every
-resolution, but that the voxel size increases with a factor 2, so
-physically the images are of the same size every resolution.}
+multi-resolution with down-sampling
+(\texttt{FixedRecursiveImagePyramid}), the second row without
+(\texttt{FixedSmoothingImagePyramid}). Note that in the first row,
+for each dimension, the image size is halved every resolution, but
+that the voxel size increases with a factor 2, so physically the
+images are of the same size every resolution.}
 \label{fig:multiresolution}
 \end{figure}
 
@@ -780,19 +791,18 @@ even use a three-level strategy: first rigid, then affine, then
 nonrigid B-spline.
 
 Another example is to increase the number of degrees of freedom
-within the transformation model. With a B-spline transformation, it
-is often good practice to start registration with a coarse control
-point grid, only capable of modelling coarse deformations. In
-subsequent resolutions the B-spline grid is gradually refined,
-thereby introducing the capability to match smaller structures. See
-Section \ref{}
+within the transformation model. With a B-spline transformation,
+it is often good practice to start registration with a coarse
+control point grid, only capable of modelling coarse deformations.
+In subsequent resolutions the B-spline grid is gradually refined,
+thereby introducing the capability to match smaller structures.
+See Section~\ref{sec:transformtuning}.
 
-\section{Evaluating registration}
+\section{Evaluating registration}\label{sec:evaluation}
 
-How do you know that your registration went well?
-
-This is a difficult problem. In general, you don't know for each
-voxel where it should map to. Here are some hints:
+How do you verify that your registration was successful? This is a
+difficult problem. In general, you don't know for each voxel where
+it should map to. Here are some hints:
 
 \begin{itemize}
 \item The deformed moving image $I_M(\vT_{\vmu}(\vx))$ should
@@ -804,26 +814,46 @@ same texture as the moving image. Sudden blurred areas in the
 deformed image may indicate that the deformation at that region is
 too large.
 
-\item For mono-modal image data you can inspect the difference image.
+\item For mono-modal image data you can inspect the difference
+image. Perfect registration would result in a difference image
+without any edges, just noise.
 
-\item Check the deformation field by looking at the determinant of
-the Jacobian. Values smaller than 1 indicate local compression,
-values larger than 1 indicate local expansion, and 1 means volume
-preservation. If this value deviates substantially from 1, you may be
-worried (but maybe not if this is what you expect for your
-application). In case it is negative you have foldings in your
-transformation, and you definitely should be worried.
-
-\item To follow the registration success, compute for each iteration
-the exact metric value (and not an approximated value, when you do
-random sampling), and plot it. For example for the SSD measure, the
-lower the metric value, the better the registration.
+\item Compute the overlap of segmented anatomical structures after registration. The
+better the overlap, the better the registration. To measure
+overlap, commonly the Dice similarity coefficient (DSC) is used:
+\begin{equation}
+  \mathrm{DSC}(X,Y) = \frac{2 |X \cap Y|}{|X|+|Y|},
+\end{equation}
+where $X$ and $Y$ represent the binary label images, and $|\cdot|$
+denotes the number of voxels that equal 1. A higher DSC indicates
+a better correspondence. A value of 1 indicates perfect overlap, a
+value of 0 means no overlap at all. Also the Tannimoto (TC)
+coefficient is used often. It is related to the $DSC$ by
+$DSC=2TC/(TC+1)$. See also \cite{Cru06:Generalized}. It is
+important to realise that the surface-volume ratio of the
+segmented structures influences the overlap values you typically
+get \citep{Roh04:Evaluation}. A value of $DSC=0.8$ would be very
+good for the overlap of complex vessel structures. For large
+spherical objects though, an overlap $<0.9$ is in general not very
+good. What is good enough depends of course on your application.
 
 \item Compute the distance between manually clicked corresponding
-points. Ideally, the registration has found the same correspondence.
+points. Ideally, the registration has found the same
+correspondence.
 
-\item Compute the overlap of segmented anatomical structures. The
-better the overlap, the better the registration ...
+\item Inspect the deformation field by looking at the determinant of
+the Jacobian of $\vTmx$. Values smaller than 1 indicate local
+compression, values larger than 1 indicate local expansion, and 1
+means volume preservation. If this value deviates substantially
+from 1, you may be worried (but maybe not if this is what you
+expect for your application). In case it is negative you have
+``foldings'' in your transformation, and you definitely should be
+worried.
+
+\item Inspect the convergence, by computing for each iteration
+the exact metric value (and not an approximated value, when you do
+random sampling), and plot it. For example for the SSD measure,
+the lower the metric value, the better the registration.
 
 \end{itemize}
 
@@ -835,12 +865,13 @@ better the overlap, the better the registration ...
 \section{Introduction}\label{sec:elastix:intro}
 
 The development of \elastix\ started half to late 2003, and was
-intended to facilitate our registration research. After some initial
-versions we decided to put the separate components of \elastix\ in
-separate libraries. This resulted in major version 3.0 in November
-2004. \elastix\ 3.0 was also the first version that was made publicly
-available on the \elastix\ website, around the same time. The
-continued development brings us today (December 2007) to version 3.8.
+intended to facilitate our registration research. After some
+initial versions we decided to put the separate components of
+\elastix\ in separate libraries. This resulted in major version
+3.0 in November 2004. \elastix\ 3.0 was also the first version
+that was made publicly available on the \elastix\ website, around
+the same time. The continued development brings us today (April
+2008) to version 3.9.
 
 \begin{table}[h!]
 \begin{tabular}{l|l}
@@ -849,14 +880,14 @@ what & where \\
 website        & \url{www.isi.uu.nl/Elastix} \\
 CVS repository & \url{/shared/CVS/elastix/} (hosted at the ISI) \\
 WIKI           & \url{https://wiki.isi.uu.nl/bin/view/CADweb/ElastiX} \\
-FAQ            &
-\url{https://wiki.isi.uu.nl/bin/view/CADweb/ElastixFAQ}
+FAQ            & \url{http://www.isi.uu.nl/Elastix/FAQ.php}
 \end{tabular}
 \end{table}
 
-The website also contains a doxygen\footnote{\url{www.doxygen.org}}
-generated part that provides documentation of the source code. An
-overview of all available classes can be found at
+The website also contains a
+\texttt{doxygen}\footnote{\url{www.doxygen.org}} generated part
+that provides documentation of the source code. An overview of all
+available classes can be found at
 \begin{quote}
 \url{www.isi.uu.nl/Elastix/doxygen/classes.html}.
 \end{quote}
@@ -874,16 +905,23 @@ for an overview of all available components.
 \item open source, freely available from \url{www.isi.uu.nl/Elastix};
 
 \item based on the ITK, so the code base is thoroughly tested.
-But with some improvements, such as the use of samplers, a
-transformation class that combines multiple transformation using
-concatenation or addition, and more.
+Quite some modifications/additions are made to the original ITK
+code though, such as the use of samplers, a transformation class
+that combines multiple transformation using composition or
+addition, and more.
 
-\item multi-platform (at least Windows and Linux. A previous version
-was reported to work on Mac OS.), multi-compiler (at least Visual C++
-2003, gcc 3.2, gcc 4.02), and supports 32 and 64 bit systems. The
-underlying ITK code builds on many more platforms, see
-\url{www.itk.org/Wiki/ITK_Prerequisites}. So, it is highly portable
-to the platform of the user's choice;
+\item suitable for many image formats. The use of ITK implies that
+all image formats supported by ITK are supported by \elastix. Some
+often used (medical) image formats are: .mhd (MetaIO), .hdr
+(Analyze/NIfTI), .gipl, .dcm (DICOM slices). DICOM directories are
+not directly supported by \elastix;
+
+\item multi-platform (at least Windows and Linux; a previous version
+was reported to work on Mac OS), multi-compiler (at least Visual
+C++ 2003, gcc 3.2, gcc 4.02), and supports 32 and 64 bit systems.
+The underlying ITK code builds on many more platforms, see
+\url{www.itk.org/Wiki/ITK_Prerequisites}. So, it is highly
+portable to the platform of the user's choice;
 
 \item highly configurable: there is a lot of choice for all the registration
 components. Choosing the configuration that suits your needs is easy
@@ -892,7 +930,7 @@ thanks to human readable and editable parameter file;
 \item easy to use for large amounts of data, since \elastix\ can be
 called easily in a script;
 
-\item fast, thanks to subsampling, if desired;
+\item fast, thanks to stochastic subsampling, if desired;
 
 \item relatively easy to extend, i.e. to add new components, so it is
 very suited for research also.
@@ -922,7 +960,7 @@ pre-compiled binaries.
     to the variable ``path''.
 
     \item Linux: Add \texttt{folder} to the path by adding the line
-    ``\texttt{PATH=folder:\$PATH}'' to your \texttt{.bashrc} file.
+    ``\texttt{export PATH=folder:\$PATH}'' to your \texttt{.bashrc} file.
     \end{enumerate}
     or call \elastix\ with the full path:
     \texttt{fullPathToFolder$\backslash$folder$\backslash$elastix}
@@ -930,10 +968,10 @@ pre-compiled binaries.
 
 \subsection{Getting started the easy way}
 
-It is also possible to compile \elastix\ yourself, since the source
-code is freely available. In this section, we assume you use the
-Microsoft Visual C++ 2003 compiler under Windows, and the GCC
-compiler under Linux.
+It is also possible to compile \elastix\ yourself, since the
+source code is freely available. In this section, we assume you
+use the Microsoft Visual C++ 2003 compiler under Windows, and the
+GCC compiler under Linux.
 
 \begin{enumerate}
 \item Download and install CMake: \url{www.cmake.org}.
@@ -973,6 +1011,13 @@ install}. Your compiler will now create the \elastix\ binaries.
 above.
 \end{enumerate}
 
+For developers: When running CMake, you may toggle the display of
+the ``advanced'' options. In this list you will find several
+options like \texttt{USE\_BSplineTransform ON/OFF}. By default all
+are ON. To reduce compilation time, you may turn some components
+OFF, which you do not plan to use anyway. Be careful though to not
+turn off essential components.
+
 \section{How to call \elastix}\label{sec:elastix:call}
 
 \elastix\ is a command line program. This means that you have to open
@@ -989,31 +1034,34 @@ basic command to run a registration is as follows:
 \texttt{elastix -f fixedImage.ext -m movingImage.ext -out
 outputDirectory -p parameterFile.txt}
 \end{quote}
-where `\texttt{ext}' is the extension of the image files. The above
-arguments are mandatory. These are minimally needed to run \elastix.
-All output of \elastix\ is written to the output directory, which
-needs to be created before running \elastix. The output consists of a
-log file (\texttt{elastix.log}), and optionally the resulting
-registered image (\texttt{result.?.mhd}), and the parameters of the
-transformation that relate the fixed and the moving image
-(\texttt{TransformParameters.?.txt}). The parameter file is an
-important file: it contains, in normal text, what kind of
-registration is performed (i.e. what metric, optimiser, etc.) and
-what the parameters are that define the registration. It gives a high
-amount of flexibility and control over the process. More information
-about the parameter file is given in Section \ref{sec:elastix:param}.
+where `\texttt{ext}' is the extension of the image files. The
+above arguments are mandatory. These are minimally needed to run
+\elastix. The parameter file is an important file: it contains, in
+normal text, what kind of registration is performed (i.e. what
+metric, optimiser, etc.) and what the parameters are that define
+the registration. It gives a high amount of flexibility and
+control over the process. More information about the parameter
+file is given in Section \ref{sec:elastix:param}. All output of
+\elastix\ is written to the output directory, which needs to be
+created before running \elastix. The output consists of a log file
+(\texttt{elastix.log}), the parameters of the transformation
+$\vT_{\vmu}$ that relates the fixed and the moving image
+(\texttt{TransformParameters.?.txt}), and, optionally, the
+resulting registered image $I_M(\vTmx)$ (\texttt{result.?.mhd}).
+The log file contains all message that were print to screen during
+registration. Also the parameterFile.txt is copied into the log
+file, and the contents of the \texttt{TransformParameters.?.txt}
+files are included. The log file is thus especially useful when
+trouble shooting.
 
-The use of masks is supported. They can be provided by adding
-\texttt{-fMask fixedMask.ext} and/or \texttt{-mMask movingMask.ext}
-to the command line. An initial transformation can be provided with a
+Besides the mandatory arguments, there are some optional
+arguments. Mask images can be provided by adding \texttt{-fMask
+fixedMask.ext} and/or \texttt{-mMask movingMask.ext} to the
+command line. An initial transformation can be provided with a
 valid transform parameter file by adding \texttt{-t0
-TransformParameters.txt} to the command line. With the command line
-option \texttt{-threads unsigned\_int} the user can specify the
-maximum number of threads that \elastix\ will use.
-
-On the \elastix-website, in the `About' section, you can find an
-example on how to use the program. Maybe now is the time to try the
-example and see a registration in action.
+TransformParameters.txt} to the command line. With the command
+line option \texttt{-threads unsigned\_int} the user can specify
+the maximum number of threads that \elastix\ will use.
 
 Running multiple registrations in succession, each possibly of a
 different type, and with the output of a previous registration as
@@ -1034,8 +1082,14 @@ run of \elastix:
 \begin{quote}
 \texttt{elastix ... -p param1.txt -p param2.txt -p param3.txt}
 \end{quote}
-The transformations from each of the registrations are automatically
-combined.
+The transformations from each of the registrations are
+automatically combined, using one of the equations
+(\ref{eq:addition}) and (\ref{eq:composition}).
+
+On the \elastix-website, in the `About' section, you can find an
+example on how to use the program. Maybe now is the time to try
+the example and see a registration in action.
+
 
 \section{The parameter file}\label{sec:elastix:param}
 
@@ -1061,8 +1115,6 @@ These choices are what make the registration a success or a disaster.
 Therefore, a separate chapter is dedicated to the fine art of tuning
 a registration, see Chapter \ref{chp:Tutorial}.
 
-\section{General code layout}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1072,68 +1124,100 @@ a registration, see Chapter \ref{chp:Tutorial}.
 
 By now you are able to at least run a registration, by calling
 \elastix\ correctly. It is often also useful to apply the
-transformation as found by the registration to another image. Maybe
-you want to apply the transformation to an original (larger) image to
-gain resolution. Or maybe you need the transformation to apply it to
-an atlas image. For those purposes a program called \transformix\ is
-available. It was developed simultaneously with \elastix.
+transformation as found by the registration to another image.
+Maybe you want to apply the transformation to an original (larger)
+image to gain resolution. Or maybe you need the transformation to
+apply it to a label image (segmentation). For those purposes a
+program called \transformix\ is available. It was developed
+simultaneously with \elastix.
 
 \section{How to call \transformix}
 
-Like \elastix\, \transformix\ is a command line driven program. You
+Like \elastix, \transformix\ is a command line driven program. You
 can get basic help on how to call it, by:
 \begin{quote}
 \texttt{transformix --help}
 \end{quote}
-which will give a list of mandatory and optional arguments. The most
-basic command is as follows:
+which will give a list of mandatory and optional arguments.
+
+The most basic command is as follows:
 \begin{quote}
 \texttt{transformix -in inputImage.ext -out outputDirectory -tp
 TransformParameters.txt}
 \end{quote}
-This call will transform the input image and write it, together with
-a log file, to the output directory. The transformation you want to
-apply is defined in the so-called transform parameter file, see
-Section \ref{sec:transformix:tp}. If you want to deform a set or all
+This call will transform the input image and write it, together
+with a log file \texttt{transformix.log}, to the output directory.
+The transformation you want to apply is defined in the transform
+parameter file. The transform parameter file could be the result
+of a previous run of \elastix\ (see Section
+\ref{sec:elastix:call}), but may also be written by yourself.
+Section~\ref{sec:transformix:tp} explains the structure and
+contents that a transform parameter file should have.
+
+Besides using \transformix\ for deforming images, you can also use
+\transformix\ to evaluate the transformation $\vTmx$ at some
+points $\vx$. If you want to deform a set of user-specified
 points, the appropriate call is:
 \begin{quote}
 \texttt{transformix -ipp inputPoints.txt -out outputDirectory -tp
-TransformParameters.txt} \\
+TransformParameters.txt}
+\end{quote}
+This will create a file \texttt{outputpoints.txt} containing the
+input points $\vx$ and the transformed points $\vTmx$ (both given
+as voxel indices of the fixed image and as physical coordinates),
+the displacement vector $\vTmx-\vx$ (in physical coordinates),
+and, if \texttt{-in inputImage.ext} is also specified, the
+transformed output points as indices of the input
+image\footnote{The downside of this is that the input image is
+also deformed, which consumes time and may not be needed by the
+user. If this is a problem, just run \transformix\ without
+\texttt{-in} and compute the voxel indices yourself, based on the
+$\vTmx$ physical coordinate data.}. The \texttt{inputPoints.txt}
+file should have the following structure:
+\begin{quote}
+\texttt{<index, point>}\\
+\texttt{<number of points>}\\
+\texttt{point1\_x point1\_y [point1\_z]}\\
+\texttt{point2\_x point2\_y [point2\_z]}\\
+\texttt{$\ldots$}
+\end{quote}
+The first line indicates whether the points are given as
+``indices'' (of the fixed image), or as ``points'' (in physical
+coordinates). The second line stores the number of points that
+will be specified. After that the point data is given.
+
+If you want to know the deformation at all voxels of the fixed
+image, simply use \texttt{-ipp all}:
+\begin{quote}
 \texttt{transformix -ipp all -out outputDirectory -tp
 TransformParameters.txt}
 \end{quote}
-This will create a file of the deformed output points, or with the
-second call a deformation field vector image. Note that both the
-input and output points are specified in the fixed image domain. If
-you want the output points specified in the moving image domain you
-additionally need to supply the moving image to the call of
-\transformix:
-\begin{quote}
-\texttt{transformix -in movingImage.ext -ipp inputPoints.txt -out
-outputDirectory -tp TransformParameters.txt}
-\end{quote}
-Currently, the downside of this call is that the moving image is also
-deformed, which consumes time. With the command line option
-\texttt{-threads unsigned\_int} the user can specify the maximum
-number of threads that \transformix\ will use.
+The deformation field is stored as a vector image
+\texttt{deformationField.mhd}. Each voxel contains the
+displacement vector $\vTmx-\vx$ in physical coordinates. The
+elements of the vectors are stored as \texttt{float} values.
+
+With the command-line option \texttt{-threads unsigned\_int} the
+user can specify the maximum number of threads that \transformix\
+will use.
 
 \section{The transform parameter file}\label{sec:transformix:tp}
 
-The result of a registration is the transformation relating the fixed
-and moving image. The parameters of this transformation are stored in
-a \texttt{TransformParameters.?.txt}-file. An example of its
-structure for a 2D rigid transformation is given in Appendix
-\ref{chp:ExampleTransformParam}. The text file contains all
-information necessary to resample an input image (the moving image)
-to the region specified in the file (by default the fixed image
-region).
+The result of a registration is the transformation $\vTm$ relating
+the fixed and moving image. The parameters of this transformation
+are stored in a \texttt{TransformParameters.?.txt}-file. An
+example of its structure for a 2D rigid transformation is given in
+Appendix \ref{chp:ExampleTransformParam}. The text file contains
+all information necessary to resample an input image (the moving
+image) to the region specified in the file (by default the fixed
+image region).
 
-The transform parameter file can be manually edited or created as is
-convenient for the user. Multiple transformations are composed by
-iteratively supplying another transform parameter file with the
+The transform parameter file can be manually edited or created as
+is convenient for the user. Multiple transformations are composed
+by iteratively supplying another transform parameter file with the
 \texttt{InitialTransformParametersFileName} tag. The last
-transformation will be that where the initial transform parameter
-file name is set to \texttt{NoInitialTransform}.
+transformation will be the one where the initial transform
+parameter file name is set to \texttt{"NoInitialTransform"}.
 
 \section{Some details}
 
@@ -1142,7 +1226,7 @@ file name is set to \texttt{NoInitialTransform}.
 The run-time of \transformix\ is built up of the following parts:
 
 \begin{enumerate}
-\item Computing the B-spline decomposition (in case you selected the
+\item Computing the B-spline decomposition of the input image (in case you selected the
 \texttt{FinalBSplineInterpolator});
 
 \item Computing the transformation for each voxel;
@@ -1170,10 +1254,6 @@ For more information about memory consumption, see Section
 \begin{quote}
 \url{https://wiki.isi.uu.nl/bin/view/CADweb/TransformixMemoryBurden}
 \end{quote}
-
-\section{\transformix\ tutorial}
-
-a la the \elastix\ tutorial in the next chapter.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1222,7 +1302,7 @@ although the defaults will not work in all cases.
 
 \section{Important parameters}\label{sec:Tutorial:importantparam}
 
-In the same order as in Section \ref{sec:comp:metric} we discuss only
+In the same order as in Section \ref{sec:comp:metric} we discuss
 the important parameters for each component.
 
 \subsection{Registration}
@@ -1273,7 +1353,7 @@ generating the resulting deformed moving image:
 \texttt{(FinalBSplineInterpolationOrder 3)}
 \end{quote}
 
-\subsection{Transform}
+\subsection{Transform}\label{sec:transformtuning}
 
 This choice depends on the application at hand. For images of the
 same patient where you expect no nonrigid deformation, you can
@@ -1352,7 +1432,7 @@ of 8 voxels this is almost 100.000 parameters. The amount of
 parameters is directly related to memory consumption and registration
 time.
 
-\subsection{Optimiser}
+\subsection{Optimiser}\label{sec:optimizertuning}
 
 The \texttt{StandardGradientDescent} method, see Equations
 (\ref{eq:gd}) and (\ref{eq:gain}) offers the possibility to perform
