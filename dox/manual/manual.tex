@@ -70,9 +70,10 @@ treated. In Chapter~\ref{chp:elastix}, \elastix\ is described and its
 usage is explained. Chapter~\ref{chp:transformix} is dedicated to
 \transformix, a program accompanying \elastix. A tutorial is given in
 Chapter~\ref{chp:Tutorial}, including many recommendations based on
-the authors' own experiences. Chapter~\ref{chp:develop} provides more
-details about the source code and explains how to create extensions
-of \elastix.
+the authors' experiences.
+
+%Chapter~\ref{chp:develop} provides more details about the source code
+%and explains how to create extensions of \elastix.
 
 \section{Quick start}
 
@@ -175,8 +176,8 @@ parametric and nonparametric. The reader is referred to
 are not discussed in this manual. The \elastix\ software is based on
 the parametric approach. In parametric methods, the number of
 possible transformations is limited by introducing a parameterisation
-(model) of the transformation. The original optimisation problem
-becomes thus:
+(model) of the transformation. The original optimisation problem thus
+becomes:
 \begin{align}
 \hat\vTm &= \arg \min_{\vTm}
  \CC(\vTm ; I_F,I_M), \label{eq:towardsparametric}
@@ -318,7 +319,7 @@ of $I_F(\vx)$ and $I_M(\vT_{\vmu}(\vx))$, respectively.
 \item[Mutual Information (MI):] (\texttt{AdvancedMattesMutualInformationMetric}) For MI \citep{MaesEA97,ViolaEA97,MattesEA03} we
 use a definition given by \citet{ThevenazEA00a}:
 \begin{align}
- MI(\vmu; I_F, I_M) &=
+\mathrm{MI}(\vmu; I_F, I_M) &=
  \sum\limits_{m\in L_M} \sum\limits_{f\in L_F}
  p(f,m;\vmu) \log_2
  \left( \frac{ p(f,m;\vmu) }{ p_F(f) p_M(m;\vmu)  }
@@ -344,10 +345,28 @@ These follow directly from the grey-value ranges of $I_F$ and
 $I_M$ and the user-specified number of histogram bins $|L_F|$ and
 $|L_M|$.
 
-\item[Normalized Mutual Information (NMI):] (\texttt{NormalizedMutualInformationMetric}) //add description
-\cite{Stu99:NMI}
+\item[Normalized Mutual Information (NMI):]
+(\texttt{NormalizedMutualInformationMetric}) Where MI can be written
+as $\mathrm{MI} = H(I_F) + H(I_M) - H(I_F,I_M)$, NMI can be written
+as $\mathrm{NMI} = ( H(I_F) + H(I_M) ) / H(I_F,I_M)$
+\cite{Stu99:NMI}. Again with the use of B-spline Parzen windows it
+can be defined as:
+\begin{align}
+\mathrm{NMI}(\vmu; I_F, I_M) &=
+ \frac{\sum\limits_{m\in L_M} \sum\limits_{f\in L_F} p(f,m;\vmu) \log_2
+ \left( p_F(f) + p_M(m;\vmu) \right)}{ \sum\limits_{m\in L_M} \sum\limits_{f\in L_F}
+ p(f,m;\vmu) \log_2 \left( p(f,m;\vmu) \right) }. \label{eq:NMI}
+\end{align}
 
-\item[Kappa Statistic (KS):] (\texttt{AdvancedKappaStatisticMetric}) //add description
+\item[Kappa Statistic (KS):] (\texttt{AdvancedKappaStatisticMetric})
+KS is defined as:
+\begin{align}
+\mathrm{KS}(\vmu;I_F,I_M) &= \frac{ 2 \sum\limits_{\vx_i \in
+\Omega_F} \mathbf{1}_{I_F(\vx_i) > 0, I_M(\vT_{\vmu}(\vx_i)) >
+0}}{\sum\limits_{\vx_i \in \Omega_F} \mathbf{1}_{I_F(\vx_i) > 0} +
+\mathbf{1}_{I_M(\vT_{\vmu}(\vx_i)) > 0}}, \label{eq:KS}
+\end{align}
+where $\mathbf{1}$ is the indicator function.
 
 \end{description}
 
@@ -1480,11 +1499,11 @@ thoughts we think when tuning the registration.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Developers guide}\label{chp:develop}
-
-\section{Setup of the code}
-
-\section{Creating new modules}
+%\chapter{Developers guide}\label{chp:develop}
+%
+%\section{Setup of the code}
+%
+%\section{Creating new modules}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
