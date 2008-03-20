@@ -764,27 +764,46 @@ Section \ref{}
 
 \section{Evaluating registration}
 
+How do you know that your registration went well?
+
+This is a difficult problem. In general, you don't know for each
+voxel where it should map to. Here are some hints:
+
+\begin{itemize}
+\item The deformed moving image $I_M(\vT_{\vmu}(\vx))$ should
+look similar to the fixed image $I_F(\vx)$. So, compare images side
+by side in a viewer. You can also display the two images on top of
+each other with a checkerboard view or a dragable cross. Besides
+looking similar, also check that the deformed moving image has the
+same texture as the moving image. Sudden blurred areas in the
+deformed image may indicate that the deformation at that region is
+too large.
+
+\item For monomodal image data you can inspect the difference image.
+
+\item Check the deformation field by looking at the determinant of
+the Jacobian. Values smaller than 1 indicate local compression,
+values larger than 1 indicate local expansion, and 1 means volume
+preservation. If this value deviates substantially from 1, you may be
+worried (but maybe not if this is what you expect for your
+application). In case it is negative you have foldings in your
+transformation, and you definitely should be worried.
+
+\item To follow the registration success, compute for each iteration
+the exact metric value (and not an approximated value, when you do
+random sampling), and plot it. For example
+
+\item Compute the distance between manually clicked corresponding
+points. Ideally, the registration has found the same correspondence.
+
+\item Compute the overlap of segmented anatomical structures
+
+
+\end{itemize}
+
 How to follow the registration result through time? what are big
 steps, what are small steps.
 
-fixed, deformed moving
-
-\begin{itemize}
-\item Compare images side by side in a viewer. deformed should
-be similar to fixed. Also deformed image should have same texture as
-moving image, so no sudden blurred areas in deformed.
-
-\item Compute a difference image if monomodal
-
-\item Compute distance between manually clicked corresponding points
-
-\item Compute overlap of anatomical structures
-
-\item check deformation field by determinant of the Jacobian <1,1,>1
-
-\item show exact metric value, and plot it. For example with Matlab
-(give Matlab code)
-\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1087,30 +1106,45 @@ region).
 The transform parameter file can be manually edited or created as is
 convenient for the user. Multiple transformations are composed by
 iteratively supplying another transform parameter file with the
-\texttt{InitialTransformParametersFileName} tag.
+\texttt{InitialTransformParametersFileName} tag. The last
+transformation will be that where the initial transform parameter
+file name is set to \texttt{NoInitialTransform}.
 
-\section{Details}
+\section{Some details}
+
+\subsection{Run-time}
 
 The run-time of \transformix\ is built up of the following parts:
 
-1. computing the B-spline decomposition 2. computing the deformation
-for each voxel 3. interpolating the input image for each voxel.
+\begin{enumerate}
+\item Computing the B-spline decomposition (in case you selected the
+\texttt{FinalBSplineInterpolator});
 
-I'm not sure, but I guess step 2 is the most time-consuming task, in
-case of a B-spline deformation. For a nD B-spline deformation,
-computing the deformation vector at a voxel basically amounts to n
-interpolations.
+\item Computing the transformation for each voxel;
 
-Step 1. is avoided by using a linear interpolator of course.
+\item Interpolating the input image for each voxel.
+\end{enumerate}
+We have never performed tests to measure the computational complexity
+of each step, but we think that step 1 is the least time-consuming
+task. This step can obviously be avoided by using a linear
+interpolator. Step 2 is dependent on the choice of the
+transformation, where linear transformations, such as the rigid and
+affine transform, are substantially faster than nonlinear transforms,
+such as the B-spline transform. Step 3 depends on the specific
+interpolator. In order of increasing complexity: nearest neighbour,
+linear, 1st-order B-spline, 2nd-order B-spline, etc.
 
-Step 3 is faster when using linear interpolation instead of cubic
-interpolation. I don't know how much exactly.
+%[What is the complexity of FinalBSplineInterpolator? And of
+%FinalLinearInterpolator? In required operations per voxel. Is that
+%described in the docs, in some papers, or on the wiki?]
 
-What is the complexity of FinalBSplineInterpolator? And of
-FinalLinearInterpolator? In required operations per voxel. Is that
-described in the docs, in some papers, or on the wiki?
+\subsection{Memory consumption}
 
-Memory consumption, see the wiki
+For more information about memory consumption, see Section
+\ref{ssec:tut:memory} and also:
+\begin{quote}
+\url{https://wiki.isi.uu.nl/bin/view/CADweb/TransformixMemoryBurden}
+\end{quote}
 
 \section{\transformix\ tutorial}
 
@@ -1188,14 +1222,16 @@ range of your input images, but in our experience 32 is usually ok:
 
 \subsection{Sampler}
 
-The \texttt{RandomCoordinate} works well in conjunction with the
-\texttt{StandardGradientDescent} optimiser, which is the recommended
-optimisation routine. This optimisation method can be used with a
-small amount of samples, randomly selected in every iteration, see
-Section \ref{sec:comp:optimiser}, which significantly decreases
-registration time. Set the \texttt{NumberOfSpatialSamples} to 3000.
-Don't go lower than 2000. The \texttt{RandomCoordinate} sampler
-avoids what is known as the grid-effect [citations].
+The \texttt{RandomCoordinate} sampler works well in conjunction with
+the \texttt{StandardGradientDescent} optimiser, which is the
+recommended optimisation routine. This optimisation method can be
+used with a small amount of samples, randomly selected in every
+iteration, see Section \ref{sec:comp:optimiser}, which significantly
+decreases registration time. Set the \texttt{NumberOfSpatialSamples}
+to 3000. Don't go lower than 2000. Compared to samplers that draw
+samples on the voxel-grid (such as the \texttt{Random} sampler), the
+\texttt{RandomCoordinate} sampler avoids what is known as the
+grid-effect [citations].
 
 \subsection{Interpolator}
 
@@ -1205,8 +1241,8 @@ recommend this over the \texttt{LinearInterpolator}, since the
 \texttt{BSplineInterpolator} has a dedicated function to compute the
 derivative of the moving image.
 
-We recommend a third order B-spline interpolator for generating the
-resulting deformed moving image:
+We recommend a higher quality third order B-spline interpolator for
+generating the resulting deformed moving image:
 \begin{quote}
 \texttt{(ResampleInterpolator "FinalBSplineInterpolator")} \\
 \texttt{(FinalBSplineInterpolationOrder 3)}
@@ -1215,7 +1251,7 @@ resulting deformed moving image:
 \subsection{Transform}
 
 This choice depends on the application at hand. For images of the
-same patient where you expect no nonrigid deformation you can
+same patient where you expect no nonrigid deformation, you can
 consider a rigid transformation, i.e. choose the
 \texttt{EulerTransform}. If you want to compensate for differences in
 scale, consider the affine transformation: \texttt{AffineTransform}.
@@ -1273,7 +1309,10 @@ command:
 \texttt{(FinalGridSpacingInVoxels 8.0 8.0)} \\
 \texttt{(GridSpacingSchedule 6.0 6.0 4.0 4.0 2.5 2.5 1.0 1.0)}
 \end{quote}
-In case of 2D images, this schedule specifies a grid spacing of $6
+The \texttt{GridSpacingSchedule} defines the multiplication factors
+for all resolution levels. In combination with the final grid
+spacing, the grid spacing for all resolution levels is determined. In
+case of 2D images, the above schedule specifies a grid spacing of $6
 \times 8 = 48$ voxels in resolution level 0, via 32 and 20 voxels, to
 8 voxels in the final resolution level.
 
@@ -1329,6 +1368,21 @@ number of iterations
 which is not only the maximum, but also the minimum, since there is
 no other appropriate stopping condition for this optimiser.
 
+\begin{figure}
+\centering
+\subfigure[]{\includegraphics[width=4cm]{fixed.eps}}\label{sfig:stepsize:fixed}
+\subfigure[]{\includegraphics[width=4cm]{moving.eps}}\label{sfig:stepsize:moving} \\
+\subfigure[]{\includegraphics[width=4cm]{a320.eps}}\label{sfig:stepsize:a320}
+\subfigure[]{\includegraphics[width=4cm]{a3200.eps}}\label{sfig:stepsize:a3200}
+\subfigure[]{\includegraphics[width=4cm]{a32000.eps}}\label{sfig:stepsize:a32000}
+\caption{The effect of the choice of the step size $a$ (\texttt{SP\_A}).
+This example can be downloaded from the \elastix\ website. (a) the
+fixed image, (b) the moving image. (c)-(e) show the registered
+images, with (c) $a = 320$ is too small, (d) $a = 3200$ as in the
+downloadable example is good, (e) $a = 32000$ is too large.}
+\label{fig:stepsize}
+\end{figure}
+
 \subsection{Image pyramids}
 
 Use the \texttt{FixedSmoothingImagePyramid}, since it will not throw
@@ -1351,9 +1405,9 @@ blurred and more attention is paid to register large, dominant
 structures.
 
 The pyramid schedule defines the amount of blurring (and
-down-sampling in case a FixedRecursiveImagePyramid is used), in each
-direction $x,y,z$ and for each resolution level. It can be specified
-as follows:
+down-sampling in case a \texttt{FixedRecursiveImagePyramid} is used),
+in each direction $x,y,z$ and for each resolution level. It can be
+specified as follows:
 \begin{quote}
 \texttt{(NumberOfResolutions 4)} \\
 \texttt{(FixedImagePyramidSchedule 8 8 4 4 2 2 1 1)}
@@ -1372,21 +1426,64 @@ performed in the $z$-direction.
 
 \section{Masks}
 
-when you use masks you only perform registration on the part of the
-image that is within the masks.
+Sometimes you are specifically interested in aligning only a part of
+the image. A possibility to focus on this part is to crop the image.
+Cropping, however, restricts the region of interest (ROI) to be a
+square (2D) or cube (3D) only. If you need an irregular shaped ROI,
+you can use masks. A mask is a binary image, filled with 0's and 1's.
+If you use a mask, you only perform registration on the part of the
+image that is within the masks, i.e. where the mask has 1's.
 
-when to use masks
+You can/should use a mask
+\begin{itemize}
+\item when your image contains an artificial edge. The registration
+might be tempted to align these artificial edges, thereby neglecting
+the meaningful edges.
 
-when not to use masks
+\item when the image contains structures in the neighbourhood
+of your ROI that may influence the registration within your ROI. This
+is for example the case when matching lung data. Usually, you are
+interested in the lungs, and not if the rib cage is well aligned.
+However, the ribs are structures that for example in CT can have a
+strong influence on the similarity metric, especially if you use the
+SSD metric. In that case, the rib cage may be well aligned at the
+cost of vessels structures near the border of the lung with the rib
+cage. In this case it will help you if you use a dilated lung
+segmentation as a mask.
+\end{itemize}
 
-when to use erosion during multi-resolution and when not
+Masks can be used both for the fixed and the moving image. A fixed
+image mask is sufficient to focus the registration on a ROI, since
+samples are drawn from the fixed image. You only want to use a mask
+for the moving image, if your moving image contains nonsense near the
+ROI.
 
-Common errors when drawing samples from the fixed image with small
-mask.
+In case you are using a mask to prevent bad karma from an artificial
+edge, you also need to set the parameter:
+\begin{quote}
+\texttt{(ErodeMask "true")}
+\end{quote}
+If not, then when performing multi-resolution, information from the
+artificial edge will flow into you ROI due to the smoothing step. In
+case the edge around your ROI is meaningful, e.g. in the lung
+example, you should set it to false, because this edge will help to
+guide the registration.
 
-How does the use of masks influence your results
+A common exception that \elastix\ throws when drawing samples is:
+``Could not find enough image samples within reasonable time.
+Probably the mask is too small.'' This probable cause for this is
+that your fixed image mask is too small. See the FAQ for more
+information.
 
 \section{Trouble shooting}
+
+\subsection{Common errors}
+
+Some common sources of confusion and questions have been gathered in
+a FAQ, which can be found at
+\begin{quote}
+\url{www.isi.uu.nl/Elastix/FAQ.php}
+\end{quote}
 
 \subsection{Bad initial alignment}
 
@@ -1436,7 +1533,7 @@ lower than 1000.0.
 
 \end{itemize}
 
-\subsection{Memory consumption}
+\subsection{Memory consumption}\label{ssec:tut:memory}
 
 The typical size of clinical images increases as a function of time.
 Therefore, memory efficiency will become more of an issue. \elastix\
@@ -1481,20 +1578,10 @@ the registration.
 
 \end{itemize}
 
-
-\subsection{Common errors}
-
-Some common sources of confusion and questions have been gathered in
-a FAQ, which can be found at
-\begin{quote}
-\url{www.isi.uu.nl/Elastix/FAQ.php}
-\end{quote}
-
-
-\section{Example}
-
-Step-by-step example where we give a look into our head, what magical
-thoughts we think when tuning the registration.
+%\section{Example}
+%
+%Step-by-step example where we give a look into our head, what magical
+%thoughts we think when tuning the registration.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
