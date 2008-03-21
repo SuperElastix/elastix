@@ -70,7 +70,11 @@ treated. In Chapter~\ref{chp:elastix}, \elastix\ is described and its
 usage is explained. Chapter~\ref{chp:transformix} is dedicated to
 \transformix, a program accompanying \elastix. A tutorial is given in
 Chapter~\ref{chp:Tutorial}, including many recommendations based on
-the authors' experiences.
+the authors' experiences. In the Appendices \ref{chp:ExampleParam}
+and \ref{chp:ExampleTransformParam} example (transform) parameter
+files are given. Appendix \ref{chp:License} contains the software
+license and disclaimer under which \elastix\ is currently
+distributed.
 
 %Chapter~\ref{chp:develop} provides more details about the source code
 %and explains how to create extensions of \elastix.
@@ -111,6 +115,16 @@ for some common problems.
 \url{elastix@isi.uu.nl}.
 \end{itemize}
 
+\section{Acknowledgements}
+
+This manual has been written while the authors worked at the Image
+Sciences Institute (ISI, \url{www.isi.uu.nl}), Utrecht, The
+Netherlands. We thank the users of \elastix, whose questions and
+remarks helped improving the usability and documentation of \elastix.
+Specifically, we want to thank the following people for proofreading
+(parts of) this manual: Josien Pluim, Keelin Murphy, Martijn van der
+Bom, Sascha M\"{u}nzing, Jeroen de Bresser, Bram van Ginneken, Kajo
+van der Marel, Adri\"{e}nne Mendrik (in no specific order).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -296,7 +310,8 @@ literature. Some common choices are described below. Between brackets
 the name of the metric in \elastix\ is given:
 
 \begin{description}
-\item[Sum of Squared Differences (SSD):] (\texttt{AdvancedMeanSquaresMetric}) The SSD is defined as:
+\item[Sum of Squared Differences (SSD):] (\texttt{AdvancedMeanSquaresMetric})
+The SSD is defined as:
 \begin{align}
 \mathrm{SSD}(\vmu;I_F,I_M) &= \frac{1}{|\Omega_F|}
 \sum\limits_{\vx_i \in \Omega_F} \left( I_F(\vx_i) -
@@ -309,7 +324,8 @@ in the fixed image, taking $I_F(\vx_i)$, calculating
 $I_M(\vT_{\vmu}(\vx_i))$ by interpolation, and adding the squared
 difference to the sum.
 
-\item[Normalised Correlation Coefficient (NCC):] (\texttt{AdvancedNormalizedCorrelationMetric}) The NCC is defined as:
+\item[Normalised Correlation Coefficient (NCC):]
+(\texttt{AdvancedNormalizedCorrelationMetric}) The NCC is defined as:
 \begin{align}
 \mathrm{NCC}(\vmu;I_F,I_M) &= \frac{ \sum\limits_{\vx_i \in \Omega_F}
 \left( I_F(\vx_i) - \overline{I_F} \right) \left( I_M(\vTm(\vx_i)) -
@@ -324,8 +340,9 @@ $\overline{I_F}=\frac{1}{|\Omega_F|}\sum\limits_{\vx_i \in
 $\overline{I_M}=\frac{1}{|\Omega_F|}\sum\limits_{\vx_i \in
 \Omega_F} I_M(\vT_{\vmu}(\vx_i))$.
 
-\item[Mutual Information (MI):] (\texttt{AdvancedMattesMutualInformationMetric}) For MI \citep{MaesEA97,ViolaEA97,MattesEA03} we
-use a definition given by \citet{ThevenazEA00a}:
+\item[Mutual Information (MI):] (\texttt{AdvancedMattesMutualInformationMetric})
+For MI \citep{MaesEA97,ViolaEA97,MattesEA03} we use a definition
+given by \citet{ThevenazEA00a}:
 \begin{align}
 \mathrm{MI}(\vmu; I_F, I_M) &=
  \sum\limits_{m\in L_M} \sum\limits_{f\in L_F}
@@ -363,9 +380,13 @@ H(I_F,I_M)$. Again, with the joint probabilities defined by
 written as:
 \begin{align}
 \mathrm{NMI}(\vmu; I_F, I_M) &=
- \frac{\sum\limits_{m\in L_M} \sum\limits_{f\in L_F} p(f,m;\vmu) \log_2
+ \frac{\sum\limits_{f\in L_F} p_F(f)
+ \log_2 p_F(f) + \sum\limits_{m\in L_M} p_M(m;\vmu) \log_2 p_M(m;\vmu)}
+ { \sum\limits_{m\in L_M} \sum\limits_{f\in L_F}
+ p(f,m;\vmu) \log_2 p(f,m;\vmu)} \nonumber \\ \nonumber \\
+ &= \frac{\sum\limits_{m\in L_M} \sum\limits_{f\in L_F} p(f,m;\vmu) \log_2
  \left( p_F(f) p_M(m;\vmu) \right)}{ \sum\limits_{m\in L_M} \sum\limits_{f\in L_F}
- p(f,m;\vmu) \log_2 \left( p(f,m;\vmu) \right) }. \label{eq:NMI}
+ p(f,m;\vmu) \log_2 p(f,m;\vmu) }. \label{eq:NMI}
 \end{align}
 
 \item[Kappa Statistic (KS):] (\texttt{AdvancedKappaStatisticMetric})
@@ -466,14 +487,14 @@ linear interpolation ($N=1$) also fall in this category. See
 \citet{Unser99} for more details.
 \end{description}
 
-During registration a first-order B-spline interpolation, i.e.
-linear interpolation, often gives satisfactory results. It is a
-good trade-off between quality and speed. To generate the final
-result, i.e. the deformed result of the registration, a
-higher-order interpolation is usually required, for which we
-recommend $N=3$. The final result is generated in \elastix\ by a
-so-called resample interpolator. Any one of the above can be used,
-but you need to prepend the name with \texttt{Final}, for example:
+During registration a first-order B-spline interpolation, i.e. linear
+interpolation, often gives satisfactory results. It is a good
+trade-off between quality and speed. To generate the final result,
+i.e. the deformed result of the registration, a higher-order
+interpolation is usually required, for which we recommend $N=3$. The
+final result is generated in \elastix\ by a so-called
+\texttt{ResampleInterpolator}. Any one of the above can be used, but
+you need to prepend the name with \texttt{Final}, for example:
 \texttt{FinalLinearInterpolator}.
 
 \begin{figure}
@@ -1523,8 +1544,10 @@ parameter file:
 \begin{quote}
   \texttt{(HowToCombineTransforms "Compose")}
 \end{quote}
-
-By default, if this line is omitted,
+By default, if this line is omitted, \texttt{"Add"} is used for
+backwards compatibility. See Section \ref{sec:comp:transform},
+Equations (\ref{eq:addition}) and (\ref{eq:composition}) for
+explanation.
 
 \subsection{Optimiser}\label{sec:optimizertuning}
 
@@ -1618,18 +1641,16 @@ number of iterations:
 \begin{quote}
 \texttt{(MaximumNumberOfIterations 500)}
 \end{quote}
-which is, in the case of \texttt{StandardGradientDescent}, not
-only the maximum, but also the minimum, since there is no other
-stopping condition implemented for this optimiser. In general, the
-more iterations, the better the registration result. But, of
-course, more iterations take more time. A value of 500 is a good
-start. Use 2000 if computation time is not such an issue. You may
-try to go down to 200 iterations if you are in a hurry. For small
-2D images, and rigid registration, even less iterations may
-suffice. A side benefit of using more iterations is that a wider
-range of \texttt{SP\_a} gives good results. Tuning \texttt{SP\_a}
-becomes thus easier.
-
+which is, in the case of \texttt{StandardGradientDescent}, not only
+the maximum, but also the minimum, since there is no other stopping
+condition implemented for this optimiser. In general, the more
+iterations, the better the registration result. But, of course, more
+iterations take more time. A value of 500 is a good start. Use 2000
+if computation time is not such an issue. You may try to go down to
+200 iterations if you are in a hurry. For small 2D images, and rigid
+registration, even less iterations may suffice. A side benefit of
+using more iterations is that a wider range of \texttt{SP\_a} gives
+good results. Tuning \texttt{SP\_a} then becomes easier.
 
 \subsection{Image pyramids}\label{sec:pyramidtuning}
 
@@ -1839,6 +1860,12 @@ This option is useful both for \elastix\ and \transformix. However,
 for \elastix\ it will only save you some memory at the very end of
 the registration.
 
+\item Use downsampled images during the registration. This probably
+will not effect the registration accuracy too much. After
+registration you can apply the resulting transformation to the
+original full size moving image, using \transformix. See the FAQ for
+more information.
+
 \end{itemize}
 
 %\section{Example}
@@ -1925,7 +1952,8 @@ the registration.
 
 // ********** ImageSampler
 
-//Number of spatial samples used to compute the mutual information in each resolution level:
+// Number of spatial samples used to compute the
+// mutual information in each resolution level:
 (ImageSampler "RandomCoordinate")
 (NumberOfSpatialSamples 2048)
 (NewSamplesEveryIteration "true")
@@ -1977,6 +2005,57 @@ the registration.
 (ResultImageFormat "mhd")
 (ResultImagePixelType "short")
 \end{verbatim}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Software License} \label{chp:License}
+
+The software comes with a license. This is currently:
+
+\section*{Shareware License Agreement and Limited Warranty}
+
+This is a legal agreement between you, the "end user," and Stefan
+Klein and Marius Staring ("the authors"). Downloading of this
+shareware (the "SOFTWARE") indicates your acceptance of these terms.
+
+\section*{Copyright}
+
+The Software is owned by the authors (except where stated) and is
+protected by Dutch copyright laws and international treaty
+provisions.
+
+\section*{Grant Of License}
+
+The authors hereby grants the end user non-exclusive right to use one
+copy of the software by the end user personally on one or more
+computer(s). All other rights not expressly granted are reserved by
+the author.
+
+The end user may store one or more copies of the software offline, on
+secondary storage media (i.e. tape, diskette) for backup purposes.
+The end user may not charge or receive any consideration from any
+other person for the receipt or use of the Software without receiving
+the author's prior written consent. If the end user wish to include
+the Software as part of a "shareware compilation", please contact the
+authors for written consent. The end user may not: modify, translate,
+disassemble, decompile, reverse engineer, or create derivative works
+based upon the Software. The end user agrees to use his/her best
+efforts to see that any user of the Software licensed hereunder
+complies with this Agreement.
+
+\section*{Disclaimer}
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER AND CONTRIBUTORS
+``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
