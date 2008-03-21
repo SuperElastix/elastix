@@ -507,17 +507,17 @@ simply defined by $\vmu=\bm{t}$.
 \vTmx &= R (\vx - \bm{c}) + \bm{t} + \bm{c},
 \end{align}
 with the matrix $R$ a rotation matrix (i.e. orthonormal and
-proper), $\bm{c}$ the center of rotation, and $\bm{t}$ translation
+proper), $\bm{c}$ the centre of rotation, and $\bm{t}$ translation
 again. The image is treated as a rigid body, which can translate
 and rotate, but cannot be scaled/stretched. The rotation matrix is
 parameterised by the Euler angles (one in 2D, three in 3D). The
-parameter vector $\vmu$ consists of the Euler angles and the
-translation vector. In 2D, this gives a vector of length 3: $\vmu
-= (\theta_z, t_x, t_y)^T$, where $\theta_z$ denotes the rotation
-around the axis normal to the image. In 3D, this gives a vector of
-length 6: $\vmu = (\theta_x, \theta_y, \theta_z, t_x, t_y,
-t_z)^T$. The center of rotation is not part of $\vmu$; it is a
-fixed setting, usually the centre of the image.
+parameter vector $\vmu$ consists of the Euler angles (in rad) and
+the translation vector. In 2D, this gives a vector of length 3:
+$\vmu = (\theta_z, t_x, t_y)^T$, where $\theta_z$ denotes the
+rotation around the axis normal to the image. In 3D, this gives a
+vector of length 6: $\vmu = (\theta_x, \theta_y, \theta_z, t_x,
+t_y, t_z)^T$. The centre of rotation is not part of $\vmu$; it is
+a fixed setting, usually the centre of the image.
 
 \item[Similarity:] (\texttt{SimilarityTransform}) A similarity transformation is defined as
 \begin{align}
@@ -1219,6 +1219,19 @@ by iteratively supplying another transform parameter file with the
 transformation will be the one where the initial transform
 parameter file name is set to \texttt{"NoInitialTransform"}.
 
+An important parameter in the transform parameter files is the
+\texttt{FinalBplineInterpolationOrder}. Usually it is set to 3,
+because that produces the best quality result image after
+registration, see Sec~\ref{sec:interpolatortuning}. However, if
+you use \transformix\ to deform a \emph{segmentation} of the
+moving image (so, a binary image), you need to manually change the
+\texttt{FinalBplineInterpolationOrder} to 0. This will make sure
+that the deformed segmentation is still a binary label image. If
+third order interpolation is used, the deformed segmentation image
+will contain garbage. This is related to the
+``overshoot-property'' of higher-order B-spline interpolation.
+
+
 \section{Some details}
 
 \subsection{Run-time}
@@ -1260,11 +1273,32 @@ For more information about memory consumption, see Section
 \chapter{Tutorial}\label{chp:Tutorial}
 
 
-\section{General advice}
+\section{Selecting the registration components}
 
-When performing registration one carefully has to choose the several
-components, as specified in Chapter \ref{chp:Registration}. In Table
-\ref{table:tutorial:components} some recommendations are given.
+When performing registration one carefully has to choose the
+several components, as specified in Chapter
+\ref{chp:Registration}. The components must be specified in the
+parameter file. For example:
+\begin{quote}
+\texttt{(Transform "BSplineTransform")}\\
+\texttt{(Metric "AdvancedMattesMutualInformation")}\\
+$\ldots$
+\end{quote}
+
+In Table \ref{table:tutorial:components} a list of the components
+that need to be specified is given, with some recommendations. The
+``Registration'' component was not mentioned in
+Chapter~\ref{chp:Registration}. The registration component serves
+to connect all other components and implements the multiresolution
+aspect of registration. So, one may say that it actually
+implements the block scheme of
+Figure~\ref{fig:registrationcomponents}. Also the ``Resampler''
+component was not explicitly mentioned in
+Chapter~\ref{chp:Registration}. It simply serves to generate the
+deformed moving image after registration. Currently there is only
+one Resampler available in \elastix: the
+\texttt{DefaultResampler}. The component is therefore not further
+discussed.
 
 \begin{table}[htb]
 \centering
@@ -1276,6 +1310,7 @@ Metric       & \texttt{AdvancedMattesMutualInformation} \\
 Sampler      & \texttt{RandomCoordinate} \\
 Interpolator & \texttt{BSplineInterpolator} \\
 ResampleInterpolator & \texttt{FinalBSplineInterpolator} \\
+Resampler    & \texttt{DefaultResampler}\\
 Transform    & Depends on the application \\
 Optimizer    & \texttt{StandardGradientDescent} \\
 FixedImagePyramid   & \texttt{FixedSmoothingImagePyramid} \\
@@ -1283,6 +1318,8 @@ MovingImagePyramid  & \texttt{MovingSmoothingImagePyramid} \\
 \end{tabular}
 \caption{Some recommendations for the several components.}\label{table:tutorial:components}
 \end{table}
+
+
 
 \section{Overview of all parameters}
 
@@ -1303,15 +1340,17 @@ although the defaults will not work in all cases.
 \section{Important parameters}\label{sec:Tutorial:importantparam}
 
 In the same order as in Section \ref{sec:comp:metric} we discuss
-the important parameters for each component.
+the important parameters for each component and explain the
+recommendations made in Table~\ref{table:tutorial:components}.
 
-\subsection{Registration}
+\subsection{Registration}\label{sec:registrationtuning}
 
 Just use the \texttt{MultiResolutionRegistration} method, since
 multi-resolution is a good idea. And if you still think you don't
 need all this multi-resolution, you can always set the
 \texttt{NumberOfResolutions} to 1. You don't have to set anything
-else.
+else. Section~\ref{sec:pyramidtuning} discusses the number of
+resolutions in more detail.
 
 \subsection{Metric}
 
@@ -1325,26 +1364,63 @@ range of your input images, but in our experience 32 is usually ok:
 \texttt{(NumberOfHistogramBins 32)}
 \end{quote}
 
-\subsection{Sampler}
+\subsection{Sampler}\label{sec:samplertuning}
 
-The \texttt{RandomCoordinate} sampler works well in conjunction with
-the \texttt{StandardGradientDescent} optimiser, which is the
+The \texttt{RandomCoordinate} sampler works well in conjunction
+with the \texttt{StandardGradientDescent} optimiser, which is the
 recommended optimisation routine. This optimisation method can be
 used with a small amount of samples, randomly selected in every
-iteration, see Section \ref{sec:comp:optimiser}, which significantly
-decreases registration time. Set the \texttt{NumberOfSpatialSamples}
-to 3000. Don't go lower than 2000. Compared to samplers that draw
-samples on the voxel-grid (such as the \texttt{Random} sampler), the
-\texttt{RandomCoordinate} sampler avoids what is known as the
-grid-effect [citations].
+iteration, see Section \ref{sec:comp:optimiser}, which
+significantly decreases registration time. Set the
+\texttt{NumberOfSpatialSamples} to 3000. Don't go lower than 2000.
+Compared to samplers that draw samples on the voxel-grid (such as
+the \texttt{Random} sampler), the \texttt{RandomCoordinate}
+sampler avoids what is known as the grid-effect
+\citep{The08:Halton}.
 
-\subsection{Interpolator}
+An important option for the random samplers, discussed in
+Section~\ref{sec:optimizertuning} is:
+\begin{quote}
+  \texttt{(NewSamplesEveryIteration "true")}
+\end{quote}
+which enforces the selection of new samples in every iteration.
+
+An interesting option for the \texttt{RandomCoordinate} sampler is
+the \texttt{UseRandomSampleRegion} parameter, used in combination
+with the \texttt{SampleRegionSize} parameter. If
+\texttt{UseRandomSampleRegion} is set to \texttt{"false"} (the
+default), the sampler draws samples from the entire image domain.
+When set to \texttt{"true"}, the sampler randomly selects one
+voxel, and then selects the remaining samples in a square
+neighbourhood around that voxel. The size of the neighbourhood is
+determined by the \texttt{SampleRegionSize} (in physical
+coordinates). An example for 3D images:
+\begin{quote}
+  \texttt{(ImageSampler "RandomCoordinate")}\\
+  \texttt{(NewSamplesEveryIteration "true")}\\
+  \texttt{(UseRandomSampleRegion "true")}\\
+  \texttt{(SampleRegionSize 50.0 50.0 50.0)}\\
+  \texttt{(NumberOfSpatialSamples 2000)}\\
+\end{quote}
+In every iteration, a square region of $50^3$\,mm is randomly
+selected. In that region, 2000 samples are selected according to a
+uniform distribution. Effectively, a kind of \emph{localized}
+similarity measure is obtained, which sometimes gives better
+registration results. See \cite{Kle08:Automatic} for more
+information on this approach. For the sample region size a
+reasonable value to try is $\approx1/3$ of the image size.
+
+
+\subsection{Interpolator}\label{sec:interpolatortuning}
 
 During the registration, use the \texttt{BSplineInterpolator} with
-first order interpolation: \texttt{(BSplineInterpolationOrder 1)}. We
-recommend this over the \texttt{LinearInterpolator}, since the
-\texttt{BSplineInterpolator} has a dedicated function to compute the
-derivative of the moving image.
+first order interpolation:
+\begin{quote}
+\texttt{(BSplineInterpolationOrder 1)}
+\end{quote}
+We recommend this instead of the \texttt{LinearInterpolator},
+since the \texttt{BSplineInterpolator} has a dedicated function to
+compute the derivative of the moving image.
 
 We recommend a higher quality third order B-spline interpolator for
 generating the resulting deformed moving image:
@@ -1358,30 +1434,36 @@ generating the resulting deformed moving image:
 This choice depends on the application at hand. For images of the
 same patient where you expect no nonrigid deformation, you can
 consider a rigid transformation, i.e. choose the
-\texttt{EulerTransform}. If you want to compensate for differences in
-scale, consider the affine transformation: \texttt{AffineTransform}.
-These two transformations require a centre of rotation, which can be
-set by the user. By default the geometric centre of the fixed image
-is taken, which is recommended. Another parameter that needs to be
-set is the scales, see Section \ref{sec:comp:transform}. We recommend
-to let \elastix\ compute it automatically:
-\texttt{(AutomaticScalesEstimation "true")}. Always start with a
-rigid or affine transformation before doing a nonrigid one, to get a
-good initial alignment.
+\texttt{EulerTransform}. If you want to compensate for differences
+in scale, consider the affine transformation:
+\texttt{AffineTransform}. These two transformations require a
+centre of rotation, which can be set by the user. By default the
+geometric centre of the fixed image is taken, which is
+recommended. Another parameter that needs to be set is the
+\texttt{Scales}. The scales define for each element of the
+transformation parameters $\vmu$ a scaling value, which is used
+during optimisation. The scaling serves to bring the elements of
+$\vmu$ in the same range (parameters corresponding to rotation
+have in general a much smaller range than parameters corresponding
+to translation). We recommend to let \elastix\ compute it
+automatically: \texttt{(AutomaticScalesEstimation "true")}. Always
+start with a rigid or affine transformation before doing a
+nonrigid one, to get a good initial alignment.
 
 For nonrigid registration problems \elastix\ has the
 \texttt{BSplineTransform}. The B-spline nonrigid transformation is
-defined by a uniform grid of control points. This grid is defined by
-the spacing between the grid nodes. The spacing defines how dense the
-grid is, or what the locality is of the transformation you can model.
-For each resolution level you can define a different grid spacing.
-This is what we call multi-grid. In general, we recommend to start
-with a coarse B-spline grid, i.e. a more global transformation. This
-way first the larger structures are matched, for the same reason as
-why you should start with a rigid or affine transformation. In later
-resolutions you can refine the transformation in a stepwise fashion;
-the idea is that you subsequently match smaller structures, up to the
-final precision. The final grid spacing is specified with:
+defined by a uniform grid of control points. This grid is defined
+by the spacing between the grid nodes. The spacing defines how
+dense the grid is, or what the locality is of the transformation
+you can model. For each resolution level you can define a
+different grid spacing. This is what we call multi-grid. In
+general, we recommend to start with a coarse B-spline grid, i.e. a
+more global transformation. This way the larger structures are
+matched first, for the same reason as why you should start with a
+rigid or affine transformation. In later resolutions you can
+refine the transformation in a stepwise fashion; the idea is that
+you subsequently match smaller structures, up to the final
+precision. The final grid spacing is specified with:
 \begin{quote}
 \texttt{(FinalGridSpacingInPhysicalUnits 10.0 10.0 10.0)}
 \end{quote}
@@ -1394,18 +1476,19 @@ also possible to specify the grid in voxel units:
 If the final B-spline grid spacing is chosen high, then you cannot
 match small structures. On the other hand, if the grid spacing is
 chosen very low, then small structures can be matched, but you
-possibly allow the transformation too have too much freedom. This can
-result in irregular transformations, especially on homogenous parts
-of your image, since there are no edges (or other information) at
-such areas that can guide the registration. A penalty or
-regularisation term, see Equation (\ref{eq:registration2}), can help
-to avoid these problems. It is hard to recommend a value for the
-final grid spacing, since it depends on the desired accuracy. But we
-can try: if you are interested in somewhat larger structures, you
-could set it too 32 voxels, for matching smaller structures you could
-go down to 16 or 8 voxels, or even up to 4. The last choice will
-maybe require some regularisation term, unless maybe if you have
-carefully and gradually refined the grid spacing.
+possibly allow the transformation to have too much freedom. This
+can result in irregular transformations, especially on homogenous
+parts of your image, since there are no edges (or other
+information) at such areas that can guide the registration. A
+penalty or regularisation term, see Equation
+(\ref{eq:registration2}), can help to avoid these problems. It is
+hard to recommend a value for the final grid spacing, since it
+depends on the desired accuracy. But we can try: if you are
+interested in somewhat larger structures, you could set it too 32
+voxels, for matching smaller structures you could go down to 16 or
+8 voxels, or even up to 4. The last choice will maybe require some
+regularisation term, unless maybe if you have carefully and
+gradually refined the grid spacing.
 
 To specify a multi-grid schedule use the \texttt{GridSpacingSchedule}
 command:
@@ -1414,12 +1497,15 @@ command:
 \texttt{(FinalGridSpacingInVoxels 8.0 8.0)} \\
 \texttt{(GridSpacingSchedule 6.0 6.0 4.0 4.0 2.5 2.5 1.0 1.0)}
 \end{quote}
-The \texttt{GridSpacingSchedule} defines the multiplication factors
-for all resolution levels. In combination with the final grid
-spacing, the grid spacing for all resolution levels is determined. In
-case of 2D images, the above schedule specifies a grid spacing of $6
-\times 8 = 48$ voxels in resolution level 0, via 32 and 20 voxels, to
-8 voxels in the final resolution level.
+The \texttt{GridSpacingSchedule} defines the multiplication
+factors for all resolution levels. In combination with the final
+grid spacing, the grid spacing for all resolution levels is
+determined. In case of 2D images, the above schedule specifies a
+grid spacing of $6 \times 8 = 48$ voxels in resolution level 0,
+via 32 and 20 voxels, to 8 voxels in the final resolution level.
+The default value for the \texttt{GridSpacingSchedule} uses a
+powers-of-2 scheme: \texttt{(GridSpacingSchedule 8.0 8.0 4.0 4.0
+2.0 2.0 1.0 1.0)} (for 2D images).
 
 As a side-note: the number of parameters that are minimised in
 (\ref{eq:registration1}) is determined by the size of $\vmu$, i.e. in
@@ -1432,47 +1518,60 @@ of 8 voxels this is almost 100.000 parameters. The amount of
 parameters is directly related to memory consumption and registration
 time.
 
+Lastly, it is wise to include the following line in every
+parameter file:
+\begin{quote}
+  \texttt{(HowToCombineTransforms "Compose")}
+\end{quote}
+
+By default, if this line is omitted,
+
 \subsection{Optimiser}\label{sec:optimizertuning}
 
 The \texttt{StandardGradientDescent} method, see Equations
-(\ref{eq:gd}) and (\ref{eq:gain}) offers the possibility to perform
-fast registration, see \cite{KleinEA07}. The problem is to tune the
-parameters of the gain factor $a_k$, see Section
-\ref{sec:Tutorial:importantparam}. Equation (\ref{eq:RM}) needs a
-choice for the step size $a_k$, which is in \elastix\ defined as in
-Equation (\ref{eq:gain}). For the parameter $\alpha$ we recommend the
-value 0.602. For $A$, use something in the order of 50. This leaves
-the parameter $a$ as the most important parameter to tune. And it is
-an important parameter, it can mean success for a good choice and
-failure if not! If $a$ is set too high, the iterative solving
-algorithm (\ref{eq:RM}) becomes unstable, and you may deform your
-image beyond recognition. If $a$ is set too low, you will never make
-it to the optimum, or may get stuck in a very small nearby local
-optimum. Too complicate things further, a good choice for $a$ is
-dependent on the cost function that is used for registration: the $a$
-that will give you a good result for SSD is not the same as the one
-that gives a good result for MI. Finally, $a$ also depends on the
-amount of deformation that you expect between the fixed and the
-moving image. So again, recommendations are hard to give. In general
-we advise you to think in orders of magnitude, if $a = 10$ is too
-small, try $a = 100$ and not $a = 11$. For mutual information you
-could start around $a = 1000.0$. For the mean squared difference
-metric you could try something smaller than 1 ???
+(\ref{eq:gd}) and (\ref{eq:gain}) offers the possibility to
+perform fast registration, see \cite{KleinEA07}. The key idea is
+that you use a random subset of voxels (samples), newly selected
+in each iteration, to compute the cost function derivatives. The
+number of samples to use is specified using the parameter
+\texttt{NumberOfSpatialSamples}, see
+Section~\ref{sec:samplertuning}. Typically, 2000-5000 is enough.
+It is important to tell the optimiser to select new samples in
+every iteration:
 \begin{quote}
-\texttt{(SP\_a 1000.0 500.0 500.0)} \\
-\texttt{(SP\_alpha 0.602)} \\
+  \texttt{(NewSamplesEveryIteration "true")}
+\end{quote}
+
+A downside of the \texttt{StandardGradientDescent} method is that
+you need to tune the parameters of the gain factor $a_k$, see
+Section \ref{sec:Tutorial:importantparam}. Equation (\ref{eq:RM})
+needs a choice for the step size $a_k$, which is in \elastix\
+defined as in Equation (\ref{eq:gain}). Figure~\ref{fig:stepsize}
+gives some examples.
+
+\begin{figure}
+\centering \psfrag{k}[tc][tc]{$k$} \psfrag{ak}[tc][tc]{$a_k$}
+\includegraphics[width=8cm]{ak.eps}
+\caption{Sequence 1: $a = 1000$, $A = 50$, $\alpha = 0.602$.
+Sequence 2: $a = 400$, $A = 10$, $\alpha = 0.602$. Both sequences
+start with the same step size, but sequence 2 decays much
+faster.}\label{fig:ak}
+\end{figure}
+The parameters $\alpha$ and $A$ define the decay slope of the
+function. For the parameter $\alpha$ we recommend the value 0.6.
+For $A$, use something in the order of 50:
+\begin{quote}
+\texttt{(SP\_alpha 0.6)} \\
 \texttt{(SP\_A 50.0)}
 \end{quote}
-$a$ equally large for every resolution level? or start with large
-steps end with small steps?
-
-number of iterations
-\begin{quote}
-\texttt{(MaximumNumberOfIterations 500)}
-\end{quote}
-which is not only the maximum, but also the minimum, since there is
-no other appropriate stopping condition for this optimiser.
-
+This leaves the parameter $a$, called \texttt{SP\_a} in \elastix,
+as the most important parameter to tune. And it is an important
+parameter, it can mean success for a good choice and failure if
+not! If $a$ is set too high, the iterative solving algorithm
+(\ref{eq:RM}) becomes unstable, and you may deform your image
+beyond recognition. If $a$ is set too low, you will never make it
+to the optimum, or may get stuck in a very small nearby local
+optimum. Figure~\ref{fig:stepsize} illustrates this.
 \begin{figure}
 \centering
 \subfigure[]{\includegraphics[width=4cm]{fixed.eps}}\label{sfig:stepsize:fixed}
@@ -1480,28 +1579,76 @@ no other appropriate stopping condition for this optimiser.
 \subfigure[]{\includegraphics[width=4cm]{a320.eps}}\label{sfig:stepsize:a320}
 \subfigure[]{\includegraphics[width=4cm]{a3200.eps}}\label{sfig:stepsize:a3200}
 \subfigure[]{\includegraphics[width=4cm]{a32000.eps}}\label{sfig:stepsize:a32000}
-\caption{The effect of the choice of the step size $a$ (\texttt{SP\_A}).
-This example can be downloaded from the \elastix\ website. (a) the
-fixed image, (b) the moving image. (c)-(e) show the registered
-images, with (c) $a = 320$ is too small, (d) $a = 3200$ as in the
-downloadable example is good, (e) $a = 32000$ is too large.}
-\label{fig:stepsize}
+\caption{The effect of the choice of the step size $a$
+(\texttt{SP\_A}). This example can be downloaded from the
+\elastix\ website. (a) the fixed image, (b) the moving image.
+(c)-(e) show the registered images, with (c) $a = 320$ is too
+small, (d) $a = 3200$ as in the downloadable example is good, (e)
+$a = 32000$ is too large.} \label{fig:stepsize}
 \end{figure}
+A good choice for $a$ is dependent on the cost function that is
+used for registration: the $a$ that will give you a good result
+for SSD is not the same as the one that gives a good result for
+MI. Finally, $a$ also depends on the amount of deformation that
+you expect between the fixed and the moving image. So again,
+recommendations are hard to give. In general we advise you to
+think in orders of magnitude, if $a = 10$ is too small, try $a =
+100$ and not $a = 11$. For mutual information, normalised
+correlation coefficient, and normalised mutual information, you
+could start around $a = 1000.0$. For the mean squared difference
+metric you could try something smaller than 1. If $a$ is chosen
+way too big, you may encounter the error message ``Too many
+samples map outside moving image buffer''. This error may have
+other causes as well though. The FAQ at the \elastix\ website
+gives more information on this error message.
 
-\subsection{Image pyramids}
+For every resolution you could specify a different value of
+\texttt{SP\_a}, but it might be easier to start with the same
+value for every resolution.
+\begin{quote}
+\texttt{(SP\_a 1000.0 1000.0 1000.0)}
+\end{quote}
+or, equivalently:
+\begin{quote}
+\texttt{(SP\_a 1000.0)}
+\end{quote}
 
-Use the \texttt{FixedSmoothingImagePyramid}, since it will not throw
-away valuable information, and since you are not using the
-\texttt{FullSampler} anyway down-sampling will not save you any time.
-Two parameters have to be set to define the multi-resolution
+The last important option related to the optimiser is the maximum
+number of iterations:
+\begin{quote}
+\texttt{(MaximumNumberOfIterations 500)}
+\end{quote}
+which is, in the case of \texttt{StandardGradientDescent}, not
+only the maximum, but also the minimum, since there is no other
+stopping condition implemented for this optimiser. In general, the
+more iterations, the better the registration result. But, of
+course, more iterations take more time. A value of 500 is a good
+start. Use 2000 if computation time is not such an issue. You may
+try to go down to 200 iterations if you are in a hurry. For small
+2D images, and rigid registration, even less iterations may
+suffice. A side benefit of using more iterations is that a wider
+range of \texttt{SP\_a} gives good results. Tuning \texttt{SP\_a}
+becomes thus easier.
+
+
+\subsection{Image pyramids}\label{sec:pyramidtuning}
+
+The \texttt{FixedImagePyramid} and the \texttt{MovingImagePyramid}
+have identical options. What is said below about the
+FixedImagePyramid works similarly for the MovingImagePyramid.
+
+Use the \texttt{FixedSmoothingImagePyramid}, since it will not
+throw away valuable information, and since you are not using the
+\texttt{FullSampler} anyway, down-sampling will not save you any
+time. Two parameters have to be set to define the multi-resolution
 strategy: the number of resolutions (\texttt{NumberOfResolutions})
 and the specific down-sampling schedule that is used in each
-resolution (\texttt{FixedImageSchedule}). If you only set the
-\texttt{NumberOfResolutions}, a default schedule will be used that
-smoothes the fixed image by a factor of 2 in each dimension, starting
-from $\sigma = 0.5$ in the last resolution. That schedule is usually
-fine. In case you have highly anisotropic data, you might want to
-blur less in the direction of the largest spacing.
+resolution (\texttt{FixedImagePyramidSchedule}). If you only set
+the \texttt{NumberOfResolutions}, a default schedule will be used
+that smoothes the fixed image by a factor of 2 in each dimension,
+starting from $\sigma = 0.5$ in the last resolution. That schedule
+is usually fine. In case you have highly anisotropic data, you
+might want to blur less in the direction of the largest spacing.
 
 In general 3 resolutions is a good starting point. If the fixed and
 moving image are initially far away, you can increase the number of
@@ -1517,12 +1664,13 @@ specified as follows:
 \texttt{(NumberOfResolutions 4)} \\
 \texttt{(FixedImagePyramidSchedule 8 8 4 4 2 2 1 1)}
 \end{quote}
-In this example 4 resolutions for a 2D image are used. At resolution
-level 0 the image is blurred with $\sigma = 8/2$ voxels in each
-direction (always halved). At level 1 $\sigma = 4/2$ is used, and
-finally at the last level, level 4, the original images are used for
-registration. Specifying the fixed and moving image pyramids with an
-identical schedule can be done with one command:
+In this example 4 resolutions for a 2D image are used. At
+resolution level 0 the image is blurred with $\sigma = 8/2$ voxels
+in each direction ($\sigma$ is half the pyramid schedule value).
+At level 1 $\sigma = 4/2$ is used, and finally at the last level,
+level 4, the original images are used for registration. Specifying
+the fixed and moving image pyramids with an identical schedule can
+be done with one command:
 \begin{quote}
 \texttt{(ImagePyramidSchedule 4 4 2 2 2 1 1 1 1)}
 \end{quote}
@@ -1542,8 +1690,9 @@ image that is within the masks, i.e. where the mask has 1's.
 You can/should use a mask
 \begin{itemize}
 \item when your image contains an artificial edge. The registration
-might be tempted to align these artificial edges, thereby neglecting
-the meaningful edges.
+might be tempted to align these artificial edges, thereby
+neglecting the meaningful edges. The conic beam edge in ultrasound
+images is an example of such an artificial edge.
 
 \item when the image contains structures in the neighbourhood
 of your ROI that may influence the registration within your ROI. This
@@ -1559,9 +1708,9 @@ segmentation as a mask.
 
 Masks can be used both for the fixed and the moving image. A fixed
 image mask is sufficient to focus the registration on a ROI, since
-samples are drawn from the fixed image. You only want to use a mask
-for the moving image, if your moving image contains nonsense near the
-ROI.
+samples are drawn from the fixed image. You only want to use a
+mask for the moving image when your moving image contains nonsense
+grey values near the ROI.
 
 In case you are using a mask to prevent bad karma from an artificial
 edge, you also need to set the parameter:
@@ -1592,29 +1741,32 @@ a FAQ, which can be found at
 
 \subsection{Bad initial alignment}
 
-\begin{figure}
-\centering \psfrag{k}[tc][tc]{$k$} \psfrag{ak}[tc][tc]{$a_k$}
-\includegraphics[width=8cm]{ak.eps}
-\caption{Sequence 1: $a = 1000$, $A = 50$, $\alpha = 0.602$.
-Sequence 2: $a = 400$, $A = 10$, $\alpha = 0.602$. Both sequences
-start with the same step size, but sequence 2 decays much
-faster.}\label{fig:ak}
-\end{figure}
 
 When the initial alignment between two images is very off, you cannot
 start a nonrigid registration. And sometimes it can be a hassle to
 get it right. What factors can help to get it right?
 
 \begin{itemize}
-\item So you choose a transformation with a low degree of freedom,
+\item Start with a transformation with a low degree of freedom,
 i.e. the translation, rigid, similarity or affine transform.
+Sometimes the images are really far off, and have no overlap to
+begin with (NB: the position of images in physical space is
+determined by the origin and voxel spacing; see
+Section~\ref{sec:comp:image}). A solution is then to add the
+following line to your parameter file:
+\begin{quote}
+  \texttt{(AutomaticTransformInitialization "true")}
+\end{quote}
+which aligns the centres of the fixed and moving image.
 
 \item You need a good multi-resolution strategy, i.e.
 quite a bit of resolution levels. This way a lot of smoothing is
 going on, blurring away all the details and thereby focussing the
 registration on the major structures.
 
-\item You can afford to take large steps now, so do it. Set the
+\item Use more iterations.
+
+\item Take larger steps. Set the
 parameter $a$ so high that the translation component of the
 transformation takes a step of several voxels in each iteration, up
 to 10. Maybe it will work, and in that case you will get alignment
@@ -1625,16 +1777,19 @@ fast. This can be achieved by setting both $a$ and $A$ a bit lower,
 see Figure \ref{fig:ak}.
 
 \item In case you need to find a large rotation, you might want to
-take larger steps for the rotation, but not for the translation. This
-can be achieved by modifying the scales parameter, see Section ???:
+take larger steps for the rotation, but not for the translation.
+This can be achieved by modifying the scales parameter, see
+Section \ref{sec:transformtuning}:
 \begin{quote}
 \texttt{(Scales 10000.0)}
 \end{quote}
-You can set it lower to take larger rotation steps. If it is set to
-1.0 you take as large steps for the rotation as for the translation
-(but the rotation is defined in radials). If you set it really high
-($> 10^6$) you won't rotate at all. You probably don't need to go
-lower than 1000.0.
+You can set it lower to take larger rotation steps. If it is set
+to 1.0 you take as large steps for the rotation as for the
+translation (but the rotation is defined in radials). If you set
+it really high ($> 10^6$) you won't rotate at all. You probably
+don't need to go lower than 1000.0. Note that the
+\texttt{AutomaticScalesEstimation} option usually works fine, so
+specifying \texttt{Scales} is not necessary.
 
 \end{itemize}
 
@@ -1670,8 +1825,11 @@ double type. You can also specify a float version:
 \begin{quote}
 \texttt{(Interpolator "BSplineInterpolatorFloat")}
 \end{quote}
-which saves you another bit of memory the size of a short image. This
-option is useful for \elastix\ only.
+which saves you another bit of memory the size of a short image.
+This option is useful for \elastix\ only. To save even more
+memory, use the \texttt{LinearInterpolator}. This may change the
+results a little though, because of its different method to
+compute image derivatives.
 
 \item Change the interpolator that is used when resampling an image:
 \begin{quote}
