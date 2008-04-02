@@ -65,7 +65,6 @@ namespace itk
       MetricError,
       MinimumStepSize } StopConditionType;
 
-
     /** Advance one step following the gradient direction. */
     virtual void AdvanceOneStep( void );
 
@@ -75,6 +74,9 @@ namespace itk
     /** Resume previously stopped optimization with current parameters
     * \sa StopOptimization. */
     virtual void ResumeOptimization( void );
+
+    /** Stop optimisation and pass on exception. */
+    virtual void MetricErrorResponse( ExceptionObject & err );
 
     /** Stop optimization.
     * \sa ResumeOptimization */

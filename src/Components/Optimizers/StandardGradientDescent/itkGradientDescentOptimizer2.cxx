@@ -81,7 +81,7 @@ namespace itk
 
 
   /**
-  * ************************ Resume the optimization *************
+  * ************************ ResumeOptimization *************
   */
 
   void
@@ -101,34 +101,28 @@ namespace itk
         this->GetScaledValueAndDerivative( 
           this->GetScaledCurrentPosition(), m_Value, m_Gradient );
       }
-      catch( ExceptionObject& err )
+      catch ( ExceptionObject& err )
       {
-        // An exception has occurred. 
-        // Terminate immediately.
-        this->m_StopCondition = MetricError;
-        this->StopOptimization();
-
-        // Pass exception to caller
-        throw err;
+        this->MetricErrorResponse( err );
       }
 
-      /** StopOptimization may have been called */
-      if( this->m_Stop )
+      /** StopOptimization may have been called. */
+      if ( this->m_Stop )
       {
         break;
       }
 
       this->AdvanceOneStep();
 
-      /** StopOptimization may have been called */
-      if( this->m_Stop )
+      /** StopOptimization may have been called. */
+      if ( this->m_Stop )
       {
         break;
       }
 
       this->m_CurrentIteration++;
 
-      if( m_CurrentIteration >= m_NumberOfIterations )
+      if ( m_CurrentIteration >= m_NumberOfIterations )
       {
         this->m_StopCondition = MaximumNumberOfIterations;
         this->StopOptimization();
@@ -137,7 +131,25 @@ namespace itk
 
     } // end while
 
-  } // end ResumeOptimization
+  } // end ResumeOptimization()
+
+
+ /**
+  * ***************** MetricErrorResponse ************************
+  */
+
+  void
+    GradientDescentOptimizer2
+    ::MetricErrorResponse( ExceptionObject & err )
+  {
+    /** An exception has occurred. Terminate immediately. */
+    this->m_StopCondition = MetricError;
+    this->StopOptimization();
+
+    /** Pass exception to caller. */
+    throw err;
+
+  } // end MetricErrorResponse()
 
 
   /**

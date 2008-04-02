@@ -86,22 +86,22 @@ namespace itk
 
     /** Sets a new LearningRate before calling the Superclass'
     * implementation, and updates the current time. */
-    virtual void AdvanceOneStep(void);
+    virtual void AdvanceOneStep( void );
 
     /** Set current time to 0 and call superclass' implementation. */
-    virtual void StartOptimization(void);
+    virtual void StartOptimization( void );
 
     /** Set/Get the initial time. Should be >=0. This function is
     * superfluous, since Param_A does effectively the same. 
     * However, in inheriting classes, like the AcceleratedGradientDescent
     * the initial time may have a different function than Param_A.  
     * Default: 0.0 */     
-    itkSetMacro(InitialTime, double);
-    itkGetConstMacro(InitialTime, double);
+    itkSetMacro( InitialTime, double );
+    itkGetConstMacro( InitialTime, double );
 
     /** Get the current time. This equals the CurrentIteration in this base class
      * but may be different in inheriting classes, such as the AccelerateGradientDescent */
-    itkGetConstMacro(CurrentTime, double);
+    itkGetConstMacro( CurrentTime, double );
 
   protected:
 

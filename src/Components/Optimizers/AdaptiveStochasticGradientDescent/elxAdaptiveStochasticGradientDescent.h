@@ -39,6 +39,11 @@ namespace elastix
   *    Default/recommended value: 500. When you are in a hurry, you may go down to 250 for example.
   *    When you have plenty of time, and want to be absolutely sure of the best results, a setting
   *    of 2000 is reasonable. In general, 500 gives satisfactory results.
+  * \parameter MaximumNumberOfSamplingAttempts: The maximum number of sampling attempts. Sometimes
+  *   not enough corresponding samples can be drawn, upon which an exception is thrown. With this
+  *   parameter it is possible to try to draw another set of samples. \n
+  *   example: <tt>(MaximumNumberOfSamplingAttempts 10 15 10)</tt> \n
+  *    Default value: 0, i.e. just fail immediately, for backward compatibility.
   * \parameter AutomaticParameterEstimation: When this parameter is set to "true",
   *   many other parameters are calculated automatically: SP_a, SP_alpha, SigmoidMax,
   *   SigmoidMin, and SigmoidScale. In the elastix.log file the actually chosen values for
@@ -187,20 +192,23 @@ namespace elastix
 
     /** Methods invoked by elastix, in which parameters can be set and 
     * progress information can be printed. */
-    virtual void BeforeRegistration(void);
-    virtual void BeforeEachResolution(void);
-    virtual void AfterEachResolution(void);
-    virtual void AfterEachIteration(void);
-    virtual void AfterRegistration(void);   
+    virtual void BeforeRegistration( void );
+    virtual void BeforeEachResolution( void );
+    virtual void AfterEachResolution( void );
+    virtual void AfterEachIteration( void );
+    virtual void AfterRegistration( void );   
 
     /** Check if any scales are set, and set the UseScales flag on or off; 
     * after that call the superclass' implementation */
-    virtual void StartOptimization(void);
+    virtual void StartOptimization( void );
 
     /** If automatic gain estimation is desired, then estimate SP_a, SP_alpha
     * SigmoidScale, SigmoidMax, SigmoidMin.
     * After that call Superclass' implementation.  */
-    virtual void ResumeOptimization(void);
+    virtual void ResumeOptimization( void );
+
+    /** Stop optimisation and pass on exception. */
+    virtual void MetricErrorResponse( ExceptionObject & err );
 
     /** Set/Get whether automatic parameter estimation is desired. 
     * If true, make sure to set the maximum step length.
@@ -216,6 +224,12 @@ namespace elastix
     /** Set/Get maximum step length */
     itkSetMacro( MaximumStepLength, double );
     itkGetConstMacro( MaximumStepLength, double );
+
+    /** Set the MaximumNumberOfSamplingAttempts. */
+    itkSetMacro( MaximumNumberOfSamplingAttempts, unsigned long );
+
+    /** Get the MaximumNumberOfSamplingAttempts. */
+    itkGetConstReferenceMacro( MaximumNumberOfSamplingAttempts, unsigned long );
 
   protected:
 
@@ -413,6 +427,11 @@ namespace elastix
     * EvaluateBSplineTransformJacobian method. */
     mutable TransformJacobianType m_InternalTransformJacobian;
 
+    /** Private variables for the sampling attempts. */
+    unsigned long m_MaximumNumberOfSamplingAttempts;
+    unsigned long m_CurrentNumberOfSamplingAttempts;
+    unsigned long m_PreviousErrorAtIteration;
+    bool          m_AutomaticParameterEstimationDone;
 
   }; // end class AdaptiveStochasticGradientDescent
 

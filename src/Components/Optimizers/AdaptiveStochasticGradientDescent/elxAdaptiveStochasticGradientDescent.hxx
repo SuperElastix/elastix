@@ -25,6 +25,11 @@ namespace elastix
     AdaptiveStochasticGradientDescent<TElastix>::
     AdaptiveStochasticGradientDescent()
   {
+    this->m_MaximumNumberOfSamplingAttempts = 0;
+    this->m_CurrentNumberOfSamplingAttempts = 0;
+    this->m_PreviousErrorAtIteration = 0;
+    this->m_AutomaticParameterEstimationDone = false;
+
     this->m_AutomaticParameterEstimation = false;
     this->m_MaximumStepLength = 1.0;
 
@@ -98,6 +103,12 @@ namespace elastix
     double A = 20.0;
     this->GetConfiguration()->ReadParameter(A, "SP_A", this->GetComponentLabel(), level, 0 );
     this->SetParam_A( A );
+
+    /** Set the MaximumNumberOfSamplingAttempts. */
+		unsigned int maximumNumberOfSamplingAttempts = 0;
+		this->GetConfiguration()->ReadParameter( maximumNumberOfSamplingAttempts,
+      "MaximumNumberOfSamplingAttempts", this->GetComponentLabel(), level, 0 );
+		this->SetMaximumNumberOfSamplingAttempts( maximumNumberOfSamplingAttempts );
     
     /** Set/Get the initial time. Default: 0.0. Should be >=0. */     
     double initialTime = 0.0;
@@ -340,7 +351,6 @@ namespace elastix
     ::StartOptimization(void)
   {
     /** Check if the entered scales are correct and != [ 1 1 1 ...] */
-
     this->SetUseScales(false);
     const ScalesType & scales = this->GetScales();
     if ( scales.GetSize() == this->GetInitialPosition().GetSize() )
@@ -354,6 +364,8 @@ namespace elastix
       }
     }
 
+    this->m_AutomaticParameterEstimationDone = false;
+
     this->Superclass1::StartOptimization();
 
   } //end StartOptimization
@@ -365,16 +377,51 @@ namespace elastix
 
   template <class TElastix>
     void AdaptiveStochasticGradientDescent<TElastix>
-    ::ResumeOptimization(void)
+    ::ResumeOptimization( void )
   {
-    if ( this->GetAutomaticParameterEstimation() )
+    if ( this->GetAutomaticParameterEstimation()
+      && !this->m_AutomaticParameterEstimationDone )
     {
       this->AutomaticParameterEstimation();
+      // hack
+      this->m_AutomaticParameterEstimationDone = true;
     }
 
     this->Superclass1::ResumeOptimization();
 
-  } //end ResumeOptimization
+  } // end ResumeOptimization()
+
+
+  /**
+   * ****************** MetricErrorResponse *************************
+   */
+
+  template <class TElastix>
+    void AdaptiveStochasticGradientDescent<TElastix>
+    ::MetricErrorResponse( ExceptionObject & err )
+	{
+    if ( this->GetCurrentIteration() != this->m_PreviousErrorAtIteration )
+    {
+      this->m_PreviousErrorAtIteration = this->GetCurrentIteration();
+      this->m_CurrentNumberOfSamplingAttempts = 1;
+    }
+    else
+    {
+      this->m_CurrentNumberOfSamplingAttempts++;
+    }
+
+    if ( this->m_CurrentNumberOfSamplingAttempts <= this->m_MaximumNumberOfSamplingAttempts )
+    {
+      this->SelectNewSamples();
+      this->ResumeOptimization();
+    }
+    else
+    {
+      /** Stop optimisation and pass on exception. */
+      this->Superclass1::MetricErrorResponse( err );
+    }
+
+  } // end MetricErrorResponse()
 
 
   /** 

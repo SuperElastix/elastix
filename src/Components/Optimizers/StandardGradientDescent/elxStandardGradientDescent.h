@@ -24,6 +24,11 @@ namespace elastix
   * \parameter MaximumNumberOfIterations: The maximum number of iterations in each resolution. \n
   *   example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
   *    Default/recommended value: 500.
+  * \parameter MaximumNumberOfSamplingAttempts: The maximum number of sampling attempts. Sometimes
+  *   not enough corresponding samples can be drawn, upon which an exception is thrown. With this
+  *   parameter it is possible to try to draw another set of samples. \n
+  *   example: <tt>(MaximumNumberOfSamplingAttempts 10 15 10)</tt> \n
+  *    Default value: 0, i.e. just fail immediately, for backward compatibility.
   * \parameter SP_a: The gain \f$a(k)\f$ at each iteration \f$k\f$ is defined by \n
   *   \f$a(k) =  SP\_a / (SP\_A + k + 1)^{SP\_alpha}\f$. \n
   *   SP_a can be defined for each resolution. \n
@@ -91,15 +96,18 @@ namespace elastix
 
     /** Methods invoked by elastix, in which parameters can be set and 
     * progress information can be printed. */
-    virtual void BeforeRegistration(void);
-    virtual void BeforeEachResolution(void);
-    virtual void AfterEachResolution(void);
-    virtual void AfterEachIteration(void);
-    virtual void AfterRegistration(void);   
+    virtual void BeforeRegistration( void );
+    virtual void BeforeEachResolution( void );
+    virtual void AfterEachResolution( void );
+    virtual void AfterEachIteration( void );
+    virtual void AfterRegistration( void );   
 
     /** Check if any scales are set, and set the UseScales flag on or off; 
     * after that call the superclass' implementation */
-    virtual void StartOptimization(void);
+    virtual void StartOptimization( void );
+
+    /** Stop optimisation and pass on exception. */
+    virtual void MetricErrorResponse( ExceptionObject & err );
 
     /** Add SetCurrentPositionPublic, which calls the protected
     * SetCurrentPosition of the itkStandardGradientDescentOptimizer class.
@@ -109,16 +117,27 @@ namespace elastix
       this->Superclass1::SetCurrentPosition( param );
     }
 
+    /** Set the MaximumNumberOfSamplingAttempts. */
+    itkSetMacro( MaximumNumberOfSamplingAttempts, unsigned long );
+
+    /** Get the MaximumNumberOfSamplingAttempts. */
+    itkGetConstReferenceMacro( MaximumNumberOfSamplingAttempts, unsigned long );
+
   protected:
 
-    StandardGradientDescent(){};
+    StandardGradientDescent();
     virtual ~StandardGradientDescent() {};
 
 
   private:
 
     StandardGradientDescent( const Self& ); // purposely not implemented
-    void operator=( const Self& );              // purposely not implemented
+    void operator=( const Self& );          // purposely not implemented
+
+    /** Private variables for the sampling attempts. */
+    unsigned long m_MaximumNumberOfSamplingAttempts;
+    unsigned long m_CurrentNumberOfSamplingAttempts;
+    unsigned long m_PreviousErrorAtIteration;
 
   }; // end class StandardGradientDescent
 
