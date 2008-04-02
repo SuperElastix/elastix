@@ -570,14 +570,14 @@ namespace itk
     AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     ::CheckNumberOfSamples(
       unsigned long wanted, unsigned long found ) const
-  { 
+  {
     this->m_NumberOfPixelsCounted = found;
     if ( found < wanted * this->GetRequiredRatioOfValidSamples() )
     {
       itkExceptionMacro( "Too many samples map outside moving image buffer: "
         << found << " / " << wanted << std::endl );
-    }    
-  } // end CheckNumberOfSamples
+    }
+  } // end CheckNumberOfSamples()
 
 
   /**
