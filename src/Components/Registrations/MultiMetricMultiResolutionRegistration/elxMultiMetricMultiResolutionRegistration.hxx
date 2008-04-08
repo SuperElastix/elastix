@@ -100,16 +100,21 @@ using namespace itk;
 		unsigned int level = this->GetCurrentLevel();
 
     /** Set the masks in the metric */
-    this->UpdateFixedMasks(level);		
-    this->UpdateMovingMasks(level);		
+    this->UpdateFixedMasks( level );
+    this->UpdateMovingMasks( level );
     
+    /** The default metric weight is 1.0, and then Metric0Weight. */
+    double defaultweight = 1.0;
+    this->GetConfiguration()->ReadParameter( defaultweight, "Metric0Weight", "", level, 0 );
+    
+    /** Set all metric weights. */
     unsigned int nrOfMetrics = this->GetCombinationMetric()->GetNumberOfMetrics();
-    for ( unsigned int metricnr = 0; metricnr < nrOfMetrics; ++metricnr)
+    for ( unsigned int metricnr = 0; metricnr < nrOfMetrics; ++metricnr )
     {
-      double weight = 1.0;
+      double weight = defaultweight;
       std::ostringstream makestring;
       makestring << "Metric" << metricnr << "Weight";
-      this->GetConfiguration()->ReadParameter(weight, makestring.str().c_str(), "", level, 0);
+      this->GetConfiguration()->ReadParameter( weight, makestring.str().c_str(), "", level, 0 );
       this->GetCombinationMetric()->SetMetricWeight( weight, metricnr );
     }
 
@@ -129,47 +134,47 @@ using namespace itk;
 
     const unsigned int nrOfMetrics = this->GetElastix()->GetNumberOfMetrics();
     this->GetCombinationMetric()->SetNumberOfMetrics( nrOfMetrics );
-    for (unsigned int i = 0; i < nrOfMetrics; ++i )
+    for ( unsigned int i = 0; i < nrOfMetrics; ++i )
     {
       this->GetCombinationMetric()->SetMetric( this->GetElastix()->
         GetElxMetricBase( i )->GetAsITKBaseType(), i );
     }
 
-    for (unsigned int i = 0; i < this->GetElastix()->GetNumberOfFixedImages(); ++i )
+    for ( unsigned int i = 0; i < this->GetElastix()->GetNumberOfFixedImages(); ++i )
     {
-      this->SetFixedImage( this->GetElastix()->GetFixedImage(i), i );
+      this->SetFixedImage( this->GetElastix()->GetFixedImage( i ), i );
     }
-    for (unsigned int i = 0; i < this->GetElastix()->GetNumberOfMovingImages(); ++i )
+    for ( unsigned int i = 0; i < this->GetElastix()->GetNumberOfMovingImages(); ++i )
     {
-      this->SetMovingImage( this->GetElastix()->GetMovingImage(i), i );
+      this->SetMovingImage( this->GetElastix()->GetMovingImage( i ), i );
     }
 
-    for (unsigned int i = 0; i < this->GetElastix()->GetNumberOfFixedImagePyramids(); ++i )
+    for ( unsigned int i = 0; i < this->GetElastix()->GetNumberOfFixedImagePyramids(); ++i )
     {
       this->SetFixedImagePyramid( this->GetElastix()->
-        GetElxFixedImagePyramidBase(i)->GetAsITKBaseType(), i );
+        GetElxFixedImagePyramidBase( i )->GetAsITKBaseType(), i );
     }
 
-    for (unsigned int i = 0; i < this->GetElastix()->GetNumberOfMovingImagePyramids(); ++i )
+    for ( unsigned int i = 0; i < this->GetElastix()->GetNumberOfMovingImagePyramids(); ++i )
     {
       this->SetMovingImagePyramid( this->GetElastix()->
-        GetElxMovingImagePyramidBase(i)->GetAsITKBaseType(), i );
+        GetElxMovingImagePyramidBase( i )->GetAsITKBaseType(), i );
     }
   
-    for (unsigned int i = 0; i < this->GetElastix()->GetNumberOfInterpolators(); ++i )
+    for ( unsigned int i = 0; i < this->GetElastix()->GetNumberOfInterpolators(); ++i )
     {
       this->SetInterpolator( this->GetElastix()->
-        GetElxInterpolatorBase(i)->GetAsITKBaseType(), i );
+        GetElxInterpolatorBase( i )->GetAsITKBaseType(), i );
     }
 
-    this->SetOptimizer(  dynamic_cast<OptimizerType*>(
-      this->GetElastix()->GetElxOptimizerBase()->GetAsITKBaseType() )   );
+    this->SetOptimizer( dynamic_cast<OptimizerType*>(
+      this->GetElastix()->GetElxOptimizerBase()->GetAsITKBaseType() ) );
 
     this->SetTransform( this->GetElastix()->
       GetElxTransformBase()->GetAsITKBaseType() );
 
     /** Samplers are not always needed: */
-    for (unsigned int i = 0; i < nrOfMetrics; ++i )
+    for ( unsigned int i = 0; i < nrOfMetrics; ++i )
     {
       if ( this->GetElastix()->GetElxMetricBase( i )->GetAdvancedMetricUseImageSampler() )
       {
@@ -234,16 +239,16 @@ using namespace itk;
     
     /** Read whether mask erosion is wanted, if any masks were supplied */
     useMaskErosion = this->ReadMaskParameters( useMaskErosionArray,
-      nrOfFixedMasks, "Fixed", level);
+      nrOfFixedMasks, "Fixed", level );
 
     /** Create and start timer, to time the whole mask configuration procedure. */
     TimerPointer timer = TimerType::New();
     timer->StartTimer();
         
     /** Now set the masks */
-    if (  ( (nrOfFixedImages==1) || (nrOfFixedMasks==0) ) &&
-          (nrOfFixedMasks<=1) &&
-          ( (nrOfFixedImagePyramids==1) || !useMaskErosion || (nrOfFixedMasks==0) )   )
+    if (  ( ( nrOfFixedImages == 1 ) || ( nrOfFixedMasks == 0 ) ) &&
+          ( nrOfFixedMasks <= 1 ) &&
+          ( (nrOfFixedImagePyramids == 1) || !useMaskErosion || (nrOfFixedMasks == 0 ) )   )
     {      
       /** 1 image || nomask, <=1 mask, 1 pyramid || noerosion || nomask: 
        * --> we can use one mask for all metrics! (or no mask at all) */
@@ -252,17 +257,17 @@ using namespace itk;
         this->GetFixedImagePyramid(), level );
       this->GetCombinationMetric()->SetFixedImageMask( fixedMask );
     } 
-    else if ( (nrOfFixedImages==1) && (nrOfFixedMasks==1) )
+    else if ( ( nrOfFixedImages == 1 ) && ( nrOfFixedMasks == 1 ) )
     {
       /** 1 image, 1 mask, erosion && multiple pyramids
        * Set a differently eroded mask in each metric. The eroded
        * masks are all based on the same mask image, but generated with
        * different pyramid settings. */
-      for (unsigned int i = 0; i < nrOfMetrics; ++i)
+      for ( unsigned int i = 0; i < nrOfMetrics; ++i )
       { 
         FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject( 
           this->GetElastix()->GetFixedMask(), useMaskErosion,
-          this->GetFixedImagePyramid(i), level );
+          this->GetFixedImagePyramid( i ), level );
         this->GetCombinationMetric()->SetFixedImageMask( fixedMask, i );
       }
     }
@@ -273,20 +278,20 @@ using namespace itk;
        * Set each supplied mask in its corresponding metric, possibly after erosion.
        * If more metrics than masks are present, the last metrics will not use a mask.
        * If less metrics than masks are present, the last masks will be ignored. */
-      for (unsigned int i = 0; i < nrOfMetrics; ++i)
+      for ( unsigned int i = 0; i < nrOfMetrics; ++i )
       {
         bool useMask_i = false; // default value in case of more metrics than masks
         if ( i < nrOfFixedMasks )
         {
-          useMask_i = useMaskErosionArray[i];
+          useMask_i = useMaskErosionArray[ i ];
         }
         FixedImagePyramidPointer pyramid_i = this->GetFixedImagePyramid(); // default value in case of only 1 pyramid
-        if (i < nrOfFixedImagePyramids)
+        if ( i < nrOfFixedImagePyramids )
         {
-          pyramid_i = this->GetFixedImagePyramid(i);
+          pyramid_i = this->GetFixedImagePyramid( i );
         }
         FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject( 
-          this->GetElastix()->GetFixedMask(i), useMask_i, pyramid_i, level );
+          this->GetElastix()->GetFixedMask( i ), useMask_i, pyramid_i, level );
         this->GetCombinationMetric()->SetFixedImageMask( fixedMask, i );
       }
     } // end else
@@ -323,16 +328,16 @@ using namespace itk;
     
     /** Read whether mask erosion is wanted, if any masks were supplied */
     useMaskErosion = this->ReadMaskParameters( useMaskErosionArray,
-      nrOfMovingMasks, "Moving", level);
+      nrOfMovingMasks, "Moving", level );
     
     /** Create and start timer, to time the whole mask configuration procedure. */
     TimerPointer timer = TimerType::New();
     timer->StartTimer();
         
     /** Now set the masks */
-    if (  ( (nrOfMovingImages==1) || (nrOfMovingMasks==0) ) &&
-          (nrOfMovingMasks<=1) &&
-          ( (nrOfMovingImagePyramids==1) || !useMaskErosion || (nrOfMovingMasks==0) )   )
+    if (  ( ( nrOfMovingImages == 1 ) || ( nrOfMovingMasks == 0 ) ) &&
+          ( nrOfMovingMasks <= 1 ) &&
+          ( ( nrOfMovingImagePyramids == 1 ) || !useMaskErosion || ( nrOfMovingMasks == 0 ) )   )
     {      
       /** 1 image || nomask, <=1 mask, 1 pyramid || noerosion || nomask: 
        * --> we can use one mask for all metrics! (or no mask at all) */
@@ -341,17 +346,17 @@ using namespace itk;
         this->GetMovingImagePyramid(), level );
       this->GetCombinationMetric()->SetMovingImageMask( movingMask );
     } 
-    else if ( (nrOfMovingImages==1) && (nrOfMovingMasks==1) )
+    else if ( ( nrOfMovingImages == 1 ) && ( nrOfMovingMasks == 1 ) )
     {
       /** 1 image, 1 mask, erosion && multiple pyramids
        * Set a differently eroded mask in each metric. The eroded
        * masks are all based on the same mask image, but generated with
        * different pyramid settings. */
-      for (unsigned int i = 0; i < nrOfMetrics; ++i)
+      for ( unsigned int i = 0; i < nrOfMetrics; ++i )
       { 
         MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject( 
           this->GetElastix()->GetMovingMask(), useMaskErosion,
-          this->GetMovingImagePyramid(i), level );
+          this->GetMovingImagePyramid( i ), level );
         this->GetCombinationMetric()->SetMovingImageMask( movingMask, i );
       }
     }
@@ -362,20 +367,20 @@ using namespace itk;
        * Set each supplied mask in its corresponding metric, possibly after erosion.
        * If more metrics than masks are present, the last metrics will not use a mask.
        * If less metrics than masks are present, the last masks will be ignored. */
-      for (unsigned int i = 0; i < nrOfMetrics; ++i)
+      for ( unsigned int i = 0; i < nrOfMetrics; ++i )
       {
         bool useMask_i = false; // default value in case of more metrics than masks
         if ( i < nrOfMovingMasks )
         {
-          useMask_i = useMaskErosionArray[i];
+          useMask_i = useMaskErosionArray[ i ];
         }
         MovingImagePyramidPointer pyramid_i = this->GetMovingImagePyramid(); // default value in case of only 1 pyramid
-        if (i < nrOfMovingImagePyramids)
+        if ( i < nrOfMovingImagePyramids )
         {
-          pyramid_i = this->GetMovingImagePyramid(i);
+          pyramid_i = this->GetMovingImagePyramid( i );
         }
         MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject( 
-          this->GetElastix()->GetMovingMask(i), useMask_i, pyramid_i, level );
+          this->GetElastix()->GetMovingMask( i ), useMask_i, pyramid_i, level );
         this->GetCombinationMetric()->SetMovingImageMask( movingMask, i );
       }
     } // end else
