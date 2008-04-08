@@ -103,12 +103,11 @@ using namespace itk;
     this->UpdateFixedMasks( level );
     this->UpdateMovingMasks( level );
     
-    /** The default metric weight is 1.0, and then Metric0Weight. */
-    double defaultweight = 1.0;
-    this->GetConfiguration()->ReadParameter( defaultweight, "Metric0Weight", "", level, 0 );
-    
-    /** Set all metric weights. */
+    /** The default metric weight is 1.0 / nrOfMetrics. */
     unsigned int nrOfMetrics = this->GetCombinationMetric()->GetNumberOfMetrics();
+    double defaultweight = 1.0 / static_cast<double>( nrOfMetrics );
+        
+    /** Set all metric weights. */
     for ( unsigned int metricnr = 0; metricnr < nrOfMetrics; ++metricnr )
     {
       double weight = defaultweight;
