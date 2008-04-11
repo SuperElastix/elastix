@@ -2,6 +2,7 @@
 #define _itkAdvancedMeanSquaresImageToImageMetric_txx
 
 #include "itkAdvancedMeanSquaresImageToImageMetric.h"
+#include "vnl/algo/vnl_matrix_update.h"
 
 namespace itk
 {
@@ -20,6 +21,9 @@ namespace itk
 
     this->m_UseNormalization = false;
     this->m_NormalizationFactor = 1.0;
+
+    this->m_SelfHessianSmoothingSigma = 1.0;
+    this->m_NumberOfSamplesForSelfHessian = 100000;
 
 	} // end constructor
 
@@ -361,6 +365,168 @@ namespace itk
       }
     }
   } // end UpdateValueAndDerivativeTerms
+
+
+  /**
+	 * ******************* GetSelfHessian *******************
+	 */
+
+	template <class TFixedImage, class TMovingImage>
+		void
+		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+		::GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const
+	{
+		itkDebugMacro("GetSelfHessian()");
+
+    typedef typename DerivativeType::ValueType        DerivativeValueType;
+    typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
+    
+    /** Initialize some variables. */
+    this->m_NumberOfPixelsCounted = 0;
+    
+    /** Arrays that store dM(x)/dmu. */
+    DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.GetSize() );
+ 
+		/** Make sure the transform parameters are up to date. */
+		this->SetTransformParameters( parameters );
+    
+    /** Prepare Hessian */
+    H.SetSize( this->m_NumberOfParameters, this->m_NumberOfParameters );
+    H.Fill(0.0);
+
+    /** Smooth fixed image */
+    typename SmootherType::Pointer smoother = SmootherType::New();    
+    smoother->SetInput( this->GetFixedImage() );
+    smoother->SetSigma( this->GetSelfHessianSmoothingSigma() );
+    smoother->Update();
+
+    /** Set up interpolator for fixed image */
+    typename FixedImageInterpolatorType::Pointer fixedInterpolator = FixedImageInterpolatorType::New();
+    if ( this->m_BSplineInterpolator.IsNotNull() )
+    {
+      fixedInterpolator->SetSplineOrder( this->m_BSplineInterpolator->GetSplineOrder() );
+    }
+    else
+    {
+      fixedInterpolator->SetSplineOrder( 1 );
+    }
+    fixedInterpolator->SetInputImage( smoother->GetOutput() );
+
+    /** Set up random coordinate sampler 
+     * Actually we could do without a sampler, but it's easy like this. */
+    typename SelfHessianSamplerType::Pointer sampler = SelfHessianSamplerType::New();
+    typename DummyFixedImageInterpolatorType::Pointer dummyInterpolator =
+      DummyFixedImageInterpolatorType::New();
+    sampler->SetInputImageRegion( this->GetImageSampler()->GetInputImageRegion() );
+    sampler->SetMask( this->GetImageSampler()->GetMask() );
+    sampler->SetInput( smoother->GetInput() );
+    sampler->SetNumberOfSamples( this->m_NumberOfSamplesForSelfHessian );
+    sampler->SetInterpolator( dummyInterpolator );
+				
+    /** Update the imageSampler and get a handle to the sample container. */
+    sampler->Update();
+    ImageSampleContainerPointer sampleContainer = sampler->GetOutput();
+
+    /** Create iterator over the sample container. */
+    typename ImageSampleContainerType::ConstIterator fiter;
+    typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
+    typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+		
+		/** Loop over the fixed image to calculate the mean squares. */
+		for ( fiter = fbegin; fiter != fend; ++fiter )
+		{
+      /** Read fixed coordinates and initialize some variables. */
+      const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+      MovingImagePointType mappedPoint;
+      MovingImageDerivativeType movingImageDerivative;
+            
+      /** Transform point and check if it is inside the bspline support region. */
+      bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint);
+
+      /** Check if point is inside mask. NB: we assume here that the 
+       * initial transformation is approximately ok. */
+      if ( sampleOk ) 
+      {
+        sampleOk = this->IsInsideMovingMask( mappedPoint );         
+      }
+
+      /** Check if point is inside moving image. NB: we assume here that the 
+       * initial transformation is approximately ok. */
+      if ( sampleOk )
+      {
+        sampleOk = this->m_Interpolator->IsInsideBuffer( mappedPoint );
+      }       
+            
+      if ( sampleOk )
+      {
+        this->m_NumberOfPixelsCounted++; 
+
+        /** Use the derivative of the fixed image for the self Hessian! */
+        movingImageDerivative = fixedInterpolator->EvaluateDerivative( fixedPoint );    
+                        
+        /** Get the TransformJacobian dT/dmu. */
+        const TransformJacobianType & jacobian = 
+          this->EvaluateTransformJacobian( fixedPoint );
+        
+        /** Compute the innerproducts (dM/dx)^T (dT/dmu) */
+        this->EvaluateTransformJacobianInnerProduct( 
+          jacobian, movingImageDerivative, imageJacobian );
+
+        /** Compute this pixel's contribution to the SelfHessian. */
+        this->UpdateSelfHessianTerms( imageJacobian, H );
+
+			} // end if sampleOk
+
+		} // end for loop over the image sample container
+
+    /** Check if enough samples were valid. */
+    this->CheckNumberOfSamples(
+      sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+       
+    /** Compute the measure value and derivative. */
+    const double normal_sum = 2.0 * this->m_NormalizationFactor / 
+      static_cast<double>( this->m_NumberOfPixelsCounted );
+    H *= normal_sum;
+    
+	} // end GetSelfHessian
+
+
+    /**
+	 * *************** UpdateSelfHessianTerms ***************************
+	 */
+
+	template < class TFixedImage, class TMovingImage >
+		void
+		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+		::UpdateSelfHessianTerms( 
+    const DerivativeType & imageJacobian,
+    HessianType & H ) const
+  {
+    /** Do rank-1 update of H */
+    if ( this->m_NonZeroJacobianIndices.GetSize() == this->m_NumberOfParameters )
+		{
+      /** Loop over all jacobians. */
+      vnl_matrix_update( H, imageJacobian, imageJacobian );
+    }
+    else
+    {
+      /** Only pick the nonzero jacobians. 
+       * Todo: we could use the symmetry here. Anyway, it won't give much probably. */
+      unsigned int imjacsize = imageJacobian.GetSize();
+      for ( unsigned int i = 0; i < imjacsize; ++i )
+      {
+        const unsigned int row = this->m_NonZeroJacobianIndices[ i ];
+        const double imjacrow = imageJacobian[ i ];
+        for ( unsigned int j = 0; j < imjacsize; ++j )
+        {          
+          const unsigned int col = this->m_NonZeroJacobianIndices[ j ];
+          H(row,col) += imjacrow * imageJacobian[ j ];       
+        }
+      }
+    } // end else
+
+  } // end UpdateSelfHessianTerms
+
 
 
 } // end namespace itk

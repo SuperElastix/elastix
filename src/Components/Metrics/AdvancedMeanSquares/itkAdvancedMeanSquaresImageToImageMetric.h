@@ -2,6 +2,9 @@
 #ifndef __itkAdvancedMeanSquaresImageToImageMetric_h
 #define __itkAdvancedMeanSquaresImageToImageMetric_h
 
+#include "itkSmoothingRecursiveGaussianImageFilter.h"
+#include "itkImageRandomCoordinateSampler.h"
+#include "itkNearestNeighborInterpolateImageFunction.h"
 #include "itkAdvancedImageToImageMetric.h"
 
 namespace itk
@@ -95,6 +98,10 @@ public:
   typedef typename
     Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
 
+  /** Some typedefs for computing the SelfHessian */
+  typedef typename DerivativeType::ValueType              HessianValueType;
+  typedef Array2D<HessianValueType>                       HessianType;
+
 	/** The fixed image dimension. */
 	itkStaticConstMacro( FixedImageDimension, unsigned int,
 		FixedImageType::ImageDimension );
@@ -113,6 +120,17 @@ public:
   /** Get value and derivatives for multiple valued optimizers. */
   virtual void GetValueAndDerivative( const TransformParametersType & parameters,
 		MeasureType& Value, DerivativeType& Derivative ) const;
+
+  /** Experimental feature: compute SelfHessian */
+  virtual void GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const;
+
+  /** Default: 1.0 mm */
+  itkSetMacro( SelfHessianSmoothingSigma, double );
+  itkGetConstMacro( SelfHessianSmoothingSigma, double );
+
+  /** Default: 100000 */
+  itkSetMacro( NumberOfSamplesForSelfHessian, unsigned int );
+  itkGetConstMacro( NumberOfSamplesForSelfHessian, unsigned int );
 
   /** Initialize the Metric by making sure that all the components
    *  are present and plugged together correctly.
@@ -154,6 +172,15 @@ protected:
  	typedef typename Superclass::BSplineParametersOffsetType        BSplineParametersOffsetType;
   typedef typename Superclass::ParameterIndexArrayType            ParameterIndexArrayType;
 
+  /** Protected typedefs for SelfHessian */
+  typedef SmoothingRecursiveGaussianImageFilter<
+    FixedImageType, FixedImageType>                               SmootherType;
+  typedef BSplineInterpolateImageFunction<
+    FixedImageType, CoordinateRepresentationType>                 FixedImageInterpolatorType;
+  typedef NearestNeighborInterpolateImageFunction<
+    FixedImageType, CoordinateRepresentationType >                DummyFixedImageInterpolatorType;     
+  typedef ImageRandomCoordinateSampler<FixedImageType>            SelfHessianSamplerType;
+
   double m_NormalizationFactor;
      
   /** Computes the innerproduct of transform jacobian with moving image gradient.
@@ -172,12 +199,20 @@ protected:
     const DerivativeType & imageJacobian,    
     MeasureType & measure,
     DerivativeType & deriv ) const;
+
+  /** Compute a pixel's contribution to the SelfHessian;
+   * Called by GetSelfHessian(). */
+  void UpdateSelfHessianTerms( 
+    const DerivativeType & imageJacobian,    
+    HessianType & H) const;
  
 private:
   AdvancedMeanSquaresImageToImageMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
   bool m_UseNormalization;
+  double m_SelfHessianSmoothingSigma;
+  unsigned int m_NumberOfSamplesForSelfHessian;
 
 }; // end class AdvancedMeanSquaresImageToImageMetric
 

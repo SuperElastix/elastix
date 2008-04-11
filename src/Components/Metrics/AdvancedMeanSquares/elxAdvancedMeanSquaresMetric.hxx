@@ -43,6 +43,21 @@ using namespace itk;
     this->GetConfiguration()->ReadParameter( useNormalization,
       "UseNormalization", this->GetComponentLabel(), level, 0 );
     this->SetUseNormalization( useNormalization );
+
+    /** Experimental options for SelfHessian */
+
+    /** Set the number of samples used to compute the SelfHessian */
+    unsigned int numberOfSamplesForSelfHessian = 100000;
+    this->GetConfiguration()->ReadParameter( numberOfSamplesForSelfHessian,
+      "NumberOfSamplesForSelfHessian", this->GetComponentLabel(), level, 0 );
+    this->SetNumberOfSamplesForSelfHessian( numberOfSamplesForSelfHessian );
+   
+    /** Set the smoothing sigma used to compute the SelfHessian */
+    double selfHessianSmoothingSigma = 1.0;
+    this->GetConfiguration()->ReadParameter( selfHessianSmoothingSigma,
+      "SelfHessianSmoothingSigma", this->GetComponentLabel(), level, 0 );
+    this->SetSelfHessianSmoothingSigma( selfHessianSmoothingSigma );     
+
 		
   } // end BeforeEachResolution
 
