@@ -266,9 +266,9 @@ namespace itk
       
       if ( eigval < mineig )
       {
-        eigval = 0.0;        
+        eigval = mineig;        
       }
-      if (eigval > 0.0 )
+      if (eigval > 1e-14 )
       {
         eigval = 1.0 / eigval;
         lowestValidEigVec = eignr;
