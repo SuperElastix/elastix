@@ -915,7 +915,7 @@ namespace itk
   {
     /** Convert point to a continous index. */
     MovingImageContinuousIndexType cindex;
-    this->m_Interpolator->ConvertPointToContinousIndex( mappedPoint, cindex );
+    this->m_Interpolator->ConvertPointToContinuousIndex( mappedPoint, cindex );
 
     /** Compute the spatial derivative for all feature images:
      * - either by calling a special function that only B-spline

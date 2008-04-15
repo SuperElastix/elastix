@@ -400,7 +400,7 @@ namespace itk
   {
     /** Check if mapped point inside image buffer. */
     MovingImageContinuousIndexType cindex;
-    this->m_Interpolator->ConvertPointToContinousIndex( mappedPoint, cindex );
+    this->m_Interpolator->ConvertPointToContinuousIndex( mappedPoint, cindex );
     bool sampleOk = this->m_Interpolator->IsInsideBuffer( cindex );
     if ( sampleOk )
     {
