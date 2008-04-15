@@ -42,7 +42,7 @@ DeformationFieldInterpolatingTransform<TScalarType, NDimensions,  TComponentType
 {
   InputContinuousIndexType cindex;
   // note the typo
-  this->m_DeformationFieldInterpolator->ConvertPointToContinousIndex(
+  this->m_DeformationFieldInterpolator->ConvertPointToContinuousIndex(
     point, cindex);
 
   if ( this->m_DeformationFieldInterpolator->IsInsideBuffer(cindex) )
