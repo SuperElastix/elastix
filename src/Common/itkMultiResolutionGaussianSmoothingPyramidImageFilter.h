@@ -12,6 +12,8 @@
 
 ======================================================================*/
 
+/** Parts of the code were taken from an ITK file.
+ * Original ITK copyright message, just for reference: */
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
@@ -100,7 +102,7 @@ namespace itk
  * The N'th output correspond to the N'th level of the pyramid.
  * 
  * To generate each output image, Gaussian smoothing is first performed 
- * using a series of RecursiveGaussianImageFilter with standard ddeviation
+ * using a series of RecursiveGaussianImageFilter with standard deviation
  * (shrink factor / 2)*imagespacing. 
  * The smoothed images are NOT downsampled, in contrast to the superclass's
  * behaviour.

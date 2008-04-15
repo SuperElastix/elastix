@@ -12,22 +12,6 @@
 
 ======================================================================*/
 
-/*=========================================================================
-
-  Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile$
-  Language:  C++
-  Date:      $Date$
-  Version:   $Revision$
-
-  Copyright (c) Insight Software Consortium. All rights reserved.
-  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-     PURPOSE.  See the above copyright notices for more information.
-
-=========================================================================*/
 #ifndef __itkDeformationVectorFieldTransform_H__
 #define __itkDeformationVectorFieldTransform_H__
 
@@ -50,9 +34,9 @@ namespace itk
  *
  * \ingroup Transforms
  *
- * \todo I take a 0-th order BSplineDeformableTransform, where a
- * 1-st order might be better. However, in that case:
- * take care of image edges, where there is BSpline support!
+ * \note Better use the DeformationFieldInterpolatingTransform.
+ * It is more flexible, since it allows runtime specification of
+ * the spline order.
  */
 
 	template <

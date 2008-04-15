@@ -12,6 +12,10 @@
 
 ======================================================================*/
 
+/** This class is a slight modification of the original ITK class:
+ * MultiResolutionImageRegistrationMethod.
+ * The original copyright message is pasted here, which includes also
+ * the version information: */
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit

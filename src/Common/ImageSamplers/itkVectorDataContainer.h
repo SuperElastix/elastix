@@ -12,6 +12,9 @@
 
 ======================================================================*/
 
+/** This class is a modification of an ITK class.
+ * The original copyright message is pasted here, which includes also
+ * the version information: */
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit

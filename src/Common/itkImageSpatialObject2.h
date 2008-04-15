@@ -12,6 +12,8 @@
 
 ======================================================================*/
 
+/** This file is a slightly modified version of an ITK file.
+ * Original ITK copyright message: */
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
@@ -42,8 +44,9 @@ namespace itk
 /** \class ImageSpatialObject2
  * \brief Implementation of an image as spatial object.
  *
- * This class combines functionnalities from a spatial object,
- * and an image.
+ * This class fixes a bug in the ITK. The ITK has implemented
+ * the ImageSpatialObject with a wrong conversion between physical
+ * coordinates and image coordinates. This class solves that.
  *
  * \sa SpatialObject CompositeSpatialObject
  */

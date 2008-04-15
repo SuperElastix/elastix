@@ -12,6 +12,8 @@
 
 ======================================================================*/
 
+/** Parts of the code were taken from an ITK file.
+ * Original ITK copyright message, just for reference: */
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit

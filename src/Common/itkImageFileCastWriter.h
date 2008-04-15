@@ -12,22 +12,6 @@
 
 ======================================================================*/
 
-/*=========================================================================
-
-  Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile$
-  Language:  C++
-  Date:      $Date$
-  Version:   $Revision$
-
-  Copyright (c) Insight Software Consortium. All rights reserved.
-  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-     PURPOSE.  See the above copyright notices for more information.
-
-=========================================================================*/
 #ifndef __itkImageFileCastWriter_h
 #define __itkImageFileCastWriter_h
 
@@ -43,25 +27,12 @@ namespace itk
 {
 
 /** \class ImageFileCastWriter
- * \brief Writes image data to a single file.
+ * \brief Casts pixel type and writes image data.
  *
- * ImageFileCastWriter writes its input data to a single output file.
- * ImageFileCastWriter interfaces with an ImageIO class to write out the
- * data. If you wish to write data into a series of files (e.g., a
- * slice per file) use ImageSeriesWriter.
- *
- * A pluggable factory pattern is used that allows different kinds of writers
- * to be registered (even at run time) without having to modify the
- * code in this class. You can either manually instantiate the ImageIO
- * object and associate it with the ImageFileCastWriter, or let the class
- * figure it out from the extension. Normally just setting the filename
- * with a suitable suffix (".png", ".jpg", etc) and setting the input 
- * to the writer is enough to get the writer to work properly.
- *
- * \sa ImageSeriesReader
- * \sa ImageIOBase
- *
- * \ingroup IOFilters 
+ * This filter saves an image and casts the data on the fly,
+ * if necessary. This is useful in some cases, to avoid the use of 
+ * a itk::CastImageFilter (to save memory for example).
+ *  
  */
 template <class TInputImage >
   class ImageFileCastWriter : public ImageFileWriter<TInputImage>

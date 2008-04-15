@@ -12,7 +12,8 @@
 
 ======================================================================*/
 
-/** Original ITK copyright message: */
+/** This file is a slightly modified version of an ITK file.
+ * Original ITK copyright message: */
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
@@ -42,11 +43,10 @@ namespace itk
 /** \class ImageMaskSpatialObject2
  * \brief Implementation of an image mask as spatial object.
  *
- * This class derives from the ImageSpatialObject2 and overloads the IsInside()
- * method.  One of the common uses of this class is to serve as Mask for the
- * Image Registration Metrics.
- *
- * \sa ImageSpatialObject2 SpatialObject CompositeSpatialObject
+ * This class fixes a bug in the ITK. The ITK has implemented
+ * the ImageSpatialObject with a wrong conversion between physical
+ * coordinates and image coordinates. This class solves that. 
+ * 
  */
 
 template < unsigned int TDimension = 3 >
