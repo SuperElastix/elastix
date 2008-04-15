@@ -83,7 +83,7 @@ distributed.
 
 \begin{itemize}
 \item Download \elastix\ from
-\url{www.isi.uu.nl/Elastix/download.php}. See Section
+\url{http://elastix.isi.uu.nl/download.php}. See Section
 \ref{sec:elastix:install} for details about the installation.
 
 \item Read some basics about the program at
@@ -93,17 +93,17 @@ distributed.
 section of the website. If you don't get the example running at your
 computer take a look at the FAQ in the general section:
 \begin{quote}
-\url{www.isi.uu.nl/Elastix/FAQ.php}
+\url{http://elastix.isi.uu.nl/FAQ.php}
 \end{quote}
 
 \item Read the complete manual if you are the type of person that
 first wants to know.
 
 \item Get started with your own application. If you need more
-information at this point you can now start reading the manual. You
-can find more information on tuning the parameters in Chapter
-\ref{chp:Tutorial}. A list of all available parameters can be found
-at \url{www.isi.uu.nl/Elastix/doxygen/pages.html}.
+information at this point you can now start reading the manual.
+You can find more information on tuning the parameters in Chapter
+\ref{chp:Tutorial}. A list of all available parameters can be
+found at \url{http://elastix.isi.uu.nl/doxygen/pages.html}.
 
 \item When you are stuck, don't miss the tutorial in Chapter
 \ref{chp:Tutorial} of this manual. Also, take a look at the FAQ again
@@ -898,10 +898,10 @@ the same time. The continued development brings us today (April
 \begin{tabular}{l|l}
 what & where \\
 \hline
-website        & \url{www.isi.uu.nl/Elastix} \\
+website        & \url{http://elastix.isi.uu.nl} \\
 CVS repository & \url{/shared/CVS/elastix/} (hosted at the ISI) \\
 WIKI           & \url{https://wiki.isi.uu.nl/bin/view/CADweb/ElastiX} \\
-FAQ            & \url{http://www.isi.uu.nl/Elastix/FAQ.php}
+FAQ            & \url{http://elastix.isi.uu.nl/FAQ.php}
 \end{tabular}
 \end{table}
 
@@ -910,12 +910,12 @@ The website also contains a
 that provides documentation of the source code. An overview of all
 available classes can be found at
 \begin{quote}
-\url{www.isi.uu.nl/Elastix/doxygen/classes.html}.
+\url{http://elastix.isi.uu.nl/doxygen/classes.html}.
 \end{quote}
 For each class a description of this class is given, together with
 information on how to use it in \elastix. See
 \begin{quote}
-\url{www.isi.uu.nl/Elastix/doxygen/modules.html}
+\url{http://elastix.isi.uu.nl/doxygen/modules.html}
 \end{quote}
 for an overview of all available components.
 
@@ -923,7 +923,7 @@ for an overview of all available components.
 
 \elastix\ is
 \begin{itemize}
-\item open source, freely available from \url{www.isi.uu.nl/Elastix};
+\item open source, freely available from \url{http://elastix.isi.uu.nl};
 
 \item based on the ITK, so the code base is thoroughly tested.
 Quite some modifications/additions are made to the original ITK
@@ -969,7 +969,7 @@ pre-compiled binaries.
 \begin{enumerate}
 \item Download the compressed archive from the website:
     \begin{quote}
-    \url{www.isi.uu.nl/Elastix/download.php}
+    \url{http://elastix.isi.uu.nl/download.php}
     \end{quote}
 
 \item Extract the archive to a \texttt{folder} of your choice.
@@ -1120,15 +1120,16 @@ as follows:
 \begin{quote}
 \texttt{(ParameterName value(s))}
 \end{quote}
-So parameters are provided between brackets, first the name, followed
-by one or more values. If the value is of type string then the values
-need to be quoted: \texttt{(ParameterName "value1" ... "valueN")}. If
-the values are of floating type, then at least one value behind the
-decimal point need to be given: \texttt{(ParameterName 1.3 3.0)}.
-Comments can be provided by starting the line with `\texttt{//}'. A
-minimal example of a valid parameter file is given in Appendix
-\ref{chp:ExampleParam}. A list of available parameters for each class
-is given at \texttt{www.isi.uu.nl/Elastix/doxygen/parameter.html}.
+So parameters are provided between brackets, first the name,
+followed by one or more values. If the value is of type string
+then the values need to be quoted: \texttt{(ParameterName "value1"
+... "valueN")}. If the values are of floating type, then at least
+one value behind the decimal point need to be given:
+\texttt{(ParameterName 1.3 3.0)}. Comments can be provided by
+starting the line with `\texttt{//}'. A minimal example of a valid
+parameter file is given in Appendix \ref{chp:ExampleParam}. A list
+of available parameters for each class is given at
+\texttt{http://elastix.isi.uu.nl/doxygen/parameter.html}.
 
 Since the choice of the several components and the parameter values
 define the registration, it is very important to set them wisely.
@@ -1346,12 +1347,12 @@ MovingImagePyramid  & \texttt{MovingSmoothingImagePyramid} \\
 
 A list of all available components of \elastix\ can be found at:
 \begin{quote}
-\url{www.isi.uu.nl/Elastix/doxygen/modules.html}
+\url{http://elastix.isi.uu.nl/doxygen/modules.html}
 \end{quote}
 A list of all parameters that can be specified for each registration
 component can be found at the \elastix\ website:
 \begin{quote}
-\url{www.isi.uu.nl/Elastix/doxygen/parameter.html}
+\url{http://elastix.isi.uu.nl/doxygen/parameter.html}
 \end{quote}
 At that site you can find how to specify a parameter and what the
 default value is. We have tried to come up with sensible defaults,
@@ -1757,7 +1758,7 @@ information.
 Some common sources of confusion and questions have been gathered in
 a FAQ, which can be found at
 \begin{quote}
-\url{www.isi.uu.nl/Elastix/FAQ.php}
+\url{http://elastix.isi.uu.nl/FAQ.php}
 \end{quote}
 
 \subsection{Bad initial alignment}
@@ -2010,52 +2011,66 @@ more information.
 
 \chapter{Software License} \label{chp:License}
 
-The software comes with a license. This is currently:
+\begin{verbatim}
+Historical Note:
 
-\section*{Shareware License Agreement and Limited Warranty}
+Elastix was initially developed by Stefan Klein and Marius Staring
+under contract to the Image Sciences Institute, University Medical
+Center Utrecht, The Netherlands.
 
-This is a legal agreement between you, the "end user," and Stefan
-Klein and Marius Staring ("the authors"). Downloading of this
-shareware (the "SOFTWARE") indicates your acceptance of these terms.
+Elastix is distributed under the new and simplified BSD license
+approved by the Open Source Initiative (OSI)
+[http://www.opensource.org/licenses/bsd-license.php].
 
-\section*{Copyright}
+The software is partially derived from the Insight Segmentation
+and Registration Toolkit (ITK), which is also distributed under
+the new and simplied BSD licence. The ITK is required by Elastix
+for compilation of the source code.
 
-The Software is owned by the authors (except where stated) and is
-protected by Dutch copyright laws and international treaty
-provisions.
+The copyright of the files in the Common/KNN/ann_1.1 subdirectory
+is held by a third party, the University of Maryland. The ANN
+package is distributed under the GNU Lesser Public Licence. Please
+read the content of the subdirectory for specific details on this
+third-party license.
 
-\section*{Grant Of License}
 
-The authors hereby grants the end user non-exclusive right to use one
-copy of the software by the end user personally on one or more
-computer(s). All other rights not expressly granted are reserved by
-the author.
+Elastix Copyright Notice:
 
-The end user may store one or more copies of the software offline, on
-secondary storage media (i.e. tape, diskette) for backup purposes.
-The end user may not charge or receive any consideration from any
-other person for the receipt or use of the Software without receiving
-the author's prior written consent. If the end user wish to include
-the Software as part of a "shareware compilation", please contact the
-authors for written consent. The end user may not: modify, translate,
-disassemble, decompile, reverse engineer, or create derivative works
-based upon the Software. The end user agrees to use his/her best
-efforts to see that any user of the Software licensed hereunder
-complies with this Agreement.
+      Copyright (c) 2004-2008 University Medical Center Utrecht
+      All rights reserved.
 
-\section*{Disclaimer}
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER AND CONTRIBUTORS
-``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR
-CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
-OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+License:
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+
+    * Redistributions in binary form must reproduce the above copyright notice,
+      this list of conditions and the following disclaimer in the documentation
+      and/or other materials provided with the distribution.
+
+    * Neither the name of the University Medical Center Utrecht nor the names of
+      its contributors may be used to endorse or promote products derived from
+      this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
+\end{verbatim}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
