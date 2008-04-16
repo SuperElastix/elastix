@@ -113,14 +113,14 @@ namespace itk
     itkSetClampMacro(MaximumNumberOfIterations, unsigned long,
       1, NumericTraits<unsigned long>::max());
     
-    /** Setting: the population size (\lambda); 
+    /** Setting: the population size (\f$\lambda\f$); 
      * if set to 0, a default value is chosen: 4 + floor( 3 ln(NumberOfParameters) ),
      * which  can be inspected after having started the optimisation. 
      * Default: 0 */
     itkSetMacro( PopulationSize, unsigned int );
     itkGetConstMacro( PopulationSize, unsigned int );
 
-    /** Setting: the number of parents (points for recombination, \mu) 
+    /** Setting: the number of parents (points for recombination, \f$\mu\f$)
      * if set to 0, a default value is chosen: floor( populationSize / 2 ),
      * which can be inspected after having started the optimisation. 
      * Default: 0 */
@@ -252,21 +252,21 @@ namespace itk
     /** Some other constants, without set/get methods
      * These settings have default values. */
 
-    /** \mu_eff */
+    /** \f$\mu_{eff}\f$ */
     double                        m_EffectiveMu; 
-    /** c_\sigma */
+    /** \f$c_{\sigma}\f$ */
     double                        m_ConjugateEvolutionPathConstant;
-    /** d_\sigma */
+    /** \f$d_{\sigma}\f$ */
     double                        m_SigmaDampingConstant;
-    /** c_cov */
+    /** \f$c_{cov}\f$ */
     double                        m_CovarianceMatrixAdaptationConstant;
-    /** c_c */
+    /** \f$c_c\f$ */
     double                        m_EvolutionPathConstant;
-    /** \mu_cov = \mu_eff */
+    /** \f$\mu_{cov} = \mu_{eff}\f$ */
     double                        m_CovarianceMatrixAdaptationWeight;
-    /** chiN  = E( ||N(0,I)|| */
+    /** \f$chiN  = E( \|N(0,I)\|\f$ */
     double                        m_ExpectationNormNormalDistribution;    
-    /** array of w_i */
+    /** array of \f$w_i\f$ */
     RecombinationWeightsType      m_RecombinationWeights;
     /** Length of the MeasureHistory deque */
     unsigned long                 m_HistoryLength;
@@ -279,22 +279,22 @@ namespace itk
     /** The current maximum square root eigen value: */
     double                        m_CurrentMaximumD;
 
-    /** h_sigma */
+    /** \f$h_{\sigma}\f$ */
     bool                          m_Heaviside;
     
-    /** d_i = x_i - m */
+    /** \f$d_i = x_i - m\f$ */
     ParameterContainerType        m_SearchDirs;
-    /** realisations of N(0,I) */
+    /** realisations of \f$N(0,I)\f$ */
     ParameterContainerType        m_NormalizedSearchDirs;
-    /** cost function values for each x_i = m + d_i */
+    /** cost function values for each \f$x_i = m + d_i\f$ */
     MeasureContainerType          m_CostFunctionValues;
-    /** m(g+1) - m(g) */    
+    /** \f$m(g+1) - m(g)\f$ */
     ParametersType                m_CurrentScaledStep;
-    /** 1/sigma * D^-1 * B' * m_CurrentScaledStep, needed for p_\sigma */
+    /** \f$1/\sigma * D^{-1} * B' * m_CurrentScaledStep, needed for p_{\sigma}\f$ */
     ParametersType                m_CurrentNormalizedStep;
-    /** p_c */
+    /** \f$p_c\f$ */
     ParametersType                m_EvolutionPath;
-    /** p_\sigma */
+    /** \f$p_\sigma\f$ */
     ParametersType                m_ConjugateEvolutionPath;
 
     /** History of best measure values */

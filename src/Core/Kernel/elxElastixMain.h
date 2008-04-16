@@ -38,7 +38,7 @@ namespace elastix
 	///
 
 	/**
-   * \function xoutSetup
+   * function xoutSetup
    * Configure the xl::xout variable, which has to be used for 
 	 * for writing messages. The function adds some default fields,
 	 * such as "warning", "error", "standard", "logonly" and "coutonly",
