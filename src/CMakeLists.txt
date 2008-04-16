@@ -74,8 +74,9 @@ SET(elastix_EXECUTABLE_PATH "${EXECUTABLE_OUTPUT_PATH}")
 # process the sub-directories
 
 SUBDIRS(Common)
-SUBDIRS(Core)
 SUBDIRS(Components)
+SUBDIRS(Core)
+
 
 #--------------------------------------------------------------------
 # Configure the examples

@@ -66,6 +66,7 @@ FILE( WRITE ${InstallFunctionCallFile}
 # the .cxx file of the component.
 #
 
+
 MACRO(ADD_ELXCOMPONENT name)
   MARK_AS_ADVANCED( USE_${name} )
   OPTION( USE_${name} "Compile this component." ON )
@@ -73,24 +74,34 @@ MACRO(ADD_ELXCOMPONENT name)
     PROJECT(${name})
     ADD_LIBRARY(${name} STATIC ${ARGN} )
     TARGET_LINK_LIBRARIES( ${name} ${elxLinkLibs} )
-    # Avoid duplicates:    
+
+    # Update AllComponentLibsTemp, while avoiding duplicates:    
     IF ( DEFINED AllComponentLibs )
-      LIST( REMOVE_ITEM AllComponentLibs ${name} )
-    ENDIF ( DEFINED AllComponentLibs )
-    # Add lib name to list of libs to be linked to elastix:
-    SET( AllComponentLibs ${AllComponentLibs} ${name} CACHE INTERNAL
-      "All component libraries for elastix/transformix" )
+      SET( dummy ${AllComponentLibs} )
+      LIST( REMOVE_ITEM dummy ${name} )
+      SET( dummy ${dummy} ${name} )      
+    ELSE( DEFINED AllComponentLibs )
+      SET( dummy ${name} )
+    ENDIF ( DEFINED AllComponentLibs )    
+    SET( AllComponentLibs ${dummy} CACHE INTERNAL "All component libraries for elastix/transformix"  )
+    
     # Write lines to two files
     FILE( APPEND ${InstallFunctionDeclarationFile}
       "elxInstallComponentFunctionDeclarationMacro( " ${name} " );\n\n" )
     FILE( APPEND ${InstallFunctionCallFile}
       "elxInstallComponentFunctionCallMacro( " ${name} " );\n\n" )
+      
   ELSE( USE_${name} )
     # remove from link list
     IF ( DEFINED AllComponentLibs )
-      LIST( REMOVE_ITEM AllComponentLibs ${name} )
-    ENDIF ( DEFINED AllComponentLibs )
+      SET( dummy ${AllComponentLibs} )
+      LIST( REMOVE_ITEM dummy ${name} )
+    ELSE( DEFINED AllComponentLibs )
+      SET( dummy "" )
+    ENDIF ( DEFINED AllComponentLibs )    
+    SET( AllComponentLibs ${dummy} CACHE INTERNAL "All component libraries for elastix/transformix"  )
   ENDIF( USE_${name} )
+
 ENDMACRO(ADD_ELXCOMPONENT)
 
 
