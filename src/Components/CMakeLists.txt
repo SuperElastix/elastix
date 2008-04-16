@@ -85,6 +85,11 @@ MACRO(ADD_ELXCOMPONENT name)
       "elxInstallComponentFunctionDeclarationMacro( " ${name} " );\n\n" )
     FILE( APPEND ${InstallFunctionCallFile}
       "elxInstallComponentFunctionCallMacro( " ${name} " );\n\n" )
+  ELSE( USE_${name} )
+    # remove from link list
+    IF ( DEFINED AllComponentLibs )
+      LIST( REMOVE_ITEM AllComponentLibs ${name} )
+    ENDIF ( DEFINED AllComponentLibs )
   ENDIF( USE_${name} )
 ENDMACRO(ADD_ELXCOMPONENT)
 
