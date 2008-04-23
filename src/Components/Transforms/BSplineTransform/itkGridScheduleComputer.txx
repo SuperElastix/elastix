@@ -15,6 +15,8 @@
 #ifndef __itkGridScheduleComputer_TXX__
 #define __itkGridScheduleComputer_TXX__
 
+#include "itkGridScheduleComputer.h"
+
 #include "itkImageRegionExclusionConstIteratorWithIndex.h"
 
 namespace itk
