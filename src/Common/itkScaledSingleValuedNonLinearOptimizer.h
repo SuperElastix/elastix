@@ -25,7 +25,7 @@ namespace itk
    * Optimizers that inherit from this class optimize a scaled 
    * cost function \f$F(y)\f$ instead of the original function \f$f(x)\f$:
    *
-   *    \f[ y    = x * s  \f]
+   *    \f[ y    = x \cdot s  \f]
    *    \f[ F(y) = f(y/s) \f]
    *
    * where \f$y\f$ are the scaled parameters, \f$x\f$ the original parameters
@@ -40,7 +40,7 @@ namespace itk
    *
    * Typically, in StartOptimization() the following line should be present:\n
    *   <tt>this->SetCurrentPosition(this->GetInitialPosition);</tt>\n
-   * This makes sure that the initial position \f$y_0 = x_0 * s\f$, where \f$x_0\f$ is
+   * This makes sure that the initial position \f$y_0 = x_0 \cdot s\f$, where \f$x_0\f$ is
    * the initial (unscaled) position entered by the user. 
    * 
    * Note that:
