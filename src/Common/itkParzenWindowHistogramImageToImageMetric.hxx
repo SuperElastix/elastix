@@ -55,9 +55,9 @@ namespace itk
     this->m_FixedParzenTermToIndexOffset = 0.5;
     this->m_MovingParzenTermToIndexOffset = -1.0;
 
-    bool m_UseDerivative = false;
-    bool m_UseFiniteDifferenceDerivative = false;
-    double m_FiniteDifferencePerturbation = 1.0;
+    this->m_UseDerivative = false;
+    this->m_UseFiniteDifferenceDerivative = false;
+    this->m_FiniteDifferencePerturbation = 1.0;
            
     this->SetUseImageSampler(true);
     this->SetUseFixedImageLimiter(true);
