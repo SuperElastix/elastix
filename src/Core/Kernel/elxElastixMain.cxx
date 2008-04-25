@@ -536,13 +536,22 @@ namespace elastix
     /** If the default equals "" (so no default), the mandatoryComponent
      * flag is true, and not component was given by the user,
      * then elastix quits. */
-    if ( returncode && (defaultComponentName == "") && mandatoryComponent )
+    if ( returncode && (defaultComponentName == "") )
     {
-      xout["error"]
-        << "ERROR: the following component has not been specified: "
-        << key << std::endl;
-      errorcode = 1;
-      return objectContainer;
+      if ( mandatoryComponent )
+      {
+        xout["error"]
+          << "ERROR: the following component has not been specified: "
+          << key << std::endl;
+        errorcode = 1;
+        return objectContainer;
+      }
+      else
+      {
+        /* Just return an empty container without nagging. */
+        errorcode = 0;
+        return objectContainer;
+      }
     }
 
     /** Try creating the specified component */
