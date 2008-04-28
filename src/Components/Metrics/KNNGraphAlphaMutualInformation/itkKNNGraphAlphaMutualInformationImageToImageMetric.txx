@@ -17,8 +17,10 @@
 
 #include "itkKNNGraphAlphaMutualInformationImageToImageMetric.h"
 
+//tmp
 #include "elxTimer.h"
-
+#include <iostream>
+#include <iomanip>
 
 namespace itk
 {
@@ -518,17 +520,6 @@ m_UseSlow = false;
     MeasureType & value,
     DerivativeType & derivative ) const
   {
-    //
-    typename tmr::Timer::Pointer timer1 = tmr::Timer::New();
-    typename tmr::Timer::Pointer timer2 = tmr::Timer::New();
-    typename tmr::Timer::Pointer timer3 = tmr::Timer::New();
-    typename tmr::Timer::Pointer timer4 = tmr::Timer::New();
-    typename tmr::Timer::Pointer timer5 = tmr::Timer::New();
-    typename tmr::Timer::Pointer timer6 = tmr::Timer::New();
-    typename tmr::Timer::Pointer timer7 = tmr::Timer::New();
-    typename tmr::Timer::Pointer timer8 = tmr::Timer::New();
-    typename tmr::Timer::Pointer timer9 = tmr::Timer::New();
-
     /** Initialize some variables. */
     MeasureType measure = NumericTraits< MeasureType >::Zero;
     derivative = DerivativeType( this->m_NumberOfParameters );
@@ -547,14 +538,12 @@ m_UseSlow = false;
     ListSamplePointer listSampleJoint  = ListSampleType::New();
 
     /** Compute the three list samples and the derivatives. */
-    timer1->StartTimer();
     TransformJacobianContainerType jacobianContainer;
     TransformJacobianIndicesContainerType jacobianIndicesContainer;
     SpatialDerivativeContainerType spatialDerivativesContainer;
     this->ComputeListSampleValuesAndDerivativePlusJacobian(
       listSampleFixed, listSampleMoving, listSampleJoint,
       true, jacobianContainer, jacobianIndicesContainer, spatialDerivativesContainer );
-    timer1->StopTimer();
   
     /** Check if enough samples were valid. */
     unsigned long size = this->GetImageSampler()->GetOutput()->Size();
@@ -565,8 +554,6 @@ m_UseSlow = false;
      *
      * and connect them to the searchers.
      */
-
-    timer2->StartTimer();
 
     /** Generate the tree for the fixed image samples. */
     this->m_BinaryKNNTreeFixed->SetSample( listSampleFixed );
@@ -587,8 +574,6 @@ m_UseSlow = false;
       ->SetBinaryTree( this->m_BinaryKNNTreeMoving );
     this->m_BinaryKNNTreeSearcherJoint
       ->SetBinaryTree( this->m_BinaryKNNTreeJoint );
-
-    timer2->StopTimer();
 
     /**
      * *************** Estimate the \alpha MI and its derivatives ******************
@@ -648,13 +633,6 @@ m_UseSlow = false;
     double twoGamma = jointSize * ( 1.0 - this->m_Alpha );
 
     /** Loop over all query points, i.e. all samples. */
-    double time3 = 0.0;
-    double time4 = 0.0;
-    double time5 = 0.0;
-    double time6 = 0.0;
-    double time7 = 0.0;
-    double time8 = 0.0;
-    double time9 = 0.0;
     for ( unsigned long i = 0; i < this->m_NumberOfPixelsCounted; i++ )
     {
       /** Get the i-th query point. */
@@ -663,15 +641,11 @@ m_UseSlow = false;
       listSampleJoint->GetMeasurementVector(  i, z_J );
 
       /** Search for the K nearest neighbours of the current query point. */
-      timer3->StartTimer();
       this->m_BinaryKNNTreeSearcherFixed->Search(  z_F, indices_F, distances_F );
       this->m_BinaryKNNTreeSearcherMoving->Search( z_M, indices_M, distances_M );
       this->m_BinaryKNNTreeSearcherJoint->Search(  z_J, indices_J, distances_J );
-      timer3->StopTimer();
-      time3 += timer3->GetElapsedClockSec();
    
       /** Variables to compute the measure and its derivative. */
-      timer4->StartTimer();
       AccumulateType Gamma_F = NumericTraits< AccumulateType >::Zero;
       AccumulateType Gamma_M = NumericTraits< AccumulateType >::Zero;
       AccumulateType Gamma_J = NumericTraits< AccumulateType >::Zero;
@@ -683,14 +657,10 @@ m_UseSlow = false;
       
       dGamma_M.Fill( NumericTraits< DerivativeValueType >::Zero );
       dGamma_J.Fill( NumericTraits< DerivativeValueType >::Zero );
-      timer4->StopTimer();
-      time4 += timer4->GetElapsedClockSec();
 
       /** Loop over the neighbours. */
-      timer5->StartTimer();
       for ( unsigned int p = 0; p < k; p++ )
       {
-        timer9->StartTimer();
         /** Get the neighbour point z_ip^M. */
         listSampleMoving->GetMeasurementVector( indices_M[ p ], z_M_ip );
         listSampleMoving->GetMeasurementVector( indices_J[ p ], z_J_ip );
@@ -715,10 +685,8 @@ m_UseSlow = false;
         D2sparse_J = spatialDerivativesContainer[ indices_J[ p ] ]
           * jacobianContainer[ indices_J[ p ] ];
 
-        timer9->StopTimer();
-        time9 += timer9->GetElapsedClockSec();
-      
-        if ( this->m_UseSlow )
+     	/** Update the */ 
+        if ( this->m_UseOldAndSlowMethod )
         {
         /** Compute ( D1sparse - D2sparse_M ) and ( D1sparse - D2sparse_J ).
          * The function returns the full matrices.
@@ -736,6 +704,8 @@ m_UseSlow = false;
         timer8->StartTimer();
         diff_M.post_multiply( Dfull_M );
         diff_J.post_multiply( Dfull_J );
+//std::cout << "full_old: " << diff_M / distance_M << std::endl;
+//std::cout << "full_old J: " << diff_J / distance_J << std::endl;
 
         /** Only compute stuff if all distances are large enough. */
         if ( distance_M > this->m_AvoidDivisionBy )
@@ -749,22 +719,32 @@ m_UseSlow = false;
         timer8->StopTimer();
         time8 += timer8->GetElapsedClockSec();
         }
-        else
-        {
+        //else
+        //{
+        /** Get the difference of z_ip^M with z_i^M. */
+        diff_M = z_M - z_M_ip;
+        diff_J = z_M - z_J_ip;
+		
           timer7->StartTimer();
 
           /** Only compute stuff if all distances are large enough. */
           bool doupdate = false;
+		  std::cout << "diff_M: " << diff_M << std::endl;
+		  std::cout << "distance_M: " << distance_M << std::endl;
+		  std::cout << "diff_J: " << diff_J << std::endl;
+		  std::cout << "distance_J: " << distance_J << std::endl;
           if ( distance_M > this->m_AvoidDivisionBy )
           {
             diff_M /= distance_M;
             doupdate = true;
           }
+		  std::cout << "diff_M: " << diff_M << std::endl;
           if ( distance_J > this->m_AvoidDivisionBy )
           {
             diff_J /= distance_J;
             doupdate &= true;
           }
+		  std::cout << "diff_J: " << diff_J << std::endl;
           //if ( doupdate )
           //{
             this->ComputeImageJacobianDifference2(
@@ -774,11 +754,33 @@ m_UseSlow = false;
               jacobianIndicesContainer[ indices_J[ p ] ],
               diff_M, diff_J,
               distance_M, distance_J,
-              dGamma_M, dGamma_J );
+              tmp_dGamma_M, tmp_dGamma_J );
+              //dGamma_M, dGamma_J );
           //}
             timer7->StopTimer();
           time7 += timer7->GetElapsedClockSec();
-        }
+        //} //end else
+
+		// Get difference between old and new
+		//std::cout << "dGamma_M old: " << dGamma_M << std::endl;
+		//std::cout << "dGamma_M new: " << tmp_dGamma_M << std::endl;
+		//std::cout << "dGamma_J old: " << dGamma_J << std::endl;
+		//std::cout << "dGamma_J new: " << tmp_dGamma_J << std::endl;
+		vnl_vector<double> tmpdiffM = dGamma_M - tmp_dGamma_M;
+		//vnl_vector<double> tmpdivM = dGamma_M / tmp_dGamma_M;
+		//std::cout << "divide: " << tmpdivM << std::endl;
+		std::cout << "diff dGamma_M: " << tmpdiffM.magnitude() << std::endl;
+		vnl_vector<double> tmpdiffJ = dGamma_J - tmp_dGamma_J;
+		std::cout << "diff dGamma_J: " << tmpdiffJ.magnitude() << std::endl;
+
+		if ( tmpdiffM.magnitude() > 0.00001 )
+		{
+		  itkExceptionMacro( << "ERROR: dGamma_M difference!" );
+		}
+		if ( tmpdiffJ.magnitude() > 0.00001 )
+		{
+		  itkExceptionMacro( << "ERROR: dGamma_J difference!" );
+		}
 
       } // end loop over the k neighbours
       timer5->StopTimer();
@@ -1110,19 +1112,27 @@ m_UseSlow = false;
       Dfull_M.set_column( D1indices[ i ], D1sparse.get_column( i ) );
     }
     Dfull_J = Dfull_M;
-    
+//std::cout << "D1full: " << Dfull_M << std::endl;
+
     /** Subtract D2sparse_M from Dfull_M. */
     for ( unsigned int i = 0; i < D2indices_M.GetSize(); ++i )
     {
-      Dfull_M.set_column( D2indices_M[ i ],
-        Dfull_M.get_column( D2indices_M[ i ] ) - D2sparse_M.get_column( i ) );
+vnl_vector<double> tmp = Dfull_M.get_column( D2indices_M[ i ] ) - D2sparse_M.get_column( i );
+
+      Dfull_M.set_column( D2indices_M[ i ], tmp );
+	  
+      //Dfull_M.set_column( D2indices_M[ i ],
+        //Dfull_M.get_column( D2indices_M[ i ] ) - D2sparse_M.get_column( i ) );
     }
 
     /** Subtract D2sparse_J from Dfull_J. */
     for ( unsigned int i = 0; i < D2indices_J.GetSize(); ++i )
     {
-      Dfull_J.set_column( D2indices_J[ i ],
-        Dfull_J.get_column( D2indices_J[ i ] ) - D2sparse_J.get_column( i ) );
+vnl_vector<double> tmp = Dfull_J.get_column( D2indices_J[ i ] ) - D2sparse_J.get_column( i );
+
+      Dfull_J.set_column( D2indices_J[ i ], tmp );
+      //Dfull_J.set_column( D2indices_J[ i ],
+        //Dfull_J.get_column( D2indices_J[ i ] ) - D2sparse_J.get_column( i ) );
     }
 
   } // end ComputeImageJacobianDifference()
@@ -1159,6 +1169,9 @@ m_UseSlow = false;
     vnl_vector<double> tmp2sparse_M = tmpM2.post_multiply( D2sparse_M );
     vnl_vector<double> tmp2sparse_J = tmpJ.post_multiply( D2sparse_J );
 
+//std::cout << "tmp1sparse: " << tmp1sparse << std::endl;
+//std::cout << "tmp2sparse_M: " << tmp2sparse_M << std::endl;
+
     /** Add first half. *
     for ( unsigned int i = 0; i < D1indices.GetSize(); ++i )
     {
@@ -1173,6 +1186,7 @@ m_UseSlow = false;
         dGamma_M[ D1indices[ i ] ] += tmp1sparse[ i ];
       }
     }
+
     if ( distance_J > this->m_AvoidDivisionBy )
     {
       for ( unsigned int i = 0; i < D1indices.GetSize(); ++i )
@@ -1197,6 +1211,33 @@ m_UseSlow = false;
         dGamma_J[ D2indices_J[ i ] ] -= tmp2sparse_J[ i ];
       }
     }
+// tmp
+if ( 0 )
+{
+DerivativeType Dfull_M2( this->m_NumberOfParameters );
+Dfull_M2.Fill( NumericTraits<DerivativeValueType>::Zero );
+for ( unsigned int i = 0; i < D1indices.GetSize(); ++i )
+{
+  Dfull_M2[ D1indices[ i ] ] = tmp1sparse[ i ];
+}
+for ( unsigned int i = 0; i < D2indices_M.GetSize(); ++i )
+{
+  Dfull_M2[ D2indices_M[ i ] ] -= tmp2sparse_M[ i ];
+}
+//std::cout << "full_new: " << Dfull_M2 << std::endl;
+
+DerivativeType Dfull_J2( this->m_NumberOfParameters );
+Dfull_J2.Fill( NumericTraits<DerivativeValueType>::Zero );
+for ( unsigned int i = 0; i < D1indices.GetSize(); ++i )
+{
+  Dfull_J2[ D1indices[ i ] ] = tmp1sparse[ i ];
+}
+for ( unsigned int i = 0; i < D2indices_J.GetSize(); ++i )
+{
+  Dfull_J2[ D2indices_J[ i ] ] -= tmp2sparse_J[ i ];
+}
+std::cout << "full_new J: " << Dfull_J2 << std::endl;
+}
 
   } // end ComputeImageJacobianDifference2()
 
