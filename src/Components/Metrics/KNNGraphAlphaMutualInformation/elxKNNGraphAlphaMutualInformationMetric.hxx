@@ -63,6 +63,10 @@ using namespace itk;
     this->m_Configuration->ReadParameter( smallNumber, "AvoidDivisionBy", 0, true );
     this->SetAvoidDivisionBy( smallNumber );
 
+    /** Get the small number that avoids division by that number. */
+    bool useSlow = false;
+    this->m_Configuration->ReadParameter( useSlow, "UseSlow", 0, true );
+    this->SetUseSlow( useSlow );
   } // end BeforeRegistration()
 
 

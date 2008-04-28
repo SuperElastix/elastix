@@ -238,6 +238,8 @@ public:
 
   /** Avoid division by a small number. */
   itkGetConstReferenceMacro( AvoidDivisionBy, double );
+
+itkSetMacro( UseSlow, bool );
   
 protected:
 
@@ -317,6 +319,20 @@ private:
     ParameterIndexArrayType & D2indices_J,
     SpatialDerivativeType & Dfull_M,
     SpatialDerivativeType & Dfull_J ) const;
+
+  virtual void ComputeImageJacobianDifference2(
+    const SpatialDerivativeType & D1sparse,
+    const SpatialDerivativeType & D2sparse_M,
+    const SpatialDerivativeType & D2sparse_J,
+    const ParameterIndexArrayType & D1indices,
+    const ParameterIndexArrayType & D2indices_M,
+    const ParameterIndexArrayType & D2indices_J,
+    const MeasurementVectorType & diff_M,
+    const MeasurementVectorType & diff_J,
+    DerivativeType & dGamma_M,
+    DerivativeType & dGamma_J ) const;
+
+bool m_UseSlow;
 
  }; // end class KNNGraphAlphaMutualInformationImageToImageMetric
 
