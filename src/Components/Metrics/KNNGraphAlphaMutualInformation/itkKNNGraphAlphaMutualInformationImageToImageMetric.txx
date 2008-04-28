@@ -773,7 +773,7 @@ m_UseSlow = false;
               jacobianIndicesContainer[ indices_M[ p ] ],
               jacobianIndicesContainer[ indices_J[ p ] ],
               diff_M, diff_J,
-              MeasureType
+              distance_M, distance_J,
               dGamma_M, dGamma_J );
           }
             timer7->StopTimer();
