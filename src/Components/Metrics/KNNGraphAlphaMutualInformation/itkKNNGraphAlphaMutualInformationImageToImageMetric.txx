@@ -765,8 +765,8 @@ m_UseSlow = false;
             diff_J /= distance_J;
             doupdate &= true;
           }
-          if ( doupdate )
-          {
+          //if ( doupdate )
+          //{
             this->ComputeImageJacobianDifference2(
               D1sparse, D2sparse_M, D2sparse_J,
               jacobianIndicesContainer[ i ],
@@ -775,7 +775,7 @@ m_UseSlow = false;
               diff_M, diff_J,
               distance_M, distance_J,
               dGamma_M, dGamma_J );
-          }
+          //}
             timer7->StopTimer();
           time7 += timer7->GetElapsedClockSec();
         }
