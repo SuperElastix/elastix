@@ -63,10 +63,13 @@ using namespace itk;
     this->m_Configuration->ReadParameter( smallNumber, "AvoidDivisionBy", 0, true );
     this->SetAvoidDivisionBy( smallNumber );
 
-    /** Get the small number that avoids division by that number. */
+    /** For backwards compatibility a setting to compute GMI exactly as in the paper.
+     * Scheduled to be removed in the future.
+     */
     bool useSlow = false;
-    this->m_Configuration->ReadParameter( useSlow, "UseSlow", 0, true );
-    this->SetUseSlow( useSlow );
+    this->m_Configuration->ReadParameter( useSlow, "UseOldAndSlowMethod", 0, true );
+    this->SetUseOldAndSlowMethod( useSlow );
+
   } // end BeforeRegistration()
 
 

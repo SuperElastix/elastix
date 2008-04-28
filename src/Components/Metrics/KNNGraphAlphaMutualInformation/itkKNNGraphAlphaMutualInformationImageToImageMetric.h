@@ -239,7 +239,8 @@ public:
   /** Avoid division by a small number. */
   itkGetConstReferenceMacro( AvoidDivisionBy, double );
 
-itkSetMacro( UseSlow, bool );
+  /** For backwards compatibility. Remove in the future. */
+  itkSetMacro( UseOldAndSlowMethod, bool );
   
 protected:
 
@@ -310,7 +311,7 @@ private:
    * care of going from a sparse matrix (hence the indices) to a
    * full sized matrix.
    */
-  virtual void ComputeImageJacobianDifference(
+  virtual void ComputeImageJacobianDifference_Old(
     SpatialDerivativeType & D1sparse,
     SpatialDerivativeType & D2sparse_M,
     SpatialDerivativeType & D2sparse_J,
@@ -320,7 +321,7 @@ private:
     SpatialDerivativeType & Dfull_M,
     SpatialDerivativeType & Dfull_J ) const;
 
-  virtual void ComputeImageJacobianDifference2(
+  virtual void UpdateDerivativeOfGammas(
     const SpatialDerivativeType & D1sparse,
     const SpatialDerivativeType & D2sparse_M,
     const SpatialDerivativeType & D2sparse_J,
@@ -329,12 +330,12 @@ private:
     const ParameterIndexArrayType & D2indices_J,
     const MeasurementVectorType & diff_M,
     const MeasurementVectorType & diff_J,
-    const MeasureType distance_M,
-    const MeasureType distance_J,
+    const MeasureType & distance_M,
+    const MeasureType & distance_J,
     DerivativeType & dGamma_M,
     DerivativeType & dGamma_J ) const;
 
-bool m_UseSlow;
+  bool m_UseOldAndSlowMethod;
 
  }; // end class KNNGraphAlphaMutualInformationImageToImageMetric
 
