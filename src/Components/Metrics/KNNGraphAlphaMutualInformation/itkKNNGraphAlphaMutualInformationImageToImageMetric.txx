@@ -773,6 +773,7 @@ m_UseSlow = false;
               jacobianIndicesContainer[ indices_M[ p ] ],
               jacobianIndicesContainer[ indices_J[ p ] ],
               diff_M, diff_J,
+              MeasureType
               dGamma_M, dGamma_J );
           }
             timer7->StopTimer();
@@ -1143,6 +1144,8 @@ m_UseSlow = false;
     const ParameterIndexArrayType & D2indices_J,
     const MeasurementVectorType & diff_M,
     const MeasurementVectorType & diff_J,
+    const MeasureType distance_M,
+    const MeasureType distance_J,
     DerivativeType & dGamma_M,
     DerivativeType & dGamma_J ) const
   {
@@ -1156,22 +1159,43 @@ m_UseSlow = false;
     vnl_vector<double> tmp2sparse_M = tmpM2.post_multiply( D2sparse_M );
     vnl_vector<double> tmp2sparse_J = tmpJ.post_multiply( D2sparse_J );
 
-    /** Add first half. */
+    /** Add first half. *
     for ( unsigned int i = 0; i < D1indices.GetSize(); ++i )
     {
       dGamma_M[ D1indices[ i ] ] += tmp1sparse[ i ];
       dGamma_J[ D1indices[ i ] ] += tmp1sparse[ i ];
+    }*/
+
+    if ( distance_M > this->m_AvoidDivisionBy )
+    {
+      for ( unsigned int i = 0; i < D1indices.GetSize(); ++i )
+      {
+        dGamma_M[ D1indices[ i ] ] += tmp1sparse[ i ];
+      }
+    }
+    if ( distance_J > this->m_AvoidDivisionBy )
+    {
+      for ( unsigned int i = 0; i < D1indices.GetSize(); ++i )
+      {
+        dGamma_J[ D1indices[ i ] ] += tmp1sparse[ i ];
+      }
     }
     
     /** Subtract second half. */
-    for ( unsigned int i = 0; i < D2indices_M.GetSize(); ++i )
+    if ( distance_M > this->m_AvoidDivisionBy )
     {
-      dGamma_M[ D2indices_M[ i ] ] -= tmp2sparse_M[ i ];
+      for ( unsigned int i = 0; i < D2indices_M.GetSize(); ++i )
+      {
+        dGamma_M[ D2indices_M[ i ] ] -= tmp2sparse_M[ i ];
+      }
     }
 
-    for ( unsigned int i = 0; i < D2indices_J.GetSize(); ++i )
+    if ( distance_J > this->m_AvoidDivisionBy )
     {
-      dGamma_J[ D2indices_J[ i ] ] -= tmp2sparse_J[ i ];
+      for ( unsigned int i = 0; i < D2indices_J.GetSize(); ++i )
+      {
+        dGamma_J[ D2indices_J[ i ] ] -= tmp2sparse_J[ i ];
+      }
     }
 
   } // end ComputeImageJacobianDifference2()

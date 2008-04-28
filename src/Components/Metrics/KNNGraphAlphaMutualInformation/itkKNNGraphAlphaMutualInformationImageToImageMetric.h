@@ -329,6 +329,8 @@ private:
     const ParameterIndexArrayType & D2indices_J,
     const MeasurementVectorType & diff_M,
     const MeasurementVectorType & diff_J,
+    const MeasureType distance_M,
+    const MeasureType distance_J,
     DerivativeType & dGamma_M,
     DerivativeType & dGamma_J ) const;
 
