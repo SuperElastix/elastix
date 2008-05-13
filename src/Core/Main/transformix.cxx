@@ -230,9 +230,9 @@ void PrintHelp(void)
 	
 	/** The parameter file. */
 	std::cout << "The transform-parameter file must contain all the information necessary for transformix to run properly. That includes which transform to use, with which parameters, etc." << std::endl;
-	std::cout << "For a usable transform-parameter file, ask us." << std::endl << std::endl;
+	std::cout << "For a usable transform-parameter file, see the output of elastix." << std::endl << std::endl;
 
-	std::cout << "Need further help? Ask Marius and/or Stefan. :-)" << std::endl;
+	std::cout << "Need further help? Check the website http://elastix.isi.uu.nl, or ask Marius and/or Stefan. :-)" << std::endl;
 
 } // end PrintHelp()
 

@@ -333,7 +333,7 @@ void PrintHelp(void)
 	std::cout << "It must also contain information specific for the metric, optimizer, transform,..." << std::endl;
 	std::cout << "For a usable parameter-file, ask us." << std::endl << std::endl;
 
-  std::cout << "Need further help? Check the website http://www.isi.uu.nl/Elastix, or ask Marius and/or Stefan. :-)" << std::endl;
+  std::cout << "Need further help? Check the website http://elastix.isi.uu.nl, or ask Marius and/or Stefan. :-)" << std::endl;
 
 } // end PrintHelp
 
