@@ -1,6 +1,6 @@
 #---------------------------------------------------------------------
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.4)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 # This project is intended to be built outside the Insight source tree
 
 #---------------------------------------------------------------------

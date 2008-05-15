@@ -22,8 +22,8 @@ xoutcell.h)
 IF(CMAKE_COMPILER_IS_GNUCXX)
   #Add -fPIC to the gcc-options. 
   #This is needed for compilation on a 64-bit machine 
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-  SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+  #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+  #SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
 ENDIF(CMAKE_COMPILER_IS_GNUCXX)
 
 # a lib defining the global variable xout.
