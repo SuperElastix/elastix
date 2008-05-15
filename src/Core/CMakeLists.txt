@@ -83,6 +83,7 @@ SOURCE_GROUP( "Configuration" FILES ${ConfigurationFiles} )
 SOURCE_GROUP( "ComponentBaseClasses" FILES ${ComponentBaseClassFiles} )
 SOURCE_GROUP( "ProgressCommand" FILES ${ProgressCommandFiles} )
 
+# seems to be not needed anymore:
 # on cygwin using gcc, -fPIC is ignored
 IF ( NOT WIN32 )
   IF(CMAKE_COMPILER_IS_GNUCXX)
