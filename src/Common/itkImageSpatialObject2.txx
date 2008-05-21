@@ -80,6 +80,8 @@ ImageSpatialObject2< TDimension,  PixelType >
     {
     std::cout << "itk::ImageSpatialObject2() : PixelType not recognized" << std::endl;
     }
+
+  m_Interpolator = NNInterpolatorType::New();
 }
 
 /** Destructor */
@@ -99,6 +101,20 @@ ImageSpatialObject2< TDimension,  PixelType >
   return IsInside(point, depth, name);
 }
 
+/** Set the interpolator */
+template< unsigned int TDimension, class PixelType >
+void
+ImageSpatialObject2< TDimension,  PixelType >
+::SetInterpolator(InterpolatorType * interpolator)
+{
+  m_Interpolator = interpolator;
+  if(m_Image)
+  {
+    m_Interpolator->SetInputImage(m_Image);
+  }
+}
+
+
 /** Test whether a point is inside or outside the object 
  *  For computational speed purposes, it is faster if the method does not
  *  check the name of the class and the current depth */ 
@@ -113,12 +129,14 @@ ImageSpatialObject2< TDimension,  PixelType >
     return false;
     }
     
-  if(!this->GetIndexToWorldTransform()->GetInverse(const_cast<TransformType *>(this->GetInternalInverseTransform())))
+  if(!this->GetIndexToWorldTransform()->GetInverse(
+    const_cast<TransformType *>(this->GetInternalInverseTransform())))
     {
     return false;
     }
 
-  PointType transformedPoint = this->GetInternalInverseTransform()->TransformPoint(point);
+  PointType transformedPoint =
+    this->GetInternalInverseTransform()->TransformPoint(point);
 
   bool isInside = true;
   typename ImageType::RegionType region = m_Image->GetLargestPossibleRegion();
@@ -189,14 +207,27 @@ ImageSpatialObject2< TDimension,  PixelType >
 
     PointType p = inverse->TransformPoint(point);
 
-    IndexType index;
+    typename InterpolatorType::ContinuousIndexType index;
+    typedef typename InterpolatorType::OutputType InterpolatorOutputType;
     for(unsigned int i=0; i<TDimension; i++)
-      {
+    {
+      index[i] = p[i];
+    }
+
+    value = static_cast<double>(
+      DefaultConvertPixelTraits<InterpolatorOutputType>::GetScalarValue(
+      m_Interpolator->EvaluateAtContinuousIndex(index)));
+
+    //IndexType index;
+    //for(unsigned int i=0; i<TDimension; i++)
+      //{
       // index[i] = (int)p[i]; // changed by stefan
-        index[i] = static_cast<int>( vnl_math_rnd( p[i] ) );
-      }
+        //index[i] = static_cast<int>( vnl_math_rnd( p[i] ) );
+      //}
     
-    value = static_cast<double>(DefaultConvertPixelTraits<PixelType>::GetScalarValue(m_Image->GetPixel(index)));
+    //value = static_cast<double>(
+      //DefaultConvertPixelTraits<PixelType>::GetScalarValue(
+      //m_Image->GetPixel(index)));
 
     return true;
     }
@@ -225,7 +256,8 @@ ImageSpatialObject2< TDimension,  PixelType >
 ::ComputeLocalBoundingBox() const
 {
     if( this->GetBoundingBoxChildrenName().empty() 
-        || strstr(typeid(Self).name(), this->GetBoundingBoxChildrenName().c_str()) )
+        || strstr(typeid(Self).name(),
+        this->GetBoundingBoxChildrenName().c_str()) )
       {
       typename ImageType::RegionType region =
         m_Image->GetLargestPossibleRegion();
@@ -239,11 +271,38 @@ ImageSpatialObject2< TDimension,  PixelType >
         pointHigh[i] = size[i] - 1 ;
         }
 
-      pointLow = this->GetIndexToWorldTransform()->TransformPoint(pointLow);
-      pointHigh = this->GetIndexToWorldTransform()->TransformPoint(pointHigh);
+      //pointLow = this->GetIndexToWorldTransform()->TransformPoint(pointLow);
+      //pointHigh = this->GetIndexToWorldTransform()->TransformPoint(pointHigh);
 
-      const_cast<BoundingBoxType *>(this->GetBounds())->SetMinimum(pointLow);
-      const_cast<BoundingBoxType *>(this->GetBounds())->SetMaximum(pointHigh);
+      //const_cast<BoundingBoxType *>(this->GetBounds())->SetMinimum(pointLow);
+      //const_cast<BoundingBoxType *>(this->GetBounds())->SetMaximum(pointHigh);
+
+        typename BoundingBoxType::Pointer bb = BoundingBoxType::New();
+        bb->SetMinimum(pointLow);
+        bb->SetMaximum(pointHigh);
+        typedef typename BoundingBoxType::PointsContainer PointsContainerType;
+        const PointsContainerType* corners = bb->GetCorners();
+
+        typename PointsContainerType::const_iterator itC = corners->begin();
+        i=0;
+        while(itC != corners->end())
+        {
+          PointType transformedPoint = this->GetIndexToWorldTransform()->TransformPoint(*itC);
+          if(i == 0)
+          {
+            const_cast<BoundingBoxType *>(this->GetBounds())->SetMinimum(transformedPoint);
+          }
+          else if(i==1)
+          {
+            const_cast<BoundingBoxType *>(this->GetBounds())->SetMaximum(transformedPoint);
+          }
+          else
+          {
+            const_cast<BoundingBoxType *>(this->GetBounds())->ConsiderPoint(transformedPoint);
+          }
+          itC++;
+          i++;
+        }
 
       return true;
       }
@@ -283,6 +342,8 @@ ImageSpatialObject2< TDimension,  PixelType >
   this->ComputeObjectToParentTransform(); 
   this->Modified(); 
   this->ComputeBoundingBox();
+
+  m_Interpolator->SetInputImage(m_Image);
 }
 
 /** Get the image inside the spatial object */

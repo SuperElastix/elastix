@@ -37,6 +37,8 @@
 #include "itkImageMaskSpatialObject2.h"
 #include "vnl/vnl_math.h"
 
+#include "itkImageRegionConstIteratorWithIndex.h"
+
 namespace itk
 {
 
@@ -67,7 +69,8 @@ ImageMaskSpatialObject2< TDimension >
 {
   if(this->GetBounds()->IsInside(point))
     {
-    if(!this->GetIndexToWorldTransform()->GetInverse(const_cast<TransformType *>(this->GetInternalInverseTransform())))
+    if(!this->GetIndexToWorldTransform()->GetInverse(
+      const_cast<TransformType *>(this->GetInternalInverseTransform())))
       {
       return false;
       }
@@ -79,8 +82,19 @@ ImageMaskSpatialObject2< TDimension >
       //index[i] = static_cast<int>( p[i] ); // changed by stefan
       index[i] = static_cast<int>( vnl_math_rnd( p[i] ) );
       }
-    bool inside = ( this->GetImage()->GetPixel(index) != NumericTraits<PixelType>::Zero );
-    return inside;
+
+      const bool insideBuffer = 
+        this->GetImage()->GetBufferedRegion().IsInside( index );
+
+      if( !insideBuffer )
+      {
+        return false;
+      }
+
+      const bool insideMask = 
+        (this->GetImage()->GetPixel(index) != NumericTraits<PixelType>::Zero);
+
+      return insideMask;
     }
 
   return false;
@@ -129,12 +143,12 @@ ImageMaskSpatialObject2< TDimension >
   RegionType region;
   
   ImagePointer image = this->GetImage();
+
+  IndexType index;
+  typename RegionType::SizeType  size;
   
   if( ImageType::ImageDimension == 3)
     {
-    IndexType index;
-    typename RegionType::SizeType  size;
-    
     for( unsigned int axis = 0; axis < ImageType::ImageDimension; axis++ )
       {
       // Two slice iterators along each axis...
@@ -150,7 +164,6 @@ ImageMaskSpatialObject2< TDimension >
           }
         }
       
-
       // Create the forward iterator to find lower bound
       SliceIteratorType  fit(  image,  image->GetRequestedRegion() );
       fit.SetFirstDirection(  direction[1] );
@@ -208,8 +221,38 @@ ImageMaskSpatialObject2< TDimension >
     }
   else
     {
-    itkExceptionMacro( << "ImageDimension must be 3!" );
-    }    
+      //itkExceptionMacro( << "ImageDimension must be 3!" );
+      typedef ImageRegionConstIteratorWithIndex<ImageType> IteratorType;
+      IteratorType it( image, image->GetRequestedRegion() );
+      it.GoToBegin();
+
+      for ( unsigned int i = 0; i < ImageType::ImageDimension; ++i )
+      {
+        index[ i ] = image->GetRequestedRegion().GetSize( i );
+        size[ i ]  = image->GetRequestedRegion().GetIndex( i );
+      }
+
+      while( !it.IsAtEnd() )
+      {
+        if ( it.Get() != outsideValue )
+        {
+          IndexType tmpIndex = it.GetIndex();
+          for ( unsigned int i = 0; i < ImageType::ImageDimension; ++i )
+          {
+            index[ i ] = index[ i ] < tmpIndex[ i ] ? index[ i ] : tmpIndex[ i ];
+            size[ i ]  = size[ i ]  > tmpIndex[ i ] ? size[ i ]  : tmpIndex[ i ];
+          }
+        }
+        ++it;
+      }
+
+      for ( unsigned int i = 0; i < ImageType::ImageDimension; ++i )
+      {
+        size[ i ] = size[ i ] - index[ i ] + 1;
+      }
+      region.SetIndex( index );
+      region.SetSize( size );
+    } // end else 
   
   return region;
    

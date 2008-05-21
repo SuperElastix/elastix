@@ -56,8 +56,8 @@ class ImageMaskSpatialObject2
 
 public:
  
-  typedef ImageMaskSpatialObject2< TDimension >        Self;
-  typedef ImageSpatialObject2< TDimension >            Superclass;
+  typedef ImageMaskSpatialObject2< TDimension >       Self;
+  typedef ImageSpatialObject2< TDimension >           Superclass;
   typedef SmartPointer< Self >                        Pointer;
   typedef SmartPointer< const Self >                  ConstPointer;
 
@@ -98,6 +98,8 @@ public:
   RegionType GetAxisAlignedBoundingBoxRegion() const;
 
 protected:
+  ImageMaskSpatialObject2(const Self&); //purposely not implemented
+  void operator=(const Self&); //purposely not implemented
 
   ImageMaskSpatialObject2();
   virtual ~ImageMaskSpatialObject2();
@@ -112,5 +114,5 @@ protected:
 #include "itkImageMaskSpatialObject2.txx"
 #endif
 
-#endif //__itkImageMaskSpatialObject22_h
+#endif //__itkImageMaskSpatialObject2_h
 
