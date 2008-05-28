@@ -48,14 +48,14 @@ ImageSpatialObject2< TDimension,  PixelType >
 ::ImageSpatialObject2()
 {
   this->SetTypeName("ImageSpatialObject2");
-  m_Image = ImageType::New();
+  //m_Image = ImageType::New(); // very strange
   m_SlicePosition = new int[TDimension];
   for(unsigned int i=0;i<TDimension;i++)
     {
     m_SlicePosition[i]=0;
     }
 
-  this->ComputeBoundingBox();
+  //this->ComputeBoundingBox(); // very strange
   if(typeid(PixelType) == typeid(short))
     {
     m_PixelType = "short";

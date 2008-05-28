@@ -48,7 +48,7 @@ ImageMaskSpatialObject2< TDimension>
 ::ImageMaskSpatialObject2()
 {
   this->SetTypeName("ImageMaskSpatialObject2");
-  this->ComputeBoundingBox();
+  //this->ComputeBoundingBox(); This is not possible since no image set yet
 }
 
 /** Destructor */
@@ -130,6 +130,27 @@ typename ImageMaskSpatialObject2< TDimension >::RegionType
 ImageMaskSpatialObject2< TDimension >
 ::GetAxisAlignedBoundingBoxRegion() const
 {
+  /** Compute index and size of the bounding box. */
+  IndexType index;
+  SizeType  size;
+  this->ComputeLocalBoundingBoxIndexAndSize( index, size );
+
+  /** Define and return region. */
+  RegionType region;
+  region.SetIndex( index );
+  region.SetSize( size );
+
+  return region;
+  
+}  // end GetAxisAlignedBoundingBoxRegion()
+
+
+template< unsigned int  TDimension >
+void
+ImageMaskSpatialObject2< TDimension >
+::ComputeLocalBoundingBoxIndexAndSize(
+  IndexType & index, SizeType & size ) const
+{
   // We will use a slice iterator to iterate through slices orthogonal
   // to each of the axis of the image to find the bounding box. Each
   // slice iterator iterates from the outermost slice towards the image
@@ -139,125 +160,176 @@ ImageMaskSpatialObject2< TDimension >
   // having to walk the whole image. Since we are using slice iterators,
   // we will implement this only for 3D images.
 
-  PixelType outsideValue = NumericTraits< PixelType >::Zero;
-  RegionType region;
-  
   ImagePointer image = this->GetImage();
+  PixelType outsideValue = NumericTraits< PixelType >::Zero;
 
-  IndexType index;
-  typename RegionType::SizeType  size;
-  
-  if( ImageType::ImageDimension == 3)
+  /** For 3D a smart implementation existed in the ITK already. */
+  if ( ImageType::ImageDimension == 3 )
+  {
+    for ( unsigned int axis = 0; axis < ImageType::ImageDimension; axis++ )
     {
-    for( unsigned int axis = 0; axis < ImageType::ImageDimension; axis++ )
-      {
       // Two slice iterators along each axis...
       // Find the orthogonal planes for the slices
       unsigned int i, j;
-      unsigned int direction[2];
-      for (i = 0, j = 0; i < 3; ++i )
+      unsigned int direction[ 2 ];
+      for ( i = 0, j = 0; i < 3; ++i )
+      {
+        if ( i != axis )
         {
-        if (i != axis )
-          {
-          direction[j] = i;
+          direction[ j ] = i;
           j++;
-          }
         }
+      }
       
       // Create the forward iterator to find lower bound
       SliceIteratorType  fit(  image,  image->GetRequestedRegion() );
-      fit.SetFirstDirection(  direction[1] );
-      fit.SetSecondDirection( direction[0] );
+      fit.SetFirstDirection(  direction[ 1 ] );
+      fit.SetSecondDirection( direction[ 0 ] );
 
       fit.GoToBegin();
-      while( !fit.IsAtEnd() )
+      while ( !fit.IsAtEnd() )
+      {
+        while ( !fit.IsAtEndOfSlice() )
         {
-        while( !fit.IsAtEndOfSlice() )
+          while ( !fit.IsAtEndOfLine() )
           {
-          while( !fit.IsAtEndOfLine() )
+            if ( fit.Get() !=  outsideValue )
             {
-            if( fit.Get() !=  outsideValue )
-              {
-              index[axis] = fit.GetIndex()[axis];
+              index[ axis ] = fit.GetIndex()[ axis ];
               fit.GoToReverseBegin(); // skip to the end
               break;
-              }
-            ++fit;
             }
-          fit.NextLine();
+            ++fit;
           }
-        fit.NextSlice();
+          fit.NextLine();
         }
-
+        fit.NextSlice();
+      }
 
       // Create the reverse iterator to find upper bound
-      SliceIteratorType  rit(  image,  image->GetRequestedRegion() );
-      rit.SetFirstDirection(  direction[1] );
-      rit.SetSecondDirection( direction[0] );
+      SliceIteratorType  rit( image,  image->GetRequestedRegion() );
+      rit.SetFirstDirection(  direction[ 1 ] );
+      rit.SetSecondDirection( direction[ 0 ] );
 
       rit.GoToReverseBegin();
-      while( !rit.IsAtReverseEnd() )
+      while ( !rit.IsAtReverseEnd() )
+      {
+        while ( !rit.IsAtReverseEndOfSlice() )
         {
-        while( !rit.IsAtReverseEndOfSlice() )
+          while ( !rit.IsAtReverseEndOfLine() )
           {
-          while( !rit.IsAtReverseEndOfLine() )
+            if ( rit.Get() !=  outsideValue )
             {
-            if( rit.Get() !=  outsideValue )
-              {
-              size[axis] = rit.GetIndex()[axis] - index[axis];
+              //size[ axis ] = rit.GetIndex()[ axis ] - index[ axis ]; // changed by Marius
+              size[ axis ] = rit.GetIndex()[ axis ] - index[ axis ] + 1;
               rit.GoToBegin(); //Skip to reverse end
               break;
-              }
-            --rit;
             }
+            --rit;
+          }
           rit.PreviousLine();
-          }
+        }
         rit.PreviousSlice();
-        }
       }
-
-    region.SetIndex( index );
-    region.SetSize( size );
     }
+  }
+  // We added a naive implementation for images of dimension other than 3
   else
+  {
+    typedef ImageRegionConstIteratorWithIndex<ImageType> IteratorType;
+    IteratorType it( image, image->GetRequestedRegion() );
+    it.GoToBegin();
+
+    for ( unsigned int i = 0; i < ImageType::ImageDimension; ++i )
     {
-      //itkExceptionMacro( << "ImageDimension must be 3!" );
-      typedef ImageRegionConstIteratorWithIndex<ImageType> IteratorType;
-      IteratorType it( image, image->GetRequestedRegion() );
-      it.GoToBegin();
+      index[ i ] = image->GetRequestedRegion().GetSize( i );
+      size[ i ]  = image->GetRequestedRegion().GetIndex( i );
+    }
 
-      for ( unsigned int i = 0; i < ImageType::ImageDimension; ++i )
+    while ( !it.IsAtEnd() )
+    {
+      if ( it.Get() != outsideValue )
       {
-        index[ i ] = image->GetRequestedRegion().GetSize( i );
-        size[ i ]  = image->GetRequestedRegion().GetIndex( i );
-      }
-
-      while( !it.IsAtEnd() )
-      {
-        if ( it.Get() != outsideValue )
+        IndexType tmpIndex = it.GetIndex();
+        for ( unsigned int i = 0; i < ImageType::ImageDimension; ++i )
         {
-          IndexType tmpIndex = it.GetIndex();
-          for ( unsigned int i = 0; i < ImageType::ImageDimension; ++i )
-          {
-            index[ i ] = index[ i ] < tmpIndex[ i ] ? index[ i ] : tmpIndex[ i ];
-            size[ i ]  = size[ i ]  > tmpIndex[ i ] ? size[ i ]  : tmpIndex[ i ];
-          }
+          index[ i ] = index[ i ] < tmpIndex[ i ] ? index[ i ] : tmpIndex[ i ];
+          size[ i ]  = size[ i ]  > tmpIndex[ i ] ? size[ i ]  : tmpIndex[ i ];
         }
-        ++it;
       }
+      ++it;
+    }
 
-      for ( unsigned int i = 0; i < ImageType::ImageDimension; ++i )
+    for ( unsigned int i = 0; i < ImageType::ImageDimension; ++i )
+    {
+      size[ i ] = size[ i ] - index[ i ] + 1;
+    }
+  } // end else 
+ 
+} // end ComputeLocalBoundingBoxIndexAndSize()
+
+
+/** Compute the bounds of the image */
+template< unsigned int TDimension >
+bool
+ImageMaskSpatialObject2< TDimension >
+::ComputeLocalBoundingBox() const
+{
+  if ( this->GetBoundingBoxChildrenName().empty()
+    || strstr( typeid(Self).name(),
+      this->GetBoundingBoxChildrenName().c_str() ) )
+  {
+    /** Compute index and size of the bounding box. */
+    IndexType indexLow;
+    SizeType  size;
+    this->ComputeLocalBoundingBoxIndexAndSize( indexLow, size );
+
+    /** Convert to points, which are NOT physical points! */
+    PointType pointLow,pointHigh;
+    for ( unsigned int i = 0; i < ImageType::ImageDimension; ++i )
+    {
+      pointLow[ i ] = indexLow[ i ];
+      pointHigh[ i ] = indexLow[ i ] + size[ i ] - 1;
+    }
+
+    /** Compute the bounding box. */
+    typename BoundingBoxType::Pointer bb = BoundingBoxType::New();
+    bb->SetMinimum( pointLow );
+    bb->SetMaximum( pointHigh );
+    typedef typename BoundingBoxType::PointsContainer PointsContainerType;
+    const PointsContainerType* corners = bb->GetCorners();
+
+    typename PointsContainerType::const_iterator itC = corners->begin();
+    unsigned int j = 0;
+    while ( itC != corners->end() )
+    {
+      PointType transformedPoint = 
+        this->GetIndexToWorldTransform()->TransformPoint( *itC );
+      if ( j == 0 )
       {
-        size[ i ] = size[ i ] - index[ i ] + 1;
+        const_cast<BoundingBoxType * >(
+          this->GetBounds() )->SetMinimum( transformedPoint );
       }
-      region.SetIndex( index );
-      region.SetSize( size );
-    } // end else 
-  
-  return region;
-   
-}
+      else if ( j == 1 )
+      {
+        const_cast<BoundingBoxType *>(
+          this->GetBounds() )->SetMaximum( transformedPoint );
+      }
+      else
+      {
+        const_cast<BoundingBoxType *>(
+          this->GetBounds() )->ConsiderPoint( transformedPoint );
+      }
+      itC++;
+      j++;
+    }
 
+    return true;
+  }
+
+  return false;
+
+} // end ComputeLocalBoundingBox()
 
 
 /** Print the object */

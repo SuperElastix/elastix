@@ -66,6 +66,7 @@ public:
   typedef typename Superclass::ImageType              ImageType;
   typedef typename Superclass::ImagePointer           ImagePointer;
   typedef typename Superclass::IndexType              IndexType;
+  typedef typename Superclass::SizeType               SizeType;
   typedef typename Superclass::RegionType             RegionType;
   typedef typename Superclass::TransformType          TransformType;
   typedef typename Superclass::PointType              PointType;
@@ -96,6 +97,15 @@ public:
    * region that encapsulates the mask image. Currently this is done only for 3D
    * volumes. */
   RegionType GetAxisAlignedBoundingBoxRegion() const;
+
+  /** Compute the boundaries of the image mask spatial object. */
+  bool ComputeLocalBoundingBox() const;
+
+  /** Helper function for GetAxisAlignedBoundingBoxRegion()
+   * and ComputeLocalBoundingBox().
+   */
+  void ComputeLocalBoundingBoxIndexAndSize(
+    IndexType & index, SizeType & size ) const;
 
 protected:
   ImageMaskSpatialObject2(const Self&); //purposely not implemented

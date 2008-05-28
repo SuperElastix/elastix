@@ -72,6 +72,7 @@ public:
   typedef Image< PixelType, TDimension >        ImageType;
   typedef typename ImageType::ConstPointer      ImagePointer;
   typedef typename ImageType::IndexType         IndexType;
+  typedef typename ImageType::SizeType          SizeType;
   typedef typename ImageType::RegionType        RegionType;
   typedef typename Superclass::TransformType    TransformType;
   typedef typename Superclass::PointType        PointType;
@@ -117,7 +118,7 @@ public:
    *  check the name of the class and the current depth */ 
   bool IsInside( const PointType & point) const;
  
-  /** Compute the boundaries of the iamge spatial object. */
+  /** Compute the boundaries of the image spatial object. */
   bool ComputeLocalBoundingBox() const;
 
   /** Returns the latest modified time of the object and its component. */
