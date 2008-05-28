@@ -153,6 +153,9 @@ namespace itk
       return true;
     }
 
+    /** Get a handle to the shrunken InputImageregion. */
+    itkGetConstReferenceMacro( ShrinkedInputImageRegion, InputImageRegionType );
+
   protected:
 
     /** The constructor. */
@@ -177,7 +180,10 @@ namespace itk
      * LargestPossibleRegions.
      */
     virtual bool CheckInputImageRegions( void );
-    
+
+    /** Compute the intersection of the InputImageRegion and the bounding box of the mask. */
+    void ShrinkInputImageRegion( void );
+   
   private:
 
 		/** The private constructor. */
@@ -193,6 +199,7 @@ namespace itk
     InputImageRegionVectorType        m_InputImageRegionVector;
     unsigned int                      m_NumberOfInputImageRegions;
 
+    InputImageRegionType              m_ShrinkedInputImageRegion;
     InputImageRegionType              m_DummyInputImageRegion;
 
   }; // end class ImageSamplerBase

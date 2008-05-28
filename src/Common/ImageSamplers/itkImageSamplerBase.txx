@@ -56,6 +56,13 @@ namespace itk
     if ( this->m_MaskVector[ pos ] != _arg )
     {
       this->m_MaskVector[ pos ] = _arg;
+      /** The following line is not necessary, since the local
+       * bounding box is already computed when SetImage() is called
+       * in the elxRegistrationBase (when the mask spatial object
+       * is constructed).
+       */
+      //this->m_Mask->ComputeLocalBoundingBox();
+      this->ShrinkInputImageRegion();
       this->Modified();
     }
 
@@ -120,6 +127,7 @@ namespace itk
     if ( this->m_InputImageRegionVector[ pos ] != _arg )
     {
       this->m_InputImageRegionVector[ pos ] = _arg;
+      this->ShrinkInputImageRegion();
       this->Modified();
     }
 
@@ -215,7 +223,7 @@ namespace itk
       this->SetInputImageRegion( inputImage->GetLargestPossibleRegion() );
     }
 
-  } // end GenerateInputRequestedRegion
+  } // end GenerateInputRequestedRegion()
 
 
   /**
@@ -235,7 +243,7 @@ namespace itk
     this->Modified();
     return true;
 
-  } // end SelectNewSamplesOnUpdate
+  } // end SelectNewSamplesOnUpdate()
 
 
   /**
@@ -300,6 +308,64 @@ namespace itk
 
 
   /**
+   * ******************* ShrinkInputImageRegion *******************
+   */
+
+  template< class TInputImage >
+    void
+    ImageSamplerBase< TInputImage >
+    ::ShrinkInputImageRegion( void )
+  {
+    if ( this->m_InputImageRegion.GetNumberOfPixels() > 0 )
+    {
+      this->m_ShrinkedInputImageRegion = this->m_InputImageRegion;
+    }
+    else
+    {
+      return;
+    }
+    
+    /** If a mask was set, then compute the intersection of the
+     * InputImageRegion and the BoundingBoxRegion.
+     */
+    if ( !this->m_Mask.IsNull() )
+    {
+      /** Get a handle to the input image. */
+      InputImageConstPointer inputImage = this->GetInput();
+      if ( !inputImage )
+      {
+        return;
+      }
+
+      /** Get the indices of the bounding box extremes.
+       * Note that the bounding box is defined in terms of the mask
+       * spacing and origin, and that we need a region in terms
+       * of the inputImage.
+       */
+      InputImageIndexType min, max;
+      inputImage->TransformPhysicalPointToIndex(
+        this->m_Mask->GetBoundingBox()->GetMinimum(), min );
+      inputImage->TransformPhysicalPointToIndex(
+        this->m_Mask->GetBoundingBox()->GetMaximum(), max );
+
+      /** Create a bounding box region. */
+      InputImageRegionType boundingBoxRegion;
+      InputImageSizeType size;
+      for ( unsigned int i = 0; i < InputImageDimension; ++i )
+      {
+        size[ i ] = max[ i ] - min[ i ] + 1;
+      }
+      boundingBoxRegion.SetIndex( min );
+      boundingBoxRegion.SetSize( size );
+
+      /** Compute the intersection. */
+      this->m_ShrinkedInputImageRegion.Crop( boundingBoxRegion );
+    }
+
+  } // end ShrinkInputImageRegion()
+  
+
+  /**
 	 * ******************* PrintSelf *******************
 	 */
   
@@ -310,9 +376,24 @@ namespace itk
   {
     Superclass::PrintSelf( os, indent );
 
+    os << indent << "NumberOfMasks" << this->m_NumberOfMasks << std::endl;
     os << indent << "Mask: " << this->m_Mask.GetPointer() << std::endl;
+    os << indent << "MaskVector:" << std::endl;
+    for ( unsigned int i = 0; i < this->m_NumberOfMasks; ++i )
+    {
+      os << indent.GetNextIndent() << this->m_MaskVector[ i ].GetPointer() << std::endl;
+    }
 
-  } // end PrintSelf
+    os << indent << "NumberOfInputImageRegions" << this->m_NumberOfInputImageRegions << std::endl;
+    os << indent << "InputImageRegion: " << this->m_InputImageRegion << std::endl;
+    os << indent << "InputImageRegionVector:" << std::endl;
+    for ( unsigned int i = 0; i < this->m_NumberOfInputImageRegions; ++i )
+    {
+      os << indent.GetNextIndent() << this->m_InputImageRegionVector[ i ] << std::endl;
+    }
+    os << indent << "ShrinkedInputImageRegion" << this->m_ShrinkedInputImageRegion << std::endl;
+
+  } // end PrintSelf()
 
 
 } // end namespace itk
