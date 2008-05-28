@@ -37,10 +37,9 @@ namespace itk
     typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
     typename MaskType::ConstPointer mask = this->GetMask();
 
-
-		/** Set up a region interator within the user specified image region.*/
+		/** Set up a region iterator within the user specified image region.*/
 	  typedef ImageRegionConstIteratorWithIndex<InputImageType> InputImageIterator;
-		InputImageIterator iter( inputImage, this->GetInputImageRegion() );
+		InputImageIterator iter( inputImage, this->GetShrinkedInputImageRegion() );
 
     /** Determine the grid */ 
     SampleGridSizeType sampleGridSize;
@@ -64,11 +63,11 @@ namespace itk
 			numberOfSamplesOnGrid *= sampleGridSize[dim];
 		}
 
-    /** Prepare for looping over the grid */
+    /** Prepare for looping over the grid. */
 		unsigned int dim_z = 1;
-		if (InputImageDimension > 2)
+		if ( InputImageDimension > 2 )
 		{
-			dim_z = sampleGridSize[2];
+			dim_z = sampleGridSize[ 2 ];
 		}
 		index = sampleGridIndex;
 

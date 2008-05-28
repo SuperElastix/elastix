@@ -67,9 +67,9 @@ namespace itk
     InputImageSizeType unitSize;
     unitSize.Fill( 1 );
     InputImageIndexType smallestIndex
-      = this->GetInputImageRegion().GetIndex();
+      = this->GetShrinkedInputImageRegion().GetIndex();
     InputImageIndexType largestIndex
-      = smallestIndex + this->GetInputImageRegion().GetSize() - unitSize;
+      = smallestIndex + this->GetShrinkedInputImageRegion().GetSize() - unitSize;
     InputImagePointType smallestImagePoint;
     InputImagePointType largestImagePoint;
     inputImage->TransformIndexToPhysicalPoint(
@@ -97,15 +97,18 @@ namespace itk
         /** Make a reference to the current sample in the container. */
         InputImagePointType & samplePoint = (*iter).Value().m_ImageCoordinates;
         ImageSampleValueType & sampleValue = (*iter).Value().m_ImageValue;
+
         /** Walk over the image until we find a valid point. */
         do 
         {
           /** Generate a point in the input image region. */
           this->GenerateRandomCoordinate( smallestPoint, largestPoint, samplePoint );
         } while ( !interpolator->IsInsideBuffer( samplePoint ) );
+
         /** Compute the value at the point. */
         sampleValue = static_cast<ImageSampleValueType>(
           this->m_Interpolator->Evaluate( samplePoint ) );
+
       } // end for loop
     } // end if no mask
     else
@@ -119,12 +122,14 @@ namespace itk
        * walking around on this image, trying to look for valid samples. */
       unsigned long numberOfSamplesTried = 0;
       unsigned long maximumNumberOfSamplesToTry = 10 * this->GetNumberOfSamples();
+
       /** Start looping over the sample container */
       for ( iter = sampleContainer->Begin(); iter != end; ++iter )
       {
         /** Make a reference to the current sample in the container. */
         InputImagePointType & samplePoint = (*iter).Value().m_ImageCoordinates;
         ImageSampleValueType & sampleValue = (*iter).Value().m_ImageValue;
+
         /** Walk over the image until we find a valid point */
         do 
         {
@@ -140,17 +145,21 @@ namespace itk
             /** Throw an error. */
             itkExceptionMacro( << "Could not find enough image samples within reasonable time. Probably the mask is too small" );
           }
+
           /** Generate a point in the input image region. */
           this->GenerateRandomCoordinate( smallestPoint, largestPoint, samplePoint );
+
         } while ( !interpolator->IsInsideBuffer( samplePoint ) || 
                   !mask->IsInside( samplePoint ) );
+
         /** Compute the value at the point. */
         sampleValue = static_cast<ImageSampleValueType>( 
           this->m_Interpolator->Evaluate( samplePoint ) );
+
       } // end for loop
     } // end if mask
    
-  } // end GenerateData
+  } // end GenerateData()
 
 
   /**
@@ -171,7 +180,7 @@ namespace itk
         this->m_RandomGenerator->GetUniformVariate(
         smallestPoint[ i ], largestPoint[ i ] ) );
     }
-  } // end GenerateRandomCoordinate   
+  } // end GenerateRandomCoordinate()
 
 
   /**
@@ -191,16 +200,13 @@ namespace itk
     {
       smallestPoint = smallestImagePoint;
       largestPoint = largestImagePoint;
-      // \todo: create bounding box around mask...
       return;
     }
     InputImagePointType maxSmallestPoint = largestImagePoint - this->GetSampleRegionSize();
-    this->GenerateRandomCoordinate(smallestImagePoint, maxSmallestPoint, smallestPoint);
+    this->GenerateRandomCoordinate( smallestImagePoint, maxSmallestPoint, smallestPoint );
     largestPoint = smallestPoint + this->GetSampleRegionSize();
-    // \todo: check if in mask, maybe separate function in imagesamplerbase:
-    // ComputeMaskBoundingBox!
     
-  } // end GenerateRandomCoordinate   
+  } // end GenerateRandomCoordinate()
 
 
   /**
@@ -217,7 +223,7 @@ namespace itk
     os << indent << "Interpolator: " << this->m_Interpolator.GetPointer() << std::endl;
     os << indent << "RandomGenerator: " << this->m_RandomGenerator.GetPointer() << std::endl;
 
-  } // end PrintSelf
+  } // end PrintSelf()
 
 
 } // end namespace itk

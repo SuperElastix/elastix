@@ -36,9 +36,9 @@ namespace itk
     typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
     typename MaskType::ConstPointer mask = this->GetMask();
     
-		/** Set up a region interator within the user specified image region.*/
+		/** Set up a region iterator within the user specified image region.*/
 	  typedef ImageRegionConstIteratorWithIndex<InputImageType> InputImageIterator;
-		InputImageIterator iter( inputImage, this->GetInputImageRegion() );
+		InputImageIterator iter( inputImage, this->GetShrinkedInputImageRegion() );
 
     /** Fill the sample container. */
 		if ( mask.IsNull() )

@@ -38,10 +38,10 @@ namespace itk
 
     /** Reserve memory for the output. */
     sampleContainer->Reserve( this->GetNumberOfSamples() );
-
+ 
     /** Setup a random iterator over the input image. */
     typedef ImageRandomConstIteratorWithIndex< InputImageType > RandomIteratorType;
-    RandomIteratorType randIter( inputImage, this->GetInputImageRegion() );
+    RandomIteratorType randIter( inputImage, this->GetShrinkedInputImageRegion() );
     randIter.GoToBegin();
 
     /** Setup an iterator over the output, which is of ImageSampleContainerType. */
@@ -77,7 +77,7 @@ namespace itk
       /** Loop over the sample container. */
       for ( iter = sampleContainer->Begin(); iter != end; ++iter )
       {
-        /** Loop untill a valid sample is found. */
+        /** Loop until a valid sample is found. */
         do 
         {
           /** Jump to a random position. */
@@ -97,6 +97,7 @@ namespace itk
           inputImage->TransformIndexToPhysicalPoint( index,
             inputPoint );
         } while ( !mask->IsInside( inputPoint ) );
+
         /** Put the coordinates and the value in the sample. */
         (*iter).Value().m_ImageCoordinates = inputPoint;
         (*iter).Value().m_ImageValue = randIter.Get();
@@ -104,7 +105,7 @@ namespace itk
       } // end for loop
     } // end if mask
 
-  } // end GenerateData
+  } // end GenerateData()
 
 
 } // end namespace itk
