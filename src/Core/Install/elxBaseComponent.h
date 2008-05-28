@@ -37,7 +37,7 @@
 #include <sstream>
 
 /** The current Elastix version. */
-#define __ELASTIX_VERSION 3.900
+#define __ELASTIX_VERSION 3.901
 
 /** All Elastix components should be in namespace elastix. */
 namespace elastix
