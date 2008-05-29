@@ -62,7 +62,6 @@ namespace itk
        * is constructed).
        */
       //this->m_Mask->ComputeLocalBoundingBox();
-      this->ShrinkInputImageRegion();
       this->Modified();
     }
 
@@ -127,7 +126,6 @@ namespace itk
     if ( this->m_InputImageRegionVector[ pos ] != _arg )
     {
       this->m_InputImageRegionVector[ pos ] = _arg;
-      this->ShrinkInputImageRegion();
       this->Modified();
     }
 
@@ -199,7 +197,6 @@ namespace itk
       if ( inputRequestedRegion.Crop( inputImage->GetLargestPossibleRegion() ) )
       {
         inputImage->SetRequestedRegion( inputRequestedRegion );
-        return;
       }
       else
       {
@@ -222,6 +219,10 @@ namespace itk
       inputImage->SetRequestedRegion( inputImage->GetLargestPossibleRegion() );
       this->SetInputImageRegion( inputImage->GetLargestPossibleRegion() );
     }
+
+    /** Crop the region of the inputImage to the bounding box of the mask. */
+    this->CropInputImageRegion();
+    inputImage->SetRequestedRegion( this->m_CroppedInputImageRegion );
 
   } // end GenerateInputRequestedRegion()
 
@@ -308,26 +309,22 @@ namespace itk
 
 
   /**
-   * ******************* ShrinkInputImageRegion *******************
+   * ******************* CropInputImageRegion *******************
    */
 
   template< class TInputImage >
     void
     ImageSamplerBase< TInputImage >
-    ::ShrinkInputImageRegion( void )
+    ::CropInputImageRegion( void )
   {
-    if ( this->m_InputImageRegion.GetNumberOfPixels() > 0 )
-    {
-      this->m_ShrinkedInputImageRegion = this->m_InputImageRegion;
-    }
-    else
-    {
-      return;
-    }
-    
-    /** If a mask was set, then compute the intersection of the
+    /** Since we expect to be called from GenerateInputRequestedRegion(),
+     * we can safely assume that m_InputImageRegion is either
+     * the LargestPossibleRegion of InputImage or a valid subregion of it.
+     *
+     * If a mask was set, then compute the intersection of the
      * InputImageRegion and the BoundingBoxRegion.
      */
+    this->m_CroppedInputImageRegion = this->m_InputImageRegion;
     if ( !this->m_Mask.IsNull() )
     {
       /** Get a handle to the input image. */
@@ -359,10 +356,19 @@ namespace itk
       boundingBoxRegion.SetSize( size );
 
       /** Compute the intersection. */
-      this->m_ShrinkedInputImageRegion.Crop( boundingBoxRegion );
+      bool cropped = this->m_CroppedInputImageRegion.Crop( boundingBoxRegion );
+
+      /** If the cropping return false, then the intersection is empty.
+       * In this case m_CroppedInputImageRegion is unchanged,
+       * but we would like to throw an exception.
+       */
+      if ( !cropped )
+      {
+        itkExceptionMacro( << "ERROR: the bounding box of the mask lies entirely out of the InputImageRegion!" );
+      }
     }
 
-  } // end ShrinkInputImageRegion()
+  } // end CropInputImageRegion()
   
 
   /**
@@ -391,7 +397,7 @@ namespace itk
     {
       os << indent.GetNextIndent() << this->m_InputImageRegionVector[ i ] << std::endl;
     }
-    os << indent << "ShrinkedInputImageRegion" << this->m_ShrinkedInputImageRegion << std::endl;
+    os << indent << "CroppedInputImageRegion" << this->m_CroppedInputImageRegion << std::endl;
 
   } // end PrintSelf()
 

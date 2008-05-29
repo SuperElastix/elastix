@@ -32,7 +32,7 @@ namespace itk
     /** Set default interpolator */
     typename DefaultInterpolatorType::Pointer bsplineInterpolator =
       DefaultInterpolatorType::New();
-    bsplineInterpolator->SetSplineOrder(3);
+    bsplineInterpolator->SetSplineOrder( 3 );
     this->m_Interpolator = bsplineInterpolator;
 
     /** Setup random generator */
@@ -40,7 +40,7 @@ namespace itk
     //this->m_RandomGenerator->Initialize();
 
     this->m_UseRandomSampleRegion = false;
-    this->m_SampleRegionSize.Fill(1.0);
+    this->m_SampleRegionSize.Fill( 1.0 );
 
   } // end constructor 
 
@@ -67,9 +67,9 @@ namespace itk
     InputImageSizeType unitSize;
     unitSize.Fill( 1 );
     InputImageIndexType smallestIndex
-      = this->GetShrinkedInputImageRegion().GetIndex();
+      = this->GetCroppedInputImageRegion().GetIndex();
     InputImageIndexType largestIndex
-      = smallestIndex + this->GetShrinkedInputImageRegion().GetSize() - unitSize;
+      = smallestIndex + this->GetCroppedInputImageRegion().GetSize() - unitSize;
     InputImagePointType smallestImagePoint;
     InputImagePointType largestImagePoint;
     inputImage->TransformIndexToPhysicalPoint(

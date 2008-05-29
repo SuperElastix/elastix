@@ -153,8 +153,8 @@ namespace itk
       return true;
     }
 
-    /** Get a handle to the shrunken InputImageregion. */
-    itkGetConstReferenceMacro( ShrinkedInputImageRegion, InputImageRegionType );
+    /** Get a handle to the cropped InputImageregion. */
+    itkGetConstReferenceMacro( CroppedInputImageRegion, InputImageRegionType );
 
   protected:
 
@@ -182,7 +182,7 @@ namespace itk
     virtual bool CheckInputImageRegions( void );
 
     /** Compute the intersection of the InputImageRegion and the bounding box of the mask. */
-    void ShrinkInputImageRegion( void );
+    void CropInputImageRegion( void );
    
   private:
 
@@ -199,7 +199,7 @@ namespace itk
     InputImageRegionVectorType        m_InputImageRegionVector;
     unsigned int                      m_NumberOfInputImageRegions;
 
-    InputImageRegionType              m_ShrinkedInputImageRegion;
+    InputImageRegionType              m_CroppedInputImageRegion;
     InputImageRegionType              m_DummyInputImageRegion;
 
   }; // end class ImageSamplerBase

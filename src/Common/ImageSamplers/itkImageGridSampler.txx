@@ -39,7 +39,7 @@ namespace itk
 
 		/** Set up a region iterator within the user specified image region.*/
 	  typedef ImageRegionConstIteratorWithIndex<InputImageType> InputImageIterator;
-		InputImageIterator iter( inputImage, this->GetShrinkedInputImageRegion() );
+		InputImageIterator iter( inputImage, this->GetCroppedInputImageRegion() );
 
     /** Determine the grid */ 
     SampleGridSizeType sampleGridSize;
