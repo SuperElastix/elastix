@@ -48,7 +48,6 @@ ImageMaskSpatialObject2< TDimension>
 ::ImageMaskSpatialObject2()
 {
   this->SetTypeName("ImageMaskSpatialObject2");
-  //this->ComputeBoundingBox(); This is not possible since no image set yet
 }
 
 /** Destructor */
