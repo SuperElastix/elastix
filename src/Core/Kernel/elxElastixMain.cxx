@@ -563,7 +563,7 @@ namespace elastix
     catch ( itk::ExceptionObject & excp )
     {
       xout["error"] 
-        << "ERROR: error occured while creating " 
+        << "ERROR: error occurred while creating " 
         << key << " "
         << componentnr  << "."  << std::endl;
       xout["error"] << excp << std::endl;
