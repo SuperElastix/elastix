@@ -55,6 +55,8 @@ SET(CommonFiles
  itkScaledSingleValuedCostFunction.h
  itkScaledSingleValuedNonLinearOptimizer.cxx
  itkScaledSingleValuedNonLinearOptimizer.h
+ itkTransformToDeformationFieldSource.h
+ itkTransformToDeformationFieldSource.txx
  itkTranslationTransformInitializer.h
  itkTranslationTransformInitializer.hxx
 )
