@@ -944,11 +944,6 @@ namespace elastix
 		typedef itk::ImageFileWriter<
       DeformationFieldImageType >                       DeformationFieldWriterType;
 
-    /** Region size for progress observer? *
-		FixedImageRegionType region;
- 		region.SetSize(
-       this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize() );
-
     /** Create an setup deformation field generator. */
     typename DeformationFieldGeneratorType::Pointer defGenerator
       = DeformationFieldGeneratorType::New();
@@ -967,7 +962,6 @@ namespace elastix
     /** Track the progress of the generation of the deformation field. */
     typename ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
     progressObserver->ConnectObserver( defGenerator );
-    //progressObserver->SetUpdateFrequency( region.GetNumberOfPixels(), 100 );
     progressObserver->SetStartString( "  Progress: " );
     progressObserver->SetEndString( "%" );
 		
@@ -985,7 +979,7 @@ namespace elastix
 		defWriter->SetFileName( makeFileName.str().c_str() );
 		
 		/** Do the writing. */
-		elxout << "  Writing the deformation field" << std::endl;
+		elxout << "  Computing and writing the deformation field ..." << std::endl;
 		try
 		{
 			defWriter->Update();
