@@ -16,7 +16,7 @@
  * ******************* elxBaseComponent.h *************************
  *
  * This file defines the class elx::BaseComponent, from which all 
- * Elastix components should inherit. It contains some methods that 
+ * elastix components should inherit. It contains some methods that 
  * each component is supposed to have.
  *
  * The namespace alias elx is defined in this file.
@@ -36,17 +36,17 @@
 #include <iostream>
 #include <sstream>
 
-/** The current Elastix version. */
-#define __ELASTIX_VERSION 3.901
+/** The current elastix version. */
+#define __ELASTIX_VERSION 3.902
 
-/** All Elastix components should be in namespace elastix. */
+/** All elastix components should be in namespace elastix. */
 namespace elastix
 {
 
 	/**
 	 * \class BaseComponent
 	 *
-	 * \brief The BaseComponent class is a class that all Elastix
+	 * \brief The BaseComponent class is a class that all elastix
 	 * components should inherit from.
 	 *
 	 * Most elastix component inherit both from an ITK class and
@@ -63,7 +63,7 @@ namespace elastix
 	public:
 
 		/**
-		 * Callback methods that each component of Elastix is supposed
+		 * Callback methods that each component of elastix is supposed
 		 * to have. These methods can be overridden in each base component
 		 * (like MetricBase, TransformBase, etc.). In this way similar
 		 * behaviour for a group of components can be implemented.
@@ -72,7 +72,7 @@ namespace elastix
 		virtual int BeforeAll(void) { return 0;};
 
 		/**
-		 * Callback methods that each component of Elastix is supposed
+		 * Callback methods that each component of elastix is supposed
 		 * to have. These methods can be overridden in each base component
 		 * (like MetricBase, TransformBase, etc.). In this way similar
 		 * behaviour for a group of components can be implemented.
@@ -84,7 +84,7 @@ namespace elastix
 		virtual void AfterRegistrationBase(void) {};
 
 		/**
-		 * Callback methods that each component of Elastix is supposed
+		 * Callback methods that each component of elastix is supposed
 		 * to have. These methods can be overridden in each single
 		 * component (like MattesMutualInformationMetric) to achieve
 		 * behaviour, specific for that single component.
