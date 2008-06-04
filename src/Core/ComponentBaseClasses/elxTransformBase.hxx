@@ -22,9 +22,9 @@
 #include "itkTransformixInputPointFileReader.h"
 #include "vnl/vnl_math.h"
 #include <itksys/SystemTools.hxx>
-#include "itkImageRegionIteratorWithIndex.h"
-#include "itkImageFileWriter.h"
 #include "itkVector.h"
+#include "itkTransformToDeformationFieldSource.h"
+#include "itkImageFileWriter.h"
 #include "itkImageGridSampler.h"
 #include "itkContinuousIndex.h"
 
@@ -302,7 +302,7 @@ namespace elastix
 				}
 			}
 			/** Else, do the reading more 'manually'.
-       * This is neccesary, because the ReadParameter can not handle
+       * This is necessary, because the ReadParameter can not handle
        * many parameters.
        */
 			else
@@ -934,84 +934,42 @@ namespace elastix
 	{
     /** Typedef's. */
     typedef typename FixedImageType::RegionType					FixedImageRegionType;
-    typedef typename FixedImageType::PointType          FixedImageOriginType;
-    typedef typename FixedImageType::SpacingType        FixedImageSpacingType;
-    typedef typename FixedImageType::IndexType          FixedImageIndexType;
-
-   	typedef itk::Vector< float, FixedImageDimension >		DeformationVectorType;
+   	typedef itk::Vector<
+      float, FixedImageDimension >		                  VectorPixelType;
 		typedef itk::Image<
-			DeformationVectorType,
-			itkGetStaticConstMacro( FixedImageDimension ) >		DeformationFieldType;
-		typedef typename DeformationFieldType::Pointer  		DeformationFieldPointer;
-		typedef itk::ImageRegionIteratorWithIndex<
-			DeformationFieldType >														DeformationFieldIteratorType;
+			VectorPixelType, FixedImageDimension >            DeformationFieldImageType;
+		typedef typename DeformationFieldImageType::Pointer DeformationFieldImagePointer;
+    typedef itk::TransformToDeformationFieldSource<
+      DeformationFieldImageType, CoordRepType >         DeformationFieldGeneratorType;
 		typedef itk::ImageFileWriter<
-      DeformationFieldType >                        		DeformationFieldWriterType;
+      DeformationFieldImageType >                       DeformationFieldWriterType;
 
-    /** Get information for the output deformation field. */
+    /** Region size for progress observer? *
 		FixedImageRegionType region;
-		FixedImageOriginType origin = 
-      this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputOrigin();
-		FixedImageSpacingType spacing =
-      this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputSpacing();
-		region.SetIndex(
-      this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputStartIndex() );
-		region.SetSize(
+ 		region.SetSize(
+       this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize() );
+
+    /** Create an setup deformation field generator. */
+    typename DeformationFieldGeneratorType::Pointer defGenerator
+      = DeformationFieldGeneratorType::New();
+    defGenerator->SetOutputSize(
       this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize() );
-		
-		/** Setup an outputImage of vectors and allocate memory(!). */
-		DeformationFieldPointer deformationField = DeformationFieldType::New();
-		deformationField->SetRegions( region );
-		deformationField->SetOrigin( origin );
-		deformationField->SetSpacing( spacing );
-		deformationField->Allocate();
-		
-		/** Setup an iterator over the deformationField. */
-		DeformationFieldIteratorType iter( deformationField, region );
+    defGenerator->SetOutputSpacing(
+      this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputSpacing() );
+    defGenerator->SetOutputOrigin(
+      this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputOrigin() );
+    defGenerator->SetOutputIndex(
+      this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputStartIndex() );
+    defGenerator->SetOutputDirection(
+      this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputDirection() );
+    defGenerator->SetTransform( const_cast<const ITKBaseType *>( this->GetAsITKBaseType() ) );
 
     /** Track the progress of the generation of the deformation field. */
-    ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
-    progressObserver->SetUpdateFrequency( region.GetNumberOfPixels(), 100 );
+    typename ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
+    progressObserver->ConnectObserver( defGenerator );
+    //progressObserver->SetUpdateFrequency( region.GetNumberOfPixels(), 100 );
     progressObserver->SetStartString( "  Progress: " );
     progressObserver->SetEndString( "%" );
-		
-		/** Declare stuff. */
-		InputPointType inputPoint;
-		OutputPointType outputPoint;
-		DeformationVectorType diff_point;
-    unsigned long currentVoxelNumber = 0;
-				
-		/** Calculate the TransformPoint of all voxels of the image. */
-		iter.Begin();
-		while ( !iter.IsAtEnd() )
-		{
-      /** Get the index. */
-			const FixedImageIndexType & inputIndex = iter.GetIndex();
-
-			/** Transform the points to physical space. */
-			deformationField->TransformIndexToPhysicalPoint( inputIndex, inputPoint );
-
-			/** Call TransformPoint. */
-			outputPoint = this->GetAsITKBaseType()->TransformPoint( inputPoint );
-
-			/** Calculate the difference. */
-			for ( unsigned int i = 0; i < FixedImageDimension; i++ )
-			{
-				diff_point[ i ] = outputPoint[ i ] - inputPoint[ i ];
-			}
-			iter.Set( diff_point );
-
-      /** Print the progress to screen. */
-      progressObserver->UpdateAndPrintProgress( currentVoxelNumber );
-      
-      /** Increase iterators. */
-			++iter;
-      currentVoxelNumber++;
-
-		} // end while
-
-    /** Indicate end of generating the deformation field. */
-    progressObserver->PrintProgress( 1.0 );
 		
 		/** Create a name for the deformation field file. */
 		std::string resultImageFormat = "mhd";
@@ -1021,24 +979,25 @@ namespace elastix
 			<< "deformationField." << resultImageFormat;
 		
 		/** Write outputImage to disk. */
-		typename DeformationFieldWriterType::Pointer deformationFieldWriter
+		typename DeformationFieldWriterType::Pointer defWriter
 			= DeformationFieldWriterType::New();
-		deformationFieldWriter->SetInput( deformationField );
-		deformationFieldWriter->SetFileName( makeFileName.str().c_str() );
+		defWriter->SetInput( defGenerator->GetOutput() );
+		defWriter->SetFileName( makeFileName.str().c_str() );
 		
 		/** Do the writing. */
 		elxout << "  Writing the deformation field" << std::endl;
 		try
 		{
-			deformationFieldWriter->Update();
+			defWriter->Update();
 		}
 		catch( itk::ExceptionObject & excp )
 		{
 			/** Add information to the exception. */
 			excp.SetLocation( "TransformBase - TransformPointsAllPoints()" );
 			std::string err_str = excp.GetDescription();
-			err_str += "\nError occured while writing deformation field image.\n";
+			err_str += "\nError occurred while writing deformation field image.\n";
 			excp.SetDescription( err_str );
+
 			/** Pass the exception to an higher level. */
 			throw excp;
 		}
