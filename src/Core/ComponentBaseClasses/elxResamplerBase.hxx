@@ -237,7 +237,7 @@ namespace elastix
 		this->GetAsITKBaseType()->Modified();
 
     /** Add a progress observer to the resampler. */
-    ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
+    typename ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
     progressObserver->ConnectObserver( this->GetAsITKBaseType() );
     progressObserver->SetStartString( "  Progress: " );
     progressObserver->SetEndString( "%" );
