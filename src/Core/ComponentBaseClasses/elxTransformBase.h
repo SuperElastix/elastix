@@ -106,6 +106,7 @@ namespace elastix
 		
 		/** Get	the dimension of the fixed image. */
 		itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
+
 		/** Get	the dimension of the moving image. */
 		itkStaticConstMacro( MovingImageDimension, unsigned int, MovingImageType::ImageDimension );
 
@@ -167,37 +168,45 @@ namespace elastix
 
 		/** Get the initial transform. */
 		virtual const InitialTransformType * GetInitialTransform(void) const;
+
 		/** Set the initial transform. */
 		virtual void SetInitialTransform( InitialTransformType * _arg );
 
 		/** Set the TransformParametersFileName. */
 		virtual void SetTransformParametersFileName( const char * filename );
+
 		/** Get the TransformParametersFileName. */
 		itkGetStringMacro( TransformParametersFileName );
 
 		/** Function to read transform-parameters from a file. */
-		virtual void ReadFromFile(void);
+		virtual void ReadFromFile( void );
+
 		/** Function to write transform-parameters to a file. */
 		virtual void WriteToFile( const ParametersType & param );
+
 		/** Function to write transform-parameters to a file. */
-		virtual void WriteToFile(void);
+		virtual void WriteToFile( void );
+
 		/** Macro for reading and writing the transform parameters in WriteToFile or not. */
 		virtual void SetReadWriteTransformParameters( const bool _arg );
+
 		/** Function to read the initial transform parameters from a file. */
 		virtual void ReadInitialTransformFromFile(
-			const char * transformParameterFileName);
+			const char * transformParameterFileName );
 
 		/** Function to transform coordinates from fixed to moving image. */
-		virtual void TransformPoints(void);
+		virtual void TransformPoints( void );
+
 		/** Function to transform coordinates from fixed to moving image. */
 		virtual void TransformPointsSomePoints( std::string filename );
+
 		/** Function to transform all coordinates from fixed to moving image. */
-		virtual void TransformPointsAllPoints(void);
+		virtual void TransformPointsAllPoints( void );
 
 		/** Makes sure that the final parameters from the registration components
 		 * are copied, set, and stored.
 		 */
-		virtual void SetFinalParameters(void);
+		virtual void SetFinalParameters( void );
 
 	protected:
 
