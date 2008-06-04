@@ -282,15 +282,15 @@ ImageSpatialObject2< TDimension,  PixelType >
         const PointsContainerType* corners = bb->GetCorners();
 
         typename PointsContainerType::const_iterator itC = corners->begin();
-        i=0;
+        unsigned int c = 0;
         while(itC != corners->end())
         {
           PointType transformedPoint = this->GetIndexToWorldTransform()->TransformPoint(*itC);
-          if(i == 0)
+          if(c == 0)
           {
             const_cast<BoundingBoxType *>(this->GetBounds())->SetMinimum(transformedPoint);
           }
-          else if(i==1)
+          else if(c==1)
           {
             const_cast<BoundingBoxType *>(this->GetBounds())->SetMaximum(transformedPoint);
           }
@@ -299,7 +299,7 @@ ImageSpatialObject2< TDimension,  PixelType >
             const_cast<BoundingBoxType *>(this->GetBounds())->ConsiderPoint(transformedPoint);
           }
           itC++;
-          i++;
+          c++;
         }
 
       return true;

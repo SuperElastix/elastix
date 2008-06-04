@@ -1,3 +1,19 @@
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+
+/** This class was inspired on an ITK class, whose original copyright
+ * message is stated here, for reference: */
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
@@ -23,8 +39,8 @@
 namespace itk
 {
 
-/** \class DeformationFieldImageFilter
- * \brief via a coordinate transform
+/** \class TransformToDeformationFieldSource
+ * \brief Generate a deformation field from a coordinate transform
  *
  *
  * Output information (spacing, size and direction) for the output
@@ -61,7 +77,8 @@ public:
   typedef TOutputImage                            OutputImageType;
   typedef typename OutputImageType::Pointer       OutputImagePointer;
   typedef typename OutputImageType::ConstPointer  OutputImageConstPointer;
-
+  typedef typename OutputImageType::RegionType    OutputImageRegionType;
+ 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
 
