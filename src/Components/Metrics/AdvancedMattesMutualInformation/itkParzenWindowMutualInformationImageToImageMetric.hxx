@@ -77,7 +77,7 @@ namespace itk
     const MarginalPDFIteratorType fixedPDFend = this->m_FixedImageMarginalPDF.end();
     MarginalPDFIteratorType movingPDFit = this->m_MovingImageMarginalPDF.begin();
     const MarginalPDFIteratorType movingPDFend = this->m_MovingImageMarginalPDF.end();
-       
+
     /** Loop over histogram */
     double MI = 0.0;
     while ( fixedPDFit != fixedPDFend )
