@@ -17,6 +17,7 @@
 
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkImageRegionConstIterator.h"
+#include "itkImageRegionConstIteratorWithIndex.h"
 
 namespace itk
 {
@@ -115,19 +116,48 @@ namespace itk
     const FixedImageType * image,
     const FixedImageRegionType & region )
   {
-    /** NB: We can't use StatisticsImageFilter to do this because
-     * the filter computes the min/max for the largest possible region. */
+    /** NB: We can't use StatisticsImageFilterWithMask to do this because
+     * the filter computes the min/max for the largest possible region.
+     * This filter is multi-threaded though.
+     */
     FixedImagePixelType trueMinTemp = NumericTraits<FixedImagePixelType>::max();
     FixedImagePixelType trueMaxTemp = NumericTraits<FixedImagePixelType>::NonpositiveMin();
-
-    typedef ImageRegionConstIterator<FixedImageType> IteratorType;
-    IteratorType iterator( image, region );
-    for ( iterator.GoToBegin(); !iterator.IsAtEnd(); ++iterator )
+    
+    /** If no mask. */
+    if ( this->m_FixedImageMask.IsNull() )
     {
-      const FixedImagePixelType sample = iterator.Get();
-      trueMinTemp = vnl_math_min( trueMinTemp, sample );
-      trueMaxTemp = vnl_math_max( trueMaxTemp, sample );
+      typedef ImageRegionConstIterator<FixedImageType> IteratorType;
+      IteratorType it( image, region );
+      for ( it.GoToBegin(); !it.IsAtEnd(); ++it )
+      {
+        const FixedImagePixelType sample = it.Get();
+        trueMinTemp = vnl_math_min( trueMinTemp, sample );
+        trueMaxTemp = vnl_math_max( trueMaxTemp, sample );
+      }
     }
+    /** Excluded extrema outside the mask.
+     * Because we have to call TransformIndexToPhysicalPoint() and
+     * check IsInside() this way is much (!) slower.
+     */
+    else
+    {
+      typedef ImageRegionConstIteratorWithIndex<FixedImageType> IteratorType;
+      IteratorType it( image, region );
+
+      for ( it.GoToBegin(); !it.IsAtEnd(); ++it )
+      {
+        OutputPointType point;
+        image->TransformIndexToPhysicalPoint( it.GetIndex(), point );
+        if ( this->m_FixedImageMask->IsInside( point ) )
+        {
+          const FixedImagePixelType sample = it.Get();
+          trueMinTemp = vnl_math_min( trueMinTemp, sample );
+          trueMaxTemp = vnl_math_max( trueMaxTemp, sample );
+        }
+      }
+    }
+
+    /** Update member variables. */
     this->m_FixedImageTrueMin = trueMinTemp;
     this->m_FixedImageTrueMax = trueMaxTemp;
 
@@ -135,8 +165,9 @@ namespace itk
       trueMinTemp - this->m_FixedLimitRangeRatio * ( trueMaxTemp - trueMinTemp ) );
     this->m_FixedImageMaxLimit = static_cast<FixedImageLimiterOutputType>(
       trueMaxTemp + this->m_FixedLimitRangeRatio * ( trueMaxTemp - trueMinTemp ) );
-  } // end ComputeFixedImageExtrema    
-    
+
+  } // end ComputeFixedImageExtrema()
+  
   
   /**
    * ****************** ComputeMovingImageExtrema ***************************
@@ -154,14 +185,41 @@ namespace itk
     MovingImagePixelType trueMinTemp = NumericTraits<MovingImagePixelType>::max();
     MovingImagePixelType trueMaxTemp = NumericTraits<MovingImagePixelType>::NonpositiveMin();
 
-    typedef ImageRegionConstIterator<MovingImageType> IteratorType;
-    IteratorType iterator( image, region );
-    for ( iterator.GoToBegin(); !iterator.IsAtEnd(); ++iterator )
+    /** If no mask. */
+    if ( this->m_MovingImageMask.IsNull() )
     {
-      const MovingImagePixelType sample = iterator.Get();
-      trueMinTemp = vnl_math_min( trueMinTemp, sample );
-      trueMaxTemp = vnl_math_max( trueMaxTemp, sample );
+      typedef ImageRegionConstIterator<MovingImageType> IteratorType;
+      IteratorType iterator( image, region );
+      for ( iterator.GoToBegin(); !iterator.IsAtEnd(); ++iterator )
+      {
+        const MovingImagePixelType sample = iterator.Get();
+        trueMinTemp = vnl_math_min( trueMinTemp, sample );
+        trueMaxTemp = vnl_math_max( trueMaxTemp, sample );
+      }
     }
+    /** Excluded extrema outside the mask.
+     * Because we have to call TransformIndexToPhysicalPoint() and
+     * check IsInside() this way is much (!) slower.
+     */
+    else
+    {
+      typedef ImageRegionConstIteratorWithIndex<MovingImageType> IteratorType;
+      IteratorType it( image, region );
+
+      for ( it.GoToBegin(); !it.IsAtEnd(); ++it )
+      {
+        OutputPointType point;
+        image->TransformIndexToPhysicalPoint( it.GetIndex(), point );
+        if ( this->m_MovingImageMask->IsInside( point ) )
+        {
+          const MovingImagePixelType sample = it.Get();
+          trueMinTemp = vnl_math_min( trueMinTemp, sample );
+          trueMaxTemp = vnl_math_max( trueMaxTemp, sample );
+        }
+      }
+    }
+
+    /** Update member variables. */
     this->m_MovingImageTrueMin = trueMinTemp;
     this->m_MovingImageTrueMax = trueMaxTemp;
 
@@ -169,8 +227,9 @@ namespace itk
       trueMinTemp - this->m_MovingLimitRangeRatio * ( trueMaxTemp - trueMinTemp ) );
     this->m_MovingImageMaxLimit = static_cast<MovingImageLimiterOutputType>(
       trueMaxTemp + this->m_MovingLimitRangeRatio * ( trueMaxTemp - trueMinTemp ) );
-  } // end ComputeMovingImageExtrema    
-    
+
+  } // end ComputeMovingImageExtrema()
+  
   
   /**
    * ****************** InitializeLimiter *****************************
