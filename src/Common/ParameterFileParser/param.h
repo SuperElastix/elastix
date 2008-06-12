@@ -340,7 +340,11 @@ inline ReturnStatusType set(char *operand, GenericValue *value)
       //  throw Exception("VPF::set: Operand is of the wrong type");
     }
 
-  strcpy(operand, dynamic_cast<Value<std::string> *>(value)->GetValue().c_str());
+  // strcpy was deprecated in VS2008: so I outcommented next line
+  // and replaced it with the following two lines.
+  //strcpy(operand, dynamic_cast<Value<std::string> *>(value)->GetValue().c_str());
+  const char * tmpchar( dynamic_cast<Value<std::string> *>(value)->GetValue().c_str() );
+  strcpy_s( operand, strlen( tmpchar ), tmpchar );
   return VALID;
 }
 
