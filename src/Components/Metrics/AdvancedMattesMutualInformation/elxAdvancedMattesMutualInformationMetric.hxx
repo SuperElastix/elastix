@@ -25,65 +25,65 @@ namespace elastix
 {
 using namespace itk;
 
-	/**
-	 * ****************** Constructor ***********************
-	 */
+  /**
+   * ****************** Constructor ***********************
+   */
 
-	template <class TElastix>
-		AdvancedMattesMutualInformationMetric<TElastix>
-		::AdvancedMattesMutualInformationMetric()
-	{
-	  this->m_Param_c = 1.0;
-		this->m_Param_gamma = 0.101;
+  template <class TElastix>
+    AdvancedMattesMutualInformationMetric<TElastix>
+    ::AdvancedMattesMutualInformationMetric()
+  {
+    this->m_Param_c = 1.0;
+    this->m_Param_gamma = 0.101;
     this->SetUseDerivative( true );
 
   } // end Constructor()
 
 
-	/**
-	 * ******************* Initialize ***********************
-	 */
+  /**
+   * ******************* Initialize ***********************
+   */
 
-	template <class TElastix>
-		void AdvancedMattesMutualInformationMetric<TElastix>
-		::Initialize( void ) throw (ExceptionObject)
-	{
-		TimerPointer timer = TimerType::New();
-		timer->StartTimer();
-		this->Superclass1::Initialize();
-		timer->StopTimer();
-		elxout << "Initialization of AdvancedMattesMutualInformation metric took: "
-			<< static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
+  template <class TElastix>
+    void AdvancedMattesMutualInformationMetric<TElastix>
+    ::Initialize( void ) throw (ExceptionObject)
+  {
+    TimerPointer timer = TimerType::New();
+    timer->StartTimer();
+    this->Superclass1::Initialize();
+    timer->StopTimer();
+    elxout << "Initialization of AdvancedMattesMutualInformation metric took: "
+      << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
 
-	} // end Initialize()
+  } // end Initialize()
 
-	
-	/**
-	 * ***************** BeforeEachResolution ***********************
-	 */
+  
+  /**
+   * ***************** BeforeEachResolution ***********************
+   */
 
-	template <class TElastix>
-		void AdvancedMattesMutualInformationMetric<TElastix>
-		::BeforeEachResolution( void )
-	{
-		/** Get the current resolution level. */
-		unsigned int level = 
-			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
-		
-		/** Get and set the number of histogram bins. */
-		unsigned int numberOfHistogramBins = 32;
+  template <class TElastix>
+    void AdvancedMattesMutualInformationMetric<TElastix>
+    ::BeforeEachResolution( void )
+  {
+    /** Get the current resolution level. */
+    unsigned int level = 
+      ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+    
+    /** Get and set the number of histogram bins. */
+    unsigned int numberOfHistogramBins = 32;
     this->GetConfiguration()->ReadParameter( numberOfHistogramBins,
       "NumberOfHistogramBins", this->GetComponentLabel(), level, 0 );
-		this->SetNumberOfFixedHistogramBins( numberOfHistogramBins );
+    this->SetNumberOfFixedHistogramBins( numberOfHistogramBins );
     this->SetNumberOfMovingHistogramBins( numberOfHistogramBins );
 
     unsigned int numberOfFixedHistogramBins = numberOfHistogramBins;
     unsigned int numberOfMovingHistogramBins = numberOfHistogramBins;
     this->GetConfiguration()->ReadParameter( numberOfFixedHistogramBins,
       "NumberOfFixedHistogramBins", this->GetComponentLabel(), level, 0 );
-		this->GetConfiguration()->ReadParameter( numberOfMovingHistogramBins,
+    this->GetConfiguration()->ReadParameter( numberOfMovingHistogramBins,
       "NumberOfMovingHistogramBins", this->GetComponentLabel(), level, 0 );
-		this->SetNumberOfFixedHistogramBins( numberOfFixedHistogramBins );
+    this->SetNumberOfFixedHistogramBins( numberOfFixedHistogramBins );
     this->SetNumberOfMovingHistogramBins( numberOfMovingHistogramBins );
 
     /** Set limiters */
@@ -93,23 +93,23 @@ using namespace itk;
     this->SetMovingImageLimiter( MovingLimiterType::New() );
     
     /** Get and set the limit range ratios. */
-		double fixedLimitRangeRatio = 0.01;
+    double fixedLimitRangeRatio = 0.01;
     double movingLimitRangeRatio = 0.01;
     this->GetConfiguration()->ReadParameter( fixedLimitRangeRatio,
       "FixedLimitRangeRatio", this->GetComponentLabel(), level, 0 );
     this->GetConfiguration()->ReadParameter( movingLimitRangeRatio,
       "MovingLimitRangeRatio", this->GetComponentLabel(), level, 0 );
-		this->SetFixedLimitRangeRatio( fixedLimitRangeRatio );
+    this->SetFixedLimitRangeRatio( fixedLimitRangeRatio );
     this->SetMovingLimitRangeRatio( movingLimitRangeRatio );
 
-    /** Set B-spline parzen kernel orders */
+    /** Set B-spline Parzen kernel orders */
     unsigned int fixedKernelBSplineOrder = 0;
     unsigned int movingKernelBSplineOrder = 3;
     this->GetConfiguration()->ReadParameter( fixedKernelBSplineOrder,
       "FixedKernelBSplineOrder", this->GetComponentLabel(), level, 0 );
     this->GetConfiguration()->ReadParameter( movingKernelBSplineOrder, 
       "MovingKernelBSplineOrder", this->GetComponentLabel(), level, 0 );
-		this->SetFixedKernelBSplineOrder( fixedKernelBSplineOrder );
+    this->SetFixedKernelBSplineOrder( fixedKernelBSplineOrder );
     this->SetMovingKernelBSplineOrder( movingKernelBSplineOrder );
 
     /** Set whether a finite difference derivative should be used */
@@ -123,11 +123,11 @@ using namespace itk;
     if ( useFiniteDifferenceDerivative )
     {
       double c = 1.0;
-			double gamma = 0.101;
-		  this->GetConfiguration()->ReadParameter(c, "SP_c", this->GetComponentLabel(), level, 0 );
-		  this->GetConfiguration()->ReadParameter(gamma, "SP_gamma", this->GetComponentLabel(), level, 0 );
-		  this->SetParam_c( c );
-	    this->SetParam_gamma( gamma );
+      double gamma = 0.101;
+      this->GetConfiguration()->ReadParameter(c, "SP_c", this->GetComponentLabel(), level, 0 );
+      this->GetConfiguration()->ReadParameter(gamma, "SP_gamma", this->GetComponentLabel(), level, 0 );
+      this->SetParam_c( c );
+      this->SetParam_gamma( gamma );
       this->SetFiniteDifferencePerturbation( this->Compute_c( 0 ) );
     }
 
@@ -146,17 +146,17 @@ using namespace itk;
       elxout << "Multiplying moving image derivatives by: " << movingImageDerivativeScales << std::endl;
     }
     
-	} // end BeforeEachResolution()
+  } // end BeforeEachResolution()
 
   
   /**
-	 * ***************** AfterEachIteration ***********************
-	 */
+   * ***************** AfterEachIteration ***********************
+   */
 
-	template <class TElastix>
-		void AdvancedMattesMutualInformationMetric<TElastix>
-		::AfterEachIteration(void)
-	{
+  template <class TElastix>
+    void AdvancedMattesMutualInformationMetric<TElastix>
+    ::AfterEachIteration(void)
+  {
     if ( this->GetUseFiniteDifferenceDerivative() )
     {
       this->m_CurrentIteration++;
@@ -165,23 +165,23 @@ using namespace itk;
     }
   }  // end AfterEachIteration()
 
-  	
-	/**
-	 * ************************** Compute_c *************************
-	 *
-	 * This function computes the parameter a at iteration k, as
-	 * in the finite difference optimizer.
-	 */
-	
-	template <class TElastix>
-		double AdvancedMattesMutualInformationMetric<TElastix>
-		::Compute_c( unsigned long k ) const
-	{ 
-		return static_cast<double>(
-			this->m_Param_c / vcl_pow( k + 1, this->m_Param_gamma ) );
+    
+  /**
+   * ************************** Compute_c *************************
+   *
+   * This function computes the parameter a at iteration k, as
+   * in the finite difference optimizer.
+   */
+  
+  template <class TElastix>
+    double AdvancedMattesMutualInformationMetric<TElastix>
+    ::Compute_c( unsigned long k ) const
+  { 
+    return static_cast<double>(
+      this->m_Param_c / vcl_pow( k + 1, this->m_Param_gamma ) );
 
-	} // end Compute_c()
-	
+  } // end Compute_c()
+  
   
 } // end namespace elastix
 

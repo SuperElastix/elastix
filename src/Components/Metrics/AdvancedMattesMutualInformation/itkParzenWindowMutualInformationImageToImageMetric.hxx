@@ -21,38 +21,38 @@
 #include "vnl/vnl_math.h"
 
 namespace itk
-{	
-	
-	/**
-	 * ********************* PrintSelf ******************************
-	 *
-	 * Print out internal information about this class.
-	 */
+{ 
+  
+  /**
+   * ********************* PrintSelf ******************************
+   *
+   * Print out internal information about this class.
+   */
 
-	template < class TFixedImage, class TMovingImage  >
-		void
-		ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
-		::PrintSelf( std::ostream& os, Indent indent ) const
-	{
-		/** Call the superclass' PrintSelf. */
-		Superclass::PrintSelf( os, indent );
-	
+  template < class TFixedImage, class TMovingImage  >
+    void
+    ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+    ::PrintSelf( std::ostream& os, Indent indent ) const
+  {
+    /** Call the superclass' PrintSelf. */
+    Superclass::PrintSelf( os, indent );
+  
     /** This function is not complete, but we don't use it anyway. */
-		
-	} // end PrintSelf
+    
+  } // end PrintSelf
 
 
   /**
-	 * ************************** GetValue **************************
-	 * Get the match Measure.
-	 */
+   * ************************** GetValue **************************
+   * Get the match Measure.
+   */
 
-	template < class TFixedImage, class TMovingImage  >
-	  typename ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
-	  ::MeasureType
-	  ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
-	  ::GetValue( const ParametersType& parameters ) const
-	{		 
+  template < class TFixedImage, class TMovingImage  >
+    typename ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+    ::MeasureType
+    ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+    ::GetValue( const ParametersType& parameters ) const
+  {    
     /** Construct the JointPDF and Alpha */
     this->ComputePDFs(parameters);          
 
@@ -106,19 +106,19 @@ namespace itk
   } // end GetValue
 
 
-	/**
-	 * ******************** GetValueAndAnalyticDerivative *******************
-	 * Get both the Value and the Derivative of the Measure. 
-	 */
+  /**
+   * ******************** GetValueAndAnalyticDerivative *******************
+   * Get both the Value and the Derivative of the Measure. 
+   */
 
-	template < class TFixedImage, class TMovingImage  >
-	  void
-	  ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
-	  ::GetValueAndAnalyticDerivative(
-	  const ParametersType& parameters,
-	  MeasureType& value,
-	  DerivativeType& derivative) const
-	{		 
+  template < class TFixedImage, class TMovingImage  >
+    void
+    ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+    ::GetValueAndAnalyticDerivative(
+    const ParametersType& parameters,
+    MeasureType& value,
+    DerivativeType& derivative) const
+  {    
     /** Initialize some variables */
     value = NumericTraits< MeasureType >::Zero;
     derivative = DerivativeType( this->GetNumberOfParameters() );
@@ -128,7 +128,7 @@ namespace itk
     this->ComputePDFsAndPDFDerivatives( parameters );
 
     /** Normalize the pdfs: p = alpha h  */
-    this->NormalizeJointPDF( this->m_JointPDF, this->m_Alpha  );
+    this->NormalizeJointPDF( this->m_JointPDF, this->m_Alpha );
     
     /** Compute the fixed and moving marginal pdf by summing over the histogram */
     this->ComputeMarginalPDF( this->m_JointPDF, this->m_FixedImageMarginalPDF, 0 );
@@ -200,19 +200,19 @@ namespace itk
 
 
   /**
-	 * ******************** GetValueAndFiniteDifferenceDerivative *******************
-	 * Get both the Value and the Derivative of the Measure. 
+   * ******************** GetValueAndFiniteDifferenceDerivative *******************
+   * Get both the Value and the Derivative of the Measure. 
    * Compute the derivative using a finite difference approximation
-	 */
+   */
 
-	template < class TFixedImage, class TMovingImage  >
-	  void
-	  ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
-	  ::GetValueAndFiniteDifferenceDerivative(
-	  const ParametersType& parameters,
-	  MeasureType& value,
-	  DerivativeType& derivative) const
-	{		 
+  template < class TFixedImage, class TMovingImage  >
+    void
+    ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+    ::GetValueAndFiniteDifferenceDerivative(
+    const ParametersType& parameters,
+    MeasureType& value,
+    DerivativeType& derivative) const
+  {    
     /** Initialize some variables */
     value = NumericTraits< MeasureType >::Zero;
     derivative = DerivativeType( this->GetNumberOfParameters() );

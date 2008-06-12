@@ -19,18 +19,18 @@
 
 namespace itk
 {
-	
-	/**
-	 * \class ParzenWindowMutualInformationImageToImageMetric
-	 * \brief Computes the mutual information between two images to be 
-	 * registered using the method of Mattes et al.
-	 *
-	 * ParzenWindowMutualInformationImageToImageMetric computes the mutual 
-	 * information between a fixed and moving image to be registered.
-	 *
-	 * The calculations are based on the method of Mattes et al [1,2]
-	 * where the probability density distribution are estimated using
-	 * Parzen histograms. Once the PDFs have been contructed, the
+  
+  /**
+   * \class ParzenWindowMutualInformationImageToImageMetric
+   * \brief Computes the mutual information between two images to be 
+   * registered using the method of Mattes et al.
+   *
+   * ParzenWindowMutualInformationImageToImageMetric computes the mutual 
+   * information between a fixed and moving image to be registered.
+   *
+   * The calculations are based on the method of Mattes et al. [1,2],
+   * where the probability density distribution are estimated using
+   * Parzen histograms. Once the PDFs have been constructed, the
    * mutual information is obtained by double summing over the
    * discrete PDF values.
    *
@@ -46,44 +46,44 @@ namespace itk
    * \li A minimum number of samples that should map within the moving image (mask) can be specified.
    *
    * Notes:\n
-	 * 1. This class returns the negative mutual information value.\n
-	 * 2. This class in not thread safe due the private data structures
-	 *     used to the store the marginal and joint pdfs.
-	 *
-	 * References:\n
-	 * [1] "Nonrigid multimodality image registration"\n
-	 *      D. Mattes, D. R. Haynor, H. Vesselle, T. Lewellen and W. Eubank\n
-	 *      Medical Imaging 2001: Image Processing, 2001, pp. 1609-1620.\n
-	 * [2] "PET-CT Image Registration in the Chest Using Free-form Deformations"\n
-	 *      D. Mattes, D. R. Haynor, H. Vesselle, T. Lewellen and W. Eubank\n
-	 *      IEEE Transactions in Medical Imaging. To Appear.\n
-	 * [3] "Optimization of Mutual Information for MultiResolution Image
-	 *      Registration"\n
-	 *      P. Thevenaz and M. Unser\n
-	 *      IEEE Transactions in Image Processing, 9(12) December 2000.\n
+   * 1. This class returns the negative mutual information value.\n
+   * 2. This class in not thread safe due the private data structures
+   *     used to the store the marginal and joint pdfs.
    *
-	 * \ingroup Metrics
+   * References:\n
+   * [1] "Nonrigid multimodality image registration"\n
+   *      D. Mattes, D. R. Haynor, H. Vesselle, T. Lewellen and W. Eubank\n
+   *      Medical Imaging 2001: Image Processing, 2001, pp. 1609-1620.\n
+   * [2] "PET-CT Image Registration in the Chest Using Free-form Deformations"\n
+   *      D. Mattes, D. R. Haynor, H. Vesselle, T. Lewellen and W. Eubank\n
+   *      IEEE Transactions in Medical Imaging. To Appear.\n
+   * [3] "Optimization of Mutual Information for MultiResolution Image
+   *      Registration"\n
+   *      P. Thevenaz and M. Unser\n
+   *      IEEE Transactions in Image Processing, 9(12) December 2000.\n
+   *
+   * \ingroup Metrics
    * \sa ParzenWindowHistogramImageToImageMetric
-	 */
+   */
 
-	template <class TFixedImage,class TMovingImage >
-		class ParzenWindowMutualInformationImageToImageMetric :
-	public ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
-	{
-	public:
-		
-		/** Standard class typedefs. */
-		typedef ParzenWindowMutualInformationImageToImageMetric					    Self;
-		typedef ParzenWindowHistogramImageToImageMetric<
-      TFixedImage, TMovingImage >			                                  Superclass;
-		typedef SmartPointer<Self>																	        Pointer;
-		typedef SmartPointer<const Self>														        ConstPointer;
-		
-		/** Method for creation through the object factory. */
-		itkNewMacro( Self );
-		
-		/** Run-time type information (and related methods). */
-		itkTypeMacro(
+  template <class TFixedImage,class TMovingImage >
+    class ParzenWindowMutualInformationImageToImageMetric :
+  public ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
+  {
+  public:
+    
+    /** Standard class typedefs. */
+    typedef ParzenWindowMutualInformationImageToImageMetric             Self;
+    typedef ParzenWindowHistogramImageToImageMetric<
+      TFixedImage, TMovingImage >                                       Superclass;
+    typedef SmartPointer<Self>                                          Pointer;
+    typedef SmartPointer<const Self>                                    ConstPointer;
+    
+    /** Method for creation through the object factory. */
+    itkNewMacro( Self );
+    
+    /** Run-time type information (and related methods). */
+    itkTypeMacro(
       ParzenWindowMutualInformationImageToImageMetric, 
       ParzenWindowHistogramImageToImageMetric );
 
@@ -132,80 +132,80 @@ namespace itk
       Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
     typedef typename
       Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
-		
+    
     /** The fixed image dimension. */
-		itkStaticConstMacro( FixedImageDimension, unsigned int,
-			FixedImageType::ImageDimension );
+    itkStaticConstMacro( FixedImageDimension, unsigned int,
+      FixedImageType::ImageDimension );
 
-		/** The moving image dimension. */
-		itkStaticConstMacro( MovingImageDimension, unsigned int,
-			MovingImageType::ImageDimension );
- 					
-		/**  Get the value. */
-		MeasureType GetValue( const ParametersType& parameters ) const;
+    /** The moving image dimension. */
+    itkStaticConstMacro( MovingImageDimension, unsigned int,
+      MovingImageType::ImageDimension );
+          
+    /**  Get the value. */
+    MeasureType GetValue( const ParametersType& parameters ) const;
 
-	protected:
-		
-		/** The constructor. */
+  protected:
+    
+    /** The constructor. */
     ParzenWindowMutualInformationImageToImageMetric(){};
 
-		/** The destructor. */
-		virtual ~ParzenWindowMutualInformationImageToImageMetric() {};
+    /** The destructor. */
+    virtual ~ParzenWindowMutualInformationImageToImageMetric() {};
 
-		/** Print Self. */
+    /** Print Self. */
     void PrintSelf( std::ostream& os, Indent indent ) const;
 
     /** Protected Typedefs ******************/
   
     /** Typedefs inherited from superclass */
     typedef typename Superclass::FixedImageIndexType                FixedImageIndexType;
-	  typedef typename Superclass::FixedImageIndexValueType           FixedImageIndexValueType;
-	  typedef typename Superclass::MovingImageIndexType               MovingImageIndexType;
-	  typedef typename Superclass::FixedImagePointType                FixedImagePointType;
-	  typedef typename Superclass::MovingImagePointType               MovingImagePointType;
+    typedef typename Superclass::FixedImageIndexValueType           FixedImageIndexValueType;
+    typedef typename Superclass::MovingImageIndexType               MovingImageIndexType;
+    typedef typename Superclass::FixedImagePointType                FixedImagePointType;
+    typedef typename Superclass::MovingImagePointType               MovingImagePointType;
     typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
-  	typedef	typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
+    typedef typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
     typedef typename Superclass::CentralDifferenceGradientFilterType        CentralDifferenceGradientFilterType;
     typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
     typedef typename Superclass::BSplineTransformType               BSplineTransformType;
     typedef typename Superclass::BSplineTransformWeightsType        BSplineTransformWeightsType;
-	  typedef typename Superclass::BSplineTransformIndexArrayType     BSplineTransformIndexArrayType;
-	  typedef typename Superclass::BSplineCombinationTransformType    BSplineCombinationTransformType;
- 	  typedef typename Superclass::BSplineParametersOffsetType        BSplineParametersOffsetType;
+    typedef typename Superclass::BSplineTransformIndexArrayType     BSplineTransformIndexArrayType;
+    typedef typename Superclass::BSplineCombinationTransformType    BSplineCombinationTransformType;
+    typedef typename Superclass::BSplineParametersOffsetType        BSplineParametersOffsetType;
     typedef typename Superclass::ParameterIndexArrayType            ParameterIndexArrayType;
     typedef typename Superclass::PDFValueType                       PDFValueType;
-		typedef typename Superclass::MarginalPDFType                    MarginalPDFType;
+    typedef typename Superclass::MarginalPDFType                    MarginalPDFType;
     typedef typename Superclass::JointPDFType                       JointPDFType;
-		typedef typename Superclass::JointPDFDerivativesType            JointPDFDerivativesType;
+    typedef typename Superclass::JointPDFDerivativesType            JointPDFDerivativesType;
     typedef typename Superclass::IncrementalMarginalPDFType         IncrementalMarginalPDFType;
-		typedef typename Superclass::JointPDFIndexType                  JointPDFIndexType;
+    typedef typename Superclass::JointPDFIndexType                  JointPDFIndexType;
     typedef typename Superclass::JointPDFRegionType                 JointPDFRegionType;
-		typedef typename Superclass::JointPDFSizeType                   JointPDFSizeType;
-		typedef typename Superclass::JointPDFDerivativesIndexType       JointPDFDerivativesIndexType;
+    typedef typename Superclass::JointPDFSizeType                   JointPDFSizeType;
+    typedef typename Superclass::JointPDFDerivativesIndexType       JointPDFDerivativesIndexType;
     typedef typename Superclass::JointPDFDerivativesRegionType      JointPDFDerivativesRegionType;
-		typedef typename Superclass::JointPDFDerivativesSizeType        JointPDFDerivativesSizeType;
+    typedef typename Superclass::JointPDFDerivativesSizeType        JointPDFDerivativesSizeType;
     typedef typename Superclass::ParzenValueContainerType           ParzenValueContainerType;
     typedef typename Superclass::KernelFunctionType                 KernelFunctionType;
 
     /**  Get the value and analytic derivatives for single valued optimizers.
      * Called by GetValueAndDerivative if UseFiniteDifferenceDerivative == false */
     virtual void GetValueAndAnalyticDerivative( const ParametersType& parameters, 
-			MeasureType& value, DerivativeType& derivative ) const;
+      MeasureType& value, DerivativeType& derivative ) const;
 
     /**  Get the value and finite difference derivatives for single valued optimizers.
      * Called by GetValueAndDerivative if UseFiniteDifferenceDerivative == true */
-		virtual void GetValueAndFiniteDifferenceDerivative( const ParametersType& parameters, 
-			MeasureType& value, DerivativeType& derivative ) const;   
+    virtual void GetValueAndFiniteDifferenceDerivative( const ParametersType& parameters, 
+      MeasureType& value, DerivativeType& derivative ) const;   
 
   
- 	private:
-		
-		/** The private constructor. */
-		ParzenWindowMutualInformationImageToImageMetric( const Self& );	// purposely not implemented
-		/** The private copy constructor. */
-		void operator=( const Self& );															// purposely not implemented
-  		
-	}; // end class ParzenWindowMutualInformationImageToImageMetric
+  private:
+    
+    /** The private constructor. */
+    ParzenWindowMutualInformationImageToImageMetric( const Self& ); // purposely not implemented
+    /** The private copy constructor. */
+    void operator=( const Self& );                              // purposely not implemented
+      
+  }; // end class ParzenWindowMutualInformationImageToImageMetric
 
 } // end namespace itk
 
