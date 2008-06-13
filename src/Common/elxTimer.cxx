@@ -160,8 +160,8 @@ using namespace itk;
 				
 		/** Convert time to string.*/
 		//struct tm *sStopTime = localtime( &(this->m_StopTime) );
-		struct tm * sStopTime = 0;
-		errno_t err1 = localtime_s( sStopTime, &(this->m_StopTime) );
+		struct tm sStopTime;
+		errno_t err1 = localtime_s( &sStopTime, &(this->m_StopTime) );
 		if ( err1 )
 		{
 			std::cout << "ERROR: Invalid argument to localtime_s." << std::endl;
@@ -169,7 +169,7 @@ using namespace itk;
 
 		//this->m_StopTimeString = asctime( sStopTime );
 		char stopTimeString[1024];
-		errno_t err2 = asctime_s( stopTimeString, 1024, sStopTime );
+		errno_t err2 = asctime_s( stopTimeString, 1024, &sStopTime );
 		this->m_StopTimeString = std::string( stopTimeString );
 		if ( err2 )
 		{
