@@ -135,7 +135,7 @@ using namespace itk;
 		}
 
 		//this->m_StartTimeString =  asctime( sStartTime );
-		char * startTimeString = "";
+		char startTimeString[1024];
 		errno_t err2 = asctime_s( startTimeString, 1024, &sStartTime );
 		this->m_StartTimeString = std::string( startTimeString );
 		if ( err2 )
@@ -168,7 +168,7 @@ using namespace itk;
 		}
 
 		//this->m_StopTimeString = asctime( sStopTime );
-		char * stopTimeString = "";
+		char stopTimeString[1024];
 		errno_t err2 = asctime_s( stopTimeString, 1024, sStopTime );
 		this->m_StopTimeString = std::string( stopTimeString );
 		if ( err2 )
