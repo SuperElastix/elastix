@@ -941,8 +941,8 @@ yyerrlab:   /* here on detecting error */
     msg = (char *) malloc(size + 15);
     if (msg != 0)
       {
-        //strcpy(msg, "parse error");
-		  strcpy_s(msg, strlen("parse error"), "parse error");
+        strcpy(msg, "parse error");
+		  //strcpy_s(msg, strlen("parse error"), "parse error");
 
         if (count < 5)
     {
@@ -951,12 +951,12 @@ yyerrlab:   /* here on detecting error */
            x < static_cast<int>(sizeof(yytname) / sizeof(char *)); x++)
         if (yycheck[x + yyn] == x)
           {
-//       strcat(msg, count == 0 ? ", expecting `" : " or `");
-//       strcat(msg, yytname[x]);
-//       strcat(msg, "'");
-			  strcat_s( msg, strlen( ", expecting `" ), count == 0 ? ", expecting `" : " or `" );
-			  strcat_s( msg, strlen( yytname[x] ), yytname[x] );
-			  strcat_s( msg, strlen( "'" ), "'" );
+        strcat(msg, count == 0 ? ", expecting `" : " or `");
+        strcat(msg, yytname[x]);
+        strcat(msg, "'");
+// 			  strcat_s( msg, strlen( ", expecting `" ), count == 0 ? ", expecting `" : " or `" );
+// 			  strcat_s( msg, strlen( yytname[x] ), yytname[x] );
+// 			  strcat_s( msg, strlen( "'" ), "'" );
 			  count++;
           }
     }

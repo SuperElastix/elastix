@@ -30,6 +30,7 @@
 =========================================================================*/
 #include <iostream>
 #include <string>
+//#include <stdlib.h>
 #include <vector>
 #include "itk_hash_map.h"
 #include "itkMacro.h"
@@ -330,7 +331,8 @@ inline ReturnStatusType set(float &operand, GenericValue *value)
   return VALID;
 }
 
-inline ReturnStatusType set(char *operand, GenericValue *value)
+// Remove support for char *, use std::string instead.
+/*inline ReturnStatusType set(char *operand, GenericValue *value)
 {
   if (value->valid() == false) return INVALID;
 
@@ -340,13 +342,14 @@ inline ReturnStatusType set(char *operand, GenericValue *value)
       //  throw Exception("VPF::set: Operand is of the wrong type");
     }
 
-  // strcpy was deprecated in VS2008: so I outcommented next line
+  // strcpy was deprecated in VS2008: so I out-commented next line
   // and replaced it with the following two lines.
-  //strcpy(operand, dynamic_cast<Value<std::string> *>(value)->GetValue().c_str());
-  const char * tmpchar( dynamic_cast<Value<std::string> *>(value)->GetValue().c_str() );
-  strcpy_s( operand, strlen( tmpchar ), tmpchar );
+  strcpy(operand, dynamic_cast<Value<std::string> *>(value)->GetValue().c_str());
+  // However, this does not exist in VS2003
+  //const char * tmpchar( dynamic_cast<Value<std::string> *>(value)->GetValue().c_str() );
+  //strcpy_s( operand, strlen( tmpchar ), tmpchar );  
   return VALID;
-}
+}*/
 
 inline ReturnStatusType set(std::string &operand, GenericValue *value)
 {

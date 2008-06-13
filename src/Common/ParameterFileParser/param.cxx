@@ -133,14 +133,13 @@ GenericValue * Parameter
     }
   return Superclass::operator[](n);
 }
- 
 
 
 void ParameterFile::Initialize( const char* fn )
 {
-  //if ((::yyin = ::fopen(fn, "r"))==NULL)
-	FILE * yyin;
-	if ( ::fopen_s( &yyin, fn, "r" ) != 0 )
+  if ((::yyin = ::fopen(fn, "r"))==NULL)
+	//FILE * yyin;
+	//if ( ::fopen_s( &yyin, fn, "r" ) != 0 )
     {
       std::string temp = "ParameterFile::Could not open input file \""
 		  + std::string(fn) + "\".";

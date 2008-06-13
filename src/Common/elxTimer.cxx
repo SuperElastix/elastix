@@ -101,17 +101,21 @@ using namespace itk;
 		this->m_ElapsedClockSec = static_cast<double>( this->m_ElapsedClock ) / CLOCKS_PER_SEC;
 		
 		/** Fill m_TimeDHMS.*/
-		//struct tm *sElapsedTime = localtime( &(this->m_ElapsedTime) );
-		struct tm sElapsedTime;
-		errno_t err = localtime_s( &sElapsedTime, &(this->m_ElapsedTime) );
-		if ( err )
-		{
-			std::cout << "ERROR: Invalid argument to localtime_s." << std::endl;
-		}
-		this->m_ElapsedTimeDHMS[ 0 ] = sElapsedTime.tm_yday;
-		this->m_ElapsedTimeDHMS[ 1 ] = sElapsedTime.tm_hour - 1;
-		this->m_ElapsedTimeDHMS[ 2 ] = sElapsedTime.tm_min;
-		this->m_ElapsedTimeDHMS[ 3 ] = sElapsedTime.tm_sec;
+		struct tm *sElapsedTime = localtime( &(this->m_ElapsedTime) );
+// 		struct tm sElapsedTime;
+// 		errno_t err = localtime_s( &sElapsedTime, &(this->m_ElapsedTime) );
+// 		if ( err )
+// 		{
+// 			std::cout << "ERROR: Invalid argument to localtime_s." << std::endl;
+// 		}
+    this->m_ElapsedTimeDHMS[ 0 ] = sElapsedTime->tm_yday;
+    this->m_ElapsedTimeDHMS[ 1 ] = sElapsedTime->tm_hour - 1;
+    this->m_ElapsedTimeDHMS[ 2 ] = sElapsedTime->tm_min;
+    this->m_ElapsedTimeDHMS[ 3 ] = sElapsedTime->tm_sec;
+// 		this->m_ElapsedTimeDHMS[ 0 ] = sElapsedTime.tm_yday;
+// 		this->m_ElapsedTimeDHMS[ 1 ] = sElapsedTime.tm_hour - 1;
+// 		this->m_ElapsedTimeDHMS[ 2 ] = sElapsedTime.tm_min;
+// 		this->m_ElapsedTimeDHMS[ 3 ] = sElapsedTime.tm_sec;
 		
 		return 0;
 
@@ -126,22 +130,22 @@ using namespace itk;
 	{
 				
 		/** Convert time to string.*/
-		//struct tm *sStartTime = localtime( &(this->m_StartTime) );
-		struct tm sStartTime;
-		errno_t err1 = localtime_s( &sStartTime, &(this->m_StartTime) );
-		if ( err1 )
-		{
-			std::cout << "ERROR: Invalid argument to localtime_s." << std::endl;
-		}
+		struct tm *sStartTime = localtime( &(this->m_StartTime) );
+		//struct tm sStartTime;
+		//errno_t err1 = localtime_s( &sStartTime, &(this->m_StartTime) );
+// 		if ( err1 )
+// 		{
+// 			std::cout << "ERROR: Invalid argument to localtime_s." << std::endl;
+// 		}
 
-		//this->m_StartTimeString =  asctime( sStartTime );
-		char startTimeString[1024];
-		errno_t err2 = asctime_s( startTimeString, 1024, &sStartTime );
-		this->m_StartTimeString = std::string( startTimeString );
-		if ( err2 )
-		{
-			std::cout << "ERROR: Invalid argument to asctime_s." << std::endl;
-		}
+		this->m_StartTimeString =  asctime( sStartTime );
+// 		char startTimeString[1024];
+// 		errno_t err2 = asctime_s( startTimeString, 1024, &sStartTime );
+// 		this->m_StartTimeString = std::string( startTimeString );
+// 		if ( err2 )
+// 		{
+// 			std::cout << "ERROR: Invalid argument to asctime_s." << std::endl;
+// 		}
 
 		this->m_StartTimeString.erase( this->m_StartTimeString.end() - 1 );
 		
@@ -159,22 +163,22 @@ using namespace itk;
 	{
 				
 		/** Convert time to string.*/
-		//struct tm *sStopTime = localtime( &(this->m_StopTime) );
-		struct tm sStopTime;
-		errno_t err1 = localtime_s( &sStopTime, &(this->m_StopTime) );
-		if ( err1 )
-		{
-			std::cout << "ERROR: Invalid argument to localtime_s." << std::endl;
-		}
+		struct tm *sStopTime = localtime( &(this->m_StopTime) );
+// 		struct tm sStopTime;
+// 		errno_t err1 = localtime_s( &sStopTime, &(this->m_StopTime) );
+// 		if ( err1 )
+// 		{
+// 			std::cout << "ERROR: Invalid argument to localtime_s." << std::endl;
+// 		}
 
-		//this->m_StopTimeString = asctime( sStopTime );
-		char stopTimeString[1024];
-		errno_t err2 = asctime_s( stopTimeString, 1024, &sStopTime );
-		this->m_StopTimeString = std::string( stopTimeString );
-		if ( err2 )
-		{
-			std::cout << "ERROR: Invalid argument to asctime_s." << std::endl;
-		}
+		this->m_StopTimeString = asctime( sStopTime );
+// 		char stopTimeString[1024];
+// 		errno_t err2 = asctime_s( stopTimeString, 1024, &sStopTime );
+// 		this->m_StopTimeString = std::string( stopTimeString );
+// 		if ( err2 )
+// 		{
+// 			std::cout << "ERROR: Invalid argument to asctime_s." << std::endl;
+// 		}
 
 		this->m_StopTimeString.erase( this->m_StopTimeString.end() - 1 );
 
