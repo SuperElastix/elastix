@@ -86,7 +86,7 @@ using namespace itk;
     this->SetNumberOfFixedHistogramBins( numberOfFixedHistogramBins );
     this->SetNumberOfMovingHistogramBins( numberOfMovingHistogramBins );
 
-    /** Set limiters */
+    /** Set limiters. */
     typedef HardLimiterFunction< RealType, FixedImageDimension > FixedLimiterType;
     typedef ExponentialLimiterFunction< RealType, MovingImageDimension > MovingLimiterType;
     this->SetFixedImageLimiter( FixedLimiterType::New() );
@@ -102,7 +102,7 @@ using namespace itk;
     this->SetFixedLimitRangeRatio( fixedLimitRangeRatio );
     this->SetMovingLimitRangeRatio( movingLimitRangeRatio );
 
-    /** Set B-spline Parzen kernel orders */
+    /** Set B-spline Parzen kernel orders. */
     unsigned int fixedKernelBSplineOrder = 0;
     unsigned int movingKernelBSplineOrder = 3;
     this->GetConfiguration()->ReadParameter( fixedKernelBSplineOrder,
@@ -112,13 +112,19 @@ using namespace itk;
     this->SetFixedKernelBSplineOrder( fixedKernelBSplineOrder );
     this->SetMovingKernelBSplineOrder( movingKernelBSplineOrder );
 
-    /** Set whether a finite difference derivative should be used */
+    /** Set whether a low memory consumption should be used. */
+    bool useExplicitPDFDerivatives = true;
+    this->GetConfiguration()->ReadParameter( useExplicitPDFDerivatives,
+      "UseExplicitPDFDerivatives", this->GetComponentLabel(), level, 0 );
+    this->SetUseExplicitPDFDerivatives( useExplicitPDFDerivatives );
+
+    /** Set whether a finite difference derivative should be used. */
     bool useFiniteDifferenceDerivative = false;
     this->GetConfiguration()->ReadParameter( useFiniteDifferenceDerivative,
       "FiniteDifferenceDerivative", this->GetComponentLabel(), level, 0 );
     this->SetUseFiniteDifferenceDerivative( useFiniteDifferenceDerivative );
 
-    /** Prepare for computing the perturbation gain c_k */
+    /** Prepare for computing the perturbation gain c_k. */
     this->SetCurrentIteration( 0 );
     if ( useFiniteDifferenceDerivative )
     {

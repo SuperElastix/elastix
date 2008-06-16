@@ -111,6 +111,7 @@ public:
   typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
   typedef typename Superclass::MeasureType                MeasureType;
   typedef typename Superclass::DerivativeType             DerivativeType;
+  typedef typename DerivativeType::ValueType              DerivativeValueType;
   typedef typename Superclass::ParametersType             ParametersType;
 
   /** Some useful extra typedefs. */

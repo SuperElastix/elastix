@@ -17,6 +17,8 @@
 
 #include "itkParzenWindowHistogramImageToImageMetric.h"
 
+#include "itkArray2D.h"
+
 namespace itk
 {
   
@@ -116,6 +118,7 @@ namespace itk
     typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
     typedef typename Superclass::MeasureType                MeasureType;
     typedef typename Superclass::DerivativeType             DerivativeType;
+    typedef typename Superclass::DerivativeValueType        DerivativeValueType;
     typedef typename Superclass::ParametersType             ParametersType;
     typedef typename Superclass::FixedImagePixelType        FixedImagePixelType;
     typedef typename Superclass::MovingImageRegionType      MovingImageRegionType;
@@ -188,15 +191,28 @@ namespace itk
     typedef typename Superclass::KernelFunctionType                 KernelFunctionType;
 
     /**  Get the value and analytic derivatives for single valued optimizers.
-     * Called by GetValueAndDerivative if UseFiniteDifferenceDerivative == false */
-    virtual void GetValueAndAnalyticDerivative( const ParametersType& parameters, 
+     * Called by GetValueAndDerivative if UseFiniteDifferenceDerivative == false.
+     */
+    virtual void GetValueAndAnalyticDerivative(
+      const ParametersType& parameters, 
+      MeasureType& value, DerivativeType& derivative ) const;
+
+    /** Get the value and analytic derivatives for single valued optimizers.
+     * Called by GetValueAndDerivative if UseFiniteDifferenceDerivative == false
+     * and UseExplicitPDFDerivatives == false.
+     */
+    virtual void GetValueAndAnalyticDerivativeLowMemory(
+      const ParametersType& parameters,
       MeasureType& value, DerivativeType& derivative ) const;
 
     /**  Get the value and finite difference derivatives for single valued optimizers.
-     * Called by GetValueAndDerivative if UseFiniteDifferenceDerivative == true */
+     * Called by GetValueAndDerivative if UseFiniteDifferenceDerivative == true.
+     */
     virtual void GetValueAndFiniteDifferenceDerivative( const ParametersType& parameters, 
-      MeasureType& value, DerivativeType& derivative ) const;   
+      MeasureType& value, DerivativeType& derivative ) const;
 
+    /** Some initialization functions, called by Initialize. */
+    virtual void InitializeHistograms( void );
   
   private:
     
@@ -204,6 +220,18 @@ namespace itk
     ParzenWindowMutualInformationImageToImageMetric( const Self& ); // purposely not implemented
     /** The private copy constructor. */
     void operator=( const Self& );                              // purposely not implemented
+
+    /** Helper array for storing the values of the JointPDF ratios. */
+    typedef double                      PRatioType;
+    typedef Array2D< PRatioType >       PRatioArrayType;
+    mutable PRatioArrayType             m_PRatioArray;
+
+    /** Update the derivative in case of low memory consumption. */
+    void UpdateDerivativeLowMemory(
+      const RealType & fixedImageValue,
+      const RealType & movingImageValue,
+      const DerivativeType & imageJacobian,
+      DerivativeType & derivative ) const;
       
   }; // end class ParzenWindowMutualInformationImageToImageMetric
 
