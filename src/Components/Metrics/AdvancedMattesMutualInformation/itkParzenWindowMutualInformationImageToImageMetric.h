@@ -155,9 +155,6 @@ namespace itk
     /** The destructor. */
     virtual ~ParzenWindowMutualInformationImageToImageMetric() {};
 
-    /** Print Self. */
-    void PrintSelf( std::ostream& os, Indent indent ) const;
-
     /** Protected Typedefs ******************/
   
     /** Typedefs inherited from superclass */
@@ -226,12 +223,15 @@ namespace itk
     typedef Array2D< PRatioType >       PRatioArrayType;
     mutable PRatioArrayType             m_PRatioArray;
 
-    /** Update the derivative in case of low memory consumption. */
+    /** Helper function to update the derivative in case of low memory consumption. */
     void UpdateDerivativeLowMemory(
       const RealType & fixedImageValue,
       const RealType & movingImageValue,
       const DerivativeType & imageJacobian,
       DerivativeType & derivative ) const;
+
+    /** Helper function to compute m_PRatioArray in case of low memory consumption. */
+    void ComputeValueAndPRatioArray( double & MI ) const;
       
   }; // end class ParzenWindowMutualInformationImageToImageMetric
 
