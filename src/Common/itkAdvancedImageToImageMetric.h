@@ -46,7 +46,7 @@ namespace itk
  *   be larger than the range of voxel values, because of so-called overshoot. The 
  *   gray-value limiters make sure this doesn't happen. 
  * \li Fast implementation when a B-spline transform is used. The B-spline transform
- *   has a sparse jacobian. The AdvancedImageToImageMetric provides functions that make
+ *   has a sparse Jacobian. The AdvancedImageToImageMetric provides functions that make
  *   it easier for inheriting metrics to exploit this fact.
  * \li MovingImageDerivativeScales: an experimental option, which allows scaling of the
  *   moving image derivatives. This is a kind of fast hack, which makes it possible to 
@@ -275,7 +275,7 @@ protected:
   /** The number of transform parameters. */
   unsigned int m_NumberOfParameters;
   
-  /** the parameter indices that have a nonzero jacobian. */
+  /** The parameter indices that have a nonzero Jacobian. */
   mutable ParameterIndexArrayType                    m_NonZeroJacobianIndices;
   
   /** Variables for the Limiters. */
@@ -379,6 +379,7 @@ private:
   AdvancedImageToImageMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
+  /** Private member variables. */
   bool    m_UseImageSampler;
   double  m_FixedLimitRangeRatio;
   double  m_MovingLimitRangeRatio;
@@ -389,7 +390,8 @@ private:
   MovingImageDerivativeScalesType m_MovingImageDerivativeScales;
     
   /** This member should only be directly accessed by the
-   * EvaluateTransformJacobian method. */
+   * EvaluateTransformJacobian method.
+   */
   mutable TransformJacobianType m_InternalTransformJacobian;
   
 }; // end class AdvancedImageToImageMetric

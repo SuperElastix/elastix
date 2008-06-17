@@ -31,9 +31,9 @@ namespace itk
     ::AdvancedImageToImageMetric()
   {
     /** don't use the default gradient image as implemented by ITK.
-     * It uses a gaussian derivative, which introduces extra smoothing,
+     * It uses a Gaussian derivative, which introduces extra smoothing,
      * which may not always be desired. Also, when the derivatives are 
-     * computed using Gaussian filtering, the grey-values should also be
+     * computed using Gaussian filtering, the gray-values should also be
      * blurred, to have a consistent 'image model' */
     this->SetComputeGradient( false ); 
 
@@ -500,9 +500,9 @@ namespace itk
         }
         if ( this->m_UseMovingImageDerivativeScales )
         {
-          for ( unsigned int i = 0; i < MovingImageDimension; ++i)
+          for ( unsigned int i = 0; i < MovingImageDimension; ++i )
           {
-            (*gradient)[i] *= this->m_MovingImageDerivativeScales[i]; 
+            (*gradient)[ i ] *= this->m_MovingImageDerivativeScales[ i ];
           }
         }
       } // end if gradient
@@ -575,13 +575,14 @@ namespace itk
     {
       /** Generic version which works for all transforms. */
       return this->m_Transform->GetJacobian( fixedImagePoint );
-    } // end if no bspline transform
+    } // end if no B-spline transform
     else
     {
       /** If the transform is of type BSplineDeformableTransform or of type
        * BSplineCombinationTransform, we can obtain a speed up by only 
        * processing the affected parameters. */
       unsigned int i = 0;
+
       /** We assume the sizes of the m_InternalTransformJacobian and the
        * m_NonZeroJacobianIndices have already been set; Also we assume
        * that the InternalTransformJacobian is not 'touched' by other
