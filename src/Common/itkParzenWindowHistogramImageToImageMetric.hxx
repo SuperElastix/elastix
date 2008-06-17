@@ -340,7 +340,7 @@ namespace itk
   template <class TFixedImage, class TMovingImage> 
     void
     ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
-    ::InitializeKernels(void)
+    ::InitializeKernels( void )
   {
     switch ( this->m_FixedKernelBSplineOrder )
     {

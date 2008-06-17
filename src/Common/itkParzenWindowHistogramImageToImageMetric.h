@@ -187,20 +187,22 @@ namespace itk
     itkGetConstReferenceMacro( UseExplicitPDFDerivatives, bool );
     itkBooleanMacro( UseExplicitPDFDerivatives );
 
-    /** Whether you plan to call the GetDerivative/GetValueAndDerivative method or not
-     * This option should be set before calling Initialize()
-     * Default: false */
+    /** Whether you plan to call the GetDerivative/GetValueAndDerivative method or not.
+     * This option should be set before calling Initialize(); Default: false.
+     */
     itkSetMacro( UseDerivative, bool );
     itkGetConstMacro( UseDerivative, bool );
 
     /** Whether you want to use a finite difference implementation of the metric's derivative.
-     * This option should be set before calling Initialize(); default: false */
+     * This option should be set before calling Initialize(); Default: false.
+     */
     itkSetMacro( UseFiniteDifferenceDerivative, bool );
     itkGetConstMacro( UseFiniteDifferenceDerivative, bool );
 
     /** For computing the finite difference derivative, the perturbation (delta) of the 
      * transform parameters; default: 1.0.
-     * mu_right= mu + delta*e_k */
+     * mu_right= mu + delta*e_k
+     */
     itkSetMacro( FiniteDifferencePerturbation, double );
     itkGetConstMacro( FiniteDifferencePerturbation, double );
     
@@ -217,7 +219,7 @@ namespace itk
 
     /** Protected Typedefs ******************/
   
-    /** Typedefs inherited from superclass */
+    /** Typedefs inherited from superclass. */
     typedef typename Superclass::FixedImageIndexType                FixedImageIndexType;
     typedef typename Superclass::FixedImageIndexValueType           FixedImageIndexValueType;
     typedef typename Superclass::MovingImageIndexType               MovingImageIndexType;
@@ -234,7 +236,7 @@ namespace itk
     typedef typename Superclass::BSplineParametersOffsetType        BSplineParametersOffsetType;
     typedef typename Superclass::ParameterIndexArrayType            ParameterIndexArrayType;
             
-    /** Typedefs for the PDFs and PDF derivatives.  */
+    /** Typedefs for the PDFs and PDF derivatives. */
     typedef float                                   PDFValueType;
     typedef Array<PDFValueType>                     MarginalPDFType;
     typedef Image<PDFValueType,2>                   JointPDFType;
@@ -409,8 +411,8 @@ namespace itk
     virtual void ComputePDFs( const ParametersType & parameters ) const;
 
     /** Some initialization functions, called by Initialize. */
-    virtual void InitializeHistograms(void);
-    virtual void InitializeKernels(void);
+    virtual void InitializeHistograms( void );
+    virtual void InitializeKernels( void );
 
     /**  Get the value and analytic derivatives for single valued optimizers.
      * Called by GetValueAndDerivative if UseFiniteDifferenceDerivative == false
@@ -424,7 +426,7 @@ namespace itk
      * Implement this method in subclasses.
      */
     virtual void GetValueAndFiniteDifferenceDerivative( const ParametersType& parameters, 
-      MeasureType& value, DerivativeType& derivative ) const {};   
+      MeasureType& value, DerivativeType& derivative ) const {};
 
   private:
     
