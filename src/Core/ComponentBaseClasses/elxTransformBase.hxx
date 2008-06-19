@@ -587,14 +587,17 @@ namespace elastix
 		typedef typename FixedImageType::IndexType								FixedImageIndexType;
 		typedef typename FixedImageType::SpacingType							FixedImageSpacingType;
 		typedef typename FixedImageType::PointType								FixedImageOriginType;
-		FixedImageSizeType size = dynamic_cast<FixedImageType *>(
-			this->m_Elastix->GetFixedImage() )->GetLargestPossibleRegion().GetSize();
-		FixedImageIndexType index = dynamic_cast<FixedImageType *>(
-			this->m_Elastix->GetFixedImage() )->GetLargestPossibleRegion().GetIndex();
-		FixedImageSpacingType spacing = dynamic_cast<FixedImageType *>(
-			this->m_Elastix->GetFixedImage() )->GetSpacing();
-		FixedImageOriginType origin = dynamic_cast<FixedImageType *>(
-			this->m_Elastix->GetFixedImage() )->GetOrigin();
+    typedef typename FixedImageType::DirectionType            FixedImageDirectionType;
+		FixedImageSizeType size = 
+			this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetSize();
+		FixedImageIndexType index = 
+			this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetIndex();
+		FixedImageSpacingType spacing =
+			this->m_Elastix->GetFixedImage()->GetSpacing();
+		FixedImageOriginType origin = 
+			this->m_Elastix->GetFixedImage()->GetOrigin();
+    FixedImageDirectionType direction = 
+      this->m_Elastix->GetFixedImage()->GetDirection();
 
 		/** Write image Size. */
 		xout["transpar"] << "(Size ";
@@ -632,6 +635,17 @@ namespace elastix
 			xout["transpar"] << origin[ i ] << " ";
 		}
 		xout["transpar"] << origin[ FixedImageDimension - 1 ] << ")" << std::endl;
+
+    /** Write direction cosines. */
+    xout["transpar"] << "(Direction";
+    for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+		{
+      for (unsigned int j = 0; j < FixedImageDimension; j++ )
+      {
+        xout["transpar"] << " " << direction(j,i);
+      }
+    }
+    xout["transpar"] << ")" << std::endl;
 
 		/** Set the precision back to default value. */
 		xout["transpar"] << std::setprecision( this->m_Elastix->GetDefaultOutputPrecision() );

@@ -49,6 +49,7 @@ namespace elastix
 		this->GetAsITKBaseType()->SetOutputStartIndex( fixedImage->GetLargestPossibleRegion().GetIndex() );
 		this->GetAsITKBaseType()->SetOutputOrigin( fixedImage->GetOrigin() );
 		this->GetAsITKBaseType()->SetOutputSpacing( fixedImage->GetSpacing() );
+		this->GetAsITKBaseType()->SetOutputDirection( fixedImage->GetDirection() );
 		
 		/** Set the DefaultPixelValue (for pixels in the resampled image
 		 * that come from outside the original (moving) image.
@@ -305,6 +306,8 @@ namespace elastix
 		IndexType				index;
 		OriginPointType	origin;
 		SizeType				size;
+    DirectionType   direction;
+    direction.SetIdentity();
 		for ( unsigned int i = 0; i < ImageDimension; i++ )
 		{
 			/** No default size. Read size from the parameter file. */
@@ -321,6 +324,12 @@ namespace elastix
 			/** Default origin. Read origin from the parameter file. */
 			origin[ i ] = 0.0;
 			this->m_Configuration->ReadParameter(	origin[ i ], "Origin", i );
+
+      /** Read direction cosines. Default identity */
+      for (unsigned int j = 0; j < ImageDimension; j++ )
+      {
+        this->m_Configuration->ReadParameter(	direction(j,i), "Direction", i*ImageDimension+j );        
+      }
 		}
 
 		/** Check for image size. */
@@ -340,6 +349,7 @@ namespace elastix
 		this->GetAsITKBaseType()->SetOutputStartIndex( index );
 		this->GetAsITKBaseType()->SetOutputOrigin( origin );
 		this->GetAsITKBaseType()->SetOutputSpacing( spacing );
+    this->GetAsITKBaseType()->SetOutputDirection( direction );
 		
 	  /** Set the DefaultPixelValue (for pixels in the resampled image
 		 * that come from outside the original (moving) image.

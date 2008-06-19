@@ -100,6 +100,7 @@ namespace elastix
 		typedef typename ITKBaseType::SizeType						SizeType;
 		typedef typename ITKBaseType::IndexType						IndexType;
 		typedef typename ITKBaseType::SpacingType					SpacingType;
+    typedef typename ITKBaseType::DirectionType       DirectionType;
 		typedef typename ITKBaseType::OriginPointType			OriginPointType;
 		typedef typename ITKBaseType::PixelType						OutputPixelType;
 
