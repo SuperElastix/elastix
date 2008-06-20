@@ -23,43 +23,43 @@ namespace elastix
 using namespace itk;
 
 
-	/**
-	 * ***************** BeforeEachResolution ***********************
-	 */
+  /**
+   * ***************** BeforeEachResolution ***********************
+   */
 
-	template <class TElastix>
-		void AdvancedNormalizedCorrelationMetric<TElastix>
-		::BeforeEachResolution(void)
-	{
-		/** Get the current resolution level. */
-		unsigned int level = 
-			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+  template <class TElastix>
+    void AdvancedNormalizedCorrelationMetric<TElastix>
+    ::BeforeEachResolution(void)
+  {
+    /** Get the current resolution level. */
+    unsigned int level = 
+      ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
-		/** Get and set SubtractMean. Default true. */
-		bool subtractMean = true;
-		this->GetConfiguration()->ReadParameter( subtractMean, "SubtractMean",
+    /** Get and set SubtractMean. Default true. */
+    bool subtractMean = true;
+    this->GetConfiguration()->ReadParameter( subtractMean, "SubtractMean",
       this->GetComponentLabel(), level, 0 );
-		this->SetSubtractMean( subtractMean );
-		
-	} // end BeforeEachResolution
-	
+    this->SetSubtractMean( subtractMean );
+    
+  } // end BeforeEachResolution
+  
 
-	/**
-	 * ******************* Initialize ***********************
-	 */
+  /**
+   * ******************* Initialize ***********************
+   */
 
-	template <class TElastix>
-		void AdvancedNormalizedCorrelationMetric<TElastix>
-		::Initialize(void) throw (ExceptionObject)
-	{
-		TimerPointer timer = TimerType::New();
-		timer->StartTimer();
-		this->Superclass1::Initialize();
-		timer->StopTimer();
-		elxout << "Initialization of AdvancedNormalizedCorrelation metric took: "
-			<< static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
+  template <class TElastix>
+    void AdvancedNormalizedCorrelationMetric<TElastix>
+    ::Initialize(void) throw (ExceptionObject)
+  {
+    TimerPointer timer = TimerType::New();
+    timer->StartTimer();
+    this->Superclass1::Initialize();
+    timer->StopTimer();
+    elxout << "Initialization of AdvancedNormalizedCorrelation metric took: "
+      << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
 
-	} // end Initialize
+  } // end Initialize
 
 
 } // end namespace elastix

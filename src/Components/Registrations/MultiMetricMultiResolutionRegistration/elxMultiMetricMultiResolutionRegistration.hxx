@@ -20,45 +20,45 @@
 namespace elastix
 {
 using namespace itk;
-	
-	/**
-	 * ******************* BeforeRegistration ***********************
-	 */
+  
+  /**
+   * ******************* BeforeRegistration ***********************
+   */
 
-	template <class TElastix>
-		void MultiMetricMultiResolutionRegistration<TElastix>
-		::BeforeRegistration(void)
-	{	
-		/** Get the components from this->m_Elastix and set them.*/
-		this->SetComponents();
+  template <class TElastix>
+    void MultiMetricMultiResolutionRegistration<TElastix>
+    ::BeforeRegistration(void)
+  {	
+    /** Get the components from this->m_Elastix and set them.*/
+    this->SetComponents();
 
-		/** Set the number of resolutions.*/		
-		unsigned int numberOfResolutions = 3;
-		this->m_Configuration->ReadParameter( numberOfResolutions, "NumberOfResolutions", 0 );
-		this->SetNumberOfLevels( numberOfResolutions );
-				
-		/** Set the FixedImageRegions to the buffered regions.*/
-		
-		/** Make sure the fixed image is up to date. */
+    /** Set the number of resolutions.*/		
+    unsigned int numberOfResolutions = 3;
+    this->m_Configuration->ReadParameter( numberOfResolutions, "NumberOfResolutions", 0 );
+    this->SetNumberOfLevels( numberOfResolutions );
+        
+    /** Set the FixedImageRegions to the buffered regions.*/
+    
+    /** Make sure the fixed image is up to date. */
     for ( unsigned int i = 0; i< this->GetElastix()->GetNumberOfFixedImages(); ++i )
     {
-		  try
-		  {
-			  this->GetElastix()->GetFixedImage(i)->Update();
-		  }
-		  catch( itk::ExceptionObject & excp )
-		  {
-			  /** Add information to the exception. */
+      try
+      {
+        this->GetElastix()->GetFixedImage(i)->Update();
+      }
+      catch( itk::ExceptionObject & excp )
+      {
+        /** Add information to the exception. */
         excp.SetLocation( "MultiMetricMultiResolutionRegistration - BeforeRegistration()" );
-			  std::string err_str = excp.GetDescription();
-			  err_str += "\nError occured while updating region info of the fixed image.\n";
-			  excp.SetDescription( err_str );
-			  /** Pass the exception to an higher level. */
-			  throw excp;
-		  }
+        std::string err_str = excp.GetDescription();
+        err_str += "\nError occured while updating region info of the fixed image.\n";
+        excp.SetDescription( err_str );
+        /** Pass the exception to an higher level. */
+        throw excp;
+      }
 
-		  /** Set the fixedImageRegion. */
-		  this->SetFixedImageRegion( this->GetElastix()->GetFixedImage(i)->GetBufferedRegion(), i );
+      /** Set the fixedImageRegion. */
+      this->SetFixedImageRegion( this->GetElastix()->GetFixedImage(i)->GetBufferedRegion(), i );
     }
 
     /** Add the target cells "Metric<i>" and "||Gradient<i>||" to xout["iteration"]
@@ -68,34 +68,34 @@ using namespace itk;
     {
       std::ostringstream makestring1;
       makestring1 << "Metric" << i;
-		  xout["iteration"].AddTargetCell( makestring1.str().c_str() );
+      xout["iteration"].AddTargetCell( makestring1.str().c_str() );
       xl::xout["iteration"][ makestring1.str().c_str() ] << std::showpoint << std::fixed;
 
       std::ostringstream makestring2;
       makestring2 << "||Gradient" << i << "||";
-		  xout["iteration"].AddTargetCell( makestring2.str().c_str() );
+      xout["iteration"].AddTargetCell( makestring2.str().c_str() );
       xl::xout["iteration"][ makestring2.str().c_str() ] << std::showpoint << std::fixed;
     }
-				  		
-	} // end BeforeRegistration
+              
+  } // end BeforeRegistration
 
 
   template <class TElastix>
-		void MultiMetricMultiResolutionRegistration<TElastix>
-		::AfterEachIteration(void)
-	{	
+    void MultiMetricMultiResolutionRegistration<TElastix>
+    ::AfterEachIteration(void)
+  {	
     /** Print the submetric values and gradients to xout["iteration"].*/
     const unsigned int nrOfMetrics = this->GetCombinationMetric()->GetNumberOfMetrics();
     for ( unsigned int i = 0; i < nrOfMetrics; ++i )
     {
       std::ostringstream makestring1;
       makestring1 << "Metric" << i;
-		  xl::xout["iteration"][ makestring1.str().c_str() ] << 
+      xl::xout["iteration"][ makestring1.str().c_str() ] << 
         this->GetCombinationMetric()->GetMetricValue(i);
 
       std::ostringstream makestring2;
       makestring2 << "||Gradient" << i << "||";
-		  xl::xout["iteration"][ makestring2.str().c_str() ] << 
+      xl::xout["iteration"][ makestring2.str().c_str() ] << 
         this->GetCombinationMetric()->GetMetricDerivative(i).magnitude();
     }
 
@@ -103,15 +103,15 @@ using namespace itk;
 
 
   /**
-	 * ******************* BeforeEachResolution ***********************
-	 */
+   * ******************* BeforeEachResolution ***********************
+   */
 
-	template <class TElastix>
-		void MultiMetricMultiResolutionRegistration<TElastix>
-		::BeforeEachResolution(void)
-	{	
+  template <class TElastix>
+    void MultiMetricMultiResolutionRegistration<TElastix>
+    ::BeforeEachResolution(void)
+  {	
     /** Get the current resolution level. */
-		unsigned int level = this->GetCurrentLevel();
+    unsigned int level = this->GetCurrentLevel();
 
     /** Set the masks in the metric */
     this->UpdateFixedMasks( level );
@@ -132,18 +132,18 @@ using namespace itk;
     }
 
   } // end BeforeEachResolution
-	
-	
-	/**
-	 * *********************** SetComponents ************************
-	 */
+  
+  
+  /**
+   * *********************** SetComponents ************************
+   */
 
-	template <class TElastix>
-		void MultiMetricMultiResolutionRegistration<TElastix>
-		::SetComponents(void)
-	{	
-		/** Get the component from this->GetElastix() (as elx::...BaseType *),
-		 * cast it to the appropriate type and set it in 'this'. */
+  template <class TElastix>
+    void MultiMetricMultiResolutionRegistration<TElastix>
+    ::SetComponents(void)
+  {	
+    /** Get the component from this->GetElastix() (as elx::...BaseType *),
+     * cast it to the appropriate type and set it in 'this'. */
 
     const unsigned int nrOfMetrics = this->GetElastix()->GetNumberOfMetrics();
     this->GetCombinationMetric()->SetNumberOfMetrics( nrOfMetrics );
@@ -226,17 +226,17 @@ using namespace itk;
       } // if sampler required by metric
     } // for loop over metrics
 
-	} // end SetComponents
+  } // end SetComponents
 
 
   /**
-	 * ************************* UpdateFixedMasks ************************
+   * ************************* UpdateFixedMasks ************************
    */
 
   template <class TElastix>
-		void MultiMetricMultiResolutionRegistration<TElastix>
+    void MultiMetricMultiResolutionRegistration<TElastix>
     ::UpdateFixedMasks( unsigned int level )
-	{    
+  {    
     /** some shortcuts */
     const unsigned int nrOfMetrics = this->GetElastix()->GetNumberOfMetrics();
     const unsigned int nrOfFixedMasks = this->GetElastix()->GetNumberOfFixedMasks();
@@ -310,22 +310,22 @@ using namespace itk;
     } // end else
 
     /** Stop timer and print the elapsed time. */
-		timer->StopTimer();
+    timer->StopTimer();
     elxout << "Setting the fixed masks took: "
-		  << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) 
+      << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) 
       << " ms." << std::endl;
-    	
+      
   } // end UpdateFixedMasks
   
 
- 	/**
-	 * ************************* UpdateMovingMasks ************************
+  /**
+   * ************************* UpdateMovingMasks ************************
    */
 
   template <class TElastix>
-		void MultiMetricMultiResolutionRegistration<TElastix>
+    void MultiMetricMultiResolutionRegistration<TElastix>
     ::UpdateMovingMasks( unsigned int level )
-	{    
+  {    
     /** some shortcuts */
     const unsigned int nrOfMetrics = this->GetElastix()->GetNumberOfMetrics();
     const unsigned int nrOfMovingMasks = this->GetElastix()->GetNumberOfMovingMasks();
@@ -399,11 +399,11 @@ using namespace itk;
     } // end else
 
     /** Stop timer and print the elapsed time. */
-		timer->StopTimer();
+    timer->StopTimer();
     elxout << "Setting the moving masks took: "
-		  << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) 
+      << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) 
       << " ms." << std::endl;
-    	
+      
   } // end UpdateMovingMasks
 
 

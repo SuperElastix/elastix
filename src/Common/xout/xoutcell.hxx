@@ -19,67 +19,67 @@
 
 namespace xoutlibrary
 {
-	using namespace std;
+  using namespace std;
 
-	/**
-	 * ************************ Constructor *************************
-	 */
+  /**
+   * ************************ Constructor *************************
+   */
 
-	template< class charT, class traits >
-		xoutcell<charT, traits>::xoutcell()
-	{		
-		this->AddTargetCell( "InternalBuffer", &(this->m_InternalBuffer) );
+  template< class charT, class traits >
+    xoutcell<charT, traits>::xoutcell()
+  {		
+    this->AddTargetCell( "InternalBuffer", &(this->m_InternalBuffer) );
 
-	} // end Constructor
-
-
-	/**
-	 * ********************* Destructor *****************************
-	 */
-
-	template< class charT, class traits >
-		xoutcell<charT, traits>::~xoutcell()
-	{
-		//nothing
-
-	} // end Destructor
+  } // end Constructor
 
 
-	/**
-	 * ******************** WriteBufferedData ***********************
-	 * 
-	 * The buffered data is sent to the outputs.
-	 */
+  /**
+   * ********************* Destructor *****************************
+   */
 
-	template< class charT, class traits >
-		void xoutcell<charT, traits>::WriteBufferedData(void)
-	{
-		/** Make sure all data is written to the string */
-		this->m_InternalBuffer << flush;
-		
-		const std::string & strbuf = this->m_InternalBuffer.str();
+  template< class charT, class traits >
+    xoutcell<charT, traits>::~xoutcell()
+  {
+    //nothing
 
-		const char * charbuf = strbuf.c_str();
+  } // end Destructor
 
-		/** Send the string to the outputs */
-		for ( CStreamMapIteratorType cit = this->m_COutputs.begin();
-			cit != this->m_COutputs.end(); ++cit )
-		{
-			*(cit->second) << charbuf << flush;
-		}
-			
-		/** Send the string to the outputs */
-		for ( XStreamMapIteratorType xit = this->m_XOutputs.begin();
-			xit != this->m_XOutputs.end(); ++xit )
-		{
-			*(xit->second) << charbuf;
-			xit->second->WriteBufferedData();
-		}
 
-		/** Empty the internal buffer */
-		this->m_InternalBuffer.str( string("") );
+  /**
+   * ******************** WriteBufferedData ***********************
+   * 
+   * The buffered data is sent to the outputs.
+   */
 
-	} // end WriteBufferedData
+  template< class charT, class traits >
+    void xoutcell<charT, traits>::WriteBufferedData(void)
+  {
+    /** Make sure all data is written to the string */
+    this->m_InternalBuffer << flush;
+    
+    const std::string & strbuf = this->m_InternalBuffer.str();
+
+    const char * charbuf = strbuf.c_str();
+
+    /** Send the string to the outputs */
+    for ( CStreamMapIteratorType cit = this->m_COutputs.begin();
+      cit != this->m_COutputs.end(); ++cit )
+    {
+      *(cit->second) << charbuf << flush;
+    }
+      
+    /** Send the string to the outputs */
+    for ( XStreamMapIteratorType xit = this->m_XOutputs.begin();
+      xit != this->m_XOutputs.end(); ++xit )
+    {
+      *(xit->second) << charbuf;
+      xit->second->WriteBufferedData();
+    }
+
+    /** Empty the internal buffer */
+    this->m_InternalBuffer.str( string("") );
+
+  } // end WriteBufferedData
 
 
 

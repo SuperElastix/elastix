@@ -138,15 +138,15 @@ GenericValue * Parameter
 void ParameterFile::Initialize( const char* fn )
 {
   if ((::yyin = ::fopen(fn, "r"))==NULL)
-	//FILE * yyin;
-	//if ( ::fopen_s( &yyin, fn, "r" ) != 0 )
+  //FILE * yyin;
+  //if ( ::fopen_s( &yyin, fn, "r" ) != 0 )
     {
       std::string temp = "ParameterFile::Could not open input file \""
-		  + std::string(fn) + "\".";
+      + std::string(fn) + "\".";
       //      throw Exception(temp);
       DIE( temp.c_str() );
     }
-	else
+  else
     {
       ::yyrestart( yyin );
       ::reset_yyvalues();

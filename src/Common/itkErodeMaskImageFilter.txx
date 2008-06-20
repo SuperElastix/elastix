@@ -43,10 +43,10 @@ namespace itk
       erosion->SetBackgroundValue( NumericTraits<InputPixelType>::Zero );
 
       /** Connect the pipeline. */
-			if ( i > 0 )
+      if ( i > 0 )
       {
          erosion->SetInput( this->m_ErodeFilterArray[ i - 1 ]->GetOutput() );			
-			}
+      }
     }
 
     this->m_IsMovingMask = false;
@@ -75,28 +75,28 @@ namespace itk
     for (unsigned int i = 0; i < InputImageDimension; ++i)
     {
       /** Declare radius-array and structuring element. */
-			RadiusType								radiusarray;
-			StructuringElementType		S_ball;
+      RadiusType								radiusarray;
+      StructuringElementType		S_ball;
       unsigned long radius;
       unsigned int schedule;
 
       /** Create the radius array */
-			radiusarray.Fill( 0 );
-			schedule = this->GetSchedule()[ level ][ i ];
+      radiusarray.Fill( 0 );
+      schedule = this->GetSchedule()[ level ][ i ];
       if ( ! this->GetIsMovingMask() )
       {
-			  radius = static_cast<unsigned long>( schedule + 1 );
+        radius = static_cast<unsigned long>( schedule + 1 );
       }
       else
       {
         radius = static_cast<unsigned long>( 2 * schedule + 1 );
       }
-			radiusarray.SetElement( i, radius );
+      radiusarray.SetElement( i, radius );
       
       /** Create the structuring element and set it into the erosion filter. */
-			S_ball.SetRadius( radiusarray );
-			S_ball.CreateStructuringElement();
-			this->m_ErodeFilterArray[ i ]->SetKernel( S_ball );
+      S_ball.SetRadius( radiusarray );
+      S_ball.CreateStructuringElement();
+      this->m_ErodeFilterArray[ i ]->SetKernel( S_ball );
     }
 
     /** Set the input into the first erosion filter */

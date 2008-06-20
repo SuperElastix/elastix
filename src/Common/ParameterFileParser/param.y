@@ -43,10 +43,10 @@ typedef Value<std::string> StringValue;
  */
 void reset_yyvalues()
   {
-	line_no=0;
-	token_head=0;
-	syntax_error_count=0;
-	semantic_error_count=0;
+  line_no=0;
+  token_head=0;
+  syntax_error_count=0;
+  semantic_error_count=0;
   }
 
 /**

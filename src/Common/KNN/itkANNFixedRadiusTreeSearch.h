@@ -20,32 +20,32 @@
 
 namespace itk
 {
-	
-	/**
-	 * \class ANNFixedRadiusTreeSearch
-	 *
-	 * \brief 
-	 *
-	 * 
-	 * \ingroup Metrics?
-	 */
-	
+  
+  /**
+   * \class ANNFixedRadiusTreeSearch
+   *
+   * \brief 
+   *
+   * 
+   * \ingroup Metrics?
+   */
+  
   template < class TListSample >
   class ANNFixedRadiusTreeSearch : public BinaryANNTreeSearchBase< TListSample >
-	{
-	public:
-		
-		/** Standard itk. */
-		typedef ANNFixedRadiusTreeSearch                Self;
-		typedef BinaryANNTreeSearchBase< TListSample >  Superclass;
-		typedef SmartPointer< Self >				            Pointer;
-		typedef SmartPointer< const Self >	            ConstPointer;
-		
+  {
+  public:
+    
+    /** Standard itk. */
+    typedef ANNFixedRadiusTreeSearch                Self;
+    typedef BinaryANNTreeSearchBase< TListSample >  Superclass;
+    typedef SmartPointer< Self >				            Pointer;
+    typedef SmartPointer< const Self >	            ConstPointer;
+    
     /** New method for creating an object using a factory. */
-		itkNewMacro( Self );
+    itkNewMacro( Self );
 
-		/** ITK type info. */
-		itkTypeMacro( ANNFixedRadiusTreeSearch, BinaryANNTreeSearchBase );
+    /** ITK type info. */
+    itkTypeMacro( ANNFixedRadiusTreeSearch, BinaryANNTreeSearchBase );
 
     /** Typedef's from Superclass. */
     typedef typename Superclass::ListSampleType         ListSampleType;
@@ -78,23 +78,23 @@ namespace itk
     virtual void Search( const MeasurementVectorType & qp, IndexArrayType & ind,
       DistanceArrayType & dists, double sqRad );
 
-	protected:
-		
-		ANNFixedRadiusTreeSearch();
-		virtual ~ANNFixedRadiusTreeSearch();
+  protected:
+    
+    ANNFixedRadiusTreeSearch();
+    virtual ~ANNFixedRadiusTreeSearch();
 
     /** Member variables. */
     double  m_ErrorBound;
     double  m_SquaredRadius;
     
-	private:
-		
-		ANNFixedRadiusTreeSearch( const Self& ); // purposely not implemented
-		void operator=( const Self& );        // purposely not implemented
+  private:
+    
+    ANNFixedRadiusTreeSearch( const Self& ); // purposely not implemented
+    void operator=( const Self& );        // purposely not implemented
 
-	}; // end class ANNFixedRadiusTreeSearch
-		
-		
+  }; // end class ANNFixedRadiusTreeSearch
+    
+    
 } // end namespace itk
 
 

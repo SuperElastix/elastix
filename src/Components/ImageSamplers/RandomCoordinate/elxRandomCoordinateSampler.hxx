@@ -46,7 +46,7 @@ namespace elastix
     this->GetConfiguration()->ReadParameter( splineOrder,
       "FixedImageBSplineInterpolationOrder", this->GetComponentLabel(), level, 0 );
     fixedImageInterpolator->SetSplineOrder( splineOrder );
-	  this->SetInterpolator( fixedImageInterpolator );
+    this->SetInterpolator( fixedImageInterpolator );
 
     /** Set the UseRandomSampleRegion bool. */
     bool useRandomSampleRegion = false;

@@ -23,58 +23,58 @@ namespace elastix
 
 using namespace itk;
 
-	/**
-	 * \class GridSampler
-	 * \brief An interpolator based on the itk::ImageGridSampler.
-	 * 
+  /**
+   * \class GridSampler
+   * \brief An interpolator based on the itk::ImageGridSampler.
+   * 
    * This image sampler samples voxels on a uniform grid.
    * This sampler is in most cases not recommended.
    * 
    * This sampler does not react on the 
    * NewSamplesEveryIteration parameter.
    *
-	 * The parameters used in this class are:
-	 * \parameter ImageSampler: Select this image sampler as follows:\n
-	 *		<tt>(ImageSampler "Grid")</tt>   
+   * The parameters used in this class are:
+   * \parameter ImageSampler: Select this image sampler as follows:\n
+   *		<tt>(ImageSampler "Grid")</tt>   
    * \parameter SampleGridSpacing: Defines the sampling grid in case of a Grid ImageSampler.\n
    *    An integer downsampling factor must be specified for each dimension, for each resolution.\n
    *    example: <tt>(SampleGridSpacing 4 4 2 2)</tt>\n
    *    Default is 2 for each dimension for each resolution.
-	 *
-	 * \ingroup ImageSamplers
-	 */
+   *
+   * \ingroup ImageSamplers
+   */
 
-	template < class TElastix >
-		class GridSampler :
-		public
-			ImageGridSampler<
+  template < class TElastix >
+    class GridSampler :
+    public
+      ImageGridSampler<
       ITK_TYPENAME elx::ImageSamplerBase<TElastix>::InputImageType >, 
-		public
+    public
       elx::ImageSamplerBase<TElastix>
-	{	
-	public:
-	
-		/** Standard ITK-stuff. */
-		typedef GridSampler									      Self;
-		typedef	ImageGridSampler<
+  {	
+  public:
+  
+    /** Standard ITK-stuff. */
+    typedef GridSampler									      Self;
+    typedef	ImageGridSampler<
       typename elx::ImageSamplerBase<TElastix>::InputImageType >	Superclass1;		
     typedef elx::ImageSamplerBase<TElastix>					Superclass2;		
-		typedef SmartPointer<Self>									Pointer;
-		typedef SmartPointer<const Self>						ConstPointer;
-		
-		/** Method for creation through the object factory. */
-		itkNewMacro(Self);
-		
-		/** Run-time type information (and related methods). */
-		itkTypeMacro( GridSampler, ImageGridSampler );
-		
-		/** Name of this class.
-		 * Use this name in the parameter file to select this specific interpolator. \n
-		 * example: <tt>(ImageSampler "Grid")</tt>\n
-		 */
-		elxClassNameMacro( "Grid" );
+    typedef SmartPointer<Self>									Pointer;
+    typedef SmartPointer<const Self>						ConstPointer;
+    
+    /** Method for creation through the object factory. */
+    itkNewMacro(Self);
+    
+    /** Run-time type information (and related methods). */
+    itkTypeMacro( GridSampler, ImageGridSampler );
+    
+    /** Name of this class.
+     * Use this name in the parameter file to select this specific interpolator. \n
+     * example: <tt>(ImageSampler "Grid")</tt>\n
+     */
+    elxClassNameMacro( "Grid" );
 
-		/** Typedefs inherited from the superclass. */
+    /** Typedefs inherited from the superclass. */
     typedef typename Superclass1::DataObjectPointer            DataObjectPointer;
     typedef typename Superclass1::OutputVectorContainerType    OutputVectorContainerType;
     typedef typename Superclass1::OutputVectorContainerPointer OutputVectorContainerPointer;
@@ -93,36 +93,36 @@ using namespace itk;
 
     /** The input image dimension. */
     itkStaticConstMacro( InputImageDimension, unsigned int,	Superclass1::InputImageDimension );
-		
-		/** Typedefs inherited from Elastix. */
-		typedef typename Superclass2::ElastixType								ElastixType;
-		typedef typename Superclass2::ElastixPointer						ElastixPointer;
-		typedef typename Superclass2::ConfigurationType					ConfigurationType;
-		typedef typename Superclass2::ConfigurationPointer			ConfigurationPointer;
-		typedef typename Superclass2::RegistrationType					RegistrationType;
-		typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
-		typedef typename Superclass2::ITKBaseType								ITKBaseType;
+    
+    /** Typedefs inherited from Elastix. */
+    typedef typename Superclass2::ElastixType								ElastixType;
+    typedef typename Superclass2::ElastixPointer						ElastixPointer;
+    typedef typename Superclass2::ConfigurationType					ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer			ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType					RegistrationType;
+    typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
+    typedef typename Superclass2::ITKBaseType								ITKBaseType;
 
     /** Execute stuff before each resolution:
-	   * \li Set the sampling grid size.
+     * \li Set the sampling grid size.
      */
-		virtual void BeforeEachResolution(void);
+    virtual void BeforeEachResolution(void);
 
-	protected:
+  protected:
 
-		/** The constructor. */
-		GridSampler() {}
-		/** The destructor. */
-		virtual ~GridSampler() {}
-		
-	private:
+    /** The constructor. */
+    GridSampler() {}
+    /** The destructor. */
+    virtual ~GridSampler() {}
+    
+  private:
 
-		/** The private constructor. */
-		GridSampler( const Self& );	// purposely not implemented
-		/** The private copy constructor. */
-		void operator=( const Self& );			// purposely not implemented
-			
-	}; // end class GridSampler
+    /** The private constructor. */
+    GridSampler( const Self& );	// purposely not implemented
+    /** The private copy constructor. */
+    void operator=( const Self& );			// purposely not implemented
+      
+  }; // end class GridSampler
 
 
 } // end namespace elastix

@@ -19,28 +19,28 @@
 
 namespace itk
 {
-	
-	/**
-	 * ************************ Constructor	*************************
-	 */
+  
+  /**
+   * ************************ Constructor	*************************
+   */
 
-	template < class TListSample >
-		ANNbdTree<TListSample>
-		::ANNbdTree()
-	{
+  template < class TListSample >
+    ANNbdTree<TListSample>
+    ::ANNbdTree()
+  {
     this->m_ShrinkingRule = ANN_BD_SIMPLE;
     
   } // end Constructor()
 
 
   /**
-	 * ************************ SetShrinkingRule *************************
-	 */
+   * ************************ SetShrinkingRule *************************
+   */
 
-	template < class TListSample >
+  template < class TListSample >
     void ANNbdTree<TListSample>
-		::SetShrinkingRule( std::string rule )
-	{
+    ::SetShrinkingRule( std::string rule )
+  {
     if ( rule == "ANN_BD_NONE" )
     {
       this->m_ShrinkingRule = ANN_BD_NONE;
@@ -66,13 +66,13 @@ namespace itk
 
 
   /**
-	 * ************************ GetShrinkingRule *************************
-	 */
+   * ************************ GetShrinkingRule *************************
+   */
 
-	template < class TListSample >
+  template < class TListSample >
     std::string ANNbdTree<TListSample>
-		::GetShrinkingRule( void )
-	{
+    ::GetShrinkingRule( void )
+  {
     switch ( this->m_ShrinkingRule )
     {
       case ANN_BD_NONE:     return "ANN_BD_NONE";
@@ -85,13 +85,13 @@ namespace itk
 
 
   /**
-	 * ************************ GenerateTree *************************
-	 */
+   * ************************ GenerateTree *************************
+   */
 
-	template < class TListSample >
+  template < class TListSample >
     void ANNbdTree<TListSample>
-		::GenerateTree( void )
-	{
+    ::GenerateTree( void )
+  {
     int dim = static_cast< int >( this->GetDataDimension() );
     int nop = static_cast< int >( this->GetActualNumberOfDataPoints() );
     int bcs = static_cast< int >( this->m_BucketSize );
@@ -107,14 +107,14 @@ namespace itk
 
 
   /**
-	 * ************************ PrintSelf *************************
-	 */
+   * ************************ PrintSelf *************************
+   */
 
-	template < class TListSample >
+  template < class TListSample >
     void
     ANNbdTree<TListSample>
-		::PrintSelf( std::ostream& os, Indent indent ) const
-	{
+    ::PrintSelf( std::ostream& os, Indent indent ) const
+  {
     Superclass::PrintSelf( os, indent );
 
     os << indent << "ShrinkingRule: " << this->m_ShrinkingRule << std::endl;

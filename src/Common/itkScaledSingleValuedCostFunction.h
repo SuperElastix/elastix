@@ -35,19 +35,19 @@ namespace itk
   {
   public:
 
-		/** Standard ITK-stuff. */
+    /** Standard ITK-stuff. */
     typedef ScaledSingleValuedCostFunction  Self;
     typedef SingleValuedCostFunction        Superclass;
     typedef SmartPointer<Self>              Pointer;
     typedef SmartPointer<const Self>        ConstPointer;
 
-		/** Method for creation through the object factory. */
+    /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
-		/** Run-time type information (and related methods). */
+    /** Run-time type information (and related methods). */
     itkTypeMacro( ScaledSingleValuedCostFunction, SingleValuedCostFunction );
 
-		/** Typedefs inherited from the superclass. */
+    /** Typedefs inherited from the superclass. */
     typedef Superclass::MeasureType         MeasureType;
     typedef Superclass::DerivativeType      DerivativeType;
     typedef Superclass::ParametersType      ParametersType;
@@ -57,14 +57,14 @@ namespace itk
 
     /** Divide the parameters by the scales and call the GetValue routine 
      * of the unscaled cost function.
-		 */
+     */
     virtual MeasureType GetValue(
       const ParametersType & parameters ) const;
 
     /** Divide the parameters by the scales, call the GetDerivative routine
      * of the unscaled cost function and divide the resulting derivative by
      * the scales.
-		 */
+     */
     virtual void GetDerivative(
       const ParametersType & parameters,
       DerivativeType & derivative ) const;
@@ -80,13 +80,13 @@ namespace itk
 
     /** Set the cost function that needs scaling. */
     itkSetObjectMacro( UnscaledCostFunction, Superclass );
-		/** Get the cost function that needs scaling. */
+    /** Get the cost function that needs scaling. */
     itkGetObjectMacro( UnscaledCostFunction, Superclass );
 
     /** Set the scales. Also computes the squared scales, just in case users 
      * call GetSquaredScales (for compatibility with the ITK convention). */
     virtual void SetScales( const ScalesType & scales );
-		/** Get the scales. */
+    /** Get the scales. */
     itkGetConstReferenceMacro( Scales, ScalesType );
 
     /** The ITK convention is to use the squared scales. This function
@@ -99,40 +99,40 @@ namespace itk
 
     /** Set the flag to use scales or not. */
     itkSetMacro( UseScales, bool );
-		/** Get the flag to use scales or not. */
+    /** Get the flag to use scales or not. */
     itkGetConstMacro( UseScales, bool );
 
-		/** Set the flag to negate the cost function or not. */
+    /** Set the flag to negate the cost function or not. */
     itkBooleanMacro( NegateCostFunction );
-		/** Set the flag to negate the cost function or not. */
+    /** Set the flag to negate the cost function or not. */
     itkSetMacro( NegateCostFunction, bool );
-		/** Get the flag to negate the cost function or not. */
+    /** Get the flag to negate the cost function or not. */
     itkGetConstMacro( NegateCostFunction, bool );
 
     /** Convert the parameters from scaled to unscaled: x = y/s. */
     virtual void ConvertScaledToUnscaledParameters( ParametersType & parameters ) const;
 
-		/** Convert the parameters from unscaled to scaled: y = x*s. */
+    /** Convert the parameters from unscaled to scaled: y = x*s. */
     virtual void ConvertUnscaledToScaledParameters( ParametersType & parameters ) const;
 
   protected:
 
-		/** The constructor. */
+    /** The constructor. */
     ScaledSingleValuedCostFunction();
-		/** The destructor. */
+    /** The destructor. */
     virtual ~ScaledSingleValuedCostFunction() {};
 
-		/** PrintSelf. */
+    /** PrintSelf. */
     void PrintSelf( std::ostream& os, Indent indent ) const{};
 
   private:
 
-		/** The private constructor. */
+    /** The private constructor. */
     ScaledSingleValuedCostFunction( const Self& );	// purposely not implemented
-		/** The private copy constructor. */
+    /** The private copy constructor. */
     void operator=( const Self& );									// purposely not implemented
 
-		/** Member variables. */
+    /** Member variables. */
     ScalesType                            m_Scales;
     ScalesType                            m_SquaredScales;
     SingleValuedCostFunctionPointer       m_UnscaledCostFunction;

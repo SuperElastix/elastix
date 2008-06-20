@@ -22,32 +22,32 @@ namespace elastix
 {
 using namespace itk;
 
-	/**
-	 * ******************* Initialize ***********************
-	 */
+  /**
+   * ******************* Initialize ***********************
+   */
 
-	template <class TElastix>
-		void AdvancedKappaStatisticMetric<TElastix>
-		::Initialize(void) throw (ExceptionObject)
-	{
-		TimerPointer timer = TimerType::New();
-		timer->StartTimer();
-		this->Superclass1::Initialize();
-		timer->StopTimer();
-		elxout << "Initialization of AdvancedKappaStatistic metric took: "
-			<< static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
+  template <class TElastix>
+    void AdvancedKappaStatisticMetric<TElastix>
+    ::Initialize(void) throw (ExceptionObject)
+  {
+    TimerPointer timer = TimerType::New();
+    timer->StartTimer();
+    this->Superclass1::Initialize();
+    timer->StopTimer();
+    elxout << "Initialization of AdvancedKappaStatistic metric took: "
+      << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
 
-	} // end Initialize
+  } // end Initialize
 
 
   /**
-	 * ***************** BeforeRegistration ***********************
-	 */
+   * ***************** BeforeRegistration ***********************
+   */
 
-	template <class TElastix>
-		void AdvancedKappaStatisticMetric<TElastix>
-		::BeforeRegistration(void)
-	{
+  template <class TElastix>
+    void AdvancedKappaStatisticMetric<TElastix>
+    ::BeforeRegistration(void)
+  {
     /** Get and set taking the complement. */
     bool useComplement = true;
     this->GetConfiguration()->ReadParameter( useComplement,
@@ -70,17 +70,17 @@ using namespace itk;
 
 
   /**
-	 * ***************** BeforeEachResolution ***********************
-	 */
+   * ***************** BeforeEachResolution ***********************
+   */
 
-	template <class TElastix>
-		void AdvancedKappaStatisticMetric<TElastix>
-		::BeforeEachResolution(void)
-	{
+  template <class TElastix>
+    void AdvancedKappaStatisticMetric<TElastix>
+    ::BeforeEachResolution(void)
+  {
     /** Get the current resolution level. */
-		unsigned int level = 
-			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
-		
+    unsigned int level = 
+      ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+    
   } // end BeforeEachResolution
 
 

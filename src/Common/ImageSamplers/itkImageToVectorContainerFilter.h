@@ -33,20 +33,20 @@ namespace itk
   {
   public:
 
-		/** Standard ITK-stuff. */
+    /** Standard ITK-stuff. */
     typedef ImageToVectorContainerFilter  Self;
     typedef VectorContainerSource<
       TOutputVectorContainer >            Superclass;
     typedef SmartPointer<Self>            Pointer;
     typedef SmartPointer<const Self>      ConstPointer;
 
-		/** Method for creation through the object factory. */
+    /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
-		/** Run-time type information (and related methods). */
+    /** Run-time type information (and related methods). */
     itkTypeMacro( ImageToVectorContainerFilter, VectorContainerSource );
 
-		/** Typedefs inherited from the superclass. */
+    /** Typedefs inherited from the superclass. */
     typedef typename Superclass::DataObjectPointer            DataObjectPointer;
     typedef typename Superclass::OutputVectorContainerType    OutputVectorContainerType;
     typedef typename Superclass::OutputVectorContainerPointer OutputVectorContainerPointer;
@@ -91,9 +91,9 @@ namespace itk
             
   private:
 
-		/** The private constructor. */
+    /** The private constructor. */
     ImageToVectorContainerFilter( const Self& );	// purposely not implemented
-		/** The private copy constructor. */
+    /** The private copy constructor. */
     void operator=( const Self& );				        // purposely not implemented
 
   }; // end class ImageToVectorContainerFilter

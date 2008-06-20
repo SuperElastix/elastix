@@ -21,8 +21,8 @@ namespace itk
 {
 
   /**
-	 * ******************* Constructor *******************
-	 */
+   * ******************* Constructor *******************
+   */
 
   template< class TOutputVectorContainer >
     VectorContainerSource< TOutputVectorContainer >
@@ -42,8 +42,8 @@ namespace itk
 
 
   /**
-	 * ******************* MakeOutput *******************
-	 */
+   * ******************* MakeOutput *******************
+   */
 
   template< class TOutputVectorContainer >
     typename VectorContainerSource< TOutputVectorContainer >::DataObjectPointer
@@ -55,8 +55,8 @@ namespace itk
 
   
   /**
-	 * ******************* GetOutput *******************
-	 */
+   * ******************* GetOutput *******************
+   */
 
   template< class TOutputVectorContainer >
     typename VectorContainerSource< TOutputVectorContainer >::OutputVectorContainerType *
@@ -74,8 +74,8 @@ namespace itk
 
 
   /**
-	 * ******************* GetOutput *******************
-	 */
+   * ******************* GetOutput *******************
+   */
 
   template< class TOutputVectorContainer >
     typename VectorContainerSource< TOutputVectorContainer >::OutputVectorContainerType *
@@ -88,8 +88,8 @@ namespace itk
   
 
   /**
-	 * ******************* GenerateInputRequestedRegion *******************
-	 */
+   * ******************* GenerateInputRequestedRegion *******************
+   */
 
   template< class TOutputVectorContainer >
     void
@@ -101,8 +101,8 @@ namespace itk
 
 
   /**
-	 * ******************* GraftOutput *******************
-	 */
+   * ******************* GraftOutput *******************
+   */
 
   template< class TOutputVectorContainer >
     void
@@ -114,8 +114,8 @@ namespace itk
 
 
   /**
-	 * ******************* GraftNthOutput *******************
-	 */
+   * ******************* GraftNthOutput *******************
+   */
 
   template< class TOutputVectorContainer >
     void
@@ -146,8 +146,8 @@ namespace itk
 
 
   /**
-	 * ******************* PrintSelf *******************
-	 */
+   * ******************* PrintSelf *******************
+   */
   
   template< class TOutputVectorContainer >
     void

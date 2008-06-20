@@ -19,22 +19,22 @@
 
 namespace itk
 {
-	
-	/**
-	 * ************************ Constructor *************************
-	 */
+  
+  /**
+   * ************************ Constructor *************************
+   */
 
-	template < class TListSample >
-		BinaryTreeBase<TListSample>
-		::BinaryTreeBase()
-	{
+  template < class TListSample >
+    BinaryTreeBase<TListSample>
+    ::BinaryTreeBase()
+  {
     this->m_Sample = 0;
   } // end Constructor
 
 
   /**
-	 * ************************ GetNumberOfDataPoints *************************
-	 */
+   * ************************ GetNumberOfDataPoints *************************
+   */
 
   template < class TListSample >
     typename BinaryTreeBase<TListSample>::TotalFrequencyType
@@ -51,8 +51,8 @@ namespace itk
 
 
   /**
-	 * ************************ GetActualNumberOfDataPoints *************************
-	 */
+   * ************************ GetActualNumberOfDataPoints *************************
+   */
 
   template < class TListSample >
     typename BinaryTreeBase<TListSample>::TotalFrequencyType
@@ -69,8 +69,8 @@ namespace itk
 
 
   /**
-	 * ************************ GetDataDimension *************************
-	 */
+   * ************************ GetDataDimension *************************
+   */
 
   template < class TListSample >
     typename BinaryTreeBase<TListSample>::MeasurementVectorSizeType

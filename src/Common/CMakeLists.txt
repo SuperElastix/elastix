@@ -108,8 +108,8 @@ ENDIF(NOT WIN32)
 
 ADD_LIBRARY(elxCommon
   ${CommonFiles}
-	${LineSearchOptimizersFiles}
-	${ImageSamplersFiles})
+  ${LineSearchOptimizersFiles}
+  ${ImageSamplersFiles})
 
 TARGET_LINK_LIBRARIES(elxCommon
 ITKBasicFilters

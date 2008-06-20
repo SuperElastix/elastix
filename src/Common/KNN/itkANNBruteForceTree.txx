@@ -20,39 +20,39 @@
 
 namespace itk
 {
-	
-	/**
-	 * ************************ Constructor	*************************
-	 */
+  
+  /**
+   * ************************ Constructor	*************************
+   */
 
-	template < class TListSample >
-		ANNBruteForceTree<TListSample>
-		::ANNBruteForceTree()
-	{
+  template < class TListSample >
+    ANNBruteForceTree<TListSample>
+    ::ANNBruteForceTree()
+  {
     this->m_ANNTree = 0;    
   } // end Constructor
 
 
   /**
-	 * ************************ Destructor *************************
-	 */
+   * ************************ Destructor *************************
+   */
 
-	template < class TListSample >
-		ANNBruteForceTree<TListSample>
-		::~ANNBruteForceTree()
-	{
+  template < class TListSample >
+    ANNBruteForceTree<TListSample>
+    ::~ANNBruteForceTree()
+  {
     ANNBinaryTreeCreator::DeleteANNBruteForceTree( this->m_ANNTree );
   } // end Destructor
 
 
   /**
-	 * ************************ GenerateTree *************************
-	 */
+   * ************************ GenerateTree *************************
+   */
 
-	template < class TListSample >
+  template < class TListSample >
     void ANNBruteForceTree<TListSample>
-		::GenerateTree( void )
-	{
+    ::GenerateTree( void )
+  {
     int dim = static_cast< int >( this->GetDataDimension() );
     int nop = static_cast< int >( this->GetActualNumberOfDataPoints() );
     

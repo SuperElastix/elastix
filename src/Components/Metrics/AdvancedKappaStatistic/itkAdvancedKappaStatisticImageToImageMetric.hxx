@@ -20,14 +20,14 @@
 namespace itk
 {
 
-	/**
-	* ******************* Constructor *******************
-	*/
+  /**
+  * ******************* Constructor *******************
+  */
 
-	template <class TFixedImage, class TMovingImage> 
-		AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
-		::AdvancedKappaStatisticImageToImageMetric()
-	{
+  template <class TFixedImage, class TMovingImage> 
+    AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
+    ::AdvancedKappaStatisticImageToImageMetric()
+  {
     this->SetComputeGradient( true );
     this->SetUseImageSampler( true );
     this->SetUseFixedImageLimiter( false );
@@ -37,36 +37,36 @@ namespace itk
     this->m_Complement = false;
     this->m_ForegroundIsNonZero = false;
 
-	} // end constructor
-
-
-	/**
-	 * ******************* PrintSelf *******************
-	 */
-
-	template < class TFixedImage, class TMovingImage> 
-		void
-		AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
-		::PrintSelf(std::ostream& os, Indent indent) const
-	{
-		Superclass::PrintSelf( os, indent );
-    os << indent << "Complement: "      << ( this->m_Complement ? "On" : "Off" ) << std::endl; 
-    os << indent << "ForegroundValue: " << this->m_ForegroundValue << std::endl;
-	} // end PrintSelf()
+  } // end constructor
 
 
   /**
-	 * *************** EvaluateMovingImageAndTransformJacobianInnerProduct ****************
-	 */
+   * ******************* PrintSelf *******************
+   */
 
-	template < class TFixedImage, class TMovingImage >
-		void
-		AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
+  template < class TFixedImage, class TMovingImage> 
+    void
+    AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
+    ::PrintSelf(std::ostream& os, Indent indent) const
+  {
+    Superclass::PrintSelf( os, indent );
+    os << indent << "Complement: "      << ( this->m_Complement ? "On" : "Off" ) << std::endl; 
+    os << indent << "ForegroundValue: " << this->m_ForegroundValue << std::endl;
+  } // end PrintSelf()
+
+
+  /**
+   * *************** EvaluateMovingImageAndTransformJacobianInnerProduct ****************
+   */
+
+  template < class TFixedImage, class TMovingImage >
+    void
+    AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
     ::EvaluateMovingImageAndTransformJacobianInnerProduct(
-		const TransformJacobianType & jacobian, 
-		const MovingImageDerivativeType & movingImageDerivative,
+    const TransformJacobianType & jacobian, 
+    const MovingImageDerivativeType & movingImageDerivative,
     DerivativeType & innerProduct ) const
-	{
+  {
     typedef typename TransformJacobianType::const_iterator JacobianIteratorType;
     typedef typename DerivativeType::iterator              DerivativeIteratorType;
     JacobianIteratorType jac = jacobian.begin();
@@ -83,28 +83,28 @@ namespace itk
       }
     }
 
-	} // end EvaluateMovingImageAndTransformJacobianInnerProduct()
+  } // end EvaluateMovingImageAndTransformJacobianInnerProduct()
 
 
-	/**
-	 * ******************* GetValue *******************
-	 */
+  /**
+   * ******************* GetValue *******************
+   */
 
-	template <class TFixedImage, class TMovingImage> 
-		typename AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>::MeasureType
-		AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
-		::GetValue( const TransformParametersType & parameters ) const
-	{
-		itkDebugMacro( "GetValue( " << parameters << " ) " );
-		
+  template <class TFixedImage, class TMovingImage> 
+    typename AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>::MeasureType
+    AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
+    ::GetValue( const TransformParametersType & parameters ) const
+  {
+    itkDebugMacro( "GetValue( " << parameters << " ) " );
+    
     /** Initialize some variables. */
-		this->m_NumberOfPixelsCounted = 0;
+    this->m_NumberOfPixelsCounted = 0;
     MeasureType measure = NumericTraits< MeasureType >::Zero;
 
     /** Make sure the transform parameters are up to date. */
-		this->SetTransformParameters( parameters );
+    this->SetTransformParameters( parameters );
 
-		/** Update the imageSampler and get a handle to the sample container. */
+    /** Update the imageSampler and get a handle to the sample container. */
     this->GetImageSampler()->Update();
     ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
@@ -120,10 +120,10 @@ namespace itk
     MeasureType movingForegroundArea = NumericTraits< MeasureType >::Zero;
     MeasureType intersection         = NumericTraits< MeasureType >::Zero;
 
-		/** Loop over the fixed image samples to calculate the kappa statistic. */
+    /** Loop over the fixed image samples to calculate the kappa statistic. */
     for ( fiter = fbegin; fiter != fend; ++fiter )
-		{
-	    /** Read fixed coordinates and initialize some variables. */
+    {
+      /** Read fixed coordinates and initialize some variables. */
       const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
       
       /** Transform point and check if it is inside the bspline support region. */
@@ -167,9 +167,9 @@ namespace itk
             && vnl_math_abs( movingImageValue ) > 0.1 ) intersection++;
         }
       
-			} // end if samplOk
+      } // end if samplOk
 
-		} // end for loop over the image sample container
+    } // end for loop over the image sample container
 
     /** Check if enough samples were valid. */
     this->CheckNumberOfSamples( sampleContainer->Size(), this->m_NumberOfPixelsCounted);
@@ -189,43 +189,43 @@ namespace itk
       measure = 1.0 - measure;
     }
 
-		/** Return the mean squares measure value. */
-		return measure;
+    /** Return the mean squares measure value. */
+    return measure;
 
-	} // end GetValue()
-	
+  } // end GetValue()
+  
 
-	/**
-	 * ******************* GetDerivative *******************
-	 */
+  /**
+   * ******************* GetDerivative *******************
+   */
 
-	template < class TFixedImage, class TMovingImage> 
-		void
-		AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
-		::GetDerivative( const TransformParametersType & parameters,
-		DerivativeType & derivative ) const
-	{
-		/** When the derivative is calculated, all information for calculating
-		 * the metric value is available. It does not cost anything to calculate
-		 * the metric value now. Therefore, we have chosen to only implement the
-		 * GetValueAndDerivative(), supplying it with a dummy value variable. */
-		MeasureType dummyvalue = NumericTraits< MeasureType >::Zero;
-		this->GetValueAndDerivative( parameters, dummyvalue, derivative );
+  template < class TFixedImage, class TMovingImage> 
+    void
+    AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
+    ::GetDerivative( const TransformParametersType & parameters,
+    DerivativeType & derivative ) const
+  {
+    /** When the derivative is calculated, all information for calculating
+     * the metric value is available. It does not cost anything to calculate
+     * the metric value now. Therefore, we have chosen to only implement the
+     * GetValueAndDerivative(), supplying it with a dummy value variable. */
+    MeasureType dummyvalue = NumericTraits< MeasureType >::Zero;
+    this->GetValueAndDerivative( parameters, dummyvalue, derivative );
 
-	} // end GetDerivative()
+  } // end GetDerivative()
 
 
-	/**
-	 * ******************* GetValueAndDerivative *******************
-	 */
+  /**
+   * ******************* GetValueAndDerivative *******************
+   */
 
-	template <class TFixedImage, class TMovingImage>
-		void
-		AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
-		::GetValueAndDerivative( const TransformParametersType & parameters, 
-		MeasureType & value, DerivativeType & derivative ) const
-	{
-		itkDebugMacro( "GetValueAndDerivative( " << parameters << " ) " );
+  template <class TFixedImage, class TMovingImage>
+    void
+    AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
+    ::GetValueAndDerivative( const TransformParametersType & parameters, 
+    MeasureType & value, DerivativeType & derivative ) const
+  {
+    itkDebugMacro( "GetValueAndDerivative( " << parameters << " ) " );
 
     /** Some typedefs. */
     typedef typename DerivativeType::ValueType        DerivativeValueType;
@@ -235,14 +235,14 @@ namespace itk
     this->m_NumberOfPixelsCounted = 0;
     MeasureType measure = NumericTraits< MeasureType >::Zero;
     derivative = DerivativeType( this->m_NumberOfParameters );
-		derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+    derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
 
     /** Array that store dM(x)/dmu. */
     DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.GetSize() );
  
-		/** Make sure the transform parameters are up to date. */
-		this->SetTransformParameters( parameters );
-				
+    /** Make sure the transform parameters are up to date. */
+    this->SetTransformParameters( parameters );
+        
     /** Update the imageSampler and get a handle to the sample container. */
     this->GetImageSampler()->Update();
     ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
@@ -263,10 +263,10 @@ namespace itk
     typename ImageSampleContainerType::ConstIterator fiter;
     typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
     typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
-		
-		/** Loop over the fixed image to calculate the kappa statistic. */
-		for ( fiter = fbegin; fiter != fend; ++fiter )
-		{
+    
+    /** Loop over the fixed image to calculate the kappa statistic. */
+    for ( fiter = fbegin; fiter != fend; ++fiter )
+    {
       /** Read fixed coordinates. */
       const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
  
@@ -311,9 +311,9 @@ namespace itk
           imageJacobian,
           sum1, sum2 );
 
-			} // end if sampleOk
+      } // end if sampleOk
 
-		} // end for loop over the image sample container
+    } // end for loop over the image sample container
 
     /** Check if enough samples were valid. */
     this->CheckNumberOfSamples(
@@ -351,17 +351,17 @@ namespace itk
       }
     }
 
-	} // end GetValueAndDerivative()
+  } // end GetValueAndDerivative()
 
 
   /**
-	 * *************** UpdateValueAndDerivativeTerms ***************************
-	 */
+   * *************** UpdateValueAndDerivativeTerms ***************************
+   */
 
-	template < class TFixedImage, class TMovingImage >
-		void
-		AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
-		::UpdateValueAndDerivativeTerms( 
+  template < class TFixedImage, class TMovingImage >
+    void
+    AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
+    ::UpdateValueAndDerivativeTerms( 
     const RealType fixedImageValue,
     const RealType movingImageValue,
     MeasureType & fixedForegroundArea,
@@ -389,9 +389,9 @@ namespace itk
         && vnl_math_abs( movingImageValue ) > 0.1 ) intersection++;
     }
     
-		/** Calculate the contributions to the derivatives with respect to each parameter. */
+    /** Calculate the contributions to the derivatives with respect to each parameter. */
     if ( this->m_NonZeroJacobianIndices.GetSize() == this->m_NumberOfParameters )
-		{
+    {
       /** Loop over all jacobians. */
       typename DerivativeType::const_iterator imjacit = imageJacobian.begin();
       typename DerivativeType::iterator sum1it = sum1.begin();
@@ -445,11 +445,11 @@ namespace itk
 
 
   /**
-	 * *************** ComputeGradient ***************************
+   * *************** ComputeGradient ***************************
    *
    * Compute the moving image gradient (dM/dx) and assigns to m_GradientImage.
    * Overrides superclass implementation.
-	 */
+   */
 
   template <class TFixedImage, class TMovingImage>
     void

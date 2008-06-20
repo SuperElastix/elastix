@@ -21,8 +21,8 @@ namespace itk
 {
 
   /**
-	 * ******************* Constructor *******************
-	 */
+   * ******************* Constructor *******************
+   */
 
   template< class TInputImage >
     ImageSamplerBase< TInputImage >
@@ -36,8 +36,8 @@ namespace itk
 
 
   /**
-	 * ******************* SetMask *******************
-	 */
+   * ******************* SetMask *******************
+   */
   
   template< class TInputImage >
     void
@@ -69,8 +69,8 @@ namespace itk
 
 
   /**
-	 * ******************* GetMask *******************
-	 */
+   * ******************* GetMask *******************
+   */
   
   template< class TInputImage >
     const typename ImageSamplerBase< TInputImage >::MaskType *
@@ -87,8 +87,8 @@ namespace itk
 
 
   /**
-	 * ******************* SetNumberOfMasks *******************
-	 */
+   * ******************* SetNumberOfMasks *******************
+   */
   
   template< class TInputImage >
     void
@@ -106,8 +106,8 @@ namespace itk
 
 
   /**
-	 * ******************* SetInputImageRegion *******************
-	 */
+   * ******************* SetInputImageRegion *******************
+   */
   
   template< class TInputImage >
     void
@@ -133,8 +133,8 @@ namespace itk
 
 
   /**
-	 * ******************* GetInputImageRegion *******************
-	 */
+   * ******************* GetInputImageRegion *******************
+   */
   
   template< class TInputImage >
     const typename ImageSamplerBase< TInputImage >::InputImageRegionType &
@@ -151,8 +151,8 @@ namespace itk
 
 
   /**
-	 * ******************* SetNumberOfInputImageRegions *******************
-	 */
+   * ******************* SetNumberOfInputImageRegions *******************
+   */
   
   template< class TInputImage >
     void
@@ -170,8 +170,8 @@ namespace itk
 
 
   /**
-	 * ******************* GenerateInputRequestedRegion *******************
-	 */
+   * ******************* GenerateInputRequestedRegion *******************
+   */
   
   template< class TInputImage >
     void
@@ -228,8 +228,8 @@ namespace itk
 
 
   /**
-	 * ******************* SelectNewSamplesOnUpdate *******************
-	 */
+   * ******************* SelectNewSamplesOnUpdate *******************
+   */
   
   template< class TInputImage >
     bool
@@ -248,8 +248,8 @@ namespace itk
 
 
   /**
-	 * ******************* IsInsideAllMasks *******************
-	 */
+   * ******************* IsInsideAllMasks *******************
+   */
   
   template< class TInputImage >
     bool
@@ -268,8 +268,8 @@ namespace itk
 
 
   /**
-	 * ******************* UpdateAllMasks *******************
-	 */
+   * ******************* UpdateAllMasks *******************
+   */
   
   template< class TInputImage >
     void
@@ -289,8 +289,8 @@ namespace itk
 
 
   /**
-	 * ******************* CheckInputImageRegions *******************
-	 */
+   * ******************* CheckInputImageRegions *******************
+   */
   
   template< class TInputImage >
     bool
@@ -372,8 +372,8 @@ namespace itk
   
 
   /**
-	 * ******************* PrintSelf *******************
-	 */
+   * ******************* PrintSelf *******************
+   */
   
   template< class TInputImage >
     void

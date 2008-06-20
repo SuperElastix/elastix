@@ -19,30 +19,30 @@
 
 namespace itk
 {
-	
-	/**
-	 * \class BinaryTreeBase
-	 *
-	 * \brief 
-	 *
-	 * 
-	 * \ingroup Metrics?
-	 */
-	
-	template < class TListSample >
-	class BinaryTreeBase : public DataObject
-	{
-	public:
-		
-		/** Standard itk. */
-		typedef BinaryTreeBase              Self;
-		typedef DataObject									Superclass;
-		typedef SmartPointer< Self >				Pointer;
-		typedef SmartPointer< const Self >	ConstPointer;
-		
-		/** ITK type info. */
-		itkTypeMacro( BinaryTreeBase, DataObject );
-		
+  
+  /**
+   * \class BinaryTreeBase
+   *
+   * \brief 
+   *
+   * 
+   * \ingroup Metrics?
+   */
+  
+  template < class TListSample >
+  class BinaryTreeBase : public DataObject
+  {
+  public:
+    
+    /** Standard itk. */
+    typedef BinaryTreeBase              Self;
+    typedef DataObject									Superclass;
+    typedef SmartPointer< Self >				Pointer;
+    typedef SmartPointer< const Self >	ConstPointer;
+    
+    /** ITK type info. */
+    itkTypeMacro( BinaryTreeBase, DataObject );
+    
     /** Typedef's. */
     typedef TListSample       SampleType;
 
@@ -67,10 +67,10 @@ namespace itk
     /** Generate the tree. */
     virtual void GenerateTree( void ) = 0;
    
-	protected:
-		
+  protected:
+    
     /** Constructor. */
-		BinaryTreeBase();
+    BinaryTreeBase();
 
     /** Destructor. */
     virtual ~BinaryTreeBase() {};
@@ -78,17 +78,17 @@ namespace itk
     /** PrintSelf. */
     virtual void PrintSelf( std::ostream& os, Indent indent ) const;
     
-	private:
-		
-		BinaryTreeBase( const Self& );  // purposely not implemented
-		void operator=( const Self& );  // purposely not implemented
+  private:
+    
+    BinaryTreeBase( const Self& );  // purposely not implemented
+    void operator=( const Self& );  // purposely not implemented
 
     /** Store the samples. */
     typename SampleType::Pointer        m_Sample;
 
-	}; // end class BinaryTreeBase
-		
-		
+  }; // end class BinaryTreeBase
+    
+    
 } // end namespace itk
 
 

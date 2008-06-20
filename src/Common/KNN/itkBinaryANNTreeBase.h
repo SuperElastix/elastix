@@ -20,30 +20,30 @@
 
 namespace itk
 {
-	
-	/**
-	 * \class BinaryANNTreeBase
-	 *
-	 * \brief 
-	 *
-	 * 
-	 * \ingroup Metrics?
-	 */
-	
-	template < class TListSample >
-	class BinaryANNTreeBase : public BinaryTreeBase< TListSample >
-	{
-	public:
-		
-		/** Standard itk. */
-		typedef BinaryANNTreeBase             Self;
-		typedef BinaryTreeBase< TListSample > Superclass;
-		typedef SmartPointer< Self >				  Pointer;
-		typedef SmartPointer< const Self >	  ConstPointer;
-		
-		/** ITK type info. */
-		itkTypeMacro( BinaryANNTreeBase, BinaryTreeBase );
-		
+  
+  /**
+   * \class BinaryANNTreeBase
+   *
+   * \brief 
+   *
+   * 
+   * \ingroup Metrics?
+   */
+  
+  template < class TListSample >
+  class BinaryANNTreeBase : public BinaryTreeBase< TListSample >
+  {
+  public:
+    
+    /** Standard itk. */
+    typedef BinaryANNTreeBase             Self;
+    typedef BinaryTreeBase< TListSample > Superclass;
+    typedef SmartPointer< Self >				  Pointer;
+    typedef SmartPointer< const Self >	  ConstPointer;
+    
+    /** ITK type info. */
+    itkTypeMacro( BinaryANNTreeBase, BinaryTreeBase );
+    
     /** Typedefs from Superclass. */
     typedef typename Superclass::SampleType                 SampleType;
     typedef typename Superclass::MeasurementVectorType      MeasurementVectorType;
@@ -56,22 +56,22 @@ namespace itk
     /** Get the ANN tree. */
     virtual ANNPointSetType * GetANNTree( void ) const = 0;
 
-	protected:
-		
+  protected:
+    
     /** Constructor. */
-		BinaryANNTreeBase();
+    BinaryANNTreeBase();
 
     /** Destructor. */
     virtual ~BinaryANNTreeBase() {};
     
-	private:
-		
-		BinaryANNTreeBase( const Self& ); // purposely not implemented
-		void operator=( const Self& );    // purposely not implemented
+  private:
+    
+    BinaryANNTreeBase( const Self& ); // purposely not implemented
+    void operator=( const Self& );    // purposely not implemented
 
-	}; // end class BinaryANNTreeBase
-		
-		
+  }; // end class BinaryANNTreeBase
+    
+    
 } // end namespace itk
 
 

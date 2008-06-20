@@ -4,5 +4,3 @@ ADD_ELXCOMPONENT( GridSampler
  elxGridSampler.hxx
  elxGridSampler.cxx )
 
-
-

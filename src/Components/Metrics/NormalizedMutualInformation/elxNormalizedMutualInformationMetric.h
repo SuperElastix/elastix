@@ -24,46 +24,46 @@ namespace elastix
 {
 using namespace itk;
 
-	/**
-	 * \class NormalizedMutualInformationMetric
-	 * \brief A metric based on the itk::ParzenWindowNormalizedMutualInformationImageToImageMetric.
-	 *
-	 *
-	 * The parameters used in this class are:
-	 * \parameter Metric: Select this metric as follows:\n
-	 *		<tt>(Metric "NormalizedMutualInformation")</tt>
-	 * \parameter NumberOfHistogramBins: The size of the histogram. Must be given for each 
-	 *		resolution, or for all resolutions at once. \n
-	 *		example: <tt>(NumberOfHistogramBins 32 32 64)</tt> \n
-	 *		The default is 32 for each resolution.
+  /**
+   * \class NormalizedMutualInformationMetric
+   * \brief A metric based on the itk::ParzenWindowNormalizedMutualInformationImageToImageMetric.
+   *
+   *
+   * The parameters used in this class are:
+   * \parameter Metric: Select this metric as follows:\n
+   *		<tt>(Metric "NormalizedMutualInformation")</tt>
+   * \parameter NumberOfHistogramBins: The size of the histogram. Must be given for each 
+   *		resolution, or for all resolutions at once. \n
+   *		example: <tt>(NumberOfHistogramBins 32 32 64)</tt> \n
+   *		The default is 32 for each resolution.
    * \parameter NumberOfFixedHistogramBins: The size of the histogram in the fixed dimension. Can be given for each 
-	 *		resolution, or for all resolutions at once. If not given, NumberOfHistograms is used.\n
-	 *		example: <tt>(NumberOfFixedHistogramBins 32 32 64)</tt> \n
-	 *		The default is the value of NumberOfHistograms.
+   *		resolution, or for all resolutions at once. If not given, NumberOfHistograms is used.\n
+   *		example: <tt>(NumberOfFixedHistogramBins 32 32 64)</tt> \n
+   *		The default is the value of NumberOfHistograms.
    * \parameter NumberOfMovingHistogramBins: The size of the histogram in the fixed dimension. Can be given for each 
-	 *		resolution, or for all resolutions at once. If not given, NumberOfHistograms is used.\n
-	 *		example: <tt>(NumberOfMovingHistogramBins 32 32 64)</tt> \n
-	 *		The default is the value of NumberOfHistograms.
+   *		resolution, or for all resolutions at once. If not given, NumberOfHistograms is used.\n
+   *		example: <tt>(NumberOfMovingHistogramBins 32 32 64)</tt> \n
+   *		The default is the value of NumberOfHistograms.
    * \parameter FixedKernelBSplineOrder: The bspline order of the Parzen window, used to estimate
    *    the joint histogram. Can be given for each resolution, or for all resolutions at once. \n
-	 *		example: <tt>(FixedKernelBSplineOrder 0 1 1)</tt> \n
-	 *		The default value is 0.
+   *		example: <tt>(FixedKernelBSplineOrder 0 1 1)</tt> \n
+   *		The default value is 0.
    * \parameter MovingKernelBSplineOrder: The bspline order of the Parzen window, used to estimate
    *    the joint histogram. Can be given for each resolution, or for all resolutions at once. \n
-	 *		example: <tt>(MovingKernelBSplineOrder 3 3 3)</tt> \n
-	 *		The default value is 3.
+   *		example: <tt>(MovingKernelBSplineOrder 3 3 3)</tt> \n
+   *		The default value is 3.
    * \parameter FixedLimitRangeRatio: The relative extension of the intensity range of the fixed image.\n
    *    If your image has grey values from 0 to 1000 and the FixedLimitRangeRatio is 0.001, the
    *    joint histogram will expect fixed image grey values from -0.001 to 1000.001. This may be 
    *    usefull if you use high order bspline interpolator for the fixed image.\n
    *		example: <tt>(FixedLimitRangeRatio 0.001 0.01 0.01)</tt> \n
-	 *		The default value is 0.01. Can be given for each resolution, or for all resolutions at once.
+   *		The default value is 0.01. Can be given for each resolution, or for all resolutions at once.
    * \parameter MovingLimitRangeRatio: The relative extension of the intensity range of the moving image.\n
    *    If your image has grey values from 0 to 1000 and the MovingLimitRangeRatio is 0.001, the
    *    joint histogram will expect moving image grey values from -0.001 to 1000.001. This may be 
    *    usefull if you use high order bspline interpolator for the moving image.\n
    *		example: <tt>(MovingLimitRangeRatio 0.001 0.01 0.01)</tt> \n
-	 *		The default value is 0.01. Can be given for each resolution, or for all resolutions at once. 
+   *		The default value is 0.01. Can be given for each resolution, or for all resolutions at once. 
    * \parameter CheckNumberOfSamples: Whether the metric checks if at least 1/4 of the 
    *    samples map inside the moving image. Must be given for each resolution or for all
    *    resolutions at once. \n
@@ -72,42 +72,42 @@ using namespace itk;
    *    if the registration is going really bad.
    *
    * \sa ParzenWindowNormalizedMutualInformationImageToImageMetric
-	 * \ingroup Metrics
-	 */
-	
-	template <class TElastix >	
-		class NormalizedMutualInformationMetric :
-		public
-			ParzenWindowNormalizedMutualInformationImageToImageMetric<
-				ITK_TYPENAME MetricBase<TElastix>::FixedImageType,
-				ITK_TYPENAME MetricBase<TElastix>::MovingImageType >,
-		public MetricBase<TElastix>
-	{
-	public:
+   * \ingroup Metrics
+   */
+  
+  template <class TElastix >	
+    class NormalizedMutualInformationMetric :
+    public
+      ParzenWindowNormalizedMutualInformationImageToImageMetric<
+        ITK_TYPENAME MetricBase<TElastix>::FixedImageType,
+        ITK_TYPENAME MetricBase<TElastix>::MovingImageType >,
+    public MetricBase<TElastix>
+  {
+  public:
 
-		/** Standard ITK-stuff. */
-		typedef NormalizedMutualInformationMetric					Self;
-		typedef ParzenWindowNormalizedMutualInformationImageToImageMetric<
-			typename MetricBase<TElastix>::FixedImageType,
-			typename MetricBase<TElastix>::MovingImageType >		Superclass1;
-		typedef MetricBase<TElastix>													Superclass2;
-		typedef SmartPointer<Self>														Pointer;
-		typedef SmartPointer<const Self>											ConstPointer;
-		
-		/** Method for creation through the object factory. */
-		itkNewMacro( Self );
-		
-		/** Run-time type information (and related methods). */
-		itkTypeMacro( NormalizedMutualInformationMetric,
-			ParzenWindowNormalizedMutualInformationImageToImageMetric );
-		
-		/** Name of this class.
-		 * Use this name in the parameter file to select this specific metric. \n
-		 * example: <tt>(Metric "NormalizedMutualInformation")</tt>\n
-		 */
-		elxClassNameMacro( "NormalizedMutualInformation" );
+    /** Standard ITK-stuff. */
+    typedef NormalizedMutualInformationMetric					Self;
+    typedef ParzenWindowNormalizedMutualInformationImageToImageMetric<
+      typename MetricBase<TElastix>::FixedImageType,
+      typename MetricBase<TElastix>::MovingImageType >		Superclass1;
+    typedef MetricBase<TElastix>													Superclass2;
+    typedef SmartPointer<Self>														Pointer;
+    typedef SmartPointer<const Self>											ConstPointer;
+    
+    /** Method for creation through the object factory. */
+    itkNewMacro( Self );
+    
+    /** Run-time type information (and related methods). */
+    itkTypeMacro( NormalizedMutualInformationMetric,
+      ParzenWindowNormalizedMutualInformationImageToImageMetric );
+    
+    /** Name of this class.
+     * Use this name in the parameter file to select this specific metric. \n
+     * example: <tt>(Metric "NormalizedMutualInformation")</tt>\n
+     */
+    elxClassNameMacro( "NormalizedMutualInformation" );
 
-		/** Typedefs from the superclass. */
+    /** Typedefs from the superclass. */
     typedef typename 
       Superclass1::CoordinateRepresentationType              CoordinateRepresentationType;
     typedef typename Superclass1::MovingImageType            MovingImageType;
@@ -150,59 +150,59 @@ using namespace itk;
       Superclass1::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
     typedef typename
       Superclass1::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
-		
+    
     /** The fixed image dimension. */
-		itkStaticConstMacro( FixedImageDimension, unsigned int,
-			FixedImageType::ImageDimension );
+    itkStaticConstMacro( FixedImageDimension, unsigned int,
+      FixedImageType::ImageDimension );
 
-		/** The moving image dimension. */
-		itkStaticConstMacro( MovingImageDimension, unsigned int,
-			MovingImageType::ImageDimension );
-		
-		/** Typedef's inherited from Elastix. */
-		typedef typename Superclass2::ElastixType								ElastixType;
-		typedef typename Superclass2::ElastixPointer						ElastixPointer;
-		typedef typename Superclass2::ConfigurationType					ConfigurationType;
-		typedef typename Superclass2::ConfigurationPointer			ConfigurationPointer;
-		typedef typename Superclass2::RegistrationType					RegistrationType;
-		typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
-		typedef typename Superclass2::ITKBaseType								ITKBaseType;
-			
-		/** Typedef for timer. */
-		typedef tmr::Timer					TimerType;
-		/** Typedef for timer. */
-		typedef TimerType::Pointer	TimerPointer;
+    /** The moving image dimension. */
+    itkStaticConstMacro( MovingImageDimension, unsigned int,
+      MovingImageType::ImageDimension );
+    
+    /** Typedef's inherited from Elastix. */
+    typedef typename Superclass2::ElastixType								ElastixType;
+    typedef typename Superclass2::ElastixPointer						ElastixPointer;
+    typedef typename Superclass2::ConfigurationType					ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer			ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType					RegistrationType;
+    typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
+    typedef typename Superclass2::ITKBaseType								ITKBaseType;
+      
+    /** Typedef for timer. */
+    typedef tmr::Timer					TimerType;
+    /** Typedef for timer. */
+    typedef TimerType::Pointer	TimerPointer;
 
-		/** Execute stuff before each new pyramid resolution:
-		 * \li Set the number of histogram bins.
+    /** Execute stuff before each new pyramid resolution:
+     * \li Set the number of histogram bins.
      * \li Set the CheckNumberOfSamples option.
      * \li Set the fixed/moving LimitRangeRatio
      * \li Set the fixed/moving limiter. */
-		virtual void BeforeEachResolution( void );
-	
-		/** Set up a timer to measure the intialisation time and
-		 * call the Superclass' implementation. */
-		virtual void Initialize(void) throw (ExceptionObject);
-	
-	protected:
+    virtual void BeforeEachResolution( void );
+  
+    /** Set up a timer to measure the intialisation time and
+     * call the Superclass' implementation. */
+    virtual void Initialize(void) throw (ExceptionObject);
+  
+  protected:
 
-		/** The constructor. */
+    /** The constructor. */
     NormalizedMutualInformationMetric()
     {
       this->SetUseDerivative(true);
     }; 
 
     /** The destructor. */ 
-		virtual ~NormalizedMutualInformationMetric() {}
-	
-	private:
+    virtual ~NormalizedMutualInformationMetric() {}
+  
+  private:
 
-		/** The private constructor. */
-		NormalizedMutualInformationMetric( const Self& );	// purposely not implemented
-		/** The private copy constructor. */
-		void operator=( const Self& );								// purposely not implemented
-		
-	}; // end class NormalizedMutualInformationMetric
+    /** The private constructor. */
+    NormalizedMutualInformationMetric( const Self& );	// purposely not implemented
+    /** The private copy constructor. */
+    void operator=( const Self& );								// purposely not implemented
+    
+  }; // end class NormalizedMutualInformationMetric
 
 
 } // end namespace elastix

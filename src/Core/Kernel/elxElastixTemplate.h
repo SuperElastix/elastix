@@ -55,12 +55,12 @@
  */
 
 #define elxGetBaseMacro(_name,_elxbasetype) \
-	virtual _elxbasetype * GetElx##_name##Base (void) const \
-	{ \
+  virtual _elxbasetype * GetElx##_name##Base (void) const \
+  { \
     return this->GetElx##_name##Base( 0 );\
-	}\
+  }\
   _elxbasetype * GetElx##_name##Base ( unsigned int idx ) const \
-	{ \
+  { \
     if ( idx < this->GetNumberOf##_name##s() ) \
     { \
       return dynamic_cast<_elxbasetype *>( \
@@ -73,54 +73,54 @@
 
 namespace elastix
 {
-	using namespace itk;
-	
-	/**
-	 * \class ElastixTemplate
-	 * \brief The main elastix class, which connects components
-	 * and invokes the BeforeRegistration(), BeforeEachResolution(),
-	 * etc. methods.
-	 *
-	 * The ElastixTemplate class ...
-	 * 
-	 * \parameter WriteTransformParametersEachIteration: Controls whether
-	 *    to save a transform parameter file to disk in every iteration.\n
-	 *    example: <tt>(WriteTransformParametersEachIteration "true")</tt>\n
-	 *    This parameter can not be specified for each resolution separately.
-	 *    Default value: "false".
-	 * \parameter WriteTransformParametersEachResolution: Controls whether
-	 *    to save a transform parameter file to disk in every resolution.\n
-	 *    example: <tt>(WriteTransformParametersEachResolution "true")</tt>\n
-	 *    This parameter can not be specified for each resolution separately.
-	 *    Default value: "false".
+  using namespace itk;
+  
+  /**
+   * \class ElastixTemplate
+   * \brief The main elastix class, which connects components
+   * and invokes the BeforeRegistration(), BeforeEachResolution(),
+   * etc. methods.
+   *
+   * The ElastixTemplate class ...
+   * 
+   * \parameter WriteTransformParametersEachIteration: Controls whether
+   *    to save a transform parameter file to disk in every iteration.\n
+   *    example: <tt>(WriteTransformParametersEachIteration "true")</tt>\n
+   *    This parameter can not be specified for each resolution separately.
+   *    Default value: "false".
+   * \parameter WriteTransformParametersEachResolution: Controls whether
+   *    to save a transform parameter file to disk in every resolution.\n
+   *    example: <tt>(WriteTransformParametersEachResolution "true")</tt>\n
+   *    This parameter can not be specified for each resolution separately.
+   *    Default value: "false".
    *
    *
-	 * \ingroup Kernel
-	 */
-	
-	template <class TFixedImage, class TMovingImage>
-		class ElastixTemplate : public Object, public ElastixBase
-	{
-	public:
-		
-		/** Standard itk.*/
-		typedef ElastixTemplate						Self;
-		typedef Object										Superclass1;
-		typedef ElastixBase								Superclass2;
-		typedef SmartPointer<Self>				Pointer;
-		typedef SmartPointer<const Self>	ConstPointer;
-		
-		/** Method for creation through the object factory.*/
-		itkNewMacro( Self );
-		
-		/** Run-time type information (and related methods).*/
-		itkTypeMacro( ElastixTemplate, Object );
-		
-		/** Typedefs inherited from Superclass2.*/
-		typedef Superclass2::ConfigurationType														ConfigurationType;
-		typedef Superclass2::ConfigurationPointer													ConfigurationPointer;
-		typedef Superclass2::ObjectType																		ObjectType; //for the components
-		typedef Superclass2::DataObjectType																DataObjectType; //for the images
+   * \ingroup Kernel
+   */
+  
+  template <class TFixedImage, class TMovingImage>
+    class ElastixTemplate : public Object, public ElastixBase
+  {
+  public:
+    
+    /** Standard itk.*/
+    typedef ElastixTemplate						Self;
+    typedef Object										Superclass1;
+    typedef ElastixBase								Superclass2;
+    typedef SmartPointer<Self>				Pointer;
+    typedef SmartPointer<const Self>	ConstPointer;
+    
+    /** Method for creation through the object factory.*/
+    itkNewMacro( Self );
+    
+    /** Run-time type information (and related methods).*/
+    itkTypeMacro( ElastixTemplate, Object );
+    
+    /** Typedefs inherited from Superclass2.*/
+    typedef Superclass2::ConfigurationType														ConfigurationType;
+    typedef Superclass2::ConfigurationPointer													ConfigurationPointer;
+    typedef Superclass2::ObjectType																		ObjectType; //for the components
+    typedef Superclass2::DataObjectType																DataObjectType; //for the images
     typedef Superclass2::ObjectPointer																ObjectPointer;
     typedef Superclass2::DataObjectPointer  													DataObjectPointer;
     typedef Superclass2::ObjectContainerType                          ObjectContainerType;      
@@ -129,17 +129,17 @@ namespace elastix
     typedef Superclass2::ObjectContainerPointer                       ObjectContainerPointer;      
     typedef Superclass2::DataObjectContainerPointer                   DataObjectContainerPointer;
     typedef Superclass2::FileNameContainerPointer                     FileNameContainerPointer;
-				
-		/** Typedef's for this class.*/
-		typedef TFixedImage																								FixedImageType;
-		typedef TMovingImage																							MovingImageType;
-		typedef typename FixedImageType::Pointer													FixedImagePointer;
-		typedef typename MovingImageType::Pointer													MovingImagePointer;
-		
-		/** For using the Dimensions.*/
-		itkStaticConstMacro( Dimension,				unsigned int, FixedImageType::ImageDimension );
-		itkStaticConstMacro( FixedDimension,	unsigned int, FixedImageType::ImageDimension );
-		itkStaticConstMacro( MovingDimension, unsigned int, MovingImageType::ImageDimension );
+        
+    /** Typedef's for this class.*/
+    typedef TFixedImage																								FixedImageType;
+    typedef TMovingImage																							MovingImageType;
+    typedef typename FixedImageType::Pointer													FixedImagePointer;
+    typedef typename MovingImageType::Pointer													MovingImagePointer;
+    
+    /** For using the Dimensions.*/
+    itkStaticConstMacro( Dimension,				unsigned int, FixedImageType::ImageDimension );
+    itkStaticConstMacro( FixedDimension,	unsigned int, FixedImageType::ImageDimension );
+    itkStaticConstMacro( MovingDimension, unsigned int, MovingImageType::ImageDimension );
 
     /** Types for the masks */
     typedef unsigned char                                             MaskPixelType;
@@ -147,59 +147,59 @@ namespace elastix
     typedef Image<MaskPixelType, MovingDimension>                     MovingMaskType;
     typedef typename FixedMaskType::Pointer                           FixedMaskPointer;    
     typedef typename MovingMaskType::Pointer                          MovingMaskPointer;
-				
-		/** Type for representation of the transform coordinates.*/
-		typedef CostFunction::ParametersValueType		CoordRepType; // double
-		    
+        
+    /** Type for representation of the transform coordinates.*/
+    typedef CostFunction::ParametersValueType		CoordRepType; // double
+        
     /** BaseComponent.*/
-		typedef BaseComponent																							BaseComponentType;
-						
-		/** A Pointer to a memberfunction of a BaseComponentType.*/
-		typedef void (BaseComponentType::*PtrToMemberFunction)(void);
-		typedef int (BaseComponentType::*PtrToMemberFunction2)(void);
-		
-		/** Commands that react on Events and call Self::Function(void).*/
-		typedef SimpleMemberCommand<Self>																	BeforeEachResolutionCommandType;
-		typedef SimpleMemberCommand<Self>																	AfterEachResolutionCommandType;
-		typedef SimpleMemberCommand<Self>																	AfterEachIterationCommandType;
-		typedef typename BeforeEachResolutionCommandType::Pointer					BeforeEachResolutionCommandPointer;
-		typedef typename AfterEachResolutionCommandType::Pointer					AfterEachResolutionCommandPointer;
-		typedef typename AfterEachIterationCommandType::Pointer						AfterEachIterationCommandPointer;
-		
-		/** The elastix basecomponent types.*/
-		typedef FixedImagePyramidBase<Self> 															FixedImagePyramidBaseType;
-		typedef MovingImagePyramidBase<Self>															MovingImagePyramidBaseType;
-		typedef InterpolatorBase<Self>																		InterpolatorBaseType;
+    typedef BaseComponent																							BaseComponentType;
+            
+    /** A Pointer to a memberfunction of a BaseComponentType.*/
+    typedef void (BaseComponentType::*PtrToMemberFunction)(void);
+    typedef int (BaseComponentType::*PtrToMemberFunction2)(void);
+    
+    /** Commands that react on Events and call Self::Function(void).*/
+    typedef SimpleMemberCommand<Self>																	BeforeEachResolutionCommandType;
+    typedef SimpleMemberCommand<Self>																	AfterEachResolutionCommandType;
+    typedef SimpleMemberCommand<Self>																	AfterEachIterationCommandType;
+    typedef typename BeforeEachResolutionCommandType::Pointer					BeforeEachResolutionCommandPointer;
+    typedef typename AfterEachResolutionCommandType::Pointer					AfterEachResolutionCommandPointer;
+    typedef typename AfterEachIterationCommandType::Pointer						AfterEachIterationCommandPointer;
+    
+    /** The elastix basecomponent types.*/
+    typedef FixedImagePyramidBase<Self> 															FixedImagePyramidBaseType;
+    typedef MovingImagePyramidBase<Self>															MovingImagePyramidBaseType;
+    typedef InterpolatorBase<Self>																		InterpolatorBaseType;
     typedef elx::ImageSamplerBase<Self>																ImageSamplerBaseType;
-		typedef MetricBase<Self>																					MetricBaseType;
-		typedef OptimizerBase<Self> 																			OptimizerBaseType;
-		typedef RegistrationBase<Self>																		RegistrationBaseType;
-		typedef ResamplerBase<Self> 																			ResamplerBaseType;
-		typedef ResampleInterpolatorBase<Self>														ResampleInterpolatorBaseType;
-		typedef elx::TransformBase<Self> 																	TransformBaseType;
+    typedef MetricBase<Self>																					MetricBaseType;
+    typedef OptimizerBase<Self> 																			OptimizerBaseType;
+    typedef RegistrationBase<Self>																		RegistrationBaseType;
+    typedef ResamplerBase<Self> 																			ResamplerBaseType;
+    typedef ResampleInterpolatorBase<Self>														ResampleInterpolatorBaseType;
+    typedef elx::TransformBase<Self> 																	TransformBaseType;
 
-		/** Typedef's for Timer class.*/
-		typedef tmr::Timer																								TimerType;
-		typedef TimerType::Pointer																				TimerPointer;
-		
-		/** Typedef's for ApplyTransform. 
+    /** Typedef's for Timer class.*/
+    typedef tmr::Timer																								TimerType;
+    typedef TimerType::Pointer																				TimerPointer;
+    
+    /** Typedef's for ApplyTransform. 
      * \todo How useful is this? It is not consequently supported, since the
      * the input image is stored in the MovingImageContainer anyway. */
-		typedef MovingImageType																						InputImageType;
-		typedef MovingImageType 																					OutputImageType;
-				
-		/** Functions to set/get pointers to the elastix components.
-		 * Get the components as pointers to elxBaseType */
-		elxGetBaseMacro( FixedImagePyramid, FixedImagePyramidBaseType );
-		elxGetBaseMacro( MovingImagePyramid, MovingImagePyramidBaseType );
-		elxGetBaseMacro( Interpolator, InterpolatorBaseType );
+    typedef MovingImageType																						InputImageType;
+    typedef MovingImageType 																					OutputImageType;
+        
+    /** Functions to set/get pointers to the elastix components.
+     * Get the components as pointers to elxBaseType */
+    elxGetBaseMacro( FixedImagePyramid, FixedImagePyramidBaseType );
+    elxGetBaseMacro( MovingImagePyramid, MovingImagePyramidBaseType );
+    elxGetBaseMacro( Interpolator, InterpolatorBaseType );
     elxGetBaseMacro( ImageSampler, ImageSamplerBaseType );
-		elxGetBaseMacro( Metric, MetricBaseType );
-		elxGetBaseMacro( Optimizer, OptimizerBaseType );
-		elxGetBaseMacro( Registration, RegistrationBaseType );
-		elxGetBaseMacro( Resampler, ResamplerBaseType );
-		elxGetBaseMacro( ResampleInterpolator, ResampleInterpolatorBaseType );
-		elxGetBaseMacro( Transform, TransformBaseType );
+    elxGetBaseMacro( Metric, MetricBaseType );
+    elxGetBaseMacro( Optimizer, OptimizerBaseType );
+    elxGetBaseMacro( Registration, RegistrationBaseType );
+    elxGetBaseMacro( Resampler, ResamplerBaseType );
+    elxGetBaseMacro( ResampleInterpolator, ResampleInterpolatorBaseType );
+    elxGetBaseMacro( Transform, TransformBaseType );
     
     /** Get pointers to the images. They are obtained from the 
      * {Fixed,Moving}ImageContainer and casted to the appropriate type */
@@ -226,32 +226,32 @@ namespace elastix
       return this->GetMovingMask(0);
     }
     virtual MovingMaskType * GetMovingMask( unsigned int idx) const;
-	
-		/** Main functions:
-		 * Run() for registration, and ApplyTransform() for just
-		 * applying a transform to an image.
-		 */
-		virtual int Run(void);
-		virtual int ApplyTransform(void);
-		
-		/** The Callback functions. */
-		virtual int BeforeAll(void);
-		virtual int BeforeAllTransformix(void);
-		virtual void BeforeRegistration(void);
-		virtual void BeforeEachResolution(void);
-		virtual void AfterEachResolution(void);
-		virtual void AfterEachIteration(void);
-		virtual void AfterRegistration(void);
+  
+    /** Main functions:
+     * Run() for registration, and ApplyTransform() for just
+     * applying a transform to an image.
+     */
+    virtual int Run(void);
+    virtual int ApplyTransform(void);
+    
+    /** The Callback functions. */
+    virtual int BeforeAll(void);
+    virtual int BeforeAllTransformix(void);
+    virtual void BeforeRegistration(void);
+    virtual void BeforeEachResolution(void);
+    virtual void AfterEachResolution(void);
+    virtual void AfterEachIteration(void);
+    virtual void AfterRegistration(void);
 
     /** Get the iteration number. */
-		itkGetConstMacro(IterationCounter, unsigned int);
+    itkGetConstMacro(IterationCounter, unsigned int);
 
     /** Get the name of the current transform parameter file. */
-		itkGetStringMacro( CurrentTransformParameterFileName );
-		
-	protected:
+    itkGetStringMacro( CurrentTransformParameterFileName );
+    
+  protected:
 
-		ElastixTemplate(); 
+    ElastixTemplate(); 
     virtual ~ElastixTemplate(){}; 
 
     /** Classes that contain a function to load multiple images, given a filename container */
@@ -259,31 +259,31 @@ namespace elastix
     typedef typename Superclass2::MultipleImageLoader<MovingImageType>  MovingImageLoaderType;
     typedef typename Superclass2::MultipleImageLoader<FixedMaskType>    FixedMaskLoaderType;
     typedef typename Superclass2::MultipleImageLoader<MovingMaskType>   MovingMaskLoaderType;
-				
-		/** CallBack commands.*/
-		BeforeEachResolutionCommandPointer	m_BeforeEachResolutionCommand;
-		AfterEachIterationCommandPointer		m_AfterEachIterationCommand;
-		AfterEachResolutionCommandPointer		m_AfterEachResolutionCommand;
+        
+    /** CallBack commands.*/
+    BeforeEachResolutionCommandPointer	m_BeforeEachResolutionCommand;
+    AfterEachIterationCommandPointer		m_AfterEachIterationCommand;
+    AfterEachResolutionCommandPointer		m_AfterEachResolutionCommand;
 
-		/** Timers */
-		TimerPointer m_Timer0;
-		TimerPointer m_IterationTimer;
-		TimerPointer m_ResolutionTimer;
+    /** Timers */
+    TimerPointer m_Timer0;
+    TimerPointer m_IterationTimer;
+    TimerPointer m_ResolutionTimer;
 
-		/** Store the CurrentTransformParameterFileName. */
-		std::string	m_CurrentTransformParameterFileName;
-		
-		/** Count the number of iterations. */
-		unsigned int m_IterationCounter;
-		
-		/** CreateTransformParameterFile.*/
-		virtual void CreateTransformParameterFile( std::string FileName, bool ToLog );
+    /** Store the CurrentTransformParameterFileName. */
+    std::string	m_CurrentTransformParameterFileName;
+    
+    /** Count the number of iterations. */
+    unsigned int m_IterationCounter;
+    
+    /** CreateTransformParameterFile.*/
+    virtual void CreateTransformParameterFile( std::string FileName, bool ToLog );
 
-		/** Open the IterationInfoFile, where the table with iteration info is written to */
-		virtual void OpenIterationInfoFile(void);
-		std::ofstream m_IterationInfoFile;
+    /** Open the IterationInfoFile, where the table with iteration info is written to */
+    virtual void OpenIterationInfoFile(void);
+    std::ofstream m_IterationInfoFile;
 
-		/** Used by the callback functions, beforeeachresolution() etc.).
+    /** Used by the callback functions, beforeeachresolution() etc.).
      * This method calls a function in each component, in the following order:
      * \li Registration
      * \li Transform
@@ -296,20 +296,20 @@ namespace elastix
      * \li ResampleInterpolator
      * \li Resampler 
      */
-		void CallInEachComponent( PtrToMemberFunction func );
-		int CallInEachComponentInt( PtrToMemberFunction2 func );
+    void CallInEachComponent( PtrToMemberFunction func );
+    int CallInEachComponentInt( PtrToMemberFunction2 func );
 
     /** Call in each component SetElastix(This) and set its ComponentLabel
      * (for example "Metric1"). This makes sure that the component knows its
      * own function in the registration process. */
     virtual void ConfigureComponents( Self * This );
-    		
-	private:
+        
+  private:
 
-		ElastixTemplate( const Self& );	// purposely not implemented
-		void operator=( const Self& );	// purposely not implemented
-		
-	}; // end class ElastixTemplate
+    ElastixTemplate( const Self& );	// purposely not implemented
+    void operator=( const Self& );	// purposely not implemented
+    
+  }; // end class ElastixTemplate
 
 
 } // end namespace elastix

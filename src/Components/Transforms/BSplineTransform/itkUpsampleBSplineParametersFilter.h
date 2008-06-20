@@ -31,91 +31,91 @@ namespace itk
  * (region, spacing, origin), and the required B-spline grid.
  *
  */
-	template < class TArray, class TImage >
-	class ITK_EXPORT UpsampleBSplineParametersFilter
-		: public Object
-	{
-	public:
+  template < class TArray, class TImage >
+  class ITK_EXPORT UpsampleBSplineParametersFilter
+    : public Object
+  {
+  public:
 
-		/** Standard class typedefs. */
-		typedef UpsampleBSplineParametersFilter		Self;
-		typedef Object														Superclass;
-		typedef SmartPointer<Self>								Pointer;
-		typedef SmartPointer<const Self>					ConstPointer;
+    /** Standard class typedefs. */
+    typedef UpsampleBSplineParametersFilter		Self;
+    typedef Object														Superclass;
+    typedef SmartPointer<Self>								Pointer;
+    typedef SmartPointer<const Self>					ConstPointer;
 
     /** Method for creation through the object factory. */
-		itkNewMacro( Self );
+    itkNewMacro( Self );
 
-		/** Run-time type information (and related methods). */
-		itkTypeMacro( UpsampleBSplineParametersFilter, Object );
+    /** Run-time type information (and related methods). */
+    itkTypeMacro( UpsampleBSplineParametersFilter, Object );
 
-		/** Typedefs. */
-		typedef TArray														ArrayType;
-		typedef typename ArrayType::ValueType			ValueType;
-		typedef TImage														ImageType;
-		typedef typename ImageType::Pointer				ImagePointer;
-		typedef typename ImageType::PixelType			PixelType;
-		typedef typename ImageType::SpacingType		SpacingType;
-		typedef typename ImageType::PointType			OriginType;
-		typedef typename ImageType::RegionType		RegionType;
+    /** Typedefs. */
+    typedef TArray														ArrayType;
+    typedef typename ArrayType::ValueType			ValueType;
+    typedef TImage														ImageType;
+    typedef typename ImageType::Pointer				ImagePointer;
+    typedef typename ImageType::PixelType			PixelType;
+    typedef typename ImageType::SpacingType		SpacingType;
+    typedef typename ImageType::PointType			OriginType;
+    typedef typename ImageType::RegionType		RegionType;
 
-		/** Dimension of the fixed image. */
-		itkStaticConstMacro( Dimension, unsigned int, ImageType::ImageDimension );
-		
-		/** Set the origin of the current grid. */
-		itkSetMacro( CurrentGridOrigin, OriginType );
+    /** Dimension of the fixed image. */
+    itkStaticConstMacro( Dimension, unsigned int, ImageType::ImageDimension );
+    
+    /** Set the origin of the current grid. */
+    itkSetMacro( CurrentGridOrigin, OriginType );
 
-		/** Set the spacing of the current grid. */
-		itkSetMacro( CurrentGridSpacing, SpacingType );
+    /** Set the spacing of the current grid. */
+    itkSetMacro( CurrentGridSpacing, SpacingType );
 
-		/** Set the region of the current grid. */
-		itkSetMacro( CurrentGridRegion, RegionType );
+    /** Set the region of the current grid. */
+    itkSetMacro( CurrentGridRegion, RegionType );
 
-		/** Set the origin of the required grid. */
-		itkSetMacro( RequiredGridOrigin, OriginType );
+    /** Set the origin of the required grid. */
+    itkSetMacro( RequiredGridOrigin, OriginType );
 
-		/** Set the spacing of the required grid. */
-		itkSetMacro( RequiredGridSpacing, SpacingType );
+    /** Set the spacing of the required grid. */
+    itkSetMacro( RequiredGridSpacing, SpacingType );
 
-		/** Set the region of the required grid. */
-		itkSetMacro( RequiredGridRegion, RegionType );
+    /** Set the region of the required grid. */
+    itkSetMacro( RequiredGridRegion, RegionType );
 
-		/** Set the B-spline order. */
-		itkSetMacro( BSplineOrder, unsigned int );
+    /** Set the B-spline order. */
+    itkSetMacro( BSplineOrder, unsigned int );
 
-		/** Set the input parameter array. *
-		itkSetMacro( InputParameters, ArrayType );
+    /** Set the input parameter array. *
+    itkSetMacro( InputParameters, ArrayType );
 
-		/** Compute the output parameter array. */
-		virtual void UpsampleParameters( const ArrayType & param_in, ArrayType & param_out );
+    /** Compute the output parameter array. */
+    virtual void UpsampleParameters( const ArrayType & param_in, ArrayType & param_out );
 
-	protected:
+  protected:
 
-		/** Constructor. */
-		UpsampleBSplineParametersFilter();
+    /** Constructor. */
+    UpsampleBSplineParametersFilter();
 
-		/** Destructor. */
+    /** Destructor. */
     ~UpsampleBSplineParametersFilter() {};
 
-		/** PrintSelf. */
-		virtual void PrintSelf( std::ostream& os, Indent indent ) const;
+    /** PrintSelf. */
+    virtual void PrintSelf( std::ostream& os, Indent indent ) const;
 
     /** Function that checks if upsampling is required. */
     virtual bool DoUpsampling( void );
   
-	private:
+  private:
 
-		UpsampleBSplineParametersFilter( const Self& );	//purposely not implemented
-		void operator=( const Self & );									//purposely not implemented
+    UpsampleBSplineParametersFilter( const Self& );	//purposely not implemented
+    void operator=( const Self & );									//purposely not implemented
 
-		/** Private member variables. */
-		OriginType		m_CurrentGridOrigin;
-		SpacingType		m_CurrentGridSpacing;
-		RegionType		m_CurrentGridRegion;
-		OriginType		m_RequiredGridOrigin;
-		SpacingType		m_RequiredGridSpacing;
-		RegionType		m_RequiredGridRegion;
-		unsigned int	m_BSplineOrder;
+    /** Private member variables. */
+    OriginType		m_CurrentGridOrigin;
+    SpacingType		m_CurrentGridSpacing;
+    RegionType		m_CurrentGridRegion;
+    OriginType		m_RequiredGridOrigin;
+    SpacingType		m_RequiredGridSpacing;
+    RegionType		m_RequiredGridRegion;
+    unsigned int	m_BSplineOrder;
 
 }; // end class UpsampleBSplineParametersFilter
 

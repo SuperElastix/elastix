@@ -4,5 +4,3 @@ ADD_ELXCOMPONENT( RandomSampler
  elxRandomSampler.hxx
  elxRandomSampler.cxx )
 
-
-

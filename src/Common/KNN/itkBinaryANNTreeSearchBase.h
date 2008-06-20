@@ -22,35 +22,35 @@
 
 namespace itk
 {
-	
-	/**
-	 * \class BinaryANNTreeSearchBase
-	 *
-	 * \brief 
-	 *
-	 * 
-	 * \ingroup Metrics?
-	 */
-	
+  
+  /**
+   * \class BinaryANNTreeSearchBase
+   *
+   * \brief 
+   *
+   * 
+   * \ingroup Metrics?
+   */
+  
   template < class TListSample >
-	class BinaryANNTreeSearchBase :
+  class BinaryANNTreeSearchBase :
     public BinaryTreeSearchBase< TListSample >
-	{
-	public:
-		
-		/** Standard itk. */
+  {
+  public:
+    
+    /** Standard itk. */
     typedef BinaryANNTreeSearchBase     Self;
-		typedef BinaryTreeSearchBase<
+    typedef BinaryTreeSearchBase<
       TListSample >                     Superclass;
-		typedef SmartPointer< Self >				Pointer;
-		typedef SmartPointer< const Self >	ConstPointer;
+    typedef SmartPointer< Self >				Pointer;
+    typedef SmartPointer< const Self >	ConstPointer;
 
-		/** ITK type info. */
-		itkTypeMacro( BinaryANNTreeSearchBase, BinaryTreeSearchBase );
+    /** ITK type info. */
+    itkTypeMacro( BinaryANNTreeSearchBase, BinaryTreeSearchBase );
 
     /** Typedefs from Superclass. */
     typedef typename Superclass::ListSampleType         ListSampleType;
-		typedef typename Superclass::BinaryTreeType         BinaryTreeType;
+    typedef typename Superclass::BinaryTreeType         BinaryTreeType;
     typedef typename Superclass::MeasurementVectorType  MeasurementVectorType;
     typedef typename Superclass::IndexArrayType         IndexArrayType;
     typedef typename Superclass::DistanceArrayType      DistanceArrayType;
@@ -69,22 +69,22 @@ namespace itk
     virtual void SetBinaryTree( BinaryTreeType * tree );
     //const BinaryTreeType * GetBinaryTree( void ) const;
 
-	protected:
-		
-		BinaryANNTreeSearchBase();
-		virtual ~BinaryANNTreeSearchBase();
+  protected:
+    
+    BinaryANNTreeSearchBase();
+    virtual ~BinaryANNTreeSearchBase();
 
     /** Member variables. */
     typename BinaryANNTreeType::Pointer m_BinaryTreeAsITKANNType;
     
-	private:
-		
-		BinaryANNTreeSearchBase( const Self& ); // purposely not implemented
-		void operator=( const Self& );          // purposely not implemented
+  private:
+    
+    BinaryANNTreeSearchBase( const Self& ); // purposely not implemented
+    void operator=( const Self& );          // purposely not implemented
 
-	}; // end class BinaryANNTreeSearchBase
-		
-		
+  }; // end class BinaryANNTreeSearchBase
+    
+    
 } // end namespace itk
 
 

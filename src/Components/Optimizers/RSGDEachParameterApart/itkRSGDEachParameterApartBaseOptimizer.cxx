@@ -41,10 +41,10 @@ RSGDEachParameterApartBaseOptimizer
   m_Maximize = false;
   m_CostFunction = 0;
   
-	m_CurrentStepLengths.Fill( 0.0f );
-	m_CurrentStepLength = 0;
+  m_CurrentStepLengths.Fill( 0.0f );
+  m_CurrentStepLength = 0;
   
-	m_StopCondition = MaximumNumberOfIterations;
+  m_StopCondition = MaximumNumberOfIterations;
   m_Gradient.Fill( 0.0f );
   m_PreviousGradient.Fill( 0.0f );
 
@@ -63,7 +63,7 @@ RSGDEachParameterApartBaseOptimizer
 {
 
   itkDebugMacro("StartOptimization");
-	
+  
   m_CurrentIteration          = 0;
 
   const unsigned int spaceDimension = 
@@ -71,11 +71,11 @@ RSGDEachParameterApartBaseOptimizer
 
   m_Gradient = DerivativeType( spaceDimension );
   m_PreviousGradient = DerivativeType( spaceDimension );
-	m_CurrentStepLengths = DerivativeType( spaceDimension );
+  m_CurrentStepLengths = DerivativeType( spaceDimension );
   m_Gradient.Fill( 0.0f );
   m_PreviousGradient.Fill( 0.0f );
-	m_CurrentStepLengths.Fill( m_MaximumStepLength );
-	m_CurrentStepLength = m_MaximumStepLength;
+  m_CurrentStepLengths.Fill( m_MaximumStepLength );
+  m_CurrentStepLength = m_MaximumStepLength;
 
   this->SetCurrentPosition( GetInitialPosition() );
   this->ResumeOptimization();
@@ -103,7 +103,7 @@ RSGDEachParameterApartBaseOptimizer
   while( !m_Stop ) 
     {
 
-		/** inefficient:
+    /** inefficient:
     ParametersType currentPosition = this->GetCurrentPosition();
     m_Value = m_CostFunction->GetValue( currentPosition );
 
@@ -114,22 +114,22 @@ RSGDEachParameterApartBaseOptimizer
 
     m_PreviousGradient = m_Gradient;
     m_CostFunction->GetDerivative( currentPosition, m_Gradient );
-		*/
+    */
 
-		/** faster:*/
+    /** faster:*/
 
-		m_PreviousGradient = m_Gradient;
-		try
-		{
-			m_CostFunction->GetValueAndDerivative(
-				this->GetCurrentPosition(), m_Value, m_Gradient );
-		}
-		catch( ExceptionObject& err)
-		{
-			m_StopCondition = MetricError;
-			this->StopOptimization();
-			throw err;
-		}
+    m_PreviousGradient = m_Gradient;
+    try
+    {
+      m_CostFunction->GetValueAndDerivative(
+        this->GetCurrentPosition(), m_Value, m_Gradient );
+    }
+    catch( ExceptionObject& err)
+    {
+      m_StopCondition = MetricError;
+      this->StopOptimization();
+      throw err;
+    }
 
 
     if( m_Stop )
@@ -224,33 +224,33 @@ RSGDEachParameterApartBaseOptimizer
     return;
     }
     
-	double sumOfCurrentStepLengths = 0.0;
-	double biggestCurrentStepLength = 0.0;
-	for(unsigned int i=0; i<spaceDimension; i++)
-	{
-		const bool signChange =
-			( transformedGradient[i] * previousTransformedGradient[i] ) < 0 ;
-		
-		if (signChange)
-		{
-			m_CurrentStepLengths[i] /=2.0;
-		}
+  double sumOfCurrentStepLengths = 0.0;
+  double biggestCurrentStepLength = 0.0;
+  for(unsigned int i=0; i<spaceDimension; i++)
+  {
+    const bool signChange =
+      ( transformedGradient[i] * previousTransformedGradient[i] ) < 0 ;
+    
+    if (signChange)
+    {
+      m_CurrentStepLengths[i] /=2.0;
+    }
 
-		const double currentStepLengths_i = m_CurrentStepLengths[i];
-		
-		sumOfCurrentStepLengths += currentStepLengths_i;
-		if ( currentStepLengths_i > biggestCurrentStepLength )
-		{
-			biggestCurrentStepLength = currentStepLengths_i;
-		}
-	} //end for
+    const double currentStepLengths_i = m_CurrentStepLengths[i];
+    
+    sumOfCurrentStepLengths += currentStepLengths_i;
+    if ( currentStepLengths_i > biggestCurrentStepLength )
+    {
+      biggestCurrentStepLength = currentStepLengths_i;
+    }
+  } //end for
 
-	/** The average current step length: */
-	m_CurrentStepLength = sumOfCurrentStepLengths / spaceDimension;
+  /** The average current step length: */
+  m_CurrentStepLength = sumOfCurrentStepLengths / spaceDimension;
 
   /** if all current step lengths are smaller than the 
-	 * MinimumStepLength stop the optimization
-	 */
+   * MinimumStepLength stop the optimization
+   */
   if( biggestCurrentStepLength < m_MinimumStepLength )
     {
     m_StopCondition = StepTooSmall;
@@ -270,10 +270,10 @@ RSGDEachParameterApartBaseOptimizer
 
   DerivativeType factor = DerivativeType(spaceDimension);
    
-	for(unsigned int i=0; i<spaceDimension; i++)
-	{
-		factor[i] = direction * m_CurrentStepLengths[i] / m_GradientMagnitude;
-	}
+  for(unsigned int i=0; i<spaceDimension; i++)
+  {
+    factor[i] = direction * m_CurrentStepLengths[i] / m_GradientMagnitude;
+  }
 
   // This method StepAlongGradient() will 
   // be overloaded in non-vector spaces

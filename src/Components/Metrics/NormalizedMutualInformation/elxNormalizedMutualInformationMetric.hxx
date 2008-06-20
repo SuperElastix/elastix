@@ -24,50 +24,50 @@ namespace elastix
 {
 using namespace itk;
 
-	/**
-	 * ******************* Initialize ***********************
-	 */
+  /**
+   * ******************* Initialize ***********************
+   */
 
-	template <class TElastix>
-		void NormalizedMutualInformationMetric<TElastix>
-		::Initialize(void) throw (ExceptionObject)
-	{
-		TimerPointer timer = TimerType::New();
-		timer->StartTimer();
-		this->Superclass1::Initialize();
-		timer->StopTimer();
-		elxout << "Initialization of NormalizedMutualInformation metric took: "
-			<< static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
+  template <class TElastix>
+    void NormalizedMutualInformationMetric<TElastix>
+    ::Initialize(void) throw (ExceptionObject)
+  {
+    TimerPointer timer = TimerType::New();
+    timer->StartTimer();
+    this->Superclass1::Initialize();
+    timer->StopTimer();
+    elxout << "Initialization of NormalizedMutualInformation metric took: "
+      << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
 
-	} // end Initialize
+  } // end Initialize
 
-	
-	/**
-	 * ***************** BeforeEachResolution ***********************
-	 */
+  
+  /**
+   * ***************** BeforeEachResolution ***********************
+   */
 
-	template <class TElastix>
-		void NormalizedMutualInformationMetric<TElastix>
-		::BeforeEachResolution(void)
-	{
-		/** Get the current resolution level. */
-		unsigned int level = 
-			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
-		
-		/** Get and set the number of histogram bins. */
-		unsigned int numberOfHistogramBins = 32;
+  template <class TElastix>
+    void NormalizedMutualInformationMetric<TElastix>
+    ::BeforeEachResolution(void)
+  {
+    /** Get the current resolution level. */
+    unsigned int level = 
+      ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+    
+    /** Get and set the number of histogram bins. */
+    unsigned int numberOfHistogramBins = 32;
     this->GetConfiguration()->ReadParameter( numberOfHistogramBins,
       "NumberOfHistogramBins", this->GetComponentLabel(), level, 0 );
-		this->SetNumberOfFixedHistogramBins( numberOfHistogramBins );
+    this->SetNumberOfFixedHistogramBins( numberOfHistogramBins );
     this->SetNumberOfMovingHistogramBins( numberOfHistogramBins );
 
     unsigned int numberOfFixedHistogramBins = numberOfHistogramBins;
     unsigned int numberOfMovingHistogramBins = numberOfHistogramBins;
-  	this->GetConfiguration()->ReadParameter( numberOfFixedHistogramBins,
+    this->GetConfiguration()->ReadParameter( numberOfFixedHistogramBins,
       "NumberOfFixedHistogramBins", this->GetComponentLabel(), level, 0 );
-		this->GetConfiguration()->ReadParameter( numberOfMovingHistogramBins,
+    this->GetConfiguration()->ReadParameter( numberOfMovingHistogramBins,
       "NumberOfMovingHistogramBins", this->GetComponentLabel(), level, 0 );
-		this->SetNumberOfFixedHistogramBins( numberOfFixedHistogramBins );
+    this->SetNumberOfFixedHistogramBins( numberOfFixedHistogramBins );
     this->SetNumberOfMovingHistogramBins( numberOfMovingHistogramBins );
 
     /** Set limiters */
@@ -77,13 +77,13 @@ using namespace itk;
     this->SetMovingImageLimiter( MovingLimiterType::New() );
     
     /** Get and set the number of histogram bins. */
-		double fixedLimitRangeRatio = 0.01;
+    double fixedLimitRangeRatio = 0.01;
     double movingLimitRangeRatio = 0.01;
     this->GetConfiguration()->ReadParameter( fixedLimitRangeRatio,
       "FixedLimitRangeRatio", this->GetComponentLabel(), level, 0 );
     this->GetConfiguration()->ReadParameter( movingLimitRangeRatio, 
       "MovingLimitRangeRatio", this->GetComponentLabel(), level, 0 );
-		this->SetFixedLimitRangeRatio( fixedLimitRangeRatio );
+    this->SetFixedLimitRangeRatio( fixedLimitRangeRatio );
     this->SetMovingLimitRangeRatio( movingLimitRangeRatio );
 
     /** Set bspline parzen kernel orders */
@@ -93,11 +93,11 @@ using namespace itk;
       "FixedKernelBSplineOrder", this->GetComponentLabel(), level, 0 );
     this->GetConfiguration()->ReadParameter( movingKernelBSplineOrder,
       "MovingKernelBSplineOrder", this->GetComponentLabel(), level, 0 );
-		this->SetFixedKernelBSplineOrder( fixedKernelBSplineOrder );
+    this->SetFixedKernelBSplineOrder( fixedKernelBSplineOrder );
     this->SetMovingKernelBSplineOrder( movingKernelBSplineOrder );
 
-	} // end BeforeEachResolution
-	
+  } // end BeforeEachResolution
+  
   
 } // end namespace elastix
 

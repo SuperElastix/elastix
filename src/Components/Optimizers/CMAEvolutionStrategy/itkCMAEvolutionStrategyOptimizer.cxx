@@ -32,7 +32,7 @@ namespace itk
    */
 
   CMAEvolutionStrategyOptimizer::
-		CMAEvolutionStrategyOptimizer()
+    CMAEvolutionStrategyOptimizer()
   {
     itkDebugMacro("Constructor");
 
@@ -156,7 +156,7 @@ namespace itk
     * if not: an exception is thrown */
     const unsigned int numberOfParameters =
       this->GetScaledCostFunction()->GetNumberOfParameters();
-	
+  
     /** Initialize the scaledCostFunction with the currently set scales */
     this->InitializeScales();
 
@@ -192,7 +192,7 @@ namespace itk
 
     this->m_Stop = false;
     this->m_StopCondition = Unknown;
-    		
+        
     this->InvokeEvent( StartEvent() );
 
     try
@@ -235,7 +235,7 @@ namespace itk
       
       /** Give the user opportunity to observe progress (current value/position/sigma etc.) */
       this->InvokeEvent( IterationEvent() );
-			      
+            
       if ( this->m_Stop )
       {
         break;
@@ -250,7 +250,7 @@ namespace itk
       this->UpdateBD();
       this->FixNumericalErrors();
 
-			/** Test if convergence has occured in some sense */
+      /** Test if convergence has occured in some sense */
       convergence = this->TestConvergence( false );
       if ( convergence )
       {
@@ -258,7 +258,7 @@ namespace itk
         break;
       }
       
-			/** Next iteration */
+      /** Next iteration */
       ++( this->m_CurrentIteration );
 
     } // end while !m_Stop
@@ -454,7 +454,7 @@ namespace itk
     this->m_CurrentMaximumD = 1.0;
     this->m_CurrentMinimumD = 1.0;
 
-		
+    
   } // end InitializeProgressVariables
   
 

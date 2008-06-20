@@ -88,14 +88,14 @@ SET(ELX_HELP_DIR ${elastix_SOURCE_DIR}/../help CACHE PATH "path to the doxygen g
 
 IF(WIN32)
   CONFIGURE_FILE(
-	  ${ELX_DOX_DIR}/example.bat
-		${ELX_HELP_DIR}/example.bat
-		COPYONLY )
+    ${ELX_DOX_DIR}/example.bat
+    ${ELX_HELP_DIR}/example.bat
+    COPYONLY )
 ELSE(WIN32)
   CONFIGURE_FILE(
-	  ${ELX_DOX_DIR}/example
-		${ELX_HELP_DIR}/example
-		COPYONLY )
+    ${ELX_DOX_DIR}/example
+    ${ELX_HELP_DIR}/example
+    COPYONLY )
 ENDIF(WIN32)
 
 MAKE_DIRECTORY( ${ELX_HELP_DIR}/exampleinput )
@@ -119,9 +119,9 @@ solution_deformedmovingimage.raw )
 
 FOREACH( ELX_EXAMPLEINPUTFILE ${ELX_EXAMPLEINPUTFILES} )
   CONFIGURE_FILE(
-	  ${ELX_DOX_DIR}/exampleinput/${ELX_EXAMPLEINPUTFILE}
-		${ELX_HELP_DIR}/exampleinput/${ELX_EXAMPLEINPUTFILE}
-		COPYONLY )
+    ${ELX_DOX_DIR}/exampleinput/${ELX_EXAMPLEINPUTFILE}
+    ${ELX_HELP_DIR}/exampleinput/${ELX_EXAMPLEINPUTFILE}
+    COPYONLY )
 ENDFOREACH( ELX_EXAMPLEINPUTFILE )
 
 
@@ -137,30 +137,30 @@ IF(Doxygen_FOUND)
   SET(ELX_DOXYGEN_DIR ${ELX_DOX_DIR}/doxygen)
 
   # Get the version number of doxygen
-	EXEC_PROGRAM(${DOXYGEN} ARGS "--version" OUTPUT_VARIABLE ELX_DOXYGEN_VERSION)
-	
-	# Get date and time
-	IF(UNIX)
-		EXEC_PROGRAM(date OUTPUT_VARIABLE ELX_DOXYGEN_DATE)
-	ENDIF(UNIX)
-	IF(WIN32)
-		SET(ELX_DOXYGEN_DATE "Sun Jan 1 00:00:00 2006")
-	ENDIF(WIN32)
+  EXEC_PROGRAM(${DOXYGEN} ARGS "--version" OUTPUT_VARIABLE ELX_DOXYGEN_VERSION)
+  
+  # Get date and time
+  IF(UNIX)
+    EXEC_PROGRAM(date OUTPUT_VARIABLE ELX_DOXYGEN_DATE)
+  ENDIF(UNIX)
+  IF(WIN32)
+    SET(ELX_DOXYGEN_DATE "Sun Jan 1 00:00:00 2006")
+  ENDIF(WIN32)
 
-	# Get the version number of elastix
-	IF(UNIX)
-		SET(ELX_BASECOMPONENT_FILE "${elastix_SOURCE_DIR}/Core/Install/elxBaseComponent.h")
-		EXEC_PROGRAM(grep ARGS "\"#define __ELASTIX_VERSION\"" "${ELX_BASECOMPONENT_FILE}" OUTPUT_VARIABLE ELX_VERSION)
-		STRING(SUBSTRING ${ELX_VERSION} 26 3 ELX_VERSION)
-	ENDIF(UNIX)
-	
-	# Configure the doxygen configuration
-	CONFIGURE_FILE(
-	  ${ELX_DOXYGEN_DIR}/doxyfile.in
-		${ELX_HELP_DIR}/doxyfile.out @ONLY )
-	# Configure the footer of the help website.
-	CONFIGURE_FILE(${elastix_SOURCE_DIR}/../dox/doxygen/DoxygenFooter.html.in ${ELX_HELP_DIR}/DoxygenFooter.html @ONLY)
-	
+  # Get the version number of elastix
+  IF(UNIX)
+    SET(ELX_BASECOMPONENT_FILE "${elastix_SOURCE_DIR}/Core/Install/elxBaseComponent.h")
+    EXEC_PROGRAM(grep ARGS "\"#define __ELASTIX_VERSION\"" "${ELX_BASECOMPONENT_FILE}" OUTPUT_VARIABLE ELX_VERSION)
+    STRING(SUBSTRING ${ELX_VERSION} 26 3 ELX_VERSION)
+  ENDIF(UNIX)
+  
+  # Configure the doxygen configuration
+  CONFIGURE_FILE(
+    ${ELX_DOXYGEN_DIR}/doxyfile.in
+    ${ELX_HELP_DIR}/doxyfile.out @ONLY )
+  # Configure the footer of the help website.
+  CONFIGURE_FILE(${elastix_SOURCE_DIR}/../dox/doxygen/DoxygenFooter.html.in ${ELX_HELP_DIR}/DoxygenFooter.html @ONLY)
+  
 ENDIF(Doxygen_FOUND)
 
 

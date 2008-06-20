@@ -6,6 +6,3 @@ ADD_ELXCOMPONENT( ViolaWellsMutualInformationMetric
  elxViolaWellsMutualInformationMetric.cxx
  )
 
-
-
-

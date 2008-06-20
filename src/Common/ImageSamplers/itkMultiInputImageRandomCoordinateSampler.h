@@ -38,19 +38,19 @@ namespace itk
   {
   public:
 
-		/** Standard ITK-stuff. */
+    /** Standard ITK-stuff. */
     typedef MultiInputImageRandomCoordinateSampler                Self;
     typedef ImageRandomSamplerBase< TInputImage >       Superclass;
     typedef SmartPointer<Self>                Pointer;
     typedef SmartPointer<const Self>          ConstPointer;
 
-		/** Method for creation through the object factory. */
+    /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
-		/** Run-time type information (and related methods). */
+    /** Run-time type information (and related methods). */
     itkTypeMacro( MultiInputImageRandomCoordinateSampler, ImageRandomSamplerBase );
 
-		/** Typedefs inherited from the superclass. */
+    /** Typedefs inherited from the superclass. */
     typedef typename Superclass::DataObjectPointer            DataObjectPointer;
     typedef typename Superclass::OutputVectorContainerType    OutputVectorContainerType;
     typedef typename Superclass::OutputVectorContainerPointer OutputVectorContainerPointer;
@@ -71,7 +71,7 @@ namespace itk
     
     /** The input image dimension. */
     itkStaticConstMacro( InputImageDimension, unsigned int,
-			Superclass::InputImageDimension );
+      Superclass::InputImageDimension );
 
     /** This image sampler samples the image on physical coordinates and thus
      * needs an interpolator.
@@ -132,9 +132,9 @@ namespace itk
             
   private:
 
-		/** The private constructor. */
+    /** The private constructor. */
     MultiInputImageRandomCoordinateSampler( const Self& );	        // purposely not implemented
-		/** The private copy constructor. */
+    /** The private copy constructor. */
     void operator=( const Self& );				    // purposely not implemented
     
     bool          m_UseRandomSampleRegion;

@@ -141,25 +141,25 @@ public:
     Superclass::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
   typedef typename
     Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
-	
-	/** The fixed image dimension. */
-	itkStaticConstMacro( FixedImageDimension, unsigned int,
-		FixedImageType::ImageDimension );
+  
+  /** The fixed image dimension. */
+  itkStaticConstMacro( FixedImageDimension, unsigned int,
+    FixedImageType::ImageDimension );
 
-	/** The moving image dimension. */
-	itkStaticConstMacro( MovingImageDimension, unsigned int,
-		MovingImageType::ImageDimension );
+  /** The moving image dimension. */
+  itkStaticConstMacro( MovingImageDimension, unsigned int,
+    MovingImageType::ImageDimension );
 
   /** Get the value for single valued optimizers. */
   MeasureType GetValue( const TransformParametersType & parameters ) const;
 
-	/** Get the derivatives of the match measure. */
+  /** Get the derivatives of the match measure. */
   void GetDerivative( const TransformParametersType & parameters,
-		DerivativeType & Derivative ) const;
+    DerivativeType & Derivative ) const;
 
   /** Get value and derivatives for multiple valued optimizers. */
   void GetValueAndDerivative( const TransformParametersType & parameters,
-		MeasureType& Value, DerivativeType& Derivative ) const;
+    MeasureType& Value, DerivativeType& Derivative ) const;
 
   /** Set/Get SubtractMean boolean. If true, the sample mean is subtracted 
    * from the sample values in the cross-correlation formula and
@@ -178,19 +178,19 @@ protected:
 
   /** Typedefs inherited from superclass */
   typedef typename Superclass::FixedImageIndexType                FixedImageIndexType;
-	typedef typename Superclass::FixedImageIndexValueType           FixedImageIndexValueType;
-	typedef typename Superclass::MovingImageIndexType               MovingImageIndexType;
-	typedef typename Superclass::FixedImagePointType                FixedImagePointType;
-	typedef typename Superclass::MovingImagePointType               MovingImagePointType;
+  typedef typename Superclass::FixedImageIndexValueType           FixedImageIndexValueType;
+  typedef typename Superclass::MovingImageIndexType               MovingImageIndexType;
+  typedef typename Superclass::FixedImagePointType                FixedImagePointType;
+  typedef typename Superclass::MovingImagePointType               MovingImagePointType;
   typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
   typedef	typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
   typedef typename Superclass::CentralDifferenceGradientFilterType CentralDifferenceGradientFilterType;
   typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
   typedef typename Superclass::BSplineTransformType               BSplineTransformType;
   typedef typename Superclass::BSplineTransformWeightsType        BSplineTransformWeightsType;
-	typedef typename Superclass::BSplineTransformIndexArrayType     BSplineTransformIndexArrayType;
-	typedef typename Superclass::BSplineCombinationTransformType    BSplineCombinationTransformType;
- 	typedef typename Superclass::BSplineParametersOffsetType        BSplineParametersOffsetType;
+  typedef typename Superclass::BSplineTransformIndexArrayType     BSplineTransformIndexArrayType;
+  typedef typename Superclass::BSplineCombinationTransformType    BSplineCombinationTransformType;
+  typedef typename Superclass::BSplineParametersOffsetType        BSplineParametersOffsetType;
   typedef typename Superclass::ParameterIndexArrayType            ParameterIndexArrayType;
 
   /** Computes the innerproduct of transform jacobian with moving image gradient.
@@ -198,7 +198,7 @@ protected:
    * to have the right size (same length as jacobian's number of columns). */
   void EvaluateTransformJacobianInnerProduct(
     const TransformJacobianType & jacobian, 
-		const MovingImageDerivativeType & movingImageDerivative,
+    const MovingImageDerivativeType & movingImageDerivative,
     DerivativeType & imageJacobian) const;
 
   /** Compute a pixel's contribution to the derivative terms;

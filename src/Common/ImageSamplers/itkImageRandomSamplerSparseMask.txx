@@ -21,8 +21,8 @@ namespace itk
 {
 
   /**
-	 * ******************* Constructor *******************
-	 */
+   * ******************* Constructor *******************
+   */
 
   template< class TInputImage >
     ImageRandomSamplerSparseMask< TInputImage >
@@ -36,8 +36,8 @@ namespace itk
 
 
   /**
-	 * ******************* GenerateData *******************
-	 */
+   * ******************* GenerateData *******************
+   */
   
   template< class TInputImage >
     void
@@ -69,8 +69,8 @@ namespace itk
 
 
   /**
-	 * ******************* PrintSelf *******************
-	 */
+   * ******************* PrintSelf *******************
+   */
   
   template< class TInputImage >
     void

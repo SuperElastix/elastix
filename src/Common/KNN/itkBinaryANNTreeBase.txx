@@ -19,15 +19,15 @@
 
 namespace itk
 {
-	
-	/**
-	 * ************************ Constructor *************************
-	 */
+  
+  /**
+   * ************************ Constructor *************************
+   */
 
-	template < class TListSample >
-		BinaryANNTreeBase<TListSample>
-		::BinaryANNTreeBase()
-	{
+  template < class TListSample >
+    BinaryANNTreeBase<TListSample>
+    ::BinaryANNTreeBase()
+  {
   } // end Constructor
 
 

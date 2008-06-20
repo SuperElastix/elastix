@@ -22,8 +22,8 @@ namespace itk
 {
 
   /**
-	 * ******************* Constructor ********************
-	 */
+   * ******************* Constructor ********************
+   */
   
   template< class TInputImage >
     MultiInputImageRandomCoordinateSampler< TInputImage >
@@ -45,8 +45,8 @@ namespace itk
 
 
   /**
-	 * ******************* GenerateData *******************
-	 */
+   * ******************* GenerateData *******************
+   */
   
   template< class TInputImage >
     void
@@ -150,8 +150,8 @@ namespace itk
 
 
   /**
-	 * ******************* GenerateSampleRegion *******************
-	 */
+   * ******************* GenerateSampleRegion *******************
+   */
   
   template< class TInputImage >
     void
@@ -216,8 +216,8 @@ namespace itk
 
 
   /**
-	 * ******************* GenerateRandomCoordinate *******************
-	 */
+   * ******************* GenerateRandomCoordinate *******************
+   */
   
   template< class TInputImage >
     void
@@ -238,8 +238,8 @@ namespace itk
 
 
   /**
-	 * ******************* PrintSelf *******************
-	 */
+   * ******************* PrintSelf *******************
+   */
   
   template< class TInputImage >
     void

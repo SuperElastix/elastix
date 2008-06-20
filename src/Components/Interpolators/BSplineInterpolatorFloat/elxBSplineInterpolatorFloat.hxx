@@ -22,29 +22,29 @@ namespace elastix
 using namespace itk;
 
 
-	/**
-	 * ***************** BeforeEachResolution ***********************
-	 */
+  /**
+   * ***************** BeforeEachResolution ***********************
+   */
 
-	template <class TElastix>
-		void BSplineInterpolatorFloat<TElastix>::
-		BeforeEachResolution( void )
-	{
-		/** Get the current resolution level. */
-		unsigned int level = 
-			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+  template <class TElastix>
+    void BSplineInterpolatorFloat<TElastix>::
+    BeforeEachResolution( void )
+  {
+    /** Get the current resolution level. */
+    unsigned int level = 
+      ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
     /** Set the SplineOrder, default value = 1. */
-		unsigned int splineOrder = 1;
-		
-		/** Read the desired splineOrder from the parameterFile. */
-		this->GetConfiguration()->ReadParameter( splineOrder,
+    unsigned int splineOrder = 1;
+    
+    /** Read the desired splineOrder from the parameterFile. */
+    this->GetConfiguration()->ReadParameter( splineOrder,
       "BSplineInterpolationOrder", this->GetComponentLabel(), level, 0 );
     
-		/** Set the splineOrder. */
-		this->SetSplineOrder( splineOrder );
-		 
-	} // end BeforeEachResolution
+    /** Set the splineOrder. */
+    this->SetSplineOrder( splineOrder );
+     
+  } // end BeforeEachResolution
 
 
 } // end namespace elastix

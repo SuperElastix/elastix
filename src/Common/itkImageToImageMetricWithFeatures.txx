@@ -22,8 +22,8 @@ namespace itk
 {
 
   /**
-	 * ********************* Constructor ****************************
-	 */
+   * ********************* Constructor ****************************
+   */
 
   template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
     ImageToImageMetricWithFeatures<TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
@@ -36,17 +36,17 @@ namespace itk
 
 
   /**
-	 * ********************* Initialize *****************************
-	 */
+   * ********************* Initialize *****************************
+   */
 
-	template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
-		void
+  template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
+    void
     ImageToImageMetricWithFeatures<TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
-		::Initialize(void) throw ( ExceptionObject )
-	{
-		/** Call the superclass. */
-		this->Superclass::Initialize();
-		
+    ::Initialize(void) throw ( ExceptionObject )
+  {
+    /** Call the superclass. */
+    this->Superclass::Initialize();
+    
     /** Check the fixed stuff. */
     for ( unsigned int i = 0; i < m_NumberOfFixedFeatureImages; i++ )
     {
@@ -83,13 +83,13 @@ namespace itk
 
     /** Check if the moving feature image interpolators are B-spline interpolators. */
     this->CheckForBSplineFeatureInterpolators();
-				
-	} // end Initialize()
+        
+  } // end Initialize()
 
 
   /**
-	 * ********************* SetNumberOfFixedFeatureImages ****************************
-	 */
+   * ********************* SetNumberOfFixedFeatureImages ****************************
+   */
 
   template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
     void
@@ -108,8 +108,8 @@ namespace itk
 
 
   /**
-	 * ********************* SetFixedFeatureImage ****************************
-	 */
+   * ********************* SetFixedFeatureImage ****************************
+   */
 
   template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
     void
@@ -136,8 +136,8 @@ namespace itk
 
 
   /**
-	 * ********************* GetFixedFeatureImage ****************************
-	 */
+   * ********************* GetFixedFeatureImage ****************************
+   */
 
   template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
     const typename ImageToImageMetricWithFeatures<TFixedImage,TMovingImage,
@@ -150,8 +150,8 @@ namespace itk
 
 
   /**
-	 * ********************* SetFixedFeatureInterpolator ****************************
-	 */
+   * ********************* SetFixedFeatureInterpolator ****************************
+   */
 
   template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
     void
@@ -178,8 +178,8 @@ namespace itk
 
 
   /**
-	 * ********************* GetFixedFeatureInterpolator ****************************
-	 */
+   * ********************* GetFixedFeatureInterpolator ****************************
+   */
 
   template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
     const typename ImageToImageMetricWithFeatures<TFixedImage,TMovingImage,
@@ -192,8 +192,8 @@ namespace itk
 
 
   /**
-	 * ********************* SetNumberOfMovingFeatureImages ****************************
-	 */
+   * ********************* SetNumberOfMovingFeatureImages ****************************
+   */
 
   template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
     void
@@ -212,8 +212,8 @@ namespace itk
 
 
   /**
-	 * ********************* SetMovingFeatureImage ****************************
-	 */
+   * ********************* SetMovingFeatureImage ****************************
+   */
 
   template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
     void
@@ -240,8 +240,8 @@ namespace itk
 
 
   /**
-	 * ********************* GetMovingFeatureImage ****************************
-	 */
+   * ********************* GetMovingFeatureImage ****************************
+   */
 
   template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
     const typename ImageToImageMetricWithFeatures<TFixedImage,TMovingImage,
@@ -254,8 +254,8 @@ namespace itk
 
 
   /**
-	 * ********************* SetMovingFeatureInterpolator ****************************
-	 */
+   * ********************* SetMovingFeatureInterpolator ****************************
+   */
 
   template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
     void
@@ -282,8 +282,8 @@ namespace itk
 
 
   /**
-	 * ********************* GetMovingFeatureInterpolator ****************************
-	 */
+   * ********************* GetMovingFeatureInterpolator ****************************
+   */
 
   template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
     const typename ImageToImageMetricWithFeatures<TFixedImage,TMovingImage,
@@ -297,17 +297,17 @@ namespace itk
 
   /**
    * ****************** CheckForBSplineFeatureInterpolators **********************
-	 */
+   */
 
   template <class TFixedImage, class TMovingImage,
     class TFixedFeatureImage, class TMovingFeatureImage>
-	void
+  void
   ImageToImageMetricWithFeatures<TFixedImage,TMovingImage,TFixedFeatureImage,TMovingFeatureImage>
-		::CheckForBSplineFeatureInterpolators( void )
+    ::CheckForBSplineFeatureInterpolators( void )
   {
     /** Check if the interpolators are of type BSplineInterpolateImageFunction.
-		 * If so, we can make use of its EvaluateDerivatives method.
-		 * Otherwise, an exception is thrown.
+     * If so, we can make use of its EvaluateDerivatives method.
+     * Otherwise, an exception is thrown.
      */
     this->m_FeatureInterpolatorsIsBSpline.resize( this->m_NumberOfMovingFeatureImages, false );
     this->m_FeatureInterpolatorsAreBSpline = true;
@@ -336,8 +336,8 @@ namespace itk
 
 
   /**
-	 * ********************* PrintSelf ****************************
-	 */
+   * ********************* PrintSelf ****************************
+   */
 
   template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
     void

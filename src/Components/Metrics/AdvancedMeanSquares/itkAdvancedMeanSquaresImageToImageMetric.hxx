@@ -21,14 +21,14 @@
 namespace itk
 {
 
-	/**
-	* ******************* Constructor *******************
-	*/
+  /**
+  * ******************* Constructor *******************
+  */
 
-	template <class TFixedImage, class TMovingImage> 
-		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-		::AdvancedMeanSquaresImageToImageMetric()
-	{
+  template <class TFixedImage, class TMovingImage> 
+    AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+    ::AdvancedMeanSquaresImageToImageMetric()
+  {
     this->SetUseImageSampler( true );
     this->SetUseFixedImageLimiter( false );
     this->SetUseMovingImageLimiter( false );
@@ -39,12 +39,12 @@ namespace itk
     this->m_SelfHessianSmoothingSigma = 1.0;
     this->m_NumberOfSamplesForSelfHessian = 100000;
 
-	} // end constructor
+  } // end constructor
 
 
   /**
-	 * ********************* Initialize ****************************
-	 */
+   * ********************* Initialize ****************************
+   */
 
   template <class TFixedImage, class TMovingImage>
     void
@@ -84,32 +84,32 @@ namespace itk
   } // end Initialize
 
 
-	/**
-	 * ******************* PrintSelf *******************
-	 */
+  /**
+   * ******************* PrintSelf *******************
+   */
 
-	template < class TFixedImage, class TMovingImage> 
-		void
-		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-		::PrintSelf(std::ostream& os, Indent indent) const
-	{
-		Superclass::PrintSelf( os, indent );
+  template < class TFixedImage, class TMovingImage> 
+    void
+    AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+    ::PrintSelf(std::ostream& os, Indent indent) const
+  {
+    Superclass::PrintSelf( os, indent );
 
-	} // end PrintSelf
+  } // end PrintSelf
 
 
   /**
-	 * *************** EvaluateTransformJacobianInnerProduct ****************
-	 */
+   * *************** EvaluateTransformJacobianInnerProduct ****************
+   */
 
-	template < class TFixedImage, class TMovingImage >
-		void
-		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-		::EvaluateTransformJacobianInnerProduct( 
-		const TransformJacobianType & jacobian, 
-		const MovingImageDerivativeType & movingImageDerivative,
+  template < class TFixedImage, class TMovingImage >
+    void
+    AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+    ::EvaluateTransformJacobianInnerProduct( 
+    const TransformJacobianType & jacobian, 
+    const MovingImageDerivativeType & movingImageDerivative,
     DerivativeType & imageJacobian ) const
-	{
+  {
     typedef typename TransformJacobianType::const_iterator JacobianIteratorType;
     typedef typename DerivativeType::iterator              DerivativeIteratorType;
     JacobianIteratorType jac = jacobian.begin();
@@ -127,28 +127,28 @@ namespace itk
         ++jac;
       }
     }
-	} // end EvaluateTransformJacobianInnerProduct
+  } // end EvaluateTransformJacobianInnerProduct
 
 
-	/**
-	 * ******************* GetValue *******************
-	 */
+  /**
+   * ******************* GetValue *******************
+   */
 
-	template <class TFixedImage, class TMovingImage> 
-		typename AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>::MeasureType
-		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-		::GetValue( const TransformParametersType & parameters ) const
-	{
-		itkDebugMacro( "GetValue( " << parameters << " ) " );
-		
+  template <class TFixedImage, class TMovingImage> 
+    typename AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>::MeasureType
+    AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+    ::GetValue( const TransformParametersType & parameters ) const
+  {
+    itkDebugMacro( "GetValue( " << parameters << " ) " );
+    
     /** Initialize some variables */
-		this->m_NumberOfPixelsCounted = 0;
+    this->m_NumberOfPixelsCounted = 0;
     MeasureType measure = NumericTraits< MeasureType >::Zero;
 
     /** Make sure the transform parameters are up to date. */
-		this->SetTransformParameters( parameters );
+    this->SetTransformParameters( parameters );
 
-		/** Update the imageSampler and get a handle to the sample container. */
+    /** Update the imageSampler and get a handle to the sample container. */
     this->GetImageSampler()->Update();
     ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
@@ -157,10 +157,10 @@ namespace itk
     typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
     typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
 
-		/** Loop over the fixed image samples to calculate the mean squares. */
+    /** Loop over the fixed image samples to calculate the mean squares. */
     for ( fiter = fbegin; fiter != fend; ++fiter )
-		{
-	    /** Read fixed coordinates and initialize some variables. */
+    {
+      /** Read fixed coordinates and initialize some variables. */
       const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
       RealType movingImageValue; 
       MovingImagePointType mappedPoint;
@@ -189,59 +189,59 @@ namespace itk
         /** Get the fixed image value. */
         const RealType & fixedImageValue = static_cast<double>( (*fiter).Value().m_ImageValue );
 
-				/** The difference squared. */
-				const RealType diff = movingImageValue - fixedImageValue; 
-				measure += diff * diff;
+        /** The difference squared. */
+        const RealType diff = movingImageValue - fixedImageValue; 
+        measure += diff * diff;
         
-			} // end if sampleOk
+      } // end if sampleOk
 
-		} // end for loop over the image sample container
+    } // end for loop over the image sample container
 
     /** Check if enough samples were valid. */
     this->CheckNumberOfSamples(
       sampleContainer->Size(), this->m_NumberOfPixelsCounted );
     
     /** Update measure value. */
-	  measure *= this->m_NormalizationFactor / 
+    measure *= this->m_NormalizationFactor / 
       static_cast<double>( this->m_NumberOfPixelsCounted );
 
-		/** Return the mean squares measure value. */
-		return measure;
+    /** Return the mean squares measure value. */
+    return measure;
 
-	} // end GetValue
-	
+  } // end GetValue
+  
 
-	/**
-	 * ******************* GetDerivative *******************
-	 */
+  /**
+   * ******************* GetDerivative *******************
+   */
 
-	template < class TFixedImage, class TMovingImage> 
-		void
-		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-		::GetDerivative( const TransformParametersType & parameters,
-		DerivativeType & derivative ) const
-	{
-		/** When the derivative is calculated, all information for calculating
-		 * the metric value is available. It does not cost anything to calculate
-		 * the metric value now. Therefore, we have chosen to only implement the
-		 * GetValueAndDerivative(), supplying it with a dummy value variable. */
-		MeasureType dummyvalue = NumericTraits< MeasureType >::Zero;
-		this->GetValueAndDerivative( parameters, dummyvalue, derivative );
+  template < class TFixedImage, class TMovingImage> 
+    void
+    AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+    ::GetDerivative( const TransformParametersType & parameters,
+    DerivativeType & derivative ) const
+  {
+    /** When the derivative is calculated, all information for calculating
+     * the metric value is available. It does not cost anything to calculate
+     * the metric value now. Therefore, we have chosen to only implement the
+     * GetValueAndDerivative(), supplying it with a dummy value variable. */
+    MeasureType dummyvalue = NumericTraits< MeasureType >::Zero;
+    this->GetValueAndDerivative( parameters, dummyvalue, derivative );
 
-	} // end GetDerivative
+  } // end GetDerivative
 
 
-	/**
-	 * ******************* GetValueAndDerivative *******************
-	 */
+  /**
+   * ******************* GetValueAndDerivative *******************
+   */
 
-	template <class TFixedImage, class TMovingImage>
-		void
-		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-		::GetValueAndDerivative( const TransformParametersType & parameters, 
-		MeasureType & value, DerivativeType & derivative ) const
-	{
-		itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
+  template <class TFixedImage, class TMovingImage>
+    void
+    AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+    ::GetValueAndDerivative( const TransformParametersType & parameters, 
+    MeasureType & value, DerivativeType & derivative ) const
+  {
+    itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 
     typedef typename DerivativeType::ValueType        DerivativeValueType;
     typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
@@ -250,14 +250,14 @@ namespace itk
     this->m_NumberOfPixelsCounted = 0;
     MeasureType measure = NumericTraits< MeasureType >::Zero;
     derivative = DerivativeType( this->m_NumberOfParameters );
-		derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+    derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
 
     /** Arrays that store dM(x)/dmu. */
     DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.GetSize() );
  
-		/** Make sure the transform parameters are up to date. */
-		this->SetTransformParameters( parameters );
-				
+    /** Make sure the transform parameters are up to date. */
+    this->SetTransformParameters( parameters );
+        
     /** Update the imageSampler and get a handle to the sample container. */
     this->GetImageSampler()->Update();
     ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
@@ -266,10 +266,10 @@ namespace itk
     typename ImageSampleContainerType::ConstIterator fiter;
     typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
     typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
-		
-		/** Loop over the fixed image to calculate the mean squares. */
-		for ( fiter = fbegin; fiter != fend; ++fiter )
-		{
+    
+    /** Loop over the fixed image to calculate the mean squares. */
+    for ( fiter = fbegin; fiter != fend; ++fiter )
+    {
       /** Read fixed coordinates and initialize some variables. */
       const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
       RealType movingImageValue; 
@@ -314,9 +314,9 @@ namespace itk
           imageJacobian,
           measure, derivative );
 
-			} // end if sampleOk
+      } // end if sampleOk
 
-		} // end for loop over the image sample container
+    } // end for loop over the image sample container
 
     /** Check if enough samples were valid. */
     this->CheckNumberOfSamples(
@@ -328,20 +328,20 @@ namespace itk
     measure *= normal_sum;
     derivative *= normal_sum;
    
-		/** The return value. */
-		value = measure;
+    /** The return value. */
+    value = measure;
 
-	} // end GetValueAndDerivative
+  } // end GetValueAndDerivative
 
 
   /**
-	 * *************** UpdateValueAndDerivativeTerms ***************************
-	 */
+   * *************** UpdateValueAndDerivativeTerms ***************************
+   */
 
-	template < class TFixedImage, class TMovingImage >
-		void
-		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-		::UpdateValueAndDerivativeTerms( 
+  template < class TFixedImage, class TMovingImage >
+    void
+    AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+    ::UpdateValueAndDerivativeTerms( 
     const RealType fixedImageValue,
     const RealType movingImageValue,
     const DerivativeType & imageJacobian,
@@ -351,14 +351,14 @@ namespace itk
     typedef typename DerivativeType::ValueType        DerivativeValueType;
 
     /** The difference squared. */
-		const RealType diff = movingImageValue - fixedImageValue; 
+    const RealType diff = movingImageValue - fixedImageValue; 
     const RealType diffdiff = diff * diff;
-		measure += diffdiff;
-        	  
-		/** Calculate the contributions to the derivatives with respect to each parameter. */
+    measure += diffdiff;
+            
+    /** Calculate the contributions to the derivatives with respect to each parameter. */
     const RealType diff_2 = diff * 2.0;
     if ( this->m_NonZeroJacobianIndices.GetSize() == this->m_NumberOfParameters )
-		{
+    {
       /** Loop over all jacobians. */
       typename DerivativeType::const_iterator imjacit = imageJacobian.begin();
       typename DerivativeType::iterator derivit = deriv.begin();
@@ -382,15 +382,15 @@ namespace itk
 
 
   /**
-	 * ******************* GetSelfHessian *******************
-	 */
+   * ******************* GetSelfHessian *******************
+   */
 
-	template <class TFixedImage, class TMovingImage>
-		void
-		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-		::GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const
-	{
-		itkDebugMacro("GetSelfHessian()");
+  template <class TFixedImage, class TMovingImage>
+    void
+    AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+    ::GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const
+  {
+    itkDebugMacro("GetSelfHessian()");
 
     typedef typename DerivativeType::ValueType        DerivativeValueType;
     typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
@@ -401,8 +401,8 @@ namespace itk
     /** Arrays that store dM(x)/dmu. */
     DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.GetSize() );
  
-		/** Make sure the transform parameters are up to date. */
-		this->SetTransformParameters( parameters );
+    /** Make sure the transform parameters are up to date. */
+    this->SetTransformParameters( parameters );
     
     /** Prepare Hessian */
     H.SetSize( this->m_NumberOfParameters, this->m_NumberOfParameters );
@@ -436,7 +436,7 @@ namespace itk
     sampler->SetInput( smoother->GetInput() );
     sampler->SetNumberOfSamples( this->m_NumberOfSamplesForSelfHessian );
     sampler->SetInterpolator( dummyInterpolator );
-				
+        
     /** Update the imageSampler and get a handle to the sample container. */
     sampler->Update();
     ImageSampleContainerPointer sampleContainer = sampler->GetOutput();
@@ -445,10 +445,10 @@ namespace itk
     typename ImageSampleContainerType::ConstIterator fiter;
     typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
     typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
-		
-		/** Loop over the fixed image to calculate the mean squares. */
-		for ( fiter = fbegin; fiter != fend; ++fiter )
-		{
+    
+    /** Loop over the fixed image to calculate the mean squares. */
+    for ( fiter = fbegin; fiter != fend; ++fiter )
+    {
       /** Read fixed coordinates and initialize some variables. */
       const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
       MovingImagePointType mappedPoint;
@@ -489,9 +489,9 @@ namespace itk
         /** Compute this pixel's contribution to the SelfHessian. */
         this->UpdateSelfHessianTerms( imageJacobian, H );
 
-			} // end if sampleOk
+      } // end if sampleOk
 
-		} // end for loop over the image sample container
+    } // end for loop over the image sample container
 
     /** Check if enough samples were valid. */
     this->CheckNumberOfSamples(
@@ -502,23 +502,23 @@ namespace itk
       static_cast<double>( this->m_NumberOfPixelsCounted );
     H *= normal_sum;
     
-	} // end GetSelfHessian
+  } // end GetSelfHessian
 
 
     /**
-	 * *************** UpdateSelfHessianTerms ***************************
-	 */
+   * *************** UpdateSelfHessianTerms ***************************
+   */
 
-	template < class TFixedImage, class TMovingImage >
-		void
-		AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-		::UpdateSelfHessianTerms( 
+  template < class TFixedImage, class TMovingImage >
+    void
+    AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
+    ::UpdateSelfHessianTerms( 
     const DerivativeType & imageJacobian,
     HessianType & H ) const
   {
     /** Do rank-1 update of H */
     if ( this->m_NonZeroJacobianIndices.GetSize() == this->m_NumberOfParameters )
-		{
+    {
       /** Loop over all jacobians. */
       vnl_matrix_update( H, imageJacobian, imageJacobian );
     }

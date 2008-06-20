@@ -25,17 +25,17 @@ namespace elastix
 using namespace itk;
 
 
-	/**
-	 * ********************* Constructor ****************************
-	 */
-	
-	template <class TElastix>
-		BSplineTransform<TElastix>::
-		BSplineTransform()
-	{
+  /**
+   * ********************* Constructor ****************************
+   */
+  
+  template <class TElastix>
+    BSplineTransform<TElastix>::
+    BSplineTransform()
+  {
     /** Initialize. */
-		this->m_BSplineTransform = BSplineTransformType::New();
-		this->SetCurrentTransform( this->m_BSplineTransform );
+    this->m_BSplineTransform = BSplineTransformType::New();
+    this->SetCurrentTransform( this->m_BSplineTransform );
 
     this->m_GridScheduleComputer = GridScheduleComputerType::New();
     this->m_GridScheduleComputer->SetBSplineOrder( SplineOrder );
@@ -43,104 +43,104 @@ using namespace itk;
     this->m_GridUpsampler = GridUpsamplerType::New();
     this->m_GridUpsampler->SetBSplineOrder( SplineOrder );
 
-	} // end Constructor()
-	
+  } // end Constructor()
+  
 
-	/**
-	 * ******************* BeforeRegistration ***********************
-	 */
+  /**
+   * ******************* BeforeRegistration ***********************
+   */
 
-	template <class TElastix>
-		void BSplineTransform<TElastix>
-		::BeforeRegistration( void )
-	{
-		/** Set initial transform parameters to a 1x1x1 grid, with deformation (0,0,0).
-		 * In the method BeforeEachResolution() this will be replaced by the right grid size.
-		 * This seems not logical, but it is required, since the registration
-		 * class checks if the number of parameters in the transform is equal to
-		 * the number of parameters in the registration class. This check is done
-		 * before calling the BeforeEachResolution() methods.
-		 */
-		
-		/** Task 1 - Set the Grid. */
-
-		/** Declarations. */
-		RegionType gridregion;
-		SizeType gridsize;
-		IndexType gridindex;
-		SpacingType gridspacing;
-		OriginType gridorigin;
-		
-		/** Fill everything with default values. */
-		gridsize.Fill(1);
-		gridindex.Fill(0);
-		gridspacing.Fill(1.0);
-		gridorigin.Fill(0.0);
-		
-		/** Set it all. */
-		gridregion.SetIndex( gridindex );
-		gridregion.SetSize( gridsize );
-		this->m_BSplineTransform->SetGridRegion( gridregion );
-		this->m_BSplineTransform->SetGridSpacing( gridspacing );
-		this->m_BSplineTransform->SetGridOrigin( gridorigin );
+  template <class TElastix>
+    void BSplineTransform<TElastix>
+    ::BeforeRegistration( void )
+  {
+    /** Set initial transform parameters to a 1x1x1 grid, with deformation (0,0,0).
+     * In the method BeforeEachResolution() this will be replaced by the right grid size.
+     * This seems not logical, but it is required, since the registration
+     * class checks if the number of parameters in the transform is equal to
+     * the number of parameters in the registration class. This check is done
+     * before calling the BeforeEachResolution() methods.
+     */
     
-		/** Task 2 - Give the registration an initial parameter-array. */
-		ParametersType dummyInitialParameters( this->GetNumberOfParameters() );
-		dummyInitialParameters.Fill( 0.0 );
-		
-		/** Put parameters in the registration. */
-		this->m_Registration->GetAsITKBaseType()
-			->SetInitialTransformParameters( dummyInitialParameters );
+    /** Task 1 - Set the Grid. */
+
+    /** Declarations. */
+    RegionType gridregion;
+    SizeType gridsize;
+    IndexType gridindex;
+    SpacingType gridspacing;
+    OriginType gridorigin;
+    
+    /** Fill everything with default values. */
+    gridsize.Fill(1);
+    gridindex.Fill(0);
+    gridspacing.Fill(1.0);
+    gridorigin.Fill(0.0);
+    
+    /** Set it all. */
+    gridregion.SetIndex( gridindex );
+    gridregion.SetSize( gridsize );
+    this->m_BSplineTransform->SetGridRegion( gridregion );
+    this->m_BSplineTransform->SetGridSpacing( gridspacing );
+    this->m_BSplineTransform->SetGridOrigin( gridorigin );
+    
+    /** Task 2 - Give the registration an initial parameter-array. */
+    ParametersType dummyInitialParameters( this->GetNumberOfParameters() );
+    dummyInitialParameters.Fill( 0.0 );
+    
+    /** Put parameters in the registration. */
+    this->m_Registration->GetAsITKBaseType()
+      ->SetInitialTransformParameters( dummyInitialParameters );
 
     /** Precompute the B-spline grid regions. */
     this->PreComputeGridInformation();
     
-	} // end BeforeRegistration()
-	
+  } // end BeforeRegistration()
+  
 
-	/**
-	 * ***************** BeforeEachResolution ***********************
-	 */
+  /**
+   * ***************** BeforeEachResolution ***********************
+   */
 
-	template <class TElastix>
-		void BSplineTransform<TElastix>
-		::BeforeEachResolution( void )
-	{
-		/** What is the current resolution level? */
-		unsigned int level = 
-			this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
+  template <class TElastix>
+    void BSplineTransform<TElastix>
+    ::BeforeEachResolution( void )
+  {
+    /** What is the current resolution level? */
+    unsigned int level = 
+      this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
-		/** Define the grid. */
-		if ( level == 0 )
-		{
-			this->InitializeTransform();
-		}	
-		else
-		{
-			/** Upsample the B-spline grid, if required. */
-			this->IncreaseScale();
-		}
+    /** Define the grid. */
+    if ( level == 0 )
+    {
+      this->InitializeTransform();
+    }	
+    else
+    {
+      /** Upsample the B-spline grid, if required. */
+      this->IncreaseScale();
+    }
 
     /** Get the PassiveEdgeWidth and use it to set the OptimizerScales. */
     unsigned int passiveEdgeWidth = 0;
     this->GetConfiguration()->ReadParameter( passiveEdgeWidth,
       "PassiveEdgeWidth", this->GetComponentLabel(), level, 0 );
-		this->SetOptimizerScales( passiveEdgeWidth );
-	
-	} // end BeforeEachResolution()
-	
+    this->SetOptimizerScales( passiveEdgeWidth );
+  
+  } // end BeforeEachResolution()
+  
 
   /**
-	 * ******************** PreComputeGridInformation ***********************
-	 */
+   * ******************** PreComputeGridInformation ***********************
+   */
 
-	template <class TElastix>
-		void BSplineTransform<TElastix>::
-		PreComputeGridInformation( void )
-	{
+  template <class TElastix>
+    void BSplineTransform<TElastix>::
+    PreComputeGridInformation( void )
+  {
     /** Get the total number of resolution levels. */
     unsigned int nrOfResolutions = 
-			this->m_Registration->GetAsITKBaseType()->GetNumberOfLevels();
+      this->m_Registration->GetAsITKBaseType()->GetNumberOfLevels();
 
     /** Set up grid schedule computer with image info */
     this->m_GridScheduleComputer->SetImageOrigin(
@@ -152,7 +152,7 @@ using namespace itk;
 
     /** Take the initial transform only into account, if composition is used. */
     if ( this->GetUseComposition() )
-		{
+    {
       this->m_GridScheduleComputer->SetInitialTransform( this->Superclass1::GetInitialTransform() );
     }
 
@@ -203,12 +203,12 @@ using namespace itk;
     {
       /** Method 2:
        * Read the FinalGridSpacingInPhysicalUnits */
-		  for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
-  		{
+      for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+      {
         this->m_Configuration->ReadParameter(
           finalGridSpacingInPhysicalUnits[ dim ], "FinalGridSpacingInPhysicalUnits",
           this->GetComponentLabel(), dim , 0, false );
-		  }
+      }
     }
     else
     {
@@ -247,7 +247,7 @@ using namespace itk;
 
       /** Compute grid spacing in physical units */
       for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
-  		{
+      {
         finalGridSpacingInPhysicalUnits[ dim ] = 
           finalGridSpacingInVoxels[ dim ] *
           this->GetElastix()->GetFixedImage()->GetSpacing()[ dim ];
@@ -313,71 +313,71 @@ using namespace itk;
 
     /** Compute the necessary information. */
     this->m_GridScheduleComputer->ComputeBSplineGrid();
-    		
+        
   } // end PreComputeGridInformation()
 
-	
-	/**
-	 * ******************** InitializeTransform ***********************
-	 *
-	 * Set the size of the initial control point grid and initialize
-	 * the parameters to 0.
-	 */
+  
+  /**
+   * ******************** InitializeTransform ***********************
+   *
+   * Set the size of the initial control point grid and initialize
+   * the parameters to 0.
+   */
 
-	template <class TElastix>
-		void BSplineTransform<TElastix>::
-		InitializeTransform( void )
-	{
-		/** Compute the B-spline grid region, origin, and spacing. */
-		RegionType gridRegion;
-		OriginType gridOrigin;
-		SpacingType gridSpacing;
+  template <class TElastix>
+    void BSplineTransform<TElastix>::
+    InitializeTransform( void )
+  {
+    /** Compute the B-spline grid region, origin, and spacing. */
+    RegionType gridRegion;
+    OriginType gridOrigin;
+    SpacingType gridSpacing;
     this->m_GridScheduleComputer->GetBSplineGrid( 0,
       gridRegion, gridSpacing, gridOrigin );
 
-		/** Set it in the BSplineTransform. */
-		this->m_BSplineTransform->SetGridRegion( gridRegion );
-		this->m_BSplineTransform->SetGridSpacing( gridSpacing );
-		this->m_BSplineTransform->SetGridOrigin( gridOrigin );
+    /** Set it in the BSplineTransform. */
+    this->m_BSplineTransform->SetGridRegion( gridRegion );
+    this->m_BSplineTransform->SetGridSpacing( gridSpacing );
+    this->m_BSplineTransform->SetGridOrigin( gridOrigin );
 
-		/** Set initial parameters for the first resolution to 0.0. */
-		ParametersType initialParameters( this->GetNumberOfParameters() );
-		initialParameters.Fill( 0.0 );
-		this->m_Registration->GetAsITKBaseType()->
-			SetInitialTransformParametersOfNextLevel( initialParameters );
-		
-	} // end InitializeTransform()
-	
-	
-	/**
-	 * *********************** IncreaseScale ************************
-	 *
-	 * Upsample the grid of control points.
-	 */
+    /** Set initial parameters for the first resolution to 0.0. */
+    ParametersType initialParameters( this->GetNumberOfParameters() );
+    initialParameters.Fill( 0.0 );
+    this->m_Registration->GetAsITKBaseType()->
+      SetInitialTransformParametersOfNextLevel( initialParameters );
+    
+  } // end InitializeTransform()
+  
+  
+  /**
+   * *********************** IncreaseScale ************************
+   *
+   * Upsample the grid of control points.
+   */
 
-	template <class TElastix>
-		void BSplineTransform<TElastix>::
-		IncreaseScale( void )
-	{
+  template <class TElastix>
+    void BSplineTransform<TElastix>::
+    IncreaseScale( void )
+  {
     /** What is the current resolution level? */
-		unsigned int level = 
-			this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
+    unsigned int level = 
+      this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
-		/** The current grid. */
+    /** The current grid. */
     OriginType  currentGridOrigin  = this->m_BSplineTransform->GetGridOrigin();
-		SpacingType currentGridSpacing = this->m_BSplineTransform->GetGridSpacing();
+    SpacingType currentGridSpacing = this->m_BSplineTransform->GetGridSpacing();
     RegionType  currentGridRegion  = this->m_BSplineTransform->GetGridRegion();
 
-		/** The new required grid. */
+    /** The new required grid. */
     OriginType  requiredGridOrigin;
-		SpacingType requiredGridSpacing;
+    SpacingType requiredGridSpacing;
     RegionType  requiredGridRegion;
     this->m_GridScheduleComputer->GetBSplineGrid( level,
       requiredGridRegion, requiredGridSpacing, requiredGridOrigin );
 
-		/** Get the latest transform parameters. */
-		ParametersType latestParameters =
-			this->m_Registration->GetAsITKBaseType()->GetLastTransformParameters();
+    /** Get the latest transform parameters. */
+    ParametersType latestParameters =
+      this->m_Registration->GetAsITKBaseType()->GetLastTransformParameters();
 
     /** Setup the GridUpsampler. */
     this->m_GridUpsampler->SetCurrentGridOrigin( currentGridOrigin );
@@ -388,155 +388,155 @@ using namespace itk;
     this->m_GridUpsampler->SetRequiredGridRegion( requiredGridRegion );
 
     /** Compute the upsampled B-spline parameters. */
-		ParametersType upsampledParameters;
+    ParametersType upsampledParameters;
     this->m_GridUpsampler->UpsampleParameters( latestParameters, upsampledParameters );
-		
-		/** Set the new grid definition in the BSplineTransform. */
+    
+    /** Set the new grid definition in the BSplineTransform. */
     this->m_BSplineTransform->SetGridOrigin( requiredGridOrigin );
-		this->m_BSplineTransform->SetGridSpacing( requiredGridSpacing );
+    this->m_BSplineTransform->SetGridSpacing( requiredGridSpacing );
     this->m_BSplineTransform->SetGridRegion( requiredGridRegion );
 
     /** Set the initial parameters for the next level. */
-		this->m_Registration->GetAsITKBaseType()->
-			SetInitialTransformParametersOfNextLevel( upsampledParameters );
+    this->m_Registration->GetAsITKBaseType()->
+      SetInitialTransformParametersOfNextLevel( upsampledParameters );
 
     /** Set the parameters in the BsplineTransform. */
     this->m_BSplineTransform->SetParameters(
       this->m_Registration->GetAsITKBaseType()->
       GetInitialTransformParametersOfNextLevel() );
-	
-	}  // end IncreaseScale()
-	
+  
+  }  // end IncreaseScale()
+  
 
-	/**
-	 * ************************* ReadFromFile ************************
-	 */
+  /**
+   * ************************* ReadFromFile ************************
+   */
 
-	template <class TElastix>
-	void BSplineTransform<TElastix>::
-		ReadFromFile( void )
-	{
-		/** Read and Set the Grid: this is a BSplineTransform specific task. */
+  template <class TElastix>
+  void BSplineTransform<TElastix>::
+    ReadFromFile( void )
+  {
+    /** Read and Set the Grid: this is a BSplineTransform specific task. */
 
-		/** Declarations. */
-		RegionType	gridregion;
-		SizeType		gridsize;
-		IndexType		gridindex;
-		SpacingType	gridspacing;
-		OriginType	gridorigin;
-		
-		/** Fill everything with default values. */
-		gridsize.Fill( 1 );
-		gridindex.Fill( 0 );
-		gridspacing.Fill( 1.0 );
-		gridorigin.Fill( 0.0 );
+    /** Declarations. */
+    RegionType	gridregion;
+    SizeType		gridsize;
+    IndexType		gridindex;
+    SpacingType	gridspacing;
+    OriginType	gridorigin;
+    
+    /** Fill everything with default values. */
+    gridsize.Fill( 1 );
+    gridindex.Fill( 0 );
+    gridspacing.Fill( 1.0 );
+    gridorigin.Fill( 0.0 );
 
-		/** Get GridSize, GridIndex, GridSpacing and GridOrigin. */
-		for ( unsigned int i = 0; i < SpaceDimension; i++ )
-		{
-			this->m_Configuration->ReadParameter( gridsize[ i ], "GridSize", i );
-			this->m_Configuration->ReadParameter( gridindex[ i ], "GridIndex", i );
-			this->m_Configuration->ReadParameter( gridspacing[ i ], "GridSpacing", i );
-			this->m_Configuration->ReadParameter( gridorigin[ i ], "GridOrigin", i );
-		}
-		
-		/** Set it all. */
-		gridregion.SetIndex( gridindex );
-		gridregion.SetSize( gridsize );
-		this->m_BSplineTransform->SetGridRegion( gridregion );
-		this->m_BSplineTransform->SetGridSpacing( gridspacing );
-		this->m_BSplineTransform->SetGridOrigin( gridorigin );
+    /** Get GridSize, GridIndex, GridSpacing and GridOrigin. */
+    for ( unsigned int i = 0; i < SpaceDimension; i++ )
+    {
+      this->m_Configuration->ReadParameter( gridsize[ i ], "GridSize", i );
+      this->m_Configuration->ReadParameter( gridindex[ i ], "GridIndex", i );
+      this->m_Configuration->ReadParameter( gridspacing[ i ], "GridSpacing", i );
+      this->m_Configuration->ReadParameter( gridorigin[ i ], "GridOrigin", i );
+    }
+    
+    /** Set it all. */
+    gridregion.SetIndex( gridindex );
+    gridregion.SetSize( gridsize );
+    this->m_BSplineTransform->SetGridRegion( gridregion );
+    this->m_BSplineTransform->SetGridSpacing( gridspacing );
+    this->m_BSplineTransform->SetGridOrigin( gridorigin );
 
-		/** Call the ReadFromFile from the TransformBase.
-		 * This must be done after setting the Grid, because later the
-		 * ReadFromFile from TransformBase calls SetParameters, which
-		 * checks the parameter-size, which is based on the GridSize.
-		 */
-		this->Superclass2::ReadFromFile();
+    /** Call the ReadFromFile from the TransformBase.
+     * This must be done after setting the Grid, because later the
+     * ReadFromFile from TransformBase calls SetParameters, which
+     * checks the parameter-size, which is based on the GridSize.
+     */
+    this->Superclass2::ReadFromFile();
 
-	} // end ReadFromFile()
+  } // end ReadFromFile()
 
 
-	/**
-	 * ************************* WriteToFile ************************
-	 *
-	 * Saves the TransformParameters as a vector and if wanted
-	 * also as a deformation field.
-	 */
+  /**
+   * ************************* WriteToFile ************************
+   *
+   * Saves the TransformParameters as a vector and if wanted
+   * also as a deformation field.
+   */
 
-	template <class TElastix>
-		void BSplineTransform<TElastix>::
-		WriteToFile( const ParametersType & param )
-	{
-		/** Call the WriteToFile from the TransformBase. */
-		this->Superclass2::WriteToFile( param );
+  template <class TElastix>
+    void BSplineTransform<TElastix>::
+    WriteToFile( const ParametersType & param )
+  {
+    /** Call the WriteToFile from the TransformBase. */
+    this->Superclass2::WriteToFile( param );
 
-		/** Add some BSplineTransform specific lines. */
-		xout["transpar"] << std::endl << "// BSplineTransform specific" << std::endl;
+    /** Add some BSplineTransform specific lines. */
+    xout["transpar"] << std::endl << "// BSplineTransform specific" << std::endl;
 
-		/** Get the GridSize, GridIndex, GridSpacing and
-		 * GridOrigin of this transform.
-		 */
-		SizeType size = this->m_BSplineTransform->GetGridRegion().GetSize();
-		IndexType index = this->m_BSplineTransform->GetGridRegion().GetIndex();
-		SpacingType spacing = this->m_BSplineTransform->GetGridSpacing();
-		OriginType origin = this->m_BSplineTransform->GetGridOrigin();
+    /** Get the GridSize, GridIndex, GridSpacing and
+     * GridOrigin of this transform.
+     */
+    SizeType size = this->m_BSplineTransform->GetGridRegion().GetSize();
+    IndexType index = this->m_BSplineTransform->GetGridRegion().GetIndex();
+    SpacingType spacing = this->m_BSplineTransform->GetGridSpacing();
+    OriginType origin = this->m_BSplineTransform->GetGridOrigin();
 
-		/** Write the GridSize of this transform. */
-		xout["transpar"] << "(GridSize ";
-		for ( unsigned int i = 0; i < SpaceDimension - 1; i++ )
-		{
-			xout["transpar"] << size[ i ] << " ";
-		}
-		xout["transpar"] << size[ SpaceDimension - 1 ] << ")" << std::endl;
-		
-		/** Write the GridIndex of this transform. */
-		xout["transpar"] << "(GridIndex ";
-		for ( unsigned int i = 0; i < SpaceDimension - 1; i++ )
-		{
-			xout["transpar"] << index[ i ] << " ";
-		}
-		xout["transpar"] << index[ SpaceDimension - 1 ] << ")" << std::endl;
-		
-		/** Set the precision of cout to 2, because GridSpacing and
-		 * GridOrigin must have at least one digit precision.
-		 */
-		xout["transpar"] << std::setprecision(10);
+    /** Write the GridSize of this transform. */
+    xout["transpar"] << "(GridSize ";
+    for ( unsigned int i = 0; i < SpaceDimension - 1; i++ )
+    {
+      xout["transpar"] << size[ i ] << " ";
+    }
+    xout["transpar"] << size[ SpaceDimension - 1 ] << ")" << std::endl;
+    
+    /** Write the GridIndex of this transform. */
+    xout["transpar"] << "(GridIndex ";
+    for ( unsigned int i = 0; i < SpaceDimension - 1; i++ )
+    {
+      xout["transpar"] << index[ i ] << " ";
+    }
+    xout["transpar"] << index[ SpaceDimension - 1 ] << ")" << std::endl;
+    
+    /** Set the precision of cout to 2, because GridSpacing and
+     * GridOrigin must have at least one digit precision.
+     */
+    xout["transpar"] << std::setprecision(10);
 
-		/** Write the GridSpacing of this transform. */
-		xout["transpar"] << "(GridSpacing ";
-		for ( unsigned int i = 0; i < SpaceDimension - 1; i++ )
-		{
-			xout["transpar"] << spacing[ i ] << " ";
-		}
-		xout["transpar"] << spacing[ SpaceDimension - 1 ] << ")" << std::endl;
+    /** Write the GridSpacing of this transform. */
+    xout["transpar"] << "(GridSpacing ";
+    for ( unsigned int i = 0; i < SpaceDimension - 1; i++ )
+    {
+      xout["transpar"] << spacing[ i ] << " ";
+    }
+    xout["transpar"] << spacing[ SpaceDimension - 1 ] << ")" << std::endl;
 
-		/** Write the GridOrigin of this transform. */
-		xout["transpar"] << "(GridOrigin ";
-		for ( unsigned int i = 0; i < SpaceDimension - 1; i++ )
-		{
-			xout["transpar"] << origin[ i ] << " ";
-		}
-		xout["transpar"] << origin[ SpaceDimension - 1 ] << ")" << std::endl;
+    /** Write the GridOrigin of this transform. */
+    xout["transpar"] << "(GridOrigin ";
+    for ( unsigned int i = 0; i < SpaceDimension - 1; i++ )
+    {
+      xout["transpar"] << origin[ i ] << " ";
+    }
+    xout["transpar"] << origin[ SpaceDimension - 1 ] << ")" << std::endl;
 
-		/** Set the precision back to default value. */
-		xout["transpar"] << std::setprecision(
-			this->m_Elastix->GetDefaultOutputPrecision() );
+    /** Set the precision back to default value. */
+    xout["transpar"] << std::setprecision(
+      this->m_Elastix->GetDefaultOutputPrecision() );
 
-	} // end WriteToFile()
+  } // end WriteToFile()
 
-	
-	/**
-	 * ******************** ComputeGridSchedule_Deprecated *********************
-	 *
-	 * Computes schedule using UpsampleGridOption.
-	 */
+  
+  /**
+   * ******************** ComputeGridSchedule_Deprecated *********************
+   *
+   * Computes schedule using UpsampleGridOption.
+   */
 
-	template <class TElastix>
-		void
+  template <class TElastix>
+    void
     BSplineTransform<TElastix>
     ::ComputeGridSchedule_Deprecated( GridScheduleType & schedule )
-	{
+  {
     bool dummy = false;
     unsigned int count = this->m_Configuration->
       CountNumberOfParameterEntries( dummy, "UpsampleGridOption" );
@@ -545,37 +545,37 @@ using namespace itk;
       return;
     }
     
-		/** If multigrid, then start with a lower resolution grid.
-		 * First, we have to find out what the resolution is for the initial grid,
-		 * i.e. the grid in the first resolution. This depends on the number of times
-		 * the grid has to be upsampled. The user can specify this amount with the
-		 * option "UpsampleGridOption".
-		 * - In case the user specifies only one such option
-		 * it is assumed that between all resolutions upsampling is needed or not.
-		 * This is also in line with former API (backwards compatability):
-		 *    (UpsampleGridOption "true") or (UpsampleGridOption "false")
-		 * In this case the factor is multiplied with 2^(nrOfResolutions - 1).
-		 * - In the other case the user has to specify after each resolution
-		 * whether or not the grid should be upsampled, i.e. (nrOfResolutions - 1)
-		 * times. For 4 resolutions this is done as:
-		 *    (UpsampleGridOption "true" "false" "true")
-		 * In this case the factor is multiplied with 2^(# of true's).
-		 * - In case nothing is given in the parameter-file, by default the
-		 * option (UpsampleGridOption "true") is assumed.
-		 */
+    /** If multigrid, then start with a lower resolution grid.
+     * First, we have to find out what the resolution is for the initial grid,
+     * i.e. the grid in the first resolution. This depends on the number of times
+     * the grid has to be upsampled. The user can specify this amount with the
+     * option "UpsampleGridOption".
+     * - In case the user specifies only one such option
+     * it is assumed that between all resolutions upsampling is needed or not.
+     * This is also in line with former API (backwards compatability):
+     *    (UpsampleGridOption "true") or (UpsampleGridOption "false")
+     * In this case the factor is multiplied with 2^(nrOfResolutions - 1).
+     * - In the other case the user has to specify after each resolution
+     * whether or not the grid should be upsampled, i.e. (nrOfResolutions - 1)
+     * times. For 4 resolutions this is done as:
+     *    (UpsampleGridOption "true" "false" "true")
+     * In this case the factor is multiplied with 2^(# of true's).
+     * - In case nothing is given in the parameter-file, by default the
+     * option (UpsampleGridOption "true") is assumed.
+     */
 
-		/** Get the number of resolutions. */
-		int nrOfResolutions = static_cast<int>(
-			this->GetRegistration()->GetAsITKBaseType()->GetNumberOfLevels() );
+    /** Get the number of resolutions. */
+    int nrOfResolutions = static_cast<int>(
+      this->GetRegistration()->GetAsITKBaseType()->GetNumberOfLevels() );
     unsigned int size = vnl_math_max( 1, nrOfResolutions - 1 );
 
-		/** Fill upsampleBSplineGridOption. */
-		bool tmp = true;
+    /** Fill upsampleBSplineGridOption. */
+    bool tmp = true;
     int deprecatedused = 1;
-		this->GetConfiguration()->ReadParameter( tmp, "UpsampleGridOption", 0 );
-		std::vector< bool > upsampleGridOption( size, tmp );
-		for ( unsigned int i = 1; i < nrOfResolutions - 1; ++i )
-		{
+    this->GetConfiguration()->ReadParameter( tmp, "UpsampleGridOption", 0 );
+    std::vector< bool > upsampleGridOption( size, tmp );
+    for ( unsigned int i = 1; i < nrOfResolutions - 1; ++i )
+    {
       tmp = upsampleGridOption[ i ];
       deprecatedused &= this->m_Configuration->ReadParameter(
         tmp, "UpsampleGridOption", i );
@@ -605,22 +605,22 @@ using namespace itk;
       schedule[ res ].Fill( factor );
     }
 
-	} // end ComputeGridSchedule_Deprecated()
+  } // end ComputeGridSchedule_Deprecated()
 
 
   /**
-	 * *********************** SetOptimizerScales ***********************
-	 * Set the optimizer scales of the edge coefficients to infinity.
-	 */
+   * *********************** SetOptimizerScales ***********************
+   * Set the optimizer scales of the edge coefficients to infinity.
+   */
 
-	template <class TElastix>
-		void BSplineTransform<TElastix>::
-		SetOptimizerScales( unsigned int edgeWidth )
-	{
+  template <class TElastix>
+    void BSplineTransform<TElastix>::
+    SetOptimizerScales( unsigned int edgeWidth )
+  {
     typedef ImageRegionExclusionConstIteratorWithIndex<ImageType>		IteratorType;
     typedef typename RegistrationType::ITKBaseType					ITKRegistrationType;
-		typedef typename ITKRegistrationType::OptimizerType			OptimizerType;
-		typedef typename OptimizerType::ScalesType							ScalesType;
+    typedef typename ITKRegistrationType::OptimizerType			OptimizerType;
+    typedef typename OptimizerType::ScalesType							ScalesType;
     typedef typename ScalesType::ValueType                  ScalesValueType;
 
     /** Define new scales */
@@ -634,11 +634,11 @@ using namespace itk;
     if ( edgeWidth == 0 )
     { 
       /** Just set the unit scales into the optimizer. */
-		  this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newScales );
+      this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newScales );
       return;
     }
 
-		/** Get the grid region information and create a fake coefficient image. */
+    /** Get the grid region information and create a fake coefficient image. */
     RegionType gridregion = this->m_BSplineTransform->GetGridRegion();
     SizeType gridsize = gridregion.GetSize();
     IndexType gridindex = gridregion.GetIndex();
@@ -692,11 +692,11 @@ using namespace itk;
     }
 
     /** Set the scales into the optimizer. */
-		this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newScales );
+    this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newScales );
 
   } // end SetOptimizerScales()
 
-	
+  
 } // end namespace elastix
 
 

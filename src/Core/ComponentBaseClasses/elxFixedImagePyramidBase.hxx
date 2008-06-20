@@ -19,75 +19,75 @@
 
 namespace elastix
 {
-	using namespace itk;
+  using namespace itk;
 
 
-	/**
-	 * ******************* BeforeRegistrationBase *******************
-	 */
+  /**
+   * ******************* BeforeRegistrationBase *******************
+   */
 
-	template <class TElastix>
-		void FixedImagePyramidBase<TElastix>
-		::BeforeRegistrationBase(void)
-	{
-		/** Call SetFixedSchedule.*/
-		this->SetFixedSchedule();
-		
-	} // end BeforeRegistrationBase
+  template <class TElastix>
+    void FixedImagePyramidBase<TElastix>
+    ::BeforeRegistrationBase(void)
+  {
+    /** Call SetFixedSchedule.*/
+    this->SetFixedSchedule();
+    
+  } // end BeforeRegistrationBase
 
 
-	/**
-	 * ********************** SetFixedSchedule **********************
-	 */
+  /**
+   * ********************** SetFixedSchedule **********************
+   */
 
-	template <class TElastix>
-		void FixedImagePyramidBase<TElastix>
-		::SetFixedSchedule(void)
-	{
-		/** Get the ImageDimension. */
-		const unsigned int FixedImageDimension = InputImageType::ImageDimension;
-		
-		/** Read numberOfResolutions. */
-		unsigned int numberOfResolutions = 0;
-		this->m_Configuration->ReadParameter( numberOfResolutions, "NumberOfResolutions", 0, true );
-		if ( numberOfResolutions == 0 )
-		{
-			xl::xout["error"] << "ERROR: NumberOfResolutions not specified!" << std::endl;
-		}
-		/** \todo quit program? Actually this check should be in the ::BeforeAll() method. */
+  template <class TElastix>
+    void FixedImagePyramidBase<TElastix>
+    ::SetFixedSchedule(void)
+  {
+    /** Get the ImageDimension. */
+    const unsigned int FixedImageDimension = InputImageType::ImageDimension;
+    
+    /** Read numberOfResolutions. */
+    unsigned int numberOfResolutions = 0;
+    this->m_Configuration->ReadParameter( numberOfResolutions, "NumberOfResolutions", 0, true );
+    if ( numberOfResolutions == 0 )
+    {
+      xl::xout["error"] << "ERROR: NumberOfResolutions not specified!" << std::endl;
+    }
+    /** \todo quit program? Actually this check should be in the ::BeforeAll() method. */
 
-		/** Create a fixedSchedule. */
-		//ScheduleType fixedSchedule( numberOfResolutions, FixedImageDimension );
+    /** Create a fixedSchedule. */
+    //ScheduleType fixedSchedule( numberOfResolutions, FixedImageDimension );
     this->GetAsITKBaseType()->SetNumberOfLevels( numberOfResolutions );
     ScheduleType fixedSchedule = this->GetAsITKBaseType()->GetSchedule();
-		
-		/** Always set the numberOfLevels first. */
-		this->GetAsITKBaseType()->SetNumberOfLevels( numberOfResolutions );
+    
+    /** Always set the numberOfLevels first. */
+    this->GetAsITKBaseType()->SetNumberOfLevels( numberOfResolutions );
 
-		/** Set the fixedPyramidSchedule to the FixedImagePyramidSchedule given 
+    /** Set the fixedPyramidSchedule to the FixedImagePyramidSchedule given 
      * in the parameter-file.	The following parameter file fields can be used:
      * ImagePyramidSchedule
      * FixedImagePyramidSchedule
      * FixedImagePyramid<i>Schedule, for the i-th fixed image pyramid used. 
      */
     int ret = 0;
-		for ( unsigned int i = 0; i < numberOfResolutions; i++ )
-		{
-			for ( unsigned int j = 0; j < FixedImageDimension; j++ )
-			{
+    for ( unsigned int i = 0; i < numberOfResolutions; i++ )
+    {
+      for ( unsigned int j = 0; j < FixedImageDimension; j++ )
+      {
         int ijret = 1;
         const unsigned int entrynr = i * FixedImageDimension + j;
-				ijret &= this->m_Configuration->ReadParameter( fixedSchedule[ i ][ j ],
-					"ImagePyramidSchedule", entrynr, true );
         ijret &= this->m_Configuration->ReadParameter( fixedSchedule[ i ][ j ],
-					"FixedImagePyramidSchedule", entrynr, true );
+          "ImagePyramidSchedule", entrynr, true );
         ijret &= this->m_Configuration->ReadParameter( fixedSchedule[ i ][ j ],
-					"Schedule", this->GetComponentLabel(), entrynr, -1, true );
+          "FixedImagePyramidSchedule", entrynr, true );
+        ijret &= this->m_Configuration->ReadParameter( fixedSchedule[ i ][ j ],
+          "Schedule", this->GetComponentLabel(), entrynr, -1, true );
 
         /** Remember if for at least one schedule element no value could be found. */
         ret |= ijret;
       } // end for FixedImageDimension
-		} // end for numberOfResolutions
+    } // end for numberOfResolutions
     if ( ret && !this->GetConfiguration()->GetSilent() )
     {
       xl::xout["warning"] << "WARNING: the fixed pyramid schedule is not fully specified!" << std::endl;
@@ -96,10 +96,10 @@ namespace elastix
     else
     {
       /** Set the schedule into this class. */
-		  this->GetAsITKBaseType()->SetSchedule( fixedSchedule );
+      this->GetAsITKBaseType()->SetSchedule( fixedSchedule );
     }
-		
-	} // end SetFixedSchedule()
+    
+  } // end SetFixedSchedule()
 
 
 } // end namespace elastix

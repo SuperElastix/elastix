@@ -22,35 +22,35 @@ namespace elastix
 {
 using namespace itk;
 
-	/**
-	 * ******************* Initialize ***********************
-	 */
+  /**
+   * ******************* Initialize ***********************
+   */
 
-	template <class TElastix>
-		void AdvancedMeanSquaresMetric<TElastix>
-		::Initialize(void) throw (ExceptionObject)
-	{
-		TimerPointer timer = TimerType::New();
-		timer->StartTimer();
-		this->Superclass1::Initialize();
-		timer->StopTimer();
-		elxout << "Initialization of AdvancedMeanSquares metric took: "
-			<< static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
+  template <class TElastix>
+    void AdvancedMeanSquaresMetric<TElastix>
+    ::Initialize(void) throw (ExceptionObject)
+  {
+    TimerPointer timer = TimerType::New();
+    timer->StartTimer();
+    this->Superclass1::Initialize();
+    timer->StopTimer();
+    elxout << "Initialization of AdvancedMeanSquares metric took: "
+      << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
 
-	} // end Initialize
+  } // end Initialize
 
 
   /**
-	 * ***************** BeforeEachResolution ***********************
-	 */
+   * ***************** BeforeEachResolution ***********************
+   */
 
-	template <class TElastix>
-		void AdvancedMeanSquaresMetric<TElastix>
-		::BeforeEachResolution(void)
-	{
+  template <class TElastix>
+    void AdvancedMeanSquaresMetric<TElastix>
+    ::BeforeEachResolution(void)
+  {
     /** Get the current resolution level. */
-		unsigned int level = 
-			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+    unsigned int level = 
+      ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
     /** Get and set the normalization. */
     bool useNormalization = false;
@@ -72,7 +72,7 @@ using namespace itk;
       "SelfHessianSmoothingSigma", this->GetComponentLabel(), level, 0 );
     this->SetSelfHessianSmoothingSigma( selfHessianSmoothingSigma );     
 
-		
+    
   } // end BeforeEachResolution
 
 

@@ -24,60 +24,60 @@ namespace elastix
 {
 using namespace itk;
 
-	/**
-	 * \class AdvancedNormalizedCorrelationMetric
-	 * \brief An metric based on the itk::AdvancedNormalizedCorrelationImageToImageMetric.
-	 *
-	 * The parameters used in this class are:
-	 * \parameter Metric: Select this metric as follows:\n
-	 *		<tt>(Metric "AdvancedNormalizedCorrelation")</tt>
-	 * \parameter SubtractMean: Flag to set if the sample mean is subtracted from the
-	 *    sample values in the cross correlation formula. This typically results in narrower
-	 *    valleys in the cost function. Default value is true. Can be defined for each resolution\n
-	 *		example: <tt>(SubtractMean "false")</tt>
+  /**
+   * \class AdvancedNormalizedCorrelationMetric
+   * \brief An metric based on the itk::AdvancedNormalizedCorrelationImageToImageMetric.
+   *
+   * The parameters used in this class are:
+   * \parameter Metric: Select this metric as follows:\n
+   *		<tt>(Metric "AdvancedNormalizedCorrelation")</tt>
+   * \parameter SubtractMean: Flag to set if the sample mean is subtracted from the
+   *    sample values in the cross correlation formula. This typically results in narrower
+   *    valleys in the cost function. Default value is true. Can be defined for each resolution\n
+   *		example: <tt>(SubtractMean "false")</tt>
    * \parameter CheckNumberOfSamples: Whether the metric checks if at least 1/4 of the 
    *    samples map inside the moving image. Must be given for each resolution or for all
    *    resolutions at once. \n
    *    example: <tt>(CheckNumberOfSamples "false" "true" "false")</tt> \n
    *    The default is true. In general it is wise to set this to true, since it detects
    *    if the registration is going really bad.
-	 *
-	 * \ingroup Metrics
-	 *
-	 */
+   *
+   * \ingroup Metrics
+   *
+   */
 
-	template <class TElastix >
-		class AdvancedNormalizedCorrelationMetric:
-		public
-			AdvancedNormalizedCorrelationImageToImageMetric<
-				ITK_TYPENAME MetricBase<TElastix>::FixedImageType,
-				ITK_TYPENAME MetricBase<TElastix>::MovingImageType >,
-		public MetricBase<TElastix>
-	{
-	public:
+  template <class TElastix >
+    class AdvancedNormalizedCorrelationMetric:
+    public
+      AdvancedNormalizedCorrelationImageToImageMetric<
+        ITK_TYPENAME MetricBase<TElastix>::FixedImageType,
+        ITK_TYPENAME MetricBase<TElastix>::MovingImageType >,
+    public MetricBase<TElastix>
+  {
+  public:
 
-		/** Standard ITK-stuff. */
-		typedef AdvancedNormalizedCorrelationMetric										Self;
-		typedef AdvancedNormalizedCorrelationImageToImageMetric<
-			typename MetricBase<TElastix>::FixedImageType,
-			typename MetricBase<TElastix>::MovingImageType >		Superclass1;
-		typedef MetricBase<TElastix>													Superclass2;
-		typedef SmartPointer<Self>														Pointer;
-		typedef SmartPointer<const Self>											ConstPointer;
-		
-		/** Method for creation through the object factory. */
-		itkNewMacro( Self );
-		
-		/** Run-time type information (and related methods). */
-		itkTypeMacro( AdvancedNormalizedCorrelationMetric, AdvancedNormalizedCorrelationImageToImageMetric );
-		
-		/** Name of this class.
-		 * Use this name in the parameter file to select this specific metric. \n
-		 * example: <tt>(Metric "AdvancedNormalizedCorrelation")</tt>\n
-		 */
-		elxClassNameMacro( "AdvancedNormalizedCorrelation" );
+    /** Standard ITK-stuff. */
+    typedef AdvancedNormalizedCorrelationMetric										Self;
+    typedef AdvancedNormalizedCorrelationImageToImageMetric<
+      typename MetricBase<TElastix>::FixedImageType,
+      typename MetricBase<TElastix>::MovingImageType >		Superclass1;
+    typedef MetricBase<TElastix>													Superclass2;
+    typedef SmartPointer<Self>														Pointer;
+    typedef SmartPointer<const Self>											ConstPointer;
+    
+    /** Method for creation through the object factory. */
+    itkNewMacro( Self );
+    
+    /** Run-time type information (and related methods). */
+    itkTypeMacro( AdvancedNormalizedCorrelationMetric, AdvancedNormalizedCorrelationImageToImageMetric );
+    
+    /** Name of this class.
+     * Use this name in the parameter file to select this specific metric. \n
+     * example: <tt>(Metric "AdvancedNormalizedCorrelation")</tt>\n
+     */
+    elxClassNameMacro( "AdvancedNormalizedCorrelation" );
 
-		/** Typedefs from the superclass. */
+    /** Typedefs from the superclass. */
     typedef typename 
       Superclass1::CoordinateRepresentationType              CoordinateRepresentationType;
     typedef typename Superclass1::MovingImageType            MovingImageType;
@@ -120,55 +120,55 @@ using namespace itk;
       Superclass1::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
     typedef typename
       Superclass1::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
-		
+    
     /** The fixed image dimension. */
-		itkStaticConstMacro( FixedImageDimension, unsigned int,
-			FixedImageType::ImageDimension );
+    itkStaticConstMacro( FixedImageDimension, unsigned int,
+      FixedImageType::ImageDimension );
 
-		/** The moving image dimension. */
-		itkStaticConstMacro( MovingImageDimension, unsigned int,
-			MovingImageType::ImageDimension );
-		
-		/** Typedef's inherited from Elastix. */
-		typedef typename Superclass2::ElastixType								ElastixType;
-		typedef typename Superclass2::ElastixPointer						ElastixPointer;
-		typedef typename Superclass2::ConfigurationType					ConfigurationType;
-		typedef typename Superclass2::ConfigurationPointer			ConfigurationPointer;
-		typedef typename Superclass2::RegistrationType					RegistrationType;
-		typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
-		typedef typename Superclass2::ITKBaseType								ITKBaseType;
-			
-		/** Typedef for timer. */
-		typedef tmr::Timer					TimerType;
-		/** Typedef for timer. */
-		typedef TimerType::Pointer	TimerPointer;
+    /** The moving image dimension. */
+    itkStaticConstMacro( MovingImageDimension, unsigned int,
+      MovingImageType::ImageDimension );
+    
+    /** Typedef's inherited from Elastix. */
+    typedef typename Superclass2::ElastixType								ElastixType;
+    typedef typename Superclass2::ElastixPointer						ElastixPointer;
+    typedef typename Superclass2::ConfigurationType					ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer			ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType					RegistrationType;
+    typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
+    typedef typename Superclass2::ITKBaseType								ITKBaseType;
+      
+    /** Typedef for timer. */
+    typedef tmr::Timer					TimerType;
+    /** Typedef for timer. */
+    typedef TimerType::Pointer	TimerPointer;
 
-		/** Execute stuff before each new pyramid resolution:
-		 * \li Set the flag to subtract the mean.
+    /** Execute stuff before each new pyramid resolution:
+     * \li Set the flag to subtract the mean.
      * \li Set the CheckNumberOfSamples setting.
-		 */
-		virtual void BeforeEachResolution(void);
+     */
+    virtual void BeforeEachResolution(void);
 
-		/** Sets up a timer to measure the intialisation time and
-		 * calls the Superclass' implementation.
-		 */
-		virtual void Initialize(void) throw (ExceptionObject);
+    /** Sets up a timer to measure the intialisation time and
+     * calls the Superclass' implementation.
+     */
+    virtual void Initialize(void) throw (ExceptionObject);
 
-	protected:
+  protected:
 
-		/** The constructor. */
+    /** The constructor. */
     AdvancedNormalizedCorrelationMetric() {};
-		/** The destructor. */
-		virtual ~AdvancedNormalizedCorrelationMetric() {}
+    /** The destructor. */
+    virtual ~AdvancedNormalizedCorrelationMetric() {}
 
-	private:
+  private:
 
-		/** The private constructor. */
-		AdvancedNormalizedCorrelationMetric( const Self& );	// purposely not implemented
-		/** The private copy constructor. */
-		void operator=( const Self& );							// purposely not implemented
-		
-	}; // end class AdvancedNormalizedCorrelationMetric
+    /** The private constructor. */
+    AdvancedNormalizedCorrelationMetric( const Self& );	// purposely not implemented
+    /** The private copy constructor. */
+    void operator=( const Self& );							// purposely not implemented
+    
+  }; // end class AdvancedNormalizedCorrelationMetric
 
 
 } // end namespace elastix

@@ -118,8 +118,8 @@ namespace itk
 
 
   /**
-	 * ********************* Constructor ****************************
-	 */
+   * ********************* Constructor ****************************
+   */
 
   template <class TFixedImage, class TMovingImage>
     CombinationImageToImageMetric<TFixedImage,TMovingImage>
@@ -132,20 +132,20 @@ namespace itk
 
 
   /**
-	 * ********************* PrintSelf ****************************
-	 */
+   * ********************* PrintSelf ****************************
+   */
 
   template <class TFixedImage, class TMovingImage>
     void
     CombinationImageToImageMetric<TFixedImage,TMovingImage>
     ::PrintSelf( std::ostream& os, Indent indent ) const
   {
-		/** Call the superclass' PrintSelf. */
-		Superclass::PrintSelf( os, indent );
-		
-		/** Add debugging information. */
-		os << indent << "NumberOfMetrics: "
-			<< this->m_NumberOfMetrics << std::endl;
+    /** Call the superclass' PrintSelf. */
+    Superclass::PrintSelf( os, indent );
+    
+    /** Add debugging information. */
+    os << indent << "NumberOfMetrics: "
+      << this->m_NumberOfMetrics << std::endl;
     os << indent << "Metric pointer, weight, value:" << std::endl;
     for ( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
     {
@@ -154,13 +154,13 @@ namespace itk
         << this->m_MetricWeights[ i ] << ", "
         << this->m_MetricValues[ i ] << std::endl;
     }
-				
-	} // end PrintSelf
+        
+  } // end PrintSelf
 
 
   /**
-	 * ******************** SetFixedImageRegion ************************
-	 */
+   * ******************** SetFixedImageRegion ************************
+   */
 
   template <class TFixedImage, class TMovingImage>
     void
@@ -180,8 +180,8 @@ namespace itk
 
 
   /**
-	 * ******************** SetFixedImageRegion ************************
-	 */
+   * ******************** SetFixedImageRegion ************************
+   */
 
   template <class TFixedImage, class TMovingImage>
     void
@@ -196,8 +196,8 @@ namespace itk
 
  
   /**
-	 * ******************** GetFixedImageRegion ************************
-	 */
+   * ******************** GetFixedImageRegion ************************
+   */
 
   template <class TFixedImage, class TMovingImage>
     const typename CombinationImageToImageMetric<TFixedImage,TMovingImage>::
@@ -218,8 +218,8 @@ namespace itk
 
  
   /**
-	 * ********************* SetNumberOfMetrics ****************************
-	 */
+   * ********************* SetNumberOfMetrics ****************************
+   */
 
   template <class TFixedImage, class TMovingImage>
     void
@@ -240,8 +240,8 @@ namespace itk
 
 
   /**
-	 * ********************* SetMetric ****************************
-	 */
+   * ********************* SetMetric ****************************
+   */
 
   template <class TFixedImage, class TMovingImage>
     void
@@ -263,8 +263,8 @@ namespace itk
   
 
   /**
-	 * ********************* GetMetric ****************************
-	 */
+   * ********************* GetMetric ****************************
+   */
 
   template <class TFixedImage, class TMovingImage>
     typename CombinationImageToImageMetric<TFixedImage,TMovingImage>
@@ -285,8 +285,8 @@ namespace itk
 
 
   /**
-	 * ********************* SetMetricWeight ****************************
-	 */
+   * ********************* SetMetricWeight ****************************
+   */
 
   template <class TFixedImage, class TMovingImage>
     void
@@ -308,8 +308,8 @@ namespace itk
 
 
   /**
-	 * ********************* GetMetricWeight ****************************
-	 */
+   * ********************* GetMetricWeight ****************************
+   */
 
   template <class TFixedImage, class TMovingImage>
     double
@@ -329,8 +329,8 @@ namespace itk
 
 
   /**
-	 * ********************* GetMetricValue ****************************
-	 */
+   * ********************* GetMetricValue ****************************
+   */
 
   template <class TFixedImage, class TMovingImage>
     typename CombinationImageToImageMetric<TFixedImage,TMovingImage>::MeasureType
@@ -350,8 +350,8 @@ namespace itk
 
 
   /**
-	 * ********************* GetMetricDerivative ****************************
-	 */
+   * ********************* GetMetricDerivative ****************************
+   */
 
   template <class TFixedImage, class TMovingImage>
     const typename CombinationImageToImageMetric<TFixedImage,TMovingImage>
@@ -372,8 +372,8 @@ namespace itk
 
   
   /**
-	 * **************** GetNumberOfPixelsCounted ************************
-	 */
+   * **************** GetNumberOfPixelsCounted ************************
+   */
 
   template <class TFixedImage, class TMovingImage>
     const unsigned long &
@@ -397,8 +397,8 @@ namespace itk
 
 
   /**
-	 * ********************* Initialize ****************************
-	 */
+   * ********************* Initialize ****************************
+   */
 
   template <class TFixedImage, class TMovingImage>
     void
@@ -442,8 +442,8 @@ namespace itk
 
  
   /**
-	 * ********************* GetValue ****************************
-	 */
+   * ********************* GetValue ****************************
+   */
 
   template <class TFixedImage, class TMovingImage>
     typename CombinationImageToImageMetric<TFixedImage,TMovingImage>::MeasureType
@@ -467,8 +467,8 @@ namespace itk
 
 
   /**
-	 * ********************* GetDerivative ****************************
-	 */
+   * ********************* GetDerivative ****************************
+   */
 
   template <class TFixedImage, class TMovingImage>
     void
@@ -493,8 +493,8 @@ namespace itk
 
 
   /**
-	 * ********************* GetValueAndDerivative ****************************
-	 */
+   * ********************* GetValueAndDerivative ****************************
+   */
 
   template <class TFixedImage, class TMovingImage>
     void

@@ -30,9 +30,9 @@ namespace itk
    *
    * \parameter SampleGridSpacing: This parameter controls the spacing
    *    of the uniform grid in all dimensions. This should be given in
-	 *		index coordinates. \n
-	 *		example: <tt>(SampleGridSpacing 4 4 4)</tt> \n
-	 *		Default is 2 in each dimension.
+   *		index coordinates. \n
+   *		example: <tt>(SampleGridSpacing 4 4 4)</tt> \n
+   *		Default is 2 in each dimension.
    */
 
   template < class TInputImage >
@@ -41,19 +41,19 @@ namespace itk
   {
   public:
 
-		/** Standard ITK-stuff. */
+    /** Standard ITK-stuff. */
     typedef ImageGridSampler                Self;
     typedef ImageSamplerBase< TInputImage >   Superclass;
     typedef SmartPointer<Self>                Pointer;
     typedef SmartPointer<const Self>          ConstPointer;
 
-		/** Method for creation through the object factory. */
+    /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
-		/** Run-time type information (and related methods). */
+    /** Run-time type information (and related methods). */
     itkTypeMacro( ImageGridSampler, ImageSamplerBase );
 
-		/** Typedefs inherited from the superclass. */
+    /** Typedefs inherited from the superclass. */
     typedef typename Superclass::DataObjectPointer            DataObjectPointer;
     typedef typename Superclass::OutputVectorContainerType    OutputVectorContainerType;
     typedef typename Superclass::OutputVectorContainerPointer OutputVectorContainerPointer;
@@ -68,19 +68,19 @@ namespace itk
 
     /** The input image dimension. */
     itkStaticConstMacro( InputImageDimension, unsigned int,
-			Superclass::InputImageDimension );
+      Superclass::InputImageDimension );
 
     /** Other typdefs. */
     typedef typename InputImageType::IndexType    InputImageIndexType;
     typedef typename InputImageType::PointType    InputImagePointType;
 
     /** Typedefs for support of user defined grid spacing for the spatial samples. */
-		typedef typename InputImageType::OffsetType							SampleGridSpacingType;
-		typedef typename SampleGridSpacingType::OffsetValueType SampleGridSpacingValueType;
-		typedef typename InputImageType::SizeType								SampleGridSizeType;
-		typedef InputImageIndexType															SampleGridIndexType;
-		typedef typename InputImageType::SizeType 							InputImageSizeType;
-		   
+    typedef typename InputImageType::OffsetType							SampleGridSpacingType;
+    typedef typename SampleGridSpacingType::OffsetValueType SampleGridSpacingValueType;
+    typedef typename InputImageType::SizeType								SampleGridSizeType;
+    typedef InputImageIndexType															SampleGridIndexType;
+    typedef typename InputImageType::SizeType 							InputImageSizeType;
+       
     /** Set/Get the sample grid spacing for each dimension (only integer factors)
      * This function overrules and previous calls to SetNumberOfSamples. */
     itkSetMacro(SampleGridSpacing, SampleGridSpacingType);
@@ -129,9 +129,9 @@ namespace itk
             
   private:
 
-		/** The private constructor. */
+    /** The private constructor. */
     ImageGridSampler( const Self& );	        // purposely not implemented
-		/** The private copy constructor. */
+    /** The private copy constructor. */
     void operator=( const Self& );				    // purposely not implemented
 
   }; // end class ImageGridSampler

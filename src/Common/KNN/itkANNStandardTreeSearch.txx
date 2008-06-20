@@ -19,39 +19,39 @@
 
 namespace itk
 {
-	
-	/**
-	 * ************************ Constructor *************************
-	 */
+  
+  /**
+   * ************************ Constructor *************************
+   */
 
-	template < class TBinaryTree >
-		ANNStandardTreeSearch<TBinaryTree>
-		::ANNStandardTreeSearch()
-	{
+  template < class TBinaryTree >
+    ANNStandardTreeSearch<TBinaryTree>
+    ::ANNStandardTreeSearch()
+  {
     this->m_ErrorBound = 0.0;
   } // end Constructor
 
 
   /**
-	 * ************************ Destructor *************************
-	 */
+   * ************************ Destructor *************************
+   */
 
-	template < class TBinaryTree >
-		ANNStandardTreeSearch<TBinaryTree>
-		::~ANNStandardTreeSearch()
-	{
+  template < class TBinaryTree >
+    ANNStandardTreeSearch<TBinaryTree>
+    ::~ANNStandardTreeSearch()
+  {
   } // end Destructor
 
 
   /**
-	 * ************************ Search *************************
-	 */
+   * ************************ Search *************************
+   */
 
-	template < class TBinaryTree >
-		void ANNStandardTreeSearch<TBinaryTree>
-		::Search( const MeasurementVectorType & qp, IndexArrayType & ind,
+  template < class TBinaryTree >
+    void ANNStandardTreeSearch<TBinaryTree>
+    ::Search( const MeasurementVectorType & qp, IndexArrayType & ind,
       DistanceArrayType & dists )
-	{
+  {
     /** Get k , dim and eps. */
     int k       = static_cast<int>( this->m_KNearestNeighbors );
     int dim     = static_cast<int>( this->m_DataDimension );

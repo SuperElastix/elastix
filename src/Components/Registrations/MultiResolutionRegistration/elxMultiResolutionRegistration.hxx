@@ -21,57 +21,57 @@
 namespace elastix
 {
 using namespace itk;
-	
-	/**
-	 * ******************* BeforeRegistration ***********************
-	 */
+  
+  /**
+   * ******************* BeforeRegistration ***********************
+   */
 
-	template <class TElastix>
-		void MultiResolutionRegistration<TElastix>
-		::BeforeRegistration(void)
-	{	
-		/** Get the components from this->m_Elastix and set them. */
-		this->SetComponents();
+  template <class TElastix>
+    void MultiResolutionRegistration<TElastix>
+    ::BeforeRegistration(void)
+  {	
+    /** Get the components from this->m_Elastix and set them. */
+    this->SetComponents();
 
-		/** Set the number of resolutions. */		
-		unsigned int numberOfResolutions = 3;
-		this->m_Configuration->ReadParameter( numberOfResolutions, "NumberOfResolutions", 0 );
-		this->SetNumberOfLevels( numberOfResolutions );
-				
-		/** Set the FixedImageRegion. */
-		
-		/** Make sure the fixed image is up to date. */
-		try
-		{
-			this->GetElastix()->GetFixedImage()->Update();
-		}
-		catch( itk::ExceptionObject & excp )
-		{
-			/** Add information to the exception. */
-			excp.SetLocation( "MultiResolutionRegistration - BeforeRegistration()" );
-			std::string err_str = excp.GetDescription();
-			err_str += "\nError occured while updating region info of the fixed image.\n";
-			excp.SetDescription( err_str );
-			/** Pass the exception to an higher level. */
-			throw excp;
-		}
+    /** Set the number of resolutions. */		
+    unsigned int numberOfResolutions = 3;
+    this->m_Configuration->ReadParameter( numberOfResolutions, "NumberOfResolutions", 0 );
+    this->SetNumberOfLevels( numberOfResolutions );
+        
+    /** Set the FixedImageRegion. */
+    
+    /** Make sure the fixed image is up to date. */
+    try
+    {
+      this->GetElastix()->GetFixedImage()->Update();
+    }
+    catch( itk::ExceptionObject & excp )
+    {
+      /** Add information to the exception. */
+      excp.SetLocation( "MultiResolutionRegistration - BeforeRegistration()" );
+      std::string err_str = excp.GetDescription();
+      err_str += "\nError occured while updating region info of the fixed image.\n";
+      excp.SetDescription( err_str );
+      /** Pass the exception to an higher level. */
+      throw excp;
+    }
 
-		/** Set the fixedImageRegion. */
-		this->SetFixedImageRegion( this->GetElastix()->GetFixedImage()->GetBufferedRegion() );
-		
-	} // end BeforeRegistration()
+    /** Set the fixedImageRegion. */
+    this->SetFixedImageRegion( this->GetElastix()->GetFixedImage()->GetBufferedRegion() );
+    
+  } // end BeforeRegistration()
 
 
   /**
-	 * ******************* BeforeEachResolution ***********************
-	 */
+   * ******************* BeforeEachResolution ***********************
+   */
 
-	template <class TElastix>
-		void MultiResolutionRegistration<TElastix>
-		::BeforeEachResolution(void)
-	{	
+  template <class TElastix>
+    void MultiResolutionRegistration<TElastix>
+    ::BeforeEachResolution(void)
+  {	
     /** Get the current resolution level. */
-		unsigned int level = this->GetCurrentLevel();
+    unsigned int level = this->GetCurrentLevel();
 
     /** Do erosion, or just reset the original masks in the metric, or
      * do nothing when no masks are used.
@@ -79,18 +79,18 @@ using namespace itk;
     this->UpdateMasks( level );		
 
   } // end BeforeEachResolution
-	
-	
-	/**
-	 * *********************** SetComponents ************************
-	 */
+  
+  
+  /**
+   * *********************** SetComponents ************************
+   */
 
-	template <class TElastix>
-		void MultiResolutionRegistration<TElastix>
-		::SetComponents(void)
-	{	
-		/** Get the component from this-GetElastix() (as elx::...BaseType *),
-		 * cast it to the appropriate type and set it in 'this'. */
+  template <class TElastix>
+    void MultiResolutionRegistration<TElastix>
+    ::SetComponents(void)
+  {	
+    /** Get the component from this-GetElastix() (as elx::...BaseType *),
+     * cast it to the appropriate type and set it in 'this'. */
 
     this->SetFixedImage( this->GetElastix()->GetFixedImage() );
     this->SetMovingImage( this->GetElastix()->GetMovingImage() );
@@ -128,17 +128,17 @@ using namespace itk;
       }
     }
 
-	} // end SetComponents
+  } // end SetComponents
 
 
- 	/**
-	 * ************************* UpdateMasks ************************
+  /**
+   * ************************* UpdateMasks ************************
    **/
 
   template <class TElastix>
-		void MultiResolutionRegistration<TElastix>
+    void MultiResolutionRegistration<TElastix>
     ::UpdateMasks( unsigned int level )
-	{
+  {
     /** some shortcuts */
     const unsigned int nrOfFixedMasks = this->GetElastix()->GetNumberOfFixedMasks();
     const unsigned int nrOfMovingMasks = this->GetElastix()->GetNumberOfMovingMasks();
@@ -173,9 +173,9 @@ using namespace itk;
     this->GetMetric()->SetFixedImageMask( fixedMask );
         
     /** Stop timer and print the elapsed time. */
-		timer->StopTimer();
+    timer->StopTimer();
     elxout << "Setting the fixed masks took: "
-		  << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) 
+      << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) 
       << " ms." << std::endl;
 
     /** start timer, to time the whole moving mask configuration procedure. */
@@ -187,12 +187,12 @@ using namespace itk;
     this->GetMetric()->SetMovingImageMask( movingMask );
         
     /** Stop timer and print the elapsed time. */
-		timer->StopTimer();
+    timer->StopTimer();
     elxout << "Setting the moving masks took: "
-		  << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) 
+      << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) 
       << " ms." << std::endl;
 
-	} // end UpdateMasks
+  } // end UpdateMasks
 
 
 } // end namespace elastix

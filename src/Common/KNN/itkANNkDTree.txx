@@ -20,15 +20,15 @@
 
 namespace itk
 {
-	
-	/**
-	 * ************************ Constructor	*************************
-	 */
+  
+  /**
+   * ************************ Constructor	*************************
+   */
 
-	template < class TListSample >
-		ANNkDTree<TListSample>
-		::ANNkDTree()
-	{
+  template < class TListSample >
+    ANNkDTree<TListSample>
+    ::ANNkDTree()
+  {
     this->m_ANNTree = 0;
     this->m_SplittingRule = ANN_KD_SL_MIDPT;
     this->m_BucketSize = 1;
@@ -37,26 +37,26 @@ namespace itk
 
 
   /**
-	 * ************************ Destructor *************************
-	 */
+   * ************************ Destructor *************************
+   */
 
-	template < class TListSample >
-		ANNkDTree<TListSample>
-		::~ANNkDTree()
-	{
+  template < class TListSample >
+    ANNkDTree<TListSample>
+    ::~ANNkDTree()
+  {
     ANNBinaryTreeCreator::DeleteANNkDTree( this->m_ANNTree );
 
   } // end Destructor()
 
 
   /**
-	 * ************************ SetSplittingRule *************************
-	 */
+   * ************************ SetSplittingRule *************************
+   */
 
-	template < class TListSample >
+  template < class TListSample >
     void ANNkDTree<TListSample>
-		::SetSplittingRule( std::string rule )
-	{
+    ::SetSplittingRule( std::string rule )
+  {
     if ( rule == "ANN_KD_STD" )
     {
       this->m_SplittingRule = ANN_KD_STD;
@@ -90,13 +90,13 @@ namespace itk
 
 
   /**
-	 * ************************ GetSplittingRule *************************
-	 */
+   * ************************ GetSplittingRule *************************
+   */
 
-	template < class TListSample >
+  template < class TListSample >
     std::string ANNkDTree<TListSample>
-		::GetSplittingRule( void )
-	{
+    ::GetSplittingRule( void )
+  {
     switch ( this->m_SplittingRule )
     {
       case ANN_KD_STD:      return "ANN_KD_STD";
@@ -111,13 +111,13 @@ namespace itk
 
 
   /**
-	 * ************************ GenerateTree *************************
-	 */
+   * ************************ GenerateTree *************************
+   */
 
-	template < class TListSample >
+  template < class TListSample >
     void ANNkDTree<TListSample>
-		::GenerateTree( void )
-	{
+    ::GenerateTree( void )
+  {
     int dim = static_cast< int >( this->GetDataDimension() );
     int nop = static_cast< int >( this->GetActualNumberOfDataPoints() );
     int bcs = static_cast< int >( this->m_BucketSize );
@@ -131,14 +131,14 @@ namespace itk
   
 
   /**
-	 * ************************ PrintSelf *************************
-	 */
+   * ************************ PrintSelf *************************
+   */
 
-	template < class TListSample >
+  template < class TListSample >
     void
     ANNkDTree<TListSample>
-		::PrintSelf( std::ostream& os, Indent indent ) const
-	{
+    ::PrintSelf( std::ostream& os, Indent indent ) const
+  {
     Superclass::PrintSelf( os, indent );
 
     os << indent << "ANNTree: " << this->m_ANNTree << std::endl;

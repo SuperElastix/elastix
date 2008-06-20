@@ -99,8 +99,8 @@ namespace itk
 {
 
   /**
-	 * ************************ Constructor *************************
- 	 */
+   * ************************ Constructor *************************
+   */
 
   template <class TFixedImage, class TMovingImage>
     MultiInputImageToImageMetricBase<TFixedImage,TMovingImage>
@@ -184,16 +184,16 @@ namespace itk
 
   /**
    * ****************** CheckForBSplineInterpolators **********************
-	 */
+   */
 
   template <class TFixedImage, class TMovingImage>
-	void
+  void
   MultiInputImageToImageMetricBase<TFixedImage,TMovingImage>
   ::CheckForBSplineInterpolators( void )
   {
     /** Check if the interpolators are of type BSplineInterpolateImageFunction.
-		 * If so, we can make use of its EvaluateDerivatives method.
-		 * Otherwise, an exception is thrown.
+     * If so, we can make use of its EvaluateDerivatives method.
+     * Otherwise, an exception is thrown.
      */
     this->m_InterpolatorsAreBSpline = true;
     this->m_BSplineInterpolatorVector.resize( this->m_NumberOfMovingImages );
@@ -223,10 +223,10 @@ namespace itk
 
   /**
    * ****************** Initialize **********************
-	 */
+   */
 
   template <class TFixedImage, class TMovingImage>
-	void
+  void
   MultiInputImageToImageMetricBase<TFixedImage,TMovingImage>
   ::Initialize( void ) throw ( ExceptionObject )
   {
@@ -295,7 +295,7 @@ namespace itk
    */
 
   template <class TFixedImage, class TMovingImage>
-	bool
+  bool
   MultiInputImageToImageMetricBase<TFixedImage,TMovingImage>
   ::EvaluateMovingImageValueAndDerivative( 
     const MovingImagePointType & mappedPoint,
@@ -320,11 +320,11 @@ namespace itk
 
 
   /**
-	 * ************************ IsInsideMovingMask *************************
-	 */
+   * ************************ IsInsideMovingMask *************************
+   */
   
   template <class TFixedImage, class TMovingImage>
-	bool
+  bool
   MultiInputImageToImageMetricBase<TFixedImage,TMovingImage>
   ::IsInsideMovingMask( const MovingImagePointType & mappedPoint ) const
   {

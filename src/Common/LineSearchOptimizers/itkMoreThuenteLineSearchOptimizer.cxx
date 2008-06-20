@@ -159,11 +159,11 @@ namespace itk
       this->SetCurrentStepLength(this->m_step);
       this->ComputeCurrentValueAndDerivative();
       this->m_dg = this->DirectionalDerivative( this->m_g );
-			this->TestConvergence(this->m_Stop);
+      this->TestConvergence(this->m_Stop);
       this->InvokeEvent( IterationEvent() );
       if ( this->m_Stop )
       {
-				this->StopOptimization();
+        this->StopOptimization();
         break;
       }
       this->m_CurrentIteration++;
@@ -428,7 +428,7 @@ namespace itk
   } // end ComputeCurrentValueAndDerivative
 
   
-	/** 
+  /** 
    * ************************** TestConvergence ****************************
    *
    * Test for convergence.

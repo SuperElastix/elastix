@@ -20,32 +20,32 @@
 
 namespace itk
 {
-	
-	/**
-	 * \class ANNStandardTreeSearch
-	 *
-	 * \brief 
-	 *
-	 * 
-	 * \ingroup Metrics?
-	 */
-	
+  
+  /**
+   * \class ANNStandardTreeSearch
+   *
+   * \brief 
+   *
+   * 
+   * \ingroup Metrics?
+   */
+  
   template < class TListSample >
   class ANNStandardTreeSearch : public BinaryANNTreeSearchBase< TListSample >
-	{
-	public:
-		
-		/** Standard itk. */
-		typedef ANNStandardTreeSearch                   Self;
-		typedef BinaryANNTreeSearchBase< TListSample >  Superclass;
-		typedef SmartPointer< Self >				            Pointer;
-		typedef SmartPointer< const Self >	            ConstPointer;
-		
+  {
+  public:
+    
+    /** Standard itk. */
+    typedef ANNStandardTreeSearch                   Self;
+    typedef BinaryANNTreeSearchBase< TListSample >  Superclass;
+    typedef SmartPointer< Self >				            Pointer;
+    typedef SmartPointer< const Self >	            ConstPointer;
+    
     /** New method for creating an object using a factory. */
-		itkNewMacro( Self );
+    itkNewMacro( Self );
 
-		/** ITK type info. */
-		itkTypeMacro( ANNStandardTreeSearch, BinaryANNTreeSearchBase );
+    /** ITK type info. */
+    itkTypeMacro( ANNStandardTreeSearch, BinaryANNTreeSearchBase );
 
     /** Typedefs from Superclass. */
     typedef typename Superclass::ListSampleType         ListSampleType;
@@ -84,22 +84,22 @@ namespace itk
     }*/
 
 
-	protected:
-		
-		ANNStandardTreeSearch();
-		virtual ~ANNStandardTreeSearch();
+  protected:
+    
+    ANNStandardTreeSearch();
+    virtual ~ANNStandardTreeSearch();
 
     /** Member variables. */
     double  m_ErrorBound;
     
-	private:
-		
-		ANNStandardTreeSearch( const Self& ); // purposely not implemented
-		void operator=( const Self& );        // purposely not implemented
+  private:
+    
+    ANNStandardTreeSearch( const Self& ); // purposely not implemented
+    void operator=( const Self& );        // purposely not implemented
 
-	}; // end class ANNStandardTreeSearch
-		
-		
+  }; // end class ANNStandardTreeSearch
+    
+    
 } // end namespace itk
 
 

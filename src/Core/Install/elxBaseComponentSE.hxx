@@ -21,71 +21,71 @@ namespace elastix
 {
   using namespace itk;
 
-	/**
-	 * ********************* Constructor ****************************
-	 */
+  /**
+   * ********************* Constructor ****************************
+   */
 
-	template <class TElastix>
-	BaseComponentSE<TElastix>::BaseComponentSE()
-	{
-		/** Initialize.*/
-		this->m_Elastix = 0;
-		this->m_Configuration = 0;
-		this->m_Registration = 0;
-	}
+  template <class TElastix>
+  BaseComponentSE<TElastix>::BaseComponentSE()
+  {
+    /** Initialize.*/
+    this->m_Elastix = 0;
+    this->m_Configuration = 0;
+    this->m_Registration = 0;
+  }
 
 
-	/**
-	 * *********************** SetElastix ***************************
-	 */
+  /**
+   * *********************** SetElastix ***************************
+   */
 
-	template <class TElastix>
-	void BaseComponentSE<TElastix>::SetElastix( TElastix * _arg )
-	{
-		/** If this->m_Elastix is not set, then set it. */
-		if ( this->m_Elastix != _arg )
-		{
-			this->m_Elastix = _arg;
+  template <class TElastix>
+  void BaseComponentSE<TElastix>::SetElastix( TElastix * _arg )
+  {
+    /** If this->m_Elastix is not set, then set it. */
+    if ( this->m_Elastix != _arg )
+    {
+      this->m_Elastix = _arg;
 
-			if ( this->m_Elastix.IsNotNull() )
-			{
-				this->m_Configuration = this->m_Elastix->GetConfiguration();
-				this->m_Registration = dynamic_cast<RegistrationPointer>( 
+      if ( this->m_Elastix.IsNotNull() )
+      {
+        this->m_Configuration = this->m_Elastix->GetConfiguration();
+        this->m_Registration = dynamic_cast<RegistrationPointer>( 
           this->m_Elastix->GetElxRegistrationBase() );
-			}
+      }
 
-			Object * thisasobject = dynamic_cast<Object *>(this);
-			if ( thisasobject )
-			{	
-				thisasobject->Modified();
-			}
-		}
-				
-	} // end SetElastix
+      Object * thisasobject = dynamic_cast<Object *>(this);
+      if ( thisasobject )
+      {	
+        thisasobject->Modified();
+      }
+    }
+        
+  } // end SetElastix
 
 
-	/**
-	 * *********************** SetConfiguration ***************************
-	 *
-	 * Added for transformix.
-	 */
+  /**
+   * *********************** SetConfiguration ***************************
+   *
+   * Added for transformix.
+   */
 
-	template <class TElastix>
-	void BaseComponentSE<TElastix>::SetConfiguration( ConfigurationType * _arg )
-	{
-		/** If this->m_Configuration is not set, then set it.*/
-		if ( this->m_Configuration != _arg )
-		{
-			this->m_Configuration = _arg;
+  template <class TElastix>
+  void BaseComponentSE<TElastix>::SetConfiguration( ConfigurationType * _arg )
+  {
+    /** If this->m_Configuration is not set, then set it.*/
+    if ( this->m_Configuration != _arg )
+    {
+      this->m_Configuration = _arg;
 
-			Object * thisasobject = dynamic_cast<Object *>(this);
-			if ( thisasobject )
-			{	
-				thisasobject->Modified();
-			}
-		}
-				
-	} // end SetConfiguration
+      Object * thisasobject = dynamic_cast<Object *>(this);
+      if ( thisasobject )
+      {	
+        thisasobject->Modified();
+      }
+    }
+        
+  } // end SetConfiguration
 
 
 } // end namespace elastix

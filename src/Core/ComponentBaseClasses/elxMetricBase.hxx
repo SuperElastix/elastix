@@ -19,53 +19,53 @@
 
 namespace elastix
 {
-	using namespace itk;
+  using namespace itk;
 
-	/**
-	 * ********************* Constructor ****************************
-	 */
+  /**
+   * ********************* Constructor ****************************
+   */
 
-	template <class TElastix>
-		MetricBase<TElastix>::MetricBase()
-	{
-		/** Initialize. */
+  template <class TElastix>
+    MetricBase<TElastix>::MetricBase()
+  {
+    /** Initialize. */
     this->m_ShowExactMetricValue = 0;
     this->m_ExactMetricSampler = 0;
 
-	} // end Constructor
+  } // end Constructor
 
-			
-	/**
-	 * ******************* BeforeEachResolutionBase ******************
-	 */
+      
+  /**
+   * ******************* BeforeEachResolutionBase ******************
+   */
 
-	template <class TElastix>
-		void MetricBase<TElastix>
-		::BeforeEachResolutionBase( void )
-	{
-		/** Get the current resolution level. */
-		unsigned int level = 
-			( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+  template <class TElastix>
+    void MetricBase<TElastix>
+    ::BeforeEachResolutionBase( void )
+  {
+    /** Get the current resolution level. */
+    unsigned int level = 
+      ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
     /** Check if the exact metric value, computed on all pixels, should be shown, 
-		 * and whether the all pixels should be used during optimisation */
+     * and whether the all pixels should be used during optimisation */
 
     /** Define the name of the ExactMetric column */
     std::string exactMetricColumn = "Exact";
     exactMetricColumn += this->GetComponentLabel();
 
     /** Remove the ExactMetric-column, if it already existed. */
-		xl::xout["iteration"].RemoveTargetCell( exactMetricColumn.c_str() );
+    xl::xout["iteration"].RemoveTargetCell( exactMetricColumn.c_str() );
     /** Read the parameter file: Show the exact metric in every iteration? */ 
-		bool showExactMetricValue = false;
+    bool showExactMetricValue = false;
     this->GetConfiguration()->ReadParameter(showExactMetricValue,
       "ShowExactMetricValue", this->GetComponentLabel(), level, 0);
     this->m_ShowExactMetricValue = showExactMetricValue;
-		if ( showExactMetricValue )
-		{
+    if ( showExactMetricValue )
+    {
       /** Create a new column in the iteration info table */
-			xl::xout["iteration"].AddTargetCell( exactMetricColumn.c_str() );
-			xl::xout["iteration"][ exactMetricColumn.c_str() ] << std::showpoint << std::fixed;
+      xl::xout["iteration"].AddTargetCell( exactMetricColumn.c_str() );
+      xl::xout["iteration"][ exactMetricColumn.c_str() ] << std::showpoint << std::fixed;
     }
 
     /** Cast this to AdvancedMetricType. */
@@ -88,41 +88,41 @@ namespace elastix
         thisAsAdvanced->SetRequiredRatioOfValidSamples( 0.25 );
       }
     }
-		  
-	} // end BeforeEachResolutionBase()
+      
+  } // end BeforeEachResolutionBase()
 
 
   /**
-	 * ******************* AfterEachIterationBase ******************
-	 */
+   * ******************* AfterEachIterationBase ******************
+   */
 
-	template <class TElastix>
-		void MetricBase<TElastix>
-		::AfterEachIterationBase(void)
-	{ 
-		/** Show the metric value computed on all voxels,
-		 * if the user wanted it */
+  template <class TElastix>
+    void MetricBase<TElastix>
+    ::AfterEachIterationBase(void)
+  { 
+    /** Show the metric value computed on all voxels,
+     * if the user wanted it */
 
     /** Define the name of the ExactMetric column (ExactMetric<i>) */
     std::string exactMetricColumn = "Exact";
     exactMetricColumn += this->GetComponentLabel();
 
-		if (this->m_ShowExactMetricValue)
-		{
-			xl::xout["iteration"][ exactMetricColumn.c_str() ] << this->GetExactValue(
+    if (this->m_ShowExactMetricValue)
+    {
+      xl::xout["iteration"][ exactMetricColumn.c_str() ] << this->GetExactValue(
         this->GetElastix()->GetElxOptimizerBase()->GetAsITKBaseType()->GetCurrentPosition() );
-		}
+    }
 
   } // end AfterEachIterationBase
 
 
-	/**
-	 * ********************* SelectNewSamples ************************
-	 */
+  /**
+   * ********************* SelectNewSamples ************************
+   */
 
-	template <class TElastix>
+  template <class TElastix>
     void MetricBase<TElastix>::SelectNewSamples( void )
-	{
+  {
     if ( this->GetAdvancedMetricImageSampler() )
     {
       /** Force the metric to base its computation on a new subset of image samples. */
@@ -140,14 +140,14 @@ namespace elastix
         << std::endl;
     }
 
-	} // end SelectNewSamples()
+  } // end SelectNewSamples()
 
   
   /**
-	 * ********************* GetExactValue ************************
-	 */
+   * ********************* GetExactValue ************************
+   */
 
-	template <class TElastix>
+  template <class TElastix>
     typename MetricBase<TElastix>::MeasureType
     MetricBase<TElastix>::GetExactValue( const ParametersType& parameters )
   { 
@@ -198,10 +198,10 @@ namespace elastix
 
   
   /**
-	 * ******************* GetAdvancedMetricUseImageSampler ********************
-	 */
+   * ******************* GetAdvancedMetricUseImageSampler ********************
+   */
 
-	template <class TElastix>
+  template <class TElastix>
     bool MetricBase<TElastix>
     ::GetAdvancedMetricUseImageSampler( void ) const
   {
@@ -221,10 +221,10 @@ namespace elastix
 
 
   /**
-	 * ******************* SetAdvancedMetricImageSampler ********************
-	 */
+   * ******************* SetAdvancedMetricImageSampler ********************
+   */
 
-	template <class TElastix>
+  template <class TElastix>
     void MetricBase<TElastix>
     ::SetAdvancedMetricImageSampler( ImageSamplerBaseType * sampler )
   {
@@ -250,10 +250,10 @@ namespace elastix
 
 
   /**
-	 * ******************* GetAdvancedMetricImageSampler ********************
-	 */
+   * ******************* GetAdvancedMetricImageSampler ********************
+   */
 
-	template <class TElastix>
+  template <class TElastix>
     typename MetricBase<TElastix>::ImageSamplerBaseType *
     MetricBase<TElastix>
     ::GetAdvancedMetricImageSampler( void ) const

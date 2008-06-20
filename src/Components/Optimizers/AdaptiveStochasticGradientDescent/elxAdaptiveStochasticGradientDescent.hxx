@@ -119,10 +119,10 @@ namespace elastix
     this->SetParam_A( A );
 
     /** Set the MaximumNumberOfSamplingAttempts. */
-		unsigned int maximumNumberOfSamplingAttempts = 0;
-		this->GetConfiguration()->ReadParameter( maximumNumberOfSamplingAttempts,
+    unsigned int maximumNumberOfSamplingAttempts = 0;
+    this->GetConfiguration()->ReadParameter( maximumNumberOfSamplingAttempts,
       "MaximumNumberOfSamplingAttempts", this->GetComponentLabel(), level, 0 );
-		this->SetMaximumNumberOfSamplingAttempts( maximumNumberOfSamplingAttempts );
+    this->SetMaximumNumberOfSamplingAttempts( maximumNumberOfSamplingAttempts );
     
     /** Set/Get the initial time. Default: 0.0. Should be >=0. */     
     double initialTime = 0.0;
@@ -413,7 +413,7 @@ namespace elastix
   template <class TElastix>
     void AdaptiveStochasticGradientDescent<TElastix>
     ::MetricErrorResponse( ExceptionObject & err )
-	{
+  {
     if ( this->GetCurrentIteration() != this->m_PreviousErrorAtIteration )
     {
       this->m_PreviousErrorAtIteration = this->GetCurrentIteration();

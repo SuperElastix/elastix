@@ -43,67 +43,67 @@
 namespace elastix
 {
 
-	/**
-	 * \class BaseComponent
-	 *
-	 * \brief The BaseComponent class is a class that all elastix
-	 * components should inherit from.
-	 *
-	 * Most elastix component inherit both from an ITK class and
-	 * from the elx::BaseComponent class. The BaseComponent class
-	 * contains some methods that each component is supposed
-	 * to have, but are not defined in itk::Object. 
-	 * 
-	 * \sa BaseComponentSE
-	 * \ingroup Install 
-	 */
+  /**
+   * \class BaseComponent
+   *
+   * \brief The BaseComponent class is a class that all elastix
+   * components should inherit from.
+   *
+   * Most elastix component inherit both from an ITK class and
+   * from the elx::BaseComponent class. The BaseComponent class
+   * contains some methods that each component is supposed
+   * to have, but are not defined in itk::Object. 
+   * 
+   * \sa BaseComponentSE
+   * \ingroup Install 
+   */
 
-	class BaseComponent
-	{
-	public:
+  class BaseComponent
+  {
+  public:
 
-		/**
-		 * Callback methods that each component of elastix is supposed
-		 * to have. These methods can be overridden in each base component
-		 * (like MetricBase, TransformBase, etc.). In this way similar
-		 * behaviour for a group of components can be implemented.
-		 */
-		virtual int BeforeAllBase(void) { return 0;};
-		virtual int BeforeAll(void) { return 0;};
+    /**
+     * Callback methods that each component of elastix is supposed
+     * to have. These methods can be overridden in each base component
+     * (like MetricBase, TransformBase, etc.). In this way similar
+     * behaviour for a group of components can be implemented.
+     */
+    virtual int BeforeAllBase(void) { return 0;};
+    virtual int BeforeAll(void) { return 0;};
 
-		/**
-		 * Callback methods that each component of elastix is supposed
-		 * to have. These methods can be overridden in each base component
-		 * (like MetricBase, TransformBase, etc.). In this way similar
-		 * behaviour for a group of components can be implemented.
-		 */
-		virtual void BeforeRegistrationBase(void) {};
-		virtual void BeforeEachResolutionBase(void) {};
-		virtual void AfterEachResolutionBase(void) {};
-		virtual void AfterEachIterationBase(void) {};
-		virtual void AfterRegistrationBase(void) {};
+    /**
+     * Callback methods that each component of elastix is supposed
+     * to have. These methods can be overridden in each base component
+     * (like MetricBase, TransformBase, etc.). In this way similar
+     * behaviour for a group of components can be implemented.
+     */
+    virtual void BeforeRegistrationBase(void) {};
+    virtual void BeforeEachResolutionBase(void) {};
+    virtual void AfterEachResolutionBase(void) {};
+    virtual void AfterEachIterationBase(void) {};
+    virtual void AfterRegistrationBase(void) {};
 
-		/**
-		 * Callback methods that each component of elastix is supposed
-		 * to have. These methods can be overridden in each single
-		 * component (like MattesMutualInformationMetric) to achieve
-		 * behaviour, specific for that single component.
-		 */
-		virtual void BeforeRegistration(void)	{};
-		virtual void BeforeEachResolution(void)	{};
-		virtual void AfterEachResolution(void) {};
-		virtual void AfterEachIteration(void)	{};
-		virtual void AfterRegistration(void) {};
-		
-		/**
-		 * The name of the component in the ComponentDatabase.
-		 * Override this function not directly, but with the 
-		 * elxClassNameMacro("name").
-		 */
-		virtual const char * elxGetClassName(void)
-		{
-			return "BaseComponent";
-		}
+    /**
+     * Callback methods that each component of elastix is supposed
+     * to have. These methods can be overridden in each single
+     * component (like MattesMutualInformationMetric) to achieve
+     * behaviour, specific for that single component.
+     */
+    virtual void BeforeRegistration(void)	{};
+    virtual void BeforeEachResolution(void)	{};
+    virtual void AfterEachResolution(void) {};
+    virtual void AfterEachIteration(void)	{};
+    virtual void AfterRegistration(void) {};
+    
+    /**
+     * The name of the component in the ComponentDatabase.
+     * Override this function not directly, but with the 
+     * elxClassNameMacro("name").
+     */
+    virtual const char * elxGetClassName(void)
+    {
+      return "BaseComponent";
+    }
 
     /** Set the component label, which consists of a label 
      * ( "Metric", "Transform") and an index number. In case
@@ -124,22 +124,22 @@ namespace elastix
     {
       return this->m_ComponentLabel.c_str();
     }
-		
-	protected:
+    
+  protected:
 
-		BaseComponent() {}
-		virtual ~BaseComponent() {} 
+    BaseComponent() {}
+    virtual ~BaseComponent() {} 
 
-	private:
+  private:
 
-		BaseComponent( const BaseComponent & );		// purposely not implemented
-		void operator=( const BaseComponent & );	// purposely not implemented
+    BaseComponent( const BaseComponent & );		// purposely not implemented
+    void operator=( const BaseComponent & );	// purposely not implemented
 
     std::string m_ComponentLabel;
 
-	}; // end class BaseComponent
-	
-	
+  }; // end class BaseComponent
+  
+  
 } // end namespace elastix
 
 /** Define an alias for the elastix namespace.*/

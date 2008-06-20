@@ -20,33 +20,33 @@
 
 namespace itk
 {
-	
-	/**
-	 * \class ANNkDTree
-	 *
-	 * \brief 
-	 *
-	 * 
-	 * \ingroup Metrics?
-	 */
-	
-	template < class TListSample >
+  
+  /**
+   * \class ANNkDTree
+   *
+   * \brief 
+   *
+   * 
+   * \ingroup Metrics?
+   */
+  
+  template < class TListSample >
   class ANNkDTree : public BinaryANNTreeBase< TListSample >
-	{
-	public:
-		
-		/** Standard itk. */
-		typedef ANNkDTree                         Self;
-		typedef BinaryANNTreeBase< TListSample >	Superclass;
-		typedef SmartPointer< Self >				      Pointer;
-		typedef SmartPointer< const Self >	      ConstPointer;
-		
-		/** New method for creating an object using a factory. */
-		itkNewMacro( Self );
-		
-		/** ITK type info. */
-		itkTypeMacro( ANNkDTree, BinaryANNTreeBase );
-		
+  {
+  public:
+    
+    /** Standard itk. */
+    typedef ANNkDTree                         Self;
+    typedef BinaryANNTreeBase< TListSample >	Superclass;
+    typedef SmartPointer< Self >				      Pointer;
+    typedef SmartPointer< const Self >	      ConstPointer;
+    
+    /** New method for creating an object using a factory. */
+    itkNewMacro( Self );
+    
+    /** ITK type info. */
+    itkTypeMacro( ANNkDTree, BinaryANNTreeBase );
+    
     /** Typedef's from Superclass. */
     typedef typename Superclass::SampleType                 SampleType;
     typedef typename Superclass::MeasurementVectorType      MeasurementVectorType;
@@ -84,10 +84,10 @@ namespace itk
       return this->m_ANNTree;
     }
    
-	protected:
-		
+  protected:
+    
     /** Constructor. */
-		ANNkDTree();
+    ANNkDTree();
 
     /** Destructor. */
     virtual ~ANNkDTree();
@@ -100,14 +100,14 @@ namespace itk
     SplittingRuleType       m_SplittingRule;
     BucketSizeType          m_BucketSize;
     
-	private:
-		
-		ANNkDTree( const Self& );       // purposely not implemented
-		void operator=( const Self& );  // purposely not implemented
-		
-	}; // end class ANNkDTree
-		
-		
+  private:
+    
+    ANNkDTree( const Self& );       // purposely not implemented
+    void operator=( const Self& );  // purposely not implemented
+    
+  }; // end class ANNkDTree
+    
+    
 } // end namespace itk
 
 

@@ -23,8 +23,8 @@ namespace itk
 {
 
   /**
-	 * ******************* GenerateData *******************
-	 */
+   * ******************* GenerateData *******************
+   */
   
   template< class TInputImage >
     void

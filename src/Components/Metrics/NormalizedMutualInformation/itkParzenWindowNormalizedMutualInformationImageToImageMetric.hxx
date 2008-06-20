@@ -22,35 +22,35 @@
 
 namespace itk
 {	
-	
-	/**
-	 * ********************* PrintSelf ******************************
-	 *
-	 * Print out internal information about this class.
-	 */
+  
+  /**
+   * ********************* PrintSelf ******************************
+   *
+   * Print out internal information about this class.
+   */
 
-	template < class TFixedImage, class TMovingImage  >
-		void
-		ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
-		::PrintSelf( std::ostream& os, Indent indent ) const
-	{
-		/** Call the superclass' PrintSelf. */
-		Superclass::PrintSelf( os, indent );
-	
+  template < class TFixedImage, class TMovingImage  >
+    void
+    ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+    ::PrintSelf( std::ostream& os, Indent indent ) const
+  {
+    /** Call the superclass' PrintSelf. */
+    Superclass::PrintSelf( os, indent );
+  
     /** This function is not complete, but we don't use it anyway. */
-		
-	} // end PrintSelf
+    
+  } // end PrintSelf
 
 
    /**
-	  * ********************** ComputeLogMarginalPDF***********************
-	  */
+    * ********************** ComputeLogMarginalPDF***********************
+    */
 
-	template < class TFixedImage, class TMovingImage  >
-	  void
-	  ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
-	  ::ComputeLogMarginalPDF( MarginalPDFType & pdf ) const
-	{	
+  template < class TFixedImage, class TMovingImage  >
+    void
+    ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+    ::ComputeLogMarginalPDF( MarginalPDFType & pdf ) const
+  {	
     /** Typedef iterator */
     typedef typename MarginalPDFType::iterator              MarginalPDFIteratorType;
 
@@ -76,17 +76,17 @@ namespace itk
 
 
   /**
-	 * ********************** ComputeNormalizedMutualInformation ***********************
+   * ********************** ComputeNormalizedMutualInformation ***********************
    * Assumes the marginal pdfs are already log'ed
    * Returns the normalized mutual information, so not its negative...
-	 */
+   */
 
-	template < class TFixedImage, class TMovingImage  >
-	  typename ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
-	  ::MeasureType
-	  ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
-	  ::ComputeNormalizedMutualInformation( MeasureType & jointEntropy ) const
-	{	
+  template < class TFixedImage, class TMovingImage  >
+    typename ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+    ::MeasureType
+    ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+    ::ComputeNormalizedMutualInformation( MeasureType & jointEntropy ) const
+  {	
     /** Typedef iterators */
     typedef ImageLinearConstIteratorWithIndex<JointPDFType> JointPDFConstIteratorType;
     typedef typename MarginalPDFType::const_iterator        MarginalPDFConstIteratorType;
@@ -128,19 +128,19 @@ namespace itk
     jointEntropy = sumden;
     return static_cast<MeasureType>( sumnum / sumden );
   } // end ComputeNormalizedMutualInformation
-	
-	
+  
+  
   /**
-	 * ************************** GetValue **************************
-	 * Get the match Measure.
-	 */
+   * ************************** GetValue **************************
+   * Get the match Measure.
+   */
 
-	template < class TFixedImage, class TMovingImage  >
-	  typename ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
-	  ::MeasureType
-	  ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
-	  ::GetValue( const ParametersType& parameters ) const
-	{		 
+  template < class TFixedImage, class TMovingImage  >
+    typename ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+    ::MeasureType
+    ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+    ::GetValue( const ParametersType& parameters ) const
+  {		 
     /** Construct the JointPDF and Alpha */
     this->ComputePDFs(parameters);          
 
@@ -164,19 +164,19 @@ namespace itk
   } // end GetValue
 
 
-	/**
-	 * ******************** GetValueAndDerivative *******************
-	 * Get both the Value and the Derivative of the Measure. 
-	 */
+  /**
+   * ******************** GetValueAndDerivative *******************
+   * Get both the Value and the Derivative of the Measure. 
+   */
 
-	template < class TFixedImage, class TMovingImage  >
-	  void
-	  ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
-	  ::GetValueAndDerivative(
-	  const ParametersType& parameters,
-	  MeasureType& value,
-	  DerivativeType& derivative) const
-	{		 
+  template < class TFixedImage, class TMovingImage  >
+    void
+    ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+    ::GetValueAndDerivative(
+    const ParametersType& parameters,
+    MeasureType& value,
+    DerivativeType& derivative) const
+  {		 
     /** Initialize some variables */
     value = NumericTraits< MeasureType >::Zero;
     derivative = DerivativeType( this->GetNumberOfParameters() );

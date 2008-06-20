@@ -169,16 +169,16 @@ namespace itk
 
       /** Store s (in m_S), y (in m_Y), and ys (in m_Rho). These are used to
        * compute the search direction in the next iterations */
-			if ( this->GetMemory() > 0 )
-			{
-				ParametersType s;
-				DerivativeType y;
-				s = this->GetCurrentStepLength() * searchDir ;
-				y = this->GetCurrentGradient() - previousGradient;
-				this->StoreCurrentPoint(s, y ); 
-				s.clear();
-				y.clear();
-			}
+      if ( this->GetMemory() > 0 )
+      {
+        ParametersType s;
+        DerivativeType y;
+        s = this->GetCurrentStepLength() * searchDir ;
+        y = this->GetCurrentGradient() - previousGradient;
+        this->StoreCurrentPoint(s, y ); 
+        s.clear();
+        y.clear();
+      }
       
       /** Number of valid entries in m_S and m_Y */
       if ( this->m_Bound < this->GetMemory() )
@@ -187,7 +187,7 @@ namespace itk
       }
       
       this->InvokeEvent( IterationEvent() );
-			      
+            
       if ( this->m_Stop )
       {
         break;
@@ -415,7 +415,7 @@ namespace itk
 
     this->m_S[ this->m_Point ] = step; // s
     this->m_Y[ this->m_Point ] = grad_dif; // y
-		this->m_Rho[ this->m_Point ] = 1.0 / inner_product( step, grad_dif ); // 1/ys
+    this->m_Rho[ this->m_Point ] = 1.0 / inner_product( step, grad_dif ); // 1/ys
 
   } // end StoreCurrentPoint
 
@@ -432,11 +432,11 @@ namespace itk
     /** Check for zero step length */
     if ( firstLineSearchDone )
     {
-   	  if ( this->m_CurrentStepLength < NumericTraits<double>::epsilon() )
-		  {
-  			this->m_StopCondition = ZeroStep;
-			  return true;
-		  }; 
+      if ( this->m_CurrentStepLength < NumericTraits<double>::epsilon() )
+      {
+        this->m_StopCondition = ZeroStep;
+        return true;
+      }; 
     }
 
     /** Check if the maximum number of iterations will not be exceeded in the following iteration */

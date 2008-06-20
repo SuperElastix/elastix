@@ -24,13 +24,13 @@ namespace elastix
 {
 using namespace itk;
 
-	/**
-	 * \class AdvancedKappaStatisticMetric
-	 * \brief An metric based on the itk::AdvancedKappaStatisticImageToImageMetric.
-	 *
-	 * The parameters used in this class are:
-	 * \parameter Metric: Select this metric as follows:\n
-	 *	  <tt>(Metric "AdvancedKappaStatistic")</tt>
+  /**
+   * \class AdvancedKappaStatisticMetric
+   * \brief An metric based on the itk::AdvancedKappaStatisticImageToImageMetric.
+   *
+   * The parameters used in this class are:
+   * \parameter Metric: Select this metric as follows:\n
+   *	  <tt>(Metric "AdvancedKappaStatistic")</tt>
    * \parameter UseComplement: Bool to use the complement of the metric or not.\n
    *    If true, the 1 - KappaStatistic is returned, which is useful since most optimizers search by default for a minimum.\n
    *    <tt>(UseComplement "true")</tt>\n
@@ -46,42 +46,42 @@ using namespace itk;
    *    The default is true. In general it is wise to set this to true, since it detects
    *    if the registration is going really bad.
    *
-	 * \ingroup Metrics
-	 *
-	 */
+   * \ingroup Metrics
+   *
+   */
 
-	template <class TElastix >
-		class AdvancedKappaStatisticMetric:
-		public
-			AdvancedKappaStatisticImageToImageMetric<
-				ITK_TYPENAME MetricBase<TElastix>::FixedImageType,
-				ITK_TYPENAME MetricBase<TElastix>::MovingImageType >,
-		public MetricBase<TElastix>
-	{
-	public:
+  template <class TElastix >
+    class AdvancedKappaStatisticMetric:
+    public
+      AdvancedKappaStatisticImageToImageMetric<
+        ITK_TYPENAME MetricBase<TElastix>::FixedImageType,
+        ITK_TYPENAME MetricBase<TElastix>::MovingImageType >,
+    public MetricBase<TElastix>
+  {
+  public:
 
-		/** Standard ITK-stuff. */
-		typedef AdvancedKappaStatisticMetric									Self;
-		typedef AdvancedKappaStatisticImageToImageMetric<
-			typename MetricBase<TElastix>::FixedImageType,
-			typename MetricBase<TElastix>::MovingImageType >		Superclass1;
-		typedef MetricBase<TElastix>													Superclass2;
-		typedef SmartPointer<Self>														Pointer;
-		typedef SmartPointer<const Self>											ConstPointer;
-		
-		/** Method for creation through the object factory. */
-		itkNewMacro( Self );
-		
-		/** Run-time type information (and related methods). */
-		itkTypeMacro( AdvancedKappaStatisticMetric, AdvancedKappaStatisticImageToImageMetric );
-		
-		/** Name of this class.
-		 * Use this name in the parameter file to select this specific metric. \n
-		 * example: <tt>(Metric "AdvancedKappaStatistic")</tt>\n
-		 */
-		elxClassNameMacro( "AdvancedKappaStatistic" );
+    /** Standard ITK-stuff. */
+    typedef AdvancedKappaStatisticMetric									Self;
+    typedef AdvancedKappaStatisticImageToImageMetric<
+      typename MetricBase<TElastix>::FixedImageType,
+      typename MetricBase<TElastix>::MovingImageType >		Superclass1;
+    typedef MetricBase<TElastix>													Superclass2;
+    typedef SmartPointer<Self>														Pointer;
+    typedef SmartPointer<const Self>											ConstPointer;
+    
+    /** Method for creation through the object factory. */
+    itkNewMacro( Self );
+    
+    /** Run-time type information (and related methods). */
+    itkTypeMacro( AdvancedKappaStatisticMetric, AdvancedKappaStatisticImageToImageMetric );
+    
+    /** Name of this class.
+     * Use this name in the parameter file to select this specific metric. \n
+     * example: <tt>(Metric "AdvancedKappaStatistic")</tt>\n
+     */
+    elxClassNameMacro( "AdvancedKappaStatistic" );
 
-		/** Typedefs from the superclass. */
+    /** Typedefs from the superclass. */
     typedef typename 
       Superclass1::CoordinateRepresentationType              CoordinateRepresentationType;
     typedef typename Superclass1::MovingImageType            MovingImageType;
@@ -124,33 +124,33 @@ using namespace itk;
       Superclass1::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
     typedef typename
       Superclass1::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
-		
+    
     /** The fixed image dimension. */
-		itkStaticConstMacro( FixedImageDimension, unsigned int,
-			FixedImageType::ImageDimension );
+    itkStaticConstMacro( FixedImageDimension, unsigned int,
+      FixedImageType::ImageDimension );
 
-		/** The moving image dimension. */
-		itkStaticConstMacro( MovingImageDimension, unsigned int,
-			MovingImageType::ImageDimension );
-		
-		/** Typedef's inherited from Elastix. */
-		typedef typename Superclass2::ElastixType								ElastixType;
-		typedef typename Superclass2::ElastixPointer						ElastixPointer;
-		typedef typename Superclass2::ConfigurationType					ConfigurationType;
-		typedef typename Superclass2::ConfigurationPointer			ConfigurationPointer;
-		typedef typename Superclass2::RegistrationType					RegistrationType;
-		typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
-		typedef typename Superclass2::ITKBaseType								ITKBaseType;
-			
-		/** Typedef for timer. */
-		typedef tmr::Timer					TimerType;
-		/** Typedef for timer. */
-		typedef TimerType::Pointer	TimerPointer;
-	
-		/** Sets up a timer to measure the initialisation time and
-		 * calls the Superclass' implementation.
-		 */
-		virtual void Initialize(void) throw (ExceptionObject);
+    /** The moving image dimension. */
+    itkStaticConstMacro( MovingImageDimension, unsigned int,
+      MovingImageType::ImageDimension );
+    
+    /** Typedef's inherited from Elastix. */
+    typedef typename Superclass2::ElastixType								ElastixType;
+    typedef typename Superclass2::ElastixPointer						ElastixPointer;
+    typedef typename Superclass2::ConfigurationType					ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer			ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType					RegistrationType;
+    typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
+    typedef typename Superclass2::ITKBaseType								ITKBaseType;
+      
+    /** Typedef for timer. */
+    typedef tmr::Timer					TimerType;
+    /** Typedef for timer. */
+    typedef TimerType::Pointer	TimerPointer;
+  
+    /** Sets up a timer to measure the initialisation time and
+     * calls the Superclass' implementation.
+     */
+    virtual void Initialize(void) throw (ExceptionObject);
 
     /** 
      * Do some things before registration:
@@ -165,21 +165,21 @@ using namespace itk;
      */
     virtual void BeforeEachResolution(void);
 
-	protected:
+  protected:
 
-		/** The constructor. */
+    /** The constructor. */
     AdvancedKappaStatisticMetric(){};
-		/** The destructor. */
-		virtual ~AdvancedKappaStatisticMetric() {}
+    /** The destructor. */
+    virtual ~AdvancedKappaStatisticMetric() {}
 
-	private:
+  private:
 
-		/** The private constructor. */
-		AdvancedKappaStatisticMetric( const Self& );// purposely not implemented
-		/** The private copy constructor. */
-		void operator=( const Self& );							// purposely not implemented
-		
-	}; // end class AdvancedKappaStatisticMetric
+    /** The private constructor. */
+    AdvancedKappaStatisticMetric( const Self& );// purposely not implemented
+    /** The private copy constructor. */
+    void operator=( const Self& );							// purposely not implemented
+    
+  }; // end class AdvancedKappaStatisticMetric
 
 
 } // end namespace elastix

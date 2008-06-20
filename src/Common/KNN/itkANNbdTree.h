@@ -19,33 +19,33 @@
 
 namespace itk
 {
-	
-	/**
-	 * \class ANNbdTree
-	 *
-	 * \brief 
-	 *
-	 * 
-	 * \ingroup Metrics?
-	 */
-	
-	template < class TListSample >
+  
+  /**
+   * \class ANNbdTree
+   *
+   * \brief 
+   *
+   * 
+   * \ingroup Metrics?
+   */
+  
+  template < class TListSample >
   class ANNbdTree : public ANNkDTree< TListSample >
-	{
-	public:
-		
-		/** Standard itk. */
-		typedef ANNbdTree                     Self;
-		typedef ANNkDTree< TListSample >	    Superclass;
-		typedef SmartPointer< Self >				  Pointer;
-		typedef SmartPointer< const Self >	  ConstPointer;
-		
-		/** New method for creating an object using a factory. */
-		itkNewMacro( Self );
-		
-		/** ITK type info. */
-		itkTypeMacro( ANNbdTree, ANNkDTree );
-		
+  {
+  public:
+    
+    /** Standard itk. */
+    typedef ANNbdTree                     Self;
+    typedef ANNkDTree< TListSample >	    Superclass;
+    typedef SmartPointer< Self >				  Pointer;
+    typedef SmartPointer< const Self >	  ConstPointer;
+    
+    /** New method for creating an object using a factory. */
+    itkNewMacro( Self );
+    
+    /** ITK type info. */
+    itkTypeMacro( ANNbdTree, ANNkDTree );
+    
     /** Typedef's from Superclass. */
     typedef typename Superclass::SampleType                 SampleType;
     typedef typename Superclass::MeasurementVectorType      MeasurementVectorType;
@@ -67,10 +67,10 @@ namespace itk
     /** Generate the tree. */
     virtual void GenerateTree( void );
    
-	protected:
-		
+  protected:
+    
     /** Constructor. */
-		ANNbdTree();
+    ANNbdTree();
 
     /** Destructor. */
     virtual ~ANNbdTree() {};
@@ -81,14 +81,14 @@ namespace itk
     /** Member variables. */
     ShrinkingRuleType   m_ShrinkingRule;
     
-	private:
-		
-		ANNbdTree( const Self& );       // purposely not implemented
-		void operator=( const Self& );  // purposely not implemented
-		
-	}; // end class ANNbdTree
-		
-		
+  private:
+    
+    ANNbdTree( const Self& );       // purposely not implemented
+    void operator=( const Self& );  // purposely not implemented
+    
+  }; // end class ANNbdTree
+    
+    
 } // end namespace itk
 
 

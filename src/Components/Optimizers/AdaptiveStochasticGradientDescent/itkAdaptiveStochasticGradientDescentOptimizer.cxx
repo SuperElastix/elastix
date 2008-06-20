@@ -22,29 +22,29 @@
 namespace itk
 {
 
-	/**
-	 * ************************* Constructor ************************
-	 */
+  /**
+   * ************************* Constructor ************************
+   */
 
-	AdaptiveStochasticGradientDescentOptimizer
-		::AdaptiveStochasticGradientDescentOptimizer()
-	{
+  AdaptiveStochasticGradientDescentOptimizer
+    ::AdaptiveStochasticGradientDescentOptimizer()
+  {
     this->m_UseAdaptiveStepSizes = true;
     this->m_SigmoidMax = 1.0;
     this->m_SigmoidMin = -0.8;
     this->m_SigmoidScale = 1e-8;
-				
-	} // end Constructor
+        
+  } // end Constructor
 
  
-	/**
-	 * ************************** UpdateCurrentTime ********************
-	 *
-	 * This function computes the input for the Compute_a function.
-	 */
+  /**
+   * ************************** UpdateCurrentTime ********************
+   *
+   * This function computes the input for the Compute_a function.
+   */
 
   void AdaptiveStochasticGradientDescentOptimizer
-		::UpdateCurrentTime( void )
+    ::UpdateCurrentTime( void )
   {
     typedef itk::Function::Sigmoid<double, double> SigmoidType;
 
@@ -82,7 +82,7 @@ namespace itk
     }
 
   } // end UpdateCurrentTime
-	
+  
 
 } // end namespace itk
 

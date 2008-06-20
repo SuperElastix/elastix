@@ -34,7 +34,7 @@ RSGDEachParameterApartOptimizer
                      const DerivativeType & transformedGradient )
 { 
 
-	itkDebugMacro(<<"factor = " << factor << "  transformedGradient= " << transformedGradient );
+  itkDebugMacro(<<"factor = " << factor << "  transformedGradient= " << transformedGradient );
 
   const unsigned int spaceDimension =
     m_CostFunction->GetNumberOfParameters();
@@ -44,10 +44,10 @@ RSGDEachParameterApartOptimizer
 
   for(unsigned int j=0; j<spaceDimension; j++)
   {
-		/** Each parameters has its own factor! */
-		newPosition[j] = currentPosition[j] + transformedGradient[j] * factor[j];
+    /** Each parameters has its own factor! */
+    newPosition[j] = currentPosition[j] + transformedGradient[j] * factor[j];
   }
-	
+  
 
   itkDebugMacro(<<"new position = " << newPosition );
 

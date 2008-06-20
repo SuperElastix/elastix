@@ -19,40 +19,40 @@
 
 namespace itk
 {
-	
-	/**
-	 * ************************ Constructor *************************
-	 */
+  
+  /**
+   * ************************ Constructor *************************
+   */
 
-	template < class TBinaryTree >
-		ANNFixedRadiusTreeSearch<TBinaryTree>
-		::ANNFixedRadiusTreeSearch()
-	{
+  template < class TBinaryTree >
+    ANNFixedRadiusTreeSearch<TBinaryTree>
+    ::ANNFixedRadiusTreeSearch()
+  {
     this->m_ErrorBound = 0.0;
     this->m_SquaredRadius = 0.0;
   } // end Constructor
 
 
   /**
-	 * ************************ Destructor *************************
-	 */
+   * ************************ Destructor *************************
+   */
 
-	template < class TBinaryTree >
-		ANNFixedRadiusTreeSearch<TBinaryTree>
-		::~ANNFixedRadiusTreeSearch()
-	{
+  template < class TBinaryTree >
+    ANNFixedRadiusTreeSearch<TBinaryTree>
+    ::~ANNFixedRadiusTreeSearch()
+  {
   } // end Destructor
 
 
   /**
-	 * ************************ Search *************************
-	 */
+   * ************************ Search *************************
+   */
 
-	template < class TBinaryTree >
-		void ANNFixedRadiusTreeSearch<TBinaryTree>
-		::Search( const MeasurementVectorType & qp, IndexArrayType & ind,
+  template < class TBinaryTree >
+    void ANNFixedRadiusTreeSearch<TBinaryTree>
+    ::Search( const MeasurementVectorType & qp, IndexArrayType & ind,
       DistanceArrayType & dists )
-	{
+  {
     /** Get k , dim and eps. */
     int k         = static_cast<int>( this->m_KNearestNeighbors );
     int dim       = static_cast<int>( this->m_DataDimension );
@@ -94,14 +94,14 @@ namespace itk
 
 
   /**
-	 * ************************ Search *************************
-	 */
+   * ************************ Search *************************
+   */
 
-	template < class TBinaryTree >
-		void ANNFixedRadiusTreeSearch<TBinaryTree>
-		::Search( const MeasurementVectorType & qp, IndexArrayType & ind,
+  template < class TBinaryTree >
+    void ANNFixedRadiusTreeSearch<TBinaryTree>
+    ::Search( const MeasurementVectorType & qp, IndexArrayType & ind,
       DistanceArrayType & dists, double sqRad )
-	{
+  {
     /** Get k , dim and eps. */
     int k         = static_cast<int>( this->m_KNearestNeighbors );
     int dim       = static_cast<int>( this->m_DataDimension );

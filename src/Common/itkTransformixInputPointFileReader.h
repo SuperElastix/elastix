@@ -29,14 +29,14 @@ namespace itk
    * A reader that understands transformix input point files.
    *
    * The first word in the text file indicates whether the input points 
-	 * are given as an integer image index or as a point (world coordinates). 
-	 * If the file does not start with "index" or "point" it is assumed 
-	 * that the points are entered as indices, for compatibility with 
-	 * elastix versions < 3.503. 
-	 *
-	 * The second word in the text file represents the number of points that
-	 * should be read.
-	 **/
+   * are given as an integer image index or as a point (world coordinates). 
+   * If the file does not start with "index" or "point" it is assumed 
+   * that the points are entered as indices, for compatibility with 
+   * elastix versions < 3.503. 
+   *
+   * The second word in the text file represents the number of points that
+   * should be read.
+   **/
 
   template <class TOutputMesh>
   class TransformixInputPointFileReader : public MeshFileReaderBase<TOutputMesh>

@@ -27,7 +27,7 @@ namespace itk
    */
 
   GenericConjugateGradientOptimizer::
-		GenericConjugateGradientOptimizer()
+    GenericConjugateGradientOptimizer()
   {
     itkDebugMacro("Constructor");
 
@@ -39,26 +39,26 @@ namespace itk
     this->m_InLineSearch = false;
     this->m_MaximumNumberOfIterations = 100;
     this->m_ValueTolerance = 1e-5;
-		this->m_GradientMagnitudeTolerance = 1e-5;
-		this->m_MaxNrOfItWithoutImprovement = 10;
-		this->m_UseDefaultMaxNrOfItWithoutImprovement = true;
+    this->m_GradientMagnitudeTolerance = 1e-5;
+    this->m_MaxNrOfItWithoutImprovement = 10;
+    this->m_UseDefaultMaxNrOfItWithoutImprovement = true;
     this->m_LineSearchOptimizer = 0;
-		this->m_PreviousGradientAndSearchDirValid = false;
-		
+    this->m_PreviousGradientAndSearchDirValid = false;
+    
     this->AddBetaDefinition(
-			"SteepestDescent", &Self::ComputeBetaSD );
-		this->AddBetaDefinition(
-			"FletcherReeves", &Self::ComputeBetaFR );
-		this->AddBetaDefinition(
-			"PolakRibiere", &Self::ComputeBetaPR );
-		this->AddBetaDefinition(
-			"DaiYuan", &Self::ComputeBetaDY );
-		this->AddBetaDefinition(
-			"HestenesStiefel", &Self::ComputeBetaHS );
-		this->AddBetaDefinition(
-			"DaiYuanHestenesStiefel", &Self::ComputeBetaDYHS );
+      "SteepestDescent", &Self::ComputeBetaSD );
+    this->AddBetaDefinition(
+      "FletcherReeves", &Self::ComputeBetaFR );
+    this->AddBetaDefinition(
+      "PolakRibiere", &Self::ComputeBetaPR );
+    this->AddBetaDefinition(
+      "DaiYuan", &Self::ComputeBetaDY );
+    this->AddBetaDefinition(
+      "HestenesStiefel", &Self::ComputeBetaHS );
+    this->AddBetaDefinition(
+      "DaiYuanHestenesStiefel", &Self::ComputeBetaDYHS );
 
-		this->SetBetaDefinition("DaiYuanHestenesStiefel");
+    this->SetBetaDefinition("DaiYuanHestenesStiefel");
             
   } // end constructor
 
@@ -80,17 +80,17 @@ namespace itk
     this->m_CurrentIteration = 0;
     this->m_CurrentStepLength = 0.0;
     this->m_CurrentValue = NumericTraits<MeasureType>::Zero;
-		this->m_PreviousGradientAndSearchDirValid = false;
-		    
+    this->m_PreviousGradientAndSearchDirValid = false;
+        
     /** Get the number of parameters; checks also if a cost function has been set at all.
     * if not: an exception is thrown */
     const unsigned int numberOfParameters =
       this->GetScaledCostFunction()->GetNumberOfParameters();
 
-		if ( this->m_UseDefaultMaxNrOfItWithoutImprovement )
-		{
-		  this->m_MaxNrOfItWithoutImprovement = numberOfParameters;
-		}
+    if ( this->m_UseDefaultMaxNrOfItWithoutImprovement )
+    {
+      this->m_MaxNrOfItWithoutImprovement = numberOfParameters;
+    }
 
     /** Set the current gradient to (0 0 0 ...) */
     this->m_CurrentGradient.SetSize(numberOfParameters);
@@ -122,15 +122,15 @@ namespace itk
 
     this->m_Stop = false;
     this->m_StopCondition = Unknown;
-		this->m_PreviousGradientAndSearchDirValid = false;
-		const double TINY_NUMBER = 1e-20;
-		unsigned int limitCount = 0;
+    this->m_PreviousGradientAndSearchDirValid = false;
+    const double TINY_NUMBER = 1e-20;
+    unsigned int limitCount = 0;
     
     ParametersType searchDir;
-		ParametersType previousSearchDir;
-		DerivativeType previousGradient;
-		MeasureType previousValue;		
-				
+    ParametersType previousSearchDir;
+    DerivativeType previousGradient;
+    MeasureType previousValue;		
+        
     this->InvokeEvent( StartEvent() );
 
     try
@@ -158,14 +158,14 @@ namespace itk
     /** Start iterating */
     while ( !this->m_Stop )
     {
-			/** Store the current search direction */
-			previousSearchDir = searchDir;
+      /** Store the current search direction */
+      previousSearchDir = searchDir;
 
       /** Compute the new search direction */
-			this->ComputeSearchDirection(
-				previousGradient,
-				this->GetCurrentGradient(),
-				searchDir );
+      this->ComputeSearchDirection(
+        previousGradient,
+        this->GetCurrentGradient(),
+        searchDir );
 
       if ( this->m_Stop )
       {
@@ -174,8 +174,8 @@ namespace itk
 
       /** Store the current gradient */
       previousGradient = this->GetCurrentGradient();
-			previousValue = this->GetCurrentValue();
-			this->m_PreviousGradientAndSearchDirValid = true;
+      previousValue = this->GetCurrentValue();
+      this->m_PreviousGradientAndSearchDirValid = true;
 
       /** Perform a line search along the search direction. On return the
        * m_CurrentStepLength, m_CurrentScaledPosition, m_CurrentValue, and
@@ -193,36 +193,36 @@ namespace itk
       }
      
       this->InvokeEvent( IterationEvent() );
-			      
+            
       if ( this->m_Stop )
       {
         break;
       }
 
-			/** Check for convergence
+      /** Check for convergence
        * \todo: move this code to TestConvergence() */
-			if ( 2.0 * vcl_abs( this->GetCurrentValue() - previousValue ) <= 
+      if ( 2.0 * vcl_abs( this->GetCurrentValue() - previousValue ) <= 
         this->GetValueTolerance() *
-				( vcl_abs(this->GetCurrentValue()) +
-				vcl_abs(previousValue) + TINY_NUMBER )   )
+        ( vcl_abs(this->GetCurrentValue()) +
+        vcl_abs(previousValue) + TINY_NUMBER )   )
       {
         if ( limitCount < this->GetMaxNrOfItWithoutImprovement() )
         {
           //this->m_CurrentGradient[limitCount] = 1.0;
-					// \todo gives errors (way to large gradient), should update
-					// initial steplength estimate maybe
+          // \todo gives errors (way to large gradient), should update
+          // initial steplength estimate maybe
           limitCount++;
         }
         else
         {
-					this->m_StopCondition = ValueTolerance;
+          this->m_StopCondition = ValueTolerance;
           this->StopOptimization();
-					break;
+          break;
         }
       }
       else
       {
-				limitCount = 0;
+        limitCount = 0;
       }
 
       /** Test if convergence has occured in some other sense */
@@ -234,7 +234,7 @@ namespace itk
         break;
       }
         
-			/** Next iteration */
+      /** Next iteration */
       this->m_CurrentIteration++;
 
     } // end while !m_Stop
@@ -264,36 +264,36 @@ namespace itk
   void
     GenericConjugateGradientOptimizer::
     ComputeSearchDirection(
-		  const DerivativeType & previousGradient,
+      const DerivativeType & previousGradient,
       const DerivativeType & gradient,
-			ParametersType & searchDir)
+      ParametersType & searchDir)
   {
     itkDebugMacro("ComputeSearchDirection");
 
     const unsigned int numberOfParameters = gradient.GetSize();
 
-		/** When no previous gradient and/or previous search direction are
-		 * available, return the negative gradient as search direction */
-		if (!this->m_PreviousGradientAndSearchDirValid)
-		{
+    /** When no previous gradient and/or previous search direction are
+     * available, return the negative gradient as search direction */
+    if (!this->m_PreviousGradientAndSearchDirValid)
+    {
       searchDir = - gradient;
-			return;
-		}
+      return;
+    }
 
-		/** Compute \beta, based on the previousGradient, the current gradient, 
-		 * and the previous search direction */
-		double beta = this->ComputeBeta(previousGradient, gradient, searchDir);
+    /** Compute \beta, based on the previousGradient, the current gradient, 
+     * and the previous search direction */
+    double beta = this->ComputeBeta(previousGradient, gradient, searchDir);
 
-		if ( this->m_Stop )
-		{
-			return;
-		}
+    if ( this->m_Stop )
+    {
+      return;
+    }
 
-		/** Compute the new search direction */
-		for (unsigned int i = 0; i < numberOfParameters; ++i)
-		{
-			searchDir[i] = - gradient[i] + beta * searchDir[i];
-		}
+    /** Compute the new search direction */
+    for (unsigned int i = 0; i < numberOfParameters; ++i)
+    {
+      searchDir[i] = - gradient[i] + beta * searchDir[i];
+    }
     
   } // end ComputeSearchDirection
 
@@ -332,7 +332,7 @@ namespace itk
     LSO->SetInitialPosition(x);
     LSO->SetInitialValue(f);
     LSO->SetInitialDerivative(g);
-		
+    
     this->SetInLineSearch(true);
     try
     {
@@ -348,7 +348,7 @@ namespace itk
 
     step = LSO->GetCurrentStepLength();
     x = LSO->GetCurrentPosition();
-		
+    
     try
     {
       LSO->GetCurrentValueAndDerivative(f,g);
@@ -360,224 +360,224 @@ namespace itk
       throw err;
     }
 
-		/** For the next iteration: */
-		//LSO->SetInitialStepLengthEstimate(step); for now in elx.
+    /** For the next iteration: */
+    //LSO->SetInitialStepLengthEstimate(step); for now in elx.
     
   } // end LineSearch
 
 
-	/** 
+  /** 
    * *********************** ComputeBeta ******************************
    */
 
-	double 
-		GenericConjugateGradientOptimizer::
-		ComputeBeta(
-	    const DerivativeType & previousGradient,
+  double 
+    GenericConjugateGradientOptimizer::
+    ComputeBeta(
+      const DerivativeType & previousGradient,
       const DerivativeType & gradient,
-		  const ParametersType & previousSearchDir)
-	{
-		
-		ComputeBetaFunctionType betaComputer = 
-		  this->m_BetaDefinitionMap[ this->GetBetaDefinition() ];
-			
-		return ((*this).*betaComputer)(
-			previousGradient, gradient, previousSearchDir );
-		
-	} // end ComputeBeta
+      const ParametersType & previousSearchDir)
+  {
+    
+    ComputeBetaFunctionType betaComputer = 
+      this->m_BetaDefinitionMap[ this->GetBetaDefinition() ];
+      
+    return ((*this).*betaComputer)(
+      previousGradient, gradient, previousSearchDir );
+    
+  } // end ComputeBeta
 
 
   /** 
-	 * ********************** ComputeBetaSD ******************************
-	 */
+   * ********************** ComputeBetaSD ******************************
+   */
 
-	double 
-		GenericConjugateGradientOptimizer::
-		ComputeBetaSD(
-	    const DerivativeType & previousGradient,
+  double 
+    GenericConjugateGradientOptimizer::
+    ComputeBetaSD(
+      const DerivativeType & previousGradient,
       const DerivativeType & gradient,
-		  const ParametersType & previousSearchDir)
-	{
+      const ParametersType & previousSearchDir)
+  {
     /** A simple hack that makes the conjugate gradient equal to
      * a steepest descent method */
-		return 0.0;
-	} // end ComputeBetaSD
+    return 0.0;
+  } // end ComputeBetaSD
 
 
-	/** 
-	 * ********************** ComputeBetaFR ******************************
-	 */
+  /** 
+   * ********************** ComputeBetaFR ******************************
+   */
 
-	double 
-		GenericConjugateGradientOptimizer::
-		ComputeBetaFR(
-	    const DerivativeType & previousGradient,
+  double 
+    GenericConjugateGradientOptimizer::
+    ComputeBetaFR(
+      const DerivativeType & previousGradient,
       const DerivativeType & gradient,
-		  const ParametersType & previousSearchDir)
-	{
-		const unsigned int numberOfParameters = gradient.GetSize();
-		double num = 0.0;
-		double den = 0.0;
+      const ParametersType & previousSearchDir)
+  {
+    const unsigned int numberOfParameters = gradient.GetSize();
+    double num = 0.0;
+    double den = 0.0;
 
-		for (unsigned int i = 0; i < numberOfParameters; ++i)
-		{
-			const double & grad = gradient[i];
-			const double & prevgrad = previousGradient[i];
-			num += grad * grad;
-			den += prevgrad * prevgrad;
-		}
+    for (unsigned int i = 0; i < numberOfParameters; ++i)
+    {
+      const double & grad = gradient[i];
+      const double & prevgrad = previousGradient[i];
+      num += grad * grad;
+      den += prevgrad * prevgrad;
+    }
 
-		if ( den <= NumericTraits<double>::epsilon() )
-		{
-			this->m_StopCondition = InfiniteBeta;
-			this->StopOptimization();
-			return 0.0;
-		}
-		return num/den;
+    if ( den <= NumericTraits<double>::epsilon() )
+    {
+      this->m_StopCondition = InfiniteBeta;
+      this->StopOptimization();
+      return 0.0;
+    }
+    return num/den;
 
-	} // end ComputeBetaFR
+  } // end ComputeBetaFR
 
 
-	/** 
-	 * ********************** ComputeBetaPR ******************************
-	 */
+  /** 
+   * ********************** ComputeBetaPR ******************************
+   */
 
-	double 
-		GenericConjugateGradientOptimizer::
-		ComputeBetaPR(
-	    const DerivativeType & previousGradient,
+  double 
+    GenericConjugateGradientOptimizer::
+    ComputeBetaPR(
+      const DerivativeType & previousGradient,
       const DerivativeType & gradient,
-		  const ParametersType & previousSearchDir)
-	{
-		const unsigned int numberOfParameters = gradient.GetSize();
-		double num = 0.0;
-		double den = 0.0;
+      const ParametersType & previousSearchDir)
+  {
+    const unsigned int numberOfParameters = gradient.GetSize();
+    double num = 0.0;
+    double den = 0.0;
 
-		for (unsigned int i = 0; i < numberOfParameters; ++i)
-		{
-			const double & grad = gradient[i];
-			const double & prevgrad = previousGradient[i];
-			num += grad * ( grad - prevgrad );
-			den += prevgrad * prevgrad;
-		}
+    for (unsigned int i = 0; i < numberOfParameters; ++i)
+    {
+      const double & grad = gradient[i];
+      const double & prevgrad = previousGradient[i];
+      num += grad * ( grad - prevgrad );
+      den += prevgrad * prevgrad;
+    }
 
-		if ( den <= NumericTraits<double>::epsilon() )
-		{
-			this->m_StopCondition = InfiniteBeta;
-			this->StopOptimization();
-			return 0.0;
-		}
-		return num/den;
+    if ( den <= NumericTraits<double>::epsilon() )
+    {
+      this->m_StopCondition = InfiniteBeta;
+      this->StopOptimization();
+      return 0.0;
+    }
+    return num/den;
 
-	} // end ComputeBetaPR
+  } // end ComputeBetaPR
 
 
-	/** 
-	 * ********************** ComputeBetaDY ******************************
-	 */
+  /** 
+   * ********************** ComputeBetaDY ******************************
+   */
 
-	double 
-		GenericConjugateGradientOptimizer::
-		ComputeBetaDY(
-	    const DerivativeType & previousGradient,
+  double 
+    GenericConjugateGradientOptimizer::
+    ComputeBetaDY(
+      const DerivativeType & previousGradient,
       const DerivativeType & gradient,
-		  const ParametersType & previousSearchDir)
-	{
-		const unsigned int numberOfParameters = gradient.GetSize();
-		double num = 0.0;
-		double den = 0.0;
+      const ParametersType & previousSearchDir)
+  {
+    const unsigned int numberOfParameters = gradient.GetSize();
+    double num = 0.0;
+    double den = 0.0;
 
-		for (unsigned int i = 0; i < numberOfParameters; ++i)
-		{
-			const double & grad = gradient[i];
-			num += grad * grad;
-			den += previousSearchDir[i] * ( grad - previousGradient[i] );
-		}
+    for (unsigned int i = 0; i < numberOfParameters; ++i)
+    {
+      const double & grad = gradient[i];
+      num += grad * grad;
+      den += previousSearchDir[i] * ( grad - previousGradient[i] );
+    }
 
-		if ( den <= NumericTraits<double>::epsilon() )
-		{
-			this->m_StopCondition = InfiniteBeta;
-			this->StopOptimization();
-			return 0.0;
-		}
-		return num/den;
-	} // end ComputeBetaDY
+    if ( den <= NumericTraits<double>::epsilon() )
+    {
+      this->m_StopCondition = InfiniteBeta;
+      this->StopOptimization();
+      return 0.0;
+    }
+    return num/den;
+  } // end ComputeBetaDY
 
 
-	/** 
-	 * ********************** ComputeBetaHS ******************************
-	 */
+  /** 
+   * ********************** ComputeBetaHS ******************************
+   */
 
-	double 
-		GenericConjugateGradientOptimizer::
-		ComputeBetaHS(
-	    const DerivativeType & previousGradient,
+  double 
+    GenericConjugateGradientOptimizer::
+    ComputeBetaHS(
+      const DerivativeType & previousGradient,
       const DerivativeType & gradient,
-		  const ParametersType & previousSearchDir)
-	{
-		const unsigned int numberOfParameters = gradient.GetSize();
-		double num = 0.0;
-		double den = 0.0;
+      const ParametersType & previousSearchDir)
+  {
+    const unsigned int numberOfParameters = gradient.GetSize();
+    double num = 0.0;
+    double den = 0.0;
 
-		for (unsigned int i = 0; i < numberOfParameters; ++i)
-		{
-			const double & diff = gradient[i] - previousGradient[i];
-			num += gradient[i] * diff;
-			den += previousSearchDir[i] * diff;
-		}
-		
-		if ( den <= NumericTraits<double>::epsilon() )
-		{
-			this->m_StopCondition = InfiniteBeta;
-			this->StopOptimization();
-			return 0.0;
-		}
+    for (unsigned int i = 0; i < numberOfParameters; ++i)
+    {
+      const double & diff = gradient[i] - previousGradient[i];
+      num += gradient[i] * diff;
+      den += previousSearchDir[i] * diff;
+    }
+    
+    if ( den <= NumericTraits<double>::epsilon() )
+    {
+      this->m_StopCondition = InfiniteBeta;
+      this->StopOptimization();
+      return 0.0;
+    }
 
-		return num/den;
-	} // end ComputeBetaHS
+    return num/den;
+  } // end ComputeBetaHS
 
 
-	/** 
-	 * ********************** ComputeBetaDYHS ***************************
-	 */
+  /** 
+   * ********************** ComputeBetaDYHS ***************************
+   */
 
-	double 
-		GenericConjugateGradientOptimizer::
-		ComputeBetaDYHS(
-	    const DerivativeType & previousGradient,
+  double 
+    GenericConjugateGradientOptimizer::
+    ComputeBetaDYHS(
+      const DerivativeType & previousGradient,
       const DerivativeType & gradient,
-		  const ParametersType & previousSearchDir)
-	{
-		const double beta_DY = this->ComputeBetaDY(
-			previousGradient, gradient, previousSearchDir);
-		
-		const double beta_HS = this->ComputeBetaHS(
-			previousGradient, gradient, previousSearchDir);
+      const ParametersType & previousSearchDir)
+  {
+    const double beta_DY = this->ComputeBetaDY(
+      previousGradient, gradient, previousSearchDir);
+    
+    const double beta_HS = this->ComputeBetaHS(
+      previousGradient, gradient, previousSearchDir);
 
-		return vnl_math_max( 0.0, vnl_math_min( beta_DY, beta_HS) );
+    return vnl_math_max( 0.0, vnl_math_min( beta_DY, beta_HS) );
 
-	} // end ComputeBetaDYHS
+  } // end ComputeBetaDYHS
 
 
   /** 
    * *********************** SetBetaDefinition **************************
    */
 
-	void
-		GenericConjugateGradientOptimizer::
-		SetBetaDefinition(const BetaDefinitionType & arg)
-	{
-		itkDebugMacro("Setting BetaDefinition to " << arg);
+  void
+    GenericConjugateGradientOptimizer::
+    SetBetaDefinition(const BetaDefinitionType & arg)
+  {
+    itkDebugMacro("Setting BetaDefinition to " << arg);
     if ( this->m_BetaDefinition != arg )
-		{
-			if (this->m_BetaDefinitionMap.count(arg) != 1)
-			{
-				itkExceptionMacro(<< "Undefined beta: " << arg);
-			}
-			this->m_BetaDefinition = arg;
+    {
+      if (this->m_BetaDefinitionMap.count(arg) != 1)
+      {
+        itkExceptionMacro(<< "Undefined beta: " << arg);
+      }
+      this->m_BetaDefinition = arg;
       this->Modified();
-		}
-	} // end SetBetaDefinition
+    }
+  } // end SetBetaDefinition
 
 
   /**
@@ -585,31 +585,31 @@ namespace itk
    */
 
   void
-		GenericConjugateGradientOptimizer::
-		AddBetaDefinition(
-		  const BetaDefinitionType & name,
-			ComputeBetaFunctionType function)
-	{
-		itkDebugMacro("Adding BetaDefinition: " << name);
+    GenericConjugateGradientOptimizer::
+    AddBetaDefinition(
+      const BetaDefinitionType & name,
+      ComputeBetaFunctionType function)
+  {
+    itkDebugMacro("Adding BetaDefinition: " << name);
 
-		this->m_BetaDefinitionMap[name] = function;
-		
-	} // end AddBetaDefinition
+    this->m_BetaDefinitionMap[name] = function;
+    
+  } // end AddBetaDefinition
 
 
-	/**
-	 * ********** SetMaxNrOfItWithoutImprovement *****************
-	 */
+  /**
+   * ********** SetMaxNrOfItWithoutImprovement *****************
+   */
 
-	void
-		GenericConjugateGradientOptimizer::
-		SetMaxNrOfItWithoutImprovement(unsigned long arg)
-	{
-		itkDebugMacro("Setting  to " << arg);
-		this->m_UseDefaultMaxNrOfItWithoutImprovement = false;
-		this->m_MaxNrOfItWithoutImprovement = arg; 
-		this->Modified();
-	} // end SetMaxNrOfItWithoutImprovement
+  void
+    GenericConjugateGradientOptimizer::
+    SetMaxNrOfItWithoutImprovement(unsigned long arg)
+  {
+    itkDebugMacro("Setting  to " << arg);
+    this->m_UseDefaultMaxNrOfItWithoutImprovement = false;
+    this->m_MaxNrOfItWithoutImprovement = arg; 
+    this->Modified();
+  } // end SetMaxNrOfItWithoutImprovement
 
   
   /** 

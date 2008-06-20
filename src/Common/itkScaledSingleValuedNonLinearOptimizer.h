@@ -61,20 +61,20 @@ namespace itk
   {
   public:
 
-		/** Standard ITK-stuff. */
+    /** Standard ITK-stuff. */
     typedef ScaledSingleValuedNonLinearOptimizer  Self;
     typedef SingleValuedNonLinearOptimizer        Superclass;
     typedef SmartPointer<Self>                    Pointer;
     typedef SmartPointer<const Self>              ConstPointer;
 
-		/** Method for creation through the object factory. */
+    /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
-		/** Run-time type information (and related methods). */
+    /** Run-time type information (and related methods). */
     itkTypeMacro( ScaledSingleValuedNonLinearOptimizer,
       SingleValuedNonLinearOptimizer );
 
-		/** Typedefs inherited from the superclass. */
+    /** Typedefs inherited from the superclass. */
     typedef Superclass::MeasureType               MeasureType;
     typedef Superclass::ParametersType            ParametersType;
     typedef Superclass::DerivativeType            DerivativeType;
@@ -90,7 +90,7 @@ namespace itk
      * are the squared scales (following the ITK convention).
      * Call this method in StartOptimization() and after
      * entering new scales.
-		 */
+     */
     virtual void InitializeScales(void);
 
     /** Setting: SetCostFunction. */
@@ -98,7 +98,7 @@ namespace itk
 
     /** Setting: Turn on/off the use of scales. Set this flag to false when no
      * scaling is desired.
-		 */
+     */
     virtual void SetUseScales( bool arg );
     const bool GetUseScales(void) const;
     
@@ -107,7 +107,7 @@ namespace itk
 
     /** Get the current unscaled position: get the ScaledCurrentPosition
      * and divide each element through its scale.
-		 */
+     */
     virtual const ParametersType & GetCurrentPosition() const;
     
     /** Get a pointer to the scaled cost function. */
@@ -116,22 +116,22 @@ namespace itk
     /** Setting: set to 'true' if you want to maximize the cost function.
      * It forces the scaledCostFunction to negate the cost function value
       * and its derivative.
-			*/
+      */
     itkBooleanMacro( Maximize );
     virtual void SetMaximize( bool _arg );
     itkGetConstMacro( Maximize, bool );
 
   protected:
 
-		/** The constructor. */
+    /** The constructor. */
     ScaledSingleValuedNonLinearOptimizer();
-		/** The destructor. */
+    /** The destructor. */
     virtual ~ScaledSingleValuedNonLinearOptimizer() {};
 
-		/** PrintSelf. */
+    /** PrintSelf. */
     void PrintSelf( std::ostream& os, Indent indent ) const{};
     
-		/** Member variables. */
+    /** Member variables. */
     ParametersType                  m_ScaledCurrentPosition;
     ScaledCostFunctionPointer       m_ScaledCostFunction;
     
@@ -153,14 +153,14 @@ namespace itk
 
     /** Divide the (scaled) parameters by the scales and call the GetValue routine 
      * of the unscaled cost function.
-		 */
+     */
     virtual MeasureType GetScaledValue(
       const ParametersType & parameters ) const;
 
     /** Divide the (scaled) parameters by the scales, call the GetDerivative routine
      * of the unscaled cost function and divide the resulting derivative by
      * the scales.
-		 */
+     */
     virtual void GetScaledDerivative(
       const ParametersType & parameters,
       DerivativeType & derivative ) const;
@@ -173,15 +173,15 @@ namespace itk
         
   private:
 
-		/** The private constructor. */
+    /** The private constructor. */
     ScaledSingleValuedNonLinearOptimizer( const Self& );	// purposely not implemented
-		/** The private copy constructor. */
+    /** The private copy constructor. */
     void operator=( const Self& );												// purposely not implemented
 
     /** Variable to store the CurrentPosition, when the function
      * GetCurrentPosition is called. This method needs a member variable,
      * because the GetCurrentPosition return something by reference.
-		 */
+     */
     mutable ParametersType          m_UnscaledCurrentPosition;
 
     bool                            m_Maximize;

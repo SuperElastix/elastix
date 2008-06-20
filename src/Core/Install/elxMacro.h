@@ -89,35 +89,35 @@
 *
 */
 #define elxInstallMacro(_classname) \
-	template < ::elx::ComponentDatabase::IndexType VIndex> \
-		class _classname##_install \
-	{ \
-	public: \
-		typedef typename ::elx::ElastixTypedef<VIndex>::ElastixType ElastixType; \
-		typedef ::elx::ComponentDatabase::ComponentDescriptionType ComponentDescriptionType; \
-		static int DO(::elx::ComponentDatabase * cdb) \
-		{ \
-		ComponentDescriptionType name = ::elx:: _classname <ElastixType>::elxGetClassNameStatic(); \
-		int dummy = ::elx::InstallFunctions< ::elx:: _classname <ElastixType> >::InstallComponent(name, VIndex, cdb); \
-			if ( ::elx::ElastixTypedef<VIndex+1>::Defined() ) \
-			{	return _classname##_install<VIndex+1>::DO( cdb ); } \
-			return dummy;  \
-		} \
-	}; \
-	template <> \
-		class _classname##_install < ::elx::NrOfSupportedImageTypes+1 > \
-	{ \
-	public: \
-		typedef ::elx::ComponentDatabase::ComponentDescriptionType ComponentDescriptionType; \
-		static int DO(::elx::ComponentDatabase * cdb) \
-		{ return 0; } \
-	}; \
+  template < ::elx::ComponentDatabase::IndexType VIndex> \
+    class _classname##_install \
+  { \
+  public: \
+    typedef typename ::elx::ElastixTypedef<VIndex>::ElastixType ElastixType; \
+    typedef ::elx::ComponentDatabase::ComponentDescriptionType ComponentDescriptionType; \
+    static int DO(::elx::ComponentDatabase * cdb) \
+    { \
+    ComponentDescriptionType name = ::elx:: _classname <ElastixType>::elxGetClassNameStatic(); \
+    int dummy = ::elx::InstallFunctions< ::elx:: _classname <ElastixType> >::InstallComponent(name, VIndex, cdb); \
+      if ( ::elx::ElastixTypedef<VIndex+1>::Defined() ) \
+      {	return _classname##_install<VIndex+1>::DO( cdb ); } \
+      return dummy;  \
+    } \
+  }; \
+  template <> \
+    class _classname##_install < ::elx::NrOfSupportedImageTypes+1 > \
+  { \
+  public: \
+    typedef ::elx::ComponentDatabase::ComponentDescriptionType ComponentDescriptionType; \
+    static int DO(::elx::ComponentDatabase * cdb) \
+    { return 0; } \
+  }; \
   extern "C" int _classname##InstallComponent( \
-		::elx::ComponentDatabase * _cdb ) \
-	{ \
-		int _InstallDummy##_classname = _classname##_install<1>::DO( _cdb  ); \
-	  return _InstallDummy##_classname ; \
-	}//ignore semicolon
+    ::elx::ComponentDatabase * _cdb ) \
+  { \
+    int _InstallDummy##_classname = _classname##_install<1>::DO( _cdb  ); \
+    return _InstallDummy##_classname ; \
+  }//ignore semicolon
 
 
 /** 
@@ -139,7 +139,7 @@
  */
 #define elxInstallComponentFunctionDeclarationMacro(_classname)\
 extern "C" int _classname##InstallComponent( \
-		::elx::ComponentDatabase * _cdb )
+    ::elx::ComponentDatabase * _cdb )
 
 
 /** 
@@ -171,29 +171,29 @@ extern "C" int _classname##InstallComponent( \
 */
 
 #define elxPrepareImageTypeSupportMacro() \
-	template < ::elx::ComponentDatabase::IndexType VIndex >  /**unsigned int*/ \
-		class ElastixTypedef \
-	{ \
-	public: \
-		/** In the specialisations of this template class */ \
-		/** this typedef will make sense */ \
-		typedef ::itk::Object ElastixType;  \
-		typedef ::elx::ComponentDatabase::PixelTypeDescriptionType PixelTypeString; \
-		static PixelTypeString fPixelTypeAsString(void) \
-			{ return PixelTypeString("");} \
-		static PixelTypeString mPixelTypeAsString(void) \
-			{ return PixelTypeString("");} \
-		static unsigned int fDim(void) \
-			{ return 0;} \
-		static unsigned int mDim(void) \
-			{ return 0;} \
-		/** In the specialisations of this template class*/ \
-		/** this function will return 'true' */ \
-		static bool Defined(void) \
-			{ return false;} \
-	} 
-	
-		
+  template < ::elx::ComponentDatabase::IndexType VIndex >  /**unsigned int*/ \
+    class ElastixTypedef \
+  { \
+  public: \
+    /** In the specialisations of this template class */ \
+    /** this typedef will make sense */ \
+    typedef ::itk::Object ElastixType;  \
+    typedef ::elx::ComponentDatabase::PixelTypeDescriptionType PixelTypeString; \
+    static PixelTypeString fPixelTypeAsString(void) \
+      { return PixelTypeString("");} \
+    static PixelTypeString mPixelTypeAsString(void) \
+      { return PixelTypeString("");} \
+    static unsigned int fDim(void) \
+      { return 0;} \
+    static unsigned int mDim(void) \
+      { return 0;} \
+    /** In the specialisations of this template class*/ \
+    /** this function will return 'true' */ \
+    static bool Defined(void) \
+      { return false;} \
+  } 
+  
+    
 /**
 * Macro for installing support for new ImageTypes.
 * Used in elxSupportedImageTypes.cxx .
@@ -222,25 +222,25 @@ extern "C" int _classname##InstallComponent( \
 */
 
 #define elxSupportedImageTypeMacro(_fPixelType,_fDim,_mPixelType,_mDim,_VIndex) \
-	template<> \
-		class ElastixTypedef < _VIndex > \
-	{ \
-	public: \
-		typedef ::itk::Image< _fPixelType , _fDim > FixedImageType; \
-		typedef ::itk::Image< _mPixelType , _mDim > MovingImageType; \
-		typedef ::elx::ElastixTemplate< FixedImageType, MovingImageType > ElastixType; \
-		typedef ::elx::ComponentDatabase::PixelTypeDescriptionType PixelTypeString; \
-		static PixelTypeString fPixelTypeAsString(void) \
-			{ return PixelTypeString( #_fPixelType );} \
-		static PixelTypeString mPixelTypeAsString(void) \
-			{ return PixelTypeString( #_mPixelType );} \
-		static unsigned int fDim(void) \
-			{ return _fDim ;} \
-		static unsigned int mDim(void) \
-			{ return _mDim ;} \
-		static bool Defined(void) \
-		{	return true; }  \
-	} 
+  template<> \
+    class ElastixTypedef < _VIndex > \
+  { \
+  public: \
+    typedef ::itk::Image< _fPixelType , _fDim > FixedImageType; \
+    typedef ::itk::Image< _mPixelType , _mDim > MovingImageType; \
+    typedef ::elx::ElastixTemplate< FixedImageType, MovingImageType > ElastixType; \
+    typedef ::elx::ComponentDatabase::PixelTypeDescriptionType PixelTypeString; \
+    static PixelTypeString fPixelTypeAsString(void) \
+      { return PixelTypeString( #_fPixelType );} \
+    static PixelTypeString mPixelTypeAsString(void) \
+      { return PixelTypeString( #_mPixelType );} \
+    static unsigned int fDim(void) \
+      { return _fDim ;} \
+    static unsigned int mDim(void) \
+      { return _mDim ;} \
+    static bool Defined(void) \
+    {	return true; }  \
+  } 
 
 
 /**

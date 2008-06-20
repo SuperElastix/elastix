@@ -21,8 +21,8 @@ namespace itk{
 namespace Statistics{
 
   /**
-	 * ************************ Constructor *************************
-	 */
+   * ************************ Constructor *************************
+   */
 
   template< class TMeasurementVector, class TInternalValue >
     ListSampleCArray< TMeasurementVector, TInternalValue >
@@ -34,8 +34,8 @@ namespace Statistics{
   } // end Constructor
 
   /**
-	 * ************************ Destructor *************************
-	 */
+   * ************************ Destructor *************************
+   */
   template< class TMeasurementVector, class TInternalValue >
     ListSampleCArray< TMeasurementVector, TInternalValue >
     ::~ListSampleCArray()
@@ -45,9 +45,9 @@ namespace Statistics{
 
 
   /**
-	 * ************************ GetMeasurementVector *************************
+   * ************************ GetMeasurementVector *************************
    * Return value in input var.
-	 */
+   */
 
   template< class TMeasurementVector, class TInternalValue >
     void ListSampleCArray< TMeasurementVector, TInternalValue >
@@ -65,9 +65,9 @@ namespace Statistics{
 
 
   /**
-	 * ************************ GetMeasurementVector *************************
+   * ************************ GetMeasurementVector *************************
    * Return value as output var.
-	 */
+   */
 
   template< class TMeasurementVector, class TInternalValue >
     const typename ListSampleCArray< TMeasurementVector, TInternalValue >
@@ -89,8 +89,8 @@ namespace Statistics{
 
 
   /**
-	 * ************************ SetMeasurement *************************
-	 */
+   * ************************ SetMeasurement *************************
+   */
   
   template< class TMeasurementVector, class TInternalValue >
     void ListSampleCArray< TMeasurementVector, TInternalValue >
@@ -105,8 +105,8 @@ namespace Statistics{
 
 
   /**
-	 * ************************ SetMeasurementVector *************************
-	 */
+   * ************************ SetMeasurementVector *************************
+   */
   
   template< class TMeasurementVector, class TInternalValue >
     void ListSampleCArray< TMeasurementVector, TInternalValue >
@@ -127,8 +127,8 @@ namespace Statistics{
 
 
   /**
-	 * ************************ Resize *************************
-	 */
+   * ************************ Resize *************************
+   */
   
   template< class TMeasurementVector, class TInternalValue >
     void ListSampleCArray< TMeasurementVector, TInternalValue >
@@ -147,7 +147,7 @@ namespace Statistics{
       }
       if ( size > 0 )
       {
-				unsigned int dim = this->GetMeasurementVectorSize();
+        unsigned int dim = this->GetMeasurementVectorSize();
         this->AllocateInternalContainer( size, dim );
         this->m_InternalContainerSize = size;
         this->Modified();
@@ -156,8 +156,8 @@ namespace Statistics{
 
 
   /**
-	 * ************************ SetActualSize *************************
-	 */
+   * ************************ SetActualSize *************************
+   */
   
   template< class TMeasurementVector, class TInternalValue >
     void
@@ -173,8 +173,8 @@ namespace Statistics{
 
 
   /**
-	 * ************************ GetActualSize *************************
-	 */
+   * ************************ GetActualSize *************************
+   */
   
   template< class TMeasurementVector, class TInternalValue >
     unsigned long
@@ -186,8 +186,8 @@ namespace Statistics{
 
     
   /**
-	 * ************************ Clear *************************
-	 */
+   * ************************ Clear *************************
+   */
   
   template< class TMeasurementVector, class TInternalValue >
     void ListSampleCArray< TMeasurementVector, TInternalValue >
@@ -198,8 +198,8 @@ namespace Statistics{
 
 
   /**
-	 * ************************ AllocateInternalContainer *************************
-	 */
+   * ************************ AllocateInternalContainer *************************
+   */
   
   template< class TMeasurementVector, class TInternalValue >
     void ListSampleCArray< TMeasurementVector, TInternalValue >
@@ -215,8 +215,8 @@ namespace Statistics{
 
 
   /**
-	 * ************************ DeallocateInternalContainer *************************
-	 */
+   * ************************ DeallocateInternalContainer *************************
+   */
   
   template< class TMeasurementVector, class TInternalValue >
     void ListSampleCArray< TMeasurementVector, TInternalValue >
@@ -232,8 +232,8 @@ namespace Statistics{
 
 
   /**
-	 * ************************ GetFrequency *************************
-	 */
+   * ************************ GetFrequency *************************
+   */
   
   template< class TMeasurementVector, class TInternalValue >
     typename ListSampleCArray< TMeasurementVector, TInternalValue >::FrequencyType 
@@ -252,8 +252,8 @@ namespace Statistics{
 
 
   /**
-	 * ************************ PrintSelf *************************
-	 */
+   * ************************ PrintSelf *************************
+   */
   
   template< class TMeasurementVector, class TInternalValue >
     void ListSampleCArray< TMeasurementVector, TInternalValue >

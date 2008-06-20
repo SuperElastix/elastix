@@ -21,39 +21,39 @@
 namespace itk{
 namespace Statistics
 {
-	
-	/**
-	 * \class ListSampleCArray
-	 *
-	 * \brief A ListSampleBase that internally uses a CArray, which can be accessed 
+  
+  /**
+   * \class ListSampleCArray
+   *
+   * \brief A ListSampleBase that internally uses a CArray, which can be accessed 
    * 
-	 * This class is useful if some function expects a c-array, but you would
+   * This class is useful if some function expects a c-array, but you would
    * like to keep things as much as possible in the itk::Statistics-framework.
-	 * 
+   * 
    * \todo: the second template argument should be removed, since the GetMeasurementVector
    * method is incorrect when TMeasurementVector::ValueType != TInternalValue.
    *  
-	 * \ingroup Metrics?
-	 */
-	
+   * \ingroup Metrics?
+   */
+  
   template < class TMeasurementVector, class TInternalValue = typename TMeasurementVector::ValueType >
-	class ListSampleCArray
+  class ListSampleCArray
     : public ListSampleBase< TMeasurementVector >
-	{
-	public:
-		
-		/** Standard itk. */
-		typedef ListSampleCArray            Self;
-		typedef ListSampleBase<
+  {
+  public:
+    
+    /** Standard itk. */
+    typedef ListSampleCArray            Self;
+    typedef ListSampleBase<
       TMeasurementVector >		          Superclass;
-		typedef SmartPointer< Self >				Pointer;
-		typedef SmartPointer< const Self >	ConstPointer;
-		
-		/** New method for creating an object using a factory.*/
-		itkNewMacro( Self );
-		
-		/** ITK type info */
-		itkTypeMacro( ListSampleCArray, ListSampleBase );
+    typedef SmartPointer< Self >				Pointer;
+    typedef SmartPointer< const Self >	ConstPointer;
+    
+    /** New method for creating an object using a factory.*/
+    itkNewMacro( Self );
+    
+    /** ITK type info */
+    itkTypeMacro( ListSampleCArray, ListSampleBase );
 
     /** Typedef's from Superclass. */
     typedef typename Superclass::MeasurementVectorType      MeasurementVectorType;
@@ -115,16 +115,16 @@ namespace Statistics
       return static_cast<TotalFrequencyType>( this->m_InternalContainerSize );
     }
 
-	protected:
-		
-		ListSampleCArray();
-		virtual ~ListSampleCArray();
+  protected:
+    
+    ListSampleCArray();
+    virtual ~ListSampleCArray();
     void PrintSelf( std::ostream& os, Indent indent ) const;
-		
-	private:
-		
-		ListSampleCArray( const Self& );	// purposely not implemented
-		void operator=( const Self& );    // purposely not implemented
+    
+  private:
+    
+    ListSampleCArray( const Self& );	// purposely not implemented
+    void operator=( const Self& );    // purposely not implemented
 
     /** The internal storage of the data in a C array. */
     InternalDataContainerType   m_InternalContainer;
@@ -137,10 +137,10 @@ namespace Statistics
     /** Functions to (de)allocate the memory of the data container. */
     void AllocateInternalContainer( unsigned long size, unsigned int dim );
     void DeallocateInternalContainer( void );
-				
-	}; // end class ListSampleCArray
-		
-		
+        
+  }; // end class ListSampleCArray
+    
+    
 } // end namespace Statistics
 } // end namespace itk
 

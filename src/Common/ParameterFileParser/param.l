@@ -48,7 +48,7 @@ extern "C" {
         // Global variables for managing current line number, column, and error
         // count.
 
-	int line_no=1, token_head=1, token_tail=1, error_count=0, err_token_size=0;
+  int line_no=1, token_head=1, token_tail=1, error_count=0, err_token_size=0;
 
 
         // DEFINITIONS:
@@ -169,14 +169,14 @@ TAB	\t
   INCR_TOKEN;
   BEGIN INITIAL; 
   std::cout << "yylex(): Line "<< line_no << ", " <<  ERRSTRING << "  "
-	   << yytext << std::endl;
+     << yytext << std::endl;
   if (error_count > MAXERRORS)
-	{
-	  std::cout << "Too many lexical errors ("
-		   << error_count
-		   <<"), quitting.\n";
-	  exit(1);
-	}
+  {
+    std::cout << "Too many lexical errors ("
+       << error_count
+       <<"), quitting.\n";
+    exit(1);
+  }
 }
 
 <ERROR>{ID} {

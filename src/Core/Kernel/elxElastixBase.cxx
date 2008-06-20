@@ -22,31 +22,31 @@
 namespace elastix
 {
 
-	/**
-	 * ********************* Constructor ****************************
-	 */
+  /**
+   * ********************* Constructor ****************************
+   */
 
-	ElastixBase::ElastixBase()
-	{
-		/** Initialize.*/
-		this->m_Configuration = 0;
-		this->m_ComponentDatabase = 0;
-		this->m_DBIndex = 0;
+  ElastixBase::ElastixBase()
+  {
+    /** Initialize.*/
+    this->m_Configuration = 0;
+    this->m_ComponentDatabase = 0;
+    this->m_DBIndex = 0;
 
-		/** The default output precision of elxout is set to 6 */
-		this->m_DefaultOutputPrecision = 6;
+    /** The default output precision of elxout is set to 6 */
+    this->m_DefaultOutputPrecision = 6;
 
     /** Create the component containers */
     this->m_FixedImagePyramidContainer = ObjectContainerType::New();
-		this->m_MovingImagePyramidContainer = ObjectContainerType::New();
-		this->m_InterpolatorContainer = ObjectContainerType::New();
+    this->m_MovingImagePyramidContainer = ObjectContainerType::New();
+    this->m_InterpolatorContainer = ObjectContainerType::New();
     this->m_ImageSamplerContainer = ObjectContainerType::New();
-		this->m_MetricContainer = ObjectContainerType::New();
-		this->m_OptimizerContainer = ObjectContainerType::New();
-		this->m_RegistrationContainer = ObjectContainerType::New();
-		this->m_ResamplerContainer = ObjectContainerType::New();
-		this->m_ResampleInterpolatorContainer = ObjectContainerType::New();
-		this->m_TransformContainer = ObjectContainerType::New();
+    this->m_MetricContainer = ObjectContainerType::New();
+    this->m_OptimizerContainer = ObjectContainerType::New();
+    this->m_RegistrationContainer = ObjectContainerType::New();
+    this->m_ResamplerContainer = ObjectContainerType::New();
+    this->m_ResampleInterpolatorContainer = ObjectContainerType::New();
+    this->m_TransformContainer = ObjectContainerType::New();
 
     /** Create image and mask containers */
     this->m_FixedImageContainer = DataObjectContainerType::New();
@@ -59,58 +59,58 @@ namespace elastix
     this->m_FixedMaskFileNameContainer = FileNameContainerType::New();
     this->m_MovingMaskFileNameContainer = FileNameContainerType::New();
 
- 		/** Initialize initialTransform and final transform. */
-		this->m_InitialTransform = 0;
+    /** Initialize initialTransform and final transform. */
+    this->m_InitialTransform = 0;
     this->m_FinalTransform = 0;
 
    } // end Constructor
 
 
-	/**
-	 * ********************* SetDBIndex ***********************
-	 */
+  /**
+   * ********************* SetDBIndex ***********************
+   */
 
-	void ElastixBase::SetDBIndex( DBIndexType _arg )
-	{
-		/** If m_DBIndex is not set, set it.*/
-		if ( this->m_DBIndex != _arg )
-		{
-			this->m_DBIndex = _arg;
+  void ElastixBase::SetDBIndex( DBIndexType _arg )
+  {
+    /** If m_DBIndex is not set, set it.*/
+    if ( this->m_DBIndex != _arg )
+    {
+      this->m_DBIndex = _arg;
 
-			Object * thisasobject = dynamic_cast<Object *>(this);
-			if ( thisasobject )
-			{	
-				thisasobject->Modified();
-			}
-		}
+      Object * thisasobject = dynamic_cast<Object *>(this);
+      if ( thisasobject )
+      {	
+        thisasobject->Modified();
+      }
+    }
 
-	} // end SetDBIndex
+  } // end SetDBIndex
 
 
-	/**
-	 * ************************ BeforeAllBase ***************************
-	 */
-	
-	int ElastixBase::BeforeAllBase(void)
-	{
-		/** Declare the return value and initialize it.*/
-		int returndummy = 0;
+  /**
+   * ************************ BeforeAllBase ***************************
+   */
+  
+  int ElastixBase::BeforeAllBase(void)
+  {
+    /** Declare the return value and initialize it.*/
+    int returndummy = 0;
 
-		/** Set the default precision of floating values in the output. */
-		this->m_Configuration->ReadParameter(
+    /** Set the default precision of floating values in the output. */
+    this->m_Configuration->ReadParameter(
       this->m_DefaultOutputPrecision, "DefaultOutputPrecision", 0, true );
-		elxout << std::setprecision( this->m_DefaultOutputPrecision );
+    elxout << std::setprecision( this->m_DefaultOutputPrecision );
 
-		/** Print to log file.*/
-		elxout << std::fixed;
-		elxout << std::showpoint;
-		elxout << std::setprecision(3);
-		elxout << "ELASTIX version: " << __ELASTIX_VERSION << std::endl;
-		elxout << std::setprecision( this->GetDefaultOutputPrecision() );
+    /** Print to log file.*/
+    elxout << std::fixed;
+    elxout << std::showpoint;
+    elxout << std::setprecision(3);
+    elxout << "ELASTIX version: " << __ELASTIX_VERSION << std::endl;
+    elxout << std::setprecision( this->GetDefaultOutputPrecision() );
 
-		/** Check Command line options and print them to the logfile.*/
-		elxout << "Command line options from ElastixBase:" << std::endl;
-		std::string check = "";
+    /** Check Command line options and print them to the logfile.*/
+    elxout << "Command line options from ElastixBase:" << std::endl;
+    std::string check = "";
 
     /** Read the fixed and moving image filenames. These are obliged options,
      * so print an error if they are not present.
@@ -138,92 +138,92 @@ namespace elastix
       elxout << "-mMask    unspecified, so no moving mask used" << std::endl;
     }
    
-		/** Check for appearance of "-out".
-		 * This check has already been performed in elastix.cxx,
-		 * Here we do it again. */
-		check = "";
-		check = this->GetConfiguration()->GetCommandLineArgument( "-out" );
-		if ( check == "" )
-		{
-			xl::xout["error"] << "ERROR: No CommandLine option \"-out\" given!" << std::endl;
-			returndummy |= 1;
-		}
-		else
-		{
-			/** Make sure that last character of -out equals a '/'. */
-			std::string folder( check );
-			if ( folder.find_last_of( "/" ) != folder.size() - 1 )
-			{
-				folder.append( "/" );
-				this->GetConfiguration()->SetCommandLineArgument( "-out", folder.c_str() );
-			}
-			elxout << "-out      " << check << std::endl;
-		}
+    /** Check for appearance of "-out".
+     * This check has already been performed in elastix.cxx,
+     * Here we do it again. */
+    check = "";
+    check = this->GetConfiguration()->GetCommandLineArgument( "-out" );
+    if ( check == "" )
+    {
+      xl::xout["error"] << "ERROR: No CommandLine option \"-out\" given!" << std::endl;
+      returndummy |= 1;
+    }
+    else
+    {
+      /** Make sure that last character of -out equals a '/'. */
+      std::string folder( check );
+      if ( folder.find_last_of( "/" ) != folder.size() - 1 )
+      {
+        folder.append( "/" );
+        this->GetConfiguration()->SetCommandLineArgument( "-out", folder.c_str() );
+      }
+      elxout << "-out      " << check << std::endl;
+    }
 
-		/** Print all "-p". */
-		unsigned int i = 1;
-		bool loop = true;
+    /** Print all "-p". */
+    unsigned int i = 1;
+    bool loop = true;
     while ( loop )
-		{
-			check = "";
-			std::ostringstream tempPname("");
-			tempPname << "-p(" << i << ")";
-			check = this->GetConfiguration()->GetCommandLineArgument( tempPname.str().c_str() );
-			if ( check == "" ) loop = false;
-			else elxout << "-p        " << check << std::endl;
-			++i;
-		}
+    {
+      check = "";
+      std::ostringstream tempPname("");
+      tempPname << "-p(" << i << ")";
+      check = this->GetConfiguration()->GetCommandLineArgument( tempPname.str().c_str() );
+      if ( check == "" ) loop = false;
+      else elxout << "-p        " << check << std::endl;
+      ++i;
+    }
 
-		/** Check for appearance of "-priority", if this is a Windows station. */
-		#ifdef _WIN32
-			check = "";
-			check = this->GetConfiguration()->GetCommandLineArgument( "-priority" );
-			if ( check == "" )
-			{
-				elxout << "-priority unspecified, so NORMAL process priority" << std::endl;
-			}
-			else
-			{
-				elxout << "-priority " << check << std::endl;
-			}
-		#endif
+    /** Check for appearance of "-priority", if this is a Windows station. */
+    #ifdef _WIN32
+      check = "";
+      check = this->GetConfiguration()->GetCommandLineArgument( "-priority" );
+      if ( check == "" )
+      {
+        elxout << "-priority unspecified, so NORMAL process priority" << std::endl;
+      }
+      else
+      {
+        elxout << "-priority " << check << std::endl;
+      }
+    #endif
 
     /** Check for appearance of -threads, which specifies the maximum number of threads. */
     check = "";
-		check = this->GetConfiguration()->GetCommandLineArgument( "-threads" );
-		if ( check == "" )
-		{
-			elxout << "-threads  unspecified, so all available threads are used" << std::endl;
-		}
-		else
-		{
-			elxout << "-threads  " << check << std::endl;
-		}
+    check = this->GetConfiguration()->GetCommandLineArgument( "-threads" );
+    if ( check == "" )
+    {
+      elxout << "-threads  unspecified, so all available threads are used" << std::endl;
+    }
+    else
+    {
+      elxout << "-threads  " << check << std::endl;
+    }
 
-		/** Return a value.*/
-		return returndummy;
+    /** Return a value.*/
+    return returndummy;
 
-	} // end BeforeAllBase
+  } // end BeforeAllBase
 
-	/**
-	 * ************************ BeforeAllTransformixBase ***************************
-	 */
-	
-	int ElastixBase::BeforeAllTransformixBase(void)
-	{
-		/** Declare the return value and initialize it.*/
-		int returndummy = 0;
+  /**
+   * ************************ BeforeAllTransformixBase ***************************
+   */
+  
+  int ElastixBase::BeforeAllTransformixBase(void)
+  {
+    /** Declare the return value and initialize it.*/
+    int returndummy = 0;
 
     /** Print to log file. */
-		elxout << std::fixed;
-		elxout << std::showpoint;
-		elxout << std::setprecision(3);
-		elxout << "ELASTIX version: " << __ELASTIX_VERSION << std::endl;
-		elxout << std::setprecision( this->GetDefaultOutputPrecision() );
+    elxout << std::fixed;
+    elxout << std::showpoint;
+    elxout << std::setprecision(3);
+    elxout << "ELASTIX version: " << __ELASTIX_VERSION << std::endl;
+    elxout << std::setprecision( this->GetDefaultOutputPrecision() );
 
-		/** Check Command line options and print them to the logfile. */
-		elxout << "Command line options from ElastixBase:" << std::endl;
-		std::string check = "";
+    /** Check Command line options and print them to the logfile. */
+    elxout << "Command line options from ElastixBase:" << std::endl;
+    std::string check = "";
 
     /** Read the input image filenames. These are not obliged options,
      * so do not print an error if they are not present.
@@ -237,72 +237,72 @@ namespace elastix
       elxout << "-in       unspecified, so no input image specified" << std::endl;
     }
     
-		/** Check for appearance of "-out". */
-		check = this->GetConfiguration()->GetCommandLineArgument( "-out" );
-		if ( check == "" )
-		{
-			xl::xout["error"] << "ERROR: No CommandLine option \"-out\" given!" << std::endl;
-			returndummy |= 1;
-		}
-		else
-		{
-			/** Make sure that last character of -out equals a '/'. */
-			std::string folder( check );
-			if ( folder.find_last_of( "/" ) != folder.size() - 1 )
-			{
-				folder.append( "/" );
-				this->GetConfiguration()->SetCommandLineArgument( "-out", folder.c_str() );
-			}
-			elxout << "-out      " << check << std::endl;
-		}
+    /** Check for appearance of "-out". */
+    check = this->GetConfiguration()->GetCommandLineArgument( "-out" );
+    if ( check == "" )
+    {
+      xl::xout["error"] << "ERROR: No CommandLine option \"-out\" given!" << std::endl;
+      returndummy |= 1;
+    }
+    else
+    {
+      /** Make sure that last character of -out equals a '/'. */
+      std::string folder( check );
+      if ( folder.find_last_of( "/" ) != folder.size() - 1 )
+      {
+        folder.append( "/" );
+        this->GetConfiguration()->SetCommandLineArgument( "-out", folder.c_str() );
+      }
+      elxout << "-out      " << check << std::endl;
+    }
 
     /** Check for appearance of -threads, which specifies the maximum number of threads. */
     check = "";
-		check = this->GetConfiguration()->GetCommandLineArgument( "-threads" );
-		if ( check == "" )
-		{
-			elxout << "-threads  unspecified, so all available threads are used" << std::endl;
-		}
-		else
-		{
-			elxout << "-threads  " << check << std::endl;
-		}
+    check = this->GetConfiguration()->GetCommandLineArgument( "-threads" );
+    if ( check == "" )
+    {
+      elxout << "-threads  unspecified, so all available threads are used" << std::endl;
+    }
+    else
+    {
+      elxout << "-threads  " << check << std::endl;
+    }
 
-		/** Print "-tp". */
-		check = this->GetConfiguration()->GetCommandLineArgument( "-tp" );
-		elxout << "-tp       " << check << std::endl;
+    /** Print "-tp". */
+    check = this->GetConfiguration()->GetCommandLineArgument( "-tp" );
+    elxout << "-tp       " << check << std::endl;
 
     return returndummy;
   } // end BeforeAllTransformixBase
 
 
-	/**
-	 * ************************ BeforeRegistrationBase ******************
-	 */
-	
-	void ElastixBase::BeforeRegistrationBase(void)
-	{
-		using namespace xl;
+  /**
+   * ************************ BeforeRegistrationBase ******************
+   */
+  
+  void ElastixBase::BeforeRegistrationBase(void)
+  {
+    using namespace xl;
 
-		/** Set up the "iteration" writing field.*/
-		this->m_IterationInfo.SetOutputs( xout.GetCOutputs() );
-		this->m_IterationInfo.SetOutputs( xout.GetXOutputs() );
-	  
-		xout.AddTargetCell( "iteration", &this->m_IterationInfo );
+    /** Set up the "iteration" writing field.*/
+    this->m_IterationInfo.SetOutputs( xout.GetCOutputs() );
+    this->m_IterationInfo.SetOutputs( xout.GetXOutputs() );
+    
+    xout.AddTargetCell( "iteration", &this->m_IterationInfo );
 
-	} // end BeforeRegistrationBase
+  } // end BeforeRegistrationBase
 
 
-	/**
-	 * **************** AfterRegistrationBase ***********************
-	 */
-	
-	void ElastixBase::AfterRegistrationBase(void)
-	{
-		/** Remove the "iteration" writing field */
-		xl::xout.RemoveTargetCell("iteration");
+  /**
+   * **************** AfterRegistrationBase ***********************
+   */
+  
+  void ElastixBase::AfterRegistrationBase(void)
+  {
+    /** Remove the "iteration" writing field */
+    xl::xout.RemoveTargetCell("iteration");
 
-	} // end AfterRegistrationBase
+  } // end AfterRegistrationBase
 
 
   /** 
@@ -317,33 +317,33 @@ namespace elastix
     FileNameContainerPointer fileNameContainer = FileNameContainerType::New();
     std::string check = "";
     std::string argused( "" );
-    		
+        
     /** Try optionkey0 */
     std::ostringstream argusedss( "" );
     argusedss << optionkey << 0;
     argused = argusedss.str();
-		check = this->GetConfiguration()->GetCommandLineArgument( argused.c_str() );
-		if ( check == "" )
-		{
+    check = this->GetConfiguration()->GetCommandLineArgument( argused.c_str() );
+    if ( check == "" )
+    {
       /** Try optionkey */
       std::ostringstream argusedss2( "" );
       argusedss2 << optionkey;
       argused = argusedss2.str();
       check = this->GetConfiguration()->GetCommandLineArgument( argused.c_str() );
       if ( check == "" )
-		  {
+      {
         /** Both failed; return an error message, if desired. */
         if ( printerrors )
         {
-  			  xl::xout["error"] 
+          xl::xout["error"] 
             << "ERROR: No CommandLine option \"" 
             << optionkey << "\" or \""
             << optionkey << 0 << "\" given!" << std::endl;
         }
-			  errorcode |= 1;
+        errorcode |= 1;
         return fileNameContainer;
       }
-		}
+    }
     /** Optionkey or optionkey0 is found. */
     if ( check != "" )
     {
@@ -355,7 +355,7 @@ namespace elastix
         unsigned int nrSpaces = nrSpaces0 > 1 ? nrSpaces0 : 1;
         std::string spaces = "";
         spaces.resize( nrSpaces, ' ' );
-		    elxout << argused << spaces << check << std::endl;
+        elxout << argused << spaces << check << std::endl;
       }
       fileNameContainer->CreateElementAt( 0 ) = check;
 

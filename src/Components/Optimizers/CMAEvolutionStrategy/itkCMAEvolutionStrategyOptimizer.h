@@ -30,7 +30,7 @@
 namespace itk
 {
   /**
-	 * \class CMAEvolutionStrategyOptimizer
+   * \class CMAEvolutionStrategyOptimizer
    * \brief A Covariance Matrix Adaptation Evolution Strategy Optimizer.
    *
    * Based on the work by Hansen:
@@ -45,7 +45,7 @@ namespace itk
    */
 
   class CMAEvolutionStrategyOptimizer :
-		public ScaledSingleValuedNonLinearOptimizer
+    public ScaledSingleValuedNonLinearOptimizer
   {
   public:
 
@@ -56,7 +56,7 @@ namespace itk
 
     itkNewMacro(Self);
     itkTypeMacro(CMAEvolutionStrategyOptimizer,
-			ScaledSingleValuedNonLinearOptimizer);
+      ScaledSingleValuedNonLinearOptimizer);
 
     typedef Superclass::ParametersType            ParametersType;
     typedef Superclass::DerivativeType            DerivativeType;
@@ -72,7 +72,7 @@ namespace itk
       PositionToleranceMax,
       ValueTolerance,
       ZeroStepLength,
-			Unknown }                                   StopConditionType;
+      Unknown }                                   StopConditionType;
 
     virtual void StartOptimization(void);
     virtual void ResumeOptimization(void);
@@ -232,10 +232,10 @@ namespace itk
     RandomGeneratorType::Pointer m_RandomGenerator;
        
     /** The value of the cost function at the current position */
-		MeasureType                   m_CurrentValue;
+    MeasureType                   m_CurrentValue;
 
     /** The current iteration number */
-		unsigned long                 m_CurrentIteration;
+    unsigned long                 m_CurrentIteration;
 
     /** The stop condition */
     StopConditionType             m_StopCondition;
@@ -417,7 +417,7 @@ namespace itk
     double                        m_PositionToleranceMin;
     double                        m_ValueTolerance;
     
-	}; // end class CMAEvolutionStrategyOptimizer
+  }; // end class CMAEvolutionStrategyOptimizer
 
 
 } // end namespace itk

@@ -942,7 +942,7 @@ yyerrlab:   /* here on detecting error */
     if (msg != 0)
       {
         strcpy(msg, "parse error");
-		  //strcpy_s(msg, strlen("parse error"), "parse error");
+      //strcpy_s(msg, strlen("parse error"), "parse error");
 
         if (count < 5)
     {
@@ -957,7 +957,7 @@ yyerrlab:   /* here on detecting error */
 // 			  strcat_s( msg, strlen( ", expecting `" ), count == 0 ? ", expecting `" : " or `" );
 // 			  strcat_s( msg, strlen( yytname[x] ), yytname[x] );
 // 			  strcat_s( msg, strlen( "'" ), "'" );
-			  count++;
+        count++;
           }
     }
         yyerror(msg);

@@ -29,93 +29,93 @@ namespace elastix
 {
 using namespace itk;
 
-	/**
-	 * \class RegistrationBase
-	 * \brief This class is the elastix base class for all Registration schemes.
-	 *
-	 * This class contains all the common functionality for Registrations.
+  /**
+   * \class RegistrationBase
+   * \brief This class is the elastix base class for all Registration schemes.
+   *
+   * This class contains all the common functionality for Registrations.
    *
    * \parameter ErodeMask: a flag to determine if the masks should be eroded
-	 *		from one resolution level to another. Choose from {"true", "false"} \n
-	 *		example: <tt>(ErodeMask "false")</tt> \n
-	 *		The default is "true". The parameter may be specified for each
+   *		from one resolution level to another. Choose from {"true", "false"} \n
+   *		example: <tt>(ErodeMask "false")</tt> \n
+   *		The default is "true". The parameter may be specified for each
    *    resolution differently, but that's not obliged. The actual amount of 
    *    erosion depends on the image pyramid. \n
    *    Erosion of the mask prevents the border / edge of the mask taken into account.
-	 *    This can be useful for example for ultrasound images,
-	 *    where you don't want to take into account values outside
-	 *    the US-beam, but where you also don't want to match the
-	 *    edge / border of this beam.
-	 *    For example for MRI's of the head, the borders of the head
-	 *    may be wanted to match, and there erosion should be avoided.
+   *    This can be useful for example for ultrasound images,
+   *    where you don't want to take into account values outside
+   *    the US-beam, but where you also don't want to match the
+   *    edge / border of this beam.
+   *    For example for MRI's of the head, the borders of the head
+   *    may be wanted to match, and there erosion should be avoided.
    * \parameter ErodeFixedMask: a flag to determine if the fixed mask(s) should be eroded
-	 *		from one resolution level to another. Choose from {"true", "false"} \n
-	 *		example: <tt>(ErodeFixedMask "true" "false")</tt>
+   *		from one resolution level to another. Choose from {"true", "false"} \n
+   *		example: <tt>(ErodeFixedMask "true" "false")</tt>
    *    This setting overrules ErodeMask.\n
    * \parameter ErodeMovingMask: a flag to determine if the moving mask(s) should be eroded
-	 *		from one resolution level to another. Choose from {"true", "false"} \n
-	 *		example: <tt>(ErodeMovingMask "true" "false")</tt>
+   *		from one resolution level to another. Choose from {"true", "false"} \n
+   *		example: <tt>(ErodeMovingMask "true" "false")</tt>
    *    This setting overrules ErodeMask.\n
    * \parameter ErodeFixedMask\<i\>: a flag to determine if the i-th fixed mask should be eroded
-	 *		from one resolution level to another. Choose from {"true", "false"} \n
-	 *		example: <tt>(ErodeFixedMask2 "true" "false")</tt>
+   *		from one resolution level to another. Choose from {"true", "false"} \n
+   *		example: <tt>(ErodeFixedMask2 "true" "false")</tt>
    *    This setting overrules ErodeMask and ErodeFixedMask.\n
    * \parameter ErodeMovingMask\<i\>: a flag to determine if the i-th moving mask should be eroded
-	 *		from one resolution level to another. Choose from {"true", "false"} \n
-	 *		example: <tt>(ErodeMovingMask2 "true" "false")</tt>
+   *		from one resolution level to another. Choose from {"true", "false"} \n
+   *		example: <tt>(ErodeMovingMask2 "true" "false")</tt>
    *    This setting overrules ErodeMask and ErodeMovingMask.\n   
    *
-	 * \ingroup Registrations
-	 * \ingroup ComponentBaseClasses
-	 */
+   * \ingroup Registrations
+   * \ingroup ComponentBaseClasses
+   */
 
-	template <class TElastix>
-		class RegistrationBase : public BaseComponentSE<TElastix>
-	{
-	public:
+  template <class TElastix>
+    class RegistrationBase : public BaseComponentSE<TElastix>
+  {
+  public:
 
-		/** Standard ITK stuff. */
-		typedef RegistrationBase						Self;
-		typedef BaseComponentSE<TElastix>		Superclass;
+    /** Standard ITK stuff. */
+    typedef RegistrationBase						Self;
+    typedef BaseComponentSE<TElastix>		Superclass;
 
-		/** Run-time type information (and related methods). */
-		itkTypeMacro( RegistrationBase, BaseComponentSE );
+    /** Run-time type information (and related methods). */
+    itkTypeMacro( RegistrationBase, BaseComponentSE );
 
-		/** Typedef's from Elastix. */
-		typedef typename Superclass::ElastixType						ElastixType;
-		typedef typename Superclass::ElastixPointer					ElastixPointer;
-		typedef typename Superclass::ConfigurationType			ConfigurationType;
-		typedef typename Superclass::ConfigurationPointer		ConfigurationPointer;
-		typedef typename Superclass::RegistrationType				RegistrationType;
-		typedef typename Superclass::RegistrationPointer		RegistrationPointer;
-	
-		/** Other typedef's. */
-		typedef typename ElastixType::FixedImageType		FixedImageType;
-		typedef typename ElastixType::MovingImageType		MovingImageType;
+    /** Typedef's from Elastix. */
+    typedef typename Superclass::ElastixType						ElastixType;
+    typedef typename Superclass::ElastixPointer					ElastixPointer;
+    typedef typename Superclass::ConfigurationType			ConfigurationType;
+    typedef typename Superclass::ConfigurationPointer		ConfigurationPointer;
+    typedef typename Superclass::RegistrationType				RegistrationType;
+    typedef typename Superclass::RegistrationPointer		RegistrationPointer;
+  
+    /** Other typedef's. */
+    typedef typename ElastixType::FixedImageType		FixedImageType;
+    typedef typename ElastixType::MovingImageType		MovingImageType;
     
     /** Get	the dimension of the fixed image. */
-		itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
-		/** Get	the dimension of the moving image. */
-		itkStaticConstMacro( MovingImageDimension, unsigned int, MovingImageType::ImageDimension );
+    itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
+    /** Get	the dimension of the moving image. */
+    itkStaticConstMacro( MovingImageDimension, unsigned int, MovingImageType::ImageDimension );
 
-		/** Typedef for ITKBaseType. */
-		typedef itk::MultiResolutionImageRegistrationMethod2<
-			FixedImageType,	MovingImageType >				ITKBaseType;
+    /** Typedef for ITKBaseType. */
+    typedef itk::MultiResolutionImageRegistrationMethod2<
+      FixedImageType,	MovingImageType >				ITKBaseType;
 
     /** Typedef for mask erosion options */
     typedef std::vector<bool>                 UseMaskErosionArrayType;
 
-		/** Cast to ITKBaseType. */
-		virtual ITKBaseType * GetAsITKBaseType(void)
-		{
-			return dynamic_cast<ITKBaseType *>(this);
-		}
+    /** Cast to ITKBaseType. */
+    virtual ITKBaseType * GetAsITKBaseType(void)
+    {
+      return dynamic_cast<ITKBaseType *>(this);
+    }
 
     /** Cast to ITKBaseType, to use in const functions. */
-		virtual const ITKBaseType * GetAsITKBaseType(void) const
-		{
-			return dynamic_cast<const ITKBaseType *>(this);
-		}
+    virtual const ITKBaseType * GetAsITKBaseType(void) const
+    {
+      return dynamic_cast<const ITKBaseType *>(this);
+    }
 
     /** Function to read the mask parameters from the configuration object.
      * \todo: move to RegistrationBase
@@ -142,13 +142,13 @@ using namespace itk;
       const unsigned int nrOfMasks,
       const std::string & whichMask,
       const unsigned int level ) const;
-		
-	protected:
+    
+  protected:
 
-		/** The constructor. */
-		RegistrationBase() {}
-		/** The destructor. */
-		virtual ~RegistrationBase() {}
+    /** The constructor. */
+    RegistrationBase() {}
+    /** The destructor. */
+    virtual ~RegistrationBase() {}
 
     /** Typedef's for mask support. */
     typedef typename ElastixType::MaskPixelType           MaskPixelType;
@@ -156,19 +156,19 @@ using namespace itk;
     typedef typename ElastixType::MovingMaskType          MovingMaskImageType;
     typedef typename FixedMaskImageType::Pointer          FixedMaskImagePointer;
     typedef typename MovingMaskImageType::Pointer         MovingMaskImagePointer;
-		typedef ImageMaskSpatialObject2<
-			itkGetStaticConstMacro( FixedImageDimension ) >			FixedMaskSpatialObjectType;
-		typedef ImageMaskSpatialObject2<
-			itkGetStaticConstMacro( MovingImageDimension ) >		MovingMaskSpatialObjectType;
-		typedef typename 
+    typedef ImageMaskSpatialObject2<
+      itkGetStaticConstMacro( FixedImageDimension ) >			FixedMaskSpatialObjectType;
+    typedef ImageMaskSpatialObject2<
+      itkGetStaticConstMacro( MovingImageDimension ) >		MovingMaskSpatialObjectType;
+    typedef typename 
       FixedMaskSpatialObjectType::Pointer             		FixedMaskSpatialObjectPointer;
-		typedef typename 
+    typedef typename 
       MovingMaskSpatialObjectType::Pointer      	    		MovingMaskSpatialObjectPointer;
 
     typedef typename ITKBaseType::FixedImagePyramidType   FixedImagePyramidType;
     typedef typename ITKBaseType::MovingImagePyramidType  MovingImagePyramidType;
 
- 		/** Some typedef's used for eroding the masks */
+    /** Some typedef's used for eroding the masks */
     typedef ErodeMaskImageFilter< FixedMaskImageType >    FixedMaskErodeFilterType;
     typedef typename FixedMaskErodeFilterType::Pointer    FixedMaskErodeFilterPointer;
     typedef ErodeMaskImageFilter< MovingMaskImageType >   MovingMaskErodeFilterType;
@@ -206,14 +206,14 @@ using namespace itk;
       const MovingMaskImageType * maskImage, bool useMaskErosion,
       const MovingImagePyramidType * pyramid, unsigned int level ) const;
 
-	private:
+  private:
 
-		/** The private constructor. */
-		RegistrationBase( const Self& );	// purposely not implemented
-		/** The private copy constructor. */
-		void operator=( const Self& );		// purposely not implemented
+    /** The private constructor. */
+    RegistrationBase( const Self& );	// purposely not implemented
+    /** The private copy constructor. */
+    void operator=( const Self& );		// purposely not implemented
 
-	}; // end class RegistrationBase
+  }; // end class RegistrationBase
 
 
 } // end namespace elastix

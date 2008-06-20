@@ -19,12 +19,12 @@
 
 namespace itk
 {
-	
+  
   unsigned int ANNBinaryTreeCreator::m_NumberOfANNBinaryTrees = 0;
 
-	/**
-	 * ************************ CreateANNkDTree *************************
-	 */
+  /**
+   * ************************ CreateANNkDTree *************************
+   */
 
   ANNBinaryTreeCreator::ANNkDTreeType * ANNBinaryTreeCreator::CreateANNkDTree(
     ANNPointArrayType pa, int n, int d, int bs,
@@ -36,8 +36,8 @@ namespace itk
 
 
   /**
-	 * ************************ CreateANNbdTree *************************
-	 */
+   * ************************ CreateANNbdTree *************************
+   */
 
   ANNBinaryTreeCreator::ANNbdTreeType * ANNBinaryTreeCreator::CreateANNbdTree(
     ANNPointArrayType pa, int n, int d, int bs,
@@ -49,8 +49,8 @@ namespace itk
 
 
   /**
-	 * ************************ CreateANNBruteForceTree *************************
-	 */
+   * ************************ CreateANNBruteForceTree *************************
+   */
 
   ANNBinaryTreeCreator::ANNBruteForceTreeType * ANNBinaryTreeCreator::CreateANNBruteForceTree(
     ANNPointArrayType pa, int n, int d )
@@ -61,8 +61,8 @@ namespace itk
 
 
   /**
-	 * ************************ DeleteANNkDTree *************************
-	 */
+   * ************************ DeleteANNkDTree *************************
+   */
 
   void ANNBinaryTreeCreator::DeleteANNkDTree( ANNkDTreeType * & tree )
   {
@@ -76,8 +76,8 @@ namespace itk
 
 
   /**
-	 * ************************ DeleteANNBruteForceTree *************************
-	 */
+   * ************************ DeleteANNBruteForceTree *************************
+   */
 
   void ANNBinaryTreeCreator::DeleteANNBruteForceTree( ANNBruteForceTreeType * & tree )
   {
@@ -91,8 +91,8 @@ namespace itk
   
 
   /**
-	 * ************************ IncreaseReferenceCount *************************
-	 */
+   * ************************ IncreaseReferenceCount *************************
+   */
   
   void ANNBinaryTreeCreator::IncreaseReferenceCount( void )
   {
@@ -101,8 +101,8 @@ namespace itk
 
 
   /**
-	 * ************************ DecreaseReferenceCount *************************
-	 */
+   * ************************ DecreaseReferenceCount *************************
+   */
   
   void ANNBinaryTreeCreator::DecreaseReferenceCount( void )
   {

@@ -232,7 +232,7 @@ namespace itk
 
     /** Helper function to compute m_PRatioArray in case of low memory consumption. */
     void ComputeValueAndPRatioArray( double & MI ) const;
-      
+
   }; // end class ParzenWindowMutualInformationImageToImageMetric
 
 } // end namespace itk

@@ -134,14 +134,14 @@ protected:
   virtual ~ErodeMaskImageFilter(){}
 
   /** Some typedef's used for eroding the masks*/
-	typedef BinaryBallStructuringElement<
-		InputPixelType, 
+  typedef BinaryBallStructuringElement<
+    InputPixelType, 
     itkGetStaticConstMacro(InputImageDimension) >         StructuringElementType;
-	typedef typename StructuringElementType::RadiusType		  RadiusType;
-	typedef BinaryErodeImageFilter<
-		InputImageType,
-		OutputImageType,
-		StructuringElementType >					                    ErodeFilterType;
+  typedef typename StructuringElementType::RadiusType		  RadiusType;
+  typedef BinaryErodeImageFilter<
+    InputImageType,
+    OutputImageType,
+    StructuringElementType >					                    ErodeFilterType;
   typedef typename ErodeFilterType::Pointer               ErodeFilterPointer;
   typedef itk::FixedArray<
     ErodeFilterPointer,

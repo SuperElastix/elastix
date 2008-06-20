@@ -21,8 +21,8 @@ namespace itk
 {
 
   /**
-	 * ******************* Constructor *******************
-	 */
+   * ******************* Constructor *******************
+   */
 
   template< class TInputImage, class TOutputVectorContainer >
     ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
@@ -39,8 +39,8 @@ namespace itk
 
 
   /**
-	 * ******************* MakeOutput *******************
-	 */
+   * ******************* MakeOutput *******************
+   */
 
   template< class TInputImage, class TOutputVectorContainer >
     DataObject::Pointer
@@ -53,8 +53,8 @@ namespace itk
 
 
   /**
-	 * ******************* SetInput *******************
-	 */
+   * ******************* SetInput *******************
+   */
 
   template< class TInputImage, class TOutputVectorContainer >
     void
@@ -69,8 +69,8 @@ namespace itk
 
 
   /**
-	 * ******************* SetInput *******************
-	 */
+   * ******************* SetInput *******************
+   */
 
   template< class TInputImage, class TOutputVectorContainer >
     void
@@ -82,8 +82,8 @@ namespace itk
 
 
   /**
-	 * ******************* GetInput *******************
-	 */
+   * ******************* GetInput *******************
+   */
 
   template< class TInputImage, class TOutputVectorContainer >
     const typename ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >::InputImageType *
@@ -96,8 +96,8 @@ namespace itk
 
 
   /**
-	 * ******************* GetInput *******************
-	 */
+   * ******************* GetInput *******************
+   */
 
   template< class TInputImage, class TOutputVectorContainer >
     const typename ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >::InputImageType *
@@ -110,8 +110,8 @@ namespace itk
 
   
   /**
-	 * ******************* GetOutput *******************
-	 */
+   * ******************* GetOutput *******************
+   */
 
   template< class TInputImage, class TOutputVectorContainer >
     typename ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >::OutputVectorContainerType *
@@ -124,8 +124,8 @@ namespace itk
 
 
   /**
-	 * ******************* PrintSelf *******************
-	 */
+   * ******************* PrintSelf *******************
+   */
   
   template< class TInputImage, class TOutputVectorContainer >
     void
@@ -137,12 +137,12 @@ namespace itk
 
 
   /**
-	 * ******************* GenerateOutputInformation *******************
+   * ******************* GenerateOutputInformation *******************
    *
    * Copy information from first input to all outputs.
    * This is a void implementation to prevent the 
    * ProcessObject version to be called.
-	 *
+   *
   
   template< class TInputImage, class TOutputVectorContainer >
     void

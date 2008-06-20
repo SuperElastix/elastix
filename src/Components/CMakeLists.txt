@@ -21,7 +21,7 @@ IF(UNIX)
       ITKIO
       ITKCommon
       ITKStatistics )
-	ENDIF(NOT APPLE)
+  ENDIF(NOT APPLE)
 ENDIF(UNIX)
 
 # Interestingly, visual c++ and MAC-GCC do need param

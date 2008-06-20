@@ -32,17 +32,17 @@ namespace xl = xoutlibrary;
 namespace xoutlibrary
 {
 
-	typedef xoutbase<char>		xoutbase_type;
-	typedef xoutsimple<char>	xoutsimple_type;
-	typedef xoutrow<char>			xoutrow_type;
-	typedef xoutcell<char>		xoutcell_type;
+  typedef xoutbase<char>		xoutbase_type;
+  typedef xoutsimple<char>	xoutsimple_type;
+  typedef xoutrow<char>			xoutrow_type;
+  typedef xoutcell<char>		xoutcell_type;
 
 
-	extern "C"
-	{	
-		xoutbase_type & get_xout(void);
-		void set_xout(xoutbase_type * arg);
-	}
+  extern "C"
+  {	
+    xoutbase_type & get_xout(void);
+    void set_xout(xoutbase_type * arg);
+  }
 
 
 

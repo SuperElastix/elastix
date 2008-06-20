@@ -4,5 +4,3 @@ ADD_ELXCOMPONENT( NearestNeighborInterpolator
  elxNearestNeighborInterpolator.hxx
  elxNearestNeighborInterpolator.cxx )
 
-
-

@@ -31,21 +31,21 @@ namespace itk
 
   template < typename TTransformScalarType, unsigned int VImageDimension >
   class ITK_EXPORT GridScheduleComputer :
-	public Object
-	{
-	public:
-		
-		/** Standard class typedefs. */
-		typedef GridScheduleComputer          			Self;
-		typedef Object                    					Superclass;
-		typedef SmartPointer< Self >								Pointer;
-		typedef SmartPointer< const Self >					ConstPointer;
-		
-		/** Method for creation through the object factory. */
-		itkNewMacro( Self );
-		
-		/** Run-time type information (and related methods). */
-		itkTypeMacro( GridScheduleComputer, Object );
+  public Object
+  {
+  public:
+    
+    /** Standard class typedefs. */
+    typedef GridScheduleComputer          			Self;
+    typedef Object                    					Superclass;
+    typedef SmartPointer< Self >								Pointer;
+    typedef SmartPointer< const Self >					ConstPointer;
+    
+    /** Method for creation through the object factory. */
+    itkNewMacro( Self );
+    
+    /** Run-time type information (and related methods). */
+    itkTypeMacro( GridScheduleComputer, Object );
 
     /** Dimension of the domain space. */
     itkStaticConstMacro( Dimension, unsigned int, VImageDimension );
@@ -128,29 +128,29 @@ namespace itk
       SpacingType & gridSpacing,
       OriginType & gridOrigin );
 
-	protected:
+  protected:
 
     /** The constructor. */
-		GridScheduleComputer();
+    GridScheduleComputer();
 
     /** The destructor. */
-		virtual ~GridScheduleComputer() {};
+    virtual ~GridScheduleComputer() {};
 
     /** PrintSelf. */
-		void PrintSelf( std::ostream& os, Indent indent ) const;
+    void PrintSelf( std::ostream& os, Indent indent ) const;
 
     /** Function to apply the initial transform, if it exists. */
     virtual void ApplyInitialTransform(
       OriginType & imageOrigin,
       SpacingType & imageSpacing,
       SpacingType & finalGridSpacing ) const;
-		
-	private:
+    
+  private:
 
-		GridScheduleComputer( const Self& );	// purposely not implemented
-		void operator=( const Self& );				// purposely not implemented
-		
-		/** Declare member variables, needed in functions. */
+    GridScheduleComputer( const Self& );	// purposely not implemented
+    void operator=( const Self& );				// purposely not implemented
+    
+    /** Declare member variables, needed in functions. */
     OriginType            m_ImageOrigin;
     SpacingType           m_ImageSpacing;
     RegionType            m_ImageRegion;
@@ -171,7 +171,7 @@ namespace itk
     VectorRegionType      m_GridRegions;
     TransformConstPointer m_InitialTransform;
 
-	}; // end class GridScheduleComputer
+  }; // end class GridScheduleComputer
   
 } // end namespace itk
 

@@ -21,7 +21,7 @@ namespace itk
 {
 
   /**
-	 * \class LineSearchOptimizer
+   * \class LineSearchOptimizer
    *
    * \brief A base class for LineSearch optimizers.
    *

@@ -22,8 +22,8 @@ namespace itk
 {
 
   /**
-	 * ************************ Constructor *************************
-	 */
+   * ************************ Constructor *************************
+   */
   
   template <class TFixedImage, class TMovingImage>
   KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
@@ -48,8 +48,8 @@ namespace itk
 
 
   /**
-	 * ************************ SetANNkDTree *************************
-	 */
+   * ************************ SetANNkDTree *************************
+   */
   
   template <class TFixedImage, class TMovingImage>
   void
@@ -62,8 +62,8 @@ namespace itk
 
 
   /**
-	 * ************************ SetANNkDTree *************************
-	 */
+   * ************************ SetANNkDTree *************************
+   */
   
   template <class TFixedImage, class TMovingImage>
   void
@@ -91,8 +91,8 @@ namespace itk
 
 
   /**
-	 * ************************ SetANNbdTree *************************
-	 */
+   * ************************ SetANNbdTree *************************
+   */
   
   template <class TFixedImage, class TMovingImage>
   void
@@ -108,8 +108,8 @@ namespace itk
 
 
   /**
-	 * ************************ SetANNbdTree *************************
-	 */
+   * ************************ SetANNbdTree *************************
+   */
   
   template <class TFixedImage, class TMovingImage>
   void
@@ -143,8 +143,8 @@ namespace itk
 
 
   /**
-	 * ************************ SetANNBruteForceTree *************************
-	 */
+   * ************************ SetANNBruteForceTree *************************
+   */
   
   template <class TFixedImage, class TMovingImage>
   void
@@ -159,8 +159,8 @@ namespace itk
 
 
   /**
-	 * ************************ SetANNStandardTreeSearch *************************
-	 */
+   * ************************ SetANNStandardTreeSearch *************************
+   */
   
   template <class TFixedImage, class TMovingImage>
   void
@@ -192,8 +192,8 @@ namespace itk
 
 
   /**
-	 * ************************ SetANNFixedRadiusTreeSearch *************************
-	 */
+   * ************************ SetANNFixedRadiusTreeSearch *************************
+   */
   
   template <class TFixedImage, class TMovingImage>
   void
@@ -230,8 +230,8 @@ namespace itk
 
 
   /**
-	 * ************************ SetANNPriorityTreeSearch *************************
-	 */
+   * ************************ SetANNPriorityTreeSearch *************************
+   */
   
   template <class TFixedImage, class TMovingImage>
   void
@@ -263,18 +263,18 @@ namespace itk
 
 
   /**
-	 * ********************* Initialize *****************************
-	 */
+   * ********************* Initialize *****************************
+   */
 
-	template <class TFixedImage, class TMovingImage>
-	void
+  template <class TFixedImage, class TMovingImage>
+  void
   KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
-		::Initialize( void ) throw ( ExceptionObject )
-	{
-		/** Call the superclass. */
-		this->Superclass::Initialize();
-		
-	  /** Check if the kNN trees are set. We only need to check the fixed tree. */
+    ::Initialize( void ) throw ( ExceptionObject )
+  {
+    /** Call the superclass. */
+    this->Superclass::Initialize();
+    
+    /** Check if the kNN trees are set. We only need to check the fixed tree. */
     if ( !this->m_BinaryKNNTreeFixed )
     {
       itkExceptionMacro( << "ERROR: The kNN tree is not set. " );
@@ -285,15 +285,15 @@ namespace itk
     {
       itkExceptionMacro( << "ERROR: The kNN tree searcher is not set. " );
     }
-				
-	} // end Initialize()
+        
+  } // end Initialize()
 
 
   /**
-	 * ************************ GetValue *************************
+   * ************************ GetValue *************************
    *
    * Get the match Measure
-	 */
+   */
 
   template <class TFixedImage, class TMovingImage>
   typename KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>::MeasureType
@@ -304,7 +304,7 @@ namespace itk
     MeasureType measure = NumericTraits< MeasureType >::Zero;
 
     /** Make sure the transform parameters are up to date. */
-		this->SetTransformParameters( parameters );
+    this->SetTransformParameters( parameters );
 
     /**
      * *************** Create the three list samples ******************
@@ -480,10 +480,10 @@ namespace itk
 
 
   /**
-	 * ************************ GetDerivative *************************
+   * ************************ GetDerivative *************************
    *
    * Get the Derivative Measure
-	 */
+   */
 
   template <class TFixedImage, class TMovingImage>
   void
@@ -493,9 +493,9 @@ namespace itk
     DerivativeType & derivative ) const
   {
     /** When the derivative is calculated, all information for calculating
-		 * the metric value is available. It does not cost anything to calculate
-		 * the metric value now. Therefore, we have chosen to only implement the
-		 * GetValueAndDerivative(), supplying it with a dummy value variable. */
+     * the metric value is available. It does not cost anything to calculate
+     * the metric value now. Therefore, we have chosen to only implement the
+     * GetValueAndDerivative(), supplying it with a dummy value variable. */
     MeasureType dummyvalue = NumericTraits< MeasureType >::Zero;
     this->GetValueAndDerivative( parameters, dummyvalue, derivative );
 
@@ -503,10 +503,10 @@ namespace itk
 
 
   /**
-	 * ************************ GetValueAndDerivative *************************
+   * ************************ GetValueAndDerivative *************************
    *
    * Get both the match Measure and theDerivative Measure
-	 */
+   */
 
   template <class TFixedImage, class TMovingImage>
   void
@@ -519,10 +519,10 @@ namespace itk
     /** Initialize some variables. */
     MeasureType measure = NumericTraits< MeasureType >::Zero;
     derivative = DerivativeType( this->m_NumberOfParameters );
-		derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+    derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
 
     /** Make sure the transform parameters are up to date. */
-		this->SetTransformParameters( parameters );
+    this->SetTransformParameters( parameters );
 
     /**
      * *************** Create the three list samples ******************
@@ -681,7 +681,7 @@ namespace itk
         D2sparse_J = spatialDerivativesContainer[ indices_J[ p ] ]
           * jacobianContainer[ indices_J[ p ] ];
 
-     	  /** Update the dGamma's. */
+        /** Update the dGamma's. */
         if ( this->m_UseOldAndSlowMethod )
         {
           /** Compute ( D1sparse - D2sparse_M ) and ( D1sparse - D2sparse_J ).
@@ -758,8 +758,8 @@ namespace itk
 
  
   /**
-	 * ************************ ComputeListSampleValuesAndDerivativePlusJacobian *************************
-	 */
+   * ************************ ComputeListSampleValuesAndDerivativePlusJacobian *************************
+   */
 
   template <class TFixedImage, class TMovingImage>
   void
@@ -779,7 +779,7 @@ namespace itk
     jacobianIndicesContainer.resize( 0 );
     spatialDerivativesContainer.resize( 0 );
 
-		/** Update the imageSampler and get a handle to the sample container. */
+    /** Update the imageSampler and get a handle to the sample container. */
     this->GetImageSampler()->Update();
     ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
     unsigned long size = sampleContainer->Size();
@@ -847,7 +847,7 @@ namespace itk
        * addition to the list samples is done.
        */
       if ( sampleOk )
-			{
+      {
         /** Get the fixed image value. */
         const RealType & fixedImageValue = static_cast<RealType>(
           (*fiter).Value().m_ImageValue );
@@ -912,12 +912,12 @@ namespace itk
 
         } // end if doDerivative
        
-				/** Update the NumberOfPixelsCounted. */
-				this->m_NumberOfPixelsCounted++;
+        /** Update the NumberOfPixelsCounted. */
+        this->m_NumberOfPixelsCounted++;
 
         ii++;
 
-			} // end if sampleOk
+      } // end if sampleOk
 
     } // end for loop over the image sample container
 
@@ -934,8 +934,8 @@ namespace itk
 
 
   /**
-	 * ************************ EvaluateMovingFeatureImageDerivatives *************************
-	 */
+   * ************************ EvaluateMovingFeatureImageDerivatives *************************
+   */
   
   template <class TFixedImage, class TMovingImage>
   void
@@ -999,8 +999,8 @@ namespace itk
 
 
   /**
-	 * ************************ ComputeImageJacobianDifference *************************
-	 */
+   * ************************ ComputeImageJacobianDifference *************************
+   */
   
   template <class TFixedImage, class TMovingImage>
   void
@@ -1041,8 +1041,8 @@ namespace itk
 
 
   /**
-	 * ************************ ComputeImageJacobianDifference *************************
-	 */
+   * ************************ ComputeImageJacobianDifference *************************
+   */
   
   template <class TFixedImage, class TMovingImage>
   void
@@ -1061,10 +1061,10 @@ namespace itk
     DerivativeType & dGamma_M,
     DerivativeType & dGamma_J ) const
   {
-		/** Make temporary copies of diff, since post_multiply changes diff. */
-		vnl_vector<double> tmpM1( diff_M );
-		vnl_vector<double> tmpM2( diff_M );
-		vnl_vector<double> tmpJ( diff_J );
+    /** Make temporary copies of diff, since post_multiply changes diff. */
+    vnl_vector<double> tmpM1( diff_M );
+    vnl_vector<double> tmpM2( diff_M );
+    vnl_vector<double> tmpJ( diff_J );
 
     /** Divide by the distance first, so that diff's are nomalised. */
     if ( distance_M > this->m_AvoidDivisionBy )
@@ -1077,7 +1077,7 @@ namespace itk
       tmpJ /= distance_J;
     }
 
-		/** Compute sparse intermediary results. */
+    /** Compute sparse intermediary results. */
     vnl_vector<double> tmp1sparse   = tmpM1.post_multiply( D1sparse );
     vnl_vector<double> tmp2sparse_M = tmpM2.post_multiply( D2sparse_M );
     vnl_vector<double> tmp2sparse_J = tmpJ.post_multiply( D2sparse_J );
@@ -1114,8 +1114,8 @@ namespace itk
 
 
   /**
-	 * ************************ PrintSelf *************************
-	 */
+   * ************************ PrintSelf *************************
+   */
   
   template <class TFixedImage, class TMovingImage>
   void

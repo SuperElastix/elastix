@@ -22,32 +22,32 @@
 namespace itk
 {
 
-	/**
-	 * ********************* Constructor ****************************
-	 */
-	
-	template < typename TTransformScalarType, unsigned int VImageDimension >
+  /**
+   * ********************* Constructor ****************************
+   */
+  
+  template < typename TTransformScalarType, unsigned int VImageDimension >
   GridScheduleComputer<TTransformScalarType, VImageDimension>
   ::GridScheduleComputer()
-	{
+  {
     this->m_BSplineOrder = 3;
     this->m_InitialTransform = 0;
     this->SetDefaultSchedule( 3, 2.0 );
 
-	} // end Constructor()
-	
+  } // end Constructor()
+  
 
   /**
-	 * ********************* SetDefaultGridSpacingSchedule ****************************
-	 */
-	
-	template < typename TTransformScalarType, unsigned int VImageDimension >
+   * ********************* SetDefaultGridSpacingSchedule ****************************
+   */
+  
+  template < typename TTransformScalarType, unsigned int VImageDimension >
   void
   GridScheduleComputer<TTransformScalarType, VImageDimension>
   ::SetDefaultSchedule(
     unsigned int levels,
     double upsamplingFactor )
-	{
+  {
     /** Set member variables. */
     this->m_NumberOfLevels = levels;
     this->SetUpsamplingFactor( upsamplingFactor );
@@ -70,14 +70,14 @@ namespace itk
 
   
   /**
-	 * ********************* SetGridSpacingSchedule ****************************
-	 */
-	
-	template < typename TTransformScalarType, unsigned int VImageDimension >
+   * ********************* SetGridSpacingSchedule ****************************
+   */
+  
+  template < typename TTransformScalarType, unsigned int VImageDimension >
   void
   GridScheduleComputer<TTransformScalarType, VImageDimension>
   ::SetSchedule( const VectorGridSpacingFactorType & schedule )
-	{
+  {
     /** Set member variables. */
     this->m_GridSpacingFactors = schedule;
     this->m_NumberOfLevels = schedule.size();
@@ -86,28 +86,28 @@ namespace itk
 
 
   /**
-	 * ********************* GetGridSpacingSchedule ****************************
-	 */
-	
-	template < typename TTransformScalarType, unsigned int VImageDimension >
+   * ********************* GetGridSpacingSchedule ****************************
+   */
+  
+  template < typename TTransformScalarType, unsigned int VImageDimension >
   void
   GridScheduleComputer<TTransformScalarType, VImageDimension>
   ::GetSchedule( VectorGridSpacingFactorType & schedule ) const
-	{
+  {
     schedule = this->m_GridSpacingFactors;
 
   } // end GetGridSpacingSchedule()
 
 
   /**
-	 * ********************* ComputeBSplineGrid ****************************
-	 */
-	
-	template < typename TTransformScalarType, unsigned int VImageDimension >
+   * ********************* ComputeBSplineGrid ****************************
+   */
+  
+  template < typename TTransformScalarType, unsigned int VImageDimension >
   void
   GridScheduleComputer<TTransformScalarType, VImageDimension>
   ::ComputeBSplineGrid( void )
-	{
+  {
     OriginType imageOrigin;
     SpacingType imageSpacing, finalGridSpacing;
 
@@ -121,7 +121,7 @@ namespace itk
 
     /** For all levels ... */
     for ( unsigned int res = 0; res < this->m_NumberOfLevels; ++res )
-		{
+    {
       /** For all dimensions ... */
       SizeType size = this->m_ImageRegion.GetSize();
       SizeType gridsize;
@@ -155,21 +155,21 @@ namespace itk
   
 
   /**
-	 * ********************* ApplyInitialTransform ****************************
+   * ********************* ApplyInitialTransform ****************************
    *
    * This function adapts the m_ImageOrigin and m_ImageSpacing.
    * This makes sure that the BSpline grid is located at the position
    * of the fixed image after undergoing the initial transform.
    */
-	
-	template < typename TTransformScalarType, unsigned int VImageDimension >
+  
+  template < typename TTransformScalarType, unsigned int VImageDimension >
   void
   GridScheduleComputer<TTransformScalarType, VImageDimension>
   ::ApplyInitialTransform( 
     OriginType & imageOrigin,
     SpacingType & imageSpacing,
     SpacingType & finalGridSpacing ) const
-	{
+  {
     /** Check for the existence of an initial transform. */
     if ( this->m_InitialTransform.IsNull() )
     {
@@ -270,10 +270,10 @@ namespace itk
 
 
   /**
-	 * ********************* GetBSplineGrid ****************************
-	 */
-	
-	template < typename TTransformScalarType, unsigned int VImageDimension >
+   * ********************* GetBSplineGrid ****************************
+   */
+  
+  template < typename TTransformScalarType, unsigned int VImageDimension >
   void
   GridScheduleComputer<TTransformScalarType, VImageDimension>
   ::GetBSplineGrid(
@@ -302,14 +302,14 @@ namespace itk
   
 
   /**
-	 * ********************* PrintSelf ****************************
-	 */
-	
-	template < typename TTransformScalarType, unsigned int VImageDimension >
+   * ********************* PrintSelf ****************************
+   */
+  
+  template < typename TTransformScalarType, unsigned int VImageDimension >
   void
   GridScheduleComputer<TTransformScalarType, VImageDimension>
   ::PrintSelf( std::ostream & os, Indent indent ) const
-	{
+  {
     Superclass::PrintSelf( os, indent );
 
     os << indent << "B-spline order: " << this->m_BSplineOrder << std::endl;

@@ -19,40 +19,40 @@
 
 namespace itk
 {
-	
-	/**
-	 * ************************ Constructor *************************
-	 */
+  
+  /**
+   * ************************ Constructor *************************
+   */
 
-	template < class TBinaryTree >
-		ANNPriorityTreeSearch<TBinaryTree>
-		::ANNPriorityTreeSearch()
-	{
+  template < class TBinaryTree >
+    ANNPriorityTreeSearch<TBinaryTree>
+    ::ANNPriorityTreeSearch()
+  {
     this->m_ErrorBound = 0.0;
     this->m_BinaryTreeAskDTree = 0;
   } // end Constructor
 
 
   /**
-	 * ************************ Destructor *************************
-	 */
+   * ************************ Destructor *************************
+   */
 
-	template < class TBinaryTree >
-		ANNPriorityTreeSearch<TBinaryTree>
-		::~ANNPriorityTreeSearch()
-	{
+  template < class TBinaryTree >
+    ANNPriorityTreeSearch<TBinaryTree>
+    ::~ANNPriorityTreeSearch()
+  {
   } // end Destructor
 
 
   /**
-	 * ************************ SetBinaryTree *************************
+   * ************************ SetBinaryTree *************************
    *
-	 */
+   */
 
-	template < class TBinaryTree >
-		void ANNPriorityTreeSearch<TBinaryTree>
-		::SetBinaryTree( BinaryTreeType * tree )
-	{
+  template < class TBinaryTree >
+    void ANNPriorityTreeSearch<TBinaryTree>
+    ::SetBinaryTree( BinaryTreeType * tree )
+  {
     this->Superclass::SetBinaryTree( tree );
     if ( tree )
     {
@@ -88,16 +88,16 @@ namespace itk
 
 
   /**
-	 * ************************ Search *************************
+   * ************************ Search *************************
    *
    * The error bound eps is ignored.
-	 */
+   */
 
-	template < class TBinaryTree >
-		void ANNPriorityTreeSearch<TBinaryTree>
-		::Search( const MeasurementVectorType & qp, IndexArrayType & ind,
+  template < class TBinaryTree >
+    void ANNPriorityTreeSearch<TBinaryTree>
+    ::Search( const MeasurementVectorType & qp, IndexArrayType & ind,
       DistanceArrayType & dists )
-	{
+  {
     /** Get k , dim and eps. */
     int k       = static_cast<int>( this->m_KNearestNeighbors );
     int dim     = static_cast<int>( this->m_DataDimension );

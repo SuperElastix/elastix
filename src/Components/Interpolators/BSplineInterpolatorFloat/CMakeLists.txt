@@ -4,5 +4,3 @@ ADD_ELXCOMPONENT( BSplineInterpolatorFloat
  elxBSplineInterpolatorFloat.hxx
  elxBSplineInterpolatorFloat.cxx )
 
-
-

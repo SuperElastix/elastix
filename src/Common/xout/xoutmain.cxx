@@ -22,18 +22,18 @@ namespace xoutlibrary
 {
 
 
-	
-	static xoutbase_type * local_xout = 0;
+  
+  static xoutbase_type * local_xout = 0;
 
-	xoutbase_type & get_xout(void)
-	{
-		return *local_xout;
-	}
+  xoutbase_type & get_xout(void)
+  {
+    return *local_xout;
+  }
 
-	void set_xout(xoutbase_type * arg)
-	{
-		local_xout = arg;
-	}
+  void set_xout(xoutbase_type * arg)
+  {
+    local_xout = arg;
+  }
 
 
 } // end namespace

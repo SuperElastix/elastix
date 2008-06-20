@@ -72,24 +72,24 @@ namespace itk
     this->m_Reader >> indexOrPoint;
     
     /** Set the IsIndex bool and the number of points.*/
- 	  if (indexOrPoint == "point")
-		{
+    if (indexOrPoint == "point")
+    {
       /** Input points are specified in world coordinates. */
-			this->m_PointsAreIndices = false;		
-		  this->m_Reader >> this->m_NumberOfPoints;
-		}
-		else if (indexOrPoint == "index")
-		{
+      this->m_PointsAreIndices = false;		
+      this->m_Reader >> this->m_NumberOfPoints;
+    }
+    else if (indexOrPoint == "index")
+    {
       /** Input points are specified as image indices. */
-			this->m_PointsAreIndices = true;
-			this->m_Reader >> this->m_NumberOfPoints;
-		}
-		else 
-		{
+      this->m_PointsAreIndices = true;
+      this->m_Reader >> this->m_NumberOfPoints;
+    }
+    else 
+    {
       /** Input points are assumed to be specified as image indices. */
-			this->m_PointsAreIndices = true;
-			this->m_NumberOfPoints = atoi( indexOrPoint.c_str() );				
-		}
+      this->m_PointsAreIndices = true;
+      this->m_NumberOfPoints = atoi( indexOrPoint.c_str() );				
+    }
 
     /** Leave the file open for the generate data  method */
 
@@ -125,7 +125,7 @@ namespace itk
         {
           if ( !this->m_Reader.eof() )
           {
-  		  	  this->m_Reader >> point[j];
+            this->m_Reader >> point[j];
           }
           else
           {
@@ -138,7 +138,7 @@ namespace itk
             return;
 
           }
-			  } 
+        } 
         points->push_back(point);
       }
     }

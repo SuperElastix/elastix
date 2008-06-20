@@ -31,8 +31,8 @@ namespace itk
    * \parameter ImageSampler: The way samples are taken from the fixed image in
    *    order to compute the metric value and its derivative in each iteration.
    *    Can be given for each resolution. Select one of {Random, Full, Grid, RandomCoordinate}.\n
-	 *		example: <tt>(ImageSampler "Random")</tt> \n
-	 *		The default is Random.
+   *		example: <tt>(ImageSampler "Random")</tt> \n
+   *		The default is Random.
    */
 
   template < class TInputImage >
@@ -42,7 +42,7 @@ namespace itk
   {
   public:
 
-		/** Standard ITK-stuff. */
+    /** Standard ITK-stuff. */
     typedef ImageSamplerBase                  Self;
     typedef ImageToVectorContainerFilter<
       TInputImage,
@@ -52,13 +52,13 @@ namespace itk
     typedef SmartPointer<Self>                Pointer;
     typedef SmartPointer<const Self>          ConstPointer;
 
-		/** Method for creation through the object factory. */
+    /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
-		/** Run-time type information (and related methods). */
+    /** Run-time type information (and related methods). */
     itkTypeMacro( ImageSamplerBase, ImageToVectorContainerFilter );
 
-		/** Typedefs inherited from the superclass. */
+    /** Typedefs inherited from the superclass. */
     typedef typename Superclass::DataObjectPointer            DataObjectPointer;
     typedef typename Superclass::OutputVectorContainerType    OutputVectorContainerType;
     typedef typename Superclass::OutputVectorContainerPointer OutputVectorContainerPointer;
@@ -70,7 +70,7 @@ namespace itk
 
     /** The input image dimension. */
     itkStaticConstMacro( InputImageDimension, unsigned int,
-			InputImageType::ImageDimension );
+      InputImageType::ImageDimension );
 
     /** Other typdefs. */
     typedef ImageSample< InputImageType >               ImageSampleType;
@@ -186,9 +186,9 @@ namespace itk
    
   private:
 
-		/** The private constructor. */
+    /** The private constructor. */
     ImageSamplerBase( const Self& );	        // purposely not implemented
-		/** The private copy constructor. */
+    /** The private copy constructor. */
     void operator=( const Self& );				    // purposely not implemented
 
     /** Member variables. */

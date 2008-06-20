@@ -23,10 +23,10 @@ namespace elastix
 
 using namespace itk;
 
-	/**
-	 * \class RandomSamplerSparseMask
-	 * \brief An interpolator based on the itk::ImageRandomSamplerSparseMask.
-	 * 
+  /**
+   * \class RandomSamplerSparseMask
+   * \brief An interpolator based on the itk::ImageRandomSamplerSparseMask.
+   * 
    * This image sampler randomly samples 'NumberOfSamples' voxels in 
    * the InputImageRegion. Voxels may be selected multiple times.
    * If a mask is given, the sampler tries to find samples within the 
@@ -38,48 +38,48 @@ using namespace itk;
    * This sampler is suitable to used in combination with the 
    * NewSamplesEveryIteration parameter (defined in the elx::OptimizerBase).
    *
-	 * The parameters used in this class are:
-	 * \parameter ImageSampler: Select this image sampler as follows:\n
-	 *		<tt>(ImageSampler "RandomSparseMask")</tt>
+   * The parameters used in this class are:
+   * \parameter ImageSampler: Select this image sampler as follows:\n
+   *		<tt>(ImageSampler "RandomSparseMask")</tt>
    * \parameter NumberOfSpatialSamples: The number of image voxels used for computing the
-	 *		metric value and its derivative in each iteration. Must be given for each resolution.\n
-	 *		example: <tt>(NumberOfSpatialSamples 2048 2048 4000)</tt> \n
-	 *		The default is 5000.
-	 *
-	 * \ingroup ImageSamplers
-	 */
+   *		metric value and its derivative in each iteration. Must be given for each resolution.\n
+   *		example: <tt>(NumberOfSpatialSamples 2048 2048 4000)</tt> \n
+   *		The default is 5000.
+   *
+   * \ingroup ImageSamplers
+   */
 
-	template < class TElastix >
-		class RandomSamplerSparseMask :
-		public
+  template < class TElastix >
+    class RandomSamplerSparseMask :
+    public
       ImageRandomSamplerSparseMask<
       ITK_TYPENAME elx::ImageSamplerBase<TElastix>::InputImageType >, 
-		public
+    public
       elx::ImageSamplerBase<TElastix>
-	{	
-	public:
-	
-		/** Standard ITK-stuff. */
-		typedef RandomSamplerSparseMask									      Self;
+  {	
+  public:
+  
+    /** Standard ITK-stuff. */
+    typedef RandomSamplerSparseMask									      Self;
     typedef	ImageRandomSamplerSparseMask<
       typename elx::ImageSamplerBase<TElastix>::InputImageType >	Superclass1;		
     typedef elx::ImageSamplerBase<TElastix>					Superclass2;		
-		typedef SmartPointer<Self>									Pointer;
-		typedef SmartPointer<const Self>						ConstPointer;
-		
-		/** Method for creation through the object factory. */
-		itkNewMacro(Self);
-		
-		/** Run-time type information (and related methods). */
-		itkTypeMacro( RandomSamplerSparseMask, ImageRandomSamplerSparseMask );
-		
-		/** Name of this class.
-		 * Use this name in the parameter file to select this specific interpolator. \n
-		 * example: <tt>(ImageSampler "RandomSparseMask")</tt>\n
-		 */
-		elxClassNameMacro( "RandomSparseMask" );
-		
-		/** Typedefs inherited from the superclass. */
+    typedef SmartPointer<Self>									Pointer;
+    typedef SmartPointer<const Self>						ConstPointer;
+    
+    /** Method for creation through the object factory. */
+    itkNewMacro(Self);
+    
+    /** Run-time type information (and related methods). */
+    itkTypeMacro( RandomSamplerSparseMask, ImageRandomSamplerSparseMask );
+    
+    /** Name of this class.
+     * Use this name in the parameter file to select this specific interpolator. \n
+     * example: <tt>(ImageSampler "RandomSparseMask")</tt>\n
+     */
+    elxClassNameMacro( "RandomSparseMask" );
+    
+    /** Typedefs inherited from the superclass. */
     typedef typename Superclass1::DataObjectPointer            DataObjectPointer;
     typedef typename Superclass1::OutputVectorContainerType    OutputVectorContainerType;
     typedef typename Superclass1::OutputVectorContainerPointer OutputVectorContainerPointer;
@@ -96,36 +96,36 @@ using namespace itk;
 
     /** The input image dimension. */
     itkStaticConstMacro( InputImageDimension, unsigned int,	Superclass1::InputImageDimension );
-		
-		/** Typedefs inherited from Elastix. */
-		typedef typename Superclass2::ElastixType								ElastixType;
-		typedef typename Superclass2::ElastixPointer						ElastixPointer;
-		typedef typename Superclass2::ConfigurationType					ConfigurationType;
-		typedef typename Superclass2::ConfigurationPointer			ConfigurationPointer;
-		typedef typename Superclass2::RegistrationType					RegistrationType;
-		typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
-		typedef typename Superclass2::ITKBaseType								ITKBaseType;
+    
+    /** Typedefs inherited from Elastix. */
+    typedef typename Superclass2::ElastixType								ElastixType;
+    typedef typename Superclass2::ElastixPointer						ElastixPointer;
+    typedef typename Superclass2::ConfigurationType					ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer			ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType					RegistrationType;
+    typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
+    typedef typename Superclass2::ITKBaseType								ITKBaseType;
 
     /** Execute stuff before each resolution:
-	   * \li Set the number of samples.
+     * \li Set the number of samples.
      */
-		virtual void BeforeEachResolution(void);
+    virtual void BeforeEachResolution(void);
 
-	protected:
+  protected:
 
-		/** The constructor. */
-		RandomSamplerSparseMask() {}
-		/** The destructor. */
-		virtual ~RandomSamplerSparseMask() {}
-		
-	private:
+    /** The constructor. */
+    RandomSamplerSparseMask() {}
+    /** The destructor. */
+    virtual ~RandomSamplerSparseMask() {}
+    
+  private:
 
-		/** The private constructor. */
-		RandomSamplerSparseMask( const Self& );	// purposely not implemented
-		/** The private copy constructor. */
-		void operator=( const Self& );			// purposely not implemented
-			
-	}; // end class RandomSamplerSparseMask
+    /** The private constructor. */
+    RandomSamplerSparseMask( const Self& );	// purposely not implemented
+    /** The private copy constructor. */
+    void operator=( const Self& );			// purposely not implemented
+      
+  }; // end class RandomSamplerSparseMask
 
 
 } // end namespace elastix

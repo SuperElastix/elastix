@@ -20,140 +20,140 @@
 
 namespace itk
 {
-	
-	
-	/**
-	 * ********************* Constructor ****************************
-	 */
+  
+  
+  /**
+   * ********************* Constructor ****************************
+   */
 
-	template < class TFixedImage, class TMovingImage >
-		MattesMutualInformationImageToImageMetricWithRigidityPenalty<TFixedImage,TMovingImage>
-		::MattesMutualInformationImageToImageMetricWithRigidityPenalty()
-	{
-		/** Initialize dilation. */
-		this->m_DilationRadiusMultiplier = NumericTraits<CoordinateRepresentationType>::One;
-		this->m_DilateRigidityImages = true;
+  template < class TFixedImage, class TMovingImage >
+    MattesMutualInformationImageToImageMetricWithRigidityPenalty<TFixedImage,TMovingImage>
+    ::MattesMutualInformationImageToImageMetricWithRigidityPenalty()
+  {
+    /** Initialize dilation. */
+    this->m_DilationRadiusMultiplier = NumericTraits<CoordinateRepresentationType>::One;
+    this->m_DilateRigidityImages = true;
 
-		/** Create and set the two metrics. */
+    /** Create and set the two metrics. */
     this->m_MattesMutualInformationMetric = MattesMutualInformationMetricType::New();
-		this->m_RigidityPenaltyTermMetric     = RigidityPenaltyTermMetricType::New();
+    this->m_RigidityPenaltyTermMetric     = RigidityPenaltyTermMetricType::New();
     this->SetNumberOfMetrics( 2 );
     this->SetMetric( this->m_MattesMutualInformationMetric, 0 );
     this->SetMetric( this->m_RigidityPenaltyTermMetric, 1 );
     this->SetMetricWeight( 1.0, 0 );
     this->SetMetricWeight( 1.0, 1 );
 
-		/** Initialize rigidity images and their usage. */
-		this->m_UseFixedRigidityImage = true;
-		this->m_UseMovingRigidityImage = true;
-		this->m_FixedRigidityImage = 0;
-		this->m_MovingRigidityImage = 0;
-		this->m_RigidityCoefficientImage = RigidityImageType::New();
+    /** Initialize rigidity images and their usage. */
+    this->m_UseFixedRigidityImage = true;
+    this->m_UseMovingRigidityImage = true;
+    this->m_FixedRigidityImage = 0;
+    this->m_MovingRigidityImage = 0;
+    this->m_RigidityCoefficientImage = RigidityImageType::New();
 
-		/** Initialize dilation filter for the rigidity images. */
-		this->m_FixedRigidityImageDilation.resize( FixedImageDimension );
-		this->m_MovingRigidityImageDilation.resize( MovingImageDimension );
-		for ( unsigned int i = 0; i < FixedImageDimension; i++ )
-		{
-			this->m_FixedRigidityImageDilation[ i ] = 0;
-			this->m_MovingRigidityImageDilation[ i ] = 0;
-		}
+    /** Initialize dilation filter for the rigidity images. */
+    this->m_FixedRigidityImageDilation.resize( FixedImageDimension );
+    this->m_MovingRigidityImageDilation.resize( MovingImageDimension );
+    for ( unsigned int i = 0; i < FixedImageDimension; i++ )
+    {
+      this->m_FixedRigidityImageDilation[ i ] = 0;
+      this->m_MovingRigidityImageDilation[ i ] = 0;
+    }
 
-		/** Initialize dilated rigidity images. */
-		this->m_FixedRigidityImageDilated = 0;
-		this->m_MovingRigidityImageDilated = 0;
-	
-	} // end Constructor()
-	
-	
-	/**
-	 * ********************* PrintSelf ******************************
-	 *
-	 * Print out internal information about this class.
-	 */
+    /** Initialize dilated rigidity images. */
+    this->m_FixedRigidityImageDilated = 0;
+    this->m_MovingRigidityImageDilated = 0;
+  
+  } // end Constructor()
+  
+  
+  /**
+   * ********************* PrintSelf ******************************
+   *
+   * Print out internal information about this class.
+   */
 
-	template < class TFixedImage, class TMovingImage  >
-		void
-		MattesMutualInformationImageToImageMetricWithRigidityPenalty<TFixedImage,TMovingImage>
-		::PrintSelf( std::ostream& os, Indent indent ) const
-	{
-		
-		this->Superclass::PrintSelf( os, indent );
-		
-		/*os << indent << "RigidPenaltyWeight: "
-			<< this->m_RigidPenaltyWeight << std::endl;
-		os << indent << "SecondOrderWeight: "
-			<< this->m_SecondOrderWeight << std::endl;
-		os << indent << "OrthonormalityWeight: "
-			<< this->m_OrthonormalityWeight << std::endl;
-		os << indent << "PropernessWeight: "
-			<< this->m_PropernessWeight << std::endl;
-		os << indent << "UseImageSpacing: ";
-		if ( this->m_UseImageSpacing ) os << "true" << std::endl;
-		else os << "false" << std::endl;*/
-		os << indent << "DilateRigidityImages: ";
-		if ( this->m_DilateRigidityImages ) os << "true" << std::endl;
-		else os << "false" << std::endl;
-		os << indent << "UseFixedRigidityImage: ";
-		if ( this->m_UseFixedRigidityImage ) os << "true" << std::endl;
-		else os << "false" << std::endl;
-		os << indent << "UseMovingRigidityImage: ";
-		if ( this->m_UseMovingRigidityImage ) os << "true" << std::endl;
-		else os << "false" << std::endl;
-		
-	} // end PrintSelf()
-	
-	
-	/**
-	 * ********************* Initialize *****************************
-	 */
+  template < class TFixedImage, class TMovingImage  >
+    void
+    MattesMutualInformationImageToImageMetricWithRigidityPenalty<TFixedImage,TMovingImage>
+    ::PrintSelf( std::ostream& os, Indent indent ) const
+  {
+    
+    this->Superclass::PrintSelf( os, indent );
+    
+    /*os << indent << "RigidPenaltyWeight: "
+      << this->m_RigidPenaltyWeight << std::endl;
+    os << indent << "SecondOrderWeight: "
+      << this->m_SecondOrderWeight << std::endl;
+    os << indent << "OrthonormalityWeight: "
+      << this->m_OrthonormalityWeight << std::endl;
+    os << indent << "PropernessWeight: "
+      << this->m_PropernessWeight << std::endl;
+    os << indent << "UseImageSpacing: ";
+    if ( this->m_UseImageSpacing ) os << "true" << std::endl;
+    else os << "false" << std::endl;*/
+    os << indent << "DilateRigidityImages: ";
+    if ( this->m_DilateRigidityImages ) os << "true" << std::endl;
+    else os << "false" << std::endl;
+    os << indent << "UseFixedRigidityImage: ";
+    if ( this->m_UseFixedRigidityImage ) os << "true" << std::endl;
+    else os << "false" << std::endl;
+    os << indent << "UseMovingRigidityImage: ";
+    if ( this->m_UseMovingRigidityImage ) os << "true" << std::endl;
+    else os << "false" << std::endl;
+    
+  } // end PrintSelf()
+  
+  
+  /**
+   * ********************* Initialize *****************************
+   */
 
-	template <class TFixedImage, class TMovingImage> 
-		void
-		MattesMutualInformationImageToImageMetricWithRigidityPenalty<TFixedImage,TMovingImage>
-		::Initialize(void) throw ( ExceptionObject )
-	{
-		/** Call the initialize of the superclass. */
-		this->Superclass::Initialize();
+  template <class TFixedImage, class TMovingImage> 
+    void
+    MattesMutualInformationImageToImageMetricWithRigidityPenalty<TFixedImage,TMovingImage>
+    ::Initialize(void) throw ( ExceptionObject )
+  {
+    /** Call the initialize of the superclass. */
+    this->Superclass::Initialize();
 
-		typename BSplineTransformType::Pointer localBSplineTransform = 0;
+    typename BSplineTransformType::Pointer localBSplineTransform = 0;
 
-		/** Set the B-spline transform to m_RigidityPenaltyTermMetric. */
-		if ( this->m_TransformIsBSpline )
-		{
-			this->m_RigidityPenaltyTermMetric->SetBSplineTransform( this->m_BSplineTransform );
-			localBSplineTransform = this->m_BSplineTransform;
-		}
-		else if ( this->m_TransformIsBSplineCombination )
-		{
-			BSplineTransformType * testPointer = dynamic_cast<BSplineTransformType *>(
-				this->m_BSplineCombinationTransform->GetCurrentTransform() );
-			if ( !testPointer )
-			{
-				itkExceptionMacro(<< "The BSplineCombinationTransform is not properly configured. The CurrentTransform is not set." );
-			}
+    /** Set the B-spline transform to m_RigidityPenaltyTermMetric. */
+    if ( this->m_TransformIsBSpline )
+    {
+      this->m_RigidityPenaltyTermMetric->SetBSplineTransform( this->m_BSplineTransform );
+      localBSplineTransform = this->m_BSplineTransform;
+    }
+    else if ( this->m_TransformIsBSplineCombination )
+    {
+      BSplineTransformType * testPointer = dynamic_cast<BSplineTransformType *>(
+        this->m_BSplineCombinationTransform->GetCurrentTransform() );
+      if ( !testPointer )
+      {
+        itkExceptionMacro(<< "The BSplineCombinationTransform is not properly configured. The CurrentTransform is not set." );
+      }
       //this->m_MattesMutualInformationMetric->SetBSplineTransform( testPointer );
-			this->m_RigidityPenaltyTermMetric->SetBSplineTransform( testPointer );
-			localBSplineTransform = testPointer;
-		}
-		else
-		{
-			itkExceptionMacro( << "ERROR: this metric expects a BSpline-transform or BSplineCombinationTransform." );
-		}
+      this->m_RigidityPenaltyTermMetric->SetBSplineTransform( testPointer );
+      localBSplineTransform = testPointer;
+    }
+    else
+    {
+      itkExceptionMacro( << "ERROR: this metric expects a BSpline-transform or BSplineCombinationTransform." );
+    }
 
-		/** Allocate the RigidityCoefficientImage, so that it matches the B-spline grid.
-		 * Only because the Initialize()-function above is called before,
-		 * this code is valid, because there the B-spline transform is set.
-		 */
-		RigidityImageRegionType region;
-		region.SetSize( localBSplineTransform->GetGridRegion().GetSize() );
-		region.SetIndex( localBSplineTransform->GetGridRegion().GetIndex() );
-		this->m_RigidityCoefficientImage->SetRegions( region );
-		this->m_RigidityCoefficientImage->SetSpacing(
-			localBSplineTransform->GetGridSpacing() );
-		this->m_RigidityCoefficientImage->SetOrigin(
-			localBSplineTransform->GetGridOrigin() );
-		this->m_RigidityCoefficientImage->Allocate();
+    /** Allocate the RigidityCoefficientImage, so that it matches the B-spline grid.
+     * Only because the Initialize()-function above is called before,
+     * this code is valid, because there the B-spline transform is set.
+     */
+    RigidityImageRegionType region;
+    region.SetSize( localBSplineTransform->GetGridRegion().GetSize() );
+    region.SetIndex( localBSplineTransform->GetGridRegion().GetIndex() );
+    this->m_RigidityCoefficientImage->SetRegions( region );
+    this->m_RigidityCoefficientImage->SetSpacing(
+      localBSplineTransform->GetGridSpacing() );
+    this->m_RigidityCoefficientImage->SetOrigin(
+      localBSplineTransform->GetGridOrigin() );
+    this->m_RigidityCoefficientImage->Allocate();
 
     if ( !this->m_UseFixedRigidityImage && !this->m_UseMovingRigidityImage )
     {
@@ -161,25 +161,25 @@ namespace itk
       this->m_RigidityCoefficientImage->FillBuffer( 1.0 );
 
       /** Set the rigidity coefficients image into the rigid regulizer metric. */
-  		this->m_RigidityPenaltyTermMetric->SetRigidityCoefficientImage(
+      this->m_RigidityPenaltyTermMetric->SetRigidityCoefficientImage(
         this->m_RigidityCoefficientImage );
     }
     else
     {
       this->DilateRigidityImages();
     }
-	
-	} // end Initialize()
+  
+  } // end Initialize()
 
 
   /**
-	  * **************** DilateRigidityImages *****************
-	  */
+    * **************** DilateRigidityImages *****************
+    */
 
-	 template < class TFixedImage, class TMovingImage  >
-		 void
-		 MattesMutualInformationImageToImageMetricWithRigidityPenalty<TFixedImage,TMovingImage>
-		 ::DilateRigidityImages( void )
+   template < class TFixedImage, class TMovingImage  >
+     void
+     MattesMutualInformationImageToImageMetricWithRigidityPenalty<TFixedImage,TMovingImage>
+     ::DilateRigidityImages( void )
    {
      /** Dilate m_FixedRigidityImage and m_MovingRigidityImage. */
      if ( this->m_DilateRigidityImages )
@@ -334,105 +334,105 @@ namespace itk
 
 
    /**
-	  * **************** FillRigidityCoefficientImage *****************
-	  */
+    * **************** FillRigidityCoefficientImage *****************
+    */
 
-	 template < class TFixedImage, class TMovingImage  >
-		 void
-		 MattesMutualInformationImageToImageMetricWithRigidityPenalty<TFixedImage,TMovingImage>
-		 ::FillRigidityCoefficientImage( const ParametersType& parameters ) const
-	 {
+   template < class TFixedImage, class TMovingImage  >
+     void
+     MattesMutualInformationImageToImageMetricWithRigidityPenalty<TFixedImage,TMovingImage>
+     ::FillRigidityCoefficientImage( const ParametersType& parameters ) const
+   {
      if ( !this->m_UseFixedRigidityImage && !this->m_UseMovingRigidityImage )
      {
        return;
      }
-		 /** Make sure that the transform is up to date. */
-		 this->m_Transform->SetParameters( parameters );
+     /** Make sure that the transform is up to date. */
+     this->m_Transform->SetParameters( parameters );
 
-		 /** Create and reset an iterator over m_RigidityCoefficientImage. */
-		 RigidityImageIteratorType it( this->m_RigidityCoefficientImage,
-			 this->m_RigidityCoefficientImage->GetLargestPossibleRegion() );
-		 it.GoToBegin();
+     /** Create and reset an iterator over m_RigidityCoefficientImage. */
+     RigidityImageIteratorType it( this->m_RigidityCoefficientImage,
+       this->m_RigidityCoefficientImage->GetLargestPossibleRegion() );
+     it.GoToBegin();
 
-		 /** Fill m_RigidityCoefficientImage. */
-		 RigidityPixelType fixedValue, movingValue, in;
-		 RigidityImagePointType point;
-		 RigidityImageIndexType index1, index2;
-		 bool isInFixedImage, isInMovingImage;
-		 while ( !it.IsAtEnd() )
-		 {
-			 /** Get current pixel in world coordinates. */
-			 this->m_RigidityCoefficientImage
-				 ->TransformIndexToPhysicalPoint( it.GetIndex(), point );
+     /** Fill m_RigidityCoefficientImage. */
+     RigidityPixelType fixedValue, movingValue, in;
+     RigidityImagePointType point;
+     RigidityImageIndexType index1, index2;
+     bool isInFixedImage, isInMovingImage;
+     while ( !it.IsAtEnd() )
+     {
+       /** Get current pixel in world coordinates. */
+       this->m_RigidityCoefficientImage
+         ->TransformIndexToPhysicalPoint( it.GetIndex(), point );
 
-			 /** Get the corresponding indices in the fixed and moving RigidityImage's.
-				* NOTE: Floating point index results are truncated to integers.
-				*/
-			 if ( this->m_UseFixedRigidityImage )
-			 {
-				 isInFixedImage = this->m_FixedRigidityImageDilated
-					 ->TransformPhysicalPointToIndex( point, index1 );
-			 }
-			 if ( this->m_UseMovingRigidityImage )
-			 {
-				 isInMovingImage = this->m_MovingRigidityImageDilated
-					 ->TransformPhysicalPointToIndex(
-					 this->m_Transform->TransformPoint( point ), index2 );
-			 }
+       /** Get the corresponding indices in the fixed and moving RigidityImage's.
+        * NOTE: Floating point index results are truncated to integers.
+        */
+       if ( this->m_UseFixedRigidityImage )
+       {
+         isInFixedImage = this->m_FixedRigidityImageDilated
+           ->TransformPhysicalPointToIndex( point, index1 );
+       }
+       if ( this->m_UseMovingRigidityImage )
+       {
+         isInMovingImage = this->m_MovingRigidityImageDilated
+           ->TransformPhysicalPointToIndex(
+           this->m_Transform->TransformPoint( point ), index2 );
+       }
 
-			 /** Get the values at those positions. */
-			 if ( this->m_UseFixedRigidityImage )
-			 {
-				 if ( isInFixedImage )
-				 {
-					 fixedValue = this->m_FixedRigidityImageDilated->GetPixel( index1 );
-				 }
-				 else
-				 {
-					 fixedValue = 0.0;
-				 }
-			 }
+       /** Get the values at those positions. */
+       if ( this->m_UseFixedRigidityImage )
+       {
+         if ( isInFixedImage )
+         {
+           fixedValue = this->m_FixedRigidityImageDilated->GetPixel( index1 );
+         }
+         else
+         {
+           fixedValue = 0.0;
+         }
+       }
 
-			 if ( this->m_UseMovingRigidityImage )
-			 {
-				 if ( isInMovingImage )
-				 {
-					 movingValue = this->m_MovingRigidityImageDilated->GetPixel( index2 );
-				 }
-				 else
-				 {
-					 movingValue = 0.0;
-				 }
-			 }
+       if ( this->m_UseMovingRigidityImage )
+       {
+         if ( isInMovingImage )
+         {
+           movingValue = this->m_MovingRigidityImageDilated->GetPixel( index2 );
+         }
+         else
+         {
+           movingValue = 0.0;
+         }
+       }
 
-			 /** Determine the maximum. */
-			 if ( this->m_UseFixedRigidityImage && this->m_UseMovingRigidityImage )
-			 {
-				 in = ( fixedValue > movingValue ? fixedValue : movingValue );
-			 }
-			 else if ( this->m_UseFixedRigidityImage && !this->m_UseMovingRigidityImage )
-			 {
-				 in = fixedValue;
-			 }
-			 else if ( !this->m_UseFixedRigidityImage && this->m_UseMovingRigidityImage )
-			 {
-				 in = movingValue;
-			 }
-			 /** else{} is not happening here, because we asssume that one of them is true.
-			  * In our case we checked that in the derived class: elxMattesMIWRR.
-				*/
-			
-			 /** Set it. */
-			 it.Set( in );
-			
-			 /** Increase iterator. */
-			 ++it;
-		 } // end while loop over rigidity coefficient image
+       /** Determine the maximum. */
+       if ( this->m_UseFixedRigidityImage && this->m_UseMovingRigidityImage )
+       {
+         in = ( fixedValue > movingValue ? fixedValue : movingValue );
+       }
+       else if ( this->m_UseFixedRigidityImage && !this->m_UseMovingRigidityImage )
+       {
+         in = fixedValue;
+       }
+       else if ( !this->m_UseFixedRigidityImage && this->m_UseMovingRigidityImage )
+       {
+         in = movingValue;
+       }
+       /** else{} is not happening here, because we asssume that one of them is true.
+        * In our case we checked that in the derived class: elxMattesMIWRR.
+        */
+      
+       /** Set it. */
+       it.Set( in );
+      
+       /** Increase iterator. */
+       ++it;
+     } // end while loop over rigidity coefficient image
 
      /** Set the rigidity coefficients image into the rigid regulizer metric. */
-		 this->m_RigidityPenaltyTermMetric->SetRigidityCoefficientImage( this->m_RigidityCoefficientImage );
+     this->m_RigidityPenaltyTermMetric->SetRigidityCoefficientImage( this->m_RigidityCoefficientImage );
 
-	 } // end FillRigidityCoefficientImage()
+   } // end FillRigidityCoefficientImage()
 
 
 } // end namespace itk

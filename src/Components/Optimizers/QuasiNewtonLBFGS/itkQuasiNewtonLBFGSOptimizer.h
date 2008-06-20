@@ -84,7 +84,7 @@ namespace itk
       MaximumNumberOfIterations,
       InvalidDiagonalMatrix,
       GradientMagnitudeTolerance,
-			ZeroStep,
+      ZeroStep,
       Unknown }                                   StopConditionType;
 
     virtual void StartOptimization(void);
@@ -118,7 +118,7 @@ namespace itk
 
     /** Setting: the memory. The number of iterations that are used
      * to estimate the Hessian. 5 by default. 0 results in (normalised) gradient
-		 * descent search directions */
+     * descent search directions */
     itkSetClampMacro(Memory,unsigned int,0,NumericTraits<unsigned int>::max());
     itkGetConstMacro(Memory,unsigned int);
     

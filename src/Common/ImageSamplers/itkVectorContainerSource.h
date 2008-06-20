@@ -33,16 +33,16 @@ namespace itk
   {
   public:
 
-		/** Standard ITK-stuff. */
+    /** Standard ITK-stuff. */
     typedef VectorContainerSource         Self;
     typedef ProcessObject                 Superclass;
     typedef SmartPointer<Self>            Pointer;
     typedef SmartPointer<const Self>      ConstPointer;
 
-		/** Method for creation through the object factory. */
+    /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
-		/** Run-time type information (and related methods). */
+    /** Run-time type information (and related methods). */
     itkTypeMacro( VectorContainerSource, ProcessObject );
 
     /** Some convenient typedefs. */
@@ -67,12 +67,12 @@ namespace itk
 
   protected:
 
-		/** The constructor. */
+    /** The constructor. */
     VectorContainerSource();
-		/** The destructor. */
+    /** The destructor. */
     virtual ~VectorContainerSource() {};
 
-		/** PrintSelf. */
+    /** PrintSelf. */
     void PrintSelf( std::ostream& os, Indent indent ) const;
     
     /** GenerateInputRequestedRegion. */
@@ -80,9 +80,9 @@ namespace itk
             
   private:
 
-		/** The private constructor. */
+    /** The private constructor. */
     VectorContainerSource( const Self& );	// purposely not implemented
-		/** The private copy constructor. */
+    /** The private copy constructor. */
     void operator=( const Self& );				// purposely not implemented
 
     /** Member variables. */

@@ -21,31 +21,31 @@
 
 namespace itk
 {
-	
-	/**
-	 * \class ANNBinaryTreeCreator
-	 *
-	 * \brief 
-	 *
-	 * 
-	 * \ingroup Metrics?
-	 */
-	
-	class ANNBinaryTreeCreator : public Object
-	{
-	public:
-		
-		/** Standard itk. */
-		typedef ANNBinaryTreeCreator        Self;
-		typedef Object									    Superclass;
-		typedef SmartPointer< Self >				Pointer;
-		typedef SmartPointer< const Self >	ConstPointer;
+  
+  /**
+   * \class ANNBinaryTreeCreator
+   *
+   * \brief 
+   *
+   * 
+   * \ingroup Metrics?
+   */
+  
+  class ANNBinaryTreeCreator : public Object
+  {
+  public:
+    
+    /** Standard itk. */
+    typedef ANNBinaryTreeCreator        Self;
+    typedef Object									    Superclass;
+    typedef SmartPointer< Self >				Pointer;
+    typedef SmartPointer< const Self >	ConstPointer;
 
     /** New method for creating an object using a factory. */
-		itkNewMacro( Self );
-		
-		/** ITK type info. */
-		itkTypeMacro( ANNBinaryTreeCreator, Object );
+    itkNewMacro( Self );
+    
+    /** ITK type info. */
+    itkTypeMacro( ANNBinaryTreeCreator, Object );
 
     /** ANN typedef's. */
     //typedef ANNpointSet     ANNTreeBaseType;
@@ -85,23 +85,23 @@ namespace itk
 
     /** Static function to decrease the reference count to ANN trees. */
     static void DecreaseReferenceCount( void );
-		
-	protected:
-		
+    
+  protected:
+    
     ANNBinaryTreeCreator(){};
     virtual ~ANNBinaryTreeCreator(){};
     
-	private:
-		
-		ANNBinaryTreeCreator( const Self& );  // purposely not implemented
-		void operator=( const Self& );        // purposely not implemented
+  private:
+    
+    ANNBinaryTreeCreator( const Self& );  // purposely not implemented
+    void operator=( const Self& );        // purposely not implemented
 
     /** Member variables. */
     static unsigned int    m_NumberOfANNBinaryTrees;
 
-	}; // end class ANNBinaryTreeCreator
+  }; // end class ANNBinaryTreeCreator
 
-		
+    
 } // end namespace itk
 
 

@@ -19,60 +19,60 @@
 
 namespace itk
 {
-	
-	/**
-	 * ************************ Constructor *************************
-	 */
+  
+  /**
+   * ************************ Constructor *************************
+   */
 
-	template < class TBinaryTree >
-		BinaryTreeSearchBase<TBinaryTree>
-		::BinaryTreeSearchBase()
-	{
+  template < class TBinaryTree >
+    BinaryTreeSearchBase<TBinaryTree>
+    ::BinaryTreeSearchBase()
+  {
     this->m_BinaryTree = 0;
     this->m_KNearestNeighbors = 1;
   } // end Constructor
 
 
   /**
-	 * ************************ Destructor *************************
-	 */
+   * ************************ Destructor *************************
+   */
 
-	template < class TBinaryTree >
-		BinaryTreeSearchBase<TBinaryTree>
-		::~BinaryTreeSearchBase()
-	{
+  template < class TBinaryTree >
+    BinaryTreeSearchBase<TBinaryTree>
+    ::~BinaryTreeSearchBase()
+  {
   } // end Destructor
 
 
   /**
-	 * ************************ SetBinaryTree *************************
-	 */
+   * ************************ SetBinaryTree *************************
+   */
 
-	template < class TBinaryTree >
-		void BinaryTreeSearchBase<TBinaryTree>
-		::SetBinaryTree( BinaryTreeType * tree )
-	{
+  template < class TBinaryTree >
+    void BinaryTreeSearchBase<TBinaryTree>
+    ::SetBinaryTree( BinaryTreeType * tree )
+  {
     if ( this->m_BinaryTree != tree )
     {
       this->m_BinaryTree = tree;
-			if ( tree )
-			{
-				this->m_DataDimension = this->m_BinaryTree->GetDataDimension();
-			}
+      if ( tree )
+      {
+        this->m_DataDimension = this->m_BinaryTree->GetDataDimension();
+      }
       this->Modified();
     }
   } // end SetBinaryTree
 
 
   /**
-	 * ************************ GetBinaryTree *************************
-	 */
+   * ************************ GetBinaryTree *************************
+   */
 
-	template < class TBinaryTree >
+  template < class TBinaryTree >
     const typename BinaryTreeSearchBase<TBinaryTree>::BinaryTreeType *
     BinaryTreeSearchBase<TBinaryTree>
-		::GetBinaryTree( void ) const
-	{
+    ::GetBinaryTree( void ) const
+  {
     return this->m_BinaryTree.GetPointer();
   } // end GetBinaryTree
 

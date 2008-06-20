@@ -19,9 +19,9 @@
 
 namespace elastix
 {
-	using namespace itk;
+  using namespace itk;
 
-	
+  
 } // end namespace elastix
 
 #endif //#ifndef __elxFixedSmoothingPyramid_hxx

@@ -4,5 +4,3 @@ ADD_ELXCOMPONENT( RandomSamplerSparseMask
  elxRandomSamplerSparseMask.hxx
  elxRandomSamplerSparseMask.cxx )
 
-
-

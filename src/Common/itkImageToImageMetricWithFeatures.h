@@ -97,14 +97,14 @@ public:
   typedef typename
     Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
   typedef typename Superclass::ParameterIndexArrayType    ParameterIndexArrayType;
-	
+  
   /** The fixed image dimension. */
-	itkStaticConstMacro( FixedImageDimension, unsigned int,
-		FixedImageType::ImageDimension );
+  itkStaticConstMacro( FixedImageDimension, unsigned int,
+    FixedImageType::ImageDimension );
 
-	/** The moving image dimension. */
-	itkStaticConstMacro( MovingImageDimension, unsigned int,
-		MovingImageType::ImageDimension );
+  /** The moving image dimension. */
+  itkStaticConstMacro( MovingImageDimension, unsigned int,
+    MovingImageType::ImageDimension );
  
   /** Typedefs for the feature images. */
   typedef TFixedFeatureImage                                FixedFeatureImageType;

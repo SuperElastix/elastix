@@ -19,38 +19,38 @@
 
 namespace itk
 {
-	
-	/**
-	 * ************************ Constructor *************************
-	 */
+  
+  /**
+   * ************************ Constructor *************************
+   */
 
-	template < class TBinaryTree >
-		BinaryANNTreeSearchBase<TBinaryTree>
-		::BinaryANNTreeSearchBase()
-	{
+  template < class TBinaryTree >
+    BinaryANNTreeSearchBase<TBinaryTree>
+    ::BinaryANNTreeSearchBase()
+  {
     this->m_BinaryTreeAsITKANNType = 0;
   } // end Constructor
 
 
   /**
-	 * ************************ Destructor *************************
-	 */
+   * ************************ Destructor *************************
+   */
 
-	template < class TBinaryTree >
-		BinaryANNTreeSearchBase<TBinaryTree>
-		::~BinaryANNTreeSearchBase()
-	{
+  template < class TBinaryTree >
+    BinaryANNTreeSearchBase<TBinaryTree>
+    ::~BinaryANNTreeSearchBase()
+  {
   } // end Destructor
 
 
   /**
-	 * ************************ SetBinaryTree *************************
-	 */
+   * ************************ SetBinaryTree *************************
+   */
 
-	template < class TBinaryTree >
-		void BinaryANNTreeSearchBase<TBinaryTree>
-		::SetBinaryTree( BinaryTreeType * tree )
-	{
+  template < class TBinaryTree >
+    void BinaryANNTreeSearchBase<TBinaryTree>
+    ::SetBinaryTree( BinaryTreeType * tree )
+  {
     this->Superclass::SetBinaryTree( tree );
     if ( tree )
     {
@@ -81,14 +81,14 @@ namespace itk
 
 
   /**
-	 * ************************ GetBinaryTree *************************
-	 *
+   * ************************ GetBinaryTree *************************
+   *
 
-	template < class TBinaryTree >
+  template < class TBinaryTree >
     const typename BinaryANNTreeSearchBase<TBinaryTree>::BinaryTreeType *
     BinaryANNTreeSearchBase<TBinaryTree>
-		::GetBinaryTree( void ) const
-	{
+    ::GetBinaryTree( void ) const
+  {
     return this->m_BinaryTree.GetPointer();
   } // end GetBinaryTree
 */

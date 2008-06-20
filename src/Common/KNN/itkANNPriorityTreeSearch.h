@@ -20,32 +20,32 @@
 
 namespace itk
 {
-	
-	/**
-	 * \class ANNPriorityTreeSearch
-	 *
-	 * \brief 
-	 *
-	 * 
-	 * \ingroup Metrics?
-	 */
-	
+  
+  /**
+   * \class ANNPriorityTreeSearch
+   *
+   * \brief 
+   *
+   * 
+   * \ingroup Metrics?
+   */
+  
   template < class TListSample >
   class ANNPriorityTreeSearch : public BinaryANNTreeSearchBase< TListSample >
-	{
-	public:
-		
-		/** Standard itk. */
-		typedef ANNPriorityTreeSearch                   Self;
-		typedef BinaryANNTreeSearchBase< TListSample >  Superclass;
-		typedef SmartPointer< Self >				            Pointer;
-		typedef SmartPointer< const Self >	            ConstPointer;
-		
+  {
+  public:
+    
+    /** Standard itk. */
+    typedef ANNPriorityTreeSearch                   Self;
+    typedef BinaryANNTreeSearchBase< TListSample >  Superclass;
+    typedef SmartPointer< Self >				            Pointer;
+    typedef SmartPointer< const Self >	            ConstPointer;
+    
     /** New method for creating an object using a factory. */
-		itkNewMacro( Self );
+    itkNewMacro( Self );
 
-		/** ITK type info. */
-		itkTypeMacro( ANNPriorityTreeSearch, BinaryANNTreeSearchBase );
+    /** ITK type info. */
+    itkTypeMacro( ANNPriorityTreeSearch, BinaryANNTreeSearchBase );
 
     /** Typedef's from Superclass. */
     typedef typename Superclass::ListSampleType         ListSampleType;
@@ -76,23 +76,23 @@ namespace itk
 
     virtual void SetBinaryTree( BinaryTreeType * tree );
 
-	protected:
-		
-		ANNPriorityTreeSearch();
-		virtual ~ANNPriorityTreeSearch();
+  protected:
+    
+    ANNPriorityTreeSearch();
+    virtual ~ANNPriorityTreeSearch();
 
     /** Member variables. */
     double          m_ErrorBound;
     ANNkDTreeType * m_BinaryTreeAskDTree;
     
-	private:
-		
-		ANNPriorityTreeSearch( const Self& ); // purposely not implemented
-		void operator=( const Self& );        // purposely not implemented
+  private:
+    
+    ANNPriorityTreeSearch( const Self& ); // purposely not implemented
+    void operator=( const Self& );        // purposely not implemented
 
-	}; // end class ANNPriorityTreeSearch
-		
-		
+  }; // end class ANNPriorityTreeSearch
+    
+    
 } // end namespace itk
 
 
