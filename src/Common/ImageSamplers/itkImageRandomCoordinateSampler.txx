@@ -29,13 +29,13 @@ namespace itk
     ImageRandomCoordinateSampler< TInputImage > ::
     ImageRandomCoordinateSampler()
   {
-    /** Set default interpolator */
+    /** Set default interpolator. */
     typename DefaultInterpolatorType::Pointer bsplineInterpolator =
       DefaultInterpolatorType::New();
     bsplineInterpolator->SetSplineOrder( 3 );
     this->m_Interpolator = bsplineInterpolator;
 
-    /** Setup random generator */
+    /** Setup random generator. */
     this->m_RandomGenerator = RandomGeneratorType::New();
     //this->m_RandomGenerator->Initialize();
 
