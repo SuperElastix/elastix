@@ -31,7 +31,9 @@ namespace itk
     /** Setup random generator. */
     this->m_RandomGenerator = RandomGeneratorType::New();
     //this->m_RandomGenerator->Initialize();
+
     this->m_InternalFullSampler = InternalFullSamplerType::New();
+
   } // end Constructor
 
 
@@ -47,6 +49,9 @@ namespace itk
     /** Get handles to the input image and output sample container. */
     InputImageConstPointer inputImage = this->GetInput();
     typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
+
+    /** Clear the container. */
+    sampleContainer->Initialize();
     
     /** Make sure the internal full sampler is up-to-date. */
     this->m_InternalFullSampler->SetInput( inputImage );
@@ -61,7 +66,7 @@ namespace itk
     for ( unsigned int i = 0; i < this->GetNumberOfSamples(); ++i )
     {
       unsigned long randomIndex = 
-        this->m_RandomGenerator->GetIntegerVariate( numberOfValidSamples );
+        this->m_RandomGenerator->GetIntegerVariate( numberOfValidSamples - 1 );
       sampleContainer->push_back( allValidSamples->ElementAt( randomIndex ) );
     }  
 
@@ -83,7 +88,6 @@ namespace itk
     os << indent << "RandomGenerator: " << this->m_RandomGenerator.GetPointer() << std::endl;
 
   } // end PrintSelf
-
 
 
 } // end namespace itk
