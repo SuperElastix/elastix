@@ -35,8 +35,11 @@ namespace itk
     InputImageConstPointer inputImage = this->GetInput();
     typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
     typename MaskType::ConstPointer mask = this->GetMask();
+
+    /** Clear the container. */
+    sampleContainer->Initialize();
     
-    /** Set up a region iterator within the user specified image region.*/
+    /** Set up a region iterator within the user specified image region. */
     typedef ImageRegionConstIteratorWithIndex<InputImageType> InputImageIterator;
     InputImageIterator iter( inputImage, this->GetCroppedInputImageRegion() );
 
@@ -47,15 +50,20 @@ namespace itk
       for( iter.GoToBegin(); ! iter.IsAtEnd(); ++iter )
       {
         ImageSampleType tempsample;
+
         /** Get sampled index */
         InputImageIndexType index = iter.GetIndex();
+
         /** Translate index to point */
         inputImage->TransformIndexToPhysicalPoint( index,
           tempsample.m_ImageCoordinates );
+
         /** Get sampled image value */
         tempsample.m_ImageValue = iter.Get();
+
         /** Store in container */
-        sampleContainer->push_back(tempsample);
+        sampleContainer->push_back( tempsample );
+
       } // end for
     } // end if no mask
     else
@@ -68,17 +76,22 @@ namespace itk
       for( iter.GoToBegin(); ! iter.IsAtEnd(); ++iter )
       {
         ImageSampleType tempsample;
+
         /** Get sampled index. */
         InputImageIndexType index = iter.GetIndex();
+
         /** Translate index to point. */
         inputImage->TransformIndexToPhysicalPoint( index,
           tempsample.m_ImageCoordinates );
+
         if ( mask->IsInside( tempsample.m_ImageCoordinates ) )
         {
           /** Get sampled image value. */
           tempsample.m_ImageValue = iter.Get();
+
           /**  Store in container. */
-          sampleContainer->push_back(tempsample);
+          sampleContainer->push_back (tempsample );
+
         } // end if
       } // end for
     } // end else (if mask exists)

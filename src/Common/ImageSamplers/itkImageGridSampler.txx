@@ -37,11 +37,14 @@ namespace itk
     typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
     typename MaskType::ConstPointer mask = this->GetMask();
 
-    /** Set up a region iterator within the user specified image region.*/
+    /** Clear the container. */
+    sampleContainer->Initialize();
+
+    /** Set up a region iterator within the user specified image region. */
     typedef ImageRegionConstIteratorWithIndex<InputImageType> InputImageIterator;
     InputImageIterator iter( inputImage, this->GetCroppedInputImageRegion() );
 
-    /** Determine the grid */ 
+    /** Determine the grid. */ 
     SampleGridSizeType sampleGridSize;
     SampleGridIndexType sampleGridIndex;
     SampleGridIndexType index;
@@ -50,16 +53,17 @@ namespace itk
     unsigned long numberOfSamplesOnGrid = 1;
     for (unsigned int dim = 0; dim < InputImageDimension; dim++)
     {
-      /** the number of sample point along one dimension */
+      /** The number of sample point along one dimension. */
       sampleGridSize[dim] = 1 + 
         (( inputImageSize[dim] - 1 ) / this->GetSampleGridSpacing()[dim]);
 
-      /** the position of the first sample along this dimension is 
-       * chosen to center the grid nicely on the image */
+      /** The position of the first sample along this dimension is 
+       * chosen to center the grid nicely on the image.
+       */
       sampleGridIndex[dim] = (   inputImageSize[dim] - 
         ( (sampleGridSize[dim] - 1) * this->GetSampleGridSpacing()[dim] +1 )   ) / 2;
 
-      /** Update the number of samples on the grid */
+      /** Update the number of samples on the grid. */
       numberOfSamplesOnGrid *= sampleGridSize[dim];
     }
 
@@ -73,7 +77,7 @@ namespace itk
 
     if ( mask.IsNull() )
     {
-      /** ugly loop over the grid */
+      /** Ugly loop over the grid. */
       for ( unsigned int z = 0; z < dim_z; z++)
       {
         for ( unsigned int y = 0; y < sampleGridSize[1]; y++)
@@ -81,23 +85,29 @@ namespace itk
           for ( unsigned int x = 0; x < sampleGridSize[0]; x++)
           {
             ImageSampleType tempsample;
-            // Get sampled fixed image value
+
+            // Get sampled fixed image value.
             tempsample.m_ImageValue = inputImage->GetPixel(index);
-            // Translate index to point
+
+            // Translate index to point.
             inputImage->TransformIndexToPhysicalPoint(
               index, tempsample.m_ImageCoordinates );
-            // Jump to next position on grid
-            index[0] += this->m_SampleGridSpacing[0];
-            // store sample in container
-            sampleContainer->push_back(tempsample);
+
+            // Jump to next position on grid.
+            index[ 0 ] += this->m_SampleGridSpacing[ 0 ];
+
+            // Store sample in container.
+            sampleContainer->push_back( tempsample );
+
           } // end x
-          index[0] = sampleGridIndex[0];
-          index[1] += this->m_SampleGridSpacing[1];
+          index[ 0 ] = sampleGridIndex[0];
+          index[ 1 ] += this->m_SampleGridSpacing[ 1 ];
+
         } // end y
-        if ( InputImageDimension > 2)
+        if ( InputImageDimension > 2 )
         {
-          index[1] = sampleGridIndex[1];
-          index[2] += this->m_SampleGridSpacing[2];
+          index[ 1 ] = sampleGridIndex[ 1 ];
+          index[ 2 ] += this->m_SampleGridSpacing[ 2 ];
         }
       } // end z
       
@@ -108,7 +118,7 @@ namespace itk
       {
         mask->GetSource()->Update();
       }
-      /* Ugly loop over the grid; checks also if a sample falls within the mask */
+      /* Ugly loop over the grid; checks also if a sample falls within the mask. */
       for ( unsigned int z = 0; z < dim_z; z++)
       {
         for ( unsigned int y = 0; y < sampleGridSize[1]; y++)
@@ -116,26 +126,32 @@ namespace itk
           for ( unsigned int x = 0; x < sampleGridSize[0]; x++)
           {
             ImageSampleType tempsample;
-            // Translate index to point
+
+            // Translate index to point.
             inputImage->TransformIndexToPhysicalPoint(
               index, tempsample.m_ImageCoordinates );
+
             if (  mask->IsInside( tempsample.m_ImageCoordinates )  )
             {
-              // Get sampled fixed image value
-              tempsample.m_ImageValue = inputImage->GetPixel(index);
-              // store sample in container
-              sampleContainer->push_back(tempsample);			
+              // Get sampled fixed image value.
+              tempsample.m_ImageValue = inputImage->GetPixel( index );
+
+              // Store sample in container.
+              sampleContainer->push_back(tempsample);
+
             } // end if in mask
             // Jump to next position on grid
-            index[0] += this->m_SampleGridSpacing[0];
+            index[ 0 ] += this->m_SampleGridSpacing[ 0 ];
+
           } // end x
-          index[0] = sampleGridIndex[0];
-          index[1] += this->m_SampleGridSpacing[1];
+          index[ 0 ] = sampleGridIndex[ 0 ];
+          index[ 1 ] += this->m_SampleGridSpacing[ 1 ];
+
         } // end y
         if (InputImageDimension > 2)
         {
-          index[1] = sampleGridIndex[1];
-          index[2] += this->m_SampleGridSpacing[2];
+          index[ 1 ] = sampleGridIndex[ 1 ];
+          index[ 2 ] += this->m_SampleGridSpacing[ 2 ];
         }
       } // end z
           
