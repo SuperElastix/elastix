@@ -79,7 +79,7 @@ namespace itk
  * for each pyramid externally prior to calling StartRegistration().
  *
  * \warning If there is discrepancy between the number of level requested
- * and a pyramid schedule. The pyramid schedule will be overriden
+ * and a pyramid schedule. The pyramid schedule will be overridden
  * with a default one.
  *
  * Before each resolution level an IterationEvent is invoked providing an
@@ -162,10 +162,10 @@ public:
   typedef typename DataObject::Pointer DataObjectPointer;
 
   /** Method that initiates the registration. */
-  virtual void StartRegistration();
+  virtual void StartRegistration( void );
 
   /** Method to stop the registration. */
-  virtual void StopRegistration();
+  virtual void StopRegistration( void );
 
   /** Set/Get the Fixed image. */
   itkSetConstObjectMacro( FixedImage, FixedImageType );
@@ -187,7 +187,7 @@ public:
   itkSetMacro( FixedImageRegion, FixedImageRegionType );
   itkGetConstReferenceMacro( FixedImageRegion, FixedImageRegionType );
 
-  /** Set/Get the Transfrom. */
+  /** Set/Get the Transform. */
   itkSetObjectMacro( Transform, TransformType );
   itkGetObjectMacro( Transform, TransformType );
 
@@ -228,17 +228,17 @@ public:
   itkGetConstReferenceMacro( LastTransformParameters, ParametersType );  
 
   /** Returns the transform resulting from the registration process. */
-  const TransformOutputType * GetOutput() const;
+  const TransformOutputType * GetOutput( void ) const;
 
   /** Make a DataObject of the correct type to be used as the specified
    * output.
    */
-  virtual DataObjectPointer MakeOutput(unsigned int idx);
+  virtual DataObjectPointer MakeOutput( unsigned int idx  );
 
   /** Method to return the latest modified time of this object or
    * any of its cached ivars.
    */
-  unsigned long GetMTime() const;  
+  unsigned long GetMTime( void ) const;  
   
 protected:
 
@@ -252,8 +252,9 @@ protected:
   virtual void PrintSelf(std::ostream& os, Indent indent) const;
 
   /** Method invoked by the pipeline in order to trigger the computation of 
-   * the registration. */
-  virtual void GenerateData ();
+   * the registration.
+   */
+  virtual void GenerateData( void );
 
   /** Initialize by setting the interconnects between the components.
       This method is executed at every level of the pyramid with the
@@ -264,7 +265,7 @@ protected:
   /** Compute the size of the fixed region for each level of the pyramid. */
   virtual void PreparePyramids( void );
 
-  /** Set the current level to be processed */  
+  /** Set the current level to be processed. */  
   itkSetMacro( CurrentLevel, unsigned long );
 
   /** The last transform parameters. Compared to the ITK class

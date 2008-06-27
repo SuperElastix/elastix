@@ -83,7 +83,8 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
                                   this->MakeOutput(0).GetPointer() );
 
   this->ProcessObject::SetNthOutput( 0, transformDecorator.GetPointer() );
-}
+
+} // end Constructor
 
 
 /*
@@ -92,7 +93,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
 template < typename TFixedImage, typename TMovingImage >
 void
 MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
-::Initialize() throw (ExceptionObject)
+::Initialize( void ) throw (ExceptionObject)
 {
 
   // Sanity checks
@@ -136,7 +137,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
 
   transformOutput->Set( this->m_Transform.GetPointer() );
 
-}
+} // end Initialize()
 
 
 /*
@@ -149,9 +150,6 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
 {
   this->m_Stop = true;
 }
-
-
-
 
 
 /*
@@ -268,7 +266,8 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
     
   }
 
-}
+} // end PreparePyramids()
+
 
 /*
  * Starts the Registration Process
@@ -357,7 +356,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
       }
     }
 
-}
+} // end StartRegistration()
 
 
 /*
@@ -400,7 +399,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
     os << this->m_FixedImageRegionPyramid[level] << std::endl;
     }
 
-}
+} // end PrintSelf()
 
 
 /*
@@ -409,7 +408,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
 template < typename TFixedImage, typename TMovingImage >
 void
 MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
-::GenerateData()
+::GenerateData( void )
 {
   this->StartRegistration();
 }
@@ -419,7 +418,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
 template < typename TFixedImage, typename TMovingImage >
 unsigned long
 MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
-::GetMTime() const
+::GetMTime( void ) const
 {
   unsigned long mtime = Superclass::GetMTime();
   unsigned long m;
@@ -466,7 +465,8 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
 
   return mtime;
   
-}
+} // end GetMTime()
+
 
 /*
  *  Get Output
@@ -478,7 +478,6 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
 {
   return static_cast< const TransformOutputType * >( this->ProcessObject::GetOutput(0) );
 }
-
 
 
 template < typename TFixedImage, typename TMovingImage >
