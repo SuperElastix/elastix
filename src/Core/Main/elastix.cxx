@@ -221,7 +221,7 @@ int main( int argc, char **argv )
 
     /** Print a start message. */
     elxout << "-------------------------------------------------------------------------" << "\n" << std::endl;
-    elxout << "Running Elastix with parameter file " << i
+    elxout << "Running elastix with parameter file " << i
       << ": \"" << argMap[ "-p" ] << "\".\n" << std::endl;
 
     /** Declare a timer, start it and print the start time. */
@@ -277,7 +277,7 @@ int main( int argc, char **argv )
   for ( unsigned int i = 0; i < nrOfParameterFiles; i++ )
   {
     elastices[ i ] = 0;
-  }	
+  }
 
   transform = 0;
   fixedImageContainer = 0;
