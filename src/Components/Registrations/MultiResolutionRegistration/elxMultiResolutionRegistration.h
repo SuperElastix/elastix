@@ -27,7 +27,7 @@ using namespace itk;
    * \class MultiResolutionRegistration
    * \brief A registration framework based on the itk::MultiResolutionImageRegistrationMethod.
    *
-   * This MultiResolutionRegistration givees a framework for registration with a
+   * This MultiResolutionRegistration gives a framework for registration with a
    * multi-resolution approach.
    *
    * The parameters used in this class are:
