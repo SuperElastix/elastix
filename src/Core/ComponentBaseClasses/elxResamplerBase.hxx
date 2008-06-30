@@ -199,7 +199,8 @@ namespace elastix
       timer->StartTimer();
 
       /** Apply the final transform, and save the result,
-       * by calling WriteResultImage. */
+       * by calling WriteResultImage.
+       */
       elxout << "\nApplying final transform ..." << std::endl;
       try
       {
