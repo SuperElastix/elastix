@@ -83,10 +83,10 @@ namespace elastix
     */
     virtual int Initialize( ArgumentMapType & _arg );
 
-    /** True, if Initialize was succesfully called. */
+    /** True, if Initialize was successfully called. */
     virtual bool Initialized( void ) const; //to elxconfigurationbase
 
-    /** Get and Set CommandLine arguments into the argument map.*/
+    /** Get and Set CommandLine arguments into the argument map. */
     const char * GetCommandLineArgument( const char * key ) const;
     void SetCommandLineArgument( const char * key, const char * value );
 
@@ -94,20 +94,26 @@ namespace elastix
     itkGetStringMacro( ParameterFileName );
     itkSetStringMacro( ParameterFileName );
 
-    /** Get and Set the elastix-level.*/
+    /** Get and Set the elastix level. */
     itkSetMacro( ElastixLevel, unsigned int );
     itkGetConstMacro( ElastixLevel, unsigned int );
 
-    /** Set/Get whether warnings are allowed to be printed, when reading a parameter */
+    /** Get and Set the total number of elastix levels. */
+    itkSetMacro( TotalNumberOfElastixLevels, unsigned int );
+    itkGetConstMacro( TotalNumberOfElastixLevels, unsigned int );
+
+    /** Set/Get whether warnings are allowed to be printed, when reading a parameter. */
     itkSetMacro( Silent, bool );
     itkGetConstMacro( Silent, bool );
 
     /** Methods that is called at the very beginning of elastixTemplate::Run.
-    * \li Prints the parameter file  */
+     * \li Prints the parameter file
+     */
     virtual int BeforeAll( void );
 
     /** Methods that is called at the very beginning of elastixTemplate::ApplyTransform.
-    * \li Prints the parameter file  */
+     * \li Prints the parameter file
+     */
     virtual int BeforeAllTransformix( void );
 
     /**
@@ -283,6 +289,7 @@ namespace elastix
     std::string               m_ParameterFileName;
     bool                      m_Initialized;
     unsigned int              m_ElastixLevel;
+    unsigned int              m_TotalNumberOfElastixLevels;
     bool                      m_Silent;
 
     /** Print the parameter file to the logfile. Called by BeforeAll().

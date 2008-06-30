@@ -17,7 +17,6 @@
 
 #include "elxResamplerBase.h"
 #include "itkImageFileCastWriter.h"
-
 #include "elxTimer.h"
 
 namespace elastix
@@ -155,7 +154,34 @@ namespace elastix
     /** Decide whether or not to write the result image. */
     std::string writeResultImage = "true";
     this->m_Configuration->ReadParameter(	writeResultImage, "WriteResultImage", 0 );
-    
+
+    /** Release some memory, here already. Sometimes it is not possible to
+     * resample and write an image, because too much memory is consumed by
+     * elastix. Releasing the memory of the pyramids and the fixed image at
+     * this point helps a lot.
+     */
+    unsigned int numberOfOutputs = this->GetElastix()
+      ->GetElxFixedImagePyramidBase()->GetAsITKBaseType()->GetNumberOfOutputs();
+    for ( unsigned int i = 0; i < numberOfOutputs; ++i )
+    {
+      this->GetElastix()->GetElxFixedImagePyramidBase()->GetAsITKBaseType()
+        ->GetOutput( i )->ReleaseData();
+    }
+    numberOfOutputs = this->GetElastix()
+      ->GetElxMovingImagePyramidBase()->GetAsITKBaseType()->GetNumberOfOutputs();
+    for ( unsigned int i = 0; i < numberOfOutputs; ++i )
+    {
+      this->GetElastix()->GetElxMovingImagePyramidBase()->GetAsITKBaseType()
+        ->GetOutput( i )->ReleaseData();
+    }
+
+    /** Only release fixed image memory if this is the final elastix level. */
+    if ( this->GetConfiguration()->GetElastixLevel() + 1
+      == this->GetConfiguration()->GetTotalNumberOfElastixLevels() )
+    {
+      this->GetElastix()->GetFixedImage()->ReleaseData();
+    }
+ 
     /** Writing result image. */
     if ( writeResultImage == "true" )
     {
@@ -278,7 +304,7 @@ namespace elastix
       /** Add information to the exception. */
       excp.SetLocation( "ResamplerBase - AfterRegistrationBase()" );
       std::string err_str = excp.GetDescription();
-      err_str += "\nError occured while writing resampled image.\n";
+      err_str += "\nError occurred while writing resampled image.\n";
       excp.SetDescription( err_str );
       /** Pass the exception to an higher level. */
       throw excp;

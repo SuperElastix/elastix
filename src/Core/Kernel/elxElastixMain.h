@@ -135,7 +135,7 @@ namespace elastix
 
     /** Set/Get functions for the fixed and moving images
      * (if these are not used, elastix tries to read them from disk,
-     * according to the commandline parameters). */
+     * according to the command line parameters). */
     itkSetObjectMacro( FixedImageContainer,	 DataObjectContainerType );
     itkSetObjectMacro( MovingImageContainer, DataObjectContainerType );
     itkGetObjectMacro( FixedImageContainer,	 DataObjectContainerType );
@@ -143,7 +143,7 @@ namespace elastix
 
     /** Set/Get functions for the fixed and moving masks
      * (if these are not used, elastix tries to read them from disk,
-     * according to the commandline parameters). */
+     * according to the command line parameters). */
     itkSetObjectMacro( FixedMaskContainer, DataObjectContainerType );
     itkSetObjectMacro( MovingMaskContainer, DataObjectContainerType );
     itkGetObjectMacro( FixedMaskContainer, DataObjectContainerType );
@@ -158,7 +158,7 @@ namespace elastix
      * Before calling this functions, call run(). */
     itkGetObjectMacro( Elastix,	ObjectType );
 
-    /** Convenience function that returns the Elastix component as
+    /** Convenience function that returns the elastix component as
      * a pointer to an ElastixBaseType. Use only after having called run()!  */
     virtual ElastixBaseType * GetElastixBase(void) const;
 
@@ -174,9 +174,13 @@ namespace elastix
     itkSetObjectMacro( InitialTransform, ObjectType );
     itkGetObjectMacro( InitialTransform, ObjectType );
 
-    /** Get and Set the elastix-level.*/
+    /** Get and Set the elastix level. */
     void SetElastixLevel( unsigned int level );
-    unsigned int GetElastixLevel(void);
+    unsigned int GetElastixLevel( void );
+
+    /** Get and Set the total number of elastix levels. */
+    void SetTotalNumberOfElastixLevels( unsigned int levels );
+    unsigned int GetTotalNumberOfElastixLevels( void );
 
     /** Returns the Index that is used in elx::ComponentDatabase.*/
     itkGetConstMacro( DBIndex, DBIndexType );
@@ -187,7 +191,7 @@ namespace elastix
     virtual void EnterCommandLineArguments( ArgumentMapType & argmap );
 
     /** Start the registration
-     * run() without commandline parameters; it assumes that 
+     * run() without command line parameters; it assumes that 
      * EnterCommandLineParameters has been invoked already, or that
      * m_Configuration is initialised in a different way. */
     virtual int Run(void);

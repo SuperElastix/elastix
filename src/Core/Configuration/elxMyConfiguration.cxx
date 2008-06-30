@@ -32,6 +32,7 @@ namespace elastix
     this->m_ParameterFileName = "";
     this->m_Initialized = false;
     this->m_ElastixLevel = 0;
+    this->m_TotalNumberOfElastixLevels = 1;
     this->m_Silent = false;
 
   } // end Constructor()

@@ -427,6 +427,30 @@ namespace elastix
 
 
   /**
+   * ********************* SetTotalNumberOfElastixLevels ************************
+   */
+
+  void ElastixMain::SetTotalNumberOfElastixLevels( unsigned int levels )
+  {
+    /** Call SetTotalNumberOfElastixLevels from MyConfiguration. */
+    this->m_Configuration->SetTotalNumberOfElastixLevels( levels );
+
+  } // end SetTotalNumberOfElastixLevels()
+
+
+  /**
+   * ********************* GetTotalNumberOfElastixLevels ************************
+   */
+
+  unsigned int ElastixMain::GetTotalNumberOfElastixLevels(void)
+  {
+    /** Call GetTotalNumberOfElastixLevels from MyConfiguration. */
+    return this->m_Configuration->GetTotalNumberOfElastixLevels();
+
+  } // end GetTotalNumberOfElastixLevels()
+
+
+  /**
    * ********************* LoadComponents **************************
    *
    * Store the install function of each component in the 

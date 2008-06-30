@@ -205,7 +205,8 @@ int main( int argc, char **argv )
 
     /** Set the current elastix-level. */
     elastices[ i ]->SetElastixLevel( i );
-
+    elastices[ i ]->SetTotalNumberOfElastixLevels( nrOfParameterFiles );
+    
     /** Delete the previous ParameterFileName. */
     if ( argMap.count( "-p" ) )
     {
