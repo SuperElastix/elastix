@@ -38,7 +38,7 @@ using namespace itk;
    *
    * The parameters used in this class are:
    * \parameter Transform: Select this transform as follows:\n
-   *		<tt>(%Transform "BSplineTransform")</tt>  
+   *		<tt>(Transform "BSplineTransform")</tt>
    * \parameter FinalGridSpacing: DEPRECATED. the grid spacing of the B-spline transform for each dimension. \n
    *		example: <tt>(FinalGridSpacing 8.0 8.0 8.0)</tt> \n
    *    If only one argument is given, that factor is used for each dimension. The spacing
