@@ -48,7 +48,8 @@ namespace elastix
       ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
     /** Check if the exact metric value, computed on all pixels, should be shown, 
-     * and whether the all pixels should be used during optimisation */
+     * and whether the all pixels should be used during optimisation.
+     */
 
     /** Define the name of the ExactMetric column */
     std::string exactMetricColumn = "Exact";
@@ -75,19 +76,26 @@ namespace elastix
     /** For advanced metrics several other things can be set. */
     if ( thisAsAdvanced != 0 )
     {
-      /** Get and set whether the metric should check if enough samples map inside the moving image. */
+      /** Should the metric check for enough samples? */
       bool checkNumberOfSamples = true;
       this->GetConfiguration()->ReadParameter( checkNumberOfSamples, 
         "CheckNumberOfSamples", this->GetComponentLabel(), level, 0 );
+
+      /** Get the required ratio. */
+      float ratio = 0.25;
+      this->GetConfiguration()->ReadParameter( ratio,
+        "RequiredRatioOfValidSamples", this->GetComponentLabel(), level, 0, true );
+
+      /** Set it. */
       if ( !checkNumberOfSamples )
       {
         thisAsAdvanced->SetRequiredRatioOfValidSamples( 0.0 );
       }
       else
       {
-        thisAsAdvanced->SetRequiredRatioOfValidSamples( 0.25 );
+        thisAsAdvanced->SetRequiredRatioOfValidSamples( ratio );
       }
-    }
+    } // end Advanced metric
       
   } // end BeforeEachResolutionBase()
 

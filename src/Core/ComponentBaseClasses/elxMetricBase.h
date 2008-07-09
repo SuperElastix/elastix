@@ -36,17 +36,22 @@ using namespace itk;
    * This class contains the common functionality for all Metrics.
    *
    * The parameters used in this class are:
-   * \parameter ShowExactMetricValue: Flag that can set to "true" or "false". If "true" the 
-   *		metric computes the exact metric value (computed on all voxels rather than on the set of
-   *		spatial samples) and shows it each iteration. Must be given for each resolution. \n
+   * \parameter ShowExactMetricValue: Flag that can set to "true" or "false".
+   *    If "true" the metric computes the exact metric value (computed on all
+   *    voxels rather than on the set of spatial samples) and shows it each
+   *    iteration. Must be given for each resolution. \n
    *		example: <tt>(ShowExactMetricValue "true" "true" "false")</tt> \n
    *		Default is "false" for all resolutions.
-   * \parameter CheckNumberOfSamples: Whether the metric checks if at least 1/4 of the 
-   *    samples map inside the moving image. Must be given for each resolution or for all
-   *    resolutions at once. \n
+   * \parameter CheckNumberOfSamples: Whether the metric checks if at least
+   *    a certain fraction (default 1/4) of the samples map inside the moving
+   *    image. Can be given for each resolution or for all resolutions at once. \n
    *    example: <tt>(CheckNumberOfSamples "false" "true" "false")</tt> \n
-   *    The default is true. In general it is wise to set this to true, since it detects
-   *    if the registration is going really bad.
+   *    The default is true. In general it is wise to set this to true,
+   *    since it detects if the registration is going really bad.
+   * \parameter RequiredRatioOfValidSamples: Defines the fraction needed in
+   *    CheckNumberOfSamples. \n
+   *		example: <tt>(RequiredRatioOfValidSamples 0.1)</tt> \n
+   *    The default is 0.25.
    *
    * \ingroup Metrics
    * \ingroup ComponentBaseClasses
@@ -58,43 +63,43 @@ using namespace itk;
   public:
 
     /** Standard ITK stuff. */
-    typedef MetricBase									Self;
-    typedef BaseComponentSE<TElastix>		Superclass;
+    typedef MetricBase                  Self;
+    typedef BaseComponentSE<TElastix>   Superclass;
 
     /** Run-time type information (and related methods). */
     itkTypeMacro( MetricBase, BaseComponentSE );
 
     /** Typedef's inherited from Elastix. */
-    typedef typename Superclass::ElastixType						ElastixType;
-    typedef typename Superclass::ElastixPointer					ElastixPointer;
-    typedef typename Superclass::ConfigurationType			ConfigurationType;
-    typedef typename Superclass::ConfigurationPointer		ConfigurationPointer;
-    typedef typename Superclass::RegistrationType				RegistrationType;
-    typedef typename Superclass::RegistrationPointer		RegistrationPointer;
+    typedef typename Superclass::ElastixType            ElastixType;
+    typedef typename Superclass::ElastixPointer         ElastixPointer;
+    typedef typename Superclass::ConfigurationType      ConfigurationType;
+    typedef typename Superclass::ConfigurationPointer   ConfigurationPointer;
+    typedef typename Superclass::RegistrationType       RegistrationType;
+    typedef typename Superclass::RegistrationPointer    RegistrationPointer;
 
     /** Other typedef's. */
-    typedef typename ElastixType::FixedImageType		FixedImageType;
-    typedef typename ElastixType::MovingImageType		MovingImageType;
+    typedef typename ElastixType::FixedImageType        FixedImageType;
+    typedef typename ElastixType::MovingImageType       MovingImageType;
     
     /** ITKBaseType. */
     typedef ImageToImageMetric<
-      FixedImageType, MovingImageType >				ITKBaseType;
+      FixedImageType, MovingImageType >       ITKBaseType;
     typedef AdvancedImageToImageMetric<
-      FixedImageType, MovingImageType >				AdvancedMetricType;
+      FixedImageType, MovingImageType >       AdvancedMetricType;
 
     /** Typedefs for sampler support. */
-    typedef typename AdvancedMetricType::ImageSamplerType   ImageSamplerBaseType;
+    typedef typename AdvancedMetricType::ImageSamplerType  ImageSamplerBaseType;
 
     /** Cast to ITKBaseType. */
-    virtual ITKBaseType * GetAsITKBaseType(void)
+    virtual ITKBaseType * GetAsITKBaseType( void )
     {
-      return dynamic_cast<ITKBaseType *>(this);
+      return dynamic_cast<ITKBaseType *>( this );
     }
 
     /** Cast to ITKBaseType, to use in const functions. */
-    virtual const ITKBaseType * GetAsITKBaseType(void) const
+    virtual const ITKBaseType * GetAsITKBaseType( void ) const
     {
-      return dynamic_cast<const ITKBaseType *>(this);
+      return dynamic_cast<const ITKBaseType *>( this );
     }
     
     /** Get	the dimension of the fixed image. */
@@ -162,9 +167,9 @@ using namespace itk;
   private:
 
     /** The private constructor. */
-    MetricBase( const Self& );			// purposely not implemented
+    MetricBase( const Self& );      // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );	// purposely not implemented
+    void operator=( const Self& );  // purposely not implemented
 
 
   }; // end class MetricBase
