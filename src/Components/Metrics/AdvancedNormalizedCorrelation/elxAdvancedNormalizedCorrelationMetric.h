@@ -35,12 +35,6 @@ using namespace itk;
    *    sample values in the cross correlation formula. This typically results in narrower
    *    valleys in the cost function. Default value is true. Can be defined for each resolution\n
    *		example: <tt>(SubtractMean "false")</tt>
-   * \parameter CheckNumberOfSamples: Whether the metric checks if at least 1/4 of the 
-   *    samples map inside the moving image. Must be given for each resolution or for all
-   *    resolutions at once. \n
-   *    example: <tt>(CheckNumberOfSamples "false" "true" "false")</tt> \n
-   *    The default is true. In general it is wise to set this to true, since it detects
-   *    if the registration is going really bad.
    *
    * \ingroup Metrics
    *

@@ -36,12 +36,6 @@ using namespace itk;
    *    where range represents the maximum gray value range of the images.\n
    *    <tt>(UseNormalization "true")</tt>\n
    *    The default value is false.
-   * \parameter CheckNumberOfSamples: Whether the metric checks if at least 1/4 of the 
-   *    samples map inside the moving image. Must be given for each resolution or for all
-   *    resolutions at once. \n
-   *    example: <tt>(CheckNumberOfSamples "false" "true" "false")</tt> \n
-   *    The default is true. In general it is wise to set this to true, since it detects
-   *    if the registration is going really bad.
    *
    * \ingroup Metrics
    *
