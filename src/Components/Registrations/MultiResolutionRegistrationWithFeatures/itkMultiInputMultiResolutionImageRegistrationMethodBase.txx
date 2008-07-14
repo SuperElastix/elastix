@@ -549,6 +549,18 @@ namespace itk
           this->m_LastTransformParameters );
       }
 
+      // Remove pyramid output of current level to release memory
+      for ( unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i )
+      {
+        this->GetFixedImagePyramid( i )->GetOutput( currentLevel )
+          ->ReleaseData();
+      }
+      for ( unsigned int i = 0; i < this->GetNumberOfMovingImagePyramids(); ++i )
+      {
+        this->GetMovingImagePyramid( i )->GetOutput( currentLevel )
+          ->ReleaseData();
+      }
+
     } // end for loop over res levels
 
   } // end GenerateData()

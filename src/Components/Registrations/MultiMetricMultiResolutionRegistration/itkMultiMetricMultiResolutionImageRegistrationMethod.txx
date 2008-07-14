@@ -301,7 +301,7 @@ namespace itk
     this->CheckPyramids();
 
     /** Setup the moving image pyramids */
-    for (unsigned int i = 0; i < this->GetNumberOfMovingImagePyramids(); ++i )
+    for ( unsigned int i = 0; i < this->GetNumberOfMovingImagePyramids(); ++i )
     {
       MovingImagePyramidPointer movpyr = this->GetMovingImagePyramid(i);
       if ( movpyr.IsNotNull() )
@@ -326,7 +326,7 @@ namespace itk
 
     this->m_FixedImageRegionPyramids.resize( this->GetNumberOfFixedImagePyramids() );
 
-    for (unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i )
+    for ( unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i )
     {
       // Setup the fixed image pyramid
       FixedImagePyramidPointer fixpyr = this->GetFixedImagePyramid(i);
@@ -346,7 +346,7 @@ namespace itk
         ScheduleType schedule = fixpyr->GetSchedule();
 
         FixedImageRegionType fixedImageRegion;
-        if (this->GetNumberOfFixedImageRegions() > 1)
+        if ( this->GetNumberOfFixedImageRegions() > 1)
         {
           fixedImageRegion = this->GetFixedImageRegion(i);
         }
@@ -512,6 +512,18 @@ namespace itk
       {
         this->SetInitialTransformParametersOfNextLevel(
           this->m_LastTransformParameters );
+      }
+
+      // Remove pyramid output of current level to release memory
+      for ( unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i )
+      {
+        this->GetFixedImagePyramid( i )->GetOutput( currentLevel )
+          ->ReleaseData();
+      }
+      for ( unsigned int i = 0; i < this->GetNumberOfMovingImagePyramids(); ++i )
+      {
+        this->GetMovingImagePyramid( i )->GetOutput( currentLevel )
+          ->ReleaseData();
       }
 
     } // end for loop over res levels
