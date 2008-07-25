@@ -153,41 +153,21 @@ namespace elastix
 
     /** Decide whether or not to write the result image. */
     std::string writeResultImage = "true";
-    this->m_Configuration->ReadParameter(	writeResultImage, "WriteResultImage", 0 );
+    this->m_Configuration->ReadParameter(
+      writeResultImage, "WriteResultImage", 0 );
 
-    /** Release some memory, here already. Sometimes it is not possible to
-     * resample and write an image, because too much memory is consumed by
-     * elastix. Releasing the memory of the pyramids and the fixed image at
-     * this point helps a lot.
+    /** Release memory to be able to resample in case a limited
+     * amount of memory is available.
      */
-    unsigned int numberOfOutputs = this->GetElastix()
-      ->GetElxFixedImagePyramidBase()->GetAsITKBaseType()->GetNumberOfOutputs();
-    for ( unsigned int i = 0; i < numberOfOutputs; ++i )
-    {
-      this->GetElastix()->GetElxFixedImagePyramidBase()->GetAsITKBaseType()
-        ->GetOutput( i )->ReleaseData();
-    }
-    numberOfOutputs = this->GetElastix()
-      ->GetElxMovingImagePyramidBase()->GetAsITKBaseType()->GetNumberOfOutputs();
-    for ( unsigned int i = 0; i < numberOfOutputs; ++i )
-    {
-      this->GetElastix()->GetElxMovingImagePyramidBase()->GetAsITKBaseType()
-        ->GetOutput( i )->ReleaseData();
-    }
-
-    /** Only release fixed image memory if this is the final elastix level. */
-    if ( this->GetConfiguration()->GetElastixLevel() + 1
-      == this->GetConfiguration()->GetTotalNumberOfElastixLevels() )
-    {
-      this->GetElastix()->GetFixedImage()->ReleaseData();
-    }
+    this->ReleaseMemory();    
  
     /** Writing result image. */
     if ( writeResultImage == "true" )
     {
       /** Create a name for the final result. */
       std::string resultImageFormat = "mhd";
-      this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0);
+      this->m_Configuration->ReadParameter(
+        resultImageFormat, "ResultImageFormat", 0);
       std::ostringstream makeFileName( "" );
       makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
         << "result." << this->m_Configuration->GetElastixLevel()
@@ -270,6 +250,23 @@ namespace elastix
     progressObserver->SetStartString( "  Progress: " );
     progressObserver->SetEndString( "%" );
 
+    /** Do the resampling. */
+    try
+    {
+      this->GetAsITKBaseType()->Update();
+    }
+    catch( itk::ExceptionObject & excp )
+    {
+      /** Add information to the exception. */
+      excp.SetLocation( "ResamplerBase - WriteResultImage()" );
+      std::string err_str = excp.GetDescription();
+      err_str += "\nError occurred while resampling the image.\n";
+      excp.SetDescription( err_str );
+
+      /** Pass the exception to an higher level. */
+      throw excp;
+    }
+
     /** Read output pixeltype from parameter the file. Replace possible " " with "_". */
     std::string resultImagePixelType = "short";
     this->m_Configuration->ReadParameter(	resultImagePixelType, "ResultImagePixelType", 0, true );
@@ -296,6 +293,8 @@ namespace elastix
     writer->SetUseCompression( doCompression );
 
     /** Do the writing. */
+    xl::xout["coutonly"] << std::flush;
+    xl::xout["coutonly"] << "\n  Writing image ..." << std::endl;
     try
     {
       writer->Update();
@@ -307,6 +306,7 @@ namespace elastix
       std::string err_str = excp.GetDescription();
       err_str += "\nError occurred while writing resampled image.\n";
       excp.SetDescription( err_str );
+
       /** Pass the exception to an higher level. */
       throw excp;
     }
@@ -449,6 +449,81 @@ namespace elastix
       << doCompression << "\")" << std::endl;
 
   } // end WriteToFile()
+
+
+  /*
+   * ******************* ReleaseMemory ********************
+   */
+
+  template<class TElastix>
+    void ResamplerBase<TElastix>
+    ::ReleaseMemory( void )
+  {
+    /** Release some memory, here already. Sometimes it is not possible to
+     * resample and write an image, because too much memory is consumed by
+     * elastix. Releasing the memory of the pyramids and the fixed image at
+     * this point helps a lot.
+     */
+
+    /** Release the pyramids. Already done after every resolution! *
+    unsigned int numberOfOutputs = this->GetElastix()
+      ->GetElxFixedImagePyramidBase()->GetAsITKBaseType()->GetNumberOfOutputs();
+    for ( unsigned int i = 0; i < numberOfOutputs; ++i )
+    {
+      this->GetElastix()->GetElxFixedImagePyramidBase()->GetAsITKBaseType()
+        ->GetOutput( i )->ReleaseData();
+    }
+    numberOfOutputs = this->GetElastix()
+      ->GetElxMovingImagePyramidBase()->GetAsITKBaseType()->GetNumberOfOutputs();
+    for ( unsigned int i = 0; i < numberOfOutputs; ++i )
+    {
+      this->GetElastix()->GetElxMovingImagePyramidBase()->GetAsITKBaseType()
+        ->GetOutput( i )->ReleaseData();
+    }
+
+    /** Release more memory, but only if this is the final elastix level. */
+    if ( this->GetConfiguration()->GetElastixLevel() + 1
+      == this->GetConfiguration()->GetTotalNumberOfElastixLevels() )
+    {
+      /** Release fixed image memory. */
+      //this->GetElastix()->GetFixedImage()->DisconnectPipeline();
+      this->GetElastix()->GetFixedImage()->ReleaseData();
+
+      /** Release fixed mask image memory. */
+      if ( this->GetElastix()->GetFixedMask() != 0 )
+      {
+        //this->GetElastix()->GetFixedMask()->DisconnectPipeline();
+        this->GetElastix()->GetFixedMask()->ReleaseData();
+      }
+      
+      /** Release moving mask image memory. */
+      if ( this->GetElastix()->GetMovingMask() != 0 )
+      {
+        //this->GetElastix()->GetMovingMask()->DisconnectPipeline();
+        this->GetElastix()->GetMovingMask()->ReleaseData();
+      }
+      
+    } // end if final elastix level
+
+    /** The B-spline interpolator stores a Coefficient image of doubles
+     * the size of the moving image. We try to clear it by setting an
+     * image of size one (zero gives division by zero in the
+     * BSplineDecompositionImageFilter).
+     * The interpolator is not needed anymore, since we have the
+     * resampler interpolator.
+     */
+    typename InterpolatorType::InputImageType::Pointer dummyImage
+      = InterpolatorType::InputImageType::New();
+    SizeType size; size.Fill( 1 );
+    dummyImage->SetRegions( size );
+    dummyImage->Allocate();
+    dummyImage->FillBuffer( 0 );
+    this->GetElastix()->GetElxInterpolatorBase()->GetAsITKBaseType()->SetInputImage( dummyImage );
+    // Above doesn't work
+
+    // Clear ImageSampler, metric, optimizer, interpolator, registration?
+
+  } // end ReleaseMemory()
 
 
 } // end namespace elastix

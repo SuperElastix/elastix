@@ -171,6 +171,9 @@ namespace elastix
     ResamplerBase(const Self&);		// purposely not implemented
     /** The private copy constructor. */
     void operator=(const Self&);	// purposely not implemented
+
+    /** Release memory. */
+    void ReleaseMemory( void );
     
   }; // end class ResamplerBase
   

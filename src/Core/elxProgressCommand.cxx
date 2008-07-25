@@ -186,11 +186,11 @@ namespace elastix
       << this->m_EndString;
     xl::xout["coutonly"] << std::flush;
 
-    /** If the process is completed, print an end-of-line. */
+    /** If the process is completed, print an end-of-line. *
     if ( progress > 0.99999 )
     {
       xl::xout["coutonly"] << std::endl;
-    }
+    }*/
 
   } // end PrintProgress()
 
