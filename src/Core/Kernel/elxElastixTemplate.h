@@ -283,7 +283,7 @@ namespace elastix
     virtual void OpenIterationInfoFile(void);
     std::ofstream m_IterationInfoFile;
 
-    /** Used by the callback functions, beforeeachresolution() etc.).
+    /** Used by the callback functions, BeforeEachResolution() etc.).
      * This method calls a function in each component, in the following order:
      * \li Registration
      * \li Transform

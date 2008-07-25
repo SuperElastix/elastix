@@ -272,7 +272,7 @@ namespace elastix
      * The type is ObjectType, but the pointer should actually point 
      * to an itk::Transform type (or inherited from that one).
      * You can use this to set it as an initial transform in another
-     * ElastixBase instantation. */
+     * ElastixBase instantiation. */
     elxSetObjectMacro( FinalTransform, ObjectType );
     elxGetObjectMacro( FinalTransform, ObjectType );
 
