@@ -100,16 +100,6 @@ SOURCE_GROUP( "CostFunctions" FILES ${CostFunctionFiles} )
 SOURCE_GROUP( "LineSearchOptimizers" FILES ${LineSearchOptimizersFiles} )
 SOURCE_GROUP( "ImageSamplers" FILES ${ImageSamplersFiles} )
 
-# on cygwin using gcc, -fPIC is ignored
-IF(NOT WIN32)
-  IF(CMAKE_COMPILER_IS_GNUCXX)
-    #Add -fPIC to the gcc-options. 
-    #This is needed for compilation on a 64-bit machine 
-    #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-    #SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
-  ENDIF(CMAKE_COMPILER_IS_GNUCXX)
-ENDIF(NOT WIN32)
-
 ADD_LIBRARY( elxCommon
   ${CommonFiles}
 	${CostFunctionFiles}
