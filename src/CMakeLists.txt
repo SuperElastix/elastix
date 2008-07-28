@@ -21,6 +21,7 @@ ENDIF(ITK_FOUND)
 
 SET( elxCommon_INCLUDE_DIRECTORIES
  ${elastix_SOURCE_DIR}/Common
+ ${elastix_SOURCE_DIR}/Common/CostFunctions
  ${elastix_SOURCE_DIR}/Common/ImageSamplers
  ${elastix_SOURCE_DIR}/Common/KNN
  ${elastix_SOURCE_DIR}/Common/KNN/ann_1.1/include
