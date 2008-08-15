@@ -128,16 +128,16 @@ namespace itk
 
     /** Declare things. */
     unsigned int i, j;
-    ZeroFluxNeumannBoundaryCondition< InputImageType >			nbc;
-    ZeroFluxNeumannBoundaryCondition< DoubleImageType >			nbc2;
-    NeighborhoodIterator< InputImageType >									nit;
-    NeighborhoodIterator< DoubleImageType >									nit2;
+    ZeroFluxNeumannBoundaryCondition< InputImageType >      nbc;
+    ZeroFluxNeumannBoundaryCondition< DoubleImageType >     nbc2;
+    NeighborhoodIterator< InputImageType >                  nit;
+    NeighborhoodIterator< DoubleImageType >                 nit2;
     VectorRealType sum;
     
     /** Allocate output. */
-    typename InputImageType::ConstPointer	input(	this->GetInput() );
-    typename InputImageType::Pointer			output( this->GetOutput() );
-    typename InputImageType::Pointer			outputtmp = InputImageType::New();
+    typename InputImageType::ConstPointer input(  this->GetInput() );
+    typename InputImageType::Pointer      output( this->GetOutput() );
+    typename InputImageType::Pointer      outputtmp = InputImageType::New();
 
     output->SetRegions( input->GetLargestPossibleRegion() );
     output->Allocate();
@@ -152,9 +152,9 @@ namespace itk
     //ProgressReporter progress( this, threadId, outputRegionForThread.GetNumberOfPixels() );
     
     /** Copy input to output. */
-    ImageRegionConstIterator< InputImageType >	in_it(
+    ImageRegionConstIterator< InputImageType >  in_it(
       input, input->GetLargestPossibleRegion() );
-    ImageRegionIterator< InputImageType >				out_it(
+    ImageRegionIterator< InputImageType >       out_it(
       output, input->GetLargestPossibleRegion() );
     in_it.GoToBegin();
     out_it.GoToBegin();
@@ -177,7 +177,7 @@ namespace itk
     nit2.OverrideBoundaryCondition( &nbc2 );
 
     /** Setup iterator over outputtmp. */
-    ImageRegionIterator< InputImageType >				oit(
+    ImageRegionIterator< InputImageType >       oit(
       outputtmp, input->GetLargestPossibleRegion() );
 
     /** Initialize c and ci. */
@@ -244,7 +244,7 @@ namespace itk
           c = nit2.GetCenterPixel();
 
           /** Set 'y = (1 - c) * x + c * mean' to the temporary output. */
-          InputPixelType value = nit.GetCenterPixel() * ( 1.0 -	c ) + mean * c;
+          InputPixelType value = nit.GetCenterPixel() * ( 1.0 - c ) + mean * c;
 
           /** Set it. */
           oit.Set( value );

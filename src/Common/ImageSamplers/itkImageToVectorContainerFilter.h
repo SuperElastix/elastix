@@ -92,9 +92,9 @@ namespace itk
   private:
 
     /** The private constructor. */
-    ImageToVectorContainerFilter( const Self& );	// purposely not implemented
+    ImageToVectorContainerFilter( const Self& );  // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );				        // purposely not implemented
+    void operator=( const Self& );                // purposely not implemented
 
   }; // end class ImageToVectorContainerFilter
 

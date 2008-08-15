@@ -21,7 +21,7 @@
 #include "vnl/vnl_math.h"
 
 namespace itk
-{	
+{ 
   
   /**
    * ********************* PrintSelf ******************************
@@ -50,7 +50,7 @@ namespace itk
     void
     ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     ::ComputeLogMarginalPDF( MarginalPDFType & pdf ) const
-  {	
+  { 
     /** Typedef iterator */
     typedef typename MarginalPDFType::iterator              MarginalPDFIteratorType;
 
@@ -86,7 +86,7 @@ namespace itk
     ::MeasureType
     ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     ::ComputeNormalizedMutualInformation( MeasureType & jointEntropy ) const
-  {	
+  { 
     /** Typedef iterators */
     typedef ImageLinearConstIteratorWithIndex<JointPDFType> JointPDFConstIteratorType;
     typedef typename MarginalPDFType::const_iterator        MarginalPDFConstIteratorType;
@@ -140,7 +140,7 @@ namespace itk
     ::MeasureType
     ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     ::GetValue( const ParametersType& parameters ) const
-  {		 
+  {    
     /** Construct the JointPDF and Alpha */
     this->ComputePDFs(parameters);          
 
@@ -176,7 +176,7 @@ namespace itk
     const ParametersType& parameters,
     MeasureType& value,
     DerivativeType& derivative) const
-  {		 
+  {    
     /** Initialize some variables */
     value = NumericTraits< MeasureType >::Zero;
     derivative = DerivativeType( this->GetNumberOfParameters() );

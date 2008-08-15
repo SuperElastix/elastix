@@ -45,7 +45,7 @@ namespace itk
       /** Connect the pipeline. */
       if ( i > 0 )
       {
-         erosion->SetInput( this->m_ErodeFilterArray[ i - 1 ]->GetOutput() );			
+         erosion->SetInput( this->m_ErodeFilterArray[ i - 1 ]->GetOutput() );     
       }
     }
 
@@ -75,8 +75,8 @@ namespace itk
     for (unsigned int i = 0; i < InputImageDimension; ++i)
     {
       /** Declare radius-array and structuring element. */
-      RadiusType								radiusarray;
-      StructuringElementType		S_ball;
+      RadiusType                radiusarray;
+      StructuringElementType    S_ball;
       unsigned long radius;
       unsigned int schedule;
 

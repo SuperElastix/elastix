@@ -81,9 +81,9 @@ namespace itk
   private:
 
     /** The private constructor. */
-    VectorContainerSource( const Self& );	// purposely not implemented
+    VectorContainerSource( const Self& ); // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );				// purposely not implemented
+    void operator=( const Self& );        // purposely not implemented
 
     /** Member variables. */
     int m_GenerateDataRegion;

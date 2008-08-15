@@ -65,7 +65,7 @@ namespace elastix
     this->GetAsITKBaseType()->SetNumberOfLevels( numberOfResolutions );
 
     /** Set the movingPyramidSchedule to the MovingImagePyramidSchedule given 
-     * in the parameter-file.	The following parameter file fields can be used:
+     * in the parameter-file. The following parameter file fields can be used:
      * ImagePyramidSchedule
      * MovingImagePyramidSchedule
      * MovingImagePyramid<i>Schedule, for the i-th moving image pyramid used. 

@@ -36,26 +36,26 @@ using namespace itk;
    *
    * The parameters used in this class are:
    * \parameter Optimizer: Select this optimizer as follows:\n
-   *		<tt>(Optimizer "CMAEvolutionStrategy")</tt>
+   *    <tt>(Optimizer "CMAEvolutionStrategy")</tt>
    * \parameter MaximumNumberOfIterations: The maximum number of iterations in each resolution. \n
-   *		example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
+   *    example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
    *    Default value: 500.\n
    * \parameter StepLength: Set the length of the initial step ( = Sigma0 = InitialSigma).\n
-   *		example: <tt>(StepLength 2.0 1.0 0.5)</tt> \n
+   *    example: <tt>(StepLength 2.0 1.0 0.5)</tt> \n
    *    Recommended value: 1/3 of the expected parameter range.\n
    *    Default value: 1.0.\n
    * \parameter ValueTolerance: Stopping criterion. See the documentation of the 
    *    itk::CMAEvolutionStrategyOptimizer for more information.\n
-   *		example: <tt>(ValueTolerance 0.001 0.0001 0.000001)</tt> \n
-   *	  Default value: 0.00001. Can be specified for each resolution.\n
+   *    example: <tt>(ValueTolerance 0.001 0.0001 0.000001)</tt> \n
+   *    Default value: 0.00001. Can be specified for each resolution.\n
    * \parameter PositionToleranceMin: Stopping criterion. See the documentation of the 
    *    itk::CMAEvolutionStrategyOptimizer for more information.\n
-   *		example: <tt>(PositionToleranceMin 0.001 0.0001 0.000001)</tt> \n
-   *	  Default value: 1e-8. Can be specified for each resolution.\n
+   *    example: <tt>(PositionToleranceMin 0.001 0.0001 0.000001)</tt> \n
+   *    Default value: 1e-8. Can be specified for each resolution.\n
    * \parameter PositionToleranceMax: Stopping criterion. See the documentation of the 
    *    itk::CMAEvolutionStrategyOptimizer for more information.\n
-   *		example: <tt>(PositionToleranceMax 0.001 0.0001 0.000001)</tt> \n
-   *	  Default value: 1e8. Can be specified for each resolution.\n
+   *    example: <tt>(PositionToleranceMax 0.001 0.0001 0.000001)</tt> \n
+   *    Default value: 1e8. Can be specified for each resolution.\n
    * \parameter PopulationSize: the number of parameter vectors evaluated in each iteration.\n
    *    If you set it to 0, a default value is calculated by the optimizer, which is reported
    *    back to the elastix.log file.\n
@@ -120,11 +120,11 @@ using namespace itk;
   public:
 
     /** Standard ITK.*/
-    typedef CMAEvolutionStrategy						  			Self;
-    typedef CMAEvolutionStrategyOptimizer						Superclass1;
-    typedef OptimizerBase<TElastix>							Superclass2;
-    typedef SmartPointer<Self>									Pointer;
-    typedef SmartPointer<const Self>						ConstPointer;
+    typedef CMAEvolutionStrategy                    Self;
+    typedef CMAEvolutionStrategyOptimizer           Superclass1;
+    typedef OptimizerBase<TElastix>             Superclass2;
+    typedef SmartPointer<Self>                  Pointer;
+    typedef SmartPointer<const Self>            ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -139,21 +139,21 @@ using namespace itk;
     elxClassNameMacro( "CMAEvolutionStrategy" );
 
     /** Typedef's inherited from Superclass1.*/
-    typedef Superclass1::CostFunctionType								    CostFunctionType;
-    typedef Superclass1::CostFunctionPointer						    CostFunctionPointer;
-    typedef Superclass1::StopConditionType							    StopConditionType;
-    typedef Superclass1::ParametersType									    ParametersType;
-    typedef Superclass1::DerivativeType											DerivativeType; 
-    typedef Superclass1::ScalesType													ScalesType; 
+    typedef Superclass1::CostFunctionType                   CostFunctionType;
+    typedef Superclass1::CostFunctionPointer                CostFunctionPointer;
+    typedef Superclass1::StopConditionType                  StopConditionType;
+    typedef Superclass1::ParametersType                     ParametersType;
+    typedef Superclass1::DerivativeType                     DerivativeType; 
+    typedef Superclass1::ScalesType                         ScalesType; 
     
     /** Typedef's inherited from Elastix.*/
-    typedef typename Superclass2::ElastixType						ElastixType;
-    typedef typename Superclass2::ElastixPointer				ElastixPointer;
-    typedef typename Superclass2::ConfigurationType			ConfigurationType;
-    typedef typename Superclass2::ConfigurationPointer	ConfigurationPointer;
-    typedef typename Superclass2::RegistrationType			RegistrationType;
-    typedef typename Superclass2::RegistrationPointer		RegistrationPointer;
-    typedef typename Superclass2::ITKBaseType						ITKBaseType;
+    typedef typename Superclass2::ElastixType           ElastixType;
+    typedef typename Superclass2::ElastixPointer        ElastixPointer;
+    typedef typename Superclass2::ConfigurationType     ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer  ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType      RegistrationType;
+    typedef typename Superclass2::RegistrationPointer   RegistrationPointer;
+    typedef typename Superclass2::ITKBaseType           ITKBaseType;
 
         
     /** Check if any scales are set, and set the UseScales flag on or off; 
@@ -179,8 +179,8 @@ using namespace itk;
 
   private:
 
-    CMAEvolutionStrategy( const Self& );	// purposely not implemented
-    void operator=( const Self& );							// purposely not implemented
+    CMAEvolutionStrategy( const Self& );  // purposely not implemented
+    void operator=( const Self& );              // purposely not implemented
         
       
   }; // end class CMAEvolutionStrategy

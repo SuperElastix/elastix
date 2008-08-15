@@ -48,7 +48,7 @@ namespace elastix
 
     /** Write the name of the resample-interpolator. */
     xl::xout["transpar"] << "(ResampleInterpolator \""
-      << this->elxGetClassName() << "\")" << std::endl;		
+      << this->elxGetClassName() << "\")" << std::endl;   
 
   } // end WriteToFile
 

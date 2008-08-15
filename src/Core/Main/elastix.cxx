@@ -50,18 +50,18 @@ int main( int argc, char **argv )
   }
 
   /** Some typedef's. */
-  typedef elx::ElastixMain												    ElastixMainType;
-  typedef ElastixMainType::Pointer								    ElastixMainPointer;
-  typedef std::vector<ElastixMainPointer>					    ElastixMainVectorType;
-  typedef ElastixMainType::ObjectPointer							ObjectPointer;
-  typedef ElastixMainType::DataObjectContainerPointer	DataObjectContainerPointer;
+  typedef elx::ElastixMain                            ElastixMainType;
+  typedef ElastixMainType::Pointer                    ElastixMainPointer;
+  typedef std::vector<ElastixMainPointer>             ElastixMainVectorType;
+  typedef ElastixMainType::ObjectPointer              ObjectPointer;
+  typedef ElastixMainType::DataObjectContainerPointer DataObjectContainerPointer;
 
-  typedef ElastixMainType::ArgumentMapType						ArgumentMapType;
-  typedef ArgumentMapType::value_type							    ArgumentMapEntryType;
+  typedef ElastixMainType::ArgumentMapType            ArgumentMapType;
+  typedef ArgumentMapType::value_type                 ArgumentMapEntryType;
 
-  typedef std::pair< std::string, std::string >		    ArgPairType;
-  typedef std::queue< ArgPairType >								    ParameterFileListType;
-  typedef ParameterFileListType::value_type				    ParameterFileListEntryType;
+  typedef std::pair< std::string, std::string >       ArgPairType;
+  typedef std::queue< ArgPairType >                   ParameterFileListType;
+  typedef ParameterFileListType::value_type           ParameterFileListEntryType;
   
   /** Some declarations and initialisations. */
   ElastixMainVectorType elastices;
@@ -116,7 +116,7 @@ int main( int argc, char **argv )
       
       /** Attempt to save the arguments in the ArgumentMap. */
       if ( argMap.count( key.c_str() ) == 0 )
-      {	
+      { 
         argMap.insert( ArgumentMapEntryType( key.c_str(), value.c_str() ) );
       }
       else
@@ -243,10 +243,10 @@ int main( int argc, char **argv )
     /** Get the transform, the fixedImage and the movingImage
      * in order to put it in the (possibly) next registration.
      */
-    transform						 = elastices[ i ]->GetFinalTransform();	
-    fixedImageContainer	 = elastices[ i ]->GetFixedImageContainer();
+    transform            = elastices[ i ]->GetFinalTransform(); 
+    fixedImageContainer  = elastices[ i ]->GetFixedImageContainer();
     movingImageContainer = elastices[ i ]->GetMovingImageContainer();
-    fixedMaskContainer	 = elastices[ i ]->GetFixedMaskContainer();
+    fixedMaskContainer   = elastices[ i ]->GetFixedMaskContainer();
     movingMaskContainer  = elastices[ i ]->GetMovingMaskContainer();
     
     /** Print a finish message. */
@@ -264,7 +264,7 @@ int main( int argc, char **argv )
 
   } // end loop over registrations
 
-  elxout << "-------------------------------------------------------------------------" << "\n" << std::endl;	
+  elxout << "-------------------------------------------------------------------------" << "\n" << std::endl; 
 
   /** Stop totaltimer and print it. */
   totaltimer->StopTimer();

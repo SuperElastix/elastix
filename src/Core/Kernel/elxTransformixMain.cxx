@@ -43,7 +43,7 @@ namespace elastix
     this->SetProcessPriority();
     this->SetMaximumNumberOfThreads();
 
-    /** Initialize database.*/		
+    /** Initialize database.*/    
     int errorCode = this->InitDBIndex();
     if (errorCode != 0)
     {
@@ -104,7 +104,7 @@ namespace elastix
     catch( itk::ExceptionObject & excp )
     {
       /** We just print the exception and let the programm quit. */
-      xl::xout["error"]	<< std::endl
+      xl::xout["error"] << std::endl
         << "--------------- Exception ---------------"
         << std::endl << excp
         << "-----------------------------------------" << std::endl;
@@ -154,10 +154,10 @@ namespace elastix
   {
     /** Check if configuration object was already initialized. */
     if ( m_Configuration->Initialized() )
-    {			
+    {     
       /** Try to read MovingImagePixelType from the parameterfile. */
       m_MovingImagePixelType = "float";
-      m_Configuration->ReadParameter( m_MovingImagePixelType,	"MovingInternalImagePixelType", 0 );
+      m_Configuration->ReadParameter( m_MovingImagePixelType, "MovingInternalImagePixelType", 0 );
 
       /** Try to read FixedImagePixelType from the parameterfile. */
       m_FixedImagePixelType = "float";
@@ -207,7 +207,7 @@ namespace elastix
         /** Get the DBIndex from the ComponentDatabase. */
         m_DBIndex = this->s_CDB->GetIndex(
           m_FixedImagePixelType,
-          m_FixedImageDimension,			
+          m_FixedImageDimension,      
           m_MovingImagePixelType,
           m_MovingImageDimension );
         if ( m_DBIndex == 0 )

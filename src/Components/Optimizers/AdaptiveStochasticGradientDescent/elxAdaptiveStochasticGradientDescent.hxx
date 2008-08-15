@@ -80,8 +80,8 @@ namespace elastix
     xout["iteration"].AddTargetCell("3b:StepSize");
     xout["iteration"].AddTargetCell("4:||Gradient||");
 
-    /** Format the metric and stepsize as floats */			
-    xl::xout["iteration"]["2:Metric"]		<< std::showpoint << std::fixed;
+    /** Format the metric and stepsize as floats */     
+    xl::xout["iteration"]["2:Metric"]   << std::showpoint << std::fixed;
     xl::xout["iteration"]["3a:StepSize"] << std::showpoint << std::fixed;
     xl::xout["iteration"]["3b:StepSize"] << std::showpoint << std::fixed;
     xl::xout["iteration"]["4:||Gradient||"] << std::showpoint << std::fixed;
@@ -216,7 +216,7 @@ namespace elastix
       double alpha = 0.602;
       this->GetConfiguration()->ReadParameter(a, "SP_a", this->GetComponentLabel(), level, 0 );    
       this->GetConfiguration()->ReadParameter(alpha, "SP_alpha", this->GetComponentLabel(), level, 0 );
-      this->SetParam_a(	a );
+      this->SetParam_a( a );
       this->SetParam_alpha( alpha );
 
       /** Set/Get the maximum of the sigmoid. 
@@ -253,7 +253,7 @@ namespace elastix
     ::AfterEachIteration(void)
   {
     /** Print some information */
-    xl::xout["iteration"]["2:Metric"]		<< this->GetValue();
+    xl::xout["iteration"]["2:Metric"]   << this->GetValue();
     xl::xout["iteration"]["3a:Time"] << this->GetCurrentTime();
     xl::xout["iteration"]["3b:StepSize"] << this->GetLearningRate();
     xl::xout["iteration"]["4:||Gradient||"] << this->GetGradient().magnitude();
@@ -291,15 +291,15 @@ namespace elastix
     {
 
     case MaximumNumberOfIterations :
-      stopcondition = "Maximum number of iterations has been reached";	
-      break;	
+      stopcondition = "Maximum number of iterations has been reached";  
+      break;  
 
     case MetricError :
-      stopcondition = "Error in metric";	
-      break;	
+      stopcondition = "Error in metric";  
+      break;  
 
     case MinimumStepSize :
-      stopcondition = "The minimum step length has been reached";	
+      stopcondition = "The minimum step length has been reached"; 
       break;
 
     default:

@@ -78,7 +78,7 @@ namespace itk
   void
     FullSearchOptimizer2
     ::StartOptimization(void)
-  {		
+  {   
     itkDebugMacro( "StartOptimization" );
     
     this->m_CurrentIteration = 0;
@@ -110,7 +110,7 @@ namespace itk
       this->ResumeOptimization();
     }
       
-  } // end StartOptimization	
+  } // end StartOptimization  
   
   
   /**
@@ -120,14 +120,14 @@ namespace itk
   void
     FullSearchOptimizer2
     ::ResumeOptimization( void )
-  {		
+  {   
     itkDebugMacro( "ResumeOptimization" );
     
     this->m_Stop = false;
     
     InvokeEvent( StartEvent() );
     while ( ! this->m_Stop ) 
-    {		
+    {   
       /** Compute the current value. */
       try
       {
@@ -182,7 +182,7 @@ namespace itk
   void
     FullSearchOptimizer2
     ::StopOptimization( void )
-  {		
+  {   
     itkDebugMacro( "StopOptimization" );
     
     this->m_Stop = true;
@@ -199,7 +199,7 @@ namespace itk
   void
     FullSearchOptimizer2
     ::AdvanceOneStep( void )
-  {		
+  {   
     itkDebugMacro( "AdvanceOneStep" );
     
     double step = this->m_Step[ this->m_CurrentIteration ];

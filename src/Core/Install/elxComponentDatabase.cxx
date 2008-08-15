@@ -59,7 +59,7 @@ namespace elastix
     const ComponentDescriptionType & name,
     IndexType i,
     PtrToCreator creator )
-  {		
+  {   
     /** Get the map */
     CreatorMapType & map = GetCreatorMap();
 
@@ -77,7 +77,7 @@ namespace elastix
     }
     else
     {
-      map.insert(	CreatorMapEntryType( key,	creator	)	);
+      map.insert( CreatorMapEntryType( key, creator ) );
       return 0;
     }
 
@@ -90,11 +90,11 @@ namespace elastix
 
   int ComponentDatabase::SetIndex(
       const PixelTypeDescriptionType & fixedPixelType,
-      ImageDimensionType fixedDimension,	
+      ImageDimensionType fixedDimension,  
       const PixelTypeDescriptionType & movingPixelType,
       ImageDimensionType movingDimension,
-      IndexType i	)
-  {		
+      IndexType i )
+  {   
     /** Get the map.*/
     IndexMapType & map = GetIndexMap();
     
@@ -109,12 +109,12 @@ namespace elastix
       xout["error"] << "Error:" << std::endl;
       xout["error"] << "FixedImageType: " << fixedDimension << "D " << fixedPixelType << std::endl;
       xout["error"] << "MovingImageType: " << movingDimension << "D " << movingPixelType << std::endl;
-      xout["error"]	<< "Elastix already supports this combination of ImageTypes!" << std::endl;
+      xout["error"] << "Elastix already supports this combination of ImageTypes!" << std::endl;
       return 1;
     }
     else
     {
-      map.insert(	IndexMapEntryType( key,	i	)	);
+      map.insert( IndexMapEntryType( key, i ) );
       return 0;
     }
 
@@ -127,7 +127,7 @@ namespace elastix
 
   ComponentDatabase::PtrToCreator ComponentDatabase::GetCreator(
     const ComponentDescriptionType & name,
-    IndexType i	)
+    IndexType i )
   {
     /** Get the map */
     CreatorMapType map = GetCreatorMap();
@@ -158,7 +158,7 @@ namespace elastix
 
   ComponentDatabase::IndexType ComponentDatabase::GetIndex(
     const PixelTypeDescriptionType & fixedPixelType,
-    ImageDimensionType fixedDimension,	
+    ImageDimensionType fixedDimension,  
     const PixelTypeDescriptionType & movingPixelType,
     ImageDimensionType movingDimension )
   {
@@ -178,7 +178,7 @@ namespace elastix
       xout["error"] << "Error:" << std::endl;
       xout["error"] << "FixedImageType: " << fixedDimension << "D " << fixedPixelType << std::endl;
       xout["error"] << "MovingImageType: " << movingDimension << "D " << movingPixelType << std::endl;
-      xout["error"]	<< "Elastix does not support this combination of ImageTypes!" << std::endl;
+      xout["error"] << "Elastix does not support this combination of ImageTypes!" << std::endl;
       xout["error"] << "Add the combination in /ElastixCore/elxSupportedImageTypes.h and recompile!" << std::endl;
       return 0;
     }

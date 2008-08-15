@@ -38,43 +38,43 @@ using namespace itk;
    *
    * The parameters used in this class are:
    * \parameter Optimizer: Select this optimizer as follows:\n
-   *		<tt>(Optimizer "ConjugateGradient")</tt>
+   *    <tt>(Optimizer "ConjugateGradient")</tt>
    * \parameter GenerateLineSearchIterations: Whether line search iteration
    *   should be counted as elastix-iterations.\n
    *   example: <tt>(GenerateLineSearchIterations "true")</tt>\n
    *   Can only be specified for all resolutions at once. \n
    *   Default value: "false".\n
    * \parameter MaximumNumberOfIterations: The maximum number of iterations in each resolution. \n
-   *		example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
+   *    example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
    *    Default value: 100.\n
    * \parameter MaximumNumberOfLineSearchIterations: The maximum number of iterations in each resolution. \n
-   *		example: <tt>(MaximumNumberOfIterations 10 10 5)</tt> \n
+   *    example: <tt>(MaximumNumberOfIterations 10 10 5)</tt> \n
    *    Default value: 10.\n
    * \parameter StepLength: Set the length of the initial step tried by the
    *    itk::MoreThuenteLineSearchOptimizer.\n
-   *		example: <tt>(StepLength 2.0 1.0 0.5)</tt> \n
+   *    example: <tt>(StepLength 2.0 1.0 0.5)</tt> \n
    *    Default value: 1.0.\n
    * \parameter LineSearchValueTolerance: Determine the Wolfe conditions that the
    *    itk::MoreThuenteLineSearchOptimizer tries to satisfy.\n
-   *		example: <tt>(LineSearchValueTolerance 0.0001 0.0001 0.0001)</tt> \n
+   *    example: <tt>(LineSearchValueTolerance 0.0001 0.0001 0.0001)</tt> \n
    *    Default value: 0.0001.\n
    * \parameter LineSearchGradientTolerance: Determine the Wolfe conditions that the
    *    itk::MoreThuenteLineSearchOptimizer tries to satisfy.\n
-   *		example: <tt>(LineSearchGradientTolerance 0.9 0.9 0.9)</tt> \n
+   *    example: <tt>(LineSearchGradientTolerance 0.9 0.9 0.9)</tt> \n
    *    Default value: 0.9.\n
    * \parameter ValueTolerance: Stopping criterion. See the documentation of the 
    *    itk::GenericConjugateGradientOptimizer for more information.\n
-   *		example: <tt>(ValueTolerance 0.001 0.0001 0.000001)</tt> \n
-   *	  Default value: 0.00001.\n
+   *    example: <tt>(ValueTolerance 0.001 0.0001 0.000001)</tt> \n
+   *    Default value: 0.00001.\n
    * \parameter GradientMagnitudeTolerance: Stopping criterion. See the documentation of the 
    *    itk::GenericConjugateGradientOptimizer for more information.\n
-   *		example: <tt>(GradientMagnitudeTolerance 0.001 0.0001 0.000001)</tt> \n
-   *	  Default value: 0.000001.\n
+   *    example: <tt>(GradientMagnitudeTolerance 0.001 0.0001 0.000001)</tt> \n
+   *    Default value: 0.000001.\n
    * \parameter ConjugateGradientType: a string that defines how 'beta' is computed in each resolution.
    *    The following methods are implemented: "SteepestDescent", "FletcherReeves", "PolakRibiere", 
    *    "DaiYuan", "HestenesStiefel", and "DaiYuanHestenesStiefel". "SteepestDescent" simply sets beta=0.
    *    See the source code of the GenericConjugateGradientOptimizer for more information.\n
-   *		example: <tt>(ConjugateGradientType "FletcherReeves" "PolakRibiere")</tt> \n
+   *    example: <tt>(ConjugateGradientType "FletcherReeves" "PolakRibiere")</tt> \n
    *    Default value: "DaiYuanHestenesStiefel".\n
    * \parameter StopIfWolfeNotSatisfied: Whether to stop the optimisation if in one iteration 
    *    the Wolfe conditions can not be satisfied by the itk::MoreThuenteLineSearchOptimizer.\n
@@ -96,11 +96,11 @@ using namespace itk;
   public:
 
     /** Standard ITK.*/
-    typedef ConjugateGradient						  			Self;
-    typedef GenericConjugateGradientOptimizer						Superclass1;
-    typedef OptimizerBase<TElastix>							Superclass2;
-    typedef SmartPointer<Self>									Pointer;
-    typedef SmartPointer<const Self>						ConstPointer;
+    typedef ConjugateGradient                   Self;
+    typedef GenericConjugateGradientOptimizer           Superclass1;
+    typedef OptimizerBase<TElastix>             Superclass2;
+    typedef SmartPointer<Self>                  Pointer;
+    typedef SmartPointer<const Self>            ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -115,27 +115,27 @@ using namespace itk;
     elxClassNameMacro( "ConjugateGradient" );
 
     /** Typedef's inherited from Superclass1.*/
-    typedef Superclass1::CostFunctionType								    CostFunctionType;
-    typedef Superclass1::CostFunctionPointer						    CostFunctionPointer;
-    typedef Superclass1::StopConditionType							    StopConditionType;
-    typedef Superclass1::ParametersType									    ParametersType;
-    typedef Superclass1::DerivativeType											DerivativeType; 
-    typedef Superclass1::ScalesType													ScalesType; 
+    typedef Superclass1::CostFunctionType                   CostFunctionType;
+    typedef Superclass1::CostFunctionPointer                CostFunctionPointer;
+    typedef Superclass1::StopConditionType                  StopConditionType;
+    typedef Superclass1::ParametersType                     ParametersType;
+    typedef Superclass1::DerivativeType                     DerivativeType; 
+    typedef Superclass1::ScalesType                         ScalesType; 
     
     /** Typedef's inherited from Elastix.*/
-    typedef typename Superclass2::ElastixType						ElastixType;
-    typedef typename Superclass2::ElastixPointer				ElastixPointer;
-    typedef typename Superclass2::ConfigurationType			ConfigurationType;
-    typedef typename Superclass2::ConfigurationPointer	ConfigurationPointer;
-    typedef typename Superclass2::RegistrationType			RegistrationType;
-    typedef typename Superclass2::RegistrationPointer		RegistrationPointer;
-    typedef typename Superclass2::ITKBaseType						ITKBaseType;
+    typedef typename Superclass2::ElastixType           ElastixType;
+    typedef typename Superclass2::ElastixPointer        ElastixPointer;
+    typedef typename Superclass2::ConfigurationType     ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer  ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType      RegistrationType;
+    typedef typename Superclass2::RegistrationPointer   RegistrationPointer;
+    typedef typename Superclass2::ITKBaseType           ITKBaseType;
 
     /** Extra typedefs */
-    typedef MoreThuenteLineSearchOptimizer							LineOptimizerType;
-    typedef LineOptimizerType::Pointer									LineOptimizerPointer;
-    typedef ReceptorMemberCommand<Self>									EventPassThroughType;
-    typedef typename EventPassThroughType::Pointer			EventPassThroughPointer;
+    typedef MoreThuenteLineSearchOptimizer              LineOptimizerType;
+    typedef LineOptimizerType::Pointer                  LineOptimizerPointer;
+    typedef ReceptorMemberCommand<Self>                 EventPassThroughType;
+    typedef typename EventPassThroughType::Pointer      EventPassThroughPointer;
         
     /** Check if any scales are set, and set the UseScales flag on or off; 
      * after that call the superclass' implementation */
@@ -157,7 +157,7 @@ using namespace itk;
     ConjugateGradient();
     virtual ~ConjugateGradient() {};
 
-    LineOptimizerPointer					m_LineOptimizer;
+    LineOptimizerPointer          m_LineOptimizer;
 
     /** Convert the line search stop condition to a string */
     virtual std::string GetLineSearchStopCondition(void) const;
@@ -184,16 +184,16 @@ using namespace itk;
 
   private:
 
-    ConjugateGradient( const Self& );	// purposely not implemented
-    void operator=( const Self& );							// purposely not implemented
+    ConjugateGradient( const Self& ); // purposely not implemented
+    void operator=( const Self& );              // purposely not implemented
 
     void InvokeIterationEvent(const EventObject & event);
 
-    EventPassThroughPointer			m_EventPasser;
-    double											m_SearchDirectionMagnitude;
-    bool												m_StartLineSearch;
-    bool												m_GenerateLineSearchIterations;
-    bool												m_StopIfWolfeNotSatisfied;
+    EventPassThroughPointer     m_EventPasser;
+    double                      m_SearchDirectionMagnitude;
+    bool                        m_StartLineSearch;
+    bool                        m_GenerateLineSearchIterations;
+    bool                        m_StopIfWolfeNotSatisfied;
     bool                        m_WolfeIsStopCondition;
       
   }; // end class ConjugateGradient

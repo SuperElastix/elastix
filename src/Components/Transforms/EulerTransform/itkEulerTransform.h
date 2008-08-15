@@ -39,8 +39,8 @@ namespace itk
     public:
       
       /** Typedef's.*/
-      typedef Euler3DTransform< TScalarType >							EulerTransform_tmp;
-      typedef typename EulerTransform_tmp::AngleType			AngleType;
+      typedef Euler3DTransform< TScalarType >             EulerTransform_tmp;
+      typedef typename EulerTransform_tmp::AngleType      AngleType;
       
     }; // end class Dummy
     
@@ -64,8 +64,8 @@ namespace itk
     public:
       
       /** Typedef's.*/
-      typedef Euler2DTransform< TScalarType >			EulerTransform_tmp;
-      typedef int	AngleType;
+      typedef Euler2DTransform< TScalarType >     EulerTransform_tmp;
+      typedef int AngleType;
     
     }; // end class Dummy
     
@@ -89,8 +89,8 @@ namespace itk
     public:
       
       /** Typedef's.*/
-      typedef Euler3DTransform< TScalarType >										EulerTransform_tmp;
-      typedef typename EulerTransform_tmp::AngleType						AngleType;
+      typedef Euler3DTransform< TScalarType >                   EulerTransform_tmp;
+      typedef typename EulerTransform_tmp::AngleType            AngleType;
       
     }; // end class Dummy
     
@@ -109,24 +109,24 @@ namespace itk
   public:
           
     typedef EulerGroupTemplate Self;
-    typedef TScalarType ScalarType; 			
-    itkStaticConstMacro( SpaceDimension, unsigned int, Dimension );					
+    typedef TScalarType ScalarType;       
+    itkStaticConstMacro( SpaceDimension, unsigned int, Dimension );         
   
     
     // This declaration of 'Euler' does not work with the GCC compiler
-    //		typedef EulerGroup<  itkGetStaticConstMacro( SpaceDimension ) >				Euler;
+    //    typedef EulerGroup<  itkGetStaticConstMacro( SpaceDimension ) >       Euler;
     // The following trick works though:
-    template <unsigned int D>	
-      class	EulerGroupWrap
+    template <unsigned int D> 
+      class EulerGroupWrap
     {
     public:
       typedef EulerGroup<D> Euler;
     };
-    typedef EulerGroupWrap<Dimension> 							EulerGroupWrapInstance;
-    typedef typename EulerGroupWrapInstance::Euler 	Euler;
+    typedef EulerGroupWrap<Dimension>               EulerGroupWrapInstance;
+    typedef typename EulerGroupWrapInstance::Euler  Euler;
     
-    typedef typename Euler::template Dummy< ScalarType >			EulerDummy;
-    typedef typename EulerDummy::EulerTransform_tmp	EulerTransform_tmp;
+    typedef typename Euler::template Dummy< ScalarType >      EulerDummy;
+    typedef typename EulerDummy::EulerTransform_tmp EulerTransform_tmp;
     
   }; // end class EulerGroupTemplate
   
@@ -148,12 +148,12 @@ namespace itk
   public:
 
     /** Standard ITK-stuff. */
-    typedef EulerTransform											Self;
+    typedef EulerTransform                      Self;
     typedef typename EulerGroupTemplate<
       TScalarType, Dimension >
-      ::EulerTransform_tmp											Superclass;
-    typedef SmartPointer<Self>									Pointer;
-    typedef SmartPointer<const Self>						ConstPointer;
+      ::EulerTransform_tmp                      Superclass;
+    typedef SmartPointer<Self>                  Pointer;
+    typedef SmartPointer<const Self>            ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -167,23 +167,23 @@ namespace itk
     /** Typedefs inherited from the superclass. */
 
     /** These are both in Euler2D and Euler3D. */
-    typedef typename Superclass::ScalarType										ScalarType;
-    typedef typename Superclass::ParametersType								ParametersType;
-    typedef typename Superclass::JacobianType									JacobianType;
-    typedef typename Superclass::OffsetType										OffsetType;
-    typedef typename Superclass::InputPointType								InputPointType;
-    typedef typename Superclass::OutputPointType							OutputPointType;
-    typedef typename Superclass::InputVectorType							InputVectorType;
-    typedef typename Superclass::OutputVectorType							OutputVectorType;
-    typedef typename Superclass::InputCovariantVectorType			InputCovariantVectorType;
-    typedef typename Superclass::OutputCovariantVectorType		OutputCovariantVectorType;
-    typedef typename Superclass::InputVnlVectorType						InputVnlVectorType;
-    typedef typename Superclass::OutputVnlVectorType					OutputVnlVectorType;
+    typedef typename Superclass::ScalarType                   ScalarType;
+    typedef typename Superclass::ParametersType               ParametersType;
+    typedef typename Superclass::JacobianType                 JacobianType;
+    typedef typename Superclass::OffsetType                   OffsetType;
+    typedef typename Superclass::InputPointType               InputPointType;
+    typedef typename Superclass::OutputPointType              OutputPointType;
+    typedef typename Superclass::InputVectorType              InputVectorType;
+    typedef typename Superclass::OutputVectorType             OutputVectorType;
+    typedef typename Superclass::InputCovariantVectorType     InputCovariantVectorType;
+    typedef typename Superclass::OutputCovariantVectorType    OutputCovariantVectorType;
+    typedef typename Superclass::InputVnlVectorType           InputVnlVectorType;
+    typedef typename Superclass::OutputVnlVectorType          OutputVnlVectorType;
     
     /** NOTE: use these only in 3D (otherwise they are just int's). */
     typedef typename EulerGroupTemplate<
-      TScalarType, Dimension >::EulerDummy										EulerDummy;
-    typedef typename EulerDummy::AngleType										AngleType;
+      TScalarType, Dimension >::EulerDummy                    EulerDummy;
+    typedef typename EulerDummy::AngleType                    AngleType;
 
     /** Make sure SetComputeZYX() is available, also in 2D,
      * in which case, its just a dummy function.

@@ -23,8 +23,8 @@ namespace elastix
 
 
   /**
-	 * ******************* Constructor ***********************
-	 */
+   * ******************* Constructor ***********************
+   */
 
   ProgressCommand::ProgressCommand()
   {
@@ -49,8 +49,8 @@ namespace elastix
 
 
   /**
-	 * ******************* Destructor ***********************
-	 */
+   * ******************* Destructor ***********************
+   */
 
   ProgressCommand::~ProgressCommand()
   {
@@ -60,8 +60,8 @@ namespace elastix
 
 
   /**
-	 * ******************* SetUpdateFrequency ***********************
-	 */
+   * ******************* SetUpdateFrequency ***********************
+   */
   
   void ProgressCommand
     ::SetUpdateFrequency(
@@ -94,8 +94,8 @@ namespace elastix
 
 
   /**
-	 * ******************* ConnectObserver ***********************
-	 */
+   * ******************* ConnectObserver ***********************
+   */
 
   void ProgressCommand
     ::ConnectObserver( ProcessObject * filter )
@@ -115,8 +115,8 @@ namespace elastix
 
 
   /**
-	 * ******************* DisconnectObserver ***********************
-	 */
+   * ******************* DisconnectObserver ***********************
+   */
 
   void ProgressCommand
     ::DisconnectObserver( ProcessObject * filter )
@@ -135,8 +135,8 @@ namespace elastix
 
 
   /**
-	 * ******************* Execute ***********************
-	 */
+   * ******************* Execute ***********************
+   */
 
   void ProgressCommand
     ::Execute( Object *caller, const EventObject &event )
@@ -153,8 +153,8 @@ namespace elastix
 
 
   /**
-	 * ******************* Execute ***********************
-	 */
+   * ******************* Execute ***********************
+   */
   
   void ProgressCommand
     ::Execute( const Object *caller, const EventObject &event )
@@ -171,8 +171,8 @@ namespace elastix
 
 
   /**
-	 * ******************* PrintProgress ***********************
-	 */
+   * ******************* PrintProgress ***********************
+   */
 
   void ProgressCommand
     ::PrintProgress( const float & progress ) const
@@ -196,8 +196,8 @@ namespace elastix
 
 
   /**
-	 * ******************* PrintProgress ***********************
-	 */
+   * ******************* PrintProgress ***********************
+   */
 
   void ProgressCommand
     ::UpdateAndPrintProgress( const unsigned long & currentVoxelNumber ) const

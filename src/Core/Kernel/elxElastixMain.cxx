@@ -36,19 +36,19 @@ namespace elastix
    * ******************* Global variables *************************
    * 
    * Some global variables (not part of the ElastixMain class, used
-   * by xoutSetup.	 
+   * by xoutSetup.   
    */
   
   /** \todo move to ElastixMain class, as static vars? */
 
   /** xout TargetCells. */
-  xoutbase_type		g_xout;
+  xoutbase_type   g_xout;
   xoutsimple_type g_WarningXout;
   xoutsimple_type g_ErrorXout;
   xoutsimple_type g_StandardXout;
   xoutsimple_type g_CoutOnlyXout;
   xoutsimple_type g_LogOnlyXout;
-  std::ofstream		g_LogFileStream;
+  std::ofstream   g_LogFileStream;
 
   /**
    * ********************* xoutSetup ******************************
@@ -91,7 +91,7 @@ namespace elastix
     g_ErrorXout.SetOutputs( xout.GetXOutputs() );
     g_StandardXout.SetOutputs( xout.GetXOutputs() );
 
-    /** Link the warning-, error- and standard-xouts to xout. */	
+    /** Link the warning-, error- and standard-xouts to xout. */  
     returndummy |= xout.AddTargetCell( "warning", &g_WarningXout );
     returndummy |= xout.AddTargetCell( "error", &g_ErrorXout );
     returndummy |= xout.AddTargetCell( "standard", &g_StandardXout );
@@ -161,7 +161,7 @@ namespace elastix
   {
     /** Initialize the configuration object with the 
      * command line parameters entered by the user.
-     */		
+     */   
     int dummy = this->m_Configuration->Initialize( argmap );
     if ( dummy )
     {
@@ -184,7 +184,7 @@ namespace elastix
     this->SetProcessPriority();
     this->SetMaximumNumberOfThreads();
 
-    /** Initialize database. */		
+    /** Initialize database. */   
     int errorCode = this->InitDBIndex();
     if ( errorCode != 0 )
     {
@@ -316,13 +316,13 @@ namespace elastix
   {
     /** Only do something when the configuration object wasn't initialized yet. */
     if ( this->m_Configuration->Initialized() )
-    {			
+    {     
       /** FixedImagePixelType */
       if ( this->m_FixedImagePixelType.empty() )
       {
         /** Try to read it from the parameterfile. */
         this->m_FixedImagePixelType = "float";
-        this->m_Configuration->ReadParameter( this->m_FixedImagePixelType,	"FixedInternalImagePixelType", 0 );
+        this->m_Configuration->ReadParameter( this->m_FixedImagePixelType,  "FixedInternalImagePixelType", 0 );
       }
 
       /** MovingImagePixelType */
@@ -377,7 +377,7 @@ namespace elastix
         /** Get the DBIndex from the ComponentDatabase. */
         this->m_DBIndex = this->s_CDB->GetIndex(
           this->m_FixedImagePixelType,
-          this->m_FixedImageDimension,			
+          this->m_FixedImageDimension,      
           this->m_MovingImagePixelType,
           this->m_MovingImageDimension );
         if ( this->m_DBIndex == 0 )
@@ -525,7 +525,7 @@ namespace elastix
     /** A pointer to the ::New() function. */
     PtrToCreator testcreator = 0;
     ObjectPointer testpointer = 0;
-    testcreator = this->s_CDB->GetCreator( name,	this->m_DBIndex );
+    testcreator = this->s_CDB->GetCreator( name,  this->m_DBIndex );
     testpointer = testcreator ? testcreator() : NULL;
     if ( testpointer.IsNull() )
     {

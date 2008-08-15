@@ -52,18 +52,18 @@ namespace elastix
    *
    * The command line arguments used by this class are:
    * \commandlinearg -t0: optional argument for elastix for specifying an initial transform
-   *		parameter file. \n
-   *		example: <tt>-t0 TransformParameters.txt</tt> \n
+   *    parameter file. \n
+   *    example: <tt>-t0 TransformParameters.txt</tt> \n
    * \commandlinearg -ipp: optional argument for transformix for specifying a set of points
    *    that have to be transformed.\n
-   *		example: <tt>-ipp inputPoints.txt</tt> \n
+   *    example: <tt>-ipp inputPoints.txt</tt> \n
    *    The inputPoints.txt file should be structured: first line should be "index" or
    *    "point", depending if the user supplies voxel indices or real world coordinates.
    *    The second line should be the number of points that should be transformed. The
    *    third and following lines give the indices or points.\n
    *    It is also possible to deform all points, thereby generating a deformation field
    *    image. This is done by:\n
-   *		example: <tt>-ipp all</tt> \n
+   *    example: <tt>-ipp all</tt> \n
    *
    * \ingroup Transforms
    * \ingroup ComponentBaseClasses
@@ -75,64 +75,64 @@ namespace elastix
   public:
 
     /** Standard ITK stuff. */
-    typedef TransformBase								Self;
-    typedef BaseComponentSE<TElastix>		Superclass;
+    typedef TransformBase               Self;
+    typedef BaseComponentSE<TElastix>   Superclass;
 
     /** Run-time type information (and related methods). */
     itkTypeMacro( TransformBase, BaseComponentSE );
 
     /** Typedef's from Superclass. */
-    typedef typename Superclass::ElastixType						ElastixType;
-    typedef typename Superclass::ElastixPointer					ElastixPointer;
-    typedef typename Superclass::ConfigurationType			ConfigurationType;
-    typedef typename Superclass::ConfigurationPointer		ConfigurationPointer;
-    typedef typename ConfigurationType::ArgumentMapType	ArgumentMapType;
-    typedef typename ArgumentMapType::value_type				ArgumentMapEntryType;
-    typedef typename Superclass::RegistrationType				RegistrationType;
-    typedef typename Superclass::RegistrationPointer		RegistrationPointer;
+    typedef typename Superclass::ElastixType            ElastixType;
+    typedef typename Superclass::ElastixPointer         ElastixPointer;
+    typedef typename Superclass::ConfigurationType      ConfigurationType;
+    typedef typename Superclass::ConfigurationPointer   ConfigurationPointer;
+    typedef typename ConfigurationType::ArgumentMapType ArgumentMapType;
+    typedef typename ArgumentMapType::value_type        ArgumentMapEntryType;
+    typedef typename Superclass::RegistrationType       RegistrationType;
+    typedef typename Superclass::RegistrationPointer    RegistrationPointer;
 
     /** Elastix typedef's. */
-    typedef typename ElastixType::CoordRepType								CoordRepType;		
-    typedef typename ElastixType::FixedImageType			        FixedImageType;
-    typedef typename ElastixType::MovingImageType			        MovingImageType;
+    typedef typename ElastixType::CoordRepType                CoordRepType;   
+    typedef typename ElastixType::FixedImageType              FixedImageType;
+    typedef typename ElastixType::MovingImageType             MovingImageType;
     
     /** Typedef's from ComponentDatabase. */
-    typedef ComponentDatabase																	ComponentDatabaseType;
-    typedef ComponentDatabaseType::ComponentDescriptionType		ComponentDescriptionType;
-    typedef ComponentDatabase::PtrToCreator										PtrToCreator;
+    typedef ComponentDatabase                                 ComponentDatabaseType;
+    typedef ComponentDatabaseType::ComponentDescriptionType   ComponentDescriptionType;
+    typedef ComponentDatabase::PtrToCreator                   PtrToCreator;
 
     /** Typedef for the ProgressCommand. */
     typedef elx::ProgressCommand          ProgressCommandType;
     
-    /** Get	the dimension of the fixed image. */
+    /** Get the dimension of the fixed image. */
     itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
 
-    /** Get	the dimension of the moving image. */
+    /** Get the dimension of the moving image. */
     itkStaticConstMacro( MovingImageDimension, unsigned int, MovingImageType::ImageDimension );
 
     /** Other typedef's. */
-    typedef itk::Object							                            ObjectType;
+    typedef itk::Object                                         ObjectType;
     typedef itk::Transform<
       CoordRepType,
       itkGetStaticConstMacro( FixedImageDimension ),
-      itkGetStaticConstMacro( MovingImageDimension ) >					ITKBaseType;
+      itkGetStaticConstMacro( MovingImageDimension ) >          ITKBaseType;
     typedef itk::CombinationTransform<CoordRepType,
-      itkGetStaticConstMacro( FixedImageDimension ) >						CombinationTransformType;	
+      itkGetStaticConstMacro( FixedImageDimension ) >           CombinationTransformType; 
     typedef typename 
-      CombinationTransformType::InitialTransformType						InitialTransformType;
+      CombinationTransformType::InitialTransformType            InitialTransformType;
 
     /** Typedef's from Transform. */
-    typedef typename ITKBaseType::ParametersType		ParametersType;
-    typedef	typename ParametersType::ValueType			ValueType;
+    typedef typename ITKBaseType::ParametersType    ParametersType;
+    typedef typename ParametersType::ValueType      ValueType;
 
     /** Typedef's for TransformPoint. */
-    typedef typename ITKBaseType::InputPointType				InputPointType;
-    typedef typename ITKBaseType::OutputPointType				OutputPointType;	
+    typedef typename ITKBaseType::InputPointType        InputPointType;
+    typedef typename ITKBaseType::OutputPointType       OutputPointType;  
     
     /** Typedefs needed for AutomaticScalesEstimation function */
-    typedef typename RegistrationType::ITKBaseType					ITKRegistrationType;
-    typedef typename ITKRegistrationType::OptimizerType			OptimizerType;
-    typedef typename OptimizerType::ScalesType							ScalesType;
+    typedef typename RegistrationType::ITKBaseType          ITKRegistrationType;
+    typedef typename ITKRegistrationType::OptimizerType     OptimizerType;
+    typedef typename OptimizerType::ScalesType              ScalesType;
     
     /** Cast to ITKBaseType. */
     virtual ITKBaseType * GetAsITKBaseType(void)
@@ -224,20 +224,20 @@ namespace elastix
     void AutomaticScalesEstimation( ScalesType & scales ) const;
 
     /** Member variables.*/
-    ParametersType *			m_TransformParametersPointer;
-    ConfigurationPointer	m_ConfigurationInitialTransform;
-    std::string						m_TransformParametersFileName;
-    ParametersType				m_FinalParameters;
+    ParametersType *      m_TransformParametersPointer;
+    ConfigurationPointer  m_ConfigurationInitialTransform;
+    std::string           m_TransformParametersFileName;
+    ParametersType        m_FinalParameters;
 
   private:
 
     /** The private constructor. */
-    TransformBase( const Self& );		// purposely not implemented
+    TransformBase( const Self& );   // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );	// purposely not implemented
+    void operator=( const Self& );  // purposely not implemented
 
     /** Boolean to decide whether or not the transform parameters are written. */
-    bool		m_ReadWriteTransformParameters;
+    bool    m_ReadWriteTransformParameters;
 
   }; // end class TransformBase
 

@@ -69,7 +69,7 @@ namespace elastix
     /** Try first to read the CenterOfRotationPoint from the 
     * transform parameter file, this is the new, and preferred
     * way, since elastix 3.402.
-    */		 
+    */     
     pointRead = ReadCenterOfRotationPoint(centerOfRotationPoint);
 
     /** If this did not succeed, probably a transform parameter file
@@ -339,11 +339,11 @@ namespace elastix
       * parameter-file.
       * Check which option is used:
       * - Nothing given in the parameter-file: rotations are scaled by the default
-      *		value 100000.0
+      *   value 100000.0
       * - Only one scale given in the parameter-file: rotations are scaled by this
-      *		value.
+      *   value.
       * - All scales are given in the parameter-file: each parameter is assigned its
-      *		own scale.
+      *   own scale.
       */
 
       /** Check the return values of ReadParameter. */
@@ -433,27 +433,27 @@ namespace elastix
     * We put this in a dummy image, so that we can correctly
     * calculate the center of rotation in world coordinates.
     */
-    SpacingType		spacing;
-    IndexType			index;
-    PointType			origin;
-    SizeType			size;
+    SpacingType   spacing;
+    IndexType     index;
+    PointType     origin;
+    SizeType      size;
     for ( unsigned int i = 0; i < SpaceDimension; i++ )
     {
       /** Read size from the parameter file. Zero by default, which is illegal. */
       size[ i ] = 0; 
-      this->m_Configuration->ReadParameter(	size[ i ], "Size", i );
+      this->m_Configuration->ReadParameter( size[ i ], "Size", i );
 
       /** Default index. Read index from the parameter file. */
       index[ i ] = 0;
-      this->m_Configuration->ReadParameter(	index[ i ], "Index", i );
+      this->m_Configuration->ReadParameter( index[ i ], "Index", i );
 
       /** Default spacing. Read spacing from the parameter file. */
       spacing[ i ] = 1.0;
-      this->m_Configuration->ReadParameter(	spacing[ i ], "Spacing", i );
+      this->m_Configuration->ReadParameter( spacing[ i ], "Spacing", i );
 
       /** Default origin. Read origin from the parameter file. */
       origin[ i ] = 0.0;
-      this->m_Configuration->ReadParameter(	origin[ i ], "Origin", i );
+      this->m_Configuration->ReadParameter( origin[ i ], "Origin", i );
     }
 
     /** Check for image size. */

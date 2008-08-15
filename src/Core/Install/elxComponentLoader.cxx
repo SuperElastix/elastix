@@ -53,7 +53,7 @@ namespace elastix
         ET::mDim(),
         VIndex  ); 
       if ( ElastixTypedef<VIndex+1>::Defined() ) 
-        {	
+        { 
           return _installsupportedimagesrecursively<VIndex+1>::DO(name, cdb); 
         } 
       return (dummy1 + dummy2);  
@@ -131,7 +131,7 @@ namespace elastix
     /** Generate the mapping between indices and image types */
     if (!this->m_ImageTypeSupportInstalled)
     {
-      installReturnCode =	this->InstallSupportedImageTypes();
+      installReturnCode = this->InstallSupportedImageTypes();
       if (installReturnCode != 0)
       {
         xout["error"] 

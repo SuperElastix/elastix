@@ -16,7 +16,7 @@
 #define __itkBinaryANNTreeBase_h
 
 #include "itkBinaryTreeBase.h"
-#include <ANN/ANN.h>	// ANN declarations
+#include <ANN/ANN.h>  // ANN declarations
 
 namespace itk
 {
@@ -38,8 +38,8 @@ namespace itk
     /** Standard itk. */
     typedef BinaryANNTreeBase             Self;
     typedef BinaryTreeBase< TListSample > Superclass;
-    typedef SmartPointer< Self >				  Pointer;
-    typedef SmartPointer< const Self >	  ConstPointer;
+    typedef SmartPointer< Self >          Pointer;
+    typedef SmartPointer< const Self >    ConstPointer;
     
     /** ITK type info. */
     itkTypeMacro( BinaryANNTreeBase, BinaryTreeBase );

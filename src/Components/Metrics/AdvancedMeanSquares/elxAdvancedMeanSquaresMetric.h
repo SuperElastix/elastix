@@ -30,7 +30,7 @@ using namespace itk;
    *
    * The parameters used in this class are:
    * \parameter Metric: Select this metric as follows:\n
-   *	  <tt>(Metric "AdvancedMeanSquares")</tt>
+   *    <tt>(Metric "AdvancedMeanSquares")</tt>
    * \parameter UseNormalization: Bool to use normalization or not.\n
    *    If true, the MeanSquares is divided by a factor (range/10)^2,
    *    where range represents the maximum gray value range of the images.\n
@@ -52,13 +52,13 @@ using namespace itk;
   public:
 
     /** Standard ITK-stuff. */
-    typedef AdvancedMeanSquaresMetric															Self;
+    typedef AdvancedMeanSquaresMetric                             Self;
     typedef AdvancedMeanSquaresImageToImageMetric<
       typename MetricBase<TElastix>::FixedImageType,
-      typename MetricBase<TElastix>::MovingImageType >		Superclass1;
-    typedef MetricBase<TElastix>													Superclass2;
-    typedef SmartPointer<Self>														Pointer;
-    typedef SmartPointer<const Self>											ConstPointer;
+      typename MetricBase<TElastix>::MovingImageType >    Superclass1;
+    typedef MetricBase<TElastix>                          Superclass2;
+    typedef SmartPointer<Self>                            Pointer;
+    typedef SmartPointer<const Self>                      ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -125,18 +125,18 @@ using namespace itk;
       MovingImageType::ImageDimension );
     
     /** Typedef's inherited from Elastix. */
-    typedef typename Superclass2::ElastixType								ElastixType;
-    typedef typename Superclass2::ElastixPointer						ElastixPointer;
-    typedef typename Superclass2::ConfigurationType					ConfigurationType;
-    typedef typename Superclass2::ConfigurationPointer			ConfigurationPointer;
-    typedef typename Superclass2::RegistrationType					RegistrationType;
-    typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
-    typedef typename Superclass2::ITKBaseType								ITKBaseType;
+    typedef typename Superclass2::ElastixType               ElastixType;
+    typedef typename Superclass2::ElastixPointer            ElastixPointer;
+    typedef typename Superclass2::ConfigurationType         ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType          RegistrationType;
+    typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
+    typedef typename Superclass2::ITKBaseType               ITKBaseType;
       
     /** Typedef for timer. */
-    typedef tmr::Timer					TimerType;
+    typedef tmr::Timer          TimerType;
     /** Typedef for timer. */
-    typedef TimerType::Pointer	TimerPointer;
+    typedef TimerType::Pointer  TimerPointer;
   
     /** Sets up a timer to measure the initialisation time and
      * calls the Superclass' implementation.
@@ -160,9 +160,9 @@ using namespace itk;
   private:
 
     /** The private constructor. */
-    AdvancedMeanSquaresMetric( const Self& );	// purposely not implemented
+    AdvancedMeanSquaresMetric( const Self& ); // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );							// purposely not implemented
+    void operator=( const Self& );              // purposely not implemented
     
   }; // end class AdvancedMeanSquaresMetric
 

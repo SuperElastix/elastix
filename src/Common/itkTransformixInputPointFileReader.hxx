@@ -75,7 +75,7 @@ namespace itk
     if (indexOrPoint == "point")
     {
       /** Input points are specified in world coordinates. */
-      this->m_PointsAreIndices = false;		
+      this->m_PointsAreIndices = false;   
       this->m_Reader >> this->m_NumberOfPoints;
     }
     else if (indexOrPoint == "index")
@@ -88,7 +88,7 @@ namespace itk
     {
       /** Input points are assumed to be specified as image indices. */
       this->m_PointsAreIndices = true;
-      this->m_NumberOfPoints = atoi( indexOrPoint.c_str() );				
+      this->m_NumberOfPoints = atoi( indexOrPoint.c_str() );        
     }
 
     /** Leave the file open for the generate data  method */

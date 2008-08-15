@@ -41,7 +41,7 @@ using namespace itk;
     this->m_LineOptimizer->AddObserver( StartEvent(), this->m_EventPasser );
 
     this->m_SearchDirectionMagnitude = 0.0;
-    this->m_StartLineSearch = false;	
+    this->m_StartLineSearch = false;  
     this->m_GenerateLineSearchIterations = false;
     this->m_StopIfWolfeNotSatisfied = true;
     this->m_WolfeIsStopCondition = false;
@@ -194,8 +194,8 @@ using namespace itk;
     xout["iteration"].AddTargetCell("6b:Wolfe2");
     xout["iteration"].AddTargetCell("7:LinSrchStopCondition");
   
-    /** Format the metric and stepsize as floats */			
-    xout["iteration"]["2:Metric"]		<< std::showpoint << std::fixed;
+    /** Format the metric and stepsize as floats */     
+    xout["iteration"]["2:Metric"]   << std::showpoint << std::fixed;
     xout["iteration"]["3:StepLength"] << std::showpoint << std::fixed;
     xout["iteration"]["4a:||Gradient||"] << std::showpoint << std::fixed;
     xout["iteration"]["4b:||SearchDir||"] << std::showpoint << std::fixed;
@@ -235,7 +235,7 @@ using namespace itk;
     
     /** Set the maximumNumberOfIterations used for a line search.*/
     unsigned int maximumNumberOfLineSearchIterations = 20;
-    this->m_Configuration->ReadParameter(	maximumNumberOfLineSearchIterations,
+    this->m_Configuration->ReadParameter( maximumNumberOfLineSearchIterations,
       "MaximumNumberOfLineSearchIterations", this->GetComponentLabel(), level, 0 );
     this->m_LineOptimizer->SetMaximumNumberOfIterations(
       maximumNumberOfLineSearchIterations );
@@ -289,7 +289,7 @@ using namespace itk;
       this->m_StopIfWolfeNotSatisfied = false;
     }
 
-    this->m_WolfeIsStopCondition = false;		
+    this->m_WolfeIsStopCondition = false;   
     this->m_SearchDirectionMagnitude = 0.0;
     this->m_StartLineSearch = false;
         
@@ -328,7 +328,7 @@ using namespace itk;
 
     if ( this->GetInLineSearch() )
     {
-      xout["iteration"]["2:Metric"]	<<
+      xout["iteration"]["2:Metric"] <<
         this->m_LineOptimizer->GetCurrentValue();
       xout["iteration"]["3:StepLength"] <<
         this->m_LineOptimizer->GetCurrentStepLength();
@@ -339,7 +339,7 @@ using namespace itk;
     } // end if in line search
     else
     {
-      xout["iteration"]["2:Metric"]	<<
+      xout["iteration"]["2:Metric"] <<
         this->GetCurrentValue();
       xout["iteration"]["3:StepLength"] << 
         this->GetCurrentStepLength(); 
@@ -349,7 +349,7 @@ using namespace itk;
         this->GetLineSearchStopCondition();
     } // end else (not in line search)
   
-    xout["iteration"]["1a:SrchDirNr"]		<< this->GetCurrentIteration();
+    xout["iteration"]["1a:SrchDirNr"]   << this->GetCurrentIteration();
     xout["iteration"]["5:Phase"]    << this->DeterminePhase();
     xout["iteration"]["4b:||SearchDir||"] << 
       this->m_SearchDirectionMagnitude ;
@@ -433,20 +433,20 @@ using namespace itk;
       {
     
         case MetricError :
-          stopcondition = "Error in metric";	
-          break;	
+          stopcondition = "Error in metric";  
+          break;  
 
         case LineSearchError :
           stopcondition = "Error in LineSearch";
           break;
       
         case MaximumNumberOfIterations :
-          stopcondition = "Maximum number of iterations has been reached";	
-          break;	
+          stopcondition = "Maximum number of iterations has been reached";  
+          break;  
     
         case GradientMagnitudeTolerance :
-          stopcondition = "The gradient magnitude has (nearly) vanished";	
-          break;	
+          stopcondition = "The gradient magnitude has (nearly) vanished"; 
+          break;  
 
         case ValueTolerance :
           stopcondition = "Almost no decrease in function value anymore";
@@ -553,32 +553,32 @@ using namespace itk;
         break;
 
       case MetricError :
-        stopcondition = "MetricError";	
-        break;	
+        stopcondition = "MetricError";  
+        break;  
     
       case MaximumNumberOfIterations :
-        stopcondition = "MaxNrIterations";	
-        break;	
+        stopcondition = "MaxNrIterations";  
+        break;  
   
       case StepTooSmall :
         stopcondition = "StepTooSmall";
-        break;	
+        break;  
 
       case StepTooLarge :
-        stopcondition = "StepTooLarge";	
-        break;	
+        stopcondition = "StepTooLarge"; 
+        break;  
 
       case IntervalTooSmall :
-        stopcondition = "IntervalTooSmall";	
-        break;	
+        stopcondition = "IntervalTooSmall"; 
+        break;  
       
       case RoundingError :
-        stopcondition = "RoundingError";	
-        break;	
+        stopcondition = "RoundingError";  
+        break;  
 
       case AscentSearchDirection :
-        stopcondition = "AscentSearchDir";	
-        break;	
+        stopcondition = "AscentSearchDir";  
+        break;  
                 
       default:
         stopcondition = "Unknown";

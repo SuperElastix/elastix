@@ -40,10 +40,10 @@ namespace itk
   public:
     
     /** Standard itk. */
-    typedef DeformationFieldRegulizer		Self;
-    typedef TAnyITKTransform						Superclass;
-    typedef SmartPointer< Self >				Pointer;
-    typedef SmartPointer< const Self >	ConstPointer;
+    typedef DeformationFieldRegulizer   Self;
+    typedef TAnyITKTransform            Superclass;
+    typedef SmartPointer< Self >        Pointer;
+    typedef SmartPointer< const Self >  ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -57,31 +57,31 @@ namespace itk
     itkStaticConstMacro( OutputSpaceDimension, unsigned int, Superclass::OutputSpaceDimension );
     
     /** Typedef's inherited from Superclass. */
-    typedef typename Superclass::ScalarType 								ScalarType;
-    typedef typename Superclass::ParametersType 						ParametersType;
-    typedef typename Superclass::JacobianType 							JacobianType;
-    typedef typename Superclass::InputVectorType						InputVectorType;
-    typedef typename Superclass::OutputVectorType 					OutputVectorType;
-    typedef typename Superclass::InputCovariantVectorType 	InputCovariantVectorType;
-    typedef typename Superclass::OutputCovariantVectorType	OutputCovariantVectorType;
-    typedef typename Superclass::InputVnlVectorType 				InputVnlVectorType;
-    typedef typename Superclass::OutputVnlVectorType				OutputVnlVectorType;
-    typedef typename Superclass::InputPointType 						InputPointType;
-    typedef typename Superclass::OutputPointType						OutputPointType;
+    typedef typename Superclass::ScalarType                 ScalarType;
+    typedef typename Superclass::ParametersType             ParametersType;
+    typedef typename Superclass::JacobianType               JacobianType;
+    typedef typename Superclass::InputVectorType            InputVectorType;
+    typedef typename Superclass::OutputVectorType           OutputVectorType;
+    typedef typename Superclass::InputCovariantVectorType   InputCovariantVectorType;
+    typedef typename Superclass::OutputCovariantVectorType  OutputCovariantVectorType;
+    typedef typename Superclass::InputVnlVectorType         InputVnlVectorType;
+    typedef typename Superclass::OutputVnlVectorType        OutputVnlVectorType;
+    typedef typename Superclass::InputPointType             InputPointType;
+    typedef typename Superclass::OutputPointType            OutputPointType;
 
     /** Typedef's needed in this class. */
     typedef DeformationVectorFieldTransform<
       ScalarType,
-      itkGetStaticConstMacro( InputSpaceDimension ) >				IntermediaryDFTransformType;
+      itkGetStaticConstMacro( InputSpaceDimension ) >       IntermediaryDFTransformType;
     typedef typename IntermediaryDFTransformType
-      ::CoefficientVectorImageType													VectorImageType;
-    typedef typename VectorImageType::PixelType							VectorPixelType;
-    typedef ImageRegionIterator< VectorImageType >					IteratorType;
+      ::CoefficientVectorImageType                          VectorImageType;
+    typedef typename VectorImageType::PixelType             VectorPixelType;
+    typedef ImageRegionIterator< VectorImageType >          IteratorType;
 
     /** Typedef's for the vectorImage. */
-    typedef typename VectorImageType::RegionType						RegionType;
-    typedef typename VectorImageType::SpacingType						SpacingType;
-    typedef typename VectorImageType::PointType							OriginType;
+    typedef typename VectorImageType::RegionType            RegionType;
+    typedef typename VectorImageType::SpacingType           SpacingType;
+    typedef typename VectorImageType::PointType             OriginType;
 
     /** Function to create and initialze the deformation fields. */
     void InitializeDeformationFields( void );
@@ -117,18 +117,18 @@ namespace itk
   private:
 
     /** The private constructor. */
-    DeformationFieldRegulizer( const Self& );	// purposely not implemented
+    DeformationFieldRegulizer( const Self& ); // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );						// purposely not implemented
+    void operator=( const Self& );            // purposely not implemented
     
     /** Declaration of members. */
-    typename IntermediaryDFTransformType::Pointer		m_IntermediaryDeformationFieldTransform;
-    bool		m_Initialized;
+    typename IntermediaryDFTransformType::Pointer   m_IntermediaryDeformationFieldTransform;
+    bool    m_Initialized;
 
     /** Declarations of region things. */
-    RegionType															m_DeformationFieldRegion;
-    OriginType															m_DeformationFieldOrigin;
-    SpacingType															m_DeformationFieldSpacing;
+    RegionType                              m_DeformationFieldRegion;
+    OriginType                              m_DeformationFieldOrigin;
+    SpacingType                             m_DeformationFieldSpacing;
 
   }; // end class DeformationFieldRegulizer
     

@@ -37,12 +37,12 @@ using namespace itk;
    *
    * The parameters used in this class are:
    * \parameter Metric: Select this metric as follows:\n
-   *		<tt>(Metric "MutualInformationHistogram")</tt>
+   *    <tt>(Metric "MutualInformationHistogram")</tt>
    *
    * \ingroup Metrics
    */
 
-  template <class TElastix >	
+  template <class TElastix >  
     class MutualInformationHistogramMetric :
     public
       MutualInformationHistogramImageToImageMetric<
@@ -53,13 +53,13 @@ using namespace itk;
   public:
 
     /** Standard ITK-stuff. */
-    typedef MutualInformationHistogramMetric							Self;
+    typedef MutualInformationHistogramMetric              Self;
     typedef MutualInformationHistogramImageToImageMetric<
       typename MetricBase<TElastix>::FixedImageType,
-      typename MetricBase<TElastix>::MovingImageType >		Superclass1;
-    typedef MetricBase<TElastix>													Superclass2;
-    typedef SmartPointer<Self>														Pointer;
-    typedef SmartPointer<const Self>											ConstPointer;
+      typename MetricBase<TElastix>::MovingImageType >    Superclass1;
+    typedef MetricBase<TElastix>                          Superclass2;
+    typedef SmartPointer<Self>                            Pointer;
+    typedef SmartPointer<const Self>                      ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -75,35 +75,35 @@ using namespace itk;
     elxClassNameMacro( "MutualInformationHistogram" );
 
     /** Typedefs inherited from the superclass. */
-    typedef typename Superclass1::TransformType							TransformType;
-    typedef typename Superclass1::TransformPointer 					TransformPointer;
-    typedef typename Superclass1::TransformJacobianType			TransformJacobianType;
-    typedef typename Superclass1::InterpolatorType 					InterpolatorType;
-    typedef typename Superclass1::MeasureType								MeasureType;
-    typedef typename Superclass1::DerivativeType 						DerivativeType;
-    typedef typename Superclass1::ParametersType 						ParametersType;
-    typedef typename Superclass1::FixedImageType 						FixedImageType;
-    typedef typename Superclass1::MovingImageType						MovingImageType;
-    typedef typename Superclass1::FixedImageConstPointer 		FixedImageConstPointer;
-    typedef typename Superclass1::MovingImageConstPointer		MovingImageCosntPointer;
-    typedef typename Superclass1::ScalesType								ScalesType;
+    typedef typename Superclass1::TransformType             TransformType;
+    typedef typename Superclass1::TransformPointer          TransformPointer;
+    typedef typename Superclass1::TransformJacobianType     TransformJacobianType;
+    typedef typename Superclass1::InterpolatorType          InterpolatorType;
+    typedef typename Superclass1::MeasureType               MeasureType;
+    typedef typename Superclass1::DerivativeType            DerivativeType;
+    typedef typename Superclass1::ParametersType            ParametersType;
+    typedef typename Superclass1::FixedImageType            FixedImageType;
+    typedef typename Superclass1::MovingImageType           MovingImageType;
+    typedef typename Superclass1::FixedImageConstPointer    FixedImageConstPointer;
+    typedef typename Superclass1::MovingImageConstPointer   MovingImageCosntPointer;
+    typedef typename Superclass1::ScalesType                ScalesType;
     
     /** The moving image dimension. */
     itkStaticConstMacro( MovingImageDimension, unsigned int,
       MovingImageType::ImageDimension );
     
     /** Typedef's inherited from Elastix. */
-    typedef typename Superclass2::ElastixType						ElastixType;
-    typedef typename Superclass2::ElastixPointer				ElastixPointer;
-    typedef typename Superclass2::ConfigurationType			ConfigurationType;
-    typedef typename Superclass2::ConfigurationPointer	ConfigurationPointer;
-    typedef typename Superclass2::RegistrationType			RegistrationType;
-    typedef typename Superclass2::RegistrationPointer		RegistrationPointer;
-    typedef typename Superclass2::ITKBaseType						ITKBaseType;
+    typedef typename Superclass2::ElastixType           ElastixType;
+    typedef typename Superclass2::ElastixPointer        ElastixPointer;
+    typedef typename Superclass2::ConfigurationType     ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer  ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType      RegistrationType;
+    typedef typename Superclass2::RegistrationPointer   RegistrationPointer;
+    typedef typename Superclass2::ITKBaseType           ITKBaseType;
       
     /** Typedef's for timer. */
-    typedef tmr::Timer					TimerType;
-    typedef TimerType::Pointer	TimerPointer;
+    typedef tmr::Timer          TimerType;
+    typedef TimerType::Pointer  TimerPointer;
     
     /** Execute stuff before the actual registration:
      * \li Nothing yet: still to be implemented.
@@ -130,9 +130,9 @@ using namespace itk;
   private:
 
     /** The private constructor. */
-    MutualInformationHistogramMetric( const Self& );	// purposely not implemented
+    MutualInformationHistogramMetric( const Self& );  // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );										// purposely not implemented
+    void operator=( const Self& );                    // purposely not implemented
     
   }; // end class MutualInformationHistogramMetric
 

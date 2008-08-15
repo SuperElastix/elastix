@@ -63,7 +63,7 @@ namespace elastix
       return dynamic_cast< FixedImageType *>( 
         this->GetFixedImageContainer()->ElementAt(idx).GetPointer() );
     } 
-    return 0; 		
+    return 0;     
   } // end SetFixedImage
 
 
@@ -81,7 +81,7 @@ namespace elastix
       return dynamic_cast< MovingImageType *>( 
         this->GetMovingImageContainer()->ElementAt(idx).GetPointer() );
     } 
-    return 0; 		
+    return 0;     
   } // end SetMovingImage
 
 
@@ -99,7 +99,7 @@ namespace elastix
       return dynamic_cast< FixedMaskType *>( 
         this->GetFixedMaskContainer()->ElementAt(idx).GetPointer() );
     } 
-    return 0; 		
+    return 0;     
   } // end SetFixedMask
 
 
@@ -117,7 +117,7 @@ namespace elastix
       return dynamic_cast< MovingMaskType *>( 
         this->GetMovingMaskContainer()->ElementAt(idx).GetPointer() );
     } 
-    return 0; 		
+    return 0;     
   } // end SetMovingMask
   
 
@@ -191,7 +191,7 @@ namespace elastix
         
     /** Print the time spent on reading images. */
     this->m_Timer0->StopTimer();
-    elxout << "Reading images took " <<	static_cast<unsigned long>(
+    elxout << "Reading images took " << static_cast<unsigned long>(
       this->m_Timer0->GetElapsedClockSec() * 1000 ) << " ms.\n" << std::endl;
 
     /** Give all components the opportunity to do some initialization. */
@@ -236,7 +236,7 @@ namespace elastix
     this->SetFinalTransform( this->GetTransformContainer()->ElementAt(0) );
 
     /** Decouple the components from Elastix. This increases the chance that
-     * some memory is released. */				
+     * some memory is released. */        
     this->ConfigureComponents( 0 );
 
     /** Return a value. */
@@ -292,7 +292,7 @@ namespace elastix
     /** Call all the ReadFromFile() functions. */
     timer->StartTimer();
     elxout << "Calling all ReadFromFile()'s ..." << std::endl;
-    this->GetElxResampleInterpolatorBase()->ReadFromFile();		
+    this->GetElxResampleInterpolatorBase()->ReadFromFile();   
     this->GetElxResamplerBase()->ReadFromFile();
     this->GetElxTransformBase()->ReadFromFile();
 
@@ -329,7 +329,7 @@ namespace elastix
       
       /** Create a name for the final result. */
       std::string resultImageFormat = "mhd";
-      this->GetConfiguration()->ReadParameter(	resultImageFormat, "ResultImageFormat", 0, true );
+      this->GetConfiguration()->ReadParameter(  resultImageFormat, "ResultImageFormat", 0, true );
       std::ostringstream makeFileName("");
       makeFileName << this->GetConfiguration()->GetCommandLineArgument( "-out" )
         << "result." << resultImageFormat;
@@ -393,7 +393,7 @@ namespace elastix
     /** Call all the BeforeAllTransformix() functions. 
      * Actually we could loop over all resample interpolators, resamplers,
      * and transforms etc. But for now, there seems to be no use yet for that.  */
-    returndummy |= this->GetElxResampleInterpolatorBase()->BeforeAllTransformix();		
+    returndummy |= this->GetElxResampleInterpolatorBase()->BeforeAllTransformix();    
     returndummy |= this->GetElxResamplerBase()->BeforeAllTransformix();
     returndummy |= this->GetElxTransformBase()->BeforeAllTransformix();
 
@@ -468,7 +468,7 @@ namespace elastix
 
 
     /** Print the current resolution. */
-    elxout << "\nResolution: " <<	level	<< std::endl;
+    elxout << "\nResolution: " << level << std::endl;
 
     this->OpenIterationInfoFile();
 
@@ -543,7 +543,7 @@ namespace elastix
 
     /** Start Timer0 here, to make it possible to measure the time needed for:
      *    - executing the BeforeEachResolution methods (if this was not the last resolution)
-     *		- executing the AfterRegistration methods (if this was the last resolution)
+     *    - executing the AfterRegistration methods (if this was the last resolution)
      */
     this->m_Timer0->StartTimer();
   
@@ -683,8 +683,8 @@ namespace elastix
     this->m_CurrentTransformParameterFileName = FileName;
 
     /** Create transformParameterFile and xout["transpar"]. */
-    xoutsimple_type		transformationParameterInfo;
-    std::ofstream			transformParameterFile;
+    xoutsimple_type   transformationParameterInfo;
+    std::ofstream     transformParameterFile;
     
     /** Set up the "TransformationParameters" writing field. */
     transformationParameterInfo.SetOutputs( xout.GetCOutputs() );
@@ -719,7 +719,7 @@ namespace elastix
     if ( ToLog )
     {
       xout["logonly"] <<
-        "\n=============== start of TransformParameterFile ==============="	<< std::endl;
+        "\n=============== start of TransformParameterFile ===============" << std::endl;
     }
 
     /** Call all the WriteToFile() functions. 
@@ -790,7 +790,7 @@ namespace elastix
     int returndummy = 0;
 
     /** Call the memberfunction 'func' of all components. */
-    returndummy |= (  ( *( this->GetConfiguration()) ).*func  )();		
+    returndummy |= (  ( *( this->GetConfiguration()) ).*func  )();    
     
     for (unsigned int i = 0; i < this->GetNumberOfRegistrations(); ++i)
     {  returndummy |= (  ( *(this->GetElxRegistrationBase(i)) ).*func  )(); }

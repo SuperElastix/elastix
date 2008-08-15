@@ -50,25 +50,25 @@ int main( int argc, char **argv )
   }
 
   /** Some typedef's.*/
-  typedef elx::TransformixMain									    TransformixMainType;
-  typedef TransformixMainType::Pointer							TransformixMainPointer;
-  typedef TransformixMainType::ArgumentMapType			ArgumentMapType;
-  typedef ArgumentMapType::value_type						    ArgumentMapEntryType;
+  typedef elx::TransformixMain                      TransformixMainType;
+  typedef TransformixMainType::Pointer              TransformixMainPointer;
+  typedef TransformixMainType::ArgumentMapType      ArgumentMapType;
+  typedef ArgumentMapType::value_type               ArgumentMapEntryType;
 
   /** Declare an instance of the Transformix class. */
-  TransformixMainPointer	transformix;
+  TransformixMainPointer  transformix;
 
   /** Initialize. */
-  int								returndummy = 0;
-  ArgumentMapType		argMap;
-  bool							outFolderPresent = false;
+  int               returndummy = 0;
+  ArgumentMapType   argMap;
+  bool              outFolderPresent = false;
   std::string       outFolder = "";
-  std::string				logFileName = "";
+  std::string       logFileName = "";
 
 
   /** Put command line parameters into parameterFileList. */
   for ( unsigned int i = 1; i < argc - 1; i += 2 )
-  {	
+  { 
     std::string key( argv[ i ] );
     std::string value( argv[ i + 1 ] );
   
@@ -88,7 +88,7 @@ int main( int argc, char **argv )
 
     /** Attempt to save the arguments in the ArgumentMap. */
     if ( argMap.count( key ) == 0 )
-    {	
+    { 
       argMap.insert( ArgumentMapEntryType( key.c_str(), value.c_str() ) );
     }
     else
@@ -223,8 +223,8 @@ void PrintHelp(void)
   std::cout << "-ipp      file containing input-image points" << std::endl;
   std::cout << "          the point are transformed according to the specified transform-parameter file" << std::endl;
   std::cout << "          use \"-ipp all\" to transform all points from the input-image" << std::endl;
-  std::cout << "-priority set the process priority to high or belownormal (Windows only)"	<< std::endl;
-  std::cout << "-threads  set the maximum number of threads of transformix"	<< std::endl;
+  std::cout << "-priority set the process priority to high or belownormal (Windows only)" << std::endl;
+  std::cout << "-threads  set the maximum number of threads of transformix" << std::endl;
   std::cout << "At least one of the options \"-in\" or \"-ipp\" should be given."
     << std::endl << std::endl;
   

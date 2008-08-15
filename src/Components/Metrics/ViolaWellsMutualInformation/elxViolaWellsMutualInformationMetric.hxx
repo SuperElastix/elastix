@@ -78,7 +78,7 @@ using namespace itk;
     /** \todo calculate them??? */
     
     /** Read the parameters from the ParameterFile. */
-    this->m_Configuration->ReadParameter(	numberOfSpatialSamples,
+    this->m_Configuration->ReadParameter( numberOfSpatialSamples,
       "NumberOfSpatialSamples", this->GetComponentLabel(), level, 0 );
     this->m_Configuration->ReadParameter( fixedImageStandardDeviation,
       "FixedImageStandardDeviation", this->GetComponentLabel(), level, 0 );

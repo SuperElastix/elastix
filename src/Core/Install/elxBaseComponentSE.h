@@ -45,21 +45,21 @@ namespace elastix
   public:
 
     /** Standard stuff.*/
-    typedef BaseComponentSE		Self;
-    typedef BaseComponent			Superclass;
+    typedef BaseComponentSE   Self;
+    typedef BaseComponent     Superclass;
 
     /** Elastix typedef's.*/
-    typedef TElastix												ElastixType;
-    typedef typename ElastixType::Pointer		ElastixPointer;
+    typedef TElastix                        ElastixType;
+    typedef typename ElastixType::Pointer   ElastixPointer;
 
     /** ConfigurationType.*/
-    typedef typename ElastixType::ConfigurationType			ConfigurationType;
-    typedef typename ElastixType::ConfigurationPointer	ConfigurationPointer;
+    typedef typename ElastixType::ConfigurationType     ConfigurationType;
+    typedef typename ElastixType::ConfigurationPointer  ConfigurationPointer;
 
     /** RegistrationType; NB: this is the elx::RegistrationBase
      * not an itk::Object or something like that. */
-    typedef typename ElastixType::RegistrationBaseType	RegistrationType;
-    typedef RegistrationType *													RegistrationPointer;
+    typedef typename ElastixType::RegistrationBaseType  RegistrationType;
+    typedef RegistrationType *                          RegistrationPointer;
 
     /**
      * Get/Set functions for Elastix.
@@ -109,14 +109,14 @@ namespace elastix
     BaseComponentSE();
     virtual ~BaseComponentSE() {}
 
-    ElastixPointer				m_Elastix;
-    ConfigurationPointer	m_Configuration;
-    RegistrationPointer		m_Registration;
+    ElastixPointer        m_Elastix;
+    ConfigurationPointer  m_Configuration;
+    RegistrationPointer   m_Registration;
 
   private:
 
-    BaseComponentSE( const Self& );		// purposely not implemented
-    void operator=( const Self& );		// purposely not implemented
+    BaseComponentSE( const Self& );   // purposely not implemented
+    void operator=( const Self& );    // purposely not implemented
 
   }; // end class BaseComponentSE
 

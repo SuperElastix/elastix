@@ -186,7 +186,7 @@ namespace itk
      {
        /** Some declarations. */
        SERadiusType radius;
-       std::vector< StructuringElementType >	structuringElement( FixedImageDimension );
+       std::vector< StructuringElementType >  structuringElement( FixedImageDimension );
 
        /** Setup the pipeline. */
        if ( this->m_UseFixedRigidityImage )

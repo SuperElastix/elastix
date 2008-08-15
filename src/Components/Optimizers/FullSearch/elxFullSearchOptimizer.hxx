@@ -50,8 +50,8 @@ using namespace itk;
     /** Add the target cells "ItNr" and "Metric" to xout["iteration"].*/
     xl::xout["iteration"].AddTargetCell("2:Metric");
 
-    /** Format the metric as floats */			
-    xl::xout["iteration"]["2:Metric"]		<< std::showpoint << std::fixed;
+    /** Format the metric as floats */      
+    xl::xout["iteration"]["2:Metric"]   << std::showpoint << std::fixed;
 
 
   } // end BeforeRegistration
@@ -180,7 +180,7 @@ using namespace itk;
           
       /** Set the name of this image on disk. */
       std::string resultImageFormat = "mhd";
-      this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0, true );
+      this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, true );
       makeString.str("");
       makeString
         << this->GetConfiguration()->GetCommandLineArgument("-out")
@@ -211,7 +211,7 @@ using namespace itk;
     ::AfterEachIteration(void)
   {
     /** Print some information */
-    xl::xout["iteration"]["2:Metric"]		<< this->GetValue();
+    xl::xout["iteration"]["2:Metric"]   << this->GetValue();
 
     this->m_OptimizationSurface->SetPixel(
       this->GetCurrentIndexInSearchSpace(),
@@ -222,7 +222,7 @@ using namespace itk;
     NameIteratorType name_it = this->m_SearchSpaceDimensionNames.begin();
 
     for ( unsigned int dim = 0; dim < nrOfSSDims; dim++)
-    {	
+    { 
       xl::xout["iteration"][name_it->second.c_str()] << currentPoint[dim];
       name_it++;
     }
@@ -239,7 +239,7 @@ using namespace itk;
     void FullSearch<TElastix>
     ::AfterEachResolution(void)
   {
-    //typedef enum {FullRangeSearched,	MetricError	} StopConditionType;
+    //typedef enum {FullRangeSearched,  MetricError } StopConditionType;
     
     std::string stopcondition;
 
@@ -252,8 +252,8 @@ using namespace itk;
       break;
       
     case MetricError :
-      stopcondition = "Error in metric";	
-      break;	
+      stopcondition = "Error in metric";  
+      break;  
     
     default:
       stopcondition = "Unknown";
@@ -298,7 +298,7 @@ using namespace itk;
     SearchSpacePointType bestPoint = this->GetBestPointInSearchSpace();
     unsigned int nrOfSSDims = bestIndex.GetSize();
 
-    elxout <<	"Index of the point in the optimization surface image that has the best metric value: [ ";
+    elxout << "Index of the point in the optimization surface image that has the best metric value: [ ";
     for (unsigned int dim = 0; dim < nrOfSSDims; dim++)
     {
       elxout << bestIndex[dim] << " ";
@@ -315,7 +315,7 @@ using namespace itk;
     /** Remove the columns from xout["iteration"] */
     NameIteratorType name_it = this->m_SearchSpaceDimensionNames.begin();
     for ( unsigned int dim = 0; dim < nrOfSSDims; dim++)
-    {	
+    { 
       xl::xout["iteration"].RemoveTargetCell( name_it->second.c_str() );
       name_it++;
     }

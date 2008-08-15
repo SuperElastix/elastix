@@ -114,7 +114,7 @@ using namespace itk;
     if ( level == 0 )
     {
       this->InitializeTransform();
-    }	
+    } 
     else
     {
       /** Upsample the B-spline grid, if required. */
@@ -196,7 +196,7 @@ using namespace itk;
     /** Declare vars */
     SpacingType finalGridSpacingInVoxels;
     SpacingType finalGridSpacingInPhysicalUnits;
-    finalGridSpacingInVoxels.Fill( 16.0 );		
+    finalGridSpacingInVoxels.Fill( 16.0 );    
     finalGridSpacingInPhysicalUnits.Fill( 8.0 ); // this default is never used
 
     if ( method2 )
@@ -419,11 +419,11 @@ using namespace itk;
     /** Read and Set the Grid: this is a BSplineTransform specific task. */
 
     /** Declarations. */
-    RegionType	gridregion;
-    SizeType		gridsize;
-    IndexType		gridindex;
-    SpacingType	gridspacing;
-    OriginType	gridorigin;
+    RegionType  gridregion;
+    SizeType    gridsize;
+    IndexType   gridindex;
+    SpacingType gridspacing;
+    OriginType  gridorigin;
     
     /** Fill everything with default values. */
     gridsize.Fill( 1 );
@@ -617,10 +617,10 @@ using namespace itk;
     void BSplineTransform<TElastix>::
     SetOptimizerScales( unsigned int edgeWidth )
   {
-    typedef ImageRegionExclusionConstIteratorWithIndex<ImageType>		IteratorType;
-    typedef typename RegistrationType::ITKBaseType					ITKRegistrationType;
-    typedef typename ITKRegistrationType::OptimizerType			OptimizerType;
-    typedef typename OptimizerType::ScalesType							ScalesType;
+    typedef ImageRegionExclusionConstIteratorWithIndex<ImageType>   IteratorType;
+    typedef typename RegistrationType::ITKBaseType          ITKRegistrationType;
+    typedef typename ITKRegistrationType::OptimizerType     OptimizerType;
+    typedef typename OptimizerType::ScalesType              ScalesType;
     typedef typename ScalesType::ValueType                  ScalesValueType;
 
     /** Define new scales */

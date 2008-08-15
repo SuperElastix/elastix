@@ -30,9 +30,9 @@ namespace itk
    *
    * \parameter SampleGridSpacing: This parameter controls the spacing
    *    of the uniform grid in all dimensions. This should be given in
-   *		index coordinates. \n
-   *		example: <tt>(SampleGridSpacing 4 4 4)</tt> \n
-   *		Default is 2 in each dimension.
+   *    index coordinates. \n
+   *    example: <tt>(SampleGridSpacing 4 4 4)</tt> \n
+   *    Default is 2 in each dimension.
    */
 
   template < class TInputImage >
@@ -75,11 +75,11 @@ namespace itk
     typedef typename InputImageType::PointType    InputImagePointType;
 
     /** Typedefs for support of user defined grid spacing for the spatial samples. */
-    typedef typename InputImageType::OffsetType							SampleGridSpacingType;
+    typedef typename InputImageType::OffsetType             SampleGridSpacingType;
     typedef typename SampleGridSpacingType::OffsetValueType SampleGridSpacingValueType;
-    typedef typename InputImageType::SizeType								SampleGridSizeType;
-    typedef InputImageIndexType															SampleGridIndexType;
-    typedef typename InputImageType::SizeType 							InputImageSizeType;
+    typedef typename InputImageType::SizeType               SampleGridSizeType;
+    typedef InputImageIndexType                             SampleGridIndexType;
+    typedef typename InputImageType::SizeType               InputImageSizeType;
        
     /** Set/Get the sample grid spacing for each dimension (only integer factors)
      * This function overrules and previous calls to SetNumberOfSamples. */
@@ -130,9 +130,9 @@ namespace itk
   private:
 
     /** The private constructor. */
-    ImageGridSampler( const Self& );	        // purposely not implemented
+    ImageGridSampler( const Self& );          // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );				    // purposely not implemented
+    void operator=( const Self& );            // purposely not implemented
 
   }; // end class ImageGridSampler
 

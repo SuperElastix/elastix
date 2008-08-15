@@ -31,23 +31,23 @@ using namespace itk;
    *
    * The parameters used in this class are:
    * \parameter Transform: Select this transform as follows:\n
-   *		<tt>(%Transform "EulerTransform")</tt>
+   *    <tt>(%Transform "EulerTransform")</tt>
    * \parameter Scales: the scale factor between the rotations and translations,
-   *		used in the optimizer. \n
-   *		example: <tt>(Scales 200000.0)</tt> \n
-   *		example: <tt>(Scales 100000.0 60000.0 ... 80000.0)</tt> \n
+   *    used in the optimizer. \n
+   *    example: <tt>(Scales 200000.0)</tt> \n
+   *    example: <tt>(Scales 100000.0 60000.0 ... 80000.0)</tt> \n
    *    If only one argument is given, that factor is used for the rotations.
-   *		If more than one argument is given, then the number of arguments should be
-   *		equal to the number of parameters: for each parameter its scale factor.
-   *		If this parameter option is not used, by default the rotations are scaled
-   *		by a factor of 100000.0. See also the AutomaticScalesEstimation parameter.
+   *    If more than one argument is given, then the number of arguments should be
+   *    equal to the number of parameters: for each parameter its scale factor.
+   *    If this parameter option is not used, by default the rotations are scaled
+   *    by a factor of 100000.0. See also the AutomaticScalesEstimation parameter.
    * \parameter AutomaticScalesEstimation: if this parameter is set to "true" the Scales
    *    parameter is ignored and the scales are determined automatically. \n
    *    example: <tt>( AutomaticScalesEstimation "true" ) </tt> \n
    *    Default: "false" (for backwards compatibility). Recommended: "true".
    * \parameter CenterOfRotation: an index around which the image is rotated. \n
-   *		example: <tt>(CenterOfRotation 128 128 90)</tt> \n
-   *		By default the CenterOfRotation is set to the geometric center of the image.
+   *    example: <tt>(CenterOfRotation 128 128 90)</tt> \n
+   *    By default the CenterOfRotation is set to the geometric center of the image.
    * \parameter AutomaticTransformInitialization: whether or not the initial translation
    *    between images should be estimated as the distance between their centers.\n
    *    example: <tt>(AutomaticTransformInitialization "true")</tt> \n
@@ -55,10 +55,10 @@ using namespace itk;
    *
    * The transform parameters necessary for transformix, additionally defined by this class, are:
    * \transformparameter CenterOfRotation: stores the center of rotation as an index. \n
-   *		example: <tt>(CenterOfRotation 128 128 90)</tt>\n
+   *    example: <tt>(CenterOfRotation 128 128 90)</tt>\n
    *    <b>depecrated!</b> From elastix version 3.402 this is changed to CenterOfRotationPoint!
    * \transformparameter CenterOfRotationPoint: stores the center of rotation, expressed in world coordinates. \n
-   *		example: <tt>(CenterOfRotationPoint 10.555 6.666 12.345)</tt>
+   *    example: <tt>(CenterOfRotationPoint 10.555 6.666 12.345)</tt>
    *
    * \ingroup Transforms
    */
@@ -73,22 +73,22 @@ using namespace itk;
   public:
     
     /** Standard ITK-stuff.*/
-    typedef EulerTransformElastix																Self;
+    typedef EulerTransformElastix                               Self;
     
     typedef CombinationTransform<
       typename elx::TransformBase< TElastix >::CoordRepType,
-      elx::TransformBase< TElastix >::FixedImageDimension >			Superclass1;
+      elx::TransformBase< TElastix >::FixedImageDimension >     Superclass1;
 
-    typedef elx::TransformBase< TElastix >											Superclass2;
+    typedef elx::TransformBase< TElastix >                      Superclass2;
 
     /** The ITK-class that provides most of the functionality, and
      * that is set as the "CurrentTransform" in the CombinationTransform */
     typedef EulerTransform<
       typename elx::TransformBase< TElastix >::CoordRepType,
-      elx::TransformBase< TElastix >::FixedImageDimension >			EulerTransformType;
+      elx::TransformBase< TElastix >::FixedImageDimension >     EulerTransformType;
 
-    typedef SmartPointer<Self>																	Pointer;
-    typedef SmartPointer<const Self>														ConstPointer;
+    typedef SmartPointer<Self>                                  Pointer;
+    typedef SmartPointer<const Self>                            ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -109,49 +109,49 @@ using namespace itk;
     /** Typedefs inherited from the superclass. */
 
     /** These are both in Euler2D and Euler3D. */
-    typedef typename Superclass1::ScalarType									ScalarType;
-    typedef typename Superclass1::ParametersType							ParametersType;
-    typedef typename Superclass1::JacobianType								JacobianType;
+    typedef typename Superclass1::ScalarType                  ScalarType;
+    typedef typename Superclass1::ParametersType              ParametersType;
+    typedef typename Superclass1::JacobianType                JacobianType;
     
-    typedef typename Superclass1::InputPointType							InputPointType;
-    typedef typename Superclass1::OutputPointType							OutputPointType;
-    typedef typename Superclass1::InputVectorType							InputVectorType;
-    typedef typename Superclass1::OutputVectorType						OutputVectorType;
-    typedef typename Superclass1::InputCovariantVectorType		InputCovariantVectorType;
-    typedef typename Superclass1::OutputCovariantVectorType		OutputCovariantVectorType;
-    typedef typename Superclass1::InputVnlVectorType					InputVnlVectorType;
-    typedef typename Superclass1::OutputVnlVectorType					OutputVnlVectorType;
+    typedef typename Superclass1::InputPointType              InputPointType;
+    typedef typename Superclass1::OutputPointType             OutputPointType;
+    typedef typename Superclass1::InputVectorType             InputVectorType;
+    typedef typename Superclass1::OutputVectorType            OutputVectorType;
+    typedef typename Superclass1::InputCovariantVectorType    InputCovariantVectorType;
+    typedef typename Superclass1::OutputCovariantVectorType   OutputCovariantVectorType;
+    typedef typename Superclass1::InputVnlVectorType          InputVnlVectorType;
+    typedef typename Superclass1::OutputVnlVectorType         OutputVnlVectorType;
     
     /** NOTE: use this one only in 3D (otherwise it's just an int). */
-    typedef typename EulerTransformType::AngleType						AngleType;
+    typedef typename EulerTransformType::AngleType            AngleType;
     
-    typedef typename EulerTransformType::Pointer							EulerTransformPointer;
-    typedef typename EulerTransformType::OffsetType						OffsetType;
+    typedef typename EulerTransformType::Pointer              EulerTransformPointer;
+    typedef typename EulerTransformType::OffsetType           OffsetType;
     
     /** Typedef's inherited from TransformBase. */
-    typedef typename Superclass2::ElastixType								ElastixType;
-    typedef typename Superclass2::ElastixPointer						ElastixPointer;
-    typedef typename Superclass2::ConfigurationType					ConfigurationType;
-    typedef typename Superclass2::ConfigurationPointer			ConfigurationPointer;
-    typedef typename Superclass2::RegistrationType					RegistrationType;
-    typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
-    typedef typename Superclass2::CoordRepType							CoordRepType;
-    typedef typename Superclass2::FixedImageType						FixedImageType;
-    typedef typename Superclass2::MovingImageType						MovingImageType;
-    typedef typename Superclass2::ITKBaseType								ITKBaseType;
-    typedef typename Superclass2::CombinationTransformType	CombinationTransformType;
+    typedef typename Superclass2::ElastixType               ElastixType;
+    typedef typename Superclass2::ElastixPointer            ElastixPointer;
+    typedef typename Superclass2::ConfigurationType         ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType          RegistrationType;
+    typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
+    typedef typename Superclass2::CoordRepType              CoordRepType;
+    typedef typename Superclass2::FixedImageType            FixedImageType;
+    typedef typename Superclass2::MovingImageType           MovingImageType;
+    typedef typename Superclass2::ITKBaseType               ITKBaseType;
+    typedef typename Superclass2::CombinationTransformType  CombinationTransformType;
     
-    /** Other typedef's. */		
-    typedef typename FixedImageType::IndexType							IndexType;
-    typedef typename IndexType::IndexValueType							IndexValueType;
-    typedef typename FixedImageType::SizeType								SizeType;
-    typedef typename FixedImageType::PointType							PointType;
-    typedef typename FixedImageType::SpacingType						SpacingType;
-    typedef typename FixedImageType::RegionType							RegionType;
+    /** Other typedef's. */   
+    typedef typename FixedImageType::IndexType              IndexType;
+    typedef typename IndexType::IndexValueType              IndexValueType;
+    typedef typename FixedImageType::SizeType               SizeType;
+    typedef typename FixedImageType::PointType              PointType;
+    typedef typename FixedImageType::SpacingType            SpacingType;
+    typedef typename FixedImageType::RegionType             RegionType;
 
     typedef CenteredTransformInitializer<
-      EulerTransformType, FixedImageType, MovingImageType>	TransformInitializerType;
-    typedef typename TransformInitializerType::Pointer			TransformInitializerPointer;
+      EulerTransformType, FixedImageType, MovingImageType>  TransformInitializerType;
+    typedef typename TransformInitializerType::Pointer      TransformInitializerPointer;
 
     /** For scales setting in the optimizer */
     typedef typename Superclass2::ScalesType                ScalesType;
@@ -224,11 +224,11 @@ using namespace itk;
   private:
 
     /** The private constructor. */
-    EulerTransformElastix( const Self& );	// purposely not implemented
+    EulerTransformElastix( const Self& ); // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );				// purposely not implemented
+    void operator=( const Self& );        // purposely not implemented
 
-    EulerTransformPointer				m_EulerTransform;
+    EulerTransformPointer       m_EulerTransform;
     
   }; // end class EulerTransformElastix
   

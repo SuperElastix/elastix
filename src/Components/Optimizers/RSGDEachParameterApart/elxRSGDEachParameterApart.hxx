@@ -38,8 +38,8 @@ using namespace itk;
     xout["iteration"].AddTargetCell("3:StepSize");
     xout["iteration"].AddTargetCell("4:||Gradient||");
 
-    /** Format the metric and stepsize as floats */			
-    xl::xout["iteration"]["2:Metric"]		<< std::showpoint << std::fixed;
+    /** Format the metric and stepsize as floats */     
+    xl::xout["iteration"]["2:Metric"]   << std::showpoint << std::fixed;
     xl::xout["iteration"]["3:StepSize"] << std::showpoint << std::fixed;
     xl::xout["iteration"]["4:||Gradient||"] << std::showpoint << std::fixed;
 
@@ -107,7 +107,7 @@ using namespace itk;
     ::AfterEachIteration(void)
   {
     /** Print some information */
-    xl::xout["iteration"]["2:Metric"]		<< this->GetValue();
+    xl::xout["iteration"]["2:Metric"]   << this->GetValue();
     xl::xout["iteration"]["3:StepSize"] << this->GetCurrentStepLength();
     xl::xout["iteration"]["4:||Gradient||"] << this->GetGradientMagnitude();
 
@@ -138,20 +138,20 @@ using namespace itk;
       break;
       
     case StepTooSmall :
-      stopcondition = "Minimum step size has been reached";	
+      stopcondition = "Minimum step size has been reached"; 
       break;
 
     case MaximumNumberOfIterations :
-      stopcondition = "Maximum number of iterations has been reached";	
-      break;	
+      stopcondition = "Maximum number of iterations has been reached";  
+      break;  
     
     case ImageNotAvailable :
-      stopcondition = "No image available";	
-      break;	
+      stopcondition = "No image available"; 
+      break;  
     
     case SamplesNotAvailable :
-      stopcondition = "No samples available";	
-      break;	
+      stopcondition = "No samples available"; 
+      break;  
 
     case MetricError :
       stopcondition = "Error in metric";

@@ -30,7 +30,7 @@ using namespace itk;
    *
    * The parameters used in this class are:
    * \parameter Metric: Select this metric as follows:\n
-   *	  <tt>(Metric "AdvancedKappaStatistic")</tt>
+   *    <tt>(Metric "AdvancedKappaStatistic")</tt>
    * \parameter UseComplement: Bool to use the complement of the metric or not.\n
    *    If true, the 1 - KappaStatistic is returned, which is useful since most optimizers search by default for a minimum.\n
    *    <tt>(UseComplement "true")</tt>\n
@@ -55,13 +55,13 @@ using namespace itk;
   public:
 
     /** Standard ITK-stuff. */
-    typedef AdvancedKappaStatisticMetric									Self;
+    typedef AdvancedKappaStatisticMetric                  Self;
     typedef AdvancedKappaStatisticImageToImageMetric<
       typename MetricBase<TElastix>::FixedImageType,
-      typename MetricBase<TElastix>::MovingImageType >		Superclass1;
-    typedef MetricBase<TElastix>													Superclass2;
-    typedef SmartPointer<Self>														Pointer;
-    typedef SmartPointer<const Self>											ConstPointer;
+      typename MetricBase<TElastix>::MovingImageType >    Superclass1;
+    typedef MetricBase<TElastix>                          Superclass2;
+    typedef SmartPointer<Self>                            Pointer;
+    typedef SmartPointer<const Self>                      ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -128,18 +128,18 @@ using namespace itk;
       MovingImageType::ImageDimension );
     
     /** Typedef's inherited from Elastix. */
-    typedef typename Superclass2::ElastixType								ElastixType;
-    typedef typename Superclass2::ElastixPointer						ElastixPointer;
-    typedef typename Superclass2::ConfigurationType					ConfigurationType;
-    typedef typename Superclass2::ConfigurationPointer			ConfigurationPointer;
-    typedef typename Superclass2::RegistrationType					RegistrationType;
-    typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
-    typedef typename Superclass2::ITKBaseType								ITKBaseType;
+    typedef typename Superclass2::ElastixType               ElastixType;
+    typedef typename Superclass2::ElastixPointer            ElastixPointer;
+    typedef typename Superclass2::ConfigurationType         ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType          RegistrationType;
+    typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
+    typedef typename Superclass2::ITKBaseType               ITKBaseType;
       
     /** Typedef for timer. */
-    typedef tmr::Timer					TimerType;
+    typedef tmr::Timer          TimerType;
     /** Typedef for timer. */
-    typedef TimerType::Pointer	TimerPointer;
+    typedef TimerType::Pointer  TimerPointer;
   
     /** Sets up a timer to measure the initialisation time and
      * calls the Superclass' implementation.
@@ -171,7 +171,7 @@ using namespace itk;
     /** The private constructor. */
     AdvancedKappaStatisticMetric( const Self& );// purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );							// purposely not implemented
+    void operator=( const Self& );              // purposely not implemented
     
   }; // end class AdvancedKappaStatisticMetric
 

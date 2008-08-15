@@ -42,28 +42,28 @@ using namespace itk;
    * \note It considers line search iterations as elastix iterations.
    *
    * \parameter Optimizer: Select this optimizer as follows:\n
-   *		<tt>(Optimizer "ConjugateGradientFRPR")</tt>\n
+   *    <tt>(Optimizer "ConjugateGradientFRPR")</tt>\n
    * \parameter MaximumNumberOfIterations: The maximum number of iterations in each resolution. \n
-   *		example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
+   *    example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
    *    Default value: 100.\n
    * \parameter MaximumNumberOfLineSearchIterations: The maximum number of iterations in each resolution. \n
-   *		example: <tt>(MaximumNumberOfIterations 10 10 5)</tt> \n
+   *    example: <tt>(MaximumNumberOfIterations 10 10 5)</tt> \n
    *    Default value: 10.\n
    * \parameter StepLength: Set the length of the initial step tried by the line seach,
    *    used to bracket the minimum.\n
-   *		example: <tt>(StepLength 2.0 1.0 0.5)</tt> \n
+   *    example: <tt>(StepLength 2.0 1.0 0.5)</tt> \n
    *    Default value: 1.0.\n
    * \parameter ValueTolerance: Convergence is declared if:
    *    \f[ 2.0 * | f_2 - f_1 | \le  ValueTolerance * ( | f_1 | + | f_2 | ) \f]
-   *		example: <tt>(ValueTolerance 0.001 0.00001 0.000001)</tt> \n
-   *  	Default value: 0.00001.\n
+   *    example: <tt>(ValueTolerance 0.001 0.00001 0.000001)</tt> \n
+   *    Default value: 0.00001.\n
    * \parameter LineSearchStepTolerance: Convergence of the line search is declared if:
-   *		\f[ | x - x_m | \le tol * |x| - ( b - a ) / 2, \f]
+   *    \f[ | x - x_m | \le tol * |x| - ( b - a ) / 2, \f]
    *    where:\n
    *    \f$x\f$ = current mininum of the gain\n
    *    \f$a, b\f$ = current brackets around the minimum\n
    *    \f$x_m = (a+b)/2 \f$\n
-   *		example: <tt>(LineSearchStepTolerance 0.001 0.00001 0.000001)</tt> \n
+   *    example: <tt>(LineSearchStepTolerance 0.001 0.00001 0.000001)</tt> \n
    *    Default value: 0.00001.
    *
    * \ingroup Optimizers
@@ -79,11 +79,11 @@ using namespace itk;
   public:
 
     /** Standard ITK.*/
-    typedef ConjugateGradientFRPR						  	Self;
-    typedef FRPROptimizer									  		Superclass1;
-    typedef OptimizerBase<TElastix>							Superclass2;
-    typedef SmartPointer<Self>									Pointer;
-    typedef SmartPointer<const Self>						ConstPointer;
+    typedef ConjugateGradientFRPR               Self;
+    typedef FRPROptimizer                       Superclass1;
+    typedef OptimizerBase<TElastix>             Superclass2;
+    typedef SmartPointer<Self>                  Pointer;
+    typedef SmartPointer<const Self>            ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -95,21 +95,21 @@ using namespace itk;
     elxClassNameMacro( "ConjugateGradientFRPR" );
 
     /** Typedef's inherited from Superclass1.*/
-    typedef Superclass1::CostFunctionType								    CostFunctionType;
-    typedef Superclass1::CostFunctionPointer						    CostFunctionPointer;
-    //typedef Superclass1::StopConditionType							    StopConditionType; not implemented in this itkOptimizer
-    typedef typename Superclass1::ParametersType				    ParametersType;
+    typedef Superclass1::CostFunctionType                   CostFunctionType;
+    typedef Superclass1::CostFunctionPointer                CostFunctionPointer;
+    //typedef Superclass1::StopConditionType                  StopConditionType; not implemented in this itkOptimizer
+    typedef typename Superclass1::ParametersType            ParametersType;
     //not declared in Superclass, although it should be.
     typedef SingleValuedNonLinearOptimizer::DerivativeType  DerivativeType;
 
     /** Typedef's inherited from Elastix.*/
-    typedef typename Superclass2::ElastixType						ElastixType;
-    typedef typename Superclass2::ElastixPointer				ElastixPointer;
-    typedef typename Superclass2::ConfigurationType			ConfigurationType;
-    typedef typename Superclass2::ConfigurationPointer	ConfigurationPointer;
-    typedef typename Superclass2::RegistrationType			RegistrationType;
-    typedef typename Superclass2::RegistrationPointer		RegistrationPointer;
-    typedef typename Superclass2::ITKBaseType						ITKBaseType;
+    typedef typename Superclass2::ElastixType           ElastixType;
+    typedef typename Superclass2::ElastixPointer        ElastixPointer;
+    typedef typename Superclass2::ConfigurationType     ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer  ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType      RegistrationType;
+    typedef typename Superclass2::RegistrationPointer   RegistrationPointer;
+    typedef typename Superclass2::ITKBaseType           ITKBaseType;
     
     /** Methods to set parameters and print output at different stages
      * in the registration process.*/
@@ -117,7 +117,7 @@ using namespace itk;
     virtual void BeforeEachResolution(void);
     virtual void AfterEachResolution(void);
     virtual void AfterEachIteration(void);
-    virtual void AfterRegistration(void);		
+    virtual void AfterRegistration(void);   
     
     /** Override the SetInitialPosition.*/
     virtual void SetInitialPosition( const ParametersType & param );
@@ -142,13 +142,13 @@ using namespace itk;
       virtual ~ConjugateGradientFRPR() {};
 
       /** To store the latest computed derivative's magnitude */
-      double					m_CurrentDerivativeMagnitude ;
+      double          m_CurrentDerivativeMagnitude ;
 
       /** Variable to store the line search direction magnitude */
-      double 					m_CurrentSearchDirectionMagnitude;
+      double          m_CurrentSearchDirectionMagnitude;
 
       /** the current gain */
-      double					m_CurrentStepLength;
+      double          m_CurrentStepLength;
       
       /** Set if the optimizer is currently bracketing the minimum, or is 
        * optimizing along a line */
@@ -201,8 +201,8 @@ using namespace itk;
             
   private:
 
-      ConjugateGradientFRPR( const Self& );	// purposely not implemented
-      void operator=( const Self& );							// purposely not implemented
+      ConjugateGradientFRPR( const Self& ); // purposely not implemented
+      void operator=( const Self& );              // purposely not implemented
 
       bool m_LineOptimizing;
       bool m_LineBracketing;

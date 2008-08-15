@@ -596,7 +596,7 @@ namespace itk
         ++derivPtr;
         ++imjac;       
       }
-    } 
+    }
     else
     {
       /** Loop only over the non-zero Jacobians. */

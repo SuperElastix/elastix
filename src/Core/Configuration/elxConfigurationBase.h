@@ -38,8 +38,8 @@ namespace elastix
   public:
 
     /** Standard.*/
-    typedef ConfigurationBase		Self;
-    typedef BaseComponent				Superclass;
+    typedef ConfigurationBase   Self;
+    typedef BaseComponent       Superclass;
 
   protected:
 
@@ -48,8 +48,8 @@ namespace elastix
 
   private:
 
-    ConfigurationBase( const Self& );	// purposely not implemented
-    void operator=( const Self& );		// purposely not implemented
+    ConfigurationBase( const Self& ); // purposely not implemented
+    void operator=( const Self& );    // purposely not implemented
 
   }; // end class ConfigurationBase
 

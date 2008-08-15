@@ -34,14 +34,14 @@ using namespace itk;
    *
    * The parameters used in this class are:
    * \parameter NewSamplesEveryIteration: if this flag is set to "true" some
-   *		optimizers ask the metric to select a new set of spatial samples in
-   *		every iteration. This, if used in combination with the correct optimizer (such as the
-   *		StandardGradientDescent), and ImageSampler (Random, RandomCoordinate, or RandomSparseMask),
+   *    optimizers ask the metric to select a new set of spatial samples in
+   *    every iteration. This, if used in combination with the correct optimizer (such as the
+   *    StandardGradientDescent), and ImageSampler (Random, RandomCoordinate, or RandomSparseMask),
    *    allows for a very low number of spatial samples (around 2000), even with large images
    *    and transforms with a large number of parameters.\n
-   *		Choose one from {"true", "false"} for every resolution.\n
-   *		example: <tt>(NewSamplesEveryIteration "true" "true" "true")</tt> \n
-   *		Default is "false" for every resolution.\n
+   *    Choose one from {"true", "false"} for every resolution.\n
+   *    example: <tt>(NewSamplesEveryIteration "true" "true" "true")</tt> \n
+   *    Default is "false" for every resolution.\n
    *
    * \ingroup Optimizers
    * \ingroup ComponentBaseClasses
@@ -53,25 +53,25 @@ using namespace itk;
   public:
 
     /** Standard ITK-stuff. */
-    typedef OptimizerBase								Self;
-    typedef BaseComponentSE<TElastix>		Superclass;
+    typedef OptimizerBase               Self;
+    typedef BaseComponentSE<TElastix>   Superclass;
 
     /** Run-time type information (and related methods). */
     itkTypeMacro( OptimizerBase, BaseComponentSE );
 
     /** Typedefs inherited from Elastix. */
-    typedef typename Superclass::ElastixType						ElastixType;
-    typedef typename Superclass::ElastixPointer					ElastixPointer;
-    typedef typename Superclass::ConfigurationType			ConfigurationType;
-    typedef typename Superclass::ConfigurationPointer		ConfigurationPointer;
-    typedef typename Superclass::RegistrationType				RegistrationType;
-    typedef typename Superclass::RegistrationPointer		RegistrationPointer;
+    typedef typename Superclass::ElastixType            ElastixType;
+    typedef typename Superclass::ElastixPointer         ElastixPointer;
+    typedef typename Superclass::ConfigurationType      ConfigurationType;
+    typedef typename Superclass::ConfigurationPointer   ConfigurationPointer;
+    typedef typename Superclass::RegistrationType       RegistrationType;
+    typedef typename Superclass::RegistrationPointer    RegistrationPointer;
 
     /** ITKBaseType. */
-    typedef itk::Optimizer	ITKBaseType;
+    typedef itk::Optimizer  ITKBaseType;
 
     /** Typedef needed for the SetCurrentPositionPublic function. */
-    typedef typename ITKBaseType::ParametersType				ParametersType;
+    typedef typename ITKBaseType::ParametersType        ParametersType;
 
     /** Cast to ITKBaseType. */
     virtual ITKBaseType * GetAsITKBaseType(void)
@@ -117,9 +117,9 @@ using namespace itk;
   private:
 
     /** The private constructor. */
-    OptimizerBase( const Self& );		// purposely not implemented
+    OptimizerBase( const Self& );   // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );	// purposely not implemented
+    void operator=( const Self& );  // purposely not implemented
 
     /** Member variable to store the user preference for using new
      * samples each iteration.

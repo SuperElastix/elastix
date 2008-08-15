@@ -122,7 +122,7 @@ namespace itk
     }
 
     /** Get a handle to the B-spline coefficient images. */
-    std::vector< CoefficientImagePointer >	inputImages( ImageDimension );
+    std::vector< CoefficientImagePointer >  inputImages( ImageDimension );
     for ( unsigned int i = 0; i < ImageDimension; i++ )
     {
       inputImages[ i ] = this->m_BSplineTransform->GetCoefficientImage()[ i ];
@@ -540,7 +540,7 @@ namespace itk
     }
 
     /** Get a handle to the B-spline coefficient images. */
-    std::vector< CoefficientImagePointer >	inputImages( ImageDimension );
+    std::vector< CoefficientImagePointer >  inputImages( ImageDimension );
     for ( unsigned int i = 0; i < ImageDimension; i++ )
     {
       inputImages[ i ] = this->m_BSplineTransform->GetCoefficientImage()[ i ];
@@ -1219,9 +1219,9 @@ namespace itk
     }
 
     /** Create neighborhood iterators over the subparts. */
-    std::vector< std::vector< NeighborhoodIteratorType > >	nitOCp( ImageDimension );
-    std::vector< std::vector< NeighborhoodIteratorType > >	nitPCp( ImageDimension );
-    std::vector< std::vector< NeighborhoodIteratorType > >	nitLCp( ImageDimension );
+    std::vector< std::vector< NeighborhoodIteratorType > >  nitOCp( ImageDimension );
+    std::vector< std::vector< NeighborhoodIteratorType > >  nitPCp( ImageDimension );
+    std::vector< std::vector< NeighborhoodIteratorType > >  nitLCp( ImageDimension );
     RadiusType radius;
     radius.Fill( 1 );
     for ( unsigned int i = 0; i < ImageDimension; i++ )
@@ -1314,17 +1314,17 @@ namespace itk
           for ( unsigned int k = 0; k < neighborhoodSize; ++k )
           {
             /** Calculation of the inner product. */
-            tmp[ i ] += Operator_A.GetElement( k ) *		// FA *
-              nitOCp[ i ][ 0 ].GetPixel( k ) *					// subpart[ i ][ 0 ]
-              nit_RCI.GetPixel( k );										// c(k)
-            tmp[ i ] += Operator_B.GetElement( k ) *		// FB *
-              nitOCp[ i ][ 1 ].GetPixel( k ) *					// subpart[ i ][ 1 ]
-              nit_RCI.GetPixel( k );										// c(k)
+            tmp[ i ] += Operator_A.GetElement( k ) *    // FA *
+              nitOCp[ i ][ 0 ].GetPixel( k ) *          // subpart[ i ][ 0 ]
+              nit_RCI.GetPixel( k );                    // c(k)
+            tmp[ i ] += Operator_B.GetElement( k ) *    // FB *
+              nitOCp[ i ][ 1 ].GetPixel( k ) *          // subpart[ i ][ 1 ]
+              nit_RCI.GetPixel( k );                    // c(k)
             if ( ImageDimension == 3 )
             {
-              tmp[ i ] += Operator_C.GetElement( k ) *	// FC *
-                nitOCp[ i ][ 2 ].GetPixel( k ) *				// subpart[ i ][ 2 ]
-                nit_RCI.GetPixel( k );									// c(k)
+              tmp[ i ] += Operator_C.GetElement( k ) *  // FC *
+                nitOCp[ i ][ 2 ].GetPixel( k ) *        // subpart[ i ][ 2 ]
+                nit_RCI.GetPixel( k );                  // c(k)
             }
           } // end loop over neighborhood
 
@@ -1371,17 +1371,17 @@ namespace itk
           for ( unsigned int k = 0; k < neighborhoodSize; ++k )
           {
             /** Calculation of the inner product. */
-            tmp[ i ] += Operator_A.GetElement( k ) *		// FA *
-              nitPCp[ i ][ 0 ].GetPixel( k ) *					// subpart[ i ][ 0 ]
-              nit_RCI.GetPixel( k );										// c(k)
-            tmp[ i ] += Operator_B.GetElement( k ) *		// FB *
-              nitPCp[ i ][ 1 ].GetPixel( k ) *					// subpart[ i ][ 1 ]
-              nit_RCI.GetPixel( k );										// c(k)
+            tmp[ i ] += Operator_A.GetElement( k ) *    // FA *
+              nitPCp[ i ][ 0 ].GetPixel( k ) *          // subpart[ i ][ 0 ]
+              nit_RCI.GetPixel( k );                    // c(k)
+            tmp[ i ] += Operator_B.GetElement( k ) *    // FB *
+              nitPCp[ i ][ 1 ].GetPixel( k ) *          // subpart[ i ][ 1 ]
+              nit_RCI.GetPixel( k );                    // c(k)
             if ( ImageDimension == 3 )
             {
-              tmp[ i ] += Operator_C.GetElement( k ) *	// FC *
-                nitPCp[ i ][ 2 ].GetPixel( k ) *				// subpart[ i ][ 2 ]
-                nit_RCI.GetPixel( k );									// c(k)
+              tmp[ i ] += Operator_C.GetElement( k ) *  // FC *
+                nitPCp[ i ][ 2 ].GetPixel( k ) *        // subpart[ i ][ 2 ]
+                nit_RCI.GetPixel( k );                  // c(k)
             }
           } // end loop over neighborhood
 
@@ -1427,26 +1427,26 @@ namespace itk
           for ( unsigned int k = 0; k < neighborhoodSize; ++k )
           {
             /** Calculation of the inner product. */
-            tmp[ i ] += Operator_D.GetElement( k ) *		// FD *
-              nitLCp[ i ][ 0 ].GetPixel( k ) *					// subpart[ i ][ 0 ]
-              nit_RCI.GetPixel( k );										// c(k)
-            tmp[ i ] += Operator_E.GetElement( k ) *		// FE *
-              nitLCp[ i ][ 1 ].GetPixel( k ) *					// subpart[ i ][ 1 ]
-              nit_RCI.GetPixel( k );										// c(k)
-            tmp[ i ] += Operator_G.GetElement( k ) *		// FG *
-              nitLCp[ i ][ 2 ].GetPixel( k ) *					// subpart[ i ][ 1 ]
-              nit_RCI.GetPixel( k );										// c(k)
+            tmp[ i ] += Operator_D.GetElement( k ) *    // FD *
+              nitLCp[ i ][ 0 ].GetPixel( k ) *          // subpart[ i ][ 0 ]
+              nit_RCI.GetPixel( k );                    // c(k)
+            tmp[ i ] += Operator_E.GetElement( k ) *    // FE *
+              nitLCp[ i ][ 1 ].GetPixel( k ) *          // subpart[ i ][ 1 ]
+              nit_RCI.GetPixel( k );                    // c(k)
+            tmp[ i ] += Operator_G.GetElement( k ) *    // FG *
+              nitLCp[ i ][ 2 ].GetPixel( k ) *          // subpart[ i ][ 1 ]
+              nit_RCI.GetPixel( k );                    // c(k)
             if ( ImageDimension == 3 )
             {
-              tmp[ i ] += Operator_F.GetElement( k ) *	// FF *
-                nitLCp[ i ][ 3 ].GetPixel( k ) *				// subpart[ i ][ 1 ]
-                nit_RCI.GetPixel( k );									// c(k)
-              tmp[ i ] += Operator_H.GetElement( k ) *	// FH *
-                nitLCp[ i ][ 4 ].GetPixel( k ) *				// subpart[ i ][ 1 ]
-                nit_RCI.GetPixel( k );									// c(k)
-              tmp[ i ] += Operator_I.GetElement( k ) *	// FI *
-                nitLCp[ i ][ 5 ].GetPixel( k ) *				// subpart[ i ][ 1 ]
-                nit_RCI.GetPixel( k );									// c(k)
+              tmp[ i ] += Operator_F.GetElement( k ) *  // FF *
+                nitLCp[ i ][ 3 ].GetPixel( k ) *        // subpart[ i ][ 1 ]
+                nit_RCI.GetPixel( k );                  // c(k)
+              tmp[ i ] += Operator_H.GetElement( k ) *  // FH *
+                nitLCp[ i ][ 4 ].GetPixel( k ) *        // subpart[ i ][ 1 ]
+                nit_RCI.GetPixel( k );                  // c(k)
+              tmp[ i ] += Operator_I.GetElement( k ) *  // FI *
+                nitLCp[ i ][ 5 ].GetPixel( k ) *        // subpart[ i ][ 1 ]
+                nit_RCI.GetPixel( k );                  // c(k)
             }
           } // end loop over neighborhood
 
@@ -1573,7 +1573,7 @@ namespace itk
     }
 
     /** Get a handle to the B-spline coefficient images. */
-    std::vector< CoefficientImagePointer >	inputImages( ImageDimension );
+    std::vector< CoefficientImagePointer >  inputImages( ImageDimension );
     for ( unsigned int i = 0; i < ImageDimension; i++ )
     {
       inputImages[ i ] = this->m_BSplineTransform->GetCoefficientImage()[ i ];
@@ -2407,9 +2407,9 @@ namespace itk
     }
 
     /** Create neighborhood iterators over the subparts. */
-    std::vector< std::vector< NeighborhoodIteratorType > >	nitOCp( ImageDimension );
-    std::vector< std::vector< NeighborhoodIteratorType > >	nitPCp( ImageDimension );
-    std::vector< std::vector< NeighborhoodIteratorType > >	nitLCp( ImageDimension );
+    std::vector< std::vector< NeighborhoodIteratorType > >  nitOCp( ImageDimension );
+    std::vector< std::vector< NeighborhoodIteratorType > >  nitPCp( ImageDimension );
+    std::vector< std::vector< NeighborhoodIteratorType > >  nitLCp( ImageDimension );
     RadiusType radius;
     radius.Fill( 1 );
     for ( unsigned int i = 0; i < ImageDimension; i++ )
@@ -2501,17 +2501,17 @@ namespace itk
           for ( unsigned int k = 0; k < neighborhoodSize; ++k )
           {
             /** Calculation of the inner product. */
-            tmp[ i ] += Operator_A.GetElement( k ) *		// FA *
-              nitOCp[ i ][ 0 ].GetPixel( k ) *					// subpart[ i ][ 0 ]
-              nit_RCI.GetPixel( k );										// c(k)
-            tmp[ i ] += Operator_B.GetElement( k ) *		// FB *
-              nitOCp[ i ][ 1 ].GetPixel( k ) *					// subpart[ i ][ 1 ]
-              nit_RCI.GetPixel( k );										// c(k)
+            tmp[ i ] += Operator_A.GetElement( k ) *    // FA *
+              nitOCp[ i ][ 0 ].GetPixel( k ) *          // subpart[ i ][ 0 ]
+              nit_RCI.GetPixel( k );                    // c(k)
+            tmp[ i ] += Operator_B.GetElement( k ) *    // FB *
+              nitOCp[ i ][ 1 ].GetPixel( k ) *          // subpart[ i ][ 1 ]
+              nit_RCI.GetPixel( k );                    // c(k)
             if ( ImageDimension == 3 )
             {
-              tmp[ i ] += Operator_C.GetElement( k ) *	// FC *
-                nitOCp[ i ][ 2 ].GetPixel( k ) *				// subpart[ i ][ 2 ]
-                nit_RCI.GetPixel( k );									// c(k)
+              tmp[ i ] += Operator_C.GetElement( k ) *  // FC *
+                nitOCp[ i ][ 2 ].GetPixel( k ) *        // subpart[ i ][ 2 ]
+                nit_RCI.GetPixel( k );                  // c(k)
             }
           } // end loop over neighborhood
 
@@ -2554,17 +2554,17 @@ namespace itk
           for ( unsigned int k = 0; k < neighborhoodSize; ++k )
           {
             /** Calculation of the inner product. */
-            tmp[ i ] += Operator_A.GetElement( k ) *		// FA *
-              nitPCp[ i ][ 0 ].GetPixel( k ) *					// subpart[ i ][ 0 ]
-              nit_RCI.GetPixel( k );										// c(k)
-            tmp[ i ] += Operator_B.GetElement( k ) *		// FB *
-              nitPCp[ i ][ 1 ].GetPixel( k ) *					// subpart[ i ][ 1 ]
-              nit_RCI.GetPixel( k );										// c(k)
+            tmp[ i ] += Operator_A.GetElement( k ) *    // FA *
+              nitPCp[ i ][ 0 ].GetPixel( k ) *          // subpart[ i ][ 0 ]
+              nit_RCI.GetPixel( k );                    // c(k)
+            tmp[ i ] += Operator_B.GetElement( k ) *    // FB *
+              nitPCp[ i ][ 1 ].GetPixel( k ) *          // subpart[ i ][ 1 ]
+              nit_RCI.GetPixel( k );                    // c(k)
             if ( ImageDimension == 3 )
             {
-              tmp[ i ] += Operator_C.GetElement( k ) *	// FC *
-                nitPCp[ i ][ 2 ].GetPixel( k ) *				// subpart[ i ][ 2 ]
-                nit_RCI.GetPixel( k );									// c(k)
+              tmp[ i ] += Operator_C.GetElement( k ) *  // FC *
+                nitPCp[ i ][ 2 ].GetPixel( k ) *        // subpart[ i ][ 2 ]
+                nit_RCI.GetPixel( k );                  // c(k)
             }
           } // end loop over neighborhood
 
@@ -2606,26 +2606,26 @@ namespace itk
           for ( unsigned int k = 0; k < neighborhoodSize; ++k )
           {
             /** Calculation of the inner product. */
-            tmp[ i ] += Operator_D.GetElement( k ) *		// FD *
-              nitLCp[ i ][ 0 ].GetPixel( k ) *					// subpart[ i ][ 0 ]
-              nit_RCI.GetPixel( k );										// c(k)
-            tmp[ i ] += Operator_E.GetElement( k ) *		// FE *
-              nitLCp[ i ][ 1 ].GetPixel( k ) *					// subpart[ i ][ 1 ]
-              nit_RCI.GetPixel( k );										// c(k)
-            tmp[ i ] += Operator_G.GetElement( k ) *		// FG *
-              nitLCp[ i ][ 2 ].GetPixel( k ) *					// subpart[ i ][ 1 ]
-              nit_RCI.GetPixel( k );										// c(k)
+            tmp[ i ] += Operator_D.GetElement( k ) *    // FD *
+              nitLCp[ i ][ 0 ].GetPixel( k ) *          // subpart[ i ][ 0 ]
+              nit_RCI.GetPixel( k );                    // c(k)
+            tmp[ i ] += Operator_E.GetElement( k ) *    // FE *
+              nitLCp[ i ][ 1 ].GetPixel( k ) *          // subpart[ i ][ 1 ]
+              nit_RCI.GetPixel( k );                    // c(k)
+            tmp[ i ] += Operator_G.GetElement( k ) *    // FG *
+              nitLCp[ i ][ 2 ].GetPixel( k ) *          // subpart[ i ][ 1 ]
+              nit_RCI.GetPixel( k );                    // c(k)
             if ( ImageDimension == 3 )
             {
-              tmp[ i ] += Operator_F.GetElement( k ) *	// FF *
-                nitLCp[ i ][ 3 ].GetPixel( k ) *				// subpart[ i ][ 1 ]
-                nit_RCI.GetPixel( k );									// c(k)
-              tmp[ i ] += Operator_H.GetElement( k ) *	// FH *
-                nitLCp[ i ][ 4 ].GetPixel( k ) *				// subpart[ i ][ 1 ]
-                nit_RCI.GetPixel( k );									// c(k)
-              tmp[ i ] += Operator_I.GetElement( k ) *	// FI *
-                nitLCp[ i ][ 5 ].GetPixel( k ) *				// subpart[ i ][ 1 ]
-                nit_RCI.GetPixel( k );									// c(k)
+              tmp[ i ] += Operator_F.GetElement( k ) *  // FF *
+                nitLCp[ i ][ 3 ].GetPixel( k ) *        // subpart[ i ][ 1 ]
+                nit_RCI.GetPixel( k );                  // c(k)
+              tmp[ i ] += Operator_H.GetElement( k ) *  // FH *
+                nitLCp[ i ][ 4 ].GetPixel( k ) *        // subpart[ i ][ 1 ]
+                nit_RCI.GetPixel( k );                  // c(k)
+              tmp[ i ] += Operator_I.GetElement( k ) *  // FI *
+                nitLCp[ i ][ 5 ].GetPixel( k ) *        // subpart[ i ][ 1 ]
+                nit_RCI.GetPixel( k );                  // c(k)
             }
           } // end loop over neighborhood
 
@@ -3002,48 +3002,48 @@ namespace itk
     {
       if ( ImageDimension == 2 )
       {
-        F[ 0 ] = 1.0 / 12.0 / s[ 0 ]; F[ 1 ] = 0.0;	F[ 2 ] = -1.0 / 12.0 / s[ 0 ];
-        F[ 3 ] = 1.0 /  3.0 / s[ 0 ]; F[ 4 ] = 0.0;	F[ 5 ] = -1.0 / 3.0 / s[ 0 ];
-        F[ 6 ] = 1.0 / 12.0 / s[ 0 ]; F[ 7 ] = 0.0;	F[ 8 ] = -1.0 / 12.0 / s[ 0 ];
+        F[ 0 ] = 1.0 / 12.0 / s[ 0 ]; F[ 1 ] = 0.0; F[ 2 ] = -1.0 / 12.0 / s[ 0 ];
+        F[ 3 ] = 1.0 /  3.0 / s[ 0 ]; F[ 4 ] = 0.0; F[ 5 ] = -1.0 / 3.0 / s[ 0 ];
+        F[ 6 ] = 1.0 / 12.0 / s[ 0 ]; F[ 7 ] = 0.0; F[ 8 ] = -1.0 / 12.0 / s[ 0 ];
       }
       else if ( ImageDimension == 3 )
       {
         /** Fill the operator. First slice. */
-        F[ 0 ] = 1.0 / 72.0 / s[ 0 ];	F[ 1 ] = 0.0;	F[ 2 ] = -1.0 / 72.0 / s[ 0 ];
-        F[ 3 ] = 1.0 / 18.0 / s[ 0 ];	F[ 4 ] = 0.0;	F[ 5 ] = -1.0 / 18.0 / s[ 0 ];
-        F[ 6 ] = 1.0 / 72.0 / s[ 0 ];	F[ 7 ] = 0.0;	F[ 8 ] = -1.0 / 72.0 / s[ 0 ];
+        F[ 0 ] = 1.0 / 72.0 / s[ 0 ]; F[ 1 ] = 0.0; F[ 2 ] = -1.0 / 72.0 / s[ 0 ];
+        F[ 3 ] = 1.0 / 18.0 / s[ 0 ]; F[ 4 ] = 0.0; F[ 5 ] = -1.0 / 18.0 / s[ 0 ];
+        F[ 6 ] = 1.0 / 72.0 / s[ 0 ]; F[ 7 ] = 0.0; F[ 8 ] = -1.0 / 72.0 / s[ 0 ];
         /** Second slice. */
-        F[  9 ] = 1.0 / 18.0 / s[ 0 ];	F[ 10 ] = 0.0; F[ 11 ] = -1.0 / 18.0 / s[ 0 ];
-        F[ 12 ] = 2.0 /  9.0 / s[ 0 ];	F[ 13 ] = 0.0; F[ 14 ] = -2.0 /  9.0 / s[ 0 ];
-        F[ 15 ] = 1.0 / 18.0 / s[ 0 ];	F[ 16 ] = 0.0; F[ 17 ] = -1.0 / 18.0 / s[ 0 ];
+        F[  9 ] = 1.0 / 18.0 / s[ 0 ];  F[ 10 ] = 0.0; F[ 11 ] = -1.0 / 18.0 / s[ 0 ];
+        F[ 12 ] = 2.0 /  9.0 / s[ 0 ];  F[ 13 ] = 0.0; F[ 14 ] = -2.0 /  9.0 / s[ 0 ];
+        F[ 15 ] = 1.0 / 18.0 / s[ 0 ];  F[ 16 ] = 0.0; F[ 17 ] = -1.0 / 18.0 / s[ 0 ];
         /** Third slice. */
-        F[ 18 ] = 1.0 / 72.0 / s[ 0 ];	F[ 19 ] = 0.0;	F[ 20 ] = -1.0 / 72.0 / s[ 0 ];
-        F[ 21 ] = 1.0 / 18.0 / s[ 0 ];	F[ 22 ] = 0.0;	F[ 23 ] = -1.0 / 18.0 / s[ 0 ];
-        F[ 24 ] = 1.0 / 72.0 / s[ 0 ];	F[ 25 ] = 0.0;	F[ 26 ] = -1.0 / 72.0 / s[ 0 ];
+        F[ 18 ] = 1.0 / 72.0 / s[ 0 ];  F[ 19 ] = 0.0;  F[ 20 ] = -1.0 / 72.0 / s[ 0 ];
+        F[ 21 ] = 1.0 / 18.0 / s[ 0 ];  F[ 22 ] = 0.0;  F[ 23 ] = -1.0 / 18.0 / s[ 0 ];
+        F[ 24 ] = 1.0 / 72.0 / s[ 0 ];  F[ 25 ] = 0.0;  F[ 26 ] = -1.0 / 72.0 / s[ 0 ];
       }
     }
     else if ( WhichF == "FB" )
     {
       if ( ImageDimension == 2 )
       {
-        F[ 0 ] =  1.0 / 12.0 / s[ 1 ];	F[ 1 ] =  1.0 / 3.0 / s[ 1 ];		F[ 2 ] =  1.0 / 12.0 / s[ 1 ];
-        F[ 3 ] =  0.0;									F[ 4 ] =  0.0;									F[ 5 ] =  0.0;
-        F[ 6 ] = -1.0 / 12.0 / s[ 1 ];	F[ 7 ] = -1.0 / 3.0 / s[ 1 ];		F[ 8 ] = -1.0 / 12.0 / s[ 1 ];
+        F[ 0 ] =  1.0 / 12.0 / s[ 1 ];  F[ 1 ] =  1.0 / 3.0 / s[ 1 ];   F[ 2 ] =  1.0 / 12.0 / s[ 1 ];
+        F[ 3 ] =  0.0;                  F[ 4 ] =  0.0;                  F[ 5 ] =  0.0;
+        F[ 6 ] = -1.0 / 12.0 / s[ 1 ];  F[ 7 ] = -1.0 / 3.0 / s[ 1 ];   F[ 8 ] = -1.0 / 12.0 / s[ 1 ];
       }
       else if ( ImageDimension == 3 )
       {
         /** Fill the operator. First slice. */
-        F[ 0 ] =  1.0 / 72.0 / s[ 1 ];	F[ 1 ] =  1.0 / 18.0 / s[ 1 ];	F[ 2 ] =  1.0 / 72.0 / s[ 1 ];
-        F[ 3 ] =  0.0;									F[ 4 ] =  0.0;									F[ 5 ] =  0.0;
-        F[ 6 ] = -1.0 / 72.0 / s[ 1 ];	F[ 7 ] = -1.0 / 18.0 / s[ 1 ];	F[ 8 ] = -1.0 / 72.0 / s[ 1 ];
+        F[ 0 ] =  1.0 / 72.0 / s[ 1 ];  F[ 1 ] =  1.0 / 18.0 / s[ 1 ];  F[ 2 ] =  1.0 / 72.0 / s[ 1 ];
+        F[ 3 ] =  0.0;                  F[ 4 ] =  0.0;                  F[ 5 ] =  0.0;
+        F[ 6 ] = -1.0 / 72.0 / s[ 1 ];  F[ 7 ] = -1.0 / 18.0 / s[ 1 ];  F[ 8 ] = -1.0 / 72.0 / s[ 1 ];
         /** Second slice. */
-        F[  9 ] =  1.0 / 18.0 / s[ 1 ];	F[ 10 ] =  2.0 / 9.0 / s[ 1 ];	F[ 11 ] =  1.0 / 18.0 / s[ 1 ];
-        F[ 12 ] =  0.0;									F[ 13 ] =  0.0;									F[ 14 ] =  0.0;
-        F[ 15 ] = -1.0 / 18.0 / s[ 1 ];	F[ 16 ] = -2.0 / 9.0 / s[ 1 ];	F[ 17 ] = -1.0 / 18.0 / s[ 1 ];
+        F[  9 ] =  1.0 / 18.0 / s[ 1 ]; F[ 10 ] =  2.0 / 9.0 / s[ 1 ];  F[ 11 ] =  1.0 / 18.0 / s[ 1 ];
+        F[ 12 ] =  0.0;                 F[ 13 ] =  0.0;                 F[ 14 ] =  0.0;
+        F[ 15 ] = -1.0 / 18.0 / s[ 1 ]; F[ 16 ] = -2.0 / 9.0 / s[ 1 ];  F[ 17 ] = -1.0 / 18.0 / s[ 1 ];
         /** Third slice. */
-        F[ 18 ] =  1.0 / 72.0 / s[ 1 ];	F[ 19 ] =  1.0 / 18.0 / s[ 1 ];	F[ 20 ] =  1.0 / 72.0 / s[ 1 ];
-        F[ 21 ] =  0.0;									F[ 22 ] =  0.0;									F[ 23 ] =  0.0;
-        F[ 24 ] = -1.0 / 72.0 / s[ 1 ];	F[ 25 ] = -1.0 / 18.0 / s[ 1 ];	F[ 26 ] = -1.0 / 72.0 / s[ 1 ];
+        F[ 18 ] =  1.0 / 72.0 / s[ 1 ]; F[ 19 ] =  1.0 / 18.0 / s[ 1 ]; F[ 20 ] =  1.0 / 72.0 / s[ 1 ];
+        F[ 21 ] =  0.0;                 F[ 22 ] =  0.0;                 F[ 23 ] =  0.0;
+        F[ 24 ] = -1.0 / 72.0 / s[ 1 ]; F[ 25 ] = -1.0 / 18.0 / s[ 1 ]; F[ 26 ] = -1.0 / 72.0 / s[ 1 ];
       }
     }
     else if ( WhichF == "FC" )
@@ -3056,17 +3056,17 @@ namespace itk
       else if ( ImageDimension == 3 )
       {
         /** Fill the operator. First slice. */
-        F[ 0 ] = 1.0 / 72.0 / s[ 2 ];	F[ 1 ] = 1.0 / 18.0 / s[ 2 ];	F[ 2 ] = 1.0 / 72.0 / s[ 2 ];
-        F[ 3 ] = 1.0 / 18.0 / s[ 2 ];	F[ 4 ] = 2.0 /  9.0 / s[ 2 ];	F[ 5 ] = 1.0 / 18.0 / s[ 2 ];
-        F[ 6 ] = 1.0 / 72.0 / s[ 2 ];	F[ 7 ] = 1.0 / 18.0 / s[ 2 ];	F[ 8 ] = 1.0 / 72.0 / s[ 2 ];
+        F[ 0 ] = 1.0 / 72.0 / s[ 2 ]; F[ 1 ] = 1.0 / 18.0 / s[ 2 ]; F[ 2 ] = 1.0 / 72.0 / s[ 2 ];
+        F[ 3 ] = 1.0 / 18.0 / s[ 2 ]; F[ 4 ] = 2.0 /  9.0 / s[ 2 ]; F[ 5 ] = 1.0 / 18.0 / s[ 2 ];
+        F[ 6 ] = 1.0 / 72.0 / s[ 2 ]; F[ 7 ] = 1.0 / 18.0 / s[ 2 ]; F[ 8 ] = 1.0 / 72.0 / s[ 2 ];
         /** Second slice. */
         F[  9 ] = 0.0; F[ 10 ] = 0.0; F[ 11 ] = 0.0;
         F[ 12 ] = 0.0; F[ 13 ] = 0.0; F[ 14 ] = 0.0;
         F[ 15 ] = 0.0; F[ 16 ] = 0.0; F[ 17 ] = 0.0;
         /** Third slice. */
-        F[ 18 ] = -1.0 / 72.0 / s[ 2 ]; F[ 19 ] = -1.0 / 18.0 / s[ 2 ];	F[ 20 ] = -1.0 / 72.0 / s[ 2 ];
-        F[ 21 ] = -1.0 / 18.0 / s[ 2 ]; F[ 22 ] = -2.0 /  9.0 / s[ 2 ];	F[ 23 ] = -1.0 / 18.0 / s[ 2 ];
-        F[ 24 ] = -1.0 / 72.0 / s[ 2 ]; F[ 25 ] = -1.0 / 18.0 / s[ 2 ];	F[ 26 ] = -1.0 / 72.0 / s[ 2 ];
+        F[ 18 ] = -1.0 / 72.0 / s[ 2 ]; F[ 19 ] = -1.0 / 18.0 / s[ 2 ]; F[ 20 ] = -1.0 / 72.0 / s[ 2 ];
+        F[ 21 ] = -1.0 / 18.0 / s[ 2 ]; F[ 22 ] = -2.0 /  9.0 / s[ 2 ]; F[ 23 ] = -1.0 / 18.0 / s[ 2 ];
+        F[ 24 ] = -1.0 / 72.0 / s[ 2 ]; F[ 25 ] = -1.0 / 18.0 / s[ 2 ]; F[ 26 ] = -1.0 / 72.0 / s[ 2 ];
       }
     }
     else if ( WhichF == "FD" )
@@ -3074,9 +3074,9 @@ namespace itk
       if ( ImageDimension == 2 )
       {
         double sp = s[ 0 ] * s[ 0 ];
-        F[ 0 ] = 1.0 / 12.0 / sp;		F[ 1 ] = -1.0 / 6.0 / sp;		F[ 2 ] = 1.0 / 12.0 / sp;
-        F[ 3 ] = 1.0 /  3.0 / sp;		F[ 4 ] = -2.0 / 3.0 / sp;		F[ 5 ] = 1.0 /  3.0 / sp;
-        F[ 6 ] = 1.0 / 12.0 / sp;		F[ 7 ] = -1.0 / 6.0 / sp;		F[ 8 ] = 1.0 / 12.0 / sp;
+        F[ 0 ] = 1.0 / 12.0 / sp;   F[ 1 ] = -1.0 / 6.0 / sp;   F[ 2 ] = 1.0 / 12.0 / sp;
+        F[ 3 ] = 1.0 /  3.0 / sp;   F[ 4 ] = -2.0 / 3.0 / sp;   F[ 5 ] = 1.0 /  3.0 / sp;
+        F[ 6 ] = 1.0 / 12.0 / sp;   F[ 7 ] = -1.0 / 6.0 / sp;   F[ 8 ] = 1.0 / 12.0 / sp;
       }
       else if ( ImageDimension == 3 )
       {
@@ -3100,25 +3100,25 @@ namespace itk
       if ( ImageDimension == 2 )
       {
         double sp = s[ 1 ] * s[ 1 ];
-        F[ 0 ] = 1.0 / 12.0 / sp;		F[ 1 ] = 1.0 / 3.0 / sp;		F[ 2 ] = 1.0 / 12.0 / sp;
-        F[ 3 ] = -1.0 / 6.0 / sp;		F[ 4 ] = -2.0 / 3.0 / sp;		F[ 5 ] = -1.0 / 6.0 / sp;
-        F[ 6 ] = 1.0 / 12.0 / sp;		F[ 7 ] = 1.0 / 3.0 / sp;		F[ 8 ] = 1.0 / 12.0 / sp;
+        F[ 0 ] = 1.0 / 12.0 / sp;   F[ 1 ] = 1.0 / 3.0 / sp;    F[ 2 ] = 1.0 / 12.0 / sp;
+        F[ 3 ] = -1.0 / 6.0 / sp;   F[ 4 ] = -2.0 / 3.0 / sp;   F[ 5 ] = -1.0 / 6.0 / sp;
+        F[ 6 ] = 1.0 / 12.0 / sp;   F[ 7 ] = 1.0 / 3.0 / sp;    F[ 8 ] = 1.0 / 12.0 / sp;
       }
       else if ( ImageDimension == 3 )
       {
         double sp = s[ 1 ] * s[ 1 ];
         /** Fill the operator. First slice. */
-        F[ 0 ] =  1.0 / 72.0 / sp;	F[ 1 ] =  1.0 / 18.0 / sp; F[ 2 ] =  1.0 / 72.0 / sp;
-        F[ 3 ] = -1.0 / 36.0 / sp;	F[ 4 ] = -1.0 /  9.0 / sp; F[ 5 ] = -1.0 / 36.0 / sp;
-        F[ 6 ] =  1.0 / 72.0 / sp;	F[ 7 ] =  1.0 / 18.0 / sp; F[ 8 ] =  1.0 / 72.0 / sp;
+        F[ 0 ] =  1.0 / 72.0 / sp;  F[ 1 ] =  1.0 / 18.0 / sp; F[ 2 ] =  1.0 / 72.0 / sp;
+        F[ 3 ] = -1.0 / 36.0 / sp;  F[ 4 ] = -1.0 /  9.0 / sp; F[ 5 ] = -1.0 / 36.0 / sp;
+        F[ 6 ] =  1.0 / 72.0 / sp;  F[ 7 ] =  1.0 / 18.0 / sp; F[ 8 ] =  1.0 / 72.0 / sp;
         /** Second slice. */
-        F[  9 ] =  1.0 / 18.0 / sp;	F[ 10 ] =  2.0 / 9.0 / sp; F[ 11 ] =  1.0 / 18.0 / sp;
-        F[ 12 ] = -1.0 /  9.0 / sp;	F[ 13 ] = -4.0 / 9.0 / sp; F[ 14 ] = -1.0 /  9.0 / sp;
-        F[ 15 ] =  1.0 / 18.0 / sp;	F[ 16 ] =  2.0 / 9.0 / sp; F[ 17 ] =  1.0 / 18.0 / sp;
+        F[  9 ] =  1.0 / 18.0 / sp; F[ 10 ] =  2.0 / 9.0 / sp; F[ 11 ] =  1.0 / 18.0 / sp;
+        F[ 12 ] = -1.0 /  9.0 / sp; F[ 13 ] = -4.0 / 9.0 / sp; F[ 14 ] = -1.0 /  9.0 / sp;
+        F[ 15 ] =  1.0 / 18.0 / sp; F[ 16 ] =  2.0 / 9.0 / sp; F[ 17 ] =  1.0 / 18.0 / sp;
         /** Third slice. */
-        F[ 18 ] =  1.0 / 72.0 / sp;	F[ 19 ] =  1.0 / 18.0 / sp;	F[ 20 ] =  1.0 / 72.0 / sp;
-        F[ 21 ] = -1.0 / 36.0 / sp;	F[ 22 ] = -1.0 /  9.0 / sp;	F[ 23 ] = -1.0 / 36.0 / sp;
-        F[ 24 ] =  1.0 / 72.0 / sp;	F[ 25 ] =  1.0 / 18.0 / sp;	F[ 26 ] =  1.0 / 72.0 / sp;
+        F[ 18 ] =  1.0 / 72.0 / sp; F[ 19 ] =  1.0 / 18.0 / sp; F[ 20 ] =  1.0 / 72.0 / sp;
+        F[ 21 ] = -1.0 / 36.0 / sp; F[ 22 ] = -1.0 /  9.0 / sp; F[ 23 ] = -1.0 / 36.0 / sp;
+        F[ 24 ] =  1.0 / 72.0 / sp; F[ 25 ] =  1.0 / 18.0 / sp; F[ 26 ] =  1.0 / 72.0 / sp;
       }
     }
     else if ( WhichF == "FF" )
@@ -3132,17 +3132,17 @@ namespace itk
       {
         double sp = s[ 2 ] * s[ 2 ];
         /** Fill the operator. First slice. */
-        F[ 0 ] = 1.0 / 72.0 / sp;	F[ 1 ] = 1.0 / 18.0 / sp;	F[ 2 ] = 1.0 / 72.0 / sp;
-        F[ 3 ] = 1.0 / 18.0 / sp;	F[ 4 ] = 2.0 /  9.0 / sp;	F[ 5 ] = 1.0 / 18.0 / sp;
-        F[ 6 ] = 1.0 / 72.0 / sp;	F[ 7 ] = 1.0 / 18.0 / sp;	F[ 8 ] = 1.0 / 72.0 / sp;
+        F[ 0 ] = 1.0 / 72.0 / sp; F[ 1 ] = 1.0 / 18.0 / sp; F[ 2 ] = 1.0 / 72.0 / sp;
+        F[ 3 ] = 1.0 / 18.0 / sp; F[ 4 ] = 2.0 /  9.0 / sp; F[ 5 ] = 1.0 / 18.0 / sp;
+        F[ 6 ] = 1.0 / 72.0 / sp; F[ 7 ] = 1.0 / 18.0 / sp; F[ 8 ] = 1.0 / 72.0 / sp;
         /** Second slice. */
-        F[  9 ] = -1.0 / 39.0 / sp; F[ 10 ] = -1.0 / 9.0 / sp;	F[ 11 ] = -1.0 / 36.0 / sp;
-        F[ 12 ] = -1.0 /  9.0 / sp; F[ 13 ] = -4.0 / 9.0 / sp;	F[ 14 ] = -1.0 /  9.0 / sp;
-        F[ 15 ] = -1.0 / 36.0 / sp; F[ 16 ] = -1.0 / 9.0 / sp;	F[ 17 ] = -1.0 / 36.0 / sp;
+        F[  9 ] = -1.0 / 39.0 / sp; F[ 10 ] = -1.0 / 9.0 / sp;  F[ 11 ] = -1.0 / 36.0 / sp;
+        F[ 12 ] = -1.0 /  9.0 / sp; F[ 13 ] = -4.0 / 9.0 / sp;  F[ 14 ] = -1.0 /  9.0 / sp;
+        F[ 15 ] = -1.0 / 36.0 / sp; F[ 16 ] = -1.0 / 9.0 / sp;  F[ 17 ] = -1.0 / 36.0 / sp;
         /** Third slice. */
-        F[ 18 ] = 1.0 / 72.0 / sp; F[ 19 ] = 1.0 / 18.0 / sp;	F[ 20 ] = 1.0 / 72.0 / sp;
-        F[ 21 ] = 1.0 / 18.0 / sp; F[ 22 ] = 2.0 /  9.0 / sp;	F[ 23 ] = 1.0 / 18.0 / sp;
-        F[ 24 ] = 1.0 / 72.0 / sp; F[ 25 ] = 1.0 / 18.0 / sp;	F[ 26 ] = 1.0 / 72.0 / sp;
+        F[ 18 ] = 1.0 / 72.0 / sp; F[ 19 ] = 1.0 / 18.0 / sp; F[ 20 ] = 1.0 / 72.0 / sp;
+        F[ 21 ] = 1.0 / 18.0 / sp; F[ 22 ] = 2.0 /  9.0 / sp; F[ 23 ] = 1.0 / 18.0 / sp;
+        F[ 24 ] = 1.0 / 72.0 / sp; F[ 25 ] = 1.0 / 18.0 / sp; F[ 26 ] = 1.0 / 72.0 / sp;
       }
     }
     else if ( WhichF == "FG" )
@@ -3150,25 +3150,25 @@ namespace itk
       if ( ImageDimension == 2 )
       {
         double sp = s[ 0 ] * s[ 1 ];
-        F[ 0 ] =  1.0 / 4.0 / sp;		F[ 1 ] = 0.0;		F[ 2 ] = -1.0 / 4.0 / sp;
-        F[ 3 ] =  0.0;							F[ 4 ] = 0.0;		F[ 5 ] =  0.0;
-        F[ 6 ] = -1.0 / 4.0 / sp;		F[ 7 ] = 0.0;		F[ 8 ] =  1.0 / 4.0 / sp;
+        F[ 0 ] =  1.0 / 4.0 / sp;   F[ 1 ] = 0.0;   F[ 2 ] = -1.0 / 4.0 / sp;
+        F[ 3 ] =  0.0;              F[ 4 ] = 0.0;   F[ 5 ] =  0.0;
+        F[ 6 ] = -1.0 / 4.0 / sp;   F[ 7 ] = 0.0;   F[ 8 ] =  1.0 / 4.0 / sp;
       }
       else if ( ImageDimension == 3 )
       {
         double sp = s[ 0 ] * s[ 1 ];
         /** Fill the operator. First slice. */
-        F[ 0 ] =  1.0 / 24.0 / sp;	F[ 1 ] = 0.0;		F[ 2 ] = -1.0 / 24.0 / sp;
-        F[ 3 ] =  0.0;							F[ 4 ] = 0.0;		F[ 5 ] =  0.0;
-        F[ 6 ] = -1.0 / 24.0 / sp;	F[ 7 ] = 0.0;		F[ 8 ] =  1.0 / 24.0 / sp;
+        F[ 0 ] =  1.0 / 24.0 / sp;  F[ 1 ] = 0.0;   F[ 2 ] = -1.0 / 24.0 / sp;
+        F[ 3 ] =  0.0;              F[ 4 ] = 0.0;   F[ 5 ] =  0.0;
+        F[ 6 ] = -1.0 / 24.0 / sp;  F[ 7 ] = 0.0;   F[ 8 ] =  1.0 / 24.0 / sp;
         /** Second slice. */
-        F[  9 ] =  1.0 / 6.0 / sp;	F[ 10 ] = 0.0;	F[ 11 ] = -1.0 / 6.0 / sp;
-        F[ 12 ] =  0.0;							F[ 13 ] = 0.0;	F[ 14 ] =  0.0;
-        F[ 15 ] = -1.0 / 6.0 / sp;	F[ 16 ] = 0.0;	F[ 17 ] =  1.0 / 6.0 / sp;
+        F[  9 ] =  1.0 / 6.0 / sp;  F[ 10 ] = 0.0;  F[ 11 ] = -1.0 / 6.0 / sp;
+        F[ 12 ] =  0.0;             F[ 13 ] = 0.0;  F[ 14 ] =  0.0;
+        F[ 15 ] = -1.0 / 6.0 / sp;  F[ 16 ] = 0.0;  F[ 17 ] =  1.0 / 6.0 / sp;
         /** Third slice. */
-        F[ 18 ] =  1.0 / 24.0 / sp;	F[ 19 ] = 0.0;	F[ 20 ] = -1.0 / 24.0 / sp;
-        F[ 21 ] =  0.0;							F[ 22 ] = 0.0;	F[ 23 ] =  0.0;
-        F[ 24 ] = -1.0 / 24.0 / sp;	F[ 25 ] = 0.0;	F[ 26 ] =  1.0 / 24.0 / sp;
+        F[ 18 ] =  1.0 / 24.0 / sp; F[ 19 ] = 0.0;  F[ 20 ] = -1.0 / 24.0 / sp;
+        F[ 21 ] =  0.0;             F[ 22 ] = 0.0;  F[ 23 ] =  0.0;
+        F[ 24 ] = -1.0 / 24.0 / sp; F[ 25 ] = 0.0;  F[ 26 ] =  1.0 / 24.0 / sp;
       }
     }
     else if ( WhichF == "FH" )
@@ -3182,17 +3182,17 @@ namespace itk
       {
         double sp = s[ 0 ] * s[ 2 ];
         /** Fill the operator. First slice. */
-        F[ 0 ] = 1.0 / 24.0 / sp;	F[ 1 ] = 0.0;	F[ 2 ] = -1.0 / 24.0 / sp;
-        F[ 3 ] = 1.0 /  6.0 / sp;	F[ 4 ] = 0.0;	F[ 5 ] = -1.0 /  6.0 / sp;
-        F[ 6 ] = 1.0 / 24.0 / sp;	F[ 7 ] = 0.0;	F[ 8 ] = -1.0 / 24.0 / sp;
+        F[ 0 ] = 1.0 / 24.0 / sp; F[ 1 ] = 0.0; F[ 2 ] = -1.0 / 24.0 / sp;
+        F[ 3 ] = 1.0 /  6.0 / sp; F[ 4 ] = 0.0; F[ 5 ] = -1.0 /  6.0 / sp;
+        F[ 6 ] = 1.0 / 24.0 / sp; F[ 7 ] = 0.0; F[ 8 ] = -1.0 / 24.0 / sp;
         /** Second slice. */
-        F[  9 ] = 0.0;	F[ 10 ] = 0.0; F[ 11 ] = 0.0;
-        F[ 12 ] = 0.0;	F[ 13 ] = 0.0; F[ 14 ] = 0.0;
-        F[ 15 ] = 0.0;	F[ 16 ] = 0.0; F[ 17 ] = 0.0;
+        F[  9 ] = 0.0;  F[ 10 ] = 0.0; F[ 11 ] = 0.0;
+        F[ 12 ] = 0.0;  F[ 13 ] = 0.0; F[ 14 ] = 0.0;
+        F[ 15 ] = 0.0;  F[ 16 ] = 0.0; F[ 17 ] = 0.0;
         /** Third slice. */
-        F[ 18 ] = -1.0 / 24.0 / sp;	F[ 19 ] = 0.0;	F[ 20 ] = 1.0 / 24.0 / sp;
-        F[ 21 ] = -1.0 /  6.0 / sp;	F[ 22 ] = 0.0;	F[ 23 ] = 1.0 /  6.0 / sp;
-        F[ 24 ] = -1.0 / 24.0 / sp;	F[ 25 ] = 0.0;	F[ 26 ] = 1.0 / 24.0 / sp;
+        F[ 18 ] = -1.0 / 24.0 / sp; F[ 19 ] = 0.0;  F[ 20 ] = 1.0 / 24.0 / sp;
+        F[ 21 ] = -1.0 /  6.0 / sp; F[ 22 ] = 0.0;  F[ 23 ] = 1.0 /  6.0 / sp;
+        F[ 24 ] = -1.0 / 24.0 / sp; F[ 25 ] = 0.0;  F[ 26 ] = 1.0 / 24.0 / sp;
       }
     }
     else if ( WhichF == "FI" )
@@ -3206,17 +3206,17 @@ namespace itk
       {
         double sp = s[ 1 ] * s[ 2 ];
         /** Fill the operator. First slice. */
-        F[ 0 ] =  1.0 / 24.0 / sp;	F[ 1 ] =  1.0 / 6.0 / sp;	F[ 2 ] =  1.0 / 24.0 / sp;
-        F[ 3 ] =  0.0;							F[ 4 ] =  0.0;						F[ 5 ] =  0.0;
-        F[ 6 ] = -1.0 / 24.0 / sp;	F[ 7 ] = -1.0 / 6.0 / sp;	F[ 8 ] = -1.0 / 24.0 / sp;
+        F[ 0 ] =  1.0 / 24.0 / sp;  F[ 1 ] =  1.0 / 6.0 / sp; F[ 2 ] =  1.0 / 24.0 / sp;
+        F[ 3 ] =  0.0;              F[ 4 ] =  0.0;            F[ 5 ] =  0.0;
+        F[ 6 ] = -1.0 / 24.0 / sp;  F[ 7 ] = -1.0 / 6.0 / sp; F[ 8 ] = -1.0 / 24.0 / sp;
         /** Second slice. */
-        F[  9 ] = 0.0;	F[ 10 ] = 0.0; F[ 11 ] = 0.0;
-        F[ 12 ] = 0.0;	F[ 13 ] = 0.0; F[ 14 ] = 0.0;
-        F[ 15 ] = 0.0;	F[ 16 ] = 0.0; F[ 17 ] = 0.0;
+        F[  9 ] = 0.0;  F[ 10 ] = 0.0; F[ 11 ] = 0.0;
+        F[ 12 ] = 0.0;  F[ 13 ] = 0.0; F[ 14 ] = 0.0;
+        F[ 15 ] = 0.0;  F[ 16 ] = 0.0; F[ 17 ] = 0.0;
         /** Third slice. */
-        F[ 18 ] = -1.0 / 24.0 / sp;	F[ 19 ] = -1.0 / 6.0 / sp;	F[ 20 ] = -1.0 / 24.0 / sp;
-        F[ 21 ] =  0.0;							F[ 22 ] =  0.0;							F[ 23 ] =  0.0;
-        F[ 24 ] =  1.0 / 24.0 / sp;	F[ 25 ] =  1.0 / 6.0 / sp;	F[ 26 ] =  1.0 / 24.0 / sp;
+        F[ 18 ] = -1.0 / 24.0 / sp; F[ 19 ] = -1.0 / 6.0 / sp;  F[ 20 ] = -1.0 / 24.0 / sp;
+        F[ 21 ] =  0.0;             F[ 22 ] =  0.0;             F[ 23 ] =  0.0;
+        F[ 24 ] =  1.0 / 24.0 / sp; F[ 25 ] =  1.0 / 6.0 / sp;  F[ 26 ] =  1.0 / 24.0 / sp;
       }
     }
     else

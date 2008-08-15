@@ -61,10 +61,10 @@ using namespace itk;
   public:
     
     /** Standard ITK-stuff.*/
-    typedef Timer												Self;
-    typedef Object											Superclass;
-    typedef SmartPointer<Self>					Pointer;
-    typedef SmartPointer<const Self>		ConstPointer;
+    typedef Timer                       Self;
+    typedef Object                      Superclass;
+    typedef SmartPointer<Self>          Pointer;
+    typedef SmartPointer<const Self>    ConstPointer;
     
     /** Method for creation through the object factory.*/
     itkNewMacro( Self );
@@ -73,12 +73,12 @@ using namespace itk;
     itkTypeMacro( Timer, Object );
     
     /** My typedef's.*/
-    typedef std::vector<int>						TimeDHMSType;
+    typedef std::vector<int>            TimeDHMSType;
     
     /** Member functions.*/
-    void	StartTimer(void);
-    int		StopTimer(void);
-    int		ElapsedClockAndTime(void);
+    void  StartTimer(void);
+    int   StopTimer(void);
+    int   ElapsedClockAndTime(void);
     
     /** Formatted Output Functions 
      * (return the time as a string, with comments)
@@ -95,7 +95,7 @@ using namespace itk;
     itkGetConstMacro( StartTime, time_t );
     itkGetConstMacro( StopTime, time_t );
     itkGetConstMacro( ElapsedTime, time_t );
-    //	itkGetConstMacro( ElapsedTimeDHMS, TimeDHMSType );
+    //  itkGetConstMacro( ElapsedTimeDHMS, TimeDHMSType );
     itkGetConstMacro( ElapsedTimeSec, int );
     itkGetConstMacro( ElapsedClock, double );
     itkGetConstMacro( ElapsedClockSec, double );
@@ -106,15 +106,15 @@ using namespace itk;
     virtual ~Timer();
     
     /** Variables that store program arguments.*/
-    time_t				m_StartTime;
-    clock_t				m_StartClock;
-    time_t				m_StopTime;
-    clock_t				m_StopClock;
-    time_t				m_ElapsedTime;
-    clock_t				m_ElapsedClock;
-    TimeDHMSType	m_ElapsedTimeDHMS;
-    int						m_ElapsedTimeSec;
-    double				m_ElapsedClockSec;
+    time_t        m_StartTime;
+    clock_t       m_StartClock;
+    time_t        m_StopTime;
+    clock_t       m_StopClock;
+    time_t        m_ElapsedTime;
+    clock_t       m_ElapsedClock;
+    TimeDHMSType  m_ElapsedTimeDHMS;
+    int           m_ElapsedTimeSec;
+    double        m_ElapsedClockSec;
 
     /** Strings that serve as output of the Formatted Output Functions */
     std::string m_StartTimeString;
@@ -126,8 +126,8 @@ using namespace itk;
 
   private:
 
-    Timer( const Self& );						// purposely not implemented
-    void operator=( const Self& );	// purposely not implemented
+    Timer( const Self& );           // purposely not implemented
+    void operator=( const Self& );  // purposely not implemented
     
   }; // end class Timer
   

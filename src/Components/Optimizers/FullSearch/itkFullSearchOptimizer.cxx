@@ -119,7 +119,7 @@ namespace itk
         break;
       }
       
-      /** Check if the value is a minimum or maximum */			
+      /** Check if the value is a minimum or maximum */     
       if (   ( m_Value < m_BestValue )  ^  m_Maximize   )  // ^ = xor, yields true if only one of the expressions is true
       {
         m_BestValue = m_Value;
@@ -179,7 +179,7 @@ namespace itk
    * dim3: 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 
    * 
    * The indices are transformed to points in search space with the formula:
-   * point[i] = min[i] + stepsize[i]*index[i]				for all i.
+   * point[i] = min[i] + stepsize[i]*index[i]       for all i.
    * 
    * Then the appropriate parameters in the ParameterArray are updated.
    */
@@ -459,7 +459,7 @@ namespace itk
       it++;
     } // end for
 
-    return point;	
+    return point; 
 
   } // end IndexToPoint
   

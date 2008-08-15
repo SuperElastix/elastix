@@ -40,19 +40,19 @@ namespace itk
  */
 
   template <
-    class TScalarType = double,				// Data type for scalars (float or double)
-    unsigned int NDimensions = 3 >		// Number of dimensions
+    class TScalarType = double,       // Data type for scalars (float or double)
+    unsigned int NDimensions = 3 >    // Number of dimensions
     class DeformationVectorFieldTransform:
   public BSplineDeformableTransform< TScalarType, NDimensions, 0 >
   {
   public:
     
     /** Standard class typedefs. */
-    typedef DeformationVectorFieldTransform				Self;
+    typedef DeformationVectorFieldTransform       Self;
     typedef BSplineDeformableTransform<
-      TScalarType, NDimensions, 0 >								Superclass;
-    typedef SmartPointer< Self >									Pointer;
-    typedef SmartPointer< const Self >						ConstPointer;
+      TScalarType, NDimensions, 0 >               Superclass;
+    typedef SmartPointer< Self >                  Pointer;
+    typedef SmartPointer< const Self >            ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -65,21 +65,21 @@ namespace itk
     itkStaticConstMacro( SplineOrder, unsigned int, Superclass::SplineOrder );
     
     /** Typedef's inherited from Superclass. */
-    typedef typename Superclass::ScalarType							ScalarType;
-    typedef typename Superclass::ParametersType					ParametersType;
-    typedef typename Superclass::JacobianType						JacobianType;
-    typedef typename Superclass::InputVectorType				InputVectorType;
-    typedef typename Superclass::OutputVectorType				OutputVectorType;
-    typedef typename Superclass::InputCovariantVectorType		InputCovariantVectorType;
-    typedef typename Superclass::OutputCovariantVectorType	OutputCovariantVectorType;
-    typedef typename Superclass::InputVnlVectorType			InputVnlVectorType;
-    typedef typename Superclass::OutputVnlVectorType		OutputVnlVectorType;
-    typedef typename Superclass::InputPointType					InputPointType;
-    typedef typename Superclass::OutputPointType				OutputPointType;
+    typedef typename Superclass::ScalarType             ScalarType;
+    typedef typename Superclass::ParametersType         ParametersType;
+    typedef typename Superclass::JacobianType           JacobianType;
+    typedef typename Superclass::InputVectorType        InputVectorType;
+    typedef typename Superclass::OutputVectorType       OutputVectorType;
+    typedef typename Superclass::InputCovariantVectorType   InputCovariantVectorType;
+    typedef typename Superclass::OutputCovariantVectorType  OutputCovariantVectorType;
+    typedef typename Superclass::InputVnlVectorType     InputVnlVectorType;
+    typedef typename Superclass::OutputVnlVectorType    OutputVnlVectorType;
+    typedef typename Superclass::InputPointType         InputPointType;
+    typedef typename Superclass::OutputPointType        OutputPointType;
 
     /** Typedef's for BulkTransform. */
-    typedef typename Superclass::BulkTransformType			BulkTransformType;
-    typedef typename Superclass::BulkTransformPointer		BulkTransformPointer;
+    typedef typename Superclass::BulkTransformType      BulkTransformType;
+    typedef typename Superclass::BulkTransformPointer   BulkTransformPointer;
 
     /** Parameters as SpaceDimension number of images. */
     typedef typename Superclass::PixelType              CoefficientPixelType; 
@@ -88,10 +88,10 @@ namespace itk
 
     /** Typedef's for VectorImage. */
     typedef Vector< float,
-      itkGetStaticConstMacro( SpaceDimension ) >	        CoefficientVectorPixelType;
+      itkGetStaticConstMacro( SpaceDimension ) >          CoefficientVectorPixelType;
     typedef Image< CoefficientVectorPixelType,
-      itkGetStaticConstMacro( SpaceDimension ) >	        CoefficientVectorImageType;
-    typedef typename CoefficientVectorImageType::Pointer	CoefficientVectorImagePointer;
+      itkGetStaticConstMacro( SpaceDimension ) >          CoefficientVectorImageType;
+    typedef typename CoefficientVectorImageType::Pointer  CoefficientVectorImagePointer;
     
     /** Set the coefficient image as a deformation field.
      * The superclass provides a similar function (SetCoeffficientImage),
@@ -120,9 +120,9 @@ namespace itk
   private:
     
     /** The private constructor. */
-    DeformationVectorFieldTransform( const Self& );	// purposely not implemented
+    DeformationVectorFieldTransform( const Self& ); // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );									// purposely not implemented
+    void operator=( const Self& );                  // purposely not implemented
 
     /** Member variables. */
     CoefficientImagePointer m_Images[ SpaceDimension ];

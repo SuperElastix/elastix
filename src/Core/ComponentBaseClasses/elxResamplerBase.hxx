@@ -41,7 +41,7 @@ namespace elastix
      * \todo make it a cast to the fixed image type
      */
     typedef typename ElastixType::FixedImageType FixedImageType;
-    FixedImageType * fixedImage =	this->m_Elastix->GetFixedImage();
+    FixedImageType * fixedImage = this->m_Elastix->GetFixedImage();
     
     /** Set the region info to the same values as in the fixedImage. */
     this->GetAsITKBaseType()->SetSize( fixedImage->GetLargestPossibleRegion().GetSize() );
@@ -96,7 +96,7 @@ namespace elastix
 
     /** Decide whether or not to write the result image this resolution. */
     bool writeResultImageThisResolution = false;
-    this->m_Configuration->ReadParameter(	writeResultImageThisResolution,
+    this->m_Configuration->ReadParameter( writeResultImageThisResolution,
       "WriteResultImageAfterEachResolution", "", level, 0, true );
 
     /** Writing result image. */
@@ -104,7 +104,7 @@ namespace elastix
     {
       /** Create a name for the final result. */
       std::string resultImageFormat = "mhd";
-      this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0, true);
+      this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, true);
       std::ostringstream makeFileName( "" );
       makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
         << "result." << this->m_Configuration->GetElastixLevel()
@@ -269,7 +269,7 @@ namespace elastix
 
     /** Read output pixeltype from parameter the file. Replace possible " " with "_". */
     std::string resultImagePixelType = "short";
-    this->m_Configuration->ReadParameter(	resultImagePixelType, "ResultImagePixelType", 0, true );
+    this->m_Configuration->ReadParameter( resultImagePixelType, "ResultImagePixelType", 0, true );
     std::basic_string<char>::size_type pos = resultImagePixelType.find( " " );
     const std::basic_string<char>::size_type npos = std::basic_string<char>::npos;
     if ( pos != npos ) resultImagePixelType.replace( pos, 1, "_" );
@@ -280,8 +280,8 @@ namespace elastix
       doCompression, "CompressResultImage", 0, true );
     
     /** Typedef's for writing the output image. */
-    typedef ImageFileCastWriter< OutputImageType >	WriterType;
-    typedef typename WriterType::Pointer					  WriterPointer;
+    typedef ImageFileCastWriter< OutputImageType >  WriterType;
+    typedef typename WriterType::Pointer            WriterPointer;
 
     /** Create writer. */
     WriterPointer writer = WriterType::New();
@@ -329,33 +329,33 @@ namespace elastix
     this->SetComponents();
     
     /** Get spacing, origin and size of the image to be produced by the resampler. */
-    SpacingType			spacing;
-    IndexType				index;
-    OriginPointType	origin;
-    SizeType				size;
+    SpacingType     spacing;
+    IndexType       index;
+    OriginPointType origin;
+    SizeType        size;
     DirectionType   direction;
     direction.SetIdentity();
     for ( unsigned int i = 0; i < ImageDimension; i++ )
     {
       /** No default size. Read size from the parameter file. */
-      this->m_Configuration->ReadParameter(	size[ i ], "Size", i );
+      this->m_Configuration->ReadParameter( size[ i ], "Size", i );
 
       /** Default index. Read index from the parameter file. */
       index[ i ] = 0;
-      this->m_Configuration->ReadParameter(	index[ i ], "Index", i );
+      this->m_Configuration->ReadParameter( index[ i ], "Index", i );
 
       /** Default spacing. Read spacing from the parameter file. */
       spacing[ i ] = 1.0;
-      this->m_Configuration->ReadParameter(	spacing[ i ], "Spacing", i );
+      this->m_Configuration->ReadParameter( spacing[ i ], "Spacing", i );
 
       /** Default origin. Read origin from the parameter file. */
       origin[ i ] = 0.0;
-      this->m_Configuration->ReadParameter(	origin[ i ], "Origin", i );
+      this->m_Configuration->ReadParameter( origin[ i ], "Origin", i );
 
       /** Read direction cosines. Default identity */
       for ( unsigned int j = 0; j < ImageDimension; j++ )
       {
-        this->m_Configuration->ReadParameter(	direction( j, i ), "Direction", i * ImageDimension + j );        
+        this->m_Configuration->ReadParameter( direction( j, i ), "Direction", i * ImageDimension + j );        
       }
     }
 
@@ -465,11 +465,13 @@ namespace elastix
      * this point helps a lot.
      */
 
-    /** Release the pyramids. Already done after every resolution! *
+    /** Release the pyramids. Already done after every resolution! */
     unsigned int numberOfOutputs = this->GetElastix()
       ->GetElxFixedImagePyramidBase()->GetAsITKBaseType()->GetNumberOfOutputs();
     for ( unsigned int i = 0; i < numberOfOutputs; ++i )
     {
+//       this->GetElastix()->GetElxFixedImagePyramidBase()->GetAsITKBaseType()
+//         ->GetOutput( i )->DisconnectPipeline();
       this->GetElastix()->GetElxFixedImagePyramidBase()->GetAsITKBaseType()
         ->GetOutput( i )->ReleaseData();
     }
@@ -477,6 +479,8 @@ namespace elastix
       ->GetElxMovingImagePyramidBase()->GetAsITKBaseType()->GetNumberOfOutputs();
     for ( unsigned int i = 0; i < numberOfOutputs; ++i )
     {
+//       this->GetElastix()->GetElxMovingImagePyramidBase()->GetAsITKBaseType()
+//         ->GetOutput( i )->DisconnectPipeline();
       this->GetElastix()->GetElxMovingImagePyramidBase()->GetAsITKBaseType()
         ->GetOutput( i )->ReleaseData();
     }
@@ -486,7 +490,7 @@ namespace elastix
       == this->GetConfiguration()->GetTotalNumberOfElastixLevels() )
     {
       /** Release fixed image memory. */
-      //this->GetElastix()->GetFixedImage()->DisconnectPipeline();
+//      this->GetElastix()->GetFixedImage()->DisconnectPipeline();
       this->GetElastix()->GetFixedImage()->ReleaseData();
 
       /** Release fixed mask image memory. */
@@ -520,8 +524,10 @@ namespace elastix
     dummyImage->FillBuffer( 0 );
     this->GetElastix()->GetElxInterpolatorBase()->GetAsITKBaseType()->SetInputImage( dummyImage );
     // Above doesn't work
+    //this->GetElastix()->GetElxInterpolatorBase()->GetAsITKBaseType() = 0;
+    //this->GetElastix()->GetElxInterpolatorBase()->GetAsITKBaseType()->SetReferenceCount( 0 );
 
-    // Clear ImageSampler, metric, optimizer, interpolator, registration?
+    // Clear ImageSampler, metric, optimizer, interpolator, registration, internal images?
 
   } // end ReleaseMemory()
 

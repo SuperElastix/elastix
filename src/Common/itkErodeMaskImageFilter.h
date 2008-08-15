@@ -45,7 +45,7 @@ namespace itk
  *   --> <tt>radius = static_cast<unsigned long>( schedule + 1 );</tt>
  *
  * If IsMovingMask == true:\n
- *	 Same story as before. Now the size the of the eroding element is doubled.
+ *   Same story as before. Now the size the of the eroding element is doubled.
  *   This is because the gradient of the moving image is used for calculating
  *   the derivative of the metric.\n
  *   --> <tt>radius = static_cast<unsigned long>( 2 * schedule + 1 );</tt>
@@ -137,11 +137,11 @@ protected:
   typedef BinaryBallStructuringElement<
     InputPixelType, 
     itkGetStaticConstMacro(InputImageDimension) >         StructuringElementType;
-  typedef typename StructuringElementType::RadiusType		  RadiusType;
+  typedef typename StructuringElementType::RadiusType     RadiusType;
   typedef BinaryErodeImageFilter<
     InputImageType,
     OutputImageType,
-    StructuringElementType >					                    ErodeFilterType;
+    StructuringElementType >                              ErodeFilterType;
   typedef typename ErodeFilterType::Pointer               ErodeFilterPointer;
   typedef itk::FixedArray<
     ErodeFilterPointer,

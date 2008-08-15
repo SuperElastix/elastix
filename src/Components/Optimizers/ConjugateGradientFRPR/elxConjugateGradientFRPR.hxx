@@ -86,8 +86,8 @@ using namespace itk;
     xout["iteration"].AddTargetCell("4b:||SearchDir||");
     xout["iteration"].AddTargetCell("5:Phase");
 
-    /** Format some fields as floats */			
-    xl::xout["iteration"]["2:Metric"]		<< std::showpoint << std::fixed;
+    /** Format some fields as floats */     
+    xl::xout["iteration"]["2:Metric"]   << std::showpoint << std::fixed;
     xl::xout["iteration"]["3:StepLength"] << std::showpoint << std::fixed;
     xl::xout["iteration"]["4a:||Gradient||"] << std::showpoint << std::fixed;
     xl::xout["iteration"]["4b:||SearchDir||"] << std::showpoint << std::fixed;
@@ -162,11 +162,11 @@ using namespace itk;
   {
     
     /** Print some information. */
-    xl::xout["iteration"]["1a:SrchDirNr"]			<< this->GetCurrentIteration();
-    xl::xout["iteration"]["1b:LineItNr"]			<<  this->GetCurrentLineIteration();
-    xl::xout["iteration"]["2:Metric"]					<< this->GetValue();
+    xl::xout["iteration"]["1a:SrchDirNr"]     << this->GetCurrentIteration();
+    xl::xout["iteration"]["1b:LineItNr"]      <<  this->GetCurrentLineIteration();
+    xl::xout["iteration"]["2:Metric"]         << this->GetValue();
     xl::xout["iteration"]["4b:||SearchDir||"] << this->GetCurrentSearchDirectionMagnitude();
-    xl::xout["iteration"]["5:Phase"]					<< this->DeterminePhase();
+    xl::xout["iteration"]["5:Phase"]          << this->DeterminePhase();
     
     /** If main iteration (NewDirection) */
     if (  (!(this->GetLineBracketing())) && (!(this->GetLineOptimizing())) )
@@ -214,12 +214,12 @@ using namespace itk;
     {
   
     case MaximumNumberOfIterations :
-      stopcondition = "Maximum number of iterations has been reached";	
-      break;	
+      stopcondition = "Maximum number of iterations has been reached";  
+      break;  
     
     case MetricError :
-      stopcondition = "Error in metric";	
-      break;	
+      stopcondition = "Error in metric";  
+      break;  
         
     default:
       stopcondition = "Unknown";

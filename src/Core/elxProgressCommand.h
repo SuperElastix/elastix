@@ -20,13 +20,13 @@
 
 namespace elastix
 {
-	using namespace itk;
-	
-	/**
-	 * \class ProgressCommand
-	 * \brief A specialized Command object for updating the progress of a
+  using namespace itk;
+  
+  /**
+   * \class ProgressCommand
+   * \brief A specialized Command object for updating the progress of a
    *  filter.
-	 *
+   *
    * There are 3 ways to use this class. 
    *
    * \li Whenever a filter, such as the itk::ResampleImageFilter, supports
@@ -77,8 +77,8 @@ namespace elastix
    *   // example assumes reader, caster and writer have been configured before
    *   
    *
-	 * //\ingroup ?
-	 */
+   * //\ingroup ?
+   */
 
 class ProgressCommand : public Command
 {

@@ -93,8 +93,8 @@ using namespace itk;
     xout["iteration"].AddTargetCell("5b:MaximumD");
     xout["iteration"].AddTargetCell("5c:MinimumD");
     
-    /** Format the metric and stepsize as floats */			
-    xout["iteration"]["2:Metric"]		<< std::showpoint << std::fixed;
+    /** Format the metric and stepsize as floats */     
+    xout["iteration"]["2:Metric"]   << std::showpoint << std::fixed;
     xout["iteration"]["3:StepLength"] << std::showpoint << std::fixed;
     xout["iteration"]["4:||Step||"] << std::showpoint << std::fixed;
     xout["iteration"]["5a:Sigma"] << std::showpoint << std::fixed;    
@@ -220,7 +220,7 @@ using namespace itk;
     using namespace xl;
 
     /** Print some information. */
-    xout["iteration"]["2:Metric"]	<< this->GetCurrentValue();
+    xout["iteration"]["2:Metric"] << this->GetCurrentValue();
     xout["iteration"]["3:StepLength"] << this->GetCurrentStepLength(); 
     xout["iteration"]["4:||Step||"] << this->GetCurrentScaledStep().magnitude();
     xout["iteration"]["5a:Sigma"] << this->GetCurrentSigma();
@@ -260,20 +260,20 @@ using namespace itk;
     switch( this->GetStopCondition() )
     {
     case MetricError :
-      stopcondition = "Error in metric";	
-      break;	
+      stopcondition = "Error in metric";  
+      break;  
 
     case MaximumNumberOfIterations :
-      stopcondition = "Maximum number of iterations has been reached";	
-      break;	
+      stopcondition = "Maximum number of iterations has been reached";  
+      break;  
 
     case PositionToleranceMin :
-      stopcondition = "The minimum step length condition has been reached";	
-      break;	
+      stopcondition = "The minimum step length condition has been reached"; 
+      break;  
 
     case PositionToleranceMax :
-      stopcondition = "The maximum step length condition has been reached";	
-      break;	
+      stopcondition = "The maximum step length condition has been reached"; 
+      break;  
 
     case ValueTolerance :
       stopcondition = "Almost no decrease in function value anymore";

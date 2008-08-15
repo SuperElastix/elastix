@@ -40,8 +40,8 @@ using namespace itk;
    *    If "true" the metric computes the exact metric value (computed on all
    *    voxels rather than on the set of spatial samples) and shows it each
    *    iteration. Must be given for each resolution. \n
-   *		example: <tt>(ShowExactMetricValue "true" "true" "false")</tt> \n
-   *		Default is "false" for all resolutions.
+   *    example: <tt>(ShowExactMetricValue "true" "true" "false")</tt> \n
+   *    Default is "false" for all resolutions.
    * \parameter CheckNumberOfSamples: Whether the metric checks if at least
    *    a certain fraction (default 1/4) of the samples map inside the moving
    *    image. Can be given for each resolution or for all resolutions at once. \n
@@ -50,7 +50,7 @@ using namespace itk;
    *    since it detects if the registration is going really bad.
    * \parameter RequiredRatioOfValidSamples: Defines the fraction needed in
    *    CheckNumberOfSamples. \n
-   *		example: <tt>(RequiredRatioOfValidSamples 0.1)</tt> \n
+   *    example: <tt>(RequiredRatioOfValidSamples 0.1)</tt> \n
    *    The default is 0.25.
    *
    * \ingroup Metrics
@@ -102,9 +102,9 @@ using namespace itk;
       return dynamic_cast<const ITKBaseType *>( this );
     }
     
-    /** Get	the dimension of the fixed image. */
+    /** Get the dimension of the fixed image. */
     itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
-    /** Get	the dimension of the moving image. */
+    /** Get the dimension of the moving image. */
     itkStaticConstMacro( MovingImageDimension, unsigned int, MovingImageType::ImageDimension );
 
     /** Execute stuff before each resolution:

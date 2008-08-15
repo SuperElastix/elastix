@@ -70,7 +70,7 @@ namespace xoutlibrary
     for ( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
     {
       /** Write a tab to the cell */
-      *(xit->second) <<	"\t" ;
+      *(xit->second) << "\t" ;
       
       /** And send its contents to the outputs */
       xit->second->WriteBufferedData();
@@ -96,9 +96,9 @@ namespace xoutlibrary
   template< class charT, class traits >
     int xoutrow<charT, traits>::
     AddTargetCell( const char * name )
-  {		
+  {   
     if ( this->m_CellMap.count( name ) == 0 )
-    {		
+    {   
       /** A new cell (type xoutcell) is created.*/
       XOutCellType * cell = new XOutCellType;
 
@@ -170,7 +170,7 @@ namespace xoutlibrary
     
     this->m_CellMap.clear();
 
-    /**	Replace the TargetCellMap with the input of this function.
+    /** Replace the TargetCellMap with the input of this function.
      * The outputs are not automatically set, because the user may
      * want to keep the outputmap that was set in the cellmap */
 
@@ -261,7 +261,7 @@ namespace xoutlibrary
   template< class charT, class traits >
     void xoutrow<charT, traits>::
     SetOutputs( const CStreamMapType & outputmap )
-  {		
+  {   
     XStreamMapIteratorType xit;
 
     /** Set the output in all cells */
@@ -311,7 +311,7 @@ namespace xoutlibrary
     headerwriter.SetOutputs( this->m_COutputs );
     headerwriter.SetOutputs( this->m_XOutputs );
 
-    /** Write the cell-names to the cells of the headerwriter.*/		
+    /** Write the cell-names to the cells of the headerwriter.*/    
     XStreamMapIteratorType xit;
 
     for ( xit = this->m_XTargetCells.begin(); xit != this->m_XTargetCells.end(); ++xit )
@@ -335,7 +335,7 @@ namespace xoutlibrary
   template< class charT, class traits >
     xoutbase<charT, traits> &
     xoutrow<charT, traits>::SelectXCell( const char * name )
-  {		
+  {   
     std::string cellname( name );
 
     /** Check if the name is "WriteHeaders". Then the method

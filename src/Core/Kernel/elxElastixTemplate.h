@@ -104,11 +104,11 @@ namespace elastix
   public:
     
     /** Standard itk.*/
-    typedef ElastixTemplate						Self;
-    typedef Object										Superclass1;
-    typedef ElastixBase								Superclass2;
-    typedef SmartPointer<Self>				Pointer;
-    typedef SmartPointer<const Self>	ConstPointer;
+    typedef ElastixTemplate           Self;
+    typedef Object                    Superclass1;
+    typedef ElastixBase               Superclass2;
+    typedef SmartPointer<Self>        Pointer;
+    typedef SmartPointer<const Self>  ConstPointer;
     
     /** Method for creation through the object factory.*/
     itkNewMacro( Self );
@@ -117,12 +117,12 @@ namespace elastix
     itkTypeMacro( ElastixTemplate, Object );
     
     /** Typedefs inherited from Superclass2.*/
-    typedef Superclass2::ConfigurationType														ConfigurationType;
-    typedef Superclass2::ConfigurationPointer													ConfigurationPointer;
-    typedef Superclass2::ObjectType																		ObjectType; //for the components
-    typedef Superclass2::DataObjectType																DataObjectType; //for the images
-    typedef Superclass2::ObjectPointer																ObjectPointer;
-    typedef Superclass2::DataObjectPointer  													DataObjectPointer;
+    typedef Superclass2::ConfigurationType                            ConfigurationType;
+    typedef Superclass2::ConfigurationPointer                         ConfigurationPointer;
+    typedef Superclass2::ObjectType                                   ObjectType; //for the components
+    typedef Superclass2::DataObjectType                               DataObjectType; //for the images
+    typedef Superclass2::ObjectPointer                                ObjectPointer;
+    typedef Superclass2::DataObjectPointer                            DataObjectPointer;
     typedef Superclass2::ObjectContainerType                          ObjectContainerType;      
     typedef Superclass2::DataObjectContainerType                      DataObjectContainerType;
     typedef Superclass2::FileNameContainerType                        FileNameContainerType;
@@ -131,14 +131,14 @@ namespace elastix
     typedef Superclass2::FileNameContainerPointer                     FileNameContainerPointer;
         
     /** Typedef's for this class.*/
-    typedef TFixedImage																								FixedImageType;
-    typedef TMovingImage																							MovingImageType;
-    typedef typename FixedImageType::Pointer													FixedImagePointer;
-    typedef typename MovingImageType::Pointer													MovingImagePointer;
+    typedef TFixedImage                                               FixedImageType;
+    typedef TMovingImage                                              MovingImageType;
+    typedef typename FixedImageType::Pointer                          FixedImagePointer;
+    typedef typename MovingImageType::Pointer                         MovingImagePointer;
     
     /** For using the Dimensions.*/
-    itkStaticConstMacro( Dimension,				unsigned int, FixedImageType::ImageDimension );
-    itkStaticConstMacro( FixedDimension,	unsigned int, FixedImageType::ImageDimension );
+    itkStaticConstMacro( Dimension,       unsigned int, FixedImageType::ImageDimension );
+    itkStaticConstMacro( FixedDimension,  unsigned int, FixedImageType::ImageDimension );
     itkStaticConstMacro( MovingDimension, unsigned int, MovingImageType::ImageDimension );
 
     /** Types for the masks */
@@ -149,44 +149,44 @@ namespace elastix
     typedef typename MovingMaskType::Pointer                          MovingMaskPointer;
         
     /** Type for representation of the transform coordinates.*/
-    typedef CostFunction::ParametersValueType		CoordRepType; // double
+    typedef CostFunction::ParametersValueType   CoordRepType; // double
         
     /** BaseComponent.*/
-    typedef BaseComponent																							BaseComponentType;
+    typedef BaseComponent                                             BaseComponentType;
             
     /** A Pointer to a memberfunction of a BaseComponentType.*/
     typedef void (BaseComponentType::*PtrToMemberFunction)(void);
     typedef int (BaseComponentType::*PtrToMemberFunction2)(void);
     
     /** Commands that react on Events and call Self::Function(void).*/
-    typedef SimpleMemberCommand<Self>																	BeforeEachResolutionCommandType;
-    typedef SimpleMemberCommand<Self>																	AfterEachResolutionCommandType;
-    typedef SimpleMemberCommand<Self>																	AfterEachIterationCommandType;
-    typedef typename BeforeEachResolutionCommandType::Pointer					BeforeEachResolutionCommandPointer;
-    typedef typename AfterEachResolutionCommandType::Pointer					AfterEachResolutionCommandPointer;
-    typedef typename AfterEachIterationCommandType::Pointer						AfterEachIterationCommandPointer;
+    typedef SimpleMemberCommand<Self>                                 BeforeEachResolutionCommandType;
+    typedef SimpleMemberCommand<Self>                                 AfterEachResolutionCommandType;
+    typedef SimpleMemberCommand<Self>                                 AfterEachIterationCommandType;
+    typedef typename BeforeEachResolutionCommandType::Pointer         BeforeEachResolutionCommandPointer;
+    typedef typename AfterEachResolutionCommandType::Pointer          AfterEachResolutionCommandPointer;
+    typedef typename AfterEachIterationCommandType::Pointer           AfterEachIterationCommandPointer;
     
     /** The elastix basecomponent types.*/
-    typedef FixedImagePyramidBase<Self> 															FixedImagePyramidBaseType;
-    typedef MovingImagePyramidBase<Self>															MovingImagePyramidBaseType;
-    typedef InterpolatorBase<Self>																		InterpolatorBaseType;
-    typedef elx::ImageSamplerBase<Self>																ImageSamplerBaseType;
-    typedef MetricBase<Self>																					MetricBaseType;
-    typedef OptimizerBase<Self> 																			OptimizerBaseType;
-    typedef RegistrationBase<Self>																		RegistrationBaseType;
-    typedef ResamplerBase<Self> 																			ResamplerBaseType;
-    typedef ResampleInterpolatorBase<Self>														ResampleInterpolatorBaseType;
-    typedef elx::TransformBase<Self> 																	TransformBaseType;
+    typedef FixedImagePyramidBase<Self>                               FixedImagePyramidBaseType;
+    typedef MovingImagePyramidBase<Self>                              MovingImagePyramidBaseType;
+    typedef InterpolatorBase<Self>                                    InterpolatorBaseType;
+    typedef elx::ImageSamplerBase<Self>                               ImageSamplerBaseType;
+    typedef MetricBase<Self>                                          MetricBaseType;
+    typedef OptimizerBase<Self>                                       OptimizerBaseType;
+    typedef RegistrationBase<Self>                                    RegistrationBaseType;
+    typedef ResamplerBase<Self>                                       ResamplerBaseType;
+    typedef ResampleInterpolatorBase<Self>                            ResampleInterpolatorBaseType;
+    typedef elx::TransformBase<Self>                                  TransformBaseType;
 
     /** Typedef's for Timer class.*/
-    typedef tmr::Timer																								TimerType;
-    typedef TimerType::Pointer																				TimerPointer;
+    typedef tmr::Timer                                                TimerType;
+    typedef TimerType::Pointer                                        TimerPointer;
     
     /** Typedef's for ApplyTransform. 
      * \todo How useful is this? It is not consequently supported, since the
      * the input image is stored in the MovingImageContainer anyway. */
-    typedef MovingImageType																						InputImageType;
-    typedef MovingImageType 																					OutputImageType;
+    typedef MovingImageType                                           InputImageType;
+    typedef MovingImageType                                           OutputImageType;
         
     /** Functions to set/get pointers to the elastix components.
      * Get the components as pointers to elxBaseType */
@@ -261,9 +261,9 @@ namespace elastix
     typedef typename Superclass2::MultipleImageLoader<MovingMaskType>   MovingMaskLoaderType;
         
     /** CallBack commands.*/
-    BeforeEachResolutionCommandPointer	m_BeforeEachResolutionCommand;
-    AfterEachIterationCommandPointer		m_AfterEachIterationCommand;
-    AfterEachResolutionCommandPointer		m_AfterEachResolutionCommand;
+    BeforeEachResolutionCommandPointer  m_BeforeEachResolutionCommand;
+    AfterEachIterationCommandPointer    m_AfterEachIterationCommand;
+    AfterEachResolutionCommandPointer   m_AfterEachResolutionCommand;
 
     /** Timers */
     TimerPointer m_Timer0;
@@ -271,7 +271,7 @@ namespace elastix
     TimerPointer m_ResolutionTimer;
 
     /** Store the CurrentTransformParameterFileName. */
-    std::string	m_CurrentTransformParameterFileName;
+    std::string m_CurrentTransformParameterFileName;
     
     /** Count the number of iterations. */
     unsigned int m_IterationCounter;
@@ -306,8 +306,8 @@ namespace elastix
         
   private:
 
-    ElastixTemplate( const Self& );	// purposely not implemented
-    void operator=( const Self& );	// purposely not implemented
+    ElastixTemplate( const Self& ); // purposely not implemented
+    void operator=( const Self& );  // purposely not implemented
     
   }; // end class ElastixTemplate
 

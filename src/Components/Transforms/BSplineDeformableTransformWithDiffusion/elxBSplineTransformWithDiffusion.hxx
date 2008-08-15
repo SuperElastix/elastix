@@ -41,7 +41,7 @@ using namespace itk;
 
     /** Initialize some things. */
     this->m_GridSpacingFactor.Fill( 8.0 );
-    this->m_Interpolator	= InterpolatorType::New();
+    this->m_Interpolator  = InterpolatorType::New();
 
     /** Initialize things for diffusion. */
     this->m_Diffusion = 0;
@@ -393,7 +393,7 @@ using namespace itk;
     /** What is the UpsampleGridOption?
      * This option defines the user's wish:
      * - true: For lower resolution levels (i.e. smaller images),
-     *				 the GridSpacing is made larger, as a power of 2.
+     *         the GridSpacing is made larger, as a power of 2.
      * - false: The GridSpacing remains equal for each resolution level.
      */
     std::string upsampleBSplineGridOption( "true" );
@@ -406,11 +406,11 @@ using namespace itk;
     if ( level == 0 )
     {
       /** Set grid equal to lowest resolution fixed image. */
-      this->SetInitialGrid( upsampleGridOption );			
-    }	
+      this->SetInitialGrid( upsampleGridOption );     
+    } 
     else
     {
-      /**	If wanted, we upsample the grid of control points. */
+      /** If wanted, we upsample the grid of control points. */
       if ( upsampleGridOption ) this->IncreaseScale();
       /** Otherwise, nothing is done with the BSpline-Grid. */
     } 
@@ -449,8 +449,8 @@ using namespace itk;
     /** Find out if we have to filter now.
      * FilterPattern1: diffusion every n iterations
      * FilterPattern2: start with diffusion every n1 iterations,
-     *		followed by diffusion every n2 iterations, and ended
-     *		by by diffusion every n3 iterations.
+     *    followed by diffusion every n2 iterations, and ended
+     *    by by diffusion every n3 iterations.
      */
     if ( filterPattern == 1 )
     {
@@ -572,7 +572,7 @@ using namespace itk;
    * desired final gridspacing and a factor 2^(NrOfImageResolutions-1).
    * Otherwise it's equal to the size of the fixed image, divided by
    * the desired final gridspacing.
-   *	 
+   *   
    * In both cases some extra grid points are put at the edges,
    * to take into account the support region of the B-splines.
    */
@@ -582,11 +582,11 @@ using namespace itk;
     ::SetInitialGrid( bool upsampleGridOption )
   {
     /** Declarations. */
-    RegionType	gridregion;
-    SizeType		gridsize;
-    IndexType		gridindex;
-    SpacingType	gridspacing;
-    OriginType	gridorigin;
+    RegionType  gridregion;
+    SizeType    gridsize;
+    IndexType   gridindex;
+    SpacingType gridspacing;
+    OriginType  gridorigin;
     
     /** Get the fixed image. */
     typename FixedImageType::Pointer fixedimage;
@@ -595,16 +595,16 @@ using namespace itk;
     
     /** Get the size etc. of this image. */
 
-    /** In elastix <=3.001: gridregion	=	fixedimage->GetRequestedRegion();  */
+    /** In elastix <=3.001: gridregion  = fixedimage->GetRequestedRegion();  */
     /** later (because requested regions were not supported anyway consistently: */
     gridregion = fixedimage->GetLargestPossibleRegion();
     /** \todo: allow the user to enter a region of interest for the registration. 
      * Especially the boundary conditions have to be dealt with carefully then. */
-    gridindex		=	gridregion.GetIndex();
+    gridindex   = gridregion.GetIndex();
     /** \todo: always 0? doesn't a largestpossible region have an index 0 by definition? */
-    gridsize		=	gridregion.GetSize();
-    gridspacing	=	fixedimage->GetSpacing();
-    gridorigin	=	fixedimage->GetOrigin();
+    gridsize    = gridregion.GetSize();
+    gridspacing = fixedimage->GetSpacing();
+    gridorigin  = fixedimage->GetOrigin();
     
     /** Read the desired grid spacing for each dimension. If only one gridspacing factor
      * is given, that one is used for each dimension.
@@ -672,7 +672,7 @@ using namespace itk;
       CoefficientUpsampleFunctionType;
     typedef itk::BSplineDecompositionImageFilter<ImageType,ImageType>
       DecompositionFilterType;
-    typedef ImageRegionConstIterator<ImageType>		IteratorType;
+    typedef ImageRegionConstIterator<ImageType>   IteratorType;
 
     /** The current region/spacing settings of the grid. */
     RegionType gridregionLow = this->m_BSplineTransform->GetGridRegion();
@@ -687,11 +687,11 @@ using namespace itk;
       this->m_Registration->GetAsITKBaseType()->GetFixedImage() );
     
     /** Set start values for computing the new grid size. */
-    RegionType gridregionHigh	= fixedimage->GetLargestPossibleRegion();
-    IndexType gridindexHigh		=	gridregionHigh.GetIndex();
-    SizeType gridsizeHigh		=	gridregionHigh.GetSize();
-    SpacingType gridspacingHigh	=	fixedimage->GetSpacing();
-    OriginType gridoriginHigh	=	fixedimage->GetOrigin();
+    RegionType gridregionHigh = fixedimage->GetLargestPossibleRegion();
+    IndexType gridindexHigh   = gridregionHigh.GetIndex();
+    SizeType gridsizeHigh   = gridregionHigh.GetSize();
+    SpacingType gridspacingHigh = fixedimage->GetSpacing();
+    OriginType gridoriginHigh = fixedimage->GetOrigin();
     
     /** A twice as dense grid: */
     this->m_GridSpacingFactor /= 2;
@@ -745,7 +745,7 @@ using namespace itk;
     {
       /** Fill the coeff image with parameter data (displacements
        * of the control points in the direction of dimension j).
-       */		
+       */   
       coeffs1->GetPixelContainer()->
         SetImportPointer( dataPointer, numberOfPixels );
       dataPointer += numberOfPixels;
@@ -881,11 +881,11 @@ using namespace itk;
     /** Task 2 - Get and Set the B-spline part of this transform. */
 
     /** Declarations of the B-spline grid and fill everything with default values. */
-    RegionType	gridregion;
-    SizeType		gridsize;
-    IndexType		gridindex;
-    SpacingType	gridspacing;
-    OriginType	gridorigin;
+    RegionType  gridregion;
+    SizeType    gridsize;
+    IndexType   gridindex;
+    SpacingType gridspacing;
+    OriginType  gridorigin;
     gridsize.Fill(1);
     gridindex.Fill(0);
     gridspacing.Fill(1.0);
@@ -931,7 +931,7 @@ using namespace itk;
     
     /** Call the function ReadInitialTransformFromFile.*/
     if ( fileName != "NoInitialTransform" )
-    {			
+    {     
       this->ReadInitialTransformFromFile( fileName.c_str() );
     }
 
@@ -999,7 +999,7 @@ using namespace itk;
 
     /** Write the filename of the deformationField image. */
     std::string resultImageFormat = "mhd";
-    this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0, true );
+    this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, true );
     std::ostringstream makeFileName( "" );
     makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
       << "DeformationFieldImage"
@@ -1093,16 +1093,16 @@ using namespace itk;
     /** This function does:
      * 1) Calculate current deformation field.
      * 2) Update the intermediary deformationFieldTransform
-     *		with this deformation field.
+     *    with this deformation field.
      * 3) Calculate the GrayValueImage with the resampler,
-     *		which is over the intermediary deformationFieldTransform.
+     *    which is over the intermediary deformationFieldTransform.
      * 4) Diffuse the current deformation field.
      * 5) Update the intermediary deformationFieldTransform
-     *		with this diffused deformation field.
+     *    with this diffused deformation field.
      * 6) Reset the parameters of the BSplineTransform
-     *		and the optimizer. Reset the initial transform.
+     *    and the optimizer. Reset the initial transform.
      * 7) If wanted, write the deformationField, the 
-     *		GrayValueImage and the diffusedField.
+     *    GrayValueImage and the diffusedField.
      */
 
     /** ------------- 1: Create deformationField. ------------- */
@@ -1116,14 +1116,14 @@ using namespace itk;
     dummyImage->SetSpacing( this->m_DeformationSpacing );
 
     /** Setup an iterator over dummyImage and outputImage. */
-    DummyIteratorType				iter( dummyImage, this->m_DeformationRegion );
-    VectorImageIteratorType	iterout( this->m_DeformationField, this->m_DeformationRegion );
+    DummyIteratorType       iter( dummyImage, this->m_DeformationRegion );
+    VectorImageIteratorType iterout( this->m_DeformationField, this->m_DeformationRegion );
     
     /** Declare stuff. */
-    InputPointType	inputPoint;
-    OutputPointType	outputPoint;
-    VectorType			diff_point;
-    IndexType				inputIndex;
+    InputPointType  inputPoint;
+    OutputPointType outputPoint;
+    VectorType      diff_point;
+    IndexType       inputIndex;
     
     /** Calculate the TransformPoint of all voxels of the image. */
     iter.Begin();
@@ -1226,7 +1226,7 @@ using namespace itk;
         {
           /** Threshold or just make sure everything is between 0 and 100. */
           // \todo Possibly combine this with the rescaleIntensity filter of
-          //		the vectorMeanDiffusionImageFilter, in order to speed up.
+          //    the vectorMeanDiffusionImageFilter, in order to speed up.
           if ( it.Get() < this->m_ThresholdHU ) it.Set( 0 );
           if ( it.Get() >= this->m_ThresholdHU ) it.Set( 100 );
           /** Update iterator. */
@@ -1323,7 +1323,7 @@ using namespace itk;
     {
       /** Create parts of the filenames. */
       std::string resultImageFormat = "mhd";
-      this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0, true );
+      this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, true );
       std::ostringstream makeFileName1( "" ), begin(""), end("");
       begin << this->m_Configuration->GetCommandLineArgument( "-out" );
       end << ".R" << this->m_Elastix->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel()
@@ -1440,7 +1440,7 @@ using namespace itk;
       bool &inside ) const
   {
     this->Superclass1::TransformPoint(
-      inputPoint,	outputPoint, weights,	indices, inside);
+      inputPoint, outputPoint, weights, indices, inside);
   } // end TransformPoint
 
   

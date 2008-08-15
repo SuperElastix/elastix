@@ -56,30 +56,30 @@ using namespace itk;
   public:
 
     /** Standard ITK-stuff. */
-    typedef FixedImagePyramidBase				Self;
-    typedef BaseComponentSE<TElastix>		Superclass;
+    typedef FixedImagePyramidBase       Self;
+    typedef BaseComponentSE<TElastix>   Superclass;
 
     /** Run-time type information (and related methods). */
     itkTypeMacro( FixedImagePyramidBase, BaseComponentSE );
 
     /** Typedefs inherited from the superclass. */
-    typedef typename Superclass::ElastixType						ElastixType;
-    typedef typename Superclass::ElastixPointer					ElastixPointer;
-    typedef typename Superclass::ConfigurationType			ConfigurationType;
-    typedef typename Superclass::ConfigurationPointer		ConfigurationPointer;
-    typedef typename Superclass::RegistrationType				RegistrationType;
-    typedef typename Superclass::RegistrationPointer		RegistrationPointer;
+    typedef typename Superclass::ElastixType            ElastixType;
+    typedef typename Superclass::ElastixPointer         ElastixPointer;
+    typedef typename Superclass::ConfigurationType      ConfigurationType;
+    typedef typename Superclass::ConfigurationPointer   ConfigurationPointer;
+    typedef typename Superclass::RegistrationType       RegistrationType;
+    typedef typename Superclass::RegistrationPointer    RegistrationPointer;
 
     /** Typedefs inherited from Elastix. */
-    typedef typename ElastixType::FixedImageType	InputImageType;
-    typedef typename ElastixType::FixedImageType	OutputImageType;
+    typedef typename ElastixType::FixedImageType  InputImageType;
+    typedef typename ElastixType::FixedImageType  OutputImageType;
           
     /** Other typedef's. */
     typedef MultiResolutionPyramidImageFilter<
-      InputImageType, OutputImageType >									ITKBaseType;
+      InputImageType, OutputImageType >                 ITKBaseType;
 
     /** Typedef's from ITKBaseType. */
-    typedef typename ITKBaseType::ScheduleType					ScheduleType;
+    typedef typename ITKBaseType::ScheduleType          ScheduleType;
 
     /** Cast to ITKBaseType. */
     virtual ITKBaseType * GetAsITKBaseType(void)
@@ -111,9 +111,9 @@ using namespace itk;
   private:
 
     /** The private constructor. */
-    FixedImagePyramidBase( const Self& );	// purposely not implemented
+    FixedImagePyramidBase( const Self& ); // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );				// purposely not implemented
+    void operator=( const Self& );        // purposely not implemented
 
   }; // end class FixedImagePyramidBase
 

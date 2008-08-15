@@ -28,11 +28,11 @@ using namespace itk;
   template <class TElastix>
     void MultiMetricMultiResolutionRegistration<TElastix>
     ::BeforeRegistration(void)
-  {	
+  { 
     /** Get the components from this->m_Elastix and set them.*/
     this->SetComponents();
 
-    /** Set the number of resolutions.*/		
+    /** Set the number of resolutions.*/    
     unsigned int numberOfResolutions = 3;
     this->m_Configuration->ReadParameter( numberOfResolutions, "NumberOfResolutions", 0 );
     this->SetNumberOfLevels( numberOfResolutions );
@@ -83,7 +83,7 @@ using namespace itk;
   template <class TElastix>
     void MultiMetricMultiResolutionRegistration<TElastix>
     ::AfterEachIteration(void)
-  {	
+  { 
     /** Print the submetric values and gradients to xout["iteration"].*/
     const unsigned int nrOfMetrics = this->GetCombinationMetric()->GetNumberOfMetrics();
     for ( unsigned int i = 0; i < nrOfMetrics; ++i )
@@ -109,7 +109,7 @@ using namespace itk;
   template <class TElastix>
     void MultiMetricMultiResolutionRegistration<TElastix>
     ::BeforeEachResolution(void)
-  {	
+  { 
     /** Get the current resolution level. */
     unsigned int level = this->GetCurrentLevel();
 
@@ -141,7 +141,7 @@ using namespace itk;
   template <class TElastix>
     void MultiMetricMultiResolutionRegistration<TElastix>
     ::SetComponents(void)
-  {	
+  { 
     /** Get the component from this->GetElastix() (as elx::...BaseType *),
      * cast it to the appropriate type and set it in 'this'. */
 

@@ -71,11 +71,11 @@ namespace itk
   public:
     
     /** Standard class typedefs. */
-    typedef ParzenWindowNormalizedMutualInformationImageToImageMetric					    Self;
+    typedef ParzenWindowNormalizedMutualInformationImageToImageMetric             Self;
     typedef ParzenWindowHistogramImageToImageMetric<
-      TFixedImage, TMovingImage >			                                  Superclass;
-    typedef SmartPointer<Self>																	        Pointer;
-    typedef SmartPointer<const Self>														        ConstPointer;
+      TFixedImage, TMovingImage >                                       Superclass;
+    typedef SmartPointer<Self>                                          Pointer;
+    typedef SmartPointer<const Self>                                    ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -164,7 +164,7 @@ namespace itk
     typedef typename Superclass::FixedImagePointType                FixedImagePointType;
     typedef typename Superclass::MovingImagePointType               MovingImagePointType;
     typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
-    typedef	typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
+    typedef typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
     typedef typename Superclass::CentralDifferenceGradientFilterType        CentralDifferenceGradientFilterType;
     typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
     typedef typename Superclass::BSplineTransformType               BSplineTransformType;
@@ -202,9 +202,9 @@ namespace itk
   private:
     
     /** The private constructor. */
-    ParzenWindowNormalizedMutualInformationImageToImageMetric( const Self& );	// purposely not implemented
+    ParzenWindowNormalizedMutualInformationImageToImageMetric( const Self& ); // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );															// purposely not implemented
+    void operator=( const Self& );                              // purposely not implemented
       
   }; // end class ParzenWindowNormalizedMutualInformationImageToImageMetric
 

@@ -28,7 +28,7 @@ using namespace itk;
   template <class TElastix>
     void MultiResolutionRegistrationWithFeatures<TElastix>
     ::BeforeRegistration( void )
-  {	
+  { 
     /** Get the components from this->m_Elastix and set them. */
     this->GetAndSetComponents();
 
@@ -53,7 +53,7 @@ using namespace itk;
   template <class TElastix>
     void MultiResolutionRegistrationWithFeatures<TElastix>
     ::BeforeEachResolution( void )
-  {	
+  { 
     /** Get the current resolution level. */
     unsigned int level = this->GetCurrentLevel();
 

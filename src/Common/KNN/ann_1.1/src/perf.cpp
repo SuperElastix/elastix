@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------
-// File:			perf.cpp
-// Programmer:		Sunil Arya and David Mount
-// Description:		Methods for performance stats
-// Last modified:	01/04/05 (Version 1.0)
+// File:      perf.cpp
+// Programmer:    Sunil Arya and David Mount
+// Description:   Methods for performance stats
+// Last modified: 01/04/05 (Version 1.0)
 //----------------------------------------------------------------------
 // Copyright (c) 1997-2005 University of Maryland and Sunil Arya and
 // David Mount.  All Rights Reserved.
@@ -18,52 +18,52 @@
 // warranty.
 //----------------------------------------------------------------------
 // History:
-//	Revision 0.1  03/04/98
-//		Initial release
-//	Revision 1.0  04/01/05
-//		Changed names to avoid namespace conflicts.
-//		Added flush after printing performance stats to fix bug
-//			in Microsoft Windows version.
+//  Revision 0.1  03/04/98
+//    Initial release
+//  Revision 1.0  04/01/05
+//    Changed names to avoid namespace conflicts.
+//    Added flush after printing performance stats to fix bug
+//      in Microsoft Windows version.
 //----------------------------------------------------------------------
 
-#include <ANN/ANN.h>					// basic ANN includes
-#include <ANN/ANNperf.h>				// performance includes
+#include <ANN/ANN.h>          // basic ANN includes
+#include <ANN/ANNperf.h>        // performance includes
 
-using namespace std;					// make std:: available
-
-//----------------------------------------------------------------------
-//	Performance statistics
-//		The following data and routines are used for computing
-//		performance statistics for nearest neighbor searching.
-//		Because these routines can slow the code down, they can be
-//		activated and deactiviated by defining the PERF variable,
-//		by compiling with the option: -DPERF
-//----------------------------------------------------------------------
+using namespace std;          // make std:: available
 
 //----------------------------------------------------------------------
-//	Global counters for performance measurement
+//  Performance statistics
+//    The following data and routines are used for computing
+//    performance statistics for nearest neighbor searching.
+//    Because these routines can slow the code down, they can be
+//    activated and deactiviated by defining the PERF variable,
+//    by compiling with the option: -DPERF
 //----------------------------------------------------------------------
 
-int				ann_Ndata_pts  = 0;		// number of data points
-int				ann_Nvisit_lfs = 0;		// number of leaf nodes visited
-int				ann_Nvisit_spl = 0;		// number of splitting nodes visited
-int				ann_Nvisit_shr = 0;		// number of shrinking nodes visited
-int				ann_Nvisit_pts = 0;		// visited points for one query
-int				ann_Ncoord_hts = 0;		// coordinate hits for one query
-int				ann_Nfloat_ops = 0;		// floating ops for one query
-ANNsampStat		ann_visit_lfs;			// stats on leaf nodes visits
-ANNsampStat		ann_visit_spl;			// stats on splitting nodes visits
-ANNsampStat		ann_visit_shr;			// stats on shrinking nodes visits
-ANNsampStat		ann_visit_nds;			// stats on total nodes visits
-ANNsampStat		ann_visit_pts;			// stats on points visited
-ANNsampStat		ann_coord_hts;			// stats on coordinate hits
-ANNsampStat		ann_float_ops;			// stats on floating ops
+//----------------------------------------------------------------------
+//  Global counters for performance measurement
+//----------------------------------------------------------------------
+
+int       ann_Ndata_pts  = 0;   // number of data points
+int       ann_Nvisit_lfs = 0;   // number of leaf nodes visited
+int       ann_Nvisit_spl = 0;   // number of splitting nodes visited
+int       ann_Nvisit_shr = 0;   // number of shrinking nodes visited
+int       ann_Nvisit_pts = 0;   // visited points for one query
+int       ann_Ncoord_hts = 0;   // coordinate hits for one query
+int       ann_Nfloat_ops = 0;   // floating ops for one query
+ANNsampStat   ann_visit_lfs;      // stats on leaf nodes visits
+ANNsampStat   ann_visit_spl;      // stats on splitting nodes visits
+ANNsampStat   ann_visit_shr;      // stats on shrinking nodes visits
+ANNsampStat   ann_visit_nds;      // stats on total nodes visits
+ANNsampStat   ann_visit_pts;      // stats on points visited
+ANNsampStat   ann_coord_hts;      // stats on coordinate hits
+ANNsampStat   ann_float_ops;      // stats on floating ops
 //
-ANNsampStat		ann_average_err;		// average error
-ANNsampStat		ann_rank_err;			// rank error
+ANNsampStat   ann_average_err;    // average error
+ANNsampStat   ann_rank_err;     // rank error
 
 //----------------------------------------------------------------------
-//	Routines for statistics.
+//  Routines for statistics.
 //----------------------------------------------------------------------
 
 DLL_API void annResetStats(int data_size) // reset stats for a set of queries
@@ -80,7 +80,7 @@ DLL_API void annResetStats(int data_size) // reset stats for a set of queries
   ann_rank_err.reset();
 }
 
-DLL_API void annResetCounts()				// reset counts for one query
+DLL_API void annResetCounts()       // reset counts for one query
 {
   ann_Nvisit_lfs = 0;
   ann_Nvisit_spl = 0;
@@ -90,7 +90,7 @@ DLL_API void annResetCounts()				// reset counts for one query
   ann_Nfloat_ops = 0;
 }
 
-DLL_API void annUpdateStats()				// update stats with current counts
+DLL_API void annUpdateStats()       // update stats with current counts
 {
   ann_visit_lfs += ann_Nvisit_lfs;
   ann_visit_nds += ann_Nvisit_spl + ann_Nvisit_lfs;
@@ -105,16 +105,16 @@ DLL_API void annUpdateStats()				// update stats with current counts
 void print_one_stat(char *title, ANNsampStat s, double div)
 {
   cout << title << "= [ ";
-  cout.width(9); cout << s.mean()/div			<< " : ";
-  cout.width(9); cout << s.stdDev()/div		<< " ]<";
-  cout.width(9); cout << s.min()/div			<< " , ";
-  cout.width(9); cout << s.max()/div			<< " >\n";
+  cout.width(9); cout << s.mean()/div     << " : ";
+  cout.width(9); cout << s.stdDev()/div   << " ]<";
+  cout.width(9); cout << s.min()/div      << " , ";
+  cout.width(9); cout << s.max()/div      << " >\n";
 }
 
-DLL_API void annPrintStats(				// print statistics for a run
-  ANNbool validate)					// true if average errors desired
+DLL_API void annPrintStats(       // print statistics for a run
+  ANNbool validate)         // true if average errors desired
 {
-  cout.precision(4);					// set floating precision
+  cout.precision(4);          // set floating precision
   cout << "  (Performance stats: "
      << " [      mean :    stddev ]<      min ,       max >\n";
   print_one_stat("    leaf_nodes       ", ann_visit_lfs, 1);
@@ -128,7 +128,7 @@ DLL_API void annPrintStats(				// print statistics for a run
     print_one_stat("    average_error    ", ann_average_err, 1);
     print_one_stat("    rank_error       ", ann_rank_err, 1);
   }
-  cout.precision(0);					// restore the default
+  cout.precision(0);          // restore the default
   cout << "  )\n";
   cout.flush();
 }

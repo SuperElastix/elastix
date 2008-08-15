@@ -36,9 +36,9 @@ namespace itk
     
     /** Standard itk. */
     typedef ANNBruteForceTree                 Self;
-    typedef BinaryANNTreeBase< TListSample >	Superclass;
-    typedef SmartPointer< Self >				      Pointer;
-    typedef SmartPointer< const Self >	      ConstPointer;
+    typedef BinaryANNTreeBase< TListSample >  Superclass;
+    typedef SmartPointer< Self >              Pointer;
+    typedef SmartPointer< const Self >        ConstPointer;
     
     /** New method for creating an object using a factory. */
     itkNewMacro( Self );
@@ -59,7 +59,7 @@ namespace itk
     /** Set the maximum number of points that are to be visited. *
     void SetMaximumNumberOfPointsToVisit( unsigned int num )
     {
-      annMaxPtsVisit(	static_cast<int>( num ) );
+      annMaxPtsVisit( static_cast<int>( num ) );
     }
 
     /** Generate the tree. */

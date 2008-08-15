@@ -48,22 +48,22 @@ namespace xoutlibrary
   public:
 
     /** Typedef's.*/
-    typedef xoutbase												Self;
+    typedef xoutbase                        Self;
     
-    typedef traits													traits_type;
-    typedef charT														char_type;
-    typedef typename traits::int_type				int_type;
-    typedef typename traits::pos_type				pos_type;
-    typedef typename traits::off_type				off_type;
-    typedef basic_ostream<charT, traits>		ostream_type;
-    typedef basic_ios<charT, traits>				ios_type;
+    typedef traits                          traits_type;
+    typedef charT                           char_type;
+    typedef typename traits::int_type       int_type;
+    typedef typename traits::pos_type       pos_type;
+    typedef typename traits::off_type       off_type;
+    typedef basic_ostream<charT, traits>    ostream_type;
+    typedef basic_ios<charT, traits>        ios_type;
     
-    typedef std::map< std::string, ostream_type * >			CStreamMapType;
-    typedef std::map< std::string, Self * >							XStreamMapType;
-    typedef typename CStreamMapType::iterator						CStreamMapIteratorType;
-    typedef typename XStreamMapType::iterator						XStreamMapIteratorType;
-    typedef typename CStreamMapType::value_type					CStreamMapEntryType;
-    typedef typename XStreamMapType::value_type					XStreamMapEntryType;
+    typedef std::map< std::string, ostream_type * >     CStreamMapType;
+    typedef std::map< std::string, Self * >             XStreamMapType;
+    typedef typename CStreamMapType::iterator           CStreamMapIteratorType;
+    typedef typename XStreamMapType::iterator           XStreamMapIteratorType;
+    typedef typename CStreamMapType::value_type         CStreamMapEntryType;
+    typedef typename XStreamMapType::value_type         XStreamMapEntryType;
     
     /** Constructors */
     xoutbase();
@@ -72,7 +72,7 @@ namespace xoutlibrary
     virtual ~xoutbase();
 
     /** The operator [] simply calls this->SelectXCell(cellname).
-     * It returns an x-cell */	
+     * It returns an x-cell */  
     inline Self & operator[]( const char * cellname );
 
     /**
@@ -83,7 +83,7 @@ namespace xoutlibrary
      * and need to deduce their own template arguments)
      */
 
-  /**	template < class T >
+  /** template < class T >
       Self & operator<<(T &  _arg)
     {
       return this->SendToTargets(_arg);
@@ -95,17 +95,17 @@ namespace xoutlibrary
       return this->SendToTargets( _arg );
     }
 
-    Self & operator<<( ostream_type & (*pf)(ostream_type	&) )
+    Self & operator<<( ostream_type & (*pf)(ostream_type  &) )
     {
       return this->SendToTargets( pf );
     }
 
-    Self & operator<<( ios_type	& (*pf)(ios_type &) )
+    Self & operator<<( ios_type & (*pf)(ios_type &) )
     {
       return this->SendToTargets( pf );
     }
 
-    Self & operator<<( ios_base	& (*pf)(ios_base &) )
+    Self & operator<<( ios_base & (*pf)(ios_base &) )
     {
       return this->SendToTargets( pf );
     }

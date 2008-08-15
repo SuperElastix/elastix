@@ -36,21 +36,21 @@ using namespace itk;
    *
    * The parameters used in this class are:\n
    * \parameter Registration: Select this registration framework as follows:\n
-   *		<tt>(Registration "MultiResolutionRegistrationWithFeatures")</tt>
+   *    <tt>(Registration "MultiResolutionRegistrationWithFeatures")</tt>
    * \parameter NumberOfResolutions: the number of resolutions used. \n
-   *		example: <tt>(NumberOfResolutions 4)</tt> \n
-   *		The default is 3.\n
+   *    example: <tt>(NumberOfResolutions 4)</tt> \n
+   *    The default is 3.\n
    * \parameter Metric\<i\>Weight: The weight for the i-th metric, in each resolution \n
-   *		example: <tt>(Metric0Weight 0.5 0.5 0.8)</tt> \n
-   *		example: <tt>(Metric1Weight 0.5 0.5 0.2)</tt> \n
-   *		The default is 1.0.
+   *    example: <tt>(Metric0Weight 0.5 0.5 0.8)</tt> \n
+   *    example: <tt>(Metric1Weight 0.5 0.5 0.2)</tt> \n
+   *    The default is 1.0.
    *
    * \ingroup Registrations
    */
 
   template <class TElastix>
     class MultiResolutionRegistrationWithFeatures :
-    public	
+    public  
       MultiResolutionImageRegistrationMethodWithFeatures<
       ITK_TYPENAME RegistrationBase<TElastix>::FixedImageType,
       ITK_TYPENAME RegistrationBase<TElastix>::MovingImageType >,
@@ -60,14 +60,14 @@ using namespace itk;
   public:
 
     /** Standard ITK: Self */
-    typedef MultiResolutionRegistrationWithFeatures			Self;
-    typedef	MultiResolutionImageRegistrationMethodWithFeatures<
+    typedef MultiResolutionRegistrationWithFeatures     Self;
+    typedef MultiResolutionImageRegistrationMethodWithFeatures<
       typename RegistrationBase<TElastix>::FixedImageType,
       typename RegistrationBase<TElastix>::MovingImageType >
                                                         Superclass1;
-    typedef RegistrationBase<TElastix>									Superclass2;
-    typedef SmartPointer<Self>													Pointer;
-    typedef SmartPointer<const Self>										ConstPointer;
+    typedef RegistrationBase<TElastix>                  Superclass2;
+    typedef SmartPointer<Self>                          Pointer;
+    typedef SmartPointer<const Self>                    ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -85,61 +85,61 @@ using namespace itk;
     /** Typedef's inherited from Superclass1. */
     
     /**  Type of the Fixed image. */
-    typedef typename Superclass1::FixedImageType						FixedImageType;
-    typedef typename Superclass1::FixedImageConstPointer		FixedImageConstPointer;
-    typedef typename Superclass1::FixedImageRegionType			FixedImageRegionType;
+    typedef typename Superclass1::FixedImageType            FixedImageType;
+    typedef typename Superclass1::FixedImageConstPointer    FixedImageConstPointer;
+    typedef typename Superclass1::FixedImageRegionType      FixedImageRegionType;
     
     /**  Type of the Moving image. */
-    typedef typename Superclass1::MovingImageType						MovingImageType;
-    typedef typename Superclass1::MovingImageConstPointer		MovingImageConstPointer;
+    typedef typename Superclass1::MovingImageType           MovingImageType;
+    typedef typename Superclass1::MovingImageConstPointer   MovingImageConstPointer;
     
     /**  Type of the metric. */
-    typedef typename Superclass1::MetricType								MetricType;
-    typedef typename Superclass1::MetricPointer							MetricPointer;
+    typedef typename Superclass1::MetricType                MetricType;
+    typedef typename Superclass1::MetricPointer             MetricPointer;
     
     /**  Type of the Transform . */
-    typedef typename Superclass1::TransformType							TransformType;
-    typedef typename Superclass1::TransformPointer					TransformPointer;
+    typedef typename Superclass1::TransformType             TransformType;
+    typedef typename Superclass1::TransformPointer          TransformPointer;
     
     /**  Type of the Interpolator. */
-    typedef typename Superclass1::InterpolatorType					InterpolatorType;
-    typedef typename Superclass1::InterpolatorPointer				InterpolatorPointer;
+    typedef typename Superclass1::InterpolatorType          InterpolatorType;
+    typedef typename Superclass1::InterpolatorPointer       InterpolatorPointer;
     
     /**  Type of the optimizer. */
-    typedef typename Superclass1::OptimizerType							OptimizerType;
-    typedef typename Superclass1::OptimizerPointer					OptimizerPointer;
+    typedef typename Superclass1::OptimizerType             OptimizerType;
+    typedef typename Superclass1::OptimizerPointer          OptimizerPointer;
     
     /** Type of the Fixed image multiresolution pyramid. */
-    typedef typename Superclass1::FixedImagePyramidType			FixedImagePyramidType;
-    typedef typename Superclass1::FixedImagePyramidPointer	FixedImagePyramidPointer;
+    typedef typename Superclass1::FixedImagePyramidType     FixedImagePyramidType;
+    typedef typename Superclass1::FixedImagePyramidPointer  FixedImagePyramidPointer;
     
     /** Type of the moving image multiresolution pyramid. */
-    typedef typename Superclass1::MovingImagePyramidType		MovingImagePyramidType ;
-    typedef typename Superclass1::MovingImagePyramidPointer	MovingImagePyramidPointer;
+    typedef typename Superclass1::MovingImagePyramidType    MovingImagePyramidType ;
+    typedef typename Superclass1::MovingImagePyramidPointer MovingImagePyramidPointer;
     
     /** Type of the Transformation parameters. This is the same type used to
      *  represent the search space of the optimization algorithm.
      */
-    typedef typename Superclass1::ParametersType						ParametersType;
+    typedef typename Superclass1::ParametersType            ParametersType;
 
     /** The CombinationMetric type, which is used internally by the Superclass1 *
-    typedef typename Superclass1::CombinationMetricType	 	  CombinationMetricType;
+    typedef typename Superclass1::CombinationMetricType     CombinationMetricType;
     typedef typename Superclass1::CombinationMetricPointer  CombinationMetricPointer;
     
     /** Typedef's from Elastix. */
-    typedef typename Superclass2::ElastixType						    ElastixType;
-    typedef typename Superclass2::ElastixPointer				    ElastixPointer;
-    typedef typename Superclass2::ConfigurationType			    ConfigurationType;
-    typedef typename Superclass2::ConfigurationPointer	    ConfigurationPointer;
-    typedef typename Superclass2::RegistrationType			    RegistrationType;
-    typedef typename Superclass2::RegistrationPointer		    RegistrationPointer;
-    typedef typename Superclass2::ITKBaseType						    ITKBaseType;
+    typedef typename Superclass2::ElastixType               ElastixType;
+    typedef typename Superclass2::ElastixPointer            ElastixPointer;
+    typedef typename Superclass2::ConfigurationType         ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType          RegistrationType;
+    typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
+    typedef typename Superclass2::ITKBaseType               ITKBaseType;
     typedef typename Superclass2::UseMaskErosionArrayType   UseMaskErosionArrayType;
 
-    /** Get	the dimension of the fixed image. */
+    /** Get the dimension of the fixed image. */
     itkStaticConstMacro( FixedImageDimension, unsigned int, Superclass2::FixedImageDimension );
 
-    /** Get	the dimension of the moving image. */
+    /** Get the dimension of the moving image. */
     itkStaticConstMacro( MovingImageDimension, unsigned int, Superclass2::MovingImageDimension );
 
     /** Execute stuff before the actual registration:
@@ -165,8 +165,8 @@ using namespace itk;
     virtual ~MultiResolutionRegistrationWithFeatures() {};
     
     /** Typedef's for timer. */
-    typedef tmr::Timer					TimerType;
-    typedef TimerType::Pointer	TimerPointer;
+    typedef tmr::Timer          TimerType;
+    typedef TimerType::Pointer  TimerPointer;
 
     /** Typedef's for mask support. */
     typedef typename Superclass2::MaskPixelType                   MaskPixelType;
@@ -195,9 +195,9 @@ using namespace itk;
   private:
 
     /** The private constructor. */
-    MultiResolutionRegistrationWithFeatures( const Self& );	// purposely not implemented
+    MultiResolutionRegistrationWithFeatures( const Self& ); // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );							// purposely not implemented
+    void operator=( const Self& );              // purposely not implemented
 
   }; // end class MultiResolutionRegistrationWithFeatures
 

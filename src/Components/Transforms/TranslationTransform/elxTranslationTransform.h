@@ -31,7 +31,7 @@ namespace elastix
    *
    * The parameters used in this class are:
    * \parameter Transform: Select this transform as follows:\n
-   *		<tt>(%Transform "TranslationTransform")</tt>
+   *    <tt>(%Transform "TranslationTransform")</tt>
    * \parameter AutomaticTransformInitialization: whether or not the initial translation
    *    between images should be estimated as the distance between their centers.\n
    *    example: <tt>(AutomaticTransformInitialization "true")</tt> \n
@@ -50,22 +50,22 @@ namespace elastix
   public:
     
     /** Standard ITK-stuff. */
-    typedef TranslationTransformElastix											Self;
+    typedef TranslationTransformElastix                     Self;
     
     typedef CombinationTransform<
       typename elx::TransformBase<TElastix>::CoordRepType,
-      elx::TransformBase<TElastix>::FixedImageDimension >		Superclass1;
+      elx::TransformBase<TElastix>::FixedImageDimension >   Superclass1;
     
-    typedef elx::TransformBase<TElastix>										Superclass2;
+    typedef elx::TransformBase<TElastix>                    Superclass2;
     
     /** The ITK-class that provides most of the functionality, and
      * that is set as the "CurrentTransform" in the CombinationTransform */
     typedef TranslationTransform<
       typename elx::TransformBase<TElastix>::CoordRepType,
-      elx::TransformBase<TElastix>::FixedImageDimension >		TranslationTransformType;
+      elx::TransformBase<TElastix>::FixedImageDimension >   TranslationTransformType;
     
-    typedef SmartPointer<Self>															Pointer;
-    typedef SmartPointer<const Self>												ConstPointer;
+    typedef SmartPointer<Self>                              Pointer;
+    typedef SmartPointer<const Self>                        ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -83,38 +83,38 @@ namespace elastix
     itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );
     
     /** Typedefs inherited from the superclass. */
-    typedef typename Superclass1::ScalarType 								ScalarType;
-    typedef typename Superclass1::ParametersType 						ParametersType;
-    typedef typename Superclass1::JacobianType 							JacobianType;
-    typedef typename Superclass1::InputVectorType						InputVectorType;
-    typedef typename Superclass1::OutputVectorType 					OutputVectorType;
-    typedef typename Superclass1::InputCovariantVectorType 	InputCovariantVectorType;
-    typedef typename Superclass1::OutputCovariantVectorType	OutputCovariantVectorType;
-    typedef typename Superclass1::InputVnlVectorType 				InputVnlVectorType;
-    typedef typename Superclass1::OutputVnlVectorType				OutputVnlVectorType;
-    typedef typename Superclass1::InputPointType 						InputPointType;
-    typedef typename Superclass1::OutputPointType						OutputPointType;
+    typedef typename Superclass1::ScalarType                ScalarType;
+    typedef typename Superclass1::ParametersType            ParametersType;
+    typedef typename Superclass1::JacobianType              JacobianType;
+    typedef typename Superclass1::InputVectorType           InputVectorType;
+    typedef typename Superclass1::OutputVectorType          OutputVectorType;
+    typedef typename Superclass1::InputCovariantVectorType  InputCovariantVectorType;
+    typedef typename Superclass1::OutputCovariantVectorType OutputCovariantVectorType;
+    typedef typename Superclass1::InputVnlVectorType        InputVnlVectorType;
+    typedef typename Superclass1::OutputVnlVectorType       OutputVnlVectorType;
+    typedef typename Superclass1::InputPointType            InputPointType;
+    typedef typename Superclass1::OutputPointType           OutputPointType;
     
     /** Typedef's from the TransformBase class. */
-    typedef typename Superclass2::ElastixType								ElastixType;
-    typedef typename Superclass2::ElastixPointer						ElastixPointer;
-    typedef typename Superclass2::ConfigurationType					ConfigurationType;
-    typedef typename Superclass2::ConfigurationPointer			ConfigurationPointer;
-    typedef typename Superclass2::RegistrationType					RegistrationType;
-    typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
-    typedef typename Superclass2::CoordRepType							CoordRepType;
-    typedef typename Superclass2::FixedImageType						FixedImageType;
-    typedef typename Superclass2::MovingImageType						MovingImageType;
-    typedef typename Superclass2::ITKBaseType								ITKBaseType;
-    typedef typename Superclass2::CombinationTransformType	CombinationTransformType;
+    typedef typename Superclass2::ElastixType               ElastixType;
+    typedef typename Superclass2::ElastixPointer            ElastixPointer;
+    typedef typename Superclass2::ConfigurationType         ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType          RegistrationType;
+    typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
+    typedef typename Superclass2::CoordRepType              CoordRepType;
+    typedef typename Superclass2::FixedImageType            FixedImageType;
+    typedef typename Superclass2::MovingImageType           MovingImageType;
+    typedef typename Superclass2::ITKBaseType               ITKBaseType;
+    typedef typename Superclass2::CombinationTransformType  CombinationTransformType;
     
     /** Extra typedefs */
     typedef TranslationTransformInitializer<
       TranslationTransformType,
       FixedImageType,
-      MovingImageType>																			TransformInitializerType;
-    typedef typename TransformInitializerType::Pointer			TransformInitializerPointer;
-    typedef typename TranslationTransformType::Pointer			TranslationTransformPointer;
+      MovingImageType>                                      TransformInitializerType;
+    typedef typename TransformInitializerType::Pointer      TransformInitializerPointer;
+    typedef typename TranslationTransformType::Pointer      TranslationTransformPointer;
 
     /** Execute stuff before the actual registration:
      * \li Call InitializeTransform.
@@ -141,9 +141,9 @@ namespace elastix
   private:
 
     /** The private constructor. */
-    TranslationTransformElastix( const Self& );	// purposely not implemented
+    TranslationTransformElastix( const Self& ); // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );							// purposely not implemented
+    void operator=( const Self& );              // purposely not implemented
     
   }; // end class TranslationTransformElastix
   

@@ -29,11 +29,11 @@ using namespace itk;
   template <class TElastix>
     void MultiResolutionRegistration<TElastix>
     ::BeforeRegistration(void)
-  {	
+  { 
     /** Get the components from this->m_Elastix and set them. */
     this->SetComponents();
 
-    /** Set the number of resolutions. */		
+    /** Set the number of resolutions. */   
     unsigned int numberOfResolutions = 3;
     this->m_Configuration->ReadParameter( numberOfResolutions, "NumberOfResolutions", 0 );
     this->SetNumberOfLevels( numberOfResolutions );
@@ -69,14 +69,14 @@ using namespace itk;
   template <class TElastix>
     void MultiResolutionRegistration<TElastix>
     ::BeforeEachResolution(void)
-  {	
+  { 
     /** Get the current resolution level. */
     unsigned int level = this->GetCurrentLevel();
 
     /** Do erosion, or just reset the original masks in the metric, or
      * do nothing when no masks are used.
      */
-    this->UpdateMasks( level );		
+    this->UpdateMasks( level );   
 
   } // end BeforeEachResolution
   
@@ -88,7 +88,7 @@ using namespace itk;
   template <class TElastix>
     void MultiResolutionRegistration<TElastix>
     ::SetComponents(void)
-  {	
+  { 
     /** Get the component from this-GetElastix() (as elx::...BaseType *),
      * cast it to the appropriate type and set it in 'this'. */
 

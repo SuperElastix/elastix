@@ -47,20 +47,20 @@ using namespace itk;
    *
    * The parameters used in this class are:
    * \parameter Optimizer: Select this optimizer as follows:\n
-   *		<tt>(Optimizer "RSGDEachParameterApart")</tt>
+   *    <tt>(Optimizer "RSGDEachParameterApart")</tt>
    * \parameter MaximumNumberOfIterations: the maximum number of iterations in each resolution. \n
-   *	 example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
+   *   example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
    *   Default value: 100.
    * \parameter MinimumGradientMagnitude: stopping criterion. If the magnitude of the derivative
    *   of the cost function is below this value, optimisation is stopped. \n
-   *	 example: <tt>(MinimumGradientMagnitude 0.0001 0.0001 0.001)</tt> \n
+   *   example: <tt>(MinimumGradientMagnitude 0.0001 0.0001 0.001)</tt> \n
    *   Default value: 1e-8. 
    * \parameter MinimumStepLength: stopping criterion. If the steplength is below this
    *   value, optimisation is stopped. \n
-   *	 example: <tt>(MinimumStepLength 1.0 0.5 0.1)</tt> \n
+   *   example: <tt>(MinimumStepLength 1.0 0.5 0.1)</tt> \n
    *   Default value: <em>0.5 / 2^resolutionlevel</em>
    * \parameter MaximumStepLength: the starting steplength.  \n
-   *	 example: <tt>(MaxiumStepLength 16.0 8.0 4.0)</tt> \n
+   *   example: <tt>(MaxiumStepLength 16.0 8.0 4.0)</tt> \n
    *   Default value: <em>16 / 2^resolutionlevel</em>. 
    *
    * \ingroup Optimizers
@@ -76,11 +76,11 @@ using namespace itk;
   public:
 
     /** Standard ITK.*/
-    typedef RSGDEachParameterApart							Self;
-    typedef RSGDEachParameterApartOptimizer			Superclass1;
-    typedef OptimizerBase<TElastix>							Superclass2;
-    typedef SmartPointer<Self>									Pointer;
-    typedef SmartPointer<const Self>						ConstPointer;
+    typedef RSGDEachParameterApart              Self;
+    typedef RSGDEachParameterApartOptimizer     Superclass1;
+    typedef OptimizerBase<TElastix>             Superclass2;
+    typedef SmartPointer<Self>                  Pointer;
+    typedef SmartPointer<const Self>            ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -95,27 +95,27 @@ using namespace itk;
     elxClassNameMacro( "RSGDEachParameterApart" );
 
     /** Typedef's inherited from Superclass1.*/
-    typedef Superclass1::CostFunctionType			CostFunctionType;
-    typedef Superclass1::CostFunctionPointer	CostFunctionPointer;
+    typedef Superclass1::CostFunctionType     CostFunctionType;
+    typedef Superclass1::CostFunctionPointer  CostFunctionPointer;
 
     /** Typedef's inherited from Elastix.*/
-    typedef typename Superclass2::ElastixType						ElastixType;
-    typedef typename Superclass2::ElastixPointer				ElastixPointer;
-    typedef typename Superclass2::ConfigurationType			ConfigurationType;
-    typedef typename Superclass2::ConfigurationPointer	ConfigurationPointer;
-    typedef typename Superclass2::RegistrationType			RegistrationType;
-    typedef typename Superclass2::RegistrationPointer		RegistrationPointer;
-    typedef typename Superclass2::ITKBaseType						ITKBaseType;
+    typedef typename Superclass2::ElastixType           ElastixType;
+    typedef typename Superclass2::ElastixPointer        ElastixPointer;
+    typedef typename Superclass2::ConfigurationType     ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer  ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType      RegistrationType;
+    typedef typename Superclass2::RegistrationPointer   RegistrationPointer;
+    typedef typename Superclass2::ITKBaseType           ITKBaseType;
     
     /** Typedef for the ParametersType. */
-    typedef typename Superclass1::ParametersType				ParametersType;
+    typedef typename Superclass1::ParametersType        ParametersType;
 
     /** Methods that have to be present everywhere.*/
     virtual void BeforeRegistration(void);
     virtual void BeforeEachResolution(void);
     virtual void AfterEachResolution(void);
     virtual void AfterEachIteration(void);
-    virtual void AfterRegistration(void);		
+    virtual void AfterRegistration(void);   
     
     /** Override the SetInitialPosition.
      * Override the implementation in itkOptimizer.h, to
@@ -130,8 +130,8 @@ using namespace itk;
       
   private:
 
-      RSGDEachParameterApart( const Self& );	// purposely not implemented
-      void operator=( const Self& );							// purposely not implemented
+      RSGDEachParameterApart( const Self& );  // purposely not implemented
+      void operator=( const Self& );              // purposely not implemented
       
   }; // end class RSGDEachParameterApart
   

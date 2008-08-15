@@ -83,8 +83,8 @@ namespace itk
 
   private:
 
-    RSGDEachParameterApartOptimizer( const Self& );	// purposely not implemented
-    void operator=( const Self& );									// purposely not implemented
+    RSGDEachParameterApartOptimizer( const Self& ); // purposely not implemented
+    void operator=( const Self& );                  // purposely not implemented
 
   }; // end class RSGDEachParameterApartOptimizer
 

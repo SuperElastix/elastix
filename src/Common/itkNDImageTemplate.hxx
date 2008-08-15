@@ -36,7 +36,7 @@ namespace itk
     SetRegions(SizeType size)
   {
     this->m_Image->SetRegions(
-      ConvertToStaticArray<SizeType,SizeTypeD>::DO(size)	 );
+      ConvertToStaticArray<SizeType,SizeTypeD>::DO(size)   );
   }
 
     
@@ -96,7 +96,7 @@ namespace itk
     GetPixel(const IndexType &index)
   {
     return this->m_Image->GetPixel(
-      ConvertToStaticArray<IndexType, IndexTypeD>::DO(index)	);
+      ConvertToStaticArray<IndexType, IndexTypeD>::DO(index)  );
   }
 
 
@@ -165,7 +165,7 @@ namespace itk
     SetSpacing( const SpacingType & spacing )
   {
     this->m_Image->SetSpacing( 
-      ConvertToStaticArray<SpacingType, SpacingTypeD>::DO(spacing)	);			
+      ConvertToStaticArray<SpacingType, SpacingTypeD>::DO(spacing)  );      
   }
 
 
@@ -174,7 +174,7 @@ namespace itk
     SetOrigin( const PointType & origin )
   {
     this->m_Image->SetOrigin( 
-      ConvertToStaticArray<PointType, PointTypeD>::DO(origin)	 );			
+      ConvertToStaticArray<PointType, PointTypeD>::DO(origin)  );     
   }
 
 
@@ -260,7 +260,7 @@ namespace itk
       this->m_Writer->SetInput(this->m_Image);
       this->m_Writer->Write();
     }
-  }	 
+  }  
     
 
   template < class TPixel, unsigned int VDimension >
@@ -272,7 +272,7 @@ namespace itk
       this->m_Reader->Update();
       this->m_Image = this->m_Reader->GetOutput(); 
     }
-  }	 
+  }  
 
   
   template < class TPixel, unsigned int VDimension >
@@ -280,7 +280,7 @@ namespace itk
     CreateNewImage(void)
   {
     this->m_Image = ImageType::New();
-  }	 
+  }  
 
 
   template < class TPixel, unsigned int VDimension >
@@ -292,11 +292,11 @@ namespace itk
       this->m_Writer=WriterType::New();
     }
     this->m_Writer->SetImageIO(_arg);
-  }	 
+  }  
 
 
   template < class TPixel, unsigned int VDimension >
-    ImageIOBase *	NDImageTemplate<TPixel, VDimension>::
+    ImageIOBase * NDImageTemplate<TPixel, VDimension>::
     GetImageIOWriter(void)
   {
     if (this->m_Writer)
@@ -307,7 +307,7 @@ namespace itk
     {
       return 0;
     }
-  }	 
+  }  
 
 
   template < class TPixel, unsigned int VDimension >
@@ -319,7 +319,7 @@ namespace itk
       this->m_Reader=ReaderType::New();
     }
     this->m_Reader->SetImageIO(_arg);
-  }	 
+  }  
 
 
   template < class TPixel, unsigned int VDimension >
@@ -334,7 +334,7 @@ namespace itk
     {
       return 0;
     }
-  }	 
+  }  
 
   
   template < class TPixel, unsigned int VDimension >
@@ -346,7 +346,7 @@ namespace itk
       this->m_Writer=WriterType::New();
     }
     this->m_Writer->SetFileName(name);
-  }	 
+  }  
 
     
   template < class TPixel, unsigned int VDimension >
@@ -358,7 +358,7 @@ namespace itk
       this->m_Reader=ReaderType::New();
     }
     this->m_Reader->SetFileName(name);
-  }	 
+  }  
 
     
   template < class TPixel, unsigned int VDimension >
@@ -373,7 +373,7 @@ namespace itk
     {
       return "";
     }
-  }	 
+  }  
 
     
   template < class TPixel, unsigned int VDimension >
@@ -388,7 +388,7 @@ namespace itk
     {
       return "";
     }
-  }	 
+  }  
 
             
 } // end namespace itk

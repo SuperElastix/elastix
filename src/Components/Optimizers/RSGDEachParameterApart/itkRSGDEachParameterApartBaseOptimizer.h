@@ -136,8 +136,8 @@ namespace itk
 
   private:
 
-    RSGDEachParameterApartBaseOptimizer( const Self& );	// purposely not implemented
-    void operator=( const Self& );											// purposely not implemented
+    RSGDEachParameterApartBaseOptimizer( const Self& ); // purposely not implemented
+    void operator=( const Self& );                      // purposely not implemented
 
   protected:
 
@@ -154,7 +154,7 @@ namespace itk
     /** All current step lengths */
     DerivativeType                m_CurrentStepLengths;
     /** The average current step length */
-    double												m_CurrentStepLength;
+    double                        m_CurrentStepLength;
 
     StopConditionType             m_StopCondition;
     unsigned long                 m_NumberOfIterations;

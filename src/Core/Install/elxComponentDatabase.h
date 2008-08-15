@@ -52,9 +52,9 @@ namespace elastix
   public:
     
     /** Standard.*/
-    typedef ComponentDatabase							Self;
-    typedef itk::Object										Superclass;
-    typedef itk::SmartPointer<Self>				Pointer;
+    typedef ComponentDatabase             Self;
+    typedef itk::Object                   Superclass;
+    typedef itk::SmartPointer<Self>       Pointer;
     typedef itk::SmartPointer<const Self> ConstPointer;
   
     itkNewMacro(Self);
@@ -64,49 +64,49 @@ namespace elastix
     typedef unsigned int IndexType;
 
     /** Typedefs for the CreatorMap*/
-    typedef itk::Object						ObjectType;
-    typedef ObjectType::Pointer		ObjectPointer;
+    typedef itk::Object           ObjectType;
+    typedef ObjectType::Pointer   ObjectPointer;
 
     /** PtrToCreator is a pointer to a function which
      * outputs an ObjectPointer and has no input arguments.
      */
     typedef ObjectPointer (*PtrToCreator)(void);
-    typedef std::string									ComponentDescriptionType;
+    typedef std::string                 ComponentDescriptionType;
     typedef std::pair<
       ComponentDescriptionType,
-      IndexType>												CreatorMapKeyType;
-    typedef PtrToCreator								CreatorMapValueType;
+      IndexType>                        CreatorMapKeyType;
+    typedef PtrToCreator                CreatorMapValueType;
     typedef std::map<
       CreatorMapKeyType,
-      CreatorMapValueType>							CreatorMapType;
-    typedef CreatorMapType::value_type	CreatorMapEntryType;
+      CreatorMapValueType>              CreatorMapType;
+    typedef CreatorMapType::value_type  CreatorMapEntryType;
     
     /** Typedefs for the IndexMap.*/
 
     /** The ImageTypeDescription contains the pixeltype (as a string)
      * and the dimension (unsigned int).
      */
-    typedef std::string			PixelTypeDescriptionType;
-    typedef unsigned int		ImageDimensionType;
+    typedef std::string     PixelTypeDescriptionType;
+    typedef unsigned int    ImageDimensionType;
     typedef std::pair<
       PixelTypeDescriptionType,
-      ImageDimensionType>		ImageTypeDescriptionType;
+      ImageDimensionType>   ImageTypeDescriptionType;
 
     /** This pair contains the ImageTypeDescription of the FixedImageType
      * and the MovingImageType.
      */
     typedef std::pair<
       ImageTypeDescriptionType,
-      ImageTypeDescriptionType>					IndexMapKeyType;
-    typedef IndexType										IndexMapValueType;
+      ImageTypeDescriptionType>         IndexMapKeyType;
+    typedef IndexType                   IndexMapValueType;
     typedef std::map<
       IndexMapKeyType,
-      IndexMapValueType>								IndexMapType;
-    typedef IndexMapType::value_type		IndexMapEntryType;
+      IndexMapValueType>                IndexMapType;
+    typedef IndexMapType::value_type    IndexMapEntryType;
 
     /** Functions to get the CreatorMap and the IndexMap.*/
-    CreatorMapType &		GetCreatorMap(void);
-    IndexMapType &			GetIndexMap(void);
+    CreatorMapType &    GetCreatorMap(void);
+    IndexMapType &      GetIndexMap(void);
 
     /** Functions to set an entry in a map.*/
     int SetCreator(
@@ -116,19 +116,19 @@ namespace elastix
 
     int SetIndex(
       const PixelTypeDescriptionType & fixedPixelType,
-      ImageDimensionType fixedDimension,	
+      ImageDimensionType fixedDimension,  
       const PixelTypeDescriptionType & movingPixelType,
       ImageDimensionType movingDimension,
-      IndexType i	);
+      IndexType i );
 
     /** Functions to get an entry in a map */
     PtrToCreator GetCreator(
       const ComponentDescriptionType & name,
-      IndexType i	);
+      IndexType i );
 
     IndexType GetIndex(
       const PixelTypeDescriptionType & fixedPixelType,
-      ImageDimensionType fixedDimension,	
+      ImageDimensionType fixedDimension,  
       const PixelTypeDescriptionType & movingPixelType,
       ImageDimensionType movingDimension );
 
@@ -137,12 +137,12 @@ namespace elastix
     ComponentDatabase(){}
     virtual ~ComponentDatabase(){}
 
-    CreatorMapType		CreatorMap;
-    IndexMapType			IndexMap;
+    CreatorMapType    CreatorMap;
+    IndexMapType      IndexMap;
 
   private:
-    ComponentDatabase( const Self& );	// purposely not implemented
-    void operator=( const Self& );	// purposely not implemented
+    ComponentDatabase( const Self& ); // purposely not implemented
+    void operator=( const Self& );  // purposely not implemented
 
   }; // end class ComponentDatabase
   

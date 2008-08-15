@@ -219,7 +219,7 @@ namespace itk
       OriginType inputPoint;
       image->TransformIndexToPhysicalPoint( inputIndex, inputPoint );
       typename TransformType::OutputPointType outputPoint = 
-        this->m_InitialTransform->TransformPoint(	inputPoint );
+        this->m_InitialTransform->TransformPoint( inputPoint );
       
       /** Update minPoint and maxPoint. */
       for ( unsigned int i = 0; i < Dimension; i++ )

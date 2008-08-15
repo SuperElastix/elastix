@@ -71,17 +71,17 @@ namespace itk
     ::SetCoefficientVectorImage( const CoefficientVectorImageType * vecImage )
   {
     /** Typedef's for iterators. */
-    typedef ImageRegionConstIterator< CoefficientVectorImageType >	VectorIteratorType;
-    typedef ImageRegionIterator< CoefficientImageType >	  					IteratorType;		
+    typedef ImageRegionConstIterator< CoefficientVectorImageType >  VectorIteratorType;
+    typedef ImageRegionIterator< CoefficientImageType >             IteratorType;   
 
     /** Create array of images representing the B-spline
      * coefficients in each dimension. */
     for ( unsigned int i = 0; i < SpaceDimension; i++ )
     {
       this->m_Images[ i ] = CoefficientImageType::New();
-      this->m_Images[ i ]->SetRegions(	vecImage->GetLargestPossibleRegion() );
-      this->m_Images[ i ]->SetOrigin(		vecImage->GetOrigin() );
-      this->m_Images[ i ]->SetSpacing(	vecImage->GetSpacing() );
+      this->m_Images[ i ]->SetRegions(  vecImage->GetLargestPossibleRegion() );
+      this->m_Images[ i ]->SetOrigin(   vecImage->GetOrigin() );
+      this->m_Images[ i ]->SetSpacing(  vecImage->GetSpacing() );
       this->m_Images[ i ]->Allocate();
     }
 
@@ -128,7 +128,7 @@ namespace itk
   {
     /** Typedef for the combiner. */
     typedef ScalarToArrayCastImageFilter<
-      CoefficientImageType, CoefficientVectorImageType >			ScalarImageCombineType;
+      CoefficientImageType, CoefficientVectorImageType >      ScalarImageCombineType;
 
     /** Get a handle to the series of coefficient images.
      * we have to apply a painful hack, because the GetCoefficientImage method

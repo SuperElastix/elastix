@@ -52,15 +52,15 @@ namespace itk
    */
   
   template < class TPixel >
-    class NDImageBase :	public Object
+    class NDImageBase : public Object
   {
   public:
     
     /** Standard class typedefs.*/
-    typedef NDImageBase														Self;
-    typedef Object																Superclass;
-    typedef SmartPointer<Self>										Pointer;
-    typedef SmartPointer<const Self>							ConstPointer;
+    typedef NDImageBase                           Self;
+    typedef Object                                Superclass;
+    typedef SmartPointer<Self>                    Pointer;
+    typedef SmartPointer<const Self>              ConstPointer;
     
     /** Method for creation through the object factory. */
     // itkNewMacro( Self );
@@ -70,37 +70,37 @@ namespace itk
     /** Run-time type information (and related methods). */
     itkTypeMacro( NDImageBase, Object );
     
-    typedef DataObject																	DataObjectType;
-    typedef DataObjectType::Pointer											DataObjectPointer;
+    typedef DataObject                                  DataObjectType;
+    typedef DataObjectType::Pointer                     DataObjectPointer;
     
-    /** Type definitions like normal itkImages, independent of the dimension */		
-    typedef typename Image<TPixel,2>::PixelType										PixelType;
-    typedef typename Image<TPixel,2>::ValueType										ValueType;
-    typedef typename Image<TPixel,2>::InternalPixelType						InternalPixelType;
-    typedef typename Image<TPixel,2>::AccessorType								AccessorType;
-    typedef typename Image<TPixel,2>::PixelContainer							PixelContainer;
-    typedef typename Image<TPixel,2>::PixelContainerPointer				PixelContainerPointer;
-    typedef typename Image<TPixel,2>::PixelContainerConstPointer	PixelContainerConstPointer;
+    /** Type definitions like normal itkImages, independent of the dimension */   
+    typedef typename Image<TPixel,2>::PixelType                   PixelType;
+    typedef typename Image<TPixel,2>::ValueType                   ValueType;
+    typedef typename Image<TPixel,2>::InternalPixelType           InternalPixelType;
+    typedef typename Image<TPixel,2>::AccessorType                AccessorType;
+    typedef typename Image<TPixel,2>::PixelContainer              PixelContainer;
+    typedef typename Image<TPixel,2>::PixelContainerPointer       PixelContainerPointer;
+    typedef typename Image<TPixel,2>::PixelContainerConstPointer  PixelContainerConstPointer;
     
-    typedef typename ImageBase<2>::SpacingType					Spacing2DType;
-    typedef typename ImageBase<2>::PointType						Point2DType;
+    typedef typename ImageBase<2>::SpacingType          Spacing2DType;
+    typedef typename ImageBase<2>::PointType            Point2DType;
     
-    typedef typename Spacing2DType::ValueType						SpacingValueType;
-    typedef typename Point2DType::ValueType							PointValueType;
-    typedef typename ImageBase<2>::IndexValueType				IndexValueType;
-    typedef typename ImageBase<2>::SizeValueType				SizeValueType;
-    typedef typename ImageBase<2>::OffsetValueType			OffsetValueType;
+    typedef typename Spacing2DType::ValueType           SpacingValueType;
+    typedef typename Point2DType::ValueType             PointValueType;
+    typedef typename ImageBase<2>::IndexValueType       IndexValueType;
+    typedef typename ImageBase<2>::SizeValueType        SizeValueType;
+    typedef typename ImageBase<2>::OffsetValueType      OffsetValueType;
     
     /** ND versions of the index and sizetypes. Unlike in
      * their counterparts in the itk::Image, their size
      * can be defined at runtime. The elx::NDImageTemplate
      * takes care of converting from/to these types to
      * to/from the corresponding types in itk::Image.*/
-    typedef Array<IndexValueType>										IndexType;
-    typedef Array<SizeValueType>										SizeType;
-    typedef Array<SpacingValueType>									SpacingType;
-    typedef Array<PointValueType>										PointType;
-    typedef Array<OffsetValueType>									OffsetType;
+    typedef Array<IndexValueType>                   IndexType;
+    typedef Array<SizeValueType>                    SizeType;
+    typedef Array<SpacingValueType>                 SpacingType;
+    typedef Array<PointValueType>                   PointType;
+    typedef Array<OffsetValueType>                  OffsetType;
     
         
     /** Region typedef support. A region is used to specify a subset of an image. */
@@ -151,7 +151,7 @@ namespace itk
     virtual SpacingType GetSpacing(void) = 0;
     virtual PointType GetOrigin(void) = 0;
     
-    /** \todo Transform IndexToPoint methods. */		
+    /** \todo Transform IndexToPoint methods. */    
     
     virtual void CopyInformation(const DataObject *data) = 0;
     virtual const OffsetValueType *GetOffsetTable() const = 0;
@@ -201,8 +201,8 @@ namespace itk
             
   private:
     
-    NDImageBase( const Self& );				// purposely not implemented
-    void operator=( const Self& );	// purposely not implemented
+    NDImageBase( const Self& );       // purposely not implemented
+    void operator=( const Self& );  // purposely not implemented
     
   }; // end class NDImageBase
   

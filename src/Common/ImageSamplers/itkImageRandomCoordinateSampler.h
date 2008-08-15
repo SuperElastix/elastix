@@ -136,9 +136,9 @@ namespace itk
   private:
 
     /** The private constructor. */
-    ImageRandomCoordinateSampler( const Self& );	        // purposely not implemented
+    ImageRandomCoordinateSampler( const Self& );          // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );				    // purposely not implemented
+    void operator=( const Self& );            // purposely not implemented
     
     bool          m_UseRandomSampleRegion;
     

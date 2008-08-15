@@ -22,7 +22,7 @@ namespace itk
 {
   
   /**
-   * ************************ Constructor	*************************
+   * ************************ Constructor *************************
    */
 
   template <typename TScalarType, unsigned int NDimensions>
@@ -48,7 +48,7 @@ namespace itk
    */
 
   template <typename TScalarType, unsigned int NDimensions>
-    unsigned int CombinationTransform<TScalarType, NDimensions>::	
+    unsigned int CombinationTransform<TScalarType, NDimensions>:: 
     GetNumberOfParameters(void) const
   { 
     /** Return the number of parameters that completely define the
@@ -73,7 +73,7 @@ namespace itk
    */
 
   template <typename TScalarType, unsigned int NDimensions>
-    bool CombinationTransform<TScalarType, NDimensions>::	
+    bool CombinationTransform<TScalarType, NDimensions>:: 
     IsLinear(void) const
   { 
     bool currentLinear = true;
@@ -98,7 +98,7 @@ namespace itk
 
   template <typename TScalarType, unsigned int NDimensions>
     const typename CombinationTransform<TScalarType, NDimensions>::ParametersType &
-    CombinationTransform<TScalarType, NDimensions>::	
+    CombinationTransform<TScalarType, NDimensions>::  
     GetParameters(void) const
   { 
     /** Return the parameters that completely define the m_CurrentTransform  */
@@ -123,7 +123,7 @@ namespace itk
    */
 
   template <typename TScalarType, unsigned int NDimensions>
-    void CombinationTransform<TScalarType, NDimensions>::	
+    void CombinationTransform<TScalarType, NDimensions>:: 
     SetParameters(const ParametersType & param)
   { 
     /** Set the parameters in the m_CurrentTransfom  */
@@ -147,7 +147,7 @@ namespace itk
    */
 
   template <typename TScalarType, unsigned int NDimensions>
-    void CombinationTransform<TScalarType, NDimensions>::	
+    void CombinationTransform<TScalarType, NDimensions>:: 
     SetParametersByValue(const ParametersType & param)
   { 
     /** Set the parameters in the m_CurrentTransfom. */
@@ -171,7 +171,7 @@ namespace itk
    */
 
   template <typename TScalarType, unsigned int NDimensions>
-    bool CombinationTransform<TScalarType, NDimensions>::	
+    bool CombinationTransform<TScalarType, NDimensions>:: 
     GetInverse(Self * inverse) const
   { 
     if(!inverse)
@@ -202,9 +202,9 @@ namespace itk
       /** The initial transform and the current transform have been set
        * and UseComposition is set to true. 
        * The inverse transform IT is defined by:
-       *	IT ( T1(T0(x) ) = x
+       *  IT ( T1(T0(x) ) = x
        * So:
-       *	IT(y) = T0^{-1} ( T1^{-1} (y) )
+       *  IT(y) = T0^{-1} ( T1^{-1} (y) )
        * which is of course only defined when the inverses of both
        * the initial and the current transforms are defined.
        */
@@ -214,7 +214,7 @@ namespace itk
       bool T0invertable = this->m_InitialTransform->GetInverse(inverseT0);
 
       if (T0invertable)
-      {				
+      {       
         /** Try to create the inverse of the current transform */
         CurrentTransformPointer inverseT1 = CurrentTransformType::New();
         bool T1invertable = this->m_CurrentTransform->GetInverse(inverseT1);
@@ -250,7 +250,7 @@ namespace itk
 
   template <typename TScalarType, unsigned int NDimensions>
     typename CombinationTransform<TScalarType, NDimensions>::OutputPointType
-    CombinationTransform<TScalarType, NDimensions>::	
+    CombinationTransform<TScalarType, NDimensions>::  
     TransformPoint(const InputPointType  & point ) const
   { 
     /** Call the selected TransformPointFunction */
@@ -265,7 +265,7 @@ namespace itk
 
   template <typename TScalarType, unsigned int NDimensions>
     const typename CombinationTransform<TScalarType, NDimensions>::JacobianType &
-    CombinationTransform<TScalarType, NDimensions>::	
+    CombinationTransform<TScalarType, NDimensions>::  
     GetJacobian(const InputPointType  & point) const
   { 
     /** Call the selected Grouper */
@@ -406,7 +406,7 @@ namespace itk
   template <typename TScalarType, unsigned int NDimensions>
     void CombinationTransform<TScalarType, NDimensions>::
     NoCurrentTransformSet( void ) const throw (ExceptionObject)
-  {				
+  {       
     itkExceptionMacro(
       << "No current transform set in the CombinationTransform" );
   } //end NoCurrentTransformSet
@@ -420,8 +420,8 @@ namespace itk
     typename CombinationTransform<TScalarType, NDimensions>::OutputPointType
     CombinationTransform<TScalarType, NDimensions>::
     TransformPointUseAddition( const InputPointType  & point ) const
-  {				
-    /** The Initial transform */		 
+  {       
+    /** The Initial transform */     
     OutputPointType out0 = 
       this->m_InitialTransform->TransformPoint( point );
     
@@ -459,7 +459,7 @@ namespace itk
 
   template <typename TScalarType, unsigned int NDimensions>
   typename CombinationTransform<TScalarType, NDimensions>::OutputPointType
-    CombinationTransform<TScalarType, NDimensions>::	
+    CombinationTransform<TScalarType, NDimensions>::  
     TransformPointNoInitialTransform( const InputPointType & point ) const
   {
     return this->m_CurrentTransform->TransformPoint( point );
@@ -472,7 +472,7 @@ namespace itk
 
   template <typename TScalarType, unsigned int NDimensions>
   typename CombinationTransform<TScalarType, NDimensions>::OutputPointType
-    CombinationTransform<TScalarType, NDimensions>::	
+    CombinationTransform<TScalarType, NDimensions>::  
     TransformPointNoCurrentTransform( const InputPointType & point ) const
   {
     /** throw an exception */
@@ -490,7 +490,7 @@ namespace itk
     const typename CombinationTransform<TScalarType, NDimensions>::JacobianType &
     CombinationTransform<TScalarType, NDimensions>::
     GetJacobianUseAddition( const InputPointType  & point ) const
-  {				
+  {       
     return this->m_CurrentTransform->GetJacobian( point );
   } // end GetJacobianUseAddition
 
@@ -515,7 +515,7 @@ namespace itk
 
   template <typename TScalarType, unsigned int NDimensions>
   const typename CombinationTransform<TScalarType, NDimensions>::JacobianType &
-    CombinationTransform<TScalarType, NDimensions>::	
+    CombinationTransform<TScalarType, NDimensions>::  
     GetJacobianNoInitialTransform( const InputPointType & point ) const
   {
     return this->m_CurrentTransform->GetJacobian( point );
@@ -528,7 +528,7 @@ namespace itk
 
   template <typename TScalarType, unsigned int NDimensions>
   const typename CombinationTransform<TScalarType, NDimensions>::JacobianType &
-    CombinationTransform<TScalarType, NDimensions>::	
+    CombinationTransform<TScalarType, NDimensions>::  
     GetJacobianNoCurrentTransform( const InputPointType & point ) const
   {
     /** throw an exception */

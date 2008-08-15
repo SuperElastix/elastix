@@ -37,9 +37,9 @@ namespace itk
     
     /** Standard itk. */
     typedef ANNBinaryTreeCreator        Self;
-    typedef Object									    Superclass;
-    typedef SmartPointer< Self >				Pointer;
-    typedef SmartPointer< const Self >	ConstPointer;
+    typedef Object                      Superclass;
+    typedef SmartPointer< Self >        Pointer;
+    typedef SmartPointer< const Self >  ConstPointer;
 
     /** New method for creating an object using a factory. */
     itkNewMacro( Self );

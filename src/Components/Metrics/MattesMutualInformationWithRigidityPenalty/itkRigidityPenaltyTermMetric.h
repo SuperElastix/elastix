@@ -48,8 +48,8 @@ namespace itk
    *
    * References:
    * [1] "Nonrigid Registration Using a Rigidity Constraint"
-   *		M. Staring, S. Klein and Josien P.W. Pluim
-   *		SPIE Medical Imaging 2006: Image Processing, 2006.
+   *    M. Staring, S. Klein and Josien P.W. Pluim
+   *    SPIE Medical Imaging 2006: Image Processing, 2006.
    * 
    * \sa BSplineTransform
    * \sa MattesMutualInformationImageToImageMetricWithRigidRegularization
@@ -63,7 +63,7 @@ namespace itk
   public:
 
     /** Standard itk stuff. */
-    typedef RigidityPenaltyTermMetric				Self;
+    typedef RigidityPenaltyTermMetric       Self;
     typedef SingleValuedCostFunction        Superclass;
     typedef SmartPointer<Self>              Pointer;
     typedef SmartPointer<const Self>        ConstPointer;
@@ -80,26 +80,26 @@ namespace itk
     typedef typename Superclass::ParametersType      ParametersType;
 
     /** Template parameters. */
-    typedef TScalarType		ScalarType;
+    typedef TScalarType   ScalarType;
 
     /** Define the dimension. */
     itkStaticConstMacro( ImageDimension, unsigned int, Dimension );
 
     /** Typedef's for BSpline transform. */
     typedef BSplineDeformableTransform< ScalarType,
-      Dimension, 3 >																	    BSplineTransformType;
-    typedef typename BSplineTransformType::Pointer		    BSplineTransformPointer;
+      Dimension, 3 >                                      BSplineTransformType;
+    typedef typename BSplineTransformType::Pointer        BSplineTransformPointer;
     typedef typename BSplineTransformType::ImageType      CoefficientImageType;
     typedef typename CoefficientImageType::Pointer        CoefficientImagePointer;
     typedef typename CoefficientImageType::SpacingType    CoefficientImageSpacingType;
 
     /** Typedef support for neigborhoods, filters, etc. */
     typedef Neighborhood< ScalarType,
-      itkGetStaticConstMacro( ImageDimension ) >			    NeighborhoodType;
-    typedef	typename NeighborhoodType::SizeType					  NeighborhoodSizeType;
-    typedef ImageRegionIterator< CoefficientImageType >	  CoefficientImageIteratorType;
+      itkGetStaticConstMacro( ImageDimension ) >          NeighborhoodType;
+    typedef typename NeighborhoodType::SizeType           NeighborhoodSizeType;
+    typedef ImageRegionIterator< CoefficientImageType >   CoefficientImageIteratorType;
     typedef NeighborhoodOperatorImageFilter<
-      CoefficientImageType, CoefficientImageType >			  NOIFType;
+      CoefficientImageType, CoefficientImageType >        NOIFType;
     typedef NeighborhoodIterator<CoefficientImageType>    NeighborhoodIteratorType;
     typedef typename NeighborhoodIteratorType::RadiusType RadiusType;
     
@@ -196,9 +196,9 @@ namespace itk
   private:
 
     /** The private constructor. */
-    RigidityPenaltyTermMetric( const Self& );	// purposely not implemented
+    RigidityPenaltyTermMetric( const Self& ); // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );				    // purposely not implemented
+    void operator=( const Self& );            // purposely not implemented
 
     /** Private function used for the filtering. It creates 1D separable operators F. */
     void Create1DOperator( NeighborhoodType & F, const std::string WhichF,
@@ -213,23 +213,23 @@ namespace itk
       const std::vector< NeighborhoodType > &Operators ) const;
 
     /** Member variables. */
-    BSplineTransformPointer 		m_BSplineTransform;
-    CoefficientImagePointer			m_RigidityCoefficientImage;
+    BSplineTransformPointer     m_BSplineTransform;
+    CoefficientImagePointer     m_RigidityCoefficientImage;
 
     /** A private variable to store the weighting of the linearity condition. */
-    ScalarType	m_LinearityConditionWeight;
+    ScalarType  m_LinearityConditionWeight;
 
     /** A private variable to store the weighting of the orthonormality condition. */
-    ScalarType	m_OrthonormalityConditionWeight;
+    ScalarType  m_OrthonormalityConditionWeight;
 
     /** A private variable to store the weighting of the properness condition. */
-    ScalarType	m_PropernessConditionWeight;
+    ScalarType  m_PropernessConditionWeight;
 
     /** Private variables to store the rigidity metric values. */
-    mutable MeasureType			m_RigidityPenaltyTermValue;
-    mutable MeasureType			m_LinearityConditionValue;
-    mutable MeasureType			m_OrthonormalityConditionValue;
-    mutable MeasureType			m_PropernessConditionValue;
+    mutable MeasureType     m_RigidityPenaltyTermValue;
+    mutable MeasureType     m_LinearityConditionValue;
+    mutable MeasureType     m_OrthonormalityConditionValue;
+    mutable MeasureType     m_PropernessConditionValue;
 
     /** Name of the output directory. */
     //std::string m_OutputDirectoryName;

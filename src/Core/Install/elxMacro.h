@@ -26,9 +26,9 @@
  * Currently not used anymore in elastix.
  */
 #ifdef _WIN32
-#	define __ELX_DLLEXPORT __declspec(dllexport)
+# define __ELX_DLLEXPORT __declspec(dllexport)
 #else
-#	define __ELX_DLLEXPORT
+# define __ELX_DLLEXPORT
 #endif
 
 
@@ -46,17 +46,17 @@
 *
 * namespace elastix {
 *
-*		template <class TElastix>
-*			class MyMetric : public MetricBase<TElastix>,
-*			 public itk::MattesMutualInformationImageToImageMetric
-*						< MetricBase<TElastix>::FixedImageType
-*							MetricBase<TElastix>::MovingImageType > 
-*		{
-*			typedef MyMetric Self;
-*			itkNewMacro( Self ); //needed for the elxInstallMacro
-*			elxClassNameMacro("MattesMutualInformation"); //also needed
-*			.......
-*		};
+*   template <class TElastix>
+*     class MyMetric : public MetricBase<TElastix>,
+*      public itk::MattesMutualInformationImageToImageMetric
+*           < MetricBase<TElastix>::FixedImageType
+*             MetricBase<TElastix>::MovingImageType > 
+*   {
+*     typedef MyMetric Self;
+*     itkNewMacro( Self ); //needed for the elxInstallMacro
+*     elxClassNameMacro("MattesMutualInformation"); //also needed
+*     .......
+*   };
 *
 * } // end namespace elastix
 *
@@ -65,7 +65,7 @@
 *
 * // elxMyMetric.cxx //
 * #include elxMyMetric.h
-*	elxInstallMacro(MyMetric);
+* elxInstallMacro(MyMetric);
 *
 * // CMakeLists.txt //
 * ADD_ELXCOMPONENT( MyMetric
@@ -73,7 +73,7 @@
 *   elxMyMetric.hxx
 *   elxMyMetric.cxx
 *   [<any other source files needed>] )
-*	
+* 
 * 
 * The class to be installed should inherit from the appropriate base class.
 * (elx::MetricBase, elx::TransformBase etc,) and from a specific itk object.
@@ -100,7 +100,7 @@
     ComponentDescriptionType name = ::elx:: _classname <ElastixType>::elxGetClassNameStatic(); \
     int dummy = ::elx::InstallFunctions< ::elx:: _classname <ElastixType> >::InstallComponent(name, VIndex, cdb); \
       if ( ::elx::ElastixTypedef<VIndex+1>::Defined() ) \
-      {	return _classname##_install<VIndex+1>::DO( cdb ); } \
+      { return _classname##_install<VIndex+1>::DO( cdb ); } \
       return dummy;  \
     } \
   }; \
@@ -202,7 +202,7 @@ extern "C" int _classname##InstallComponent( \
 *
 * namespace elastix {
 * elxSupportedImageTypeMacro(unsigned short, 2, float, 3, 1);
-*	elxSupportedImageTypeMacro(unsigned short, 3, float, 3, 2);
+* elxSupportedImageTypeMacro(unsigned short, 3, float, 3, 2);
 * etc.
 * } //end namespace elastix
 * 
@@ -239,7 +239,7 @@ extern "C" int _classname##InstallComponent( \
     static unsigned int mDim(void) \
       { return _mDim ;} \
     static bool Defined(void) \
-    {	return true; }  \
+    { return true; }  \
   } 
 
 
@@ -251,7 +251,7 @@ extern "C" int _classname##InstallComponent( \
  * class MyMetric
  * {
  * public:
- *	 elxClassNameMacro("MyFirstMetric");
+ *   elxClassNameMacro("MyFirstMetric");
  * }
  *
  * This macro defines two functions. 
@@ -268,14 +268,14 @@ virtual const char * elxGetClassName(void) {return _name ;}
 
 
 /**
- *	elxout
+ *  elxout
  *
- *	This macro replaces 'elxout' by '::xl::xout["standard"]'. 
- *	This simplifies writing messages to screen and logfile.
+ *  This macro replaces 'elxout' by '::xl::xout["standard"]'. 
+ *  This simplifies writing messages to screen and logfile.
  *  
- *	NB: for error and warning messages, for writing to the 
- *	transformparameterfile etc. do not use elxout, but 
- *	xout["{error, warning, etc}"].
+ *  NB: for error and warning messages, for writing to the 
+ *  transformparameterfile etc. do not use elxout, but 
+ *  xout["{error, warning, etc}"].
  *  
  */
 #define elxout ::xl::xout["standard"]

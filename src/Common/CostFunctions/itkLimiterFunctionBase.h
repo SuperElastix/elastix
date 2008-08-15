@@ -53,22 +53,22 @@ public:
   typedef LimiterFunctionBase                     Self;
   typedef FunctionBase< TInput,
     typename NumericTraits< TInput >::RealType >  Superclass;
-  typedef SmartPointer<Self> Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
+  typedef SmartPointer<Self>                      Pointer;
+  typedef SmartPointer<const Self>                ConstPointer;
   
   /** Run-time type information (and related methods). */
-  itkTypeMacro(LimiterFunctionBase, FunctionBase);
+  itkTypeMacro( LimiterFunctionBase, FunctionBase );
 
   itkStaticConstMacro( Dimension, unsigned int, NDimension );
 
   /** Superclass' typedefs */
-  typedef typename Superclass::InputType InputType;
-  typedef typename Superclass::OutputType OutputType;
+  typedef typename Superclass::InputType          InputType;
+  typedef typename Superclass::OutputType         OutputType;
 
-  typedef OutputType                      DerivativeValueType;
+  typedef OutputType                              DerivativeValueType;
   typedef CovariantVector<
     DerivativeValueType,
-    itkGetStaticConstMacro(Dimension)>    DerivativeType;
+    itkGetStaticConstMacro(Dimension)>            DerivativeType;
 
   /** Limit the input value. */
   virtual OutputType Evaluate( const InputType & input ) const = 0;
@@ -78,33 +78,33 @@ public:
 
   /** Set/Get the upper bound that the output should respect. Make sure it is higher 
    * than the lower bound. */
-  itkSetMacro(UpperBound, OutputType);
-  itkGetConstMacro(UpperBound, OutputType);
+  itkSetMacro( UpperBound, OutputType );
+  itkGetConstMacro( UpperBound, OutputType );
 
   /** Set/Get the lower bound that the output should respect. Make sure it is lower
    * than the higher bound. */
-  itkSetMacro(LowerBound, OutputType);
-  itkGetConstMacro(LowerBound, OutputType);
+  itkSetMacro( LowerBound, OutputType );
+  itkGetConstMacro( LowerBound, OutputType );
 
   /** Set the point where the limiter starts to work. Only input values above this number
    * will possibly be affected. Make sure it is <= than the UpperBound. */
-  itkSetMacro(UpperThreshold, InputType);
-  itkGetConstMacro(UpperThreshold, InputType);
+  itkSetMacro( UpperThreshold, InputType );
+  itkGetConstMacro( UpperThreshold, InputType );
 
   /** Set the point where the limiter starts to work. Only input values below this number
    * will possibly be affected. Make sure it is >= than the LowerBound. */
-  itkSetMacro(LowerThreshold, InputType);
-  itkGetConstMacro(LowerThreshold, InputType);
+  itkSetMacro( LowerThreshold, InputType );
+  itkGetConstMacro( LowerThreshold, InputType );
 
   /** Initialize the limiter */
-  virtual void Initialize(void) throw (ExceptionObject) {};
+  virtual void Initialize( void ) throw (ExceptionObject) {};
   
 protected:
   LimiterFunctionBase()
   {
     this->m_UpperBound =
       itk::NumericTraits<OutputType>::One + 
-      itk::NumericTraits<OutputType>::One ;
+      itk::NumericTraits<OutputType>::One;
     this->m_LowerBound = itk::NumericTraits<OutputType>::Zero;
     this->m_UpperThreshold = itk::NumericTraits<InputType>::One;
     this->m_LowerThreshold = itk::NumericTraits<InputType>::One;

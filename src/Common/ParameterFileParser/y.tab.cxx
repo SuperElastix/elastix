@@ -954,9 +954,9 @@ yyerrlab:   /* here on detecting error */
         strcat(msg, count == 0 ? ", expecting `" : " or `");
         strcat(msg, yytname[x]);
         strcat(msg, "'");
-// 			  strcat_s( msg, strlen( ", expecting `" ), count == 0 ? ", expecting `" : " or `" );
-// 			  strcat_s( msg, strlen( yytname[x] ), yytname[x] );
-// 			  strcat_s( msg, strlen( "'" ), "'" );
+//        strcat_s( msg, strlen( ", expecting `" ), count == 0 ? ", expecting `" : " or `" );
+//        strcat_s( msg, strlen( yytname[x] ), yytname[x] );
+//        strcat_s( msg, strlen( "'" ), "'" );
         count++;
           }
     }

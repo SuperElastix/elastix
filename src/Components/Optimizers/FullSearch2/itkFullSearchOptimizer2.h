@@ -35,10 +35,10 @@ namespace itk
   public:
     
     /** Standard class typedefs. */
-    typedef FullSearchOptimizer2		            Self;
-    typedef SingleValuedNonLinearOptimizer	   	Superclass;
-    typedef SmartPointer<Self>									Pointer;
-    typedef SmartPointer<const Self>						ConstPointer;
+    typedef FullSearchOptimizer2                Self;
+    typedef SingleValuedNonLinearOptimizer      Superclass;
+    typedef SmartPointer<Self>                  Pointer;
+    typedef SmartPointer<const Self>            ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -46,7 +46,7 @@ namespace itk
     /** Run-time type information (and related methods). */
     itkTypeMacro( FullSearchOptimizer2, SingleValuedNonLinearOptimizer );
 
-    typedef Superclass::ParametersType								ParametersType;
+    typedef Superclass::ParametersType                ParametersType;
     
     /** Codes of stopping conditions */
     typedef enum {
@@ -107,15 +107,15 @@ namespace itk
     bool                          m_Maximize;
     bool                          m_Stop;
     double                        m_Value;
-    double												m_BestValue;
+    double                        m_BestValue;
     StopConditionType             m_StopCondition;
     std::vector< double >         m_Step;
     ParametersType                m_BasePosition;
         
   private:
 
-    FullSearchOptimizer2( const Self& );	// purposely not implemented
-    void operator=( const Self& );										// purposely not implemented
+    FullSearchOptimizer2( const Self& );  // purposely not implemented
+    void operator=( const Self& );                    // purposely not implemented
     
     /** Private member variables.*/
     unsigned long                 m_NumberOfIterations;

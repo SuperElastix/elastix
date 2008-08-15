@@ -174,9 +174,9 @@ namespace itk
   private:
 
     /** The private constructor. */
-    ScaledSingleValuedNonLinearOptimizer( const Self& );	// purposely not implemented
+    ScaledSingleValuedNonLinearOptimizer( const Self& );  // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );												// purposely not implemented
+    void operator=( const Self& );                        // purposely not implemented
 
     /** Variable to store the CurrentPosition, when the function
      * GetCurrentPosition is called. This method needs a member variable,

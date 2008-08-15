@@ -34,7 +34,7 @@ using namespace itk;
    *
    * The parameters used in this class are:
    * \parameter ImageSampler: Select this image sampler as follows:\n
-   *		<tt>(ImageSampler "Full")</tt>
+   *    <tt>(ImageSampler "Full")</tt>
    *
    * \ingroup ImageSamplers
    */
@@ -46,16 +46,16 @@ using namespace itk;
       ITK_TYPENAME elx::ImageSamplerBase<TElastix>::InputImageType >, 
     public
       elx::ImageSamplerBase<TElastix>
-  {	
+  { 
   public:
   
     /** Standard ITK-stuff. */
-    typedef FullSampler									      Self;
-    typedef	ImageFullSampler<
-      typename elx::ImageSamplerBase<TElastix>::InputImageType >	Superclass1;		
-    typedef elx::ImageSamplerBase<TElastix>					Superclass2;		
-    typedef SmartPointer<Self>									Pointer;
-    typedef SmartPointer<const Self>						ConstPointer;
+    typedef FullSampler                       Self;
+    typedef ImageFullSampler<
+      typename elx::ImageSamplerBase<TElastix>::InputImageType >  Superclass1;    
+    typedef elx::ImageSamplerBase<TElastix>         Superclass2;    
+    typedef SmartPointer<Self>                  Pointer;
+    typedef SmartPointer<const Self>            ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro(Self);
@@ -82,19 +82,19 @@ using namespace itk;
     typedef typename Superclass1::ImageSampleContainerType     ImageSampleContainerType;
     typedef typename Superclass1::MaskType                     MaskType;
     typedef typename Superclass1::InputImageIndexType          InputImageIndexType;
-    typedef typename Superclass1::InputImagePointType          InputImagePointType;	
+    typedef typename Superclass1::InputImagePointType          InputImagePointType; 
 
     /** The input image dimension. */
-    itkStaticConstMacro( InputImageDimension, unsigned int,	Superclass1::InputImageDimension );
+    itkStaticConstMacro( InputImageDimension, unsigned int, Superclass1::InputImageDimension );
     
     /** Typedefs inherited from Elastix. */
-    typedef typename Superclass2::ElastixType								ElastixType;
-    typedef typename Superclass2::ElastixPointer						ElastixPointer;
-    typedef typename Superclass2::ConfigurationType					ConfigurationType;
-    typedef typename Superclass2::ConfigurationPointer			ConfigurationPointer;
-    typedef typename Superclass2::RegistrationType					RegistrationType;
-    typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
-    typedef typename Superclass2::ITKBaseType								ITKBaseType;
+    typedef typename Superclass2::ElastixType               ElastixType;
+    typedef typename Superclass2::ElastixPointer            ElastixPointer;
+    typedef typename Superclass2::ConfigurationType         ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType          RegistrationType;
+    typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
+    typedef typename Superclass2::ITKBaseType               ITKBaseType;
 
   protected:
 
@@ -106,9 +106,9 @@ using namespace itk;
   private:
 
     /** The private constructor. */
-    FullSampler( const Self& );	// purposely not implemented
+    FullSampler( const Self& ); // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );			// purposely not implemented
+    void operator=( const Self& );      // purposely not implemented
       
   }; // end class FullSampler
 

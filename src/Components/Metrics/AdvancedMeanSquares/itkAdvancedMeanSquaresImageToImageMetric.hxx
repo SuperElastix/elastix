@@ -331,7 +331,7 @@ namespace itk
     /** The return value. */
     value = measure;
 
-  } // end GetValueAndDerivative
+  } // end GetValueAndDerivative()
 
 
   /**

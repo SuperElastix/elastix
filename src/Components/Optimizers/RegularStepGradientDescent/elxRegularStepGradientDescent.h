@@ -34,26 +34,26 @@ using namespace itk;
    *
    * The parameters used in this class are:
    * \parameter Optimizer: Select this optimizer as follows:\n
-   *		<tt>(Optimizer "RegularStepGradientDescent")</tt>
+   *    <tt>(Optimizer "RegularStepGradientDescent")</tt>
    * \parameter MaximumNumberOfIterations: the maximum number of iterations in each resolution. \n
-   *	 example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
+   *   example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
    *   Default value: 500.
    * \parameter MinimumGradientMagnitude: stopping criterion. If the magnitude of the derivative
    *   of the cost function is below this value, optimisation is stopped. \n
-   *	 example: <tt>(MinimumGradientMagnitude 0.0001 0.0001 0.001)</tt> \n
+   *   example: <tt>(MinimumGradientMagnitude 0.0001 0.0001 0.001)</tt> \n
    *   Default value: 1e-8. 
    * \parameter MinimumStepLength: stopping criterion. If the steplength is below this
    *   value, optimisation is stopped. \n
-   *	 example: <tt>(MinimumStepLength 1.0 0.5 0.1)</tt> \n
+   *   example: <tt>(MinimumStepLength 1.0 0.5 0.1)</tt> \n
    *   Default value: <em>0.5 / 2^resolutionlevel</em>
    * \parameter MaximumStepLength: the starting steplength.  \n
-   *	 example: <tt>(MaximumStepLength 16.0 8.0 4.0)</tt> \n
+   *   example: <tt>(MaximumStepLength 16.0 8.0 4.0)</tt> \n
    *   Default value: <em>16 / 2^resolutionlevel</em>. 
    * \parameter RelaxationFactor: the factor with which the steplength is multiplied,
    *   if the optimiser notices that a smaller steplength is needed. \n
-   *	 example: <tt>(RelaxationFactor 0.5 0.5 0.8 )</tt>. \n
+   *   example: <tt>(RelaxationFactor 0.5 0.5 0.8 )</tt>. \n
    *   Default/recommended value: 0.5.
-   *	 
+   *   
    * 
    * \sa ImprovedRegularStepGradientDescentOptimizer
    * \ingroup Optimizers
@@ -69,11 +69,11 @@ using namespace itk;
   public:
 
     /** Standard ITK.*/
-    typedef RegularStepGradientDescent									Self;
-    typedef RegularStepGradientDescentOptimizer	Superclass1;
-    typedef OptimizerBase<TElastix>											Superclass2;
-    typedef SmartPointer<Self>									Pointer;
-    typedef SmartPointer<const Self>						ConstPointer;
+    typedef RegularStepGradientDescent                  Self;
+    typedef RegularStepGradientDescentOptimizer Superclass1;
+    typedef OptimizerBase<TElastix>                     Superclass2;
+    typedef SmartPointer<Self>                  Pointer;
+    typedef SmartPointer<const Self>            ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -88,20 +88,20 @@ using namespace itk;
     elxClassNameMacro( "RegularStepGradientDescent" );
 
     /** Typedef's inherited from Superclass1.*/
-    typedef Superclass1::CostFunctionType			CostFunctionType;
-    typedef Superclass1::CostFunctionPointer	CostFunctionPointer;
+    typedef Superclass1::CostFunctionType     CostFunctionType;
+    typedef Superclass1::CostFunctionPointer  CostFunctionPointer;
 
     /** Typedef's inherited from Elastix.*/
-    typedef typename Superclass2::ElastixType						ElastixType;
-    typedef typename Superclass2::ElastixPointer				ElastixPointer;
-    typedef typename Superclass2::ConfigurationType			ConfigurationType;
-    typedef typename Superclass2::ConfigurationPointer	ConfigurationPointer;
-    typedef typename Superclass2::RegistrationType			RegistrationType;
-    typedef typename Superclass2::RegistrationPointer		RegistrationPointer;
-    typedef typename Superclass2::ITKBaseType						ITKBaseType;
+    typedef typename Superclass2::ElastixType           ElastixType;
+    typedef typename Superclass2::ElastixPointer        ElastixPointer;
+    typedef typename Superclass2::ConfigurationType     ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer  ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType      RegistrationType;
+    typedef typename Superclass2::RegistrationPointer   RegistrationPointer;
+    typedef typename Superclass2::ITKBaseType           ITKBaseType;
     
     /** Typedef for the ParametersType. */
-    typedef typename Superclass1::ParametersType				ParametersType;
+    typedef typename Superclass1::ParametersType        ParametersType;
 
     /** Methods invoked by elastix, in which parameters can be set and 
      * progress information can be printed. */
@@ -109,7 +109,7 @@ using namespace itk;
     virtual void BeforeEachResolution(void);
     virtual void AfterEachResolution(void);
     virtual void AfterEachIteration(void);
-    virtual void AfterRegistration(void);		
+    virtual void AfterRegistration(void);   
     
     /** Override the SetInitialPosition.
      * Override the implementation in itkOptimizer.h, to
@@ -125,8 +125,8 @@ using namespace itk;
       
   private:
 
-      RegularStepGradientDescent( const Self& );	// purposely not implemented
-      void operator=( const Self& );							// purposely not implemented
+      RegularStepGradientDescent( const Self& );  // purposely not implemented
+      void operator=( const Self& );              // purposely not implemented
       
   }; // end class RegularStepGradientDescent
   

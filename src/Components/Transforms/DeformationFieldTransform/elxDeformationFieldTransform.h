@@ -35,13 +35,13 @@ using namespace itk;
    *
    * The parameters used in this class are:
    * \parameter Transform: Select this transform as follows:\n
-   *		<tt>(%Transform "DeformationFieldTransform")</tt>
+   *    <tt>(%Transform "DeformationFieldTransform")</tt>
    *
    * The transform parameters necessary for transformix, additionally defined by this class, are:
    * \transformparameter DeformationFieldFileName: stores the name of the deformation field. \n
-   *		example: <tt>(DeformationFieldFileName "defField.mhd")</tt>
+   *    example: <tt>(DeformationFieldFileName "defField.mhd")</tt>
    * \transformparameter DeformationFieldInterpolationOrder: The interpolation order used for interpolating the deformation field:\n
-   *		example: <tt>(DeformationFieldInterpolationOrder 0)</tt>\n
+   *    example: <tt>(DeformationFieldInterpolationOrder 0)</tt>\n
    *    The default value is 0. Choose from the allowed values 0 or 1.
    *
    *
@@ -54,7 +54,7 @@ using namespace itk;
     class DeformationFieldTransform:
   public
     CombinationTransform< 
-      ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,			
+      ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,      
       elx::TransformBase<TElastix>::FixedImageDimension >,
   public
     TransformBase<TElastix>
@@ -62,7 +62,7 @@ using namespace itk;
   public:
 
     /** Standard ITK-stuff. */
-    typedef DeformationFieldTransform											Self;
+    typedef DeformationFieldTransform                     Self;
 
     /** The ITK-class that provides most of the functionality, and
      * that is set as the "CurrentTransform" in the CombinationTransform */
@@ -72,13 +72,13 @@ using namespace itk;
       float >                                             DeformationFieldInterpolatingTransformType;
 
     typedef CombinationTransform< 
-      typename elx::TransformBase<TElastix>::CoordRepType,			
-      elx::TransformBase<TElastix>::FixedImageDimension >	Superclass1;
+      typename elx::TransformBase<TElastix>::CoordRepType,      
+      elx::TransformBase<TElastix>::FixedImageDimension > Superclass1;
 
-    typedef elx::TransformBase< TElastix >								Superclass2;	
+    typedef elx::TransformBase< TElastix >                Superclass2;  
 
-    typedef SmartPointer< Self >													Pointer;
-    typedef SmartPointer< const Self >										ConstPointer;
+    typedef SmartPointer< Self >                          Pointer;
+    typedef SmartPointer< const Self >                    ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -96,17 +96,17 @@ using namespace itk;
     itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );
     
     /** Typedefs inherited from the superclass. */
-    typedef typename Superclass1::ScalarType 								ScalarType;
-    typedef typename Superclass1::ParametersType 						ParametersType;
-    typedef typename Superclass1::JacobianType 							JacobianType;
-    typedef typename Superclass1::InputVectorType						InputVectorType;
-    typedef typename Superclass1::OutputVectorType 					OutputVectorType;
-    typedef typename Superclass1::InputCovariantVectorType 	InputCovariantVectorType;
-    typedef typename Superclass1::OutputCovariantVectorType	OutputCovariantVectorType;
-    typedef typename Superclass1::InputVnlVectorType 				InputVnlVectorType;
-    typedef typename Superclass1::OutputVnlVectorType				OutputVnlVectorType;
-    typedef typename Superclass1::InputPointType 						InputPointType;
-    typedef typename Superclass1::OutputPointType						OutputPointType;
+    typedef typename Superclass1::ScalarType                ScalarType;
+    typedef typename Superclass1::ParametersType            ParametersType;
+    typedef typename Superclass1::JacobianType              JacobianType;
+    typedef typename Superclass1::InputVectorType           InputVectorType;
+    typedef typename Superclass1::OutputVectorType          OutputVectorType;
+    typedef typename Superclass1::InputCovariantVectorType  InputCovariantVectorType;
+    typedef typename Superclass1::OutputCovariantVectorType OutputCovariantVectorType;
+    typedef typename Superclass1::InputVnlVectorType        InputVnlVectorType;
+    typedef typename Superclass1::OutputVnlVectorType       OutputVnlVectorType;
+    typedef typename Superclass1::InputPointType            InputPointType;
+    typedef typename Superclass1::OutputPointType           OutputPointType;
     
     /** Typedef's specific for the DeformationFieldInterpolatingTransform. */
     typedef typename DeformationFieldInterpolatingTransformType::DeformationFieldType DeformationFieldType;
@@ -116,17 +116,17 @@ using namespace itk;
       DeformationFieldInterpolatingTransformPointer;
 
     /** Typedef's from TransformBase. */
-    typedef typename Superclass2::ElastixType								ElastixType;
-    typedef typename Superclass2::ElastixPointer						ElastixPointer;
-    typedef typename Superclass2::ConfigurationType					ConfigurationType;
-    typedef typename Superclass2::ConfigurationPointer			ConfigurationPointer;
-    typedef typename Superclass2::RegistrationType					RegistrationType;
-    typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
-    typedef typename Superclass2::CoordRepType							CoordRepType;
-    typedef typename Superclass2::FixedImageType						FixedImageType;
-    typedef typename Superclass2::MovingImageType						MovingImageType;
-    typedef typename Superclass2::ITKBaseType								ITKBaseType;
-    typedef typename Superclass2::CombinationTransformType	CombinationTransformType;
+    typedef typename Superclass2::ElastixType               ElastixType;
+    typedef typename Superclass2::ElastixPointer            ElastixPointer;
+    typedef typename Superclass2::ConfigurationType         ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType          RegistrationType;
+    typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
+    typedef typename Superclass2::CoordRepType              CoordRepType;
+    typedef typename Superclass2::FixedImageType            FixedImageType;
+    typedef typename Superclass2::MovingImageType           MovingImageType;
+    typedef typename Superclass2::ITKBaseType               ITKBaseType;
+    typedef typename Superclass2::CombinationTransformType  CombinationTransformType;
   
     /** Function to read transform-parameters from a file. */
     virtual void ReadFromFile(void);
@@ -143,9 +143,9 @@ using namespace itk;
   private:
 
     /** The private constructor. */
-    DeformationFieldTransform( const Self& );	// purposely not implemented
+    DeformationFieldTransform( const Self& ); // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );						// purposely not implemented
+    void operator=( const Self& );            // purposely not implemented
 
     /** The transform that is set as current transform in the 
      * CcombinationTransform */

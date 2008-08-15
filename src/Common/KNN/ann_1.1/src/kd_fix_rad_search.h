@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------
-// File:			kd_fix_rad_search.h
-// Programmer:		Sunil Arya and David Mount
-// Description:		Standard kd-tree fixed-radius kNN search
-// Last modified:	??/??/?? (Version 1.1)
+// File:      kd_fix_rad_search.h
+// Programmer:    Sunil Arya and David Mount
+// Description:   Standard kd-tree fixed-radius kNN search
+// Last modified: ??/??/?? (Version 1.1)
 //----------------------------------------------------------------------
 // Copyright (c) 1997-2005 University of Maryland and Sunil Arya and
 // David Mount.  All Rights Reserved.
@@ -18,27 +18,27 @@
 // warranty.
 //----------------------------------------------------------------------
 // History:
-//	Revision 1.1  ??/??/??
-//		Initial release
+//  Revision 1.1  ??/??/??
+//    Initial release
 //----------------------------------------------------------------------
 
 #ifndef ANN_kd_fix_rad_search_H
 #define ANN_kd_fix_rad_search_H
 
-#include "kd_tree.h"					// kd-tree declarations
-#include "kd_util.h"					// kd-tree utilities
-#include "pr_queue_k.h"					// k-element priority queue
+#include "kd_tree.h"          // kd-tree declarations
+#include "kd_util.h"          // kd-tree utilities
+#include "pr_queue_k.h"         // k-element priority queue
 
-#include <ANN/ANNperf.h>				// performance evaluation
+#include <ANN/ANNperf.h>        // performance evaluation
 
 //----------------------------------------------------------------------
-//	Global variables
-//		These are active for the life of each call to
-//		annRangeSearch().  They are set to save the number of
-//		variables that need to be passed among the various search
-//		procedures.
+//  Global variables
+//    These are active for the life of each call to
+//    annRangeSearch().  They are set to save the number of
+//    variables that need to be passed among the various search
+//    procedures.
 //----------------------------------------------------------------------
 
-extern ANNpoint			ANNkdFRQ;			// query point (static copy)
+extern ANNpoint     ANNkdFRQ;     // query point (static copy)
 
 #endif

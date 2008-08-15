@@ -47,8 +47,8 @@ using namespace itk;
     /** Add some target cells to xout["iteration"].*/
     xout["iteration"].AddTargetCell("2:Metric");
 
-    /** Format them as floats */			
-    xl::xout["iteration"]["2:Metric"]		<< std::showpoint << std::fixed;
+    /** Format them as floats */      
+    xl::xout["iteration"]["2:Metric"]   << std::showpoint << std::fixed;
     
   } // end BeforeRegistration
 
@@ -90,8 +90,8 @@ using namespace itk;
     /** Add some target cells to xout["iteration"].*/
     xout["iteration"].AddTargetCell("1:step");
 
-    /** Format them as floats */			
-    xl::xout["iteration"]["1:step"]		<< std::showpoint << std::fixed;
+    /** Format them as floats */      
+    xl::xout["iteration"]["1:step"]   << std::showpoint << std::fixed;
 
   } // end BeforeEachResolution
 
@@ -107,8 +107,8 @@ using namespace itk;
     unsigned int i = this->GetCurrentIteration();
 
     /** Print some information */
-    xl::xout["iteration"]["2:Metric"]		<< this->GetValue();
-    xl::xout["iteration"]["1:step"]		<< this->GetStep( i );
+    xl::xout["iteration"]["2:Metric"]   << this->GetValue();
+    xl::xout["iteration"]["1:step"]   << this->GetStep( i );
 
     /** Select new spatial samples for the computation of the metric
      * \todo You may also choose to select new samples after evaluation
@@ -138,8 +138,8 @@ using namespace itk;
         break;
   
       case MetricError :
-        stopcondition = "Error in metric";	
-        break;	
+        stopcondition = "Error in metric";  
+        break;  
 
       default:
         stopcondition = "Unknown";

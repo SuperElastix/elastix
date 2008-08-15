@@ -34,23 +34,23 @@ using namespace itk;
    *
    * The parameters used in this class are:
    * \parameter Transform: Select this transform as follows:\n
-   *		<tt>(%Transform "AffineTransform")</tt>
+   *    <tt>(%Transform "AffineTransform")</tt>
    * \parameter Scales: the scale factor between the rotations and translations,
-   *		used in the optimizer. \n
-   *		example: <tt>(Scales 200000.0)</tt> \n
-   *		example: <tt>(Scales 100000.0 60000.0 ... 80000.0)</tt> \n
+   *    used in the optimizer. \n
+   *    example: <tt>(Scales 200000.0)</tt> \n
+   *    example: <tt>(Scales 100000.0 60000.0 ... 80000.0)</tt> \n
    *    If only one argument is given, that factor is used for the rotations.
-   *		If more than one argument is given, then the number of arguments should be
-   *		equal to the number of parameters: for each parameter its scale factor.
-   *		If this parameter option is not used, by default the rotations are scaled
-   *		by a factor of 100000.0. See also the AutomaticScalesEstimation parameter.
+   *    If more than one argument is given, then the number of arguments should be
+   *    equal to the number of parameters: for each parameter its scale factor.
+   *    If this parameter option is not used, by default the rotations are scaled
+   *    by a factor of 100000.0. See also the AutomaticScalesEstimation parameter.
    * \parameter AutomaticScalesEstimation: if this parameter is set to "true" the Scales
    *    parameter is ignored and the scales are determined automatically. \n
    *    example: <tt>( AutomaticScalesEstimation "true" ) </tt> \n
    *    Default: "false" (for backwards compatibility). Recommended: "true".
    * \parameter CenterOfRotation: an index around which the image is rotated. \n
-   *		example: <tt>(CenterOfRotation 128 128 90)</tt> \n
-   *		By default the CenterOfRotation is set to the geometric center of the image.
+   *    example: <tt>(CenterOfRotation 128 128 90)</tt> \n
+   *    By default the CenterOfRotation is set to the geometric center of the image.
    * \parameter AutomaticTransformInitialization: whether or not the initial translation
    *    between images should be estimated as the distance between their centers.\n
    *    example: <tt>(AutomaticTransformInitialization "true")</tt> \n
@@ -59,10 +59,10 @@ using namespace itk;
    *
    * The transform parameters necessary for transformix, additionally defined by this class, are:
    * \transformparameter CenterOfRotation: stores the center of rotation as an index. \n
-   *		example: <tt>(CenterOfRotation 128 128 90)</tt> 
+   *    example: <tt>(CenterOfRotation 128 128 90)</tt> 
    *    deprecated! From elastix version 3.402 this is changed to CenterOfRotationPoint!
    * \transformparameter CenterOfRotationPoint: stores the center of rotation, expressed in world coordinates. \n
-   *		example: <tt>(CenterOfRotationPoint 10.555 6.666 12.345)</tt>
+   *    example: <tt>(CenterOfRotationPoint 10.555 6.666 12.345)</tt>
    *
    * \ingroup Transforms
    */
@@ -71,28 +71,28 @@ using namespace itk;
     class AffineTransformElastix :
       public CombinationTransform<
           ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,
-          elx::TransformBase<TElastix>::FixedImageDimension >	,
+          elx::TransformBase<TElastix>::FixedImageDimension > ,
       public elx::TransformBase<TElastix>
   {
   public:
 
     /** Standard ITK-stuff. */
-    typedef AffineTransformElastix														Self;
+    typedef AffineTransformElastix                            Self;
 
     typedef CombinationTransform<
       typename elx::TransformBase<TElastix>::CoordRepType,
-      elx::TransformBase<TElastix>::FixedImageDimension >			Superclass1;
+      elx::TransformBase<TElastix>::FixedImageDimension >     Superclass1;
 
-    typedef elx::TransformBase<TElastix>											Superclass2;
+    typedef elx::TransformBase<TElastix>                      Superclass2;
 
     /** The ITK-class that provides most of the functionality, and
      * that is set as the "CurrentTransform" in the CombinationTransform */
     typedef AffineTransform<
       typename elx::TransformBase<TElastix>::CoordRepType,
-      elx::TransformBase<TElastix>::FixedImageDimension >			AffineTransformType;
+      elx::TransformBase<TElastix>::FixedImageDimension >     AffineTransformType;
 
-    typedef SmartPointer<Self>																Pointer;
-    typedef SmartPointer<const Self>													ConstPointer;
+    typedef SmartPointer<Self>                                Pointer;
+    typedef SmartPointer<const Self>                          ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -110,43 +110,43 @@ using namespace itk;
     itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );
     
     /** Typedefs inherited from the superclass. */
-    typedef typename Superclass1::ScalarType 								ScalarType;
-    typedef typename Superclass1::ParametersType 						ParametersType;
-    typedef typename Superclass1::JacobianType 							JacobianType;
-    typedef typename Superclass1::InputVectorType						InputVectorType;
-    typedef typename Superclass1::OutputVectorType 					OutputVectorType;
-    typedef typename Superclass1::InputCovariantVectorType 	InputCovariantVectorType;
-    typedef typename Superclass1::OutputCovariantVectorType	OutputCovariantVectorType;
-    typedef typename Superclass1::InputVnlVectorType 				InputVnlVectorType;
-    typedef typename Superclass1::OutputVnlVectorType				OutputVnlVectorType;
-    typedef typename Superclass1::InputPointType 						InputPointType;
-    typedef typename Superclass1::OutputPointType						OutputPointType;
+    typedef typename Superclass1::ScalarType                ScalarType;
+    typedef typename Superclass1::ParametersType            ParametersType;
+    typedef typename Superclass1::JacobianType              JacobianType;
+    typedef typename Superclass1::InputVectorType           InputVectorType;
+    typedef typename Superclass1::OutputVectorType          OutputVectorType;
+    typedef typename Superclass1::InputCovariantVectorType  InputCovariantVectorType;
+    typedef typename Superclass1::OutputCovariantVectorType OutputCovariantVectorType;
+    typedef typename Superclass1::InputVnlVectorType        InputVnlVectorType;
+    typedef typename Superclass1::OutputVnlVectorType       OutputVnlVectorType;
+    typedef typename Superclass1::InputPointType            InputPointType;
+    typedef typename Superclass1::OutputPointType           OutputPointType;
     
     /** Typedef's from the TransformBase class. */
-    typedef typename Superclass2::ElastixType								ElastixType;
-    typedef typename Superclass2::ElastixPointer						ElastixPointer;
-    typedef typename Superclass2::ConfigurationType					ConfigurationType;
-    typedef typename Superclass2::ConfigurationPointer			ConfigurationPointer;
-    typedef typename Superclass2::RegistrationType					RegistrationType;
-    typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
-    typedef typename Superclass2::CoordRepType							CoordRepType;
-    typedef typename Superclass2::FixedImageType						FixedImageType;
-    typedef typename Superclass2::MovingImageType						MovingImageType;
-    typedef typename Superclass2::ITKBaseType								ITKBaseType;
-    typedef typename Superclass2::CombinationTransformType	CombinationTransformType;
+    typedef typename Superclass2::ElastixType               ElastixType;
+    typedef typename Superclass2::ElastixPointer            ElastixPointer;
+    typedef typename Superclass2::ConfigurationType         ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType          RegistrationType;
+    typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
+    typedef typename Superclass2::CoordRepType              CoordRepType;
+    typedef typename Superclass2::FixedImageType            FixedImageType;
+    typedef typename Superclass2::MovingImageType           MovingImageType;
+    typedef typename Superclass2::ITKBaseType               ITKBaseType;
+    typedef typename Superclass2::CombinationTransformType  CombinationTransformType;
     
     /** Other typedef's. */
-    typedef typename FixedImageType::IndexType							IndexType;
-    typedef typename IndexType::IndexValueType							IndexValueType;
-    typedef typename FixedImageType::SizeType								SizeType;
-    typedef typename FixedImageType::PointType							PointType;
-    typedef typename FixedImageType::SpacingType						SpacingType;
-    typedef typename FixedImageType::RegionType							RegionType;
+    typedef typename FixedImageType::IndexType              IndexType;
+    typedef typename IndexType::IndexValueType              IndexValueType;
+    typedef typename FixedImageType::SizeType               SizeType;
+    typedef typename FixedImageType::PointType              PointType;
+    typedef typename FixedImageType::SpacingType            SpacingType;
+    typedef typename FixedImageType::RegionType             RegionType;
     
     typedef CenteredTransformInitializer<
-      AffineTransformType, FixedImageType, MovingImageType>	TransformInitializerType;
-    typedef typename TransformInitializerType::Pointer			TransformInitializerPointer;
-    typedef typename AffineTransformType::Pointer						AffineTransformPointer;
+      AffineTransformType, FixedImageType, MovingImageType> TransformInitializerType;
+    typedef typename TransformInitializerType::Pointer      TransformInitializerPointer;
+    typedef typename AffineTransformType::Pointer           AffineTransformPointer;
 
     /** For scales setting in the optimizer */
     typedef typename Superclass2::ScalesType                ScalesType;
@@ -219,11 +219,11 @@ using namespace itk;
   private:
 
     /** The private constructor. */
-    AffineTransformElastix( const Self& );	// purposely not implemented
+    AffineTransformElastix( const Self& );  // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );					// purposely not implemented
+    void operator=( const Self& );          // purposely not implemented
 
-    AffineTransformPointer				m_AffineTransform;
+    AffineTransformPointer        m_AffineTransform;
     
   }; // end class AffineTransformElastix
   

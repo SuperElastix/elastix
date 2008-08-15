@@ -31,7 +31,7 @@ using namespace itk;
    *
    * The parameters used in this class are:
    * \parameter Metric: Select this metric as follows:\n
-   *		<tt>(Metric "KNNGraphAlphaMutualInformation")</tt>
+   *    <tt>(Metric "KNNGraphAlphaMutualInformation")</tt>
    * \parameter Alpha: since this metric calculates alpha - mutual information. \n
    *    <tt>(Alpha 0.5)</tt> \n
    *    Choose a value between 0.0 and 1.0. The default is 0.5.
@@ -92,13 +92,13 @@ using namespace itk;
   public:
 
     /** Standard ITK-stuff. */
-    typedef KNNGraphAlphaMutualInformationMetric					Self;
+    typedef KNNGraphAlphaMutualInformationMetric          Self;
     typedef KNNGraphAlphaMutualInformationImageToImageMetric<
       typename MetricBase<TElastix>::FixedImageType,
-      typename MetricBase<TElastix>::MovingImageType >		Superclass1;
-    typedef MetricBase<TElastix>													Superclass2;
-    typedef SmartPointer<Self>														Pointer;
-    typedef SmartPointer<const Self>											ConstPointer;
+      typename MetricBase<TElastix>::MovingImageType >    Superclass1;
+    typedef MetricBase<TElastix>                          Superclass2;
+    typedef SmartPointer<Self>                            Pointer;
+    typedef SmartPointer<const Self>                      ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -114,22 +114,22 @@ using namespace itk;
     elxClassNameMacro( "KNNGraphAlphaMutualInformation" );
 
     /** Typedefs inherited from the superclass.*/
-    typedef typename Superclass1::TransformType							TransformType;
-    typedef typename Superclass1::TransformPointer 					TransformPointer;
-    typedef typename Superclass1::TransformJacobianType			TransformJacobianType;
-    typedef typename Superclass1::InterpolatorType 					InterpolatorType;
-    typedef typename Superclass1::MeasureType								MeasureType;
-    typedef typename Superclass1::DerivativeType 						DerivativeType;
-    typedef typename Superclass1::ParametersType 						ParametersType;
-    typedef typename Superclass1::FixedImageType 						FixedImageType;
-    typedef typename Superclass1::MovingImageType						MovingImageType;
-    typedef typename Superclass1::FixedImageConstPointer 		FixedImageConstPointer;
-    typedef typename Superclass1::MovingImageConstPointer		MovingImageConstPointer;
-    //typedef typename Superclass1::FixedImageIndexType				FixedImageIndexType;
-    //typedef typename Superclass1::FixedImageIndexValueType 	FixedImageIndexValueType;
-    //typedef typename Superclass1::MovingImageIndexType 			MovingImageIndexType;
-    //typedef typename Superclass1::FixedImagePointType				FixedImagePointType;
-    //typedef typename Superclass1::MovingImagePointType 			MovingImagePointType;
+    typedef typename Superclass1::TransformType             TransformType;
+    typedef typename Superclass1::TransformPointer          TransformPointer;
+    typedef typename Superclass1::TransformJacobianType     TransformJacobianType;
+    typedef typename Superclass1::InterpolatorType          InterpolatorType;
+    typedef typename Superclass1::MeasureType               MeasureType;
+    typedef typename Superclass1::DerivativeType            DerivativeType;
+    typedef typename Superclass1::ParametersType            ParametersType;
+    typedef typename Superclass1::FixedImageType            FixedImageType;
+    typedef typename Superclass1::MovingImageType           MovingImageType;
+    typedef typename Superclass1::FixedImageConstPointer    FixedImageConstPointer;
+    typedef typename Superclass1::MovingImageConstPointer   MovingImageConstPointer;
+    //typedef typename Superclass1::FixedImageIndexType       FixedImageIndexType;
+    //typedef typename Superclass1::FixedImageIndexValueType  FixedImageIndexValueType;
+    //typedef typename Superclass1::MovingImageIndexType      MovingImageIndexType;
+    //typedef typename Superclass1::FixedImagePointType       FixedImagePointType;
+    //typedef typename Superclass1::MovingImagePointType      MovingImagePointType;
     
     /** The fixed image dimension */
     itkStaticConstMacro (FixedImageDimension, unsigned int,
@@ -139,22 +139,22 @@ using namespace itk;
       MovingImageType::ImageDimension );
     
     /** Typedef's inherited from Elastix. */
-    typedef typename Superclass2::ElastixType								ElastixType;
-    typedef typename Superclass2::ElastixPointer						ElastixPointer;
-    typedef typename Superclass2::ConfigurationType					ConfigurationType;
-    typedef typename Superclass2::ConfigurationPointer			ConfigurationPointer;
-    typedef typename Superclass2::RegistrationType					RegistrationType;
-    typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
-    typedef typename Superclass2::ITKBaseType								ITKBaseType;
+    typedef typename Superclass2::ElastixType               ElastixType;
+    typedef typename Superclass2::ElastixPointer            ElastixPointer;
+    typedef typename Superclass2::ConfigurationType         ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType          RegistrationType;
+    typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
+    typedef typename Superclass2::ITKBaseType               ITKBaseType;
 
     /** Typedefs for feature images. */
     typedef FixedImageType          FixedFeatureImageType;
     typedef MovingImageType         MovingFeatureImageType;
       
     /** Typedef for timer. */
-    typedef tmr::Timer					TimerType;
+    typedef tmr::Timer          TimerType;
     /** Typedef for timer. */
-    typedef TimerType::Pointer	TimerPointer;
+    typedef TimerType::Pointer  TimerPointer;
 
     /** Execute stuff before the registration:
      * \li Set the alpha from alpha - MI.
@@ -194,9 +194,9 @@ using namespace itk;
   private:
 
     /** The private constructor. */
-    KNNGraphAlphaMutualInformationMetric( const Self& );	// purposely not implemented
+    KNNGraphAlphaMutualInformationMetric( const Self& );  // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );								  // purposely not implemented
+    void operator=( const Self& );                  // purposely not implemented
     
   }; // end class KNNGraphAlphaMutualInformationMetric
 

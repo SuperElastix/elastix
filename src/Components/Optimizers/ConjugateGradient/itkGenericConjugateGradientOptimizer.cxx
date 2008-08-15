@@ -129,7 +129,7 @@ namespace itk
     ParametersType searchDir;
     ParametersType previousSearchDir;
     DerivativeType previousGradient;
-    MeasureType previousValue;		
+    MeasureType previousValue;    
         
     this->InvokeEvent( StartEvent() );
 

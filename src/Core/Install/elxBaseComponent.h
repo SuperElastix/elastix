@@ -89,10 +89,10 @@ namespace elastix
      * component (like MattesMutualInformationMetric) to achieve
      * behaviour, specific for that single component.
      */
-    virtual void BeforeRegistration(void)	{};
-    virtual void BeforeEachResolution(void)	{};
+    virtual void BeforeRegistration(void) {};
+    virtual void BeforeEachResolution(void) {};
     virtual void AfterEachResolution(void) {};
-    virtual void AfterEachIteration(void)	{};
+    virtual void AfterEachIteration(void) {};
     virtual void AfterRegistration(void) {};
     
     /**
@@ -132,8 +132,8 @@ namespace elastix
 
   private:
 
-    BaseComponent( const BaseComponent & );		// purposely not implemented
-    void operator=( const BaseComponent & );	// purposely not implemented
+    BaseComponent( const BaseComponent & );   // purposely not implemented
+    void operator=( const BaseComponent & );  // purposely not implemented
 
     std::string m_ComponentLabel;
 

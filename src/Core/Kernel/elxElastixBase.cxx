@@ -79,7 +79,7 @@ namespace elastix
 
       Object * thisasobject = dynamic_cast<Object *>(this);
       if ( thisasobject )
-      {	
+      { 
         thisasobject->Modified();
       }
     }

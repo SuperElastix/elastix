@@ -166,7 +166,7 @@ namespace itk
     typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
     
     /** Create variables to store intermediate results. */
-    typedef typename NumericTraits< MeasureType >::AccumulateType		AccumulateType;
+    typedef typename NumericTraits< MeasureType >::AccumulateType   AccumulateType;
     AccumulateType sff = NumericTraits< AccumulateType >::Zero;
     AccumulateType smm = NumericTraits< AccumulateType >::Zero;
     AccumulateType sfm = NumericTraits< AccumulateType >::Zero;
@@ -302,7 +302,7 @@ namespace itk
     DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.GetSize() );
     
     /** Initialize some variables for intermediate results. */
-    typedef typename NumericTraits< MeasureType >::AccumulateType		AccumulateType;
+    typedef typename NumericTraits< MeasureType >::AccumulateType   AccumulateType;
     AccumulateType sff = NumericTraits< AccumulateType >::Zero;
     AccumulateType smm = NumericTraits< AccumulateType >::Zero;
     AccumulateType sfm = NumericTraits< AccumulateType >::Zero;

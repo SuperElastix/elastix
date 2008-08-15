@@ -91,9 +91,9 @@ namespace itk
   private:
 
     /** The private constructor. */
-    ImageRandomSamplerBase( const Self& );	        // purposely not implemented
+    ImageRandomSamplerBase( const Self& );          // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );				    // purposely not implemented
+    void operator=( const Self& );            // purposely not implemented
 
   }; // end class ImageSamplerBase
 

@@ -36,9 +36,9 @@ namespace itk
     
     /** Standard itk. */
     typedef BinaryTreeBase              Self;
-    typedef DataObject									Superclass;
-    typedef SmartPointer< Self >				Pointer;
-    typedef SmartPointer< const Self >	ConstPointer;
+    typedef DataObject                  Superclass;
+    typedef SmartPointer< Self >        Pointer;
+    typedef SmartPointer< const Self >  ConstPointer;
     
     /** ITK type info. */
     itkTypeMacro( BinaryTreeBase, DataObject );

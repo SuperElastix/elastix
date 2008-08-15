@@ -47,9 +47,9 @@ SET(CommonFiles
 )
 
 SET( CostFunctionFiles
-	CostFunctions/itkAdvancedImageToImageMetric.h
- 	CostFunctions/itkAdvancedImageToImageMetric.hxx
-	CostFunctions/itkExponentialLimiterFunction.h
+  CostFunctions/itkAdvancedImageToImageMetric.h
+  CostFunctions/itkAdvancedImageToImageMetric.hxx
+  CostFunctions/itkExponentialLimiterFunction.h
   CostFunctions/itkExponentialLimiterFunction.hxx
   CostFunctions/itkHardLimiterFunction.h
   CostFunctions/itkHardLimiterFunction.hxx
@@ -102,7 +102,7 @@ SOURCE_GROUP( "ImageSamplers" FILES ${ImageSamplersFiles} )
 
 ADD_LIBRARY( elxCommon
   ${CommonFiles}
-	${CostFunctionFiles}
+  ${CostFunctionFiles}
   ${LineSearchOptimizersFiles}
   ${ImageSamplersFiles}
 )

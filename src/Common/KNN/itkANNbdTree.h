@@ -36,9 +36,9 @@ namespace itk
     
     /** Standard itk. */
     typedef ANNbdTree                     Self;
-    typedef ANNkDTree< TListSample >	    Superclass;
-    typedef SmartPointer< Self >				  Pointer;
-    typedef SmartPointer< const Self >	  ConstPointer;
+    typedef ANNkDTree< TListSample >      Superclass;
+    typedef SmartPointer< Self >          Pointer;
+    typedef SmartPointer< const Self >    ConstPointer;
     
     /** New method for creating an object using a factory. */
     itkNewMacro( Self );

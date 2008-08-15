@@ -27,7 +27,7 @@ namespace xoutlibrary
 
   template< class charT, class traits >
     xoutcell<charT, traits>::xoutcell()
-  {		
+  {   
     this->AddTargetCell( "InternalBuffer", &(this->m_InternalBuffer) );
 
   } // end Constructor

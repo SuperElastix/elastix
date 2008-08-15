@@ -38,11 +38,11 @@ using namespace itk;
    *
    * The parameters used in this class are:
    * \parameter ImageSampler: Select this image sampler as follows:\n
-   *		<tt>(ImageSampler "Random")</tt>
+   *    <tt>(ImageSampler "Random")</tt>
    * \parameter NumberOfSpatialSamples: The number of image voxels used for computing the
-   *		metric value and its derivative in each iteration. Must be given for each resolution.\n
-   *		example: <tt>(NumberOfSpatialSamples 2048 2048 4000)</tt> \n
-   *		The default is 5000.
+   *    metric value and its derivative in each iteration. Must be given for each resolution.\n
+   *    example: <tt>(NumberOfSpatialSamples 2048 2048 4000)</tt> \n
+   *    The default is 5000.
    *
    * \ingroup ImageSamplers
    */
@@ -54,16 +54,16 @@ using namespace itk;
       ITK_TYPENAME elx::ImageSamplerBase<TElastix>::InputImageType >, 
     public
       elx::ImageSamplerBase<TElastix>
-  {	
+  { 
   public:
   
     /** Standard ITK-stuff. */
-    typedef RandomSampler									      Self;
-    typedef	ImageRandomSampler<
-      typename elx::ImageSamplerBase<TElastix>::InputImageType >	Superclass1;		
-    typedef elx::ImageSamplerBase<TElastix>					Superclass2;		
-    typedef SmartPointer<Self>									Pointer;
-    typedef SmartPointer<const Self>						ConstPointer;
+    typedef RandomSampler                       Self;
+    typedef ImageRandomSampler<
+      typename elx::ImageSamplerBase<TElastix>::InputImageType >  Superclass1;    
+    typedef elx::ImageSamplerBase<TElastix>         Superclass2;    
+    typedef SmartPointer<Self>                  Pointer;
+    typedef SmartPointer<const Self>            ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro(Self);
@@ -90,19 +90,19 @@ using namespace itk;
     typedef typename Superclass1::ImageSampleContainerType     ImageSampleContainerType;
     typedef typename Superclass1::MaskType                     MaskType;
     typedef typename Superclass1::InputImageIndexType          InputImageIndexType;
-    typedef typename Superclass1::InputImagePointType          InputImagePointType;	
+    typedef typename Superclass1::InputImagePointType          InputImagePointType; 
 
     /** The input image dimension. */
-    itkStaticConstMacro( InputImageDimension, unsigned int,	Superclass1::InputImageDimension );
+    itkStaticConstMacro( InputImageDimension, unsigned int, Superclass1::InputImageDimension );
     
     /** Typedefs inherited from Elastix. */
-    typedef typename Superclass2::ElastixType								ElastixType;
-    typedef typename Superclass2::ElastixPointer						ElastixPointer;
-    typedef typename Superclass2::ConfigurationType					ConfigurationType;
-    typedef typename Superclass2::ConfigurationPointer			ConfigurationPointer;
-    typedef typename Superclass2::RegistrationType					RegistrationType;
-    typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
-    typedef typename Superclass2::ITKBaseType								ITKBaseType;
+    typedef typename Superclass2::ElastixType               ElastixType;
+    typedef typename Superclass2::ElastixPointer            ElastixPointer;
+    typedef typename Superclass2::ConfigurationType         ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType          RegistrationType;
+    typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
+    typedef typename Superclass2::ITKBaseType               ITKBaseType;
 
     /** Execute stuff before each resolution:
      * \li Set the number of samples.
@@ -119,9 +119,9 @@ using namespace itk;
   private:
 
     /** The private constructor. */
-    RandomSampler( const Self& );	// purposely not implemented
+    RandomSampler( const Self& ); // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );			// purposely not implemented
+    void operator=( const Self& );      // purposely not implemented
       
   }; // end class RandomSampler
 

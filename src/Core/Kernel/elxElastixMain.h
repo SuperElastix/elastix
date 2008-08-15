@@ -80,9 +80,9 @@ namespace elastix
   public:
     
     /** Standard itk.*/
-    typedef ElastixMain								Self;
-    typedef Object										Superclass;
-    typedef SmartPointer<Self>				Pointer;
+    typedef ElastixMain               Self;
+    typedef Object                    Superclass;
+    typedef SmartPointer<Self>        Pointer;
     typedef SmartPointer<const Self>  ConstPointer;
     
     /** Method for creation through the object factory.*/
@@ -94,16 +94,16 @@ namespace elastix
     /** Typedef's.*/
 
     /** itk base objects.*/
-    typedef Object									ObjectType;
-    typedef ObjectType::Pointer			ObjectPointer;
-    typedef DataObject							DataObjectType;
-    typedef DataObjectType::Pointer	DataObjectPointer;
+    typedef Object                  ObjectType;
+    typedef ObjectType::Pointer     ObjectPointer;
+    typedef DataObject              DataObjectType;
+    typedef DataObjectType::Pointer DataObjectPointer;
 
     /** Elastix components.*/
-    typedef ElastixBase																			ElastixBaseType;
-    typedef ElastixBase::ConfigurationType									ConfigurationType;
-    typedef ConfigurationType::ArgumentMapType							ArgumentMapType;
-    typedef ConfigurationType::Pointer											ConfigurationPointer;
+    typedef ElastixBase                                     ElastixBaseType;
+    typedef ElastixBase::ConfigurationType                  ConfigurationType;
+    typedef ConfigurationType::ArgumentMapType              ArgumentMapType;
+    typedef ConfigurationType::Pointer                      ConfigurationPointer;
     typedef ElastixBase::ObjectContainerType                ObjectContainerType;
     typedef ElastixBase::DataObjectContainerType            DataObjectContainerType;
     typedef ElastixBase::ObjectContainerPointer             ObjectContainerPointer;
@@ -111,34 +111,34 @@ namespace elastix
 
     /** Typedefs for the database that holds pointers to ::New() functions.
      * Those functions are used to instantiate components, such as the metric etc. */
-    typedef ComponentDatabase																ComponentDatabaseType;
-    typedef ComponentDatabaseType::Pointer									ComponentDatabasePointer;
-    typedef ComponentDatabaseType::PtrToCreator							PtrToCreator;
-    typedef ComponentDatabaseType::ComponentDescriptionType	ComponentDescriptionType;
-    typedef ComponentDatabaseType::PixelTypeDescriptionType	PixelTypeDescriptionType;
-    typedef ComponentDatabaseType::ImageDimensionType				ImageDimensionType;
-    typedef ComponentDatabaseType::IndexType								DBIndexType;
+    typedef ComponentDatabase                               ComponentDatabaseType;
+    typedef ComponentDatabaseType::Pointer                  ComponentDatabasePointer;
+    typedef ComponentDatabaseType::PtrToCreator             PtrToCreator;
+    typedef ComponentDatabaseType::ComponentDescriptionType ComponentDescriptionType;
+    typedef ComponentDatabaseType::PixelTypeDescriptionType PixelTypeDescriptionType;
+    typedef ComponentDatabaseType::ImageDimensionType       ImageDimensionType;
+    typedef ComponentDatabaseType::IndexType                DBIndexType;
     
     /** Typedef for class that populates a ComponentDatabase */
-    typedef ComponentLoader																	ComponentLoaderType;
-    typedef ComponentLoaderType::Pointer										ComponentLoaderPointer;
+    typedef ComponentLoader                                 ComponentLoaderType;
+    typedef ComponentLoaderType::Pointer                    ComponentLoaderPointer;
       
     /** Set/Get functions for the description of the imagetype.*/
-    itkSetMacro( FixedImagePixelType,		PixelTypeDescriptionType );
-    itkSetMacro( MovingImagePixelType,	PixelTypeDescriptionType );
-    itkSetMacro( FixedImageDimension,		ImageDimensionType );
-    itkSetMacro( MovingImageDimension,	ImageDimensionType );
-    itkGetMacro( FixedImagePixelType,		PixelTypeDescriptionType );
-    itkGetMacro( MovingImagePixelType,	PixelTypeDescriptionType );
-    itkGetMacro( FixedImageDimension,		ImageDimensionType );
-    itkGetMacro( MovingImageDimension,	ImageDimensionType );
+    itkSetMacro( FixedImagePixelType,   PixelTypeDescriptionType );
+    itkSetMacro( MovingImagePixelType,  PixelTypeDescriptionType );
+    itkSetMacro( FixedImageDimension,   ImageDimensionType );
+    itkSetMacro( MovingImageDimension,  ImageDimensionType );
+    itkGetMacro( FixedImagePixelType,   PixelTypeDescriptionType );
+    itkGetMacro( MovingImagePixelType,  PixelTypeDescriptionType );
+    itkGetMacro( FixedImageDimension,   ImageDimensionType );
+    itkGetMacro( MovingImageDimension,  ImageDimensionType );
 
     /** Set/Get functions for the fixed and moving images
      * (if these are not used, elastix tries to read them from disk,
      * according to the command line parameters). */
-    itkSetObjectMacro( FixedImageContainer,	 DataObjectContainerType );
+    itkSetObjectMacro( FixedImageContainer,  DataObjectContainerType );
     itkSetObjectMacro( MovingImageContainer, DataObjectContainerType );
-    itkGetObjectMacro( FixedImageContainer,	 DataObjectContainerType );
+    itkGetObjectMacro( FixedImageContainer,  DataObjectContainerType );
     itkGetObjectMacro( MovingImageContainer, DataObjectContainerType );
 
     /** Set/Get functions for the fixed and moving masks
@@ -156,7 +156,7 @@ namespace elastix
     /** Functions to get pointers to the elastix components. 
      * The components are returned as Object::Pointer.
      * Before calling this functions, call run(). */
-    itkGetObjectMacro( Elastix,	ObjectType );
+    itkGetObjectMacro( Elastix, ObjectType );
 
     /** Convenience function that returns the elastix component as
      * a pointer to an ElastixBaseType. Use only after having called run()!  */
@@ -186,7 +186,7 @@ namespace elastix
     itkGetConstMacro( DBIndex, DBIndexType );
     
     /** Enter the command line parameters, which were given by the user,
-     * if elastix.exe is used to do a registration.	
+     * if elastix.exe is used to do a registration. 
      * The Configuration object will be initialized in this way. */
     virtual void EnterCommandLineArguments( ArgumentMapType & argmap );
 
@@ -239,21 +239,21 @@ namespace elastix
     ObjectPointer m_Elastix;
 
     /** The configuratio object, containing the parameters and command-line arguments */
-    ConfigurationPointer	m_Configuration;
+    ConfigurationPointer  m_Configuration;
 
     /** Description of the ImageTypes.*/
-    PixelTypeDescriptionType		m_FixedImagePixelType;
-    ImageDimensionType					m_FixedImageDimension;
-    PixelTypeDescriptionType		m_MovingImagePixelType;
-    ImageDimensionType					m_MovingImageDimension;
+    PixelTypeDescriptionType    m_FixedImagePixelType;
+    ImageDimensionType          m_FixedImageDimension;
+    PixelTypeDescriptionType    m_MovingImagePixelType;
+    ImageDimensionType          m_MovingImageDimension;
 
-    DBIndexType									m_DBIndex;
+    DBIndexType                 m_DBIndex;
 
     /** The images and masks */
-    DataObjectContainerPointer	m_FixedImageContainer;
-    DataObjectContainerPointer	m_MovingImageContainer;
-    DataObjectContainerPointer	m_FixedMaskContainer;
-    DataObjectContainerPointer	m_MovingMaskContainer;
+    DataObjectContainerPointer  m_FixedImageContainer;
+    DataObjectContainerPointer  m_MovingImageContainer;
+    DataObjectContainerPointer  m_FixedMaskContainer;
+    DataObjectContainerPointer  m_MovingMaskContainer;
 
     /** A transform that is the result of registration. */
     ObjectPointer m_FinalTransform;
@@ -267,7 +267,7 @@ namespace elastix
     
     /** InitDBIndex sets m_DBIndex by asking the ImageTypes
      * from the Configuration object and obtaining the corresponding
-     * DB index from the ComponentDatabase.	*/
+     * DB index from the ComponentDatabase. */
     virtual int InitDBIndex(void);
 
     /** Create a component. Make sure InitDBIndex has been called before.
@@ -297,8 +297,8 @@ namespace elastix
 
   private:
 
-    ElastixMain( const Self& );			// purposely not implemented
-    void operator=( const Self& );	// purposely not implemented
+    ElastixMain( const Self& );     // purposely not implemented
+    void operator=( const Self& );  // purposely not implemented
 
   }; // end class ElastixMain
   

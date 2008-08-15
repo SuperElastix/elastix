@@ -75,7 +75,7 @@
 
 namespace elastix
 {
-  using namespace itk;	
+  using namespace itk;  
   
   /**
    * \class ElastixBase
@@ -88,42 +88,42 @@ namespace elastix
    *
    * The command line arguments used by this class are:
    * \commandlinearg -f: mandatory argument for elastix with the file name of the fixed image. \n
-   *		example: <tt>-f fixedImage.mhd</tt> \n
+   *    example: <tt>-f fixedImage.mhd</tt> \n
    * \commandlinearg -m: mandatory argument for elastix with the file name of the moving image. \n
-   *		example: <tt>-m movingImage.mhd</tt> \n
+   *    example: <tt>-m movingImage.mhd</tt> \n
    * \commandlinearg -out: mandatory argument for both elastix and transformix
-   *		with the name of the directory that is going to contain everything that
-   *		elastix or tranformix returns as output. \n
-   *		example: <tt>-out outputdirectory</tt> \n
+   *    with the name of the directory that is going to contain everything that
+   *    elastix or tranformix returns as output. \n
+   *    example: <tt>-out outputdirectory</tt> \n
    * \commandlinearg -p: mandatory argument for elastix with the name of the parameter file. \n
-   *		example: <tt>-p parameters.txt</tt> \n
-   *		Multiple parameter files are allowed. It means that multiple registrations
-   *		are runned in sequence, with the output of some registration as input
-   *		to the next.
+   *    example: <tt>-p parameters.txt</tt> \n
+   *    Multiple parameter files are allowed. It means that multiple registrations
+   *    are runned in sequence, with the output of some registration as input
+   *    to the next.
    * \commandlinearg -fMask: Optional argument for elastix with the file name of a mask for
-   *		the fixed image. The mask image should contain of zeros and ones, zeros indicating 
-   *		pixels that are not used for the registration. \n
-   *		example: <tt>-fMask fixedmask.mhd</tt> \n
+   *    the fixed image. The mask image should contain of zeros and ones, zeros indicating 
+   *    pixels that are not used for the registration. \n
+   *    example: <tt>-fMask fixedmask.mhd</tt> \n
    * \commandlinearg -mMask: Optional argument for elastix with the file name of a mask for
-   *		the moving image. The mask image should contain of zeros and ones, zeros indicating 
-   *		pixels that are not used for the registration. \n
-   *		example: <tt>-mMask movingmask.mhd</tt> \n
+   *    the moving image. The mask image should contain of zeros and ones, zeros indicating 
+   *    pixels that are not used for the registration. \n
+   *    example: <tt>-mMask movingmask.mhd</tt> \n
    * \commandlinearg -tp: mandatory argument for transformix with the name of
-   *		the transform parameter file. \n
-   *		example: <tt>-tp TransformParameters.txt</tt> \n
-   *		In one such a transform parameter file a reference can be used to another
-   *		transform parameter file, which is then used as an initial transform.
+   *    the transform parameter file. \n
+   *    example: <tt>-tp TransformParameters.txt</tt> \n
+   *    In one such a transform parameter file a reference can be used to another
+   *    transform parameter file, which is then used as an initial transform.
    * \commandlinearg -priority: optional argument for both elastix and transformix to
-   *		specify the priority setting of this process. Choose one from {belownormal, high}. \n
-   *		example: <tt>-priority high</tt> \n
-   *		This argument is only valid for running under Windows. For Linux, run
-   *		elastix with "nice".
+   *    specify the priority setting of this process. Choose one from {belownormal, high}. \n
+   *    example: <tt>-priority high</tt> \n
+   *    This argument is only valid for running under Windows. For Linux, run
+   *    elastix with "nice".
    * \commandlinearg -threads: optional argument for both elastix and transformix to
-   *		specify the maximum number of threads used by this process. Default: no maximum. \n
-   *		example: <tt>-threads 2</tt> \n
+   *    specify the maximum number of threads used by this process. Default: no maximum. \n
+   *    example: <tt>-threads 2</tt> \n
    * \commandlinearg -in: optional argument for transformix with the file name of an input image. \n
-   *		example: <tt>-in inputImage.mhd</tt> \n
-   *		If this option is skipped, a deformation field of the transform will be generated.
+   *    example: <tt>-in inputImage.mhd</tt> \n
+   *    If this option is skipped, a deformation field of the transform will be generated.
    *
    * \ingroup Kernel
    */
@@ -133,16 +133,16 @@ namespace elastix
   public:
 
     /** Standard typedefs etc. */
-    typedef ElastixBase				Self;
-    typedef BaseComponent			Superclass;
+    typedef ElastixBase       Self;
+    typedef BaseComponent     Superclass;
   
     /** Typedefs used in this class */
-    typedef MyConfiguration							        ConfigurationType;
-    typedef ConfigurationType::Pointer	        ConfigurationPointer;
-    typedef itk::Object									        ObjectType; //for the components
+    typedef MyConfiguration                     ConfigurationType;
+    typedef ConfigurationType::Pointer          ConfigurationPointer;
+    typedef itk::Object                         ObjectType; //for the components
     typedef ObjectType::Pointer                 ObjectPointer;
-    typedef itk::DataObject							        DataObjectType; //for the images
-    typedef DataObjectType::Pointer			        DataObjectPointer;
+    typedef itk::DataObject                     DataObjectType; //for the images
+    typedef DataObjectType::Pointer             DataObjectPointer;
     typedef itk::VectorContainer<
       unsigned int, ObjectPointer>              ObjectContainerType;
     typedef ObjectContainerType::Pointer        ObjectContainerPointer;
@@ -154,9 +154,9 @@ namespace elastix
     typedef FileNameContainerType::Pointer      FileNameContainerPointer;
     
     /** Other typedef's.*/
-    typedef ComponentDatabase   								ComponentDatabaseType;
-    typedef ComponentDatabaseType::Pointer			ComponentDatabasePointer;
-    typedef ComponentDatabaseType::IndexType		DBIndexType;
+    typedef ComponentDatabase                   ComponentDatabaseType;
+    typedef ComponentDatabaseType::Pointer      ComponentDatabasePointer;
+    typedef ComponentDatabaseType::IndexType    DBIndexType;
 
     /** The itk class that ElastixTemplate is expected to inherit from
      * Of course ElastixTemplate also inherits from this class (ElastixBase)  */
@@ -309,8 +309,8 @@ namespace elastix
     ElastixBase();
     virtual ~ElastixBase() {};
     
-    ConfigurationPointer	    m_Configuration;
-    DBIndexType						    m_DBIndex;
+    ConfigurationPointer      m_Configuration;
+    DBIndexType               m_DBIndex;
     ComponentDatabasePointer  m_ComponentDatabase;
 
     /** Convenient mini class to load the files specified by a filename container
@@ -368,10 +368,10 @@ namespace elastix
 
   private:
 
-    ElastixBase( const Self& );			// purposely not implemented
-    void operator=( const Self& );	// purposely not implemented
+    ElastixBase( const Self& );     // purposely not implemented
+    void operator=( const Self& );  // purposely not implemented
 
-    xl::xoutrow_type			m_IterationInfo;	
+    xl::xoutrow_type      m_IterationInfo;  
     
     int m_DefaultOutputPrecision;
 

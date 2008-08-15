@@ -38,8 +38,8 @@ namespace itk
     /** Standard itk. */
     typedef ANNFixedRadiusTreeSearch                Self;
     typedef BinaryANNTreeSearchBase< TListSample >  Superclass;
-    typedef SmartPointer< Self >				            Pointer;
-    typedef SmartPointer< const Self >	            ConstPointer;
+    typedef SmartPointer< Self >                    Pointer;
+    typedef SmartPointer< const Self >              ConstPointer;
     
     /** New method for creating an object using a factory. */
     itkNewMacro( Self );

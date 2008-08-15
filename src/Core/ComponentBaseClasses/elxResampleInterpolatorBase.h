@@ -23,7 +23,7 @@
 
 
 namespace elastix
-{	
+{ 
   using namespace itk;
 
   /**
@@ -42,27 +42,27 @@ namespace elastix
   public:
 
     /** Standard ITK stuff. */
-    typedef ResampleInterpolatorBase		Self;
-    typedef BaseComponentSE<TElastix>		Superclass;
+    typedef ResampleInterpolatorBase    Self;
+    typedef BaseComponentSE<TElastix>   Superclass;
 
     /** Run-time type information (and related methods). */
     itkTypeMacro( ResampleInterpolatorBase, BaseComponentSE );
 
     /** Typedef's from superclass. */
-    typedef typename Superclass::ElastixType					ElastixType;
-    typedef typename Superclass::ElastixPointer				ElastixPointer;
-    typedef typename Superclass::ConfigurationType		ConfigurationType;
-    typedef typename Superclass::ConfigurationPointer	ConfigurationPointer;
-    typedef typename Superclass::RegistrationType			RegistrationType;
-    typedef typename Superclass::RegistrationPointer	RegistrationPointer;
+    typedef typename Superclass::ElastixType          ElastixType;
+    typedef typename Superclass::ElastixPointer       ElastixPointer;
+    typedef typename Superclass::ConfigurationType    ConfigurationType;
+    typedef typename Superclass::ConfigurationPointer ConfigurationPointer;
+    typedef typename Superclass::RegistrationType     RegistrationType;
+    typedef typename Superclass::RegistrationPointer  RegistrationPointer;
 
     /** Typedef's from elastix. */
-    typedef typename ElastixType::MovingImageType			InputImageType;
-    typedef typename ElastixType::CoordRepType				CoordRepType;
+    typedef typename ElastixType::MovingImageType     InputImageType;
+    typedef typename ElastixType::CoordRepType        CoordRepType;
 
     /** Other typedef's. */
     typedef InterpolateImageFunction< 
-      InputImageType, CoordRepType >									ITKBaseType;
+      InputImageType, CoordRepType >                  ITKBaseType;
 
     /** Cast ti ITKBaseType. */
     virtual ITKBaseType * GetAsITKBaseType(void)
@@ -96,9 +96,9 @@ namespace elastix
   private:
 
     /** The private constructor. */
-    ResampleInterpolatorBase( const Self& );	// purposely not implemented
+    ResampleInterpolatorBase( const Self& );  // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );						// purposely not implemented
+    void operator=( const Self& );            // purposely not implemented
 
   }; // end class ResampleInterpolatorBase
 

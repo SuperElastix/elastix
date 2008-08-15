@@ -38,10 +38,10 @@ namespace itk
   public:
 
     /** Standard class typedefs. */
-    typedef UpsampleBSplineParametersFilter		Self;
-    typedef Object														Superclass;
-    typedef SmartPointer<Self>								Pointer;
-    typedef SmartPointer<const Self>					ConstPointer;
+    typedef UpsampleBSplineParametersFilter   Self;
+    typedef Object                            Superclass;
+    typedef SmartPointer<Self>                Pointer;
+    typedef SmartPointer<const Self>          ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -50,14 +50,14 @@ namespace itk
     itkTypeMacro( UpsampleBSplineParametersFilter, Object );
 
     /** Typedefs. */
-    typedef TArray														ArrayType;
-    typedef typename ArrayType::ValueType			ValueType;
-    typedef TImage														ImageType;
-    typedef typename ImageType::Pointer				ImagePointer;
-    typedef typename ImageType::PixelType			PixelType;
-    typedef typename ImageType::SpacingType		SpacingType;
-    typedef typename ImageType::PointType			OriginType;
-    typedef typename ImageType::RegionType		RegionType;
+    typedef TArray                            ArrayType;
+    typedef typename ArrayType::ValueType     ValueType;
+    typedef TImage                            ImageType;
+    typedef typename ImageType::Pointer       ImagePointer;
+    typedef typename ImageType::PixelType     PixelType;
+    typedef typename ImageType::SpacingType   SpacingType;
+    typedef typename ImageType::PointType     OriginType;
+    typedef typename ImageType::RegionType    RegionType;
 
     /** Dimension of the fixed image. */
     itkStaticConstMacro( Dimension, unsigned int, ImageType::ImageDimension );
@@ -105,17 +105,17 @@ namespace itk
   
   private:
 
-    UpsampleBSplineParametersFilter( const Self& );	//purposely not implemented
-    void operator=( const Self & );									//purposely not implemented
+    UpsampleBSplineParametersFilter( const Self& ); //purposely not implemented
+    void operator=( const Self & );                 //purposely not implemented
 
     /** Private member variables. */
-    OriginType		m_CurrentGridOrigin;
-    SpacingType		m_CurrentGridSpacing;
-    RegionType		m_CurrentGridRegion;
-    OriginType		m_RequiredGridOrigin;
-    SpacingType		m_RequiredGridSpacing;
-    RegionType		m_RequiredGridRegion;
-    unsigned int	m_BSplineOrder;
+    OriginType    m_CurrentGridOrigin;
+    SpacingType   m_CurrentGridSpacing;
+    RegionType    m_CurrentGridRegion;
+    OriginType    m_RequiredGridOrigin;
+    SpacingType   m_RequiredGridSpacing;
+    RegionType    m_RequiredGridRegion;
+    unsigned int  m_BSplineOrder;
 
 }; // end class UpsampleBSplineParametersFilter
 

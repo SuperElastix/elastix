@@ -21,7 +21,7 @@ namespace itk
 {
   
   /**
-   * ************************ Constructor	*************************
+   * ************************ Constructor *************************
    */
 
   template < class TListSample >

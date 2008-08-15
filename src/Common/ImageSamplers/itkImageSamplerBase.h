@@ -31,8 +31,8 @@ namespace itk
    * \parameter ImageSampler: The way samples are taken from the fixed image in
    *    order to compute the metric value and its derivative in each iteration.
    *    Can be given for each resolution. Select one of {Random, Full, Grid, RandomCoordinate}.\n
-   *		example: <tt>(ImageSampler "Random")</tt> \n
-   *		The default is Random.
+   *    example: <tt>(ImageSampler "Random")</tt> \n
+   *    The default is Random.
    */
 
   template < class TInputImage >
@@ -82,7 +82,7 @@ namespace itk
     typedef typename InputImagePointType::ValueType     InputImagePointValueType;
     typedef typename ImageSampleType::RealType          ImageSampleValueType;
     typedef SpatialObject<
-      itkGetStaticConstMacro( InputImageDimension ) > 	MaskType;
+      itkGetStaticConstMacro( InputImageDimension ) >   MaskType;
     typedef typename MaskType::Pointer                  MaskPointer;
     typedef typename MaskType::ConstPointer             MaskConstPointer;
     typedef std::vector< MaskConstPointer >             MaskVectorType;
@@ -187,9 +187,9 @@ namespace itk
   private:
 
     /** The private constructor. */
-    ImageSamplerBase( const Self& );	        // purposely not implemented
+    ImageSamplerBase( const Self& );          // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );				    // purposely not implemented
+    void operator=( const Self& );            // purposely not implemented
 
     /** Member variables. */
     MaskConstPointer                  m_Mask;

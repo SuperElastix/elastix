@@ -57,11 +57,11 @@ namespace itk
   public:
     
     /** Standard itk.*/
-    typedef CombinationTransform				Self;
+    typedef CombinationTransform        Self;
     typedef Transform< TScalarType,
-      NDimensions, NDimensions > 				Superclass;
-    typedef SmartPointer< Self >				Pointer;
-    typedef SmartPointer< const Self >	ConstPointer;
+      NDimensions, NDimensions >        Superclass;
+    typedef SmartPointer< Self >        Pointer;
+    typedef SmartPointer< const Self >  ConstPointer;
     
     /** New method for creating an object using a factory.*/
     itkNewMacro( Self );
@@ -72,18 +72,18 @@ namespace itk
     /** Input and Output space dimension.*/
     itkStaticConstMacro( SpaceDimension, unsigned int, NDimensions );
     
-    /** Typedefs inherited from Superclass.*/			
-    typedef typename Superclass::ScalarType 								ScalarType;
-    typedef typename Superclass::ParametersType 						ParametersType;
-    typedef typename Superclass::JacobianType 							JacobianType;
-    typedef typename Superclass::InputVectorType						InputVectorType;
-    typedef typename Superclass::OutputVectorType 					OutputVectorType;
-    typedef typename Superclass::InputCovariantVectorType 	InputCovariantVectorType;
-    typedef typename Superclass::OutputCovariantVectorType	OutputCovariantVectorType;
-    typedef typename Superclass::InputVnlVectorType 				InputVnlVectorType;
-    typedef typename Superclass::OutputVnlVectorType				OutputVnlVectorType;
-    typedef typename Superclass::InputPointType 						InputPointType;
-    typedef typename Superclass::OutputPointType						OutputPointType;
+    /** Typedefs inherited from Superclass.*/     
+    typedef typename Superclass::ScalarType                 ScalarType;
+    typedef typename Superclass::ParametersType             ParametersType;
+    typedef typename Superclass::JacobianType               JacobianType;
+    typedef typename Superclass::InputVectorType            InputVectorType;
+    typedef typename Superclass::OutputVectorType           OutputVectorType;
+    typedef typename Superclass::InputCovariantVectorType   InputCovariantVectorType;
+    typedef typename Superclass::OutputCovariantVectorType  OutputCovariantVectorType;
+    typedef typename Superclass::InputVnlVectorType         InputVnlVectorType;
+    typedef typename Superclass::OutputVnlVectorType        OutputVnlVectorType;
+    typedef typename Superclass::InputPointType             InputPointType;
+    typedef typename Superclass::OutputPointType            OutputPointType;
         
     /** A pointer to a function that 'eats' a const InputPointType  & 
      * and spits out an OutputPointType. */
@@ -94,13 +94,13 @@ namespace itk
     typedef const JacobianType & (Self::*GetJacobianFunctionPointer)( const InputPointType & ) const;
     
     /** Typedefs for the InitialTransform */
-    typedef Superclass																			InitialTransformType;
-    typedef typename InitialTransformType::Pointer					InitialTransformPointer;
-    typedef typename InitialTransformType::ConstPointer			InitialTransformConstPointer;
+    typedef Superclass                                      InitialTransformType;
+    typedef typename InitialTransformType::Pointer          InitialTransformPointer;
+    typedef typename InitialTransformType::ConstPointer     InitialTransformConstPointer;
     
     /** Typedefs for the CurrentTransform */
-    typedef Superclass																			CurrentTransformType;
-    typedef typename CurrentTransformType::Pointer					CurrentTransformPointer;
+    typedef Superclass                                      CurrentTransformType;
+    typedef typename CurrentTransformType::Pointer          CurrentTransformPointer;
         
     /** Set/Get a pointer to the InitialTransform */
     itkGetConstObjectMacro( InitialTransform, InitialTransformType );
@@ -132,7 +132,7 @@ namespace itk
     /** Get the Transformation Parameters from the CurrentTransform. */
     virtual const ParametersType& GetParameters( void ) const;
 
-    /** Set the transformation parameters in the CurrentTransform	*/
+    /** Set the transformation parameters in the CurrentTransform */
     virtual void SetParameters( const ParametersType & param);
 
     /** Set the transformation parameters in the CurrentTransform.  
@@ -192,7 +192,7 @@ namespace itk
     GetJacobianFunctionPointer m_SelectedGetJacobianFunction;
 
     /** Methods to combine the TransformPoint functions of the 
-     * initial and the current transform.	 */
+     * initial and the current transform.  */
     
     /** ADDITION: \f$T(x) = T_0(x) + T_1(x) - x\f$ */
     inline OutputPointType TransformPointUseAddition( const InputPointType  & point ) const;
@@ -228,8 +228,8 @@ namespace itk
         
   private:
     
-    CombinationTransform( const Self& );	// purposely not implemented
-    void operator=( const Self& );		    // purposely not implemented
+    CombinationTransform( const Self& );  // purposely not implemented
+    void operator=( const Self& );        // purposely not implemented
 
   }; // end class CombinationTransform
     

@@ -62,8 +62,8 @@ using namespace itk;
     xout["iteration"].AddTargetCell("3:Gain a_k");
     xout["iteration"].AddTargetCell("4:||Gradient||");
 
-    /** Format the metric and stepsize as floats */			
-    xl::xout["iteration"]["2:Metric"]		<< std::showpoint << std::fixed;
+    /** Format the metric and stepsize as floats */     
+    xl::xout["iteration"]["2:Metric"]   << std::showpoint << std::fixed;
     xl::xout["iteration"]["3:Gain a_k"] << std::showpoint << std::fixed;
     xl::xout["iteration"]["4:||Gradient||"] << std::showpoint << std::fixed;
     
@@ -107,7 +107,7 @@ using namespace itk;
     this->GetConfiguration()->ReadParameter(alpha, "SP_alpha", this->GetComponentLabel(), level, 0 );
     this->GetConfiguration()->ReadParameter(gamma, "SP_gamma", this->GetComponentLabel(), level, 0 );
 
-    this->Seta(	a );
+    this->Seta( a );
     this->Setc( c );
     this->SetA( A );
     this->SetAlpha( alpha );
@@ -131,11 +131,11 @@ using namespace itk;
     
     if (this->m_ShowMetricValues)
     {
-      xl::xout["iteration"]["2:Metric"]		<< this->GetValue();
+      xl::xout["iteration"]["2:Metric"]   << this->GetValue();
     }
     else
     {
-      xl::xout["iteration"]["2:Metric"]		<< "---";
+      xl::xout["iteration"]["2:Metric"]   << "---";
     }
     
     xl::xout["iteration"]["3:Gain a_k"] << this->GetLearningRate();
@@ -173,12 +173,12 @@ using namespace itk;
     {
   
     case MaximumNumberOfIterations :
-      stopcondition = "Maximum number of iterations has been reached";	
-      break;	
+      stopcondition = "Maximum number of iterations has been reached";  
+      break;  
     
     case MetricError :
-      stopcondition = "Error in metric";	
-      break;	
+      stopcondition = "Error in metric";  
+      break;  
         
     default:
       stopcondition = "Unknown";

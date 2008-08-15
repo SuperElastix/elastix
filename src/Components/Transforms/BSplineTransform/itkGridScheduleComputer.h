@@ -36,10 +36,10 @@ namespace itk
   public:
     
     /** Standard class typedefs. */
-    typedef GridScheduleComputer          			Self;
-    typedef Object                    					Superclass;
-    typedef SmartPointer< Self >								Pointer;
-    typedef SmartPointer< const Self >					ConstPointer;
+    typedef GridScheduleComputer                Self;
+    typedef Object                              Superclass;
+    typedef SmartPointer< Self >                Pointer;
+    typedef SmartPointer< const Self >          ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -147,8 +147,8 @@ namespace itk
     
   private:
 
-    GridScheduleComputer( const Self& );	// purposely not implemented
-    void operator=( const Self& );				// purposely not implemented
+    GridScheduleComputer( const Self& );  // purposely not implemented
+    void operator=( const Self& );        // purposely not implemented
     
     /** Declare member variables, needed in functions. */
     OriginType            m_ImageOrigin;

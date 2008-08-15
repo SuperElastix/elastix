@@ -55,10 +55,10 @@ namespace itk
   public:
     
     /** Standard class typedefs. */
-    typedef FiniteDifferenceGradientDescentOptimizer		Self;
-    typedef ScaledSingleValuedNonLinearOptimizer	   		Superclass;
-    typedef SmartPointer<Self>									Pointer;
-    typedef SmartPointer<const Self>						ConstPointer;
+    typedef FiniteDifferenceGradientDescentOptimizer    Self;
+    typedef ScaledSingleValuedNonLinearOptimizer        Superclass;
+    typedef SmartPointer<Self>                  Pointer;
+    typedef SmartPointer<const Self>            ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -140,15 +140,15 @@ namespace itk
     
     // made protected so subclass can access
     DerivativeType                m_Gradient; 
-    double												m_LearningRate;
-    double												m_GradientMagnitude;
+    double                        m_LearningRate;
+    double                        m_GradientMagnitude;
     
     /** Boolean that says if the current value of
     * the metric has to be computed. This is not 
     * necessary for optimisation; just nice for
     * progress information.
     */ 
-    bool													m_ComputeCurrentValue;
+    bool                          m_ComputeCurrentValue;
     
     // Functions to compute the parameters at iteration k.
     virtual double Compute_a( unsigned long k ) const;
@@ -156,8 +156,8 @@ namespace itk
     
   private:
 
-    FiniteDifferenceGradientDescentOptimizer( const Self& );	// purposely not implemented
-    void operator=( const Self& );										// purposely not implemented
+    FiniteDifferenceGradientDescentOptimizer( const Self& );  // purposely not implemented
+    void operator=( const Self& );                    // purposely not implemented
     
     /** Private member variables.*/
     bool                          m_Stop;
@@ -167,11 +167,11 @@ namespace itk
     unsigned long                 m_CurrentIteration;
     
     /**Parameters, as described by Spall.*/
-    double												m_Param_a;
-    double												m_Param_c;
-    double												m_Param_A;
-    double												m_Param_alpha;
-    double												m_Param_gamma;
+    double                        m_Param_a;
+    double                        m_Param_c;
+    double                        m_Param_A;
+    double                        m_Param_alpha;
+    double                        m_Param_gamma;
     
   }; // end class FiniteDifferenceGradientDescentOptimizer
 

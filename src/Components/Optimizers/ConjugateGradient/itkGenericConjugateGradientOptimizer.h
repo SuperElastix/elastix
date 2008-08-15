@@ -60,13 +60,13 @@ namespace itk
     
     /** Typedef for a function that computes \f$\beta\f$, given the previousGradient,
      * the current gradient, and the previous search direction */
-    typedef double (Self::*												ComputeBetaFunctionType
+    typedef double (Self::*                       ComputeBetaFunctionType
       )( const DerivativeType & ,
          const DerivativeType & ,
          const ParametersType & );
-    typedef std::string														BetaDefinitionType;
+    typedef std::string                           BetaDefinitionType;
     typedef std::map< BetaDefinitionType,
-      ComputeBetaFunctionType >										BetaDefinitionMapType;
+      ComputeBetaFunctionType >                   BetaDefinitionMapType;
             
     typedef enum {
       MetricError,
@@ -142,7 +142,7 @@ namespace itk
 
     /** Flag that is true as long as the method
      * SetMaxNrOfItWithoutImprovement is never called */
-    bool													m_UseDefaultMaxNrOfItWithoutImprovement;
+    bool                          m_UseDefaultMaxNrOfItWithoutImprovement;
 
     /** Is true when the LineSearchOptimizer has been started. */
     bool                          m_InLineSearch;
@@ -152,14 +152,14 @@ namespace itk
      * Typically 'true' at the start of optimization, or when a stopped optimisation
      * is resumed (in the latter case the previous gradient and search direction
      * may of course still be valid, but to be safe it is assumed that they are not). */
-    bool													m_PreviousGradientAndSearchDirValid;
+    bool                          m_PreviousGradientAndSearchDirValid;
 
     /** The name of the BetaDefinition */
-    BetaDefinitionType  					m_BetaDefinition;
+    BetaDefinitionType            m_BetaDefinition;
     
     /** A mapping that links the names of the BetaDefinitions to functions that
      * compute \f$\beta\f$. */
-    BetaDefinitionMapType					m_BetaDefinitionMap;
+    BetaDefinitionMapType         m_BetaDefinitionMap;
     
     /** Function to add a new beta definition. The first argument should be a name 
      * via which a user can select this \f$\beta\f$ definition. The second argument is a 
@@ -249,7 +249,7 @@ namespace itk
     unsigned long                 m_MaximumNumberOfIterations;
     double                        m_ValueTolerance;
     double                        m_GradientMagnitudeTolerance;
-    unsigned long									m_MaxNrOfItWithoutImprovement;
+    unsigned long                 m_MaxNrOfItWithoutImprovement;
     
     LineSearchOptimizerPointer    m_LineSearchOptimizer;
     

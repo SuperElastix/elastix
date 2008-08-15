@@ -28,12 +28,12 @@ using namespace itk;
    *
    * The parameters used in this class are:
    * \parameter MovingImagePyramid: Select this pyramid as follows:\n
-   *		<tt>(MovingImagePyramid "MovingRecursiveImagePyramid")</tt>
+   *    <tt>(MovingImagePyramid "MovingRecursiveImagePyramid")</tt>
    *
    * \ingroup ImagePyramids
    */
 
-  template <class TElastix>	
+  template <class TElastix> 
     class MovingRecursivePyramid :
     public
       RecursiveMultiResolutionPyramidImageFilter<
@@ -45,13 +45,13 @@ using namespace itk;
   public:
 
     /** Standard ITK. */
-    typedef MovingRecursivePyramid																		Self;
+    typedef MovingRecursivePyramid                                    Self;
     typedef RecursiveMultiResolutionPyramidImageFilter<
         typename MovingImagePyramidBase<TElastix>::InputImageType,
-        typename MovingImagePyramidBase<TElastix>::OutputImageType >	Superclass1;		
-    typedef MovingImagePyramidBase<TElastix>													Superclass2;
-    typedef SmartPointer<Self>																				Pointer;
-    typedef SmartPointer<const Self>																	ConstPointer;
+        typename MovingImagePyramidBase<TElastix>::OutputImageType >  Superclass1;    
+    typedef MovingImagePyramidBase<TElastix>                          Superclass2;
+    typedef SmartPointer<Self>                                        Pointer;
+    typedef SmartPointer<const Self>                                  ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -69,20 +69,20 @@ using namespace itk;
     itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
     
     /** Typedefs inherited from Superclass1. */
-    typedef typename Superclass1::InputImageType						InputImageType; 
-    typedef typename Superclass1::OutputImageType						OutputImageType;
-    typedef typename Superclass1::InputImagePointer					InputImagePointer;
-    typedef typename Superclass1::OutputImagePointer				OutputImagePointer;
-    typedef typename Superclass1::InputImageConstPointer		InputImageConstPointer;
+    typedef typename Superclass1::InputImageType            InputImageType; 
+    typedef typename Superclass1::OutputImageType           OutputImageType;
+    typedef typename Superclass1::InputImagePointer         InputImagePointer;
+    typedef typename Superclass1::OutputImagePointer        OutputImagePointer;
+    typedef typename Superclass1::InputImageConstPointer    InputImageConstPointer;
 
     /** Typedefs inherited from Elastix. */
-    typedef typename Superclass2::ElastixType						ElastixType;
-    typedef typename Superclass2::ElastixPointer				ElastixPointer;
-    typedef typename Superclass2::ConfigurationType			ConfigurationType;
-    typedef typename Superclass2::ConfigurationPointer	ConfigurationPointer;
-    typedef typename Superclass2::RegistrationType			RegistrationType;
-    typedef typename Superclass2::RegistrationPointer		RegistrationPointer;
-    typedef typename Superclass2::ITKBaseType						ITKBaseType;
+    typedef typename Superclass2::ElastixType           ElastixType;
+    typedef typename Superclass2::ElastixPointer        ElastixPointer;
+    typedef typename Superclass2::ConfigurationType     ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer  ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType      RegistrationType;
+    typedef typename Superclass2::RegistrationPointer   RegistrationPointer;
+    typedef typename Superclass2::ITKBaseType           ITKBaseType;
     
   protected:
 
@@ -94,9 +94,9 @@ using namespace itk;
   private:
 
     /** The private constructor. */
-    MovingRecursivePyramid( const Self& );	// purposely not implemented
+    MovingRecursivePyramid( const Self& );  // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );					// purposely not implemented
+    void operator=( const Self& );          // purposely not implemented
       
   }; // end class MovingRecursivePyramid
     

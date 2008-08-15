@@ -43,22 +43,22 @@ namespace elastix
   public:
 
     /** Standard ITK-stuff. */
-    typedef ImageSamplerBase						Self;
-    typedef BaseComponentSE<TElastix>		Superclass;
+    typedef ImageSamplerBase            Self;
+    typedef BaseComponentSE<TElastix>   Superclass;
 
     /** Run-time type information (and related methods). */
     itkTypeMacro( ImageSamplerBase, BaseComponentSE );
 
     /** Typedefs inherited from Elastix. */
-    typedef typename Superclass::ElastixType						ElastixType;
-    typedef typename Superclass::ElastixPointer					ElastixPointer;
-    typedef typename Superclass::ConfigurationType			ConfigurationType;
-    typedef typename Superclass::ConfigurationPointer		ConfigurationPointer;
-    typedef typename Superclass::RegistrationType				RegistrationType;
-    typedef typename Superclass::RegistrationPointer		RegistrationPointer;
+    typedef typename Superclass::ElastixType            ElastixType;
+    typedef typename Superclass::ElastixPointer         ElastixPointer;
+    typedef typename Superclass::ConfigurationType      ConfigurationType;
+    typedef typename Superclass::ConfigurationPointer   ConfigurationPointer;
+    typedef typename Superclass::RegistrationType       RegistrationType;
+    typedef typename Superclass::RegistrationPointer    RegistrationPointer;
 
     /** Other typedef's. */
-    typedef typename ElastixType::FixedImageType		    InputImageType;
+    typedef typename ElastixType::FixedImageType        InputImageType;
     
     /** ITKBaseType. */
     typedef itk::ImageSamplerBase< InputImageType >     ITKBaseType;
@@ -91,9 +91,9 @@ namespace elastix
   private:
 
     /** The private constructor. */
-    ImageSamplerBase( const Self& );	// purposely not implemented
+    ImageSamplerBase( const Self& );  // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );		// purposely not implemented
+    void operator=( const Self& );    // purposely not implemented
 
   }; // end class ImageSamplerBase
 

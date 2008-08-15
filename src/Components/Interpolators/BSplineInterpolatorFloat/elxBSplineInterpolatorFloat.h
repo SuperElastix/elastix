@@ -36,10 +36,10 @@ using namespace itk;
    *
    * The parameters used in this class are:
    * \parameter Interpolator: Select this interpolator as follows:\n
-   *		<tt>(Interpolator "BSplineInterpolatorFloat")</tt>
+   *    <tt>(Interpolator "BSplineInterpolatorFloat")</tt>
    * \parameter BSplineInterpolationOrder: the order of the B-spline polynomial. \n
-   *		example: <tt>(BSplineInterpolationOrder 3 2 3)</tt> \n
-   *		The default order is 1. The parameter can be specified for each resolution.\n
+   *    example: <tt>(BSplineInterpolationOrder 3 2 3)</tt> \n
+   *    The default order is 1. The parameter can be specified for each resolution.\n
    *    If only given for one resolution, that value is used for the other resolutions as well.
    *
    * \ingroup Interpolators
@@ -54,18 +54,18 @@ using namespace itk;
         float > , //CoefficientType 
     public
       InterpolatorBase<TElastix>
-  {	
+  { 
   public:
   
     /** Standard ITK-stuff. */
-    typedef BSplineInterpolatorFloat						Self;
-    typedef	BSplineInterpolateImageFunction<
+    typedef BSplineInterpolatorFloat            Self;
+    typedef BSplineInterpolateImageFunction<
       typename InterpolatorBase<TElastix>::InputImageType,
       typename InterpolatorBase<TElastix>::CoordRepType,
-      float >																	  Superclass1;		
-    typedef InterpolatorBase<TElastix>					Superclass2;		
-    typedef SmartPointer<Self>									Pointer;
-    typedef SmartPointer<const Self>						ConstPointer;
+      float >                                   Superclass1;    
+    typedef InterpolatorBase<TElastix>          Superclass2;    
+    typedef SmartPointer<Self>                  Pointer;
+    typedef SmartPointer<const Self>            ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -83,26 +83,26 @@ using namespace itk;
     itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
     
     /** Typedefs inherited from the superclass. */
-    typedef typename Superclass1::OutputType								OutputType;
-    typedef typename Superclass1::InputImageType						InputImageType;
-    typedef typename Superclass1::IndexType									IndexType;
-    typedef typename Superclass1::ContinuousIndexType				ContinuousIndexType;
-    typedef typename Superclass1::PointType									PointType;		
-    typedef typename Superclass1::Iterator									Iterator;
-    typedef typename Superclass1::CoefficientDataType				CoefficientDataType;
-    typedef typename Superclass1::CoefficientImageType			CoefficientImageType;
-    typedef typename Superclass1::CoefficientFilter					CoefficientFilter;
-    typedef typename Superclass1::CoefficientFilterPointer	CoefficientFilterPointer;
-    typedef typename Superclass1::CovariantVectorType				CovariantVectorType;
+    typedef typename Superclass1::OutputType                OutputType;
+    typedef typename Superclass1::InputImageType            InputImageType;
+    typedef typename Superclass1::IndexType                 IndexType;
+    typedef typename Superclass1::ContinuousIndexType       ContinuousIndexType;
+    typedef typename Superclass1::PointType                 PointType;    
+    typedef typename Superclass1::Iterator                  Iterator;
+    typedef typename Superclass1::CoefficientDataType       CoefficientDataType;
+    typedef typename Superclass1::CoefficientImageType      CoefficientImageType;
+    typedef typename Superclass1::CoefficientFilter         CoefficientFilter;
+    typedef typename Superclass1::CoefficientFilterPointer  CoefficientFilterPointer;
+    typedef typename Superclass1::CovariantVectorType       CovariantVectorType;
     
     /** Typedefs inherited from Elastix. */
-    typedef typename Superclass2::ElastixType								ElastixType;
-    typedef typename Superclass2::ElastixPointer						ElastixPointer;
-    typedef typename Superclass2::ConfigurationType					ConfigurationType;
-    typedef typename Superclass2::ConfigurationPointer			ConfigurationPointer;
-    typedef typename Superclass2::RegistrationType					RegistrationType;
-    typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
-    typedef typename Superclass2::ITKBaseType								ITKBaseType;
+    typedef typename Superclass2::ElastixType               ElastixType;
+    typedef typename Superclass2::ElastixPointer            ElastixPointer;
+    typedef typename Superclass2::ConfigurationType         ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType          RegistrationType;
+    typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
+    typedef typename Superclass2::ITKBaseType               ITKBaseType;
 
     /** Execute stuff before each new pyramid resolution:
      * \li Set the spline order.
@@ -119,9 +119,9 @@ using namespace itk;
   private:
 
     /** The private constructor. */
-    BSplineInterpolatorFloat( const Self& );	// purposely not implemented
+    BSplineInterpolatorFloat( const Self& );  // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );			      // purposely not implemented
+    void operator=( const Self& );            // purposely not implemented
       
   }; // end class BSplineInterpolatorFloat
 

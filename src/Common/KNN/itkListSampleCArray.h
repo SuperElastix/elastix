@@ -45,9 +45,9 @@ namespace Statistics
     /** Standard itk. */
     typedef ListSampleCArray            Self;
     typedef ListSampleBase<
-      TMeasurementVector >		          Superclass;
-    typedef SmartPointer< Self >				Pointer;
-    typedef SmartPointer< const Self >	ConstPointer;
+      TMeasurementVector >              Superclass;
+    typedef SmartPointer< Self >        Pointer;
+    typedef SmartPointer< const Self >  ConstPointer;
     
     /** New method for creating an object using a factory.*/
     itkNewMacro( Self );
@@ -123,7 +123,7 @@ namespace Statistics
     
   private:
     
-    ListSampleCArray( const Self& );	// purposely not implemented
+    ListSampleCArray( const Self& );  // purposely not implemented
     void operator=( const Self& );    // purposely not implemented
 
     /** The internal storage of the data in a C array. */

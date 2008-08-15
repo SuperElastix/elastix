@@ -65,7 +65,7 @@ namespace elastix
     this->GetAsITKBaseType()->SetNumberOfLevels( numberOfResolutions );
 
     /** Set the fixedPyramidSchedule to the FixedImagePyramidSchedule given 
-     * in the parameter-file.	The following parameter file fields can be used:
+     * in the parameter-file. The following parameter file fields can be used:
      * ImagePyramidSchedule
      * FixedImagePyramidSchedule
      * FixedImagePyramid<i>Schedule, for the i-th fixed image pyramid used. 

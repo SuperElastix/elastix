@@ -64,7 +64,7 @@ using namespace itk;
     this->Superclass2::ReadFromFile();
 
     /** Setup VectorImageReader. */
-    typedef ImageFileReader< DeformationFieldType >	VectorReaderType;
+    typedef ImageFileReader< DeformationFieldType > VectorReaderType;
     typename VectorReaderType::Pointer vectorReader
       = VectorReaderType::New();
 
@@ -93,7 +93,7 @@ using namespace itk;
       excp.SetDescription( err_str );
       /** Pass the exception to an higher level. */
       throw excp;
-    }		
+    }   
 
     /** Set the deformationFieldImage in the
      * itkDeformationFieldInterpolatingTransform.
@@ -164,7 +164,7 @@ using namespace itk;
 
     /** Create the filename of the deformationField image. */
     std::string resultImageFormat = "mhd";
-    this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0, true );
+    this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, true );
     std::ostringstream makeFileName( "" );
     makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
       << "DeformationFieldImage"

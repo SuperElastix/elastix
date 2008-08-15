@@ -65,12 +65,12 @@ namespace itk
   public:
     
     /** Standard itk.*/
-    typedef BSplineCombinationTransform	Self;
+    typedef BSplineCombinationTransform Self;
     typedef CombinationTransform<
       TScalarType,
-      NDimensions >											Superclass;
-    typedef SmartPointer< Self >				Pointer;
-    typedef SmartPointer< const Self >	ConstPointer;
+      NDimensions >                     Superclass;
+    typedef SmartPointer< Self >        Pointer;
+    typedef SmartPointer< const Self >  ConstPointer;
     
     /** New method for creating an object using a factory.*/
     itkNewMacro( Self );
@@ -84,37 +84,37 @@ namespace itk
     /** BSplineOrder */
     itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
     
-    /** Typedefs inherited from Superclass.*/			
-    typedef typename Superclass::ScalarType 									ScalarType;
-    typedef typename Superclass::ParametersType 							ParametersType;
-    typedef typename Superclass::JacobianType 								JacobianType;
-    typedef typename Superclass::InputVectorType							InputVectorType;
-    typedef typename Superclass::OutputVectorType 						OutputVectorType;
-    typedef typename Superclass::InputCovariantVectorType 		InputCovariantVectorType;
-    typedef typename Superclass::OutputCovariantVectorType		OutputCovariantVectorType;
-    typedef typename Superclass::InputVnlVectorType 					InputVnlVectorType;
-    typedef typename Superclass::OutputVnlVectorType					OutputVnlVectorType;
-    typedef typename Superclass::InputPointType 							InputPointType;
-    typedef typename Superclass::OutputPointType							OutputPointType;
+    /** Typedefs inherited from Superclass.*/     
+    typedef typename Superclass::ScalarType                   ScalarType;
+    typedef typename Superclass::ParametersType               ParametersType;
+    typedef typename Superclass::JacobianType                 JacobianType;
+    typedef typename Superclass::InputVectorType              InputVectorType;
+    typedef typename Superclass::OutputVectorType             OutputVectorType;
+    typedef typename Superclass::InputCovariantVectorType     InputCovariantVectorType;
+    typedef typename Superclass::OutputCovariantVectorType    OutputCovariantVectorType;
+    typedef typename Superclass::InputVnlVectorType           InputVnlVectorType;
+    typedef typename Superclass::OutputVnlVectorType          OutputVnlVectorType;
+    typedef typename Superclass::InputPointType               InputPointType;
+    typedef typename Superclass::OutputPointType              OutputPointType;
     typedef typename 
-      Superclass::TransformPointFunctionPointer								TransformPointFunctionPointer;
+      Superclass::TransformPointFunctionPointer               TransformPointFunctionPointer;
     typedef typename 
-      Superclass::GetJacobianFunctionPointer									GetJacobianFunctionPointer;
-    typedef typename Superclass::InitialTransformType					InitialTransformType;
-    typedef typename Superclass::InitialTransformPointer			InitialTransformPointer;
-    typedef typename Superclass::InitialTransformConstPointer	InitialTransformConstPointer;
-    typedef typename Superclass::CurrentTransformType					CurrentTransformType;
-    typedef typename Superclass::CurrentTransformPointer			CurrentTransformPointer;
+      Superclass::GetJacobianFunctionPointer                  GetJacobianFunctionPointer;
+    typedef typename Superclass::InitialTransformType         InitialTransformType;
+    typedef typename Superclass::InitialTransformPointer      InitialTransformPointer;
+    typedef typename Superclass::InitialTransformConstPointer InitialTransformConstPointer;
+    typedef typename Superclass::CurrentTransformType         CurrentTransformType;
+    typedef typename Superclass::CurrentTransformPointer      CurrentTransformPointer;
     
     /** Typedefs for the BSplineTransform. */
     typedef itk::BSplineDeformableTransform<
       ScalarType,
       itkGetStaticConstMacro( SpaceDimension ),
-      itkGetStaticConstMacro( SplineOrder ) >									BSplineTransformType;
-    typedef typename BSplineTransformType::Pointer						BSplineTransformPointer;
-    typedef typename BSplineTransformType::WeightsType				WeightsType;
+      itkGetStaticConstMacro( SplineOrder ) >                 BSplineTransformType;
+    typedef typename BSplineTransformType::Pointer            BSplineTransformPointer;
+    typedef typename BSplineTransformType::WeightsType        WeightsType;
     typedef typename 
-      BSplineTransformType::ParameterIndexArrayType						ParameterIndexArrayType;
+      BSplineTransformType::ParameterIndexArrayType           ParameterIndexArrayType;
     typedef typename BSplineTransformType::ImageType          CoefficientImageType;
     typedef typename BSplineTransformType::ImagePointer       CoefficientImagePointer;
     
@@ -168,7 +168,7 @@ namespace itk
     TransformPointBSplineFunctionPointer m_SelectedTransformPointBSplineFunction;
 
     /** Methods to combine the TransformPoint functions of the 
-     * initial and the current transform. Variant with extra arguments.	 */
+     * initial and the current transform. Variant with extra arguments.  */
     
     /** ADDITION: T(x) = T0(x) + T1(x) - x */
     inline void TransformPointBSplineUseAddition( 
@@ -206,8 +206,8 @@ namespace itk
         
   private:
     
-    BSplineCombinationTransform( const Self& );	// purposely not implemented
-    void operator=( const Self& );		// purposely not implemented
+    BSplineCombinationTransform( const Self& ); // purposely not implemented
+    void operator=( const Self& );    // purposely not implemented
         
   }; // end class BSplineCombinationTransform
     

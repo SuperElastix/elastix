@@ -39,9 +39,9 @@ namespace elastix
   public:
     
     /** Standard itk.*/
-    typedef TransformixMain						Self;
-    typedef ElastixMain								Superclass;
-    typedef SmartPointer<Self>				Pointer;
+    typedef TransformixMain           Self;
+    typedef ElastixMain               Superclass;
+    typedef SmartPointer<Self>        Pointer;
     typedef SmartPointer<const Self>  ConstPointer;
     
     /** Method for creation through the object factory.*/
@@ -53,16 +53,16 @@ namespace elastix
     /** Typedef's from Superclass.*/
     
     /** typedef's from itk base Object.*/
-    typedef Superclass::ObjectType					ObjectType;
-    typedef Superclass::ObjectPointer				ObjectPointer;
-    typedef Superclass::DataObjectType			DataObjectType;
-    typedef Superclass::DataObjectPointer		DataObjectPointer;
+    typedef Superclass::ObjectType          ObjectType;
+    typedef Superclass::ObjectPointer       ObjectPointer;
+    typedef Superclass::DataObjectType      DataObjectType;
+    typedef Superclass::DataObjectPointer   DataObjectPointer;
     
     /** Elastix components.*/
-    typedef Superclass::ElastixBaseType							ElastixBaseType;
-    typedef Superclass::ConfigurationType						ConfigurationType;
-    typedef Superclass::ArgumentMapType							ArgumentMapType;
-    typedef Superclass::ConfigurationPointer				ConfigurationPointer;
+    typedef Superclass::ElastixBaseType             ElastixBaseType;
+    typedef Superclass::ConfigurationType           ConfigurationType;
+    typedef Superclass::ArgumentMapType             ArgumentMapType;
+    typedef Superclass::ConfigurationPointer        ConfigurationPointer;
     typedef Superclass::ObjectContainerType         ObjectContainerType;
     typedef Superclass::DataObjectContainerType     DataObjectContainerType;
     typedef Superclass::ObjectContainerPointer      ObjectContainerPointer;
@@ -70,17 +70,17 @@ namespace elastix
 
     /** Typedefs for the database that holds pointers to ::New() functions.
      * Those functions are used to instantiate components, such as the metric etc. */
-    typedef Superclass::ComponentDatabaseType				ComponentDatabaseType;
-    typedef Superclass::ComponentDatabasePointer		ComponentDatabasePointer;
-    typedef Superclass::PtrToCreator								PtrToCreator;
-    typedef Superclass::ComponentDescriptionType		ComponentDescriptionType;
-    typedef Superclass::PixelTypeDescriptionType		PixelTypeDescriptionType;
-    typedef Superclass::ImageDimensionType					ImageDimensionType;
-    typedef Superclass::DBIndexType									DBIndexType;
+    typedef Superclass::ComponentDatabaseType       ComponentDatabaseType;
+    typedef Superclass::ComponentDatabasePointer    ComponentDatabasePointer;
+    typedef Superclass::PtrToCreator                PtrToCreator;
+    typedef Superclass::ComponentDescriptionType    ComponentDescriptionType;
+    typedef Superclass::PixelTypeDescriptionType    PixelTypeDescriptionType;
+    typedef Superclass::ImageDimensionType          ImageDimensionType;
+    typedef Superclass::DBIndexType                 DBIndexType;
         
     /** Typedef for class that populates a ComponentDatabase */
-    typedef Superclass::ComponentLoaderType					ComponentLoaderType;
-    typedef Superclass::ComponentLoaderPointer			ComponentLoaderPointer;
+    typedef Superclass::ComponentLoaderType         ComponentLoaderType;
+    typedef Superclass::ComponentLoaderPointer      ComponentLoaderPointer;
         
     /** Overwrite Run() from base-class.*/
     virtual int Run(void);
@@ -102,8 +102,8 @@ namespace elastix
     
   private:
     
-    TransformixMain( const Self& );	// purposely not implemented
-    void operator=( const Self& );	// purposely not implemented
+    TransformixMain( const Self& ); // purposely not implemented
+    void operator=( const Self& );  // purposely not implemented
     
   }; // end class TransformixMain
   

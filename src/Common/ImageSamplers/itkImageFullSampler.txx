@@ -46,7 +46,7 @@ namespace itk
     /** Fill the sample container. */
     if ( mask.IsNull() )
     {
-      /** Simply loop over the image and store all samples in the container. */		 
+      /** Simply loop over the image and store all samples in the container. */    
       for( iter.GoToBegin(); ! iter.IsAtEnd(); ++iter )
       {
         ImageSampleType tempsample;

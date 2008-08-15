@@ -22,7 +22,7 @@ namespace itk
 {
   
   /**
-   * ************************ Constructor	*************************
+   * ************************ Constructor *************************
    */
 
   template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
@@ -45,7 +45,7 @@ namespace itk
   template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
     typename BSplineCombinationTransform<
       TScalarType, NDimensions, VSplineOrder>::OutputPointType
-    BSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>::	
+    BSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>:: 
     TransformPoint(const InputPointType  & point ) const
   { 
     return this->Superclass::TransformPoint( point );
@@ -57,7 +57,7 @@ namespace itk
    */
 
   template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-    void BSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>::	
+    void BSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>::  
     TransformPoint(
       const InputPointType &inputPoint,
       OutputPointType &outputPoint,
@@ -67,7 +67,7 @@ namespace itk
   { 
     /** Call the selected TransformPointBSplineFunction */
     ((*this).*m_SelectedTransformPointBSplineFunction)(
-      inputPoint, outputPoint, weights,	indices, inside);
+      inputPoint, outputPoint, weights, indices, inside);
 
   } // end TransformPoint with extra arguments
 
@@ -161,14 +161,14 @@ namespace itk
       WeightsType &weights,
       ParameterIndexArrayType &indices, 
       bool &inside ) const
-  {				
-    /** The Initial transform */		 
+  {       
+    /** The Initial transform */     
     OutputPointType out0 = 
       this->m_InitialTransform->TransformPoint( inputPoint );
     
     /** The Current transform */
     this->m_CurrentTransformAsBSplineTransform->TransformPoint( 
-      inputPoint, outputPoint, weights,	indices, inside);
+      inputPoint, outputPoint, weights, indices, inside);
     
     /** Both added together */
     for ( unsigned int i=0; i < SpaceDimension; i++ )
@@ -194,7 +194,7 @@ namespace itk
     {
       this->m_CurrentTransformAsBSplineTransform->TransformPoint( 
         this->m_InitialTransform->TransformPoint( inputPoint ),
-        outputPoint, weights,	indices, inside);
+        outputPoint, weights, indices, inside);
     } // end TransformPointBSplineUseComposition
       
       
@@ -203,7 +203,7 @@ namespace itk
    */
 
   template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-  void BSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>::	
+  void BSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>::  
     TransformPointBSplineNoInitialTransform( 
       const InputPointType &inputPoint,
       OutputPointType &outputPoint,
@@ -212,7 +212,7 @@ namespace itk
       bool &inside ) const
   {
     this->m_CurrentTransformAsBSplineTransform->TransformPoint(
-      inputPoint, outputPoint, weights,	indices, inside);
+      inputPoint, outputPoint, weights, indices, inside);
   } // end TransformPointBSplineNoInitialTransform
 
 
@@ -221,7 +221,7 @@ namespace itk
    */
 
   template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-  void BSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>::	
+  void BSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>::  
     TransformPointBSplineNoCurrentTransform(
       const InputPointType &inputPoint,
       OutputPointType &outputPoint,

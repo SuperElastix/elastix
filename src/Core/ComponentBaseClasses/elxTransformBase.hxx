@@ -131,7 +131,7 @@ namespace elastix
   template <class TElastix>
     void TransformBase<TElastix>
     ::BeforeRegistrationBase( void )
-  {	
+  { 
     /** Read from the configuration file how to combine the initial
      * transform with the current transform.
      */
@@ -173,7 +173,7 @@ namespace elastix
       {
         if ( itksys::SystemTools::FileExists( fileName.c_str() ) )
         {
-          this->ReadInitialTransformFromFile(	fileName.c_str() );
+          this->ReadInitialTransformFromFile( fileName.c_str() );
         }
         else
         {
@@ -294,7 +294,7 @@ namespace elastix
 
       /** If NumberOfParameters < 20, we read in the normal way. */
       if ( NumberOfParameters < 20 )
-      {			
+      {     
         for ( unsigned int i = 0; i < NumberOfParameters; i++ )
         {
           this->m_Configuration->ReadParameter(
@@ -455,19 +455,19 @@ namespace elastix
       GetCreator( InitialTransformName, this->m_Elastix->GetDBIndex() );
     initialTransform = testcreator ? testcreator() : NULL;
     
-    Self * elx_initialTransform = dynamic_cast< Self * >( initialTransform.GetPointer() );			
+    Self * elx_initialTransform = dynamic_cast< Self * >( initialTransform.GetPointer() );      
     
     /** Call the ReadFromFile method of the initialTransform. */
     if ( elx_initialTransform )
     {
       //elx_initialTransform->SetTransformParametersFileName(transformParametersFileName);
       elx_initialTransform->SetElastix( this->GetElastix() );
-      elx_initialTransform->SetConfiguration( this->m_ConfigurationInitialTransform );			
+      elx_initialTransform->SetConfiguration( this->m_ConfigurationInitialTransform );      
       elx_initialTransform->ReadFromFile();
     
       /** Set initial transform. */
       InitialTransformType * testPointer =
-        dynamic_cast<InitialTransformType* >(	initialTransform.GetPointer() );
+        dynamic_cast<InitialTransformType* >( initialTransform.GetPointer() );
       if ( testPointer )
       {
         this->SetInitialTransform( testPointer );
@@ -579,14 +579,14 @@ namespace elastix
     std::string movpix = "float";
     this->m_Configuration->ReadParameter( fixpix, "FixedInternalImagePixelType", 0 );
     this->m_Configuration->ReadParameter( movpix, "MovingInternalImagePixelType", 0 );
-    xout["transpar"] << "(FixedInternalImagePixelType \""	<< fixpix << "\")" << std::endl;
-    xout["transpar"] << "(MovingInternalImagePixelType \""	<< movpix << "\")" << std::endl;
+    xout["transpar"] << "(FixedInternalImagePixelType \"" << fixpix << "\")" << std::endl;
+    xout["transpar"] << "(MovingInternalImagePixelType \""  << movpix << "\")" << std::endl;
 
     /** Get the Size, Spacing and Origin of the fixed image. */
-    typedef typename FixedImageType::SizeType									FixedImageSizeType;
-    typedef typename FixedImageType::IndexType								FixedImageIndexType;
-    typedef typename FixedImageType::SpacingType							FixedImageSpacingType;
-    typedef typename FixedImageType::PointType								FixedImageOriginType;
+    typedef typename FixedImageType::SizeType                 FixedImageSizeType;
+    typedef typename FixedImageType::IndexType                FixedImageIndexType;
+    typedef typename FixedImageType::SpacingType              FixedImageSpacingType;
+    typedef typename FixedImageType::PointType                FixedImageOriginType;
     typedef typename FixedImageType::DirectionType            FixedImageDirectionType;
     FixedImageSizeType size = 
       this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetSize();
@@ -708,7 +708,7 @@ namespace elastix
     ::TransformPointsSomePoints( std::string filename )
   {
     /** Typedef's. */
-    typedef typename FixedImageType::RegionType					  FixedImageRegionType;
+    typedef typename FixedImageType::RegionType           FixedImageRegionType;
     typedef typename FixedImageType::PointType            FixedImageOriginType;
     typedef typename FixedImageType::SpacingType          FixedImageSpacingType;
     typedef typename FixedImageType::IndexType            FixedImageIndexType;
@@ -762,7 +762,7 @@ namespace elastix
     typename PointSetType::Pointer inputPointSet = ippReader->GetOutput();
   
     /** Create the storage classes. */
-    std::vector< FixedImageIndexType >    inputindexvec(  nrofpoints );	
+    std::vector< FixedImageIndexType >    inputindexvec(  nrofpoints ); 
     std::vector< InputPointType >         inputpointvec(  nrofpoints );
     std::vector< OutputPointType >        outputpointvec( nrofpoints );
     std::vector< FixedImageIndexType >    outputindexfixedvec( nrofpoints );
@@ -873,7 +873,7 @@ namespace elastix
     outputPointsFileName += "outputpoints.txt";
     std::ofstream outputPointsFile( outputPointsFileName.c_str() );
     outputPointsFile << std::showpoint << std::fixed;
-    elxout << "  The transformed points are saved in: " <<	outputPointsFileName << std::endl;
+    elxout << "  The transformed points are saved in: " <<  outputPointsFileName << std::endl;
     //\todo do not write opp to log file, but only to outputPointsFile.
     elxout.AddOutput( "opp", &outputPointsFile );
     
@@ -926,7 +926,7 @@ namespace elastix
       }
 
       elxout << "]" << std::endl;
-    }	// end for nrofpoints	
+    } // end for nrofpoints 
     
     /** Stop writing to the output file. */
     elxout.RemoveOutput( "opp" );
@@ -947,9 +947,9 @@ namespace elastix
     ::TransformPointsAllPoints(void)
   {
     /** Typedef's. */
-    typedef typename FixedImageType::RegionType					FixedImageRegionType;
+    typedef typename FixedImageType::RegionType         FixedImageRegionType;
     typedef itk::Vector<
-      float, FixedImageDimension >		                  VectorPixelType;
+      float, FixedImageDimension >                      VectorPixelType;
     typedef itk::Image<
       VectorPixelType, FixedImageDimension >            DeformationFieldImageType;
     typedef typename DeformationFieldImageType::Pointer DeformationFieldImagePointer;
@@ -981,7 +981,7 @@ namespace elastix
     
     /** Create a name for the deformation field file. */
     std::string resultImageFormat = "mhd";
-    this->m_Configuration->ReadParameter(	resultImageFormat, "ResultImageFormat", 0, true );
+    this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, true );
     std::ostringstream makeFileName( "" );
     makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
       << "deformationField." << resultImageFormat;
@@ -1123,7 +1123,7 @@ namespace elastix
         scales += element_product( jacd, jacd );
       }
     }
-    scales /= static_cast<double>( nrofsamples );	
+    scales /= static_cast<double>( nrofsamples ); 
 
   } // end AutomaticScalesEstimation
 

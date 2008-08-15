@@ -44,7 +44,7 @@ namespace itk
   {
   public:
     /** Standard class typedefs. */
-    typedef FullSearchOptimizer								Self;
+    typedef FullSearchOptimizer               Self;
     typedef SingleValuedNonLinearOptimizer    Superclass;
     typedef SmartPointer<Self>                Pointer;
     typedef SmartPointer<const Self>          ConstPointer;
@@ -62,28 +62,28 @@ namespace itk
     } StopConditionType;
     
     /* Typedefs inherited from superclass */
-    typedef Superclass::ParametersType								ParametersType;
-    typedef Superclass::CostFunctionType							CostFunctionType;
-    typedef Superclass::CostFunctionPointer						CostFunctionPointer;
-    typedef Superclass::MeasureType										MeasureType;
+    typedef Superclass::ParametersType                ParametersType;
+    typedef Superclass::CostFunctionType              CostFunctionType;
+    typedef Superclass::CostFunctionPointer           CostFunctionPointer;
+    typedef Superclass::MeasureType                   MeasureType;
     
-    typedef ParametersType::ValueType									ParameterValueType; // = double
-    typedef ParameterValueType												RangeValueType;
-    typedef FixedArray<RangeValueType, 3>							RangeType;
-    typedef MapContainer<unsigned int, RangeType>			SearchSpaceType;
-    typedef SearchSpaceType::Pointer									SearchSpacePointer;
-    typedef SearchSpaceType::ConstIterator						SearchSpaceIteratorType;
+    typedef ParametersType::ValueType                 ParameterValueType; // = double
+    typedef ParameterValueType                        RangeValueType;
+    typedef FixedArray<RangeValueType, 3>             RangeType;
+    typedef MapContainer<unsigned int, RangeType>     SearchSpaceType;
+    typedef SearchSpaceType::Pointer                  SearchSpacePointer;
+    typedef SearchSpaceType::ConstIterator            SearchSpaceIteratorType;
     
     /** Type that stores the parameter values of the parameters to be optimized.
     * Updated every iteration. */
-    typedef Array<ParameterValueType>									SearchSpacePointType;
+    typedef Array<ParameterValueType>                 SearchSpacePointType;
     
     /** The same values, but transformed to integer indices.
     * These can be used to create an image visualizing the search space. */
-    typedef Array<long>																SearchSpaceIndexType;
+    typedef Array<long>                               SearchSpaceIndexType;
     
     /** The size of each dimension to be searched ((max-min)/step)) */
-    typedef Array<unsigned long>											SearchSpaceSizeType;
+    typedef Array<unsigned long>                      SearchSpaceSizeType;
 
     
     /** NB: The methods SetScales has no influence! */
@@ -111,7 +111,7 @@ namespace itk
      * dim3: 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 
      * 
      * The indices are transformed to points in search space with the formula:
-     * point[i] = min[i] + stepsize[i]*index[i]				for all i.
+     * point[i] = min[i] + stepsize[i]*index[i]       for all i.
      * 
      * Then the appropriate parameters in the ParameterArray are updated.
      */
@@ -192,18 +192,18 @@ namespace itk
     bool                          m_Maximize;
     bool                          m_Stop;
     double                        m_Value;
-    double												m_BestValue;
+    double                        m_BestValue;
     StopConditionType             m_StopCondition;
     
-    SearchSpacePointer						m_SearchSpace;
-    SearchSpacePointType					m_CurrentPointInSearchSpace;
-    SearchSpaceIndexType					m_CurrentIndexInSearchSpace;
-    SearchSpacePointType					m_BestPointInSearchSpace;
-    SearchSpaceIndexType					m_BestIndexInSearchSpace;
-    SearchSpaceSizeType						m_SearchSpaceSize;
-    unsigned int									m_NumberOfSearchSpaceDimensions;
+    SearchSpacePointer            m_SearchSpace;
+    SearchSpacePointType          m_CurrentPointInSearchSpace;
+    SearchSpaceIndexType          m_CurrentIndexInSearchSpace;
+    SearchSpacePointType          m_BestPointInSearchSpace;
+    SearchSpaceIndexType          m_BestIndexInSearchSpace;
+    SearchSpaceSizeType           m_SearchSpaceSize;
+    unsigned int                  m_NumberOfSearchSpaceDimensions;
     
-    unsigned long									m_LastSearchSpaceChanges;
+    unsigned long                 m_LastSearchSpaceChanges;
     virtual void ProcessSearchSpaceChanges(void);
     
   private:

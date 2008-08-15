@@ -43,11 +43,11 @@ namespace itk
   public:
     
     /** Standard itk. */
-    typedef DeformationFieldRegulizerForBSpline			Self;
+    typedef DeformationFieldRegulizerForBSpline     Self;
     typedef DeformationFieldRegulizer<
-      TBSplineTransform >														Superclass;
-    typedef SmartPointer< Self >										Pointer;
-    typedef SmartPointer< const Self >							ConstPointer;
+      TBSplineTransform >                           Superclass;
+    typedef SmartPointer< Self >                    Pointer;
+    typedef SmartPointer< const Self >              ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -55,32 +55,32 @@ namespace itk
     /** Run-time type information (and related methods). */
     itkTypeMacro( DeformationFieldRegulizerForBSpline, DeformationFieldRegulizer );
     
-    /** Get	the dimension of the input space. */
+    /** Get the dimension of the input space. */
     itkStaticConstMacro( InputSpaceDimension, unsigned int, Superclass::InputSpaceDimension );
-    /** Get	the dimension of the output space. */
+    /** Get the dimension of the output space. */
     itkStaticConstMacro( OutputSpaceDimension, unsigned int, Superclass::OutputSpaceDimension );
     
     /** Typedef's inherited from Superclass. */
-    typedef typename Superclass::ScalarType 								ScalarType;
-    typedef typename Superclass::ParametersType 						ParametersType;
-    typedef typename Superclass::JacobianType 							JacobianType;
-    typedef typename Superclass::InputVectorType						InputVectorType;
-    typedef typename Superclass::OutputVectorType 					OutputVectorType;
-    typedef typename Superclass::InputCovariantVectorType 	InputCovariantVectorType;
-    typedef typename Superclass::OutputCovariantVectorType	OutputCovariantVectorType;
-    typedef typename Superclass::InputVnlVectorType 				InputVnlVectorType;
-    typedef typename Superclass::OutputVnlVectorType				OutputVnlVectorType;
-    typedef typename Superclass::InputPointType 						InputPointType;
-    typedef typename Superclass::OutputPointType						OutputPointType;
+    typedef typename Superclass::ScalarType                 ScalarType;
+    typedef typename Superclass::ParametersType             ParametersType;
+    typedef typename Superclass::JacobianType               JacobianType;
+    typedef typename Superclass::InputVectorType            InputVectorType;
+    typedef typename Superclass::OutputVectorType           OutputVectorType;
+    typedef typename Superclass::InputCovariantVectorType   InputCovariantVectorType;
+    typedef typename Superclass::OutputCovariantVectorType  OutputCovariantVectorType;
+    typedef typename Superclass::InputVnlVectorType         InputVnlVectorType;
+    typedef typename Superclass::OutputVnlVectorType        OutputVnlVectorType;
+    typedef typename Superclass::InputPointType             InputPointType;
+    typedef typename Superclass::OutputPointType            OutputPointType;
 
     /** Typedef's inherited from the BSplineTransform. */
-    typedef TBSplineTransform			BSplineTransformType;
-    typedef typename BSplineTransformType::WeightsType								WeightsType;
-    typedef typename BSplineTransformType::ParameterIndexArrayType		ParameterIndexArrayType;
+    typedef TBSplineTransform     BSplineTransformType;
+    typedef typename BSplineTransformType::WeightsType                WeightsType;
+    typedef typename BSplineTransformType::ParameterIndexArrayType    ParameterIndexArrayType;
 
     /** Other typedef's inherited from Superclass. */
-    typedef typename Superclass::IntermediaryDFTransformType					IntermediaryDFTransformType;
-    typedef typename Superclass::VectorImageType											VectorImageType;
+    typedef typename Superclass::IntermediaryDFTransformType          IntermediaryDFTransformType;
+    typedef typename Superclass::VectorImageType                      VectorImageType;
 
     /** Method to transform a point, 1 argument. */
     virtual OutputPointType TransformPoint( const InputPointType & point ) const;
@@ -103,9 +103,9 @@ namespace itk
   private:
     
     /** The private constructor. */
-    DeformationFieldRegulizerForBSpline( const Self& );	// purposely not implemented
+    DeformationFieldRegulizerForBSpline( const Self& ); // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );											// purposely not implemented
+    void operator=( const Self& );                      // purposely not implemented
     
   }; // end class DeformationFieldRegulizerForBSpline
     

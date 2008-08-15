@@ -49,7 +49,7 @@ namespace itk
     this->m_Param_c = 1.0;
     this->m_Param_A = 1.0;
     this->m_Param_alpha = 0.602;
-    this->m_Param_gamma = 0.101;		
+    this->m_Param_gamma = 0.101;    
     
   } // end Constructor
   
@@ -85,7 +85,7 @@ namespace itk
   void
     FiniteDifferenceGradientDescentOptimizer
     ::StartOptimization(void)
-  {		
+  {   
     itkDebugMacro( "StartOptimization" );
     
     this->m_CurrentIteration = 0;
@@ -107,7 +107,7 @@ namespace itk
       this->ResumeOptimization();
     }
       
-  } // end StartOptimization	
+  } // end StartOptimization  
   
   
   /**
@@ -117,7 +117,7 @@ namespace itk
   void
     FiniteDifferenceGradientDescentOptimizer
     ::ResumeOptimization( void )
-  {		
+  {   
     itkDebugMacro( "ResumeOptimization" );
     
     this->m_Stop = false;
@@ -135,8 +135,8 @@ namespace itk
       spaceDimension = this->GetScaledCostFunction()->GetNumberOfParameters();
       
       /** Initialisation.*/
-      ck	= this->Compute_c( m_CurrentIteration );
-      this->m_Gradient	=	DerivativeType( spaceDimension );
+      ck  = this->Compute_c( m_CurrentIteration );
+      this->m_Gradient  = DerivativeType( spaceDimension );
       param = this->GetScaledCurrentPosition();
     
       /** Compute the current value, if desired by interested users */
@@ -226,7 +226,7 @@ namespace itk
   void
     FiniteDifferenceGradientDescentOptimizer
     ::StopOptimization( void )
-  {		
+  {   
     itkDebugMacro( "StopOptimization" );
     
     this->m_Stop = true;
@@ -242,7 +242,7 @@ namespace itk
   void
     FiniteDifferenceGradientDescentOptimizer
     ::AdvanceOneStep( void )
-  {		
+  {   
     itkDebugMacro( "AdvanceOneStep" );
     
     const unsigned int spaceDimension = 

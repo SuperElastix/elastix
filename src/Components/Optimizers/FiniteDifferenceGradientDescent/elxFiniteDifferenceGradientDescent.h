@@ -35,9 +35,9 @@ using namespace itk;
    *
    * The parameters used in this class are:
    * \parameter Optimizer: Select this optimizer as follows:\n
-   *		<tt>(Optimizer "FiniteDifferenceGradientDescent")</tt>
+   *    <tt>(Optimizer "FiniteDifferenceGradientDescent")</tt>
    * \parameter MaximumNumberOfIterations: The maximum number of iterations in each resolution. \n
-   *		example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
+   *    example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
    *    Default value: 500.
    * \parameter SP_a: The gain \f$a(k)\f$ at each iteration \f$k\f$ is defined by \n
    *   \f$\quad a(k) =  SP\_a / (SP\_A + k + 1)^{SP\_alpha}\f$. \n
@@ -84,11 +84,11 @@ using namespace itk;
   public:
 
     /** Standard ITK.*/
-    typedef FiniteDifferenceGradientDescent						Self;
-    typedef FiniteDifferenceGradientDescentOptimizer	Superclass1;
-    typedef OptimizerBase<TElastix>										Superclass2;
-    typedef SmartPointer<Self>												Pointer;
-    typedef SmartPointer<const Self>									ConstPointer;
+    typedef FiniteDifferenceGradientDescent           Self;
+    typedef FiniteDifferenceGradientDescentOptimizer  Superclass1;
+    typedef OptimizerBase<TElastix>                   Superclass2;
+    typedef SmartPointer<Self>                        Pointer;
+    typedef SmartPointer<const Self>                  ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -103,28 +103,28 @@ using namespace itk;
     elxClassNameMacro( "FiniteDifferenceGradientDescent" );
 
     /** Typedef's inherited from Superclass1.*/
-    typedef Superclass1::CostFunctionType			CostFunctionType;
-    typedef Superclass1::CostFunctionPointer	CostFunctionPointer;
-    typedef Superclass1::StopConditionType		StopConditionType;
+    typedef Superclass1::CostFunctionType     CostFunctionType;
+    typedef Superclass1::CostFunctionPointer  CostFunctionPointer;
+    typedef Superclass1::StopConditionType    StopConditionType;
     
     /** Typedef's inherited from Elastix.*/
-    typedef typename Superclass2::ElastixType						ElastixType;
-    typedef typename Superclass2::ElastixPointer				ElastixPointer;
-    typedef typename Superclass2::ConfigurationType			ConfigurationType;
-    typedef typename Superclass2::ConfigurationPointer	ConfigurationPointer;
-    typedef typename Superclass2::RegistrationType			RegistrationType;
-    typedef typename Superclass2::RegistrationPointer		RegistrationPointer;
-    typedef typename Superclass2::ITKBaseType						ITKBaseType;
+    typedef typename Superclass2::ElastixType           ElastixType;
+    typedef typename Superclass2::ElastixPointer        ElastixPointer;
+    typedef typename Superclass2::ConfigurationType     ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer  ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType      RegistrationType;
+    typedef typename Superclass2::RegistrationPointer   RegistrationPointer;
+    typedef typename Superclass2::ITKBaseType           ITKBaseType;
     
     /** Typedef for the ParametersType. */
-    typedef typename Superclass1::ParametersType				ParametersType;
+    typedef typename Superclass1::ParametersType        ParametersType;
 
     /** Methods that take care of setting parameters and printing progress information.*/
     virtual void BeforeRegistration(void);
     virtual void BeforeEachResolution(void);
     virtual void AfterEachResolution(void);
     virtual void AfterEachIteration(void);
-    virtual void AfterRegistration(void);		
+    virtual void AfterRegistration(void);   
 
     /** Check if any scales are set, and set the UseScales flag on or off; 
      * after that call the superclass' implementation */
@@ -139,8 +139,8 @@ using namespace itk;
       
   private:
 
-      FiniteDifferenceGradientDescent( const Self& );	// purposely not implemented
-      void operator=( const Self& );							// purposely not implemented
+      FiniteDifferenceGradientDescent( const Self& ); // purposely not implemented
+      void operator=( const Self& );              // purposely not implemented
       
   }; // end class FiniteDifferenceGradientDescent
   

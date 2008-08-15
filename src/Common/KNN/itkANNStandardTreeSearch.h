@@ -38,8 +38,8 @@ namespace itk
     /** Standard itk. */
     typedef ANNStandardTreeSearch                   Self;
     typedef BinaryANNTreeSearchBase< TListSample >  Superclass;
-    typedef SmartPointer< Self >				            Pointer;
-    typedef SmartPointer< const Self >	            ConstPointer;
+    typedef SmartPointer< Self >                    Pointer;
+    typedef SmartPointer< const Self >              ConstPointer;
     
     /** New method for creating an object using a factory. */
     itkNewMacro( Self );
@@ -73,7 +73,7 @@ namespace itk
     /** Set the maximum number of points that are to be visited. *
     void SetMaximumNumberOfPointsToVisit( unsigned int num )
     {
-      annMaxPtsVisit(	static_cast<int>( num ) );
+      annMaxPtsVisit( static_cast<int>( num ) );
     }
 
     /** Get the number of points that are visited in the last search. *

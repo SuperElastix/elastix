@@ -35,7 +35,7 @@ using namespace itk;
    *
    * The parameters used in this class are:
    * \parameter ImageSampler: Select this image sampler as follows:\n
-   *		<tt>(ImageSampler "Grid")</tt>   
+   *    <tt>(ImageSampler "Grid")</tt>   
    * \parameter SampleGridSpacing: Defines the sampling grid in case of a Grid ImageSampler.\n
    *    An integer downsampling factor must be specified for each dimension, for each resolution.\n
    *    example: <tt>(SampleGridSpacing 4 4 2 2)</tt>\n
@@ -51,16 +51,16 @@ using namespace itk;
       ITK_TYPENAME elx::ImageSamplerBase<TElastix>::InputImageType >, 
     public
       elx::ImageSamplerBase<TElastix>
-  {	
+  { 
   public:
   
     /** Standard ITK-stuff. */
-    typedef GridSampler									      Self;
-    typedef	ImageGridSampler<
-      typename elx::ImageSamplerBase<TElastix>::InputImageType >	Superclass1;		
-    typedef elx::ImageSamplerBase<TElastix>					Superclass2;		
-    typedef SmartPointer<Self>									Pointer;
-    typedef SmartPointer<const Self>						ConstPointer;
+    typedef GridSampler                       Self;
+    typedef ImageGridSampler<
+      typename elx::ImageSamplerBase<TElastix>::InputImageType >  Superclass1;    
+    typedef elx::ImageSamplerBase<TElastix>         Superclass2;    
+    typedef SmartPointer<Self>                  Pointer;
+    typedef SmartPointer<const Self>            ConstPointer;
     
     /** Method for creation through the object factory. */
     itkNewMacro(Self);
@@ -87,21 +87,21 @@ using namespace itk;
     typedef typename Superclass1::ImageSampleContainerType     ImageSampleContainerType;
     typedef typename Superclass1::MaskType                     MaskType;
     typedef typename Superclass1::InputImageIndexType          InputImageIndexType;
-    typedef typename Superclass1::InputImagePointType          InputImagePointType;	
+    typedef typename Superclass1::InputImagePointType          InputImagePointType; 
     typedef typename Superclass1::SampleGridSpacingType        GridSpacingType;
     typedef typename Superclass1::SampleGridSpacingValueType   SampleGridSpacingValueType;
 
     /** The input image dimension. */
-    itkStaticConstMacro( InputImageDimension, unsigned int,	Superclass1::InputImageDimension );
+    itkStaticConstMacro( InputImageDimension, unsigned int, Superclass1::InputImageDimension );
     
     /** Typedefs inherited from Elastix. */
-    typedef typename Superclass2::ElastixType								ElastixType;
-    typedef typename Superclass2::ElastixPointer						ElastixPointer;
-    typedef typename Superclass2::ConfigurationType					ConfigurationType;
-    typedef typename Superclass2::ConfigurationPointer			ConfigurationPointer;
-    typedef typename Superclass2::RegistrationType					RegistrationType;
-    typedef typename Superclass2::RegistrationPointer				RegistrationPointer;
-    typedef typename Superclass2::ITKBaseType								ITKBaseType;
+    typedef typename Superclass2::ElastixType               ElastixType;
+    typedef typename Superclass2::ElastixPointer            ElastixPointer;
+    typedef typename Superclass2::ConfigurationType         ConfigurationType;
+    typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
+    typedef typename Superclass2::RegistrationType          RegistrationType;
+    typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
+    typedef typename Superclass2::ITKBaseType               ITKBaseType;
 
     /** Execute stuff before each resolution:
      * \li Set the sampling grid size.
@@ -118,9 +118,9 @@ using namespace itk;
   private:
 
     /** The private constructor. */
-    GridSampler( const Self& );	// purposely not implemented
+    GridSampler( const Self& ); // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );			// purposely not implemented
+    void operator=( const Self& );      // purposely not implemented
       
   }; // end class GridSampler
 

@@ -73,7 +73,7 @@ SOURCE_GROUP("Install" FILES
  ${InstallFilesForComponents}
  ${InstallFilesForExecutables}
 )
-	
+  
 SOURCE_GROUP("Kernel" FILES
  ${KernelFilesForComponents}
  ${KernelFilesForExecutables}

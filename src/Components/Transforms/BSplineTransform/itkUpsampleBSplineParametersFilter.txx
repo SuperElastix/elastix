@@ -57,12 +57,12 @@ namespace itk
 
     /** Typedefs. */
     typedef itk::ResampleImageFilter<
-      ImageType, ImageType >											  UpsampleFilterType;
+      ImageType, ImageType >                        UpsampleFilterType;
     typedef itk::BSplineResampleImageFunction<
-      ImageType, ValueType > 											  CoefficientUpsampleFunctionType;
+      ImageType, ValueType >                        CoefficientUpsampleFunctionType;
     typedef itk::BSplineDecompositionImageFilter<
-      ImageType, ImageType >											  DecompositionFilterType;
-    typedef ImageRegionConstIterator< ImageType >		IteratorType;
+      ImageType, ImageType >                        DecompositionFilterType;
+    typedef ImageRegionConstIterator< ImageType >   IteratorType;
 
     /** Get the pointer to the data of the input parameters. */
     PixelType * inputDataPointer = const_cast<PixelType *>( parameters_in.data_block() );

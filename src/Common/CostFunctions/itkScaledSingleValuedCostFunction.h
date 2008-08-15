@@ -58,8 +58,7 @@ namespace itk
     /** Divide the parameters by the scales and call the GetValue routine 
      * of the unscaled cost function.
      */
-    virtual MeasureType GetValue(
-      const ParametersType & parameters ) const;
+    virtual MeasureType GetValue( const ParametersType & parameters ) const;
 
     /** Divide the parameters by the scales, call the GetDerivative routine
      * of the unscaled cost function and divide the resulting derivative by
@@ -86,6 +85,7 @@ namespace itk
     /** Set the scales. Also computes the squared scales, just in case users 
      * call GetSquaredScales (for compatibility with the ITK convention). */
     virtual void SetScales( const ScalesType & scales );
+
     /** Get the scales. */
     itkGetConstReferenceMacro( Scales, ScalesType );
 
@@ -93,17 +93,20 @@ namespace itk
      * takes the square root of the input scales and sets them as the 
      * the actual scales */
     virtual void SetSquaredScales( const ScalesType & squaredScales);
+
     /** The ITK convention is to use the squared scales. This function
      * returns the squared actual scales. */     
     itkGetConstReferenceMacro( SquaredScales, ScalesType );
 
     /** Set the flag to use scales or not. */
     itkSetMacro( UseScales, bool );
+
     /** Get the flag to use scales or not. */
     itkGetConstMacro( UseScales, bool );
 
     /** Set the flag to negate the cost function or not. */
     itkBooleanMacro( NegateCostFunction );
+
     /** Set the flag to negate the cost function or not. */
     itkSetMacro( NegateCostFunction, bool );
     /** Get the flag to negate the cost function or not. */
@@ -123,14 +126,14 @@ namespace itk
     virtual ~ScaledSingleValuedCostFunction() {};
 
     /** PrintSelf. */
-    void PrintSelf( std::ostream& os, Indent indent ) const{};
+    void PrintSelf( std::ostream& os, Indent indent ) const {};
 
   private:
 
     /** The private constructor. */
-    ScaledSingleValuedCostFunction( const Self& );	// purposely not implemented
+    ScaledSingleValuedCostFunction( const Self& );  // purposely not implemented
     /** The private copy constructor. */
-    void operator=( const Self& );									// purposely not implemented
+    void operator=( const Self& );                  // purposely not implemented
 
     /** Member variables. */
     ScalesType                            m_Scales;
@@ -139,7 +142,6 @@ namespace itk
     bool                                  m_UseScales;      
     bool                                  m_NegateCostFunction;
     
-
   }; // end class ScaledSingleValuedCostFunction
 
 } //end namespace itk

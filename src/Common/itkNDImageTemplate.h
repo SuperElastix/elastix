@@ -40,15 +40,15 @@ namespace itk
    */
   
   template < class TPixel, unsigned int VDimension >
-    class NDImageTemplate :	public NDImageBase<TPixel>
+    class NDImageTemplate : public NDImageBase<TPixel>
   {
   public:
     
     /** Standard class typedefs.*/
-    typedef NDImageTemplate												Self;
-    typedef NDImageBase<TPixel>										Superclass;
-    typedef SmartPointer<Self>										Pointer;
-    typedef SmartPointer<const Self>							ConstPointer;
+    typedef NDImageTemplate                       Self;
+    typedef NDImageBase<TPixel>                   Superclass;
+    typedef SmartPointer<Self>                    Pointer;
+    typedef SmartPointer<const Self>              ConstPointer;
     
     /** Method for creation through the object factory. */
      itkNewMacro( Self );
@@ -65,7 +65,7 @@ namespace itk
     typedef typename Superclass::DataObjectType DataObjectType;
     typedef typename Superclass::DataObjectPointer DataObjectPointer;
     
-    /** Type definitions like normal itkImages, independent of the dimension */		
+    /** Type definitions like normal itkImages, independent of the dimension */   
     typedef typename Superclass::PixelType PixelType;
     typedef typename Superclass::ValueType ValueType;
     typedef typename Superclass::InternalPixelType InternalPixelType;
@@ -89,12 +89,12 @@ namespace itk
         
     
     /** Typedefs dependent on the dimension */
-    typedef Image<TPixel, VDimension>				ImageType;
-    typedef typename ImageType::Pointer			ImagePointer;
-    typedef ImageFileWriter<ImageType>			WriterType;
-    typedef typename WriterType::Pointer		WriterPointer;
-    typedef ImageFileReader<ImageType>			ReaderType;
-    typedef typename ReaderType::Pointer		ReaderPointer;
+    typedef Image<TPixel, VDimension>       ImageType;
+    typedef typename ImageType::Pointer     ImagePointer;
+    typedef ImageFileWriter<ImageType>      WriterType;
+    typedef typename WriterType::Pointer    WriterPointer;
+    typedef ImageFileReader<ImageType>      ReaderType;
+    typedef typename ReaderType::Pointer    ReaderPointer;
 
     /** Original, itk, versions of the index and sizetypes etc. */
     typedef typename ImageType::IndexType IndexTypeD;
@@ -216,8 +216,8 @@ namespace itk
           
   private:
     
-    NDImageTemplate( const Self& );				// purposely not implemented
-    void operator=( const Self& );	// purposely not implemented
+    NDImageTemplate( const Self& );       // purposely not implemented
+    void operator=( const Self& );  // purposely not implemented
     
     
 

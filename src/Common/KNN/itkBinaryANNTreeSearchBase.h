@@ -42,8 +42,8 @@ namespace itk
     typedef BinaryANNTreeSearchBase     Self;
     typedef BinaryTreeSearchBase<
       TListSample >                     Superclass;
-    typedef SmartPointer< Self >				Pointer;
-    typedef SmartPointer< const Self >	ConstPointer;
+    typedef SmartPointer< Self >        Pointer;
+    typedef SmartPointer< const Self >  ConstPointer;
 
     /** ITK type info. */
     itkTypeMacro( BinaryANNTreeSearchBase, BinaryTreeSearchBase );
