@@ -25,6 +25,6 @@
  *
  * \section manual Manual
  *
- * <p>We have a manual! Download it <a href="../download/manual.pdf">here</a>.</p>
+ * <p>We have a manual! Download it <a href="../download/manual.pdf" onClick="javascript: pageTracker._trackPageview('../download/manual');">here</a>.</p>
  *
  */
