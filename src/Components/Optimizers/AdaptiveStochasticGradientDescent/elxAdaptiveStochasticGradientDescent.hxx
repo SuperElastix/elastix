@@ -241,6 +241,8 @@ namespace elastix
       this->SetSigmoidScale( sigmoidScale );
     } // end else: no automatic parameter estimation
 
+    //temp save gradients
+   
   } // end BeforeEachResolution
 
 
@@ -278,6 +280,12 @@ namespace elastix
     /** Get the current resolution level.*/
     unsigned int level = static_cast<unsigned int>(
       this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
+
+    //temp save gradients
+    if ( this->m_SaveCovarianceMatrix )
+    {
+      this->m_gradsfile.close();
+    }
 
     /**
     * typedef enum {

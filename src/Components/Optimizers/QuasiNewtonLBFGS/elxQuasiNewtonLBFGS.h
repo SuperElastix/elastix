@@ -48,7 +48,7 @@ using namespace itk;
    * \parameter MaximumNumberOfIterations: The maximum number of iterations in each resolution. \n
    *    example: <tt>(MaximumNumberOfIterations 100 100 50)</tt> \n
    *    Default value: 100.\n
-   * \parameter MaximumNumberOfLineSearchIterations: The maximum number of iterations in each resolution. \n
+   * \parameter MaximumNumberOfLineSearchIterations: The maximum number of line search iterations in each resolution. \n
    *    example: <tt>(MaximumNumberOfIterations 10 10 5)</tt> \n
    *    Default value: 10.\n
    * \parameter StepLength: Set the length of the initial step tried by the

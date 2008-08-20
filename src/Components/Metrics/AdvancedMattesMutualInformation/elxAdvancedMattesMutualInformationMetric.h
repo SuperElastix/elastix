@@ -39,13 +39,13 @@ using namespace itk;
    *    example: <tt>(NumberOfHistogramBins 32 32 64)</tt> \n
    *    The default is 32 for each resolution.
    * \parameter NumberOfFixedHistogramBins: The size of the histogram in the fixed dimension. Can be given for each 
-   *    resolution, or for all resolutions at once. If not given, NumberOfHistograms is used.\n
+   *    resolution, or for all resolutions at once. If not given, NumberOfHistogramBins is used.\n
    *    example: <tt>(NumberOfFixedHistogramBins 32 32 64)</tt> \n
-   *    The default is the value of NumberOfHistograms, or, if that one is also not given, 32.
+   *    The default is the value of NumberOfHistogramBins, or, if that one is also not given, 32.
    * \parameter NumberOfMovingHistogramBins: The size of the histogram in the fixed dimension. Can be given for each 
-   *    resolution, or for all resolutions at once. If not given, NumberOfHistograms is used.\n
+   *    resolution, or for all resolutions at once. If not given, NumberOfHistogramBins is used.\n
    *    example: <tt>(NumberOfMovingHistogramBins 32 32 64)</tt> \n
-   *    The default is the value of NumberOfHistograms, or, if that one is also not given, 32.
+   *    The default is the value of NumberOfHistogramBins, or, if that one is also not given, 32.
    * \parameter FixedKernelBSplineOrder: The bspline order of the Parzen window, used to estimate
    *    the joint histogram. Can be given for each resolution, or for all resolutions at once. \n
    *    example: <tt>(FixedKernelBSplineOrder 0 1 1)</tt> \n
