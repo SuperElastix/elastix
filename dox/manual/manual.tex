@@ -310,7 +310,7 @@ literature. Some common choices are described below. Between brackets
 the name of the metric in \elastix\ is given:
 
 \begin{description}
-\item[Sum of Squared Differences (SSD):] (\texttt{AdvancedMeanSquaresMetric})
+\item[Sum of Squared Differences (SSD):] (\texttt{AdvancedMeanSquares})
 The SSD is defined as:
 \begin{align}
 \mathrm{SSD}(\vmu;I_F,I_M) &= \frac{1}{|\Omega_F|}
@@ -325,7 +325,7 @@ $I_M(\vT_{\vmu}(\vx_i))$ by interpolation, and adding the squared
 difference to the sum.
 
 \item[Normalised Correlation Coefficient (NCC):]
-(\texttt{AdvancedNormalizedCorrelationMetric}) The NCC is defined as:
+(\texttt{AdvancedNormalizedCorrelation}) The NCC is defined as:
 \begin{align}
 \mathrm{NCC}(\vmu;I_F,I_M) &= \frac{ \sum\limits_{\vx_i \in \Omega_F}
 \left( I_F(\vx_i) - \overline{I_F} \right) \left( I_M(\vTm(\vx_i)) -
@@ -340,7 +340,7 @@ $\overline{I_F}=\frac{1}{|\Omega_F|}\sum\limits_{\vx_i \in
 $\overline{I_M}=\frac{1}{|\Omega_F|}\sum\limits_{\vx_i \in
 \Omega_F} I_M(\vT_{\vmu}(\vx_i))$.
 
-\item[Mutual Information (MI):] (\texttt{AdvancedMattesMutualInformationMetric})
+\item[Mutual Information (MI):] (\texttt{AdvancedMattesMutualInformation})
 For MI \citep{MaesEA97,ViolaEA97,MattesEA03} we use a definition
 given by \citet{ThevenazEA00a}:
 \begin{align}
@@ -371,7 +371,7 @@ $I_M$ and the user-specified number of histogram bins $|L_F|$ and
 $|L_M|$.
 
 \item[Normalized Mutual Information (NMI):]
-(\texttt{NormalizedMutualInformationMetric})\\ NMI is defined by
+(\texttt{NormalizedMutualInformation})\\ NMI is defined by
 $\mathrm{NMI} = ( H(I_F) + H(I_M) ) / H(I_F,I_M)$, with $H$
 denoting entropy. This expression can be compared to the
 definition of MI in terms of $H$: $\mathrm{MI} = H(I_F) + H(I_M) -
@@ -389,7 +389,7 @@ written as:
  p(f,m;\vmu) \log_2 p(f,m;\vmu) }. \label{eq:NMI}
 \end{align}
 
-\item[Kappa Statistic (KS):] (\texttt{AdvancedKappaStatisticMetric})
+\item[Kappa Statistic (KS):] (\texttt{AdvancedKappaStatistic})
 KS is defined as:
 \begin{align}
 \mathrm{KS}(\vmu;I_F,I_M) &= \frac{ 2 \sum\limits_{\vx_i \in
