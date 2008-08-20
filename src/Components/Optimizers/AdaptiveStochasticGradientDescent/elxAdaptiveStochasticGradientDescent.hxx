@@ -281,12 +281,6 @@ namespace elastix
     unsigned int level = static_cast<unsigned int>(
       this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
 
-    //temp save gradients
-    if ( this->m_SaveCovarianceMatrix )
-    {
-      this->m_gradsfile.close();
-    }
-
     /**
     * typedef enum {
     *   MaximumNumberOfIterations,
