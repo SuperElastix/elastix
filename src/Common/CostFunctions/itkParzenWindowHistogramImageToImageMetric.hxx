@@ -128,12 +128,11 @@ namespace itk
     
     /** If the user plans to use a finite difference derivative,
      * allocate some memory for the perturbed alpha variables.
-     * Assume the superclass has set the m_NumberOfParameters.
      */
     if ( this->GetUseDerivative() && this->GetUseFiniteDifferenceDerivative() )
     {
-      this->m_PerturbedAlphaRight.SetSize( this->m_NumberOfParameters );
-      this->m_PerturbedAlphaLeft.SetSize( this->m_NumberOfParameters );
+      this->m_PerturbedAlphaRight.SetSize( this->GetNumberOfParameters() );
+      this->m_PerturbedAlphaLeft.SetSize( this->GetNumberOfParameters() );
     }
     else
     {
@@ -232,7 +231,7 @@ namespace itk
     if ( this->GetUseDerivative() )
     {
       /** For the derivatives of the joint PDF define a region starting from {0,0,0}
-       * with size {m_NumberOfParameters,m_NumberOfMovingHistogramBins,
+       * with size {GetNumberOfParameters(),m_NumberOfMovingHistogramBins,
        * m_NumberOfFixedHistogramBins}. The dimension represents transform parameters,
        * moving image Parzen window index and fixed image Parzen window index,
        * respectively.
@@ -244,7 +243,7 @@ namespace itk
       JointPDFDerivativesIndexType  jointPDFDerivativesIndex;
       JointPDFDerivativesSizeType   jointPDFDerivativesSize;
       jointPDFDerivativesIndex.Fill( 0 );
-      jointPDFDerivativesSize[0] = this->m_NumberOfParameters;
+      jointPDFDerivativesSize[0] = this->GetNumberOfParameters();
       jointPDFDerivativesSize[1] = this->m_NumberOfMovingHistogramBins;
       jointPDFDerivativesSize[2] = this->m_NumberOfFixedHistogramBins;
       jointPDFDerivativesRegion.SetIndex( jointPDFDerivativesIndex );
@@ -271,13 +270,13 @@ namespace itk
         IncrementalMarginalPDFSizeType movingIMPDFSize;        
 
         fixedIMPDFIndex.Fill( 0 );
-        fixedIMPDFSize[0] = this->m_NumberOfParameters;
+        fixedIMPDFSize[0] = this->GetNumberOfParameters();
         fixedIMPDFSize[1] = this->m_NumberOfFixedHistogramBins;
         fixedIMPDFRegion.SetSize( fixedIMPDFSize );
         fixedIMPDFRegion.SetIndex( fixedIMPDFIndex );
 
         movingIMPDFIndex.Fill( 0 );
-        movingIMPDFSize[0] = this->m_NumberOfParameters;
+        movingIMPDFSize[0] = this->GetNumberOfParameters();
         movingIMPDFSize[1] = this->m_NumberOfMovingHistogramBins;
         movingIMPDFRegion.SetSize( movingIMPDFSize );
         movingIMPDFRegion.SetIndex( movingIMPDFIndex );
@@ -586,11 +585,11 @@ namespace itk
       ( pdfIndex[0] * this->m_JointPDFDerivatives->GetOffsetTable()[1] ) +
       ( pdfIndex[1] * this->m_JointPDFDerivatives->GetOffsetTable()[2] );
     
-    if ( this->m_NonZeroJacobianIndices.GetSize() == this->m_NumberOfParameters )
+    if ( this->m_NonZeroJacobianIndices.GetSize() == this->GetNumberOfParameters() )
     {
       /** Loop over all Jacobians. */
       typename DerivativeType::const_iterator imjac = imageJacobian.begin();
-      for ( unsigned int mu = 0; mu < this->m_NumberOfParameters; ++mu )
+      for ( unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu )
       {
         *(derivPtr) -= static_cast<PDFValueType>( (*imjac) * factor );
         ++derivPtr;
@@ -761,7 +760,7 @@ namespace itk
     {
       for ( unsigned int m = 0; m < this->m_NumberOfMovingHistogramBins; ++m )
       {
-        for ( unsigned int p = 0; p < this->m_NumberOfParameters; ++p )
+        for ( unsigned int p = 0; p < this->GetNumberOfParameters(); ++p )
         {
           fixincit.Value() += incit.Get();
           movincit.Value() += incit.Get();
@@ -1196,7 +1195,7 @@ namespace itk
       {
         /** Get the fixed image value and make sure the value falls within the histogram range. */
         RealType fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
-        fixedImageValue = this->GetFixedImageLimiter()->Evaluate(fixedImageValue);
+        fixedImageValue = this->GetFixedImageLimiter()->Evaluate( fixedImageValue );
 
         /** Check if point is inside mask. */        
         sampleOk = this->IsInsideMovingMask( mappedPoint );
@@ -1322,7 +1321,7 @@ namespace itk
 
     /** Compute alpha and its perturbed versions. */
     this->m_Alpha = 1.0 / sumOfMovingMaskValues;
-    for ( unsigned int i = 0; i < this->m_NumberOfParameters; ++i )
+    for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
       this->m_PerturbedAlphaRight[ i ] += sumOfMovingMaskValues;
       this->m_PerturbedAlphaLeft[ i ] += sumOfMovingMaskValues;

@@ -479,11 +479,11 @@ namespace itk
     //typedef typename DerivativeType::iterator   DerivativeIteratorType;
     //DerivativeIteratorType itDerivative( derivative );
 
-    if ( this->m_NonZeroJacobianIndices.GetSize() == this->m_NumberOfParameters )
+    if ( this->m_NonZeroJacobianIndices.GetSize() == this->GetNumberOfParameters() )
     {
       /** Loop over all Jacobians. */
       typename DerivativeType::const_iterator imjac = imageJacobian.begin();
-      for ( unsigned int mu = 0; mu < this->m_NumberOfParameters; ++mu )
+      for ( unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu )
       {
          derivative[ mu ] += static_cast<DerivativeValueType>(
           imageJacobian[ mu ] * sum ); // \todo: iterators?

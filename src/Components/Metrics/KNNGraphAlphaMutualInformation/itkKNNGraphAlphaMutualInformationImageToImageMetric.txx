@@ -518,7 +518,7 @@ namespace itk
   {
     /** Initialize some variables. */
     MeasureType measure = NumericTraits< MeasureType >::Zero;
-    derivative = DerivativeType( this->m_NumberOfParameters );
+    derivative = DerivativeType( this->GetNumberOfParameters() );
     derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
 
     /** Make sure the transform parameters are up to date. */
@@ -648,8 +648,8 @@ namespace itk
 
       SpatialDerivativeType D1sparse, D2sparse_M, D2sparse_J;
       D1sparse = spatialDerivativesContainer[ i ] * jacobianContainer[ i ];
-      SpatialDerivativeType Dfull_M( movingSize, this->m_NumberOfParameters );
-      SpatialDerivativeType Dfull_J( movingSize, this->m_NumberOfParameters );
+      SpatialDerivativeType Dfull_M( movingSize, this->GetNumberOfParameters() );
+      SpatialDerivativeType Dfull_J( movingSize, this->GetNumberOfParameters() );
       
       dGamma_M.Fill( NumericTraits< DerivativeValueType >::Zero );
       dGamma_J.Fill( NumericTraits< DerivativeValueType >::Zero );
@@ -1124,7 +1124,6 @@ namespace itk
   {
     Superclass::PrintSelf( os, indent );
 
-    os << indent << "NumberOfParameters: " << this->m_NumberOfParameters << std::endl;
     os << indent << "Alpha: " << this->m_Alpha << std::endl;
     os << indent << "AvoidDivisionBy: " << this->m_AvoidDivisionBy << std::endl;
     os << indent << "UseOldAndSlowMethod: " << this->m_UseOldAndSlowMethod << std::endl;

@@ -249,7 +249,7 @@ namespace itk
     /** Initialize some variables. */
     this->m_NumberOfPixelsCounted = 0;
     MeasureType measure = NumericTraits< MeasureType >::Zero;
-    derivative = DerivativeType( this->m_NumberOfParameters );
+    derivative = DerivativeType( this->GetNumberOfParameters() );
     derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
 
     /** Arrays that store dM(x)/dmu. */
@@ -357,12 +357,13 @@ namespace itk
             
     /** Calculate the contributions to the derivatives with respect to each parameter. */
     const RealType diff_2 = diff * 2.0;
-    if ( this->m_NonZeroJacobianIndices.GetSize() == this->m_NumberOfParameters )
+    if ( this->m_NonZeroJacobianIndices.GetSize()
+      == this->GetNumberOfParameters() )
     {
       /** Loop over all jacobians. */
       typename DerivativeType::const_iterator imjacit = imageJacobian.begin();
       typename DerivativeType::iterator derivit = deriv.begin();
-      for ( unsigned int mu = 0; mu < this->m_NumberOfParameters; ++mu )
+      for ( unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu )
       {
         (*derivit) += diff_2 * (*imjacit);        
         ++imjacit;
@@ -405,7 +406,8 @@ namespace itk
     this->SetTransformParameters( parameters );
     
     /** Prepare Hessian */
-    H.SetSize( this->m_NumberOfParameters, this->m_NumberOfParameters );
+    H.SetSize( this->GetNumberOfParameters(),
+      this->GetNumberOfParameters() );
     H.Fill(0.0);
 
     /** Smooth fixed image */
@@ -517,7 +519,8 @@ namespace itk
     HessianType & H ) const
   {
     /** Do rank-1 update of H */
-    if ( this->m_NonZeroJacobianIndices.GetSize() == this->m_NumberOfParameters )
+    if ( this->m_NonZeroJacobianIndices.GetSize()
+      == this->GetNumberOfParameters() )
     {
       /** Loop over all jacobians. */
       vnl_matrix_update( H, imageJacobian, imageJacobian );

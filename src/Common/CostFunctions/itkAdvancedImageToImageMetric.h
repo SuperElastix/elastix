@@ -271,9 +271,6 @@ protected:
   /** The number of BSpline transform weights is the number of
   * of parameter in the support region (per dimension ). */   
   unsigned long                                     m_NumBSplineWeights;
-
-  /** The number of transform parameters. */
-  unsigned int m_NumberOfParameters;
   
   /** The parameter indices that have a nonzero Jacobian. */
   mutable ParameterIndexArrayType                    m_NonZeroJacobianIndices;

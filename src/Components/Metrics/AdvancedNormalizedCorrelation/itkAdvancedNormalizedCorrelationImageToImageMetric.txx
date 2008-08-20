@@ -103,7 +103,7 @@ namespace itk
     typedef typename DerivativeType::ValueType        DerivativeValueType;
             
     /** Calculate the contributions to the derivatives with respect to each parameter. */
-    if ( this->m_NonZeroJacobianIndices.GetSize() == this->m_NumberOfParameters )
+    if ( this->m_NonZeroJacobianIndices.GetSize() == this->GetNumberOfParameters() )
     {
       /** Loop over all jacobians. */
       typename DerivativeType::const_iterator imjacit = imageJacobian.begin();
@@ -111,7 +111,7 @@ namespace itk
       typename DerivativeType::iterator derivativeMit = derivativeM.begin();
       typename DerivativeType::iterator differentialit = differential.begin();
 
-      for ( unsigned int mu = 0; mu < this->m_NumberOfParameters; ++mu )
+      for ( unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu )
       {
         (*derivativeFit) += fixedImageValue * (*imjacit);
         (*derivativeMit) += movingImageValue * (*imjacit);
@@ -289,13 +289,13 @@ namespace itk
     /** Initialize some variables. */
     this->m_NumberOfPixelsCounted = 0;
     MeasureType measure = NumericTraits< MeasureType >::Zero;
-    derivative = DerivativeType( this->m_NumberOfParameters );
+    derivative = DerivativeType( this->GetNumberOfParameters() );
     derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
-    DerivativeType derivativeF = DerivativeType( this->m_NumberOfParameters );
+    DerivativeType derivativeF = DerivativeType( this->GetNumberOfParameters() );
     derivativeF.Fill( NumericTraits< DerivativeValueType >::Zero );
-    DerivativeType derivativeM = DerivativeType( this->m_NumberOfParameters );
+    DerivativeType derivativeM = DerivativeType( this->GetNumberOfParameters() );
     derivativeM.Fill( NumericTraits< DerivativeValueType >::Zero );
-    DerivativeType differential = DerivativeType( this->m_NumberOfParameters );
+    DerivativeType differential = DerivativeType( this->GetNumberOfParameters() );
     differential.Fill( NumericTraits< DerivativeValueType >::Zero );
 
     /** Arrays that store dM(x)/dmu. */
@@ -366,13 +366,8 @@ namespace itk
         sff += fixedImageValue  * fixedImageValue;
         smm += movingImageValue * movingImageValue;
         sfm += fixedImageValue  * movingImageValue;
-        if ( this->m_SubtractMean )
-        {
-          sf += fixedImageValue;
-          sm += movingImageValue;
-        }
-
-
+        sf  += fixedImageValue;  // Only needed when m_SubtractMean == true
+        sm  += movingImageValue; // Only needed when m_SubtractMean == true
 
         /** Compute this pixel's contribution to the derivative terms. */
         this->UpdateDerivativeTerms( 
@@ -396,7 +391,7 @@ namespace itk
       smm -= ( sm * sm / N );
       sfm -= ( sf * sm / N );
 
-      for( unsigned int i = 0; i < this->m_NumberOfParameters; i++ )
+      for( unsigned int i = 0; i < this->GetNumberOfParameters(); i++ )
       {
         derivativeF[ i ] -= sf * differential[ i ] / N;
         derivativeM[ i ] -= sm * differential[ i ] / N;
@@ -410,9 +405,10 @@ namespace itk
     if ( this->m_NumberOfPixelsCounted > 0 && denom < -1e-14 )
     {
       value = sfm / denom;
-      for ( unsigned int i = 0; i < this->m_NumberOfParameters; i++ )
+      for ( unsigned int i = 0; i < this->GetNumberOfParameters(); i++ )
       {
-        derivative[ i ] = ( derivativeF[ i ] - ( sfm / smm ) * derivativeM[ i ] ) / denom;
+        derivative[ i ] = ( derivativeF[ i ]
+          - ( sfm / smm ) * derivativeM[ i ] ) / denom;
       }
     }
     else

@@ -234,7 +234,7 @@ namespace itk
     /** Initialize some variables. */
     this->m_NumberOfPixelsCounted = 0;
     MeasureType measure = NumericTraits< MeasureType >::Zero;
-    derivative = DerivativeType( this->m_NumberOfParameters );
+    derivative = DerivativeType( this->GetNumberOfParameters() );
     derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
 
     /** Array that store dM(x)/dmu. */
@@ -254,8 +254,8 @@ namespace itk
     MeasureType movingForegroundArea = NumericTraits< MeasureType >::Zero;
     MeasureType intersection         = NumericTraits< MeasureType >::Zero;
 
-    DerivativeType sum1( this->m_NumberOfParameters );
-    DerivativeType sum2( this->m_NumberOfParameters );
+    DerivativeType sum1( this->GetNumberOfParameters() );
+    DerivativeType sum2( this->GetNumberOfParameters() );
     sum1.Fill( NumericTraits< DerivativeValueType >::Zero );
     sum2.Fill( NumericTraits< DerivativeValueType >::Zero );
 
@@ -344,7 +344,7 @@ namespace itk
     
     if ( areaSum > 1e-14 )
     {
-      for ( unsigned int par = 0; par < this->m_NumberOfParameters; par++ )
+      for ( unsigned int par = 0; par < this->GetNumberOfParameters(); par++ )
       {
         derivative[ par ] = direction * ( areaSum * sum1[ par ] - 2.0 * intersection * sum2[ par ] )
           / ( areaSum * areaSum );
@@ -390,13 +390,13 @@ namespace itk
     }
     
     /** Calculate the contributions to the derivatives with respect to each parameter. */
-    if ( this->m_NonZeroJacobianIndices.GetSize() == this->m_NumberOfParameters )
+    if ( this->m_NonZeroJacobianIndices.GetSize() == this->GetNumberOfParameters() )
     {
-      /** Loop over all jacobians. */
+      /** Loop over all Jacobians. */
       typename DerivativeType::const_iterator imjacit = imageJacobian.begin();
       typename DerivativeType::iterator sum1it = sum1.begin();
       typename DerivativeType::iterator sum2it = sum2.begin();
-      for ( unsigned int mu = 0; mu < this->m_NumberOfParameters; ++mu )
+      for ( unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu )
       {
         if ( !this->m_ForegroundIsNonZero )
         {

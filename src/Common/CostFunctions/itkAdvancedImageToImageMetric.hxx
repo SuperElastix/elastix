@@ -49,7 +49,6 @@ namespace itk
     this->m_BSplineCombinationTransform = 0;
     this->m_NumBSplineParametersPerDim = 0;
     this->m_NumBSplineWeights = 0;
-    this->m_NumberOfParameters = 0;
     this->m_TransformIsBSpline = false;
     this->m_TransformIsBSplineCombination = false;
         
@@ -84,12 +83,7 @@ namespace itk
   {
     /** Initialize transform, interpolator, etc. */
     Superclass::Initialize();
-
-    /** Cache the number of transformation parameters. This line 
-     * emphasises that a user has to call Initialize again if the number
-     * of parameters is changed. */
-    this->m_NumberOfParameters = this->m_Transform->GetNumberOfParameters();
-
+ 
     /** Setup the parameters for the gray value limiters. */
     this->InitializeLimiters();
   
@@ -446,8 +440,8 @@ namespace itk
     }
     else
     {   
-      this->m_NonZeroJacobianIndices.SetSize( this->m_NumberOfParameters );
-      for ( unsigned int i = 0; i < this->m_NumberOfParameters; ++i )
+      this->m_NonZeroJacobianIndices.SetSize( this->GetNumberOfParameters() );
+      for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
       {
         this->m_NonZeroJacobianIndices[ i ] = i;
       }
@@ -709,7 +703,6 @@ namespace itk
        
     /** Other variables. */
     os << indent << "Other variables of the AdvancedImageToImageMetric: " << std::endl;
-    os << indent.GetNextIndent() << "NumberOfParameters: " << this->m_NumberOfParameters << std::endl;
     os << indent.GetNextIndent() << "RequiredRatioOfValidSamples: " << this->m_RequiredRatioOfValidSamples << std::endl;
     os << indent.GetNextIndent() << "UseMovingImageDerivativeScales: " << this->m_UseMovingImageDerivativeScales << std::endl;
     os << indent.GetNextIndent() << "MovingImageDerivativeScales: " << this->m_MovingImageDerivativeScales << std::endl;
