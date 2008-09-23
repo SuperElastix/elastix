@@ -115,7 +115,7 @@ using namespace itk;
     /** Set whether a low memory consumption should be used. */
     bool useExplicitPDFDerivatives = true;
     this->GetConfiguration()->ReadParameter( useExplicitPDFDerivatives,
-      "UseExplicitPDFDerivatives", this->GetComponentLabel(), level, 0 );
+      "UseFastAndLowMemoryVersion", this->GetComponentLabel(), level, 0 );
     this->SetUseExplicitPDFDerivatives( useExplicitPDFDerivatives );
 
     /** Set whether a finite difference derivative should be used. */
