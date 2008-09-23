@@ -196,8 +196,10 @@ using namespace itk;
         << "." << std::endl;
         
     } // if (!realerror)
-
-    /** \todo else: quit program or something like that. */
+    else
+    {
+      itkExceptionMacro( << "ERROR: elastix found an error in the search space definition, and is quiting." );
+    }
 
   } // end BeforeEachResolution
 
@@ -345,9 +347,11 @@ using namespace itk;
   /**
    * ************ CheckSearchSpaceRangeDefinition *****************
    */
+
   template <class TElastix>
     int FullSearch<TElastix>
-    ::CheckSearchSpaceRangeDefinition(const std::string & fullFieldName, int errorcode, unsigned int entry_nr)
+    ::CheckSearchSpaceRangeDefinition(
+    const std::string & fullFieldName, int errorcode, unsigned int entry_nr )
   {
 
     /** Complain if not at least one search space dimension has been found,
@@ -363,6 +367,8 @@ using namespace itk;
         << "Please define the field (" 
         << fullFieldName
         << " \"name\" parameter_nr min max stepsize) correctly in the parameter file" 
+        << std::endl
+        << "Maybe you specified a floating value without the required dot-separator?"
         << std::endl;
       return 1;
     } 
