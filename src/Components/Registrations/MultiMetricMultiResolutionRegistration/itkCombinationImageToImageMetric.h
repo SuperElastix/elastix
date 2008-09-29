@@ -72,7 +72,7 @@ public:
   itkTypeMacro( CombinationImageToImageMetric, ImageToImageMetric );
 
   /** Define the ::New() method */
-  itkNewMacro(Self);
+  itkNewMacro( Self );
 
   /** Constants for the image dimensions */
   itkStaticConstMacro( MovingImageDimension, unsigned int,
@@ -84,8 +84,10 @@ public:
   typedef typename Superclass::CoordinateRepresentationType CoordinateRepresentationType;
   typedef typename Superclass::MovingImageType            MovingImageType;
   typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
+  //typedef typename Superclass::MovingImagePointer         MovingImagePointer;
   typedef typename Superclass::MovingImageConstPointer    MovingImageConstPointer;
   typedef typename Superclass::FixedImageType             FixedImageType;
+  //typedef typename Superclass::FixedImagePointer          FixedImagePointer;
   typedef typename Superclass::FixedImageConstPointer     FixedImageConstPointer;
   typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
   typedef typename Superclass::TransformType              TransformType;
@@ -108,14 +110,31 @@ public:
   typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
   typedef typename Superclass::MeasureType                MeasureType;
   typedef typename Superclass::DerivativeType             DerivativeType;
+  //typedef typename Superclass::DerivativeValueType        DerivativeValueType;
   typedef typename Superclass::ParametersType             ParametersType;
 
+  /*
+  typedef typename Superclass::ImageSamplerType             ImageSamplerType;
+  typedef typename Superclass::ImageSamplerPointer          ImageSamplerPointer;
+  typedef typename Superclass::ImageSampleContainerType     ImageSampleContainerType;
+  typedef typename Superclass::ImageSampleContainerPointer  ImageSampleContainerPointer;
+  typedef typename Superclass::FixedImageLimiterType        FixedImageLimiterType;
+  typedef typename Superclass::FixedImageLimiterOutputType  FixedImageLimiterOutputType;
+  typedef typename Superclass::MovingImageLimiterType       MovingImageLimiterType;
+  typedef typename Superclass::MovingImageLimiterOutputType MovingImageLimiterOutputType;
+  typedef typename Superclass::ScalarType                   ScalarType;
+  typedef typename Superclass::AdvancedTransformType        AdvancedTransformType;
+
   /** Typedefs for the metrics. */
-  typedef ImageToImageMetric< FixedImageType,
-    MovingImageType >                                     ImageMetricType;
+  typedef Superclass                                      ImageMetricType;
   typedef typename ImageMetricType::Pointer               ImageMetricPointer;
   typedef SingleValuedCostFunction                        SingleValuedCostFunctionType;
   typedef typename SingleValuedCostFunctionType::Pointer  SingleValuedCostFunctionPointer;
+
+  typedef typename FixedImageType::PixelType              FixedImagePixelType;
+  typedef typename MovingImageType::RegionType            MovingImageRegionType;
+  typedef FixedArray< double,
+    itkGetStaticConstMacro(MovingImageDimension) >        MovingImageDerivativeScalesType;
 
   /**
    * Get and set the metrics and their weights.
@@ -169,25 +188,24 @@ public:
   /** Returns the transform set in a specific metric. If the 
    * submetric is a singlevalued costfunction a zero pointer will
    * be returned */
-  virtual const TransformType * GetTransform( unsigned int pos) const;
+  virtual const TransformType * GetTransform( unsigned int pos ) const;
 
   /** Return Transform 0 */
   virtual const TransformType * GetTransform( void ) const
   {
-    return this->GetTransform(0);
+    return this->GetTransform( 0 );
   };
-
 
   /** Pass the interpolator to all sub metrics. */
   virtual void SetInterpolator( InterpolatorType *_arg );
   
   /** Pass an interpolator to a specific metric */
-  virtual void SetInterpolator( InterpolatorType * _arg, unsigned int pos);
+  virtual void SetInterpolator( InterpolatorType * _arg, unsigned int pos );
 
   /** Returns the interpolator set in a specific metric. If the 
    * submetric is a singlevalued costfunction a zero pointer will
    * be returned */
-  virtual const InterpolatorType * GetInterpolator( unsigned int pos) const;
+  virtual const InterpolatorType * GetInterpolator( unsigned int pos ) const;
 
   /** Return Interpolator 0 */
   virtual const InterpolatorType * GetInterpolator( void ) const
@@ -195,17 +213,16 @@ public:
     return this->GetInterpolator(0);
   };
   
-
   /** Pass the fixed image to all sub metrics. */
   virtual void SetFixedImage( const FixedImageType *_arg );
 
   /** Pass a fixed image to a specific metric */
-  virtual void SetFixedImage( const FixedImageType *_arg, unsigned int pos);
+  virtual void SetFixedImage( const FixedImageType *_arg, unsigned int pos );
 
   /** Returns the fixedImage set in a specific metric. If the 
    * submetric is a singlevalued costfunction a zero pointer will
    * be returned */
-  virtual const FixedImageType * GetFixedImage( unsigned int pos) const;
+  virtual const FixedImageType * GetFixedImage( unsigned int pos ) const;
 
   /** Return FixedImage 0 */
   virtual const FixedImageType * GetFixedImage( void ) const
@@ -213,17 +230,16 @@ public:
     return this->GetFixedImage(0);
   };
 
-
   /** Pass the fixed image mask to all sub metrics. */
   virtual void SetFixedImageMask( FixedImageMaskType *_arg );
 
   /** Pass a fixed image mask to a specific metric */
-  virtual void SetFixedImageMask( FixedImageMaskType *_arg, unsigned int pos);
+  virtual void SetFixedImageMask( FixedImageMaskType *_arg, unsigned int pos );
 
   /** Returns the fixedImageMask set in a specific metric. If the 
    * submetric is a singlevalued costfunction a zero pointer will
    * be returned */
-  virtual const FixedImageMaskType * GetFixedImageMask( unsigned int pos) const;
+  virtual const FixedImageMaskType * GetFixedImageMask( unsigned int pos ) const;
 
   /** Return FixedImageMask 0 */
   virtual const FixedImageMaskType * GetFixedImageMask( void ) const
@@ -231,17 +247,16 @@ public:
     return this->GetFixedImageMask(0);
   };
 
-
   /** Pass the fixed image region to all sub metrics. */
   virtual void SetFixedImageRegion( const FixedImageRegionType _arg );
 
   /** Pass a fixed image region to a specific metric. */
-  virtual void SetFixedImageRegion( const FixedImageRegionType _arg, unsigned int pos);
+  virtual void SetFixedImageRegion( const FixedImageRegionType _arg, unsigned int pos );
 
   /** Returns the fixedImageRegion set in a specific metric. If the 
    * submetric is a singlevalued costfunction a region with size zero will 
    * be returned */
-  virtual const FixedImageRegionType & GetFixedImageRegion( unsigned int pos) const;
+  virtual const FixedImageRegionType & GetFixedImageRegion( unsigned int pos ) const;
 
   /** Return FixedImageRegion 0 */
   virtual const FixedImageRegionType & GetFixedImageRegion( void ) const
@@ -249,17 +264,16 @@ public:
     return this->GetFixedImageRegion(0);
   };
 
-
   /** Pass the moving image to all sub metrics. */
   virtual void SetMovingImage( const MovingImageType *_arg );
 
   /** Pass a moving image to a specific metric */
-  virtual void SetMovingImage( const MovingImageType *_arg, unsigned int pos);
+  virtual void SetMovingImage( const MovingImageType *_arg, unsigned int pos );
 
   /** Returns the movingImage set in a specific metric. If the 
    * submetric is a singlevalued costfunction a zero pointer will
    * be returned */
-  virtual const MovingImageType * GetMovingImage( unsigned int pos) const;
+  virtual const MovingImageType * GetMovingImage( unsigned int pos ) const;
 
   /** Return MovingImage 0 */
   virtual const MovingImageType * GetMovingImage( void ) const
@@ -267,17 +281,16 @@ public:
     return this->GetMovingImage(0);
   };
 
-
   /** Pass the moving image mask to all sub metrics. */
   virtual void SetMovingImageMask( MovingImageMaskType *_arg );
 
   /** Pass a moving image mask to a specific metric */
-  virtual void SetMovingImageMask( MovingImageMaskType *_arg, unsigned int pos);
+  virtual void SetMovingImageMask( MovingImageMaskType *_arg, unsigned int pos );
 
   /** Returns the movingImageMask set in a specific metric. If the 
    * submetric is a singlevalued costfunction a zero pointer will
    * be returned */
-  virtual const MovingImageMaskType * GetMovingImageMask( unsigned int pos) const;
+  virtual const MovingImageMaskType * GetMovingImageMask( unsigned int pos ) const;
 
   /** Return MovingImageMask 0 */
   virtual const MovingImageMaskType * GetMovingImageMask( void ) const
@@ -285,10 +298,9 @@ public:
     return this->GetMovingImageMask(0);
   };
 
-
   /** Get the number of pixels considered in the computation. Return the sum
     * of pixels counted by all metrics */
-  virtual const unsigned long & GetNumberOfPixelsCounted(void) const;
+  virtual const unsigned long & GetNumberOfPixelsCounted( void ) const;
   
   /** Pass initialisation to all sub metrics. */
   virtual void Initialize( void ) throw ( ExceptionObject );
