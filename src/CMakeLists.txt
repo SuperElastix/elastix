@@ -149,11 +149,8 @@ IF(Doxygen_FOUND)
   ENDIF(WIN32)
 
   # Get the version number of elastix
-  IF(UNIX)
-    SET(ELX_BASECOMPONENT_FILE "${elastix_SOURCE_DIR}/Core/Install/elxBaseComponent.h")
-    EXEC_PROGRAM(grep ARGS "\"#define __ELASTIX_VERSION\"" "${ELX_BASECOMPONENT_FILE}" OUTPUT_VARIABLE ELX_VERSION)
-    STRING(SUBSTRING ${ELX_VERSION} 26 3 ELX_VERSION)
-  ENDIF(UNIX)
+  FILE( STRINGS ${elastix_SOURCE_DIR}/Core/Install/elxBaseComponent.h ELX_VERSION REGEX "\(#define\ __ELASTIX_VERSION\)" )
+  STRING(SUBSTRING ${ELX_VERSION} 26 3 ELX_VERSION)
   
   # Configure the doxygen configuration
   CONFIGURE_FILE(

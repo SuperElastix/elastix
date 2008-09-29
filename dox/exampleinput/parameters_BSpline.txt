@@ -52,7 +52,10 @@
 // Final spacing of B-Spline grid (unit = size of 1 voxel)
 // You can give it for each dimension differently, or for 
 // all dimensions the same.
-(FinalGridSpacing 16.0 16.0 )
+(FinalGridSpacingInVoxels 16.0 16.0 )
+
+// You may also give the B-spline grid spacing in mm, like this:
+//(FinalGridSpacingInPhysicalUnits 16.0 16.0)
 
 // Number of spatial samples used to compute the mutual
 // information in each resolution level.

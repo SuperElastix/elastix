@@ -218,6 +218,16 @@ SPAN.charliteral   { color: #008080 }
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: 13px;
 }
+.memitem {
+    padding: 0px 8px 4px 8px;
+    font-size: 14px;
+    background-color: #FFFBD7;
+    border-top: 1px none #E0E0E0;
+    border-right: 1px none #E0E0E0;
+    border-bottom: 1px none #E0E0E0;
+    border-left: 1px none #E0E0E0;
+    margin: 0px;
+}
 .search     { color: #003399;
               font-weight: bold;
 }

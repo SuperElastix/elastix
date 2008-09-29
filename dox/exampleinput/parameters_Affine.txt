@@ -36,7 +36,9 @@
 // decrease it; if elastix crashes after a few iterations, with
 // the message that all samples map outside the moving image 
 // buffer, you may have to increase this parameter.
-(Scales 50000.0)
+//(Scales 50000.0)
+// Better use automatic scales estimation:
+(AutomaticScalesEstimation "true")
 
 // Automatically guess an initial translation. Not needed/recommended
 // here, because we already did a rigid registration before!

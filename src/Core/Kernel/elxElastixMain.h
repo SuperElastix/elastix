@@ -203,13 +203,13 @@ namespace elastix
 
     /** Set process priority, which is read from the command line arguments. 
      * Syntax:
-     * -priority <high, belownormal>
+     * -priority \<high, belownormal\>
      */
     virtual void SetProcessPriority(void) const;
 
     /** Set maximum number of threads, which is read from the command line arguments. 
      * Syntax:
-     * -threads <int>
+     * -threads \<int\>
      */
     virtual void SetMaximumNumberOfThreads(void) const;
 
