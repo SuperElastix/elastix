@@ -165,8 +165,8 @@ IF(Doxygen_FOUND)
     ${ELX_HELP_DIR}/DoxygenFooter.html @ONLY)
   # Configure the MainPage.dox
   CONFIGURE_FILE(
-    ${ELX_DOXYGEN_DIR/MainPage.dox.in
-    ${ELX_HELP_DIR/../dox/doxygen/MainPage.dox @ONLY )
+    ${ELX_DOXYGEN_DIR}/MainPage.dox.in
+    ${ELX_HELP_DIR}/MainPage.dox @ONLY )
   
 ENDIF(Doxygen_FOUND)
 
