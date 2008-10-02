@@ -90,6 +90,8 @@
 //  basic includes
 //----------------------------------------------------------------------
 
+#include <cstring>    // needed for gcc4.3, added for elastix
+#include <cstdlib>    // needed for gcc4.3, added for elastix
 #include <cmath>      // math includes
 #include <iostream>     // I/O streams
 

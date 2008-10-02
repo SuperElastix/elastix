@@ -35,6 +35,9 @@
 #include "itk_hash_map.h"
 #include "itkMacro.h"
 
+// needed for gcc4.3:
+#include <cstring>
+
 #ifndef __VISParameterFile_h__
 #define __VISParameterFile_h__
 namespace VISParameterFile
