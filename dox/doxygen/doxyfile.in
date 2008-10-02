@@ -547,7 +547,7 @@ WARN_LOGFILE           =
 # with spaces.
 
 INPUT                  = "@ELX_DOXYGEN_DIR@/Modules.dox" \
-                         "@ELX_DOXYGEN_DIR@/MainPage.dox" \
+                         "@ELX_HELP_DIR@/MainPage.dox" \
                          "@elastix_SOURCE_DIR@"
 
 # This tag can be used to specify the character encoding of the source files 
