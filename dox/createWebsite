@@ -176,7 +176,7 @@ then
   echo "v"$version > $tempdir/download/version.txt
 
   # write the date/time
-  date '+%m-%d-%Y' > $tempdir/download/latestreleasedate.txt
+  date '+%d-%m-%Y' > $tempdir/download/latestreleasedate.txt
 
   # copy the copyright message
   cp $exportdirwin/src/CopyrightElastix.txt $tempdir
