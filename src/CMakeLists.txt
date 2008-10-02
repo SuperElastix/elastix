@@ -140,12 +140,15 @@ IF(Doxygen_FOUND)
   # Get the version number of doxygen
   EXEC_PROGRAM(${DOXYGEN} ARGS "--version" OUTPUT_VARIABLE ELX_DOXYGEN_VERSION)
   
-  # Get date and time
-  IF(UNIX)
-    EXEC_PROGRAM(date OUTPUT_VARIABLE ELX_DOXYGEN_DATE)
-  ENDIF(UNIX)
+  # Get date
+  IF(UNIX OR CYGWIN)
+    EXEC_PROGRAM("date '+%m-%d-%Y'" OUTPUT_VARIABLE ELX_DOXYGEN_DATE)
+  ENDIF(UNIX OR CYGWIN)
   IF(WIN32)
-    SET(ELX_DOXYGEN_DATE "Sun Jan 1 00:00:00 2006")
+    IF( NOT CYGWIN )
+      EXEC_PROGRAM("date /T" OUTPUT_VARIABLE ELX_DOXYGEN_DATETEMP)
+      STRING( REPLACE "/" "-" ELX_DOXYGEN_DATE ${ELX_DOXYGEN_DATETEMP})
+    ENDIF( NOT CYGWIN )
   ENDIF(WIN32)
 
   # Get the version number of elastix
@@ -157,7 +160,13 @@ IF(Doxygen_FOUND)
     ${ELX_DOXYGEN_DIR}/doxyfile.in
     ${ELX_HELP_DIR}/doxyfile.out @ONLY )
   # Configure the footer of the help website.
-  CONFIGURE_FILE(${elastix_SOURCE_DIR}/../dox/doxygen/DoxygenFooter.html.in ${ELX_HELP_DIR}/DoxygenFooter.html @ONLY)
+  CONFIGURE_FILE(
+    ${ELX_DOXYGEN_DIR}/DoxygenFooter.html.in
+    ${ELX_HELP_DIR}/DoxygenFooter.html @ONLY)
+  # Configure the MainPage.dox
+  CONFIGURE_FILE(
+    ${ELX_DOXYGEN_DIR/MainPage.dox.in
+    ${ELX_HELP_DIR/../dox/doxygen/MainPage.dox @ONLY )
   
 ENDIF(Doxygen_FOUND)
 
