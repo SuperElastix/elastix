@@ -1,10 +1,8 @@
 #---------------------------------------------------------------------
-
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
-# This project is intended to be built outside the Insight source tree
+CMAKE_MINIMUM_REQUIRED( VERSION 2.6 )
 
 #---------------------------------------------------------------------
-PROJECT(elastix)
+PROJECT( elastix )
 
 #---------------------------------------------------------------------
 # Find ITK.
@@ -27,7 +25,7 @@ SET( elxCommon_INCLUDE_DIRECTORIES
  ${elastix_SOURCE_DIR}/Common/KNN/ann_1.1/include
  ${elastix_SOURCE_DIR}/Common/LineSearchOptimizers
  ${elastix_SOURCE_DIR}/Common/ParameterFileParser
- ${elastix_SOURCE_DIR}/Common/TransformGrouper
+ ${elastix_SOURCE_DIR}/Common/Transforms
  ${elastix_SOURCE_DIR}/Common/xout
 )
 
@@ -65,25 +63,24 @@ INCLUDE_DIRECTORIES( ${elxINCLUDE_DIRECTORIES} )
 #---------------------------------------------------------------------
 # Output directories.
 
-MARK_AS_ADVANCED(LIBRARY_OUTPUT_PATH EXECUTABLE_OUTPUT_PATH)
-SET (LIBRARY_OUTPUT_PATH ${elastix_BINARY_DIR}/bin CACHE INTERNAL "Single output directory for building all libraries.")
-SET (EXECUTABLE_OUTPUT_PATH ${elastix_BINARY_DIR}/bin CACHE INTERNAL "Single output directory for building all executables.")
-SET(elastix_LIBRARY_PATH "${LIBRARY_OUTPUT_PATH}")
-SET(elastix_EXECUTABLE_PATH "${EXECUTABLE_OUTPUT_PATH}")
+MARK_AS_ADVANCED( LIBRARY_OUTPUT_PATH EXECUTABLE_OUTPUT_PATH )
+SET( LIBRARY_OUTPUT_PATH ${elastix_BINARY_DIR}/bin CACHE INTERNAL "Single output directory for building all libraries." )
+SET( EXECUTABLE_OUTPUT_PATH ${elastix_BINARY_DIR}/bin CACHE INTERNAL "Single output directory for building all executables." )
+SET( elastix_LIBRARY_PATH "${LIBRARY_OUTPUT_PATH}" )
+SET( elastix_EXECUTABLE_PATH "${EXECUTABLE_OUTPUT_PATH}" )
 
 #---------------------------------------------------------------------
 # process the sub-directories
 
-SUBDIRS(Common)
-SUBDIRS(Components)
-SUBDIRS(Core)
-
+SUBDIRS( Common )
+SUBDIRS( Components )
+SUBDIRS( Core )
 
 #--------------------------------------------------------------------
 # Configure the examples
 
-SET(ELX_DOX_DIR ${elastix_SOURCE_DIR}/../dox )
-SET(ELX_HELP_DIR ${elastix_SOURCE_DIR}/../help CACHE PATH "path to the doxygen generated help files and the examples")
+SET( ELX_DOX_DIR  ${elastix_SOURCE_DIR}/../dox )
+SET( ELX_HELP_DIR ${elastix_SOURCE_DIR}/../help CACHE PATH "path to the doxygen generated help files and the examples" )
 
 # Copy the examples to the help directory
 
@@ -102,21 +99,22 @@ ENDIF(WIN32)
 MAKE_DIRECTORY( ${ELX_HELP_DIR}/exampleinput )
 MAKE_DIRECTORY( ${ELX_HELP_DIR}/exampleoutput )
 
-SET(ELX_EXAMPLEINPUTFILES
-fixed.mhd
-fixed.raw
-mask_fixed.mhd
-mask_fixed.raw
-mask_moving.mhd
-mask_moving.raw
-moving.mhd
-moving.raw
-parameters_Affine.txt
-parameters_BSpline.txt
-parameters_Rigid.txt
-parameters_Translation.txt
-solution_deformedmovingimage.mhd
-solution_deformedmovingimage.raw )
+SET( ELX_EXAMPLEINPUTFILES
+ fixed.mhd
+ fixed.raw
+ mask_fixed.mhd
+ mask_fixed.raw
+ mask_moving.mhd
+ mask_moving.raw
+ moving.mhd
+ moving.raw
+ parameters_Affine.txt
+ parameters_BSpline.txt
+ parameters_Rigid.txt
+ parameters_Translation.txt
+ solution_deformedmovingimage.mhd
+ solution_deformedmovingimage.raw
+)
 
 FOREACH( ELX_EXAMPLEINPUTFILE ${ELX_EXAMPLEINPUTFILES} )
   CONFIGURE_FILE(
@@ -129,16 +127,16 @@ ENDFOREACH( ELX_EXAMPLEINPUTFILE )
 #---------------------------------------------------------------------
 # Configure the doxygen-configuration
 
-FIND_PACKAGE(Doxygen QUIET)
-STRING(COMPARE NOTEQUAL ${DOXYGEN} "DOXYGEN-NOTFOUND" Doxygen_FOUND)
+FIND_PACKAGE( Doxygen QUIET )
+STRING( COMPARE NOTEQUAL ${DOXYGEN} "DOXYGEN-NOTFOUND" Doxygen_FOUND )
 
 IF(Doxygen_FOUND)
 
   # Set the path to the doxygen configuration source
-  SET(ELX_DOXYGEN_DIR ${ELX_DOX_DIR}/doxygen)
+  SET( ELX_DOXYGEN_DIR ${ELX_DOX_DIR}/doxygen )
 
   # Get the version number of doxygen
-  EXEC_PROGRAM(${DOXYGEN} ARGS "--version" OUTPUT_VARIABLE ELX_DOXYGEN_VERSION)
+  EXEC_PROGRAM( ${DOXYGEN} ARGS "--version" OUTPUT_VARIABLE ELX_DOXYGEN_VERSION )
   
   # Get date
   IF(UNIX OR CYGWIN)
@@ -146,15 +144,15 @@ IF(Doxygen_FOUND)
   ENDIF(UNIX OR CYGWIN)
   IF(WIN32)
     IF( NOT CYGWIN )
-      EXECUTE_PROCESS(COMMAND "${ELX_DOXYGEN_DIR}/doxdate.bat" OUTPUT_VARIABLE ELX_DOXYGEN_DATETEMP)
-      STRING( REPLACE "/" "-" ELX_DOXYGEN_DATE ${ELX_DOXYGEN_DATETEMP})
+      EXECUTE_PROCESS( COMMAND "${ELX_DOXYGEN_DIR}/doxdate.bat" OUTPUT_VARIABLE ELX_DOXYGEN_DATETEMP )
+      STRING( REPLACE "/" "-" ELX_DOXYGEN_DATE ${ELX_DOXYGEN_DATETEMP} )
     ENDIF( NOT CYGWIN )
   ENDIF(WIN32)
 
   # Get the version number of elastix
   FILE( STRINGS ${elastix_SOURCE_DIR}/Core/Install/elxBaseComponent.h ELX_VERSION REGEX "\(#define\ __ELASTIX_VERSION\)" )
-  STRING(SUBSTRING ${ELX_VERSION} 26 3 ELX_VERSION)
-  
+  STRING( SUBSTRING ${ELX_VERSION} 26 3 ELX_VERSION )
+
   # Configure the doxygen configuration
   CONFIGURE_FILE(
     ${ELX_DOXYGEN_DIR}/doxyfile.in
