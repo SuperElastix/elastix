@@ -5,112 +5,140 @@ SUBDIRS( ParameterFileParser )
 SUBDIRS( xout )
 
 SET(CommonFiles
-  elxTimer.cxx
-  elxTimer.h
-  itkBSplineCombinationTransform.h
-  itkBSplineCombinationTransform.hxx
-  itkCombinationTransform.h
-  itkCombinationTransform.hxx
-  itkDeformationFieldInterpolatingTransform.h
-  itkDeformationFieldInterpolatingTransform.txx
-  itkDeformationFieldRegulizer.h
-  itkDeformationFieldRegulizer.hxx
-  itkDeformationFieldRegulizerForBSpline.h
-  itkDeformationFieldRegulizerForBSpline.hxx
-  itkDeformationVectorFieldTransform.h
-  itkDeformationVectorFieldTransform.txx
-  itkErodeMaskImageFilter.h
-  itkErodeMaskImageFilter.txx
-  itkImageFileCastWriter.h
-  itkImageFileCastWriter.txx
-  itkImageMaskSpatialObject2.h
-  itkImageMaskSpatialObject2.txx
-  itkImageSpatialObject2.h
-  itkImageSpatialObject2.txx
-  itkMeshFileReaderBase.h
-  itkMeshFileReaderBase.txx
-  itkMultiResolutionGaussianSmoothingPyramidImageFilter.h
-  itkMultiResolutionGaussianSmoothingPyramidImageFilter.txx
-  itkMultiResolutionImageRegistrationMethod2.h
-  itkMultiResolutionImageRegistrationMethod2.txx
-  itkTransformixInputPointFileReader.h
-  itkTransformixInputPointFileReader.hxx
-  itkNDImageBase.h
-  itkNDImageTemplate.h
-  itkNDImageTemplate.hxx
-  itkScaledSingleValuedNonLinearOptimizer.cxx
-  itkScaledSingleValuedNonLinearOptimizer.h
-  itkTransformToDeformationFieldSource.h
-  itkTransformToDeformationFieldSource.txx
-  itkTranslationTransformInitializer.h
-  itkTranslationTransformInitializer.hxx
+ elxTimer.cxx
+ elxTimer.h
+ itkBSplineCombinationTransform.h
+ itkBSplineCombinationTransform.hxx
+ itkCombinationTransform.h
+ itkCombinationTransform.hxx
+ itkDeformationFieldInterpolatingTransform.h
+ itkDeformationFieldInterpolatingTransform.txx
+ itkDeformationFieldRegulizer.h
+ itkDeformationFieldRegulizer.hxx
+ itkDeformationFieldRegulizerForBSpline.h
+ itkDeformationFieldRegulizerForBSpline.hxx
+ itkDeformationVectorFieldTransform.h
+ itkDeformationVectorFieldTransform.txx
+ itkErodeMaskImageFilter.h
+ itkErodeMaskImageFilter.txx
+ itkImageFileCastWriter.h
+ itkImageFileCastWriter.txx
+ itkImageMaskSpatialObject2.h
+ itkImageMaskSpatialObject2.txx
+ itkImageSpatialObject2.h
+ itkImageSpatialObject2.txx
+ itkMeshFileReaderBase.h
+ itkMeshFileReaderBase.txx
+ itkMultiResolutionGaussianSmoothingPyramidImageFilter.h
+ itkMultiResolutionGaussianSmoothingPyramidImageFilter.txx
+ itkMultiResolutionImageRegistrationMethod2.h
+ itkMultiResolutionImageRegistrationMethod2.txx
+ itkTransformixInputPointFileReader.h
+ itkTransformixInputPointFileReader.hxx
+ itkNDImageBase.h
+ itkNDImageTemplate.h
+ itkNDImageTemplate.hxx
+ itkScaledSingleValuedNonLinearOptimizer.cxx
+ itkScaledSingleValuedNonLinearOptimizer.h
+ itkTransformToDeformationFieldSource.h
+ itkTransformToDeformationFieldSource.txx
+ itkTranslationTransformInitializer.h
+ itkTranslationTransformInitializer.hxx
 )
 
 SET( CostFunctionFiles
-  CostFunctions/itkAdvancedImageToImageMetric.h
-  CostFunctions/itkAdvancedImageToImageMetric.hxx
-  CostFunctions/itkExponentialLimiterFunction.h
-  CostFunctions/itkExponentialLimiterFunction.hxx
-  CostFunctions/itkHardLimiterFunction.h
-  CostFunctions/itkHardLimiterFunction.hxx
-  CostFunctions/itkImageToImageMetricWithFeatures.h
-  CostFunctions/itkImageToImageMetricWithFeatures.txx
-  CostFunctions/itkLimiterFunctionBase.h
-  CostFunctions/itkMultiInputImageToImageMetricBase.h
-  CostFunctions/itkMultiInputImageToImageMetricBase.txx
-  CostFunctions/itkParzenWindowHistogramImageToImageMetric.h
-  CostFunctions/itkParzenWindowHistogramImageToImageMetric.hxx
-  CostFunctions/itkScaledSingleValuedCostFunction.cxx
-  CostFunctions/itkScaledSingleValuedCostFunction.h
+ CostFunctions/itkAdvancedImageToImageMetric.h
+ CostFunctions/itkAdvancedImageToImageMetric.hxx
+ CostFunctions/itkExponentialLimiterFunction.h
+ CostFunctions/itkExponentialLimiterFunction.hxx
+ CostFunctions/itkHardLimiterFunction.h
+ CostFunctions/itkHardLimiterFunction.hxx
+ CostFunctions/itkImageToImageMetricWithFeatures.h
+ CostFunctions/itkImageToImageMetricWithFeatures.txx
+ CostFunctions/itkLimiterFunctionBase.h
+ CostFunctions/itkMultiInputImageToImageMetricBase.h
+ CostFunctions/itkMultiInputImageToImageMetricBase.txx
+ CostFunctions/itkParzenWindowHistogramImageToImageMetric.h
+ CostFunctions/itkParzenWindowHistogramImageToImageMetric.hxx
+ CostFunctions/itkScaledSingleValuedCostFunction.cxx
+ CostFunctions/itkScaledSingleValuedCostFunction.h
+ #CostFunctions/itkTransformPenaltyTerm.h
+ #CostFunctions/itkTransformPenaltyTerm.txx
+)
+
+SET( TransformFiles
+ #Transforms/itkAdvancedAffineTransform.h
+ #Transforms/itkAdvancedAffineTransform.txx
+ #Transforms/itkAdvancedBSplineDeformableTransform.h
+ #Transforms/itkAdvancedBSplineDeformableTransform.txx
+ #Transforms/itkAdvancedMatrixOffsetTransformBase.h
+ #Transforms/itkAdvancedMatrixOffsetTransformBase.txx
+ #Transforms/itkAdvancedTransform.h
+ #Transforms/itkAdvancedTransform.txx
+ #Transforms/itkBSplineInterpolationDerivativeWeightFunction.h
+ #Transforms/itkBSplineInterpolationDerivativeWeightFunction.txx
+ #Transforms/itkBSplineInterpolationSecondOrderDerivativeWeightFunction.h
+ #Transforms/itkBSplineInterpolationSecondOrderDerivativeWeightFunction.txx
+ #Transforms/itkBSplineInterpolationWeightFunction.h
+ #Transforms/itkBSplineInterpolationWeightFunction.txx
+ #Transforms/itkBSplineInterpolationWeightFunctionBase.h
+ #Transforms/itkBSplineInterpolationWeightFunctionBase.txx
+ #Transforms/itkBSplineSecondOrderDerivativeKernelFunction.h
+ Transforms/itkGridScheduleComputer.h
+ Transforms/itkGridScheduleComputer.txx
+ Transforms/itkUpsampleBSplineParametersFilter.h
+ Transforms/itkUpsampleBSplineParametersFilter.txx
 )
 
 SET( LineSearchOptimizersFiles
-  LineSearchOptimizers/itkMoreThuenteLineSearchOptimizer.h
-  LineSearchOptimizers/itkMoreThuenteLineSearchOptimizer.cxx
-  LineSearchOptimizers/itkLineSearchOptimizer.h
-  LineSearchOptimizers/itkLineSearchOptimizer.cxx
+ LineSearchOptimizers/itkMoreThuenteLineSearchOptimizer.h
+ LineSearchOptimizers/itkMoreThuenteLineSearchOptimizer.cxx
+ LineSearchOptimizers/itkLineSearchOptimizer.h
+ LineSearchOptimizers/itkLineSearchOptimizer.cxx
 )
 
 SET( ImageSamplersFiles
-  ImageSamplers/itkImageFullSampler.h
-  ImageSamplers/itkImageFullSampler.txx
-  ImageSamplers/itkImageGridSampler.h
-  ImageSamplers/itkImageGridSampler.txx
-  ImageSamplers/itkImageRandomCoordinateSampler.h
-  ImageSamplers/itkImageRandomCoordinateSampler.txx
-  ImageSamplers/itkMultiInputImageRandomCoordinateSampler.h
-  ImageSamplers/itkMultiInputImageRandomCoordinateSampler.txx
-  ImageSamplers/itkImageRandomSampler.h
-  ImageSamplers/itkImageRandomSampler.txx
-  ImageSamplers/itkImageRandomSamplerSparseMask.h
-  ImageSamplers/itkImageRandomSamplerSparseMask.txx
-  ImageSamplers/itkImageSample.h
-  ImageSamplers/itkImageSamplerBase.h
-  ImageSamplers/itkImageSamplerBase.txx
-  ImageSamplers/itkImageRandomSamplerBase.h
-  ImageSamplers/itkImageToVectorContainerFilter.h
-  ImageSamplers/itkImageToVectorContainerFilter.txx
-  ImageSamplers/itkVectorContainerSource.h
-  ImageSamplers/itkVectorContainerSource.txx
-  ImageSamplers/itkVectorDataContainer.h
-  ImageSamplers/itkVectorDataContainer.txx
+ ImageSamplers/itkImageFullSampler.h
+ ImageSamplers/itkImageFullSampler.txx
+ ImageSamplers/itkImageGridSampler.h
+ ImageSamplers/itkImageGridSampler.txx
+ ImageSamplers/itkImageRandomCoordinateSampler.h
+ ImageSamplers/itkImageRandomCoordinateSampler.txx
+ ImageSamplers/itkMultiInputImageRandomCoordinateSampler.h
+ ImageSamplers/itkMultiInputImageRandomCoordinateSampler.txx
+ ImageSamplers/itkImageRandomSampler.h
+ ImageSamplers/itkImageRandomSampler.txx
+ ImageSamplers/itkImageRandomSamplerSparseMask.h
+ ImageSamplers/itkImageRandomSamplerSparseMask.txx
+ ImageSamplers/itkImageSample.h
+ ImageSamplers/itkImageSamplerBase.h
+ ImageSamplers/itkImageSamplerBase.txx
+ ImageSamplers/itkImageRandomSamplerBase.h
+ ImageSamplers/itkImageToVectorContainerFilter.h
+ ImageSamplers/itkImageToVectorContainerFilter.txx
+ ImageSamplers/itkVectorContainerSource.h
+ ImageSamplers/itkVectorContainerSource.txx
+ ImageSamplers/itkVectorDataContainer.h
+ ImageSamplers/itkVectorDataContainer.txx
 )
 
 SOURCE_GROUP( "CostFunctions" FILES ${CostFunctionFiles} )
+SOURCE_GROUP( "Transforms" FILES ${TransformFiles} )
 SOURCE_GROUP( "LineSearchOptimizers" FILES ${LineSearchOptimizersFiles} )
 SOURCE_GROUP( "ImageSamplers" FILES ${ImageSamplersFiles} )
 
 ADD_LIBRARY( elxCommon
-  ${CommonFiles}
-  ${CostFunctionFiles}
-  ${LineSearchOptimizersFiles}
-  ${ImageSamplersFiles}
+ ${CommonFiles}
+ ${CostFunctionFiles}
+ ${TransformFiles}
+ ${LineSearchOptimizersFiles}
+ ${ImageSamplersFiles}
 )
 
 TARGET_LINK_LIBRARIES( elxCommon
-  ITKBasicFilters
-  ITKNumerics
-  ITKIO
-  ITKCommon
+ ITKBasicFilters
+ ITKNumerics
+ ITKIO
+ ITKCommon
 )
 
