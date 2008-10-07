@@ -7,18 +7,6 @@ SUBDIRS( xout )
 SET(CommonFiles
  elxTimer.cxx
  elxTimer.h
- itkBSplineCombinationTransform.h
- itkBSplineCombinationTransform.hxx
- itkCombinationTransform.h
- itkCombinationTransform.hxx
- itkDeformationFieldInterpolatingTransform.h
- itkDeformationFieldInterpolatingTransform.txx
- itkDeformationFieldRegulizer.h
- itkDeformationFieldRegulizer.hxx
- itkDeformationFieldRegulizerForBSpline.h
- itkDeformationFieldRegulizerForBSpline.hxx
- itkDeformationVectorFieldTransform.h
- itkDeformationVectorFieldTransform.txx
  itkErodeMaskImageFilter.h
  itkErodeMaskImageFilter.txx
  itkImageFileCastWriter.h
@@ -40,10 +28,6 @@ SET(CommonFiles
  itkNDImageTemplate.hxx
  itkScaledSingleValuedNonLinearOptimizer.cxx
  itkScaledSingleValuedNonLinearOptimizer.h
- itkTransformToDeformationFieldSource.h
- itkTransformToDeformationFieldSource.txx
- itkTranslationTransformInitializer.h
- itkTranslationTransformInitializer.hxx
 )
 
 SET( CostFunctionFiles
@@ -84,6 +68,22 @@ SET( TransformFiles
  #Transforms/itkBSplineInterpolationWeightFunctionBase.h
  #Transforms/itkBSplineInterpolationWeightFunctionBase.txx
  #Transforms/itkBSplineSecondOrderDerivativeKernelFunction.h
+ Transforms/itkBSplineCombinationTransform.h
+ Transforms/itkBSplineCombinationTransform.hxx
+ Transforms/itkCombinationTransform.h
+ Transforms/itkCombinationTransform.hxx
+ Transforms/itkDeformationFieldInterpolatingTransform.h
+ Transforms/itkDeformationFieldInterpolatingTransform.txx
+ Transforms/itkDeformationFieldRegulizer.h
+ Transforms/itkDeformationFieldRegulizer.hxx
+ Transforms/itkDeformationFieldRegulizerForBSpline.h
+ Transforms/itkDeformationFieldRegulizerForBSpline.hxx
+ Transforms/itkDeformationVectorFieldTransform.h
+ Transforms/itkDeformationVectorFieldTransform.txx
+ Transforms/itkTransformToDeformationFieldSource.h
+ Transforms/itkTransformToDeformationFieldSource.txx
+ Transforms/itkTranslationTransformInitializer.h
+ Transforms/itkTranslationTransformInitializer.hxx
  Transforms/itkGridScheduleComputer.h
  Transforms/itkGridScheduleComputer.txx
  Transforms/itkUpsampleBSplineParametersFilter.h
