@@ -21,6 +21,7 @@
 
 namespace itk
 {
+
 /**
  * \class GridScheduleComputer
  * \brief This class computes all information about the B-spline grid,
@@ -29,150 +30,150 @@ namespace itk
  * \ingroup 
  */
 
-  template < typename TTransformScalarType, unsigned int VImageDimension >
-  class ITK_EXPORT GridScheduleComputer :
-  public Object
-  {
-  public:
-    
-    /** Standard class typedefs. */
-    typedef GridScheduleComputer                Self;
-    typedef Object                              Superclass;
-    typedef SmartPointer< Self >                Pointer;
-    typedef SmartPointer< const Self >          ConstPointer;
-    
-    /** Method for creation through the object factory. */
-    itkNewMacro( Self );
-    
-    /** Run-time type information (and related methods). */
-    itkTypeMacro( GridScheduleComputer, Object );
+template < typename TTransformScalarType, unsigned int VImageDimension >
+class ITK_EXPORT GridScheduleComputer
+  : public Object
+{
+public:
 
-    /** Dimension of the domain space. */
-    itkStaticConstMacro( Dimension, unsigned int, VImageDimension );
+  /** Standard class typedefs. */
+  typedef GridScheduleComputer                Self;
+  typedef Object                              Superclass;
+  typedef SmartPointer< Self >                Pointer;
+  typedef SmartPointer< const Self >          ConstPointer;
 
-    /** Typedef's. */
-    typedef TTransformScalarType                  TransformScalarType;
-    typedef ImageBase<
-      itkGetStaticConstMacro( Dimension ) >       ImageBaseType;
-    typedef typename ImageBaseType::PointType     PointType;
-    typedef typename ImageBaseType::PointType     OriginType;
-    typedef typename ImageBaseType::SpacingType   SpacingType;
-    typedef typename ImageBaseType::SizeType      SizeType;
-    typedef typename ImageBaseType::SizeValueType SizeValueType;
-    typedef typename ImageBaseType::RegionType    RegionType;
-    typedef SpacingType                           GridSpacingFactorType;
-    typedef std::vector< OriginType >             VectorOriginType;
-    typedef std::vector< SpacingType >            VectorSpacingType;
-    typedef std::vector< RegionType >             VectorRegionType;
-    typedef std::vector< GridSpacingFactorType >  VectorGridSpacingFactorType;
+  /** Method for creation through the object factory. */
+  itkNewMacro( Self );
 
-    /** Typedefs for the initial transform. */
-    typedef Transform<
-      TransformScalarType,
-      itkGetStaticConstMacro( Dimension ),
-      itkGetStaticConstMacro( Dimension ) >       TransformType;
-    typedef typename TransformType::Pointer       TransformPointer;
-    typedef typename TransformType::ConstPointer  TransformConstPointer;
+  /** Run-time type information (and related methods). */
+  itkTypeMacro( GridScheduleComputer, Object );
 
-    /** Set the ImageOrigin. */
-    itkSetMacro( ImageOrigin, OriginType );
+  /** Dimension of the domain space. */
+  itkStaticConstMacro( Dimension, unsigned int, VImageDimension );
 
-    /** Get the ImageOrigin. */
-    itkGetConstMacro( ImageOrigin, OriginType );
+  /** Typedef's. */
+  typedef TTransformScalarType                  TransformScalarType;
+  typedef ImageBase<
+    itkGetStaticConstMacro( Dimension ) >       ImageBaseType;
+  typedef typename ImageBaseType::PointType     PointType;
+  typedef typename ImageBaseType::PointType     OriginType;
+  typedef typename ImageBaseType::SpacingType   SpacingType;
+  typedef typename ImageBaseType::SizeType      SizeType;
+  typedef typename ImageBaseType::SizeValueType SizeValueType;
+  typedef typename ImageBaseType::RegionType    RegionType;
+  typedef SpacingType                           GridSpacingFactorType;
+  typedef std::vector< OriginType >             VectorOriginType;
+  typedef std::vector< SpacingType >            VectorSpacingType;
+  typedef std::vector< RegionType >             VectorRegionType;
+  typedef std::vector< GridSpacingFactorType >  VectorGridSpacingFactorType;
 
-    /** Set the ImageSpacing. */
-    itkSetMacro( ImageSpacing, SpacingType );
+  /** Typedefs for the initial transform. */
+  typedef Transform<
+    TransformScalarType,
+    itkGetStaticConstMacro( Dimension ),
+    itkGetStaticConstMacro( Dimension ) >       TransformType;
+  typedef typename TransformType::Pointer       TransformPointer;
+  typedef typename TransformType::ConstPointer  TransformConstPointer;
 
-    /** Get the ImageSpacing. */
-    itkGetConstMacro( ImageSpacing, SpacingType );
+  /** Set the ImageOrigin. */
+  itkSetMacro( ImageOrigin, OriginType );
 
-    /** Set the ImageRegion. */
-    itkSetMacro( ImageRegion, RegionType );
+  /** Get the ImageOrigin. */
+  itkGetConstMacro( ImageOrigin, OriginType );
 
-    /** Get the ImageRegion. */
-    itkGetConstMacro( ImageRegion, RegionType );
+  /** Set the ImageSpacing. */
+  itkSetMacro( ImageSpacing, SpacingType );
 
-    /** Set the B-spline order. */
-    itkSetClampMacro( BSplineOrder, unsigned int, 0, 5 );
+  /** Get the ImageSpacing. */
+  itkGetConstMacro( ImageSpacing, SpacingType );
 
-    /** Get the B-spline order. */
-    itkGetConstMacro( BSplineOrder, unsigned int );
+  /** Set the ImageRegion. */
+  itkSetMacro( ImageRegion, RegionType );
 
-    /** Set the final grid spacing. */
-    itkSetMacro( FinalGridSpacing, SpacingType );
+  /** Get the ImageRegion. */
+  itkGetConstMacro( ImageRegion, RegionType );
 
-    /** Get the final grid spacing. */
-    itkGetConstMacro( FinalGridSpacing, SpacingType );
+  /** Set the B-spline order. */
+  itkSetClampMacro( BSplineOrder, unsigned int, 0, 5 );
 
-    /** Set a default grid spacing schedule. */
-    virtual void SetDefaultSchedule(
-      unsigned int levels,
-      double upsamplingFactor );
+  /** Get the B-spline order. */
+  itkGetConstMacro( BSplineOrder, unsigned int );
 
-    /** Set a grid spacing schedule. */
-    virtual void SetSchedule(
-      const VectorGridSpacingFactorType & schedule );
+  /** Set the final grid spacing. */
+  itkSetMacro( FinalGridSpacing, SpacingType );
 
-    /** Get the grid spacing schedule. */
-    virtual void GetSchedule( VectorGridSpacingFactorType & schedule ) const;
+  /** Get the final grid spacing. */
+  itkGetConstMacro( FinalGridSpacing, SpacingType );
 
-    /** Set an initial Transform. Only set one if composition is used. */
-    itkSetConstObjectMacro( InitialTransform, TransformType );
+  /** Set a default grid spacing schedule. */
+  virtual void SetDefaultSchedule(
+    unsigned int levels,
+    double upsamplingFactor );
 
-    /** Compute the B-spline grid. */
-    virtual void ComputeBSplineGrid( void );
+  /** Set a grid spacing schedule. */
+  virtual void SetSchedule(
+    const VectorGridSpacingFactorType & schedule );
 
-    /** Get the B-spline grid at some level. */
-    virtual void GetBSplineGrid( unsigned int level,
-      RegionType & gridRegion,
-      SpacingType & gridSpacing,
-      OriginType & gridOrigin );
+  /** Get the grid spacing schedule. */
+  virtual void GetSchedule( VectorGridSpacingFactorType & schedule ) const;
 
-  protected:
+  /** Set an initial Transform. Only set one if composition is used. */
+  itkSetConstObjectMacro( InitialTransform, TransformType );
 
-    /** The constructor. */
-    GridScheduleComputer();
+  /** Compute the B-spline grid. */
+  virtual void ComputeBSplineGrid( void );
 
-    /** The destructor. */
-    virtual ~GridScheduleComputer() {};
+  /** Get the B-spline grid at some level. */
+  virtual void GetBSplineGrid( unsigned int level,
+    RegionType & gridRegion,
+    SpacingType & gridSpacing,
+    OriginType & gridOrigin );
 
-    /** PrintSelf. */
-    void PrintSelf( std::ostream& os, Indent indent ) const;
+protected:
 
-    /** Function to apply the initial transform, if it exists. */
-    virtual void ApplyInitialTransform(
-      OriginType & imageOrigin,
-      SpacingType & imageSpacing,
-      SpacingType & finalGridSpacing ) const;
-    
-  private:
+  /** The constructor. */
+  GridScheduleComputer();
 
-    GridScheduleComputer( const Self& );  // purposely not implemented
-    void operator=( const Self& );        // purposely not implemented
-    
-    /** Declare member variables, needed in functions. */
-    OriginType            m_ImageOrigin;
-    SpacingType           m_ImageSpacing;
-    RegionType            m_ImageRegion;
-    unsigned int          m_BSplineOrder;
-    unsigned int          m_NumberOfLevels;
-    SpacingType           m_FinalGridSpacing;
-    VectorGridSpacingFactorType m_GridSpacingFactors;
+  /** The destructor. */
+  virtual ~GridScheduleComputer() {};
 
-    /** Clamp the upsampling factor. */
-    itkSetClampMacro( UpsamplingFactor, float, 1.0, NumericTraits<float>::max() );
+  /** PrintSelf. */
+  void PrintSelf( std::ostream& os, Indent indent ) const;
 
-    /** Declare member variables, needed internally. */
-    float                 m_UpsamplingFactor;
+  /** Function to apply the initial transform, if it exists. */
+  virtual void ApplyInitialTransform(
+    OriginType & imageOrigin,
+    SpacingType & imageSpacing,
+    SpacingType & finalGridSpacing ) const;
 
-    /** Declare member variables, needed for B-spline grid. */
-    VectorSpacingType     m_GridSpacings;
-    VectorOriginType      m_GridOrigins;
-    VectorRegionType      m_GridRegions;
-    TransformConstPointer m_InitialTransform;
+private:
 
-  }; // end class GridScheduleComputer
-  
+  GridScheduleComputer( const Self& );  // purposely not implemented
+  void operator=( const Self& );        // purposely not implemented
+
+  /** Declare member variables, needed in functions. */
+  OriginType            m_ImageOrigin;
+  SpacingType           m_ImageSpacing;
+  RegionType            m_ImageRegion;
+  unsigned int          m_BSplineOrder;
+  unsigned int          m_NumberOfLevels;
+  SpacingType           m_FinalGridSpacing;
+  VectorGridSpacingFactorType m_GridSpacingFactors;
+
+  /** Clamp the upsampling factor. */
+  itkSetClampMacro( UpsamplingFactor, float, 1.0, NumericTraits<float>::max() );
+
+  /** Declare member variables, needed internally. */
+  float                 m_UpsamplingFactor;
+
+  /** Declare member variables, needed for B-spline grid. */
+  VectorSpacingType     m_GridSpacings;
+  VectorOriginType      m_GridOrigins;
+  VectorRegionType      m_GridRegions;
+  TransformConstPointer m_InitialTransform;
+
+}; // end class GridScheduleComputer
+
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION

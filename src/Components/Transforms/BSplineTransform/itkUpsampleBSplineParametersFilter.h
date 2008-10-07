@@ -18,11 +18,12 @@
 #include "itkObject.h"
 #include "itkArray.h"
 
+
 namespace itk
 {
   
 /** \class UpsampleBSplineParametersFilter
- (
+ *
  * \brief Convenience class for upsampling a B-spline coefficient image.
  *
  * The UpsampleBSplineParametersFilter class is a class that takes as input
@@ -31,91 +32,93 @@ namespace itk
  * (region, spacing, origin), and the required B-spline grid.
  *
  */
-  template < class TArray, class TImage >
-  class ITK_EXPORT UpsampleBSplineParametersFilter
-    : public Object
-  {
-  public:
 
-    /** Standard class typedefs. */
-    typedef UpsampleBSplineParametersFilter   Self;
-    typedef Object                            Superclass;
-    typedef SmartPointer<Self>                Pointer;
-    typedef SmartPointer<const Self>          ConstPointer;
+template < class TArray, class TImage >
+class ITK_EXPORT UpsampleBSplineParametersFilter
+  : public Object
+{
+public:
 
-    /** Method for creation through the object factory. */
-    itkNewMacro( Self );
+  /** Standard class typedefs. */
+  typedef UpsampleBSplineParametersFilter   Self;
+  typedef Object                            Superclass;
+  typedef SmartPointer<Self>                Pointer;
+  typedef SmartPointer<const Self>          ConstPointer;
 
-    /** Run-time type information (and related methods). */
-    itkTypeMacro( UpsampleBSplineParametersFilter, Object );
+  /** Method for creation through the object factory. */
+  itkNewMacro( Self );
 
-    /** Typedefs. */
-    typedef TArray                            ArrayType;
-    typedef typename ArrayType::ValueType     ValueType;
-    typedef TImage                            ImageType;
-    typedef typename ImageType::Pointer       ImagePointer;
-    typedef typename ImageType::PixelType     PixelType;
-    typedef typename ImageType::SpacingType   SpacingType;
-    typedef typename ImageType::PointType     OriginType;
-    typedef typename ImageType::RegionType    RegionType;
+  /** Run-time type information (and related methods). */
+  itkTypeMacro( UpsampleBSplineParametersFilter, Object );
 
-    /** Dimension of the fixed image. */
-    itkStaticConstMacro( Dimension, unsigned int, ImageType::ImageDimension );
-    
-    /** Set the origin of the current grid. */
-    itkSetMacro( CurrentGridOrigin, OriginType );
+  /** Typedefs. */
+  typedef TArray                            ArrayType;
+  typedef typename ArrayType::ValueType     ValueType;
+  typedef TImage                            ImageType;
+  typedef typename ImageType::Pointer       ImagePointer;
+  typedef typename ImageType::PixelType     PixelType;
+  typedef typename ImageType::SpacingType   SpacingType;
+  typedef typename ImageType::PointType     OriginType;
+  typedef typename ImageType::RegionType    RegionType;
 
-    /** Set the spacing of the current grid. */
-    itkSetMacro( CurrentGridSpacing, SpacingType );
+  /** Dimension of the fixed image. */
+  itkStaticConstMacro( Dimension, unsigned int, ImageType::ImageDimension );
 
-    /** Set the region of the current grid. */
-    itkSetMacro( CurrentGridRegion, RegionType );
+  /** Set the origin of the current grid. */
+  itkSetMacro( CurrentGridOrigin, OriginType );
 
-    /** Set the origin of the required grid. */
-    itkSetMacro( RequiredGridOrigin, OriginType );
+  /** Set the spacing of the current grid. */
+  itkSetMacro( CurrentGridSpacing, SpacingType );
 
-    /** Set the spacing of the required grid. */
-    itkSetMacro( RequiredGridSpacing, SpacingType );
+  /** Set the region of the current grid. */
+  itkSetMacro( CurrentGridRegion, RegionType );
 
-    /** Set the region of the required grid. */
-    itkSetMacro( RequiredGridRegion, RegionType );
+  /** Set the origin of the required grid. */
+  itkSetMacro( RequiredGridOrigin, OriginType );
 
-    /** Set the B-spline order. */
-    itkSetMacro( BSplineOrder, unsigned int );
+  /** Set the spacing of the required grid. */
+  itkSetMacro( RequiredGridSpacing, SpacingType );
 
-    /** Set the input parameter array. *
-    itkSetMacro( InputParameters, ArrayType );
+  /** Set the region of the required grid. */
+  itkSetMacro( RequiredGridRegion, RegionType );
 
-    /** Compute the output parameter array. */
-    virtual void UpsampleParameters( const ArrayType & param_in, ArrayType & param_out );
+  /** Set the B-spline order. */
+  itkSetMacro( BSplineOrder, unsigned int );
 
-  protected:
+  /** Set the input parameter array. *
+  itkSetMacro( InputParameters, ArrayType );
 
-    /** Constructor. */
-    UpsampleBSplineParametersFilter();
+  /** Compute the output parameter array. */
+  virtual void UpsampleParameters( const ArrayType & param_in,
+    ArrayType & param_out );
 
-    /** Destructor. */
-    ~UpsampleBSplineParametersFilter() {};
+protected:
 
-    /** PrintSelf. */
-    virtual void PrintSelf( std::ostream& os, Indent indent ) const;
+  /** Constructor. */
+  UpsampleBSplineParametersFilter();
 
-    /** Function that checks if upsampling is required. */
-    virtual bool DoUpsampling( void );
-  
-  private:
+  /** Destructor. */
+  ~UpsampleBSplineParametersFilter() {};
 
-    UpsampleBSplineParametersFilter( const Self& ); //purposely not implemented
-    void operator=( const Self & );                 //purposely not implemented
+  /** PrintSelf. */
+  virtual void PrintSelf( std::ostream& os, Indent indent ) const;
 
-    /** Private member variables. */
-    OriginType    m_CurrentGridOrigin;
-    SpacingType   m_CurrentGridSpacing;
-    RegionType    m_CurrentGridRegion;
-    OriginType    m_RequiredGridOrigin;
-    SpacingType   m_RequiredGridSpacing;
-    RegionType    m_RequiredGridRegion;
-    unsigned int  m_BSplineOrder;
+  /** Function that checks if upsampling is required. */
+  virtual bool DoUpsampling( void );
+
+private:
+
+  UpsampleBSplineParametersFilter( const Self& ); //purposely not implemented
+  void operator=( const Self & );                 //purposely not implemented
+
+  /** Private member variables. */
+  OriginType    m_CurrentGridOrigin;
+  SpacingType   m_CurrentGridSpacing;
+  RegionType    m_CurrentGridRegion;
+  OriginType    m_RequiredGridOrigin;
+  SpacingType   m_RequiredGridSpacing;
+  RegionType    m_RequiredGridRegion;
+  unsigned int  m_BSplineOrder;
 
 }; // end class UpsampleBSplineParametersFilter
 
