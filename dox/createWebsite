@@ -62,6 +62,7 @@ copyright="$exportdirwin/src/CopyrightElastix.txt"
 # The stuff we do not want to distribute
 leaveouts="src/Components/Metrics/KNNGraphAlphaMutualInformation src/Components/Optimizers/FullSearch2 src/Components/Optimizers/PreconditionedGradientDescent"
 
+
 # checkout linux64 export:
 if [ "$arg" = "exportlinux64" ]
 then
@@ -121,7 +122,9 @@ then
   cd $exportdirlinux64
   # tar does not recognise m:/... filenames; convert to cygwin style.
   cwdir=`pwd`
-  tar -cjvf $cwdir/elastix_sources_v$version.tar.bz2 src
+  # select which documentation to include in the source zip/tar
+  doxfordistribution=`find dox -type f | grep -v "dox/manual" | grep -v "dox/createWebsite"`
+  tar -cjvf $cwdir/elastix_sources_v$version.tar.bz2 src $doxfordistribution
   cd install
   cp ../src/CopyrightElastix.txt .
   tar -cjvf $cwdir/elastix_linux64_v$version.tar.bz2 *
@@ -151,6 +154,8 @@ then
   currentdir=`pwd`
   cd $exportdirwin
   rm elastix*.zip
+  doxfordistribution=`find dox -type f | grep -v "dox/manual" | grep -v "dox/createWebsite"`
+  wzzip -ex -a -P $exportdirwin/elastix_sources_v$version.zip $doxfordistribution
   wzzip -ex -a -r -P $exportdirwin/elastix_sources_v$version.zip src
   cd install
   cp ../src/CopyrightElastix.txt .
