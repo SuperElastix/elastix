@@ -44,7 +44,6 @@
   { \
     return this->m_##_name##s.size(); \
   } 
-    
 
 
 namespace itk
@@ -91,10 +90,10 @@ public:
   typedef SmartPointer<const Self>                           ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro(Self);
+  itkNewMacro( Self );
   
   /** Run-time type information (and related methods). */
-  itkTypeMacro(MultiMetricMultiResolutionImageRegistrationMethod,
+  itkTypeMacro( MultiMetricMultiResolutionImageRegistrationMethod,
     MultiResolutionImageRegistrationMethod2 );
 
   /**  Superclass types */
@@ -133,8 +132,9 @@ public:
 
   /** Unfortunately the StopRegistration method is not virtual and
    * the m_Stop member is private in the superclass. That's why
-   * we provide the following function to interrupt registration. */
-  virtual void StopMultiMetricRegistration(void)
+   * we provide the following function to interrupt registration.
+   */
+  virtual void StopMultiMetricRegistration( void )
   {
     this->m_Stop = true;
   }
@@ -148,8 +148,9 @@ public:
 
   /** Get the metric as a pointer to a combination metric type.
    * Use this method to setup the combination metric (set weights,
-   * nrofmetrics, submetrics, etc */
-  virtual CombinationMetricType * GetCombinationMetric(void) const
+   * nrofmetrics, submetrics, etc.
+   */
+  virtual CombinationMetricType * GetCombinationMetric( void ) const
   {
     return this->m_CombinationMetric.GetPointer();
   }
@@ -158,7 +159,8 @@ public:
    * SetFixedImage() just calls SetFixedImage(0).
    * SetFixedImage(0) also calls the Superclass::SetFixedImage(). This 
    * is defined by the itkSimpleSetMacro.
-   * GetFixedImage() just returns GetFixedImage(0)==Superclass::m_FixedImage,  */
+   * GetFixedImage() just returns GetFixedImage(0)==Superclass::m_FixedImage.
+   */
 
   /** Set/Get the Fixed image. */
   virtual void SetFixedImage( const FixedImageType * _arg, unsigned int pos );
@@ -215,13 +217,15 @@ public:
   itkGetNumberOfMacro( MovingImagePyramid );
 
   /** Method to return the latest modified time of this object or
-   * any of its cached ivars */
-  unsigned long GetMTime() const;  
+   * any of its cached ivars.
+   */
+  unsigned long GetMTime( void ) const;  
 
   /** Get the last transformation parameters visited by 
    * the optimizer. Return the member variable declared in this class, 
-   * and not that of the superclass (which is declared private) */
-  virtual const ParametersType & GetLastTransformParameters(void) const
+   * and not that of the superclass (which is declared private).
+   */
+  virtual const ParametersType & GetLastTransformParameters( void ) const
   {
     return this->m_LastTransformParameters;
   }
@@ -229,40 +233,45 @@ public:
 protected:
   MultiMetricMultiResolutionImageRegistrationMethod();
   virtual ~MultiMetricMultiResolutionImageRegistrationMethod() {};
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  void PrintSelf( std::ostream& os, Indent indent ) const;
 
   typedef std::vector<FixedImageRegionType>  FixedImageRegionPyramidType;
   
   /** Method invoked by the pipeline in order to trigger the computation of 
-   * the registration. */
-  virtual void GenerateData();
+   * the registration.
+   */
+  virtual void GenerateData( void );
 
   /** Initialize by setting the interconnects between the components.
    * This method is executed at every level of the pyramid with the
-   * values corresponding to this resolution */
-  virtual void Initialize() throw (ExceptionObject);
+   * values corresponding to this resolution.
+   */
+  virtual void Initialize( void ) throw (ExceptionObject);
 
   /** Compute the size of the fixed region for each level of the pyramid.
    * Actually we would like to override PreparePyramids, but this function
-   * is not virtual... */
+   * is not virtual...
+   */
   virtual void PrepareAllPyramids( void );
 
   /** Function called by PrepareAllPyramids, which checks if the user input
-   * regarding the image pyramids is ok */
-  virtual void CheckPyramids(void) throw (ExceptionObject);
+   * regarding the image pyramids is ok.
+   */
+  virtual void CheckPyramids( void ) throw (ExceptionObject);
 
   /** Function called by Initialize, which checks if the user input
-   * is ok. Called by Initialize() */
-  virtual void CheckOnInitialize(void) throw (ExceptionObject);
+   * is ok. Called by Initialize().
+   */
+  virtual void CheckOnInitialize( void ) throw (ExceptionObject);
 
   /** Variables already defined in the superclass, but as private...  */
   bool m_Stop;
   ParametersType m_LastTransformParameters;
 
-  /** A shortcut to m_Metric of type CombinationMetricPointer */
+  /** A shortcut to m_Metric of type CombinationMetricPointer. */
   CombinationMetricPointer m_CombinationMetric;
 
-  /** Containers for the pointers supplied by the user */
+  /** Containers for the pointers supplied by the user. */
   std::vector<FixedImageConstPointer>       m_FixedImages;
   std::vector<MovingImageConstPointer>      m_MovingImages;
   std::vector<FixedImageRegionType>         m_FixedImageRegions;
@@ -270,13 +279,12 @@ protected:
   std::vector<MovingImagePyramidPointer>    m_MovingImagePyramids;
   std::vector<InterpolatorPointer>          m_Interpolators;
 
-  /** This vector is filled by the PrepareAllPyramids function */
+  /** This vector is filled by the PrepareAllPyramids function. */
   std::vector<FixedImageRegionPyramidType>  m_FixedImageRegionPyramids;
 
-  /** Dummy image region */
+  /** Dummy image region. */
   FixedImageRegionType m_NullFixedImageRegion;
-  
-     
+       
 private:
   MultiMetricMultiResolutionImageRegistrationMethod(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
@@ -295,6 +303,4 @@ private:
 #endif
 
 #endif
-
-
 
