@@ -100,7 +100,7 @@ namespace elastix
      * Override this function not directly, but with the 
      * elxClassNameMacro("name").
      */
-    virtual const char * elxGetClassName(void)
+    virtual const char * elxGetClassName( void ) const
     {
       return "BaseComponent";
     }

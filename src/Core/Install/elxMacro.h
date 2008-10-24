@@ -263,8 +263,8 @@ extern "C" int _classname##InstallComponent( \
  * ComponentDatabase, using "elxInstallMacro".
  */
 #define elxClassNameMacro(_name) \
-static const char * elxGetClassNameStatic(void) {return _name ;} \
-virtual const char * elxGetClassName(void) {return _name ;}
+static const char * elxGetClassNameStatic( void ) { return _name ; } \
+virtual const char * elxGetClassName( void ) const { return _name ; }
 
 
 /**
