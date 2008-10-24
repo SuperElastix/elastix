@@ -64,6 +64,11 @@ using namespace itk;
     this->m_UseMovingSegmentation = false;
     this->m_UseFixedSegmentation = false;
 
+    /** Make sure that the TransformBase::WriteToFile() does
+     * not write the transformParameters in the file.
+     */
+    this->SetReadWriteTransformParameters( false );
+
   } // end Constructor
   
 
@@ -376,7 +381,7 @@ using namespace itk;
     this->m_Diffusion->SetGrayValueImage( this->m_GrayValueImage1 );
     this->m_Diffusion->SetInput( this->m_DeformationField );
 
-  } // end BeforeRegistration
+  } // end BeforeRegistration()
 
 
   /**
@@ -415,7 +420,7 @@ using namespace itk;
       /** Otherwise, nothing is done with the BSpline-Grid. */
     } 
     
-  } // end BeforeEachResolution
+  } // end BeforeEachResolution()
   
 
   /**
@@ -523,7 +528,7 @@ using namespace itk;
       this->DiffuseDeformationField();
     }
 
-  } // end AfterEachIteration
+  } // end AfterEachIteration()
 
   
   /**
@@ -559,7 +564,7 @@ using namespace itk;
     this->m_DeformationField = 0;
     this->m_DiffusedField = 0;
 
-  } // end AfterRegistration
+  } // end AfterRegistration()
 
 
   /**
@@ -650,7 +655,7 @@ using namespace itk;
     this->m_Registration->GetAsITKBaseType()
       ->SetInitialTransformParametersOfNextLevel( initialParameters );
     
-  } // end SetInitialGrid
+  } // end SetInitialGrid()
   
   
   /**
@@ -661,7 +666,7 @@ using namespace itk;
 
   template <class TElastix>
     void BSplineTransformWithDiffusion<TElastix>
-    ::IncreaseScale(void)
+    ::IncreaseScale( void )
   {
     /** Typedefs. */
     typedef itk::ResampleImageFilter<ImageType, ImageType>
@@ -821,7 +826,7 @@ using namespace itk;
     this->m_Registration->GetAsITKBaseType()->
       SetInitialTransformParametersOfNextLevel( parameters_out );
   
-  }  // end IncreaseScale
+  }  // end IncreaseScale()
   
 
   /**
@@ -965,7 +970,7 @@ using namespace itk;
     this->SetTransformParametersFileName(
       this->GetConfiguration()->GetCommandLineArgument( "-tp" ) );
     
-  } // end ReadFromFile
+  } // end ReadFromFile()
 
 
   /**
@@ -977,13 +982,8 @@ using namespace itk;
 
   template <class TElastix>
     void BSplineTransformWithDiffusion<TElastix>
-    ::WriteToFile( const ParametersType & param )
+    ::WriteToFile( const ParametersType & param ) const
   {
-    /** Make sure that the Transformbase::WriteToFile() does
-     * not write the transformParameters in the file.
-     */
-    this->SetReadWriteTransformParameters( false );
-
     /** Call the WriteToFile from the TransformBase.*/
     this->Superclass2::WriteToFile( param );
 
@@ -1079,7 +1079,7 @@ using namespace itk;
     xout["transpar"] << std::setprecision(
       this->m_Elastix->GetDefaultOutputPrecision() );
     
-  } // end WriteToFile
+  } // end WriteToFile()
 
 
   /**

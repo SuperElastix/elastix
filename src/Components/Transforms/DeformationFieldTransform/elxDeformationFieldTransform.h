@@ -129,9 +129,10 @@ using namespace itk;
     typedef typename Superclass2::CombinationTransformType  CombinationTransformType;
   
     /** Function to read transform-parameters from a file. */
-    virtual void ReadFromFile(void);
+    virtual void ReadFromFile( void );
+
     /** Function to write transform-parameters to a file. */
-    virtual void WriteToFile( const ParametersType & param );
+    virtual void WriteToFile( const ParametersType & param ) const;
 
   protected:
 

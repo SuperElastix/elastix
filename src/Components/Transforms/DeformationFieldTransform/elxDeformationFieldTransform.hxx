@@ -42,9 +42,13 @@ using namespace itk;
     this->SetCurrentTransform(
       this->m_DeformationFieldInterpolatingTransform );
 
+    /** Make sure that the TransformBase::WriteToFile() does
+     * not read the transformParameters in the file.
+     */
+    this->SetReadWriteTransformParameters( false );
+
   } // end Constructor
   
-
   
   /**
    * ************************* ReadFromFile ************************
@@ -52,13 +56,9 @@ using namespace itk;
 
   template <class TElastix>
   void DeformationFieldTransform<TElastix>::
-    ReadFromFile(void)
+    ReadFromFile( void )
   {
     // \todo Test this ReadFromFile function.
-
-    /** Make sure that the Transformbase::WriteToFile() does
-     * not read the transformParameters in the file. */
-    this->SetReadWriteTransformParameters( false );
     
     /** Call the ReadFromFile from the TransformBase. */
     this->Superclass2::ReadFromFile();
@@ -129,7 +129,7 @@ using namespace itk;
     this->m_DeformationFieldInterpolatingTransform->
       SetDeformationFieldInterpolator( interpolator );
     
-  } // end ReadFromFile
+  } // end ReadFromFile()
 
 
   /**
@@ -140,14 +140,10 @@ using namespace itk;
    */
 
   template <class TElastix>
-    void DeformationFieldTransform<TElastix>::
-    WriteToFile( const ParametersType & param )
+    void DeformationFieldTransform<TElastix>
+      ::WriteToFile( const ParametersType & param ) const
   {
     // \todo Finish and Test this WriteToFile function.
-
-    /** Make sure that the Transformbase::WriteToFile() does
-     * not write the transformParameters in the file. */
-    this->SetReadWriteTransformParameters( false );
 
     /** Call the WriteToFile from the TransformBase. */
     this->Superclass2::WriteToFile( param );
@@ -213,7 +209,7 @@ using namespace itk;
       xl::xout["error"] << excp << std::endl;
     }
 
-  } // end WriteToFile
+  } // end WriteToFile()
 
   
 } // end namespace elastix

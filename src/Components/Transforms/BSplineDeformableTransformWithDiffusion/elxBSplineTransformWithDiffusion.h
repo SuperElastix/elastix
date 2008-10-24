@@ -313,21 +313,22 @@ using namespace itk;
     /** Execute stuff after registration:
      * \li Destroy things that are not needed anymore in order to free memory.
      */
-    virtual void AfterRegistration(void);
+    virtual void AfterRegistration( void );
 
     /** Set the initial B-spline grid. */
     virtual void SetInitialGrid( bool upsampleGridOption );
 
     /** Upsample the B-spline grid. */
-    virtual void IncreaseScale(void);
+    virtual void IncreaseScale( void );
     
     /** Function to read transform-parameters from a file. */
-    virtual void ReadFromFile(void);
+    virtual void ReadFromFile( void );
+
     /** Function to write transform-parameters to a file. */
-    virtual void WriteToFile( const ParametersType & param );
+    virtual void WriteToFile( const ParametersType & param ) const;
     
     /** Diffuse the deformation field. */
-    void DiffuseDeformationField(void);
+    void DiffuseDeformationField( void );
 
     /** Method to transform a point.
      * This method just calls the implementation from the 
