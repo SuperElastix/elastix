@@ -62,7 +62,7 @@
   { \
     if (pos == 0) \
     { \
-    this->Superclass::Set##_name ( _arg ); \
+      this->Superclass::Set##_name ( _arg ); \
     } \
     ImageMetricType * testPtr = dynamic_cast<ImageMetricType *>( this->GetMetric(pos) ); \
     if ( testPtr ) \
@@ -152,7 +152,15 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
     os << indent << "Metric " << i << ": "
       << this->m_Metrics[ i ].GetPointer() << ", "
       << this->m_MetricWeights[ i ] << ", "
-      << this->m_MetricValues[ i ] << std::endl;
+      << this->m_MetricValues[ i ] << ", ";
+    if ( this->m_UseMetric[ i ] )
+    {
+      os << "used" << std::endl;
+    }
+    else
+    {
+      os << "not used" << std::endl;
+    }
   }
 
 } // end PrintSelf()
@@ -171,7 +179,8 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
   {
     this->Superclass::SetFixedImageRegion( _arg );
   }
-  ImageMetricType * testPtr = dynamic_cast<ImageMetricType *>( this->GetMetric(pos) );
+  ImageMetricType * testPtr = dynamic_cast<ImageMetricType *>(
+    this->GetMetric( pos ) );
   if ( testPtr )
   {
     testPtr->SetFixedImageRegion( _arg );
@@ -208,7 +217,7 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
 ::GetFixedImageRegion( unsigned int pos ) const
 {
   const ImageMetricType * testPtr
-    = dynamic_cast<const ImageMetricType *>( this->GetMetric(pos) ); 
+    = dynamic_cast<const ImageMetricType *>( this->GetMetric( pos ) ); 
   if ( testPtr )
   {
     return testPtr->GetFixedImageRegion();
@@ -235,6 +244,7 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
     this->m_NumberOfMetrics = count;
     this->m_Metrics.resize( count );
     this->m_MetricWeights.resize( count );
+    this->m_UseMetric.resize( count );
     this->m_MetricValues.resize( count );
     this->m_MetricDerivatives.resize( count );
     this->Modified();
@@ -330,6 +340,71 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
   }
 
 } // end GetMetricWeight()
+
+
+/**
+ * ********************* SetUseMetric ****************************
+ */
+
+template <class TFixedImage, class TMovingImage>
+void
+CombinationImageToImageMetric<TFixedImage,TMovingImage>
+::SetUseMetric( const bool use, const unsigned int pos )
+{
+  if ( pos >= this->GetNumberOfMetrics() )
+  {
+    this->SetNumberOfMetrics( pos + 1 );
+  }
+
+  if ( use != this->m_UseMetric[ pos ] )
+  {
+    this->m_UseMetric[ pos ] = use;
+    this->Modified();
+  }
+
+} // end SetUseMetric()
+
+
+/**
+ * ********************* SetUseAllMetrics ****************************
+ */
+
+template <class TFixedImage, class TMovingImage>
+void
+CombinationImageToImageMetric<TFixedImage,TMovingImage>
+::SetUseAllMetrics( void )
+{
+  for ( unsigned int pos = 0; pos < this->GetNumberOfMetrics(); ++pos )
+  {
+    if ( !this->m_UseMetric[ pos ] )
+    {
+      this->m_UseMetric[ pos ] = true;
+      this->Modified();
+    }
+  }
+
+} // end SetUseAllMetrics()
+
+
+/**
+ * ********************* GetUseMetric ****************************
+ */
+
+template <class TFixedImage, class TMovingImage>
+bool
+CombinationImageToImageMetric<TFixedImage,TMovingImage>
+::GetUseMetric( unsigned int pos ) const
+{
+  if ( pos >= this->GetNumberOfMetrics() )
+  {
+    return false;
+  }
+  else
+  {
+    return this->m_UseMetric[ pos ];
+  }
+
+} // end GetUseMetric()
 
 
 /**
@@ -455,12 +530,18 @@ typename CombinationImageToImageMetric<TFixedImage,TMovingImage>::MeasureType
 CombinationImageToImageMetric<TFixedImage,TMovingImage>
 ::GetValue( const ParametersType & parameters ) const
 {
-  /** Add all metric values. */
+  /** Initialise. */
   MeasureType measure = NumericTraits< MeasureType >::Zero;
+
+  /** Add all metric values. */
   for ( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
   {
     MeasureType tmpValue = this->m_Metrics[ i ]->GetValue( parameters );
-    measure += this->m_MetricWeights[ i ] * tmpValue;
+
+    if ( this->m_UseMetric[ i ] )
+    {
+      measure += this->m_MetricWeights[ i ] * tmpValue;
+    }
 
     /** Store for later, for interested users. */
     this->m_MetricValues[ i ] = tmpValue;
@@ -482,15 +563,21 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
 ::GetDerivative( const ParametersType & parameters,
   DerivativeType & derivative ) const
 {
-  /** Add all metric derivatives. */
+  /** Initialise. */
   DerivativeType tmpDerivative = DerivativeType( this->GetNumberOfParameters() );
   derivative = DerivativeType( this->GetNumberOfParameters() );
   derivative.Fill( NumericTraits< MeasureType >::Zero );
+
+  /** Add all metric derivatives. */
   for ( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
   {
     tmpDerivative.Fill( NumericTraits< MeasureType >::Zero );
     this->m_Metrics[ i ]->GetDerivative( parameters, tmpDerivative );
-    derivative += this->m_MetricWeights[ i ] * tmpDerivative;
+
+    if ( this->m_UseMetric[ i ] )
+    {
+      derivative += this->m_MetricWeights[ i ] * tmpDerivative;
+    }
 
     /** Store for later, for interested users. */
     this->m_MetricDerivatives[ i ] = tmpDerivative;
@@ -506,14 +593,16 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
 template <class TFixedImage, class TMovingImage>
 void
 CombinationImageToImageMetric<TFixedImage,TMovingImage>
-::GetValueAndDerivative( const ParametersType & parameters,
-  MeasureType & value, DerivativeType & derivative ) const
+::GetValueAndDerivative(
+  const ParametersType & parameters,
+  MeasureType & value,
+  DerivativeType & derivative ) const
 {
   /** Initialise. */
   MeasureType tmpValue = NumericTraits< MeasureType >::Zero;
-  DerivativeType tmpDerivative = DerivativeType( this->GetNumberOfParameters() );
-
   value = NumericTraits< MeasureType >::Zero;
+
+  DerivativeType tmpDerivative = DerivativeType( this->GetNumberOfParameters() );
   derivative = DerivativeType( this->GetNumberOfParameters() );
   derivative.Fill( NumericTraits< MeasureType >::Zero );
 
@@ -524,8 +613,11 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
     tmpDerivative.Fill( NumericTraits< MeasureType >::Zero );
     this->m_Metrics[ i ]->GetValueAndDerivative( parameters, tmpValue, tmpDerivative );
 
-    value += this->m_MetricWeights[ i ] * tmpValue;
-    derivative += this->m_MetricWeights[ i ] * tmpDerivative;
+    if ( this->m_UseMetric[ i ] )
+    {
+      value += this->m_MetricWeights[ i ] * tmpValue;
+      derivative += this->m_MetricWeights[ i ] * tmpDerivative;
+    }
 
     /** Store for later, for interested users. */
     this->m_MetricValues[ i ] = tmpValue;

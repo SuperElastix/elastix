@@ -160,6 +160,19 @@ public:
   /** Get the weight for metric i. */
   double GetMetricWeight( unsigned int pos ) const;
 
+  /** Select which metrics are used.
+   * This is useful in case you want to compute a certain measure, but not
+   * actually use it during the registration.
+   * By default all metrics that are set, are also used.
+   */
+  void SetUseMetric( const bool use, const unsigned int pos );
+
+  /** Use all metrics. */
+  void SetUseAllMetrics( void );
+
+  /** Get if this metric is used. */
+  bool GetUseMetric( const unsigned int pos ) const;
+
   /** Get the last computed value for metric i. */
   MeasureType GetMetricValue( unsigned int pos ) const;
 
@@ -336,6 +349,7 @@ protected:
   unsigned int                                      m_NumberOfMetrics;
   std::vector< SingleValuedCostFunctionPointer >    m_Metrics;
   std::vector< double >                             m_MetricWeights;
+  std::vector< bool >                               m_UseMetric;
   mutable std::vector< MeasureType >                m_MetricValues;
   mutable std::vector< DerivativeType >             m_MetricDerivatives;
     
