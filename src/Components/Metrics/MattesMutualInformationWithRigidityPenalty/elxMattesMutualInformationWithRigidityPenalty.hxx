@@ -201,7 +201,8 @@ using namespace itk;
     /** Stop and print the timer. */
     timer->StopTimer();
     elxout << "Initialization of MattesMutualInformationWithRigidityPenalty metric took: "
-      << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
+      << static_cast<long>( timer->GetElapsedClockSec() * 1000 )
+      << " ms." << std::endl;
 
   } // end Initialize()
 
@@ -274,6 +275,13 @@ using namespace itk;
     this->m_MattesMutualInformationMetric
       ->SetMovingKernelBSplineOrder( movingKernelBSplineOrder );
 
+    /** Set whether a low memory consumption should be used. */
+    bool useFastAndLowMemoryVersion = true;
+    this->GetConfiguration()->ReadParameter( useFastAndLowMemoryVersion,
+      "UseFastAndLowMemoryVersion", this->GetComponentLabel(), level, 0 );
+    this->m_MattesMutualInformationMetric
+      ->SetUseExplicitPDFDerivatives( !useFastAndLowMemoryVersion );
+
     /**
      *  Set options for the rigidity penalty term metric.
      */
@@ -294,37 +302,43 @@ using namespace itk;
     bool useLinearityCondition = true;
     this->GetConfiguration()->ReadParameter( useLinearityCondition,
       "UseLinearityCondition", this->GetComponentLabel(), level, 0 );
-    this->m_RigidityPenaltyTermMetric->SetUseLinearityCondition( useLinearityCondition );
+    this->m_RigidityPenaltyTermMetric->SetUseLinearityCondition(
+      useLinearityCondition );
 
     /** Get and set the usage of the orthonormality condition part. */
     bool useOrthonormalityCondition = true;
     this->GetConfiguration()->ReadParameter( useOrthonormalityCondition,
       "UseOrthonormalityCondition", this->GetComponentLabel(), level, 0 );
-    this->m_RigidityPenaltyTermMetric->SetUseOrthonormalityCondition( useOrthonormalityCondition );
+    this->m_RigidityPenaltyTermMetric->SetUseOrthonormalityCondition(
+      useOrthonormalityCondition );
 
     /** Set the usage of the properness condition part. */
     bool usePropernessCondition = true;
     this->GetConfiguration()->ReadParameter( usePropernessCondition,
       "UsePropernessCondition", this->GetComponentLabel(), level, 0 );
-    this->m_RigidityPenaltyTermMetric->SetUsePropernessCondition( usePropernessCondition );
+    this->m_RigidityPenaltyTermMetric->SetUsePropernessCondition(
+      usePropernessCondition );
 
     /** Set the calculation of the linearity condition part. */
     bool calculateLinearityCondition = true;
     this->GetConfiguration()->ReadParameter( calculateLinearityCondition,
       "CalculateLinearityCondition", this->GetComponentLabel(), level, 0 );
-    this->m_RigidityPenaltyTermMetric->SetCalculateLinearityCondition( calculateLinearityCondition );
+    this->m_RigidityPenaltyTermMetric->SetCalculateLinearityCondition(
+      calculateLinearityCondition );
 
     /** Set the calculation of the orthonormality condition part. */
     bool calculateOrthonormalityCondition = true;
     this->GetConfiguration()->ReadParameter( calculateOrthonormalityCondition,
       "CalculateOrthonormalityCondition", this->GetComponentLabel(), level, 0 );
-    this->m_RigidityPenaltyTermMetric->SetCalculateOrthonormalityCondition( calculateOrthonormalityCondition );
+    this->m_RigidityPenaltyTermMetric->SetCalculateOrthonormalityCondition(
+      calculateOrthonormalityCondition );
 
     /** Set the calculation of the properness condition part. */
     bool calculatePropernessCondition = true;
     this->GetConfiguration()->ReadParameter( calculatePropernessCondition,
       "CalculatePropernessCondition", this->GetComponentLabel(), level, 0 );
-    this->m_RigidityPenaltyTermMetric->SetCalculatePropernessCondition( calculatePropernessCondition );
+    this->m_RigidityPenaltyTermMetric->SetCalculatePropernessCondition(
+      calculatePropernessCondition );
 
     /** Get and set the RigidityPenaltyWeight. */
     double rigidityPenaltyWeight = 1.0;
@@ -336,19 +350,22 @@ using namespace itk;
     double linearityConditionWeight = 1.0;
     this->m_Configuration->ReadParameter( linearityConditionWeight,
       "LinearityConditionWeight", this->GetComponentLabel(), level, 0 );
-    this->m_RigidityPenaltyTermMetric->SetLinearityConditionWeight( linearityConditionWeight );
+    this->m_RigidityPenaltyTermMetric->SetLinearityConditionWeight(
+      linearityConditionWeight );
 
     /** Set the orthonormalityConditionWeight of this level. */
     double orthonormalityConditionWeight = 1.0;
     this->m_Configuration->ReadParameter( orthonormalityConditionWeight,
       "OrthonormalityConditionWeight", this->GetComponentLabel(), level, 0 );
-    this->m_RigidityPenaltyTermMetric->SetOrthonormalityConditionWeight( orthonormalityConditionWeight );
+    this->m_RigidityPenaltyTermMetric->SetOrthonormalityConditionWeight(
+      orthonormalityConditionWeight );
 
     /** Set the propernessConditionWeight of this level. */
     double propernessConditionWeight = 1.0;
     this->m_Configuration->ReadParameter( propernessConditionWeight,
       "PropernessConditionWeight", this->GetComponentLabel(), level, 0 );
-    this->m_RigidityPenaltyTermMetric->SetPropernessConditionWeight( propernessConditionWeight );
+    this->m_RigidityPenaltyTermMetric->SetPropernessConditionWeight(
+      propernessConditionWeight );
     
   } // end BeforeEachResolution()
   

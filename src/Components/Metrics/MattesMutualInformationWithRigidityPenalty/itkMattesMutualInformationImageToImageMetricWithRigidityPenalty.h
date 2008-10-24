@@ -19,7 +19,6 @@
 #include "itkCombinedImageToImageMetric.h"
 
 /** Include the two metrics we want to combine. */
-//#include "../MattesMutualInformation/itkMattesMutualInformationImageToImageMetric2.h"
 #include "../AdvancedMattesMutualInformation/itkParzenWindowMutualInformationImageToImageMetric.h"
 #include "itkRigidityPenaltyTermMetric.h"
 
