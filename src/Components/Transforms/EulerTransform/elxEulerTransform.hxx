@@ -108,7 +108,7 @@ namespace elastix
      */
     this->Superclass2::ReadFromFile();
 
-  } // end ReadFromFile
+  } // end ReadFromFile()
 
 
   /**
@@ -117,7 +117,7 @@ namespace elastix
   
   template <class TElastix>
     void EulerTransformElastix<TElastix>
-    ::WriteToFile( const ParametersType & param )
+    ::WriteToFile( const ParametersType & param ) const
   {
     /** Call the WriteToFile from the TransformBase. */
     this->Superclass2::WriteToFile( param );
@@ -151,7 +151,7 @@ namespace elastix
       xout["transpar"] << "(ComputeZYX \"" << computeZYX << "\")" << std::endl;
     }
   
-  } // end WriteToFile
+  } // end WriteToFile()
 
   
   /**
@@ -426,7 +426,7 @@ namespace elastix
 
   template <class TElastix>
   bool EulerTransformElastix<TElastix>::
-    ReadCenterOfRotationIndex(InputPointType & rotationPoint)
+    ReadCenterOfRotationIndex( InputPointType & rotationPoint ) const
   {
 
     /** Try to read CenterOfRotationIndex from the transform parameter
@@ -511,16 +511,16 @@ namespace elastix
     /** Succesfully read centerOfRotation as Index */
     return true;
 
-  } //end ReadCenterOfRotationIndex
+  } //end ReadCenterOfRotationIndex()
 
 
-    /**
+  /**
    * ******************** ReadCenterOfRotationPoint *********************
    */
 
   template <class TElastix>
   bool EulerTransformElastix<TElastix>::
-    ReadCenterOfRotationPoint(InputPointType & rotationPoint)
+    ReadCenterOfRotationPoint( InputPointType & rotationPoint ) const
   {
 
     /** Try to read CenterOfRotationPoint from the transform parameter
@@ -551,7 +551,7 @@ namespace elastix
     /** Succesfully read centerOfRotation as Point */
     return true;
 
-  } //end ReadCenterOfRotationPoint
+  } //end ReadCenterOfRotationPoint()
 
 
 
