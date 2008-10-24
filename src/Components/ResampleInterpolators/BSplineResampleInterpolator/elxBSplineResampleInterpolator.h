@@ -110,12 +110,13 @@ namespace elastix
     /** Execute stuff before the actual registration:
     * \li Set the spline order.
     */
-    virtual void BeforeRegistration(void);
+    virtual void BeforeRegistration( void );
 
     /** Function to read transform-parameters from a file. */
-    virtual void ReadFromFile(void);
+    virtual void ReadFromFile( void );
+
     /** Function to write transform-parameters to a file. */
-    virtual void WriteToFile(void);
+    virtual void WriteToFile( void ) const;
 
   protected:
 

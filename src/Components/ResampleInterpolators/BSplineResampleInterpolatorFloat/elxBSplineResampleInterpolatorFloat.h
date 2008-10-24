@@ -115,7 +115,7 @@ namespace elastix
     virtual void ReadFromFile( void );
 
     /** Function to write transform-parameters to a file. */
-    virtual void WriteToFile( void );
+    virtual void WriteToFile( void ) const;
 
   protected:
 
