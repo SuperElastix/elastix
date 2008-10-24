@@ -413,8 +413,9 @@ namespace elastix
    */
 
   template <class TElastix>
-    void ResamplerBase<TElastix>
-    ::WriteToFile( void )
+    void
+      ResamplerBase<TElastix>
+    ::WriteToFile( void ) const
   {
     /** Write Resampler specific things. */
     xl::xout["transpar"] << std::endl << "// Resampler specific" << std::endl;

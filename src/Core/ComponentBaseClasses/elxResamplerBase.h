@@ -112,21 +112,21 @@ namespace elastix
       OutputImageType::ImageDimension );
 
     /** Cast to ITKBaseType. */
-    virtual ITKBaseType * GetAsITKBaseType(void)
+    virtual ITKBaseType * GetAsITKBaseType( void )
     {
-      return dynamic_cast<ITKBaseType *>(this);
+      return dynamic_cast<ITKBaseType *>( this );
     }
 
     /** Cast to ITKBaseType, to use in const functions. */
-    virtual const ITKBaseType * GetAsITKBaseType(void) const
+    virtual const ITKBaseType * GetAsITKBaseType( void ) const
     {
-      return dynamic_cast<const ITKBaseType *>(this);
+      return dynamic_cast<const ITKBaseType *>( this );
     }
 
     /** Execute stuff before the actual transformation:
      * \li nothing here
      */
-    virtual int BeforeAllTransformix(void){ return 0;};
+    virtual int BeforeAllTransformix( void ){ return 0;};
 
     /** Execute stuff before the actual registration:
      * \li Set all components into the resampler, such as the transform
@@ -134,23 +134,23 @@ namespace elastix
      * \li Set output image information, such as size, spacing, etc.
      * \li Set the default pixel value.
      */
-    virtual void BeforeRegistrationBase(void);
+    virtual void BeforeRegistrationBase( void );
 
     /** Execute stuff after the registration:
      * \li Write the resulting output image.
      */
-    virtual void AfterEachResolutionBase(void);
+    virtual void AfterEachResolutionBase( void );
 
     /** Execute stuff after the registration:
      * \li Write the resulting output image.
      */
-    virtual void AfterRegistrationBase(void);
+    virtual void AfterRegistrationBase( void );
 
     /** Function to read transform-parameters from a file. */
-    virtual void ReadFromFile(void);
+    virtual void ReadFromFile( void );
 
     /** Function to write transform-parameters to a file. */
-    virtual void WriteToFile(void);
+    virtual void WriteToFile( void ) const;
 
     /** Function to write the result output image to a file. */
     virtual void WriteResultImage( const char * filename );

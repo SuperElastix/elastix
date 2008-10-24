@@ -28,7 +28,7 @@ namespace elastix
 
   template <class TElastix>
     void ResampleInterpolatorBase<TElastix>
-    ::ReadFromFile(void)
+    ::ReadFromFile( void )
   {
     // nothing, but must be here
 
@@ -40,8 +40,9 @@ namespace elastix
    */
 
   template <class TElastix>
-    void ResampleInterpolatorBase<TElastix>
-    ::WriteToFile(void)
+    void
+      ResampleInterpolatorBase<TElastix>
+    ::WriteToFile( void ) const
   {
     /** Write ResampleInterpolator specific things. */
     xl::xout["transpar"] << std::endl << "// ResampleInterpolator specific" << std::endl;
@@ -50,7 +51,7 @@ namespace elastix
     xl::xout["transpar"] << "(ResampleInterpolator \""
       << this->elxGetClassName() << "\")" << std::endl;   
 
-  } // end WriteToFile
+  } // end WriteToFile()
 
 
 } // end namespace elastix
