@@ -107,7 +107,7 @@ namespace elastix
   
   template <class TElastix>
     void SimilarityTransformElastix<TElastix>
-    ::WriteToFile( const ParametersType & param )
+    ::WriteToFile( const ParametersType & param ) const
   {
     /** Call the WriteToFile from the TransformBase. */
     this->Superclass2::WriteToFile( param );
@@ -345,7 +345,7 @@ namespace elastix
 
   template <class TElastix>
   bool SimilarityTransformElastix<TElastix>::
-    ReadCenterOfRotationIndex( InputPointType & rotationPoint )
+    ReadCenterOfRotationIndex( InputPointType & rotationPoint ) const
   {
     /** Try to read CenterOfRotationIndex from the transform parameter
      * file, which is the rotationPoint, expressed in index-values.
@@ -438,7 +438,7 @@ namespace elastix
 
   template <class TElastix>
   bool SimilarityTransformElastix<TElastix>::
-    ReadCenterOfRotationPoint(InputPointType & rotationPoint)
+    ReadCenterOfRotationPoint( InputPointType & rotationPoint ) const
   {
 
     /** Try to read CenterOfRotationPoint from the transform parameter
