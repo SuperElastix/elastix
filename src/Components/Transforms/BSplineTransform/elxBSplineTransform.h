@@ -235,9 +235,9 @@ using namespace itk;
     virtual void ReadFromFile( void );
 
     /** Function to write transform-parameters to a file. */
-    virtual void WriteToFile( const ParametersType & param );
+    virtual void WriteToFile( const ParametersType & param ) const;
 
-    /** Set the scales of the edge bspline coefficients to zero. */
+    /** Set the scales of the edge B-spline coefficients to zero. */
     virtual void SetOptimizerScales( unsigned int edgeWidth );
     
   protected:
@@ -253,7 +253,6 @@ using namespace itk;
 
     /** Method to determine a schedule based on the UpsampleGridOption */
     virtual void ComputeGridSchedule_Deprecated( GridScheduleType & schedule );
-
 
   private:
 

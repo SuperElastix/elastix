@@ -466,7 +466,7 @@ using namespace itk;
 
   template <class TElastix>
     void BSplineTransform<TElastix>::
-    WriteToFile( const ParametersType & param )
+    WriteToFile( const ParametersType & param ) const
   {
     /** Call the WriteToFile from the TransformBase. */
     this->Superclass2::WriteToFile( param );
