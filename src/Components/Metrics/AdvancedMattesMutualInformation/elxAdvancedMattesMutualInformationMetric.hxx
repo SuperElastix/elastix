@@ -113,10 +113,10 @@ using namespace itk;
     this->SetMovingKernelBSplineOrder( movingKernelBSplineOrder );
 
     /** Set whether a low memory consumption should be used. */
-    bool useExplicitPDFDerivatives = true;
-    this->GetConfiguration()->ReadParameter( useExplicitPDFDerivatives,
+    bool useFastAndLowMemoryVersion = true;
+    this->GetConfiguration()->ReadParameter( useFastAndLowMemoryVersion,
       "UseFastAndLowMemoryVersion", this->GetComponentLabel(), level, 0 );
-    this->SetUseExplicitPDFDerivatives( useExplicitPDFDerivatives );
+    this->SetUseExplicitPDFDerivatives( !useFastAndLowMemoryVersion );
 
     /** Set whether a finite difference derivative should be used. */
     bool useFiniteDifferenceDerivative = false;
