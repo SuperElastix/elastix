@@ -25,7 +25,9 @@
 #include "itkLimiterFunctionBase.h"
 #include "itkFixedArray.h"
 
-//#include "itkAdvancedTransform.h"
+#include "itkAdvancedTransform.h"
+#include "itkAdvancedBSplineDeformableTransform.h"
+#include "itkAdvancedBSplineCombinationTransform.h"
 
 
 namespace itk
@@ -137,7 +139,7 @@ public:
     RealType, MovingImageDimension>                       MovingImageLimiterType;
   typedef typename MovingImageLimiterType::OutputType     MovingImageLimiterOutputType;
 
-  /** Advanced transform. *
+  /** Advanced transform. */
   typedef typename TransformType::ScalarType              ScalarType;
   typedef AdvancedTransform<
     ScalarType,
@@ -202,9 +204,12 @@ public:
    * \li Call the superclass' implementation
    * \li Cache the number of transform parameters
    * \li Initialize the image sampler, if used.
-   * \li Check if a bspline interpolator has been set
-   * \li Check if a BSplineTransform or a BSplineCombinationTransform has been set */
-  virtual void Initialize(void) throw ( ExceptionObject );
+   * \li Check if a B-spline interpolator has been set
+   * \li Check if a BSplineTransform or a BSplineCombinationTransform has been set
+   * \li Check if an AdvancedBSplineTransform or an
+   *       AdvancedBSplineCombinationTransform has been set
+   */
+  virtual void Initialize( void ) throw ( ExceptionObject );
 
 protected:
 
@@ -240,14 +245,22 @@ protected:
     CoordinateRepresentationType,
     itkGetStaticConstMacro(FixedImageDimension),
     DeformationSplineOrder>                                     BSplineTransformType;
-  typedef typename 
-    BSplineTransformType::WeightsType                           BSplineTransformWeightsType;
-  typedef typename 
-    BSplineTransformType::ParameterIndexArrayType               BSplineTransformIndexArrayType;
   typedef itk::BSplineCombinationTransform<
     CoordinateRepresentationType,
     itkGetStaticConstMacro(FixedImageDimension),
     DeformationSplineOrder>                                     BSplineCombinationTransformType;
+  typedef AdvancedBSplineDeformableTransform<
+    CoordinateRepresentationType,
+    itkGetStaticConstMacro(FixedImageDimension),
+    DeformationSplineOrder>                                     AdvancedBSplineTransformType;
+  typedef itk::AdvancedBSplineCombinationTransform<
+    CoordinateRepresentationType,
+    itkGetStaticConstMacro(FixedImageDimension),
+    DeformationSplineOrder>                                     AdvancedBSplineCombinationTransformType;
+  typedef typename 
+    BSplineTransformType::WeightsType                           BSplineTransformWeightsType;
+  typedef typename 
+    BSplineTransformType::ParameterIndexArrayType               BSplineTransformIndexArrayType;
   typedef FixedArray< unsigned long, 
     itkGetStaticConstMacro(FixedImageDimension)>                BSplineParametersOffsetType;
   /** Array type for holding parameter indices */
@@ -267,10 +280,14 @@ protected:
   /** Variables used when the transform is a B-spline transform. */
   bool m_TransformIsBSpline;
   bool m_TransformIsBSplineCombination;
+  bool m_TransformIsAdvancedBSpline;
+  bool m_TransformIsAdvancedBSplineCombination;
   typename BSplineTransformType::Pointer            m_BSplineTransform;
+  typename AdvancedBSplineTransformType::Pointer    m_AdvancedBSplineTransform;
+  typename BSplineCombinationTransformType::Pointer m_BSplineCombinationTransform;
+  typename AdvancedBSplineCombinationTransformType::Pointer m_AdvancedBSplineCombinationTransform;
   mutable BSplineTransformWeightsType               m_BSplineTransformWeights;
   mutable BSplineTransformIndexArrayType            m_BSplineTransformIndices;
-  typename BSplineCombinationTransformType::Pointer m_BSplineCombinationTransform;
   BSplineParametersOffsetType                       m_BSplineParametersOffset;
 
   /** The number of BSpline parameters per image dimension. */
