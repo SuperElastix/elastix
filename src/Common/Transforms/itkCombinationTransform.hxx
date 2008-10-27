@@ -68,6 +68,7 @@ namespace itk
 
   } //end GetNumberOfParameters
 
+
   /**
    * ***************** IsLinear **************************
    */
