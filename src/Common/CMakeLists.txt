@@ -21,13 +21,13 @@ SET(CommonFiles
  itkMultiResolutionGaussianSmoothingPyramidImageFilter.txx
  itkMultiResolutionImageRegistrationMethod2.h
  itkMultiResolutionImageRegistrationMethod2.txx
- itkTransformixInputPointFileReader.h
- itkTransformixInputPointFileReader.hxx
  itkNDImageBase.h
  itkNDImageTemplate.h
  itkNDImageTemplate.hxx
  itkScaledSingleValuedNonLinearOptimizer.cxx
  itkScaledSingleValuedNonLinearOptimizer.h
+ itkTransformixInputPointFileReader.h
+ itkTransformixInputPointFileReader.hxx
 )
 
 SET( CostFunctionFiles
@@ -46,30 +46,34 @@ SET( CostFunctionFiles
  CostFunctions/itkParzenWindowHistogramImageToImageMetric.hxx
  CostFunctions/itkScaledSingleValuedCostFunction.cxx
  CostFunctions/itkScaledSingleValuedCostFunction.h
- #CostFunctions/itkTransformPenaltyTerm.h
- #CostFunctions/itkTransformPenaltyTerm.txx
+ CostFunctions/itkTransformPenaltyTerm.h
+ CostFunctions/itkTransformPenaltyTerm.txx
 )
 
 SET( TransformFiles
- #Transforms/itkAdvancedAffineTransform.h
- #Transforms/itkAdvancedAffineTransform.txx
- #Transforms/itkAdvancedBSplineDeformableTransform.h
- #Transforms/itkAdvancedBSplineDeformableTransform.txx
- #Transforms/itkAdvancedMatrixOffsetTransformBase.h
- #Transforms/itkAdvancedMatrixOffsetTransformBase.txx
- #Transforms/itkAdvancedTransform.h
- #Transforms/itkAdvancedTransform.txx
- #Transforms/itkBSplineInterpolationDerivativeWeightFunction.h
- #Transforms/itkBSplineInterpolationDerivativeWeightFunction.txx
- #Transforms/itkBSplineInterpolationSecondOrderDerivativeWeightFunction.h
- #Transforms/itkBSplineInterpolationSecondOrderDerivativeWeightFunction.txx
- #Transforms/itkBSplineInterpolationWeightFunction.h
- #Transforms/itkBSplineInterpolationWeightFunction.txx
- #Transforms/itkBSplineInterpolationWeightFunctionBase.h
- #Transforms/itkBSplineInterpolationWeightFunctionBase.txx
- #Transforms/itkBSplineSecondOrderDerivativeKernelFunction.h
+ Transforms/itkAdvancedAffineTransform.h
+ Transforms/itkAdvancedAffineTransform.txx
+ Transforms/itkAdvancedBSplineCombinationTransform.h
+ Transforms/itkAdvancedBSplineCombinationTransform.hxx
+ Transforms/itkAdvancedBSplineDeformableTransform.h
+ Transforms/itkAdvancedBSplineDeformableTransform.txx
+ Transforms/itkAdvancedCombinationTransform.h
+ Transforms/itkAdvancedCombinationTransform.hxx
+ Transforms/itkAdvancedMatrixOffsetTransformBase.h
+ Transforms/itkAdvancedMatrixOffsetTransformBase.txx
+ Transforms/itkAdvancedTransform.h
+ Transforms/itkAdvancedTransform.txx
  Transforms/itkBSplineCombinationTransform.h
  Transforms/itkBSplineCombinationTransform.hxx
+ Transforms/itkBSplineInterpolationDerivativeWeightFunction.h
+ Transforms/itkBSplineInterpolationDerivativeWeightFunction.txx
+ Transforms/itkBSplineInterpolationSecondOrderDerivativeWeightFunction.h
+ Transforms/itkBSplineInterpolationSecondOrderDerivativeWeightFunction.txx
+ Transforms/itkBSplineInterpolationWeightFunction2.h
+ Transforms/itkBSplineInterpolationWeightFunction2.txx
+ Transforms/itkBSplineInterpolationWeightFunctionBase.h
+ Transforms/itkBSplineInterpolationWeightFunctionBase.txx
+ Transforms/itkBSplineSecondOrderDerivativeKernelFunction.h
  Transforms/itkCombinationTransform.h
  Transforms/itkCombinationTransform.hxx
  Transforms/itkDeformationFieldInterpolatingTransform.h
@@ -104,18 +108,18 @@ SET( ImageSamplersFiles
  ImageSamplers/itkImageGridSampler.txx
  ImageSamplers/itkImageRandomCoordinateSampler.h
  ImageSamplers/itkImageRandomCoordinateSampler.txx
- ImageSamplers/itkMultiInputImageRandomCoordinateSampler.h
- ImageSamplers/itkMultiInputImageRandomCoordinateSampler.txx
  ImageSamplers/itkImageRandomSampler.h
  ImageSamplers/itkImageRandomSampler.txx
+ ImageSamplers/itkImageRandomSamplerBase.h
  ImageSamplers/itkImageRandomSamplerSparseMask.h
  ImageSamplers/itkImageRandomSamplerSparseMask.txx
  ImageSamplers/itkImageSample.h
  ImageSamplers/itkImageSamplerBase.h
  ImageSamplers/itkImageSamplerBase.txx
- ImageSamplers/itkImageRandomSamplerBase.h
  ImageSamplers/itkImageToVectorContainerFilter.h
  ImageSamplers/itkImageToVectorContainerFilter.txx
+ ImageSamplers/itkMultiInputImageRandomCoordinateSampler.h
+ ImageSamplers/itkMultiInputImageRandomCoordinateSampler.txx
  ImageSamplers/itkVectorContainerSource.h
  ImageSamplers/itkVectorContainerSource.txx
  ImageSamplers/itkVectorDataContainer.h
