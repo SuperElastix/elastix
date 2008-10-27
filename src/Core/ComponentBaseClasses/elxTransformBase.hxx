@@ -287,11 +287,11 @@ void TransformBase<TElastix>
    */
   //m_FinalParameters = this->m_Registration->GetAsITKBaseType()->
   //GetLastTransformParameters();
-  m_FinalParameters = this->GetElastix()->GetElxOptimizerBase()
+  this->m_FinalParameters = this->GetElastix()->GetElxOptimizerBase()
     ->GetAsITKBaseType()->GetCurrentPosition();
 
   /** Set the final Parameters for the resampler. */
-  this->GetAsITKBaseType()->SetParameters( m_FinalParameters );
+  this->GetAsITKBaseType()->SetParameters( this->m_FinalParameters );
 
 } // end SetFinalParameters()
 
