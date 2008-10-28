@@ -1269,7 +1269,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   const unsigned long parametersPerDim
     = this->GetNumberOfParametersPerDimension();
   IndexType ind;
-  unsigned long mu = 0;
+  unsigned long mu2 = 0;
 
   /** For all control points in the support region, set which of the
    * indices in the parameter array are non-zero.
@@ -1289,13 +1289,13 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     /** Update the nonZeroJacobianIndices for all directions. */
     for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
-      nonZeroJacobianIndices[ mu + dim * numberOfWeights ]
+      nonZeroJacobianIndices[ mu2 + dim * numberOfWeights ]
         = parameterNumber + dim * parametersPerDim;
     }
 
     /** Increase the iterators. */
     ++it;
-    ++mu;
+    ++mu2;
   }
   
 } // end GetJacobianOfSpatialHessian()

@@ -84,7 +84,9 @@ class ITK_EXPORT AdvancedTransform
 public:
   /** Standard class typedefs. */
   typedef AdvancedTransform           Self;
-  typedef Transform                   Superclass;
+  typedef Transform< TScalarType,
+    NInputDimensions,
+    NOutputDimensions >               Superclass;
   typedef SmartPointer< Self >        Pointer;
   typedef SmartPointer< const Self >  ConstPointer;
   
