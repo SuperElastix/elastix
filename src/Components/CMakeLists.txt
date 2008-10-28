@@ -1,7 +1,7 @@
 #---------------------------------------------------------------------
 # Sub project name
 
-PROJECT(elxComponents)
+PROJECT( elxComponents )
 
 #---------------------------------------------------------------------
 # Set the libraries to be linked.
@@ -10,8 +10,8 @@ PROJECT(elxComponents)
 # when we still used .dll's. I'm not sure if it will still
 # give an error, but as long as linux does not complain
 # about the missing param, just leave it out.
-IF(UNIX)
-  IF (NOT APPLE)
+IF( UNIX )
+  IF ( NOT APPLE )
     SET(elxLinkLibs
       xoutlib
       elxCommon
@@ -21,12 +21,12 @@ IF(UNIX)
       ITKIO
       ITKCommon
       ITKStatistics )
-  ENDIF(NOT APPLE)
-ENDIF(UNIX)
+  ENDIF( NOT APPLE )
+ENDIF( UNIX )
 
 # Interestingly, visual c++ and MAC-GCC do need param
-IF(WIN32 OR APPLE)
-  SET(elxLinkLibs
+IF( WIN32 OR APPLE )
+  SET( elxLinkLibs
     param
     xoutlib
     elxCommon
@@ -36,7 +36,7 @@ IF(WIN32 OR APPLE)
     ITKIO
     ITKCommon
     ITKStatistics )
-ENDIF(WIN32 OR APPLE)
+ENDIF( WIN32 OR APPLE )
 
 #--------------------------------------------------------------------
 # Prepare elxInstallComponentFunctionDeclarations.h and
@@ -67,33 +67,33 @@ FILE( WRITE ${InstallFunctionCallFile}
 #
 
 
-MACRO(ADD_ELXCOMPONENT name)
+MACRO( ADD_ELXCOMPONENT name )
   MARK_AS_ADVANCED( USE_${name} )
   OPTION( USE_${name} "Compile this component." ON )
   IF( USE_${name} )
-    PROJECT(${name})
-    ADD_LIBRARY(${name} STATIC ${ARGN} )
+    PROJECT( ${name} )
+    ADD_LIBRARY( ${name} STATIC ${ARGN} )
     TARGET_LINK_LIBRARIES( ${name} ${elxLinkLibs} )
 
     # Update AllComponentLibsTemp, while avoiding duplicates:    
-    IF ( DEFINED AllComponentLibs )
+    IF( DEFINED AllComponentLibs )
       SET( dummy ${AllComponentLibs} )
       LIST( REMOVE_ITEM dummy ${name} )
       SET( dummy ${dummy} ${name} )      
     ELSE( DEFINED AllComponentLibs )
       SET( dummy ${name} )
     ENDIF ( DEFINED AllComponentLibs )    
-    SET( AllComponentLibs ${dummy} CACHE INTERNAL "All component libraries for elastix/transformix"  )
+    SET( AllComponentLibs ${dummy} CACHE INTERNAL "All component libraries for elastix/transformix" )
     
     # Write lines to two files
     FILE( APPEND ${InstallFunctionDeclarationFile}
       "elxInstallComponentFunctionDeclarationMacro( " ${name} " );\n\n" )
     FILE( APPEND ${InstallFunctionCallFile}
       "elxInstallComponentFunctionCallMacro( " ${name} " );\n\n" )
-      
+
   ELSE( USE_${name} )
     # remove from link list
-    IF ( DEFINED AllComponentLibs )
+    IF( DEFINED AllComponentLibs )
       SET( dummy ${AllComponentLibs} )
       LIST( REMOVE_ITEM dummy ${name} )
     ELSE( DEFINED AllComponentLibs )
@@ -102,19 +102,19 @@ MACRO(ADD_ELXCOMPONENT name)
     SET( AllComponentLibs ${dummy} CACHE INTERNAL "All component libraries for elastix/transformix"  )
   ENDIF( USE_${name} )
 
-ENDMACRO(ADD_ELXCOMPONENT)
+ENDMACRO( ADD_ELXCOMPONENT )
 
 
 #---------------------------------------------------------------------
 # Search for all components
 #
 
-FILE(GLOB_RECURSE ListOfComponents "*/CMakeLists.txt")
+FILE( GLOB_RECURSE ListOfComponents "*/CMakeLists.txt" )
 
-FOREACH(comp ${ListOfComponents} )
-  GET_FILENAME_COMPONENT(path_to_comp ${comp} PATH)
-  STRING(REGEX REPLACE "${elxComponents_SOURCE_DIR}/" "" relative_path_to_comp ${path_to_comp} )
+FOREACH( comp ${ListOfComponents} )
+  GET_FILENAME_COMPONENT( path_to_comp ${comp} PATH )
+  STRING( REGEX REPLACE "${elxComponents_SOURCE_DIR}/" "" relative_path_to_comp ${path_to_comp} )
   SUBDIRS( ${relative_path_to_comp} )
-ENDFOREACH(comp)
+ENDFOREACH( comp )
 
 

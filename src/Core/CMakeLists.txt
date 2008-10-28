@@ -1,26 +1,26 @@
-PROJECT(elxCore)
+PROJECT( elxCore )
 
 
-SET(KernelFilesForExecutables
+SET( KernelFilesForExecutables
  Kernel/elxElastixMain.cxx
  Kernel/elxElastixMain.h
  Kernel/elxTransformixMain.cxx
  Kernel/elxTransformixMain.h
 )
 
-SET(KernelFilesForComponents
+SET( KernelFilesForComponents
  Kernel/elxElastixBase.cxx
  Kernel/elxElastixBase.h
  Kernel/elxElastixTemplate.h
  Kernel/elxElastixTemplate.hxx
 )
 
-SET(InstallFilesForExecutables
+SET( InstallFilesForExecutables
  Install/elxComponentLoader.cxx
  Install/elxComponentLoader.h
 )
 
-SET(InstallFilesForComponents
+SET( InstallFilesForComponents
  Install/elxComponentDatabase.cxx
  Install/elxComponentDatabase.h
  Install/elxBaseComponent.h
@@ -33,7 +33,7 @@ SET(InstallFilesForComponents
  Install/elxSupportedImageTypes.h
 )
 
-SET(ConfigurationFiles
+SET( ConfigurationFiles
  Configuration/elxConfigurationBase.cxx
  Configuration/elxConfigurationBase.h
  Configuration/elxConfigurationToUse.h
@@ -41,7 +41,7 @@ SET(ConfigurationFiles
  Configuration/elxMyConfiguration.h
 )
 
-SET(ComponentBaseClassFiles
+SET( ComponentBaseClassFiles
  ComponentBaseClasses/elxFixedImagePyramidBase.h
  ComponentBaseClasses/elxImageSamplerBase.h
  ComponentBaseClasses/elxInterpolatorBase.h
@@ -69,12 +69,12 @@ SET( ProgressCommandFiles
  elxProgressCommand.h
 )
 
-SOURCE_GROUP("Install" FILES
+SOURCE_GROUP( "Install" FILES
  ${InstallFilesForComponents}
  ${InstallFilesForExecutables}
 )
-  
-SOURCE_GROUP("Kernel" FILES
+
+SOURCE_GROUP( "Kernel" FILES
  ${KernelFilesForComponents}
  ${KernelFilesForExecutables}
 )
@@ -83,7 +83,7 @@ SOURCE_GROUP( "Configuration" FILES ${ConfigurationFiles} )
 SOURCE_GROUP( "ComponentBaseClasses" FILES ${ComponentBaseClassFiles} )
 SOURCE_GROUP( "ProgressCommand" FILES ${ProgressCommandFiles} )
 
-ADD_LIBRARY(elxCore
+ADD_LIBRARY( elxCore
  ${KernelFilesForComponents}
  ${InstallFilesForComponents}
  ${ConfigurationFiles}
@@ -91,7 +91,7 @@ ADD_LIBRARY(elxCore
  ${ProgressCommandFiles}
 )
 
-TARGET_LINK_LIBRARIES(elxCore
+TARGET_LINK_LIBRARIES( elxCore
  elxCommon
  xoutlib
  ITKBasicFilters
@@ -101,7 +101,7 @@ TARGET_LINK_LIBRARIES(elxCore
 )
 #param
 
-ADD_EXECUTABLE(elastix
+ADD_EXECUTABLE( elastix
  Main/elastix.cxx
  Main/elastix.h
  Kernel/elxElastixMain.cxx
@@ -109,7 +109,7 @@ ADD_EXECUTABLE(elastix
  ${InstallFilesForExecutables}
 )
 
-ADD_EXECUTABLE(transformix
+ADD_EXECUTABLE( transformix
  Main/transformix.cxx
  Main/transformix.h
  Kernel/elxElastixMain.cxx
@@ -119,7 +119,7 @@ ADD_EXECUTABLE(transformix
  ${InstallFilesForExecutables}
 )
 
-TARGET_LINK_LIBRARIES(elastix
+TARGET_LINK_LIBRARIES( elastix
  elxCommon
  elxCore
  param
@@ -131,7 +131,7 @@ TARGET_LINK_LIBRARIES(elastix
  ${AllComponentLibs}
 )
 
-TARGET_LINK_LIBRARIES(transformix
+TARGET_LINK_LIBRARIES( transformix
  elxCommon
  elxCore
  param
