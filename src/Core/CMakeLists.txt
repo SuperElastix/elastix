@@ -1,5 +1,8 @@
+#---------------------------------------------------------------------
 PROJECT( elxCore )
 
+#---------------------------------------------------------------------
+# Define lists of files in the subdirectories.
 
 SET( KernelFilesForExecutables
  Kernel/elxElastixMain.cxx
@@ -69,6 +72,9 @@ SET( ProgressCommandFiles
  elxProgressCommand.h
 )
 
+#---------------------------------------------------------------------
+# Construct source groups for nice visualisation in Visual Studio.
+
 SOURCE_GROUP( "Install" FILES
  ${InstallFilesForComponents}
  ${InstallFilesForExecutables}
@@ -83,6 +89,9 @@ SOURCE_GROUP( "Configuration" FILES ${ConfigurationFiles} )
 SOURCE_GROUP( "ComponentBaseClasses" FILES ${ComponentBaseClassFiles} )
 SOURCE_GROUP( "ProgressCommand" FILES ${ProgressCommandFiles} )
 
+#---------------------------------------------------------------------
+# Create the elxCore library.
+
 ADD_LIBRARY( elxCore
  ${KernelFilesForComponents}
  ${InstallFilesForComponents}
@@ -90,6 +99,9 @@ ADD_LIBRARY( elxCore
  ${ComponentBaseClassFiles}
  ${ProgressCommandFiles}
 )
+
+#---------------------------------------------------------------------
+# Link against other libraries.
 
 TARGET_LINK_LIBRARIES( elxCore
  elxCommon
@@ -101,6 +113,9 @@ TARGET_LINK_LIBRARIES( elxCore
 )
 #param
 
+#---------------------------------------------------------------------
+# Create the elastix executable.
+
 ADD_EXECUTABLE( elastix
  Main/elastix.cxx
  Main/elastix.h
@@ -108,6 +123,9 @@ ADD_EXECUTABLE( elastix
  Kernel/elxElastixMain.h
  ${InstallFilesForExecutables}
 )
+
+#---------------------------------------------------------------------
+# Create the transformix executable.
 
 ADD_EXECUTABLE( transformix
  Main/transformix.cxx
@@ -118,6 +136,9 @@ ADD_EXECUTABLE( transformix
  Kernel/elxTransformixMain.h
  ${InstallFilesForExecutables}
 )
+
+#---------------------------------------------------------------------
+# Link elastix against other libraries.
 
 TARGET_LINK_LIBRARIES( elastix
  elxCommon
@@ -131,6 +152,9 @@ TARGET_LINK_LIBRARIES( elastix
  ${AllComponentLibs}
 )
 
+#---------------------------------------------------------------------
+# Link transformix against other libraries.
+
 TARGET_LINK_LIBRARIES( transformix
  elxCommon
  elxCore
@@ -142,6 +166,9 @@ TARGET_LINK_LIBRARIES( transformix
  ITKCommon
  ${AllComponentLibs}
 )
+
+#---------------------------------------------------------------------
+# Define the install directory.
 
 INSTALL( TARGETS elastix transformix RUNTIME DESTINATION . )
 

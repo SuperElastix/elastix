@@ -66,7 +66,6 @@ FILE( WRITE ${InstallFunctionCallFile}
 # the .cxx file of the component.
 #
 
-
 MACRO( ADD_ELXCOMPONENT name )
   MARK_AS_ADVANCED( USE_${name} )
   OPTION( USE_${name} "Compile this component." ON )
@@ -104,7 +103,6 @@ MACRO( ADD_ELXCOMPONENT name )
 
 ENDMACRO( ADD_ELXCOMPONENT )
 
-
 #---------------------------------------------------------------------
 # Search for all components
 #
@@ -116,5 +114,3 @@ FOREACH( comp ${ListOfComponents} )
   STRING( REGEX REPLACE "${elxComponents_SOURCE_DIR}/" "" relative_path_to_comp ${path_to_comp} )
   SUBDIRS( ${relative_path_to_comp} )
 ENDFOREACH( comp )
-
-

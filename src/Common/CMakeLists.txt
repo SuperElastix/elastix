@@ -1,10 +1,17 @@
+#---------------------------------------------------------------------
 PROJECT( elxCommon )
+
+#---------------------------------------------------------------------
+# Sub-projects.
 
 SUBDIRS( KNN )
 SUBDIRS( ParameterFileParser )
 SUBDIRS( xout )
 
-SET(CommonFiles
+#---------------------------------------------------------------------
+# Define lists of files in the subdirectories.
+
+SET( CommonFiles
  elxTimer.cxx
  elxTimer.h
  itkErodeMaskImageFilter.h
@@ -126,10 +133,16 @@ SET( ImageSamplersFiles
  ImageSamplers/itkVectorDataContainer.txx
 )
 
+#---------------------------------------------------------------------
+# Construct source groups for nice visualisation in Visual Studio.
+
 SOURCE_GROUP( "CostFunctions" FILES ${CostFunctionFiles} )
 SOURCE_GROUP( "Transforms" FILES ${TransformFiles} )
 SOURCE_GROUP( "LineSearchOptimizers" FILES ${LineSearchOptimizersFiles} )
 SOURCE_GROUP( "ImageSamplers" FILES ${ImageSamplersFiles} )
+
+#---------------------------------------------------------------------
+# Create the elxCommon library.
 
 ADD_LIBRARY( elxCommon
  ${CommonFiles}
@@ -138,6 +151,9 @@ ADD_LIBRARY( elxCommon
  ${LineSearchOptimizersFiles}
  ${ImageSamplersFiles}
 )
+
+#---------------------------------------------------------------------
+# Link against other libraries.
 
 TARGET_LINK_LIBRARIES( elxCommon
  ITKBasicFilters
