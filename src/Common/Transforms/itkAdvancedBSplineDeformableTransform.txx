@@ -1095,7 +1095,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   sh.resize( SpaceDimension );
 
   /** Helper variables. */
-  WeightsType weights;
+  WeightsType weights( this->m_WeightsFunction->GetNumberOfWeights() );
   IndexType supportIndex;
   RegionType supportRegion;
 
@@ -1206,15 +1206,15 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     return;
   }
 
-  /** Helper variables. */
-  WeightsType weights;
-  IndexType supportIndex;
-
   /** Compute the number of affected B-spline parameters. */
   const unsigned int numberOfWeights
     = this->m_WeightsFunction->GetNumberOfWeights();
   const unsigned int numberOfNonZeroJacobianIndices
     = numberOfWeights * SpaceDimension;
+
+  /** Helper variables. */
+  WeightsType weights( numberOfWeights );
+  IndexType supportIndex;
 
   /** Resize data structures. */
   jsh.resize( numberOfNonZeroJacobianIndices );
@@ -1355,7 +1355,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   nonZeroJacobianIndices.resize( numberOfNonZeroJacobianIndices );
 
   /** Helper variables. */
-  WeightsType weights;
+  WeightsType weights( numberOfWeights );
   IndexType supportIndex;
   this->m_SODerivativeWeightsFunction->ComputeStartIndex(
     cindex, supportIndex );
