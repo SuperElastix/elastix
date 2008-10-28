@@ -19,7 +19,6 @@
 namespace itk
 {
 
-
 /**
  * ****************** Constructor *******************************
  */
@@ -52,10 +51,6 @@ BSplineInterpolationDerivativeWeightFunction<TCoordRep, VSpaceDimension, VSpline
     if ( dir < SpaceDimension )
     {
       this->m_DerivativeDirection = dir;
-
-      /** Change variables. *
-      this->InitializeSupport();
-      this->InitializeOffsetToIndexTable();*/
 
       this->Modified();
     }
@@ -91,15 +86,13 @@ BSplineInterpolationDerivativeWeightFunction<TCoordRep, VSpaceDimension, VSpline
 ::Compute1DWeights(
   const ContinuousIndexType & index,
   const IndexType & startIndex,
-  std::vector< vnl_vector< double > > & weights1D ) const
+  OneDWeightsType & weights1D ) const
 {
   /** Compute the 1D weights. */
-  weights1D.resize( SpaceDimension );
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     double x = index[ i ] - static_cast<double>( startIndex[ i ] );
     
-    weights1D[ i ].set_size( this->m_SupportSize[ i ] );
     for ( unsigned int k = 0; k < this->m_SupportSize[ i ]; ++k )
     {
       if ( i != this->m_DerivativeDirection )

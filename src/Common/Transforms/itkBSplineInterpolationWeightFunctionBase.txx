@@ -44,7 +44,6 @@ inline int BSplineFloor2(double x)
 namespace itk
 {
 
-
 /**
  * ****************** Constructor *******************************
  */
@@ -56,11 +55,6 @@ BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
   /** Initialize members. */
   this->InitializeSupport();
   this->InitializeOffsetToIndexTable();
-
-  /** Initialize interpolation kernels. */
-  this->m_Kernel = 0;
-  this->m_DerivativeKernel = 0;
-  this->m_SecondOrderDerivativeKernel = 0;
 
 } // end Constructor
 
@@ -194,7 +188,7 @@ BSplineInterpolationWeightFunctionBase<TCoordRep,VSpaceDimension, VSplineOrder>
   weights.SetSize( this->m_NumberOfWeights );
 
   /** Compute the 1D weights. */
-  std::vector< vnl_vector< double > > weights1D( SpaceDimension );
+  OneDWeightsType weights1D;
   this->Compute1DWeights( cindex, startIndex, weights1D );
 
   /** Compute the vector of weights. */

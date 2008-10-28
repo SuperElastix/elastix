@@ -18,6 +18,7 @@ PURPOSE. See the above copyright notices for more information.
 #include "itkContinuousIndex.h"
 #include "itkArray.h"
 #include "itkArray2D.h"
+#include "itkMatrix.h"
 #include "itkBSplineKernelFunction.h"
 #include "itkBSplineDerivativeKernelFunction.h"
 #include "itkBSplineSecondOrderDerivativeKernelFunction.h"
@@ -50,11 +51,12 @@ public FunctionBase< ContinuousIndex<TCoordRep,VSpaceDimension>, Array<double> >
 {
 public:
   /** Standard class typedefs. */
-  typedef BSplineInterpolationWeightFunctionBase Self;
-  typedef FunctionBase< ContinuousIndex<TCoordRep,VSpaceDimension>,
-            Array<double> >                  Superclass;
-  typedef SmartPointer<Self>                 Pointer;
-  typedef SmartPointer<const Self>           ConstPointer;
+  typedef BSplineInterpolationWeightFunctionBase  Self;
+  typedef FunctionBase<
+    ContinuousIndex< TCoordRep, VSpaceDimension >,
+    Array<double> >                               Superclass;
+  typedef SmartPointer<Self>                      Pointer;
+  typedef SmartPointer<const Self>                ConstPointer;
   
   /** Run-time type information (and related methods). */
   itkTypeMacro( BSplineInterpolationWeightFunctionBase, FunctionBase );
@@ -113,11 +115,19 @@ protected:
   /** Lookup table type. */
   typedef Array2D<unsigned long> TableType;
 
+  /** Typedef for intermediary 1D weights.
+   * The Matrix is at least twice as fast as std::vector< vnl_vector< double > >,
+   * probably because of the fixed size at compile time.
+   */
+  typedef Matrix< double,
+    itkGetStaticConstMacro( SpaceDimension ),
+    itkGetStaticConstMacro( SplineOrder ) + 1 > OneDWeightsType;
+
   /** Compute the 1D weights. */
   virtual void Compute1DWeights(
     const ContinuousIndexType & index,
     const IndexType & startIndex,
-    std::vector< vnl_vector< double > > & weights1D ) const = 0;
+    OneDWeightsType & weights1D ) const = 0;
 
   /** Print the member variables. */
   virtual void PrintSelf( std::ostream & os, Indent indent ) const;

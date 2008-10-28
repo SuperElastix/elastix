@@ -79,6 +79,7 @@ protected:
   typedef typename Superclass
     ::SecondOrderDerivativeKernelType               SecondOrderDerivativeKernelType;
   typedef typename Superclass::TableType            TableType;
+  typedef typename Superclass::OneDWeightsType      OneDWeightsType;
 
   /* Compute the 1D weights, which are:
    * [ \beta^3( x[i] - startIndex[i] ), \beta^3( x[i] - startIndex[i] - 1 ),
@@ -87,7 +88,7 @@ protected:
   virtual void Compute1DWeights(
     const ContinuousIndexType & index,
     const IndexType & startIndex,
-    std::vector< vnl_vector< double > > & weights1D ) const;
+    OneDWeightsType & weights1D ) const;
 
 private:
   BSplineInterpolationWeightFunction2(const Self&); //purposely not implemented
