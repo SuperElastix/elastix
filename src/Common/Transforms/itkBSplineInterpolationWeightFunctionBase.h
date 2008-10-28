@@ -91,7 +91,7 @@ public:
     WeightsType & weights, IndexType & startIndex ) const;
 
   /** Compute the start index of the support region. */
-  virtual void ComputeStartIndex( const ContinuousIndexType & index,
+  void ComputeStartIndex( const ContinuousIndexType & index,
     IndexType & startIndex ) const;
 
   /** Get support region size. */

@@ -181,11 +181,24 @@ BSplineInterpolationWeightFunctionBase<TCoordRep,VSpaceDimension, VSplineOrder>
   WeightsType & weights, 
   IndexType & startIndex ) const
 {
-  /** Find the starting index of the support region. */
-  this->ComputeStartIndex( cindex, startIndex );
+  /** Find the starting index of the support region.
+   * It's a little bit faster (5%) to copy the code of ComputeStartIndex(),
+   * than it is to call it:
+   * this->ComputeStartIndex( cindex, startIndex );
+   */
+  for ( unsigned int i = 0; i < SpaceDimension; ++i )
+  {
+    startIndex[ i ] = static_cast<typename IndexType::IndexValueType>(
+      BSplineFloor2( cindex[ i ]
+      - static_cast<double>( this->m_SupportSize[ i ] - 2.0 ) / 2.0 ) );
+  }
 
-  /** Initialize the weights. */
-  weights.SetSize( this->m_NumberOfWeights );
+  /** Don't initialize the weights!
+   * weights.SetSize( this->m_NumberOfWeights );
+   * This will result in a big performance penalty (50%). In Evaluate( index )
+   * we have set the size correctly anyway. We just assume that when this
+   * function is called directly, the user has set the size correctly.
+   */
 
   /** Compute the 1D weights. */
   OneDWeightsType weights1D;
