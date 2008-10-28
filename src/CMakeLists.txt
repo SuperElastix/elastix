@@ -6,13 +6,12 @@ PROJECT( elastix )
 
 #---------------------------------------------------------------------
 # Find ITK.
-FIND_PACKAGE(ITK)
-IF(ITK_FOUND)
-  INCLUDE(${ITK_USE_FILE})
-ELSE(ITK_FOUND)
-  MESSAGE(FATAL_ERROR
-          "Cannot build without ITK.  Please set ITK_DIR.")
-ENDIF(ITK_FOUND)
+FIND_PACKAGE( ITK )
+IF( ITK_FOUND )
+  INCLUDE( ${ITK_USE_FILE} )
+ELSE( ITK_FOUND )
+  MESSAGE( FATAL_ERROR "Cannot build without ITK.  Please set ITK_DIR." )
+ENDIF( ITK_FOUND )
 
 #---------------------------------------------------------------------
 # Include directories
@@ -63,14 +62,16 @@ INCLUDE_DIRECTORIES( ${elxINCLUDE_DIRECTORIES} )
 #---------------------------------------------------------------------
 # Output directories.
 
-MARK_AS_ADVANCED( LIBRARY_OUTPUT_PATH EXECUTABLE_OUTPUT_PATH )
-SET( LIBRARY_OUTPUT_PATH ${elastix_BINARY_DIR}/bin CACHE INTERNAL "Single output directory for building all libraries." )
-SET( EXECUTABLE_OUTPUT_PATH ${elastix_BINARY_DIR}/bin CACHE INTERNAL "Single output directory for building all executables." )
-SET( elastix_LIBRARY_PATH "${LIBRARY_OUTPUT_PATH}" )
-SET( elastix_EXECUTABLE_PATH "${EXECUTABLE_OUTPUT_PATH}" )
+#MARK_AS_ADVANCED( LIBRARY_OUTPUT_DIRECTORY RUNTIME_OUTPUT_DIRECTORY )
+#SET( LIBRARY_OUTPUT_DIRECTORY ${elastix_BINARY_DIR}/bin CACHE INTERNAL
+#  "Single output directory for building all libraries." )
+#SET( RUNTIME_OUTPUT_DIRECTORY ${elastix_BINARY_DIR}/bin CACHE INTERNAL
+#  "Single output directory for building all executables." )
+#SET( elastix_LIBRARY_OUTPUT_DIRECTORY "${LIBRARY_OUTPUT_DIRECTORY}" )
+#SET( elastix_RUNTIME_OUTPUT_DIRECTORY "${RUNTIME_OUTPUT_DIRECTORY}" )
 
 #---------------------------------------------------------------------
-# process the sub-directories
+# Process the sub-directories
 
 SUBDIRS( Common )
 SUBDIRS( Components )
@@ -80,21 +81,22 @@ SUBDIRS( Core )
 # Configure the examples
 
 SET( ELX_DOX_DIR  ${elastix_SOURCE_DIR}/../dox )
-SET( ELX_HELP_DIR ${elastix_SOURCE_DIR}/../help CACHE PATH "path to the doxygen generated help files and the examples" )
+SET( ELX_HELP_DIR ${elastix_SOURCE_DIR}/../help CACHE PATH
+  "path to the doxygen generated help files and the examples" )
 
 # Copy the examples to the help directory
 
-IF(WIN32)
+IF( WIN32 )
   CONFIGURE_FILE(
     ${ELX_DOX_DIR}/example.bat
     ${ELX_HELP_DIR}/example.bat
     COPYONLY )
-ELSE(WIN32)
+ELSE( WIN32 )
   CONFIGURE_FILE(
     ${ELX_DOX_DIR}/example
     ${ELX_HELP_DIR}/example
     COPYONLY )
-ENDIF(WIN32)
+ENDIF( WIN32 )
 
 MAKE_DIRECTORY( ${ELX_HELP_DIR}/exampleinput )
 MAKE_DIRECTORY( ${ELX_HELP_DIR}/exampleoutput )
@@ -123,14 +125,13 @@ FOREACH( ELX_EXAMPLEINPUTFILE ${ELX_EXAMPLEINPUTFILES} )
     COPYONLY )
 ENDFOREACH( ELX_EXAMPLEINPUTFILE )
 
-
 #---------------------------------------------------------------------
 # Configure the doxygen-configuration
 
 FIND_PACKAGE( Doxygen QUIET )
 STRING( COMPARE NOTEQUAL ${DOXYGEN} "DOXYGEN-NOTFOUND" Doxygen_FOUND )
 
-IF(Doxygen_FOUND)
+IF( Doxygen_FOUND )
 
   # Set the path to the doxygen configuration source
   SET( ELX_DOXYGEN_DIR ${ELX_DOX_DIR}/doxygen )
@@ -139,18 +140,20 @@ IF(Doxygen_FOUND)
   EXEC_PROGRAM( ${DOXYGEN} ARGS "--version" OUTPUT_VARIABLE ELX_DOXYGEN_VERSION )
   
   # Get date
-  IF(UNIX OR CYGWIN)
-    EXEC_PROGRAM("date '+%d-%m-%Y'" OUTPUT_VARIABLE ELX_DOXYGEN_DATE)
-  ENDIF(UNIX OR CYGWIN)
-  IF(WIN32)
+  IF( UNIX OR CYGWIN )
+    EXEC_PROGRAM( "date '+%d-%m-%Y'" OUTPUT_VARIABLE ELX_DOXYGEN_DATE )
+  ENDIF( UNIX OR CYGWIN )
+  IF( WIN32 )
     IF( NOT CYGWIN )
-      EXECUTE_PROCESS( COMMAND "${ELX_DOXYGEN_DIR}/doxdate.bat" OUTPUT_VARIABLE ELX_DOXYGEN_DATETEMP )
+      EXECUTE_PROCESS( COMMAND "${ELX_DOXYGEN_DIR}/doxdate.bat"
+        OUTPUT_VARIABLE ELX_DOXYGEN_DATETEMP )
       STRING( REPLACE "/" "-" ELX_DOXYGEN_DATE ${ELX_DOXYGEN_DATETEMP} )
     ENDIF( NOT CYGWIN )
-  ENDIF(WIN32)
+  ENDIF( WIN32 )
 
   # Get the version number of elastix
-  FILE( STRINGS ${elastix_SOURCE_DIR}/Core/Install/elxBaseComponent.h ELX_VERSION REGEX "\(#define\ __ELASTIX_VERSION\)" )
+  FILE( STRINGS ${elastix_SOURCE_DIR}/Core/Install/elxBaseComponent.h
+    ELX_VERSION REGEX "\(#define\ __ELASTIX_VERSION\)" )
   STRING( SUBSTRING ${ELX_VERSION} 26 3 ELX_VERSION )
 
   # Configure the doxygen configuration
@@ -165,7 +168,16 @@ IF(Doxygen_FOUND)
   CONFIGURE_FILE(
     ${ELX_DOXYGEN_DIR}/MainPage.dox.in
     ${ELX_HELP_DIR}/MainPage.dox @ONLY )
-  
-ENDIF(Doxygen_FOUND)
 
+ENDIF( Doxygen_FOUND )
+
+#---------------------------------------------------------------------
+# Testing
+
+SET( BUILD_ELX_TESTING OFF CACHE BOOL
+  "Perform some tests on basic functionality of elastix." )
+IF( BUILD_ELX_TESTING )
+  ENABLE_TESTING()
+  SUBDIRS( Testing )
+ENDIF( BUILD_ELX_TESTING )
 
