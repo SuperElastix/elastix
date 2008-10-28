@@ -60,17 +60,6 @@ SET( elxINCLUDE_DIRECTORIES
 INCLUDE_DIRECTORIES( ${elxINCLUDE_DIRECTORIES} )
 
 #---------------------------------------------------------------------
-# Output directories.
-
-#MARK_AS_ADVANCED( LIBRARY_OUTPUT_DIRECTORY RUNTIME_OUTPUT_DIRECTORY )
-#SET( LIBRARY_OUTPUT_DIRECTORY ${elastix_BINARY_DIR}/bin CACHE INTERNAL
-#  "Single output directory for building all libraries." )
-#SET( RUNTIME_OUTPUT_DIRECTORY ${elastix_BINARY_DIR}/bin CACHE INTERNAL
-#  "Single output directory for building all executables." )
-#SET( elastix_LIBRARY_OUTPUT_DIRECTORY "${LIBRARY_OUTPUT_DIRECTORY}" )
-#SET( elastix_RUNTIME_OUTPUT_DIRECTORY "${RUNTIME_OUTPUT_DIRECTORY}" )
-
-#---------------------------------------------------------------------
 # Process the sub-directories
 
 SUBDIRS( Common )
