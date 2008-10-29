@@ -31,14 +31,7 @@ MACRO( ADD_ELX_TEST name )
 ENDMACRO( ADD_ELX_TEST )
 
 #---------------------------------------------------------------------
-#ADD_EXECUTABLE( itkBSplineInterpolationWeightFunctionsTest
-# itkBSplineInterpolationWeightFunctionsTest.cxx
-#)
-#TARGET_LINK_LIBRARIES( itkBSplineInterpolationWeightFunctionsTest
-# ITKCommon ITKBasicFilters
-#)
-#ADD_TEST( BSplineInterpolationWeightFunctionsTest
-# itkBSplineInterpolationWeightFunctionsTest
-#)
 
-ADD_ELX_TEST( BSplineInterpolationWeightFunctionsTest )
+ADD_ELX_TEST( BSplineInterpolationWeightFunctionTest )
+ADD_ELX_TEST( BSplineInterpolationDerivativeWeightFunctionTest )
+#ADD_ELX_TEST( BSplineInterpolationSODerivativeWeightFunctionTest )
