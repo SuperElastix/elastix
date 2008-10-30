@@ -40,7 +40,6 @@ PURPOSE. See the above copyright notices for more information.
 #include "itkBSplineInterpolationDerivativeWeightFunction.h"
 #include "itkBSplineInterpolationSecondOrderDerivativeWeightFunction.h"
 
-#include "itkBSplineInterpolationWeightFunction.h"//still slightly faster
 
 namespace itk
 {
@@ -319,12 +318,9 @@ public:
   OutputPointType TransformPoint( const InputPointType & point ) const;
 
   /** Interpolation weights function type. */
-  typedef BSplineInterpolationWeightFunction< ScalarType,
-    itkGetStaticConstMacro(SpaceDimension),
-    itkGetStaticConstMacro(SplineOrder)>                    WeightsFunctionType;
   typedef BSplineInterpolationWeightFunction2< ScalarType,
     itkGetStaticConstMacro(SpaceDimension),
-    itkGetStaticConstMacro(SplineOrder)>                    WeightsFunctionType2;
+    itkGetStaticConstMacro(SplineOrder)>                    WeightsFunctionType;
   typedef typename WeightsFunctionType::WeightsType         WeightsType;
   typedef typename WeightsFunctionType::ContinuousIndexType ContinuousIndexType;
   typedef BSplineInterpolationDerivativeWeightFunction<

@@ -786,7 +786,6 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
   this->m_InitialTransform->GetSpatialHessian( ipp, sh0 );
   this->m_CurrentTransform->GetSpatialHessian( ipp, sh1 );
 
-  sh.resize( SpaceDimension );
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     sh[ i ] = sh0[ i ] + sh1[ i ];
@@ -816,7 +815,6 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
   this->m_InitialTransform->GetSpatialHessian( ipp, sh0 );
   this->m_CurrentTransform->GetSpatialHessian( transformedPoint, sh1 );
 
-  sh.resize( SpaceDimension );
   for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
   {
     // \todo: check

@@ -1091,9 +1091,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     return;
   }
 
-  /** Resize the vector of matrices. */
-  sh.resize( SpaceDimension );
-
   /** Helper variables. */
   WeightsType weights( this->m_WeightsFunction->GetNumberOfWeights() );
   IndexType supportIndex;
@@ -1101,10 +1098,12 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 
   /** For all derivative directions, compute the spatial Hessian.
    * The derivatives are d^2T / dx_i dx_j.
+   * Make use of the fact that the Hessian is symmetrical, so do not compute
+   * both i,j and j,i for i != j.
    */
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
-    for ( unsigned int j = 0; j < SpaceDimension; ++j )
+    for ( unsigned int j = 0; j <= i; ++j )
     {
       /** Set the derivative direction. */
       this->m_SODerivativeWeightsFunction->SetDerivativeDirections( i, j );
@@ -1133,8 +1132,9 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
           ++mu;
         }
         
-        /** Update the spatial Hessian sh. */
+        /** Update the spatial Hessian sh. The Hessian is symmetrical. */
         sh[ dim ][ i ][ j ] = sum;
+        sh[ dim ][ j ][ i ] = sum;
       }
 
     }
@@ -1216,26 +1216,22 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   WeightsType weights( numberOfWeights );
   IndexType supportIndex;
 
-  /** Resize data structures. */
+  /** Resize data structures. It is not required to resize the SpatialHessian
+   * types, since the default constructor of the itk::Matrix sets everything
+   * to zero.
+   */
   jsh.resize( numberOfNonZeroJacobianIndices );
-  for ( unsigned int mu = 0; mu < numberOfNonZeroJacobianIndices; ++mu )
-  {
-    jsh[ mu ].resize( SpaceDimension );
-    // set all matrices to 0
-    /*for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
-    {
-      jsh[ mu ][ dim ].Fill( 0 );
-    } // Not required, since the default constructor sets everything to zero. */
-  }
   nonZeroJacobianIndices.resize( numberOfNonZeroJacobianIndices );
 
   /** For all derivative directions, compute the derivatives of the
    * spatial Hessian to the transformation parameters mu:
    * d/dmu of d^2T / dx_i dx_j
+   * Make use of the fact that the Hessian is symmetrical, so do not compute
+   * both i,j and j,i for i != j.
    */
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
-    for ( unsigned int j = 0; j < SpaceDimension; ++j )
+    for ( unsigned int j = 0; j <= i; ++j )
     {
       /** Set the derivative direction. */
       this->m_SODerivativeWeightsFunction->SetDerivativeDirections( i, j );
@@ -1249,6 +1245,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
         for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
         {
           jsh[ mu + dim * numberOfWeights ][ dim ][ i ][ j ] = weights[ mu ];
+          if ( i != j ) jsh[ mu + dim * numberOfWeights ][ dim ][ j ][ i ] = weights[ mu ];
         }
       }
 
@@ -1257,7 +1254,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 
   /** Get the support region. */
   RegionType supportRegion;
-  //supportRegion.SetSize( this->m_WeightsFunction->GetSupportSize() );
   supportRegion.SetSize( this->m_SupportSize );
   supportRegion.SetIndex( supportIndex );
 
@@ -1340,18 +1336,11 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   const unsigned int numberOfNonZeroJacobianIndices
     = numberOfWeights * SpaceDimension;
 
-  /** Resize data structures. */
-  sh.resize( SpaceDimension );
+  /** Resize data structures. It is not required to resize the SpatialHessian
+   * types, since the default constructor of the itk::Matrix sets everything
+   * to zero.
+   */
   jsh.resize( numberOfNonZeroJacobianIndices );
-  for ( unsigned int mu = 0; mu < numberOfNonZeroJacobianIndices; ++mu )
-  {
-    jsh[ mu ].resize( SpaceDimension );
-    // set all matrices to 0
-    /*for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
-    {
-      jsh[ mu ][ dim ].Fill( 0 );
-    } // Not required, since the default constructor sets everything to zero. */
-  }
   nonZeroJacobianIndices.resize( numberOfNonZeroJacobianIndices );
 
   /** Helper variables. */
@@ -1374,10 +1363,12 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** For all derivative directions, compute the derivatives of the
    * spatial Hessian to the transformation parameters mu:
    * d/dmu of d^2T / dx_i dx_j
+   * Make use of the fact that the Hessian is symmetrical, so do not compute
+   * both i,j and j,i for i != j.
    */
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
-    for ( unsigned int j = 0; j < SpaceDimension; ++j )
+    for ( unsigned int j = 0; j <= i; ++j )
     {
       /** Set the derivative direction. */
       this->m_SODerivativeWeightsFunction->SetDerivativeDirections( i, j );
@@ -1390,10 +1381,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       /** Compute d^2T_{dim} / dx_i dx_j = \sum coefs_{dim} * weights. */
       for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
       {
-        /** Create an iterator over the correct part of the coefficient image. *
-        ImageRegionConstIterator<ImageType> itCoef(
-          this->m_CoefficientImage[ dim ], supportRegion );
-
         /** Compute the sum for this dimension. */
         double sum = 0.0;
         unsigned long mu1 = 0;
@@ -1405,8 +1392,9 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
           ++mu1;
         }
         
-        /** Update the spatial Hessian sh. */
+        /** Update the spatial Hessian sh. The Hessian is symmetrical. */
         sh[ dim ][ i ][ j ] = sum;
+        sh[ dim ][ j ][ i ] = sum;
       }
 
       /** Compute the Jacobian of the spatial Hessian jsh. */
@@ -1417,15 +1405,12 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
         for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
         {
           jsh[ mu + dim * numberOfWeights ][ dim ][ i ][ j ] = weights[ mu ];
+          if ( i != j ) jsh[ mu + dim * numberOfWeights ][ dim ][ j ][ i ] = weights[ mu ];
         }
       }
 
     } // end for j
   } // end for i
-
-  /** Get the support region. *
-  supportRegion.SetSize( this->m_SupportSize );
-  supportRegion.SetIndex( supportIndex );
 
   /** Create an iterator over the coefficient image. */
   ImageRegionConstIteratorWithIndex< ImageType >

@@ -80,7 +80,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   }
   this->GetFixedImage()->TransformIndexToPhysicalPoint( index, tmpPoint );
   this->m_AdvancedTransform->GetSpatialHessian( tmpPoint, spatialHessian );
-  if ( spatialHessian.size() == 0 )
+  if ( spatialHessian.Size() == 0 )
   {
     return static_cast<MeasureType>( measure );
   }
@@ -216,7 +216,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   this->m_AdvancedTransform->GetSpatialHessian( tmpPoint, spatialHessian );
   this->m_AdvancedTransform->GetJacobianOfSpatialHessian( tmpPoint,
     jacobianOfSpatialHessian, nonZeroJacobianIndices );
-  if ( spatialHessian.size() == 0 && jacobianOfSpatialHessian.size() == 0 )
+  if ( spatialHessian.Size() == 0 && jacobianOfSpatialHessian.size() == 0 )
   {
     value = static_cast<MeasureType>( measure );
     return;
@@ -287,6 +287,15 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
           spatialHessian[ k ].GetVnlMatrix().frobenius_norm() );
       }
 
+      /** Prepare some stuff for the computation of the metric derivative. *
+      std::vector< const InternalMatrixType > A( FixedImageDimension );
+      for ( unsigned int k = 0; k < FixedImageDimension; ++k )
+      {
+        A[ k ] = spatialHessian[ k ].GetVnlMatrix();
+      }
+      const RealType Bsize = static_cast<RealType>(
+        jacobianOfSpatialHessian[ 0 ][ 0 ].GetVnlMatrix().size() );
+
       /** Compute the contribution to the metric derivative of this point. */
       for ( unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu )
       {
@@ -298,6 +307,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
           const InternalMatrixType & A = spatialHessian[ k ].GetVnlMatrix();
           const InternalMatrixType & B = jacobianOfSpatialHessian[ mu ][ k ].GetVnlMatrix();
           const RealType matrixMean = element_product( A, B ).mean();
+          //const RealType matrixMean = element_product( A[ k ], B ).mean();
           const RealType Bsize = static_cast<RealType>( B.size() );
           derivative[ nonZeroJacobianIndices[ mu ] ] += 2.0 * matrixMean * Bsize;
         }

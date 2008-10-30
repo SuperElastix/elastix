@@ -33,6 +33,7 @@ PURPOSE. See the above copyright notices for more information.
 
 #include "itkTransform.h"
 #include "itkMatrix.h"
+#include "itkFixedArray.h"
 
 namespace itk
 {
@@ -115,14 +116,19 @@ public:
   typedef typename Superclass::InputPointType       InputPointType;
   typedef typename Superclass::OutputPointType      OutputPointType;
 
-  /** Types for the (Spatial)Jacobian/Hessian. */
+  /** Types for the (Spatial)Jacobian/Hessian.
+   * Using an itk::FixedArray instead of an std::vector gives a performance
+   * gain for the SpatialHessianType.
+   */
   typedef std::vector< unsigned long >              NonZeroJacobianIndicesType;
   typedef Matrix< ScalarType,
     InputSpaceDimension, OutputSpaceDimension >     SpatialJacobianType;
   typedef std::vector< SpatialJacobianType >        JacobianOfSpatialJacobianType;
-  typedef std::vector<
+  // \todo: think about the SpatialHessian type, should be a 3D native type
+  typedef FixedArray<
     Matrix< ScalarType,
-    InputSpaceDimension, OutputSpaceDimension > >   SpatialHessianType; // think about this type, should be a 3D native type
+    InputSpaceDimension, OutputSpaceDimension >,
+    InputSpaceDimension >                           SpatialHessianType;
   typedef std::vector< SpatialHessianType >         JacobianOfSpatialHessianType;
   typedef typename SpatialJacobianType::InternalMatrixType  InternalMatrixType;
 
