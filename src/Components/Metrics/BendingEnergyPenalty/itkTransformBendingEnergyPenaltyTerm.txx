@@ -113,14 +113,6 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
       sampleOk = this->IsInsideMovingMask( mappedPoint );        
     }
 
-    /** Compute the moving image value and check if the point is
-    * inside the moving image buffer. *
-    if ( sampleOk )
-    {
-    sampleOk = this->EvaluateMovingImageValueAndDerivative(
-    mappedPoint, movingImageValue, 0 );
-    }*/
-
     if ( sampleOk )
     {
       this->m_NumberOfPixelsCounted++; 
@@ -133,7 +125,8 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
       /** Compute the contribution of this point. */
       for ( unsigned int k = 0; k < FixedImageDimension; ++k )
       {
-        measure += vnl_math_sqr( spatialHessian[ k ].GetVnlMatrix().frobenius_norm() );
+        measure += vnl_math_sqr(
+          spatialHessian[ k ].GetVnlMatrix().frobenius_norm() );
       }
 
     } // end if sampleOk
@@ -223,11 +216,13 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   }
   // TODO: This is only required once! and not every iteration.
 
-  /** Arrays that store dM(x)/dmu. *
-  DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.GetSize() );
-
   /** Make sure the transform parameters are up to date. */
   this->SetTransformParameters( parameters );
+
+  /** Check if this transform is a B-spline transform. */
+  bool transformIsBSpline = this->m_TransformIsAdvancedBSpline
+    || this->m_TransformIsAdvancedBSplineCombination;
+  // \todo: Check if Combo transform is also ok for speedup trick.
 
   /** Update the imageSampler and get a handle to the sample container. */
   this->GetImageSampler()->Update();
@@ -243,12 +238,15 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   {
     /** Read fixed coordinates and initialize some variables. */
     const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
-    //RealType movingImageValue; 
     MovingImagePointType mappedPoint;
-    //MovingImageDerivativeType movingImageDerivative;
+
+    /** Although the mapped point is not needed to compute the penalty term,
+     * we compute in order to check if it maps inside the support region of
+     * the B-spline and if it maps inside the moving image mask.
+     */
 
     /** Transform point and check if it is inside the bspline support region. */
-    bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint);
+    bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
     /** Check if point is inside mask. */
     if ( sampleOk ) 
@@ -256,27 +254,18 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
       sampleOk = this->IsInsideMovingMask( mappedPoint );        
     }
 
-    /** Compute the moving image value M(T(x)) and derivative dM/dx and check if
-    * the point is inside the moving image buffer *
-    if ( sampleOk )
-    {
-      sampleOk = this->EvaluateMovingImageValueAndDerivative( 
-        mappedPoint, movingImageValue, 0 );
-    }*/
-
+    // \todo Need to check if it maps in the moving image ??:
+    // well it maps in the moving mask anyway.
+//     MovingImageContinuousIndexType cindex;
+//     if ( sampleOk )
+//     {//       this->m_Interpolator->ConvertPointToContinuousIndex( mappedPoint, cindex );//       sampleOk = this->m_Interpolator->IsInsideBuffer( cindex );//     }
     if ( sampleOk )
     {
       this->m_NumberOfPixelsCounted++; 
 
-      /** Get the fixed image value. *
-      const RealType & fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
-
       /** Get the spatial Hessian of the transformation at the current point.
        * This is needed to compute the bending energy.
        */
-//       this->m_AdvancedTransform->GetSpatialHessian( fixedPoint, spatialHessian );
-//       this->m_AdvancedTransform->GetJacobianOfSpatialHessian( fixedPoint,
-//         jacobianOfSpatialHessian, nonZeroJacobianIndices );
       this->m_AdvancedTransform->GetJacobianOfSpatialHessian( fixedPoint,
         spatialHessian, jacobianOfSpatialHessian, nonZeroJacobianIndices );
 
@@ -287,7 +276,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
           spatialHessian[ k ].GetVnlMatrix().frobenius_norm() );
       }
 
-      /** Prepare some stuff for the computation of the metric derivative. *
+      /** Prepare some stuff for the computation of the metric derivative. */
       std::vector< const InternalMatrixType > A( FixedImageDimension );
       for ( unsigned int k = 0; k < FixedImageDimension; ++k )
       {
@@ -296,22 +285,49 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
       const RealType Bsize = static_cast<RealType>(
         jacobianOfSpatialHessian[ 0 ][ 0 ].GetVnlMatrix().size() );
 
-      /** Compute the contribution to the metric derivative of this point. */
-      for ( unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu )
+      /** Make a distinction between a B-spline transform and other transforms. */
+      if ( !transformIsBSpline )
       {
-        for ( unsigned int k = 0; k < FixedImageDimension; ++k )
+        /** Compute the contribution to the metric derivative of this point. */
+        for ( unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu )
         {
-          /** This computes:
-           * \sum_i \sum_j A_ij B_ij = element_product(A,B).mean()*B.size()
-           */
-          const InternalMatrixType & A = spatialHessian[ k ].GetVnlMatrix();
-          const InternalMatrixType & B = jacobianOfSpatialHessian[ mu ][ k ].GetVnlMatrix();
-          const RealType matrixMean = element_product( A, B ).mean();
-          //const RealType matrixMean = element_product( A[ k ], B ).mean();
-          const RealType Bsize = static_cast<RealType>( B.size() );
-          derivative[ nonZeroJacobianIndices[ mu ] ] += 2.0 * matrixMean * Bsize;
+          for ( unsigned int k = 0; k < FixedImageDimension; ++k )
+          {
+            /** This computes:
+             * \sum_i \sum_j A_ij B_ij = element_product(A,B).mean()*B.size()
+             */
+            const InternalMatrixType & B
+              = jacobianOfSpatialHessian[ mu ][ k ].GetVnlMatrix();
+            const RealType matrixMean = element_product( A[ k ], B ).mean();
+            derivative[ nonZeroJacobianIndices[ mu ] ]
+              += 2.0 * matrixMean * Bsize;
+          }
         }
       }
+      else
+      {
+        /** For the B-spline transform we know that only 1/FixedImageDimension
+         * part of the JacobianOfSpatialHessian is non-zero.
+         */
+
+        /** Compute the contribution to the metric derivative of this point. */
+        unsigned int numParPerDim
+          = nonZeroJacobianIndices.size() / FixedImageDimension;
+        for ( unsigned int mu = 0; mu < numParPerDim; ++mu )
+        {
+          for ( unsigned int k = 0; k < FixedImageDimension; ++k )
+          {
+            /** This computes:
+             * \sum_i \sum_j A_ij B_ij = element_product(A,B).mean()*B.size()
+             */
+            const InternalMatrixType & B
+              = jacobianOfSpatialHessian[ mu + numParPerDim * k ][ k ].GetVnlMatrix();
+            const RealType matrixMean = element_product( A[ k ], B ).mean();
+            derivative[ nonZeroJacobianIndices[ mu + numParPerDim * k ] ]
+              += 2.0 * matrixMean * Bsize;
+          }
+        }
+      } // end if B-spline
 
     } // end if sampleOk
 

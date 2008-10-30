@@ -1212,10 +1212,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   const unsigned int numberOfNonZeroJacobianIndices
     = numberOfWeights * SpaceDimension;
 
-  /** Helper variables. */
-  WeightsType weights( numberOfWeights );
-  IndexType supportIndex;
-
   /** Resize data structures. It is not required to resize the SpatialHessian
    * types, since the default constructor of the itk::Matrix sets everything
    * to zero.
@@ -1223,12 +1219,17 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   jsh.resize( numberOfNonZeroJacobianIndices );
   nonZeroJacobianIndices.resize( numberOfNonZeroJacobianIndices );
 
+  /** Helper variables. */
+  WeightsType weights( numberOfWeights );
+  IndexType supportIndex;
+
   /** For all derivative directions, compute the derivatives of the
    * spatial Hessian to the transformation parameters mu:
    * d/dmu of d^2T / dx_i dx_j
    * Make use of the fact that the Hessian is symmetrical, so do not compute
    * both i,j and j,i for i != j.
    */
+  std::vector<WeightsType> weightVector;
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     for ( unsigned int j = 0; j <= i; ++j )
@@ -1239,18 +1240,34 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       /** Compute the derivative weights. */
       this->m_SODerivativeWeightsFunction->Evaluate( cindex, weights, supportIndex );
 
-      /** Compute d/dmu d^2T_{dim} / dx_i dx_j = weights. */
-      for ( unsigned int mu = 0; mu < numberOfWeights; ++mu )
-      {
-        for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
-        {
-          jsh[ mu + dim * numberOfWeights ][ dim ][ i ][ j ] = weights[ mu ];
-          if ( i != j ) jsh[ mu + dim * numberOfWeights ][ dim ][ j ][ i ] = weights[ mu ];
-        }
-      }
+      /** Remember the weights. */
+      weightVector.push_back( weights );
 
     } // end for j
   } // end for i
+
+  /** Compute d/dmu d^2T_{dim} / dx_i dx_j = weights. */
+  for ( unsigned int mu = 0; mu < numberOfWeights; ++mu )
+  {
+    SpatialJacobianType matrix;
+    unsigned int count = 0;
+    for ( unsigned int i = 0; i < SpaceDimension; ++i )
+    {
+      for ( unsigned int j = 0; j <= i; ++j )
+      {
+        matrix[ i ][ j ] = weightVector[ count ][ mu ];
+        if ( i != j ) matrix[ j ][ i ] = matrix[ i ][ j ];
+        ++count;
+      }
+    }
+
+    for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+    {
+      jsh[ mu + dim * numberOfWeights ][ dim ] = matrix;
+    }
+  }
+
+  /** Compute the nonzero Jacobian indices. *
 
   /** Get the support region. */
   RegionType supportRegion;
@@ -1366,6 +1383,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
    * Make use of the fact that the Hessian is symmetrical, so do not compute
    * both i,j and j,i for i != j.
    */
+  std::vector<WeightsType> weightVector;
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     for ( unsigned int j = 0; j <= i; ++j )
@@ -1376,9 +1394,12 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       /** Compute the derivative weights. */
       this->m_SODerivativeWeightsFunction->Evaluate( cindex, weights, supportIndex );
 
-      /** Compute the spatial Hessian sh. */
-     
-      /** Compute d^2T_{dim} / dx_i dx_j = \sum coefs_{dim} * weights. */
+      /** Remember the weights. */
+      weightVector.push_back( weights );
+
+      /** Compute the spatial Hessian sh:
+       *    d^2T_{dim} / dx_i dx_j = \sum coefs_{dim} * weights.
+       */
       for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
       {
         /** Compute the sum for this dimension. */
@@ -1394,23 +1415,36 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
         
         /** Update the spatial Hessian sh. The Hessian is symmetrical. */
         sh[ dim ][ i ][ j ] = sum;
-        sh[ dim ][ j ][ i ] = sum;
-      }
-
-      /** Compute the Jacobian of the spatial Hessian jsh. */
-
-      /** Compute d/dmu d^2T_{dim} / dx_i dx_j = weights. */
-      for ( unsigned int mu = 0; mu < numberOfWeights; ++mu )
-      {
-        for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
-        {
-          jsh[ mu + dim * numberOfWeights ][ dim ][ i ][ j ] = weights[ mu ];
-          if ( i != j ) jsh[ mu + dim * numberOfWeights ][ dim ][ j ][ i ] = weights[ mu ];
-        }
+        if ( i != j ) sh[ dim ][ j ][ i ] = sum;
       }
 
     } // end for j
   } // end for i
+
+  /** Compute the Jacobian of the spatial Hessian jsh:
+   *    d/dmu d^2T_{dim} / dx_i dx_j = weights.
+   */
+  for ( unsigned int mu = 0; mu < numberOfWeights; ++mu )
+  {
+    SpatialJacobianType matrix;
+    unsigned int count = 0;
+    for ( unsigned int i = 0; i < SpaceDimension; ++i )
+    {
+      for ( unsigned int j = 0; j <= i; ++j )
+      {
+        matrix[ i ][ j ] = weightVector[ count ][ mu ];
+        if ( i != j ) matrix[ j ][ i ] = matrix[ i ][ j ];
+        ++count;
+      }
+    }
+
+    for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+    {
+      jsh[ mu + dim * numberOfWeights ][ dim ] = matrix;
+    }
+  }
+
+  /** Compute the nonzero Jacobian indices. */
 
   /** Create an iterator over the coefficient image. */
   ImageRegionConstIteratorWithIndex< ImageType >
