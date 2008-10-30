@@ -34,4 +34,4 @@ ENDMACRO( ADD_ELX_TEST )
 
 ADD_ELX_TEST( BSplineInterpolationWeightFunctionTest )
 ADD_ELX_TEST( BSplineInterpolationDerivativeWeightFunctionTest )
-#ADD_ELX_TEST( BSplineInterpolationSODerivativeWeightFunctionTest )
+ADD_ELX_TEST( BSplineInterpolationSODerivativeWeightFunctionTest )
