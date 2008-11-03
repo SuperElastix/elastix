@@ -25,6 +25,8 @@
 #include "itkLimiterFunctionBase.h"
 #include "itkFixedArray.h"
 
+//#include "itkAdvancedTransform.h"
+
 
 namespace itk
 {
@@ -81,8 +83,7 @@ public:
     TFixedImage::ImageDimension );
 
   /** Typedefs from the superclass. */
-  typedef typename 
-    Superclass::CoordinateRepresentationType              CoordinateRepresentationType;
+  typedef typename Superclass::CoordinateRepresentationType CoordinateRepresentationType;
   typedef typename Superclass::MovingImageType            MovingImageType;
   typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
   typedef typename MovingImageType::Pointer               MovingImagePointer;
@@ -135,6 +136,13 @@ public:
   typedef LimiterFunctionBase<
     RealType, MovingImageDimension>                       MovingImageLimiterType;
   typedef typename MovingImageLimiterType::OutputType     MovingImageLimiterOutputType;
+
+  /** Advanced transform. *
+  typedef typename TransformType::ScalarType              ScalarType;
+  typedef AdvancedTransform<
+    ScalarType,
+    FixedImageDimension,
+    MovingImageDimension >                                AdvancedTransformType;
 
   /** Public methods ********************/
 

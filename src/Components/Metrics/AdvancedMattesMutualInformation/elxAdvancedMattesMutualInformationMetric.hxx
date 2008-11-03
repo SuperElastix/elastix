@@ -113,10 +113,10 @@ using namespace itk;
     this->SetMovingKernelBSplineOrder( movingKernelBSplineOrder );
 
     /** Set whether a low memory consumption should be used. */
-    bool useExplicitPDFDerivatives = true;
-    this->GetConfiguration()->ReadParameter( useExplicitPDFDerivatives,
+    bool useFastAndLowMemoryVersion = true;
+    this->GetConfiguration()->ReadParameter( useFastAndLowMemoryVersion,
       "UseFastAndLowMemoryVersion", this->GetComponentLabel(), level, 0 );
-    this->SetUseExplicitPDFDerivatives( useExplicitPDFDerivatives );
+    this->SetUseExplicitPDFDerivatives( !useFastAndLowMemoryVersion );
 
     /** Set whether a finite difference derivative should be used. */
     bool useFiniteDifferenceDerivative = false;
@@ -130,8 +130,10 @@ using namespace itk;
     {
       double c = 1.0;
       double gamma = 0.101;
-      this->GetConfiguration()->ReadParameter(c, "SP_c", this->GetComponentLabel(), level, 0 );
-      this->GetConfiguration()->ReadParameter(gamma, "SP_gamma", this->GetComponentLabel(), level, 0 );
+      this->GetConfiguration()->ReadParameter( c, "SP_c",
+        this->GetComponentLabel(), level, 0 );
+      this->GetConfiguration()->ReadParameter( gamma, "SP_gamma",
+        this->GetComponentLabel(), level, 0 );
       this->SetParam_c( c );
       this->SetParam_gamma( gamma );
       this->SetFiniteDifferencePerturbation( this->Compute_c( 0 ) );
@@ -142,14 +144,16 @@ using namespace itk;
     int usescales = 0;
     for ( unsigned int i = 0; i < MovingImageDimension; ++i )
     {
-      usescales |= this->GetConfiguration()->ReadParameter( movingImageDerivativeScales[i],
-        "MovingImageDerivativeScales", this->GetComponentLabel(), i, -1, true );
+      usescales |= this->GetConfiguration()->ReadParameter(
+        movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
+        this->GetComponentLabel(), i, -1, true );
     }
     if ( usescales == 0 )
     {
       this->SetUseMovingImageDerivativeScales( true );
       this->SetMovingImageDerivativeScales( movingImageDerivativeScales );
-      elxout << "Multiplying moving image derivatives by: " << movingImageDerivativeScales << std::endl;
+      elxout << "Multiplying moving image derivatives by: "
+        << movingImageDerivativeScales << std::endl;
     }
     
   } // end BeforeEachResolution()
