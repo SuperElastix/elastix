@@ -87,8 +87,8 @@ BSplineResampleInterpolator<TElastix>
   /** The BSplineResampleInterpolator adds: */
 
   /** Write the FinalBSplineInterpolationOrder. */
-  xout["transpar"] << "(FinalBSplineInterpolationOrder " <<
-    this->GetSplineOrder() << ")" << std::endl;
+  xout["transpar"] << "(FinalBSplineInterpolationOrder "
+    << this->GetSplineOrder() << ")" << std::endl;
 
 } // end WriteToFile()
 
