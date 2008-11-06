@@ -371,7 +371,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
 template < typename TFixedImage, typename TMovingImage >
 void
 MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
-::PrintSelf(std::ostream& os, Indent indent) const
+::PrintSelf( std::ostream& os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
   os << indent << "Metric: " << this->m_Metric.GetPointer() << std::endl;
@@ -380,30 +380,28 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
   os << indent << "Interpolator: " << this->m_Interpolator.GetPointer() << std::endl;
   os << indent << "FixedImage: " << this->m_FixedImage.GetPointer() << std::endl;
   os << indent << "MovingImage: " << this->m_MovingImage.GetPointer() << std::endl;
-  os << indent << "FixedImagePyramid: ";
-  os << this->m_FixedImagePyramid.GetPointer() << std::endl;
-  os << indent << "MovingImagePyramid: ";
-  os << this->m_MovingImagePyramid.GetPointer() << std::endl;
+  os << indent << "FixedImagePyramid: "
+    << this->m_FixedImagePyramid.GetPointer() << std::endl;
+  os << indent << "MovingImagePyramid: "
+    << this->m_MovingImagePyramid.GetPointer() << std::endl;
 
-  os << indent << "NumberOfLevels: ";
-  os << this->m_NumberOfLevels << std::endl;
+  os << indent << "NumberOfLevels: " << this->m_NumberOfLevels << std::endl;
+  os << indent << "CurrentLevel: " << this->m_CurrentLevel << std::endl;  
 
-  os << indent << "CurrentLevel: ";
-  os << this->m_CurrentLevel << std::endl;  
+  os << indent << "InitialTransformParameters: "
+    << this->m_InitialTransformParameters << std::endl;
+  os << indent << "InitialTransformParametersOfNextLevel: "
+    << this->m_InitialTransformParametersOfNextLevel << std::endl;
+  os << indent << "LastTransformParameters: "
+    << this->m_LastTransformParameters << std::endl;
+  os << indent << "FixedImageRegion: "
+    << this->m_FixedImageRegion << std::endl;
 
-  os << indent << "InitialTransformParameters: ";
-  os << this->m_InitialTransformParameters << std::endl;
-  os << indent << "InitialTransformParametersOfNextLevel: ";
-  os << this->m_InitialTransformParametersOfNextLevel << std::endl;
-  os << indent << "LastTransformParameters: ";
-  os << this->m_LastTransformParameters << std::endl;
-  os << indent << "FixedImageRegion: ";
-  os << this->m_FixedImageRegion << std::endl;
-  for(unsigned int level=0; level< this->m_FixedImageRegionPyramid.size(); level++)
-    {
-    os << indent << "FixedImageRegion at level " << level << ": ";
-    os << this->m_FixedImageRegionPyramid[level] << std::endl;
-    }
+  for( unsigned int level = 0; level < this->m_FixedImageRegionPyramid.size(); level++ )
+  {
+    os << indent << "FixedImageRegion at level " << level << ": "
+      << this->m_FixedImageRegionPyramid[ level ] << std::endl;
+  }
 
 } // end PrintSelf()
 
