@@ -730,20 +730,23 @@ namespace itk
   {
     Superclass::PrintSelf( os, indent );
 
-    os << indent << "FixedImages: [ ";
+    /** Print all fixed images. */
+    os << indent << "Fixed images: [ ";
     for ( unsigned int i = 0; i < this->GetNumberOfFixedImages(); ++i )
     {
       os << this->m_FixedImages[ i ] << " ";
     }
     os << "]" << std::endl;
 
-    os << indent << "MovingImages: [ ";
+    /** Print all moving images. */
+    os << indent << "Moving images: [ ";
     for ( unsigned int i = 0; i < this->GetNumberOfMovingImages(); ++i )
     {
       os << this->m_MovingImages[ i ] << " ";
     }
     os << "]" << std::endl;
 
+    /** Print all fixed image regions. */
     os << indent << "FixedImageRegions: [ ";
     for ( unsigned int i = 0; i < this->GetNumberOfFixedImageRegions(); ++i )
     {
@@ -751,6 +754,7 @@ namespace itk
     }
     os << "]" << std::endl;
 
+    /** Print all fixed image region pyramids. */
     os << indent << "FixedImageRegionPyramids: [ ";
     for ( unsigned int i = 0; i < this->GetNumberOfFixedImageRegions(); ++i )
     {
@@ -763,6 +767,7 @@ namespace itk
     }
     os << " ]" << std::endl;
     
+    /** Print all fixed image pyramids. */
     os << indent << "FixedImagePyramids: [ ";
     for ( unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i )
     {
@@ -770,6 +775,7 @@ namespace itk
     }
     os << "]" << std::endl;
   
+    /** Print all moving image pyramids. */
     os << indent << "MovingImagePyramids: [ ";
     for ( unsigned int i = 0; i < this->GetNumberOfMovingImagePyramids(); ++i )
     {
@@ -777,6 +783,7 @@ namespace itk
     }
     os << "]" << std::endl;
 
+    /** Print all moving image interpolators. */
     os << indent << "Interpolators: [ ";
     for ( unsigned int i = 0; i < this->GetNumberOfInterpolators(); ++i )
     {
@@ -784,6 +791,7 @@ namespace itk
     }
     os << "]" << std::endl;
 
+    /** Print all fixed image interpolators. */
     os << indent << "FixedImageInterpolators: [ ";
     for ( unsigned int i = 0; i < this->GetNumberOfFixedImageInterpolators(); ++i )
     {

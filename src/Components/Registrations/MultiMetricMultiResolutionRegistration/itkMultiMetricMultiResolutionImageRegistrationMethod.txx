@@ -340,13 +340,13 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
   for ( unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i )
   {
     // Setup the fixed image pyramid
-    FixedImagePyramidPointer fixpyr = this->GetFixedImagePyramid(i);
+    FixedImagePyramidPointer fixpyr = this->GetFixedImagePyramid( i );
     if ( fixpyr.IsNotNull() ) 
     {
       fixpyr->SetNumberOfLevels( this->GetNumberOfLevels() );
       if ( this->GetNumberOfFixedImages() > 1 )
       {
-        fixpyr->SetInput( this->GetFixedImage(i) );          
+        fixpyr->SetInput( this->GetFixedImage( i ) );          
       }
       else
       {
@@ -357,9 +357,9 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
       ScheduleType schedule = fixpyr->GetSchedule();
 
       FixedImageRegionType fixedImageRegion;
-      if ( this->GetNumberOfFixedImageRegions() > 1)
+      if ( this->GetNumberOfFixedImageRegions() > 1 )
       {
-        fixedImageRegion = this->GetFixedImageRegion(i);
+        fixedImageRegion = this->GetFixedImageRegion( i );
       }
       else
       {
@@ -368,13 +368,13 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
       SizeType  inputSize  = fixedImageRegion.GetSize();
       IndexType inputStart = fixedImageRegion.GetIndex();
       IndexType inputEnd = inputStart;
-      for ( unsigned int dim = 0; dim < TFixedImage::ImageDimension; dim++)
+      for ( unsigned int dim = 0; dim < TFixedImage::ImageDimension; dim++ )
       {
-        inputEnd[dim] += ( inputSize[dim]-1 );
+        inputEnd[ dim ] += ( inputSize[ dim ] - 1 );
       }
 
-      this->m_FixedImageRegionPyramids[i].reserve( this->GetNumberOfLevels() );
-      this->m_FixedImageRegionPyramids[i].resize( this->GetNumberOfLevels() );
+      this->m_FixedImageRegionPyramids[ i ].reserve( this->GetNumberOfLevels() );
+      this->m_FixedImageRegionPyramids[ i ].resize( this->GetNumberOfLevels() );
 
       // Compute the FixedImageRegion corresponding to each level of the 
       // pyramid. 
@@ -392,8 +392,8 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
 
       PointType inputStartPoint;
       PointType inputEndPoint;
-      fixpyr->GetInput()->TransformIndexToPhysicalPoint(inputStart, inputStartPoint);
-      fixpyr->GetInput()->TransformIndexToPhysicalPoint(inputEnd, inputEndPoint);
+      fixpyr->GetInput()->TransformIndexToPhysicalPoint( inputStart, inputStartPoint );
+      fixpyr->GetInput()->TransformIndexToPhysicalPoint( inputEnd, inputEndPoint );
 
       for ( unsigned int level=0; level < this->GetNumberOfLevels(); level++ )
       {
@@ -401,18 +401,23 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
         IndexType start;
         CIndexType startcindex;
         CIndexType endcindex;
-        FixedImageType * fixedImageAtLevel = fixpyr->GetOutput(level);
+        FixedImageType * fixedImageAtLevel = fixpyr->GetOutput( level );
         /** map the original fixed image region to the image resulting from the 
-        * FixedImagePyramid at level l.
-        * To be on the safe side, the start point is ceiled, and the end point is
-        * floored. To see why, consider an image of 4 by 4, and its downsampled version of 2 by 2. */
-        fixedImageAtLevel->TransformPhysicalPointToContinuousIndex(inputStartPoint, startcindex);
-        fixedImageAtLevel->TransformPhysicalPointToContinuousIndex(inputEndPoint, endcindex);
-        for ( unsigned int dim = 0; dim < TFixedImage::ImageDimension; dim++)
+         * FixedImagePyramid at level l.
+         * To be on the safe side, the start point is ceiled, and the end point
+         * is floored. To see why, consider an image of 4 by 4, and its
+         * downsampled version of 2 by 2.
+         */
+        fixedImageAtLevel->TransformPhysicalPointToContinuousIndex(
+          inputStartPoint, startcindex );
+        fixedImageAtLevel->TransformPhysicalPointToContinuousIndex(
+          inputEndPoint, endcindex );
+        for ( unsigned int dim = 0; dim < TFixedImage::ImageDimension; dim++ )
         {
           start[ dim ] = static_cast<IndexValueType>( vcl_ceil( startcindex[ dim ] ) );
           size[ dim ]  = static_cast<SizeValueType>( 
-            static_cast<SizeValueType>( vcl_floor( endcindex[ dim ] ) ) - start[ dim ] + 1 );
+            static_cast<SizeValueType>( vcl_floor( endcindex[ dim ] ) )
+            - start[ dim ] + 1 );
         }
 
         this->m_FixedImageRegionPyramids[ i ][ level ].SetSize( size );
