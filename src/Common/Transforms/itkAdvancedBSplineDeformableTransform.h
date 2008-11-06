@@ -32,7 +32,6 @@ PURPOSE. See the above copyright notices for more information.
 #ifndef __itkAdvancedBSplineDeformableTransform_h
 #define __itkAdvancedBSplineDeformableTransform_h
 
-#include <iostream>
 #include "itkAdvancedTransform.h"
 #include "itkImage.h"
 #include "itkImageRegion.h"
@@ -125,8 +124,8 @@ template <
     class TScalarType = double,          // Data type for scalars
     unsigned int NDimensions = 3,        // Number of dimensions
     unsigned int VSplineOrder = 3 >      // Spline order
-class ITK_EXPORT AdvancedBSplineDeformableTransform : 
-          public AdvancedTransform< TScalarType, NDimensions, NDimensions >
+class ITK_EXPORT AdvancedBSplineDeformableTransform
+  : public AdvancedTransform< TScalarType, NDimensions, NDimensions >
 {
 public:
   /** Standard class typedefs. */
@@ -136,7 +135,7 @@ public:
   typedef SmartPointer<Self>                        Pointer;
   typedef SmartPointer<const Self>                  ConstPointer;
       
-  /** New macro for creation of through the object factory.*/
+  /** New macro for creation of through the object factory. */
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
@@ -190,7 +189,6 @@ public:
    * This method wraps each grid as itk::Image's using the user specified
    * grid region, spacing and origin.
    * NOTE: The grid region, spacing and origin must be set first.
-   *
    */
   void SetParameters( const ParametersType & parameters );
   
@@ -208,7 +206,6 @@ public:
    *
    * This function was added to allow the transform to work with the 
    * itkTransformReader/Writer I/O filters.
-   *
    */
   void SetFixedParameters( const ParametersType & parameters );
 
@@ -227,7 +224,6 @@ public:
    * This method wraps each grid as itk::Image's using the user specified
    * grid region, spacing and origin.
    * NOTE: The grid region, spacing and origin must be set first.
-   *
    */
   void SetParametersByValue( const ParametersType & parameters );
 
@@ -248,9 +244,10 @@ public:
   virtual const ParametersType& GetFixedParameters( void ) const;
   
   /** Parameters as SpaceDimension number of images. */
-  typedef typename ParametersType::ValueType                      PixelType;
-  typedef Image<PixelType,itkGetStaticConstMacro( SpaceDimension )> ImageType;
-  typedef typename ImageType::Pointer                             ImagePointer;
+  typedef typename ParametersType::ValueType            PixelType;
+  typedef Image< PixelType,
+    itkGetStaticConstMacro( SpaceDimension )>           ImageType;
+  typedef typename ImageType::Pointer                   ImagePointer;
 
   /** Get the array of coefficient images. */
   virtual ImagePointer * GetCoefficientImage( void )
@@ -268,12 +265,11 @@ public:
    *
    * Warning: use either the SetParameters() or SetCoefficientImage()
    * API. Mixing the two modes may results in unexpected results.
-   *
    */
   virtual void SetCoefficientImage( ImagePointer images[] );  
 
   /** Typedefs for specifying the extend to the grid. */
-  typedef ImageRegion<itkGetStaticConstMacro(SpaceDimension)>    RegionType;
+  typedef ImageRegion< itkGetStaticConstMacro( SpaceDimension ) > RegionType;
   
   typedef typename RegionType::IndexType    IndexType;
   typedef typename RegionType::SizeType     SizeType;
@@ -288,7 +284,7 @@ public:
   itkGetConstMacro( GridRegion, RegionType );
 
   /** This method specifies the grid spacing or resolution. */
-  virtual void SetGridSpacing( const SpacingType& spacing );
+  virtual void SetGridSpacing( const SpacingType & spacing );
   itkGetMacro( GridSpacing, SpacingType );
   itkGetConstMacro( GridSpacing, SpacingType );
 
@@ -304,9 +300,9 @@ public:
 
   /** Typedef of the bulk transform. */
   typedef Transform< ScalarType,
-    itkGetStaticConstMacro(SpaceDimension),
-    itkGetStaticConstMacro(SpaceDimension)>                 BulkTransformType;
-  typedef typename BulkTransformType::ConstPointer          BulkTransformPointer;
+    itkGetStaticConstMacro( SpaceDimension ),
+    itkGetStaticConstMacro( SpaceDimension ) >          BulkTransformType;
+  typedef typename BulkTransformType::ConstPointer      BulkTransformPointer;
 
   /** This method specifies the bulk transform to be applied. 
    * The default is the identity transform.
@@ -319,18 +315,18 @@ public:
 
   /** Interpolation weights function type. */
   typedef BSplineInterpolationWeightFunction2< ScalarType,
-    itkGetStaticConstMacro(SpaceDimension),
-    itkGetStaticConstMacro(SplineOrder)>                    WeightsFunctionType;
+    itkGetStaticConstMacro( SpaceDimension ),
+    itkGetStaticConstMacro( SplineOrder ) >                 WeightsFunctionType;
   typedef typename WeightsFunctionType::WeightsType         WeightsType;
   typedef typename WeightsFunctionType::ContinuousIndexType ContinuousIndexType;
   typedef BSplineInterpolationDerivativeWeightFunction<
     ScalarType,
-    itkGetStaticConstMacro(SpaceDimension),
-    itkGetStaticConstMacro(SplineOrder)>                    DerivativeWeightsFunctionType;
+    itkGetStaticConstMacro( SpaceDimension ),
+    itkGetStaticConstMacro( SplineOrder ) >                 DerivativeWeightsFunctionType;
   typedef BSplineInterpolationSecondOrderDerivativeWeightFunction<
     ScalarType,
-    itkGetStaticConstMacro(SpaceDimension),
-    itkGetStaticConstMacro(SplineOrder)>                    SODerivativeWeightsFunctionType;
+    itkGetStaticConstMacro( SpaceDimension ),
+    itkGetStaticConstMacro( SplineOrder ) >                 SODerivativeWeightsFunctionType;
 
   /** Parameter index array type. */
   typedef Array<unsigned long> ParameterIndexArrayType;
@@ -342,7 +338,8 @@ public:
    * Parameter indices for the i-th dimension can be obtained by adding
    * ( i * this->GetNumberOfParametersPerDimension() ) to the indices array.
    */
-  virtual void TransformPoint( const InputPointType & inputPoint,
+  virtual void TransformPoint(
+    const InputPointType & inputPoint,
     OutputPointType & outputPoint,
     WeightsType & weights,
     ParameterIndexArrayType & indices,
@@ -350,12 +347,14 @@ public:
 
   /** Get number of weights. */
   unsigned long GetNumberOfWeights( void ) const
-    { return this->m_WeightsFunction->GetNumberOfWeights(); }
+  {
+    return this->m_WeightsFunction->GetNumberOfWeights();
+  }
 
   /** Method to transform a vector - 
    *  not applicable for this type of transform.
    */
-  virtual OutputVectorType TransformVector(const InputVectorType &) const
+  virtual OutputVectorType TransformVector( const InputVectorType & ) const
     { 
     itkExceptionMacro(<< "Method not applicable for deformable transform." );
     return OutputVectorType(); 
@@ -486,30 +485,30 @@ private:
   OriginType      m_GridOrigin;
   GridOffsetType  m_GridOffsetTable;
 
-  DirectionType m_PointToIndex;
-  DirectionType m_IndexToPoint;
+  DirectionType   m_PointToIndex;
+  DirectionType   m_IndexToPoint;
   
-  RegionType    m_ValidRegion;
+  RegionType      m_ValidRegion;
 
   /** Variables defining the interpolation support region. */
-  unsigned long m_Offset;
-  bool          m_SplineOrderOdd;
-  SizeType      m_SupportSize;
-  IndexType     m_ValidRegionLast;
+  unsigned long   m_Offset;
+  bool            m_SplineOrderOdd;
+  SizeType        m_SupportSize;
+  IndexType       m_ValidRegionLast;
   
   /** Array holding images wrapped from the flat parameters. */
-  ImagePointer   m_WrappedImage[NDimensions];
+  ImagePointer    m_WrappedImage[ NDimensions ];
 
   /** Array of images representing the B-spline coefficients 
    *  in each dimension. */
-  ImagePointer   m_CoefficientImage[NDimensions];
+  ImagePointer    m_CoefficientImage[ NDimensions ];
 
   /** Jacobian as SpaceDimension number of images. */
-  typedef typename JacobianType::ValueType JacobianPixelType;
-  typedef Image<JacobianPixelType,
-                itkGetStaticConstMacro(SpaceDimension)> JacobianImageType;
+  typedef typename JacobianType::ValueType      JacobianPixelType;
+  typedef Image< JacobianPixelType,
+    itkGetStaticConstMacro( SpaceDimension ) >  JacobianImageType;
  
-  typename JacobianImageType::Pointer m_JacobianImage[NDimensions];
+  typename JacobianImageType::Pointer m_JacobianImage[ NDimensions ];
 
   /** Keep track of last support region used in computing the Jacobian
    * for fast resetting of Jacobian to zero.
