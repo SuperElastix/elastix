@@ -58,7 +58,7 @@ namespace itk
     ::GetValue( const ParametersType& parameters ) const
   {    
     /** Construct the JointPDF and Alpha. */
-    this->ComputePDFs(parameters);          
+    this->ComputePDFs( parameters );          
 
     /** Normalize the pdfs: p = alpha h. */
     this->NormalizeJointPDF( this->m_JointPDF, this->m_Alpha );

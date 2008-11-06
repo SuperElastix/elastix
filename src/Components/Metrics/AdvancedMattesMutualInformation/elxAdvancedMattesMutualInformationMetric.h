@@ -34,39 +34,63 @@ using namespace itk;
    * The parameters used in this class are:
    * \parameter Metric: Select this metric as follows:\n
    *    <tt>(Metric "AdvancedMattesMutualInformation")</tt>
-   * \parameter NumberOfHistogramBins: The size of the histogram. Must be given for each 
-   *    resolution, or for all resolutions at once. \n
+   * \parameter NumberOfHistogramBins: The size of the histogram. Must be
+   *    given for each resolution, or for all resolutions at once. \n
    *    example: <tt>(NumberOfHistogramBins 32 32 64)</tt> \n
    *    The default is 32 for each resolution.
-   * \parameter NumberOfFixedHistogramBins: The size of the histogram in the fixed dimension. Can be given for each 
-   *    resolution, or for all resolutions at once. If not given, NumberOfHistogramBins is used.\n
+   * \parameter NumberOfFixedHistogramBins: The size of the histogram in the
+   *    fixed dimension. Can be given for each resolution, or for all
+   *    resolutions at once. If not given, NumberOfHistogramBins is used.\n
    *    example: <tt>(NumberOfFixedHistogramBins 32 32 64)</tt> \n
-   *    The default is the value of NumberOfHistogramBins, or, if that one is also not given, 32.
-   * \parameter NumberOfMovingHistogramBins: The size of the histogram in the fixed dimension. Can be given for each 
-   *    resolution, or for all resolutions at once. If not given, NumberOfHistogramBins is used.\n
+   *    The default is the value of NumberOfHistogramBins, or, if that one
+   *    is also not given, 32.
+   * \parameter NumberOfMovingHistogramBins: The size of the histogram in
+   *    the fixed dimension. Can be given for each resolution, or for all
+   *    resolutions at once. If not given, NumberOfHistogramBins is used.\n
    *    example: <tt>(NumberOfMovingHistogramBins 32 32 64)</tt> \n
-   *    The default is the value of NumberOfHistogramBins, or, if that one is also not given, 32.
-   * \parameter FixedKernelBSplineOrder: The bspline order of the Parzen window, used to estimate
-   *    the joint histogram. Can be given for each resolution, or for all resolutions at once. \n
+   *    The default is the value of NumberOfHistogramBins, or, if that one
+   *    is also not given, 32.
+   * \parameter FixedKernelBSplineOrder: The B-spline order of the Parzen
+   *    window, used to estimate the joint histogram. Can be given for each
+   *    resolution, or for all resolutions at once. \n
    *    example: <tt>(FixedKernelBSplineOrder 0 1 1)</tt> \n
    *    The default value is 0.
-   * \parameter MovingKernelBSplineOrder: The bspline order of the Parzen window, used to estimate
-   *    the joint histogram. Can be given for each resolution, or for all resolutions at once. \n
+   * \parameter MovingKernelBSplineOrder: The B-spline order of the Parzen
+   *    window, used to estimate the joint histogram. Can be given for each
+   *    resolution, or for all resolutions at once. \n
    *    example: <tt>(MovingKernelBSplineOrder 3 3 3)</tt> \n
    *    The default value is 3.
-   * \parameter FixedLimitRangeRatio: The relative extension of the intensity range of the fixed image.\n
-   *    If your image has grey values from 0 to 1000 and the FixedLimitRangeRatio is 0.001, the
-   *    joint histogram will expect fixed image grey values from -0.001 to 1000.001. This may be 
-   *    usefull if you use high order bspline interpolator for the fixed image.\n
+   * \parameter FixedLimitRangeRatio: The relative extension of the intensity
+   *    range of the fixed image.\n
+   *    If your image has grey values from 0 to 1000 and the
+   *    FixedLimitRangeRatio is 0.001, the joint histogram will expect fixed
+   *    image grey values from -0.001 to 1000.001. This may be usefull if
+   *    you use high order bspline interpolator for the fixed image.\n
    *    example: <tt>(FixedLimitRangeRatio 0.001 0.01 0.01)</tt> \n
-   *    The default value is 0.01. Can be given for each resolution, or for all resolutions at once.
-   * \parameter MovingLimitRangeRatio: The relative extension of the intensity range of the moving image.\n
-   *    If your image has grey values from 0 to 1000 and the MovingLimitRangeRatio is 0.001, the
-   *    joint histogram will expect moving image grey values from -0.001 to 1000.001. This may be 
-   *    usefull if you use high order bspline interpolator for the moving image.\n
+   *    The default value is 0.01. Can be given for each resolution, or for
+   *    all resolutions at once.
+   * \parameter MovingLimitRangeRatio: The relative extension of the
+   *    intensity range of the moving image.\n
+   *    If your image has grey values from 0 to 1000 and the
+   *    MovingLimitRangeRatio is 0.001, the joint histogram will expect
+   *    moving image grey values from -0.001 to 1000.001. This may be 
+   *    useful if you use high order bspline interpolator for the moving image.\n
    *    example: <tt>(MovingLimitRangeRatio 0.001 0.01 0.01)</tt> \n
-   *    The default value is 0.01. Can be given for each resolution, or for all resolutions at once. 
+   *    The default value is 0.01. Can be given for each resolution, or for
+   *    all resolutions at once. 
    * \parameter FiniteDifferenceDerivative: Experimental feature, do not use.
+   * \parameter UseFastAndLowMemoryVersion: Switch between a version of
+   *    mutual information that explicitely computes the derivatives of the
+   *    joint histogram to each transformation parameter (false) and a
+   *    version that computes the mutual information via another route (true).
+   *    The first option allocates a large 3D matrix of size:
+   *    NumberOfFixedHistogramBins * NumberOfMovingHistogramBins * number
+   *    of affected B-spline parameters. This method is faster for a low
+   *    number of parameters. The second method does not use this huge matrix,
+   *    and is therefore much more memory efficient for large images and fine
+   *    B-spline grids.
+   *    example: <tt>(UseFastAndLowMemoryVersion "false")</tt> \n
+   *    The default is "true".
    *
    * \sa ParzenWindowMutualInformationImageToImageMetric
    * \ingroup Metrics
