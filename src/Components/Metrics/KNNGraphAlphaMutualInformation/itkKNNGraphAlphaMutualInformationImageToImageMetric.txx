@@ -717,10 +717,11 @@ namespace itk
             diff_M, diff_J,
             distance_M, distance_J,
             dGamma_M, dGamma_J );
-        }
+
+        } // end if m_UseOldAndSlowMethod
 
       } // end loop over the k neighbours
-      
+
       /** Compute contributions. */
       H = vcl_sqrt( Gamma_F * Gamma_M );
       if ( H > this->m_AvoidDivisionBy )
@@ -962,8 +963,7 @@ namespace itk
       for ( unsigned int i = 1; i < this->GetNumberOfMovingImages(); ++i )
       {
         /** Compute the gradient at feature image i. */
-        gradient = this
-          ->m_BSplineInterpolatorVector[ i ]
+        gradient = this->m_BSplineInterpolatorVector[ i ]
           ->EvaluateDerivativeAtContinuousIndex( cindex );
 
         /** Set the gradient into the Array2D. */
@@ -1006,12 +1006,12 @@ namespace itk
   void
   KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   ::ComputeImageJacobianDifference_Old(
-    SpatialDerivativeType & D1sparse,
-    SpatialDerivativeType & D2sparse_M,
-    SpatialDerivativeType & D2sparse_J,
-    ParameterIndexArrayType & D1indices,
-    ParameterIndexArrayType & D2indices_M,
-    ParameterIndexArrayType & D2indices_J,
+    const SpatialDerivativeType & D1sparse,
+    const SpatialDerivativeType & D2sparse_M,
+    const SpatialDerivativeType & D2sparse_J,
+    const ParameterIndexArrayType & D1indices,
+    const ParameterIndexArrayType & D2indices_M,
+    const ParameterIndexArrayType & D2indices_J,
     SpatialDerivativeType & Dfull_M,
     SpatialDerivativeType & Dfull_J ) const
   {
@@ -1041,7 +1041,7 @@ namespace itk
 
 
   /**
-   * ************************ ComputeImageJacobianDifference *************************
+   * ************************ UpdateDerivativeOfGammas *************************
    */
   
   template <class TFixedImage, class TMovingImage>
@@ -1064,9 +1064,19 @@ namespace itk
     /** Make temporary copies of diff, since post_multiply changes diff. */
     vnl_vector<double> tmpM1( diff_M );
     vnl_vector<double> tmpM2( diff_M );
-    vnl_vector<double> tmpJ( diff_J );
+    vnl_vector<double> tmpJ1( diff_J );
+    vnl_vector<double> tmpJ2( diff_J );
 
-    /** Divide by the distance first, so that diff's are nomalised. */
+    /** Divide by the distance first, so that diff's are normalised.
+     * Dividing at this place is much faster, since distance_? is a small
+     * vector, i.e. only the size of the number of features (e.g. 6).
+     * Dividing tmp?sparse_? is slower, since it is a vector of the size of
+     * the B-spline support, so in 3D and spline order 3: (3 + 1)^3 * 3 = 192.
+     * On an example registration it gave me a speedup of about 25%!
+     * Both methods should return the same results, but due to numerical
+     * stuff the metric value and derivative start to deviate after a couple
+     * of iterations.
+     */
     if ( distance_M > this->m_AvoidDivisionBy )
     {
       tmpM1 /= distance_M;
@@ -1074,20 +1084,22 @@ namespace itk
     }
     if ( distance_J > this->m_AvoidDivisionBy )
     {
-      tmpJ /= distance_J;
+      tmpJ1 /= distance_J;
+      tmpJ2 /= distance_J;
     }
 
     /** Compute sparse intermediary results. */
-    vnl_vector<double> tmp1sparse   = tmpM1.post_multiply( D1sparse );
+    vnl_vector<double> tmp1sparse_M = tmpM1.post_multiply( D1sparse );
+    vnl_vector<double> tmp1sparse_J = tmpJ1.post_multiply( D1sparse );
     vnl_vector<double> tmp2sparse_M = tmpM2.post_multiply( D2sparse_M );
-    vnl_vector<double> tmp2sparse_J = tmpJ.post_multiply( D2sparse_J );
+    vnl_vector<double> tmp2sparse_J = tmpJ2.post_multiply( D2sparse_J );
 
     /** Update dGamma_M. */
     if ( distance_M > this->m_AvoidDivisionBy )
     {
       for ( unsigned int i = 0; i < D1indices.GetSize(); ++i )
       {
-        dGamma_M[ D1indices[ i ] ] += tmp1sparse[ i ];
+        dGamma_M[ D1indices[ i ] ] += tmp1sparse_M[ i ];
       }
 
       for ( unsigned int i = 0; i < D2indices_M.GetSize(); ++i )
@@ -1101,7 +1113,7 @@ namespace itk
     {
       for ( unsigned int i = 0; i < D1indices.GetSize(); ++i )
       {
-        dGamma_J[ D1indices[ i ] ] += tmp1sparse[ i ];
+        dGamma_J[ D1indices[ i ] ] += tmp1sparse_J[ i ];
       }
 
       for ( unsigned int i = 0; i < D2indices_J.GetSize(); ++i )

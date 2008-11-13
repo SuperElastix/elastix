@@ -312,12 +312,12 @@ private:
    * full sized matrix.
    */
   virtual void ComputeImageJacobianDifference_Old(
-    SpatialDerivativeType & D1sparse,
-    SpatialDerivativeType & D2sparse_M,
-    SpatialDerivativeType & D2sparse_J,
-    ParameterIndexArrayType & D1indices,
-    ParameterIndexArrayType & D2indices_M,
-    ParameterIndexArrayType & D2indices_J,
+    const SpatialDerivativeType & D1sparse,
+    const SpatialDerivativeType & D2sparse_M,
+    const SpatialDerivativeType & D2sparse_J,
+    const ParameterIndexArrayType & D1indices,
+    const ParameterIndexArrayType & D2indices_M,
+    const ParameterIndexArrayType & D2indices_J,
     SpatialDerivativeType & Dfull_M,
     SpatialDerivativeType & Dfull_J ) const;
 
