@@ -252,7 +252,7 @@ namespace itk
   template <typename TScalarType, unsigned int NDimensions>
     typename CombinationTransform<TScalarType, NDimensions>::OutputPointType
     CombinationTransform<TScalarType, NDimensions>::  
-    TransformPoint(const InputPointType  & point ) const
+    TransformPoint(const InputPointType & point ) const
   { 
     /** Call the selected TransformPointFunction */
     return ((*this).*m_SelectedTransformPointFunction)(point);
