@@ -14,6 +14,8 @@ SUBDIRS( xout )
 SET( CommonFiles
  elxTimer.cxx
  elxTimer.h
+ #itkBSplineKernelFunction2.h
+ #itkBSplineKernelFunction2.cxx
  itkErodeMaskImageFilter.h
  itkErodeMaskImageFilter.txx
  itkImageFileCastWriter.h
@@ -72,6 +74,7 @@ SET( TransformFiles
  Transforms/itkAdvancedTransform.txx
  Transforms/itkBSplineCombinationTransform.h
  Transforms/itkBSplineCombinationTransform.hxx
+ Transforms/itkBSplineDerivativeKernelFunction2.h
  Transforms/itkBSplineInterpolationDerivativeWeightFunction.h
  Transforms/itkBSplineInterpolationDerivativeWeightFunction.txx
  Transforms/itkBSplineInterpolationSecondOrderDerivativeWeightFunction.h
@@ -80,7 +83,8 @@ SET( TransformFiles
  Transforms/itkBSplineInterpolationWeightFunction2.txx
  Transforms/itkBSplineInterpolationWeightFunctionBase.h
  Transforms/itkBSplineInterpolationWeightFunctionBase.txx
- Transforms/itkBSplineSecondOrderDerivativeKernelFunction.h
+ #Transforms/itkBSplineSecondOrderDerivativeKernelFunction.h
+ Transforms/itkBSplineSecondOrderDerivativeKernelFunction2.h
  Transforms/itkCombinationTransform.h
  Transforms/itkCombinationTransform.hxx
  Transforms/itkDeformationFieldInterpolatingTransform.h

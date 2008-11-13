@@ -19,27 +19,6 @@
 #include "itkMatrix.h"
 #include "itkImageRegionConstIteratorWithIndex.h"
 
-// anonymous namespace
-namespace
-{
-//--------------------------------------------------------------------------
-// The 'floor' function on x86 and mips is many times slower than these
-// and is used a lot in this code, optimize for different CPU architectures
-inline int BSplineFloor2(double x)
-{
-#if defined mips || defined sparc || defined __ppc__
-  return (int)((unsigned int)(x + 2147483648.0) - 2147483648U);
-#elif defined i386 || defined _M_IX86
-  union { unsigned int hilo[2]; double d; } u;  
-  u.d = x + 103079215104.0;
-  return (int)((u.hilo[1]<<16)|(u.hilo[0]>>16));  
-#else
-  return int(floor(x));
-#endif
-}
-
-}
-
 
 namespace itk
 {
@@ -189,7 +168,7 @@ BSplineInterpolationWeightFunctionBase<TCoordRep,VSpaceDimension, VSplineOrder>
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     startIndex[ i ] = static_cast<typename IndexType::IndexValueType>(
-      BSplineFloor2( cindex[ i ]
+      vcl_floor( cindex[ i ]
       - static_cast<double>( this->m_SupportSize[ i ] - 2.0 ) / 2.0 ) );
   }
 
@@ -207,11 +186,13 @@ BSplineInterpolationWeightFunctionBase<TCoordRep,VSpaceDimension, VSplineOrder>
   /** Compute the vector of weights. */
   for ( unsigned int k = 0; k < this->m_NumberOfWeights; k++ )
   {
-    weights[ k ] = 1.0;
+    double tmp1 = 1.0;
+    const unsigned long * tmp2 = this->m_OffsetToIndexTable[ k ];
     for ( unsigned int j = 0; j < SpaceDimension; j++ )
     {
-      weights[ k ] *= weights1D[ j ][ this->m_OffsetToIndexTable[ k ][ j ] ];
+      tmp1 *= weights1D[ j ][ tmp2[ j ] ];
     }
+    weights[ k ] = tmp1;
   }
 
 } // end Evaluate()
@@ -232,7 +213,7 @@ BSplineInterpolationWeightFunctionBase<TCoordRep,VSpaceDimension, VSplineOrder>
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     startIndex[ i ] = static_cast<typename IndexType::IndexValueType>(
-      BSplineFloor2( cindex[ i ]
+      vcl_floor( cindex[ i ]
       - static_cast<double>( this->m_SupportSize[ i ] - 2.0 ) / 2.0 ) );
   }
 

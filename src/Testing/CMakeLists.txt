@@ -32,6 +32,15 @@ ENDMACRO( ADD_ELX_TEST )
 
 #---------------------------------------------------------------------
 
+ADD_ELX_TEST( BSplineDerivativeKernelFunctionTest )
+ADD_ELX_TEST( BSplineSODerivativeKernelFunctionTest )
 ADD_ELX_TEST( BSplineInterpolationWeightFunctionTest )
 ADD_ELX_TEST( BSplineInterpolationDerivativeWeightFunctionTest )
 ADD_ELX_TEST( BSplineInterpolationSODerivativeWeightFunctionTest )
+#ADD_ELX_TEST( AdvancedBSplineDeformableTransformTest )
+
+
+#ADD_EXECUTABLE( itkBSplineKernelFunctionTest itkBSplineKernelFunctionTest.cxx
+#itkBSplineKernelFunction2.cxx )
+#TARGET_LINK_LIBRARIES( itkBSplineKernelFunctionTest ITKCommon ITKBasicFilters )
+#ADD_TEST( BSplineKernelFunctionTest itkBSplineKernelFunctionTest )

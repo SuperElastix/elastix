@@ -20,8 +20,8 @@ PURPOSE. See the above copyright notices for more information.
 #include "itkArray2D.h"
 #include "itkMatrix.h"
 #include "itkBSplineKernelFunction.h"
-#include "itkBSplineDerivativeKernelFunction.h"
-#include "itkBSplineSecondOrderDerivativeKernelFunction.h"
+#include "itkBSplineDerivativeKernelFunction2.h"
+#include "itkBSplineSecondOrderDerivativeKernelFunction2.h"
 
 
 namespace itk
@@ -107,9 +107,9 @@ protected:
   /** Interpolation kernel types. */
   typedef BSplineKernelFunction<
     itkGetStaticConstMacro( SplineOrder ) >   KernelType;
-  typedef BSplineDerivativeKernelFunction<
+  typedef BSplineDerivativeKernelFunction2<
     itkGetStaticConstMacro( SplineOrder ) >   DerivativeKernelType;
-  typedef BSplineSecondOrderDerivativeKernelFunction<
+  typedef BSplineSecondOrderDerivativeKernelFunction2<
     itkGetStaticConstMacro( SplineOrder ) >   SecondOrderDerivativeKernelType;
 
   /** Lookup table type. */

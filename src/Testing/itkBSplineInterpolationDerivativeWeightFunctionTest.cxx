@@ -19,7 +19,7 @@ int main( int argc, char *argv[] )
   /** The number of calls to Evaluate(). This number gives reasonably
    * fast test results in Release mode. 
    */
-  unsigned int N = 1e6;
+  unsigned int N = 1e7;
 
   /** Other typedefs. */
   typedef itk::BSplineInterpolationDerivativeWeightFunction<
