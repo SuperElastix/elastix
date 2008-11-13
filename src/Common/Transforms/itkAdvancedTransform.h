@@ -132,6 +132,9 @@ public:
   typedef std::vector< SpatialHessianType >         JacobianOfSpatialHessianType;
   typedef typename SpatialJacobianType::InternalMatrixType  InternalMatrixType;
 
+  /** Get the number of nonzero Jacobian indices. By default all. */
+  virtual unsigned long GetNumberOfNonZeroJacobianIndices( void ) const;
+
   /** This returns a sparse version of the Jacobian of the transformation.
    *
    * The Jacobian is expressed as a vector of partial derivatives of the

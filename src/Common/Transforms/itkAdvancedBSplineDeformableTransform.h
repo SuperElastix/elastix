@@ -397,6 +397,8 @@ public:
 
   unsigned int GetNumberOfAffectedWeights( void ) const;
 
+  virtual unsigned long GetNumberOfNonZeroJacobianIndices( void ) const;
+
   /** Compute the Jacobian matrix of the transformation at one point. */
   virtual const JacobianType & GetJacobian( const InputPointType & point ) const;
 

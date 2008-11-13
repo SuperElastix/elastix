@@ -124,6 +124,9 @@ public:
   /** Return the number of parameters that completely define the CurrentTransform. */
   virtual unsigned int GetNumberOfParameters( void ) const;
 
+  /** Get the number of nonzero Jacobian indices. By default all. */
+  virtual unsigned long GetNumberOfNonZeroJacobianIndices( void ) const;
+
   /** Get the transformation parameters from the CurrentTransform. */
   virtual const ParametersType & GetParameters( void ) const;
 

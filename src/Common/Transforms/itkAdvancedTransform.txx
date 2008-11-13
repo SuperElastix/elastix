@@ -61,6 +61,20 @@ AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
 
 
 /**
+ * ********************* GetNumberOfNonZeroJacobianIndices ****************************
+ */
+
+template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
+unsigned long
+AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
+::GetNumberOfNonZeroJacobianIndices( void ) const
+{
+  return this->GetNumberOfParameters();
+
+} // end GetNumberOfNonZeroJacobianIndices()
+
+
+/**
  * ********************* GetJacobian ****************************
  */
 

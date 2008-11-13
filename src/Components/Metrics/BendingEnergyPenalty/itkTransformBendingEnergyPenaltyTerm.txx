@@ -189,6 +189,10 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   SpatialHessianType spatialHessian;
   JacobianOfSpatialHessianType jacobianOfSpatialHessian;
   NonZeroJacobianIndicesType nonZeroJacobianIndices;
+  unsigned long numberOfNonZeroJacobianIndices = this->m_AdvancedTransform
+     ->GetNumberOfNonZeroJacobianIndices();
+  jacobianOfSpatialHessian.resize( numberOfNonZeroJacobianIndices );
+  nonZeroJacobianIndices.resize( numberOfNonZeroJacobianIndices );
 
   /** Check if the SpatialHessian and the JacobianOfSpatialHessian are nonzero.
    * If they are zero, they were implemented in the transform as such, which
@@ -266,8 +270,12 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
       /** Get the spatial Hessian of the transformation at the current point.
        * This is needed to compute the bending energy.
        */
-      this->m_AdvancedTransform->GetJacobianOfSpatialHessian( fixedPoint,
-        spatialHessian, jacobianOfSpatialHessian, nonZeroJacobianIndices );
+//       this->m_AdvancedTransform->GetSpatialHessian( fixedPoint,
+//         spatialHessian );
+//       this->m_AdvancedTransform->GetJacobianOfSpatialHessian( fixedPoint,
+//         jacobianOfSpatialHessian, nonZeroJacobianIndices );
+       this->m_AdvancedTransform->GetJacobianOfSpatialHessian( fixedPoint,
+         spatialHessian, jacobianOfSpatialHessian, nonZeroJacobianIndices );
 
       /** Compute the contribution to the metric value of this point. */
       for ( unsigned int k = 0; k < FixedImageDimension; ++k )

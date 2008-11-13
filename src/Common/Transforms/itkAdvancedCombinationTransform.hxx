@@ -98,6 +98,34 @@ unsigned int AdvancedCombinationTransform<TScalarType, NDimensions>
 
 
 /**
+ * ***************** GetNumberOfNonZeroJacobianIndices **************************
+ */
+
+template <typename TScalarType, unsigned int NDimensions>
+unsigned long
+AdvancedCombinationTransform<TScalarType, NDimensions>
+::GetNumberOfNonZeroJacobianIndices( void ) const
+{ 
+  /** Return the number of parameters that completely define
+   * the m_CurrentTransform.
+   */
+  if ( this->m_CurrentTransform.IsNotNull() )
+  {
+    return this->m_CurrentTransform->GetNumberOfNonZeroJacobianIndices();
+  }
+  else
+  {
+    /** Throw an exception. */
+    this->NoCurrentTransformSet();
+
+    /** dummy return. */
+    return this->m_Parameters.GetSize();
+  }
+
+} // end GetNumberOfNonZeroJacobianIndices()
+
+
+/**
  * ***************** IsLinear **************************
  */
 
