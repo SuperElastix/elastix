@@ -17,6 +17,7 @@
 
 #include "itkParzenWindowHistogramImageToImageMetric.h"
 
+#include "itkBSplineDerivativeKernelFunction.h"
 #include "itkImageRegionIterator.h"
 #include "itkImageLinearIteratorWithIndex.h"
 #include "itkImageSliceIteratorWithIndex.h"

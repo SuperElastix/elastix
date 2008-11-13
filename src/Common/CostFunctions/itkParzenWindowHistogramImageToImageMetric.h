@@ -17,7 +17,7 @@
 
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkBSplineKernelFunction.h"
-#include "itkBSplineDerivativeKernelFunction.h"
+
 
 namespace itk
 {
