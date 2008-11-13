@@ -210,7 +210,6 @@ public:
 
   /**
    * *** Standard metric stuff: ***
-   * 
    */
 
   /** Initialize the metric. */
