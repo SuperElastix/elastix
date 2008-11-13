@@ -110,25 +110,33 @@ BSplineInterpolationSecondOrderDerivativeWeightFunction<TCoordRep, VSpaceDimensi
   {
     double x = index[ i ] - static_cast<double>( startIndex[ i ] );
     
-    for ( unsigned int k = 0; k < this->m_SupportSize[ i ]; ++k )
+    if ( i != this->m_DerivativeDirections[ 0 ]
+      && i != this->m_DerivativeDirections[ 1 ] )
     {
-      if ( i != this->m_DerivativeDirections[ 0 ]
-        && i != this->m_DerivativeDirections[ 1 ] )
+      for ( unsigned int k = 0; k < this->m_SupportSize[ i ]; ++k )
       {
         weights1D[ i ][ k ] = this->m_Kernel->Evaluate( x );
+        x -= 1.0;
+      }
+    }
+    else
+    {
+      if ( this->m_EqualDerivativeDirections )
+      {
+        for ( unsigned int k = 0; k < this->m_SupportSize[ i ]; ++k )
+        {
+          weights1D[ i ][ k ] = this->m_SecondOrderDerivativeKernel->Evaluate( x );
+          x -= 1.0;
+        }
       }
       else
       {
-        if ( this->m_EqualDerivativeDirections )
-        {
-          weights1D[ i ][ k ] = this->m_SecondOrderDerivativeKernel->Evaluate( x );
-        }
-        else
+        for ( unsigned int k = 0; k < this->m_SupportSize[ i ]; ++k )
         {
           weights1D[ i ][ k ] = this->m_DerivativeKernel->Evaluate( x );
+          x -= 1.0;
         }
       }
-      x -= 1.0;
     }
   }
 
