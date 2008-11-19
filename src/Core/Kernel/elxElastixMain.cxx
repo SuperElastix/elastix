@@ -282,6 +282,12 @@ int ElastixMain::Run( void )
     xl::xout["error"] << excp << std::endl;
     errorCode = 1;
   }
+  catch ( ... )
+  {
+    xl::xout["error"] << "ERROR: an unknown non-ITK exception was caught.\n"
+      << "Please report this to elastix.support@gmail.com." << std::endl;
+    errorCode = 1;
+  }
 
   /** Return the final transform. */
   this->m_FinalTransform = this->GetElastixBase()->GetFinalTransform();
