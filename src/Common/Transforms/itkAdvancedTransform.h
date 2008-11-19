@@ -135,6 +135,10 @@ public:
   /** Get the number of nonzero Jacobian indices. By default all. */
   virtual unsigned long GetNumberOfNonZeroJacobianIndices( void ) const;
 
+  /** Whether the advanced transform has nonzero matrices. */
+  itkGetConstMacro( HasNonZeroSpatialHessian, bool );
+  itkGetConstMacro( HasNonZeroJacobianOfSpatialHessian, bool );
+
   /** This returns a sparse version of the Jacobian of the transformation.
    *
    * The Jacobian is expressed as a vector of partial derivatives of the
@@ -271,6 +275,9 @@ private:
 
   AdvancedTransform(const Self&); // purposely not implemented
   void operator=(const Self&);    // purposely not implemented
+
+  bool m_HasNonZeroSpatialHessian;
+  bool m_HasNonZeroJacobianOfSpatialHessian;
 
 }; // end class AdvancedTransform
 

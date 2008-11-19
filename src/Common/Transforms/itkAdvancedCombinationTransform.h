@@ -154,6 +154,10 @@ public:
    * Returns true when both initial and current transform are linear */
   virtual bool IsLinear( void ) const;
 
+  /** Whether the advanced transform has nonzero matrices. */
+  virtual bool GetHasNonZeroSpatialHessian( void ) const;
+  virtual bool HasNonZeroJacobianOfSpatialHessian( void ) const;
+
   /** Compute the Jacobian of the transformation. */
   virtual const JacobianType & GetJacobian( const InputPointType & point ) const;
 

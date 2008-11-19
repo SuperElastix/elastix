@@ -136,7 +136,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
     }
 
   this->m_IndexToPoint = this->m_GridDirection * scale;
-  this->m_PointToIndex = this->m_IndexToPoint.GetInverse();
+  this->m_PointToIndexMatrix = this->m_IndexToPoint.GetInverse();
   
   this->m_LastJacobianIndex = this->m_ValidRegion.GetIndex();
   
@@ -284,7 +284,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
       }
 
     this->m_IndexToPoint = this->m_GridDirection * scale;
-    this->m_PointToIndex = this->m_IndexToPoint.GetInverse();
+    this->m_PointToIndexMatrix = this->m_IndexToPoint.GetInverse();
 
     this->Modified();
     }
@@ -315,7 +315,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
       }
 
     this->m_IndexToPoint = this->m_GridDirection * scale;
-    this->m_PointToIndex = this->m_IndexToPoint.GetInverse();
+    this->m_PointToIndexMatrix = this->m_IndexToPoint.GetInverse();
 
     this->Modified();
     }
@@ -659,7 +659,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   os << indent << "GridDirection: " << this->m_GridDirection << std::endl;
   os << indent << "GridOffsetTable: " << this->m_GridOffsetTable << std::endl;
   os << indent << "IndexToPoint: " << this->m_IndexToPoint << std::endl;
-  os << indent << "PointToIndex: " << this->m_PointToIndex << std::endl;
+  os << indent << "PointToIndex: " << this->m_PointToIndexMatrix << std::endl;
 
   os << indent << "CoefficientImage: [ ";
   for ( j = 0; j < SpaceDimension - 1; j++ )
@@ -720,6 +720,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
     }
 
   return inside;
+
 }
 
 // Transform a point
@@ -731,97 +732,90 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   OutputPointType & outputPoint, 
   WeightsType & weights, 
   ParameterIndexArrayType & indices,
-  bool& inside ) const
+  bool & inside ) const
 {
-  unsigned int j;
-  IndexType supportIndex;
-
   inside = true;
 
+  /** Take care of the initial transform. */
   InputPointType transformedPoint;
   if ( this->m_BulkTransform )
-    {
+  {
     transformedPoint = this->m_BulkTransform->TransformPoint( point );
-    }
+  }
   else
-    {
+  {
     transformedPoint = point;
-    }
+  }
 
-  if ( this->m_CoefficientImage[0] )
-    {
-    ContinuousIndexType index;
-
-    this->TransformPointToContinuousGridIndex( point, index );
-
-    // NOTE: if the support region does not lie totally within the grid
-    // we assume zero displacement and return the input point
-    inside = this->InsideValidRegion( index );
-    if ( !inside )
-      {
-      outputPoint = transformedPoint;
-      return;
-      }
-
-    // Compute interpolation weights
-    this->m_WeightsFunction->Evaluate( index, weights, supportIndex );
-
-    // For each dimension, correlate coefficient with weights
-    RegionType supportRegion;
-    supportRegion.SetSize( this->m_SupportSize );
-    supportRegion.SetIndex( supportIndex );
-
-    outputPoint.Fill( NumericTraits<ScalarType>::Zero );
-
-    typedef ImageRegionConstIterator<ImageType> IteratorType;
-    IteratorType iterator[ SpaceDimension ];
-    unsigned long counter = 0;
-    const PixelType * basePointer = this->m_CoefficientImage[0]->GetBufferPointer();
-
-    for ( j = 0; j < SpaceDimension; j++ )
-      {
-      iterator[j] = IteratorType( this->m_CoefficientImage[j], supportRegion );
-      }
-
-    while ( ! iterator[0].IsAtEnd() )
-      {
-
-      // multiply weigth with coefficient
-      for ( j = 0; j < SpaceDimension; j++ )
-        {
-        outputPoint[j] += static_cast<ScalarType>( 
-          weights[counter] * iterator[j].Get());
-        }
-
-      // populate the indices array
-      indices[counter] = &(iterator[0].Value()) - basePointer;
-
-      // go to next coefficient in the support region
-      ++ counter;
-      for ( j = 0; j < SpaceDimension; j++ )
-        {
-        ++( iterator[j] );
-        }
-      }
-  
-    // return results
-    for ( j = 0; j < SpaceDimension; j++ )
-      {
-      outputPoint[j] += transformedPoint[j];
-      }
-
-    }
-  else
-    {
-
+  /** Check if the coefficient image has been set. */
+  if ( !this->m_CoefficientImage[ 0 ] )
+  {
     itkWarningMacro( << "B-spline coefficients have not been set" );
-
-    for ( j = 0; j < SpaceDimension; j++ )
-      {
-      outputPoint[j] = transformedPoint[j];
-      }
-
+    for ( unsigned int j = 0; j < SpaceDimension; j++ )
+    {
+      outputPoint[ j ] = transformedPoint[ j ];
     }
+    return;
+  }
+
+  /***/
+  ContinuousIndexType cindex;
+  this->TransformPointToContinuousGridIndex( point, cindex );
+
+  // NOTE: if the support region does not lie totally within the grid
+  // we assume zero displacement and return the input point
+  inside = this->InsideValidRegion( cindex );
+  if ( !inside )
+  {
+    outputPoint = transformedPoint;
+    return;
+  }
+
+  // Compute interpolation weights
+  IndexType supportIndex;
+  this->m_WeightsFunction->Evaluate( cindex, weights, supportIndex );
+
+  // For each dimension, correlate coefficient with weights
+  RegionType supportRegion;
+  supportRegion.SetSize( this->m_SupportSize );
+  supportRegion.SetIndex( supportIndex );
+
+  outputPoint.Fill( NumericTraits<ScalarType>::Zero );
+
+  /** Create iterators over the coefficient images. */
+  typedef ImageRegionConstIterator<ImageType> IteratorType;
+  IteratorType iterator[ SpaceDimension ];
+  unsigned long counter = 0;
+  const PixelType * basePointer
+    = this->m_CoefficientImage[ 0 ]->GetBufferPointer();
+
+  for ( unsigned int j = 0; j < SpaceDimension; j++ )
+  {
+    iterator[ j ] = IteratorType( this->m_CoefficientImage[ j ], supportRegion );
+  }
+
+  /** Loop over the support region. */
+  while ( !iterator[ 0 ].IsAtEnd() )
+  {
+    // populate the indices array
+    indices[ counter ] = &(iterator[ 0 ].Value()) - basePointer;
+
+    // multiply weigth with coefficient to compute displacement
+    for ( unsigned int j = 0; j < SpaceDimension; j++ )
+    {
+       outputPoint[ j ] += static_cast<ScalarType>(
+         weights[ counter ] * iterator[ j ].Value() );
+       ++iterator[ j ];
+    }
+    ++ counter;
+
+  } // end while
+
+  // The output point is the start point + displacement.
+  for ( unsigned int j = 0; j < SpaceDimension; j++ )
+  {
+    outputPoint[ j ] += transformedPoint[ j ];
+  }
 
 }
 
@@ -999,25 +993,25 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
-::TransformPointToContinuousGridIndex( const InputPointType & point, ContinuousIndexType & index ) const
+::TransformPointToContinuousGridIndex(
+  const InputPointType & point,
+  ContinuousIndexType & cindex ) const
 {
-  unsigned int j;
-
   Vector<double, SpaceDimension> tvector;
 
-  for ( j = 0; j < SpaceDimension; j++ )
-    {
-    tvector[j] = point[j] - this->m_GridOrigin[j];
-    }
+  for ( unsigned int j = 0; j < SpaceDimension; j++ )
+  {
+    tvector[ j ] = point[ j ] - this->m_GridOrigin[ j ];
+  }
 
-  Vector<double, SpaceDimension> cvector;
+  Vector<double, SpaceDimension> cvector
+    = this->m_PointToIndexMatrix * tvector;
 
-  cvector = this->m_PointToIndex * tvector;
-
-  for ( j = 0; j < SpaceDimension; j++ )
-    {
-    index[j] = static_cast< typename ContinuousIndexType::CoordRepType >( cvector[j] );
-    }
+  for ( unsigned int j = 0; j < SpaceDimension; j++ )
+  {
+    cindex[ j ] = static_cast< typename ContinuousIndexType::CoordRepType >(
+      cvector[ j ] );
+  }
 }
 
 
@@ -1097,18 +1091,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
    */
   ContinuousIndexType cindex;
   this->TransformPointToContinuousGridIndex( ipp, cindex );
-
-  // NOTE: if the support region does not lie totally within the grid
-  // we assume zero displacement and return
-  if ( !this->InsideValidRegion( cindex ) )
-  {
-    return;
-  }
-
-  /** Helper variables. *
-  WeightsType weights( this->m_WeightsFunction->GetNumberOfWeights() );
-  IndexType supportIndex;
-  RegionType supportRegion;
 
   /** Helper variables. */
   WeightsType weights( this->m_WeightsFunction->GetNumberOfWeights() );
@@ -1219,26 +1201,12 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   ContinuousIndexType cindex;
   this->TransformPointToContinuousGridIndex( ipp, cindex );
 
-  // NOTE: if the support region does not lie totally within the grid
-  // we assume zero displacement and return
-  if ( !this->InsideValidRegion( cindex ) )
-  {
-    return;
-  }
-
   /** Compute the number of affected B-spline parameters. */
   const unsigned int numberOfWeights
     = this->m_WeightsFunction->GetNumberOfWeights();
   const unsigned int numberOfNonZeroJacobianIndices
     = this->GetNumberOfNonZeroJacobianIndices();
-
-  /** Resize data structures. It is not required to resize the SpatialHessian
-   * types, since the default constructor of the itk::Matrix sets everything
-   * to zero.
-   *
-  jsh.resize( numberOfNonZeroJacobianIndices );
-  nonZeroJacobianIndices.resize( numberOfNonZeroJacobianIndices );
-
+ 
   /** Helper variables. */
   WeightsType weights( numberOfWeights );
   IndexType supportIndex;
@@ -1249,7 +1217,9 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
    * Make use of the fact that the Hessian is symmetrical, so do not compute
    * both i,j and j,i for i != j.
    */
-  std::vector<WeightsType> weightVector;
+  const unsigned int d = SpaceDimension * ( SpaceDimension + 1 ) / 2;
+  FixedArray<WeightsType, d> weightVector;
+  unsigned int count = 0;
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     for ( unsigned int j = 0; j <= i; ++j )
@@ -1261,12 +1231,14 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       this->m_SODerivativeWeightsFunction->Evaluate( cindex, weights, supportIndex );
 
       /** Remember the weights. */
-      weightVector.push_back( weights );
+      weightVector[ count ] = weights;
+      ++count;
 
     } // end for j
   } // end for i
 
   /** Compute d/dmu d^2T_{dim} / dx_i dx_j = weights. */
+  SpatialHessianType * basepointer = &jsh[ 0 ];
   for ( unsigned int mu = 0; mu < numberOfWeights; ++mu )
   {
     SpatialJacobianType matrix;
@@ -1283,7 +1255,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 
     for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
-      jsh[ mu + dim * numberOfWeights ][ dim ] = matrix;
+      (*(basepointer + mu + dim * numberOfWeights))[ dim ] = matrix;
     }
   }
 
@@ -1307,6 +1279,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** For all control points in the support region, set which of the
    * indices in the parameter array are non-zero.
    */
+  unsigned long * basepointer2 = &nonZeroJacobianIndices[ 0 ];
   while ( !it.IsAtEnd() )
   {
     /** Get the current index. */
@@ -1322,7 +1295,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     /** Update the nonZeroJacobianIndices for all directions. */
     for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
-      nonZeroJacobianIndices[ mu2 + dim * numberOfWeights ]
+      *(basepointer2 + mu2 + dim * numberOfWeights)
         = parameterNumber + dim * parametersPerDim;
     }
 
@@ -1360,25 +1333,11 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   ContinuousIndexType cindex;
   this->TransformPointToContinuousGridIndex( ipp, cindex );
 
-  // NOTE: if the support region does not lie totally within the grid
-  // we assume zero displacement and return
-  if ( !this->InsideValidRegion( cindex ) )
-  {
-    return;
-  }
-
   /** Compute the number of affected B-spline parameters. */
   const unsigned int numberOfWeights
     = this->m_WeightsFunction->GetNumberOfWeights();
   const unsigned int numberOfNonZeroJacobianIndices
     = this->GetNumberOfNonZeroJacobianIndices();
-
-  /** Resize data structures. It is not required to resize the SpatialHessian
-   * types, since the default constructor of the itk::Matrix sets everything
-   * to zero.
-   *
-  jsh.resize( numberOfNonZeroJacobianIndices );
-  nonZeroJacobianIndices.resize( numberOfNonZeroJacobianIndices );
 
   /** Helper variables. */
   WeightsType weights( numberOfWeights );
@@ -1395,7 +1354,9 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
    * Make use of the fact that the Hessian is symmetrical, so do not compute
    * both i,j and j,i for i != j.
    */
-  std::vector<WeightsType> weightVector;
+  const unsigned int d = SpaceDimension * ( SpaceDimension + 1 ) / 2;
+  double * weightVector = new double[ d * numberOfWeights ];
+  unsigned int count = 0;
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     for ( unsigned int j = 0; j <= i; ++j )
@@ -1407,31 +1368,34 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       this->m_SODerivativeWeightsFunction->Evaluate( cindex, weights, supportIndex );
 
       /** Remember the weights. */
-      weightVector.push_back( weights );
+      memcpy( weightVector + count * numberOfWeights,
+        weights.data_block(), numberOfWeights * sizeof( double ) );
+      count++;
 
       /** Compute the spatial Hessian sh:
        *    d^2T_{dim} / dx_i dx_j = \sum coefs_{dim} * weights.
        */
       for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
       {
-        /** Create an iterator over the correct part of the coefficient image. */
+        /** Create an iterator over the correct part of the coefficient
+         * image. Create an iterator over the weights vector.
+         */
         ImageRegionConstIterator<ImageType> itCoef(
           this->m_CoefficientImage[ dim ], supportRegion );
+        WeightsType::const_iterator itWeights = weights.begin();
 
         /** Compute the sum for this dimension. */
         double sum = 0.0;
-        unsigned long mu1 = 0;
         while ( !itCoef.IsAtEnd() )
         {
-          sum += itCoef.Value() * weights[ mu1 ];
+          sum += itCoef.Value() * (*itWeights);
+          ++itWeights;
           ++itCoef;
-          ++mu1;
         }
         
         /** Update the spatial Hessian sh. The Hessian is symmetrical. */
-        sh[ dim ][ i ][ j ] = sum;
-        //if ( i != j ) sh[ dim ][ j ][ i ] = sum;
-        sh[ dim ][ j ][ i ] = sum;
+        sh[ dim ]( i, j ) = sum;
+        sh[ dim ]( j, i ) = sum;
       }
 
     } // end for j
@@ -1440,6 +1404,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** Compute the Jacobian of the spatial Hessian jsh:
    *    d/dmu d^2T_{dim} / dx_i dx_j = weights.
    */
+  SpatialHessianType * basepointer = &jsh[ 0 ];
   for ( unsigned int mu = 0; mu < numberOfWeights; ++mu )
   {
     SpatialJacobianType matrix;
@@ -1448,17 +1413,20 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     {
       for ( unsigned int j = 0; j <= i; ++j )
       {
-        matrix[ i ][ j ] = weightVector[ count ][ mu ];
-        if ( i != j ) matrix[ j ][ i ] = matrix[ i ][ j ];
+        double tmp = *( weightVector + count * numberOfWeights + mu );
+        matrix[ i ][ j ] = tmp;
+        if ( i != j ) matrix[ j ][ i ] = tmp;
         ++count;
       }
     }
 
     for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
-      jsh[ mu + dim * numberOfWeights ][ dim ] = matrix;
+      (*(basepointer + mu + dim * numberOfWeights))[ dim ] = matrix;
     }
   }
+
+  delete weightVector;
 
   /** Compute the nonzero Jacobian indices. */
 
@@ -1475,6 +1443,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** For all control points in the support region, set which of the
    * indices in the parameter array are non-zero.
    */
+  unsigned long * basepointer2 = &nonZeroJacobianIndices[ 0 ];
   while ( !it.IsAtEnd() )
   {
     /** Get the current index. */
@@ -1490,7 +1459,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     /** Update the nonZeroJacobianIndices for all directions. */
     for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
-      nonZeroJacobianIndices[ mu2 + dim * numberOfWeights ]
+      *( basepointer2 + mu2 + dim * numberOfWeights )
         = parameterNumber + dim * parametersPerDim;
     }
 

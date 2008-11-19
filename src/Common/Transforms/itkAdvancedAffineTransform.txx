@@ -72,7 +72,6 @@ template<class TScalarType, unsigned int NDimensions>
 AdvancedAffineTransform<TScalarType, NDimensions>::
 ~AdvancedAffineTransform()
 {
-  return;
 }
 
 
@@ -440,7 +439,6 @@ AdvancedAffineTransform<TScalarType, NDimensions>
   SpatialHessianType & sh ) const
 {
   /** The SpatialHessian contains only zeros. We simply return nothing. */
-  sh.resize( 0 );
 
 } // end GetSpatialHessian()
 
@@ -490,6 +488,28 @@ AdvancedAffineTransform<TScalarType, NDimensions>
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
   /** The JacobianOfSpatialHessian contains only zeros.
+   * We simply return nothing.
+   */
+  jsh.resize( 0 );
+  nonZeroJacobianIndices.resize( 0 );
+  
+} // end GetJacobianOfSpatialHessian()
+
+
+/**
+ * ********************* GetJacobianOfSpatialHessian ****************************
+ */
+
+template<class TScalarType, unsigned int NDimensions>
+void
+AdvancedAffineTransform<TScalarType, NDimensions>
+::GetJacobianOfSpatialHessian(
+  const InputPointType &,
+  SpatialHessianType & sh,
+  JacobianOfSpatialHessianType & jsh,
+  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+{
+  /** The Hessian and the JacobianOfSpatialHessian contain only zeros.
    * We simply return nothing.
    */
   jsh.resize( 0 );

@@ -45,6 +45,9 @@ template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutpu
 AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
 ::AdvancedTransform()
 {
+  this->m_HasNonZeroSpatialHessian = true;
+  this->m_HasNonZeroJacobianOfSpatialHessian = true;
+
 } // end Constructor
 
 

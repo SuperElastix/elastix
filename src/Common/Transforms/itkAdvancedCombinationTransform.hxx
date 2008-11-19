@@ -299,6 +299,68 @@ bool AdvancedCombinationTransform<TScalarType, NDimensions>
 
 
 /**
+ * ***************** GetHasNonZeroSpatialHessian **************************
+ */
+
+template <typename TScalarType, unsigned int NDimensions>
+bool
+AdvancedCombinationTransform<TScalarType, NDimensions>
+::GetHasNonZeroSpatialHessian( void ) const
+{
+  /** Set the parameters in the m_CurrentTransfom. */
+  if ( this->m_CurrentTransform.IsNull() )
+  {
+    /** No current transform has been set. Throw an exception. */
+    this->NoCurrentTransformSet();
+    return false;
+  }
+  else if ( this->m_InitialTransform.IsNull() )
+  {
+    /** No Initial transform, so call the CurrentTransform's implementation. */
+    return this->m_CurrentTransform->GetHasNonZeroSpatialHessian();
+  }
+  else
+  {
+    bool dummy = this->m_InitialTransform->GetHasNonZeroSpatialHessian()
+      || this->m_CurrentTransform->GetHasNonZeroSpatialHessian();
+    return dummy;
+  }
+
+} // end GetHasNonZeroSpatialHessian()
+
+
+/**
+ * ***************** HasNonZeroJacobianOfSpatialHessian **************************
+ */
+
+template <typename TScalarType, unsigned int NDimensions>
+bool
+AdvancedCombinationTransform<TScalarType, NDimensions>
+::HasNonZeroJacobianOfSpatialHessian( void ) const
+{
+  /** Set the parameters in the m_CurrentTransfom. */
+  if ( this->m_CurrentTransform.IsNull() )
+  {
+    /** No current transform has been set. Throw an exception. */
+    this->NoCurrentTransformSet();
+    return false;
+  }
+  else if ( this->m_InitialTransform.IsNull() )
+  {
+    /** No Initial transform, so call the CurrentTransform's implementation. */
+    return this->m_CurrentTransform->GetHasNonZeroJacobianOfSpatialHessian();
+  }
+  else
+  {
+    bool dummy = this->m_InitialTransform->GetHasNonZeroJacobianOfSpatialHessian()
+      || this->m_CurrentTransform->GetHasNonZeroJacobianOfSpatialHessian();
+    return dummy;
+  }
+
+} // end HasNonZeroJacobianOfSpatialHessian()
+
+
+/**
  *
  * ***********************************************************
  * ***** Functions to set the transformations and choose the
@@ -494,7 +556,7 @@ template <typename TScalarType, unsigned int NDimensions>
 void AdvancedCombinationTransform<TScalarType, NDimensions>
 ::NoCurrentTransformSet( void ) const throw (ExceptionObject)
 {
-  itkExceptionMacro( << "No current transform set in the CombinationTransform" );
+  itkExceptionMacro( << "No current transform set in the AdvancedCombinationTransform" );
 
 } // end NoCurrentTransformSet()
 

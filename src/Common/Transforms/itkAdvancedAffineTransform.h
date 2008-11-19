@@ -32,8 +32,6 @@ PURPOSE. See the above copyright notices for more information.
 #ifndef __itkAdvancedAffineTransform_h
 #define __itkAdvancedAffineTransform_h
 
-#include <iostream>
-
 #include "itkMatrix.h"
 #include "itkAdvancedMatrixOffsetTransformBase.h"
 #include "itkExceptionObject.h"
@@ -299,6 +297,16 @@ public:
    * of the Metric() method. **/
   ScalarType Metric(void) const;
 
+  /** Whether the advanced transform has nonzero matrices. */
+  virtual bool GetHasNonZeroSpatialHessian( void ) const
+  {
+    return false;
+  }
+  virtual bool HasNonZeroJacobianOfSpatialHessian( void ) const
+  {
+    return false;
+  }
+
   /** Compute the Jacobian of the transformation. */
   virtual void GetJacobian(
     const InputPointType &,
@@ -326,6 +334,15 @@ public:
     const InputPointType &,
     JacobianOfSpatialHessianType &,
     NonZeroJacobianIndicesType & ) const;
+
+  /** Compute both the spatial Hessian and the Jacobian of the
+   * spatial Hessian of the transformation.
+   */
+  virtual void GetJacobianOfSpatialHessian(
+    const InputPointType & ipp,
+    SpatialHessianType & sh,
+    JacobianOfSpatialHessianType & jsh,
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
 
 protected:
   /** Construct an AdvancedAffineTransform object

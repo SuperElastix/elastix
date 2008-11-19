@@ -399,6 +399,16 @@ public:
 
   virtual unsigned long GetNumberOfNonZeroJacobianIndices( void ) const;
 
+  /** Whether the advanced transform has nonzero matrices. */
+  virtual bool GetHasNonZeroSpatialHessian( void ) const
+  {
+    return true;
+  }
+  virtual bool HasNonZeroJacobianOfSpatialHessian( void ) const
+  {
+    return true;
+  }
+
   /** Compute the Jacobian matrix of the transformation at one point. */
   virtual const JacobianType & GetJacobian( const InputPointType & point ) const;
 
@@ -487,7 +497,7 @@ private:
   OriginType      m_GridOrigin;
   GridOffsetType  m_GridOffsetTable;
 
-  DirectionType   m_PointToIndex;
+  DirectionType   m_PointToIndexMatrix;
   DirectionType   m_IndexToPoint;
   
   RegionType      m_ValidRegion;
