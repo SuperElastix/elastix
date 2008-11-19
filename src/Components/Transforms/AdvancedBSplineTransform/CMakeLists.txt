@@ -5,5 +5,3 @@ ADD_ELXCOMPONENT( AdvancedBSplineTransform
  elxAdvancedBSplineTransform.cxx
 )
 
-
-

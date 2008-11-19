@@ -16,6 +16,7 @@
 #define __elxAffineTransform_H_
 
 #include "itkAffineTransform.h"
+
 #include "itkCenteredTransformInitializer.h"
 #include "elxIncludes.h"
 
@@ -46,7 +47,7 @@ using namespace itk;
    *    by a factor of 100000.0. See also the AutomaticScalesEstimation parameter.
    * \parameter AutomaticScalesEstimation: if this parameter is set to "true" the Scales
    *    parameter is ignored and the scales are determined automatically. \n
-   *    example: <tt>( AutomaticScalesEstimation "true" ) </tt> \n
+   *    example: <tt>(AutomaticScalesEstimation "true") </tt> \n
    *    Default: "false" (for backwards compatibility). Recommended: "true".
    * \parameter CenterOfRotation: an index around which the image is rotated. \n
    *    example: <tt>(CenterOfRotation 128 128 90)</tt> \n
