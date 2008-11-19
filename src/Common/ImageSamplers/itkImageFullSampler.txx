@@ -46,8 +46,22 @@ namespace itk
     /** Fill the sample container. */
     if ( mask.IsNull() )
     {
-      /** Simply loop over the image and store all samples in the container. */    
-      for( iter.GoToBegin(); ! iter.IsAtEnd(); ++iter )
+      /** Try to reserve memory. If no mask is used this can raise std
+       * exceptions when the input image is large.
+       */
+      try
+      {
+        sampleContainer->Reserve( this->GetCroppedInputImageRegion()
+          .GetNumberOfPixels() );
+      }
+      catch ( ... )
+      {
+        itkExceptionMacro( "ERROR: failed to allocate memory for the sample container." );
+      }
+
+      /** Simply loop over the image and store all samples in the container. */
+      unsigned long ind = 0;
+      for( iter.GoToBegin(); !iter.IsAtEnd(); ++iter, ++ind )
       {
         ImageSampleType tempsample;
 
@@ -62,7 +76,7 @@ namespace itk
         tempsample.m_ImageValue = iter.Get();
 
         /** Store in container */
-        sampleContainer->push_back( tempsample );
+        sampleContainer->SetElement( ind, tempsample );
 
       } // end for
     } // end if no mask

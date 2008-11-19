@@ -55,20 +55,48 @@ namespace itk
     
     /** Make sure the internal full sampler is up-to-date. */
     this->m_InternalFullSampler->SetInput( inputImage );
-    this->m_InternalFullSampler->SetMask(  this->GetMask() );
+    this->m_InternalFullSampler->SetMask( this->GetMask() );
     this->m_InternalFullSampler->SetInputImageRegion( this->GetInputImageRegion() );
-    this->m_InternalFullSampler->Update();
-    typename ImageSampleContainerType::Pointer allValidSamples =
-      this->m_InternalFullSampler->GetOutput();
+
+    /** Use try/catch, since the full sampler may crash, due to insufficient
+     * memory.
+     */
+    try
+    {
+      this->m_InternalFullSampler->Update();
+    }
+    catch ( ExceptionObject & err )
+    {
+      std::string message = "ERROR: This ImageSampler internally uses the "
+        "ImageFullSampler. Updating of this internal sampler raised the "
+        "exception:\n";
+      message += err.GetDescription();
+
+      std::string fullSamplerMessage = err.GetDescription();
+      std::string::size_type loc = fullSamplerMessage.find(
+        "ERROR: failed to allocate memory for the sample container", 0 );
+      if ( loc != std::string::npos && this->GetMask() == 0 )
+      {
+        message += "\nYou are using the ImageRandomSamplerSparseMask sampler, "
+          "but you did not set a mask. The internal full sampler therefore "
+          "requires a lot of memory. Consider using the ImageRandomSampler "
+          "instead.";
+      }
+      const char * message2 = message.c_str();
+      itkExceptionMacro( << message2 );
+    }
+
+    typename ImageSampleContainerType::Pointer allValidSamples
+      = this->m_InternalFullSampler->GetOutput();
     unsigned long numberOfValidSamples = allValidSamples->Size();
 
     /** Take random samples from the allValidSamples-container. */
     for ( unsigned int i = 0; i < this->GetNumberOfSamples(); ++i )
     {
-      unsigned long randomIndex = 
-        this->m_RandomGenerator->GetIntegerVariate( numberOfValidSamples - 1 );
+      unsigned long randomIndex
+        = this->m_RandomGenerator->GetIntegerVariate( numberOfValidSamples - 1 );
       sampleContainer->push_back( allValidSamples->ElementAt( randomIndex ) );
-    }  
+    }
 
   } // end GenerateData
 
