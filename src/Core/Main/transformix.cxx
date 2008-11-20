@@ -65,7 +65,6 @@ int main( int argc, char **argv )
   std::string       outFolder = "";
   std::string       logFileName = "";
 
-
   /** Put command line parameters into parameterFileList. */
   for ( unsigned int i = 1; i < argc - 1; i += 2 )
   { 
@@ -147,7 +146,7 @@ int main( int argc, char **argv )
     std::cerr << "ERROR: No CommandLine option \"-out\" given!" << std::endl;
   }
 
-  /** Stop if some fatal errors occured. */
+  /** Stop if some fatal errors occurred. */
   if ( returndummy )
   {
     return returndummy;
@@ -158,7 +157,7 @@ int main( int argc, char **argv )
   /** Declare a timer, start it and print the start time. */
   tmr::Timer::Pointer totaltimer = tmr::Timer::New();
   totaltimer->StartTimer();
-  elxout << "Transformix is started at " <<
+  elxout << "transformix is started at " <<
     totaltimer->PrintStartTime() << ".\n" << std::endl;
 
   /**
@@ -169,7 +168,7 @@ int main( int argc, char **argv )
   transformix = TransformixMainType::New();
   
   /** Print a start message. */
-  elxout << "Running Transformix with parameter file \""
+  elxout << "Running transformix with parameter file \""
       << argMap[ "-tp" ] << "\".\n" << std::endl;
 
   /** Run transformix. */
@@ -178,7 +177,7 @@ int main( int argc, char **argv )
   /** Check if runned without errors. */
   if ( returndummy != 0 )
   {
-    xl::xout["error"] << "Errors occured" << std::endl;
+    xl::xout["error"] << "Errors occurred" << std::endl;
     return returndummy;
   }
 
@@ -203,36 +202,48 @@ int main( int argc, char **argv )
  * *********************** PrintHelp ****************************
  */
 
-void PrintHelp(void)
+void PrintHelp( void )
 {
-  std::cout << "*********** transformix help: ***********\n\n";
+  /** Print the version. */
+  std::cout << std::fixed;
+  std::cout << std::showpoint;
+  std::cout << std::setprecision( 3 );
+  std::cout << "transformix version: " << __ELASTIX_VERSION << "\n" << std::endl;
 
   /** What is transformix? */
-  std::cout << "Transformix applies a transform on an input image." << std::endl;
-  std::cout << "The transform is specified in the transform-parameter file."
-    << std::endl << std::endl;
+  std::cout << "transformix applies a transform on an input image and/or "
+    "generates a deformation field.\n";
+  std::cout << "The transform is specified in the transform-parameter file.\n"
+    << std::endl;
 
-  /** Mandatory argments. */
-  std::cout << "Call transformix from the command line with mandatory arguments:" << std::endl;
-  std::cout << "-out      output directory" << std::endl;
-  std::cout << "-tp       transform-parameter file, only 1" << std::endl << std::endl;
+  /** Mandatory arguments. */
+  std::cout << "Call transformix from the command line with mandatory arguments:\n";
+  std::cout << "-out      output directory\n";
+  std::cout << "-tp       transform-parameter file, only 1\n" << std::endl;
 
   /** Optional arguments. */
-  std::cout << "Optional extra commands:" << std::endl;
-  std::cout << "-in       input image to deform" << std::endl;
-  std::cout << "-ipp      file containing input-image points" << std::endl;
-  std::cout << "          the point are transformed according to the specified transform-parameter file" << std::endl;
-  std::cout << "          use \"-ipp all\" to transform all points from the input-image" << std::endl;
-  std::cout << "-priority set the process priority to high or belownormal (Windows only)" << std::endl;
-  std::cout << "-threads  set the maximum number of threads of transformix" << std::endl;
-  std::cout << "At least one of the options \"-in\" or \"-ipp\" should be given."
-    << std::endl << std::endl;
+  std::cout << "Optional extra commands:\n";
+  std::cout << "-in       input image to deform\n";
+  std::cout << "-ipp      file containing input-image points\n";
+  std::cout << "          the point are transformed according to the specified "
+    "transform-parameter file\n";
+  std::cout << "          use \"-ipp all\" to transform all points from the "
+    "input-image\n";
+  std::cout << "-priority set the process priority to high or belownormal "
+    "(Windows only)\n";
+  std::cout << "-threads  set the maximum number of threads of transformix\n";
+  std::cout << "At least one of the options \"-in\" or \"-ipp\" should be given.\n"
+    << std::endl;
   
   /** The parameter file. */
-  std::cout << "The transform-parameter file must contain all the information necessary for transformix to run properly. That includes which transform to use, with which parameters, etc." << std::endl;
-  std::cout << "For a usable transform-parameter file, see the output of elastix." << std::endl << std::endl;
+  std::cout << "The transform-parameter file must contain all the information "
+    "necessary for transformix to run properly. That includes which transform "
+    "to use, with which parameters, etc.\n";
+  std::cout << "For a usable transform-parameter file, see the output of "
+    "elastix.\n" << std::endl;
 
-  std::cout << "Need further help? Check the website http://elastix.isi.uu.nl, or ask Marius and/or Stefan. :-)" << std::endl;
+  std::cout << "Need further help? Check the website http://elastix.isi.uu.nl, "
+    "or mail elastix.support@gmail.com." << std::endl;
 
 } // end PrintHelp()
 

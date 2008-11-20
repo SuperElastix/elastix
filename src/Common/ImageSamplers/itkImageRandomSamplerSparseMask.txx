@@ -78,7 +78,7 @@ namespace itk
       if ( loc != std::string::npos && this->GetMask() == 0 )
       {
         message += "\nYou are using the ImageRandomSamplerSparseMask sampler, "
-          "but you did not set a mask. The internal full sampler therefore "
+          "but you did not set a mask. The internal ImageFullSampler therefore "
           "requires a lot of memory. Consider using the ImageRandomSampler "
           "instead.";
       }

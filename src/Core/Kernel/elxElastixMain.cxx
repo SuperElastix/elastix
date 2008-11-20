@@ -276,15 +276,22 @@ int ElastixMain::Run( void )
   {
     errorCode = this->GetElastixBase()->Run();
   }
-  catch( itk::ExceptionObject & excp )
+  catch( itk::ExceptionObject & excp1 )
   {
-    /** We just print the exception and let the program quit. */
-    xl::xout["error"] << excp << std::endl;
+    /** We just print the itk::exception and let the program quit. */
+    xl::xout["error"] << excp1 << std::endl;
+    errorCode = 1;
+  }
+  catch ( std::exception & excp2 )
+  {
+    /** We just print the std::exception and let the program quit. */
+    xl::xout["error"] << "std: " << excp2.what() << std::endl;
     errorCode = 1;
   }
   catch ( ... )
   {
-    xl::xout["error"] << "ERROR: an unknown non-ITK exception was caught.\n"
+    /** We don't know what happened and just print a general message. */
+    xl::xout["error"] << "ERROR: an unknown non-ITK, non-std exception was caught.\n"
       << "Please report this to elastix.support@gmail.com." << std::endl;
     errorCode = 1;
   }

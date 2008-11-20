@@ -216,9 +216,10 @@ int ElastixTemplate<TFixedImage, TMovingImage>
     /** Add information to the exception. */
     excp.SetLocation( "ElastixTemplate - Run()" );
     std::string err_str = excp.GetDescription();
-    err_str += "\nError occured during actual registration.\n";
+    err_str += "\n\nError occurred during actual registration.";
     excp.SetDescription( err_str );
-    /** Pass the exception to an higher level. */
+
+    /** Pass the exception to a higher level. */
     throw excp;
   }
 

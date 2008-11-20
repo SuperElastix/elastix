@@ -536,7 +536,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     /** Compute value and possibly derivative. */
     movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex( cindex );
     if ( gradient )
-    { 
+    {
       if ( this->m_InterpolatorIsBSpline && !this->GetComputeGradient() )
       {
         /** Computed moving image gradient using derivative BSpline kernel. */

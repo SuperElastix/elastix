@@ -54,9 +54,17 @@ namespace itk
         sampleContainer->Reserve( this->GetCroppedInputImageRegion()
           .GetNumberOfPixels() );
       }
+      catch ( std::exception & excp )
+      {
+        std::string message = "std: ";
+        message += excp.what();
+        message += "\nERROR: failed to allocate memory for the sample container.";
+        const char * message2 = message.c_str();
+        itkExceptionMacro( << message2 );
+      }
       catch ( ... )
       {
-        itkExceptionMacro( "ERROR: failed to allocate memory for the sample container." );
+        itkExceptionMacro( << "ERROR: failed to allocate memory for the sample container." );
       }
 
       /** Simply loop over the image and store all samples in the container. */
