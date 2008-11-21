@@ -895,23 +895,35 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
   const InputPointType & ipp,
   SpatialHessianType & sh ) const
 {
+  /** Create intermediary variables for the internal transforms. */
   SpatialJacobianType sj0, sj1;
   SpatialHessianType sh0, sh1;
+
+  /** Transform the input point. */
+  // \todo this has already been computed and it is expensive.
   InputPointType transformedPoint
     = this->m_InitialTransform->TransformPoint( ipp );
 
+  /** Compute the (Jacobian of the) spatial Jacobian / Hessian of the
+   * internal transforms.
+   */
   this->m_InitialTransform->GetSpatialJacobian( ipp, sj0 );
   this->m_CurrentTransform->GetSpatialJacobian( transformedPoint, sj1 );
   this->m_InitialTransform->GetSpatialHessian( ipp, sh0 );
   this->m_CurrentTransform->GetSpatialHessian( transformedPoint, sh1 );
 
+  /** Combine them in one overall spatial Hessian. */
   for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
   {
-    // \todo: check
-    sh[ dim ]
-      //= sj0[ i ][ dim ] * sh1[ i ][ j ] + sh0[ i ][ dim ] * sj1[ i ][ j ];
-      = element_product( sj0.GetVnlMatrix(), sh1[ dim ].GetVnlMatrix() )
-      + element_product( sh0[ dim ].GetVnlMatrix(), sj1.GetVnlMatrix() );
+    for ( unsigned int i = 0; i < SpaceDimension; ++i )
+    {
+      for ( unsigned int j = 0; j < SpaceDimension; ++j )
+      {
+        sh[ dim ]( i, j )
+          = sj0( dim, j ) * sh1[ dim ]( i, j )
+          + sh0[ dim ]( i, j ) * sj1( dim, j );
+      }  
+    }
   }
 
 } // end GetSpatialHessianUseComposition()
@@ -999,19 +1011,6 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
   JacobianOfSpatialJacobianType & jsj,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
-  SpatialJacobianType sj0;
-  JacobianOfSpatialJacobianType jsj1;
-  this->m_InitialTransform->GetSpatialJacobian( ipp, sj0 );
-  this->m_CurrentTransform->GetJacobianOfSpatialJacobian(
-    this->m_InitialTransform->TransformPoint( ipp ),
-    jsj1, nonZeroJacobianIndices );
-
-  for ( unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu )
-  {
-    // todo: check (vector * matrix ), should be elementswise I guess
-    jsj[ mu ] = element_product( sj0.GetVnlMatrix(), jsj1[ mu ].GetVnlMatrix() );
-  }
-
 } // end GetJacobianOfSpatialJacobianUseComposition()
 
 
@@ -1038,7 +1037,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
   sj = element_product( sj0.GetVnlMatrix(), sj1.GetVnlMatrix() );
   for ( unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu )
   {
-    // todo: check (vector * matrix ), should be elementswise I guess
+    // \todo: check (vector * matrix ), should be elementswise I guess
     jsj[ mu ] = element_product( sj0.GetVnlMatrix(), jsj1[ mu ].GetVnlMatrix() );
   }
 
@@ -1168,29 +1167,6 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
   JacobianOfSpatialHessianType & jsh,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
-  SpatialJacobianType sj0;
-  SpatialHessianType sh0;
-  JacobianOfSpatialJacobianType jsj1;
-  JacobianOfSpatialHessianType jsh1;
-  InputPointType transformedPoint
-    = this->m_InitialTransform->TransformPoint( ipp );
-  this->m_InitialTransform->GetSpatialJacobian( ipp, sj0 );
-  this->m_InitialTransform->GetSpatialHessian( ipp, sh0 );
-  this->m_CurrentTransform->GetJacobianOfSpatialJacobian(
-    transformedPoint, jsj1, nonZeroJacobianIndices );
-  this->m_CurrentTransform->GetJacobianOfSpatialHessian(
-    transformedPoint, jsh1, nonZeroJacobianIndices );
-
-  for ( unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu )
-  {
-    for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
-    {
-      // todo: check, should be elements wise I guess
-      jsh[ mu ][ dim ]
-        = element_product( sj0.GetVnlMatrix(), jsh1[ mu ][ dim ].GetVnlMatrix() )
-        + element_product( sh0[ dim ].GetVnlMatrix(), jsj1[ mu ].GetVnlMatrix() );
-    }
-  }
 
 } // end GetJacobianOfSpatialHessianUseComposition()
 
@@ -1208,12 +1184,24 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
   JacobianOfSpatialHessianType & jsh,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
+  /** Create intermediary variables for the internal transforms. */
   SpatialJacobianType sj0, sj1;
   SpatialHessianType sh0, sh1;
   JacobianOfSpatialJacobianType jsj1;
   JacobianOfSpatialHessianType jsh1;
+
+  unsigned long numberOfNZJI = jsh.size();
+  jsj1.resize( numberOfNZJI );
+  jsh1.resize( numberOfNZJI );
+
+  /** Transform the input point. */
+  // \todo this has already been computed and it is expensive.
   InputPointType transformedPoint
     = this->m_InitialTransform->TransformPoint( ipp );
+
+  /** Compute the (Jacobian of the) spatial Jacobian / Hessian of the
+   * internal transforms.
+   */
   this->m_InitialTransform->GetSpatialJacobian( ipp, sj0 );
   this->m_InitialTransform->GetSpatialHessian( ipp, sh0 );
   this->m_CurrentTransform->GetJacobianOfSpatialJacobian(
@@ -1221,21 +1209,34 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
   this->m_CurrentTransform->GetJacobianOfSpatialHessian(
     transformedPoint, sh1, jsh1, nonZeroJacobianIndices );
 
+  /** Combine them in one overall spatial Hessian. */
   for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
   {
-    sh[ dim ]
-      = element_product( sj0.GetVnlMatrix(), sh1[ dim ].GetVnlMatrix() )
-      + element_product( sh0[ dim ].GetVnlMatrix(), sj1.GetVnlMatrix() );
+    for ( unsigned int i = 0; i < SpaceDimension; ++i )
+    {
+      for ( unsigned int j = 0; j < SpaceDimension; ++j )
+      {
+        sh[ dim ]( i, j )
+          = sj0( dim, j ) * sh1[ dim ]( i, j )
+          + sh0[ dim ]( i, j ) * sj1( dim, j );
+      }
+    }
   }
 
+  /** Combine them in one overall Jacobian of spatial Hessian. */
   for ( unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu )
   {
     for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
-      // todo: check, should be elements wise I guess
-      jsh[ mu ][ dim ]
-        = element_product( sj0.GetVnlMatrix(), jsh1[ mu ][ dim ].GetVnlMatrix() )
-        + element_product( sh0[ dim ].GetVnlMatrix(), jsj1[ mu ].GetVnlMatrix() );
+      for ( unsigned int i = 0; i < SpaceDimension; ++i )
+      {
+        for ( unsigned int j = 0; j < SpaceDimension; ++j )
+        {
+          jsh[ mu ][ dim ]( i, j )
+            = sj0( dim, j ) * jsh1[ mu ][ dim ]( i, j )
+            + sh0[ dim ]( i, j ) * jsj1[ mu ]( dim, j );
+        }
+      }
     }
   }
 

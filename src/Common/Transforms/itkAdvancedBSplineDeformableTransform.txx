@@ -1046,11 +1046,62 @@ template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 ::GetJacobian(
-  const InputPointType & p,
-  JacobianType & j,
+  const InputPointType & ipp,
+  JacobianType & jacobian,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
   /** This implements a sparse version of the Jacobian. */
+  // Can only compute Jacobian if parameters are set via
+  // SetParameters or SetParametersByValue
+  if ( this->m_InputParametersPointer == NULL )
+  {
+    itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
+  }
+
+  /** Convert the physical point to a continuous index, which
+   * is needed for the 'Evaluate()' functions below.
+   */
+  ContinuousIndexType cindex;
+  this->TransformPointToContinuousGridIndex( ipp, cindex );
+
+  /** Compute the number of affected B-spline parameters. */
+  const unsigned int numberOfWeights
+    = this->m_WeightsFunction->GetNumberOfWeights();
+  const unsigned int numberOfNonZeroJacobianIndices
+    = this->GetNumberOfNonZeroJacobianIndices();
+
+  /** Helper variables. */
+  WeightsType weights( numberOfWeights );
+  IndexType supportIndex;
+  this->m_WeightsFunction->ComputeStartIndex(
+    cindex, supportIndex );
+  RegionType supportRegion;
+  supportRegion.SetSize( this->m_SupportSize );
+  supportRegion.SetIndex( supportIndex );
+
+  /** For all derivative directions, compute the derivatives of the
+   * spatial Jacobian to the transformation parameters mu:
+   * d/dmu of dT / dx_i
+   */
+
+  /** Compute the derivative weights. */
+  this->m_WeightsFunction->Evaluate( cindex, weights, supportIndex );
+
+  /** Compute the Jacobian of the spatial Jacobian jsj:
+   *    d/dmu dT_{dim} / dx_i = weights.
+   */
+  double * basepointer = &weights[ 0 ];
+  for ( unsigned int mu = 0; mu < numberOfWeights; ++mu )
+  {
+    for ( unsigned int i = 0; i < SpaceDimension; ++i )
+    {
+       jacobian( i, mu + i * numberOfWeights ) = *( basepointer + mu );
+    }
+  }
+
+  /** Compute the nonzero Jacobian indices. */
+  this->ComputeNonZeroJacobianIndices( nonZeroJacobianIndices, supportRegion );
+
 } // end GetJacobian()
 
 
@@ -1065,6 +1116,73 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   const InputPointType & ipp,
   SpatialJacobianType & sj ) const
 {
+  // Can only compute Jacobian if parameters are set via
+  // SetParameters or SetParametersByValue
+  if ( this->m_InputParametersPointer == NULL )
+  {
+    itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
+  }
+
+  /** Convert the physical point to a continuous index, which
+   * is needed for the 'Evaluate()' functions below.
+   */
+  ContinuousIndexType cindex;
+  this->TransformPointToContinuousGridIndex( ipp, cindex );
+
+  /** Compute the number of affected B-spline parameters. */
+  const unsigned int numberOfWeights
+    = this->m_WeightsFunction->GetNumberOfWeights();
+  const unsigned int numberOfNonZeroJacobianIndices
+    = this->GetNumberOfNonZeroJacobianIndices();
+
+  /** Helper variables. */
+  WeightsType weights( numberOfWeights );
+  IndexType supportIndex;
+  this->m_DerivativeWeightsFunction->ComputeStartIndex(
+    cindex, supportIndex );
+  RegionType supportRegion;
+  supportRegion.SetSize( this->m_SupportSize );
+  supportRegion.SetIndex( supportIndex );
+
+  /** For all derivative directions, compute the derivatives of the
+   * spatial Jacobian to the transformation parameters mu:
+   * d/dmu of dT / dx_i
+   */
+  for ( unsigned int i = 0; i < SpaceDimension; ++i )
+  {
+    /** Set the derivative direction. */
+    this->m_DerivativeWeightsFunction->SetDerivativeDirection( i );
+
+    /** Compute the derivative weights. */
+    this->m_DerivativeWeightsFunction->Evaluate( cindex, weights, supportIndex );
+
+    /** Compute the spatial Jacobian sj:
+     *    dT_{dim} / dx_i = \sum coefs_{dim} * weights.
+     */
+    for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+    {
+      /** Create an iterator over the correct part of the coefficient
+       * image. Create an iterator over the weights vector.
+       */
+      ImageRegionConstIterator<ImageType> itCoef(
+        this->m_CoefficientImage[ dim ], supportRegion );
+      WeightsType::const_iterator itWeights = weights.begin();
+
+      /** Compute the sum for this dimension. */
+      double sum = 0.0;
+      while ( !itCoef.IsAtEnd() )
+      {
+        sum += itCoef.Value() * (*itWeights);
+        ++itWeights;
+        ++itCoef;
+      }
+
+      /** Update the spatial Jacobian sj. */
+      sj( dim, i ) = sum;
+
+    } // end for dim
+  } // end for i
+
 } // end GetSpatialJacobian()
 
 
@@ -1157,6 +1275,75 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   JacobianOfSpatialJacobianType & jsj,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
+  // Can only compute Jacobian if parameters are set via
+  // SetParameters or SetParametersByValue
+  if ( this->m_InputParametersPointer == NULL )
+  {
+    itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
+  }
+
+  /** Convert the physical point to a continuous index, which
+   * is needed for the 'Evaluate()' functions below.
+   */
+  ContinuousIndexType cindex;
+  this->TransformPointToContinuousGridIndex( ipp, cindex );
+
+  /** Compute the number of affected B-spline parameters. */
+  const unsigned int numberOfWeights
+    = this->m_WeightsFunction->GetNumberOfWeights();
+  const unsigned int numberOfNonZeroJacobianIndices
+    = this->GetNumberOfNonZeroJacobianIndices();
+
+  /** Helper variables. */
+  WeightsType weights( numberOfWeights );
+  IndexType supportIndex;
+  this->m_DerivativeWeightsFunction->ComputeStartIndex(
+    cindex, supportIndex );
+  RegionType supportRegion;
+  supportRegion.SetSize( this->m_SupportSize );
+  supportRegion.SetIndex( supportIndex );
+
+  /** For all derivative directions, compute the derivatives of the
+   * spatial Jacobian to the transformation parameters mu:
+   * d/dmu of dT / dx_i
+   */
+  double * weightVector = new double[ SpaceDimension * numberOfWeights ];
+  //double * weightVector = new double[ numberOfNonZeroJacobianIndices ];
+  for ( unsigned int i = 0; i < SpaceDimension; ++i )
+  {
+    /** Set the derivative direction. */
+    this->m_DerivativeWeightsFunction->SetDerivativeDirection( i );
+
+    /** Compute the derivative weights. */
+    this->m_DerivativeWeightsFunction->Evaluate( cindex, weights, supportIndex );
+
+    /** Remember the weights. */
+    memcpy( weightVector + i * numberOfWeights,
+      weights.data_block(), numberOfWeights * sizeof( double ) );
+
+  } // end for i
+
+  /** Compute the Jacobian of the spatial Jacobian jsj:
+   *    d/dmu dT_{dim} / dx_i = weights.
+   */
+  SpatialJacobianType * basepointer = &jsj[ 0 ];
+  for ( unsigned int mu = 0; mu < numberOfWeights; ++mu )
+  {
+    for ( unsigned int i = 0; i < SpaceDimension; ++i )
+    {
+      double tmp = *( weightVector + i * numberOfWeights + mu );
+      for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+      {
+        (*( basepointer + dim * numberOfWeights + mu ))( dim, i ) = tmp;
+      }
+    }
+  }
+
+  delete weightVector;
+
+  /** Compute the nonzero Jacobian indices. */
+  this->ComputeNonZeroJacobianIndices( nonZeroJacobianIndices, supportRegion );
+
 } // end GetJacobianOfSpatialJacobian()
 
 
@@ -1173,6 +1360,100 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   JacobianOfSpatialJacobianType & jsj,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
+  // Can only compute Jacobian if parameters are set via
+  // SetParameters or SetParametersByValue
+  if ( this->m_InputParametersPointer == NULL )
+  {
+    itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
+  }
+
+  /** Convert the physical point to a continuous index, which
+   * is needed for the 'Evaluate()' functions below.
+   */
+  ContinuousIndexType cindex;
+  this->TransformPointToContinuousGridIndex( ipp, cindex );
+
+  /** Compute the number of affected B-spline parameters. */
+  const unsigned int numberOfWeights
+    = this->m_WeightsFunction->GetNumberOfWeights();
+  const unsigned int numberOfNonZeroJacobianIndices
+    = this->GetNumberOfNonZeroJacobianIndices();
+
+  /** Helper variables. */
+  WeightsType weights( numberOfWeights );
+  IndexType supportIndex;
+  this->m_DerivativeWeightsFunction->ComputeStartIndex(
+    cindex, supportIndex );
+  RegionType supportRegion;
+  supportRegion.SetSize( this->m_SupportSize );
+  supportRegion.SetIndex( supportIndex );
+
+  /** For all derivative directions, compute the derivatives of the
+   * spatial Jacobian to the transformation parameters mu:
+   * d/dmu of dT / dx_i
+   */
+  double * weightVector = new double[ SpaceDimension * numberOfWeights ];
+  //double * weightVector = new double[ numberOfNonZeroJacobianIndices ];
+  for ( unsigned int i = 0; i < SpaceDimension; ++i )
+  {
+    /** Set the derivative direction. */
+    this->m_DerivativeWeightsFunction->SetDerivativeDirection( i );
+
+    /** Compute the derivative weights. */
+    this->m_DerivativeWeightsFunction->Evaluate( cindex, weights, supportIndex );
+
+    /** Remember the weights. */
+    memcpy( weightVector + i * numberOfWeights,
+      weights.data_block(), numberOfWeights * sizeof( double ) );
+    
+    /** Compute the spatial Jacobian sj:
+     *    dT_{dim} / dx_i = \sum coefs_{dim} * weights.
+     */
+    for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+    {
+      /** Create an iterator over the correct part of the coefficient
+       * image. Create an iterator over the weights vector.
+       */
+      ImageRegionConstIterator<ImageType> itCoef(
+        this->m_CoefficientImage[ dim ], supportRegion );
+      WeightsType::const_iterator itWeights = weights.begin();
+
+      /** Compute the sum for this dimension. */
+      double sum = 0.0;
+      while ( !itCoef.IsAtEnd() )
+      {
+        sum += itCoef.Value() * (*itWeights);
+        ++itWeights;
+        ++itCoef;
+      }
+
+      /** Update the spatial Jacobian sj. */
+      sj( dim, i ) = sum;
+
+    } // end for dim
+  } // end for i
+
+  /** Compute the Jacobian of the spatial Jacobian jsj:
+   *    d/dmu dT_{dim} / dx_i = weights.
+   */
+  SpatialJacobianType * basepointer = &jsj[ 0 ];
+  for ( unsigned int mu = 0; mu < numberOfWeights; ++mu )
+  {
+    for ( unsigned int i = 0; i < SpaceDimension; ++i )
+    {
+      double tmp = *( weightVector + i * numberOfWeights + mu );
+      for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+      {
+        (*( basepointer + dim * numberOfWeights + mu ))( dim, i ) = tmp;
+      }
+    }
+  }
+
+  delete weightVector;
+
+  /** Compute the nonzero Jacobian indices. */
+  this->ComputeNonZeroJacobianIndices( nonZeroJacobianIndices, supportRegion );
+
 } // end GetJacobianOfSpatialJacobian()
 
 
@@ -1210,6 +1491,11 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** Helper variables. */
   WeightsType weights( numberOfWeights );
   IndexType supportIndex;
+  this->m_SODerivativeWeightsFunction->ComputeStartIndex(
+    cindex, supportIndex );
+  RegionType supportRegion;
+  supportRegion.SetSize( this->m_SupportSize );
+  supportRegion.SetIndex( supportIndex );
 
   /** For all derivative directions, compute the derivatives of the
    * spatial Hessian to the transformation parameters mu:
@@ -1260,49 +1546,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   }
 
   /** Compute the nonzero Jacobian indices. */
-
-  /** Get the support region. */
-  RegionType supportRegion;
-  supportRegion.SetSize( this->m_SupportSize );
-  supportRegion.SetIndex( supportIndex );
-
-  /** Create an iterator over the coefficient image. */
-  ImageRegionConstIteratorWithIndex< ImageType >
-    it( this->m_CoefficientImage[ 0 ], supportRegion );
-
-  /** Initialize some helper variables. */
-  const unsigned long parametersPerDim
-    = this->GetNumberOfParametersPerDimension();
-  IndexType ind;
-  unsigned long mu2 = 0;
-
-  /** For all control points in the support region, set which of the
-   * indices in the parameter array are non-zero.
-   */
-  unsigned long * basepointer2 = &nonZeroJacobianIndices[ 0 ];
-  while ( !it.IsAtEnd() )
-  {
-    /** Get the current index. */
-    ind = it.GetIndex();
-
-    /** Translate the index into a parameter number for the x-direction. */
-    unsigned long parameterNumber = 0;
-    for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
-    {
-      parameterNumber += ind[ dim ] * this->m_GridOffsetTable[ dim ];
-    }
-
-    /** Update the nonZeroJacobianIndices for all directions. */
-    for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
-    {
-      *(basepointer2 + mu2 + dim * numberOfWeights)
-        = parameterNumber + dim * parametersPerDim;
-    }
-
-    /** Increase the iterators. */
-    ++it;
-    ++mu2;
-  }
+  this->ComputeNonZeroJacobianIndices( nonZeroJacobianIndices, supportRegion );
   
 } // end GetJacobianOfSpatialHessian()
 
@@ -1429,21 +1673,38 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   delete weightVector;
 
   /** Compute the nonzero Jacobian indices. */
+  this->ComputeNonZeroJacobianIndices( nonZeroJacobianIndices, supportRegion );
 
+} // end GetJacobianOfSpatialHessian()
+
+
+/**
+ * ********************* ComputeNonZeroJacobianIndices ****************************
+ */
+
+template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+void
+AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
+::ComputeNonZeroJacobianIndices(
+  NonZeroJacobianIndicesType & nonZeroJacobianIndices,
+  const RegionType & supportRegion ) const
+{
   /** Create an iterator over the coefficient image. */
   ImageRegionConstIteratorWithIndex< ImageType >
     it( this->m_CoefficientImage[ 0 ], supportRegion );
 
   /** Initialize some helper variables. */
+  const unsigned int numberOfWeights
+    = this->m_WeightsFunction->GetNumberOfWeights();
   const unsigned long parametersPerDim
     = this->GetNumberOfParametersPerDimension();
   IndexType ind;
-  unsigned long mu2 = 0;
+  unsigned long mu = 0;
 
   /** For all control points in the support region, set which of the
    * indices in the parameter array are non-zero.
    */
-  unsigned long * basepointer2 = &nonZeroJacobianIndices[ 0 ];
+  unsigned long * basepointer = &nonZeroJacobianIndices[ 0 ];
   while ( !it.IsAtEnd() )
   {
     /** Get the current index. */
@@ -1459,16 +1720,17 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     /** Update the nonZeroJacobianIndices for all directions. */
     for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
-      *( basepointer2 + mu2 + dim * numberOfWeights )
+      *( basepointer + mu + dim * numberOfWeights )
         = parameterNumber + dim * parametersPerDim;
     }
 
     /** Increase the iterators. */
     ++it;
-    ++mu2;
-  }
+    ++mu;
 
-} // end GetJacobianOfSpatialHessian()
+  } // end while
+
+} // end ComputeNonZeroJacobianIndices()
 
 
 } // namespace

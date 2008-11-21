@@ -211,6 +211,15 @@ protected:
     ParameterIndexArrayType & indices, 
     bool & inside ) const;
 
+  /** Compute both the spatial Hessian and the Jacobian of the
+   * spatial Hessian of the transformation.
+   */
+  virtual inline void GetJacobianOfSpatialHessianUseComposition(
+    const InputPointType & ipp,
+    SpatialHessianType & sh,
+    JacobianOfSpatialHessianType & jsh,
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+
 private:
 
   AdvancedBSplineCombinationTransform( const Self& ); // purposely not implemented

@@ -45,8 +45,8 @@ AdvancedBSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>
 template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 typename AdvancedBSplineCombinationTransform<
 TScalarType, NDimensions, VSplineOrder>::OutputPointType
-AdvancedBSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>:: 
-TransformPoint( const InputPointType & point ) const
+AdvancedBSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>
+::TransformPoint( const InputPointType & point ) const
 { 
   return this->Superclass::TransformPoint( point );
 
@@ -58,8 +58,9 @@ TransformPoint( const InputPointType & point ) const
  */
 
 template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-void AdvancedBSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>::  
-TransformPoint( const InputPointType & inputPoint,
+void
+AdvancedBSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>
+::TransformPoint( const InputPointType & inputPoint,
   OutputPointType & outputPoint,
   WeightsType & weights,
   ParameterIndexArrayType & indices,
@@ -77,7 +78,8 @@ TransformPoint( const InputPointType & inputPoint,
  */
 
 template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-void AdvancedBSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>
+void
+AdvancedBSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>
 ::SetCurrentTransform( CurrentTransformType * _arg )
 {
   /** Set the the current transform and call the UpdateCombinationMethod. */
@@ -117,7 +119,8 @@ void AdvancedBSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>
  */
 
 template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-void AdvancedBSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>
+void
+AdvancedBSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>
 ::UpdateCombinationMethod( void )
 {
   this->Superclass::UpdateCombinationMethod();
@@ -152,8 +155,9 @@ void AdvancedBSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>
  */
 
 template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-void AdvancedBSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>::
-TransformPointBSplineUseAddition(
+void
+AdvancedBSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>
+::TransformPointBSplineUseAddition(
   const InputPointType & inputPoint,
   OutputPointType & outputPoint,
   WeightsType & weights,
@@ -182,8 +186,9 @@ TransformPointBSplineUseAddition(
  */
 
 template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-void AdvancedBSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>::
-TransformPointBSplineUseComposition(
+void
+AdvancedBSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>
+::TransformPointBSplineUseComposition(
   const InputPointType & inputPoint,
   OutputPointType & outputPoint,
   WeightsType & weights,
@@ -202,8 +207,9 @@ TransformPointBSplineUseComposition(
  */
 
 template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-void AdvancedBSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>::  
-TransformPointBSplineNoInitialTransform(
+void
+AdvancedBSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>
+::TransformPointBSplineNoInitialTransform(
   const InputPointType & inputPoint,
   OutputPointType & outputPoint,
   WeightsType & weights,
@@ -221,8 +227,9 @@ TransformPointBSplineNoInitialTransform(
  */
 
 template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-void AdvancedBSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>::  
-TransformPointBSplineNoCurrentTransform(
+void
+AdvancedBSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>
+::TransformPointBSplineNoCurrentTransform(
   const InputPointType & inputPoint,
   OutputPointType & outputPoint,
   WeightsType & weights,
@@ -233,6 +240,93 @@ TransformPointBSplineNoCurrentTransform(
   this->NoCurrentTransformSet(); 
 
 } // end TransformPointBSplineNoCurrentTransform()
+
+
+/**
+ * ******** GetJacobianOfSpatialHessianUseComposition ******************
+ */
+
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+void
+AdvancedBSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>
+::GetJacobianOfSpatialHessianUseComposition(
+  const InputPointType & ipp,
+  SpatialHessianType & sh,
+  JacobianOfSpatialHessianType & jsh,
+  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+{
+  /** Create intermediary variables for the internal transforms. */
+  SpatialJacobianType sj0, sj1;
+  SpatialHessianType sh0, sh1;
+  JacobianOfSpatialJacobianType jsj1;
+  JacobianOfSpatialHessianType jsh1;
+
+  unsigned long numberOfNZJI = jsh.size();
+  jsj1.resize( numberOfNZJI );
+  jsh1.resize( numberOfNZJI );
+
+  /** Transform the input point. */
+  // \todo this has already been computed and it is expensive.
+  InputPointType transformedPoint
+    = this->m_InitialTransform->TransformPoint( ipp );
+
+  /** Compute the (Jacobian of the) spatial Jacobian / Hessian of the
+   * internal transforms.
+   */
+  this->m_InitialTransform->GetSpatialJacobian( ipp, sj0 );
+  this->m_InitialTransform->GetSpatialHessian( ipp, sh0 );
+  this->m_CurrentTransform->GetJacobianOfSpatialJacobian(
+    transformedPoint, sj1, jsj1, nonZeroJacobianIndices );
+  this->m_CurrentTransform->GetJacobianOfSpatialHessian(
+    transformedPoint, sh1, jsh1, nonZeroJacobianIndices );
+
+  /** Combine them in one overall spatial Hessian. */
+  for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+  {
+    for ( unsigned int i = 0; i < SpaceDimension; ++i )
+    {
+      for ( unsigned int j = 0; j < SpaceDimension; ++j )
+      {
+        sh[ dim ]( i, j )
+          = sj0( dim, j ) * sh1[ dim ]( i, j )
+          + sh0[ dim ]( i, j ) * sj1( dim, j );
+      }
+    }
+  }
+
+  /** Combine them in one overall Jacobian of spatial Hessian. */
+  unsigned int numParPerDim
+    = nonZeroJacobianIndices.size() / SpaceDimension;
+  for ( unsigned int mu = 0; mu < numParPerDim; ++mu )
+  {
+    SpatialJacobianType matrix = jsh1[ mu ][ 0 ];
+    for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+    {
+      SpatialJacobianType matrix2;
+      for ( unsigned int i = 0; i < SpaceDimension; ++i )
+      {
+        for ( unsigned int j = 0; j < SpaceDimension; ++j )
+        {
+          matrix2( i, j ) = sj0( dim, j ) * matrix( i, j );
+        }
+      }
+      jsh[ mu + numParPerDim * dim ][ dim ] = matrix2;
+    }
+  }
+
+  for ( unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu )
+  {
+    SpatialJacobianType matrix = jsj1[ mu ];
+    for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+    {
+      for ( unsigned int i = 0; i < SpaceDimension; ++i )
+      {
+        jsh[ mu ][ dim ]( dim, i ) += sh0[ dim ]( dim, i ) * matrix( dim, i );
+      }
+    }
+  }
+
+} // end GetJacobianOfSpatialHessianUseComposition()
 
 
 } // end namespace itk

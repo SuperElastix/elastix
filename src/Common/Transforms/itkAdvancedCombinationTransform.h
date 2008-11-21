@@ -488,7 +488,7 @@ protected:
     JacobianOfSpatialHessianType & jsh,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
 
-  inline void GetJacobianOfSpatialHessianUseComposition(
+  virtual inline void GetJacobianOfSpatialHessianUseComposition(
     const InputPointType & ipp,
     SpatialHessianType & sh,
     JacobianOfSpatialHessianType & jsh,

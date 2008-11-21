@@ -391,8 +391,8 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   {
     this->m_TransformIsBSpline = true;
     this->m_BSplineTransform = testPtr1a;
-    this->m_NumBSplineParametersPerDim = 
-      this->m_BSplineTransform->GetNumberOfParametersPerDimension();
+    this->m_NumBSplineParametersPerDim
+      = this->m_BSplineTransform->GetNumberOfParametersPerDimension();
     this->m_NumBSplineWeights = this->m_BSplineTransform->GetNumberOfWeights();
     itkDebugMacro( "Transform is BSplineDeformable" );
   }
@@ -440,7 +440,8 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 
     if ( !bsplineTransform )
     {
-      itkExceptionMacro( << "The BSplineCombinationTransform is not properly configured. The CurrentTransform is not set." );
+      itkExceptionMacro( << "The BSplineCombinationTransform is not properly "
+        "configured. The CurrentTransform is not set." );
     }
     this->m_NumBSplineParametersPerDim
       = bsplineTransform->GetNumberOfParametersPerDimension();
@@ -463,7 +464,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     this->m_TransformIsAdvancedBSplineCombination = true;
     this->m_AdvancedBSplineCombinationTransform = testPtr2b;
 
-    /** The current transform in the AdvancedBSplineCombinationTransform is 
+    /** The current transform in the AdvancedBSplineCombinationTransform is
      * always an AdvancedBSplineTransform.
      */
     AdvancedBSplineTransformType * advancedBSplineTransform
@@ -472,7 +473,8 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 
     if ( !advancedBSplineTransform )
     {
-      itkExceptionMacro( << "The AdvancedBSplineCombinationTransform is not properly configured. The CurrentTransform is not set." );
+      itkExceptionMacro( << "The AdvancedBSplineCombinationTransform is not "
+        "properly configured. The CurrentTransform is not set." );
     }
     this->m_NumBSplineParametersPerDim
       = advancedBSplineTransform->GetNumberOfParametersPerDimension();
@@ -486,22 +488,22 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     || this->m_TransformIsBSplineCombination
     || this->m_TransformIsAdvancedBSplineCombination )
   {
-    this->m_BSplineTransformWeights =
-      BSplineTransformWeightsType( this->m_NumBSplineWeights );
-    this->m_BSplineTransformIndices =
-      BSplineTransformIndexArrayType( this->m_NumBSplineWeights );
+    this->m_BSplineTransformWeights
+      = BSplineTransformWeightsType( this->m_NumBSplineWeights );
+    this->m_BSplineTransformIndices
+      = BSplineTransformIndexArrayType( this->m_NumBSplineWeights );
     for ( unsigned int j = 0; j < FixedImageDimension; j++ )
     {
-      this->m_BSplineParametersOffset[ j ] = j * this->m_NumBSplineParametersPerDim; 
+      this->m_BSplineParametersOffset[ j ] = j * this->m_NumBSplineParametersPerDim;
     }
     this->m_NonZeroJacobianIndices.SetSize(
       FixedImageDimension * this->m_NumBSplineWeights );
-    this->m_InternalTransformJacobian.SetSize( 
+    this->m_InternalTransformJacobian.SetSize(
       FixedImageDimension, FixedImageDimension * this->m_NumBSplineWeights );
     this->m_InternalTransformJacobian.Fill( 0.0 );
   }
   else
-  {   
+  {
     this->m_NonZeroJacobianIndices.SetSize( this->GetNumberOfParameters() );
     for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
@@ -522,7 +524,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 template < class TFixedImage, class TMovingImage >
 bool
 AdvancedImageToImageMetric<TFixedImage,TMovingImage>
-::EvaluateMovingImageValueAndDerivative( 
+::EvaluateMovingImageValueAndDerivative(
   const MovingImagePointType & mappedPoint,
   RealType & movingImageValue,
   MovingImageDerivativeType * gradient ) const
@@ -540,8 +542,8 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
       if ( this->m_InterpolatorIsBSpline && !this->GetComputeGradient() )
       {
         /** Computed moving image gradient using derivative BSpline kernel. */
-        (*gradient) = 
-          this->m_BSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
+        (*gradient)
+          = this->m_BSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
       }
       else
       {
@@ -592,13 +594,13 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     && !this->m_TransformIsAdvancedBSplineCombination )
   {
     mappedPoint = this->m_Transform->TransformPoint( fixedImagePoint );
-    sampleOk = true;      
+    sampleOk = true;
   }
   else
   {
     if ( this->m_TransformIsBSpline )
     {
-      this->m_BSplineTransform->TransformPoint( 
+      this->m_BSplineTransform->TransformPoint(
         fixedImagePoint,
         mappedPoint,
         this->m_BSplineTransformWeights,
@@ -607,7 +609,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     }
     else if ( this->m_TransformIsAdvancedBSpline )
     {
-      this->m_AdvancedBSplineTransform->TransformPoint( 
+      this->m_AdvancedBSplineTransform->TransformPoint(
         fixedImagePoint,
         mappedPoint,
         this->m_BSplineTransformWeights,
@@ -616,7 +618,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     }
     else if ( this->m_TransformIsBSplineCombination )
     {
-      this->m_BSplineCombinationTransform->TransformPoint( 
+      this->m_BSplineCombinationTransform->TransformPoint(
         fixedImagePoint,
         mappedPoint,
         this->m_BSplineTransformWeights,
@@ -625,7 +627,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     }
     else if ( this->m_TransformIsAdvancedBSplineCombination )
     {
-      this->m_AdvancedBSplineCombinationTransform->TransformPoint( 
+      this->m_AdvancedBSplineCombinationTransform->TransformPoint(
         fixedImagePoint,
         mappedPoint,
         this->m_BSplineTransformWeights,

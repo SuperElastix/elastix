@@ -543,6 +543,10 @@ private:
 
   void UpdateGridOffsetTable( void );
 
+  void ComputeNonZeroJacobianIndices(
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices,
+    const RegionType & supportRegion ) const;
+
 }; //class AdvancedBSplineDeformableTransform
 
 
