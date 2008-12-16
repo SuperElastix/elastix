@@ -113,11 +113,11 @@ int main( int argc, char *argv[] )
     / static_cast<double>( clockOur );
   std::cerr << std::fixed;
   std::cerr << std::setprecision( 1 );
-  std::cerr << "The time difference is " << timeDifference
+  std::cerr << "The time difference is " << ( timeDifference - 1.0 ) * 100.0
     << "% in favor of "
     << ( timeDifference > 1.0 ? "our " : "the ITK " )
     << "implementation." << std::endl;
-  if ( timeDifference > ( 1.0 + allowedTimeDifference ) )
+  if ( timeDifference < ( 1.0 - allowedTimeDifference ) )
   {
     std::cerr << "ERROR: the ITK implementation is more than "
       << static_cast<unsigned int>( allowedTimeDifference * 100.0 )
@@ -203,11 +203,11 @@ int main( int argc, char *argv[] )
     / static_cast<double>( clockOur );
   std::cerr << std::fixed;
   std::cerr << std::setprecision( 1 );
-  std::cerr << "The time difference is " << timeDifference
+  std::cerr << "The time difference is " << ( timeDifference - 1.0 ) * 100.0
     << "% in favor of "
     << ( timeDifference > 1.0 ? "our " : "the ITK " )
     << "implementation." << std::endl;
-  if ( timeDifference > ( 1.0 + allowedTimeDifference ) )
+  if ( timeDifference < ( 1.0 - allowedTimeDifference ) )
   {
     std::cerr << "ERROR: the ITK implementation is more than "
       << static_cast<unsigned int>( allowedTimeDifference * 100.0 )
