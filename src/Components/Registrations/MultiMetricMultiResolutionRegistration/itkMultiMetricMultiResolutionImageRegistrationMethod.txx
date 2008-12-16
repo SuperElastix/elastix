@@ -285,7 +285,8 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
       this->m_FixedImageRegionPyramids[ i ][ this->GetCurrentLevel() ], i );
   }
 
-  this->GetMetric()->Initialize();
+  //this->GetMetric()->Initialize();
+  this->GetCombinationMetric()->Initialize();
 
   /** Setup the optimizer. */
   this->GetOptimizer()->SetCostFunction( this->GetMetric() );
@@ -463,12 +464,13 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
     itkExceptionMacro(<<"Transform is not present");
   }
 
-  this->SetInitialTransformParametersOfNextLevel( this->GetInitialTransformParameters() );
+  this->SetInitialTransformParametersOfNextLevel(
+    this->GetInitialTransformParameters() );
 
-  if ( this->GetInitialTransformParametersOfNextLevel().Size() != 
-    this->GetTransform()->GetNumberOfParameters() )
+  if ( this->GetInitialTransformParametersOfNextLevel().Size()
+    != this->GetTransform()->GetNumberOfParameters() )
   {
-    itkExceptionMacro(<<"Size mismatch between initial parameter and transform"); 
+    itkExceptionMacro( << "Size mismatch between initial parameter and transform" );
   }
 
   /** Prepare the fixed and moving pyramids. */
@@ -498,7 +500,7 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
     }
     catch( ExceptionObject& err )
     {
-      this->m_LastTransformParameters = ParametersType(1);
+      this->m_LastTransformParameters = ParametersType( 1 );
       this->m_LastTransformParameters.Fill( 0.0f );
 
       // pass exception to caller
@@ -532,16 +534,25 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
     }
 
     // Remove pyramid output of current level to release memory
-    for ( unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i )
+    // This will generate a bug, and will also cause the pyramids to be re-run
+    // every resolution. Because in ImageToImageMetric you have
+    //  m_FixedImage->GetSource()->Update();
+    /*for ( unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i )
     {
+      //this->GetFixedImagePyramid( i )->GetOutput( currentLevel )
+        //->DisconnectPipeline();
+        //->DisconnectSource( this->GetFixedImagePyramid( i ), currentLevel );
       this->GetFixedImagePyramid( i )->GetOutput( currentLevel )
         ->ReleaseData();
     }
     for ( unsigned int i = 0; i < this->GetNumberOfMovingImagePyramids(); ++i )
     {
+      //this->GetMovingImagePyramid( i )->GetOutput( currentLevel )
+        //->DisconnectPipeline();
+        //->DisconnectSource( this->GetFixedImagePyramid( i ), currentLevel );
       this->GetMovingImagePyramid( i )->GetOutput( currentLevel )
         ->ReleaseData();
-    }
+    }*/
 
   } // end for loop over res levels
 

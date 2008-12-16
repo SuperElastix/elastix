@@ -504,6 +504,7 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
     itkExceptionMacro( << "The first sub metric must be of type ImageToImageMetric!");
   }
 
+  /** Call Initialize for all metrics. */
   for ( unsigned int i = 0; i < this->GetNumberOfMetrics() ; i++ )
   {
     SingleValuedCostFunctionType * costfunc = this->GetMetric( i );

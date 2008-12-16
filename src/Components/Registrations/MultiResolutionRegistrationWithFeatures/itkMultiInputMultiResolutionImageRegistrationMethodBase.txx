@@ -542,7 +542,7 @@ namespace itk
       this->m_LastTransformParameters = this->GetOptimizer()->GetCurrentPosition();
       this->GetTransform()->SetParameters( this->m_LastTransformParameters );
       
-      /** setup the initial parameters for next level. */
+      /** Setup the initial parameters for next level. */
       if ( this->GetCurrentLevel() < this->GetNumberOfLevels() - 1 )
       {
         this->SetInitialTransformParametersOfNextLevel(
@@ -550,7 +550,9 @@ namespace itk
       }
 
       // Remove pyramid output of current level to release memory
-      for ( unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i )
+      // This will generate a bug, and will also cause the pyramids to be re-run
+      // every resolution.
+      /*for ( unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i )
       {
         this->GetFixedImagePyramid( i )->GetOutput( currentLevel )
           ->ReleaseData();
@@ -559,7 +561,7 @@ namespace itk
       {
         this->GetMovingImagePyramid( i )->GetOutput( currentLevel )
           ->ReleaseData();
-      }
+      }*/
 
     } // end for loop over res levels
 
