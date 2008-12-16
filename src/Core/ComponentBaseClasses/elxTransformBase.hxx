@@ -154,7 +154,7 @@ void TransformBase<TElastix>
     }
   }
 
-  /** Check if this is a CombinationTransform. */
+  /** Check if this is an AdvancedCombinationTransform. */
   AdvancedCombinationTransformType * thisAsGrouper2 = 
     dynamic_cast< AdvancedCombinationTransformType * >( this );
   if ( thisAsGrouper2 )
@@ -266,6 +266,12 @@ void TransformBase<TElastix>
     if ( _arg2 )
     {
       thisAsGrouper2->SetInitialTransform( _arg2 );
+    }
+    else
+    {
+      itkExceptionMacro( << "ERROR: You are using the advanced combination "
+        "transform, but you are trying to set a normal transform as initial "
+        "transform. That is not possible." );
     }
   }
 
