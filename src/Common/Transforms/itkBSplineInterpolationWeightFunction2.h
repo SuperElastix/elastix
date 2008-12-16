@@ -80,6 +80,7 @@ protected:
     ::SecondOrderDerivativeKernelType               SecondOrderDerivativeKernelType;
   typedef typename Superclass::TableType            TableType;
   typedef typename Superclass::OneDWeightsType      OneDWeightsType;
+  typedef typename Superclass::WeightArrayType  WeightArrayType;
 
   /* Compute the 1D weights, which are:
    * [ \beta^3( x[i] - startIndex[i] ), \beta^3( x[i] - startIndex[i] - 1 ),
