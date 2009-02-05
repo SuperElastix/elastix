@@ -19,8 +19,8 @@
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile$
   Language:  C++
-  Date:      $Date$
-  Version:   $Revision$
+  Date:      $Date: 2008-04-15 19:54:41 +0200 (Tue, 15 Apr 2008) $
+  Version:   $Revision: 1573 $
 
   Copyright (c) 2002 Insight Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
@@ -1622,7 +1622,7 @@ static int yy_more_len = 0;
 char *yytext;
 #line 1 "param.l"
 #define INITIAL 0
-/* $Id$
+/* $Id: lex.yy.cxx 1573 2008-04-15 17:54:41Z stefan $
 
 // ******************************************************************
 // VISPack. Copyright (c) 1994-2000 Ross Whitaker rtw@utk.edu       *

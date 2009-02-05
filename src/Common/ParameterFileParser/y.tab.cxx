@@ -19,8 +19,8 @@
   Program:   Insight Segmentation & Registration Toolkit
   Module:    $RCSfile$
   Language:  C++
-  Date:      $Date$
-  Version:   $Revision$
+  Date:      $Date: 2008-08-15 16:43:53 +0200 (Fri, 15 Aug 2008) $
+  Version:   $Revision: 1943 $
 
   Copyright (c) 2002 Insight Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
