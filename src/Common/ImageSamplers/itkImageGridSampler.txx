@@ -43,13 +43,17 @@ namespace itk
     /** Set up a region iterator within the user specified image region. */
     typedef ImageRegionConstIteratorWithIndex<InputImageType> InputImageIterator;
     InputImageIterator iter( inputImage, this->GetCroppedInputImageRegion() );
+    
+    /** Take into account the possibility of a smaller bounding box around the mask */
+    this->SetNumberOfSamples( this->m_RequestedNumberOfSamples );
 
     /** Determine the grid. */ 
-    SampleGridSizeType sampleGridSize;
-    SampleGridIndexType sampleGridIndex;
     SampleGridIndexType index;
+    SampleGridSizeType sampleGridSize;
+    SampleGridIndexType sampleGridIndex =
+      this->GetCroppedInputImageRegion().GetIndex();    
     const InputImageSizeType & inputImageSize =
-      this->GetInputImageRegion().GetSize();
+      this->GetCroppedInputImageRegion().GetSize();
     unsigned long numberOfSamplesOnGrid = 1;
     for (unsigned int dim = 0; dim < InputImageDimension; dim++)
     {
@@ -58,9 +62,9 @@ namespace itk
         (( inputImageSize[dim] - 1 ) / this->GetSampleGridSpacing()[dim]);
 
       /** The position of the first sample along this dimension is 
-       * chosen to center the grid nicely on the image.
+       * chosen to center the grid nicely on the input image region.
        */
-      sampleGridIndex[dim] = (   inputImageSize[dim] - 
+      sampleGridIndex[dim] += (   inputImageSize[dim] - 
         ( (sampleGridSize[dim] - 1) * this->GetSampleGridSpacing()[dim] +1 )   ) / 2;
 
       /** Update the number of samples on the grid. */
@@ -169,22 +173,40 @@ namespace itk
     ImageGridSampler< TInputImage >
     ::SetNumberOfSamples( unsigned long nrofsamples )
   {
-    /** Compute the grid spacing needed to achieve the NumberOfSamplesForExactGradient. */
-    const unsigned long allvoxels = this->GetInputImageRegion().GetNumberOfPixels();
-    const double allvoxelsd = static_cast<double>( allvoxels );
-    const double nrofsamplesd = static_cast<double>( nrofsamples );
-    const double indimd = static_cast<double>( InputImageDimension );
+    /** Store what the user wanted */
+    if ( this->m_RequestedNumberOfSamples != nrofsamples )
+    {
+      this->m_RequestedNumberOfSamples = nrofsamples;
+      this->Modified();
+    }
 
-    /** compute isotropic gridspacing */
-    const double fraction = allvoxelsd / nrofsamplesd;
-    int gridspacing = static_cast<int>( 
-      vnl_math_rnd( vcl_pow( fraction, 1.0/indimd ) )   );
-    gridspacing = vnl_math_max( 1, gridspacing );
+    /** Compute an isotropic grid spacing which realises the nrofsamples 
+     * approximately */
+    if ( nrofsamples != 0 )
+    {
+      /** Compute the grid spacing needed to achieve the NumberOfSamplesForExactGradient. */
+      const unsigned long allvoxels = this->GetInputImageRegion().GetNumberOfPixels();
+      const double allvoxelsd = static_cast<double>( allvoxels );
+      const double nrofsamplesd = static_cast<double>( nrofsamples );
+      const double indimd = static_cast<double>( InputImageDimension );
 
-    /** Set gridspacings for all dimensions */
-    SampleGridSpacingType gridspacings;
-    gridspacings.Fill( gridspacing );
-    this->SetSampleGridSpacing( gridspacings );
+      /** compute isotropic gridspacing */
+      const double fraction = allvoxelsd / nrofsamplesd;
+      int gridspacing = static_cast<int>( 
+        vnl_math_rnd( vcl_pow( fraction, 1.0/indimd ) )   );
+      gridspacing = vnl_math_max( 1, gridspacing );
+
+      /** Set gridspacings for all dimensions
+       * Do not use the SetSampleGridSpacing function because it calls
+       * SetNumberOfSamples(0) internally. */
+      SampleGridSpacingType gridspacings;
+      gridspacings.Fill( gridspacing );
+      if ( this->GetSampleGridSpacing() != gridspacings )
+      {
+        this->m_SampleGridSpacing = gridspacings;
+        this->Modified();
+      }      
+    }
 
   } // end SetNumberOfSamples
 

@@ -1256,15 +1256,18 @@ namespace elastix
     * This is taken into account at the end of this function. */
     unsigned int nrofsamples = this->m_NumberOfJacobianMeasurements;
     sampler->SetNumberOfSamples( nrofsamples );
-    
+        
     /** get samples and check the actually obtained number of samples */
     sampler->Update();
     sampleContainer = sampler->GetOutput();
     nrofsamples = sampleContainer->Size();
+    
     if ( nrofsamples == 0 )
     {
+      
       itkExceptionMacro(
-        << "No valid voxels found to estimate the AdaptiveStochasticGradientDescent parameters." );
+        << "No valid voxels (0/" << this->m_NumberOfJacobianMeasurements << 
+        ") found to estimate the AdaptiveStochasticGradientDescent parameters." );
     }
 
   } // end SampleFixedImageForJacobianTerms

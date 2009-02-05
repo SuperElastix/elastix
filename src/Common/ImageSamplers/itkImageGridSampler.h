@@ -82,8 +82,18 @@ namespace itk
     typedef typename InputImageType::SizeType               InputImageSizeType;
        
     /** Set/Get the sample grid spacing for each dimension (only integer factors)
-     * This function overrules and previous calls to SetNumberOfSamples. */
-    itkSetMacro(SampleGridSpacing, SampleGridSpacingType);
+     * This function overrules previous calls to SetNumberOfSamples.
+     * Moreover, it calls SetNumberOfSamples(0) (see below), to make sure
+     * that the user-set sample grid spacing is never overruled. */
+    void SetSampleGridSpacing( SampleGridSpacingType arg )
+    {
+      this->SetNumberOfSamples(0);
+      if ( this->m_SampleGridSpacing != arg )
+      {
+        this->m_SampleGridSpacing = arg;
+        this->Modified();
+      }
+    }
     itkGetConstMacro(SampleGridSpacing, SampleGridSpacingType);
 
     /** Define an isotropic SampleGridSpacing such that the desired number
@@ -95,7 +105,14 @@ namespace itk
      * 
      * The InputImageRegion needs to be specified beforehand. A mask is ignored,
      * so the realised number of samples could be significantly lower than expected.
-     * This function overrules any previous calls to SetSampleGridSpacing.  */
+     * However, the sample grid spacing is recomputed in the update phase, when the
+     * bounding box of the mask is known. Supplying nrofsamples=0 turns off the
+     * (re)computation of the SampleGridSpacing. Once nrofsamples=0 has been given,
+     * the last computed SampleGridSpacing is simply considered as a user parameter,
+     * which is not modified automatically anymore.
+     * 
+     * This function overrules any previous calls to SetSampleGridSpacing. 
+     */
     virtual void SetNumberOfSamples( unsigned long nrofsamples );
 
     /** Selecting new samples makes no sense if nothing changed. The same
@@ -114,7 +131,11 @@ namespace itk
   protected:
 
     /** The constructor. */
-    ImageGridSampler() {};
+    ImageGridSampler() 
+    {
+      this->m_RequestedNumberOfSamples = 0;
+    }
+
     /** The destructor. */
     virtual ~ImageGridSampler() {};
 
@@ -126,6 +147,9 @@ namespace itk
 
     /** An array of integer spacing factors */
     SampleGridSpacingType m_SampleGridSpacing;
+
+    /** The number of samples entered in the SetNumberOfSamples method */
+    unsigned long m_RequestedNumberOfSamples;
             
   private:
 
