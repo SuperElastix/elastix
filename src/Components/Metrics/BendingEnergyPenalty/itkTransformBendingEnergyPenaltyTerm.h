@@ -59,14 +59,16 @@ public:
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass::MeasureType          MeasureType;
+  typedef typename Superclass::RealType             RealType;
   typedef typename Superclass::DerivativeType       DerivativeType;
   typedef typename Superclass::ParametersType       ParametersType;
   typedef typename Superclass::TransformType        TransformType;
   typedef typename Superclass::FixedImageType       FixedImageType;
   typedef typename Superclass::ScalarType           ScalarType;
+  typedef typename Superclass::ImageSampleContainerType    ImageSampleContainerType;
+  typedef typename Superclass::ImageSampleContainerPointer ImageSampleContainerPointer;
 
   /** Typedefs from the AdvancedTransform. */
-  typedef typename Superclass::TransformType        TransformType;
   typedef typename Superclass
     ::NonZeroJacobianIndicesType                    NonZeroJacobianIndicesType;
   typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
@@ -110,9 +112,9 @@ protected:
 private:
 
   /** The private constructor. */
-  TransformBendingEnergyPenaltyTerm( const Self& );	// purposely not implemented
+  TransformBendingEnergyPenaltyTerm( const Self& ); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self& );			  // purposely not implemented
+  void operator=( const Self& );                    // purposely not implemented
 
 }; // end class TransformBendingEnergyPenaltyTerm
 

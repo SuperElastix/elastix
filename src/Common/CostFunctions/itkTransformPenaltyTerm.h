@@ -53,8 +53,11 @@ public:
 
   /** Typedef's inherited from the superclass. */
   typedef typename Superclass::MeasureType          MeasureType;
+  typedef typename Superclass::RealType             RealType;
   typedef typename Superclass::DerivativeType       DerivativeType;
   typedef typename Superclass::ParametersType       ParametersType;
+  typedef typename Superclass::ImageSampleContainerType    ImageSampleContainerType;
+  typedef typename Superclass::ImageSampleContainerPointer ImageSampleContainerPointer;
 
   /** Template parameters. */
   typedef TFixedImage   FixedImageType;
