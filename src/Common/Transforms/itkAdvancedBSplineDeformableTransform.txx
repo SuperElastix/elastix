@@ -1166,7 +1166,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
        */
       ImageRegionConstIterator<ImageType> itCoef(
         this->m_CoefficientImage[ dim ], supportRegion );
-      WeightsType::const_iterator itWeights = weights.begin();
+      typename WeightsType::const_iterator itWeights = weights.begin();
 
       /** Compute the sum for this dimension. */
       double sum = 0.0;
@@ -1416,7 +1416,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
        */
       ImageRegionConstIterator<ImageType> itCoef(
         this->m_CoefficientImage[ dim ], supportRegion );
-      WeightsType::const_iterator itWeights = weights.begin();
+      typename WeightsType::const_iterator itWeights = weights.begin();
 
       /** Compute the sum for this dimension. */
       double sum = 0.0;
@@ -1626,7 +1626,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
          */
         ImageRegionConstIterator<ImageType> itCoef(
           this->m_CoefficientImage[ dim ], supportRegion );
-        WeightsType::const_iterator itWeights = weights.begin();
+        typename WeightsType::const_iterator itWeights = weights.begin();
 
         /** Compute the sum for this dimension. */
         double sum = 0.0;
