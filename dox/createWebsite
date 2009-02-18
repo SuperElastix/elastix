@@ -55,12 +55,12 @@ exportdirwin="$exportbasedirwin/tags/$tag"
 exportdirlinux64="$exportbasedirlinux64/tags/$tag"
 exportdirlinux32="$exportbasedirlinux32/tags/$tag"
 svnurl="http://svn.isi.uu.nl:8080/elastix"
-tempdir="d:/temp/elastixwebsitetemp"
+tempdir="d:/dox/elastixwebsite/$tag"
 websitebase="http://elastix.isi.uu.nl"
 copyright="$exportdirwin/src/CopyrightElastix.txt"
 
 # The stuff we do not want to distribute
-leaveouts="src/Components/Metrics/KNNGraphAlphaMutualInformation src/Components/Optimizers/FullSearch2 src/Components/Optimizers/PreconditionedGradientDescent"
+leaveouts="src/Components/Metrics/KNNGraphAlphaMutualInformation src/Components/Optimizers/FullSearch2 src/Components/Optimizers/PreconditionedGradientDescent src/Components/Metrics/BendingEnergyPenalty"
 
 
 # checkout linux64 export:
