@@ -574,7 +574,7 @@ using namespace itk;
     int deprecatedused = 1;
     this->GetConfiguration()->ReadParameter( tmp, "UpsampleGridOption", 0 );
     std::vector< bool > upsampleGridOption( size, tmp );
-    for ( unsigned int i = 1; i < nrOfResolutions - 1; ++i )
+    for ( unsigned int i = 1; static_cast<long>(i) < nrOfResolutions - 1; ++i )
     {
       tmp = upsampleGridOption[ i ];
       deprecatedused &= this->m_Configuration->ReadParameter(

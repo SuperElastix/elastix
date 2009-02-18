@@ -57,12 +57,12 @@ public:
   /** Enum of for spline order. */
   itkStaticConstMacro(SplineOrder, unsigned int, VSplineOrder);
 
-  /** Evaluate the function. *
-  inline double Evaluate( const double & u ) const
-    {
-    return ( m_KernelFunction->Evaluate( u + 0.5 ) - 
-      m_KernelFunction->Evaluate( u - 0.5 ) );
-    }
+  /** Evaluate the function. */
+  //inline double Evaluate( const double & u ) const
+  //  {
+  //  return ( m_KernelFunction->Evaluate( u + 0.5 ) - 
+  //    m_KernelFunction->Evaluate( u - 0.5 ) );
+  //  }
   /** Evaluate the function. */
   inline double Evaluate( const double & u ) const
   {
@@ -88,8 +88,8 @@ private:
   template<unsigned int>
   struct Dispatch : DispatchBase {};
 
-  /** Zeroth order spline. *
-  inline double Evaluate (const Dispatch<0>&, const double & u) const
+  /** Zeroth order spline. */
+  /**inline double Evaluate (const Dispatch<0>&, const double & u) const
   {
 
     double absValue = vnl_math_abs( u );
@@ -107,7 +107,7 @@ private:
       return 0.0;
     }
 
-  }
+  }*/
 
   /** First order spline */
   inline double Evaluate ( const Dispatch<1>&, const double& u) const

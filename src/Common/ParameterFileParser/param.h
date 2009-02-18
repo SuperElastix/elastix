@@ -91,6 +91,7 @@ class GenericValue
 public:
   GenericValue(bool b) {m_Valid = b;}
   GenericValue() : m_Valid(true) {}
+	virtual ~GenericValue() {}
   virtual value_type GetValueType() const    { return VPF_UNKNOWN; }
   virtual void PrintSelf(std::ostream &s) const { s << "VPF_UNKNOWN_VALUE"; }
   bool valid() const { return m_Valid; }

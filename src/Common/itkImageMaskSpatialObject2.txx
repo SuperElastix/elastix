@@ -238,11 +238,15 @@ ImageMaskSpatialObject2< TDimension >
     typedef ImageRegionConstIteratorWithIndex<ImageType> IteratorType;
     IteratorType it( image, image->GetRequestedRegion() );
     it.GoToBegin();
+		IndexType endindex;
 
     for ( unsigned int i = 0; i < ImageType::ImageDimension; ++i )
     {
-      index[ i ] = image->GetRequestedRegion().GetSize( i );
-      size[ i ]  = image->GetRequestedRegion().GetIndex( i );
+		  // modified by stefan; old (commented) implemenation assumed zero start index
+      index[ i ] = image->GetRequestedRegion().GetIndex( i ) + image->GetRequestedRegion().GetSize( i ) - 1;
+      //index[ i ] = image->GetRequestedRegion().GetSize( i );
+			endindex[ i ] = image->GetRequestedRegion().GetIndex( i ); 
+      //size[ i ]  = image->GetRequestedRegion().GetIndex( i );
     }
 
     while ( !it.IsAtEnd() )
@@ -253,7 +257,8 @@ ImageMaskSpatialObject2< TDimension >
         for ( unsigned int i = 0; i < ImageType::ImageDimension; ++i )
         {
           index[ i ] = index[ i ] < tmpIndex[ i ] ? index[ i ] : tmpIndex[ i ];
-          size[ i ]  = size[ i ]  > tmpIndex[ i ] ? size[ i ]  : tmpIndex[ i ];
+          //size[ i ] = static_cast<long>( size[ i ] )  > tmpIndex[ i ] ? size[ i ]  : tmpIndex[ i ];
+          endindex[ i ] = endindex[ i ] > tmpIndex[ i ] ? endindex[ i ]  : tmpIndex[ i ];
         }
       }
       ++it;
@@ -261,7 +266,8 @@ ImageMaskSpatialObject2< TDimension >
 
     for ( unsigned int i = 0; i < ImageType::ImageDimension; ++i )
     {
-      size[ i ] = size[ i ] - index[ i ] + 1;
+      //size[ i ] = size[ i ] - index[ i ] + 1;
+      size[ i ] = endindex[ i ] - index[ i ] + 1;
     }
   } // end else 
  

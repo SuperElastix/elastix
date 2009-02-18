@@ -286,7 +286,7 @@ namespace itk
 
     searchDir = - gradient;
 
-    unsigned int cp = this->m_Point;
+    int cp = static_cast<int>( this->m_Point );
 
     for (unsigned int i = 0; i < this->m_Bound; ++i)
     {
@@ -321,7 +321,7 @@ namespace itk
         searchDir[j] += alpha_min_beta * s[j];
       }
       ++cp;
-      if ( cp == this->GetMemory() )
+      if ( static_cast<unsigned int>(cp) == this->GetMemory() )
       {
         cp = 0;
       }

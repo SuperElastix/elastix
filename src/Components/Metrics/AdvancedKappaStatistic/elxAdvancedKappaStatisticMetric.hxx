@@ -78,8 +78,8 @@ using namespace itk;
     ::BeforeEachResolution(void)
   {
     /** Get the current resolution level. */
-    unsigned int level = 
-      ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+    //unsigned int level = 
+    //  ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
     
   } // end BeforeEachResolution
 

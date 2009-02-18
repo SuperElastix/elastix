@@ -85,9 +85,6 @@ public:
   /** Set the B-spline order. */
   itkSetMacro( BSplineOrder, unsigned int );
 
-  /** Set the input parameter array. *
-  itkSetMacro( InputParameters, ArrayType );
-
   /** Compute the output parameter array. */
   virtual void UpsampleParameters( const ArrayType & param_in,
     ArrayType & param_out );

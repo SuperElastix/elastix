@@ -105,7 +105,6 @@ namespace elastix
 
     const unsigned int P = this->GetElastix()->GetElxTransformBase()->
       GetAsITKBaseType()->GetNumberOfParameters();
-    const double Pd = static_cast<double>( P );
 
     /** Set the maximumNumberOfIterations. */
     unsigned int maximumNumberOfIterations = 500;
@@ -817,14 +816,12 @@ namespace elastix
     /** Get the number of parameters */
     const unsigned int P = static_cast<unsigned int>( 
       this->GetScaledCurrentPosition().GetSize() );
-    const double Pd = static_cast<double>( P );
 
     /** Get transform and set current position */
     typename TransformType::Pointer transform = this->GetRegistration()->
       GetAsITKBaseType()->GetTransform();
     transform->SetParameters( this->GetCurrentPosition() );
     const unsigned int outdim = transform->GetOutputSpaceDimension();
-    const double outdimd = static_cast<double>( outdim );
 
     /** Get scales vector */
     const ScalesType & scales = this->m_ScaledCostFunction->GetScales();
@@ -1041,14 +1038,12 @@ namespace elastix
     /** Get the number of parameters */
     const unsigned int P = static_cast<unsigned int>( 
       this->GetScaledCurrentPosition().GetSize() );
-    const double Pd = static_cast<double>( P );
 
     /** Get transform and set current position */
     typename TransformType::Pointer transform = this->GetRegistration()->
       GetAsITKBaseType()->GetTransform();
     transform->SetParameters( this->GetCurrentPosition() );
     const unsigned int outdim = transform->GetOutputSpaceDimension();
-    const double outdimd = static_cast<double>( outdim );
 
     /** Get scales vector */
     const ScalesType & scales = this->m_ScaledCostFunction->GetScales();

@@ -366,13 +366,17 @@ namespace itk
     while ( fixedPDFit != fixedPDFend )
     {
       const double fixedPDFValue = *fixedPDFit;
+			double logFixedPDFValue = 0.0;
+		  if ( fixedPDFValue > 1e-16 )
+			{
+				logFixedPDFValue = vcl_log( fixedPDFValue );
+			}
       movingPDFit = movingPDFbegin;
       movingIndex = 0;
 
       while ( movingPDFit != movingPDFend )
       {
         const double movingPDFValue = *movingPDFit; //returns float actually
-        const double fixPDFmovPDF = fixedPDFValue * movingPDFValue;
         const double jointPDFValue = jointPDFit.Get();
 
         /** Check for non-zero bin contribution. */
@@ -384,7 +388,7 @@ namespace itk
 
           if ( fixedPDFValue > 1e-16 )
           {
-            MI += jointPDFValue * ( pRatio - vcl_log( fixedPDFValue ) );
+            MI += jointPDFValue * ( pRatio - logFixedPDFValue );
           }
         } // end if-block to check non-zero bin contribution
 
@@ -482,7 +486,7 @@ namespace itk
     if ( this->m_NonZeroJacobianIndices.GetSize() == this->GetNumberOfParameters() )
     {
       /** Loop over all Jacobians. */
-      typename DerivativeType::const_iterator imjac = imageJacobian.begin();
+      //typename DerivativeType::const_iterator imjac = imageJacobian.begin();
       for ( unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu )
       {
          derivative[ mu ] += static_cast<DerivativeValueType>(

@@ -507,8 +507,12 @@ void TransformBase<TElastix>
   argmapInitialTransform.insert( ArgumentMapEntryType(
     "-tp", transformParametersFileName ) );
 
-  int dummy = this->m_ConfigurationInitialTransform->Initialize(
+  int initfailure = this->m_ConfigurationInitialTransform->Initialize(
     argmapInitialTransform );
+	if ( initfailure != 0 )
+  {
+	  itkGenericExceptionMacro( "ERROR: Reading initial transform parameters failed: " << transformParametersFileName );
+	}
 
   /** Read the InitialTransform name. */
   ComponentDescriptionType InitialTransformName = "AffineTransform";

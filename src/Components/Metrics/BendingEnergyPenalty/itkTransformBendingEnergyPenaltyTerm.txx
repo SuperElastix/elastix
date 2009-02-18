@@ -47,7 +47,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   //       << this->m_Transform->GetPointer() << std::endl;
 
 } // end PrintSelf()
-
+*/
 
 /**
  * ****************** GetValue *******************************

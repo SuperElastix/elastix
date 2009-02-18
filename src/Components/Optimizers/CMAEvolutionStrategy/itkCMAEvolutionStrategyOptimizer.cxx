@@ -154,8 +154,7 @@ namespace itk
         
     /** Get the number of parameters; checks also if a cost function has been set at all.
     * if not: an exception is thrown */
-    const unsigned int numberOfParameters =
-      this->GetScaledCostFunction()->GetNumberOfParameters();
+    this->GetScaledCostFunction()->GetNumberOfParameters();
   
     /** Initialize the scaledCostFunction with the currently set scales */
     this->InitializeScales();
@@ -616,13 +615,7 @@ namespace itk
   {
     itkDebugMacro("AdvanceOneStep");
 
-    /** Get the number of parameters from the cost function */
-    const unsigned int numberOfParameters =
-      this->GetScaledCostFunction()->GetNumberOfParameters();    
-
     /** Some casts/aliases: */
-    const unsigned int N = numberOfParameters;
-    const unsigned int lambda = this->m_PopulationSize;
     const unsigned int mu = this->m_NumberOfParents;
 
     /** Compute the CurrentScaledStep, using the RecombinationWeights and 
@@ -667,12 +660,7 @@ namespace itk
   {
     itkDebugMacro("UpdateConjugateEvolutionPath");
 
-    /** Get the number of parameters from the cost function */
-    const unsigned int numberOfParameters =
-      this->GetScaledCostFunction()->GetNumberOfParameters();    
-
     /** Some casts/aliases: */
-    const unsigned int N = numberOfParameters;
     const double c_sigma = this->m_ConjugateEvolutionPathConstant;
         
     /** Update p_sigma */
@@ -735,12 +723,7 @@ namespace itk
   {
     itkDebugMacro("UpdateEvolutionPath");
     
-    /** Get the number of parameters from the cost function */
-    const unsigned int numberOfParameters =
-      this->GetScaledCostFunction()->GetNumberOfParameters();    
-
     /** Some casts/aliases: */
-    const unsigned int N = numberOfParameters;
     const double c_c = this->m_EvolutionPathConstant;
 
     /** Compute the evolution path p_c */

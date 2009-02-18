@@ -102,8 +102,7 @@ namespace itk
 
     /** Get the number of parameters; checks also if a cost function has been set at all.
     * if not: an exception is thrown */
-    const unsigned int numberOfParameters =
-      this->GetScaledCostFunction()->GetNumberOfParameters();
+    this->GetScaledCostFunction()->GetNumberOfParameters();
 
     /** Initialize the scaledCostFunction with the currently set scales */
     this->InitializeScales();

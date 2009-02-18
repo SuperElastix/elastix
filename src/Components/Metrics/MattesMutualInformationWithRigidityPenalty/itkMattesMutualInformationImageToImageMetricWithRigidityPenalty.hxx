@@ -358,7 +358,11 @@ namespace itk
      RigidityPixelType fixedValue, movingValue, in;
      RigidityImagePointType point;
      RigidityImageIndexType index1, index2;
-     bool isInFixedImage, isInMovingImage;
+		 fixedValue = NumericTraits<RigidityPixelType>::Zero;
+		 movingValue = NumericTraits<RigidityPixelType>::Zero;
+		 in = NumericTraits<RigidityPixelType>::Zero;
+     bool isInFixedImage = false;
+  	 bool	isInMovingImage = false;		 
      while ( !it.IsAtEnd() )
      {
        /** Get current pixel in world coordinates. */

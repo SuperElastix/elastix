@@ -183,41 +183,6 @@ namespace itk
       TScalarType, Dimension >::SimilarityDummy               SimilarityDummy;
     typedef typename SimilarityDummy::AngleType               AngleType;
 
-    /** Make sure SetComputeZYX() is available, also in 2D,
-     * in which case, its just a dummy function.
-     *
-    virtual void SetComputeZYX( const bool arg )
-    {
-      if ( SpaceDimension == 3 )
-      {
-        typedef Similarity3DTransform< ScalarType >  Similarity3DTransformType;
-        typename Similarity3DTransformType::Pointer transform
-          = dynamic_cast< Similarity3DTransformType * >( this );
-        if ( transform )
-        {
-          transform->Similarity3DTransformType::SetComputeZYX( arg );
-        }
-      }
-    };
-
-    /** Make sure GetComputeZYX() is available, also in 2D,
-     * in which case, it just returns false.
-     *
-    virtual bool GetComputeZYX( void ) const
-    {
-      if ( SpaceDimension == 3 )
-      {
-        typedef Similarity3DTransform< ScalarType >  Similarity3DTransformType;
-        typename Similarity3DTransformType::ConstPointer transform
-          = dynamic_cast< const Similarity3DTransformType * >( this );
-        if ( transform )
-        {
-          return transform->Similarity3DTransformType::GetComputeZYX();
-        }
-      }
-      return false;
-    };*/
-
   protected:
 
     SimilarityTransform(){};

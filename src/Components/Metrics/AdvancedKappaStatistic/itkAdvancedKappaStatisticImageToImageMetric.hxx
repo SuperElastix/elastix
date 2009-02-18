@@ -476,6 +476,8 @@ namespace itk
     typename GradientImageType::PixelType tempGradPixel;
     typename MovingImageType::SizeType movingSize
       = this->m_MovingImage->GetBufferedRegion().GetSize();
+		typename MovingImageType::IndexType movingIndex
+      = this->m_MovingImage->GetBufferedRegion().GetIndex();
 
     /** Loop over the images. */
     while ( !mit.IsAtEnd() )
@@ -486,8 +488,8 @@ namespace itk
       for ( unsigned int i = 0; i < MovingImageDimension; i++ )
       {
         /** Check for being on the edge of the moving image. */
-        if ( currIndex[ i ] == 0 
-          || currIndex[ i ] == movingSize[ i ] - 1 )
+        if ( currIndex[ i ] == movingIndex[ i ] 
+          || currIndex[ i ]  == static_cast<int>( movingIndex[ i ] + movingSize[ i ] - 1 ) )
         {
           tempGradPixel[ i ] = 0.0;
         }
@@ -496,9 +498,9 @@ namespace itk
           /** Get the left, center and right values. */
           minusIndex[ i ] = currIndex[ i ] - 1;
           plusIndex[ i ] = currIndex[ i ] + 1;
-          double minusVal = static_cast<double>( this->m_MovingImage->GetPixel( minusIndex ) );
-          double val      = static_cast<double>( this->m_MovingImage->GetPixel( currIndex ) );
-          double plusVal  = static_cast<double>( this->m_MovingImage->GetPixel( plusIndex ) );
+          const double minusVal = static_cast<double>( this->m_MovingImage->GetPixel( minusIndex ) );
+          //const double val      = static_cast<double>( this->m_MovingImage->GetPixel( currIndex ) );
+          const double plusVal  = static_cast<double>( this->m_MovingImage->GetPixel( plusIndex ) );
 
           /** Calculate the gradient. */
           // \todo also use the ForegroundIsNonZero boolean.

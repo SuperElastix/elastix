@@ -122,9 +122,9 @@ using namespace itk;
      */
     typedef typename Superclass1::ParametersType            ParametersType;
 
-    /** The CombinationMetric type, which is used internally by the Superclass1 *
-    typedef typename Superclass1::CombinationMetricType     CombinationMetricType;
-    typedef typename Superclass1::CombinationMetricPointer  CombinationMetricPointer;
+    /** The CombinationMetric type, which is used internally by the Superclass1 */
+    //typedef typename Superclass1::CombinationMetricType     CombinationMetricType;
+    //typedef typename Superclass1::CombinationMetricPointer  CombinationMetricPointer;
     
     /** Typedef's from Elastix. */
     typedef typename Superclass2::ElastixType               ElastixType;

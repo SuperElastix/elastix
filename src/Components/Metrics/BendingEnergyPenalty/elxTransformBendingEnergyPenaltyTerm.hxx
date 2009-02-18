@@ -41,18 +41,18 @@ void TransformBendingEnergyPenalty<TElastix>
 
 /**
  * ***************** BeforeEachResolution ***********************
- *
+ */
 
-template <class TElastix>
-void TransformBendingEnergyPenalty<TElastix>
-::BeforeEachResolution( void )
-{
-  /** Get the current resolution level. *
-  unsigned int level =
-    ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
-
-
-} // end BeforeEachResolution() */
+//template <class TElastix>
+//void TransformBendingEnergyPenalty<TElastix>
+//::BeforeEachResolution( void )
+//{
+//  /** Get the current resolution level. */
+//  unsigned int level =
+//    ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+//
+//
+//} // end BeforeEachResolution() 
 
 
 } // end namespace elastix

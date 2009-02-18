@@ -978,30 +978,29 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
       featureGradients.set_row( i - 1, gradient.GetDataPointer() );
     } // end for-loop
   } // end if
-  /*
-  else
-  {
-  /** Get the gradient by NearestNeighboorInterpolation of the gradient image.
-  * It is assumed that the gradient image is computed beforehand.
-  *
-
-  /** Round the continuous index to the nearest neighbour. *
-  MovingImageIndexType index;
-  for ( unsigned int j = 0; j < MovingImageDimension; j++ )
-  {
-  index[ j ] = static_cast<long>( vnl_math_rnd( cindex[ j ] ) );
-  }
-
-  MovingImageDerivativeType gradient;
-  for ( unsigned int i = 0; i < this->m_NumberOfMovingFeatureImages; ++i )
-  {
-  /** Compute the gradient at feature image i. *
-  gradient = this->m_GradientFeatureImage[ i ]->GetPixel( index );
-
-  /** Set the gradient into the Array2D. *
-  featureGradients.set_column( i, gradient.GetDataPointer() );
-  } // end for-loop
-  } // end if */
+//  else
+//  {
+//  /** Get the gradient by NearestNeighboorInterpolation of the gradient image.
+//  * It is assumed that the gradient image is computed beforehand.
+//  */
+//
+//  /** Round the continuous index to the nearest neighbour. */
+//  MovingImageIndexType index;
+//  for ( unsigned int j = 0; j < MovingImageDimension; j++ )
+//  {
+//  index[ j ] = static_cast<long>( vnl_math_rnd( cindex[ j ] ) );
+//  }
+//
+//  MovingImageDerivativeType gradient;
+//  for ( unsigned int i = 0; i < this->m_NumberOfMovingFeatureImages; ++i )
+//  {
+//  /** Compute the gradient at feature image i. */
+//  gradient = this->m_GradientFeatureImage[ i ]->GetPixel( index );
+//
+//  /** Set the gradient into the Array2D. */
+//  featureGradients.set_column( i, gradient.GetDataPointer() );
+//  } // end for-loop
+//  } // end if 
 
 } // end EvaluateMovingFeatureImageDerivatives()
 

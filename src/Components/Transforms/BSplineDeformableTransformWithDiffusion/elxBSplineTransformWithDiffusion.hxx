@@ -432,7 +432,7 @@ using namespace itk;
     ::AfterEachIteration(void)
   {
     /** Declare boolean. */
-    bool DiffusionNow;
+    bool DiffusionNow = false;
 
     /** Find out filterpattern. */
     unsigned int filterPattern = 1;

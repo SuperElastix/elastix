@@ -288,7 +288,6 @@ namespace itk
 
     /** Initialize some variables. */
     this->m_NumberOfPixelsCounted = 0;
-    MeasureType measure = NumericTraits< MeasureType >::Zero;
     derivative = DerivativeType( this->GetNumberOfParameters() );
     derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
     DerivativeType derivativeF = DerivativeType( this->GetNumberOfParameters() );

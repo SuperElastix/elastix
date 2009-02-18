@@ -1067,8 +1067,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** Compute the number of affected B-spline parameters. */
   const unsigned int numberOfWeights
     = this->m_WeightsFunction->GetNumberOfWeights();
-  const unsigned int numberOfNonZeroJacobianIndices
-    = this->GetNumberOfNonZeroJacobianIndices();
+  //const unsigned int numberOfNonZeroJacobianIndices
+  //  = this->GetNumberOfNonZeroJacobianIndices();
 
   /** Helper variables. */
   WeightsType weights( numberOfWeights );
@@ -1132,8 +1132,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** Compute the number of affected B-spline parameters. */
   const unsigned int numberOfWeights
     = this->m_WeightsFunction->GetNumberOfWeights();
-  const unsigned int numberOfNonZeroJacobianIndices
-    = this->GetNumberOfNonZeroJacobianIndices();
+  //const unsigned int numberOfNonZeroJacobianIndices
+  //  = this->GetNumberOfNonZeroJacobianIndices();
 
   /** Helper variables. */
   WeightsType weights( numberOfWeights );
@@ -1291,8 +1291,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** Compute the number of affected B-spline parameters. */
   const unsigned int numberOfWeights
     = this->m_WeightsFunction->GetNumberOfWeights();
-  const unsigned int numberOfNonZeroJacobianIndices
-    = this->GetNumberOfNonZeroJacobianIndices();
+  //const unsigned int numberOfNonZeroJacobianIndices
+  //  = this->GetNumberOfNonZeroJacobianIndices();
 
   /** Helper variables. */
   WeightsType weights( numberOfWeights );
@@ -1376,8 +1376,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** Compute the number of affected B-spline parameters. */
   const unsigned int numberOfWeights
     = this->m_WeightsFunction->GetNumberOfWeights();
-  const unsigned int numberOfNonZeroJacobianIndices
-    = this->GetNumberOfNonZeroJacobianIndices();
+  //const unsigned int numberOfNonZeroJacobianIndices
+  //  = this->GetNumberOfNonZeroJacobianIndices();
 
   /** Helper variables. */
   WeightsType weights( numberOfWeights );
@@ -1485,8 +1485,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** Compute the number of affected B-spline parameters. */
   const unsigned int numberOfWeights
     = this->m_WeightsFunction->GetNumberOfWeights();
-  const unsigned int numberOfNonZeroJacobianIndices
-    = this->GetNumberOfNonZeroJacobianIndices();
+  //const unsigned int numberOfNonZeroJacobianIndices
+  //  = this->GetNumberOfNonZeroJacobianIndices();
  
   /** Helper variables. */
   WeightsType weights( numberOfWeights );
@@ -1580,8 +1580,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** Compute the number of affected B-spline parameters. */
   const unsigned int numberOfWeights
     = this->m_WeightsFunction->GetNumberOfWeights();
-  const unsigned int numberOfNonZeroJacobianIndices
-    = this->GetNumberOfNonZeroJacobianIndices();
+  //const unsigned int numberOfNonZeroJacobianIndices
+  //  = this->GetNumberOfNonZeroJacobianIndices();
 
   /** Helper variables. */
   WeightsType weights( numberOfWeights );

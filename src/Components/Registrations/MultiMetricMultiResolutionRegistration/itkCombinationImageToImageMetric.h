@@ -113,7 +113,7 @@ public:
   //typedef typename Superclass::DerivativeValueType        DerivativeValueType;
   typedef typename Superclass::ParametersType             ParametersType;
 
-  /*
+  /**
   typedef typename Superclass::ImageSamplerType             ImageSamplerType;
   typedef typename Superclass::ImageSamplerPointer          ImageSamplerPointer;
   typedef typename Superclass::ImageSampleContainerType     ImageSampleContainerType;
@@ -124,6 +124,7 @@ public:
   typedef typename Superclass::MovingImageLimiterOutputType MovingImageLimiterOutputType;
   typedef typename Superclass::ScalarType                   ScalarType;
   typedef typename Superclass::AdvancedTransformType        AdvancedTransformType;
+	*/
 
   /** Typedefs for the metrics. */
   typedef Superclass                                      ImageMetricType;

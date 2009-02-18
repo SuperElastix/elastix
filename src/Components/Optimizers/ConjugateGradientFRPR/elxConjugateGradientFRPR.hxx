@@ -226,7 +226,7 @@ using namespace itk;
       break;
       
     }
-
+*/
     /** Print the stopping condition */
     //elxout << "Stopping condition: " << stopcondition << "." << std::endl;
 

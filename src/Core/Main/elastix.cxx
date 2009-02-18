@@ -80,7 +80,7 @@ int main( int argc, char **argv )
   std::string logFileName = "";
 
   /** Put command line parameters into parameterFileList. */
-  for ( unsigned int i = 1; i < ( argc - 1 ); i += 2 )
+  for ( unsigned int i = 1; static_cast<long>(i) < ( argc - 1 ); i += 2 )
   {
     std::string key( argv[ i ] );
     std::string value( argv[ i + 1 ] );
