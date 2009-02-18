@@ -1875,10 +1875,49 @@ more information.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %\chapter{Developers guide}\label{chp:develop}
+
+%\section{Compiling elastix}
+
+%1. Download cmake from www.cmake.org and install it according to instructions
+%2. Download itk 3.8 from www.itk.org (not version 3.10).
+%3. Unpack the ITK tarball
+%4. make a directory where you want to generate the binaries and go that directory
+%5. run: ccmake <ITKsourcedir>
+%    In the Cmake interface you have to repeatedly press c (configure) until the "generate" option becomes available.
+%    Also you have to make some choices:
+%    BuildType = Release
+%    BuildExamples / BuildTesting / BuildSharedLibs = Off
+%    At the end, press generate (g)
+%7. download the elastix sources and unpack
+%8. follow the same procedure as with itk: generate a directory for the binaries, go to there, and run: ccmake <elastixsourcedir>
+%9. BuildType= Release
+%    ITK_DIR = the binary directory where you compiled itk
+%    CMAKE_INSTALL_PREFIX = choose a directory where you would like to install the elastix executables
+%10. run: make install
+
+
 %
 %\section{Setup of the code}
+
+%elastix consists roughly of 2 layers: A) ITK-style classes that implement
+%functionality, B) elastix wrappers around the ITK classes that take care of
+%reading/setting parameters etc. The image samplers are implemented as ITK
+%classes that all inherit from a base class itk::ImageSamplerBase. These can be
+%found in <elastixsource>/Common/ImageSamplers. So, this is "layer A" in
+%elastix. For each sampler (random, grid, full... ) a wrapper is written,
+%located in <elastixsource>/Components/ImageSamplers, which takes care of
+%configuring the sampler before each new resolution of the registration process.
+%This is "layer B" of elastix.
 %
 %\section{Creating new modules}
+
+%It is natural to start writing the layer A filter, without bothering about
+%elastix. You can simply extract the ImageSamper directory from elastix and make
+%a small test program that reads an image, runs the sampler, and generates a
+%plot like figure 1 in the article. Once you got the new sampler to work, it is
+%trivial to write the layer B wrapper in elastix (some copy-paste from existing
+%samplers).
+%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
