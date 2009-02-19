@@ -999,6 +999,24 @@ freely available. In this section, we assume you use the Microsoft Visual C++
 %Linux systems, add the option \texttt{-fPIC} to the following flags:
 %\texttt{CMAKE\_CXX\_FLAGS} and \texttt{CMAKE\_C\_FLAGS}.
 
+
+%1. Download cmake from www.cmake.org and install it according to instructions
+%2. Download itk 3.8 from www.itk.org (not version 3.10).
+%3. Unpack the ITK tarball
+%4. make a directory where you want to generate the binaries and go that directory
+%5. run: ccmake <ITKsourcedir>
+%    In the Cmake interface you have to repeatedly press c (configure) until the "generate" option becomes available.
+%    Also you have to make some choices:
+%    BuildType = Release
+%    BuildExamples / BuildTesting / BuildSharedLibs = Off
+%    At the end, press generate (g)
+%7. download the elastix sources and unpack
+%8. follow the same procedure as with itk: generate a directory for the binaries, go to there, and run: ccmake <elastixsourcedir>
+%9. BuildType= Release
+%    ITK_DIR = the binary directory where you compiled itk
+%    CMAKE_INSTALL_PREFIX = choose a directory where you would like to install the elastix executables
+%10. run: make install
+
 \item Download the compressed sources from the website.
 
 \item Extract the archive to a \texttt{folderSrc} of your choice.
@@ -1650,6 +1668,7 @@ registration, even less iterations may suffice. A side benefit of
 using more iterations is that a wider range of \texttt{SP\_a} gives
 good results. Tuning \texttt{SP\_a} then becomes easier.
 
+
 \subsection{Image pyramids}\label{sec:pyramidtuning}
 
 The \texttt{FixedImagePyramid} and the \texttt{MovingImagePyramid}
@@ -1871,53 +1890,138 @@ more information.
 %Step-by-step example where we give a look into our head, what magical
 %thoughts we think when tuning the registration.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Advanced topics}
+
+\section{Metrics}
+
+\subsection{Combining metrics}
+
+\subsection{Penalty terms}
+
+\subsection{Some other metrics}
+
+-Mutual information with rigidity penalty
+
+%-Alpha mutual information
+%---MultiInputRandomCoordinate
+%---MultiResolutionRegistrationWithFeatures
+
+\section{Image samplers}
+
+-RandomSparseMask
+
+\section{Transforms}
+
+DeformationFieldTransform
+
+BSplineDeformableTransformWithDiffusion
+
+\section{Optimisation methods}
+
+-Adaptive stochastic gradient descent
+
+-Conjugate gradient
+---ConjugateGradientFRPR
+
+-CMAEvolutionStrategy
+
+-FiniteDifferenceGradientDescent
+
+-Full search
+
+-Quasi Newton
+
+%-Preconditioned Stochastic Gradient Descent
+
+-RegularStepGradientDescent
+---RSGDEachParameterApart
+
+-SimultaneousPerturbation
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%\chapter{Developers guide}\label{chp:develop}
-
-%\section{Compiling elastix}
-
-%1. Download cmake from www.cmake.org and install it according to instructions
-%2. Download itk 3.8 from www.itk.org (not version 3.10).
-%3. Unpack the ITK tarball
-%4. make a directory where you want to generate the binaries and go that directory
-%5. run: ccmake <ITKsourcedir>
-%    In the Cmake interface you have to repeatedly press c (configure) until the "generate" option becomes available.
-%    Also you have to make some choices:
-%    BuildType = Release
-%    BuildExamples / BuildTesting / BuildSharedLibs = Off
-%    At the end, press generate (g)
-%7. download the elastix sources and unpack
-%8. follow the same procedure as with itk: generate a directory for the binaries, go to there, and run: ccmake <elastixsourcedir>
-%9. BuildType= Release
-%    ITK_DIR = the binary directory where you compiled itk
-%    CMAKE_INSTALL_PREFIX = choose a directory where you would like to install the elastix executables
-%10. run: make install
-
+\chapter{Developers guide}\label{chp:develop}
 
 %
-%\section{Setup of the code}
+\section{Setup of the code}
 
-%elastix consists roughly of 2 layers: A) ITK-style classes that implement
-%functionality, B) elastix wrappers around the ITK classes that take care of
-%reading/setting parameters etc. The image samplers are implemented as ITK
-%classes that all inherit from a base class itk::ImageSamplerBase. These can be
-%found in <elastixsource>/Common/ImageSamplers. So, this is "layer A" in
-%elastix. For each sampler (random, grid, full... ) a wrapper is written,
-%located in <elastixsource>/Components/ImageSamplers, which takes care of
-%configuring the sampler before each new resolution of the registration process.
-%This is "layer B" of elastix.
-%
-%\section{Creating new modules}
+\elastix consists roughly of two layers: A) ITK-style classes that implement
+functionality, B) \elastix wrappers around the ITK classes that take care of
+reading/setting parameters etc. The image samplers, for example, are
+implemented as ITK classes that all inherit from a base class
+\texttt{itk::ImageSamplerBase}. These can be found in
+\texttt{src/Common/ImageSamplers}. So, this is ``layer A'' in \elastix. For
+each sampler (random, grid, full... ) a wrapper is written, located in
+\texttt{src/Components/ImageSamplers}, which takes care of configuring the
+sampler before each new resolution of the registration process. This is ``layer
+B'' of \elastix.
 
-%It is natural to start writing the layer A filter, without bothering about
-%elastix. You can simply extract the ImageSamper directory from elastix and make
-%a small test program that reads an image, runs the sampler, and generates a
-%plot like figure 1 in the article. Once you got the new sampler to work, it is
-%trivial to write the layer B wrapper in elastix (some copy-paste from existing
-%samplers).
-%
+\subsection{Directory structure}
+
+\begin{itemize}
+\item dox
+\item src/Common: itk classes. layer A stuff.
+\item src/Core: this is the main elastix kernel, responsible for the
+    execution flow, connecting the classes, reading parameters etc.
+\item src/Components: this directory contains the components and their
+    elastix wrappers (layer B)
+\end{itemize}
+
+\subsection{\elastix execution flow}
+\begin{enumerate}
+\item elastix.cxx
+\item ElastixMain
+\item ElastixTemplate (Run)
+\item concept of observer/command structure;
+    overzicht van al dit soort functies:
+    \begin{itemize}
+    \item BeforeAll
+    \item BeforeRegistratioin
+    \item BeforeEachResolution
+    \item AfterEachResolution
+    \item AfterEachIteration
+    \item AfterRegistration
+    \end{itemize}
+\end{enumerate}
+
+\subsection{\transformix execution flow}
+\begin{enumerate}
+\item transformixx.cxx
+\item TransformixMain
+\item ElastixTemplate (RunTransformix}
+\item overzicht van al dit soort functies:
+    \begin{itemize}
+    \item BeforeAll
+    \item ApplyTransform
+    \item ...
+    \end{itemize}
+\end{enumerate}
+
+\subsection{External packages}
+
+\elastix uses a few external packages, which are included in the source.
+
+\begin{itemize}
+\item Parameter file parser
+\item xout
+\item ANN license! used for a not yet released component.
+\end{itemize}
+
+\section{Creating new components}
+
+If you want to create your own component, it is natural to start writing the
+layer A filter, without bothering about elastix. The layer A filter should
+implement all basic functionality,
+
+You can simply extract the ImageSampler directory from elastix and make a small
+test program that reads an image, runs the sampler, and verifies its output.
+Once you got the new sampler to work, it is trivial to write the layer B
+wrapper in elastix (some copy-paste from existing samplers).
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
