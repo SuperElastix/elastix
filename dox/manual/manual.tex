@@ -17,6 +17,7 @@
 % Definitions
 \newcommand{\elastix}{\texttt{elastix}}
 \newcommand{\transformix}{\texttt{transformix}}
+\newcommand{\etal}{\emph{et al.}}
 \newcommand{\vx}{\bm{x}}
 \newcommand{\vu}{\bm{u}}
 \newcommand{\vux}{\bm{u}(\bm{x})}
@@ -63,18 +64,23 @@ compare different registration methods for his/her specific
 application. The command-line interface simplifies the processing
 of large amounts of data sets, using scripting.
 
+\section{Outline of this manual}
+
 In Chapter~\ref{chp:Registration} quite an extensive introduction to
 some general theory of image registration is given. Also, the
 different components of which a registration method consists, are
-treated. In Chapter~\ref{chp:elastix}, \elastix\ is described and its
-usage is explained. Chapter~\ref{chp:transformix} is dedicated to
-\transformix, a program accompanying \elastix. A tutorial is given in
-Chapter~\ref{chp:Tutorial}, including many recommendations based on
-the authors' experiences. In the Appendices \ref{chp:ExampleParam}
-and \ref{chp:ExampleTransformParam} example (transform) parameter
-files are given. Appendix \ref{chp:License} contains the software
-license and disclaimer under which \elastix\ is currently
-distributed.
+treated. In Chapter~\ref{chp:elastix}, \elastix\ is described and
+its usage is explained. Chapter~\ref{chp:transformix} is dedicated
+to \transformix, a program accompanying \elastix. A tutorial is
+given in Chapter~\ref{chp:Tutorial}, including many recommendations
+based on the authors' experiences. More advanced registration topics
+are covered in Chapter \ref{chp:advanced}. The final chapter
+provides more details for those interested in the setup of the
+source code and gives information on how to implement your own
+additions to \elastix. In the Appendices \ref{chp:ExampleParam} and
+\ref{chp:ExampleTransformParam} example (transform) parameter files
+are given. Appendix \ref{chp:License} contains the software license
+and disclaimer under which \elastix\ is currently distributed.
 
 %Chapter~\ref{chp:develop} provides more details about the source code
 %and explains how to create extensions of \elastix.
@@ -129,6 +135,10 @@ van der Marel, Adri\"{e}nne Mendrik (in no specific order).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Image registration}\label{chp:Registration}
+
+This chapter introduces primary registration concepts that are at
+the base of \elastix. More advanced registration topics are covered
+in Chapter \ref{chp:advanced}.
 
 Image registration is an important tool in the field of medical
 imaging. In many clinical situations several images of a patient
@@ -223,20 +233,19 @@ in Section~\ref{sec:comp:transform}.
 \label{fig:registrationcomponents}
 \end{figure}
 
-Figure~\ref{fig:registrationcomponents} shows the general
-components of a parametric registration algorithm in a block
-scheme. The scheme is a slightly extended version of the scheme
-introduced in \cite{ITKSoftwareGuideSecondEdition}. Several
-components can be recognised from Equations
+Figure~\ref{fig:registrationcomponents} shows the general components
+of a parametric registration algorithm in a block scheme. The scheme
+is a slightly extended version of the scheme introduced in
+\cite{ITKSoftwareGuideSecondEdition}. Several components can be
+recognised from Equations
 (\ref{eq:registration1})-(\ref{eq:parametric}); some will be
 introduced later. First of all, we have the images. The concept of
 an image needs to be defined. This is done in
-Section~\ref{sec:comp:image}. Then we have the cost function
-$\CC$, or ``metric'', which defines the quality of alignment. As
-mentioned earlier, the cost function consists of a similarity
-measure $\Sim$ and a regularisation term $\Pen$. The
-regularisation term $\Pen$ is not discussed in this manual, since
-it is often not required in the parametric registration approach.
+Section~\ref{sec:comp:image}. Then we have the cost function $\CC$,
+or ``metric'', which defines the quality of alignment. As mentioned
+earlier, the cost function consists of a similarity measure $\Sim$
+and a regularisation term $\Pen$. The regularisation term $\Pen$ is
+not discussed in this chapter, but in Chapter \ref{chp:advanced}.
 The similarity measure $\Sim$ is discussed in
 Section~\ref{sec:comp:metric}. The definition of the similarity
 measure introduces the sampler component, which is treated in
@@ -250,8 +259,8 @@ which intensity interpolation is needed. Choices for the
 interpolator are described in Section \ref{sec:comp:interpolator}.
 Another thing, not immediately clear from Equations
 (\ref{eq:registration1})-(\ref{eq:parametric}), is the use of
-multi-resolution strategies to speed-up registration, and to make
-it more robust, see Section \ref{sec:comp:multiresolution}.
+multi-resolution strategies to speed-up registration, and to make it
+more robust, see Section \ref{sec:comp:multiresolution}.
 
 \section{Images}\label{sec:comp:image}
 
@@ -300,6 +309,10 @@ Therefore, you should take care that you use an image format that
 is able to store the relevant information (e.g. \texttt{mhd},
 DICOM). Some image formats, like \texttt{vpx}, do not store the
 origin and spacing. This may cause serious problems!
+
+The image orientation is not yet supported in \elastix, so
+registration of images with different orientation are not supported.
+This feature is on our priority list.
 
 \section{Metrics}\label{sec:comp:metric}
 
@@ -414,7 +427,7 @@ better performance than MI in some cases. The KS measure is
 specifically meant to register binary images (segmentations). It
 measures the ``overlap'' of the segmentations.
 
-\section{Sampler}\label{sec:comp:sampler}
+\section{Image samplers}\label{sec:comp:sampler}
 
 In Equations (\ref{eq:ssd})-(\ref{eq:histogram}) we observe a loop
 over the fixed image: $\sum_{\vx_i \in \Omega_F}$. Until now, we
@@ -632,7 +645,7 @@ first. The result of the initial rigid or affine registration is
 combined with the nonrigid B-spline transformation in one of the
 following two ways:
 \begin{align}
-  \text{addition: }\quad    & \vTmx = \vTm^\mathrm{BS}(\vx) + \vT_{\hat\vmu_0}(\vx)\label{eq:addition} \\
+  \text{addition: }\quad    & \vTmx = \vTm^\mathrm{BS}(\vx) + \vT_{\hat\vmu_0}(\vx) - \vx\label{eq:addition} \\
   \text{composition: }\quad & \vTmx = \vTm^\mathrm{BS}\left( \vT_{\hat\vmu_0}(\vx) \right)
   = ( \vTm^\mathrm{BS} \circ
   \vT_{\hat\vmu_0})(\vx)\label{eq:composition}
@@ -856,9 +869,12 @@ good for the overlap of complex vessel structures. For large
 spherical objects though, an overlap $<0.9$ is in general not very
 good. What is good enough depends of course on your application.
 
-\item Compute the distance between manually clicked corresponding
-points. Ideally, the registration has found the same
-correspondence.
+\item Compute the distance after registration between points that you know correspond.
+You can obtain corresponding points by manually clicking them in the
+fixed and the moving image. A less time-consuming option is the
+semi-automated approach of Murphy \etal \cite{Murphy08}, which is
+designed for finding corresponding points in the lung. Ideally, the
+registration has found the same correspondence as the ground truth.
 
 \item Inspect the deformation field by looking at the determinant of
 the Jacobian of $\vTmx$. Values smaller than 1 indicate local
@@ -875,6 +891,8 @@ random sampling), and plot it. For example for the SSD measure,
 the lower the metric value, the better the registration.
 
 \end{itemize}
+
+% There are papers about evaluation of registration
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1071,25 +1089,25 @@ basic command to run a registration is as follows:
 \texttt{elastix -f fixedImage.ext -m movingImage.ext -out
 outputDirectory -p parameterFile.txt}
 \end{quote}
-where `\texttt{ext}' is the extension of the image files. The
-above arguments are mandatory. These are minimally needed to run
-\elastix. The parameter file is an important file: it contains, in
-normal text, what kind of registration is performed (i.e. what
-metric, optimiser, etc.) and what the parameters are that define
-the registration. It gives a high amount of flexibility and
-control over the process. More information about the parameter
-file is given in Section \ref{sec:elastix:param}. All output of
-\elastix\ is written to the output directory, which needs to be
-created before running \elastix. The output consists of a log file
-(\texttt{elastix.log}), the parameters of the transformation
-$\vT_{\vmu}$ that relates the fixed and the moving image
-(\texttt{TransformParameters.?.txt}), and, optionally, the
-resulting registered image $I_M(\vTmx)$ (\texttt{result.?.mhd}).
-The log file contains all message that were print to screen during
-registration. Also the parameterFile.txt is copied into the log
-file, and the contents of the \texttt{TransformParameters.?.txt}
-files are included. The log file is thus especially useful when
-trouble shooting.
+where `\texttt{ext}' is the extension of the image files. The above
+arguments are mandatory. These are minimally needed to run \elastix.
+The parameter file is an important file: it contains, in normal
+text, what kind of registration is performed (i.e. what metric,
+optimiser, etc.) and what the parameters are that define the
+registration. It gives a high amount of flexibility and control over
+the process. More information about the parameter file is given in
+Section \ref{sec:elastix:param}. All output of \elastix\ is written
+to the output directory, which needs to be created before running
+\elastix. The output consists of a log file (\texttt{elastix.log}),
+the parameters of the transformation $\vT_{\vmu}$ that relates the
+fixed and the moving image (\texttt{TransformParameters.?.txt}),
+and, optionally, the resulting registered image $I_M(\vTmx)$
+(\texttt{result.?.mhd}). The log file contains all messages that
+were print to screen during registration. Also the
+\texttt{parameterFile.txt} is copied into the log file, and the
+contents of the \texttt{TransformParameters.?.txt} files are
+included. The log file is thus especially useful for trouble
+shooting.
 
 Besides the mandatory arguments, there are some optional
 arguments. Mask images can be provided by adding \texttt{-fMask
@@ -1119,9 +1137,9 @@ run of \elastix:
 \begin{quote}
 \texttt{elastix ... -p param1.txt -p param2.txt -p param3.txt}
 \end{quote}
-The transformations from each of the registrations are
-automatically combined, using one of the equations
-(\ref{eq:addition}) and (\ref{eq:composition}).
+The transformations from each of the registrations are automatically
+combined, using one of the equations (\ref{eq:addition}) and
+(\ref{eq:composition}).
 
 On the \elastix-website, in the `About' section, you can find an
 example on how to use the program. Maybe now is the time to try
@@ -1283,15 +1301,16 @@ The run-time of \transformix\ is built up of the following parts:
 
 \item Interpolating the input image for each voxel.
 \end{enumerate}
-We have never performed tests to measure the computational complexity
-of each step, but we think that step 1 is the least time-consuming
-task. This step can obviously be avoided by using a linear
-interpolator. Step 2 is dependent on the choice of the
-transformation, where linear transformations, such as the rigid and
-affine transform, are substantially faster than nonlinear transforms,
-such as the B-spline transform. Step 3 depends on the specific
-interpolator. In order of increasing complexity: nearest neighbour,
-linear, 1st-order B-spline, 2nd-order B-spline, etc.
+We have never performed tests to measure the computational
+complexity of each step, but we think that step 1 is the least
+time-consuming task. This step can obviously be avoided by using a
+nearest neighbour or linear interpolator. Step 2 is dependent on the
+choice of the transformation, where linear transformations, such as
+the rigid and affine transform, are substantially faster than
+nonlinear transforms, such as the B-spline transform. Step 3 depends
+on the specific interpolator. In order of increasing complexity:
+nearest neighbour, linear, 1st-order B-spline, 2nd-order B-spline,
+etc.
 
 %[What is the complexity of FinalBSplineInterpolator? And of
 %FinalLinearInterpolator? In required operations per voxel. Is that
@@ -1356,8 +1375,6 @@ MovingImagePyramid  & \texttt{MovingSmoothingImagePyramid} \\
 \caption{Some recommendations for the several components.}\label{table:tutorial:components}
 \end{table}
 
-
-
 \section{Overview of all parameters}
 
 A list of all available components of \elastix\ can be found at:
@@ -1371,8 +1388,7 @@ component can be found at the \elastix\ website:
 \end{quote}
 At that site you can find how to specify a parameter and what the
 default value is. We have tried to come up with sensible defaults,
-although the defaults will not work in all cases.
-
+although the defaults will certainly not work in all cases.
 
 \section{Important parameters}\label{sec:Tutorial:importantparam}
 
@@ -1391,12 +1407,13 @@ resolutions in more detail.
 
 \subsection{Metric}
 
-The \texttt{AdvancedMattesMutualInformation} usually works well, both
-for mono- and multi-modal images. It supports fast computation of the
-metric value and derivative in case the transform is a B-spline. You
-need to set the number of histogram bins, which is needed to compute
-the joint histogram. A good value for this depends on the dynamic
-range of your input images, but in our experience 32 is usually ok:
+The \texttt{AdvancedMattesMutualInformation} usually works well,
+both for mono- and multi-modal images. It supports fast computation
+of the metric value and derivative in case the transform is a
+B-spline by exploiting its compact support. You need to set the
+number of histogram bins, which is needed to compute the joint
+histogram. A good value for this depends on the dynamic range of
+your input images, but in our experience 32 is usually ok:
 \begin{quote}
 \texttt{(NumberOfHistogramBins 32)}
 \end{quote}
@@ -1473,18 +1490,21 @@ same patient where you expect no nonrigid deformation, you can
 consider a rigid transformation, i.e. choose the
 \texttt{EulerTransform}. If you want to compensate for differences
 in scale, consider the affine transformation:
-\texttt{AffineTransform}. These two transformations require a
-centre of rotation, which can be set by the user. By default the
-geometric centre of the fixed image is taken, which is
-recommended. Another parameter that needs to be set is the
-\texttt{Scales}. The scales define for each element of the
-transformation parameters $\vmu$ a scaling value, which is used
-during optimisation. The scaling serves to bring the elements of
-$\vmu$ in the same range (parameters corresponding to rotation
-have in general a much smaller range than parameters corresponding
-to translation). We recommend to let \elastix\ compute it
-automatically: \texttt{(AutomaticScalesEstimation "true")}. Always
-start with a rigid or affine transformation before doing a
+\texttt{AffineTransform}. These two transformations require a centre
+of rotation, which can be set by the user. By default the geometric
+centre of the fixed image is taken, which is recommended. Another
+parameter that needs to be set is the \texttt{Scales}. The scales
+define for each element of the transformation parameters $\vmu$ a
+scaling value, which is used during optimisation. The scaling serves
+to bring the elements of $\vmu$ in the same range (parameters
+corresponding to rotation have in general a much smaller range than
+parameters corresponding to translation). We recommend to let
+\elastix\ compute it automatically:
+\texttt{(AutomaticScalesEstimation "true")}\footnote{The
+implementation is given in
+%\verb=elastix\src\Core\ComponentBaseClasses\elxTransformBase.hxx=}
+\texttt{elastix$\backslash$src$\backslash$Core$\backslash$ComponentBaseClasses$\backslash$elxTransformBase.hxx}}.
+Always start with a rigid or affine transformation before doing a
 nonrigid one, to get a good initial alignment.
 
 For nonrigid registration problems \elastix\ has the
@@ -1545,15 +1565,15 @@ powers-of-2 scheme: \texttt{(GridSpacingSchedule 8.0 8.0 4.0 4.0
 2.0 2.0 1.0 1.0)} (for 2D images).
 
 As a side-note: the number of parameters that are minimised in
-(\ref{eq:registration1}) is determined by the size of $\vmu$, i.e. in
-case of the B-spline deformable transform by the control point grid
-spacing. If you double the spacing, the number of parameters are
-increased by a factor 8 for a 3D image. For a $256^3$ image and a
-grid spacing of 16 voxels this will result in approximately
+(\ref{eq:registration1}) is determined by the size of $\vmu$, i.e.
+in case of the B-spline deformable transform by the control point
+grid spacing. If you double the spacing, the number of parameters
+are increased by a factor 8 for a 3D image. For a $256^3$ image and
+a grid spacing of 16 voxels this will result in approximately
 $(256/16)^3 \times 3 \approx 12.000$ parameters; for a grid spacing
 of 8 voxels this is almost 100.000 parameters. The amount of
-parameters is directly related to memory consumption and registration
-time.
+parameters can be directly related to memory consumption and
+registration time, depending on the specific implementation.
 
 Lastly, it is wise to include the following line in every
 parameter file:
@@ -1625,21 +1645,20 @@ optimum. Figure~\ref{fig:stepsize} illustrates this.
 small, (d) $a = 3200$ as in the downloadable example is good, (e)
 $a = 32000$ is too large.} \label{fig:stepsize}
 \end{figure}
-A good choice for $a$ is dependent on the cost function that is
-used for registration: the $a$ that will give you a good result
-for SSD is not the same as the one that gives a good result for
-MI. Finally, $a$ also depends on the amount of deformation that
-you expect between the fixed and the moving image. So again,
-recommendations are hard to give. In general we advise you to
-think in orders of magnitude, if $a = 10$ is too small, try $a =
-100$ and not $a = 11$. For mutual information, normalised
-correlation coefficient, and normalised mutual information, you
-could start around $a = 1000.0$. For the mean squared difference
-metric you could try something smaller than 1. If $a$ is chosen
-way too big, you may encounter the error message ``Too many
-samples map outside moving image buffer''. This error may have
-other causes as well though. The FAQ at the \elastix\ website
-gives more information on this error message.
+A good choice for $a$ is dependent on the cost function that is used
+for registration: the $a$ that will give you a good result for SSD
+is not the same as the one that gives a good result for MI. Finally,
+$a$ also depends on the amount of deformation that you expect
+between the fixed and the moving image. So again, recommendations
+are hard to give. In general we advise you to think in orders of
+magnitude, if $a = 10$ is too small, try $a = 100$ and not $a = 11$.
+For mutual information, normalised correlation coefficient, and
+normalised mutual information, you could start around $a = 1000$.
+For the mean squared difference metric you could try something
+smaller than 1. If $a$ is chosen way too big, you may encounter the
+error message ``Too many samples map outside moving image buffer''.
+This error may have other causes as well though. The FAQ at the
+\elastix\ website gives more information on this error message.
 
 For every resolution you could specify a different value of
 \texttt{SP\_a}, but it might be easier to start with the same
@@ -1668,6 +1687,9 @@ registration, even less iterations may suffice. A side benefit of
 using more iterations is that a wider range of \texttt{SP\_a} gives
 good results. Tuning \texttt{SP\_a} then becomes easier.
 
+A relatively new development is that of an adaptive stochastic
+gradient descent algorithm \cite{Klein09}, which does not require
+tuning $a$. This optimiser is covered in Chapter \ref{chp:advanced}.
 
 \subsection{Image pyramids}\label{sec:pyramidtuning}
 
@@ -1675,18 +1697,20 @@ The \texttt{FixedImagePyramid} and the \texttt{MovingImagePyramid}
 have identical options. What is said below about the
 FixedImagePyramid works similarly for the MovingImagePyramid.
 
-Use the \texttt{FixedSmoothingImagePyramid}, since it will not
-throw away valuable information, and since you are not using the
+Use the \texttt{FixedSmoothingImagePyramid}, since it will not throw
+away valuable information, and since you are not using the
 \texttt{FullSampler} anyway, down-sampling will not save you any
-time. Two parameters have to be set to define the multi-resolution
-strategy: the number of resolutions (\texttt{NumberOfResolutions})
-and the specific down-sampling schedule that is used in each
-resolution (\texttt{FixedImagePyramidSchedule}). If you only set
-the \texttt{NumberOfResolutions}, a default schedule will be used
-that smoothes the fixed image by a factor of 2 in each dimension,
+time. It may consume quite some memory though for large images and
+many resolution levels. Two parameters have to be set to define the
+multi-resolution strategy: the number of resolutions
+(\texttt{NumberOfResolutions}) and the specific down-sampling
+schedule that is used in each resolution
+(\texttt{FixedImagePyramidSchedule}). If you only set the
+\texttt{NumberOfResolutions}, a default schedule will be used that
+smoothes the fixed image by a factor of 2 in each dimension,
 starting from $\sigma = 0.5$ in the last resolution. That schedule
-is usually fine. In case you have highly anisotropic data, you
-might want to blur less in the direction of the largest spacing.
+is usually fine. In case you have highly anisotropic data, you might
+want to blur less in the direction of the largest spacing.
 
 In general 3 resolutions is a good starting point. If the fixed and
 moving image are initially far away, you can increase the number of
@@ -1727,10 +1751,10 @@ image that is within the masks, i.e. where the mask has 1's.
 
 You can/should use a mask
 \begin{itemize}
-\item when your image contains an artificial edge. The registration
-might be tempted to align these artificial edges, thereby
-neglecting the meaningful edges. The conic beam edge in ultrasound
-images is an example of such an artificial edge.
+\item when your image contains an artificial edge that has no real meaning.
+The registration might be tempted to align these artificial edges,
+thereby neglecting the meaningful edges. The conic beam edge in
+ultrasound images is an example of such an artificial edge.
 
 \item when the image contains structures in the neighbourhood
 of your ROI that may influence the registration within your ROI. This
@@ -1763,7 +1787,7 @@ guide the registration.
 
 A common exception that \elastix\ throws when drawing samples is:
 ``Could not find enough image samples within reasonable time.
-Probably the mask is too small.'' This probable cause for this is
+Probably the mask is too small.'' The probable cause for this is
 that your fixed image mask is too small. See the FAQ for more
 information.
 
@@ -1778,7 +1802,6 @@ a FAQ, which can be found at
 \end{quote}
 
 \subsection{Bad initial alignment}
-
 
 When the initial alignment between two images is very off, you cannot
 start a nonrigid registration. And sometimes it can be a hassle to
@@ -1892,7 +1915,7 @@ more information.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Advanced topics}
+\chapter{Advanced topics}\label{chp:advanced}
 
 \section{Metrics}
 
@@ -1949,16 +1972,16 @@ BSplineDeformableTransformWithDiffusion
 %
 \section{Setup of the code}
 
-\elastix consists roughly of two layers: A) ITK-style classes that implement
-functionality, B) \elastix wrappers around the ITK classes that take care of
-reading/setting parameters etc. The image samplers, for example, are
-implemented as ITK classes that all inherit from a base class
-\texttt{itk::ImageSamplerBase}. These can be found in
-\texttt{src/Common/ImageSamplers}. So, this is ``layer A'' in \elastix. For
-each sampler (random, grid, full... ) a wrapper is written, located in
-\texttt{src/Components/ImageSamplers}, which takes care of configuring the
-sampler before each new resolution of the registration process. This is ``layer
-B'' of \elastix.
+\elastix\ consists roughly of two layers: A) ITK-style classes that
+implement functionality, B) \elastix wrappers around the ITK classes
+that take care of reading/setting parameters etc. The image
+samplers, for example, are implemented as ITK classes that all
+inherit from a base class \texttt{itk::ImageSamplerBase}. These can
+be found in \texttt{src/Common/ImageSamplers}. So, this is ``layer
+A'' in \elastix. For each sampler (random, grid, full... ) a wrapper
+is written, located in \texttt{src/Components/ImageSamplers}, which
+takes care of configuring the sampler before each new resolution of
+the registration process. This is ``layer B'' of \elastix.
 
 \subsection{Directory structure}
 
@@ -1971,7 +1994,7 @@ B'' of \elastix.
     elastix wrappers (layer B)
 \end{itemize}
 
-\subsection{\elastix execution flow}
+\subsection{\elastix\ execution flow}
 \begin{enumerate}
 \item elastix.cxx
 \item ElastixMain
@@ -1988,11 +2011,11 @@ B'' of \elastix.
     \end{itemize}
 \end{enumerate}
 
-\subsection{\transformix execution flow}
+\subsection{\transformix\ execution flow}
 \begin{enumerate}
-\item transformixx.cxx
+\item transformix.cxx
 \item TransformixMain
-\item ElastixTemplate (RunTransformix}
+\item ElastixTemplate (RunTransformix)
 \item overzicht van al dit soort functies:
     \begin{itemize}
     \item BeforeAll
@@ -2003,7 +2026,8 @@ B'' of \elastix.
 
 \subsection{External packages}
 
-\elastix uses a few external packages, which are included in the source.
+\elastix\ uses a few external packages, which are included in the
+source.
 
 \begin{itemize}
 \item Parameter file parser
@@ -2013,8 +2037,13 @@ B'' of \elastix.
 
 \section{Functional differences with the ITK registration framework}
 
-Although \elastix is based on the ITK registration framework, it implements
-several functional enhancements.
+Although \elastix\ is based on the ITK registration framework, it
+implements several functional enhancements.
+
+- AdvancedImageToImageMetric: ImageSampler's, ...
+
+- registration classes: what's the difference? Should we just file a
+bug fix?
 
 \section{Creating new components}
 
