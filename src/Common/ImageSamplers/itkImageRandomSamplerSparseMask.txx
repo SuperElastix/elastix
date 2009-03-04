@@ -56,7 +56,7 @@ namespace itk
     /** Make sure the internal full sampler is up-to-date. */
     this->m_InternalFullSampler->SetInput( inputImage );
     this->m_InternalFullSampler->SetMask( this->GetMask() );
-    this->m_InternalFullSampler->SetInputImageRegion( this->GetInputImageRegion() );
+    this->m_InternalFullSampler->SetInputImageRegion( this->GetCroppedInputImageRegion() );
 
     /** Use try/catch, since the full sampler may crash, due to insufficient
      * memory.

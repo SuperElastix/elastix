@@ -187,7 +187,7 @@ namespace itk
 
     /** Get a pointer to the input image. */
     InputImagePointer inputImage = const_cast< InputImageType * >( this->GetInput() );
-
+    
     /** Get and set the region. */
     if ( this->GetInputImageRegion().GetNumberOfPixels() != 0 )
     {
@@ -333,6 +333,8 @@ namespace itk
       {
         return;
       }
+
+      this->UpdateAllMasks();
 
       /** Get the indices of the bounding box extremes.
        * Note that the bounding box is defined in terms of the mask
