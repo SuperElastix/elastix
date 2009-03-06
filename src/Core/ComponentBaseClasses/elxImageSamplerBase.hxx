@@ -27,14 +27,15 @@ namespace elastix
 
   template <class TElastix>
     void ImageSamplerBase<TElastix>
-    ::BeforeEachResolutionBase(void)
+    ::BeforeEachResolutionBase( void )
   {
     /** Get the current resolution level. */
     unsigned int level = 
       ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
-    /** Check if NewSamplesEveryIteration is possible with the selected ImageSampler. 
-    * The "" argument means that no prefix is supplied. */
+    /** Check if NewSamplesEveryIteration is possible with the selected ImageSampler.
+     * The "" argument means that no prefix is supplied.
+     */
     bool newSamples = false;
     this->m_Configuration->ReadParameter( newSamples, "NewSamplesEveryIteration",
       "", level, 0, true );
@@ -45,13 +46,13 @@ namespace elastix
       if ( !ret )
       {
         xl::xout["warning"]
-        << "WARNING: You want to select new samples every iteration,\n"
+          << "WARNING: You want to select new samples every iteration,\n"
           << "but the selected ImageSampler is not suited for that." 
           << std::endl;
       }
     }
 
-  } // end BeforeEachResolutionBase
+  } // end BeforeEachResolutionBase()
 
 } // end namespace elastix
 
