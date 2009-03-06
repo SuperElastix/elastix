@@ -1067,8 +1067,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** Compute the number of affected B-spline parameters. */
   const unsigned int numberOfWeights
     = this->m_WeightsFunction->GetNumberOfWeights();
-  //const unsigned int numberOfNonZeroJacobianIndices
-  //  = this->GetNumberOfNonZeroJacobianIndices();
 
   /** Helper variables. */
   WeightsType weights( numberOfWeights );
@@ -1132,8 +1130,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** Compute the number of affected B-spline parameters. */
   const unsigned int numberOfWeights
     = this->m_WeightsFunction->GetNumberOfWeights();
-  //const unsigned int numberOfNonZeroJacobianIndices
-  //  = this->GetNumberOfNonZeroJacobianIndices();
 
   /** Helper variables. */
   WeightsType weights( numberOfWeights );
@@ -1253,7 +1249,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
         
         /** Update the spatial Hessian sh. The Hessian is symmetrical. */
         sh[ dim ][ i ][ j ] = sum;
-        //if ( i != j ) sh[ dim ][ j ][ i ] = sum;
         sh[ dim ][ j ][ i ] = sum;
       }
 
@@ -1291,8 +1286,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** Compute the number of affected B-spline parameters. */
   const unsigned int numberOfWeights
     = this->m_WeightsFunction->GetNumberOfWeights();
-  //const unsigned int numberOfNonZeroJacobianIndices
-  //  = this->GetNumberOfNonZeroJacobianIndices();
 
   /** Helper variables. */
   WeightsType weights( numberOfWeights );
@@ -1376,8 +1369,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** Compute the number of affected B-spline parameters. */
   const unsigned int numberOfWeights
     = this->m_WeightsFunction->GetNumberOfWeights();
-  //const unsigned int numberOfNonZeroJacobianIndices
-  //  = this->GetNumberOfNonZeroJacobianIndices();
 
   /** Helper variables. */
   WeightsType weights( numberOfWeights );
@@ -1393,7 +1384,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
    * d/dmu of dT / dx_i
    */
   double * weightVector = new double[ SpaceDimension * numberOfWeights ];
-  //double * weightVector = new double[ numberOfNonZeroJacobianIndices ];
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     /** Set the derivative direction. */
@@ -1485,8 +1475,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** Compute the number of affected B-spline parameters. */
   const unsigned int numberOfWeights
     = this->m_WeightsFunction->GetNumberOfWeights();
-  //const unsigned int numberOfNonZeroJacobianIndices
-  //  = this->GetNumberOfNonZeroJacobianIndices();
  
   /** Helper variables. */
   WeightsType weights( numberOfWeights );
@@ -1580,8 +1568,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** Compute the number of affected B-spline parameters. */
   const unsigned int numberOfWeights
     = this->m_WeightsFunction->GetNumberOfWeights();
-  //const unsigned int numberOfNonZeroJacobianIndices
-  //  = this->GetNumberOfNonZeroJacobianIndices();
 
   /** Helper variables. */
   WeightsType weights( numberOfWeights );

@@ -278,7 +278,7 @@ AdvancedBSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>
   this->m_CurrentTransform->GetJacobianOfSpatialJacobian(
     transformedPoint, sj1, jsj1, nonZeroJacobianIndices );
   this->m_CurrentTransform->GetJacobianOfSpatialHessian(
-    transformedPoint, sh1, jsh1, nonZeroJacobianIndices );
+    ipp, sh1, jsh1, nonZeroJacobianIndices );
 
   /** Combine them in one overall spatial Hessian. */
   for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
@@ -288,8 +288,8 @@ AdvancedBSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>
       for ( unsigned int j = 0; j < SpaceDimension; ++j )
       {
         sh[ dim ]( i, j )
-          = sj0( dim, j ) * sh1[ dim ]( i, j )
-          + sh0[ dim ]( i, j ) * sj1( dim, j );
+          = sj1( dim, j ) * sh0[ dim ]( i, j )
+          + sj0( dim, i ) * sh1[ dim ]( i, j ) * sj0( dim, j );
       }
     }
   }
@@ -307,7 +307,7 @@ AdvancedBSplineCombinationTransform<TScalarType, NDimensions, VSplineOrder>
       {
         for ( unsigned int j = 0; j < SpaceDimension; ++j )
         {
-          matrix2( i, j ) = sj0( dim, j ) * matrix( i, j );
+          matrix2( i, j ) = sj0( dim, i ) * matrix( i, j ) * sj0( dim, j );
         }
       }
       jsh[ mu + numParPerDim * dim ][ dim ] = matrix2;
