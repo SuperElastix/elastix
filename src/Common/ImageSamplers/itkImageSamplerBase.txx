@@ -193,7 +193,7 @@ namespace itk
     {
       InputImageRegionType inputRequestedRegion = this->GetInputImageRegion();
 
-      /** crop the input requested region at the input's largest possible region. */
+      /** Crop the input requested region at the input's largest possible region. */
       if ( inputRequestedRegion.Crop( inputImage->GetLargestPossibleRegion() ) )
       {
         inputImage->SetRequestedRegion( inputRequestedRegion );
@@ -201,16 +201,17 @@ namespace itk
       else
       {
         /** Couldn't crop the region (requested region is outside the largest
-         * possible region).  Throw an exception. */
+         * possible region). Throw an exception.
+         */
 
-        /** store what we tried to request (prior to trying to crop). */
+        /** Store what we tried to request (prior to trying to crop). */
         inputImage->SetRequestedRegion( inputRequestedRegion );
 
-        /** build an exception. */
-        InvalidRequestedRegionError e(__FILE__, __LINE__);
-        e.SetLocation(ITK_LOCATION);
-        e.SetDescription("Requested region is (at least partially) outside the largest possible region.");
-        e.SetDataObject(inputImage);
+        /** Build an exception. */
+        InvalidRequestedRegionError e( __FILE__, __LINE__ );
+        e.SetLocation( ITK_LOCATION );
+        e.SetDescription( "Requested region is (at least partially) outside the largest possible region." );
+        e.SetDataObject( inputImage );
         throw e;
       } 
     }
@@ -366,7 +367,8 @@ namespace itk
        */
       if ( !cropped )
       {
-        itkExceptionMacro( << "ERROR: the bounding box of the mask lies entirely out of the InputImageRegion!" );
+        itkExceptionMacro( << "ERROR: the bounding box of the mask lies "
+          << "entirely out of the InputImageRegion!" );
       }
     }
 

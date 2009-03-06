@@ -69,14 +69,15 @@ namespace itk
     typedef typename InputImageType::IndexType    InputImageIndexType;
     typedef typename InputImageType::PointType    InputImagePointType;
 
-    /** Selecting new samples makes no sense if nothing changed. The same
-     * samples would be selected anyway. */
+    /** Selecting new samples makes no sense if nothing changed.
+     * The same samples would be selected anyway.
+     */
     virtual bool SelectNewSamplesOnUpdate(void)
     {
       return false;
     };
 
-    /** Returns whether the sampler supports SelectNewSamplesOnUpdate() */
+    /** Returns whether the sampler supports SelectNewSamplesOnUpdate(). */
     virtual bool SelectingNewSamplesOnUpdateSupported( void ) const
     {
       return false;

@@ -98,7 +98,7 @@ namespace itk
       sampleContainer->push_back( allValidSamples->ElementAt( randomIndex ) );
     }
 
-  } // end GenerateData
+  } // end GenerateData()
 
 
   /**
@@ -115,7 +115,7 @@ namespace itk
     os << indent << "InternalFullSampler: " << this->m_InternalFullSampler.GetPointer() << std::endl;
     os << indent << "RandomGenerator: " << this->m_RandomGenerator.GetPointer() << std::endl;
 
-  } // end PrintSelf
+  } // end PrintSelf()
 
 
 } // end namespace itk
