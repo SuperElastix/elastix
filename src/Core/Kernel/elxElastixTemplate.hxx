@@ -214,7 +214,7 @@ int ElastixTemplate<TFixedImage, TMovingImage>
   catch( itk::ExceptionObject & excp )
   {
     /** Add information to the exception. */
-    excp.SetLocation( "ElastixTemplate - Run()" );
+    excp.SetLocation( "ElastixTemplate - Run()" ); 
     std::string err_str = excp.GetDescription();
     err_str += "\n\nError occurred during actual registration.";
     excp.SetDescription( err_str );
