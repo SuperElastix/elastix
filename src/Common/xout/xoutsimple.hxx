@@ -108,7 +108,7 @@ namespace xoutlibrary
   {   
     this->SetTargetCells( outputmap );
 
-  } // end SetOutputs
+  } // end SetOutputs()
   
 
   /**
@@ -116,12 +116,12 @@ namespace xoutlibrary
    */
 
   template< class charT, class traits >
-    const typename xoutbase<charT, traits>::XStreamMapType &
-    xoutsimple<charT, traits>::GetXOutputs(void)
+    const typename xoutsimple<charT, traits>::XStreamMapType &
+    xoutsimple<charT, traits>::GetXOutputs( void )
   {   
     return this->m_XTargetCells;
 
-  } // end GetOutputs
+  } // end GetXOutputs()
 
   
   /**
@@ -129,12 +129,12 @@ namespace xoutlibrary
    */
 
   template< class charT, class traits >
-    const typename xoutbase<charT, traits>::CStreamMapType &
-    xoutsimple<charT, traits>::GetCOutputs(void)
+    const typename xoutsimple<charT, traits>::CStreamMapType &
+    xoutsimple<charT, traits>::GetCOutputs( void )
   {   
     return this->m_CTargetCells;
 
-  } // end GetOutputs
+  } // end GetCOutputs()
 
 
 } // end namespace xoutlibrary
