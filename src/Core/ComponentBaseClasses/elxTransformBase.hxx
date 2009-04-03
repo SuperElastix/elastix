@@ -291,8 +291,6 @@ void TransformBase<TElastix>
   /** Make a local copy, since some transforms do not do this,
    * like the BSpline-transform.
    */
-  //m_FinalParameters = this->m_Registration->GetAsITKBaseType()->
-  //GetLastTransformParameters();
   this->m_FinalParameters = this->GetElastix()->GetElxOptimizerBase()
     ->GetAsITKBaseType()->GetCurrentPosition();
 
