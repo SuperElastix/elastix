@@ -578,12 +578,14 @@ RECURSIVE              = YES
 # excluded from the INPUT source files. This way you can easily exclude a 
 # subdirectory from a directory tree whose root is specified with the INPUT tag.
 
-EXCLUDE                = "@elastix_SOURCE_DIR@/Common/ParameterFileParser" \
-                         "@elastix_SOURCE_DIR@/Common/KNN/ann_1.1" \
-                         "@elastix_SOURCE_DIR@/Components/Transforms/EulerTransform/itkEulerTransform.h" \
-                         "@elastix_SOURCE_DIR@/Components/Transforms/SimilarityTransform/itkSimilarityTransform.h" \
-                         "@elastix_SOURCE_DIR@/Components/Optimizers/PreconditionedGradientDescent" \
-                         "@elastix_SOURCE_DIR@/Components/Optimizers/FullSearch2"
+EXCLUDE = "@elastix_SOURCE_DIR@/Common/ParameterFileParser" \
+		"@elastix_SOURCE_DIR@/Common/KNN/ann_1.1" \
+		"@elastix_SOURCE_DIR@/Components/Transforms/AdvancedAffineTransform" \
+		"@elastix_SOURCE_DIR@/Components/Transforms/AdvancedBSplineTransform" \
+    "@elastix_SOURCE_DIR@/Components/Transforms/EulerTransform/itkEulerTransform.h" \
+    "@elastix_SOURCE_DIR@/Components/Transforms/SimilarityTransform/itkSimilarityTransform.h" \
+    "@elastix_SOURCE_DIR@/Components/Optimizers/PreconditionedGradientDescent" \
+    "@elastix_SOURCE_DIR@/Components/Optimizers/FullSearch2"
 
 # The EXCLUDE_SYMLINKS tag can be used select whether or not files or 
 # directories that are symbolic links (a Unix filesystem feature) are excluded 
@@ -597,7 +599,7 @@ EXCLUDE_SYMLINKS       = NO
 # against the file with absolute path, so to exclude all test directories 
 # for example use the pattern */test/*
 
-EXCLUDE_PATTERNS       = 
+EXCLUDE_PATTERNS       = 		"@elastix_SOURCE_DIR@/Common/Transforms/itkAdvanced"*
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names 
 # (namespaces, classes, functions, etc.) that should be excluded from the 
