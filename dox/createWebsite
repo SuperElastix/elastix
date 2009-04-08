@@ -60,7 +60,7 @@ websitebase="http://elastix.isi.uu.nl"
 copyright="$exportdirwin/src/CopyrightElastix.txt"
 
 # The stuff we do not want to distribute
-leaveouts="src/Components/Metrics/KNNGraphAlphaMutualInformation src/Components/Optimizers/FullSearch2 src/Components/Optimizers/PreconditionedGradientDescent src/Components/Metrics/BendingEnergyPenalty"
+leaveouts="src/Components/Optimizers/FullSearch2 src/Components/Optimizers/PreconditionedGradientDescent src/Components/Metrics/BendingEnergyPenalty"
 
 
 # checkout linux64 export:

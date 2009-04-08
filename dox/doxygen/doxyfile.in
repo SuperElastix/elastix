@@ -579,10 +579,9 @@ RECURSIVE              = YES
 # subdirectory from a directory tree whose root is specified with the INPUT tag.
 
 EXCLUDE                = "@elastix_SOURCE_DIR@/Common/ParameterFileParser" \
-                         "@elastix_SOURCE_DIR@/Common/KNN" \
+                         "@elastix_SOURCE_DIR@/Common/KNN/ann_1.1" \
                          "@elastix_SOURCE_DIR@/Components/Transforms/EulerTransform/itkEulerTransform.h" \
                          "@elastix_SOURCE_DIR@/Components/Transforms/SimilarityTransform/itkSimilarityTransform.h" \
-                         "@elastix_SOURCE_DIR@/Components/Metrics/KNNGraphAlphaMutualInformation" \
                          "@elastix_SOURCE_DIR@/Components/Optimizers/PreconditionedGradientDescent" \
                          "@elastix_SOURCE_DIR@/Components/Optimizers/FullSearch2"
 
