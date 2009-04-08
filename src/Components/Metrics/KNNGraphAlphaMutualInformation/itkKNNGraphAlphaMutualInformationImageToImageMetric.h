@@ -53,12 +53,16 @@ namespace itk
  * the length of certain graphs, see Neemuchwala. Specifically, we use
  * the k-Nearest Neighbour (kNN) graph, using an implementation provided
  * by the Approximate Nearest Neighbour (ANN) software package.
- * 
  *
  * Note that the feature image are given beforehand, and that values
  * are calculated by interpolation on the transformed point. For some
  * features, it would be better (but slower) to first apply the transform
  * on the image and then recalculate the feature.
+ *
+ * All the technical details can be found in:\n
+ * M. Staring, U.A. van der Heide, S. Klein, M.A. Viergever and J.P.W. Pluim,
+ * "Registration of Cervical MRI Using Multifeature Mutual Information,"
+ * IEEE Transactions on Medical Imaging, 2009, in press.
  * 
  * \ingroup RegistrationMetrics
  */
@@ -237,9 +241,6 @@ public:
 
   /** Avoid division by a small number. */
   itkGetConstReferenceMacro( AvoidDivisionBy, double );
-
-  /** For backwards compatibility. Remove in the future. */
-  itkSetMacro( UseOldAndSlowMethod, bool );
   
 protected:
 
@@ -310,16 +311,6 @@ private:
    * care of going from a sparse matrix (hence the indices) to a
    * full sized matrix.
    */
-  virtual void ComputeImageJacobianDifference_Old(
-    const SpatialDerivativeType & D1sparse,
-    const SpatialDerivativeType & D2sparse_M,
-    const SpatialDerivativeType & D2sparse_J,
-    const ParameterIndexArrayType & D1indices,
-    const ParameterIndexArrayType & D2indices_M,
-    const ParameterIndexArrayType & D2indices_J,
-    SpatialDerivativeType & Dfull_M,
-    SpatialDerivativeType & Dfull_J ) const;
-
   virtual void UpdateDerivativeOfGammas(
     const SpatialDerivativeType & D1sparse,
     const SpatialDerivativeType & D2sparse_M,
@@ -333,8 +324,6 @@ private:
     const MeasureType & distance_J,
     DerivativeType & dGamma_M,
     DerivativeType & dGamma_J ) const;
-
-  bool m_UseOldAndSlowMethod;
 
  }; // end class KNNGraphAlphaMutualInformationImageToImageMetric
 

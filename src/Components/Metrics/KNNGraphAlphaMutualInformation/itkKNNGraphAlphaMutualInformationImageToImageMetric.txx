@@ -42,8 +42,6 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   this->m_BinaryKNNTreeSearcherMoving = 0;
   this->m_BinaryKNNTreeSearcherJoint = 0;
 
-  this->m_UseOldAndSlowMethod = false;
-
 } // end Constructor()
 
 
@@ -56,8 +54,7 @@ void
 KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 ::SetANNkDTree( unsigned int bucketSize, std::string splittingRule )
 {
-  this->SetANNkDTree( bucketSize,
-    splittingRule, splittingRule, splittingRule );
+  this->SetANNkDTree( bucketSize, splittingRule, splittingRule, splittingRule );
 
 } // end SetANNkDTree()
 
@@ -489,8 +486,8 @@ template <class TFixedImage, class TMovingImage>
 void
 KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 ::GetDerivative(
-                const TransformParametersType & parameters,
-                DerivativeType & derivative ) const
+  const TransformParametersType & parameters,
+  DerivativeType & derivative ) const
 {
   /** When the derivative is calculated, all information for calculating
    * the metric value is available. It does not cost anything to calculate
@@ -511,9 +508,9 @@ template <class TFixedImage, class TMovingImage>
 void
 KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 ::GetValueAndDerivative(
-                        const TransformParametersType & parameters,
-                        MeasureType & value,
-                        DerivativeType & derivative ) const
+  const TransformParametersType & parameters,
+  MeasureType & value,
+  DerivativeType & derivative ) const
 {
   /** Initialize some variables. */
   MeasureType measure = NumericTraits< MeasureType >::Zero;
@@ -647,12 +644,6 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 
     SpatialDerivativeType D1sparse, D2sparse_M, D2sparse_J;
     D1sparse = spatialDerivativesContainer[ i ] * jacobianContainer[ i ];
-    SpatialDerivativeType Dfull_M, Dfull_J;
-    if ( this->m_UseOldAndSlowMethod )
-    {
-      Dfull_M.SetSize( movingSize, this->GetNumberOfParameters() );
-      Dfull_J.SetSize( movingSize, this->GetNumberOfParameters() );
-    }
 
     dGamma_M.Fill( NumericTraits< DerivativeValueType >::Zero );
     dGamma_J.Fill( NumericTraits< DerivativeValueType >::Zero );
@@ -685,43 +676,14 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
       * jacobianContainer[ indices_J[ p ] ];
 
       /** Update the dGamma's. */
-      if ( this->m_UseOldAndSlowMethod )
-      {
-        /** Compute ( D1sparse - D2sparse_M ) and ( D1sparse - D2sparse_J ).
-        * The function returns the full matrices.
-        */
-        this->ComputeImageJacobianDifference_Old(
-          D1sparse, D2sparse_M, D2sparse_J,
-          jacobianIndicesContainer[ i ],
-          jacobianIndicesContainer[ indices_M[ p ] ],
-          jacobianIndicesContainer[ indices_J[ p ] ],
-          Dfull_M, Dfull_J );
-
-        diff_M.post_multiply( Dfull_M );
-        diff_J.post_multiply( Dfull_J );
-
-        /** Only compute stuff if all distances are large enough. */
-        if ( distance_M > this->m_AvoidDivisionBy )
-        {
-          dGamma_M += diff_M / distance_M;
-        }
-        if ( distance_J > this->m_AvoidDivisionBy )
-        {
-          dGamma_J += diff_J / distance_J;
-        }
-      }
-      else
-      {
-        this->UpdateDerivativeOfGammas(
-          D1sparse, D2sparse_M, D2sparse_J,
-          jacobianIndicesContainer[ i ],
-          jacobianIndicesContainer[ indices_M[ p ] ],
-          jacobianIndicesContainer[ indices_J[ p ] ],
-          diff_M, diff_J,
-          distance_M, distance_J,
-          dGamma_M, dGamma_J );
-
-      } // end if m_UseOldAndSlowMethod
+      this->UpdateDerivativeOfGammas(
+        D1sparse, D2sparse_M, D2sparse_J,
+        jacobianIndicesContainer[ i ],
+        jacobianIndicesContainer[ indices_M[ p ] ],
+        jacobianIndicesContainer[ indices_J[ p ] ],
+        diff_M, diff_J,
+        distance_M, distance_J,
+        dGamma_M, dGamma_J );
 
     } // end loop over the k neighbours
 
@@ -950,8 +912,8 @@ template <class TFixedImage, class TMovingImage>
 void
 KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 ::EvaluateMovingFeatureImageDerivatives(
-                                        const MovingImagePointType & mappedPoint,
-                                        SpatialDerivativeType & featureGradients ) const
+  const MovingImagePointType & mappedPoint,
+  SpatialDerivativeType & featureGradients ) const
 {
   /** Convert point to a continous index. */
   MovingImageContinuousIndexType cindex;
@@ -1003,48 +965,6 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 //  } // end if 
 
 } // end EvaluateMovingFeatureImageDerivatives()
-
-
-/**
- * ************************ ComputeImageJacobianDifference *************************
- */
-
-template <class TFixedImage, class TMovingImage>
-void
-KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
-::ComputeImageJacobianDifference_Old(
-  const SpatialDerivativeType & D1sparse,
-  const SpatialDerivativeType & D2sparse_M,
-  const SpatialDerivativeType & D2sparse_J,
-  const ParameterIndexArrayType & D1indices,
-  const ParameterIndexArrayType & D2indices_M,
-  const ParameterIndexArrayType & D2indices_J,
-  SpatialDerivativeType & Dfull_M,
-  SpatialDerivativeType & Dfull_J ) const
-{
-  /** Set Dfull_M = Dfull_J = D1sparse. */
-  Dfull_M.Fill( NumericTraits<DerivativeValueType>::Zero );
-  for ( unsigned int i = 0; i < D1indices.GetSize(); ++i )
-  {
-    Dfull_M.set_column( D1indices[ i ], D1sparse.get_column( i ) );
-  }
-  Dfull_J = Dfull_M;
-
-  /** Subtract D2sparse_M from Dfull_M. */
-  for ( unsigned int i = 0; i < D2indices_M.GetSize(); ++i )
-  {
-    Dfull_M.set_column( D2indices_M[ i ],
-      Dfull_M.get_column( D2indices_M[ i ] ) - D2sparse_M.get_column( i ) );
-  }
-
-  /** Subtract D2sparse_J from Dfull_J. */
-  for ( unsigned int i = 0; i < D2indices_J.GetSize(); ++i )
-  {
-    Dfull_J.set_column( D2indices_J[ i ],
-      Dfull_J.get_column( D2indices_J[ i ] ) - D2sparse_J.get_column( i ) );
-  }
-
-} // end ComputeImageJacobianDifference_Old()
 
 
 /**
@@ -1145,7 +1065,6 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 
   os << indent << "Alpha: " << this->m_Alpha << std::endl;
   os << indent << "AvoidDivisionBy: " << this->m_AvoidDivisionBy << std::endl;
-  os << indent << "UseOldAndSlowMethod: " << this->m_UseOldAndSlowMethod << std::endl;
 
   os << indent << "BinaryKNNTreeFixed: "
     << this->m_BinaryKNNTreeFixed.GetPointer() << std::endl;

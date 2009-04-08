@@ -125,11 +125,6 @@ using namespace itk;
     typedef typename Superclass1::MovingImageType           MovingImageType;
     typedef typename Superclass1::FixedImageConstPointer    FixedImageConstPointer;
     typedef typename Superclass1::MovingImageConstPointer   MovingImageConstPointer;
-    //typedef typename Superclass1::FixedImageIndexType       FixedImageIndexType;
-    //typedef typename Superclass1::FixedImageIndexValueType  FixedImageIndexValueType;
-    //typedef typename Superclass1::MovingImageIndexType      MovingImageIndexType;
-    //typedef typename Superclass1::FixedImagePointType       FixedImagePointType;
-    //typedef typename Superclass1::MovingImagePointType      MovingImagePointType;
     
     /** The fixed image dimension */
     itkStaticConstMacro (FixedImageDimension, unsigned int,
