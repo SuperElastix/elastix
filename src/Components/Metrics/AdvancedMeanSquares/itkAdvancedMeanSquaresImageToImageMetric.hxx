@@ -304,7 +304,7 @@ namespace itk
         const TransformJacobianType & jacobian = 
           this->EvaluateTransformJacobian( fixedPoint );
         
-        /** Compute the innerproducts (dM/dx)^T (dT/dmu) and (dMask/dx)^T (dT/dmu). */
+        /** Compute the innerproducts (dM/dx)^T (dT/dmu). */
         this->EvaluateTransformJacobianInnerProduct( 
           jacobian, movingImageDerivative, imageJacobian );
 
