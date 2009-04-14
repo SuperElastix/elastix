@@ -50,10 +50,16 @@ username="stefan"
 # Some base directories
 exportbasedirwin="d:/tk/elastix/exports"
 exportbasedirlinux64="m:/tk/elastix/exports"
+# when using rashindra's machine:
 exportbasedirlinux32="/home/stefan/tk/elastix/exports"
+# when using the biggrid
+exportbasedirlinux32grid="m:/tk/elastix/exports"
 exportdirwin="$exportbasedirwin/tags/$tag"
 exportdirlinux64="$exportbasedirlinux64/tags/$tag"
+# when using rashindra's computer:
 exportdirlinux32="$exportbasedirlinux32/tags/$tag"
+# when using the biggrid
+exportdirlinux32grid="$exportbasedirlinux32grid/tags/$tag""linux32"
 svnurl="http://svn.isi.uu.nl:8080/elastix"
 tempdir="d:/dox/elastixwebsite/$tag"
 websitebase="http://elastix.isi.uu.nl"
@@ -66,7 +72,7 @@ leaveouts="src/Components/Optimizers/FullSearch2 src/Components/Optimizers/Preco
 # checkout linux64 export:
 if [ "$arg" = "exportlinux64" ]
 then
-  svn export --native-eol LF $svnurl/tags/$tag $exportdirlinux64
+  svn export --force --native-eol LF $svnurl/tags/$tag $exportdirlinux64
   for leaveout in $leaveouts
   do
     rm -r $exportdirlinux64/$leaveout
@@ -134,6 +140,22 @@ then
   exit
 fi
 
+# zip linux32grid
+if [ "$arg" = "ziplinux32grid" ]
+then
+  currentdir=`pwd`
+  cd $exportdirlinux32grid
+  # tar does not recognise m:/... filenames; convert to cygwin style.
+  cwdir=`pwd`
+  # select which documentation to include in the source zip/tar
+  doxfordistribution=`find dox -type f | grep -v "dox/manual" | grep -v "dox/createWebsite"`
+  cd install
+  cp ../src/CopyrightElastix.txt .
+  tar -cjvf $cwdir/elastix_linux32_v$version.tar.bz2 *
+  cd $currentdir
+  exit
+fi
+
 # zip linux32: run this one directly on rashindra's computer
 if [ "$arg" = "ziplinux32" ]
 then
@@ -174,6 +196,7 @@ then
   mkdir -p $tempdir/download
   cp $exportdirwin/*.zip $tempdir/download
   cp $exportdirlinux64/*.tar.bz2 $tempdir/download
+  cp $exportdirlinux32grid/*.tar.bz2 $tempdir/download
   cp $exportdirwin/dox/manual/manual.pdf $tempdir/download/elastix_manual_v$version.pdf
   cp -r $exportdirwin/help/html $tempdir/doxygen
     

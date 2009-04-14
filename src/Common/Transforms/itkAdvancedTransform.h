@@ -142,24 +142,24 @@ public:
   /** This returns a sparse version of the Jacobian of the transformation.
    *
    * The Jacobian is expressed as a vector of partial derivatives of the
-	 * transformation components with respect to the parameters \$\bm{\mu}\$ that
-   * define the transformation \$\bm{T}\$, evaluated at a point \$\bm{p}\$.
+	 * transformation components with respect to the parameters \$\mu\$ that
+   * define the transformation \$T\$, evaluated at a point \$p\$.
    *
    * \f[
       J=\left[ \begin{array}{cccc}
-      \frac{\partial T_{1}}{\partial \mu_{1}}(\bm{p}) & 
-      \frac{\partial T_{1}}{\partial \mu_{2}}(\bm{p}) & 
+      \frac{\partial T_{1}}{\partial \mu_{1}}(p) & 
+      \frac{\partial T_{1}}{\partial \mu_{2}}(p) & 
       \cdots &
-      \frac{\partial T_{1}}{\partial \mu_{m}}(\bm{p}) \\
-      \frac{\partial T_{2}}{\partial \mu_{1}}(\bm{p}) & 
-      \frac{\partial T_{2}}{\partial \mu_{2}}(\bm{p}) & 
+      \frac{\partial T_{1}}{\partial \mu_{m}}(p) \\
+      \frac{\partial T_{2}}{\partial \mu_{1}}(p) & 
+      \frac{\partial T_{2}}{\partial \mu_{2}}(p) & 
       \cdots &
-      \frac{\partial T_{2}}{\partial \mu_{m}}(\bm{p}) \\
+      \frac{\partial T_{2}}{\partial \mu_{m}}(p) \\
       \vdots & \vdots & \ddots & \vdots \\
-      \frac{\partial T_{d}}{\partial \mu_{1}}(\bm{p}) & 
-      \frac{\partial T_{d}}{\partial \mu_{2}}(\bm{p}) & 
+      \frac{\partial T_{d}}{\partial \mu_{1}}(p) & 
+      \frac{\partial T_{d}}{\partial \mu_{2}}(p) & 
       \cdots &
-      \frac{\partial T_{d}}{\partial \mu_{m}}(\bm{p})
+      \frac{\partial T_{d}}{\partial \mu_{m}}(p)
       \end{array}\right],
    * \f]
    * with \$m\$ the number of parameters, i.e. the size of \$\mu\$, and \$d\$
@@ -179,24 +179,24 @@ public:
 	/** Compute the spatial Jacobian of the transformation.
    *
    * The spatial Jacobian is expressed as a vector of partial derivatives of the
-   * transformation components with respect to the spatial position \$\bm{x}\$,
-   * evaluated at a point \$\bm{p}\$.
+   * transformation components with respect to the spatial position \$x\$,
+   * evaluated at a point \$p\$.
    *
    * \f[
       sJ=\left[ \begin{array}{cccc}
-      \frac{\partial T_{1}}{\partial x_{1}}(\bm{p}) & 
-      \frac{\partial T_{1}}{\partial x_{2}}(\bm{p}) & 
+      \frac{\partial T_{1}}{\partial x_{1}}(p) & 
+      \frac{\partial T_{1}}{\partial x_{2}}(p) & 
       \cdots &
-      \frac{\partial T_{1}}{\partial x_{m}}(\bm{p}) \\
-      \frac{\partial T_{2}}{\partial x_{1}}(\bm{p}) & 
-      \frac{\partial T_{2}}{\partial x_{2}}(\bm{p}) & 
+      \frac{\partial T_{1}}{\partial x_{m}}(p) \\
+      \frac{\partial T_{2}}{\partial x_{1}}(p) & 
+      \frac{\partial T_{2}}{\partial x_{2}}(p) & 
       \cdots &
-      \frac{\partial T_{2}}{\partial x_{m}}(\bm{p}) \\
+      \frac{\partial T_{2}}{\partial x_{m}}(p) \\
       \vdots & \vdots & \ddots & \vdots \\
-      \frac{\partial T_{d}}{\partial x_{1}}(\bm{p}) & 
-      \frac{\partial T_{d}}{\partial x_{2}}(\bm{p}) & 
+      \frac{\partial T_{d}}{\partial x_{1}}(p) & 
+      \frac{\partial T_{d}}{\partial x_{2}}(p) & 
       \cdots &
-      \frac{\partial T_{d}}{\partial x_{m}}(\bm{p})
+      \frac{\partial T_{d}}{\partial x_{m}}(p)
       \end{array}\right],
    * \f]
    * with \$m\$ the number of parameters, i.e. the size of \$\mu\$, and \$d\$
@@ -210,14 +210,14 @@ public:
    *
    * The spatial Hessian is the vector of matrices of partial second order
    * derivatives of the transformation components with respect to the spatial
-   * position \$\bm{x}\$, evaluated at a point \$\bm{p}\$.
+   * position \$x\$, evaluated at a point \$p\$.
    *
    * \f[
       sH=\left[ \begin{array}{cc}
-      \frac{\partial^2 T_{i}}{\partial x_{1} \partial x_{1}}(\bm{p}) & 
-      \frac{\partial^2 T_{i}}{\partial x_{1} \partial x_{2}}(\bm{p}) \\
-      \frac{\partial^2 T_{i}}{\partial x_{1} \partial x_{2}}(\bm{p}) &
-      \frac{\partial^2 T_{i}}{\partial x_{2} \partial x_{2}}(\bm{p}) \\
+      \frac{\partial^2 T_{i}}{\partial x_{1} \partial x_{1}}(p) & 
+      \frac{\partial^2 T_{i}}{\partial x_{1} \partial x_{2}}(p) \\
+      \frac{\partial^2 T_{i}}{\partial x_{1} \partial x_{2}}(p) &
+      \frac{\partial^2 T_{i}}{\partial x_{2} \partial x_{2}}(p) \\
       \end{array}\right],
    * \f]
    * with i the i-th component of the transformation.
@@ -229,8 +229,8 @@ public:
   /** Compute the Jacobian of the spatial Jacobian of the transformation.
    *
    * The Jacobian of the spatial Jacobian is the derivative of the spatial
-   * Jacobian to the transformation parameters \$\bm{\mu}\$, evaluated at
-   * a point \$\bm{p}\$.
+   * Jacobian to the transformation parameters \$\mu\$, evaluated at
+   * a point \$p\$.
    */
   virtual void GetJacobianOfSpatialJacobian(
     const InputPointType & ipp,
@@ -249,8 +249,8 @@ public:
   /** Compute the Jacobian of the spatial Hessian of the transformation.
    *
    * The Jacobian of the spatial Hessian is the derivative of the spatial
-   * Hessian to the transformation parameters \$\bm{\mu}\$, evaluated at
-   * a point \$\bm{p}\$.
+   * Hessian to the transformation parameters \$\mu\$, evaluated at
+   * a point \$p\$.
    */
   virtual void GetJacobianOfSpatialHessian(
     const InputPointType & ipp,
