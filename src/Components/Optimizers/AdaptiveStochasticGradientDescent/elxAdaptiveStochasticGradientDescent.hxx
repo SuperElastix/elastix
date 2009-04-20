@@ -204,7 +204,7 @@ namespace elastix
       this->m_NumberOfSamplesForExactGradient = 100000;
       this->GetConfiguration()->ReadParameter(
         this->m_NumberOfSamplesForExactGradient,
-        "NumberOfSamplesForExactGradient ",
+        "NumberOfSamplesForExactGradient",
         this->GetComponentLabel(), level, 0 );   
 
     } // end if automatic parameter estimation
