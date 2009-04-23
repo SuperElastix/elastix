@@ -676,15 +676,15 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     {
       for ( unsigned int mu = 0; mu < this->m_NumBSplineWeights; mu++ )
       {
-        /* The array weights contains the Jacobian values in a 1-D array 
+        /* The array weights contains the Jacobian values in a 1-D array
          * (because for each parameter the Jacobian is non-zero in only 1 of the
          * possible dimensions) which is multiplied by the moving image gradient.
          */
         this->m_InternalTransformJacobian[ dim ][ i ] = this->m_BSplineTransformWeights[ mu ];
 
         /** The parameter number to which this partial derivative corresponds. */
-        const unsigned int parameterNumber = 
-          this->m_BSplineTransformIndices[ mu ] + this->m_BSplineParametersOffset[ dim ];
+        const unsigned int parameterNumber
+          = this->m_BSplineTransformIndices[ mu ] + this->m_BSplineParametersOffset[ dim ];
         this->m_NonZeroJacobianIndices[ i ] = parameterNumber;
 
         /** Go to next column in m_InternalTransformJacobian. */
