@@ -30,7 +30,7 @@
 
 namespace elastix
 {
-  //using namespace itk; //Not here because the ITK also started to define a TransformBase class....
+//using namespace itk; //Not here because the ITK also started to define a TransformBase class....
 
 
 /**
@@ -38,7 +38,8 @@ namespace elastix
  */
 
 template <class TElastix>
-TransformBase<TElastix>::TransformBase()
+TransformBase<TElastix>
+::TransformBase()
 {
   /** Initialize. */
   this->m_TransformParametersPointer = 0;
@@ -53,7 +54,8 @@ TransformBase<TElastix>::TransformBase()
  */
 
 template <class TElastix>
-TransformBase<TElastix>::~TransformBase()
+TransformBase<TElastix>
+::~TransformBase()
 {
   /** Delete. */
   if ( this->m_TransformParametersPointer )
@@ -69,7 +71,8 @@ TransformBase<TElastix>::~TransformBase()
  */
 
 template <class TElastix>
-int TransformBase<TElastix>
+int
+TransformBase<TElastix>
 ::BeforeAllBase( void )
 {
   /** Check Command line options and print them to the logfile. */
@@ -129,7 +132,8 @@ int TransformBase<TElastix>
  */
 
 template <class TElastix>
-void TransformBase<TElastix>
+void
+TransformBase<TElastix>
 ::BeforeRegistrationBase( void )
 { 
   /** Read from the configuration file how to combine the initial
@@ -137,7 +141,7 @@ void TransformBase<TElastix>
    */
   std::string howToCombineTransforms = "Add";
   this->m_Configuration->ReadParameter( howToCombineTransforms,
-    "HowToCombineTransforms", 0, true );
+    "HowToCombineTransforms", 0, false );
 
   /** Check if this is a CombinationTransform. */
   CombinationTransformType * thisAsGrouper = 
@@ -245,7 +249,8 @@ TransformBase<TElastix>
  */
 
 template <class TElastix>
-void TransformBase<TElastix>
+void
+TransformBase<TElastix>
 ::SetInitialTransform( InitialTransformType * _arg )
 {
   /** Cast to a(n Advanced)CombinationTransform. */
@@ -354,7 +359,9 @@ void TransformBase<TElastix>
      */
     else
     {
-      std::ifstream input( this->GetConfiguration()->GetCommandLineArgument( "-tp" ) );
+      std::string tpFilename
+        = this->GetConfiguration()->GetCommandLineArgument( "-tp" );
+      std::ifstream input( tpFilename.c_str() );
       if ( input.is_open() )
       {
         /** Search for the following pattern:
@@ -391,7 +398,7 @@ void TransformBase<TElastix>
         else
         {
           xl::xout["error"]
-          << "Invalid transform parameter file! The parameters could not be found."
+            << "Invalid transform parameter file! The parameters could not be found."
             << std::endl;
           itkGenericExceptionMacro( << "Error during reading the transform parameter file!" );
         }
@@ -399,8 +406,8 @@ void TransformBase<TElastix>
       } // end if input-file is open
       else
       {
-        xl::xout["error"] <<
-          "The transform parameter file could not opened!" << std::endl;
+        xl::xout["error"]
+          << "The transform parameter file could not opened!" << std::endl;
         itkGenericExceptionMacro( << "Error during reading the transform parameter file!" );
       }
     } // end else
@@ -423,9 +430,10 @@ void TransformBase<TElastix>
      * is not the same as this transform parameter file. Otherwise,
      * we will have an infinite loop.
      */
-    std::string fullFileName1 = itksys::SystemTools::CollapseFullPath( fileName.c_str() );
+    std::string fullFileName1 = itksys::SystemTools::CollapseFullPath(
+      fileName.c_str() );
     std::string fullFileName2 = itksys::SystemTools::CollapseFullPath( 
-      this->GetConfiguration()->GetCommandLineArgument( "-tp" ) );
+      this->GetConfiguration()->GetCommandLineArgument( "-tp" ).c_str() );
     if ( fullFileName1 == fullFileName2 )
     {
       itkExceptionMacro( << "ERROR: The InitialTransformParametersFileName "
@@ -479,7 +487,7 @@ void TransformBase<TElastix>
    * as an initial transform (see the WriteToFile method)
    */
   this->SetTransformParametersFileName(
-    this->GetConfiguration()->GetCommandLineArgument( "-tp" ) );
+    this->GetConfiguration()->GetCommandLineArgument( "-tp" ).c_str() );
 
 } // end ReadFromFile()
 
@@ -501,15 +509,16 @@ void TransformBase<TElastix>
   }
 
   /** Create argmapInitialTransform. */
-  ArgumentMapType argmapInitialTransform;
-  argmapInitialTransform.insert( ArgumentMapEntryType(
+  CommandLineArgumentMapType argmapInitialTransform;
+  argmapInitialTransform.insert( CommandLineEntryType(
     "-tp", transformParametersFileName ) );
 
   int initfailure = this->m_ConfigurationInitialTransform->Initialize(
     argmapInitialTransform );
 	if ( initfailure != 0 )
   {
-	  itkGenericExceptionMacro( "ERROR: Reading initial transform parameters failed: " << transformParametersFileName );
+	  itkGenericExceptionMacro( << "ERROR: Reading initial transform "
+      << "parameters failed: " << transformParametersFileName );
 	}
 
   /** Read the InitialTransform name. */
@@ -751,7 +760,8 @@ void TransformBase<TElastix>
  */
 
 template <class TElastix>
-void TransformBase<TElastix>
+void
+TransformBase<TElastix>
 ::TransformPoints( void ) const
 {
   /** If the optional command "-ipp" is given in the command
@@ -796,7 +806,8 @@ void TransformBase<TElastix>
  */
 
 template <class TElastix>
-void TransformBase<TElastix>
+void
+TransformBase<TElastix>
 ::TransformPointsSomePoints( const std::string filename ) const
 {
   /** Typedef's. */
@@ -961,12 +972,14 @@ void TransformBase<TElastix>
     deformationvec[ j ].CastFrom( outputpointvec[ j ] - inputpointvec[ j ] );
   }
 
-  /** Create filename and filestream. */
-  std::string outputPointsFileName = this->m_Configuration->GetCommandLineArgument( "-out" );
+  /** Create filename and file stream. */
+  std::string outputPointsFileName = this->m_Configuration
+    ->GetCommandLineArgument( "-out" );
   outputPointsFileName += "outputpoints.txt";
   std::ofstream outputPointsFile( outputPointsFileName.c_str() );
   outputPointsFile << std::showpoint << std::fixed;
-  elxout << "  The transformed points are saved in: " <<  outputPointsFileName << std::endl;
+  elxout << "  The transformed points are saved in: "
+    <<  outputPointsFileName << std::endl;
   //\todo do not write opp to log file, but only to outputPointsFile.
   elxout.AddOutput( "opp", &outputPointsFile );
 
@@ -1074,7 +1087,7 @@ void TransformBase<TElastix>
 
   /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
-  this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, true );
+  this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, false );
   std::ostringstream makeFileName( "" );
   makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
     << "deformationField." << resultImageFormat;
@@ -1157,7 +1170,8 @@ void TransformBase<TElastix>
  */
 
 template <class TElastix>
-void TransformBase<TElastix>
+void
+TransformBase<TElastix>
 ::AutomaticScalesEstimation( ScalesType & scales ) const
 {
   typedef itk::ImageGridSampler< FixedImageType >     ImageSamplerType;

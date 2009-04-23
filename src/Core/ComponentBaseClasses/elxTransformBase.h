@@ -87,8 +87,10 @@ public:
   typedef typename Superclass::ElastixPointer         ElastixPointer;
   typedef typename Superclass::ConfigurationType      ConfigurationType;
   typedef typename Superclass::ConfigurationPointer   ConfigurationPointer;
-  typedef typename ConfigurationType::ArgumentMapType ArgumentMapType;
-  typedef typename ArgumentMapType::value_type        ArgumentMapEntryType;
+  typedef typename ConfigurationType
+    ::CommandLineArgumentMapType                      CommandLineArgumentMapType;
+  typedef typename ConfigurationType
+    ::CommandLineEntryType                            CommandLineEntryType;
   typedef typename Superclass::RegistrationType       RegistrationType;
   typedef typename Superclass::RegistrationPointer    RegistrationPointer;
 

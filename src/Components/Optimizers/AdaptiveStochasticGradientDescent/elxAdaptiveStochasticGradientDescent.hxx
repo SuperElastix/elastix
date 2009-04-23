@@ -134,7 +134,7 @@ namespace elastix
      * Depecrated alias UseCruzAcceleration is also still supported. */
     bool useAdaptiveStepSizes = true;
     this->GetConfiguration()->ReadParameter( useAdaptiveStepSizes,
-      "UseCruzAcceleration", this->GetComponentLabel(), level, 0, true );
+      "UseCruzAcceleration", this->GetComponentLabel(), level, 0, false );
     this->GetConfiguration()->ReadParameter( useAdaptiveStepSizes,
       "UseAdaptiveStepSizes", this->GetComponentLabel(), level, 0 );
     this->SetUseAdaptiveStepSizes( useAdaptiveStepSizes );

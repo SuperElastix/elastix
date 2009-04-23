@@ -160,7 +160,7 @@ using namespace itk;
 
     /** Create the filename of the deformationField image. */
     std::string resultImageFormat = "mhd";
-    this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, true );
+    this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, false );
     std::ostringstream makeFileName( "" );
     makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
       << "DeformationFieldImage"

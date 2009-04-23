@@ -178,16 +178,15 @@ using namespace itk;
 
     /** determine method */
     bool method3 = false;
-    double dummy = 1.0;
     unsigned int count = this->m_Configuration->
-      CountNumberOfParameterEntries( dummy, "FinalGridSpacing" );
+      CountNumberOfParameterEntries( "FinalGridSpacing" );
     if ( count != 0 )
     {
       method3 = true;
     }
     bool method2 = false;
     count = this->m_Configuration->
-      CountNumberOfParameterEntries( dummy, "FinalGridSpacingInPhysicalUnits" );
+      CountNumberOfParameterEntries( "FinalGridSpacingInPhysicalUnits" );
     if ( count != 0 )
     {
       method2 = true;
@@ -216,14 +215,14 @@ using namespace itk;
       /** Method 3:
        * Silently try to read the deprecated FinalGridSpacing (in voxels).
        */
-      int deprecatedused = 1;
+      bool deprecatedused = false;
       for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
       {
-        deprecatedused &= this->m_Configuration->ReadParameter(
+        deprecatedused |= this->m_Configuration->ReadParameter(
           finalGridSpacingInVoxels[ dim ], "FinalGridSpacing",
-          this->GetComponentLabel(), dim , 0, true );        
+          this->GetComponentLabel(), dim , 0, false );        
       }    
-      if ( deprecatedused==0 )
+      if ( deprecatedused )
       {
         /** This message was introduced in elastix 3.9. Actual deprecation can only be done
          * after elastix 4.1 at least.
@@ -242,7 +241,7 @@ using namespace itk;
       {
         this->m_Configuration->ReadParameter(
           finalGridSpacingInVoxels[ dim ], "FinalGridSpacingInVoxels",
-          this->GetComponentLabel(), dim , 0, false );
+          this->GetComponentLabel(), dim , 0 );
       }
 
       /** Compute grid spacing in physical units */
@@ -266,7 +265,7 @@ using namespace itk;
     
     /** Read what the user has specified. This overrules everything. */
     count = this->m_Configuration->
-      CountNumberOfParameterEntries( dummy, "GridSpacingSchedule" );
+      CountNumberOfParameterEntries( "GridSpacingSchedule" );
     unsigned int entry_nr = 0;
     if ( count == 0 )
     {
@@ -279,7 +278,7 @@ using namespace itk;
         for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
         {
           this->m_Configuration->ReadParameter( gridSchedule[res][dim],
-            "GridSpacingSchedule", entry_nr, true );       
+            "GridSpacingSchedule", entry_nr, false );       
         }
         ++entry_nr;
       }
@@ -291,7 +290,7 @@ using namespace itk;
         for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
         {
           this->m_Configuration->ReadParameter( gridSchedule[ res ][ dim ],
-            "GridSpacingSchedule", entry_nr, true );
+            "GridSpacingSchedule", entry_nr, false );
           ++entry_nr;
         }
       }
@@ -537,9 +536,8 @@ using namespace itk;
     BSplineTransform<TElastix>
     ::ComputeGridSchedule_Deprecated( GridScheduleType & schedule )
   {
-    bool dummy = false;
     unsigned int count = this->m_Configuration->
-      CountNumberOfParameterEntries( dummy, "UpsampleGridOption" );
+      CountNumberOfParameterEntries( "UpsampleGridOption" );
     if ( count == 0 )
     {
       return;
@@ -571,18 +569,18 @@ using namespace itk;
 
     /** Fill upsampleBSplineGridOption. */
     bool tmp = true;
-    int deprecatedused = 1;
+    bool deprecatedused = false;
     this->GetConfiguration()->ReadParameter( tmp, "UpsampleGridOption", 0 );
     std::vector< bool > upsampleGridOption( size, tmp );
     for ( unsigned int i = 1; static_cast<long>(i) < nrOfResolutions - 1; ++i )
     {
       tmp = upsampleGridOption[ i ];
-      deprecatedused &= this->m_Configuration->ReadParameter(
+      deprecatedused |= this->m_Configuration->ReadParameter(
         tmp, "UpsampleGridOption", i );
       upsampleGridOption[ i ] = tmp;
     }
 
-    if ( deprecatedused==0 )
+    if ( deprecatedused )
     {
       /** This message was introduced in elastix 3.9. Actual deprecation can only be done
        * after elastix 4.1 at least.

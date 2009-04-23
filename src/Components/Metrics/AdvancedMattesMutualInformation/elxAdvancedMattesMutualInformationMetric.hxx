@@ -139,16 +139,18 @@ using namespace itk;
       this->SetFiniteDifferencePerturbation( this->Compute_c( 0 ) );
     }
 
+    /** Set whether to use moving image derivative scales. */
     this->SetUseMovingImageDerivativeScales( false );
     MovingImageDerivativeScalesType movingImageDerivativeScales;
-    int usescales = 0;
+    bool usescales = false;
     for ( unsigned int i = 0; i < MovingImageDimension; ++i )
     {
       usescales |= this->GetConfiguration()->ReadParameter(
         movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
-        this->GetComponentLabel(), i, -1, true );
+        this->GetComponentLabel(), i, -1, false );
     }
-    if ( usescales == 0 )
+
+    if ( usescales )
     {
       this->SetUseMovingImageDerivativeScales( true );
       this->SetMovingImageDerivativeScales( movingImageDerivativeScales );

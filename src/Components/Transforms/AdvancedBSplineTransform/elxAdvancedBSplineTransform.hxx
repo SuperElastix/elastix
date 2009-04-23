@@ -170,10 +170,9 @@ void AdvancedBSplineTransform<TElastix>
    */
 
   /** Determine which method is used. */
-  double dummy = 1.0;
   bool method1 = false;
   unsigned int count1 = this->m_Configuration
-    ->CountNumberOfParameterEntries( dummy, "FinalGridSpacingInVoxels" );
+    ->CountNumberOfParameterEntries( "FinalGridSpacingInVoxels" );
   if ( count1 > 0 )
   {
     method1 = true;
@@ -181,7 +180,7 @@ void AdvancedBSplineTransform<TElastix>
 
   bool method2 = false;
   unsigned int count2 = this->m_Configuration
-    ->CountNumberOfParameterEntries( dummy, "FinalGridSpacingInPhysicalUnits" );
+    ->CountNumberOfParameterEntries( "FinalGridSpacingInPhysicalUnits" );
   if ( count2 > 0 )
   {
     method2 = true;
@@ -207,7 +206,7 @@ void AdvancedBSplineTransform<TElastix>
     {
       this->m_Configuration->ReadParameter(
         finalGridSpacingInVoxels[ dim ], "FinalGridSpacingInVoxels",
-        this->GetComponentLabel(), dim , 0, false );
+        this->GetComponentLabel(), dim , 0 );
     }
 
     /** Compute the grid spacing in physical units. */
@@ -226,7 +225,7 @@ void AdvancedBSplineTransform<TElastix>
     {
       this->m_Configuration->ReadParameter(
         finalGridSpacingInPhysicalUnits[ dim ], "FinalGridSpacingInPhysicalUnits",
-        this->GetComponentLabel(), dim , 0, false );
+        this->GetComponentLabel(), dim , 0 );
     }
   }
 
@@ -238,7 +237,7 @@ void AdvancedBSplineTransform<TElastix>
 
   /** Read what the user has specified. This overrules everything. */
   count2 = this->m_Configuration
-    ->CountNumberOfParameterEntries( dummy, "GridSpacingSchedule" );
+    ->CountNumberOfParameterEntries( "GridSpacingSchedule" );
   unsigned int entry_nr = 0;
   if ( count2 == 0 )
   {
@@ -251,7 +250,7 @@ void AdvancedBSplineTransform<TElastix>
       for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
       {
         this->m_Configuration->ReadParameter( gridSchedule[ res ][ dim ],
-          "GridSpacingSchedule", entry_nr, true );
+          "GridSpacingSchedule", entry_nr, false );
       }
       ++entry_nr;
     }
@@ -263,7 +262,7 @@ void AdvancedBSplineTransform<TElastix>
       for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
       {
         this->m_Configuration->ReadParameter( gridSchedule[ res ][ dim ],
-          "GridSpacingSchedule", entry_nr, true );
+          "GridSpacingSchedule", entry_nr, false );
         ++entry_nr;
       }
     }

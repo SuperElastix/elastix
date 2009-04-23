@@ -26,7 +26,7 @@
 
 #include "elxBaseComponent.h"
 #include "elxComponentDatabase.h"
-#include "elxConfigurationToUse.h"
+#include "elxConfiguration.h"
 #include "itkObject.h"
 #include "itkDataObject.h"
 #include "elxMacro.h"
@@ -137,7 +137,7 @@ public:
   typedef BaseComponent     Superclass;
 
   /** Typedefs used in this class. */
-  typedef MyConfiguration                     ConfigurationType;
+  typedef Configuration                       ConfigurationType;
   typedef ConfigurationType::Pointer          ConfigurationPointer;
   typedef itk::Object                         ObjectType; //for the components
   typedef ObjectType::Pointer                 ObjectPointer;

@@ -345,7 +345,8 @@ int ElastixTemplate<TFixedImage, TMovingImage>
 
     /** Create a name for the final result. */
     std::string resultImageFormat = "mhd";
-    this->GetConfiguration()->ReadParameter(  resultImageFormat, "ResultImageFormat", 0, true );
+    this->GetConfiguration()->ReadParameter( resultImageFormat,
+      "ResultImageFormat", 0, false );
     std::ostringstream makeFileName("");
     makeFileName << this->GetConfiguration()->GetCommandLineArgument( "-out" )
       << "result." << resultImageFormat;
@@ -545,7 +546,7 @@ void ElastixTemplate<TFixedImage, TMovingImage>
   /** Create a TransformParameter-file for the current resolution. */
   bool writeTransformParameterEachResolution = false;
   this->GetConfiguration()->ReadParameter( writeTransformParameterEachResolution,
-    "WriteTransformParametersEachResolution", 0, true );
+    "WriteTransformParametersEachResolution", 0, false );
   if ( writeTransformParameterEachResolution )
   {
     /** Create the TransformParameters filename for this resolution. */
@@ -603,7 +604,7 @@ void ElastixTemplate<TFixedImage, TMovingImage>
   /** Create a TransformParameter-file for the current iteration. */
   bool writeTansformParametersThisIteration = false;
   this->GetConfiguration()->ReadParameter( writeTansformParametersThisIteration,
-    "WriteTransformParametersEachIteration", 0, true );
+    "WriteTransformParametersEachIteration", 0, false );
   //this->GetConfiguration()->ReadParameter( writeTansformParametersThisIteration,
   //"WriteTransformParametersEachIteration", level, true );
   if ( writeTansformParametersThisIteration )

@@ -403,7 +403,7 @@ using namespace itk;
      */
     std::string upsampleBSplineGridOption( "true" );
     bool upsampleGridOption = true;
-    this->m_Configuration->ReadParameter( upsampleBSplineGridOption, "UpsampleGridOption", 0, true );
+    this->m_Configuration->ReadParameter( upsampleBSplineGridOption, "UpsampleGridOption", 0, false );
     if ( upsampleBSplineGridOption == "true" ) upsampleGridOption = true;
     else if ( upsampleBSplineGridOption == "false" ) upsampleGridOption = false;
     
@@ -944,7 +944,7 @@ using namespace itk;
      * initial transform with the current transform.
      */
     std::string howToCombineTransforms = "Add"; // default
-    this->m_Configuration->ReadParameter( howToCombineTransforms, "HowToCombineTransforms", 0, true );
+    this->m_Configuration->ReadParameter( howToCombineTransforms, "HowToCombineTransforms", 0, false );
     
     /** Convert 'this' to a pointer to a CombinationTransformType and set how
      * to combine the current transform with the initial transform */
@@ -968,7 +968,7 @@ using namespace itk;
      * as an initial transform (see the WriteToFile method)
      */
     this->SetTransformParametersFileName(
-      this->GetConfiguration()->GetCommandLineArgument( "-tp" ) );
+      this->GetConfiguration()->GetCommandLineArgument( "-tp" ).c_str() );
     
   } // end ReadFromFile()
 
@@ -999,7 +999,7 @@ using namespace itk;
 
     /** Write the filename of the deformationField image. */
     std::string resultImageFormat = "mhd";
-    this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, true );
+    this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, false );
     std::ostringstream makeFileName( "" );
     makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
       << "DeformationFieldImage"
@@ -1323,7 +1323,7 @@ using namespace itk;
     {
       /** Create parts of the filenames. */
       std::string resultImageFormat = "mhd";
-      this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, true );
+      this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, false );
       std::ostringstream makeFileName1( "" ), begin(""), end("");
       begin << this->m_Configuration->GetCommandLineArgument( "-out" );
       end << ".R" << this->m_Elastix->GetElxRegistrationBase()->GetAsITKBaseType()->GetCurrentLevel()

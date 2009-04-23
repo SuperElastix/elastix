@@ -20,199 +20,196 @@
 
 namespace elastix
 {
-  using namespace itk;
+using namespace itk;
 
+/**
+ * ********************* ReadMaskParameters ************************
+ */
 
-  /**
-   * ********************* ReadMaskParameters ************************
+template <class TElastix>
+bool
+RegistrationBase<TElastix>
+::ReadMaskParameters( UseMaskErosionArrayType & useMaskErosionArray,
+  const unsigned int nrOfMasks, const std::string & whichMask,
+  const unsigned int level ) const
+{    
+  /** Read whether mask erosion is wanted, if any masks were supplied. */
+
+  /** Bool that remembers if mask erosion is wanted in any of the masks 
+   * remains false when no masks are used. This bool will be output.
    */
+  bool useMaskErosion = false; 
 
-  template <class TElastix>
-    bool RegistrationBase<TElastix>
-    ::ReadMaskParameters( 
-    UseMaskErosionArrayType & useMaskErosionArray,
-    const unsigned int nrOfMasks,
-    const std::string & whichMask,
-    const unsigned int level ) const
-  {    
-    /** Read whether mask erosion is wanted, if any masks were supplied. */
+  /** Array of bools, that remembers for each mask if erosion is wanted. */
+  useMaskErosionArray.resize( nrOfMasks, false );
 
-    /** Bool that remembers if mask erosion is wanted in any of the masks 
-     * remains false when no masks are used. This bool will be output.
+  /** "ErodeFixedMask" or "ErodeMovingMask". */
+  std::string whichErodeMaskOption( "Erode" );
+  whichErodeMaskOption += whichMask;
+  whichErodeMaskOption += "Mask";
+
+  /** Read the parameters. */
+  if ( nrOfMasks > 0 )
+  {
+    /** Default values for all masks. Look for ErodeMask, or Erode<Fixed,Moving>Mask. */
+    bool erosionOrNot = true;
+    this->GetConfiguration()->ReadParameter( erosionOrNot,
+      "ErodeMask", "", level, 0, false );
+    this->GetConfiguration()->ReadParameter( erosionOrNot,
+      whichErodeMaskOption.c_str(), "", level, 0 );
+    if ( erosionOrNot )
+    {
+      /** fill with 'true's. */
+      useMaskErosionArray.clear();
+      useMaskErosionArray.resize( nrOfMasks, true );
+    }
+   
+    /** Try to read an erode mask parameter given for a specified mask only:
+     * (ErodeFixedMask0 "true" "false" ) for example.
      */
-    bool useMaskErosion = false; 
-
-    /** Array of bools, that remembers for each mask if erosion is wanted. */
-    useMaskErosionArray.resize( nrOfMasks, false );
-    
-    /** "ErodeFixedMask" or "ErodeMovingMask". */
-    std::string whichErodeMaskOption( "Erode" );
-    whichErodeMaskOption += whichMask;
-    whichErodeMaskOption += "Mask";
-
-    /** Read the parameters. */
-    if ( nrOfMasks > 0 )
+    for ( unsigned int i = 0; i < nrOfMasks; ++i )
     {
-      /** Default values for all masks. Look for ErodeMask, or Erode<Fixed,Moving>Mask. */
-      bool erosionOrNot = true;
-      this->GetConfiguration()->ReadParameter( erosionOrNot,
-        "ErodeMask", "", level, 0, true );
-      this->GetConfiguration()->ReadParameter( erosionOrNot,
-        whichErodeMaskOption.c_str(), "", level, 0 );
-      if ( erosionOrNot )
+      std::ostringstream makestring;
+      makestring << whichErodeMaskOption << i; // key for parameter file
+      bool erosionOrNot_i = erosionOrNot; // default value
+      this->GetConfiguration()->ReadParameter( erosionOrNot_i,
+        makestring.str().c_str(), "", level, 0, false );
+      if ( erosionOrNot_i )
       {
-        /** fill with 'true's. */
-        useMaskErosionArray.clear();
-        useMaskErosionArray.resize( nrOfMasks, true );
+        useMaskErosionArray[ i ] = true;
       }
-      /** Try to read an erode mask parameter given for a specified mask only:
-       * (ErodeFixedMask0 "true" "false" ) for example.
-       */
-      for ( unsigned int i = 0; i < nrOfMasks; ++i )
+      else
       {
-        std::ostringstream makestring;
-        makestring << whichErodeMaskOption << i; // key for parameter file
-        bool erosionOrNot_i = erosionOrNot; // default value
-        this->GetConfiguration()->ReadParameter( erosionOrNot_i,
-          makestring.str().c_str(), "", level, 0, true );
-        if ( erosionOrNot_i )
-        {
-          useMaskErosionArray[ i ] = true;
-        }
-        else
-        {
-          useMaskErosionArray[ i ] = false;
-        }
-        /** Check if mask erosion is wanted in any of the masks. */
-        useMaskErosion |= useMaskErosionArray[ i ];
+        useMaskErosionArray[ i ] = false;
       }
-    } // end if nrOfMasks > 0
+      /** Check if mask erosion is wanted in any of the masks. */
+      useMaskErosion |= useMaskErosionArray[ i ];
+    }
+  } // end if nrOfMasks > 0
 
-    return useMaskErosion;
+  return useMaskErosion;
 
-  } // end ReadMaskParameters()
+} // end ReadMaskParameters()
 
 
-  /**
-   * ******************* GenerateFixedMaskSpatialObject **********************
-   */
+/**
+ * ******************* GenerateFixedMaskSpatialObject **********************
+ */
 
-  template <class TElastix>
-    typename RegistrationBase<TElastix>
-    ::FixedMaskSpatialObjectPointer 
-    RegistrationBase<TElastix>
-    ::GenerateFixedMaskSpatialObject( 
-      const FixedMaskImageType * maskImage, bool useMaskErosion,
-      const FixedImagePyramidType * pyramid, unsigned int level ) const
+template <class TElastix>
+typename RegistrationBase<TElastix>::FixedMaskSpatialObjectPointer 
+RegistrationBase<TElastix>
+::GenerateFixedMaskSpatialObject(
+  const FixedMaskImageType * maskImage, bool useMaskErosion,
+  const FixedImagePyramidType * pyramid, unsigned int level ) const
+{
+  FixedMaskSpatialObjectPointer fixedMaskSpatialObject = 0;
+  if ( !maskImage )
   {
-    FixedMaskSpatialObjectPointer fixedMaskSpatialObject = 0;
-    if ( !maskImage)
-    {
-      return fixedMaskSpatialObject;
-    }
-    fixedMaskSpatialObject = FixedMaskSpatialObjectType::New();
-
-    /** Just convert to spatial object if no erosion is needed */
-    if ( !useMaskErosion || !pyramid)
-    {
-      fixedMaskSpatialObject->SetImage( maskImage );
-      return fixedMaskSpatialObject;
-    }
-
-    /** Erode, and convert to spatial object */
-    FixedMaskErodeFilterPointer erosion = FixedMaskErodeFilterType::New();
-    erosion->SetInput( maskImage );
-    erosion->SetSchedule( pyramid->GetSchedule() );
-    erosion->SetIsMovingMask( false );
-    erosion->SetResolutionLevel( level );
-
-    /** Set output of the erosion to fixedImageMaskAsImage. */
-    FixedMaskImagePointer erodedFixedMaskAsImage = erosion->GetOutput();
-            
-    /** Do the erosion. */
-    try
-    {
-      erodedFixedMaskAsImage->Update();
-    }
-    catch( itk::ExceptionObject & excp )
-    {
-      /** Add information to the exception. */
-      excp.SetLocation( "RegistrationBase - UpdateMasks()" );
-      std::string err_str = excp.GetDescription();
-      err_str += "\nError while eroding the fixed mask.\n";
-      excp.SetDescription( err_str );
-      /** Pass the exception to an higher level. */
-      throw excp;
-    }
-
-    /** Release some memory */
-    erodedFixedMaskAsImage->DisconnectPipeline();
-
-    fixedMaskSpatialObject->SetImage( erodedFixedMaskAsImage );
     return fixedMaskSpatialObject;
-     
-  } // end GenerateFixedMaskSpatialObject
+  }
+  fixedMaskSpatialObject = FixedMaskSpatialObjectType::New();
 
-
-  /**
-   * ******************* GenerateMovingMaskSpatialObject **********************
-   */
-
-  template <class TElastix>
-    typename RegistrationBase<TElastix>
-    ::MovingMaskSpatialObjectPointer 
-    RegistrationBase<TElastix>
-    ::GenerateMovingMaskSpatialObject( 
-      const MovingMaskImageType * maskImage, bool useMaskErosion,
-      const MovingImagePyramidType * pyramid, unsigned int level ) const
+  /** Just convert to spatial object if no erosion is needed. */
+  if ( !useMaskErosion || !pyramid )
   {
-    MovingMaskSpatialObjectPointer movingMaskSpatialObject = 0;
-    if ( !maskImage )
-    {
-      return movingMaskSpatialObject;
-    }
-    movingMaskSpatialObject = MovingMaskSpatialObjectType::New();
+    fixedMaskSpatialObject->SetImage( maskImage );
+    return fixedMaskSpatialObject;
+  }
 
-    /** Just convert to spatial object if no erosion is needed */
-    if ( !useMaskErosion || !pyramid )
-    {
-      movingMaskSpatialObject->SetImage( maskImage );
-      return movingMaskSpatialObject;
-    }
+  /** Erode, and convert to spatial object. */
+  FixedMaskErodeFilterPointer erosion = FixedMaskErodeFilterType::New();
+  erosion->SetInput( maskImage );
+  erosion->SetSchedule( pyramid->GetSchedule() );
+  erosion->SetIsMovingMask( false );
+  erosion->SetResolutionLevel( level );
 
-    /** Erode, and convert to spatial object */
-    MovingMaskErodeFilterPointer erosion = MovingMaskErodeFilterType::New();
-    erosion->SetInput( maskImage );
-    erosion->SetSchedule( pyramid->GetSchedule() );
-    erosion->SetIsMovingMask( true );
-    erosion->SetResolutionLevel( level );
+  /** Set output of the erosion to fixedImageMaskAsImage. */
+  FixedMaskImagePointer erodedFixedMaskAsImage = erosion->GetOutput();
 
-    /** Set output of the erosion to movingImageMaskAsImage. */
-    MovingMaskImagePointer erodedMovingMaskAsImage = erosion->GetOutput();
-            
-    /** Do the erosion. */
-    try
-    {
-      erodedMovingMaskAsImage->Update();
-    }
-    catch( itk::ExceptionObject & excp )
-    {
-      /** Add information to the exception. */
-      excp.SetLocation( "RegistrationBase - UpdateMasks()" );
-      std::string err_str = excp.GetDescription();
-      err_str += "\nError while eroding the moving mask.\n";
-      excp.SetDescription( err_str );
-      /** Pass the exception to an higher level. */
-      throw excp;
-    }
+  /** Do the erosion. */
+  try
+  {
+    erodedFixedMaskAsImage->Update();
+  }
+  catch( itk::ExceptionObject & excp )
+  {
+    /** Add information to the exception. */
+    excp.SetLocation( "RegistrationBase - UpdateMasks()" );
+    std::string err_str = excp.GetDescription();
+    err_str += "\nError while eroding the fixed mask.\n";
+    excp.SetDescription( err_str );
+    /** Pass the exception to an higher level. */
+    throw excp;
+  }
 
-    /** Release some memory */
-    erodedMovingMaskAsImage->DisconnectPipeline();
+  /** Release some memory. */
+  erodedFixedMaskAsImage->DisconnectPipeline();
 
-    movingMaskSpatialObject->SetImage( erodedMovingMaskAsImage );
+  fixedMaskSpatialObject->SetImage( erodedFixedMaskAsImage );
+  return fixedMaskSpatialObject;
+
+} // end GenerateFixedMaskSpatialObject()
+
+
+/**
+ * ******************* GenerateMovingMaskSpatialObject **********************
+ */
+
+template <class TElastix>
+typename RegistrationBase<TElastix>::MovingMaskSpatialObjectPointer 
+RegistrationBase<TElastix>
+::GenerateMovingMaskSpatialObject(
+  const MovingMaskImageType * maskImage, bool useMaskErosion,
+  const MovingImagePyramidType * pyramid, unsigned int level ) const
+{
+  MovingMaskSpatialObjectPointer movingMaskSpatialObject = 0;
+  if ( !maskImage )
+  {
     return movingMaskSpatialObject;
-     
-  } // end GenerateMovingMaskSpatialObject
+  }
+  movingMaskSpatialObject = MovingMaskSpatialObjectType::New();
+
+  /** Just convert to spatial object if no erosion is needed. */
+  if ( !useMaskErosion || !pyramid )
+  {
+    movingMaskSpatialObject->SetImage( maskImage );
+    return movingMaskSpatialObject;
+  }
+
+  /** Erode, and convert to spatial object. */
+  MovingMaskErodeFilterPointer erosion = MovingMaskErodeFilterType::New();
+  erosion->SetInput( maskImage );
+  erosion->SetSchedule( pyramid->GetSchedule() );
+  erosion->SetIsMovingMask( true );
+  erosion->SetResolutionLevel( level );
+
+  /** Set output of the erosion to movingImageMaskAsImage. */
+  MovingMaskImagePointer erodedMovingMaskAsImage = erosion->GetOutput();
+
+  /** Do the erosion. */
+  try
+  {
+    erodedMovingMaskAsImage->Update();
+  }
+  catch( itk::ExceptionObject & excp )
+  {
+    /** Add information to the exception. */
+    excp.SetLocation( "RegistrationBase - UpdateMasks()" );
+    std::string err_str = excp.GetDescription();
+    err_str += "\nError while eroding the moving mask.\n";
+    excp.SetDescription( err_str );
+    /** Pass the exception to an higher level. */
+    throw excp;
+  }
+
+  /** Release some memory */
+  erodedMovingMaskAsImage->DisconnectPipeline();
+
+  movingMaskSpatialObject->SetImage( erodedMovingMaskAsImage );
+  return movingMaskSpatialObject;
+
+} // end GenerateMovingMaskSpatialObject()
 
 
 } // end namespace elastix

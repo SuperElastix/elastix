@@ -37,11 +37,8 @@ SET( InstallFilesForComponents
 )
 
 SET( ConfigurationFiles
- Configuration/elxConfigurationBase.cxx
- Configuration/elxConfigurationBase.h
- Configuration/elxConfigurationToUse.h
- Configuration/elxMyConfiguration.cxx
- Configuration/elxMyConfiguration.h
+ Configuration/elxConfiguration.cxx
+ Configuration/elxConfiguration.h
 )
 
 SET( ComponentBaseClassFiles

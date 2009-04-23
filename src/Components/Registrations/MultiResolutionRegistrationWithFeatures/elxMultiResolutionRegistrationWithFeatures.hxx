@@ -191,7 +191,7 @@ using namespace itk;
     for ( unsigned int i = 1; i < noFixIm; ++i )
     {
       this->m_Configuration->ReadParameter(
-        soFII[ i ], "FixedImageInterpolatorBSplineOrder", i, true );
+        soFII[ i ], "FixedImageInterpolatorBSplineOrder", i, false );
     }
 
     /** Create and set interpolators for the fixed feature images. */

@@ -102,7 +102,7 @@ public:
   /** elastix components. */
   typedef ElastixBase                                     ElastixBaseType;
   typedef ElastixBase::ConfigurationType                  ConfigurationType;
-  typedef ConfigurationType::ArgumentMapType              ArgumentMapType;
+  typedef ConfigurationType::CommandLineArgumentMapType              ArgumentMapType;
   typedef ConfigurationType::Pointer                      ConfigurationPointer;
   typedef ElastixBase::ObjectContainerType                ObjectContainerType;
   typedef ElastixBase::DataObjectContainerType            DataObjectContainerType;

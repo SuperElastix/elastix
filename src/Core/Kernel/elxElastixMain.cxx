@@ -337,7 +337,7 @@ int ElastixMain::Run( ArgumentMapType & argmap )
 int ElastixMain::InitDBIndex( void )
 {
   /** Only do something when the configuration object wasn't initialized yet. */
-  if ( this->m_Configuration->Initialized() )
+  if ( this->m_Configuration->IsInitialized() )
   {     
     /** FixedImagePixelType. */
     if ( this->m_FixedImagePixelType.empty() )
@@ -499,7 +499,8 @@ int ElastixMain::LoadComponents( void )
   }
 
   /** Get the current program. */
-  const char * argv0 = this->m_Configuration->GetCommandLineArgument( "-argv0" );
+  const char * argv0
+    = this->m_Configuration->GetCommandLineArgument( "-argv0" ).c_str();
 
   /** Load the components. */
   return this->s_ComponentLoader->LoadComponents( argv0 );
@@ -577,7 +578,6 @@ ElastixMain::ObjectContainerPointer ElastixMain::CreateComponents(
 {
   ComponentDescriptionType componentName = defaultComponentName;
   unsigned int componentnr = 0;
-  int returncode = 0;
   ObjectContainerPointer objectContainer = ObjectContainerType::New();
   objectContainer->Initialize();
 
@@ -585,19 +585,19 @@ ElastixMain::ObjectContainerPointer ElastixMain::CreateComponents(
    * If the user hasn't specified any component names, use
    * the default, and give a warning.
    */
-  returncode = this->m_Configuration->ReadParameter(
-    componentName, key.c_str(), componentnr, false );
+  bool found = this->m_Configuration->ReadParameter(
+    componentName, key, componentnr, true );
 
   /** If the default equals "" (so no default), the mandatoryComponent
    * flag is true, and not component was given by the user,
    * then elastix quits.
    */
-  if ( returncode && ( defaultComponentName == "" ) )
+  if ( !found && ( defaultComponentName == "" ) )
   {
     if ( mandatoryComponent )
     {
       xout["error"]
-      << "ERROR: the following component has not been specified: "
+        << "ERROR: the following component has not been specified: "
         << key << std::endl;
       errorcode = 1;
       return objectContainer;
@@ -621,19 +621,19 @@ ElastixMain::ObjectContainerPointer ElastixMain::CreateComponents(
     xout["error"] 
     << "ERROR: error occurred while creating " 
       << key << " "
-      << componentnr  << "." << std::endl;
+      << componentnr << "." << std::endl;
     xout["error"] << excp << std::endl;
     errorcode = 1;
     return objectContainer;
   }
 
   /** Check if more than one component name is given. */
-  while ( returncode == 0 )
+  while ( found )
   {
     ++componentnr;
-    returncode = this->m_Configuration->ReadParameter(
-      componentName, key.c_str(), componentnr, true );
-    if ( returncode == 0 )   
+    found = this->m_Configuration->ReadParameter(
+      componentName, key, componentnr, false );
+    if ( found )   
     {
       try
       {
@@ -643,7 +643,7 @@ ElastixMain::ObjectContainerPointer ElastixMain::CreateComponents(
       catch ( itk::ExceptionObject & excp )
       {
         xout["error"] 
-        << "ERROR: error occured while creating " 
+          << "ERROR: error occurred while creating " 
           << key << " "
           << componentnr  << "." << std::endl;
         xout["error"] << excp << std::endl;

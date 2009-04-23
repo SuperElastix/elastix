@@ -100,35 +100,35 @@ using namespace itk;
       if (!realerror && !errorcode)
       {
         errorcode = this->GetConfiguration()->ReadParameter(
-          name, fullFieldName.c_str(), entry_nr, true);
+          name, fullFieldName.c_str(), entry_nr, false );
         realerror = this->CheckSearchSpaceRangeDefinition(fullFieldName.c_str(), errorcode, entry_nr);
         entry_nr++;
       }
       if (!realerror && !errorcode)
       {
         errorcode = this->GetConfiguration()->ReadParameter(
-          param_nr, fullFieldName.c_str(), entry_nr, true);
+          param_nr, fullFieldName.c_str(), entry_nr, false );
         realerror = this->CheckSearchSpaceRangeDefinition(fullFieldName.c_str(), errorcode, entry_nr);
         entry_nr++;
       }
       if (!realerror && !errorcode)
       {
         errorcode = this->GetConfiguration()->ReadParameter(
-          minimum, fullFieldName.c_str(), entry_nr, true);
+          minimum, fullFieldName.c_str(), entry_nr, false );
         realerror = this->CheckSearchSpaceRangeDefinition(fullFieldName.c_str(), errorcode, entry_nr);
         entry_nr++;
       }
       if (!realerror && !errorcode)
       {
         errorcode = this->GetConfiguration()->ReadParameter(
-          maximum, fullFieldName.c_str(), entry_nr, true);
+          maximum, fullFieldName.c_str(), entry_nr, false );
         realerror = this->CheckSearchSpaceRangeDefinition(fullFieldName.c_str(), errorcode, entry_nr);
         entry_nr++;
       }
       if (!realerror && !errorcode)
       {
         errorcode = this->GetConfiguration()->ReadParameter(
-          stepsize, fullFieldName.c_str(), entry_nr, true);
+          stepsize, fullFieldName.c_str(), entry_nr, false );
         realerror = this->CheckSearchSpaceRangeDefinition(fullFieldName.c_str(), errorcode, entry_nr);
         entry_nr++;
       }
@@ -180,7 +180,7 @@ using namespace itk;
           
       /** Set the name of this image on disk. */
       std::string resultImageFormat = "mhd";
-      this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, true );
+      this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, false );
       makeString.str("");
       makeString
         << this->GetConfiguration()->GetCommandLineArgument("-out")

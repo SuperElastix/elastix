@@ -60,7 +60,8 @@ AdvancedAffineTransformElastix<TElastix>
  */
 
 template <class TElastix>
-void AdvancedAffineTransformElastix<TElastix>
+void
+AdvancedAffineTransformElastix<TElastix>
 ::ReadFromFile( void )
 {
   InputPointType centerOfRotationPoint;
@@ -85,8 +86,9 @@ void AdvancedAffineTransformElastix<TElastix>
 
   if ( !pointRead && !indexRead )
   {
-    xl::xout["error"] << "ERROR: No center of rotation is specified in the transform parameter file" << std::endl;
-    itkExceptionMacro(<< "Transform parameter file is corrupt.")
+    xl::xout["error"] << "ERROR: No center of rotation is specified in the "
+      << "transform parameter file" << std::endl;
+    itkExceptionMacro( << "Transform parameter file is corrupt.")
   }
 
   /** Set the center in this Transform. */
@@ -143,12 +145,12 @@ void
 AdvancedAffineTransformElastix<TElastix>
 ::InitializeTransform( void )
 {    
-  /** Set all parameters to zero (no rotations, no translation */
+  /** Set all parameters to zero (no rotations, no translation). */
   this->m_AffineTransform->SetIdentity();
 
   /** Try to read CenterOfRotationIndex from parameter file,
-  * which is the rotationPoint, expressed in index-values.
-  */
+   * which is the rotationPoint, expressed in index-values.
+   */
   IndexType centerOfRotationIndex;
   InputPointType centerOfRotationPoint;
 
@@ -163,17 +165,17 @@ AdvancedAffineTransformElastix<TElastix>
     centerOfRotationPoint[ i ] = 0.0;
 
     /** Check COR index: Returns zero when parameter was in the parameter file. */
-    int returncodeI = this->m_Configuration->ReadParameter(
-      centerOfRotationIndex[ i ], "CenterOfRotation", i, true );
-    if ( returncodeI != 0 )
+    bool foundI = this->m_Configuration->ReadParameter(
+      centerOfRotationIndex[ i ], "CenterOfRotation", i, false );
+    if ( !foundI )
     {
       centerGivenAsIndex &= false;
     }
 
     /** Check COR point: Returns zero when parameter was in the parameter file. */
-    int returncodeP = this->m_Configuration->ReadParameter(
-      centerOfRotationPoint[ i ], "CenterOfRotationPoint", i, true );
-    if ( returncodeP != 0 )
+    bool foundP = this->m_Configuration->ReadParameter(
+      centerOfRotationPoint[ i ], "CenterOfRotationPoint", i, false );
+    if ( !foundP )
     {
       centerGivenAsPoint &= false;
     }           
@@ -184,15 +186,18 @@ AdvancedAffineTransformElastix<TElastix>
   bool CORPointInImage = true;
   if ( centerGivenAsIndex )
   {      
-    CORIndexInImage =  this->m_Registration->GetAsITKBaseType()->
-      GetFixedImage()->GetLargestPossibleRegion().IsInside( centerOfRotationIndex );
-  }    
+    CORIndexInImage =  this->m_Registration->GetAsITKBaseType()
+      ->GetFixedImage()->GetLargestPossibleRegion().IsInside(
+      centerOfRotationIndex );
+  }
+
   if ( centerGivenAsPoint )
   {     
     typedef ContinuousIndex< double, SpaceDimension > ContinuousIndexType;
     ContinuousIndexType cindex;
-    CORPointInImage = this->m_Registration->GetAsITKBaseType()->GetFixedImage()->
-      TransformPhysicalPointToContinuousIndex( centerOfRotationPoint, cindex );
+    CORPointInImage = this->m_Registration->GetAsITKBaseType()
+      ->GetFixedImage()->TransformPhysicalPointToContinuousIndex(
+      centerOfRotationPoint, cindex );
   }
 
   /** Give a warning if necessary. */
@@ -211,13 +216,11 @@ AdvancedAffineTransformElastix<TElastix>
    * If an initial transform is given, automatic transform initialization is 
    * not possible.
    */
-  std::string automaticTransformInitializationString( "false" );
   bool automaticTransformInitialization = false;
-  this->m_Configuration->ReadParameter(
-    automaticTransformInitializationString,
-    "AutomaticTransformInitialization", 0);
-  if ( (automaticTransformInitializationString == "true") &&
-    (this->Superclass1::GetInitialTransform() == 0) )
+  bool tmpBool = false;
+  this->m_Configuration->ReadParameter( tmpBool,
+    "AutomaticTransformInitialization", 0 );
+  if ( tmpBool && this->Superclass1::GetInitialTransform() == 0 )
   {
     automaticTransformInitialization = true;
   }
@@ -260,8 +263,9 @@ AdvancedAffineTransformElastix<TElastix>
     if ( centerGivenAsIndex )
     {
       /** Convert from index-value to physical-point-value. */
-      this->m_Registration->GetAsITKBaseType()->GetFixedImage()->
-        TransformIndexToPhysicalPoint( centerOfRotationIndex, centerOfRotationPoint );
+      this->m_Registration->GetAsITKBaseType()->GetFixedImage()
+        ->TransformIndexToPhysicalPoint(
+        centerOfRotationIndex, centerOfRotationPoint );
     }
     this->m_AffineTransform->SetCenter( centerOfRotationPoint );
   }
@@ -270,10 +274,11 @@ AdvancedAffineTransformElastix<TElastix>
    * composition is used to combine the initial transform with the
    * the current (affine) transform.
    */
-  if ( (this->GetUseComposition()) && (this->Superclass1::GetInitialTransform() != 0) )
+  if ( this->GetUseComposition()
+    && this->Superclass1::GetInitialTransform() != 0 )
   {
-    InputPointType transformedCenterOfRotationPoint = 
-      this->Superclass1::GetInitialTransform()->TransformPoint( 
+    InputPointType transformedCenterOfRotationPoint
+      = this->Superclass1::GetInitialTransform()->TransformPoint( 
       this->m_AffineTransform->GetCenter() );
     this->m_AffineTransform->SetCenter(
       transformedCenterOfRotationPoint );
@@ -354,15 +359,11 @@ AdvancedAffineTransformElastix<TElastix>
      *   own scale.
      */
 
-    /** Check the return values of ReadParameter. */
-    std::vector<int> returnvalues( this->GetNumberOfParameters(), 5 );
-    for ( unsigned int i = 0; i < this->GetNumberOfParameters(); i++ )
-    {
-      returnvalues[ i ] = this->m_Configuration->ReadParameter( dummy, "Scales", i, true );
-    }
+    unsigned int count
+      = this->m_Configuration->CountNumberOfParameterEntries( "Scales" );
 
     /** Check which of the above options is used. */
-    if ( returnvalues[ 0 ] == 1 )
+    if ( count == 0 )
     {
       /** In this case the first option is used. */
       for ( unsigned int i = 0; i < RotationPart; i++ )
@@ -370,7 +371,7 @@ AdvancedAffineTransformElastix<TElastix>
         newscales[ i ] = 100000.0;
       }
     }
-    else if ( returnvalues[ 0 ] == 0 && returnvalues[ 1 ] == 1 )
+    else if ( count == 1 )
     {
       /** In this case the second option is used. */
       double scale = 100000.0;
@@ -380,7 +381,7 @@ AdvancedAffineTransformElastix<TElastix>
         newscales[ i ] = scale;
       }
     }
-    else if ( returnvalues[ 0 ] == 0 && returnvalues[ this->GetNumberOfParameters() - 1 ] == 0 )
+    else if ( count == this->GetNumberOfParameters() )
     {
       /** In this case the third option is used. */
       for ( unsigned int i = 0; i < this->GetNumberOfParameters(); i++ )
@@ -394,7 +395,8 @@ AdvancedAffineTransformElastix<TElastix>
        * An error is thrown, because using erroneous scales in the optimizer
        * can give unpredictable results.
        */
-      itkExceptionMacro( << "ERROR: The Scales-option in the parameter-file has not been set properly." );
+      itkExceptionMacro( << "ERROR: The Scales-option in the parameter-file"
+        << " has not been set properly." );
     }
 
   } // end else: no automaticScalesEstimation
@@ -412,10 +414,10 @@ AdvancedAffineTransformElastix<TElastix>
  */
 
 template <class TElastix>
-bool AdvancedAffineTransformElastix<TElastix>::
-ReadCenterOfRotationIndex( InputPointType & rotationPoint ) const
+bool
+AdvancedAffineTransformElastix<TElastix>
+::ReadCenterOfRotationIndex( InputPointType & rotationPoint ) const
 {
-
   /** Try to read CenterOfRotationIndex from the transform parameter
    * file, which is the rotationPoint, expressed in index-values.
    */
@@ -426,14 +428,15 @@ ReadCenterOfRotationIndex( InputPointType & rotationPoint ) const
     centerOfRotationIndex[ i ] = 0;
 
     /** Returns zero when parameter was in the parameter file. */
-    int returncode = this->m_Configuration->ReadParameter(
-      centerOfRotationIndex[ i ], "CenterOfRotation", i, true );
-    if ( returncode != 0 )
+    bool found = this->m_Configuration->ReadParameter(
+      centerOfRotationIndex[ i ], "CenterOfRotation", i, false );
+    if ( !found )
     {
       centerGivenAsIndex &= false;
     }
-  } //end for i
-  if (!centerGivenAsIndex)
+  }
+
+  if ( !centerGivenAsIndex )
   {
     return false;
   }
@@ -474,7 +477,8 @@ ReadCenterOfRotationIndex( InputPointType & rotationPoint ) const
       illegalSize = true;
     }
   }
-  if (illegalSize)
+
+  if ( illegalSize )
   {
     xl::xout["error"] << "ERROR: One or more image sizes are 0!" << std::endl;
     return false;
@@ -521,13 +525,14 @@ AdvancedAffineTransformElastix<TElastix>
     centerOfRotationPoint[ i ] = 0.0;
 
     /** Returns zero when parameter was in the parameter file. */
-    int returncode = this->m_Configuration->ReadParameter(
-      centerOfRotationPoint[ i ], "CenterOfRotationPoint", i, true );
-    if ( returncode != 0 )
+    bool found = this->m_Configuration->ReadParameter(
+      centerOfRotationPoint[ i ], "CenterOfRotationPoint", i, false );
+    if ( !found )
     {
       centerGivenAsPoint &= false;
     }
-  } //end for i
+  }
+
   if ( !centerGivenAsPoint )
   {
     return false;

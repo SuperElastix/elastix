@@ -246,3 +246,4 @@ void KNNGraphAlphaMutualInformationMetric<TElastix>
 
 #endif // end #ifndef __elxKNNGraphAlphaMutualInformationMetric_HXX__
 
+

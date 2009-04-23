@@ -157,26 +157,26 @@ void TransformixMain::SetInputImageContainer(
 int TransformixMain::InitDBIndex( void )
 {
   /** Check if configuration object was already initialized. */
-  if ( m_Configuration->Initialized() )
+  if ( this->m_Configuration->IsInitialized() )
   {     
     /** Try to read MovingImagePixelType from the parameter file. */
-    m_MovingImagePixelType = "float";
-    m_Configuration->ReadParameter( m_MovingImagePixelType,
+    this->m_MovingImagePixelType = "float";
+    this->m_Configuration->ReadParameter( this->m_MovingImagePixelType,
       "MovingInternalImagePixelType", 0 );
 
     /** Try to read FixedImagePixelType from the parameter file. */
-    m_FixedImagePixelType = "float";
-    m_Configuration->ReadParameter( m_FixedImagePixelType,
+    this->m_FixedImagePixelType = "float";
+    this->m_Configuration->ReadParameter( this->m_FixedImagePixelType,
       "FixedInternalImagePixelType", 0 );
 
     /** MovingImageDimension. */
-    if ( m_MovingImageDimension == 0 )
+    if ( this->m_MovingImageDimension == 0 )
     {
       /** Try to read it from the parameter file. */
-      m_Configuration->ReadParameter( m_MovingImageDimension,
+      this->m_Configuration->ReadParameter( this->m_MovingImageDimension,
         "MovingImageDimension", 0 );
 
-      if ( m_MovingImageDimension == 0 )
+      if ( this->m_MovingImageDimension == 0 )
       {
         xl::xout["error"] << "ERROR:" << std::endl;
         xl::xout["error"] << "The MovingImageDimension is not given." << std::endl;
@@ -185,12 +185,13 @@ int TransformixMain::InitDBIndex( void )
     }
 
     /** FixedImageDimension. */
-    if ( m_FixedImageDimension == 0 )
+    if ( this->m_FixedImageDimension == 0 )
     {
       /** Try to read it from the parameter file. */
-      m_Configuration->ReadParameter( m_FixedImageDimension, "FixedImageDimension", 0 );
+      this->m_Configuration->ReadParameter( this->m_FixedImageDimension,
+        "FixedImageDimension", 0 );
 
-      if ( m_FixedImageDimension == 0 )
+      if ( this->m_FixedImageDimension == 0 )
       {
         xl::xout["error"] << "ERROR:" << std::endl;
         xl::xout["error"] << "The FixedImageDimension is not given." << std::endl;
@@ -212,12 +213,12 @@ int TransformixMain::InitDBIndex( void )
     if ( this->s_CDB.IsNotNull() )
     {
       /** Get the DBIndex from the ComponentDatabase. */
-      m_DBIndex = this->s_CDB->GetIndex(
-        m_FixedImagePixelType,
-        m_FixedImageDimension,      
-        m_MovingImagePixelType,
-        m_MovingImageDimension );
-      if ( m_DBIndex == 0 )
+      this->m_DBIndex = this->s_CDB->GetIndex(
+        this->m_FixedImagePixelType,
+        this->m_FixedImageDimension,      
+        this->m_MovingImagePixelType,
+        this->m_MovingImageDimension );
+      if ( this->m_DBIndex == 0 )
       {
         xl::xout["error"] << "ERROR:" << std::endl;
         xl::xout["error"] << "Something went wrong in the ComponentDatabase." << std::endl;

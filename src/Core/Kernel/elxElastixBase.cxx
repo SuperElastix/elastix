@@ -97,7 +97,7 @@ int ElastixBase::BeforeAllBase( void )
 
   /** Set the default precision of floating values in the output. */
   this->m_Configuration->ReadParameter(
-    this->m_DefaultOutputPrecision, "DefaultOutputPrecision", 0, true );
+    this->m_DefaultOutputPrecision, "DefaultOutputPrecision", 0, false );
   elxout << std::setprecision( this->m_DefaultOutputPrecision );
 
   /** Print to log file. */
