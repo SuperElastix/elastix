@@ -7,7 +7,7 @@ Elastix is distributed under the new and simplified BSD license approved by the
 Open Source Initiative (OSI) [http://www.opensource.org/licenses/bsd-license.php].
 
 The software is partially derived from the Insight Segmentation and Registration
-Toolkit (ITK), which is also distributed under the new and simplied BSD licence.
+Toolkit (ITK), which is also distributed under the new and simplified BSD licence.
 The ITK is required by Elastix for compilation of the source code.
 
 The copyright of the files in the Common/KNN/ann_1.1 subdirectory is held by a third
