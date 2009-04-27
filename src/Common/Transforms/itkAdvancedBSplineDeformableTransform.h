@@ -483,12 +483,24 @@ protected:
   void TransformPointToContinuousGridIndex( 
    const InputPointType & point, ContinuousIndexType & index ) const;
 
-private:
-  AdvancedBSplineDeformableTransform(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  virtual void ComputeNonZeroJacobianIndices(
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices,
+    const RegionType & supportRegion ) const;
+
+  /** Check if a continuous index is inside the valid region. */
+  virtual bool InsideValidRegion( const ContinuousIndexType& index ) const;
 
   /** The bulk transform. */
   BulkTransformPointer  m_BulkTransform;
+
+  /** Array of images representing the B-spline coefficients 
+  *  in each dimension. */
+  ImagePointer    m_CoefficientImage[ NDimensions ];
+
+  /** Pointer to function used to compute B-spline interpolation weights. */
+  typename WeightsFunctionType::Pointer             m_WeightsFunction;
+  typename DerivativeWeightsFunctionType::Pointer   m_DerivativeWeightsFunction;
+  typename SODerivativeWeightsFunctionType::Pointer m_SODerivativeWeightsFunction;
 
   /** Variables defining the coefficient grid extend. */
   RegionType      m_GridRegion;
@@ -499,7 +511,7 @@ private:
 
   DirectionType   m_PointToIndexMatrix;
   DirectionType   m_IndexToPoint;
-  
+
   RegionType      m_ValidRegion;
 
   /** Variables defining the interpolation support region. */
@@ -507,45 +519,33 @@ private:
   bool            m_SplineOrderOdd;
   SizeType        m_SupportSize;
   IndexType       m_ValidRegionLast;
-  
-  /** Array holding images wrapped from the flat parameters. */
-  ImagePointer    m_WrappedImage[ NDimensions ];
 
-  /** Array of images representing the B-spline coefficients 
-   *  in each dimension. */
-  ImagePointer    m_CoefficientImage[ NDimensions ];
+  /** Keep a pointer to the input parameters. */
+  const ParametersType *  m_InputParametersPointer;
 
   /** Jacobian as SpaceDimension number of images. */
   typedef typename JacobianType::ValueType      JacobianPixelType;
   typedef Image< JacobianPixelType,
     itkGetStaticConstMacro( SpaceDimension ) >  JacobianImageType;
- 
+
   typename JacobianImageType::Pointer m_JacobianImage[ NDimensions ];
 
   /** Keep track of last support region used in computing the Jacobian
-   * for fast resetting of Jacobian to zero.
-   */
+  * for fast resetting of Jacobian to zero.
+  */
   mutable IndexType m_LastJacobianIndex;
 
-  /** Keep a pointer to the input parameters. */
-  const ParametersType *  m_InputParametersPointer;
+  /** Array holding images wrapped from the flat parameters. */
+  ImagePointer    m_WrappedImage[ NDimensions ];
 
   /** Internal parameters buffer. */
   ParametersType          m_InternalParametersBuffer;
 
-  /** Pointer to function used to compute B-spline interpolation weights. */
-  typename WeightsFunctionType::Pointer             m_WeightsFunction;
-  typename DerivativeWeightsFunctionType::Pointer   m_DerivativeWeightsFunction;
-  typename SODerivativeWeightsFunctionType::Pointer m_SODerivativeWeightsFunction;
-
-  /** Check if a continuous index is inside the valid region. */
-  bool InsideValidRegion( const ContinuousIndexType& index ) const;
-
+private:
+  AdvancedBSplineDeformableTransform(const Self&); //purposely not implemented
+  void operator=(const Self&); //purposely not implemented
+  
   void UpdateGridOffsetTable( void );
-
-  void ComputeNonZeroJacobianIndices(
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices,
-    const RegionType & supportRegion ) const;
 
 }; //class AdvancedBSplineDeformableTransform
 
