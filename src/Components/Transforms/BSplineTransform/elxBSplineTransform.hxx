@@ -226,12 +226,21 @@ using namespace itk;
       {
         /** This message was introduced in elastix 3.9. Actual deprecation can only be done
          * after elastix 4.1 at least.
+         * For elastix 4.2 we changed the warning into trowing an exception, so
+         * it's more clear that we will remove this option.
          */
-        xl::xout["warning"] << "WARNING: deprecated parameter \"FinalGridSpacing\" used!\n"
-          << "This parameter is scheduled to be removed in a future release!\n"
-          << "Better use \"FinalGridSpacingInVoxels\", which has the same meaning, "
-          << "or \"FinalGridSpacingInPhysicalUnits\"."
-          << std::endl;
+//         xl::xout["warning"] << "WARNING: deprecated parameter \"FinalGridSpacing\" used!\n"
+//           << "This parameter is scheduled to be removed in a future release!\n"
+//           << "Better use \"FinalGridSpacingInVoxels\", which has the same meaning, "
+//           << "or \"FinalGridSpacingInPhysicalUnits\"."
+//           << std::endl;
+        itkExceptionMacro( << "ERROR: deprecated parameter \"FinalGridSpacing\""
+          << " used!\n"
+          << "This parameter is scheduled to be removed in release 4.3!\n"
+          << "Use \"FinalGridSpacingInVoxels\", which has the same meaning, "
+          << "or \"FinalGridSpacingInPhysicalUnits\".\n"
+          << "Continuing to use this parameter will yield unexpected "
+          << "registration results." );
       }
 
       /** Method 1:
