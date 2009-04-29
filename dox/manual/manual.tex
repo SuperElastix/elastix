@@ -227,7 +227,6 @@ in Section~\ref{sec:comp:transform}.
 
 \begin{figure}
 \centering
-%\resizebox{\textwidth}{!}{\input{images/registrationcomponents.pstex_t}}
 \includegraphics[width=\textwidth]{images/registrationcomponents.eps}
 \caption{The basic registration components.}
 \label{fig:registrationcomponents}
@@ -850,9 +849,10 @@ too large.
 image. Perfect registration would result in a difference image
 without any edges, just noise.
 
-\item Compute the overlap of segmented anatomical structures after registration. The
-better the overlap, the better the registration. To measure
-overlap, commonly the Dice similarity coefficient (DSC) is used:
+\item Compute the overlap of segmented anatomical structures
+after registration. The better the overlap, the better the
+registration. To measure overlap, commonly the Dice similarity
+coefficient (DSC) is used:
 \begin{equation}
   \mathrm{DSC}(X,Y) = \frac{2 |X \cap Y|}{|X|+|Y|},
 \end{equation}
@@ -901,20 +901,21 @@ the lower the metric value, the better the registration.
 
 \section{Introduction}\label{sec:elastix:intro}
 
-The development of \elastix\ started half to late 2003, and was intended to
-facilitate our registration research. After some initial versions we decided to
-put the separate components of \elastix\ in separate libraries. This resulted
-in major version 3.0 in November 2004. \elastix\ 3.0 was also the first version
-that was made publicly available on the \elastix\ website, around the same
-time. The continued development brings us today (September 2008) to version
-4.0.
+The development of \elastix\ started half to late 2003, and was
+intended to facilitate our registration research. After some initial
+versions we decided to put the separate components of \elastix\ in
+separate libraries. This resulted in major version 3.0 in November
+2004. \elastix\ 3.0 was also the first version that was made
+publicly available on the \elastix\ website, around the same time.
+The continued development brings us today (April 2009) to version
+4.1.
 
 \begin{table}[h!]
 \begin{tabular}{l|l}
 what & where \\
 \hline
 website        & \url{http://elastix.isi.uu.nl} \\
-CVS repository & \url{/shared/CVS/elastix/} (hosted at the ISI) \\
+SVN repository & \url{http://svn.isi.uu.nl} (hosted at the ISI) \\
 WIKI           & \url{https://wiki.isi.uu.nl/bin/view/CADweb/ElastiX} \\
 FAQ            & \url{http://elastix.isi.uu.nl/FAQ.php}
 \end{tabular}
@@ -1012,14 +1013,10 @@ freely available. In this section, we assume you use the Microsoft Visual C++
 \item Download and install CMake: \url{www.cmake.org}.
 
 \item Download and compile the ITK: \url{www.itk.org}.
-% not needed anymore:
-%For 64 bit
-%Linux systems, add the option \texttt{-fPIC} to the following flags:
-%\texttt{CMAKE\_CXX\_FLAGS} and \texttt{CMAKE\_C\_FLAGS}.
 
 
 %1. Download cmake from www.cmake.org and install it according to instructions
-%2. Download itk 3.8 from www.itk.org (not version 3.10).
+%2. Download itk 3.12 from www.itk.org (not version 3.10).
 %3. Unpack the ITK tarball
 %4. make a directory where you want to generate the binaries and go that directory
 %5. run: ccmake <ITKsourcedir>
@@ -1285,7 +1282,6 @@ make sure that the deformed segmentation is still a binary label image. If
 third order interpolation is used, the deformed segmentation image will contain
 garbage. This is related to the ``overshoot-property'' of higher-order B-spline
 interpolation.
-
 
 \section{Some details}
 
@@ -1919,50 +1915,177 @@ more information.
 
 \section{Metrics}
 
-\subsection{Combining metrics}
+\subsection{Image registration with multiple metrics and/or images}
+
+Up till now we viewed image registration as the problem of finding
+the spatial relation between one fixed image and one moving image,
+using one similarity metric to define the fit. Sometimes, it is
+desirable to combine multiple metrics, or multiple fixed and moving
+images, or both. All these three generalisations are available in \elastix:
+\begin{description}
+\item[multi-metric] In this case the registration cost function is defined
+as:
+\begin{align}
+\CC(\vTm; I_F, I_M) &= \frac{1}{\sum_{i=1}^N \omega_i} \sum_{i=1}^N
+\omega_i \CC_i(\vTm; I_F, I_M),
+\end{align}
+with $\omega_i$ the weights. This way the same fixed and moving
+image is used for every sub-metric $\CC_i$. This way one can
+simultaneously optimise the SSD and MI during a registration.
+
+\elastix\ should be called like:
+\begin{quote}
+\texttt{elastix -f fixed.ext -m moving.ext -out outDir -p parameterFile.txt}
+\end{quote}
+
+\item[multi-image] In this case the registration cost function is defined
+as:
+\begin{align}
+\CC(\vTm; I_F, I_M) &= \frac{1}{\sum_{i=1}^N \omega_i} \sum_{i=1}^N
+\omega_i \CC(\vTm; I_F^i, I_M^i).
+\end{align}
+This way one can simultaneously register all channels of
+multi-spectral input data, using a single type of cost function for
+all channels.
+
+\elastix\ should be called like:
+\begin{quote}
+\texttt{elastix -f0 fixed0.ext -f1 fixed1.ext -f... -m0 moving0.ext
+ -m1 moving1.ext -m... -out outDir -p parameterFile.txt}
+\end{quote}
+
+\item[both] In this case the registration cost function is defined
+as:
+\begin{align}
+\CC(\vTm; I_F, I_M) &= \frac{1}{\sum_{i=1}^N \omega_i} \sum_{i=1}^N
+\omega_i \CC_i(\vTm; I_F^i, I_M^i).
+\end{align}
+This is the most general way of registration supported by \elastix.
+This will make it possible for example to register two lung CT data
+sets with MI, while simultaneously registering the fissure
+segmentations with the kappa statistic. The two may help each other
+in getting a better registration compared to only using a single channel.
+\end{description}
+
+All three scenarios use the multi-metric registration method, which
+is selected in the parameter file with:
+\small
+\begin{verbatim}
+(Registration "MultiMetricMultiResolutionRegistration")
+\end{verbatim}
+\normalsize Other parts of the parameter file should look like:
+\small
+\begin{verbatim}
+(FixedImagePyramid "FixedSmoothingImagePyramid" "FixedSmoothingImagePyramid" ...)
+(MovingImagePyramid "MovingSmoothingImagePyramid" "MovingSmoothingImagePyramid" ... )
+(Interpolator "BSplineInterpolator" "BSplineInterpolator" ...)
+(Metric "AdvancedMattesMutualInformation" "AdvancedMeanSquareDifference" ...)
+(ImageSampler "RandomCoordinate" "RandomCoordinate" ...)
+
+(Metric0Weight 0.125)
+(Metric1Weight 0.125)
+(Metric2Weight 0.125)
+etc
+\end{verbatim}
+\normalsize
 
 \subsection{Penalty terms}
 
-\subsection{Some other metrics}
+nothing here yet
 
--Mutual information with rigidity penalty
+\subsection{Additional metrics}
 
-%-Alpha mutual information
-%---MultiInputRandomCoordinate
-%---MultiResolutionRegistrationWithFeatures
+Some more advanced metrics, not found in the ITK, are available in
+\elastix:
+\begin{description}
+\item[Mutual information with rigidity penalty] This metric computes the combined
+cost function
+\begin{align}
+\CC &= \frac{1}{\omega} \left( \mathit{MI}(\vTm;I_F,I_M) + \omega
+\mathcal{P}^{\mathrm{rigid}}(\vTm;I_M) \right)
+\end{align}
+with $\mathcal{P}^{\mathrm{rigid}}$ the rigidity penalty term
+described in \cite{Staring07}. It is specified in the parameter file
+with: \small
+\begin{verbatim}
+(Metric "MattesMutualInformationWithRigidityPenalty")
+// normal Mattes MI parameters
+
+// Rigidity penalty parameters:
+(RigidityPenaltyWeight 0.1)
+(LinearityConditionWeight 10.0)
+(OrthonormalityConditionWeight 1.0)
+(PropernessConditionWeight 100.0)
+(MovingRigidityImageName "movingRigidityImage.mhd")
+\end{verbatim}
+\normalsize A complete list of the available parameters can be found
+at \url{http://elastix.isi.uu.nl/doxygen/a00056.html}.
+
+\item[$\alpha$-mutual information] This metric computes true multi-channel
+$\alpha$-mutual information. It does not use high-dimensional joint
+histograms, but instead relies on $k$-nearest neighbour graphs to
+estimate $\alpha$-MI. Details can be found in \cite{Staring09}. It
+is specified in the parameter file with: \small
+\begin{verbatim}
+(Registration "MultiResolutionRegistrationWithFeatures")
+(FixedImagePyramid "FixedSmoothingImagePyramid" "FixedSmoothingImagePyramid")
+(MovingImagePyramid "MovingSmoothingImagePyramid" "MovingSmoothingImagePyramid")
+(Interpolator "BSplineInterpolator" "BSplineInterpolator")
+(Metric "KNNGraphAlphaMutualInformation")
+(ImageSampler "MultiInputRandomCoordinate")
+
+// KNN specific
+(Alpha 0.99)
+(AvoidDivisionBy 0.0000000001)
+(TreeType "KDTree")
+(BucketSize 50)
+(SplittingRule "ANN_KD_STD")
+(ShrinkingRule "ANN_BD_SIMPLE")
+(TreeSearchType "Standard")
+(KNearestNeighbours 20)
+(ErrorBound 10.0)
+\end{verbatim}
+\normalsize A complete list of the available parameters can be found
+at \url{http://elastix.isi.uu.nl/doxygen/a00053.html}.
+\end{description}
 
 \section{Image samplers}
 
--RandomSparseMask
+\begin{description}
+\item[RandomSparseMask]
+\end{description}
 
 \section{Transforms}
 
-DeformationFieldTransform
+\begin{description}
+\item[DeformationFieldTransform]
 
-BSplineDeformableTransformWithDiffusion
+\item[BSplineDeformableTransformWithDiffusion]
+\end{description}
 
 \section{Optimisation methods}
 
--Adaptive stochastic gradient descent
+\begin{description}
+\item[Adaptive stochastic gradient descent]
 
--Conjugate gradient
+\item[Conjugate gradient]
 ---ConjugateGradientFRPR
 
--CMAEvolutionStrategy
+\item[CMAEvolutionStrategy]
 
--FiniteDifferenceGradientDescent
+\item[FiniteDifferenceGradientDescent]
 
--Full search
+\item[Full search]
 
--Quasi Newton
+\item[Quasi Newton]
 
-%-Preconditioned Stochastic Gradient Descent
+%\item[Preconditioned Stochastic Gradient Descent
 
--RegularStepGradientDescent
+\item[RegularStepGradientDescent]
 ---RSGDEachParameterApart
 
--SimultaneousPerturbation
-
+\item[SimultaneousPerturbation]
+\end{description}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2063,6 +2186,7 @@ wrapper in elastix (some copy-paste from existing samplers).
 
 \chapter{Example parameter file}\label{chp:ExampleParam}
 
+\small
 \begin{verbatim}
 //ImageTypes
 (FixedInternalImagePixelType "float")
@@ -2146,11 +2270,13 @@ wrapper in elastix (some copy-paste from existing samplers).
 //Default pixel value for pixels that come from outside the picture:
 (DefaultPixelValue 0)
 \end{verbatim}
+\normalsize
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Example transform parameter file}\label{chp:ExampleTransformParam}
 
+\small
 \begin{verbatim}
 (Transform "EulerTransform")
 (NumberOfParameters 3)
@@ -2181,11 +2307,13 @@ wrapper in elastix (some copy-paste from existing samplers).
 (ResultImageFormat "mhd")
 (ResultImagePixelType "short")
 \end{verbatim}
+\normalsize
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Software License} \label{chp:License}
 
+\small
 \begin{verbatim}
 Overview:
 
@@ -2197,10 +2325,10 @@ Elastix is distributed under the new and simplified BSD license
 approved by the Open Source Initiative (OSI)
 [http://www.opensource.org/licenses/bsd-license.php].
 
-The software is partially derived from the Insight Segmentation
-and Registration Toolkit (ITK), which is also distributed under
-the new and simplied BSD licence. The ITK is required by Elastix
-for compilation of the source code.
+The software is partially derived from the Insight Segmentation and
+Registration Toolkit (ITK), which is also distributed under the new
+and simplified BSD licence. The ITK is required by Elastix for
+compilation of the source code.
 
 The copyright of the files in the Common/KNN/ann_1.1 subdirectory
 is held by a third party, the University of Maryland. The ANN
@@ -2246,6 +2374,7 @@ TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 \end{verbatim}
+\normalsize
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
