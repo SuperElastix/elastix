@@ -124,9 +124,6 @@ private:
   void GetParameterFromLine( const std::string & fullLine,
     const std::string & line );
 
-  /** Functions to do string manipulations. */
-  bool IsQuoted( const std::string & instring, std::string & unquoted ) const;
-
   /** Uniform way to throw exceptions when the parameter file appears to be
    * invalid.
    */

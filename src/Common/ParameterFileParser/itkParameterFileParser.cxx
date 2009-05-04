@@ -256,31 +256,72 @@ ParameterFileParser
   const std::string & line )
 {
   /** A line has a parameter name followed by one or more parameters.
-   * They are all separated by one or more spaces. (All tabs have been
-   * removed previously.) So,
-   * 1) we split the line at the spaces
+   * They are all separated by one or more spaces (all tabs have been
+   * removed previously) or by quotes in case of strings. So,
+   * 1) we split the line at the spaces or quotes
    * 2) the first one is the parameter name
    * 3) the other strings that are not a series of spaces, are parameter values
    */
 
   /** 1) Split the line. */
-  std::vector<itksys::String> splittedLine
-    = itksys::SystemTools::SplitString( line.c_str(), ' ', false );
+  std::vector<itksys::String> splittedLine;
+  std::size_t numQuotes = itksys::SystemTools::CountChar( line.c_str(), '"' );
+  if ( numQuotes == 0 )
+  {
+    splittedLine = itksys::SystemTools::SplitString( line.c_str(), ' ', false );
+  }
+  else if ( numQuotes % 2 == 0 )
+  {
+    splittedLine = itksys::SystemTools::SplitString( line.c_str(), '"', false );
+  }
+  else
+  {
+    std::string hint = "This line has an odd number of quotes (\").";
+    this->ThrowException( fullLine, hint );
+  }
 
   /** 2) Get the parameter name. */
   std::string parameterName = splittedLine[ 0 ];
+  itksys::SystemTools::ReplaceString( parameterName, " ", "" );
   splittedLine.erase( splittedLine.begin() );
 
   /** 3) Get the parameter values. */
   std::vector< std::string > parameterValues;
   for ( unsigned int i = 0; i < splittedLine.size(); ++i )
   {
-    itksys::SystemTools::ReplaceString( splittedLine[ i ], " ", "" );
-    if ( splittedLine[ i ] != "" )
+    /** Remove spaces from an unquoted number. */
+    if ( numQuotes == 0 )
+    {
+      itksys::SystemTools::ReplaceString( splittedLine[ i ], " ", "" );
+    }
+    else
+    {
+      /** Remove leading and trailing spaces for a quoted string. */
+      itksys::RegularExpression leadingSpaces( "^[ ]*(.*)" );
+      leadingSpaces.find( splittedLine[ i ] );
+      splittedLine[ i ] = leadingSpaces.match( 1 );
+
+      itksys::RegularExpression trailingSpaces( "[ \t]+$" );
+      if ( trailingSpaces.find( splittedLine[ i ] ) )
+      {
+        splittedLine[ i ] = splittedLine[ i ].substr( 0, trailingSpaces.start() );
+      }
+    }
+
+    /** Conditionally add this value. */
+    if ( splittedLine[ i ] != ""
+      && splittedLine[ i ] !=  "\"" )
     {
       parameterValues.push_back( splittedLine[ i ] );
     }
   }
+// 
+//   std::cerr << std::endl << "|" << parameterName << ": ";
+//   for ( unsigned int i = 0; i < parameterValues.size(); ++i )
+//   {
+//     std::cerr << "|" << parameterValues[ i ] << "| ";
+//   }
+//   std::cerr << std::endl;
 
   /** Perform some checks on the parameter name. */
   itksys::RegularExpression reInvalidCharacters( "[.,:;!@#$%^&-+|<>?]" );
@@ -297,8 +338,7 @@ ParameterFileParser
   for ( unsigned int i = 0; i < parameterValues.size(); ++i )
   {
     /** A string should be quoted. */
-    std::string unquoted = "";
-    if ( this->IsQuoted( parameterValues[ i ], unquoted ) )
+    if ( numQuotes > 0 )
     {
       /** Check for invalid characters. */
       match = reInvalidCharacters.find( parameterValues[ i ] );
@@ -309,9 +349,6 @@ ParameterFileParser
           + "\" contains invalid characters.";
         this->ThrowException( fullLine, hint );
       }
-
-      /** Remove the quotes from the string. */
-      parameterValues[ i ] = unquoted;
     }
     else
     {
@@ -347,25 +384,6 @@ ParameterFileParser
   this->m_ParameterMap.insert( make_pair( parameterName, parameterValues ) );
 
 } // end GetParameterFromLine()
-
-
-/**
- * **************** IsQuoted ***************
- */
-
-bool
-ParameterFileParser
-::IsQuoted( const std::string & instring, std::string & unquoted ) const
-{
-  if ( itksys::SystemTools::StringStartsWith( instring.c_str(), "\"" )
-    && itksys::SystemTools::StringEndsWith( instring.c_str(), "\"" ) )
-  {
-    unquoted = instring.substr( 1, instring.size() - 2 );
-    return true;
-  }
-  return false;
-
-} // end IsQuoted()
 
 
 /**
