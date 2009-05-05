@@ -268,7 +268,7 @@ namespace itk
     // NOW A SECOND PASS OVER THE SAMPLES to compute the derivative
 
     /** Array that stores dM(x)/dmu. */
-    DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.GetSize() );
+    DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.size() );
     // TODO: mask derivative??
 
     /** Get a handle to the sample container. */
@@ -487,7 +487,7 @@ namespace itk
     //typedef typename DerivativeType::iterator   DerivativeIteratorType;
     //DerivativeIteratorType itDerivative( derivative );
 
-    if ( this->m_NonZeroJacobianIndices.GetSize() == this->GetNumberOfParameters() )
+    if ( this->m_NonZeroJacobianIndices.size() == this->GetNumberOfParameters() )
     {
       /** Loop over all Jacobians. */
       //typename DerivativeType::const_iterator imjac = imageJacobian.begin();

@@ -586,7 +586,7 @@ namespace itk
       ( pdfIndex[0] * this->m_JointPDFDerivatives->GetOffsetTable()[1] ) +
       ( pdfIndex[1] * this->m_JointPDFDerivatives->GetOffsetTable()[2] );
     
-    if ( this->m_NonZeroJacobianIndices.GetSize() == this->GetNumberOfParameters() )
+    if ( this->m_NonZeroJacobianIndices.size() == this->GetNumberOfParameters() )
     {
       /** Loop over all Jacobians. */
       typename DerivativeType::const_iterator imjac = imageJacobian.begin();
@@ -854,7 +854,7 @@ namespace itk
           PDFValueType * incLeftPtr = incLeftBasePtr + offset;
 
           /** Loop only over the non-zero Jacobians. */
-          for ( unsigned int i = 0; i < this->m_NonZeroJacobianIndices.GetSize(); ++i )
+          for ( unsigned int i = 0; i < this->m_NonZeroJacobianIndices.size(); ++i )
           {
             const unsigned int mu = this->m_NonZeroJacobianIndices[ i ];
             PDFValueType * rPtr = incRightPtr + mu;
@@ -883,7 +883,7 @@ namespace itk
      */
     JointPDFDerivativesIndexType rindex;
     JointPDFDerivativesIndexType lindex;
-    for ( unsigned int i = 0; i < this->m_NonZeroJacobianIndices.GetSize(); ++i)
+    for ( unsigned int i = 0; i < this->m_NonZeroJacobianIndices.size(); ++i)
     {
       const unsigned int mu = this->m_NonZeroJacobianIndices[ i ];
       const double maskr = movingMaskValuesRight[ i ];
@@ -1063,7 +1063,7 @@ namespace itk
     this->m_NumberOfPixelsCounted = 0;
             
     /** Arrays that store dM(x)/dmu and dMask(x)/dmu. */
-    DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.GetSize() );
+    DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.size() );
            
     /** Set up the parameters in the transform. */
     this->SetTransformParameters( parameters );
@@ -1163,10 +1163,10 @@ namespace itk
     const double delta = this->GetFiniteDifferencePerturbation();
         
     /** Arrays that store dM(x)/dmu and dMask(x)/dmu. */
-    DerivativeType movingImageValuesRight( this->m_NonZeroJacobianIndices.GetSize() );
-    DerivativeType movingImageValuesLeft( this->m_NonZeroJacobianIndices.GetSize() );
-    DerivativeType movingMaskValuesRight( this->m_NonZeroJacobianIndices.GetSize() );
-    DerivativeType movingMaskValuesLeft( this->m_NonZeroJacobianIndices.GetSize() );
+    DerivativeType movingImageValuesRight( this->m_NonZeroJacobianIndices.size() );
+    DerivativeType movingImageValuesLeft( this->m_NonZeroJacobianIndices.size() );
+    DerivativeType movingMaskValuesRight( this->m_NonZeroJacobianIndices.size() );
+    DerivativeType movingMaskValuesLeft( this->m_NonZeroJacobianIndices.size() );
            
     /** Set up the parameters in the transform. */
     this->SetTransformParameters( parameters );
@@ -1247,7 +1247,7 @@ namespace itk
         MovingImagePointType mappedPointLeft;
 
         /** Loop over all parameters to perturb (parameters with nonzero Jacobian). */
-        for ( unsigned int i = 0; i < this->m_NonZeroJacobianIndices.GetSize(); ++i )
+        for ( unsigned int i = 0; i < this->m_NonZeroJacobianIndices.size(); ++i )
         { 
           /** Compute the transformed input point after perturbation. */
           for ( unsigned int j = 0; j < MovingImageDimension; ++j )

@@ -496,15 +496,23 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     {
       this->m_BSplineParametersOffset[ j ] = j * this->m_NumBSplineParametersPerDim;
     }
-    this->m_NonZeroJacobianIndices.SetSize(
-      FixedImageDimension * this->m_NumBSplineWeights );
+    // SK: \todo: change into something like this:
+    //if ( this->m_TransformIsAdvancedCombination )
+    // nrnonzerojac= this->m_AdvancedCombinationTransform->GetNumberOfNonZeroJacobianIndices();
+    
+    //sk:
+    //this->m_NonZeroJacobianIndices.SetSize(
+    //  FixedImageDimension * this->m_NumBSplineWeights );
+    this->m_NonZeroJacobianIndices.resize( FixedImageDimension * this->m_NumBSplineWeights );
     this->m_InternalTransformJacobian.SetSize(
       FixedImageDimension, FixedImageDimension * this->m_NumBSplineWeights );
     this->m_InternalTransformJacobian.Fill( 0.0 );
   }
   else
   {
-    this->m_NonZeroJacobianIndices.SetSize( this->GetNumberOfParameters() );
+    //sk:
+    //this->m_NonZeroJacobianIndices.SetSize( this->GetNumberOfParameters() );
+    this->m_NonZeroJacobianIndices.resize( this->GetNumberOfParameters() );
     for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
       this->m_NonZeroJacobianIndices[ i ] = i;
@@ -591,7 +599,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   if ( !this->m_TransformIsBSpline
     && !this->m_TransformIsAdvancedBSpline
     && !this->m_TransformIsBSplineCombination
-    && !this->m_TransformIsAdvancedBSplineCombination )
+    ) //SK && !this->m_TransformIsAdvancedBSplineCombination ) 
   {
     mappedPoint = this->m_Transform->TransformPoint( fixedImagePoint );
     sampleOk = true;
@@ -659,6 +667,15 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     /** Generic version which works for all transforms. */
     return this->m_Transform->GetJacobian( fixedImagePoint );
   } // end if no B-spline transform
+  else if ( this->m_TransformIsAdvancedBSplineCombination )
+  {
+    //SK: test:    
+    this->m_AdvancedBSplineCombinationTransform->GetJacobian(
+      fixedImagePoint,
+      this->m_InternalTransformJacobian,
+      this->m_NonZeroJacobianIndices );
+    return this->m_InternalTransformJacobian;
+  }
   else
   {
     /** If the transform is of type BSplineDeformableTransform or of type
@@ -802,8 +819,8 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   os << indent << "Variables used when the transform is a B-spline transform: " << std::endl;
   os << indent.GetNextIndent() << "InternalTransformJacobian: "
     << this->m_InternalTransformJacobian << std::endl;
-  os << indent.GetNextIndent() << "NonZeroJacobianIndices: "
-    << this->m_NonZeroJacobianIndices << std::endl;
+  // os << indent.GetNextIndent() << "NonZeroJacobianIndices: "
+  //  << this->m_NonZeroJacobianIndices << std::endl;
   os << indent.GetNextIndent() << "TransformIsBSpline: "
     << this->m_TransformIsBSpline << std::endl;
   os << indent.GetNextIndent() << "TransformIsBSplineCombination: "

@@ -103,7 +103,7 @@ namespace itk
     typedef typename DerivativeType::ValueType        DerivativeValueType;
             
     /** Calculate the contributions to the derivatives with respect to each parameter. */
-    if ( this->m_NonZeroJacobianIndices.GetSize() == this->GetNumberOfParameters() )
+    if ( this->m_NonZeroJacobianIndices.size() == this->GetNumberOfParameters() )
     {
       /** Loop over all jacobians. */
       typename DerivativeType::const_iterator imjacit = imageJacobian.begin();
@@ -298,7 +298,7 @@ namespace itk
     differential.Fill( NumericTraits< DerivativeValueType >::Zero );
 
     /** Arrays that store dM(x)/dmu. */
-    DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.GetSize() );
+    DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.size() );
     
     /** Initialize some variables for intermediate results. */
     typedef typename NumericTraits< MeasureType >::AccumulateType   AccumulateType;

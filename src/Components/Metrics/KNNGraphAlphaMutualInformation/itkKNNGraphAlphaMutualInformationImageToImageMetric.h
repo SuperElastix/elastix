@@ -131,6 +131,7 @@ public:
   typedef typename
     Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
   typedef typename Superclass::ParameterIndexArrayType    ParameterIndexArrayType;
+  typedef typename Superclass::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
 
   /** Typedef's for storing multiple inputs. */
   typedef typename Superclass::FixedImageVectorType       FixedImageVectorType;
@@ -275,7 +276,8 @@ private:
   typedef typename Superclass::MovingImageDerivativeType MovingImageDerivativeType;
   typedef typename Superclass::MovingImageContinuousIndexType MovingImageContinuousIndexType;
   typedef std::vector<TransformJacobianType>             TransformJacobianContainerType;
-  typedef std::vector<ParameterIndexArrayType>           TransformJacobianIndicesContainerType;
+  //typedef std::vector<ParameterIndexArrayType>           TransformJacobianIndicesContainerType;
+  typedef std::vector<NonZeroJacobianIndicesType>        TransformJacobianIndicesContainerType;
   typedef Array2D<double>                                SpatialDerivativeType;
   typedef std::vector<SpatialDerivativeType>             SpatialDerivativeContainerType;
 
@@ -315,9 +317,12 @@ private:
     const SpatialDerivativeType & D1sparse,
     const SpatialDerivativeType & D2sparse_M,
     const SpatialDerivativeType & D2sparse_J,
-    const ParameterIndexArrayType & D1indices,
-    const ParameterIndexArrayType & D2indices_M,
-    const ParameterIndexArrayType & D2indices_J,
+    //const ParameterIndexArrayType & D1indices,
+    //const ParameterIndexArrayType & D2indices_M,
+    //const ParameterIndexArrayType & D2indices_J,
+    const NonZeroJacobianIndicesType & D1indices,
+    const NonZeroJacobianIndicesType & D2indices_M,
+    const NonZeroJacobianIndicesType & D2indices_J,
     const MeasurementVectorType & diff_M,
     const MeasurementVectorType & diff_J,
     const MeasureType & distance_M,

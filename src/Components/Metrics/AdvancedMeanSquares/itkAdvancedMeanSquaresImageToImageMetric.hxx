@@ -253,7 +253,7 @@ namespace itk
     derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
 
     /** Arrays that store dM(x)/dmu. */
-    DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.GetSize() );
+    DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.size() );
  
     /** Make sure the transform parameters are up to date. */
     this->SetTransformParameters( parameters );
@@ -357,7 +357,7 @@ namespace itk
             
     /** Calculate the contributions to the derivatives with respect to each parameter. */
     const RealType diff_2 = diff * 2.0;
-    if ( this->m_NonZeroJacobianIndices.GetSize()
+    if ( this->m_NonZeroJacobianIndices.size()
       == this->GetNumberOfParameters() )
     {
       /** Loop over all jacobians. */
@@ -400,7 +400,7 @@ namespace itk
     this->m_NumberOfPixelsCounted = 0;
     
     /** Arrays that store dM(x)/dmu. */
-    DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.GetSize() );
+    DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.size() );
  
     /** Make sure the transform parameters are up to date. */
     this->SetTransformParameters( parameters );
@@ -519,7 +519,7 @@ namespace itk
     HessianType & H ) const
   {
     /** Do rank-1 update of H */
-    if ( this->m_NonZeroJacobianIndices.GetSize()
+    if ( this->m_NonZeroJacobianIndices.size()
       == this->GetNumberOfParameters() )
     {
       /** Loop over all jacobians. */

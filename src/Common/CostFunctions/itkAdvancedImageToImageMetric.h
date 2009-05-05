@@ -265,6 +265,9 @@ protected:
     itkGetStaticConstMacro(FixedImageDimension)>                BSplineParametersOffsetType;
   /** Array type for holding parameter indices */
   typedef Array<unsigned int>                                   ParameterIndexArrayType;
+  //typedef ParameterIndexArrayType                               NonZeroJacobianIndicesType;
+  typedef typename AdvancedBSplineCombinationTransformType::NonZeroJacobianIndicesType
+    NonZeroJacobianIndicesType; // SK
     
   /** Protected Variables **************/
 
@@ -298,7 +301,9 @@ protected:
   unsigned long                                     m_NumBSplineWeights;
   
   /** The parameter indices that have a nonzero Jacobian. */
-  mutable ParameterIndexArrayType                    m_NonZeroJacobianIndices;
+  
+  //mutable ParameterIndexArrayType                    m_NonZeroJacobianIndices;
+  mutable NonZeroJacobianIndicesType                   m_NonZeroJacobianIndices;
   
   /** Variables for the Limiters. */
   typename FixedImageLimiterType::Pointer            m_FixedImageLimiter;

@@ -238,7 +238,7 @@ namespace itk
     derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
 
     /** Array that store dM(x)/dmu. */
-    DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.GetSize() );
+    DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.size() );
  
     /** Make sure the transform parameters are up to date. */
     this->SetTransformParameters( parameters );
@@ -390,7 +390,7 @@ namespace itk
     }
     
     /** Calculate the contributions to the derivatives with respect to each parameter. */
-    if ( this->m_NonZeroJacobianIndices.GetSize() == this->GetNumberOfParameters() )
+    if ( this->m_NonZeroJacobianIndices.size() == this->GetNumberOfParameters() )
     {
       /** Loop over all Jacobians. */
       typename DerivativeType::const_iterator imjacit = imageJacobian.begin();

@@ -978,9 +978,12 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   const SpatialDerivativeType & D1sparse,
   const SpatialDerivativeType & D2sparse_M,
   const SpatialDerivativeType & D2sparse_J,
-  const ParameterIndexArrayType & D1indices,
-  const ParameterIndexArrayType & D2indices_M,
-  const ParameterIndexArrayType & D2indices_J,
+  //const ParameterIndexArrayType & D1indices,
+  //const ParameterIndexArrayType & D2indices_M,
+  //const ParameterIndexArrayType & D2indices_J,
+  const NonZeroJacobianIndicesType & D1indices,
+  const NonZeroJacobianIndicesType & D2indices_M,
+  const NonZeroJacobianIndicesType & D2indices_J,
   const MeasurementVectorType & diff_M,
   const MeasurementVectorType & diff_J,
   const MeasureType & distance_M,
@@ -1024,12 +1027,12 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   /** Update dGamma_M. */
   if ( distance_M > this->m_AvoidDivisionBy )
   {
-    for ( unsigned int i = 0; i < D1indices.GetSize(); ++i )
+    for ( unsigned int i = 0; i < D1indices.size(); ++i )
     {
       dGamma_M[ D1indices[ i ] ] += tmp1sparse_M[ i ];
     }
 
-    for ( unsigned int i = 0; i < D2indices_M.GetSize(); ++i )
+    for ( unsigned int i = 0; i < D2indices_M.size(); ++i )
     {
       dGamma_M[ D2indices_M[ i ] ] -= tmp2sparse_M[ i ];
     }
@@ -1038,12 +1041,12 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   /** Update dGamma_J. */
   if ( distance_J > this->m_AvoidDivisionBy )
   {
-    for ( unsigned int i = 0; i < D1indices.GetSize(); ++i )
+    for ( unsigned int i = 0; i < D1indices.size(); ++i )
     {
       dGamma_J[ D1indices[ i ] ] += tmp1sparse_J[ i ];
     }
 
-    for ( unsigned int i = 0; i < D2indices_J.GetSize(); ++i )
+    for ( unsigned int i = 0; i < D2indices_J.size(); ++i )
     {
       dGamma_J[ D2indices_J[ i ] ] -= tmp2sparse_J[ i ];
     }
