@@ -104,7 +104,7 @@ public:
 
   /** Get the final grid spacing. */
   itkGetConstMacro( FinalGridSpacing, SpacingType );
-
+  
   /** Set a default grid spacing schedule. */
   virtual void SetDefaultSchedule(
     unsigned int levels,
@@ -137,8 +137,18 @@ protected:
   /** The destructor. */
   virtual ~GridScheduleComputer() {};
 
+  /** Declare member variables, needed for B-spline grid. */
+  VectorSpacingType     m_GridSpacings;
+  VectorOriginType      m_GridOrigins;
+  VectorRegionType      m_GridRegions;
+  TransformConstPointer m_InitialTransform;
+  VectorGridSpacingFactorType m_GridSpacingFactors;
+
   /** PrintSelf. */
   void PrintSelf( std::ostream& os, Indent indent ) const;
+
+  /** Get number of levels. */
+  itkGetConstMacro( NumberOfLevels, unsigned int );
 
   /** Function to apply the initial transform, if it exists. */
   virtual void ApplyInitialTransform(
@@ -157,20 +167,13 @@ private:
   RegionType            m_ImageRegion;
   unsigned int          m_BSplineOrder;
   unsigned int          m_NumberOfLevels;
-  SpacingType           m_FinalGridSpacing;
-  VectorGridSpacingFactorType m_GridSpacingFactors;
+  SpacingType           m_FinalGridSpacing;  
 
   /** Clamp the upsampling factor. */
   itkSetClampMacro( UpsamplingFactor, float, 1.0, NumericTraits<float>::max() );
 
   /** Declare member variables, needed internally. */
   float                 m_UpsamplingFactor;
-
-  /** Declare member variables, needed for B-spline grid. */
-  VectorSpacingType     m_GridSpacings;
-  VectorOriginType      m_GridOrigins;
-  VectorRegionType      m_GridRegions;
-  TransformConstPointer m_InitialTransform;
 
 }; // end class GridScheduleComputer
 
