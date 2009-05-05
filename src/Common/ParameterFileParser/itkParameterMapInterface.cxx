@@ -119,6 +119,19 @@ ParameterMapInterface
 } // end ReadParameter()
 
 
+/**
+ * **************** StringCast ***************
+ */
+
+bool
+ParameterMapInterface
+::StringCast( const std::string & parameterValue, std::string & casted ) const
+{
+  casted = parameterValue;
+  return true;
+} // end StringCast()
+
+
 } // end namespace itk
 
 #endif // end __itkParameterMapInterface_cxx

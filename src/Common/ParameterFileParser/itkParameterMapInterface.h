@@ -151,7 +151,7 @@ public:
     }
       
     /** Cast the string to type T. */
-    bool castSuccesful = this->StringCast<T>( vec[ entry_nr ], parameterValue );
+    bool castSuccesful = this->StringCast( vec[ entry_nr ], parameterValue );
 
     /** Check if the cast was successful. */
     if ( !castSuccesful )
@@ -290,6 +290,11 @@ private:
     return true;
 
   } // end StringCast()
+
+  /** Provide a specialization for std::string, since the general StringCast
+   * (especially ss >> casted) will not work for strings containing spaces.
+   */
+  bool StringCast( const std::string & parameterValue, std::string & casted ) const;
 
 }; // end class ParameterMapInterface
 
