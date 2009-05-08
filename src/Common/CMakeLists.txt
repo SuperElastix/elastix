@@ -95,8 +95,6 @@ SET( TransformFiles
  Transforms/itkDeformationFieldRegulizerForBSpline.hxx
  Transforms/itkDeformationVectorFieldTransform.h
  Transforms/itkDeformationVectorFieldTransform.txx
- Transforms/itkTransformToDeformationFieldSource.h
- Transforms/itkTransformToDeformationFieldSource.txx
  Transforms/itkTranslationTransformInitializer.h
  Transforms/itkTranslationTransformInitializer.hxx
  Transforms/itkGridScheduleComputer.h
