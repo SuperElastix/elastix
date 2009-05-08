@@ -124,6 +124,10 @@ private:
   void GetParameterFromLine( const std::string & fullLine,
     const std::string & line );
 
+  /** Splits a line in parameter name and values. */
+  void SplitLine( const std::string & fullLine, const std::string & line,
+    std::vector<std::string> & splittedLine ) const;
+
   /** Uniform way to throw exceptions when the parameter file appears to be
    * invalid.
    */

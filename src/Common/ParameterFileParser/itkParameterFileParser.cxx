@@ -143,7 +143,7 @@ ParameterFileParser
   }
 
   /** Check the extension. */
-  std::string ext = itksys::SystemTools::GetFilenameExtension(
+  std::string ext = itksys::SystemTools::GetFilenameLastExtension(
     this->m_ParameterFileName );
   if ( ext != ".txt" )
   {
@@ -264,21 +264,8 @@ ParameterFileParser
    */
 
   /** 1) Split the line. */
-  std::vector<itksys::String> splittedLine;
-  std::size_t numQuotes = itksys::SystemTools::CountChar( line.c_str(), '"' );
-  if ( numQuotes == 0 )
-  {
-    splittedLine = itksys::SystemTools::SplitString( line.c_str(), ' ', false );
-  }
-  else if ( numQuotes % 2 == 0 )
-  {
-    splittedLine = itksys::SystemTools::SplitString( line.c_str(), '"', false );
-  }
-  else
-  {
-    std::string hint = "This line has an odd number of quotes (\").";
-    this->ThrowException( fullLine, hint );
-  }
+  std::vector<std::string> splittedLine;
+  this->SplitLine( fullLine, line, splittedLine );
 
   /** 2) Get the parameter name. */
   std::string parameterName = splittedLine[ 0 ];
@@ -289,101 +276,122 @@ ParameterFileParser
   std::vector< std::string > parameterValues;
   for ( unsigned int i = 0; i < splittedLine.size(); ++i )
   {
-    /** Remove spaces from an unquoted number. */
-    if ( numQuotes == 0 )
-    {
-      itksys::SystemTools::ReplaceString( splittedLine[ i ], " ", "" );
-    }
-    else
-    {
-      /** Remove leading and trailing spaces for a quoted string. */
-      itksys::RegularExpression leadingSpaces( "^[ ]*(.*)" );
-      leadingSpaces.find( splittedLine[ i ] );
-      splittedLine[ i ] = leadingSpaces.match( 1 );
-
-      itksys::RegularExpression trailingSpaces( "[ \t]+$" );
-      if ( trailingSpaces.find( splittedLine[ i ] ) )
-      {
-        splittedLine[ i ] = splittedLine[ i ].substr( 0, trailingSpaces.start() );
-      }
-    }
-
-    /** Conditionally add this value. */
-    if ( splittedLine[ i ] != ""
-      && splittedLine[ i ] !=  "\"" )
+    if ( splittedLine[ i ] != "" )
     {
       parameterValues.push_back( splittedLine[ i ] );
     }
   }
-// 
-//   std::cerr << std::endl << "|" << parameterName << ": ";
-//   for ( unsigned int i = 0; i < parameterValues.size(); ++i )
-//   {
-//     std::cerr << "|" << parameterValues[ i ] << "| ";
-//   }
-//   std::cerr << std::endl;
 
-  /** Perform some checks on the parameter name. */
-  itksys::RegularExpression reInvalidCharacters( "[.,:;!@#$%^&-+|<>?]" );
-  bool match = reInvalidCharacters.find( parameterName );
+  /** 4) Perform some checks on the parameter name. */
+  itksys::RegularExpression reInvalidCharacters1( "[.,:;!@#$%^&-+|<>?]" );
+  bool match = reInvalidCharacters1.find( parameterName );
   if ( match )
   {
     std::string hint = "The parameter \""
       + parameterName
-      + "\" contains invalid characters.";
+      + "\" contains invalid characters (.,:;!@#$%^&-+|<>?).";
     this->ThrowException( fullLine, hint );
   }
 
-  /** Perform checks on the parameter values. */
+  /** 5) Perform checks on the parameter values. */
+  itksys::RegularExpression reContainsChar( "[a-zA-Z]" );
+  itksys::RegularExpression reInvalidCharacters2( "[,:;!@#$%^&-+|<>?]" );
   for ( unsigned int i = 0; i < parameterValues.size(); ++i )
   {
-    /** A string should be quoted. */
-    if ( numQuotes > 0 )
+    /** For all entries some characters are not allowed. */
+    if ( reInvalidCharacters2.find( parameterValues[ i ] ) )
     {
-      /** Check for invalid characters. */
-      match = reInvalidCharacters.find( parameterValues[ i ] );
-      if ( match )
-      {
-        std::string hint = "The parameter value \""
-          + parameterValues[ i ]
-          + "\" contains invalid characters.";
-        this->ThrowException( fullLine, hint );
-      }
+      std::string hint = "The parameter value \""
+        + parameterValues[ i ]
+      + "\" contains invalid characters (,:;!@#$%^&-+|<>?).";
+      this->ThrowException( fullLine, hint );
     }
-    else
+
+    /** Find out what kind of entry this is. */
+    bool containsChars = reContainsChar.find( parameterValues[ i ] );
+
+    /** For strings also some other characters are not allowed. */
+    itksys::RegularExpression reInvalidString( "[.]" );
+    if ( containsChars )
     {
-      /** Otherwise it's a number. */
-
-      /** Check for invalid numbers. */
-      itksys::RegularExpression reInvalidNumbers1( "[a-zA-Z:;!@#$%^&-+|<>?]" );
-
-      bool match1 = reInvalidNumbers1.find( parameterValues[ i ] );
-      if ( match1 )
+      /** For strings also some other characters are not allowed. */
+      if ( reInvalidString.find( parameterValues[ i ] ) )
       {
         std::string hint = "The parameter value \""
           + parameterValues[ i ]
-          + "\" contains invalid characters.";
-        this->ThrowException( fullLine, hint );
-      }
-
-      /** Check for ",". */
-      itksys::RegularExpression reInvalidNumbers2( "[,]" );
-      bool match2 = reInvalidNumbers2.find( parameterValues[ i ] );
-      if ( match2 )
-      {
-        std::string hint = "The parameter value \""
-          + parameterValues[ i ]
-          + "\" contains a \",\". "
-          + "Floating values should be specified with a dot (\".\").";
+        + "\" contains invalid characters (.).";
         this->ThrowException( fullLine, hint );
       }
     }
   }
   
-  /** Insert this combination in the parameter map. */
+  /** 6) Insert this combination in the parameter map. */
   this->m_ParameterMap.insert( make_pair( parameterName, parameterValues ) );
 
 } // end GetParameterFromLine()
+
+
+/**
+ * **************** SplitLine ***************
+ */
+
+void
+ParameterFileParser
+::SplitLine( const std::string & fullLine, const std::string & line,
+  std::vector<std::string> & splittedLine ) const
+{
+  splittedLine.clear();
+  splittedLine.resize( 1 );
+  std::vector<itksys::String> splittedLine1;
+
+  /** Count the number of quotes in the line. If it is an odd value, the
+   * line contains an error; strings should start and end with a quote, so
+   * the total number of quotes is even.
+   */
+  std::size_t numQuotes = itksys::SystemTools::CountChar( line.c_str(), '"' );
+  if ( numQuotes % 2 == 1 )
+  {
+    /** An invalid parameter line. */
+    std::string hint = "This line has an odd number of quotes (\").";
+    this->ThrowException( fullLine, hint );
+  }
+  
+  /** Loop over the line. */
+  std::string::const_iterator it;
+  unsigned int index = 0;
+  numQuotes = 0;
+  for ( it = line.begin(); it < line.end(); it++ )
+  {
+    if ( *it == '"' )
+    {
+      /** Start a new element. */
+      splittedLine.push_back( "" );
+      index++;
+      numQuotes++;
+    }
+    else if ( *it == ' ' )
+    {
+      /** Only start a new element if it is not a quote, otherwise just add
+       * the space to the string.
+       */
+      if ( numQuotes % 2 == 0 )
+      {
+        splittedLine.push_back( "" );
+        index++;
+      }
+      else
+      {
+        splittedLine[ index ].push_back( *it );
+      }
+    }
+    else
+    {
+      /** Add this character to the element. */
+      splittedLine[ index ].push_back( *it );
+    }
+  }
+
+} // end SplitLine()
 
 
 /**

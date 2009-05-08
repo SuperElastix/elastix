@@ -137,18 +137,17 @@ using namespace itk;
      * ranges from the parameter file is a real error. Prints some
      * error message if so.
      */
-    virtual int CheckSearchSpaceRangeDefinition(const std::string & fullFieldName, int errorcode, unsigned int entry_nr);
+    //virtual int CheckSearchSpaceRangeDefinition(const std::string & fullFieldName, int errorcode, unsigned int entry_nr);
+    virtual bool CheckSearchSpaceRangeDefinition( const std::string & fullFieldName,
+      const bool found, const unsigned int entry_nr ) const;
       
   private:
 
-    FullSearch( const Self& );  // purposely not implemented
-    void operator=( const Self& );              // purposely not implemented
-
-
+    FullSearch( const Self& );      // purposely not implemented
+    void operator=( const Self& );  // purposely not implemented
     
   }; // end class FullSearch
   
-
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION

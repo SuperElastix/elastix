@@ -139,7 +139,7 @@ public:
     const unsigned int entry_nr, const bool printThisErrorMessage )
   {
     std::string errorMessage = "";
-    bool found = this->m_ParameterMapInterface->ReadParameter<T>(
+    bool found = this->m_ParameterMapInterface->ReadParameter(
       parameterValue, parameterName, entry_nr,
       printThisErrorMessage, errorMessage );
     if ( errorMessage != "" )
@@ -156,7 +156,7 @@ public:
     const unsigned int entry_nr )
   {
     std::string errorMessage = "";
-    bool found = this->m_ParameterMapInterface->ReadParameter<T>(
+    bool found = this->m_ParameterMapInterface->ReadParameter(
       parameterValue, parameterName, entry_nr, errorMessage );
     if ( errorMessage != "" )
     {
@@ -174,7 +174,7 @@ public:
     const bool printThisErrorMessage ) const
   {
     std::string errorMessage = "";
-    bool found = this->m_ParameterMapInterface->ReadParameter<T>(
+    bool found = this->m_ParameterMapInterface->ReadParameter(
       parameterValue, parameterName, prefix, entry_nr, default_entry_nr,
       printThisErrorMessage, errorMessage );
     if ( errorMessage != "" )
@@ -192,7 +192,7 @@ public:
     const unsigned int entry_nr, const int default_entry_nr ) const
   {
     std::string errorMessage = "";
-    bool found = this->m_ParameterMapInterface->ReadParameter<T>(
+    bool found = this->m_ParameterMapInterface->ReadParameter(
       parameterValue, parameterName, prefix, entry_nr, default_entry_nr,
       errorMessage );
     if ( errorMessage != "" )
