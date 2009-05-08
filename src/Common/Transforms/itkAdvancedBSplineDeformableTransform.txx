@@ -12,10 +12,11 @@
 
 ======================================================================*/
 
+/** version of original itk file on which code is based: */
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkAdvancedBSplineDeformableTransform.txx,v $
+  Module:    $RCSfile: itkBSplineDeformableTransform.txx,v $
   Language:  C++
   Date:      $Date: 2008-05-08 23:22:35 $
   Version:   $Revision: 1.41 $
@@ -37,6 +38,7 @@
 #include "itkImageRegionConstIterator.h"
 #include "itkImageRegionConstIteratorWithIndex.h"
 #include "itkIdentityTransform.h"
+#include "vnl/vnl_math.h"
 
 namespace itk
 {
@@ -825,17 +827,20 @@ typename AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrd
 ::OutputPointType
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 ::TransformPoint(const InputPointType &point) const 
-{
-  
-  WeightsType weights( this->m_WeightsFunction->GetNumberOfWeights() );
-  ParameterIndexArrayType indices( this->m_WeightsFunction->GetNumberOfWeights() );
+{  
+  /** Allocate memory on the stack: */
+  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  typename WeightsType::ValueType weightsArray[ numberOfWeights ];
+  typename ParameterIndexArrayType::ValueType indicesArray[ numberOfWeights ];
+  WeightsType weights( weightsArray, numberOfWeights, false );
+  ParameterIndexArrayType indices( indicesArray, numberOfWeights, false );
+
   OutputPointType outputPoint;
   bool inside;
 
   this->TransformPoint( point, outputPoint, weights, indices, inside );
 
   return outputPoint;
-
 }
 
  
@@ -898,8 +903,12 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
     }
 
   // Compute interpolation weights
-  WeightsType weights( this->m_WeightsFunction->GetNumberOfWeights() );
   IndexType supportIndex;
+  
+  /** Allocate memory on the stack: */
+  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  typename WeightsType::ValueType weightsArray[ numberOfWeights ];
+  WeightsType weights( weightsArray, numberOfWeights, false );  
 
   this->m_WeightsFunction->Evaluate( index, weights, supportIndex );
   this->m_LastJacobianIndex = supportIndex;
@@ -1073,16 +1082,15 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   {    
     return;
   }
+  
+  /** Helper variables. */  
+  IndexType supportIndex; 
 
   /** Compute the number of affected B-spline parameters. */
-  const unsigned int numberOfWeights
-    = this->m_WeightsFunction->GetNumberOfWeights();
-
-  /** Helper variables. */
-  WeightsType weights( numberOfWeights );
-  IndexType supportIndex;
-  //this->m_WeightsFunction->ComputeStartIndex(
-  //  cindex, supportIndex );
+  /** Allocate memory on the stack: */
+  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  typename WeightsType::ValueType weightsArray[ numberOfWeights ];
+  WeightsType weights( weightsArray, numberOfWeights, false );
 
   /** Compute the derivative weights. */
   this->m_WeightsFunction->Evaluate( cindex, weights, supportIndex );
@@ -1092,8 +1100,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   supportRegion.SetSize( this->m_SupportSize );
   supportRegion.SetIndex( supportIndex );
 
-  /** Put at the right positions */
-  
+  /** Put at the right positions */  
   for ( unsigned int mu = 0; mu < numberOfWeights; ++mu )
   {
     for ( unsigned int i = 0; i < SpaceDimension; ++i )
@@ -1133,11 +1140,11 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   this->TransformPointToContinuousGridIndex( ipp, cindex );
 
   /** Compute the number of affected B-spline parameters. */
-  const unsigned int numberOfWeights
-    = this->m_WeightsFunction->GetNumberOfWeights();
+  /** Allocate memory on the stack: */
+  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  typename WeightsType::ValueType weightsArray[ numberOfWeights ];
+  WeightsType weights( weightsArray, numberOfWeights, false );
 
-  /** Helper variables. */
-  WeightsType weights( numberOfWeights );
   IndexType supportIndex;
   this->m_DerivativeWeightsFunction->ComputeStartIndex(
     cindex, supportIndex );
@@ -1212,7 +1219,11 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   this->TransformPointToContinuousGridIndex( ipp, cindex );
 
   /** Helper variables. */
-  WeightsType weights( this->m_WeightsFunction->GetNumberOfWeights() );
+  /** Allocate memory on the stack: */
+  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  typename WeightsType::ValueType weightsArray[ numberOfWeights ];
+  WeightsType weights( weightsArray, numberOfWeights, false );
+
   IndexType supportIndex;
   this->m_SODerivativeWeightsFunction->ComputeStartIndex(
     cindex, supportIndex );
@@ -1287,13 +1298,12 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
    */
   ContinuousIndexType cindex;
   this->TransformPointToContinuousGridIndex( ipp, cindex );
-
-  /** Compute the number of affected B-spline parameters. */
-  const unsigned int numberOfWeights
-    = this->m_WeightsFunction->GetNumberOfWeights();
-
+  
   /** Helper variables. */
-  WeightsType weights( numberOfWeights );
+  /** Allocate memory on the stack: */
+  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  typename WeightsType::ValueType weightsArray[ numberOfWeights ];
+  WeightsType weights( weightsArray, numberOfWeights, false );  
   IndexType supportIndex;
   this->m_DerivativeWeightsFunction->ComputeStartIndex(
     cindex, supportIndex );
@@ -1372,11 +1382,13 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   this->TransformPointToContinuousGridIndex( ipp, cindex );
 
   /** Compute the number of affected B-spline parameters. */
-  const unsigned int numberOfWeights
-    = this->m_WeightsFunction->GetNumberOfWeights();
 
-  /** Helper variables. */
-  WeightsType weights( numberOfWeights );
+  /** Allocate memory on the stack: */
+  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  typename WeightsType::ValueType weightsArray[ numberOfWeights ];
+  WeightsType weights( weightsArray, numberOfWeights, false );
+
+  /** Helper variables. */  
   IndexType supportIndex;
   this->m_DerivativeWeightsFunction->ComputeStartIndex(
     cindex, supportIndex );
@@ -1478,11 +1490,11 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   this->TransformPointToContinuousGridIndex( ipp, cindex );
 
   /** Compute the number of affected B-spline parameters. */
-  const unsigned int numberOfWeights
-    = this->m_WeightsFunction->GetNumberOfWeights();
- 
-  /** Helper variables. */
-  WeightsType weights( numberOfWeights );
+  /** Allocate memory on the stack: */
+  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  typename WeightsType::ValueType weightsArray[ numberOfWeights ];
+  WeightsType weights( weightsArray, numberOfWeights, false );
+
   IndexType supportIndex;
   this->m_SODerivativeWeightsFunction->ComputeStartIndex(
     cindex, supportIndex );
@@ -1571,11 +1583,11 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   this->TransformPointToContinuousGridIndex( ipp, cindex );
 
   /** Compute the number of affected B-spline parameters. */
-  const unsigned int numberOfWeights
-    = this->m_WeightsFunction->GetNumberOfWeights();
+  /** Allocate memory on the stack: */
+  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  typename WeightsType::ValueType weightsArray[ numberOfWeights ];
+  WeightsType weights( weightsArray, numberOfWeights, false );
 
-  /** Helper variables. */
-  WeightsType weights( numberOfWeights );
   IndexType supportIndex;
   this->m_SODerivativeWeightsFunction->ComputeStartIndex(
     cindex, supportIndex );
@@ -1685,8 +1697,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     it( this->m_CoefficientImage[ 0 ], supportRegion );
 
   /** Initialize some helper variables. */
-  const unsigned int numberOfWeights
-    = this->m_WeightsFunction->GetNumberOfWeights();
+  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;  
   const unsigned long parametersPerDim
     = this->GetNumberOfParametersPerDimension();
   //IndexType ind;

@@ -67,6 +67,28 @@ public:
   /** Spline order. */
   itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
 
+  /** Recursive template to retrieve the number of weights at compile time. */
+  template <unsigned int Dimension>
+  class GetConstNumberOfWeights
+  {
+  public:
+    itkStaticConstMacro( Value, unsigned long, (SplineOrder+1) * GetConstNumberOfWeights<Dimension-1>::Value );
+  };
+
+  /** Template specialization to terminate the recursive loop. */
+  template <>
+  class GetConstNumberOfWeights<0>
+  {
+  public:
+    itkStaticConstMacro( Value, unsigned long, 1 );
+  };
+
+  /** Auxiliary typedef */
+  typedef GetConstNumberOfWeights< itkGetStaticConstMacro(SpaceDimension) > ConstNumberOfWeightsDim;  
+
+  /** The number of weights as a static const. */
+  itkStaticConstMacro( NumberOfWeights, unsigned long, ConstNumberOfWeightsDim::Value );
+
   /** OutputType typedef support. */
   typedef Array< double > WeightsType;
 
@@ -98,7 +120,7 @@ public:
   itkGetConstReferenceMacro( SupportSize, SizeType );
 
   /** Get number of weights. */
-  itkGetConstReferenceMacro( NumberOfWeights, unsigned long );
+  itkGetConstMacro( NumberOfWeights, unsigned long );
   
 protected:
   BSplineInterpolationWeightFunctionBase();
@@ -156,6 +178,8 @@ private:
    * keep track where is what.
    */
   void InitializeOffsetToIndexTable( void );
+
+
   
 };
 

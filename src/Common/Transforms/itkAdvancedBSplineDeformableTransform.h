@@ -346,9 +346,10 @@ public:
     bool & inside ) const;
 
   /** Get number of weights. */
+
   unsigned long GetNumberOfWeights( void ) const
   {
-    return this->m_WeightsFunction->GetNumberOfWeights();
+    return this->m_WeightsFunction->GetNumberOfWeights();    
   }
 
   /** Method to transform a vector - 
