@@ -57,11 +57,13 @@ namespace elastix
 
     this->m_BSplineTransform = 0;
     this->m_BSplineCombinationTransform = 0;
+    this->m_AdvancedTransform = 0;
     this->m_NumBSplineParametersPerDim = 0;
     this->m_NumBSplineWeights = 0;
     this->m_NumberOfParameters = 0;
     this->m_TransformIsBSpline = false;
     this->m_TransformIsBSplineCombination = false;
+    this->m_TransformIsAdvanced = false;
 
   } // Constructor
 
@@ -772,15 +774,20 @@ namespace elastix
     std::string transformName = this->GetElastix()->
       GetElxTransformBase()->GetNameOfClass();
 
+    /** \todo solve in a more generic way */
     const std::string translationName = "TranslationTransformElastix";
-    const std::string bsplineName = "BSplineTransform";
+    const std::string bsplineName1 = "BSplineTransform";  
+    const std::string bsplineName2 = "AdvancedBSplineTransform";  
+    const std::string bsplineName3 = "CyclicBSplineTransform";  
     
     if ( transformName == translationName )
     {
       this->ComputeJacobianTermsTranslation(
         TrC, TrCC, maxJJ, maxJCJ );
     }
-    else if ( transformName == bsplineName )
+    else if ( (transformName == bsplineName1) 
+           || (transformName == bsplineName2)
+           || (transformName == bsplineName3) )
     {
       this->ComputeJacobianTermsBSpline(
         TrC, TrCC, maxJJ, maxJCJ );
@@ -1063,8 +1070,8 @@ namespace elastix
     * Possibly apply scaling afterwards. */
     std::vector<JacobianConstIteratorType> jacit(outdim);
     unsigned int samplenr = 0;
-    ParameterIndexArrayType & jacind = this->m_NonZeroJacobianIndices;
-    const unsigned int sizejacind = jacind.GetSize();
+    NonZeroJacobianIndicesType & jacind = this->m_NonZeroJacobianIndices;
+    const unsigned int sizejacind = jacind.size();
 
     /** Prepare for progress printing */
     ProgressCommandPointer progressObserver = ProgressCommandType::New();
@@ -1388,12 +1395,12 @@ namespace elastix
   template <class TElastix>
     void AdaptiveStochasticGradientDescent<TElastix>
     ::CheckForBSplineTransform( void )
-  {
-    this->m_TransformIsBSpline = false;
+  {    
     typename TransformType::Pointer transform = this->GetRegistration()->
       GetAsITKBaseType()->GetTransform();
     this->m_NumberOfParameters = transform->GetNumberOfParameters();
 
+    this->m_TransformIsBSpline = false;
     BSplineTransformType * testPtr1 = dynamic_cast<BSplineTransformType *>(
       transform.GetPointer() );
     if ( !testPtr1 )
@@ -1442,6 +1449,21 @@ namespace elastix
       itkDebugMacro( "Transform is BSplineCombination" );
     }
 
+    this->m_TransformIsAdvanced = false;
+    AdvancedTransformType * testPtr3 = dynamic_cast<AdvancedTransformType *>(
+      transform.GetPointer() );
+    if ( !testPtr3 )
+    {
+      this->m_AdvancedTransform = 0;
+      itkDebugMacro( "Transform is not Advanced" );
+    }
+    else
+    {
+      this->m_TransformIsAdvanced = true;
+      this->m_AdvancedTransform = testPtr3;      
+      itkDebugMacro( "Transform is AdvancedDeformable" );
+    }
+
     /** Resize the weights and transform index arrays and compute the parameters offset. */
     if ( this->m_TransformIsBSpline || this->m_TransformIsBSplineCombination )
     {
@@ -1453,15 +1475,23 @@ namespace elastix
       {
         this->m_BSplineParametersOffset[ j ] = j * this->m_NumBSplineParametersPerDim; 
       }
-      this->m_NonZeroJacobianIndices.SetSize(
+      this->m_NonZeroJacobianIndices.resize(
         FixedImageDimension * this->m_NumBSplineWeights );
       this->m_InternalTransformJacobian.SetSize( 
         FixedImageDimension, FixedImageDimension * this->m_NumBSplineWeights );
       this->m_InternalTransformJacobian.Fill( 0.0 );
     }
+    else if ( this->m_TransformIsAdvanced )
+    {
+      /** A more generic way of sparse jacobians */
+      this->m_NonZeroJacobianIndices.resize( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+      this->m_InternalTransformJacobian.SetSize(
+        FixedImageDimension, this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+      this->m_InternalTransformJacobian.Fill( 0.0 );
+    }  
     else
     {   
-      this->m_NonZeroJacobianIndices.SetSize( this->m_NumberOfParameters );
+      this->m_NonZeroJacobianIndices.resize( this->m_NumberOfParameters );
       for ( unsigned int i = 0; i < this->m_NumberOfParameters; ++i )
       {
         this->m_NonZeroJacobianIndices[ i ] = i;
@@ -1484,7 +1514,13 @@ namespace elastix
   {
     typename MovingImageType::PointType dummy;
     bool sampleOk = false;
-    if ( this->m_TransformIsBSpline )
+    if ( this->m_TransformIsAdvanced )
+    {
+      this->m_AdvancedTransform->GetJacobian( fixedImagePoint,
+        this->m_InternalTransformJacobian, this->m_NonZeroJacobianIndices  );
+      return this->m_InternalTransformJacobian;
+    }
+    else if ( this->m_TransformIsBSpline )
     {
       this->m_BSplineTransform->TransformPoint( 
         fixedImagePoint,
@@ -1502,10 +1538,15 @@ namespace elastix
         this->m_BSplineTransformIndices,
         sampleOk );
     }
+
+    /** Check sample */
     if ( !sampleOk )
     {
       this->m_InternalTransformJacobian.Fill(0.0);
-      this->m_NonZeroJacobianIndices.Fill(0);
+      for (unsigned int i = 0; i < this->m_NonZeroJacobianIndices.size(); ++i )
+      { 
+        this->m_NonZeroJacobianIndices[i]=0;
+      }
       return this->m_InternalTransformJacobian;
     }
 

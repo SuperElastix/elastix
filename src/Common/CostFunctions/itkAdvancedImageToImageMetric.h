@@ -24,11 +24,7 @@
 #include "itkBSplineCombinationTransform.h"
 #include "itkLimiterFunctionBase.h"
 #include "itkFixedArray.h"
-
 #include "itkAdvancedTransform.h"
-#include "itkAdvancedBSplineDeformableTransform.h"
-#include "itkAdvancedBSplineCombinationTransform.h"
-
 
 namespace itk
 {
@@ -206,8 +202,7 @@ public:
    * \li Initialize the image sampler, if used.
    * \li Check if a B-spline interpolator has been set
    * \li Check if a BSplineTransform or a BSplineCombinationTransform has been set
-   * \li Check if an AdvancedBSplineTransform or an
-   *       AdvancedBSplineCombinationTransform has been set
+   * \li Check if an AdvancedTransform has been set
    */
   virtual void Initialize( void ) throw ( ExceptionObject );
 
@@ -248,15 +243,7 @@ protected:
   typedef itk::BSplineCombinationTransform<
     CoordinateRepresentationType,
     itkGetStaticConstMacro(FixedImageDimension),
-    DeformationSplineOrder>                                     BSplineCombinationTransformType;
-  typedef AdvancedBSplineDeformableTransform<
-    CoordinateRepresentationType,
-    itkGetStaticConstMacro(FixedImageDimension),
-    DeformationSplineOrder>                                     AdvancedBSplineTransformType;
-  typedef itk::AdvancedBSplineCombinationTransform<
-    CoordinateRepresentationType,
-    itkGetStaticConstMacro(FixedImageDimension),
-    DeformationSplineOrder>                                     AdvancedBSplineCombinationTransformType;
+    DeformationSplineOrder>                                     BSplineCombinationTransformType;  
   typedef typename 
     BSplineTransformType::WeightsType                           BSplineTransformWeightsType;
   typedef typename 
@@ -266,8 +253,8 @@ protected:
   /** Array type for holding parameter indices */
   typedef Array<unsigned int>                                   ParameterIndexArrayType;
   //typedef ParameterIndexArrayType                               NonZeroJacobianIndicesType;
-  typedef typename AdvancedBSplineCombinationTransformType::NonZeroJacobianIndicesType
-    NonZeroJacobianIndicesType; // SK
+  typedef typename 
+    AdvancedTransformType::NonZeroJacobianIndicesType           NonZeroJacobianIndicesType;
     
   /** Protected Variables **************/
 
@@ -282,13 +269,11 @@ protected:
 
   /** Variables used when the transform is a B-spline transform. */
   bool m_TransformIsBSpline;
-  bool m_TransformIsBSplineCombination;
-  bool m_TransformIsAdvancedBSpline;
-  bool m_TransformIsAdvancedBSplineCombination;
+  bool m_TransformIsBSplineCombination;  
+  bool m_TransformIsAdvanced;
   typename BSplineTransformType::Pointer            m_BSplineTransform;
-  typename AdvancedBSplineTransformType::Pointer    m_AdvancedBSplineTransform;
   typename BSplineCombinationTransformType::Pointer m_BSplineCombinationTransform;
-  typename AdvancedBSplineCombinationTransformType::Pointer m_AdvancedBSplineCombinationTransform;
+  typename AdvancedTransformType::Pointer           m_AdvancedTransform;
   mutable BSplineTransformWeightsType               m_BSplineTransformWeights;
   mutable BSplineTransformIndexArrayType            m_BSplineTransformIndices;
   BSplineParametersOffsetType                       m_BSplineParametersOffset;
@@ -417,8 +402,7 @@ private:
   MovingImageDerivativeScalesType m_MovingImageDerivativeScales;
     
   /** This member should only be directly accessed by the
-   * EvaluateTransformJacobian method.
-   */
+   * EvaluateTransformJacobian method. */
   mutable TransformJacobianType m_InternalTransformJacobian;
   
 }; // end class AdvancedImageToImageMetric

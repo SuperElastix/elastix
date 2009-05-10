@@ -21,6 +21,7 @@
 #include "elxIncludes.h"
 #include "elxProgressCommand.h"
 #include "itkBSplineCombinationTransform.h"
+#include "itkAdvancedTransform.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "vnl/algo/vnl_symmetric_eigensystem.h"
 
@@ -286,6 +287,7 @@ namespace elastix
     /** Typedefs for support of sparse jacobians and BSplineTransforms. */
     typedef JacobianType                                          TransformJacobianType;
     itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
+    itkStaticConstMacro( MovingImageDimension, unsigned int, MovingImageType::ImageDimension );
     enum { DeformationSplineOrder = 3 };
     typedef typename TransformType::ScalarType                    CoordinateRepresentationType;  
     typedef BSplineDeformableTransform<
@@ -302,8 +304,14 @@ namespace elastix
       DeformationSplineOrder>                                     BSplineCombinationTransformType;
     typedef FixedArray< unsigned long, 
       itkGetStaticConstMacro(FixedImageDimension)>                BSplineParametersOffsetType;
-    /** Array type for holding parameter indices */
-    typedef Array<unsigned int>                                   ParameterIndexArrayType;
+    
+    typedef AdvancedTransform<
+      CoordinateRepresentationType,
+      itkGetStaticConstMacro(FixedImageDimension),
+      itkGetStaticConstMacro(MovingImageDimension) >              AdvancedTransformType;
+    typedef typename 
+      AdvancedTransformType::NonZeroJacobianIndicesType           NonZeroJacobianIndicesType;
+    
 
     AdaptiveStochasticGradientDescent();
     virtual ~AdaptiveStochasticGradientDescent() {};
@@ -322,7 +330,9 @@ namespace elastix
     /** Variables used when the transform is a bspline transform. */
     bool m_TransformIsBSpline;
     bool m_TransformIsBSplineCombination;
+    bool m_TransformIsAdvanced;
     typename BSplineTransformType::Pointer            m_BSplineTransform;
+    typename AdvancedTransformType::Pointer           m_AdvancedTransform;
     mutable BSplineTransformWeightsType               m_BSplineTransformWeights;
     mutable BSplineTransformIndexArrayType            m_BSplineTransformIndices;
     typename BSplineCombinationTransformType::Pointer m_BSplineCombinationTransform;
@@ -339,7 +349,8 @@ namespace elastix
     unsigned int m_NumberOfParameters;
 
     /** the parameter indices that have a nonzero jacobian. */
-    mutable ParameterIndexArrayType                   m_NonZeroJacobianIndices;
+    //mutable ParameterIndexArrayType                   m_NonZeroJacobianIndices;
+    mutable NonZeroJacobianIndicesType                  m_NonZeroJacobianIndices;
 
     /** RandomGenerator for AddRandomPerturbation */
     typename RandomGeneratorType::Pointer             m_RandomGenerator;

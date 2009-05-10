@@ -1101,13 +1101,15 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   supportRegion.SetIndex( supportIndex );
 
   /** Put at the right positions */  
-  for ( unsigned int mu = 0; mu < numberOfWeights; ++mu )
+  unsigned int counter = 0;
+  for ( unsigned int d = 0; d < SpaceDimension; ++d )
   {
-    for ( unsigned int i = 0; i < SpaceDimension; ++i )
+    for ( unsigned int mu = 0; mu < numberOfWeights; ++mu )
     {
-       jacobian( i, mu + i * numberOfWeights ) = weights[mu];
+      jacobian( d, counter ) = weights[mu];
+      ++counter;
     }
-  }
+  } 
 
   /** Compute the nonzero Jacobian indices. */
   this->ComputeNonZeroJacobianIndices( nonZeroJacobianIndices, supportRegion );

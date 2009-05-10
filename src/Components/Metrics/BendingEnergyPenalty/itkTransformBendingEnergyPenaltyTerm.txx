@@ -187,8 +187,14 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   this->SetTransformParameters( parameters );
 
   /** Check if this transform is a B-spline transform. */
-  bool transformIsBSpline = this->m_TransformIsAdvancedBSpline
-    || this->m_TransformIsAdvancedBSplineCombination;
+  //bool transformIsBSpline = this->m_TransformIsAdvancedBSpline
+  //  || this->m_TransformIsAdvancedBSplineCombination;
+  /** SK: changed this because I removed the advancedbspline options
+   * for the AdvancedImageToImageMetric
+   * It's quite an ugly hack though, since it only works in elastix  */ 
+  const std::string transformName = this->m_AdvancedTransform->GetNameOfClass();
+  const std::string bsplineTransformName = "AdvancedBSplineTransform";
+  bool transformIsBSpline = (transformName == bsplineTransformName);
   // \todo: Check if Combo transform is also ok for speedup trick.
 
   /** Update the imageSampler and get a handle to the sample container. */

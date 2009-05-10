@@ -17,7 +17,8 @@
 /* For easy changing the BSplineOrder: */
 #define __VSplineOrder 3
 
-#include "itkAdvancedBSplineCombinationTransform.h"
+#include "itkAdvancedCombinationTransform.h"
+#include "itkAdvancedBSplineDeformableTransform.h"
 
 #include "itkGridScheduleComputer.h"
 #include "itkUpsampleBSplineParametersFilter.h"
@@ -84,10 +85,9 @@ using namespace itk;
 template < class TElastix >
 class AdvancedBSplineTransform
   : public
-  AdvancedBSplineCombinationTransform<
+  AdvancedCombinationTransform<
   ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,
-  elx::TransformBase<TElastix>::FixedImageDimension,
-  __VSplineOrder > ,
+  elx::TransformBase<TElastix>::FixedImageDimension > ,
   public
   TransformBase<TElastix>
 {
@@ -95,26 +95,18 @@ public:
 
   /** Standard ITK-stuff. */
   typedef AdvancedBSplineTransform                Self;
-  typedef AdvancedBSplineCombinationTransform<
+  typedef AdvancedCombinationTransform<
     typename elx::TransformBase<TElastix>::CoordRepType,
-    elx::TransformBase<TElastix>::FixedImageDimension,
-    __VSplineOrder >                              Superclass1;
+    elx::TransformBase<TElastix>::FixedImageDimension > Superclass1;
   typedef elx::TransformBase<TElastix>            Superclass2;
   typedef SmartPointer<Self>                      Pointer;
   typedef SmartPointer<const Self>                ConstPointer;
-
-  /** The ITK-class that provides most of the functionality, and
-   * that is set as the "CurrentTransform" in the CombinationTransform.
-   */
-  typedef typename 
-    Superclass1::BSplineTransformType             BSplineTransformType;
-  typedef typename BSplineTransformType::Pointer  BSplineTransformPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( AdvancedBSplineTransform, AdvancedBSplineCombinationTransform );
+  itkTypeMacro( AdvancedBSplineTransform, AdvancedCombinationTransform );
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific transform. \n
@@ -127,6 +119,15 @@ public:
 
   /** The BSpline order. */
   itkStaticConstMacro( SplineOrder, unsigned int, __VSplineOrder );
+  
+  /** The ITK-class that provides most of the functionality, and
+   * that is set as the "CurrentTransform" in the CombinationTransform.
+   */
+  typedef itk::AdvancedBSplineDeformableTransform<
+    typename elx::TransformBase<TElastix>::CoordRepType,
+    itkGetStaticConstMacro( SpaceDimension ),
+    itkGetStaticConstMacro( SplineOrder ) >                 BSplineTransformType;
+  typedef typename BSplineTransformType::Pointer            BSplineTransformPointer;
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::ScalarType                ScalarType;

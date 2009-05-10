@@ -48,15 +48,13 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 
   this->m_BSplineTransform = 0;
   this->m_BSplineCombinationTransform = 0;
-  this->m_AdvancedBSplineTransform = 0;
-  this->m_AdvancedBSplineCombinationTransform = 0;
+  this->m_AdvancedTransform = 0;
   this->m_NumBSplineParametersPerDim = 0;
   this->m_NumBSplineWeights = 0;
   this->m_TransformIsBSpline = false;
   this->m_TransformIsBSplineCombination = false;
-  this->m_TransformIsAdvancedBSpline = false;
-  this->m_TransformIsAdvancedBSplineCombination = false;
-
+  this->m_TransformIsAdvanced = false;
+  
   this->m_UseMovingImageDerivativeScales = false;
 
   this->m_FixedImageLimiter = 0;
@@ -396,27 +394,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     this->m_NumBSplineWeights = this->m_BSplineTransform->GetNumberOfWeights();
     itkDebugMacro( "Transform is BSplineDeformable" );
   }
-
-  /** Check if the transform is of type AdvancedBSplineTransform. */
-  this->m_TransformIsAdvancedBSpline = false;
-  AdvancedBSplineTransformType * testPtr1b
-    = dynamic_cast<AdvancedBSplineTransformType *>( this->m_Transform.GetPointer() );
-  if ( !testPtr1b )
-  {
-    this->m_AdvancedBSplineTransform = 0;
-    itkDebugMacro( "Transform is not AdvancedBSplineDeformable" );
-  }
-  else
-  {
-    this->m_TransformIsAdvancedBSpline = true;
-    this->m_AdvancedBSplineTransform = testPtr1b;
-    this->m_NumBSplineParametersPerDim
-      = this->m_AdvancedBSplineTransform->GetNumberOfParametersPerDimension();
-    this->m_NumBSplineWeights
-      = this->m_AdvancedBSplineTransform->GetNumberOfWeights();
-    itkDebugMacro( "Transform is AdvancedBSplineDeformable" );
-  }
-
+  
   /** Check if the transform is of type BSplineCombinationTransform. */
   this->m_TransformIsBSplineCombination = false;
   BSplineCombinationTransformType * testPtr2a
@@ -449,44 +427,26 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     itkDebugMacro( "Transform is BSplineCombination" );
   }
 
-  /** Check if the transform is of type AdvancedBSplineCombinationTransform. */
-  this->m_TransformIsAdvancedBSplineCombination = false;
-  AdvancedBSplineCombinationTransformType * testPtr2b
-    = dynamic_cast<AdvancedBSplineCombinationTransformType *>(
+  /** Check if the transform is of type AdvancedTransform. */
+  this->m_TransformIsAdvanced = false;
+  AdvancedTransformType * testPtr2b
+    = dynamic_cast<AdvancedTransformType *>(
     this->m_Transform.GetPointer() );
   if ( !testPtr2b )
   {
-    this->m_AdvancedBSplineCombinationTransform = 0;
-    itkDebugMacro( "Transform is not AdvancedBSplineCombination" );
+    this->m_AdvancedTransform = 0;
+    itkDebugMacro( "Transform is not Advanced" );
   }
   else
   {
-    this->m_TransformIsAdvancedBSplineCombination = true;
-    this->m_AdvancedBSplineCombinationTransform = testPtr2b;
-
-    /** The current transform in the AdvancedBSplineCombinationTransform is
-     * always an AdvancedBSplineTransform.
-     */
-    AdvancedBSplineTransformType * advancedBSplineTransform
-      = dynamic_cast<AdvancedBSplineTransformType * >(
-      this->m_AdvancedBSplineCombinationTransform->GetCurrentTransform() );
-
-    if ( !advancedBSplineTransform )
-    {
-      itkExceptionMacro( << "The AdvancedBSplineCombinationTransform is not "
-        "properly configured. The CurrentTransform is not set." );
-    }
-    this->m_NumBSplineParametersPerDim
-      = advancedBSplineTransform->GetNumberOfParametersPerDimension();
-    this->m_NumBSplineWeights = advancedBSplineTransform->GetNumberOfWeights();
-    itkDebugMacro( "Transform is AdvancedBSplineCombination" );
+    this->m_TransformIsAdvanced = true;
+    this->m_AdvancedTransform = testPtr2b;
+    itkDebugMacro( "Transform is Advanced" );
   }
 
   /** Resize the weights and transform index arrays and compute the parameters offset. */
-  if ( this->m_TransformIsBSpline
-    || this->m_TransformIsAdvancedBSpline
-    || this->m_TransformIsBSplineCombination
-    || this->m_TransformIsAdvancedBSplineCombination )
+  if ( this->m_TransformIsBSpline    
+    || this->m_TransformIsBSplineCombination )
   {
     this->m_BSplineTransformWeights
       = BSplineTransformWeightsType( this->m_NumBSplineWeights );
@@ -496,22 +456,23 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     {
       this->m_BSplineParametersOffset[ j ] = j * this->m_NumBSplineParametersPerDim;
     }
-    // SK: \todo: change into something like this:
-    //if ( this->m_TransformIsAdvancedCombination )
-    // nrnonzerojac= this->m_AdvancedCombinationTransform->GetNumberOfNonZeroJacobianIndices();
-    
-    //sk:
-    //this->m_NonZeroJacobianIndices.SetSize(
-    //  FixedImageDimension * this->m_NumBSplineWeights );
+       
     this->m_NonZeroJacobianIndices.resize( FixedImageDimension * this->m_NumBSplineWeights );
     this->m_InternalTransformJacobian.SetSize(
       FixedImageDimension, FixedImageDimension * this->m_NumBSplineWeights );
     this->m_InternalTransformJacobian.Fill( 0.0 );
   }
-  else
+  else if ( this->m_TransformIsAdvanced )
   {
-    //sk:
-    //this->m_NonZeroJacobianIndices.SetSize( this->GetNumberOfParameters() );
+    /** A more generic way of sparse jacobians */
+    this->m_NonZeroJacobianIndices.resize( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+    this->m_InternalTransformJacobian.SetSize(
+       FixedImageDimension, this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+    this->m_InternalTransformJacobian.Fill( 0.0 );
+  }    
+  else
+  {  
+    /** no sparse jacobian support */
     this->m_NonZeroJacobianIndices.resize( this->GetNumberOfParameters() );
     for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
@@ -596,10 +557,8 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   MovingImagePointType & mappedPoint ) const
 {
   bool sampleOk = true;
-  if ( !this->m_TransformIsBSpline
-    && !this->m_TransformIsAdvancedBSpline
-    && !this->m_TransformIsBSplineCombination
-    ) //SK && !this->m_TransformIsAdvancedBSplineCombination ) 
+  if ( !this->m_TransformIsBSpline    
+    && !this->m_TransformIsBSplineCombination )     
   {
     mappedPoint = this->m_Transform->TransformPoint( fixedImagePoint );
     sampleOk = true;
@@ -614,16 +573,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
         this->m_BSplineTransformWeights,
         this->m_BSplineTransformIndices,
         sampleOk );
-    }
-    else if ( this->m_TransformIsAdvancedBSpline )
-    {
-      this->m_AdvancedBSplineTransform->TransformPoint(
-        fixedImagePoint,
-        mappedPoint,
-        this->m_BSplineTransformWeights,
-        this->m_BSplineTransformIndices,
-        sampleOk );
-    }
+    }    
     else if ( this->m_TransformIsBSplineCombination )
     {
       this->m_BSplineCombinationTransform->TransformPoint(
@@ -632,16 +582,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
         this->m_BSplineTransformWeights,
         this->m_BSplineTransformIndices,
         sampleOk );
-    }
-    else if ( this->m_TransformIsAdvancedBSplineCombination )
-    {
-      this->m_AdvancedBSplineCombinationTransform->TransformPoint(
-        fixedImagePoint,
-        mappedPoint,
-        this->m_BSplineTransformWeights,
-        this->m_BSplineTransformIndices,
-        sampleOk );
-    }
+    }   
   }
 
   return sampleOk;
@@ -659,24 +600,17 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 ::EvaluateTransformJacobian( 
   const FixedImagePointType & fixedImagePoint) const
 {
-  if ( !this->m_TransformIsBSpline
-    && !this->m_TransformIsAdvancedBSpline
-    && !this->m_TransformIsBSplineCombination
-    && !this->m_TransformIsAdvancedBSplineCombination )
+  if ( this->m_TransformIsAdvanced )
   {
-    /** Generic version which works for all transforms. */
-    return this->m_Transform->GetJacobian( fixedImagePoint );
-  } // end if no B-spline transform
-  else if ( this->m_TransformIsAdvancedBSplineCombination )
-  {
-    //SK: test:    
-    this->m_AdvancedBSplineCombinationTransform->GetJacobian(
+    /** Advanced transform: generic sparse jacobian support */
+    this->m_AdvancedTransform->GetJacobian(
       fixedImagePoint,
       this->m_InternalTransformJacobian,
       this->m_NonZeroJacobianIndices );
     return this->m_InternalTransformJacobian;
   }
-  else
+  else if ( this->m_TransformIsBSpline
+         || this->m_TransformIsBSplineCombination )
   {
     /** If the transform is of type BSplineDeformableTransform or of type
      * BSplineCombinationTransform, we can obtain a speed up by only 
@@ -710,8 +644,12 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     } //end dim for loop
 
     return this->m_InternalTransformJacobian;
-
-  } // end if-block transform is BSpline
+  } 
+  else
+  {
+    /** Generic version which works for all transforms. */
+    return this->m_Transform->GetJacobian( fixedImagePoint );
+  } 
 
 } // end EvaluateTransformJacobian()
 
@@ -819,6 +757,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   os << indent << "Variables used when the transform is a B-spline transform: " << std::endl;
   os << indent.GetNextIndent() << "InternalTransformJacobian: "
     << this->m_InternalTransformJacobian << std::endl;
+  // \todo loop over all elements and print
   // os << indent.GetNextIndent() << "NonZeroJacobianIndices: "
   //  << this->m_NonZeroJacobianIndices << std::endl;
   os << indent.GetNextIndent() << "TransformIsBSpline: "
@@ -829,14 +768,10 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     << this->m_BSplineTransform.GetPointer() << std::endl;
   os << indent.GetNextIndent() << "BSplineCombinationTransform: "
     << this->m_BSplineCombinationTransform.GetPointer() << std::endl;
-  os << indent.GetNextIndent() << "TransformIsAdvancedBSpline: "
-    << this->m_TransformIsAdvancedBSpline << std::endl;
-  os << indent.GetNextIndent() << "TransformIsAdvancedBSplineCombination: "
-    << this->m_TransformIsAdvancedBSplineCombination << std::endl;
-  os << indent.GetNextIndent() << "AdvancedBSplineTransform: "
-    << this->m_AdvancedBSplineTransform.GetPointer() << std::endl;
-  os << indent.GetNextIndent() << "AdvancedBSplineCombinationTransform: "
-    << this->m_AdvancedBSplineCombinationTransform.GetPointer() << std::endl;
+  os << indent.GetNextIndent() << "TransformIsAdvanced: "
+    << this->m_TransformIsAdvanced << std::endl;  
+  os << indent.GetNextIndent() << "AdvancedTransform: "
+    << this->m_AdvancedTransform.GetPointer() << std::endl; 
   os << indent.GetNextIndent() << "BSplineTransformWeights: "
     << this->m_BSplineTransformWeights << std::endl;
   os << indent.GetNextIndent() << "BSplineTransformIndices: "
