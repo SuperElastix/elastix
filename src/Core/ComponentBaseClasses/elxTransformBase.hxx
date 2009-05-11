@@ -335,30 +335,35 @@ void TransformBase<TElastix>
   /** Task 1 - Read the parameters from file. */
 
   /** Get the number of TransformParameters. */
-  unsigned int NumberOfParameters = 0;
-  this->m_Configuration->ReadParameter( NumberOfParameters, "NumberOfParameters", 0 );
+  unsigned int numberOfParameters = 0;
+  this->m_Configuration->ReadParameter( numberOfParameters, "NumberOfParameters", 0 );
 
   if ( this->m_ReadWriteTransformParameters )
   {
     /** Get the TransformParameters. */
     if ( this->m_TransformParametersPointer ) delete this->m_TransformParametersPointer;
-    this->m_TransformParametersPointer = new ParametersType( NumberOfParameters );
+    this->m_TransformParametersPointer = new ParametersType( numberOfParameters );
 
-    /** If NumberOfParameters < 20, we read in the normal way. */
-    if ( NumberOfParameters < 20 )
-    {     
-      for ( unsigned int i = 0; i < NumberOfParameters; i++ )
+    /** Write the TransformParameters. */
+    if ( numberOfParameters < 20 )
+    {
+      /** If numberOfParameters < 20, we read in the normal way. An extra 
+       * copy is needed.
+       */
+      std::vector<ValueType> vecPar( numberOfParameters,
+        itk::NumericTraits<ValueType>::Zero );
+      this->m_Configuration->ReadParameter( vecPar, "TransformParameters",
+        0, numberOfParameters - 1, true );
+      for ( unsigned int i = 0; i < numberOfParameters; i++ )
       {
-        this->m_Configuration->ReadParameter(
-          (*(this->m_TransformParametersPointer))[ i ], "TransformParameters", i );
+        (*(this->m_TransformParametersPointer))[ i ] = vecPar[ i ];
       }
     }
-    /** Else, do the reading more 'manually'.
-     * This is necessary, because the ReadParameter can not handle
-     * many parameters.
-     */
     else
     {
+      /** Otherwise, do the reading more 'manually'. This is necessary,
+       * because the ReadParameter can not handle many parameters.
+       */
       std::string tpFilename
         = this->GetConfiguration()->GetCommandLineArgument( "-tp" );
       std::ifstream input( tpFilename.c_str() );
@@ -390,7 +395,7 @@ void TransformBase<TElastix>
         } // end while
         if ( found )
         {
-          for ( unsigned int i = 0; i < NumberOfParameters; i++ )
+          for ( unsigned int i = 0; i < numberOfParameters; i++ )
           {
             input >> (*(this->m_TransformParametersPointer))[ i ];
           }
@@ -414,6 +419,7 @@ void TransformBase<TElastix>
 
     /** Set the parameters into this transform. */
     this->GetAsITKBaseType()->SetParameters( *(this->m_TransformParametersPointer) );
+
   } // end if this->m_ReadWriteTransformParameters
 
   /** Task 2 - Get the InitialTransform. */
