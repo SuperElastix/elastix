@@ -1313,12 +1313,14 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   supportRegion.SetSize( this->m_SupportSize );
   supportRegion.SetIndex( supportIndex );
 
+  /** On the stack instead of heap is faster. */
+  //double * weightVector = new double[ SpaceDimension * numberOfWeights ];
+  double weightVector[ SpaceDimension * numberOfWeights ];
+
   /** For all derivative directions, compute the derivatives of the
    * spatial Jacobian to the transformation parameters mu:
    * d/dmu of dT / dx_i
    */
-  double * weightVector = new double[ SpaceDimension * numberOfWeights ];
-  //double * weightVector = new double[ numberOfNonZeroJacobianIndices ];
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     /** Set the derivative direction. */
@@ -1348,8 +1350,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       }
     }
   }
-
-  delete weightVector;
 
   /** Compute the nonzero Jacobian indices. */
   this->ComputeNonZeroJacobianIndices( nonZeroJacobianIndices, supportRegion );
@@ -1398,11 +1398,14 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   supportRegion.SetSize( this->m_SupportSize );
   supportRegion.SetIndex( supportIndex );
 
+  /** On the stack instead of heap is faster. */
+  //double * weightVector = new double[ SpaceDimension * numberOfWeights ];
+  double weightVector[ SpaceDimension * numberOfWeights ];
+
   /** For all derivative directions, compute the derivatives of the
    * spatial Jacobian to the transformation parameters mu:
    * d/dmu of dT / dx_i
    */
-  double * weightVector = new double[ SpaceDimension * numberOfWeights ];
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     /** Set the derivative direction. */
@@ -1457,8 +1460,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       }
     }
   }
-
-  delete weightVector;
 
   /** Compute the nonzero Jacobian indices. */
   this->ComputeNonZeroJacobianIndices( nonZeroJacobianIndices, supportRegion );
@@ -1597,14 +1598,17 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   supportRegion.SetSize( this->m_SupportSize );
   supportRegion.SetIndex( supportIndex );
 
+  /** On the stack instead of heap is faster. */
+  const unsigned int d = SpaceDimension * ( SpaceDimension + 1 ) / 2;
+  //double * weightVector = new double[ SpaceDimension * numberOfWeights ];
+  double weightVector[ d * numberOfWeights ];
+
   /** For all derivative directions, compute the derivatives of the
    * spatial Hessian to the transformation parameters mu:
    * d/dmu of d^2T / dx_i dx_j
    * Make use of the fact that the Hessian is symmetrical, so do not compute
    * both i,j and j,i for i != j.
    */
-  const unsigned int d = SpaceDimension * ( SpaceDimension + 1 ) / 2;
-  double * weightVector = new double[ d * numberOfWeights ];
   unsigned int count = 0;
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
@@ -1674,8 +1678,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       (*(basepointer + mu + dim * numberOfWeights))[ dim ] = matrix;
     }
   }
-
-  delete weightVector;
 
   /** Compute the nonzero Jacobian indices. */
   this->ComputeNonZeroJacobianIndices( nonZeroJacobianIndices, supportRegion );
