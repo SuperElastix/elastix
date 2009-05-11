@@ -202,6 +202,26 @@ public:
 
     return found;
   }
+
+  /** Read a range of parameters from the parameter file. */
+  template <class T>
+  bool ReadParameter( std::vector<T> & parameterValues,
+    const std::string & parameterName,
+    const unsigned int entry_nr_start,
+    const unsigned int entry_nr_end,
+    const bool printThisErrorMessage ) const
+  {
+    std::string errorMessage = "";
+    bool found = this->m_ParameterMapInterface->ReadParameter(
+      parameterValues, parameterName, entry_nr_start, entry_nr_end,
+      printThisErrorMessage, errorMessage );
+    if ( errorMessage != "" )
+    {
+      xl::xout["error"] << errorMessage;
+    }
+
+    return found;
+  }
    
   protected:
 
