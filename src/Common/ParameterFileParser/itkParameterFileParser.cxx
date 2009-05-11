@@ -1,3 +1,17 @@
+/*======================================================================
+
+This file is part of the elastix software.
+
+Copyright (c) University Medical Center Utrecht. All rights reserved.
+See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+details.
+
+This software is distributed WITHOUT ANY WARRANTY; without even 
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+
 #ifndef __itkParameterFileParser_cxx
 #define __itkParameterFileParser_cxx
 
@@ -42,7 +56,7 @@ ParameterFileParser
  * **************** GetParameterMap ***************
  */
   
-ParameterFileParser::ParameterMapType
+const ParameterFileParser::ParameterMapType &
 ParameterFileParser
 ::GetParameterMap( void ) const
 {
@@ -87,7 +101,7 @@ ParameterFileParser
   while ( this->m_ParameterFile.good() )
   {
     /** Extract a line. */
-    itksys::SystemTools::GetLineFromStream( this->m_ParameterFile, lineIn ); // \todo: returns bool
+    itksys::SystemTools::GetLineFromStream( this->m_ParameterFile, lineIn );
 
     /** Check this line. */
     bool validLine = this->CheckLine( lineIn, lineOut );

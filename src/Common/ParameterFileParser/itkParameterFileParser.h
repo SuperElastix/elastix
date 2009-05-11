@@ -1,3 +1,17 @@
+/*======================================================================
+
+This file is part of the elastix software.
+
+Copyright (c) University Medical Center Utrecht. All rights reserved.
+See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+details.
+
+This software is distributed WITHOUT ANY WARRANTY; without even 
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+
 #ifndef __itkParameterFileParser_h
 #define __itkParameterFileParser_h
 
@@ -87,7 +101,7 @@ public:
   itkGetStringMacro( ParameterFileName );
 
   /** Return the parameter map. */
-  virtual ParameterMapType GetParameterMap( void ) const;
+  virtual const ParameterMapType & GetParameterMap( void ) const;
 
   /** Read the parameters in the parameter map. */
   void ReadParameterFile( void );
