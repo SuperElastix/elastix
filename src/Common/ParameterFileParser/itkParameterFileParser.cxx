@@ -207,7 +207,6 @@ ParameterFileParser
   }
 
   /** 2. Check for comments. */
-  //itksys::RegularExpression reComment( "[ ]*//" );
   itksys::RegularExpression reComment( "^//" );
   bool match2 = reComment.find( lineOut );
   if ( match2 )
@@ -294,8 +293,7 @@ ParameterFileParser
   }
 
   /** 5) Perform checks on the parameter values. */
-  itksys::RegularExpression reContainsChar( "[a-zA-Z]" );
-  itksys::RegularExpression reInvalidCharacters2( "[,:;!@#$%^&-+|<>?]" );
+  itksys::RegularExpression reInvalidCharacters2( "[,;!@#$%^&|<>?]" );
   for ( unsigned int i = 0; i < parameterValues.size(); ++i )
   {
     /** For all entries some characters are not allowed. */
@@ -303,25 +301,8 @@ ParameterFileParser
     {
       std::string hint = "The parameter value \""
         + parameterValues[ i ]
-      + "\" contains invalid characters (,:;!@#$%^&-+|<>?).";
+      + "\" contains invalid characters (,;!@#$%^&|<>?).";
       this->ThrowException( fullLine, hint );
-    }
-
-    /** Find out what kind of entry this is. */
-    bool containsChars = reContainsChar.find( parameterValues[ i ] );
-
-    /** For strings also some other characters are not allowed. */
-    itksys::RegularExpression reInvalidString( "[.]" );
-    if ( containsChars )
-    {
-      /** For strings also some other characters are not allowed. */
-      if ( reInvalidString.find( parameterValues[ i ] ) )
-      {
-        std::string hint = "The parameter value \""
-          + parameterValues[ i ]
-        + "\" contains invalid characters (.).";
-        this->ThrowException( fullLine, hint );
-      }
     }
   }
   
