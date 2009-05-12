@@ -356,7 +356,7 @@ public:
           << " for the parameter \"" << parameterName
           << "\" failed!\n"
           << "  You tried to cast \"" << vec[ i ]
-        << "\" from std::string to "
+          << "\" from std::string to "
           << typeid( parameterValues[ 0 ] ).name() << std::endl;
 
         itkExceptionMacro( << ss.str() );

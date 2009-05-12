@@ -340,15 +340,16 @@ void TransformBase<TElastix>
 
   if ( this->m_ReadWriteTransformParameters )
   {
-    /** Get the TransformParameters. */
+    /** Get the TransformParameters pointer. */
     if ( this->m_TransformParametersPointer ) delete this->m_TransformParametersPointer;
     this->m_TransformParametersPointer = new ParametersType( numberOfParameters );
 
-    /** Write the TransformParameters. */
-    if ( numberOfParameters < 20 )
+    /** Read the TransformParameters. */
+    if ( this->m_Configuration->CountNumberOfParameterEntries( "TransformParameters" ) > 0 )
     {
-      /** If numberOfParameters < 20, we read in the normal way. An extra 
-       * copy is needed.
+      /** This is the way parameters should be specified since elastix 4.2:
+       * (TransformParameters num num ... num)
+       * Just like any other parameter.
        */
       std::vector<ValueType> vecPar( numberOfParameters,
         itk::NumericTraits<ValueType>::Zero );
@@ -361,61 +362,101 @@ void TransformBase<TElastix>
     }
     else
     {
-      /** Otherwise, do the reading more 'manually'. This is necessary,
-       * because the ReadParameter can not handle many parameters.
+      /** We still support the old way of specifying parameters, which was:
+       * For less than 20 parameters:
+       * (TransformParameters num num ... num)
+       * Otherwise:
+       * // (TransformParameters)
+       * // num num ... num
        */
-      std::string tpFilename
-        = this->GetConfiguration()->GetCommandLineArgument( "-tp" );
-      std::ifstream input( tpFilename.c_str() );
-      if ( input.is_open() )
+      std::string errorString1 = "ERROR: Invalid transform parameter file! ";
+      errorString1 += "The parameters could not be found.";
+      std::string errorString2 = "Error during reading the transform ";
+      errorString2 += "parameter file!";
+      std::string hint = "The transform parameters should be specified as:\n";
+      hint += "(TransformParameters num num ... num)";
+      if ( numberOfParameters < 20 )
       {
-        /** Search for the following pattern:
-        *
-        * // (TransformParameters)
-        * // 1.0 435.0 etc... 
-        *
-        */
-        bool found = false;
-        std::string teststring;
-        while ( !found && !input.eof() )
+        xl::xout["error"] << errorString1 << "\n" << hint << std::endl;
+        itkGenericExceptionMacro( << errorString2.c_str() );
+      }
+      else
+      {
+        /** Otherwise, do the reading more 'manually'. This used to be necessary,
+         * because the old parser could not handle many parameters.
+         */
+
+        /** Open the transform parameter file for reading. */
+        std::string tpFilename
+          = this->GetConfiguration()->GetCommandLineArgument( "-tp" );
+        std::ifstream input( tpFilename.c_str(), std::fstream::in );
+        if ( !input.is_open() )
         {
-          input >> teststring;
-          if ( teststring == "//" )
+          xl::xout["error"]
+            << "The transform parameter file could not opened!" << std::endl;
+          itkGenericExceptionMacro( << errorString2.c_str() );
+        }
+
+        /** Find the line "// (TransformParameters)". */
+        bool found = false;
+        std::string teststring = "";
+        while ( !found && input.good() )
+        {
+          /** Extract a line. */
+          itksys::SystemTools::GetLineFromStream( input, teststring );
+
+          if ( teststring == "// (TransformParameters)" )
           {
-            input >> teststring;
-            if ( teststring == "(TransformParameters)" )
-            { 
-              input >> teststring;
-              if ( teststring == "//" )
-              {
-                found = true;
-              }
+            found = true;
+
+            /** We have found the line "// (TransformParameters)",
+             * the next one should be "// num num num ..."
+             */
+            itksys::SystemTools::GetLineFromStream( input, teststring );
+
+            /** Put it in a string stream and read the first word. */
+            std::stringstream ss( teststring );
+            ss >> teststring;
+            if ( teststring != "//" )
+            {
+              xl::xout["error"] << errorString1 << "\n" << hint << std::endl;
+              itkGenericExceptionMacro( << errorString2.c_str() );
+            }
+
+            /** All the other words are parameter values. */
+            unsigned int i = 0;
+            while ( ss.good() && i < numberOfParameters )
+            {
+              ss >> (*(this->m_TransformParametersPointer))[ i ];
+              i++;
+            }
+
+            /** Check for failbit, indicative of a failed read or cast. */
+            if ( ss.bad() || ss.fail() )
+            {
+              itkGenericExceptionMacro( << errorString2.c_str() );
             }
           }
-        } // end while
-        if ( found )
+        }
+        input.close();
+
+        /** Check if old way was found. */
+        if ( !found )
         {
-          for ( unsigned int i = 0; i < numberOfParameters; i++ )
-          {
-            input >> (*(this->m_TransformParametersPointer))[ i ];
-          }
+          xl::xout["error"] << errorString1 << "\n" << hint << std::endl;
+          itkGenericExceptionMacro( << errorString2.c_str() );
         }
         else
         {
-          xl::xout["error"]
-            << "Invalid transform parameter file! The parameters could not be found."
+          /** Issue a deprecation warning. */
+          xl::xout["warning"] << "\nWARNING: This way of supplying parameters"
+            << " is deprecated since elastix 4.2.\n"
+            << "Use\n\t\t(TransformParameters num num ... num)\ninstead.\n"
             << std::endl;
-          itkGenericExceptionMacro( << "Error during reading the transform parameter file!" );
+          // Currently, just continue, it's only a warning.
         }
-        input.close();
-      } // end if input-file is open
-      else
-      {
-        xl::xout["error"]
-          << "The transform parameter file could not opened!" << std::endl;
-        itkGenericExceptionMacro( << "Error during reading the transform parameter file!" );
-      }
-    } // end else
+      } // end else > 20
+    } // end new way / old way
 
     /** Set the parameters into this transform. */
     this->GetAsITKBaseType()->SetParameters( *(this->m_TransformParametersPointer) );
@@ -602,30 +643,14 @@ void TransformBase<TElastix>
   /** Write the parameters of this transform. */
   if ( this->m_ReadWriteTransformParameters )
   {
-    if ( nrP < 20 )
+    /** In this case, write in a normal way to the parameter file. */
+    xout["transpar"] << "(TransformParameters ";
+    for ( unsigned int i = 0; i < nrP - 1; i++ )
     {
-      /** In this case, write in a normal way to the parameter file. */
-      xout["transpar"] << "(TransformParameters ";
-      for ( unsigned int i = 0; i < nrP - 1; i++ )
-      {
-        xout["transpar"] << param[ i ] << " ";
-      }
-      xout["transpar"] << param[ nrP - 1 ] << ")" << std::endl;
+      xout["transpar"] << param[ i ] << " ";
     }
-    else
-    {
-      /** Otherwise, write to parameter file with "// " in front of it.
-       * This is necessary, because the ReadParameter can not handle
-       * many parameters.
-       */
-      xout["transpar"] << "// (TransformParameters)" << std::endl << "// ";
-      for ( unsigned int i = 0; i < nrP - 1; i++ )
-      {
-        xout["transpar"] << param[ i ] << " ";
-      }
-      xout["transpar"] << param[ nrP -1 ] << std::endl;
-    }
-  } // end if this->m_WriteTransformParameters
+    xout["transpar"] << param[ nrP - 1 ] << ")" << std::endl;
+  }
 
   /** Write the name of the parameters-file of the initial transform. */
   if ( this->GetInitialTransform() )
