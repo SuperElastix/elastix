@@ -50,7 +50,7 @@ using namespace itk;
    *    Default value: 100.\n
    * \parameter MaximumNumberOfLineSearchIterations: The maximum number of line search iterations in each resolution. \n
    *    example: <tt>(MaximumNumberOfLineSearchIterations 10 10 5)</tt> \n
-   *    Default value: 10.\n
+   *    Default value: 20.\n
    * \parameter StepLength: Set the length of the initial step tried by the
    *    itk::MoreThuenteLineSearchOptimizer.\n
    *    example: <tt>(StepLength 2.0 1.0 0.5)</tt> \n
