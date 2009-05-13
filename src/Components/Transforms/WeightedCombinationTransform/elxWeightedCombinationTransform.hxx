@@ -273,7 +273,7 @@ namespace elastix
         subTransformName, "Transform", 0 );
 
       /** Create a SubTransform. */
-      ObjectType::Pointer subTransform;
+      typename ObjectType::Pointer subTransform;
       PtrToCreator testcreator = 0;
       testcreator = this->GetElastix()->GetComponentDatabase()
         ->GetCreator( subTransformName, this->m_Elastix->GetDBIndex() );
