@@ -219,10 +219,10 @@ namespace elastix
     ::LoadSubTransforms( void )
   {  
     /** Typedef's from ComponentDatabase. */
-    typedef Superclass2::ComponentDatabaseType                ComponentDatabaseType;
-    typedef Superclass2::ComponentDescriptionType             ComponentDescriptionType;
-    typedef Superclass2::PtrToCreator                         PtrToCreator;
-    typedef Superclass2::ObjectType                           ObjectType;
+    typedef typename Superclass2::ComponentDatabaseType                ComponentDatabaseType;
+    typedef typename Superclass2::ComponentDescriptionType             ComponentDescriptionType;
+    typedef typename Superclass2::PtrToCreator                         PtrToCreator;
+    typedef typename Superclass2::ObjectType                           ObjectType;
 
     const unsigned int N = 
       this->m_Configuration->CountNumberOfParameterEntries( "SubTransforms" );
