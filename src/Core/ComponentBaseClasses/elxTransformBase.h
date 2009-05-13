@@ -233,8 +233,7 @@ protected:
   void AutomaticScalesEstimation( ScalesType & scales ) const;
 
   /** Member variables. */
-  ParametersType *      m_TransformParametersPointer;
-  ConfigurationPointer  m_ConfigurationInitialTransform;
+  ParametersType *      m_TransformParametersPointer;  
   std::string           m_TransformParametersFileName;
   ParametersType        m_FinalParameters;
 

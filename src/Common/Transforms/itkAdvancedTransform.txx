@@ -60,6 +60,8 @@ AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
 ::AdvancedTransform( unsigned int dimension, unsigned int numberOfParameters ) :
   Superclass( dimension, numberOfParameters )
 {
+  this->m_HasNonZeroSpatialHessian = true;
+  this->m_HasNonZeroJacobianOfSpatialHessian = true;
 } // end Constructor
 
 

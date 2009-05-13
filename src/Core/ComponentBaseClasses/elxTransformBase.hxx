@@ -42,8 +42,7 @@ TransformBase<TElastix>
 ::TransformBase()
 {
   /** Initialize. */
-  this->m_TransformParametersPointer = 0;
-  this->m_ConfigurationInitialTransform = 0;
+  this->m_TransformParametersPointer = 0;  
   this->m_ReadWriteTransformParameters = true;
 
 } // end Constructor()
@@ -175,8 +174,8 @@ TransformBase<TElastix>
 
   /** Set the initial transform. Elastix returns an itkObject, so 
    * try to cast it to an InitialTransformType, which is of type itk::Transform.
-   * No need to cast to InitialAdvancedTransformType, since itk::AdvancedTransform
-   * is a Superclass of itk::Transform.
+   * No need to cast to InitialAdvancedTransformType, since InitialAdvancedTransformType
+   * inherits from InitialTransformType.
    */
   if ( this->m_Elastix->GetInitialTransform() )
   {
@@ -548,19 +547,15 @@ void TransformBase<TElastix>
 ::ReadInitialTransformFromFile( const char * transformParametersFileName )
 {
   /** Create a new configuration, which will be initialized with
-   * the transformParameterFileName.
-   */
-  if ( !(this->m_ConfigurationInitialTransform) )
-  {
-    this->m_ConfigurationInitialTransform = ConfigurationType::New();
-  }
+   * the transformParameterFileName. */  
+  ConfigurationPointer configurationInitialTransform = ConfigurationType::New();
 
   /** Create argmapInitialTransform. */
   CommandLineArgumentMapType argmapInitialTransform;
   argmapInitialTransform.insert( CommandLineEntryType(
     "-tp", transformParametersFileName ) );
 
-  int initfailure = this->m_ConfigurationInitialTransform->Initialize(
+  int initfailure = configurationInitialTransform->Initialize(
     argmapInitialTransform );
 	if ( initfailure != 0 )
   {
@@ -569,16 +564,16 @@ void TransformBase<TElastix>
 	}
 
   /** Read the InitialTransform name. */
-  ComponentDescriptionType InitialTransformName = "AffineTransform";
-  this->m_ConfigurationInitialTransform->ReadParameter(
-    InitialTransformName, "Transform", 0 );
+  ComponentDescriptionType initialTransformName = "AffineTransform";
+  configurationInitialTransform->ReadParameter(
+    initialTransformName, "Transform", 0 );
 
   /** Create an InitialTransform. */
   ObjectType::Pointer initialTransform;
 
   PtrToCreator testcreator = 0;
   testcreator = this->GetElastix()->GetComponentDatabase()
-    ->GetCreator( InitialTransformName, this->m_Elastix->GetDBIndex() );
+    ->GetCreator( initialTransformName, this->m_Elastix->GetDBIndex() );
   initialTransform = testcreator ? testcreator() : NULL;
 
   Self * elx_initialTransform = dynamic_cast< Self * >(
@@ -589,7 +584,7 @@ void TransformBase<TElastix>
   {
     //elx_initialTransform->SetTransformParametersFileName(transformParametersFileName);
     elx_initialTransform->SetElastix( this->GetElastix() );
-    elx_initialTransform->SetConfiguration( this->m_ConfigurationInitialTransform );      
+    elx_initialTransform->SetConfiguration( configurationInitialTransform );      
     elx_initialTransform->ReadFromFile();
 
     /** Set initial transform. */
