@@ -335,10 +335,11 @@ public:
     /** Get the vector of parameters. */
     const ParameterValuesType & vec = this->m_ParameterMap.find( parameterName )->second;
 
-    /** The default is filled with zero's. *
+    /** The default is filled with zero's. 
     parameterValues.clear();
     parameterValues.resize( entry_nr_end - entry_nr_start + 1,
       itk::NumericTraits<T>::Zero );
+    */
 
     /** Get all parameters at once. */
     unsigned int j = 0;
