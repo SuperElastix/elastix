@@ -155,6 +155,9 @@ namespace elastix
       WeightedCombinationTransformType::TransformType               SubTransformType;
     typedef typename
       WeightedCombinationTransformType::TransformPointer            SubTransformPointer;
+
+    /** For scales setting in the optimizer */
+    typedef typename Superclass2::ScalesType                ScalesType;
     
     /** Execute stuff before the actual registration:
      * \li Read some parameters
