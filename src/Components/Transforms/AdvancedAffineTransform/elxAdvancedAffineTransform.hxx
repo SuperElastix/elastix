@@ -340,12 +340,11 @@ AdvancedAffineTransformElastix<TElastix>
      * that your registration may require translations as
      * large as 1/10 of the diagonal of the bounding box.
      */
-    double dummy = 100000.0;
-
+    
     /** The first SpaceDimension * SpaceDimension number of parameters
      * represent rotations (4 in 2D and 9 in 3D).
      */
-    unsigned int RotationPart = SpaceDimension * SpaceDimension;
+    const unsigned int rotationPart = SpaceDimension * SpaceDimension;
 
     /** this->m_Configuration->ReadParameter() returns 0 if there is a value given
      * in the parameter-file, and returns 1 if there is no value given in the
@@ -366,7 +365,7 @@ AdvancedAffineTransformElastix<TElastix>
     if ( count == 0 )
     {
       /** In this case the first option is used. */
-      for ( unsigned int i = 0; i < RotationPart; i++ )
+      for ( unsigned int i = 0; i < rotationPart; i++ )
       {
         newscales[ i ] = 100000.0;
       }
@@ -376,7 +375,7 @@ AdvancedAffineTransformElastix<TElastix>
       /** In this case the second option is used. */
       double scale = 100000.0;
       this->m_Configuration->ReadParameter( scale, "Scales", 0 );
-      for ( unsigned int i = 0; i < RotationPart; i++ )
+      for ( unsigned int i = 0; i < rotationPart; i++ )
       {
         newscales[ i ] = scale;
       }

@@ -27,6 +27,23 @@ PURPOSE. See the above copyright notices for more information.
 namespace itk
 {
 
+  /** Recursive template to retrieve the number of Bspline weights at compile time. */
+  template <unsigned int SplineOrder, unsigned int Dimension>
+  class GetConstNumberOfWeightsHack
+  {
+  public:
+    typedef GetConstNumberOfWeightsHack<SplineOrder, Dimension-1> OneDimensionLess;
+    itkStaticConstMacro( Value, unsigned long, (SplineOrder+1) * OneDimensionLess::Value );
+  };
+
+  /** Partial template specialization to terminate the recursive loop. */
+  template <unsigned int SplineOrder>
+  class GetConstNumberOfWeightsHack<SplineOrder, 0>
+  {
+  public:
+    itkStaticConstMacro( Value, unsigned long, 1 );
+  };
+
 /** \class BSplineInterpolationWeightFunctionBase
  * \brief Returns the weights over the support region used for B-spline
  * interpolation/reconstruction.
@@ -67,27 +84,11 @@ public:
   /** Spline order. */
   itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
 
-  /** Recursive template to retrieve the number of weights at compile time. */
-  template <unsigned int Dimension>
-  class GetConstNumberOfWeights
-  {
-  public:
-    itkStaticConstMacro( Value, unsigned long, (SplineOrder+1) * GetConstNumberOfWeights<Dimension-1>::Value );
-  };
-
-  /** Template specialization to terminate the recursive loop. */
-  template <>
-  class GetConstNumberOfWeights<0>
-  {
-  public:
-    itkStaticConstMacro( Value, unsigned long, 1 );
-  };
-
-  /** Auxiliary typedef */
-  typedef GetConstNumberOfWeights< itkGetStaticConstMacro(SpaceDimension) > ConstNumberOfWeightsDim;  
-
   /** The number of weights as a static const. */
-  itkStaticConstMacro( NumberOfWeights, unsigned long, ConstNumberOfWeightsDim::Value );
+  typedef GetConstNumberOfWeightsHack<
+      itkGetStaticConstMacro(SplineOrder),
+      itkGetStaticConstMacro(SpaceDimension) > GetConstNumberOfWeightsHackType;
+  itkStaticConstMacro( NumberOfWeights, unsigned long, GetConstNumberOfWeightsHackType::Value );
 
   /** OutputType typedef support. */
   typedef Array< double > WeightsType;

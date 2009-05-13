@@ -111,6 +111,7 @@ public:
   /** Set/Get whether warnings are allowed to be printed, when reading a parameter. *
   itkSetMacro( Silent, bool );
   itkGetConstMacro( Silent, bool );
+  */
 
   /** Methods that is called at the very beginning of elastixTemplate::Run.
    * \li Prints the parameter file

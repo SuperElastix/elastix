@@ -134,7 +134,7 @@ namespace itk
     MoreThuenteLineSearchOptimizer::
     StartOptimization(void)
   {
-    int returnvalue = this->CheckSettings();
+    this->CheckSettings();
             
     this->SetCurrentPosition( this->GetInitialPosition() );
     this->GetInitialValueAndDerivative();
