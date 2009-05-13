@@ -915,8 +915,8 @@ The continued development brings us today (April 2009) to version
 what & where \\
 \hline
 website        & \url{http://elastix.isi.uu.nl} \\
-SVN repository & \url{http://svn.isi.uu.nl} (hosted at the ISI) \\
-WIKI           & \url{https://wiki.isi.uu.nl/bin/view/CADweb/ElastiX} \\
+SVN repository & \url{https://svn.bigr.nl/elastix} \\
+WIKI           & \url{http://elastix.bigr.nl/wiki} \\
 FAQ            & \url{http://elastix.isi.uu.nl/FAQ.php}
 \end{tabular}
 \end{table}
@@ -1012,8 +1012,11 @@ freely available. In this section, we assume you use the Microsoft Visual C++
 \begin{enumerate}
 \item Download and install CMake: \url{www.cmake.org}.
 
-\item Download and compile the ITK: \url{www.itk.org}.
-
+\item Download and compile the ITK version 3.12: \url{www.itk.org}. Make
+    sure to set the (advanced) CMake variable
+    \texttt{ITK\_IMAGE\_BEHAVES\_AS\_ORIENTEDIMAGE} to \texttt{OFF}. On
+    Linux systems with the GCC compiler: set \texttt{CMAKE\_BUILD\_TYPE} to
+    ``Release''.
 
 %1. Download cmake from www.cmake.org and install it according to instructions
 %2. Download itk 3.12 from www.itk.org (not version 3.10).
