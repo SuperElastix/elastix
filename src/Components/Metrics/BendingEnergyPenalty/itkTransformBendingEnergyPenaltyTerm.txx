@@ -269,9 +269,9 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
               = jacobianOfSpatialHessian[ mu ][ k ].GetVnlMatrix();
 
             RealType matrixProduct = 0.0;
-            InternalMatrixType::const_iterator itA = A[ k ].begin();
-            InternalMatrixType::const_iterator itB = B.begin();
-            InternalMatrixType::const_iterator itAend = A[ k ].end();
+            typename InternalMatrixType::const_iterator itA = A[ k ].begin();
+            typename InternalMatrixType::const_iterator itB = B.begin();
+            typename InternalMatrixType::const_iterator itAend = A[ k ].end();
             while ( itA != itAend )
             {
               matrixProduct += (*itA) * (*itB);
@@ -312,9 +312,9 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
               = jacobianOfSpatialHessian[ mu + numParPerDim * k ][ k ].GetVnlMatrix();
 
             RealType matrixElementProduct = 0.0;
-            InternalMatrixType::const_iterator itA = A[ k ].begin();
-            InternalMatrixType::const_iterator itB = B.begin();
-            InternalMatrixType::const_iterator itAend = A[ k ].end();
+            typename InternalMatrixType::const_iterator itA = A[ k ].begin();
+            typename InternalMatrixType::const_iterator itB = B.begin();
+            typename InternalMatrixType::const_iterator itAend = A[ k ].end();
             while ( itA != itAend )
             {
               matrixElementProduct += (*itA) * (*itB);

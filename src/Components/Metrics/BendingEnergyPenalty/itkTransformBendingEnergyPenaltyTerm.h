@@ -58,15 +58,41 @@ public:
   itkTypeMacro( TransformBendingEnergyPenaltyTerm, TransformPenaltyTerm );
 
   /** Typedefs inherited from the superclass. */
-  typedef typename Superclass::MeasureType          MeasureType;
-  typedef typename Superclass::RealType             RealType;
-  typedef typename Superclass::DerivativeType       DerivativeType;
-  typedef typename Superclass::ParametersType       ParametersType;
-  typedef typename Superclass::TransformType        TransformType;
-  typedef typename Superclass::FixedImageType       FixedImageType;
-  typedef typename Superclass::ScalarType           ScalarType;
+  typedef typename Superclass::CoordinateRepresentationType CoordinateRepresentationType;
+  typedef typename Superclass::MovingImageType            MovingImageType;
+  typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
+  typedef typename Superclass::MovingImagePointer         MovingImagePointer;
+  typedef typename Superclass::MovingImageConstPointer    MovingImageConstPointer;
+  typedef typename Superclass::FixedImageType             FixedImageType;
+  typedef typename Superclass::FixedImagePointer          FixedImagePointer;
+  typedef typename Superclass::FixedImageConstPointer     FixedImageConstPointer;
+  typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
+  typedef typename Superclass::TransformType              TransformType;
+  typedef typename Superclass::TransformPointer           TransformPointer;
+  typedef typename Superclass::InputPointType             InputPointType;
+  typedef typename Superclass::OutputPointType            OutputPointType;
+  typedef typename Superclass::TransformParametersType    TransformParametersType;
+  typedef typename Superclass::TransformJacobianType      TransformJacobianType;
+  typedef typename Superclass::InterpolatorType           InterpolatorType;
+  typedef typename Superclass::InterpolatorPointer        InterpolatorPointer;
+  typedef typename Superclass::RealType                   RealType;
+  typedef typename Superclass::GradientPixelType          GradientPixelType;
+  typedef typename Superclass::GradientImageType          GradientImageType;
+  typedef typename Superclass::GradientImagePointer       GradientImagePointer;
+  typedef typename Superclass::GradientImageFilterType    GradientImageFilterType;
+  typedef typename Superclass::GradientImageFilterPointer GradientImageFilterPointer;
+  typedef typename Superclass::FixedImageMaskType         FixedImageMaskType;
+  typedef typename Superclass::FixedImageMaskPointer      FixedImageMaskPointer;
+  typedef typename Superclass::MovingImageMaskType        MovingImageMaskType;
+  typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
+  typedef typename Superclass::MeasureType                MeasureType;
+  typedef typename Superclass::DerivativeType             DerivativeType;
+  typedef typename Superclass::DerivativeValueType        DerivativeValueType;
+  typedef typename Superclass::ParametersType             ParametersType;
+  typedef typename Superclass::FixedImagePixelType        FixedImagePixelType;
   typedef typename Superclass::ImageSampleContainerType    ImageSampleContainerType;
   typedef typename Superclass::ImageSampleContainerPointer ImageSampleContainerPointer;
+  typedef typename Superclass::ScalarType                 ScalarType;
 
   /** Typedefs from the AdvancedTransform. */
   typedef typename Superclass
@@ -84,6 +110,7 @@ public:
 
   /** Initialize the penalty term. *
   virtual void Initialize( void ) throw ( ExceptionObject );
+  */
 
   /** Get the penalty term value. */
   virtual MeasureType GetValue( const ParametersType & parameters ) const;
@@ -99,6 +126,14 @@ public:
     DerivativeType & derivative ) const;
 
 protected:
+
+  /** Typedefs for indices and points. */
+  typedef typename Superclass::FixedImageIndexType                FixedImageIndexType;
+  typedef typename Superclass::FixedImageIndexValueType           FixedImageIndexValueType;
+  typedef typename Superclass::MovingImageIndexType               MovingImageIndexType;
+  typedef typename Superclass::FixedImagePointType                FixedImagePointType;
+  typedef typename Superclass::MovingImagePointType               MovingImagePointType;
+  typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
 
   /** The constructor. */
   TransformBendingEnergyPenaltyTerm();
