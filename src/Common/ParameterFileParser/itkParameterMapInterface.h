@@ -327,7 +327,7 @@ public:
       std::stringstream ss;
       ss << "WARNING: The parameter \"" << parameterName
         << "\" does not exist at entry number " << entry_nr_end
-        << ".\nThe default value \"" // << itk::NumericTraits<T>::Zero // SK: crashes for string
+        << ".\nThe default value \"" << itk::NumericTraits<T>::Zero
         << "\" is used instead." << std::endl;
       itkExceptionMacro( << ss.str() );
     }
@@ -365,6 +365,15 @@ public:
 
     return true;
   }
+
+  /** Provide a specialization for std::string, for efficiency. */
+  bool ReadParameter(
+    std::vector<std::string> & parameterValues,
+    const std::string & parameterName,
+    const unsigned int entry_nr_start,
+    const unsigned int entry_nr_end,
+    const bool printThisErrorMessage,
+    std::string & errorMessage ) const;
 
 protected:
   ParameterMapInterface();

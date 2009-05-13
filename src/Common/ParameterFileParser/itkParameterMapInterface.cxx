@@ -146,6 +146,77 @@ ParameterMapInterface
 } // end StringCast()
 
 
+/**
+ * **************** ReadParameter ***************
+ */
+
+bool
+ParameterMapInterface
+::ReadParameter(
+  std::vector<std::string> & parameterValues,
+  const std::string & parameterName,
+  const unsigned int entry_nr_start,
+  const unsigned int entry_nr_end,
+  const bool printThisErrorMessage,
+  std::string & errorMessage ) const
+{
+  /** Reset the error message. */
+  errorMessage = "";
+
+  /** Get the number of entries. */
+  unsigned int numberOfEntries = this->CountNumberOfParameterEntries(
+    parameterName );
+
+  /** Check if the requested parameter exists. */
+  if ( numberOfEntries == 0 )
+  {
+    std::stringstream ss;
+    ss << "WARNING: The parameter \"" << parameterName
+      << "\", requested between entry numbers " << entry_nr_start
+      << " and " << entry_nr_end
+      << ", does not exist at all.\n"
+      << "  The default values are used instead." << std::endl;
+    if ( printThisErrorMessage && this->m_PrintErrorMessages )
+    {
+      errorMessage = ss.str();
+    }
+    return false;
+  }
+
+  /** Check. */
+  if ( entry_nr_start > entry_nr_end )
+  {
+    std::stringstream ss;
+    ss << "WARNING: The entry number start (" << entry_nr_start
+      << ") should be smaller than entry number end (" << entry_nr_end
+      << "). It was requested for parameter \"" << parameterName
+      << "\"." << std::endl;
+
+    /** Programming error: just throw an exception. */
+    itkExceptionMacro( << ss.str() );
+  }
+
+  /** Check if it exists at the requested entry numbers. */
+  if ( entry_nr_end >= numberOfEntries )
+  {
+    std::stringstream ss;
+    ss << "WARNING: The parameter \"" << parameterName
+      << "\" does not exist at entry number " << entry_nr_end
+      << ".\nThe default empty string \"\" is used instead." << std::endl;
+    itkExceptionMacro( << ss.str() );
+  }
+
+  /** Get the vector of parameters. */
+  const ParameterValuesType & vec = this->m_ParameterMap.find( parameterName )->second;
+
+  /** Copy all parameters at once. */
+  std::vector<std::string>::const_iterator it = vec.begin();
+  parameterValues.clear();
+  parameterValues.assign( it + entry_nr_start, it + entry_nr_end + 1 );
+  
+  return true;
+}
+
 } // end namespace itk
 
 #endif // end __itkParameterMapInterface_cxx
