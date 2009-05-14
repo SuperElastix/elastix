@@ -52,115 +52,89 @@ using namespace itk;
     void MattesMutualInformationWithRigidityPenalty<TElastix>
     ::BeforeRegistration( void )
   {
-    /** Get and set the useFixedRigidityImage and read the FixedRigidityImage if wanted. */
-    bool useFixedRigidityImage = true;
-    this->GetConfiguration()->ReadParameter( useFixedRigidityImage,
-      "UseFixedRigidityImage", this->GetComponentLabel(), 0, -1 );
-    if ( useFixedRigidityImage )
+    /** Read the fixed rigidity image if desired. */
+    std::string fixedRigidityImageName = "";
+    this->GetConfiguration()->ReadParameter( fixedRigidityImageName,
+      "FixedRigidityImageName", this->GetComponentLabel(), 0, -1 );
+
+    if ( fixedRigidityImageName != "" )
     {
       /** Use the FixedRigidityImage. */
       this->SetUseFixedRigidityImage( true );
 
-      /** Read the fixed rigidity image and set it in the right class. */
-      std::string fixedRigidityImageName = "";
-      this->GetConfiguration()->ReadParameter( fixedRigidityImageName,
-        "FixedRigidityImageName", this->GetComponentLabel(), 0, -1 );
+      /** Create the reader and set the filename. */
+      this->m_FixedRigidityImageReader = RigidityImageReaderType::New();
+      this->m_FixedRigidityImageReader->SetFileName( fixedRigidityImageName.c_str() );
 
-      /** Check if a name is given. */
-      if ( fixedRigidityImageName == "" )
+      /** Do the reading. */
+      try
       {
-        /** Create and throw an exception. */
-        itkExceptionMacro( << "ERROR: No fixed rigidity image filename specified." );
+        this->m_FixedRigidityImageReader->Update();
       }
-      else
+      catch( ExceptionObject & excp )
       {
-        /** Create the reader and set the filename. */
-        this->m_FixedRigidityImageReader = RigidityImageReaderType::New();
-        this->m_FixedRigidityImageReader->SetFileName( fixedRigidityImageName.c_str() );
+        /** Add information to the exception. */
+        excp.SetLocation( "MattesMutualInformationWithRigidityPenalty - BeforeRegistration()" );
+        std::string err_str = excp.GetDescription();
+        err_str += "\nError occured while reading the FixedRigidityImage.\n";
+        excp.SetDescription( err_str );
+        /** Pass the exception to an higher level. */
+        throw excp;
+      }
 
-        /** Do the reading. */
-        try
-        {
-          this->m_FixedRigidityImageReader->Update();
-        }
-        catch( ExceptionObject & excp )
-        {
-          /** Add information to the exception. */
-          excp.SetLocation( "MattesMutualInformationWithRigidityPenalty - BeforeRegistration()" );
-          std::string err_str = excp.GetDescription();
-          err_str += "\nError occured while reading the FixedRigidityImage.\n";
-          excp.SetDescription( err_str );
-          /** Pass the exception to an higher level. */
-          throw excp;
-        }
-
-        /** Set the fixed rigidity image into the superclass. */
-        this->SetFixedRigidityImage( this->m_FixedRigidityImageReader->GetOutput() );
-        
-      } // end if filename
+      /** Set the fixed rigidity image into the superclass. */
+      this->SetFixedRigidityImage( this->m_FixedRigidityImageReader->GetOutput() );
     }
     else
     {
       this->SetUseFixedRigidityImage( false );
-    } // end if use fixedRigidityImage
+    }
 
-    /** Get and set the useMovingRigidityImage and read the movingRigidityImage if wanted. */
-    bool useMovingRigidityImage = true;
-    this->GetConfiguration()->ReadParameter( useMovingRigidityImage,
-      "UseMovingRigidityImage", this->GetComponentLabel(), 0, -1 );
-    if ( useMovingRigidityImage )
+    /** Read the moving rigidity image if desired. */
+    std::string movingRigidityImageName = "";
+    this->GetConfiguration()->ReadParameter( movingRigidityImageName,
+      "MovingRigidityImageName", this->GetComponentLabel(), 0, -1 );
+
+    if ( movingRigidityImageName != "" )
     {
       /** Use the movingRigidityImage. */
       this->SetUseMovingRigidityImage( true );
       
-      /** Read the moving rigidity image and set it in the right class. */
-      std::string movingRigidityImageName = "";
-      this->GetConfiguration()->ReadParameter( movingRigidityImageName,
-        "MovingRigidityImageName", this->GetComponentLabel(), 0, -1 );
-      
-      /** Check if a name is given. */
-      if ( movingRigidityImageName == "" )
+      /** Create the reader and set the filename. */
+      this->m_MovingRigidityImageReader = RigidityImageReaderType::New();
+      this->m_MovingRigidityImageReader->SetFileName( movingRigidityImageName.c_str() );
+
+      /** Do the reading. */
+      try
       {
-        /** Create and throw an exception. */
-        itkExceptionMacro( << "ERROR: No moving rigidity image filename specified." );
+        this->m_MovingRigidityImageReader->Update();
       }
-      else
+      catch( ExceptionObject & excp )
       {
-        /** Create the reader and set the filename. */
-        this->m_MovingRigidityImageReader = RigidityImageReaderType::New();
-        this->m_MovingRigidityImageReader->SetFileName( movingRigidityImageName.c_str() );
-        
-        /** Do the reading. */
-        try
-        {
-          this->m_MovingRigidityImageReader->Update();
-        }
-        catch( ExceptionObject & excp )
-        {
-          /** Add information to the exception. */
-          excp.SetLocation( "MattesMutualInformationWithRigidityPenalty - BeforeRegistration()" );
-          std::string err_str = excp.GetDescription();
-          err_str += "\nError occured while reading the MovingRigidityImage.\n";
-          excp.SetDescription( err_str );
-          /** Pass the exception to an higher level. */
-          throw excp;
-        }
+        /** Add information to the exception. */
+        excp.SetLocation( "MattesMutualInformationWithRigidityPenalty - BeforeRegistration()" );
+        std::string err_str = excp.GetDescription();
+        err_str += "\nError occured while reading the MovingRigidityImage.\n";
+        excp.SetDescription( err_str );
+        /** Pass the exception to an higher level. */
+        throw excp;
+      }
 
-        /** Set the moving rigidity image into the superclass. */
-        this->SetMovingRigidityImage( this->m_MovingRigidityImageReader->GetOutput() );
-
-      } // end if filename
+      /** Set the moving rigidity image into the superclass. */
+      this->SetMovingRigidityImage( this->m_MovingRigidityImageReader->GetOutput() );
     }
     else
     {
       this->SetUseMovingRigidityImage( false );
-    } // end if use movingRigidityImage
+    }
 
     /** Important check: at least one rigidity image must be given. */
-    if ( !useFixedRigidityImage && !useMovingRigidityImage )
+    if ( fixedRigidityImageName == "" && movingRigidityImageName == "" )
     {
-      xl::xout["warning"] << "WARNING: UseFixedRigidityImage and UseMovingRigidityImage are both true.\n";
-      xl::xout["warning"] << "         The rigidity penalty term is evaluated on entire input transform domain." << std::endl;
+      xl::xout["warning"] << "WARNING: FixedRigidityImageName and "
+        << "MovingRigidityImage are both not supplied.\n"
+        << "  The rigidity penalty term is evaluated on entire input "
+        << "transform domain." << std::endl;
     }
 
     /** Add target cells to xout["iteration"]. */
@@ -172,10 +146,14 @@ using namespace itk;
 
     /** Format the metric as floats. */
     xl::xout["iteration"]["5:Metric-MI"] << std::showpoint << std::fixed;
-    xl::xout["iteration"]["6:Metric-RP"] << std::showpoint << std::fixed << std::setprecision( 10 );
-    xl::xout["iteration"]["7:Metric-LC"] << std::showpoint << std::fixed << std::setprecision( 10 );
-    xl::xout["iteration"]["8:Metric-OC"] << std::showpoint << std::fixed << std::setprecision( 10 );
-    xl::xout["iteration"]["9:Metric-PC"] << std::showpoint << std::fixed << std::setprecision( 10 );
+    xl::xout["iteration"]["6:Metric-RP"] << std::showpoint << std::fixed
+      << std::setprecision( 10 );
+    xl::xout["iteration"]["7:Metric-LC"] << std::showpoint << std::fixed
+      << std::setprecision( 10 );
+    xl::xout["iteration"]["8:Metric-OC"] << std::showpoint << std::fixed
+      << std::setprecision( 10 );
+    xl::xout["iteration"]["9:Metric-PC"] << std::showpoint << std::fixed
+      << std::setprecision( 10 );
 
   } // end BeforeRegistration()
 
