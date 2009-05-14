@@ -113,7 +113,7 @@ namespace elastix
   *   metric etc.
   * \parameter SigmoidScale: The scale/width of the sigmoid function (\f$\omega\f$). 
   *   The parameter can be specified for each resolution, or for all resolutions at once.\n
-  *   example: <tt>(SigmoidMin 0.00001)</tt>\n
+  *   example: <tt>(SigmoidScale 0.00001)</tt>\n
   *   Default value: 1e-8. This parameter has no influence when AutomaticParameterEstimation
   *   is used. In that case, the value is automatically determined, depending on the images,
   *   metric etc.
@@ -124,10 +124,10 @@ namespace elastix
   *   Default value: 0.0. When increased, the optimization starts with smaller steps, leaving
   *   the possibility to increase the steps when necessary. If set to 0.0, the method starts with
   *   with the largest step allowed. 
-  * \parameter UseMaximumLikelihoodMethod: Experimental parameter. Leave to default setting.
+  * \parameter UseMaximumLikelihoodMethod: Experimental parameter. Leave to default setting.\n
   *   example: <tt>(UseMaximumLikelihood "false")</tt>\n
   *   Default/recommended value: "false".
-  * \parameter SaveCovarianceMatrix: Experimental parameter. Leave to default setting. 
+  * \parameter SaveCovarianceMatrix: Experimental parameter. Leave to default setting.\n
   *   example: <tt>(SaveCovarianceMatrix "false")</tt>\n
   *   Default/recommended value: "false".
   * \parameter NumberOfGradientMeasurements: Number of gradients N to estimate the
