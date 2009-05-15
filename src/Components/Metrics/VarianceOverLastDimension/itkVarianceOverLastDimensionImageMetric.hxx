@@ -310,7 +310,7 @@ namespace itk
   {
     itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 
-    /** Define derivative and Jacobina types. */
+    /** Define derivative and Jacobian types. */
     typedef typename DerivativeType::ValueType        DerivativeValueType;
     typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
 
