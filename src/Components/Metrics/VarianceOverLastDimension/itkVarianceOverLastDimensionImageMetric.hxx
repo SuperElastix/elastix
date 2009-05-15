@@ -52,8 +52,8 @@ namespace itk
     Superclass::Initialize();
 
     /** Retrieve slowest varying dimension and its size. */
-    const int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
-    const int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
+    const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
+    const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
     
     /** Check num last samples. */
     if ( m_NumSamplesLastDimension > lastDimSize ) {
@@ -186,9 +186,10 @@ namespace itk
     typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
 
     /** Retrieve slowest varying dimension and its size. */
-    const int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
-    const int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
-    const int numLastDimSamples = m_NumSamplesLastDimension < lastDimSize?m_NumSamplesLastDimension:lastDimSize;
+    const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
+    const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
+    const unsigned int numLastDimSamples =
+      this->m_NumSamplesLastDimension < lastDimSize ? m_NumSamplesLastDimension : lastDimSize;
 
     /** Vector containing last dimension positions to use: initialize on all positions. */
     std::vector<int> lastDimPositions (lastDimSize);
@@ -335,9 +336,10 @@ namespace itk
     typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
 
     /** Retrieve slowest varying dimension and its size. */
-    const int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
-    const int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
-    const int numLastDimSamples = m_NumSamplesLastDimension < lastDimSize?m_NumSamplesLastDimension:lastDimSize;
+    const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
+    const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
+    const unsigned int numLastDimSamples = 
+      this->m_NumSamplesLastDimension < lastDimSize ? m_NumSamplesLastDimension : lastDimSize;
 
     /** Vector containing last dimension positions to use: initialize on all positions. */
     std::vector<int> lastDimPositions ( lastDimSize );
