@@ -29,7 +29,7 @@ using namespace itk;
    *
    * The parameters used in this class are:
    * \parameter Metric: Select this metric as follows:\n
-   *    <tt>(Metric "TransformBendingEnergyPenaltyTerm")</tt>
+   *    <tt>(Metric "TransformBendingEnergyPenalty")</tt>
    *
    * \ingroup Metrics
    *
