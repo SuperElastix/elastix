@@ -93,9 +93,7 @@ public:
 
   /** Typedefs from the AdvancedTransform. */
   typedef typename Superclass
-    ::AdvancedTransformType                     TransformType;
-  typedef typename TransformType
-    ::NonZeroJacobianIndicesType                NonZeroJacobianIndicesType;
+    ::AdvancedTransformType                     TransformType;  
   typedef typename TransformType
     ::SpatialJacobianType                       SpatialJacobianType;
   typedef typename TransformType
