@@ -63,6 +63,7 @@ namespace elastix
 //  elxSupportedImageTypeMacro( int,              3, int,               3,  6 );
   elxSupportedImageTypeMacro( float,            2, float,             2,  2 );
   elxSupportedImageTypeMacro( float,            3, float,             3,  3 );
+  //elxSupportedImageTypeMacro( float,            4, float,             4,  4 );
 //  elxSupportedImageTypeMacro( double,           2, double,            2,  9 );
 //  elxSupportedImageTypeMacro( double,           3, double,            3,  10 );
 //  elxSupportedImageTypeMacro( unsigned short,   2, unsigned short,    2,  11 );

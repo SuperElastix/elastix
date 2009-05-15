@@ -142,8 +142,8 @@ public:
   /** This returns a sparse version of the Jacobian of the transformation.
    *
    * The Jacobian is expressed as a vector of partial derivatives of the
-	 * transformation components with respect to the parameters \$\mu\$ that
-   * define the transformation \$T\$, evaluated at a point \$p\$.
+	 * transformation components with respect to the parameters \f$\mu\f$ that
+   * define the transformation \f$T\f$, evaluated at a point \f$p\f$.
    *
    * \f[
       J=\left[ \begin{array}{cccc}
@@ -162,7 +162,7 @@ public:
       \frac{\partial T_{d}}{\partial \mu_{m}}(p)
       \end{array}\right],
    * \f]
-   * with \$m\$ the number of parameters, i.e. the size of \$\mu\$, and \$d\$
+   * with \f$m\f$ the number of parameters, i.e. the size of \f$\mu\f$, and \f$d\f$
    * the dimension of the image.
    */
   virtual void GetJacobian(
@@ -179,8 +179,8 @@ public:
 	/** Compute the spatial Jacobian of the transformation.
    *
    * The spatial Jacobian is expressed as a vector of partial derivatives of the
-   * transformation components with respect to the spatial position \$x\$,
-   * evaluated at a point \$p\$.
+   * transformation components with respect to the spatial position \f$x\f$,
+   * evaluated at a point \f$p\f$.
    *
    * \f[
       sJ=\left[ \begin{array}{cccc}
@@ -199,7 +199,7 @@ public:
       \frac{\partial T_{d}}{\partial x_{m}}(p)
       \end{array}\right],
    * \f]
-   * with \$m\$ the number of parameters, i.e. the size of \$\mu\$, and \$d\$
+   * with \f$m\f$ the number of parameters, i.e. the size of \f$\mu\f$, and \f$d\f$
    * the dimension of the image.
    */
   virtual void GetSpatialJacobian(
@@ -210,7 +210,7 @@ public:
    *
    * The spatial Hessian is the vector of matrices of partial second order
    * derivatives of the transformation components with respect to the spatial
-   * position \$x\$, evaluated at a point \$p\$.
+   * position \f$x\f$, evaluated at a point \f$p\f$.
    *
    * \f[
       sH=\left[ \begin{array}{cc}
@@ -229,8 +229,8 @@ public:
   /** Compute the Jacobian of the spatial Jacobian of the transformation.
    *
    * The Jacobian of the spatial Jacobian is the derivative of the spatial
-   * Jacobian to the transformation parameters \$\mu\$, evaluated at
-   * a point \$p\$.
+   * Jacobian to the transformation parameters \f$\mu\f$, evaluated at
+   * a point \f$p\f$.
    */
   virtual void GetJacobianOfSpatialJacobian(
     const InputPointType & ipp,
@@ -249,8 +249,8 @@ public:
   /** Compute the Jacobian of the spatial Hessian of the transformation.
    *
    * The Jacobian of the spatial Hessian is the derivative of the spatial
-   * Hessian to the transformation parameters \$\mu\$, evaluated at
-   * a point \$p\$.
+   * Hessian to the transformation parameters \f$\mu\f$, evaluated at
+   * a point \f$p\f$.
    */
   virtual void GetJacobianOfSpatialHessian(
     const InputPointType & ipp,

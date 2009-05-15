@@ -185,6 +185,7 @@ protected:
   typedef typename Superclass::BSplineCombinationTransformType    BSplineCombinationTransformType;
   typedef typename Superclass::BSplineParametersOffsetType        BSplineParametersOffsetType;
   typedef typename Superclass::ParameterIndexArrayType            ParameterIndexArrayType;
+  typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
 
   /** Protected typedefs for SelfHessian */
   typedef SmoothingRecursiveGaussianImageFilter<

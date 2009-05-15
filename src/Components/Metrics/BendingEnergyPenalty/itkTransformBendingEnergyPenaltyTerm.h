@@ -134,6 +134,7 @@ protected:
   typedef typename Superclass::FixedImagePointType                FixedImagePointType;
   typedef typename Superclass::MovingImagePointType               MovingImagePointType;
   typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
+  typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
 
   /** The constructor. */
   TransformBendingEnergyPenaltyTerm();

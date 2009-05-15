@@ -32,9 +32,6 @@ TransformPenaltyTerm< TFixedImage, TScalarType >
   /** Initialize member variables. */
   this->m_AdvancedTransform  = 0;
 
-  /** This is an advanced metric and therefore uses a sampler. */
-  this->SetUseImageSampler( true );
-
 } // end constructor
 
 
@@ -82,18 +79,6 @@ TransformPenaltyTerm< TFixedImage, TScalarType >
       itkExceptionMacro( << "ERROR: The transform is not an AdvancedTransform, which is needed for this penalty term." );
     }
   }
-
-  /** Check fixed image region. */
-  if ( this->GetFixedImageRegion().GetNumberOfPixels() == 0 )
-  {
-    itkExceptionMacro( << "FixedImageRegion is empty" );
-  }
-
-  /** If there are any observers on the metric,
-   * call them to give the user code a chance to set
-   * parameters on the metric.
-   */
-  this->InvokeEvent( InitializeEvent() );
 
 } // end Initialize()
 

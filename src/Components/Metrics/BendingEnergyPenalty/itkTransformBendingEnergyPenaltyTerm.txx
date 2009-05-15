@@ -29,6 +29,9 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
 ::TransformBendingEnergyPenaltyTerm()
 {
   /** Initialize member variables. */
+
+  /** Turn on the sampler functionality */
+  this->SetUseImageSampler( true );
 } // end constructor
 
 

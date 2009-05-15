@@ -445,6 +445,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   }
 
   /** Resize the weights and transform index arrays and compute the parameters offset. */
+  unsigned long nrNonZeroJacobianIndices = 0;
   if ( this->m_TransformIsBSpline    
     || this->m_TransformIsBSplineCombination )
   {
@@ -457,28 +458,32 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
       this->m_BSplineParametersOffset[ j ] = j * this->m_NumBSplineParametersPerDim;
     }
        
-    this->m_NonZeroJacobianIndices.resize( FixedImageDimension * this->m_NumBSplineWeights );
+    nrNonZeroJacobianIndices = FixedImageDimension * this->m_NumBSplineWeights;
     this->m_InternalTransformJacobian.SetSize(
-      FixedImageDimension, FixedImageDimension * this->m_NumBSplineWeights );
+      FixedImageDimension, nrNonZeroJacobianIndices );
     this->m_InternalTransformJacobian.Fill( 0.0 );
   }
   else if ( this->m_TransformIsAdvanced )
   {
     /** A more generic way of sparse jacobians */
-    this->m_NonZeroJacobianIndices.resize( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+    nrNonZeroJacobianIndices = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();    
     this->m_InternalTransformJacobian.SetSize(
-       FixedImageDimension, this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+       FixedImageDimension, nrNonZeroJacobianIndices );
     this->m_InternalTransformJacobian.Fill( 0.0 );
   }    
   else
   {  
-    /** no sparse jacobian support */
-    this->m_NonZeroJacobianIndices.resize( this->GetNumberOfParameters() );
-    for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
-    {
-      this->m_NonZeroJacobianIndices[ i ] = i;
-    }
+    /** no sparse jacobian support; internal transform jacobian is not needed */
+    nrNonZeroJacobianIndices = this->GetNumberOfParameters();    
     this->m_InternalTransformJacobian.SetSize( 0, 0 );
+  }
+
+  /** Intialize m_NonZeroJacobianIndices */
+  this->m_NonZeroJacobianIndices.resize( nrNonZeroJacobianIndices);
+  for ( unsigned int i = 0; i < nrNonZeroJacobianIndices; ++i )
+  {
+    /** Initialize with 0 1 2 3 ... */
+    this->m_NonZeroJacobianIndices[ i ] = i;
   }
 
 } // end CheckForBSplineTransform()

@@ -36,7 +36,7 @@ namespace elastix
    * a principal component that follows from your statistical model for example.
    *
    * A normalization factor can optionally be used:
-   * \f$T(x) = \sum_i w_i T_i(x) / \sum_i w_i\$
+   * \f$T(x) = \sum_i w_i T_i(x) / \sum_i w_i\f$
    *
    * You can also use this class to average transformations found by previous
    * elastix runs.
