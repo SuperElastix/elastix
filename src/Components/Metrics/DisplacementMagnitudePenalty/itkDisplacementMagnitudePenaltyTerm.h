@@ -82,9 +82,7 @@ public:
   typedef typename Superclass::ImageSampleContainerPointer ImageSampleContainerPointer;
   typedef typename Superclass::ScalarType                 ScalarType;
 
-  /** Typedefs from the AdvancedTransform. */
-  typedef typename Superclass
-    ::NonZeroJacobianIndicesType                    NonZeroJacobianIndicesType;
+  /** Typedefs from the AdvancedTransform. */  
   typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
   typedef typename Superclass
     ::JacobianOfSpatialJacobianType                 JacobianOfSpatialJacobianType;
