@@ -78,8 +78,26 @@ using namespace itk;
     ::BeforeEachResolution(void)
   {
     /** Get the current resolution level. */
-    //unsigned int level = 
-    //  ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+    unsigned int level = 
+      ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+
+    /** Set moving image derivative scales. */
+    this->SetUseMovingImageDerivativeScales( false );
+    MovingImageDerivativeScalesType movingImageDerivativeScales;
+    int usescales = 0;
+    for ( unsigned int i = 0; i < MovingImageDimension; ++i )
+    {
+      usescales = this->GetConfiguration()->ReadParameter(
+        movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
+        this->GetComponentLabel(), i, -1, true );
+    }
+    if ( usescales == 0 )
+    {
+      this->SetUseMovingImageDerivativeScales( true );
+      this->SetMovingImageDerivativeScales( movingImageDerivativeScales );
+      elxout << "Multiplying moving image derivatives by: "
+        << movingImageDerivativeScales << std::endl;
+    }
     
   } // end BeforeEachResolution
 

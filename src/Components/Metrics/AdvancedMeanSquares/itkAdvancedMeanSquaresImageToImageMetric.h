@@ -111,6 +111,8 @@ public:
     Superclass::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
   typedef typename
     Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
+  typedef typename
+    Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
 
   /** Some typedefs for computing the SelfHessian */
   typedef typename DerivativeType::ValueType              HessianValueType;

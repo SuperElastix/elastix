@@ -128,7 +128,9 @@ namespace itk
       Superclass::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
     typedef typename
       Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
-    
+    typedef typename
+      Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
+      
     /** The fixed image dimension. */
     itkStaticConstMacro( FixedImageDimension, unsigned int,
       FixedImageType::ImageDimension );

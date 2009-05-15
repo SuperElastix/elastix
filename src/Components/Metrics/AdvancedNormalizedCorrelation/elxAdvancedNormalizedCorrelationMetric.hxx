@@ -40,6 +40,24 @@ using namespace itk;
     this->GetConfiguration()->ReadParameter( subtractMean, "SubtractMean",
       this->GetComponentLabel(), level, 0 );
     this->SetSubtractMean( subtractMean );
+
+    /** Set moving image derivative scales. */
+    this->SetUseMovingImageDerivativeScales( false );
+    MovingImageDerivativeScalesType movingImageDerivativeScales;
+    int usescales = 0;
+    for ( unsigned int i = 0; i < MovingImageDimension; ++i )
+    {
+      usescales = this->GetConfiguration()->ReadParameter(
+        movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
+        this->GetComponentLabel(), i, -1, true );
+    }
+    if ( usescales == 0 )
+    {
+      this->SetUseMovingImageDerivativeScales( true );
+      this->SetMovingImageDerivativeScales( movingImageDerivativeScales );
+      elxout << "Multiplying moving image derivatives by: "
+        << movingImageDerivativeScales << std::endl;
+    }
     
   } // end BeforeEachResolution
   
