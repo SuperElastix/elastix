@@ -140,7 +140,6 @@ public:
    * Although perhaps not really efficient, this makes sure that 
    * this->Modified() is called when the transform container is updated.
    **/
-  itkGetConstReferenceMacro( TransformContainer, TransformContainerType );
   const TransformContainerType & GetTransformContainer(void) const
   {
     return this->m_TransformContainer;
