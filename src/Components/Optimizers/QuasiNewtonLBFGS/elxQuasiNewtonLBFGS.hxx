@@ -266,7 +266,7 @@ using namespace itk;
     /** Set the Memory */
     unsigned int LBFGSUpdateAccuracy = 5;
     this->m_Configuration->ReadParameter( LBFGSUpdateAccuracy,
-      "LBFGSUpdateAccuracy", level );
+      "LBFGSUpdateAccuracy", this->GetComponentLabel(), level, 0 );
     this->SetMemory(LBFGSUpdateAccuracy);
 
     /** Check whether to stop optimisation if Wolfe conditions are not satisfied. */

@@ -147,10 +147,17 @@ namespace itk
     /**  Get the value. */
     MeasureType GetValue( const ParametersType& parameters ) const;
 
+    /** Set/get whether to apply the technique introduced by Nicholas Tustison; default: false */
+    itkGetConstMacro(UseJacobianPreconditioning, bool);
+    itkSetMacro(UseJacobianPreconditioning, bool);
+
   protected:
     
     /** The constructor. */
-    ParzenWindowMutualInformationImageToImageMetric(){};
+    ParzenWindowMutualInformationImageToImageMetric()
+    {
+      this->m_UseJacobianPreconditioning = false;
+    }
 
     /** The destructor. */
     virtual ~ParzenWindowMutualInformationImageToImageMetric() {};
@@ -186,6 +193,7 @@ namespace itk
     typedef typename Superclass::JointPDFDerivativesSizeType        JointPDFDerivativesSizeType;
     typedef typename Superclass::ParzenValueContainerType           ParzenValueContainerType;
     typedef typename Superclass::KernelFunctionType                 KernelFunctionType;
+    typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
 
     /**  Get the value and analytic derivatives for single valued optimizers.
      * Called by GetValueAndDerivative if UseFiniteDifferenceDerivative == false.
@@ -208,6 +216,13 @@ namespace itk
     virtual void GetValueAndFiniteDifferenceDerivative( const ParametersType& parameters, 
       MeasureType& value, DerivativeType& derivative ) const;
 
+    /** Compute terms to implement preconditioning as proposed by Tustison et al. */
+    virtual void ComputeJacobianPreconditioner( 
+      const TransformJacobianType & jac,
+      const NonZeroJacobianIndicesType & nzji,
+      DerivativeType & preconditioner,
+      DerivativeType & divisor ) const;
+
     /** Some initialization functions, called by Initialize. */
     virtual void InitializeHistograms( void );
   
@@ -222,6 +237,9 @@ namespace itk
     typedef double                      PRatioType;
     typedef Array2D< PRatioType >       PRatioArrayType;
     mutable PRatioArrayType             m_PRatioArray;
+
+    /** Setting */
+    bool  m_UseJacobianPreconditioning;
 
     /** Helper function to update the derivative in case of low memory consumption. */
     void UpdateDerivativeLowMemory(

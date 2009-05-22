@@ -19,6 +19,9 @@
 
 #include "itkImageLinearConstIteratorWithIndex.h"
 #include "vnl/vnl_math.h"
+#include "itkMatrix.h"
+#include "vnl/vnl_inverse.h"
+#include "vnl/vnl_det.h"
 
 namespace itk
 { 
@@ -269,7 +272,11 @@ namespace itk
 
     /** Array that stores dM(x)/dmu. */
     DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.size() );
-    // TODO: mask derivative??
+
+    /** Arrays for jacobian preconditioning */
+    DerivativeType jacobianPreconditioner( this->m_NonZeroJacobianIndices.size() );
+    DerivativeType preconditioningDivisor( this->GetNumberOfParameters() );
+    preconditioningDivisor.Fill( 0.0 );
 
     /** Get a handle to the sample container. */
     ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
@@ -325,12 +332,42 @@ namespace itk
         this->EvaluateTransformJacobianInnerProduct( 
           jacobian, movingImageDerivative, imageJacobian );
 
+        /** If desired, apply the technique introduced by Tustison */
+        if ( this->GetUseJacobianPreconditioning() )
+        {
+          this->ComputeJacobianPreconditioner( jacobian, this->m_NonZeroJacobianIndices,
+            jacobianPreconditioner, preconditioningDivisor );
+          DerivativeValueType * imjacit = imageJacobian.begin();
+          DerivativeValueType * jacprecit = jacobianPreconditioner.begin();
+          for ( unsigned int i = 0; i < this->m_NonZeroJacobianIndices.size(); ++i )
+          while ( imjacit != imageJacobian.end() )
+          {        
+            (*imjacit) *= (*jacprecit);
+            ++imjacit;
+            ++jacprecit;
+          }
+        }
+
         /** Compute this sample's contribution to the joint distributions. */
         this->UpdateDerivativeLowMemory(
           fixedImageValue, movingImageValue, imageJacobian, derivative );
 
       } // end sampleOk
     } // end loop over sample container
+
+    /** If desired, apply the technique introduced by Tustison */
+    if ( this->GetUseJacobianPreconditioning() )
+    {      
+      DerivativeValueType * derivit = derivative.begin();
+      DerivativeValueType * divisit = preconditioningDivisor.begin();      
+      const double normalizationFactor = static_cast<double>(this->m_NumberOfPixelsCounted);
+      while( derivit != derivative.end() )
+      {
+        (*derivit) *= normalizationFactor / ( (*divisit) + 1e-14 );        
+        ++derivit;
+        ++divisit;
+      }
+    }
 
   } // end GetValueAndAnalyticDerivativeLowMemory()
 
@@ -715,6 +752,101 @@ namespace itk
     }
     
   } // end GetValueAndFiniteDifferenceDerivative
+
+
+  /**
+  * ******************** ComputeJacobianPreconditioner *******************
+  */
+
+  template < class TFixedImage, class TMovingImage >
+  void
+    ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+    ::ComputeJacobianPreconditioner( 
+    const TransformJacobianType & jac,
+    const NonZeroJacobianIndicesType & nzji,
+    DerivativeType & preconditioner,
+    DerivativeType & divisor ) const
+  {
+    typedef typename TransformJacobianType::ValueType  TransformJacobianValueType;
+    const unsigned int M = nzji.size();
+    typedef Matrix<double, MovingImageDimension, MovingImageDimension> MatrixType;
+    MatrixType jacjact;
+    
+    /** Compute jac * jac' */
+    for (unsigned int drow = 0; drow < MovingImageDimension; ++drow)
+    {      
+      for (unsigned int dcol = drow; dcol < MovingImageDimension; ++dcol)
+      {
+        const TransformJacobianValueType * jacit1 = jac[drow];
+        const TransformJacobianValueType * jacit2 = jac[dcol];
+        double sum = 0.0;
+        for (unsigned int mu = 0; mu < M; ++mu )
+        {
+          sum += (*jacit1) * (*jacit2);
+          ++jacit1;
+          ++jacit2;
+        }
+        jacjact( drow, dcol ) = sum;
+        jacjact( dcol, drow ) = sum;
+      }
+    }
+
+    /** Invert */        
+    const double addtodiag = 1e-10;
+    for (unsigned int drow = 0; drow < MovingImageDimension; ++drow)
+    {
+      jacjact(drow,drow) += addtodiag;
+    }    
+    jacjact = vnl_inverse( jacjact.GetVnlMatrix() );    
+
+    /** Compute preconditioner = diag( jac' * m * jac ),
+     * with m = inv(jacjact)
+     * implementation:
+     * preconditioner = sum_dr sum_dc m(dr,dc) jac(dr,:) * jac(dc,:) */
+    preconditioner.Fill(0.0);
+    for (unsigned int drow = 0; drow < MovingImageDimension; ++drow)
+    {      
+      for (unsigned int dcol = drow; dcol < MovingImageDimension; ++dcol)
+      {
+        DerivativeValueType * precondit = preconditioner.begin();
+        const TransformJacobianValueType * jacit1 = jac[drow];
+        const TransformJacobianValueType * jacit2 = jac[dcol];        
+        /** count twice if off-diagonal */
+        const double fac = drow == dcol ? 1.0 : 2.0;
+        const double m = fac * jacjact(drow, dcol);
+        for (unsigned int mu = 0; mu < M; ++mu )
+        {
+          *precondit += m* (*jacit1) * (*jacit2);
+          ++precondit;
+          ++jacit1;
+          ++jacit2;
+
+        }
+      }
+    }
+
+    /** Update divisor = sum_samples diag(jac'*jac) */
+    DerivativeType temp(M);
+    temp.Fill(0.0);
+    /** Compute this sample's contribution */
+    for (unsigned int drow = 0; drow < MovingImageDimension; ++drow)
+    {  
+      DerivativeValueType * tempit = temp.begin();
+      const TransformJacobianValueType * jacit1 = jac[drow];
+      for (unsigned int mu = 0; mu < M; ++mu )
+      {
+        *tempit += vnl_math_sqr( *jacit1 );
+        ++tempit;
+        ++jacit1;
+      }      
+    }
+    /** Update divisor */
+    for (unsigned int mu = 0; mu < M; ++mu )
+    {
+      divisor[ nzji[mu] ] += temp[mu];
+    }   
+  
+  } // end ComputeJacobianPreconditioner
 
 } // end namespace itk 
 

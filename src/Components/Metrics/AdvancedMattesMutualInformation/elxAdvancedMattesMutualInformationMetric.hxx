@@ -118,6 +118,12 @@ using namespace itk;
       "UseFastAndLowMemoryVersion", this->GetComponentLabel(), level, 0 );
     this->SetUseExplicitPDFDerivatives( !useFastAndLowMemoryVersion );
 
+    /** Set whether to use Nick Tustison's preconditioning technique. */
+    bool useJacobianPreconditioning = false;
+    this->GetConfiguration()->ReadParameter( useJacobianPreconditioning,
+      "UseJacobianPreconditioning", this->GetComponentLabel(), level, 0 );
+    this->SetUseJacobianPreconditioning( useJacobianPreconditioning );
+
     /** Set whether a finite difference derivative should be used. */
     bool useFiniteDifferenceDerivative = false;
     this->GetConfiguration()->ReadParameter( useFiniteDifferenceDerivative,
