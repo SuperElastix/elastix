@@ -19,6 +19,7 @@
 \newcommand{\transformix}{\texttt{transformix}}
 \newcommand{\etal}{\emph{et al.}}
 \newcommand{\vx}{\bm{x}}
+\newcommand{\vxt}[1][]{\bm{\widetilde x}_{#1}}
 \newcommand{\vu}{\bm{u}}
 \newcommand{\vux}{\bm{u}(\bm{x})}
 \newcommand{\vmu}{\bm{\mu}}
@@ -29,6 +30,8 @@
 \newcommand{\NN}{\mathcal{N}}
 \newcommand{\Sim}{\mathcal{S}}
 \newcommand{\Pen}{\mathcal{P}}
+\newcommand{\D}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\Dd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3}}
 
 % see page474 latex manual:
 \newcommand\relphantom[1]{\mathrel{\phantom{#1}}}
@@ -1933,8 +1936,9 @@ as:
 \omega_i \CC_i(\vTm; I_F, I_M),
 \end{align}
 with $\omega_i$ the weights. This way the same fixed and moving
-image is used for every sub-metric $\CC_i$. This way one can
-simultaneously optimise the SSD and MI during a registration.
+image is used for every sub-metric $\CC_i$. This way one can for
+example simultaneously optimise the SSD and MI during a
+registration.
 
 \elastix\ should be called like:
 \begin{quote}
@@ -1953,8 +1957,9 @@ all channels.
 
 \elastix\ should be called like:
 \begin{quote}
-\texttt{elastix -f0 fixed0.ext -f1 fixed1.ext -f... -m0 moving0.ext
- -m1 moving1.ext -m... -out outDir -p parameterFile.txt}
+\texttt{elastix -f0 fixed0.ext -f1 fixed1.ext -f<>... -m0
+moving0.ext
+ -m1 moving1.ext -m<>... -out outDir -p parameterFile.txt}
 \end{quote}
 
 \item[both] In this case the registration cost function is defined
@@ -1992,9 +1997,8 @@ etc
 \end{verbatim}
 \normalsize
 
-\subsection{Penalty terms}
-
-nothing here yet
+Another way of registering multi-spectral data is to use the
+$\alpha$-mutual information measure, described below.
 
 \subsection{Additional metrics}
 
@@ -2004,8 +2008,8 @@ Some more advanced metrics, not found in the ITK, are available in
 \item[Mutual information with rigidity penalty] This metric computes the combined
 cost function
 \begin{align}
-\CC &= \frac{1}{\omega} \left( \mathit{MI}(\vTm;I_F,I_M) + \omega
-\mathcal{P}^{\mathrm{rigid}}(\vTm;I_M) \right)
+\CC &= \mathit{MI}(\vTm;I_F,I_M) + \omega
+\mathcal{P}^{\mathrm{rigid}}(\vTm;I_M)
 \end{align}
 with $\mathcal{P}^{\mathrm{rigid}}$ the rigidity penalty term
 described in \cite{Staring07}. It is specified in the parameter file
@@ -2013,6 +2017,7 @@ with: \small
 \begin{verbatim}
 (Metric "MattesMutualInformationWithRigidityPenalty")
 // normal Mattes MI parameters
+...
 
 // Rigidity penalty parameters:
 (RigidityPenaltyWeight 0.1)
@@ -2051,6 +2056,72 @@ is specified in the parameter file with: \small
 \normalsize A complete list of the available parameters can be found
 at \url{http://elastix.isi.uu.nl/doxygen/a00053.html}.
 \end{description}
+
+\subsection{Penalty terms}
+
+This paragraph requires extension and modification.
+
+In order to regularise the transformation $\vT_{\vmu}$ often a
+penalty term $\mathcal{P}(\vmu)$ is added to the cost function, so
+it becomes:
+\begin{align}
+\mathcal{C} &= \omega_1 \mathcal{S} + \omega_2 \mathcal{P},
+\end{align}
+where $\omega_1, \omega_2$ user-defined constants that weigh
+similarity against regularity.
+
+Penalty term are often based on the first or second order spatial
+derivatives of the transformation. For example the bending energy of
+the transformation, which is arguably the most common penalty term,
+is defined in 2D as:
+\begin{align}
+\mathcal{P}_{\mathrm{BE}}(\vmu) &= \frac{1}{P} \sum_{\vxt[i]}
+\left\| \frac{\partial^2 \vT}{\partial \vx \partial \vx^T}(\vxt[i])
+\right\|_F^2 \\
+&= \frac{1}{P} \sum_{\vxt[i]} \sum_{j = 1}^2 \left( \frac{\partial^2
+T_j}{\partial x_1^2}(\vxt[i]) \right)^2  + 2 \left( \frac{\partial^2
+T_j}{\partial x_1 \partial x_2}(\vxt[i]) \right)^2 + \left(
+\frac{\partial^2 T_j}{\partial x_2^2}(\vxt[i]) \right)^2,
+\end{align}
+where $P$ is the number of points $\vxt[i]$, and the tilde denotes
+the difference between a variable and a given point over which a
+term is evaluated.
+
+The derivative of the similarity measure usually involves
+computation of the spatial derivative of the moving image:
+$\D{I_M}{\vx}$, and the derivative of the transformation to its
+parameters: $\D{\vT}{\vmu}$. In the ITK the last derivative is
+implemented using $\texttt{transform->GetJacobian()}$, i.e. the
+derivative to the transformation parameters $\vmu$ is referred to as
+`Jacobian'.
+
+Penalty terms usually consist of the first and second order
+\emph{spatial} derivatives of the transformation, i.e.
+$\D{\vT}{\vx}$ and $\Dd{\vT}{\vx}{\vx^T}$. We will refer to these
+derivatives as the `SpatialJacobian' and the `SpatialHessian' to
+clearly distinguish between these derivatives and the `Jacobian'. In
+order to apply the gradient descent optimisation routine
+(\ref{eq:gd}), (\ref{eq:RM}), we additionally need the derivatives
+$\D{}{\vmu} \D{\vT}{\vx}$ and $\D{}{\vmu} \Dd{\vT}{\vx}{\vx^T}$.
+These we call the `JacobianOfSpatialJacobian' and
+`JacobianOfSpatialHessian', respectively.
+
+The transform class as defined in the ITK does not support the
+computation of spatial derivatives $\partial \vT / \partial \vx$ and
+$\partial^2 \vT / \partial \vx^2$, and their derivatives to $\vmu$.
+Initially, we created non-generic classes that combine MI and the
+mentioned penalty terms specifically (the
+\texttt{MattesMutualInformationWithRigidityPenalty} component in
+\elastix). Recently, however, we created a more advanced version of
+the ITK transform that does implement these spatial derivatives.
+Additionally, we created a bending energy regularisation class that
+takes advantage of these functions. It should now be relatively easy
+to create similar classes for the other penalty terms.
+
+This all means that it is possible in \elastix\ to combine any
+similarity metric with any of the available penalty terms (currently
+only the bending energy), and the MI similarity metric with the
+bending energy, the incompressibility or the rigidity penalty term.
 
 \section{Image samplers}
 
