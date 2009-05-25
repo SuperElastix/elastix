@@ -59,6 +59,7 @@ public:
   /** The BSpline order. */
   itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
 
+  typedef typename Superclass::JacobianType         JacobianType;
   typedef typename Superclass
     ::NonZeroJacobianIndicesType                    NonZeroJacobianIndicesType;
   typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
@@ -68,6 +69,7 @@ public:
   typedef typename Superclass
     ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
   typedef typename Superclass::InternalMatrixType   InternalMatrixType;
+  typedef typename Superclass::ParametersType       ParametersType;
   
   /** Parameters as SpaceDimension number of images. */
   typedef typename ParametersType::ValueType            PixelType;
@@ -76,9 +78,10 @@ public:
   typedef typename ImageType::Pointer                   ImagePointer;
 
   /** Typedefs for specifying the extend to the grid. */
-  typedef ImageRegion< itkGetStaticConstMacro( SpaceDimension ) > RegionType;
+  //typedef ImageRegion< itkGetStaticConstMacro( SpaceDimension ) > RegionType;
   typedef ImageRegion< itkGetStaticConstMacro( SpaceDimension - 1 ) > RegionRedDimType;
-  
+ 
+  typedef typename Superclass::RegionType       RegionType; 
   typedef typename RegionType::IndexType        IndexType;
   typedef typename RegionType::SizeType         SizeType;
   typedef typename RegionRedDimType::IndexType  IndexRedDimType;
@@ -86,7 +89,21 @@ public:
   typedef typename ImageType::SpacingType       SpacingType;
   typedef typename ImageType::DirectionType     DirectionType;
   typedef typename ImageType::PointType         OriginType;
-  typedef IndexType                             GridOffsetType;
+  typedef typename RegionType::IndexType        GridOffsetType;
+  typedef typename Superclass::InputPointType   InputPointType;
+  typedef typename Superclass::OutputPointType  OutputPointType;
+  typedef typename Superclass::WeightsType      WeightsType;
+  typedef typename Superclass::
+            ParameterIndexArrayType             ParameterIndexArrayType;
+  typedef typename Superclass::
+            ContinuousIndexType                 ContinuousIndexType;
+  typedef typename Superclass::ScalarType       ScalarType;
+  typedef typename Superclass::
+            JacobianImageType                   JacobianImageType;
+  typedef typename Superclass::
+            JacobianPixelType                   JacobianPixelType;
+  typedef typename Superclass::
+            WeightsFunctionType                 WeightsFunctionType;
 
   /** This method specifies the region over which the grid resides. */
   virtual void SetGridRegion( const RegionType& region );
@@ -123,7 +140,7 @@ protected:
     const RegionType & supportRegion ) const;
 
   /** Check if a continuous index is inside the valid region. */
-  bool InsideValidRegion( const ContinuousIndexType& index ) const;
+  bool InsideValidRegion( const ContinuousIndexType & index ) const;
 
   RegionRedDimType m_ValidRegionRedDim;
 

@@ -193,7 +193,7 @@ namespace itk
 
     /** Vector containing last dimension positions to use: initialize on all positions. */
     std::vector<int> lastDimPositions (lastDimSize);
-    for ( int i = 0; i < lastDimSize; ++i ) 
+    for ( unsigned int i = 0; i < lastDimSize; ++i ) 
     {
       lastDimPositions[i] = i;
     }
@@ -213,7 +213,7 @@ namespace itk
       double sumWeightingFactors = 0.0;
       double sumValues = 0.0;
       double sumValuesSquared = 0.0;
-      for (int d = 0; d < lastDimPositions.size(); ++d) 
+      for (unsigned int d = 0; d < lastDimPositions.size(); ++d) 
       {
         /** Initialize some variables. */
         RealType movingImageValue;
@@ -343,7 +343,7 @@ namespace itk
 
     /** Vector containing last dimension positions to use: initialize on all positions. */
     std::vector<int> lastDimPositions ( lastDimSize );
-    for ( int i = 0; i < lastDimSize; ++i ) 
+    for ( unsigned int i = 0; i < lastDimSize; ++i ) 
     {
       lastDimPositions[ i ] = i;
     }
@@ -368,7 +368,7 @@ namespace itk
       derivativeTerm0.Fill( NumericTraits< DerivativeValueType >::Zero );
       DerivativeType derivativeTerm1 ( this->GetNumberOfParameters() );
       derivativeTerm1.Fill( NumericTraits< DerivativeValueType >::Zero );
-      for ( int d = 0; d < lastDimPositions.size(); ++d ) 
+      for ( unsigned int d = 0; d < lastDimPositions.size(); ++d ) 
       {
         /** Initialize some variables. */
         RealType movingImageValue;

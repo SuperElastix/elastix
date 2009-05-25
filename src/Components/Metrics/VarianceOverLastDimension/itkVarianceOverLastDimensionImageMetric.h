@@ -66,7 +66,7 @@ public:
 
   /** Set functions. */
   itkSetMacro(SampleLastDimensionRandomly, bool);
-  itkSetMacro(NumSamplesLastDimension, int);
+  itkSetMacro(NumSamplesLastDimension, unsigned int);
   
   void SetWeightingFactors(const std::vector<double> & w);
   //itkSetMacro(WeightingFactors, std::vector<double>);
@@ -198,7 +198,7 @@ private:
 
   /** Variables to control random sampling in last dimension. */
   bool m_SampleLastDimensionRandomly;
-  int m_NumSamplesLastDimension;
+  unsigned int m_NumSamplesLastDimension;
 
   /** Variables to control weighting in the last dimension. */
   std::vector<double> m_WeightingFactors;

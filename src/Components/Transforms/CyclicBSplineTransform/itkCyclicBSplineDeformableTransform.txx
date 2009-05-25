@@ -52,9 +52,9 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   Superclass::SetGridRegion( region );
   
   /** Check if last dimension of supportregion < last dimension of grid. */
-  const int lastDim = m_GridRegion.GetImageDimension() - 1;
-  const int lastDimSize = m_GridRegion.GetSize( lastDim );
-  const int supportLastDimSize = m_SupportSize.GetElement( lastDim );
+  const int lastDim = this->m_GridRegion.GetImageDimension() - 1;
+  const int lastDimSize = this->m_GridRegion.GetSize( lastDim );
+  const int supportLastDimSize = this->m_SupportSize.GetElement( lastDim );
   if (supportLastDimSize > lastDimSize)
   {
     itkExceptionMacro( "Last dimension (" << lastDim << ") of support size (" 
@@ -74,8 +74,8 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 ::ReduceDimensionValidRegion()
 {
   /** Create valid region for SpaceDimsion - 1. */
-  IndexType        regionIndex = m_ValidRegion.GetIndex();
-  SizeType         regionSize = m_ValidRegion.GetSize();
+  IndexType        regionIndex = this->m_ValidRegion.GetIndex();
+  SizeType         regionSize = this->m_ValidRegion.GetSize();
   IndexRedDimType  regionIndexRedDim;
   SizeRedDimType   regionSizeRedDim;
   for ( unsigned int i = 0; i < SpaceDimension - 1; i++ )
@@ -83,8 +83,8 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
       regionIndexRedDim.SetElement( i, regionIndex.GetElement( i ) );
       regionSizeRedDim.SetElement( i, regionSize.GetElement( i ) );
   }
-  m_ValidRegionRedDim.SetIndex( regionIndexRedDim );
-  m_ValidRegionRedDim.SetSize( regionSizeRedDim );
+  this->m_ValidRegionRedDim.SetIndex( regionIndexRedDim );
+  this->m_ValidRegionRedDim.SetSize( regionSizeRedDim );
 }
 
 /** Check if the point lies inside a valid region. */
@@ -98,13 +98,13 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 
   /** Reduce dimension of input index. */
   IndexRedDimType  indexRedDim;
-  for ( unsigned int i = 0; i < SpaceDimension - 1; i++ )
+  for ( unsigned long i = 0; i < SpaceDimension - 1; i++ )
   {
-    indexRedDim.SetElement( i, index.GetElement( i ) );
+    indexRedDim.SetElement( i, static_cast< unsigned long >( index.GetElement( i ) ) );
   }
 
   /** Check if point is in valid region. */
-  if ( !m_ValidRegionRedDim.IsInside( indexRedDim ) )
+  if ( !this->m_ValidRegionRedDim.IsInside( indexRedDim ) )
   {
     inside = false;
   }
@@ -221,13 +221,12 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
     return;
   }
 
-  /***/
   ContinuousIndexType cindex;
   this->TransformPointToContinuousGridIndex( point, cindex );
 
   /** NOTE: if the support region does not lie totally within the grid
-  /* (except for the last dimension, which wraps around) we assume 
-  /* zero displacement and return the input point.
+   * (except for the last dimension, which wraps around) we assume 
+   * zero displacement and return the input point.
    */
   inside = this->InsideValidRegion( cindex );
   if ( !inside )
@@ -247,7 +246,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 
   /** Split support region into two parts. */
   RegionType supportRegions[ 2 ];
-  this->SplitRegion( m_CoefficientImage[ 0 ]->GetLargestPossibleRegion(), supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
+  this->SplitRegion( this->m_CoefficientImage[ 0 ]->GetLargestPossibleRegion(), supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
   
   /** Zero output point elements. */
   outputPoint.Fill( NumericTraits<ScalarType>::Zero );
@@ -303,7 +302,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 ::GetJacobian( const InputPointType & point ) const
 {
   /** Can only compute Jacobian if parameters are set via
-  /* SetParameters or SetParametersByValue.
+   * SetParameters or SetParametersByValue.
    */
   if( this->m_InputParametersPointer == NULL )
   {
@@ -311,8 +310,8 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   }
 
   /** Zero all components of jacobian
-  /* NOTE: for efficiency, we only need to zero out the coefficients
-  /* that got fill last time this method was called.
+   * NOTE: for efficiency, we only need to zero out the coefficients
+   * that got fill last time this method was called.
    */
   RegionType supportRegion;
   supportRegion.SetSize( this->m_SupportSize );
@@ -320,7 +319,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 
   /** Split support region into two parts. */
   RegionType supportRegions[ 2 ];
-  this->SplitRegion( m_JacobianImage[ 0 ]->GetLargestPossibleRegion(), supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
+  this->SplitRegion( this->m_JacobianImage[ 0 ]->GetLargestPossibleRegion(), supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
 
   /** Create iterators over Jacobian images. */
   for ( unsigned int r = 0; r < 2; ++r )
@@ -349,8 +348,8 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   this->TransformPointToContinuousGridIndex( point, index );
 
   /** NOTE: if the support region does not lie totally within the grid
-  /* (except for the last dimension) we assume zero displacement and 
-  /* return the input point. */
+   * (except for the last dimension) we assume zero displacement and 
+   * return the input point. */
   if ( !this->InsideValidRegion( index ) )
   {
     return this->m_Jacobian;
@@ -371,7 +370,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   supportRegion.SetIndex( supportIndex );
 
   /** Split support region into two parts. */
-  this->SplitRegion( m_JacobianImage[ 0 ]->GetLargestPossibleRegion(), supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
+  this->SplitRegion( this->m_JacobianImage[ 0 ]->GetLargestPossibleRegion(), supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
 
   /** For each dimension, copy the weight to the support region. */
   unsigned long counter = 0;
@@ -433,7 +432,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   supportRegion.SetIndex( supportIndex );
   /** Split support region into two parts. */
   RegionType supportRegions[ 2 ];
-  this->SplitRegion(m_CoefficientImage[ 0 ]->GetLargestPossibleRegion(), supportRegion, supportRegions[ 0 ], supportRegions[ 1 ]);
+  this->SplitRegion( this->m_CoefficientImage[ 0 ]->GetLargestPossibleRegion(), supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
 
   /** For each dimension, copy the weight to the support region. */
   unsigned long counter = 0;
@@ -467,7 +466,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 {
   /** Split support region into two parts. */
   RegionType supportRegions[ 2 ];
-  this->SplitRegion( m_CoefficientImage[ 0 ]->GetLargestPossibleRegion(), supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
+  this->SplitRegion( this->m_CoefficientImage[ 0 ]->GetLargestPossibleRegion(), supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
 
   /** Initialize some helper variables. */
   const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;

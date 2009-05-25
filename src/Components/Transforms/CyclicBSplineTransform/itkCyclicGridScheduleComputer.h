@@ -39,7 +39,8 @@ public:
 
   /** Standard class typedefs. */
   typedef CyclicGridScheduleComputer          Self;
-  typedef GridScheduleComputer                Superclass;
+  typedef GridScheduleComputer<
+      TTransformScalarType, VImageDimension>  Superclass;
   typedef SmartPointer< Self >                Pointer;
   typedef SmartPointer< const Self >          ConstPointer;
 
