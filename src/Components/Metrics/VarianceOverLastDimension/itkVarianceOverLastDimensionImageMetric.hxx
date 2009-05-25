@@ -345,7 +345,7 @@ namespace itk
     std::vector<int> lastDimPositions ( lastDimSize );
     for ( int i = 0; i < lastDimSize; ++i ) 
     {
-      lastDimPositions[i] = i;
+      lastDimPositions[ i ] = i;
     }
 
     /** Loop over the fixed image samples to calculate the variance over time for every sample position. */
