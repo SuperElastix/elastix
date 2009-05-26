@@ -97,10 +97,10 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   bool inside = true;
 
   /** Reduce dimension of input index. */
-  IndexRedDimType  indexRedDim;
+  RedContinuousIndexType  indexRedDim;
   for ( unsigned long i = 0; i < SpaceDimension - 1; i++ )
   {
-    indexRedDim.SetElement( i, static_cast< unsigned long >( index.GetElement( i ) ) );
+    indexRedDim.SetElement( i, index.GetElement( i ) );
   }
 
   /** Check if point is in valid region. */

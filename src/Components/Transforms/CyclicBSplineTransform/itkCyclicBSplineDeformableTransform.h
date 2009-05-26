@@ -104,6 +104,11 @@ public:
             JacobianPixelType                   JacobianPixelType;
   typedef typename Superclass::
             WeightsFunctionType                 WeightsFunctionType;
+  typedef BSplineInterpolationWeightFunction2< ScalarType,
+    itkGetStaticConstMacro( SpaceDimension - 1 ),
+    itkGetStaticConstMacro( SplineOrder ) >     RedWeightsFunctionType;
+  typedef typename RedWeightsFunctionType::
+                  ContinuousIndexType           RedContinuousIndexType;
 
   /** This method specifies the region over which the grid resides. */
   virtual void SetGridRegion( const RegionType& region );
