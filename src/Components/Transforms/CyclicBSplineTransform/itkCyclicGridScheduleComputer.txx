@@ -46,6 +46,7 @@ CyclicGridScheduleComputer<TTransformScalarType, VImageDimension>
 {
   /** Call superclass method. */
   //Superclass::ComputeBSplineGrid();
+  std::cout << "Oh yeah!" << std::endl;
 
   OriginType imageOrigin;
   SpacingType imageSpacing, finalGridSpacing;
@@ -69,12 +70,12 @@ CyclicGridScheduleComputer<TTransformScalarType, VImageDimension>
       /** Compute the grid spacings. */
       double gridSpacing
         = finalGridSpacing[ dim ] * this->m_GridSpacingFactors[ res ][ dim ];
-      this->m_GridSpacings[ res ][ dim ] = gridSpacing;
 
       /** Check if the grid spacing matches the cyclic behaviour of this 
        * transform. We want the spacing at the borders for the last dimension
        * to be half the grid spacing.
        */
+      unsigned int bareGridSize = 0;
       if (dim == Dimension - 1) 
       {
         const float lastDimSizeInPhysicalUnits = 
@@ -83,17 +84,22 @@ CyclicGridScheduleComputer<TTransformScalarType, VImageDimension>
         /** Compute closest correct spacing. */
           
         /** Compute number of nodes. */
-        const int numNodes = static_cast<int>( lastDimSizeInPhysicalUnits / 
-                                     gridSpacing );
-          
+        bareGridSize = static_cast<unsigned int>( lastDimSizeInPhysicalUnits / 
+                                                                   gridSpacing );
+
         /** Compute new (larger) gridspacing. */
         gridSpacing = 
-              lastDimSizeInPhysicalUnits / static_cast<float> ( numNodes );
+              lastDimSizeInPhysicalUnits / static_cast<float> ( bareGridSize );
+       
+      } 
+      else 
+      {
+        /** Compute the grid size without the extra grid points at the edges. */
+        bareGridSize = static_cast<unsigned int>(
+          vcl_ceil( size[ dim ] * imageSpacing[ dim ] / gridSpacing ) );
       }
 
-      /** Compute the grid size without the extra grid points at the edges. */
-      const unsigned int bareGridSize = static_cast<unsigned int>(
-        vcl_ceil( size[ dim ] * imageSpacing[ dim ] / gridSpacing ) );
+      this->m_GridSpacings[ res ][ dim ] = gridSpacing;
 
       /** The number of B-spline grid nodes is the bareGridSize plus the
        * B-spline order more grid nodes (for all dimensions but the last).
