@@ -58,6 +58,8 @@ CyclicGridScheduleComputer<TTransformScalarType, VImageDimension>
   this->m_GridRegions.resize( this->GetNumberOfLevels() );
   this->m_GridSpacings.resize( this->GetNumberOfLevels() );
 
+  /** Epsilon for 
+
   /** For all levels ... */
   for ( unsigned int res = 0; res < this->GetNumberOfLevels(); ++res )
   {
@@ -66,6 +68,11 @@ CyclicGridScheduleComputer<TTransformScalarType, VImageDimension>
     SizeType gridsize;
     for ( unsigned int dim = 0; dim < Dimension; ++dim )
     {
+      /** Compute the grid spacings. */
+      double gridSpacing
+        = finalGridSpacing[ dim ] * this->m_GridSpacingFactors[ res ][ dim ];
+      this->m_GridSpacings[ res ][ dim ] = gridSpacing;
+
       /** Check if the grid spacing matches the cyclic behaviour of this 
        * transform. We want the spacing at the borders for the last dimension
        * to be half the grid spacing.
@@ -74,27 +81,17 @@ CyclicGridScheduleComputer<TTransformScalarType, VImageDimension>
       {
         const float lastDimSizeInPhysicalUnits = 
                imageSpacing[ dim ] * this->GetImageRegion().GetSize( dim );
-        if ( fmod( lastDimSizeInPhysicalUnits, 
-           static_cast<float>( finalGridSpacing[ dim ] ) ) > 0) {
-          /** The grid spacing is too small to make the spacing at the borders half
-           * half the provided spacing. Compute closest correct spacing and output
-           * a warning.
-           */
+        
+        /** Compute closest correct spacing. */
           
-          /** Compute number of nodes. */
-          const int numNodes = static_cast<int>( lastDimSizeInPhysicalUnits / 
-                                     finalGridSpacing[ dim ] );
+        /** Compute number of nodes. */
+        const int numNodes = static_cast<int>( lastDimSizeInPhysicalUnits / 
+                                     gridSpacing );
           
-          /** Compute new (larger) gridspacing. */
-          finalGridSpacing[ dim ] = 
-                lastDimSizeInPhysicalUnits / static_cast<float> ( numNodes );
-        }
+        /** Compute new (larger) gridspacing. */
+        gridSpacing = 
+              lastDimSizeInPhysicalUnits / static_cast<float> ( numNodes );
       }
-
-      /** Compute the grid spacings. */
-      double gridSpacing
-        = finalGridSpacing[ dim ] * this->m_GridSpacingFactors[ res ][ dim ];
-      this->m_GridSpacings[ res ][ dim ] = gridSpacing;
 
       /** Compute the grid size without the extra grid points at the edges. */
       const unsigned int bareGridSize = static_cast<unsigned int>(
