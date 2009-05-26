@@ -46,7 +46,6 @@ CyclicGridScheduleComputer<TTransformScalarType, VImageDimension>
 {
   /** Call superclass method. */
   //Superclass::ComputeBSplineGrid();
-  std::cout << "Oh yeah!" << std::endl;
 
   OriginType imageOrigin;
   SpacingType imageSpacing, finalGridSpacing;
