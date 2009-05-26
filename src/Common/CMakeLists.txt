@@ -60,8 +60,6 @@ SET( CostFunctionFiles
 )
 
 SET( TransformFiles
- Transforms/itkAdvancedAffineTransform.h
- Transforms/itkAdvancedAffineTransform.txx
  Transforms/itkAdvancedBSplineCombinationTransform.h
  Transforms/itkAdvancedBSplineCombinationTransform.hxx
  Transforms/itkAdvancedBSplineDeformableTransform.h
