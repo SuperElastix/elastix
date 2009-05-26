@@ -58,8 +58,6 @@ CyclicGridScheduleComputer<TTransformScalarType, VImageDimension>
   this->m_GridRegions.resize( this->GetNumberOfLevels() );
   this->m_GridSpacings.resize( this->GetNumberOfLevels() );
 
-  /** Epsilon for 
-
   /** For all levels ... */
   for ( unsigned int res = 0; res < this->GetNumberOfLevels(); ++res )
   {
