@@ -148,16 +148,13 @@ namespace itk
     MeasureType GetValue( const ParametersType& parameters ) const;
 
     /** Set/get whether to apply the technique introduced by Nicholas Tustison; default: false */
-    itkGetConstMacro(UseJacobianPreconditioning, bool);
-    itkSetMacro(UseJacobianPreconditioning, bool);
+    itkGetConstMacro( UseJacobianPreconditioning, bool );
+    itkSetMacro( UseJacobianPreconditioning, bool );
 
   protected:
     
     /** The constructor. */
-    ParzenWindowMutualInformationImageToImageMetric()
-    {
-      this->m_UseJacobianPreconditioning = false;
-    }
+    ParzenWindowMutualInformationImageToImageMetric();
 
     /** The destructor. */
     virtual ~ParzenWindowMutualInformationImageToImageMetric() {};

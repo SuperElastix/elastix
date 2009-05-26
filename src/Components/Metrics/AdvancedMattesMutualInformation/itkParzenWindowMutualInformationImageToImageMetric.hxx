@@ -25,7 +25,19 @@
 
 namespace itk
 { 
-  
+
+ /**
+  * ********************* Constructor ******************************
+  */
+
+  template < class TFixedImage, class TMovingImage >
+    ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+    ::ParzenWindowMutualInformationImageToImageMetric()
+  {
+    this->m_UseJacobianPreconditioning = false;
+  } // end constructor
+
+
  /**
   * ********************* InitializeHistograms ******************************
   */
@@ -359,8 +371,10 @@ namespace itk
     if ( this->GetUseJacobianPreconditioning() )
     {      
       DerivativeValueType * derivit = derivative.begin();
-      DerivativeValueType * divisit = preconditioningDivisor.begin();      
-      const double normalizationFactor = static_cast<double>(this->m_NumberOfPixelsCounted);
+      DerivativeValueType * divisit = preconditioningDivisor.begin();  
+      /** This normalization was not in the Tustison paper, but it helps, 
+       * especially for localized mutual information */
+      const double normalizationFactor = preconditioningDivisor.mean();
       while( derivit != derivative.end() )
       {
         (*derivit) *= normalizationFactor / ( (*divisit) + 1e-14 );        
