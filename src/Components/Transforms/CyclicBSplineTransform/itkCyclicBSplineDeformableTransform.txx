@@ -149,9 +149,9 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   size2.Fill( 0 );
 
   /** Get last dimension information. */
-  const int lastDim = imageRegion.GetImageDimension() - 1;
-  const int lastDimSize = imageRegion.GetSize( lastDim );
-  const int supportLastDimSize = inRegion.GetSize( lastDim );
+  const unsigned int lastDim = imageRegion.GetImageDimension() - 1;
+  const unsigned int lastDimSize = imageRegion.GetSize( lastDim );
+  const unsigned int supportLastDimSize = inRegion.GetSize( lastDim );
 
   /** Check if we need to split. */
   const int lastDimIndex = inRegion.GetIndex( lastDim );
@@ -166,13 +166,13 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
     size2 = inRegion.GetSize();
     size2.SetElement( lastDim, supportLastDimSize + lastDimIndex );
   } 
-  else if ( inRegion.GetIndex( lastDim ) + supportLastDimSize > lastDimSize )
+  else if ( lastDimIndex + supportLastDimSize > lastDimSize )
   {
     /** Set last dimension item of index2 to zero. */
     index2.SetElement( lastDim, 0 );
 
     /** Set new size of supportRegion1. */
-    size1.SetElement( lastDim, lastDimSize - inRegion.GetIndex( lastDim ) );
+    size1.SetElement( lastDim, lastDimSize - lastDimIndex );
 
     /** Set size and index of supportRegion2. */
     size2 = inRegion.GetSize();
