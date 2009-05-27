@@ -71,8 +71,9 @@ using namespace itk;
     void ZeroDeformationConstraint<TElastix>
     ::BeforeEachResolution(void)
   {
-    /** Reset iteration number. */
+    /** Reset iteration number and num penalty term updates. */
     this->m_CurrentIteration = 0;
+    this->m_NumPenaltyTermUpdates = 0;
 
     /** Reset previous maximum magnitude. */
     this->m_PreviousMaximumMagnitude = itk::NumericTraits< double >::max();
@@ -144,7 +145,8 @@ using namespace itk;
       /** Check if maximum magnitude decreased enough. If not update penalty term multiplier. */
       if ( this->GetCurrentMaximumMagnitude() > this->m_RequiredConstraintDecreaseFactor * this->m_PreviousMaximumMagnitude )
       {
-        this->m_CurrentPenaltyTermMultiplier = this->DetermineNewPenaltyTermMultiplier( m_CurrentIteration );
+        this->m_CurrentPenaltyTermMultiplier = this->DetermineNewPenaltyTermMultiplier( this->m_NumPenaltyTermUpdates + 1 );
+        this->m_NumPenaltyTermUpdates++;
       }
       this->m_PreviousMaximumMagnitude = this->GetCurrentMaximumMagnitude();
     }    

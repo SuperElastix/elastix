@@ -191,6 +191,7 @@ using namespace itk;
     /** Previous maximum magnitude value and required decrease factor. */
     double m_PreviousMaximumMagnitude;
     double m_RequiredConstraintDecreaseFactor;
+    unsigned int m_NumPenaltyTermUpdates;
 
     /** Average lagrange multiplier variable for output. */
     double m_AverageLagrangeMultiplier;
