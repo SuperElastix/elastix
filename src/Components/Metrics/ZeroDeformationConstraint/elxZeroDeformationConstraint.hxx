@@ -54,11 +54,13 @@ using namespace itk;
     xout["iteration"].AddTargetCell("5:Penalty");
     xout["iteration"].AddTargetCell("6:Lagrange");
     xout["iteration"].AddTargetCell("7:Infeasibility");
+    xout["iteration"].AddTargetCell("8:MaxMagnitude");
 
     /** Format the metric and stepsize as floats */     
     xl::xout["iteration"]["5:Penalty"]  << std::showpoint << std::fixed;
     xl::xout["iteration"]["6:Lagrange"] << std::showpoint << std::fixed;
     xl::xout["iteration"]["7:Infeasibility"] << std::showpoint << std::fixed;
+    xl::xout["iteration"]["8:MaxMagnitude"] << std::showpoint << std::fixed;
 
   }
 
@@ -138,6 +140,7 @@ using namespace itk;
     xl::xout["iteration"]["5:Penalty"]  << this->m_CurrentPenaltyTermMultiplier;
     xl::xout["iteration"]["6:Lagrange"] << this->m_AverageLagrangeMultiplier;
     xl::xout["iteration"]["7:Infeasibility"] << this->GetCurrentInfeasibility();
+    xl::xout["iteration"]["8:MaxMagnitude"] << this->GetCurrentMaximumMagnitude();
 
     if ( m_CurrentIteration % this->m_NumSubIterations == 0 )
     {
