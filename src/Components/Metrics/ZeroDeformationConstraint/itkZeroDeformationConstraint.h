@@ -111,6 +111,8 @@ public:
     Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
   typedef typename
     Superclass::NonZeroJacobianIndicesType                NonZeroJacobianIndicesType;
+  typedef typename
+    Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,

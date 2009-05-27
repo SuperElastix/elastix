@@ -152,7 +152,7 @@ namespace itk
       sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
     /** Return the mean squares measure value. */
-    return ( -sumMagnitude + this->m_CurrentPenaltyTermMultiplier / 2.0 * sumSquaredMagnitude ) / static_cast< float > ( m_NumberOfPixelsCounted );
+    return ( -sumMagnitude + this->m_CurrentPenaltyTermMultiplier / 2.0 * sumSquaredMagnitude ) / static_cast< float > ( this->m_NumberOfPixelsCounted );
     //return -sumMagnitude + this->m_CurrentPenaltyTermMultiplier / 2.0 * sumSquaredMagnitude;
 
   } // end GetValue
@@ -197,7 +197,6 @@ namespace itk
     typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
 
     /** Initialize measure and derivative to zero. */
-    MeasureType measure = NumericTraits< MeasureType >::Zero;
     derivative = DerivativeType( this->GetNumberOfParameters() );
     derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
 
@@ -219,7 +218,6 @@ namespace itk
     /** Initialize some variables. */
     double sumMagnitude = 0.0;
     double sumSquaredMagnitude = 0.0;
-    double sumDerivative = 0.0;
     this->m_CurrentInfeasibility = 0.0;
     this->m_NumberOfPixelsCounted = 0;
 
@@ -271,8 +269,8 @@ namespace itk
             this->EvaluateTransformJacobian( fixedPoint );
 
         /** Compute (dT/dMu)T * scaledTransformation. */
-        const NonZeroJacobianIndicesType::size_type numNonZeroJacobianIndices = this->m_NonZeroJacobianIndices.size();
-        for ( NonZeroJacobianIndicesType::size_type n = 0; n < numNonZeroJacobianIndices; ++n )
+        const typename NonZeroJacobianIndicesType::size_type numNonZeroJacobianIndices = this->m_NonZeroJacobianIndices.size();
+        for ( typename NonZeroJacobianIndicesType::size_type n = 0; n < numNonZeroJacobianIndices; ++n )
         {
           float jacScaledTransformation = 0.0f;
           for ( unsigned int d = 0; d < FixedImageDimension; ++d )
@@ -296,11 +294,11 @@ namespace itk
 
     /** Return the mean squares measure value. */
     //value = -sumMagnitude + this->m_CurrentPenaltyTermMultiplier / 2.0 * sumSquaredMagnitude;
-    value = ( -sumMagnitude + this->m_CurrentPenaltyTermMultiplier / 2.0 * sumSquaredMagnitude ) / static_cast< float > ( m_NumberOfPixelsCounted );
+    value = ( -sumMagnitude + this->m_CurrentPenaltyTermMultiplier / 2.0 * sumSquaredMagnitude ) / static_cast< float > ( this->m_NumberOfPixelsCounted );
 
-    for ( int p = 0; p < this->GetNumberOfParameters(); ++p) 
+    for ( unsigned int p = 0; p < this->GetNumberOfParameters(); ++p) 
     {
-      derivative[ p ] /= static_cast< float > ( m_NumberOfPixelsCounted );
+      derivative[ p ] /= static_cast< float > ( this->m_NumberOfPixelsCounted );
     }
 
   } // end GetValueAndDerivative()
