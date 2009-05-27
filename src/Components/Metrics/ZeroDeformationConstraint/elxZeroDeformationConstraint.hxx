@@ -62,6 +62,7 @@ using namespace itk;
 
   }
 
+
   /**
    * ***************** BeforeEachResolution ***********************
    */
@@ -73,12 +74,15 @@ using namespace itk;
     /** Reset iteration number. */
     this->m_CurrentIteration = 0;
 
+    /** Reset previous maximum magnitude. */
+    this->m_PreviousMaximumMagnitude = itk::NumericTraits< double >::max();
+
     /** Get the current resolution level. */
     unsigned int level = 
       ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
     /** Get the initial lagrange multiplier. */
-    float initialLagrangeMultiplier;
+    double initialLagrangeMultiplier;
     this->GetConfiguration()->ReadParameter( initialLagrangeMultiplier,
       "InitialLagrangeMultiplier", this->GetComponentLabel(), level, 0 );
     this->SetInitialLangrangeMultiplier( initialLagrangeMultiplier );
@@ -92,6 +96,10 @@ using namespace itk;
     /** Get the penalty term multiplier factor. */
     this->GetConfiguration()->ReadParameter( this->m_PenaltyTermMultiplierFactor,
       "PenaltyTermMultiplierFactor", this->GetComponentLabel(), level, 0 );
+
+    /** Get the required decrease factor for the maximum magnitude. */
+    this->GetConfiguration()->ReadParameter( this->m_RequiredConstraintDecreaseFactor,
+      "RequiredConstraintDecreaseFactor", this->GetComponentLabel(), level, 0 );
 
     /** Get the number of subiterations after which the new lagrange multiplier
      * is determined.
@@ -130,10 +138,15 @@ using namespace itk;
     xl::xout["iteration"]["6:Lagrange"] << this->m_AverageLagrangeMultiplier;
     xl::xout["iteration"]["7:Infeasibility"] << this->GetCurrentInfeasibility();
 
-    this->m_CurrentPenaltyTermMultiplier = this->DetermineNewPenaltyTermMultiplier( m_CurrentIteration );
     if ( m_CurrentIteration % this->m_NumSubIterations == 0 )
     {
       this->DetermineNewLagrangeMultipliers();
+      /** Check if maximum magnitude decreased enough. If not update penalty term multiplier. */
+      if ( this->GetCurrentMaximumMagnitude() > this->m_RequiredConstraintDecreaseFactor * this->m_PreviousMaximumMagnitude )
+      {
+        this->m_CurrentPenaltyTermMultiplier = this->DetermineNewPenaltyTermMultiplier( m_CurrentIteration );
+      }
+      this->m_PreviousMaximumMagnitude = this->GetCurrentMaximumMagnitude();
     }    
   } // end AfterEachIteration
 
@@ -148,9 +161,9 @@ using namespace itk;
   {
 
     m_AverageLagrangeMultiplier = 0.0;
-    for ( std::vector< float >::size_type i = 0; i < this->m_CurrentLagrangeMultipliers.size(); ++i )
+    for ( std::vector< double >::size_type i = 0; i < this->m_CurrentLagrangeMultipliers.size(); ++i )
     {
-      this->m_CurrentLagrangeMultipliers[ i ] = min( 0.0f, this->m_CurrentLagrangeMultipliers[ i ] - 
+      this->m_CurrentLagrangeMultipliers[ i ] = min( 0.0, this->m_CurrentLagrangeMultipliers[ i ] - 
         this->m_CurrentPenaltyTermValues[ i ] * this->GetCurrentPenaltyTermMultiplier() );
       m_AverageLagrangeMultiplier += this->m_CurrentLagrangeMultipliers[ i ];
     }
@@ -164,10 +177,10 @@ using namespace itk;
   */
 
   template <class TElastix>
-  float ZeroDeformationConstraint<TElastix>
+  double ZeroDeformationConstraint<TElastix>
     ::DetermineNewPenaltyTermMultiplier( const int iterationNumber ) const 
   {
-    return static_cast<float> ( this->m_InitialPenaltyTermMultiplier * vcl_pow( 
+    return static_cast< double > ( this->m_InitialPenaltyTermMultiplier * vcl_pow( 
       static_cast<double>( this->m_PenaltyTermMultiplierFactor ), static_cast<double> ( iterationNumber ) ) );
   } // end DetermineNewTermPenaltyMultiplier
 

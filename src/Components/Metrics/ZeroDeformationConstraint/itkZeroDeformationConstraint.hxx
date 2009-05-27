@@ -27,9 +27,10 @@ namespace itk
   template <class TFixedImage, class TMovingImage> 
     ZeroDeformationConstraintMetric<TFixedImage,TMovingImage>
       ::ZeroDeformationConstraintMetric():
-        m_CurrentPenaltyTermMultiplier( 1.0f ), 
+        m_CurrentPenaltyTermMultiplier( 1.0 ), 
         m_CurrentLagrangeMultipliers( 0 ),
-        m_InitialLangrangeMultiplier( 1.0f )
+        m_InitialLangrangeMultiplier( 1.0 ),
+        m_CurrentMaximumMagnitude( 0.0 )
   {
     this->SetUseImageSampler( true );
     this->SetUseFixedImageLimiter( false );
@@ -109,6 +110,7 @@ namespace itk
     double sumSquaredMagnitude = 0.0;
     this->m_CurrentInfeasibility = 0.0;
     this->m_NumberOfPixelsCounted = 0;
+    this->m_CurrentMaximumMagnitude = 0.0;
 
     /** Loop over the samples to compute sums for computation of the metric. */
     int i = 0;
@@ -132,9 +134,10 @@ namespace itk
       {
         this->m_NumberOfPixelsCounted++;
 
-        const float magnitude = (mappedPoint - fixedPoint).GetVnlVector().magnitude();
+        const double magnitude = (mappedPoint - fixedPoint).GetVnlVector().magnitude();
         /** Remember current penalty term value. */
-        this->m_CurrentPenaltyTermValues[i] = magnitude;
+        this->m_CurrentPenaltyTermValues[ i ] = magnitude;
+        this->m_CurrentMaximumMagnitude = max( this->m_CurrentMaximumMagnitude, magnitude );
         /** Update magnitude sums. */
         sumMagnitude += this->m_CurrentLagrangeMultipliers[ i ] * magnitude;
         sumSquaredMagnitude += magnitude*magnitude;
@@ -220,6 +223,7 @@ namespace itk
     double sumSquaredMagnitude = 0.0;
     this->m_CurrentInfeasibility = 0.0;
     this->m_NumberOfPixelsCounted = 0;
+    this->m_CurrentMaximumMagnitude = 0.0;
 
     /** Loop over the samples to compute sums for the metric value and derivative. */
     int i = 0;
@@ -249,9 +253,10 @@ namespace itk
         {
           transformation[ d ] = mappedPoint[ d ] - fixedPoint[ d ];
         }
-        const float magnitude = transformation.GetVnlVector().magnitude();
+        const double magnitude = transformation.GetVnlVector().magnitude();
         /** Remember current penalty term value. */
         this->m_CurrentPenaltyTermValues[ i ] = magnitude;
+        this->m_CurrentMaximumMagnitude = max( this->m_CurrentMaximumMagnitude, magnitude );
         /** Update magnitude sums. */
         sumMagnitude += this->m_CurrentLagrangeMultipliers[ i ] * magnitude;
         sumSquaredMagnitude += magnitude*magnitude;

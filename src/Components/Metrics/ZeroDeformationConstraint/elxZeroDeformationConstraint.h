@@ -60,13 +60,13 @@ using namespace itk;
     itkTypeMacro( ZeroDeformationConstraint, ZeroDeformationConstraintMetric );
 
     /** Set functions. */
-    itkSetMacro( InitialPenaltyTermMultiplier, float );
-    itkSetMacro( PenaltyTermMultiplierFactor, float );
+    itkSetMacro( InitialPenaltyTermMultiplier, double );
+    itkSetMacro( PenaltyTermMultiplierFactor, double );
     itkSetMacro( NumSubIterations, unsigned int );
 
     /** Get functions. */
-    itkGetConstMacro( InitialPenaltyTermMultiplier, float );
-    itkGetConstMacro( PenaltyTermMultiplierFactor, float );
+    itkGetConstMacro( InitialPenaltyTermMultiplier, double );
+    itkGetConstMacro( PenaltyTermMultiplierFactor, double );
     itkGetConstMacro( NumSubIterations, unsigned int );
 
     /** Name of this class.
@@ -181,18 +181,22 @@ using namespace itk;
     void operator=( const Self& );              // purposely not implemented
 
     /** Start lagrangian multiplier and penalty multiplier alpha. */
-    float m_InitialPenaltyTermMultiplier;
-    float m_PenaltyTermMultiplierFactor;
+    double m_InitialPenaltyTermMultiplier;
+    double m_PenaltyTermMultiplierFactor;
 
     /** Number of sub-iterations, after which the new lagrangian multipliers are determined. */
     unsigned int m_NumSubIterations;
     unsigned int m_CurrentIteration;
 
+    /** Previous maximum magnitude value and required decrease factor. */
+    double m_PreviousMaximumMagnitude;
+    double m_RequiredConstraintDecreaseFactor;
+
     /** Average lagrange multiplier variable for output. */
     double m_AverageLagrangeMultiplier;
 
     inline void DetermineNewLagrangeMultipliers( );
-    inline float DetermineNewPenaltyTermMultiplier( const int iterationNumber ) const;
+    inline double DetermineNewPenaltyTermMultiplier( const int iterationNumber ) const;
 
   }; // end class ZeroDeformationConstraint
 

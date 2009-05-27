@@ -54,12 +54,13 @@ public:
   itkTypeMacro( VarianceOverLastDimensionImageMetric, AdvancedImageToImageMetric );
 
   /** Set functions. */
-  itkSetMacro( CurrentPenaltyTermMultiplier, float );
-  itkSetMacro( InitialLangrangeMultiplier, float );
+  itkSetMacro( CurrentPenaltyTermMultiplier, double );
+  itkSetMacro( InitialLangrangeMultiplier, double );
   
   /** Get functions. */
-  itkGetConstMacro( CurrentPenaltyTermMultiplier, float );
-  itkGetConstMacro( InitialLangrangeMultiplier, float );
+  itkGetConstMacro( CurrentPenaltyTermMultiplier, double );
+  itkGetConstMacro( CurrentMaximumMagnitude, double );
+  itkGetConstMacro( InitialLangrangeMultiplier, double );
   itkGetConstMacro( CurrentInfeasibility, double );
 
   float GetCurrentPenaltyTermValue ( const int i ) const {
@@ -165,17 +166,20 @@ protected:
   typedef typename Superclass::ParameterIndexArrayType            ParameterIndexArrayType;
 
   /** Current penalty term value. */
-  mutable std::vector< float > m_CurrentPenaltyTermValues;
+  mutable std::vector< double > m_CurrentPenaltyTermValues;
 
   /** Current lagrange multipliers (per constraint) and penalty term multiplier. */
-  float m_CurrentPenaltyTermMultiplier;
-  std::vector< float > m_CurrentLagrangeMultipliers;
+  double m_CurrentPenaltyTermMultiplier;
+  std::vector< double > m_CurrentLagrangeMultipliers;
 
   /** Current infeasibility value: sum( c( x_k ) ) / K. */
   mutable double m_CurrentInfeasibility;
 
+  /** Current maximum magnitude value. */
+  mutable double m_CurrentMaximumMagnitude;
+
   /** Initial langrange multiplier value. */
-  float m_InitialLangrangeMultiplier;
+  double m_InitialLangrangeMultiplier;
 
 private:
   ZeroDeformationConstraintMetric(const Self&); //purposely not implemented
