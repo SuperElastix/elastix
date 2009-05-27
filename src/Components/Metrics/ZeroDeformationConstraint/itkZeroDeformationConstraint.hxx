@@ -29,8 +29,8 @@ namespace itk
       ::ZeroDeformationConstraintMetric():
         m_CurrentPenaltyTermMultiplier( 1.0 ), 
         m_CurrentLagrangeMultipliers( 0 ),
-        m_InitialLangrangeMultiplier( 1.0 ),
-        m_CurrentMaximumMagnitude( 0.0 )
+        m_CurrentMaximumMagnitude( 0.0 ),
+        m_InitialLangrangeMultiplier( 1.0 )
   {
     this->SetUseImageSampler( true );
     this->SetUseFixedImageLimiter( false );
@@ -137,7 +137,7 @@ namespace itk
         const double magnitude = (mappedPoint - fixedPoint).GetVnlVector().magnitude();
         /** Remember current penalty term value. */
         this->m_CurrentPenaltyTermValues[ i ] = magnitude;
-        this->m_CurrentMaximumMagnitude = max( this->m_CurrentMaximumMagnitude, magnitude );
+        this->m_CurrentMaximumMagnitude = std::max( this->m_CurrentMaximumMagnitude, magnitude );
         /** Update magnitude sums. */
         sumMagnitude += this->m_CurrentLagrangeMultipliers[ i ] * magnitude;
         sumSquaredMagnitude += magnitude*magnitude;
@@ -256,7 +256,7 @@ namespace itk
         const double magnitude = transformation.GetVnlVector().magnitude();
         /** Remember current penalty term value. */
         this->m_CurrentPenaltyTermValues[ i ] = magnitude;
-        this->m_CurrentMaximumMagnitude = max( this->m_CurrentMaximumMagnitude, magnitude );
+        this->m_CurrentMaximumMagnitude = std::max( this->m_CurrentMaximumMagnitude, magnitude );
         /** Update magnitude sums. */
         sumMagnitude += this->m_CurrentLagrangeMultipliers[ i ] * magnitude;
         sumSquaredMagnitude += magnitude*magnitude;
