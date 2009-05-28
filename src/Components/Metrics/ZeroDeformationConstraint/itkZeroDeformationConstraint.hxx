@@ -266,7 +266,7 @@ namespace itk
         for ( unsigned int d = 0; d < FixedImageDimension; ++d )
         {
            transformation[ d ] = ( -this->m_CurrentLagrangeMultipliers[ i ] * transformation[ d ] )
-              / ( magnitude + epsilon ) + this->m_CurrentPenaltyTermMultiplier * transformation[ d ];
+              / pow( magnitude + epsilon, 0.5 ) + this->m_CurrentPenaltyTermMultiplier * transformation[ d ];
         }
 
         /** Get the TransformJacobian dT/dMu (jacobian). */
