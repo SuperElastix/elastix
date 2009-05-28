@@ -37,13 +37,13 @@ template <
     unsigned int NDimensions = 3,        // Number of dimensions
     unsigned int VSplineOrder = 3 >      // Spline order
 class ITK_EXPORT CyclicBSplineDeformableTransform
-  : public AdvancedBSplineDeformableTransform< TScalarType, NDimensions, NDimensions >
+  : public AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
 {
 public:
   /** Standard class typedefs. */
   typedef CyclicBSplineDeformableTransform          Self;
   typedef AdvancedBSplineDeformableTransform<
-    TScalarType, NDimensions, NDimensions >         Superclass;
+    TScalarType, NDimensions, VSplineOrder >         Superclass;
   typedef SmartPointer<Self>                        Pointer;
   typedef SmartPointer<const Self>                  ConstPointer;
 
