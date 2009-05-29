@@ -360,6 +360,10 @@ namespace itk
         SampleRandom( numLastDimSamples, lastDimSize, lastDimPositions );
       }
 
+      /** Transform sampled point to voxel coordinates. */
+      FixedImageContinuousIndexType voxelCoord;
+      this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
+
       /** Loop over the slowest varying dimension. */
       double sumWeightingFactors = 0.0;
       double sumValues = 0.0;
@@ -374,10 +378,6 @@ namespace itk
         RealType movingImageValue;
         MovingImagePointType mappedPoint;
         MovingImageDerivativeType movingImageDerivative;
-
-        /** Transform sampled point to voxel coordinates. */
-        FixedImageContinuousIndexType voxelCoord;
-        this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
 
         /** Set fixed point's last dimension to lastDimPosition. */
         voxelCoord[lastDim] = lastDimPositions[d];
