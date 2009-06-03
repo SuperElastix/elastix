@@ -220,6 +220,55 @@ int main( int argc, char *argv[] )
   std::cerr << "The elapsed time for the Jacobian of the spatial Hessian is: "
     << clockITK << std::endl;
 
+  /** Time the implementation of the spatial Jacobian and its Jacobian. */
+  startClock = clock();
+  for ( unsigned int i = 0; i < N; ++i )
+  {
+    transform->GetSpatialJacobian( inputPoint, spatialJacobian );
+    transform->GetJacobianOfSpatialJacobian( inputPoint,
+      jacobianOfSpatialJacobian, nzji );
+  }
+  endClock = clock();
+  clockITK = endClock - startClock;
+  std::cerr << "The elapsed time for the spatial Jacobian (2 func) is: "
+    << clockITK << std::endl;
+
+  /** Time the implementation of the spatial Jacobian and its Jacobian. */
+  startClock = clock();
+  for ( unsigned int i = 0; i < N; ++i )
+  {
+    transform->GetJacobianOfSpatialJacobian( inputPoint,
+      spatialJacobian, jacobianOfSpatialJacobian, nzji );
+  }
+  endClock = clock();
+  clockITK = endClock - startClock;
+  std::cerr << "The elapsed time for the spatial Jacobian (1 func) is: "
+    << clockITK << std::endl;
+
+  /** Time the implementation of the spatial Hessian. */
+  startClock = clock();
+  for ( unsigned int i = 0; i < N; ++i )
+  {
+    transform->GetSpatialHessian( inputPoint, spatialHessian );
+    transform->GetJacobianOfSpatialHessian( inputPoint,
+      jacobianOfSpatialHessian, nzji );
+  }
+  endClock = clock();
+  clockITK = endClock - startClock;
+  std::cerr << "The elapsed time for the spatial Hessian (2 func) is: "
+    << clockITK << std::endl;
+
+  /** Time the implementation of the Jacobian of the spatial Hessian. */
+  startClock = clock();
+  for ( unsigned int i = 0; i < N; ++i )
+  {
+    transform->GetJacobianOfSpatialHessian( inputPoint,
+      spatialHessian, jacobianOfSpatialHessian, nzji );
+  }
+  endClock = clock();
+  clockITK = endClock - startClock;
+  std::cerr << "The elapsed time for the spatial Hessian (1 func) is: "
+    << clockITK << std::endl;
 
   /** Return a value. */
   return 0;
