@@ -31,7 +31,8 @@ namespace elastix
   {
 
     /** Get dimension to reduce from configuration. */
-    unsigned int reducedDimension, reducedDimensionIndex;
+    unsigned int reducedDimension = InputImageDimension - 1;
+    unsigned int reducedDimensionIndex = 0;
     this->GetConfiguration()->ReadParameter(
       reducedDimension, "ReducedDimension", 
       this->GetComponentLabel(), 0, 0 );
