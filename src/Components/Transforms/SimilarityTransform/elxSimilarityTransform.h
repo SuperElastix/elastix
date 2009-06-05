@@ -71,7 +71,7 @@ using namespace itk;
 
   template < class TElastix >
     class SimilarityTransformElastix:
-      public CombinationTransform<
+      public AdvancedCombinationTransform<
         ITK_TYPENAME elx::TransformBase< TElastix >::CoordRepType,
         elx::TransformBase< TElastix >::FixedImageDimension >,
       public elx::TransformBase< TElastix >
@@ -80,7 +80,7 @@ using namespace itk;
     
     /** Standard ITK-stuff. */
     typedef SimilarityTransformElastix                          Self;
-    typedef CombinationTransform<
+    typedef AdvancedCombinationTransform<
       typename elx::TransformBase< TElastix >::CoordRepType,
       elx::TransformBase< TElastix >::FixedImageDimension >     Superclass1;
     typedef elx::TransformBase< TElastix >                      Superclass2;
@@ -97,7 +97,7 @@ using namespace itk;
     itkNewMacro( Self );
     
     /** Run-time type information (and related methods). */
-    itkTypeMacro( SimilarityTransformElastix, CombinationTransform );
+    itkTypeMacro( SimilarityTransformElastix, AdvancedCombinationTransform );
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific transform. \n
@@ -125,7 +125,6 @@ using namespace itk;
     typedef typename Superclass1::OutputVnlVectorType         OutputVnlVectorType;
     
     /** NOTE: use this one only in 3D (otherwise it's just an int). */
-    typedef typename SimilarityTransformType::AngleType       AngleType;
     typedef typename SimilarityTransformType::Pointer         SimilarityTransformPointer;
     typedef typename SimilarityTransformType::OffsetType      OffsetType;
     

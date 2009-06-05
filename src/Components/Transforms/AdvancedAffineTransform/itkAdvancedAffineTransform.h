@@ -369,6 +369,11 @@ private:
   AdvancedAffineTransform(const Self & other);
   const Self & operator=( const Self & );
 
+  NonZeroJacobianIndicesType m_NonZeroJacobianIndices;
+  SpatialHessianType m_SpatialHessian;
+  JacobianOfSpatialJacobianType m_JacobianOfSpatialJacobian;
+  JacobianOfSpatialHessianType m_JacobianOfSpatialHessian;
+
 }; //class AdvancedAffineTransform
 
 /** Back transform a vector */

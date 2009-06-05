@@ -16,7 +16,7 @@
 #define __itkDeformationFieldInterpolatingTransform_h
 
 #include <iostream>
-#include "itkTransform.h"
+#include "itkAdvancedTransform.h"
 #include "itkExceptionObject.h"
 #include "itkImage.h"
 #include "itkVectorInterpolateImageFunction.h"
@@ -42,12 +42,12 @@ namespace itk
     unsigned int NDimensions=3,        // Number of input dimensions
     class TComponentType=double>       // ComponentType of the deformation field 
   class DeformationFieldInterpolatingTransform : 
-    public Transform< TScalarType, NDimensions, NDimensions >
+    public AdvancedTransform< TScalarType, NDimensions, NDimensions >
   {
   public:
     /** Standard class typedefs. */
     typedef DeformationFieldInterpolatingTransform Self;
-    typedef Transform< TScalarType, NDimensions, NDimensions > Superclass;
+    typedef AdvancedTransform< TScalarType, NDimensions, NDimensions > Superclass;
     typedef SmartPointer<Self>        Pointer;
     typedef SmartPointer<const Self>  ConstPointer;
         
@@ -55,7 +55,7 @@ namespace itk
     itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( DeformationFieldInterpolatingTransform, Transform );
+    itkTypeMacro( DeformationFieldInterpolatingTransform, AdvancedTransform );
 
     /** Dimension of the domain spaces. */
     itkStaticConstMacro(InputSpaceDimension, unsigned int, Superclass::InputSpaceDimension);

@@ -60,14 +60,16 @@ SET( CostFunctionFiles
 )
 
 SET( TransformFiles
- Transforms/itkAdvancedBSplineCombinationTransform.h
- Transforms/itkAdvancedBSplineCombinationTransform.hxx
  Transforms/itkAdvancedBSplineDeformableTransform.h
  Transforms/itkAdvancedBSplineDeformableTransform.txx
  Transforms/itkAdvancedCombinationTransform.h
  Transforms/itkAdvancedCombinationTransform.hxx
  Transforms/itkAdvancedMatrixOffsetTransformBase.h
  Transforms/itkAdvancedMatrixOffsetTransformBase.txx
+ Transforms/itkAdvancedRigid2DTransform.h
+ Transforms/itkAdvancedRigid2DTransform.txx
+ Transforms/itkAdvancedRigid3DTransform.h
+ Transforms/itkAdvancedRigid3DTransform.txx
  Transforms/itkAdvancedTransform.h
  Transforms/itkAdvancedTransform.txx
  Transforms/itkBSplineCombinationTransform.h
@@ -85,14 +87,6 @@ SET( TransformFiles
  Transforms/itkBSplineSecondOrderDerivativeKernelFunction2.h
  Transforms/itkCombinationTransform.h
  Transforms/itkCombinationTransform.hxx
- Transforms/itkDeformationFieldInterpolatingTransform.h
- Transforms/itkDeformationFieldInterpolatingTransform.txx
- Transforms/itkDeformationFieldRegulizer.h
- Transforms/itkDeformationFieldRegulizer.hxx
- Transforms/itkDeformationFieldRegulizerForBSpline.h
- Transforms/itkDeformationFieldRegulizerForBSpline.hxx
- Transforms/itkDeformationVectorFieldTransform.h
- Transforms/itkDeformationVectorFieldTransform.txx
  Transforms/itkGridScheduleComputer.h
  Transforms/itkGridScheduleComputer.txx
  Transforms/itkUpsampleBSplineParametersFilter.h

@@ -56,6 +56,8 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   this->m_InverseMatrixMTime = this->m_MatrixMTime;
   this->m_FixedParameters.SetSize( NInputDimensions );
   this->m_FixedParameters.Fill( 0.0 );
+
+  this->PrecomputeJacobians(OutputSpaceDimension,ParametersDimension);
 }
 
 
@@ -75,6 +77,8 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   this->m_Singular = false;
   this->m_InverseMatrix.SetIdentity();
   this->m_InverseMatrixMTime = this->m_MatrixMTime;
+
+  this->PrecomputeJacobians(outputDims, paramDims);
 }
 
 
@@ -95,8 +99,64 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
     this->m_Translation[ i ] = offset[ i ];
   }
   this->ComputeMatrixParameters();
+
+  this->PrecomputeJacobians(OutputSpaceDimension,ParametersDimension);
 }
 
+
+// Print self
+template<class TScalarType, unsigned int NInputDimensions,
+                            unsigned int NOutputDimensions>
+void
+AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>
+::PrecomputeJacobians(unsigned int outputDims, unsigned int paramDims)
+{
+  /** Nonzero jacobian indices, for GetJacobian */
+  this->m_NonZeroJacobianIndices.resize(paramDims);
+  for (unsigned int par = 0; par < paramDims; ++par )
+  {
+    this->m_NonZeroJacobianIndices[par] = par;
+  }
+
+  /** Set to correct size and fill. This may be different for inheriting classes,
+   * such as the RigidTransform. */
+  this->m_JacobianOfSpatialJacobian.resize(paramDims);  
+  unsigned int par = 0;  
+  for(unsigned int row=0; row < outputDims; row++) 
+  {
+    for(unsigned int col=0; col < InputSpaceDimension; col++) 
+    {
+      if ( par < paramDims )
+      {
+        SpatialJacobianType sj;
+        sj.Fill( 0.0 );
+        sj[row][col] = 1.0;
+        this->m_JacobianOfSpatialJacobian[ par ] = sj; 
+        ++par;
+      }
+    }
+  }
+  
+  /** Set to correct size and initialize to 0 */
+  this->m_JacobianOfSpatialHessian.resize(paramDims);
+  for ( par = 0; par < paramDims; ++par )
+  {
+    for (unsigned int d = 0; d < outputDims; ++d )
+    {
+      //SK: \todo: how can outputDims ever be different from OutputSpaceDimension?
+       this->m_JacobianOfSpatialHessian[par][d].Fill(0.0);
+    }
+  }
+
+  /** m_SpatialHessian is initialized with zeros */
+  for (unsigned int d = 0; d < outputDims; ++d )
+  {
+    //SK: \todo: how can outputDims ever be different from OutputSpaceDimension?
+    this->m_SpatialHessian[d].Fill(0.0);
+  }
+
+  /** m_SpatialJacobian simply equals m_Matrix */
+} // end PrecomputeJacobians
 
 // Print self
 template<class TScalarType, unsigned int NInputDimensions,
@@ -530,6 +590,141 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   // of the matrix (e.g., the class' versor) when the matrix is explicitly
   // set.
 }
+
+/**
+ * ********************* GetJacobian ****************************
+ */
+
+template<class TScalarType, unsigned int NInputDimensions,
+                            unsigned int NOutputDimensions>
+void
+AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>
+::GetJacobian(
+  const InputPointType & p,
+  JacobianType & j,
+  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+{
+  j = this->GetJacobian( p );
+  nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
+
+} // end GetJacobian()
+
+
+/**
+ * ********************* GetSpatialJacobian ****************************
+ */
+
+template<class TScalarType, unsigned int NInputDimensions,
+                            unsigned int NOutputDimensions>
+void
+AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>
+::GetSpatialJacobian(
+  const InputPointType &,
+  SpatialJacobianType & sj ) const
+{
+  sj = this->GetMatrix();
+
+} // end GetSpatialJacobian()
+
+
+/**
+ * ********************* GetSpatialHessian ****************************
+ */
+
+template<class TScalarType, unsigned int NInputDimensions,
+                            unsigned int NOutputDimensions>
+void
+AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>
+::GetSpatialHessian(
+  const InputPointType &,
+  SpatialHessianType & sh ) const
+{
+  /** The SpatialHessian contains only zeros. */
+  sh = this->m_SpatialHessian;  
+
+} // end GetSpatialHessian()
+
+  
+/**
+ * ********************* GetJacobianOfSpatialJacobian ****************************
+ */
+
+template<class TScalarType, unsigned int NInputDimensions,
+                            unsigned int NOutputDimensions>
+void
+AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>
+::GetJacobianOfSpatialJacobian(
+  const InputPointType &,
+  JacobianOfSpatialJacobianType & jsj,
+  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+{
+  /** The jacobian of spatial jacobian remains constant, so was precomputed */
+  jsj = this->m_JacobianOfSpatialJacobian;
+  nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;  
+} // end GetJacobianOfSpatialJacobian()
+
+
+/**
+ * ********************* GetJacobianOfSpatialJacobian ****************************
+ */
+
+template<class TScalarType, unsigned int NInputDimensions,
+                            unsigned int NOutputDimensions>
+void
+AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>
+::GetJacobianOfSpatialJacobian(
+  const InputPointType &,
+  SpatialJacobianType & sj,
+  JacobianOfSpatialJacobianType & jsj,
+  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+{
+  /** The jacobian of spatial jacobian remains constant, so was precomputed */
+  sj = this->GetMatrix();
+  jsj = this->m_JacobianOfSpatialJacobian;
+  nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;  
+} // end GetJacobianOfSpatialJacobian()
+
+
+/**
+ * ********************* GetJacobianOfSpatialHessian ****************************
+ */
+
+template<class TScalarType, unsigned int NInputDimensions,
+                            unsigned int NOutputDimensions>
+void
+AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>
+::GetJacobianOfSpatialHessian(
+  const InputPointType &,
+  JacobianOfSpatialHessianType & jsh,
+  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+{
+  /** The JacobianOfSpatialHessian contains only zeros.*/  
+  jsh = this->m_JacobianOfSpatialHessian;  
+  nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;  
+  
+} // end GetJacobianOfSpatialHessian()
+
+
+/**
+ * ********************* GetJacobianOfSpatialHessian ****************************
+ */
+
+template<class TScalarType, unsigned int NInputDimensions,
+                            unsigned int NOutputDimensions>
+void
+AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>
+::GetJacobianOfSpatialHessian(
+  const InputPointType &,
+  SpatialHessianType & sh,
+  JacobianOfSpatialHessianType & jsh,
+  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+{
+  /** The Hessian and the JacobianOfSpatialHessian contain only zeros. */
+  sh = this->m_SpatialHessian;
+  jsh = this->m_JacobianOfSpatialHessian;  
+  nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;    
+  
+} // end GetJacobianOfSpatialHessian()
 
 } // namespace
 

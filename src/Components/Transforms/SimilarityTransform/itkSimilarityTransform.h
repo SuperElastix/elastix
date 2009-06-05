@@ -15,8 +15,9 @@
 #ifndef __itkSimilarityTransform_H__
 #define __itkSimilarityTransform_H__
 
-#include "itkSimilarity2DTransform.h"
-#include "itkSimilarity3DTransform.h"
+#include "itkAdvancedSimilarity2DTransform.h"
+#include "itkAdvancedSimilarity3DTransform.h"
+#include "itkAdvancedMatrixOffsetTransformBase.h"
 
 namespace itk
 {
@@ -38,9 +39,9 @@ namespace itk
     public:
       
       /** Typedef's.*/
-      typedef Similarity3DTransform< TScalarType >            SimilarityTransform_tmp;
-      typedef typename SimilarityTransform_tmp::AngleType     AngleType;
-      
+      typedef AdvancedMatrixOffsetTransformBase< 
+        TScalarType, Dimension, Dimension >            SimilarityTransform_tmp;
+            
     }; // end class Dummy
     
   }; // end class SimilarityGroup
@@ -63,9 +64,8 @@ namespace itk
     public:
       
       /** Typedef's.*/
-      typedef Similarity2DTransform< TScalarType >      SimilarityTransform_tmp;
-      typedef int AngleType;
-    
+      typedef AdvancedSimilarity2DTransform< TScalarType >      SimilarityTransform_tmp;
+          
     }; // end class Dummy
     
   }; // end class SimilarityGroup<2>
@@ -88,9 +88,8 @@ namespace itk
     public:
       
       /** Typedef's.*/
-      typedef Similarity3DTransform< TScalarType >                  SimilarityTransform_tmp;
-      typedef typename SimilarityTransform_tmp::AngleType           AngleType;
-      
+      typedef AdvancedSimilarity3DTransform< TScalarType >                  SimilarityTransform_tmp;
+            
     }; // end class Dummy
     
   }; // end class SimilarityGroup<3>
@@ -177,12 +176,17 @@ namespace itk
     typedef typename Superclass::OutputCovariantVectorType    OutputCovariantVectorType;
     typedef typename Superclass::InputVnlVectorType           InputVnlVectorType;
     typedef typename Superclass::OutputVnlVectorType          OutputVnlVectorType;
-    
-    /** NOTE: use these only in 3D (otherwise they are just int's). */
-    typedef typename SimilarityGroupTemplate<
-      TScalarType, Dimension >::SimilarityDummy               SimilarityDummy;
-    typedef typename SimilarityDummy::AngleType               AngleType;
 
+    typedef typename Superclass
+      ::NonZeroJacobianIndicesType                    NonZeroJacobianIndicesType;
+    typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
+    typedef typename Superclass
+      ::JacobianOfSpatialJacobianType                 JacobianOfSpatialJacobianType;
+    typedef typename Superclass::SpatialHessianType   SpatialHessianType;
+    typedef typename Superclass
+      ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
+    typedef typename Superclass::InternalMatrixType   InternalMatrixType;
+    
   protected:
 
     SimilarityTransform(){};

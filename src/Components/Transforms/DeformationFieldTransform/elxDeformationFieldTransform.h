@@ -18,7 +18,7 @@
 #include "itkDeformationFieldInterpolatingTransform.h"
 
 #include "elxIncludes.h"
-#include "itkCombinationTransform.h"
+#include "itkAdvancedCombinationTransform.h"
 
 
 namespace elastix
@@ -53,7 +53,7 @@ using namespace itk;
   template < class TElastix >
     class DeformationFieldTransform:
   public
-    CombinationTransform< 
+    AdvancedCombinationTransform< 
       ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,      
       elx::TransformBase<TElastix>::FixedImageDimension >,
   public
@@ -71,7 +71,7 @@ using namespace itk;
       elx::TransformBase<TElastix>::FixedImageDimension,
       float >                                             DeformationFieldInterpolatingTransformType;
 
-    typedef CombinationTransform< 
+    typedef AdvancedCombinationTransform< 
       typename elx::TransformBase<TElastix>::CoordRepType,      
       elx::TransformBase<TElastix>::FixedImageDimension > Superclass1;
 
@@ -84,7 +84,7 @@ using namespace itk;
     itkNewMacro( Self );
     
     /** Run-time type information (and related methods). */
-    itkTypeMacro( DeformationFieldTransform, CombinationTransform );
+    itkTypeMacro( DeformationFieldTransform, AdvancedCombinationTransform );
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific transform. \n

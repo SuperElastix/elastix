@@ -373,6 +373,49 @@ public:
    * is invertible at this point.
    */
   const JacobianType & GetJacobian( const InputPointType & point ) const;
+
+  /** Compute the Jacobian of the transformation. */
+  virtual void GetJacobian(
+    const InputPointType &,
+    JacobianType &,
+    NonZeroJacobianIndicesType & ) const;
+
+  /** Compute the spatial Jacobian of the transformation. */
+  virtual void GetSpatialJacobian(
+    const InputPointType &,
+    SpatialJacobianType & ) const;
+
+  /** Compute the spatial Hessian of the transformation. */
+  virtual void GetSpatialHessian(
+    const InputPointType &,
+    SpatialHessianType & ) const;
+
+  /** Compute the Jacobian of the spatial Jacobian of the transformation. */
+  virtual void GetJacobianOfSpatialJacobian(
+    const InputPointType &,
+    JacobianOfSpatialJacobianType &,
+    NonZeroJacobianIndicesType & ) const;
+
+  /** Compute the Jacobian of the spatial Jacobian of the transformation. */
+  virtual void GetJacobianOfSpatialJacobian(
+    const InputPointType &,
+    SpatialJacobianType &,
+    JacobianOfSpatialJacobianType &,
+    NonZeroJacobianIndicesType & ) const;
+
+  /** Compute the Jacobian of the spatial Hessian of the transformation. */
+  virtual void GetJacobianOfSpatialHessian(
+    const InputPointType &,
+    JacobianOfSpatialHessianType &,
+    NonZeroJacobianIndicesType & ) const;
+
+  /** Compute both the spatial Hessian and the Jacobian of the
+   * spatial Hessian of the transformation. */
+  virtual void GetJacobianOfSpatialHessian(
+    const InputPointType & ipp,
+    SpatialHessianType & sh,
+    JacobianOfSpatialHessianType & jsh,
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
  
 protected:
   /** Construct an AdvancedMatrixOffsetTransformBase object
@@ -388,6 +431,9 @@ protected:
   AdvancedMatrixOffsetTransformBase( unsigned int outputDims,
     unsigned int paramDims );
   AdvancedMatrixOffsetTransformBase();      
+
+  /** Called by constructors: */
+  virtual void PrecomputeJacobians(unsigned int outputDims, unsigned int paramDims);
   
   /** Destroy an AdvancedMatrixOffsetTransformBase object. */
   virtual ~AdvancedMatrixOffsetTransformBase() {};
@@ -447,6 +493,14 @@ protected:
     this->m_Center = center;
   };
 
+  /** (spatial) Jacobians and Hessians can mostly be precomputed by this transform.
+   * Store them in these member variables.
+   * SpatialJacobian is simply m_Matrix */   
+  NonZeroJacobianIndicesType m_NonZeroJacobianIndices;
+  SpatialHessianType m_SpatialHessian;
+  JacobianOfSpatialJacobianType m_JacobianOfSpatialJacobian;
+  JacobianOfSpatialHessianType m_JacobianOfSpatialHessian;
+  
 private:
 
   AdvancedMatrixOffsetTransformBase(const Self & other);
@@ -464,7 +518,7 @@ private:
   /** To avoid recomputation of the inverse if not needed. */
   TimeStamp                   m_MatrixMTime;
   mutable TimeStamp           m_InverseMatrixMTime;
-
+  
 }; //class AdvancedMatrixOffsetTransformBase
 
 }  // namespace itk

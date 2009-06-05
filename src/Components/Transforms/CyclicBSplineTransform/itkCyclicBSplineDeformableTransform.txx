@@ -464,6 +464,8 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   NonZeroJacobianIndicesType & nonZeroJacobianIndices,
   const RegionType & supportRegion ) const
 {
+  nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );
+
   /** Split support region into two parts. */
   RegionType supportRegions[ 2 ];
   this->SplitRegion( this->m_CoefficientImage[ 0 ]->GetLargestPossibleRegion(), supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );

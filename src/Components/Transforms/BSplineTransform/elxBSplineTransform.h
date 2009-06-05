@@ -38,7 +38,7 @@ using namespace itk;
    *
    * The parameters used in this class are:
    * \parameter Transform: Select this transform as follows:\n
-   *    <tt>(Transform "BSplineTransform")</tt>
+   *    <tt>(Transform "BSplineTransformOld")</tt>
    * \parameter FinalGridSpacing: DEPRECATED. the grid spacing of the B-spline transform for each dimension. \n
    *    example: <tt>(FinalGridSpacing 8.0 8.0 8.0)</tt> \n
    *    If only one argument is given, that factor is used for each dimension. The spacing
@@ -133,7 +133,7 @@ using namespace itk;
      * Use this name in the parameter file to select this specific transform. \n
      * example: <tt>(Transform "BSplineTransform")</tt>\n
      */
-    elxClassNameMacro( "BSplineTransform" );
+    elxClassNameMacro( "BSplineTransformOld" );
     
     /** Dimension of the fixed image. */
     itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );

@@ -44,6 +44,31 @@ template<class TScalarType, unsigned int NDimensions>
 AdvancedAffineTransform<TScalarType, NDimensions>::
 AdvancedAffineTransform(): Superclass(SpaceDimension,ParametersDimension)
 {
+  /** Nonzero jacobian indices, for GetJacobian */
+  this->m_NonZeroJacobianIndices.resize(ParametersDimension);
+  for (unsigned int i = 0; i < ParametersDimension; ++i )
+  {
+    this->m_NonZeroJacobianIndices[i] = i;
+  }
+
+  /** Set to correct size. */
+  this->m_JacobianOfSpatialJacobian.resize(ParametersDimension);
+  /** Fill the matrices. */
+  for ( unsigned int mu = 0; mu < ParametersDimension; ++mu )
+  {
+    SpatialJacobianType sj;
+    sj.Fill( 0.0 );
+    if ( mu < SpaceDimension * SpaceDimension )
+    {
+      sj[ mu / SpaceDimension ][ mu % SpaceDimension ] = 1.0;
+    }
+    this->m_JacobianOfSpatialJacobian[ mu ] = sj; 
+  }
+
+  /** Set to correct size. The elements are automatically initialized to 0 */
+  this->m_JacobianOfSpatialHessian.resize(ParametersDimension);
+
+  /** m_SpatialHessian is automatically initialized with zeros */
 }
 
 
@@ -387,13 +412,7 @@ AdvancedAffineTransform<TScalarType, NDimensions>
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
   j = this->Superclass::GetJacobian( p );
-
-  unsigned int parSize = this->GetNumberOfParameters();
-  nonZeroJacobianIndices.resize( parSize );
-  for ( unsigned int mu = 0; mu < parSize; ++mu )
-  {
-    nonZeroJacobianIndices[ mu ] = mu;
-  }
+  nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
 
 } // end GetJacobian()
 
@@ -409,20 +428,7 @@ AdvancedAffineTransform<TScalarType, NDimensions>
   const InputPointType &,
   SpatialJacobianType & sj ) const
 {
-  /** In 2D the SpatialJacobian looks like:
-   * sj = [ mu0 mu1 ]
-   *      [ mu2 mu3 ]
-   */
-
-  /** Fill the matrix. *
-  for ( unsigned int i = 0; i < SpaceDimension; ++i )
-  {
-    for ( unsigned int j = 0; j < SpaceDimension; ++j )
-    {
-      sj[ i ][ j ] = this->m_Parameters[ i * SpaceDimension + j ];
-    }
-  }*/
-  sj = this->GetMatrix(); // CHECK
+  sj = this->GetMatrix();
 
 } // end GetSpatialJacobian()
 
@@ -438,7 +444,8 @@ AdvancedAffineTransform<TScalarType, NDimensions>
   const InputPointType &,
   SpatialHessianType & sh ) const
 {
-  /** The SpatialHessian contains only zeros. We simply return nothing. */
+  /** The SpatialHessian contains only zeros. */
+  sh = this->m_SpatialHessian;  
 
 } // end GetSpatialHessian()
 
@@ -455,23 +462,9 @@ AdvancedAffineTransform<TScalarType, NDimensions>
   JacobianOfSpatialJacobianType & jsj,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
-  unsigned int parSize = this->GetNumberOfParameters();
-  jsj.resize( parSize );
-  nonZeroJacobianIndices.resize( parSize );
-
-  /** Fill the matrices. */
-  for ( unsigned int mu = 0; mu < parSize; ++mu )
-  {
-    SpatialJacobianType sj;
-    sj.Fill( 0.0 );
-    if ( mu < SpaceDimension * SpaceDimension )
-    {
-      sj[ mu / SpaceDimension ][ mu % SpaceDimension ] = 1.0;
-    }
-    jsj[ mu ] = sj;
-    nonZeroJacobianIndices[ mu ] = mu;
-  }
-
+  /** The jacobian of spatial jacobian remains constant, so was precomputed */
+  jsj = this->m_JacobianOfSpatialJacobian;
+  nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;  
 } // end GetJacobianOfSpatialJacobian()
 
 
@@ -487,11 +480,9 @@ AdvancedAffineTransform<TScalarType, NDimensions>
   JacobianOfSpatialHessianType & jsh,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
-  /** The JacobianOfSpatialHessian contains only zeros.
-   * We simply return nothing.
-   */
-  jsh.resize( 0 );
-  nonZeroJacobianIndices.resize( 0 );
+  /** The JacobianOfSpatialHessian contains only zeros.*/  
+  jsh = this->m_JacobianOfSpatialHessian;  
+  nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;  
   
 } // end GetJacobianOfSpatialHessian()
 
@@ -509,11 +500,10 @@ AdvancedAffineTransform<TScalarType, NDimensions>
   JacobianOfSpatialHessianType & jsh,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
-  /** The Hessian and the JacobianOfSpatialHessian contain only zeros.
-   * We simply return nothing.
-   */
-  jsh.resize( 0 );
-  nonZeroJacobianIndices.resize( 0 );
+  /** The Hessian and the JacobianOfSpatialHessian contain only zeros. */
+  sh = this->m_SpatialHessian;
+  jsh = this->m_JacobianOfSpatialHessian;  
+  nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;    
   
 } // end GetJacobianOfSpatialHessian()
 

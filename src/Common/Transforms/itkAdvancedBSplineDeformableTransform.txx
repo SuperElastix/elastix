@@ -1074,6 +1074,11 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   this->TransformPointToContinuousGridIndex( ipp, cindex );
 
   /** Initialize */
+  const unsigned int nnzji = this->GetNumberOfNonZeroJacobianIndices();
+  if ( (jacobian.cols() != nnzji) || (jacobian.rows() != SpaceDimension) )
+  {
+    jacobian.SetSize( SpaceDimension, nnzji );
+  }
   jacobian.Fill(0.0);
   
   // NOTE: if the support region does not lie totally within the grid
@@ -1153,11 +1158,11 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   RegionType supportRegion;
   supportRegion.SetSize( this->m_SupportSize );
   supportRegion.SetIndex( supportIndex );
-
-  /** For all derivative directions, compute the derivatives of the
-   * spatial Jacobian to the transformation parameters mu:
-   * d/dmu of dT / dx_i
-   */
+  
+  /** Compute the spatial Jacobian sj:
+     *    dT_{dim} / dx_i = delta_{dim,i} + \sum coefs_{dim} * weights.
+     */
+  sj.SetIdentity();
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     /** Set the derivative direction. */
@@ -1188,7 +1193,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       }
 
       /** Update the spatial Jacobian sj. */
-      sj( dim, i ) = sum;
+      sj( dim, i ) += sum;
 
     } // end for dim
   } // end for i
@@ -1295,6 +1300,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
   }
 
+  jsj.resize( this->GetNumberOfNonZeroJacobianIndices() );
+
   /** Convert the physical point to a continuous index, which
    * is needed for the 'Evaluate()' functions below.
    */
@@ -1377,6 +1384,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
   }
 
+  jsj.resize( this->GetNumberOfNonZeroJacobianIndices() );
+
   /** Convert the physical point to a continuous index, which
    * is needed for the 'Evaluate()' functions below.
    */
@@ -1402,10 +1411,12 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   //double * weightVector = new double[ SpaceDimension * numberOfWeights ];
   double weightVector[ SpaceDimension * numberOfWeights ];
 
+  /** Initialize the spatial Jacobian sj: */
+  sj.SetIdentity();
+
   /** For all derivative directions, compute the derivatives of the
    * spatial Jacobian to the transformation parameters mu:
-   * d/dmu of dT / dx_i
-   */
+   * d/dmu of dT / dx_i */
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     /** Set the derivative direction. */
@@ -1413,14 +1424,15 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 
     /** Compute the derivative weights. */
     this->m_DerivativeWeightsFunction->Evaluate( cindex, weights, supportIndex );
+    /** \todo: we can realise some speedup here to compute the derivative
+     * weights at once for all dimensions */
 
     /** Remember the weights. */
     memcpy( weightVector + i * numberOfWeights,
       weights.data_block(), numberOfWeights * sizeof( double ) );
     
     /** Compute the spatial Jacobian sj:
-     *    dT_{dim} / dx_i = \sum coefs_{dim} * weights.
-     */
+     *    dT_{dim} / dx_i = delta_{dim,i} + \sum coefs_{dim} * weights. */
     for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
       /** Create an iterator over the correct part of the coefficient
@@ -1440,7 +1452,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       }
 
       /** Update the spatial Jacobian sj. */
-      sj( dim, i ) = sum;
+      sj( dim, i ) += sum;
 
     } // end for dim
   } // end for i
@@ -1485,6 +1497,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   {
     itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
   }
+
+  jsh.resize( this->GetNumberOfNonZeroJacobianIndices() );
 
   /** Convert the physical point to a continuous index, which
    * is needed for the 'Evaluate()' functions below.
@@ -1578,6 +1592,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   {
     itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
   }
+
+  jsh.resize( this->GetNumberOfNonZeroJacobianIndices() );
 
   /** Convert the physical point to a continuous index, which
    * is needed for the 'Evaluate()' functions below.
@@ -1696,6 +1712,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   NonZeroJacobianIndicesType & nonZeroJacobianIndices,
   const RegionType & supportRegion ) const
 {
+  nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );
+
   /** Create an iterator over the coefficient image. */
   ImageRegionConstIterator< ImageType >
     it( this->m_CoefficientImage[ 0 ], supportRegion );

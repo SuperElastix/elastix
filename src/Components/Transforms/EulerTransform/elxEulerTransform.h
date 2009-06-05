@@ -15,6 +15,7 @@
 #ifndef __elxEulerTransform_H__
 #define __elxEulerTransform_H__
 
+#include "itkAdvancedCombinationTransform.h"
 #include "itkEulerTransform.h"
 #include "itkCenteredTransformInitializer.h"
 #include "elxIncludes.h"
@@ -65,7 +66,7 @@ using namespace itk;
 
   template < class TElastix >
     class EulerTransformElastix:
-      public CombinationTransform<
+      public AdvancedCombinationTransform<
         ITK_TYPENAME elx::TransformBase< TElastix >::CoordRepType,
         elx::TransformBase< TElastix >::FixedImageDimension >,
       public elx::TransformBase< TElastix >
@@ -75,7 +76,7 @@ using namespace itk;
     /** Standard ITK-stuff.*/
     typedef EulerTransformElastix                               Self;
     
-    typedef CombinationTransform<
+    typedef AdvancedCombinationTransform<
       typename elx::TransformBase< TElastix >::CoordRepType,
       elx::TransformBase< TElastix >::FixedImageDimension >     Superclass1;
 
@@ -95,7 +96,7 @@ using namespace itk;
     
     /** Run-time type information (and related methods). */
     //itkTypeMacro( EulerTransformElastix, EulerTransform );
-    itkTypeMacro( EulerTransformElastix, CombinationTransform );
+    itkTypeMacro( EulerTransformElastix, AdvancedCombinationTransform );
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific transform. \n
@@ -121,10 +122,7 @@ using namespace itk;
     typedef typename Superclass1::OutputCovariantVectorType   OutputCovariantVectorType;
     typedef typename Superclass1::InputVnlVectorType          InputVnlVectorType;
     typedef typename Superclass1::OutputVnlVectorType         OutputVnlVectorType;
-    
-    /** NOTE: use this one only in 3D (otherwise it's just an int). */
-    typedef typename EulerTransformType::AngleType            AngleType;
-    
+                
     typedef typename EulerTransformType::Pointer              EulerTransformPointer;
     typedef typename EulerTransformType::OffsetType           OffsetType;
     

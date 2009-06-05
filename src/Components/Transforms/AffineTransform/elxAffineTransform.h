@@ -35,7 +35,7 @@ using namespace itk;
    *
    * The parameters used in this class are:
    * \parameter Transform: Select this transform as follows:\n
-   *    <tt>(%Transform "AffineTransform")</tt>
+   *    <tt>(%Transform "AffineTransformOld")</tt>
    * \parameter Scales: the scale factor between the rotations and translations,
    *    used in the optimizer. \n
    *    example: <tt>(Scales 200000.0)</tt> \n
@@ -103,9 +103,9 @@ using namespace itk;
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific transform. \n
-     * example: <tt>(Transform "AffineTransform")</tt>\n
+     * example: <tt>(Transform "AffineTransformOld")</tt>\n
      */
-    elxClassNameMacro( "AffineTransform" );
+    elxClassNameMacro( "AffineTransformOld" );
     
     /** Dimension of the domain space. */
     itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );

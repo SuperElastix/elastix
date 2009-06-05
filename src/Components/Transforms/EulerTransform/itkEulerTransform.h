@@ -15,8 +15,9 @@
 #ifndef __itkEulerTransform_H__
 #define __itkEulerTransform_H__
 
-#include "itkEuler2DTransform.h"
-#include "itkEuler3DTransform.h"
+#include "itkAdvancedRigid2DTransform.h"
+#include "itkAdvancedEuler3DTransform.h"
+#include "itkAdvancedMatrixOffsetTransformBase.h"
 
 namespace itk
 {
@@ -39,8 +40,7 @@ namespace itk
     public:
       
       /** Typedef's.*/
-      typedef Euler3DTransform< TScalarType >             EulerTransform_tmp;
-      typedef typename EulerTransform_tmp::AngleType      AngleType;
+      typedef AdvancedMatrixOffsetTransformBase< TScalarType, Dimension, Dimension >             EulerTransform_tmp;      
       
     }; // end class Dummy
     
@@ -64,9 +64,8 @@ namespace itk
     public:
       
       /** Typedef's.*/
-      typedef Euler2DTransform< TScalarType >     EulerTransform_tmp;
-      typedef int AngleType;
-    
+      typedef AdvancedRigid2DTransform< TScalarType >     EulerTransform_tmp;
+          
     }; // end class Dummy
     
   }; // end class EulerGroup<2>
@@ -89,14 +88,13 @@ namespace itk
     public:
       
       /** Typedef's.*/
-      typedef Euler3DTransform< TScalarType >                   EulerTransform_tmp;
-      typedef typename EulerTransform_tmp::AngleType            AngleType;
-      
+      typedef AdvancedEuler3DTransform< TScalarType >           EulerTransform_tmp;
+            
     }; // end class Dummy
     
   }; // end class EulerGroup<3>
-  
-  
+
+   
   /**
    * \class EulerGroupTemplate
    * \brief This class templates the EulerGroup over its dimension.
@@ -166,7 +164,7 @@ namespace itk
     
     /** Typedefs inherited from the superclass. */
 
-    /** These are both in Euler2D and Euler3D. */
+    /** These are both in Rigid2D and Euler3D. */
     typedef typename Superclass::ScalarType                   ScalarType;
     typedef typename Superclass::ParametersType               ParametersType;
     typedef typename Superclass::JacobianType                 JacobianType;
@@ -179,12 +177,17 @@ namespace itk
     typedef typename Superclass::OutputCovariantVectorType    OutputCovariantVectorType;
     typedef typename Superclass::InputVnlVectorType           InputVnlVectorType;
     typedef typename Superclass::OutputVnlVectorType          OutputVnlVectorType;
-    
-    /** NOTE: use these only in 3D (otherwise they are just int's). */
-    typedef typename EulerGroupTemplate<
-      TScalarType, Dimension >::EulerDummy                    EulerDummy;
-    typedef typename EulerDummy::AngleType                    AngleType;
 
+    typedef typename Superclass
+      ::NonZeroJacobianIndicesType                    NonZeroJacobianIndicesType;
+    typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
+    typedef typename Superclass
+      ::JacobianOfSpatialJacobianType                 JacobianOfSpatialJacobianType;
+    typedef typename Superclass::SpatialHessianType   SpatialHessianType;
+    typedef typename Superclass
+      ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
+    typedef typename Superclass::InternalMatrixType   InternalMatrixType;
+    
     /** Make sure SetComputeZYX() is available, also in 2D,
      * in which case, its just a dummy function.
      */
@@ -192,7 +195,7 @@ namespace itk
     {
       if ( SpaceDimension == 3 )
       {
-        typedef Euler3DTransform< ScalarType >  Euler3DTransformType;
+        typedef AdvancedEuler3DTransform< ScalarType >  Euler3DTransformType;
         typename Euler3DTransformType::Pointer transform
           = dynamic_cast< Euler3DTransformType * >( this );
         if ( transform )
@@ -209,7 +212,7 @@ namespace itk
     {
       if ( SpaceDimension == 3 )
       {
-        typedef Euler3DTransform< ScalarType >  Euler3DTransformType;
+        typedef AdvancedEuler3DTransform< ScalarType >  Euler3DTransformType;
         typename Euler3DTransformType::ConstPointer transform
           = dynamic_cast< const Euler3DTransformType * >( this );
         if ( transform )

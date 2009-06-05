@@ -824,7 +824,8 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
   this->m_InitialTransform->GetSpatialJacobian( ipp, sj0 );
   this->m_CurrentTransform->GetSpatialJacobian(
     this->m_InitialTransform->TransformPoint( ipp ), sj1 );
-  sj = element_product( sj0.GetVnlMatrix(), sj1.GetVnlMatrix() );
+
+  sj = sj1 * sj0;    
 
 } // end GetSpatialJacobianUseComposition()
 
@@ -911,21 +912,20 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
   this->m_InitialTransform->GetSpatialJacobian( ipp, sj0 );
   this->m_CurrentTransform->GetSpatialJacobian( transformedPoint, sj1 );
   this->m_InitialTransform->GetSpatialHessian( ipp, sh0 );
-  this->m_CurrentTransform->GetSpatialHessian( ipp, sh1 );
+  this->m_CurrentTransform->GetSpatialHessian( transformedPoint, sh1 );
+
+  SpatialJacobianType sj0t = sj0.GetTranspose();
 
   /** Combine them in one overall spatial Hessian. */
   for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
   {
-    for ( unsigned int i = 0; i < SpaceDimension; ++i )
+    sh[dim] = sj0t * ( sh1[dim] * sj0 );
+
+    for ( unsigned int p = 0; p < SpaceDimension; ++p )
     {
-      for ( unsigned int j = 0; j < SpaceDimension; ++j )
-      {
-        sh[ dim ]( i, j )
-          = sj1( dim, j ) * sh0[ dim ]( i, j )
-          + sj0( dim, i ) * sh1[ dim ]( i, j ) * sj0( dim, j );
-      }  
+      sh[dim] += ( sh0[p] * sj1(dim,p) ); 
     }
-  }
+  }   
 
 } // end GetSpatialHessianUseComposition()
 
@@ -1019,9 +1019,10 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
     this->m_InitialTransform->TransformPoint( ipp ),
     jsj1, nonZeroJacobianIndices );
 
+  jsj.resize( nonZeroJacobianIndices.size() );
   for ( unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu )
   {
-    jsj[ mu ] = element_product( sj0.GetVnlMatrix(), jsj1[ mu ].GetVnlMatrix() );
+    jsj[ mu ] = jsj1[ mu ] * sj0;    
   }
 
 } // end GetJacobianOfSpatialJacobianUseComposition()
@@ -1046,12 +1047,12 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
   this->m_CurrentTransform->GetJacobianOfSpatialJacobian(
     this->m_InitialTransform->TransformPoint( ipp ),
     sj1, jsj1, nonZeroJacobianIndices );
-
-  sj = element_product( sj0.GetVnlMatrix(), sj1.GetVnlMatrix() );
+  
+  sj = sj1 * sj0;    
+  jsj.resize( nonZeroJacobianIndices.size() );
   for ( unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu )
-  {
-    // \todo: check (vector * matrix ), should be elementswise I guess
-    jsj[ mu ] = element_product( sj0.GetVnlMatrix(), jsj1[ mu ].GetVnlMatrix() );
+  {    
+    jsj[ mu ] = jsj1[ mu ] * sj0;    
   }
 
 } // end GetJacobianOfSpatialJacobianUseComposition()
@@ -1186,38 +1187,36 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
   JacobianOfSpatialJacobianType jsj1;
   JacobianOfSpatialHessianType jsh1;
 
-  unsigned long numberOfNZJI = jsh.size();
-  jsj1.resize( numberOfNZJI );
-  jsh1.resize( numberOfNZJI );
-
   /** Transform the input point. */
   // \todo: this has already been computed and it is expensive.
   InputPointType transformedPoint
     = this->m_InitialTransform->TransformPoint( ipp );
 
   /** Compute the (Jacobian of the) spatial Jacobian / Hessian of the
-   * internal transforms.
-   */
+   * internal transforms. */  
   this->m_InitialTransform->GetSpatialJacobian( ipp, sj0 );
   this->m_InitialTransform->GetSpatialHessian( ipp, sh0 );
+
+  /** Assume/demand that GetJacobianOfSpatialJacobian returns
+   * the same nonZeroJacobianIndices as the GetJacobianOfSpatialHessian. */
   this->m_CurrentTransform->GetJacobianOfSpatialJacobian(
     transformedPoint, jsj1, nonZeroJacobianIndices );
   this->m_CurrentTransform->GetJacobianOfSpatialHessian(
-    ipp, jsh1, nonZeroJacobianIndices );
+    transformedPoint, jsh1, nonZeroJacobianIndices );
+
+  SpatialJacobianType sj0t = sj0.GetTranspose();  
+  jsh.resize( nonZeroJacobianIndices.size() );  
 
   /** Combine them in one overall Jacobian of spatial Hessian. */
   for ( unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu )
   {
     for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
-      for ( unsigned int i = 0; i < SpaceDimension; ++i )
+      jsh[mu][dim] = sj0t * ( jsh1[mu][dim] * sj0 );
+
+      for ( unsigned int p = 0; p < SpaceDimension; ++p )
       {
-        for ( unsigned int j = 0; j < SpaceDimension; ++j )
-        {
-          jsh[ mu ][ dim ]( i, j )
-            = jsj1[ mu ]( dim, j ) * sh0[ dim ]( i, j )
-            + sj0( dim, i ) * jsh1[ mu ][ dim ]( i, j ) * sj0( dim, j );
-        }
+        jsh[mu][dim] += ( sh0[p] * jsj1[mu](dim,p) );
       }
     }
   }
@@ -1244,55 +1243,50 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
   JacobianOfSpatialJacobianType jsj1;
   JacobianOfSpatialHessianType jsh1;
 
-  unsigned long numberOfNZJI = jsh.size();
-  jsj1.resize( numberOfNZJI );
-  jsh1.resize( numberOfNZJI );
-
   /** Transform the input point. */
   // \todo this has already been computed and it is expensive.
   InputPointType transformedPoint
     = this->m_InitialTransform->TransformPoint( ipp );
 
   /** Compute the (Jacobian of the) spatial Jacobian / Hessian of the
-   * internal transforms.
-   */
+   * internal transforms. */
   this->m_InitialTransform->GetSpatialJacobian( ipp, sj0 );
   this->m_InitialTransform->GetSpatialHessian( ipp, sh0 );
+
+    /** Assume/demand that GetJacobianOfSpatialJacobian returns
+   * the same nonZeroJacobianIndices as the GetJacobianOfSpatialHessian. */
   this->m_CurrentTransform->GetJacobianOfSpatialJacobian(
     transformedPoint, sj1, jsj1, nonZeroJacobianIndices );
   this->m_CurrentTransform->GetJacobianOfSpatialHessian(
-    ipp, sh1, jsh1, nonZeroJacobianIndices );
+    transformedPoint, sh1, jsh1, nonZeroJacobianIndices );
 
-  /** Combine them in one overall spatial Hessian. */
-  for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
-  {
-    for ( unsigned int i = 0; i < SpaceDimension; ++i )
-    {
-      for ( unsigned int j = 0; j < SpaceDimension; ++j )
-      {
-        sh[ dim ]( i, j )
-          = sj1( dim, j ) * sh0[ dim ]( i, j )
-          + sj0( dim, i ) * sh1[ dim ]( i, j ) * sj0( dim, j );
-      }
-    }
-  }
+  SpatialJacobianType sj0t = sj0.GetTranspose();  
+  jsh.resize( nonZeroJacobianIndices.size() );  
 
   /** Combine them in one overall Jacobian of spatial Hessian. */
   for ( unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu )
   {
     for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
-      for ( unsigned int i = 0; i < SpaceDimension; ++i )
+      jsh[mu][dim] = sj0t * ( jsh1[mu][dim] * sj0 );
+
+      for ( unsigned int p = 0; p < SpaceDimension; ++p )
       {
-        for ( unsigned int j = 0; j < SpaceDimension; ++j )
-        {
-          jsh[ mu ][ dim ]( i, j )
-            = jsj1[ mu ]( dim, j ) * sh0[ dim ]( i, j )
-            + sj0( dim, i ) * jsh1[ mu ][ dim ]( i, j ) * sj0( dim, j );
-        }
+        jsh[mu][dim] += ( sh0[p] * jsj1[mu](dim,p) );
       }
     }
   }
+
+   /** Combine them in one overall spatial Hessian. */
+  for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+  {
+    sh[dim] = sj0t * ( sh1[dim] * sj0 );
+
+    for ( unsigned int p = 0; p < SpaceDimension; ++p )
+    {
+      sh[dim] += ( sh0[p] * sj1(dim,p) );
+    }
+  }   
 
 } // end GetJacobianOfSpatialHessianUseComposition()
 

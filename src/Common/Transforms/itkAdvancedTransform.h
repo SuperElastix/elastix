@@ -122,13 +122,13 @@ public:
    */
   typedef std::vector< unsigned long >              NonZeroJacobianIndicesType;
   typedef Matrix< ScalarType,
-    InputSpaceDimension, OutputSpaceDimension >     SpatialJacobianType;
+    OutputSpaceDimension, InputSpaceDimension >     SpatialJacobianType;
   typedef std::vector< SpatialJacobianType >        JacobianOfSpatialJacobianType;
   // \todo: think about the SpatialHessian type, should be a 3D native type
   typedef FixedArray<
     Matrix< ScalarType,
-    InputSpaceDimension, OutputSpaceDimension >,
-    InputSpaceDimension >                           SpatialHessianType;
+    InputSpaceDimension, InputSpaceDimension >,
+    OutputSpaceDimension >                           SpatialHessianType;
   typedef std::vector< SpatialHessianType >         JacobianOfSpatialHessianType;
   typedef typename SpatialJacobianType::InternalMatrixType  InternalMatrixType;
 

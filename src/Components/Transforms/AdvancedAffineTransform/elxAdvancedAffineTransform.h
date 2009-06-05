@@ -15,7 +15,7 @@
 #ifndef __elxAdvancedAffineTransform_H_
 #define __elxAdvancedAffineTransform_H_
 
-#include "itkAdvancedAffineTransform.h"
+#include "itkAdvancedMatrixOffsetTransformBase.h"
 #include "itkAdvancedCombinationTransform.h"
 
 #include "itkCenteredTransformInitializer.h"
@@ -27,7 +27,7 @@ using namespace itk;
 
   /**
    * \class AdvancedAffineTransformElastix
-   * \brief A transform based on the itk::AdvancedAffineTransform.
+   * \brief A transform based on the itk::AdvancedMatrixOffsetTransformBase.
    *
    * This transform is an affine transformation.
    *
@@ -36,7 +36,7 @@ using namespace itk;
    *
    * The parameters used in this class are:
    * \parameter Transform: Select this transform as follows:\n
-   *    <tt>(%Transform "AdvancedAffineTransform")</tt>
+   *    <tt>(%Transform "AffineTransform")</tt>
    * \parameter Scales: the scale factor between the rotations and translations,
    *    used in the optimizer. \n
    *    example: <tt>(Scales 200000.0)</tt> \n
@@ -89,9 +89,10 @@ using namespace itk;
 
     /** The ITK-class that provides most of the functionality, and
      * that is set as the "CurrentTransform" in the CombinationTransform */
-    typedef AdvancedAffineTransform<
+    typedef AdvancedMatrixOffsetTransformBase<
       typename elx::TransformBase<TElastix>::CoordRepType,
-      elx::TransformBase<TElastix>::FixedImageDimension >     AffineTransformType;
+      elx::TransformBase<TElastix>::FixedImageDimension,
+      elx::TransformBase<TElastix>::MovingImageDimension >     AffineTransformType;
     
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -101,9 +102,9 @@ using namespace itk;
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific transform. \n
-     * example: <tt>(Transform "AdvancedAffineTransform")</tt>\n
+     * example: <tt>(Transform "AffineTransform")</tt>\n
      */
-    elxClassNameMacro( "AdvancedAffineTransform" );
+    elxClassNameMacro( "AffineTransform" );
     
     /** Dimension of the domain space. */
     itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );
