@@ -208,20 +208,21 @@ namespace itk
       if ( m_SampleLastDimensionRandomly ) {
         SampleRandom( numLastDimSamples, lastDimSize, lastDimPositions );
       }
+      
+      /** Transform sampled point to voxel coordinates. */
+      FixedImageContinuousIndexType voxelCoord;
+      this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
 
       /** Loop over the slowest varying dimension. */
       double sumWeightingFactors = 0.0;
       double sumValues = 0.0;
       double sumValuesSquared = 0.0;
-      for (unsigned int d = 0; d < lastDimPositions.size(); ++d) 
+      const unsigned int realNumLastDimPositions = lastDimPositions.size();
+      for (unsigned int d = 0; d < realNumLastDimPositions; ++d) 
       {
         /** Initialize some variables. */
         RealType movingImageValue;
         MovingImagePointType mappedPoint;
-
-        /** Transform sampled point to voxel coordinates. */
-        FixedImageContinuousIndexType voxelCoord;
-        this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
 
         /** Set fixed point's last dimension to lastDimPosition. */
         voxelCoord[lastDim] = lastDimPositions[d];
@@ -368,11 +369,12 @@ namespace itk
       double sumWeightingFactors = 0.0;
       double sumValues = 0.0;
       double sumValuesSquared = 0.0;
+      const unsigned int realNumLastDimPositions = lastDimPositions.size();
       DerivativeType derivativeTerm0 ( this->GetNumberOfParameters() );
       derivativeTerm0.Fill( NumericTraits< DerivativeValueType >::Zero );
       DerivativeType derivativeTerm1 ( this->GetNumberOfParameters() );
       derivativeTerm1.Fill( NumericTraits< DerivativeValueType >::Zero );
-      for ( unsigned int d = 0; d < lastDimPositions.size(); ++d ) 
+      for ( unsigned int d = 0; d < realNumLastDimPositions; ++d ) 
       {
         /** Initialize some variables. */
         RealType movingImageValue;
