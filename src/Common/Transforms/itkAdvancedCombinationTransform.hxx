@@ -1263,7 +1263,8 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
   this->m_CurrentTransform->GetJacobianOfSpatialHessian(
     transformedPoint, sh1, jsh1, nonZeroJacobianIndices );
 
-  SpatialJacobianType sj0t = sj0.GetTranspose();  
+  typename SpatialJacobianType::InternalMatrixType sj0tvnl = sj0.GetTranspose();
+  SpatialJacobianType sj0t( sj0tvnl );  
   jsh.resize( nonZeroJacobianIndices.size() );  
 
   /** Combine them in one overall Jacobian of spatial Hessian. */
