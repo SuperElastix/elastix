@@ -357,6 +357,7 @@ AdvancedAffineTransformElastix<TElastix>
      * - All scales are given in the parameter-file: each parameter is assigned its
      *   own scale.
      */
+    const double defaultScalingvalue = 100000.0;
 
     unsigned int count
       = this->m_Configuration->CountNumberOfParameterEntries( "Scales" );
@@ -367,13 +368,13 @@ AdvancedAffineTransformElastix<TElastix>
       /** In this case the first option is used. */
       for ( unsigned int i = 0; i < rotationPart; i++ )
       {
-        newscales[ i ] = 100000.0;
+        newscales[ i ] = defaultScalingvalue;
       }
     }
     else if ( count == 1 )
     {
       /** In this case the second option is used. */
-      double scale = 100000.0;
+      double scale = defaultScalingvalue;
       this->m_Configuration->ReadParameter( scale, "Scales", 0 );
       for ( unsigned int i = 0; i < rotationPart; i++ )
       {

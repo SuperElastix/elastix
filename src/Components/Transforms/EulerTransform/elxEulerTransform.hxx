@@ -366,7 +366,7 @@ EulerTransformElastix<TElastix>
      * large as 1/10 of the diagonal of the bounding box.
      */
 
-    double dummy = 100000.0;
+    const double defaultScalingvalue = 100000.0;
 
     /** If the Dimension is 3, the first 3 parameters represent rotations.
      * If the Dimension is 2, only the first parameter represent a rotation.
@@ -395,13 +395,13 @@ EulerTransformElastix<TElastix>
       /** In this case the first option is used. */
       for ( unsigned int i = 0; i < RotationPart; i++ )
       {
-        newscales[ i ] = 100000.0;
+        newscales[ i ] = defaultScalingvalue;
       }
     }
     else if ( count == 1 )
     {
       /** In this case the second option is used. */
-      double scale = 100000.0;
+      double scale = defaultScalingvalue;
       this->m_Configuration->ReadParameter( scale, "Scales", 0 );
       for ( unsigned int i = 0; i < RotationPart; i++ )
       {
