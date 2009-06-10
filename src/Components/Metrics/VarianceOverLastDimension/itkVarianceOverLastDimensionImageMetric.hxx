@@ -18,6 +18,7 @@
 #include "itkVarianceOverLastDimensionImageMetric.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "vnl/algo/vnl_matrix_update.h"
+#include <numeric>
 
 namespace itk
 {
@@ -56,19 +57,19 @@ namespace itk
     const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
     
     /** Check num last samples. */
-    if ( m_NumSamplesLastDimension > lastDimSize ) {
-      m_NumSamplesLastDimension = lastDimSize;
+    if ( this->m_NumSamplesLastDimension > lastDimSize ) {
+      this->m_NumSamplesLastDimension = lastDimSize;
     }
 
     /** Check weighting factors. */
-    if ( m_WeightingFactors.size() != lastDimSize ) 
+    if ( this->m_WeightingFactors.size() != lastDimSize ) 
     {
-      if ( m_WeightingFactors.size() > 0 ) 
+      if ( this->m_WeightingFactors.size() > 0 ) 
       {
         std::cout << "Error: number of provided weighting factors does not match the size of the last dimension!" << std::endl;
       }
-      m_WeightingFactors.clear();
-      m_WeightingFactors.resize( lastDimSize, 1.0 );
+      this->m_WeightingFactors.clear();
+      this->m_WeightingFactors.resize( lastDimSize, 1.0 );
     }
   } // end Initialize
 
@@ -81,7 +82,7 @@ namespace itk
     VarianceOverLastDimensionImageMetric<TFixedImage,TMovingImage>
     ::SetWeightingFactors (const std::vector<double> & w)
   {
-    m_WeightingFactors = w;
+    this->m_WeightingFactors = w;
     this->Modified();
   } // end SetWeightingFactors
 
@@ -189,7 +190,7 @@ namespace itk
     const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
     const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
     const unsigned int numLastDimSamples =
-      this->m_NumSamplesLastDimension < lastDimSize ? m_NumSamplesLastDimension : lastDimSize;
+      this->m_NumSamplesLastDimension < lastDimSize ? this->m_NumSamplesLastDimension : lastDimSize;
 
     /** Vector containing last dimension positions to use: initialize on all positions. */
     std::vector<int> lastDimPositions (lastDimSize);
@@ -205,7 +206,7 @@ namespace itk
       FixedImagePointType fixedPoint = (*fiter).Value().m_ImageCoordinates;
 
       /** Determine random last dimension positions if needed. */
-      if ( m_SampleLastDimensionRandomly ) {
+      if ( this->m_SampleLastDimensionRandomly ) {
         SampleRandom( numLastDimSamples, lastDimSize, lastDimPositions );
       }
       
@@ -214,9 +215,12 @@ namespace itk
       this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
 
       /** Loop over the slowest varying dimension. */
-      double sumWeightingFactors = 0.0;
+      //double sumWeightingFactors = 0.0;
       double sumValues = 0.0;
       double sumValuesSquared = 0.0;
+      double sumWeightedValues = 0.0;
+      double sumWeightingFactors = 0.0;
+      unsigned int numSamplesOk = 0;
       const unsigned int realNumLastDimPositions = lastDimPositions.size();
       for (unsigned int d = 0; d < realNumLastDimPositions; ++d) 
       {
@@ -249,19 +253,23 @@ namespace itk
 
         if ( sampleOk )
         {
-          sumWeightingFactors += m_WeightingFactors[lastDimPositions[d]];
-          sumValues += m_WeightingFactors[lastDimPositions[d]] * movingImageValue;
-          sumValuesSquared += m_WeightingFactors[lastDimPositions[d]] * movingImageValue * movingImageValue;
+          numSamplesOk++;
+          sumWeightingFactors += this->m_WeightingFactors[ lastDimPositions[ d ] ];
+          sumValues += movingImageValue;
+          sumValuesSquared += movingImageValue * movingImageValue;
+          sumWeightedValues += this->m_WeightingFactors[ lastDimPositions[ d ] ] * movingImageValue;
         } // end if sampleOk
       } // end for loop over last dimension
 
-      if (sumWeightingFactors > 0)
+      if ( numSamplesOk > 0 )
       {
         this->m_NumberOfPixelsCounted++;
 
         /** Add this variance to the variance sum. */
-        const double expectedValue = sumValues / sumWeightingFactors;
-        measure += sumValuesSquared / sumWeightingFactors - (expectedValue * expectedValue);
+        const double expectedValue = sumValues / static_cast< double > ( numSamplesOk );
+        const double weightedExpectedValue = sumWeightedValues / sumWeightingFactors;
+        const double expectedSquaredValue = sumValuesSquared / static_cast< double > ( numSamplesOk );
+        measure += expectedSquaredValue - 2.0 * expectedValue * weightedExpectedValue + weightedExpectedValue * weightedExpectedValue;
       }
     } // end for loop over the image sample container
 
@@ -270,8 +278,7 @@ namespace itk
       sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
     /** Compute average over variances. */
-    measure *= 1.0 / 
-      static_cast<double>( this->m_NumberOfPixelsCounted );
+    measure /= static_cast<double>( this->m_NumberOfPixelsCounted );
 
     /** Return the mean squares measure value. */
     return measure;
@@ -321,9 +328,6 @@ namespace itk
     derivative = DerivativeType( this->GetNumberOfParameters() );
     derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
 
-    /** Arrays that store dM(x)/dmu. */
-    DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.size() );
-
     /** Make sure the transform parameters are up to date. */
     this->SetTransformParameters( parameters );
 
@@ -340,7 +344,7 @@ namespace itk
     const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
     const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
     const unsigned int numLastDimSamples = 
-      this->m_NumSamplesLastDimension < lastDimSize ? m_NumSamplesLastDimension : lastDimSize;
+      this->m_NumSamplesLastDimension < lastDimSize ? this->m_NumSamplesLastDimension : lastDimSize;
 
     /** Vector containing last dimension positions to use: initialize on all positions. */
     std::vector<int> lastDimPositions ( lastDimSize );
@@ -356,7 +360,7 @@ namespace itk
       FixedImagePointType fixedPoint = (*fiter).Value().m_ImageCoordinates;
 
       /** Determine random last dimension positions if needed. */
-      if ( m_SampleLastDimensionRandomly ) 
+      if ( this->m_SampleLastDimensionRandomly ) 
       {
         SampleRandom( numLastDimSamples, lastDimSize, lastDimPositions );
       }
@@ -366,14 +370,26 @@ namespace itk
       this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
 
       /** Loop over the slowest varying dimension. */
-      double sumWeightingFactors = 0.0;
+      //double sumWeightingFactors = 0.0;
       double sumValues = 0.0;
       double sumValuesSquared = 0.0;
+      double sumWeightedValues = 0.0;
+      double sumWeightingFactors = 0.0;
+      unsigned int numSamplesOk = 0;
       const unsigned int realNumLastDimPositions = lastDimPositions.size();
-      DerivativeType derivativeTerm0 ( this->GetNumberOfParameters() );
-      derivativeTerm0.Fill( NumericTraits< DerivativeValueType >::Zero );
-      DerivativeType derivativeTerm1 ( this->GetNumberOfParameters() );
-      derivativeTerm1.Fill( NumericTraits< DerivativeValueType >::Zero );
+
+      /** Arrays that store dM(x)/dmu, sum dM(x)/dmu, sum weighted dM(x)/dmu
+      * and sum M(x)*dM(x)/dmu.
+      */
+      DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.size() );
+      imageJacobian.Fill( NumericTraits< DerivativeValueType >::Zero );
+      DerivativeType sumImageJacobian( this->m_NonZeroJacobianIndices.size() );
+      sumImageJacobian.Fill( NumericTraits< DerivativeValueType >::Zero );
+      DerivativeType sumWeightedImageJacobian( this->m_NonZeroJacobianIndices.size() );
+      sumWeightedImageJacobian.Fill( NumericTraits< DerivativeValueType >::Zero );
+      DerivativeType sumValueImageJacobian( this->m_NonZeroJacobianIndices.size() );
+      sumValueImageJacobian.Fill( NumericTraits< DerivativeValueType >::Zero );
+
       for ( unsigned int d = 0; d < realNumLastDimPositions; ++d ) 
       {
         /** Initialize some variables. */
@@ -382,7 +398,7 @@ namespace itk
         MovingImageDerivativeType movingImageDerivative;
 
         /** Set fixed point's last dimension to lastDimPosition. */
-        voxelCoord[lastDim] = lastDimPositions[d];
+        voxelCoord[ lastDim ] = lastDimPositions[ d ];
 
         /** Transform sampled point back to world coordinates. */
         this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
@@ -407,15 +423,17 @@ namespace itk
         if ( sampleOk )
         {
           /** Update value terms **/
-          sumWeightingFactors += m_WeightingFactors[lastDimPositions[d]];
-          sumValues += m_WeightingFactors[lastDimPositions[d]] * movingImageValue;
-          sumValuesSquared += m_WeightingFactors[lastDimPositions[d]] * movingImageValue * movingImageValue;
+          numSamplesOk++;
+          sumWeightingFactors += this->m_WeightingFactors[ lastDimPositions[ d ] ];
+          sumValues += movingImageValue;
+          sumValuesSquared += movingImageValue * movingImageValue;
+          sumWeightedValues += this->m_WeightingFactors[ lastDimPositions[ d ] ] * movingImageValue;
 
           /** Get the TransformJacobian dT/dmu. */
           const TransformJacobianType & jacobian = 
             this->EvaluateTransformJacobian( fixedPoint );
 
-          /** Compute the innerproducts (dM/dx)^T (dT/dmu) and (dMask/dx)^T (dT/dmu). */
+          /** Compute the innerproduct (dM/dx)^T (dT/dmu). */
           this->EvaluateTransformJacobianInnerProduct( 
             jacobian, movingImageDerivative, imageJacobian );
 
@@ -423,24 +441,31 @@ namespace itk
           this->UpdateDerivativeTerms( 
             movingImageValue,
             imageJacobian,
-            m_WeightingFactors[lastDimPositions[d]],
-            derivativeTerm0,
-            derivativeTerm1 );
+            this->m_WeightingFactors[ lastDimPositions[ d ] ],
+            sumImageJacobian,
+            sumWeightedImageJacobian,
+            sumValueImageJacobian );
         } // end if sampleOk
       } // end for loop over last dimension
 
-      if (sumWeightingFactors>0) 
+      if ( numSamplesOk > 0 )
       {
         this->m_NumberOfPixelsCounted++;
 
         /** Add this variance to the variance sum. */
-        const double expectedValue = sumValues / sumWeightingFactors;
-        measure += sumValuesSquared / sumWeightingFactors - ( expectedValue * expectedValue );
+        const double expectedValue = sumValues / static_cast< double > ( numSamplesOk );
+        const double weightedExpectedValue = sumWeightedValues / sumWeightingFactors;
+        const double expectedSquaredValue = sumValuesSquared / static_cast< double > ( numSamplesOk );
+        measure += expectedSquaredValue - 2.0 * expectedValue * weightedExpectedValue + weightedExpectedValue * weightedExpectedValue;
 
         /** Update derivative. */
-        derivative += 
-           1.0 / sumWeightingFactors * derivativeTerm0 - 
-           2.0 / sumWeightingFactors * sumValues * ( 1.0 / static_cast<double>( sumWeightingFactors ) * derivativeTerm1 );
+        derivative +=
+          (
+            2.0 * sumValueImageJacobian - 
+            2.0 * weightedExpectedValue * sumImageJacobian -
+            2.0 * ( sumWeightedImageJacobian / sumWeightingFactors ) * sumValues
+          ) / static_cast<double>( numSamplesOk ) +
+          2.0 * weightedExpectedValue * ( sumWeightedImageJacobian / sumWeightingFactors );
       }
     } // end for loop over the image sample container
 
@@ -469,8 +494,9 @@ namespace itk
     const RealType movingImageValue,
     const DerivativeType & imageJacobian,
     const double weightingFactor,
-    DerivativeType & deriv0,
-    DerivativeType & deriv1 ) const
+    DerivativeType & sumImageJacobian,
+    DerivativeType & sumWeightedImageJacobian,
+    DerivativeType & sumValueImageJacobian) const
   {
     typedef typename DerivativeType::ValueType        DerivativeValueType;
 
@@ -480,15 +506,19 @@ namespace itk
     {
       /** Loop over all jacobians. */
       typename DerivativeType::const_iterator imjacit = imageJacobian.begin();
-      typename DerivativeType::iterator derivit0 = deriv0.begin();
-      typename DerivativeType::iterator derivit1 = deriv1.begin();
+      typename DerivativeType::iterator sumImageJacobianIt = sumImageJacobian.begin();
+      typename DerivativeType::iterator sumWeightedImageJacobianIt = sumWeightedImageJacobian.begin();
+      typename DerivativeType::iterator sumValueImageJacobianIt = sumValueImageJacobian.begin();
       for ( unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu )
       {
-        (*derivit0) += 2.0 * weightingFactor * movingImageValue * (*imjacit);
-        (*derivit1) += weightingFactor * (*imjacit);
+        (*sumImageJacobianIt) += (*imjacit);
+        (*sumWeightedImageJacobianIt) += weightingFactor * (*imjacit);
+        (*sumValueImageJacobianIt) += movingImageValue * (*imjacit);
+
         ++imjacit;
-        ++derivit0;
-        ++derivit1;
+        ++sumImageJacobianIt;
+        ++sumWeightedImageJacobianIt;
+        ++sumValueImageJacobianIt;
       }
     }
     else
@@ -497,8 +527,9 @@ namespace itk
       for ( unsigned int i = 0; i < imageJacobian.GetSize(); ++i )
       {
         const unsigned int index = this->m_NonZeroJacobianIndices[ i ];
-        deriv0[ index ] += 2.0 * weightingFactor * movingImageValue * imageJacobian[ i ];
-        deriv1[ index ] += weightingFactor * imageJacobian[ i ];
+        sumImageJacobian[ index ] += imageJacobian[ i ];
+        sumWeightedImageJacobian[ index ] += weightingFactor * imageJacobian[ i ];
+        sumValueImageJacobian[ index ] += movingImageValue * imageJacobian[ i ];
       }
     }
   } // end UpdateValueAndDerivativeTerms

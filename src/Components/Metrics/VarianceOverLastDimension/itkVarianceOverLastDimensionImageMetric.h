@@ -170,7 +170,7 @@ protected:
   typedef typename Superclass::BSplineCombinationTransformType    BSplineCombinationTransformType;
   typedef typename Superclass::BSplineParametersOffsetType        BSplineParametersOffsetType;
   //typedef typename Superclass::ParameterIndexArrayType            ParameterIndexArrayType;
-  typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
+  //typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
 
   /** Computes the innerproduct of transform jacobian with moving image gradient.
    * The results are stored in imageJacobian, which is supposed
@@ -187,7 +187,8 @@ protected:
     const DerivativeType & imageJacobian,   
     const double weightingFactor,
     DerivativeType & deriv0,
-    DerivativeType & deriv1) const;
+    DerivativeType & deriv1,
+    DerivativeType & deriv2) const;
  
 private:
   VarianceOverLastDimensionImageMetric(const Self&); //purposely not implemented
