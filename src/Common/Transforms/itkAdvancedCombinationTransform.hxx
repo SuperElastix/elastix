@@ -914,7 +914,8 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
   this->m_InitialTransform->GetSpatialHessian( ipp, sh0 );
   this->m_CurrentTransform->GetSpatialHessian( transformedPoint, sh1 );
 
-  SpatialJacobianType sj0t = sj0.GetTranspose();
+  typename SpatialJacobianType::InternalMatrixType sj0tvnl = sj0.GetTranspose();
+  SpatialJacobianType sj0t( sj0tvnl );
 
   /** Combine them in one overall spatial Hessian. */
   for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
@@ -1204,7 +1205,9 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
   this->m_CurrentTransform->GetJacobianOfSpatialHessian(
     transformedPoint, jsh1, nonZeroJacobianIndices );
 
-  SpatialJacobianType sj0t = sj0.GetTranspose();  
+  typename SpatialJacobianType::InternalMatrixType sj0tvnl = sj0.GetTranspose();
+  SpatialJacobianType sj0t( sj0tvnl );
+  
   jsh.resize( nonZeroJacobianIndices.size() );  
 
   /** Combine them in one overall Jacobian of spatial Hessian. */
