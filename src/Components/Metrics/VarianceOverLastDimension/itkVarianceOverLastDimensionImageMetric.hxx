@@ -169,7 +169,7 @@ namespace itk
     ::GetValue( const TransformParametersType & parameters ) const
   {
     itkDebugMacro( "GetValue( " << parameters << " ) " );
-
+    
     /** Initialize some variables */
     this->m_NumberOfPixelsCounted = 0;
     MeasureType measure = NumericTraits< MeasureType >::Zero;
@@ -317,7 +317,7 @@ namespace itk
     MeasureType & value, DerivativeType & derivative ) const
   {
     itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
-
+    
     /** Define derivative and Jacobian types. */
     typedef typename DerivativeType::ValueType        DerivativeValueType;
     typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
@@ -327,7 +327,7 @@ namespace itk
     MeasureType measure = NumericTraits< MeasureType >::Zero;
     derivative = DerivativeType( this->GetNumberOfParameters() );
     derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
-
+    
     /** Make sure the transform parameters are up to date. */
     this->SetTransformParameters( parameters );
 
@@ -370,7 +370,6 @@ namespace itk
       this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
 
       /** Loop over the slowest varying dimension. */
-      //double sumWeightingFactors = 0.0;
       double sumValues = 0.0;
       double sumValuesSquared = 0.0;
       double sumWeightedValues = 0.0;
@@ -396,14 +395,13 @@ namespace itk
         RealType movingImageValue;
         MovingImagePointType mappedPoint;
         MovingImageDerivativeType movingImageDerivative;
-
+        
         /** Set fixed point's last dimension to lastDimPosition. */
         voxelCoord[ lastDim ] = lastDimPositions[ d ];
-
         /** Transform sampled point back to world coordinates. */
         this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
-
         /** Transform point and check if it is inside the bspline support region. */
+
         bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
         /** Check if point is inside mask. */
@@ -451,10 +449,10 @@ namespace itk
       if ( numSamplesOk > 0 )
       {
         this->m_NumberOfPixelsCounted++;
-
         /** Add this variance to the variance sum. */
         const double expectedValue = sumValues / static_cast< double > ( numSamplesOk );
         const double weightedExpectedValue = sumWeightedValues / sumWeightingFactors;
+
         const double expectedSquaredValue = sumValuesSquared / static_cast< double > ( numSamplesOk );
         measure += expectedSquaredValue - 2.0 * expectedValue * weightedExpectedValue + weightedExpectedValue * weightedExpectedValue;
 
@@ -468,11 +466,11 @@ namespace itk
           2.0 * weightedExpectedValue * ( sumWeightedImageJacobian / sumWeightingFactors );
       }
     } // end for loop over the image sample container
-
+    
     /** Check if enough samples were valid. */
     this->CheckNumberOfSamples(
       sampleContainer->Size(), this->m_NumberOfPixelsCounted );
-
+    
     /** Compute average over variances. */
     measure /= static_cast<double>( this->m_NumberOfPixelsCounted );
     derivative /= static_cast<double>( this->m_NumberOfPixelsCounted );
