@@ -79,12 +79,12 @@ ErodeMaskImageFilter< TImage >
     radiusarray.SetElement( i, radius );
   }
 
-  /** Threshold the data first. Every voxel with intensity >= 1 is used. *
+  /** Threshold the data first. Every voxel with intensity >= 1 is used. 
   // Not needed since IsInside of a mask checks for != 0.
   typename ThresholdFilterType::Pointer threshold = ThresholdFilterType::New();
   threshold->ThresholdAbove(  itk::NumericTraits<InputPixelType>::One );
   threshold->SetOutsideValue( itk::NumericTraits<InputPixelType>::One );
-  threshold->SetInput( this->GetInput() );
+  threshold->SetInput( this->GetInput() ); */
 
   /** Create and run the erosion filter. */
   typename ErodeFilterType::Pointer erosion = ErodeFilterType::New();
