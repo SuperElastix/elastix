@@ -383,11 +383,11 @@ namespace itk
       */
       DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.size() );
       imageJacobian.Fill( NumericTraits< DerivativeValueType >::Zero );
-      DerivativeType sumImageJacobian( this->m_NonZeroJacobianIndices.size() );
+      DerivativeType sumImageJacobian( this->GetNumberOfParameters() );
       sumImageJacobian.Fill( NumericTraits< DerivativeValueType >::Zero );
-      DerivativeType sumWeightedImageJacobian( this->m_NonZeroJacobianIndices.size() );
+      DerivativeType sumWeightedImageJacobian( this->GetNumberOfParameters() );
       sumWeightedImageJacobian.Fill( NumericTraits< DerivativeValueType >::Zero );
-      DerivativeType sumValueImageJacobian( this->m_NonZeroJacobianIndices.size() );
+      DerivativeType sumValueImageJacobian( this->GetNumberOfParameters() );
       sumValueImageJacobian.Fill( NumericTraits< DerivativeValueType >::Zero );
 
       for ( unsigned int d = 0; d < realNumLastDimPositions; ++d ) 

@@ -69,7 +69,7 @@ using namespace itk;
     int i = 0;
     double weightingFactor = 0.0;
     while ( this->GetConfiguration()->ReadParameter( weightingFactor ,
-      "LastDimensionWeightingFactors", this->GetComponentLabel(), i, 0 ) )
+      "LastDimensionWeightingFactors", this->GetComponentLabel(), i, -1 ) )
     {
       weightingFactors.push_back( weightingFactor );
       ++i;
