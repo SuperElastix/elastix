@@ -25,6 +25,7 @@
 #include "itkImageMaskSpatialObject2.h"
 #include "itkErodeMaskImageFilter.h"
 
+
 namespace elastix
 {
 using namespace itk;

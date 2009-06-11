@@ -14,16 +14,8 @@ SUBDIRS( xout )
 SET( CommonFiles
  elxTimer.cxx
  elxTimer.h
- #itkBSplineKernelFunction2.h
- #itkBSplineKernelFunction2.cxx
- itkErodeMaskImageFilter.h
- itkErodeMaskImageFilter.txx
  itkImageFileCastWriter.h
  itkImageFileCastWriter.txx
- itkImageMaskSpatialObject2.h
- itkImageMaskSpatialObject2.txx
- itkImageSpatialObject2.h
- itkImageSpatialObject2.txx
  itkMeshFileReaderBase.h
  itkMeshFileReaderBase.txx
  itkMultiResolutionGaussianSmoothingPyramidImageFilter.h
@@ -37,6 +29,19 @@ SET( CommonFiles
  itkScaledSingleValuedNonLinearOptimizer.h
  itkTransformixInputPointFileReader.h
  itkTransformixInputPointFileReader.hxx
+)
+
+SET( MaskFiles
+ itkImageMaskSpatialObject2.h
+ itkImageMaskSpatialObject2.txx
+ itkImageSpatialObject2.h
+ itkImageSpatialObject2.txx
+ itkErodeMaskImageFilter.h
+ itkErodeMaskImageFilter.txx
+ itkParabolicErodeDilateImageFilter.h
+ itkParabolicErodeDilateImageFilter.txx
+ itkParabolicErodeImageFilter.h
+ itkParabolicMorphUtils.h
 )
 
 SET( CostFunctionFiles
@@ -83,6 +88,7 @@ SET( TransformFiles
  Transforms/itkBSplineInterpolationWeightFunction2.txx
  Transforms/itkBSplineInterpolationWeightFunctionBase.h
  Transforms/itkBSplineInterpolationWeightFunctionBase.txx
+ Transforms/itkBSplineKernelFunction2.h
  #Transforms/itkBSplineSecondOrderDerivativeKernelFunction.h
  Transforms/itkBSplineSecondOrderDerivativeKernelFunction2.h
  Transforms/itkCombinationTransform.h
@@ -128,6 +134,7 @@ SET( ImageSamplersFiles
 #---------------------------------------------------------------------
 # Construct source groups for nice visualisation in Visual Studio.
 
+SOURCE_GROUP( "Masks" FILES ${MaskFiles} )
 SOURCE_GROUP( "CostFunctions" FILES ${CostFunctionFiles} )
 SOURCE_GROUP( "Transforms" FILES ${TransformFiles} )
 SOURCE_GROUP( "LineSearchOptimizers" FILES ${LineSearchOptimizersFiles} )
@@ -137,6 +144,7 @@ SOURCE_GROUP( "ImageSamplers" FILES ${ImageSamplersFiles} )
 # Create the elxCommon library.
 
 ADD_LIBRARY( elxCommon
+ ${MaskFiles}
  ${CommonFiles}
  ${CostFunctionFiles}
  ${TransformFiles}
