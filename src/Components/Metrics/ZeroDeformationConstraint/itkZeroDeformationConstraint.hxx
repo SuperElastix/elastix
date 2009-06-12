@@ -156,7 +156,6 @@ namespace itk
 
     /** Return the mean squares measure value. */
     return ( -sumMagnitude + this->m_CurrentPenaltyTermMultiplier / 2.0 * sumSquaredMagnitude ) / static_cast< float > ( this->m_NumberOfPixelsCounted );
-    //return -sumMagnitude + this->m_CurrentPenaltyTermMultiplier / 2.0 * sumSquaredMagnitude;
 
   } // end GetValue
   
@@ -266,7 +265,7 @@ namespace itk
         for ( unsigned int d = 0; d < FixedImageDimension; ++d )
         {
            transformation[ d ] = ( -this->m_CurrentLagrangeMultipliers[ i ] * transformation[ d ] )
-              / pow( magnitude + epsilon, 0.5 ) + this->m_CurrentPenaltyTermMultiplier * transformation[ d ];
+              / ( magnitude + epsilon ) + this->m_CurrentPenaltyTermMultiplier * transformation[ d ];
         }
 
         /** Get the TransformJacobian dT/dMu (jacobian). */
@@ -298,7 +297,6 @@ namespace itk
     this->m_CurrentInfeasibility /= this->m_NumberOfPixelsCounted;
 
     /** Return the mean squares measure value. */
-    //value = -sumMagnitude + this->m_CurrentPenaltyTermMultiplier / 2.0 * sumSquaredMagnitude;
     value = ( -sumMagnitude + this->m_CurrentPenaltyTermMultiplier / 2.0 * sumSquaredMagnitude ) / static_cast< float > ( this->m_NumberOfPixelsCounted );
 
     for ( unsigned int p = 0; p < this->GetNumberOfParameters(); ++p) 
