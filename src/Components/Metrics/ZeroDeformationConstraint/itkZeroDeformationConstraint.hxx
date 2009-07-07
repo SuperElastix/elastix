@@ -29,7 +29,7 @@ namespace itk
       ::ZeroDeformationConstraintMetric():
         m_CurrentPenaltyTermMultiplier( 1.0 ), 
         m_CurrentLagrangeMultipliers( 0 ),
-        m_CurrentMaximumMagnitude( 0.0 ),
+        m_CurrentMaximumMagnitude2( 0.0 ),
         m_InitialLangrangeMultiplier( 1.0 )
   {
     this->SetUseImageSampler( true );
@@ -106,11 +106,11 @@ namespace itk
     typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
 
     /** Initialize some variables. */
-    double sumMagnitude = 0.0;
-    double sumSquaredMagnitude = 0.0;
-    this->m_CurrentInfeasibility = 0.0;
-    this->m_NumberOfPixelsCounted = 0;
-    this->m_CurrentMaximumMagnitude = 0.0;
+    double sumMagnitude2 = 0.0;
+    double sumMagnitude4 = 0.0;
+    this->m_CurrentInfeasibility     = 0.0;
+    this->m_NumberOfPixelsCounted    = 0;
+    this->m_CurrentMaximumMagnitude2 = 0.0;
 
     /** Loop over the samples to compute sums for computation of the metric. */
     int i = 0;
@@ -134,15 +134,16 @@ namespace itk
       {
         this->m_NumberOfPixelsCounted++;
 
-        const double magnitude = (mappedPoint - fixedPoint).GetVnlVector().magnitude();
+        const double magnitude  = (mappedPoint - fixedPoint).GetVnlVector().magnitude();
+        const double magnitude2 = magnitude * magnitude;
         /** Remember current penalty term value. */
-        this->m_CurrentPenaltyTermValues[ i ] = magnitude;
-        this->m_CurrentMaximumMagnitude = std::max( this->m_CurrentMaximumMagnitude, magnitude );
+        this->m_CurrentPenaltyTermValues[ i ] = magnitude2;
+        this->m_CurrentMaximumMagnitude2 = std::max( this->m_CurrentMaximumMagnitude2, magnitude2 );
         /** Update magnitude sums. */
-        sumMagnitude += this->m_CurrentLagrangeMultipliers[ i ] * magnitude;
-        sumSquaredMagnitude += magnitude*magnitude;
+        sumMagnitude2 += this->m_CurrentLagrangeMultipliers[ i ] * magnitude2;
+        sumMagnitude4 += magnitude2 * magnitude2;
         /** Update infeasibility value. */
-        this->m_CurrentInfeasibility += magnitude;
+        this->m_CurrentInfeasibility += magnitude2;
       }
       ++i;
     } // end for loop over the image sample container
@@ -155,7 +156,7 @@ namespace itk
       sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
     /** Return the mean squares measure value. */
-    return ( -sumMagnitude + this->m_CurrentPenaltyTermMultiplier / 2.0 * sumSquaredMagnitude ) / static_cast< float > ( this->m_NumberOfPixelsCounted );
+    return ( -sumMagnitude2 + this->m_CurrentPenaltyTermMultiplier / 2.0 * sumMagnitude4 ) / static_cast< float > ( this->m_NumberOfPixelsCounted );
 
   } // end GetValue
   
@@ -192,8 +193,6 @@ namespace itk
   {
     itkDebugMacro( "GetValueAndDerivative( " << parameters << " ) ");
 
-    const float epsilon = 1.0E-14f;
-
     /** Define derivative and Jacobian types. */
     typedef typename DerivativeType::ValueType        DerivativeValueType;
     typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
@@ -218,11 +217,11 @@ namespace itk
     typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
 
     /** Initialize some variables. */
-    double sumMagnitude = 0.0;
-    double sumSquaredMagnitude = 0.0;
-    this->m_CurrentInfeasibility = 0.0;
-    this->m_NumberOfPixelsCounted = 0;
-    this->m_CurrentMaximumMagnitude = 0.0;
+    double sumMagnitude2 = 0.0;
+    double sumMagnitude4 = 0.0;
+    this->m_CurrentInfeasibility     = 0.0;
+    this->m_NumberOfPixelsCounted    = 0;
+    this->m_CurrentMaximumMagnitude2 = 0.0;
 
     /** Loop over the samples to compute sums for the metric value and derivative. */
     int i = 0;
@@ -253,19 +252,21 @@ namespace itk
           transformation[ d ] = mappedPoint[ d ] - fixedPoint[ d ];
         }
         const double magnitude = transformation.GetVnlVector().magnitude();
+        const double magnitude2 = magnitude * magnitude;
         /** Remember current penalty term value. */
-        this->m_CurrentPenaltyTermValues[ i ] = magnitude;
-        this->m_CurrentMaximumMagnitude = std::max( this->m_CurrentMaximumMagnitude, magnitude );
+        this->m_CurrentPenaltyTermValues[ i ] = magnitude2;
+        this->m_CurrentMaximumMagnitude2 = std::max( this->m_CurrentMaximumMagnitude2, magnitude2 );
         /** Update magnitude sums. */
-        sumMagnitude += this->m_CurrentLagrangeMultipliers[ i ] * magnitude;
-        sumSquaredMagnitude += magnitude*magnitude;
+        sumMagnitude2 += this->m_CurrentLagrangeMultipliers[ i ] * magnitude2;
+        sumMagnitude4 += magnitude2 * magnitude2;
         /** Update infeasibility measure. */
-        this->m_CurrentInfeasibility += magnitude;
+        this->m_CurrentInfeasibility += magnitude2;
 
         for ( unsigned int d = 0; d < FixedImageDimension; ++d )
         {
-           transformation[ d ] = ( -this->m_CurrentLagrangeMultipliers[ i ] * transformation[ d ] )
-              / ( magnitude + epsilon ) + this->m_CurrentPenaltyTermMultiplier * transformation[ d ];
+          
+          transformation[ d ] = ( -2.0 * this->m_CurrentLagrangeMultipliers[ i ] * transformation[ d ] )
+                                + 2.0 * this->m_CurrentPenaltyTermMultiplier * transformation[ d ] * magnitude2;
         }
 
         /** Get the TransformJacobian dT/dMu (jacobian). */
@@ -297,7 +298,7 @@ namespace itk
     this->m_CurrentInfeasibility /= this->m_NumberOfPixelsCounted;
 
     /** Return the mean squares measure value. */
-    value = ( -sumMagnitude + this->m_CurrentPenaltyTermMultiplier / 2.0 * sumSquaredMagnitude ) / static_cast< float > ( this->m_NumberOfPixelsCounted );
+    value = ( -sumMagnitude2 + this->m_CurrentPenaltyTermMultiplier / 2.0 * sumMagnitude4 ) / static_cast< float > ( this->m_NumberOfPixelsCounted );
 
     for ( unsigned int p = 0; p < this->GetNumberOfParameters(); ++p) 
     {
@@ -305,8 +306,7 @@ namespace itk
     }
 
   } // end GetValueAndDerivative()
-
-
+  
 } // end namespace itk
 
 #endif // end #ifndef _itkZeroDeformationConstraintMetric_hxx

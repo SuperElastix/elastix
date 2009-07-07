@@ -59,7 +59,7 @@ public:
   
   /** Get functions. */
   itkGetConstMacro( CurrentPenaltyTermMultiplier, double );
-  itkGetConstMacro( CurrentMaximumMagnitude, double );
+  itkGetConstMacro( CurrentMaximumMagnitude2, double );
   itkGetConstMacro( InitialLangrangeMultiplier, double );
   itkGetConstMacro( CurrentInfeasibility, double );
 
@@ -176,7 +176,7 @@ protected:
   mutable double m_CurrentInfeasibility;
 
   /** Current maximum magnitude value. */
-  mutable double m_CurrentMaximumMagnitude;
+  mutable double m_CurrentMaximumMagnitude2;
 
   /** Initial langrange multiplier value. */
   double m_InitialLangrangeMultiplier;

@@ -54,7 +54,7 @@ using namespace itk;
     xout["iteration"].AddTargetCell("5:Penalty");
     xout["iteration"].AddTargetCell("6:Lagrange");
     xout["iteration"].AddTargetCell("7:Infeasibility");
-    xout["iteration"].AddTargetCell("8:MaxMagnitude");
+    xout["iteration"].AddTargetCell("8:MaxMagnitude2");
 
     /** Format the metric and stepsize as floats */     
     xl::xout["iteration"]["5:Penalty"]  << std::showpoint << std::fixed;
@@ -78,7 +78,7 @@ using namespace itk;
     this->m_NumPenaltyTermUpdates = 0;
 
     /** Reset previous maximum magnitude. */
-    this->m_PreviousMaximumMagnitude = itk::NumericTraits< double >::max();
+    this->m_PreviousMaximumMagnitude2 = itk::NumericTraits< double >::max();
 
     /** Get the current resolution level. */
     unsigned int level = 
@@ -140,18 +140,18 @@ using namespace itk;
     xl::xout["iteration"]["5:Penalty"]  << this->m_CurrentPenaltyTermMultiplier;
     xl::xout["iteration"]["6:Lagrange"] << this->m_AverageLagrangeMultiplier;
     xl::xout["iteration"]["7:Infeasibility"] << this->GetCurrentInfeasibility();
-    xl::xout["iteration"]["8:MaxMagnitude"] << this->GetCurrentMaximumMagnitude();
+    xl::xout["iteration"]["8:MaxMagnitude2"] << this->GetCurrentMaximumMagnitude2();
 
     if ( m_CurrentIteration % this->m_NumSubIterations == 0 )
     {
       this->DetermineNewLagrangeMultipliers();
       /** Check if maximum magnitude decreased enough. If not update penalty term multiplier. */
-      if ( this->GetCurrentMaximumMagnitude() > this->m_RequiredConstraintDecreaseFactor * this->m_PreviousMaximumMagnitude )
+      if ( this->GetCurrentMaximumMagnitude2() > this->m_RequiredConstraintDecreaseFactor * this->m_PreviousMaximumMagnitude2 )
       {
         this->m_CurrentPenaltyTermMultiplier = this->DetermineNewPenaltyTermMultiplier( this->m_NumPenaltyTermUpdates + 1 );
         this->m_NumPenaltyTermUpdates++;
       }
-      this->m_PreviousMaximumMagnitude = this->GetCurrentMaximumMagnitude();
+      this->m_PreviousMaximumMagnitude2 = this->GetCurrentMaximumMagnitude2();
     }    
   } // end AfterEachIteration
 
@@ -168,7 +168,7 @@ using namespace itk;
     m_AverageLagrangeMultiplier = 0.0;
     for ( std::vector< double >::size_type i = 0; i < this->m_CurrentLagrangeMultipliers.size(); ++i )
     {
-      this->m_CurrentLagrangeMultipliers[ i ] = min( 0.0, this->m_CurrentLagrangeMultipliers[ i ] - 
+      this->m_CurrentLagrangeMultipliers[ i ] = vnl_math_min( 0.0, this->m_CurrentLagrangeMultipliers[ i ] - 
         this->m_CurrentPenaltyTermValues[ i ] * this->GetCurrentPenaltyTermMultiplier() );
       m_AverageLagrangeMultiplier += this->m_CurrentLagrangeMultipliers[ i ];
     }

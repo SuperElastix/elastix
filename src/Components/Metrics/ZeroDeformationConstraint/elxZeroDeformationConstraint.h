@@ -189,7 +189,7 @@ using namespace itk;
     unsigned int m_CurrentIteration;
 
     /** Previous maximum magnitude value and required decrease factor. */
-    double m_PreviousMaximumMagnitude;
+    double m_PreviousMaximumMagnitude2;
     double m_RequiredConstraintDecreaseFactor;
     unsigned int m_NumPenaltyTermUpdates;
 
