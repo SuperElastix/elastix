@@ -54,9 +54,6 @@ using namespace itk;
     typedef SmartPointer<Self>                            Pointer;
     typedef SmartPointer<const Self>                      ConstPointer;
     
-    /** Multi metric typedefs. */
-    typedef elx::MultiMetricMultiResolutionRegistration<TElastix> MultiMetricRegistrationType;
-
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
@@ -141,6 +138,9 @@ using namespace itk;
     typedef typename Superclass2::RegistrationType          RegistrationType;
     typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
     typedef typename Superclass2::ITKBaseType               ITKBaseType;
+
+    /** Multi metric typedefs. */
+    typedef elx::MultiMetricMultiResolutionRegistration<ElastixType> MultiMetricRegistrationType;
       
     /** Typedef for timer. */
     typedef tmr::Timer          TimerType;
