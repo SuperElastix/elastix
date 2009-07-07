@@ -55,7 +55,7 @@ using namespace itk;
     typedef SmartPointer<const Self>                      ConstPointer;
     
     /** Multi metric typedefs. */
-    typedef elx::MultiMetricMultiResolutionRegistration<ElastixType> MultiMetricRegistrationType;
+    typedef elx::MultiMetricMultiResolutionRegistration<TElastix> MultiMetricRegistrationType;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
