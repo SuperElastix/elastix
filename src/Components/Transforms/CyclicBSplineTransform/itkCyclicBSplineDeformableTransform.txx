@@ -329,11 +329,11 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
     unsigned int j;
     for ( j = 0; j < SpaceDimension; j++ )
     {
-      iterator[j] = IteratorType( this->m_JacobianImage[ j ], supportRegions[ r ] );
+      iterator[ j ] = IteratorType( this->m_JacobianImage[ j ], supportRegions[ r ] );
     }
 
     /** Zero out Jacobian elements for both support regions. */
-    while ( ! iterator[ 0 ].IsAtEnd() )
+    while ( !iterator[ 0 ].IsAtEnd() )
     {
       for ( j = 0; j < SpaceDimension; j++ )
       {
