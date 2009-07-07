@@ -62,6 +62,8 @@ using namespace itk;
     xl::xout["iteration"]["7:Infeasibility"] << std::showpoint << std::fixed;
     xl::xout["iteration"]["8:MaxMagnitude"] << std::showpoint << std::fixed;
 
+    /** Check if we are using a multi-metric registration. */
+    m_MultiMetricRegistration = dynamic_cast< MultiMetricRegistrationType * >( this->GetRegistration() );
   }
 
 
@@ -150,6 +152,20 @@ using namespace itk;
       {
         this->m_CurrentPenaltyTermMultiplier = this->DetermineNewPenaltyTermMultiplier( this->m_NumPenaltyTermUpdates + 1 );
         this->m_NumPenaltyTermUpdates++;
+
+        /** Update multi metric weights (to prevent problems with the optimizer gain). */
+        if ( m_MultiMetricRegistration != NULL ) 
+        {
+          /** Get the number of metrics. */
+          unsigned int nrOfMetrics = m_MultiMetricRegistration->GetCombinationMetric()->GetNumberOfMetrics();
+
+          /** Update weights. */
+          for ( unsigned int metricnr = 0; metricnr < nrOfMetrics; ++metricnr )
+          {
+            double currentWeight = m_MultiMetricRegistration->GetCombinationMetric()->GetMetricWeight( metricnr );
+            m_MultiMetricRegistration->GetCombinationMetric()->SetMetricWeight( currentWeight / this->m_PenaltyTermMultiplierFactor, metricnr );
+          }
+        }
       }
       this->m_PreviousMaximumMagnitude2 = this->GetCurrentMaximumMagnitude2();
     }    

@@ -18,6 +18,7 @@
 #include "elxIncludes.h"
 #include "itkZeroDeformationConstraint.h"
 
+#include "../../Registrations/MultiMetricMultiResolutionRegistration/elxMultiMetricMultiResolutionRegistration.h"
 #include "elxTimer.h"
 
 namespace elastix
@@ -52,6 +53,9 @@ using namespace itk;
     typedef MetricBase<TElastix>                          Superclass2;
     typedef SmartPointer<Self>                            Pointer;
     typedef SmartPointer<const Self>                      ConstPointer;
+    
+    /** Multi metric typedefs. */
+    typedef elx::MultiMetricMultiResolutionRegistration<ElastixType> MultiMetricRegistrationType;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -195,6 +199,9 @@ using namespace itk;
 
     /** Average lagrange multiplier variable for output. */
     double m_AverageLagrangeMultiplier;
+
+    /** Variable to store casted registration pointer in (for multi-metric check). */ 
+    MultiMetricRegistrationType * m_MultiMetricRegistration;
 
     inline void DetermineNewLagrangeMultipliers( );
     inline double DetermineNewPenaltyTermMultiplier( const int iterationNumber ) const;
