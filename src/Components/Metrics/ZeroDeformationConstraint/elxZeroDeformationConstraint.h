@@ -202,6 +202,7 @@ using namespace itk;
 
     /** Variable to store casted registration pointer in (for multi-metric check). */ 
     MultiMetricRegistrationType * m_MultiMetricRegistration;
+    bool m_UpdateMetricWeights;
 
     inline void DetermineNewLagrangeMultipliers( );
     inline double DetermineNewPenaltyTermMultiplier( const int iterationNumber ) const;
