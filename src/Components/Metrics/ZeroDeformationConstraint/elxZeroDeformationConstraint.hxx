@@ -161,7 +161,6 @@ using namespace itk;
         /** Update multi metric weights (to prevent problems with the optimizer gain). */
         if ( m_UpdateMetricWeights && m_MultiMetricRegistration != NULL ) 
         {
-          std::cout << "Update metric weights" << std::endl;
           /** Get the number of metrics. */
           unsigned int nrOfMetrics = m_MultiMetricRegistration->GetCombinationMetric()->GetNumberOfMetrics();
 
@@ -171,8 +170,6 @@ using namespace itk;
             double currentWeight = m_MultiMetricRegistration->GetCombinationMetric()->GetMetricWeight( metricnr );
             m_MultiMetricRegistration->GetCombinationMetric()->SetMetricWeight( currentWeight / this->m_PenaltyTermMultiplierFactor, metricnr );
           }
-        } else {
-          std::cout << "Do not update metric weights" << std::endl;
         }
       }
       this->m_PreviousMaximumMagnitude2 = this->GetCurrentMaximumMagnitude2();
