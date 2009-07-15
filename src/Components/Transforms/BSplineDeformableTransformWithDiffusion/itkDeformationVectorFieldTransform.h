@@ -15,7 +15,7 @@
 #ifndef __itkDeformationVectorFieldTransform_H__
 #define __itkDeformationVectorFieldTransform_H__
 
-#include "itkBSplineDeformableTransform.h"
+#include "itkAdvancedBSplineDeformableTransform.h"
 
 namespace itk
 {
@@ -26,7 +26,7 @@ namespace itk
  * This class makes it easy to set a deformation vector field
  * as a Transform-object.
  *
- * The class inherits from the 0th-order BSplineDeformableTransform,
+ * The class inherits from the 0th-order AdvancedBSplineDeformableTransform,
  * and converts a VectorImage to the BSpline CoefficientImage.
  * 
  * This is useful if you know for example how to deform each voxel
@@ -43,13 +43,13 @@ namespace itk
     class TScalarType = double,       // Data type for scalars (float or double)
     unsigned int NDimensions = 3 >    // Number of dimensions
     class DeformationVectorFieldTransform:
-  public BSplineDeformableTransform< TScalarType, NDimensions, 0 >
+  public AdvancedBSplineDeformableTransform< TScalarType, NDimensions, 0 >
   {
   public:
     
     /** Standard class typedefs. */
     typedef DeformationVectorFieldTransform       Self;
-    typedef BSplineDeformableTransform<
+    typedef AdvancedBSplineDeformableTransform<
       TScalarType, NDimensions, 0 >               Superclass;
     typedef SmartPointer< Self >                  Pointer;
     typedef SmartPointer< const Self >            ConstPointer;
@@ -58,7 +58,7 @@ namespace itk
     itkNewMacro( Self );
     
     /** Run-time type information (and related methods). */
-    itkTypeMacro( DeformationVectorFieldTransform, BSplineDeformableTransform );
+    itkTypeMacro( DeformationVectorFieldTransform, AdvancedBSplineDeformableTransform );
     
     /** Dimension of the domain space. */
     itkStaticConstMacro( SpaceDimension, unsigned int, NDimensions );

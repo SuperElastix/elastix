@@ -18,7 +18,7 @@
 /* For easy changing the BSplineOrder: */
 #define __VSplineOrder 3
 
-#include "itkBSplineDeformableTransform.h"
+#include "itkAdvancedBSplineDeformableTransform.h"
 #include "itkBSplineCombinationTransform.h"
 #include "itkBSplineResampleImageFilterBase.h"
 #include "itkBSplineUpsampleImageFilter.h"
@@ -49,16 +49,16 @@ using namespace itk;
   /**
    * \class BSplineTransformWithDiffusion
    * \brief This class combines a B-spline transform with the
-   * diffusion/filtering of the deformationfield.
+   * diffusion/filtering of the deformation field.
    *
-   * Every n iterations the deformationfield is diffused using the
+   * Every n iterations the deformation field is diffused using the
    * VectorMeanDiffusionImageFilter. The total transformation of a point
    * is determined by adding the B-spline deformation to the
-   * deformationfield arrow. Filtering of the deformation field is based
+   * deformation field arrow. Filtering of the deformation field is based
    * on some 'stiffness coefficient' image.
    *
    * \warning Using this transform in with the option
-   * (HowToCombineTranforms "Compose"). May give unpredicable results.
+   * (HowToCombineTranforms "Compose"). May give unpredictable results.
    * Especially if the initial transformation is large. This is because
    * the coefficient grid is not properly initialized.
    * Better use (HowToCombineTranforms "Add").
@@ -182,7 +182,7 @@ using namespace itk;
 
     /** The ITK-class that provides most of the functionality, and
      * that is set as the "CurrentTransform" in the CombinationTransform */
-    typedef BSplineDeformableTransform<
+    typedef AdvancedBSplineDeformableTransform<
       typename elx::TransformBase<TElastix>::CoordRepType,
       elx::TransformBase<TElastix>::FixedImageDimension,
       __VSplineOrder >                          BSplineTransformType;
@@ -336,7 +336,7 @@ using namespace itk;
      * The DeformationFieldRegulizerForBSpline is used which expects
      * that its template argument is a BSplineDeformableTransform. This is 
      * not the case, because we gave it a BSplineCombinationTransform.
-     * This last class has a slightly different behaviour of the 
+     * This last class has a slightly different behavior of the 
      * TransformPoint() method (it does not call the TransformPoint() with
      * with 5 arguments, as the BSplineDeformableTransform does).
      */
