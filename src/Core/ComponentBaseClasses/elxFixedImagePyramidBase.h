@@ -45,6 +45,9 @@ using namespace itk;
    *    example: <tt>(ImagePyramidSchedule 4 4 2 2 1 1)</tt> \n
    *    Used as a default when FixedImagePyramidSchedule is not specified. If both are omitted,
    *    a default schedule is assumed: isotropic, halved in each resolution, so, like in the example.
+   * \parameter WritePyramidImagesAfterEachResolution: ...\n
+   *    example: <tt>(WritePyramidImagesAfterEachResolution "true")</tt>\n
+   *    default "false".
    *
    * \ingroup ImagePyramids
    * \ingroup ComponentBaseClasses
@@ -96,10 +99,19 @@ using namespace itk;
     /** Execute stuff before the actual registration:
      * \li Set the schedule of the fixed image pyramid.
      */
-    virtual void BeforeRegistrationBase(void);
+    virtual void BeforeRegistrationBase( void );
+
+    /** Execute stuff after each resolution:
+     * \li Write the pyramid image to file.
+     */
+    virtual void AfterEachResolutionBase( void );
 
     /** Method for setting the schedule. */
-    virtual void SetFixedSchedule(void);
+    virtual void SetFixedSchedule( void );
+
+    /** Method to write the pyramid image. */
+    virtual void WritePyramidImage( const std::string & filename,
+      const unsigned int & level );
 
   protected:
 
