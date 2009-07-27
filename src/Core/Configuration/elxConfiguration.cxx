@@ -149,6 +149,7 @@ Configuration
   this->m_ParameterFileParser->SetParameterFileName( this->m_ParameterFileName );
   try
   {
+    xl::xout["standard"] << "Reading the elastix parameters from file ...\n" << std::endl;
     this->m_ParameterFileParser->ReadParameterFile();
   }
   catch ( itk::ExceptionObject & excp )
