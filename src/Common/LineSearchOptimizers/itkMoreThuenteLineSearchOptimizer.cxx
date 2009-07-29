@@ -613,7 +613,7 @@ namespace itk
    * ************************** SafeGuardedStep ****************************
    *
    * Advance a step along the line search direction and update
-   * the interval of uncertainty. Returns 0 if an error has occured. 
+   * the interval of uncertainty. Returns 0 if an error has occurred. 
    */
   
   int

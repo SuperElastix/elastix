@@ -50,7 +50,7 @@ using namespace itk;
       /** Add information to the exception. */
       excp.SetLocation( "MultiResolutionRegistration - BeforeRegistration()" );
       std::string err_str = excp.GetDescription();
-      err_str += "\nError occured while updating region info of the fixed image.\n";
+      err_str += "\nError occurred while updating region info of the fixed image.\n";
       excp.SetDescription( err_str );
       /** Pass the exception to an higher level. */
       throw excp;
@@ -143,25 +143,28 @@ using namespace itk;
     const unsigned int nrOfFixedMasks = this->GetElastix()->GetNumberOfFixedMasks();
     const unsigned int nrOfMovingMasks = this->GetElastix()->GetNumberOfMovingMasks();
     const unsigned int oneOrNoFixedMasks = vnl_math_min( static_cast<unsigned int>(1),
-      nrOfFixedMasks);
+      nrOfFixedMasks );
     const unsigned int oneOrNoMovingMasks = vnl_math_min( static_cast<unsigned int>(1),
-      nrOfMovingMasks);
+      nrOfMovingMasks );
     
     /** Array of bools, that remembers for each mask if erosion is wanted.
-     * dummy, we will not use it */
+     * dummy, we will not use it.
+     */
     UseMaskErosionArrayType useMaskErosionArray;
 
     /** Bool that remembers if mask erosion is wanted in any of the masks 
-     * remains false when no masks are used */
+     * remains false when no masks are used.
+     */
     bool useFixedMaskErosion;
     bool useMovingMaskErosion;
 
     /** Read whether mask erosion is wanted, if any masks were supplied
-     * Only one mask is taken into account */
+     * Only one mask is taken into account.
+     */
     useFixedMaskErosion = this->ReadMaskParameters( useMaskErosionArray,
-      oneOrNoFixedMasks, "Fixed", level);
+      oneOrNoFixedMasks, "Fixed", level );
     useMovingMaskErosion = this->ReadMaskParameters( useMaskErosionArray,
-      oneOrNoMovingMasks, "Moving", level);
+      oneOrNoMovingMasks, "Moving", level );
 
     /** Create and start timer, to time the whole fixed mask configuration procedure. */
     TimerPointer timer = TimerType::New();

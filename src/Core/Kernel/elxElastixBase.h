@@ -359,14 +359,14 @@ protected:
         {
           /** Add information to the exception. */
           std::string err_str = excp.GetDescription();
-          err_str += "\nError occured while reading the image described as " 
+          err_str += "\nError occurred while reading the image described as " 
             + imageDescription + ", with file name " + imageReader->GetFileName() + "\n";
           excp.SetDescription( err_str );
           /** Pass the exception to the caller of this function. */
           throw excp;
         }
 
-        /** Store loaded image in the image container, as a DataObject* */
+        /** Store loaded image in the image container, as a DataObject*. */
         ImagePointer image = imageReader->GetOutput();
         imageContainer->CreateElementAt(i) = image.GetPointer();
 

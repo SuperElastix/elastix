@@ -203,13 +203,15 @@ AdvancedAffineTransformElastix<TElastix>
   /** Give a warning if necessary. */
   if ( !CORIndexInImage && centerGivenAsIndex )
   {
-    xl::xout["warning"] << "WARNING: Center of Rotation (index) is not within image boundaries!" << std::endl;
+    xl::xout["warning"] << "WARNING: Center of Rotation (index) is not "
+      << "within image boundaries!" << std::endl;
   }
 
   /** Give a warning if necessary. */
   if ( !CORPointInImage && centerGivenAsPoint && !centerGivenAsIndex )
   {
-    xl::xout["warning"] << "WARNING: Center of Rotation (point) is not within image boundaries!" << std::endl;
+    xl::xout["warning"] << "WARNING: Center of Rotation (point) is not "
+      << "within image boundaries!" << std::endl;
   }
 
   /** Check if user wants automatic transform initialization; false by default.
@@ -242,8 +244,17 @@ AdvancedAffineTransformElastix<TElastix>
       this->m_Registration->GetAsITKBaseType()->GetFixedImage() );
     transformInitializer->SetMovingImage(
       this->m_Registration->GetAsITKBaseType()->GetMovingImage() );
-    transformInitializer->SetTransform(this->m_AffineTransform);
+    transformInitializer->SetTransform( this->m_AffineTransform );
+
+    /** Select the method of initialization. Default: "GeometricalCenter". */
     transformInitializer->GeometryOn();
+    std::string method = "GeometricalCenter";
+    this->m_Configuration->ReadParameter( method,
+      "AutomaticTransformInitializationMethod", 0 );
+    if ( method == "CenterOfGravity" )
+    {
+      transformInitializer->MomentsOn();
+    }
     transformInitializer->InitializeTransform();
   }
 
@@ -287,7 +298,6 @@ AdvancedAffineTransformElastix<TElastix>
   /** Set the initial parameters in this->m_Registration. */
   this->m_Registration->GetAsITKBaseType()->
     SetInitialTransformParameters( this->GetParameters() );
-
 
 } // end InitializeTransform()
 

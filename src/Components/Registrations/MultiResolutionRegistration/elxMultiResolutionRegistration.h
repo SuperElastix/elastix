@@ -58,7 +58,7 @@ using namespace itk;
     typedef SmartPointer<const Self>                    ConstPointer;
     
     /** Method for creation through the object factory. */
-    itkNewMacro(Self);
+    itkNewMacro( Self );
     
     /** Run-time type information (and related methods). */
     itkTypeMacro( MultiResolutionRegistration, MultiResolutionImageRegistrationMethod );
@@ -127,11 +127,11 @@ using namespace itk;
      * \li Connect all components to the registration framework.
      * \li Set the number of resolution levels.
      * \li Set the fixed image region. */
-    virtual void BeforeRegistration(void);
+    virtual void BeforeRegistration( void );
 
     /** Execute stuff before each resolution:
      * \li Update masks with an erosion. */
-    virtual void BeforeEachResolution(void);
+    virtual void BeforeEachResolution( void );
         
   protected:
 
@@ -160,7 +160,7 @@ using namespace itk;
     void UpdateMasks( unsigned int level );
 
     /** Read the components from m_Elastix and set them in the Registration class. */
-    virtual void SetComponents(void);   
+    virtual void SetComponents( void );   
     
   private:
 

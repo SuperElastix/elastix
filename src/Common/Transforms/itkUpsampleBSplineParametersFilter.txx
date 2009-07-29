@@ -134,7 +134,7 @@ UpsampleBSplineParametersFilter<TArray,TImage>
       /** Add information to the exception. */
       excp.SetLocation( "UpsampleBSplineParametersFilter - UpsampleParameters()" );
       std::string err_str = excp.GetDescription();
-      err_str += "\nError occured while using decompositionFilter.\n";
+      err_str += "\nError occurred while using decompositionFilter.\n";
       excp.SetDescription( err_str );
 
       /** Pass the exception to an higher level. */

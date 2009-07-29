@@ -142,10 +142,9 @@ public:
   typedef SingleValuedNonLinearOptimizer           OptimizerType;
 
   /** Type of the Fixed image multiresolution pyramid. */
-  typedef MultiResolutionPyramidImageFilter< FixedImageType,
-                                             FixedImageType >
-  FixedImagePyramidType;
-  typedef typename FixedImagePyramidType::Pointer  FixedImagePyramidPointer;
+  typedef MultiResolutionPyramidImageFilter<
+    FixedImageType, FixedImageType >                FixedImagePyramidType;
+  typedef typename FixedImagePyramidType::Pointer   FixedImagePyramidPointer;
   
   /** Type of the moving image multiresolution pyramid. */
   typedef MultiResolutionPyramidImageFilter< MovingImageType,

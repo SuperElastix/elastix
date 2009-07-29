@@ -17,12 +17,7 @@
 
 #include "elxFixedRecursivePyramid.h"
 
-namespace elastix
-{
-  using namespace itk;
-
-  
-} // end namespace elastix
+//nothing
 
 #endif //#ifndef __elxFixedRecursivePyramid_hxx
 

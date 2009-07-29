@@ -85,8 +85,9 @@ void AffineTransformElastix<TElastix>
 
   if ( !pointRead && !indexRead )
   {
-    xl::xout["error"] << "ERROR: No center of rotation is specified in the transform parameter file" << std::endl;
-    itkExceptionMacro(<< "Transform parameter file is corrupt.")
+    xl::xout["error"] << "ERROR: No center of rotation is specified in the "
+      << "transform parameter file" << std::endl;
+    itkExceptionMacro( << "Transform parameter file is corrupt." )
   }
 
   /** Set the center in this Transform. */
@@ -242,7 +243,16 @@ AffineTransformElastix<TElastix>
     transformInitializer->SetMovingImage(
       this->m_Registration->GetAsITKBaseType()->GetMovingImage() );
     transformInitializer->SetTransform(this->m_AffineTransform);
+
+    /** Select the method of initialization. Default: "GeometricalCenter". */
     transformInitializer->GeometryOn();
+    std::string method = "GeometricalCenter";
+    this->m_Configuration->ReadParameter( method,
+      "AutomaticTransformInitializationMethod", 0 );
+    if ( method == "CenterOfGravity" )
+    {
+      transformInitializer->MomentsOn();
+    }
     transformInitializer->InitializeTransform();
   }
 
