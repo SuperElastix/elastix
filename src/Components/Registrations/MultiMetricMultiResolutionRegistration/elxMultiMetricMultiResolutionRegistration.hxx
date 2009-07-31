@@ -46,7 +46,7 @@ MultiMetricMultiResolutionRegistration<TElastix>
   {
     try
     {
-      this->GetElastix()->GetFixedImage(i)->Update();
+      this->GetElastix()->GetFixedImage( i )->Update();
     }
     catch( itk::ExceptionObject & excp )
     {
@@ -136,7 +136,7 @@ MultiMetricMultiResolutionRegistration<TElastix>
     double weight = defaultWeight;
     std::ostringstream makestring;
     makestring << "Metric" << metricnr << "Weight";
-    this->GetConfiguration()->ReadParameter( weight, makestring.str().c_str(), "", level, 0 );
+    this->GetConfiguration()->ReadParameter( weight, makestring.str(), "", level, 0 );
     this->GetCombinationMetric()->SetMetricWeight( weight, metricnr );
   }
 
@@ -147,7 +147,7 @@ MultiMetricMultiResolutionRegistration<TElastix>
     bool use = defaultUse;
     std::ostringstream makestring;
     makestring << "Metric" << metricnr << "Use";
-    this->GetConfiguration()->ReadParameter( use, makestring.str().c_str(), "", level, 0 );
+    this->GetConfiguration()->ReadParameter( use, makestring.str(), "", level, 0 );
     this->GetCombinationMetric()->SetUseMetric( use, metricnr );
   }
 

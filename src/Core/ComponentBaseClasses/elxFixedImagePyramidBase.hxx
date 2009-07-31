@@ -37,63 +37,59 @@ FixedImagePyramidBase<TElastix>
 
 
 /**
- * ******************* AfterEachResolutionBase *******************
+ * ******************* BeforeEachResolutionBase *******************
  */
 
 template <class TElastix>
 void
 FixedImagePyramidBase<TElastix>
-::AfterEachResolutionBase( void )
+::BeforeEachResolutionBase( void )
 {
   /** What is the current resolution level? */
-  unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
+  const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
-  /** Decide whether or not to write the pyramid image this resolution. */
+  /** Decide whether or not to write the pyramid images this resolution. */
   bool writePyramidImage = false;
   this->m_Configuration->ReadParameter( writePyramidImage,
     "WritePyramidImagesAfterEachResolution", "", level, 0, false );
 
+  /** Get the desired extension / file format. */
+  std::string resultImageFormat = "mhd";
+  this->m_Configuration->ReadParameter( resultImageFormat,
+    "ResultImageFormat", 0, false );
+
   /** Writing result image. */
   if ( writePyramidImage )
   {
-    /** Create a name for the final result. */
-    std::string resultImageFormat = "mhd";
-    this->m_Configuration->ReadParameter( resultImageFormat,
-      "ResultImageFormat", 0, false );
-    std::ostringstream makeFileName( "" );
-    makeFileName
-      << this->m_Configuration->GetCommandLineArgument( "-out" )
-      << "pyramid_fixed." << this->m_Configuration->GetElastixLevel()
-      << ".R" << level
-      << "." << resultImageFormat;
-
-//     /** Time the writing. */
-//     typedef tmr::Timer TimerType;
-//     TimerType::Pointer timer = TimerType::New();
-//     timer->StartTimer();
-
-    /** Save the fixed pyramid image. */
-    elxout << "Writing fixed pyramid image this resolution ..." << std::endl;
-    try
+    const unsigned int numPyramids = this->GetElastix()->GetNumberOfFixedImagePyramids();
+    for ( unsigned int i = 0; i < numPyramids; ++i )
     {
-      this->WritePyramidImage( makeFileName.str(), level );
-    }
-    catch( itk::ExceptionObject & excp )
-    {
-      xl::xout["error"] << "Exception caught: " << std::endl;
-      xl::xout["error"] << excp
-        << "Resuming elastix." << std::endl;
-    }
+      /** Create a name for the final result. */
+      std::ostringstream makeFileName( "" );
+      makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" );
+      if ( numPyramids == 1 ){ makeFileName << "pyramid_fixed."; }
+      else{ makeFileName << "pyramid_fixed" << i << "."; }
+      makeFileName
+        << this->m_Configuration->GetElastixLevel()
+        << ".R" << level
+        << "." << resultImageFormat;
 
-//     /** Print the elapsed time for the writing. */
-//     timer->StopTimer();
-//     elxout << "  Applying transform took "
-//       << static_cast<long>( timer->GetElapsedClockSec() )
-//       << " s." << std::endl;
-
+      /** Save the fixed pyramid image. */
+      elxout << "Writing fixed pyramid image " << i
+        << " from resolution " << level << "..." << std::endl;
+      try
+      {
+        this->WritePyramidImage( makeFileName.str(), i, level );
+      }
+      catch( itk::ExceptionObject & excp )
+      {
+        xl::xout["error"] << "Exception caught: " << std::endl;
+        xl::xout["error"] << excp << "Resuming elastix." << std::endl;
+      }
+    } // end for
   } // end if
 
-} // end AfterEachResolutionBase()
+} // end BeforeEachResolutionBase()
 
 
 /**
@@ -169,34 +165,10 @@ FixedImagePyramidBase<TElastix>
 template<class TElastix>
 void
 FixedImagePyramidBase<TElastix>
-::WritePyramidImage( const std::string & filename, const unsigned int & level )
+::WritePyramidImage( const std::string & filename,
+  const unsigned int & whichPyramid,
+  const unsigned int & level ) const
 {
-//   /** Make sure the resampler is updated. */
-//   this->GetAsITKBaseType()->Modified();
-// 
-//   /** Add a progress observer to the resampler. */
-//   typename ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
-//   progressObserver->ConnectObserver( this->GetAsITKBaseType() );
-//   progressObserver->SetStartString( "  Progress: " );
-//   progressObserver->SetEndString( "%" );
-//
-//   /** Do the resampling. */
-//   try
-//   {
-//     this->GetAsITKBaseType()->Update();
-//   }
-//   catch( itk::ExceptionObject & excp )
-//   {
-//     /** Add information to the exception. */
-//     excp.SetLocation( "ResamplerBase - WriteResultImage()" );
-//     std::string err_str = excp.GetDescription();
-//     err_str += "\nError occurred while resampling the image.\n";
-//     excp.SetDescription( err_str );
-// 
-//     /** Pass the exception to an higher level. */
-//     throw excp;
-//   }
-
   /** Read output pixeltype from parameter the file. Replace possible " " with "_". */
   std::string resultImagePixelType = "short";
   this->m_Configuration->ReadParameter( resultImagePixelType,
@@ -210,14 +182,14 @@ FixedImagePyramidBase<TElastix>
   this->m_Configuration->ReadParameter(
     doCompression, "CompressResultImage", 0, false );
 
-  /** Typedef's for writing the output image. */
-  typedef ImageFileCastWriter< OutputImageType >  WriterType;
-
   /** Create writer. */
+  typedef ImageFileCastWriter< OutputImageType > WriterType;
   typename WriterType::Pointer writer = WriterType::New();
 
   /** Setup the pipeline. */
-  writer->SetInput( this->GetAsITKBaseType()->GetOutput( level ) );
+  writer->SetInput( this->GetElastix()
+    ->GetElxFixedImagePyramidBase( whichPyramid )
+    ->GetAsITKBaseType()->GetOutput( level ) );
   writer->SetFileName( filename.c_str() );
   writer->SetOutputComponentType( resultImagePixelType.c_str() );
   writer->SetUseCompression( doCompression );
@@ -232,7 +204,7 @@ FixedImagePyramidBase<TElastix>
   catch( itk::ExceptionObject & excp )
   {
     /** Add information to the exception. */
-    excp.SetLocation( "FixedImagePyramidBase - AfterEachResolutionBase()" );
+    excp.SetLocation( "FixedImagePyramidBase - BeforeEachResolutionBase()" );
     std::string err_str = excp.GetDescription();
     err_str += "\nError occurred while writing pyramid image.\n";
     excp.SetDescription( err_str );
@@ -240,9 +212,6 @@ FixedImagePyramidBase<TElastix>
     /** Pass the exception to an higher level. */
     throw excp;
   }
-
-  /** Disconnect from the resampler. */
-  //progressObserver->DisconnectObserver( this->GetAsITKBaseType() );
 
 } // end WritePyramidImage()
 

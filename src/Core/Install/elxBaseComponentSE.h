@@ -23,7 +23,6 @@ namespace elastix
 {
   using namespace itk;
 
-
   /**
    * \class BaseComponentSE
    *
@@ -39,86 +38,88 @@ namespace elastix
    * \ingroup Install
    */
 
-  template <class TElastix>
-    class BaseComponentSE : public BaseComponent
+template <class TElastix>
+class BaseComponentSE : public BaseComponent
+{
+public:
+
+  /** Standard stuff. */
+  typedef BaseComponentSE   Self;
+  typedef BaseComponent     Superclass;
+
+  /** Elastix typedef's. */
+  typedef TElastix                        ElastixType;
+  typedef typename ElastixType::Pointer   ElastixPointer;
+
+  /** ConfigurationType. */
+  typedef typename ElastixType::ConfigurationType     ConfigurationType;
+  typedef typename ElastixType::ConfigurationPointer  ConfigurationPointer;
+
+  /** RegistrationType; NB: this is the elx::RegistrationBase
+   * not an itk::Object or something like that.
+   */
+  typedef typename ElastixType::RegistrationBaseType  RegistrationType;
+  typedef RegistrationType *                          RegistrationPointer;
+
+  /**
+   * Get/Set functions for Elastix.
+   * The Set-functions cannot be defined with the itkSetObjectMacro,
+   * since this class does not derive from itk::Object and 
+   * thus does not have a ::Modified() method.
+   *
+   * This method checks if this instance of the class can be casted
+   * (dynamically) to an itk::Object. If yes, it calls ::Modified()
+   *
+   * Besides setting m_Elastix, this method also sets m_Configuration
+   * and m_Registration.
+   */
+  virtual void SetElastix( ElastixType * _arg );
+
+  /** itkGetObjectMacro( Elastix, ElastixType );
+   * without the itkDebug call.
+   */
+  virtual ElastixType * GetElastix( void ) const
   {
-  public:
+    return this->m_Elastix.GetPointer();
+  }
 
-    /** Standard stuff.*/
-    typedef BaseComponentSE   Self;
-    typedef BaseComponent     Superclass;
+  /** itkGetObjectMacro(Configuration, ConfigurationType);
+   * The configuration object provides functionality to
+   * read parameters and command line arguments.
+   */
+  virtual ConfigurationType * GetConfiguration( void ) const
+  {
+    return this->m_Configuration.GetPointer();
+  }
 
-    /** Elastix typedef's.*/
-    typedef TElastix                        ElastixType;
-    typedef typename ElastixType::Pointer   ElastixPointer;
+  /** Set the configuration. Added for transformix. */
+  virtual void SetConfiguration( ConfigurationType * _arg );
 
-    /** ConfigurationType.*/
-    typedef typename ElastixType::ConfigurationType     ConfigurationType;
-    typedef typename ElastixType::ConfigurationPointer  ConfigurationPointer;
+  /** Get a pointer to the Registration component.
+   * This is a convenience function, since the registration
+   * component is needed often by other components.
+   * It could be accessed also via GetElastix->GetRegistrationBase().
+   */
+  virtual RegistrationPointer GetRegistration( void ) const
+  {
+    return this->m_Registration;
+  }
 
-    /** RegistrationType; NB: this is the elx::RegistrationBase
-     * not an itk::Object or something like that. */
-    typedef typename ElastixType::RegistrationBaseType  RegistrationType;
-    typedef RegistrationType *                          RegistrationPointer;
+protected:
 
-    /**
-     * Get/Set functions for Elastix.
-     * The Set-functions cannot be defined with the itkSetObjectMacro,
-     * since this class does not derive from itk::Object and 
-     * thus does not have a ::Modified() method.
-     *
-     * This method checks if this instance of the class can be casted
-     * (dynamically) to an itk::Object. If yes, it calls ::Modified()
-     *
-     * Besides setting m_Elastix, this method also sets m_Configuration
-     * and m_Registration.
-     */
-    virtual void SetElastix( ElastixType * _arg );
+  BaseComponentSE();
+  virtual ~BaseComponentSE() {}
 
-    /** itkGetObjectMacro( Elastix, ElastixType );
-     * without the itkDebug call.
-     */
-    virtual ElastixType * GetElastix(void) const
-    {
-      return this->m_Elastix.GetPointer();
-    }
+  ElastixPointer        m_Elastix;
+  ConfigurationPointer  m_Configuration;
+  RegistrationPointer   m_Registration;
 
-    /** itkGetObjectMacro(Configuration, ConfigurationType);
-     * The configuration object provides functionality to
-     * read parameters and command line arguments. */
-    virtual ConfigurationType * GetConfiguration(void) const
-    {
-      return this->m_Configuration.GetPointer();
-    }
+private:
 
-    /** Set the configuration. Added for tranformix. */
-    virtual void SetConfiguration( ConfigurationType * _arg );
-    
-    /** Get a pointer to the Registration component. 
-     * This is a convenience function, since the registration
-     * component is needed often by other components.
-     * It could be accessed also via 
-     * GetElastix->GetRegistrationBase() */
-    virtual RegistrationPointer GetRegistration(void) const
-    {
-      return this->m_Registration;
-    }
+  BaseComponentSE( const Self& );   // purposely not implemented
+  void operator=( const Self& );    // purposely not implemented
 
-  protected:
-
-    BaseComponentSE();
-    virtual ~BaseComponentSE() {}
-
-    ElastixPointer        m_Elastix;
-    ConfigurationPointer  m_Configuration;
-    RegistrationPointer   m_Registration;
-
-  private:
-
-    BaseComponentSE( const Self& );   // purposely not implemented
-    void operator=( const Self& );    // purposely not implemented
-
-  }; // end class BaseComponentSE
+}; // end class BaseComponentSE
 
 
 } //end namespace elastix
@@ -127,7 +128,6 @@ namespace elastix
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "elxBaseComponentSE.hxx"
 #endif
-
 
 #endif // end #ifndef __elxBaseComponentSE_h
 

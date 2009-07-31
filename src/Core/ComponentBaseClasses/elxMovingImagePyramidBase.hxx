@@ -37,52 +37,59 @@ MovingImagePyramidBase<TElastix>
 
 
 /**
- * ******************* AfterEachResolutionBase *******************
+ * ******************* BeforeEachResolutionBase *******************
  */
 
 template <class TElastix>
 void
 MovingImagePyramidBase<TElastix>
-::AfterEachResolutionBase( void )
+::BeforeEachResolutionBase( void )
 {
   /** What is the current resolution level? */
-  unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
+  const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
-  /** Decide whether or not to write the pyramid image this resolution. */
+  /** Decide whether or not to write the pyramid images this resolution. */
   bool writePyramidImage = false;
   this->m_Configuration->ReadParameter( writePyramidImage,
     "WritePyramidImagesAfterEachResolution", "", level, 0, false );
 
+  /** Get the desired extension / file format. */
+  std::string resultImageFormat = "mhd";
+  this->m_Configuration->ReadParameter( resultImageFormat,
+    "ResultImageFormat", 0, false );
+
   /** Writing result image. */
   if ( writePyramidImage )
   {
-    /** Create a name for the final result. */
-    std::string resultImageFormat = "mhd";
-    this->m_Configuration->ReadParameter( resultImageFormat,
-      "ResultImageFormat", 0, false );
-    std::ostringstream makeFileName( "" );
-    makeFileName
-      << this->m_Configuration->GetCommandLineArgument( "-out" )
-      << "pyramid_moving." << this->m_Configuration->GetElastixLevel()
-      << ".R" << level
-      << "." << resultImageFormat;
-
-    /** Save the fixed pyramid image. */
-    elxout << "Writing moving pyramid image this resolution ..." << std::endl;
-    try
+    const unsigned int numPyramids = this->GetElastix()->GetNumberOfMovingImagePyramids();
+    for ( unsigned int i = 0; i < numPyramids; ++i )
     {
-      this->WritePyramidImage( makeFileName.str(), level );
-    }
-    catch( itk::ExceptionObject & excp )
-    {
-      xl::xout["error"] << "Exception caught: " << std::endl;
-      xl::xout["error"] << excp
-        << "Resuming elastix." << std::endl;
-    }
+      /** Create a name for the final result. */
+      std::ostringstream makeFileName( "" );
+      makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" );
+      if ( numPyramids == 1 ){ makeFileName << "pyramid_moving."; }
+      else{ makeFileName << "pyramid_moving" << i << "."; }
+      makeFileName
+        << this->m_Configuration->GetElastixLevel()
+        << ".R" << level
+        << "." << resultImageFormat;
 
+      /** Save the fixed pyramid image. */
+      elxout << "Writing moving pyramid image " << i
+        << " from resolution " << level << "..." << std::endl;
+      try
+      {
+        this->WritePyramidImage( makeFileName.str(), i, level );
+      }
+      catch( itk::ExceptionObject & excp )
+      {
+        xl::xout["error"] << "Exception caught: " << std::endl;
+        xl::xout["error"] << excp << "Resuming elastix." << std::endl;
+      }
+    } // end for
   } // end if
 
-} // end AfterEachResolutionBase()
+} // end BeforeEachResolutionBase()
 
 
 /**
@@ -158,7 +165,9 @@ MovingImagePyramidBase<TElastix>
 template<class TElastix>
 void
 MovingImagePyramidBase<TElastix>
-::WritePyramidImage( const std::string & filename, const unsigned int & level )
+::WritePyramidImage( const std::string & filename,
+  const unsigned int & whichPyramid,
+  const unsigned int & level ) const
 {
   /** Read output pixeltype from parameter the file. Replace possible " " with "_". */
   std::string resultImagePixelType = "short";
@@ -173,14 +182,14 @@ MovingImagePyramidBase<TElastix>
   this->m_Configuration->ReadParameter(
     doCompression, "CompressResultImage", 0, false );
 
-  /** Typedef's for writing the output image. */
-  typedef ImageFileCastWriter< OutputImageType >  WriterType;
-
   /** Create writer. */
+  typedef ImageFileCastWriter< OutputImageType > WriterType;
   typename WriterType::Pointer writer = WriterType::New();
 
   /** Setup the pipeline. */
-  writer->SetInput( this->GetAsITKBaseType()->GetOutput( level ) );
+  writer->SetInput( this->GetElastix()
+    ->GetElxMovingImagePyramidBase( whichPyramid )
+    ->GetAsITKBaseType()->GetOutput( level ) );
   writer->SetFileName( filename.c_str() );
   writer->SetOutputComponentType( resultImagePixelType.c_str() );
   writer->SetUseCompression( doCompression );
@@ -195,7 +204,7 @@ MovingImagePyramidBase<TElastix>
   catch( itk::ExceptionObject & excp )
   {
     /** Add information to the exception. */
-    excp.SetLocation( "MovingImagePyramidBase - AfterEachResolutionBase()" );
+    excp.SetLocation( "MovingImagePyramidBase - BeforeEachResolutionBase()" );
     std::string err_str = excp.GetDescription();
     err_str += "\nError occurred while writing pyramid image.\n";
     excp.SetDescription( err_str );
