@@ -59,8 +59,8 @@ namespace Statistics
     typedef typename Superclass::MeasurementVectorType      MeasurementVectorType;
     typedef typename Superclass::MeasurementVectorSizeType  MeasurementVectorSizeType;
     typedef typename Superclass::MeasurementType            MeasurementType;
-    typedef typename Superclass::FrequencyType              FrequencyType ;
-    typedef typename Superclass::TotalFrequencyType         TotalFrequencyType ;
+    typedef typename Superclass::FrequencyType              FrequencyType;
+    typedef typename Superclass::TotalFrequencyType         TotalFrequencyType;
     typedef typename Superclass::InstanceIdentifier         InstanceIdentifier;
     typedef typename Superclass::SearchResultVectorType     SearchResultVectorType;
     
@@ -134,8 +134,10 @@ namespace Statistics
     /** Dummy needed for GetMeasurementVector(). */
     mutable MeasurementVectorType m_TemporaryMeasurementVector;
 
-    /** Functions to (de)allocate the memory of the data container. */
+    /** Function to allocate the memory of the data container. */
     void AllocateInternalContainer( unsigned long size, unsigned int dim );
+
+    /** Function to deallocate the memory of the data container. */
     void DeallocateInternalContainer( void );
         
   }; // end class ListSampleCArray
