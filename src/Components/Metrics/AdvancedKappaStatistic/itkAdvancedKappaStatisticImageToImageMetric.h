@@ -98,6 +98,7 @@ public:
   typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
   typedef typename Superclass::MeasureType                MeasureType;
   typedef typename Superclass::DerivativeType             DerivativeType;
+  typedef typename Superclass::DerivativeValueType        DerivativeValueType;
   typedef typename Superclass::ParametersType             ParametersType;
   typedef typename Superclass::FixedImagePixelType        FixedImagePixelType;
   typedef typename Superclass::MovingImageRegionType      MovingImageRegionType;
@@ -135,31 +136,31 @@ public:
     MeasureType& Value, DerivativeType& Derivative ) const;
 
   /** Computes the moving gradient image dM/dx. */
-  void ComputeGradient();
+  virtual void ComputeGradient( void );
 
   /** This method allows the user to set the foreground value. The default value is 1.0. */
   itkSetMacro( ForegroundValue, RealType ); 
-  itkGetConstMacro( ForegroundValue, RealType );
-
-  /** If this boolean is set to true, everything that is nonzero is treated as
-   * the object. The default is false.
-   */
-  itkSetMacro( ForegroundIsNonZero, bool );
-  itkGetConstMacro( ForegroundIsNonZero, bool );
-  itkBooleanMacro( ForegroundIsNonZero );
+  itkGetConstReferenceMacro( ForegroundValue, RealType );
 
   /** Set/Get whether this metric returns 2*|A&B|/(|A|+|B|) 
    * (ComplementOff, the default) or 1.0 - 2*|A&B|/(|A|+|B|) 
    * (ComplementOn). When using an optimizer that minimizes
-   * metric values use ComplementOn().  */
+   * metric values use ComplementOn().
+   */
   itkSetMacro( Complement, bool );
-  itkGetConstMacro( Complement, bool );
+  itkGetConstReferenceMacro( Complement, bool );
   itkBooleanMacro( Complement );
+
+  /** Set the precision. */
+  itkSetMacro( Epsilon, RealType );
+  itkGetConstReferenceMacro( Epsilon, RealType );
    
 protected:
   AdvancedKappaStatisticImageToImageMetric();
   virtual ~AdvancedKappaStatisticImageToImageMetric() {};
-  void PrintSelf( std::ostream& os, Indent indent ) const;
+
+  /** PrintSelf. */
+  void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** Protected Typedefs ******************/
 
@@ -171,7 +172,7 @@ protected:
   typedef typename Superclass::MovingImagePointType               MovingImagePointType;
   typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
   typedef typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
-  typedef typename Superclass::CentralDifferenceGradientFilterType        CentralDifferenceGradientFilterType;
+  typedef typename Superclass::CentralDifferenceGradientFilterType  CentralDifferenceGradientFilterType;
   typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
   typedef typename Superclass::BSplineTransformType               BSplineTransformType;
   typedef typename Superclass::BSplineTransformWeightsType        BSplineTransformWeightsType;
@@ -180,22 +181,24 @@ protected:
   typedef typename Superclass::BSplineParametersOffsetType        BSplineParametersOffsetType;
   typedef typename Superclass::ParameterIndexArrayType            ParameterIndexArrayType;
     
-  /** Computes the innerproduct of transform jacobian with moving image gradient.
+  /** Computes the inner product of transform jacobian with moving image gradient.
    * The results are stored in the imageJacobian, which is supposed
-   * to have the right size (same length as jacobian's number of columns). */
+   * to have the right size (same length as Jacobian's number of columns).
+   */
   void EvaluateMovingImageAndTransformJacobianInnerProduct(
     const TransformJacobianType & jacobian, 
     const MovingImageDerivativeType & movingImageDerivative,
     DerivativeType & innerProduct ) const;
 
   /** Compute a pixel's contribution to the measure and derivatives;
-   * Called by GetValueAndDerivative(). */
+   * Called by GetValueAndDerivative().
+   */
   void UpdateValueAndDerivativeTerms( 
-    const RealType fixedImageValue,
-    const RealType movingImageValue,
-    MeasureType & fixedForegroundArea,
-    MeasureType & movingForegroundArea,
-    MeasureType & intersection,
+    const RealType & fixedImageValue,
+    const RealType & movingImageValue,
+    std::size_t & fixedForegroundArea,
+    std::size_t & movingForegroundArea,
+    std::size_t & intersection,
     const DerivativeType & imageJacobian,
     DerivativeType & sum1,
     DerivativeType & sum2 ) const;
@@ -205,9 +208,8 @@ private:
   void operator=(const Self&); //purposely not implemented
 
   RealType   m_ForegroundValue;
+  RealType   m_Epsilon;
   bool       m_Complement;
-  bool       m_ForegroundIsNonZero;
-
 
 }; // end class AdvancedKappaStatisticImageToImageMetric
 
