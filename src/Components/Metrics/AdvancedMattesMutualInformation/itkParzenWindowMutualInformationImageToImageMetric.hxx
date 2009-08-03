@@ -285,7 +285,7 @@ namespace itk
     /** Array that stores dM(x)/dmu. */
     DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.size() );
 
-    /** Arrays for jacobian preconditioning */
+    /** Arrays for Jacobian preconditioning */
     DerivativeType jacobianPreconditioner( this->m_NonZeroJacobianIndices.size() );
     DerivativeType preconditioningDivisor( this->GetNumberOfParameters() );
     preconditioningDivisor.Fill( 0.0 );

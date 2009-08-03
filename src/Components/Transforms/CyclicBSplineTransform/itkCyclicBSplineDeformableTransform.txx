@@ -309,7 +309,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
     itkExceptionMacro( <<"Cannot compute Jacobian: parameters not set" );
   }
 
-  /** Zero all components of jacobian
+  /** Zero all components of Jacobian
    * NOTE: for efficiency, we only need to zero out the coefficients
    * that got fill last time this method was called.
    */
@@ -384,7 +384,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
     }
     while ( !iterator[ 0 ].IsAtEnd() )
     {
-      /** Copy weight to jacobian image. */
+      /** Copy weight to Jacobian image. */
       for ( unsigned int j = 0; j < SpaceDimension; j++ )
       {
         iterator[ j ].Set( static_cast<JacobianPixelType>( weights[ counter ] ) );

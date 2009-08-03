@@ -409,7 +409,7 @@ namespace itk
     /** Identity matrix. */
     IMatrixType m_I;
 
-    /** Precomputed nonzero jacobian indices (simply all params) */
+    /** Precomputed nonzero Jacobian indices (simply all params) */
     NonZeroJacobianIndicesType m_NonZeroJacobianIndices;
 
     /** for old GetJacobian() method: */

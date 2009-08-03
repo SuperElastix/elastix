@@ -288,9 +288,9 @@ namespace itk
     typename KernelFunctionType::Pointer m_MovingKernel;
     typename KernelFunctionType::Pointer m_DerivativeMovingKernel;
 
-    /** Computes the inner product of transform jacobian with moving image gradient
+    /** Computes the inner product of transform Jacobian with moving image gradient
      * The results are stored in imageJacobian, which is supposed to have the
-     * right size (same length as jacobian's number of columns).
+     * right size (same length as Jacobian's number of columns).
      */
     void EvaluateTransformJacobianInnerProduct(
       const TransformJacobianType & jacobian, 
@@ -308,7 +308,7 @@ namespace itk
       const KernelFunctionType * kernel, ParzenValueContainerType & parzenValues ) const;
     
     /** Update the joint PDF with a pixel pair; on demand also updates the 
-     * pdf derivatives (if the jacobian pointers are nonzero).
+     * pdf derivatives (if the Jacobian pointers are nonzero).
      */
     virtual void UpdateJointPDFAndDerivatives(
       RealType fixedImageValue, RealType movingImageValue,
@@ -317,7 +317,7 @@ namespace itk
     /** Update the joint PDF and the incremental pdfs.
      * The input is a pixel pair (fixed, moving, moving mask) and
      * a set of moving image/mask values when using mu+delta*e_k, for 
-     * each k that has a nonzero jacobian. And for mu-delta*e_k of course.
+     * each k that has a nonzero Jacobian. And for mu-delta*e_k of course.
      * Also updates the PerturbedAlpha's
      * This function is used when UseFiniteDifferenceDerivative is true.
      *

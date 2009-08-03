@@ -55,8 +55,8 @@ namespace itk
  *   \frac{\partial \mathrm{NC}}{\partial p} = \frac{\partial \mathrm{NC}}{\partial m} \frac{\partial m}{\partial x} \frac{\partial x}{\partial p} = \frac{\partial \mathrm{NC}}{\partial m} * \mathtt{gradient} * \mathtt{jacobian},
  * \f]
  *
- * where gradient is the derivative of the moving image m to x, and where jacobian is the
- * derivative of the transformation to its parameters. gradient * jacobian is called the differential.
+ * where gradient is the derivative of the moving image m to x, and where Jacobian is the
+ * derivative of the transformation to its parameters. gradient * Jacobian is called the differential.
  * This yields for the derivative:
  *
  * \f[
@@ -195,9 +195,9 @@ protected:
   typedef typename Superclass::BSplineParametersOffsetType        BSplineParametersOffsetType;
   typedef typename Superclass::ParameterIndexArrayType            ParameterIndexArrayType;
 
-  /** Computes the innerproduct of transform jacobian with moving image gradient.
+  /** Computes the innerproduct of transform Jacobian with moving image gradient.
    * The results are stored in imageJacobian, which is supposed
-   * to have the right size (same length as jacobian's number of columns). */
+   * to have the right size (same length as Jacobian's number of columns). */
   void EvaluateTransformJacobianInnerProduct(
     const TransformJacobianType & jacobian, 
     const MovingImageDerivativeType & movingImageDerivative,

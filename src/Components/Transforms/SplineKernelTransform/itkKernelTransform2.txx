@@ -231,7 +231,7 @@ namespace itk
     ComputeLInverse(void)
   {
     // Assumes that L has already been computed
-    // Necessary for the jacobian
+    // Necessary for the Jacobian
     if(!m_LMatrixComputed) {
       this->ComputeL();
     }

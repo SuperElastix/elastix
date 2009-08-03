@@ -94,7 +94,7 @@ public:
 
   /** This returns a sparse version of the Jacobian of the transformation.
    * In this class however, the Jacobian is not sparse.
-   * However, it is a useful function, since the jacobian is passed
+   * However, it is a useful function, since the Jacobian is passed
    * by reference, which makes it threadsafe, unlike the normal
    * GetJacobian function. */
   virtual void GetJacobian(

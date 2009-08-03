@@ -200,9 +200,9 @@ protected:
 
   double m_NormalizationFactor;
      
-  /** Computes the innerproduct of transform jacobian with moving image gradient.
+  /** Computes the innerproduct of transform Jacobian with moving image gradient.
    * The results are stored in imageJacobian, which is supposed
-   * to have the right size (same length as jacobian's number of columns). */
+   * to have the right size (same length as Jacobian's number of columns). */
   void EvaluateTransformJacobianInnerProduct(
     const TransformJacobianType & jacobian, 
     const MovingImageDerivativeType & movingImageDerivative,

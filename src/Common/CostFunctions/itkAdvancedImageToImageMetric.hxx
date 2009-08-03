@@ -473,7 +473,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   }    
   else
   {  
-    /** no sparse jacobian support; internal transform jacobian is not needed */
+    /** no sparse Jacobian support; internal transform Jacobian is not needed */
     nrNonZeroJacobianIndices = this->GetNumberOfParameters();    
     this->m_InternalTransformJacobian.SetSize( 0, 0 );
   }
@@ -607,7 +607,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 {
   if ( this->m_TransformIsAdvanced )
   {
-    /** Advanced transform: generic sparse jacobian support */
+    /** Advanced transform: generic sparse Jacobian support */
     this->m_AdvancedTransform->GetJacobian(
       fixedImagePoint,
       this->m_InternalTransformJacobian,

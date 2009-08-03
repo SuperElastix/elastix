@@ -26,1632 +26,1709 @@
 #include "itkAdvancedImageToImageMetric.h"
 
 
-
 namespace elastix
 {
   using namespace itk;
 
-  /**
-  * ********************** Constructor ***********************
-  */
-
-  template <class TElastix>
-    AdaptiveStochasticGradientDescent<TElastix>::
-    AdaptiveStochasticGradientDescent()
-  {
-    this->m_MaximumNumberOfSamplingAttempts = 0;
-    this->m_CurrentNumberOfSamplingAttempts = 0;
-    this->m_PreviousErrorAtIteration = 0;
-    this->m_AutomaticParameterEstimationDone = false;
-
-    this->m_AutomaticParameterEstimation = false;
-    this->m_MaximumStepLength = 1.0;
-
-    this->m_NumberOfGradientMeasurements = 0;
-    this->m_NumberOfJacobianMeasurements = 0;
-    this->m_NumberOfSamplesForExactGradient = 100000;
-        
-    this->m_UseMaximumLikelihoodMethod = false;
-    this->m_SaveCovarianceMatrix = false;
-    this->m_RandomGenerator = RandomGeneratorType::New();
-
-    this->m_BSplineTransform = 0;
-    this->m_BSplineCombinationTransform = 0;
-    this->m_AdvancedTransform = 0;
-    this->m_NumBSplineParametersPerDim = 0;
-    this->m_NumBSplineWeights = 0;
-    this->m_NumberOfParameters = 0;
-    this->m_TransformIsBSpline = false;
-    this->m_TransformIsBSplineCombination = false;
-    this->m_TransformIsAdvanced = false;
-
-  } // Constructor
-
-
-  /**
-  * ***************** BeforeRegistration ***********************
-  */
-
-  template <class TElastix>
-    void AdaptiveStochasticGradientDescent<TElastix>::
-    BeforeRegistration(void)
-  {
-    /** Add the target cell "stepsize" to xout["iteration"].*/
-    xout["iteration"].AddTargetCell("2:Metric");
-    xout["iteration"].AddTargetCell("3a:Time");
-    xout["iteration"].AddTargetCell("3b:StepSize");
-    xout["iteration"].AddTargetCell("4:||Gradient||");
-
-    /** Format the metric and stepsize as floats */     
-    xl::xout["iteration"]["2:Metric"]   << std::showpoint << std::fixed;
-    xl::xout["iteration"]["3a:StepSize"] << std::showpoint << std::fixed;
-    xl::xout["iteration"]["3b:StepSize"] << std::showpoint << std::fixed;
-    xl::xout["iteration"]["4:||Gradient||"] << std::showpoint << std::fixed;
-
-    this->m_SettingsVector.clear();
-
-  } // end BeforeRegistration
-
-
-  /**
-  * ***************** BeforeEachResolution ***********************
-  */
-
-  template <class TElastix>
-    void AdaptiveStochasticGradientDescent<TElastix>
-    ::BeforeEachResolution(void)
-  {
-    /** Get the current resolution level. */
-    unsigned int level = static_cast<unsigned int>(
-      this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
-
-    const unsigned int P = this->GetElastix()->GetElxTransformBase()->
-      GetAsITKBaseType()->GetNumberOfParameters();
-
-    /** Set the maximumNumberOfIterations. */
-    unsigned int maximumNumberOfIterations = 500;
-    this->GetConfiguration()->ReadParameter( maximumNumberOfIterations,
-      "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0 );
-    this->SetNumberOfIterations( maximumNumberOfIterations );
-
-    /** Set the gain parameter A. */
-    double A = 20.0;
-    this->GetConfiguration()->ReadParameter(A, "SP_A", this->GetComponentLabel(), level, 0 );
-    this->SetParam_A( A );
-
-    /** Set the MaximumNumberOfSamplingAttempts. */
-    unsigned int maximumNumberOfSamplingAttempts = 0;
-    this->GetConfiguration()->ReadParameter( maximumNumberOfSamplingAttempts,
-      "MaximumNumberOfSamplingAttempts", this->GetComponentLabel(), level, 0 );
-    this->SetMaximumNumberOfSamplingAttempts( maximumNumberOfSamplingAttempts );
-    
-    /** Set/Get the initial time. Default: 0.0. Should be >=0. */     
-    double initialTime = 0.0;
-    this->GetConfiguration()->ReadParameter( initialTime,
-      "SigmoidInitialTime", this->GetComponentLabel(), level, 0 );
-    this->SetInitialTime( initialTime );
-
-    /** Set/Get whether the adaptive step size mechanism is desired. Default: true 
-     * NB: the setting is turned of in case of UseRandomSampleRegion=true. 
-     * Depecrated alias UseCruzAcceleration is also still supported. */
-    bool useAdaptiveStepSizes = true;
-    this->GetConfiguration()->ReadParameter( useAdaptiveStepSizes,
-      "UseCruzAcceleration", this->GetComponentLabel(), level, 0, false );
-    this->GetConfiguration()->ReadParameter( useAdaptiveStepSizes,
-      "UseAdaptiveStepSizes", this->GetComponentLabel(), level, 0 );
-    this->SetUseAdaptiveStepSizes( useAdaptiveStepSizes );
- 
-    /** Set whether automatic gain estimation is required; default: true */
-    this->m_AutomaticParameterEstimation = true;
-    this->GetConfiguration()->ReadParameter( this->m_AutomaticParameterEstimation,
-      "AutomaticParameterEstimation", this->GetComponentLabel(), level, 0 );
-
-    if ( this->m_AutomaticParameterEstimation )
-    {
-      /** Set the maximum step length: the maximum displacement of a voxel in mm.
-       * Compute default value: mean spacing of fixed and moving image */
-      const unsigned int fixdim = this->GetElastix()->FixedDimension;
-      const unsigned int movdim = this->GetElastix()->MovingDimension;
-      double sum = 0.0;      
-      for (unsigned int d = 0; d < fixdim; ++d )
-      {
-        sum += this->GetElastix()->GetFixedImage()->GetSpacing()[d];
-      }
-      for (unsigned int d = 0; d < movdim; ++d )
-      {
-        sum += this->GetElastix()->GetMovingImage()->GetSpacing()[d];
-      }
-      this->m_MaximumStepLength = sum / static_cast<double>( fixdim + movdim );
-      /** Read user setting */
-      this->GetConfiguration()->ReadParameter( this->m_MaximumStepLength,
-        "MaximumStepLength", this->GetComponentLabel(), level, 0 );
-
-      /** Setting: use maximum likelihood method */
-      this->m_UseMaximumLikelihoodMethod = false;
-      this->GetConfiguration()->ReadParameter( 
-        this->m_UseMaximumLikelihoodMethod,
-        "UseMaximumLikelihoodMethod",
-        this->GetComponentLabel(), level, 0 );
-  
-      /** Setting: save .mat file with covariance matrix, sigma1, and sigma3 if true 
-       * \todo: does not seem to work on linux 64bit. linux 32bit i did not test. */
-      this->m_SaveCovarianceMatrix = false;
-      this->GetConfiguration()->ReadParameter( 
-        this->m_SaveCovarianceMatrix, "SaveCovarianceMatrix",
-        this->GetComponentLabel(), level, 0 );
-
-      /** Number of gradients N to estimate the average square magnitudes
-       * of the exact gradient and the approximation error. 
-       * A value of 0 (default) means automatic estimation. */
-      this->m_NumberOfGradientMeasurements = 0;
-      this->GetConfiguration()->ReadParameter(
-        this->m_NumberOfGradientMeasurements,
-        "NumberOfGradientMeasurements",
-        this->GetComponentLabel(), level, 0 );
-
-      /** Set the number of jacobian measurements M. 
-       * By default, if nothing specified by the user, M is determined as:
-       * M = max( 1000, nrofparams*3 );
-       * This is a rather crude rule of thumb, which seems to work in practice. */
-      this->m_NumberOfJacobianMeasurements = vnl_math_max( 
-        static_cast<unsigned int>(1000), static_cast<unsigned int>(P*3) );
-      this->GetConfiguration()->ReadParameter(
-        this->m_NumberOfJacobianMeasurements,
-        "NumberOfJacobianMeasurements",
-        this->GetComponentLabel(), level, 0 );
-
-      /** Set the number of image samples used to compute the 'exact' gradient.
-       * By default, if nothing supplied by the user, 100000. This works in general.
-       * If the image is smaller, the number of samples is automatically reduced later. */
-      this->m_NumberOfSamplesForExactGradient = 100000;
-      this->GetConfiguration()->ReadParameter(
-        this->m_NumberOfSamplesForExactGradient,
-        "NumberOfSamplesForExactGradient",
-        this->GetComponentLabel(), level, 0 );   
-
-    } // end if automatic parameter estimation
-    else
-    {
-      /** If no automatic parameter estimation is used, a and alpha also need to be specified */
-      double a = 400.0; // arbitrary guess
-      double alpha = 0.602;
-      this->GetConfiguration()->ReadParameter(a, "SP_a", this->GetComponentLabel(), level, 0 );    
-      this->GetConfiguration()->ReadParameter(alpha, "SP_alpha", this->GetComponentLabel(), level, 0 );
-      this->SetParam_a( a );
-      this->SetParam_alpha( alpha );
-
-      /** Set/Get the maximum of the sigmoid. 
-      * Should be >0. Default: 1.0 */     
-      double sigmoidMax = 1.0;
-      this->GetConfiguration()->ReadParameter( sigmoidMax,
-        "SigmoidMax", this->GetComponentLabel(), level, 0 );
-      this->SetSigmoidMax( sigmoidMax );
-
-      /** Set/Get the minimum of the sigmoid. 
-      * Should be <0. Default: -0.8 */     
-      double sigmoidMin = -0.8;
-      this->GetConfiguration()->ReadParameter( sigmoidMin,
-        "SigmoidMin", this->GetComponentLabel(), level, 0 );
-      this->SetSigmoidMin( sigmoidMin );
-
-      /** Set/Get the scaling of the sigmoid width. Large values 
-      * cause a more wide sigmoid. Default: 1e-8. Should be >0. */     
-      double sigmoidScale = 1e-8;
-      this->GetConfiguration()->ReadParameter( sigmoidScale,
-        "SigmoidScale", this->GetComponentLabel(), level, 0 );
-      this->SetSigmoidScale( sigmoidScale );
-    } // end else: no automatic parameter estimation
-
-    //temp save gradients
-   
-  } // end BeforeEachResolution
-
-
-  /**
-  * ***************** AfterEachIteration *************************
-  */
-
-  template <class TElastix>
-    void AdaptiveStochasticGradientDescent<TElastix>
-    ::AfterEachIteration(void)
-  {
-    /** Print some information */
-    xl::xout["iteration"]["2:Metric"]   << this->GetValue();
-    xl::xout["iteration"]["3a:Time"] << this->GetCurrentTime();
-    xl::xout["iteration"]["3b:StepSize"] << this->GetLearningRate();
-    xl::xout["iteration"]["4:||Gradient||"] << this->GetGradient().magnitude();
-
-    /** Select new spatial samples for the computation of the metric */
-    if ( this->GetNewSamplesEveryIteration() )
-    {
-      this->SelectNewSamples();
-    }
-
-  } // end AfterEachIteration
-
-
-  /**
-  * ***************** AfterEachResolution *************************
-  */
-
-  template <class TElastix>
-    void AdaptiveStochasticGradientDescent<TElastix>
-    ::AfterEachResolution(void)
-  {
-    /** Get the current resolution level.*/
-    unsigned int level = static_cast<unsigned int>(
-      this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
-
-    /**
-    * typedef enum {
-    *   MaximumNumberOfIterations,
-    *   MetricError,
-    *   MinimumStepSize } StopConditionType;
-    */
-    std::string stopcondition;
-
-    switch( this->GetStopCondition() )
-    {
-
-    case MaximumNumberOfIterations :
-      stopcondition = "Maximum number of iterations has been reached";  
-      break;  
-
-    case MetricError :
-      stopcondition = "Error in metric";  
-      break;  
-
-    case MinimumStepSize :
-      stopcondition = "The minimum step length has been reached"; 
-      break;
-
-    default:
-      stopcondition = "Unknown";
-      break;
-    }
-
-    /** Print the stopping condition */
-    elxout << "Stopping condition: " << stopcondition << "." << std::endl;
-
-    /** Store the used parameters, for later printing to screen */
-    SettingsType settings;    
-    settings.a = this->GetParam_a();
-    settings.A = this->GetParam_A();
-    settings.alpha = this->GetParam_alpha();
-    settings.fmax = this->GetSigmoidMax();
-    settings.fmin = this->GetSigmoidMin();
-    settings.omega = this->GetSigmoidScale();
-    this->m_SettingsVector.push_back( settings );
-
-    /** Print settings that were used in this resolution */
-    SettingsVectorType tempSettingsVector;
-    tempSettingsVector.push_back( settings );
-    elxout 
-      << "Settings of " << this->elxGetClassName() 
-      << " in resolution " << level << ":" << std::endl;
-    this->PrintSettingsVector( tempSettingsVector );
-
-  } // end AfterEachResolution
-
-
-  /**
-  * ******************* AfterRegistration ************************
-  */
-
-  template <class TElastix>
-    void AdaptiveStochasticGradientDescent<TElastix>
-    ::AfterRegistration(void)
-  {
-    /** Print the best metric value */
-
-    double bestValue = this->GetValue();
-    elxout
-      << std::endl
-      << "Final metric value  = " 
-      << bestValue
-      << std::endl;
-
-    elxout
-      << "Settings of " << this->elxGetClassName()
-      << " for all resolutions:" << std::endl;
-    this->PrintSettingsVector( this->m_SettingsVector );
-
-  } // end AfterRegistration
-
-
-  /**
-  * ****************** StartOptimization *************************
-  */
-
-  template <class TElastix>
-    void AdaptiveStochasticGradientDescent<TElastix>
-    ::StartOptimization(void)
-  {
-    /** Check if the entered scales are correct and != [ 1 1 1 ...] */
-    this->SetUseScales(false);
-    const ScalesType & scales = this->GetScales();
-    if ( scales.GetSize() == this->GetInitialPosition().GetSize() )
-    {
-      ScalesType unit_scales( scales.GetSize() );
-      unit_scales.Fill(1.0);
-      if (scales != unit_scales)
-      {
-        /** only then: */
-        this->SetUseScales(true);
-      }
-    }
-
-    this->m_AutomaticParameterEstimationDone = false;
-
-    this->Superclass1::StartOptimization();
-
-  } //end StartOptimization
-
-
-  /** 
-  * ********************** ResumeOptimization **********************
-  */
-
-  template <class TElastix>
-    void AdaptiveStochasticGradientDescent<TElastix>
-    ::ResumeOptimization( void )
-  {
-    if ( this->GetAutomaticParameterEstimation()
-      && !this->m_AutomaticParameterEstimationDone )
-    {
-      this->AutomaticParameterEstimation();
-      // hack
-      this->m_AutomaticParameterEstimationDone = true;
-    }
-
-    this->Superclass1::ResumeOptimization();
-
-  } // end ResumeOptimization()
-
-
-  /**
-   * ****************** MetricErrorResponse *************************
+/**
+ * ********************** Constructor ***********************
+ */
+
+template <class TElastix>
+AdaptiveStochasticGradientDescent<TElastix>
+::AdaptiveStochasticGradientDescent()
+{
+  this->m_MaximumNumberOfSamplingAttempts = 0;
+  this->m_CurrentNumberOfSamplingAttempts = 0;
+  this->m_PreviousErrorAtIteration = 0;
+  this->m_AutomaticParameterEstimationDone = false;
+
+  this->m_AutomaticParameterEstimation = false;
+  this->m_MaximumStepLength = 1.0;
+
+  this->m_NumberOfGradientMeasurements = 0;
+  this->m_NumberOfJacobianMeasurements = 0;
+  this->m_NumberOfSamplesForExactGradient = 100000;
+
+  this->m_UseMaximumLikelihoodMethod = false;
+  this->m_SaveCovarianceMatrix = false;
+  this->m_RandomGenerator = RandomGeneratorType::New();
+
+  this->m_BSplineTransform = 0;
+  this->m_BSplineCombinationTransform = 0;
+  this->m_AdvancedTransform = 0;
+  this->m_NumBSplineParametersPerDim = 0;
+  this->m_NumBSplineWeights = 0;
+  this->m_NumberOfParameters = 0;
+  this->m_TransformIsBSpline = false;
+  this->m_TransformIsBSplineCombination = false;
+  this->m_TransformIsAdvanced = false;
+
+} // Constructor
+
+
+/**
+ * ***************** BeforeRegistration ***********************
+ */
+
+template <class TElastix>
+void
+AdaptiveStochasticGradientDescent<TElastix>
+::BeforeRegistration( void )
+{
+  /** Add the target cell "stepsize" to xout["iteration"]. */
+  xout["iteration"].AddTargetCell("2:Metric");
+  xout["iteration"].AddTargetCell("3a:Time");
+  xout["iteration"].AddTargetCell("3b:StepSize");
+  xout["iteration"].AddTargetCell("4:||Gradient||");
+
+  /** Format the metric and stepsize as floats. */     
+  xl::xout["iteration"]["2:Metric"]   << std::showpoint << std::fixed;
+  xl::xout["iteration"]["3a:StepSize"] << std::showpoint << std::fixed;
+  xl::xout["iteration"]["3b:StepSize"] << std::showpoint << std::fixed;
+  xl::xout["iteration"]["4:||Gradient||"] << std::showpoint << std::fixed;
+
+  this->m_SettingsVector.clear();
+
+} // end BeforeRegistration()
+
+
+/**
+ * ***************** BeforeEachResolution ***********************
+ */
+
+template <class TElastix>
+void AdaptiveStochasticGradientDescent<TElastix>
+::BeforeEachResolution( void )
+{
+  /** Get the current resolution level. */
+  unsigned int level = static_cast<unsigned int>(
+    this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
+
+  const unsigned int P = this->GetElastix()->GetElxTransformBase()
+    ->GetAsITKBaseType()->GetNumberOfParameters();
+
+  /** Set the maximumNumberOfIterations. */
+  unsigned int maximumNumberOfIterations = 500;
+  this->GetConfiguration()->ReadParameter( maximumNumberOfIterations,
+    "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0 );
+  this->SetNumberOfIterations( maximumNumberOfIterations );
+
+  /** Set the gain parameter A. */
+  double A = 20.0;
+  this->GetConfiguration()->ReadParameter(A, "SP_A", this->GetComponentLabel(), level, 0 );
+  this->SetParam_A( A );
+
+  /** Set the MaximumNumberOfSamplingAttempts. */
+  unsigned int maximumNumberOfSamplingAttempts = 0;
+  this->GetConfiguration()->ReadParameter( maximumNumberOfSamplingAttempts,
+    "MaximumNumberOfSamplingAttempts", this->GetComponentLabel(), level, 0 );
+  this->SetMaximumNumberOfSamplingAttempts( maximumNumberOfSamplingAttempts );
+
+  /** Set/Get the initial time. Default: 0.0. Should be >=0. */     
+  double initialTime = 0.0;
+  this->GetConfiguration()->ReadParameter( initialTime,
+    "SigmoidInitialTime", this->GetComponentLabel(), level, 0 );
+  this->SetInitialTime( initialTime );
+
+  /** Set/Get whether the adaptive step size mechanism is desired. Default: true 
+   * NB: the setting is turned of in case of UseRandomSampleRegion=true. 
+   * Deprecated alias UseCruzAcceleration is also still supported.
    */
+  bool useAdaptiveStepSizes = true;
+  this->GetConfiguration()->ReadParameter( useAdaptiveStepSizes,
+    "UseCruzAcceleration", this->GetComponentLabel(), level, 0, false );
+  this->GetConfiguration()->ReadParameter( useAdaptiveStepSizes,
+    "UseAdaptiveStepSizes", this->GetComponentLabel(), level, 0 );
+  this->SetUseAdaptiveStepSizes( useAdaptiveStepSizes );
 
-  template <class TElastix>
-    void AdaptiveStochasticGradientDescent<TElastix>
-    ::MetricErrorResponse( ExceptionObject & err )
+  /** Set whether automatic gain estimation is required; default: true. */
+  this->m_AutomaticParameterEstimation = true;
+  this->GetConfiguration()->ReadParameter( this->m_AutomaticParameterEstimation,
+    "AutomaticParameterEstimation", this->GetComponentLabel(), level, 0 );
+
+  if ( this->m_AutomaticParameterEstimation )
   {
-    if ( this->GetCurrentIteration() != this->m_PreviousErrorAtIteration )
-    {
-      this->m_PreviousErrorAtIteration = this->GetCurrentIteration();
-      this->m_CurrentNumberOfSamplingAttempts = 1;
-    }
-    else
-    {
-      this->m_CurrentNumberOfSamplingAttempts++;
-    }
-
-    if ( this->m_CurrentNumberOfSamplingAttempts <= this->m_MaximumNumberOfSamplingAttempts )
-    {
-      this->SelectNewSamples();
-      this->ResumeOptimization();
-    }
-    else
-    {
-      /** Stop optimisation and pass on exception. */
-      this->Superclass1::MetricErrorResponse( err );
-    }
-
-  } // end MetricErrorResponse()
-
-
-  /** 
-  * ******************* AutomaticParameterEstimation **********************
-  * Estimates some reasonable values for the parameters
-  * SP_a, SP_alpha (=1), SigmoidMin, SigmoidMax (=1), and SigmoidScale. 
-  */
-
-  template <class TElastix>
-    void AdaptiveStochasticGradientDescent<TElastix>
-    ::AutomaticParameterEstimation( void )
-  {
-    const unsigned int P = static_cast<unsigned int>( 
-      this->GetScaledCurrentPosition().GetSize() );
-    const double Pd = static_cast<double>( P );
-
-    /** Get the user input */
-    const double delta = this->GetMaximumStepLength();
-
-    /** Compute the jacobian terms */
-    double TrC = 0.0;
-    double TrCC = 0.0;
-    double maxJJ = 0.0;
-    double maxJCJ = 0.0;
-    this->m_CovarianceMatrix.SetSize(0,0);
-    this->ComputeJacobianTerms(TrC, TrCC, maxJJ, maxJCJ);
-
-    /** Determine number of gradient measurements such that
-     * E + 2\sqrt(Var) < K E
-     * with
-     * E = E(1/N \sum_n g_n^T g_n) = sigma_1^2 TrC
-     * Var = Var(1/N \sum_n g_n^T g_n) = 2 sigma_1^4 TrCC / N
-     * K = 1.5
-     * We enforce a minimum of 2.
+    /** Set the maximum step length: the maximum displacement of a voxel in mm.
+     * Compute default value: mean spacing of fixed and moving image.
      */
-    if ( this->m_NumberOfGradientMeasurements == 0 )
+    const unsigned int fixdim = this->GetElastix()->FixedDimension;
+    const unsigned int movdim = this->GetElastix()->MovingDimension;
+    double sum = 0.0;      
+    for (unsigned int d = 0; d < fixdim; ++d )
     {
-      const double K = 1.5;
-      this->m_NumberOfGradientMeasurements = static_cast<unsigned int>( 
-        vcl_ceil( 8.0*TrCC/TrC/TrC/(K-1)/(K-1) )    );
-      this->m_NumberOfGradientMeasurements = vnl_math_max( static_cast<unsigned int>(2),
-        this->m_NumberOfGradientMeasurements );
-      elxout << "NumberOfGradientMeasurements to estimate sigma_i: " << this->m_NumberOfGradientMeasurements << std::endl;
+      sum += this->GetElastix()->GetFixedImage()->GetSpacing()[d];
     }
-     
-    /** Measure square magnitude of exact gradient and approximation error */
-    const double sigma4factor = 1.0; 
-    const double sigma4 = sigma4factor * delta / vcl_sqrt( maxJJ );
-    double gg = 0.0;
-    double ee = 0.0;
-    bool maxlik = 
-      this->SampleGradients( this->GetScaledCurrentPosition(), sigma4, gg, ee );
-
-    /** Determine parameter settings */
-    double sigma1;
-    double sigma3;
-    if ( maxlik )
+    for (unsigned int d = 0; d < movdim; ++d )
     {
-      /** maximum likelihood estimator of sigma: 
-      * gg = 1/N sum_n g_n^T C^{-1} g_n 
-      * sigma1 = gg / P */
-      sigma1 = vcl_sqrt( gg / Pd );
-      sigma3 = vcl_sqrt( ee / Pd );      
+      sum += this->GetElastix()->GetMovingImage()->GetSpacing()[d];
     }
-    else
-    {
-      /** estimate of sigma such that empirical norm^2 equals theoretical:
-      * gg = 1/N sum_n g_n' g_n
-      * sigma = gg / TrC */
-      sigma1 = vcl_sqrt( gg / TrC );
-      sigma3 = vcl_sqrt( ee / TrC );
-    }
+    this->m_MaximumStepLength = sum / static_cast<double>( fixdim + movdim );
+    /** Read user setting */
+    this->GetConfiguration()->ReadParameter( this->m_MaximumStepLength,
+      "MaximumStepLength", this->GetComponentLabel(), level, 0 );
 
-    /** Save covariance matrix if desired */
-    this->SaveCovarianceMatrix( sigma1, sigma3, this->m_CovarianceMatrix );
+    /** Setting: use maximum likelihood method. */
+    this->m_UseMaximumLikelihoodMethod = false;
+    this->GetConfiguration()->ReadParameter( 
+      this->m_UseMaximumLikelihoodMethod,
+      "UseMaximumLikelihoodMethod",
+      this->GetComponentLabel(), level, 0 );
 
-    /** Clean up */
-    this->m_CovarianceMatrix.SetSize(0,0);
+    /** Setting: save .mat file with covariance matrix, sigma1, and sigma3 if true 
+     * \todo: does not seem to work on linux 64bit. linux 32bit i did not test.
+     */
+    this->m_SaveCovarianceMatrix = false;
+    this->GetConfiguration()->ReadParameter( 
+      this->m_SaveCovarianceMatrix, "SaveCovarianceMatrix",
+      this->GetComponentLabel(), level, 0 );
 
-    const double alpha = 1.0;
-    const double A = this->GetParam_A();
-    const double a_max = A * delta / sigma1  / vcl_sqrt( maxJCJ );
-    const double noisefactor = sigma1*sigma1 / ( sigma1*sigma1 + sigma3*sigma3 + 1e-14 );
-    const double a = a_max * noisefactor;
+    /** Number of gradients N to estimate the average square magnitudes
+     * of the exact gradient and the approximation error. 
+     * A value of 0 (default) means automatic estimation.
+     */
+    this->m_NumberOfGradientMeasurements = 0;
+    this->GetConfiguration()->ReadParameter(
+      this->m_NumberOfGradientMeasurements,
+      "NumberOfGradientMeasurements",
+      this->GetComponentLabel(), level, 0 );
 
-    const double omega = vnl_math_max( 1e-14, 0.1 * sigma3 * sigma3 * vcl_sqrt( TrCC ) );
-    const double fmax = 1.0;
-    const double fmin = -0.99+ 0.98*noisefactor;
+    /** Set the number of Jacobian measurements M. 
+     * By default, if nothing specified by the user, M is determined as:
+     * M = max( 1000, nrofparams*3 );
+     * This is a rather crude rule of thumb, which seems to work in practice.
+     */
+    this->m_NumberOfJacobianMeasurements = vnl_math_max( 
+      static_cast<unsigned int>(1000), static_cast<unsigned int>(P*3) );
+    this->GetConfiguration()->ReadParameter(
+      this->m_NumberOfJacobianMeasurements,
+      "NumberOfJacobianMeasurements",
+      this->GetComponentLabel(), level, 0 );
 
-    /** Set parameters in superclass */
+    /** Set the number of image samples used to compute the 'exact' gradient.
+     * By default, if nothing supplied by the user, 100000. This works in general.
+     * If the image is smaller, the number of samples is automatically reduced later.
+     */
+    this->m_NumberOfSamplesForExactGradient = 100000;
+    this->GetConfiguration()->ReadParameter(
+      this->m_NumberOfSamplesForExactGradient,
+      "NumberOfSamplesForExactGradient",
+      this->GetComponentLabel(), level, 0 );   
+
+  } // end if automatic parameter estimation
+  else
+  {
+    /** If no automatic parameter estimation is used, a and alpha also need
+     * to be specified.
+     */
+    double a = 400.0; // arbitrary guess
+    double alpha = 0.602;
+    this->GetConfiguration()->ReadParameter(a, "SP_a", this->GetComponentLabel(), level, 0 );    
+    this->GetConfiguration()->ReadParameter(alpha, "SP_alpha", this->GetComponentLabel(), level, 0 );
     this->SetParam_a( a );
     this->SetParam_alpha( alpha );
-    this->SetSigmoidMax( fmax );
-    this->SetSigmoidMin( fmin );
-    this->SetSigmoidScale( omega );
 
-  } // end AutomaticParameterEstimation
+    /** Set/Get the maximum of the sigmoid. Should be >0. Default: 1.0. */
+    double sigmoidMax = 1.0;
+    this->GetConfiguration()->ReadParameter( sigmoidMax,
+      "SigmoidMax", this->GetComponentLabel(), level, 0 );
+    this->SetSigmoidMax( sigmoidMax );
+
+    /** Set/Get the minimum of the sigmoid. Should be <0. Default: -0.8. */
+    double sigmoidMin = -0.8;
+    this->GetConfiguration()->ReadParameter( sigmoidMin,
+      "SigmoidMin", this->GetComponentLabel(), level, 0 );
+    this->SetSigmoidMin( sigmoidMin );
+
+    /** Set/Get the scaling of the sigmoid width. Large values 
+     * cause a more wide sigmoid. Default: 1e-8. Should be >0.
+     */
+    double sigmoidScale = 1e-8;
+    this->GetConfiguration()->ReadParameter( sigmoidScale,
+      "SigmoidScale", this->GetComponentLabel(), level, 0 );
+    this->SetSigmoidScale( sigmoidScale );
+  } // end else: no automatic parameter estimation
+
+  //temp save gradients
+
+} // end BeforeEachResolution()
 
 
-  /** 
-  * ******************** SampleGradients **********************
-  */
+/**
+ * ***************** AfterEachIteration *************************
+ */
 
-  /** Measure some derivatives, exact and approximated. Returns
-  * the squared magnitude of the gradient and approximation error.
-  * Needed for the automatic parameter estimation */
-  template <class TElastix>
-    bool AdaptiveStochasticGradientDescent<TElastix>
-    ::SampleGradients(const ParametersType & mu0,
-    double perturbationSigma, double & gg, double & ee)
+template <class TElastix>
+void
+AdaptiveStochasticGradientDescent<TElastix>
+::AfterEachIteration( void )
+{
+  /** Print some information. */
+  xl::xout["iteration"]["2:Metric"] << this->GetValue();
+  xl::xout["iteration"]["3a:Time"] << this->GetCurrentTime();
+  xl::xout["iteration"]["3b:StepSize"] << this->GetLearningRate();
+  xl::xout["iteration"]["4:||Gradient||"] << this->GetGradient().magnitude();
+
+  /** Select new spatial samples for the computation of the metric. */
+  if ( this->GetNewSamplesEveryIteration() )
   {
-    /** Some shortcuts */
-    const unsigned int P = static_cast<unsigned int>( mu0.GetSize() );
-    const double Pd = static_cast<double>( P );
-    const unsigned int M = this->GetElastix()->GetNumberOfMetrics();
-    CovarianceMatrixType & cov = this->m_CovarianceMatrix;
+    this->SelectNewSamples();
+  }
 
-    /** Prepare for maximum likelihood estimation of sigmas.
-     * In that case we need a matrix eigendecomposition */
-    bool maxlik = false;
-    EigenSystemType * eig = 0;    
-    unsigned int rank = P;
-    if ( (cov.size() != 0) && this->m_UseMaximumLikelihoodMethod )
-    {       
-      /** Do an eigendecomposition of the covariance matrix C and compute D^{-1/2}.
-       * This result will be used to compute g^T C^{-1} g, using
-       * g^T C^{-1} g = x^T x, with x = D^{-1/2} V^T g.
-       * The rank is needed at the end of this function. 
-       * Also, remember that we are really using the maximum likelihood method. */
-      maxlik = true;
-      eig = new EigenSystemType( cov );
-      this->PrepareEigenSystem( eig, rank );
-    }   
+} // end AfterEachIteration()
 
-    /** Variables for sampler support. Each metric may have a sampler */    
-    std::vector< bool >                                   useRandomSampleRegionVec( M, false );
-    std::vector< ImageRandomSamplerBasePointer >          randomSamplerVec( M, 0 );
-    std::vector< ImageRandomCoordinateSamplerPointer >    randomCoordinateSamplerVec( M, 0 );
-    std::vector< ImageGridSamplerPointer >                gridSamplerVec( M, 0 );
 
-    /** If new samples every iteration, get each sampler, and check if it is
-    * a kind of random sampler. If yes, prepare an additional grid sampler
-    * for the exact gradients, and set the stochasticgradients flag to true. */
-    bool stochasticgradients = false;
-    if ( this->GetNewSamplesEveryIteration() )
+/**
+ * ***************** AfterEachResolution *************************
+ */
+
+template <class TElastix>
+void
+AdaptiveStochasticGradientDescent<TElastix>
+::AfterEachResolution( void )
+{
+  /** Get the current resolution level. */
+  unsigned int level = static_cast<unsigned int>(
+    this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
+
+  /**
+   * typedef enum {
+   *   MaximumNumberOfIterations,
+   *   MetricError,
+   *   MinimumStepSize } StopConditionType;
+   */
+  std::string stopcondition;
+
+  switch( this->GetStopCondition() )
+  {
+
+  case MaximumNumberOfIterations :
+    stopcondition = "Maximum number of iterations has been reached";  
+    break;  
+
+  case MetricError :
+    stopcondition = "Error in metric";  
+    break;  
+
+  case MinimumStepSize :
+    stopcondition = "The minimum step length has been reached"; 
+    break;
+
+  default:
+    stopcondition = "Unknown";
+    break;
+  }
+
+  /** Print the stopping condition. */
+  elxout << "Stopping condition: " << stopcondition << "." << std::endl;
+
+  /** Store the used parameters, for later printing to screen. */
+  SettingsType settings;    
+  settings.a = this->GetParam_a();
+  settings.A = this->GetParam_A();
+  settings.alpha = this->GetParam_alpha();
+  settings.fmax = this->GetSigmoidMax();
+  settings.fmin = this->GetSigmoidMin();
+  settings.omega = this->GetSigmoidScale();
+  this->m_SettingsVector.push_back( settings );
+
+  /** Print settings that were used in this resolution. */
+  SettingsVectorType tempSettingsVector;
+  tempSettingsVector.push_back( settings );
+  elxout 
+    << "Settings of " << this->elxGetClassName() 
+    << " in resolution " << level << ":" << std::endl;
+  this->PrintSettingsVector( tempSettingsVector );
+
+} // end AfterEachResolution()
+
+
+/**
+ * ******************* AfterRegistration ************************
+ */
+
+template <class TElastix>
+void
+AdaptiveStochasticGradientDescent<TElastix>
+::AfterRegistration( void )
+{
+  /** Print the best metric value. */
+
+  double bestValue = this->GetValue();
+  elxout << std::endl
+    << "Final metric value  = " 
+    << bestValue
+    << std::endl;
+
+  elxout
+    << "Settings of " << this->elxGetClassName()
+    << " for all resolutions:" << std::endl;
+  this->PrintSettingsVector( this->m_SettingsVector );
+
+} // end AfterRegistration()
+
+
+/**
+ * ****************** StartOptimization *************************
+ */
+
+template <class TElastix>
+void
+AdaptiveStochasticGradientDescent<TElastix>
+::StartOptimization( void )
+{
+  /** Check if the entered scales are correct and != [ 1 1 1 ...]. */
+  this->SetUseScales( false );
+  const ScalesType & scales = this->GetScales();
+  if ( scales.GetSize() == this->GetInitialPosition().GetSize() )
+  {
+    ScalesType unit_scales( scales.GetSize() );
+    unit_scales.Fill(1.0);
+    if ( scales != unit_scales )
     {
-      for ( unsigned int m = 0; m < M; ++m )
-      {
-        /** Get the sampler */
-        ImageSamplerBasePointer sampler =
-          this->GetElastix()->GetElxMetricBase( m )->GetAdvancedMetricImageSampler();      
-        randomSamplerVec[m] = 
-          dynamic_cast< ImageRandomSamplerBaseType * >( sampler.GetPointer() );
-        randomCoordinateSamplerVec[m] = 
-          dynamic_cast< ImageRandomCoordinateSamplerType * >( sampler.GetPointer() );
+      /** only then: */
+      this->SetUseScales( true );
+    }
+  }
 
-        if ( randomSamplerVec[m].IsNotNull() )
-        {
-          /** At least one of the metric has a random sampler. */
-          stochasticgradients |= true;
+  this->m_AutomaticParameterEstimationDone = false;
 
-          /** If the sampler is a randomCoordinateSampler set the UseRandomSampleRegion
-          * property to false temporarily. It disturbs the parameter estimation.
-          * At the end of this function the original setting is set back. 
-          * Also, the AdaptiveStepSize mechanism is turned off when any of the samplers
-          * has UseRandomSampleRegion==true.
-          * \todo Extend ASGD to really take into account random region sampling. */
-          if ( randomCoordinateSamplerVec[m].IsNotNull() )
-          {
-            useRandomSampleRegionVec[m] = randomCoordinateSamplerVec[m]->GetUseRandomSampleRegion();
-            if ( useRandomSampleRegionVec[m] )
-            {
-              if ( this->GetUseAdaptiveStepSizes() )
-              {
-                xl::xout["warning"] 
-                  << "WARNING: UseAdaptiveStepSizes is turned off, "
-                  << "because UseRandomSampleRegion is set to \"true\"." 
-                  << std::endl;
-                this->SetUseAdaptiveStepSizes( false );
-              }
-            }
-            randomCoordinateSamplerVec[m]->SetUseRandomSampleRegion( false );
-          } // end if random coordinate sampler
+  this->Superclass1::StartOptimization();
 
-          /** Set up the grid samper for the "exact" gradients.
-          * Copy settings from the random sampler and update. */
-          gridSamplerVec[m] = ImageGridSamplerType::New();
-          gridSamplerVec[m]->SetInput( randomSamplerVec[m]->GetInput() );
-          gridSamplerVec[m]->SetInputImageRegion( randomSamplerVec[m]->GetInputImageRegion() );
-          gridSamplerVec[m]->SetMask( randomSamplerVec[m]->GetMask() );
-          gridSamplerVec[m]->SetNumberOfSamples( this->m_NumberOfSamplesForExactGradient );
-          gridSamplerVec[m]->Update();
-        } // end if random sampler  
+} //end StartOptimization()
 
-      } // end for loop over metrics
-    } // end if NewSamplesEveryIteration.
-  
-    /** Prepare for progress printing */
-    ProgressCommandPointer progressObserver = ProgressCommandType::New();
-    progressObserver->SetUpdateFrequency( 
-      this->m_NumberOfGradientMeasurements, this->m_NumberOfGradientMeasurements );
-    progressObserver->SetStartString( "  Progress: " );
-    elxout << "Sampling gradients for " << this->elxGetClassName() 
-      << " configuration... " << std::endl;
 
-    /** Initialize some variables for storing gradients and their magnitudes. */
-    DerivativeType approxgradient;
-    DerivativeType exactgradient;
-    DerivativeType diffgradient;
-    DerivativeType solveroutput;
-    double exactgg = 0.0;
-    double diffgg = 0.0;    
+/**
+ * ********************** ResumeOptimization **********************
+ */
 
-    /** Compute gg for some random parameters */      
-    for ( unsigned int i = 0 ; i < this->m_NumberOfGradientMeasurements; ++i)
-    {
-      /** Show progress 0-100% */
-      progressObserver->UpdateAndPrintProgress( i );
+template <class TElastix>
+void
+AdaptiveStochasticGradientDescent<TElastix>
+::ResumeOptimization( void )
+{
+  if ( this->GetAutomaticParameterEstimation()
+    && !this->m_AutomaticParameterEstimationDone )
+  {
+    this->AutomaticParameterEstimation();
+    // hack
+    this->m_AutomaticParameterEstimationDone = true;
+  }
 
-      /** Generate a perturbation, according to \mu_i ~ N( \mu_0, perturbationsigma^2 I )  */
-      ParametersType perturbedMu0 = mu0;
-      this->AddRandomPerturbation( perturbedMu0, perturbationSigma );
+  this->Superclass1::ResumeOptimization();
 
-      /** Compute contribution to exactgg and diffgg. */
-      if ( stochasticgradients )
-      {
-        /** Set grid sampler(s) and get exact derivative. */
-        for ( unsigned int m = 0; m < M; ++m )
-        {
-          if ( gridSamplerVec[m].IsNotNull() )
-          {
-            this->GetElastix()->GetElxMetricBase( m )->
-              SetAdvancedMetricImageSampler( gridSamplerVec[m] );
-          }
-        }
-        this->GetScaledDerivativeWithExceptionHandling( perturbedMu0, exactgradient );        
+} // end ResumeOptimization()
 
-        /** Set random sampler(s), select new spatial samples and get approximate derivative. */
-        for ( unsigned int m = 0; m < M; ++m )
-        {
-          if ( randomSamplerVec[m].IsNotNull() )
-          {
-            this->GetElastix()->GetElxMetricBase( m )->
-              SetAdvancedMetricImageSampler( randomSamplerVec[m] );
-          }
-        }
-        this->SelectNewSamples();
-        this->GetScaledDerivativeWithExceptionHandling( perturbedMu0, approxgradient );
-        
-        /** Compute error vector */
-        diffgradient = exactgradient - approxgradient;
 
-        /** Compute g^T g or g^T C^{-1}g, and e^T e or e^T C^{-1}e */
-        if ( !maxlik )
-        {
-          /** g^T g and e^T e, if no maximum likelihood. */
-          exactgg += exactgradient.squared_magnitude();
-          diffgg += diffgradient.squared_magnitude();
-        }
-        else
-        {
-          /** compute g^T C^{-1} g */
-          solveroutput = eig->D * ( exactgradient * eig->V );
-          exactgg += solveroutput.squared_magnitude();
-          solveroutput = eig->D * ( diffgradient * eig->V );
-          diffgg += solveroutput.squared_magnitude();          
-        }
-      }
-      else // no stochastic gradients
-      {
-        /** Get exact gradient. */
-        this->GetScaledDerivativeWithExceptionHandling( perturbedMu0, exactgradient );
-        
-        /** Compute g^T g or g^T C^{-1}g. NB: diffgg=0. */        
-        if ( !maxlik )
-        {
-          exactgg += exactgradient.squared_magnitude();
-        }
-        else
-        {
-          /** compute g^T C^{-1} g */
-          solveroutput = eig->D * ( exactgradient * eig->V );
-          exactgg += solveroutput.squared_magnitude();          
-        }
-      } // end else: no stochastic gradients
+/**
+ * ****************** MetricErrorResponse *************************
+ */
 
-    } // end for loop over gradient measurements
+template <class TElastix>
+void
+AdaptiveStochasticGradientDescent<TElastix>
+::MetricErrorResponse( ExceptionObject & err )
+{
+  if ( this->GetCurrentIteration() != this->m_PreviousErrorAtIteration )
+  {
+    this->m_PreviousErrorAtIteration = this->GetCurrentIteration();
+    this->m_CurrentNumberOfSamplingAttempts = 1;
+  }
+  else
+  {
+    this->m_CurrentNumberOfSamplingAttempts++;
+  }
 
-    progressObserver->PrintProgress( 1.0 );    
+  if ( this->m_CurrentNumberOfSamplingAttempts <= this->m_MaximumNumberOfSamplingAttempts )
+  {
+    this->SelectNewSamples();
+    this->ResumeOptimization();
+  }
+  else
+  {
+    /** Stop optimisation and pass on exception. */
+    this->Superclass1::MetricErrorResponse( err );
+  }
 
-    /** Compute means */    
-    exactgg /= this->m_NumberOfGradientMeasurements;
-    diffgg /= this->m_NumberOfGradientMeasurements;
+} // end MetricErrorResponse()
 
-    /** For output: gg and ee. 
-     * gg and ee will be divided by Pd, but actually need to be divided by
-     * the rank, in case of maximum likelihood. In case of no maximum likelihood,
-     * the rank equals Pd. */
-    gg = exactgg * Pd / static_cast<double>(rank);
-    ee = diffgg * Pd / static_cast<double>(rank);
-   
-    /** Set back useRandomSampleRegion flag to what it was. */
+
+/** 
+ * ******************* AutomaticParameterEstimation **********************
+ * Estimates some reasonable values for the parameters
+ * SP_a, SP_alpha (=1), SigmoidMin, SigmoidMax (=1), and SigmoidScale. 
+ */
+
+template <class TElastix>
+void
+AdaptiveStochasticGradientDescent<TElastix>
+::AutomaticParameterEstimation( void )
+{
+  const unsigned int P = static_cast<unsigned int>( 
+    this->GetScaledCurrentPosition().GetSize() );
+  const double Pd = static_cast<double>( P );
+
+  /** Get the user input. */
+  const double delta = this->GetMaximumStepLength();
+
+  /** Compute the Jacobian terms. */
+  double TrC = 0.0;
+  double TrCC = 0.0;
+  double maxJJ = 0.0;
+  double maxJCJ = 0.0;
+  this->m_CovarianceMatrix.SetSize( 0, 0 );
+  this->ComputeJacobianTerms( TrC, TrCC, maxJJ, maxJCJ );
+
+  /** Determine number of gradient measurements such that
+   * E + 2\sqrt(Var) < K E
+   * with
+   * E = E(1/N \sum_n g_n^T g_n) = sigma_1^2 TrC
+   * Var = Var(1/N \sum_n g_n^T g_n) = 2 sigma_1^4 TrCC / N
+   * K = 1.5
+   * We enforce a minimum of 2.
+   */
+  if ( this->m_NumberOfGradientMeasurements == 0 )
+  {
+    const double K = 1.5;
+    this->m_NumberOfGradientMeasurements = static_cast<unsigned int>( 
+      vcl_ceil( 8.0 * TrCC / TrC / TrC / (K-1) / (K-1) ) );
+    this->m_NumberOfGradientMeasurements = vnl_math_max(
+      static_cast<unsigned int>( 2 ),
+      this->m_NumberOfGradientMeasurements );
+    elxout << "NumberOfGradientMeasurements to estimate sigma_i: "
+      << this->m_NumberOfGradientMeasurements << std::endl;
+  }
+
+  /** Measure square magnitude of exact gradient and approximation error. */
+  const double sigma4factor = 1.0; 
+  const double sigma4 = sigma4factor * delta / vcl_sqrt( maxJJ );
+  double gg = 0.0;
+  double ee = 0.0;
+  bool maxlik = this->SampleGradients(
+    this->GetScaledCurrentPosition(), sigma4, gg, ee );
+
+  /** Determine parameter settings. */
+  double sigma1;
+  double sigma3;
+  if ( maxlik )
+  {
+    /** Maximum likelihood estimator of sigma: 
+     * gg = 1/N sum_n g_n^T C^{-1} g_n 
+     * sigma1 = gg / P
+     */
+    sigma1 = vcl_sqrt( gg / Pd );
+    sigma3 = vcl_sqrt( ee / Pd );      
+  }
+  else
+  {
+    /** Estimate of sigma such that empirical norm^2 equals theoretical:
+     * gg = 1/N sum_n g_n' g_n
+     * sigma = gg / TrC
+     */
+    sigma1 = vcl_sqrt( gg / TrC );
+    sigma3 = vcl_sqrt( ee / TrC );
+  }
+
+  /** Save covariance matrix if desired. */
+  this->SaveCovarianceMatrix( sigma1, sigma3, this->m_CovarianceMatrix );
+
+  /** Clean up. */
+  this->m_CovarianceMatrix.SetSize( 0, 0 );
+
+  const double alpha = 1.0;
+  const double A = this->GetParam_A();
+  const double a_max = A * delta / sigma1 / vcl_sqrt( maxJCJ );
+  const double noisefactor = sigma1 * sigma1
+    / ( sigma1 * sigma1 + sigma3 * sigma3 + 1e-14 );
+  const double a = a_max * noisefactor;
+
+  const double omega = vnl_math_max( 1e-14, 0.1 * sigma3 * sigma3 * vcl_sqrt( TrCC ) );
+  const double fmax = 1.0;
+  const double fmin = -0.99 + 0.98 * noisefactor;
+
+  /** Set parameters in superclass. */
+  this->SetParam_a( a );
+  this->SetParam_alpha( alpha );
+  this->SetSigmoidMax( fmax );
+  this->SetSigmoidMin( fmin );
+  this->SetSigmoidScale( omega );
+
+} // end AutomaticParameterEstimation()
+
+
+/** 
+ * ******************** SampleGradients **********************
+ */
+
+/** Measure some derivatives, exact and approximated. Returns
+ * the squared magnitude of the gradient and approximation error.
+ * Needed for the automatic parameter estimation.
+ */
+template <class TElastix>
+bool
+AdaptiveStochasticGradientDescent<TElastix>
+::SampleGradients( const ParametersType & mu0,
+  double perturbationSigma, double & gg, double & ee )
+{
+  /** Some shortcuts. */
+  const unsigned int P = static_cast<unsigned int>( mu0.GetSize() );
+  const double Pd = static_cast<double>( P );
+  const unsigned int M = this->GetElastix()->GetNumberOfMetrics();
+  CovarianceMatrixType & cov = this->m_CovarianceMatrix;
+
+  /** Prepare for maximum likelihood estimation of sigmas.
+   * In that case we need a matrix eigen decomposition.
+   */
+  bool maxlik = false;
+  EigenSystemType * eig = 0;    
+  unsigned int rank = P;
+  if ( ( cov.size() != 0 ) && this->m_UseMaximumLikelihoodMethod )
+  {       
+    /** Do an eigen decomposition of the covariance matrix C and compute D^{-1/2}.
+     * This result will be used to compute g^T C^{-1} g, using
+     * g^T C^{-1} g = x^T x, with x = D^{-1/2} V^T g.
+     * The rank is needed at the end of this function. 
+     * Also, remember that we are really using the maximum likelihood method.
+     */
+    maxlik = true;
+    eig = new EigenSystemType( cov );
+    this->PrepareEigenSystem( eig, rank );
+  }   
+
+  /** Variables for sampler support. Each metric may have a sampler. */
+  std::vector< bool >                                 useRandomSampleRegionVec( M, false );
+  std::vector< ImageRandomSamplerBasePointer >        randomSamplerVec( M, 0 );
+  std::vector< ImageRandomCoordinateSamplerPointer >  randomCoordinateSamplerVec( M, 0 );
+  std::vector< ImageGridSamplerPointer >              gridSamplerVec( M, 0 );
+
+  /** If new samples every iteration, get each sampler, and check if it is
+   * a kind of random sampler. If yes, prepare an additional grid sampler
+   * for the exact gradients, and set the stochasticgradients flag to true.
+   */
+  bool stochasticgradients = false;
+  if ( this->GetNewSamplesEveryIteration() )
+  {
     for ( unsigned int m = 0; m < M; ++m )
     {
-      if ( randomCoordinateSamplerVec[m].IsNotNull() )
-      {     
-        randomCoordinateSamplerVec[m]->SetUseRandomSampleRegion( useRandomSampleRegionVec[m] );
-      }
-    }
+      /** Get the sampler. */
+      ImageSamplerBasePointer sampler =
+        this->GetElastix()->GetElxMetricBase( m )->GetAdvancedMetricImageSampler();      
+      randomSamplerVec[m] = 
+        dynamic_cast< ImageRandomSamplerBaseType * >( sampler.GetPointer() );
+      randomCoordinateSamplerVec[m] = 
+        dynamic_cast< ImageRandomCoordinateSamplerType * >( sampler.GetPointer() );
 
-    /** Clean up eigensystem. */
-    if (eig)
-    {     
-      delete eig;
-      eig = 0;
-    }   
- 
-    /** Return whether the maxlik approach was used. */
-    return maxlik;
+      if ( randomSamplerVec[m].IsNotNull() )
+      {
+        /** At least one of the metric has a random sampler. */
+        stochasticgradients |= true;
 
-  } // end SampleGradients
-
-
-  /** 
-  * ******************** ComputeJacobianTerms **********************
-  */
-
-  template <class TElastix>
-    void AdaptiveStochasticGradientDescent<TElastix>
-    ::ComputeJacobianTerms(double & TrC, double & TrCC, 
-    double & maxJJ, double & maxJCJ )
-  {
-    std::string transformName = this->GetElastix()->
-      GetElxTransformBase()->GetNameOfClass();
-
-    /** \todo solve in a more generic way */
-    const std::string translationName = "TranslationTransformElastix";
-    const std::string bsplineName1 = "BSplineTransform";  
-    const std::string bsplineName2 = "AdvancedBSplineTransform";  
-    const std::string bsplineName3 = "CyclicBSplineTransform";  
-    
-    if ( transformName == translationName )
-    {
-      this->ComputeJacobianTermsTranslation(
-        TrC, TrCC, maxJJ, maxJCJ );
-    }
-    else if ( (transformName == bsplineName1) 
-           || (transformName == bsplineName2)
-           || (transformName == bsplineName3) )
-    {
-      this->ComputeJacobianTermsBSpline(
-        TrC, TrCC, maxJJ, maxJCJ );
-    }
-    else 
-    {
-      this->ComputeJacobianTermsGeneric(
-        TrC, TrCC, maxJJ, maxJCJ );
-    }   
-
-  } // end ComputeJacobianTerms
-
-
-  /** 
-  * ************* ComputeJacobianTermsGeneric ****************
-  */
-
-  template <class TElastix>
-    void AdaptiveStochasticGradientDescent<TElastix>
-    ::ComputeJacobianTermsGeneric(double & TrC, double & TrCC, 
-    double & maxJJ, double & maxJCJ )
-  {
-    typedef typename CovarianceMatrixType::iterator     CovarianceMatrixIteratorType;
-    typedef typename JacobianType::const_iterator       JacobianConstIteratorType;
-    typedef vnl_vector<double>                          JacobianColumnType;
-
-    /** Get samples */
-    ImageSampleContainerPointer sampleContainer = 0;
-    this->SampleFixedImageForJacobianTerms( sampleContainer );
-    unsigned int nrofsamples = sampleContainer->Size();
-    const double n = static_cast<double>(nrofsamples);
-
-    /** Get the number of parameters */
-    const unsigned int P = static_cast<unsigned int>( 
-      this->GetScaledCurrentPosition().GetSize() );
-
-    /** Get transform and set current position */
-    typename TransformType::Pointer transform = this->GetRegistration()->
-      GetAsITKBaseType()->GetTransform();
-    transform->SetParameters( this->GetCurrentPosition() );
-    const unsigned int outdim = transform->GetOutputSpaceDimension();
-
-    /** Get scales vector */
-    const ScalesType & scales = this->m_ScaledCostFunction->GetScales();
-
-    /** Create iterator over the sample container. */
-    typename ImageSampleContainerType::ConstIterator iter;
-    typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
-    typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
-
-    /** Initialize covariance matrix */
-    this->m_CovarianceMatrix.SetSize( P,P );
-    CovarianceMatrixType & cov = this->m_CovarianceMatrix;
-    cov.Fill(0.0);    
-
-    /** Loop over image and compute jacobian. Possibly apply scaling.
-    * Compute C = 1/n \sum_i J_i^T J_i */
-    std::vector<JacobianConstIteratorType> jacit(outdim);
-    unsigned int samplenr = 0;
-    CovarianceMatrixIteratorType covit;
-
-    /** Prepare for progress printing */
-    ProgressCommandPointer progressObserver = ProgressCommandType::New();
-    progressObserver->SetUpdateFrequency( nrofsamples*2, 100 );
-    progressObserver->SetStartString( "  Progress: " );
-    elxout << "Computing JacobianTerms for " << this->elxGetClassName() 
-      << " configuration... " << std::endl;
-
-    for ( iter = begin; iter != end; ++iter )
-    {
-      /** Print progress 0-50% */
-      progressObserver->UpdateAndPrintProgress( samplenr );
-      ++samplenr;
-
-      /** Read fixed coordinates and get jacobian. */      
-      const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
-      const JacobianType & jac = transform->GetJacobian( point );   
-
-      /** Update covariance matrix */
-      covit = cov.begin();
-      for ( unsigned int p = 0; p < P; ++p )
-      {        
-        const JacobianColumnType jaccolp = jac.get_column(p);
-        /** Initialize iterators at first column of jacobian */
-        for ( unsigned int d = 0; d < outdim; ++d)
+        /** If the sampler is a randomCoordinateSampler set the UseRandomSampleRegion
+         * property to false temporarily. It disturbs the parameter estimation.
+         * At the end of this function the original setting is set back. 
+         * Also, the AdaptiveStepSize mechanism is turned off when any of the samplers
+         * has UseRandomSampleRegion==true.
+         * \todo Extend ASGD to really take into account random region sampling.
+         */
+        if ( randomCoordinateSamplerVec[m].IsNotNull() )
         {
-          jacit[d] = jac.begin() + d * P;
+          useRandomSampleRegionVec[m] = randomCoordinateSamplerVec[m]->GetUseRandomSampleRegion();
+          if ( useRandomSampleRegionVec[m] )
+          {
+            if ( this->GetUseAdaptiveStepSizes() )
+            {
+              xl::xout["warning"] 
+                << "WARNING: UseAdaptiveStepSizes is turned off, "
+                << "because UseRandomSampleRegion is set to \"true\"." 
+                << std::endl;
+              this->SetUseAdaptiveStepSizes( false );
+            }
+          }
+          randomCoordinateSamplerVec[m]->SetUseRandomSampleRegion( false );
+        } // end if random coordinate sampler
+
+        /** Set up the grid samper for the "exact" gradients.
+         * Copy settings from the random sampler and update.
+         */
+        gridSamplerVec[m] = ImageGridSamplerType::New();
+        gridSamplerVec[m]->SetInput( randomSamplerVec[m]->GetInput() );
+        gridSamplerVec[m]->SetInputImageRegion( randomSamplerVec[m]->GetInputImageRegion() );
+        gridSamplerVec[m]->SetMask( randomSamplerVec[m]->GetMask() );
+        gridSamplerVec[m]->SetNumberOfSamples( this->m_NumberOfSamplesForExactGradient );
+        gridSamplerVec[m]->Update();
+      } // end if random sampler  
+
+    } // end for loop over metrics
+  } // end if NewSamplesEveryIteration.
+
+  /** Prepare for progress printing. */
+  ProgressCommandPointer progressObserver = ProgressCommandType::New();
+  progressObserver->SetUpdateFrequency( 
+    this->m_NumberOfGradientMeasurements, this->m_NumberOfGradientMeasurements );
+  progressObserver->SetStartString( "  Progress: " );
+  elxout << "Sampling gradients for " << this->elxGetClassName() 
+    << " configuration... " << std::endl;
+
+  /** Initialize some variables for storing gradients and their magnitudes. */
+  DerivativeType approxgradient;
+  DerivativeType exactgradient;
+  DerivativeType diffgradient;
+  DerivativeType solveroutput;
+  double exactgg = 0.0;
+  double diffgg = 0.0;    
+
+  /** Compute gg for some random parameters. */
+  for ( unsigned int i = 0 ; i < this->m_NumberOfGradientMeasurements; ++i )
+  {
+    /** Show progress 0-100% */
+    progressObserver->UpdateAndPrintProgress( i );
+
+    /** Generate a perturbation, according to \mu_i ~ N( \mu_0, perturbationsigma^2 I ). */
+    ParametersType perturbedMu0 = mu0;
+    this->AddRandomPerturbation( perturbedMu0, perturbationSigma );
+
+    /** Compute contribution to exactgg and diffgg. */
+    if ( stochasticgradients )
+    {
+      /** Set grid sampler(s) and get exact derivative. */
+      for ( unsigned int m = 0; m < M; ++m )
+      {
+        if ( gridSamplerVec[m].IsNotNull() )
+        {
+          this->GetElastix()->GetElxMetricBase( m )
+            ->SetAdvancedMetricImageSampler( gridSamplerVec[m] );
         }
-        for ( unsigned int q = 0; q < P; ++q )
-        {          
-          for ( unsigned int d = 0; d < outdim; ++d)
-          {
-            *covit += jaccolp[d] * (*jacit[d]) / n;
-            ++jacit[d];
-          }          
-          ++covit;
-        } // q
-      } // p       
-
-    } // end computation of covariance matrix
-
-    /** Apply scales. */
-    if ( this->GetUseScales() )
-    {
-      for (unsigned int p = 0; p < P; ++p)
-      {
-        cov.scale_column( p, 1.0/scales[p] );
-        cov.scale_row( p, 1.0/scales[p] );
       }
-    }
+      this->GetScaledDerivativeWithExceptionHandling( perturbedMu0, exactgradient );        
 
-    /** Compute TrC = trace(C) */
-    for (unsigned int p = 0; p < P; ++p)
-    {
-      TrC += cov[p][p];
-    }
-
-    /** Compute TrCC = ||C||_F^2 */
-    TrCC = vnl_math_sqr( cov.frobenius_norm() );
-
-    /** Compute maxJJ and maxJCJ
-    * \li maxJJ = max_j [ ||J_j||_F^2 + 2\sqrt{2} || J_j J_j^T ||_F ]
-    * \li maxJCJ = max_j [ Tr( J_j C J_j^T ) + 2\sqrt{2} || J_j C J_j^T ||_F ]
-    */
-    maxJJ = 0.0;
-    maxJCJ = 0.0;    
-    const double sqrt2 = vcl_sqrt(static_cast<double>(2.0));
-    JacobianType jacj;
-    samplenr = 0;
-    for ( iter = begin; iter != end; ++iter )
-    {
-      /** Show progress 50-100% */
-      progressObserver->UpdateAndPrintProgress( samplenr + nrofsamples );
-      ++samplenr;
-
-      /** Read fixed coordinates and get jacobian. */      
-      const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
-      jacj = transform->GetJacobian( point );
-
-      /** Apply scales, if necessary */
-      if ( this->GetUseScales() )
+      /** Set random sampler(s), select new spatial samples and get approximate derivative. */
+      for ( unsigned int m = 0; m < M; ++m )
       {
-        for (unsigned int p = 0; p < P; ++p)
+        if ( randomSamplerVec[m].IsNotNull() )
         {
-          jacj.scale_column( p, 1.0/scales[p] );
+          this->GetElastix()->GetElxMetricBase( m )->
+            SetAdvancedMetricImageSampler( randomSamplerVec[m] );
         }
-      } 
-
-      /** Compute 1st part of JJ: ||J_j||_F^2 */
-      double JJ_j = vnl_math_sqr( jacj.frobenius_norm() );
-
-      /** Compute 2nd part of JJ: 2\sqrt{2} || J_j J_j^T ||_F */
-      JacobianType jacjjacj(outdim,outdim); // J_j J_j^T
-      for( unsigned int dx = 0; dx < outdim; ++dx )
-      {
-        for( unsigned int dy = 0; dy < outdim; ++dy )
-        {
-          jacjjacj(dx,dy)=0.0;
-          for (unsigned int p = 0; p < P; ++p)
-          {
-            jacjjacj[dx][dy] += jacj[dx][p] * jacj[dy][p];
-          } // p
-        } // dy
-      } // dx
-      JJ_j += 2.0 * sqrt2 * jacjjacj.frobenius_norm();
-
-      /** Max_j [JJ] */
-      maxJJ = vnl_math_max( maxJJ, JJ_j);
-
-      /** Compute JCJ */
-      double JCJ_j = 0.0;
-
-      /** J_j C */
-      JacobianType jacjC(outdim, P);
-      jacjC = jacj * cov;
-
-      /** J_j C J_j^T */
-      JacobianType jacjCjacj(outdim, outdim);
-      for( unsigned int dx = 0; dx < outdim; ++dx )
-      {
-        ParametersType jacjCdx(jacjC[dx], P, false);
-        for( unsigned int dy = 0; dy < outdim; ++dy )
-        {
-          ParametersType jacjdy(jacj[dy], P, false);
-          jacjCjacj(dx,dy) = dot_product(jacjCdx, jacjdy);
-        } // dy
-      } // dx
-
-      /** Compute 1st part of JCJ: Tr( J_j C J_j^T ) */
-      for (unsigned int d = 0; d < outdim; ++d)
-      {
-        JCJ_j += jacjCjacj[d][d];
       }
+      this->SelectNewSamples();
+      this->GetScaledDerivativeWithExceptionHandling( perturbedMu0, approxgradient );
 
-      /** Compute 2nd part of JCJ: 2\sqrt{2} || J_j C J_j^T ||_F */
-      JCJ_j += 2.0 * sqrt2 * jacjCjacj.frobenius_norm();
+      /** Compute error vector. */
+      diffgradient = exactgradient - approxgradient;
 
-      /** Max_j [JCJ]*/
-      maxJCJ = vnl_math_max( maxJCJ, JCJ_j);
-
-    } // next sample from sample container  
-
-    /** Finalize progress information */
-    progressObserver->PrintProgress( 1.0 );
-
-  } // end ComputeJacobianTermsGenericLinear
-
-
-  /** 
-  * ************* ComputeJacobianTermsTranslation ********************
-  */
-
-  template <class TElastix>
-    void AdaptiveStochasticGradientDescent<TElastix>
-    ::ComputeJacobianTermsTranslation(double & TrC, double & TrCC, 
-    double & maxJJ, double & maxJCJ )
-  {
-    /** Get the number of parameters */
-    const unsigned int P = static_cast<unsigned int>( 
-      this->GetScaledCurrentPosition().GetSize() );
-    const double Pd = static_cast<double>( P );
-
-    const double sqrt2 = vcl_sqrt(static_cast<double>(2.0));
-
-    /** For translation transforms the Jacobian dT/dmu equals I
-    * at every voxel. The Jacobian terms are simplified in this case: */
-    TrC = Pd;
-    TrCC = Pd;
-    maxJJ = Pd + 2.0 * sqrt2 * vcl_sqrt(Pd);
-    maxJCJ = maxJJ;
-
-  } // end ComputeJacobianTermsTranslation
-
-
-  /** 
-  * **************** ComputeJacobianTermsBSpline **********************
-  */
-
-  template <class TElastix>
-    void AdaptiveStochasticGradientDescent<TElastix>
-    ::ComputeJacobianTermsBSpline(double & TrC, double & TrCC, 
-    double & maxJJ, double & maxJCJ )
-  {
-    typedef typename JacobianType::const_iterator       JacobianConstIteratorType;
-    typedef vnl_vector<double>                          JacobianColumnType;
-
-    this->CheckForBSplineTransform();
-
-    /** Get samples */
-    ImageSampleContainerPointer sampleContainer = 0;
-    this->SampleFixedImageForJacobianTerms( sampleContainer );
-    unsigned int nrofsamples = sampleContainer->Size();
-    const double n = static_cast<double>(nrofsamples);
-
-    /** Get the number of parameters */
-    const unsigned int P = static_cast<unsigned int>( 
-      this->GetScaledCurrentPosition().GetSize() );
-
-    /** Get transform and set current position */
-    typename TransformType::Pointer transform = this->GetRegistration()->
-      GetAsITKBaseType()->GetTransform();
-    transform->SetParameters( this->GetCurrentPosition() );
-    const unsigned int outdim = transform->GetOutputSpaceDimension();
-
-    /** Get scales vector */
-    const ScalesType & scales = this->m_ScaledCostFunction->GetScales();
-
-    /** Create iterator over the sample container. */
-    typename ImageSampleContainerType::ConstIterator iter;
-    typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
-    typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
-
-    /** Initialize covariance matrix */
-    this->m_CovarianceMatrix.SetSize( P,P );
-    CovarianceMatrixType & cov = this->m_CovarianceMatrix;
-    cov.Fill(0.0);    
-
-    /** Loop over image and compute jacobian. 
-    * Compute C = 1/n \sum_i J_i^T J_i 
-    * Possibly apply scaling afterwards. */
-    std::vector<JacobianConstIteratorType> jacit(outdim);
-    unsigned int samplenr = 0;
-    NonZeroJacobianIndicesType & jacind = this->m_NonZeroJacobianIndices;
-    const unsigned int sizejacind = jacind.size();
-
-    /** Prepare for progress printing */
-    ProgressCommandPointer progressObserver = ProgressCommandType::New();
-    progressObserver->SetUpdateFrequency( nrofsamples*2, 100 );
-    progressObserver->SetStartString( "  Progress: " );
-    elxout << "Computing JacobianTerms for " << this->elxGetClassName() 
-      << " configuration... " << std::endl;
-
-    for ( iter = begin; iter != end; ++iter )
-    {
-      /** Print progress 0-50% */
-      progressObserver->UpdateAndPrintProgress( samplenr );
-      ++samplenr;
-
-      /** Read fixed coordinates and get jacobian.  */
-      const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
-      const JacobianType & jac = this->EvaluateBSplineTransformJacobian( point );     
-      
-      /** Update covariance matrix */
-      for ( unsigned int pi = 0; pi < sizejacind; ++pi )
+      /** Compute g^T g or g^T C^{-1}g, and e^T e or e^T C^{-1}e. */
+      if ( !maxlik )
       {
-        const unsigned int p = jacind[pi];
-
-        const JacobianColumnType jaccolp = jac.get_column(pi);
-        /** Initialize iterators at first column of (sparse) jacobian */
-        for ( unsigned int d = 0; d < outdim; ++d)
-        {
-          jacit[d] = jac.begin() + d * sizejacind;
-        }
-        for ( unsigned int qi = 0; qi < sizejacind; ++qi )
-        { 
-          const unsigned int q = jacind[qi];
-          for ( unsigned int d = 0; d < outdim; ++d)
-          {
-            cov[p][q] += jaccolp[d] * (*jacit[d]) / n;
-            ++jacit[d];
-          }                    
-        } // qi
-      } // pi       
-
-    } // end computation of covariance matrix
-    
-    /** Apply scales. */
-    if ( this->GetUseScales() )
-    {
-      for (unsigned int p = 0; p < P; ++p)
-      {
-        cov.scale_column( p, 1.0/scales[p] );
-        cov.scale_row( p, 1.0/scales[p] );
-      }
-    }
-
-    /** Compute TrC = trace(C) */
-    for (unsigned int p = 0; p < P; ++p)
-    {
-      TrC += cov[p][p];
-    }
-
-    /** Compute TrCC = ||C||_F^2 */
-    TrCC = vnl_math_sqr( cov.frobenius_norm() );
-
-    /** Compute maxJJ and maxJCJ
-    * \li maxJJ = max_j [ ||J_j||_F^2 + 2\sqrt{2} || J_j J_j^T ||_F ]
-    * \li maxJCJ = max_j [ Tr( J_j C J_j^T ) + 2\sqrt{2} || J_j C J_j^T ||_F ]
-    */
-    maxJJ = 0.0;
-    maxJCJ = 0.0;    
-    const double sqrt2 = vcl_sqrt(static_cast<double>(2.0));
-    JacobianType jacj;
-    samplenr = 0;
-    for ( iter = begin; iter != end; ++iter )
-    {
-      /** Show progress 50-100% */
-      progressObserver->UpdateAndPrintProgress( samplenr + nrofsamples );
-      ++samplenr;
-
-      /** Read fixed coordinates and get jacobian.  */
-      const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
-      JacobianType jacj = this->EvaluateBSplineTransformJacobian( point );    
-
-      /** Apply scales, if necessary */
-      if ( this->GetUseScales() )
-      {
-        for (unsigned int pi = 0; pi < sizejacind; ++pi)
-        {
-          const unsigned int p = jacind[pi];
-          jacj.scale_column( pi, 1.0/scales[p] );
-        }
-      } 
-
-      /** Compute 1st part of JJ: ||J_j||_F^2 */
-      double JJ_j = vnl_math_sqr( jacj.frobenius_norm() );
-
-      /** Compute 2nd part of JJ: 2\sqrt{2} || J_j J_j^T ||_F */
-      JacobianType jacjjacj(outdim,outdim); // J_j J_j^T
-      for( unsigned int dx = 0; dx < outdim; ++dx )
-      {
-        for( unsigned int dy = 0; dy < outdim; ++dy )
-        {
-          jacjjacj(dx,dy)=0.0;
-          for (unsigned int pi = 0; pi < sizejacind; ++pi)
-          {
-            jacjjacj[dx][dy] += jacj[dx][pi] * jacj[dy][pi];
-          } // pi
-        } // dy
-      } // dx
-      JJ_j += 2.0 * sqrt2 * jacjjacj.frobenius_norm();
-
-      /** Max_j [JJ] */
-      maxJJ = vnl_math_max( maxJJ, JJ_j);
-
-      /** Compute JCJ */
-      double JCJ_j = 0.0;
-
-      /** J_j C */
-      JacobianType jacjC(outdim, sizejacind);
-      jacjC.Fill(0.0);
-      for( unsigned int dx = 0; dx < outdim; ++dx )
-      {
-        for ( unsigned int pi = 0; pi < sizejacind; ++pi)
-        {
-          const unsigned int p = jacind[pi];
-          for ( unsigned int qi = 0; qi < sizejacind; ++qi)
-          {
-            const unsigned int q = jacind[qi];
-            jacjC[dx][pi] += jacj[dx][qi] * cov[q][p];
-          } // qi
-        } // pi
-      } // dx
-  
-      /** J_j C J_j^T */
-      JacobianType jacjCjacj(outdim, outdim);
-      for( unsigned int dx = 0; dx < outdim; ++dx )
-      {
-        ParametersType jacjCdx(jacjC[dx], sizejacind, false);
-        for( unsigned int dy = 0; dy < outdim; ++dy )
-        {
-          ParametersType jacjdy(jacj[dy], sizejacind, false);
-          jacjCjacj(dx,dy) = dot_product(jacjCdx, jacjdy);
-        } // dy
-      } // dx
-
-      /** Compute 1st part of JCJ: Tr( J_j C J_j^T ) */
-      for (unsigned int d = 0; d < outdim; ++d)
-      {
-        JCJ_j += jacjCjacj[d][d];
-      }
-
-      /** Compute 2nd part of JCJ: 2\sqrt{2} || J_j C J_j^T ||_F */
-      JCJ_j += 2.0 * sqrt2 * jacjCjacj.frobenius_norm();
-
-      /** Max_j [JCJ]*/
-      maxJCJ = vnl_math_max( maxJCJ, JCJ_j);
-
-    } // next sample from sample container  
-
-    /** Finalize progress information */
-    progressObserver->PrintProgress( 1.0 );
-
-  } // end ComputeJacobianTermsBSpline
-
-
-  /** 
-  * **************** SampleFixedImageForJacobianTerms *******************
-  */
-
-  template <class TElastix>
-    void AdaptiveStochasticGradientDescent<TElastix>
-    ::SampleFixedImageForJacobianTerms(
-    ImageSampleContainerPointer & sampleContainer )
-  {
-    /** Set up grid sampler */
-    ImageGridSamplerPointer sampler = ImageGridSamplerType::New();
-    sampler->SetInput( this->GetElastix()->
-      GetElxMetricBase()->GetAsITKBaseType()->GetFixedImage() );
-    sampler->SetInputImageRegion( this->GetElastix()->
-      GetElxMetricBase()->GetAsITKBaseType()->GetFixedImageRegion() );
-    sampler->SetMask( this->GetElastix()->
-      GetElxMetricBase()->GetAsITKBaseType()->GetFixedImageMask() );
-
-    /** Determine grid spacing of sampler such that the desired 
-    * NumberOfJacobianMeasurements is achieved approximately.
-    * Note that the actually obtained number of samples may be lower, due to masks.
-    * This is taken into account at the end of this function. */
-    unsigned int nrofsamples = this->m_NumberOfJacobianMeasurements;
-    sampler->SetNumberOfSamples( nrofsamples );
-        
-    /** get samples and check the actually obtained number of samples */
-    sampler->Update();
-    sampleContainer = sampler->GetOutput();
-    nrofsamples = sampleContainer->Size();
-    
-    if ( nrofsamples == 0 )
-    {
-      
-      itkExceptionMacro(
-        << "No valid voxels (0/" << this->m_NumberOfJacobianMeasurements << 
-        ") found to estimate the AdaptiveStochasticGradientDescent parameters." );
-    }
-
-  } // end SampleFixedImageForJacobianTerms
-
-
-  /** 
-  * **************** PrintSettingsVector **********************
-  */
-
-  template <class TElastix>
-    void AdaptiveStochasticGradientDescent<TElastix>
-    ::PrintSettingsVector( const SettingsVectorType & settings ) const
-  {
-    const unsigned long nrofres = settings.size();
-
-    /** Print to log file */
-    elxout << "( SP_a " ;
-    for (unsigned int i = 0; i < nrofres; ++i)
-    {
-      elxout << settings[i].a << " "; 
-    }
-    elxout << ")\n" ;
-
-    elxout << "( SP_A " ;
-    for (unsigned int i = 0; i < nrofres; ++i)
-    {
-      elxout << settings[i].A << " "; 
-    }
-    elxout << ")\n" ;
-
-    elxout << "( SP_alpha " ;
-    for (unsigned int i = 0; i < nrofres; ++i)
-    {
-      elxout << settings[i].alpha << " "; 
-    }
-    elxout << ")\n" ;
-
-    elxout << "( SigmoidMax " ;
-    for (unsigned int i = 0; i < nrofres; ++i)
-    {
-      elxout << settings[i].fmax << " "; 
-    }
-    elxout << ")\n" ;
-
-    elxout << "( SigmoidMin " ;
-    for (unsigned int i = 0; i < nrofres; ++i)
-    {
-      elxout << settings[i].fmin << " "; 
-    }
-    elxout << ")\n" ;
-
-    elxout << "( SigmoidScale " ;
-    for (unsigned int i = 0; i < nrofres; ++i)
-    {
-      elxout << settings[i].omega << " "; 
-    }
-    elxout << ")\n" ;
-
-    elxout << std::endl;
-
-  } // end PrintSettingsVector
-
-
-  /**
-  * ****************** SaveCovarianceMatrix **********************
-  */
-
-  template <class TElastix>
-    void AdaptiveStochasticGradientDescent<TElastix>
-    ::SaveCovarianceMatrix( double sigma1, double sigma3, 
-    const CovarianceMatrixType & cov )
-  {
-    if ( this->m_SaveCovarianceMatrix == false )
-    {
-      return;
-    }
-
-    /** Store covariance matrix in matlab format */
-    unsigned int level = static_cast<unsigned int>(
-      this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
-    unsigned int elevel = this->GetConfiguration()->GetElastixLevel();
-
-    /** Make filenames */
-    std::ostringstream makeFileName("");
-    makeFileName
-      << this->GetConfiguration()->GetCommandLineArgument("-out")
-      << "EstimatedCovarianceMatrix."
-      << elevel
-      << ".R" << level
-      << ".mat";
-    std::ostringstream makeCovName("");
-    makeCovName
-      << "EstCovE"
-      << elevel
-      << "R" << level;   
-    std::ostringstream makeSigma1VarName("");
-    makeSigma1VarName
-      << "Sigma1E"
-      << elevel
-      << "R" << level;   
-    std::ostringstream makeSigma3VarName("");
-    makeSigma3VarName
-      << "Sigma3E"
-      << elevel
-      << "R" << level;   
-
-    /** Write to file */
-    vnl_matlab_filewrite matlabWriter( makeFileName.str().c_str() );
-    matlabWriter.write(cov, makeCovName.str().c_str() );
-    matlabWriter.write(sigma1, makeSigma1VarName.str().c_str() );
-    matlabWriter.write(sigma3, makeSigma3VarName.str().c_str() );
-
-  } // end SaveCovarianceMatrix
-
-
-  /**
-  * ****************** CheckForBSplineTransform **********************
-  * Check if the transform is of type BSplineDeformableTransform.
-  * If so, we can speed up derivative calculations by only inspecting
-  * the parameters in the support region of a point. 
-  */
-
-  template <class TElastix>
-    void AdaptiveStochasticGradientDescent<TElastix>
-    ::CheckForBSplineTransform( void )
-  {    
-    typename TransformType::Pointer transform = this->GetRegistration()->
-      GetAsITKBaseType()->GetTransform();
-    this->m_NumberOfParameters = transform->GetNumberOfParameters();
-
-    this->m_TransformIsBSpline = false;
-    BSplineTransformType * testPtr1 = dynamic_cast<BSplineTransformType *>(
-      transform.GetPointer() );
-    if ( !testPtr1 )
-    {
-      this->m_BSplineTransform = 0;
-      itkDebugMacro( "Transform is not BSplineDeformable" );
-    }
-    else
-    {
-      this->m_TransformIsBSpline = true;
-      this->m_BSplineTransform = testPtr1;
-      this->m_NumBSplineParametersPerDim = 
-        this->m_BSplineTransform->GetNumberOfParametersPerDimension();
-      this->m_NumBSplineWeights = this->m_BSplineTransform->GetNumberOfWeights();
-      itkDebugMacro( "Transform is BSplineDeformable" );
-    }
-
-    /** Check if the transform is of type BSplineCombinationTransform. */
-    this->m_TransformIsBSplineCombination = false;
-
-    BSplineCombinationTransformType * testPtr2 = 
-      dynamic_cast<BSplineCombinationTransformType *>( transform.GetPointer() );
-    if ( !testPtr2 )
-    {
-      this->m_BSplineCombinationTransform = 0;
-      itkDebugMacro( "Transform is not BSplineCombination" );
-    }
-    else
-    {
-      this->m_TransformIsBSplineCombination = true;
-      this->m_BSplineCombinationTransform = testPtr2;
-
-      /** The current transform in the BSplineCombinationTransform is 
-      * always a BSplineTransform. */
-      BSplineTransformType * bsplineTransform = 
-        dynamic_cast<BSplineTransformType * >(
-        this->m_BSplineCombinationTransform->GetCurrentTransform() );
-
-      if ( !bsplineTransform )
-      {
-        itkExceptionMacro(<< "The BSplineCombinationTransform is not properly configured. The CurrentTransform is not set." );
-      }
-      this->m_NumBSplineParametersPerDim = 
-        bsplineTransform->GetNumberOfParametersPerDimension();
-      this->m_NumBSplineWeights = bsplineTransform->GetNumberOfWeights();
-      itkDebugMacro( "Transform is BSplineCombination" );
-    }
-
-    this->m_TransformIsAdvanced = false;
-    AdvancedTransformType * testPtr3 = dynamic_cast<AdvancedTransformType *>(
-      transform.GetPointer() );
-    if ( !testPtr3 )
-    {
-      this->m_AdvancedTransform = 0;
-      itkDebugMacro( "Transform is not Advanced" );
-    }
-    else
-    {
-      this->m_TransformIsAdvanced = true;
-      this->m_AdvancedTransform = testPtr3;      
-      itkDebugMacro( "Transform is AdvancedDeformable" );
-    }
-
-    /** Resize the weights and transform index arrays and compute the parameters offset. */
-    if ( this->m_TransformIsBSpline || this->m_TransformIsBSplineCombination )
-    {
-      this->m_BSplineTransformWeights =
-        BSplineTransformWeightsType( this->m_NumBSplineWeights );
-      this->m_BSplineTransformIndices =
-        BSplineTransformIndexArrayType( this->m_NumBSplineWeights );
-      for ( unsigned int j = 0; j < FixedImageDimension; j++ )
-      {
-        this->m_BSplineParametersOffset[ j ] = j * this->m_NumBSplineParametersPerDim; 
-      }
-      this->m_NonZeroJacobianIndices.resize(
-        FixedImageDimension * this->m_NumBSplineWeights );
-      this->m_InternalTransformJacobian.SetSize( 
-        FixedImageDimension, FixedImageDimension * this->m_NumBSplineWeights );
-      this->m_InternalTransformJacobian.Fill( 0.0 );
-    }
-    else if ( this->m_TransformIsAdvanced )
-    {
-      /** A more generic way of sparse jacobians */
-      this->m_NonZeroJacobianIndices.resize( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
-      this->m_InternalTransformJacobian.SetSize(
-        FixedImageDimension, this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
-      this->m_InternalTransformJacobian.Fill( 0.0 );
-    }  
-    else
-    {   
-      this->m_NonZeroJacobianIndices.resize( this->m_NumberOfParameters );
-      for ( unsigned int i = 0; i < this->m_NumberOfParameters; ++i )
-      {
-        this->m_NonZeroJacobianIndices[ i ] = i;
-      }
-      this->m_InternalTransformJacobian.SetSize( 0, 0 );
-    }
-
-  } // end CheckForBSplineTransform
-  
-
-  /**
-  * *************** EvaluateBSplineTransformJacobian ****************
-  */
-
-  template <class TElastix>
-    const typename AdaptiveStochasticGradientDescent<TElastix>::TransformJacobianType &
-    AdaptiveStochasticGradientDescent<TElastix>
-    ::EvaluateBSplineTransformJacobian( 
-    const FixedImagePointType & fixedImagePoint) const
-  {
-    typename MovingImageType::PointType dummy;
-    bool sampleOk = false;
-    if ( this->m_TransformIsAdvanced )
-    {
-      this->m_AdvancedTransform->GetJacobian( fixedImagePoint,
-        this->m_InternalTransformJacobian, this->m_NonZeroJacobianIndices  );
-      return this->m_InternalTransformJacobian;
-    }
-    else if ( this->m_TransformIsBSpline )
-    {
-      this->m_BSplineTransform->TransformPoint( 
-        fixedImagePoint,
-        dummy,
-        this->m_BSplineTransformWeights,
-        this->m_BSplineTransformIndices,
-        sampleOk );
-    }
-    else if ( this->m_TransformIsBSplineCombination )
-    {
-      this->m_BSplineCombinationTransform->TransformPoint( 
-        fixedImagePoint,
-        dummy,
-        this->m_BSplineTransformWeights,
-        this->m_BSplineTransformIndices,
-        sampleOk );
-    }
-
-    /** Check sample */
-    if ( !sampleOk )
-    {
-      this->m_InternalTransformJacobian.Fill(0.0);
-      for (unsigned int i = 0; i < this->m_NonZeroJacobianIndices.size(); ++i )
-      { 
-        this->m_NonZeroJacobianIndices[i]=0;
-      }
-      return this->m_InternalTransformJacobian;
-    }
-
-    /** If the transform is of type BSplineDeformableTransform or of type
-    * BSplineCombinationTransform, we can obtain a speed up by only 
-    * processing the affected parameters. */
-    unsigned int i = 0;
-    /** We assume the sizes of the m_InternalTransformJacobian and the
-    * m_NonZeroJacobianIndices have already been set; Also we assume
-    * that the InternalTransformJacobian is not 'touched' by other
-    * functions (some elements always stay zero). */      
-    for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
-    {
-      for ( unsigned int mu = 0; mu < this->m_NumBSplineWeights; mu++ )
-      {
-        /* The array weights contains the Jacobian values in a 1-D array 
-        * (because for each parameter the Jacobian is non-zero in only 1 of the
-        * possible dimensions) which is multiplied by the moving image gradient. */
-        this->m_InternalTransformJacobian[ dim ][ i ] = this->m_BSplineTransformWeights[ mu ];
-
-        /** The parameter number to which this partial derivative corresponds */
-        const unsigned int parameterNumber = 
-          this->m_BSplineTransformIndices[ mu ] + this->m_BSplineParametersOffset[ dim ];
-        this->m_NonZeroJacobianIndices[ i ] = parameterNumber;
-
-        /** Go to next column in m_InternalTransformJacobian */
-        ++i;
-      } //end mu for loop
-    } //end dim for loop
-  
-    return this->m_InternalTransformJacobian;
-
-  } // end EvaluateBSplineTransformJacobian
-
-
-  /**
-   * *************** GetScaledDerivativeWithExceptionHandling ***************
-   * Helper function, used by SampleGradients.
-   */
-
-  template <class TElastix>
-    void AdaptiveStochasticGradientDescent<TElastix>
-    ::GetScaledDerivativeWithExceptionHandling( 
-    const ParametersType & parameters, DerivativeType & derivative )
-  {
-    double dummyvalue = 0;
-    try
-    {
-      this->GetScaledValueAndDerivative( parameters, dummyvalue, derivative );
-    }
-      catch( ExceptionObject& err )
-      {
-        this->m_StopCondition = MetricError;
-        this->StopOptimization();
-        throw err;
-      }
-  } // end GetScaledDerivativeWithExceptionHandling
-
-
-  /**
-   * *************** AddRandomPerturbation ***************
-   * Helper function, used by SampleGradients.
-   */
-
-  template <class TElastix>
-    void AdaptiveStochasticGradientDescent<TElastix>
-    ::AddRandomPerturbation( ParametersType & parameters, double sigma )
-  {
-    /** Add delta ~ sigma * N(0,I) to the input parameters. */
-    for (unsigned int p = 0; p < parameters.GetSize(); ++p)
-    {
-      parameters[p] += sigma * this->m_RandomGenerator->GetNormalVariate(0.0, 1.0);
-    }
-  } // end AddRandomPerturbation
-
-
-  /**
-   * *************** PrepareEigenSystem ***************
-   * Helper function, used by SampleGradients.
-   */
-
-  template <class TElastix>
-    void AdaptiveStochasticGradientDescent<TElastix>
-    ::PrepareEigenSystem( EigenSystemType * eig, unsigned int & rank ) const
-  {
-    /** compute D^{-1/2} */
-    const unsigned int P = eig->D.size();
-    rank = P;
-    for ( unsigned int i = 0; i < P; ++i )
-    {
-      const double tmp = eig->D(i);
-      if ( tmp > 1e-16)
-      {
-        eig->D(i) = 1.0 / vcl_sqrt(tmp);
+        /** g^T g and e^T e, if no maximum likelihood. */
+        exactgg += exactgradient.squared_magnitude();
+        diffgg += diffgradient.squared_magnitude();
       }
       else
       {
-        eig->D(i) = 0.0;
-        --rank;
+        /** compute g^T C^{-1} g. */
+        solveroutput = eig->D * ( exactgradient * eig->V );
+        exactgg += solveroutput.squared_magnitude();
+        solveroutput = eig->D * ( diffgradient * eig->V );
+        diffgg += solveroutput.squared_magnitude();          
       }
     }
-    /** Print rank */
-    elxout << "Rank of covariance matrix is: " << rank << std::endl;
+    else // no stochastic gradients
+    {
+      /** Get exact gradient. */
+      this->GetScaledDerivativeWithExceptionHandling( perturbedMu0, exactgradient );
 
-  } // end PrepareEigenSystem
+      /** Compute g^T g or g^T C^{-1}g. NB: diffgg=0. */        
+      if ( !maxlik )
+      {
+        exactgg += exactgradient.squared_magnitude();
+      }
+      else
+      {
+        /** compute g^T C^{-1} g. */
+        solveroutput = eig->D * ( exactgradient * eig->V );
+        exactgg += solveroutput.squared_magnitude();          
+      }
+    } // end else: no stochastic gradients
+
+  } // end for loop over gradient measurements
+
+  progressObserver->PrintProgress( 1.0 );    
+
+  /** Compute means. */
+  exactgg /= this->m_NumberOfGradientMeasurements;
+  diffgg /= this->m_NumberOfGradientMeasurements;
+
+  /** For output: gg and ee. 
+   * gg and ee will be divided by Pd, but actually need to be divided by
+   * the rank, in case of maximum likelihood. In case of no maximum likelihood,
+   * the rank equals Pd.
+   */
+  gg = exactgg * Pd / static_cast<double>( rank );
+  ee =  diffgg * Pd / static_cast<double>( rank );
+
+  /** Set back useRandomSampleRegion flag to what it was. */
+  for ( unsigned int m = 0; m < M; ++m )
+  {
+    if ( randomCoordinateSamplerVec[ m ].IsNotNull() )
+    {     
+      randomCoordinateSamplerVec[ m ]
+        ->SetUseRandomSampleRegion( useRandomSampleRegionVec[ m ] );
+    }
+  }
+
+  /** Clean up eigensystem. */
+  if ( eig )
+  {     
+    delete eig;
+    eig = 0;
+  }
+
+  /** Return whether the maxlik approach was used. */
+  return maxlik;
+
+} // end SampleGradients()
+
+
+/** 
+ * ******************** ComputeJacobianTerms **********************
+ */
+
+template <class TElastix>
+void
+AdaptiveStochasticGradientDescent<TElastix>
+::ComputeJacobianTerms( double & TrC, double & TrCC, 
+  double & maxJJ, double & maxJCJ )
+{
+  std::string transformName = this->GetElastix()
+    ->GetElxTransformBase()->GetNameOfClass();
+
+  /** \todo solve in a more generic way. */
+  const std::string translationName = "TranslationTransformElastix";
+  const std::string bsplineName1 = "BSplineTransform";  
+  const std::string bsplineName2 = "AdvancedBSplineTransform";  
+  const std::string bsplineName3 = "CyclicBSplineTransform";  
+
+  if ( transformName == translationName )
+  {
+    this->ComputeJacobianTermsTranslation(
+      TrC, TrCC, maxJJ, maxJCJ );
+  }
+  else if ( (transformName == bsplineName1) 
+    || (transformName == bsplineName2)
+    || (transformName == bsplineName3) )
+  {
+    this->ComputeJacobianTermsBSpline(
+      TrC, TrCC, maxJJ, maxJCJ );
+  }
+  else
+  {
+    this->ComputeJacobianTermsGeneric(
+      TrC, TrCC, maxJJ, maxJCJ );
+  }
+
+} // end ComputeJacobianTerms()
+
+
+/** 
+ * ************* ComputeJacobianTermsGeneric ****************
+ */
+
+template <class TElastix>
+void
+AdaptiveStochasticGradientDescent<TElastix>
+::ComputeJacobianTermsGeneric( double & TrC, double & TrCC, 
+  double & maxJJ, double & maxJCJ )
+{
+  typedef typename CovarianceMatrixType::iterator     CovarianceMatrixIteratorType;
+  typedef typename JacobianType::const_iterator       JacobianConstIteratorType;
+  typedef vnl_vector<double>                          JacobianColumnType;
+
+  /** Get samples. */
+  ImageSampleContainerPointer sampleContainer = 0;
+  this->SampleFixedImageForJacobianTerms( sampleContainer );
+  unsigned int nrofsamples = sampleContainer->Size();
+  const double n = static_cast<double>( nrofsamples );
+
+  /** Get the number of parameters. */
+  const unsigned int P = static_cast<unsigned int>( 
+    this->GetScaledCurrentPosition().GetSize() );
+
+  /** Get transform and set current position. */
+  typename TransformType::Pointer transform = this->GetRegistration()
+    ->GetAsITKBaseType()->GetTransform();
+  transform->SetParameters( this->GetCurrentPosition() );
+  const unsigned int outdim = transform->GetOutputSpaceDimension();
+
+  /** Get scales vector. */
+  const ScalesType & scales = this->m_ScaledCostFunction->GetScales();
+
+  /** Create iterator over the sample container. */
+  typename ImageSampleContainerType::ConstIterator iter;
+  typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
+  typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
+
+  /** Initialize covariance matrix. */
+  try
+  {
+    this->m_CovarianceMatrix.SetSize( P, P );
+  }
+  catch ( std::exception & e )
+  {
+    std::ostringstream makeString( "" );
+    makeString << "ERROR: " << e.what() << std::endl;
+    makeString << "  Error while allocating a covariance matrix of size "
+      << P << " by " << P
+      << ", needed to automatically compute the parameters for the "
+      << "AdaptiveStochasticGradientDescent optimizer." << std::endl;
+    itkExceptionMacro( << makeString.str().c_str() );
+  }
+  CovarianceMatrixType & cov = this->m_CovarianceMatrix;
+  cov.Fill(0.0);
+
+  /** Loop over image and compute Jacobian. Possibly apply scaling.
+   * Compute C = 1/n \sum_i J_i^T J_i
+   */
+  std::vector<JacobianConstIteratorType> jacit(outdim);
+  unsigned int samplenr = 0;
+  CovarianceMatrixIteratorType covit;
+
+  /** Prepare for progress printing. */
+  ProgressCommandPointer progressObserver = ProgressCommandType::New();
+  progressObserver->SetUpdateFrequency( nrofsamples*2, 100 );
+  progressObserver->SetStartString( "  Progress: " );
+  elxout << "Computing JacobianTerms for " << this->elxGetClassName() 
+    << " configuration... " << std::endl;
+
+  for ( iter = begin; iter != end; ++iter )
+  {
+    /** Print progress 0-50% */
+    progressObserver->UpdateAndPrintProgress( samplenr );
+    ++samplenr;
+
+    /** Read fixed coordinates and get Jacobian. */      
+    const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
+    const JacobianType & jac = transform->GetJacobian( point );   
+
+    /** Update covariance matrix. */
+    covit = cov.begin();
+    for ( unsigned int p = 0; p < P; ++p )
+    {        
+      const JacobianColumnType jaccolp = jac.get_column( p );
+
+      /** Initialize iterators at first column of Jacobian. */
+      for ( unsigned int d = 0; d < outdim; ++d)
+      {
+        jacit[ d ] = jac.begin() + d * P;
+      }
+      for ( unsigned int q = 0; q < P; ++q )
+      {          
+        for ( unsigned int d = 0; d < outdim; ++d )
+        {
+          *covit += jaccolp[ d ] * (*jacit[ d ]) / n;
+          ++jacit[ d ];
+        }          
+        ++covit;
+      } // q
+    } // p
+
+  } // end computation of covariance matrix
+
+  /** Apply scales. */
+  if ( this->GetUseScales() )
+  {
+    for ( unsigned int p = 0; p < P; ++p )
+    {
+      cov.scale_column( p, 1.0 / scales[ p ] );
+      cov.scale_row( p, 1.0 / scales[ p ] );
+    }
+  }
+
+  /** Compute TrC = trace(C). */
+  for ( unsigned int p = 0; p < P; ++p )
+  {
+    TrC += cov[ p ][ p ];
+  }
+
+  /** Compute TrCC = ||C||_F^2. */
+  TrCC = vnl_math_sqr( cov.frobenius_norm() );
+
+  /** Compute maxJJ and maxJCJ
+   * \li maxJJ = max_j [ ||J_j||_F^2 + 2\sqrt{2} || J_j J_j^T ||_F ]
+   * \li maxJCJ = max_j [ Tr( J_j C J_j^T ) + 2\sqrt{2} || J_j C J_j^T ||_F ]
+   */
+  maxJJ = 0.0;
+  maxJCJ = 0.0;    
+  const double sqrt2 = vcl_sqrt(static_cast<double>(2.0));
+  JacobianType jacj;
+  samplenr = 0;
+  for ( iter = begin; iter != end; ++iter )
+  {
+    /** Show progress 50-100% */
+    progressObserver->UpdateAndPrintProgress( samplenr + nrofsamples );
+    ++samplenr;
+
+    /** Read fixed coordinates and get Jacobian. */      
+    const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
+    jacj = transform->GetJacobian( point );
+
+    /** Apply scales, if necessary. */
+    if ( this->GetUseScales() )
+    {
+      for ( unsigned int p = 0; p < P; ++p )
+      {
+        jacj.scale_column( p, 1.0 / scales[ p ] );
+      }
+    } 
+
+    /** Compute 1st part of JJ: ||J_j||_F^2. */
+    double JJ_j = vnl_math_sqr( jacj.frobenius_norm() );
+
+    /** Compute 2nd part of JJ: 2\sqrt{2} || J_j J_j^T ||_F. */
+    JacobianType jacjjacj( outdim,outdim ); // J_j J_j^T
+    for ( unsigned int dx = 0; dx < outdim; ++dx )
+    {
+      for( unsigned int dy = 0; dy < outdim; ++dy )
+      {
+        jacjjacj( dx, dy )=0.0;
+        for ( unsigned int p = 0; p < P; ++p )
+        {
+          jacjjacj[ dx ][ dy ] += jacj[ dx ][ p ] * jacj[ dy ][ p ];
+        } // p
+      } // dy
+    } // dx
+    JJ_j += 2.0 * sqrt2 * jacjjacj.frobenius_norm();
+
+    /** Max_j [JJ] */
+    maxJJ = vnl_math_max( maxJJ, JJ_j );
+
+    /** Compute JCJ */
+    double JCJ_j = 0.0;
+
+    /** J_j C */
+    JacobianType jacjC( outdim, P );
+    jacjC = jacj * cov;
+
+    /** J_j C J_j^T. */
+    JacobianType jacjCjacj( outdim, outdim );
+    for( unsigned int dx = 0; dx < outdim; ++dx )
+    {
+      ParametersType jacjCdx( jacjC[ dx ], P, false );
+      for( unsigned int dy = 0; dy < outdim; ++dy )
+      {
+        ParametersType jacjdy( jacj[ dy ], P, false );
+        jacjCjacj( dx, dy ) = dot_product( jacjCdx, jacjdy );
+      } // dy
+    } // dx
+
+    /** Compute 1st part of JCJ: Tr( J_j C J_j^T ). */
+    for ( unsigned int d = 0; d < outdim; ++d )
+    {
+      JCJ_j += jacjCjacj[ d ][ d ];
+    }
+
+    /** Compute 2nd part of JCJ: 2\sqrt{2} || J_j C J_j^T ||_F. */
+    JCJ_j += 2.0 * sqrt2 * jacjCjacj.frobenius_norm();
+
+    /** Max_j [JCJ]. */
+    maxJCJ = vnl_math_max( maxJCJ, JCJ_j );
+
+  } // next sample from sample container 
+
+  /** Finalize progress information. */
+  progressObserver->PrintProgress( 1.0 );
+
+} // end ComputeJacobianTermsGenericLinear()
+
+
+/** 
+ * ************* ComputeJacobianTermsTranslation ********************
+ */
+
+template <class TElastix>
+void
+AdaptiveStochasticGradientDescent<TElastix>
+::ComputeJacobianTermsTranslation( double & TrC, double & TrCC, 
+  double & maxJJ, double & maxJCJ )
+{
+  /** Get the number of parameters. */
+  const unsigned int P = static_cast<unsigned int>( 
+    this->GetScaledCurrentPosition().GetSize() );
+  const double Pd = static_cast<double>( P );
+
+  const double sqrt2 = vcl_sqrt( static_cast<double>( 2.0 ) );
+
+  /** For translation transforms the Jacobian dT/dmu equals I
+   * at every voxel. The Jacobian terms are simplified in this case:
+   */
+  TrC = Pd;
+  TrCC = Pd;
+  maxJJ = Pd + 2.0 * sqrt2 * vcl_sqrt( Pd );
+  maxJCJ = maxJJ;
+
+} // end ComputeJacobianTermsTranslation()
+
+
+/** 
+ * **************** ComputeJacobianTermsBSpline **********************
+ */
+
+template <class TElastix>
+void
+AdaptiveStochasticGradientDescent<TElastix>
+::ComputeJacobianTermsBSpline( double & TrC, double & TrCC, 
+  double & maxJJ, double & maxJCJ )
+{
+  typedef typename JacobianType::const_iterator       JacobianConstIteratorType;
+  typedef vnl_vector<double>                          JacobianColumnType;
+
+  this->CheckForBSplineTransform();
+
+  /** Get samples. */
+  ImageSampleContainerPointer sampleContainer = 0;
+  this->SampleFixedImageForJacobianTerms( sampleContainer );
+  unsigned int nrofsamples = sampleContainer->Size();
+  const double n = static_cast<double>( nrofsamples );
+
+  /** Get the number of parameters. */
+  const unsigned int P = static_cast<unsigned int>( 
+    this->GetScaledCurrentPosition().GetSize() );
+
+  /** Get transform and set current position. */
+  typename TransformType::Pointer transform = this->GetRegistration()
+    ->GetAsITKBaseType()->GetTransform();
+  transform->SetParameters( this->GetCurrentPosition() );
+  const unsigned int outdim = transform->GetOutputSpaceDimension();
+
+  /** Get scales vector. */
+  const ScalesType & scales = this->m_ScaledCostFunction->GetScales();
+
+  /** Create iterator over the sample container. */
+  typename ImageSampleContainerType::ConstIterator iter;
+  typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
+  typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
+
+  /** Initialize covariance matrix. */
+  try
+  {
+    this->m_CovarianceMatrix.SetSize( P, P );
+  }
+  catch ( std::exception & e )
+  {
+    std::ostringstream makeString( "" );
+    makeString << "ERROR: " << e.what() << std::endl;
+    makeString << "  Error while allocating a covariance matrix of size "
+      << P << " by " << P
+      << ", needed to automatically compute the parameters for the "
+      << "AdaptiveStochasticGradientDescent optimizer." << std::endl;
+    itkExceptionMacro( << makeString.str().c_str() );
+  }
+  CovarianceMatrixType & cov = this->m_CovarianceMatrix;
+  cov.Fill( 0.0 );    
+
+  /** Loop over image and compute Jacobian. 
+   * Compute C = 1/n \sum_i J_i^T J_i 
+   * Possibly apply scaling afterwards.
+   */
+  std::vector<JacobianConstIteratorType> jacit( outdim );
+  unsigned int samplenr = 0;
+  NonZeroJacobianIndicesType & jacind = this->m_NonZeroJacobianIndices;
+  const unsigned int sizejacind = jacind.size();
+
+  /** Prepare for progress printing. */
+  ProgressCommandPointer progressObserver = ProgressCommandType::New();
+  progressObserver->SetUpdateFrequency( nrofsamples * 2, 100 );
+  progressObserver->SetStartString( "  Progress: " );
+  elxout << "Computing JacobianTerms for " << this->elxGetClassName() 
+    << " configuration... " << std::endl;
+
+  for ( iter = begin; iter != end; ++iter )
+  {
+    /** Print progress 0-50% */
+    progressObserver->UpdateAndPrintProgress( samplenr );
+    ++samplenr;
+
+    /** Read fixed coordinates and get Jacobian.  */
+    const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
+    const JacobianType & jac = this->EvaluateBSplineTransformJacobian( point );     
+
+    /** Update covariance matrix. */
+    for ( unsigned int pi = 0; pi < sizejacind; ++pi )
+    {
+      const unsigned int p = jacind[ pi ];
+
+      const JacobianColumnType jaccolp = jac.get_column(pi);
+
+      /** Initialize iterators at first column of (sparse) Jacobian. */
+      for ( unsigned int d = 0; d < outdim; ++d )
+      {
+        jacit[ d ] = jac.begin() + d * sizejacind;
+      }
+      for ( unsigned int qi = 0; qi < sizejacind; ++qi )
+      { 
+        const unsigned int q = jacind[ qi ];
+        for ( unsigned int d = 0; d < outdim; ++d )
+        {
+          cov[ p ][ q ] += jaccolp[ d ] * (*jacit[ d ]) / n;
+          ++jacit[ d ];
+        }        
+      } // qi
+    } // pi
+
+  } // end computation of covariance matrix
+
+  /** Apply scales. */
+  if ( this->GetUseScales() )
+  {
+    for ( unsigned int p = 0; p < P; ++p )
+    {
+      cov.scale_column( p, 1.0 / scales[ p ] );
+      cov.scale_row( p, 1.0 / scales[ p ] );
+    }
+  }
+
+  /** Compute TrC = trace(C). */
+  for ( unsigned int p = 0; p < P; ++p )
+  {
+    TrC += cov[ p ][ p ];
+  }
+
+  /** Compute TrCC = ||C||_F^2. */
+  TrCC = vnl_math_sqr( cov.frobenius_norm() );
+
+  /** Compute maxJJ and maxJCJ
+   * \li maxJJ = max_j [ ||J_j||_F^2 + 2\sqrt{2} || J_j J_j^T ||_F ]
+   * \li maxJCJ = max_j [ Tr( J_j C J_j^T ) + 2\sqrt{2} || J_j C J_j^T ||_F ]
+   */
+  maxJJ = 0.0;
+  maxJCJ = 0.0;    
+  const double sqrt2 = vcl_sqrt(static_cast<double>(2.0));
+  JacobianType jacj;
+  samplenr = 0;
+  for ( iter = begin; iter != end; ++iter )
+  {
+    /** Show progress 50-100% */
+    progressObserver->UpdateAndPrintProgress( samplenr + nrofsamples );
+    ++samplenr;
+
+    /** Read fixed coordinates and get Jacobian. */
+    const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
+    JacobianType jacj = this->EvaluateBSplineTransformJacobian( point );    
+
+    /** Apply scales, if necessary. */
+    if ( this->GetUseScales() )
+    {
+      for ( unsigned int pi = 0; pi < sizejacind; ++pi )
+      {
+        const unsigned int p = jacind[ pi ];
+        jacj.scale_column( pi, 1.0 / scales[ p ] );
+      }
+    } 
+
+    /** Compute 1st part of JJ: ||J_j||_F^2. */
+    double JJ_j = vnl_math_sqr( jacj.frobenius_norm() );
+
+    /** Compute 2nd part of JJ: 2\sqrt{2} || J_j J_j^T ||_F. */
+    JacobianType jacjjacj( outdim, outdim ); // J_j J_j^T
+    for( unsigned int dx = 0; dx < outdim; ++dx )
+    {
+      for( unsigned int dy = 0; dy < outdim; ++dy )
+      {
+        jacjjacj( dx, dy ) = 0.0;
+        for ( unsigned int pi = 0; pi < sizejacind; ++pi )
+        {
+          jacjjacj[ dx ][ dy ] += jacj[ dx ][ pi ] * jacj[ dy ][ pi ];
+        } // pi
+      } // dy
+    } // dx
+    JJ_j += 2.0 * sqrt2 * jacjjacj.frobenius_norm();
+
+    /** Max_j [JJ] */
+    maxJJ = vnl_math_max( maxJJ, JJ_j );
+
+    /** Compute JCJ */
+    double JCJ_j = 0.0;
+
+    /** J_j C */
+    JacobianType jacjC( outdim, sizejacind );
+    jacjC.Fill(0.0);
+    for( unsigned int dx = 0; dx < outdim; ++dx )
+    {
+      for ( unsigned int pi = 0; pi < sizejacind; ++pi )
+      {
+        const unsigned int p = jacind[ pi ];
+        for ( unsigned int qi = 0; qi < sizejacind; ++qi )
+        {
+          const unsigned int q = jacind[ qi ];
+          jacjC[ dx ][ pi ] += jacj[ dx ][ qi ] * cov[ q ][ p ];
+        } // qi
+      } // pi
+    } // dx
+
+    /** J_j C J_j^T */
+    JacobianType jacjCjacj(outdim, outdim);
+    for( unsigned int dx = 0; dx < outdim; ++dx )
+    {
+      ParametersType jacjCdx( jacjC[ dx ], sizejacind, false );
+      for( unsigned int dy = 0; dy < outdim; ++dy )
+      {
+        ParametersType jacjdy( jacj[ dy ], sizejacind, false );
+        jacjCjacj( dx, dy ) = dot_product( jacjCdx, jacjdy );
+      } // dy
+    } // dx
+
+    /** Compute 1st part of JCJ: Tr( J_j C J_j^T ) */
+    for ( unsigned int d = 0; d < outdim; ++d )
+    {
+      JCJ_j += jacjCjacj[ d ][ d] ;
+    }
+
+    /** Compute 2nd part of JCJ: 2\sqrt{2} || J_j C J_j^T ||_F */
+    JCJ_j += 2.0 * sqrt2 * jacjCjacj.frobenius_norm();
+
+    /** Max_j [JCJ]*/
+    maxJCJ = vnl_math_max( maxJCJ, JCJ_j );
+
+  } // next sample from sample container  
+
+  /** Finalize progress information */
+  progressObserver->PrintProgress( 1.0 );
+
+} // end ComputeJacobianTermsBSpline()
+
+
+/** 
+ * **************** SampleFixedImageForJacobianTerms *******************
+ */
+
+template <class TElastix>
+void
+AdaptiveStochasticGradientDescent<TElastix>
+::SampleFixedImageForJacobianTerms(
+  ImageSampleContainerPointer & sampleContainer )
+{
+  /** Set up grid sampler. */
+  ImageGridSamplerPointer sampler = ImageGridSamplerType::New();
+  sampler->SetInput( this->GetElastix()
+    ->GetElxMetricBase()->GetAsITKBaseType()->GetFixedImage() );
+  sampler->SetInputImageRegion( this->GetElastix()
+    ->GetElxMetricBase()->GetAsITKBaseType()->GetFixedImageRegion() );
+  sampler->SetMask( this->GetElastix()
+    ->GetElxMetricBase()->GetAsITKBaseType()->GetFixedImageMask() );
+
+  /** Determine grid spacing of sampler such that the desired 
+   * NumberOfJacobianMeasurements is achieved approximately.
+   * Note that the actually obtained number of samples may be lower, due to masks.
+   * This is taken into account at the end of this function.
+   */
+  unsigned int nrofsamples = this->m_NumberOfJacobianMeasurements;
+  sampler->SetNumberOfSamples( nrofsamples );
+
+  /** Get samples and check the actually obtained number of samples. */
+  sampler->Update();
+  sampleContainer = sampler->GetOutput();
+  nrofsamples = sampleContainer->Size();
+
+  if ( nrofsamples == 0 )
+  {
+    itkExceptionMacro(
+      << "No valid voxels (0/" << this->m_NumberOfJacobianMeasurements
+      << ") found to estimate the AdaptiveStochasticGradientDescent parameters." );
+  }
+
+} // end SampleFixedImageForJacobianTerms()
+
+
+/** 
+ * **************** PrintSettingsVector **********************
+ */
+
+template <class TElastix>
+void
+AdaptiveStochasticGradientDescent<TElastix>
+::PrintSettingsVector( const SettingsVectorType & settings ) const
+{
+  const unsigned long nrofres = settings.size();
+
+  /** Print to log file */
+  elxout << "( SP_a " ;
+  for ( unsigned int i = 0; i < nrofres; ++i )
+  {
+    elxout << settings[ i ].a << " "; 
+  }
+  elxout << ")\n" ;
+
+  elxout << "( SP_A " ;
+  for ( unsigned int i = 0; i < nrofres; ++i )
+  {
+    elxout << settings[ i ].A << " "; 
+  }
+  elxout << ")\n" ;
+
+  elxout << "( SP_alpha " ;
+  for ( unsigned int i = 0; i < nrofres; ++i )
+  {
+    elxout << settings[i].alpha << " "; 
+  }
+  elxout << ")\n" ;
+
+  elxout << "( SigmoidMax " ;
+  for ( unsigned int i = 0; i < nrofres; ++i )
+  {
+    elxout << settings[i].fmax << " "; 
+  }
+  elxout << ")\n" ;
+
+  elxout << "( SigmoidMin " ;
+  for ( unsigned int i = 0; i < nrofres; ++i )
+  {
+    elxout << settings[i].fmin << " "; 
+  }
+  elxout << ")\n" ;
+
+  elxout << "( SigmoidScale " ;
+  for ( unsigned int i = 0; i < nrofres; ++i )
+  {
+    elxout << settings[i].omega << " "; 
+  }
+  elxout << ")\n" ;
+
+  elxout << std::endl;
+
+} // end PrintSettingsVector()
+
+
+/**
+ * ****************** SaveCovarianceMatrix **********************
+ */
+
+template <class TElastix>
+void
+AdaptiveStochasticGradientDescent<TElastix>
+::SaveCovarianceMatrix( double sigma1, double sigma3, 
+  const CovarianceMatrixType & cov )
+{
+  if ( this->m_SaveCovarianceMatrix == false )
+  {
+    return;
+  }
+
+  /** Store covariance matrix in matlab format. */
+  unsigned int level = static_cast<unsigned int>(
+    this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
+  unsigned int elevel = this->GetConfiguration()->GetElastixLevel();
+
+  /** Make filenames */
+  std::ostringstream makeFileName("");
+  makeFileName
+    << this->GetConfiguration()->GetCommandLineArgument("-out")
+    << "EstimatedCovarianceMatrix."
+    << elevel
+    << ".R" << level
+    << ".mat";
+  std::ostringstream makeCovName("");
+  makeCovName
+    << "EstCovE"
+    << elevel
+    << "R" << level;   
+  std::ostringstream makeSigma1VarName("");
+  makeSigma1VarName
+    << "Sigma1E"
+    << elevel
+    << "R" << level;   
+  std::ostringstream makeSigma3VarName("");
+  makeSigma3VarName
+    << "Sigma3E"
+    << elevel
+    << "R" << level;   
+
+  /** Write to file */
+  vnl_matlab_filewrite matlabWriter( makeFileName.str().c_str() );
+  matlabWriter.write(cov, makeCovName.str().c_str() );
+  matlabWriter.write(sigma1, makeSigma1VarName.str().c_str() );
+  matlabWriter.write(sigma3, makeSigma3VarName.str().c_str() );
+
+} // end SaveCovarianceMatrix()
+
+
+/**
+ * ****************** CheckForBSplineTransform **********************
+ * Check if the transform is of type BSplineDeformableTransform.
+ * If so, we can speed up derivative calculations by only inspecting
+ * the parameters in the support region of a point. 
+ */
+
+template <class TElastix>
+void
+AdaptiveStochasticGradientDescent<TElastix>
+::CheckForBSplineTransform( void )
+{    
+  typename TransformType::Pointer transform = this->GetRegistration()
+    ->GetAsITKBaseType()->GetTransform();
+  this->m_NumberOfParameters = transform->GetNumberOfParameters();
+
+  this->m_TransformIsBSpline = false;
+  BSplineTransformType * testPtr1 = dynamic_cast<BSplineTransformType *>(
+    transform.GetPointer() );
+  if ( !testPtr1 )
+  {
+    this->m_BSplineTransform = 0;
+    itkDebugMacro( "Transform is not BSplineDeformable" );
+  }
+  else
+  {
+    this->m_TransformIsBSpline = true;
+    this->m_BSplineTransform = testPtr1;
+    this->m_NumBSplineParametersPerDim = 
+      this->m_BSplineTransform->GetNumberOfParametersPerDimension();
+    this->m_NumBSplineWeights = this->m_BSplineTransform->GetNumberOfWeights();
+    itkDebugMacro( "Transform is BSplineDeformable" );
+  }
+
+  /** Check if the transform is of type BSplineCombinationTransform. */
+  this->m_TransformIsBSplineCombination = false;
+
+  BSplineCombinationTransformType * testPtr2 = 
+    dynamic_cast<BSplineCombinationTransformType *>( transform.GetPointer() );
+  if ( !testPtr2 )
+  {
+    this->m_BSplineCombinationTransform = 0;
+    itkDebugMacro( "Transform is not BSplineCombination" );
+  }
+  else
+  {
+    this->m_TransformIsBSplineCombination = true;
+    this->m_BSplineCombinationTransform = testPtr2;
+
+    /** The current transform in the BSplineCombinationTransform is 
+     * always a BSplineTransform.
+     */
+    BSplineTransformType * bsplineTransform = 
+      dynamic_cast<BSplineTransformType * >(
+      this->m_BSplineCombinationTransform->GetCurrentTransform() );
+
+    if ( !bsplineTransform )
+    {
+      itkExceptionMacro( << "The BSplineCombinationTransform is not properly"
+        << " configured. The CurrentTransform is not set." );
+    }
+    this->m_NumBSplineParametersPerDim = 
+      bsplineTransform->GetNumberOfParametersPerDimension();
+    this->m_NumBSplineWeights = bsplineTransform->GetNumberOfWeights();
+    itkDebugMacro( "Transform is BSplineCombination" );
+  }
+
+  this->m_TransformIsAdvanced = false;
+  AdvancedTransformType * testPtr3 = dynamic_cast<AdvancedTransformType *>(
+    transform.GetPointer() );
+  if ( !testPtr3 )
+  {
+    this->m_AdvancedTransform = 0;
+    itkDebugMacro( "Transform is not Advanced" );
+  }
+  else
+  {
+    this->m_TransformIsAdvanced = true;
+    this->m_AdvancedTransform = testPtr3;      
+    itkDebugMacro( "Transform is AdvancedDeformable" );
+  }
+
+  /** Resize the weights and transform index arrays and compute the parameters offset. */
+  if ( this->m_TransformIsBSpline || this->m_TransformIsBSplineCombination )
+  {
+    this->m_BSplineTransformWeights =
+      BSplineTransformWeightsType( this->m_NumBSplineWeights );
+    this->m_BSplineTransformIndices =
+      BSplineTransformIndexArrayType( this->m_NumBSplineWeights );
+    for ( unsigned int j = 0; j < FixedImageDimension; j++ )
+    {
+      this->m_BSplineParametersOffset[ j ] = j * this->m_NumBSplineParametersPerDim; 
+    }
+    this->m_NonZeroJacobianIndices.resize(
+      FixedImageDimension * this->m_NumBSplineWeights );
+    this->m_InternalTransformJacobian.SetSize( 
+      FixedImageDimension, FixedImageDimension * this->m_NumBSplineWeights );
+    this->m_InternalTransformJacobian.Fill( 0.0 );
+  }
+  else if ( this->m_TransformIsAdvanced )
+  {
+    /** A more generic way of sparse Jacobians. */
+    this->m_NonZeroJacobianIndices.resize(
+      this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+    this->m_InternalTransformJacobian.SetSize(
+      FixedImageDimension,
+      this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+    this->m_InternalTransformJacobian.Fill( 0.0 );
+  }  
+  else
+  {   
+    this->m_NonZeroJacobianIndices.resize( this->m_NumberOfParameters );
+    for ( unsigned int i = 0; i < this->m_NumberOfParameters; ++i )
+    {
+      this->m_NonZeroJacobianIndices[ i ] = i;
+    }
+    this->m_InternalTransformJacobian.SetSize( 0, 0 );
+  }
+
+} // end CheckForBSplineTransform()
+
+
+/**
+ * *************** EvaluateBSplineTransformJacobian ****************
+ */
+
+template <class TElastix>
+const typename AdaptiveStochasticGradientDescent<TElastix>::TransformJacobianType &
+AdaptiveStochasticGradientDescent<TElastix>
+::EvaluateBSplineTransformJacobian(
+  const FixedImagePointType & fixedImagePoint) const
+{
+  typename MovingImageType::PointType dummy;
+  bool sampleOk = false;
+  if ( this->m_TransformIsAdvanced )
+  {
+    this->m_AdvancedTransform->GetJacobian( fixedImagePoint,
+      this->m_InternalTransformJacobian, this->m_NonZeroJacobianIndices  );
+    return this->m_InternalTransformJacobian;
+  }
+  else if ( this->m_TransformIsBSpline )
+  {
+    this->m_BSplineTransform->TransformPoint( 
+      fixedImagePoint,
+      dummy,
+      this->m_BSplineTransformWeights,
+      this->m_BSplineTransformIndices,
+      sampleOk );
+  }
+  else if ( this->m_TransformIsBSplineCombination )
+  {
+    this->m_BSplineCombinationTransform->TransformPoint( 
+      fixedImagePoint,
+      dummy,
+      this->m_BSplineTransformWeights,
+      this->m_BSplineTransformIndices,
+      sampleOk );
+  }
+
+  /** Check sample */
+  if ( !sampleOk )
+  {
+    this->m_InternalTransformJacobian.Fill(0.0);
+    for (unsigned int i = 0; i < this->m_NonZeroJacobianIndices.size(); ++i )
+    { 
+      this->m_NonZeroJacobianIndices[i]=0;
+    }
+    return this->m_InternalTransformJacobian;
+  }
+
+  /** If the transform is of type BSplineDeformableTransform or of type
+   * BSplineCombinationTransform, we can obtain a speed up by only 
+   * processing the affected parameters.
+   */
+  unsigned int i = 0;
+  /** We assume the sizes of the m_InternalTransformJacobian and the
+   * m_NonZeroJacobianIndices have already been set; Also we assume
+   * that the InternalTransformJacobian is not 'touched' by other
+   * functions (some elements always stay zero).
+   */
+  for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
+  {
+    for ( unsigned int mu = 0; mu < this->m_NumBSplineWeights; mu++ )
+    {
+      /* The array weights contains the Jacobian values in a 1-D array 
+       * (because for each parameter the Jacobian is non-zero in only 1 of the
+       * possible dimensions) which is multiplied by the moving image gradient.
+       */
+      this->m_InternalTransformJacobian[ dim ][ i ] = this->m_BSplineTransformWeights[ mu ];
+
+      /** The parameter number to which this partial derivative corresponds. */
+      const unsigned int parameterNumber = 
+        this->m_BSplineTransformIndices[ mu ] + this->m_BSplineParametersOffset[ dim ];
+      this->m_NonZeroJacobianIndices[ i ] = parameterNumber;
+
+      /** Go to next column in m_InternalTransformJacobian. */
+      ++i;
+    } //end mu for loop
+  } //end dim for loop
+
+  return this->m_InternalTransformJacobian;
+
+} // end EvaluateBSplineTransformJacobian()
+
+
+/**
+ * *************** GetScaledDerivativeWithExceptionHandling ***************
+ * Helper function, used by SampleGradients.
+ */
+
+template <class TElastix>
+void
+AdaptiveStochasticGradientDescent<TElastix>
+::GetScaledDerivativeWithExceptionHandling( 
+  const ParametersType & parameters, DerivativeType & derivative )
+{
+  double dummyvalue = 0;
+  try
+  {
+    this->GetScaledValueAndDerivative( parameters, dummyvalue, derivative );
+  }
+  catch( ExceptionObject& err )
+  {
+    this->m_StopCondition = MetricError;
+    this->StopOptimization();
+    throw err;
+  }
+} // end GetScaledDerivativeWithExceptionHandling()
+
+
+/**
+ * *************** AddRandomPerturbation ***************
+ * Helper function, used by SampleGradients.
+ */
+
+template <class TElastix>
+void
+AdaptiveStochasticGradientDescent<TElastix>
+::AddRandomPerturbation( ParametersType & parameters, double sigma )
+{
+  /** Add delta ~ sigma * N(0,I) to the input parameters. */
+  for ( unsigned int p = 0; p < parameters.GetSize(); ++p )
+  {
+    parameters[ p ] += sigma * this->m_RandomGenerator->GetNormalVariate( 0.0, 1.0 );
+  }
+} // end AddRandomPerturbation()
+
+
+/**
+ * *************** PrepareEigenSystem ***************
+ * Helper function, used by SampleGradients.
+ */
+
+template <class TElastix>
+void
+AdaptiveStochasticGradientDescent<TElastix>
+::PrepareEigenSystem( EigenSystemType * eig, unsigned int & rank ) const
+{
+  /** compute D^{-1/2} */
+  const unsigned int P = eig->D.size();
+  rank = P;
+  for ( unsigned int i = 0; i < P; ++i )
+  {
+    const double tmp = eig->D(i);
+    if ( tmp > 1e-16)
+    {
+      eig->D(i) = 1.0 / vcl_sqrt(tmp);
+    }
+    else
+    {
+      eig->D(i) = 0.0;
+      --rank;
+    }
+  }
+  /** Print rank */
+  elxout << "Rank of covariance matrix is: " << rank << std::endl;
+
+} // end PrepareEigenSystem()
+
 
 } // end namespace elastix
 

@@ -99,7 +99,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
     }
   this->m_ValidRegion = this->m_GridRegion;
 
-  // Initialize jacobian images
+  // Initialize Jacobian images
   for ( unsigned int j = 0; j < SpaceDimension; j++ )
     {
     this->m_JacobianImage[j] = ImageType::New();
@@ -193,7 +193,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 
     this->m_GridRegion = region;
 
-    // set regions for each coefficient and jacobian image
+    // set regions for each coefficient and Jacobian image
     for ( unsigned int j = 0; j < SpaceDimension; j++ )
       {
       this->m_WrappedImage[j]->SetRegions( this->m_GridRegion );
@@ -272,7 +272,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
     {
     this->m_GridSpacing = spacing;
 
-    // set spacing for each coefficient and jacobian image
+    // set spacing for each coefficient and Jacobian image
     for ( unsigned int j = 0; j < SpaceDimension; j++ )
       {
       this->m_WrappedImage[j]->SetSpacing( this->m_GridSpacing.GetDataPointer() );
@@ -303,7 +303,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
     {
     this->m_GridDirection = direction;
 
-    // set direction for each coefficient and jacobian image
+    // set direction for each coefficient and Jacobian image
     for ( unsigned int j = 0; j < SpaceDimension; j++ )
       {
       this->m_WrappedImage[j]->SetDirection( this->m_GridDirection );
@@ -859,7 +859,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
     itkExceptionMacro( <<"Cannot compute Jacobian: parameters not set" );
     }
 
-  // Zero all components of jacobian
+  // Zero all components of Jacobian
   // NOTE: for efficiency, we only need to zero out the coefficients
   // that got fill last time this method was called.
   RegionType supportRegion;
@@ -878,7 +878,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   while ( ! iterator[0].IsAtEnd() )
     {
 
-    // zero out jacobian elements
+    // zero out Jacobian elements
     for ( j = 0; j < SpaceDimension; j++ )
       {
       iterator[j].Set( NumericTraits<JacobianPixelType>::Zero );
@@ -925,7 +925,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   while ( !iterator[0].IsAtEnd() )
     {
 
-    // copy weight to jacobian image
+    // copy weight to Jacobian image
     for ( j = 0; j < SpaceDimension; j++ )
       {
       iterator[j].Set( static_cast<JacobianPixelType>( weights[counter] ) );
@@ -1082,7 +1082,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   jacobian.Fill(0.0);
   
   // NOTE: if the support region does not lie totally within the grid
-  // we assume zero displacement and zero jacobian
+  // we assume zero displacement and zero Jacobian
   if ( !this->InsideValidRegion( cindex ) )
   {    
     return;

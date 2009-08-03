@@ -332,7 +332,7 @@ AdvancedSimilarity3DTransform<TScalarType>
 
 }
 
-// Precompute jacobian of Spatial jacobian
+// Precompute Jacobian of Spatial Jacobian
 template <class TScalarType>
 void
 AdvancedSimilarity3DTransform<TScalarType>
@@ -343,7 +343,7 @@ AdvancedSimilarity3DTransform<TScalarType>
     return;
   }
 
-  /** The jacobian of spatial jacobian remains constant, so is precomputed */
+  /** The Jacobian of spatial Jacobian remains constant, so is precomputed */
   JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;
   jsj.resize(ParametersDimension);
 

@@ -111,7 +111,7 @@ void
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>
 ::PrecomputeJacobians(unsigned int outputDims, unsigned int paramDims)
 {
-  /** Nonzero jacobian indices, for GetJacobian */
+  /** Nonzero Jacobian indices, for GetJacobian */
   this->m_NonZeroJacobianIndices.resize(paramDims);
   for (unsigned int par = 0; par < paramDims; ++par )
   {
@@ -658,7 +658,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   JacobianOfSpatialJacobianType & jsj,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
-  /** The jacobian of spatial jacobian remains constant, so was precomputed */
+  /** The Jacobian of spatial Jacobian remains constant, so was precomputed */
   jsj = this->m_JacobianOfSpatialJacobian;
   nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;  
 } // end GetJacobianOfSpatialJacobian()
@@ -678,7 +678,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   JacobianOfSpatialJacobianType & jsj,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
-  /** The jacobian of spatial jacobian remains constant, so was precomputed */
+  /** The Jacobian of spatial Jacobian remains constant, so was precomputed */
   sj = this->GetMatrix();
   jsj = this->m_JacobianOfSpatialJacobian;
   nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;  

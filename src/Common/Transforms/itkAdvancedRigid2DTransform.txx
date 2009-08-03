@@ -119,7 +119,7 @@ AdvancedRigid2DTransform<TScalarType>
     itkWarningMacro("Bad Rotation Matrix " << this->GetMatrix() ); 
     }
 
-  /** Update jacobian of spatial jacobian */
+  /** Update Jacobian of spatial Jacobian */
   this->PrecomputeJacobianOfSpatialJacobian();
 }
 
@@ -170,7 +170,7 @@ SetIdentity( void )
 {
   this->Superclass::SetIdentity();
   m_Angle = NumericTraits< TScalarType >::Zero;
-  // make sure to also precompute jacobian:  
+  // make sure to also precompute Jacobian:  
   this->PrecomputeJacobianOfSpatialJacobian();
 }
 
@@ -299,13 +299,13 @@ GetJacobian( const InputPointType & p ) const
 }
 
 
-// Precompute jacobian of Spatial jacobian
+// Precompute Jacobian of Spatial Jacobian
 template <class TScalarType>
 void
 AdvancedRigid2DTransform<TScalarType>
 ::PrecomputeJacobianOfSpatialJacobian( void )
 {
-  /** The jacobian of spatial jacobian remains constant, so is precomputed */
+  /** The Jacobian of spatial Jacobian remains constant, so is precomputed */
   const double ca = vcl_cos(m_Angle );
   const double sa = vcl_sin(m_Angle );
   JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;

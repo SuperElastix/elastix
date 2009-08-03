@@ -328,7 +328,7 @@ GetJacobian( const InputPointType & p ) const
 
 }
 
-// Precompute jacobian of Spatial jacobian
+// Precompute Jacobian of Spatial Jacobian
 template <class TScalarType>
 void
 AdvancedEuler3DTransform<TScalarType>
@@ -340,7 +340,7 @@ AdvancedEuler3DTransform<TScalarType>
     return;
   }
 
-  /** The jacobian of spatial jacobian is constant over inputspace, so is precomputed */
+  /** The Jacobian of spatial Jacobian is constant over inputspace, so is precomputed */
   JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;
   jsj.resize(ParametersDimension);
   const double cx = vcl_cos(m_AngleX);

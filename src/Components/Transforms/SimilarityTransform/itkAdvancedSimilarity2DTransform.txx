@@ -274,13 +274,13 @@ SetMatrix(const MatrixType & matrix )
 
 }
 
-// Precompute jacobian of Spatial jacobian
+// Precompute Jacobian of Spatial Jacobian
 template <class TScalarType>
 void
 AdvancedSimilarity2DTransform<TScalarType>
 ::PrecomputeJacobianOfSpatialJacobian( void )
 {
-  /** The jacobian of spatial jacobian remains constant, so is precomputed */
+  /** The Jacobian of spatial Jacobian remains constant, so is precomputed */
   const double angle = this->GetAngle();
   double ca = vcl_cos( angle );
   double sa = vcl_sin( angle );  

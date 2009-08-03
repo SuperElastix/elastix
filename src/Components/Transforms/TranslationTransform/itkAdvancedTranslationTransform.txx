@@ -43,7 +43,7 @@ AdvancedTranslationTransform():Superclass(SpaceDimension,ParametersDimension)
   /** SpatialJacobian is also constant */
   this->m_SpatialJacobian.SetIdentity();
 
-  /** Nonzero jacobian indices, for GetJacobian */
+  /** Nonzero Jacobian indices, for GetJacobian */
   this->m_NonZeroJacobianIndices.resize(ParametersDimension);
   for (unsigned int i = 0; i < ParametersDimension; ++i )
   {
@@ -242,7 +242,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>
   const InputPointType &,
   SpatialJacobianType & sj ) const
 {
-  /** Return pre-stored spatial jacobian */
+  /** Return pre-stored spatial Jacobian */
   sj = this->m_SpatialJacobian;
 } // end GetSpatialJacobian()
 

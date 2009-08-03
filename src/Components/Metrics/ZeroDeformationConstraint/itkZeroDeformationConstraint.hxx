@@ -269,7 +269,7 @@ namespace itk
                                 + 2.0 * this->m_CurrentPenaltyTermMultiplier * transformation[ d ] * magnitude2;
         }
 
-        /** Get the TransformJacobian dT/dMu (jacobian). */
+        /** Get the TransformJacobian dT/dMu (Jacobian). */
         const TransformJacobianType & jacobian = 
             this->EvaluateTransformJacobian( fixedPoint );
 

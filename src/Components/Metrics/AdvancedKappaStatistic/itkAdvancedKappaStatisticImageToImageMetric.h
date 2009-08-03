@@ -181,7 +181,7 @@ protected:
   typedef typename Superclass::BSplineParametersOffsetType        BSplineParametersOffsetType;
   typedef typename Superclass::ParameterIndexArrayType            ParameterIndexArrayType;
     
-  /** Computes the inner product of transform jacobian with moving image gradient.
+  /** Computes the inner product of transform Jacobian with moving image gradient.
    * The results are stored in the imageJacobian, which is supposed
    * to have the right size (same length as Jacobian's number of columns).
    */

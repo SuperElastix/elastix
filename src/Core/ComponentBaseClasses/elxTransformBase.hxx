@@ -1247,7 +1247,7 @@ TransformBase<TElastix>
     const InputPointType & point = (*iter).Value().m_ImageCoordinates;
     const JacobianType & jacobian = thisITK->GetJacobian( point );   
 
-    /** Square each element of the jacobian and add each row
+    /** Square each element of the Jacobian and add each row
      * to the newscales.
      */
     for( unsigned int d = 0; d < outdim; ++d )
