@@ -22,7 +22,6 @@
 #include <sstream>
 #include "vnl/vnl_math.h"
 #include "vnl/vnl_matlab_filewrite.h"
-
 #include "itkAdvancedImageToImageMetric.h"
 
 
@@ -840,8 +839,6 @@ AdaptiveStochasticGradientDescent<TElastix>
   double & maxJJ, double & maxJCJ )
 {
   typedef typename CovarianceMatrixType::iterator     CovarianceMatrixIteratorType;
-  typedef typename JacobianType::const_iterator       JacobianConstIteratorType;
-  typedef vnl_vector<double>                          JacobianColumnType;
 
   /** Get samples. */
   ImageSampleContainerPointer sampleContainer = 0;
@@ -883,12 +880,12 @@ AdaptiveStochasticGradientDescent<TElastix>
     itkExceptionMacro( << makeString.str().c_str() );
   }
   CovarianceMatrixType & cov = this->m_CovarianceMatrix;
-  cov.Fill(0.0);
+  cov.Fill( 0.0 );
 
   /** Loop over image and compute Jacobian. Possibly apply scaling.
    * Compute C = 1/n \sum_i J_i^T J_i
    */
-  std::vector<JacobianConstIteratorType> jacit(outdim);
+  std::vector<JacobianConstIteratorType> jacit( outdim );
   unsigned int samplenr = 0;
   CovarianceMatrixIteratorType covit;
 
@@ -912,14 +909,15 @@ AdaptiveStochasticGradientDescent<TElastix>
     /** Update covariance matrix. */
     covit = cov.begin();
     for ( unsigned int p = 0; p < P; ++p )
-    {        
+    {
       const JacobianColumnType jaccolp = jac.get_column( p );
-
+      
       /** Initialize iterators at first column of Jacobian. */
-      for ( unsigned int d = 0; d < outdim; ++d)
+      for ( unsigned int d = 0; d < outdim; ++d )
       {
         jacit[ d ] = jac.begin() + d * P;
       }
+
       for ( unsigned int q = 0; q < P; ++q )
       {          
         for ( unsigned int d = 0; d < outdim; ++d )
@@ -958,7 +956,7 @@ AdaptiveStochasticGradientDescent<TElastix>
    */
   maxJJ = 0.0;
   maxJCJ = 0.0;    
-  const double sqrt2 = vcl_sqrt(static_cast<double>(2.0));
+  const double sqrt2 = vcl_sqrt( static_cast<double>( 2.0 ) );
   JacobianType jacj;
   samplenr = 0;
   for ( iter = begin; iter != end; ++iter )
@@ -984,7 +982,7 @@ AdaptiveStochasticGradientDescent<TElastix>
     double JJ_j = vnl_math_sqr( jacj.frobenius_norm() );
 
     /** Compute 2nd part of JJ: 2\sqrt{2} || J_j J_j^T ||_F. */
-    JacobianType jacjjacj( outdim,outdim ); // J_j J_j^T
+    JacobianType jacjjacj( outdim, outdim ); // J_j J_j^T
     for ( unsigned int dx = 0; dx < outdim; ++dx )
     {
       for( unsigned int dy = 0; dy < outdim; ++dy )
@@ -1005,8 +1003,7 @@ AdaptiveStochasticGradientDescent<TElastix>
     double JCJ_j = 0.0;
 
     /** J_j C */
-    JacobianType jacjC( outdim, P );
-    jacjC = jacj * cov;
+    JacobianType jacjC = jacj * cov;
 
     /** J_j C J_j^T. */
     JacobianType jacjCjacj( outdim, outdim );
@@ -1078,8 +1075,24 @@ AdaptiveStochasticGradientDescent<TElastix>
 ::ComputeJacobianTermsBSpline( double & TrC, double & TrCC, 
   double & maxJJ, double & maxJCJ )
 {
-  typedef typename JacobianType::const_iterator       JacobianConstIteratorType;
-  typedef vnl_vector<double>                          JacobianColumnType;
+  /** Initialize. */
+  TrC = TrCC = maxJJ = maxJCJ = 0.0;
+
+  /** This function computes four terms needed for the automatic parameter
+   * estimation. The equation number refers to the IJCV paper.
+   * Term 1: TrC, which is the trace of the covariance matrix, needed in (34):
+   *    C = 1/n \sum_{i=1}^n J_i^T J_i    (25)
+   *    with n the number of samples, J_i the Jacobian of the i-th sample.
+   * Term 2: TrCC, which is the Frobenius norm of C, needed in (60):
+   *    ||C||_F^2 = trace( C^T C )
+   * To compute equations (47) and (54) we need the four sub-terms:
+   *    A: trace( J_j C J_j^T )  in (47)
+   *    B: || J_j C J_j^T ||_F   in (47)
+   *    C: || J_j ||_F^2         in (54)
+   *    D: || J_j J_j^T ||_F     in (54)
+   * Term 3: maxJJ, see (47)
+   * Term 4: maxJCJ, see (54)
+   */
 
   this->CheckForBSplineTransform();
 
@@ -1133,6 +1146,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   unsigned int samplenr = 0;
   NonZeroJacobianIndicesType & jacind = this->m_NonZeroJacobianIndices;
   const unsigned int sizejacind = jacind.size();
+  //std::vector<JacobianType> vecJac;
 
   /** Prepare for progress printing. */
   ProgressCommandPointer progressObserver = ProgressCommandType::New();
@@ -1141,36 +1155,47 @@ AdaptiveStochasticGradientDescent<TElastix>
   elxout << "Computing JacobianTerms for " << this->elxGetClassName() 
     << " configuration... " << std::endl;
 
+  /**
+   *    TERM 1
+   */
   for ( iter = begin; iter != end; ++iter )
   {
     /** Print progress 0-50% */
     progressObserver->UpdateAndPrintProgress( samplenr );
     ++samplenr;
 
-    /** Read fixed coordinates and get Jacobian.  */
+    /** Read fixed coordinates and get Jacobian.
+     * Also store the Jacobians for future use. Storage needs depend on the
+     * B-spline order O, image dimension d, and the number of samples n:
+     *    d * (O + 1)^d * n * sizeof( double )
+     * which is 30 MB for O = 3, d = 3, n = 20000. That's ok.
+     */
+    /** Read fixed coordinates and get Jacobian. */
     const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
     const JacobianType & jac = this->EvaluateBSplineTransformJacobian( point );     
+    //vecJac.push_back( jac );
 
     /** Update covariance matrix. */
     for ( unsigned int pi = 0; pi < sizejacind; ++pi )
     {
       const unsigned int p = jacind[ pi ];
 
-      const JacobianColumnType jaccolp = jac.get_column(pi);
+      const JacobianColumnType jaccolp = jac.get_column( pi );
 
       /** Initialize iterators at first column of (sparse) Jacobian. */
       for ( unsigned int d = 0; d < outdim; ++d )
       {
         jacit[ d ] = jac.begin() + d * sizejacind;
       }
+
       for ( unsigned int qi = 0; qi < sizejacind; ++qi )
-      { 
+      {
         const unsigned int q = jacind[ qi ];
         for ( unsigned int d = 0; d < outdim; ++d )
         {
           cov[ p ][ q ] += jaccolp[ d ] * (*jacit[ d ]) / n;
           ++jacit[ d ];
-        }        
+        }
       } // qi
     } // pi
 
@@ -1192,27 +1217,31 @@ AdaptiveStochasticGradientDescent<TElastix>
     TrC += cov[ p ][ p ];
   }
 
-  /** Compute TrCC = ||C||_F^2. */
+  /**
+   *    TERM 2
+   *
+   * Compute TrCC = ||C||_F^2.
+   */
   TrCC = vnl_math_sqr( cov.frobenius_norm() );
 
-  /** Compute maxJJ and maxJCJ
+  /**
+   *    TERM 3 and 4
+   *
+   * Compute maxJJ and maxJCJ
    * \li maxJJ = max_j [ ||J_j||_F^2 + 2\sqrt{2} || J_j J_j^T ||_F ]
    * \li maxJCJ = max_j [ Tr( J_j C J_j^T ) + 2\sqrt{2} || J_j C J_j^T ||_F ]
    */
   maxJJ = 0.0;
   maxJCJ = 0.0;    
-  const double sqrt2 = vcl_sqrt(static_cast<double>(2.0));
+  const double sqrt2 = vcl_sqrt( static_cast<double>( 2.0 ) );
   JacobianType jacj;
   samplenr = 0;
   for ( iter = begin; iter != end; ++iter )
   {
-    /** Show progress 50-100% */
-    progressObserver->UpdateAndPrintProgress( samplenr + nrofsamples );
-    ++samplenr;
-
     /** Read fixed coordinates and get Jacobian. */
     const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
-    JacobianType jacj = this->EvaluateBSplineTransformJacobian( point );    
+    JacobianType jacj = this->EvaluateBSplineTransformJacobian( point );
+    //jacj = vecjac[ samplenr ];
 
     /** Apply scales, if necessary. */
     if ( this->GetUseScales() )
@@ -1229,9 +1258,9 @@ AdaptiveStochasticGradientDescent<TElastix>
 
     /** Compute 2nd part of JJ: 2\sqrt{2} || J_j J_j^T ||_F. */
     JacobianType jacjjacj( outdim, outdim ); // J_j J_j^T
-    for( unsigned int dx = 0; dx < outdim; ++dx )
+    for ( unsigned int dx = 0; dx < outdim; ++dx )
     {
-      for( unsigned int dy = 0; dy < outdim; ++dy )
+      for ( unsigned int dy = 0; dy < outdim; ++dy )
       {
         jacjjacj( dx, dy ) = 0.0;
         for ( unsigned int pi = 0; pi < sizejacind; ++pi )
@@ -1242,16 +1271,16 @@ AdaptiveStochasticGradientDescent<TElastix>
     } // dx
     JJ_j += 2.0 * sqrt2 * jacjjacj.frobenius_norm();
 
-    /** Max_j [JJ] */
+    /** Max_j [JJ_j]. */
     maxJJ = vnl_math_max( maxJJ, JJ_j );
 
-    /** Compute JCJ */
+    /** Compute JCJ_j. */
     double JCJ_j = 0.0;
 
     /** J_j C */
     JacobianType jacjC( outdim, sizejacind );
-    jacjC.Fill(0.0);
-    for( unsigned int dx = 0; dx < outdim; ++dx )
+    jacjC.Fill( 0.0 );
+    for ( unsigned int dx = 0; dx < outdim; ++dx )
     {
       for ( unsigned int pi = 0; pi < sizejacind; ++pi )
       {
@@ -1265,30 +1294,34 @@ AdaptiveStochasticGradientDescent<TElastix>
     } // dx
 
     /** J_j C J_j^T */
-    JacobianType jacjCjacj(outdim, outdim);
-    for( unsigned int dx = 0; dx < outdim; ++dx )
+    JacobianType jacjCjacj( outdim, outdim );
+    for ( unsigned int dx = 0; dx < outdim; ++dx )
     {
       ParametersType jacjCdx( jacjC[ dx ], sizejacind, false );
-      for( unsigned int dy = 0; dy < outdim; ++dy )
+      for ( unsigned int dy = 0; dy < outdim; ++dy )
       {
         ParametersType jacjdy( jacj[ dy ], sizejacind, false );
         jacjCjacj( dx, dy ) = dot_product( jacjCdx, jacjdy );
       } // dy
     } // dx
 
-    /** Compute 1st part of JCJ: Tr( J_j C J_j^T ) */
+    /** Compute 1st part of JCJ: Tr( J_j C J_j^T ). */
     for ( unsigned int d = 0; d < outdim; ++d )
     {
-      JCJ_j += jacjCjacj[ d ][ d] ;
+      JCJ_j += jacjCjacj[ d ][ d ] ;
     }
 
-    /** Compute 2nd part of JCJ: 2\sqrt{2} || J_j C J_j^T ||_F */
+    /** Compute 2nd part of JCJ_j: 2 \sqrt{2} || J_j C J_j^T ||_F. */
     JCJ_j += 2.0 * sqrt2 * jacjCjacj.frobenius_norm();
 
-    /** Max_j [JCJ]*/
+    /** Max_j [JCJ_j]. */
     maxJCJ = vnl_math_max( maxJCJ, JCJ_j );
 
-  } // next sample from sample container  
+    /** Show progress 50-100%. */
+    progressObserver->UpdateAndPrintProgress( samplenr + nrofsamples );
+    ++samplenr;
+
+  } // end loop over sample container  
 
   /** Finalize progress information */
   progressObserver->PrintProgress( 1.0 );
@@ -1671,12 +1704,13 @@ AdaptiveStochasticGradientDescent<TElastix>
   {
     this->GetScaledValueAndDerivative( parameters, dummyvalue, derivative );
   }
-  catch( ExceptionObject& err )
+  catch ( ExceptionObject & err )
   {
     this->m_StopCondition = MetricError;
     this->StopOptimization();
     throw err;
   }
+
 } // end GetScaledDerivativeWithExceptionHandling()
 
 
@@ -1695,6 +1729,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   {
     parameters[ p ] += sigma * this->m_RandomGenerator->GetNormalVariate( 0.0, 1.0 );
   }
+
 } // end AddRandomPerturbation()
 
 

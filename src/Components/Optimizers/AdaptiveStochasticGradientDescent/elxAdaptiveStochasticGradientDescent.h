@@ -36,7 +36,7 @@ namespace elastix
   *
   * This class is a wrap around the AdaptiveStochasticGradientDescentOptimizer class.
   * It takes care of setting parameters and printing progress information.
-  * For more information about the optimisation method, please read the documentation
+  * For more information about the optimization method, please read the documentation
   * of the AdaptiveStochasticGradientDescentOptimizer class.
   *
   * This optimizer is very suitable to be used in combination with the Random image sampler,
@@ -281,11 +281,15 @@ protected:
   typedef typename ImageSampleContainerType::Pointer  ImageSampleContainerPointer;
 
   /** Other protected typedefs */
+  typedef double                                      CovariancePrecisionType;
+  typedef Array2D<CovariancePrecisionType>            CovarianceMatrixType;
+  typedef vnl_symmetric_eigensystem<
+    CovariancePrecisionType>                          EigenSystemType;
+  typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
   typedef ProgressCommand                             ProgressCommandType;
   typedef typename ProgressCommand::Pointer           ProgressCommandPointer;
-  typedef Array2D<double>                             CovarianceMatrixType; 
-  typedef vnl_symmetric_eigensystem<double>           EigenSystemType;
-  typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
+  typedef typename JacobianType::const_iterator       JacobianConstIteratorType;
+  typedef vnl_vector<CovariancePrecisionType>         JacobianColumnType;
 
   /** Typedefs for support of sparse Jacobians and BSplineTransforms. */
   typedef JacobianType                                TransformJacobianType;
