@@ -61,32 +61,28 @@ FixedImagePyramidBase<TElastix>
   /** Writing result image. */
   if ( writePyramidImage )
   {
-    const unsigned int numPyramids = this->GetElastix()->GetNumberOfFixedImagePyramids();
-    for ( unsigned int i = 0; i < numPyramids; ++i )
-    {
-      /** Create a name for the final result. */
-      std::ostringstream makeFileName( "" );
-      makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" );
-      if ( numPyramids == 1 ){ makeFileName << "pyramid_fixed."; }
-      else{ makeFileName << "pyramid_fixed" << i << "."; }
-      makeFileName
-        << this->m_Configuration->GetElastixLevel()
-        << ".R" << level
-        << "." << resultImageFormat;
+    /** Create a name for the final result. */
+    std::ostringstream makeFileName( "" );
+    makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" );
+    makeFileName
+      << this->GetComponentLabel() << "."
+      << this->m_Configuration->GetElastixLevel()
+      << ".R" << level
+      << "." << resultImageFormat;
 
-      /** Save the fixed pyramid image. */
-      elxout << "Writing fixed pyramid image " << i
-        << " from resolution " << level << "..." << std::endl;
-      try
-      {
-        this->WritePyramidImage( makeFileName.str(), i, level );
-      }
-      catch( itk::ExceptionObject & excp )
-      {
-        xl::xout["error"] << "Exception caught: " << std::endl;
-        xl::xout["error"] << excp << "Resuming elastix." << std::endl;
-      }
-    } // end for
+    /** Save the fixed pyramid image. */
+    elxout << "Writing fixed pyramid image "
+      << this->GetComponentLabel()
+      << " from resolution " << level << "..." << std::endl;
+    try
+    {
+      this->WritePyramidImage( makeFileName.str(), level );
+    }
+    catch( itk::ExceptionObject & excp )
+    {
+      xl::xout["error"] << "Exception caught: " << std::endl;
+      xl::xout["error"] << excp << "Resuming elastix." << std::endl;
+    }
   } // end if
 
 } // end BeforeEachResolutionBase()
@@ -166,8 +162,7 @@ template<class TElastix>
 void
 FixedImagePyramidBase<TElastix>
 ::WritePyramidImage( const std::string & filename,
-  const unsigned int & whichPyramid,
-  const unsigned int & level ) const
+  const unsigned int & level )// const
 {
   /** Read output pixeltype from parameter the file. Replace possible " " with "_". */
   std::string resultImagePixelType = "short";
@@ -187,9 +182,7 @@ FixedImagePyramidBase<TElastix>
   typename WriterType::Pointer writer = WriterType::New();
 
   /** Setup the pipeline. */
-  writer->SetInput( this->GetElastix()
-    ->GetElxFixedImagePyramidBase( whichPyramid )
-    ->GetAsITKBaseType()->GetOutput( level ) );
+  writer->SetInput( this->GetAsITKBaseType()->GetOutput( level ) );
   writer->SetFileName( filename.c_str() );
   writer->SetOutputComponentType( resultImagePixelType.c_str() );
   writer->SetUseCompression( doCompression );

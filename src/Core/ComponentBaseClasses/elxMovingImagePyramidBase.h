@@ -112,8 +112,7 @@ public:
 
   /** Method to write the pyramid image. */
   virtual void WritePyramidImage( const std::string & filename,
-    const unsigned int & whichPyramid,
-    const unsigned int & level ) const;
+    const unsigned int & level ); // const;
 
 protected:
 

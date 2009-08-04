@@ -91,7 +91,7 @@ public:
   }
 
   /** Cast to ITKBaseType, to use in const functions. */
-  virtual const ITKBaseType * GetAsITKBaseType(void) const
+  virtual const ITKBaseType * GetAsITKBaseType( void ) const
   {
     return dynamic_cast<const ITKBaseType *>(this);
   }
@@ -111,8 +111,7 @@ public:
 
   /** Method to write the pyramid image. */
   virtual void WritePyramidImage( const std::string & filename,
-    const unsigned int & whichPyramid,
-    const unsigned int & level ) const;
+    const unsigned int & level );// const;
 
 protected:
 
