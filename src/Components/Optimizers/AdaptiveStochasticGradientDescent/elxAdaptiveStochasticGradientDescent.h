@@ -24,6 +24,7 @@
 #include "itkAdvancedTransform.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "vnl/algo/vnl_symmetric_eigensystem.h"
+#include "vnl/vnl_sparse_matrix.h"
 
 namespace elastix
 {
@@ -283,6 +284,7 @@ protected:
   /** Other protected typedefs */
   typedef double                                      CovariancePrecisionType;
   typedef Array2D<CovariancePrecisionType>            CovarianceMatrixType;
+  typedef vnl_sparse_matrix<CovariancePrecisionType>  SparseCovarianceMatrixType;
   typedef vnl_symmetric_eigensystem<
     CovariancePrecisionType>                          EigenSystemType;
   typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
@@ -435,6 +437,13 @@ protected:
    * of the B-splines, resulting in sparse Jacobians.
    */
   virtual void ComputeJacobianTermsBSpline( double & TrC, double & TrCC, 
+    double & maxJJ, double & maxJCJ );
+
+  /** For B-splines, a speed up can be realized by using the compact support
+   * of the B-splines, resulting in sparse Jacobians.
+   * Version using sparse covariance matrix
+   */
+  virtual void ComputeJacobianTermsBSplineSparse( double & TrC, double & TrCC, 
     double & maxJJ, double & maxJCJ );
 
   /** Helper function, which calls GetScaledValueAndDerivative and does
