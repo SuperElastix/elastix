@@ -1569,20 +1569,15 @@ AdaptiveStochasticGradientDescent<TElastix>
     /** Compute 2nd part of JJ: 2\sqrt{2} || J_j J_j^T ||_F. */
     for ( unsigned int dx = 0; dx < outdim; ++dx )
     {
-      //for ( unsigned int dy = dx; dy < outdim; ++dy )
-      for ( unsigned int dy = 0; dy < outdim; ++dy )
-      {
-//         const JacobianColumnType & jacrowx = jacj.get_row( dx );
-//         const JacobianColumnType & jacrowy = jacj.get_row( dy );
-//         const CovariancePrecisionType tmp = dot_product( jacrowx, jacrowy );
-//         jacjjacj[ dx ][ dy ] = tmp;
-//         if ( dx != dy ) { jacjjacj[ dy ][ dx ] = tmp; }
+      const JacobianColumnType jacrowx = jacj.get_row( dx );
 
-        jacjjacj( dx, dy ) = 0.0;
-        for ( unsigned int pi = 0; pi < sizejacind; ++pi )
-        {
-          jacjjacj[ dx ][ dy ] += jacj[ dx ][ pi ] * jacj[ dy ][ pi ];
-        } // pi
+      for ( unsigned int dy = dx; dy < outdim; ++dy )
+      {
+        const JacobianColumnType jacrowy = jacj.get_row( dy );
+        const CovariancePrecisionType tmp = dot_product( jacrowx, jacrowy );
+        jacjjacj[ dx ][ dy ] = tmp;
+        if ( dx != dy ) { jacjjacj[ dy ][ dx ] = tmp; }
+
       } // dy
     } // dx
     JJ_j += 2.0 * sqrt2 * jacjjacj.frobenius_norm();
