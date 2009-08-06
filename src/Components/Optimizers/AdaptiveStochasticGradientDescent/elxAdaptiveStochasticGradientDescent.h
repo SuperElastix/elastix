@@ -143,7 +143,7 @@ namespace elastix
   *   which is used to estimate the covariance matrix. 
   *   The parameter can be specified for each resolution, or for all resolutions at once.\n
   *   example: <tt>(NumberOfJacobianMeasurements 5000 10000 20000)</tt>\n
-  *   Default value: M = max( 1000, nrofparams*3 ), with nrofparams the 
+  *   Default value: M = max( 1000, nrofparams ), with nrofparams the 
   *   number of transform parameters. This is a rather crude rule of thumb,
   *   which seems to work in practice. In principle, the more the better, but the slower.
   *   The parameter has only influence when AutomaticParameterEstimation is used.

@@ -197,11 +197,11 @@ void AdaptiveStochasticGradientDescent<TElastix>
 
     /** Set the number of Jacobian measurements M. 
      * By default, if nothing specified by the user, M is determined as:
-     * M = max( 1000, nrofparams*3 );
+     * M = max( 1000, nrofparams );
      * This is a rather crude rule of thumb, which seems to work in practice.
      */
     this->m_NumberOfJacobianMeasurements = vnl_math_max( 
-      static_cast<unsigned int>(1000), static_cast<unsigned int>(P*3) );
+      static_cast<unsigned int>(1000), static_cast<unsigned int>(P) );
     this->GetConfiguration()->ReadParameter(
       this->m_NumberOfJacobianMeasurements,
       "NumberOfJacobianMeasurements",
@@ -1525,7 +1525,7 @@ AdaptiveStochasticGradientDescent<TElastix>
     }
   }
 
-  /** Compute TrC = trace(C) and diagC */
+  /** Compute TrC = trace(C), and diagC */
   DiagCovarianceMatrixType diagC( P, 0.0 );
   for ( unsigned int p = 0; p < P; ++p )
   {
