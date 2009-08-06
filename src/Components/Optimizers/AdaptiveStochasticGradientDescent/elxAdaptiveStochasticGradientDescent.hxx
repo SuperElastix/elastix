@@ -1437,8 +1437,10 @@ AdaptiveStochasticGradientDescent<TElastix>
   std::vector<JacobianConstIteratorType> jacit( outdim );
   unsigned int samplenr = 0;
   NonZeroJacobianIndicesType & jacind = this->m_NonZeroJacobianIndices;
+  NonZeroJacobianIndicesType prevjacind;
   const unsigned int sizejacind = jacind.size();
-  CovarianceMatrixType jactjac(sizejacind, sizejacind);  
+  CovarianceMatrixType jactjac(sizejacind, sizejacind);
+  jactjac.Fill(0.0);
 
   /** Prepare for progress printing. */
   ProgressCommandPointer progressObserver = ProgressCommandType::New();
@@ -1460,28 +1462,43 @@ AdaptiveStochasticGradientDescent<TElastix>
     /** Read fixed coordinates and get Jacobian J_j. */
     const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
     const JacobianType & jac = this->EvaluateBSplineTransformJacobian( point );
-
-    /** Compute J_j^T J_j */
-    vnl_fastops::AtA(jactjac, jac);
-
-    /** Update covariance matrix. */
-    for ( unsigned int pi = 0; pi < sizejacind; ++pi )
+    
+    if ( jacind == prevjacind )
     {
-      const unsigned int p = jacind[ pi ];
-      for ( unsigned int qi = 0; qi < sizejacind; ++qi )
+      /** Update sum of J_j^T J_j */
+      vnl_fastops::inc_X_by_AtA(jactjac, jac);      
+    }
+    else
+    {
+      /** The following should only be done after the first sample */
+      if ( iter != begin )
       {
-        const unsigned int q = jacind[ qi ];
-        /** Exploit symmetry: only fill upper triangular part */
-        if (q >= p)
+        /** Update covariance matrix. */
+        for ( unsigned int pi = 0; pi < sizejacind; ++pi )
         {
-          const double tempval = jactjac(pi,qi) / n;        
-          if ( vcl_abs( tempval ) > 1e-14 )
-          {          
-            cov( p, q ) += tempval;
-          }
-        }
-      } // qi
-    } // pi
+          const unsigned int p = prevjacind[ pi ];
+          for ( unsigned int qi = 0; qi < sizejacind; ++qi )
+          {
+            const unsigned int q = prevjacind[ qi ];
+            /** Exploit symmetry: only fill upper triangular part */
+            if (q >= p)
+            {
+              const double tempval = jactjac(pi,qi) / n;        
+              if ( vcl_abs( tempval ) > 1e-14 )
+              {          
+                cov( p, q ) += tempval;
+              }
+            }
+          } // qi
+        } // pi
+      } // end if
+
+      /** Initialize jactjac by J_j^T J_j */
+      vnl_fastops::AtA(jactjac, jac);
+
+      /** Remember nonzerojacobian indices */
+      prevjacind = jacind;
+    } // end else
 
   } // end iter loop: end computation of covariance matrix
 
