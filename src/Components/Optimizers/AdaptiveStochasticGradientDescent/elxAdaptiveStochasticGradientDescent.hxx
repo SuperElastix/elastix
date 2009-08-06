@@ -1462,11 +1462,11 @@ AdaptiveStochasticGradientDescent<TElastix>
     /** Read fixed coordinates and get Jacobian J_j. */
     const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
     const JacobianType & jac = this->EvaluateBSplineTransformJacobian( point );
-    
+        
     if ( jacind == prevjacind )
     {
       /** Update sum of J_j^T J_j */
-      vnl_fastops::inc_X_by_AtA(jactjac, jac);      
+      vnl_fastops::inc_X_by_AtA(jactjac, jac);       
     }
     else
     {
@@ -1501,6 +1501,24 @@ AdaptiveStochasticGradientDescent<TElastix>
     } // end else
 
   } // end iter loop: end computation of covariance matrix
+  /** Update covariance matrix once again to include last jactjac updates 
+   * \todo: a bit ugly that this loop is copied from above */
+  for ( unsigned int pi = 0; pi < sizejacind; ++pi )
+  {
+    const unsigned int p = prevjacind[ pi ];
+    for ( unsigned int qi = 0; qi < sizejacind; ++qi )
+    {
+      const unsigned int q = prevjacind[ qi ];
+      if (q >= p)
+      {
+        const double tempval = jactjac(pi,qi) / n;        
+        if ( vcl_abs( tempval ) > 1e-14 )
+        {          
+          cov( p, q ) += tempval;
+        }
+      }
+    } // qi
+  } // pi  
 
 //   tmpTimer1->StopTimer();
 //   elxout << "Constructing the covariance matrix took "
