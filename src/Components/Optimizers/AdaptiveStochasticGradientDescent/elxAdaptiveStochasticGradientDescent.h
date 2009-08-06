@@ -282,16 +282,16 @@ protected:
   typedef typename ImageSampleContainerType::Pointer  ImageSampleContainerPointer;
 
   /** Other protected typedefs */
-  typedef double                                      CovariancePrecisionType;
-  typedef Array2D<CovariancePrecisionType>            CovarianceMatrixType;
-  typedef vnl_sparse_matrix<CovariancePrecisionType>  SparseCovarianceMatrixType;
+  typedef double                                      CovarianceValueType;
+  typedef Array2D<CovarianceValueType>            CovarianceMatrixType;
+  typedef vnl_sparse_matrix<CovarianceValueType>  SparseCovarianceMatrixType;
   typedef vnl_symmetric_eigensystem<
-    CovariancePrecisionType>                          EigenSystemType;
+    CovarianceValueType>                          EigenSystemType;
   typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
   typedef ProgressCommand                             ProgressCommandType;
   typedef typename ProgressCommand::Pointer           ProgressCommandPointer;
   typedef typename JacobianType::const_iterator       JacobianConstIteratorType;
-  typedef vnl_vector<CovariancePrecisionType>         JacobianColumnType;
+  typedef vnl_vector<CovarianceValueType>         JacobianColumnType;
 
   /** Typedefs for support of sparse Jacobians and BSplineTransforms. */
   typedef JacobianType                                TransformJacobianType;

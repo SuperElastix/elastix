@@ -21,6 +21,8 @@
 #include <vector>
 #include <sstream>
 #include "vnl/vnl_math.h"
+#include "vnl/vnl_fastops.h"
+#include "vnl/vnl_diag_matrix.h"
 #include "vnl/vnl_matlab_filewrite.h"
 #include "itkAdvancedImageToImageMetric.h"
 #include "elxTimer.h"
@@ -1393,7 +1395,9 @@ AdaptiveStochasticGradientDescent<TElastix>
    */
 
   typedef typename SparseCovarianceMatrixType::row  SparseRowType;
-
+  typedef Array<unsigned int>   NonzeroJacobianIndicesExpandedType;
+  typedef vnl_diag_matrix<CovarianceValueType>  DiagCovarianceMatrixType;
+  
   /** Initialize. */
   TrC = TrCC = maxJJ = maxJCJ = 0.0;
 
@@ -1415,9 +1419,9 @@ AdaptiveStochasticGradientDescent<TElastix>
   transform->SetParameters( this->GetCurrentPosition() );
   const unsigned int outdim = transform->GetOutputSpaceDimension();
 
-  /** Get scales vector. */
+  /** Get scales vector and save also as diagonal matrix */
   const ScalesType & scales = this->m_ScaledCostFunction->GetScales();
-
+  
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator iter;
   typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
@@ -1434,6 +1438,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   unsigned int samplenr = 0;
   NonZeroJacobianIndicesType & jacind = this->m_NonZeroJacobianIndices;
   const unsigned int sizejacind = jacind.size();
+  CovarianceMatrixType jactjac(sizejacind, sizejacind);  
 
   /** Prepare for progress printing. */
   ProgressCommandPointer progressObserver = ProgressCommandType::New();
@@ -1452,39 +1457,33 @@ AdaptiveStochasticGradientDescent<TElastix>
     progressObserver->UpdateAndPrintProgress( samplenr );
     ++samplenr;
 
-    /** Read fixed coordinates and get Jacobian. */
+    /** Read fixed coordinates and get Jacobian J_j. */
     const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
     const JacobianType & jac = this->EvaluateBSplineTransformJacobian( point );
+
+    /** Compute J_j^T J_j */
+    vnl_fastops::AtA(jactjac, jac);
 
     /** Update covariance matrix. */
     for ( unsigned int pi = 0; pi < sizejacind; ++pi )
     {
       const unsigned int p = jacind[ pi ];
-      const JacobianColumnType jaccolp = jac.get_column( pi );
-
-      /** Initialize iterators at first column of (sparse) Jacobian. */
-      for ( unsigned int d = 0; d < outdim; ++d )
-      {
-        jacit[ d ] = jac.begin() + d * sizejacind;
-      }
-
       for ( unsigned int qi = 0; qi < sizejacind; ++qi )
       {
-        double tempsum = 0.0;
-        for ( unsigned int d = 0; d < outdim; ++d )
+        const unsigned int q = jacind[ qi ];
+        /** Exploit symmetry: only fill upper triangular part */
+        if (q >= p)
         {
-          tempsum += jaccolp[ d ] * (*jacit[ d ]) / n;
-          ++jacit[ d ];
-        }
-        if ( vcl_abs( tempsum ) > 1e-14 )
-        {
-          const unsigned int q = jacind[ qi ];
-          cov( p, q ) += tempsum;
+          const double tempval = jactjac(pi,qi) / n;        
+          if ( vcl_abs( tempval ) > 1e-14 )
+          {          
+            cov( p, q ) += tempval;
+          }
         }
       } // qi
     } // pi
 
-  } // end computation of covariance matrix
+  } // end iter loop: end computation of covariance matrix
 
 //   tmpTimer1->StopTimer();
 //   elxout << "Constructing the covariance matrix took "
@@ -1509,13 +1508,16 @@ AdaptiveStochasticGradientDescent<TElastix>
     }
   }
 
-  /** Compute TrC = trace(C). */
+  /** Compute TrC = trace(C) and diagC */
+  DiagCovarianceMatrixType diagC( P, 0.0 );
   for ( unsigned int p = 0; p < P; ++p )
   {
     if ( !cov.empty_row( p ) )
     {
-      //avoid creation of element if the row is empty
-      TrC += cov( p, p );
+      //avoid creation of element if the row is empty      
+      CovarianceValueType & covpp = cov(p,p);
+      TrC += covpp;
+      diagC[p] = covpp;
     }
   }
 
@@ -1531,7 +1533,10 @@ AdaptiveStochasticGradientDescent<TElastix>
     TrCC += vnl_math_sqr( cov.value() );
     notfinished2 = cov.next();
   }
-
+  /** Symmetry: multiply by 2 and subtract sumsqr(diagC). */
+  TrCC *= 2.0;
+  TrCC -= diagC.diagonal().squared_magnitude();
+  
   /**
    *    TERM 3 and 4
    *
@@ -1542,20 +1547,26 @@ AdaptiveStochasticGradientDescent<TElastix>
   maxJJ = 0.0;
   maxJCJ = 0.0;
   const double sqrt2 = vcl_sqrt( static_cast<double>( 2.0 ) );
-  JacobianType jacj;
-  JacobianType jacjjacj( outdim, outdim );
-  JacobianType jacjC;
-  JacobianType jacjCjacj( outdim, outdim );
+  JacobianType jacj(outdim, sizejacind);
+  JacobianType jacjjacj(outdim, outdim);
+  JacobianType jacjC(outdim, sizejacind);
+  DiagCovarianceMatrixType diagCsparse( sizejacind );
+  JacobianType jacjdiagC(outdim, sizejacind);
+  JacobianType jacjdiagCjacj(outdim, outdim);
+  JacobianType jacjCjacj(outdim, outdim);
+  NonzeroJacobianIndicesExpandedType jacindExpanded(P);
+  
   samplenr = 0;
   for ( iter = begin; iter != end; ++iter )
   {
-    /** Read fixed coordinates and get Jacobian. */
+    /** Read fixed coordinates and get Jacobian (make copy now, because
+     * scales will be incorporated). */
     const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
     jacj = this->EvaluateBSplineTransformJacobian( point );
 
     /** Apply scales, if necessary. */
     if ( this->GetUseScales() )
-    {
+    {      
       for ( unsigned int pi = 0; pi < sizejacind; ++pi )
       {
         const unsigned int p = jacind[ pi ];
@@ -1567,19 +1578,7 @@ AdaptiveStochasticGradientDescent<TElastix>
     double JJ_j = vnl_math_sqr( jacj.frobenius_norm() );
 
     /** Compute 2nd part of JJ: 2\sqrt{2} || J_j J_j^T ||_F. */
-    for ( unsigned int dx = 0; dx < outdim; ++dx )
-    {
-      const JacobianColumnType jacrowx = jacj.get_row( dx );
-
-      for ( unsigned int dy = dx; dy < outdim; ++dy )
-      {
-        const JacobianColumnType jacrowy = jacj.get_row( dy );
-        const CovariancePrecisionType tmp = dot_product( jacrowx, jacrowy );
-        jacjjacj[ dx ][ dy ] = tmp;
-        if ( dx != dy ) { jacjjacj[ dy ][ dx ] = tmp; }
-
-      } // dy
-    } // dx
+    vnl_fastops::ABt( jacjjacj, jacj, jacj);    
     JJ_j += 2.0 * sqrt2 * jacjjacj.frobenius_norm();
 
     /** Max_j [JJ_j]. */
@@ -1590,51 +1589,61 @@ AdaptiveStochasticGradientDescent<TElastix>
 
     /** J_j C = jacjC. */
     jacjC.SetSize( outdim, sizejacind );
-    jacjC.Fill( 0.0 );    
+    jacjC.Fill( 0.0 );
+
+    /** Store the nonzero jacobian indices in a different format 
+     * and create the sparse diagC. */
+    jacindExpanded.Fill(sizejacind);
     for ( unsigned int pi = 0; pi < sizejacind; ++pi )
     {
-      const unsigned int p = jacind[ pi ];
-      // use symmetry: cov(q,p)=cov(p,q)-> loop over column q = loop over row p of cov
-      //SparseRowType & covrowp = cov.get_row( p );
-      if ( !cov.empty_row( p ) )
-      //if ( !covrowp.empty_row( p ) )
+      const unsigned int p = jacind[pi];
+      jacindExpanded[ p ] = pi;
+      diagCsparse[ pi ] = diagC[ p ];
+    }   
+    
+    /** We below calculate jacjC = J_j cov^T, but later we will correct
+     * for this using:
+     * J C J' = J (cov + cov' - diag(cov')) J'.
+     * (NB: cov now still contains only the upper triangular part of C)
+     */
+    for ( unsigned int pi = 0; pi < sizejacind; ++pi )
+    {
+      const unsigned int p = jacind[ pi ];      
+      if ( !cov.empty_row( p ) )      
       {
         SparseRowType & covrowp = cov.get_row( p );
         typename SparseRowType::iterator covrowpit;
 
-        for ( unsigned int qi = 0; qi < sizejacind; ++qi )
+        /** Loop over row p of the sparse cov matrix */
+        for ( covrowpit = covrowp.begin(); covrowpit != covrowp.end(); ++covrowpit )
         {
-          const unsigned int q = jacind[ qi ];
+          const unsigned int q = (*covrowpit).first;
+          const unsigned int qi = jacindExpanded[ q ];
 
-          /** Find in the sparse covrow the element with .first == q. */
-          for ( covrowpit = covrowp.begin(); ( covrowpit != covrowp.end() )
-            && ( (*covrowpit).first < q ); ++covrowpit );
-
-          if ( !( ( covrowpit == covrowp.end() ) || ( (*covrowpit).first != q ) ) )
+          if ( qi < sizejacind )
           {
             /** If found, update the jacjC matrix. */
-            const CovariancePrecisionType covElement = (*covrowpit).second;
+            const CovarianceValueType covElement = (*covrowpit).second;
             for ( unsigned int dx = 0; dx < outdim; ++dx )
             {
               jacjC[ dx ][ pi ] += jacj[ dx ][ qi ] * covElement;
             } //dx
-          }
-        } // qi
+          } // if qi < sizejacind
+        } // for covrow
+
       } // if not empty row
     } // pi
 
-    /** J_j C J_j^T  = jacjCjacj. */
-    for ( unsigned int dx = 0; dx < outdim; ++dx )
-    {
-      ParametersType jacjCdx( jacjC[ dx ], sizejacind, false );
-      for ( unsigned int dy = dx; dy < outdim; ++dy )
-      {
-        ParametersType jacjdy( jacj[ dy ], sizejacind, false );
-        const double val = dot_product( jacjCdx, jacjdy );
-        jacjCjacj( dx, dy ) = val;
-        jacjCjacj( dy, dx ) = val;
-      } // dy
-    } // dx
+    /** J_j C J_j^T  = jacjCjacj. 
+     * But note that we actually compute J_j cov' J_j^T
+     */
+    vnl_fastops::ABt( jacjCjacj, jacjC, jacj );    
+
+    /** jacjCjacj = jacjCjacj+ jacjCjacj' - jacjdiagCjacj */
+    jacjdiagC = jacj * diagCsparse;
+    vnl_fastops::ABt( jacjdiagCjacj, jacjdiagC, jacj);
+    jacjCjacj += jacjCjacj.transpose();
+    jacjCjacj -= jacjdiagCjacj;
 
     /** Compute 1st part of JCJ: Tr( J_j C J_j^T ). */
     for ( unsigned int d = 0; d < outdim; ++d )
