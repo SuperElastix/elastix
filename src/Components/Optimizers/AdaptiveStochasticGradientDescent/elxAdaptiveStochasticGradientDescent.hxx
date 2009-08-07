@@ -834,9 +834,9 @@ AdaptiveStochasticGradientDescent<TElastix>
 
   /** Try to guess the band structure of the covariance matrix.
    * A 'band' is a series of elements cov(p,q) with constant q-p.
-   * On a few positions in the image the jacobian is computed. The
-   * nonzerojacobianindices are inspected to figure out which 
-   * values of q-p occur often. This is done by making a histogram.
+   * In the loop below, on a few positions in the image the jacobian
+   * is computed. The nonzerojacobianindices are inspected to figure out
+   * which values of q-p occur often. This is done by making a histogram.
    * The histogram is then sorted and the most occuring bands
    * are determined. The covariance elements in these bands will not 
    * be stored in the sparse matrix structure 'cov', but in the band
@@ -891,9 +891,9 @@ AdaptiveStochasticGradientDescent<TElastix>
 
   /** Compute the number of bands. */
   const unsigned int bandcovsize = vnl_math_min( maxbandcovsize, difHist2.size() );
-  /** Maps parameterNrDifference to colnr in bandcov. */
+  /** Maps parameterNrDifference (q-p) to colnr in bandcov. */
   std::vector<unsigned int> bandcovMap( P, bandcovsize );
-  /** Maps colnr in bandcov to parameterNrDifference. */
+  /** Maps colnr in bandcov to parameterNrDifference (q-p). */
   std::vector<unsigned int> bandcovMap2( bandcovsize, P );
 
   /** Sort the difHist2 based on the frequencies. */
