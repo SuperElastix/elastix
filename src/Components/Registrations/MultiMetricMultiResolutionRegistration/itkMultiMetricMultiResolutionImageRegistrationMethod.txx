@@ -43,6 +43,24 @@
     } \
   } // comment to allow ; after calling macro
 
+/** Macro that implements the get methods. */
+#define itkImplementationGetMacro(_name,_type1,_type2) \
+  template < typename TFixedImage, typename TMovingImage > \
+  _type1 typename \
+  MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage> \
+  :: _type2 \
+  MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage> \
+  ::Get##_name ( unsigned int pos ) const \
+  { \
+    if ( pos >= this->GetNumberOf##_name##s() ) \
+    { \
+      return 0; \
+    } \
+    else \
+    { \
+      return this->m_##_name##s [pos].GetPointer(); \
+    } \
+  } // comment to allow ; after calling macro
 
 
 namespace itk
@@ -54,6 +72,12 @@ itkImplementationSetMacro( FixedImageRegion, const FixedImageRegionType );
 itkImplementationSetMacro( Interpolator, InterpolatorType * );
 itkImplementationSetMacro( FixedImagePyramid, FixedImagePyramidType * );
 itkImplementationSetMacro( MovingImagePyramid, MovingImagePyramidType * );
+
+itkImplementationGetMacro( FixedImage, const, FixedImageType * );
+itkImplementationGetMacro( MovingImage, const, MovingImageType * );
+itkImplementationGetMacro( Interpolator, , InterpolatorType * );
+itkImplementationGetMacro( FixedImagePyramid, , FixedImagePyramidType * );
+itkImplementationGetMacro( MovingImagePyramid, , MovingImagePyramidType * );
 
 
 /**
@@ -70,121 +94,6 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
   this->m_LastTransformParameters.Fill( 0.0f );
 
 } // end Constructor
-
-
-/** 
- * **************** GetFixedImage **********************************
- */
-
-template < typename TFixedImage, typename TMovingImage >
-const typename 
-MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
-::FixedImageType *
-MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
-::GetFixedImage( unsigned int pos ) const
-{
-  if ( pos >= this->GetNumberOfFixedImages() )
-  {
-    return 0;
-  }
-  else
-  {
-    return this->m_FixedImages[ pos ].GetPointer();
-  }
-
-} // end GetFixedImage()
-
-
-/** 
- * **************** GetMovingImage **********************************
- */
-
-template < typename TFixedImage, typename TMovingImage >
-const typename 
-MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
-::MovingImageType *
-MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
-::GetMovingImage( unsigned int pos ) const
-{
-  if ( pos >= this->GetNumberOfMovingImages() )
-  {
-    return 0;
-  }
-  else
-  {
-    return this->m_MovingImages[ pos ].GetPointer();
-  }
-
-} // end GetMovingImage()
-
-
-/** 
- * **************** GetInterpolator **********************************
- */
-
-template < typename TFixedImage, typename TMovingImage >
-typename 
-MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
-::InterpolatorType *
-MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
-::GetInterpolator( unsigned int pos ) const
-{
-  if ( pos >= this->GetNumberOfInterpolators() )
-  {
-    return 0;
-  }
-  else
-  {
-    return this->m_Interpolators[ pos ].GetPointer();
-  }
-
-} // end GetInterpolator()
-
-
-/** 
- * **************** GetFixedImagePyramid **********************************
- */
-
-template < typename TFixedImage, typename TMovingImage >
-typename 
-MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
-::FixedImagePyramidType *
-MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
-::GetFixedImagePyramid( unsigned int pos ) const
-{
-  if ( pos >= this->GetNumberOfFixedImagePyramids() )
-  {
-    return 0;
-  }
-  else
-  {
-    return this->m_FixedImagePyramids[ pos ].GetPointer();
-  }
-
-} // end GetFixedImagePyramid()
-
-
-/** 
- * **************** GetMovingImagePyramid **********************************
- */
-
-template < typename TFixedImage, typename TMovingImage >
-typename 
-MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
-::MovingImagePyramidType *
-MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
-::GetMovingImagePyramid( unsigned int pos ) const
-{
-  if ( pos >= this->GetNumberOfMovingImagePyramids() )
-  {
-    return 0;
-  }
-  else
-  {
-    return this->m_MovingImagePyramids[ pos ].GetPointer();
-  }
-
-} // end GetMovingImagePyramid()
 
 
 /** 
@@ -706,47 +615,56 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
   unsigned int nrOfMetrics = this->GetCombinationMetric()->GetNumberOfMetrics();
   if ( this->GetNumberOfInterpolators() > nrOfMetrics )
   {
-    itkExceptionMacro( << "NumberOfInterpolators can not exceed the NumberOfMetrics in the CombinationMetric!" );
+    itkExceptionMacro( << "NumberOfInterpolators can not exceed the "
+      << "NumberOfMetrics in the CombinationMetric!" );
   }
   if ( this->GetNumberOfFixedImagePyramids() > nrOfMetrics )
   {
-    itkExceptionMacro( << "NumberOfFixedImagePyramids can not exceed the NumberOfMetrics in the CombinationMetric!" );
+    itkExceptionMacro( << "NumberOfFixedImagePyramids can not exceed the "
+      << "NumberOfMetrics in the CombinationMetric!" );
   }
   if ( this->GetNumberOfMovingImagePyramids() > nrOfMetrics )
   {
-    itkExceptionMacro( << "NumberOfMovingImagePyramids can not exceed the NumberOfMetrics in the CombinationMetric!" );
+    itkExceptionMacro( << "NumberOfMovingImagePyramids can not exceed the "
+      << "NumberOfMetrics in the CombinationMetric!" );
   }
   if ( this->GetNumberOfMovingImagePyramids() >
     this->GetNumberOfInterpolators() )
   {
-    itkExceptionMacro( << "NumberOfMovingImagePyramids can not exceed the NumberOfInterpolators!" );
+    itkExceptionMacro( << "NumberOfMovingImagePyramids can not exceed the "
+      << "NumberOfInterpolators!" );
   }
 
   /** For all components: ==nrofmetrics of ==1. */
   if (  ( this->GetNumberOfInterpolators() != 1 ) &&
     ( this->GetNumberOfInterpolators() != nrOfMetrics )  )
   {
-    itkExceptionMacro( << "The NumberOfInterpolators should equal 1 or equal the NumberOfMetrics" );
+    itkExceptionMacro( << "The NumberOfInterpolators should equal 1 "
+      << "or equal the NumberOfMetrics" );
   }
   if (  ( this->GetNumberOfFixedImagePyramids() != 1 ) &&
     ( this->GetNumberOfFixedImagePyramids() != nrOfMetrics )  )
   {
-    itkExceptionMacro( << "The NumberOfFixedImagePyramids should equal 1 or equal the NumberOfMetrics" );
+    itkExceptionMacro( << "The NumberOfFixedImagePyramids should equal 1 "
+      << "or equal the NumberOfMetrics" );
   }
   if (  ( this->GetNumberOfMovingImagePyramids() != 1 ) &&
     ( this->GetNumberOfMovingImagePyramids() != nrOfMetrics )  )
   {
-    itkExceptionMacro( << "The NumberOfMovingImagePyramids should equal 1 or equal the NumberOfMetrics" );
+    itkExceptionMacro( << "The NumberOfMovingImagePyramids should equal 1 "
+      << "or equal the NumberOfMetrics" );
   }
   if (  ( this->GetNumberOfFixedImages() != 1 ) &&
     ( this->GetNumberOfFixedImages() != nrOfMetrics )  )
   {
-    itkExceptionMacro( << "The NumberOfFixedImages should equal 1 or equal the NumberOfMetrics" );
+    itkExceptionMacro( << "The NumberOfFixedImages should equal 1 "
+      << "or equal the NumberOfMetrics" );
   }
   if (  ( this->GetNumberOfMovingImages() != 1 ) &&
     ( this->GetNumberOfMovingImages() != nrOfMetrics )  )
   {
-    itkExceptionMacro( << "The NumberOfMovingImages should equal 1 or equal the NumberOfMetrics" );
+    itkExceptionMacro( << "The NumberOfMovingImages should equal 1 "
+      << "or equal the NumberOfMetrics" );
   }
 
 } // end CheckOnInitialize()
@@ -755,5 +673,6 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
 } // end namespace itk
 
 #undef itkImplementationSetMacro
+#undef itkImplementationGetMacro
 
 #endif
