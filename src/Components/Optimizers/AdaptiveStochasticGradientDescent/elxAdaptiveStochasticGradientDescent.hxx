@@ -20,13 +20,14 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <algorithm>
+#include <utility>
 #include "vnl/vnl_math.h"
 #include "vnl/vnl_fastops.h"
 #include "vnl/vnl_diag_matrix.h"
 #include "vnl/vnl_matlab_filewrite.h"
 #include "itkAdvancedImageToImageMetric.h"
 #include "elxTimer.h"
-
 
 namespace elastix
 {
@@ -1394,9 +1395,10 @@ AdaptiveStochasticGradientDescent<TElastix>
    * Term 4: maxJCJ, see (54)
    */
 
-  typedef typename SparseCovarianceMatrixType::row  SparseRowType;
-  typedef Array<unsigned int>   NonzeroJacobianIndicesExpandedType;
-  typedef vnl_diag_matrix<CovarianceValueType>  DiagCovarianceMatrixType;
+  typedef typename SparseCovarianceMatrixType::row SparseRowType;
+  typedef typename SparseCovarianceMatrixType::pair_t SparseCovarianceElementType;
+  typedef Array<unsigned int> NonZeroJacobianIndicesExpandedType;
+  typedef vnl_diag_matrix<CovarianceValueType> DiagCovarianceMatrixType;
   
   /** Initialize. */
   TrC = TrCC = maxJJ = maxJCJ = 0.0;
@@ -1419,40 +1421,126 @@ AdaptiveStochasticGradientDescent<TElastix>
   transform->SetParameters( this->GetCurrentPosition() );
   const unsigned int outdim = transform->GetOutputSpaceDimension();
 
-  /** Get scales vector and save also as diagonal matrix */
+  /** Get scales vector */
   const ScalesType & scales = this->m_ScaledCostFunction->GetScales();
   
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator iter;
   typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
   typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
-
-  /** Initialize covariance matrix. */
-  SparseCovarianceMatrixType cov( P, P );
-
-  /** Loop over image and compute Jacobian. 
-   * Compute C = 1/n \sum_i J_i^T J_i 
-   * Possibly apply scaling afterwards.
-   */
-  std::vector<JacobianConstIteratorType> jacit( outdim );
   unsigned int samplenr = 0;
+  
+  /** Variables for nonzerojacobian indices */
   NonZeroJacobianIndicesType & jacind = this->m_NonZeroJacobianIndices;
-  NonZeroJacobianIndicesType prevjacind;
+  jacind[0] = 0;
+  jacind[1] = 0;  
+  NonZeroJacobianIndicesType prevjacind = jacind;
   const unsigned int sizejacind = jacind.size();
+
+  /** Initialize covariance matrix. Sparse, diagonal, and band form. */
+  SparseCovarianceMatrixType cov( P, P );
+  DiagCovarianceMatrixType diagcov( P, 0.0 );
+  CovarianceMatrixType bandcov;  
+
+  /** For temporary storage of J'J */
   CovarianceMatrixType jactjac(sizejacind, sizejacind);
   jactjac.Fill(0.0);
-
+  
   /** Prepare for progress printing. */
   ProgressCommandPointer progressObserver = ProgressCommandType::New();
   progressObserver->SetUpdateFrequency( nrofsamples * 2, 100 );
   progressObserver->SetStartString( "  Progress: " );
   elxout << "  Computing JacobianTerms (B-spline, sparse matrix) ... " << std::endl;
+ 
+  /** Variables for the band cov matrix: */  
+  const unsigned int maxbandcovsize = 192;  
+  const unsigned int nrOfBandStructureSamples = 10;
+  /** DifHist is a histogram of absolute parameterNrDifferences that
+   * occur in the nonzerojacobianindex vectors. 
+   * DifHist2 is another way of storing the histogram, as a vector
+   * of pairs. pair.first = Frequency, pair.second = parameterNrDifference.
+   * This is useful for sorting. */
+  typedef std::vector<unsigned int> DifHistType;
+  typedef std::pair<unsigned int, unsigned int> FreqPairType;
+  typedef std::vector<FreqPairType> DifHist2Type;
+  DifHistType difHist( P, 0 );   
+  DifHist2Type difHist2;
 
+  /** Try to guess the bandstructure of the covariance matrix */  
+  unsigned int onezero=0;
+  for ( unsigned int s=0; s < nrOfBandStructureSamples; ++s )
+  {
+    /** Semirandomly get some samples from the samplecontainer */
+    const unsigned int samplenr = (s+1) * nrofsamples / (nrOfBandStructureSamples+2+onezero);
+    onezero = 1 - onezero; // introduces semirandomness
+
+    /** Read fixed coordinates and get Jacobian J_j. */
+    const FixedImagePointType & point = sampleContainer->GetElement(samplenr).m_ImageCoordinates;  
+    const JacobianType & jac = this->EvaluateBSplineTransformJacobian( point );
+
+    /** Skip invalid jacobians in the beginning, if any */
+    if ( jacind[0] == jacind[1] )
+    {
+      continue;
+    }
+
+    /** Fill the histogram of parameter nr differences */
+    for ( unsigned int i = 0; i < sizejacind; ++i )
+    {
+      const int jacindi = static_cast<int>(jacind[i]);
+      for ( unsigned int j = i; j < sizejacind; ++j )        
+      {
+        const int jacindj = static_cast<int>(jacind[j]);          
+        difHist[ static_cast<unsigned int>( vcl_abs( jacindj - jacindi ) ) ]++;          
+      }
+    }
+  }
+
+  /** Copy the nonzero elements of the difHist to a vector pairs */
+  for (unsigned int p = 0; p < P; ++p )
+  {
+    const unsigned int freq = difHist[p];
+    if ( freq != 0 )
+    {
+      difHist2.push_back( FreqPairType( freq, p ) );      
+    }
+  }
+  difHist.resize(0);
+
+  /** Compute the number of bands */
+  const unsigned int bandcovsize = vnl_math_min( maxbandcovsize, difHist2.size() );
+  /** maps parameterNrDifference to colnr in bandcov */
+  std::vector<unsigned int> bandcovMap(P, bandcovsize);
+  /** maps colnr in bandcov to parameterNrDifference */
+  std::vector<unsigned int> bandcovMap2(bandcovsize, P);
+
+  /** Sort the difHist2 based on the frequencies */
+  std::sort( difHist2.begin(), difHist2.end() );  
+  
+  /** Determine the bands that are expected to be most dominant */
+  DifHist2Type::iterator difHist2It = difHist2.end();
+  for ( unsigned int b = 0; b < bandcovsize; ++b )
+  {
+    --difHist2It;
+    bandcovMap[ difHist2It->second ] = b;
+    bandcovMap2[ b ] = difHist2It->second;   
+  }  
+
+  /** Initialize band matrix */
+  bandcov = CovarianceMatrixType( P, bandcovsize );
+  bandcov.Fill(0.0);
+  
   /**
    *    TERM 1
+   *
+   * Loop over image and compute Jacobian. 
+   * Compute C = 1/n \sum_i J_i^T J_i 
+   * Possibly apply scaling afterwards.   
    */
 //   tmr::Timer::Pointer tmpTimer1 = tmr::Timer::New();
 //   tmpTimer1->StartTimer();
+  jacind[0] = 0;
+  jacind[1] = 0;  
   for ( iter = begin; iter != end; ++iter )
   {
     /** Print progress 0-50%. */
@@ -1462,6 +1550,12 @@ AdaptiveStochasticGradientDescent<TElastix>
     /** Read fixed coordinates and get Jacobian J_j. */
     const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
     const JacobianType & jac = this->EvaluateBSplineTransformJacobian( point );
+
+    /** Skip invalid jacobians in the beginning, if any */
+    if ( jacind[0] == jacind[1] )
+    {
+      continue;
+    }
         
     if ( jacind == prevjacind )
     {
@@ -1469,7 +1563,7 @@ AdaptiveStochasticGradientDescent<TElastix>
       vnl_fastops::inc_X_by_AtA(jactjac, jac);       
     }
     else
-    {
+    {      
       /** The following should only be done after the first sample */
       if ( iter != begin )
       {
@@ -1477,18 +1571,28 @@ AdaptiveStochasticGradientDescent<TElastix>
         for ( unsigned int pi = 0; pi < sizejacind; ++pi )
         {
           const unsigned int p = prevjacind[ pi ];
+          
           for ( unsigned int qi = 0; qi < sizejacind; ++qi )
           {
             const unsigned int q = prevjacind[ qi ];
             /** Exploit symmetry: only fill upper triangular part */
-            if (q >= p)
-            {
-              const double tempval = jactjac(pi,qi) / n;        
+            if (q >= p )
+            {              
+              const double tempval = jactjac(pi,qi) / n;              
               if ( vcl_abs( tempval ) > 1e-14 )
-              {          
-                cov( p, q ) += tempval;
-              }
+              {
+                const unsigned int bandindex = bandcovMap[q-p];
+                if (bandindex < bandcovsize)
+                {
+                  bandcov(p, bandindex) +=tempval;                 
+                }
+                else
+                {
+                  cov( p, q ) += tempval;    
+                }
+              }              
             }
+            
           } // qi
         } // pi
       } // end if
@@ -1511,15 +1615,39 @@ AdaptiveStochasticGradientDescent<TElastix>
       const unsigned int q = prevjacind[ qi ];
       if (q >= p)
       {
-        const double tempval = jactjac(pi,qi) / n;        
+        const double tempval = jactjac(pi,qi) / n; 
         if ( vcl_abs( tempval ) > 1e-14 )
         {          
-          cov( p, q ) += tempval;
+           const unsigned int bandindex  = bandcovMap[q-p];
+           if (bandindex < bandcovsize)
+           {
+             bandcov(p, bandindex) +=tempval;
+           }
+           else
+           {
+             cov( p, q ) += tempval;
+           }
         }
       }
     } // qi
   } // pi  
 
+  /** Copy the bandmatrix into the sparse matrix and empty the bandcov matrix.
+   * \todo: perhaps work further with this bandmatrix instead */
+  for( unsigned int p=0; p < P; ++p)
+  {
+    for (unsigned int b=0; b < bandcovsize; ++b )
+    {      
+      const double tempval = bandcov(p,b);
+      if (vcl_abs(tempval)>1e-14)
+      {
+        const unsigned int q = p + bandcovMap2[b];
+        cov(p,q) = tempval;        
+      }
+    }
+  }
+  bandcov.set_size(0,0);
+  
 //   tmpTimer1->StopTimer();
 //   elxout << "Constructing the covariance matrix took "
 //     << tmpTimer1->PrintElapsedTimeDHMS() << std::endl;
@@ -1541,10 +1669,9 @@ AdaptiveStochasticGradientDescent<TElastix>
       cov( cov.getrow(), col ) /= scales[ col ];
       notfinished = cov.next();
     }
-  }
-
-  /** Compute TrC = trace(C), and diagC */
-  DiagCovarianceMatrixType diagC( P, 0.0 );
+  }  
+  
+  /** Compute TrC = trace(C), and diagcov */ 
   for ( unsigned int p = 0; p < P; ++p )
   {
     if ( !cov.empty_row( p ) )
@@ -1552,9 +1679,9 @@ AdaptiveStochasticGradientDescent<TElastix>
       //avoid creation of element if the row is empty      
       CovarianceValueType & covpp = cov(p,p);
       TrC += covpp;
-      diagC[p] = covpp;
-    }
-  }
+      diagcov[p] = covpp;
+    }  
+  }  
 
   /**
    *    TERM 2
@@ -1568,9 +1695,9 @@ AdaptiveStochasticGradientDescent<TElastix>
     TrCC += vnl_math_sqr( cov.value() );
     notfinished2 = cov.next();
   }
-  /** Symmetry: multiply by 2 and subtract sumsqr(diagC). */
+  /** Symmetry: multiply by 2 and subtract sumsqr(diagcov). */
   TrCC *= 2.0;
-  TrCC -= diagC.diagonal().squared_magnitude();
+  TrCC -= diagcov.diagonal().squared_magnitude();
   
   /**
    *    TERM 3 and 4
@@ -1584,12 +1711,12 @@ AdaptiveStochasticGradientDescent<TElastix>
   const double sqrt2 = vcl_sqrt( static_cast<double>( 2.0 ) );
   JacobianType jacj(outdim, sizejacind);
   JacobianType jacjjacj(outdim, outdim);
-  JacobianType jacjC(outdim, sizejacind);
-  DiagCovarianceMatrixType diagCsparse( sizejacind );
-  JacobianType jacjdiagC(outdim, sizejacind);
-  JacobianType jacjdiagCjacj(outdim, outdim);
-  JacobianType jacjCjacj(outdim, outdim);
-  NonzeroJacobianIndicesExpandedType jacindExpanded(P);
+  JacobianType jacjcov(outdim, sizejacind);
+  DiagCovarianceMatrixType diagcovsparse( sizejacind );
+  JacobianType jacjdiagcov(outdim, sizejacind);
+  JacobianType jacjdiagcovjacj(outdim, outdim);
+  JacobianType jacjcovjacj(outdim, outdim);
+  NonZeroJacobianIndicesExpandedType jacindExpanded(P);
   
   samplenr = 0;
   for ( iter = begin; iter != end; ++iter )
@@ -1622,18 +1749,17 @@ AdaptiveStochasticGradientDescent<TElastix>
     /** Compute JCJ_j. */
     double JCJ_j = 0.0;
 
-    /** J_j C = jacjC. */
-    jacjC.SetSize( outdim, sizejacind );
-    jacjC.Fill( 0.0 );
+    /** J_j C = jacjC. */    
+    jacjcov.Fill( 0.0 );
 
     /** Store the nonzero jacobian indices in a different format 
-     * and create the sparse diagC. */
+     * and create the sparse diagcov. */
     jacindExpanded.Fill(sizejacind);
     for ( unsigned int pi = 0; pi < sizejacind; ++pi )
     {
       const unsigned int p = jacind[pi];
       jacindExpanded[ p ] = pi;
-      diagCsparse[ pi ] = diagC[ p ];
+      diagcovsparse[ pi ] = diagcov[ p ];
     }   
     
     /** We below calculate jacjC = J_j cov^T, but later we will correct
@@ -1661,7 +1787,7 @@ AdaptiveStochasticGradientDescent<TElastix>
             const CovarianceValueType covElement = (*covrowpit).second;
             for ( unsigned int dx = 0; dx < outdim; ++dx )
             {
-              jacjC[ dx ][ pi ] += jacj[ dx ][ qi ] * covElement;
+              jacjcov[ dx ][ pi ] += jacj[ dx ][ qi ] * covElement;
             } //dx
           } // if qi < sizejacind
         } // for covrow
@@ -1672,22 +1798,22 @@ AdaptiveStochasticGradientDescent<TElastix>
     /** J_j C J_j^T  = jacjCjacj. 
      * But note that we actually compute J_j cov' J_j^T
      */
-    vnl_fastops::ABt( jacjCjacj, jacjC, jacj );    
+    vnl_fastops::ABt( jacjcovjacj, jacjcov, jacj );    
 
-    /** jacjCjacj = jacjCjacj+ jacjCjacj' - jacjdiagCjacj */
-    jacjdiagC = jacj * diagCsparse;
-    vnl_fastops::ABt( jacjdiagCjacj, jacjdiagC, jacj);
-    jacjCjacj += jacjCjacj.transpose();
-    jacjCjacj -= jacjdiagCjacj;
+    /** jacjCjacj = jacjCjacj+ jacjCjacj' - jacjdiagcovjacj */
+    jacjdiagcov = jacj * diagcovsparse;
+    vnl_fastops::ABt( jacjdiagcovjacj, jacjdiagcov, jacj);
+    jacjcovjacj += jacjcovjacj.transpose();
+    jacjcovjacj -= jacjdiagcovjacj;
 
     /** Compute 1st part of JCJ: Tr( J_j C J_j^T ). */
     for ( unsigned int d = 0; d < outdim; ++d )
     {
-      JCJ_j += jacjCjacj[ d ][ d ];
+      JCJ_j += jacjcovjacj[ d ][ d ];
     }
 
     /** Compute 2nd part of JCJ_j: 2 \sqrt{2} || J_j C J_j^T ||_F. */
-    JCJ_j += 2.0 * sqrt2 * jacjCjacj.frobenius_norm();
+    JCJ_j += 2.0 * sqrt2 * jacjcovjacj.frobenius_norm();
 
     /** Max_j [JCJ_j]. */
     maxJCJ = vnl_math_max( maxJCJ, JCJ_j );
