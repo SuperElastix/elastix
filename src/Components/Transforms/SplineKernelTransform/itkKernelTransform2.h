@@ -396,7 +396,7 @@ namespace itk
     It used to be mutable because m_GMatrix was made an ivar
     only to avoid copying the matrix at return time 
     but this is not necessary 
-    SK: we don't need this matrix anymore as a member
+    SK: we don't need this matrix anymore as a member */
     //GMatrixType m_GMatrix;
 
     /** Has the W matrix been computed? */

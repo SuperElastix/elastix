@@ -16,6 +16,7 @@
 #define __elxFixedImagePyramidBase_hxx
 
 #include "elxFixedImagePyramidBase.h"
+#include "itkImageFileCastWriter.h"
 
 namespace elastix
 {

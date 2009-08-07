@@ -477,7 +477,7 @@ namespace itk
     GetJacobian( const InputPointType & thisPoint) const
   {     
     this->GetJacobian( thisPoint, this->m_Jacobian, this->m_NonZeroJacobianIndicesTemp );
-    return m_Jacobian;
+    return this->m_Jacobian;
   }
 
   // Set to the identity transform - ie make the  Source and target lm the same

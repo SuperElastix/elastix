@@ -71,10 +71,11 @@ public:
    * \f$\alpha = 12 ( 1 - \nu ) - 1\f$
    */
   //itkSetMacro( Alpha, TScalarType ); Cant use the macro because the matrices must be recomputed
-  virtual void SetAlpha(TScalarType Alpha) {m_Alpha=Alpha;
-                               m_LMatrixComputed=false;
-                               m_LInverseComputed=false;
-                               m_WMatrixComputed=false;
+  virtual void SetAlpha(TScalarType Alpha) {
+    this->m_Alpha=Alpha;
+    this->m_LMatrixComputed=false;
+    this->m_LInverseComputed=false;
+    this->m_WMatrixComputed=false;
   }
   
   /** Get alpha */

@@ -453,11 +453,6 @@ AdaptiveStochasticGradientDescent<TElastix>
     << this->elxGetClassName()
     << " ..." << std::endl;
 
-  /** Get the number of parameters. */
-  const unsigned int P = static_cast<unsigned int>( 
-    this->GetScaledCurrentPosition().GetSize() );
-  const double Pd = static_cast<double>( P );
-
   /** Get the user input. */
   const double delta = this->GetMaximumStepLength();
 
@@ -558,8 +553,6 @@ AdaptiveStochasticGradientDescent<TElastix>
   double perturbationSigma, double & gg, double & ee )
 {
   /** Some shortcuts. */
-  const unsigned int P = static_cast<unsigned int>( mu0.GetSize() );
-  const double Pd = static_cast<double>( P );
   const unsigned int M = this->GetElastix()->GetNumberOfMetrics();
   
   /** Variables for sampler support. Each metric may have a sampler. */
@@ -890,7 +883,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   difHist.resize( 0 );
 
   /** Compute the number of bands. */
-  const unsigned int bandcovsize = vnl_math_min( maxbandcovsize, difHist2.size() );
+  const unsigned int bandcovsize = vnl_math_min( maxbandcovsize, static_cast<unsigned int>(difHist2.size()) );
   /** Maps parameterNrDifference (q-p) to colnr in bandcov. */
   std::vector<unsigned int> bandcovMap( P, bandcovsize );
   /** Maps colnr in bandcov to parameterNrDifference (q-p). */
