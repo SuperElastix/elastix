@@ -20,11 +20,8 @@
 #include "itkImageRandomCoordinateSampler.h"
 #include "elxIncludes.h"
 #include "elxProgressCommand.h"
-#include "itkBSplineCombinationTransform.h"
 #include "itkAdvancedTransform.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
-#include "vnl/algo/vnl_symmetric_eigensystem.h"
-#include "vnl/vnl_sparse_matrix.h"
 
 namespace elastix
 {
@@ -125,12 +122,6 @@ namespace elastix
   *   Default value: 0.0. When increased, the optimization starts with smaller steps, leaving
   *   the possibility to increase the steps when necessary. If set to 0.0, the method starts with
   *   with the largest step allowed. 
-  * \parameter UseMaximumLikelihoodMethod: Experimental parameter. Leave to default setting.\n
-  *   example: <tt>(UseMaximumLikelihood "false")</tt>\n
-  *   Default/recommended value: "false".
-  * \parameter SaveCovarianceMatrix: Experimental parameter. Leave to default setting.\n
-  *   example: <tt>(SaveCovarianceMatrix "false")</tt>\n
-  *   Default/recommended value: "false".
   * \parameter NumberOfGradientMeasurements: Number of gradients N to estimate the
   *   average square magnitudes of the exact gradient and the approximation error.
   *   The parameter can be specified for each resolution, or for all resolutions at once.\n
@@ -281,46 +272,22 @@ protected:
     ImageGridSamplerType::ImageSampleContainerType    ImageSampleContainerType;
   typedef typename ImageSampleContainerType::Pointer  ImageSampleContainerPointer;
 
-  /** Other protected typedefs */
-  typedef double                                      CovarianceValueType;
-  typedef Array2D<CovarianceValueType>            CovarianceMatrixType;
-  typedef vnl_sparse_matrix<CovarianceValueType>  SparseCovarianceMatrixType;
-  typedef vnl_symmetric_eigensystem<
-    CovarianceValueType>                          EigenSystemType;
+  /** Other protected typedefs */  
   typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
   typedef ProgressCommand                             ProgressCommandType;
-  typedef typename ProgressCommand::Pointer           ProgressCommandPointer;
-  typedef typename JacobianType::const_iterator       JacobianConstIteratorType;
-  typedef vnl_vector<CovarianceValueType>         JacobianColumnType;
+  typedef typename ProgressCommand::Pointer           ProgressCommandPointer;  
 
-  /** Typedefs for support of sparse Jacobians and BSplineTransforms. */
+  /** Typedefs for support of sparse Jacobians and AdvancedTransforms. */
   typedef JacobianType                                TransformJacobianType;
   itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
   itkStaticConstMacro( MovingImageDimension, unsigned int, MovingImageType::ImageDimension );
-  enum { DeformationSplineOrder = 3 };
-  typedef typename TransformType::ScalarType          CoordinateRepresentationType;  
-  typedef BSplineDeformableTransform<
-    CoordinateRepresentationType,
-    itkGetStaticConstMacro(FixedImageDimension),
-    DeformationSplineOrder>                           BSplineTransformType;
-  typedef typename 
-    BSplineTransformType::WeightsType                 BSplineTransformWeightsType;
-  typedef typename 
-    BSplineTransformType::ParameterIndexArrayType     BSplineTransformIndexArrayType;
-  typedef BSplineCombinationTransform<
-    CoordinateRepresentationType,
-    itkGetStaticConstMacro(FixedImageDimension),
-    DeformationSplineOrder>                           BSplineCombinationTransformType;
-  typedef FixedArray< unsigned long, 
-    itkGetStaticConstMacro(FixedImageDimension)>      BSplineParametersOffsetType;
-
+  typedef typename TransformType::ScalarType          CoordinateRepresentationType; 
   typedef AdvancedTransform<
     CoordinateRepresentationType,
     itkGetStaticConstMacro(FixedImageDimension),
     itkGetStaticConstMacro(MovingImageDimension) >    AdvancedTransformType;
   typedef typename 
     AdvancedTransformType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
-
 
   AdaptiveStochasticGradientDescent();
   virtual ~AdaptiveStochasticGradientDescent() {};
@@ -332,58 +299,18 @@ protected:
   unsigned int m_NumberOfGradientMeasurements;
   unsigned int m_NumberOfJacobianMeasurements;
   unsigned int m_NumberOfSamplesForExactGradient;
-  CovarianceMatrixType m_CovarianceMatrix;
-  bool m_UseMaximumLikelihoodMethod;
-  bool m_SaveCovarianceMatrix;
-
-  /** Variables used when the transform is a B-spline transform. */
-  bool m_TransformIsBSpline;
-  bool m_TransformIsBSplineCombination;
-  bool m_TransformIsAdvanced;
-  typename BSplineTransformType::Pointer            m_BSplineTransform;
+  
+  /** The transform stored as AdvancedTransform */  
   typename AdvancedTransformType::Pointer           m_AdvancedTransform;
-  mutable BSplineTransformWeightsType               m_BSplineTransformWeights;
-  mutable BSplineTransformIndexArrayType            m_BSplineTransformIndices;
-  typename BSplineCombinationTransformType::Pointer m_BSplineCombinationTransform;
-  BSplineParametersOffsetType                       m_BSplineParametersOffset;
-
-  /** The number of BSpline parameters per image dimension. */
-  long                                              m_NumBSplineParametersPerDim;
-
-  /** The number of BSpline transform weights is the number of
-   * of parameter in the support region (per dimension ).
-   */
-  unsigned long                                     m_NumBSplineWeights;
-
-  /** The number of transform parameters. */
-  unsigned int m_NumberOfParameters;
-
-  /** the parameter indices that have a nonzero Jacobian. */
-  mutable NonZeroJacobianIndicesType                m_NonZeroJacobianIndices;
 
   /** RandomGenerator for AddRandomPerturbation. */
   typename RandomGeneratorType::Pointer             m_RandomGenerator;
 
-
-  /** Check if the transform is a B-spline transform. Called by Initialize. */
-  virtual void CheckForBSplineTransform( void );
-
-  /** This function returns a reference to a sparse transform Jacobian.
-   * This is either a reference to the full TransformJacobian or
-   * a reference to a sparse Jacobian. 
-   * The m_NonZeroJacobianIndices contains the indices that are nonzero.
-   * The length of NonZeroJacobianIndices is set in the CheckForBSplineTransform
-   * function.
-   */
-  virtual const TransformJacobianType & EvaluateBSplineTransformJacobian(
-    const FixedImagePointType & fixedImagePoint ) const;
+  /** Check if the transform is an advanced transform. Called by Initialize. */
+  virtual void CheckForAdvancedTransform( void );
 
   /** Print the contents of the settings vector to elxout. */
   virtual void PrintSettingsVector( const SettingsVectorType & settings ) const;
-
-  /** Save the covariance matrix in Matlab format, if desired. */
-  virtual void SaveCovarianceMatrix( double sigma1, double sigma3, 
-    const CovarianceMatrixType & cov );
 
   /** Estimates some reasonable values for the parameters
    * SP_a, SP_alpha (=1), SigmoidMin, SigmoidMax (=1), and
@@ -396,10 +323,9 @@ protected:
    * Needed for the automatic parameter estimation.
    * Gradients are measured at position mu_n, which are generated according to:
    * mu_n - mu_0 ~ N(0, perturbationSigma^2 I );
-   * The value returned indicates whether a maximum likelihood method was
-   * used. In case of true, gg=g^T C^{-1} g. else gg = g^T g
+   * gg = g^T g, etc.
    */
-  virtual bool SampleGradients( const ParametersType & mu0,
+  virtual void SampleGradients( const ParametersType & mu0,
     double perturbationSigma, double & gg, double & ee );
 
   /** Returns a container of fixed image samples, sampled using a grid sampler
@@ -418,34 +344,7 @@ protected:
    */
   virtual void ComputeJacobianTerms( double & TrC, double & TrCC, 
     double & maxJJ, double & maxJCJ );
-
-  /** Implementation of the Jacobian terms, using a method that is
-   * linearly complex regarding the number of Jacobian measurements.
-   * The memory usage is independent on the number of Jacobian measurements
-   * and quadratically proportional to the number of parameters.
-   */
-  virtual void ComputeJacobianTermsGeneric( double & TrC, double & TrCC, 
-    double & maxJJ, double & maxJCJ );
-
-  /** For translation transforms, things become much simpler, since 
-   * analytic expressions can be derived.
-   */
-  virtual void ComputeJacobianTermsTranslation( double & TrC, double & TrCC, 
-    double & maxJJ, double & maxJCJ );
-
-  /** For B-splines, a speed up can be realized by using the compact support
-   * of the B-splines, resulting in sparse Jacobians.
-   */
-  virtual void ComputeJacobianTermsBSpline( double & TrC, double & TrCC, 
-    double & maxJJ, double & maxJCJ );
-
-  /** For B-splines, a speed up can be realized by using the compact support
-   * of the B-splines, resulting in sparse Jacobians.
-   * Version using sparse covariance matrix
-   */
-  virtual void ComputeJacobianTermsBSplineSparse( double & TrC, double & TrCC, 
-    double & maxJJ, double & maxJCJ );
-
+ 
   /** Helper function, which calls GetScaledValueAndDerivative and does
    * some exception handling. Used by SampleGradients.
    */
@@ -456,14 +355,7 @@ protected:
    * parameters, with delta ~ sigma * N(0,I). Used by SampleGradients.
    */ 
   virtual void AddRandomPerturbation( ParametersType & parameters, double sigma );
-
-  /** Helper function that takes the inverse square root of the eigenvalues of a
-   * an eigensystem. If ~0, then the eigenvalue is set to 0 and the rank is reduced.
-   * The rank is returned by reference. NB: the eigensystem is modified by this
-   * function!
-   */
-  virtual void PrepareEigenSystem( EigenSystemType * eig, unsigned int & rank ) const;
-
+ 
 private:
 
   AdaptiveStochasticGradientDescent( const Self& );  // purposely not implemented
@@ -471,11 +363,6 @@ private:
 
   bool m_AutomaticParameterEstimation;
   double m_MaximumStepLength;      
-
-  /** This member should only be directly accessed by the
-   * EvaluateBSplineTransformJacobian method.
-   */
-  mutable TransformJacobianType m_InternalTransformJacobian;
 
   /** Private variables for the sampling attempts. */
   unsigned long m_MaximumNumberOfSamplingAttempts;
