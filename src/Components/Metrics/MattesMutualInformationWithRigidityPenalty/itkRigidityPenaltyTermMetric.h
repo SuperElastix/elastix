@@ -17,7 +17,7 @@
 
 #include "itkSingleValuedCostFunction.h"
 
-#include "itkBSplineDeformableTransform.h"
+#include "itkAdvancedBSplineDeformableTransform.h"
 
 #include "itkNeighborhood.h"
 #include "itkImageRegionIterator.h"
@@ -86,14 +86,14 @@ namespace itk
     itkStaticConstMacro( ImageDimension, unsigned int, Dimension );
 
     /** Typedef's for BSpline transform. */
-    typedef BSplineDeformableTransform< ScalarType,
+    typedef AdvancedBSplineDeformableTransform< ScalarType,
       Dimension, 3 >                                      BSplineTransformType;
     typedef typename BSplineTransformType::Pointer        BSplineTransformPointer;
     typedef typename BSplineTransformType::ImageType      CoefficientImageType;
     typedef typename CoefficientImageType::Pointer        CoefficientImagePointer;
     typedef typename CoefficientImageType::SpacingType    CoefficientImageSpacingType;
 
-    /** Typedef support for neigborhoods, filters, etc. */
+    /** Typedef support for neighborhoods, filters, etc. */
     typedef Neighborhood< ScalarType,
       itkGetStaticConstMacro( ImageDimension ) >          NeighborhoodType;
     typedef typename NeighborhoodType::SizeType           NeighborhoodSizeType;

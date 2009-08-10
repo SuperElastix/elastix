@@ -38,116 +38,126 @@ using namespace itk;
    * \parameter Metric: Select this metric as follows:\n
    *    <tt>(Metric "MattesMutualInformationWithRigidityPenalty")</tt>
    *
-   * \parameter NumberOfHistogramBins: The size of the histogram. Must be given for each 
-   *    resolution, or for all resolutions at once. \n
+   * \parameter NumberOfHistogramBins: The size of the histogram. Must be 
+   *    given for each resolution, or for all resolutions at once. \n
    *    example: <tt>(NumberOfHistogramBins 32 32 64)</tt> \n
    *    The default is 32 for each resolution.
-   * \parameter NumberOfFixedHistogramBins: The size of the histogram in the fixed dimension. Can be given for each 
-   *    resolution, or for all resolutions at once. If not given, NumberOfHistogramBins is used.\n
+   * \parameter NumberOfFixedHistogramBins: The size of the histogram in the
+   *    fixed dimension. Can be given for each resolution, or for all 
+   *    resolutions at once. If not given, NumberOfHistogramBins is used.\n
    *    example: <tt>(NumberOfFixedHistogramBins 32 32 64)</tt> \n
    *    The default is the value of NumberOfHistogramBins.
-   * \parameter NumberOfMovingHistogramBins: The size of the histogram in the fixed dimension. Can be given for each 
-   *    resolution, or for all resolutions at once. If not given, NumberOfHistogramBins is used.\n
+   * \parameter NumberOfMovingHistogramBins: The size of the histogram in the
+   *    moving dimension. Can be given for each resolution, or for all 
+   *    resolutions at once. If not given, NumberOfHistogramBins is used.\n
    *    example: <tt>(NumberOfMovingHistogramBins 32 32 64)</tt> \n
    *    The default is the value of NumberOfHistogramBins.
-   * \parameter FixedKernelBSplineOrder: The bspline order of the Parzen window, used to estimate
-   *    the joint histogram. Can be given for each resolution, or for all resolutions at once. \n
+   * \parameter FixedKernelBSplineOrder: The B-spline order of the Parzen 
+   *    window, used to estimate the joint histogram. Can be given for each
+   *    resolution, or for all resolutions at once. \n
    *    example: <tt>(FixedKernelBSplineOrder 0 1 1)</tt> \n
    *    The default value is 0.
-   * \parameter MovingKernelBSplineOrder: The bspline order of the Parzen window, used to estimate
-   *    the joint histogram. Can be given for each resolution, or for all resolutions at once. \n
+   * \parameter MovingKernelBSplineOrder: The B-spline order of the Parzen
+   *    window, used to estimate the joint histogram. Can be given for each
+   *    resolution, or for all resolutions at once. \n
    *    example: <tt>(MovingKernelBSplineOrder 3 3 3)</tt> \n
    *    The default value is 3.
-   * \parameter FixedLimitRangeRatio: The relative extension of the intensity range of the fixed image.\n
-   *    If your image has grey values from 0 to 1000 and the FixedLimitRangeRatio is 0.001, the
-   *    joint histogram will expect fixed image grey values from -0.001 to 1000.001. This may be 
-   *    usefull if you use high order bspline interpolator for the fixed image.\n
+   * \parameter FixedLimitRangeRatio: The relative extension of the intensity
+   *    range of the fixed image.\n
+   *    If your image has grey values from 0 to 1000 and the
+   *    FixedLimitRangeRatio is 0.001, the joint histogram will expect fixed
+   *    image grey values from -0.001 to 1000.001. This may be useful if you
+   *    use high order B-spline interpolator for the fixed image.\n
    *    example: <tt>(FixedLimitRangeRatio 0.001 0.01 0.01)</tt> \n
-   *    The default value is 0.01. Can be given for each resolution, or for all resolutions at once.
-   * \parameter MovingLimitRangeRatio: The relative extension of the intensity range of the moving image.\n
-   *    If your image has grey values from 0 to 1000 and the MovingLimitRangeRatio is 0.001, the
-   *    joint histogram will expect moving image grey values from -0.001 to 1000.001. This may be 
-   *    usefull if you use high order bspline interpolator for the moving image.\n
+   *    The default value is 0.01. Can be given for each resolution, or for
+   *    all resolutions at once.
+   * \parameter MovingLimitRangeRatio: The relative extension of the intensity
+   *    range of the moving image.\n
+   *    If your image has grey values from 0 to 1000 and the MovingLimitRangeRatio
+   *    is 0.001, the joint histogram will expect moving image grey values
+   *    from -0.001 to 1000.001. This may be useful if you use high order
+   *    B-spline interpolator for the moving image.\n
    *    example: <tt>(MovingLimitRangeRatio 0.001 0.01 0.01)</tt> \n
-   *    The default value is 0.01. Can be given for each resolution, or for all resolutions at once. 
+   *    The default value is 0.01. Can be given for each resolution, or for
+   *    all resolutions at once. 
    *
    * \parameter RigidityPenaltyWeight: A parameter to weigh the rigidity penalty
    *    term against the mutual information metric. \n
    *    example: <tt>(RigidityPenaltyWeight 0.1)</tt> \n
    *    example: <tt>(RigidityPenaltyWeight 1.0 0.5 0.1)</tt> \n
    *    If only one argument is given, that value is used for all resolutions.
-   *    If more than one argument is given, then the number of arguments should be
-   *    equal to the number of resolutions: for each resolution its rigid penalty weight.
-   *    If this parameter option is not used, by default the rigid penalty weight is set
-   *    to 1.0 for each resolution.
+   *    If more than one argument is given, then the number of arguments should
+   *    be equal to the number of resolutions: for each resolution its rigid
+   *    penalty weight. If this parameter option is not used, by default the
+   *    rigid penalty weight is set to 1.0 for each resolution.
    * \parameter LinearityConditionWeight: A parameter to weigh the linearity
    *    condition term of the rigidity term. \n
    *    example: <tt>(LinearityConditionWeight 2.0)</tt> \n
    *    Default is 1.0.
-   * \parameter OrthonormalityConditionWeight: A parameter to weigh the orthonormality
-   *    condition term of the rigidity term. \n
+   * \parameter OrthonormalityConditionWeight: A parameter to weigh the
+   *    orthonormality condition term of the rigidity term. \n
    *    example: <tt>(OrthonormalityConditionWeight 2.0)</tt> \n
    *    Default is 1.0.
    * \parameter PropernessConditionWeight: A parameter to weigh the properness
    *    condition term of the rigidity term. \n
    *    example: <tt>(PropernessConditionWeight 2.0)</tt> \n
    *    Default is 1.0.
-   * \parameter UseLinearityCondition: A flag to specify the usage of the linearity
-   *    condition term for optimisation. \n
+   * \parameter UseLinearityCondition: A flag to specify the usage of the
+   *    linearity condition term for optimisation. \n
    *    example: <tt>(UseLinearityCondition "false")</tt> \n
    *    Default is "true".
-   * \parameter UseOrthonormalityCondition: A flag to specify the usage of the orthonormality
-   *    condition term for optimisation. \n
+   * \parameter UseOrthonormalityCondition: A flag to specify the usage of
+   *    the orthonormality condition term for optimisation. \n
    *    example: <tt>(UseOrthonormalityCondition "false")</tt> \n
    *    Default is "true".
-   * \parameter UsePropernessCondition: A flag to specify the usage of the properness
-   *    condition term for optimisation. \n
+   * \parameter UsePropernessCondition: A flag to specify the usage of the 
+   *    properness condition term for optimisation. \n
    *    example: <tt>(UsePropernessCondition "false")</tt> \n
    *    Default is "true".
    * \parameter CalculateLinearityCondition: A flag to specify if the linearity
-   *    condition should still be calcualted, even if it is not used for optimisation. \n
+   *    condition should still be calcualted, even if it is not used for
+   *    optimisation. \n
    *    example: <tt>(CalculateLinearityCondition "false")</tt> \n
    *    Default is "true".
-   * \parameter CalculateOrthonormalityCondition: A flag to specify if the orthonormality
-   *    condition should still be calcualted, even if it is not used for optimisation. \n
+   * \parameter CalculateOrthonormalityCondition: A flag to specify if the 
+   *    orthonormality condition should still be calcualted, even if it is 
+   *    not used for optimisation. \n
    *    example: <tt>(CalculateOrthonormalityCondition "false")</tt> \n
    *    Default is "true".
-   * \parameter CalculatePropernessCondition: A flag to specify if the Properness
-   *    condition should still be calcualted, even if it is not used for optimisation. \n
+   * \parameter CalculatePropernessCondition: A flag to specify if the properness
+   *    condition should still be calcualted, even if it is not used for
+   *    optimisation. \n
    *    example: <tt>(CalculatePropernessCondition "false")</tt> \n
    *    Default is "true".
-   * \parameter FixedRigidityImageName: the name of a coefficient image to specify
-   *    the rigidity index of voxels in the fixed image. \n
+   * \parameter FixedRigidityImageName: the name of a coefficient image to
+   *    specify the rigidity index of voxels in the fixed image. \n
    *    example: <tt>(FixedRigidityImageName "fixedRigidityImage.mhd")</tt> \n
    *    If not supplied the rigidity coefficient is not based on the fixed
    *    image, which is recommended.\n
    *    If neither FixedRigidityImageName nor MovingRigidityImageName are
    *    supplied, the rigidity penalty term is evaluated on the whole transform
    *    input domain.
-   * \parameter MovingRigidityImageName: the name of a coefficient image to specify
-   *    the rigidity index of voxels in the moving image. \n
+   * \parameter MovingRigidityImageName: the name of a coefficient image to
+   *    specify the rigidity index of voxels in the moving image. \n
    *    example: <tt>(MovingRigidityImageName "movingRigidityImage.mhd")</tt> \n
    *    If not supplied the rigidity coefficient is not based on the moving
    *    image, which is NOT recommended.\n
    *    If neither FixedRigidityImageName nor MovingRigidityImageName are
    *    supplied, the rigidity penalty term is evaluated on the whole transform
    *    input domain.
-   * \parameter DilateRigidityImages: flag to specify the dilation of the rigidity
-   *    coefficient images. With this the region of rigidity can be extended to
-   *    force rigidity of the inner region. \n
+   * \parameter DilateRigidityImages: flag to specify the dilation of the
+   *    rigidity coefficient images. With this the region of rigidity can be
+   *    extended to force rigidity of the inner region. \n
    *    example: <tt>(DilateRigidityImages "false" "false" "true")</tt> \n
    *    Default is "true".
-   * \parameter DilationRadiusMultiplier: the dilation radius is a muliplier times the
-   *    gridspacing of the B-spline transform. \n
+   * \parameter DilationRadiusMultiplier: the dilation radius is a multiplier
+   *    times the grid spacing of the B-spline transform. \n
    *    example: <tt>(DilationRadiusMultiplier 1.0 1.0 2.0)</tt> \n
    *    Default is 1.0.
    *
-   * \todo: read these parameters using the new ReadParameter command
-   *
-   * \sa MattesMutualInformationImageToImageMetricWithMask
-   * \sa MattesMutualInformationImageToImageMetricWithRigidRegularization
-   * \sa RigidRegulizerMetric
-   * \sa BSplineTransform
+   * \sa ParzenWindowMutualInformationImageToImageMetric
+   * \sa MattesMutualInformationImageToImageMetricWithRigidityPenalty
+   * \sa RigidityPenaltyTermMetric
    * \ingroup Metrics
    */
   

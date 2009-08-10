@@ -27,6 +27,11 @@
 #include "itkBinaryBallStructuringElement.h"
 #include "itkImageRegionIterator.h"
 
+/** This metric only works with advanced B-spline transforms. */
+#include "itkAdvancedBSplineDeformableTransform.h"
+#include "itkAdvancedCombinationTransform.h"
+
+
 namespace itk
 {
   
@@ -49,178 +54,183 @@ namespace itk
    * \ingroup Metrics
    */
 
-  template < class TFixedImage, class TMovingImage >
-    class MattesMutualInformationImageToImageMetricWithRigidityPenalty :
-  public CombinedImageToImageMetric< TFixedImage, TMovingImage >
+template < class TFixedImage, class TMovingImage >
+class MattesMutualInformationImageToImageMetricWithRigidityPenalty
+  : public CombinedImageToImageMetric< TFixedImage, TMovingImage >
+{
+public:
+    
+  /** Standard class typedefs. */
+  typedef MattesMutualInformationImageToImageMetricWithRigidityPenalty    Self;
+  typedef CombinedImageToImageMetric<
+    TFixedImage, TMovingImage >                         Superclass;
+  typedef SmartPointer<Self>                            Pointer;
+  typedef SmartPointer<const Self>                      ConstPointer;
+
+  /** Method for creation through the object factory. */
+  itkNewMacro( Self );
+
+  /** Run-time type information (and related methods). */
+  itkTypeMacro( MattesMutualInformationImageToImageMetricWithRigidityPenalty,
+    CombinedImageToImageMetric );
+
+  /** Types inherited from Superclass. */
+  typedef typename Superclass::TransformType            TransformType;
+  typedef typename Superclass::TransformPointer         TransformPointer;
+  typedef typename Superclass::TransformJacobianType    TransformJacobianType;
+  typedef typename Superclass::InterpolatorType         InterpolatorType;
+  typedef typename Superclass::MeasureType              MeasureType;
+  typedef typename Superclass::DerivativeType           DerivativeType;
+  typedef typename Superclass::ParametersType           ParametersType;
+  typedef typename Superclass::FixedImageType           FixedImageType;
+  typedef typename Superclass::MovingImageType          MovingImageType;
+  typedef typename Superclass::FixedImageConstPointer   FixedImageConstPointer;
+  typedef typename Superclass::MovingImageConstPointer  MovingImageCosntPointer;
+  typedef typename Superclass::CoordinateRepresentationType
+    CoordinateRepresentationType;
+
+  typedef typename Superclass::CoordinateRepresentationType
+                                                        CoordinateRepresentationType;
+  static const unsigned int SplineOrder = 3; // ugly, how else?
+  typedef AdvancedBSplineDeformableTransform<
+    CoordinateRepresentationType,
+    FixedImageDimension, SplineOrder >                  BSplineTransformType;
+  typedef typename BSplineTransformType::SpacingType    GridSpacingType;
+  typedef AdvancedCombinationTransform<
+    CoordinateRepresentationType, FixedImageDimension > CombinationTransformType;
+
+  /** Index and Point typedef support. */
+  typedef typename FixedImageType::IndexType            FixedImageIndexType;
+  typedef typename FixedImageIndexType::IndexValueType  FixedImageIndexValueType;
+  typedef typename MovingImageType::IndexType           MovingImageIndexType;
+  typedef typename TransformType::InputPointType        FixedImagePointType;
+  typedef typename TransformType::OutputPointType       MovingImagePointType;
+
+  /** The fixed image dimension. */
+  itkStaticConstMacro( FixedImageDimension, unsigned int,
+    FixedImageType::ImageDimension );
+
+  /** The moving image dimension. */
+  itkStaticConstMacro( MovingImageDimension, unsigned int,
+    MovingImageType::ImageDimension );
+
+  /** Typedefs for the two metrics we combine. */
+  typedef ParzenWindowMutualInformationImageToImageMetric<
+    FixedImageType,MovingImageType >                      MattesMutualInformationMetricType;
+  typedef typename MattesMutualInformationMetricType
+    ::Pointer                                             MattesMutualInformationPointer;
+  typedef RigidityPenaltyTermMetric<
+    itkGetStaticConstMacro( FixedImageDimension ),
+    CoordinateRepresentationType >                        RigidityPenaltyTermMetricType;
+  typedef typename RigidityPenaltyTermMetricType::Pointer RigidityPenaltyTermPointer;
+
+  /** Typedefs for the rigidity penalty term. */
+  typedef typename RigidityPenaltyTermMetricType
+    ::CoefficientImageType                              RigidityImageType;
+  typedef typename RigidityPenaltyTermMetricType
+    ::CoefficientImagePointer                           RigidityImagePointer;
+  typedef typename RigidityPenaltyTermMetricType
+    ::ScalarType                                        RigidityPixelType;
+  typedef typename RigidityImageType::RegionType        RigidityImageRegionType;
+  typedef typename RigidityImageType::IndexType         RigidityImageIndexType;
+  typedef typename RigidityImageType::PointType         RigidityImagePointType;
+  typedef ImageRegionIterator< RigidityImageType >      RigidityImageIteratorType;
+  typedef BinaryBallStructuringElement<
+    RigidityPixelType,
+    itkGetStaticConstMacro( FixedImageDimension ) >     StructuringElementType;
+  typedef typename StructuringElementType::RadiusType   SERadiusType;
+  typedef GrayscaleDilateImageFilter<
+    RigidityImageType, RigidityImageType,
+    StructuringElementType >                            DilateFilterType;
+  typedef typename DilateFilterType::Pointer            DilateFilterPointer;
+
+  /** Initialize the metric. */
+  void Initialize(void) throw ( ExceptionObject );
+
+  /**  Get the value. */
+  MeasureType GetValue( const ParametersType& parameters ) const
   {
+    this->FillRigidityCoefficientImage( parameters );
+    return this->Superclass::GetValue( parameters );
+  };
 
-  public:
-    
-    /** Standard class typedefs. */
-    typedef MattesMutualInformationImageToImageMetricWithRigidityPenalty    Self;
-    typedef CombinedImageToImageMetric<
-      TFixedImage, TMovingImage >                         Superclass;
-    typedef SmartPointer<Self>                            Pointer;
-    typedef SmartPointer<const Self>                      ConstPointer;
-    
-    /** Method for creation through the object factory. */
-    itkNewMacro( Self );
-    
-    /** Run-time type information (and related methods). */
-    itkTypeMacro( MattesMutualInformationImageToImageMetricWithRigidityPenalty,
-      CombinedImageToImageMetric );
-    
-    /** Types inherited from Superclass. */
-    typedef typename Superclass::TransformType            TransformType;
-    typedef typename Superclass::TransformPointer         TransformPointer;
-    typedef typename Superclass::TransformJacobianType    TransformJacobianType;
-    typedef typename Superclass::InterpolatorType         InterpolatorType;
-    typedef typename Superclass::MeasureType              MeasureType;
-    typedef typename Superclass::DerivativeType           DerivativeType;
-    typedef typename Superclass::ParametersType           ParametersType;
-    typedef typename Superclass::FixedImageType           FixedImageType;
-    typedef typename Superclass::MovingImageType          MovingImageType;
-    typedef typename Superclass::FixedImageConstPointer   FixedImageConstPointer;
-    typedef typename Superclass::MovingImageConstPointer  MovingImageCosntPointer;
-    typedef typename Superclass::CoordinateRepresentationType
-      CoordinateRepresentationType;
+  /** Get the derivatives of the match measure. */
+  void GetDerivative( const ParametersType& parameters,
+    DerivativeType & derivative ) const
+  {
+    this->FillRigidityCoefficientImage( parameters );
+    this->Superclass::GetDerivative( parameters, derivative );
+  };
 
-    typedef typename Superclass::BSplineTransformType             BSplineTransformType;
-    typedef typename Superclass::BSplineCombinationTransformType  BSplineCombinationTransformType;
-    typedef typename BSplineTransformType::SpacingType            GridSpacingType;
-    
-    /** Index and Point typedef support. */
-    typedef typename FixedImageType::IndexType            FixedImageIndexType;
-    typedef typename FixedImageIndexType::IndexValueType  FixedImageIndexValueType;
-    typedef typename MovingImageType::IndexType           MovingImageIndexType;
-    typedef typename TransformType::InputPointType        FixedImagePointType;
-    typedef typename TransformType::OutputPointType       MovingImagePointType;
-    
-    /** The fixed image dimension. */
-    itkStaticConstMacro( FixedImageDimension, unsigned int,
-      FixedImageType::ImageDimension );
+  /**  Get the value and derivatives for single valued optimizers. */
+  void GetValueAndDerivative( const ParametersType& parameters, 
+    MeasureType& value, DerivativeType& derivative ) const
+  {
+    this->FillRigidityCoefficientImage( parameters );
+    this->Superclass::GetValueAndDerivative( parameters, value, derivative );
+  };
 
-    /** The moving image dimension. */
-    itkStaticConstMacro( MovingImageDimension, unsigned int,
-      MovingImageType::ImageDimension );
-    
-    /** Typedefs for the two metrics we combine. */
-    typedef ParzenWindowMutualInformationImageToImageMetric<
-      FixedImageType,MovingImageType >                      MattesMutualInformationMetricType;
-    typedef typename MattesMutualInformationMetricType
-      ::Pointer                                             MattesMutualInformationPointer;
-    typedef RigidityPenaltyTermMetric<
-      itkGetStaticConstMacro( FixedImageDimension ),
-      CoordinateRepresentationType >                        RigidityPenaltyTermMetricType;
-    typedef typename RigidityPenaltyTermMetricType::Pointer RigidityPenaltyTermPointer;
+  /** Set if the RigidityImage's are dilated. */
+  itkSetMacro( DilateRigidityImages, bool );
 
-    /** Typedefs for the rigidity penalty term. */
-    typedef typename RigidityPenaltyTermMetricType
-      ::CoefficientImageType                              RigidityImageType;
-    typedef typename RigidityPenaltyTermMetricType
-      ::CoefficientImagePointer                           RigidityImagePointer;
-    typedef typename RigidityPenaltyTermMetricType
-      ::ScalarType                                        RigidityPixelType;
-    typedef typename RigidityImageType::RegionType        RigidityImageRegionType;
-    typedef typename RigidityImageType::IndexType         RigidityImageIndexType;
-    typedef typename RigidityImageType::PointType         RigidityImagePointType;
-    typedef ImageRegionIterator< RigidityImageType >      RigidityImageIteratorType;
-    typedef BinaryBallStructuringElement<
-      RigidityPixelType,
-      itkGetStaticConstMacro( FixedImageDimension ) >     StructuringElementType;
-    typedef typename StructuringElementType::RadiusType   SERadiusType;
-    typedef GrayscaleDilateImageFilter<
-      RigidityImageType, RigidityImageType,
-      StructuringElementType >                            DilateFilterType;
-    typedef typename DilateFilterType::Pointer            DilateFilterPointer;
-  
-    /** Initialize the metric. */
-    void Initialize(void) throw ( ExceptionObject );
-    
-    /**  Get the value. */
-    MeasureType GetValue( const ParametersType& parameters ) const
-    {
-      this->FillRigidityCoefficientImage( parameters );
-      return this->Superclass::GetValue( parameters );
-    };
+  /** Set the DilationRadiusMultiplier. */
+  itkSetClampMacro( DilationRadiusMultiplier, CoordinateRepresentationType,
+    0.1, NumericTraits<CoordinateRepresentationType>::max() );
 
-    /** Get the derivatives of the match measure. */
-    void GetDerivative( const ParametersType& parameters,
-      DerivativeType & derivative ) const
-    {
-      this->FillRigidityCoefficientImage( parameters );
-      this->Superclass::GetDerivative( parameters, derivative );
-    };
+  /** Set the fixed coefficient image. */
+  itkSetObjectMacro( FixedRigidityImage, RigidityImageType );
 
-    /**  Get the value and derivatives for single valued optimizers. */
-    void GetValueAndDerivative( const ParametersType& parameters, 
-      MeasureType& value, DerivativeType& derivative ) const
-    {
-      this->FillRigidityCoefficientImage( parameters );
-      this->Superclass::GetValueAndDerivative( parameters, value, derivative );
-    };
+  /** Set the moving coefficient image. */
+  itkSetObjectMacro( MovingRigidityImage, RigidityImageType );
 
-    /** Set if the RigidityImage's are dilated. */
-    itkSetMacro( DilateRigidityImages, bool );
+  /** Set to use the FixedRigidityImage or not. */
+  itkSetMacro( UseFixedRigidityImage, bool );
 
-    /** Set the DilationRadiusMultiplier. */
-    itkSetClampMacro( DilationRadiusMultiplier, CoordinateRepresentationType,
-      0.1, NumericTraits<CoordinateRepresentationType>::max() );
+  /** Set to use the MovingRigidityImage or not. */
+  itkSetMacro( UseMovingRigidityImage, bool );
 
-    /** Set the fixed coefficient image. */
-    itkSetObjectMacro( FixedRigidityImage, RigidityImageType );
+  /** Function to fill the RigidityCoefficientImage every iteration. */
+  void FillRigidityCoefficientImage( const ParametersType& parameters ) const;
 
-    /** Set the moving coefficient image. */
-    itkSetObjectMacro( MovingRigidityImage, RigidityImageType );
+protected:
 
-    /** Set to use the FixedRigidityImage or not. */
-    itkSetMacro( UseFixedRigidityImage, bool );
+  /** The constructor. */
+  MattesMutualInformationImageToImageMetricWithRigidityPenalty();
+  /** The destructor. */
+  virtual ~MattesMutualInformationImageToImageMetricWithRigidityPenalty() {};
 
-    /** Set to use the MovingRigidityImage or not. */
-    itkSetMacro( UseMovingRigidityImage, bool );
+  /** PrintSelf. */
+  void PrintSelf( std::ostream& os, Indent indent ) const;
 
-    /** Function to fill the RigidityCoefficientImage every iteration. */
-    void FillRigidityCoefficientImage( const ParametersType& parameters ) const;
+  /** The two metrics. */
+  MattesMutualInformationPointer  m_MattesMutualInformationMetric;
+  RigidityPenaltyTermPointer      m_RigidityPenaltyTermMetric;
 
-  protected:
-    
-    /** The constructor. */
-    MattesMutualInformationImageToImageMetricWithRigidityPenalty();
-    /** The destructor. */
-    virtual ~MattesMutualInformationImageToImageMetricWithRigidityPenalty() {};
+private:
 
-    /** PrintSelf. */
-    void PrintSelf( std::ostream& os, Indent indent ) const;
+  /** The private constructor. */
+  MattesMutualInformationImageToImageMetricWithRigidityPenalty( const Self& );  // purposely not implemented
 
-    /** The two metrics. */
-    MattesMutualInformationPointer  m_MattesMutualInformationMetric;
-    RigidityPenaltyTermPointer      m_RigidityPenaltyTermMetric;
-    
-  private:
-    
-    /** The private constructor. */
-    MattesMutualInformationImageToImageMetricWithRigidityPenalty( const Self& );  // purposely not implemented
+  /** The private copy constructor. */
+  void operator=( const Self& );                                    // purposely not implemented
 
-    /** The private copy constructor. */
-    void operator=( const Self& );                                    // purposely not implemented
-    
-    /** Internal function to dilate the rigidity images. */
-    virtual void DilateRigidityImages( void );
+  /** Internal function to dilate the rigidity images. */
+  virtual void DilateRigidityImages( void );
 
-    /** Rigidity image variables. */
-    CoordinateRepresentationType    m_DilationRadiusMultiplier;
-    bool                            m_DilateRigidityImages;
-    RigidityImagePointer            m_FixedRigidityImage;
-    RigidityImagePointer            m_MovingRigidityImage;
-    RigidityImagePointer            m_RigidityCoefficientImage;
-    std::vector< DilateFilterPointer >  m_FixedRigidityImageDilation;
-    std::vector< DilateFilterPointer >  m_MovingRigidityImageDilation;
-    RigidityImagePointer            m_FixedRigidityImageDilated;
-    RigidityImagePointer            m_MovingRigidityImageDilated;
-    bool                            m_UseFixedRigidityImage;
-    bool                            m_UseMovingRigidityImage;
-    
-  }; // end class MattesMutualInformationImageToImageMetricWithRigidityPenalty
+  /** Rigidity image variables. */
+  CoordinateRepresentationType    m_DilationRadiusMultiplier;
+  bool                            m_DilateRigidityImages;
+  RigidityImagePointer            m_FixedRigidityImage;
+  RigidityImagePointer            m_MovingRigidityImage;
+  RigidityImagePointer            m_RigidityCoefficientImage;
+  std::vector< DilateFilterPointer >  m_FixedRigidityImageDilation;
+  std::vector< DilateFilterPointer >  m_MovingRigidityImageDilation;
+  RigidityImagePointer            m_FixedRigidityImageDilated;
+  RigidityImagePointer            m_MovingRigidityImageDilated;
+  bool                            m_UseFixedRigidityImage;
+  bool                            m_UseMovingRigidityImage;
+
+}; // end class MattesMutualInformationImageToImageMetricWithRigidityPenalty
 
 } // end namespace itk
 
