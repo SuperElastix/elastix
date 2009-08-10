@@ -752,7 +752,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   typedef vnl_sparse_matrix<CovarianceValueType>      SparseCovarianceMatrixType;  
   typedef typename SparseCovarianceMatrixType::row    SparseRowType;
   typedef typename SparseCovarianceMatrixType::pair_t SparseCovarianceElementType;
-  typedef Array<unsigned int> NonZeroJacobianIndicesExpandedType;
+  typedef Array<unsigned int>           NonZeroJacobianIndicesExpandedType;
   typedef vnl_diag_matrix<CovarianceValueType>        DiagCovarianceMatrixType;
   typedef vnl_vector<CovarianceValueType>             JacobianColumnType;
   
@@ -786,13 +786,14 @@ AdaptiveStochasticGradientDescent<TElastix>
   typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
   unsigned int samplenr = 0;
   
-  /** Variables for nonzerojacobian indices and the jacobian */
-  const unsigned int sizejacind = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
+  /** Variables for nonzerojacobian indices and the Jacobian. */
+  const unsigned int sizejacind
+    = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   JacobianType jacj( outdim, sizejacind );
   jacj.Fill( 0.0 );
-  NonZeroJacobianIndicesType jacind(sizejacind);  
+  NonZeroJacobianIndicesType jacind( sizejacind );
   jacind[ 0 ] = 0;
-  if (sizejacind >1) jacind[ 1 ] = 0;
+  if ( sizejacind > 1 ) jacind[ 1 ] = 0;
   NonZeroJacobianIndicesType prevjacind = jacind;  
   
   /** Initialize covariance matrix. Sparse, diagonal, and band form. */
@@ -800,7 +801,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   DiagCovarianceMatrixType diagcov( P, 0.0 );
   CovarianceMatrixType bandcov;  
 
-  /** For temporary storage of J'J */
+  /** For temporary storage of J'J. */
   CovarianceMatrixType jactjac( sizejacind, sizejacind );
   jactjac.Fill( 0.0 );
   
@@ -808,50 +809,53 @@ AdaptiveStochasticGradientDescent<TElastix>
   ProgressCommandPointer progressObserver = ProgressCommandType::New();
   progressObserver->SetUpdateFrequency( nrofsamples * 2, 100 );
   progressObserver->SetStartString( "  Progress: " );
-  elxout << "  Computing JacobianTerms... " << std::endl;
+  elxout << "  Computing JacobianTerms ... " << std::endl;
  
-  /** Variables for the band cov matrix: */  
+  /** Variables for the band cov matrix. */  
   const unsigned int maxbandcovsize = 192;  
   const unsigned int nrOfBandStructureSamples = 10;
+
   /** DifHist is a histogram of absolute parameterNrDifferences that
    * occur in the nonzerojacobianindex vectors. 
    * DifHist2 is another way of storing the histogram, as a vector
    * of pairs. pair.first = Frequency, pair.second = parameterNrDifference.
    * This is useful for sorting.
    */
-  typedef std::vector<unsigned int> DifHistType;
+  typedef std::vector<unsigned int>             DifHistType;
   typedef std::pair<unsigned int, unsigned int> FreqPairType;
-  typedef std::vector<FreqPairType> DifHist2Type;
-  DifHistType difHist( P, 0 );   
+  typedef std::vector<FreqPairType>             DifHist2Type;
+  DifHistType difHist( P, 0 );
   DifHist2Type difHist2;
 
   /** Try to guess the band structure of the covariance matrix.
    * A 'band' is a series of elements cov(p,q) with constant q-p.
-   * In the loop below, on a few positions in the image the jacobian
+   * In the loop below, on a few positions in the image the Jacobian
    * is computed. The nonzerojacobianindices are inspected to figure out
    * which values of q-p occur often. This is done by making a histogram.
-   * The histogram is then sorted and the most occuring bands
+   * The histogram is then sorted and the most occurring bands
    * are determined. The covariance elements in these bands will not 
    * be stored in the sparse matrix structure 'cov', but in the band
    * matrix 'bandcov', which is much faster.
    * Only after the bandcov and cov have been filled (by looping over 
-   * all jacobian measurements in the sample container, the bandcov 
+   * all Jacobian measurements in the sample container, the bandcov 
    * matrix is injected in the cov matrix, for easy further calculations,
-   * and the bandcov matrix is deleted. */
+   * and the bandcov matrix is deleted.
+   */
   unsigned int onezero = 0;
   for ( unsigned int s = 0; s < nrOfBandStructureSamples; ++s )
   {
-    /** Semi-randomly get some samples from the samplecontainer. */
+    /** Semi-randomly get some samples from the sample container. */
     const unsigned int samplenr = ( s + 1 ) * nrofsamples
-      / (nrOfBandStructureSamples + 2 + onezero );
-    onezero = 1 - onezero; // introduces semirandomness
+      / ( nrOfBandStructureSamples + 2 + onezero );
+    onezero = 1 - onezero; // introduces semi-randomness
 
     /** Read fixed coordinates and get Jacobian J_j. */
-    const FixedImagePointType & point = sampleContainer->GetElement(samplenr).m_ImageCoordinates;    
+    const FixedImagePointType & point
+      = sampleContainer->GetElement(samplenr).m_ImageCoordinates;    
     this->m_AdvancedTransform->GetJacobian( point, jacj, jacind  );
 
     /** Skip invalid Jacobians in the beginning, if any. */
-    if (sizejacind >1)
+    if ( sizejacind > 1 )
     {
       if ( jacind[ 0 ] == jacind[ 1 ] )
       {
@@ -883,7 +887,8 @@ AdaptiveStochasticGradientDescent<TElastix>
   difHist.resize( 0 );
 
   /** Compute the number of bands. */
-  const unsigned int bandcovsize = vnl_math_min( maxbandcovsize, static_cast<unsigned int>(difHist2.size()) );
+  const unsigned int bandcovsize = vnl_math_min( maxbandcovsize,
+    static_cast<unsigned int>(difHist2.size()) );
   /** Maps parameterNrDifference (q-p) to colnr in bandcov. */
   std::vector<unsigned int> bandcovMap( P, bandcovsize );
   /** Maps colnr in bandcov to parameterNrDifference (q-p). */
@@ -913,7 +918,7 @@ AdaptiveStochasticGradientDescent<TElastix>
    * Possibly apply scaling afterwards.
    */
   jacind[ 0 ] = 0;
-  if (sizejacind >1) jacind[ 1 ] = 0;  
+  if ( sizejacind > 1 ) jacind[ 1 ] = 0;  
   for ( iter = begin; iter != end; ++iter )
   {
     /** Print progress 0-50%. */
@@ -925,7 +930,7 @@ AdaptiveStochasticGradientDescent<TElastix>
     this->m_AdvancedTransform->GetJacobian( point, jacj, jacind  );
 
     /** Skip invalid Jacobians in the beginning, if any. */
-    if (sizejacind >1)
+    if ( sizejacind > 1 )
     {
       if ( jacind[ 0 ] == jacind[ 1 ] )
       {
@@ -1044,7 +1049,7 @@ AdaptiveStochasticGradientDescent<TElastix>
     }
   }  
   
-  /** Compute TrC = trace(C), and diagcov */ 
+  /** Compute TrC = trace(C), and diagcov. */ 
   for ( unsigned int p = 0; p < P; ++p )
   {
     if ( !cov.empty_row( p ) )
@@ -1325,7 +1330,8 @@ AdaptiveStochasticGradientDescent<TElastix>
   {
     this->m_AdvancedTransform = 0;
     itkDebugMacro( "Transform is not Advanced" );
-    itkExceptionMacro( << "The automatic parameter estimation of the ASGD optimizer works only with advanced transforms" );
+    itkExceptionMacro( << "The automatic parameter estimation of the ASGD "
+      << "optimizer works only with advanced transforms" );
   }
   else
   {    
