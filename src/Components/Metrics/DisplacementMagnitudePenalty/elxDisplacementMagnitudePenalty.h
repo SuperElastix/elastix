@@ -45,7 +45,7 @@ using namespace itk;
     public
       DisplacementMagnitudePenaltyTerm<
         ITK_TYPENAME MetricBase<TElastix>::FixedImageType,
-        ITK_TYPENAME MetricBase<TElastix>::MovingImageType >,
+        double >,
     public MetricBase<TElastix>
   {
   public:
@@ -54,7 +54,7 @@ using namespace itk;
     typedef DisplacementMagnitudePenalty                 Self;
     typedef DisplacementMagnitudePenaltyTerm<
       typename MetricBase<TElastix>::FixedImageType,
-      typename MetricBase<TElastix>::MovingImageType >    Superclass1;
+      double >                                            Superclass1;
     typedef MetricBase<TElastix>                          Superclass2;
     typedef SmartPointer<Self>                            Pointer;
     typedef SmartPointer<const Self>                      ConstPointer;
