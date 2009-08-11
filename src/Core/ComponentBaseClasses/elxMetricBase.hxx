@@ -147,7 +147,8 @@ MetricBase<TElastix>
   {
     /** Not every metric may have implemented this, so give a warning when this
      * method is called for a metric without sampler support.
-     * To avoid the warning, this method may be overridden by a subclass. */
+     * To avoid the warning, this method may be overridden by a subclass.
+     */
     xl::xout["warning"] 
       << "WARNING: The NewSamplesEveryIteration option was set to \"true\", but "
       << this->GetComponentLabel()

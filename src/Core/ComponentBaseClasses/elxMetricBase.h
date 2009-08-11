@@ -109,29 +109,35 @@ using namespace itk;
 
     /** Execute stuff before each resolution:
      * \li Check if the exact metric value should be computed
-     * (to monitor the progress of the registration) */
-    virtual void BeforeEachResolutionBase(void);
+     * (to monitor the progress of the registration).
+     */
+    virtual void BeforeEachResolutionBase( void );
 
     /** Execute stuff after each iteration:
-     * \li Optionally compute the exact metric value and plot it to screen */
-    virtual void AfterEachIterationBase(void);
+     * \li Optionally compute the exact metric value and plot it to screen.
+     */
+    virtual void AfterEachIterationBase( void );
     
-    /*** Force the metric to base its computation on a new subset of image samples.
-     * Not every metric may have implemented this. */
-    virtual void SelectNewSamples(void);
+    /** Force the metric to base its computation on a new subset of image samples.
+     * Not every metric may have implemented this.
+     */
+    virtual void SelectNewSamples( void );
 
     /** Returns whether the metric uses a sampler. When the metric is not of
-     * AdvancedMetricType, the function returns false immediately. */
+     * AdvancedMetricType, the function returns false immediately.
+     */
     virtual bool GetAdvancedMetricUseImageSampler( void ) const;
 
     /** Method to set the image sampler. The image sampler is only used when
      * the metric is of type AdvancedMetricType, and has UseImageSampler set
-     * to true. In other cases, the function does nothing. */
+     * to true. In other cases, the function does nothing.
+     */
     virtual void SetAdvancedMetricImageSampler( ImageSamplerBaseType * sampler );
 
     /** Methods to get the image sampler. The image sampler is only used when
      * the metric is of type AdvancedMetricType, and has UseImageSampler set
-     * to true. In other cases, the function returns 0. */
+     * to true. In other cases, the function returns 0.
+     */
     virtual ImageSamplerBaseType * GetAdvancedMetricImageSampler( void ) const;
 
   protected:
@@ -140,7 +146,7 @@ using namespace itk;
     typedef typename ITKBaseType::MeasureType       MeasureType;
     typedef typename ITKBaseType::ParametersType    ParametersType;
 
-    /** The full sampler used by the GetExactValue method */    
+    /** The full sampler used by the GetExactValue method. */    
     typedef itk::ImageFullSampler<FixedImageType>   ImageFullSamplerType;
     
     /** The constructor. */
@@ -149,12 +155,12 @@ using namespace itk;
     virtual ~MetricBase() {}
 
     /**  Get the exact value. Mutual information computed over all points.
-     * It is meant in situations when you optimise using just a subset of pixels, 
+     * It is meant in situations when you optimize using just a subset of pixels, 
      * but are interested in the exact value of the metric. 
      *
      * This method only works when the itkYourMetric inherits from 
      * the AdvancedMetricType.
-     * In other cases it returns 0. You may reimplement this method in 
+     * In other cases it returns 0. You may re-implement this method in 
      * the elxYourMetric, if you like. 
      */
     virtual MeasureType GetExactValue( const ParametersType& parameters );
