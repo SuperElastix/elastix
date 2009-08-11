@@ -48,7 +48,8 @@ MattesMutualInformationWithRigidityPenalty<TElastix>
  */
 
 template <class TElastix>
-void MattesMutualInformationWithRigidityPenalty<TElastix>
+void
+MattesMutualInformationWithRigidityPenalty<TElastix>
 ::BeforeRegistration( void )
 {
   /** Read the fixed rigidity image if desired. */
@@ -352,7 +353,8 @@ void MattesMutualInformationWithRigidityPenalty<TElastix>
  */
 
 template <class TElastix>
-void MattesMutualInformationWithRigidityPenalty<TElastix>
+void
+MattesMutualInformationWithRigidityPenalty<TElastix>
 ::AfterEachIteration( void )
 {
   /** Print some information. */

@@ -47,9 +47,9 @@ namespace itk
    * This metric only works with B-splines as a transformation model.
    *
    * References:
-   * [1] "Nonrigid Registration Using a Rigidity Constraint"
-   *    M. Staring, S. Klein and Josien P.W. Pluim
-   *    SPIE Medical Imaging 2006: Image Processing, 2006.
+   * [1] M. Staring, S. Klein and J.P.W. Pluim,
+   *    "A Rigidity Penalty Term for Nonrigid Registration,"
+   *    Medical Physics, vol. 34, no. 11, pp. 4098 - 4108, November 2007.
    * 
    * \sa BSplineTransform
    * \sa MattesMutualInformationImageToImageMetricWithRigidRegularization
