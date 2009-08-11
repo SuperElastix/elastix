@@ -136,8 +136,9 @@ protected:
   /** The destructor. */
   virtual ~TransformBendingEnergyPenaltyTerm() {};
 
-  /** A function to check if the transform is B-spline, for speedup. */
-  virtual bool CheckForBSplineTransform( void ) const;
+  /** Typedef's for the B-spline transform. */
+  typedef typename Superclass::BSplineTransformType       BSplineTransformType;
+  typedef typename Superclass::CombinationTransformType   CombinationTransformType;
 
 private:
 

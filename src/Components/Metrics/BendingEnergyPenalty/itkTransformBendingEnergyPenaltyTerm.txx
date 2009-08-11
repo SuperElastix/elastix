@@ -16,10 +16,6 @@
 
 #include "itkTransformBendingEnergyPenaltyTerm.h"
 
-// Needed for checking for B-spline for faster implementation
-#include "itkAdvancedBSplineDeformableTransform.h"
-#include "itkAdvancedCombinationTransform.h"
-
 
 namespace itk
 {
@@ -38,47 +34,6 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   this->SetUseImageSampler( true );
 
 } // end constructor
-
-
-/**
- * ****************** CheckForBSplineTransform *******************************
- */
-
-template< class TFixedImage, class TScalarType >
-bool
-TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
-::CheckForBSplineTransform( void ) const
-{
-  /** Check if this transform is a B-spline transform. */
-  typedef AdvancedBSplineDeformableTransform< ScalarType,
-    FixedImageDimension, 3 >                        BSplineTransformType;
-  typedef AdvancedCombinationTransform< ScalarType,
-    FixedImageDimension >                           CombinationTransformType;
-  BSplineTransformType * testPtr1
-    = dynamic_cast<BSplineTransformType *>( this->m_Transform.GetPointer() );
-  CombinationTransformType * testPtr2a
-    = dynamic_cast<CombinationTransformType *>( this->m_Transform.GetPointer() );
-  bool transformIsBSpline = false;
-  if ( testPtr1 )
-  {
-    /** The transform is of type AdvancedBSplineDeformableTransform. */
-    transformIsBSpline = true;
-  }
-  else if ( testPtr2a )
-  {
-    /** The transform is of type AdvancedCombinationTransform. */
-    BSplineTransformType * testPtr2b = dynamic_cast<BSplineTransformType *>(
-      (testPtr2a->GetCurrentTransform()) );
-    if ( testPtr2b )
-    {
-      /** The current transform is of type AdvancedBSplineDeformableTransform. */
-      transformIsBSpline = true;
-    }
-  }
-
-  return transformIsBSpline;
-
-} // end CheckForBSplineTransform()
 
 
 /**
@@ -219,7 +174,8 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   this->SetTransformParameters( parameters );
 
   /** Check if this transform is a B-spline transform. */
-  bool transformIsBSpline = this->CheckForBSplineTransform();
+  typename BSplineTransformType::Pointer dummy = 0;
+  bool transformIsBSpline = this->CheckForBSplineTransform( dummy );
 
   /** Update the imageSampler and get a handle to the sample container. */
   this->GetImageSampler()->Update();
