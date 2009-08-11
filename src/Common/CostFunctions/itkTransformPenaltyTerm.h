@@ -35,7 +35,7 @@ namespace itk
  * \ingroup Metrics
  */
 
-template< class TFixedImage, class TScalarType >
+template< class TFixedImage, class TScalarType = double >
 class TransformPenaltyTerm
   : public AdvancedImageToImageMetric< TFixedImage, TFixedImage >
 {
@@ -93,7 +93,7 @@ public:
 
   /** Typedefs from the AdvancedTransform. */
   typedef typename Superclass
-    ::AdvancedTransformType                     TransformType;  
+    ::AdvancedTransformType                     TransformType;
   typedef typename TransformType
     ::SpatialJacobianType                       SpatialJacobianType;
   typedef typename TransformType
@@ -109,7 +109,8 @@ public:
   itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
 
   /** Initialize the penalty term by making sure that
-   * all the components are present and plugged together correctly. */
+   * all the components are present and plugged together correctly.
+   */
   virtual void Initialize( void ) throw ( ExceptionObject );
 
 protected:

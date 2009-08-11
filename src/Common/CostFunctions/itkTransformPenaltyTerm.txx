@@ -76,7 +76,8 @@ TransformPenaltyTerm< TFixedImage, TScalarType >
       = dynamic_cast< TransformType * >( this->m_Transform.GetPointer() );
     if ( !this->m_AdvancedTransform )
     {
-      itkExceptionMacro( << "ERROR: The transform is not an AdvancedTransform, which is needed for this penalty term." );
+      itkExceptionMacro( << "ERROR: The transform is not an AdvancedTransform,"
+        << " which is needed for this penalty term." );
     }
   }
 
