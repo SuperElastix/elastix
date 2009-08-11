@@ -484,7 +484,8 @@ namespace itk
     ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
     ::UpdateJointPDFAndDerivatives(
       RealType fixedImageValue, RealType movingImageValue, 
-      const DerivativeType * imageJacobian ) const
+      const DerivativeType * imageJacobian,
+      const NonZeroJacobianIndicesType * nzji) const
   {
     typedef ImageSliceIteratorWithIndex< JointPDFType >  PDFIteratorType;
 
@@ -560,7 +561,7 @@ namespace itk
           it.Value() += static_cast<PDFValueType>( fv * movingParzenValues[ m ] );
           this->UpdateJointPDFDerivatives( 
             it.GetIndex(), fv_et * derivativeMovingParzenValues[ m ],
-            *imageJacobian );
+            *imageJacobian, *nzji );
           ++it;
         }
         it.NextLine();
@@ -579,14 +580,15 @@ namespace itk
     ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
     ::UpdateJointPDFDerivatives(
     const JointPDFIndexType & pdfIndex, double factor,
-    const DerivativeType & imageJacobian ) const
+    const DerivativeType & imageJacobian,
+    const NonZeroJacobianIndicesType & nzji  ) const
   {
     /** Get the pointer to the element with index [0, pdfIndex[0], pdfIndex[1]]. */
     PDFValueType * derivPtr = this->m_JointPDFDerivatives->GetBufferPointer() +
       ( pdfIndex[0] * this->m_JointPDFDerivatives->GetOffsetTable()[1] ) +
       ( pdfIndex[1] * this->m_JointPDFDerivatives->GetOffsetTable()[2] );
     
-    if ( this->m_NonZeroJacobianIndices.size() == this->GetNumberOfParameters() )
+    if ( nzji.size() == this->GetNumberOfParameters() )
     {
       /** Loop over all Jacobians. */
       typename DerivativeType::const_iterator imjac = imageJacobian.begin();
@@ -602,7 +604,7 @@ namespace itk
       /** Loop only over the non-zero Jacobians. */
       for ( unsigned int i = 0; i < imageJacobian.GetSize(); ++i )
       {
-        const unsigned int mu = this->m_NonZeroJacobianIndices[ i ];
+        const unsigned int mu = nzji[ i ];
         PDFValueType * ptr = derivPtr + mu;
         *(ptr) -= static_cast<PDFValueType>( imageJacobian[ i ] * factor );
       }
@@ -791,7 +793,8 @@ namespace itk
     const DerivativeType & movingImageValuesRight,
     const DerivativeType & movingImageValuesLeft,
     const DerivativeType & movingMaskValuesRight,
-    const DerivativeType & movingMaskValuesLeft ) const
+    const DerivativeType & movingMaskValuesLeft,
+    const NonZeroJacobianIndicesType & nzji ) const
   {
     /** Pointers to the first pixels in the incremental joint pdfs. */
     PDFValueType * incRightBasePtr = this->m_IncrementalJointPDFRight->GetBufferPointer();
@@ -854,9 +857,9 @@ namespace itk
           PDFValueType * incLeftPtr = incLeftBasePtr + offset;
 
           /** Loop only over the non-zero Jacobians. */
-          for ( unsigned int i = 0; i < this->m_NonZeroJacobianIndices.size(); ++i )
+          for ( unsigned int i = 0; i < nzji.size(); ++i )
           {
-            const unsigned int mu = this->m_NonZeroJacobianIndices[ i ];
+            const unsigned int mu = nzji[ i ];
             PDFValueType * rPtr = incRightPtr + mu;
             PDFValueType * lPtr = incLeftPtr + mu;
             *(rPtr) -= fv_mask_mv;
@@ -883,9 +886,9 @@ namespace itk
      */
     JointPDFDerivativesIndexType rindex;
     JointPDFDerivativesIndexType lindex;
-    for ( unsigned int i = 0; i < this->m_NonZeroJacobianIndices.size(); ++i)
+    for ( unsigned int i = 0; i < nzji.size(); ++i)
     {
-      const unsigned int mu = this->m_NonZeroJacobianIndices[ i ];
+      const unsigned int mu = nzji[ i ];
       const double maskr = movingMaskValuesRight[ i ];
       const double maskl = movingMaskValuesLeft[ i ];
             
@@ -1033,7 +1036,7 @@ namespace itk
         
         /** Compute this sample's contribution to the joint distributions. */
         this->UpdateJointPDFAndDerivatives(
-          fixedImageValue, movingImageValue, 0 );
+          fixedImageValue, movingImageValue, 0, 0 );
       }
 
     } // end iterating over fixed image spatial sample container for loop
@@ -1061,9 +1064,11 @@ namespace itk
     this->m_JointPDFDerivatives->FillBuffer( 0.0 );
     this->m_Alpha = 0.0;
     this->m_NumberOfPixelsCounted = 0;
-            
-    /** Arrays that store dM(x)/dmu and dMask(x)/dmu. */
-    DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.size() );
+
+    /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
+    NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+    DerivativeType imageJacobian( nzji.size() );
+    TransformJacobianType jacobian;
            
     /** Set up the parameters in the transform. */
     this->SetTransformParameters( parameters );
@@ -1117,8 +1122,7 @@ namespace itk
           movingImageValue, movingImageDerivative );
         
         /** Get the TransformJacobian dT/dmu. */
-        const TransformJacobianType & jacobian = 
-          this->EvaluateTransformJacobian( fixedPoint );
+        this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
         
         /** Compute the inner product (dM/dx)^T (dT/dmu). */
         this->EvaluateTransformJacobianInnerProduct( 
@@ -1126,7 +1130,7 @@ namespace itk
         
         /** Update the joint pdf and the joint pdf derivatives. */
         this->UpdateJointPDFAndDerivatives(
-          fixedImageValue, movingImageValue, &imageJacobian );
+          fixedImageValue, movingImageValue, &imageJacobian, &nzji );
                               
       } //end if-block check sampleOk
     } // end iterating over fixed image spatial sample container for loop
@@ -1161,12 +1165,16 @@ namespace itk
     this->m_NumberOfPixelsCounted = 0;
     double sumOfMovingMaskValues = 0.0;
     const double delta = this->GetFiniteDifferencePerturbation();
-        
-    /** Arrays that store dM(x)/dmu and dMask(x)/dmu. */
-    DerivativeType movingImageValuesRight( this->m_NonZeroJacobianIndices.size() );
-    DerivativeType movingImageValuesLeft( this->m_NonZeroJacobianIndices.size() );
-    DerivativeType movingMaskValuesRight( this->m_NonZeroJacobianIndices.size() );
-    DerivativeType movingMaskValuesLeft( this->m_NonZeroJacobianIndices.size() );
+    
+    /** sparse jacobian+indices. */
+    NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );    
+    TransformJacobianType jacobian;
+
+    /** Arrays that store dM(x)/dmu and dMask(x)/dmu. */    
+    DerivativeType movingImageValuesRight( nzji.size() );
+    DerivativeType movingImageValuesLeft( nzji.size() );
+    DerivativeType movingMaskValuesRight( nzji.size() );
+    DerivativeType movingMaskValuesLeft( nzji.size() );
            
     /** Set up the parameters in the transform. */
     this->SetTransformParameters( parameters );
@@ -1240,14 +1248,13 @@ namespace itk
          * function of its parameters, so that we can evaluate T(x;\mu+delta_ek)
          * as T(x) + delta * dT/dmu_k.
          */
-        const TransformJacobianType & jacobian = 
-          this->EvaluateTransformJacobian( fixedPoint );
+        this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
         
         MovingImagePointType mappedPointRight;
         MovingImagePointType mappedPointLeft;
 
         /** Loop over all parameters to perturb (parameters with nonzero Jacobian). */
-        for ( unsigned int i = 0; i < this->m_NonZeroJacobianIndices.size(); ++i )
+        for ( unsigned int i = 0; i < nzji.size(); ++i )
         { 
           /** Compute the transformed input point after perturbation. */
           for ( unsigned int j = 0; j < MovingImageDimension; ++j )
@@ -1311,7 +1318,7 @@ namespace itk
         this->UpdateJointPDFAndIncrementalPDFs(
           fixedImageValue, movingImageValue, movingMaskValue, 
           movingImageValuesRight, movingImageValuesLeft, 
-          movingMaskValuesRight, movingMaskValuesLeft );
+          movingMaskValuesRight, movingMaskValuesLeft, nzji );
                               
       } //end if-block check sampleOk
     } // end iterating over fixed image spatial sample container for loop

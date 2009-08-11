@@ -63,6 +63,8 @@ MattesMutualInformationImageToImageMetricWithRigidityPenalty<TFixedImage,TMoving
   this->m_FixedRigidityImageDilated = 0;
   this->m_MovingRigidityImageDilated = 0;
 
+  this->m_LocalBSplineTransform = 0;
+
 } // end Constructor()
 
 
@@ -142,12 +144,14 @@ MattesMutualInformationImageToImageMetricWithRigidityPenalty<TFixedImage,TMoving
       this->m_RigidityPenaltyTermMetric->SetBSplineTransform( testPtr2b );
     }
   }
+ 
 
   /** Set the B-spline transform to m_RigidityPenaltyTermMetric. */
   if ( !transformSupported )
   {
     itkExceptionMacro( << "ERROR: this metric expects a B-spline transform." );
   }
+  this->m_LocalBSplineTransform = localBSplineTransform;
 
   /** Allocate the RigidityCoefficientImage, so that it matches the B-spline grid.
    * Only because the Initialize()-function above is called before,
@@ -218,18 +222,11 @@ MattesMutualInformationImageToImageMetricWithRigidityPenalty<TFixedImage,TMoving
 
     /** Get the B-spline grid spacing. */
     GridSpacingType spacing;
-    if ( this->m_TransformIsBSpline )
+    if ( this->m_LocalBSplineTransform.IsNotNull() )
     {
-      spacing = this->m_BSplineTransform->GetGridSpacing();
+      spacing = this->m_LocalBSplineTransform->GetGridSpacing();
     }
-    else if ( this->m_TransformIsBSplineCombination )
-    {
-      BSplineTransformType * localBSpline =
-        dynamic_cast<BSplineTransformType *>(
-        this->m_BSplineCombinationTransform->GetCurrentTransform() );
-      spacing = localBSpline->GetGridSpacing();
-    }
-
+   
     /** Set stuff for the separate dilation. */
     for ( unsigned int i = 0; i < FixedImageDimension; i++ )
     {

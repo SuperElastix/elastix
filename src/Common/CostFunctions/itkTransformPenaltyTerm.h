@@ -112,11 +112,6 @@ public:
   /** Define the dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
 
-  /** Initialize the penalty term by making sure that
-   * all the components are present and plugged together correctly.
-   */
-  virtual void Initialize( void ) throw ( ExceptionObject );
-
 protected:
 
   /** Typedefs for indices and points. */
@@ -129,13 +124,13 @@ protected:
   typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
 
   /** The constructor. */
-  TransformPenaltyTerm();
+  TransformPenaltyTerm(){};
 
   /** The destructor. */
   virtual ~TransformPenaltyTerm() {};
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream& os, Indent indent ) const;
+  //void PrintSelf( std::ostream& os, Indent indent ) const;
 
   typename TransformType::Pointer m_AdvancedTransform;
 

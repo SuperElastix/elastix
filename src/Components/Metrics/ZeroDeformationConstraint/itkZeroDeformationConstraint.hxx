@@ -201,8 +201,10 @@ namespace itk
     derivative = DerivativeType( this->GetNumberOfParameters() );
     derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
 
-    /** Arrays that store dM(x)/dmu. */
-    DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.size() );
+    /** Arrays that store dM(x)/dmu, and the sparse jacobian+indices. */
+    NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+    DerivativeType imageJacobian( nzji.size() );
+    TransformJacobianType jacobian;
 
     /** Make sure the transform parameters are up to date. */
     this->SetTransformParameters( parameters );
@@ -270,11 +272,10 @@ namespace itk
         }
 
         /** Get the TransformJacobian dT/dMu (Jacobian). */
-        const TransformJacobianType & jacobian = 
-            this->EvaluateTransformJacobian( fixedPoint );
+        this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
 
         /** Compute (dT/dMu)T * scaledTransformation. */
-        const typename NonZeroJacobianIndicesType::size_type numNonZeroJacobianIndices = this->m_NonZeroJacobianIndices.size();
+        const typename NonZeroJacobianIndicesType::size_type numNonZeroJacobianIndices = nzji.size();
         for ( typename NonZeroJacobianIndicesType::size_type n = 0; n < numNonZeroJacobianIndices; ++n )
         {
           float jacScaledTransformation = 0.0f;
@@ -284,7 +285,7 @@ namespace itk
           }
 
           /** Update derivative sum. */
-          derivative[ this->m_NonZeroJacobianIndices[ n ] ] += jacScaledTransformation;
+          derivative[ nzji[ n ] ] += jacScaledTransformation;
         }
       } // sampleOk
       i++;

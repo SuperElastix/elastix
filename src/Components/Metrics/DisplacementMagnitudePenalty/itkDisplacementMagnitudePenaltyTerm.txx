@@ -53,21 +53,6 @@ DisplacementMagnitudePenaltyTerm< TFixedImage, TScalarType >
 } // end PrintSelf()
 */
 
-
-/**
- * ****************** Initialize *******************************
- */
-
-template< class TFixedImage, class TScalarType >
-void
-DisplacementMagnitudePenaltyTerm< TFixedImage, TScalarType >
-  ::Initialize(void) throw ( ExceptionObject )
-{
-  /** Bypass the superclass, since we do not need an advanced transform */
-  typedef typename Superclass::Superclass SuperSuperclass;
-  this->SuperSuperclass::Initialize();
-}
-
 /**
  * ****************** GetValue *******************************
  */
@@ -175,7 +160,11 @@ DisplacementMagnitudePenaltyTerm< TFixedImage, TScalarType >
   RealType measure = NumericTraits< RealType >::Zero;
   derivative = DerivativeType( this->GetNumberOfParameters() );
   derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
-  const unsigned long nrNonZeroJacobianIndices = this->m_NonZeroJacobianIndices.size();
+
+  /** Array that stores sparse jacobian+indices. */
+  NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );  
+  TransformJacobianType jacobian;
+  const unsigned long nrNonZeroJacobianIndices = nzji.size();
   
   /** Make sure the transform parameters are up to date. */
   this->SetTransformParameters( parameters );
@@ -210,8 +199,7 @@ DisplacementMagnitudePenaltyTerm< TFixedImage, TScalarType >
       this->m_NumberOfPixelsCounted++; 
 
       /** Get the TransformJacobian dT/dmu. */
-      const TransformJacobianType & jacobian = 
-        this->EvaluateTransformJacobian( fixedPoint );
+      this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
   
       /** Compute displacement */
       VectorType vec = mappedPoint - fixedPoint;
@@ -226,7 +214,7 @@ DisplacementMagnitudePenaltyTerm< TFixedImage, TScalarType >
         const double vecd = vec[d];
         for (unsigned int i = 0; i < nrNonZeroJacobianIndices; ++i )
         {
-          const unsigned int mu = this->m_NonZeroJacobianIndices[i];
+          const unsigned int mu = nzji[i];
           derivative[mu] += vecd * jacobian(d,i);
         }              
       }   

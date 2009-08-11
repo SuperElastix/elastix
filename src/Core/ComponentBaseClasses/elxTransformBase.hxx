@@ -157,21 +157,6 @@ TransformBase<TElastix>
     }
   }
 
-  /** Check if this is an AdvancedCombinationTransform. */
-  AdvancedCombinationTransformType * thisAsGrouper2 = 
-    dynamic_cast< AdvancedCombinationTransformType * >( this );
-  if ( thisAsGrouper2 )
-  {
-    if ( howToCombineTransforms == "Compose" )
-    {
-      thisAsGrouper2->SetUseComposition( true );
-    }
-    else
-    {
-      thisAsGrouper2->SetUseComposition( false );
-    }
-  }
-
   /** Set the initial transform. Elastix returns an itkObject, so 
    * try to cast it to an InitialTransformType, which is of type itk::Transform.
    * No need to cast to InitialAdvancedTransformType, since InitialAdvancedTransformType
@@ -218,26 +203,13 @@ TransformBase<TElastix>
   /** Cast to a(n Advanced)CombinationTransform. */
   const CombinationTransformType * thisAsGrouper
     = dynamic_cast< const CombinationTransformType * >( this );
-  const AdvancedCombinationTransformType * thisAsGrouper2
-    = dynamic_cast< const AdvancedCombinationTransformType * >( this );
-
+  
   /** Set the initial transform. */
   if ( thisAsGrouper )
   {
     return thisAsGrouper->GetInitialTransform();
   }
-  else if ( thisAsGrouper2 )
-  {
-    const InitialTransformType * initialTransform
-      = dynamic_cast< const InitialTransformType * >(
-      thisAsGrouper2->GetInitialTransform() );
-    if ( initialTransform )
-    {
-      return initialTransform;
-    }
-    return 0;
-  }
-
+  
   return 0;
 
 } // end GetInitialTransform()
@@ -255,30 +227,13 @@ TransformBase<TElastix>
   /** Cast to a(n Advanced)CombinationTransform. */
   CombinationTransformType * thisAsGrouper
     = dynamic_cast< CombinationTransformType * >( this );
-  AdvancedCombinationTransformType * thisAsGrouper2
-    = dynamic_cast< AdvancedCombinationTransformType * >( this );
-
+ 
   /** Set initial transform. */
   if ( thisAsGrouper )
   {
     thisAsGrouper->SetInitialTransform( _arg );
   }
-  else if ( thisAsGrouper2 )
-  {
-    InitialAdvancedTransformType * _arg2
-      = dynamic_cast< InitialAdvancedTransformType * >( _arg );
-    if ( _arg2 )
-    {
-      thisAsGrouper2->SetInitialTransform( _arg2 );
-    }
-    else
-    {
-      itkExceptionMacro( << "ERROR: You are using the advanced combination "
-        "transform, but you are trying to set a normal transform as initial "
-        "transform. That is not possible." );
-    }
-  }
-
+  
   // \todo AdvancedCombinationTransformType
 
 } // end SetInitialTransform()
@@ -503,8 +458,6 @@ void TransformBase<TElastix>
    */
   CombinationTransformType * thisAsGrouper = 
     dynamic_cast< CombinationTransformType * >( this );
-  AdvancedCombinationTransformType * thisAsGrouper2 = 
-    dynamic_cast< AdvancedCombinationTransformType * >( this );
   if ( thisAsGrouper )
   {
     if ( howToCombineTransforms == "Compose" )
@@ -516,18 +469,7 @@ void TransformBase<TElastix>
       thisAsGrouper->SetUseComposition( false );
     }
   }
-  else if ( thisAsGrouper2 )
-  {
-    if ( howToCombineTransforms == "Compose" )
-    {
-      thisAsGrouper2->SetUseComposition( true );
-    }
-    else
-    {
-      thisAsGrouper2->SetUseComposition( false );
-    }
-  }
-
+  
   /** Task 4 - Remember the name of the TransformParametersFileName.
    * This will be needed when another transform will use this transform
    * as an initial transform (see the WriteToFile method)
@@ -672,16 +614,7 @@ void TransformBase<TElastix>
       combinationMethod = "Compose";
     }
   }
-  const AdvancedCombinationTransformType * dummyComboTransform2
-    = dynamic_cast< const AdvancedCombinationTransformType * >( this );
-  if ( dummyComboTransform2 )
-  {
-    if ( dummyComboTransform2->GetUseComposition() )
-    {
-      combinationMethod = "Compose";
-    }
-  }
-
+ 
   xout["transpar"] << "(HowToCombineTransforms \""
     << combinationMethod << "\")" << std::endl;
 

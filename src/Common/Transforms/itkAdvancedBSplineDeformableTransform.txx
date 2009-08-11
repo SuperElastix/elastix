@@ -1084,7 +1084,13 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   // NOTE: if the support region does not lie totally within the grid
   // we assume zero displacement and zero Jacobian
   if ( !this->InsideValidRegion( cindex ) )
-  {    
+  { 
+    /** Return some dummy */
+    nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );
+    for (unsigned int i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i )
+    {
+      nonZeroJacobianIndices[i] = i;
+    }
     return;
   }
   

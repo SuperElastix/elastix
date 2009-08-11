@@ -229,6 +229,7 @@ private:
   RigidityImagePointer            m_MovingRigidityImageDilated;
   bool                            m_UseFixedRigidityImage;
   bool                            m_UseMovingRigidityImage;
+  typename BSplineTransformType::Pointer m_LocalBSplineTransform;
 
 }; // end class MattesMutualInformationImageToImageMetricWithRigidityPenalty
 

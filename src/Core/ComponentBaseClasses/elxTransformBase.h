@@ -20,7 +20,6 @@
 
 #include "elxBaseComponentSE.h"
 #include "itkTransform.h"
-#include "itkCombinationTransform.h"
 #include "itkAdvancedCombinationTransform.h"
 #include "elxComponentDatabase.h"
 #include "elxProgressCommand.h"
@@ -120,16 +119,12 @@ public:
   typedef itk::Transform<
     CoordRepType,
     itkGetStaticConstMacro( FixedImageDimension ),
-    itkGetStaticConstMacro( MovingImageDimension ) >          ITKBaseType;
-  typedef itk::CombinationTransform<CoordRepType,
-    itkGetStaticConstMacro( FixedImageDimension ) >           CombinationTransformType;
+    itkGetStaticConstMacro( MovingImageDimension ) >          ITKBaseType;    
+  typedef itk::AdvancedCombinationTransform<CoordRepType,
+    itkGetStaticConstMacro( FixedImageDimension ) >           CombinationTransformType;  
   typedef typename
     CombinationTransformType::InitialTransformType            InitialTransformType;
-  typedef itk::AdvancedCombinationTransform<CoordRepType,
-    itkGetStaticConstMacro( FixedImageDimension ) >           AdvancedCombinationTransformType;
-  typedef typename
-    AdvancedCombinationTransformType::InitialTransformType    InitialAdvancedTransformType;
-
+  
   /** Typedef's from Transform. */
   typedef typename ITKBaseType::ParametersType    ParametersType;
   typedef typename ParametersType::ValueType      ValueType;

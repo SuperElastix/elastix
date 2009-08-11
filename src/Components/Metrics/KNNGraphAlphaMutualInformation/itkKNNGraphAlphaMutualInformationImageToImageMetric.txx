@@ -773,6 +773,8 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   MovingImagePointType mappedPoint;
   double fixedFeatureValue = 0.0;
   double movingFeatureValue = 0.0;
+  NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );  
+  TransformJacobianType jacobian;
 
   /** Loop over the fixed image samples to calculate the list samples. */
   unsigned int ii = 0;
@@ -861,8 +863,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
       if ( doDerivative )
       {
         /** Get the TransformJacobian dT/dmu. */
-        jacobianContainer.push_back( this->EvaluateTransformJacobian( fixedPoint ) );
-        jacobianIndicesContainer.push_back( this->m_NonZeroJacobianIndices );
+        this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
+        jacobianContainer.push_back( jacobian );
+        jacobianIndicesContainer.push_back( nzji );
 
         /** Get the spatial derivative of the moving image. */
         SpatialDerivativeType spatialDerivatives(

@@ -197,18 +197,11 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 
     /** Get the B-spline grid spacing. */
     GridSpacingType spacing;
-    if ( this->m_TransformIsBSpline )
+    if (this->m_BSplineTransform.IsNotNull() )
     {
       spacing = this->m_BSplineTransform->GetGridSpacing();
     }
-    else if ( this->m_TransformIsBSplineCombination )
-    {
-      BSplineTransformType * localBSpline =
-        dynamic_cast<BSplineTransformType *>(
-        this->m_BSplineCombinationTransform->GetCurrentTransform() );
-      spacing = localBSpline->GetGridSpacing();
-    }
-
+   
     /** Set stuff for the separate dilation. */
     for ( unsigned int i = 0; i < FixedImageDimension; i++ )
     {

@@ -158,13 +158,7 @@ protected:
   typedef typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
   typedef typename Superclass::CentralDifferenceGradientFilterType CentralDifferenceGradientFilterType;
   typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
-  typedef typename Superclass::BSplineTransformType               BSplineTransformType;
-  typedef typename Superclass::BSplineTransformWeightsType        BSplineTransformWeightsType;
-  typedef typename Superclass::BSplineTransformIndexArrayType     BSplineTransformIndexArrayType;
-  typedef typename Superclass::BSplineCombinationTransformType    BSplineCombinationTransformType;
-  typedef typename Superclass::BSplineParametersOffsetType        BSplineParametersOffsetType;
-  typedef typename Superclass::ParameterIndexArrayType            ParameterIndexArrayType;
-
+  
   /** Current penalty term value. */
   mutable std::vector< double > m_CurrentPenaltyTermValues;
 

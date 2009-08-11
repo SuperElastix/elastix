@@ -20,8 +20,6 @@
 #include "itkImageSamplerBase.h"
 #include "itkGradientImageFilter.h"
 #include "itkBSplineInterpolateImageFunction.h"
-#include "itkBSplineDeformableTransform.h"
-#include "itkBSplineCombinationTransform.h"
 #include "itkLimiterFunctionBase.h"
 #include "itkFixedArray.h"
 #include "itkAdvancedTransform.h"
@@ -200,8 +198,7 @@ public:
    * \li Call the superclass' implementation
    * \li Cache the number of transform parameters
    * \li Initialize the image sampler, if used.
-   * \li Check if a B-spline interpolator has been set
-   * \li Check if a BSplineTransform or a BSplineCombinationTransform has been set
+   * \li Check if a B-spline interpolator has been set   
    * \li Check if an AdvancedTransform has been set
    */
   virtual void Initialize( void ) throw ( ExceptionObject );
@@ -235,24 +232,6 @@ protected:
     MovingImageType, RealType, RealType>                        CentralDifferenceGradientFilterType;
       
   /** Typedefs for support of sparse Jacobians and BSplineTransforms. */
-  enum { DeformationSplineOrder = 3 };
-  typedef BSplineDeformableTransform<
-    CoordinateRepresentationType,
-    itkGetStaticConstMacro(FixedImageDimension),
-    DeformationSplineOrder>                                     BSplineTransformType;
-  typedef itk::BSplineCombinationTransform<
-    CoordinateRepresentationType,
-    itkGetStaticConstMacro(FixedImageDimension),
-    DeformationSplineOrder>                                     BSplineCombinationTransformType;  
-  typedef typename 
-    BSplineTransformType::WeightsType                           BSplineTransformWeightsType;
-  typedef typename 
-    BSplineTransformType::ParameterIndexArrayType               BSplineTransformIndexArrayType;
-  typedef FixedArray< unsigned long, 
-    itkGetStaticConstMacro(FixedImageDimension)>                BSplineParametersOffsetType;
-  /** Array type for holding parameter indices */
-  typedef Array<unsigned int>                                   ParameterIndexArrayType;
-  //typedef ParameterIndexArrayType                               NonZeroJacobianIndicesType;
   typedef typename 
     AdvancedTransformType::NonZeroJacobianIndicesType           NonZeroJacobianIndicesType;
     
@@ -267,29 +246,10 @@ protected:
   typename BSplineInterpolatorType::Pointer             m_BSplineInterpolator;
   typename CentralDifferenceGradientFilterType::Pointer m_CentralDifferenceGradientFilter;
 
-  /** Variables used when the transform is a B-spline transform. */
-  bool m_TransformIsBSpline;
-  bool m_TransformIsBSplineCombination;  
+  /** Variables to store the AdvancedTransform. */  
   bool m_TransformIsAdvanced;
-  typename BSplineTransformType::Pointer            m_BSplineTransform;
-  typename BSplineCombinationTransformType::Pointer m_BSplineCombinationTransform;
   typename AdvancedTransformType::Pointer           m_AdvancedTransform;
-  mutable BSplineTransformWeightsType               m_BSplineTransformWeights;
-  mutable BSplineTransformIndexArrayType            m_BSplineTransformIndices;
-  BSplineParametersOffsetType                       m_BSplineParametersOffset;
-
-  /** The number of BSpline parameters per image dimension. */
-  long                                              m_NumBSplineParametersPerDim;
-
-  /** The number of BSpline transform weights is the number of
-  * of parameter in the support region (per dimension ). */   
-  unsigned long                                     m_NumBSplineWeights;
-  
-  /** The parameter indices that have a nonzero Jacobian. */
-  
-  //mutable ParameterIndexArrayType                    m_NonZeroJacobianIndices;
-  mutable NonZeroJacobianIndicesType                   m_NonZeroJacobianIndices;
-  
+ 
   /** Variables for the Limiters. */
   typename FixedImageLimiterType::Pointer            m_FixedImageLimiter;
   typename MovingImageLimiterType::Pointer           m_MovingImageLimiter;
@@ -338,14 +298,12 @@ protected:
 
   /** Methods to support transforms with sparse Jacobians, like the BSplineTransform **********/
 
-  /** Check if the transform is a B-spline transform. Called by Initialize. */
-  virtual void CheckForBSplineTransform( void );
+  /** Check if the transform is an AdvancedTransform. Called by Initialize. */
+  virtual void CheckForAdvancedTransform( void );
 
   /** Transform a point from FixedImage domain to MovingImage domain.
    * This function also checks if mapped point is within support region of the transform.
-   * It returns true if so, and false otherwise
-   * If the transform is a B-spline transform some data is stored (BSplineWeights
-   * and BSplineIndices) that speedup EvaluateTransformJacobian. */
+   * It returns true if so, and false otherwise */
   virtual bool TransformPoint( 
     const FixedImagePointType & fixedImagePoint,
     MovingImagePointType & mappedPoint ) const;
@@ -354,10 +312,12 @@ protected:
    * This is either a reference to the full TransformJacobian or
    * a reference to a sparse Jacobians. 
    * The m_NonZeroJacobianIndices contains the indices that are nonzero.
-   * The length of NonZeroJacobianIndices is set in the CheckForBSplineTransform
+   * The length of NonZeroJacobianIndices is set in the CheckForAdvancedTransform
    * function. */ 
-  virtual const TransformJacobianType & EvaluateTransformJacobian(
-    const FixedImagePointType & fixedImagePoint ) const;
+  virtual bool EvaluateTransformJacobian(
+    const FixedImagePointType & fixedImagePoint,
+    TransformJacobianType & jacobian,
+    NonZeroJacobianIndicesType & nzji ) const;
   
   /** Convenience method: check if point is inside the moving mask. *****************/
   virtual bool IsInsideMovingMask( const MovingImagePointType & point ) const;
@@ -400,11 +360,7 @@ private:
   double  m_RequiredRatioOfValidSamples;
   bool    m_UseMovingImageDerivativeScales;
   MovingImageDerivativeScalesType m_MovingImageDerivativeScales;
-    
-  /** This member should only be directly accessed by the
-   * EvaluateTransformJacobian method. */
-  mutable TransformJacobianType m_InternalTransformJacobian;
-  
+   
 }; // end class AdvancedImageToImageMetric
 
 } // end namespace itk

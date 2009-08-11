@@ -96,6 +96,7 @@ namespace itk
     const RealType fixedImageValue,
     const RealType movingImageValue,
     const DerivativeType & imageJacobian,
+    const NonZeroJacobianIndicesType & nzji,
     DerivativeType & derivativeF,
     DerivativeType & derivativeM,
     DerivativeType & differential ) const
@@ -103,7 +104,7 @@ namespace itk
     typedef typename DerivativeType::ValueType        DerivativeValueType;
             
     /** Calculate the contributions to the derivatives with respect to each parameter. */
-    if ( this->m_NonZeroJacobianIndices.size() == this->GetNumberOfParameters() )
+    if ( nzji.size() == this->GetNumberOfParameters() )
     {
       /** Loop over all jacobians. */
       typename DerivativeType::const_iterator imjacit = imageJacobian.begin();
@@ -127,7 +128,7 @@ namespace itk
       /** Only pick the nonzero jacobians. */
       for ( unsigned int i = 0; i < imageJacobian.GetSize(); ++i )
       {
-        const unsigned int index = this->m_NonZeroJacobianIndices[ i ];
+        const unsigned int index = nzji[ i ];
         const RealType differentialtmp = imageJacobian[ i ];
         derivativeF[ index ] += fixedImageValue  * differentialtmp;
         derivativeM[ index ] += movingImageValue * differentialtmp;
@@ -297,8 +298,10 @@ namespace itk
     DerivativeType differential = DerivativeType( this->GetNumberOfParameters() );
     differential.Fill( NumericTraits< DerivativeValueType >::Zero );
 
-    /** Arrays that store dM(x)/dmu. */
-    DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.size() );
+    /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
+    NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+    DerivativeType imageJacobian( nzji.size() );
+    TransformJacobianType jacobian;
     
     /** Initialize some variables for intermediate results. */
     typedef typename NumericTraits< MeasureType >::AccumulateType   AccumulateType;
@@ -354,8 +357,7 @@ namespace itk
         const RealType & fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
 
         /** Get the TransformJacobian dT/dmu. */
-        const TransformJacobianType & jacobian = 
-          this->EvaluateTransformJacobian( fixedPoint );
+        this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
         
         /** Compute the innerproducts (dM/dx)^T (dT/dmu) and (dMask/dx)^T (dT/dmu). */
         this->EvaluateTransformJacobianInnerProduct( 
@@ -370,7 +372,7 @@ namespace itk
 
         /** Compute this pixel's contribution to the derivative terms. */
         this->UpdateDerivativeTerms( 
-          fixedImageValue, movingImageValue, imageJacobian,
+          fixedImageValue, movingImageValue, imageJacobian, nzji,
           derivativeF, derivativeM, differential );
 
       } // end if sampleOk

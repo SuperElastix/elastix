@@ -188,12 +188,7 @@ protected:
   typedef typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
   typedef typename Superclass::CentralDifferenceGradientFilterType CentralDifferenceGradientFilterType;
   typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
-  typedef typename Superclass::BSplineTransformType               BSplineTransformType;
-  typedef typename Superclass::BSplineTransformWeightsType        BSplineTransformWeightsType;
-  typedef typename Superclass::BSplineTransformIndexArrayType     BSplineTransformIndexArrayType;
-  typedef typename Superclass::BSplineCombinationTransformType    BSplineCombinationTransformType;
-  typedef typename Superclass::BSplineParametersOffsetType        BSplineParametersOffsetType;
-  typedef typename Superclass::ParameterIndexArrayType            ParameterIndexArrayType;
+  typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
 
   /** Computes the innerproduct of transform Jacobian with moving image gradient.
    * The results are stored in imageJacobian, which is supposed
@@ -208,7 +203,8 @@ protected:
   void UpdateDerivativeTerms( 
     const RealType fixedImageValue,
     const RealType movingImageValue,    
-    const DerivativeType & imageJacobian,    
+    const DerivativeType & imageJacobian,
+    const NonZeroJacobianIndicesType & nzji,
     DerivativeType & derivativeF,
     DerivativeType & derivativeM,
     DerivativeType & differential ) const;

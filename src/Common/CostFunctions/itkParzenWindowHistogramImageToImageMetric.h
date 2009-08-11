@@ -228,13 +228,7 @@ namespace itk
     typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
     typedef typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
     typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
-    typedef typename Superclass::CentralDifferenceGradientFilterType CentralDifferenceGradientFilterType;
-    typedef typename Superclass::BSplineTransformType               BSplineTransformType;
-    typedef typename Superclass::BSplineTransformWeightsType        BSplineTransformWeightsType;
-    typedef typename Superclass::BSplineTransformIndexArrayType     BSplineTransformIndexArrayType;
-    typedef typename Superclass::BSplineCombinationTransformType    BSplineCombinationTransformType;
-    typedef typename Superclass::BSplineParametersOffsetType        BSplineParametersOffsetType;
-    typedef typename Superclass::ParameterIndexArrayType            ParameterIndexArrayType;
+    typedef typename Superclass::CentralDifferenceGradientFilterType CentralDifferenceGradientFilterType;    
     typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
             
     /** Typedefs for the PDFs and PDF derivatives. */
@@ -312,7 +306,7 @@ namespace itk
      */
     virtual void UpdateJointPDFAndDerivatives(
       RealType fixedImageValue, RealType movingImageValue,
-      const DerivativeType * imageJacobian ) const;
+      const DerivativeType * imageJacobian, const NonZeroJacobianIndicesType * nzji ) const;
 
     /** Update the joint PDF and the incremental pdfs.
      * The input is a pixel pair (fixed, moving, moving mask) and
@@ -329,7 +323,8 @@ namespace itk
       const DerivativeType & movingImageValuesRight,
       const DerivativeType & movingImageValuesLeft,
       const DerivativeType & movingMaskValuesRight,
-      const DerivativeType & movingMaskValuesLeft ) const;
+      const DerivativeType & movingMaskValuesLeft,
+      const NonZeroJacobianIndicesType & nzji ) const;
 
     /** Update the pdf derivatives
      * adds -image_jac[mu]*factor to the bin 
@@ -338,7 +333,8 @@ namespace itk
      */
     void UpdateJointPDFDerivatives(
       const JointPDFIndexType & pdfIndex, double factor,
-      const DerivativeType & imageJacobian ) const;
+      const DerivativeType & imageJacobian,
+      const NonZeroJacobianIndicesType & nzji ) const;
     
     /** Multiply the pdf entries by the given normalization factor. */
     virtual void NormalizeJointPDF(

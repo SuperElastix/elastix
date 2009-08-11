@@ -251,9 +251,11 @@ namespace itk
     MeasureType measure = NumericTraits< MeasureType >::Zero;
     derivative = DerivativeType( this->GetNumberOfParameters() );
     derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
-
-    /** Arrays that store dM(x)/dmu. */
-    DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.size() );
+    
+    /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
+    NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+    DerivativeType imageJacobian( nzji.size() );
+    TransformJacobianType jacobian;
  
     /** Make sure the transform parameters are up to date. */
     this->SetTransformParameters( parameters );
@@ -301,8 +303,7 @@ namespace itk
         const RealType & fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
 
         /** Get the TransformJacobian dT/dmu. */
-        const TransformJacobianType & jacobian = 
-          this->EvaluateTransformJacobian( fixedPoint );
+        this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
         
         /** Compute the innerproducts (dM/dx)^T (dT/dmu). */
         this->EvaluateTransformJacobianInnerProduct( 
@@ -311,7 +312,7 @@ namespace itk
         /** Compute this pixel's contribution to the measure and derivatives. */
         this->UpdateValueAndDerivativeTerms( 
           fixedImageValue, movingImageValue,
-          imageJacobian,
+          imageJacobian, nzji,
           measure, derivative );
 
       } // end if sampleOk
@@ -345,6 +346,7 @@ namespace itk
     const RealType fixedImageValue,
     const RealType movingImageValue,
     const DerivativeType & imageJacobian,
+    const NonZeroJacobianIndicesType & nzji,
     MeasureType & measure,
     DerivativeType & deriv ) const
   {
@@ -357,8 +359,7 @@ namespace itk
             
     /** Calculate the contributions to the derivatives with respect to each parameter. */
     const RealType diff_2 = diff * 2.0;
-    if ( this->m_NonZeroJacobianIndices.size()
-      == this->GetNumberOfParameters() )
+    if ( nzji.size() == this->GetNumberOfParameters() )
     {
       /** Loop over all jacobians. */
       typename DerivativeType::const_iterator imjacit = imageJacobian.begin();
@@ -375,7 +376,7 @@ namespace itk
       /** Only pick the nonzero jacobians. */
       for ( unsigned int i = 0; i < imageJacobian.GetSize(); ++i )
       {
-        const unsigned int index = this->m_NonZeroJacobianIndices[ i ];
+        const unsigned int index = nzji[ i ];
         deriv[ index ] += diff_2 * imageJacobian[ i ];       
       }
     }
@@ -398,9 +399,11 @@ namespace itk
     
     /** Initialize some variables. */
     this->m_NumberOfPixelsCounted = 0;
-    
-    /** Arrays that store dM(x)/dmu. */
-    DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.size() );
+        
+    /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
+    NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+    DerivativeType imageJacobian( nzji.size() );
+    TransformJacobianType jacobian;
  
     /** Make sure the transform parameters are up to date. */
     this->SetTransformParameters( parameters );
@@ -481,15 +484,14 @@ namespace itk
         movingImageDerivative = fixedInterpolator->EvaluateDerivative( fixedPoint );    
                         
         /** Get the TransformJacobian dT/dmu. */
-        const TransformJacobianType & jacobian = 
-          this->EvaluateTransformJacobian( fixedPoint );
+        this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
         
         /** Compute the innerproducts (dM/dx)^T (dT/dmu) */
         this->EvaluateTransformJacobianInnerProduct( 
           jacobian, movingImageDerivative, imageJacobian );
 
         /** Compute this pixel's contribution to the SelfHessian. */
-        this->UpdateSelfHessianTerms( imageJacobian, H );
+        this->UpdateSelfHessianTerms( imageJacobian, nzji, H );
 
       } // end if sampleOk
 
@@ -516,11 +518,11 @@ namespace itk
     AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
     ::UpdateSelfHessianTerms( 
     const DerivativeType & imageJacobian,
+    const NonZeroJacobianIndicesType & nzji,
     HessianType & H ) const
   {
     /** Do rank-1 update of H */
-    if ( this->m_NonZeroJacobianIndices.size()
-      == this->GetNumberOfParameters() )
+    if ( nzji.size() == this->GetNumberOfParameters() )
     {
       /** Loop over all jacobians. */
       vnl_matrix_update( H, imageJacobian, imageJacobian );
@@ -532,11 +534,11 @@ namespace itk
       unsigned int imjacsize = imageJacobian.GetSize();
       for ( unsigned int i = 0; i < imjacsize; ++i )
       {
-        const unsigned int row = this->m_NonZeroJacobianIndices[ i ];
+        const unsigned int row = nzji[ i ];
         const double imjacrow = imageJacobian[ i ];
         for ( unsigned int j = 0; j < imjacsize; ++j )
         {          
-          const unsigned int col = this->m_NonZeroJacobianIndices[ j ];
+          const unsigned int col = nzji[ j ];
           H(row,col) += imjacrow * imageJacobian[ j ];       
         }
       }

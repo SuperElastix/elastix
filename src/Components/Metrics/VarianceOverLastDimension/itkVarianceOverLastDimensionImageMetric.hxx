@@ -379,8 +379,11 @@ namespace itk
 
       /** Arrays that store dM(x)/dmu, sum dM(x)/dmu, sum weighted dM(x)/dmu
       * and sum M(x)*dM(x)/dmu.
-      */
-      DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.size() );
+      * Also transform jacobian and nonzerojacind
+      */      
+      NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+      TransformJacobianType jacobian;
+      DerivativeType imageJacobian( nzji.size() );      
       imageJacobian.Fill( NumericTraits< DerivativeValueType >::Zero );
       DerivativeType sumImageJacobian( this->GetNumberOfParameters() );
       sumImageJacobian.Fill( NumericTraits< DerivativeValueType >::Zero );
@@ -428,8 +431,7 @@ namespace itk
           sumWeightedValues += this->m_WeightingFactors[ lastDimPositions[ d ] ] * movingImageValue;
 
           /** Get the TransformJacobian dT/dmu. */
-          const TransformJacobianType & jacobian = 
-            this->EvaluateTransformJacobian( fixedPoint );
+          this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
 
           /** Compute the innerproduct (dM/dx)^T (dT/dmu). */
           this->EvaluateTransformJacobianInnerProduct( 
@@ -439,6 +441,7 @@ namespace itk
           this->UpdateDerivativeTerms( 
             movingImageValue,
             imageJacobian,
+            nzji,
             this->m_WeightingFactors[ lastDimPositions[ d ] ],
             sumImageJacobian,
             sumWeightedImageJacobian,
@@ -491,6 +494,7 @@ namespace itk
     ::UpdateDerivativeTerms( 
     const RealType movingImageValue,
     const DerivativeType & imageJacobian,
+    const NonZeroJacobianIndicesType & nzji,
     const double weightingFactor,
     DerivativeType & sumImageJacobian,
     DerivativeType & sumWeightedImageJacobian,
@@ -499,8 +503,7 @@ namespace itk
     typedef typename DerivativeType::ValueType        DerivativeValueType;
 
     /** Calculate the contributions to the derivatives with respect to each parameter. */
-    if ( this->m_NonZeroJacobianIndices.size()
-      == this->GetNumberOfParameters() )
+    if ( nzji.size() == this->GetNumberOfParameters() )
     {
       /** Loop over all jacobians. */
       typename DerivativeType::const_iterator imjacit = imageJacobian.begin();
@@ -524,7 +527,7 @@ namespace itk
       /** Only pick the nonzero jacobians. */
       for ( unsigned int i = 0; i < imageJacobian.GetSize(); ++i )
       {
-        const unsigned int index = this->m_NonZeroJacobianIndices[ i ];
+        const unsigned int index = nzji[ i ];
         sumImageJacobian[ index ] += imageJacobian[ i ];
         sumWeightedImageJacobian[ index ] += weightingFactor * imageJacobian[ i ];
         sumValueImageJacobian[ index ] += movingImageValue * imageJacobian[ i ];

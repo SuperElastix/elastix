@@ -130,7 +130,6 @@ public:
     Superclass::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
   typedef typename
     Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
-  typedef typename Superclass::ParameterIndexArrayType    ParameterIndexArrayType;
   typedef typename Superclass::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
 
   /** Typedef's for storing multiple inputs. */

@@ -93,11 +93,6 @@ public:
 
   /** Define the dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
-
-  /** Initialize the penalty term. 
-   * Bypass the superclass (TransformPenaltyTerm), because an advanced 
-   * transform is not strictly necessary for this penalty term */
-  virtual void Initialize( void ) throw ( ExceptionObject );
   
   /** Get the penalty term value. 
    * \f[ Value = 1/N sum_x ||T(x) - x||^2 \f]

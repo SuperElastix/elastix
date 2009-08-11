@@ -228,8 +228,10 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
   MeasureType measure = NumericTraits< MeasureType >::Zero;
   derivative = DerivativeType( this->GetNumberOfParameters() );
 
-  /** Array that store dM(x)/dmu. */
-  DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.size() );
+  /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
+  NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+  DerivativeType imageJacobian( nzji.size() );
+  TransformJacobianType jacobian;
 
   /** Make sure the transform parameters are up to date. */
   this->SetTransformParameters( parameters );
@@ -290,8 +292,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
         = static_cast<RealType>( (*fiter).Value().m_ImageValue );
 
       /** Get the TransformJacobian dT/dmu. */
-      const TransformJacobianType & jacobian
-        = this->EvaluateTransformJacobian( fixedPoint );
+      this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
 
       /** Compute the inner products (dM/dx)^T (dT/dmu). */
       this->EvaluateMovingImageAndTransformJacobianInnerProduct(
@@ -301,7 +302,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
       this->UpdateValueAndDerivativeTerms(
         fixedImageValue, movingImageValue,
         fixedForegroundArea, movingForegroundArea, intersection,
-        imageJacobian,
+        imageJacobian, nzji,
         vecSum1, vecSum2 );
 
     } // end if sampleOk
@@ -352,6 +353,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
   std::size_t & movingForegroundArea,
   std::size_t & intersection,
   const DerivativeType & imageJacobian,
+  const NonZeroJacobianIndicesType & nzji,
   DerivativeType & sum1,
   DerivativeType & sum2 ) const
 {
@@ -365,7 +367,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
     && diffMoving < this->m_Epsilon ) intersection++;
 
   /** Calculate the contributions to the derivatives with respect to each parameter. */
-  if ( this->m_NonZeroJacobianIndices.size() == this->GetNumberOfParameters() )
+  if ( nzji.size() == this->GetNumberOfParameters() )
   {
     /** Loop over all Jacobians. */
     typename DerivativeType::const_iterator imjacit = imageJacobian.begin();
@@ -386,9 +388,9 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
   else
   {
     /** Only pick the nonzero Jacobians. */
-    for ( unsigned int i = 0; i < imageJacobian.GetSize(); ++i )
+    for ( unsigned int i = 0; i < nzji.size(); ++i )
     {
-      const unsigned int index = this->m_NonZeroJacobianIndices[ i ];
+      const unsigned int index = nzji[ i ];
       const DerivativeValueType imjac = imageJacobian[ i ];
       if ( diffFixed < this->m_Epsilon )
       {

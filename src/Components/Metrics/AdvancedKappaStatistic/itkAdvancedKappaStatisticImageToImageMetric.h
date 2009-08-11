@@ -174,13 +174,8 @@ protected:
   typedef typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
   typedef typename Superclass::CentralDifferenceGradientFilterType  CentralDifferenceGradientFilterType;
   typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
-  typedef typename Superclass::BSplineTransformType               BSplineTransformType;
-  typedef typename Superclass::BSplineTransformWeightsType        BSplineTransformWeightsType;
-  typedef typename Superclass::BSplineTransformIndexArrayType     BSplineTransformIndexArrayType;
-  typedef typename Superclass::BSplineCombinationTransformType    BSplineCombinationTransformType;
-  typedef typename Superclass::BSplineParametersOffsetType        BSplineParametersOffsetType;
-  typedef typename Superclass::ParameterIndexArrayType            ParameterIndexArrayType;
-    
+  typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
+ 
   /** Computes the inner product of transform Jacobian with moving image gradient.
    * The results are stored in the imageJacobian, which is supposed
    * to have the right size (same length as Jacobian's number of columns).
@@ -200,6 +195,7 @@ protected:
     std::size_t & movingForegroundArea,
     std::size_t & intersection,
     const DerivativeType & imageJacobian,
+    const NonZeroJacobianIndicesType & nzji,
     DerivativeType & sum1,
     DerivativeType & sum2 ) const;
  

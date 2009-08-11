@@ -77,8 +77,6 @@ SET( TransformFiles
  Transforms/itkAdvancedRigid3DTransform.txx
  Transforms/itkAdvancedTransform.h
  Transforms/itkAdvancedTransform.txx
- Transforms/itkBSplineCombinationTransform.h
- Transforms/itkBSplineCombinationTransform.hxx
  Transforms/itkBSplineDerivativeKernelFunction2.h
  Transforms/itkBSplineInterpolationDerivativeWeightFunction.h
  Transforms/itkBSplineInterpolationDerivativeWeightFunction.txx
@@ -91,8 +89,6 @@ SET( TransformFiles
  Transforms/itkBSplineKernelFunction2.h
  #Transforms/itkBSplineSecondOrderDerivativeKernelFunction.h
  Transforms/itkBSplineSecondOrderDerivativeKernelFunction2.h
- Transforms/itkCombinationTransform.h
- Transforms/itkCombinationTransform.hxx
  Transforms/itkGridScheduleComputer.h
  Transforms/itkGridScheduleComputer.txx
  Transforms/itkUpsampleBSplineParametersFilter.h

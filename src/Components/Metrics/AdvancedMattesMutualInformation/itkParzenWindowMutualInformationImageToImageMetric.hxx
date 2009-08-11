@@ -282,11 +282,13 @@ namespace itk
 
     // NOW A SECOND PASS OVER THE SAMPLES to compute the derivative
 
-    /** Array that stores dM(x)/dmu. */
-    DerivativeType imageJacobian( this->m_NonZeroJacobianIndices.size() );
+    /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
+    NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+    DerivativeType imageJacobian( nzji.size() );
+    TransformJacobianType jacobian;
 
     /** Arrays for Jacobian preconditioning */
-    DerivativeType jacobianPreconditioner( this->m_NonZeroJacobianIndices.size() );
+    DerivativeType jacobianPreconditioner( nzji.size() );
     DerivativeType preconditioningDivisor( this->GetNumberOfParameters() );
     preconditioningDivisor.Fill( 0.0 );
 
@@ -337,8 +339,7 @@ namespace itk
           ->Evaluate( movingImageValue, movingImageDerivative );
 
         /** Get the transform Jacobian dT/dmu. */
-        const TransformJacobianType & jacobian = 
-          this->EvaluateTransformJacobian( fixedPoint );
+        this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
 
         /** Compute the inner product (dM/dx)^T (dT/dmu). */
         this->EvaluateTransformJacobianInnerProduct( 
@@ -347,11 +348,11 @@ namespace itk
         /** If desired, apply the technique introduced by Tustison */
         if ( this->GetUseJacobianPreconditioning() )
         {
-          this->ComputeJacobianPreconditioner( jacobian, this->m_NonZeroJacobianIndices,
+          this->ComputeJacobianPreconditioner( jacobian, nzji,
             jacobianPreconditioner, preconditioningDivisor );
           DerivativeValueType * imjacit = imageJacobian.begin();
           DerivativeValueType * jacprecit = jacobianPreconditioner.begin();
-          for ( unsigned int i = 0; i < this->m_NonZeroJacobianIndices.size(); ++i )
+          for ( unsigned int i = 0; i < nzji.size(); ++i )
           while ( imjacit != imageJacobian.end() )
           {        
             (*imjacit) *= (*jacprecit);
@@ -362,7 +363,7 @@ namespace itk
 
         /** Compute this sample's contribution to the joint distributions. */
         this->UpdateDerivativeLowMemory(
-          fixedImageValue, movingImageValue, imageJacobian, derivative );
+          fixedImageValue, movingImageValue, imageJacobian, nzji, derivative );
 
       } // end sampleOk
     } // end loop over sample container
@@ -475,6 +476,7 @@ namespace itk
     const RealType & fixedImageValue,
     const RealType & movingImageValue,
     const DerivativeType & imageJacobian,
+    const NonZeroJacobianIndicesType & nzji,
     DerivativeType & derivative ) const
   {
     /** In this function we need to do (see eq. 24 of Thevenaz [3]):
@@ -538,7 +540,7 @@ namespace itk
     //typedef typename DerivativeType::iterator   DerivativeIteratorType;
     //DerivativeIteratorType itDerivative( derivative );
 
-    if ( this->m_NonZeroJacobianIndices.size() == this->GetNumberOfParameters() )
+    if ( nzji.size() == this->GetNumberOfParameters() )
     {
       /** Loop over all Jacobians. */
       //typename DerivativeType::const_iterator imjac = imageJacobian.begin();
@@ -553,7 +555,7 @@ namespace itk
       /** Loop only over the non-zero Jacobians. */
       for ( unsigned int i = 0; i < imageJacobian.GetSize(); ++i )
       {
-        const unsigned int mu = this->m_NonZeroJacobianIndices[ i ];
+        const unsigned int mu = nzji[ i ];
         derivative[ mu ] += static_cast<DerivativeValueType>(
           imageJacobian[ i ] * sum ); // \todo: iterators?
       }

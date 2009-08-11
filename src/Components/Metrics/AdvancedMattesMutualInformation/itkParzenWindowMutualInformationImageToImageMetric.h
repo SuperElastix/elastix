@@ -170,13 +170,7 @@ namespace itk
     typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
     typedef typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
     typedef typename Superclass::CentralDifferenceGradientFilterType        CentralDifferenceGradientFilterType;
-    typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
-    typedef typename Superclass::BSplineTransformType               BSplineTransformType;
-    typedef typename Superclass::BSplineTransformWeightsType        BSplineTransformWeightsType;
-    typedef typename Superclass::BSplineTransformIndexArrayType     BSplineTransformIndexArrayType;
-    typedef typename Superclass::BSplineCombinationTransformType    BSplineCombinationTransformType;
-    typedef typename Superclass::BSplineParametersOffsetType        BSplineParametersOffsetType;
-    typedef typename Superclass::ParameterIndexArrayType            ParameterIndexArrayType;
+    typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;   
     typedef typename Superclass::PDFValueType                       PDFValueType;
     typedef typename Superclass::MarginalPDFType                    MarginalPDFType;
     typedef typename Superclass::JointPDFType                       JointPDFType;
@@ -243,6 +237,7 @@ namespace itk
       const RealType & fixedImageValue,
       const RealType & movingImageValue,
       const DerivativeType & imageJacobian,
+      const NonZeroJacobianIndicesType & nzji,
       DerivativeType & derivative ) const;
 
     /** Helper function to compute m_PRatioArray in case of low memory consumption. */

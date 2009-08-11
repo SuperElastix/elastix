@@ -96,7 +96,6 @@ public:
     Superclass::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
   typedef typename
     Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
-  typedef typename Superclass::ParameterIndexArrayType    ParameterIndexArrayType;
   
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
