@@ -126,8 +126,8 @@ public:
   typedef itk::AdvancedBSplineDeformableTransform<
     typename elx::TransformBase<TElastix>::CoordRepType,
     itkGetStaticConstMacro( SpaceDimension ),
-    itkGetStaticConstMacro( SplineOrder ) >                 BSplineTransformType;
-  typedef typename BSplineTransformType::Pointer            BSplineTransformPointer;
+    itkGetStaticConstMacro( SplineOrder ) >               BSplineTransformType;
+  typedef typename BSplineTransformType::Pointer          BSplineTransformPointer;
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::ScalarType                ScalarType;
