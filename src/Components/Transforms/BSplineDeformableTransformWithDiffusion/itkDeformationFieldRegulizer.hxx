@@ -37,18 +37,6 @@ namespace itk
   
 
   /**
-   * *********************** Destructor ***************************
-   */
-
-  template <class TAnyITKTransform>
-    DeformationFieldRegulizer<TAnyITKTransform>
-    ::~DeformationFieldRegulizer()
-  {
-    //nothing
-  } // end Destructor
-
-
-  /**
    * ********* InitializeIntermediaryDeformationField **************
    */
 
@@ -78,7 +66,8 @@ namespace itk
     }
 
     /** Set the deformation field in the transform. */
-    this->m_IntermediaryDeformationFieldTransform->SetCoefficientVectorImage( intermediaryDeformationField );
+    this->m_IntermediaryDeformationFieldTransform
+      ->SetCoefficientVectorImage( intermediaryDeformationField );
 
     /** Set to initialized. */
     this->m_Initialized = true;
@@ -95,7 +84,7 @@ namespace itk
     DeformationFieldRegulizer<TAnyITKTransform>
     ::TransformPoint( const InputPointType & inputPoint ) const
   {
-    /** Get the outputpoint of any ITK Transform and the deformationfield. */
+    /** Get the outputpoint of any ITK Transform and the deformation field. */
     OutputPointType oppAnyT, oppDF, opp;
     oppAnyT = this->Superclass::TransformPoint( inputPoint );
     oppDF = this->m_IntermediaryDeformationFieldTransform->TransformPoint( inputPoint );

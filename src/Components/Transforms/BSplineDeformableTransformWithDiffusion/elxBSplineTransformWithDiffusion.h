@@ -19,6 +19,7 @@
 #define __VSplineOrder 3
 
 #include "itkAdvancedBSplineDeformableTransform.h"
+//#include "itkAdvancedCombinationTransform.h"
 #include "itkBSplineCombinationTransform.h"
 #include "itkBSplineResampleImageFilterBase.h"
 #include "itkBSplineUpsampleImageFilter.h"
@@ -154,258 +155,258 @@ using namespace itk;
    * \ingroup Transforms
    */
 
-  template < class TElastix >
-    class BSplineTransformWithDiffusion:
-  public
+template < class TElastix >
+class BSplineTransformWithDiffusion
+  : public
   DeformationFieldRegulizerForBSpline<
+    //AdvancedCombinationTransform<
     BSplineCombinationTransform<
-      ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,
-      elx::TransformBase<TElastix>::FixedImageDimension,
-      __VSplineOrder
-    >
-  >,
+    ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,
+    //elx::TransformBase<TElastix>::FixedImageDimension > >,
+    elx::TransformBase<TElastix>::FixedImageDimension, __VSplineOrder > >,
   public
-    TransformBase<TElastix>
-  {
-  public:
+  TransformBase<TElastix>
+{
+public:
 
-    /** Standard ITK-stuff. */
-    typedef BSplineTransformWithDiffusion       Self;
+  /** Standard ITK-stuff. */
+  typedef BSplineTransformWithDiffusion               Self;
+  typedef DeformationFieldRegulizerForBSpline<
+    //AdvancedCombinationTransform<
+    BSplineCombinationTransform<
+    typename elx::TransformBase<TElastix>::CoordRepType,
+    //elx::TransformBase<TElastix>::FixedImageDimension > >
+    elx::TransformBase<TElastix>::FixedImageDimension, __VSplineOrder > >
+                                                      Superclass1;
+  typedef elx::TransformBase<TElastix>                Superclass2;
 
-    typedef DeformationFieldRegulizerForBSpline<
-      BSplineCombinationTransform<
-        typename elx::TransformBase<TElastix>::CoordRepType,
-        elx::TransformBase<TElastix>::FixedImageDimension,
-        __VSplineOrder > >                      Superclass1;
-    
-    typedef elx::TransformBase<TElastix>        Superclass2;
+  /** The ITK-class that provides most of the functionality, and
+   * that is set as the "CurrentTransform" in the CombinationTransform.
+   */
+  typedef AdvancedBSplineDeformableTransform<
+    typename elx::TransformBase<TElastix>::CoordRepType,
+    elx::TransformBase<TElastix>::FixedImageDimension,
+    __VSplineOrder >                          BSplineTransformType;
 
-    /** The ITK-class that provides most of the functionality, and
-     * that is set as the "CurrentTransform" in the CombinationTransform */
-    typedef AdvancedBSplineDeformableTransform<
-      typename elx::TransformBase<TElastix>::CoordRepType,
-      elx::TransformBase<TElastix>::FixedImageDimension,
-      __VSplineOrder >                          BSplineTransformType;
+  typedef SmartPointer<Self>                  Pointer;
+  typedef SmartPointer<const Self>            ConstPointer;
 
-    typedef SmartPointer<Self>                  Pointer;
-    typedef SmartPointer<const Self>            ConstPointer;
-    
-    /** Method for creation through the object factory. */
-    itkNewMacro( Self );
-    
-    /** Run-time type information (and related methods). */
-    itkTypeMacro( BSplineTransformWithDiffusion, DeformationFieldRegulizerForBSpline );
+  /** Method for creation through the object factory. */
+  itkNewMacro( Self );
 
-    /** Name of this class.
-     * Use this name in the parameter file to select this specific transform. \n
-     * example: <tt>(Transform "BSplineTransformWithDiffusion")</tt>\n
-     */
-    elxClassNameMacro( "BSplineTransformWithDiffusion" );
-    
-    /** Dimension of the domain space. */
-    itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );
-    
-    /** The BSpline order. */
-    itkStaticConstMacro( SplineOrder, unsigned int, __VSplineOrder );
-    
-    /** Typedefs inherited from the superclass. */
-    typedef typename Superclass1::ScalarType                ScalarType;
-    typedef typename Superclass1::ParametersType            ParametersType;
-    typedef typename Superclass1::JacobianType              JacobianType;
-    typedef typename Superclass1::InputVectorType           InputVectorType;
-    typedef typename Superclass1::OutputVectorType          OutputVectorType;
-    typedef typename Superclass1::InputCovariantVectorType  InputCovariantVectorType;
-    typedef typename Superclass1::OutputCovariantVectorType OutputCovariantVectorType;
-    typedef typename Superclass1::InputVnlVectorType        InputVnlVectorType;
-    typedef typename Superclass1::OutputVnlVectorType       OutputVnlVectorType;
-    typedef typename Superclass1::InputPointType            InputPointType;
-    typedef typename Superclass1::OutputPointType           OutputPointType;
-    
-    /** Typedef's specific for the BSplineTransform. */
-    typedef typename BSplineTransformType::PixelType                  PixelType;
-    typedef typename BSplineTransformType::ImageType                  ImageType;
-    typedef typename BSplineTransformType::ImagePointer               ImagePointer;
-    typedef typename BSplineTransformType::RegionType                 RegionType;
-    typedef typename BSplineTransformType::IndexType                  IndexType;
-    typedef typename BSplineTransformType::SizeType                   SizeType;
-    typedef typename BSplineTransformType::SpacingType                SpacingType;
-    typedef typename BSplineTransformType::OriginType                 OriginType;
-    typedef typename BSplineTransformType::BulkTransformType          BulkTransformType;
-    typedef typename BSplineTransformType::BulkTransformPointer       BulkTransformPointer;
-    typedef typename BSplineTransformType::WeightsFunctionType        WeightsFunctionType;
-    typedef typename BSplineTransformType::WeightsType                WeightsType;
-    typedef typename BSplineTransformType::ContinuousIndexType        ContinuousIndexType;
-    typedef typename BSplineTransformType::ParameterIndexArrayType    ParameterIndexArrayType;
+  /** Run-time type information (and related methods). */
+  itkTypeMacro( BSplineTransformWithDiffusion, DeformationFieldRegulizerForBSpline );
 
-    /** Typedef's from TransformBase. */
-    typedef typename Superclass2::ElastixType               ElastixType;
-    typedef typename Superclass2::ElastixPointer            ElastixPointer;
-    typedef typename Superclass2::ConfigurationType         ConfigurationType;
-    typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
-    typedef typename Superclass2::RegistrationType          RegistrationType;
-    typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
-    typedef typename Superclass2::CoordRepType              CoordRepType;
-    typedef typename Superclass2::FixedImageType            FixedImageType;
-    typedef typename Superclass2::MovingImageType           MovingImageType;
-    typedef typename Superclass2::ITKBaseType               ITKBaseType;
-    typedef typename Superclass2::CombinationTransformType  CombinationTransformType;
+  /** Name of this class.
+   * Use this name in the parameter file to select this specific transform. \n
+   * example: <tt>(Transform "BSplineTransformWithDiffusion")</tt>\n
+   */
+  elxClassNameMacro( "BSplineTransformWithDiffusion" );
 
-    /** Other typedef's inherited from Superclass1. */
-    typedef typename Superclass1::IntermediaryDFTransformType         IntermediaryDFTransformType;
-    typedef typename Superclass1::VectorImageType                     VectorImageType;
-    
-    /** References to the fixed and moving image types. */
-    typedef typename ElastixType::FixedImageType            FixedImageELXType;
-    typedef typename ElastixType::MovingImageType           MovingImageELXType;
-    
-    /** Other typedef's.*/
-    typedef Image< short,
-      itkGetStaticConstMacro( SpaceDimension ) >      DummyImageType;
-    typedef ImageRegionConstIterator<
-      DummyImageType >                                DummyIteratorType;
-    typedef typename BSplineTransformType::Pointer    BSplineTransformPointer;
-    typedef typename Superclass1::Superclass          GenericDeformationFieldRegulizer;
+  /** Dimension of the domain space. */
+  itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );
 
-    /** Typedef's for the diffusion of the deformation field. */
-    typedef ImageFileReader< VectorImageType >        VectorReaderType;
-    typedef typename VectorImageType::PixelType       VectorType;
-    typedef ImageRegionIterator<
-      VectorImageType >                               VectorImageIteratorType;
-    typedef FixedImageELXType                         GrayValueImageType;
-    typedef typename GrayValueImageType::PixelType    GrayValuePixelType;
-    typedef ImageRegionIterator<
-      GrayValueImageType >                            GrayValueImageIteratorType;
-    typedef MaximumImageFilter<
-      GrayValueImageType, GrayValueImageType,
-      GrayValueImageType >                            MaximumImageFilterType;
-    typedef VectorMeanDiffusionImageFilter<
-      VectorImageType, GrayValueImageType >           DiffusionFilterType;
-    typedef typename VectorImageType::SizeType        RadiusType;
-    typedef ResampleImageFilter<
-      MovingImageELXType, GrayValueImageType,
-      CoordRepType >                                  ResamplerType1;
-    typedef ResampleImageFilter<
-      GrayValueImageType, GrayValueImageType,
-      CoordRepType >                                  ResamplerType2;
-    typedef BSplineInterpolateImageFunction<
-      GrayValueImageType >                            InterpolatorType;
-    typedef ImageFileReader< GrayValueImageType >     GrayValueImageReaderType;
-    typedef ImageFileWriter< GrayValueImageType >     GrayValueImageWriterType;
-    typedef ImageFileWriter< VectorImageType >        DeformationFieldWriterType;
+  /** The BSpline order. */
+  itkStaticConstMacro( SplineOrder, unsigned int, __VSplineOrder );
 
-    /** Execute stuff before the actual registration:
-     * \li Create an initial B-spline grid.
-     * \li Create initial registration parameters.
-     * \li Setup stuff for the diffusion of the deformation field.
-     */
-    virtual void BeforeRegistration(void);
+  /** Typedefs inherited from the superclass. */
+  typedef typename Superclass1::ScalarType                ScalarType;
+  typedef typename Superclass1::ParametersType            ParametersType;
+  typedef typename Superclass1::JacobianType              JacobianType;
+  typedef typename Superclass1::InputVectorType           InputVectorType;
+  typedef typename Superclass1::OutputVectorType          OutputVectorType;
+  typedef typename Superclass1::InputCovariantVectorType  InputCovariantVectorType;
+  typedef typename Superclass1::OutputCovariantVectorType OutputCovariantVectorType;
+  typedef typename Superclass1::InputVnlVectorType        InputVnlVectorType;
+  typedef typename Superclass1::OutputVnlVectorType       OutputVnlVectorType;
+  typedef typename Superclass1::InputPointType            InputPointType;
+  typedef typename Superclass1::OutputPointType           OutputPointType;
 
-    /** Execute stuff before each new pyramid resolution:
-     * \li upsample the B-spline grid.
-     */
-    virtual void BeforeEachResolution(void);
+  /** Typedef's specific for the BSplineTransform. */
+  typedef typename BSplineTransformType::PixelType                  PixelType;
+  typedef typename BSplineTransformType::ImageType                  ImageType;
+  typedef typename BSplineTransformType::ImagePointer               ImagePointer;
+  typedef typename BSplineTransformType::RegionType                 RegionType;
+  typedef typename BSplineTransformType::IndexType                  IndexType;
+  typedef typename BSplineTransformType::SizeType                   SizeType;
+  typedef typename BSplineTransformType::SpacingType                SpacingType;
+  typedef typename BSplineTransformType::OriginType                 OriginType;
+  typedef typename BSplineTransformType::BulkTransformType          BulkTransformType;
+  typedef typename BSplineTransformType::BulkTransformPointer       BulkTransformPointer;
+  typedef typename BSplineTransformType::WeightsFunctionType        WeightsFunctionType;
+  typedef typename BSplineTransformType::WeightsType                WeightsType;
+  typedef typename BSplineTransformType::ContinuousIndexType        ContinuousIndexType;
+  typedef typename BSplineTransformType::ParameterIndexArrayType    ParameterIndexArrayType;
 
-    /** Execute stuff after each iteration:
-     * \li Do a diffusion of the deformation field.
-     */
-    virtual void AfterEachIteration(void);
-    
-    /** Execute stuff after registration:
-     * \li Destroy things that are not needed anymore in order to free memory.
-     */
-    virtual void AfterRegistration( void );
+  /** Typedef's from TransformBase. */
+  typedef typename Superclass2::ElastixType               ElastixType;
+  typedef typename Superclass2::ElastixPointer            ElastixPointer;
+  typedef typename Superclass2::ConfigurationType         ConfigurationType;
+  typedef typename Superclass2::ConfigurationPointer      ConfigurationPointer;
+  typedef typename Superclass2::RegistrationType          RegistrationType;
+  typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
+  typedef typename Superclass2::CoordRepType              CoordRepType;
+  typedef typename Superclass2::FixedImageType            FixedImageType;
+  typedef typename Superclass2::MovingImageType           MovingImageType;
+  typedef typename Superclass2::ITKBaseType               ITKBaseType;
+  typedef typename Superclass2::CombinationTransformType  CombinationTransformType;
 
-    /** Set the initial B-spline grid. */
-    virtual void SetInitialGrid( bool upsampleGridOption );
+  /** Other typedef's inherited from Superclass1. */
+  typedef typename Superclass1::IntermediaryDFTransformType   IntermediaryDFTransformType;
+  typedef typename Superclass1::VectorImageType               VectorImageType;
 
-    /** Upsample the B-spline grid. */
-    virtual void IncreaseScale( void );
-    
-    /** Function to read transform-parameters from a file. */
-    virtual void ReadFromFile( void );
+  /** References to the fixed and moving image types. */
+  typedef typename ElastixType::FixedImageType            FixedImageELXType;
+  typedef typename ElastixType::MovingImageType           MovingImageELXType;
 
-    /** Function to write transform-parameters to a file. */
-    virtual void WriteToFile( const ParametersType & param ) const;
-    
-    /** Diffuse the deformation field. */
-    void DiffuseDeformationField( void );
+  /** Other typedef's.*/
+  typedef Image< short,
+    itkGetStaticConstMacro( SpaceDimension ) >      DummyImageType;
+  typedef ImageRegionConstIterator<
+    DummyImageType >                                DummyIteratorType;
+  typedef typename BSplineTransformType::Pointer    BSplineTransformPointer;
+  typedef typename Superclass1::Superclass          GenericDeformationFieldRegulizer;
 
-    /** Method to transform a point.
-     * This method just calls the implementation from the 
-     * GenericDeformationFieldRegulizer. This is necessary, since:
-     * The DeformationFieldRegulizerForBSpline is used which expects
-     * that its template argument is a BSplineDeformableTransform. This is 
-     * not the case, because we gave it a BSplineCombinationTransform.
-     * This last class has a slightly different behavior of the 
-     * TransformPoint() method (it does not call the TransformPoint() with
-     * with 5 arguments, as the BSplineDeformableTransform does).
-     */
-    virtual OutputPointType TransformPoint( const InputPointType  & point ) const;
+  /** Typedef's for the diffusion of the deformation field. */
+  typedef ImageFileReader< VectorImageType >        VectorReaderType;
+  typedef typename VectorImageType::PixelType       VectorType;
+  typedef ImageRegionIterator<
+    VectorImageType >                               VectorImageIteratorType;
+  typedef FixedImageELXType                         GrayValueImageType;
+  typedef typename GrayValueImageType::PixelType    GrayValuePixelType;
+  typedef ImageRegionIterator<
+    GrayValueImageType >                            GrayValueImageIteratorType;
+  typedef MaximumImageFilter<
+    GrayValueImageType, GrayValueImageType,
+    GrayValueImageType >                            MaximumImageFilterType;
+  typedef VectorMeanDiffusionImageFilter<
+    VectorImageType, GrayValueImageType >           DiffusionFilterType;
+  typedef typename VectorImageType::SizeType        RadiusType;
+  typedef ResampleImageFilter<
+    MovingImageELXType, GrayValueImageType,
+    CoordRepType >                                  ResamplerType1;
+  typedef ResampleImageFilter<
+    GrayValueImageType, GrayValueImageType,
+    CoordRepType >                                  ResamplerType2;
+  typedef BSplineInterpolateImageFunction<
+    GrayValueImageType >                            InterpolatorType;
+  typedef ImageFileReader< GrayValueImageType >     GrayValueImageReaderType;
+  typedef ImageFileWriter< GrayValueImageType >     GrayValueImageWriterType;
+  typedef ImageFileWriter< VectorImageType >        DeformationFieldWriterType;
 
-    /**  Method to transform a point with extra arguments. Just calls 
-     * the Superclass1's implementation. Has to be present here since it is an
-     * overloaded function. */
-    virtual void TransformPoint(
-      const InputPointType &inputPoint,
-      OutputPointType &outputPoint,
-      WeightsType &weights,
-      ParameterIndexArrayType &indices, 
-      bool &inside ) const;
+  /** Execute stuff before the actual registration:
+   * \li Create an initial B-spline grid.
+   * \li Create initial registration parameters.
+   * \li Setup stuff for the diffusion of the deformation field.
+   */
+  virtual void BeforeRegistration( void );
 
-  protected:
+  /** Execute stuff before each new pyramid resolution:
+   * \li upsample the B-spline grid.
+   */
+  virtual void BeforeEachResolution( void );
 
-    /** The constructor. */
-    BSplineTransformWithDiffusion();
-    /** The destructor. */
-    virtual ~BSplineTransformWithDiffusion() {};
-    
-    /** Member variables. */
-    SpacingType   m_GridSpacingFactor;
+  /** Execute stuff after each iteration:
+   * \li Do a diffusion of the deformation field.
+   */
+  virtual void AfterEachIteration( void );
 
+  /** Execute stuff after registration:
+   * \li Destroy things that are not needed anymore in order to free memory.
+   */
+  virtual void AfterRegistration( void );
 
-  private:
+  /** Set the initial B-spline grid. */
+  virtual void SetInitialGrid( bool upsampleGridOption );
 
-    /** The private constructor. */
-    BSplineTransformWithDiffusion( const Self& ); // purposely not implemented
-    /** The private copy constructor. */
-    void operator=( const Self& );                // purposely not implemented
-    
-    /** Member variables for diffusion. */
-    typename DiffusionFilterType::Pointer   m_Diffusion;
-    typename VectorImageType::Pointer       m_DeformationField;
-    typename VectorImageType::Pointer       m_DiffusedField;
-    typename GrayValueImageType::Pointer    m_GrayValueImage1;
-    typename GrayValueImageType::Pointer    m_GrayValueImage2;
-    typename GrayValueImageType::Pointer    m_MovingSegmentationImage;
-    typename GrayValueImageType::Pointer    m_FixedSegmentationImage;
-    typename GrayValueImageReaderType::Pointer  m_MovingSegmentationReader;
-    typename GrayValueImageReaderType::Pointer  m_FixedSegmentationReader;
-    std::string                             m_MovingSegmentationFileName;
-    std::string                             m_FixedSegmentationFileName;
-    typename ResamplerType1::Pointer        m_Resampler1;
-    typename ResamplerType2::Pointer        m_Resampler2;
-    typename InterpolatorType::Pointer      m_Interpolator;
-    RegionType                              m_DeformationRegion;
-    OriginType                              m_DeformationOrigin;
-    SpacingType                             m_DeformationSpacing;
+  /** Upsample the B-spline grid. */
+  virtual void IncreaseScale( void );
 
-    /** Member variables for writing diffusion files. */
-    bool m_WriteDiffusionFiles;
-    bool m_AlsoFixed;
-    bool m_ThresholdBool;
-    GrayValuePixelType m_ThresholdHU;
-    bool m_UseMovingSegmentation;
-    bool m_UseFixedSegmentation;
+  /** Function to read transform-parameters from a file. */
+  virtual void ReadFromFile( void );
 
-    /** The B-spline parameters, which is going to be filled with zeros. */
-    ParametersType m_BSplineParameters;
+  /** Function to write transform-parameters to a file. */
+  virtual void WriteToFile( const ParametersType & param ) const;
 
-    /** The internal BSplineTransform, set as a current transform in 
-     * the combination transform */
-    BSplineTransformPointer m_BSplineTransform;
+  /** Diffuse the deformation field. */
+  void DiffuseDeformationField( void );
 
-  }; // end class BSplineTransformWithDiffusion
-  
+  /** Method to transform a point.
+   * This method just calls the implementation from the 
+   * GenericDeformationFieldRegulizer. This is necessary, since:
+   * The DeformationFieldRegulizerForBSpline is used which expects
+   * that its template argument is a BSplineDeformableTransform. This is 
+   * not the case, because we gave it a BSplineCombinationTransform.
+   * This last class has a slightly different behavior of the 
+   * TransformPoint() method (it does not call the TransformPoint() with
+   * with 5 arguments, as the BSplineDeformableTransform does).
+   */
+  virtual OutputPointType TransformPoint( const InputPointType  & point ) const;
+
+  /**  Method to transform a point with extra arguments. Just calls 
+   * the Superclass1's implementation. Has to be present here since it is an
+   * overloaded function.
+   */
+  virtual void TransformPoint(
+    const InputPointType & inputPoint,
+    OutputPointType & outputPoint,
+    WeightsType & weights,
+    ParameterIndexArrayType & indices,
+    bool & inside ) const;
+
+protected:
+
+  /** The constructor. */
+  BSplineTransformWithDiffusion();
+  /** The destructor. */
+  virtual ~BSplineTransformWithDiffusion() {};
+
+  /** Member variables. */
+  SpacingType   m_GridSpacingFactor;
+
+private:
+
+  /** The private constructor. */
+  BSplineTransformWithDiffusion( const Self& ); // purposely not implemented
+  /** The private copy constructor. */
+  void operator=( const Self& );                // purposely not implemented
+
+  /** Member variables for diffusion. */
+  typename DiffusionFilterType::Pointer   m_Diffusion;
+  typename VectorImageType::Pointer       m_DeformationField;
+  typename VectorImageType::Pointer       m_DiffusedField;
+  typename GrayValueImageType::Pointer    m_GrayValueImage1;
+  typename GrayValueImageType::Pointer    m_GrayValueImage2;
+  typename GrayValueImageType::Pointer    m_MovingSegmentationImage;
+  typename GrayValueImageType::Pointer    m_FixedSegmentationImage;
+  typename GrayValueImageReaderType::Pointer  m_MovingSegmentationReader;
+  typename GrayValueImageReaderType::Pointer  m_FixedSegmentationReader;
+  std::string                             m_MovingSegmentationFileName;
+  std::string                             m_FixedSegmentationFileName;
+  typename ResamplerType1::Pointer        m_Resampler1;
+  typename ResamplerType2::Pointer        m_Resampler2;
+  typename InterpolatorType::Pointer      m_Interpolator;
+  RegionType                              m_DeformationRegion;
+  OriginType                              m_DeformationOrigin;
+  SpacingType                             m_DeformationSpacing;
+
+  /** Member variables for writing diffusion files. */
+  bool m_WriteDiffusionFiles;
+  bool m_AlsoFixed;
+  bool m_ThresholdBool;
+  GrayValuePixelType m_ThresholdHU;
+  bool m_UseMovingSegmentation;
+  bool m_UseFixedSegmentation;
+
+  /** The B-spline parameters, which is going to be filled with zeros. */
+  ParametersType m_BSplineParameters;
+
+  /** The internal BSplineTransform, set as a current transform in 
+  * the combination transform */
+  BSplineTransformPointer m_BSplineTransform;
+
+}; // end class BSplineTransformWithDiffusion
+
 
 } // end namespace elastix
 
@@ -414,5 +415,4 @@ using namespace itk;
 #endif
 
 #endif // end #ifndef __elxBSplineTransformWithDiffusion_H__
-
 

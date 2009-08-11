@@ -39,12 +39,10 @@ namespace itk
  * the spline order.
  */
 
-  template <
-    class TScalarType = double,       // Data type for scalars (float or double)
-    unsigned int NDimensions = 3 >    // Number of dimensions
-    class DeformationVectorFieldTransform:
-  public AdvancedBSplineDeformableTransform< TScalarType, NDimensions, 0 >
-  {
+template < class TScalarType = double, unsigned int NDimensions = 3 >
+class DeformationVectorFieldTransform
+  : public AdvancedBSplineDeformableTransform< TScalarType, NDimensions, 0 >
+{
   public:
     
     /** Standard class typedefs. */
@@ -100,14 +98,16 @@ namespace itk
      * which is often more convenient.
      * The method internally just converts this vector image to 
      * nr_of_dim scalar images and passes it on to the 
-     * SetCoefficientImage function. */
+     * SetCoefficientImage function.
+     */
     virtual void SetCoefficientVectorImage( const CoefficientVectorImageType * vecImage );
 
     /** Get the coefficient image as a vector image.
      * The vector image is created only on demand. The caller is
      * expected to provide a smart pointer to the resulting image;
      * this stresses the fact that this method does not return a member 
-     * variable, like most Get... methods. */
+     * variable, like most Get... methods.
+     */
     virtual void GetCoefficientVectorImage( CoefficientVectorImagePointer & vecImage ) const;
     
   protected:

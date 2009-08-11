@@ -32,17 +32,6 @@ namespace itk
 
   } // end Constructor
   
-  /**
-   * *********************** Destructor ***************************
-   */
-
-  template < class TBSplineTransform >
-    DeformationFieldRegulizerForBSpline< TBSplineTransform >
-    ::~DeformationFieldRegulizerForBSpline()
-  {
-    //nothing
-  } // end Destructor
-
 
   /**
    * ****************** TransformPoint ****************************

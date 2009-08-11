@@ -98,7 +98,7 @@ namespace itk
     /** The constructor. */
     DeformationFieldRegulizerForBSpline();
     /** The destructor. */
-    virtual ~DeformationFieldRegulizerForBSpline();
+    virtual ~DeformationFieldRegulizerForBSpline() {};
     
   private:
     

@@ -112,7 +112,7 @@ namespace itk
     /** The constructor. */
     DeformationFieldRegulizer();
     /** The destructor. */
-    virtual ~DeformationFieldRegulizer();
+    virtual ~DeformationFieldRegulizer() {};
     
   private:
 

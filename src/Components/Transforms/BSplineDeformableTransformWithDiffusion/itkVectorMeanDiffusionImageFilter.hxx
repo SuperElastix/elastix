@@ -23,8 +23,6 @@
 #include "itkZeroFluxNeumannBoundaryCondition.h"
 #include "itkProgressReporter.h"
 
-//#include "itkCastImageFilter.h"
-//#include "itkImageFileWriter.h"
 
 namespace itk
 {
@@ -351,7 +349,7 @@ namespace itk
       /** Add information to the exception. */
       excp.SetLocation( "VectorMeanDiffusionImageFilter - FilterGrayValueImage()" );
       std::string err_str = excp.GetDescription();
-      err_str += "\nError occured while rescaling the intensities of the grayValue image.\n";
+      err_str += "\nError occurred while rescaling the intensities of the grayValue image.\n";
       excp.SetDescription( err_str );
       /** Pass the exception to an higher level. */
       throw excp;
