@@ -87,7 +87,8 @@ using namespace itk;
     typedef elx::TransformBase<TElastix>                      Superclass2;
 
     /** The ITK-class that provides most of the functionality, and
-     * that is set as the "CurrentTransform" in the CombinationTransform */
+     * that is set as the "CurrentTransform" in the CombinationTransform.
+     */
     typedef AffineTransform<
       typename elx::TransformBase<TElastix>::CoordRepType,
       elx::TransformBase<TElastix>::FixedImageDimension >     AffineTransformType;
