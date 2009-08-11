@@ -17,6 +17,10 @@
 
 #include "itkAdvancedImageToImageMetric.h"
 
+// Needed for checking for B-spline for faster implementation
+#include "itkAdvancedBSplineDeformableTransform.h"
+#include "itkAdvancedCombinationTransform.h"
+
 
 namespace itk
 {
@@ -134,6 +138,16 @@ protected:
   void PrintSelf( std::ostream& os, Indent indent ) const;
 
   typename TransformType::Pointer m_AdvancedTransform;
+
+  /** Typedef's for the B-spline transform. */
+  typedef AdvancedBSplineDeformableTransform<
+    ScalarType, FixedImageDimension, 3 >          BSplineTransformType;
+  typedef typename BSplineTransformType::Pointer  BSplineTransformPointer;
+  typedef AdvancedCombinationTransform<
+    ScalarType, FixedImageDimension >             CombinationTransformType;
+
+  /** A function to check if the transform is B-spline, for speedup. */
+  virtual bool CheckForBSplineTransform( BSplineTransformPointer & bspline ) const;
 
 private:
 
