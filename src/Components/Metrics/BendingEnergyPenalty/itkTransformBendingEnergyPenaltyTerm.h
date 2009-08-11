@@ -106,10 +106,6 @@ public:
   /** Define the dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
 
-  /** Initialize the penalty term. *
-  virtual void Initialize( void ) throw ( ExceptionObject );
-  */
-
   /** Get the penalty term value. */
   virtual MeasureType GetValue( const ParametersType & parameters ) const;
 
@@ -140,8 +136,8 @@ protected:
   /** The destructor. */
   virtual ~TransformBendingEnergyPenaltyTerm() {};
 
-  /** PrintSelf. *
-  void PrintSelf( std::ostream& os, Indent indent ) const;*/
+  /** A function to check if the transform is B-spline, for speedup. */
+  virtual bool CheckForBSplineTransform( void ) const;
 
 private:
 

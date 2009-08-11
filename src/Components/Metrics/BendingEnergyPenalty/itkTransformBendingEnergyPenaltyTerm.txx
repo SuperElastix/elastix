@@ -16,6 +16,10 @@
 
 #include "itkTransformBendingEnergyPenaltyTerm.h"
 
+// Needed for checking for B-spline for faster implementation
+#include "itkAdvancedBSplineDeformableTransform.h"
+#include "itkAdvancedCombinationTransform.h"
+
 
 namespace itk
 {
@@ -30,27 +34,52 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
 {
   /** Initialize member variables. */
 
-  /** Turn on the sampler functionality */
+  /** Turn on the sampler functionality. */
   this->SetUseImageSampler( true );
+
 } // end constructor
 
 
 /**
- * ****************** PrintSelf *******************************
- *
+ * ****************** CheckForBSplineTransform *******************************
+ */
 
 template< class TFixedImage, class TScalarType >
-void
+bool
 TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
-::PrintSelf( std::ostream & os, Indent indent ) const
+::CheckForBSplineTransform( void ) const
 {
-  this->Superclass::PrintSelf( os, indent );
+  /** Check if this transform is a B-spline transform. */
+  typedef AdvancedBSplineDeformableTransform< ScalarType,
+    FixedImageDimension, 3 >                        BSplineTransformType;
+  typedef AdvancedCombinationTransform< ScalarType,
+    FixedImageDimension >                           CombinationTransformType;
+  BSplineTransformType * testPtr1
+    = dynamic_cast<BSplineTransformType *>( this->m_Transform.GetPointer() );
+  CombinationTransformType * testPtr2a
+    = dynamic_cast<CombinationTransformType *>( this->m_Transform.GetPointer() );
+  bool transformIsBSpline = false;
+  if ( testPtr1 )
+  {
+    /** The transform is of type AdvancedBSplineDeformableTransform. */
+    transformIsBSpline = true;
+  }
+  else if ( testPtr2a )
+  {
+    /** The transform is of type AdvancedCombinationTransform. */
+    BSplineTransformType * testPtr2b = dynamic_cast<BSplineTransformType *>(
+      (testPtr2a->GetCurrentTransform()) );
+    if ( testPtr2b )
+    {
+      /** The current transform is of type AdvancedBSplineDeformableTransform. */
+      transformIsBSpline = true;
+    }
+  }
 
-  //     os << indent << "Transform: "
-  //       << this->m_Transform->GetPointer() << std::endl;
+  return transformIsBSpline;
 
-} // end PrintSelf()
-*/
+} // end CheckForBSplineTransform()
+
 
 /**
  * ****************** GetValue *******************************
@@ -190,15 +219,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   this->SetTransformParameters( parameters );
 
   /** Check if this transform is a B-spline transform. */
-  //bool transformIsBSpline = this->m_TransformIsAdvancedBSpline
-  //  || this->m_TransformIsAdvancedBSplineCombination;
-  /** SK: changed this because I removed the advancedbspline options
-   * for the AdvancedImageToImageMetric
-   * It's quite an ugly hack though, since it only works in elastix  */ 
-  const std::string transformName = this->m_AdvancedTransform->GetNameOfClass();
-  const std::string bsplineTransformName = "AdvancedBSplineTransform";
-  bool transformIsBSpline = (transformName == bsplineTransformName);
-  // \todo: Check if Combo transform is also ok for speedup trick.
+  bool transformIsBSpline = this->CheckForBSplineTransform();
 
   /** Update the imageSampler and get a handle to the sample container. */
   this->GetImageSampler()->Update();
