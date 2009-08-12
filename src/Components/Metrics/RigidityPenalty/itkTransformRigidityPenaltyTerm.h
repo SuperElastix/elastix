@@ -122,7 +122,6 @@ public:
   typedef typename Superclass::ScalarType                 ScalarType;
 
   /** Typedefs from the AdvancedTransform. */
-  typedef typename Superclass::TransformType        TransformType;  
   typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
   typedef typename Superclass
     ::JacobianOfSpatialJacobianType                 JacobianOfSpatialJacobianType;
@@ -133,6 +132,7 @@ public:
 
   /** Define the dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
+  itkStaticConstMacro( MovingImageDimension, unsigned int, FixedImageType::ImageDimension );
   itkStaticConstMacro( ImageDimension, unsigned int, FixedImageType::ImageDimension );
 
   /** Initialize the penalty term. */
@@ -199,8 +199,8 @@ public:
    */
   itkSetObjectMacro( BSplineTransform, BSplineTransformType );
 
-  /** Set the RigidityImage in this class. *
-  itkSetObjectMacro( RigidityCoefficientImage, RigidityImageType );
+  /** Set the RigidityImage in this class. */
+  //itkSetObjectMacro( RigidityCoefficientImage, RigidityImageType );
 
   /** Set/Get the weight of the linearity condition part. */
   itkSetClampMacro( LinearityConditionWeight, ScalarType,

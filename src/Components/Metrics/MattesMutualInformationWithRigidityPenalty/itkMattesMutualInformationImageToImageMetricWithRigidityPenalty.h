@@ -86,8 +86,14 @@ public:
   typedef typename Superclass::MovingImageType          MovingImageType;
   typedef typename Superclass::FixedImageConstPointer   FixedImageConstPointer;
   typedef typename Superclass::MovingImageConstPointer  MovingImageCosntPointer;
-  typedef typename Superclass::CoordinateRepresentationType
-    CoordinateRepresentationType;
+
+  /** The fixed image dimension. */
+  itkStaticConstMacro( FixedImageDimension, unsigned int,
+    FixedImageType::ImageDimension );
+
+  /** The moving image dimension. */
+  itkStaticConstMacro( MovingImageDimension, unsigned int,
+    MovingImageType::ImageDimension );
 
   typedef typename Superclass::CoordinateRepresentationType
                                                         CoordinateRepresentationType;
@@ -105,14 +111,6 @@ public:
   typedef typename MovingImageType::IndexType           MovingImageIndexType;
   typedef typename TransformType::InputPointType        FixedImagePointType;
   typedef typename TransformType::OutputPointType       MovingImagePointType;
-
-  /** The fixed image dimension. */
-  itkStaticConstMacro( FixedImageDimension, unsigned int,
-    FixedImageType::ImageDimension );
-
-  /** The moving image dimension. */
-  itkStaticConstMacro( MovingImageDimension, unsigned int,
-    MovingImageType::ImageDimension );
 
   /** Typedefs for the two metrics we combine. */
   typedef ParzenWindowMutualInformationImageToImageMetric<
