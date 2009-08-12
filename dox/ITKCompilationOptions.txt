@@ -16,9 +16,6 @@ ITK_USE_REVIEW																				true
 ITK_USE_REVIEW_STATISTICS															false
   If set to true, elastix does not compile, since the KNN component depends on the old statistics implementation of ITK.
 
-ITK_USE_PORTABLE_ROUND																true
-  Have not noticed problems with previous versions, but this seems to be a good idea.
-
 ITK_USE_CENTERED_PIXEL_COORDINATES_CONSISTENTLY				false
   If you need consistency with previous elastix version set it to false.
   If set to true you get different registration results. However, the results may just different, not wrong. We have not tested this yet. In fact, it is conceptually better to set this option to true.
