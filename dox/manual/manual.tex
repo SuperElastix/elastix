@@ -13,6 +13,7 @@
 \graphicspath{{images/}}
 
 \usepackage{natbib}
+\usepackage{ctable}
 
 % Definitions
 \newcommand{\elastix}{\texttt{elastix}}
@@ -27,7 +28,7 @@
 \newcommand{\vTm}{\bm{T}_{\vmu}}
 \newcommand{\vTmx}{\bm{T}_{\vmu}(\bm{x})}
 \newcommand{\CC}{\mathcal{C}}
-\newcommand{\NN}{\mathcal{N}}
+\newcommand{\Ncal}{\mathcal{N}}
 \newcommand{\Sim}{\mathcal{S}}
 \newcommand{\Pen}{\mathcal{P}}
 \newcommand{\D}[2]{\frac{\partial #1}{\partial #2}}
@@ -129,11 +130,12 @@ for some common problems.
 This manual has been written while the authors worked at the Image
 Sciences Institute (ISI, \url{www.isi.uu.nl}), Utrecht, The
 Netherlands. We thank the users of \elastix, whose questions and
-remarks helped improving the usability and documentation of \elastix.
-Specifically, we want to thank the following people for proofreading
-(parts of) this manual: Josien Pluim, Keelin Murphy, Martijn van der
-Bom, Sascha M\"{u}nzing, Jeroen de Bresser, Bram van Ginneken, Kajo
-van der Marel, Adri\"{e}nne Mendrik (in no specific order).
+remarks helped improving the usability and documentation of
+\elastix. Specifically, we want to thank the following people for
+proofreading (parts of) this manual when we constructed a first
+version: Josien Pluim, Keelin Murphy, Martijn van der Bom, Sascha
+M\"{u}nzing, Jeroen de Bresser, Bram van Ginneken, Kajo van der
+Marel, Adri\"{e}nne Mendrik (in no specific order).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -584,36 +586,35 @@ this gives a vector of length 12.
 transformation that is parameterised by B-splines
 \citep{RueckertEA99}:
 \begin{align}
-\vTmx = \vx + \sum_{\vx_k \in \NN_{\vx}} \bm{p}_k \bm{\beta}^3(\vx
+\vTmx = \vx + \sum_{\vx_k \in \Ncal_{\vx}} \bm{p}_k \bm{\beta}^3(\vx
 - \vx_k),\label{eq:bspline}
 \end{align}
 with $\vx_k$ the control points, $\bm{\beta}^3(x)$ the cubic
-multidimensional B-spline polynomial \citep{Unser99}, $\bm{p}_k$
-the B-spline coefficient vectors (loosely speaking, the control
-point displacements), and $\NN_{\vx}$ the set of all control
-points within the compact support of the B-spline at $\vx$. The
-control points  $\vx_k$ are defined on a regular grid, overlayed
-on the fixed image. In this context we talk about `the control
-point grid that is put on the fixed image', and about `control
-points that are moved around'. Note that $\vTm(\vx_k)\neq \vx_k +
-\bm{p}_k$, a common misunderstanding. Calling $\bm{p}_k$ the
-control point displacements is, therefore, actually somewhat
-misleading. Also note that the control point grid is entirely
-unrelated to the grid used by the Grid image sampler, see
-Section~\ref{sec:comp:sampler}.
+multidimensional B-spline polynomial \citep{Unser99}, $\bm{p}_k$ the
+B-spline coefficient vectors (loosely speaking, the control point
+displacements), and $\Ncal_{\vx}$ the set of all control points
+within the compact support of the B-spline at $\vx$. The control
+points $\vx_k$ are defined on a regular grid, overlayed on the fixed
+image. In this context we talk about `the control point grid that is
+put on the fixed image', and about `control points that are moved
+around'. Note that $\vTm(\vx_k)\neq \vx_k + \bm{p}_k$, a common
+misunderstanding. Calling $\bm{p}_k$ the control point displacements
+is, therefore, actually somewhat misleading. Also note that the
+control point grid is entirely unrelated to the grid used by the
+Grid image sampler, see Section~\ref{sec:comp:sampler}.
 
-The control point grid is defined by the amount of space between
-the control points, which can be different for each direction.
-B-splines have local support ($|\NN_{\vx}|$ is small), which means
-that the transformation of a point can be computed from only a
-couple of surrounding control points. This is beneficial both for
-modelling local transformations, and for fast computation. The
-parameters $\vmu$ are formed by the B-spline coefficients
-$\bm{p}_k$. The number of control points $P$ determines the number
-of parameters. For 3D images, $\approx 10000$ parameters is not an
-unusual case. The parameter vector is (for 2D images) composed as
-follows: $\vmu = (p_{1x}, p_{2x}, \ldots, p_{Px}, p_{1y}, p_{2y},
-\ldots, p_{Py} )^T$.
+The control point grid is defined by the amount of space between the
+control points, which can be different for each direction. B-splines
+have local support ($|\Ncal_{\vx}|$ is small), which means that the
+transformation of a point can be computed from only a couple of
+surrounding control points. This is beneficial both for modelling
+local transformations, and for fast computation. The parameters
+$\vmu$ are formed by the B-spline coefficients $\bm{p}_k$. The
+number of control points $P$ determines the number of parameters.
+For 3D images, $\approx 10000$ parameters is not an unusual case.
+The parameter vector is (for 2D images) composed as follows: $\vmu =
+(p_{1x}, p_{2x}, \ldots, p_{Px}, p_{1y}, p_{2y}, \ldots, p_{Py}
+)^T$.
 \end{description}
 
 \begin{figure}
@@ -742,9 +743,9 @@ accuracy. In that case, the parameter $a$ is the parameter that is to
 be tuned for your application.
 
 Other optimisers available in \elastix\ are: \texttt{FullSearch},
-\texttt{ConjugateGradient},\linebreak
-\texttt{ConjugateGradientFRPR}, \texttt{QuasiNewtonLBFGS},
-\texttt{RSGDEachParameterApart},\linebreak
+\texttt{AdaptiveStochasticGradientDescent},
+\texttt{ConjugateGradient}, \texttt{ConjugateGradientFRPR},
+\texttt{QuasiNewtonLBFGS}, \texttt{RSGDEachParameterApart},
 \texttt{SimultaneousPerturbation}, \texttt{CMAEvolutionStrategy}.
 
 \section{Multi-resolution}\label{sec:comp:multiresolution}
@@ -1323,7 +1324,7 @@ etc.
 For more information about memory consumption, see Section
 \ref{ssec:tut:memory} and also:
 \begin{quote}
-\url{https://wiki.isi.uu.nl/bin/view/CADweb/TransformixMemoryBurden}
+\url{http://elastix.bigr.nl/wiki/index.php/Memory_consumption_transformix}
 \end{quote}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2169,16 +2170,26 @@ bending energy, the incompressibility or the rigidity penalty term.
 %
 \section{Setup of the code}
 
-\elastix\ consists roughly of two layers: A) ITK-style classes that
-implement functionality, B) \elastix wrappers around the ITK classes
-that take care of reading/setting parameters etc. The image
-samplers, for example, are implemented as ITK classes that all
-inherit from a base class \texttt{itk::ImageSamplerBase}. These can
-be found in \texttt{src/Common/ImageSamplers}. So, this is ``layer
-A'' in \elastix. For each sampler (random, grid, full... ) a wrapper
-is written, located in \texttt{src/Components/ImageSamplers}, which
-takes care of configuring the sampler before each new resolution of
-the registration process. This is ``layer B'' of \elastix.
+The \elastix\ source code consists roughly of two layers, both
+written in C++: A) ITK-style classes that implement image
+registration functionality, and B) \elastix\ wrappers that take care
+of reading and setting parameters, instantiating and connecting
+components, saving (intermediate) results, and similar
+`administrative' tasks. The modular design enables adding new
+components, without changing the \elastix\ core. Adding a new
+component starts by creating the layer A class, which can be
+compiled and tested independent of layer B. Subsequently, a small
+layer B wrapper needs to be written, which connects the layer A
+class to the other parts of \elastix.
+
+The image samplers, for example, are implemented as ITK classes that
+all inherit from a base class \texttt{itk::ImageSamplerBase}. These
+can be found in \texttt{src/Common/ImageSamplers}. So, this is
+``layer A'' in \elastix. For each sampler (random, grid, full... ) a
+wrapper is written, located in
+\texttt{src/Components/ImageSamplers}, which takes care of
+configuring the sampler before each new resolution of the
+registration process. This is ``layer B'' of \elastix.
 
 \subsection{Directory structure}
 
@@ -2191,56 +2202,111 @@ the registration process. This is ``layer B'' of \elastix.
     elastix wrappers (layer B)
 \end{itemize}
 
-\subsection{\elastix\ execution flow}
-\begin{enumerate}
-\item elastix.cxx
-\item ElastixMain
-\item ElastixTemplate (Run)
-\item concept of observer/command structure;
-    overzicht van al dit soort functies:
-    \begin{itemize}
-    \item BeforeAll
-    \item BeforeRegistratioin
-    \item BeforeEachResolution
-    \item AfterEachResolution
-    \item AfterEachIteration
-    \item AfterRegistration
-    \end{itemize}
-\end{enumerate}
+%\subsection{\elastix\ execution flow}
+%\begin{enumerate}
+%\item elastix.cxx
+%\item ElastixMain
+%\item ElastixTemplate (Run)
+%\item concept of observer/command structure;
+%    overzicht van al dit soort functies:
+%    \begin{itemize}
+%    \item BeforeAll
+%    \item BeforeRegistratioin
+%    \item BeforeEachResolution
+%    \item AfterEachResolution
+%    \item AfterEachIteration
+%    \item AfterRegistration
+%    \end{itemize}
+%\end{enumerate}
+%
+%\subsection{\transformix\ execution flow}
+%\begin{enumerate}
+%\item transformix.cxx
+%\item TransformixMain
+%\item ElastixTemplate (RunTransformix)
+%\item overzicht van al dit soort functies:
+%    \begin{itemize}
+%    \item BeforeAll
+%    \item ApplyTransform
+%    \item ...
+%    \end{itemize}
+%\end{enumerate}
+%
+%\subsection{External packages}
+%
+%\elastix\ uses a few external packages, which are included in the
+%source.
+%
+%\begin{itemize}
+%\item Parameter file parser
+%\item xout
+%\item ANN license! used for a not yet released component.
+%\end{itemize}
 
-\subsection{\transformix\ execution flow}
-\begin{enumerate}
-\item transformix.cxx
-\item TransformixMain
-\item ElastixTemplate (RunTransformix)
-\item overzicht van al dit soort functies:
-    \begin{itemize}
-    \item BeforeAll
-    \item ApplyTransform
-    \item ...
-    \end{itemize}
-\end{enumerate}
+\section{Functional differences with the ITK}
 
-\subsection{External packages}
+%Although \elastix\ is based on the ITK registration framework, it
+%implements several functional enhancements.
+%
+%- AdvancedImageToImageMetric: ImageSampler's, ...
+%
+%- Advanced transformation, .....
 
-\elastix\ uses a few external packages, which are included in the
-source.
+A large part of the \elastix\ code is based on the ITK
+\cite{ITKSoftwareGuideSecondEdition}. The use of the ITK implies
+that the low-level functionality (image classes, memory allocation
+etc.) is thoroughly tested. Naturally, all image formats supported
+by the ITK are supported by \elastix\ as well. The C++ source code
+can be compiled on multiple operating systems (Windows XP, Linux,
+Mac OS X), using various compilers (MS Visual Studio up to version
+2008, GCC up to version 4.3), and supports both 32 and 64 bit
+systems. In addition to the existing ITK image registration classes,
+\elastix\ implements new functionality. The most important
+enhancements are listed in Table \ref{table:extras}.
 
-\begin{itemize}
-\item Parameter file parser
-\item xout
-\item ANN license! used for a not yet released component.
-\end{itemize}
+\begin{table}
+\centering
+\begin{tabular}{p{30pc}}
+\toprule \toprule
+\begin{list}{\labelitemi}{\leftmargin=1em}
+\item A modular framework for sampling strategies.
 
-\section{Functional differences with the ITK registration framework}
+\item Several new optimisers: Kiefer-Wolfowitz, Robbins-Monro,
+adaptive stochastic gradient descent, evolutionary strategy.
 
-Although \elastix\ is based on the ITK registration framework, it
-implements several functional enhancements.
+\item Complete rework of existing ITK optimisers, adding more user
+control and better error handling: quasi-Newton, nonlinear conjugate
+gradient.
 
-- AdvancedImageToImageMetric: ImageSampler's, ...
+\item Several new or more flexible cost functions: (normalised) mutual
+information, implemented with Parzen windowing similar to
+\cite{ThevenazEA00a}, multifeature $\alpha$-mutual information,
+bending energy penalty term, rigidity penalty term.
 
-- registration classes: what's the difference? Should we just file a
-bug fix?
+\item The ability to concatenate any number of geometric
+transformations.
+
+\item The transformations support computation of not only
+$\partial \vT / \partial \vmu$, but also of spatial derivatives
+$\partial \vT / \partial \vx$ and $\partial^2 \vT / \partial \vx^2$,
+and their derivatives to $\vmu$, frequently required for the
+computation of regularisation terms. Additionally, the compact
+support of certain transformations is integrated more generally.
+
+\item Linear combinations of cost functions, instead of just a single cost
+function.
+
+\item A Gaussian pyramid without downsampling.
+\end{list}\\
+ \bottomrule \bottomrule
+\end{tabular}
+\caption{The most important enhancements and additions in \elastix,
+compared to the ITK.}\label{table:extras}
+\end{table}
+
+
+%%- registration classes: what's the difference? Should we just file a
+%bug fix?
 
 \section{Creating new components}
 
