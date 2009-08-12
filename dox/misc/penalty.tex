@@ -30,15 +30,16 @@
 \newcommand{\vy}[1][]{\bm{y}_{#1}}
 \newcommand{\D}[2]{\frac{\partial #1}{\partial #2}}
 \newcommand{\Dd}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3}}
+\newcommand{\elastix}{\texttt{elastix}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
 
-\title{The use of penalty terms in the ITK}
+\title{Spatial derivatives and penalty terms in ITK and \elastix}
 
-\author{Marius Staring}
+\author{Marius Staring and Stefan Klein}
 \date{}
 \maketitle
 
@@ -239,65 +240,15 @@ virtual const JacobianType & GetJacobian( const InputPointType & ) const;
 \end{verbatim}
 \end{quote}
 which returns a reference to the member variable
-\texttt{m\_Jacobian}. The member is however only valid for the input
-point[, WRONG: except for transformations with a derivative
-independent of the spatial position, such as the affine transforms].
-Therefore, we think that it should not be possible to access this
-parameter at a later time, when the input point has possibly
-changed.
+\texttt{m\_Jacobian}. It is possible, however, that this member is
+only valid for the input point, namely for transformations with a
+derivative dependent of the spatial position. Therefore, we think
+that it should not be possible to access this parameter at a later
+time, when the input point has possibly changed.
 
 Also notice the \texttt{NonZeroJacobianIndicesType} in the function
 definitions. These are meant for the support of sparse Jacobians,
 JacobianOfSpatialJacobians, etc.
-
-\section{Bending energy penalty term}
-
-The bending energy was defined as:
-\begin{align}
-\mathcal{P}_{\mathrm{BE}}(\vmu) &= \frac{1}{P} \sum_{\vxt[i]}
-\sum_{k,l,m = 1}^2 \left( \Dd{T_k}{x_l}{x_m}(\vxt[i]) \right)^2.
-\end{align}
-
-We constructed an \texttt{itk::TransformBendingEnergyPenaltyTerm}
-which inherits from the \texttt{itk::ImageToImage\-Metric}. The
-\texttt{GetValue()}-method is implemented like:
-\begin{quote}
-\begin{verbatim}
-SpatialHessianType spatialHessian;
-for all samples
-  this->GetTransform()->GetSpatialHessian( sample, spatialHessian );
-  for all k, l, m
-    measure += spatialHessian[ k ][ l ][ m ]^2;
-  end
-end
-measure /= this->m_NumberOfPixelsCounted;
-\end{verbatim}
-\end{quote}
-
-For the \texttt{GetValueAndDerivative()} we have:
-\begin{align}
-\D{}{\vmu} \mathcal{P}_{\mathrm{BE}}(\vmu) &=  \frac{1}{P}
-\sum_{\vxt[i]} \sum_{k,l,m = 1}^2 2 \Dd{T_k}{x_l}{x_m} (\vxt[i])
-\D{}{\vmu} \Dd{T_k}{x_l}{x_m}(\vxt[i]),
-\end{align}
-which is implemented like:
-\begin{quote}
-\begin{verbatim}
-SpatialHessianType spatialHessian;
-JacobianOfSpatialHessianType jacobianOfSpatialHessian;
-for all samples
-  this->GetTransform()->GetSpatialHessian( sample, spatialHessian );
-  this->GetTransform()->GetJacobianOfSpatialHessian( sample,
-    jacobianOfSpatialHessian, nonZeroJacobianIndices );
-  for all nonZeroJacobianIndices, k, l, m
-    derivative[ nonZeroJacobianIndices[ mu ] ] += 2.0
-      * spatialHessian[ k ][ i ][ j ]
-      * jacobianOfSpatialHessian[ mu ][ k ][ i ][ j ];
-  end
-end
-derivative /= this->m_NumberOfPixelsCounted;
-\end{verbatim}
-\end{quote}
 
 \section{Affine transformation}
 
@@ -326,18 +277,21 @@ x_2 & 0 & 0 & 1 & 0 \\ 0 & 0 & \widetilde x_1 & \widetilde x_2 & 0 &
 \end{align}
 where $O_s$ is a zero matrix of size $s$.
 
-centre of rotation!!!
+%centre of rotation!!!
 
 The \texttt{GetJacobianOfSpatialJacobian()} returns
 \texttt{nonZeroJacobianIndices} = $[ 0, 1, 2, 3 ]$.
 
-For the SpatialHessian and the JacobianOfSpatialHessian we choose to
-not return matrices filled with zeros, but instead zero sized
-matrices. The implementation of the penalty term is assumed to check
-for the size. In case of an affine transform the size is zero, and
-the penalty term can simply return zero. This is a performance
-benefit compared to walking over the zero matrix, and adding and
-multiplying everything, which in the end also gives zero.
+%For the SpatialHessian and the JacobianOfSpatialHessian we choose to
+%not return matrices filled with zeros, but instead zero sized
+%matrices. The implementation of the penalty term is assumed to check
+%for the size. In case of an affine transform the size is zero, and
+%the penalty term can simply return zero. This is a performance
+%benefit compared to walking over the zero matrix, and adding and
+%multiplying everything, which in the end also gives zero.
+
+These derivatives are implemented in the
+\texttt{itk::AdvancedMatrixOffsetTransformBase} class.
 
 \section{B-spline transformation}
 
@@ -410,6 +364,8 @@ b_{31}^{0} \end{bmatrix} \right\}, \cdots, \left\{ O_{d \times d},
 b_{31}^{15} \end{bmatrix} \right\} \right\}.
 \end{align}
 
+These derivatives are implemented in the
+\texttt{itk::AdvancedBSplineDeformableTransform} class.
 
 \section{Combining transformations}
 
@@ -438,11 +394,11 @@ for the derivatives. Define $\bm{y} = \vT_0(\vxt)$.
 \intertext{SpatialJacobian:}
 \D{\vTmu}{\vx}(\vxt) &= \D{}{\vx} \left( \vT_0(\vxt) + \vT_1(\vxt) -
 \vxt \right) = \D{}{\vx} \vT_0(\vxt) + \D{}{\vx} \vT_1(\vxt) - \bm{I}, \\
-\D{\vTmu}{\vx}(\vxt) &= \D{}{\vx} \vT_1(\vT_0(\vxt)) = \D{}{\vx}
-\vT_1(\bm{y}) \cdot \D{}{\vx} \vT_0(\vxt). \\
-\Biggl[ \D{T_{\vmu,k}}{x_i}(\vxt) &= \left( \D{T_{1,k}}{\vx}(\vy)
-\right)^T \D{\vT_0}{x_i}(\vxt) =  \left(\D{\vT_0}{x_i}(\vxt)
-\right)^T \D{T_{1,k}}{\vx}(\vy) \qquad \mathrm{(Stefan)} \Biggr]
+%\D{\vTmu}{\vx}(\vxt) &= \D{}{\vx} \vT_1(\vT_0(\vxt)) = \D{}{\vx}
+%\vT_1(\bm{y}) \cdot \D{}{\vx} \vT_0(\vxt). \\
+\D{T_{\vmu,k}}{x_i}(\vxt) &= \left( \D{T_{1,k}}{\vx}(\vy) \right)^T
+\D{\vT_0}{x_i}(\vxt) =  \left(\D{\vT_0}{x_i}(\vxt) \right)^T
+\D{T_{1,k}}{\vx}(\vy)
 \intertext{JacobianOfSpatialJacobian:}
 \D{}{\vmu} \D{\vTmu}{\vx}(\vxt) &= \D{}{\vmu} \D{}{\vx} \left(
 \vT_0(\vxt) + \vT_1(\vxt) - \vxt \right) = \D{}{\vmu} \D{}{\vx}
@@ -454,30 +410,88 @@ for the derivatives. Define $\bm{y} = \vT_0(\vxt)$.
 \Dd{\vTmu}{x_i}{x_j} &= \Dd{}{x_i}{x_j} \left( \vT_0(\vxt) +
 \vT_1(\vxt) \right) = \Dd{}{x_i}{x_j} \vT_0(\vxt) +
 \Dd{}{x_i}{x_j} \vT_1(\vxt), \\
-\Dd{\vTmu}{x_i}{x_j} &= \Dd{}{x_i}{x_j} \left( \vT_1(\vT_0(\vxt))
-\right) = \D{}{x_i} \vT_0(\vxt) \Dd{}{x_i}{x_j} \vT_1(\bm{y})
-\D{}{x_j} \vT_0(\vxt) + \Dd{}{x_i}{x_j} \vT_0(\vxt) \D{}{x_j}
-\vT_1(\bm{y}). \\
-\Biggl[ \Dd{T_{\vmu,k}}{x_i}{x_j}(\vxt) &= \left(
-\D{T_{1,k}}{\vx}(\vy) \right)^T \Dd{\vT_0}{x_i}{x_j}(\vxt) +
-\left(\D{\vT_0}{x_i}(\vxt) \right)^T
-\Dd{T_{1,k}}{\vx}{\vx^T}(\bm{y}) \D{\vT_0}{x_j}(\vxt) \qquad
-\mathrm{(Stefan)} \Biggr]
+%\Dd{\vTmu}{x_i}{x_j} &= \Dd{}{x_i}{x_j} \left( \vT_1(\vT_0(\vxt))
+%\right) = \D{}{x_i} \vT_0(\vxt) \Dd{}{x_i}{x_j} \vT_1(\bm{y})
+%\D{}{x_j} \vT_0(\vxt) + \Dd{}{x_i}{x_j} \vT_0(\vxt) \D{}{x_j}
+%\vT_1(\bm{y}). \\
+\Dd{T_{\vmu,k}}{x_i}{x_j}(\vxt) &= \left( \D{T_{1,k}}{\vx}(\vy)
+\right)^T \Dd{\vT_0}{x_i}{x_j}(\vxt) + \left(\D{\vT_0}{x_i}(\vxt)
+\right)^T \Dd{T_{1,k}}{\vx}{\vx^T}(\bm{y}) \D{\vT_0}{x_j}(\vxt)
 \intertext{JacobianOfSpatialHessian:}
 \D{}{\vmu} \Dd{\vTmu}{x_i}{x_j} &= \D{}{\vmu} \Dd{}{x_i}{x_j} \left(
 \vT_0(\vxt) + \vT_1(\vxt) - \vxt \right) = \D{}{\vmu}
 \Dd{}{x_i}{x_j} \vT_1(\vxt), \\
-\D{}{\vmu} \Dd{\vTmu}{\vx}{\vx^T} &= \D{}{\vmu} \Dd{}{x_i}{x_j}
-\left( \vT_1(\vT_0(\vxt)) \right) \\
- &= \D{}{x_i} \vT_0(\vxt) \D{}{\vmu} \Dd{}{x_i}{x_j} \vT_1(\bm{y})
-\D{}{x_j} \vT_0(\vxt) + \Dd{}{x_i}{x_j} \vT_0(\vxt) \D{}{\vmu}
-\D{}{x_j} \vT_1(\bm{y}). \\
-\Biggl[ \D{}{\vmu} \Dd{T_{mu,k}}{x_i}{x_j}(\vxt) &=
+%\D{}{\vmu} \Dd{\vTmu}{\vx}{\vx^T} &= \D{}{\vmu} \Dd{}{x_i}{x_j}
+%\left( \vT_1(\vT_0(\vxt)) \right) \\
+% &= \D{}{x_i} \vT_0(\vxt) \D{}{\vmu} \Dd{}{x_i}{x_j} \vT_1(\bm{y})
+%\D{}{x_j} \vT_0(\vxt) + \Dd{}{x_i}{x_j} \vT_0(\vxt) \D{}{\vmu}
+%\D{}{x_j} \vT_1(\bm{y}). \\
+\D{}{\vmu} \Dd{T_{mu,k}}{x_i}{x_j}(\vxt) &=
 \Dd{T_{1,k}}{\vmu}{\vx^T}(\vy) \Dd{\vT_0}{x_i}{x_j}(\vxt) +
 \left(\D{\vT_0}{x_i}(\vxt) \right)^T \left(\D{}{\vmu}
-\Dd{T_{1,k}}{\vx}{\vx^T}(\bm{y})\right) \D{\vT_0}{x_j}(\vxt) \qquad
-\mathrm{(Stefan)} \Biggr]
+\Dd{T_{1,k}}{\vx}{\vx^T}(\bm{y})\right) \D{\vT_0}{x_j}(\vxt)
 \end{align}
+
+These derivatives are implemented in the
+\texttt{itk::AdvancedCombinationTransform} class.
+
+\section{Bending energy penalty term}
+
+The bending energy was defined as:
+\begin{align}
+\mathcal{P}_{\mathrm{BE}}(\vmu) &= \frac{1}{P} \sum_{\vxt[i]}
+\sum_{k,l,m = 1}^2 \left( \Dd{T_k}{x_l}{x_m}(\vxt[i]) \right)^2.
+\end{align}
+
+We constructed an \texttt{itk::TransformBendingEnergyPenaltyTerm}
+which inherits from the \texttt{itk::ImageToImage\-Metric}. The
+\texttt{GetValue()}-method is implemented like:
+\begin{quote}
+\begin{verbatim}
+SpatialHessianType spatialHessian; for all samples
+  this->GetTransform()->GetSpatialHessian( sample, spatialHessian );
+  for all k, l, m
+    measure += spatialHessian[ k ][ l ][ m ]^2;
+  end
+end measure /= this->m_NumberOfPixelsCounted;
+\end{verbatim}
+\end{quote}
+
+For the \texttt{GetValueAndDerivative()} we have:
+\begin{align}
+\D{}{\vmu} \mathcal{P}_{\mathrm{BE}}(\vmu) &=  \frac{1}{P}
+\sum_{\vxt[i]} \sum_{k,l,m = 1}^2 2 \Dd{T_k}{x_l}{x_m} (\vxt[i])
+\D{}{\vmu} \Dd{T_k}{x_l}{x_m}(\vxt[i]),
+\end{align}
+which is implemented like:
+\begin{quote}
+\begin{verbatim}
+SpatialHessianType spatialHessian; JacobianOfSpatialHessianType
+jacobianOfSpatialHessian; for all samples
+  this->GetTransform()->GetSpatialHessian( sample, spatialHessian );
+  this->GetTransform()->GetJacobianOfSpatialHessian( sample,
+    jacobianOfSpatialHessian, nonZeroJacobianIndices );
+  for all nonZeroJacobianIndices, k, l, m
+    derivative[ nonZeroJacobianIndices[ mu ] ] += 2.0
+      * spatialHessian[ k ][ i ][ j ]
+      * jacobianOfSpatialHessian[ mu ][ k ][ i ][ j ];
+  end
+end derivative /= this->m_NumberOfPixelsCounted;
+\end{verbatim}
+\end{quote}
+
+This penalty term is implemented in the
+\texttt{itk::TransformBendingEnergyPenaltyTerm} class.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Discussion and Conclusion}
+
+This document describes the use and implementation of spatial
+derivatives of coordinate transformations. These spatial derivatives
+were exploited by the bending energy penalty term. Their usage is,
+however, not limited to that penalty term, and many more penalty
+terms can be implemented using the new functionality.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
