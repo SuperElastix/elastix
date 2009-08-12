@@ -346,7 +346,6 @@ public:
     bool & inside ) const;
 
   /** Get number of weights. */
-
   unsigned long GetNumberOfWeights( void ) const
   {
     return this->m_WeightsFunction->GetNumberOfWeights();    
@@ -357,16 +356,16 @@ public:
    */
   virtual OutputVectorType TransformVector( const InputVectorType & ) const
     { 
-    itkExceptionMacro(<< "Method not applicable for deformable transform." );
+    itkExceptionMacro( << "Method not applicable for deformable transform." );
     return OutputVectorType(); 
     }
 
   /** Method to transform a vnl_vector - 
    *  not applicable for this type of transform.
    */
-  virtual OutputVnlVectorType TransformVector(const InputVnlVectorType &) const
+  virtual OutputVnlVectorType TransformVector(const InputVnlVectorType & ) const
     { 
-    itkExceptionMacro(<< "Method not applicable for deformable transform. ");
+    itkExceptionMacro( << "Method not applicable for deformable transform. ");
     return OutputVnlVectorType(); 
     }
 
@@ -374,9 +373,9 @@ public:
    *  not applicable for this type of transform.
    */
   virtual OutputCovariantVectorType TransformCovariantVector(
-    const InputCovariantVectorType &) const
+    const InputCovariantVectorType & ) const
     { 
-    itkExceptionMacro(<< "Method not applicable for deformable transform. ");
+    itkExceptionMacro( << "Method not applicable for deformable transform. ");
     return OutputCovariantVectorType(); 
     } 
     

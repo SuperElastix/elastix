@@ -201,7 +201,7 @@ BSplineTransformWithDiffusion<TElastix>
     {
       xout[ "error" ] << "ERROR: No FixedSegmentation filename specified." << std::endl;
       /** Create and throw an exception. */
-      itkExceptionMacro( << "ERROR: No FixedSegmentation filename specified.");
+      itkExceptionMacro( << "ERROR: No FixedSegmentation filename specified." );
     }
   }
 
@@ -448,7 +448,7 @@ BSplineTransformWithDiffusion<TElastix>
   /** Declare boolean. */
   bool DiffusionNow = false;
 
-  /** Find out filterpattern. */
+  /** Find out filter pattern. */
   unsigned int filterPattern = 1;
   this->m_Configuration->ReadParameter( filterPattern, "FilterPattern", 0 );
   if ( filterPattern != 1 && filterPattern != 2 )
@@ -468,11 +468,11 @@ BSplineTransformWithDiffusion<TElastix>
     "MaximumNumberOfIterations", ResNr );
 
   /** Find out if we have to filter now.
-  * FilterPattern1: diffusion every n iterations
-  * FilterPattern2: start with diffusion every n1 iterations,
-  *    followed by diffusion every n2 iterations, and ended
-  *    by by diffusion every n3 iterations.
-  */
+   * FilterPattern1: diffusion every n iterations
+   * FilterPattern2: start with diffusion every n1 iterations,
+   *    followed by diffusion every n2 iterations, and ended
+   *    by by diffusion every n3 iterations.
+   */
   if ( filterPattern == 1 )
   {
     /** Find out after how many iterations a diffusion is wanted. */
@@ -533,7 +533,7 @@ BSplineTransformWithDiffusion<TElastix>
       diffusionEachNIterations = howManyIterations2;
     }
 
-    /** This iteration filteren? Also filter after the last iteration. */
+    /** Filter the current iteration? Also filter after the last iteration. */
     DiffusionNow = ( ( CurrentIterationNumber + 1 ) % diffusionEachNIterations == 0 );
     DiffusionNow |= ( CurrentIterationNumber == ( maximumNumberOfIterations - 1 ) );
 
@@ -818,7 +818,7 @@ BSplineTransformWithDiffusion<TElastix>
       /** Add information to the exception. */
       excp.SetLocation( "BSplineTransform - IncreaseScale()" );
       std::string err_str = excp.GetDescription();
-      err_str += "\nError occured while using decompositionFilter.\n";
+      err_str += "\nError occurred while using decompositionFilter.\n";
       excp.SetDescription( err_str );
       /** Pass the exception to an higher level. */
       throw excp;
@@ -844,8 +844,8 @@ BSplineTransformWithDiffusion<TElastix>
   this->m_BSplineTransform->SetGridRegion( gridregionHigh );
   this->m_BSplineTransform->SetGridOrigin( gridoriginHigh );
   this->m_BSplineTransform->SetGridSpacing( gridspacingHigh );
-  this->m_Registration->GetAsITKBaseType()->
-    SetInitialTransformParametersOfNextLevel( parameters_out );
+  this->m_Registration->GetAsITKBaseType()
+    ->SetInitialTransformParametersOfNextLevel( parameters_out );
 
 }  // end IncreaseScale()
 
@@ -966,7 +966,8 @@ BSplineTransformWithDiffusion<TElastix>
    * initial transform with the current transform.
    */
   std::string howToCombineTransforms = "Add"; // default
-  this->m_Configuration->ReadParameter( howToCombineTransforms, "HowToCombineTransforms", 0, false );
+  this->m_Configuration->ReadParameter( howToCombineTransforms,
+    "HowToCombineTransforms", 0, false );
 
   /** Convert 'this' to a pointer to a CombinationTransformType and set how
    * to combine the current transform with the initial transform */
@@ -1233,7 +1234,7 @@ BSplineTransformWithDiffusion<TElastix>
         /** Add information to the exception. */
         excp.SetLocation( "BSplineTransformWithDiffusion - DiffuseDeformationField()" );
         std::string err_str = excp.GetDescription();
-        err_str += "\nError occured when using the maximumImageFilter to get the grayValue image.\n";
+        err_str += "\nError occurred when using the maximumImageFilter to get the grayValue image.\n";
         excp.SetDescription( err_str );
         /** Pass the exception to an higher level. */
         throw excp;
@@ -1371,7 +1372,7 @@ BSplineTransformWithDiffusion<TElastix>
       /** Add information to the exception. */
       excp.SetLocation( "BSplineTransformWithDiffusion - DiffuseDeformationField()" );
       std::string err_str = excp.GetDescription();
-      err_str += "\nError occured while writing the deformationField image.\n";
+      err_str += "\nError occurred while writing the deformationField image.\n";
       excp.SetDescription( err_str );
       /** Print the exception. */
       xl::xout["error"] << excp << std::endl;
@@ -1447,24 +1448,6 @@ BSplineTransformWithDiffusion<TElastix>
 ::TransformPoint( const InputPointType  & point ) const
 {
   return this->GenericDeformationFieldRegulizer::TransformPoint(point);
-} // end TransformPoint()
-
-
-/**
- * ******************* TransformPoint ******************
- */
-
-template <class TElastix>
-void BSplineTransformWithDiffusion<TElastix>
-::TransformPoint(
-  const InputPointType & inputPoint,
-  OutputPointType & outputPoint,
-  WeightsType & weights,
-  ParameterIndexArrayType & indices,
-  bool & inside ) const
-{
-  this->Superclass1::TransformPoint(
-    inputPoint, outputPoint, weights, indices, inside );
 
 } // end TransformPoint()
 

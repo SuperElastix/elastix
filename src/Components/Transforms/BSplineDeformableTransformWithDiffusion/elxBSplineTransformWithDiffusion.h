@@ -19,8 +19,8 @@
 #define __VSplineOrder 3
 
 #include "itkAdvancedBSplineDeformableTransform.h"
-//#include "itkAdvancedCombinationTransform.h"
-#include "itkBSplineCombinationTransform.h"
+#include "itkAdvancedCombinationTransform.h"
+//#include "itkBSplineCombinationTransform.h"
 #include "itkBSplineResampleImageFilterBase.h"
 #include "itkBSplineUpsampleImageFilter.h"
 
@@ -28,10 +28,8 @@
 
 #include "elxIncludes.h"
 
-//#include <sstream>
-
 /** Include structure for the diffusion. */
-#include "itkDeformationFieldRegulizerForBSpline.h"
+#include "itkDeformationFieldRegulizer.h"
 #include "itkVectorMeanDiffusionImageFilter.h"
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
@@ -158,12 +156,12 @@ using namespace itk;
 template < class TElastix >
 class BSplineTransformWithDiffusion
   : public
-  DeformationFieldRegulizerForBSpline<
-    //AdvancedCombinationTransform<
-    BSplineCombinationTransform<
+  DeformationFieldRegulizer<
+    AdvancedCombinationTransform<
+    //BSplineCombinationTransform<
     ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,
-    //elx::TransformBase<TElastix>::FixedImageDimension > >,
-    elx::TransformBase<TElastix>::FixedImageDimension, __VSplineOrder > >,
+    elx::TransformBase<TElastix>::FixedImageDimension > >,
+    //elx::TransformBase<TElastix>::FixedImageDimension, __VSplineOrder > >,
   public
   TransformBase<TElastix>
 {
@@ -171,12 +169,12 @@ public:
 
   /** Standard ITK-stuff. */
   typedef BSplineTransformWithDiffusion               Self;
-  typedef DeformationFieldRegulizerForBSpline<
-    //AdvancedCombinationTransform<
-    BSplineCombinationTransform<
+  typedef DeformationFieldRegulizer<
+    AdvancedCombinationTransform<
+    //BSplineCombinationTransform<
     typename elx::TransformBase<TElastix>::CoordRepType,
-    //elx::TransformBase<TElastix>::FixedImageDimension > >
-    elx::TransformBase<TElastix>::FixedImageDimension, __VSplineOrder > >
+    elx::TransformBase<TElastix>::FixedImageDimension > >
+    //elx::TransformBase<TElastix>::FixedImageDimension, __VSplineOrder > >
                                                       Superclass1;
   typedef elx::TransformBase<TElastix>                Superclass2;
 
@@ -195,7 +193,7 @@ public:
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( BSplineTransformWithDiffusion, DeformationFieldRegulizerForBSpline );
+  itkTypeMacro( BSplineTransformWithDiffusion, DeformationFieldRegulizer );
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific transform. \n
@@ -334,7 +332,7 @@ public:
   /** Method to transform a point.
    * This method just calls the implementation from the 
    * GenericDeformationFieldRegulizer. This is necessary, since:
-   * The DeformationFieldRegulizerForBSpline is used which expects
+   * The DeformationFieldRegulizerFor is used which expects
    * that its template argument is a BSplineDeformableTransform. This is 
    * not the case, because we gave it a BSplineCombinationTransform.
    * This last class has a slightly different behavior of the 
@@ -346,13 +344,13 @@ public:
   /**  Method to transform a point with extra arguments. Just calls 
    * the Superclass1's implementation. Has to be present here since it is an
    * overloaded function.
-   */
+   *
   virtual void TransformPoint(
     const InputPointType & inputPoint,
     OutputPointType & outputPoint,
     WeightsType & weights,
     ParameterIndexArrayType & indices,
-    bool & inside ) const;
+    bool & inside ) const;*/
 
 protected:
 
@@ -402,7 +400,8 @@ private:
   ParametersType m_BSplineParameters;
 
   /** The internal BSplineTransform, set as a current transform in 
-  * the combination transform */
+   * the combination transform.
+   */
   BSplineTransformPointer m_BSplineTransform;
 
 }; // end class BSplineTransformWithDiffusion
