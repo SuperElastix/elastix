@@ -180,7 +180,7 @@ then
   wzzip -ex -a -r -P $exportdirwin/elastix_sources_v$version.zip src
   cd install
   cp ../src/CopyrightElastix.txt .
-	cp d:/tk/libtiff3.dll .
+	cp d:/tk/install/libtiff3.dll .
   wzzip -ex -a -r -P $exportdirwin/elastix_windows32_v$version.zip *
   cd ../help
   wzzip -ex -a -r -P $exportdirwin/elastix_example_v$version.zip exampleinput example.bat
