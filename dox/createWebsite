@@ -45,7 +45,7 @@ arg="$1"
 version="4.2"
 tag="elastix_04_2"
 
-username="stefan"
+username="sklein"
 
 # Some base directories
 exportbasedirwin="d:/tk/elastix/exports"
@@ -60,7 +60,7 @@ exportdirlinux64="$exportbasedirlinux64/tags/$tag"
 exportdirlinux32="$exportbasedirlinux32/tags/$tag"
 # when using the biggrid
 exportdirlinux32grid="$exportbasedirlinux32grid/tags/$tag""linux32"
-svnurl="http://svn.isi.uu.nl:8080/elastix"
+svnurl="https://svn.bigr.nl/elastix"
 tempdir="d:/dox/elastixwebsite/$tag"
 websitebase="http://elastix.isi.uu.nl"
 copyright="$exportdirwin/src/CopyrightElastix.txt"
