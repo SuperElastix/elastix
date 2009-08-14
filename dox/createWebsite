@@ -42,8 +42,8 @@
 arg="$1"
 
 # You have to set the following
-version="4.1"
-tag="elastix_04_1"
+version="4.2"
+tag="elastix_04_2"
 
 username="stefan"
 
@@ -180,6 +180,7 @@ then
   wzzip -ex -a -r -P $exportdirwin/elastix_sources_v$version.zip src
   cd install
   cp ../src/CopyrightElastix.txt .
+	cp d:/tk/libtiff3.dll .
   wzzip -ex -a -r -P $exportdirwin/elastix_windows32_v$version.zip *
   cd ../help
   wzzip -ex -a -r -P $exportdirwin/elastix_example_v$version.zip exampleinput example.bat
