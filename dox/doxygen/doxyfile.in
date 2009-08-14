@@ -197,7 +197,7 @@ TAB_SIZE               = 2
 # You can put \n's in the value part of an alias to insert newlines.
 
 ALIASES                = "parameter=\xrefitem parameter \"Parameters\" \"Parameters\"" \
-                         "transformparameter=\xrefitem transformparameter \"Transform Parameters\" \"Transform Parameters\"" \
+                         "transformparameter=\xrefitem transformparameter \"Transform Parameters\" \"%Transform Parameters\"" \
                          "commandlinearg=\xrefitem commandlinearg \"Command line arguments\" \"Command line arguments\""
 
 # Set the OPTIMIZE_OUTPUT_FOR_C tag to YES if your project consists of C 

@@ -77,7 +77,7 @@ namespace elastix
    * \transformparameter Transform: Select this transform as follows:\n
    *    <tt>(%Transform "SplineKernelTransform")</tt>
    * \transformparameter SplineKernelType: Select the deformation model, which must be one of
-   * {ThinPlateSpline, VolumeSpline, ElasticBodySpline, ElastixBodyReciprocalSpline). In
+   * {ThinPlateSpline, VolumeSpline, ElasticBodySpline, ElasticBodyReciprocalSpline). In
    * 2D this option is ignored and a ThinPlateSpline will always be used. \n
    *   example: <tt>(SplineKernelType "ElasticBodySpline")</tt>\n   * 
    * \transformparameter SplineRelaxationFactor: make the spline interpolating or approximating. 

@@ -12,6 +12,9 @@
 \usepackage{graphicx,subfigure,psfrag,epsfig}
 \graphicspath{{images/}}
 
+\usepackage[dvips,breaklinks,bookmarks,bookmarksnumbered]{hyperref}
+\hypersetup{pdftitle={elastix, the manual},pdfauthor={Stefan Klein and Marius Staring}}
+
 \usepackage{natbib}
 \usepackage{ctable}
 
@@ -92,9 +95,10 @@ and disclaimer under which \elastix\ is currently distributed.
 \section{Quick start}
 
 \begin{itemize}
-\item Download \elastix\ from
-\url{http://elastix.isi.uu.nl/download.php}. See Section
-\ref{sec:elastix:install} for details about the installation.
+\item Download \elastix\ from \url{http://elastix.isi.uu.nl/download.php}.
+    See Section \ref{sec:elastix:install} for details about the
+    installation. Do not forget to subscribe to the \elastix\ mailing list,
+    which is the main forum for questions and announcements.
 
 \item Read some basics about the program at
     \url{http://elastix.isi.uu.nl/about.php} and in this manual.
@@ -109,33 +113,33 @@ computer take a look at the FAQ in the general section:
 \item Read the complete manual if you are the type of person that
 first wants to know.
 
-\item Get started with your own application. If you need more
-information at this point you can now start reading the manual.
-You can find more information on tuning the parameters in Chapter
-\ref{chp:Tutorial}. A list of all available parameters can be
-found at \url{http://elastix.isi.uu.nl/doxygen/pages.html}.
+\item Get started with your own application. If you need more information
+    at this point you can now start reading the manual. You can find more
+    information on tuning the parameters in Chapter \ref{chp:Tutorial}. A
+    list of all available parameters can be found at
+    \url{http://elastix.isi.uu.nl/doxygen/pages.html}. Also take a look at
+    the \emph{parameter file database} at
+    \url{http://elastix.isi.uu.nl/wiki.php}, for many example parameter
+    files.
 
 \item When you are stuck, don't miss the tutorial in Chapter
 \ref{chp:Tutorial} of this manual. Also, take a look at the FAQ again
 for some common problems.
 
-\item When you are still stuck, consult your local registration guru.
-
-\item When you are really stuck you can mail the developers at
-    \url{elastix.support@gmail.com}.
+\item When you are still stuck, do not hesitate to send an e-mail to the
+    \elastix\ mailing list. In general, you will soon get an answer.
 \end{itemize}
 
 \section{Acknowledgements}
 
-This manual has been written while the authors worked at the Image
-Sciences Institute (ISI, \url{www.isi.uu.nl}), Utrecht, The
-Netherlands. We thank the users of \elastix, whose questions and
-remarks helped improving the usability and documentation of
-\elastix. Specifically, we want to thank the following people for
-proofreading (parts of) this manual when we constructed a first
-version: Josien Pluim, Keelin Murphy, Martijn van der Bom, Sascha
-M\"{u}nzing, Jeroen de Bresser, Bram van Ginneken, Kajo van der
-Marel, Adri\"{e}nne Mendrik (in no specific order).
+This manual has mainly been written while the authors worked at the Image
+Sciences Institute (ISI, \url{http://www.isi.uu.nl}), Utrecht, The Netherlands.
+We thank the users of \elastix, whose questions and remarks helped improving
+the usability and documentation of \elastix. Specifically, we want to thank the
+following people for proofreading (parts of) this manual when we constructed a
+first version: Josien Pluim, Keelin Murphy, Martijn van der Bom, Sascha
+M\"{u}nzing, Jeroen de Bresser, Bram van Ginneken, Kajo van der Marel,
+Adri\"{e}nne Mendrik (in no specific order).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -314,9 +318,12 @@ is able to store the relevant information (e.g. \texttt{mhd},
 DICOM). Some image formats, like \texttt{vpx}, do not store the
 origin and spacing. This may cause serious problems!
 
-The image orientation is not yet supported in \elastix, so
-registration of images with different orientation are not supported.
-This feature is on our priority list.
+The image orientation (direction cosines) is not yet fully supported in
+\elastix. The registration will run, but basically assumes that the images have
+unit direction cosines. In many applications this does not cause problems, but
+be especially careful when fixed and moving image have different orientations,
+or when you need to relate the resulting transformation to some physical
+property. Full support of image orientation is on our priority list.
 
 \section{Metrics}\label{sec:comp:metric}
 
@@ -525,10 +532,11 @@ you need to prepend the name with \texttt{Final}, for example:
 
 \section{Transforms}\label{sec:comp:transform}
 
-The transformation model used for $\vT_{\vmu}$ determines what type
-of deformations between the fixed and moving image you can handle. In
-order of increasing flexibility, these are the translation, the
-rigid, the affine, and the nonrigid B-spline transformations.
+The transformation model used for $\vT_{\vmu}$ determines what type of
+deformations between the fixed and moving image you can handle. In order of
+increasing flexibility, these are the translation, the rigid, the similarity,
+the affine, the nonrigid B-spline and the nonrigid thin-plate spline like
+transformations.
 
 \begin{description}
 \item[Translation:] (\texttt{TranslationTransform}) The translation is defined as:
@@ -557,34 +565,32 @@ a fixed setting, usually the centre of the image.
 
 \item[Similarity:] (\texttt{SimilarityTransform}) A similarity transformation is defined as
 \begin{align}
-\vTmx &= s R (\vx - \bm{c}) + \bm{t} + \bm{c},
+\vTmx &= s \bm{R} (\vx - \bm{c}) + \bm{t} + \bm{c},
 \end{align}
-with $s$ a scalar and $R$ a rotation matrix. This means that the
-image is treated as an object, which can translate, rotate, and
-scale isotropically. The rotation matrix is parameterised by an
-angle in 2D, and by a so-called ``versor'' in 3D (Euler angles
-could have been used as well). The parameter vector $\vmu$
-consists of the angle/versor, the translation vector, and the
-isotropic scaling factor. In 2D, this gives a vector of length 4:
-$\vmu = (s, \theta_z, t_x, t_y)^T$. In 3D, this gives a vector of
-length 7: $\vmu = (q_1, q_2, q_3, t_x, t_y, t_z, s)^T$, where
-$q_1$, $q_2$, and $q_3$ are the elements of the versor. There are
-few cases when you need this transform.
+with $s$ a scalar and $\bm{R}$ a rotation matrix. This means that the image
+is treated as an object, which can translate, rotate, and scale
+isotropically. The rotation matrix is parameterised by an angle in 2D, and
+by a so-called ``versor'' in 3D (Euler angles could have been used as
+well). The parameter vector $\vmu$ consists of the angle/versor, the
+translation vector, and the isotropic scaling factor. In 2D, this gives a
+vector of length 4: $\vmu = (s, \theta_z, t_x, t_y)^T$. In 3D, this gives a
+vector of length 7: $\vmu = (q_1, q_2, q_3, t_x, t_y, t_z, s)^T$, where
+$q_1$, $q_2$, and $q_3$ are the elements of the versor. There are few cases
+when you need this transform.
 
 \item[Affine:] (\texttt{AffineTransform}) An affine transformation is defined as:
 \begin{align}
-\vTmx &= A (\vx - \bm{c}) + \bm{t} + \bm{c},
+\vTmx &= \bm{A} (\vx - \bm{c}) + \bm{t} + \bm{c},
 \end{align}
-where the matrix $A$ has no restrictions. This means that the
-image can be translated, rotated, scaled, and sheared. The
-parameter vector $\vmu$ is formed by the matrix elements $a_{ij}$
-and the translation vector. In 2D, this gives a vector of length
-6: $\vmu=(a_{11}, a_{12}, a_{21}, a_{22}, t_x, t_y)^T$. In 3D,
-this gives a vector of length 12.
+where the matrix $\bm{A}$ has no restrictions. This means that the image
+can be translated, rotated, scaled, and sheared. The parameter vector
+$\vmu$ is formed by the matrix elements $a_{ij}$ and the translation
+vector. In 2D, this gives a vector of length 6: $\vmu=(a_{11}, a_{12},
+a_{21}, a_{22}, t_x, t_y)^T$. In 3D, this gives a vector of length 12.
 
-\item[B-splines:] (\texttt{BSplineTransform}) For the category of non-rigid transformations, we focus on a
-transformation that is parameterised by B-splines
-\citep{RueckertEA99}:
+\item[B-splines:] (\texttt{BSplineTransform}) For the category of non-rigid
+    transformations, B-splines \citep{RueckertEA99} are often used as a
+    parameterisation:
 \begin{align}
 \vTmx = \vx + \sum_{\vx_k \in \Ncal_{\vx}} \bm{p}_k \bm{\beta}^3(\vx
 - \vx_k),\label{eq:bspline}
@@ -592,16 +598,15 @@ transformation that is parameterised by B-splines
 with $\vx_k$ the control points, $\bm{\beta}^3(x)$ the cubic
 multidimensional B-spline polynomial \citep{Unser99}, $\bm{p}_k$ the
 B-spline coefficient vectors (loosely speaking, the control point
-displacements), and $\Ncal_{\vx}$ the set of all control points
-within the compact support of the B-spline at $\vx$. The control
-points $\vx_k$ are defined on a regular grid, overlayed on the fixed
-image. In this context we talk about `the control point grid that is
-put on the fixed image', and about `control points that are moved
-around'. Note that $\vTm(\vx_k)\neq \vx_k + \bm{p}_k$, a common
-misunderstanding. Calling $\bm{p}_k$ the control point displacements
-is, therefore, actually somewhat misleading. Also note that the
-control point grid is entirely unrelated to the grid used by the
-Grid image sampler, see Section~\ref{sec:comp:sampler}.
+displacements), and $\Ncal_{\vx}$ the set of all control points within the
+compact support of the B-spline at $\vx$. The control points $\vx_k$ are
+defined on a regular grid, overlayed on the fixed image. In this context we
+talk about `the control point grid that is put on the fixed image', and
+about `control points that are moved around'. Note that $\vTm(\vx_k)\neq
+\vx_k + \bm{p}_k$, a common misunderstanding. Calling $\bm{p}_k$ the
+control point displacements is, therefore, actually somewhat misleading.
+Also note that the control point grid is entirely unrelated to the grid
+used by the Grid image sampler, see Section~\ref{sec:comp:sampler}.
 
 The control point grid is defined by the amount of space between the
 control points, which can be different for each direction. B-splines
@@ -615,6 +620,36 @@ For 3D images, $\approx 10000$ parameters is not an unusual case.
 The parameter vector is (for 2D images) composed as follows: $\vmu =
 (p_{1x}, p_{2x}, \ldots, p_{Px}, p_{1y}, p_{2y}, \ldots, p_{Py}
 )^T$.
+
+
+\item[Thin-plate splines:] (\texttt{SplineKernelTransform}) Thin-plate
+    splines are another well-known representation for nonrigid
+    transformations. The thin-plate spline is an instance of the more
+    general class of kernel-based transforms \cite{Davis97,Brooks07}. The
+    transformation is based on a set of $k=1\ldots K$ corresponding
+    landmarks in fixed and moving image. The landmark displacements
+    $\bm{d}_k = \vx_k^{\mathrm{mov}} - \vx_k^{\mathrm{fix}}$ form the
+    parameter vector $\vmu$. The fixed landmark positions
+    $\vx_k^{\mathrm{fix}}$ are given by the user. The transformation is
+    expressed as a sum of an affine component and a nonrigid component:
+\begin{align}
+\vTmx = \vx + A \vx + \bm{t} + \sum_{\vx_k} \bm{c}_k \bm{G}(\vx
+- \vx_k^{\mathrm{fix}}),\label{eq:splinekernel}
+\end{align}
+ where $\vx_k$ are landmark positions in the fixed image, $\bm{G}(\bm{r})$
+ is a basis function and $\bm{c}_k$ are the coefficients corresponding to
+ each landmark. The coefficients $\bm{c}_k$ and the elements of $\bm{A}$
+ and $\bm{t}$ are computed from the landmark displacements. The specific
+ choice of basis function $\bm{G}(\bm{r})$ determines the ``physical
+ behaviour''. The most often used choice of $\bm{G}(\bm{r})$ leads to the
+ thin-plate spline, but another useful alternative is the elastic-body
+ spline \cite{Davis97}. The spline kernel transforms are often less
+ efficient than the B-splines (because they lack the compact support
+ property of the B-splines), but they allow for more flexibility in placing
+ the control points $\vx_k^{\mathrm{fix}})$. The parameter vector is (for
+ 2D images) composed as follows: $\vmu = (d_{1x}, d_{1y}, d_{2x}, d_{2y},
+ \ldots, d_{Kx}, d_{Ky} )^T$. Note the difference in ordering of $\vmu$
+ compared to the B-splines transform.
 \end{description}
 
 \begin{figure}
@@ -637,20 +672,18 @@ the moving image. NB: the overlayed grid in (f) is NOT the
 B-spline control point grid, since that one is defined on the
 fixed image!} \label{fig:transformexample}
 \end{figure}
-See Figure \ref{fig:transformexample} for an illustration of the
-different transforms (except for the similarity transformation).
-Choose the transformation that fits your needs: only choose a
-nonrigid transformation if you expect that the underlying problem
-contains local deformations, choose a rigid transformation if you
-only need to compensate for differences in pose. To initialise a
-nonrigid registration problem, perform a rigid or affine one
-first. The result of the initial rigid or affine registration is
-combined with the nonrigid B-spline transformation in one of the
-following two ways:
+See Figure \ref{fig:transformexample} for an illustration of different
+transforms. Choose the transformation that fits your needs: only choose a
+nonrigid transformation if you expect that the underlying problem contains
+local deformations, choose a rigid transformation if you only need to
+compensate for differences in pose. To initialise a nonrigid registration
+problem, perform a rigid or affine one first. The result of the initial rigid
+or affine registration $\vT_{\hat\vmu_0}$ is combined with a nonrigid
+transformation $\vTm^\mathrm{NR}$ in one of the following two ways:
 \begin{align}
-  \text{addition: }\quad    & \vTmx = \vTm^\mathrm{BS}(\vx) + \vT_{\hat\vmu_0}(\vx) - \vx\label{eq:addition} \\
-  \text{composition: }\quad & \vTmx = \vTm^\mathrm{BS}\left( \vT_{\hat\vmu_0}(\vx) \right)
-  = ( \vTm^\mathrm{BS} \circ
+  \text{addition: }\quad    & \vTmx = \vTm^\mathrm{NR}(\vx) + \vT_{\hat\vmu_0}(\vx) - \vx\label{eq:addition} \\
+  \text{composition: }\quad & \vTmx = \vTm^\mathrm{NR}\left( \vT_{\hat\vmu_0}(\vx) \right)
+  = ( \vTm^\mathrm{NR} \circ
   \vT_{\hat\vmu_0})(\vx)\label{eq:composition}
 \end{align}
 The latter method is in general to be preferred, because it makes
@@ -735,15 +768,16 @@ of these parameters. Section~\ref{sec:optimizertuning} gives some
 more advice.
 \end{description}
 
-Note that GD and RM are in fact very similar. Running RM with a Full
-sampler (see Section~\ref{sec:comp:sampler}), instead of a Random
-sampler, is equivalent to performing GD. We recommend the use of RM
-over GD, since it is so much faster, without compromising on
-accuracy. In that case, the parameter $a$ is the parameter that is to
-be tuned for your application.
+Note that GD and RM are in fact very similar. Running RM with a Full sampler
+(see Section~\ref{sec:comp:sampler}), instead of a Random sampler, is
+equivalent to performing GD. We recommend the use of RM over GD, since it is so
+much faster, without compromising on accuracy. In that case, the parameter $a$
+is the parameter that is to be tuned for your application. A more advanced
+version of the \texttt{StandardGradientDescent} is the
+\texttt{AdaptiveStochasticGradientDescent}, which requires less parameters to
+be set and tends to be more robust \cite{Klein09}.
 
 Other optimisers available in \elastix\ are: \texttt{FullSearch},
-\texttt{AdaptiveStochasticGradientDescent},
 \texttt{ConjugateGradient}, \texttt{ConjugateGradientFRPR},
 \texttt{QuasiNewtonLBFGS}, \texttt{RSGDEachParameterApart},
 \texttt{SimultaneousPerturbation}, \texttt{CMAEvolutionStrategy}.
@@ -819,11 +853,10 @@ with fewer degrees of freedom for the transformation model. The
 degrees of freedom of the transformation equals the length (number
 of elements) of the parameter vector $\vmu$.
 
-An example of this was already mentioned in
-Section~\ref{sec:comp:transform}: the use of a rigid
-transformation prior to nonrigid B-spline registration. We may
-even use a three-level strategy: first rigid, then affine, then
-nonrigid B-spline.
+An example of this was already mentioned in Section~\ref{sec:comp:transform}:
+the use of a rigid transformation prior to nonrigid (B-spline) registration. We
+may even use a three-level strategy: first rigid, then affine, then nonrigid
+B-spline.
 
 Another example is to increase the number of degrees of freedom
 within the transformation model. With a B-spline transformation,
@@ -905,14 +938,12 @@ the lower the metric value, the better the registration.
 
 \section{Introduction}\label{sec:elastix:intro}
 
-The development of \elastix\ started half to late 2003, and was
-intended to facilitate our registration research. After some initial
-versions we decided to put the separate components of \elastix\ in
-separate libraries. This resulted in major version 3.0 in November
-2004. \elastix\ 3.0 was also the first version that was made
-publicly available on the \elastix\ website, around the same time.
-The continued development brings us today (April 2009) to version
-4.1.
+The development of \elastix\ started half to late 2003, and was intended to
+facilitate our registration research. After some initial versions we decided to
+put the separate components of \elastix\ in separate libraries. This resulted
+in major version 3.0 in November 2004. \elastix\ 3.0 was also the first version
+that was made publicly available on the \elastix\ website, around the same
+time. The continued development brings us today (\today) to version 4.2.
 
 \begin{table}[h!]
 \begin{tabular}{l|l}
@@ -920,15 +951,16 @@ what & where \\
 \hline
 website        & \url{http://elastix.isi.uu.nl} \\
 SVN repository & \url{https://svn.bigr.nl/elastix} \\
-WIKI           & \url{http://elastix.bigr.nl/wiki} \\
-FAQ            & \url{http://elastix.isi.uu.nl/FAQ.php}
+WIKI           & \url{http://elastix.isi.uu.nl/wiki.php} \\
+FAQ            & \url{http://elastix.isi.uu.nl/FAQ.php} \\
+Mailing list   & \url{elastix@bigr.nl} (subscription via website) \\
 \end{tabular}
 \end{table}
 
 The website also contains a
-\texttt{doxygen}\footnote{\url{www.doxygen.org}} generated part
-that provides documentation of the source code. An overview of all
-available classes can be found at
+\texttt{doxygen}\footnote{\url{http://www.doxygen.org}} generated part that
+provides documentation of the source code. An overview of all available classes
+can be found at
 \begin{quote}
 \url{http://elastix.isi.uu.nl/doxygen/classes.html}.
 \end{quote}
@@ -1016,11 +1048,11 @@ freely available. In this section, we assume you use the Microsoft Visual C++
 \begin{enumerate}
 \item Download and install CMake: \url{www.cmake.org}.
 
-\item Download and compile the ITK version 3.12: \url{www.itk.org}. Make
+\item Download and compile the ITK version 3.14: \url{www.itk.org}. Make
     sure to set the (advanced) CMake variable
-    \texttt{ITK\_IMAGE\_BEHAVES\_AS\_ORIENTEDIMAGE} to \texttt{OFF}. On
-    Linux systems with the GCC compiler: set \texttt{CMAKE\_BUILD\_TYPE} to
-    ``Release''.
+    \texttt{ITK\_IMAGE\_BEHAVES\_AS\_ORIENTED\_IMAGE} to \texttt{OFF} and
+    \texttt{ITK\_USE\_REVIEW} to \texttt{ON}. On Linux systems with the GCC
+    compiler: set \texttt{CMAKE\_BUILD\_TYPE} to ``Release''.
 
 %1. Download cmake from www.cmake.org and install it according to instructions
 %2. Download itk 3.12 from www.itk.org (not version 3.10).
@@ -1062,9 +1094,9 @@ freely available. In this section, we assume you use the Microsoft Visual C++
 CMake will create a project or solution or make file for your
 compiler.
 
-\item Compile \elastix\ by opening the project and selecting
-``compile'' in release mode, or on Linux by running \texttt{make
-install}. Your compiler will now create the \elastix\ binaries.
+\item Compile \elastix\ by opening the project and selecting ``compile'' in
+    release mode, or on Linux by running \texttt{make install}. Your
+    compiler will now create the \elastix\ binaries.
 
 \item Make sure your operating system can find the program, see
 above.
@@ -1191,7 +1223,7 @@ apply it to a label image (segmentation). For those purposes a
 program called \transformix\ is available. It was developed
 simultaneously with \elastix.
 
-\section{How to call \transformix}
+\section{How to call \transformix}\label{sec:calltransformix}
 
 Like \elastix, \transformix\ is a command line driven program. You
 can get basic help on how to call it, by:
@@ -1361,7 +1393,7 @@ discussed.
 
 \begin{table}[htb]
 \centering
-\begin{tabular}{l|l}
+\begin{tabular}{l|p{15em}}
 \textbf{Component} & \textbf{Recommendation} \\
 \hline
 Registration & \texttt{MultiResolutionRegistration} \\
@@ -1371,7 +1403,7 @@ Interpolator & \texttt{BSplineInterpolator} \\
 ResampleInterpolator & \texttt{FinalBSplineInterpolator} \\
 Resampler    & \texttt{DefaultResampler}\\
 Transform    & Depends on the application \\
-Optimizer    & \texttt{StandardGradientDescent} \\
+Optimizer    & \texttt{StandardGradientDescent}/ \texttt{AdaptiveStochasticGradientDescent} \\
 FixedImagePyramid   & \texttt{FixedSmoothingImagePyramid} \\
 MovingImagePyramid  & \texttt{MovingSmoothingImagePyramid} \\
 \end{tabular}
@@ -1423,17 +1455,15 @@ your input images, but in our experience 32 is usually ok:
 
 \subsection{Sampler}\label{sec:samplertuning}
 
-The \texttt{RandomCoordinate} sampler works well in conjunction
-with the \texttt{StandardGradientDescent} optimiser, which is the
-recommended optimisation routine. This optimisation method can be
-used with a small amount of samples, randomly selected in every
-iteration, see Section \ref{sec:comp:optimiser}, which
-significantly decreases registration time. Set the
-\texttt{NumberOfSpatialSamples} to 3000. Don't go lower than 2000.
-Compared to samplers that draw samples on the voxel-grid (such as
-the \texttt{Random} sampler), the \texttt{RandomCoordinate}
-sampler avoids what is known as the grid-effect
-\citep{The08:Halton}.
+The \texttt{RandomCoordinate} sampler works well in conjunction with the
+\texttt{StandardGradientDescent} and \texttt{AdaptiveStochasticGradientDescent}
+optimisers, which are the recommended optimisation routines. These optimisation
+methods can be used with a small amount of samples, randomly selected in every
+iteration, see Section \ref{sec:comp:optimiser}, which significantly decreases
+registration time. Set the \texttt{NumberOfSpatialSamples} to 3000. Don't go
+lower than 2000. Compared to samplers that draw samples on the voxel-grid (such
+as the \texttt{Random} sampler), the \texttt{RandomCoordinate} sampler avoids
+what is known as the grid-effect \citep{The08:Halton}.
 
 An important option for the random samplers, discussed in
 Section~\ref{sec:optimizertuning} is:
@@ -1577,6 +1607,11 @@ $(256/16)^3 \times 3 \approx 12.000$ parameters; for a grid spacing
 of 8 voxels this is almost 100.000 parameters. The amount of
 parameters can be directly related to memory consumption and
 registration time, depending on the specific implementation.
+
+As an alternative to the B-spline transform, \elastix\ includes the
+\texttt{SplineKernelTransform}, which implements a thin-plate spline type of
+transform. See Chapter~\ref{chp:advanced} for more information on this
+transform.
 
 Lastly, it is wise to include the following line in every
 parameter file:
@@ -2027,8 +2062,9 @@ with: \small
 (PropernessConditionWeight 100.0)
 (MovingRigidityImageName "movingRigidityImage.mhd")
 \end{verbatim}
-\normalsize A complete list of the available parameters can be found
-at \url{http://elastix.isi.uu.nl/doxygen/a00056.html}.
+\normalsize A complete list of the available parameters can be found at
+\url{http://elastix.isi.uu.nl/doxygen/a00056.html}. See also
+Section~\ref{sec:penaltyterms}.
 
 \item[$\alpha$-mutual information] This metric computes true multi-channel
 $\alpha$-mutual information. It does not use high-dimensional joint
@@ -2058,7 +2094,7 @@ is specified in the parameter file with: \small
 at \url{http://elastix.isi.uu.nl/doxygen/a00053.html}.
 \end{description}
 
-\subsection{Penalty terms}
+\subsection{Penalty terms}\label{sec:penaltyterms}
 
 This paragraph requires extension and modification.
 
@@ -2107,41 +2143,105 @@ $\D{}{\vmu} \D{\vT}{\vx}$ and $\D{}{\vmu} \Dd{\vT}{\vx}{\vx^T}$.
 These we call the `JacobianOfSpatialJacobian' and
 `JacobianOfSpatialHessian', respectively.
 
-The transform class as defined in the ITK does not support the
-computation of spatial derivatives $\partial \vT / \partial \vx$ and
-$\partial^2 \vT / \partial \vx^2$, and their derivatives to $\vmu$.
-Initially, we created non-generic classes that combine MI and the
-mentioned penalty terms specifically (the
-\texttt{MattesMutualInformationWithRigidityPenalty} component in
-\elastix). Recently, however, we created a more advanced version of
-the ITK transform that does implement these spatial derivatives.
-Additionally, we created a bending energy regularisation class that
-takes advantage of these functions. It should now be relatively easy
-to create similar classes for the other penalty terms.
+The transform class as defined in the ITK does not support the computation of
+spatial derivatives $\partial \vT / \partial \vx$ and $\partial^2 \vT /
+\partial \vx^2$, and their derivatives to $\vmu$. Initially, we created
+non-generic classes that combine MI and the mentioned penalty terms
+specifically (the \texttt{MattesMutualInformationWithRigidityPenalty} component
+in \elastix). Recently, however, we created a more advanced version of the ITK
+transform that does implement these spatial derivatives. Additionally, we
+created a bending energy regularisation class that takes advantage of these
+functions. We also reimplemented the rigidity penalty term.
 
-This all means that it is possible in \elastix\ to combine any
-similarity metric with any of the available penalty terms (currently
-only the bending energy), and the MI similarity metric with the
-bending energy, the incompressibility or the rigidity penalty term.
+This all means that it is possible in \elastix\ to combine any similarity
+metric with any of the available penalty terms (currently the bending energy
+and the rigidity penalty term).
+
+\subsection{DisplacementMagnitudePenalty: inverting transformations}
+
+The \texttt{DisplacementMagnitudePenalty} is a cost function that penalises
+$||\vTm(\vx)-\vx||^2$. You can use this to invert transforms, by setting the
+transform to be inverted as an initial transform (using \texttt{-t0}), setting
+\texttt{(HowToCombineTransforms "Compose")}, and running \elastix\ with this
+metric. After that you can manually set the initial transform in the last
+parameter file to \texttt{"NoInitialTransform"}, and voila, you have the
+inverse transform! Strictly speaken, you should then also change the
+Size/Spacing/Origin/Index settings to match that of the moving image. Select it
+with:
+\begin{verbatim}
+(Metric "DisplacementMagnitudePenalty")
+\end{verbatim}
+Note that inverting a transformation becomes conceptually very similar to
+performing an image registration in this way. Consequently, the same choices
+are relevant: optimisation algorithm, multiresolution etc...
 
 \section{Image samplers}
 
 \begin{description}
-\item[RandomSparseMask]
+\item[RandomSparseMask] This variant of the random sampler is useful if the
+    fixed image mask is sparse (i.e. consists of many zeros).
 \end{description}
 
 \section{Transforms}
 
 \begin{description}
-\item[DeformationFieldTransform]
+\item[DeformationFieldTransform] This transform serves as a wrapper around
+    existing deformation field vector images. It computes the
+    transformation by interpolating the deformation field image. The
+    relevant tags in the transform parameter file are as follows:
+\begin{verbatim}
+(Transform "DeformationFieldTransform")
+(DeformationFieldFileName "deformationField.mhd")
+(DeformationFieldInterpolationOrder 1)
+(NumberOfParameters 0)
+\end{verbatim}
+The deformation field image's pixel type should be a vector of
+\texttt{float} elements. It could be a deformation field that is the result
+of \texttt{transformix -ipp all} for example! Since this transform does not
+have any parameters (the $\vmu$ has zero length), it makes no sense to use
+it for registration. It can just be used as an initial transformation
+(supplied by the option \texttt{-t0}) or as input for \transformix.
 
-\item[BSplineDeformableTransformWithDiffusion]
+\item[SplineKernelTransform] As an alternative to the B-spline transform,
+    \elastix\ includes a the \texttt{SplineKernelTransform}, which
+    implements a thin-plate spline type of transform. This transformation
+    requires a list of fixed image landmarks (control points) to be
+    specified, by means of an input points file which has the same format
+    as the \texttt{-ipp} file used by \transformix\
+    (Section~\ref{sec:calltransformix}. See the \texttt{doxygen}
+    documentation on the website for a list of its parameters.
+
+\item[WeightedCombinationTransform] This is a transformation that is
+    modelled as a weighted combination of user-specified transformations:
+    $\vTm(\vx) = \sum_i w_i \vT_i(\vx)$. The weights $w_i$ form the
+    parameter vector $\vmu$. The sub-transforms $\vT_i(\vx)$ may for
+    example follow from a statistical deformation model, obtained by
+    principal component analysis. See the \texttt{doxygen} documentation on
+    the website for a list of its parameters.
+
+\item[BSplineDeformableTransformWithDiffusion] This transform implements
+    the work described in \cite{Staring07a}.
 \end{description}
 
 \section{Optimisation methods}
 
 \begin{description}
-\item[Adaptive stochastic gradient descent]
+\item[AdaptiveStochasticGradientDescent] This optimizer is very similar to
+    the StandardGradientDescent, but implements an adaptive step size
+    mechanism and estimates a proper initial value for \texttt{SP\_a}. See
+    \cite{Klein09} for more details. In practice this optimizer works in
+    many applications with its default settings. Only the number of
+    iterations must be specified by the user:
+\begin{verbatim}
+(Optimizer "AdaptiveStochasticGradientDescent")
+(MaximumNumberOfIterations 500)
+(SigmoidInitialTime 4.0)
+(MaximumStepLength 1.0)
+\end{verbatim}
+The last two options are not mandatory. \texttt{SigmoidInitialTime}
+corresponds to $t_0$ in the article; its default value is 0. The
+\texttt{MaximumStepLength} corresponds to $\delta$ in the article; its
+default value equals the average voxel spacing of fixed and moving image.
 
 \item[Conjugate gradient]
 ---ConjugateGradientFRPR
