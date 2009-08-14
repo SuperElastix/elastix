@@ -196,7 +196,7 @@ then
   mkdir -p $tempdir/download
   cp $exportdirwin/*.zip $tempdir/download
   cp $exportdirlinux64/*.tar.bz2 $tempdir/download
-  cp $exportdirlinux32grid/*.tar.bz2 $tempdir/download
+#  cp $exportdirlinux32grid/*.tar.bz2 $tempdir/download
   cp $exportdirwin/dox/manual/manual.pdf $tempdir/download/elastix_manual_v$version.pdf
   cp -r $exportdirwin/help/html $tempdir/doxygen
     
