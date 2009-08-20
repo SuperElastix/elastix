@@ -181,6 +181,8 @@ then
   cd install
   cp ../src/CopyrightElastix.txt .
 	cp d:/tk/install/libtiff3.dll .
+	cp d:/tk/install/jpeg62.dll .
+	cp d:/tk/install/zlib1.dll .
   wzzip -ex -a -r -P $exportdirwin/elastix_windows32_v$version.zip *
   cd ../help
   wzzip -ex -a -r -P $exportdirwin/elastix_example_v$version.zip exampleinput example.bat
