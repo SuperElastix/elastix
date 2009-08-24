@@ -132,8 +132,6 @@ protected:
   /** PrintSelf. */
   //void PrintSelf( std::ostream& os, Indent indent ) const;
 
-  typename TransformType::Pointer m_AdvancedTransform;
-
   /** Typedef's for the B-spline transform. */
   typedef AdvancedBSplineDeformableTransform<
     ScalarType, FixedImageDimension, 3 >          BSplineTransformType;
