@@ -179,8 +179,6 @@ private:
    * keep track where is what.
    */
   void InitializeOffsetToIndexTable( void );
-
-
   
 };
 

@@ -50,8 +50,19 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 {
   // Instantiate weights functions
   this->m_WeightsFunction = WeightsFunctionType::New();
-  this->m_DerivativeWeightsFunction = DerivativeWeightsFunctionType::New();
-  this->m_SODerivativeWeightsFunction = SODerivativeWeightsFunctionType::New();;
+  this->m_DerivativeWeightsFunctions.resize( SpaceDimension );
+  this->m_SODerivativeWeightsFunctions.resize( SpaceDimension );
+  for ( unsigned int i = 0; i < SpaceDimension; ++i )
+  {
+    this->m_DerivativeWeightsFunctions[ i ] = DerivativeWeightsFunctionType::New();
+    this->m_DerivativeWeightsFunctions[ i ]->SetDerivativeDirection( i );
+    this->m_SODerivativeWeightsFunctions[ i ].resize( SpaceDimension );
+    for ( unsigned int j = 0; j < SpaceDimension; ++j )
+    {
+      this->m_SODerivativeWeightsFunctions[ i ][ j ] = SODerivativeWeightsFunctionType::New();
+      this->m_SODerivativeWeightsFunctions[ i ][ j ]->SetDerivativeDirections( i, j );
+    }
+  }
   this->m_SupportSize = this->m_WeightsFunction->GetSupportSize();
 
   // Instantiate an identity transform
@@ -1152,6 +1163,14 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   ContinuousIndexType cindex;
   this->TransformPointToContinuousGridIndex( ipp, cindex );
 
+  // NOTE: if the support region does not lie totally within the grid
+  // we assume zero displacement and identity spatial Jacobian
+  if ( !this->InsideValidRegion( cindex ) )
+  {
+    sj.SetIdentity();
+    return;
+  }
+
   /** Compute the number of affected B-spline parameters. */
   /** Allocate memory on the stack: */
   const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
@@ -1159,23 +1178,20 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   WeightsType weights( weightsArray, numberOfWeights, false );
 
   IndexType supportIndex;
-  this->m_DerivativeWeightsFunction->ComputeStartIndex(
+  this->m_DerivativeWeightsFunctions[ 0 ]->ComputeStartIndex(
     cindex, supportIndex );
   RegionType supportRegion;
   supportRegion.SetSize( this->m_SupportSize );
   supportRegion.SetIndex( supportIndex );
   
   /** Compute the spatial Jacobian sj:
-     *    dT_{dim} / dx_i = delta_{dim,i} + \sum coefs_{dim} * weights.
-     */
+   *    dT_{dim} / dx_i = delta_{dim,i} + \sum coefs_{dim} * weights.
+   */
   sj.SetIdentity();
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
-    /** Set the derivative direction. */
-    this->m_DerivativeWeightsFunction->SetDerivativeDirection( i );
-
     /** Compute the derivative weights. */
-    this->m_DerivativeWeightsFunction->Evaluate( cindex, weights, supportIndex );
+    this->m_DerivativeWeightsFunctions[ i ]->Evaluate( cindex, weights, supportIndex );
 
     /** Compute the spatial Jacobian sj:
      *    dT_{dim} / dx_i = \sum coefs_{dim} * weights.
@@ -1231,6 +1247,17 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   ContinuousIndexType cindex;
   this->TransformPointToContinuousGridIndex( ipp, cindex );
 
+  // NOTE: if the support region does not lie totally within the grid
+  // we assume zero displacement and zero spatial Hessian
+  if ( !this->InsideValidRegion( cindex ) )
+  {
+    for ( unsigned int i = 0; i < sh.Size(); ++i )
+    {
+      sh[ i ].Fill( 0.0 );
+    }
+    return;
+  }
+
   /** Helper variables. */
   /** Allocate memory on the stack: */
   const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
@@ -1238,7 +1265,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   WeightsType weights( weightsArray, numberOfWeights, false );
 
   IndexType supportIndex;
-  this->m_SODerivativeWeightsFunction->ComputeStartIndex(
+  this->m_SODerivativeWeightsFunctions[ 0 ][ 0 ]->ComputeStartIndex(
     cindex, supportIndex );
   RegionType supportRegion;
   supportRegion.SetSize( this->m_SupportSize );
@@ -1253,11 +1280,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   {
     for ( unsigned int j = 0; j <= i; ++j )
     {
-      /** Set the derivative direction. */
-      this->m_SODerivativeWeightsFunction->SetDerivativeDirections( i, j );
-
       /** Compute the derivative weights. */
-      this->m_SODerivativeWeightsFunction->Evaluate( cindex, weights, supportIndex );
+      this->m_SODerivativeWeightsFunctions[ i ][ j ]->Evaluate( cindex, weights, supportIndex );
      
       /** Compute d^2T_{dim} / dx_i dx_j = \sum coefs_{dim} * weights. */
       for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
@@ -1313,6 +1337,22 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
    */
   ContinuousIndexType cindex;
   this->TransformPointToContinuousGridIndex( ipp, cindex );
+
+  // NOTE: if the support region does not lie totally within the grid
+  // we assume zero displacement and zero jsj.
+  if ( !this->InsideValidRegion( cindex ) )
+  {
+    for ( unsigned int i = 0; i < jsj.size(); ++i )
+    {
+      jsj[ i ].Fill( 0.0 );
+    }
+    nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );
+    for ( unsigned int i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i )
+    {
+      nonZeroJacobianIndices[ i ] = i;
+    }
+    return;
+  }
   
   /** Helper variables. */
   /** Allocate memory on the stack: */
@@ -1320,14 +1360,13 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   typename WeightsType::ValueType weightsArray[ numberOfWeights ];
   WeightsType weights( weightsArray, numberOfWeights, false );  
   IndexType supportIndex;
-  this->m_DerivativeWeightsFunction->ComputeStartIndex(
+  this->m_DerivativeWeightsFunctions[ 0 ]->ComputeStartIndex(
     cindex, supportIndex );
   RegionType supportRegion;
   supportRegion.SetSize( this->m_SupportSize );
   supportRegion.SetIndex( supportIndex );
 
   /** On the stack instead of heap is faster. */
-  //double * weightVector = new double[ SpaceDimension * numberOfWeights ];
   double weightVector[ SpaceDimension * numberOfWeights ];
 
   /** For all derivative directions, compute the derivatives of the
@@ -1336,11 +1375,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
    */
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
-    /** Set the derivative direction. */
-    this->m_DerivativeWeightsFunction->SetDerivativeDirection( i );
-
     /** Compute the derivative weights. */
-    this->m_DerivativeWeightsFunction->Evaluate( cindex, weights, supportIndex );
+    this->m_DerivativeWeightsFunctions[ i ]->Evaluate( cindex, weights, supportIndex );
 
     /** Remember the weights. */
     memcpy( weightVector + i * numberOfWeights,
@@ -1398,6 +1434,23 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   ContinuousIndexType cindex;
   this->TransformPointToContinuousGridIndex( ipp, cindex );
 
+  // NOTE: if the support region does not lie totally within the grid
+  // we assume zero displacement and identity sj and zero jsj.
+  if ( !this->InsideValidRegion( cindex ) )
+  {
+    sj.SetIdentity();
+    for ( unsigned int i = 0; i < jsj.size(); ++i )
+    {
+      jsj[ i ].Fill( 0.0 );
+    }
+    nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );
+    for ( unsigned int i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i )
+    {
+      nonZeroJacobianIndices[ i ] = i;
+    }
+    return;
+  }
+
   /** Compute the number of affected B-spline parameters. */
 
   /** Allocate memory on the stack: */
@@ -1407,29 +1460,25 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 
   /** Helper variables. */  
   IndexType supportIndex;
-  this->m_DerivativeWeightsFunction->ComputeStartIndex(
+  this->m_DerivativeWeightsFunctions[ 0 ]->ComputeStartIndex(
     cindex, supportIndex );
   RegionType supportRegion;
   supportRegion.SetSize( this->m_SupportSize );
   supportRegion.SetIndex( supportIndex );
 
   /** On the stack instead of heap is faster. */
-  //double * weightVector = new double[ SpaceDimension * numberOfWeights ];
   double weightVector[ SpaceDimension * numberOfWeights ];
 
   /** Initialize the spatial Jacobian sj: */
   sj.SetIdentity();
 
   /** For all derivative directions, compute the derivatives of the
-   * spatial Jacobian to the transformation parameters mu:
-   * d/dmu of dT / dx_i */
+   * spatial Jacobian to the transformation parameters mu: d/dmu of dT / dx_i
+   */
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
-    /** Set the derivative direction. */
-    this->m_DerivativeWeightsFunction->SetDerivativeDirection( i );
-
     /** Compute the derivative weights. */
-    this->m_DerivativeWeightsFunction->Evaluate( cindex, weights, supportIndex );
+    this->m_DerivativeWeightsFunctions[ i ]->Evaluate( cindex, weights, supportIndex );
     /** \todo: we can realise some speedup here to compute the derivative
      * weights at once for all dimensions */
 
@@ -1438,7 +1487,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       weights.data_block(), numberOfWeights * sizeof( double ) );
     
     /** Compute the spatial Jacobian sj:
-     *    dT_{dim} / dx_i = delta_{dim,i} + \sum coefs_{dim} * weights. */
+     *    dT_{dim} / dx_i = delta_{dim,i} + \sum coefs_{dim} * weights.
+     */
     for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
       /** Create an iterator over the correct part of the coefficient
@@ -1512,14 +1562,34 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   ContinuousIndexType cindex;
   this->TransformPointToContinuousGridIndex( ipp, cindex );
 
+  // NOTE: if the support region does not lie totally within the grid
+  // we assume zero displacement and identity sj and zero jsj.
+  if ( !this->InsideValidRegion( cindex ) )
+  {
+    for ( unsigned int i = 0; i < jsh.size(); ++i )
+    {
+      for ( unsigned int j = 0; j < jsh[ i ].Size(); ++j )
+      {
+        jsh[ i ][ j ].Fill( 0.0 );
+      }
+    }
+    nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );
+    for ( unsigned int i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i )
+    {
+      nonZeroJacobianIndices[ i ] = i;
+    }
+    return;
+  }
+
   /** Compute the number of affected B-spline parameters. */
+
   /** Allocate memory on the stack: */
   const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
   typename WeightsType::ValueType weightsArray[ numberOfWeights ];
   WeightsType weights( weightsArray, numberOfWeights, false );
 
   IndexType supportIndex;
-  this->m_SODerivativeWeightsFunction->ComputeStartIndex(
+  this->m_SODerivativeWeightsFunctions[ 0 ][ 0 ]->ComputeStartIndex(
     cindex, supportIndex );
   RegionType supportRegion;
   supportRegion.SetSize( this->m_SupportSize );
@@ -1538,11 +1608,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   {
     for ( unsigned int j = 0; j <= i; ++j )
     {
-      /** Set the derivative direction. */
-      this->m_SODerivativeWeightsFunction->SetDerivativeDirections( i, j );
-
       /** Compute the derivative weights. */
-      this->m_SODerivativeWeightsFunction->Evaluate( cindex, weights, supportIndex );
+      this->m_SODerivativeWeightsFunctions[ i ][ j ]->Evaluate( cindex, weights, supportIndex );
 
       /** Remember the weights. */
       weightVector[ count ] = weights;
@@ -1607,14 +1674,38 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   ContinuousIndexType cindex;
   this->TransformPointToContinuousGridIndex( ipp, cindex );
 
+  // NOTE: if the support region does not lie totally within the grid
+  // we assume zero displacement and identity sj and zero jsj.
+  if ( !this->InsideValidRegion( cindex ) )
+  {
+    for ( unsigned int i = 0; i < jsh.size(); ++i )
+    {
+      for ( unsigned int j = 0; j < jsh[ i ].Size(); ++j )
+      {
+        jsh[ i ][ j ].Fill( 0.0 );
+      }
+    }
+    for ( unsigned int i = 0; i < sh.Size(); ++i )
+    {
+      sh[ i ].Fill( 0.0 );
+    }
+    nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );
+    for ( unsigned int i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i )
+    {
+      nonZeroJacobianIndices[ i ] = i;
+    }
+    return;
+  }
+
   /** Compute the number of affected B-spline parameters. */
+
   /** Allocate memory on the stack: */
   const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
   typename WeightsType::ValueType weightsArray[ numberOfWeights ];
   WeightsType weights( weightsArray, numberOfWeights, false );
 
   IndexType supportIndex;
-  this->m_SODerivativeWeightsFunction->ComputeStartIndex(
+  this->m_SODerivativeWeightsFunctions[ 0 ][ 0 ]->ComputeStartIndex(
     cindex, supportIndex );
   RegionType supportRegion;
   supportRegion.SetSize( this->m_SupportSize );
@@ -1622,7 +1713,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 
   /** On the stack instead of heap is faster. */
   const unsigned int d = SpaceDimension * ( SpaceDimension + 1 ) / 2;
-  //double * weightVector = new double[ SpaceDimension * numberOfWeights ];
   double weightVector[ d * numberOfWeights ];
 
   /** For all derivative directions, compute the derivatives of the
@@ -1636,11 +1726,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   {
     for ( unsigned int j = 0; j <= i; ++j )
     {
-      /** Set the derivative direction. */
-      this->m_SODerivativeWeightsFunction->SetDerivativeDirections( i, j );
-
       /** Compute the derivative weights. */
-      this->m_SODerivativeWeightsFunction->Evaluate( cindex, weights, supportIndex );
+      this->m_SODerivativeWeightsFunctions[ i ][ j ]->Evaluate( cindex, weights, supportIndex );
 
       /** Remember the weights. */
       memcpy( weightVector + count * numberOfWeights,
@@ -1728,7 +1815,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;  
   const unsigned long parametersPerDim
     = this->GetNumberOfParametersPerDimension();
-  //IndexType ind;
   unsigned long mu = 0;
 
   /** For all control points in the support region, set which of the
@@ -1738,15 +1824,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   
   while ( !it.IsAtEnd() )
   {
-    /** Get the current index. */
-    //ind = it.GetIndex();
-
-    /** Translate the index into a parameter number for the x-direction. */
-    //unsigned long parameterNumber = 0;
-    //for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
-    //{
-    // parameterNumber += ind[ dim ] * this->m_GridOffsetTable[ dim ];
-    //}
     unsigned long parameterNumber = &(it.Value()) - basePointer;
 
     /** Update the nonZeroJacobianIndices for all directions. */

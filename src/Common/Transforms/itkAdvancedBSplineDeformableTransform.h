@@ -497,10 +497,15 @@ protected:
   *  in each dimension. */
   ImagePointer    m_CoefficientImage[ NDimensions ];
 
-  /** Pointer to function used to compute B-spline interpolation weights. */
-  typename WeightsFunctionType::Pointer             m_WeightsFunction;
-  typename DerivativeWeightsFunctionType::Pointer   m_DerivativeWeightsFunction;
-  typename SODerivativeWeightsFunctionType::Pointer m_SODerivativeWeightsFunction;
+  /** Pointer to function used to compute B-spline interpolation weights.
+   * For each direction we create a different weights function for thread-
+   * safety.
+   */
+  typename WeightsFunctionType::Pointer                   m_WeightsFunction;
+  std::vector<
+    typename DerivativeWeightsFunctionType::Pointer >     m_DerivativeWeightsFunctions;
+  std::vector< std::vector<
+    typename SODerivativeWeightsFunctionType::Pointer > > m_SODerivativeWeightsFunctions;
 
   /** Variables defining the coefficient grid extend. */
   RegionType      m_GridRegion;
