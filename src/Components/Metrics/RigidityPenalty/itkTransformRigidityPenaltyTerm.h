@@ -227,18 +227,18 @@ public:
   itkSetMacro( UsePropernessCondition, bool );
 
   /** Set the calculation of the linearity condition part,
-  * even if we don't use it.
-  */
+   * even if we don't use it.
+   */
   itkSetMacro( CalculateLinearityCondition, bool );
 
   /** Set the calculation of the orthonormality condition part,
-  * even if we don't use it.
-  */
+   * even if we don't use it.
+   */
   itkSetMacro( CalculateOrthonormalityCondition, bool );
 
   /** Set the calculation of the properness condition part.,
-  * even if we don't use it.
-  */
+   * even if we don't use it.
+   */
   itkSetMacro( CalculatePropernessCondition, bool );
 
   /** Get the value of the linearity condition. */
@@ -251,7 +251,7 @@ public:
   itkGetConstReferenceMacro( PropernessConditionValue, MeasureType );
 
   /** Get the value of the total rigidity penalty term. */
-  itkGetConstReferenceMacro( RigidityPenaltyTermValue, MeasureType );
+  //itkGetConstReferenceMacro( RigidityPenaltyTermValue, MeasureType );
 
   /** Set if the RigidityImage's are dilated. */
   itkSetMacro( DilateRigidityImages, bool );

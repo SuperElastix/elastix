@@ -275,7 +275,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>
   JacobianOfSpatialJacobianType & jsj,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
-  jsj = this->m_JacobianOfSpatialJacobian;  
+  jsj = this->m_JacobianOfSpatialJacobian;
   nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
 } // end GetJacobianOfSpatialJacobian()
 

@@ -279,7 +279,7 @@ namespace itk
       MovingImageDerivativeType movingImageDerivative;
             
       /** Transform point and check if it is inside the bspline support region. */
-      bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint);
+      bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
       
       /** Check if point is inside mask. */
       if ( sampleOk ) 

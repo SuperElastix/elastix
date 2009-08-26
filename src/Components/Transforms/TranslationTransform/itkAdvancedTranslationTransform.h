@@ -317,3 +317,4 @@ BackTransform(const OutputCovariantVectorType &vect) const
 #endif
 
 #endif /* __itkAdvancedTranslationTransform_h */
+

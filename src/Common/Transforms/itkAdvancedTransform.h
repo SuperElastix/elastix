@@ -128,7 +128,7 @@ public:
   typedef FixedArray<
     Matrix< ScalarType,
     InputSpaceDimension, InputSpaceDimension >,
-    OutputSpaceDimension >                           SpatialHessianType;
+    OutputSpaceDimension >                          SpatialHessianType;
   typedef std::vector< SpatialHessianType >         JacobianOfSpatialHessianType;
   typedef typename SpatialJacobianType::InternalMatrixType  InternalMatrixType;
 
