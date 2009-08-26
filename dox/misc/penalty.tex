@@ -299,38 +299,54 @@ A transformation parameterised by third order B-splines can be
 written in 2D as follows:
 \begin{align}
 \vTmu(\vxt) &= \begin{bmatrix} T_1(\vxt;\vmu) \\ T_2(\vxt;\vmu)
-\end{bmatrix} = \begin{bmatrix} \sum_{i} \mu_i \beta^3(\widetilde{x}_1 - x_{1}^i)
-\beta^3(\widetilde{x}_2 - x_{2}^i) \\ \sum_{i} \mu_{i+16}
-\beta^3(\widetilde{x}_1 - x_{1}^i) \beta^3(\widetilde{x}_2 -
-x_{2}^i)
+\end{bmatrix} = \begin{bmatrix} \sum_{i} \mu_i \beta^3 \left(
+\frac{ \widetilde{x}_1 - x_{1}^i}{\sigma_1} \right)
+\beta^3 \left( \frac{\widetilde{x}_2 - x_{2}^i}{\sigma_2}\right) \\
+ \sum_{i} \mu_{i+16} \beta^3 \left( \frac{ \widetilde{x}_1 - x_{1}^i}
+ {\sigma_1} \right) \beta^3 \left( \frac{\widetilde{x}_2 - x_{2}^i}{\sigma_2} \right)
 \end{bmatrix},
 \end{align}
 with $\vx^i$ the control points within the support of the B-spline
-basis functions $\beta^3(\cdot)$. Here, we labelled the
-$x$-direction of the control points with $\mu_0, \ldots, \mu_{15}$
-and the $y$-direction with $\mu_{16}, \ldots, \mu_{31}$. (Since the
-support of a cubic B-spline is $4^d = 16$.)
+basis functions $\beta^3(\cdot)$, and $\sigma$ the B-spline grid
+spacing. Here, we labelled the $x$-direction of the control points
+with $\mu_0, \ldots, \mu_{15}$ and the $y$-direction with $\mu_{16},
+\ldots, \mu_{31}$. (Since the support of a cubic B-spline is $4^d =
+16$.)
 
 For short notation, define:
 \begin{align}
-b_{33}^{i} &= \beta^3(\widetilde{x}_1 - x_{1}^i)
-\beta^3(\widetilde{x}_2 - x_{2}^i), \\
-b_{23}^{i} &= \left[ \beta^2(\widetilde{x}_1 - x_{1}^i +
-\tfrac{1}{2} ) - \beta^2(\widetilde{x}_1 - x_{1}^i - \tfrac{1}{2} )
-\right] \beta^3(\widetilde{x}_2 - x_{2}^i), \\
-b_{32}^{i} &= \beta^3(\widetilde{x}_1 - x_{1}^i) \left[
-\beta^2(\widetilde{x}_2 - x_{2}^i + \tfrac{1}{2} ) - \beta^2(
-\widetilde{x}_2 - x_{2}^i - \tfrac{1}{2} ) \right], \\
-b_{22}^{i} &= \left[ \beta^2( \widetilde{x}_1 - x_{1}^i +
-\tfrac{1}{2} ) - \beta^2( \widetilde{x}_1 - x_{1}^i - \tfrac{1}{2} )
-\right] \left[ \beta^2( \widetilde{x}_2 - x_{2}^i + \tfrac{1}{2} ) -
-\beta^2( \widetilde{x}_2 - x_{2}^i - \tfrac{1}{2} ) \right], \\
-b_{13}^{i} &= \left[ \beta^1(\widetilde{x}_1 - x_{1}^i + 1 ) - 2
-\beta^1( \widetilde{x}_1 - x_{1}^i ) + \beta^1(\widetilde{x}_1 -
-x_{1}^i - 1 ) \right] \beta^3(\widetilde{x}_2 - x_{2}^i), \\
-b_{31}^{i} &= \beta^3(\widetilde{x}_1 - x_{1}^i) \left[
-\beta^1(\widetilde{x}_2 - x_{2}^i + 1 ) - 2 \beta^1( \widetilde{x}_2
-- x_{2}^i ) + \beta^1(\widetilde{x}_2 - x_{2}^i - 1 ) \right].
+b_{33}^{i} &= \beta^3\left( (\widetilde{x}_1 - x_{1}^i) / \sigma_1
+\right) \cdot \beta^3 \left( (\widetilde{x}_2 - x_{2}^i) / \sigma_2
+\right), \\
+b_{23}^{i} &= \left[ \beta^2 \left( (\widetilde{x}_1 -
+x_{1}^i)/\sigma_1 + \tfrac{1}{2} \right) - \beta^2 \left(
+(\widetilde{x}_1 - x_{1}^i)/\sigma_1 - \tfrac{1}{2} \right) \right]
+\cdot \beta^3 \left( (\widetilde{x}_2 - x_{2}^i)/\sigma_2 \right) /
+\sigma_1, \\
+b_{32}^{i} &= \beta^3 \left( (\widetilde{x}_1 - x_{1}^i)/\sigma_1
+\right) \cdot \left[ \beta^2 \left( (\widetilde{x}_2 -
+x_{2}^i)/\sigma_2 + \tfrac{1}{2} \right) - \beta^2 \left( (
+\widetilde{x}_2 - x_{2}^i)/\sigma_2 - \tfrac{1}{2} \right) \right] /
+\sigma_2, \\
+\begin{split}
+b_{22}^{i} &= \left[ \beta^2 \left( ( \widetilde{x}_1 -
+x_{1}^i)/\sigma_1 + \tfrac{1}{2} \right) - \beta^2 \left( (
+\widetilde{x}_1 - x_{1}^i)/\sigma_1 - \tfrac{1}{2} \right) \right] \\
+& \qquad \qquad \cdot \left[ \beta^2 \left( ( \widetilde{x}_2 -
+x_{2}^i)/\sigma_2 + \tfrac{1}{2} \right) - \beta^2 \left( (
+\widetilde{x}_2 - x_{2}^i)/\sigma_2 - \tfrac{1}{2} \right) \right] /
+(\sigma_1 \sigma_2),
+\end{split} \\
+b_{13}^{i} &= \left[ \beta^1 \left( (\widetilde{x}_1 -
+x_{1}^i)/\sigma_1 + 1 \right) - 2 \beta^1 \left( ( \widetilde{x}_1 -
+x_{1}^i)/\sigma_1 \right) + \beta^1 \left( (\widetilde{x}_1 -
+x_{1}^i)/\sigma_1 - 1 \right) \right] \cdot \beta^3 \left(
+(\widetilde{x}_2 - x_{2}^i)/\sigma_2 \right) / \sigma_1^2, \\
+b_{31}^{i} &= \beta^3 \left( (\widetilde{x}_1 - x_{1}^i)/\sigma_1
+\right) \cdot \left[ \beta^1 \left( (\widetilde{x}_2 -
+x_{2}^i)/\sigma_2 + 1 \right) - 2 \beta^1 \left( ( \widetilde{x}_2 -
+x_{2}^i)/\sigma_2 \right) + \beta^1 \left( (\widetilde{x}_2 -
+x_{2}^i)/\sigma_2 - 1 \right) \right] / \sigma_2^2.
 \end{align}
 From these equations we derive:
 \begin{align}
