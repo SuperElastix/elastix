@@ -84,14 +84,14 @@ template<class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrde
 void
 BSplineInterpolationDerivativeWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>
 ::Compute1DWeights(
-  const ContinuousIndexType & index,
+  const ContinuousIndexType & cindex,
   const IndexType & startIndex,
   OneDWeightsType & weights1D ) const
 {
   /** Compute the 1D weights. */
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
-    double x = index[ i ] - static_cast<double>( startIndex[ i ] );
+    double x = cindex[ i ] - static_cast<double>( startIndex[ i ] );
 
     if ( i != this->m_DerivativeDirection )
     {

@@ -69,6 +69,7 @@ SET( TransformFiles
  Transforms/itkAdvancedBSplineDeformableTransform.txx
  Transforms/itkAdvancedCombinationTransform.h
  Transforms/itkAdvancedCombinationTransform.hxx
+ Transforms/itkAdvancedIdentityTransform.h
  Transforms/itkAdvancedMatrixOffsetTransformBase.h
  Transforms/itkAdvancedMatrixOffsetTransformBase.txx
  Transforms/itkAdvancedRigid2DTransform.h

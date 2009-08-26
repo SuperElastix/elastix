@@ -237,7 +237,8 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 
   /** Compute interpolation weights. */
   IndexType supportIndex;
-  this->m_WeightsFunction->Evaluate( cindex, weights, supportIndex );
+  this->m_WeightsFunction->ComputeStartIndex( cindex, supportIndex );
+  this->m_WeightsFunction->Evaluate( cindex, supportIndex, weights );
 
   /** For each dimension, correlate coefficient with weights. */
   RegionType supportRegion;
@@ -246,7 +247,8 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 
   /** Split support region into two parts. */
   RegionType supportRegions[ 2 ];
-  this->SplitRegion( this->m_CoefficientImage[ 0 ]->GetLargestPossibleRegion(), supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
+  this->SplitRegion( this->m_CoefficientImage[ 0 ]->GetLargestPossibleRegion(),
+    supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
   
   /** Zero output point elements. */
   outputPoint.Fill( NumericTraits<ScalarType>::Zero );
@@ -319,7 +321,8 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 
   /** Split support region into two parts. */
   RegionType supportRegions[ 2 ];
-  this->SplitRegion( this->m_JacobianImage[ 0 ]->GetLargestPossibleRegion(), supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
+  this->SplitRegion( this->m_JacobianImage[ 0 ]->GetLargestPossibleRegion(),
+    supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
 
   /** Create iterators over Jacobian images. */
   for ( unsigned int r = 0; r < 2; ++r )
@@ -344,13 +347,13 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   }
 
   /** Transform from world to grid coordinates. */
-  ContinuousIndexType index;
-  this->TransformPointToContinuousGridIndex( point, index );
+  ContinuousIndexType cindex;
+  this->TransformPointToContinuousGridIndex( point, cindex );
 
   /** NOTE: if the support region does not lie totally within the grid
    * (except for the last dimension) we assume zero displacement and 
    * return the input point. */
-  if ( !this->InsideValidRegion( index ) )
+  if ( !this->InsideValidRegion( cindex ) )
   {
     return this->m_Jacobian;
   }
@@ -360,17 +363,18 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   typename WeightsType::ValueType weightsArray[ numberOfWeights ];
   WeightsType weights( weightsArray, numberOfWeights, false );
 
-  /** Compute interpolation weights. */  
+  /** Compute interpolation weights. */
   IndexType supportIndex;
-
-  this->m_WeightsFunction->Evaluate( index, weights, supportIndex );
+  this->m_WeightsFunction->ComputeStartIndex( cindex, supportIndex );
+  this->m_WeightsFunction->Evaluate( cindex, supportIndex, weights );
   this->m_LastJacobianIndex = supportIndex;
 
   /** Set new support region index. */
   supportRegion.SetIndex( supportIndex );
 
   /** Split support region into two parts. */
-  this->SplitRegion( this->m_JacobianImage[ 0 ]->GetLargestPossibleRegion(), supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
+  this->SplitRegion( this->m_JacobianImage[ 0 ]->GetLargestPossibleRegion(),
+    supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
 
   /** For each dimension, copy the weight to the support region. */
   unsigned long counter = 0;
@@ -412,13 +416,13 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   const PixelType * basePointer = this->m_CoefficientImage[0]->GetBufferPointer();
 
   /** Tranform from world coordinates to grid coordinates. */
-  ContinuousIndexType index;
-  this->TransformPointToContinuousGridIndex( point, index ); 
+  ContinuousIndexType cindex;
+  this->TransformPointToContinuousGridIndex( point, cindex ); 
 
   /** NOTE: if the support region does not lie totally within the grid
    * we assume zero displacement and return the input point.
    */
-  if ( !this->InsideValidRegion( index ) )
+  if ( !this->InsideValidRegion( cindex ) )
   {
     weights.Fill(0.0);
     indexes.Fill(0);
@@ -427,12 +431,14 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   
   /** Compute interpolation weights. */
   IndexType supportIndex;
-  this->m_WeightsFunction->Evaluate( index, weights, supportIndex );
+  this->m_WeightsFunction->ComputeStartIndex( cindex, supportIndex );
+  this->m_WeightsFunction->Evaluate( cindex, supportIndex, weights );
 
   supportRegion.SetIndex( supportIndex );
   /** Split support region into two parts. */
   RegionType supportRegions[ 2 ];
-  this->SplitRegion( this->m_CoefficientImage[ 0 ]->GetLargestPossibleRegion(), supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
+  this->SplitRegion( this->m_CoefficientImage[ 0 ]->GetLargestPossibleRegion(),
+    supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
 
   /** For each dimension, copy the weight to the support region. */
   unsigned long counter = 0;
@@ -468,7 +474,8 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 
   /** Split support region into two parts. */
   RegionType supportRegions[ 2 ];
-  this->SplitRegion( this->m_CoefficientImage[ 0 ]->GetLargestPossibleRegion(), supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
+  this->SplitRegion( this->m_CoefficientImage[ 0 ]->GetLargestPossibleRegion(),
+    supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
 
   /** Initialize some helper variables. */
   const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;

@@ -786,7 +786,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 
   // Compute interpolation weights
   IndexType supportIndex;
-  this->m_WeightsFunction->Evaluate( cindex, weights, supportIndex );
+  this->m_WeightsFunction->ComputeStartIndex( cindex, supportIndex );
+  this->m_WeightsFunction->Evaluate( cindex, supportIndex, weights );
 
   // For each dimension, correlate coefficient with weights
   RegionType supportRegion;
@@ -902,13 +903,13 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
     }
 
  
-  ContinuousIndexType index;
+  ContinuousIndexType cindex;
 
-  this->TransformPointToContinuousGridIndex( point, index );
+  this->TransformPointToContinuousGridIndex( point, cindex );
 
   // NOTE: if the support region does not lie totally within the grid
   // we assume zero displacement and return the input point
-  if ( !this->InsideValidRegion( index ) )
+  if ( !this->InsideValidRegion( cindex ) )
     {
     return this->m_Jacobian;
     }
@@ -921,7 +922,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   typename WeightsType::ValueType weightsArray[ numberOfWeights ];
   WeightsType weights( weightsArray, numberOfWeights, false );  
 
-  this->m_WeightsFunction->Evaluate( index, weights, supportIndex );
+  this->m_WeightsFunction->ComputeStartIndex( cindex, supportIndex );
+  this->m_WeightsFunction->Evaluate( cindex, supportIndex, weights );
   this->m_LastJacobianIndex = supportIndex;
 
   // For each dimension, copy the weight to the support region
@@ -950,7 +952,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
       }
     }
 
-
   // Return the results
   return this->m_Jacobian;
 
@@ -968,13 +969,13 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   supportRegion.SetSize( this->m_SupportSize );
   const PixelType * basePointer = this->m_CoefficientImage[0]->GetBufferPointer();
 
-  ContinuousIndexType index;
+  ContinuousIndexType cindex;
 
-  this->TransformPointToContinuousGridIndex( point, index ); 
+  this->TransformPointToContinuousGridIndex( point, cindex ); 
 
   // NOTE: if the support region does not lie totally within the grid
   // we assume zero displacement and return the input point
-  if ( !this->InsideValidRegion( index ) )
+  if ( !this->InsideValidRegion( cindex ) )
     {
     weights.Fill(0.0);
     indexes.Fill(0);
@@ -984,7 +985,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   // Compute interpolation weights
   IndexType supportIndex;
 
-  this->m_WeightsFunction->Evaluate( index, weights, supportIndex );
+  this->m_WeightsFunction->ComputeStartIndex( cindex, supportIndex );
+  this->m_WeightsFunction->Evaluate( cindex, supportIndex, weights );
 
   // For each dimension, copy the weight to the support region
   supportRegion.SetIndex( supportIndex );
@@ -994,18 +996,14 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 
   IteratorType iterator = IteratorType( this->m_CoefficientImage[0], supportRegion );
 
-
   while ( ! iterator.IsAtEnd() )
-    {
-
-
+  {
     indexes[counter] = &(iterator.Value()) - basePointer;
 
     // go to next coefficient in the support region
     ++ counter;
     ++iterator;
-    
-    }
+  }
 
 }
 
@@ -1115,7 +1113,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   WeightsType weights( weightsArray, numberOfWeights, false );
 
   /** Compute the derivative weights. */
-  this->m_WeightsFunction->Evaluate( cindex, weights, supportIndex );
+  this->m_WeightsFunction->ComputeStartIndex( cindex, supportIndex );
+  this->m_WeightsFunction->Evaluate( cindex, supportIndex, weights );
 
   /** Set up support region */
   RegionType supportRegion;
@@ -1128,7 +1127,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   {
     for ( unsigned int mu = 0; mu < numberOfWeights; ++mu )
     {
-      jacobian( d, counter ) = weights[mu];
+      jacobian( d, counter ) = weights[ mu ];
       ++counter;
     }
   } 
@@ -1191,7 +1190,10 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     /** Compute the derivative weights. */
-    this->m_DerivativeWeightsFunctions[ i ]->Evaluate( cindex, weights, supportIndex );
+    this->m_DerivativeWeightsFunctions[ i ]->Evaluate( cindex, supportIndex, weights );
+
+    /** Get the grid spacing division factor for this dimension. */
+    ScalarType sp = this->m_GridSpacing[ i ];
 
     /** Compute the spatial Jacobian sj:
      *    dT_{dim} / dx_i = \sum coefs_{dim} * weights.
@@ -1215,7 +1217,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       }
 
       /** Update the spatial Jacobian sj. */
-      sj( dim, i ) += sum;
+      sj( dim, i ) += sum / sp;
 
     } // end for dim
   } // end for i
@@ -1281,8 +1283,12 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     for ( unsigned int j = 0; j <= i; ++j )
     {
       /** Compute the derivative weights. */
-      this->m_SODerivativeWeightsFunctions[ i ][ j ]->Evaluate( cindex, weights, supportIndex );
-     
+      this->m_SODerivativeWeightsFunctions[ i ][ j ]
+        ->Evaluate( cindex, supportIndex, weights );
+
+      /** Get the grid spacing division factor for this dimension. */
+      ScalarType sp = this->m_GridSpacing[ i ] * this->m_GridSpacing[ j ];
+
       /** Compute d^2T_{dim} / dx_i dx_j = \sum coefs_{dim} * weights. */
       for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
       {
@@ -1301,10 +1307,9 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
         }
         
         /** Update the spatial Hessian sh. The Hessian is symmetrical. */
-        sh[ dim ][ i ][ j ] = sum;
-        sh[ dim ][ j ][ i ] = sum;
+        sh[ dim ][ i ][ j ] = sum / sp;
+        sh[ dim ][ j ][ i ] = sum / sp;
       }
-
     }
   }
 
@@ -1355,10 +1360,12 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   }
   
   /** Helper variables. */
+
   /** Allocate memory on the stack: */
   const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
   typename WeightsType::ValueType weightsArray[ numberOfWeights ];
-  WeightsType weights( weightsArray, numberOfWeights, false );  
+  WeightsType weights( weightsArray, numberOfWeights, false );
+
   IndexType supportIndex;
   this->m_DerivativeWeightsFunctions[ 0 ]->ComputeStartIndex(
     cindex, supportIndex );
@@ -1376,7 +1383,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     /** Compute the derivative weights. */
-    this->m_DerivativeWeightsFunctions[ i ]->Evaluate( cindex, weights, supportIndex );
+    this->m_DerivativeWeightsFunctions[ i ]->Evaluate( cindex, supportIndex, weights );
 
     /** Remember the weights. */
     memcpy( weightVector + i * numberOfWeights,
@@ -1392,7 +1399,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   {
     for ( unsigned int i = 0; i < SpaceDimension; ++i )
     {
-      double tmp = *( weightVector + i * numberOfWeights + mu );
+      double tmp = *( weightVector + i * numberOfWeights + mu )
+        / this->m_GridSpacing[ i ];
       for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
       {
         (*( basepointer + dim * numberOfWeights + mu ))( dim, i ) = tmp;
@@ -1478,9 +1486,12 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     /** Compute the derivative weights. */
-    this->m_DerivativeWeightsFunctions[ i ]->Evaluate( cindex, weights, supportIndex );
+    this->m_DerivativeWeightsFunctions[ i ]->Evaluate( cindex, supportIndex, weights );
     /** \todo: we can realise some speedup here to compute the derivative
      * weights at once for all dimensions */
+
+    /** Get the grid spacing division factor for this dimension. */
+    ScalarType sp = this->m_GridSpacing[ i ];
 
     /** Remember the weights. */
     memcpy( weightVector + i * numberOfWeights,
@@ -1508,7 +1519,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       }
 
       /** Update the spatial Jacobian sj. */
-      sj( dim, i ) += sum;
+      sj( dim, i ) += sum / sp;
 
     } // end for dim
   } // end for i
@@ -1521,7 +1532,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   {
     for ( unsigned int i = 0; i < SpaceDimension; ++i )
     {
-      double tmp = *( weightVector + i * numberOfWeights + mu );
+      double tmp = *( weightVector + i * numberOfWeights + mu )
+        / this->m_GridSpacing[ i ];
       for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
       {
         (*( basepointer + dim * numberOfWeights + mu ))( dim, i ) = tmp;
@@ -1609,7 +1621,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     for ( unsigned int j = 0; j <= i; ++j )
     {
       /** Compute the derivative weights. */
-      this->m_SODerivativeWeightsFunctions[ i ][ j ]->Evaluate( cindex, weights, supportIndex );
+      this->m_SODerivativeWeightsFunctions[ i ][ j ]->Evaluate( cindex, supportIndex, weights );
 
       /** Remember the weights. */
       weightVector[ count ] = weights;
@@ -1628,8 +1640,12 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     {
       for ( unsigned int j = 0; j <= i; ++j )
       {
-        matrix[ i ][ j ] = weightVector[ count ][ mu ];
-        if ( i != j ) matrix[ j ][ i ] = matrix[ i ][ j ];
+        /** Get the grid spacing division factor for this dimension. */
+        ScalarType sp = this->m_GridSpacing[ i ] * this->m_GridSpacing[ j ];
+
+        double tmp = weightVector[ count ][ mu ] / sp;
+        matrix[ i ][ j ] = tmp;
+        if ( i != j ) matrix[ j ][ i ] = tmp;
         ++count;
       }
     }
@@ -1727,7 +1743,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     for ( unsigned int j = 0; j <= i; ++j )
     {
       /** Compute the derivative weights. */
-      this->m_SODerivativeWeightsFunctions[ i ][ j ]->Evaluate( cindex, weights, supportIndex );
+      this->m_SODerivativeWeightsFunctions[ i ][ j ]
+        ->Evaluate( cindex, supportIndex, weights );
 
       /** Remember the weights. */
       memcpy( weightVector + count * numberOfWeights,
@@ -1756,8 +1773,9 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
         }
         
         /** Update the spatial Hessian sh. The Hessian is symmetrical. */
-        sh[ dim ]( i, j ) = sum;
-        sh[ dim ]( j, i ) = sum;
+        ScalarType sp = this->m_GridSpacing[ i ] * this->m_GridSpacing[ j ];
+        sh[ dim ]( i, j ) = sum / sp;
+        sh[ dim ]( j, i ) = sum / sp;
       }
 
     } // end for j
@@ -1775,7 +1793,11 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     {
       for ( unsigned int j = 0; j <= i; ++j )
       {
-        double tmp = *( weightVector + count * numberOfWeights + mu );
+        /** Get the grid spacing division factor for this dimension. */
+        ScalarType sp = this->m_GridSpacing[ i ] * this->m_GridSpacing[ j ];
+
+        double tmp = *( weightVector + count * numberOfWeights + mu ) / sp;
+        //double tmp = weightVector[ count ][ mu ] / sp;
         matrix[ i ][ j ] = tmp;
         if ( i != j ) matrix[ j ][ i ] = tmp;
         ++count;
