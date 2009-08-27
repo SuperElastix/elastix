@@ -494,12 +494,12 @@ void ResamplerBase<TElastix>
   } // end if final elastix level
 
   /** The B-spline interpolator stores a Coefficient image of doubles
-  * the size of the moving image. We try to clear it by setting an
-  * image of size one (zero gives division by zero in the
-  * BSplineDecompositionImageFilter).
-  * The interpolator is not needed anymore, since we have the
-  * resampler interpolator.
-  */
+   * the size of the moving image. We try to clear it by setting an
+   * image of size one (zero gives division by zero in the
+   * BSplineDecompositionImageFilter).
+   * The interpolator is not needed anymore, since we have the
+   * resampler interpolator.
+   */
   typename InterpolatorType::InputImageType::Pointer dummyImage
     = InterpolatorType::InputImageType::New();
   SizeType size; size.Fill( 1 );

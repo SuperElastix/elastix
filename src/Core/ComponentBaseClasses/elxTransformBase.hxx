@@ -24,6 +24,7 @@
 #include <itksys/SystemTools.hxx>
 #include "itkVector.h"
 #include "itkTransformToDeformationFieldSource.h"
+#include "itkTransformToDeterminantOfSpatialJacobianSource.h"
 #include "itkImageFileWriter.h"
 #include "itkImageGridSampler.h"
 #include "itkContinuousIndex.h"
@@ -111,13 +112,34 @@ int TransformBase<TElastix>
 
   /** Check for appearance of "-ipp". */
   check = this->m_Configuration->GetCommandLineArgument( "-ipp" );
+  if ( check != "" )
+  {
+    elxout << "-ipp      " << check << std::endl;
+    // Deprecated since elastix 4.3
+    xout["warning"] << "WARNING: \"-ipp\" is deprecated, use \"-def\" instead!"
+      << std::endl;
+  }
+
+  /** Check for appearance of "-def". */
+  check = this->m_Configuration->GetCommandLineArgument( "-def" );
   if ( check == "" )
   {
-    elxout << "-ipp      unspecified, so no inputpoints transformed" << std::endl;
+    elxout << "-def      unspecified, so no input points transformed" << std::endl;
   }
   else
   {
-    elxout << "-ipp      " << check << std::endl;
+    elxout << "-def      " << check << std::endl;
+  }
+
+  /** Check for appearance of "-jac". */
+  check = this->m_Configuration->GetCommandLineArgument( "-jac" );
+  if ( check == "" )
+  {
+    elxout << "-jac      unspecified, so no det(dT/dx) computed" << std::endl;
+  }
+  else
+  {
+    elxout << "-jac      " << check << std::endl;
   }
 
   /** Return a value. */
@@ -723,19 +745,28 @@ void
 TransformBase<TElastix>
 ::TransformPoints( void ) const
 {
-  /** If the optional command "-ipp" is given in the command
+  /** If the optional command "-def" is given in the command
    * line arguments, then and only then we continue.
    */
-  std::string ipp = this->GetConfiguration()->GetCommandLineArgument( "-ipp" );
+  const std::string ipp = this->GetConfiguration()->GetCommandLineArgument( "-ipp" );
+  std::string def = this->GetConfiguration()->GetCommandLineArgument( "-def" );
 
-  /** If there is an inputpoint-file? */
-  if ( ipp != "" && ipp != "all" )
+  /** For backwards compatibility def = ipp. */
+  if ( def != "" && ipp != "" )
+  {
+    itkExceptionMacro( << "ERROR: Can not use both \"-def\" and \"-ipp\"!\n"
+      << "  \"-ipp\" is deprecated, use only \"-def\".\n" );
+  }
+  else if ( def == "" && ipp != "" ) def = ipp;
+
+  /** If there is an input point-file? */
+  if ( def != "" && def != "all" )
   {
     elxout << "  The transform is evaluated on some points, "
       << "specified in the input point file." << std::endl;
-    this->TransformPointsSomePoints( ipp );
+    this->TransformPointsSomePoints( def );
   }
-  else if ( ipp == "all" )
+  else if ( def == "all" )
   {
     elxout << "  The transform is evaluated on all points. "
       << "The result is a deformation field." << std::endl;
@@ -744,7 +775,7 @@ TransformBase<TElastix>
   else
   {
     // just a message
-    elxout << "  The command-line option \"-ipp\" is not used, "
+    elxout << "  The command-line option \"-def\" is not used, "
       << "so no points are transformed" << std::endl;
   }
 
@@ -1076,6 +1107,89 @@ void TransformBase<TElastix>
   }
 
 } // end TransformPointsAllPoints()
+
+
+/**
+ * ************** ComputeDeterminantOfSpatialJacobian **********************
+ */
+
+template <class TElastix>
+void
+TransformBase<TElastix>
+::ComputeDeterminantOfSpatialJacobian( void ) const
+{
+  /** If the optional command "-jac" is given in the command line arguments,
+   * then and only then we continue.
+   */
+  std::string jac = this->GetConfiguration()->GetCommandLineArgument( "-jac" );
+  if ( jac != "all" )
+  {
+    elxout << "  The command-line option \"-jac\" is not used, "
+      << "so no det(dT/dx) computed." << std::endl;
+    return;
+  }
+
+  /** Typedef's. */
+  typedef itk::Image<float, FixedImageDimension>      JacobianImageType;
+  typedef itk::TransformToDeterminantOfSpatialJacobianSource<
+    JacobianImageType, CoordRepType >                 JacobianGeneratorType;
+  typedef itk::ImageFileWriter< JacobianImageType >   JacobianWriterType;
+
+  /** Create an setup Jacobian generator. */
+  typename JacobianGeneratorType::Pointer jacGenerator = JacobianGeneratorType::New();
+  jacGenerator->SetTransform( const_cast<const ITKBaseType *>(
+    this->GetAsITKBaseType() ) );
+  jacGenerator->SetOutputSize(
+    this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize() );
+  jacGenerator->SetOutputSpacing(
+    this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputSpacing() );
+  jacGenerator->SetOutputOrigin(
+    this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputOrigin() );
+  jacGenerator->SetOutputIndex(
+    this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputStartIndex() );
+  jacGenerator->SetOutputDirection(
+    this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputDirection() );
+  // NOTE: We can not use the following, since the fixed image does not exist in transformix
+  //   jacGenerator->SetOutputParametersFromImage(
+  //     this->GetRegistration()->GetAsITKBaseType()->GetFixedImage() );
+
+  /** Track the progress of the generation of the deformation field. */
+  typename ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
+  progressObserver->ConnectObserver( jacGenerator );
+  progressObserver->SetStartString( "  Progress: " );
+  progressObserver->SetEndString( "%" );
+
+  /** Create a name for the deformation field file. */
+  std::string resultImageFormat = "mhd";
+  this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, false );
+  std::ostringstream makeFileName( "" );
+  makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
+    << "spatialJacobian." << resultImageFormat;
+
+  /** Write outputImage to disk. */
+  typename JacobianWriterType::Pointer jacWriter = JacobianWriterType::New();
+  jacWriter->SetInput( jacGenerator->GetOutput() );
+  jacWriter->SetFileName( makeFileName.str().c_str() );
+
+  /** Do the writing. */
+  elxout << "  Computing and writing the spatial Jacobian ..." << std::endl;
+  try
+  {
+    jacWriter->Update();
+  }
+  catch( itk::ExceptionObject & excp )
+  {
+    /** Add information to the exception. */
+    excp.SetLocation( "TransformBase - ComputeDeterminantOfSpatialJacobian()" );
+    std::string err_str = excp.GetDescription();
+    err_str += "\nError occurred while writing spatial Jacobian determinant image.\n";
+    excp.SetDescription( err_str );
+
+    /** Pass the exception to an higher level. */
+    throw excp;
+  }
+
+} // end ComputeDeterminantOfSpatialJacobian()
 
 
 /**

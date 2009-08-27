@@ -19,7 +19,7 @@
 #include "elxMacro.h"
 
 #include "elxBaseComponentSE.h"
-#include "itkTransform.h"
+#include "itkAdvancedTransform.h"
 #include "itkAdvancedCombinationTransform.h"
 #include "elxComponentDatabase.h"
 #include "elxProgressCommand.h"
@@ -29,7 +29,7 @@
 
 namespace elastix
 {
-  //using namespace itk; //Not here, because a TransformBase class was recently added to ITK...
+  //using namespace itk; //Not here, because a TransformBase class was added to ITK...
 
 /**
  * \class TransformBase
@@ -43,7 +43,7 @@ namespace elastix
  *   by the result of registration using the previous parameter file). Possible options
  *   are "Add" and "Compose".\n
  *   "Add" combines the initial transform \f$T_0\f$ and the current
- *   transform \f$T_1\f$ (which is currently optimised) by
+ *   transform \f$T_1\f$ (which is currently optimized) by
  *   addition: \f$T(x) = T_0(x) + T_1(x)\f$;\n
  *   "Compose" by composition: \f$T(x) = T_1 ( T_0(x) )\f$.\n
  *   example: <tt>(HowToCombineTransforms "Add")
@@ -53,16 +53,16 @@ namespace elastix
  * \commandlinearg -t0: optional argument for elastix for specifying an initial transform
  *    parameter file. \n
  *    example: <tt>-t0 TransformParameters.txt</tt> \n
- * \commandlinearg -ipp: optional argument for transformix for specifying a set of points
+ * \commandlinearg -def: optional argument for transformix for specifying a set of points
  *    that have to be transformed.\n
- *    example: <tt>-ipp inputPoints.txt</tt> \n
+ *    example: <tt>-def inputPoints.txt</tt> \n
  *    The inputPoints.txt file should be structured: first line should be "index" or
  *    "point", depending if the user supplies voxel indices or real world coordinates.
  *    The second line should be the number of points that should be transformed. The
  *    third and following lines give the indices or points.\n
  *    It is also possible to deform all points, thereby generating a deformation field
  *    image. This is done by:\n
- *    example: <tt>-ipp all</tt> \n
+ *    example: <tt>-def all</tt> \n
  *
  * \ingroup Transforms
  * \ingroup ComponentBaseClasses
@@ -75,8 +75,8 @@ class TransformBase
 public:
 
   /** Standard ITK stuff. */
-  typedef TransformBase               Self;
-  typedef BaseComponentSE<TElastix>   Superclass;
+  typedef TransformBase                               Self;
+  typedef BaseComponentSE<TElastix>                   Superclass;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( TransformBase, BaseComponentSE );
@@ -94,17 +94,17 @@ public:
   typedef typename Superclass::RegistrationPointer    RegistrationPointer;
 
   /** Elastix typedef's. */
-  typedef typename ElastixType::CoordRepType                CoordRepType;   
-  typedef typename ElastixType::FixedImageType              FixedImageType;
-  typedef typename ElastixType::MovingImageType             MovingImageType;
+  typedef typename ElastixType::CoordRepType          CoordRepType;   
+  typedef typename ElastixType::FixedImageType        FixedImageType;
+  typedef typename ElastixType::MovingImageType       MovingImageType;
 
   /** Typedef's from ComponentDatabase. */
-  typedef ComponentDatabase                                 ComponentDatabaseType;
+  typedef ComponentDatabase                           ComponentDatabaseType;
   typedef ComponentDatabaseType::ComponentDescriptionType   ComponentDescriptionType;
-  typedef ComponentDatabase::PtrToCreator                   PtrToCreator;
+  typedef ComponentDatabase::PtrToCreator             PtrToCreator;
 
   /** Typedef for the ProgressCommand. */
-  typedef elx::ProgressCommand          ProgressCommandType;
+  typedef elx::ProgressCommand                        ProgressCommandType;
 
   /** Get the dimension of the fixed image. */
   itkStaticConstMacro( FixedImageDimension,
@@ -115,28 +115,28 @@ public:
     unsigned int, MovingImageType::ImageDimension );
 
   /** Other typedef's. */
-  typedef itk::Object                                         ObjectType;
-  typedef itk::Transform<
+  typedef itk::Object                                 ObjectType;
+  typedef itk::AdvancedTransform<
     CoordRepType,
     itkGetStaticConstMacro( FixedImageDimension ),
-    itkGetStaticConstMacro( MovingImageDimension ) >          ITKBaseType;    
+    itkGetStaticConstMacro( MovingImageDimension ) >  ITKBaseType;    
   typedef itk::AdvancedCombinationTransform<CoordRepType,
-    itkGetStaticConstMacro( FixedImageDimension ) >           CombinationTransformType;  
+    itkGetStaticConstMacro( FixedImageDimension ) >   CombinationTransformType;  
   typedef typename
-    CombinationTransformType::InitialTransformType            InitialTransformType;
+    CombinationTransformType::InitialTransformType    InitialTransformType;
   
   /** Typedef's from Transform. */
-  typedef typename ITKBaseType::ParametersType    ParametersType;
-  typedef typename ParametersType::ValueType      ValueType;
+  typedef typename ITKBaseType::ParametersType        ParametersType;
+  typedef typename ParametersType::ValueType          ValueType;
 
   /** Typedef's for TransformPoint. */
   typedef typename ITKBaseType::InputPointType        InputPointType;
   typedef typename ITKBaseType::OutputPointType       OutputPointType;  
 
   /** Typedefs needed for AutomaticScalesEstimation function */
-  typedef typename RegistrationType::ITKBaseType          ITKRegistrationType;
-  typedef typename ITKRegistrationType::OptimizerType     OptimizerType;
-  typedef typename OptimizerType::ScalesType              ScalesType;
+  typedef typename RegistrationType::ITKBaseType      ITKRegistrationType;
+  typedef typename ITKRegistrationType::OptimizerType OptimizerType;
+  typedef typename OptimizerType::ScalesType          ScalesType;
 
   /** Cast to ITKBaseType. */
   virtual ITKBaseType * GetAsITKBaseType( void )
@@ -206,6 +206,9 @@ public:
 
   /** Function to transform all coordinates from fixed to moving image. */
   virtual void TransformPointsAllPoints( void ) const;
+
+  /** Function to compute the determinant of the spatial Jacobian. */
+  virtual void ComputeDeterminantOfSpatialJacobian( void ) const;
 
   /** Makes sure that the final parameters from the registration components
    * are copied, set, and stored.

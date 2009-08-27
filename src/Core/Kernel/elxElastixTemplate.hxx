@@ -316,13 +316,13 @@ int ElastixTemplate<TFixedImage, TMovingImage>
   elxout << "  Calling all ReadFromFile()'s took "
     << timer->PrintElapsedTimeSec()
     << " s" << std::endl;
-  timer->StartTimer();
-  elxout << "Transforming points ..." << std::endl;
 
   /** Call TransformPoints.
    * Actually we could loop over all transforms.
    * But for now, there seems to be no use yet for that.
    */
+  timer->StartTimer();
+  elxout << "Transforming points ..." << std::endl;
   try
   {
     this->GetElxTransformBase()->TransformPoints();
@@ -330,10 +330,30 @@ int ElastixTemplate<TFixedImage, TMovingImage>
   catch( itk::ExceptionObject & excp )
   {
     xout["error"] << excp << std::endl;
-    xout["error"] << "However, transformix continues anyway with resampling." << std::endl;
+    xout["error"] << "However, transformix continues anyway." << std::endl;
   }
   timer->StopTimer();
   elxout << "  Transforming points done, it took "
+    << timer->PrintElapsedTimeSec()
+    << " s" << std::endl;
+
+  /** Call ComputeSpatialJacobian.
+   * Actually we could loop over all transforms.
+   * But for now, there seems to be no use yet for that.
+   */
+  timer->StartTimer();
+  elxout << "Compute determinant of spatial Jacobian ..." << std::endl;
+  try
+  {
+    this->GetElxTransformBase()->ComputeDeterminantOfSpatialJacobian();
+  }
+  catch( itk::ExceptionObject & excp )
+  {
+    xout["error"] << excp << std::endl;
+    xout["error"] << "However, transformix continues anyway." << std::endl;
+  }
+  timer->StopTimer();
+  elxout << "  Computing determinant of spatial Jacobian done, it took "
     << timer->PrintElapsedTimeSec()
     << " s" << std::endl;
 

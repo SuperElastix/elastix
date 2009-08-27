@@ -90,6 +90,8 @@ SET( TransformFiles
  Transforms/itkBSplineKernelFunction2.h
  #Transforms/itkBSplineSecondOrderDerivativeKernelFunction.h
  Transforms/itkBSplineSecondOrderDerivativeKernelFunction2.h
+ Transforms/itkTransformToDeterminantOfSpatialJacobianSource.h
+ Transforms/itkTransformToDeterminantOfSpatialJacobianSource.txx
  Transforms/itkGridScheduleComputer.h
  Transforms/itkGridScheduleComputer.txx
  Transforms/itkUpsampleBSplineParametersFilter.h

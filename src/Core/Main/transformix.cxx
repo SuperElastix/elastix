@@ -73,7 +73,7 @@ int main( int argc, char **argv )
   
     if ( key == "-out" )
     {
-      /** Make sure that last character of the outputfolder equals a '/'. */
+      /** Make sure that last character of the output folder equals a '/'. */
       if ( value.find_last_of( "/" ) != value.size() - 1 )
       {
         value.append( "/" );
@@ -110,10 +110,14 @@ int main( int argc, char **argv )
     returndummy |= -1;
   }
 
-  /** Check that at least one of the options "-in" or "-ipp" is given. */
-  if ( argMap.count( "-in" ) == 0 && argMap.count( "-ipp" ) == 0 )
+  /** Check that at least one of the options "-in" or "-ipp" or "-jac" is given. */
+  if ( argMap.count( "-in" ) == 0
+    && argMap.count( "-ipp" ) == 0
+    && argMap.count( "-def" ) == 0
+    && argMap.count( "-jac" ) == 0 )
   {
-    std::cerr << "ERROR: At least one of the CommandLine options \"-in\" pr \"-ipp\" should be given!" << std::endl;
+    std::cerr << "ERROR: At least one of the CommandLine options \"-in\" or "
+      << "\"-def\" or \"-jac\" should be given!" << std::endl;
     returndummy |= -1;
   }
 
@@ -174,7 +178,7 @@ int main( int argc, char **argv )
   /** Run transformix. */
   returndummy = transformix->Run( argMap );
   
-  /** Check if runned without errors. */
+  /** Check if transformix run without errors. */
   if ( returndummy != 0 )
   {
     xl::xout["error"] << "Errors occurred" << std::endl;
@@ -224,15 +228,17 @@ void PrintHelp( void )
   /** Optional arguments. */
   std::cout << "Optional extra commands:\n";
   std::cout << "-in       input image to deform\n";
-  std::cout << "-ipp      file containing input-image points\n";
+  std::cout << "-def      file containing input-image points\n";
   std::cout << "          the point are transformed according to the specified "
     "transform-parameter file\n";
-  std::cout << "          use \"-ipp all\" to transform all points from the "
-    "input-image\n";
+  std::cout << "          use \"-def all\" to transform all points from the "
+    "input-image, which effectively generates a deformation field.\n";
+  std::cout << "-jac      use \"-jac all\" to generate an image with the "
+    << "determinant of the spatial Jacobian\n";
   std::cout << "-priority set the process priority to high or belownormal "
     "(Windows only)\n";
   std::cout << "-threads  set the maximum number of threads of transformix\n";
-  std::cout << "At least one of the options \"-in\" or \"-ipp\" should be given.\n"
+  std::cout << "At least one of the options \"-in\" or \"-def\" or \"-jac\" should be given.\n"
     << std::endl;
   
   /** The parameter file. */
