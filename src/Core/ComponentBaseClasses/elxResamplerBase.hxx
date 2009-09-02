@@ -17,6 +17,7 @@
 
 #include "elxResamplerBase.h"
 #include "itkImageFileCastWriter.h"
+#include "itkChangeInformationImageFilter.h"
 #include "elxTimer.h"
 
 namespace elastix
@@ -277,12 +278,24 @@ ResamplerBase<TElastix>
   /** Typedef's for writing the output image. */
   typedef ImageFileCastWriter< OutputImageType >  WriterType;
   typedef typename WriterType::Pointer            WriterPointer;
+  typedef ChangeInformationImageFilter<
+    OutputImageType >                             ChangeInfoFilterType;
+
+  /** Possibly change direction cosines to their original value, as specified
+   * in the tp-file, or by the fixed image. This is only necessary when 
+   * the UseDirectionCosines flag was set to false. */
+  typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
+  DirectionType originalDirection;
+  bool retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
+  infoChanger->SetOutputDirection( originalDirection );
+  infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
+  infoChanger->SetInput( this->GetAsITKBaseType()->GetOutput() );
 
   /** Create writer. */
   WriterPointer writer = WriterType::New();
 
   /** Setup the pipeline. */
-  writer->SetInput( this->GetAsITKBaseType()->GetOutput() );
+  writer->SetInput( infoChanger->GetOutput() );
   writer->SetFileName( filename );
   writer->SetOutputComponentType( resultImagePixelType.c_str() );
   writer->SetUseCompression( doCompression );
@@ -373,6 +386,14 @@ ResamplerBase<TElastix>
   this->GetAsITKBaseType()->SetOutputStartIndex( index );
   this->GetAsITKBaseType()->SetOutputOrigin( origin );
   this->GetAsITKBaseType()->SetOutputSpacing( spacing );
+
+  /** Set the direction cosines. If no direction cosines
+   * should be used, set identity cosines, to simulate the 
+   * old ITK behaviour. */
+  if ( ! this->GetElastix()->GetUseDirectionCosines() )
+  {
+    direction.SetIdentity();
+  }
   this->GetAsITKBaseType()->SetOutputDirection( direction );
 
   /** Set the DefaultPixelValue (for pixels in the resampled image
@@ -474,7 +495,7 @@ void ResamplerBase<TElastix>
     == this->GetConfiguration()->GetTotalNumberOfElastixLevels() )
   {
     /** Release fixed image memory. */
-    //      this->GetElastix()->GetFixedImage()->DisconnectPipeline();
+    //      this->GetElastix()->GetFixedImage()->DisconnectPipeline();    
     this->GetElastix()->GetFixedImage()->ReleaseData();
 
     /** Release fixed mask image memory. */

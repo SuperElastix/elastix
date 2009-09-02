@@ -142,6 +142,7 @@ using namespace itk;
     typedef typename FixedImageType::PointType              PointType;
     typedef typename FixedImageType::SpacingType            SpacingType;
     typedef typename FixedImageType::RegionType             RegionType;
+    typedef typename FixedImageType::DirectionType          DirectionType;
     
     typedef CenteredTransformInitializer<
       AffineTransformType, FixedImageType, MovingImageType> TransformInitializerType;

@@ -16,6 +16,8 @@
 
 #include "elxTransformRigidityPenaltyTerm.h"
 
+#include "itkChangeInformationImageFilter.h"
+
 
 namespace elastix
 {
@@ -37,6 +39,9 @@ TransformRigidityPenalty<TElastix>
   typedef typename Superclass1::RigidityImageType RigidityImageType;	
   typedef ImageFileReader<RigidityImageType> RigidityImageReaderType;
   typename RigidityImageReaderType::Pointer fixedRigidityReader;
+  typedef ChangeInformationImageFilter<RigidityImageType> ChangeInfoFilterType;
+  typedef typename ChangeInfoFilterType::Pointer  ChangeInfoFilterPointer;
+  typedef RigidityImageType::DirectionType        DirectionType;
 
   if ( fixedRigidityImageName != "" )
   {
@@ -47,10 +52,18 @@ TransformRigidityPenalty<TElastix>
     fixedRigidityReader = RigidityImageReaderType::New();
     fixedRigidityReader->SetFileName( fixedRigidityImageName.c_str() );
 
+    /** Possibly overrule the direction cosines. */
+    ChangeInfoFilterPointer infoChanger = ChangeInfoFilterType::New();
+    DirectionType direction;
+    direction.SetIdentity();
+    infoChanger->SetOutputDirection( direction );
+    infoChanger->SetChangeDirection( ! this->GetElastix()->GetUseDirectionCosines() );
+    infoChanger->SetInput( fixedRigidityReader->GetOutput() );
+
     /** Do the reading. */
     try
     {
-      fixedRigidityReader->Update();
+      infoChanger->Update();
     }
     catch( ExceptionObject & excp )
     {
@@ -64,7 +77,7 @@ TransformRigidityPenalty<TElastix>
     }
 
     /** Set the fixed rigidity image into the superclass. */
-    this->SetFixedRigidityImage( fixedRigidityReader->GetOutput() );
+    this->SetFixedRigidityImage( infoChanger->GetOutput() );
   }
   else
   {
@@ -86,10 +99,18 @@ TransformRigidityPenalty<TElastix>
     movingRigidityReader = RigidityImageReaderType::New();
     movingRigidityReader->SetFileName( movingRigidityImageName.c_str() );
 
+    /** Possibly overrule the direction cosines. */
+    ChangeInfoFilterPointer infoChanger = ChangeInfoFilterType::New();
+    DirectionType direction;
+    direction.SetIdentity();
+    infoChanger->SetOutputDirection( direction );
+    infoChanger->SetChangeDirection( ! this->GetElastix()->GetUseDirectionCosines() );
+    infoChanger->SetInput( movingRigidityReader->GetOutput() );
+
     /** Do the reading. */
     try
     {
-      movingRigidityReader->Update();
+      infoChanger->Update();
     }
     catch( ExceptionObject & excp )
     {
@@ -103,7 +124,7 @@ TransformRigidityPenalty<TElastix>
     }
 
     /** Set the moving rigidity image into the superclass. */
-    this->SetMovingRigidityImage( movingRigidityReader->GetOutput() );
+    this->SetMovingRigidityImage( infoChanger->GetOutput() );
   }
   else
   {

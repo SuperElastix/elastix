@@ -17,7 +17,6 @@
 
 #include "elxKNNGraphAlphaMutualInformationMetric.h"
 
-#include "itkImageFileReader.h"
 #include "itkBSplineInterpolateImageFunction.h"
 
 #include <string>

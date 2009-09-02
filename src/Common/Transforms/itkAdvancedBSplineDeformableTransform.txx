@@ -150,7 +150,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 
   this->m_IndexToPoint = this->m_GridDirection * scale;
   this->m_PointToIndexMatrix = this->m_IndexToPoint.GetInverse();
-  
+  this->m_PointToIndexMatrixTransposed = this->m_PointToIndexMatrix.GetTranspose();
+   
   this->m_LastJacobianIndex = this->m_ValidRegion.GetIndex();
   
 }
@@ -298,6 +299,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 
     this->m_IndexToPoint = this->m_GridDirection * scale;
     this->m_PointToIndexMatrix = this->m_IndexToPoint.GetInverse();
+    this->m_PointToIndexMatrixTransposed = this->m_PointToIndexMatrix.GetTranspose();
 
     this->Modified();
     }
@@ -329,6 +331,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 
     this->m_IndexToPoint = this->m_GridDirection * scale;
     this->m_PointToIndexMatrix = this->m_IndexToPoint.GetInverse();
+    this->m_PointToIndexMatrixTransposed = this->m_PointToIndexMatrix.GetTranspose();
 
     this->Modified();
     }
@@ -1191,10 +1194,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   {
     /** Compute the derivative weights. */
     this->m_DerivativeWeightsFunctions[ i ]->Evaluate( cindex, supportIndex, weights );
-
-    /** Get the grid spacing division factor for this dimension. */
-    ScalarType sp = this->m_GridSpacing[ i ];
-
+    
     /** Compute the spatial Jacobian sj:
      *    dT_{dim} / dx_i = \sum coefs_{dim} * weights.
      */
@@ -1217,10 +1217,13 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       }
 
       /** Update the spatial Jacobian sj. */
-      sj( dim, i ) += sum / sp;
+      sj( dim, i ) += sum;
 
     } // end for dim
   } // end for i
+
+  /** Take into account grid spacing and direction cosines. */
+  sj = sj * this->m_PointToIndexMatrix;
 
 } // end GetSpatialJacobian()
 
@@ -1285,10 +1288,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       /** Compute the derivative weights. */
       this->m_SODerivativeWeightsFunctions[ i ][ j ]
         ->Evaluate( cindex, supportIndex, weights );
-
-      /** Get the grid spacing division factor for this dimension. */
-      ScalarType sp = this->m_GridSpacing[ i ] * this->m_GridSpacing[ j ];
-
+     
       /** Compute d^2T_{dim} / dx_i dx_j = \sum coefs_{dim} * weights. */
       for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
       {
@@ -1307,10 +1307,16 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
         }
         
         /** Update the spatial Hessian sh. The Hessian is symmetrical. */
-        sh[ dim ][ i ][ j ] = sum / sp;
-        sh[ dim ][ j ][ i ] = sum / sp;
+        sh[ dim ][ i ][ j ] = sum;
+        sh[ dim ][ j ][ i ] = sum;
       }
     }
+  }
+
+  /** Take into account grid spacing and direction matrix */
+  for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+  {
+    sh[dim] = this->m_PointToIndexMatrixTransposed * ( sh[dim] * this->m_PointToIndexMatrix );
   }
 
 } // end GetSpatialHessian()
@@ -1399,14 +1405,19 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   {
     for ( unsigned int i = 0; i < SpaceDimension; ++i )
     {
-      double tmp = *( weightVector + i * numberOfWeights + mu )
-        / this->m_GridSpacing[ i ];
+      double tmp = *( weightVector + i * numberOfWeights + mu );
       for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
       {
         (*( basepointer + dim * numberOfWeights + mu ))( dim, i ) = tmp;
       }
     }
   }
+
+  /** Take into account grid spacing and direction cosines */
+  for ( unsigned int i = 0; i < jsj.size(); ++i )
+  {
+    jsj[ i ] = jsj[ i ] * this->m_PointToIndexMatrix;
+  }     
 
   /** Compute the nonzero Jacobian indices. */
   this->ComputeNonZeroJacobianIndices( nonZeroJacobianIndices, supportRegion );
@@ -1490,9 +1501,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     /** \todo: we can realise some speedup here to compute the derivative
      * weights at once for all dimensions */
 
-    /** Get the grid spacing division factor for this dimension. */
-    ScalarType sp = this->m_GridSpacing[ i ];
-
     /** Remember the weights. */
     memcpy( weightVector + i * numberOfWeights,
       weights.data_block(), numberOfWeights * sizeof( double ) );
@@ -1519,10 +1527,13 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       }
 
       /** Update the spatial Jacobian sj. */
-      sj( dim, i ) += sum / sp;
+      sj( dim, i ) += sum;
 
     } // end for dim
   } // end for i
+
+  /** Take into account grid spacing and direction cosines. */
+  sj = sj * this->m_PointToIndexMatrix ;
 
   /** Compute the Jacobian of the spatial Jacobian jsj:
    *    d/dmu dT_{dim} / dx_i = weights.
@@ -1532,13 +1543,18 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   {
     for ( unsigned int i = 0; i < SpaceDimension; ++i )
     {
-      double tmp = *( weightVector + i * numberOfWeights + mu )
-        / this->m_GridSpacing[ i ];
+      double tmp = *( weightVector + i * numberOfWeights + mu );
       for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
       {
         (*( basepointer + dim * numberOfWeights + mu ))( dim, i ) = tmp;
       }
     }
+  }
+
+  /** Take into account grid spacing and direction cosines */
+  for ( unsigned int i = 0; i < jsj.size(); ++i )
+  {
+    jsj[ i ] = jsj[ i ] * this->m_PointToIndexMatrix;
   }
 
   /** Compute the nonzero Jacobian indices. */
@@ -1639,11 +1655,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     for ( unsigned int i = 0; i < SpaceDimension; ++i )
     {
       for ( unsigned int j = 0; j <= i; ++j )
-      {
-        /** Get the grid spacing division factor for this dimension. */
-        ScalarType sp = this->m_GridSpacing[ i ] * this->m_GridSpacing[ j ];
-
-        double tmp = weightVector[ count ][ mu ] / sp;
+      {        
+        double tmp = weightVector[ count ][ mu ];
         matrix[ i ][ j ] = tmp;
         if ( i != j ) matrix[ j ][ i ] = tmp;
         ++count;
@@ -1653,6 +1666,15 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
       (*(basepointer + mu + dim * numberOfWeights))[ dim ] = matrix;
+    }
+  }
+
+  /** Take into account grid spacing and direction matrix */
+  for ( unsigned int i = 0; i < jsh.size(); ++i )
+  {
+    for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+    {
+      jsh[i][dim] = this->m_PointToIndexMatrixTransposed * ( jsh[i][dim] * this->m_PointToIndexMatrix );
     }
   }
 
@@ -1772,10 +1794,9 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
           ++itCoef;
         }
         
-        /** Update the spatial Hessian sh. The Hessian is symmetrical. */
-        ScalarType sp = this->m_GridSpacing[ i ] * this->m_GridSpacing[ j ];
-        sh[ dim ]( i, j ) = sum / sp;
-        sh[ dim ]( j, i ) = sum / sp;
+        /** Update the spatial Hessian sh. The Hessian is symmetrical. */        
+        sh[ dim ]( i, j ) = sum;
+        sh[ dim ]( j, i ) = sum;
       }
 
     } // end for j
@@ -1793,11 +1814,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     {
       for ( unsigned int j = 0; j <= i; ++j )
       {
-        /** Get the grid spacing division factor for this dimension. */
-        ScalarType sp = this->m_GridSpacing[ i ] * this->m_GridSpacing[ j ];
-
-        double tmp = *( weightVector + count * numberOfWeights + mu ) / sp;
-        //double tmp = weightVector[ count ][ mu ] / sp;
+        double tmp = *( weightVector + count * numberOfWeights + mu );
+        //double tmp = weightVector[ count ][ mu ];
         matrix[ i ][ j ] = tmp;
         if ( i != j ) matrix[ j ][ i ] = tmp;
         ++count;
@@ -1807,6 +1825,19 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
       (*(basepointer + mu + dim * numberOfWeights))[ dim ] = matrix;
+    }
+  }
+
+  /** Take into account grid spacing and direction matrix */  
+  for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+  {
+    sh[dim] = this->m_PointToIndexMatrixTransposed * ( sh[dim] * this->m_PointToIndexMatrix );
+  }
+  for ( unsigned int i = 0; i < jsh.size(); ++i )
+  {
+    for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+    {
+      jsh[i][dim] = this->m_PointToIndexMatrixTransposed * ( jsh[i][dim] * this->m_PointToIndexMatrix );
     }
   }
 

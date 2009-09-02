@@ -173,29 +173,32 @@ int ElastixTemplate<TFixedImage, TMovingImage>
   elxout << "\nReading images..." << std::endl;
 
   /** Read images and masks, if not set already. */
+  const bool useDirCos = this->GetUseDirectionCosines();
+  FixedImageDirectionType fixDirCos;
   if ( this->GetFixedImage() == 0 )
   {
     this->SetFixedImageContainer( 
       FixedImageLoaderType::GenerateImageContainer(
-      this->GetFixedImageFileNameContainer(), "Fixed Image" )  );
+      this->GetFixedImageFileNameContainer(), "Fixed Image", useDirCos, &fixDirCos )  );
+    this->SetOriginalFixedImageDirection( fixDirCos );
   }
   if ( this->GetMovingImage() == 0 )
   {
     this->SetMovingImageContainer( 
       MovingImageLoaderType::GenerateImageContainer(
-      this->GetMovingImageFileNameContainer(), "Moving Image" )  );
+      this->GetMovingImageFileNameContainer(), "Moving Image", useDirCos )  );
   }
   if ( this->GetFixedMask() == 0 )
   {
     this->SetFixedMaskContainer( 
       FixedMaskLoaderType::GenerateImageContainer(
-      this->GetFixedMaskFileNameContainer(), "Fixed Mask" )  );
+      this->GetFixedMaskFileNameContainer(), "Fixed Mask", useDirCos )  );
   }
   if ( this->GetMovingMask() == 0 )
   {
     this->SetMovingMaskContainer( 
       MovingMaskLoaderType::GenerateImageContainer(
-      this->GetMovingMaskFileNameContainer(), "Moving Mask" )  );
+      this->GetMovingMaskFileNameContainer(), "Moving Mask", useDirCos )  );
   }
 
   /** Print the time spent on reading images. */
@@ -289,11 +292,12 @@ int ElastixTemplate<TFixedImage, TMovingImage>
     elxout << std::endl << "Reading input image ..." << std::endl;
 
     /** Load the image from disk, if it wasn't set already by the user. */
+    const bool useDirCos = this->GetUseDirectionCosines();
     if ( this->GetMovingImage() == 0 )
     {
       this->SetMovingImageContainer(
         MovingImageLoaderType::GenerateImageContainer(
-        this->GetMovingImageFileNameContainer(), "Input Image" ) );
+        this->GetMovingImageFileNameContainer(), "Input Image", useDirCos ) );
     } // end if !moving image
 
     /** Tell the user. */
@@ -959,6 +963,79 @@ void ElastixTemplate<TFixedImage, TMovingImage>
   }
 
 } // end OpenIterationInfoFile()
+
+
+/**
+ * ************** GetOriginalFixedImageDirection *********************
+ * Determine the original fixed image direction (it might have been
+ * set to identity by setting the UseDirectionCosines option to false).
+ * This function retrieves the true direction cosines.
+ */
+
+template <class TFixedImage, class TMovingImage>
+bool ElastixTemplate<TFixedImage, TMovingImage>
+::GetOriginalFixedImageDirection( FixedImageDirectionType & direction ) const
+{
+  typedef typename FixedImageLoaderType::ChangeInfoFilterType ChangerType;
+  if ( this->GetFixedImage() == 0 )
+  {
+    /** Try to read direction cosines from (transform-)parameter file. */
+    bool retdc = true;
+    FixedImageDirectionType directionRead = direction;    
+    for ( unsigned int i = 0; i < FixedDimension; i++ )
+    {
+      for ( unsigned int j = 0; j < FixedDimension; j++ )
+      {
+        retdc &= this->m_Configuration->ReadParameter( directionRead( j, i ),
+          "Direction", i * FixedDimension + j, false );        
+      }
+    }
+    if (retdc)
+    {
+      direction = directionRead;
+    }
+    return retdc;
+  }
+
+  /** Only trust this when the fixed image exists. */
+  if ( this->m_OriginalFixedImageDirection.size() ==
+    FixedDimension * FixedDimension )
+  {
+    for ( unsigned int i = 0; i < FixedDimension; i++ )
+    {
+      for ( unsigned int j = 0; j < FixedDimension; j++ )
+      {
+        direction(j,i) = this->m_OriginalFixedImageDirection[ i * FixedDimension + j ];
+      }
+    }
+    return true;
+  }
+  else
+  {
+    return false;
+  }  
+} // end GetOriginalFixedImageDirection()
+
+
+/**
+ * ************** SetOriginalFixedImageDirection ********************* 
+ */
+
+template <class TFixedImage, class TMovingImage>
+void ElastixTemplate<TFixedImage, TMovingImage>
+::SetOriginalFixedImageDirection( const FixedImageDirectionType & arg )
+{
+  /** flatten to 1d array */
+  this->m_OriginalFixedImageDirection.resize( FixedDimension * FixedDimension );
+  for ( unsigned int i = 0; i < FixedDimension; i++ )
+  {
+    for ( unsigned int j = 0; j < FixedDimension; j++ )
+    {
+      this->m_OriginalFixedImageDirection[ i * FixedDimension + j ] = arg(j,i);
+    }
+  }
+
+} // end SetOriginalFixedImageDirection()
 
 } // end namespace elastix
 

@@ -28,6 +28,7 @@
 #include "itkImageFileWriter.h"
 #include "itkImageGridSampler.h"
 #include "itkContinuousIndex.h"
+#include "itkChangeInformationImageFilter.h"
 
 namespace elastix
 {
@@ -675,8 +676,12 @@ void TransformBase<TElastix>
     this->m_Elastix->GetFixedImage()->GetSpacing();
   FixedImageOriginType origin = 
     this->m_Elastix->GetFixedImage()->GetOrigin();
-  FixedImageDirectionType direction = 
-    this->m_Elastix->GetFixedImage()->GetDirection();
+  /** The following line would be logically: */
+  //FixedImageDirectionType direction = 
+  //  this->m_Elastix->GetFixedImage()->GetDirection();
+  /** But to support the UseDirectionCosines option, we should do it like this: */
+  FixedImageDirectionType direction;
+  this->GetElastix()->GetOriginalFixedImageDirection( direction );
 
   /** Write image Size. */
   xout["transpar"] << "(Size ";
@@ -725,9 +730,19 @@ void TransformBase<TElastix>
     }
   }
   xout["transpar"] << ")" << std::endl;
-
+  
   /** Set the precision back to default value. */
   xout["transpar"] << std::setprecision( this->m_Elastix->GetDefaultOutputPrecision() );
+
+  /** Write whether the direction cosines should be taken into account. 
+   * This parameter is written from elastix 4.203. */
+  std::string useDirectionCosinesBool = "false";
+  if ( this->GetElastix()->GetUseDirectionCosines() )
+  {
+    useDirectionCosinesBool = "true";
+  }
+  xout["transpar"] << "(UseDirectionCosines \""
+    << useDirectionCosinesBool << "\")" << std::endl;
 
 } // end WriteToFile()
 
@@ -812,6 +827,7 @@ TransformBase<TElastix>
     itk::ContinuousIndex<double, FixedImageDimension>   FixedImageContinuousIndexType;
   typedef 
     itk::ContinuousIndex<double, MovingImageDimension>  MovingImageContinuousIndexType;
+  typedef typename FixedImageType::DirectionType        FixedImageDirectionType;
 
   typedef bool                                          DummyIPPPixelType;
   typedef itk::DefaultStaticMeshTraits<
@@ -864,12 +880,15 @@ TransformBase<TElastix>
 
   /** Make a temporary image with the right region info,
    * which we can use to convert between points and indices.
-   */
+   * By taking the image from the resampler output, the UseDirectionCosines
+   * parameter is automatically taken into account. */
   FixedImageRegionType region;
   FixedImageOriginType origin = 
     this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputOrigin();
   FixedImageSpacingType spacing =
     this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputSpacing();
+  FixedImageDirectionType direction = 
+    this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputDirection();
   region.SetIndex(
     this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputStartIndex() );
   region.SetSize(
@@ -879,7 +898,8 @@ TransformBase<TElastix>
   dummyImage->SetRegions( region );
   dummyImage->SetOrigin( origin );
   dummyImage->SetSpacing( spacing );
-
+  dummyImage->SetDirection( direction );
+  
   /** Temp vars */
   FixedImageContinuousIndexType fixedcindex;
   MovingImageContinuousIndexType movingcindex;
@@ -1044,6 +1064,7 @@ void TransformBase<TElastix>
 {
   /** Typedef's. */
   typedef typename FixedImageType::RegionType         FixedImageRegionType;
+  typedef typename FixedImageType::DirectionType      FixedImageDirectionType;
   typedef itk::Vector<
     float, FixedImageDimension >                      VectorPixelType;
   typedef itk::Image<
@@ -1051,6 +1072,8 @@ void TransformBase<TElastix>
   typedef typename DeformationFieldImageType::Pointer DeformationFieldImagePointer;
   typedef itk::TransformToDeformationFieldSource<
     DeformationFieldImageType, CoordRepType >         DeformationFieldGeneratorType;
+  typedef itk::ChangeInformationImageFilter<
+    DeformationFieldImageType >                       ChangeInfoFilterType;
   typedef itk::ImageFileWriter<
     DeformationFieldImageType >                       DeformationFieldWriterType;
 
@@ -1069,6 +1092,16 @@ void TransformBase<TElastix>
     this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputDirection() );
   defGenerator->SetTransform( const_cast<const ITKBaseType *>( this->GetAsITKBaseType() ) );
 
+  /** Possibly change direction cosines to their original value, as specified
+   * in the tp-file, or by the fixed image. This is only necessary when 
+   * the UseDirectionCosines flag was set to false. */
+  typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
+  FixedImageDirectionType originalDirection;
+  bool retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
+  infoChanger->SetOutputDirection( originalDirection );
+  infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
+  infoChanger->SetInput( defGenerator->GetOutput() );
+
   /** Track the progress of the generation of the deformation field. */
   typename ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
   progressObserver->ConnectObserver( defGenerator );
@@ -1085,7 +1118,7 @@ void TransformBase<TElastix>
   /** Write outputImage to disk. */
   typename DeformationFieldWriterType::Pointer defWriter
     = DeformationFieldWriterType::New();
-  defWriter->SetInput( defGenerator->GetOutput() );
+  defWriter->SetInput( infoChanger->GetOutput() );
   defWriter->SetFileName( makeFileName.str().c_str() );
 
   /** Do the writing. */
@@ -1134,6 +1167,9 @@ TransformBase<TElastix>
   typedef itk::TransformToDeterminantOfSpatialJacobianSource<
     JacobianImageType, CoordRepType >                 JacobianGeneratorType;
   typedef itk::ImageFileWriter< JacobianImageType >   JacobianWriterType;
+  typedef itk::ChangeInformationImageFilter<
+    JacobianImageType >                               ChangeInfoFilterType;
+  typedef typename FixedImageType::DirectionType      FixedImageDirectionType;
 
   /** Create an setup Jacobian generator. */
   typename JacobianGeneratorType::Pointer jacGenerator = JacobianGeneratorType::New();
@@ -1153,6 +1189,16 @@ TransformBase<TElastix>
   //   jacGenerator->SetOutputParametersFromImage(
   //     this->GetRegistration()->GetAsITKBaseType()->GetFixedImage() );
 
+  /** Possibly change direction cosines to their original value, as specified
+   * in the tp-file, or by the fixed image. This is only necessary when 
+   * the UseDirectionCosines flag was set to false. */
+  typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
+  FixedImageDirectionType originalDirection;
+  bool retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
+  infoChanger->SetOutputDirection( originalDirection );
+  infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
+  infoChanger->SetInput( jacGenerator->GetOutput() );
+
   /** Track the progress of the generation of the deformation field. */
   typename ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
   progressObserver->ConnectObserver( jacGenerator );
@@ -1168,7 +1214,7 @@ TransformBase<TElastix>
 
   /** Write outputImage to disk. */
   typename JacobianWriterType::Pointer jacWriter = JacobianWriterType::New();
-  jacWriter->SetInput( jacGenerator->GetOutput() );
+  jacWriter->SetInput( infoChanger->GetOutput() );
   jacWriter->SetFileName( makeFileName.str().c_str() );
 
   /** Do the writing. */

@@ -60,6 +60,7 @@ public:
   typedef typename ImageBaseType::PointType     PointType;
   typedef typename ImageBaseType::PointType     OriginType;
   typedef typename ImageBaseType::SpacingType   SpacingType;
+  typedef typename ImageBaseType::DirectionType DirectionType;
   typedef typename ImageBaseType::SizeType      SizeType;
   typedef typename ImageBaseType::SizeValueType SizeValueType;
   typedef typename ImageBaseType::RegionType    RegionType;

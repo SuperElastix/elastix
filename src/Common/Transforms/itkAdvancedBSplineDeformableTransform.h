@@ -515,6 +515,7 @@ protected:
   GridOffsetType  m_GridOffsetTable;
 
   DirectionType   m_PointToIndexMatrix;
+  DirectionType   m_PointToIndexMatrixTransposed;
   DirectionType   m_IndexToPoint;
 
   RegionType      m_ValidRegion;

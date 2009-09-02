@@ -87,7 +87,17 @@ namespace elastix
       transformInitializer->SetMovingImage(
         this->m_Registration->GetAsITKBaseType()->GetMovingImage() );
       transformInitializer->SetTransform(this->m_TranslationTransform);
+
+      /** Select the method of initialization. Default: "GeometricalCenter". */
       transformInitializer->GeometryOn();
+      std::string method = "GeometricalCenter";
+      this->m_Configuration->ReadParameter( method,
+        "AutomaticTransformInitializationMethod", 0 );
+      if ( method == "CenterOfGravity" )
+      {
+        transformInitializer->MomentsOn();
+      }
+     
       transformInitializer->InitializeTransform();
     }
 

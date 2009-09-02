@@ -337,25 +337,47 @@ namespace itk
 
       this->UpdateAllMasks();
 
-      /** Get the indices of the bounding box extremes.
+      /** Get the indices of the bounding box extremes, based on the first mask.
        * Note that the bounding box is defined in terms of the mask
        * spacing and origin, and that we need a region in terms
-       * of the inputImage.
+       * of the inputImage indices.
        */
-      InputImageIndexType min, max;
-      inputImage->TransformPhysicalPointToIndex(
-        this->m_Mask->GetBoundingBox()->GetMinimum(), min );
-      inputImage->TransformPhysicalPointToIndex(
-        this->m_Mask->GetBoundingBox()->GetMaximum(), max );
+      
+      typedef typename MaskType::BoundingBoxType BoundingBoxType;
+      typedef typename BoundingBoxType::PointsContainer PointsContainerType;
+      typename BoundingBoxType::Pointer bb = this->m_Mask->GetBoundingBox();
+      typename BoundingBoxType::Pointer bbIndex = BoundingBoxType::New();
+      const PointsContainerType* cornersWorld = bb->GetPoints();      
+      typename PointsContainerType::Pointer cornersIndex = PointsContainerType::New();
+      cornersIndex->Reserve( cornersWorld->Size() );
+      typename PointsContainerType::const_iterator itCW = cornersWorld->begin();
+      typename PointsContainerType::iterator itCI = cornersIndex->begin();      
+      typedef itk::ContinuousIndex< 
+        InputImagePointValueType, InputImageDimension > CIndexType;
+      CIndexType cindex;
+      while(itCW != cornersWorld->end())
+      {
+        inputImage->TransformPhysicalPointToContinuousIndex(*itCW, cindex);
+        *itCI = cindex;        
+        itCI++;
+        itCW++;
+      }      
+      bbIndex->SetPoints( cornersIndex );
+      bbIndex->ComputeBoundingBox();
 
       /** Create a bounding box region. */
-      InputImageRegionType boundingBoxRegion;
+      InputImageIndexType minIndex, maxIndex;
       InputImageSizeType size;
+      InputImageRegionType boundingBoxRegion;
       for ( unsigned int i = 0; i < InputImageDimension; ++i )
       {
-        size[ i ] = max[ i ] - min[ i ] + 1;
+        /** apply ceil/floor for max/min resp. to be sure that 
+         * the bounding box is not too small */
+        maxIndex[i] = vcl_ceil( bbIndex->GetMaximum()[i] );
+        minIndex[i] = vcl_floor( bbIndex->GetMinimum()[i] );
+        size[i] = maxIndex[i] - minIndex[i] + 1;
       }
-      boundingBoxRegion.SetIndex( min );
+      boundingBoxRegion.SetIndex( minIndex );
       boundingBoxRegion.SetSize( size );
 
       /** Compute the intersection. */

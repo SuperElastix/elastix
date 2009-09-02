@@ -100,6 +100,8 @@ namespace itk
     
   protected:
 
+    typedef typename InterpolatorType::ContinuousIndexType   InputImageContinuousIndexType;
+
     /** The constructor. */
     ImageRandomCoordinateSampler();
     /** The destructor. */
@@ -114,9 +116,9 @@ namespace itk
     /** Generate a point randomly in a bounding box.
      * This method can be overwritten in subclasses if a different distribution is desired. */
     virtual void GenerateRandomCoordinate(
-      const InputImagePointType & smallestPoint,
-      const InputImagePointType & largestPoint,
-      InputImagePointType &       randomPoint);
+      const InputImageContinuousIndexType & smallestContIndex,
+      const InputImageContinuousIndexType & largestContIndex,
+      InputImageContinuousIndexType &       randomContIndex);
 
     typename InterpolatorType::Pointer    m_Interpolator;
     typename RandomGeneratorType::Pointer m_RandomGenerator;
@@ -128,10 +130,10 @@ namespace itk
      * Otherwise, the midpoint of the sample region is randomly selected and 
      * the two corners are computed using the SampleRegionSize */
     virtual void GenerateSampleRegion(
-      const InputImagePointType & smallestImagePoint,
-      const InputImagePointType & largestImagePoint,
-      InputImagePointType & smallestPoint,
-      InputImagePointType & largestPoint );
+      const InputImageContinuousIndexType & smallestImageContIndex,
+      const InputImageContinuousIndexType & largestImageContIndex,
+      InputImageContinuousIndexType & smallestContIndex,
+      InputImageContinuousIndexType & largestContIndex );
             
   private:
 

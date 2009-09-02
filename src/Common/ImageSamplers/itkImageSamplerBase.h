@@ -93,7 +93,8 @@ namespace itk
     /** Set the masks. */
     virtual void SetMask( const MaskType *_arg, unsigned int pos );
 
-    /** Set the first mask. */
+    /** Set the first mask. NB: the first mask is used to 
+     * compute a bounding box in which samples are considered. */
     virtual void SetMask( const MaskType *_arg )
     {
       this->SetMask( _arg, 0 );

@@ -151,6 +151,8 @@ using namespace itk;
       this->GetElastix()->GetFixedImage()->GetOrigin() );
     this->m_GridScheduleComputer->SetImageSpacing(
       this->GetElastix()->GetFixedImage()->GetSpacing() );
+    this->m_GridScheduleComputer->SetImageDirection(
+      this->GetElastix()->GetFixedImage()->GetDirection() );
     this->m_GridScheduleComputer->SetImageRegion(
       this->GetElastix()->GetFixedImage()->GetLargestPossibleRegion() );
 
@@ -221,9 +223,6 @@ using namespace itk;
       nrOfResolutions, 2.0 );
     GridScheduleType gridSchedule;
     this->m_GridScheduleComputer->GetSchedule( gridSchedule );
-    
-    /** Get the deprecated UpsampleGridOption. */
-    this->ComputeGridSchedule_Deprecated( gridSchedule );
     
     /** Read what the user has specified. This overrules everything. */
     unsigned int count = this->m_Configuration->
@@ -300,13 +299,15 @@ using namespace itk;
     RegionType gridRegion;
     OriginType gridOrigin;
     SpacingType gridSpacing;
+    DirectionType gridDirection;
     this->m_GridScheduleComputer->GetBSplineGrid( 0,
-      gridRegion, gridSpacing, gridOrigin );
+      gridRegion, gridSpacing, gridOrigin, gridDirection );
 
     /** Set it in the BSplineTransform. */
     this->m_CyclicBSplineTransform->SetGridRegion( gridRegion );
     this->m_CyclicBSplineTransform->SetGridSpacing( gridSpacing );
     this->m_CyclicBSplineTransform->SetGridOrigin( gridOrigin );
+    this->m_CyclicBSplineTransform->SetGridDirection( gridDirection );
 
     /** Set initial parameters for the first resolution to 0.0. */
     ParametersType initialParameters( this->GetNumberOfParameters() );
@@ -335,13 +336,15 @@ using namespace itk;
     OriginType  currentGridOrigin  = this->m_CyclicBSplineTransform->GetGridOrigin();
     SpacingType currentGridSpacing = this->m_CyclicBSplineTransform->GetGridSpacing();
     RegionType  currentGridRegion  = this->m_CyclicBSplineTransform->GetGridRegion();
+    DirectionType currentGridDirection = this->m_CyclicBSplineTransform->GetGridDirection();
 
     /** The new required grid. */
     OriginType  requiredGridOrigin;
     SpacingType requiredGridSpacing;
     RegionType  requiredGridRegion;
+    DirectionType requiredGridDirection;
     this->m_GridScheduleComputer->GetBSplineGrid( level,
-      requiredGridRegion, requiredGridSpacing, requiredGridOrigin );
+      requiredGridRegion, requiredGridSpacing, requiredGridOrigin, requiredGridDirection );
 
     /** Get the latest transform parameters. */
     ParametersType latestParameters =
@@ -351,9 +354,11 @@ using namespace itk;
     this->m_GridUpsampler->SetCurrentGridOrigin( currentGridOrigin );
     this->m_GridUpsampler->SetCurrentGridSpacing( currentGridSpacing );
     this->m_GridUpsampler->SetCurrentGridRegion( currentGridRegion );
+    this->m_GridUpsampler->SetCurrentGridDirection( currentGridDirection );
     this->m_GridUpsampler->SetRequiredGridOrigin( requiredGridOrigin );
     this->m_GridUpsampler->SetRequiredGridSpacing( requiredGridSpacing );
     this->m_GridUpsampler->SetRequiredGridRegion( requiredGridRegion );
+      this->m_GridUpsampler->SetRequiredGridDirection( requiredGridDirection );
 
     /** Compute the upsampled B-spline parameters. */
     ParametersType upsampledParameters;
@@ -363,6 +368,7 @@ using namespace itk;
     this->m_CyclicBSplineTransform->SetGridOrigin( requiredGridOrigin );
     this->m_CyclicBSplineTransform->SetGridSpacing( requiredGridSpacing );
     this->m_CyclicBSplineTransform->SetGridRegion( requiredGridRegion );
+    this->m_CyclicBSplineTransform->SetGridDirection( requiredGridDirection );  
 
     /** Set the initial parameters for the next level. */
     this->m_Registration->GetAsITKBaseType()->
@@ -392,12 +398,14 @@ using namespace itk;
     IndexType   gridindex;
     SpacingType gridspacing;
     OriginType  gridorigin;
+    DirectionType griddirection;
     
     /** Fill everything with default values. */
     gridsize.Fill( 1 );
     gridindex.Fill( 0 );
     gridspacing.Fill( 1.0 );
     gridorigin.Fill( 0.0 );
+    griddirection.SetIdentity();
 
     /** Get GridSize, GridIndex, GridSpacing and GridOrigin. */
     for ( unsigned int i = 0; i < SpaceDimension; i++ )
@@ -406,6 +414,11 @@ using namespace itk;
       this->m_Configuration->ReadParameter( gridindex[ i ], "GridIndex", i );
       this->m_Configuration->ReadParameter( gridspacing[ i ], "GridSpacing", i );
       this->m_Configuration->ReadParameter( gridorigin[ i ], "GridOrigin", i );
+      for ( unsigned int j = 0; j < SpaceDimension; j++ )
+      {
+        this->m_Configuration->ReadParameter( griddirection( j, i),
+          "GridDirection", i * SpaceDimension + j );
+      } 
     }
     
     /** Set it all. */
@@ -414,6 +427,7 @@ using namespace itk;
     this->m_CyclicBSplineTransform->SetGridRegion( gridregion );
     this->m_CyclicBSplineTransform->SetGridSpacing( gridspacing );
     this->m_CyclicBSplineTransform->SetGridOrigin( gridorigin );
+    this->m_CyclicBSplineTransform->SetGridDirection( griddirection );
 
     /** Call the ReadFromFile from the TransformBase.
      * This must be done after setting the Grid, because later the
@@ -442,13 +456,13 @@ using namespace itk;
     /** Add some BSplineTransform specific lines. */
     xout["transpar"] << std::endl << "// BSplineTransform specific" << std::endl;
 
-    /** Get the GridSize, GridIndex, GridSpacing and
-     * GridOrigin of this transform.
-     */
+    /** Get the GridSize, GridIndex, GridSpacing,
+     * GridOrigin, and GridDirection of this transform. */
     SizeType size = this->m_CyclicBSplineTransform->GetGridRegion().GetSize();
     IndexType index = this->m_CyclicBSplineTransform->GetGridRegion().GetIndex();
     SpacingType spacing = this->m_CyclicBSplineTransform->GetGridSpacing();
     OriginType origin = this->m_CyclicBSplineTransform->GetGridOrigin();
+    DirectionType direction = this->m_CyclicBSplineTransform->GetGridDirection();
 
     /** Write the GridSize of this transform. */
     xout["transpar"] << "(GridSize ";
@@ -487,92 +501,22 @@ using namespace itk;
     }
     xout["transpar"] << origin[ SpaceDimension - 1 ] << ")" << std::endl;
 
+    /** Write the GridDirection of this transform. */
+    xout["transpar"] << "(GridDirection";
+    for ( unsigned int i = 0; i < SpaceDimension; i++ )
+    {
+      for ( unsigned int j = 0; j < SpaceDimension; j++ )
+      {
+        xout["transpar"] << " " << direction(j,i);
+      }
+    }
+    xout["transpar"] << ")" << std::endl;
+
     /** Set the precision back to default value. */
     xout["transpar"] << std::setprecision(
       this->m_Elastix->GetDefaultOutputPrecision() );
 
   } // end WriteToFile()
-
-  
-  /**
-   * ******************** ComputeGridSchedule_Deprecated *********************
-   *
-   * Computes schedule using UpsampleGridOption.
-   */
-
-  template <class TElastix>
-    void
-    CyclicBSplineTransform<TElastix>
-    ::ComputeGridSchedule_Deprecated( GridScheduleType & schedule )
-  {
-    unsigned int count = this->m_Configuration->
-      CountNumberOfParameterEntries( "UpsampleGridOption" );
-    if ( count == 0 )
-    {
-      return;
-    }
-    
-    /** If multigrid, then start with a lower resolution grid.
-     * First, we have to find out what the resolution is for the initial grid,
-     * i.e. the grid in the first resolution. This depends on the number of times
-     * the grid has to be upsampled. The user can specify this amount with the
-     * option "UpsampleGridOption".
-     * - In case the user specifies only one such option
-     * it is assumed that between all resolutions upsampling is needed or not.
-     * This is also in line with former API (backwards compatability):
-     *    (UpsampleGridOption "true") or (UpsampleGridOption "false")
-     * In this case the factor is multiplied with 2^(nrOfResolutions - 1).
-     * - In the other case the user has to specify after each resolution
-     * whether or not the grid should be upsampled, i.e. (nrOfResolutions - 1)
-     * times. For 4 resolutions this is done as:
-     *    (UpsampleGridOption "true" "false" "true")
-     * In this case the factor is multiplied with 2^(# of true's).
-     * - In case nothing is given in the parameter-file, by default the
-     * option (UpsampleGridOption "true") is assumed.
-     */
-
-    /** Get the number of resolutions. */
-    int nrOfResolutions = static_cast<int>(
-      this->GetRegistration()->GetAsITKBaseType()->GetNumberOfLevels() );
-    unsigned int size = vnl_math_max( 1, nrOfResolutions - 1 );
-
-    /** Fill upsampleBSplineGridOption. */
-    bool tmp = true;
-    bool deprecatedused = false;
-    this->GetConfiguration()->ReadParameter( tmp, "UpsampleGridOption", 0 );
-    std::vector< bool > upsampleGridOption( size, tmp );
-    for ( unsigned int i = 1; static_cast<long>( i ) < nrOfResolutions - 1; ++i )
-    {
-      tmp = upsampleGridOption[ i ];
-      deprecatedused &= this->m_Configuration->ReadParameter(
-        tmp, "UpsampleGridOption", i );
-      upsampleGridOption[ i ] = tmp;
-    }
-
-    if ( deprecatedused )
-    {
-      /** This message was introduced in elastix 3.9. Actual deprecation can only be done
-       * after elastix 4.1 at least.
-       */
-      xl::xout["warning"] << "WARNING: deprecated parameter \"UpsampleGridOption\" used!\n"
-        << "This parameter is scheduled to be removed in a future release!\n"
-        << "Better use \"GridSpacingSchedule\" instead."
-        << std::endl;
-    }
-
-    /** Create a B-spline grid schedule using the upsample-grid-options. */
-    schedule[ nrOfResolutions - 1 ].Fill( 1.0 );
-    float factor = 1.0;
-    for ( int res = nrOfResolutions - 2; res > -1; --res )
-    {
-      if ( upsampleGridOption[ res ] )
-      {        
-        factor *= 2.0;
-      }      
-      schedule[ res ].Fill( factor );
-    }
-
-  } // end ComputeGridSchedule_Deprecated()
 
 
   /**

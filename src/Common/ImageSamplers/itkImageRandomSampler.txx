@@ -51,7 +51,10 @@ namespace itk
     /** Fill the sample container. */
     if ( mask.IsNull() )
     {
-      randIter.SetNumberOfSamples( this->GetNumberOfSamples() );
+      /** number of samples + 1, because of the initial ++randIter. */
+      randIter.SetNumberOfSamples( this->GetNumberOfSamples()+1 );
+      /** Advance one, in order to generate the same sequence as when using a mask */
+      ++randIter;
       for ( iter = sampleContainer->Begin(); iter != end; ++iter )
       {
         /** Get the index, transform it to the physical coordinates and put it in the sample. */
@@ -72,6 +75,7 @@ namespace itk
         mask->GetSource()->Update();
       }
       InputImagePointType inputPoint;
+      bool insideMask = false;
       /** Make sure we are not eternally trying to find samples: */
       randIter.SetNumberOfSamples( 10 * this->GetNumberOfSamples() );
       /** Loop over the sample container. */
@@ -96,14 +100,22 @@ namespace itk
           /** Get the index, and transform it to the physical coordinates. */
           InputImageIndexType index = randIter.GetIndex();
           inputImage->TransformIndexToPhysicalPoint( index, inputPoint );
-        } while ( !mask->IsInside( inputPoint ) );
+          /** Check if it's inside the mask. */
+          insideMask = mask->IsInside( inputPoint );
+        } while ( !insideMask );
 
         /** Put the coordinates and the value in the sample. */
         (*iter).Value().m_ImageCoordinates = inputPoint;
         (*iter).Value().m_ImageValue = randIter.Get();
         
       } // end for loop
+
+      /** Extra random sample to make sure the same sequence is generated
+       * with and without mask. */
+      ++randIter;
+
     } // end if mask
+    
 
   } // end GenerateData()
 

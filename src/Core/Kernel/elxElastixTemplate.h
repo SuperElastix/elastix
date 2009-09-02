@@ -148,6 +148,9 @@ public:
   typedef typename FixedMaskType::Pointer                           FixedMaskPointer;    
   typedef typename MovingMaskType::Pointer                          MovingMaskPointer;
 
+  /** Typedef for the UseDirectionCosines option. */
+  typedef typename FixedImageType::DirectionType                    FixedImageDirectionType;
+
   /** Type for representation of the transform coordinates. */
   typedef CostFunction::ParametersValueType   CoordRepType; // double
 
@@ -253,6 +256,12 @@ public:
   /** Get the name of the current transform parameter file. */
   itkGetStringMacro( CurrentTransformParameterFileName );
 
+  /** Get the original direction cosines of the fixed image. Returns
+   * false if it failed to determine the orignal fixed image direction. In
+   * that case the direction var is left unchanged. If no fixed image is
+   * present, it tries to read it from the parameter file. */
+  virtual bool GetOriginalFixedImageDirection( FixedImageDirectionType & direction ) const;
+
 protected:
 
   ElastixTemplate();
@@ -309,6 +318,9 @@ protected:
    * own function in the registration process.
    */
   virtual void ConfigureComponents( Self * This );
+
+  /** Set the direction in the superclass' m_OriginalFixedImageDirection variable */
+  virtual void SetOriginalFixedImageDirection( const FixedImageDirectionType & arg );
 
 private:
 

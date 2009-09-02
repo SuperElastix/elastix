@@ -26,6 +26,10 @@ namespace itk
  * \class GridScheduleComputer
  * \brief This class computes all information about the B-spline grid,
  * given the image information and the desired grid spacing.
+ * 
+ * NB: the Direction Cosines of the B-spline grid are set identical
+ * to the user-supplied ImageDirection if the 
+ * ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE macro is set.
  *
  * \ingroup 
  */
@@ -58,12 +62,14 @@ public:
   typedef typename ImageBaseType::PointType     PointType;
   typedef typename ImageBaseType::PointType     OriginType;
   typedef typename ImageBaseType::SpacingType   SpacingType;
+  typedef typename ImageBaseType::DirectionType DirectionType;
   typedef typename ImageBaseType::SizeType      SizeType;
   typedef typename ImageBaseType::SizeValueType SizeValueType;
   typedef typename ImageBaseType::RegionType    RegionType;
   typedef SpacingType                           GridSpacingFactorType;
   typedef std::vector< OriginType >             VectorOriginType;
   typedef std::vector< SpacingType >            VectorSpacingType;
+  typedef std::vector< DirectionType >          VectorDirectionType;
   typedef std::vector< RegionType >             VectorRegionType;
   typedef std::vector< GridSpacingFactorType >  VectorGridSpacingFactorType;
 
@@ -86,6 +92,12 @@ public:
 
   /** Get the ImageSpacing. */
   itkGetConstMacro( ImageSpacing, SpacingType );
+
+  /** Set the ImageDirection. */
+  itkSetMacro( ImageDirection, DirectionType );
+
+  /** Get the ImageDirection. */
+  itkGetConstMacro( ImageDirection, DirectionType );
 
   /** Set the ImageRegion. */
   itkSetMacro( ImageRegion, RegionType );
@@ -127,7 +139,8 @@ public:
   virtual void GetBSplineGrid( unsigned int level,
     RegionType & gridRegion,
     SpacingType & gridSpacing,
-    OriginType & gridOrigin );
+    OriginType & gridOrigin,
+    DirectionType & gridDirection );
 
 protected:
 
@@ -138,8 +151,9 @@ protected:
   virtual ~GridScheduleComputer() {};
 
   /** Declare member variables, needed for B-spline grid. */
-  VectorSpacingType     m_GridSpacings;
+  VectorSpacingType     m_GridSpacings;  
   VectorOriginType      m_GridOrigins;
+  VectorDirectionType   m_GridDirections;
   VectorRegionType      m_GridRegions;
   TransformConstPointer m_InitialTransform;
   VectorGridSpacingFactorType m_GridSpacingFactors;
@@ -154,6 +168,7 @@ protected:
   virtual void ApplyInitialTransform(
     OriginType & imageOrigin,
     SpacingType & imageSpacing,
+    DirectionType & imageDirection,
     SpacingType & finalGridSpacing ) const;
 
 private:
@@ -165,6 +180,7 @@ private:
   OriginType            m_ImageOrigin;
   SpacingType           m_ImageSpacing;
   RegionType            m_ImageRegion;
+  DirectionType         m_ImageDirection;
   unsigned int          m_BSplineOrder;
   unsigned int          m_NumberOfLevels;
   SpacingType           m_FinalGridSpacing;  

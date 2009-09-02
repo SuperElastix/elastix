@@ -151,6 +151,7 @@ public:
   typedef typename BSplineTransformType::SizeType         SizeType;
   typedef typename BSplineTransformType::SpacingType      SpacingType;
   typedef typename BSplineTransformType::OriginType       OriginType;
+  typedef typename BSplineTransformType::DirectionType    DirectionType;
   typedef typename 
     BSplineTransformType::BulkTransformType               BulkTransformType;
   typedef typename 

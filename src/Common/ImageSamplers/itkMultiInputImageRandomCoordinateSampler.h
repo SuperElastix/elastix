@@ -102,6 +102,8 @@ namespace itk
     
   protected:
 
+    typedef typename InterpolatorType::ContinuousIndexType   InputImageContinuousIndexType;
+
     /** The constructor. */
     MultiInputImageRandomCoordinateSampler();
 
@@ -117,9 +119,9 @@ namespace itk
     /** Generate a point randomly in a bounding box.
      * This method can be overwritten in subclasses if a different distribution is desired. */
     virtual void GenerateRandomCoordinate(
-      const InputImagePointType & smallestPoint,
-      const InputImagePointType & largestPoint,
-      InputImagePointType &       randomPoint);
+      const InputImageContinuousIndexType & smallestContIndex,
+      const InputImageContinuousIndexType & largestContIndex,
+      InputImageContinuousIndexType &       randomContIndex);
 
     typename InterpolatorType::Pointer    m_Interpolator;
     typename RandomGeneratorType::Pointer m_RandomGenerator;
@@ -127,8 +129,8 @@ namespace itk
 
     /** Generate the two corners of a sampling region. */
     virtual void GenerateSampleRegion(
-      InputImagePointType & smallestPoint,
-      InputImagePointType & largestPoint );
+      InputImageContinuousIndexType & smallestContIndex,
+      InputImageContinuousIndexType & largestContIndex );
             
   private:
 

@@ -56,6 +56,9 @@ using namespace itk;
    * deformation field arrow. Filtering of the deformation field is based
    * on some 'stiffness coefficient' image.
    *
+   * \todo: this Transform has not been tested for images with Direction cosines
+   * matrix other than the identity matrix.
+   *
    * \warning Using this transform in with the option
    * (HowToCombineTranforms "Compose"). May give unpredictable results.
    * Especially if the initial transformation is large. This is because

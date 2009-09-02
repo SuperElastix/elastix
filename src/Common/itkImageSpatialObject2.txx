@@ -48,12 +48,14 @@ ImageSpatialObject2< TDimension,  PixelType >
 ::ImageSpatialObject2()
 {
   this->SetTypeName("ImageSpatialObject2");
+  m_Image = ImageType::New();
   m_SlicePosition = new int[TDimension];
   for(unsigned int i=0;i<TDimension;i++)
     {
     m_SlicePosition[i]=0;
     }
 
+	this->ComputeBoundingBox();
   if(typeid(PixelType) == typeid(short))
     {
     m_PixelType = "short";
@@ -121,18 +123,16 @@ bool
 ImageSpatialObject2< TDimension,  PixelType >
 ::IsInside( const PointType & point) const
 {
-  this->ComputeLocalBoundingBox();
   if( !this->GetBounds()->IsInside(point) )
     {
     return false;
     }
     
-  if(!this->GetIndexToWorldTransform()->GetInverse(
-    const_cast<TransformType *>(this->GetInternalInverseTransform())))
+	if( !this->SetInternalInverseTransformToWorldToIndexTransform() )
     {
     return false;
     }
-
+  
   PointType transformedPoint =
     this->GetInternalInverseTransform()->TransformPoint(point);
 
@@ -144,7 +144,7 @@ ImageSpatialObject2< TDimension,  PixelType >
     {
     if( size[i] )
       {
-      //if( (transformedPoint[i] > size[i]) || (transformedPoint[i] < 0) ) // changed by stefan
+      //if( (transformedPoint[i] > size[i]) || (transformedPoint[i] < 0) ) // changed by SK
         if( (transformedPoint[i] > size[i]-1) || (transformedPoint[i] < 0) )
         {
         isInside = false;
@@ -197,13 +197,12 @@ ImageSpatialObject2< TDimension,  PixelType >
 {
   if( IsEvaluableAt( point, 0, name ) )
     {
-    typename TransformType::Pointer inverse = TransformType::New();
-    if(!this->GetIndexToWorldTransform()->GetInverse(inverse))
+    if( !this->SetInternalInverseTransformToWorldToIndexTransform() )
       {
       return false;
       }
 
-    PointType p = inverse->TransformPoint(point);
+    PointType p = this->GetInternalInverseTransform()->TransformPoint(point);
 
     typename InterpolatorType::ContinuousIndexType index;
     typedef typename InterpolatorType::OutputType InterpolatorOutputType;
@@ -215,17 +214,6 @@ ImageSpatialObject2< TDimension,  PixelType >
     value = static_cast<double>(
       DefaultConvertPixelTraits<InterpolatorOutputType>::GetScalarValue(
       m_Interpolator->EvaluateAtContinuousIndex(index)));
-
-    //IndexType index;
-    //for(unsigned int i=0; i<TDimension; i++)
-      //{
-      // index[i] = (int)p[i]; // changed by stefan
-        //index[i] = static_cast<int>( vnl_math_rnd( p[i] ) );
-      //}
-    
-    //value = static_cast<double>(
-      //DefaultConvertPixelTraits<PixelType>::GetScalarValue(
-      //m_Image->GetPixel(index)));
 
     return true;
     }
@@ -253,58 +241,47 @@ bool
 ImageSpatialObject2< TDimension,  PixelType >
 ::ComputeLocalBoundingBox() const
 {
-    if( this->GetBoundingBoxChildrenName().empty() 
-        || strstr(typeid(Self).name(),
-        this->GetBoundingBoxChildrenName().c_str()) )
+  if( this->GetBoundingBoxChildrenName().empty()
+      || strstr(typeid(Self).name(),
+                this->GetBoundingBoxChildrenName().c_str()) )
+    {
+    typename ImageType::RegionType region =
+      m_Image->GetLargestPossibleRegion();
+    itk::Size<TDimension> size = region.GetSize();
+    PointType pointLow,pointHigh;
+
+    unsigned int i;
+    for(i=0; i<TDimension; i++ )
       {
-      typename ImageType::RegionType region =
-        m_Image->GetLargestPossibleRegion();
-      itk::Size<TDimension> size = region.GetSize();
-      PointType pointLow,pointHigh;
-  
-      for( unsigned int i=0; i<TDimension; i++ )
-        {
-        pointLow[i] = 0;
-        //pointHigh[i] = size[i]; // changed by stefan
-        pointHigh[i] = size[i] - 1 ;
-        }
-
-      //pointLow = this->GetIndexToWorldTransform()->TransformPoint(pointLow);
-      //pointHigh = this->GetIndexToWorldTransform()->TransformPoint(pointHigh);
-
-      //const_cast<BoundingBoxType *>(this->GetBounds())->SetMinimum(pointLow);
-      //const_cast<BoundingBoxType *>(this->GetBounds())->SetMaximum(pointHigh);
-
-        typename BoundingBoxType::Pointer bb = BoundingBoxType::New();
-        bb->SetMinimum(pointLow);
-        bb->SetMaximum(pointHigh);
-        typedef typename BoundingBoxType::PointsContainer PointsContainerType;
-        const PointsContainerType* corners = bb->GetCorners();
-
-        typename PointsContainerType::const_iterator itC = corners->begin();
-        unsigned int c = 0;
-        while(itC != corners->end())
-        {
-          PointType transformedPoint = this->GetIndexToWorldTransform()->TransformPoint(*itC);
-          if(c == 0)
-          {
-            const_cast<BoundingBoxType *>(this->GetBounds())->SetMinimum(transformedPoint);
-          }
-          else if(c==1)
-          {
-            const_cast<BoundingBoxType *>(this->GetBounds())->SetMaximum(transformedPoint);
-          }
-          else
-          {
-            const_cast<BoundingBoxType *>(this->GetBounds())->ConsiderPoint(transformedPoint);
-          }
-          itC++;
-          c++;
-        }
-
-      return true;
+      pointLow[i] = 0;
+      pointHigh[i] = size[i] - 1; // changed by stefan: subtract -1
       }
-  
+
+    typename BoundingBoxType::Pointer bb = BoundingBoxType::New();
+    bb->SetMinimum(pointLow);
+    bb->SetMaximum(pointHigh);
+    typedef typename BoundingBoxType::PointsContainer PointsContainerType;
+    const PointsContainerType* corners = bb->GetCorners();
+
+    /** Take into account indextoworld transform: SK: itk implementation was buggy */
+    typename PointsContainerType::Pointer cornersWorld = PointsContainerType::New();
+    cornersWorld->Reserve( corners->Size() );
+    
+    typename PointsContainerType::const_iterator itC = corners->begin();
+    typename PointsContainerType::iterator itCW = cornersWorld->begin();
+    while(itC != corners->end())
+      {
+      PointType transformedPoint = this->GetIndexToWorldTransform()->TransformPoint(*itC);
+      *itCW = transformedPoint;
+      itCW++;
+      itC++;
+      }
+    const_cast<BoundingBoxType *>(this->GetBounds())->SetPoints(cornersWorld);
+    const_cast<BoundingBoxType *>(this->GetBounds())->ComputeBoundingBox();
+
+    return true;
+    }
+
   return false;
 }
 
@@ -314,31 +291,56 @@ void
 ImageSpatialObject2< TDimension,  PixelType >
 ::SetImage(const ImageType * image )
 {
-  if( !image )
+ if( !image )
     {
     return;
     }
-      
+
   m_Image = image;
-  typename TransformType::OffsetType offset; 
-  typename TransformType::OutputVectorType scaling; 
-  typename ImageType::PointType      origin; 
-  typename ImageType::SpacingType    spacing; 
-  
+  typename TransformType::OffsetType offset;
+  typename TransformType::MatrixType indexToObjectMatrix;
+  typename ImageType::PointType      origin;
+  typename ImageType::SpacingType    spacing;
+  typename ImageType::DirectionType  direction;
+  typename ImageType::IndexType      indexProbe;
+  typename ImageType::PointType      pointProbe;
+
   origin.Fill( 0 );
   spacing.Fill( 1.0 );
 
-  origin = m_Image->GetOrigin(); 
-  spacing = m_Image->GetSpacing(); 
-  for( unsigned int d=0; d<TDimension; d++) 
-    { 
-    scaling[d] = spacing[d]; 
-    offset[d]  = origin[d]; 
-    } 
-  this->GetIndexToObjectTransform()->SetScale( scaling ); 
-  this->GetIndexToObjectTransform()->SetOffset( offset ); 
-  this->ComputeObjectToParentTransform(); 
-  this->Modified(); 
+  origin = m_Image->GetOrigin();
+  spacing = m_Image->GetSpacing();
+  direction= m_Image->GetDirection();
+
+  for( unsigned int d=0; d<TDimension; d++)
+    {
+    offset[d]  = origin[d];
+
+    // Get the Image transformation by passing index probes along each one of
+    // the image axis.
+    indexProbe.Fill(0);
+    indexProbe[d] = 1;
+
+    m_Image->TransformIndexToPhysicalPoint( indexProbe, pointProbe );
+
+    // Remove the origin
+    for( unsigned int d3=0; d3<TDimension; d3++ )
+      {
+      pointProbe[d3] -= origin[d3];
+      }
+
+    for(unsigned int d2=0; d2<TDimension;d2++)
+      {
+      indexToObjectMatrix[d2][d] = pointProbe[d2];
+      }
+    }
+
+  this->GetIndexToObjectTransform()->SetMatrix( indexToObjectMatrix );
+  this->GetIndexToObjectTransform()->SetOffset( offset );
+
+  this->ComputeObjectToParentTransform();
+
+  this->Modified();
   this->ComputeBoundingBox();
 
   m_Interpolator->SetInputImage(m_Image);

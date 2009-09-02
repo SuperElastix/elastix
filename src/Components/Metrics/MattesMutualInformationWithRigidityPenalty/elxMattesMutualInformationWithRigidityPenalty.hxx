@@ -19,6 +19,7 @@
 
 #include "itkHardLimiterFunction.h"
 #include "itkExponentialLimiterFunction.h"
+#include "itkChangeInformationImageFilter.h"
 #include "vnl/vnl_math.h"
 #include <string>
 
@@ -52,6 +53,10 @@ void
 MattesMutualInformationWithRigidityPenalty<TElastix>
 ::BeforeRegistration( void )
 {
+  typedef ChangeInformationImageFilter<RigidityImageType> ChangeInfoFilterType;
+  typedef typename ChangeInfoFilterType::Pointer  ChangeInfoFilterPointer;
+  typedef RigidityImageType::DirectionType        DirectionType;
+
   /** Read the fixed rigidity image if desired. */
   std::string fixedRigidityImageName = "";
   this->GetConfiguration()->ReadParameter( fixedRigidityImageName,
@@ -66,10 +71,18 @@ MattesMutualInformationWithRigidityPenalty<TElastix>
     this->m_FixedRigidityImageReader = RigidityImageReaderType::New();
     this->m_FixedRigidityImageReader->SetFileName( fixedRigidityImageName.c_str() );
 
+    /** Possibly overrule the direction cosines. */
+    ChangeInfoFilterPointer infoChanger = ChangeInfoFilterType::New();
+    DirectionType direction;
+    direction.SetIdentity();
+    infoChanger->SetOutputDirection( direction );
+    infoChanger->SetChangeDirection( ! this->GetElastix()->GetUseDirectionCosines() );
+    infoChanger->SetInput( this->m_FixedRigidityImageReader->GetOutput() );
+
     /** Do the reading. */
     try
     {
-      this->m_FixedRigidityImageReader->Update();
+      infoChanger->Update();
     }
     catch( ExceptionObject & excp )
     {
@@ -83,7 +96,7 @@ MattesMutualInformationWithRigidityPenalty<TElastix>
     }
 
     /** Set the fixed rigidity image into the superclass. */
-    this->SetFixedRigidityImage( this->m_FixedRigidityImageReader->GetOutput() );
+    this->SetFixedRigidityImage( infoChanger->GetOutput() );
   }
   else
   {
@@ -104,10 +117,18 @@ MattesMutualInformationWithRigidityPenalty<TElastix>
     this->m_MovingRigidityImageReader = RigidityImageReaderType::New();
     this->m_MovingRigidityImageReader->SetFileName( movingRigidityImageName.c_str() );
 
+    /** Possibly overrule the direction cosines. */
+    ChangeInfoFilterPointer infoChanger = ChangeInfoFilterType::New();
+    DirectionType direction;
+    direction.SetIdentity();
+    infoChanger->SetOutputDirection( direction );
+    infoChanger->SetChangeDirection( ! this->GetElastix()->GetUseDirectionCosines() );
+    infoChanger->SetInput( this->m_MovingRigidityImageReader->GetOutput() );
+
     /** Do the reading. */
     try
     {
-      this->m_MovingRigidityImageReader->Update();
+      infoChanger->Update();
     }
     catch( ExceptionObject & excp )
     {
@@ -121,7 +142,7 @@ MattesMutualInformationWithRigidityPenalty<TElastix>
     }
 
     /** Set the moving rigidity image into the superclass. */
-    this->SetMovingRigidityImage( this->m_MovingRigidityImageReader->GetOutput() );
+    this->SetMovingRigidityImage( infoChanger->GetOutput() );
   }
   else
   {

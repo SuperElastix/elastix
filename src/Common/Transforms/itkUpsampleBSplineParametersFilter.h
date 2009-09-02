@@ -29,7 +29,7 @@ namespace itk
  * The UpsampleBSplineParametersFilter class is a class that takes as input
  * the B-spline parameters. It's purpose is to compute new B-spline parameters
  * on a denser grid. Therefore, the user needs to supply the old B-spline grid
- * (region, spacing, origin), and the required B-spline grid.
+ * (region, spacing, origin, direction), and the required B-spline grid.
  *
  */
 
@@ -59,6 +59,7 @@ public:
   typedef typename ImageType::PixelType     PixelType;
   typedef typename ImageType::SpacingType   SpacingType;
   typedef typename ImageType::PointType     OriginType;
+  typedef typename ImageType::DirectionType DirectionType;
   typedef typename ImageType::RegionType    RegionType;
 
   /** Dimension of the fixed image. */
@@ -70,6 +71,9 @@ public:
   /** Set the spacing of the current grid. */
   itkSetMacro( CurrentGridSpacing, SpacingType );
 
+  /** Set the direction of the current grid. */
+  itkSetMacro( CurrentGridDirection, DirectionType );
+
   /** Set the region of the current grid. */
   itkSetMacro( CurrentGridRegion, RegionType );
 
@@ -78,6 +82,9 @@ public:
 
   /** Set the spacing of the required grid. */
   itkSetMacro( RequiredGridSpacing, SpacingType );
+
+  /** Set the direction of the required grid. */
+  itkSetMacro( RequiredGridDirection, DirectionType );
 
   /** Set the region of the required grid. */
   itkSetMacro( RequiredGridRegion, RegionType );
@@ -111,9 +118,11 @@ private:
   /** Private member variables. */
   OriginType    m_CurrentGridOrigin;
   SpacingType   m_CurrentGridSpacing;
+  DirectionType m_CurrentGridDirection;
   RegionType    m_CurrentGridRegion;
   OriginType    m_RequiredGridOrigin;
   SpacingType   m_RequiredGridSpacing;
+  DirectionType m_RequiredGridDirection;
   RegionType    m_RequiredGridRegion;
   unsigned int  m_BSplineOrder;
 

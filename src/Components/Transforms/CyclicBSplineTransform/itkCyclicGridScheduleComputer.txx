@@ -16,6 +16,7 @@
 #define __itkCyclicGridScheduleComputer_TXX__
 
 #include "itkCyclicGridScheduleComputer.h"
+#include "itkConfigure.h"
 
 #include "itkImageRegionExclusionConstIteratorWithIndex.h"
 
@@ -49,14 +50,21 @@ CyclicGridScheduleComputer<TTransformScalarType, VImageDimension>
 
   OriginType imageOrigin;
   SpacingType imageSpacing, finalGridSpacing;
+  DirectionType imageDirection;
 
   /** Apply the initial transform. */    
-  this->ApplyInitialTransform( imageOrigin, imageSpacing, finalGridSpacing );
+  this->ApplyInitialTransform( imageOrigin, imageSpacing, imageDirection, finalGridSpacing );
+
+#ifndef ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE    
+  /** Ignore direction cosines */
+  imageDirection.SetIdentity();
+#endif
 
   /** Set the appropriate sizes. */
   this->m_GridOrigins.resize( this->GetNumberOfLevels() );
   this->m_GridRegions.resize( this->GetNumberOfLevels() );
   this->m_GridSpacings.resize( this->GetNumberOfLevels() );
+  this->m_GridDirections.resize( this->GetNumberOfLevels() );
 
   /** For all levels ... */
   for ( unsigned int res = 0; res < this->GetNumberOfLevels(); ++res )
@@ -116,8 +124,16 @@ CyclicGridScheduleComputer<TTransformScalarType, VImageDimension>
         - ( size[ dim ] - 1 ) * imageSpacing[ dim ] ) / 2.0;
     }
 
+    /** Take into account direction cosines: 
+     * rotate grid origin around image origin. */
+    this->m_GridOrigins[ res ] = imageOrigin + imageDirection * ( 
+      this->m_GridOrigins[ res ] - imageOrigin );
+
     /** Set the grid region. */
     this->m_GridRegions[ res ].SetSize( gridsize );
+
+    /** Simply copy the image direction for now */
+    this->m_GridDirections[ res ] = imageDirection;
   }
 
 } // end ComputeBSplineGrid()

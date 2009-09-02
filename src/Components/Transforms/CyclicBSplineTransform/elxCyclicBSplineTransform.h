@@ -109,6 +109,7 @@ using namespace itk;
     typedef typename CyclicBSplineTransformType::SizeType     SizeType;
     typedef typename CyclicBSplineTransformType::SpacingType  SpacingType;
     typedef typename CyclicBSplineTransformType::OriginType   OriginType;
+    typedef typename CyclicBSplineTransformType::DirectionType DirectionType;
     typedef typename CyclicBSplineTransformType::BulkTransformType
                                                         BulkTransformType;
     typedef typename CyclicBSplineTransformType::BulkTransformPointer     
@@ -199,10 +200,7 @@ using namespace itk;
 
     /** Read user-specified gridspacing and call the itkGridScheduleComputer. */
     virtual void PreComputeGridInformation( void );
-
-    /** Method to determine a schedule based on the UpsampleGridOption */
-    virtual void ComputeGridSchedule_Deprecated( GridScheduleType & schedule );
-
+ 
   private:
 
     /** The private constructor. */

@@ -458,7 +458,9 @@ AdvancedAffineTransformElastix<TElastix>
   SpacingType   spacing;
   IndexType     index;
   PointType     origin;
-  SizeType      size;
+  SizeType      size; 
+  DirectionType direction;
+  direction.SetIdentity();
   for ( unsigned int i = 0; i < SpaceDimension; i++ )
   {
     /** Read size from the parameter file. Zero by default, which is illegal. */
@@ -476,6 +478,13 @@ AdvancedAffineTransformElastix<TElastix>
     /** Default origin. Read origin from the parameter file. */
     origin[ i ] = 0.0;
     this->m_Configuration->ReadParameter( origin[ i ], "Origin", i );
+
+    /** Read direction cosines. Default identity */
+    for ( unsigned int j = 0; j < SpaceDimension; j++ )
+    {
+      this->m_Configuration->ReadParameter( direction( j, i ),
+        "Direction", i * SpaceDimension + j );        
+    }
   }
 
   /** Check for image size. */
@@ -505,6 +514,7 @@ AdvancedAffineTransformElastix<TElastix>
   dummyImage->SetRegions( region );
   dummyImage->SetOrigin( origin );
   dummyImage->SetSpacing( spacing );
+  dummyImage->SetDirection( direction );
 
   /** Convert center of rotation from index-value to physical-point-value. */
   dummyImage->TransformIndexToPhysicalPoint(

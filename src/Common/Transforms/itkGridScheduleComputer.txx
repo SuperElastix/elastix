@@ -18,7 +18,9 @@
 #include "itkGridScheduleComputer.h"
 
 #include "itkImageRegionExclusionConstIteratorWithIndex.h"
-
+#include "itkConfigure.h"
+#include "vnl/vnl_inverse.h"
+#include "itkBoundingBox.h"
 
 namespace itk
 {
@@ -109,14 +111,21 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
 {
   OriginType imageOrigin;
   SpacingType imageSpacing, finalGridSpacing;
+  DirectionType imageDirection;
 
-  /** Apply the initial transform. */    
-  this->ApplyInitialTransform( imageOrigin, imageSpacing, finalGridSpacing );
+  /** Apply the initial transform.  */    
+  this->ApplyInitialTransform( imageOrigin, imageSpacing, imageDirection, finalGridSpacing );
+  
+#ifndef ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE    
+  /** Ignore direction cosines */
+  imageDirection.SetIdentity();
+#endif
 
   /** Set the appropriate sizes. */
   this->m_GridOrigins.resize( this->m_NumberOfLevels );
   this->m_GridRegions.resize( this->m_NumberOfLevels );
   this->m_GridSpacings.resize( this->m_NumberOfLevels );
+  this->m_GridDirections.resize( this->m_NumberOfLevels );
 
   /** For all levels ... */
   for ( unsigned int res = 0; res < this->m_NumberOfLevels; ++res )
@@ -136,8 +145,7 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
         vcl_ceil( size[ dim ] * imageSpacing[ dim ] / gridSpacing ) );
 
       /** The number of B-spline grid nodes is the bareGridSize plus the
-       * B-spline order more grid nodes.
-       */
+       * B-spline order more grid nodes. */
       gridsize[ dim ] = static_cast<SizeValueType>(
         bareGridSize + this->m_BSplineOrder );
 
@@ -147,8 +155,16 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
         - ( size[ dim ] - 1 ) * imageSpacing[ dim ] ) / 2.0;
     }
 
+    /** Take into account direction cosines: 
+     * rotate grid origin around image origin. */
+    this->m_GridOrigins[ res ] = imageOrigin + imageDirection * ( 
+      this->m_GridOrigins[ res ] - imageOrigin );
+
     /** Set the grid region. */
     this->m_GridRegions[ res ].SetSize( gridsize );
+
+    /** Simply copy the image direction for now */
+    this->m_GridDirections[ res ] = imageDirection;
   }
 
 } // end ComputeBSplineGrid()
@@ -168,6 +184,7 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
 ::ApplyInitialTransform(
   OriginType & imageOrigin,
   SpacingType & imageSpacing,
+  DirectionType & imageDirection,
   SpacingType & finalGridSpacing ) const
 {
   /** Check for the existence of an initial transform. */
@@ -175,15 +192,28 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
   {
     imageOrigin = this->m_ImageOrigin;
     imageSpacing = this->m_ImageSpacing;
+    imageDirection = this->m_ImageDirection;
     finalGridSpacing = this->m_FinalGridSpacing;
     return;
   }
+
+  /** We could rotate the image direction according 
+   * to the average rotation of the initial transformation. 
+   * For now leave it as is. */
+  imageDirection = this->m_ImageDirection;
+  DirectionType invImageDirection = vnl_inverse( imageDirection.GetVnlMatrix() );
 
   /** We have to determine a bounding box around the fixed image after
    * applying the initial transform. This is done by iterating over the
    * the boundary of the fixed image, evaluating the initial transform
    * at those points, and keeping track of the minimum/maximum transformed
    * coordinate in each dimension.
+   *
+   * NB: the possibility of non-identity direction cosines makes it
+   * a bit more complicated. This is dealt with by applying the inverse 
+   * direction matrix during computation of the bounding box.
+   *
+   * \todo: automatically estimate an optimal imageDirection?
    */
 
   /** Create a temporary image. As small as possible, for memory savings. */
@@ -191,10 +221,19 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
   typename ImageType::Pointer image = ImageType::New();
   image->SetOrigin( this->m_ImageOrigin );
   image->SetSpacing( this->m_ImageSpacing );
+  image->SetDirection( this->m_ImageDirection );
   image->SetRegions( this->m_ImageRegion );
   image->Allocate();
 
   /** The points that define the bounding box. */
+  typedef typename PointType::ValueType             PointValueType;
+  typedef BoundingBox< unsigned long,
+    Dimension, PointValueType >                     BoundingBoxType;
+  typedef typename BoundingBoxType::Pointer         BoundingBoxPointer;
+  typedef typename BoundingBoxType::PointsContainer PointsContainerType;
+  typedef typename PointsContainerType::Pointer     PointsContainerPointer;
+  BoundingBoxPointer boundingBox = BoundingBoxType::New();
+  PointsContainerPointer boundaryPoints = PointsContainerType::New();
   OriginType maxPoint;
   OriginType minPoint;
   maxPoint.Fill( NumericTraits< TransformScalarType >::NonpositiveMin() );
@@ -206,8 +245,25 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
   BoundaryIteratorType bit( image, this->m_ImageRegion );
   bit.SetExclusionRegionToInsetRegion();
   bit.GoToBegin();
+  SizeType imageSize = this->m_ImageRegion.GetSize();
+  SizeType insetImageSize = imageSize;
+  for (unsigned int i = 0; i < Dimension; ++i )
+  {
+    if ( insetImageSize[i] > 1 )
+    {
+      insetImageSize[i] -= 2;
+    }
+    else
+    {
+      insetImageSize[i] = 0;
+    }
+  }
+  RegionType insetImageRegion( insetImageSize );
+  const unsigned long numberOfBoundaryPoints = 
+    this->m_ImageRegion.GetNumberOfPixels() - insetImageRegion.GetNumberOfPixels();
+  boundaryPoints->reserve( numberOfBoundaryPoints );
 
-  /** Start loop over boundary; determines minPoint and maxPoint. */
+  /** Start loop over boundary and compute transformed points. */
   typedef typename ImageType::IndexType IndexType;
   while ( !bit.IsAtEnd() )
   {
@@ -221,31 +277,32 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
     typename TransformType::OutputPointType outputPoint = 
       this->m_InitialTransform->TransformPoint( inputPoint );
 
-    /** Update minPoint and maxPoint. */
-    for ( unsigned int i = 0; i < Dimension; i++ )
-    {
-      TransformScalarType & outi = outputPoint[ i ];
-      TransformScalarType & maxi = maxPoint[ i ];
-      TransformScalarType & mini = minPoint[ i ];
-      if ( outi > maxi )
-      {
-        maxi = outi;
-      }
-      if ( outi < mini )
-      {
-        mini = outi;
-      }
-    }
+#ifdef ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE    
+    outputPoint = invImageDirection * outputPoint;
+#endif
+
+    /** Store transformed point */
+    boundaryPoints->push_back( outputPoint );
 
     /** Step to next voxel. */
     ++bit;
 
   } // end while loop over image boundary
 
+  /** Compute min and max point */
+  boundingBox->SetPoints( boundaryPoints );
+  boundingBox->ComputeBoundingBox();
+  minPoint = boundingBox->GetMinimum();
+  maxPoint = boundingBox->GetMaximum();
+
   /** Set minPoint as the new "ImageOrigin" (between quotes, since it
    * is not really the origin of the fixedImage anymore).
-   */
+   * Take into account direction cosines */   
   imageOrigin = minPoint;
+
+#ifdef ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE  
+  imageOrigin = imageDirection * imageOrigin;
+#endif
 
   /** Compute the new "ImageSpacing" in each dimension. */
   const double smallnumber = NumericTraits<double>::epsilon();
@@ -283,7 +340,8 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
   unsigned int level,
   RegionType & gridRegion,
   SpacingType & gridSpacing,
-  OriginType & gridOrigin )
+  OriginType & gridOrigin,
+  DirectionType & gridDirection )
 {
   /** Check level. */
   if ( level > this->m_NumberOfLevels - 1 )
@@ -300,6 +358,7 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
   gridRegion  = this->m_GridRegions[ level ];
   gridSpacing = this->m_GridSpacings[ level ];
   gridOrigin  = this->m_GridOrigins[ level ];
+  gridDirection = this->m_GridDirections[ level ];
 
 } // end GetBSplineGrid()
 
@@ -320,6 +379,7 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
 
   os << indent << "ImageSpacing: " << this->m_ImageSpacing << std::endl;
   os << indent << "ImageOrigin: " << this->m_ImageOrigin << std::endl;
+  os << indent << "ImageDirection: " << this->m_ImageDirection << std::endl;
   os << indent << "ImageRegion: " << std::endl;
   this->m_ImageRegion.Print( os, indent.GetNextIndent() );
 
@@ -340,6 +400,12 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
   for ( unsigned int i = 0; i < this->m_NumberOfLevels; ++i )
   {
     os << indent.GetNextIndent() << this->m_GridOrigins[ i ] << std::endl;
+  }
+
+  os << indent << "GridDirections: " << std::endl;
+  for ( unsigned int i = 0; i < this->m_NumberOfLevels; ++i )
+  {
+    os << indent.GetNextIndent() << this->m_GridDirections[ i ] << std::endl;
   }
 
   os << indent << "GridRegions: " << std::endl;

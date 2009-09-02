@@ -81,6 +81,7 @@ UpsampleBSplineParametersFilter<TArray,TImage>
   ImagePointer coeffs_in = ImageType::New();
   coeffs_in->SetOrigin(  this->m_CurrentGridOrigin );
   coeffs_in->SetSpacing( this->m_CurrentGridSpacing );
+  coeffs_in->SetDirection( this->m_CurrentGridDirection );
   coeffs_in->SetRegions( this->m_CurrentGridRegion );
 
   /** Initialise iterator in the parameters_out. */
@@ -118,6 +119,7 @@ UpsampleBSplineParametersFilter<TArray,TImage>
     upsampler->SetOutputStartIndex( this->m_RequiredGridRegion.GetIndex() );
     upsampler->SetOutputSpacing( this->m_RequiredGridSpacing );
     upsampler->SetOutputOrigin( this->m_RequiredGridOrigin );
+    upsampler->SetOutputDirection( this->m_RequiredGridDirection );
     upsampler->SetInput( coeffs_in );
 
     /** Setup the decomposition filter. */
@@ -171,7 +173,8 @@ UpsampleBSplineParametersFilter<TArray,TImage>
 {
   bool ret = ( this->m_CurrentGridOrigin != this->m_RequiredGridOrigin );
   ret |= ( this->m_CurrentGridSpacing != this->m_RequiredGridSpacing );
-  ret |= ( this->m_CurrentGridRegion != this->m_RequiredGridRegion );
+  ret |= ( this->m_CurrentGridDirection != this->m_RequiredGridDirection );
+  ret |= ( this->m_CurrentGridRegion != this->m_RequiredGridRegion );  
 
   return ret;
 
@@ -191,10 +194,12 @@ UpsampleBSplineParametersFilter<TArray,TImage>
 
   os << indent << "CurrentGridOrigin: "  << this->m_CurrentGridOrigin << std::endl;
   os << indent << "CurrentGridSpacing: " << this->m_CurrentGridSpacing << std::endl;
+  os << indent << "CurrentGridDirection: " << this->m_CurrentGridDirection << std::endl;
   os << indent << "CurrentGridRegion: "  << this->m_CurrentGridRegion << std::endl;
 
   os << indent << "RequiredGridOrigin: "  << this->m_RequiredGridOrigin << std::endl;
   os << indent << "RequiredGridSpacing: " << this->m_RequiredGridSpacing << std::endl;
+  os << indent << "RequiredGridDirection: " << this->m_RequiredGridDirection << std::endl;
   os << indent << "RequiredGridRegion: "  << this->m_RequiredGridRegion << std::endl;
 
   os << indent << "BSplineOrder: " << this->m_BSplineOrder << std::endl;

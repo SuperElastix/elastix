@@ -62,6 +62,9 @@ ElastixBase::ElastixBase()
   this->m_InitialTransform = 0;
   this->m_FinalTransform = 0;
 
+  /** Ignore direction cosines by default, for backward compatability. */
+  this->m_UseDirectionCosines = false;  
+
 } // end Constructor
 
 
@@ -202,6 +205,19 @@ int ElastixBase::BeforeAllBase( void )
     elxout << "-threads  " << check << std::endl;
   }
 
+  /** Check the very important UseDirectionCosines parameter. */
+  this->m_UseDirectionCosines = false;
+  bool retudc = this->GetConfiguration()->ReadParameter( this->m_UseDirectionCosines, 
+    "UseDirectionCosines", 0 );
+  if ( !retudc )
+  {
+    xl::xout["warning"] 
+      << "\nWARNING: From elastix 4.3 it is highly recommended to add\n"
+      << "the UseDirectionCosines option to your parameter file! See\n"
+      << "http://elastix.isi.uu.nl/whatsnew_04_3.php for more information.\n" 
+      << std::endl;
+  }
+
   /** Return a value. */
   return returndummy;
 
@@ -275,6 +291,19 @@ int ElastixBase::BeforeAllTransformixBase( void )
   /** Print "-tp". */
   check = this->GetConfiguration()->GetCommandLineArgument( "-tp" );
   elxout << "-tp       " << check << std::endl;
+
+  /** Check the very important UseDirectionCosines parameter. */
+  this->m_UseDirectionCosines = false;
+  bool retudc = this->GetConfiguration()->ReadParameter( this->m_UseDirectionCosines, 
+    "UseDirectionCosines", 0 );
+  if ( !retudc )
+  {
+    xl::xout["warning"] 
+      << "\nWARNING: From elastix 4.3 it is highly recommended to add\n"
+      << "the UseDirectionCosines option to your parameter file! See\n"
+      << "http://elastix.isi.uu.nl/whatsnew_04_3.php for more information.\n" 
+      << std::endl;
+  }
 
   return returndummy;
 
@@ -399,6 +428,38 @@ ElastixBase::GenerateFileNameContainer(
   return fileNameContainer;
 
 } // end GenerateFileNameContainer()
+
+
+/**
+ * ******************** GetUseDirectionCosines ********************
+ */
+
+bool ElastixBase::GetUseDirectionCosines( void ) const
+{
+  return this->m_UseDirectionCosines;
+}
+
+
+/**
+ * ******************** SetOriginalFixedImageDirectionFlat ********************
+ */
+
+void ElastixBase::SetOriginalFixedImageDirectionFlat(
+  const FlatDirectionCosinesType & arg )
+{
+  this->m_OriginalFixedImageDirection = arg;
+}
+
+
+/**
+ * ******************** GetOriginalFixedImageDirectionFlat ********************
+ */
+
+const ElastixBase::FlatDirectionCosinesType & 
+ElastixBase::GetOriginalFixedImageDirectionFlat( void ) const
+{
+  return this->m_OriginalFixedImageDirection;
+}
 
 
 } // end namespace elastix

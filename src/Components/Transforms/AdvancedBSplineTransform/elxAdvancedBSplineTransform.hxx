@@ -146,6 +146,8 @@ void AdvancedBSplineTransform<TElastix>
     this->GetElastix()->GetFixedImage()->GetOrigin() );
   this->m_GridScheduleComputer->SetImageSpacing(
     this->GetElastix()->GetFixedImage()->GetSpacing() );
+  this->m_GridScheduleComputer->SetImageDirection(
+    this->GetElastix()->GetFixedImage()->GetDirection() );
   this->m_GridScheduleComputer->SetImageRegion(
     this->GetElastix()->GetFixedImage()->GetLargestPossibleRegion() );
 
@@ -303,13 +305,15 @@ void AdvancedBSplineTransform<TElastix>
   RegionType gridRegion;
   OriginType gridOrigin;
   SpacingType gridSpacing;
+  DirectionType gridDirection;
   this->m_GridScheduleComputer->GetBSplineGrid( 0,
-    gridRegion, gridSpacing, gridOrigin );
+    gridRegion, gridSpacing, gridOrigin, gridDirection );
 
   /** Set it in the BSplineTransform. */
   this->m_BSplineTransform->SetGridRegion( gridRegion );
   this->m_BSplineTransform->SetGridSpacing( gridSpacing );
   this->m_BSplineTransform->SetGridOrigin( gridOrigin );
+  this->m_BSplineTransform->SetGridDirection( gridDirection );
 
   /** Set initial parameters for the first resolution to 0.0. */
   ParametersType initialParameters( this->GetNumberOfParameters() );
@@ -335,16 +339,18 @@ void AdvancedBSplineTransform<TElastix>
     this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
   /** The current grid. */
-  OriginType  currentGridOrigin  = this->m_BSplineTransform->GetGridOrigin();
-  SpacingType currentGridSpacing = this->m_BSplineTransform->GetGridSpacing();
-  RegionType  currentGridRegion  = this->m_BSplineTransform->GetGridRegion();
+  OriginType  currentGridOrigin      = this->m_BSplineTransform->GetGridOrigin();
+  SpacingType currentGridSpacing     = this->m_BSplineTransform->GetGridSpacing();
+  RegionType  currentGridRegion      = this->m_BSplineTransform->GetGridRegion();
+  DirectionType currentGridDirection = this->m_BSplineTransform->GetGridDirection();
 
   /** The new required grid. */
-  OriginType  requiredGridOrigin;
-  SpacingType requiredGridSpacing;
-  RegionType  requiredGridRegion;
+  OriginType    requiredGridOrigin;
+  SpacingType   requiredGridSpacing;
+  RegionType    requiredGridRegion;
+  DirectionType requiredGridDirection;
   this->m_GridScheduleComputer->GetBSplineGrid( level,
-    requiredGridRegion, requiredGridSpacing, requiredGridOrigin );
+    requiredGridRegion, requiredGridSpacing, requiredGridOrigin, requiredGridDirection );
 
   /** Get the latest transform parameters. */
   ParametersType latestParameters =
@@ -354,9 +360,11 @@ void AdvancedBSplineTransform<TElastix>
   this->m_GridUpsampler->SetCurrentGridOrigin( currentGridOrigin );
   this->m_GridUpsampler->SetCurrentGridSpacing( currentGridSpacing );
   this->m_GridUpsampler->SetCurrentGridRegion( currentGridRegion );
+  this->m_GridUpsampler->SetCurrentGridDirection( currentGridDirection );
   this->m_GridUpsampler->SetRequiredGridOrigin( requiredGridOrigin );
   this->m_GridUpsampler->SetRequiredGridSpacing( requiredGridSpacing );
   this->m_GridUpsampler->SetRequiredGridRegion( requiredGridRegion );
+  this->m_GridUpsampler->SetRequiredGridDirection( requiredGridDirection );
 
   /** Compute the upsampled B-spline parameters. */
   ParametersType upsampledParameters;
@@ -366,6 +374,7 @@ void AdvancedBSplineTransform<TElastix>
   this->m_BSplineTransform->SetGridOrigin( requiredGridOrigin );
   this->m_BSplineTransform->SetGridSpacing( requiredGridSpacing );
   this->m_BSplineTransform->SetGridRegion( requiredGridRegion );
+  this->m_BSplineTransform->SetGridDirection( requiredGridDirection );  
 
   /** Set the initial parameters for the next level. */
   this->m_Registration->GetAsITKBaseType()
@@ -395,12 +404,14 @@ void AdvancedBSplineTransform<TElastix>
   IndexType   gridindex;
   SpacingType gridspacing;
   OriginType  gridorigin;
+  DirectionType griddirection;
 
   /** Fill everything with default values. */
   gridsize.Fill( 1 );
   gridindex.Fill( 0 );
   gridspacing.Fill( 1.0 );
   gridorigin.Fill( 0.0 );
+  griddirection.SetIdentity();
 
   /** Get GridSize, GridIndex, GridSpacing and GridOrigin. */
   for ( unsigned int i = 0; i < SpaceDimension; i++ )
@@ -409,6 +420,11 @@ void AdvancedBSplineTransform<TElastix>
     this->m_Configuration->ReadParameter( gridindex[ i ], "GridIndex", i );
     this->m_Configuration->ReadParameter( gridspacing[ i ], "GridSpacing", i );
     this->m_Configuration->ReadParameter( gridorigin[ i ], "GridOrigin", i );
+    for ( unsigned int j = 0; j < SpaceDimension; j++ )
+    {
+      this->m_Configuration->ReadParameter( griddirection( j, i),
+        "GridDirection", i * SpaceDimension + j );
+    }  
   }
 
   /** Set it all. */
@@ -417,7 +433,8 @@ void AdvancedBSplineTransform<TElastix>
   this->m_BSplineTransform->SetGridRegion( gridregion );
   this->m_BSplineTransform->SetGridSpacing( gridspacing );
   this->m_BSplineTransform->SetGridOrigin( gridorigin );
-
+  this->m_BSplineTransform->SetGridDirection( griddirection );
+  
   /** Call the ReadFromFile from the TransformBase.
    * This must be done after setting the Grid, because later the
    * ReadFromFile from TransformBase calls SetParameters, which
@@ -445,13 +462,13 @@ void AdvancedBSplineTransform<TElastix>
   /** Add some BSplineTransform specific lines. */
   xout["transpar"] << std::endl << "// BSplineTransform specific" << std::endl;
 
-  /** Get the GridSize, GridIndex, GridSpacing and
-   * GridOrigin of this transform.
-   */
+  /** Get the GridSize, GridIndex, GridSpacing,
+   * GridOrigin, and GridDirection of this transform. */
   SizeType size = this->m_BSplineTransform->GetGridRegion().GetSize();
   IndexType index = this->m_BSplineTransform->GetGridRegion().GetIndex();
   SpacingType spacing = this->m_BSplineTransform->GetGridSpacing();
   OriginType origin = this->m_BSplineTransform->GetGridOrigin();
+  DirectionType direction = this->m_BSplineTransform->GetGridDirection();
 
   /** Write the GridSize of this transform. */
   xout["transpar"] << "(GridSize ";
@@ -489,6 +506,17 @@ void AdvancedBSplineTransform<TElastix>
     xout["transpar"] << origin[ i ] << " ";
   }
   xout["transpar"] << origin[ SpaceDimension - 1 ] << ")" << std::endl;
+
+  /** Write the GridDirection of this transform. */
+  xout["transpar"] << "(GridDirection";
+  for ( unsigned int i = 0; i < SpaceDimension; i++ )
+  {
+    for ( unsigned int j = 0; j < SpaceDimension; j++ )
+    {
+      xout["transpar"] << " " << direction(j,i);
+    }
+  }
+  xout["transpar"] << ")" << std::endl;
 
   /** Set the precision back to default value. */
   xout["transpar"] << std::setprecision(

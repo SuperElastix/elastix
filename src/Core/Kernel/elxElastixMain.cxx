@@ -271,6 +271,11 @@ int ElastixMain::Run( void )
   /** Set the initial transform, if it happens to be there. */
   this->GetElastixBase()->SetInitialTransform( this->GetInitialTransform() );
 
+  /** Set the original fixed image direction cosines (relevant in case the 
+   * UseDirectionCosines parameter was set to false. */
+  this->GetElastixBase()->SetOriginalFixedImageDirectionFlat(
+    this->GetOriginalFixedImageDirectionFlat() );
+
   /** Run elastix! */
   try
   {
@@ -304,6 +309,11 @@ int ElastixMain::Run( void )
   this->SetMovingImageContainer( this->GetElastixBase()->GetMovingImageContainer() );
   this->SetFixedMaskContainer(  this->GetElastixBase()->GetFixedMaskContainer() );
   this->SetMovingMaskContainer( this->GetElastixBase()->GetMovingMaskContainer() );
+
+  /** Store the original fixed image direction cosines (relevant in case the 
+   * UseDirectionCosines parameter was set to false. */
+  this->SetOriginalFixedImageDirectionFlat(  
+    this->GetElastixBase()->GetOriginalFixedImageDirectionFlat() );
 
   /** Return a value. */
   return errorCode;
@@ -704,6 +714,27 @@ void ElastixMain::SetMaximumNumberOfThreads( void ) const
   }
 
 } // end SetMaximumNumberOfThreads()
+
+
+/**
+ * ******************** SetOriginalFixedImageDirectionFlat ********************
+ */
+
+void ElastixMain::SetOriginalFixedImageDirectionFlat(
+  const FlatDirectionCosinesType & arg )
+{
+  this->m_OriginalFixedImageDirection = arg;
+}
+
+/**
+ * ******************** GetOriginalFixedImageDirectionFlat ********************
+ */
+
+const ElastixMain::FlatDirectionCosinesType & 
+ElastixMain::GetOriginalFixedImageDirectionFlat( void ) const
+{
+  return this->m_OriginalFixedImageDirection;
+}
 
 
 } // end namespace elastix

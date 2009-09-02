@@ -48,6 +48,7 @@ ImageMaskSpatialObject2< TDimension>
 ::ImageMaskSpatialObject2()
 {
   this->SetTypeName("ImageMaskSpatialObject2");
+  this->ComputeBoundingBox();
 }
 
 /** Destructor */
@@ -59,44 +60,45 @@ ImageMaskSpatialObject2< TDimension>
 
 
 /** Test whether a point is inside or outside the object 
- *  For computational speed purposes, it is faster if the method does not
- *  check the name of the class and the current depth */ 
+*  For computational speed purposes, it is faster if the method does not
+*  check the name of the class and the current depth */ 
 template< unsigned int TDimension >
 bool 
 ImageMaskSpatialObject2< TDimension >
 ::IsInside( const PointType & point) const
 {
-  if(this->GetBounds()->IsInside(point))
-    {
-    if(!this->GetIndexToWorldTransform()->GetInverse(
-      const_cast<TransformType *>(this->GetInternalInverseTransform())))
-      {
-      return false;
-      }
-    PointType p = this->GetInternalInverseTransform()->TransformPoint(point);
+  if(!this->GetBounds()->IsInside(point))
+  {
+    return false;
+  }
+  if( !this->SetInternalInverseTransformToWorldToIndexTransform() )
+  {
+    return false;
+  }
 
-    IndexType index;
-    for(unsigned int i=0; i<TDimension; i++)
-      {
-      //index[i] = static_cast<int>( p[i] ); // changed by stefan
-      index[i] = static_cast<int>( vnl_math_rnd( p[i] ) );
-      }
+  PointType p = this->GetInternalInverseTransform()->TransformPoint(point);
 
-      const bool insideBuffer = 
-        this->GetImage()->GetBufferedRegion().IsInside( index );
+  IndexType index;
+  for(unsigned int i=0; i<TDimension; i++)
+  {
+    //index[i] = static_cast<int>( p[i] ); // changed by stefan
+    index[i] = static_cast<int>( vnl_math_rnd( p[i] ) );
+  }
 
-      if( !insideBuffer )
-      {
-        return false;
-      }
+  const bool insideBuffer = 
+    this->GetImage()->GetBufferedRegion().IsInside( index );
 
-      const bool insideMask = 
-        (this->GetImage()->GetPixel(index) != NumericTraits<PixelType>::Zero);
+  if( !insideBuffer )
+  {
+    return false;
+  }
 
-      return insideMask;
-    }
+  const bool insideMask = 
+    (this->GetImage()->GetPixel(index) != NumericTraits<PixelType>::Zero);
 
-  return false;
+  return insideMask;
+
+
 }
 
 
@@ -304,30 +306,21 @@ ImageMaskSpatialObject2< TDimension >
     typedef typename BoundingBoxType::PointsContainer PointsContainerType;
     const PointsContainerType* corners = bb->GetCorners();
 
+    /** Take into account indextoworld transform: SK: itk implementation was buggy */
+    typename PointsContainerType::Pointer cornersWorld = PointsContainerType::New();
+    cornersWorld->Reserve( corners->Size() );
+    
     typename PointsContainerType::const_iterator itC = corners->begin();
-    unsigned int j = 0;
-    while ( itC != corners->end() )
-    {
-      PointType transformedPoint = 
-        this->GetIndexToWorldTransform()->TransformPoint( *itC );
-      if ( j == 0 )
+    typename PointsContainerType::iterator itCW = cornersWorld->begin();
+    while(itC != corners->end())
       {
-        const_cast<BoundingBoxType * >(
-          this->GetBounds() )->SetMinimum( transformedPoint );
-      }
-      else if ( j == 1 )
-      {
-        const_cast<BoundingBoxType *>(
-          this->GetBounds() )->SetMaximum( transformedPoint );
-      }
-      else
-      {
-        const_cast<BoundingBoxType *>(
-          this->GetBounds() )->ConsiderPoint( transformedPoint );
-      }
+      PointType transformedPoint = this->GetIndexToWorldTransform()->TransformPoint(*itC);
+      *itCW = transformedPoint;
+      itCW++;
       itC++;
-      j++;
-    }
+      }
+    const_cast<BoundingBoxType *>(this->GetBounds())->SetPoints(cornersWorld);
+    const_cast<BoundingBoxType *>(this->GetBounds())->ComputeBoundingBox();
 
     return true;
   }

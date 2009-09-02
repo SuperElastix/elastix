@@ -241,7 +241,17 @@ SimilarityTransformElastix<TElastix>
     transformInitializer->SetMovingImage(
       this->m_Registration->GetAsITKBaseType()->GetMovingImage() );
     transformInitializer->SetTransform( this->m_SimilarityTransform );
+
+    /** Select the method of initialization. Default: "GeometricalCenter". */
     transformInitializer->GeometryOn();
+    std::string method = "GeometricalCenter";
+    this->m_Configuration->ReadParameter( method,
+      "AutomaticTransformInitializationMethod", 0 );
+    if ( method == "CenterOfGravity" )
+    {
+      transformInitializer->MomentsOn();
+    }
+
     transformInitializer->InitializeTransform();
   }
 
@@ -391,6 +401,8 @@ SimilarityTransformElastix<TElastix>
   IndexType     index;
   PointType     origin;
   SizeType      size;
+  DirectionType direction;
+  direction.SetIdentity();
   for ( unsigned int i = 0; i < SpaceDimension; i++ )
   {
     /** Read size from the parameter file. Zero by default, which is illegal. */
@@ -408,6 +420,13 @@ SimilarityTransformElastix<TElastix>
     /** Default origin. Read origin from the parameter file. */
     origin[ i ] = 0.0;
     this->m_Configuration->ReadParameter( origin[ i ], "Origin", i );
+
+    /** Read direction cosines. Default identity */
+    for ( unsigned int j = 0; j < SpaceDimension; j++ )
+    {
+      this->m_Configuration->ReadParameter( direction( j, i ),
+        "Direction", i * SpaceDimension + j );        
+    }
   }
 
   /** Check for image size. */
@@ -437,6 +456,7 @@ SimilarityTransformElastix<TElastix>
   dummyImage->SetRegions( region );
   dummyImage->SetOrigin( origin );
   dummyImage->SetSpacing( spacing );
+  dummyImage->SetDirection( direction );
 
   /** Convert center of rotation from index-value to physical-point-value.*/
   dummyImage->TransformIndexToPhysicalPoint( 

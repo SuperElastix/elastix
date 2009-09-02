@@ -55,6 +55,7 @@ int main( int argc, char **argv )
   typedef std::vector<ElastixMainPointer>             ElastixMainVectorType;
   typedef ElastixMainType::ObjectPointer              ObjectPointer;
   typedef ElastixMainType::DataObjectContainerPointer DataObjectContainerPointer;
+  typedef ElastixMainType::FlatDirectionCosinesType   FlatDirectionCosinesType;
 
   typedef ElastixMainType::ArgumentMapType            ArgumentMapType;
   typedef ArgumentMapType::value_type                 ArgumentMapEntryType;
@@ -71,6 +72,7 @@ int main( int argc, char **argv )
   DataObjectContainerPointer movingImageContainer = 0;
   DataObjectContainerPointer fixedMaskContainer = 0;
   DataObjectContainerPointer movingMaskContainer = 0;
+  FlatDirectionCosinesType  fixedImageOriginalDirection;
   int returndummy = 0;
   unsigned long nrOfParameterFiles = 0;
   ArgumentMapType argMap;
@@ -202,6 +204,7 @@ int main( int argc, char **argv )
     elastices[ i ]->SetMovingImageContainer( movingImageContainer );
     elastices[ i ]->SetFixedMaskContainer( fixedMaskContainer );
     elastices[ i ]->SetMovingMaskContainer( movingMaskContainer );
+    elastices[ i ]->SetOriginalFixedImageDirectionFlat( fixedImageOriginalDirection );
 
     /** Set the current elastix-level. */
     elastices[ i ]->SetElastixLevel( i );
@@ -248,6 +251,7 @@ int main( int argc, char **argv )
     movingImageContainer = elastices[ i ]->GetMovingImageContainer();
     fixedMaskContainer   = elastices[ i ]->GetFixedMaskContainer();
     movingMaskContainer  = elastices[ i ]->GetMovingMaskContainer();
+    fixedImageOriginalDirection = elastices[ i ]->GetOriginalFixedImageDirectionFlat();
     
     /** Print a finish message. */
     elxout << "Running elastix with parameter file " << i

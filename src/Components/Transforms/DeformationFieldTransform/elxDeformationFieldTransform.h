@@ -148,9 +148,14 @@ using namespace itk;
     /** The private copy constructor. */
     void operator=( const Self& );            // purposely not implemented
 
+    typedef typename DeformationFieldType::DirectionType   DirectionType;
+
     /** The transform that is set as current transform in the 
      * CcombinationTransform */
     DeformationFieldInterpolatingTransformPointer m_DeformationFieldInterpolatingTransform;
+
+    /** Original direction cosines; stored to facilitate UseDirectionCosines option. */
+    DirectionType           m_OriginalDeformationFieldDirection;
     
   }; // end class DeformationFieldTransform
   

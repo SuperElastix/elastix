@@ -108,6 +108,7 @@ public:
   typedef ElastixBase::DataObjectContainerType            DataObjectContainerType;
   typedef ElastixBase::ObjectContainerPointer             ObjectContainerPointer;
   typedef ElastixBase::DataObjectContainerPointer         DataObjectContainerPointer;
+  typedef ElastixBase::FlatDirectionCosinesType           FlatDirectionCosinesType;
 
   /** Typedefs for the database that holds pointers to ::New() functions.
    * Those functions are used to instantiate components, such as the metric etc.
@@ -180,6 +181,13 @@ public:
    */
   itkSetObjectMacro( InitialTransform, ObjectType );
   itkGetObjectMacro( InitialTransform, ObjectType );
+
+  /** Set/Get the original fixed image direction as a flat array
+   * (d11 d21 d31 d21 d22 etc ) */
+  virtual void SetOriginalFixedImageDirectionFlat(
+    const FlatDirectionCosinesType & arg );
+  virtual const FlatDirectionCosinesType & 
+    GetOriginalFixedImageDirectionFlat( void ) const;
 
   /** Get and Set the elastix level. */
   void SetElastixLevel( unsigned int level );
@@ -271,6 +279,8 @@ protected:
 
   /** The initial transform. */
   ObjectPointer m_InitialTransform;
+
+  FlatDirectionCosinesType     m_OriginalFixedImageDirection;
 
   static ComponentDatabasePointer s_CDB;
   static ComponentLoaderPointer s_ComponentLoader;

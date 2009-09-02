@@ -22,6 +22,7 @@
 
 #include "itkVectorNearestNeighborInterpolateImageFunction.h"
 #include "itkVectorLinearInterpolateImageFunction.h"
+#include "itkChangeInformationImageFilter.h"
 
 namespace elastix
 {
@@ -43,9 +44,11 @@ using namespace itk;
       this->m_DeformationFieldInterpolatingTransform );
 
     /** Make sure that the TransformBase::WriteToFile() does
-     * not read the transformParameters in the file.
-     */
+     * not read the transformParameters in the file. */
     this->SetReadWriteTransformParameters( false );
+
+    /** Initialize to identity. */
+    this->m_OriginalDeformationFieldDirection.SetIdentity();
 
   } // end Constructor
   
@@ -62,6 +65,9 @@ using namespace itk;
     
     /** Call the ReadFromFile from the TransformBase. */
     this->Superclass2::ReadFromFile();
+    
+    typedef ChangeInformationImageFilter<DeformationFieldType> ChangeInfoFilterType;
+    typedef typename ChangeInfoFilterType::Pointer  ChangeInfoFilterPointer;
 
     /** Setup VectorImageReader. */
     typedef ImageFileReader< DeformationFieldType > VectorReaderType;
@@ -78,11 +84,19 @@ using namespace itk;
       itkExceptionMacro( << "Error while reading transform parameter file!" );
     }
 
+    /** Possibly overrule the direction cosines. */
+    ChangeInfoFilterPointer infoChanger = ChangeInfoFilterType::New();
+    DirectionType direction;
+    direction.SetIdentity();
+    infoChanger->SetOutputDirection( direction );
+    infoChanger->SetChangeDirection( ! this->GetElastix()->GetUseDirectionCosines() );
+    infoChanger->SetInput( vectorReader->GetOutput() );
+
     /** Read deformationFieldImage from file. */
     vectorReader->SetFileName( fileName.c_str() );
     try
     {
-      vectorReader->Update();
+      infoChanger->Update();
     }
     catch( itk::ExceptionObject & excp )
     {
@@ -93,13 +107,17 @@ using namespace itk;
       excp.SetDescription( err_str );
       /** Pass the exception to an higher level. */
       throw excp;
-    }   
+    }
+
+    /** Store the original direction for later use */
+    this->m_OriginalDeformationFieldDirection = 
+      vectorReader->GetOutput()->GetDirection();
 
     /** Set the deformationFieldImage in the
      * itkDeformationFieldInterpolatingTransform.
      */
     this->m_DeformationFieldInterpolatingTransform->
-      SetDeformationField( vectorReader->GetOutput() );
+      SetDeformationField( infoChanger->GetOutput() );
 
     typedef typename DeformationFieldInterpolatingTransformType::
       DeformationFieldInterpolatorType InterpolatorType;
@@ -148,6 +166,9 @@ using namespace itk;
     /** Call the WriteToFile from the TransformBase. */
     this->Superclass2::WriteToFile( param );
 
+    typedef ChangeInformationImageFilter<DeformationFieldType> ChangeInfoFilterType;
+    typedef typename ChangeInfoFilterType::Pointer  ChangeInfoFilterPointer;
+
     /** Add some DeformationFieldTransform specific lines. */
     xout["transpar"] << std::endl << "// DeformationFieldTransform specific" << std::endl;
 
@@ -186,12 +207,18 @@ using namespace itk;
     xout["transpar"] << "(DeformationFieldInterpolationOrder "
       <<  interpolationOrder << ")" << std::endl;
 
+    /** Possibly change the direction cosines to there original value */
+    typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
+    infoChanger->SetOutputDirection( this->m_OriginalDeformationFieldDirection );
+    infoChanger->SetChangeDirection( !this->GetElastix()->GetUseDirectionCosines() );
+    infoChanger->SetInput( this->m_DeformationFieldInterpolatingTransform->GetDeformationField() );
+
     /** Write the deformation field image. */
     typedef itk::ImageFileWriter< DeformationFieldType > VectorWriterType;
     typename VectorWriterType::Pointer writer
       = VectorWriterType::New();
     writer->SetFileName( makeFileName.str().c_str() );
-    writer->SetInput( this->m_DeformationFieldInterpolatingTransform->GetDeformationField() );
+    writer->SetInput( infoChanger->GetOutput() );
 
     /** Do the writing. */
     try

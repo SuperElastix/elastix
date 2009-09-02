@@ -269,7 +269,17 @@ EulerTransformElastix<TElastix>
     transformInitializer->SetMovingImage(
       this->m_Registration->GetAsITKBaseType()->GetMovingImage() );
     transformInitializer->SetTransform( this->m_EulerTransform );
+    
+    /** Select the method of initialization. Default: "GeometricalCenter". */
     transformInitializer->GeometryOn();
+    std::string method = "GeometricalCenter";
+    this->m_Configuration->ReadParameter( method,
+      "AutomaticTransformInitializationMethod", 0 );
+    if ( method == "CenterOfGravity" )
+    {
+      transformInitializer->MomentsOn();
+    }
+    
     transformInitializer->InitializeTransform();
   }
 
@@ -468,7 +478,7 @@ EulerTransformElastix<TElastix>
     return false;
   }
 
-  /** Get spacing, origin and size of the fixed image.
+  /** Get spacing, origin, size, and direction cosines of the fixed image.
    * We put this in a dummy image, so that we can correctly
    * calculate the center of rotation in world coordinates.
    */
@@ -476,6 +486,8 @@ EulerTransformElastix<TElastix>
   IndexType     index;
   PointType     origin;
   SizeType      size;
+  DirectionType direction;
+  direction.SetIdentity();
   for ( unsigned int i = 0; i < SpaceDimension; i++ )
   {
     /** Read size from the parameter file. Zero by default, which is illegal. */
@@ -493,6 +505,13 @@ EulerTransformElastix<TElastix>
     /** Default origin. Read origin from the parameter file. */
     origin[ i ] = 0.0;
     this->m_Configuration->ReadParameter( origin[ i ], "Origin", i );
+
+    /** Read direction cosines. Default identity */
+    for ( unsigned int j = 0; j < SpaceDimension; j++ )
+    {
+      this->m_Configuration->ReadParameter( direction( j, i ),
+        "Direction", i * SpaceDimension + j );        
+    }
   }
 
   /** Check for image size. */
@@ -521,6 +540,7 @@ EulerTransformElastix<TElastix>
   dummyImage->SetRegions( region );
   dummyImage->SetOrigin( origin );
   dummyImage->SetSpacing( spacing );
+  dummyImage->SetDirection( direction );
 
   /** Convert center of rotation from index-value to physical-point-value. */
   dummyImage->TransformIndexToPhysicalPoint(

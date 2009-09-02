@@ -33,6 +33,7 @@
 #include "xoutmain.h"
 #include "itkVectorContainer.h"
 #include "itkImageFileReader.h"
+#include "itkChangeInformationImageFilter.h"
 
 #include <fstream>
 #include <iomanip>
@@ -157,6 +158,7 @@ public:
   typedef ComponentDatabase                   ComponentDatabaseType;
   typedef ComponentDatabaseType::Pointer      ComponentDatabasePointer;
   typedef ComponentDatabaseType::IndexType    DBIndexType;
+  typedef std::vector<double>                 FlatDirectionCosinesType;
 
   /** The itk class that ElastixTemplate is expected to inherit from
    * Of course ElastixTemplate also inherits from this class (ElastixBase).
@@ -312,6 +314,18 @@ public:
     return this->m_DefaultOutputPrecision;
   }
 
+  /** Get whether direction cosines should be taken into account (true)
+   * or ignored (false). This depends on the UseDirectionCosines 
+   * parameter. */
+  virtual bool GetUseDirectionCosines( void ) const;
+
+  /** Set/Get the original fixed image direction as a flat array
+   * (d11 d21 d31 d21 d22 etc ) */
+  virtual void SetOriginalFixedImageDirectionFlat(
+    const FlatDirectionCosinesType & arg );
+  virtual const FlatDirectionCosinesType & 
+    GetOriginalFixedImageDirectionFlat( void ) const;
+
 protected:
 
   ElastixBase();
@@ -320,6 +334,8 @@ protected:
   ConfigurationPointer      m_Configuration;
   DBIndexType               m_DBIndex;
   ComponentDatabasePointer  m_ComponentDatabase;
+  
+  FlatDirectionCosinesType     m_OriginalFixedImageDirection;
 
   /** Convenient mini class to load the files specified by a filename container
    * The function GenerateImageContainer can be used without instantiating an 
@@ -328,6 +344,10 @@ protected:
    * to be loaded. In case of errors, an itk::ExceptionObject is thrown that
    * includes this short description and the fileName which caused the error.
    * See ElastixTemplate::Run() for an example of usage.
+   *
+   * The useDirection option is built in as a means to ignore the direction 
+   * cosines. Set it to false to force the direction cosines to identity.
+   * The original direction cosines are returned separately.
    */
   template < class TImage >
   class MultipleImageLoader
@@ -337,9 +357,13 @@ protected:
     typedef typename ImageType::Pointer         ImagePointer;
     typedef ImageFileReader<ImageType>          ImageReaderType;
     typedef typename ImageReaderType::Pointer   ImageReaderPointer;
+    typedef typename ImageType::DirectionType   DirectionType;
+    typedef ChangeInformationImageFilter<ImageType> ChangeInfoFilterType;
+    typedef typename ChangeInfoFilterType::Pointer  ChangeInfoFilterPointer;
 
     static DataObjectContainerPointer GenerateImageContainer(
-      FileNameContainerType * fileNameContainer, const std::string & imageDescription )
+      FileNameContainerType * fileNameContainer, const std::string & imageDescription,
+      bool useDirectionCosines, DirectionType * originalDirectionCosines = NULL )
     {
       DataObjectContainerPointer imageContainer = DataObjectContainerType::New();
 
@@ -349,11 +373,17 @@ protected:
         /** Setup reader. */
         ImageReaderPointer imageReader = ImageReaderType::New();
         imageReader->SetFileName( fileNameContainer->ElementAt( i ).c_str() );
+        ChangeInfoFilterPointer infoChanger = ChangeInfoFilterType::New();
+        DirectionType direction;
+        direction.SetIdentity();
+        infoChanger->SetOutputDirection( direction );
+        infoChanger->SetChangeDirection( !useDirectionCosines );
+        infoChanger->SetInput( imageReader->GetOutput() );
 
         /** Do the reading. */
         try
-        {
-          imageReader->Update();
+        {          
+          infoChanger->Update();
         }
         catch( itk::ExceptionObject & excp )
         {
@@ -366,9 +396,15 @@ protected:
           throw excp;
         }
 
-        /** Store loaded image in the image container, as a DataObject*. */
-        ImagePointer image = imageReader->GetOutput();
+        /** Store loaded image in the image container, as a DataObjectPointer. */
+        ImagePointer image = infoChanger->GetOutput();
         imageContainer->CreateElementAt(i) = image.GetPointer();
+
+        /** Store the original direction cosines */
+        if ( originalDirectionCosines )
+        {
+          *originalDirectionCosines = imageReader->GetOutput()->GetDirection();
+        }
 
       } // end for i
 
@@ -419,6 +455,9 @@ private:
   /** The initial and final transform. */
   ObjectPointer m_InitialTransform;
   ObjectPointer m_FinalTransform;
+
+  /** Use or ignore direction cosines. */
+  bool m_UseDirectionCosines;
 
   /** Read a series of command line options that satisfy the following syntax:
    * {-f,-f0} \<filename0\> [-f1 \<filename1\> [ -f2 \<filename2\> ... ] ]

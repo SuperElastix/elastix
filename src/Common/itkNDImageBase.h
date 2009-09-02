@@ -101,7 +101,7 @@ namespace itk
     typedef Array<SpacingValueType>                 SpacingType;
     typedef Array<PointValueType>                   PointType;
     typedef Array<OffsetValueType>                  OffsetType;
-    
+    /** \todo: extend to direction cosines; but not needed for now in elastix */
         
     /** Region typedef support. A region is used to specify a subset of an image. */
 

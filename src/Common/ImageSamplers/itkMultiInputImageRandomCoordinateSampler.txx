@@ -16,6 +16,8 @@
 #define __MultiInputImageRandomCoordinateSampler_txx
 
 #include "itkMultiInputImageRandomCoordinateSampler.h"
+#include "vnl/vnl_inverse.h"
+#include "itkConfigure.h"
 
 
 namespace itk
@@ -69,10 +71,10 @@ namespace itk
     interpolator->SetInputImage( inputImage );
 
     /** Get the intersection of all sample regions. */
-    InputImagePointType smallestPoint;
-    InputImagePointType largestPoint;
+    InputImageContinuousIndexType smallestContIndex;
+    InputImageContinuousIndexType largestContIndex;
     this->GenerateSampleRegion(
-      smallestPoint, largestPoint );
+      smallestContIndex, largestContIndex );
     
     /** Reserve memory for the output. */
     sampleContainer->Reserve( this->GetNumberOfSamples() );
@@ -81,6 +83,7 @@ namespace itk
     typename ImageSampleContainerType::Iterator iter;
     typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
 
+    InputImageContinuousIndexType sampleContIndex;
     /** Fill the sample container. */
     if ( mask.IsNull() )
     {
@@ -91,12 +94,15 @@ namespace itk
         InputImagePointType & samplePoint = (*iter).Value().m_ImageCoordinates;
         ImageSampleValueType & sampleValue = (*iter).Value().m_ImageValue;
 
-        /** Generate a point in the input image region. */
-        this->GenerateRandomCoordinate( smallestPoint, largestPoint, samplePoint );
+        /** Generate a point in the input image region. */        
+        this->GenerateRandomCoordinate( smallestContIndex, largestContIndex, sampleContIndex );
 
-        /** Compute the value at the point. */
+        /** Convert to point */
+        inputImage->TransformContinuousIndexToPhysicalPoint( sampleContIndex, samplePoint );
+        
+        /** Compute the value at the contindex. */
         sampleValue = static_cast<ImageSampleValueType>(
-          this->m_Interpolator->Evaluate( samplePoint ) );
+          this->m_Interpolator->EvaluateAtContinuousIndex( sampleContIndex ) );
 
       } // end for loop
     } // end if no mask
@@ -135,13 +141,14 @@ namespace itk
             itkExceptionMacro( << "Could not find enough image samples within reasonable time. Probably the mask is too small" );
           }
 
-          /** Generate a point in the input image region. */
-          this->GenerateRandomCoordinate( smallestPoint, largestPoint, samplePoint );
+          /** Generate a point in the input image region. */          
+          this->GenerateRandomCoordinate( smallestContIndex, largestContIndex, sampleContIndex );
+          inputImage->TransformContinuousIndexToPhysicalPoint( sampleContIndex, samplePoint );
         } while ( !this->IsInsideAllMasks( samplePoint ) );
 
-        /** Compute the value at the point. */
+        /** Compute the value at the contindex. */
         sampleValue = static_cast<ImageSampleValueType>( 
-          this->m_Interpolator->Evaluate( samplePoint ) );
+          this->m_Interpolator->EvaluateAtContinuousIndex( sampleContIndex ) );
 
       } // end for loop
     } // end if mask
@@ -157,12 +164,12 @@ namespace itk
     void
     MultiInputImageRandomCoordinateSampler< TInputImage >::
     GenerateSampleRegion(
-      InputImagePointType & smallestPoint,
-      InputImagePointType & largestPoint )
+      InputImageContinuousIndexType & smallestContIndex,
+      InputImageContinuousIndexType & largestContIndex )
   {
     /** Get handles to the number of inputs and regions. */
-    unsigned int numberOfInputs = this->GetNumberOfInputs();
-    unsigned int numberOfRegions = this->GetNumberOfInputImageRegions();
+    const unsigned int numberOfInputs = this->GetNumberOfInputs();
+    const unsigned int numberOfRegions = this->GetNumberOfInputImageRegions();
 
     /** Check. */
     if ( numberOfRegions != numberOfInputs && numberOfRegions != 1 )
@@ -170,11 +177,28 @@ namespace itk
       itkExceptionMacro( << "ERROR: The number of regions should be 1 or the number of inputs." );
     }
 
+    typedef InputImageType::DirectionType DirectionType;
+    DirectionType dir0 = this->GetInput( 0 )->GetDirection();
+    DirectionType dir0inv = vnl_inverse( dir0.GetVnlMatrix() );
+    for (unsigned int i = 1; i < numberOfInputs; ++i )
+    {
+      DirectionType diri = this->GetInput( i )->GetDirection();
+      if ( diri != dir0 )
+      {
+        itkExceptionMacro( << "ERROR: All input images should have the same direction cosines matrix." );
+      }
+    }
+
     /** Initialize the smallest and largest point. */
+    InputImagePointType smallestPoint;
+    InputImagePointType largestPoint;
     smallestPoint.Fill( NumericTraits<InputImagePointValueType>::NonpositiveMin() );
     largestPoint.Fill( NumericTraits<InputImagePointValueType>::max() );
 
-    /** Determine the intersection of all regions. */
+    /** Determine the intersection of all regions, assuming identical direction cosines,
+     * but possibly different origin/spacing.
+     * \todo: test this really carefully!
+     */
     InputImageSizeType unitSize;
     unitSize.Fill( 1 );
     for ( unsigned int i = 0; i < numberOfRegions; ++i )
@@ -185,13 +209,19 @@ namespace itk
       InputImageIndexType largestIndex
         = smallestIndex + this->GetInputImageRegion( i ).GetSize() - unitSize;
 
-      /** Convert to points. */
+      /** Convert to points */
       InputImagePointType smallestImagePoint;
       InputImagePointType largestImagePoint;
       this->GetInput( i )->TransformIndexToPhysicalPoint(
         smallestIndex, smallestImagePoint );
       this->GetInput( i )->TransformIndexToPhysicalPoint(
       largestIndex, largestImagePoint );
+
+      /** apply inverse direction, so that next max-operation makes sense. */
+#ifdef ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE
+      smallestImagePoint = dir0inv * smallestImagePoint;
+      largestImagePoint = dir0inv * largestImagePoint;
+#endif
 
       /** Determine intersection. */
       for ( unsigned int j = 0; j < InputImageDimension; ++j )
@@ -204,12 +234,30 @@ namespace itk
       }
     }
 
+    /** Convert to continuous index in input image 0. */
+#ifdef ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE
+    smallestPoint = dir0 * smallestPoint;
+    largestPoint = dir0 * largestPoint;
+#endif
+    this->GetInput( 0 )->TransformPhysicalPointToContinuousIndex( smallestPoint, smallestContIndex );
+    this->GetInput( 0 )->TransformPhysicalPointToContinuousIndex( largestPoint, largestContIndex );
+
     /** Support for localised mutual information. */
     if ( this->GetUseRandomSampleRegion() )
     {
-      InputImagePointType maxSmallestPoint = largestPoint - this->GetSampleRegionSize();
-      this->GenerateRandomCoordinate( smallestPoint, maxSmallestPoint, smallestPoint );
-      largestPoint = smallestPoint + this->GetSampleRegionSize();
+      /** Convert sampleRegionSize to continuous index space */
+      typedef typename InputImageContinuousIndexType::VectorType   CIndexVectorType;
+      CIndexVectorType sampleRegionSize;
+      for (unsigned int i = 0; i < InputImageDimension; ++i)
+      {
+        sampleRegionSize[i] = this->GetSampleRegionSize()[i] /
+          this->GetInput()->GetSpacing()[i];
+      }       
+      InputImageContinuousIndexType maxSmallestContIndex = largestContIndex;
+      maxSmallestContIndex -= sampleRegionSize;
+      this->GenerateRandomCoordinate( smallestContIndex, maxSmallestContIndex, smallestContIndex );      
+      largestContIndex = smallestContIndex;
+      largestContIndex += sampleRegionSize; 
     }
     
   } // end GenerateSampleRegion()
@@ -223,17 +271,16 @@ namespace itk
     void
     MultiInputImageRandomCoordinateSampler< TInputImage >::
     GenerateRandomCoordinate(
-      const InputImagePointType & smallestPoint,
-      const InputImagePointType & largestPoint,
-      InputImagePointType       & randomPoint )
+      const InputImageContinuousIndexType & smallestContIndex,
+      const InputImageContinuousIndexType & largestContIndex,
+      InputImageContinuousIndexType &       randomContIndex)
   {
     for ( unsigned int i = 0; i < InputImageDimension; ++i)
     {
-      randomPoint[ i ] = static_cast<InputImagePointValueType>( 
+      randomContIndex[ i ] = static_cast<InputImagePointValueType>( 
         this->m_RandomGenerator->GetUniformVariate(
-        smallestPoint[ i ], largestPoint[ i ] ) );
+        smallestContIndex[ i ], largestContIndex[ i ] ) );
     }
-
   } // end GenerateRandomCoordinate()
 
 
