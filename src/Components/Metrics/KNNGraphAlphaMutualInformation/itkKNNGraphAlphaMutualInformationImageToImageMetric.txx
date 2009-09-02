@@ -748,7 +748,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   /** Update the imageSampler and get a handle to the sample container. */
   this->GetImageSampler()->Update();
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  unsigned long size = sampleContainer->Size();
+  const unsigned long nrOfRequestedSamples = sampleContainer->Size();
 
   /** Create an iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator fiter;
@@ -762,18 +762,26 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Resize the list samples so that enough memory is allocated. */
   listSampleFixed->SetMeasurementVectorSize( fixedSize );
-  listSampleFixed->Resize( size );
+  listSampleFixed->Resize( nrOfRequestedSamples );
   listSampleMoving->SetMeasurementVectorSize( movingSize );
-  listSampleMoving->Resize( size );
+  listSampleMoving->Resize( nrOfRequestedSamples );
   listSampleJoint->SetMeasurementVectorSize( jointSize );
-  listSampleJoint->Resize( size );
+  listSampleJoint->Resize( nrOfRequestedSamples );
+
+  /** Potential speedup: it avoids re-allocations. I noticed performance
+   * gains when nrOfRequestedSamples is about 10000 or higher.
+   */
+  jacobianContainer.reserve( nrOfRequestedSamples );
+  jacobianIndicesContainer.reserve( nrOfRequestedSamples );
+  spatialDerivativesContainer.reserve( nrOfRequestedSamples );
 
   /** Create variables to store intermediate results. */
   RealType movingImageValue;
   MovingImagePointType mappedPoint;
   double fixedFeatureValue = 0.0;
   double movingFeatureValue = 0.0;
-  NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );  
+  NonZeroJacobianIndicesType nzji(
+    this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );  
   TransformJacobianType jacobian;
 
   /** Loop over the fixed image samples to calculate the list samples. */
@@ -834,7 +842,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
       for ( unsigned int j = 1; j < this->GetNumberOfFixedImages(); j++ )
       {
         fixedFeatureValue = this->m_FixedImageInterpolatorVector[ j ]
-        ->Evaluate( fixedPoint );
+          ->Evaluate( fixedPoint );
         listSampleFixed->SetMeasurement(
           this->m_NumberOfPixelsCounted, j, fixedFeatureValue );
         listSampleJoint->SetMeasurement(
@@ -845,7 +853,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
       for ( unsigned int j = 1; j < this->GetNumberOfMovingImages(); j++ )
       {
         movingFeatureValue = this->m_InterpolatorVector[ j ]
-        ->Evaluate( mappedPoint );
+          ->Evaluate( mappedPoint );
         listSampleMoving->SetMeasurement(
           this->m_NumberOfPixelsCounted,
           j,
@@ -981,9 +989,6 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   const SpatialDerivativeType & D1sparse,
   const SpatialDerivativeType & D2sparse_M,
   const SpatialDerivativeType & D2sparse_J,
-  //const ParameterIndexArrayType & D1indices,
-  //const ParameterIndexArrayType & D2indices_M,
-  //const ParameterIndexArrayType & D2indices_J,
   const NonZeroJacobianIndicesType & D1indices,
   const NonZeroJacobianIndicesType & D2indices_M,
   const NonZeroJacobianIndicesType & D2indices_J,
