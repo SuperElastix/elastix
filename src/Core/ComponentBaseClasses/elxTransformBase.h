@@ -46,8 +46,64 @@ namespace elastix
  *   transform \f$T_1\f$ (which is currently optimized) by
  *   addition: \f$T(x) = T_0(x) + T_1(x)\f$;\n
  *   "Compose" by composition: \f$T(x) = T_1 ( T_0(x) )\f$.\n
- *   example: <tt>(HowToCombineTransforms "Add")
+ *   example: <tt>(HowToCombineTransforms "Add")</tt>\n
  *   Default: "Add".
+ *
+ * \transformparameter UseDirectionCosines: Controls whether to use or ignore the 
+ * direction cosines (world matrix, transform matrix) set in the images.
+ * Voxel spacing and image origin are always taken into account, regardless 
+ * the setting of this parameter.\n
+ *    example: <tt>(UseDirectionCosines "true")</tt>\n
+ * Default: false. Recommended: true. The default value is false for
+ * backward compatibility reasons. This parameter was introduced in
+ * elastix 4.3. Setting it to false means that you choose to ignore important
+ * information from the image, which relates voxel coordinates to world coordinates.
+ * Ignoring it may easily lead to left/right swaps for example, which could 
+ * skrew up a (medical) analysis.
+ * \transformparameter HowToCombineTransforms: Indicates how to use the initial transform\n
+ *   (given by the command-line argument -t0, or, if using multiple parameter files,
+ *   by the result of registration using the previous parameter file). Possible options
+ *   are "Add" and "Compose".\n
+ *   "Add" combines the initial transform \f$T_0\f$ and the current
+ *   transform \f$T_1\f$ (which is currently optimized) by
+ *   addition: \f$T(x) = T_0(x) + T_1(x)\f$;\n
+ *   "Compose" by composition: \f$T(x) = T_1 ( T_0(x) )\f$.\n
+ *   example: <tt>(HowToCombineTransforms "Add")</tt>\n
+ *   Default: "Add".
+ * \transformparameter Size: The size (number of voxels in each dimension) of the fixed image
+ * that was used during registration, and which is used for resampling the deformed moving image.\n
+ * example: <tt>(Size 100 90 90)</tt>\n
+ * Mandatory parameter.
+ * \transformparameter Index: The starting index of the fixed image region
+ * that was used during registration, and which is used for resampling the deformed moving image.\n
+ * example: <tt>(Index 0 0 0)</tt>\n
+ * Currently always zero.
+ * \transformparameter Spacing: The voxel spacing of the fixed image
+ * that was used during registration, and which is used for resampling the deformed moving image.\n
+ * example: <tt>(Spacing 1.0 1.0 1.0)</tt>\n
+ * Default: 1.0 for each dimension.
+ * \transformparameter Origin: The origin (location of the first voxel in world coordinate) of the fixed image
+ * that was used during registration, and which is used for resampling the deformed moving image.\n
+ * example: <tt>(Origin 5.0 10.0 11.0)</tt>\n
+ * Default: 0.0 for each dimension.
+ * \transformparameter Direction: The direction cosines matrix of the fixed image
+ * that was used during registration, and which is used for resampling the deformed moving image
+ * if the UseDirectionCosines parameter is set to "true".\n
+ * example: <tt>(Direction -1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.1)</tt>\n
+ * Default: identity matrix. Elements are sorted as follows: [ d11 d21 d31 d12 d22 d32 d13 d23 d33] (in 3D).
+ * \transformparameter TransformParameters: the transform parameter vector that defines the transformation.\n
+ * example <tt>(TransformParameters 0.03 1.0 0.2 ...)</tt>\n
+ * The number of entries is stored the NumberOfParameters entry.
+ * \transformparameter NumberOfParameters: the length of the transform parameter vector.\n
+ * example <tt>(NumberOfParameters 722)</tt>\n
+ * \transformparameter InitialTransformParametersFileName: The location/name of an initial
+ * transform that will be loaded when loading the current transform parameter file. Note 
+ * that transform parameter file can also contain an initial transform. Recursively all
+ * transforms are thus automatically loaded when loading the last transform parameter file.\n
+ * example <tt>(InitialTransformParametersFileName "./res/TransformParameters.0.txt")</tt>\n
+ * The location is relative to the path from where elastix/transformix is started!\n
+ * Default: "NoInitialTransform", which (obviously) means that there is no initial transform
+ * to be loaded.
  *
  * The command line arguments used by this class are:
  * \commandlinearg -t0: optional argument for elastix for specifying an initial transform

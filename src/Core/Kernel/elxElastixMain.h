@@ -71,6 +71,21 @@ extern int xoutSetup( const char * logfilename );
  * to this type.\n
  * example: <tt>(MovingInternalImagePixelType "float")</tt>\n
  * Default/recommended: "float"\n
+ *
+ * \transformparameter FixedImageDimension: the dimension of the fixed image. \n
+ * example: <tt>(FixedImageDimension 2)</tt>\n
+ * \transformparameter MovingImageDimension: the dimension of the fixed image. \n
+ * example: <tt>(MovingImageDimension 2)</tt>\n
+ * \transformparameter FixedInternalImagePixelType: the pixel type of the internal
+ * fixed image representation. The fixed image is automatically converted
+ * to this type.\n
+ * example: <tt>(FixedInternalImagePixelType "float")</tt>\n
+ * Default/recommended: "float"\n
+ * \transformparameter MovingInternalImagePixelType: the pixel type of the internal
+ * moving image representation. The moving image is automatically converted
+ * to this type.\n
+ * example: <tt>(MovingInternalImagePixelType "float")</tt>\n
+ * Default/recommended: "float"\n
  * 
  * \ingroup Kernel
  */

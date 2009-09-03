@@ -93,7 +93,17 @@ using namespace itk;
  *    example: <tt>(WriteTransformParametersEachResolution "true")</tt>\n
  *    This parameter can not be specified for each resolution separately.
  *    Default value: "false".
- *
+ * \parameter UseDirectionCosines: Controls whether to use or ignore the 
+ * direction cosines (world matrix, transform matrix) set in the images.
+ * Voxel spacing and image origin are always taken into account, regardless 
+ * the setting of this parameter.\n
+ *    example: <tt>(UseDirectionCosines "true")</tt>\n
+ * Default: false. Recommended: true. The default value is false for
+ * backward compatibility reasons. This parameter was introduced in
+ * elastix 4.3. Setting it to false means that you choose to ignore important
+ * information from the image, which relates voxel coordinates to world coordinates.
+ * Ignoring it may easily lead to left/right swaps for example, which could 
+ * skrew up a (medical) analysis.
  *
  * \ingroup Kernel
  */
