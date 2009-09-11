@@ -143,8 +143,8 @@ namespace itk
             typename ImageSampleContainerType::iterator stlend = sampleContainer->end();
             stlnow += iter.Index();
             sampleContainer->erase( stlnow, stlend);
-            /** Throw an error. */
-            itkExceptionMacro( << "Could not find enough image samples within reasonable time. Probably the mask is too small" );
+            itkExceptionMacro( << "Could not find enough image samples within "
+              << "reasonable time. Probably the mask is too small" );
           }
 
           /** Generate a point in the input image region. */

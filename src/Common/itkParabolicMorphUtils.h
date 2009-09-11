@@ -1,11 +1,13 @@
 #ifndef __itkParabolicUtils_h
 #define __itkParabolicUtils_h
 
+#include <itkArray.h>
+
 #include "itkProgressReporter.h"
 namespace itk {
 template <class LineBufferType, class RealType, bool doDilate>
-void DoLine( LineBufferType &LineBuf, LineBufferType &tmpLineBuf,
-  const RealType magnitude, const RealType m_Extreme )
+void DoLine(LineBufferType &LineBuf, LineBufferType &tmpLineBuf, 
+	    const RealType magnitude, const RealType m_Extreme)
 {
   // contact point algorithm
   long koffset = 0, newcontact=0;  // how far away the search starts.
@@ -18,7 +20,7 @@ void DoLine( LineBufferType &LineBuf, LineBufferType &tmpLineBuf,
 					    // comparison
     for (long krange = koffset; krange <= 0; krange++)
       {
-      // difference needs to be parameterised
+      // difference needs to be paramaterised
       RealType T = LineBuf[pos + krange] - magnitude * krange * krange;
       // switch on template parameter - hopefully gets optimized away.
       if (doDilate ? (T >= BaseVal) : (T <= BaseVal) )
@@ -51,7 +53,7 @@ void DoLine( LineBufferType &LineBuf, LineBufferType &tmpLineBuf,
 
 template <class TInIter, class TOutIter, class RealType, 
 	  class OutputPixelType, bool doDilate>
-void doOneDimension( TInIter &inputIterator, TOutIter &outputIterator, 
+void doOneDimension(TInIter &inputIterator, TOutIter &outputIterator, 
 		    ProgressReporter &progress,
 		    const long LineLength, 
 		    const unsigned direction,
@@ -59,9 +61,13 @@ void doOneDimension( TInIter &inputIterator, TOutIter &outputIterator,
 		    const bool m_UseImageSpacing,
 		    const RealType m_Extreme,
 		    const RealType image_scale,
-		    const RealType Sigma )
+		    const RealType Sigma)
 {
-  typedef typename std::vector<RealType> LineBufferType;
+//  typedef typename std::vector<RealType> LineBufferType;
+
+  // message from M.Starring suggested performance gain using Array
+  // instead of std::vector.
+  typedef typename itk::Array<RealType> LineBufferType;
   RealType iscale = 1.0;
   if (m_UseImageSpacing)
     {
@@ -105,5 +111,4 @@ void doOneDimension( TInIter &inputIterator, TOutIter &outputIterator,
 
 
 }
-
 #endif

@@ -154,7 +154,6 @@ ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage >
   //const unsigned int imageDimension = inputImage->GetImageDimension();
   outputImage->SetBufferedRegion( outputImage->GetRequestedRegion() );
   outputImage->Allocate();
-
   // Set up the multithreaded processing
   typename ImageSource< TOutputImage >::ThreadStruct str;
   str.Filter = this;
@@ -177,7 +176,7 @@ ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>
 {
   // compute the number of rows first, so we can setup a progress reporter
   typename std::vector< unsigned int > NumberOfRows;
-  InputSizeType size = outputRegionForThread.GetSize();
+  InputSizeType   size   = outputRegionForThread.GetSize();
 
   for (unsigned int i = 0; i < InputImageDimension; i++)
     {
@@ -194,17 +193,20 @@ ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>
 
   ProgressReporter * progress = new ProgressReporter(this, threadId, NumberOfRows[m_CurrentDimension], 30, m_CurrentDimension * progressPerDimension, progressPerDimension);
 
+
   typedef ImageLinearConstIteratorWithIndex< TInputImage  >  InputConstIteratorType;
   typedef ImageLinearIteratorWithIndex< TOutputImage >  OutputIteratorType;
 
   // for stages after the first
   typedef ImageLinearConstIteratorWithIndex< TOutputImage  >  OutputConstIteratorType;
 
+
   typedef ImageRegion< TInputImage::ImageDimension > RegionType;
 
-  typename TInputImage::ConstPointer inputImage(  this->GetInput () );
-  typename TOutputImage::Pointer     outputImage( this->GetOutput() );
+  typename TInputImage::ConstPointer   inputImage(    this->GetInput ()   );
+  typename TOutputImage::Pointer       outputImage(   this->GetOutput()        );
 
+  
   outputImage->SetBufferedRegion( outputImage->GetRequestedRegion() );
   outputImage->Allocate();
   RegionType region = outputRegionForThread;
@@ -233,16 +235,14 @@ ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>
       unsigned long LineLength = region.GetSize()[0];
       RealType image_scale = this->GetInput()->GetSpacing()[0];
       
-      doOneDimension<InputConstIteratorType,OutputIteratorType,
-        RealType, OutputPixelType, doDilate>(
-        inputIterator, outputIterator,
-        *progress, LineLength, 0,
-        this->m_MagnitudeSign,
-        this->m_UseImageSpacing,
-        this->m_Extreme,
-        image_scale,
-        this->m_Scale[0]
-      );
+      doOneDimension<InputConstIteratorType,OutputIteratorType, 
+	RealType, OutputPixelType, doDilate>(inputIterator, outputIterator, 
+					     *progress, LineLength, 0, 
+					     this->m_MagnitudeSign, 
+					     this->m_UseImageSpacing,
+					     this->m_Extreme,
+					     image_scale, 
+					     this->m_Scale[0]);
       }
     else 
       {
@@ -271,16 +271,14 @@ ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>
       RealType image_scale = this->GetInput()->GetSpacing()[m_CurrentDimension];
 
       doOneDimension<OutputConstIteratorType,OutputIteratorType,
-        RealType, OutputPixelType, doDilate>(
-        inputIteratorStage2, outputIterator,
-        *progress, LineLength, m_CurrentDimension,
-        this->m_MagnitudeSign,
-        this->m_UseImageSpacing,
-        this->m_Extreme,
-        image_scale,
-        this->m_Scale[m_CurrentDimension]
-      );
-      }
+	RealType, OutputPixelType, doDilate>(inputIteratorStage2, outputIterator, 
+					     *progress, LineLength, m_CurrentDimension,
+					     this->m_MagnitudeSign, 
+					     this->m_UseImageSpacing,
+					     this->m_Extreme,
+					     image_scale,
+					     this->m_Scale[m_CurrentDimension]);
+	}
     }
 }
 
@@ -303,5 +301,4 @@ ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>
 
 
 } // namespace itk
-
 #endif

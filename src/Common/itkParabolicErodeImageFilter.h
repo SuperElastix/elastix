@@ -30,17 +30,17 @@ class ITK_EXPORT ParabolicErodeImageFilter:
 
 public:
   /** Standard class typedefs. */
-  typedef ParabolicErodeImageFilter       Self;
-  typedef ParabolicErodeDilateImageFilter<
-    TInputImage, false, TOutputImage>     Superclass;
-  typedef SmartPointer<Self>              Pointer;
+  typedef ParabolicErodeImageFilter  Self;
+  typedef ParabolicErodeDilateImageFilter<TInputImage, false, TOutputImage> Superclass;
+  typedef SmartPointer<Self>                   Pointer;
   typedef SmartPointer<const Self>        ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Runtime information support. */
-  itkTypeMacro( ParabolicErodeImageFilter, ParabolicErodeDilateImageFilter );
+  itkTypeMacro(ParabolicErodeImageFilter, ParabolicErodeDilateImageFilter);
+
 
   /** Pixel Type of the input image */
   typedef TInputImage                                    InputImageType;
@@ -73,6 +73,7 @@ protected:
 private:
   ParabolicErodeImageFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
+
   
 };
 

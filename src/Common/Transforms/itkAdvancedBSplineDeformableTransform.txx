@@ -965,7 +965,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
-::GetJacobian( const InputPointType & point, WeightsType& weights, ParameterIndexArrayType& indexes) const
+::GetJacobian( const InputPointType & point, WeightsType& weights,
+  ParameterIndexArrayType & indexes ) const
 {
 
   RegionType supportRegion;
@@ -1091,7 +1092,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   {
     jacobian.SetSize( SpaceDimension, nnzji );
   }
-  jacobian.Fill(0.0);
+  jacobian.Fill( 0.0 );
   
   // NOTE: if the support region does not lie totally within the grid
   // we assume zero displacement and zero Jacobian

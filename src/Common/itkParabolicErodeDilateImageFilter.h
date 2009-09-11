@@ -135,6 +135,8 @@ protected:
 //  virtual void GenerateInputRequestedRegion() throw(InvalidRequestedRegionError);
   // Override since the filter produces the entire dataset.
   void EnlargeOutputRequestedRegion(DataObject *output);
+
+  bool m_UseImageSpacing;
   
 private:
   ParabolicErodeDilateImageFilter(const Self&); //purposely not implemented
@@ -143,7 +145,6 @@ private:
   typename TInputImage::PixelType m_Extreme;
 
   int m_MagnitudeSign;
-  bool m_UseImageSpacing;
   int m_CurrentDimension;
 };
 
