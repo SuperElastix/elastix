@@ -41,7 +41,7 @@ TransformRigidityPenalty<TElastix>
   typename RigidityImageReaderType::Pointer fixedRigidityReader;
   typedef ChangeInformationImageFilter<RigidityImageType> ChangeInfoFilterType;
   typedef typename ChangeInfoFilterType::Pointer  ChangeInfoFilterPointer;
-  typedef RigidityImageType::DirectionType        DirectionType;
+  typedef typename RigidityImageType::DirectionType        DirectionType;
 
   if ( fixedRigidityImageName != "" )
   {

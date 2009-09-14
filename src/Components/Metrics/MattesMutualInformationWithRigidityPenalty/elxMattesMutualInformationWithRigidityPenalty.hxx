@@ -55,7 +55,7 @@ MattesMutualInformationWithRigidityPenalty<TElastix>
 {
   typedef ChangeInformationImageFilter<RigidityImageType> ChangeInfoFilterType;
   typedef typename ChangeInfoFilterType::Pointer  ChangeInfoFilterPointer;
-  typedef RigidityImageType::DirectionType        DirectionType;
+  typedef typename RigidityImageType::DirectionType        DirectionType;
 
   /** Read the fixed rigidity image if desired. */
   std::string fixedRigidityImageName = "";

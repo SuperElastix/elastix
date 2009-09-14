@@ -177,9 +177,11 @@ namespace itk
       itkExceptionMacro( << "ERROR: The number of regions should be 1 or the number of inputs." );
     }
 
-    typedef InputImageType::DirectionType DirectionType;
+    typedef typename InputImageType::DirectionType DirectionType;
     DirectionType dir0 = this->GetInput( 0 )->GetDirection();
-    DirectionType dir0inv = vnl_inverse( dir0.GetVnlMatrix() );
+		typename DirectionType::InternalMatrixType dir0invtemp = 
+      vnl_inverse( dir0.GetVnlMatrix() );
+		DirectionType dir0inv( dir0invtemp );
     for (unsigned int i = 1; i < numberOfInputs; ++i )
     {
       DirectionType diri = this->GetInput( i )->GetDirection();
