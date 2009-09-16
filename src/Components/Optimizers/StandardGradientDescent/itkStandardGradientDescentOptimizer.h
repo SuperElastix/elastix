@@ -117,6 +117,14 @@ namespace itk
      * but may be different in inheriting classes, such as the AccelerateGradientDescent */
     itkGetConstMacro( CurrentTime, double );
 
+    /** Set the current time to the initial time. This can be useful
+     * to 'reset' the optimisation, for example if you changed the 
+     * cost function while optimisation. Be careful with this function. */
+    virtual void ResetCurrentTimeToInitialTime( void )
+    {
+      this->m_CurrentTime = this->m_InitialTime;
+    }
+     
   protected:
 
     StandardGradientDescentOptimizer();
