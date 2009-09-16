@@ -272,7 +272,6 @@ namespace itk
 
           /** Update displacement sums. */
           const double displacement =  mappedPoint[ d ] - fixedPoint[ d ];
-          const double displacementSquared = displacement * displacement;
           sumDisplacement += this->m_CurrentLagrangeMultipliers[ i ] * displacement;
           sumDisplacementSquared += displacement * displacement;
 

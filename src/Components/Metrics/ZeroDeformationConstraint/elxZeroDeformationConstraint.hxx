@@ -147,7 +147,7 @@ using namespace itk;
     xl::xout["iteration"]["5:Penalty"]  << this->m_CurrentPenaltyTermMultiplier;
     xl::xout["iteration"]["6:Lagrange"] << this->m_AverageLagrangeMultiplier;
     xl::xout["iteration"]["7:Infeasibility"] << this->GetCurrentInfeasibility();
-    xl::xout["iteration"]["8:MaxAbsDisplacement"] << this->GetCurrentMaximumMagnitude2();
+    xl::xout["iteration"]["8:MaxAbsDisplacement"] << this->GetCurrentMaximumAbsoluteDisplacement();
 
     if ( m_CurrentIteration % this->m_NumSubIterations == 0 )
     {
@@ -172,7 +172,7 @@ using namespace itk;
           }
         }
       }
-      this->m_PreviousMaximumMagnitude2 = this->GetCurrentMaximumMagnitude2();
+      this->m_PreviousMaximumMagnitude2 = this->GetCurrentMaximumAbsoluteDisplacement();
     }    
   } // end AfterEachIteration
 
