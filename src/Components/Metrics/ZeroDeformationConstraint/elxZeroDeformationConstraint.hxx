@@ -54,13 +54,13 @@ using namespace itk;
     xout["iteration"].AddTargetCell("5:Penalty");
     xout["iteration"].AddTargetCell("6:Lagrange");
     xout["iteration"].AddTargetCell("7:Infeasibility");
-    xout["iteration"].AddTargetCell("8:MaxMagnitude2");
+    xout["iteration"].AddTargetCell("8:MaxAbsDisplacement");
 
     /** Format the metric and stepsize as floats */     
     xl::xout["iteration"]["5:Penalty"]  << std::showpoint << std::fixed;
     xl::xout["iteration"]["6:Lagrange"] << std::showpoint << std::fixed;
     xl::xout["iteration"]["7:Infeasibility"] << std::showpoint << std::fixed;
-    xl::xout["iteration"]["8:MaxMagnitude"] << std::showpoint << std::fixed;
+    xl::xout["iteration"]["8:MaxAbsDisplacement"] << std::showpoint << std::fixed;
 
     /** Read config to determine if we want to update the metric weights. */
     m_UpdateMetricWeights = false;
@@ -147,13 +147,13 @@ using namespace itk;
     xl::xout["iteration"]["5:Penalty"]  << this->m_CurrentPenaltyTermMultiplier;
     xl::xout["iteration"]["6:Lagrange"] << this->m_AverageLagrangeMultiplier;
     xl::xout["iteration"]["7:Infeasibility"] << this->GetCurrentInfeasibility();
-    xl::xout["iteration"]["8:MaxMagnitude2"] << this->GetCurrentMaximumMagnitude2();
+    xl::xout["iteration"]["8:MaxAbsDisplacement"] << this->GetCurrentMaximumMagnitude2();
 
     if ( m_CurrentIteration % this->m_NumSubIterations == 0 )
     {
       this->DetermineNewLagrangeMultipliers();
       /** Check if maximum magnitude decreased enough. If not update penalty term multiplier. */
-      if ( this->GetCurrentMaximumMagnitude2() > this->m_RequiredConstraintDecreaseFactor * this->m_PreviousMaximumMagnitude2 )
+      if ( this->GetCurrentMaximumAbsoluteDisplacement() > this->m_RequiredConstraintDecreaseFactor * this->m_PreviousMaximumMagnitude2 )
       {
         this->m_CurrentPenaltyTermMultiplier = this->DetermineNewPenaltyTermMultiplier( this->m_NumPenaltyTermUpdates + 1 );
         this->m_NumPenaltyTermUpdates++;

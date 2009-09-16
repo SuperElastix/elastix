@@ -59,7 +59,7 @@ public:
   
   /** Get functions. */
   itkGetConstMacro( CurrentPenaltyTermMultiplier, double );
-  itkGetConstMacro( CurrentMaximumMagnitude2, double );
+  itkGetConstMacro( CurrentMaximumAbsoluteDisplacement, double );
   itkGetConstMacro( InitialLangrangeMultiplier, double );
   itkGetConstMacro( CurrentInfeasibility, double );
 
@@ -166,11 +166,11 @@ protected:
   double m_CurrentPenaltyTermMultiplier;
   std::vector< double > m_CurrentLagrangeMultipliers;
 
-  /** Current infeasibility value: sum( c( x_k ) ) / K. */
+  /** Current infeasibility value: sum( abs ( c( x_k ) ) ) / K. */
   mutable double m_CurrentInfeasibility;
 
-  /** Current maximum magnitude value. */
-  mutable double m_CurrentMaximumMagnitude2;
+  /** Current maximum absolute displacement value. */
+  mutable double m_CurrentMaximumAbsoluteDisplacement;
 
   /** Initial langrange multiplier value. */
   double m_InitialLangrangeMultiplier;

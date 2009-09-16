@@ -29,8 +29,8 @@ namespace itk
       ::ZeroDeformationConstraintMetric():
         m_CurrentPenaltyTermMultiplier( 1.0 ), 
         m_CurrentLagrangeMultipliers( 0 ),
-        m_CurrentMaximumMagnitude2( 0.0 ),
-        m_InitialLangrangeMultiplier( 1.0 )
+        m_CurrentMaximumAbsoluteDisplacement( 0.0 ),
+        m_InitialLangrangeMultiplier( 0.0 )
   {
     this->SetUseImageSampler( true );
     this->SetUseFixedImageLimiter( false );
@@ -56,14 +56,15 @@ namespace itk
      * initial langrange multiplier value as supplied by the user. 
      */
     this->GetImageSampler()->Update();
+    const unsigned int numConstraints = this->GetImageSampler()->GetOutput()->Size() * MovingImageDimension;
     this->m_CurrentLagrangeMultipliers.clear();
-    this->m_CurrentLagrangeMultipliers.resize( this->GetImageSampler()->GetOutput()->Size(), this->m_InitialLangrangeMultiplier );
+    this->m_CurrentLagrangeMultipliers.resize( numConstraints, this->m_InitialLangrangeMultiplier );
 
     /** Set right size of current penalty term value vector. These values are
      * used to determine new langrange multipliers.
      */
     this->m_CurrentPenaltyTermValues.clear();
-    this->m_CurrentPenaltyTermValues.resize( this->GetImageSampler()->GetOutput()->Size(), 0.0f );
+    this->m_CurrentPenaltyTermValues.resize( numConstraints, 0.0f );
 
   } // end Initialize
 
@@ -106,11 +107,11 @@ namespace itk
     typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
 
     /** Initialize some variables. */
-    double sumMagnitude2 = 0.0;
-    double sumMagnitude4 = 0.0;
+    double sumDisplacement = 0.0;
+    double sumDisplacementSquared = 0.0;
     this->m_CurrentInfeasibility     = 0.0;
     this->m_NumberOfPixelsCounted    = 0;
-    this->m_CurrentMaximumMagnitude2 = 0.0;
+    this->m_CurrentMaximumAbsoluteDisplacement = 0.0;
 
     /** Loop over the samples to compute sums for computation of the metric. */
     int i = 0;
@@ -129,34 +130,46 @@ namespace itk
         sampleOk = this->IsInsideMovingMask( mappedPoint );
       }
 
-      /** Compute the magnitude of mappedPoint - fixedPoint. */
-      if (sampleOk)
+      /** Compute the displacement. */
+      if ( sampleOk )
       {
         this->m_NumberOfPixelsCounted++;
 
-        const double magnitude  = (mappedPoint - fixedPoint).GetVnlVector().magnitude();
-        const double magnitude2 = magnitude * magnitude;
-        /** Remember current penalty term value. */
-        this->m_CurrentPenaltyTermValues[ i ] = magnitude2;
-        this->m_CurrentMaximumMagnitude2 = std::max( this->m_CurrentMaximumMagnitude2, magnitude2 );
-        /** Update magnitude sums. */
-        sumMagnitude2 += this->m_CurrentLagrangeMultipliers[ i ] * magnitude2;
-        sumMagnitude4 += magnitude2 * magnitude2;
-        /** Update infeasibility value. */
-        this->m_CurrentInfeasibility += magnitude2;
+        /** Process all coordinate axes. */
+        for ( unsigned int d = 0; d < MovingImageDimension; ++d )
+        {
+          /** Update displacement sums. */
+          const double displacement =  mappedPoint[ d ] - fixedPoint[ d ];
+          sumDisplacement += this->m_CurrentLagrangeMultipliers[ i ] * displacement;
+          sumDisplacementSquared += displacement * displacement;
+
+          /** Remember current penalty term value. */
+          this->m_CurrentPenaltyTermValues[ i ] = displacement;
+          this->m_CurrentMaximumAbsoluteDisplacement = std::max( this->m_CurrentMaximumAbsoluteDisplacement, fabs( displacement ) );
+
+          /** Update infeasibility value. */
+          this->m_CurrentInfeasibility += fabs( displacement );
+
+          ++i;
+        }
       }
-      ++i;
+      else 
+      {
+        /** Skip point. */
+        i += 3;
+      }
+      
     } // end for loop over the image sample container
 
     /** Average infeasibility measure. */
-    this->m_CurrentInfeasibility /= this->m_NumberOfPixelsCounted;
+    this->m_CurrentInfeasibility /= ( this->m_NumberOfPixelsCounted * MovingImageDimension );
 
     /** Check if enough samples were valid. */
     this->CheckNumberOfSamples(
       sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
     /** Return the mean squares measure value. */
-    return ( -sumMagnitude2 + this->m_CurrentPenaltyTermMultiplier / 2.0 * sumMagnitude4 ) / static_cast< float > ( this->m_NumberOfPixelsCounted );
+    return ( -sumDisplacement + this->m_CurrentPenaltyTermMultiplier / 2.0 * sumDisplacementSquared ) / static_cast< float > ( this->m_NumberOfPixelsCounted * MovingImageDimension );
 
   } // end GetValue
   
@@ -219,16 +232,17 @@ namespace itk
     typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
 
     /** Initialize some variables. */
-    double sumMagnitude2 = 0.0;
-    double sumMagnitude4 = 0.0;
+    double sumDisplacement           = 0.0;
+    double sumDisplacementSquared    = 0.0;
     this->m_CurrentInfeasibility     = 0.0;
     this->m_NumberOfPixelsCounted    = 0;
-    this->m_CurrentMaximumMagnitude2 = 0.0;
+    this->m_CurrentMaximumAbsoluteDisplacement = 0.0;
 
     /** Loop over the samples to compute sums for the metric value and derivative. */
     int i = 0;
     for ( fiter = fbegin; fiter != fend; ++fiter )
     {
+
       /** Read fixed coordinates. */
       FixedImagePointType fixedPoint = (*fiter).Value().m_ImageCoordinates;
 
@@ -242,72 +256,77 @@ namespace itk
         sampleOk = this->IsInsideMovingMask( mappedPoint );
       }
 
-      /** Compute the magnitude of mappedPoint - fixedPoint. */
-      if (sampleOk)
+      /** Compute the displacement. */
+      if ( sampleOk )
       {
+
         this->m_NumberOfPixelsCounted++;
-
-        /** Update terms for value. */
-        MovingImagePointType transformation;
-        for ( unsigned int d = 0; d < FixedImageDimension; ++d )
-        {
-          transformation[ d ] = mappedPoint[ d ] - fixedPoint[ d ];
-        }
-        const double magnitude = transformation.GetVnlVector().magnitude();
-        const double magnitude2 = magnitude * magnitude;
-        /** Remember current penalty term value. */
-        this->m_CurrentPenaltyTermValues[ i ] = magnitude2;
-        this->m_CurrentMaximumMagnitude2 = std::max( this->m_CurrentMaximumMagnitude2, magnitude2 );
-        /** Update magnitude sums. */
-        sumMagnitude2 += this->m_CurrentLagrangeMultipliers[ i ] * magnitude2;
-        sumMagnitude4 += magnitude2 * magnitude2;
-        /** Update infeasibility measure. */
-        this->m_CurrentInfeasibility += magnitude2;
-
-        for ( unsigned int d = 0; d < FixedImageDimension; ++d )
-        {
-          
-          transformation[ d ] = ( -2.0 * this->m_CurrentLagrangeMultipliers[ i ] * transformation[ d ] )
-                                + 2.0 * this->m_CurrentPenaltyTermMultiplier * transformation[ d ] * magnitude2;
-        }
 
         /** Get the TransformJacobian dT/dMu (Jacobian). */
         this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
-
-        /** Compute (dT/dMu)T * scaledTransformation. */
         const typename NonZeroJacobianIndicesType::size_type numNonZeroJacobianIndices = nzji.size();
-        for ( typename NonZeroJacobianIndicesType::size_type n = 0; n < numNonZeroJacobianIndices; ++n )
+
+        /** Process all coordinate axes. */
+        for ( unsigned int d = 0; d < MovingImageDimension; ++d )
         {
-          float jacScaledTransformation = 0.0f;
-          for ( unsigned int d = 0; d < FixedImageDimension; ++d )
+
+          /** Update displacement sums. */
+          const double displacement =  mappedPoint[ d ] - fixedPoint[ d ];
+          const double displacementSquared = displacement * displacement;
+          sumDisplacement += this->m_CurrentLagrangeMultipliers[ i ] * displacement;
+          sumDisplacementSquared += displacement * displacement;
+
+          /** Remember current penalty term value. */
+          this->m_CurrentPenaltyTermValues[ i ] = displacement;
+          this->m_CurrentMaximumAbsoluteDisplacement = std::max( this->m_CurrentMaximumAbsoluteDisplacement, fabs( displacement ) );
+
+          /** Update infeasibility value. */
+          this->m_CurrentInfeasibility += fabs( displacement );
+
+          /** Part of the computation, which still needs to be multiplied with the Jacobian. */
+          const double mult = - this->m_CurrentLagrangeMultipliers[ i ]
+                              + this->m_CurrentPenaltyTermMultiplier * displacement;
+
+          /** Compute (dT/dMu)T * mult. */
+          for ( typename NonZeroJacobianIndicesType::size_type n = 0; n < numNonZeroJacobianIndices; ++n )
           {
-            jacScaledTransformation += jacobian( d, n ) * transformation[ d ];
+            double jacScaledTransformation = jacobian( d, n ) * mult;
+
+            /** Update derivative sum. */
+            derivative[ nzji[ n ] ] += jacScaledTransformation;
           }
 
-          /** Update derivative sum. */
-          derivative[ nzji[ n ] ] += jacScaledTransformation;
+          ++i;
+
         }
-      } // sampleOk
-      i++;
+      }
+      else 
+      {
+
+        /** Skip point. */
+        i += 3;
+
+      }
+
     } // end for loop over the image sample container
 
-    /** Check if enough samples were valid. */
-    this->CheckNumberOfSamples(
-      sampleContainer->Size(), this->m_NumberOfPixelsCounted );
-
     /** Average infeasibility measure. */
-    this->m_CurrentInfeasibility /= this->m_NumberOfPixelsCounted;
+    this->m_CurrentInfeasibility /= ( this->m_NumberOfPixelsCounted * MovingImageDimension );
 
-    /** Return the mean squares measure value. */
-    value = ( -sumMagnitude2 + this->m_CurrentPenaltyTermMultiplier / 2.0 * sumMagnitude4 ) / static_cast< float > ( this->m_NumberOfPixelsCounted );
+    /** Check if enough samples were valid. */
+    this->CheckNumberOfSamples( sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
+    /** Return the measure value. */
+    value = ( -sumDisplacement + this->m_CurrentPenaltyTermMultiplier / 2.0 * sumDisplacementSquared ) / static_cast< float > ( this->m_NumberOfPixelsCounted * MovingImageDimension );
+
+    /** Determine final derivative. */
     for ( unsigned int p = 0; p < this->GetNumberOfParameters(); ++p) 
     {
-      derivative[ p ] /= static_cast< float > ( this->m_NumberOfPixelsCounted );
+      derivative[ p ] /= static_cast< float > ( this->m_NumberOfPixelsCounted * MovingImageDimension );
     }
 
   } // end GetValueAndDerivative()
-  
+
 } // end namespace itk
 
 #endif // end #ifndef _itkZeroDeformationConstraintMetric_hxx
