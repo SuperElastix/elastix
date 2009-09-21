@@ -106,12 +106,12 @@ public:
   itkGetConstMacro(AngleX, ScalarType);
   itkGetConstMacro(AngleY, ScalarType);
   itkGetConstMacro(AngleZ, ScalarType);
-
-  /** This method computes the Jacobian matrix of the transformation.
-   * given point or vector, returning the transformed point or
-   * vector. The rank of the Jacobian will also indicate if the 
-   * transform is invertible at this point. */
-  const JacobianType & GetJacobian(const InputPointType  &point ) const;
+  
+  /** Compute the Jacobian of the transformation. */
+  virtual void GetJacobian(
+    const InputPointType &,
+    JacobianType &,
+    NonZeroJacobianIndicesType & ) const;
 
   /** Set/Get the order of the computation. Default ZXY */
   itkSetMacro(ComputeZYX,bool);

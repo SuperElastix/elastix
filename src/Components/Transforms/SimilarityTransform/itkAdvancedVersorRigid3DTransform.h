@@ -109,11 +109,11 @@ public:
   void SetParameters( const ParametersType & parameters );
   virtual const ParametersType& GetParameters(void) const;
 
-  /** This method computes the Jacobian matrix of the transformation.
-   * given point or vector, returning the transformed point or
-   * vector. The rank of the Jacobian will also indicate if the 
-   * transform is invertible at this point. */
-  const JacobianType & GetJacobian(const InputPointType  &point ) const;
+  /** This method computes the Jacobian matrix of the transformation. */
+  virtual void GetJacobian(
+    const InputPointType &,
+    JacobianType &,
+    NonZeroJacobianIndicesType & ) const;
 
 protected:
   AdvancedVersorRigid3DTransform(unsigned int outputSpaceDim,

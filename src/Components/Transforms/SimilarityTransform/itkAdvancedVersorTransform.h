@@ -128,12 +128,11 @@ public:
   /** Set the parameters to the IdentityTransform */
   virtual void SetIdentity(void);
 
-  /** Compute the Jacobian of the transformation
-   *  This method computes the Jacobian matrix of the transformation.
-   *  given point or vector, returning the transformed point or
-   *  vector. The rank of the Jacobian will also indicate if the 
-   *  transform is invertible at this point. */
-  const JacobianType & GetJacobian(const InputPointType  &point ) const;
+  /** This method computes the Jacobian matrix of the transformation. */
+  virtual void GetJacobian(
+    const InputPointType &,
+    JacobianType &,
+    NonZeroJacobianIndicesType & ) const;
 
 protected:
 

@@ -137,9 +137,11 @@ AdvancedVersorRigid3DTransform<TScalarType>
 
 // Set parameters
 template<class TScalarType>
-const typename AdvancedVersorRigid3DTransform<TScalarType>::JacobianType &
+void
 AdvancedVersorRigid3DTransform<TScalarType>::
-GetJacobian( const InputPointType & p ) const
+GetJacobian( const InputPointType & p,
+    JacobianType & j,
+    NonZeroJacobianIndicesType & nzji) const
 {
   typedef typename VersorType::ValueType  ValueType;
 
@@ -149,7 +151,8 @@ GetJacobian( const InputPointType & p ) const
   const ValueType vz = this->GetVersor().GetZ();
   const ValueType vw = this->GetVersor().GetW();
 
-  this->m_Jacobian.Fill(0.0);
+  j.SetSize( OutputSpaceDimension, ParametersDimension );
+  j.Fill(0.0);
 
   const double px = p[0] - this->GetCenter()[0];
   const double py = p[1] - this->GetCenter()[1];
@@ -171,33 +174,32 @@ GetJacobian( const InputPointType & p ) const
 
 
   // compute Jacobian with respect to quaternion parameters
-  this->m_Jacobian[0][0] = 2.0 * (               (vyw+vxz)*py + (vzw-vxy)*pz)
+  j[0][0] = 2.0 * (               (vyw+vxz)*py + (vzw-vxy)*pz)
                          / vw;
-  this->m_Jacobian[1][0] = 2.0 * ((vyw-vxz)*px   -2*vxw   *py + (vxx-vww)*pz) 
+  j[1][0] = 2.0 * ((vyw-vxz)*px   -2*vxw   *py + (vxx-vww)*pz) 
                          / vw;
-  this->m_Jacobian[2][0] = 2.0 * ((vzw+vxy)*px + (vww-vxx)*py   -2*vxw   *pz) 
-                         / vw;
-
-  this->m_Jacobian[0][1] = 2.0 * ( -2*vyw  *px + (vxw+vyz)*py + (vww-vyy)*pz) 
-                         / vw;
-  this->m_Jacobian[1][1] = 2.0 * ((vxw-vyz)*px                + (vzw+vxy)*pz) 
-                         / vw;
-  this->m_Jacobian[2][1] = 2.0 * ((vyy-vww)*px + (vzw-vxy)*py   -2*vyw   *pz) 
+  j[2][0] = 2.0 * ((vzw+vxy)*px + (vww-vxx)*py   -2*vxw   *pz) 
                          / vw;
 
-  this->m_Jacobian[0][2] = 2.0 * ( -2*vzw  *px + (vzz-vww)*py + (vxw-vyz)*pz) 
+  j[0][1] = 2.0 * ( -2*vyw  *px + (vxw+vyz)*py + (vww-vyy)*pz) 
                          / vw;
-  this->m_Jacobian[1][2] = 2.0 * ((vww-vzz)*px   -2*vzw   *py + (vyw+vxz)*pz) 
+  j[1][1] = 2.0 * ((vxw-vyz)*px                + (vzw+vxy)*pz) 
                          / vw;
-  this->m_Jacobian[2][2] = 2.0 * ((vxw+vyz)*px + (vyw-vxz)*py               ) 
+  j[2][1] = 2.0 * ((vyy-vww)*px + (vzw-vxy)*py   -2*vyw   *pz) 
                          / vw;
 
-  this->m_Jacobian[0][3] = 1.0;
-  this->m_Jacobian[1][4] = 1.0;
-  this->m_Jacobian[2][5] = 1.0;
+  j[0][2] = 2.0 * ( -2*vzw  *px + (vzz-vww)*py + (vxw-vyz)*pz) 
+                         / vw;
+  j[1][2] = 2.0 * ((vww-vzz)*px   -2*vzw   *py + (vyw+vxz)*pz) 
+                         / vw;
+  j[2][2] = 2.0 * ((vxw+vyz)*px + (vyw-vxz)*py               ) 
+                         / vw;
 
-  return this->m_Jacobian;
+  j[0][3] = 1.0;
+  j[1][4] = 1.0;
+  j[2][5] = 1.0;
 
+  nzji = this->m_NonZeroJacobianIndices;
 }
   
 // Print self

@@ -270,32 +270,33 @@ GetParameters( void ) const
 
 // Compute transformation Jacobian
 template<class TScalarType>
-const typename AdvancedRigid2DTransform<TScalarType>::JacobianType &
+void
 AdvancedRigid2DTransform<TScalarType>::
-GetJacobian( const InputPointType & p ) const
+GetJacobian( const InputPointType & p,
+    JacobianType & j,
+    NonZeroJacobianIndicesType & nzji ) const
 {
-
   const double ca = vcl_cos(this->GetAngle() );
   const double sa = vcl_sin(this->GetAngle() );
 
-  this->m_Jacobian.Fill(0.0);
+  j.SetSize(OutputSpaceDimension, ParametersDimension );
+  j.Fill(0.0);
 
   const double cx = this->GetCenter()[0];
   const double cy = this->GetCenter()[1];
 
   // derivatives with respect to the angle
-  this->m_Jacobian[0][0] = -sa * ( p[0] - cx ) - ca * ( p[1] - cy );
-  this->m_Jacobian[1][0] =  ca * ( p[0] - cx ) - sa * ( p[1] - cy ); 
+  j[0][0] = -sa * ( p[0] - cx ) - ca * ( p[1] - cy );
+  j[1][0] =  ca * ( p[0] - cx ) - sa * ( p[1] - cy ); 
 
   // compute derivatives for the translation part
   unsigned int blockOffset = 1;  
   for(unsigned int dim=0; dim < OutputSpaceDimension; dim++ ) 
     {
-    this->m_Jacobian[ dim ][ blockOffset + dim ] = 1.0;
+    j[ dim ][ blockOffset + dim ] = 1.0;
     }
 
-  return this->m_Jacobian;
-
+  nzji = this->m_NonZeroJacobianIndices;
 }
 
 

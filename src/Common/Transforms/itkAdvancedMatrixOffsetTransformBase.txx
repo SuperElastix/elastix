@@ -487,35 +487,9 @@ template<class TScalarType, unsigned int NInputDimensions,
 const typename AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::JacobianType & 
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>
 ::GetJacobian( const InputPointType & p ) const
-{
-  // The Jacobian of the affine transform is composed of
-  // subblocks of diagonal matrices, each one of them having
-  // a constant value in the diagonal.
-
-  this->m_Jacobian.Fill( 0.0 );
-
-  const InputVectorType v = p - this->GetCenter();
-    
-  unsigned int blockOffset = 0;
-  
-  for(unsigned int block=0; block < NInputDimensions; block++) 
-    {
-    for(unsigned int dim=0; dim < NOutputDimensions; dim++ ) 
-      {
-      this->m_Jacobian( block , blockOffset + dim ) = v[dim];
-      }
-
-    blockOffset += NInputDimensions;
-
-    }
-
-  for(unsigned int dim=0; dim < NOutputDimensions; dim++ ) 
-    {
-    this->m_Jacobian( dim , blockOffset + dim ) = 1.0;
-    }
-
+{  
+  this->GetJacobian(p, this->m_Jacobian, this->m_NonZeroJacobianIndicesTemp );
   return this->m_Jacobian;
-
 }
 
 // Computes offset based on center, matrix, and translation variables
@@ -604,7 +578,33 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   JacobianType & j,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
-  j = this->GetJacobian( p );
+  // The Jacobian of the affine transform is composed of
+  // subblocks of diagonal matrices, each one of them having
+  // a constant value in the diagonal.
+
+  j.SetSize( OutputSpaceDimension, ParametersDimension);
+  j.Fill( 0.0 );
+
+  const InputVectorType v = p - this->GetCenter();
+    
+  unsigned int blockOffset = 0;
+  
+  for(unsigned int block=0; block < NInputDimensions; block++) 
+  {
+    for(unsigned int dim=0; dim < NOutputDimensions; dim++ ) 
+    {
+      j( block , blockOffset + dim ) = v[dim];
+    }
+
+    blockOffset += NInputDimensions;
+
+  }
+
+  for(unsigned int dim=0; dim < NOutputDimensions; dim++ ) 
+  {
+    j( dim , blockOffset + dim ) = 1.0;
+  }
+   
   nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
 
 } // end GetJacobian()

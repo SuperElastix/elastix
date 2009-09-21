@@ -149,11 +149,16 @@ public:
    * \sa Transform::GetFixedParameters() */
   const ParametersType & GetParameters( void ) const; 
  
-   /** This method computes the Jacobian matrix of the transformation
+  /** This method computes the Jacobian matrix of the transformation
    * at a given input point.
    *
    * \sa Transform::GetJacobian() */
- const JacobianType & GetJacobian(const InputPointType  &point ) const;
+  
+  /** Compute the Jacobian of the transformation. */
+  virtual void GetJacobian(
+    const InputPointType &,
+    JacobianType &,
+    NonZeroJacobianIndicesType & ) const;
 
   /** Set the transformation to an identity. */
   virtual void SetIdentity( void );

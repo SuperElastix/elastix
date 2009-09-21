@@ -73,7 +73,7 @@ AdvancedAffineTransformElastix<TElastix>
    * transform parameter file, this is the new, and preferred
    * way, since elastix 3.402.
    */     
-  pointRead = ReadCenterOfRotationPoint( centerOfRotationPoint );
+  pointRead = this->ReadCenterOfRotationPoint( centerOfRotationPoint );
 
   /** If this did not succeed, probably a transform parameter file
    * is trying to be read that was generated using an older elastix
@@ -81,7 +81,7 @@ AdvancedAffineTransformElastix<TElastix>
    */
   if ( !pointRead )
   {
-    indexRead = ReadCenterOfRotationIndex( centerOfRotationPoint );
+    indexRead = this->ReadCenterOfRotationIndex( centerOfRotationPoint );
   }
 
   if ( !pointRead && !indexRead )

@@ -221,12 +221,10 @@ AdvancedEuler3DTransform<TScalarType>
   RotationX[1][0]=0;RotationX[1][1]=cx;RotationX[1][2]=-sx;
   RotationX[2][0]=0;RotationX[2][1]=sx;RotationX[2][2]=cx;
 
-
   Matrix<TScalarType,3,3> RotationY;
   RotationY[0][0]=cy;RotationY[0][1]=0;RotationY[0][2]=sy;
   RotationY[1][0]=0;RotationY[1][1]=1;RotationY[1][2]=0;
   RotationY[2][0]=-sy;RotationY[2][1]=0;RotationY[2][2]=cy;
-
   
   Matrix<TScalarType,3,3> RotationZ;
   RotationZ[0][0]=cz;RotationZ[0][1]=-sz;RotationZ[0][2]=0;
@@ -248,62 +246,16 @@ AdvancedEuler3DTransform<TScalarType>
 }
 
 
-// Set parameters
+// Get Jacobian
 template<class TScalarType>
-const typename AdvancedEuler3DTransform<TScalarType>::JacobianType &
+void
 AdvancedEuler3DTransform<TScalarType>::
-GetJacobian( const InputPointType & p ) const
+GetJacobian( const InputPointType & p,
+    JacobianType & j,
+    NonZeroJacobianIndicesType & nzji) const
 {
-  // need to check if angles are in the right order
-  /**
-  const double cx = vcl_cos(m_AngleX);
-  const double sx = vcl_sin(m_AngleX);
-  const double cy = vcl_cos(m_AngleY);
-  const double sy = vcl_sin(m_AngleY); 
-  const double cz = vcl_cos(m_AngleZ);
-  const double sz = vcl_sin(m_AngleZ);
-  
-  this->m_Jacobian.Fill(0.0);
-    
-  const double px = p[0] - this->GetCenter()[0];
-  const double py = p[1] - this->GetCenter()[1];
-  const double pz = p[2] - this->GetCenter()[2];
-
-  
-  if ( m_ComputeZYX )
-    {
-    this->m_Jacobian[0][0] = (cz*sy*cx+sz*sx)*py+(-cz*sy*sx+sz*cx)*pz;
-    this->m_Jacobian[1][0] = (sz*sy*cx-cz*sx)*py+(-sz*sy*sx-cz*cx)*pz;
-    this->m_Jacobian[2][0] = (cy*cx)*py+(-cy*sx)*pz;  
-    
-    this->m_Jacobian[0][1] = (-cz*sy)*px+(cz*cy*sx)*py+(cz*cy*cx)*pz;
-    this->m_Jacobian[1][1] = (-sz*sy)*px+(sz*cy*sx)*py+(sz*cy*cx)*pz;
-    this->m_Jacobian[2][1] = (-cy)*px+(-sy*sx)*py+(-sy*cx)*pz;
-    
-    this->m_Jacobian[0][2] = (-sz*cy)*px+(-sz*sy*sx-cz*cx)*py
-                                        +(-sz*sy*cx+cz*sx)*pz;
-    this->m_Jacobian[1][2] = (cz*cy)*px+(cz*sy*sx-sz*cx)*py+(cz*sy*cx+sz*sx)*pz;  
-    this->m_Jacobian[2][2] = 0;
-    }
-  else
-    {
-    this->m_Jacobian[0][0] = (-sz*cx*sy)*px + (sz*sx)*py + (sz*cx*cy)*pz;
-    this->m_Jacobian[1][0] = (cz*cx*sy)*px + (-cz*sx)*py + (-cz*cx*cy)*pz;
-    this->m_Jacobian[2][0] = (sx*sy)*px + (cx)*py + (-sx*cy)*pz;  
-    
-    this->m_Jacobian[0][1] = (-cz*sy-sz*sx*cy)*px + (cz*cy-sz*sx*sy)*pz;
-    this->m_Jacobian[1][1] = (-sz*sy+cz*sx*cy)*px + (sz*cy+cz*sx*sy)*pz;
-    this->m_Jacobian[2][1] = (-cx*cy)*px + (-cx*sy)*pz;
-    
-    this->m_Jacobian[0][2] = (-sz*cy-cz*sx*sy)*px + (-cz*cx)*py 
-                                                  + (-sz*sy+cz*sx*cy)*pz;
-    this->m_Jacobian[1][2] = (cz*cy-sz*sx*sy)*px + (-sz*cx)*py 
-                                                 + (cz*sy+sz*sx*cy)*pz;
-    this->m_Jacobian[2][2] = 0;
-    }
-  */
-
-  this->m_Jacobian.Fill(0.0);
+  j.SetSize(OutputSpaceDimension, ParametersDimension);
+  j.Fill(0.0);
   const JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;
 
   /** Compute dR/dmu * (p-c) */
@@ -313,7 +265,7 @@ GetJacobian( const InputPointType & p ) const
     const InputVectorType column = jsj[dim] * pp;
     for (unsigned int i=0; i < SpaceDimension; ++i)
     {
-      this->m_Jacobian(i,dim) = column[i];
+      j(i,dim) = column[i];
     }
   }
 
@@ -321,10 +273,10 @@ GetJacobian( const InputPointType & p ) const
   const unsigned int blockOffset = 3;  
   for(unsigned int dim=0; dim < SpaceDimension; dim++ ) 
     {
-    this->m_Jacobian[ dim ][ blockOffset + dim ] = 1.0;
+    j[ dim ][ blockOffset + dim ] = 1.0;
     }
 
-  return this->m_Jacobian;
+  nzji = this->m_NonZeroJacobianIndices;
 
 }
 

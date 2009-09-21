@@ -204,8 +204,11 @@ public:
   /** This method computes the Jacobian matrix of the transformation
    * at a given input point.
    *
-   * \sa Transform::GetJacobian() */
-  const JacobianType & GetJacobian(const InputPointType  &point ) const;
+   * \sa Transform::GetJacobian() */    
+  virtual void GetJacobian(
+    const InputPointType &,
+    JacobianType &,
+    NonZeroJacobianIndicesType & ) const;
 
   /**
    * This method creates and returns a new AdvancedRigid2DTransform object

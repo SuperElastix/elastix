@@ -205,9 +205,11 @@ AdvancedSimilarity3DTransform<TScalarType>
 
 // Set parameters
 template<class TScalarType>
-const typename AdvancedSimilarity3DTransform<TScalarType>::JacobianType &
+void
 AdvancedSimilarity3DTransform<TScalarType>::
-GetJacobian( const InputPointType & p ) const
+GetJacobian( const InputPointType & p,
+    JacobianType & j,
+    NonZeroJacobianIndicesType & nzji ) const
 {
   /**
   typedef typename VersorType::ValueType  ValueType;
@@ -266,7 +268,8 @@ GetJacobian( const InputPointType & p ) const
                          / vw;
   */
 
-  this->m_Jacobian.Fill(0.0);
+  j.SetSize( OutputSpaceDimension, ParametersDimension );
+  j.Fill(0.0);
   const InputVectorType pp = p - this->GetCenter();
   const JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;
 
@@ -276,25 +279,25 @@ GetJacobian( const InputPointType & p ) const
     const InputVectorType column = jsj[dim] * pp;
     for (unsigned int i=0; i < SpaceDimension; ++i)
     {
-      this->m_Jacobian(i,dim) = column[i];
+      j(i,dim) = column[i];
     }
   }
 
   // compute Jacobian with respect to the translation parameters
-  this->m_Jacobian[0][3] = 1.0;
-  this->m_Jacobian[1][4] = 1.0;
-  this->m_Jacobian[2][5] = 1.0;
+  j[0][3] = 1.0;
+  j[1][4] = 1.0;
+  j[2][5] = 1.0;
 
   // compute Jacobian with respect to the scale parameter
   const MatrixType & matrix = this->GetMatrix();
 
   const InputVectorType mpp = matrix * pp;
 
-  this->m_Jacobian[0][6] = mpp[0] / m_Scale;
-  this->m_Jacobian[1][6] = mpp[1] / m_Scale;
-  this->m_Jacobian[2][6] = mpp[2] / m_Scale;
+  j[0][6] = mpp[0] / m_Scale;
+  j[1][6] = mpp[1] / m_Scale;
+  j[2][6] = mpp[2] / m_Scale;
 
-  return this->m_Jacobian;
+  nzji = this->m_NonZeroJacobianIndices;
 
 }
  

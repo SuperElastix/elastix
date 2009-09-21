@@ -365,13 +365,7 @@ public:
     return true;
   }
 
-  /** Compute the Jacobian of the transformation
-   *
-   * This method computes the Jacobian matrix of the transformation.
-   * given point or vector, returning the transformed point or
-   * vector. The rank of the Jacobian will also indicate if the transform
-   * is invertible at this point.
-   */
+  /** Compute the Jacobian of the transformation */
   const JacobianType & GetJacobian( const InputPointType & point ) const;
 
   /** Compute the Jacobian of the transformation. */
@@ -518,6 +512,10 @@ private:
   /** To avoid recomputation of the inverse if not needed. */
   TimeStamp                   m_MatrixMTime;
   mutable TimeStamp           m_InverseMatrixMTime;
+
+  /** Used by the GetJacobian() function which returns the
+   * jacobian as an output variable. */
+  mutable NonZeroJacobianIndicesType m_NonZeroJacobianIndicesTemp;
   
 }; //class AdvancedMatrixOffsetTransformBase
 

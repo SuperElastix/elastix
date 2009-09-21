@@ -163,15 +163,18 @@ AdvancedSimilarity2DTransform<TScalarType>
 
 // Compute the transformation Jacobian
 template<class TScalarType>
-const typename AdvancedSimilarity2DTransform<TScalarType>::JacobianType &
+void
 AdvancedSimilarity2DTransform<TScalarType>::
-GetJacobian( const InputPointType & p ) const
+GetJacobian( const InputPointType & p,
+    JacobianType & j,
+    NonZeroJacobianIndicesType & nzji ) const
 {
   const double angle = this->GetAngle();
   const double ca = vcl_cos(angle );
   const double sa = vcl_sin(angle );
 
-  this->m_Jacobian.Fill(0.0);
+  j.SetSize( OutputSpaceDimension, ParametersDimension );
+  j.Fill(0.0);
 
   const InputPointType center = this->GetCenter();  
   const double cx = center[0];
@@ -180,22 +183,22 @@ GetJacobian( const InputPointType & p ) const
   //const OutputVectorType translation = this->GetTranslation();
 
   // derivatives with respect to the scale
-  this->m_Jacobian[0][0] =    ca * ( p[0] - cx ) - sa * ( p[1] - cy );
-  this->m_Jacobian[1][0] =    sa * ( p[0] - cx ) + ca * ( p[1] - cy ); 
+  j[0][0] =    ca * ( p[0] - cx ) - sa * ( p[1] - cy );
+  j[1][0] =    sa * ( p[0] - cx ) + ca * ( p[1] - cy ); 
 
   // derivatives with respect to the angle
-  this->m_Jacobian[0][1] = ( -sa * ( p[0] - cx ) - ca * ( p[1] - cy ) ) * m_Scale;
-  this->m_Jacobian[1][1] = (  ca * ( p[0] - cx ) - sa * ( p[1] - cy ) ) * m_Scale; 
+  j[0][1] = ( -sa * ( p[0] - cx ) - ca * ( p[1] - cy ) ) * m_Scale;
+  j[1][1] = (  ca * ( p[0] - cx ) - sa * ( p[1] - cy ) ) * m_Scale; 
 
   // compute derivatives with respect to the translation part
   // first with respect to tx
-  this->m_Jacobian[0][2] = 1.0;
-  this->m_Jacobian[1][2] = 0.0;
+  j[0][2] = 1.0;
+  j[1][2] = 0.0;
   // first with respect to ty
-  this->m_Jacobian[0][3] = 0.0;
-  this->m_Jacobian[1][3] = 1.0;
+  j[0][3] = 0.0;
+  j[1][3] = 1.0;
 
-  return this->m_Jacobian;
+  nzji = this->m_NonZeroJacobianIndices;
 
 }
 
