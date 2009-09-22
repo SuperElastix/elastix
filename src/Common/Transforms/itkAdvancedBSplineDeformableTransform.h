@@ -508,15 +508,17 @@ protected:
     typename SODerivativeWeightsFunctionType::Pointer > > m_SODerivativeWeightsFunctions;
 
   /** Variables defining the coefficient grid extend. */
-  RegionType      m_GridRegion;
-  SpacingType     m_GridSpacing;
-  DirectionType   m_GridDirection;
-  OriginType      m_GridOrigin;
-  GridOffsetType  m_GridOffsetTable;
+  RegionType          m_GridRegion;
+  SpacingType         m_GridSpacing;
+  DirectionType       m_GridDirection;
+  OriginType          m_GridOrigin;
+  GridOffsetType      m_GridOffsetTable;
 
-  DirectionType   m_PointToIndexMatrix;
-  DirectionType   m_PointToIndexMatrixTransposed;
-  DirectionType   m_IndexToPoint;
+  DirectionType       m_PointToIndexMatrix;
+  SpatialJacobianType m_PointToIndexMatrix2;
+  DirectionType       m_PointToIndexMatrixTransposed;
+  SpatialJacobianType m_PointToIndexMatrixTransposed2;
+  DirectionType       m_IndexToPoint;
 
   RegionType      m_ValidRegion;
 

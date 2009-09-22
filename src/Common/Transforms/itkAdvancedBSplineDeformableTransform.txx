@@ -151,9 +151,17 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   this->m_IndexToPoint = this->m_GridDirection * scale;
   this->m_PointToIndexMatrix = this->m_IndexToPoint.GetInverse();
   this->m_PointToIndexMatrixTransposed = this->m_PointToIndexMatrix.GetTranspose();
-   
   this->m_LastJacobianIndex = this->m_ValidRegion.GetIndex();
-  
+  for ( unsigned int i = 0; i < SpaceDimension; ++i )
+  {
+    for ( unsigned int j = 0; j < SpaceDimension; ++j )
+    {
+      this->m_PointToIndexMatrix2[ i ][ j ]
+        = static_cast<ScalarType>( this->m_PointToIndexMatrix[ i ][ j ] );
+      this->m_PointToIndexMatrixTransposed2[ i ][ j ]
+        = static_cast<ScalarType>( this->m_PointToIndexMatrixTransposed[ i ][ j ] );
+    }
+  }
 }
     
 
@@ -281,29 +289,38 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 ::SetGridSpacing( const SpacingType& spacing )
 {
   if ( this->m_GridSpacing != spacing )
-    {
+  {
     this->m_GridSpacing = spacing;
 
     // set spacing for each coefficient and Jacobian image
     for ( unsigned int j = 0; j < SpaceDimension; j++ )
-      {
+    {
       this->m_WrappedImage[j]->SetSpacing( this->m_GridSpacing.GetDataPointer() );
       this->m_JacobianImage[j]->SetSpacing( this->m_GridSpacing.GetDataPointer() );
-      }
+    }
 
     DirectionType scale;
     for( unsigned int i=0; i<SpaceDimension; i++)
-      {
+    {
       scale[i][i] = this->m_GridSpacing[i];
-      }
+    }
 
     this->m_IndexToPoint = this->m_GridDirection * scale;
     this->m_PointToIndexMatrix = this->m_IndexToPoint.GetInverse();
     this->m_PointToIndexMatrixTransposed = this->m_PointToIndexMatrix.GetTranspose();
-
-    this->Modified();
+    for ( unsigned int i = 0; i < SpaceDimension; ++i )
+    {
+      for ( unsigned int j = 0; j < SpaceDimension; ++j )
+      {
+        this->m_PointToIndexMatrix2[ i ][ j ]
+          = static_cast<ScalarType>( this->m_PointToIndexMatrix[ i ][ j ] );
+        this->m_PointToIndexMatrixTransposed2[ i ][ j ]
+          = static_cast<ScalarType>( this->m_PointToIndexMatrixTransposed[ i ][ j ] );
+      }
     }
 
+    this->Modified();
+  }
 }
 
 // Set the grid direction
@@ -332,9 +349,19 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
     this->m_IndexToPoint = this->m_GridDirection * scale;
     this->m_PointToIndexMatrix = this->m_IndexToPoint.GetInverse();
     this->m_PointToIndexMatrixTransposed = this->m_PointToIndexMatrix.GetTranspose();
+    for ( unsigned int i = 0; i < SpaceDimension; ++i )
+    {
+      for ( unsigned int j = 0; j < SpaceDimension; ++j )
+      {
+        this->m_PointToIndexMatrix2[ i ][ j ]
+          = static_cast<ScalarType>( this->m_PointToIndexMatrix[ i ][ j ] );
+        this->m_PointToIndexMatrixTransposed2[ i ][ j ]
+          = static_cast<ScalarType>( this->m_PointToIndexMatrixTransposed[ i ][ j ] );
+      }
+    }
 
     this->Modified();
-    }
+  }
 
 }
 
@@ -664,9 +691,6 @@ void
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
-
-  unsigned int j;
-
   this->Superclass::PrintSelf(os, indent);
 
   os << indent << "GridRegion: " << this->m_GridRegion << std::endl;
@@ -678,18 +702,18 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   os << indent << "PointToIndex: " << this->m_PointToIndexMatrix << std::endl;
 
   os << indent << "CoefficientImage: [ ";
-  for ( j = 0; j < SpaceDimension - 1; j++ )
-    {
-    os << this->m_CoefficientImage[j].GetPointer() << ", ";
-    }
-  os << this->m_CoefficientImage[j].GetPointer() << " ]" << std::endl;
+  for ( unsigned int j = 0; j < SpaceDimension - 1; j++ )
+  {
+    os << this->m_CoefficientImage[ j ].GetPointer() << ", ";
+  }
+  os << this->m_CoefficientImage[ SpaceDimension - 1 ].GetPointer() << " ]" << std::endl;
 
   os << indent << "WrappedImage: [ ";
-  for ( j = 0; j < SpaceDimension - 1; j++ )
-    {
-    os << this->m_WrappedImage[j].GetPointer() << ", ";
-    }
-  os << this->m_WrappedImage[j].GetPointer() << " ]" << std::endl;
+  for ( unsigned int j = 0; j < SpaceDimension - 1; j++ )
+  {
+    os << this->m_WrappedImage[ j ].GetPointer() << ", ";
+  }
+  os << this->m_WrappedImage[ SpaceDimension - 1 ].GetPointer() << " ]" << std::endl;
  
   os << indent << "InputParametersPointer: " 
      << this->m_InputParametersPointer << std::endl;
@@ -701,10 +725,10 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   os << this->m_WeightsFunction.GetPointer() << std::endl;
 
   if ( this->m_BulkTransform )
-    {
+  {
     os << indent << "BulkTransformType: " 
-       << this->m_BulkTransform->GetNameOfClass() << std::endl;
-    }
+      << this->m_BulkTransform->GetNameOfClass() << std::endl;
+  }
      
 }
 
@@ -1224,7 +1248,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   } // end for i
 
   /** Take into account grid spacing and direction cosines. */
-  sj = sj * this->m_PointToIndexMatrix;
+  sj = sj * this->m_PointToIndexMatrix2;
 
 } // end GetSpatialJacobian()
 
@@ -1317,7 +1341,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** Take into account grid spacing and direction matrix */
   for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
   {
-    sh[dim] = this->m_PointToIndexMatrixTransposed * ( sh[dim] * this->m_PointToIndexMatrix );
+    sh[dim] = this->m_PointToIndexMatrixTransposed2
+      * ( sh[dim] * this->m_PointToIndexMatrix2 );
   }
 
 } // end GetSpatialHessian()
@@ -1417,7 +1442,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** Take into account grid spacing and direction cosines */
   for ( unsigned int i = 0; i < jsj.size(); ++i )
   {
-    jsj[ i ] = jsj[ i ] * this->m_PointToIndexMatrix;
+    jsj[ i ] = jsj[ i ] * this->m_PointToIndexMatrix2;
   }     
 
   /** Compute the nonzero Jacobian indices. */
@@ -1534,7 +1559,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   } // end for i
 
   /** Take into account grid spacing and direction cosines. */
-  sj = sj * this->m_PointToIndexMatrix ;
+  sj = sj * this->m_PointToIndexMatrix2;
 
   /** Compute the Jacobian of the spatial Jacobian jsj:
    *    d/dmu dT_{dim} / dx_i = weights.
@@ -1555,7 +1580,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** Take into account grid spacing and direction cosines */
   for ( unsigned int i = 0; i < jsj.size(); ++i )
   {
-    jsj[ i ] = jsj[ i ] * this->m_PointToIndexMatrix;
+    jsj[ i ] = jsj[ i ] * this->m_PointToIndexMatrix2;
   }
 
   /** Compute the nonzero Jacobian indices. */
@@ -1675,7 +1700,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   {
     for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
-      jsh[i][dim] = this->m_PointToIndexMatrixTransposed * ( jsh[i][dim] * this->m_PointToIndexMatrix );
+      jsh[i][dim] = this->m_PointToIndexMatrixTransposed2
+        * ( jsh[i][dim] * this->m_PointToIndexMatrix2 );
     }
   }
 
@@ -1832,13 +1858,15 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** Take into account grid spacing and direction matrix */  
   for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
   {
-    sh[dim] = this->m_PointToIndexMatrixTransposed * ( sh[dim] * this->m_PointToIndexMatrix );
+    sh[dim] = this->m_PointToIndexMatrixTransposed2
+      * ( sh[dim] * this->m_PointToIndexMatrix2 );
   }
   for ( unsigned int i = 0; i < jsh.size(); ++i )
   {
     for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
-      jsh[i][dim] = this->m_PointToIndexMatrixTransposed * ( jsh[i][dim] * this->m_PointToIndexMatrix );
+      jsh[i][dim] = this->m_PointToIndexMatrixTransposed2
+        * ( jsh[i][dim] * this->m_PointToIndexMatrix2 );
     }
   }
 
