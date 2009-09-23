@@ -244,7 +244,10 @@ public:
    * ElasticBodyReciprocalSplineKernelTransform.
    */
   itkSetMacro( PoissonRatio, TScalarType );
-  itkGetConstReferenceMacro( PoissonRatio, TScalarType );
+  virtual const TScalarType GetPoissonRatio( void ) const
+  {
+    return this->m_PoissonRatio;
+  };
 
 protected:
   KernelTransform2();

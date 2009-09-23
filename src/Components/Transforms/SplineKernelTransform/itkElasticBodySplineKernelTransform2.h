@@ -90,7 +90,7 @@ public:
     }
   }
 
-  virtual const TScalarType & GetPoissonRatio( void ) const 
+  virtual const TScalarType GetPoissonRatio( void ) const 
   {
     return 1.0 - ( this->m_Alpha + 1.0 ) / 12.0;
   }
