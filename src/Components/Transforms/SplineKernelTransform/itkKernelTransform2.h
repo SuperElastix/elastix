@@ -245,15 +245,6 @@ public:
    */
   itkSetMacro( PoissonRatio, TScalarType );
   itkGetConstReferenceMacro( PoissonRatio, TScalarType );
-//   virtual void SetPoissonRatio( TScalarType Nu ) 
-//   {
-//     this->m_PoissonRatio = Nu;
-//   };
-//   virtual TScalarType GetPoissonRatio(void) const 
-//   {
-//     /** return last set value */
-//     return this->m_PoissonRatio;
-//   }
 
 protected:
   KernelTransform2();

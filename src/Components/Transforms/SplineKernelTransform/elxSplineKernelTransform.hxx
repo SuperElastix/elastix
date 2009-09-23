@@ -64,10 +64,10 @@ SplineKernelTransform<TElastix>
     {
       this->m_KernelTransform = TPKernelTransformType::New();
     }
-    else if ( kernelType == "ThinPlateR2LogRSpline" )
-    {
-      this->m_KernelTransform = TPRKernelTransformType::New();
-    }
+//     else if ( kernelType == "ThinPlateR2LogRSpline" )
+//     {
+//       this->m_KernelTransform = TPRKernelTransformType::New();
+//     }
     else if ( kernelType == "VolumeSpline" )
     {
       this->m_KernelTransform = VKernelTransformType::New();

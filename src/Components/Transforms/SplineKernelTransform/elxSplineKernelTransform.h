@@ -51,7 +51,7 @@ namespace elastix
    *    <tt>(%Transform "SplineKernelTransform")</tt>
    * \parameter SplineKernelType: Select the deformation model, which must
    * be one of { ThinPlateSpline, ThinPlateR2LogRSpline, VolumeSpline,
-   * ElasticBodySpline, ElastixBodyReciprocalSpline). In 2D this option is
+   * ElasticBodySpline, ElasticBodyReciprocalSpline). In 2D this option is
    * ignored and a ThinPlateSpline will always be used. \n
    *   example: <tt>(SplineKernelType "ElasticBodySpline")</tt>\n
    * Default: ThinPlateSpline. You cannot specify this parameter for each
