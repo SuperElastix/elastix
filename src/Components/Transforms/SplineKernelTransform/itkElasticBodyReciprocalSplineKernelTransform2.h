@@ -82,17 +82,17 @@ public:
   itkGetConstMacro( Alpha, TScalarType );
   
   /** Convenience method */
-  virtual void SetPoissonRatio(TScalarType Nu) 
+  virtual void SetPoissonRatio( const TScalarType Nu )
   {
-    if ( (Nu > -1) && (Nu < 0.5) )
+    if ( Nu > -1.0 && Nu < 0.5 )
     {
       this->SetAlpha( 8.0 * ( 1.0 - Nu ) - 1.0 );
     }
   }
-  virtual TScalarType GetPoissonRatio(void) const 
+
+  virtual const TScalarType & GetPoissonRatio( void ) const 
   {
-    TScalarType ret = 1.0 - ( this->m_Alpha+1.0 ) / 8.0;
-    return ret;
+    return 1.0 - ( this->m_Alpha + 1.0 ) / 8.0;
   }
   
   /** These (rather redundant) typedefs are needed because on SGI, typedefs
