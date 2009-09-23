@@ -45,7 +45,7 @@ KernelTransform2<TScalarType, NDimensions>
   this->m_Stiffness = 0.0;
 
   // dummy value:
-  this->m_PoissonRatio = 1.0;
+  this->m_PoissonRatio = 0.3;
 }
 
 
@@ -57,19 +57,19 @@ void
 KernelTransform2<TScalarType, NDimensions>
 ::SetSourceLandmarks( PointSetType * landmarks )
 {
-  itkDebugMacro("setting SourceLandmarks to " << landmarks );
+  itkDebugMacro( << "setting SourceLandmarks to " << landmarks );
   if ( this->m_SourceLandmarks != landmarks )
   {
     this->m_SourceLandmarks = landmarks;
     this->UpdateParameters();
     this->Modified();
 
-    // these are invalidated when the source lms change
+    // these are invalidated when the source landmarks change
     this->m_WMatrixComputed = false;
     this->m_LMatrixComputed = false;
     this->m_LInverseComputed = false;
 
-    // you must recompute L and Linv - this does not require the targ lms
+    // you must recompute L and Linv - this does not require the targ landmarks
     this->ComputeLInverse();
 
     // precompute the nonzerojacobianindices vector
@@ -97,7 +97,7 @@ KernelTransform2<TScalarType, NDimensions>
   {
     this->m_TargetLandmarks = landmarks;
     
-    // this is invalidated when the target lms change
+    // this is invalidated when the target landmarks change
     this->m_WMatrixComputed = false;
     this->ComputeWMatrix();
     this->UpdateParameters();
@@ -117,7 +117,8 @@ KernelTransform2<TScalarType, NDimensions>
 ::ComputeG( const InputVectorType &, GMatrixType & ) const
 {
   itkExceptionMacro( << "ComputeG() should be reimplemented in the subclass !!" );
-}
+} // end ComputeG()
+
 
 /**
  *
@@ -129,8 +130,9 @@ KernelTransform2<TScalarType, NDimensions>
 ::ComputeReflexiveG( PointsIterator, GMatrixType & GMatrix ) const
 {
   GMatrix.fill( NumericTraits< TScalarType >::Zero );
-  GMatrix.fill_diagonal( m_Stiffness );
-}
+  GMatrix.fill_diagonal( this->m_Stiffness );
+
+} // end ComputeReflexiveG()
 
 
 /**
@@ -142,12 +144,11 @@ template <class TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>
 ::ComputeDeformationContribution(
-  const InputPointType  & thisPoint,
-  OutputPointType & result ) const
+  const InputPointType & thisPoint, OutputPointType & opp ) const
 {
-  const unsigned long numberOfLandmarks = m_SourceLandmarks->GetNumberOfPoints();
+  const unsigned long numberOfLandmarks = this->m_SourceLandmarks->GetNumberOfPoints();
 
-  PointsIterator sp = m_SourceLandmarks->GetPoints()->Begin();
+  PointsIterator sp = this->m_SourceLandmarks->GetPoints()->Begin();
   GMatrixType Gmatrix;
 
   for ( unsigned long lnd = 0; lnd < numberOfLandmarks; lnd++ )
@@ -157,7 +158,7 @@ KernelTransform2<TScalarType, NDimensions>
     {
       for ( unsigned int odim = 0; odim < NDimensions; odim++ )
       {
-        result[ odim ] += Gmatrix( dim, odim ) * this->m_DMatrix( dim, lnd );
+        opp[ odim ] += Gmatrix( dim, odim ) * this->m_DMatrix( dim, lnd );
       }
     }
     ++sp;
@@ -175,15 +176,14 @@ void
 KernelTransform2<TScalarType, NDimensions>
 ::ComputeD( void )
 {
-  const unsigned long numberOfLandmarks = m_SourceLandmarks->GetNumberOfPoints();
+  const unsigned long numberOfLandmarks = this->m_SourceLandmarks->GetNumberOfPoints();
 
-  PointsIterator sp  = m_SourceLandmarks->GetPoints()->Begin();
-  PointsIterator tp  = m_TargetLandmarks->GetPoints()->Begin();
-  PointsIterator end = m_SourceLandmarks->GetPoints()->End();
+  PointsIterator sp  = this->m_SourceLandmarks->GetPoints()->Begin();
+  PointsIterator tp  = this->m_TargetLandmarks->GetPoints()->Begin();
+  PointsIterator end = this->m_SourceLandmarks->GetPoints()->End();
 
   this->m_Displacements->Reserve( numberOfLandmarks );
-  typename VectorSetType::Iterator vt = m_Displacements->Begin();
-
+  typename VectorSetType::Iterator vt = this->m_Displacements->Begin();
   while ( sp != end )
   {
     vt->Value() = tp->Value() - sp->Value();
@@ -228,9 +228,10 @@ void
 KernelTransform2<TScalarType, NDimensions>
 ::ComputeLInverse( void )
 {
-  if ( !m_LMatrixComputed ) this->ComputeL();
+  if ( !this->m_LMatrixComputed ) this->ComputeL();
   this->m_LMatrixInverse = vnl_matrix_inverse<TScalarType>( this->m_LMatrix );
   this->m_LInverseComputed = true;
+
 } // end ComputeLInverse()
 
 
@@ -255,7 +256,7 @@ KernelTransform2<TScalarType, NDimensions>
   this->m_LMatrix.fill( 0.0 );
   this->m_LMatrix.update( this->m_KMatrix, 0, 0 );
   this->m_LMatrix.update( this->m_PMatrix, 0, this->m_KMatrix.columns() );
-  this->m_LMatrix.update( this->m_PMatrix.transpose(), this->m_KMatrix.rows(), 0);
+  this->m_LMatrix.update( this->m_PMatrix.transpose(), this->m_KMatrix.rows(), 0 );
   this->m_LMatrix.update( O2, this->m_KMatrix.rows(), this->m_KMatrix.columns() );
   this->m_LMatrixComputed = true;
 
@@ -430,28 +431,26 @@ typename KernelTransform2<TScalarType, NDimensions>::OutputPointType
 KernelTransform2<TScalarType, NDimensions>
 ::TransformPoint( const InputPointType & thisPoint ) const
 {
-  OutputPointType result;
-  typedef typename OutputPointType::ValueType ValueType;
-  result.Fill( NumericTraits< ValueType >::Zero );
-
-  this->ComputeDeformationContribution( thisPoint, result );
+  OutputPointType opp;
+  opp.Fill( NumericTraits<typename OutputPointType::ValueType>::Zero );
+  this->ComputeDeformationContribution( thisPoint, opp );
 
   // Add the rotational part of the Affine component
   for ( unsigned int j = 0; j < NDimensions; j++ )
   {
     for ( unsigned int i = 0; i < NDimensions; i++ )
     {
-      result[ i ] += this->m_AMatrix( i, j ) * thisPoint[ j ];
+      opp[ i ] += this->m_AMatrix( i, j ) * thisPoint[ j ];
     }
   }
 
   // This vector holds the translational part of the Affine component
   for ( unsigned int k = 0; k < NDimensions; k++ )
   {
-    result[ k ] += this->m_BVector( k ) + thisPoint[ k ];
+    opp[ k ] += this->m_BVector( k ) + thisPoint[ k ];
   }
 
-  return result;
+  return opp;
   
 } // end TransformPoint()
 
@@ -491,7 +490,6 @@ void
 KernelTransform2<TScalarType, NDimensions>
 ::SetParameters( const ParametersType & parameters )
 {
-  //	std::cout<<"Setting parameters to "<<parameters<<std::endl;
   this->m_Parameters = parameters;
   typename PointsContainer::Pointer landmarks = PointsContainer::New();
   const unsigned int numberOfLandmarks = parameters.Size() / NDimensions;
@@ -617,7 +615,8 @@ const typename KernelTransform2<TScalarType, NDimensions>::ParametersType &
 KernelTransform2<TScalarType, NDimensions>
 ::GetFixedParameters( void ) const
 {
-  this->m_FixedParameters = ParametersType( m_SourceLandmarks->GetNumberOfPoints() * NDimensions );
+  this->m_FixedParameters = ParametersType(
+    this->m_SourceLandmarks->GetNumberOfPoints() * NDimensions );
   PointsIterator itr = this->m_SourceLandmarks->GetPoints()->Begin();
   PointsIterator end = this->m_SourceLandmarks->GetPoints()->End();
   unsigned int pcounter = 0;
@@ -661,7 +660,7 @@ KernelTransform2<TScalarType, NDimensions>
     {
       for ( unsigned int odim = 0; odim < NDimensions; odim++ )
       {
-        for ( unsigned int lidx = 0; lidx < numberOfLandmarks*NDimensions; lidx++ )
+        for ( unsigned int lidx = 0; lidx < numberOfLandmarks * NDimensions; lidx++ )
         {
           j[ odim ] [lidx] += Gmatrix( dim, odim )
             * this->m_LMatrixInverse[ lnd * NDimensions + dim ][ lidx ];
@@ -670,16 +669,18 @@ KernelTransform2<TScalarType, NDimensions>
     }
     ++sp;
   }
+
   for ( unsigned int odim = 0; odim < NDimensions; odim++ )
   {
-    for ( unsigned int lidx = 0; lidx < numberOfLandmarks*NDimensions; lidx++ )
+    for ( unsigned long lidx = 0; lidx < numberOfLandmarks * NDimensions; lidx++ )
     {
       for ( unsigned int dim = 0; dim < NDimensions; dim++ )
       {
         j[ odim ][lidx] += p[ dim ]
           * this->m_LMatrixInverse[ ( numberOfLandmarks + dim ) * NDimensions + odim ][ lidx ];
       }
-      j[ odim ][lidx] += this->m_LMatrixInverse[ ( numberOfLandmarks + NDimensions) * NDimensions + odim ][ lidx ];
+      const unsigned long index = ( numberOfLandmarks + NDimensions ) * NDimensions + odim;
+      j[ odim ][lidx] += this->m_LMatrixInverse[ index ][ lidx ];
     }
   }
   nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;

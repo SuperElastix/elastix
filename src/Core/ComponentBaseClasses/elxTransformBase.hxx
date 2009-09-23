@@ -117,7 +117,7 @@ int TransformBase<TElastix>
   {
     elxout << "-ipp      " << check << std::endl;
     // Deprecated since elastix 4.3
-		xl::xout["warning"] << "WARNING: \"-ipp\" is deprecated, use \"-def\" instead!"
+    xl::xout["warning"] << "WARNING: \"-ipp\" is deprecated, use \"-def\" instead!"
       << std::endl;
   }
 

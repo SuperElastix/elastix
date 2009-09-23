@@ -107,7 +107,7 @@ public:
 
 protected:
   ElasticBodyReciprocalSplineKernelTransform2();
-  virtual ~ElasticBodyReciprocalSplineKernelTransform2();
+  virtual ~ElasticBodyReciprocalSplineKernelTransform2() {};
   void PrintSelf(std::ostream& os, Indent indent) const;
   
   /** These (rather redundant) typedefs are needed because on SGI, typedefs

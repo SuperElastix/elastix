@@ -23,48 +23,45 @@ namespace itk
 
 template <class TScalarType, unsigned int NDimensions>
 void
-VolumeSplineKernelTransform2<TScalarType, NDimensions>::
-ComputeG(const InputVectorType & x, GMatrixType & GMatrix) const
+VolumeSplineKernelTransform2<TScalarType, NDimensions>
+::ComputeG( const InputVectorType & x, GMatrixType & GMatrix ) const
 {
-
   const TScalarType r = x.GetNorm();
   GMatrix.fill( NumericTraits< TScalarType >::Zero );
   const TScalarType r3 = r * r * r;
-  for(unsigned int i=0; i<NDimensions; i++)
-    {
-    GMatrix[i][i] = r3;
-    }
+  for ( unsigned int i = 0; i < NDimensions; i++ )
+  {
+    GMatrix[ i ][ i ] = r3;
+  }
   
-}
+} // end ComputeG()
 
 
 template <class TScalarType, unsigned int NDimensions>
 void
-VolumeSplineKernelTransform2<TScalarType, NDimensions>::
-ComputeDeformationContribution( const InputPointType  & thisPoint,
-                                OutputPointType & result     ) const
+VolumeSplineKernelTransform2<TScalarType, NDimensions>
+::ComputeDeformationContribution(
+  const InputPointType  & thisPoint, OutputPointType & opp ) const
 {
+  const unsigned long numberOfLandmarks = this->m_SourceLandmarks->GetNumberOfPoints();
+  PointsIterator sp = this->m_SourceLandmarks->GetPoints()->Begin();
 
-  const unsigned long numberOfLandmarks = 
-                              this->m_SourceLandmarks->GetNumberOfPoints();
-
-  PointsIterator sp  = this->m_SourceLandmarks->GetPoints()->Begin();
-
-  for(unsigned int lnd=0; lnd < numberOfLandmarks; lnd++ )
-    {
+  for ( unsigned int lnd = 0; lnd < numberOfLandmarks; lnd++ )
+  {
     InputVectorType position = thisPoint - sp->Value();
     const TScalarType r = position.GetNorm();
     const TScalarType r3 = r * r * r;
 
-    for(unsigned int odim=0; odim < NDimensions; odim++ )
-      {
-      result[ odim ] += r3 * this->m_DMatrix(odim,lnd);
-      }
-    ++sp;
+    for ( unsigned int odim = 0; odim < NDimensions; odim++ )
+    {
+      opp[ odim ] += r3 * this->m_DMatrix( odim, lnd );
     }
+    ++sp;
+  }
 
-}
+} // end ComputeDeformationContribution()
 
 
 } // namespace itk
+
 #endif

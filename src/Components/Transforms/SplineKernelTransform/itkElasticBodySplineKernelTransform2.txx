@@ -25,47 +25,45 @@ template <class TScalarType, unsigned int NDimensions>
 ElasticBodySplineKernelTransform2<TScalarType, NDimensions>::
 ElasticBodySplineKernelTransform2() 
 {
-  // Alpha = 12 ( 1 - \nu ) - 1
-  m_Alpha = 12.0 * ( 1.0 - .25 ) - 1;
+  this->m_Alpha = 12.0 * ( 1.0 - .25 ) - 1.0;
 }
 
-template <class TScalarType, unsigned int NDimensions>
-ElasticBodySplineKernelTransform2<TScalarType, NDimensions>::
-~ElasticBodySplineKernelTransform2()
-{
-}
 
 template <class TScalarType, unsigned int NDimensions>
 void
 ElasticBodySplineKernelTransform2<TScalarType, NDimensions>
-::ComputeG(const InputVectorType & x, GMatrixType & GMatrix) const
+::ComputeG( const InputVectorType & x, GMatrixType & GMatrix ) const
 {
   const TScalarType r       = x.GetNorm();
   const TScalarType factor  = -3.0 * r;
-  const TScalarType radial  = m_Alpha * ( r * r ) * r;
-  for(unsigned int i=0; i<NDimensions; i++)
-    {
-    const typename InputVectorType::ValueType xi = x[i] * factor;
+  const TScalarType radial  = this->m_Alpha * r * r * r;
+  for ( unsigned int i = 0; i < NDimensions; i++ )
+  {
+    const typename InputVectorType::ValueType xi = x[ i ] * factor;
     // G is symmetric
-    for(unsigned int j=0; j<i; j++)
-      {
-      const TScalarType value = xi * x[j]; 
-      GMatrix[i][j] = value;
-      GMatrix[j][i] = value;
-      }
-    GMatrix[i][i] =  radial + xi * x[i];
+    for ( unsigned int j = 0; j < i; j++ )
+    {
+      const TScalarType value = xi * x[ j ];
+      GMatrix[ i ][ j ] = value;
+      GMatrix[ j ][ i ] = value;
     }
- 
-}
+    GMatrix[ i ][ i ] =  radial + xi * x[ i ];
+  }
+
+} // end ComputeG()
+
 
 template <class TScalarType, unsigned int NDimensions>
 void
 ElasticBodySplineKernelTransform2<TScalarType, NDimensions>
 ::PrintSelf(std::ostream& os, Indent indent) const
 {
-  Superclass::PrintSelf(os,indent);
-  os << indent << "m_Alpha: " << m_Alpha << std::endl;
-}
+  Superclass::PrintSelf( os, indent );
+  os << indent << "m_Alpha: " << this->m_Alpha << std::endl;
+
+} // end PrintSelf()
+
 
 } // namespace itk
+
 #endif
