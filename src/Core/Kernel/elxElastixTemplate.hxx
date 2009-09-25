@@ -17,6 +17,22 @@
 
 #include "elxElastixTemplate.h"
 
+#define elxCheckAndSetComponentMacro( _name ) \
+  _name##BaseType * base = this->GetElx##_name##Base( i ); \
+  if ( base != 0 ) \
+  { \
+    base->SetComponentLabel( #_name, i ); \
+    base->SetElastix( This ); \
+  } \
+  else \
+  { \
+    std::string par = ""; \
+    this->m_Configuration->ReadParameter( par, #_name, i, false ); \
+    itkExceptionMacro( << "ERROR: entry " << i << " of " << #_name \
+      << " reads \"" << par << "\", which is not of type " << #_name << "BaseType." ); \
+  }
+// end elxCheckAndSetComponentMacro
+
 namespace elastix
 {
 using namespace itk;
@@ -877,45 +893,55 @@ void ElastixTemplate<TFixedImage, TMovingImage>
 {
   this->GetConfiguration()->SetComponentLabel("Configuration", 0);
 
-  for (unsigned int i = 0; i < this->GetNumberOfRegistrations(); ++i)
-  { this->GetElxRegistrationBase(i)->SetComponentLabel( "Registration", i );
-  this->GetElxRegistrationBase(i)->SetElastix( This ); }
+  for ( unsigned int i = 0; i < this->GetNumberOfRegistrations(); ++i)
+  {
+    elxCheckAndSetComponentMacro( Registration );
+  }
 
-  for (unsigned int i = 0; i < this->GetNumberOfTransforms(); ++i)
-  { this->GetElxTransformBase(i)->SetComponentLabel( "Transform", i );
-  this->GetElxTransformBase(i)->SetElastix( This ); }
+  for ( unsigned int i = 0; i < this->GetNumberOfTransforms(); ++i )
+  {
+    elxCheckAndSetComponentMacro( Transform );
+  }
 
-  for (unsigned int i = 0; i < this->GetNumberOfImageSamplers(); ++i)
-  { this->GetElxImageSamplerBase(i)->SetComponentLabel( "ImageSampler", i );
-  this->GetElxImageSamplerBase(i)->SetElastix( This ); }
+  for ( unsigned int i = 0; i < this->GetNumberOfImageSamplers(); ++i )
+  {
+    elxCheckAndSetComponentMacro( ImageSampler );
+  }
 
-  for (unsigned int i = 0; i < this->GetNumberOfMetrics(); ++i)
-  { this->GetElxMetricBase(i)->SetComponentLabel( "Metric", i );
-  this->GetElxMetricBase(i)->SetElastix( This ); }
+  for ( unsigned int i = 0; i < this->GetNumberOfMetrics(); ++i )
+  {
+    elxCheckAndSetComponentMacro( Metric );
+  }
 
-  for (unsigned int i = 0; i < this->GetNumberOfInterpolators(); ++i)
-  { this->GetElxInterpolatorBase(i)->SetComponentLabel( "Interpolator", i );
-  this->GetElxInterpolatorBase(i)->SetElastix( This ); }
+  for ( unsigned int i = 0; i < this->GetNumberOfInterpolators(); ++i )
+  {
+    elxCheckAndSetComponentMacro( Interpolator );
+  }
 
-  for (unsigned int i = 0; i < this->GetNumberOfOptimizers(); ++i)
-  { this->GetElxOptimizerBase(i)->SetComponentLabel( "Optimizer", i );
-  this->GetElxOptimizerBase(i)->SetElastix( This ); }
+  for ( unsigned int i = 0; i < this->GetNumberOfOptimizers(); ++i )
+  {
+    elxCheckAndSetComponentMacro( Optimizer );
+  }
 
-  for (unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i)
-  { this->GetElxFixedImagePyramidBase(i)->SetComponentLabel( "FixedImagePyramid", i );
-  this->GetElxFixedImagePyramidBase(i)->SetElastix( This ); }
+  for ( unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i )
+  {
+    elxCheckAndSetComponentMacro( FixedImagePyramid );
+  }
 
-  for (unsigned int i = 0; i < this->GetNumberOfMovingImagePyramids(); ++i)
-  { this->GetElxMovingImagePyramidBase(i)->SetComponentLabel( "MovingImagePyramid", i );
-  this->GetElxMovingImagePyramidBase(i)->SetElastix( This ); }
+  for ( unsigned int i = 0; i < this->GetNumberOfMovingImagePyramids(); ++i )
+  {
+    elxCheckAndSetComponentMacro( MovingImagePyramid );
+  }
 
-  for (unsigned int i = 0; i < this->GetNumberOfResampleInterpolators(); ++i)
-  { this->GetElxResampleInterpolatorBase(i)->SetComponentLabel( "ResampleInterpolator", i );
-  this->GetElxResampleInterpolatorBase(i)->SetElastix( This ); }
+  for ( unsigned int i = 0; i < this->GetNumberOfResampleInterpolators(); ++i )
+  {
+    elxCheckAndSetComponentMacro( ResampleInterpolator );
+  }
 
-  for (unsigned int i = 0; i < this->GetNumberOfResamplers(); ++i)
-  { this->GetElxResamplerBase(i)->SetComponentLabel( "Resampler", i );
-  this->GetElxResamplerBase(i)->SetElastix( This ); }
+  for ( unsigned int i = 0; i < this->GetNumberOfResamplers(); ++i )
+  {
+    elxCheckAndSetComponentMacro( Resampler );
+  }
 
 } // end ConfigureComponents()
 
@@ -1042,3 +1068,4 @@ void ElastixTemplate<TFixedImage, TMovingImage>
 
 #endif // end #ifndef __elxElastixTemplate_hxx
 
+#undef elxCheckAndSetComponentMacro

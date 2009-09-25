@@ -629,7 +629,7 @@ ElastixMain::ObjectContainerPointer ElastixMain::CreateComponents(
   catch ( itk::ExceptionObject & excp )
   {
     xout["error"] 
-    << "ERROR: error occurred while creating " 
+      << "ERROR: error occurred while creating " 
       << key << " "
       << componentnr << "." << std::endl;
     xout["error"] << excp << std::endl;
