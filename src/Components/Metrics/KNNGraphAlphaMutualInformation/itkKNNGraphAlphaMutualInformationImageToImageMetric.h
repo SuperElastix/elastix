@@ -62,7 +62,8 @@ namespace itk
  * All the technical details can be found in:\n
  * M. Staring, U.A. van der Heide, S. Klein, M.A. Viergever and J.P.W. Pluim,
  * "Registration of Cervical MRI Using Multifeature Mutual Information,"
- * IEEE Transactions on Medical Imaging, 2009, in press.
+ * IEEE Transactions on Medical Imaging, vol. 28, no. 9, pp. 1412 - 1421,
+ * September 2009.
  * 
  * \ingroup RegistrationMetrics
  */
