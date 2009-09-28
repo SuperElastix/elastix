@@ -206,6 +206,15 @@ public:
     return dynamic_cast<const ITKBaseType *>( this );
   }
 
+  virtual const CombinationTransformType * GetAsCombinationTransform(void) const
+  {
+    return dynamic_cast<const CombinationTransformType * >( this );
+  }
+  virtual CombinationTransformType * GetAsCombinationTransform(void)
+  {
+    return dynamic_cast<CombinationTransformType * >( this );
+  }
+
   /** Execute stuff before everything else:
    * \li Check the appearance of an initial transform.
    */

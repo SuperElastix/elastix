@@ -16,7 +16,7 @@
 #define __elxZeroDeformationConstraint_HXX__
 
 #include "elxZeroDeformationConstraint.h"
-
+#include "StandardGradientDescent/itkStandardGradientDescentOptimizer.h"
 
 namespace elastix
 {
@@ -61,14 +61,7 @@ using namespace itk;
     xl::xout["iteration"]["6:Lagrange"] << std::showpoint << std::fixed;
     xl::xout["iteration"]["7:Infeasibility"] << std::showpoint << std::fixed;
     xl::xout["iteration"]["8:MaxAbsDisplacement"] << std::showpoint << std::fixed;
-
-    /** Read config to determine if we want to update the metric weights. */
-    m_UpdateMetricWeights = false;
-    this->GetConfiguration()->ReadParameter( m_UpdateMetricWeights,
-      "UpdateMetricWeights", this->GetComponentLabel(), 0, 0 );
-
-    /** Check if we are using a multi-metric registration. */
-    m_MultiMetricRegistration = dynamic_cast< MultiMetricRegistrationType * >( this->GetRegistration() );
+  
   }
 
 
@@ -84,8 +77,8 @@ using namespace itk;
     this->m_CurrentIteration = 0;
     this->m_NumPenaltyTermUpdates = 0;
 
-    /** Reset previous maximum magnitude. */
-    this->m_PreviousMaximumMagnitude2 = itk::NumericTraits< double >::max();
+    /** Reset previous maximum absolute displacement. */
+    this->m_PreviousMaximumAbsoluteDisplacement = itk::NumericTraits< double >::max();
 
     /** Get the current resolution level. */
     unsigned int level = 
@@ -107,7 +100,7 @@ using namespace itk;
     this->GetConfiguration()->ReadParameter( this->m_PenaltyTermMultiplierFactor,
       "PenaltyTermMultiplierFactor", this->GetComponentLabel(), level, 0 );
 
-    /** Get the required decrease factor for the maximum magnitude. */
+    /** Get the required decrease factor for the maximum displacement. */
     this->GetConfiguration()->ReadParameter( this->m_RequiredConstraintDecreaseFactor,
       "RequiredConstraintDecreaseFactor", this->GetComponentLabel(), level, 0 );
 
@@ -152,27 +145,22 @@ using namespace itk;
     if ( m_CurrentIteration % this->m_NumSubIterations == 0 )
     {
       this->DetermineNewLagrangeMultipliers();
-      /** Check if maximum magnitude decreased enough. If not update penalty term multiplier. */
-      if ( this->GetCurrentMaximumAbsoluteDisplacement() > this->m_RequiredConstraintDecreaseFactor * this->m_PreviousMaximumMagnitude2 )
+      
+      /** Check if maximum displacement decreased enough. If not update penalty term multiplier. */
+      if ( this->GetCurrentMaximumAbsoluteDisplacement() > this->m_RequiredConstraintDecreaseFactor * this->m_PreviousMaximumAbsoluteDisplacement )
       {
         this->m_CurrentPenaltyTermMultiplier = this->DetermineNewPenaltyTermMultiplier( this->m_NumPenaltyTermUpdates + 1 );
         this->m_NumPenaltyTermUpdates++;
 
-        /** Update multi metric weights (to prevent problems with the optimizer gain). */
-        if ( m_UpdateMetricWeights && m_MultiMetricRegistration != NULL ) 
+        /** Reset ASGD current time parameter. */
+        StandardGradientDescentOptimizer * ptr = dynamic_cast< StandardGradientDescentOptimizer * > ( this->GetElastix()->GetElxOptimizerBase() );
+        if ( ptr != NULL )
         {
-          /** Get the number of metrics. */
-          unsigned int nrOfMetrics = m_MultiMetricRegistration->GetCombinationMetric()->GetNumberOfMetrics();
-
-          /** Update weights. */
-          for ( unsigned int metricnr = 0; metricnr < nrOfMetrics; ++metricnr )
-          {
-            double currentWeight = m_MultiMetricRegistration->GetCombinationMetric()->GetMetricWeight( metricnr );
-            m_MultiMetricRegistration->GetCombinationMetric()->SetMetricWeight( currentWeight / this->m_PenaltyTermMultiplierFactor, metricnr );
-          }
+          ptr->ResetCurrentTimeToInitialTime();
+          ptr->SetParam_a( ptr->GetParam_a() / this->m_PenaltyTermMultiplierFactor );
         }
       }
-      this->m_PreviousMaximumMagnitude2 = this->GetCurrentMaximumAbsoluteDisplacement();
+      this->m_PreviousMaximumAbsoluteDisplacement = this->GetCurrentMaximumAbsoluteDisplacement();
     }    
   } // end AfterEachIteration
 

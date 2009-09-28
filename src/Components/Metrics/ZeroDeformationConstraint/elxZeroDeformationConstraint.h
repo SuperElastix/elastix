@@ -193,16 +193,12 @@ using namespace itk;
     unsigned int m_CurrentIteration;
 
     /** Previous maximum magnitude value and required decrease factor. */
-    double m_PreviousMaximumMagnitude2;
+    double m_PreviousMaximumAbsoluteDisplacement;
     double m_RequiredConstraintDecreaseFactor;
     unsigned int m_NumPenaltyTermUpdates;
 
     /** Average lagrange multiplier variable for output. */
     double m_AverageLagrangeMultiplier;
-
-    /** Variable to store casted registration pointer in (for multi-metric check). */ 
-    MultiMetricRegistrationType * m_MultiMetricRegistration;
-    bool m_UpdateMetricWeights;
 
     inline void DetermineNewLagrangeMultipliers( );
     inline double DetermineNewPenaltyTermMultiplier( const int iterationNumber ) const;

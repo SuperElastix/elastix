@@ -17,6 +17,8 @@
 
 #include "elxReducedDimensionGridSampler.h"
 
+#include "itkAdvancedBSplineDeformableTransform.h"
+
 namespace elastix
 {
   using namespace itk;
@@ -58,16 +60,82 @@ namespace elastix
     
     GridSpacingType gridspacing;
 
-    /** Read the desired grid spacing of the samples. */
-    unsigned int spacing_dim;
-    for ( unsigned int dim = 0; dim < InputImageDimension; dim++ )
+    /** Read the automatic grid estimation setting. */
+    bool automaticGridEstimation = false;
+    this->GetConfiguration()->ReadParameter( 
+      automaticGridEstimation, "AutomaticSampleGridEstimation",
+       this->GetComponentLabel(), 0, 0, false );
+
+    if ( automaticGridEstimation )
     {
-      spacing_dim = 2;
-      this->GetConfiguration()->ReadParameter(
-        spacing_dim, "SampleGridSpacing", 
-        this->GetComponentLabel(), level * InputImageDimension + dim, -1 );
-      gridspacing[ dim ] = static_cast<SampleGridSpacingValueType>( spacing_dim );
+      /** Set grid spacing to b-spline grid spacing. */
+      typedef AdvancedBSplineDeformableTransform<typename ElastixType::CoordRepType, InputImageDimension, 2> BSpline2Type; 
+      typedef AdvancedBSplineDeformableTransform<typename ElastixType::CoordRepType, InputImageDimension, 3> BSpline3Type; 
+
+      typedef typename ElastixType::TransformBaseType TransformBaseType;
+      typedef typename TransformBaseType::CombinationTransformType CombinationTransformType;
+
+      CombinationTransformType * testPtr = this->GetElastix()->GetElxTransformBase()->GetAsCombinationTransform();
+      if ( testPtr != NULL )
+      {
+
+        BSpline2Type * bspline2 = 
+          dynamic_cast< BSpline2Type * > ( testPtr->GetCurrentTransform() );
+        BSpline3Type * bspline3 = 
+          dynamic_cast< BSpline3Type * > ( testPtr->GetCurrentTransform() );
+      
+        typename BSpline2Type::SpacingType spacing;
+        if ( bspline2 != NULL ) 
+        {
+          spacing = bspline2->GetGridSpacing();
+        } 
+        else if ( bspline3 != NULL ) 
+        {
+          spacing = bspline3->GetGridSpacing();
+        } 
+        else 
+        {
+          /** Not a bspline transform, fall back to reading grid spacing from parameter file. */
+          automaticGridEstimation = false;
+        }
+
+        if ( automaticGridEstimation )
+        {
+          /** Compute the grid spacing in voxel units. */
+          for ( unsigned int dim = 0; dim < InputImageDimension; ++dim )
+          {
+            if ( this->m_ReducedDimension == dim )
+            {
+              gridspacing[ dim ] = 1;
+            }
+            else
+            {
+              gridspacing[ dim ] = static_cast< int > ( spacing[ dim ] /
+                this->GetElastix()->GetFixedImage()->GetSpacing()[ dim ] );
+            }
+         }
+        }
+        else
+        {
+          automaticGridEstimation = false;
+        }
+      }
     }
+
+    if ( !automaticGridEstimation )
+    {
+      /** Read the desired grid spacing of the samples. */
+      unsigned int spacing_dim;
+      for ( unsigned int dim = 0; dim < InputImageDimension; dim++ )
+      {
+        spacing_dim = 2;
+        this->GetConfiguration()->ReadParameter(
+          spacing_dim, "SampleGridSpacing", 
+          this->GetComponentLabel(), level * InputImageDimension + dim, -1 );
+        gridspacing[ dim ] = static_cast<SampleGridSpacingValueType>( spacing_dim );
+      }
+    }
+
     this->SetSampleGridSpacing( gridspacing );
 
   } // end BeforeEachResolution

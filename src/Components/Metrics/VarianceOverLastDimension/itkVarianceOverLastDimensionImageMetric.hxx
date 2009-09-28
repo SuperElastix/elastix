@@ -2,7 +2,7 @@
 
   This file is part of the elastix software.
 
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  Copyright (c) Erasmus MC, Rotterdam. All rights reserved.
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
