@@ -138,6 +138,8 @@ namespace elastix
 
     this->SetSampleGridSpacing( gridspacing );
 
+    /** Output grid spacing to log file. */
+    elxout << "Sample grid spacing of ReducedDimensionGridSampler = " << this->GetSampleGridSpacing() << std::endl;
   } // end BeforeEachResolution
 
 

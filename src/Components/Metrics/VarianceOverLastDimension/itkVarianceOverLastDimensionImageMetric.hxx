@@ -353,6 +353,14 @@ namespace itk
       lastDimPositions[ i ] = i;
     }
 
+    
+    NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+    TransformJacobianType jacobian;
+    DerivativeType imageJacobian( nzji.size() );      
+    DerivativeType sumImageJacobian( this->GetNumberOfParameters() );
+    DerivativeType sumWeightedImageJacobian( this->GetNumberOfParameters() );
+    DerivativeType sumValueImageJacobian( this->GetNumberOfParameters() );
+
     /** Loop over the fixed image samples to calculate the variance over time for every sample position. */
     for ( fiter = fbegin; fiter != fend; ++fiter )
     {
@@ -381,15 +389,9 @@ namespace itk
       * and sum M(x)*dM(x)/dmu.
       * Also transform jacobian and nonzerojacind
       */      
-      NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
-      TransformJacobianType jacobian;
-      DerivativeType imageJacobian( nzji.size() );      
       imageJacobian.Fill( NumericTraits< DerivativeValueType >::Zero );
-      DerivativeType sumImageJacobian( this->GetNumberOfParameters() );
       sumImageJacobian.Fill( NumericTraits< DerivativeValueType >::Zero );
-      DerivativeType sumWeightedImageJacobian( this->GetNumberOfParameters() );
       sumWeightedImageJacobian.Fill( NumericTraits< DerivativeValueType >::Zero );
-      DerivativeType sumValueImageJacobian( this->GetNumberOfParameters() );
       sumValueImageJacobian.Fill( NumericTraits< DerivativeValueType >::Zero );
 
       for ( unsigned int d = 0; d < realNumLastDimPositions; ++d ) 
@@ -404,7 +406,6 @@ namespace itk
         /** Transform sampled point back to world coordinates. */
         this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
         /** Transform point and check if it is inside the bspline support region. */
-
         bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
         /** Check if point is inside mask. */

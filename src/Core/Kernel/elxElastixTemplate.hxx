@@ -1069,3 +1069,4 @@ void ElastixTemplate<TFixedImage, TMovingImage>
 #endif // end #ifndef __elxElastixTemplate_hxx
 
 #undef elxCheckAndSetComponentMacro
+
