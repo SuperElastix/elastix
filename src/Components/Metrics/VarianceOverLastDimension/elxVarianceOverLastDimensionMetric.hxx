@@ -64,18 +64,6 @@ using namespace itk;
       "NumSamplesLastDimension", this->GetComponentLabel(), level, 0 );
     this->SetNumSamplesLastDimension( numSamplesLastDimension );
 
-    /** Get and set the weighting factors. */
-    std::vector<double> weightingFactors;
-    int i = 0;
-    double weightingFactor = 0.0;
-    while ( this->GetConfiguration()->ReadParameter( weightingFactor ,
-      "LastDimensionWeightingFactors", this->GetComponentLabel(), i, -1 ) )
-    {
-      weightingFactors.push_back( weightingFactor );
-      ++i;
-    }
-    this->SetWeightingFactors( weightingFactors );
-
     /** Set moving image derivative scales. */
     this->SetUseMovingImageDerivativeScales( false );
     MovingImageDerivativeScalesType movingImageDerivativeScales;

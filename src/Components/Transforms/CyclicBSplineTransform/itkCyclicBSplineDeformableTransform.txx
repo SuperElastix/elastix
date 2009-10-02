@@ -512,7 +512,6 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 
 } // end ComputeNonZeroJacobianIndices()
 
-
 } // namespace
 
 #endif

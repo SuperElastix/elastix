@@ -67,10 +67,7 @@ public:
   /** Set functions. */
   itkSetMacro(SampleLastDimensionRandomly, bool);
   itkSetMacro(NumSamplesLastDimension, unsigned int);
-  
-  void SetWeightingFactors(const std::vector<double> & w);
-  //itkSetMacro(WeightingFactors, std::vector<double>);
-  
+
   /** Get functions. */
   itkGetConstMacro(SampleLastDimensionRandomly, bool);
   itkGetConstMacro(NumSamplesLastDimension, int);
@@ -174,17 +171,6 @@ protected:
     const MovingImageDerivativeType & movingImageDerivative,
     DerivativeType & imageJacobian) const;
 
-  /** Compute a pixel's contribution to the measure and derivatives;
-   * Called by GetValueAndDerivative(). */
-  void UpdateDerivativeTerms( 
-    const RealType movingImageValue,    
-    const DerivativeType & imageJacobian,   
-    const NonZeroJacobianIndicesType & nzji,
-    const double weightingFactor,
-    DerivativeType & deriv0,
-    DerivativeType & deriv1,
-    DerivativeType & deriv2) const;
- 
 private:
   VarianceOverLastDimensionImageMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
@@ -195,9 +181,6 @@ private:
   /** Variables to control random sampling in last dimension. */
   bool m_SampleLastDimensionRandomly;
   unsigned int m_NumSamplesLastDimension;
-
-  /** Variables to control weighting in the last dimension. */
-  std::vector<double> m_WeightingFactors;
 
 }; // end class VarianceOverLastDimensionImageMetric
 
