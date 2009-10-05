@@ -13,17 +13,12 @@
 ======================================================================*/
 
 #ifndef __itkCyclicBSplineDeformableTransform_txx
-#define __itkCyclicSplineDeformableTransform_txx
+#define __itkCyclicBSplineDeformableTransform_txx
 
 #include "itkCyclicBSplineDeformableTransform.h"
 #include "itkContinuousIndex.h"
-#include "itkImageRegionIterator.h"
-#include "itkImageRegionConstIterator.h"
-#include "itkImageRegionConstIteratorWithIndex.h"
-#include "itkIdentityTransform.h"
 
-namespace itk
-{
+namespace itk {
 
 /** Constructor with default arguments. */
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
@@ -457,6 +452,109 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     }
   }
 }
+
+
+/**
+ * ********************* GetSpatialJacobian ****************************
+ */
+
+template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+void
+CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
+::GetSpatialJacobian(
+  const InputPointType & ipp,
+  SpatialJacobianType & sj ) const
+{
+  // Can only compute Jacobian if parameters are set via
+  // SetParameters or SetParametersByValue
+  if ( this->m_InputParametersPointer == NULL )
+  {
+    itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
+  }
+
+  /** Convert the physical point to a continuous index, which
+   * is needed for the 'Evaluate()' functions below.
+   */
+  ContinuousIndexType cindex;
+  this->TransformPointToContinuousGridIndex( ipp, cindex );
+
+  // NOTE: if the support region does not lie totally within the grid
+  // we assume zero displacement and identity spatial Jacobian
+  if ( !this->InsideValidRegion( cindex ) )
+  {
+    sj.SetIdentity();
+    return;
+  }
+
+  /** Compute the number of affected B-spline parameters. */
+  /** Allocate memory on the stack: */
+  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  typename WeightsType::ValueType weightsArray[ numberOfWeights ];
+  WeightsType weights( weightsArray, numberOfWeights, false );
+
+  IndexType supportIndex;
+  this->m_DerivativeWeightsFunctions[ 0 ]->ComputeStartIndex(
+    cindex, supportIndex );
+  RegionType supportRegion;
+  supportRegion.SetSize( this->m_SupportSize );
+  supportRegion.SetIndex( supportIndex );
+
+  /** Split support region into two parts. */
+  RegionType supportRegions[ 2 ];
+  this->SplitRegion( this->m_CoefficientImage[ 0 ]->GetLargestPossibleRegion(),
+     supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
+
+  sj.Fill( 0.0 );
+  
+  /** Compute the spatial Jacobian sj:
+   *    dT_{dim} / dx_i = delta_{dim,i} + \sum coefs_{dim} * weights.
+   */
+  for ( unsigned int i = 0; i < SpaceDimension; ++i )
+  {
+    /** Compute the derivative weights. */
+    this->m_DerivativeWeightsFunctions[ i ]->Evaluate( cindex, supportIndex, weights );
+    
+    /** Compute the spatial Jacobian sj:
+     *    dT_{dim} / dx_i = \sum coefs_{dim} * weights.
+     */
+    for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+    {
+      /** Compute the sum for this dimension. */
+      double sum = 0.0;
+        
+      typename WeightsType::const_iterator itWeights = weights.begin();
+
+      for ( unsigned int r = 0; r < 2; ++r)
+      {
+        /** Create an iterator over the correct part of the coefficient
+         * image. Create an iterator over the weights vector.
+         */
+        ImageRegionConstIterator<ImageType> itCoef(
+          this->m_CoefficientImage[ dim ], supportRegions[ r ] );
+        
+        while ( !itCoef.IsAtEnd() )
+        {
+          sum += itCoef.Value() * (*itWeights);
+          ++itWeights;
+          ++itCoef;
+        }
+      } // end for r
+
+      /** Update the spatial Jacobian sj. */
+      sj( dim, i ) += sum;
+    } // end for dim
+  } // end for i
+
+  /** Take into account grid spacing and direction cosines. */
+  sj = sj * this->m_PointToIndexMatrix;
+
+  /** Add identity. */
+  for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+  {
+    sj( dim, dim ) += 1.0;
+  }
+
+} // end GetSpatialJacobian()
 
 
 /**

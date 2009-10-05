@@ -60,10 +60,9 @@ public:
   itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
 
   typedef typename Superclass::JacobianType         JacobianType;
-  //typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
+  typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
   typedef typename Superclass
     ::NonZeroJacobianIndicesType                    NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
   typedef typename Superclass
     ::JacobianOfSpatialJacobianType                 JacobianOfSpatialJacobianType;
   typedef typename Superclass::SpatialHessianType   SpatialHessianType;
@@ -138,9 +137,9 @@ public:
     ParameterIndexArrayType & indices ) const;
 
   /** Compute the spatial Jacobian of the transformation. */
-  //virtual void GetSpatialJacobian(
-  //  const InputPointType & ipp,
-  //  SpatialJacobianType & sj ) const;
+  virtual void GetSpatialJacobian(
+    const InputPointType & ipp,
+    SpatialJacobianType & sj ) const;
 
 protected:
   CyclicBSplineDeformableTransform();
