@@ -1214,7 +1214,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** Compute the spatial Jacobian sj:
    *    dT_{dim} / dx_i = delta_{dim,i} + \sum coefs_{dim} * weights * PointToGridIndex.
    */
-  sj.Fill(0.0);
+  sj.Fill( 0.0 );
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     /** Compute the derivative weights. */
@@ -1250,10 +1250,10 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** Take into account grid spacing and direction cosines. */
   sj = sj * this->m_PointToIndexMatrix2;
 
-  /** Add contribution of spatial derivative of x */
+  /** Add contribution of spatial derivative of x. */
   for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
   {
-    sj(dim,dim) += 1.0;
+    sj( dim, dim ) += 1.0;
   }
 
 } // end GetSpatialJacobian()
@@ -1521,7 +1521,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   double weightVector[ SpaceDimension * numberOfWeights ];
 
   /** Initialize the spatial Jacobian sj: */
-  sj.Fill(0.0);
+  sj.Fill( 0.0 );
 
   /** For all derivative directions, compute the derivatives of the
    * spatial Jacobian to the transformation parameters mu: d/dmu of dT / dx_i
@@ -1567,10 +1567,10 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** Take into account grid spacing and direction cosines. */
   sj = sj * this->m_PointToIndexMatrix2;
   
-  /** Add contribution of spatial derivative of x */
+  /** Add contribution of spatial derivative of x. */
   for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
   {
-    sj(dim,dim) += 1.0;
+    sj( dim, dim ) += 1.0;
   }
 
   /** Compute the Jacobian of the spatial Jacobian jsj:

@@ -299,7 +299,8 @@ A transformation parameterised by third order B-splines can be
 written in 2D as follows:
 \begin{align}
 \vTmu(\vxt) &= \begin{bmatrix} T_1(\vxt;\vmu) \\ T_2(\vxt;\vmu)
-\end{bmatrix} = \begin{bmatrix} \sum_{i} \mu_i \beta^3 \left(
+\end{bmatrix} = \begin{bmatrix} \widetilde{x}_1 \\ \widetilde{x}_2 \end{bmatrix}
+ + \begin{bmatrix} \sum_{i} \mu_i \beta^3 \left(
 \frac{ \widetilde{x}_1 - x_{1}^i}{\sigma_1} \right)
 \beta^3 \left( \frac{\widetilde{x}_2 - x_{2}^i}{\sigma_2}\right) \\
  \sum_{i} \mu_{i+16} \beta^3 \left( \frac{ \widetilde{x}_1 - x_{1}^i}
@@ -353,8 +354,8 @@ From these equations we derive:
 \D{\vT}{\vmu}(\vxt) &= \begin{bmatrix} b_{33}^{0} & \cdots &
 b_{33}^{15} & 0 & \cdots & 0 \\ 0 & \cdots & 0 & b_{33}^{0} &
 \cdots & b_{33}^{15} \end{bmatrix}, \\
-\D{\vT}{\vx}(\vxt) &= \begin{bmatrix} \sum_i \mu_i b_{23}^i & \sum_i
-\mu_i b_{32}^i \\ \sum_i \mu_{i+16} b_{23}^{i} & \sum_i
+\D{\vT}{\vx}(\vxt) &= \begin{bmatrix} 1 + \sum_i \mu_i b_{23}^i &
+\sum_i \mu_i b_{32}^i \\ \sum_i \mu_{i+16} b_{23}^{i} & 1 + \sum_i
 \mu_{i+16} b_{32}^{i} \end{bmatrix}, \\
 \Dd{\vT}{\vx}{\vx^T}(\vxt) &= \left\{ \begin{bmatrix} \sum_i \mu_i
 b_{13}^i & \sum_i \mu_i b_{22}^i \\ \sum_i \mu_{i} b_{22}^{i} &
