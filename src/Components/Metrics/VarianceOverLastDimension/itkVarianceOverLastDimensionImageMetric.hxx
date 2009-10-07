@@ -61,6 +61,38 @@ namespace itk
       this->m_NumSamplesLastDimension = lastDimSize;
     }
 
+    /** Compute variance over last dimension for complete image to use as normalization factor. */
+    ImageLinearConstIteratorWithIndex< MovingImageType > it( this->GetMovingImage(), 
+                                         this->GetMovingImage()->GetLargestPossibleRegion() );
+    it.SetDirection( lastDim );
+    it.GoToBegin();
+
+    double sumvar = 0.0;
+    int num = 0;
+    while( !it.IsAtEnd() )
+    {
+      double sum = 0.0;
+      double sumsq = 0.0;
+      int numlast = 0;
+
+      while( !it.IsAtEndOfLine() )
+      {
+        double value = it.Get();
+        sum += value;
+        sumsq += value * value;
+        ++numlast;
+        ++it;
+      }
+
+      double expectedValue = sum / static_cast< double > ( numlast );
+      sumvar += sumsq / static_cast< double > ( numlast ) - expectedValue * expectedValue;
+      num++;
+
+      it.NextLine();
+    }
+    
+    this->m_InitialVariance = sumvar / static_cast< double > ( num );
+  
   } // end Initialize
 
 
@@ -249,6 +281,8 @@ namespace itk
 
     /** Compute average over variances. */
     measure /= static_cast<double>( this->m_NumberOfPixelsCounted );
+    /** Normalize with initial variance. */
+    measure /= this->m_InitialVariance;
 
     /** Return the mean squares measure value. */
     return measure;
@@ -443,9 +477,9 @@ namespace itk
     this->CheckNumberOfSamples(
       sampleContainer->Size(), this->m_NumberOfPixelsCounted );
     
-    /** Compute average over variances. */
-    measure /= static_cast<double>( this->m_NumberOfPixelsCounted );
-    derivative /= static_cast<double>( this->m_NumberOfPixelsCounted );
+    /** Compute average over variances and normalize with initial variance. */
+    measure /= static_cast<double>( this->m_NumberOfPixelsCounted * this->m_InitialVariance );
+    derivative /= static_cast<double>( this->m_NumberOfPixelsCounted * this->m_InitialVariance );
 
     /** Return the mean squares measure value. */
     value = measure;

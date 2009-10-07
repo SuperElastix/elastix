@@ -182,6 +182,9 @@ private:
   bool m_SampleLastDimensionRandomly;
   unsigned int m_NumSamplesLastDimension;
 
+  /** Initial variance in last dimension, used as normalization factor. */
+  double m_InitialVariance;
+
 }; // end class VarianceOverLastDimensionImageMetric
 
 } // end namespace itk
