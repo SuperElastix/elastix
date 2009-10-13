@@ -64,7 +64,7 @@ using namespace itk;
      * Use this name in the parameter file to select this specific pyramid. \n
      * example: <tt>(FixedImagePyramid "FixedImageShrinkingPyramid")</tt>\n
      */
-    elxClassNameMacro( "FixedShrinkingPyramid" );
+    elxClassNameMacro( "FixedShrinkingImagePyramid" );
 
     /** Get the ImageDimension. */
     itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
