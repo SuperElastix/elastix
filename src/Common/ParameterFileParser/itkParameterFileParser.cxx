@@ -321,7 +321,17 @@ ParameterFileParser
   }
   
   /** 6) Insert this combination in the parameter map. */
-  this->m_ParameterMap.insert( make_pair( parameterName, parameterValues ) );
+  if ( this->m_ParameterMap.count( parameterName ) )
+  {
+    std::string hint = "The parameter \""
+      + parameterName
+      + "\" is specified more than once.";
+    this->ThrowException( fullLine, hint );
+  }
+  else
+  {
+    this->m_ParameterMap.insert( make_pair( parameterName, parameterValues ) );
+  }
 
 } // end GetParameterFromLine()
 
