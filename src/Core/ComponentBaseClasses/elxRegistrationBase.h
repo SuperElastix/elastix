@@ -143,6 +143,11 @@ using namespace itk;
       const unsigned int nrOfMasks,
       const std::string & whichMask,
       const unsigned int level ) const;
+
+    /** Execute stuff after each resolution:
+     * \li Release memory.
+     */
+    virtual void AfterEachResolutionBase( void );
     
   protected:
 

@@ -136,7 +136,7 @@ namespace elastix
      */
     virtual void BeforeRegistrationBase( void );
 
-    /** Execute stuff after the registration:
+    /** Execute stuff after each resolution:
      * \li Write the resulting output image.
      */
     virtual void AfterEachResolutionBase( void );
