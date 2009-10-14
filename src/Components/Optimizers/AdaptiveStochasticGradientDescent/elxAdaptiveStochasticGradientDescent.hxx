@@ -480,8 +480,15 @@ AdaptiveStochasticGradientDescent<TElastix>
   if ( this->m_NumberOfGradientMeasurements == 0 )
   {
     const double K = 1.5;
-    this->m_NumberOfGradientMeasurements = static_cast<unsigned int>( 
-      vcl_ceil( 8.0 * TrCC / TrC / TrC / (K-1) / (K-1) ) );
+    if ( TrCC > 1e-14 && TrC > 1e-14 )
+    {
+      this->m_NumberOfGradientMeasurements = static_cast<unsigned int>( 
+        vcl_ceil( 8.0 * TrCC / TrC / TrC / (K-1) / (K-1) ) );
+    }
+    else
+    {
+      this->m_NumberOfGradientMeasurements = 2;
+    }
     this->m_NumberOfGradientMeasurements = vnl_math_max(
       static_cast<unsigned int>( 2 ),
       this->m_NumberOfGradientMeasurements );
@@ -491,9 +498,13 @@ AdaptiveStochasticGradientDescent<TElastix>
 
   /** Measure square magnitude of exact gradient and approximation error. */
   const double sigma4factor = 1.0; 
-  const double sigma4 = sigma4factor * delta / vcl_sqrt( maxJJ );
+  double sigma4 = 0.0;
   double gg = 0.0;
   double ee = 0.0;
+  if ( maxJJ > 1e-14 )
+  {
+    sigma4 = sigma4factor * delta / vcl_sqrt( maxJJ );
+  }  
   this->SampleGradients(
     this->GetScaledCurrentPosition(), sigma4, gg, ee );
   timer3->StopTimer();
@@ -502,18 +513,28 @@ AdaptiveStochasticGradientDescent<TElastix>
     << std::endl;
 
   /** Determine parameter settings. */
-  double sigma1;
-  double sigma3;
+  double sigma1 = 0.0;
+  double sigma3 = 0.0;
   /** Estimate of sigma such that empirical norm^2 equals theoretical:
    * gg = 1/N sum_n g_n' g_n
    * sigma = gg / TrC
    */
-  sigma1 = vcl_sqrt( gg / TrC );
-  sigma3 = vcl_sqrt( ee / TrC );
+  if ( gg > 1e-14 && TrC > 1e-14 )
+  {
+    sigma1 = vcl_sqrt( gg / TrC );  
+  }
+  if ( ee > 1e-14 && TrC > 1e-14 )
+  {
+    sigma3 = vcl_sqrt( ee / TrC );
+  }
     
   const double alpha = 1.0;
   const double A = this->GetParam_A();
-  const double a_max = A * delta / sigma1 / vcl_sqrt( maxJCJ );
+  double a_max = 0.0;
+  if ( sigma1 > 1e-14 && maxJCJ > 1e-14 )
+  {
+    a_max = A * delta / sigma1 / vcl_sqrt( maxJCJ );
+  }
   const double noisefactor = sigma1 * sigma1
     / ( sigma1 * sigma1 + sigma3 * sigma3 + 1e-14 );
   const double a = a_max * noisefactor;

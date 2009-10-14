@@ -185,6 +185,8 @@ namespace itk
     this->m_FixedImageBinSize = 
       ( this->m_FixedImageMaxLimit - this->m_FixedImageMinLimit + 2.0 * smallNumberFixed ) /
       static_cast<double>( this->m_NumberOfFixedHistogramBins - 2 * fixedPadding - 1 );
+    this->m_FixedImageBinSize = vnl_math_max( this->m_FixedImageBinSize, 1e-10 );
+    this->m_FixedImageBinSize = vnl_math_min( this->m_FixedImageBinSize, 1e+10 );
     this->m_FixedImageNormalizedMin = 
       (this->m_FixedImageMinLimit - smallNumberFixed ) / this->m_FixedImageBinSize
       - static_cast<double>( fixedPadding );
@@ -192,6 +194,8 @@ namespace itk
     this->m_MovingImageBinSize = 
       ( this->m_MovingImageMaxLimit - this->m_MovingImageMinLimit + 2.0 * smallNumberMoving ) /
       static_cast<double>( this->m_NumberOfMovingHistogramBins - 2 * movingPadding -1 );
+    this->m_MovingImageBinSize = vnl_math_max( this->m_MovingImageBinSize, 1e-10 );
+    this->m_MovingImageBinSize = vnl_math_min( this->m_MovingImageBinSize, 1e+10 );  
     this->m_MovingImageNormalizedMin = 
       ( this->m_MovingImageMinLimit - smallNumberMoving ) / this->m_MovingImageBinSize
       - static_cast<double>( movingPadding );
@@ -1045,8 +1049,12 @@ namespace itk
     this->CheckNumberOfSamples( sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
     /** Compute alpha. */
-    this->m_Alpha = 1.0 / static_cast<double>( this->m_NumberOfPixelsCounted );
-    
+    this->m_Alpha = 0.0;
+    if ( this->m_NumberOfPixelsCounted > 0 )
+    {
+      this->m_Alpha = 1.0 / static_cast<double>( this->m_NumberOfPixelsCounted );
+    }
+        
   } // end ComputePDFs()
 
   
@@ -1140,7 +1148,11 @@ namespace itk
       sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
     /** Compute alpha. */
-    this->m_Alpha = 1.0 / static_cast<double>( this->m_NumberOfPixelsCounted );
+    this->m_Alpha = 0.0;
+    if ( this->m_NumberOfPixelsCounted > 0 )
+    {
+      this->m_Alpha = 1.0 / static_cast<double>( this->m_NumberOfPixelsCounted );
+    }
         
   } // end ComputePDFsAndPDFDerivatives()
 
@@ -1328,7 +1340,11 @@ namespace itk
       sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
     /** Compute alpha and its perturbed versions. */
-    this->m_Alpha = 1.0 / sumOfMovingMaskValues;
+    this->m_Alpha = 0.0;
+    if ( sumOfMovingMaskValues > 1e-14 )
+    {
+      this->m_Alpha = 1.0 / sumOfMovingMaskValues;
+    }
     for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
       this->m_PerturbedAlphaRight[ i ] += sumOfMovingMaskValues;

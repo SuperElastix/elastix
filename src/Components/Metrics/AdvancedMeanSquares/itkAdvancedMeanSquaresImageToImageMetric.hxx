@@ -73,7 +73,11 @@ namespace itk
        * that will be observed.
        * \todo We may involve the standard derivation of the image into
        * this estimate.  */
-      this->m_NormalizationFactor = 100.0 / maxdiff / maxdiff;
+      this->m_NormalizationFactor = 1.0;
+      if ( maxdiff > 1e-10 )
+      {
+        this->m_NormalizationFactor = 100.0 / maxdiff / maxdiff;
+      }
       
     }
     else
@@ -202,8 +206,13 @@ namespace itk
       sampleContainer->Size(), this->m_NumberOfPixelsCounted );
     
     /** Update measure value. */
-    measure *= this->m_NormalizationFactor / 
+    double normal_sum = 0.0;
+    if ( this->m_NumberOfPixelsCounted > 0 )
+    {
+      normal_sum = this->m_NormalizationFactor / 
       static_cast<double>( this->m_NumberOfPixelsCounted );
+    }
+    measure *= normal_sum;
 
     /** Return the mean squares measure value. */
     return measure;
@@ -324,8 +333,12 @@ namespace itk
       sampleContainer->Size(), this->m_NumberOfPixelsCounted );
        
     /** Compute the measure value and derivative. */
-    const double normal_sum = this->m_NormalizationFactor / 
-      static_cast<double>( this->m_NumberOfPixelsCounted );
+    double normal_sum = 0.0;
+    if ( this->m_NumberOfPixelsCounted > 0 )
+    {
+      normal_sum = this->m_NormalizationFactor / 
+        static_cast<double>( this->m_NumberOfPixelsCounted );
+    }
     measure *= normal_sum;
     derivative *= normal_sum;
    
@@ -501,10 +514,18 @@ namespace itk
     this->CheckNumberOfSamples(
       sampleContainer->Size(), this->m_NumberOfPixelsCounted );
        
-    /** Compute the measure value and derivative. */
-    const double normal_sum = 2.0 * this->m_NormalizationFactor / 
-      static_cast<double>( this->m_NumberOfPixelsCounted );
-    H *= normal_sum;
+    /** Compute the measure value and derivative. */    
+    if ( this->m_NumberOfPixelsCounted > 0 )
+    {
+      const double normal_sum = 2.0 * this->m_NormalizationFactor / 
+        static_cast<double>( this->m_NumberOfPixelsCounted );
+      H *= normal_sum;
+    }
+    else
+    {
+      H.Fill(0.0);
+      H.fill_diagonal(1.0);
+    }
     
   } // end GetSelfHessian
 
