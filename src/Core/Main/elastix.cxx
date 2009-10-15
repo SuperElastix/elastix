@@ -183,9 +183,20 @@ int main( int argc, char **argv )
   /** Declare a timer, start it and print the start time. */
   tmr::Timer::Pointer totaltimer = tmr::Timer::New();
   totaltimer->StartTimer();
-  elxout << "elastix is started at "
-    << totaltimer->PrintStartTime()
+  elxout << "elastix is started at " << totaltimer->PrintStartTime()
     << ".\n" << std::endl;
+
+  /** Print where elastix was run. */
+  itksys::SystemInformation info;
+  info.RunCPUCheck();
+  info.RunOSCheck();
+  info.RunMemoryCheck();
+  elxout << "elastix runs at: " << info.GetHostname() << std::endl;
+  elxout << "  " << info.GetOSName() << " "
+    << info.GetOSRelease() << ( info.Is64Bits() ? " (x64), " : ", " )
+    << info.GetOSVersion()
+    << ", with " << info.GetTotalPhysicalMemory() << " MB memory."
+    << std::endl;
 
   /**
    * ********************* START REGISTRATION *********************

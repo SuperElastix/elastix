@@ -23,6 +23,7 @@
 #include "itkObject.h"
 #include "itkDataObject.h"
 #include <itksys/SystemTools.hxx>
+#include <itksys/SystemInformation.hxx>
 
 #include "elxTimer.h"
 
