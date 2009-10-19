@@ -124,6 +124,15 @@ void AdaptiveStochasticGradientDescent<TElastix>
     "SigmoidInitialTime", this->GetComponentLabel(), level, 0 );
   this->SetInitialTime( initialTime );
 
+  /** Set the maximum band size of the covariance matrix. */
+  this->m_MaxBandCovSize = 192;
+  this->GetConfiguration()->ReadParameter(this->m_MaxBandCovSize, "MaxBandCovSize", this->GetComponentLabel(), level, 0 );
+
+  /** Set the number of random samples used to estimate the structure of the covariance matrix. */
+  this->m_NumberOfBandStructureSamples = 10;
+  this->GetConfiguration()->ReadParameter(this->m_NumberOfBandStructureSamples, "NumberOfBandStructureSamples", 
+      this->GetComponentLabel(), level, 0 );
+
   /** Set/Get whether the adaptive step size mechanism is desired. Default: true 
    * NB: the setting is turned of in case of UseRandomSampleRegion=true. 
    * Deprecated alias UseCruzAcceleration is also still supported.
@@ -833,8 +842,8 @@ AdaptiveStochasticGradientDescent<TElastix>
   elxout << "  Computing JacobianTerms ... " << std::endl;
  
   /** Variables for the band cov matrix. */  
-  const unsigned int maxbandcovsize = 192;  
-  const unsigned int nrOfBandStructureSamples = 10;
+  const unsigned int maxbandcovsize = m_MaxBandCovSize;  
+  const unsigned int nrOfBandStructureSamples = m_NumberOfBandStructureSamples;
 
   /** DifHist is a histogram of absolute parameterNrDifferences that
    * occur in the nonzerojacobianindex vectors. 
@@ -908,6 +917,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   difHist.resize( 0 );
 
   /** Compute the number of bands. */
+  elxout << "  Estimated band size covariance matrix: " << difHist2.size() << std::endl;
   const unsigned int bandcovsize = vnl_math_min( maxbandcovsize,
     static_cast<unsigned int>(difHist2.size()) );
   /** Maps parameterNrDifference (q-p) to colnr in bandcov. */

@@ -370,6 +370,10 @@ private:
   unsigned long m_PreviousErrorAtIteration;
   bool          m_AutomaticParameterEstimationDone;
 
+  /** Private variables for band size estimation of covariance matrix. */
+  unsigned long m_MaxBandCovSize;
+  unsigned long m_NumberOfBandStructureSamples;
+
 }; // end class AdaptiveStochasticGradientDescent
 
 
