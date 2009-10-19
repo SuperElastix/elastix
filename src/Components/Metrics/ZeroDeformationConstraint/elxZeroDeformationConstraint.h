@@ -192,6 +192,9 @@ using namespace itk;
     unsigned int m_NumSubIterations;
     unsigned int m_CurrentIteration;
 
+    /** Bool for setting to update param_a or not. */
+    bool m_UpdateParam_a;
+
     /** Previous maximum magnitude value and required decrease factor. */
     double m_PreviousMaximumAbsoluteDisplacement;
     double m_RequiredConstraintDecreaseFactor;

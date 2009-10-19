@@ -61,6 +61,11 @@ using namespace itk;
     xl::xout["iteration"]["6:Lagrange"] << std::showpoint << std::fixed;
     xl::xout["iteration"]["7:Infeasibility"] << std::showpoint << std::fixed;
     xl::xout["iteration"]["8:MaxAbsDisplacement"] << std::showpoint << std::fixed;
+
+    /** Get the setting for updating param_a of the ASGD optimizer. */
+    this->m_UpdateParam_a = true;
+    this->GetConfiguration()->ReadParameter( this->m_UpdateParam_a,
+      "UpdateParam_a", this->GetComponentLabel(), 0, 0, true );
   
   }
 
@@ -145,18 +150,23 @@ using namespace itk;
     if ( m_CurrentIteration % this->m_NumSubIterations == 0 )
     {
       this->DetermineNewLagrangeMultipliers();
+        
+      /** Reset ASGD current time parameter. */
+      StandardGradientDescentOptimizer * ptr = dynamic_cast< StandardGradientDescentOptimizer * > ( this->GetElastix()->GetElxOptimizerBase() );
+      if ( ptr != NULL )
+      {
+        ptr->ResetCurrentTimeToInitialTime();
+      }
       
       /** Check if maximum displacement decreased enough. If not update penalty term multiplier. */
-      if ( this->GetCurrentMaximumAbsoluteDisplacement() > this->m_RequiredConstraintDecreaseFactor * this->m_PreviousMaximumAbsoluteDisplacement )
+      if ( this->GetCurrentMaximumAbsoluteDisplacement() > this->m_RequiredConstraintDecreaseFactor * this->m_PreviousMaximumAbsoluteDisplacement
+             && this->GetCurrentMaximumAbsoluteDisplacement() > 10E-5  )
       {
         this->m_CurrentPenaltyTermMultiplier = this->DetermineNewPenaltyTermMultiplier( this->m_NumPenaltyTermUpdates + 1 );
         this->m_NumPenaltyTermUpdates++;
 
-        /** Reset ASGD current time parameter. */
-        StandardGradientDescentOptimizer * ptr = dynamic_cast< StandardGradientDescentOptimizer * > ( this->GetElastix()->GetElxOptimizerBase() );
-        if ( ptr != NULL )
+        if ( ptr != NULL && this->m_UpdateParam_a )
         {
-          ptr->ResetCurrentTimeToInitialTime();
           ptr->SetParam_a( ptr->GetParam_a() / this->m_PenaltyTermMultiplierFactor );
         }
       }
