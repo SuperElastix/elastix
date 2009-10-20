@@ -1,7 +1,8 @@
-ObjectType = Image
 NDims = 2
-BinaryData = True
-BinaryDataByteOrderMSB = False
 DimSize = 256 256
 ElementType = MET_SHORT
+Offset = 0.0 0.0 
+ElementSpacing = 1.0 1.0
+ElementByteOrderMSB = False 
+ElementNumberOfChannels = 1
 ElementDataFile = solution_deformedmovingimage.raw
