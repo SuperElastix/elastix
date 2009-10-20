@@ -66,7 +66,17 @@ using namespace itk;
     this->m_UpdateParam_a = true;
     this->GetConfiguration()->ReadParameter( this->m_UpdateParam_a,
       "UpdateParam_a", this->GetComponentLabel(), 0, 0, true );
+
+    /** Get the initial Lagrange multiplier value. */
+    double initialLagrangeMultiplier = 0.0;
+    this->GetConfiguration()->ReadParameter( initialLagrangeMultiplier,
+      "InitialLagrangeMultiplier", this->GetComponentLabel(), 0, 0 );
+    this->m_AverageLagrangeMultiplier = this->m_InitialLangrangeMultiplier;
   
+    /** Get the initial penalty term multiplier. */
+    this->GetConfiguration()->ReadParameter( this->m_InitialPenaltyTermMultiplier,
+      "InitialPenaltyTermMultiplier", this->GetComponentLabel(), 0, 0 );
+    this->m_CurrentPenaltyTermMultiplier = this->m_InitialPenaltyTermMultiplier;
   }
 
 
@@ -89,18 +99,12 @@ using namespace itk;
     unsigned int level = 
       ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
-    /** Get the initial lagrange multiplier. */
-    double initialLagrangeMultiplier;
-    this->GetConfiguration()->ReadParameter( initialLagrangeMultiplier,
-      "InitialLagrangeMultiplier", this->GetComponentLabel(), level, 0 );
-    this->SetInitialLangrangeMultiplier( initialLagrangeMultiplier );
-    this->m_AverageLagrangeMultiplier = this->m_InitialLangrangeMultiplier;
+    /** Set the initial lagrange multiplier. If we are not in the coarsest resolution
+     * level we set the langrange multipliers to the average value of the last resolution. 
+     * Note that in the first resolution level, the average Lagrange multiplier is set
+     * to its initial value in BeforeRegistration. */
+    this->SetInitialLangrangeMultiplier( this->m_AverageLagrangeMultiplier );
 
-    /** Get the initial penalty term multiplier. */
-    this->GetConfiguration()->ReadParameter( this->m_InitialPenaltyTermMultiplier,
-      "InitialPenaltyTermMultiplier", this->GetComponentLabel(), level, 0 );
-    this->m_CurrentPenaltyTermMultiplier = this->m_InitialPenaltyTermMultiplier;
-    
     /** Get the penalty term multiplier factor. */
     this->GetConfiguration()->ReadParameter( this->m_PenaltyTermMultiplierFactor,
       "PenaltyTermMultiplierFactor", this->GetComponentLabel(), level, 0 );

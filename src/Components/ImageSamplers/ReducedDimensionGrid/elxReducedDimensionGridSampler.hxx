@@ -60,11 +60,15 @@ namespace elastix
     
     GridSpacingType gridspacing;
 
-    /** Read the automatic grid estimation setting. */
+    /** Read the automatic grid estimation settings. */
     bool automaticGridEstimation = false;
     this->GetConfiguration()->ReadParameter( 
       automaticGridEstimation, "AutomaticSampleGridEstimation",
        this->GetComponentLabel(), 0, 0, false );
+    float gridSpacingFactor = 1.0f;
+    this->GetConfiguration()->ReadParameter(
+      gridSpacingFactor, "GridSpacingFactor",
+      this->GetComponentLabel(), 0, 0, false );
 
     if ( automaticGridEstimation )
     {
@@ -110,7 +114,7 @@ namespace elastix
             }
             else
             {
-              gridspacing[ dim ] = static_cast< int > ( spacing[ dim ] /
+              gridspacing[ dim ] = static_cast< int > ( gridSpacingFactor * spacing[ dim ] /
                 this->GetElastix()->GetFixedImage()->GetSpacing()[ dim ] );
             }
          }

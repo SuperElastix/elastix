@@ -2,9 +2,9 @@
 
   This file is part of the elastix software.
 
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
+  Copyright (c) Erasmus MC University Medical Center Rotterdam. 
+  All rights reserved.  See src/CopyrightElastix.txt or 
+  http://elastix.isi.uu.nl/legal.php for details.
 
      This software is distributed WITHOUT ANY WARRANTY; without even 
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
@@ -260,7 +260,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
     const PixelType * basePointer
       = this->m_CoefficientImage[ 0 ]->GetBufferPointer();
     
-    for ( unsigned int j = 0; j < SpaceDimension; j++ )
+    for ( unsigned int j = 0; j < SpaceDimension - 1; j++ )
     {
       iterator[ j ] = IteratorType( this->m_CoefficientImage[ j ], supportRegions[ r ] );
     }
@@ -272,7 +272,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
       indices[ counter ] = &(iterator[ 0 ].Value()) - basePointer;
 
       /** Multiply weigth with coefficient to compute displacement. */
-      for ( unsigned int j = 0; j < SpaceDimension; j++ )
+      for ( unsigned int j = 0; j < SpaceDimension - 1; j++ )
       {
          outputPoint[ j ] += static_cast<ScalarType>(
            weights[ counter ] * iterator[ j ].Value() );

@@ -920,6 +920,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   elxout << "  Estimated band size covariance matrix: " << difHist2.size() << std::endl;
   const unsigned int bandcovsize = vnl_math_min( maxbandcovsize,
     static_cast<unsigned int>(difHist2.size()) );
+  elxout << "  Used band size covariance matrix: " << bandcovsize << std::endl;
   /** Maps parameterNrDifference (q-p) to colnr in bandcov. */
   std::vector<unsigned int> bandcovMap( P, bandcovsize );
   /** Maps colnr in bandcov to parameterNrDifference (q-p). */
