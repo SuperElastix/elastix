@@ -162,14 +162,24 @@ namespace itk
     void GetValueAndDerivative( const ParametersType& parameters, 
       MeasureType& value, DerivativeType& derivative ) const; 
         
-    /** Number of bins to use for the fixed image in the histogram. Typical value is 32. */
+    /** Number of bins to use for the fixed image in the histogram.
+     * Typical value is 32.  The minimum value is 4 due to the padding
+     * required by the Parzen windowing with a cubic B-spline kernel. Note
+     * that even if the metric is used on binary images, the number of bins
+     * should at least be equal to four.
+     */
     itkSetClampMacro( NumberOfFixedHistogramBins, unsigned long,
-      1, NumericTraits<unsigned long>::max() );
+      4, NumericTraits<unsigned long>::max() );
     itkGetMacro( NumberOfFixedHistogramBins, unsigned long);   
 
-    /** Number of bins for the moving image to use in the histogram. Typical value is 32. */
+    /** Number of bins to use for the moving image in the histogram.
+     * Typical value is 32.  The minimum value is 4 due to the padding
+     * required by the Parzen windowing with a cubic B-spline kernel. Note
+     * that even if the metric is used on binary images, the number of bins
+     * should at least be equal to four.
+     */
     itkSetClampMacro( NumberOfMovingHistogramBins, unsigned long,
-      1, NumericTraits<unsigned long>::max() );
+      4, NumericTraits<unsigned long>::max() );
     itkGetMacro( NumberOfMovingHistogramBins, unsigned long);   
 
     /** The B-spline order of the fixed Parzen window; default: 0 */
@@ -222,6 +232,7 @@ namespace itk
     /** Typedefs inherited from superclass. */
     typedef typename Superclass::FixedImageIndexType                FixedImageIndexType;
     typedef typename Superclass::FixedImageIndexValueType           FixedImageIndexValueType;
+    typedef typename FixedImageType::OffsetValueType                OffsetValueType;
     typedef typename Superclass::MovingImageIndexType               MovingImageIndexType;
     typedef typename Superclass::FixedImagePointType                FixedImagePointType;
     typedef typename Superclass::MovingImagePointType               MovingImagePointType;
@@ -298,7 +309,7 @@ namespace itk
      * the right size already.
      */
     void EvaluateParzenValues(
-      double parzenWindowTerm, int parzenWindowIndex,
+      double parzenWindowTerm, OffsetValueType parzenWindowIndex,
       const KernelFunctionType * kernel, ParzenValueContainerType & parzenValues ) const;
     
     /** Update the joint PDF with a pixel pair; on demand also updates the 

@@ -181,25 +181,31 @@ namespace itk
       ( this->m_MovingImageMaxLimit - this->m_MovingImageMinLimit ) /
       static_cast<double>( this->m_NumberOfFixedHistogramBins - 2 * movingPadding - 1 );
     
-    /** Compute binsizes. */       
-    this->m_FixedImageBinSize = 
-      ( this->m_FixedImageMaxLimit - this->m_FixedImageMinLimit + 2.0 * smallNumberFixed ) /
-      static_cast<double>( this->m_NumberOfFixedHistogramBins - 2 * fixedPadding - 1 );
+    /** Compute binsizes. */
+    const double fixedHistogramWidth = static_cast<double>(
+      static_cast<OffsetValueType>( this->m_NumberOfFixedHistogramBins ) // requires cast to signed type!
+      - 2.0 * fixedPadding - 1.0 );
+    this->m_FixedImageBinSize
+      = ( this->m_FixedImageMaxLimit - this->m_FixedImageMinLimit
+      + 2.0 * smallNumberFixed ) / fixedHistogramWidth;
     this->m_FixedImageBinSize = vnl_math_max( this->m_FixedImageBinSize, 1e-10 );
     this->m_FixedImageBinSize = vnl_math_min( this->m_FixedImageBinSize, 1e+10 );
-    this->m_FixedImageNormalizedMin = 
-      (this->m_FixedImageMinLimit - smallNumberFixed ) / this->m_FixedImageBinSize
-      - static_cast<double>( fixedPadding );
+    this->m_FixedImageNormalizedMin
+      = ( this->m_FixedImageMinLimit - smallNumberFixed )
+      / this->m_FixedImageBinSize - static_cast<double>( fixedPadding );
     
-    this->m_MovingImageBinSize = 
-      ( this->m_MovingImageMaxLimit - this->m_MovingImageMinLimit + 2.0 * smallNumberMoving ) /
-      static_cast<double>( this->m_NumberOfMovingHistogramBins - 2 * movingPadding -1 );
+    const double movingHistogramWidth = static_cast<double>(
+      static_cast<OffsetValueType>( this->m_NumberOfMovingHistogramBins ) // requires cast to signed type!
+      - 2.0 * movingPadding - 1.0 );
+    this->m_MovingImageBinSize
+      = ( this->m_MovingImageMaxLimit - this->m_MovingImageMinLimit
+      + 2.0 * smallNumberMoving ) / movingHistogramWidth;
     this->m_MovingImageBinSize = vnl_math_max( this->m_MovingImageBinSize, 1e-10 );
     this->m_MovingImageBinSize = vnl_math_min( this->m_MovingImageBinSize, 1e+10 );  
-    this->m_MovingImageNormalizedMin = 
-      ( this->m_MovingImageMinLimit - smallNumberMoving ) / this->m_MovingImageBinSize
-      - static_cast<double>( movingPadding );
-        
+    this->m_MovingImageNormalizedMin
+      = ( this->m_MovingImageMinLimit - smallNumberMoving )
+      / this->m_MovingImageBinSize - static_cast<double>( movingPadding );
+
     /** Allocate memory for the marginal PDF. */
     this->m_FixedImageMarginalPDF.SetSize( this->m_NumberOfFixedHistogramBins );
     this->m_MovingImageMarginalPDF.SetSize( this->m_NumberOfMovingHistogramBins );
@@ -408,9 +414,9 @@ namespace itk
      * where ParzenTermToIndexOffset = 1/2, 0, -1/2, or -1.
      */
     this->m_FixedParzenTermToIndexOffset =
-      0.5 - static_cast<double>(this->m_FixedKernelBSplineOrder) / 2.0;
+      0.5 - static_cast<double>( this->m_FixedKernelBSplineOrder ) / 2.0;
     this->m_MovingParzenTermToIndexOffset =
-      0.5 - static_cast<double>(this->m_MovingKernelBSplineOrder) / 2.0;
+      0.5 - static_cast<double>( this->m_MovingKernelBSplineOrder ) / 2.0;
              
   } // end InitializeKernels()
  
@@ -426,7 +432,7 @@ namespace itk
     ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
     ::GetDerivative( const ParametersType& parameters, DerivativeType & derivative ) const
   {
-    /** call the combined version, since the additional computation of
+    /** Call the combined version, since the additional computation of
      * the value does not take extra time.
      */
     MeasureType value;
@@ -466,7 +472,7 @@ namespace itk
     void
     ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
     ::EvaluateParzenValues(
-      double parzenWindowTerm, int parzenWindowIndex,
+      double parzenWindowTerm, OffsetValueType parzenWindowIndex,
       const KernelFunctionType * kernel, ParzenValueContainerType & parzenValues ) const
   {
     const unsigned int max_i = parzenValues.GetSize();
@@ -500,11 +506,11 @@ namespace itk
       movingImageValue / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
         
     /** The lowest bin numbers affected by this pixel: */
-    const int fixedImageParzenWindowIndex =
-      static_cast<int>( vcl_floor(
+    const OffsetValueType fixedImageParzenWindowIndex =
+      static_cast<OffsetValueType>( vcl_floor(
       fixedImageParzenWindowTerm + this->m_FixedParzenTermToIndexOffset ) );
-    const int movingImageParzenWindowIndex =
-      static_cast<int>( vcl_floor(
+    const OffsetValueType movingImageParzenWindowIndex =
+      static_cast<OffsetValueType>( vcl_floor(
       movingImageParzenWindowTerm + this->m_MovingParzenTermToIndexOffset ) );
 
     /** The Parzen values. */
@@ -809,24 +815,24 @@ namespace itk
     ParzenValueContainerType movingParzenValues( this->m_JointPDFWindow.GetSize()[0] );
 
     /** Determine fixed image Parzen window arguments (see eq. 6 of Mattes paper [2]). */
-    const double fixedImageParzenWindowTerm = 
-      fixedImageValue / this->m_FixedImageBinSize - this->m_FixedImageNormalizedMin;
+    const double fixedImageParzenWindowTerm
+      = fixedImageValue / this->m_FixedImageBinSize - this->m_FixedImageNormalizedMin;
 
     /** The lowest bin numbers affected by this pixel: */
-    const int fixedImageParzenWindowIndex = 
-      static_cast<int>( vcl_floor( 
+    const OffsetValueType fixedImageParzenWindowIndex = 
+      static_cast<OffsetValueType>( vcl_floor( 
       fixedImageParzenWindowTerm + this->m_FixedParzenTermToIndexOffset ) );
     this->EvaluateParzenValues(
       fixedImageParzenWindowTerm, fixedImageParzenWindowIndex,
-      this->m_FixedKernel, fixedParzenValues);
+      this->m_FixedKernel, fixedParzenValues );
             
     if ( movingMaskValue > 1e-10 )
     {
       /** Determine moving image Parzen window arguments (see eq. 6 of Mattes paper [2]). */
       const double movingImageParzenWindowTerm =
         movingImageValue / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
-      const int movingImageParzenWindowIndex =    
-        static_cast<int>( vcl_floor(
+      const OffsetValueType movingImageParzenWindowIndex =    
+        static_cast<OffsetValueType>( vcl_floor(
         movingImageParzenWindowTerm + this->m_MovingParzenTermToIndexOffset ) );
       this->EvaluateParzenValues(
         movingImageParzenWindowTerm, movingImageParzenWindowIndex,
@@ -902,7 +908,8 @@ namespace itk
         const double movr = movingImageValuesRight[i];
         const double movParzenWindowTermRight =
           movr / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
-        const int movParzenWindowIndexRight = static_cast<int>( vcl_floor(
+        const OffsetValueType movParzenWindowIndexRight
+          = static_cast<OffsetValueType>( vcl_floor(
           movParzenWindowTermRight + this->m_MovingParzenTermToIndexOffset ) );
         this->EvaluateParzenValues(
           movParzenWindowTermRight, movParzenWindowIndexRight,
@@ -937,7 +944,8 @@ namespace itk
         const double movl = movingImageValuesLeft[ i ];
         const double movParzenWindowTermLeft =
           movl / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
-        const int movParzenWindowIndexLeft = static_cast<int>( vcl_floor(
+        const OffsetValueType movParzenWindowIndexLeft
+          = static_cast<OffsetValueType>( vcl_floor(
           movParzenWindowTermLeft + this->m_MovingParzenTermToIndexOffset ) );
         this->EvaluateParzenValues(
           movParzenWindowTermLeft, movParzenWindowIndexLeft,
