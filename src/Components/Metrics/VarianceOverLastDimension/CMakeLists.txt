@@ -1,6 +1,5 @@
 
-
-ADD_ELXCOMPONENT( VarianceOverLastDimensionMetric
+ADD_ELXCOMPONENT( VarianceOverLastDimensionMetric OFF
  elxVarianceOverLastDimensionMetric.h
  elxVarianceOverLastDimensionMetric.hxx
  elxVarianceOverLastDimensionMetric.cxx

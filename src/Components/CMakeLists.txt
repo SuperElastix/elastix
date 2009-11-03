@@ -67,11 +67,22 @@ FILE( WRITE ${InstallFunctionCallFile}
 #
 
 MACRO( ADD_ELXCOMPONENT name )
+  # Compile this component or not
+  SET ( defaultValue ON )
+  IF ( ${ARGV1} STREQUAL "OFF" )
+    SET ( defaultValue OFF )
+  ENDIF ( ${ARGV1} STREQUAL "OFF" )
   MARK_AS_ADVANCED( USE_${name} )
-  OPTION( USE_${name} "Compile this component." ON )
+  OPTION( USE_${name} "Compile this component" ${defaultValue} )
+
   IF( USE_${name} )
+    # Create the list of files which create the library
+    SET( filelist ${ARGN} )
+    LIST( REMOVE_ITEM filelist "ON" "OFF" )
+
+    # Create project and library
     PROJECT( ${name} )
-    ADD_LIBRARY( ${name} STATIC ${ARGN} )
+    ADD_LIBRARY( ${name} STATIC ${filelist} )
     TARGET_LINK_LIBRARIES( ${name} ${elxLinkLibs} )
 
     # Update AllComponentLibsTemp, while avoiding duplicates:    
@@ -91,7 +102,7 @@ MACRO( ADD_ELXCOMPONENT name )
       "elxInstallComponentFunctionCallMacro( " ${name} " );\n\n" )
 
   ELSE( USE_${name} )
-    # remove from link list
+    # Remove from link list
     IF( DEFINED AllComponentLibs )
       SET( dummy ${AllComponentLibs} )
       LIST( REMOVE_ITEM dummy ${name} )
@@ -109,8 +120,9 @@ ENDMACRO( ADD_ELXCOMPONENT )
 
 FILE( GLOB_RECURSE ListOfComponents "*/CMakeLists.txt" )
 
-FOREACH( comp ${ListOfComponents} )
-  GET_FILENAME_COMPONENT( path_to_comp ${comp} PATH )
+FOREACH( component ${ListOfComponents} )
+  GET_FILENAME_COMPONENT( path_to_comp ${component} PATH )
   STRING( REGEX REPLACE "${elxComponents_SOURCE_DIR}/" "" relative_path_to_comp ${path_to_comp} )
   SUBDIRS( ${relative_path_to_comp} )
-ENDFOREACH( comp )
+ENDFOREACH( component )
+

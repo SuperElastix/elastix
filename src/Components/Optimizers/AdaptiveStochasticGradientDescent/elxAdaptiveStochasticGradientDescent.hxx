@@ -109,7 +109,8 @@ void AdaptiveStochasticGradientDescent<TElastix>
 
   /** Set the gain parameter A. */
   double A = 20.0;
-  this->GetConfiguration()->ReadParameter(A, "SP_A", this->GetComponentLabel(), level, 0 );
+  this->GetConfiguration()->ReadParameter( A,
+    "SP_A", this->GetComponentLabel(), level, 0 );
   this->SetParam_A( A );
 
   /** Set the MaximumNumberOfSamplingAttempts. */
@@ -126,12 +127,13 @@ void AdaptiveStochasticGradientDescent<TElastix>
 
   /** Set the maximum band size of the covariance matrix. */
   this->m_MaxBandCovSize = 192;
-  this->GetConfiguration()->ReadParameter(this->m_MaxBandCovSize, "MaxBandCovSize", this->GetComponentLabel(), level, 0 );
+  this->GetConfiguration()->ReadParameter( this->m_MaxBandCovSize,
+    "MaxBandCovSize", this->GetComponentLabel(), level, 0 );
 
   /** Set the number of random samples used to estimate the structure of the covariance matrix. */
   this->m_NumberOfBandStructureSamples = 10;
-  this->GetConfiguration()->ReadParameter(this->m_NumberOfBandStructureSamples, "NumberOfBandStructureSamples", 
-      this->GetComponentLabel(), level, 0 );
+  this->GetConfiguration()->ReadParameter( this->m_NumberOfBandStructureSamples,
+    "NumberOfBandStructureSamples", this->GetComponentLabel(), level, 0 );
 
   /** Set/Get whether the adaptive step size mechanism is desired. Default: true 
    * NB: the setting is turned of in case of UseRandomSampleRegion=true. 

@@ -1,6 +1,5 @@
 
-
-ADD_ELXCOMPONENT( CyclicBSplineTransform
+ADD_ELXCOMPONENT( CyclicBSplineTransform OFF
  elxCyclicBSplineTransform.h
  elxCyclicBSplineTransform.hxx
  elxCyclicBSplineTransform.cxx
@@ -9,6 +8,4 @@ ADD_ELXCOMPONENT( CyclicBSplineTransform
  itkCyclicGridScheduleComputer.h
  itkCyclicGridScheduleComputer.txx
 )
-
-
 

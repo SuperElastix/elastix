@@ -1,6 +1,5 @@
 
-
-ADD_ELXCOMPONENT( RSGDEachParameterApart
+ADD_ELXCOMPONENT( RSGDEachParameterApart OFF
  elxRSGDEachParameterApart.h
  elxRSGDEachParameterApart.hxx
  elxRSGDEachParameterApart.cxx 
@@ -8,7 +7,4 @@ ADD_ELXCOMPONENT( RSGDEachParameterApart
  itkRSGDEachParameterApartOptimizer.cxx
  itkRSGDEachParameterApartBaseOptimizer.h
  itkRSGDEachParameterApartBaseOptimizer.cxx)
-
-
-
 

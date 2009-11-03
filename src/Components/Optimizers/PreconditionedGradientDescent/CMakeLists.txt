@@ -1,6 +1,5 @@
 
-
-ADD_ELXCOMPONENT( PreconditionedGradientDescent
+ADD_ELXCOMPONENT( PreconditionedGradientDescent OFF
  elxPreconditionedGradientDescent.h
  elxPreconditionedGradientDescent.hxx
  elxPreconditionedGradientDescent.cxx
@@ -9,6 +8,4 @@ ADD_ELXCOMPONENT( PreconditionedGradientDescent
  itkPreconditionedGradientDescentOptimizer.h 
  itkPreconditionedGradientDescentOptimizer.cxx 
 )
-
-
 

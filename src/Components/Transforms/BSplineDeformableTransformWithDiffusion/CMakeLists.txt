@@ -1,8 +1,5 @@
-#---------------------------------------------------------------------
-# Needed for registering this component to elastix
-# See src/Components/CMakeList.txt for the macro
 
-ADD_ELXCOMPONENT( BSplineTransformWithDiffusion
+ADD_ELXCOMPONENT( BSplineTransformWithDiffusion OFF
  elxBSplineTransformWithDiffusion.h
  elxBSplineTransformWithDiffusion.hxx
  elxBSplineTransformWithDiffusion.cxx
@@ -12,3 +9,4 @@ ADD_ELXCOMPONENT( BSplineTransformWithDiffusion
  itkDeformationVectorFieldTransform.txx
  itkVectorMeanDiffusionImageFilter.h
  itkVectorMeanDiffusionImageFilter.hxx)
+

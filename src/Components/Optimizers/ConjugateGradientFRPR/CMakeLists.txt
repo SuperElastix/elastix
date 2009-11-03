@@ -1,9 +1,6 @@
 
-
-ADD_ELXCOMPONENT( ConjugateGradientFRPR
+ADD_ELXCOMPONENT( ConjugateGradientFRPR OFF
  elxConjugateGradientFRPR.h
  elxConjugateGradientFRPR.hxx
  elxConjugateGradientFRPR.cxx )
-
-
 
