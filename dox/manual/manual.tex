@@ -6,14 +6,24 @@
 
 % For math
 \usepackage{amsmath,amsthm,amssymb}
-\usepackage{bm,url}
+\usepackage{bm}
 
 % For figures
 \usepackage{graphicx,subfigure,psfrag,epsfig}
 \graphicspath{{images/}}
 
+% Url's and clickable pdf
 \usepackage[dvips,breaklinks,bookmarks,bookmarksnumbered]{hyperref}
-\hypersetup{pdftitle={elastix, the manual},pdfauthor={Stefan Klein and Marius Staring}}
+\hypersetup{
+  pdftitle={elastix, the manual},
+  pdfauthor={Stefan Klein and Marius Staring},
+  colorlinks={true},      % false: boxed links; true: colored links
+  linkcolor=red,          % color of internal links
+  citecolor=green,        % color of links to bibliography
+  filecolor=magenta,      % color of file links
+  urlcolor=cyan           % color of external links
+}
+\usepackage{url,breakurl}
 
 \usepackage{natbib}
 \usepackage{ctable}
@@ -1111,9 +1121,9 @@ turn off essential components.
 
 \section{How to call \elastix}\label{sec:elastix:call}
 
-\elastix\ is a command line program. This means that you have to open
-a command line interface (a DOS-box, a shell) and type in an
-appropriate elastix command. This also means that there is no
+\elastix\ is a command line program. This means that you have to
+open a command line interface (a DOS-box, a shell) and type in an
+appropriate \elastix\ command. This also means that there is no
 graphical user interface. Help on using the program can be acquired
 as follows:
 \begin{quote}
@@ -1251,7 +1261,7 @@ Besides using \transformix\ for deforming images, you can also use
 points $\vx$. If you want to deform a set of user-specified
 points, the appropriate call is:
 \begin{quote}
-\texttt{transformix -ipp inputPoints.txt -out outputDirectory -tp
+\texttt{transformix -def inputPoints.txt -out outputDirectory -tp
 TransformParameters.txt}
 \end{quote}
 This will create a file \texttt{outputpoints.txt} containing the
@@ -1279,9 +1289,9 @@ coordinates). The second line stores the number of points that
 will be specified. After that the point data is given.
 
 If you want to know the deformation at all voxels of the fixed
-image, simply use \texttt{-ipp all}:
+image, simply use \texttt{-def all}:
 \begin{quote}
-\texttt{transformix -ipp all -out outputDirectory -tp
+\texttt{transformix -def all -out outputDirectory -tp
 TransformParameters.txt}
 \end{quote}
 The deformation field is stored as a vector image
@@ -2164,15 +2174,17 @@ and the rigidity penalty term).
 
 \subsection{DisplacementMagnitudePenalty: inverting transformations}
 
-The \texttt{DisplacementMagnitudePenalty} is a cost function that penalises
-$||\vTm(\vx)-\vx||^2$. You can use this to invert transforms, by setting the
-transform to be inverted as an initial transform (using \texttt{-t0}), setting
-\texttt{(HowToCombineTransforms "Compose")}, and running \elastix\ with this
-metric. After that you can manually set the initial transform in the last
-parameter file to \texttt{"NoInitialTransform"}, and voila, you have the
-inverse transform! Strictly speaken, you should then also change the
-Size/Spacing/Origin/Index settings to match that of the moving image. Select it
-with:
+The \texttt{DisplacementMagnitudePenalty} is a cost function that
+penalises $||\vTm(\vx)-\vx||^2$. You can use this to invert
+transforms, by setting the transform to be inverted as an initial
+transform (using \texttt{-t0}), setting
+\texttt{(HowToCombineTransforms "Compose")}, and running \elastix\
+with this metric. After that you can manually set the initial
+transform in the last parameter file to
+\texttt{"NoInitialTransform"}, and voila, you have the inverse
+transform! Strictly speaking, you should then also change the
+Size/Spacing/Origin/Index settings to match that of the moving
+image. Select it with:
 \begin{verbatim}
 (Metric "DisplacementMagnitudePenalty")
 \end{verbatim}
@@ -2201,18 +2213,19 @@ are relevant: optimisation algorithm, multiresolution etc...
 (NumberOfParameters 0)
 \end{verbatim}
 The deformation field image's pixel type should be a vector of
-\texttt{float} elements. It could be a deformation field that is the result
-of \texttt{transformix -ipp all} for example! Since this transform does not
-have any parameters (the $\vmu$ has zero length), it makes no sense to use
-it for registration. It can just be used as an initial transformation
-(supplied by the option \texttt{-t0}) or as input for \transformix.
+\texttt{float} elements. It could be a deformation field that is the
+result of \texttt{transformix -def all} for example! Since this
+transform does not have any parameters (the $\vmu$ has zero length),
+it makes no sense to use it for registration. It can just be used as
+an initial transformation (supplied by the option \texttt{-t0}) or
+as input for \transformix.
 
 \item[SplineKernelTransform] As an alternative to the B-spline transform,
     \elastix\ includes a the \texttt{SplineKernelTransform}, which
     implements a thin-plate spline type of transform. This transformation
     requires a list of fixed image landmarks (control points) to be
     specified, by means of an input points file which has the same format
-    as the \texttt{-ipp} file used by \transformix\
+    as the \texttt{-def} file used by \transformix\
     (Section~\ref{sec:calltransformix}. See the \texttt{doxygen}
     documentation on the website for a list of its parameters.
 
@@ -2301,10 +2314,10 @@ registration process. This is ``layer B'' of \elastix.
 \begin{itemize}
 \item dox
 \item src/Common: itk classes. layer A stuff.
-\item src/Core: this is the main elastix kernel, responsible for the
+\item src/Core: this is the main \elastix\ kernel, responsible for the
     execution flow, connecting the classes, reading parameters etc.
 \item src/Components: this directory contains the components and their
-    elastix wrappers (layer B)
+    \elastix\ wrappers (layer B)
 \end{itemize}
 
 %\subsection{\elastix\ execution flow}
@@ -2415,14 +2428,15 @@ compared to the ITK.}\label{table:extras}
 
 \section{Creating new components}
 
-If you want to create your own component, it is natural to start writing the
-layer A filter, without bothering about elastix. The layer A filter should
-implement all basic functionality,
+If you want to create your own component, it is natural to start
+writing the layer A filter, without bothering about \elastix. The
+layer A filter should implement all basic functionality,
 
-You can simply extract the ImageSampler directory from elastix and make a small
-test program that reads an image, runs the sampler, and verifies its output.
-Once you got the new sampler to work, it is trivial to write the layer B
-wrapper in elastix (some copy-paste from existing samplers).
+You can simply extract the ImageSampler directory from \elastix\ and
+make a small test program that reads an image, runs the sampler, and
+verifies its output. Once you got the new sampler to work, it is
+trivial to write the layer B wrapper in \elastix\ (some copy-paste
+from existing samplers).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2562,9 +2576,10 @@ wrapper in elastix (some copy-paste from existing samplers).
 \begin{verbatim}
 Overview:
 
-Elastix was initially developed by Stefan Klein and Marius Staring
-under contract to the Image Sciences Institute, University Medical
-Center Utrecht, The Netherlands.
+Elastix was developed by Stefan Klein and Marius Staring under
+supervision of Josien P.W. Pluim, initially under contract to the
+Image Sciences Institute, University Medical Center Utrecht, The
+Netherlands.
 
 Elastix is distributed under the new and simplified BSD license
 approved by the Open Source Initiative (OSI)
@@ -2584,7 +2599,7 @@ third-party license.
 
 Elastix Copyright Notice:
 
-      Copyright (c) 2004-2008 University Medical Center Utrecht
+      Copyright (c) 2004-2009 University Medical Center Utrecht
       All rights reserved.
 
 
