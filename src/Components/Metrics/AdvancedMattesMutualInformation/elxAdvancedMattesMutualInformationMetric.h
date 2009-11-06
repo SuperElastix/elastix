@@ -62,19 +62,19 @@ using namespace itk;
    *    The default value is 3.
    * \parameter FixedLimitRangeRatio: The relative extension of the intensity
    *    range of the fixed image.\n
-   *    If your image has grey values from 0 to 1000 and the
+   *    If your fixed image has grey values from a to b and the
    *    FixedLimitRangeRatio is 0.001, the joint histogram will expect fixed
-   *    image grey values from -0.001 to 1000.001. This may be usefull if
+   *    image grey values from a-0.001(b-a) to b+0.001(b-a). This may be useful if
    *    you use high order bspline interpolator for the fixed image.\n
    *    example: <tt>(FixedLimitRangeRatio 0.001 0.01 0.01)</tt> \n
    *    The default value is 0.01. Can be given for each resolution, or for
    *    all resolutions at once.
    * \parameter MovingLimitRangeRatio: The relative extension of the
    *    intensity range of the moving image.\n
-   *    If your image has grey values from 0 to 1000 and the
-   *    MovingLimitRangeRatio is 0.001, the joint histogram will expect
-   *    moving image grey values from -0.001 to 1000.001. This may be 
-   *    useful if you use high order bspline interpolator for the moving image.\n
+   *    If your moving image has grey values from a to b and the
+   *    MovingLimitRangeRatio is 0.001, the joint histogram will expect moving
+   *    image grey values from a-0.001(b-a) to b+0.001(b-a). This may be useful if
+   *    you use high order bspline interpolator for the moving image.\n
    *    example: <tt>(MovingLimitRangeRatio 0.001 0.01 0.01)</tt> \n
    *    The default value is 0.01. Can be given for each resolution, or for
    *    all resolutions at once. 

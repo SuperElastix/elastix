@@ -79,7 +79,7 @@ public:
 
   /** Typedefs for specifying the extend to the grid. */
   //typedef ImageRegion< itkGetStaticConstMacro( SpaceDimension ) > RegionType;
-  typedef ImageRegion< itkGetStaticConstMacro( SpaceDimension - 1 ) > RegionRedDimType;
+  typedef ImageRegion< itkGetStaticConstMacro( SpaceDimension ) - 1 > RegionRedDimType;
  
   typedef typename Superclass::RegionType       RegionType; 
   typedef typename RegionType::IndexType        IndexType;
@@ -105,7 +105,7 @@ public:
   typedef typename Superclass::
             WeightsFunctionType                 WeightsFunctionType;
   typedef BSplineInterpolationWeightFunction2< ScalarType,
-    itkGetStaticConstMacro( SpaceDimension - 1 ),
+    itkGetStaticConstMacro( SpaceDimension ) - 1,
     itkGetStaticConstMacro( SplineOrder ) >     RedWeightsFunctionType;
   typedef typename RedWeightsFunctionType::
                   ContinuousIndexType           RedContinuousIndexType;
