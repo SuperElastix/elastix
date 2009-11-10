@@ -25,8 +25,7 @@ template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 ::CyclicBSplineDeformableTransform():Superclass()
 {
-  /** Compute reduced valid region. */
-  this->ReduceDimensionValidRegion();
+
 }
 
 /** Destructor. */
