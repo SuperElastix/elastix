@@ -215,10 +215,10 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 
     // set regions for each coefficient and Jacobian image
     for ( unsigned int j = 0; j < SpaceDimension; j++ )
-      {
-      this->m_WrappedImage[j]->SetRegions( this->m_GridRegion );
-      this->m_JacobianImage[j]->SetRegions( this->m_GridRegion );
-      }
+    {
+      this->m_WrappedImage[ j ]->SetRegions( this->m_GridRegion );
+      this->m_JacobianImage[ j ]->SetRegions( this->m_GridRegion );
+    }
 
     // Set the valid region
     // If the grid spans the interval [start, last].
@@ -229,17 +229,19 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
     // Where offset = vcl_floor(spline / 2 ).
     // Note that the last pixel is not included in the valid region
     // with odd spline orders.
+    // For backward compatibility m_ValidRegion is still created.
     typename RegionType::SizeType size = this->m_GridRegion.GetSize();
     typename RegionType::IndexType index = this->m_GridRegion.GetIndex();
+    typedef typename ContinuousIndexType::ValueType CValueType;
     for ( unsigned int j = 0; j < SpaceDimension; j++ )
-      {
-      index[j] += 
+    {
+      this->m_ValidRegionBegin[ j ] = static_cast<CValueType>( index[ j ] ) + ( static_cast<CValueType>( SplineOrder ) - 1.0 ) / 2.0;
+      this->m_ValidRegionEnd[ j ]   = static_cast<CValueType>( index[ j ] ) + static_cast<CValueType>( size[ j ] ) - ( static_cast<CValueType>( SplineOrder ) - 1.0 ) / 2.0;
+      index[ j ] += 
         static_cast< typename RegionType::IndexValueType >( this->m_Offset );
-      size[j] -= 
+      size[ j ] -= 
         static_cast< typename RegionType::SizeValueType> ( 2 * this->m_Offset );
-      this->m_ValidRegionLast[j] = index[j] +
-        static_cast< typename RegionType::IndexValueType >( size[j] ) - 1;
-      }
+    }
     this->m_ValidRegion.SetSize( size );
     this->m_ValidRegion.SetIndex( index );
 
@@ -740,27 +742,17 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   const ContinuousIndexType& index ) const
 {
   bool inside = true;
-
-  if ( !this->m_ValidRegion.IsInside( index ) )
-    {
-    inside = false;
+  
+  /** Check if index can be evaluated given the current grid. */
+  for ( unsigned int j = 0; j < SpaceDimension; j++ )
+  {
+    if ( index[ j ] < this->m_ValidRegionBegin[ j ] || index[ j ] >= this->m_ValidRegionEnd[ j ] ) {
+      inside = false;
+      break;
     }
-
-  if ( inside && this->m_SplineOrderOdd )
-    {
-    typedef typename ContinuousIndexType::ValueType ValueType;
-    for( unsigned int j = 0; j < SpaceDimension; j++ )
-      {
-      if ( index[j] >= static_cast<ValueType>( this->m_ValidRegionLast[j] ) )
-        { 
-        inside = false;
-        break;
-        }
-      }
-    }
+  }
 
   return inside;
-
 }
 
 // Transform a point

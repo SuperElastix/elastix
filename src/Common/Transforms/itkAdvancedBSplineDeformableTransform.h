@@ -526,7 +526,8 @@ protected:
   unsigned long   m_Offset;
   bool            m_SplineOrderOdd;
   SizeType        m_SupportSize;
-  IndexType       m_ValidRegionLast;
+  ContinuousIndexType m_ValidRegionBegin;
+  ContinuousIndexType m_ValidRegionEnd;
 
   /** Keep a pointer to the input parameters. */
   const ParametersType *  m_InputParametersPointer;
