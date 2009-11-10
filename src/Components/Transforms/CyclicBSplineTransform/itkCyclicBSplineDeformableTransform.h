@@ -2,7 +2,7 @@
 
 This file is part of the elastix software.
 
-Copyright (c) University Medical Center Utrecht. All rights reserved.
+Copyright (c) Erasmus MC University Medical Center Rotterdam. 
 See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
 details.
 
@@ -41,11 +41,11 @@ class ITK_EXPORT CyclicBSplineDeformableTransform
 {
 public:
   /** Standard class typedefs. */
-  typedef CyclicBSplineDeformableTransform          Self;
+  typedef CyclicBSplineDeformableTransform            Self;
   typedef AdvancedBSplineDeformableTransform<
-    TScalarType, NDimensions, VSplineOrder >         Superclass;
-  typedef SmartPointer<Self>                        Pointer;
-  typedef SmartPointer<const Self>                  ConstPointer;
+    TScalarType, NDimensions, VSplineOrder >          Superclass;
+  typedef SmartPointer<Self>                          Pointer;
+  typedef SmartPointer<const Self>                    ConstPointer;
 
   /** New macro for creation of through the object factory. */
   itkNewMacro( Self );
@@ -59,33 +59,27 @@ public:
   /** The BSpline order. */
   itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
 
-  typedef typename Superclass::JacobianType         JacobianType;
-  typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
+  typedef typename Superclass::JacobianType           JacobianType;
+  typedef typename Superclass::SpatialJacobianType    SpatialJacobianType;
   typedef typename Superclass
-    ::NonZeroJacobianIndicesType                    NonZeroJacobianIndicesType;
+    ::NonZeroJacobianIndicesType                      NonZeroJacobianIndicesType;
   typedef typename Superclass
-    ::JacobianOfSpatialJacobianType                 JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType   SpatialHessianType;
+    ::JacobianOfSpatialJacobianType                   JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType     SpatialHessianType;
   typedef typename Superclass
-    ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
-  typedef typename Superclass::InternalMatrixType   InternalMatrixType;
-  typedef typename Superclass::ParametersType       ParametersType;
+    ::JacobianOfSpatialHessianType                    JacobianOfSpatialHessianType;
+  typedef typename Superclass::InternalMatrixType     InternalMatrixType;
+  typedef typename Superclass::ParametersType         ParametersType;
   
   /** Parameters as SpaceDimension number of images. */
-  typedef typename ParametersType::ValueType            PixelType;
+  typedef typename ParametersType::ValueType          PixelType;
   typedef Image< PixelType,
-    itkGetStaticConstMacro( SpaceDimension )>           ImageType;
-  typedef typename ImageType::Pointer                   ImagePointer;
+    itkGetStaticConstMacro( SpaceDimension )>         ImageType;
+  typedef typename ImageType::Pointer                 ImagePointer;
 
-  /** Typedefs for specifying the extend to the grid. */
-  //typedef ImageRegion< itkGetStaticConstMacro( SpaceDimension ) > RegionType;
-  typedef ImageRegion< itkGetStaticConstMacro( SpaceDimension ) - 1 > RegionRedDimType;
- 
   typedef typename Superclass::RegionType       RegionType; 
   typedef typename RegionType::IndexType        IndexType;
   typedef typename RegionType::SizeType         SizeType;
-  typedef typename RegionRedDimType::IndexType  IndexRedDimType;
-  typedef typename RegionRedDimType::SizeType   SizeRedDimType;
   typedef typename ImageType::SpacingType       SpacingType;
   typedef typename ImageType::DirectionType     DirectionType;
   typedef typename ImageType::PointType         OriginType;
@@ -152,12 +146,6 @@ protected:
   /** Check if a continuous index is inside the valid region. */
   bool InsideValidRegion( const ContinuousIndexType & index ) const;
 
-  RegionRedDimType m_ValidRegionRedDim;
-
-  /** Reduce the dimensionality of the valid region with one and store the 
-      result in m_ValidRegionRedDim. */
-  virtual void ReduceDimensionValidRegion();
-  
   /** Split an image region into two regions based on the last dimension. */
   virtual void SplitRegion( 
     const RegionType & imageRegion,

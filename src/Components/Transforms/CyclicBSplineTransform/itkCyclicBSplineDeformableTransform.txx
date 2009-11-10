@@ -58,28 +58,6 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
                        << lastDimSize << ")." );
   }
 
-  /** Compute reduced valid region. */
-  this->ReduceDimensionValidRegion();
-}
-
-/** Reduce the valid region dimension to SpaceDimension - 1. */
-template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-void 
-CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
-::ReduceDimensionValidRegion()
-{
-  /** Create valid region for SpaceDimsion - 1. */
-  IndexType        regionIndex = this->m_ValidRegion.GetIndex();
-  SizeType         regionSize = this->m_ValidRegion.GetSize();
-  IndexRedDimType  regionIndexRedDim;
-  SizeRedDimType   regionSizeRedDim;
-  for ( unsigned int i = 0; i < SpaceDimension - 1; i++ )
-  {
-      regionIndexRedDim.SetElement( i, regionIndex.GetElement( i ) );
-      regionSizeRedDim.SetElement( i, regionSize.GetElement( i ) );
-  }
-  this->m_ValidRegionRedDim.SetIndex( regionIndexRedDim );
-  this->m_ValidRegionRedDim.SetSize( regionSizeRedDim );
 }
 
 /** Check if the point lies inside a valid region. */
@@ -91,34 +69,16 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 {
   bool inside = true;
 
-  /** Reduce dimension of input index. */
-  RedContinuousIndexType  indexRedDim;
-  for ( unsigned long i = 0; i < SpaceDimension - 1; i++ )
+  /** Check if index can be evaluated given the current grid. */
+  for ( unsigned int j = 0; j < SpaceDimension - 1; j++ )
   {
-    indexRedDim.SetElement( i, index.GetElement( i ) );
-  }
-
-  /** Check if point is in valid region. */
-  if ( !this->m_ValidRegionRedDim.IsInside( indexRedDim ) )
-  {
-    inside = false;
-  }
-
-  if ( inside && this->m_SplineOrderOdd )
-  {
-    typedef typename ContinuousIndexType::ValueType ValueType;
-    for( unsigned int j = 0; j < SpaceDimension - 1; j++ )
-    {
-      if ( index[ j ] >= static_cast<ValueType>( this->m_ValidRegionLast[ j ] ) )
-      { 
-        inside = false;
-        break;
-      }
+    if ( index[ j ] < this->m_ValidRegionBegin[ j ] || index[ j ] >= this->m_ValidRegionEnd[ j ] ) {
+      inside = false;
+      break;
     }
   }
 
   return inside;
-
 }
 
 /** Split region into two parts: 1) The part that reaches from
@@ -299,17 +259,17 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 ::GetJacobian( const InputPointType & point ) const
 {
   /** Can only compute Jacobian if parameters are set via
-   * SetParameters or SetParametersByValue.
-   */
+       * SetParameters or SetParametersByValue.
+       */
   if( this->m_InputParametersPointer == NULL )
   {
     itkExceptionMacro( <<"Cannot compute Jacobian: parameters not set" );
   }
 
   /** Zero all components of Jacobian
-   * NOTE: for efficiency, we only need to zero out the coefficients
-   * that got fill last time this method was called.
-   */
+       * NOTE: for efficiency, we only need to zero out the coefficients
+       * that got fill last time this method was called.
+       */
   RegionType supportRegion;
   supportRegion.SetSize( this->m_SupportSize );
   supportRegion.SetIndex( this->m_LastJacobianIndex );
@@ -346,8 +306,8 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   this->TransformPointToContinuousGridIndex( point, cindex );
 
   /** NOTE: if the support region does not lie totally within the grid
-   * (except for the last dimension) we assume zero displacement and 
-   * return the input point. */
+       * (except for the last dimension) we assume zero displacement and 
+       * return the input point. */
   if ( !this->InsideValidRegion( cindex ) )
   {
     return this->m_Jacobian;
@@ -415,8 +375,8 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   this->TransformPointToContinuousGridIndex( point, cindex ); 
 
   /** NOTE: if the support region does not lie totally within the grid
-   * we assume zero displacement and return the input point.
-   */
+       * we assume zero displacement and return the input point.
+       */
   if ( !this->InsideValidRegion( cindex ) )
   {
     weights.Fill(0.0);
@@ -473,8 +433,8 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   }
 
   /** Convert the physical point to a continuous index, which
-   * is needed for the 'Evaluate()' functions below.
-   */
+       * is needed for the 'Evaluate()' functions below.
+       */
   ContinuousIndexType cindex;
   this->TransformPointToContinuousGridIndex( ipp, cindex );
 
@@ -507,16 +467,16 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   sj.Fill( 0.0 );
   
   /** Compute the spatial Jacobian sj:
-   *    dT_{dim} / dx_i = delta_{dim,i} + \sum coefs_{dim} * weights.
-   */
+       *    dT_{dim} / dx_i = delta_{dim,i} + \sum coefs_{dim} * weights.
+       */
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     /** Compute the derivative weights. */
     this->m_DerivativeWeightsFunctions[ i ]->Evaluate( cindex, supportIndex, weights );
     
     /** Compute the spatial Jacobian sj:
-     *    dT_{dim} / dx_i = \sum coefs_{dim} * weights.
-     */
+            *    dT_{dim} / dx_i = \sum coefs_{dim} * weights.
+            */
     for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
       /** Compute the sum for this dimension. */
@@ -527,8 +487,8 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       for ( unsigned int r = 0; r < 2; ++r)
       {
         /** Create an iterator over the correct part of the coefficient
-         * image. Create an iterator over the weights vector.
-         */
+                       * image. Create an iterator over the weights vector.
+                       */
         ImageRegionConstIterator<ImageType> itCoef(
           this->m_CoefficientImage[ dim ], supportRegions[ r ] );
         
@@ -587,8 +547,8 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       iterator( this->m_CoefficientImage[ 0 ], supportRegions[ r ] );
   
     /** For all control points in the support region, set which of the
-     * indices in the parameter array are non-zero.
-     */
+            * indices in the parameter array are non-zero.
+            */
     const PixelType * basePointer = this->m_CoefficientImage[ 0 ]->GetBufferPointer();
     while ( !iterator.IsAtEnd() )
     {
