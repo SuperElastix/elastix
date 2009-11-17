@@ -226,7 +226,9 @@ protected:
   
   /** Typedefs used for computing image derivatives. */
   typedef BSplineInterpolateImageFunction<
-    MovingImageType, CoordinateRepresentationType>              BSplineInterpolatorType;
+    MovingImageType, CoordinateRepresentationType, double>      BSplineInterpolatorType;
+  typedef BSplineInterpolateImageFunction<
+    MovingImageType, CoordinateRepresentationType, float>       BSplineInterpolatorFloatType;
   typedef typename BSplineInterpolatorType::CovariantVectorType MovingImageDerivativeType;
   typedef GradientImageFilter<
     MovingImageType, RealType, RealType>                        CentralDifferenceGradientFilterType;
@@ -243,7 +245,9 @@ protected:
 
   /** Variables for image derivative computation. */
   bool m_InterpolatorIsBSpline;
+  bool m_InterpolatorIsBSplineFloat;
   typename BSplineInterpolatorType::Pointer             m_BSplineInterpolator;
+  typename BSplineInterpolatorFloatType::Pointer             m_BSplineInterpolatorFloat;
   typename CentralDifferenceGradientFilterType::Pointer m_CentralDifferenceGradientFilter;
 
   /** Variables to store the AdvancedTransform. */  

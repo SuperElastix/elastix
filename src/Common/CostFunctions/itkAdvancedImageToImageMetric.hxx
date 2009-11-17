@@ -43,7 +43,9 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   this->m_RequiredRatioOfValidSamples = 0.25;
 
   this->m_BSplineInterpolator = 0;
+  this->m_BSplineInterpolatorFloat = 0;
   this->m_InterpolatorIsBSpline = false;
+  this->m_InterpolatorIsBSplineFloat = false;
   this->m_CentralDifferenceGradientFilter = 0;
 
   this->m_AdvancedTransform = 0;
@@ -333,13 +335,28 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     itkDebugMacro( "Interpolator is not BSpline" );
   }
 
+  this->m_InterpolatorIsBSplineFloat = false;
+  BSplineInterpolatorFloatType * testPtr2 = 
+    dynamic_cast<BSplineInterpolatorFloatType *>( this->m_Interpolator.GetPointer() );
+  if ( testPtr2 )
+  {
+    this->m_InterpolatorIsBSplineFloat = true;
+    this->m_BSplineInterpolatorFloat = testPtr2;
+    itkDebugMacro( "Interpolator is BSplineFloat" );
+  }
+  else
+  {
+    this->m_BSplineInterpolatorFloat = 0;
+    itkDebugMacro( "Interpolator is not BSplineFloat" );
+  }
+
   /** Don't overwrite the gradient image if GetComputeGradient() == true.
    * Otherwise we can use a forward difference derivative, or the derivative
    * provided by the BSpline interpolator.
    */
   if ( !this->GetComputeGradient() )
   {
-    if ( !this->m_InterpolatorIsBSpline )
+    if ( !this->m_InterpolatorIsBSpline && !this->m_InterpolatorIsBSplineFloat )
     {
       this->m_CentralDifferenceGradientFilter = CentralDifferenceGradientFilterType::New();
       this->m_CentralDifferenceGradientFilter->SetUseImageSpacing( true );
@@ -420,6 +437,12 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
         /** Computed moving image gradient using derivative BSpline kernel. */
         (*gradient)
           = this->m_BSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
+      }
+      else if ( this->m_InterpolatorIsBSplineFloat && !this->GetComputeGradient() )
+      {
+        /** Computed moving image gradient using derivative BSpline kernel. */
+        (*gradient)
+          = this->m_BSplineInterpolatorFloat->EvaluateDerivativeAtContinuousIndex( cindex );
       }
       else
       {
@@ -591,6 +614,10 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     << this->m_InterpolatorIsBSpline << std::endl;
   os << indent.GetNextIndent() << "BSplineInterpolator: "
     << this->m_BSplineInterpolator.GetPointer() << std::endl;
+  os << indent.GetNextIndent() << "InterpolatorIsBSplineFloat: "
+    << this->m_InterpolatorIsBSplineFloat << std::endl;
+  os << indent.GetNextIndent() << "BSplineInterpolatorFloat: "
+    << this->m_BSplineInterpolatorFloat.GetPointer() << std::endl;
   os << indent.GetNextIndent() << "CentralDifferenceGradientFilter: "
     << this->m_CentralDifferenceGradientFilter.GetPointer() << std::endl;
 
