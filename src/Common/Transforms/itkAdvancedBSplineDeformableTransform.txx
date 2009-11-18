@@ -235,8 +235,13 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
     typedef typename ContinuousIndexType::ValueType CValueType;
     for ( unsigned int j = 0; j < SpaceDimension; j++ )
     {
-      this->m_ValidRegionBegin[ j ] = static_cast<CValueType>( index[ j ] ) + ( static_cast<CValueType>( SplineOrder ) - 1.0 ) / 2.0;
-      this->m_ValidRegionEnd[ j ]   = static_cast<CValueType>( index[ j ] ) + static_cast<CValueType>( size[ j ] ) - ( static_cast<CValueType>( SplineOrder ) - 1.0 ) / 2.0;
+      this->m_ValidRegionBegin[ j ] = 
+        static_cast<CValueType>( index[ j ] ) + 
+        ( static_cast<CValueType>( SplineOrder ) - 1.0 ) / 2.0;
+      this->m_ValidRegionEnd[ j ] = 
+        static_cast<CValueType>( index[ j ] ) +
+        static_cast<CValueType>( size[ j ] - 1 ) - 
+        ( static_cast<CValueType>( SplineOrder ) - 1.0 ) / 2.0;
       index[ j ] += 
         static_cast< typename RegionType::IndexValueType >( this->m_Offset );
       size[ j ] -= 
