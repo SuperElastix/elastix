@@ -77,8 +77,17 @@ using namespace itk;
      */
 
     /** Set the metric. */
-    this->SetMetric( this->GetElastix()->
-      GetElxMetricBase()->GetAsITKBaseType() );
+    MetricType * testPtr = dynamic_cast<MetricType *>(
+      this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType() );
+    if ( testPtr )
+    {
+      this->SetMetric( testPtr );
+    }
+    else
+    {
+      itkExceptionMacro( << "ERROR: MultiResolutionRegistrationWithFeatures "
+        << "expects the metric to be of type AdvancedImageToImageMetric!" );
+    }
 
     /** Set the fixed images. */
     for ( unsigned int i = 0; i < this->GetElastix()->GetNumberOfFixedImages(); ++i )

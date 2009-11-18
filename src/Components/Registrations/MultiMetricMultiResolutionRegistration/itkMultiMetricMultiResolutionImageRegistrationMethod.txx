@@ -164,20 +164,20 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
   /** Setup the metric. */
   this->GetCombinationMetric()->SetTransform( this->GetTransform() );
 
-  this->GetCombinationMetric()->SetMovingImage(
-    this->GetMovingImagePyramid()->GetOutput( this->GetCurrentLevel() ) );
-  for ( unsigned int i = 0; i < this->GetNumberOfMovingImagePyramids(); ++i )
-  {
-    this->GetCombinationMetric()->SetMovingImage(
-      this->GetMovingImagePyramid( i )->GetOutput( this->GetCurrentLevel() ), i );
-  }
-
   this->GetCombinationMetric()->SetFixedImage(
     this->GetFixedImagePyramid()->GetOutput( this->GetCurrentLevel() ) );
   for ( unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i )
   {
     this->GetCombinationMetric()->SetFixedImage(
       this->GetFixedImagePyramid( i )->GetOutput( this->GetCurrentLevel() ), i );
+  }
+
+  this->GetCombinationMetric()->SetMovingImage(
+    this->GetMovingImagePyramid()->GetOutput( this->GetCurrentLevel() ) );
+  for ( unsigned int i = 0; i < this->GetNumberOfMovingImagePyramids(); ++i )
+  {
+    this->GetCombinationMetric()->SetMovingImage(
+      this->GetMovingImagePyramid( i )->GetOutput( this->GetCurrentLevel() ), i );
   }
 
   this->GetCombinationMetric()->SetInterpolator( this->GetInterpolator() );
@@ -221,26 +221,7 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
 ::PrepareAllPyramids( void )
 {
   this->CheckPyramids();
-
-  /** Setup the moving image pyramids. */
-  for ( unsigned int i = 0; i < this->GetNumberOfMovingImagePyramids(); ++i )
-  {
-    MovingImagePyramidPointer movpyr = this->GetMovingImagePyramid( i );
-    if ( movpyr.IsNotNull() )
-    {
-      movpyr->SetNumberOfLevels( this->GetNumberOfLevels() );
-      if ( this->GetNumberOfMovingImages() > 1 )
-      {
-        movpyr->SetInput( this->GetMovingImage( i ) );
-      }
-      else
-      {
-        movpyr->SetInput( this->GetMovingImage() );
-      }
-      movpyr->UpdateLargestPossibleRegion();
-    }
-  }
-
+  
   /** Set up the fixed image pyramids and the fixed image region pyramids. */
   typedef typename FixedImageRegionType::SizeType         SizeType;
   typedef typename FixedImageRegionType::IndexType        IndexType;
@@ -339,6 +320,25 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
 
   } // end for loop over fixed pyramids
 
+  /** Setup the moving image pyramids. */
+  for ( unsigned int i = 0; i < this->GetNumberOfMovingImagePyramids(); ++i )
+  {
+    MovingImagePyramidPointer movpyr = this->GetMovingImagePyramid( i );
+    if ( movpyr.IsNotNull() )
+    {
+      movpyr->SetNumberOfLevels( this->GetNumberOfLevels() );
+      if ( this->GetNumberOfMovingImages() > 1 )
+      {
+        movpyr->SetInput( this->GetMovingImage( i ) );
+      }
+      else
+      {
+        movpyr->SetInput( this->GetMovingImage() );
+      }
+      movpyr->UpdateLargestPossibleRegion();
+    }
+  }
+
 } // end PrepareAllPyramids()
 
 
@@ -368,9 +368,9 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
   this->m_Stop = false;
 
   /** Check the transform and set the initial parameters. */
-  if( this->GetTransform() == 0 )
+  if ( this->GetTransform() == 0 )
   {
-    itkExceptionMacro(<<"Transform is not present");
+    itkExceptionMacro( << "Transform is not present" );
   }
 
   this->SetInitialTransformParametersOfNextLevel(
@@ -448,17 +448,11 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
     //  m_FixedImage->GetSource()->Update();
     /*for ( unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i )
     {
-      //this->GetFixedImagePyramid( i )->GetOutput( currentLevel )
-        //->DisconnectPipeline();
-        //->DisconnectSource( this->GetFixedImagePyramid( i ), currentLevel );
       this->GetFixedImagePyramid( i )->GetOutput( currentLevel )
         ->ReleaseData();
     }
     for ( unsigned int i = 0; i < this->GetNumberOfMovingImagePyramids(); ++i )
     {
-      //this->GetMovingImagePyramid( i )->GetOutput( currentLevel )
-        //->DisconnectPipeline();
-        //->DisconnectSource( this->GetFixedImagePyramid( i ), currentLevel );
       this->GetMovingImagePyramid( i )->GetOutput( currentLevel )
         ->ReleaseData();
     }*/
@@ -550,19 +544,19 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
   /** Check if at least one of the following are provided. */
   if ( this->GetFixedImage() == 0 )
   {
-    itkExceptionMacro(<<"FixedImage is not present");
+    itkExceptionMacro( << "FixedImage is not present" );
   }
   if ( this->GetMovingImage() == 0 )
   {
-    itkExceptionMacro(<<"MovingImage is not present");
+    itkExceptionMacro( << "MovingImage is not present" );
   }
   if ( this->GetFixedImagePyramid() == 0 )
   {
-    itkExceptionMacro(<<"Fixed image pyramid is not present");
+    itkExceptionMacro( << "Fixed image pyramid is not present" );
   }
   if ( this->GetMovingImagePyramid() == 0 )
   {
-    itkExceptionMacro(<<"Moving image pyramid is not present");
+    itkExceptionMacro( << "Moving image pyramid is not present" );
   }
 
   /** Check if the number if fixed/moving pyramids >= nr of fixed/moving images,
@@ -570,15 +564,18 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
    */
   if ( this->GetNumberOfFixedImagePyramids() < this->GetNumberOfFixedImages() )
   {
-    itkExceptionMacro( << "The number of fixed image pyramids should be >= the number of fixed images" );
+    itkExceptionMacro( << "The number of fixed image pyramids should be >= "
+      << "the number of fixed images" );
   }
   if ( this->GetNumberOfMovingImagePyramids() < this->GetNumberOfMovingImages() )
   {
-    itkExceptionMacro( << "The number of moving image pyramids should be >= the number of moving images" );
+    itkExceptionMacro( << "The number of moving image pyramids should be >= "
+      << "the number of moving images" );
   }
   if ( this->GetNumberOfFixedImageRegions() != this->GetNumberOfFixedImages() )
   {
-    itkExceptionMacro( << "The number of fixed image regions should equal the number of fixed image" );
+    itkExceptionMacro( << "The number of fixed image regions should equal "
+      << "the number of fixed images" );
   }
 
 } // end CheckPyramids()
@@ -596,19 +593,19 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
   /** Check if at least one of the following is present. */
   if ( this->GetMetric() == 0 )
   {
-    itkExceptionMacro(<<"Metric is not present" );
+    itkExceptionMacro( << "Metric is not present" );
   }
   if ( this->GetOptimizer() == 0 )
   {
-    itkExceptionMacro(<<"Optimizer is not present" );
+    itkExceptionMacro( << "Optimizer is not present" );
   }
-  if( this->GetTransform() == 0 )
+  if ( this->GetTransform() == 0 )
   {
-    itkExceptionMacro(<<"Transform is not present");
+    itkExceptionMacro( << "Transform is not present" );
   }
-  if( this->GetInterpolator() == 0 )
+  if ( this->GetInterpolator() == 0 )
   {
-    itkExceptionMacro(<<"Interpolator is not present");
+    itkExceptionMacro( << "Interpolator is not present" );
   }
 
   /** nrofmetrics >= nrofinterpolators >= nrofpyramids >= nofimages */

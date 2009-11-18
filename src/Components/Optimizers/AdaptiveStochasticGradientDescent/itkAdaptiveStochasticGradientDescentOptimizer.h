@@ -76,7 +76,8 @@ namespace itk
     itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( AdaptiveStochasticGradientDescentOptimizer, StandardGradientDescentOptimizer );
+    itkTypeMacro( AdaptiveStochasticGradientDescentOptimizer,
+      StandardGradientDescentOptimizer );
 
     /** Typedefs inherited from the superclass. */
     typedef Superclass::MeasureType               MeasureType;
@@ -134,7 +135,6 @@ namespace itk
     double                        m_SigmoidMax;
     double                        m_SigmoidMin;
     double                        m_SigmoidScale;
-
 
   }; // end class AdaptiveStochasticGradientDescentOptimizer
 

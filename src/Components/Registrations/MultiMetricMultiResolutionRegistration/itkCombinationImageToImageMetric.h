@@ -15,7 +15,8 @@
 #ifndef __itkCombinationImageToImageMetric_h
 #define __itkCombinationImageToImageMetric_h
 
-#include "itkImageToImageMetric.h"
+#include "itkAdvancedImageToImageMetric.h"
+#include "itkSingleValuedPointSetToPointSetMetric.h"
 
 namespace itk
 {
@@ -48,9 +49,6 @@ namespace itk
  * why we chose to reimplement the Get{Transform,Interpolator}()
  * methods.
  *
- * \todo: introduce the itkTransformRegularizerCostFunctionBase
- * and split the cost function vector in the CombinationImageToImageMetric
- * in a ImageMetric vector and a Regularizer vector.
  *
  * \ingroup RegistrationMetrics
  *
@@ -58,18 +56,39 @@ namespace itk
 
 template <class TFixedImage, class TMovingImage>
 class CombinationImageToImageMetric :
-  public ImageToImageMetric< TFixedImage, TMovingImage >
+  public AdvancedImageToImageMetric< TFixedImage, TMovingImage >
+//   public SingleValuedPointSetToPointSetMetric<
+//     PointSet<
+//       typename TFixedImage::PointValueType,
+//       TFixedImage::ImageDimension,
+//       DefaultStaticMeshTraits<
+//         typename TFixedImage::PointValueType,
+//         TFixedImage::ImageDimension,
+//         TFixedImage::ImageDimension,
+//         typename TFixedImage::PointValueType,
+//         typename TFixedImage::PointValueType,
+//         typename TFixedImage::PointValueType > >,
+//     PointSet<
+//       typename TMovingImage::PointValueType,
+//       TMovingImage::ImageDimension,
+//       DefaultStaticMeshTraits<
+//         typename TMovingImage::PointValueType,
+//         TMovingImage::ImageDimension,
+//         TMovingImage::ImageDimension,
+//         typename TMovingImage::PointValueType,
+//         typename TMovingImage::PointValueType,
+//         typename TMovingImage::PointValueType > > >
 {
 public:
   /** Standard class typedefs. */
   typedef CombinationImageToImageMetric   Self;
-  typedef ImageToImageMetric<
+  typedef AdvancedImageToImageMetric<
     TFixedImage, TMovingImage >           Superclass;
   typedef SmartPointer<Self>              Pointer;
   typedef SmartPointer<const Self>        ConstPointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( CombinationImageToImageMetric, ImageToImageMetric );
+  itkTypeMacro( CombinationImageToImageMetric, AdvancedImageToImageMetric );
 
   /** Define the ::New() method */
   itkNewMacro( Self );
@@ -90,8 +109,8 @@ public:
   //typedef typename Superclass::FixedImagePointer          FixedImagePointer;
   typedef typename Superclass::FixedImageConstPointer     FixedImageConstPointer;
   typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
-  typedef typename Superclass::TransformType              TransformType;
-  typedef typename Superclass::TransformPointer           TransformPointer;
+  typedef typename Superclass::AdvancedTransformType      TransformType;
+  typedef typename TransformType::Pointer                 TransformPointer;
   typedef typename Superclass::InputPointType             InputPointType;
   typedef typename Superclass::OutputPointType            OutputPointType;
   typedef typename Superclass::TransformParametersType    TransformParametersType;
@@ -137,6 +156,32 @@ public:
   typedef FixedArray< double,
     itkGetStaticConstMacro(MovingImageDimension) >        MovingImageDerivativeScalesType;
 
+  /** Typedef for the PointSetMetric. */
+  typedef SingleValuedPointSetToPointSetMetric<
+    PointSet<
+      typename TFixedImage::PointValueType,
+      TFixedImage::ImageDimension,
+      DefaultStaticMeshTraits<
+        typename TFixedImage::PointValueType,
+        TFixedImage::ImageDimension,
+        TFixedImage::ImageDimension,
+        typename TFixedImage::PointValueType,
+        typename TFixedImage::PointValueType,
+        typename TFixedImage::PointValueType > >,
+    PointSet<
+      typename TMovingImage::PointValueType,
+      TMovingImage::ImageDimension,
+      DefaultStaticMeshTraits<
+        typename TMovingImage::PointValueType,
+        TMovingImage::ImageDimension,
+        TMovingImage::ImageDimension,
+        typename TMovingImage::PointValueType,
+        typename TMovingImage::PointValueType,
+        typename TMovingImage::PointValueType > > >       Superclass2;
+  typedef typename Superclass2::FixedPointSetType         FixedPointSetType;
+  typedef typename Superclass2::MovingPointSetType        MovingPointSetType;
+  typedef Superclass2                                     PointSetMetricType;
+
   /**
    * Get and set the metrics and their weights.
    **/
@@ -149,7 +194,8 @@ public:
 
   /** Set metric i. It may be a SingleValuedCostFunction, instead of
    * a ImageToImageMetric, but the first one should be an 
-   * ImageToImageMetric in all cases. */
+   * ImageToImageMetric in all cases.
+   */
   void SetMetric( SingleValuedCostFunctionType * metric, unsigned int pos );
 
   /** Get metric i. */
@@ -199,9 +245,9 @@ public:
    */
   virtual void SetTransform( TransformType * _arg, unsigned int pos );
 
-  /** Returns the transform set in a specific metric. If the 
-   * submetric is a singlevalued costfunction a zero pointer will
-   * be returned */
+  /** Returns the transform set in a specific metric. If the submetric is a
+   * singlevalued costfunction a zero pointer will be returned.
+   */
   virtual const TransformType * GetTransform( unsigned int pos ) const;
 
   /** Return Transform 0 */
@@ -216,9 +262,9 @@ public:
   /** Pass an interpolator to a specific metric */
   virtual void SetInterpolator( InterpolatorType * _arg, unsigned int pos );
 
-  /** Returns the interpolator set in a specific metric. If the 
-   * submetric is a singlevalued costfunction a zero pointer will
-   * be returned */
+  /** Returns the interpolator set in a specific metric. If the submetric is
+   * a singlevalued costfunction a zero pointer will be returned.
+   */
   virtual const InterpolatorType * GetInterpolator( unsigned int pos ) const;
 
   /** Return Interpolator 0 */
@@ -313,10 +359,11 @@ public:
   };
 
   /** Get the number of pixels considered in the computation. Return the sum
-    * of pixels counted by all metrics */
+   * of pixels counted by all metrics.
+   */
   virtual const unsigned long & GetNumberOfPixelsCounted( void ) const;
   
-  /** Pass initialisation to all sub metrics. */
+  /** Pass initialization to all sub metrics. */
   virtual void Initialize( void ) throw ( ExceptionObject );
   
   /**
@@ -337,8 +384,9 @@ public:
     MeasureType & value,
     DerivativeType & derivative ) const;
 
-   /** Method to return the latest modified time of this object or
-   * any of its cached ivars */
+  /** Method to return the latest modified time of this object or any of its
+   * cached ivars.
+   */
   virtual unsigned long GetMTime() const;  
   
 protected:

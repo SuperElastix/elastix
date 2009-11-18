@@ -142,6 +142,20 @@ public:
 
   /** Public methods ********************/
 
+  virtual void SetTransform( AdvancedTransformType * arg )
+  {
+    this->Superclass::SetTransform( arg );
+    if ( this->m_AdvancedTransform != arg )
+    {
+      this->m_AdvancedTransform = arg;
+      this->Modified();
+    }
+  }
+  const AdvancedTransformType * GetTransform( void ) const
+  {
+    return this->m_AdvancedTransform.GetPointer();
+  }
+
   /** Set/Get the image sampler. */
   itkSetObjectMacro( ImageSampler, ImageSamplerType );
   virtual ImageSamplerType * GetImageSampler( void ) const
@@ -233,7 +247,7 @@ protected:
   typedef GradientImageFilter<
     MovingImageType, RealType, RealType>                        CentralDifferenceGradientFilterType;
       
-  /** Typedefs for support of sparse Jacobians and BSplineTransforms. */
+  /** Typedefs for support of sparse Jacobians and compact support of transformations. */
   typedef typename 
     AdvancedTransformType::NonZeroJacobianIndicesType           NonZeroJacobianIndicesType;
     
@@ -306,8 +320,9 @@ protected:
   virtual void CheckForAdvancedTransform( void );
 
   /** Transform a point from FixedImage domain to MovingImage domain.
-   * This function also checks if mapped point is within support region of the transform.
-   * It returns true if so, and false otherwise */
+   * This function also checks if mapped point is within support region of
+   * the transform. It returns true if so, and false otherwise.
+   */
   virtual bool TransformPoint( 
     const FixedImagePointType & fixedImagePoint,
     MovingImagePointType & mappedPoint ) const;

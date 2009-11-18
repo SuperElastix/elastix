@@ -143,7 +143,8 @@ public:
    * the metric is a combination metric.
    * GetMetric returns the combination metric.
    * By default, a combination metric is already set on constructing 
-   * this class. */
+   * this class.
+   */
   virtual void SetMetric( MetricType * _arg );
 
   /** Get the metric as a pointer to a combination metric type.
@@ -162,7 +163,7 @@ public:
    * GetFixedImage() just returns GetFixedImage(0)==Superclass::m_FixedImage.
    */
 
-  /** Set/Get the Fixed image. */
+  /** Set/Get the fixed image. */
   virtual void SetFixedImage( const FixedImageType * _arg, unsigned int pos );
   virtual const FixedImageType * GetFixedImage( unsigned int pos ) const;
   virtual const FixedImageType * GetFixedImage( void ) const
@@ -171,7 +172,7 @@ public:
   itkSetNumberOfMacro( FixedImage );
   itkGetNumberOfMacro( FixedImage );
 
-  /** Set/Get the Moving image. */
+  /** Set/Get the moving image. */
   virtual void SetMovingImage( const MovingImageType * _arg, unsigned int pos );
   virtual const MovingImageType * GetMovingImage( unsigned int pos ) const;
   virtual const MovingImageType * GetMovingImage( void ) const
@@ -180,7 +181,7 @@ public:
   itkSetNumberOfMacro( MovingImage );
   itkGetNumberOfMacro( MovingImage );
 
-  /** Set/Get the Fixed image region. */
+  /** Set/Get the fixed image region. */
   virtual void SetFixedImageRegion( FixedImageRegionType _arg, unsigned int pos );
   virtual const FixedImageRegionType & GetFixedImageRegion( unsigned int pos ) const;
   virtual const FixedImageRegionType & GetFixedImageRegion( void ) const
@@ -189,7 +190,7 @@ public:
   itkSetNumberOfMacro( FixedImageRegion );
   itkGetNumberOfMacro( FixedImageRegion );
 
-  /** Set/Get the Interpolator. */
+  /** Set/Get the interpolator. */
   virtual void SetInterpolator( InterpolatorType * _arg, unsigned int pos );
   virtual InterpolatorType * GetInterpolator( unsigned int pos ) const;
   virtual InterpolatorType * GetInterpolator( void )

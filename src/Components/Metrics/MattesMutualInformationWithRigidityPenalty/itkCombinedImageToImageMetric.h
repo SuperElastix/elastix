@@ -58,8 +58,8 @@ public:
   typedef typename Superclass::FixedImageType             FixedImageType;
   typedef typename Superclass::FixedImageConstPointer     FixedImageConstPointer;
   typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
-  typedef typename Superclass::TransformType              TransformType;
-  typedef typename Superclass::TransformPointer           TransformPointer;
+  typedef typename Superclass::AdvancedTransformType      TransformType;
+  typedef typename Superclass::TransformType::Pointer     TransformPointer;
   typedef typename Superclass::InputPointType             InputPointType;
   typedef typename Superclass::OutputPointType            OutputPointType;
   typedef typename Superclass::TransformParametersType    TransformParametersType;

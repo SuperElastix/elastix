@@ -38,7 +38,7 @@
 #define __itkMultiResolutionImageRegistrationMethod2_h
 
 #include "itkProcessObject.h"
-#include "itkImageToImageMetric.h"
+#include "itkAdvancedImageToImageMetric.h"
 #include "itkSingleValuedNonLinearOptimizer.h"
 #include "itkMultiResolutionPyramidImageFilter.h"
 #include "itkNumericTraits.h"
@@ -109,53 +109,52 @@ public:
   itkTypeMacro( MultiResolutionImageRegistrationMethod2, ProcessObject );
 
   /**  Type of the Fixed image. */
-  typedef          TFixedImage                     FixedImageType;
-  typedef typename FixedImageType::ConstPointer    FixedImageConstPointer;
-  typedef typename FixedImageType::RegionType      FixedImageRegionType;
-  typedef std::vector<FixedImageRegionType>        FixedImageRegionPyramidType;
+  typedef          TFixedImage                        FixedImageType;
+  typedef typename FixedImageType::ConstPointer       FixedImageConstPointer;
+  typedef typename FixedImageType::RegionType         FixedImageRegionType;
+  typedef std::vector<FixedImageRegionType>           FixedImageRegionPyramidType;
 
   /**  Type of the Moving image. */
-  typedef          TMovingImage                    MovingImageType;
-  typedef typename MovingImageType::ConstPointer   MovingImageConstPointer;
+  typedef          TMovingImage                       MovingImageType;
+  typedef typename MovingImageType::ConstPointer      MovingImageConstPointer;
 
   /**  Type of the metric. */
-  typedef ImageToImageMetric< FixedImageType,
-                              MovingImageType >    MetricType;
-  typedef typename MetricType::Pointer             MetricPointer;
+  typedef AdvancedImageToImageMetric<
+    FixedImageType, MovingImageType >                 MetricType;
+  typedef typename MetricType::Pointer                MetricPointer;
 
   /**  Type of the Transform . */
-  typedef typename MetricType::TransformType       TransformType;
-  typedef typename TransformType::Pointer          TransformPointer;
+  typedef typename MetricType::AdvancedTransformType  TransformType;
+  typedef typename TransformType::Pointer             TransformPointer;
 
   /** Type for the output: Using Decorator pattern for enabling
    * the Transform to be passed in the data pipeline.
    */
-  typedef  DataObjectDecorator< TransformType >    TransformOutputType;
-  typedef typename TransformOutputType::Pointer    TransformOutputPointer;
+  typedef  DataObjectDecorator< TransformType >       TransformOutputType;
+  typedef typename TransformOutputType::Pointer       TransformOutputPointer;
   typedef typename TransformOutputType::ConstPointer  TransformOutputConstPointer;
   
   /**  Type of the Interpolator. */
-  typedef typename MetricType::InterpolatorType    InterpolatorType;
-  typedef typename InterpolatorType::Pointer       InterpolatorPointer;
+  typedef typename MetricType::InterpolatorType       InterpolatorType;
+  typedef typename InterpolatorType::Pointer          InterpolatorPointer;
 
   /**  Type of the optimizer. */
-  typedef SingleValuedNonLinearOptimizer           OptimizerType;
+  typedef SingleValuedNonLinearOptimizer              OptimizerType;
 
   /** Type of the Fixed image multiresolution pyramid. */
   typedef MultiResolutionPyramidImageFilter<
-    FixedImageType, FixedImageType >                FixedImagePyramidType;
-  typedef typename FixedImagePyramidType::Pointer   FixedImagePyramidPointer;
+    FixedImageType, FixedImageType >                  FixedImagePyramidType;
+  typedef typename FixedImagePyramidType::Pointer     FixedImagePyramidPointer;
   
   /** Type of the moving image multiresolution pyramid. */
-  typedef MultiResolutionPyramidImageFilter< MovingImageType,
-                                             MovingImageType >
-  MovingImagePyramidType;
-  typedef typename MovingImagePyramidType::Pointer MovingImagePyramidPointer;
+  typedef MultiResolutionPyramidImageFilter<
+    MovingImageType, MovingImageType >                MovingImagePyramidType;
+  typedef typename MovingImagePyramidType::Pointer    MovingImagePyramidPointer;
 
   /** Type of the Transformation parameters This is the same type used to
    *  represent the search space of the optimization algorithm.
    */
-  typedef  typename MetricType::TransformParametersType    ParametersType;
+  typedef typename MetricType::TransformParametersType  ParametersType;
 
   /** Smart Pointer type to a DataObject. */
   typedef typename DataObject::Pointer DataObjectPointer;
@@ -204,7 +203,7 @@ public:
 
   /** Set/Get the number of multi-resolution levels. */
   itkSetClampMacro( NumberOfLevels, unsigned long, 1,
-                    NumericTraits<unsigned long>::max() );
+    NumericTraits<unsigned long>::max() );
   itkGetMacro( NumberOfLevels, unsigned long );
 
   /** Get the current resolution level being processed. */

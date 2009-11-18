@@ -104,8 +104,17 @@ using namespace itk;
     this->SetInterpolator( this->GetElastix()->
       GetElxInterpolatorBase()->GetAsITKBaseType() );
 
-    this->SetMetric( this->GetElastix()->
-      GetElxMetricBase()->GetAsITKBaseType() );
+    MetricType * testPtr = dynamic_cast<MetricType *>(
+      this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType() );
+    if ( testPtr )
+    {
+      this->SetMetric( testPtr );
+    }
+    else
+    {
+      itkExceptionMacro( << "ERROR: MultiResolutionRegistration expects the "
+        << "metric to be of type AdvancedImageToImageMetric!" );
+    }
 
     this->SetOptimizer(  dynamic_cast<OptimizerType*>(
       this->GetElastix()->GetElxOptimizerBase()->GetAsITKBaseType() )   );

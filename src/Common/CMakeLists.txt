@@ -60,6 +60,8 @@ SET( CostFunctionFiles
  CostFunctions/itkParzenWindowHistogramImageToImageMetric.hxx
  CostFunctions/itkScaledSingleValuedCostFunction.cxx
  CostFunctions/itkScaledSingleValuedCostFunction.h
+ CostFunctions/itkSingleValuedPointSetToPointSetMetric.h
+ CostFunctions/itkSingleValuedPointSetToPointSetMetric.txx 
  CostFunctions/itkTransformPenaltyTerm.h
  CostFunctions/itkTransformPenaltyTerm.txx
 )

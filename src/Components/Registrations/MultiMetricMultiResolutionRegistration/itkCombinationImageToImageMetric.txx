@@ -26,68 +26,128 @@
  */
 
 /** For setting objects, implement two methods */
-#define itkImplementationSetObjectMacro(_name, _type1, _type2 ) \
-  template <class TFixedImage, class TMovingImage> \
-    void \
-    CombinationImageToImageMetric<TFixedImage,TMovingImage> \
-    ::Set##_name ( _type1 _type2 *_arg, unsigned int pos ) \
+#define itkImplementationSetObjectMacro2(_name, _type1, _type2 ) \
+template <class TFixedImage, class TMovingImage> \
+void \
+CombinationImageToImageMetric<TFixedImage,TMovingImage> \
+::Set##_name ( _type1 _type2 *_arg, unsigned int pos ) \
+{ \
+  if ( pos == 0 ) \
   { \
-    if (pos == 0) \
-    { \
-      this->Superclass::Set##_name ( _arg ); \
-    } \
-    ImageMetricType * testPtr = dynamic_cast<ImageMetricType *>( this->GetMetric(pos) ); \
-    if ( testPtr ) \
-    { \
-      testPtr->Set##_name ( _arg ); \
-    } \
+    this->Superclass::Set##_name ( _arg ); \
   } \
-  template <class TFixedImage, class TMovingImage> \
-    void \
-    CombinationImageToImageMetric<TFixedImage,TMovingImage> \
-    ::Set##_name ( _type1 _type2 *_arg ) \
+  ImageMetricType    * testPtr1 \
+    = dynamic_cast<ImageMetricType *>( this->GetMetric( pos ) ); \
+  PointSetMetricType * testPtr2 \
+    = dynamic_cast<PointSetMetricType *>( this->GetMetric( pos ) ); \
+  if ( testPtr1 ) \
   { \
-    for ( unsigned int i = 0; i < this->GetNumberOfMetrics(); i++ ) \
-    { \
-      this->Set##_name ( _arg, i); \
-    } \
-  }  // comments for allowing ; after calling the macro
+    testPtr1->Set##_name ( _arg ); \
+  } \
+  else if ( testPtr2 ) \
+  { \
+    testPtr2->Set##_name ( _arg ); \
+  } \
+} \
+template <class TFixedImage, class TMovingImage> \
+void \
+CombinationImageToImageMetric<TFixedImage,TMovingImage> \
+::Set##_name ( _type1 _type2 *_arg ) \
+{ \
+  for ( unsigned int i = 0; i < this->GetNumberOfMetrics(); i++ ) \
+  { \
+    this->Set##_name ( _arg, i ); \
+  } \
+}  // comments for allowing ; after calling the macro
+
+#define itkImplementationSetObjectMacro1(_name, _type1, _type2 ) \
+template <class TFixedImage, class TMovingImage> \
+void \
+CombinationImageToImageMetric<TFixedImage,TMovingImage> \
+::Set##_name ( _type1 _type2 *_arg, unsigned int pos ) \
+{ \
+  if ( pos == 0 ) \
+  { \
+    this->Superclass::Set##_name ( _arg ); \
+  } \
+  ImageMetricType    * testPtr1 \
+    = dynamic_cast<ImageMetricType *>( this->GetMetric( pos ) ); \
+  if ( testPtr1 ) \
+  { \
+    testPtr1->Set##_name ( _arg ); \
+  } \
+} \
+template <class TFixedImage, class TMovingImage> \
+void \
+CombinationImageToImageMetric<TFixedImage,TMovingImage> \
+::Set##_name ( _type1 _type2 *_arg ) \
+{ \
+  for ( unsigned int i = 0; i < this->GetNumberOfMetrics(); i++ ) \
+  { \
+    this->Set##_name ( _arg, i ); \
+  } \
+}  // comments for allowing ; after calling the macro
 
 /** for getting const object, implement one method */
-#define itkImplementationGetConstObjectMacro(_name,_type) \
-  template <class TFixedImage, class TMovingImage> \
-  const typename CombinationImageToImageMetric<TFixedImage,TMovingImage>:: \
-    _type * CombinationImageToImageMetric<TFixedImage,TMovingImage> \
-    ::Get##_name ( unsigned int pos ) const \
+#define itkImplementationGetConstObjectMacro1(_name,_type) \
+template <class TFixedImage, class TMovingImage> \
+const typename CombinationImageToImageMetric<TFixedImage,TMovingImage>:: \
+  _type * CombinationImageToImageMetric<TFixedImage,TMovingImage> \
+::Get##_name ( unsigned int pos ) const \
+{ \
+  const ImageMetricType    * testPtr1 \
+    = dynamic_cast<const ImageMetricType * >( this->GetMetric( pos ) ); \
+  if ( testPtr1 ) \
   { \
-    const ImageMetricType * testPtr = dynamic_cast<const ImageMetricType * >( this->GetMetric(pos) ); \
-    if ( testPtr ) \
-    { \
-      return testPtr->Get##_name (); \
-    } \
-    else \
-    { \
+    return testPtr1->Get##_name (); \
+  } \
+  else \
+  { \
     return 0; \
-    } \
-  }  //
- 
+  } \
+}  // comments for allowing ; after calling the macro
+
+#define itkImplementationGetConstObjectMacro2(_name,_type) \
+template <class TFixedImage, class TMovingImage> \
+const typename CombinationImageToImageMetric<TFixedImage,TMovingImage>:: \
+  _type * CombinationImageToImageMetric<TFixedImage,TMovingImage> \
+::Get##_name ( unsigned int pos ) const \
+{ \
+  const ImageMetricType    * testPtr1 \
+    = dynamic_cast<const ImageMetricType * >( this->GetMetric( pos ) ); \
+  const PointSetMetricType * testPtr2 \
+    = dynamic_cast<const PointSetMetricType * >( this->GetMetric( pos ) ); \
+  if ( testPtr1 ) \
+  { \
+    return testPtr1->Get##_name (); \
+  } \
+  else if ( testPtr2 ) \
+  { \
+    return testPtr2->Get##_name (); \
+  } \
+  else \
+  { \
+    return 0; \
+  } \
+}  // comments for allowing ; after calling the macro
+
 
 namespace itk
 {
 
-  itkImplementationSetObjectMacro( Transform, , TransformType );
-  itkImplementationSetObjectMacro( Interpolator, , InterpolatorType );
-  itkImplementationSetObjectMacro( FixedImageMask, , FixedImageMaskType );
-  itkImplementationSetObjectMacro( MovingImageMask, , MovingImageMaskType );
-  itkImplementationSetObjectMacro( FixedImage, const, FixedImageType );
-  itkImplementationSetObjectMacro( MovingImage, const, MovingImageType );
+itkImplementationSetObjectMacro2( Transform, , TransformType );
+itkImplementationSetObjectMacro1( Interpolator, , InterpolatorType );
+itkImplementationSetObjectMacro2( FixedImageMask, , FixedImageMaskType );
+itkImplementationSetObjectMacro2( MovingImageMask, , MovingImageMaskType );
+itkImplementationSetObjectMacro1( FixedImage, const, FixedImageType );
+itkImplementationSetObjectMacro1( MovingImage, const, MovingImageType );
 
-  itkImplementationGetConstObjectMacro( Transform, TransformType );
-  itkImplementationGetConstObjectMacro( Interpolator, InterpolatorType );
-  itkImplementationGetConstObjectMacro( FixedImageMask, FixedImageMaskType );
-  itkImplementationGetConstObjectMacro( MovingImageMask, MovingImageMaskType );
-  itkImplementationGetConstObjectMacro( FixedImage, FixedImageType );
-  itkImplementationGetConstObjectMacro( MovingImage, MovingImageType );
+itkImplementationGetConstObjectMacro2( Transform, TransformType );
+itkImplementationGetConstObjectMacro1( Interpolator, InterpolatorType );
+itkImplementationGetConstObjectMacro2( FixedImageMask, FixedImageMaskType );
+itkImplementationGetConstObjectMacro2( MovingImageMask, MovingImageMaskType );
+itkImplementationGetConstObjectMacro1( FixedImage, FixedImageType );
+itkImplementationGetConstObjectMacro1( MovingImage, MovingImageType );
 
 
 /**
@@ -458,24 +518,27 @@ void
 CombinationImageToImageMetric<TFixedImage,TMovingImage>
 ::Initialize( void ) throw ( ExceptionObject )
 {
-  /** Check if transform, interpolator have been set. Effectively
-   * this method checks if the first sub metric is set up completely.
-   * This implicitly means that the first sub metric is an 
-   * ImageToImageMetric, which is a reasonable demand.
+  /** Check if transform, interpolator have been set. Effectively this
+   * method checks if the first sub metric is set up completely.
+   * This implicitly means that the first sub metric is an ImageToImageMetric,
+   * which is a reasonable demand.
    */
   this->Superclass::Initialize();
   
   /** Check if at least one (image)metric is provided */
-  if ( this->GetNumberOfMetrics() < 1 )
+  if ( this->GetNumberOfMetrics() == 0 )
   {
     itkExceptionMacro( << "At least one metric should be set!" );
   }
-  ImageMetricType * firstMetric = dynamic_cast<ImageMetricType *>(
-    this->GetMetric( 0 ) );
-  if ( !firstMetric )
-  {
-    itkExceptionMacro( << "The first sub metric must be of type ImageToImageMetric!" );
-  }
+
+  /** Check the first metric. */
+//   ImageMetricType * firstMetric = dynamic_cast<ImageMetricType *>(
+//     this->GetMetric( 0 ) );
+//   if ( !firstMetric )
+//   {
+//     itkExceptionMacro( << "The first sub metric must be of type ImageToImageMetric!" );
+//     itkWarningMacro( << "The first sub metric is not of type ImageToImageMetric!" );
+//   }
 
   /** Call Initialize for all metrics. */
   for ( unsigned int i = 0; i < this->GetNumberOfMetrics() ; i++ )
@@ -483,12 +546,17 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
     SingleValuedCostFunctionType * costfunc = this->GetMetric( i );
     if ( !costfunc )
     {
-      itkExceptionMacro( << "Metric " << i << "has not been set!" );
+      itkExceptionMacro( << "Metric " << i << " has not been set!" );
     }
-    ImageMetricType * testPtr = dynamic_cast<ImageMetricType *>( costfunc );
-    if ( testPtr )
+    ImageMetricType    * testPtr1 = dynamic_cast<ImageMetricType *>( this->GetMetric( i ) );
+    PointSetMetricType * testPtr2 = dynamic_cast<PointSetMetricType *>( this->GetMetric( i ) );
+    if ( testPtr1 )
     {
-      testPtr->Initialize();
+      testPtr1->Initialize();
+    }
+    else if ( testPtr2 )
+    {
+      testPtr2->Initialize();
     }
   }
 
@@ -636,8 +704,10 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
 } // end namespace itk
 
 
-#undef itkImplementationSetObjectMacro
-#undef itkImplementationGetConstObjectMacro
+#undef itkImplementationSetObjectMacro1
+#undef itkImplementationSetObjectMacro2
+#undef itkImplementationGetConstObjectMacro1
+#undef itkImplementationGetConstObjectMacro2
 
 #endif // end #ifndef _itkCombinationImageToImageMetric_txx
 

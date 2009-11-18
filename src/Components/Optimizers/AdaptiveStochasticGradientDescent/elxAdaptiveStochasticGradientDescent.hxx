@@ -1252,14 +1252,20 @@ AdaptiveStochasticGradientDescent<TElastix>
 ::SampleFixedImageForJacobianTerms(
   ImageSampleContainerPointer & sampleContainer )
 {
+  typedef typename ElastixType::MetricBaseType::AdvancedMetricType MetricType;
+  MetricType * testPtr = dynamic_cast<MetricType *>(
+    this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType() );
+  if ( !testPtr )
+  {
+    itkExceptionMacro( << "ERROR: AdaptiveStochasticGradientDescent expects "
+      << "the metric to be of type AdvancedImageToImageMetric!" );
+  }
+
   /** Set up grid sampler. */
   ImageGridSamplerPointer sampler = ImageGridSamplerType::New();
-  sampler->SetInput( this->GetElastix()
-    ->GetElxMetricBase()->GetAsITKBaseType()->GetFixedImage() );
-  sampler->SetInputImageRegion( this->GetElastix()
-    ->GetElxMetricBase()->GetAsITKBaseType()->GetFixedImageRegion() );
-  sampler->SetMask( this->GetElastix()
-    ->GetElxMetricBase()->GetAsITKBaseType()->GetFixedImageMask() );
+  sampler->SetInput( testPtr->GetFixedImage() );
+  sampler->SetInputImageRegion( testPtr->GetFixedImageRegion() );
+  sampler->SetMask( testPtr->GetFixedImageMask() );
 
   /** Determine grid spacing of sampler such that the desired 
    * NumberOfJacobianMeasurements is achieved approximately.
