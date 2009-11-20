@@ -107,11 +107,11 @@ namespace itk
     typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
 
     /** Initialize some variables. */
-    double sumDisplacement = 0.0;
-    double sumDisplacementSquared = 0.0;
-    this->m_CurrentInfeasibility     = 0.0;
-    this->m_NumberOfPixelsCounted    = 0;
-    this->m_CurrentMaximumAbsoluteDisplacement = 0.0;
+    float sumDisplacement = 0.0f;
+    float sumDisplacementSquared = 0.0f;
+    this->m_CurrentInfeasibility = 0.0f;
+    this->m_NumberOfPixelsCounted = 0;
+    this->m_CurrentMaximumAbsoluteDisplacement = 0.0f;
 
     /** Loop over the samples to compute sums for computation of the metric. */
     int i = 0;
@@ -139,13 +139,13 @@ namespace itk
         for ( unsigned int d = 0; d < MovingImageDimension; ++d )
         {
           /** Update displacement sums. */
-          const double displacement =  mappedPoint[ d ] - fixedPoint[ d ];
+          const float displacement =  mappedPoint[ d ] - fixedPoint[ d ];
           sumDisplacement += this->m_CurrentLagrangeMultipliers[ i ] * displacement;
           sumDisplacementSquared += displacement * displacement;
 
           /** Remember current penalty term value. */
           this->m_CurrentPenaltyTermValues[ i ] = displacement;
-          this->m_CurrentMaximumAbsoluteDisplacement = std::max( this->m_CurrentMaximumAbsoluteDisplacement, fabs( displacement ) );
+          this->m_CurrentMaximumAbsoluteDisplacement = std::max( this->m_CurrentMaximumAbsoluteDisplacement, static_cast<float> ( fabs( displacement ) ) );
 
           /** Update infeasibility value. */
           this->m_CurrentInfeasibility += fabs( displacement );
@@ -232,8 +232,8 @@ namespace itk
     typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
 
     /** Initialize some variables. */
-    double sumDisplacement           = 0.0;
-    double sumDisplacementSquared    = 0.0;
+    float sumDisplacement           = 0.0;
+    float sumDisplacementSquared    = 0.0;
     this->m_CurrentInfeasibility     = 0.0;
     this->m_NumberOfPixelsCounted    = 0;
     this->m_CurrentMaximumAbsoluteDisplacement = 0.0;
@@ -271,25 +271,25 @@ namespace itk
         {
 
           /** Update displacement sums. */
-          const double displacement =  mappedPoint[ d ] - fixedPoint[ d ];
+          const float displacement =  mappedPoint[ d ] - fixedPoint[ d ];
           sumDisplacement += this->m_CurrentLagrangeMultipliers[ i ] * displacement;
           sumDisplacementSquared += displacement * displacement;
 
           /** Remember current penalty term value. */
           this->m_CurrentPenaltyTermValues[ i ] = displacement;
-          this->m_CurrentMaximumAbsoluteDisplacement = std::max( this->m_CurrentMaximumAbsoluteDisplacement, fabs( displacement ) );
+          this->m_CurrentMaximumAbsoluteDisplacement = std::max( this->m_CurrentMaximumAbsoluteDisplacement, static_cast<float>( fabs( displacement ) ) );
 
           /** Update infeasibility value. */
           this->m_CurrentInfeasibility += fabs( displacement );
 
           /** Part of the computation, which still needs to be multiplied with the Jacobian. */
-          const double mult = - this->m_CurrentLagrangeMultipliers[ i ]
-                              + this->m_CurrentPenaltyTermMultiplier * displacement;
+          const float mult = - this->m_CurrentLagrangeMultipliers[ i ]
+                             + this->m_CurrentPenaltyTermMultiplier * displacement;
 
           /** Compute (dT/dMu)T * mult. */
           for ( typename NonZeroJacobianIndicesType::size_type n = 0; n < numNonZeroJacobianIndices; ++n )
           {
-            double jacScaledTransformation = jacobian( d, n ) * mult;
+            float jacScaledTransformation = jacobian( d, n ) * mult;
 
             /** Update derivative sum. */
             derivative[ nzji[ n ] ] += jacScaledTransformation;

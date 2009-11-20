@@ -66,17 +66,6 @@ using namespace itk;
     this->m_UpdateParam_a = true;
     this->GetConfiguration()->ReadParameter( this->m_UpdateParam_a,
       "UpdateParam_a", this->GetComponentLabel(), 0, 0, true );
-
-    /** Get the initial Lagrange multiplier value. */
-    double initialLagrangeMultiplier = 0.0;
-    this->GetConfiguration()->ReadParameter( initialLagrangeMultiplier,
-      "InitialLagrangeMultiplier", this->GetComponentLabel(), 0, 0 );
-    this->m_AverageLagrangeMultiplier = this->m_InitialLangrangeMultiplier;
-  
-    /** Get the initial penalty term multiplier. */
-    this->GetConfiguration()->ReadParameter( this->m_InitialPenaltyTermMultiplier,
-      "InitialPenaltyTermMultiplier", this->GetComponentLabel(), 0, 0 );
-    this->m_CurrentPenaltyTermMultiplier = this->m_InitialPenaltyTermMultiplier;
   }
 
 
@@ -99,11 +88,18 @@ using namespace itk;
     unsigned int level = 
       ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
-    /** Set the initial lagrange multiplier. If we are not in the coarsest resolution
-     * level we set the langrange multipliers to the average value of the last resolution. 
-     * Note that in the first resolution level, the average Lagrange multiplier is set
-     * to its initial value in BeforeRegistration. */
-    this->SetInitialLangrangeMultiplier( this->m_AverageLagrangeMultiplier );
+    /** Get and set the initial Lagrange multiplier value. */
+    double initialLagrangeMultiplier = 0.0;
+    this->GetConfiguration()->ReadParameter( initialLagrangeMultiplier,
+      "InitialLagrangeMultiplier", this->GetComponentLabel(), level, 0 );
+    this->SetInitialLangrangeMultiplier( initialLagrangeMultiplier );
+    this->m_AverageLagrangeMultiplier = this->m_InitialLangrangeMultiplier;
+
+    /** Get and set the initial penalty term multiplier. */
+    this->m_InitialPenaltyTermMultiplier = 1.0;
+    this->GetConfiguration()->ReadParameter( this->m_InitialPenaltyTermMultiplier,
+      "InitialPenaltyTermMultiplier", this->GetComponentLabel(), level, 0 );
+    this->m_CurrentPenaltyTermMultiplier = this->m_InitialPenaltyTermMultiplier;
 
     /** Get the penalty term multiplier factor. */
     this->GetConfiguration()->ReadParameter( this->m_PenaltyTermMultiplierFactor,
@@ -151,6 +147,11 @@ using namespace itk;
     xl::xout["iteration"]["7:Infeasibility"] << this->GetCurrentInfeasibility();
     xl::xout["iteration"]["8:MaxAbsDisplacement"] << this->GetCurrentMaximumAbsoluteDisplacement();
 
+    if ( m_CurrentIteration == 0 )
+    {
+      this->m_PreviousMaximumAbsoluteDisplacement = this->GetCurrentMaximumAbsoluteDisplacement();
+    }
+
     if ( m_CurrentIteration % this->m_NumSubIterations == 0 )
     {
       this->DetermineNewLagrangeMultipliers();
@@ -191,7 +192,7 @@ using namespace itk;
     m_AverageLagrangeMultiplier = 0.0;
     for ( std::vector< double >::size_type i = 0; i < this->m_CurrentLagrangeMultipliers.size(); ++i )
     {
-      this->m_CurrentLagrangeMultipliers[ i ] = vnl_math_min( 0.0, this->m_CurrentLagrangeMultipliers[ i ] - 
+      this->m_CurrentLagrangeMultipliers[ i ] = vnl_math_min( 0.0f, this->m_CurrentLagrangeMultipliers[ i ] - 
         this->m_CurrentPenaltyTermValues[ i ] * this->GetCurrentPenaltyTermMultiplier() );
       m_AverageLagrangeMultiplier += this->m_CurrentLagrangeMultipliers[ i ];
     }

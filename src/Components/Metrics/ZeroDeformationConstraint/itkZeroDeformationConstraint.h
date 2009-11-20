@@ -54,14 +54,14 @@ public:
   itkTypeMacro( VarianceOverLastDimensionImageMetric, AdvancedImageToImageMetric );
 
   /** Set functions. */
-  itkSetMacro( CurrentPenaltyTermMultiplier, double );
-  itkSetMacro( InitialLangrangeMultiplier, double );
+  itkSetMacro( CurrentPenaltyTermMultiplier, float );
+  itkSetMacro( InitialLangrangeMultiplier, float );
   
   /** Get functions. */
-  itkGetConstMacro( CurrentPenaltyTermMultiplier, double );
-  itkGetConstMacro( CurrentMaximumAbsoluteDisplacement, double );
-  itkGetConstMacro( InitialLangrangeMultiplier, double );
-  itkGetConstMacro( CurrentInfeasibility, double );
+  itkGetConstMacro( CurrentPenaltyTermMultiplier, float );
+  itkGetConstMacro( CurrentMaximumAbsoluteDisplacement, float );
+  itkGetConstMacro( InitialLangrangeMultiplier, float );
+  itkGetConstMacro( CurrentInfeasibility, float );
 
   float GetCurrentPenaltyTermValue ( const int i ) const {
     return m_CurrentPenaltyTermValues[ i ];
@@ -160,20 +160,20 @@ protected:
   typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
   
   /** Current penalty term value. */
-  mutable std::vector< double > m_CurrentPenaltyTermValues;
+  mutable std::vector< float > m_CurrentPenaltyTermValues;
 
   /** Current lagrange multipliers (per constraint) and penalty term multiplier. */
-  double m_CurrentPenaltyTermMultiplier;
-  std::vector< double > m_CurrentLagrangeMultipliers;
+  float m_CurrentPenaltyTermMultiplier;
+  std::vector< float > m_CurrentLagrangeMultipliers;
 
   /** Current infeasibility value: sum( abs ( c( x_k ) ) ) / K. */
-  mutable double m_CurrentInfeasibility;
+  mutable float m_CurrentInfeasibility;
 
   /** Current maximum absolute displacement value. */
-  mutable double m_CurrentMaximumAbsoluteDisplacement;
+  mutable float m_CurrentMaximumAbsoluteDisplacement;
 
   /** Initial langrange multiplier value. */
-  double m_InitialLangrangeMultiplier;
+  float m_InitialLangrangeMultiplier;
 
 private:
   ZeroDeformationConstraintMetric(const Self&); //purposely not implemented
