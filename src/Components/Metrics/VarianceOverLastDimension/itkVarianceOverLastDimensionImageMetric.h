@@ -65,8 +65,11 @@ public:
   itkTypeMacro( VarianceOverLastDimensionImageMetric, AdvancedImageToImageMetric );
 
   /** Set functions. */
-  itkSetMacro(SampleLastDimensionRandomly, bool);
-  itkSetMacro(NumSamplesLastDimension, unsigned int);
+  itkSetMacro( SampleLastDimensionRandomly, bool );
+  itkSetMacro( NumSamplesLastDimension, unsigned int );
+  itkSetMacro( NumAdditionalSamplesFixed, unsigned int );
+  itkSetMacro( ReducedDimensionIndex, unsigned int );
+  itkSetMacro( SubtractMean, bool );
 
   /** Get functions. */
   itkGetConstMacro(SampleLastDimensionRandomly, bool);
@@ -181,9 +184,14 @@ private:
   /** Variables to control random sampling in last dimension. */
   bool m_SampleLastDimensionRandomly;
   unsigned int m_NumSamplesLastDimension;
+  unsigned int m_NumAdditionalSamplesFixed;
+  unsigned int m_ReducedDimensionIndex;
+  
+  /** Bool to determine if we want to subtract the mean derivate from the derivative elements. */
+  bool m_SubtractMean;
 
   /** Initial variance in last dimension, used as normalization factor. */
-  double m_InitialVariance;
+  float m_InitialVariance;
 
 }; // end class VarianceOverLastDimensionImageMetric
 

@@ -31,7 +31,8 @@ namespace itk
     VarianceOverLastDimensionImageMetric<TFixedImage,TMovingImage>
       ::VarianceOverLastDimensionImageMetric():
         m_SampleLastDimensionRandomly( false ),
-        m_NumSamplesLastDimension( 10 )
+        m_NumSamplesLastDimension( 10 ),
+        m_SubtractMean( false )
   {
     this->SetUseImageSampler( true );
     this->SetUseFixedImageLimiter( false );
@@ -57,7 +58,8 @@ namespace itk
     const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
     
     /** Check num last samples. */
-    if ( this->m_NumSamplesLastDimension > lastDimSize ) {
+    if ( this->m_NumSamplesLastDimension > lastDimSize ) 
+    {
       this->m_NumSamplesLastDimension = lastDimSize;
     }
 
@@ -67,31 +69,33 @@ namespace itk
     it.SetDirection( lastDim );
     it.GoToBegin();
 
-    double sumvar = 0.0;
+    float sumvar = 0.0;
     int num = 0;
     while( !it.IsAtEnd() )
     {
-      double sum = 0.0;
-      double sumsq = 0.0;
-      int numlast = 0;
-
+      /** Compute sum of values and sum of squared values. */
+      float sum = 0.0;
+      float sumsq = 0.0;
+      unsigned int numlast = 0;
       while( !it.IsAtEndOfLine() )
       {
-        double value = it.Get();
+        float value = it.Get();
         sum += value;
         sumsq += value * value;
         ++numlast;
         ++it;
       }
 
-      double expectedValue = sum / static_cast< double > ( numlast );
-      sumvar += sumsq / static_cast< double > ( numlast ) - expectedValue * expectedValue;
+      /** Compute expected value (mean) and variance. */
+      float expectedValue = sum / static_cast< float > ( numlast );
+      sumvar += sumsq / static_cast< float > ( numlast ) - expectedValue * expectedValue;
       num++;
 
       it.NextLine();
     }
     
-    this->m_InitialVariance = sumvar / static_cast< double > ( num );
+    /** Compute average variance. */
+    this->m_InitialVariance = sumvar / static_cast< float > ( num );
   
   } // end Initialize
 
@@ -121,9 +125,14 @@ namespace itk
 
     /** Initialize random number generator. */
     Statistics::MersenneTwisterRandomVariateGenerator::Pointer randomGenerator = Statistics::MersenneTwisterRandomVariateGenerator::New();
-    randomGenerator->SetSeed();
 
-    /** Get n samples. */
+    /** Sample additional at fixed timepoint. */
+    for ( unsigned int i = 0; i < m_NumAdditionalSamplesFixed; ++i )
+    {
+      numbers.push_back( this->m_ReducedDimensionIndex );
+    }
+
+    /** Get n random samples. */
     for ( int i = 0; i < n; ++i )
     {
       int randomNum = 0;
@@ -199,11 +208,13 @@ namespace itk
     const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
     const unsigned int numLastDimSamples = this->m_NumSamplesLastDimension;
 
-    /** Vector containing last dimension positions to use: initialize on all positions. */
-    std::vector<int> lastDimPositions (lastDimSize);
-    for ( unsigned int i = 0; i < lastDimSize; ++i ) 
-    {
-      lastDimPositions[i] = i;
+    /** Vector containing last dimension positions to use: initialize on all positions when random sampling turned off. */
+    std::vector<int> lastDimPositions;
+    if ( !this->m_SampleLastDimensionRandomly ) {
+      for ( unsigned int i = 0; i < lastDimSize; ++i ) 
+      {
+        lastDimPositions.push_back( i );
+      }
     }
 
     /** Loop over the fixed image samples to calculate the variance over time for every sample position. */
@@ -213,7 +224,8 @@ namespace itk
       FixedImagePointType fixedPoint = (*fiter).Value().m_ImageCoordinates;
 
       /** Determine random last dimension positions if needed. */
-      if ( this->m_SampleLastDimensionRandomly ) {
+      if ( this->m_SampleLastDimensionRandomly ) 
+      {
         SampleRandom( numLastDimSamples, lastDimSize, lastDimPositions );
       }
 
@@ -222,11 +234,11 @@ namespace itk
       this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
 
       /** Loop over the slowest varying dimension. */
-      double sumValues = 0.0;
-      double sumValuesSquared = 0.0;
+      float sumValues = 0.0;
+      float sumValuesSquared = 0.0;
       unsigned int numSamplesOk = 0;
       const unsigned int realNumLastDimPositions = lastDimPositions.size();
-      for (unsigned int d = 0; d < realNumLastDimPositions; ++d)
+      for ( unsigned int d = 0; d < realNumLastDimPositions; ++d )
       {
         /** Initialize some variables. */
         RealType movingImageValue;
@@ -248,7 +260,7 @@ namespace itk
         }
 
         /** Compute the moving image value and check if the point is
-        * inside the moving image buffer. */
+                       * inside the moving image buffer. */
         if ( sampleOk )
         {
           sampleOk = this->EvaluateMovingImageValueAndDerivative(
@@ -268,8 +280,8 @@ namespace itk
         this->m_NumberOfPixelsCounted++;
 
         /** Add this variance to the variance sum. */
-        const double expectedValue = sumValues / static_cast< double > ( numSamplesOk );
-        const double expectedSquaredValue = sumValuesSquared / static_cast< double > ( numSamplesOk );
+        const float expectedValue = sumValues / static_cast< float > ( numSamplesOk );
+        const float expectedSquaredValue = sumValuesSquared / static_cast< float > ( numSamplesOk );
         measure += expectedSquaredValue - expectedValue * expectedValue;
       }
 
@@ -280,7 +292,7 @@ namespace itk
       sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
     /** Compute average over variances. */
-    measure /= static_cast<double>( this->m_NumberOfPixelsCounted );
+    measure /= static_cast< float >( this->m_NumberOfPixelsCounted );
     /** Normalize with initial variance. */
     measure /= this->m_InitialVariance;
 
@@ -348,13 +360,14 @@ namespace itk
     const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
     const unsigned int lastDimSize = 
       this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
-    const unsigned int numLastDimSamples = this->m_NumSamplesLastDimension;
 
-    /** Vector containing last dimension positions to use: initialize on all positions. */
-    std::vector<int> lastDimPositions ( lastDimSize );
-    for ( unsigned int i = 0; i < lastDimSize; ++i ) 
-    {
-      lastDimPositions[ i ] = i;
+    /** Vector containing last dimension positions to use: initialize on all positions when random sampling turned off. */
+    std::vector<int> lastDimPositions;
+    if ( this->m_SampleLastDimensionRandomly ) {
+      for ( unsigned int i = 0; i < lastDimSize; ++i ) 
+      {
+        lastDimPositions.push_back( i );
+      }
     }
 
     /** Create variables to store intermediate results in. */
@@ -362,7 +375,7 @@ namespace itk
     DerivativeType imageJacobian( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );      
 
     /** Get real last dim samples. */
-    const unsigned int realNumLastDimPositions = this->m_SampleLastDimensionRandomly ? numLastDimSamples : lastDimSize;
+    const unsigned int realNumLastDimPositions = this->m_SampleLastDimensionRandomly ? this->m_NumSamplesLastDimension + this->m_NumAdditionalSamplesFixed : lastDimSize;
 
     /** Variable to store and nzjis. */
     std::vector<NonZeroJacobianIndicesType> nzjis ( 
@@ -380,19 +393,19 @@ namespace itk
       /** Determine random last dimension positions if needed. */
       if ( this->m_SampleLastDimensionRandomly ) 
       {
-        SampleRandom( numLastDimSamples, lastDimSize, lastDimPositions );
+        SampleRandom( this->m_NumSamplesLastDimension, lastDimSize, lastDimPositions );
       }
 
       /** Initialize MT vector. */
-      std::fill(MT.begin(), MT.end(), itk::NumericTraits<RealType>::Zero);
+      std::fill( MT.begin(), MT.end(), itk::NumericTraits<RealType>::Zero );
 
       /** Transform sampled point to voxel coordinates. */
       FixedImageContinuousIndexType voxelCoord;
       this->GetFixedImage()->TransformPhysicalPointToContinuousIndex( fixedPoint, voxelCoord );
 
       /** Loop over the slowest varying dimension. */
-      double sumValues = 0.0;
-      double sumValuesSquared = 0.0;
+      float sumValues = 0.0;
+      float sumValuesSquared = 0.0;
       unsigned int numSamplesOk = 0;
 
       /** First loop over t: compute M(T(x,t)), dM(T(x,t))/dmu, nzji and store. */
@@ -417,7 +430,7 @@ namespace itk
         }
 
         /** Compute the moving image value and check if the point is
-        * inside the moving image buffer. */
+                       * inside the moving image buffer. */
         if ( sampleOk )
         {
           sampleOk = this->EvaluateMovingImageValueAndDerivative(
@@ -454,11 +467,11 @@ namespace itk
       if ( numSamplesOk > 0 )
       {
         this->m_NumberOfPixelsCounted++;
-
+        
         /** Compute average intensity value. */
-        const double expectedValue = sumValues / static_cast< double > ( numSamplesOk );
+        const float expectedValue = sumValues / static_cast< float > ( numSamplesOk );
         /** Add this variance to the variance sum. */
-        const double expectedSquaredValue = sumValuesSquared / static_cast< double > ( numSamplesOk );
+        const float expectedSquaredValue = sumValuesSquared / static_cast< float > ( numSamplesOk );
         measure += expectedSquaredValue - expectedValue * expectedValue;
         
         /** Second loop over t: update derivative. */
@@ -466,7 +479,7 @@ namespace itk
         {
           for ( unsigned int j = 0; j < nzjis[ d ].size(); ++j )
           {
-            derivative[ nzjis[ d ][ j ] ] += ( 2.0 * ( MT[ d ] - expectedValue ) * dMTdmu[ d ][ j ] ) / static_cast< double > ( numSamplesOk );
+            derivative[ nzjis[ d ][ j ] ] += ( 2.0 * ( MT[ d ] - expectedValue ) * dMTdmu[ d ][ j ] ) / static_cast< float > ( numSamplesOk );
           }
         }
 
@@ -478,8 +491,33 @@ namespace itk
       sampleContainer->Size(), this->m_NumberOfPixelsCounted );
     
     /** Compute average over variances and normalize with initial variance. */
-    measure /= static_cast<double>( this->m_NumberOfPixelsCounted * this->m_InitialVariance );
-    derivative /= static_cast<double>( this->m_NumberOfPixelsCounted * this->m_InitialVariance );
+    measure /= static_cast< float >( this->m_NumberOfPixelsCounted * this->m_InitialVariance );
+    derivative /= static_cast< float >( this->m_NumberOfPixelsCounted * this->m_InitialVariance );
+    
+    /** Subtract mean from derivative elements. */
+    if ( this->m_SubtractMean )
+    {
+      /** Update derivative per dimension. */
+      unsigned int numParametersPerDimension = this->GetNumberOfParameters() / this->GetFixedImage()->GetImageDimension();
+      for ( unsigned int d = 0; d < this->GetFixedImage()->GetImageDimension(); ++d )
+      {
+        /** Compute mean per dimension. */
+        DerivativeType mean ( numParametersPerDimension );
+        mean.Fill( 0.0 );
+        unsigned int starti = numParametersPerDimension * d;
+        for ( unsigned int i = starti, ii = 0; i < starti + numParametersPerDimension; ++i, ++ii )
+        {       
+          mean[ ii ] += derivative[ i ];
+        }
+        mean /= static_cast< double >( numParametersPerDimension );
+
+        /** Update derivative per dimension. */
+        for ( unsigned int i = starti, ii = 0; i < starti + numParametersPerDimension; ++i, ++ii )
+        {       
+          derivative[ i ] -= mean[ ii ];
+        }
+      } 
+    }
 
     /** Return the mean squares measure value. */
     value = measure;

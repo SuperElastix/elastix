@@ -57,12 +57,31 @@ using namespace itk;
     this->GetConfiguration()->ReadParameter( useRandomSampling,
       "SampleLastDimensionRandomly", this->GetComponentLabel(), level, 0 );
     this->SetSampleLastDimensionRandomly( useRandomSampling );
-
+    
+    /** Get and set if we want to subtract the mean from the derivative. */
+    bool subtractMean = false;
+    this->GetConfiguration()->ReadParameter( subtractMean,
+      "SubtractMean", this->GetComponentLabel(), 0, 0 );
+    this->SetSubtractMean( subtractMean );
+    
     /** Get and set the number of random samples for the last dimension. */
     int numSamplesLastDimension = 10;
     this->GetConfiguration()->ReadParameter( numSamplesLastDimension,
       "NumSamplesLastDimension", this->GetComponentLabel(), level, 0 );
     this->SetNumSamplesLastDimension( numSamplesLastDimension );
+
+    /** Get and set the number of additional samples sampled at the fixed timepoint.  */
+    unsigned int numAdditionalSamplesFixed = 0;
+    this->GetConfiguration()->ReadParameter( numAdditionalSamplesFixed,
+      "NumAdditionalSamplesFixed", this->GetComponentLabel(), level, 0 );
+    this->SetNumAdditionalSamplesFixed( numAdditionalSamplesFixed );
+
+    /** Get and set the fixed timepoint number. */
+    unsigned int reducedDimensionIndex = 0;
+    this->GetConfiguration()->ReadParameter(
+        reducedDimensionIndex, "ReducedDimensionIndex",
+        this->GetComponentLabel(), 0, 0 );
+    this->SetReducedDimensionIndex( reducedDimensionIndex );
 
     /** Set moving image derivative scales. */
     this->SetUseMovingImageDerivativeScales( false );
