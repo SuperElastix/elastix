@@ -68,7 +68,7 @@ namespace elastix
     float gridSpacingFactor = 1.0f;
     this->GetConfiguration()->ReadParameter(
       gridSpacingFactor, "GridSpacingFactor",
-      this->GetComponentLabel(), 0, 0, false );
+      this->GetComponentLabel(), level, 0, false );
 
     if ( automaticGridEstimation )
     {
