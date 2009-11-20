@@ -141,13 +141,12 @@ MultiMetricMultiResolutionRegistration<TElastix>
   }
 
   /** Set whether to use a specific metric. */
-  bool defaultUse = true;
   for ( unsigned int metricnr = 0; metricnr < nrOfMetrics; ++metricnr )
   {
-    bool use = defaultUse;
+    bool use = true;
     std::ostringstream makestring;
     makestring << "Metric" << metricnr << "Use";
-    this->GetConfiguration()->ReadParameter( use, makestring.str(), "", level, 0 );
+    this->GetConfiguration()->ReadParameter( use, makestring.str(), "", level, 0, false );
     this->GetCombinationMetric()->SetUseMetric( use, metricnr );
   }
 

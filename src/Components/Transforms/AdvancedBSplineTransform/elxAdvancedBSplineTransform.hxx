@@ -123,7 +123,7 @@ void AdvancedBSplineTransform<TElastix>
   /** Get the PassiveEdgeWidth and use it to set the OptimizerScales. */
   unsigned int passiveEdgeWidth = 0;
   this->GetConfiguration()->ReadParameter( passiveEdgeWidth,
-    "PassiveEdgeWidth", this->GetComponentLabel(), level, 0 );
+    "PassiveEdgeWidth", this->GetComponentLabel(), level, 0, false );
   this->SetOptimizerScales( passiveEdgeWidth );
 
 } // end BeforeEachResolution()
