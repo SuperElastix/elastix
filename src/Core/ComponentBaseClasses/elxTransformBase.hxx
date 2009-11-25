@@ -161,9 +161,21 @@ TransformBase<TElastix>
   /** Read from the configuration file how to combine the initial
    * transform with the current transform.
    */
-  std::string howToCombineTransforms = "Add";
-  this->m_Configuration->ReadParameter( howToCombineTransforms,
-    "HowToCombineTransforms", 0, false );
+  std::string howToCombineTransforms = "Compose";
+  bool isSpecifiedByUser = this->m_Configuration->ReadParameter(
+    howToCombineTransforms, "HowToCombineTransforms", 0, false );
+
+  /** Warn the user about changed default behavior.
+   * This warning can be removed in elastix 4.5.
+   */
+  if ( !isSpecifiedByUser )
+  {
+    elxout << "\nWARNING: In elastix 4.3 the default value for "
+      << "\"HowToCombineTransforms\" was changed from \"Add\" to \"Compose\"!\n"
+      << "Use \"(HowToCombineTransforms \"Add\")\" to reproduce previous "
+      << "behavior.\n"
+      << std::endl;
+  }
 
   /** Check if this is a CombinationTransform. */
   CombinationTransformType * thisAsGrouper = 
@@ -180,16 +192,15 @@ TransformBase<TElastix>
     }
   }
 
-  /** Set the initial transform. Elastix returns an itkObject, so 
-   * try to cast it to an InitialTransformType, which is of type itk::Transform.
+  /** Set the initial transform. Elastix returns an itk::Object, so try to
+   * cast it to an InitialTransformType, which is of type itk::Transform.
    * No need to cast to InitialAdvancedTransformType, since InitialAdvancedTransformType
    * inherits from InitialTransformType.
    */
   if ( this->m_Elastix->GetInitialTransform() )
   {
-    InitialTransformType * testPointer =
-      dynamic_cast<InitialTransformType* >(
-      this->m_Elastix->GetInitialTransform()  );
+    InitialTransformType * testPointer = dynamic_cast<InitialTransformType* >(
+      this->m_Elastix->GetInitialTransform() );
     if ( testPointer )
     {
       this->SetInitialTransform( testPointer );
@@ -627,7 +638,7 @@ void TransformBase<TElastix>
   }
 
   /** Write the way Transforms are combined. */
-  std::string combinationMethod = "Add";
+  std::string combinationMethod = "Compose";
   const CombinationTransformType * dummyComboTransform
     = dynamic_cast< const CombinationTransformType * >( this );
   if ( dummyComboTransform )
@@ -735,7 +746,8 @@ void TransformBase<TElastix>
   xout["transpar"] << std::setprecision( this->m_Elastix->GetDefaultOutputPrecision() );
 
   /** Write whether the direction cosines should be taken into account. 
-   * This parameter is written from elastix 4.203. */
+   * This parameter is written from elastix 4.203.
+   */
   std::string useDirectionCosinesBool = "false";
   if ( this->GetElastix()->GetUseDirectionCosines() )
   {

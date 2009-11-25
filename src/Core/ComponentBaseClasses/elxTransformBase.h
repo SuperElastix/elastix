@@ -60,7 +60,7 @@ namespace elastix
  * information from the image, which relates voxel coordinates to world coordinates.
  * Ignoring it may easily lead to left/right swaps for example, which could 
  * skrew up a (medical) analysis.
- * \transformparameter HowToCombineTransforms: Indicates how to use the initial transform\n
+ * \transformparameter HowToCombineTransforms: Indicates how to use the initial transform
  *   (given by the command-line argument -t0, or, if using multiple parameter files,
  *   by the result of registration using the previous parameter file). Possible options
  *   are "Add" and "Compose".\n
@@ -69,7 +69,7 @@ namespace elastix
  *   addition: \f$T(x) = T_0(x) + T_1(x)\f$;\n
  *   "Compose" by composition: \f$T(x) = T_1 ( T_0(x) )\f$.\n
  *   example: <tt>(HowToCombineTransforms "Add")</tt>\n
- *   Default: "Add".
+ *   Default: "Compose".
  * \transformparameter Size: The size (number of voxels in each dimension) of the fixed image
  * that was used during registration, and which is used for resampling the deformed moving image.\n
  * example: <tt>(Size 100 90 90)</tt>\n

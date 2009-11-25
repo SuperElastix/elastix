@@ -283,7 +283,8 @@ ResamplerBase<TElastix>
 
   /** Possibly change direction cosines to their original value, as specified
    * in the tp-file, or by the fixed image. This is only necessary when 
-   * the UseDirectionCosines flag was set to false. */
+   * the UseDirectionCosines flag was set to false.
+   */
   typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
   DirectionType originalDirection;
   bool retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
@@ -389,7 +390,8 @@ ResamplerBase<TElastix>
 
   /** Set the direction cosines. If no direction cosines
    * should be used, set identity cosines, to simulate the 
-   * old ITK behaviour. */
+   * old ITK behavior.
+   */
   if ( ! this->GetElastix()->GetUseDirectionCosines() )
   {
     direction.SetIdentity();

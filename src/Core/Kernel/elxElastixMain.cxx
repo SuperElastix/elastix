@@ -272,7 +272,8 @@ int ElastixMain::Run( void )
   this->GetElastixBase()->SetInitialTransform( this->GetInitialTransform() );
 
   /** Set the original fixed image direction cosines (relevant in case the 
-   * UseDirectionCosines parameter was set to false. */
+   * UseDirectionCosines parameter was set to false.
+   */
   this->GetElastixBase()->SetOriginalFixedImageDirectionFlat(
     this->GetOriginalFixedImageDirectionFlat() );
 
