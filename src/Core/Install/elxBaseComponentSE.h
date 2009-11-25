@@ -98,7 +98,7 @@ public:
   /** Get a pointer to the Registration component.
    * This is a convenience function, since the registration
    * component is needed often by other components.
-   * It could be accessed also via GetElastix->GetRegistrationBase().
+   * It could be accessed also via GetElastix->GetElxRegistrationBase().
    */
   virtual RegistrationPointer GetRegistration( void ) const
   {
