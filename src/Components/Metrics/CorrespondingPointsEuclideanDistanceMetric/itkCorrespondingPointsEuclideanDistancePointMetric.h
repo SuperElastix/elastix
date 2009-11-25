@@ -75,6 +75,8 @@ public:
   typedef typename Superclass::OutputPointType            OutputPointType;
   typedef typename OutputPointType::CoordRepType          CoordRepType;
   typedef vnl_vector<CoordRepType>                        VnlVectorType;
+  
+  typedef typename Superclass::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
 
   /**  Get the value for single valued optimizers. */
   MeasureType GetValue( const TransformParametersType & parameters ) const;

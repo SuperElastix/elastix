@@ -67,7 +67,7 @@ public:
   /** Standard ITK-stuff. */
   typedef CorrespondingPointsEuclideanDistanceMetric    Self;
   typedef CorrespondingPointsEuclideanDistancePointMetric<
-    typename PointSet<
+    PointSet<
       typename MetricBase<TElastix>::FixedPointValueType,
       MetricBase<TElastix>::FixedImageDimension,
       DefaultStaticMeshTraits<
@@ -77,7 +77,7 @@ public:
         typename MetricBase<TElastix>::FixedPointValueType,
         typename MetricBase<TElastix>::FixedPointValueType,
         typename MetricBase<TElastix>::FixedPointValueType > >,
-    typename PointSet<
+    PointSet<
       typename MetricBase<TElastix>::MovingPointValueType,
       MetricBase<TElastix>::MovingImageDimension,
       DefaultStaticMeshTraits<
@@ -133,14 +133,6 @@ public:
 //   typedef typename
 //     Superclass1::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
 
-  /** The fixed image dimension. */
-  itkStaticConstMacro( FixedImageDimension, unsigned int,
-    FixedImageType::ImageDimension );
-
-  /** The moving image dimension. */
-  itkStaticConstMacro( MovingImageDimension, unsigned int,
-    MovingImageType::ImageDimension );
-
   /** Typedefs inherited from elastix. */
   typedef typename Superclass2::ElastixType               ElastixType;
   typedef typename Superclass2::ElastixPointer            ElastixPointer;
@@ -150,6 +142,15 @@ public:
   typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
   typedef typename Superclass2::ITKBaseType               ITKBaseType;
   typedef typename Superclass2::FixedImageType            FixedImageType;
+  typedef typename Superclass2::MovingImageType           MovingImageType;
+  
+	/** The fixed image dimension. */
+  itkStaticConstMacro( FixedImageDimension, unsigned int,
+    FixedImageType::ImageDimension );
+
+  /** The moving image dimension. */
+  itkStaticConstMacro( MovingImageDimension, unsigned int,
+    MovingImageType::ImageDimension );
 
   /** Assuming fixed and moving pointsets are of equal type, which implicitly
    * assumes that the fixed and moving image are of the same type.

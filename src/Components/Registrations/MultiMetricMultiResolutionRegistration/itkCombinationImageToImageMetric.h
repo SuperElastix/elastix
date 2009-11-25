@@ -159,25 +159,25 @@ public:
   /** Typedef for the PointSetMetric. */
   typedef SingleValuedPointSetToPointSetMetric<
     PointSet<
-      typename TFixedImage::PointValueType,
+      CoordinateRepresentationType,
       TFixedImage::ImageDimension,
       DefaultStaticMeshTraits<
-        typename TFixedImage::PointValueType,
+        CoordinateRepresentationType,
         TFixedImage::ImageDimension,
         TFixedImage::ImageDimension,
-        typename TFixedImage::PointValueType,
-        typename TFixedImage::PointValueType,
-        typename TFixedImage::PointValueType > >,
+        CoordinateRepresentationType,
+        CoordinateRepresentationType,
+        CoordinateRepresentationType > >,
     PointSet<
-      typename TMovingImage::PointValueType,
+      CoordinateRepresentationType,
       TMovingImage::ImageDimension,
       DefaultStaticMeshTraits<
-        typename TMovingImage::PointValueType,
+        CoordinateRepresentationType,
         TMovingImage::ImageDimension,
         TMovingImage::ImageDimension,
-        typename TMovingImage::PointValueType,
-        typename TMovingImage::PointValueType,
-        typename TMovingImage::PointValueType > > >       Superclass2;
+        CoordinateRepresentationType,
+        CoordinateRepresentationType,
+        CoordinateRepresentationType > > > 					      Superclass2;
   typedef typename Superclass2::FixedPointSetType         FixedPointSetType;
   typedef typename Superclass2::MovingPointSetType        MovingPointSetType;
   typedef Superclass2                                     PointSetMetricType;

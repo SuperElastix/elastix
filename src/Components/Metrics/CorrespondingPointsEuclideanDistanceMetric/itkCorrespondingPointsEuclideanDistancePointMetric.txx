@@ -94,7 +94,7 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet,TMovingPointSet>
 
     if ( sampleOk )
     {
-      this->m_NumberOfPointsCounted;
+      this->m_NumberOfPointsCounted++;
 
       VnlVectorType diffPoint = ( movingPoint - mappedPoint ).GetVnlVector();
       MeasureType distance = diffPoint.magnitude();

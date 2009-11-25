@@ -79,9 +79,11 @@ using namespace itk;
 
     /** Other typedef's. */
     typedef typename ElastixType::FixedImageType        FixedImageType;
-    typedef typename FixedImageType::PointValueType     FixedPointValueType;
+    typedef typename FixedImageType::PointType          FixedPointType;
+    typedef typename FixedPointType::ValueType          FixedPointValueType;
     typedef typename ElastixType::MovingImageType       MovingImageType;
-    typedef typename MovingImageType::PointValueType    MovingPointValueType;
+    typedef typename MovingImageType::PointType         MovingPointType;
+    typedef typename MovingPointType::ValueType         MovingPointValueType;
     
     /** ITKBaseType. */
 //     typedef ImageToImageMetric<
