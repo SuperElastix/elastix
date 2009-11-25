@@ -40,26 +40,8 @@ template <class TElastix >
 class CorrespondingPointsEuclideanDistanceMetric
   : public
   CorrespondingPointsEuclideanDistancePointMetric<
-  PointSet<
-    typename MetricBase<TElastix>::FixedPointValueType,
-    MetricBase<TElastix>::FixedImageDimension,
-    DefaultStaticMeshTraits<
-      typename MetricBase<TElastix>::FixedPointValueType,
-      MetricBase<TElastix>::FixedImageDimension,
-      MetricBase<TElastix>::FixedImageDimension,
-      typename MetricBase<TElastix>::FixedPointValueType,
-      typename MetricBase<TElastix>::FixedPointValueType,
-      typename MetricBase<TElastix>::FixedPointValueType > >,
-  PointSet<
-    typename MetricBase<TElastix>::MovingPointValueType,
-    MetricBase<TElastix>::MovingImageDimension,
-    DefaultStaticMeshTraits<
-      typename MetricBase<TElastix>::MovingPointValueType,
-      MetricBase<TElastix>::MovingImageDimension,
-      MetricBase<TElastix>::MovingImageDimension,
-      typename MetricBase<TElastix>::MovingPointValueType,
-      typename MetricBase<TElastix>::MovingPointValueType,
-      typename MetricBase<TElastix>::MovingPointValueType > > >,
+    typename MetricBase<TElastix>::FixedPointSetType,
+    typename MetricBase<TElastix>::MovingPointSetType >,
   public MetricBase<TElastix>
 {
 public:
@@ -67,27 +49,8 @@ public:
   /** Standard ITK-stuff. */
   typedef CorrespondingPointsEuclideanDistanceMetric    Self;
   typedef CorrespondingPointsEuclideanDistancePointMetric<
-    PointSet<
-      typename MetricBase<TElastix>::FixedPointValueType,
-      MetricBase<TElastix>::FixedImageDimension,
-      DefaultStaticMeshTraits<
-        typename MetricBase<TElastix>::FixedPointValueType,
-        MetricBase<TElastix>::FixedImageDimension,
-        MetricBase<TElastix>::FixedImageDimension,
-        typename MetricBase<TElastix>::FixedPointValueType,
-        typename MetricBase<TElastix>::FixedPointValueType,
-        typename MetricBase<TElastix>::FixedPointValueType > >,
-    PointSet<
-      typename MetricBase<TElastix>::MovingPointValueType,
-      MetricBase<TElastix>::MovingImageDimension,
-      DefaultStaticMeshTraits<
-        typename MetricBase<TElastix>::MovingPointValueType,
-        MetricBase<TElastix>::MovingImageDimension,
-        MetricBase<TElastix>::MovingImageDimension,
-        typename MetricBase<TElastix>::MovingPointValueType,
-        typename MetricBase<TElastix>::MovingPointValueType,
-        typename MetricBase<TElastix>::MovingPointValueType > >
-    >                                                   Superclass1;
+    typename MetricBase<TElastix>::FixedPointSetType,
+    typename MetricBase<TElastix>::MovingPointSetType > Superclass1;
   typedef MetricBase<TElastix>                          Superclass2;
   typedef SmartPointer<Self>                            Pointer;
   typedef SmartPointer<const Self>                      ConstPointer;
@@ -106,8 +69,7 @@ public:
   elxClassNameMacro( "CorrespondingPointsEuclideanDistanceMetric" );
 
   /** Typedefs from the superclass. */
-  //typedef typename Superclass1::CoordinateRepresentationType CoordinateRepresentationType;
-
+  typedef typename Superclass1::CoordinateRepresentationType CoordinateRepresentationType;
   typedef typename Superclass1::FixedPointSetType          FixedPointSetType;
   typedef typename Superclass1::FixedPointSetConstPointer  FixedPointSetConstPointer;
   typedef typename Superclass1::MovingPointSetType         MovingPointSetType;
@@ -128,10 +90,6 @@ public:
   typedef typename Superclass1::MeasureType                MeasureType;
   typedef typename Superclass1::DerivativeType             DerivativeType;
   typedef typename Superclass1::ParametersType             ParametersType;
-//  typedef typename Superclass1::FixedImagePixelType        FixedImagePixelType;
-//  typedef typename Superclass1::MovingImageRegionType      MovingImageRegionType;
-//   typedef typename
-//     Superclass1::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
 
   /** Typedefs inherited from elastix. */
   typedef typename Superclass2::ElastixType               ElastixType;

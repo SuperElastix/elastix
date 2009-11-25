@@ -57,27 +57,6 @@ namespace itk
 template <class TFixedImage, class TMovingImage>
 class CombinationImageToImageMetric :
   public AdvancedImageToImageMetric< TFixedImage, TMovingImage >
-//   public SingleValuedPointSetToPointSetMetric<
-//     PointSet<
-//       typename TFixedImage::PointValueType,
-//       TFixedImage::ImageDimension,
-//       DefaultStaticMeshTraits<
-//         typename TFixedImage::PointValueType,
-//         TFixedImage::ImageDimension,
-//         TFixedImage::ImageDimension,
-//         typename TFixedImage::PointValueType,
-//         typename TFixedImage::PointValueType,
-//         typename TFixedImage::PointValueType > >,
-//     PointSet<
-//       typename TMovingImage::PointValueType,
-//       TMovingImage::ImageDimension,
-//       DefaultStaticMeshTraits<
-//         typename TMovingImage::PointValueType,
-//         TMovingImage::ImageDimension,
-//         TMovingImage::ImageDimension,
-//         typename TMovingImage::PointValueType,
-//         typename TMovingImage::PointValueType,
-//         typename TMovingImage::PointValueType > > >
 {
 public:
   /** Standard class typedefs. */
@@ -157,30 +136,24 @@ public:
     itkGetStaticConstMacro(MovingImageDimension) >        MovingImageDerivativeScalesType;
 
   /** Typedef for the PointSetMetric. */
-  typedef SingleValuedPointSetToPointSetMetric<
-    PointSet<
+  typedef PointSet< CoordinateRepresentationType,
+    TFixedImage::ImageDimension,
+    DefaultStaticMeshTraits<
       CoordinateRepresentationType,
       TFixedImage::ImageDimension,
-      DefaultStaticMeshTraits<
-        CoordinateRepresentationType,
-        TFixedImage::ImageDimension,
-        TFixedImage::ImageDimension,
-        CoordinateRepresentationType,
-        CoordinateRepresentationType,
-        CoordinateRepresentationType > >,
-    PointSet<
+      TFixedImage::ImageDimension,
+      CoordinateRepresentationType, CoordinateRepresentationType,
+      CoordinateRepresentationType > >                    FixedPointSetType;
+  typedef PointSet< CoordinateRepresentationType,
+    TMovingImage::ImageDimension,
+    DefaultStaticMeshTraits<
       CoordinateRepresentationType,
       TMovingImage::ImageDimension,
-      DefaultStaticMeshTraits<
-        CoordinateRepresentationType,
-        TMovingImage::ImageDimension,
-        TMovingImage::ImageDimension,
-        CoordinateRepresentationType,
-        CoordinateRepresentationType,
-        CoordinateRepresentationType > > > 					      Superclass2;
-  typedef typename Superclass2::FixedPointSetType         FixedPointSetType;
-  typedef typename Superclass2::MovingPointSetType        MovingPointSetType;
-  typedef Superclass2                                     PointSetMetricType;
+      TMovingImage::ImageDimension,
+      CoordinateRepresentationType, CoordinateRepresentationType,
+      CoordinateRepresentationType > >                    MovingPointSetType;
+  typedef SingleValuedPointSetToPointSetMetric<
+    FixedPointSetType, MovingPointSetType > 					    PointSetMetricType;
 
   /**
    * Get and set the metrics and their weights.

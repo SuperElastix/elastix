@@ -21,6 +21,7 @@
 #include "elxBaseComponentSE.h"
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkImageFullSampler.h"
+#include "itkPointSet.h"
 
 #include "elxTimer.h"
 
@@ -57,135 +58,146 @@ using namespace itk;
    * \ingroup ComponentBaseClasses
    */
 
-  template <class TElastix>
-    class MetricBase : public BaseComponentSE<TElastix>
+template <class TElastix>
+class MetricBase : public BaseComponentSE<TElastix>
+{
+public:
+
+  /** Standard ITK stuff. */
+  typedef MetricBase                  Self;
+  typedef BaseComponentSE<TElastix>   Superclass;
+
+  /** Run-time type information (and related methods). */
+  itkTypeMacro( MetricBase, BaseComponentSE );
+
+  /** Typedef's inherited from Elastix. */
+  typedef typename Superclass::ElastixType            ElastixType;
+  typedef typename Superclass::ElastixPointer         ElastixPointer;
+  typedef typename Superclass::ConfigurationType      ConfigurationType;
+  typedef typename Superclass::ConfigurationPointer   ConfigurationPointer;
+  typedef typename Superclass::RegistrationType       RegistrationType;
+  typedef typename Superclass::RegistrationPointer    RegistrationPointer;
+
+  /** Other typedef's. */
+  typedef typename ElastixType::FixedImageType        FixedImageType;
+  typedef typename FixedImageType::PointType          FixedPointType;
+  typedef typename FixedPointType::ValueType          FixedPointValueType;
+  typedef typename ElastixType::MovingImageType       MovingImageType;
+  typedef typename MovingImageType::PointType         MovingPointType;
+  typedef typename MovingPointType::ValueType         MovingPointValueType;
+
+  /** ITKBaseType. */
+  typedef SingleValuedCostFunction                    ITKBaseType;
+  typedef AdvancedImageToImageMetric<
+    FixedImageType, MovingImageType >                 AdvancedMetricType;
+
+  /** Get the dimension of the fixed image. */
+  itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
+  /** Get the dimension of the moving image. */
+  itkStaticConstMacro( MovingImageDimension, unsigned int, MovingImageType::ImageDimension );
+
+  /** Typedefs for point sets. */
+  typedef typename ITKBaseType::ParametersValueType CoordinateRepresentationType;
+  typedef PointSet<
+    CoordinateRepresentationType, FixedImageDimension,
+    DefaultStaticMeshTraits<
+      CoordinateRepresentationType,
+      FixedImageDimension, FixedImageDimension,
+      CoordinateRepresentationType, CoordinateRepresentationType,
+      CoordinateRepresentationType > >                FixedPointSetType;
+  typedef PointSet<
+    CoordinateRepresentationType, MovingImageDimension,
+    DefaultStaticMeshTraits<
+      CoordinateRepresentationType,
+      MovingImageDimension, MovingImageDimension,
+      CoordinateRepresentationType, CoordinateRepresentationType,
+      CoordinateRepresentationType > >                MovingPointSetType;
+
+  /** Typedefs for sampler support. */
+  typedef typename AdvancedMetricType::ImageSamplerType  ImageSamplerBaseType;
+
+  /** Cast to ITKBaseType. */
+  virtual ITKBaseType * GetAsITKBaseType( void )
   {
-  public:
+    return dynamic_cast<ITKBaseType *>( this );
+  }
 
-    /** Standard ITK stuff. */
-    typedef MetricBase                  Self;
-    typedef BaseComponentSE<TElastix>   Superclass;
-
-    /** Run-time type information (and related methods). */
-    itkTypeMacro( MetricBase, BaseComponentSE );
-
-    /** Typedef's inherited from Elastix. */
-    typedef typename Superclass::ElastixType            ElastixType;
-    typedef typename Superclass::ElastixPointer         ElastixPointer;
-    typedef typename Superclass::ConfigurationType      ConfigurationType;
-    typedef typename Superclass::ConfigurationPointer   ConfigurationPointer;
-    typedef typename Superclass::RegistrationType       RegistrationType;
-    typedef typename Superclass::RegistrationPointer    RegistrationPointer;
-
-    /** Other typedef's. */
-    typedef typename ElastixType::FixedImageType        FixedImageType;
-    typedef typename FixedImageType::PointType          FixedPointType;
-    typedef typename FixedPointType::ValueType          FixedPointValueType;
-    typedef typename ElastixType::MovingImageType       MovingImageType;
-    typedef typename MovingImageType::PointType         MovingPointType;
-    typedef typename MovingPointType::ValueType         MovingPointValueType;
-    
-    /** ITKBaseType. */
-//     typedef ImageToImageMetric<
-//       FixedImageType, MovingImageType >       ITKBaseType;
-//     typedef AdvancedImageToImageMetric<
-//       FixedImageType, MovingImageType >       ITKBaseType;
-    typedef SingleValuedCostFunction          ITKBaseType;
-    typedef AdvancedImageToImageMetric<
-      FixedImageType, MovingImageType >       AdvancedMetricType;
-
-    /** Typedefs for sampler support. */
-    typedef typename AdvancedMetricType::ImageSamplerType  ImageSamplerBaseType;
-
-    /** Cast to ITKBaseType. */
-    virtual ITKBaseType * GetAsITKBaseType( void )
-    {
-      return dynamic_cast<ITKBaseType *>( this );
-    }
-
-    /** Cast to ITKBaseType, to use in const functions. */
-    virtual const ITKBaseType * GetAsITKBaseType( void ) const
-    {
-      return dynamic_cast<const ITKBaseType *>( this );
-    }
-    
-    /** Get the dimension of the fixed image. */
-    itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
-    /** Get the dimension of the moving image. */
-    itkStaticConstMacro( MovingImageDimension, unsigned int, MovingImageType::ImageDimension );
-
-    /** Execute stuff before each resolution:
-     * \li Check if the exact metric value should be computed
-     * (to monitor the progress of the registration).
-     */
-    virtual void BeforeEachResolutionBase( void );
-
-    /** Execute stuff after each iteration:
-     * \li Optionally compute the exact metric value and plot it to screen.
-     */
-    virtual void AfterEachIterationBase( void );
-    
-    /** Force the metric to base its computation on a new subset of image samples.
-     * Not every metric may have implemented this.
-     */
-    virtual void SelectNewSamples( void );
-
-    /** Returns whether the metric uses a sampler. When the metric is not of
-     * AdvancedMetricType, the function returns false immediately.
-     */
-    virtual bool GetAdvancedMetricUseImageSampler( void ) const;
-
-    /** Method to set the image sampler. The image sampler is only used when
-     * the metric is of type AdvancedMetricType, and has UseImageSampler set
-     * to true. In other cases, the function does nothing.
-     */
-    virtual void SetAdvancedMetricImageSampler( ImageSamplerBaseType * sampler );
-
-    /** Methods to get the image sampler. The image sampler is only used when
-     * the metric is of type AdvancedMetricType, and has UseImageSampler set
-     * to true. In other cases, the function returns 0.
-     */
-    virtual ImageSamplerBaseType * GetAdvancedMetricImageSampler( void ) const;
-
-  protected:
-
-    /** The type returned by the GetValue methods. Used by the GetExactValue method. */
-    typedef typename ITKBaseType::MeasureType       MeasureType;
-    typedef typename ITKBaseType::ParametersType    ParametersType;
-
-    /** The full sampler used by the GetExactValue method. */    
-    typedef itk::ImageFullSampler<FixedImageType>   ImageFullSamplerType;
-    
-    /** The constructor. */
-    MetricBase();
-    /** The destructor. */
-    virtual ~MetricBase() {}
-
-    /**  Get the exact value. Mutual information computed over all points.
-     * It is meant in situations when you optimize using just a subset of pixels, 
-     * but are interested in the exact value of the metric. 
-     *
-     * This method only works when the itkYourMetric inherits from 
-     * the AdvancedMetricType.
-     * In other cases it returns 0. You may re-implement this method in 
-     * the elxYourMetric, if you like. 
-     */
-    virtual MeasureType GetExactValue( const ParametersType& parameters );
-    /** \todo the method GetExactDerivative could as well be added here. */
+  /** Cast to ITKBaseType, to use in const functions. */
+  virtual const ITKBaseType * GetAsITKBaseType( void ) const
+  {
+    return dynamic_cast<const ITKBaseType *>( this );
+  }
   
-    bool m_ShowExactMetricValue;
-    typename ImageFullSamplerType::Pointer m_ExactMetricSampler;
+  /** Execute stuff before each resolution:
+   * \li Check if the exact metric value should be computed
+   * (to monitor the progress of the registration).
+   */
+  virtual void BeforeEachResolutionBase( void );
 
+  /** Execute stuff after each iteration:
+   * \li Optionally compute the exact metric value and plot it to screen.
+   */
+  virtual void AfterEachIterationBase( void );
 
-  private:
+  /** Force the metric to base its computation on a new subset of image samples.
+   * Not every metric may have implemented this.
+   */
+  virtual void SelectNewSamples( void );
 
-    /** The private constructor. */
-    MetricBase( const Self& );      // purposely not implemented
-    /** The private copy constructor. */
-    void operator=( const Self& );  // purposely not implemented
+  /** Returns whether the metric uses a sampler. When the metric is not of
+   * AdvancedMetricType, the function returns false immediately.
+   */
+  virtual bool GetAdvancedMetricUseImageSampler( void ) const;
 
+  /** Method to set the image sampler. The image sampler is only used when
+   * the metric is of type AdvancedMetricType, and has UseImageSampler set
+   * to true. In other cases, the function does nothing.
+   */
+  virtual void SetAdvancedMetricImageSampler( ImageSamplerBaseType * sampler );
 
-  }; // end class MetricBase
+  /** Methods to get the image sampler. The image sampler is only used when
+   * the metric is of type AdvancedMetricType, and has UseImageSampler set
+   * to true. In other cases, the function returns 0.
+   */
+  virtual ImageSamplerBaseType * GetAdvancedMetricImageSampler( void ) const;
+
+protected:
+
+  /** The type returned by the GetValue methods. Used by the GetExactValue method. */
+  typedef typename ITKBaseType::MeasureType       MeasureType;
+  typedef typename ITKBaseType::ParametersType    ParametersType;
+
+  /** The full sampler used by the GetExactValue method. */
+  typedef itk::ImageFullSampler<FixedImageType>   ImageFullSamplerType;
+
+  /** The constructor. */
+  MetricBase();
+  /** The destructor. */
+  virtual ~MetricBase() {}
+
+  /**  Get the exact value. Mutual information computed over all points.
+   * It is meant in situations when you optimize using just a subset of pixels,
+   * but are interested in the exact value of the metric.
+   *
+   * This method only works when the itkYourMetric inherits from
+   * the AdvancedMetricType.
+   * In other cases it returns 0. You may re-implement this method in
+   * the elxYourMetric, if you like.
+   */
+  virtual MeasureType GetExactValue( const ParametersType& parameters );
+  /** \todo the method GetExactDerivative could as well be added here. */
+
+  bool m_ShowExactMetricValue;
+  typename ImageFullSamplerType::Pointer m_ExactMetricSampler;
+
+private:
+
+  /** The private constructor. */
+  MetricBase( const Self& );      // purposely not implemented
+  /** The private copy constructor. */
+  void operator=( const Self& );  // purposely not implemented
+
+}; // end class MetricBase
 
 
 } // end namespace elastix
@@ -195,4 +207,3 @@ using namespace itk;
 #endif
 
 #endif // end #ifndef __elxMetricBase_h
-
