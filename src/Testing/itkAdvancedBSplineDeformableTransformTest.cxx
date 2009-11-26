@@ -3,6 +3,7 @@
 #include "itkGridScheduleComputer.h"
 
 #include <ctime>
+#include <fstream>
 #include <iomanip>
 
 //-------------------------------------------------------------------------------------
@@ -21,7 +22,7 @@ int main( int argc, char *argv[] )
   /** The number of calls to Evaluate(). This number gives reasonably
    * fast test results in Release mode. 
    */
-  unsigned int N = 1e5;
+  unsigned int N = static_cast<unsigned int>( 1e5 );
 
   /** Check. */
   if ( argc != 2 )
@@ -146,23 +147,23 @@ int main( int argc, char *argv[] )
   transform->GetJacobianOfSpatialHessian( inputPoint,
     spatialHessian, jacobianOfSpatialHessian, nzji );
 
-  /***
-  transform->GetSpatialHessian( inputPoint, spatialHessian );
-  for ( unsigned int i = 0; i < Dimension; ++i )
-  {
-    std::cerr << spatialHessian[ i ] << std::endl;
-  }
-
-  /***
-  transform->GetJacobianOfSpatialHessian( inputPoint,
-    spatialHessian, jacobianOfSpatialHessian, nzji );
-  for ( unsigned int mu = 0; mu < 2; ++mu )
-  {
-    for ( unsigned int i = 0; i < Dimension; ++i )
-    {
-      std::cerr << jacobianOfSpatialHessian[ mu ][ i ] << std::endl;
-    }
-  }
+//   /***/
+//   transform->GetSpatialHessian( inputPoint, spatialHessian );
+//   for ( unsigned int i = 0; i < Dimension; ++i )
+//   {
+//     std::cerr << spatialHessian[ i ] << std::endl;
+//   }
+// 
+//   /***/
+//   transform->GetJacobianOfSpatialHessian( inputPoint,
+//     spatialHessian, jacobianOfSpatialHessian, nzji );
+//   for ( unsigned int mu = 0; mu < 2; ++mu )
+//   {
+//     for ( unsigned int i = 0; i < Dimension; ++i )
+//     {
+//       std::cerr << jacobianOfSpatialHessian[ mu ][ i ] << std::endl;
+//     }
+//   }
 
   /**
    *

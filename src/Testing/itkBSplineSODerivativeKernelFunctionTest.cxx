@@ -20,7 +20,7 @@ int main( int argc, char *argv[] )
   /** The number of calls to Evaluate(). This number gives reasonably
    * fast test results in Release mode. 
    */
-  unsigned int N = 1e8;
+  unsigned int N = static_cast<unsigned int>( 1e8 );
 
   /** Other typedefs. */
   typedef itk::BSplineSecondOrderDerivativeKernelFunction<SplineOrder> BSplineSODerivativeKernelType;

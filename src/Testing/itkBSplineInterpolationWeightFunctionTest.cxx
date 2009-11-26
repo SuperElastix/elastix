@@ -23,7 +23,7 @@ int main( int argc, char *argv[] )
    * fast test results in Release mode. In 3D half of this number calls are
    * made.
    */
-  unsigned int N = 1e6;
+  unsigned int N = static_cast<unsigned int>( 1e6 );
 
   /** Other typedefs. */
   typedef itk::BSplineInterpolationWeightFunction<
@@ -171,7 +171,7 @@ int main( int argc, char *argv[] )
   std::cerr << "The distance is: " << error << std::endl;
 
   /** TEST: Compare the two performance wise. */
-  N /= 2.0;
+  N /= 2;
 
   /** Time the ITK implementation. */
   startClock = clock();
