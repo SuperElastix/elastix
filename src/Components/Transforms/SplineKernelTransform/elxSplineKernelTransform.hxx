@@ -234,15 +234,15 @@ SplineKernelTransform<TElastix>
   inputPointSet->DisconnectPipeline();
   if ( ippReader->GetPointsAreIndices() )
   {
-    /** Convert to world coordinates */
+    /** Convert to world coordinates. */
     typename FixedImageType::Pointer fixedImage = this->GetElastix()->GetFixedImage();
+    InputPointType inputPoint; inputPoint.Fill( 0.0f );
+    FixedImageIndexType inputIndex;
     for ( unsigned int j = 0; j < nrofpoints; ++j )
     {
       /** The read point from the inputPointSet is actually an index
        * Cast to the proper type.
        */
-      InputPointType inputPoint;
-      FixedImageIndexType inputIndex;
       inputPointSet->GetPoint( j, &inputPoint );
       for ( unsigned int d = 0; d < SpaceDimension; ++d )
       {
@@ -261,9 +261,9 @@ SplineKernelTransform<TElastix>
   if ( this->GetUseComposition()
     && this->Superclass1::GetInitialTransform() != 0 )
   {
+    InputPointType inputPoint; inputPoint.Fill( 0.0f );
     for ( unsigned int j = 0; j < nrofpoints; ++j )
     {
-      InputPointType inputPoint;
       inputPointSet->GetPoint( j, &inputPoint );
       inputPoint = this->Superclass1::GetInitialTransform()
         ->TransformPoint( inputPoint );

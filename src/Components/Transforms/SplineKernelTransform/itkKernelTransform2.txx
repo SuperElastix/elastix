@@ -323,11 +323,11 @@ KernelTransform2<TScalarType, NDimensions>
   const unsigned long numberOfLandmarks = this->m_SourceLandmarks->GetNumberOfPoints();
   IMatrixType I; I.set_identity();
   IMatrixType temp;
-  InputPointType p;
+  InputPointType p; p.Fill( 0.0f );
 
   this->m_PMatrix.set_size( NDimensions * numberOfLandmarks,
     NDimensions * ( NDimensions + 1 ) );
-  this->m_PMatrix.fill( 0.0 );
+  this->m_PMatrix.fill( 0.0f );
   
   for ( unsigned long i = 0; i < numberOfLandmarks; i++ )
   {
