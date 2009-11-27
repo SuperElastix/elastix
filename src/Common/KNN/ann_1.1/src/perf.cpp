@@ -102,13 +102,14 @@ DLL_API void annUpdateStats()       // update stats with current counts
 }
 
                     // print a single statistic
-void print_one_stat(char *title, ANNsampStat s, double div)
+//void print_one_stat(char *title, ANNsampStat s, double div)
+void print_one_stat( const std::string & title, ANNsampStat s, double div)
 {
-  cout << title << "= [ ";
-  cout.width(9); cout << s.mean()/div     << " : ";
-  cout.width(9); cout << s.stdDev()/div   << " ]<";
-  cout.width(9); cout << s.min()/div      << " , ";
-  cout.width(9); cout << s.max()/div      << " >\n";
+  std::cout << title.c_str() << "= [ ";
+  std::cout.width(9); std::cout << s.mean()/div     << " : ";
+  std::cout.width(9); std::cout << s.stdDev()/div   << " ]<";
+  std::cout.width(9); std::cout << s.min()/div      << " , ";
+  std::cout.width(9); std::cout << s.max()/div      << " >\n";
 }
 
 DLL_API void annPrintStats(       // print statistics for a run

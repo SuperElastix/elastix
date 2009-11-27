@@ -25,7 +25,8 @@
 //----------------------------------------------------------------------
 
 #include <ANN/ANNx.h>         // all ANN includes
-#include <ANN/ANNperf.h>        // ANN performance 
+#include <ANN/ANNperf.h>      // ANN performance
+#include <iostream>
 
 using namespace std;          // make std:: accessible
 
@@ -163,14 +164,15 @@ ANNbool ANNorthRect::inside(int dim, ANNpoint p)
 //  Error handler
 //----------------------------------------------------------------------
 
-void annError(char *msg, ANNerr level)
+//void annError( char * msg, ANNerr level )
+void annError( const std::string & msg, ANNerr level )
 {
   if (level == ANNabort) {
-    cerr << "ANN: ERROR------->" << msg << "<-------------ERROR\n";
+    std::cerr << "ANN: ERROR------->" << msg.c_str() << "<-------------ERROR\n";
     exit(1);
   }
   else {
-    cerr << "ANN: WARNING----->" << msg << "<-------------WARNING\n";
+    std::cerr << "ANN: WARNING----->" << msg.c_str() << "<-------------WARNING\n";
   }
 }
 
