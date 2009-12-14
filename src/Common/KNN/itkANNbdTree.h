@@ -50,7 +50,7 @@ namespace itk
     typedef typename Superclass::SampleType                 SampleType;
     typedef typename Superclass::MeasurementVectorType      MeasurementVectorType;
     typedef typename Superclass::MeasurementVectorSizeType  MeasurementVectorSizeType;
-    typedef typename Superclass::TotalFrequencyType         TotalFrequencyType;
+    typedef typename Superclass::TotalAbsoluteFrequencyType TotalAbsoluteFrequencyType;
     typedef typename Superclass::ANNPointSetType            ANNPointSetType;
     typedef typename Superclass::ANNkDTreeType              ANNkDTreeType;
     typedef typename Superclass::SplittingRuleType          SplittingRuleType;

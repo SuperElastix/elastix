@@ -51,7 +51,7 @@ namespace itk
     typedef typename Superclass::SampleType                 SampleType;
     typedef typename Superclass::MeasurementVectorType      MeasurementVectorType;
     typedef typename Superclass::MeasurementVectorSizeType  MeasurementVectorSizeType;
-    typedef typename Superclass::TotalFrequencyType         TotalFrequencyType;
+    typedef typename Superclass::TotalAbsoluteFrequencyType TotalAbsoluteFrequencyType;
 
     /** Typedef's. */
     typedef ANNpointSet       ANNPointSetType;

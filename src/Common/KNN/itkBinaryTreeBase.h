@@ -49,17 +49,17 @@ namespace itk
     /** Typedef's. */
     typedef typename SampleType::MeasurementVectorType      MeasurementVectorType;
     typedef typename SampleType::MeasurementVectorSizeType  MeasurementVectorSizeType;
-    typedef typename SampleType::TotalFrequencyType         TotalFrequencyType;
+    typedef typename SampleType::TotalAbsoluteFrequencyType TotalAbsoluteFrequencyType;
 
     /** Set and get the samples: the array of points. */
     itkSetObjectMacro( Sample, SampleType );
     itkGetConstObjectMacro( Sample, SampleType );
 
     /** Get the number of data points. */
-    TotalFrequencyType GetNumberOfDataPoints( void ) const;
+    TotalAbsoluteFrequencyType GetNumberOfDataPoints( void ) const;
 
     /** Get the actual number of data points. */
-    TotalFrequencyType GetActualNumberOfDataPoints( void ) const;
+    TotalAbsoluteFrequencyType GetActualNumberOfDataPoints( void ) const;
 
     /** Get the dimension of the input data. */
     MeasurementVectorSizeType GetDataDimension( void ) const;
@@ -98,4 +98,3 @@ namespace itk
 
 
 #endif // end #ifndef __itkBinaryTreeBase_h
-

@@ -16,7 +16,8 @@
 #define __itkListSampleCArray_h
 
 #include "itkObjectFactory.h"
-#include "itkListSampleBase.h"
+//#include "itkListSampleBase.h"
+#include "itkSample.h"
 
 namespace itk{
 namespace Statistics
@@ -38,31 +39,29 @@ namespace Statistics
   
   template < class TMeasurementVector, class TInternalValue = typename TMeasurementVector::ValueType >
   class ListSampleCArray
-    : public ListSampleBase< TMeasurementVector >
+    : public Sample< TMeasurementVector >
   {
   public:
     
     /** Standard itk. */
-    typedef ListSampleCArray            Self;
-    typedef ListSampleBase<
-      TMeasurementVector >              Superclass;
-    typedef SmartPointer< Self >        Pointer;
-    typedef SmartPointer< const Self >  ConstPointer;
+    typedef ListSampleCArray              Self;
+    typedef Sample< TMeasurementVector >  Superclass;
+    typedef SmartPointer< Self >          Pointer;
+    typedef SmartPointer< const Self >    ConstPointer;
     
     /** New method for creating an object using a factory.*/
     itkNewMacro( Self );
     
     /** ITK type info */
-    itkTypeMacro( ListSampleCArray, ListSampleBase );
+    itkTypeMacro( ListSampleCArray, Sample );
 
     /** Typedef's from Superclass. */
     typedef typename Superclass::MeasurementVectorType      MeasurementVectorType;
     typedef typename Superclass::MeasurementVectorSizeType  MeasurementVectorSizeType;
     typedef typename Superclass::MeasurementType            MeasurementType;
-    typedef typename Superclass::FrequencyType              FrequencyType;
-    typedef typename Superclass::TotalFrequencyType         TotalFrequencyType;
+    typedef typename Superclass::AbsoluteFrequencyType      AbsoluteFrequencyType;
+    typedef typename Superclass::TotalAbsoluteFrequencyType TotalAbsoluteFrequencyType;
     typedef typename Superclass::InstanceIdentifier         InstanceIdentifier;
-    typedef typename Superclass::SearchResultVectorType     SearchResultVectorType;
     
     /** Typedef's for the internal data container. */
     typedef TInternalValue          InternalValueType;
@@ -85,34 +84,39 @@ namespace Statistics
     void Clear( void );
 
     /** Function to get the size of the data container. */
-    unsigned int Size( void ) const
+    virtual InstanceIdentifier Size( void ) const
     {
-      return static_cast<unsigned int>( this->m_InternalContainerSize );
+      return this->m_InternalContainerSize;
     }
     
     /** Function to get a point from the data container. 
      * NB: the reference to the returned value remains only valid until the next
      * call to this function.
      * The method GetMeasurementVector( const InstanceIdentifier &id, MeasurementVectorType & mv)
-     * is actually a preferred way to get a measurement vector. */
-    const MeasurementVectorType & GetMeasurementVector( const InstanceIdentifier &id ) const;    
+     * is actually a preferred way to get a measurement vector.
+     */
+   virtual const MeasurementVectorType & GetMeasurementVector(
+      InstanceIdentifier id ) const;    
 
     /** Function to get a point from the data container. */
-    void GetMeasurementVector( const InstanceIdentifier &id, MeasurementVectorType & mv ) const;
+    void GetMeasurementVector( InstanceIdentifier id,
+      MeasurementVectorType & mv ) const;
 
     /** Function to set part of a point (measurement) in the data container. */
-    void SetMeasurement( const InstanceIdentifier &id, const unsigned int &dim, const MeasurementType &value );
+    void SetMeasurement( InstanceIdentifier id,
+      unsigned int dim, const MeasurementType &value );
 
     /** Function to set a point (measurement vector) in the data container. */
-    void SetMeasurementVector( const InstanceIdentifier &id, const MeasurementVectorType &mv );
+    void SetMeasurementVector( InstanceIdentifier id,
+      const MeasurementVectorType &mv );
 
     /** Function to get the frequency of point i. 1.0 if it exist, 0.0 otherwise. */
-    FrequencyType GetFrequency( const InstanceIdentifier &id ) const;
+    virtual AbsoluteFrequencyType GetFrequency( InstanceIdentifier id ) const;
     
     /** Function to get the total frequency. */
-    TotalFrequencyType GetTotalFrequency() const
+    virtual TotalAbsoluteFrequencyType GetTotalFrequency( void ) const
     {
-      return static_cast<TotalFrequencyType>( this->m_InternalContainerSize );
+      return static_cast<TotalAbsoluteFrequencyType>( this->m_InternalContainerSize );
     }
 
   protected:
@@ -141,8 +145,8 @@ namespace Statistics
     void DeallocateInternalContainer( void );
         
   }; // end class ListSampleCArray
-    
-    
+
+
 } // end namespace Statistics
 } // end namespace itk
 
@@ -153,4 +157,3 @@ namespace Statistics
 
 
 #endif // end #ifndef __itkListSampleCArray_h
-
