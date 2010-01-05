@@ -953,7 +953,7 @@ facilitate our registration research. After some initial versions we decided to
 put the separate components of \elastix\ in separate libraries. This resulted
 in major version 3.0 in November 2004. \elastix\ 3.0 was also the first version
 that was made publicly available on the \elastix\ website, around the same
-time. The continued development brings us today (\today) to version 4.2.
+time. The continued development brings us today (\today) to version 4.3.
 
 \begin{table}[h!]
 \begin{tabular}{l|l}
@@ -1060,8 +1060,7 @@ freely available. In this section, we assume you use the Microsoft Visual C++
 
 \item Download and compile the ITK version 3.14: \url{www.itk.org}. Make
     sure to set the (advanced) CMake variable
-    \texttt{ITK\_IMAGE\_BEHAVES\_AS\_ORIENTED\_IMAGE} to \texttt{OFF} and
-    \texttt{ITK\_USE\_REVIEW} to \texttt{ON}. On Linux systems with the GCC
+    \texttt{ITK\_USE\_REVIEW} to \texttt{ON} and \texttt{ITK\_USE\_REVIEW_STATISTICS} to \texttt{ON}. On Linux systems with the GCC
     compiler: set \texttt{CMAKE\_BUILD\_TYPE} to ``Release''.
 
 %1. Download cmake from www.cmake.org and install it according to instructions
