@@ -269,6 +269,9 @@ public:
   /** Function to transform coordinates from fixed to moving image. */
   virtual void TransformPointsSomePoints( const std::string filename ) const;
 
+  /** Function to transform coordinates from fixed to moving image, given as VTK file. */
+  virtual void TransformPointsSomePointsVTK( const std::string filename ) const;
+
   /** Function to transform all coordinates from fixed to moving image. */
   virtual void TransformPointsAllPoints( void ) const;
 
