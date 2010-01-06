@@ -29,6 +29,9 @@
 #include "itkImageGridSampler.h"
 #include "itkContinuousIndex.h"
 #include "itkChangeInformationImageFilter.h"
+#include "itkVTKPolyDataReader.h"
+#include "itkVTKPolyDataWriter.h"
+#include "itkTransformMeshFilter.h"
 
 namespace elastix
 {
@@ -789,9 +792,19 @@ TransformBase<TElastix>
   /** If there is an input point-file? */
   if ( def != "" && def != "all" )
   {
-    elxout << "  The transform is evaluated on some points, "
-      << "specified in the input point file." << std::endl;
-    this->TransformPointsSomePoints( def );
+    if ( itksys::SystemTools::StringEndsWith( def.c_str(), ".vtk" ) ||
+         itksys::SystemTools::StringEndsWith( def.c_str(), ".VTK" ) )
+    {
+      elxout << "  The transform is evaluated on some points, "
+        << "specified in a VTK input point file." << std::endl;
+        this->TransformPointsSomePointsVTK( def );
+    }
+    else
+    {        
+      elxout << "  The transform is evaluated on some points, "
+        << "specified in the input point file." << std::endl;
+      this->TransformPointsSomePoints( def );
+    }
   }
   else if ( def == "all" )
   {
@@ -1060,6 +1073,91 @@ TransformBase<TElastix>
   elxout.RemoveOutput( "opp" );
 
 } // end TransformPointsSomePoints()
+
+/**
+ * ************** TransformPointsSomePointsVTK *********************
+ *
+ * This function reads points from a .vtk file and transforms
+ * these fixed-image coordinates to moving-image
+ * coordinates.
+ *
+ * Reads the inputmesh from a vtk file, assuming world coordinates.
+ * Computes the transformed points, save as outputpoints.vtk.
+ */
+
+template <class TElastix>
+void
+TransformBase<TElastix>
+::TransformPointsSomePointsVTK( const std::string filename ) const
+{
+  /** Typedef's. \todo test DummyIPPPixelType=bool. */  
+  typedef float                                         DummyIPPPixelType;
+  typedef itk::DefaultStaticMeshTraits<
+    DummyIPPPixelType, FixedImageDimension,
+    FixedImageDimension, CoordRepType>                  MeshTraitsType;  
+  typedef itk::Mesh< 
+    DummyIPPPixelType, FixedImageDimension, MeshTraitsType > MeshType;
+  typedef itk::VTKPolyDataReader< MeshType >            MeshReaderType;
+  typedef itk::VTKPolyDataWriter< MeshType >            MeshWriterType;  
+  typedef itk::TransformMeshFilter< 
+    MeshType, MeshType, CombinationTransformType>       TransformMeshFilterType;
+   
+  /** Read the input points. */
+  typename MeshReaderType::Pointer meshReader = MeshReaderType::New();
+  meshReader->SetFileName( filename.c_str() );
+  elxout << "  Reading input point file: " << filename << std::endl;
+  try
+  {
+    meshReader->Update();
+  }
+  catch (itk::ExceptionObject & err)
+  { 
+    xl::xout["error"] << "  Error while opening input point file." << std::endl;
+    xl::xout["error"] << err << std::endl;      
+  }
+
+  /** Some user-feedback. */
+  elxout << "  Input points are specified in world coordinates." << std::endl;
+  unsigned long nrofpoints = meshReader->GetOutput()->GetNumberOfPoints();
+  elxout << "  Number of specified input points: " << nrofpoints << std::endl;
+  
+  /** Apply the transform. */
+  elxout << "  The input points are transformed." << std::endl;
+  typename TransformMeshFilterType::Pointer meshTransformer = TransformMeshFilterType::New();
+  meshTransformer->SetTransform( 
+    const_cast<CombinationTransformType *>( this->GetAsCombinationTransform() ) );
+  meshTransformer->SetInput( meshReader->GetOutput() );
+  try
+  {
+    meshTransformer->Update();    
+  }
+  catch (itk::ExceptionObject & err)
+  { 
+    xl::xout["error"] << "  Error while transforming points." << std::endl;
+    xl::xout["error"] << err << std::endl;      
+  }
+
+  /** Create filename and file stream. */
+  std::string outputPointsFileName = this->m_Configuration
+    ->GetCommandLineArgument( "-out" );
+  outputPointsFileName += "outputpoints.vtk"; 
+  elxout << "  The transformed points are saved in: "
+    <<  outputPointsFileName << std::endl;
+  typename MeshWriterType::Pointer meshWriter = MeshWriterType::New();  
+  meshWriter->SetFileName( outputPointsFileName.c_str() );
+  meshWriter->SetInput( meshTransformer->GetOutput() );
+
+  try
+  {
+    meshWriter->Update();    
+  }
+  catch (itk::ExceptionObject & err)
+  { 
+    xl::xout["error"] << "  Error while saving points." << std::endl;
+    xl::xout["error"] << err << std::endl;      
+  }
+  
+} // end TransformPointsSomePointsVTK()
 
 
 /**
