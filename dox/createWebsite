@@ -42,8 +42,8 @@
 arg="$1"
 
 # You have to set the following
-version="4.2"
-tag="elastix_04_2"
+version="4.3"
+tag="elastix_04_3"
 
 username="sklein"
 
