@@ -328,12 +328,9 @@ is able to store the relevant information (e.g. \texttt{mhd},
 DICOM). Some image formats, like \texttt{vpx}, do not store the
 origin and spacing. This may cause serious problems!
 
-The image orientation (direction cosines) is not yet fully supported in
-\elastix. The registration will run, but basically assumes that the images have
-unit direction cosines. In many applications this does not cause problems, but
-be especially careful when fixed and moving image have different orientations,
-or when you need to relate the resulting transformation to some physical
-property. Full support of image orientation is on our priority list.
+Up to \elastix\ version 4.2, the image orientation (direction cosines) was not
+yet fully supported in \elastix. From \elastix\ 4.3, image orientation is fully
+supported, but can be disabled for backward compatibility reasons.
 
 \section{Metrics}\label{sec:comp:metric}
 
@@ -999,12 +996,12 @@ often used (medical) image formats are: .mhd (MetaIO), .hdr
 (Analyze/NIfTI), .gipl, .dcm (DICOM slices). DICOM directories are
 not directly supported by \elastix;
 
-\item multi-platform (at least Windows and Linux; a previous version
-was reported to work on Mac OS), multi-compiler (at least Visual
-C++ 2003, gcc 3.2, gcc 4.02), and supports 32 and 64 bit systems.
-The underlying ITK code builds on many more platforms, see
-\url{www.itk.org/Wiki/ITK_Prerequisites}. So, it is highly
-portable to the platform of the user's choice;
+\item multi-platform (at least Windows and Linux; a previous version was
+    reported to work on Mac OS), multi-compiler (at least Visual C++ 2005,
+    2008, gcc 3.2, 4.02, 4.1.2), and supports 32 and 64 bit systems. The
+    underlying ITK code builds on many more platforms, see
+    \url{www.itk.org/Wiki/ITK_Prerequisites}. So, it is highly portable to
+    the platform of the user's choice;
 
 \item highly configurable: there is a lot of choice for all the registration
 components. Choosing the configuration that suits your needs is easy
@@ -1059,9 +1056,10 @@ freely available. In this section, we assume you use the Microsoft Visual C++
 \item Download and install CMake: \url{www.cmake.org}.
 
 \item Download and compile the ITK version 3.14: \url{www.itk.org}. Make
-    sure to set the (advanced) CMake variable
-    \texttt{ITK\_USE\_REVIEW} to \texttt{ON} and \texttt{ITK\_USE\_REVIEW_STATISTICS} to \texttt{ON}. On Linux systems with the GCC
-    compiler: set \texttt{CMAKE\_BUILD\_TYPE} to ``Release''.
+    sure to set the (advanced) CMake variable \texttt{ITK\_USE\_REVIEW} to
+    \texttt{ON} and \texttt{ITK\_USE\_REVIEW\_STATISTICS} to \texttt{ON}.
+    On Linux systems with the GCC compiler: set \texttt{CMAKE\_BUILD\_TYPE}
+    to ``Release''.
 
 %1. Download cmake from www.cmake.org and install it according to instructions
 %2. Download itk 3.12 from www.itk.org (not version 3.10).
@@ -1632,10 +1630,11 @@ parameter file:
 \begin{quote}
   \texttt{(HowToCombineTransforms "Compose")}
 \end{quote}
-By default, if this line is omitted, \texttt{"Add"} is used for
-backwards compatibility. See Section \ref{sec:comp:transform},
-Equations (\ref{eq:addition}) and (\ref{eq:composition}) for
-explanation.
+Up to \elastix\ version 4.2, by default, if this line was omitted,
+\texttt{"Add"} was used for backwards compatibility. From \elastix\ version
+4.3, the default has been changed to \texttt{"Compose"}, which is better in
+most applications. See Section \ref{sec:comp:transform}, Equations
+(\ref{eq:addition}) and (\ref{eq:composition}) for explanation.
 
 \subsection{Optimiser}\label{sec:optimizertuning}
 
