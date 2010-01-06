@@ -16,6 +16,7 @@
 #define __itkListSampleCArray_txx
 
 #include "itkListSampleCArray.h"
+#include "itkNumericTraits.h"
 
 namespace itk{ 
 namespace Statistics{
@@ -249,11 +250,11 @@ ListSampleCArray< TMeasurementVector, TInternalValue >
 {
   if ( id < this->m_InternalContainerSize )
   {
-    return 1.0 ;
+    return itk::NumericTraits<AbsoluteFrequencyType>::One;
   }
   else
   {
-    return 0.0 ;
+    return itk::NumericTraits<AbsoluteFrequencyType>::Zero;
   }
 } // end GetFrequency()
 
