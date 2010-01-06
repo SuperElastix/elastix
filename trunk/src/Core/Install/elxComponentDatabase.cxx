@@ -1,0 +1,199 @@
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+
+/**
+ * Implementation of the ComponentDatabase class.
+ * 
+ */
+
+#ifndef __elxComponentDatabase_cxx
+#define __elxComponentDatabase_cxx
+
+#include "elxComponentDatabase.h"
+#include "xoutmain.h"
+
+
+namespace elastix
+{
+  using namespace xl;
+
+
+  /**
+   * ******************** GetCreatorMap ***************************
+   */
+
+  ComponentDatabase::CreatorMapType & ComponentDatabase::GetCreatorMap(void)
+  {
+    return CreatorMap;
+
+  } // end GetCreatorMap
+  
+
+  /**
+   * ********************** GetIndexMap ***************************
+   */
+
+  ComponentDatabase::IndexMapType & ComponentDatabase::GetIndexMap(void)
+  {
+    return IndexMap;
+
+  } // end GetIndexMap
+
+
+  /**
+   * *********************** SetCreator ***************************
+   */
+
+  int ComponentDatabase::SetCreator(
+    const ComponentDescriptionType & name,
+    IndexType i,
+    PtrToCreator creator )
+  {   
+    /** Get the map */
+    CreatorMapType & map = GetCreatorMap();
+
+    /** Make a key with the input arguments */
+    CreatorMapKeyType key( name, i );
+
+    /** Check if this key has been defined already.
+     * If not, insert the key + creator in the map.
+     */
+    if ( map.count( key ) ) //==1
+    {
+      xout["error"] << "Error: " << std::endl;
+      xout["error"] << name << "(index " << i << ") - This component has already been installed!" << std::endl;
+      return 1;
+    }
+    else
+    {
+      map.insert( CreatorMapEntryType( key, creator ) );
+      return 0;
+    }
+
+  } // end SetCreator
+
+
+  /**
+   * *********************** SetIndex *****************************
+   */
+
+  int ComponentDatabase::SetIndex(
+      const PixelTypeDescriptionType & fixedPixelType,
+      ImageDimensionType fixedDimension,  
+      const PixelTypeDescriptionType & movingPixelType,
+      ImageDimensionType movingDimension,
+      IndexType i )
+  {   
+    /** Get the map.*/
+    IndexMapType & map = GetIndexMap();
+    
+    /** Make a key with the input arguments.*/
+    ImageTypeDescriptionType fixedImage( fixedPixelType, fixedDimension );
+    ImageTypeDescriptionType movingImage( movingPixelType, movingDimension );
+    IndexMapKeyType key( fixedImage, movingImage );
+
+    /** Insert the key+index in the map, if it hadn't been done before yet.*/ 
+    if ( map.count(key) ) //==1
+    {
+      xout["error"] << "Error:" << std::endl;
+      xout["error"] << "FixedImageType: " << fixedDimension << "D " << fixedPixelType << std::endl;
+      xout["error"] << "MovingImageType: " << movingDimension << "D " << movingPixelType << std::endl;
+      xout["error"] << "Elastix already supports this combination of ImageTypes!" << std::endl;
+      return 1;
+    }
+    else
+    {
+      map.insert( IndexMapEntryType( key, i ) );
+      return 0;
+    }
+
+  } // end SetIndex
+
+
+  /**
+   * *********************** GetCreator ***************************
+   */
+
+  ComponentDatabase::PtrToCreator ComponentDatabase::GetCreator(
+    const ComponentDescriptionType & name,
+    IndexType i )
+  {
+    /** Get the map */
+    CreatorMapType map = GetCreatorMap();
+
+    /** Make a key with the input arguments */
+    CreatorMapKeyType key( name, i );
+
+    /** Check if this key has been defined. If yes, return the 'creator'
+     * that is linked to it.
+     */
+    if ( map.count( key ) == 0 ) // of gewoon !map.count( key ) als boven??
+    {
+      xout["error"] << "Error: " << std::endl;
+      xout["error"] << name << "(index " << i << ") - This component is not installed!" << std::endl;
+      return 0;
+    }
+    else
+    {
+      return map[ key ];
+    }
+
+  } // end GetCreator
+
+
+  /**
+   * ************************* GetIndex ***************************
+   */
+
+  ComponentDatabase::IndexType ComponentDatabase::GetIndex(
+    const PixelTypeDescriptionType & fixedPixelType,
+    ImageDimensionType fixedDimension,  
+    const PixelTypeDescriptionType & movingPixelType,
+    ImageDimensionType movingDimension )
+  {
+    /** Get the map */
+    IndexMapType map = GetIndexMap();
+    
+    /** Make a key with the input arguments */
+    ImageTypeDescriptionType fixedImage( fixedPixelType, fixedDimension );
+    ImageTypeDescriptionType movingImage( movingPixelType, movingDimension );
+    IndexMapKeyType key( fixedImage, movingImage );
+
+    /** Check if this key has been defined. If yes, return the 'index'
+     * that is linked to it.
+     */
+    if ( map.count( key ) == 0 )  // of gewoon !map.count( key ) als boven??
+    {
+      xout["error"] << "Error:" << std::endl;
+      xout["error"] << "FixedImageType: " << fixedDimension << "D " << fixedPixelType << std::endl;
+      xout["error"] << "MovingImageType: " << movingDimension << "D " << movingPixelType << std::endl;
+      xout["error"] << "Elastix does not support this combination of ImageTypes!" << std::endl;
+      xout["error"] << "Add the combination in /ElastixCore/elxSupportedImageTypes.h and recompile!" << std::endl;
+      return 0;
+    }
+    else
+    {
+      return map[ key ];
+    }
+
+  } // end GetIndex
+
+
+
+
+} // end namespace elastix
+
+
+#endif // end ifndef __elxComponentDatabase_cxx
+

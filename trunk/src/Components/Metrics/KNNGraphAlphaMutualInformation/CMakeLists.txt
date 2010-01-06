@@ -1,0 +1,15 @@
+
+
+ADD_ELXCOMPONENT( KNNGraphAlphaMutualInformationMetric
+ elxKNNGraphAlphaMutualInformationMetric.h
+ elxKNNGraphAlphaMutualInformationMetric.hxx
+ elxKNNGraphAlphaMutualInformationMetric.cxx
+ itkKNNGraphAlphaMutualInformationImageToImageMetric.h
+ itkKNNGraphAlphaMutualInformationImageToImageMetric.txx
+)
+
+IF( USE_KNNGraphAlphaMutualInformationMetric )
+  TARGET_LINK_LIBRARIES( KNNGraphAlphaMutualInformationMetric KNNlib ANNlib)
+ENDIF( USE_KNNGraphAlphaMutualInformationMetric )
+
+

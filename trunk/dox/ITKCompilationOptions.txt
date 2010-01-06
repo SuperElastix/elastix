@@ -1,0 +1,20 @@
+elastix 4.2 compiles with ITK 3.16 compiled with the following options:
+
+
+ITK_USE_OPTIMIZED_REGISTRATION_METHODS                false
+  Has probably no effect, since elastix implements its own versions of the metrics.
+
+ITK_USE_ORIENTED_IMAGE_DIRECTION											true
+ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE										true
+  elastix does use image direction cosines (orientation)when you set the option (UseDirectionCosines "true") in your parameter file. By default the direction cosines are internally set to the identity, for backward compatibility. However, (UseDirectionCosines "true") is the recommended setting, but should be explicitely set.
+
+ITK_USE_REVIEW																				true
+  We use some classes from the Review directory.
+
+ITK_USE_REVIEW_STATISTICS															true
+  If set to false, elastix does not compile, since the KNN component depends on the new statistics implementation of ITK.
+
+ITK_USE_CENTERED_PIXEL_COORDINATES_CONSISTENTLY				true
+  If you need consistency with previous elastix version set it to false.
+  If set to true you get different registration results. However, the results may be different, not wrong. We have not tested this yet. In fact, it is conceptually better to set this option to true.
+

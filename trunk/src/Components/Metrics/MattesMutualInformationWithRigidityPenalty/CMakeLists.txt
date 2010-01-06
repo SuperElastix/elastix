@@ -1,0 +1,12 @@
+
+
+ADD_ELXCOMPONENT( MattesMutualInformationWithRigidityPenalty
+ elxMattesMutualInformationWithRigidityPenalty.h
+ elxMattesMutualInformationWithRigidityPenalty.hxx
+ elxMattesMutualInformationWithRigidityPenalty.cxx
+ itkMattesMutualInformationImageToImageMetricWithRigidityPenalty.h 
+ itkMattesMutualInformationImageToImageMetricWithRigidityPenalty.hxx
+ itkRigidityPenaltyTermMetric.h
+ itkRigidityPenaltyTermMetric.txx
+ itkCombinedImageToImageMetric.h
+ itkCombinedImageToImageMetric.hxx)

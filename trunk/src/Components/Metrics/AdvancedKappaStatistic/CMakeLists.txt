@@ -1,0 +1,10 @@
+
+
+ADD_ELXCOMPONENT( AdvancedKappaStatisticMetric
+ elxAdvancedKappaStatisticMetric.h
+ elxAdvancedKappaStatisticMetric.hxx
+ elxAdvancedKappaStatisticMetric.cxx
+ itkAdvancedKappaStatisticImageToImageMetric.h
+ itkAdvancedKappaStatisticImageToImageMetric.hxx )
+
+

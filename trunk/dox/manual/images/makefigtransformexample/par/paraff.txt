@@ -1,0 +1,77 @@
+//affine
+
+//ImageTypes
+(FixedInternalImagePixelType "float")
+(FixedImageDimension 2)
+(MovingInternalImagePixelType "float")
+(MovingImageDimension 2)
+
+//Components
+(Registration "MultiResolutionRegistration")
+(FixedImagePyramid "FixedSmoothingImagePyramid")
+(MovingImagePyramid "MovingSmoothingImagePyramid")
+(Interpolator "BSplineInterpolator")
+(Metric "AdvancedMattesMutualInformation")
+(Optimizer "AdaptiveStochasticGradientDescent")
+(ResampleInterpolator "FinalBSplineInterpolator")
+(Resampler "DefaultResampler")
+(Transform "AffineTransform")
+
+(AutomaticScalesEstimation "true")
+
+(ResultImagePixelType "short")
+
+(ErodeMask "false" "false" "false")
+
+(HowToCombineTransforms "Compose")
+
+(FixedKernelBSplineOrder 1 1 1)
+(MovingKernelBSplineOrder 3 3 3)
+
+
+(AutomaticTransformInitialization "false")
+
+(NumberOfResolutions 3)
+
+(WriteTransformParametersEachIteration "false")
+
+(NewSamplesEveryIteration "true")
+(ShowExactMetricValue "false")
+(ImageSampler "RandomCoordinate")
+(FixedImageBSplineInterpolationOrder 1)
+(UseRandomSampleRegion "false" )
+(SampleRegionSize 70.0)
+
+//Maximum number of iterations in each resolution level:
+(MaximumNumberOfIterations 500)
+
+//Number of grey level bins in each resolution level:
+(NumberOfFixedHistogramBins 32)
+(NumberOfMovingHistogramBins 32 )
+
+//Number of spatial samples used to compute the mutual information in each resolution level:
+(NumberOfSpatialSamples 2000 2000 2000)
+
+//Order of B-Spline interpolation used in each resolution level:
+(BSplineInterpolationOrder 1 1 1)
+
+//Order of B-Spline interpolation used for applying the final deformation:
+(FinalBSplineInterpolationOrder 3)
+
+//Default pixel value for pixels that come from outside the picture:
+(DefaultPixelValue 0)
+
+(UseCruzAcceleration "true" )
+(AutomaticParameterEstimation "true")
+(MaximumStepLength 1.0 1.0 1.0 )
+
+//SP: Param_A in each resolution level. a_k = a/(A+k+1)^alpha
+(SP_A 20.0)
+
+//SP: Param_alpha in each resolution level. a_k = a/(A+k+1)^alpha
+(SP_alpha 1.0)
+
+(FiniteDifferenceDerivative "false")
+
+
+

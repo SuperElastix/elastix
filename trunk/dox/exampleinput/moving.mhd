@@ -1,0 +1,9 @@
+ObjectType = Image
+NDims = 2
+BinaryData = True
+BinaryDataByteOrderMSB = False
+Color = 1 0 0 1
+ElementSpacing = 1 1
+DimSize = 256 256
+ElementType = MET_SHORT
+ElementDataFile = moving.raw
