@@ -20,7 +20,6 @@
 #include "itkBSplineInterpolateImageFunction.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 
-
 namespace itk
 {
 
@@ -30,6 +29,8 @@ namespace itk
    *
    * This image sampler generates not only samples that correspond with 
    * pixel locations, but selects points in physical space.
+	 *
+	 * \ingroup ImageSamplers
    */
 
   template < class TInputImage >

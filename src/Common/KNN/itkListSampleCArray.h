@@ -34,7 +34,7 @@ namespace Statistics
    * \todo: the second template argument should be removed, since the GetMeasurementVector
    * method is incorrect when TMeasurementVector::ValueType != TInternalValue.
    *  
-   * \ingroup Metrics?
+   * \ingroup Miscellaneous
    */
   
   template < class TMeasurementVector, class TInternalValue = typename TMeasurementVector::ValueType >

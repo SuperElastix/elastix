@@ -27,7 +27,7 @@ namespace itk
    * \brief 
    *
    * 
-   * \ingroup Metrics?
+   * \ingroup ANNwrap
    */
   
   template < class TListSample >

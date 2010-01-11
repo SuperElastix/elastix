@@ -9,6 +9,12 @@ Common contains different types of common functionality.
 */
 
 /**
+\defgroup ANNwrap ANNwrap
+\ingroup Common
+Classes that serve as a wrap around the ANN library.
+*/
+
+/**
 \defgroup Miscellaneous Miscellaneous
 \ingroup Common
 The Miscellaneous contains everything else.
@@ -41,6 +47,12 @@ xout contains functionality to print all output of the program to whatever.
  \defgroup Components Components
 
 Components contains the different registration components.
+*/
+
+/**
+\defgroup ImageSamplers ImageSamplers
+\ingroup Components
+ImageSamplers determine how the fixed image is sampled during the registration process. Examples are Random or Full (all voxels).
 */
 
 /**

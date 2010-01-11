@@ -33,6 +33,9 @@ namespace itk
    *    index coordinates. \n
    *    example: <tt>(SampleGridSpacing 4 4 4)</tt> \n
    *    Default is 2 in each dimension.
+	 *
+	 *
+	 * \ingroup ImageSamplers
    */
 
   template < class TInputImage >
