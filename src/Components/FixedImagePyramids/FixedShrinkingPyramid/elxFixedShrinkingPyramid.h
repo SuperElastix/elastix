@@ -29,7 +29,7 @@ using namespace itk;
    *
    * The parameters used in this class are:
    * \parameter FixedImagePyramid: Select this pyramid as follows:\n
-   *    <tt>(FixedImagePyramid "FixedImageShrinkingPyramid")</tt>
+   *    <tt>(FixedImagePyramid "FixedShrinkingImagePyramid")</tt>
    *
    * \ingroup ImagePyramids
    */
@@ -62,7 +62,7 @@ using namespace itk;
     
     /** Name of this class.
      * Use this name in the parameter file to select this specific pyramid. \n
-     * example: <tt>(FixedImagePyramid "FixedImageShrinkingPyramid")</tt>\n
+     * example: <tt>(FixedImagePyramid "FixedShrinkingImagePyramid")</tt>\n
      */
     elxClassNameMacro( "FixedShrinkingImagePyramid" );
 

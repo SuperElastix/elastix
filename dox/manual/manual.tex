@@ -1,7 +1,7 @@
 \documentclass[]{report}
 
 % Define page
-\usepackage[top=1in, bottom=1in, left=1.5in, right=1.5in]{geometry}
+\usepackage[top=1in, bottom=1in, left=1in, right=1in]{geometry}
 \linespread{1.1}
 
 % For math
@@ -818,6 +818,10 @@ down-sampling.
 \item[Gaussian scale space:] (\texttt{FixedSmoothingImagePyramid} and
 \texttt{MovingSmoothingImagePyramid}) Applies smoothing and
 \emph{no} down-sampling.
+
+\item[Shrinking pyramid:] (\texttt{FixedShrinkingImagePyramid} and
+\texttt{MovingShrinkingImagePyramid}) Applies \emph{no} smoothing,
+but only down-sampling.
 \end{description}
 
 Figure~\ref{fig:multiresolution} shows the Gaussian pyramid with and
@@ -901,22 +905,23 @@ coefficient (DSC) is used:
   \mathrm{DSC}(X,Y) = \frac{2 |X \cap Y|}{|X|+|Y|},
 \end{equation}
 where $X$ and $Y$ represent the binary label images, and $|\cdot|$
-denotes the number of voxels that equal 1. A higher DSC indicates
-a better correspondence. A value of 1 indicates perfect overlap, a
+denotes the number of voxels that equal 1. A higher DSC indicates a
+better correspondence. A value of 1 indicates perfect overlap, a
 value of 0 means no overlap at all. Also the Tannimoto (TC)
-coefficient is used often. It is related to the $DSC$ by
-$DSC=2TC/(TC+1)$. See also \cite{Cru06:Generalized}. It is
-important to realise that the surface-volume ratio of the
-segmented structures influences the overlap values you typically
-get \citep{Roh04:Evaluation}. A value of $DSC=0.8$ would be very
-good for the overlap of complex vessel structures. For large
-spherical objects though, an overlap $<0.9$ is in general not very
-good. What is good enough depends of course on your application.
+coefficient is used often. It is related to the DSC by
+$\mathrm{DSC}=2\mathrm{TC}/(\mathrm{TC}+1)$. See also
+\cite{Cru06:Generalized}. It is important to realise that the
+surface-volume ratio of the segmented structures influences the
+overlap values you typically get \citep{Roh04:Evaluation}. A value
+of $\mathrm{DSC}=0.8$ would be very good for the overlap of complex
+vessel structures. For large spherical objects though, an overlap
+$<0.9$ is in general not very good. What is good enough depends of
+course on your application.
 
 \item Compute the distance after registration between points that you know correspond.
 You can obtain corresponding points by manually clicking them in the
 fixed and the moving image. A less time-consuming option is the
-semi-automated approach of Murphy \etal \cite{Murphy08}, which is
+semi-automated approach of Murphy \etal\ \cite{Murphy08}, which is
 designed for finding corresponding points in the lung. Ideally, the
 registration has found the same correspondence as the ground truth.
 
@@ -1055,7 +1060,7 @@ freely available. In this section, we assume you use the Microsoft Visual C++
 \begin{enumerate}
 \item Download and install CMake: \url{www.cmake.org}.
 
-\item Download and compile the ITK version 3.14: \url{www.itk.org}. Make
+\item Download and compile the ITK version 3.16: \url{www.itk.org}. Make
     sure to set the (advanced) CMake variable \texttt{ITK\_USE\_REVIEW} to
     \texttt{ON} and \texttt{ITK\_USE\_REVIEW\_STATISTICS} to \texttt{ON}.
     On Linux systems with the GCC compiler: set \texttt{CMAKE\_BUILD\_TYPE}
@@ -1198,15 +1203,18 @@ as follows:
 \texttt{(ParameterName value(s))}
 \end{quote}
 So parameters are provided between brackets, first the name,
-followed by one or more values. If the value is of type string
-then the values need to be quoted: \texttt{(ParameterName "value1"
-... "valueN")}. If the values are of floating type, then at least
-one value behind the decimal point need to be given:
-\texttt{(ParameterName 1.3 3.0)}. Comments can be provided by
-starting the line with `\texttt{//}'. A minimal example of a valid
-parameter file is given in Appendix \ref{chp:ExampleParam}. A list
-of available parameters for each class is given at
-\texttt{http://elastix.isi.uu.nl/doxygen/parameter.html}.
+followed by one or more values. If the value is of type string then
+the values need to be quoted:
+\begin{quote}
+\texttt{(ParameterName "value1" ... "valueN")}
+\end{quote}
+Comments can be provided by starting the line with `\texttt{//}'. A
+minimal example of a valid parameter file is given in Appendix
+\ref{chp:ExampleParam}. A list of available parameters for each
+class is given at
+\url{http://elastix.isi.uu.nl/doxygen/parameter.html}. Examples of
+parameter files can be found at the wiki:
+\url{http://elastix.bigr.nl/wiki/index.php/Parameter_file_database}.
 
 Since the choice of the several components and the parameter values
 define the registration, it is very important to set them wisely.
@@ -1467,15 +1475,17 @@ your input images, but in our experience 32 is usually ok:
 
 \subsection{Sampler}\label{sec:samplertuning}
 
-The \texttt{RandomCoordinate} sampler works well in conjunction with the
-\texttt{StandardGradientDescent} and \texttt{AdaptiveStochasticGradientDescent}
-optimisers, which are the recommended optimisation routines. These optimisation
-methods can be used with a small amount of samples, randomly selected in every
-iteration, see Section \ref{sec:comp:optimiser}, which significantly decreases
-registration time. Set the \texttt{NumberOfSpatialSamples} to 3000. Don't go
-lower than 2000. Compared to samplers that draw samples on the voxel-grid (such
-as the \texttt{Random} sampler), the \texttt{RandomCoordinate} sampler avoids
-what is known as the grid-effect \citep{The08:Halton}.
+The \texttt{RandomCoordinate} sampler works well in conjunction with
+the \texttt{StandardGradientDescent} and\\
+\texttt{AdaptiveStochasticGradientDescent} optimisers, which are the
+recommended optimisation routines. These optimisation methods can be
+used with a small amount of samples, randomly selected in every
+iteration, see Section \ref{sec:comp:optimiser}, which significantly
+decreases registration time. Set the \texttt{NumberOfSpatialSamples}
+to 3000. Don't go lower than 2000. Compared to samplers that draw
+samples on the voxel-grid (such as the \texttt{Random} sampler), the
+\texttt{RandomCoordinate} sampler avoids what is known as the
+grid-effect \citep{The08:Halton}.
 
 An important option for the random samplers, discussed in
 Section~\ref{sec:optimizertuning} is:
@@ -1578,19 +1588,18 @@ also possible to specify the grid in voxel units:
 If the final B-spline grid spacing is chosen high, then you cannot
 match small structures. On the other hand, if the grid spacing is
 chosen very low, then small structures can be matched, but you
-possibly allow the transformation to have too much freedom. This
-can result in irregular transformations, especially on homogenous
-parts of your image, since there are no edges (or other
-information) at such areas that can guide the registration. A
-penalty or regularisation term, see Equation
-(\ref{eq:registration2}), can help to avoid these problems. It is
-hard to recommend a value for the final grid spacing, since it
-depends on the desired accuracy. But we can try: if you are
-interested in somewhat larger structures, you could set it too 32
-voxels, for matching smaller structures you could go down to 16 or
-8 voxels, or even up to 4. The last choice will maybe require some
-regularisation term, unless maybe if you have carefully and
-gradually refined the grid spacing.
+possibly allow the transformation to have too much freedom. This can
+result in irregular transformations, especially on homogenous parts
+of your image, since there are no edges (or other information) at
+such areas that can guide the registration. A penalty or
+regularisation term, see Equation (\ref{eq:registration2}), can help
+to avoid these problems. It is hard to recommend a value for the
+final grid spacing, since it depends on the desired accuracy. But we
+can try: if you are interested in somewhat larger structures, you
+could set it to 32 voxels, for matching smaller structures you could
+go down to 16 or 8 voxels, or even up to 4. The last choice will
+maybe require some regularisation term, unless maybe if you have
+carefully and gradually refined the grid spacing.
 
 To specify a multi-grid schedule use the \texttt{GridSpacingSchedule}
 command:
