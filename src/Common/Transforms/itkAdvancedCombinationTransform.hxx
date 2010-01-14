@@ -75,7 +75,8 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
  */
 
 template <typename TScalarType, unsigned int NDimensions>
-unsigned int AdvancedCombinationTransform<TScalarType, NDimensions>
+unsigned int
+AdvancedCombinationTransform<TScalarType, NDimensions>
 ::GetNumberOfParameters( void ) const
 { 
   /** Return the number of parameters that completely define
@@ -130,7 +131,8 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
  */
 
 template <typename TScalarType, unsigned int NDimensions>
-bool AdvancedCombinationTransform<TScalarType, NDimensions>
+bool
+AdvancedCombinationTransform<TScalarType, NDimensions>
 ::IsLinear( void ) const
 { 
   bool currentLinear = true;
@@ -177,11 +179,38 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
 
 
 /**
+ * ***************** GetFixedParameters **************************
+ */
+
+template <typename TScalarType, unsigned int NDimensions>
+const typename AdvancedCombinationTransform<TScalarType, NDimensions>::ParametersType &
+AdvancedCombinationTransform<TScalarType, NDimensions>
+::GetFixedParameters( void ) const
+{ 
+  /** Return the fixed parameters that define the m_CurrentTransform. */
+  if ( this->m_CurrentTransform.IsNotNull() )
+  {
+    return this->m_CurrentTransform->GetFixedParameters();
+  }
+  else
+  {
+    /** Throw an exception. */
+    this->NoCurrentTransformSet();
+    
+    /** dummy return. */
+    return this->m_FixedParameters;
+  }
+
+} // end GetFixedParameters()
+
+
+/**
  * ***************** SetParameters **************************
  */
 
 template <typename TScalarType, unsigned int NDimensions>
-void AdvancedCombinationTransform<TScalarType, NDimensions>
+void
+AdvancedCombinationTransform<TScalarType, NDimensions>
 ::SetParameters( const ParametersType & param )
 { 
   /** Set the parameters in the m_CurrentTransform. */
@@ -200,11 +229,36 @@ void AdvancedCombinationTransform<TScalarType, NDimensions>
 
 
 /**
+ * ***************** SetFixedParameters **************************
+ */
+
+template <typename TScalarType, unsigned int NDimensions>
+void
+AdvancedCombinationTransform<TScalarType, NDimensions>
+::SetFixedParameters( const ParametersType & param )
+{ 
+  /** Set the parameters in the m_CurrentTransform. */
+  if ( this->m_CurrentTransform.IsNotNull() )
+  {
+    this->Modified();
+    this->m_CurrentTransform->SetFixedParameters( param );
+  }
+  else
+  {
+    /** Throw an exception. */
+    this->NoCurrentTransformSet();
+  }
+
+} // end SetFixedParameters()
+
+
+/**
  * ***************** SetParametersByValue **************************
  */
 
 template <typename TScalarType, unsigned int NDimensions>
-void AdvancedCombinationTransform<TScalarType, NDimensions>
+void
+AdvancedCombinationTransform<TScalarType, NDimensions>
 ::SetParametersByValue( const ParametersType & param )
 { 
   /** Set the parameters in the m_CurrentTransfom. */
@@ -227,7 +281,8 @@ void AdvancedCombinationTransform<TScalarType, NDimensions>
  */
 
 template <typename TScalarType, unsigned int NDimensions>
-bool AdvancedCombinationTransform<TScalarType, NDimensions>
+bool
+AdvancedCombinationTransform<TScalarType, NDimensions>
 ::GetInverse( Self * inverse ) const
 { 
   if( !inverse )

@@ -130,6 +130,9 @@ public:
   /** Get the transformation parameters from the CurrentTransform. */
   virtual const ParametersType & GetParameters( void ) const;
 
+  /** Get the fixed parameters from the CurrentTransform. */
+  virtual const ParametersType & GetFixedParameters( void ) const;
+
   /** Set the transformation parameters in the CurrentTransform. */
   virtual void SetParameters( const ParametersType & param );
 
@@ -137,6 +140,9 @@ public:
    * This method forces the transform to copy the parameters.
    */
   virtual void SetParametersByValue( const ParametersType & param );
+
+  /** Set the fixed parameters in the CurrentTransform. */
+  virtual void SetFixedParameters( const ParametersType & fixedParam );
 
   /** Return the inverse \f$T^{-1}\f$ of the transform.
    *  This is only possible when:
