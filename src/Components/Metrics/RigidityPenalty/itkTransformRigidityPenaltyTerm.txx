@@ -141,6 +141,8 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
     localBSplineTransform->GetGridSpacing() );
   this->m_RigidityCoefficientImage->SetOrigin(
     localBSplineTransform->GetGridOrigin() );
+  this->m_RigidityCoefficientImage->SetDirection(
+    localBSplineTransform->GetGridDirection() );
   this->m_RigidityCoefficientImage->Allocate();
 
   if ( !this->m_UseFixedRigidityImage && !this->m_UseMovingRigidityImage )
