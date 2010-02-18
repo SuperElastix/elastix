@@ -32,17 +32,79 @@ template <class TElastix>
 AdvancedBSplineTransform<TElastix>
 ::AdvancedBSplineTransform()
 {
-  /** Initialize. */
-  this->m_BSplineTransform = BSplineTransformType::New();
-  this->SetCurrentTransform( this->m_BSplineTransform );
-
-  this->m_GridScheduleComputer = GridScheduleComputerType::New();
-  this->m_GridScheduleComputer->SetBSplineOrder( SplineOrder );
-
-  this->m_GridUpsampler = GridUpsamplerType::New();
-  this->m_GridUpsampler->SetBSplineOrder( SplineOrder );
 
 } // end Constructor()
+
+/**
+ * ******************* BeforeAll ***********************
+ */
+
+template <class TElastix>
+int AdvancedBSplineTransform<TElastix>
+::BeforeAll( void )
+{
+  /** Read spline order and periodicity setting from configuration file. */
+  m_SplineOrder = 3;
+  this->GetConfiguration()->ReadParameter( m_SplineOrder,
+    "BSplineTransformSplineOrder", this->GetComponentLabel(), 0, 0, true );
+  m_Periodic = false;
+  this->GetConfiguration()->ReadParameter( m_Periodic,
+    "UseTransformPeriodicity", this->GetComponentLabel(), 0, 0, true );
+    
+  /** Initialize the right BSplineTransform and GridScheduleComputer. */
+  if ( m_Periodic ) 
+  {
+    this->m_GridScheduleComputer = PeriodicGridScheduleComputerType::New();
+    this->m_GridScheduleComputer->SetBSplineOrder( m_SplineOrder );
+
+    if ( m_SplineOrder == 1) 
+    {
+      this->m_BSplineTransform = PeriodicBSplineTransformLinearType::New();
+    }
+    else if ( m_SplineOrder == 2)
+    {
+      this->m_BSplineTransform = PeriodicBSplineTransformQuadraticType::New();
+    }
+    else if ( m_SplineOrder == 3)
+    {
+      this->m_BSplineTransform = PeriodicBSplineTransformCubicType::New();
+    } 
+    else 
+    {
+      itkExceptionMacro( << "ERROR: The provided spline order is not supported." );
+      return 1;
+    }
+  }
+  else
+  {
+    this->m_GridScheduleComputer = GridScheduleComputerType::New();
+    this->m_GridScheduleComputer->SetBSplineOrder( m_SplineOrder );
+
+    if ( m_SplineOrder == 1) 
+    {
+      this->m_BSplineTransform = BSplineTransformLinearType::New();
+    }
+    else if ( m_SplineOrder == 2)
+    {
+      this->m_BSplineTransform = BSplineTransformQuadraticType::New();
+    }
+    else if ( m_SplineOrder == 3)
+    {
+      this->m_BSplineTransform = BSplineTransformCubicType::New();
+    } 
+    else 
+    {
+      itkExceptionMacro( << "ERROR: The provided spline order is not supported." );
+      return 1;
+    }
+  }
+
+  this->SetCurrentTransform( this->m_BSplineTransform );
+  this->m_GridUpsampler = GridUpsamplerType::New();
+  this->m_GridUpsampler->SetBSplineOrder( m_SplineOrder );
+  
+  return 0;
+}
 
 
 /**
@@ -75,6 +137,11 @@ void AdvancedBSplineTransform<TElastix>
   gridindex.Fill( 0 );
   gridspacing.Fill( 1.0 );
   gridorigin.Fill( 0.0 );
+  
+  /** Set gridsize for large dimension to 4 to prevent errors when checking
+     * on support region size.
+     */
+  gridsize.SetElement( gridsize.GetSizeDimension()-1, 4 );
 
   /** Set it all. */
   gridregion.SetIndex( gridindex );
@@ -277,6 +344,16 @@ void AdvancedBSplineTransform<TElastix>
       << " numberOfResolutions, or the numberOfResolutions * ImageDimension."
       << std::endl;
     itkExceptionMacro( << "ERROR: Invalid GridSpacingSchedule!" );
+  }
+  
+  /** Output a warning that the gridspacing may be adapted to fit the Periodic
+     * behavior of the transform.
+     */
+  if ( m_Periodic )
+  {
+    xl::xout["warning"] 
+         << "WARNING: The provided grid spacing may be adapted to fit the Periodic "
+         << "behavior of the PeriodicBSplineTransform." << std::endl;
   }
 
   /** Set the grid schedule and final grid spacing in the schedule computer. */
