@@ -498,28 +498,32 @@ namespace itk
     if ( this->m_SubtractMean )
     {
       /** Update derivative per dimension. */
+      unsigned int lastDimGridSize = this->m_GridSize[ lastDim ];
       unsigned int numParametersPerDimension = this->GetNumberOfParameters() / this->GetFixedImage()->GetImageDimension();
+      unsigned int numSpatialParametersPerDimension = numParametersPerDimension / lastDimGridSize;
+      DerivativeType mean ( numSpatialParametersPerDimension );
       for ( unsigned int d = 0; d < this->GetFixedImage()->GetImageDimension(); ++d )
       {
         /** Compute mean per dimension. */
-        DerivativeType mean ( numParametersPerDimension );
         mean.Fill( 0.0 );
         unsigned int starti = numParametersPerDimension * d;
-        for ( unsigned int i = starti, ii = 0; i < starti + numParametersPerDimension; ++i, ++ii )
+        for ( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
         {       
-          mean[ ii ] += derivative[ i ];
+          const unsigned int index = i % numSpatialParametersPerDimension;
+          mean[ index ] += derivative[ i ];
         }
-        mean /= static_cast< double >( numParametersPerDimension );
+        mean /= static_cast< double >( lastDimGridSize );
 
         /** Update derivative per dimension. */
-        for ( unsigned int i = starti, ii = 0; i < starti + numParametersPerDimension; ++i, ++ii )
+        for ( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
         {       
-          derivative[ i ] -= mean[ ii ];
+          const unsigned int index = i % numSpatialParametersPerDimension;
+          derivative[ i ] -= mean[ index ];
         }
       } 
     }
 
-    /** Return the mean squares measure value. */
+    /** Return the measure value. */
     value = measure;
 
   } // end GetValueAndDerivative()

@@ -17,6 +17,7 @@
 
 #include "elxIncludes.h"
 #include "itkVarianceOverLastDimensionImageMetric.h"
+#include "itkAdvancedBSplineDeformableTransform.h"
 
 #include "elxTimer.h"
 
@@ -56,7 +57,7 @@ using namespace itk;
   public:
 
     /** Standard ITK-stuff. */
-    typedef VarianceOverLastDimensionMetric                             Self;
+    typedef VarianceOverLastDimensionMetric               Self;
     typedef VarianceOverLastDimensionImageMetric<
       typename MetricBase<TElastix>::FixedImageType,
       typename MetricBase<TElastix>::MovingImageType >    Superclass1;
@@ -79,6 +80,7 @@ using namespace itk;
     /** Typedefs from the superclass. */
     typedef typename 
       Superclass1::CoordinateRepresentationType              CoordinateRepresentationType;
+    typedef typename Superclass1::ScalarType                 ScalarType;
     typedef typename Superclass1::MovingImageType            MovingImageType;
     typedef typename Superclass1::MovingImagePixelType       MovingImagePixelType;
     typedef typename Superclass1::MovingImageConstPointer    MovingImageConstPointer;
@@ -138,6 +140,14 @@ using namespace itk;
     typedef typename Superclass2::RegistrationType          RegistrationType;
     typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
     typedef typename Superclass2::ITKBaseType               ITKBaseType;
+    
+    /** Typedef's for the B-spline transform. */
+    typedef AdvancedBSplineDeformableTransform<
+      ScalarType, FixedImageDimension, 3 >          BSplineTransformCubicType;
+    typedef AdvancedBSplineDeformableTransform<
+      ScalarType, FixedImageDimension, 2 >          BSplineTransformQuadraticType;
+    typedef AdvancedCombinationTransform<
+      ScalarType, FixedImageDimension >             CombinationTransformType;
       
     /** Typedef for timer. */
     typedef tmr::Timer          TimerType;

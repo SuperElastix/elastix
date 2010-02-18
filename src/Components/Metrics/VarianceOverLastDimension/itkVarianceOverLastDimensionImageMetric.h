@@ -52,11 +52,14 @@ class VarianceOverLastDimensionImageMetric :
 public:
 
   /** Standard class typedefs. */
-  typedef VarianceOverLastDimensionImageMetric        Self;
+  typedef VarianceOverLastDimensionImageMetric    Self;
   typedef AdvancedImageToImageMetric<
     TFixedImage, TMovingImage >                   Superclass;
   typedef SmartPointer<Self>                      Pointer;
   typedef SmartPointer<const Self>                ConstPointer;
+  
+  typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
+  typedef typename FixedImageRegionType::SizeType         FixedImageSizeType;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -70,6 +73,7 @@ public:
   itkSetMacro( NumAdditionalSamplesFixed, unsigned int );
   itkSetMacro( ReducedDimensionIndex, unsigned int );
   itkSetMacro( SubtractMean, bool );
+  itkSetMacro( GridSize, FixedImageSizeType );
 
   /** Get functions. */
   itkGetConstMacro(SampleLastDimensionRandomly, bool);
@@ -83,7 +87,6 @@ public:
   typedef typename Superclass::MovingImageConstPointer    MovingImageConstPointer;
   typedef typename Superclass::FixedImageType             FixedImageType;
   typedef typename Superclass::FixedImageConstPointer     FixedImageConstPointer;
-  typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
   typedef typename Superclass::TransformType              TransformType;
   typedef typename Superclass::TransformPointer           TransformPointer;
   typedef typename Superclass::InputPointType             InputPointType;
@@ -192,6 +195,9 @@ private:
 
   /** Initial variance in last dimension, used as normalization factor. */
   float m_InitialVariance;
+  
+  /** GridSize of B-spline transform. */
+  FixedImageSizeType m_GridSize;
 
 }; // end class VarianceOverLastDimensionImageMetric
 

@@ -101,8 +101,32 @@ using namespace itk;
         << movingImageDerivativeScales << std::endl;
     }
     
+    /** Check if this transform is a B-spline transform. */
+    CombinationTransformType * testPtr1
+      = dynamic_cast<CombinationTransformType *>( this->GetElastix()->GetElxTransformBase() );
+    if ( testPtr1 )
+    {
+      /** Check for quadratic B-spline. */
+      BSplineTransformQuadraticType * testPtr1a = dynamic_cast<BSplineTransformQuadraticType *>(
+        testPtr1->GetCurrentTransform() );
+      if ( testPtr1a )
+      {
+        this->SetGridSize( testPtr1a->GetGridRegion().GetSize() );
+      } 
+      else 
+      {
+        /** Check for cubic B-spline. */
+        BSplineTransformCubicType * testPtr1b = dynamic_cast<BSplineTransformCubicType *>(
+          testPtr1->GetCurrentTransform() );
+        if ( testPtr1b )
+        {
+          this->SetGridSize( testPtr1b->GetGridRegion().GetSize() );
+        }
+      }
+    }
+    
   } // end BeforeEachResolution
-
+  
 } // end namespace elastix
 
 
