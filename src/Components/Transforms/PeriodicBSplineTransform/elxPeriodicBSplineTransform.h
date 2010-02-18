@@ -12,15 +12,15 @@
 
 ======================================================================*/
 
-#ifndef __elxCyclicBSplineTransform_h
-#define __elxCyclicBSplineTransform_h
+#ifndef __elxPeriodicBSplineTransform_h
+#define __elxPeriodicBSplineTransform_h
 
 /* For easy changing the BSplineOrder: */
 #define __VSplineOrder 3
 
-#include "itkCyclicBSplineDeformableTransform.h"
+#include "itkPeriodicBSplineDeformableTransform.h"
 
-#include "itkCyclicGridScheduleComputer.h"
+#include "itkPeriodicGridScheduleComputer.h"
 #include "itkUpsampleBSplineParametersFilter.h"
 
 #include "elxIncludes.h"
@@ -30,13 +30,13 @@ namespace elastix
 using namespace itk;
 
   /**
-   * \class CyclicBSplineTransform
-   * \brief A transform based on the itkCyclicBSplineTransform.
+   * \class PeriodicBSplineTransform
+   * \brief A transform based on the itkPeriodicBSplineTransform.
    * \ingroup Transforms
    */
 
   template < class TElastix >
-  class CyclicBSplineTransform :
+  class PeriodicBSplineTransform :
     public AdvancedCombinationTransform<
     ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,
     elx::TransformBase<TElastix>::FixedImageDimension > ,
@@ -46,7 +46,7 @@ using namespace itk;
   public:
 
     /** Standard ITK-stuff. */
-    typedef CyclicBSplineTransform                  Self;
+    typedef PeriodicBSplineTransform                  Self;
 
     typedef AdvancedCombinationTransform<
       typename elx::TransformBase<TElastix>::CoordRepType,
@@ -58,25 +58,25 @@ using namespace itk;
         
     /** The ITK-class that provides most of the functionality, and
     * that is set as the "CurrentTransform" in the CombinationTransform */
-    typedef CyclicBSplineDeformableTransform<
+    typedef PeriodicBSplineDeformableTransform<
       typename elx::TransformBase<TElastix>::CoordRepType,
       elx::TransformBase<TElastix>::FixedImageDimension,
-      __VSplineOrder >         CyclicBSplineTransformType;
+      __VSplineOrder >         PeriodicBSplineTransformType;
 
-    typedef typename CyclicBSplineTransformType::Pointer 
-                                                CyclicBSplineTransformPointer;
+    typedef typename PeriodicBSplineTransformType::Pointer 
+                                                PeriodicBSplineTransformPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( CyclicBSplineTransform, AdvancedCombinationTransform );
+    itkTypeMacro( PeriodicBSplineTransform, AdvancedCombinationTransform );
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific transform. \n
      * example: <tt>(Transform "BSplineTransform")</tt>\n
      */
-    elxClassNameMacro( "CyclicBSplineTransform" );
+    elxClassNameMacro( "PeriodicBSplineTransform" );
 
     /** Dimension of the fixed image. */
     itkStaticConstMacro( SpaceDimension, unsigned int, 
@@ -101,25 +101,25 @@ using namespace itk;
     typedef typename Superclass1::OutputPointType     OutputPointType;
     
     /** Typedef's specific for the BSplineTransform. */
-    typedef typename CyclicBSplineTransformType::PixelType    PixelType;
-    typedef typename CyclicBSplineTransformType::ImageType    ImageType;
-    typedef typename CyclicBSplineTransformType::ImagePointer ImagePointer;
-    typedef typename CyclicBSplineTransformType::RegionType   RegionType;
-    typedef typename CyclicBSplineTransformType::IndexType    IndexType;
-    typedef typename CyclicBSplineTransformType::SizeType     SizeType;
-    typedef typename CyclicBSplineTransformType::SpacingType  SpacingType;
-    typedef typename CyclicBSplineTransformType::OriginType   OriginType;
-    typedef typename CyclicBSplineTransformType::DirectionType DirectionType;
-    typedef typename CyclicBSplineTransformType::BulkTransformType
+    typedef typename PeriodicBSplineTransformType::PixelType    PixelType;
+    typedef typename PeriodicBSplineTransformType::ImageType    ImageType;
+    typedef typename PeriodicBSplineTransformType::ImagePointer ImagePointer;
+    typedef typename PeriodicBSplineTransformType::RegionType   RegionType;
+    typedef typename PeriodicBSplineTransformType::IndexType    IndexType;
+    typedef typename PeriodicBSplineTransformType::SizeType     SizeType;
+    typedef typename PeriodicBSplineTransformType::SpacingType  SpacingType;
+    typedef typename PeriodicBSplineTransformType::OriginType   OriginType;
+    typedef typename PeriodicBSplineTransformType::DirectionType DirectionType;
+    typedef typename PeriodicBSplineTransformType::BulkTransformType
                                                         BulkTransformType;
-    typedef typename CyclicBSplineTransformType::BulkTransformPointer     
+    typedef typename PeriodicBSplineTransformType::BulkTransformPointer     
                                                         BulkTransformPointer;
-    typedef typename CyclicBSplineTransformType::WeightsFunctionType      
+    typedef typename PeriodicBSplineTransformType::WeightsFunctionType      
                                                         WeightsFunctionType;
-    typedef typename CyclicBSplineTransformType::WeightsType  WeightsType;
-    typedef typename CyclicBSplineTransformType::ContinuousIndexType 
+    typedef typename PeriodicBSplineTransformType::WeightsType  WeightsType;
+    typedef typename PeriodicBSplineTransformType::ContinuousIndexType 
                                                         ContinuousIndexType;
-    typedef typename CyclicBSplineTransformType::ParameterIndexArrayType  
+    typedef typename PeriodicBSplineTransformType::ParameterIndexArrayType  
                                                         ParameterIndexArrayType;
 
     /** Typedef's from TransformBase. */
@@ -137,13 +137,13 @@ using namespace itk;
                                                       CombinationTransformType;
 
     /** Typedef's for the GridScheduleComputer and the UpsampleBSplineParametersFilter. */
-    typedef CyclicGridScheduleComputer<CoordRepType, SpaceDimension >             
+    typedef PeriodicGridScheduleComputer<CoordRepType, SpaceDimension >             
                                                    GridScheduleComputerType;
     typedef typename GridScheduleComputerType::Pointer     
                                                    GridScheduleComputerPointer;
     typedef typename GridScheduleComputerType::VectorGridSpacingFactorType  
                                                    GridScheduleType;
-    typedef UpsampleBSplineParametersFilter<ParametersType, ImageType >     
+    typedef UpsampleBSplineParametersFilter<ParametersType, ImageType >
                                                    GridUpsamplerType;
     typedef typename GridUpsamplerType::Pointer                             
                                                    GridUpsamplerPointer;
@@ -193,10 +193,10 @@ using namespace itk;
   protected:
 
     /** The constructor. */
-    CyclicBSplineTransform();
+    PeriodicBSplineTransform();
 
     /** The destructor. */
-    virtual ~CyclicBSplineTransform() {}
+    virtual ~PeriodicBSplineTransform() {}
 
     /** Read user-specified gridspacing and call the itkGridScheduleComputer. */
     virtual void PreComputeGridInformation( void );
@@ -204,13 +204,13 @@ using namespace itk;
   private:
 
     /** The private constructor. */
-    CyclicBSplineTransform( const Self& );  // purposely not implemented
+    PeriodicBSplineTransform( const Self& );  // purposely not implemented
     /** The private copy constructor. */
     void operator=( const Self& );    // purposely not implemented
 
 
     /** Private variables. */
-    CyclicBSplineTransformPointer  m_CyclicBSplineTransform;
+    PeriodicBSplineTransformPointer  m_PeriodicBSplineTransform;
     GridScheduleComputerPointer    m_GridScheduleComputer;
     GridUpsamplerPointer           m_GridUpsampler;
     
@@ -220,8 +220,8 @@ using namespace itk;
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "elxCyclicBSplineTransform.hxx"
+#include "elxPeriodicBSplineTransform.hxx"
 #endif
 
-#endif // end #ifndef __elxCyclicBSplineTransform_h
+#endif // end #ifndef __elxPeriodicBSplineTransform_h
 

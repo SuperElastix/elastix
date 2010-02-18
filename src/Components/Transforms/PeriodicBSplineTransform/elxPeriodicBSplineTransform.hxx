@@ -12,10 +12,10 @@
 
 ======================================================================*/
 
-#ifndef __elxCyclicBSplineTransform_hxx
-#define __elxCyclicBSplineTransform_hxx
+#ifndef __elxPeriodicBSplineTransform_hxx
+#define __elxPeriodicBSplineTransform_hxx
 
-#include "elxCyclicBSplineTransform.h"
+#include "elxPeriodicBSplineTransform.h"
 
 #include "itkImageRegionExclusionConstIteratorWithIndex.h"
 #include "vnl/vnl_math.h"
@@ -30,12 +30,12 @@ using namespace itk;
    */
   
   template <class TElastix>
-    CyclicBSplineTransform<TElastix>::
-    CyclicBSplineTransform()
+    PeriodicBSplineTransform<TElastix>::
+    PeriodicBSplineTransform()
   {
     /** Initialize. */
-    this->m_CyclicBSplineTransform = CyclicBSplineTransformType::New();
-    this->SetCurrentTransform( this->m_CyclicBSplineTransform );
+    this->m_PeriodicBSplineTransform = PeriodicBSplineTransformType::New();
+    this->SetCurrentTransform( this->m_PeriodicBSplineTransform );
 
     this->m_GridScheduleComputer = GridScheduleComputerType::New();
     this->m_GridScheduleComputer->SetBSplineOrder( SplineOrder );
@@ -51,7 +51,7 @@ using namespace itk;
    */
 
   template <class TElastix>
-    void CyclicBSplineTransform<TElastix>
+    void PeriodicBSplineTransform<TElastix>
     ::BeforeRegistration( void )
   {
     /** Set initial transform parameters to a 1x1x1 grid, with deformation (0,0,0).
@@ -84,9 +84,9 @@ using namespace itk;
     /** Set it all. */
     gridregion.SetIndex( gridindex );
     gridregion.SetSize( gridsize );
-    this->m_CyclicBSplineTransform->SetGridRegion( gridregion );
-    this->m_CyclicBSplineTransform->SetGridSpacing( gridspacing );
-    this->m_CyclicBSplineTransform->SetGridOrigin( gridorigin );
+    this->m_PeriodicBSplineTransform->SetGridRegion( gridregion );
+    this->m_PeriodicBSplineTransform->SetGridSpacing( gridspacing );
+    this->m_PeriodicBSplineTransform->SetGridOrigin( gridorigin );
     
     /** Task 2 - Give the registration an initial parameter-array. */
     ParametersType dummyInitialParameters( this->GetNumberOfParameters() );
@@ -107,7 +107,7 @@ using namespace itk;
    */
 
   template <class TElastix>
-    void CyclicBSplineTransform<TElastix>
+    void PeriodicBSplineTransform<TElastix>
     ::BeforeEachResolution( void )
   {
     /** What is the current resolution level? */
@@ -139,7 +139,7 @@ using namespace itk;
    */
 
   template <class TElastix>
-    void CyclicBSplineTransform<TElastix>::
+    void PeriodicBSplineTransform<TElastix>::
     PreComputeGridInformation( void )
   {
     /** Get the total number of resolution levels. */
@@ -266,12 +266,12 @@ using namespace itk;
       itkExceptionMacro( << "ERROR: Invalid GridSpacingSchedule!" );
     }
 
-    /** Output a warning that the gridspacing may be adapted to fit the cyclic
+    /** Output a warning that the gridspacing may be adapted to fit the periodic
     * behavior of the transform.
     */
     xl::xout["warning"] 
-       << "WARNING: The provided grid spacing may be adapted to fit the cyclic "
-       << "behavior of the CyclicBSplineTransform." << std::endl;
+       << "WARNING: The provided grid spacing may be adapted to fit the periodic "
+       << "behavior of the PeriodicBSplineTransform." << std::endl;
 
     /** Set the grid schedule and final grid spacing in the schedule computer. */
     this->m_GridScheduleComputer->SetFinalGridSpacing( 
@@ -292,7 +292,7 @@ using namespace itk;
    */
 
   template <class TElastix>
-    void CyclicBSplineTransform<TElastix>::
+    void PeriodicBSplineTransform<TElastix>::
     InitializeTransform( void )
   {
     /** Compute the B-spline grid region, origin, and spacing. */
@@ -304,10 +304,10 @@ using namespace itk;
       gridRegion, gridSpacing, gridOrigin, gridDirection );
 
     /** Set it in the BSplineTransform. */
-    this->m_CyclicBSplineTransform->SetGridRegion( gridRegion );
-    this->m_CyclicBSplineTransform->SetGridSpacing( gridSpacing );
-    this->m_CyclicBSplineTransform->SetGridOrigin( gridOrigin );
-    this->m_CyclicBSplineTransform->SetGridDirection( gridDirection );
+    this->m_PeriodicBSplineTransform->SetGridRegion( gridRegion );
+    this->m_PeriodicBSplineTransform->SetGridSpacing( gridSpacing );
+    this->m_PeriodicBSplineTransform->SetGridOrigin( gridOrigin );
+    this->m_PeriodicBSplineTransform->SetGridDirection( gridDirection );
 
     /** Set initial parameters for the first resolution to 0.0. */
     ParametersType initialParameters( this->GetNumberOfParameters() );
@@ -325,7 +325,7 @@ using namespace itk;
    */
 
   template <class TElastix>
-    void CyclicBSplineTransform<TElastix>::
+    void PeriodicBSplineTransform<TElastix>::
     IncreaseScale( void )
   {
     /** What is the current resolution level? */
@@ -333,10 +333,10 @@ using namespace itk;
       this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
     /** The current grid. */
-    OriginType  currentGridOrigin  = this->m_CyclicBSplineTransform->GetGridOrigin();
-    SpacingType currentGridSpacing = this->m_CyclicBSplineTransform->GetGridSpacing();
-    RegionType  currentGridRegion  = this->m_CyclicBSplineTransform->GetGridRegion();
-    DirectionType currentGridDirection = this->m_CyclicBSplineTransform->GetGridDirection();
+    OriginType  currentGridOrigin  = this->m_PeriodicBSplineTransform->GetGridOrigin();
+    SpacingType currentGridSpacing = this->m_PeriodicBSplineTransform->GetGridSpacing();
+    RegionType  currentGridRegion  = this->m_PeriodicBSplineTransform->GetGridRegion();
+    DirectionType currentGridDirection = this->m_PeriodicBSplineTransform->GetGridDirection();
 
     /** The new required grid. */
     OriginType  requiredGridOrigin;
@@ -365,17 +365,17 @@ using namespace itk;
     this->m_GridUpsampler->UpsampleParameters( latestParameters, upsampledParameters );
     
     /** Set the new grid definition in the BSplineTransform. */
-    this->m_CyclicBSplineTransform->SetGridOrigin( requiredGridOrigin );
-    this->m_CyclicBSplineTransform->SetGridSpacing( requiredGridSpacing );
-    this->m_CyclicBSplineTransform->SetGridRegion( requiredGridRegion );
-    this->m_CyclicBSplineTransform->SetGridDirection( requiredGridDirection );  
+    this->m_PeriodicBSplineTransform->SetGridOrigin( requiredGridOrigin );
+    this->m_PeriodicBSplineTransform->SetGridSpacing( requiredGridSpacing );
+    this->m_PeriodicBSplineTransform->SetGridRegion( requiredGridRegion );
+    this->m_PeriodicBSplineTransform->SetGridDirection( requiredGridDirection );  
 
     /** Set the initial parameters for the next level. */
     this->m_Registration->GetAsITKBaseType()->
       SetInitialTransformParametersOfNextLevel( upsampledParameters );
 
     /** Set the parameters in the BsplineTransform. */
-    this->m_CyclicBSplineTransform->SetParameters(
+    this->m_PeriodicBSplineTransform->SetParameters(
       this->m_Registration->GetAsITKBaseType()->
       GetInitialTransformParametersOfNextLevel() );
   
@@ -387,7 +387,7 @@ using namespace itk;
    */
 
   template <class TElastix>
-  void CyclicBSplineTransform<TElastix>::
+  void PeriodicBSplineTransform<TElastix>::
     ReadFromFile( void )
   {
     /** Read and Set the Grid: this is a BSplineTransform specific task. */
@@ -424,10 +424,10 @@ using namespace itk;
     /** Set it all. */
     gridregion.SetIndex( gridindex );
     gridregion.SetSize( gridsize );
-    this->m_CyclicBSplineTransform->SetGridRegion( gridregion );
-    this->m_CyclicBSplineTransform->SetGridSpacing( gridspacing );
-    this->m_CyclicBSplineTransform->SetGridOrigin( gridorigin );
-    this->m_CyclicBSplineTransform->SetGridDirection( griddirection );
+    this->m_PeriodicBSplineTransform->SetGridRegion( gridregion );
+    this->m_PeriodicBSplineTransform->SetGridSpacing( gridspacing );
+    this->m_PeriodicBSplineTransform->SetGridOrigin( gridorigin );
+    this->m_PeriodicBSplineTransform->SetGridDirection( griddirection );
 
     /** Call the ReadFromFile from the TransformBase.
      * This must be done after setting the Grid, because later the
@@ -447,7 +447,7 @@ using namespace itk;
    */
 
   template <class TElastix>
-    void CyclicBSplineTransform<TElastix>::
+    void PeriodicBSplineTransform<TElastix>::
     WriteToFile( const ParametersType & param ) const
   {
     /** Call the WriteToFile from the TransformBase. */
@@ -458,11 +458,11 @@ using namespace itk;
 
     /** Get the GridSize, GridIndex, GridSpacing,
      * GridOrigin, and GridDirection of this transform. */
-    SizeType size = this->m_CyclicBSplineTransform->GetGridRegion().GetSize();
-    IndexType index = this->m_CyclicBSplineTransform->GetGridRegion().GetIndex();
-    SpacingType spacing = this->m_CyclicBSplineTransform->GetGridSpacing();
-    OriginType origin = this->m_CyclicBSplineTransform->GetGridOrigin();
-    DirectionType direction = this->m_CyclicBSplineTransform->GetGridDirection();
+    SizeType size = this->m_PeriodicBSplineTransform->GetGridRegion().GetSize();
+    IndexType index = this->m_PeriodicBSplineTransform->GetGridRegion().GetIndex();
+    SpacingType spacing = this->m_PeriodicBSplineTransform->GetGridSpacing();
+    OriginType origin = this->m_PeriodicBSplineTransform->GetGridOrigin();
+    DirectionType direction = this->m_PeriodicBSplineTransform->GetGridDirection();
 
     /** Write the GridSize of this transform. */
     xout["transpar"] << "(GridSize ";
@@ -525,7 +525,7 @@ using namespace itk;
    */
 
   template <class TElastix>
-    void CyclicBSplineTransform<TElastix>::
+    void PeriodicBSplineTransform<TElastix>::
     SetOptimizerScales( unsigned int edgeWidth )
   {
     typedef ImageRegionExclusionConstIteratorWithIndex<ImageType>   IteratorType;
@@ -536,7 +536,7 @@ using namespace itk;
 
     /** Define new scales */
     const unsigned long numberOfParameters
-      = this->m_CyclicBSplineTransform->GetNumberOfParameters();
+      = this->m_PeriodicBSplineTransform->GetNumberOfParameters();
     const unsigned long offset = numberOfParameters / SpaceDimension;
     ScalesType newScales( numberOfParameters );
     newScales.Fill( NumericTraits<ScalesValueType>::One );
@@ -550,7 +550,7 @@ using namespace itk;
     }
 
     /** Get the grid region information and create a fake coefficient image. */
-    RegionType gridregion = this->m_CyclicBSplineTransform->GetGridRegion();
+    RegionType gridregion = this->m_PeriodicBSplineTransform->GetGridRegion();
     SizeType gridsize = gridregion.GetSize();
     IndexType gridindex = gridregion.GetIndex();
     ImagePointer coeff = ImageType::New();
@@ -611,5 +611,5 @@ using namespace itk;
 } // end namespace elastix
 
 
-#endif // end #ifndef __elxCyclicBSplineTransform_hxx
+#endif // end #ifndef __elxPeriodicBSplineTransform_hxx
 

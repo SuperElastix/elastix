@@ -1,11 +1,11 @@
 
-ADD_ELXCOMPONENT( CyclicBSplineTransform OFF
- elxCyclicBSplineTransform.h
- elxCyclicBSplineTransform.hxx
- elxCyclicBSplineTransform.cxx
- itkCyclicBSplineDeformableTransform.h
- itkCyclicBSplineDeformableTransform.txx
- itkCyclicGridScheduleComputer.h
- itkCyclicGridScheduleComputer.txx
+ADD_ELXCOMPONENT( PeriodicBSplineTransform OFF
+ elxPeriodicBSplineTransform.h
+ elxPeriodicBSplineTransform.hxx
+ elxPeriodicBSplineTransform.cxx
+ itkPeriodicBSplineDeformableTransform.h
+ itkPeriodicBSplineDeformableTransform.txx
+ itkPeriodicGridScheduleComputer.h
+ itkPeriodicGridScheduleComputer.txx
 )
 

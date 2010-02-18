@@ -12,10 +12,10 @@
 
 ======================================================================*/
 
-#ifndef __itkCyclicGridScheduleComputer_TXX__
-#define __itkCyclicGridScheduleComputer_TXX__
+#ifndef __itkPeriodicGridScheduleComputer_TXX__
+#define __itkPeriodicGridScheduleComputer_TXX__
 
-#include "itkCyclicGridScheduleComputer.h"
+#include "itkPeriodicGridScheduleComputer.h"
 #include "itkConfigure.h"
 
 #include "itkImageRegionExclusionConstIteratorWithIndex.h"
@@ -29,8 +29,8 @@ namespace itk
  */
   
 template < typename TTransformScalarType, unsigned int VImageDimension >
-CyclicGridScheduleComputer<TTransformScalarType, VImageDimension>
-::CyclicGridScheduleComputer()
+PeriodicGridScheduleComputer<TTransformScalarType, VImageDimension>
+::PeriodicGridScheduleComputer()
 {
 
 } // end Constructor()
@@ -42,7 +42,7 @@ CyclicGridScheduleComputer<TTransformScalarType, VImageDimension>
 
 template < typename TTransformScalarType, unsigned int VImageDimension >
 void
-CyclicGridScheduleComputer<TTransformScalarType, VImageDimension>
+PeriodicGridScheduleComputer<TTransformScalarType, VImageDimension>
 ::ComputeBSplineGrid( void )
 {
   /** Call superclass method. */
@@ -78,7 +78,7 @@ CyclicGridScheduleComputer<TTransformScalarType, VImageDimension>
       double gridSpacing
         = finalGridSpacing[ dim ] * this->m_GridSpacingFactors[ res ][ dim ];
 
-      /** Check if the grid spacing matches the cyclic behaviour of this 
+      /** Check if the grid spacing matches the Periodic behaviour of this 
        * transform. We want the spacing at the borders for the last dimension
        * to be half the grid spacing.
        */
@@ -140,4 +140,4 @@ CyclicGridScheduleComputer<TTransformScalarType, VImageDimension>
 
 } // end namespace itk
 
-#endif // end #ifndef __itkCyclicGridScheduleComputer_TXX__
+#endif // end #ifndef __itkPeriodicGridScheduleComputer_TXX__

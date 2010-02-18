@@ -12,26 +12,26 @@
 
 ======================================================================*/
 
-#ifndef __itkCyclicBSplineDeformableTransform_txx
-#define __itkCyclicBSplineDeformableTransform_txx
+#ifndef __itkPeriodicBSplineDeformableTransform_txx
+#define __itkPeriodicBSplineDeformableTransform_txx
 
-#include "itkCyclicBSplineDeformableTransform.h"
+#include "itkPeriodicBSplineDeformableTransform.h"
 #include "itkContinuousIndex.h"
 
 namespace itk {
 
 /** Constructor with default arguments. */
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
-::CyclicBSplineDeformableTransform():Superclass()
+PeriodicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
+::PeriodicBSplineDeformableTransform():Superclass()
 {
 
 }
 
 /** Destructor. */
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
-::~CyclicBSplineDeformableTransform()
+PeriodicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
+::~PeriodicBSplineDeformableTransform()
 {
 
 }
@@ -39,7 +39,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 /** Set the grid region. */
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
-CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
+PeriodicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 ::SetGridRegion( const RegionType& region )
 {
   /** Call superclass SetGridRegion. */
@@ -62,7 +62,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 /** Check if the point lies inside a valid region. */
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 bool 
-CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
+PeriodicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 ::InsideValidRegion( 
   const ContinuousIndexType& index ) const
 {
@@ -87,7 +87,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
  */
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void 
-CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
+PeriodicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 ::SplitRegion(
   const RegionType & imageRegion,
   const RegionType & inRegion, 
@@ -143,7 +143,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 /** Transform a point. */
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void 
-CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
+PeriodicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 ::TransformPoint( 
   const InputPointType & point, 
   OutputPointType & outputPoint, 
@@ -252,9 +252,9 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 /** Compute the Jacobian in one position. */
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 const 
-typename CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
+typename PeriodicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 ::JacobianType & 
-CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
+PeriodicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 ::GetJacobian( const InputPointType & point ) const
 {
   /** Can only compute Jacobian if parameters are set via
@@ -362,7 +362,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 /** Compute the Jacobian in one position. */
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
-CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
+PeriodicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 ::GetJacobian( const InputPointType & point, WeightsType& weights, ParameterIndexArrayType& indexes) const
 {
   RegionType supportRegion;
@@ -419,7 +419,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
-CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
+PeriodicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 ::GetSpatialJacobian(
   const InputPointType & ipp,
   SpatialJacobianType & sj ) const
@@ -522,7 +522,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
-CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
+PeriodicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 ::ComputeNonZeroJacobianIndices(
   NonZeroJacobianIndicesType & nonZeroJacobianIndices,
   const RegionType & supportRegion ) const

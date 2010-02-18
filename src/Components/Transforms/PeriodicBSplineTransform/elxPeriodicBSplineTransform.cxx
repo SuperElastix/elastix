@@ -12,6 +12,6 @@
 
 ======================================================================*/
 
-#include "elxCyclicBSplineTransform.h"
+#include "elxPeriodicBSplineTransform.h"
 
-elxInstallMacro( CyclicBSplineTransform );
+elxInstallMacro( PeriodicBSplineTransform );
