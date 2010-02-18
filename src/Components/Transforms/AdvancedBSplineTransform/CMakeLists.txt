@@ -3,5 +3,9 @@ ADD_ELXCOMPONENT( AdvancedBSplineTransform
  elxAdvancedBSplineTransform.h
  elxAdvancedBSplineTransform.hxx
  elxAdvancedBSplineTransform.cxx
+ itkPeriodicBSplineDeformableTransform.h
+ itkPeriodicBSplineDeformableTransform.txx
+ itkPeriodicGridScheduleComputer.h
+ itkPeriodicGridScheduleComputer.txx
 )
 

@@ -18,8 +18,8 @@
 #include "itkAdvancedBSplineDeformableTransform.h"
 
 #include "itkGridScheduleComputer.h"
-#include "../PeriodicBSplineTransform/itkPeriodicBSplineDeformableTransform.h"
-#include "../PeriodicBSplineTransform/itkPeriodicGridScheduleComputer.h"
+#include "itkPeriodicBSplineDeformableTransform.h"
+#include "itkPeriodicGridScheduleComputer.h"
 #include "itkUpsampleBSplineParametersFilter.h"
 
 #include "elxIncludes.h"
