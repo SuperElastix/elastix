@@ -142,10 +142,8 @@ using namespace itk;
     typedef typename Superclass2::ITKBaseType               ITKBaseType;
     
     /** Typedef's for the B-spline transform. */
-    typedef AdvancedBSplineDeformableTransform<
-      ScalarType, FixedImageDimension, 3 >          BSplineTransformCubicType;
-    typedef AdvancedBSplineDeformableTransform<
-      ScalarType, FixedImageDimension, 2 >          BSplineTransformQuadraticType;
+    typedef AdvancedBSplineDeformableTransformBase<
+      ScalarType, FixedImageDimension >             BSplineTransformBaseType;
     typedef AdvancedCombinationTransform<
       ScalarType, FixedImageDimension >             CombinationTransformType;
       

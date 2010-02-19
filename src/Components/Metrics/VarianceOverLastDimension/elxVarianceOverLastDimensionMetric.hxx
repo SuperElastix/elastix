@@ -107,22 +107,12 @@ using namespace itk;
     if ( testPtr1 )
     {
       /** Check for quadratic B-spline. */
-      BSplineTransformQuadraticType * testPtr1a = dynamic_cast<BSplineTransformQuadraticType *>(
+      BSplineTransformBaseType * testPtr2 = dynamic_cast<BSplineTransformBaseType *>(
         testPtr1->GetCurrentTransform() );
-      if ( testPtr1a )
+      if ( testPtr2 )
       {
-        this->SetGridSize( testPtr1a->GetGridRegion().GetSize() );
+        this->SetGridSize( testPtr2->GetGridRegion().GetSize() );
       } 
-      else 
-      {
-        /** Check for cubic B-spline. */
-        BSplineTransformCubicType * testPtr1b = dynamic_cast<BSplineTransformCubicType *>(
-          testPtr1->GetCurrentTransform() );
-        if ( testPtr1b )
-        {
-          this->SetGridSize( testPtr1b->GetGridRegion().GetSize() );
-        }
-      }
     }
     
   } // end BeforeEachResolution
