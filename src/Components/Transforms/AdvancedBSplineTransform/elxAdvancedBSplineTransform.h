@@ -281,6 +281,9 @@ private:
   /** Variables to remember order and periodicity of BSplineTransform. */
   unsigned int m_SplineOrder;
   bool m_Periodic;
+  
+  /** Initialize the right BSplineTransfrom based on the spline order and periodicity. */
+  unsigned int InitializeBSplineTransform();
 
 }; // end class AdvancedBSplineTransform
 

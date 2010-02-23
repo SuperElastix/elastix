@@ -35,22 +35,13 @@ AdvancedBSplineTransform<TElastix>
 
 } // end Constructor()
 
-/**
- * ******************* BeforeAll ***********************
- */
 
+/**
+ * ************ InitializeBSplineTransform ***************
+ */
 template <class TElastix>
-int AdvancedBSplineTransform<TElastix>
-::BeforeAll( void )
-{
-  /** Read spline order and periodicity setting from configuration file. */
-  m_SplineOrder = 3;
-  this->GetConfiguration()->ReadParameter( m_SplineOrder,
-    "BSplineTransformSplineOrder", this->GetComponentLabel(), 0, 0, true );
-  m_Periodic = false;
-  this->GetConfiguration()->ReadParameter( m_Periodic,
-    "UseTransformPeriodicity", this->GetComponentLabel(), 0, 0, true );
-    
+unsigned int AdvancedBSplineTransform<TElastix>
+::InitializeBSplineTransform() {
   /** Initialize the right BSplineTransform and GridScheduleComputer. */
   if ( m_Periodic ) 
   {
@@ -104,6 +95,25 @@ int AdvancedBSplineTransform<TElastix>
   this->m_GridUpsampler->SetBSplineOrder( m_SplineOrder );
   
   return 0;
+}
+
+/**
+ * ******************* BeforeAll ***********************
+ */
+
+template <class TElastix>
+int AdvancedBSplineTransform<TElastix>
+::BeforeAll( void )
+{
+  /** Read spline order and periodicity setting from configuration file. */
+  m_SplineOrder = 3;
+  this->GetConfiguration()->ReadParameter( m_SplineOrder,
+    "BSplineTransformSplineOrder", this->GetComponentLabel(), 0, 0, true );
+  m_Periodic = false;
+  this->GetConfiguration()->ReadParameter( m_Periodic,
+    "UseTransformPeriodicity", this->GetComponentLabel(), 0, 0, true );
+    
+  return InitializeBSplineTransform();
 }
 
 
@@ -473,6 +483,15 @@ template <class TElastix>
 void AdvancedBSplineTransform<TElastix>
 ::ReadFromFile( void )
 {
+  /** Read spline order and periodicity settings and initialize BSplineTransform. */
+  m_SplineOrder = 3;
+  this->GetConfiguration()->ReadParameter( m_SplineOrder,
+    "BSplineTransformSplineOrder", this->GetComponentLabel(), 0, 0 );
+  m_Periodic = false;
+  this->GetConfiguration()->ReadParameter( m_Periodic,
+    "UseTransformPeriodicity", this->GetComponentLabel(), 0, 0 );
+  InitializeBSplineTransform();
+  
   /** Read and Set the Grid: this is a BSplineTransform specific task. */
 
   /** Declarations. */
@@ -594,6 +613,10 @@ void AdvancedBSplineTransform<TElastix>
     }
   }
   xout["transpar"] << ")" << std::endl;
+
+  /** Write the spline order and periodicity of this transform. */
+  xout["transpar"] << "(BSplineTransformSplineOrder " << m_SplineOrder << ")" << std::endl;
+  xout["transpar"] << "(UseTransformPeriodicity \"" << m_Periodic << "\")" << std::endl;
 
   /** Set the precision back to default value. */
   xout["transpar"] << std::setprecision(
