@@ -616,7 +616,12 @@ void AdvancedBSplineTransform<TElastix>
 
   /** Write the spline order and periodicity of this transform. */
   xout["transpar"] << "(BSplineTransformSplineOrder " << m_SplineOrder << ")" << std::endl;
-  xout["transpar"] << "(UseTransformPeriodicity \"" << m_Periodic << "\")" << std::endl;
+  std::string m_PeriodicString = "false";
+  if ( m_Periodic )
+  {
+    m_PeriodicString = "true";
+  }
+  xout["transpar"] << "(UseTransformPeriodicity \"" << m_PeriodicString << "\")" << std::endl;
 
   /** Set the precision back to default value. */
   xout["transpar"] << std::setprecision(
