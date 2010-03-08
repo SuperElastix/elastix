@@ -144,6 +144,9 @@ TransformRigidityPenalty<TElastix>
   xout["iteration"].AddTargetCell("Metric-LC");
   xout["iteration"].AddTargetCell("Metric-OC");
   xout["iteration"].AddTargetCell("Metric-PC");
+  xout["iteration"].AddTargetCell("||Gradient-LC||");
+  xout["iteration"].AddTargetCell("||Gradient-OC||");
+  xout["iteration"].AddTargetCell("||Gradient-PC||");
 
   /** Format the metric as floats. */
   xl::xout["iteration"]["Metric-LC"] << std::showpoint << std::fixed
@@ -151,6 +154,12 @@ TransformRigidityPenalty<TElastix>
   xl::xout["iteration"]["Metric-OC"] << std::showpoint << std::fixed
     << std::setprecision( 10 );
   xl::xout["iteration"]["Metric-PC"] << std::showpoint << std::fixed
+    << std::setprecision( 10 );
+  xl::xout["iteration"]["||Gradient-LC||"] << std::showpoint << std::fixed
+    << std::setprecision( 10 );
+  xl::xout["iteration"]["||Gradient-OC||"] << std::showpoint << std::fixed
+    << std::setprecision( 10 );
+  xl::xout["iteration"]["||Gradient-PC||"] << std::showpoint << std::fixed
     << std::setprecision( 10 );
 
 } // end BeforeRegistration()
@@ -282,6 +291,13 @@ TransformRigidityPenalty<TElastix>
     this->GetOrthonormalityConditionValue();
   xl::xout["iteration"]["Metric-PC"] <<
     this->GetPropernessConditionValue();
+
+  xl::xout["iteration"]["||Gradient-LC||"] <<
+    this->GetLinearityConditionGradientMagnitude();
+  xl::xout["iteration"]["||Gradient-OC||"] <<
+    this->GetOrthonormalityConditionGradientMagnitude();
+  xl::xout["iteration"]["||Gradient-PC||"] <<
+    this->GetPropernessConditionGradientMagnitude();
 
 } // end AfterEachIteration()
 

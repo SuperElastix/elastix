@@ -250,6 +250,15 @@ public:
   /** Get the value of the properness condition. */
   itkGetConstReferenceMacro( PropernessConditionValue, MeasureType );
 
+  /** Get the gradient magnitude of the linearity condition. */
+  itkGetConstReferenceMacro( LinearityConditionGradientMagnitude, MeasureType );
+
+  /** Get the gradient magnitude of the orthonormality condition. */
+  itkGetConstReferenceMacro( OrthonormalityConditionGradientMagnitude, MeasureType );
+
+  /** Get the gradient magnitude of the properness condition. */
+  itkGetConstReferenceMacro( PropernessConditionGradientMagnitude, MeasureType );
+
   /** Get the value of the total rigidity penalty term. */
   //itkGetConstReferenceMacro( RigidityPenaltyTermValue, MeasureType );
 
@@ -312,10 +321,15 @@ private:
   ScalarType              m_LinearityConditionWeight;
   ScalarType              m_OrthonormalityConditionWeight;
   ScalarType              m_PropernessConditionWeight;
+
   mutable MeasureType     m_RigidityPenaltyTermValue;
   mutable MeasureType     m_LinearityConditionValue;
   mutable MeasureType     m_OrthonormalityConditionValue;
   mutable MeasureType     m_PropernessConditionValue;
+  mutable MeasureType     m_LinearityConditionGradientMagnitude;
+  mutable MeasureType     m_OrthonormalityConditionGradientMagnitude;
+  mutable MeasureType     m_PropernessConditionGradientMagnitude;
+
   bool                    m_UseLinearityCondition;
   bool                    m_UseOrthonormalityCondition;
   bool                    m_UsePropernessCondition;

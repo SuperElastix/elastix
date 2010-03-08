@@ -42,6 +42,11 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
   this->m_OrthonormalityConditionValue  = NumericTraits<MeasureType>::Zero;
   this->m_PropernessConditionValue      = NumericTraits<MeasureType>::Zero;
 
+  /** Gradients. */
+  this->m_LinearityConditionGradientMagnitude = NumericTraits<MeasureType>::Zero;
+  this->m_OrthonormalityConditionGradientMagnitude = NumericTraits<MeasureType>::Zero;
+  this->m_PropernessConditionGradientMagnitude = NumericTraits<MeasureType>::Zero;
+
   /** Usage. */
   this->m_UseLinearityCondition             = true;
   this->m_UseOrthonormalityCondition        = true;
@@ -470,6 +475,31 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
   /** Get the B-spline coefficient image spacing. */
   CoefficientImageSpacingType spacing = inputImages[ 0 ]->GetSpacing();
 
+  /** TASK 0:
+   * Compute the rigidityCoefficientSum and check on it.
+   * 
+   ************************************************************************* */
+
+  /** Create iterator over the rigidity coeficient image. */
+  CoefficientImageIteratorType it_RCI( m_RigidityCoefficientImage,
+    m_RigidityCoefficientImage->GetLargestPossibleRegion() );
+  it_RCI.GoToBegin();
+  ScalarType rigidityCoefficientSum = NumericTraits< ScalarType >::Zero;
+  
+  /** Add the rigidity coefficients together. */
+  while ( !it_RCI.IsAtEnd() )
+  {
+    rigidityCoefficientSum += it_RCI.Get();
+    ++it_RCI;
+  }
+
+  /** Check for early termination. */
+  if ( rigidityCoefficientSum < 1e-14 )
+  {
+    this->m_RigidityPenaltyTermValue = NumericTraits<MeasureType>::Zero;
+    return this->m_RigidityPenaltyTermValue;
+  }
+
   /** TASK 1:
    * Prepare for the calculation of the rigidity penalty term.
    * 
@@ -583,18 +613,15 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
     }
   }
 
-  /** Create iterator over the rigidity coeficient image. */
-  CoefficientImageIteratorType it_RCI( m_RigidityCoefficientImage,
-    m_RigidityCoefficientImage->GetLargestPossibleRegion() );
-  it_RCI.GoToBegin();
-
   /** TASK 4A:
    * Do the actual calculation of the rigidity penalty term value.
    * Calculate the orthonormality term.
    * 
    ************************************************************************* */
 
-  ScalarType rigidityCoefficientSum = NumericTraits< ScalarType >::Zero;
+  /** Reset all iterators. */
+  it_RCI.GoToBegin();
+
   if ( this->m_CalculateOrthonormalityCondition )
   {
     ScalarType mu1_A, mu2_A, mu3_A, mu1_B, mu2_B, mu3_B, mu1_C, mu2_C, mu3_C;
@@ -670,17 +697,12 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
           , 2.0 ) );
       }
 
-      /** Add the rigidity coefficients together. */
-      rigidityCoefficientSum += it_RCI.Get();
-
       /** Increase all iterators. */
       for ( unsigned int i = 0; i < ImageDimension; i++ )
       {
         ++itA[ i ];++itB[ i ];
         if ( ImageDimension == 3 ) ++itC[ i ];
       }
-      ++it_RCI;
-
     } // end while
   } // end if do orthonormality
 
@@ -696,11 +718,9 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
     itA[ i ].GoToBegin(); itB[ i ].GoToBegin();
     if ( ImageDimension == 3 ) itC[ i ].GoToBegin();
   }
-  it_RCI.GoToBegin();
 
   if ( this->m_CalculatePropernessCondition )
   {
-    rigidityCoefficientSum = NumericTraits< ScalarType >::Zero;
     ScalarType mu1_A, mu2_A, mu3_A, mu1_B, mu2_B, mu3_B, mu1_C, mu2_C, mu3_C;
     while ( !itA[ 0 ].IsAtEnd() )
     {
@@ -742,16 +762,12 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
           );
       }
 
-      /** Add the rigidity coefficients together. */
-      rigidityCoefficientSum += it_RCI.Get();
-
       /** Increase all iterators. */
       for ( unsigned int i = 0; i < ImageDimension; i++ )
       {
         ++itA[ i ];++itB[ i ];
         if ( ImageDimension == 3 ) ++itC[ i ];
       }
-      ++it_RCI;
 
     } // end while
   } // end if do properness
@@ -767,7 +783,6 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 
   if ( this->m_CalculateLinearityCondition )
   {
-    rigidityCoefficientSum = NumericTraits< ScalarType >::Zero;
     while ( !itD[ 0 ].IsAtEnd() )
     {
       /** Linearity condition part. */
@@ -790,9 +805,6 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
         }
       } // end loop over i
 
-      /** Add the rigidity coefficients together. */
-      rigidityCoefficientSum += it_RCI.Get();
-
       /** Increase all iterators. */
       for ( unsigned int i = 0; i < ImageDimension; i++ )
       {
@@ -802,7 +814,6 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
           ++itF[ i ];++itH[ i ];++itI[ i ];
         }
       }
-      ++it_RCI;
 
     } // end while
   } // end if do properness
@@ -813,40 +824,33 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
    ************************************************************************* */
 
   /** Calculate the rigidity penalty term value. */
-  if ( rigidityCoefficientSum < 1e-14 )
+  if ( this->m_CalculateLinearityCondition )
   {
-    this->m_RigidityPenaltyTermValue = NumericTraits<MeasureType>::Zero;
+    this->m_LinearityConditionValue /= rigidityCoefficientSum;
   }
-  else
+  if ( this->m_CalculateOrthonormalityCondition )
   {
-    if ( this->m_CalculateLinearityCondition )
-    {
-      this->m_LinearityConditionValue /= rigidityCoefficientSum;
-    }
-    if ( this->m_CalculateOrthonormalityCondition )
-    {
-      this->m_OrthonormalityConditionValue /= rigidityCoefficientSum;
-    }
-    if ( this->m_CalculatePropernessCondition )
-    {
-      this->m_PropernessConditionValue /= rigidityCoefficientSum;
-    }
+    this->m_OrthonormalityConditionValue /= rigidityCoefficientSum;
+  }
+  if ( this->m_CalculatePropernessCondition )
+  {
+    this->m_PropernessConditionValue /= rigidityCoefficientSum;
+  }
 
-    if ( this->m_UseLinearityCondition )
-    {
-      this->m_RigidityPenaltyTermValue +=
-        this->m_LinearityConditionWeight * this->m_LinearityConditionValue;
-    }
-    if ( this->m_UseOrthonormalityCondition )
-    {
-      this->m_RigidityPenaltyTermValue +=
-        this->m_OrthonormalityConditionWeight * this->m_OrthonormalityConditionValue;
-    }
-    if ( this->m_UsePropernessCondition )
-    {
-      this->m_RigidityPenaltyTermValue +=
-        this->m_PropernessConditionWeight * this->m_PropernessConditionValue;
-    }
+  if ( this->m_UseLinearityCondition )
+  {
+    this->m_RigidityPenaltyTermValue +=
+      this->m_LinearityConditionWeight * this->m_LinearityConditionValue;
+  }
+  if ( this->m_UseOrthonormalityCondition )
+  {
+    this->m_RigidityPenaltyTermValue +=
+      this->m_OrthonormalityConditionWeight * this->m_OrthonormalityConditionValue;
+  }
+  if ( this->m_UsePropernessCondition )
+  {
+    this->m_RigidityPenaltyTermValue +=
+      this->m_PropernessConditionWeight * this->m_PropernessConditionValue;
   }
 
   /** Return the rigidity penalty term value. */
@@ -895,8 +899,6 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
   this->m_LinearityConditionValue       = NumericTraits< MeasureType >::Zero;
   this->m_OrthonormalityConditionValue  = NumericTraits< MeasureType >::Zero;
   this->m_PropernessConditionValue      = NumericTraits< MeasureType >::Zero;
-  derivative = DerivativeType( this->GetNumberOfParameters() );
-  derivative.Fill( NumericTraits< MeasureType >::Zero );
 
   /** Set output values to zero. */
   derivative = DerivativeType( this->GetNumberOfParameters() );
@@ -922,6 +924,31 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 
   /** Get the B-spline coefficient image spacing. */
   CoefficientImageSpacingType spacing = inputImages[ 0 ]->GetSpacing();
+
+  /** TASK 0:
+   * Compute the rigidityCoefficientSum and check on it.
+   * 
+   ************************************************************************* */
+
+  /** Create iterator over the rigidity coeficient image. */
+  CoefficientImageIteratorType it_RCI( m_RigidityCoefficientImage,
+    m_RigidityCoefficientImage->GetLargestPossibleRegion() );
+  it_RCI.GoToBegin();
+  ScalarType rigidityCoefficientSum = NumericTraits< ScalarType >::Zero;
+  
+  /** Add the rigidity coefficients together. */
+  while ( !it_RCI.IsAtEnd() )
+  {
+    rigidityCoefficientSum += it_RCI.Get();
+    ++it_RCI;
+  }
+
+  /** Check for early termination. */
+  if ( rigidityCoefficientSum < 1e-14 )
+  {
+    this->m_RigidityPenaltyTermValue = NumericTraits<MeasureType>::Zero;
+    return;
+  }
 
   /** TASK 1:
    * Prepare for the calculation of the rigidity penalty term.
@@ -1094,17 +1121,14 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
     }
   }
 
-  /** For the value: Create iterator over the rigidity coeficient image. */
-  CoefficientImageIteratorType it_RCI( m_RigidityCoefficientImage,
-    m_RigidityCoefficientImage->GetLargestPossibleRegion() );
-  it_RCI.GoToBegin();
-
   /** TASK 4A:
    * Do the calculation of the orthonormality subparts.
    * 
    ************************************************************************* */
 
-  ScalarType rigidityCoefficientSum = NumericTraits< ScalarType >::Zero;
+  /** Reset all iterators. */
+  it_RCI.GoToBegin();
+
   if ( this->m_CalculateOrthonormalityCondition )
   {
     ScalarType mu1_A, mu2_A, mu3_A, mu1_B, mu2_B, mu3_B, mu1_C, mu2_C, mu3_C;
@@ -1333,11 +1357,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
         itOCp[ 2 ][ 2 ].Set( 2.0 * valueOC );
       } // end if dim == 3
 
-      /** Add the rigidity coefficients together. */
-      rigidityCoefficientSum += it_RCI.Get();
-
       /** Increase all iterators. */
-      ++it_RCI;
       for ( unsigned int i = 0; i < ImageDimension; i++ )
       {
         ++itA[ i ];++itB[ i ];
@@ -1365,7 +1385,6 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 
   if ( this->m_CalculatePropernessCondition )
   {
-    rigidityCoefficientSum = NumericTraits< ScalarType >::Zero;
     ScalarType mu1_A, mu2_A, mu3_A, mu1_B, mu2_B, mu3_B, mu1_C, mu2_C, mu3_C;
     ScalarType valuePC;
     while ( !itPCp[ 0 ][ 0 ].IsAtEnd() )
@@ -1579,11 +1598,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
         itPCp[ 2 ][ 2 ].Set( 2.0 * valuePC );
       } // end if dim == 3
 
-      /** Add the rigidity coefficients together. */
-      rigidityCoefficientSum += it_RCI.Get();
-
       /** Increase all iterators. */
-      ++it_RCI;
       for ( unsigned int i = 0; i < ImageDimension; i++ )
       {
         ++itA[ i ];++itB[ i ];
@@ -1606,7 +1621,6 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 
   if ( this->m_CalculateLinearityCondition )
   {
-    rigidityCoefficientSum = NumericTraits< ScalarType >::Zero;
     while ( !itLCp[ 0 ][ 0 ].IsAtEnd() )
     {
       /** Linearity condition part. */
@@ -1662,9 +1676,6 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
         itLCp[ 2 ][ 5 ].Set( 2.0 * itI[ 2 ].Get() );
       } // end if dim == 3
 
-      /** Add the rigidity coefficients together. */
-      rigidityCoefficientSum += it_RCI.Get();
-
       /** Increase all iterators. */
       for ( unsigned int i = 0; i < ImageDimension; i++ )
       {
@@ -1678,7 +1689,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
           ++itLCp[ i ][ j ];
         }
       }
-      ++it_RCI;
+
     } // end while 
   } // end if do linearity
 
@@ -1688,42 +1699,35 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
    ************************************************************************* */
 
   /** Calculate the rigidity penalty term value. */
-  if ( rigidityCoefficientSum < 1e-14 )
+  if ( this->m_CalculateLinearityCondition )
   {
-    this->m_RigidityPenaltyTermValue = NumericTraits<MeasureType>::Zero;
+    this->m_LinearityConditionValue /= rigidityCoefficientSum;
   }
-  else
+  if ( this->m_CalculateOrthonormalityCondition )
   {
-    if ( this->m_CalculateLinearityCondition )
-    {
-      this->m_LinearityConditionValue /= rigidityCoefficientSum;
-    }
-    if ( this->m_CalculateOrthonormalityCondition )
-    {
-      this->m_OrthonormalityConditionValue /= rigidityCoefficientSum;
-    }
-    if ( this->m_CalculatePropernessCondition )
-    {
-      this->m_PropernessConditionValue /= rigidityCoefficientSum;
-    }
+    this->m_OrthonormalityConditionValue /= rigidityCoefficientSum;
+  }
+  if ( this->m_CalculatePropernessCondition )
+  {
+    this->m_PropernessConditionValue /= rigidityCoefficientSum;
+  }
 
-    if ( this->m_UseLinearityCondition )
-    {
-      this->m_RigidityPenaltyTermValue +=
-        this->m_LinearityConditionWeight * this->m_LinearityConditionValue;
-    }
-    if ( this->m_UseOrthonormalityCondition )
-    {
-      this->m_RigidityPenaltyTermValue +=
-        this->m_OrthonormalityConditionWeight * this->m_OrthonormalityConditionValue;
-    }
-    if ( this->m_UsePropernessCondition )
-    {
-      this->m_RigidityPenaltyTermValue +=
-        this->m_PropernessConditionWeight * this->m_PropernessConditionValue;
-    }
-    value = this->m_RigidityPenaltyTermValue;
+  if ( this->m_UseLinearityCondition )
+  {
+    this->m_RigidityPenaltyTermValue +=
+      this->m_LinearityConditionWeight * this->m_LinearityConditionValue;
   }
+  if ( this->m_UseOrthonormalityCondition )
+  {
+    this->m_RigidityPenaltyTermValue +=
+      this->m_OrthonormalityConditionWeight * this->m_OrthonormalityConditionValue;
+  }
+  if ( this->m_UsePropernessCondition )
+  {
+    this->m_RigidityPenaltyTermValue +=
+      this->m_PropernessConditionWeight * this->m_PropernessConditionValue;
+  }
+  value = this->m_RigidityPenaltyTermValue;
 
   /** TASK 6:
    * Create filtered versions of the subparts.
@@ -2015,6 +2019,10 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 
   /** Do the addition. */
   // NOTE: unlike the values, for the derivatives weight * derivative is returned.
+  MeasureType gradMagLC = NumericTraits<MeasureType>::Zero;
+  MeasureType gradMagOC = NumericTraits<MeasureType>::Zero;
+  MeasureType gradMagPC = NumericTraits<MeasureType>::Zero;
+  double rigidityCoefficientSumSqr = rigidityCoefficientSum * rigidityCoefficientSum;
   while ( !itDIs[ 0 ].IsAtEnd() )
   {
     for ( unsigned int i = 0; i < ImageDimension; i++ )
@@ -2022,36 +2030,45 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
       ScalarType tmp = NumericTraits<ScalarType>::Zero;
       if ( this->m_UseLinearityCondition )
       {
-        tmp += this->m_LinearityConditionWeight * itLCpf[ i ].Get();
+        ScalarType tmpLC = this->m_LinearityConditionWeight * itLCpf[ i ].Get();
+        gradMagLC += tmpLC * tmpLC / rigidityCoefficientSumSqr;
+        tmp += tmpLC;
       }
       if ( this->m_UseOrthonormalityCondition )
       {
-        tmp += this->m_OrthonormalityConditionWeight * itOCpf[ i ].Get();
+        ScalarType tmpOC = this->m_OrthonormalityConditionWeight * itOCpf[ i ].Get();
+        gradMagOC += tmpOC * tmpOC / rigidityCoefficientSumSqr;
+        tmp += tmpOC;
       }
       if ( this->m_UsePropernessCondition )
       {
-        tmp += this->m_PropernessConditionWeight * itPCpf[ i ].Get();
+        ScalarType tmpPC = this->m_PropernessConditionWeight * itPCpf[ i ].Get();
+        gradMagPC += tmpPC * tmpPC / rigidityCoefficientSumSqr;
+        tmp += tmpPC;
       }
       itDIs[ i ].Set( tmp );
+
       ++itDIs[ i ]; ++itOCpf[ i ]; ++itPCpf[ i ]; ++itLCpf[ i ];
     }
   } // end while
 
+  /** Set the gradient magnitudes of the several terms. */
+  this->m_LinearityConditionGradientMagnitude = vcl_sqrt( gradMagLC );
+  this->m_OrthonormalityConditionGradientMagnitude = vcl_sqrt( gradMagOC );
+  this->m_PropernessConditionGradientMagnitude = vcl_sqrt( gradMagPC );
+
   /** Rearrange to create a derivative. */
-  if ( rigidityCoefficientSum > 1e-14 )
+  unsigned int j = 0;
+  for ( unsigned int i = 0; i < ImageDimension; i++ )
   {
-    unsigned int j = 0;
-    for ( unsigned int i = 0; i < ImageDimension; i++ )
+    itDIs[ i ].GoToBegin();
+    while ( !itDIs[ i ].IsAtEnd() )
     {
-      itDIs[ i ].GoToBegin();
-      while ( !itDIs[ i ].IsAtEnd() )
-      {
-        derivative[ j ] = itDIs[ i ].Get() / rigidityCoefficientSum;
-        ++itDIs[ i ];
-        j++;
-      } // end while
-    } // end for
-  } // end if 
+      derivative[ j ] = itDIs[ i ].Get() / rigidityCoefficientSum;
+      ++itDIs[ i ];
+      j++;
+    } // end while
+  } // end for
 
 } // end GetValueAndDerivative()
 
@@ -2087,6 +2104,12 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
     << this->m_OrthonormalityConditionValue << std::endl;
   os << indent << "PropernessConditionValue: "
     << this->m_PropernessConditionValue << std::endl;
+  os << indent << "LinearityConditionGradientMagnitude: "
+    << this->m_LinearityConditionGradientMagnitude << std::endl;
+  os << indent << "OrthonormalityConditionGradientMagnitude: "
+    << this->m_OrthonormalityConditionGradientMagnitude << std::endl;
+  os << indent << "PropernessConditionGradientMagnitude: "
+    << this->m_PropernessConditionGradientMagnitude << std::endl;
   os << indent << "UseLinearityCondition: "
     << this->m_UseLinearityCondition << std::endl;
   os << indent << "UseOrthonormalityCondition: "
