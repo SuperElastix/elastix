@@ -68,6 +68,11 @@ IF( MSVC )
     /D_CRT_SECURE_NO_DEPRECATE
     /D_CRT_TIME_FUNCTIONS_NO_DEPRECATE
     )
+  # Increases address capacity
+  IF ( WIN32 )
+    SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /bigobj")
+    SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /bigobj")
+  ENDIF ( WIN32 )
 ENDIF( MSVC )
 
 #---------------------------------------------------------------------
