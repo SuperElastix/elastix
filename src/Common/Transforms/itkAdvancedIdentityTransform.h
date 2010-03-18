@@ -302,6 +302,8 @@ protected:
 		}
 
 		/** Set to correct size. The elements are automatically initialized to 0. */
+    this->m_HasNonZeroSpatialHessian = false;
+    this->m_HasNonZeroJacobianOfSpatialHessian = false;
 		this->m_JacobianOfSpatialJacobian.resize( ParametersDimension );
 		this->m_JacobianOfSpatialHessian.resize( ParametersDimension );
 		

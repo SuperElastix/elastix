@@ -138,6 +138,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   }
   
   /** Set to correct size and initialize to 0 */
+  this->m_HasNonZeroJacobianOfSpatialHessian = false;
   this->m_JacobianOfSpatialHessian.resize(paramDims);
   for ( par = 0; par < paramDims; ++par )
   {
@@ -149,6 +150,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   }
 
   /** m_SpatialHessian is initialized with zeros */
+  this->m_HasNonZeroSpatialHessian = false;
   for (unsigned int d = 0; d < outputDims; ++d )
   {
     //SK: \todo: how can outputDims ever be different from OutputSpaceDimension?
@@ -156,6 +158,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   }
 
   /** m_SpatialJacobian simply equals m_Matrix */
+
 } // end PrecomputeJacobians
 
 // Print self

@@ -1271,10 +1271,19 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
     for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
       jsh[mu][dim] = sj0t * ( jsh1[mu][dim] * sj0 );
+    }
+  }
 
-      for ( unsigned int p = 0; p < SpaceDimension; ++p )
+  if ( this->m_InitialTransform->GetHasNonZeroSpatialHessian() )
+  {
+    for ( unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu )
+    {
+      for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
       {
-        jsh[mu][dim] += ( sh0[p] * jsj1[mu](dim,p) );
+        for ( unsigned int p = 0; p < SpaceDimension; ++p )
+        {
+          jsh[mu][dim] += ( sh0[p] * jsj1[mu](dim,p) );
+        }
       }
     }
   }
@@ -1307,12 +1316,14 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
     = this->m_InitialTransform->TransformPoint( ipp );
 
   /** Compute the (Jacobian of the) spatial Jacobian / Hessian of the
-   * internal transforms. */
+   * internal transforms.
+   */
   this->m_InitialTransform->GetSpatialJacobian( ipp, sj0 );
   this->m_InitialTransform->GetSpatialHessian( ipp, sh0 );
 
-    /** Assume/demand that GetJacobianOfSpatialJacobian returns
-   * the same nonZeroJacobianIndices as the GetJacobianOfSpatialHessian. */
+  /** Assume/demand that GetJacobianOfSpatialJacobian returns the same
+   * nonZeroJacobianIndices as the GetJacobianOfSpatialHessian.
+   */
   this->m_CurrentTransform->GetJacobianOfSpatialJacobian(
     transformedPoint, sj1, jsj1, nonZeroJacobianIndices );
   this->m_CurrentTransform->GetJacobianOfSpatialHessian(
@@ -1328,24 +1339,39 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
     for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
       jsh[mu][dim] = sj0t * ( jsh1[mu][dim] * sj0 );
-
-      for ( unsigned int p = 0; p < SpaceDimension; ++p )
+    }
+  }
+  
+  if ( this->m_InitialTransform->GetHasNonZeroSpatialHessian() )
+  {
+    for ( unsigned int mu = 0; mu < nonZeroJacobianIndices.size(); ++mu )
+    {
+      for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
       {
-        jsh[mu][dim] += ( sh0[p] * jsj1[mu](dim,p) );
+        for ( unsigned int p = 0; p < SpaceDimension; ++p )
+        {
+          jsh[mu][dim] += ( sh0[p] * jsj1[mu](dim,p) );
+        }
       }
     }
   }
 
-   /** Combine them in one overall spatial Hessian. */
+  /** Combine them in one overall spatial Hessian. */
   for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
   {
     sh[dim] = sj0t * ( sh1[dim] * sj0 );
+  }
 
-    for ( unsigned int p = 0; p < SpaceDimension; ++p )
+  if ( this->m_InitialTransform->GetHasNonZeroSpatialHessian() )
+  {
+    for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
-      sh[dim] += ( sh0[p] * sj1(dim,p) );
+      for ( unsigned int p = 0; p < SpaceDimension; ++p )
+      {
+        sh[dim] += ( sh0[p] * sj1(dim,p) );
+      }
     }
-  }   
+  }
 
 } // end GetJacobianOfSpatialHessianUseComposition()
 
