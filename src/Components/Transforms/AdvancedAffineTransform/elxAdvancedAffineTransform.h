@@ -18,7 +18,7 @@
 #include "itkAdvancedMatrixOffsetTransformBase.h"
 #include "itkAdvancedCombinationTransform.h"
 
-#include "itkCenteredTransformInitializer.h"
+#include "itkCenteredTransformInitializer2.h"
 #include "elxIncludes.h"
 
 namespace elastix
@@ -144,7 +144,8 @@ using namespace itk;
     typedef typename FixedImageType::RegionType             RegionType;
     typedef typename FixedImageType::DirectionType          DirectionType;
     
-    typedef CenteredTransformInitializer<
+    //typedef CenteredTransformInitializer<
+	typedef CenteredTransformInitializer2<
       AffineTransformType, FixedImageType, MovingImageType> TransformInitializerType;
     typedef typename TransformInitializerType::Pointer      TransformInitializerPointer;
     typedef typename AffineTransformType::Pointer           AffineTransformPointer;
