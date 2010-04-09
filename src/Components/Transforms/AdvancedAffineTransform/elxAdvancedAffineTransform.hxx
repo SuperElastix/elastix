@@ -254,12 +254,10 @@ AdvancedAffineTransformElastix<TElastix>
     if ( method == "CenterOfGravity" )
     {
       transformInitializer->MomentsOn();
-	  std::string method = "CenterOfGravity";
     }
 	if ( method == "Origins" )
     {
       transformInitializer->OriginsOn();
-	  std::string method = "Origins";
     }
     transformInitializer->InitializeTransform();
   }
