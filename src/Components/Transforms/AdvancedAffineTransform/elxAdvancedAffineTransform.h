@@ -145,7 +145,7 @@ using namespace itk;
     typedef typename FixedImageType::DirectionType          DirectionType;
     
     //typedef CenteredTransformInitializer<
-	typedef CenteredTransformInitializer2<
+    typedef CenteredTransformInitializer2<
       AffineTransformType, FixedImageType, MovingImageType> TransformInitializerType;
     typedef typename TransformInitializerType::Pointer      TransformInitializerPointer;
     typedef typename AffineTransformType::Pointer           AffineTransformPointer;

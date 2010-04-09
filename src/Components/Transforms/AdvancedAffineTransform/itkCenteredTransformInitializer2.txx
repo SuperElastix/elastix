@@ -75,8 +75,8 @@ CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage >
 
   if( m_UseMoments )
     {
-	// Moments
-	// std::cerr << "Moments mode..." << std::endl;
+    // Moments
+    // std::cerr << "Moments mode..." << std::endl;
     m_FixedCalculator->SetImage(  m_FixedImage );
     m_FixedCalculator->Compute();
 
@@ -94,19 +94,19 @@ CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage >
       }
     }
   else if ( m_UseOrigins )
-	{
-	// Origins
-	// std::cerr << "Origins mode..." << std::endl;
-	const typename MovingImageType::RegionType & movingRegion = m_MovingImage->GetLargestPossibleRegion();
+    {
+    // Origins
+    // std::cerr << "Origins mode..." << std::endl;
+    const typename MovingImageType::RegionType & movingRegion = m_MovingImage->GetLargestPossibleRegion();
     const typename MovingImageType::IndexType & movingIndex = movingRegion.GetIndex();
     const typename MovingImageType::SizeType & movingSize = movingRegion.GetSize();
-	
-	typedef typename InputPointType::ValueType CoordRepType;
-	typedef ContinuousIndex< CoordRepType, InputSpaceDimension >  ContinuousIndexType;
+    
+    typedef typename InputPointType::ValueType CoordRepType;
+    typedef ContinuousIndex< CoordRepType, InputSpaceDimension >  ContinuousIndexType;
 
     typedef typename ContinuousIndexType::ValueType  ContinuousIndexValueType;
-	
-	InputPointType centerMovingPoint;
+    
+    InputPointType centerMovingPoint;
     ContinuousIndexType centerMovingIndex;
 
     for( unsigned int m=0; m<InputSpaceDimension; m++ )
@@ -118,29 +118,29 @@ CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage >
 
     m_MovingImage->TransformContinuousIndexToPhysicalPoint( 
       centerMovingIndex, centerMovingPoint );
-	  
-	// Origins points
-	InputPointType originMovingPoint;
+      
+    // Origins points
+    InputPointType originMovingPoint;
     m_MovingImage->TransformIndexToPhysicalPoint( 
       movingIndex, originMovingPoint );
-	  
-	const typename FixedImageType::RegionType & fixedRegion = m_FixedImage->GetLargestPossibleRegion();
+      
+    const typename FixedImageType::RegionType & fixedRegion = m_FixedImage->GetLargestPossibleRegion();
     const typename FixedImageType::IndexType & fixedIndex = fixedRegion.GetIndex();
-	InputPointType originFixedPoint;
+    InputPointType originFixedPoint;
     m_FixedImage->TransformIndexToPhysicalPoint( 
       fixedIndex, originFixedPoint );
-	
-	for( unsigned int i=0; i<InputSpaceDimension; i++)
+    
+    for( unsigned int i=0; i<InputSpaceDimension; i++)
       {
       translationVector[i] = originMovingPoint[i] - originFixedPoint[i];
-	  rotationCenter[i]    = centerMovingPoint[i] - translationVector[i];
+      rotationCenter[i]    = centerMovingPoint[i] - translationVector[i];
       }
-	  
+      
     }
   else
     {
     // Here use the geometrical center of each image.
-	// std::cerr << "Geometrical mode..." << std::endl;
+    // std::cerr << "Geometrical mode..." << std::endl;
 
     const typename FixedImageType::RegionType & fixedRegion = m_FixedImage->GetLargestPossibleRegion();
     const typename FixedImageType::IndexType & fixedIndex = fixedRegion.GetIndex();

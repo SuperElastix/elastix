@@ -100,9 +100,9 @@ public:
 
   /** Moment calculators */
   typedef ImageMomentsCalculator< FixedImageType >   
-												 FixedImageCalculatorType;
+                                                 FixedImageCalculatorType;
   typedef ImageMomentsCalculator< MovingImageType >  
-												 MovingImageCalculatorType;
+                                                 MovingImageCalculatorType;
 
   typedef typename FixedImageCalculatorType::Pointer
                                                  FixedImageCalculatorPointer;
