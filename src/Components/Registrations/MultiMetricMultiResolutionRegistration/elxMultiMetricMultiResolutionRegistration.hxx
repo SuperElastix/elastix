@@ -128,7 +128,7 @@ MultiMetricMultiResolutionRegistration<TElastix>
   /** Set the masks in the metric. */
   this->UpdateFixedMasks( level );
   this->UpdateMovingMasks( level );
-  
+
   /** Set all metric weights. The default metric weight is 1.0 / nrOfMetrics. */
   double defaultWeight = 1.0 / static_cast<double>( nrOfMetrics );
   for ( unsigned int metricnr = 0; metricnr < nrOfMetrics; ++metricnr )
