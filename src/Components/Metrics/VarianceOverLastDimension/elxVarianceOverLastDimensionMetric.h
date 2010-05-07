@@ -18,6 +18,7 @@
 #include "elxIncludes.h"
 #include "itkVarianceOverLastDimensionImageMetric.h"
 #include "itkAdvancedBSplineDeformableTransform.h"
+#include "../Transforms/StackTransform/itkStackTransform.h"
 
 #include "elxTimer.h"
 
@@ -87,6 +88,7 @@ using namespace itk;
     typedef typename Superclass1::FixedImageType             FixedImageType;
     typedef typename Superclass1::FixedImageConstPointer     FixedImageConstPointer;
     typedef typename Superclass1::FixedImageRegionType       FixedImageRegionType;
+    typedef typename Superclass1::FixedImageSizeType         FixedImageSizeType;
     typedef typename Superclass1::TransformType              TransformType;
     typedef typename Superclass1::TransformPointer           TransformPointer;
     typedef typename Superclass1::InputPointType             InputPointType;
@@ -146,6 +148,10 @@ using namespace itk;
       ScalarType, FixedImageDimension >             BSplineTransformBaseType;
     typedef AdvancedCombinationTransform<
       ScalarType, FixedImageDimension >             CombinationTransformType;
+    typedef StackTransform<
+      ScalarType, FixedImageDimension, MovingImageDimension > StackTransformType;
+    typedef AdvancedBSplineDeformableTransformBase<
+      ScalarType, FixedImageDimension - 1 >         ReducedDimensionBSplineTransformBaseType;
       
     /** Typedef for timer. */
     typedef tmr::Timer          TimerType;

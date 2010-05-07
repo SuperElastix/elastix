@@ -106,13 +106,34 @@ using namespace itk;
       = dynamic_cast<CombinationTransformType *>( this->GetElastix()->GetElxTransformBase() );
     if ( testPtr1 )
     {
-      /** Check for quadratic B-spline. */
+      /** Check for B-spline transform. */
       BSplineTransformBaseType * testPtr2 = dynamic_cast<BSplineTransformBaseType *>(
         testPtr1->GetCurrentTransform() );
       if ( testPtr2 )
       {
         this->SetGridSize( testPtr2->GetGridRegion().GetSize() );
-      } 
+      }
+      else
+      {
+        /** Check for stack transform. */
+        StackTransformType * testPtr3 = dynamic_cast<StackTransformType *>(
+          testPtr1->GetCurrentTransform() );
+        if ( testPtr3 )
+        {
+          if ( testPtr3->GetNumberOfSubTransforms() > 0 )
+          {
+            // Check if subtransform is a B-spline transform
+            ReducedDimensionBSplineTransformBaseType * testPtr4 = dynamic_cast<ReducedDimensionBSplineTransformBaseType *>(
+              testPtr3->GetSubTransform( 0 ).GetPointer() );
+            if ( testPtr4 )
+            {
+              FixedImageSizeType gridSize;
+              gridSize.Fill( testPtr3->GetNumberOfSubTransforms() );
+              this->SetGridSize( gridSize );
+            }
+          }
+        }
+      }
     }
     
   } // end BeforeEachResolution
