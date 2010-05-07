@@ -661,9 +661,9 @@ void BSplineStackTransform<TElastix>
   xout["transpar"] << "(BSplineTransformSplineOrder " << m_SplineOrder << ")" << std::endl;
 
   /** Write the stack spacing, stack origina and number of sub transforms. */
-  xout["transpar"] << "(StackSpacing \"" << this->m_BSplineStackTransform->GetStackSpacing() << "\")" << std::endl;
-  xout["transpar"] << "(StackOrigin \"" << this->m_BSplineStackTransform->GetStackOrigin() << "\")" << std::endl;
-  xout["transpar"] << "(NumberOfSubTransforms \"" << this->m_BSplineStackTransform->GetNumberOfSubTransforms() << "\")" << std::endl;
+  xout["transpar"] << "(StackSpacing " << this->m_BSplineStackTransform->GetStackSpacing() << ")" << std::endl;
+  xout["transpar"] << "(StackOrigin " << this->m_BSplineStackTransform->GetStackOrigin() << ")" << std::endl;
+  xout["transpar"] << "(NumberOfSubTransforms " << this->m_BSplineStackTransform->GetNumberOfSubTransforms() << ")" << std::endl;
 
   /** Set the precision back to default value. */
   xout["transpar"] << std::setprecision(
