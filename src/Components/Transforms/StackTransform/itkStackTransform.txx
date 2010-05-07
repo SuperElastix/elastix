@@ -52,7 +52,6 @@ StackTransform<TScalarType,NInputDimensions,NOutputDimensions>::SetParameters( c
   }
 
   // Set separate subtransform parameters
-  unsigned int i = 0;
   const unsigned int numSubTransformParameters = this->m_SubTransformContainer[ 0 ]->GetNumberOfParameters();
   for ( unsigned int t = 0; t < this->m_NumberOfSubTransforms; ++t )
   {
@@ -172,9 +171,9 @@ StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
   /** Fill output Jacobian. */
   jac.set_size( InputSpaceDimension, nzji.size() );
   jac.Fill( 0.0 );
-  for ( int d = 0; d < ReducedInputSpaceDimension; ++d )
+  for ( unsigned int d = 0; d < ReducedInputSpaceDimension; ++d )
   {
-    for ( int n = 0; n < nzji.size(); ++n )
+    for ( unsigned int n = 0; n < nzji.size(); ++n )
     {
       jac[ d ][ n ] = subjac[ d ][ n ];
     }
