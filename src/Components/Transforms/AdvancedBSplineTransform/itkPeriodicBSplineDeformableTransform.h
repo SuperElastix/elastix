@@ -41,7 +41,7 @@ class ITK_EXPORT PeriodicBSplineDeformableTransform
 {
 public:
   /** Standard class typedefs. */
-  typedef PeriodicBSplineDeformableTransform            Self;
+  typedef PeriodicBSplineDeformableTransform          Self;
   typedef AdvancedBSplineDeformableTransform<
     TScalarType, NDimensions, VSplineOrder >          Superclass;
   typedef SmartPointer<Self>                          Pointer;
