@@ -7,6 +7,7 @@ PROJECT( elxCommon )
 SUBDIRS( KNN )
 SUBDIRS( ParameterFileParser )
 SUBDIRS( xout )
+SUBDIRS( CUDA )
 
 #---------------------------------------------------------------------
 # Define lists of files in the subdirectories.

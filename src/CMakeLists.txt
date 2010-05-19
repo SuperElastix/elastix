@@ -14,6 +14,17 @@ ELSE( ITK_FOUND )
 ENDIF( ITK_FOUND )
 
 #---------------------------------------------------------------------
+# Find CUDA.
+MARK_AS_ADVANCED(ELASTIX_USE_CUDA)
+OPTION(ELASTIX_USE_CUDA "Use CUDA enabled GPU" OFF)
+
+IF( ELASTIX_USE_CUDA )
+  FIND_PACKAGE( CUDA )
+  IF( NOT CUDA_FOUND )
+    MESSAGE( FATAL_ERROR "Cannot build without CUDA.  Please set CUDA_TOOLKIT_ROOT_DIR." )
+  ENDIF( NOT CUDA_FOUND )
+ENDIF( ELASTIX_USE_CUDA )
+
 # elastix depends on some ITK settings
 
 IF( NOT ITK_USE_REVIEW )
@@ -44,6 +55,7 @@ ENDIF()
 SET( elxCommon_INCLUDE_DIRECTORIES
  ${elastix_SOURCE_DIR}/Common
  ${elastix_SOURCE_DIR}/Common/CostFunctions
+ ${elastix_SOURCE_DIR}/Common/CUDA
  ${elastix_SOURCE_DIR}/Common/ImageSamplers
  ${elastix_SOURCE_DIR}/Common/KNN
  ${elastix_SOURCE_DIR}/Common/KNN/ann_1.1/include
