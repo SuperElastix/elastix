@@ -1,5 +1,6 @@
 /* $Id$ */
-#pragma once
+#if !defined(ITKCUDARESAMPLEFILTER_H)
+#define ITKCUDARESAMPLEFILTER_H
 
 #include "itkImage.h"
 #include "itkResampleImageFilter.h"
@@ -49,3 +50,5 @@ private:
 }; /* namespace itk */
 
 #include "itkCUDAResampleImageFilter.hxx"
+
+#endif /* ITKCUDARESAMPLEFILTER_H */

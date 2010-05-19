@@ -1,5 +1,6 @@
 /* $Id$ */
-#pragma once
+#if !defined(ITKCUDARESAMPLEFILTER_HXX)
+#define ITKCUDARESAMPLEFILTER_HXX
 #include <cuda_runtime.h>
 
 #include "itkCUDAResampleImageFilter.h"
@@ -99,3 +100,5 @@ namespace itk
 		m_cuda.GenerateData(data);
 	}
 }; /* namespace itk */
+
+#endif /* ITKCUDARESAMPLEFILTER_HXX */

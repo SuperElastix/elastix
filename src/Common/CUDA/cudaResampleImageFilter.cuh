@@ -1,5 +1,6 @@
 /* $Id$ */
-#pragma once
+#if !defined(CUDARESAMPLEIMAGEFILTER_CUH)
+#define CUDARESAMPLEIMAGEFILTER_CUH
 
 #include <cuda_runtime.h>
 #include "cudaMacro.h"
@@ -69,3 +70,5 @@ namespace cuda
 	};
 
 }; /* namespace cuda */
+
+#endif /* CUDARESAMPLEIMAGEFILTER_CUH */

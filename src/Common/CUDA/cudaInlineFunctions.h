@@ -1,5 +1,6 @@
 /* $Id$ */
-#pragma once
+#if !defined(CUDAINLINEFUNCTIONS_H)
+#define CUDAINLINEFUNCTIONS_H
 
 #include <cuda_runtime.h>
 #include <stdio.h>
@@ -9,7 +10,7 @@
 #include "cudaMacro.h"
 
 namespace cuda {
-#define cudaCheckMsg(msg) __cudaCheckMsg(msg, __FILE__, __LINE__)
+	#define cudaCheckMsg(msg) __cudaCheckMsg(msg, __FILE__, __LINE__)
 
 	inline void __cudaCheckMsg(const char *msg, const char *file, const int line) {
 		cudaError_t err = ::cudaGetLastError();
@@ -105,3 +106,5 @@ namespace cuda {
 	DBG_FUNC(cudaSetDevice, (int device), (device));
 	DBG_FUNC(cudaGetDeviceProperties, (struct cudaDeviceProp *prop, int device), (prop, device));
 }; /* cuda */
+
+#endif /* CUDAINLINEFUNCTIONS_H */
