@@ -4,7 +4,8 @@
 
 #include "itkImage.h"
 #include "itkResampleImageFilter.h"
-#include "itkBSplineDeformableTransform.h"
+#include "itkAdvancedCombinationTransform.h"
+#include "itkAdvancedBSplineDeformableTransform.h"
 #include "cudaResampleImageFilter.cuh"
 
 namespace itk
@@ -16,17 +17,23 @@ class ITK_EXPORT itkCUDAResampleImageFilter:
 {
 public:
 	/** Standard class typedefs. */
-	typedef itkCUDAResampleImageFilter                                               Self;
-	typedef ResampleImageFilter<TInputImage,TOutputImage,TInterpolatorPrecisionType> Superclass;
-	typedef SmartPointer<Self>                                                       Pointer;
-	typedef SmartPointer<const Self>                                                 ConstPointer;
+	typedef itkCUDAResampleImageFilter                          Self;
+	typedef ResampleImageFilter<
+    TInputImage,TOutputImage,TInterpolatorPrecisionType>      Superclass;
+	typedef SmartPointer<Self>                                  Pointer;
+	typedef SmartPointer<const Self>                            ConstPointer;
 
-	typedef BSplineDeformableTransform<TInterpolatorPrecisionType, 3, 3> BSplineTransformType;
-	typedef cuda::CUDAResampleImageFilter<typename BSplineTransformType::ParametersValueType, typename TInputImage::PixelType, float> Cudaclass;
+  typedef AdvancedCombinationTransform<
+    TInterpolatorPrecisionType, 3 >                           InternalComboTransformType;
+	typedef AdvancedBSplineDeformableTransform<
+    TInterpolatorPrecisionType, 3, 3>                         InternalBSplineTransformType;
+	typedef cuda::CUDAResampleImageFilter<
+    typename InternalBSplineTransformType::ParametersValueType,
+    typename TInputImage::PixelType, float>                   Cudaclass;
 
 	itkCUDAResampleImageFilter();
 	~itkCUDAResampleImageFilter();
-	virtual void GenerateData();
+	virtual void GenerateData( void );
 
 	itkNewMacro(Self); 
 
@@ -41,7 +48,7 @@ public:
 private:
 	bool m_UseCuda;
 	bool m_PreFilter;
-	const BSplineTransformType* m_Transform;
+  typename InternalBSplineTransformType::Pointer m_InternalCUDATransform;
 	Cudaclass m_cuda;
 
 	void copyParameters();

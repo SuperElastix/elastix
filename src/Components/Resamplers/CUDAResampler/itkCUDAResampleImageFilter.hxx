@@ -12,7 +12,7 @@ namespace itk
 		::itkCUDAResampleImageFilter()
 		: m_UseCuda(true)
 		, m_PreFilter(false)
-		, m_Transform(false)
+		, m_InternalCUDATransform(false)
 	{
 	}
 
@@ -49,56 +49,111 @@ namespace itk
 		float defaultPixelValue   = GetDefaultPixelValue();
 		m_cuda.cudaCopyImageSymbols(inputimageSpacing, inputimageOrigin, outputimageSpacing, outputimageOrigin, defaultPixelValue);
 
-		const typename BSplineTransformType::OriginType  ITKgridOrigin  = m_Transform->GetGridOrigin();
-		const typename BSplineTransformType::SpacingType ITKgridSpacing = m_Transform->GetGridSpacing();
-		const typename BSplineTransformType::SizeType    ITKgridSize    = m_Transform->GetGridRegion().GetSize();
+		const typename InternalBSplineTransformType::OriginType  ITKgridOrigin  = m_InternalCUDATransform->GetGridOrigin();
+		const typename InternalBSplineTransformType::SpacingType ITKgridSpacing = m_InternalCUDATransform->GetGridSpacing();
+		const typename InternalBSplineTransformType::SizeType    ITKgridSize    = m_InternalCUDATransform->GetGridRegion().GetSize();
 
 		float3 gridSpacing        = make_float3(ITKgridSpacing[0],   ITKgridSpacing[1],   ITKgridSpacing[2]);
 		float3 gridOrigin         = make_float3(ITKgridOrigin[0],    ITKgridOrigin[1],    ITKgridOrigin[2]);
 		int3   gridSize           = make_int3  (ITKgridSize[0],      ITKgridSize[1],      ITKgridSize[2]);
 		m_cuda.cudaCopyGridSymbols(gridSpacing, gridOrigin, gridSize);
 
-		const BSplineTransformType::ParametersType params = m_Transform->GetParameters();
+		const InternalBSplineTransformType::ParametersType params
+      = m_InternalCUDATransform->GetParameters();
 
-		m_cuda.cudaMallocTransformationData(gridSize, params.data_block());
+		m_cuda.cudaMallocTransformationData( gridSize, params.data_block() );
 	}
 
 	template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
 	void
 		itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>
-		::GenerateData()
+		::GenerateData( void )
 	{
-		if (!m_UseCuda) return Superclass::GenerateData();
+    /** If we are not using CUDA simply use the CPU implementation. */
+		if ( !m_UseCuda )
+    {
+      return Superclass::GenerateData();
+    }
 
 		try
 		{
-			m_Transform = dynamic_cast<const BSplineTransformType*>(GetTransform());
-			if (m_Transform == NULL) itkWarningMacro("using CPU (no B-spline transform set)");
+      /** First check if the Transform is valid for CUDA. */
+      InternalBSplineTransformType * testPtr1
+        = const_cast<InternalBSplineTransformType *>(
+        dynamic_cast<const InternalBSplineTransformType *>( this->GetTransform() ) );
+      InternalComboTransformType * testPtr2a
+        = const_cast<InternalComboTransformType *>(
+        dynamic_cast<const InternalComboTransformType *>( this->GetTransform() ) );
+
+      bool transformIsValid = false;
+      if ( testPtr1 )
+      {
+        /** The transform is of type AdvancedBSplineDeformableTransform. */
+        transformIsValid = true;
+        m_InternalCUDATransform = testPtr1;
+      }
+      else if ( testPtr2a )
+      {
+        // check that the comboT has no initial transform and that current = b-spline
+        // and that b-spline = 3rd order
+
+        /** The transform is of type AdvancedCombinationTransform. */
+        if ( !testPtr2a->GetInitialTransform() )
+        {
+          InternalBSplineTransformType * testPtr2b
+            = dynamic_cast<InternalBSplineTransformType *>(
+            testPtr2a->GetCurrentTransform() );
+          if ( testPtr2b )
+          {
+            /** The current transform is of type AdvancedBSplineDeformableTransform. */
+            transformIsValid = true;
+            m_InternalCUDATransform = testPtr2b;
+          }
+        }
+      }
+
+      if ( !transformIsValid )
+      {
+        itkWarningMacro( << "Using CPU (no B-spline transform set)" );
+      }
+
+      /** Check if proper CUDA device. */
 			bool cuda_device = (Cudaclass::checkExecutionParameters() == 0);
-			if (!cuda_device) itkWarningMacro("using CPU (no CUDA capable GPU found, update driver)");
-			m_UseCuda = (m_Transform != NULL) && cuda_device;
+			if ( !cuda_device )
+      {
+        itkWarningMacro( << "Using CPU (no CUDA capable GPU found, and/or update driver)" );
+      }
+
+      m_UseCuda = m_InternalCUDATransform.IsNotNull() && cuda_device;
 		}
-		catch (itk::ExceptionObject& excep)
+		catch ( itk::ExceptionObject & excep )
 		{
+      // FIXME: no printing
 			std::cerr << excep << std::endl;
 			m_UseCuda = false;
 		}
 
-		if (!m_UseCuda) return Superclass::GenerateData();			
+		if ( !m_UseCuda )
+    {
+      return Superclass::GenerateData();
+    }
 
-		/* initialise cuda device */
+		/** Initialize CUDA device. */
 		m_cuda.cudaInit();
 
-		/* copy the parameters to the GPU */
+		/** Copy the parameters to the GPU. */
 		copyParameters();
 
-		/* allocate host memory for the output and copy/cast the result back to the host */
+		/** Allocate host memory for the output and copy/cast the result back to the host. */
 		AllocateOutputs();
 		InputPixelType* data = GetOutput()->GetBufferPointer();
 
-		/* run the resampler */
-		m_cuda.GenerateData(data);
-	}
+		/** Run the resampler. */
+		m_cuda.GenerateData( data );
+
+	} // end GenerateData()
+
+
 }; /* namespace itk */
 
 #endif /* ITKCUDARESAMPLEFILTER_HXX */
