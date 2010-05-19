@@ -7,7 +7,10 @@ PROJECT( elxCommon )
 SUBDIRS( KNN )
 SUBDIRS( ParameterFileParser )
 SUBDIRS( xout )
-SUBDIRS( CUDA )
+
+IF( ELASTIX_USE_CUDA )
+  SUBDIRS( CUDA )
+ENDIF()
 
 #---------------------------------------------------------------------
 # Define lists of files in the subdirectories.
