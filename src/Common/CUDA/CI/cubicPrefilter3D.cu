@@ -84,7 +84,7 @@ __global__ void SamplesToCoefficients3DZ(
 	const uint startIdx = y * width + x;
 	const uint slice = height * width;
 
-	ConvertToInterpolationCoefficients(volume + startIdx, height, slice);
+	ConvertToInterpolationCoefficients(volume + startIdx, depth, slice);
 }
 
 //--------------------------------------------------------------------------
