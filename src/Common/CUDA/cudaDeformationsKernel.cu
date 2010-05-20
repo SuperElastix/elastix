@@ -96,15 +96,15 @@ __global__ void resample_image(TImageType* dst, int3 inputImageSize, int3 output
 	
 	if (isValidSample) {
 		/* B-Spline deform of a coordinate uses world coordinate */
-		float3 deform = deform_at_coord_simple(out_coord_world_bspline);
+		float3 deform = deform_at_coord(out_coord_world_bspline);
 		float3 inp_coord_world = out_coord_world + deform;
 		/* translate world coordinates to normal coordinates */
-		float3 inp_coord = ((inp_coord_world - CUInputImageOrigin) / CUInputImageSpacing);
+		float3 inp_coord = ((inp_coord_world - CUInputImageOrigin) / CUInputImageSpacing) + 0.5f;
 
-		isValidSample = (inp_coord > 0.0f) && inp_coord < make_float3(inputImageSize - 1);
+		isValidSample = (inp_coord > 0.0f) && inp_coord < make_float3(inputImageSize);
 
 		/* B-spline transform of a coordinate uses normal coordinates */
-		if (isValidSample) res = cubicTex3DSimple(m_tex_inputImage, inp_coord + 0.5f);
+		if (isValidSample) res = cubicTex3D(m_tex_inputImage, inp_coord);
 	}
 	
 	dst[id] = static_cast<TImageType>(res);
