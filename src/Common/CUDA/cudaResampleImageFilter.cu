@@ -191,7 +191,7 @@ void
 		for (offset = 0; offset <= nrOfOutputVoxels - m_MaxnrOfVoxelsPerIteration; offset += m_MaxnrOfVoxelsPerIteration)
 		{
 			resample_image<<<dimGrid, dimBlock>>>(m_OutputImage, m_InputImageSize, m_OutputImageSize, offset);
-			cuda::cudaCheckMsg("kernel launch failed: interpolate_image");
+			cuda::cudaCheckMsg("kernel launch failed: resample_image");
 			cudaCastToHost(m_MaxnrOfVoxelsPerIteration, m_OutputImage, tmp_src, &dst[offset]);
 		}
 	}
@@ -199,7 +199,7 @@ void
 	/* do the remainder ensuring again dimGrid*dimBlock is less than image size */
 	dimGrid = dim3(nrOfOutputVoxels - offset) / dimBlock;
 	resample_image<<<dimGrid, dimBlock>>>(m_OutputImage, m_InputImageSize, m_OutputImageSize, offset);
-	cuda::cudaCheckMsg("kernel launch failed: interpolate_image");
+	cuda::cudaCheckMsg("kernel launch failed: resample_image");
 	cudaCastToHost(dimGrid.x * dimBlock.x, m_OutputImage, tmp_src, &dst[offset]);
 
 	/* do the final amount of voxels < dimBlock */

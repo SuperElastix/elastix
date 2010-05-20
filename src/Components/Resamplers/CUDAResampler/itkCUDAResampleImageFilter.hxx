@@ -58,8 +58,7 @@ namespace itk
 		int3   gridSize           = make_int3  (ITKgridSize[0],      ITKgridSize[1],      ITKgridSize[2]);
 		m_cuda.cudaCopyGridSymbols(gridSpacing, gridOrigin, gridSize);
 
-		const InternalBSplineTransformType::ParametersType params
-      = m_InternalCUDATransform->GetParameters();
+		const InternalBSplineTransformType::ParametersType params = m_InternalCUDATransform->GetParameters();
 
 		m_cuda.cudaMallocTransformationData( gridSize, params.data_block() );
 	}
@@ -69,74 +68,74 @@ namespace itk
 		itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>
 		::GenerateData( void )
 	{
-    /** If we are not using CUDA simply use the CPU implementation. */
+		/** If we are not using CUDA simply use the CPU implementation. */
 		if ( !m_UseCuda )
-    {
-      return Superclass::GenerateData();
-    }
+		{
+			return Superclass::GenerateData();
+		}
 
 		try
 		{
-      /** First check if the Transform is valid for CUDA. */
-      InternalBSplineTransformType * testPtr1
-        = const_cast<InternalBSplineTransformType *>(
-        dynamic_cast<const InternalBSplineTransformType *>( this->GetTransform() ) );
-      InternalComboTransformType * testPtr2a
-        = const_cast<InternalComboTransformType *>(
-        dynamic_cast<const InternalComboTransformType *>( this->GetTransform() ) );
+			/** First check if the Transform is valid for CUDA. */
+			InternalBSplineTransformType * testPtr1
+			  = const_cast<InternalBSplineTransformType *>(
+			  dynamic_cast<const InternalBSplineTransformType *>( this->GetTransform() ) );
+			InternalComboTransformType * testPtr2a
+			  = const_cast<InternalComboTransformType *>(
+			  dynamic_cast<const InternalComboTransformType *>( this->GetTransform() ) );
 
-      bool transformIsValid = false;
-      if ( testPtr1 )
-      {
-        /** The transform is of type AdvancedBSplineDeformableTransform. */
-        transformIsValid = true;
-        m_InternalCUDATransform = testPtr1;
-      }
-      else if ( testPtr2a )
-      {
-        // check that the comboT has no initial transform and that current = b-spline
-        // and that b-spline = 3rd order
+			bool transformIsValid = false;
+			if ( testPtr1 )
+			{
+				/** The transform is of type AdvancedBSplineDeformableTransform. */
+				transformIsValid = true;
+				m_InternalCUDATransform = testPtr1;
+			}
+			else if ( testPtr2a )
+			{
+				// check that the comboT has no initial transform and that current = b-spline
+				// and that b-spline = 3rd order
 
-        /** The transform is of type AdvancedCombinationTransform. */
-        if ( !testPtr2a->GetInitialTransform() )
-        {
-          InternalBSplineTransformType * testPtr2b
-            = dynamic_cast<InternalBSplineTransformType *>(
-            testPtr2a->GetCurrentTransform() );
-          if ( testPtr2b )
-          {
-            /** The current transform is of type AdvancedBSplineDeformableTransform. */
-            transformIsValid = true;
-            m_InternalCUDATransform = testPtr2b;
-          }
-        }
-      }
+				/** The transform is of type AdvancedCombinationTransform. */
+				if ( !testPtr2a->GetInitialTransform() )
+				{
+					InternalBSplineTransformType * testPtr2b
+					  = dynamic_cast<InternalBSplineTransformType *>(
+					  testPtr2a->GetCurrentTransform() );
+					if ( testPtr2b )
+					{
+						/** The current transform is of type AdvancedBSplineDeformableTransform. */
+						transformIsValid = true;
+						m_InternalCUDATransform = testPtr2b;
+					}
+				}
+			}
 
-      if ( !transformIsValid )
-      {
-        itkWarningMacro( << "Using CPU (no B-spline transform set)" );
-      }
+			if ( !transformIsValid )
+			{
+				itkWarningMacro( << "Using CPU (no B-spline transform set)" );
+			}
 
-      /** Check if proper CUDA device. */
+			/** Check if proper CUDA device. */
 			bool cuda_device = (Cudaclass::checkExecutionParameters() == 0);
 			if ( !cuda_device )
-      {
-        itkWarningMacro( << "Using CPU (no CUDA capable GPU found, and/or update driver)" );
-      }
+			{
+				itkWarningMacro( << "Using CPU (no CUDA capable GPU found, and/or update driver)" );
+			}
 
-      m_UseCuda = m_InternalCUDATransform.IsNotNull() && cuda_device;
+			m_UseCuda = m_InternalCUDATransform.IsNotNull() && cuda_device;
 		}
 		catch ( itk::ExceptionObject & excep )
 		{
-      // FIXME: no printing
+			// FIXME: no printing
 			std::cerr << excep << std::endl;
 			m_UseCuda = false;
 		}
 
 		if ( !m_UseCuda )
-    {
-      return Superclass::GenerateData();
-    }
+		{
+			return Superclass::GenerateData();
+		}
 
 		/** Initialize CUDA device. */
 		m_cuda.cudaInit();

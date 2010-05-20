@@ -19,17 +19,17 @@ public:
 	/** Standard class typedefs. */
 	typedef itkCUDAResampleImageFilter                          Self;
 	typedef ResampleImageFilter<
-    TInputImage,TOutputImage,TInterpolatorPrecisionType>      Superclass;
+	  TInputImage,TOutputImage,TInterpolatorPrecisionType>      Superclass;
 	typedef SmartPointer<Self>                                  Pointer;
 	typedef SmartPointer<const Self>                            ConstPointer;
 
   typedef AdvancedCombinationTransform<
     TInterpolatorPrecisionType, 3 >                           InternalComboTransformType;
 	typedef AdvancedBSplineDeformableTransform<
-    TInterpolatorPrecisionType, 3, 3>                         InternalBSplineTransformType;
+	  TInterpolatorPrecisionType, 3, 3>                         InternalBSplineTransformType;
 	typedef cuda::CUDAResampleImageFilter<
-    typename InternalBSplineTransformType::ParametersValueType,
-    typename TInputImage::PixelType, float>                   Cudaclass;
+	typename InternalBSplineTransformType::ParametersValueType,
+	  typename TInputImage::PixelType, float>                   Cudaclass;
 
 	itkCUDAResampleImageFilter();
 	~itkCUDAResampleImageFilter();
@@ -48,7 +48,7 @@ public:
 private:
 	bool m_UseCuda;
 	bool m_PreFilter;
-  typename InternalBSplineTransformType::Pointer m_InternalCUDATransform;
+	typename InternalBSplineTransformType::Pointer m_InternalCUDATransform;
 	Cudaclass m_cuda;
 
 	void copyParameters();
