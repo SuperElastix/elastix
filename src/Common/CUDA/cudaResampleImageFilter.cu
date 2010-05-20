@@ -206,9 +206,13 @@ void
 	offset += dimGrid.x * dimBlock.x;
 	dimBlock = dim3(nrOfOutputVoxels - offset);
 	dimGrid  = dim3(1);
-	resample_image<<<dimGrid, dimBlock>>>(m_OutputImage, m_InputImageSize, m_OutputImageSize, offset);
-	cuda::cudaCheckMsg("kernel launch failed: resample_image");
-	cudaCastToHost(dimGrid.x * dimBlock.x, m_OutputImage, tmp_src, &dst[offset]);
+
+	if (dimBlock.x > 0)
+	{
+		resample_image<<<dimGrid, dimBlock>>>(m_OutputImage, m_InputImageSize, m_OutputImageSize, offset);
+		cuda::cudaCheckMsg("kernel launch failed: resample_image");
+		cudaCastToHost(dimGrid.x * dimBlock.x, m_OutputImage, tmp_src, &dst[offset]);
+	}
 	delete[] tmp_src;
 }
 
