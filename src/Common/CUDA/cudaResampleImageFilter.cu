@@ -145,7 +145,8 @@ void
 	m_InputImageSize            = inputsize;
 	m_OutputImageSize           = outputsize;
 	m_nrOfInputVoxels           = m_InputImageSize.x  * m_InputImageSize.y  * m_InputImageSize.z;
-	m_MaxnrOfVoxelsPerIteration = min((size_t)(m_OutputImageSize.x * m_OutputImageSize.y * m_OutputImageSize.z), m_MaxnrOfVoxelsPerIteration);
+	size_t nrOfOutputVoxels     = m_OutputImageSize.x * m_OutputImageSize.y * m_OutputImageSize.z;
+	m_MaxnrOfVoxelsPerIteration = min((unsigned int)nrOfOutputVoxels, m_MaxnrOfVoxelsPerIteration);
 
 	cudaExtent volumeExtent     = make_cudaExtent(m_InputImageSize.x, m_InputImageSize.y, m_InputImageSize.z);
 
@@ -197,14 +198,14 @@ void
 	}
 
 	/* do the remainder ensuring again dimGrid*dimBlock is less than image size */
-	dimGrid = dim3(nrOfOutputVoxels - offset) / dimBlock;
+	dimGrid = dim3((unsigned int)(nrOfOutputVoxels - offset)) / dimBlock;
 	resample_image<<<dimGrid, dimBlock>>>(m_OutputImage, m_InputImageSize, m_OutputImageSize, offset);
 	cuda::cudaCheckMsg("kernel launch failed: resample_image");
 	cudaCastToHost(dimGrid.x * dimBlock.x, m_OutputImage, tmp_src, &dst[offset]);
 
 	/* do the final amount of voxels < dimBlock */
 	offset += dimGrid.x * dimBlock.x;
-	dimBlock = dim3(nrOfOutputVoxels - offset);
+	dimBlock = dim3((unsigned int)(nrOfOutputVoxels - offset));
 	dimGrid  = dim3(1);
 
 	if (dimBlock.x > 0)
@@ -283,7 +284,7 @@ TOutputImageType* cuda::cudaCastToType(cudaExtent& volumeExtent, const TInputIma
 	const size_t voxelsPerSlice = volumeExtent.width * volumeExtent.height;
 	size_t offset = 0;
 	dim3 dimBlock(min((int)max(volumeExtent.width, volumeExtent.height), 512));
-	dim3 dimGrid(voxelsPerSlice / dimBlock.x);
+	dim3 dimGrid((unsigned int)(voxelsPerSlice / dimBlock.x));
 	/* not a perfect fit, fix it */
 	if (dimBlock.x * dimGrid.x != voxelsPerSlice) ++dimGrid.x;
 

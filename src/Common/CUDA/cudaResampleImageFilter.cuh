@@ -65,7 +65,7 @@ namespace cuda
 		cudaChannelFormatDesc m_channelDescCoeff;
 		int                   m_Device;
 
-		size_t                m_MaxnrOfVoxelsPerIteration;
+		unsigned int          m_MaxnrOfVoxelsPerIteration;
 		TInternalImageType* inputImage;
 
 	#if defined(__CUDACC__)

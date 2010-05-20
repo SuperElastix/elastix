@@ -35,8 +35,8 @@ policies, either expressed or implied.
 #define _3D_CUBIC_BSPLINE_PREFILTER_H_
 
 #include <stdio.h>
-#include "../cudaInlineFunctions.h"
 #include "internal/cubicPrefilter_kernel.cu"
+#include "../cudaInlineFunctions.h"
 
 //--------------------------------------------------------------------------
 // Global CUDA procedures
@@ -97,8 +97,12 @@ __global__ void SamplesToCoefficients3DZ(
 //! @param height  volume height in number of voxels
 //! @param depth   volume depth in number of voxels
 template<class floatN>
-extern void CubicBSplinePrefilter3D(floatN* volume, uint width, uint height, uint depth)
+extern void CubicBSplinePrefilter3D(floatN* volume, size_t width_, size_t height_, size_t depth_)
 {
+	/** surpress x86_64 warnings... **/
+	uint width  = (uint)width_;
+	uint height = (uint)height_;
+	uint depth  = (uint)depth_;
 	// Try to determine the optimal block dimensions
 	uint dimX = min(min(PowTwoDivider(width), PowTwoDivider(height)), 64);
 	uint dimY = min(min(PowTwoDivider(depth), PowTwoDivider(height)), 512/dimX);
@@ -116,57 +120,6 @@ extern void CubicBSplinePrefilter3D(floatN* volume, uint width, uint height, uin
 	dim3 dimGridZ(width / dimBlock.x, height / dimBlock.y);
 	SamplesToCoefficients3DZ<floatN><<<dimGridZ, dimBlock>>>(volume, width, height, depth);
 	cuda::cudaCheckMsg("SamplesToCoefficients3DZ kernel failed");
-}
-
-//! Convert the voxel values into cubic b-spline coefficients
-//! @param volume  pointer to the voxel volume in GPU (device) memory
-//! @param width   volume width in number of voxels
-//! @param height  volume height in number of voxels
-//! @param depth   volume depth in number of voxels
-//! @note Prints stopwatch feedback
-template<class floatN>
-extern void CubicBSplinePrefilter3DTimer(floatN* volume, uint width, uint height, uint depth)
-{
-	printf("\nCubic B-Spline Prefilter timer:\n");
-	uint hTimer;
-	CUT_SAFE_CALL(cutCreateTimer(&hTimer));
-	CUT_SAFE_CALL(cutResetTimer(hTimer));
-	CUT_SAFE_CALL(cutStartTimer(hTimer));
-
-	// Try to determine the optimal block dimensions
-	uint dimX = min(min(PowTwoDivider(width), PowTwoDivider(height)), 64);
-	uint dimY = min(min(PowTwoDivider(depth), PowTwoDivider(height)), 512/dimX);
-	dim3 dimBlock(dimX, dimY);
-
-	// Replace the voxel values by the b-spline coefficients
-	dim3 dimGridX(height / dimBlock.x, depth / dimBlock.y);
-	SamplesToCoefficients3DX<floatN><<<dimGridX, dimBlock>>>(volume, width, height, depth);
-	CUT_CHECK_ERROR("SamplesToCoefficients3DX kernel failed");
-
-	CUT_SAFE_CALL(cutStopTimer(hTimer));
-	double timerValueX = cutGetTimerValue(hTimer);
-	printf("x-direction : %f msec\n", timerValueX);
-	CUT_SAFE_CALL(cutResetTimer(hTimer));
-	CUT_SAFE_CALL(cutStartTimer(hTimer));
-
-	dim3 dimGridY(width / dimBlock.x, depth / dimBlock.y);
-	SamplesToCoefficients3DY<floatN><<<dimGridY, dimBlock>>>(volume, width, height, depth);
-	CUT_CHECK_ERROR("SamplesToCoefficients3DY kernel failed");
-
-	CUT_SAFE_CALL(cutStopTimer(hTimer));
-	double timerValueY = cutGetTimerValue(hTimer);
- 	printf("y-direction : %f msec\n", timerValueY);
-	CUT_SAFE_CALL(cutResetTimer(hTimer));
-	CUT_SAFE_CALL(cutStartTimer(hTimer));
-
-	dim3 dimGridZ(width / dimBlock.x, height / dimBlock.y);
-	SamplesToCoefficients3DZ<floatN><<<dimGridZ, dimBlock>>>(volume, width, height, depth);
-	CUT_CHECK_ERROR("SamplesToCoefficients3DZ kernel failed");
-
-	CUT_SAFE_CALL(cutStopTimer(hTimer));
-	double timerValueZ = cutGetTimerValue(hTimer);
-	printf("z-direction : %f msec\n", timerValueZ);
-	printf("total : %f msec\n\n", timerValueX+timerValueY+timerValueZ);
 }
 
 #endif  //_3D_CUBIC_BSPLINE_PREFILTER_H_
