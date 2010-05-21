@@ -11,7 +11,7 @@ namespace cuda
 	template <class TInputImageType, class TOutputImageType>
 	TOutputImageType* cudaCastToType( cudaExtent& volumeExtent,
 	  const TInputImageType* src, TOutputImageType* dst,
-	  cudaMemcpyKind direction, int device );
+	  cudaMemcpyKind direction, bool UseCPU);
 
 	class cudaTextures
 	{
@@ -50,6 +50,9 @@ namespace cuda
 		cudaGetConstMacro(Device, int);
 		cudaSetMacro(Device, int);
 
+		cudaSetMacro(CastOnGPU, bool);
+		cudaGetConstMacro(CastOnGPU, bool);
+
 		static int checkExecutionParameters();
 
 	private:
@@ -64,9 +67,9 @@ namespace cuda
 		size_t                m_nrOfOutputVoxels;
 		cudaChannelFormatDesc m_channelDescCoeff;
 		int                   m_Device;
+		bool                  m_CastOnGPU;
 
 		unsigned int          m_MaxnrOfVoxelsPerIteration;
-		TInternalImageType* inputImage;
 
 	#if defined(__CUDACC__)
 		template <typename tex_t> cudaError_t cudaBindTextureToArray(

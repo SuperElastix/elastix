@@ -41,14 +41,19 @@ public:
 	itkBooleanMacro(UseCuda);
 	itkGetConstMacro(UseCuda, bool);
 
+	itkSetMacro(UseGPUToCastData, bool);
+	itkBooleanMacro(UseGPUToCastData);
+	itkGetConstMacro(UseGPUToCastData, bool);
+
 	itkSetMacro(PreFilter, bool);
 	itkBooleanMacro(PreFilter);
 	itkGetConstMacro(PreFilter, bool);
 
 private:
-	bool m_UseCuda;
-	bool m_PreFilter;
 	typename InternalBSplineTransformType::Pointer m_InternalCUDATransform;
+	bool      m_UseCuda;
+	bool      m_UseGPUToCastData;
+	bool      m_PreFilter;
 	Cudaclass m_cuda;
 
 	void copyParameters();

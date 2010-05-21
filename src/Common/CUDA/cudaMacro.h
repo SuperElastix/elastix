@@ -25,4 +25,13 @@ namespace cuda
 	  virtual type Get##name () {   \
 	    return this->m_##name;      \
 	  }
+
+	#define cudaBooleanMacro(name) \
+	  virtual void name##On() {    \
+	    this->Set##name(true);     \
+	  }                            \
+	  virtual void name##Off() {   \
+	    this->Set##name(false);    \
+	  }
+
 }; /* namespace cuda */

@@ -28,6 +28,7 @@ cuda::CUDAResampleImageFilter<TInterpolatorPrecisionType, TImageType, TInternalI
 	, m_InputImage (NULL)
 	, m_InputImageSize(make_int3(0,0,0))
 	, m_Device(0)
+	, m_CastOnGPU(false)
 	, m_MaxnrOfVoxelsPerIteration(1 << 20)
 {
 }
@@ -117,7 +118,7 @@ void
 	clock_t start = clock();
 	TInternalImageType* params_tmp = new TInternalImageType[nrOfParametersPerDimension * 3];
 	for (size_t i = 0; i != nrOfParametersPerDimension * 3; ++i) params_tmp[i] = static_cast<TInternalImageType>(params[i]);
-	std::cout << "parameter type conversion took " << clock() - start << "ms" << std::endl;
+	std::cout << "parameter type conversion took " << clock() - start << "ms for " << nrOfParametersPerDimension * 3 << " elements" << std::endl;
 	cudaBindTextureToArray(m_coeffsX, &params_tmp[0 * nrOfParametersPerDimension], gridExtent, m_tex_coeffsX, m_channelDescCoeff);
 	cudaBindTextureToArray(m_coeffsY, &params_tmp[1 * nrOfParametersPerDimension], gridExtent, m_tex_coeffsY, m_channelDescCoeff);
 	cudaBindTextureToArray(m_coeffsZ, &params_tmp[2 * nrOfParametersPerDimension], gridExtent, m_tex_coeffsZ, m_channelDescCoeff);
@@ -127,11 +128,11 @@ void
 	TInternalImageType* params_gpu = cuda::cudaMalloc<TInternalImageType>(nrOfParametersPerDimension);
 
 	/* create the b-spline coefficients texture */
-	cudaCastToType<TInterpolatorPrecisionType, TInternalImageType>(gridExtent, &params[0 * nrOfParametersPerDimension], params_gpu, cudaMemcpyHostToDevice, m_Device);
+	cudaCastToType<TInterpolatorPrecisionType, TInternalImageType>(gridExtent, &params[0 * nrOfParametersPerDimension], params_gpu, cudaMemcpyHostToDevice, m_CastOnGPU);
 	cudaBindTextureToArray(m_coeffsX, params_gpu, gridExtent, m_tex_coeffsX, m_channelDescCoeff, false, true);
-	cudaCastToType<TInterpolatorPrecisionType, TInternalImageType>(gridExtent, &params[1 * nrOfParametersPerDimension], params_gpu, cudaMemcpyHostToDevice, m_Device);
+	cudaCastToType<TInterpolatorPrecisionType, TInternalImageType>(gridExtent, &params[1 * nrOfParametersPerDimension], params_gpu, cudaMemcpyHostToDevice, m_CastOnGPU);
 	cudaBindTextureToArray(m_coeffsY, params_gpu, gridExtent, m_tex_coeffsY, m_channelDescCoeff, false, true);
-	cudaCastToType<TInterpolatorPrecisionType, TInternalImageType>(gridExtent, &params[2 * nrOfParametersPerDimension], params_gpu, cudaMemcpyHostToDevice, m_Device);
+	cudaCastToType<TInterpolatorPrecisionType, TInternalImageType>(gridExtent, &params[2 * nrOfParametersPerDimension], params_gpu, cudaMemcpyHostToDevice, m_CastOnGPU);
 	cudaBindTextureToArray(m_coeffsZ, params_gpu, gridExtent, m_tex_coeffsZ, m_channelDescCoeff, false, true);
 	cuda::cudaFree(params_gpu);
 #endif
@@ -253,7 +254,7 @@ void
 	::cudaCastToHost(int3 size, const TInternalImageType* src, TImageType* dst)
 {
 	cudaExtent volumeExtent = make_cudaExtent(size.x, size.y, size.z);
-	cudaCastToType<TInternalImageType, TImageType>(volumeExtent, src, dst, cudaMemcpyDeviceToHost, m_Device);
+	cudaCastToType<TInternalImageType, TImageType>(volumeExtent, src, dst, cudaMemcpyDeviceToHost, m_CastOnGPU);
 }
 
 template <typename TInterpolatorPrecisionType, typename TImageType, typename TInternalImageType>
@@ -262,7 +263,7 @@ void
 	::cudaCastToDevice(int3 size, const TImageType* src, TInternalImageType* dst)
 {
 	cudaExtent volumeExtent = make_cudaExtent(size.x, size.y, size.z);
-	cudaCastToType<TImageType, TInternalImageType>(volumeExtent, src, dst, cudaMemcpyHostToDevice, m_Device);
+	cudaCastToType<TImageType, TInternalImageType>(volumeExtent, src, dst, cudaMemcpyHostToDevice, m_CastOnGPU);
 }
 
 /* check for double TInputImageType or TOutputImageType */
@@ -271,7 +272,7 @@ template <class T> inline bool is_double() {return false;}
 template <       > inline bool is_double<double>() {return true;}
 
 template <>
-float* cuda::cudaCastToType<float, float>(cudaExtent& volumeExtent, const float* src, float* dst, cudaMemcpyKind direction, int device)
+float* cuda::cudaCastToType<float, float>(cudaExtent& volumeExtent, const float* src, float* dst, cudaMemcpyKind direction, bool UseGPU)
 {
 	const size_t voxelsPerSlice = volumeExtent.width * volumeExtent.height;
 	cuda::cudaMemcpy(dst, src, voxelsPerSlice * volumeExtent.depth, direction);
@@ -279,73 +280,75 @@ float* cuda::cudaCastToType<float, float>(cudaExtent& volumeExtent, const float*
 }
 
 template <class TInputImageType, class TOutputImageType>
-TOutputImageType* cuda::cudaCastToType(cudaExtent& volumeExtent, const TInputImageType* src, TOutputImageType* dst, cudaMemcpyKind direction, int device)
+TOutputImageType* cuda::cudaCastToType(cudaExtent& volumeExtent, const TInputImageType* src, TOutputImageType* dst, cudaMemcpyKind direction, bool UseGPU)
 {
-	const size_t voxelsPerSlice = volumeExtent.width * volumeExtent.height;
+	cudaDeviceProp prop;
 	size_t offset = 0;
+	const size_t voxelsPerSlice = volumeExtent.width * volumeExtent.height;
+
 	dim3 dimBlock(min((int)max(volumeExtent.width, volumeExtent.height), 512));
 	dim3 dimGrid((unsigned int)(voxelsPerSlice / dimBlock.x));
 	/* not a perfect fit, fix it */
 	if (dimBlock.x * dimGrid.x != voxelsPerSlice) ++dimGrid.x;
 
 	clock_t start = clock();
-	if (is_double<TInputImageType>() || is_double<TOutputImageType>())
-	{
-		cudaDeviceProp prop;
-		cuda::cudaGetDeviceProperties(&prop, device);
-		/* only devices from compute capability 1.3 support double precision on the device */
-		if (prop.major == 1 && prop.minor < 3)
-		{
-			const size_t nof_elements  = volumeExtent.width * volumeExtent.height * volumeExtent.depth;
-			switch (direction)
-			{
-			case cudaMemcpyHostToDevice: {
-				if (is_double<TOutputImageType>()) throw itk::ExceptionObject("GPU doesn't support double-precision");
 
-				/* we can still convert from double (TInputImageType) to TOutputImageType, just not on the GPU */
-				TOutputImageType* src_cast = new TOutputImageType[nof_elements];
-				for (size_t i = 0; i != nof_elements; ++i) src_cast[i] = static_cast<TOutputImageType>(src[i]);
-				cuda::cudaMemcpy(dst, src_cast, nof_elements, cudaMemcpyHostToDevice);
-			} break;
-			case cudaMemcpyDeviceToHost: {
-				if (is_double<TInputImageType>()) throw itk::ExceptionObject("GPU doesn't support double-precision");
-
-				/* we can still convert from TOutputImageType to double (TInputImageType), just not on the GPU */
-				TInputImageType* dst_cast = new TInputImageType[nof_elements];
-				cuda::cudaMemcpy(dst_cast, src, nof_elements, cudaMemcpyDeviceToHost);
-				for (size_t i = 0; i != nof_elements; ++i) dst[i] = static_cast<TOutputImageType>(dst_cast[i]);
-			} break;
-			}
-
-			goto END_OF_FUNCTION;
-		}
-	}
+	/* only devices from compute capability 1.3 support double precision on the device */
+	cuda::cudaGetDeviceProperties(&prop, 0);
+	bool device_less_2_0 = (prop.major == 1 && prop.minor < 3);
 
 	switch (direction)
 	{
-	case cudaMemcpyHostToDevice: {
-		TInputImageType* tmp = cuda::cudaMalloc<TInputImageType>(voxelsPerSlice);
-		for (int slice = 0; slice != volumeExtent.depth; ++slice, offset += voxelsPerSlice)
+	case cudaMemcpyHostToDevice:
+		if (is_double<TOutputImageType>() && device_less_2_0) throw itk::ExceptionObject("GPU doesn't support double-precision");
+
+		if (!UseGPU)
 		{
-			cuda::cudaMemcpy(tmp, src + offset, voxelsPerSlice, cudaMemcpyHostToDevice);
-			cast_to_type<TInputImageType, TOutputImageType><<<dimGrid, dimBlock>>>(dst + offset, tmp, voxelsPerSlice);
-			cuda::cudaCheckMsg("kernel launch failed: cast_to_type");
+			size_t nof_elements = voxelsPerSlice * volumeExtent.depth;
+			/* allocate memory on host, copy over data (and cast) and copy results to GPU */
+			TOutputImageType* tmp = new TOutputImageType[nof_elements];
+			for (size_t i = 0; i != nof_elements; ++i) tmp[i] = static_cast<TOutputImageType>(src[i]);
+			cuda::cudaMemcpy(dst, tmp, nof_elements, cudaMemcpyHostToDevice);
 		}
-		cudaFree(tmp);
-		} break;
-	case cudaMemcpyDeviceToHost: {
-		TOutputImageType* tmp = cuda::cudaMalloc<TOutputImageType>(voxelsPerSlice);
-		for (int slice = 0; slice != volumeExtent.depth; ++slice, offset += voxelsPerSlice)
+		else
 		{
-			cast_to_type<TInputImageType, TOutputImageType><<<dimGrid, dimBlock>>>(tmp, src + offset, voxelsPerSlice);
-			cuda::cudaCheckMsg("kernel launch failed: cast_to_type");
-			cuda::cudaMemcpy(dst + offset, tmp, voxelsPerSlice, cudaMemcpyDeviceToHost);
+			TInputImageType* tmp = cuda::cudaMalloc<TInputImageType>(voxelsPerSlice);
+			/* process each slice separately, copy source to GPU, and cast/copy in kernel */
+			for (int slice = 0; slice != volumeExtent.depth; ++slice, offset += voxelsPerSlice)
+			{
+				cuda::cudaMemcpy(tmp, src + offset, voxelsPerSlice, cudaMemcpyHostToDevice);
+				cast_to_type<TInputImageType, TOutputImageType><<<dimGrid, dimBlock>>>(dst + offset, tmp, voxelsPerSlice);
+				cuda::cudaCheckMsg("kernel launch failed: cast_to_type");
+			}
+			cudaFree(tmp);
 		}
-		cudaFree(tmp);
-		} break;
+		break;
+	case cudaMemcpyDeviceToHost:
+		if (is_double<TInputImageType>() && device_less_2_0) throw itk::ExceptionObject("GPU doesn't support double-precision");
+
+		if (!UseGPU)
+		{
+			size_t nof_elements = voxelsPerSlice * volumeExtent.depth;
+			/* allocate memory on host, copy data from GPU and cast */
+			TInputImageType* tmp = new TInputImageType[nof_elements];
+			cuda::cudaMemcpy(tmp, src, nof_elements, cudaMemcpyDeviceToHost);
+			for (size_t i = 0; i != nof_elements; ++i) dst[i] = static_cast<TOutputImageType>(tmp[i]);
+		}
+		else
+		{
+			TOutputImageType* tmp = cuda::cudaMalloc<TOutputImageType>(voxelsPerSlice);
+			/* process each slice separately, cast/copy in kernel and copy results to host */
+			for (int slice = 0; slice != volumeExtent.depth; ++slice, offset += voxelsPerSlice)
+			{
+				cast_to_type<TInputImageType, TOutputImageType><<<dimGrid, dimBlock>>>(tmp, src + offset, voxelsPerSlice);
+				cuda::cudaCheckMsg("kernel launch failed: cast_to_type");
+				cuda::cudaMemcpy(dst + offset, tmp, voxelsPerSlice, cudaMemcpyDeviceToHost);
+			}
+			cudaFree(tmp);
+		}
+		break;
 	}
 
-END_OF_FUNCTION:
-	std::cout << "type conversion took " << clock() - start << "ms" << std::endl;
+	std::cout << "type conversion took " << clock() - start << "ms for " << voxelsPerSlice * volumeExtent.depth << " elements" << std::endl;
 	return dst;
 }

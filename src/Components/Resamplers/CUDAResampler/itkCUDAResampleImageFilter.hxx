@@ -11,6 +11,7 @@ namespace itk
 	itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>
 		::itkCUDAResampleImageFilter()
 		: m_UseCuda(true)
+		, m_UseGPUToCastData(false)
 		, m_PreFilter(false)
 		, m_InternalCUDATransform(false)
 	{
@@ -139,6 +140,7 @@ namespace itk
 
 		/** Initialize CUDA device. */
 		m_cuda.cudaInit();
+		m_cuda.SetCastOnGPU(m_UseGPUToCastData);
 
 		/** Copy the parameters to the GPU. */
 		copyParameters();
