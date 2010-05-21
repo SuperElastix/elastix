@@ -168,7 +168,7 @@ void
 
 	/* create the image interpolation texture */
 	cuda::cudaMalloc3DArray(&m_InputImage, &m_channelDescCoeff, volumeExtent);
-	cudaBindTextureToArray(m_InputImage, tmpImage, volumeExtent, m_tex_inputImage, m_channelDescCoeff, false);
+	cudaBindTextureToArray(m_InputImage, tmpImage, volumeExtent, m_tex_inputImage, m_channelDescCoeff);
 	delete[] tmpImage;
 
 	/* allocate destination array */
