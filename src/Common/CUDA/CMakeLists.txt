@@ -3,7 +3,7 @@ CUDA_ADD_LIBRARY( elastix_cuda cudaResampleImageFilter.cu cudaResampleImageFilte
 CUDA_INCLUDE_DIRECTORIES( ${CUDA_SDK_ROOT_DIR}/C/common/inc )
 
 #add some additional options to the nvcc compiler
-SET( CUDA_NVCC_FLAGS "--ptxas-options=-v;-use_fast_math;-gencode=arch=compute_11,code=\\\"sm_11,compute_11\\\";-gencode=arch=compute_13,code=\\\"sm_11,compute_13\\\";-gencode=arch=compute_20,code=\\\"sm_20,compute_20\\\"" CACHE STRING "Over original CUDA_NVCC_FLAGS" FORCE )
+SET( CUDA_NVCC_FLAGS "--ptxas-options=-v;-use_fast_math;-gencode=arch=compute_11,code=\\\"sm_11,compute_11\\\";-gencode=arch=compute_13,code=\\\"sm_13,compute_13\\\";-gencode=arch=compute_20,code=\\\"sm_20,compute_20\\\"" CACHE STRING "Over original CUDA_NVCC_FLAGS" FORCE )
 
 #ADD_LIBRARY( elastix_cuda cudaDeformationsKernel.cu )
 #SET_SOURCE_FILES_PROPERTIES( cudaDeformationsKernel.cu HEADER_FILE_ONLY )
