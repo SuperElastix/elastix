@@ -45,15 +45,10 @@ public:
 	itkBooleanMacro(UseGPUToCastData);
 	itkGetConstMacro(UseGPUToCastData, bool);
 
-	itkSetMacro(PreFilter, bool);
-	itkBooleanMacro(PreFilter);
-	itkGetConstMacro(PreFilter, bool);
-
 private:
 	typename InternalBSplineTransformType::Pointer m_InternalCUDATransform;
 	bool      m_UseCuda;
 	bool      m_UseGPUToCastData;
-	bool      m_PreFilter;
 	Cudaclass m_cuda;
 
 	void copyParameters();

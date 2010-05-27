@@ -12,7 +12,6 @@ namespace itk
 		::itkCUDAResampleImageFilter()
 		: m_UseCuda(true)
 		, m_UseGPUToCastData(false)
-		, m_PreFilter(false)
 		, m_InternalCUDATransform(false)
 	{
 	}
@@ -40,7 +39,7 @@ namespace itk
 		int3 inputsize             = make_int3(ITKinputsize[0],  ITKinputsize[1],  ITKinputsize[2]);
 		int3 outputsize            = make_int3(ITKoutputsize[0], ITKoutputsize[1], ITKoutputsize[2]);
 		const InputPixelType* data = GetInput()->GetBufferPointer();
-		m_cuda.cudaMallocImageData(inputsize, outputsize, data, m_PreFilter);
+		m_cuda.cudaMallocImageData(inputsize, outputsize, data);
 
 		float3 outputimageSpacing = make_float3(ITKoutputSpacing[0], ITKoutputSpacing[1], ITKoutputSpacing[2]);
 		float3 outputimageOrigin  = make_float3(ITKoutputOrigin[0],  ITKoutputOrigin[1],  ITKoutputOrigin[2]);

@@ -141,7 +141,7 @@ void
 template <typename TInterpolatorPrecisionType, typename TImageType, typename TInternalImageType>
 void
 	cuda::CUDAResampleImageFilter<TInterpolatorPrecisionType, TImageType, TInternalImageType>
-	::cudaMallocImageData(int3 inputsize, int3 outputsize, const TImageType* data, bool PreFilter)
+	::cudaMallocImageData(int3 inputsize, int3 outputsize, const TImageType* data)
 {
 	m_InputImageSize            = inputsize;
 	m_OutputImageSize           = outputsize;
@@ -151,14 +151,11 @@ void
 
 	cudaExtent volumeExtent     = make_cudaExtent(m_InputImageSize.x, m_InputImageSize.y, m_InputImageSize.z);
 
-	/* allocate in memory and PreFilter if requested. We do need to cast to float if not already 
+	/* allocate in memory and PreFilter image. We do need to cast to float if not already 
 	 * because linear filtering only works with floating point values */
 	TInternalImageType* inputImage = cuda::cudaMalloc<TInternalImageType>(m_nrOfInputVoxels);
 	cudaCastToDevice(m_InputImageSize, data, inputImage);
-	if (PreFilter)
-	{
-		CubicBSplinePrefilter3D(inputImage, volumeExtent.width, volumeExtent.height, volumeExtent.depth);
-	}
+	CubicBSplinePrefilter3D(inputImage, volumeExtent.width, volumeExtent.height, volumeExtent.depth);
 
 	/* XXX - cudaMemcpy3D fails if a DeviceToDevice copy src is not allocated with cudaMallocPitch
 	 * or cudaMalloc3D, so we need this hack to get the data there */

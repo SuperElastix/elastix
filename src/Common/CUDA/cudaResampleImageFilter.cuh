@@ -39,7 +39,7 @@ namespace cuda
 		  float3& OutputImageSpacing, float3& OutputImageOrigin, float DefaultPixelValue );
 		void cudaCopyGridSymbols(float3& GridSpacing, float3& GridOrigin, int3& GridSize);
 		void cudaMallocTransformationData(int3 gridSize, const TInterpolatorPrecisionType* params);
-		void cudaMallocImageData(int3 inputsize, int3 outputsize, const TImageType* data, bool PreFilter);
+		void cudaMallocImageData(int3 inputsize, int3 outputsize, const TImageType* data);
 		void cudaCastToHost(size_t size, const TInternalImageType* src, TInternalImageType* tmp_src, TImageType* dst);
 		void cudaCastToHost(int3 size, const TInternalImageType* src, TImageType* dst);
 		void cudaCastToDevice(int3 size, const TImageType* src, TInternalImageType* dst);
