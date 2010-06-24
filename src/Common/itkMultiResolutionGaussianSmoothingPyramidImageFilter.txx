@@ -108,9 +108,14 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>
   typedef CastImageFilter<InputImageType, OutputImageType> CasterType;
   typedef RecursiveGaussianImageFilter<OutputImageType, OutputImageType> SmootherType;
   typedef typename SmootherType::Pointer SmootherPointer;
-  typedef FixedArray<SmootherPointer, ImageDimension>  SmootherArrayType;
+  typedef typename ImageSource<OutputImageType>::Pointer BaseFilterPointer;
+  typedef FixedArray<SmootherPointer, ImageDimension> SmootherArrayType;
+  typedef FixedArray<BaseFilterPointer, ImageDimension> SmootherPointerArrayType;
   typedef typename InputImageType::SpacingType SpacingType;
   
+  /** Create smoother pointer array, this array contains pointers
+   * to the filters for the different dimensions.
+   */
   typename CasterType::Pointer caster = CasterType::New();
   SmootherArrayType smootherArray;
   for ( unsigned int i = 0; i < ImageDimension; ++i)
@@ -121,16 +126,18 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>
     smootherArray[i]->SetNormalizeAcrossScale(false);
     smootherArray[i]->ReleaseDataFlagOn();
   }
+
+  /** Create smoother pointer array which maintains pointers
+   * to the previous filter to use. By using this separate pointer
+   * array we can skip dimensions for which the pyramid value is
+   * zero.
+   */
+  SmootherPointerArrayType smootherPointerArray;
   
-  // connect the filters
+  // First set the input of the first filter pointer to the input image.
   caster->SetInput( inputPtr );
-  
   smootherArray[0]->SetInput( caster->GetOutput() );
-  for ( unsigned int i = 1; i < ImageDimension; ++i)
-  {
-    smootherArray[i]->SetInput( smootherArray[i-1]->GetOutput() );
-  } 
- 
+
   /** Set the standard deviation and do the smoothing */
   unsigned int ilevel, idim;
   unsigned int factors[ImageDimension];
@@ -157,24 +164,44 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>
        * In the superclass, the DiscreteGaussianImageFilter is used, which
        * requires the variance, and has the option to ignore the image spacing.
        * That's why the formula looks maybe different at first sight.   */
-      if ( factors[idim] == 0 )
-      {
-        stdev[idim]=0.01*spacing[idim];
-      }
-      else
-      {
-        stdev[idim] = 0.5 * static_cast<float>( factors[idim] )*spacing[idim];
-      }
+      stdev[idim] = 0.5 * static_cast<float>( factors[idim] )*spacing[idim];
       smootherArray[idim]->SetSigma( stdev[idim] );
       // force to always update in case shrink factors are the same 
       // (SK: why? is this because we reuse this filter for every resolution?)
       smootherArray[idim]->Modified();
+
+      // Update smoother pointer array for this dimension
+      if ( factors[idim] == 0.0 )
+      {
+        // Bypass the filter for this dimension
+        if ( idim > 0 )
+        {
+          smootherPointerArray[idim] = smootherPointerArray[idim-1];
+        }
+        else
+        {
+          smootherPointerArray[idim] = caster;
+        }
+      }
+      else
+      {
+        // Use the filter for this dimension
+        smootherPointerArray[idim] = smootherArray[idim];
+      }
+
+      /** Set the input of the smoother filters to the previous pointers 
+       * maintained in the pointer array.
+       */    
+      if ( idim > 0 )
+      {
+        smootherArray[idim]->SetInput( smootherPointerArray[idim-1]->GetOutput() );
+      }
     }
     
-    smootherArray[ImageDimension-1]->GraftOutput( outputPtr );
-    smootherArray[ImageDimension-1]->Update();
+    smootherPointerArray[ImageDimension-1]->GraftOutput( outputPtr );
+    smootherPointerArray[ImageDimension-1]->Update();
    
-    this->GraftNthOutput( ilevel, smootherArray[ImageDimension-1]->GetOutput() );
+    this->GraftNthOutput( ilevel, smootherPointerArray[ImageDimension-1]->GetOutput() );
 
   } // for ilevel...
 
