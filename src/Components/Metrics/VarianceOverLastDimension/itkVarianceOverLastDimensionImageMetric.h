@@ -74,6 +74,7 @@ public:
   itkSetMacro( ReducedDimensionIndex, unsigned int );
   itkSetMacro( SubtractMean, bool );
   itkSetMacro( GridSize, FixedImageSizeType );
+  itkSetMacro( TransformIsStackTransform, bool );
 
   /** Get functions. */
   itkGetConstMacro(SampleLastDimensionRandomly, bool);
@@ -198,6 +199,9 @@ private:
   
   /** GridSize of B-spline transform. */
   FixedImageSizeType m_GridSize;
+
+  /** Bool to indicate if the transform used is a stacktransform. Set by elx files. */
+  bool m_TransformIsStackTransform;
 
 }; // end class VarianceOverLastDimensionImageMetric
 

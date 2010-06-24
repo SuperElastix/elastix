@@ -32,7 +32,8 @@ namespace itk
       ::VarianceOverLastDimensionImageMetric():
         m_SampleLastDimensionRandomly( false ),
         m_NumSamplesLastDimension( 10 ),
-        m_SubtractMean( false )
+        m_SubtractMean( false ),
+        m_TransformIsStackTransform( false )
   {
     this->SetUseImageSampler( true );
     this->SetUseFixedImageLimiter( false );
@@ -497,30 +498,69 @@ namespace itk
     /** Subtract mean from derivative elements. */
     if ( this->m_SubtractMean )
     {
-      /** Update derivative per dimension. */
-      unsigned int lastDimGridSize = this->m_GridSize[ lastDim ];
-      unsigned int numParametersPerDimension = this->GetNumberOfParameters() / this->GetFixedImage()->GetImageDimension();
-      unsigned int numSpatialParametersPerDimension = numParametersPerDimension / lastDimGridSize;
-      DerivativeType mean ( numSpatialParametersPerDimension );
-      for ( unsigned int d = 0; d < this->GetFixedImage()->GetImageDimension(); ++d )
+      if ( ! this->m_TransformIsStackTransform )
       {
-        /** Compute mean per dimension. */
-        mean.Fill( 0.0 );
-        unsigned int starti = numParametersPerDimension * d;
-        for ( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
-        {       
-          const unsigned int index = i % numSpatialParametersPerDimension;
-          mean[ index ] += derivative[ i ];
-        }
-        mean /= static_cast< double >( lastDimGridSize );
+        /** Update derivative per dimension. 
+         * Parameters are ordered xxxxxxx yyyyyyy zzzzzzz ttttttt and
+         * per dimension xyz.
+         */
+        const unsigned int lastDimGridSize = this->m_GridSize[ lastDim ];
+        const unsigned int numParametersPerDimension = this->GetNumberOfParameters() / this->GetMovingImage()->GetImageDimension();
+        const unsigned int numControlPointsPerDimension = numParametersPerDimension / lastDimGridSize;
+        DerivativeType mean ( numControlPointsPerDimension );
+        for ( unsigned int d = 0; d < this->GetMovingImage()->GetImageDimension(); ++d )
+        {
+          /** Compute mean per dimension. */
+          mean.Fill( 0.0 );
+          const unsigned int starti = numParametersPerDimension * d;
+          for ( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
+          {       
+            const unsigned int index = i % numControlPointsPerDimension;
+            mean[ index ] += derivative[ i ];
+          }
+          mean /= static_cast< double >( lastDimGridSize );
 
-        /** Update derivative per dimension. */
-        for ( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
-        {       
-          const unsigned int index = i % numSpatialParametersPerDimension;
-          derivative[ i ] -= mean[ index ];
+          /** Update derivative for every control point per dimension. */
+          for ( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
+          {       
+            const unsigned int index = i % numControlPointsPerDimension;
+            derivative[ i ] -= mean[ index ];
+          }
+        } 
+      }
+      else
+      {
+        /** Update derivative per dimension. 
+         * Parameters are ordered x0x0x0y0y0y0z0z0z0x1x1x1y1y1y1z1z1z1 with
+         * the number the time point index.
+         */
+        const unsigned int numParametersPerLastDimension = this->GetNumberOfParameters() / lastDimSize;
+        DerivativeType mean ( numParametersPerLastDimension );
+        mean.Fill( 0.0 );
+
+        /** Compute mean per control point. */
+        for ( unsigned int t = 0; t < lastDimSize; ++t )
+        {
+          const unsigned int startc = numParametersPerLastDimension * t;
+          for ( unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c )
+          {
+            const unsigned int index = c % numParametersPerLastDimension;
+            mean[ index ] += derivative[ c ];
+          }
         }
-      } 
+        mean /= static_cast< double >( lastDimSize );
+
+        /** Update derivative per control point. */
+        for ( unsigned int t = 0; t < lastDimSize; ++t )
+        {
+          const unsigned int startc = numParametersPerLastDimension * t;
+          for ( unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c )
+          {       
+            const unsigned int index = c % numParametersPerLastDimension;
+            derivative[ c ] -= mean[ index ];
+          }
+        }
+      }
     }
 
     /** Return the measure value. */
