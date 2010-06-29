@@ -46,59 +46,62 @@ policies, either expressed or implied.
 //--------------------------------------------------------------------------
 template<class floatN>
 __device__ floatN InitialCausalCoefficient(
-	floatN* c,			// coefficients
-	uint DataLength,	// number of coefficients
-	int step)
+  floatN* c,        // coefficients
+  uint DataLength,  // number of coefficients
+  int step )
 {
-	const uint Horizon = UMIN(28, DataLength);
+  const uint Horizon = UMIN( 28, DataLength );
 
-	// this initialization corresponds to mirror boundaries
-	// accelerated loop
-	float zn = Pole;
-	floatN Sum = *c;
-	for (uint n = 1; n < Horizon; n++) {
-		c += step;
-		Sum += zn * *c;
-		zn *= Pole;
-	}
-	return(Sum);
+  // this initialization corresponds to mirror boundaries
+  // accelerated loop
+  float zn = Pole;
+  floatN Sum = *c;
+  for ( uint n = 1; n < Horizon; n++ )
+  {
+    c += step;
+    Sum += zn * *c;
+    zn *= Pole;
+  }
+  return Sum;
 }
 
 template<class floatN>
 __device__ floatN InitialAntiCausalCoefficient(
-	floatN* c,			// last coefficient
-	uint DataLength,	// number of samples or coefficients
-	int step)
+  floatN* c,        // last coefficient
+  uint DataLength,  // number of samples or coefficients
+  int step )
 {
-	// this initialization corresponds to mirror boundaries
-	return((Pole / (Pole * Pole - 1.0f)) * (Pole * c[-step] + *c));
+  // this initialization corresponds to mirror boundaries
+  return((Pole / (Pole * Pole - 1.0f)) * (Pole * c[-step] + *c));
 }
 
 template<class floatN>
 __device__ void ConvertToInterpolationCoefficients(
-	floatN* coeffs,		// input samples --> output coefficients
-	uint DataLength,	// number of samples or coefficients
-	int step)
+  floatN* coeffs,   // input samples --> output coefficients
+  uint DataLength,  // number of samples or coefficients
+  int step )
 {
-	// compute the overall gain
-	const float Lambda = (1.0f - Pole) * (1.0f - 1.0f / Pole);
+  // compute the overall gain
+  const float Lambda = (1.0f - Pole) * (1.0f - 1.0f / Pole);
 
-	// causal initialization
-	floatN* c = coeffs;
-	floatN previous_c;  //cache the previously calculated c rather than look it up again (faster!)
-	*c = previous_c = Lambda * InitialCausalCoefficient(c, DataLength, step);
-	// causal recursion
-	for (uint n = 1; n < DataLength; n++) {
-		c += step;
-		*c = previous_c = Lambda * *c + Pole * previous_c;
-	}
-	// anticausal initialization
-	*c = previous_c = InitialAntiCausalCoefficient(c, DataLength, step);
-	// anticausal recursion
-	for (int n = DataLength - 2; 0 <= n; n--) {
-		c -= step;
-		*c = previous_c = Pole * (previous_c - *c);
-	}
+  // causal initialization
+  floatN* c = coeffs;
+  floatN previous_c;  //cache the previously calculated c rather than look it up again (faster!)
+  *c = previous_c = Lambda * InitialCausalCoefficient( c, DataLength, step );
+  // causal recursion
+  for ( uint n = 1; n < DataLength; n++ )
+  {
+    c += step;
+    *c = previous_c = Lambda * *c + Pole * previous_c;
+  }
+  // anticausal initialization
+  *c = previous_c = InitialAntiCausalCoefficient( c, DataLength, step );
+  // anticausal recursion
+  for ( int n = DataLength - 2; 0 <= n; n-- )
+  {
+    c -= step;
+    *c = previous_c = Pole * (previous_c - *c);
+  }
 }
 
 #endif // _CUBIC_BSPLINE_PREFILTER_KERNEL_H_

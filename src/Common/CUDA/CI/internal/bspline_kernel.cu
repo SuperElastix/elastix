@@ -39,67 +39,70 @@ policies, either expressed or implied.
 
 // Cubic B-spline function
 // The 3rd order Maximal Order and Minimum Support function, that it is maximally differentiable.
-inline __host__ __device__ float bspline(float t)
+inline __host__ __device__ float bspline( float t )
 {
-	t = fabs(t);
-	const float a = 2.0f - t;
+  t = fabs( t );
+  const float a = 2.0f - t;
 
-	if (t < 1.0f) return 2.0f/3.0f - 0.5f*t*t*a;
-	else if (t < 2.0f) return a*a*a / 6.0f;
-	else return 0.0f;
+  if ( t < 1.0f )       return 2.0f / 3.0f - 0.5f * t * t * a;
+  else if ( t < 2.0f )  return a * a * a / 6.0f;
+  else return 0.0f;
 }
 
 // The first order derivative of the cubic B-spline
-inline __host__ __device__ float bspline_1st_derivative(float t)
+inline __host__ __device__ float bspline_1st_derivative( float t )
 {
-	if (-2.0f < t && t <= -1.0f) return 0.5f*t*t + 2.0f*t + 2.0f;
-	else if (-1.0f < t && t <= 0.0f) return -1.5f*t*t - 2.0f*t;
-	else if ( 0.0f < t && t <= 1.0f) return  1.5f*t*t - 2.0f*t;
-	else if ( 1.0f < t && t <  2.0f) return -0.5f*t*t + 2.0f*t - 2.0f;
-	else return 0.0f;
+  if      (-2.0f < t && t <= -1.0f ) return  0.5f * t * t + 2.0f * t + 2.0f;
+  else if (-1.0f < t && t <=  0.0f ) return -1.5f * t * t - 2.0f * t;
+  else if ( 0.0f < t && t <=  1.0f ) return  1.5f * t * t - 2.0f * t;
+  else if ( 1.0f < t && t <   2.0f ) return -0.5f * t * t + 2.0f * t - 2.0f;
+  else return 0.0f;
 }
 
 // The second order derivative of the cubic B-spline
-inline __host__ __device__ float bspline_2nd_derivative(float t)
+inline __host__ __device__ float bspline_2nd_derivative( float t )
 {
-	t = fabs(t);
+  t = fabs( t );
 
-	if (t < 1.0f) return 3.0f*t - 2.0f;
-	else if (t < 2.0f) return 2.0f - t;
-	else return 0.0f;
+  if      ( t < 1.0f ) return 3.0f * t - 2.0f;
+  else if ( t < 2.0f ) return 2.0f - t;
+  else return 0.0f;
 }
 
 // Inline calculation of the bspline convolution weights, without conditional statements
-template<class T> inline __device__ void bspline_weights(T fraction, T& w0, T& w1, T& w2, T& w3)
+template<class T> inline __device__ void bspline_weights(
+  T fraction, T& w0, T& w1, T& w2, T& w3 )
 {
-	const T one_frac = 1.0f - fraction;
-	const T squared = fraction * fraction;
-	const T one_sqd = one_frac * one_frac;
+  const T one_frac = 1.0f - fraction;
+  const T squared = fraction * fraction;
+  const T one_sqd = one_frac * one_frac;
 
-	w0 = 1.0f/6.0f * one_sqd * one_frac;
-	w1 = 2.0f/3.0f - 0.5f * squared * (2.0f-fraction);
-	w2 = 2.0f/3.0f - 0.5f * one_sqd * (2.0f-one_frac);
-	w3 = 1.0f/6.0f * squared * fraction;
+  w0 = 1.0f / 6.0f * one_sqd * one_frac;
+  w1 = 2.0f / 3.0f - 0.5f * squared * ( 2.0f - fraction );
+  w2 = 2.0f / 3.0f - 0.5f * one_sqd * ( 2.0f - one_frac );
+  w3 = 1.0f / 6.0f * squared * fraction;
 }
 
 // Inline calculation of the first order derivative bspline convolution weights, without conditional statements
-template<class T> inline __device__ void bspline_weights_1st_derivative(T fraction, T& w0, T& w1, T& w2, T& w3)
+template<class T> inline __device__ void bspline_weights_1st_derivative(
+  T fraction, T& w0, T& w1, T& w2, T& w3 )
 {
-	const T squared = fraction * fraction;
+  const T squared = fraction * fraction;
 
-	w0 = -0.5f * squared + fraction - 0.5f;
-	w1 =  1.5f * squared - 2.0f * fraction;
-	w2 = -1.5f * squared + fraction + 0.5f;
-	w3 =  0.5f * squared;
+  w0 = -0.5f * squared + fraction - 0.5f;
+  w1 =  1.5f * squared - 2.0f * fraction;
+  w2 = -1.5f * squared + fraction + 0.5f;
+  w3 =  0.5f * squared;
 }
 
 // Inline calculation of the second order derivative bspline convolution weights, without conditional statements
-template<class T> inline __device__ void bspline_weights_2nd_derivative(T fraction, T& w0, T& w1, T& w2, T& w3)
+template<class T> inline __device__ void bspline_weights_2nd_derivative(
+  T fraction, T& w0, T& w1, T& w2, T& w3 )
 {
-	w0 =  1.0f - fraction;
-	w1 =  3.0f * fraction - 2.0f;
-	w2 = -3.0f * fraction + 1.0f;
-	w3 =  fraction;
+  w0 =  1.0f - fraction;
+  w1 =  3.0f * fraction - 2.0f;
+  w2 = -3.0f * fraction + 1.0f;
+  w3 =  fraction;
 }
 
 #endif // _CUDA_BSPLINE_H_
