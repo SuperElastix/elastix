@@ -236,6 +236,7 @@ void AdaptiveStochasticGradientDescent<TElastix>
     this->GetConfiguration()->ReadParameter( sigmoidScale,
       "SigmoidScale", this->GetComponentLabel(), level, 0 );
     this->SetSigmoidScale( sigmoidScale );
+
   } // end else: no automatic parameter estimation
 
   //temp save gradients
@@ -292,12 +293,12 @@ AdaptiveStochasticGradientDescent<TElastix>
   {
 
   case MaximumNumberOfIterations :
-    stopcondition = "Maximum number of iterations has been reached";  
-    break;  
+    stopcondition = "Maximum number of iterations has been reached";
+    break;
 
   case MetricError :
-    stopcondition = "Error in metric";  
-    break;  
+    stopcondition = "Error in metric";
+    break;
 
   case MinimumStepSize :
     stopcondition = "The minimum step length has been reached"; 
@@ -312,7 +313,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   elxout << "Stopping condition: " << stopcondition << "." << std::endl;
 
   /** Store the used parameters, for later printing to screen. */
-  SettingsType settings;    
+  SettingsType settings;
   settings.a = this->GetParam_a();
   settings.A = this->GetParam_A();
   settings.alpha = this->GetParam_alpha();
@@ -324,7 +325,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   /** Print settings that were used in this resolution. */
   SettingsVectorType tempSettingsVector;
   tempSettingsVector.push_back( settings );
-  elxout 
+  elxout
     << "Settings of " << this->elxGetClassName() 
     << " in resolution " << level << ":" << std::endl;
   this->PrintSettingsVector( tempSettingsVector );
@@ -345,7 +346,7 @@ AdaptiveStochasticGradientDescent<TElastix>
 
   double bestValue = this->GetValue();
   elxout << std::endl
-    << "Final metric value  = " 
+    << "Final metric value  = "
     << bestValue
     << std::endl;
 
@@ -445,7 +446,7 @@ AdaptiveStochasticGradientDescent<TElastix>
 /** 
  * ******************* AutomaticParameterEstimation **********************
  * Estimates some reasonable values for the parameters
- * SP_a, SP_alpha (=1), SigmoidMin, SigmoidMax (=1), and SigmoidScale. 
+ * SP_a, SP_alpha (=1), SigmoidMin, SigmoidMax (=1), and SigmoidScale.
  */
 
 template <class TElastix>
@@ -604,7 +605,7 @@ AdaptiveStochasticGradientDescent<TElastix>
     {
       /** Get the sampler. */
       ImageSamplerBasePointer sampler =
-        this->GetElastix()->GetElxMetricBase( m )->GetAdvancedMetricImageSampler();      
+        this->GetElastix()->GetElxMetricBase( m )->GetAdvancedMetricImageSampler();
       randomSamplerVec[m] = 
         dynamic_cast< ImageRandomSamplerBaseType * >( sampler.GetPointer() );
       randomCoordinateSamplerVec[m] = 
@@ -617,7 +618,7 @@ AdaptiveStochasticGradientDescent<TElastix>
 
         /** If the sampler is a randomCoordinateSampler set the UseRandomSampleRegion
          * property to false temporarily. It disturbs the parameter estimation.
-         * At the end of this function the original setting is set back. 
+         * At the end of this function the original setting is set back.
          * Also, the AdaptiveStepSize mechanism is turned off when any of the samplers
          * has UseRandomSampleRegion==true.
          * \todo Extend ASGD to really take into account random region sampling.
@@ -651,7 +652,7 @@ AdaptiveStochasticGradientDescent<TElastix>
         gridSamplerVec[ m ]->SetNumberOfSamples( this->m_NumberOfSamplesForExactGradient );
         gridSamplerVec[ m ]->Update();
 
-      } // end if random sampler  
+      } // end if random sampler
 
     } // end for loop over metrics
   } // end if NewSamplesEveryIteration.
@@ -694,7 +695,7 @@ AdaptiveStochasticGradientDescent<TElastix>
             ->SetAdvancedMetricImageSampler( gridSamplerVec[ m ] );
         }
       }
-      this->GetScaledDerivativeWithExceptionHandling( perturbedMu0, exactgradient );        
+      this->GetScaledDerivativeWithExceptionHandling( perturbedMu0, exactgradient );
 
       /** Set random sampler(s), select new spatial samples and get approximate derivative. */
       for ( unsigned int m = 0; m < M; ++m )
@@ -713,26 +714,26 @@ AdaptiveStochasticGradientDescent<TElastix>
 
       /** Compute g^T g and e^T e */
       exactgg += exactgradient.squared_magnitude();
-      diffgg += diffgradient.squared_magnitude();     
+      diffgg += diffgradient.squared_magnitude();
     }
     else // no stochastic gradients
     {
       /** Get exact gradient. */
       this->GetScaledDerivativeWithExceptionHandling( perturbedMu0, exactgradient );
 
-      /** Compute g^T g. NB: diffgg=0. */        
-      exactgg += exactgradient.squared_magnitude();      
+      /** Compute g^T g. NB: diffgg=0. */
+      exactgg += exactgradient.squared_magnitude();
     } // end else: no stochastic gradients
 
   } // end for loop over gradient measurements
 
-  progressObserver->PrintProgress( 1.0 );    
+  progressObserver->PrintProgress( 1.0 );
 
   /** Compute means. */
   exactgg /= this->m_NumberOfGradientMeasurements;
   diffgg /= this->m_NumberOfGradientMeasurements;
 
-  /** For output: gg and ee. 
+  /** For output: gg and ee.
    * gg and ee will be divided by Pd, but actually need to be divided by
    * the rank, in case of maximum likelihood. In case of no maximum likelihood,
    * the rank equals Pd.
@@ -760,7 +761,7 @@ AdaptiveStochasticGradientDescent<TElastix>
 template <class TElastix>
 void
 AdaptiveStochasticGradientDescent<TElastix>
-::ComputeJacobianTerms( double & TrC, double & TrCC, 
+::ComputeJacobianTerms( double & TrC, double & TrCC,
   double & maxJJ, double & maxJCJ )
 {
   /** This function computes four terms needed for the automatic parameter
@@ -781,7 +782,7 @@ AdaptiveStochasticGradientDescent<TElastix>
 
   typedef double                                      CovarianceValueType;
   typedef Array2D<CovarianceValueType>                CovarianceMatrixType;
-  typedef vnl_sparse_matrix<CovarianceValueType>      SparseCovarianceMatrixType;  
+  typedef vnl_sparse_matrix<CovarianceValueType>      SparseCovarianceMatrixType;
   typedef typename SparseCovarianceMatrixType::row    SparseRowType;
   typedef typename SparseCovarianceMatrixType::pair_t SparseCovarianceElementType;
   typedef Array<unsigned int>           NonZeroJacobianIndicesExpandedType;
@@ -883,8 +884,8 @@ AdaptiveStochasticGradientDescent<TElastix>
 
     /** Read fixed coordinates and get Jacobian J_j. */
     const FixedImagePointType & point
-      = sampleContainer->GetElement(samplenr).m_ImageCoordinates;    
-    this->m_AdvancedTransform->GetJacobian( point, jacj, jacind  );
+      = sampleContainer->GetElement(samplenr).m_ImageCoordinates;
+    this->m_AdvancedTransform->GetJacobian( point, jacj, jacind );
 
     /** Skip invalid Jacobians in the beginning, if any. */
     if ( sizejacind > 1 )
@@ -943,16 +944,16 @@ AdaptiveStochasticGradientDescent<TElastix>
   /** Initialize band matrix. */
   bandcov = CovarianceMatrixType( P, bandcovsize );
   bandcov.Fill( 0.0 );
-  
+
   /**
    *    TERM 1
    *
-   * Loop over image and compute Jacobian. 
-   * Compute C = 1/n \sum_i J_i^T J_i 
+   * Loop over image and compute Jacobian.
+   * Compute C = 1/n \sum_i J_i^T J_i
    * Possibly apply scaling afterwards.
    */
   jacind[ 0 ] = 0;
-  if ( sizejacind > 1 ) jacind[ 1 ] = 0;  
+  if ( sizejacind > 1 ) jacind[ 1 ] = 0;
   for ( iter = begin; iter != end; ++iter )
   {
     /** Print progress 0-50%. */
@@ -960,7 +961,7 @@ AdaptiveStochasticGradientDescent<TElastix>
     ++samplenr;
 
     /** Read fixed coordinates and get Jacobian J_j. */
-    const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;   
+    const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
     this->m_AdvancedTransform->GetJacobian( point, jacj, jacind  );
 
     /** Skip invalid Jacobians in the beginning, if any. */
@@ -1020,7 +1021,7 @@ AdaptiveStochasticGradientDescent<TElastix>
 
   } // end iter loop: end computation of covariance matrix
 
-  /** Update covariance matrix once again to include last jactjac updates 
+  /** Update covariance matrix once again to include last jactjac updates
    * \todo: a bit ugly that this loop is copied from above.
    */
   for ( unsigned int pi = 0; pi < sizejacind; ++pi )
@@ -1111,7 +1112,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   /** Symmetry: multiply by 2 and subtract sumsqr(diagcov). */
   TrCC *= 2.0;
   TrCC -= diagcov.diagonal().squared_magnitude();
-  
+
   /**
    *    TERM 3 and 4
    *
@@ -1121,7 +1122,7 @@ AdaptiveStochasticGradientDescent<TElastix>
    */
   maxJJ = 0.0;
   maxJCJ = 0.0;
-  const double sqrt2 = vcl_sqrt( static_cast<double>( 2.0 ) );  
+  const double sqrt2 = vcl_sqrt( static_cast<double>( 2.0 ) );
   JacobianType jacjjacj( outdim, outdim );
   JacobianType jacjcov( outdim, sizejacind );
   DiagCovarianceMatrixType diagcovsparse( sizejacind );
@@ -1133,10 +1134,10 @@ AdaptiveStochasticGradientDescent<TElastix>
   samplenr = 0;
   for ( iter = begin; iter != end; ++iter )
   {
-    /** Read fixed coordinates and get Jacobian */
+    /** Read fixed coordinates and get Jacobian. */
     const FixedImagePointType & point = (*iter).Value().m_ImageCoordinates;
     this->m_AdvancedTransform->GetJacobian( point, jacj, jacind  );
-    
+
     /** Apply scales, if necessary. */
     if ( this->GetUseScales() )
     {      
@@ -1163,7 +1164,7 @@ AdaptiveStochasticGradientDescent<TElastix>
     /** J_j C = jacjC. */
     jacjcov.Fill( 0.0 );
 
-    /** Store the nonzero Jacobian indices in a different format 
+    /** Store the nonzero Jacobian indices in a different format
      * and create the sparse diagcov.
      */
     jacindExpanded.Fill( sizejacind );
@@ -1181,8 +1182,8 @@ AdaptiveStochasticGradientDescent<TElastix>
      */
     for ( unsigned int pi = 0; pi < sizejacind; ++pi )
     {
-      const unsigned int p = jacind[ pi ];      
-      if ( !cov.empty_row( p ) )      
+      const unsigned int p = jacind[ pi ];
+      if ( !cov.empty_row( p ) )
       {
         SparseRowType & covrowp = cov.get_row( p );
         typename SparseRowType::iterator covrowpit;
@@ -1210,7 +1211,7 @@ AdaptiveStochasticGradientDescent<TElastix>
     /** J_j C J_j^T  = jacjCjacj. 
      * But note that we actually compute J_j cov' J_j^T
      */
-    vnl_fastops::ABt( jacjcovjacj, jacjcov, jacj );    
+    vnl_fastops::ABt( jacjcovjacj, jacjcov, jacj );
 
     /** jacjCjacj = jacjCjacj+ jacjCjacj' - jacjdiagcovjacj */
     jacjdiagcov = jacj * diagcovsparse;
@@ -1236,7 +1237,7 @@ AdaptiveStochasticGradientDescent<TElastix>
 
   } // end loop over sample container
 
-  /** Finalize progress information */
+  /** Finalize progress information. */
   progressObserver->PrintProgress( 1.0 );
 
 } // end ComputeJacobianTerms()
@@ -1375,7 +1376,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   }
   else
   {    
-    this->m_AdvancedTransform = testPtr;      
+    this->m_AdvancedTransform = testPtr;
     itkDebugMacro( "Transform is Advanced" );
   }
  
