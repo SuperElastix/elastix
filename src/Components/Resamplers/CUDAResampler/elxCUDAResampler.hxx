@@ -11,11 +11,11 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxCUDAResampler_hxx
 #define __elxCUDAResampler_hxx
 
 #include "elxCUDAResampler.h"
+
 
 namespace elastix
 {
@@ -29,13 +29,15 @@ int
 CUDAResampler<TElastix>
 ::BeforeAll( void )
 {
-	int res = this->Superclass1::Cudaclass::checkExecutionParameters();
-	if ( res != 0)
-	{
-		itkExceptionMacro("ERROR: no valid CUDA devices found!");
-	}
-	return res;
+  int res = this->Superclass1::CudaResampleImageFilterType::checkExecutionParameters();
+  if ( res != 0 )
+  {
+    itkExceptionMacro( "ERROR: no valid CUDA devices found!" );
+  }
+  return res;
+
   // implement checks for CUDA cards available.
+
 } // end BeforeAll()
 
 
