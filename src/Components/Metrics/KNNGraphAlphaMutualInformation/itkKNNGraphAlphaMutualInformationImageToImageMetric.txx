@@ -756,9 +756,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
 
   /** Get the size of the feature vectors. */
-  unsigned int fixedSize  = this->GetNumberOfFixedImages();
-  unsigned int movingSize = this->GetNumberOfMovingImages();
-  unsigned int jointSize  = fixedSize + movingSize;
+  const unsigned int fixedSize  = this->GetNumberOfFixedImages();
+  const unsigned int movingSize = this->GetNumberOfMovingImages();
+  const unsigned int jointSize  = fixedSize + movingSize;
 
   /** Resize the list samples so that enough memory is allocated. */
   listSampleFixed->SetMeasurementVectorSize( fixedSize );
