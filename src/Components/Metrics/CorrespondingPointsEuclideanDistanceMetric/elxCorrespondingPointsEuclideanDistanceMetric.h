@@ -24,17 +24,17 @@ namespace elastix
 {
 using namespace itk;
 
-  /**
-   * \class CorrespondingPointsEuclideanDistanceMetric
-   * \brief An metric based on the itk::CorrespondingPointsEuclideanDistancePointMetric.
-   *
-   * The parameters used in this class are:
-   * \parameter Metric: Select this metric as follows:\n
-   *    <tt>(Metric "CorrespondingPointsEuclideanDistanceMetric")</tt>
-   *
-   * \ingroup Metrics
-   *
-   */
+/**
+ * \class CorrespondingPointsEuclideanDistanceMetric
+ * \brief An metric based on the itk::CorrespondingPointsEuclideanDistancePointMetric.
+ *
+ * The parameters used in this class are:
+ * \parameter Metric: Select this metric as follows:\n
+ *    <tt>(Metric "CorrespondingPointsEuclideanDistanceMetric")</tt>
+ *
+ * \ingroup Metrics
+ *
+ */
 
 template <class TElastix >
 class CorrespondingPointsEuclideanDistanceMetric
@@ -125,7 +125,14 @@ public:
    */
   virtual void Initialize( void ) throw ( ExceptionObject );
 
-  /** 
+  /**
+   * Do some things before all:
+   * \li Check and print the command line arguments fp and mp.
+   *   This should be done in BeforeAllBase and not BeforeAll.
+   */
+  virtual int BeforeAllBase( void );
+
+  /**
    * Do some things before registration:
    * \li Load and set the pointsets.
    */

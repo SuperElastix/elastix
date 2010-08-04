@@ -44,6 +44,60 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>
 
 
 /**
+ * ***************** BeforeAllBase ***********************
+ */
+
+template <class TElastix>
+int
+CorrespondingPointsEuclideanDistanceMetric<TElastix>
+::BeforeAllBase( void )
+{
+  this->Superclass2::BeforeAllBase();
+
+  /** Check if the current configuration uses this metric. */
+  unsigned int count = 0;
+  for ( unsigned int i = 0; i < this->m_Configuration
+    ->CountNumberOfParameterEntries( "Metric" ); ++i )
+  {
+    std::string metricName = "";
+    this->m_Configuration->ReadParameter( metricName, "Metric", i );
+    if ( metricName == "CorrespondingPointsEuclideanDistanceMetric" ) count++;
+  }
+  if ( count == 0 ) return 0;
+ 
+  /** Check Command line options and print them to the log file. */
+  elxout << "Command line options from CorrespondingPointsEuclideanDistanceMetric:" << std::endl;
+  std::string check( "" );
+
+  /** Check for appearance of "-fp". */
+  check = this->m_Configuration->GetCommandLineArgument( "-fp" );
+  if ( check.empty() )
+  {
+    elxout << "-fp       unspecified" << std::endl;
+  }
+  else
+  {
+    elxout << "-fp       " << check << std::endl;
+  }
+
+  /** Check for appearance of "-mp". */
+  check = this->m_Configuration->GetCommandLineArgument( "-mp" );
+  if ( check.empty() )
+  {
+    elxout << "-mp       unspecified" << std::endl;
+  }
+  else
+  {
+    elxout << "-mp       " << check << std::endl;
+  }
+
+  /** Return a value. */
+  return 0;
+
+} // end BeforeAllBase()
+
+
+/**
  * ***************** BeforeRegistration ***********************
  */
 
