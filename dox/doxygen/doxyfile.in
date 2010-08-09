@@ -31,14 +31,14 @@ PROJECT_NAME           = elastix
 # This could be handy for archiving the generated documentation or 
 # if some version control system is used.
 
-PROJECT_NUMBER         = "@ELX_VERSION@"
+PROJECT_NUMBER         = "@ELASTIX_VERSION@"
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) 
 # base path where the generated documentation will be put. 
 # If a relative path is entered, it will be relative to the location 
 # where doxygen was started. If left blank the current directory will be used.
 
-OUTPUT_DIRECTORY       = "@ELX_HELP_DIR@"
+OUTPUT_DIRECTORY       = "@ELASTIX_HELP_DIR@"
 
 # If the CREATE_SUBDIRS tag is set to YES, then doxygen will create 
 # 4096 sub-directories (in 2 levels) under the output directory of each output 
@@ -546,8 +546,8 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                  = "@ELX_DOXYGEN_DIR@/Modules.dox" \
-                         "@ELX_HELP_DIR@/MainPage.dox" \
+INPUT                  = "@ELASTIX_DOXYGEN_DIR@/Modules.dox" \
+                         "@ELASTIX_HELP_DIR@/MainPage.dox" \
                          "@elastix_SOURCE_DIR@"
 
 # This tag can be used to specify the character encoding of the source files 
@@ -635,7 +635,7 @@ EXAMPLE_RECURSIVE      = NO
 # directories that contain image that are included in the documentation (see 
 # the \image command).
 
-IMAGE_PATH             = "@ELX_DOXYGEN_DIR@/images"
+IMAGE_PATH             = "@ELASTIX_DOXYGEN_DIR@/images"
 
 # The INPUT_FILTER tag can be used to specify a program that doxygen should 
 # invoke to filter for each input file. Doxygen will invoke the filter program 
@@ -765,13 +765,13 @@ HTML_FILE_EXTENSION    = .html
 # each generated HTML page. If it is left blank doxygen will generate a 
 # standard header.
 
-HTML_HEADER            = "@ELX_DOXYGEN_DIR@/DoxygenHeader.html"
+HTML_HEADER            = "@ELASTIX_DOXYGEN_DIR@/DoxygenHeader.html"
 
 # The HTML_FOOTER tag can be used to specify a personal HTML footer for 
 # each generated HTML page. If it is left blank doxygen will generate a 
 # standard footer.
 
-HTML_FOOTER            = "@ELX_HELP_DIR@/DoxygenFooter.html"
+HTML_FOOTER            = "@ELASTIX_HELP_DIR@/DoxygenFooter.html"
 
 # The HTML_STYLESHEET tag can be used to specify a user-defined cascading 
 # style sheet that is used by each HTML page. It can be used to 
@@ -780,7 +780,7 @@ HTML_FOOTER            = "@ELX_HELP_DIR@/DoxygenFooter.html"
 # the style sheet file to the HTML output directory, so don't put your own 
 # stylesheet in the HTML output directory as well, or it will be erased!
 
-HTML_STYLESHEET        = "@ELX_DOXYGEN_DIR@/elastix.css"
+HTML_STYLESHEET        = "@ELASTIX_DOXYGEN_DIR@/elastix.css"
 
 # If the HTML_ALIGN_MEMBERS tag is set to YES, the members of classes, 
 # files or namespaces will be aligned in HTML using tables. If set to 

@@ -122,28 +122,28 @@ SUBDIRS( Core )
 #--------------------------------------------------------------------
 # Configure the examples
 
-SET( ELX_DOX_DIR  ${elastix_SOURCE_DIR}/../dox )
-SET( ELX_HELP_DIR ${elastix_SOURCE_DIR}/../help CACHE PATH
+SET( ELASTIX_DOX_DIR  ${elastix_SOURCE_DIR}/../dox )
+SET( ELASTIX_HELP_DIR ${elastix_SOURCE_DIR}/../help CACHE PATH
   "path to the doxygen generated help files and the examples" )
 
 # Copy the examples to the help directory
 
 IF( WIN32 )
   CONFIGURE_FILE(
-    ${ELX_DOX_DIR}/example.bat
-    ${ELX_HELP_DIR}/example.bat
+    ${ELASTIX_DOX_DIR}/example.bat
+    ${ELASTIX_HELP_DIR}/example.bat
     COPYONLY )
 ELSE( WIN32 )
   CONFIGURE_FILE(
-    ${ELX_DOX_DIR}/example
-    ${ELX_HELP_DIR}/example
+    ${ELASTIX_DOX_DIR}/example
+    ${ELASTIX_HELP_DIR}/example
     COPYONLY )
 ENDIF( WIN32 )
 
-MAKE_DIRECTORY( ${ELX_HELP_DIR}/exampleinput )
-MAKE_DIRECTORY( ${ELX_HELP_DIR}/exampleoutput )
+MAKE_DIRECTORY( ${ELASTIX_HELP_DIR}/exampleinput )
+MAKE_DIRECTORY( ${ELASTIX_HELP_DIR}/exampleoutput )
 
-SET( ELX_EXAMPLEINPUTFILES
+SET( elxEXAMPLE_INPUT_FILES
  fixed.mhd
  fixed.raw
  mask_fixed.mhd
@@ -162,8 +162,8 @@ SET( ELX_EXAMPLEINPUTFILES
 
 FOREACH( ELX_EXAMPLEINPUTFILE ${ELX_EXAMPLEINPUTFILES} )
   CONFIGURE_FILE(
-    ${ELX_DOX_DIR}/exampleinput/${ELX_EXAMPLEINPUTFILE}
-    ${ELX_HELP_DIR}/exampleinput/${ELX_EXAMPLEINPUTFILE}
+    ${ELASTIX_DOX_DIR}/exampleinput/${ELX_EXAMPLEINPUTFILE}
+    ${ELASTIX_HELP_DIR}/exampleinput/${ELX_EXAMPLEINPUTFILE}
     COPYONLY )
 ENDFOREACH( ELX_EXAMPLEINPUTFILE )
 
@@ -176,50 +176,50 @@ STRING( COMPARE NOTEQUAL ${DOXYGEN} "DOXYGEN-NOTFOUND" Doxygen_FOUND )
 IF( Doxygen_FOUND )
 
   # Set the path to the doxygen configuration source
-  SET( ELX_DOXYGEN_DIR ${ELX_DOX_DIR}/doxygen )
+  SET( ELASTIX_DOXYGEN_DIR ${ELASTIX_DOX_DIR}/doxygen )
 
   # Get the version number of doxygen
-  EXEC_PROGRAM( ${DOXYGEN} ARGS "--version" OUTPUT_VARIABLE ELX_DOXYGEN_VERSION )
+  EXEC_PROGRAM( ${DOXYGEN} ARGS "--version" OUTPUT_VARIABLE ELASTIX_DOXYGEN_VERSION )
   
   # Get date
   IF( UNIX OR CYGWIN )
-    EXEC_PROGRAM( "date '+%d-%m-%Y'" OUTPUT_VARIABLE ELX_DOXYGEN_DATE )
+    EXEC_PROGRAM( "date '+%d-%m-%Y'" OUTPUT_VARIABLE ELASTIX_DOXYGEN_DATE )
   ENDIF( UNIX OR CYGWIN )
   IF( WIN32 )
     IF( NOT CYGWIN )
-      EXECUTE_PROCESS( COMMAND "${ELX_DOXYGEN_DIR}/doxdate.bat"
-        OUTPUT_VARIABLE ELX_DOXYGEN_DATETEMP )
-      STRING( REPLACE "/" "-" ELX_DOXYGEN_DATE ${ELX_DOXYGEN_DATETEMP} )
+      EXECUTE_PROCESS( COMMAND "${ELASTIX_DOXYGEN_DIR}/doxdate.bat"
+        OUTPUT_VARIABLE ELASTIX_DOXYGEN_DATETEMP )
+      STRING( REPLACE "/" "-" ELASTIX_DOXYGEN_DATE ${ELASTIX_DOXYGEN_DATETEMP} )
     ENDIF( NOT CYGWIN )
   ENDIF( WIN32 )
 
   # Get the version number of elastix
   FILE( STRINGS ${elastix_SOURCE_DIR}/Core/Install/elxBaseComponent.h
-    ELX_VERSION REGEX "\(#define\ __ELASTIX_VERSION\)" )
-  STRING( SUBSTRING ${ELX_VERSION} 26 3 ELX_VERSION )
+    ELASTIX_VERSION REGEX "\(#define\ __ELASTIX_VERSION\)" )
+  STRING( SUBSTRING ${ELASTIX_VERSION} 26 3 ELASTIX_VERSION )
 
   # Configure the doxygen configuration
   CONFIGURE_FILE(
-    ${ELX_DOXYGEN_DIR}/doxyfile.in
-    ${ELX_HELP_DIR}/doxyfile.out @ONLY )
+    ${ELASTIX_DOXYGEN_DIR}/doxyfile.in
+    ${ELASTIX_HELP_DIR}/doxyfile.out @ONLY )
   # Configure the footer of the help website.
   CONFIGURE_FILE(
-    ${ELX_DOXYGEN_DIR}/DoxygenFooter.html.in
-    ${ELX_HELP_DIR}/DoxygenFooter.html @ONLY)
+    ${ELASTIX_DOXYGEN_DIR}/DoxygenFooter.html.in
+    ${ELASTIX_HELP_DIR}/DoxygenFooter.html @ONLY)
   # Configure the MainPage.dox
   CONFIGURE_FILE(
-    ${ELX_DOXYGEN_DIR}/MainPage.dox.in
-    ${ELX_HELP_DIR}/MainPage.dox @ONLY )
+    ${ELASTIX_DOXYGEN_DIR}/MainPage.dox.in
+    ${ELASTIX_HELP_DIR}/MainPage.dox @ONLY )
 
 ENDIF( Doxygen_FOUND )
 
 #---------------------------------------------------------------------
 # Testing
 
-SET( BUILD_ELX_TESTING OFF CACHE BOOL
+SET( ELASTIX_BUILD_TESTING OFF CACHE BOOL
   "Perform some tests on basic functionality of elastix." )
-IF( BUILD_ELX_TESTING )
+IF( ELASTIX_BUILD_TESTING )
   ENABLE_TESTING()
   SUBDIRS( Testing )
-ENDIF( BUILD_ELX_TESTING )
+ENDIF()
 

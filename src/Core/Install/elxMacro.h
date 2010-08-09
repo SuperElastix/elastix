@@ -15,22 +15,6 @@
 #ifndef __elxMacro_h
 #define __elxMacro_h
 
-/** 
- * Macro for creating function in .DLL's
- * 
- * Windows needs __declspec stuff. Unix does not need anything.
- *
- * usage: 
- *  extern "C" __ELX_DLLEXPORT void FunctionToExport(void);
- * 
- * Currently not used anymore in elastix.
- */
-#ifdef _WIN32
-# define __ELX_DLLEXPORT __declspec(dllexport)
-#else
-# define __ELX_DLLEXPORT
-#endif
-
 
 /**
 * Macro for installing support new components (like a new metric, interpolator,
