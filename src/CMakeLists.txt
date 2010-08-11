@@ -23,7 +23,18 @@ IF( ELASTIX_USE_CUDA )
   IF( NOT CUDA_FOUND )
     MESSAGE( FATAL_ERROR "Cannot build without CUDA.  Please set CUDA_TOOLKIT_ROOT_DIR." )
   ENDIF( NOT CUDA_FOUND )
+
+	MARK_AS_ADVANCED( CUDA_BUILD_CUBIN )
+	MARK_AS_ADVANCED( CUDA_BUILD_EMULATION )
+	MARK_AS_ADVANCED( CUDA_VERBOSE_BUILD )
+	MARK_AS_ADVANCED( CUDA_SDK_ROOT_DIR )
 ENDIF( ELASTIX_USE_CUDA )
+
+#----------------------------------------------------------------------
+# Mark some mostly unused variables as advanced
+MARK_AS_ADVANCED( EXECUTABLE_OUTPUT_PATH )
+MARK_AS_ADVANCED( LIBRARY_OUTPUT_PATH )
+
 
 #---------------------------------------------------------------------
 # Check if Mevis DicomTiff support is desired
