@@ -6,11 +6,9 @@ PROJECT( elastix )
 
 #---------------------------------------------------------------------
 # Find ITK.
-FIND_PACKAGE( ITK )
+FIND_PACKAGE( ITK REQUIRED )
 IF( ITK_FOUND )
   INCLUDE( ${ITK_USE_FILE} )
-ELSE( ITK_FOUND )
-  MESSAGE( FATAL_ERROR "Cannot build without ITK.  Please set ITK_DIR." )
 ENDIF( ITK_FOUND )
 
 #---------------------------------------------------------------------
@@ -19,10 +17,7 @@ MARK_AS_ADVANCED(ELASTIX_USE_CUDA)
 OPTION(ELASTIX_USE_CUDA "Use CUDA enabled GPU" OFF)
 
 IF( ELASTIX_USE_CUDA )
-  FIND_PACKAGE( CUDA )
-  IF( NOT CUDA_FOUND )
-    MESSAGE( FATAL_ERROR "Cannot build without CUDA.  Please set CUDA_TOOLKIT_ROOT_DIR." )
-  ENDIF( NOT CUDA_FOUND )
+  FIND_PACKAGE( CUDA REQUIRED )
 
 	MARK_AS_ADVANCED( CUDA_BUILD_CUBIN )
 	MARK_AS_ADVANCED( CUDA_BUILD_EMULATION )
