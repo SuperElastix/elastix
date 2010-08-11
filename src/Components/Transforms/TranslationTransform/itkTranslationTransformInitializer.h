@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -28,12 +28,12 @@ namespace itk
  * \class TranslationTransformInitializer
  *
  * \brief TranslationTransformInitializer is a helper class intended to
- * initialize the translation of a TranslationTransforms 
- * 
+ * initialize the translation of a TranslationTransforms
+ *
  * This class is connected to the fixed image, moving image and transform
  * involved in the registration. Two modes of operation are possible:
- * 
- * - Geometrical, 
+ *
+ * - Geometrical,
  * - Center of mass
  *
  * In the first mode, the geometrical centers of the images are computed.
@@ -50,12 +50,12 @@ namespace itk
  * are similar for both images and hence the best initial guess for
  * registration is to superimpose both mass centers.  Note that this
  * assumption will probably not hold in multi-modality registration.
- * 
+ *
  * \ingroup Transforms
  */
-template < class TTransform,     
+template < class TTransform,
            class TFixedImage,
-           class TMovingImage > 
+           class TMovingImage >
 class TranslationTransformInitializer : public Object
 {
 public:
@@ -64,7 +64,7 @@ public:
   typedef Object                           Superclass;
   typedef SmartPointer<Self>               Pointer;
   typedef SmartPointer<const Self>         ConstPointer;
-    
+
   /** New macro for creation of through a Smart Pointer. */
   itkNewMacro( Self );
 
@@ -79,7 +79,7 @@ public:
   itkStaticConstMacro(SpaceDimension, unsigned int, TransformType::SpaceDimension);
   itkStaticConstMacro(InputSpaceDimension, unsigned int, TransformType::InputSpaceDimension);
   itkStaticConstMacro(OutputSpaceDimension, unsigned int, TransformType::OutputSpaceDimension);
-  
+
   /** Image Types to use in the initialization of the transform */
   typedef   TFixedImage              FixedImageType;
   typedef   TMovingImage             MovingImageType;
@@ -96,10 +96,10 @@ public:
 
   /** Point type. */
   typedef typename TransformType::InputPointType   InputPointType;
-  
+
   /** Vector type. */
   typedef typename TransformType::OutputVectorType  OutputVectorType;
- 
+
   /** Set the transform to be initialized */
   itkSetObjectMacro( Transform,   TransformType   );
 
@@ -112,7 +112,7 @@ public:
   /** Initialize the transform using data from the images */
   virtual void InitializeTransform() const;
 
-  /** Select between using the geometrical center of the images or 
+  /** Select between using the geometrical center of the images or
       using the center of mass given by the image intensities. */
   void GeometryOn() { m_UseMoments = false; }
   void MomentsOn()  { m_UseMoments = true; }

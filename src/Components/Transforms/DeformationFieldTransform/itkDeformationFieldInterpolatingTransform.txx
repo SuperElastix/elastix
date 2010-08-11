@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -24,7 +24,7 @@ namespace itk
 // Constructor with default arguments
 template<class TScalarType, unsigned int NDimensions, class TComponentType>
 DeformationFieldInterpolatingTransform<TScalarType, NDimensions,  TComponentType>::
-DeformationFieldInterpolatingTransform() : 
+DeformationFieldInterpolatingTransform() :
 Superclass(OutputSpaceDimension,0)
 {
   this->m_DeformationField = 0;
@@ -36,7 +36,7 @@ Superclass(OutputSpaceDimension,0)
 
   this->SetIdentity();
 }
-    
+
 
 // Destructor
 template<class TScalarType, unsigned int NDimensions, class TComponentType>
@@ -61,7 +61,7 @@ DeformationFieldInterpolatingTransform<TScalarType, NDimensions,  TComponentType
 
   if ( this->m_DeformationFieldInterpolator->IsInsideBuffer(cindex) )
   {
-    InterpolatorOutputType vec = 
+    InterpolatorOutputType vec =
      this->m_DeformationFieldInterpolator->EvaluateAtContinuousIndex( cindex);
     OutputPointType outpoint;
     for ( unsigned int i = 0; i < InputSpaceDimension; ++i)
@@ -93,7 +93,7 @@ DeformationFieldInterpolatingTransform<TScalarType, NDimensions,  TComponentType
   if ( this->m_DeformationFieldInterpolator.IsNotNull() )
   {
     this->m_DeformationFieldInterpolator->SetInputImage(
-      this->m_DeformationField );      
+      this->m_DeformationField );
   }
 }
 
@@ -113,7 +113,7 @@ DeformationFieldInterpolatingTransform<TScalarType, NDimensions,  TComponentType
   if ( this->m_DeformationFieldInterpolator.IsNotNull() )
   {
     this->m_DeformationFieldInterpolator->SetInputImage(
-      this->m_DeformationField );      
+      this->m_DeformationField );
   }
 }
 
@@ -126,7 +126,7 @@ DeformationFieldInterpolatingTransform<TScalarType, NDimensions,  TComponentType
 PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os,indent);
-  
+
   os << indent << "DeformationField: " << this->m_DeformationField << std::endl;
   os << indent << "ZeroDeformationField: " << this->m_ZeroDeformationField << std::endl;
   os << indent << "DeformationFieldInterpolator: " << this->m_DeformationFieldInterpolator << std::endl;
@@ -145,10 +145,10 @@ SetIdentity()
       DefaultDeformationFieldInterpolatorType::New();
   }
   this->SetDeformationField( this->m_ZeroDeformationField );
-  
+
 }
- 
-  
+
+
 } // namespace
 
 #endif

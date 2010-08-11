@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -25,12 +25,12 @@ namespace itk
    *
    * \brief Samples randomly some voxels of an image.
    *
-   * This image sampler randomly samples 'NumberOfSamples' voxels in 
+   * This image sampler randomly samples 'NumberOfSamples' voxels in
    * the InputImageRegion. Voxels may be selected multiple times.
-   * If a mask is given, the sampler tries to find samples within the 
+   * If a mask is given, the sampler tries to find samples within the
    * mask. If the mask is very sparse, this may take some time. In this case,
    * consider using the ImageRandomSamplerSparseMask.
-   * 
+   *
 	 * \ingroup ImageSamplers
 	 * */
 
@@ -72,7 +72,7 @@ namespace itk
     /** Other typedefs. */
     typedef typename InputImageType::IndexType    InputImageIndexType;
     typedef typename InputImageType::PointType    InputImagePointType;
-        
+
   protected:
 
     /** The constructor. */
@@ -82,7 +82,7 @@ namespace itk
 
     /** Function that does the work. */
     virtual void GenerateData( void );
-            
+
   private:
 
     /** The private constructor. */

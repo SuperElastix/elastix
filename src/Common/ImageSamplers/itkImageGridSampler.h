@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -83,7 +83,7 @@ namespace itk
     typedef typename InputImageType::SizeType               SampleGridSizeType;
     typedef InputImageIndexType                             SampleGridIndexType;
     typedef typename InputImageType::SizeType               InputImageSizeType;
-       
+
     /** Set/Get the sample grid spacing for each dimension (only integer factors)
      * This function overrules previous calls to SetNumberOfSamples.
      * Moreover, it calls SetNumberOfSamples(0) (see below), to make sure
@@ -105,7 +105,7 @@ namespace itk
      * spacing = max[ 1, round( (availablevoxels/nrofsamples)^(1/dimension) ) ],
      * with
      * availablevoxels = nr of voxels in input image region.
-     * 
+     *
      * The InputImageRegion needs to be specified beforehand. A mask is ignored,
      * so the realised number of samples could be significantly lower than expected.
      * However, the sample grid spacing is recomputed in the update phase, when the
@@ -113,8 +113,8 @@ namespace itk
      * (re)computation of the SampleGridSpacing. Once nrofsamples=0 has been given,
      * the last computed SampleGridSpacing is simply considered as a user parameter,
      * which is not modified automatically anymore.
-     * 
-     * This function overrules any previous calls to SetSampleGridSpacing. 
+     *
+     * This function overrules any previous calls to SetSampleGridSpacing.
      */
     virtual void SetNumberOfSamples( unsigned long nrofsamples );
 
@@ -130,11 +130,11 @@ namespace itk
     {
       return false;
     }
-    
+
   protected:
 
     /** The constructor. */
-    ImageGridSampler() 
+    ImageGridSampler()
     {
       this->m_RequestedNumberOfSamples = 0;
     }
@@ -153,7 +153,7 @@ namespace itk
 
     /** The number of samples entered in the SetNumberOfSamples method */
     unsigned long m_RequestedNumberOfSamples;
-            
+
   private:
 
     /** The private constructor. */

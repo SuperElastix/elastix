@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -40,7 +40,7 @@ using namespace itk;
    *    from one resolution level to another. Choose from {"true", "false"} \n
    *    example: <tt>(ErodeMask "false")</tt> \n
    *    The default is "true". The parameter may be specified for each
-   *    resolution differently, but that's not obliged. The actual amount of 
+   *    resolution differently, but that's not obliged. The actual amount of
    *    erosion depends on the image pyramid. \n
    *    Erosion of the mask prevents the border / edge of the mask taken into account.
    *    This can be useful for example for ultrasound images,
@@ -64,7 +64,7 @@ using namespace itk;
    * \parameter ErodeMovingMask\<i\>: a flag to determine if the i-th moving mask should be eroded
    *    from one resolution level to another. Choose from {"true", "false"} \n
    *    example: <tt>(ErodeMovingMask2 "true" "false")</tt>
-   *    This setting overrules ErodeMask and ErodeMovingMask.\n   
+   *    This setting overrules ErodeMask and ErodeMovingMask.\n
    *
    * \ingroup Registrations
    * \ingroup ComponentBaseClasses
@@ -89,11 +89,11 @@ using namespace itk;
     typedef typename Superclass::ConfigurationPointer   ConfigurationPointer;
     typedef typename Superclass::RegistrationType       RegistrationType;
     typedef typename Superclass::RegistrationPointer    RegistrationPointer;
-  
+
     /** Other typedef's. */
     typedef typename ElastixType::FixedImageType    FixedImageType;
     typedef typename ElastixType::MovingImageType   MovingImageType;
-    
+
     /** Get the dimension of the fixed image. */
     itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
     /** Get the dimension of the moving image. */
@@ -120,7 +120,7 @@ using namespace itk;
 
     /** Function to read the mask parameters from the configuration object.
      * \todo: move to RegistrationBase
-     * Input: 
+     * Input:
      * \li an array that will contain a bool for each mask, saying if it needs erosion or not
      * \li the number of masks
      * \li whichMask: "Fixed" or "Moving"
@@ -129,13 +129,13 @@ using namespace itk;
      * \li The function returns a bool that says if any mask needs erosion. If the number of masks
      * is zero, this bool will be false.
      * \li The useMaskErosionArray, which indicates for each mask whether it should be eroded.
-     * If the number of masks is zero, this array will be empty. 
-     * 
-     * The function first checks Erode<Fixed,Moving>Mask\<i\>, with i the mask number, 
+     * If the number of masks is zero, this array will be empty.
+     *
+     * The function first checks Erode<Fixed,Moving>Mask\<i\>, with i the mask number,
      * then Erode<Fixed,Moving>Mask, and finally ErodeMask. So, if you do not specify
      * Erode<Fixed,Moving>Mask\<i\>, Erode<Fixed,Moving>Mask is tried, and then ErodeMask.
      * If you specify ErodeMask, that option will be used for all masks, fixed and moving!
-     * All options can be specified for each resolution specifically, or at once for all 
+     * All options can be specified for each resolution specifically, or at once for all
      * resolutions.
      */
     virtual bool ReadMaskParameters(
@@ -148,7 +148,7 @@ using namespace itk;
      * \li Release memory.
      */
     virtual void AfterEachResolutionBase( void );
-    
+
   protected:
 
     /** The constructor. */
@@ -166,9 +166,9 @@ using namespace itk;
       itkGetStaticConstMacro( FixedImageDimension ) >     FixedMaskSpatialObjectType;
     typedef ImageMaskSpatialObject2<
       itkGetStaticConstMacro( MovingImageDimension ) >    MovingMaskSpatialObjectType;
-    typedef typename 
+    typedef typename
       FixedMaskSpatialObjectType::Pointer                 FixedMaskSpatialObjectPointer;
-    typedef typename 
+    typedef typename
       MovingMaskSpatialObjectType::Pointer                MovingMaskSpatialObjectPointer;
 
     typedef typename ITKBaseType::FixedImagePyramidType   FixedImagePyramidType;
@@ -187,12 +187,12 @@ using namespace itk;
      * \li the image pyramid, which is needed to determines the amount of erosion
      *  (can be set to 0 if useMaskErosion == false
      * \li the resolution level
-     * Output: 
-     * \li the mask as a spatial object, which can be set in a metric for example 
+     * Output:
+     * \li the mask as a spatial object, which can be set in a metric for example
      *
      * This function is used by the registration components
      */
-    FixedMaskSpatialObjectPointer GenerateFixedMaskSpatialObject( 
+    FixedMaskSpatialObjectPointer GenerateFixedMaskSpatialObject(
       const FixedMaskImageType * maskImage, bool useMaskErosion,
       const FixedImagePyramidType * pyramid, unsigned int level ) const;
 
@@ -203,12 +203,12 @@ using namespace itk;
      * \li the image pyramid, which is needed to determines the amount of erosion
      *  (can be set to 0 if useMaskErosion == false
      * \li the resolution level
-     * Output: 
-     * \li the mask as a spatial object, which can be set in a metric for example 
+     * Output:
+     * \li the mask as a spatial object, which can be set in a metric for example
      *
      * This function is used by the registration components
      */
-    MovingMaskSpatialObjectPointer GenerateMovingMaskSpatialObject( 
+    MovingMaskSpatialObjectPointer GenerateMovingMaskSpatialObject(
       const MovingMaskImageType * maskImage, bool useMaskErosion,
       const MovingImagePyramidType * pyramid, unsigned int level ) const;
 

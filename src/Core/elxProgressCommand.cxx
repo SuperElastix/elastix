@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -62,7 +62,7 @@ namespace elastix
   /**
    * ******************* SetUpdateFrequency ***********************
    */
-  
+
   void ProgressCommand
     ::SetUpdateFrequency(
     const unsigned long numberOfVoxels,
@@ -155,13 +155,13 @@ namespace elastix
   /**
    * ******************* Execute ***********************
    */
-  
+
   void ProgressCommand
     ::Execute( const Object *caller, const EventObject &event )
   {
     const ProcessObject *po = dynamic_cast<const ProcessObject *>( caller );
     if ( !po ) return;
-  
+
     if ( typeid( event ) == typeid( ProgressEvent ) )
     {
       this->PrintProgress( po->GetProgress() );
@@ -204,12 +204,12 @@ namespace elastix
   {
     if ( this->m_StreamOutputIsConsole )
     {
-      const unsigned long frac = 
+      const unsigned long frac =
         static_cast<unsigned long>( this->m_NumberOfVoxels / this->m_NumberOfUpdates );
       if ( currentVoxelNumber % frac == 0 )
       {
         this->PrintProgress(
-          static_cast<float>( currentVoxelNumber ) / 
+          static_cast<float>( currentVoxelNumber ) /
           static_cast<float>( this->m_NumberOfVoxels ) );
       }
     }

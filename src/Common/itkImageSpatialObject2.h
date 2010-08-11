@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -25,8 +25,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -42,7 +42,7 @@
 
 namespace itk
 {
-  
+
 /** \class ImageSpatialObject2
  * \brief Implementation of an image as spatial object.
  *
@@ -56,13 +56,13 @@ namespace itk
 template < unsigned int TDimension = 3,
            class TPixelType = unsigned char
 >
-class ImageSpatialObject2 
+class ImageSpatialObject2
   : public SpatialObject< TDimension >
 {
 
 public:
- 
-  typedef double ScalarType; 
+
+  typedef double ScalarType;
   typedef ImageSpatialObject2< TDimension, TPixelType > Self;
   typedef SpatialObject< TDimension >                 Superclass;
   typedef SmartPointer< Self >                        Pointer;
@@ -79,7 +79,7 @@ public:
   typedef typename Superclass::BoundingBoxType  BoundingBoxType;
   typedef InterpolateImageFunction<ImageType>   InterpolatorType;
 
-  typedef NearestNeighborInterpolateImageFunction<ImageType>  
+  typedef NearestNeighborInterpolateImageFunction<ImageType>
     NNInterpolatorType;
 
   typedef VectorContainer< unsigned long, PointType> PointContainerType;
@@ -97,15 +97,15 @@ public:
   /** Get a pointer to the image currently attached to the object. */
   const ImageType * GetImage( void ) const;
 
-  /** Return true if the object is evaluable at the requested point, 
+  /** Return true if the object is evaluable at the requested point,
    *  and else otherwise. */
-  bool IsEvaluableAt( const PointType & point, 
+  bool IsEvaluableAt( const PointType & point,
                       unsigned int depth=0, char *name=NULL) const;
 
-  /** Returns the value of the image at the requested point. 
+  /** Returns the value of the image at the requested point.
    *  If the point is not inside the object, then an exception is thrown.
    * \sa ExceptionObject */
-  bool ValueAt( const PointType & point, double & value, 
+  bool ValueAt( const PointType & point, double & value,
                 unsigned int depth=0, char *name=NULL) const;
 
 
@@ -113,11 +113,11 @@ public:
   bool IsInside( const PointType & point,
                  unsigned int depth, char *name) const;
 
-  /** Test whether a point is inside or outside the object 
+  /** Test whether a point is inside or outside the object
    *  For computational speed purposes, it is faster if the method does not
-   *  check the name of the class and the current depth */ 
+   *  check the name of the class and the current depth */
   bool IsInside( const PointType & point) const;
- 
+
   /** Compute the boundaries of the image spatial object. */
   bool ComputeLocalBoundingBox() const;
 
@@ -128,7 +128,7 @@ public:
   void SetSlicePosition(unsigned int dimension, int position);
 
   /** Get the slice position */
-  int GetSlicePosition(unsigned int dimension) 
+  int GetSlicePosition(unsigned int dimension)
   {return m_SlicePosition[dimension];}
 
   const char* GetPixelType()

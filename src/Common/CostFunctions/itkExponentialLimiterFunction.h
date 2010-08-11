@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -25,16 +25,16 @@ namespace itk
  * \class ExponentialLimiterFunction
  * \brief A soft limiter
  *
- * If the input value exceeds the upper/lower threshold the output is 
+ * If the input value exceeds the upper/lower threshold the output is
  * diminished/increased, such that it never will exceed the UpperBound/LowerBound.
  * It does this in a smooth manner, with an exponential function.
  *
  * \f[ L(f(x)) = (T-B) e^{(f-T)/(T-B)} + B, \f]
- * where \f$B\f$ is the upper/lower bound and \f$T\f$ the upper/lower threshold 
- * 
+ * where \f$B\f$ is the upper/lower bound and \f$T\f$ the upper/lower threshold
+ *
  * \ingroup Functions
  * \sa LimiterFunctionBase, HardLimiterFunction
- * 
+ *
  */
 template < class TInput, unsigned int NDimension >
 class ExponentialLimiterFunction :
@@ -46,7 +46,7 @@ public:
   typedef LimiterFunctionBase<TInput, NDimension> Superclass;
   typedef SmartPointer<Self> Pointer;
   typedef SmartPointer<const Self> ConstPointer;
-  
+
   /** Run-time type information (and related methods). */
   itkTypeMacro(ExponentialLimiterFunction, LimiterFunctionBase);
 
@@ -71,7 +71,7 @@ public:
 
   /** Initialize the limiter; calls the ComputeLimiterSettings() function */
   virtual void Initialize(void) throw (ExceptionObject);
-  
+
 protected:
   ExponentialLimiterFunction();
   ~ExponentialLimiterFunction(){};
@@ -83,7 +83,7 @@ protected:
   double m_LTminLB;
   double m_LTminLBinv;
 
-  
+
 private:
   ExponentialLimiterFunction(const Self& ); //purposely not implemented
   void operator=(const Self& ); //purposely not implemented

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -96,12 +96,12 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
 } // end Constructor
 
 
-/** 
+/**
  * **************** GetFixedImageRegion **********************************
  */
 
 template < typename TFixedImage, typename TMovingImage >
-const typename 
+const typename
 MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
 ::FixedImageRegionType &
 MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
@@ -128,7 +128,7 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
  */
 
 template < typename TFixedImage, typename TMovingImage >
-void 
+void
 MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
 ::SetMetric( MetricType * _arg )
 {
@@ -203,7 +203,7 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
     this->GetInitialTransformParametersOfNextLevel() );
 
   /** Connect the transform to the Decorator. */
-  TransformOutputType * transformOutput =  
+  TransformOutputType * transformOutput =
     static_cast< TransformOutputType * >( this->ProcessObject::GetOutput( 0 ) );
 
   transformOutput->Set( this->GetTransform() );
@@ -221,7 +221,7 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
 ::PrepareAllPyramids( void )
 {
   this->CheckPyramids();
-  
+
   /** Set up the fixed image pyramids and the fixed image region pyramids. */
   typedef typename FixedImageRegionType::SizeType         SizeType;
   typedef typename FixedImageRegionType::IndexType        IndexType;
@@ -232,16 +232,16 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
   {
     // Setup the fixed image pyramid
     FixedImagePyramidPointer fixpyr = this->GetFixedImagePyramid( i );
-    if ( fixpyr.IsNotNull() ) 
+    if ( fixpyr.IsNotNull() )
     {
       fixpyr->SetNumberOfLevels( this->GetNumberOfLevels() );
       if ( this->GetNumberOfFixedImages() > 1 )
       {
-        fixpyr->SetInput( this->GetFixedImage( i ) );          
+        fixpyr->SetInput( this->GetFixedImage( i ) );
       }
       else
       {
-        fixpyr->SetInput( this->GetFixedImage() );          
+        fixpyr->SetInput( this->GetFixedImage() );
       }
       fixpyr->UpdateLargestPossibleRegion();
 
@@ -267,10 +267,10 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
       this->m_FixedImageRegionPyramids[ i ].reserve( this->GetNumberOfLevels() );
       this->m_FixedImageRegionPyramids[ i ].resize( this->GetNumberOfLevels() );
 
-      // Compute the FixedImageRegion corresponding to each level of the 
-      // pyramid. 
+      // Compute the FixedImageRegion corresponding to each level of the
+      // pyramid.
       //
-      // In the ITK implementation this uses the same algorithm of the ShrinkImageFilter 
+      // In the ITK implementation this uses the same algorithm of the ShrinkImageFilter
       // since the regions should be compatible. However, we inherited another
       // Multiresolution pyramid, which does not use the same shrinking pattern.
       // Instead of copying the shrinking code, we compute image regions from
@@ -293,7 +293,7 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
         CIndexType startcindex;
         CIndexType endcindex;
         FixedImageType * fixedImageAtLevel = fixpyr->GetOutput( level );
-        /** map the original fixed image region to the image resulting from the 
+        /** map the original fixed image region to the image resulting from the
          * FixedImagePyramid at level l.
          * To be on the safe side, the start point is ceiled, and the end point
          * is floored. To see why, consider an image of 4 by 4, and its
@@ -306,7 +306,7 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
         for ( unsigned int dim = 0; dim < TFixedImage::ImageDimension; dim++ )
         {
           start[ dim ] = static_cast<IndexValueType>( vcl_ceil( startcindex[ dim ] ) );
-          size[ dim ]  = static_cast<SizeValueType>( 
+          size[ dim ]  = static_cast<SizeValueType>(
             static_cast<SizeValueType>( vcl_floor( endcindex[ dim ] ) )
             - start[ dim ] + 1 );
         }
@@ -388,7 +388,7 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
   /** Loop over the resolution levels. */
   for ( unsigned int currentLevel = 0; currentLevel < this->GetNumberOfLevels();
     currentLevel++ )
-  {  
+  {
     this->SetCurrentLevel( currentLevel );
 
     // Invoke an iteration event.
@@ -397,7 +397,7 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
     this->InvokeEvent( IterationEvent() );
 
     // Check if there has been a stop request
-    if ( this->m_Stop ) 
+    if ( this->m_Stop )
     {
       break;
     }
@@ -462,7 +462,7 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,TMovingImage>
 } // end GenerateData()
 
 
-/** 
+/**
  * ***************** GetMTime ******************
  */
 

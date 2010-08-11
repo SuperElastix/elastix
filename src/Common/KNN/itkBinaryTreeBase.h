@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -19,30 +19,30 @@
 
 namespace itk
 {
-  
+
   /**
    * \class BinaryTreeBase
    *
-   * \brief 
+   * \brief
    *
-   * 
+   *
    * \ingroup ANNwrap
    */
-  
+
   template < class TListSample >
   class BinaryTreeBase : public DataObject
   {
   public:
-    
+
     /** Standard itk. */
     typedef BinaryTreeBase              Self;
     typedef DataObject                  Superclass;
     typedef SmartPointer< Self >        Pointer;
     typedef SmartPointer< const Self >  ConstPointer;
-    
+
     /** ITK type info. */
     itkTypeMacro( BinaryTreeBase, DataObject );
-    
+
     /** Typedef's. */
     typedef TListSample       SampleType;
 
@@ -63,12 +63,12 @@ namespace itk
 
     /** Get the dimension of the input data. */
     MeasurementVectorSizeType GetDataDimension( void ) const;
-    
+
     /** Generate the tree. */
     virtual void GenerateTree( void ) = 0;
-   
+
   protected:
-    
+
     /** Constructor. */
     BinaryTreeBase();
 
@@ -77,9 +77,9 @@ namespace itk
 
     /** PrintSelf. */
     virtual void PrintSelf( std::ostream& os, Indent indent ) const;
-    
+
   private:
-    
+
     BinaryTreeBase( const Self& );  // purposely not implemented
     void operator=( const Self& );  // purposely not implemented
 
@@ -87,8 +87,8 @@ namespace itk
     typename SampleType::Pointer        m_Sample;
 
   }; // end class BinaryTreeBase
-    
-    
+
+
 } // end namespace itk
 
 

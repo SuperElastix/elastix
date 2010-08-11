@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -38,8 +38,8 @@ namespace elastix
   * of the AdaptiveStochasticGradientDescentOptimizer class.
   *
   * This optimizer is very suitable to be used in combination with the Random image sampler,
-  * or with the RandomCoordinate image sampler, with the setting (NewSamplesEveryIteration "true"). 
-  * Much effort has been spent on providing reasonable default values for all parameters, to 
+  * or with the RandomCoordinate image sampler, with the setting (NewSamplesEveryIteration "true").
+  * Much effort has been spent on providing reasonable default values for all parameters, to
   * simplify usage. In most registration problems, good results should be obtained without specifying
   * any of the parameters described below (except the first of course, which defines the optimizer
   * to use).
@@ -65,16 +65,16 @@ namespace elastix
   *   Default/recommended value: "true". The parameter can be specified for each resolution,
   *   or for all resolutions at once.
   * \parameter UseAdaptiveStepSizes: When this parameter is set to "true", the adaptive
-  *   step size mechanism described in the documentation of 
+  *   step size mechanism described in the documentation of
   *   itk::AdaptiveStochasticGradientDescentOptimizer is used.
   *   The parameter can be specified for each resolution, or for all resolutions at once.\n
   *   example: <tt>(UseAdaptiveStepSizes "true")</tt>\n
   *   Default/recommend value: "true", because it makes the registration more robust. In case
   *   of using a RandomCoordinate sampler, with (UseRandomSampleRegion "true"), the adaptive
   *   step size mechanism is turned off, no matter the user setting.
-  * \parameter MaximumStepLength: Also called \f$\delta\f$. This parameter can be considered as 
-  *   the maximum voxel displacement between two iterations. The larger this parameter, the 
-  *   more agressive the optimization. 
+  * \parameter MaximumStepLength: Also called \f$\delta\f$. This parameter can be considered as
+  *   the maximum voxel displacement between two iterations. The larger this parameter, the
+  *   more agressive the optimization.
   *   The parameter can be specified for each resolution, or for all resolutions at once.\n
   *   example: <tt>(MaximumStepLength 1.0)</tt>\n
   *   Default: mean voxel spacing of fixed and moving image. This seems to work well in general.
@@ -102,14 +102,14 @@ namespace elastix
   *   The parameter can be specified for each resolution, or for all resolutions at once.\n
   *   example: <tt>(SigmoidMax 1.0)</tt>\n
   *   Default/recommended value: 1.0. This parameter has no influence when AutomaticParameterEstimation
-  *   is used. In that case, always a value 1.0 is used.   
+  *   is used. In that case, always a value 1.0 is used.
   * \parameter SigmoidMin: The minimum of the sigmoid function (\f$f_{min}\f$). Must be smaller than 0.
   *   The parameter can be specified for each resolution, or for all resolutions at once.\n
   *   example: <tt>(SigmoidMin -0.8)</tt>\n
   *   Default value: -0.8. This parameter has no influence when AutomaticParameterEstimation
   *   is used. In that case, the value is automatically determined, depending on the images,
   *   metric etc.
-  * \parameter SigmoidScale: The scale/width of the sigmoid function (\f$\omega\f$). 
+  * \parameter SigmoidScale: The scale/width of the sigmoid function (\f$\omega\f$).
   *   The parameter can be specified for each resolution, or for all resolutions at once.\n
   *   example: <tt>(SigmoidScale 0.00001)</tt>\n
   *   Default value: 1e-8. This parameter has no influence when AutomaticParameterEstimation
@@ -121,25 +121,25 @@ namespace elastix
   *   example: <tt>(SigmoidInitialTime 0.0 5.0 5.0)</tt>\n
   *   Default value: 0.0. When increased, the optimization starts with smaller steps, leaving
   *   the possibility to increase the steps when necessary. If set to 0.0, the method starts with
-  *   with the largest step allowed. 
+  *   with the largest step allowed.
   * \parameter NumberOfGradientMeasurements: Number of gradients N to estimate the
   *   average square magnitudes of the exact gradient and the approximation error.
   *   The parameter can be specified for each resolution, or for all resolutions at once.\n
   *   example: <tt>(NumberOfGradientMeasurements 10)</tt>\n
-  *   Default value: 0, which means that the value is automatically estimated. 
+  *   Default value: 0, which means that the value is automatically estimated.
   *   In principle, the more the better, but the slower. In practice N=10 is usually sufficient.
   *   But the automatic estimation achieved by N=0 also works good.
-  *   The parameter has only influence when AutomaticParameterEstimation is used.   
+  *   The parameter has only influence when AutomaticParameterEstimation is used.
   * \parameter NumberOfJacobianMeasurements: The number of voxels M where the Jacobian is measured,
-  *   which is used to estimate the covariance matrix. 
+  *   which is used to estimate the covariance matrix.
   *   The parameter can be specified for each resolution, or for all resolutions at once.\n
   *   example: <tt>(NumberOfJacobianMeasurements 5000 10000 20000)</tt>\n
-  *   Default value: M = max( 1000, nrofparams ), with nrofparams the 
+  *   Default value: M = max( 1000, nrofparams ), with nrofparams the
   *   number of transform parameters. This is a rather crude rule of thumb,
   *   which seems to work in practice. In principle, the more the better, but the slower.
   *   The parameter has only influence when AutomaticParameterEstimation is used.
   * \parameter NumberOfSamplesForExactGradient: The number of image samples used to compute
-  *   the 'exact' gradient. The samples are chosen on a uniform grid. 
+  *   the 'exact' gradient. The samples are chosen on a uniform grid.
   *   The parameter can be specified for each resolution, or for all resolutions at once.\n
   *   example: <tt>(NumberOfSamplesForExactGradient 100000)</tt>\n
   *   Default/recommended: 100000. This works in general. If the image is smaller, the number
@@ -196,16 +196,16 @@ public:
   /** Typedef for the ParametersType. */
   typedef typename Superclass1::ParametersType        ParametersType;
 
-  /** Methods invoked by elastix, in which parameters can be set and 
+  /** Methods invoked by elastix, in which parameters can be set and
    * progress information can be printed.
    */
   virtual void BeforeRegistration( void );
   virtual void BeforeEachResolution( void );
   virtual void AfterEachResolution( void );
   virtual void AfterEachIteration( void );
-  virtual void AfterRegistration( void );   
+  virtual void AfterRegistration( void );
 
-  /** Check if any scales are set, and set the UseScales flag on or off; 
+  /** Check if any scales are set, and set the UseScales flag on or off;
    * after that call the superclass' implementation.
    */
   virtual void StartOptimization( void );
@@ -219,13 +219,13 @@ public:
   /** Stop optimization and pass on exception. */
   virtual void MetricErrorResponse( ExceptionObject & err );
 
-  /** Set/Get whether automatic parameter estimation is desired. 
+  /** Set/Get whether automatic parameter estimation is desired.
    * If true, make sure to set the maximum step length.
    *
    * The following parameters are automatically determined:
    * SP_a, SP_alpha (=1), SigmoidMin, SigmoidMax (=1),
-   * SigmoidScale. 
-   * A usually suitable value for SP_A is 20, which is the 
+   * SigmoidScale.
+   * A usually suitable value for SP_A is 20, which is the
    * default setting, if not specified by the user.
    */
   itkSetMacro( AutomaticParameterEstimation, bool );
@@ -260,33 +260,33 @@ protected:
   typedef itk::ImageSamplerBase<FixedImageType>       ImageSamplerBaseType;
   typedef typename ImageSamplerBaseType::Pointer      ImageSamplerBasePointer;
   typedef itk::ImageRandomSamplerBase<FixedImageType> ImageRandomSamplerBaseType;
-  typedef typename 
+  typedef typename
     ImageRandomSamplerBaseType::Pointer               ImageRandomSamplerBasePointer;
-  typedef 
+  typedef
     itk::ImageRandomCoordinateSampler<FixedImageType> ImageRandomCoordinateSamplerType;
-  typedef typename 
+  typedef typename
     ImageRandomCoordinateSamplerType::Pointer         ImageRandomCoordinateSamplerPointer;
   typedef ImageGridSampler< FixedImageType >          ImageGridSamplerType;
   typedef typename ImageGridSamplerType::Pointer      ImageGridSamplerPointer;
-  typedef typename 
+  typedef typename
     ImageGridSamplerType::ImageSampleContainerType    ImageSampleContainerType;
   typedef typename ImageSampleContainerType::Pointer  ImageSampleContainerPointer;
 
-  /** Other protected typedefs */  
+  /** Other protected typedefs */
   typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
   typedef ProgressCommand                             ProgressCommandType;
-  typedef typename ProgressCommand::Pointer           ProgressCommandPointer;  
+  typedef typename ProgressCommand::Pointer           ProgressCommandPointer;
 
   /** Typedefs for support of sparse Jacobians and AdvancedTransforms. */
   typedef JacobianType                                TransformJacobianType;
   itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
   itkStaticConstMacro( MovingImageDimension, unsigned int, MovingImageType::ImageDimension );
-  typedef typename TransformType::ScalarType          CoordinateRepresentationType; 
+  typedef typename TransformType::ScalarType          CoordinateRepresentationType;
   typedef AdvancedTransform<
     CoordinateRepresentationType,
     itkGetStaticConstMacro(FixedImageDimension),
     itkGetStaticConstMacro(MovingImageDimension) >    AdvancedTransformType;
-  typedef typename 
+  typedef typename
     AdvancedTransformType::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
 
   AdaptiveStochasticGradientDescent();
@@ -299,8 +299,8 @@ protected:
   unsigned int m_NumberOfGradientMeasurements;
   unsigned int m_NumberOfJacobianMeasurements;
   unsigned int m_NumberOfSamplesForExactGradient;
-  
-  /** The transform stored as AdvancedTransform */  
+
+  /** The transform stored as AdvancedTransform */
   typename AdvancedTransformType::Pointer           m_AdvancedTransform;
 
   /** RandomGenerator for AddRandomPerturbation. */
@@ -331,7 +331,7 @@ protected:
   /** Returns a container of fixed image samples, sampled using a grid sampler
    * The grid size is determined from the user entered number of Jacobian measurements,
    * or a default value of 200 is used.
-   * The actual number of samples depends on the presence of masks, and 
+   * The actual number of samples depends on the presence of masks, and
    * the restriction that the grid spacing of the grid sampler must be integer.
    * The samples input variable contains the sample container after execution.
    * It does not have to be initialized/allocated before.
@@ -342,27 +342,27 @@ protected:
   /** Functions to compute the Jacobian terms needed for the automatic
    * parameter estimation.
    */
-  virtual void ComputeJacobianTerms( double & TrC, double & TrCC, 
+  virtual void ComputeJacobianTerms( double & TrC, double & TrCC,
     double & maxJJ, double & maxJCJ );
- 
+
   /** Helper function, which calls GetScaledValueAndDerivative and does
    * some exception handling. Used by SampleGradients.
    */
-  virtual void GetScaledDerivativeWithExceptionHandling( 
+  virtual void GetScaledDerivativeWithExceptionHandling(
     const ParametersType & parameters, DerivativeType & derivative );
 
   /** Helper function that adds a random perturbation delta to the input
    * parameters, with delta ~ sigma * N(0,I). Used by SampleGradients.
-   */ 
+   */
   virtual void AddRandomPerturbation( ParametersType & parameters, double sigma );
- 
+
 private:
 
   AdaptiveStochasticGradientDescent( const Self& );  // purposely not implemented
   void operator=( const Self& );              // purposely not implemented
 
   bool m_AutomaticParameterEstimation;
-  double m_MaximumStepLength;      
+  double m_MaximumStepLength;
 
   /** Private variables for the sampling attempts. */
   unsigned long m_MaximumNumberOfSamplingAttempts;

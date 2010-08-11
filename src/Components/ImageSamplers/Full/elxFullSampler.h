@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -26,9 +26,9 @@ using namespace itk;
   /**
    * \class FullSampler
    * \brief An interpolator based on the itk::ImageFullSampler.
-   * 
-   * This image sampler samples all voxels in 
-   * the InputImageRegion. 
+   *
+   * This image sampler samples all voxels in
+   * the InputImageRegion.
    *
    * This sampler does not react to the NewSamplesEveryIteration parameter.
    *
@@ -43,32 +43,32 @@ using namespace itk;
     class FullSampler :
     public
       ImageFullSampler<
-      ITK_TYPENAME elx::ImageSamplerBase<TElastix>::InputImageType >, 
+      ITK_TYPENAME elx::ImageSamplerBase<TElastix>::InputImageType >,
     public
       elx::ImageSamplerBase<TElastix>
-  { 
+  {
   public:
-  
+
     /** Standard ITK-stuff. */
     typedef FullSampler                       Self;
     typedef ImageFullSampler<
-      typename elx::ImageSamplerBase<TElastix>::InputImageType >  Superclass1;    
-    typedef elx::ImageSamplerBase<TElastix>         Superclass2;    
+      typename elx::ImageSamplerBase<TElastix>::InputImageType >  Superclass1;
+    typedef elx::ImageSamplerBase<TElastix>         Superclass2;
     typedef SmartPointer<Self>                  Pointer;
     typedef SmartPointer<const Self>            ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro(Self);
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( FullSampler, ImageFullSampler );
-    
+
     /** Name of this class.
      * Use this name in the parameter file to select this specific interpolator. \n
      * example: <tt>(ImageSampler "Full")</tt>\n
      */
     elxClassNameMacro( "Full" );
-  
+
     /** Typedefs inherited from the superclass. */
     typedef typename Superclass1::DataObjectPointer            DataObjectPointer;
     typedef typename Superclass1::OutputVectorContainerType    OutputVectorContainerType;
@@ -82,11 +82,11 @@ using namespace itk;
     typedef typename Superclass1::ImageSampleContainerType     ImageSampleContainerType;
     typedef typename Superclass1::MaskType                     MaskType;
     typedef typename Superclass1::InputImageIndexType          InputImageIndexType;
-    typedef typename Superclass1::InputImagePointType          InputImagePointType; 
+    typedef typename Superclass1::InputImagePointType          InputImagePointType;
 
     /** The input image dimension. */
     itkStaticConstMacro( InputImageDimension, unsigned int, Superclass1::InputImageDimension );
-    
+
     /** Typedefs inherited from Elastix. */
     typedef typename Superclass2::ElastixType               ElastixType;
     typedef typename Superclass2::ElastixPointer            ElastixPointer;
@@ -102,14 +102,14 @@ using namespace itk;
     FullSampler() {}
     /** The destructor. */
     virtual ~FullSampler() {}
-    
+
   private:
 
     /** The private constructor. */
     FullSampler( const Self& ); // purposely not implemented
     /** The private copy constructor. */
     void operator=( const Self& );      // purposely not implemented
-      
+
   }; // end class FullSampler
 
 

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -19,7 +19,7 @@
 
 namespace elastix
 {
-//using namespace itk; not here because itk::ImageSamplerBase also exists. 
+//using namespace itk; not here because itk::ImageSamplerBase also exists.
 
 /**
  * ******************* BeforeEachResolutionBase ******************
@@ -48,7 +48,7 @@ ImageSamplerBase<TElastix>
     {
       xl::xout["warning"]
         << "WARNING: You want to select new samples every iteration,\n"
-        << "but the selected ImageSampler is not suited for that." 
+        << "but the selected ImageSampler is not suited for that."
         << std::endl;
     }
   }

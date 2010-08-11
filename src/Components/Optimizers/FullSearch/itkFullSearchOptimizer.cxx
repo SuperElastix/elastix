@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -23,7 +23,7 @@
 
 namespace itk
 {
-  
+
   /**
    * ************************ Constructor **************************
    */
@@ -31,7 +31,7 @@ namespace itk
     ::FullSearchOptimizer()
   {
     itkDebugMacro("Constructor");
-    
+
     m_CurrentIteration = 0;
     m_Maximize = false;
     m_Value = 0.0;
@@ -43,8 +43,8 @@ namespace itk
     m_LastSearchSpaceChanges = 0;
 
   } //end constructor
-  
-  
+
+
   /**
    * ***************** Start the optimization **********************
    */
@@ -52,22 +52,22 @@ namespace itk
     FullSearchOptimizer
     ::StartOptimization( void )
   {
-    
+
     itkDebugMacro("StartOptimization");
-    
+
     m_CurrentIteration   = 0;
-    
+
     this->ProcessSearchSpaceChanges();
-    
+
     m_CurrentIndexInSearchSpace.Fill(0);
     m_BestIndexInSearchSpace.Fill(0);
-    
+
     m_CurrentPointInSearchSpace = this->IndexToPoint(m_CurrentIndexInSearchSpace);
     m_BestPointInSearchSpace = m_CurrentPointInSearchSpace;
 
     this->SetCurrentPosition( this->PointToPosition( m_CurrentPointInSearchSpace )  );
-    
-    
+
+
     if (m_Maximize)
     {
       m_BestValue = NumericTraits<double>::NonpositiveMin();
@@ -78,11 +78,11 @@ namespace itk
     }
 
     this->ResumeOptimization();
-    
+
   }
-  
-  
-  
+
+
+
   /**
    * ******************** Resume the optimization ******************
    */
@@ -90,26 +90,26 @@ namespace itk
     FullSearchOptimizer
     ::ResumeOptimization( void )
   {
-    
+
     itkDebugMacro("ResumeOptimization");
-    
+
     m_Stop = false;
-    
+
     InvokeEvent( StartEvent() );
-    while( !m_Stop ) 
+    while( !m_Stop )
     {
-  
+
       try
       {
         m_Value = m_CostFunction->GetValue( this->GetCurrentPosition() );
       }
       catch( ExceptionObject& err )
       {
-        // An exception has occurred. 
+        // An exception has occurred.
         // Terminate immediately.
         m_StopCondition = MetricError;
         StopOptimization();
-        
+
         // Pass exception to caller
         throw err;
       }
@@ -118,20 +118,20 @@ namespace itk
       {
         break;
       }
-      
-      /** Check if the value is a minimum or maximum */     
+
+      /** Check if the value is a minimum or maximum */
       if (   ( m_Value < m_BestValue )  ^  m_Maximize   )  // ^ = xor, yields true if only one of the expressions is true
       {
         m_BestValue = m_Value;
         m_BestPointInSearchSpace = m_CurrentPointInSearchSpace;
         m_BestIndexInSearchSpace = m_CurrentIndexInSearchSpace;
       }
-      
+
       this->InvokeEvent( IterationEvent() );
-  
+
       /** Prepare for next step */
       m_CurrentIteration++;
-      
+
       if( m_CurrentIteration >= this->GetNumberOfIterations() )
       {
         m_StopCondition = FullRangeSearched;
@@ -141,13 +141,13 @@ namespace itk
 
       /** Set the next position in search space. */
       this->UpdateCurrentPosition();
-      
+
     } // end while
-    
-    
+
+
   } //end function ResumeOptimization
-  
-  
+
+
   /**
    * ************************** Stop optimization ******************
    */
@@ -155,9 +155,9 @@ namespace itk
     FullSearchOptimizer
     ::StopOptimization( void )
   {
-    
+
     itkDebugMacro("StopOptimization");
-    
+
     m_Stop = true;
 
     this->SetCurrentPosition(
@@ -165,35 +165,35 @@ namespace itk
     InvokeEvent( EndEvent() );
 
   } // end function StopOptimization
-  
-  
+
+
   /**
    * ********************* UpdateCurrentPosition *******************
    *
    * Goes to the next point in search space
    *
    * example of sequence of indices in a 3d search space:
-   * 
+   *
    * dim1: 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2
-   * dim2: 0 0 0 1 1 1 2 2 2 0 0 0 1 1 1 2 2 2 0 0 0 1 1 1 2 2 2 
-   * dim3: 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 
-   * 
+   * dim2: 0 0 0 1 1 1 2 2 2 0 0 0 1 1 1 2 2 2 0 0 0 1 1 1 2 2 2
+   * dim3: 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2
+   *
    * The indices are transformed to points in search space with the formula:
    * point[i] = min[i] + stepsize[i]*index[i]       for all i.
-   * 
+   *
    * Then the appropriate parameters in the ParameterArray are updated.
    */
 
   void
     FullSearchOptimizer
     ::UpdateCurrentPosition( void )
-  { 
-    
+  {
+
     itkDebugMacro("Current position updated.");
-          
+
     /** Get the current parameters; const_cast, because we want to adapt it later. */
     ParametersType & currentPosition = const_cast<ParametersType &>( this->GetCurrentPosition() );
-          
+
     /** Get the dimension and sizes of the searchspace. */
     const unsigned int searchSpaceDimension = this->GetNumberOfSearchSpaceDimensions();
     const SearchSpaceSizeType & searchSpaceSize = this->GetSearchSpaceSize();
@@ -204,7 +204,7 @@ namespace itk
     {
       /** if the full range of ssdim-1 has been searched (so, if its
        * index has just been set back to 0) then increase index[ssdim] */
-      if ( JustSetPreviousDimToZero ) 
+      if ( JustSetPreviousDimToZero )
       {
         /** reset the bool */
         JustSetPreviousDimToZero = false;
@@ -216,7 +216,7 @@ namespace itk
           m_CurrentIndexInSearchSpace[ssdim] = 0;
           JustSetPreviousDimToZero = true;
         }
-        else 
+        else
         {
           m_CurrentIndexInSearchSpace[ssdim] = dummy;
         }
@@ -230,7 +230,7 @@ namespace itk
 
     /** Transform the index to a point in search space.
      * Change the appropriate parameters in the ParameterArray.
-     * 
+     *
      * The IndexToPoint and PointToParameter functions are not used here,
      * because we edit directly in the currentPosition (faster).
      */
@@ -239,15 +239,15 @@ namespace itk
       /** Transform the index to a point; point = min + step*index */
       RangeType range = it.Value();
       m_CurrentPointInSearchSpace[ssdim] = range[0] +
-        static_cast<double>( range[2] * m_CurrentIndexInSearchSpace[ssdim] ); 
+        static_cast<double>( range[2] * m_CurrentIndexInSearchSpace[ssdim] );
 
       /** Update the array of parameters. */
       currentPosition[ it.Index() ] = m_CurrentPointInSearchSpace[ssdim] ;
       it++;
     } // end for
-    
+
   } // end UpdateCurrentPosition
-  
+
 
   /**
    * ********************* ProcessSearchSpaceChanges **************
@@ -278,8 +278,8 @@ namespace itk
         m_SearchSpaceSize[ssdim] = static_cast<unsigned long>( (range[1]-range[0])/range[2] ) + 1 ;
         it++;
       }
-      
-  
+
+
     } // end if search space modified
 
     /** Remember the time of the last processed changes */
@@ -287,10 +287,10 @@ namespace itk
 
   } // end function ProcessSearchSpaceChanges
 
-  
+
   /**
    * ********************** AddSearchDimension ********************
-   * 
+   *
    * Add a dimension to the SearchSpace
    */
   void
@@ -305,7 +305,7 @@ namespace itk
     {
       m_SearchSpace = SearchSpaceType::New();
     }
-    
+
     /** Fill a range array */
     RangeType range;
     range[0]=minimum;
@@ -322,7 +322,7 @@ namespace itk
 
   /**
    * ******************* RemoveSearchDimension ********************
-   * 
+   *
    * Remove a dimension from the SearchSpace
    */
   void
@@ -334,14 +334,14 @@ namespace itk
       m_SearchSpace->DeleteIndex(param_nr);
     }
   }
-  
+
 
   /**
-   * ***************** GetNumberOfIterations ********************** 
+   * ***************** GetNumberOfIterations **********************
    *
-   * Get the total number of iterations = sizes[0]*sizes[1]*sizes[2]* etc..... 
+   * Get the total number of iterations = sizes[0]*sizes[1]*sizes[2]* etc.....
    */
-  const unsigned long 
+  const unsigned long
     FullSearchOptimizer
     ::GetNumberOfIterations(void)
   {
@@ -360,12 +360,12 @@ namespace itk
 
     return nr_it;
   }
-  
+
 
   /**
    * ******************** GetNumberOfSearchSpaceDimensions ********
    *
-   * Get the Dimension of the SearchSpace. 
+   * Get the Dimension of the SearchSpace.
    */
   const unsigned int
     FullSearchOptimizer
@@ -374,7 +374,7 @@ namespace itk
     this->ProcessSearchSpaceChanges();
     return this->m_NumberOfSearchSpaceDimensions;
   }
-  
+
 
   /**
    * ******************** GetSearchSpaceSize **********************
@@ -389,7 +389,7 @@ namespace itk
       this->ProcessSearchSpaceChanges();
       return this->m_SearchSpaceSize;
   }
-  
+
 
   /**
    * ********************* PointToPosition ************************
@@ -412,7 +412,7 @@ namespace itk
     {
       /** Update the array of parameters. */
       param[ it.Index() ] = point[ssdim] ;
-        
+
       /** go to next dimension in search space */
       it++;
 
@@ -426,13 +426,13 @@ namespace itk
   /**
    * ********************* IndexToPosition ************************
    */
-  FullSearchOptimizer::ParametersType 
+  FullSearchOptimizer::ParametersType
     FullSearchOptimizer
     ::IndexToPosition(const SearchSpaceIndexType & index)
   {
     return this->PointToPosition( this->IndexToPoint(index) );
   }
-  
+
 
   /**
    * ********************* IndexToPoint ***************************
@@ -453,18 +453,18 @@ namespace itk
     {
       /** point = min + step*index */
       RangeType range = it.Value();
-      point[ssdim] = range[0] + static_cast<double>( range[2]*index[ssdim] ); 
+      point[ssdim] = range[0] + static_cast<double>( range[2]*index[ssdim] );
 
       /** go to next dimension in search space */
       it++;
     } // end for
 
-    return point; 
+    return point;
 
   } // end IndexToPoint
-  
 
-  
+
+
 } // end namespace itk
 
 #endif // #ifndef __itkFullSearchOptimizer_cxx

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -26,8 +26,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -69,7 +69,7 @@ template <
   typename TElementIdentifier,
   typename TElement
   >
-class ITK_EXPORT VectorDataContainer: 
+class ITK_EXPORT VectorDataContainer:
   public DataObject,
   public std::vector<TElement>
 {
@@ -79,18 +79,18 @@ public:
   typedef DataObject                Superclass;
   typedef SmartPointer<Self>        Pointer;
   typedef SmartPointer<const Self>  ConstPointer;
-  
+
   /** Save the template parameters. */
   typedef TElementIdentifier        ElementIdentifier;
   typedef TElement                  Element;
-  
+
 private:
   /** Quick access to the STL vector type that was inherited. */
   typedef std::vector<Element>                    VectorType;
-  typedef typename VectorType::size_type          size_type;  
+  typedef typename VectorType::size_type          size_type;
   typedef typename VectorType::iterator           VectorIterator;
   typedef typename VectorType::const_iterator     VectorConstIterator;
-    
+
 protected:
   /** Provide pass-through constructors corresponding to all the STL
    * vector constructors.  These are for internal use only since this is also
@@ -106,7 +106,7 @@ protected:
   template <typename InputIterator>
   VectorDataContainer(InputIterator first, InputIterator last):
     DataObject(), VectorType(first, last) {}
-  
+
 public:
 
   /** This type is provided to Adapt this container as an STL container */
@@ -114,14 +114,14 @@ public:
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
-  
+
   /** Standard part of every itk Object. */
   itkTypeMacro( VectorDataContainer, DataObject );
 
   /** Convenient typedefs for the iterator and const iterator. */
   class Iterator;
   class ConstIterator;
-    
+
   /** Cast the container to a STL container type */
   STLContainerType & CastToSTLContainer() {
      return dynamic_cast<STLContainerType &>(*this); }
@@ -133,7 +133,7 @@ public:
   /** Friends to this class. */
   friend class Iterator;
   friend class ConstIterator;
-  
+
   /** Simulate STL-map style iteration where dereferencing the iterator
    * gives access to both the index and the value. */
   class Iterator
@@ -141,7 +141,7 @@ public:
   public:
     Iterator() {}
     Iterator(size_type d, const VectorIterator& i): m_Pos(d), m_Iter(i) {}
-    
+
     Iterator& operator* ()    { return *this; }
     Iterator* operator-> ()   { return this; }
     Iterator& operator++ ()   { ++m_Pos; ++m_Iter; return *this; }
@@ -153,19 +153,19 @@ public:
     bool operator != (const Iterator& r) const { return m_Iter != r.m_Iter; }
     bool operator == (const ConstIterator& r) const { return m_Iter == r.m_Iter; }
     bool operator != (const ConstIterator& r) const { return m_Iter != r.m_Iter; }
-    
+
     /** Get the index into the VectorDataContainer associated with this iterator.   */
     ElementIdentifier Index(void) const { return static_cast<ElementIdentifier>( m_Pos ); }
-    
+
     /** Get the value at this iterator's location in the VectorDataContainer.   */
     Element& Value(void) const { return *m_Iter; }
-    
+
   private:
     size_type m_Pos;
     VectorIterator m_Iter;
     friend class ConstIterator;
   };
-  
+
   /** Simulate STL-map style const iteration where dereferencing the iterator
    * gives read access to both the index and the value. */
   class ConstIterator
@@ -174,7 +174,7 @@ public:
     ConstIterator() {}
     ConstIterator(size_type d, const VectorConstIterator& i): m_Pos(d), m_Iter(i) {}
     ConstIterator(const Iterator& r) { m_Pos = r.m_Pos; m_Iter = r.m_Iter; }
-    
+
     ConstIterator& operator* ()    { return *this; }
     ConstIterator* operator-> ()   { return this; }
     ConstIterator& operator++ ()   { ++m_Pos; ++m_Iter; return *this; }
@@ -183,26 +183,26 @@ public:
     ConstIterator operator-- (int) { ConstIterator temp(*this); --m_Pos; --m_Iter; return temp; }
 
     ConstIterator& operator = (const Iterator& r) { m_Pos = r.m_Pos; m_Iter = r.m_Iter; return *this; }
-    
+
     bool operator == (const Iterator& r) const { return m_Iter == r.m_Iter; }
     bool operator != (const Iterator& r) const { return m_Iter != r.m_Iter; }
     bool operator == (const ConstIterator& r) const { return m_Iter == r.m_Iter; }
     bool operator != (const ConstIterator& r) const { return m_Iter != r.m_Iter; }
-    
+
     /** Get the index into the VectorDataContainer associated with this iterator.   */
     ElementIdentifier Index(void) const { return static_cast<ElementIdentifier>( m_Pos ); }
-    
+
     /** Get the value at this iterator's location in the VectorDataContainer.   */
     const Element& Value(void) const { return *m_Iter; }
-    
+
   private:
     size_type m_Pos;
     VectorConstIterator m_Iter;
     friend class Iterator;
-  };  
-  
+  };
+
   /* Declare the public interface routines. */
-  
+
   /**
    * Get a reference to the element at the given index.
    * It is assumed that the index exists, and it will not automatically
@@ -255,7 +255,7 @@ public:
    * given index without expansion.
    */
   bool IndexExists( ElementIdentifier ) const;
-  
+
   /**
    * Check if the given index is in range of the vector.  If it is not, return
    * false.  Otherwise, set the element through the pointer (if it isn't NULL),
@@ -276,7 +276,7 @@ public:
    * overwrite the index with the default element.
    */
   void DeleteIndex( ElementIdentifier );
-  
+
   /**
    * Get a begin const iterator for the vector.
    */
@@ -285,7 +285,7 @@ public:
   /**
    * Get an end const iterator for the vector.
    */
-  ConstIterator End( void ) const;  
+  ConstIterator End( void ) const;
 
   /**
    * Get a begin iterator for the vector.
@@ -295,7 +295,7 @@ public:
   /**
    * Get an end iterator for the vector.
    */
-  Iterator End( void );  
+  Iterator End( void );
 
   /**
    * Get the number of elements currently stored in the vector.
@@ -325,11 +325,11 @@ public:
    * Clear the elements. The final size will be zero.
    */
   void Initialize( void );
-    
+
 }; // end class VectorDataContainer
 
 } // end namespace itk
-  
+
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itkVectorDataContainer.txx"
 #endif

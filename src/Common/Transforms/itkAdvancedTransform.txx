@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -23,8 +23,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -85,12 +85,12 @@ AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
 
 template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
 const typename AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::JacobianType & 
+::JacobianType &
 AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
 ::GetJacobian( const InputPointType & ) const
 {
   itkExceptionMacro( << "Subclass should override this method" );
-  // Next line is needed to avoid errors due to: 
+  // Next line is needed to avoid errors due to:
   // "function must return a value".
   return this->m_Jacobian;
 

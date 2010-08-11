@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -20,7 +20,7 @@
 
 namespace itk
 {
-  
+
   /**
    * ************************ Constructor *************************
    */
@@ -29,7 +29,7 @@ namespace itk
     ANNBruteForceTree<TListSample>
     ::ANNBruteForceTree()
   {
-    this->m_ANNTree = 0;    
+    this->m_ANNTree = 0;
   } // end Constructor
 
 
@@ -55,14 +55,14 @@ namespace itk
   {
     int dim = static_cast< int >( this->GetDataDimension() );
     int nop = static_cast< int >( this->GetActualNumberOfDataPoints() );
-    
+
     ANNBinaryTreeCreator::DeleteANNBruteForceTree( this->m_ANNTree );
 
     this->m_ANNTree = ANNBinaryTreeCreator::CreateANNBruteForceTree(
       this->GetSample()->GetInternalContainer(), nop, dim );
 
   } // end GenerateTree
-  
+
 
 } // end namespace itk
 

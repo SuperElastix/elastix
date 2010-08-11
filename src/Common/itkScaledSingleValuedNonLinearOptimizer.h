@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -22,7 +22,7 @@ namespace itk
 {
   /** \class ScaledSingleValuedNonLinearOptimizer
    *
-   * Optimizers that inherit from this class optimize a scaled 
+   * Optimizers that inherit from this class optimize a scaled
    * cost function \f$F(y)\f$ instead of the original function \f$f(x)\f$:
    *
    *    \f[ y    = x \cdot s  \f]
@@ -32,8 +32,8 @@ namespace itk
    * and \f$s\f$ the scales.
    *
    * During optimization the inheriting classes should update the
-   * ScaledCurrentPosition (\f$y\f$) instead of the CurrentPosition (\f$y/s\f$). 
-   *  
+   * ScaledCurrentPosition (\f$y\f$) instead of the CurrentPosition (\f$y/s\f$).
+   *
    * When an optimizer needs the value at a (scaled) position \f$y\f$,
    * it should use the function this->GetScaledValue(\f$y\f$)
    * instead of the GetValue method. Similar for the derivative.
@@ -41,17 +41,17 @@ namespace itk
    * Typically, in StartOptimization() the following line should be present:\n
    *   <tt>this->SetCurrentPosition(this->GetInitialPosition);</tt>\n
    * This makes sure that the initial position \f$y_0 = x_0 \cdot s\f$, where \f$x_0\f$ is
-   * the initial (unscaled) position entered by the user. 
-   * 
+   * the initial (unscaled) position entered by the user.
+   *
    * Note that:
    * - GetScaledCurrentPosition returns the current \f$y\f$.
    * - GetCurrentPosition returns the current \f$x = y/s\f$. This array is only
    * computed when asked for by the user.
-   * - It is NOT necessary to set the CurrentPosition!! In fact, it is 
+   * - It is NOT necessary to set the CurrentPosition!! In fact, it is
    * not possible anymore: the SetCurrentPosition(param) method is overrided
    * and calls SetScaledCurrentPositon(param*scales).
    * - The ITK convention is to set the squared scales in the optimizer.
-   * So, if you want a scaling s, you must call SetScales(\f$s.*s\f$) (where .* 
+   * So, if you want a scaling s, you must call SetScales(\f$s.*s\f$) (where .*
    * symbolises the element-wise product of \f$s\f$ with \f$s\f$)
    *
    */
@@ -84,7 +84,7 @@ namespace itk
     typedef ScaledSingleValuedCostFunction        ScaledCostFunctionType;
     typedef ScaledCostFunctionType::Pointer       ScaledCostFunctionPointer;
 
-    /** Configure the scaled cost function. This function 
+    /** Configure the scaled cost function. This function
      * sets the current scales in the ScaledCostFunction.
      * NB: it assumes that the scales entered by the user
      * are the squared scales (following the ITK convention).
@@ -101,7 +101,7 @@ namespace itk
      */
     virtual void SetUseScales( bool arg );
     const bool GetUseScales(void) const;
-    
+
     /** Get the current scaled position. */
     itkGetConstReferenceMacro( ScaledCurrentPosition, ParametersType );
 
@@ -109,7 +109,7 @@ namespace itk
      * and divide each element through its scale.
      */
     virtual const ParametersType & GetCurrentPosition() const;
-    
+
     /** Get a pointer to the scaled cost function. */
     itkGetConstObjectMacro( ScaledCostFunction, ScaledCostFunctionType );
 
@@ -130,12 +130,12 @@ namespace itk
 
     /** PrintSelf. */
     void PrintSelf( std::ostream& os, Indent indent ) const{};
-    
+
     /** Member variables. */
     ParametersType                  m_ScaledCurrentPosition;
     ScaledCostFunctionPointer       m_ScaledCostFunction;
-    
-    /** Set m_ScaledCurrentPosition. */ 
+
+    /** Set m_ScaledCurrentPosition. */
     virtual void SetScaledCurrentPosition( const ParametersType & parameters );
 
     /** Set the scaled current position by entering the non-scaled
@@ -151,7 +151,7 @@ namespace itk
      */
     virtual void  SetCurrentPosition ( const ParametersType &param );
 
-    /** Divide the (scaled) parameters by the scales and call the GetValue routine 
+    /** Divide the (scaled) parameters by the scales and call the GetValue routine
      * of the unscaled cost function.
      */
     virtual MeasureType GetScaledValue(
@@ -170,7 +170,7 @@ namespace itk
       const ParametersType & parameters,
       MeasureType & value,
       DerivativeType & derivative ) const;
-        
+
   private:
 
     /** The private constructor. */

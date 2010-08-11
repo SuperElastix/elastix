@@ -65,7 +65,7 @@ SET( CostFunctionFiles
  CostFunctions/itkScaledSingleValuedCostFunction.cxx
  CostFunctions/itkScaledSingleValuedCostFunction.h
  CostFunctions/itkSingleValuedPointSetToPointSetMetric.h
- CostFunctions/itkSingleValuedPointSetToPointSetMetric.txx 
+ CostFunctions/itkSingleValuedPointSetToPointSetMetric.txx
  CostFunctions/itkTransformPenaltyTerm.h
  CostFunctions/itkTransformPenaltyTerm.txx
 )

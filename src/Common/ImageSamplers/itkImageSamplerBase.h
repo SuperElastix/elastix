@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -95,7 +95,7 @@ namespace itk
     /** Set the masks. */
     virtual void SetMask( const MaskType *_arg, unsigned int pos );
 
-    /** Set the first mask. NB: the first mask is used to 
+    /** Set the first mask. NB: the first mask is used to
      * compute a bounding box in which samples are considered. */
     virtual void SetMask( const MaskType *_arg )
     {
@@ -113,10 +113,10 @@ namespace itk
 
     /** Set the number of masks. */
     virtual void SetNumberOfMasks( const unsigned int _arg );
-    
+
     /** Get the number of masks. */
     itkGetConstMacro( NumberOfMasks, unsigned int );
-   
+
     /** ******************** Regions ******************** */
 
     /** Set the region over which the samples will be taken. */
@@ -139,7 +139,7 @@ namespace itk
 
     /** Set the number of input image regions. */
     virtual void SetNumberOfInputImageRegions( const unsigned int _arg );
-    
+
     /** Get the number of input image regions. */
     itkGetConstMacro( NumberOfInputImageRegions, unsigned int );
 
@@ -186,7 +186,7 @@ namespace itk
 
     /** Compute the intersection of the InputImageRegion and the bounding box of the mask. */
     void CropInputImageRegion( void );
-   
+
   private:
 
     /** The private constructor. */

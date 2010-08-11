@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -20,30 +20,30 @@
 
 namespace itk
 {
-  
+
   /**
    * \class BinaryANNTreeBase
    *
-   * \brief 
+   * \brief
    *
-   * 
+   *
    * \ingroup ANNwrap
    */
-  
+
   template < class TListSample >
   class BinaryANNTreeBase : public BinaryTreeBase< TListSample >
   {
   public:
-    
+
     /** Standard itk. */
     typedef BinaryANNTreeBase             Self;
     typedef BinaryTreeBase< TListSample > Superclass;
     typedef SmartPointer< Self >          Pointer;
     typedef SmartPointer< const Self >    ConstPointer;
-    
+
     /** ITK type info. */
     itkTypeMacro( BinaryANNTreeBase, BinaryTreeBase );
-    
+
     /** Typedefs from Superclass. */
     typedef typename Superclass::SampleType                 SampleType;
     typedef typename Superclass::MeasurementVectorType      MeasurementVectorType;
@@ -57,21 +57,21 @@ namespace itk
     virtual ANNPointSetType * GetANNTree( void ) const = 0;
 
   protected:
-    
+
     /** Constructor. */
     BinaryANNTreeBase();
 
     /** Destructor. */
     virtual ~BinaryANNTreeBase() {};
-    
+
   private:
-    
+
     BinaryANNTreeBase( const Self& ); // purposely not implemented
     void operator=( const Self& );    // purposely not implemented
 
   }; // end class BinaryANNTreeBase
-    
-    
+
+
 } // end namespace itk
 
 

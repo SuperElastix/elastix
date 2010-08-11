@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -39,12 +39,12 @@ namespace itk
     this->m_Point = 0;
     this->m_PreviousPoint = 0;
     this->m_Bound = 0;
-      
+
     this->m_MaximumNumberOfIterations = 100;
     this->m_GradientMagnitudeTolerance = 1e-5;
     this->m_LineSearchOptimizer = 0;
     this->m_Memory = 5;
-            
+
   } // end constructor
 
 
@@ -67,7 +67,7 @@ namespace itk
     this->m_CurrentIteration = 0;
     this->m_CurrentStepLength = 0.0;
     this->m_CurrentValue = NumericTraits<MeasureType>::Zero;
-    
+
     /** Get the number of parameters; checks also if a cost function has been set at all.
     * if not: an exception is thrown */
     const unsigned int numberOfParameters =
@@ -76,7 +76,7 @@ namespace itk
     /** Set the current gradient to (0 0 0 ...) */
     this->m_CurrentGradient.SetSize(numberOfParameters);
     this->m_CurrentGradient.Fill( 0.0 );
-    
+
     /** Resize Rho, Alpha, S and Y. */
     this->m_Rho.SetSize( this->GetMemory() );
     this->m_S.resize( this->GetMemory() );
@@ -92,7 +92,7 @@ namespace itk
     {
       this->ResumeOptimization();
     }
-    
+
   } // end StartOptimization
 
 
@@ -109,7 +109,7 @@ namespace itk
     this->m_Stop = false;
     this->m_StopCondition = Unknown;
     this->m_CurrentStepLength = 0.0;
-    
+
     ParametersType searchDir;
     DerivativeType previousGradient;
 
@@ -119,7 +119,7 @@ namespace itk
     try
     {
       this->GetScaledValueAndDerivative(
-        this->GetScaledCurrentPosition(), 
+        this->GetScaledCurrentPosition(),
         this->m_CurrentValue,
         this->m_CurrentGradient );
     }
@@ -161,7 +161,7 @@ namespace itk
         this->m_ScaledCurrentPosition,
         this->m_CurrentValue,
         this->m_CurrentGradient);
-      
+
       if ( this->m_Stop )
       {
         break;
@@ -175,19 +175,19 @@ namespace itk
         DerivativeType y;
         s = this->GetCurrentStepLength() * searchDir ;
         y = this->GetCurrentGradient() - previousGradient;
-        this->StoreCurrentPoint(s, y ); 
+        this->StoreCurrentPoint(s, y );
         s.clear();
         y.clear();
       }
-      
+
       /** Number of valid entries in m_S and m_Y */
       if ( this->m_Bound < this->GetMemory() )
       {
         this->m_Bound++;
       }
-      
+
       this->InvokeEvent( IterationEvent() );
-            
+
       if ( this->m_Stop )
       {
         break;
@@ -209,7 +209,7 @@ namespace itk
       {
         this->m_Point = 0;
       }
-        
+
       this->m_CurrentIteration++;
 
     } // end while !m_Stop
@@ -218,7 +218,7 @@ namespace itk
   } // end ResumeOptimization
 
 
-  /** 
+  /**
    * *********************** StopOptimization *****************************
    */
 
@@ -232,7 +232,7 @@ namespace itk
   } // end StopOptimization()
 
 
-  /** 
+  /**
    * ********************* ComputeDiagonalMatrix ********************
    */
 
@@ -263,7 +263,7 @@ namespace itk
   } // end ComputeDiagonalMatrix
 
 
-  /** 
+  /**
    * *********************** ComputeSearchDirection ************************
    */
 
@@ -304,12 +304,12 @@ namespace itk
         searchDir[j] -= alpha_cp * y[j];
       }
     }
-    
+
     for (unsigned int j = 0; j < numberOfParameters; ++j)
     {
       searchDir[j] *= H0[j];
     }
-    
+
     for (unsigned int i=0; i < this->m_Bound; ++i)
     {
       const double yr = inner_product( this->m_Y[cp], searchDir);
@@ -326,7 +326,7 @@ namespace itk
         cp = 0;
       }
     }
-  
+
     /** Normalize if no information about previous steps is available yet */
     if (this->m_Bound == 0)
     {
@@ -336,7 +336,7 @@ namespace itk
   } // end ComputeSearchDirection
 
 
-  /** 
+  /**
    * ********************* LineSearch *******************************
    *
    * Perform a line search along the search direction. On return the
@@ -353,7 +353,7 @@ namespace itk
       MeasureType & f,
       DerivativeType & g )
   {
-  
+
     itkDebugMacro("LineSearch");
 
     LineSearchOptimizerPointer LSO = this->GetLineSearchOptimizer();
@@ -397,11 +397,11 @@ namespace itk
       this->StopOptimization();
       throw err;
     }
-    
+
   } // end LineSearch
 
 
-  /** 
+  /**
    * ********************* StoreCurrentPoint ************************
    */
 
@@ -420,7 +420,7 @@ namespace itk
   } // end StoreCurrentPoint
 
 
-  /** 
+  /**
    * ********************* TestConvergence ************************
    */
 
@@ -436,7 +436,7 @@ namespace itk
       {
         this->m_StopCondition = ZeroStep;
         return true;
-      }; 
+      };
     }
 
     /** Check if the maximum number of iterations will not be exceeded in the following iteration */
@@ -456,7 +456,7 @@ namespace itk
     }
 
     return false;
-    
+
   } // end TestConvergence
 
 } // end namespace itk

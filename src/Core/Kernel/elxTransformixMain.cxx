@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -36,14 +36,14 @@ namespace elastix
  * Assuming EnterCommandLineParameters has already been invoked.
  * or that m_Configuration is initialised in another way.
  */
-  
+
 int TransformixMain::Run( void )
 {
   /** Set process properties. */
   this->SetProcessPriority();
   this->SetMaximumNumberOfThreads();
 
-  /** Initialize database. */    
+  /** Initialize database. */
   int errorCode = this->InitDBIndex();
   if ( errorCode != 0 )
   {
@@ -51,7 +51,7 @@ int TransformixMain::Run( void )
   }
 
   /** Create the Elastix component. */
-  try 
+  try
   {
     /** Key "Elastix", see elxComponentLoader::InstallSupportedImageTypes(). */
     this->m_Elastix = this->CreateComponent( "Elastix" );
@@ -94,13 +94,13 @@ int TransformixMain::Run( void )
   this->GetElastixBase()->SetMovingImageContainer(
     this->GetMovingImageContainer() );
 
-  /** Set the initial transform, if it happens to be there 
+  /** Set the initial transform, if it happens to be there
   * \todo: Does this make sense for transformix?
   */
   this->GetElastixBase()->SetInitialTransform( this->GetInitialTransform() );
 
   /** ApplyTransform! */
-  try 
+  try
   {
     errorCode = this->GetElastixBase()->ApplyTransform();
   }
@@ -158,7 +158,7 @@ int TransformixMain::InitDBIndex( void )
 {
   /** Check if configuration object was already initialized. */
   if ( this->m_Configuration->IsInitialized() )
-  {     
+  {
     /** Try to read MovingImagePixelType from the parameter file. */
     this->m_MovingImagePixelType = "float";
     this->m_Configuration->ReadParameter( this->m_MovingImagePixelType,
@@ -215,7 +215,7 @@ int TransformixMain::InitDBIndex( void )
       /** Get the DBIndex from the ComponentDatabase. */
       this->m_DBIndex = this->s_CDB->GetIndex(
         this->m_FixedImagePixelType,
-        this->m_FixedImageDimension,      
+        this->m_FixedImageDimension,
         this->m_MovingImagePixelType,
         this->m_MovingImageDimension );
       if ( this->m_DBIndex == 0 )

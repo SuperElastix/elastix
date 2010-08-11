@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -22,17 +22,17 @@
 
 /**
  * *********************** clock() *********************************
- * 
+ *
  * Return Value
- * 
+ *
  * clock returns the number of clock ticks of elapsed processor time.
  * The returned value is the product of the amount of time that has
  * elapsed since the start of a process and the value of the CLOCKS_PER_SEC
  * constant. If the amount of elapsed time is unavailable, the function
  * returns -1, cast as a clock_t.
- * 
+ *
  * Remarks
- * 
+ *
  * The clock function tells how much processor time the calling process has
  * used. The time in seconds is approximated by dividing the clock return
  * value by the value of the CLOCKS_PER_SEC constant. In other words,
@@ -59,28 +59,28 @@ using namespace itk;
   class Timer : public Object
   {
   public:
-    
+
     /** Standard ITK-stuff.*/
     typedef Timer                       Self;
     typedef Object                      Superclass;
     typedef SmartPointer<Self>          Pointer;
     typedef SmartPointer<const Self>    ConstPointer;
-    
+
     /** Method for creation through the object factory.*/
     itkNewMacro( Self );
-    
+
     /** Run-time type information (and related methods).*/
     itkTypeMacro( Timer, Object );
-    
+
     /** My typedef's.*/
     typedef std::vector<int>            TimeDHMSType;
-    
+
     /** Member functions.*/
     void  StartTimer(void);
     int   StopTimer(void);
     int   ElapsedClockAndTime(void);
-    
-    /** Formatted Output Functions 
+
+    /** Formatted Output Functions
      * (return the time as a string, with comments)
      */
     const std::string & PrintStartTime(void);
@@ -89,8 +89,8 @@ using namespace itk;
     const std::string & PrintElapsedTimeSec(void);
     const std::string & PrintElapsedClock(void);
     const std::string & PrintElapsedClockSec(void);
-    
-    
+
+
     /** Communication with outside world.*/
     itkGetConstMacro( StartTime, time_t );
     itkGetConstMacro( StopTime, time_t );
@@ -99,12 +99,12 @@ using namespace itk;
     itkGetConstMacro( ElapsedTimeSec, int );
     itkGetConstMacro( ElapsedClock, double );
     itkGetConstMacro( ElapsedClockSec, double );
-    
+
   protected:
 
     Timer();
     virtual ~Timer();
-    
+
     /** Variables that store program arguments.*/
     time_t        m_StartTime;
     clock_t       m_StartClock;
@@ -128,9 +128,9 @@ using namespace itk;
 
     Timer( const Self& );           // purposely not implemented
     void operator=( const Self& );  // purposely not implemented
-    
+
   }; // end class Timer
-  
+
 
 } // end namespace tmr
 

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -67,7 +67,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 
     const double diff1 = this->m_FixedImageTrueMax - this->m_MovingImageTrueMin;
     const double diff2 = this->m_MovingImageTrueMax - this->m_FixedImageTrueMin;
-    const double maxdiff = vnl_math_max( diff1, diff2 ); 
+    const double maxdiff = vnl_math_max( diff1, diff2 );
 
     /** We guess that maxdiff/10 is the maximum average difference that will
      * be observed.
@@ -92,7 +92,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* PrintSelf *******************
  */
 
-template < class TFixedImage, class TMovingImage> 
+template < class TFixedImage, class TMovingImage>
 void
 AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 ::PrintSelf(std::ostream& os, Indent indent) const
@@ -143,7 +143,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* GetValue *******************
  */
 
-template <class TFixedImage, class TMovingImage> 
+template <class TFixedImage, class TMovingImage>
 typename AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>::MeasureType
 AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 ::GetValue( const TransformParametersType & parameters ) const
@@ -171,7 +171,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   {
     /** Read fixed coordinates and initialize some variables. */
     const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
-    RealType movingImageValue; 
+    RealType movingImageValue;
     MovingImagePointType mappedPoint;
 
     /** Transform point and check if it is inside the B-spline support region. */
@@ -200,7 +200,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
       const RealType & fixedImageValue = static_cast<double>( (*fiter).Value().m_ImageValue );
 
       /** The difference squared. */
-      const RealType diff = movingImageValue - fixedImageValue; 
+      const RealType diff = movingImageValue - fixedImageValue;
       measure += diff * diff;
 
     } // end if sampleOk
@@ -215,7 +215,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   double normal_sum = 0.0;
   if ( this->m_NumberOfPixelsCounted > 0 )
   {
-    normal_sum = this->m_NormalizationFactor / 
+    normal_sum = this->m_NormalizationFactor /
       static_cast<double>( this->m_NumberOfPixelsCounted );
   }
   measure *= normal_sum;
@@ -230,7 +230,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* GetDerivative *******************
  */
 
-template < class TFixedImage, class TMovingImage> 
+template < class TFixedImage, class TMovingImage>
 void
 AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 ::GetDerivative(
@@ -293,7 +293,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   {
     /** Read fixed coordinates and initialize some variables. */
     const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
-    RealType movingImageValue; 
+    RealType movingImageValue;
     MovingImagePointType mappedPoint;
     MovingImageDerivativeType movingImageDerivative;
 
@@ -301,9 +301,9 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
     bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
     /** Check if point is inside mask. */
-    if ( sampleOk ) 
+    if ( sampleOk )
     {
-      sampleOk = this->IsInsideMovingMask( mappedPoint );        
+      sampleOk = this->IsInsideMovingMask( mappedPoint );
     }
 
     /** Compute the moving image value M(T(x)) and derivative dM/dx and check if
@@ -311,13 +311,13 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
      */
     if ( sampleOk )
     {
-      sampleOk = this->EvaluateMovingImageValueAndDerivative( 
+      sampleOk = this->EvaluateMovingImageValueAndDerivative(
         mappedPoint, movingImageValue, &movingImageDerivative );
     }
 
     if ( sampleOk )
     {
-      this->m_NumberOfPixelsCounted++; 
+      this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
       const RealType & fixedImageValue
@@ -327,11 +327,11 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
       this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
 
       /** Compute the innerproducts (dM/dx)^T (dT/dmu). */
-      this->EvaluateTransformJacobianInnerProduct( 
+      this->EvaluateTransformJacobianInnerProduct(
         jacobian, movingImageDerivative, imageJacobian );
 
       /** Compute this pixel's contribution to the measure and derivatives. */
-      this->UpdateValueAndDerivativeTerms( 
+      this->UpdateValueAndDerivativeTerms(
         fixedImageValue, movingImageValue,
         imageJacobian, nzji,
         measure, derivative );
@@ -348,7 +348,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   double normal_sum = 0.0;
   if ( this->m_NumberOfPixelsCounted > 0 )
   {
-    normal_sum = this->m_NormalizationFactor / 
+    normal_sum = this->m_NormalizationFactor /
       static_cast<double>( this->m_NumberOfPixelsCounted );
   }
   measure *= normal_sum;
@@ -378,7 +378,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   typedef typename DerivativeType::ValueType        DerivativeValueType;
 
   /** The difference squared. */
-  const RealType diff = movingImageValue - fixedImageValue; 
+  const RealType diff = movingImageValue - fixedImageValue;
   const RealType diffdiff = diff * diff;
   measure += diffdiff;
 
@@ -391,9 +391,9 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
     typename DerivativeType::iterator derivit = deriv.begin();
     for ( unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu )
     {
-      (*derivit) += diff_2 * (*imjacit);        
+      (*derivit) += diff_2 * (*imjacit);
       ++imjacit;
-      ++derivit;   
+      ++derivit;
     }
   }
   else
@@ -402,7 +402,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
     for ( unsigned int i = 0; i < imageJacobian.GetSize(); ++i )
     {
       const unsigned int index = nzji[ i ];
-      deriv[ index ] += diff_2 * imageJacobian[ i ];       
+      deriv[ index ] += diff_2 * imageJacobian[ i ];
     }
   }
 } // end UpdateValueAndDerivativeTerms
@@ -440,7 +440,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   H.Fill(0.0);
 
   /** Smooth fixed image */
-  typename SmootherType::Pointer smoother = SmootherType::New();    
+  typename SmootherType::Pointer smoother = SmootherType::New();
   smoother->SetInput( this->GetFixedImage() );
   smoother->SetSigma( this->GetSelfHessianSmoothingSigma() );
   smoother->Update();
@@ -457,7 +457,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   }
   fixedInterpolator->SetInputImage( smoother->GetOutput() );
 
-  /** Set up random coordinate sampler 
+  /** Set up random coordinate sampler
    * Actually we could do without a sampler, but it's easy like this.
    */
   typename SelfHessianSamplerType::Pointer sampler = SelfHessianSamplerType::New();
@@ -489,34 +489,34 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
     /** Transform point and check if it is inside the B-spline support region. */
     bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint);
 
-    /** Check if point is inside mask. NB: we assume here that the 
+    /** Check if point is inside mask. NB: we assume here that the
      * initial transformation is approximately ok.
      */
-    if ( sampleOk ) 
+    if ( sampleOk )
     {
-      sampleOk = this->IsInsideMovingMask( mappedPoint );         
+      sampleOk = this->IsInsideMovingMask( mappedPoint );
     }
 
-    /** Check if point is inside moving image. NB: we assume here that the 
+    /** Check if point is inside moving image. NB: we assume here that the
      * initial transformation is approximately ok.
      */
     if ( sampleOk )
     {
       sampleOk = this->m_Interpolator->IsInsideBuffer( mappedPoint );
-    }       
+    }
 
     if ( sampleOk )
     {
-      this->m_NumberOfPixelsCounted++; 
+      this->m_NumberOfPixelsCounted++;
 
       /** Use the derivative of the fixed image for the self Hessian! */
-      movingImageDerivative = fixedInterpolator->EvaluateDerivative( fixedPoint );    
+      movingImageDerivative = fixedInterpolator->EvaluateDerivative( fixedPoint );
 
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
 
       /** Compute the innerproducts (dM/dx)^T (dT/dmu) */
-      this->EvaluateTransformJacobianInnerProduct( 
+      this->EvaluateTransformJacobianInnerProduct(
         jacobian, movingImageDerivative, imageJacobian );
 
       /** Compute this pixel's contribution to the SelfHessian. */
@@ -530,10 +530,10 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   this->CheckNumberOfSamples(
     sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
-  /** Compute the measure value and derivative. */    
+  /** Compute the measure value and derivative. */
   if ( this->m_NumberOfPixelsCounted > 0 )
   {
-    const double normal_sum = 2.0 * this->m_NormalizationFactor / 
+    const double normal_sum = 2.0 * this->m_NormalizationFactor /
       static_cast<double>( this->m_NumberOfPixelsCounted );
     H *= normal_sum;
   }
@@ -553,7 +553,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 template < class TFixedImage, class TMovingImage >
 void
 AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-::UpdateSelfHessianTerms( 
+::UpdateSelfHessianTerms(
   const DerivativeType & imageJacobian,
   const NonZeroJacobianIndicesType & nzji,
   HessianType & H ) const
@@ -566,7 +566,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   }
   else
   {
-    /** Only pick the nonzero Jacobians. 
+    /** Only pick the nonzero Jacobians.
     * Todo: we could use the symmetry here. Anyway, it won't give much probably. */
     unsigned int imjacsize = imageJacobian.GetSize();
     for ( unsigned int i = 0; i < imjacsize; ++i )
@@ -574,9 +574,9 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
       const unsigned int row = nzji[ i ];
       const double imjacrow = imageJacobian[ i ];
       for ( unsigned int j = 0; j < imjacsize; ++j )
-      {          
+      {
         const unsigned int col = nzji[ j ];
-        H(row,col) += imjacrow * imageJacobian[ j ];       
+        H(row,col) += imjacrow * imageJacobian[ j ];
       }
     }
   } // end else

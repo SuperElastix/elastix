@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -32,7 +32,7 @@ using namespace itk;
     ::BeforeEachResolution(void)
   {
     /** Get the current resolution level. */
-    unsigned int level = 
+    unsigned int level =
       ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
     /** Get and set SubtractMean. Default true. */
@@ -58,9 +58,9 @@ using namespace itk;
       elxout << "Multiplying moving image derivatives by: "
         << movingImageDerivativeScales << std::endl;
     }
-    
+
   } // end BeforeEachResolution
-  
+
 
   /**
    * ******************* Initialize ***********************

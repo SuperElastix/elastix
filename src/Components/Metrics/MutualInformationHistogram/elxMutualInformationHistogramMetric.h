@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -31,8 +31,8 @@ using namespace itk;
    * This metric is not yet fully supported. But with a little effort it is!
    *
    * \warning: this metric is not very well tested in elastix.
-   * \warning: this metric is not based on the AdvancedImageToImageMetric so 
-   * does not support the ImageSampler framework and might be very slow in 
+   * \warning: this metric is not based on the AdvancedImageToImageMetric so
+   * does not support the ImageSampler framework and might be very slow in
    * combination with B-spline transform.
    *
    * The parameters used in this class are:
@@ -42,7 +42,7 @@ using namespace itk;
    * \ingroup Metrics
    */
 
-  template <class TElastix >  
+  template <class TElastix >
     class MutualInformationHistogramMetric :
     public
       MutualInformationHistogramImageToImageMetric<
@@ -60,14 +60,14 @@ using namespace itk;
     typedef MetricBase<TElastix>                          Superclass2;
     typedef SmartPointer<Self>                            Pointer;
     typedef SmartPointer<const Self>                      ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( MutualInformationHistogramMetric,
       MutualInformationHistogramImageToImageMetric );
-    
+
     /** Name of this class.
      * Use this name in the parameter file to select this specific metric. \n
      * example: <tt>(Metric "MutualInformationHistogram")</tt>\n
@@ -87,11 +87,11 @@ using namespace itk;
     typedef typename Superclass1::FixedImageConstPointer    FixedImageConstPointer;
     typedef typename Superclass1::MovingImageConstPointer   MovingImageCosntPointer;
     typedef typename Superclass1::ScalesType                ScalesType;
-    
+
     /** The moving image dimension. */
     itkStaticConstMacro( MovingImageDimension, unsigned int,
       MovingImageType::ImageDimension );
-    
+
     /** Typedef's inherited from Elastix. */
     typedef typename Superclass2::ElastixType           ElastixType;
     typedef typename Superclass2::ElastixPointer        ElastixPointer;
@@ -100,11 +100,11 @@ using namespace itk;
     typedef typename Superclass2::RegistrationType      RegistrationType;
     typedef typename Superclass2::RegistrationPointer   RegistrationPointer;
     typedef typename Superclass2::ITKBaseType           ITKBaseType;
-      
+
     /** Typedef's for timer. */
     typedef tmr::Timer          TimerType;
     typedef TimerType::Pointer  TimerPointer;
-    
+
     /** Execute stuff before the actual registration:
      * \li Nothing yet: still to be implemented.
      */
@@ -119,11 +119,11 @@ using namespace itk;
      * calls the Superclass' implementation.
      */
     virtual void Initialize(void) throw (ExceptionObject);
-    
+
   protected:
 
     /** The constructor. */
-    MutualInformationHistogramMetric(); 
+    MutualInformationHistogramMetric();
     /** The destructor. */
     virtual ~MutualInformationHistogramMetric() {}
 
@@ -133,7 +133,7 @@ using namespace itk;
     MutualInformationHistogramMetric( const Self& );  // purposely not implemented
     /** The private copy constructor. */
     void operator=( const Self& );                    // purposely not implemented
-    
+
   }; // end class MutualInformationHistogramMetric
 
 

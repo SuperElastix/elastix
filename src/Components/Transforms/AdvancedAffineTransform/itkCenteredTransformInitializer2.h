@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -31,11 +31,11 @@ namespace itk
  * \brief CenteredTransformInitializer2 is a helper class intended to
  * initialize the center of rotation and the translation of Transforms having
  * the center of rotation among their parameters.
- * 
+ *
  * This class is connected to the fixed image, moving image and transform
  * involved in the registration. Three modes of operation are possible:
- * 
- * - Geometrical, 
+ *
+ * - Geometrical,
  * - Center of mass
  * - Origins
  *
@@ -55,17 +55,17 @@ namespace itk
  * are similar for both images and hence the best initial guess for
  * registration is to superimpose both mass centers.  Note that this
  * assumption will probably not hold in multi-modality registration.
- * 
- * In the third mode, the vector from the coordinates (0,0,0) of the 
+ *
+ * In the third mode, the vector from the coordinates (0,0,0) of the
  * fixed image to the coordinates (0,0,0) of the moving image is passed as the
- * initial translation T and the geometrical center of the 
+ * initial translation T and the geometrical center of the
  * moving image, translated by inv(T), is passed as initial center of rotation to the transform.
  *
  * \ingroup Transforms
  */
 template < class TTransform,
            class TFixedImage,
-           class TMovingImage > 
+           class TMovingImage >
 class ITK_EXPORT CenteredTransformInitializer2 : public Object
 {
 public:
@@ -74,7 +74,7 @@ public:
   typedef Object                           Superclass;
   typedef SmartPointer<Self>               Pointer;
   typedef SmartPointer<const Self>         ConstPointer;
-    
+
   /** New macro for creation of through a Smart Pointer. */
   itkNewMacro( Self );
 
@@ -86,9 +86,9 @@ public:
   typedef typename TransformType::Pointer   TransformPointer;
 
   /** Dimension of parameters. */
-  itkStaticConstMacro(InputSpaceDimension, unsigned int, 
+  itkStaticConstMacro(InputSpaceDimension, unsigned int,
                       TransformType::InputSpaceDimension);
-  itkStaticConstMacro(OutputSpaceDimension, unsigned int, 
+  itkStaticConstMacro(OutputSpaceDimension, unsigned int,
                       TransformType::OutputSpaceDimension);
 
   /** Image Types to use in the initialization of the transform */
@@ -99,14 +99,14 @@ public:
   typedef   typename MovingImageType::ConstPointer  MovingImagePointer;
 
   /** Moment calculators */
-  typedef ImageMomentsCalculator< FixedImageType >   
+  typedef ImageMomentsCalculator< FixedImageType >
                                                  FixedImageCalculatorType;
-  typedef ImageMomentsCalculator< MovingImageType >  
+  typedef ImageMomentsCalculator< MovingImageType >
                                                  MovingImageCalculatorType;
 
   typedef typename FixedImageCalculatorType::Pointer
                                                  FixedImageCalculatorPointer;
-  typedef typename MovingImageCalculatorType::Pointer 
+  typedef typename MovingImageCalculatorType::Pointer
                                                  MovingImageCalculatorPointer;
 
 
@@ -115,10 +115,10 @@ public:
 
   /** Point type. */
   typedef typename TransformType::InputPointType   InputPointType;
-  
+
   /** Vector type. */
   typedef typename TransformType::OutputVectorType  OutputVectorType;
-  
+
   /** Set the transform to be initialized */
   itkSetObjectMacro( Transform,   TransformType   );
 
@@ -132,7 +132,7 @@ public:
   /** Initialize the transform using data from the images */
   virtual void InitializeTransform();
 
-  /** Select between using the geometrical center of the images or 
+  /** Select between using the geometrical center of the images or
       using the center of mass given by the image intensities. */
   void GeometryOn() { m_UseMoments = false; m_UseOrigins=false;}
   void MomentsOn()  { m_UseMoments = true; m_UseOrigins=false;}

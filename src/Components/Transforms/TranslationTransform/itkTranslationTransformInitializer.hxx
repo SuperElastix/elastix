@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -23,7 +23,7 @@ namespace itk
 
 template < class TTransform, class TFixedImage, class TMovingImage >
 TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage >
-::TranslationTransformInitializer() 
+::TranslationTransformInitializer()
 {
   m_FixedCalculator  = FixedImageCalculatorType::New();
   m_MovingCalculator = MovingImageCalculatorType::New();
@@ -32,7 +32,7 @@ TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage >
 
 
 template < class TTransform, class TFixedImage, class TMovingImage >
-void 
+void
 TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage >
 ::InitializeTransform() const
 {
@@ -55,14 +55,14 @@ TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage >
 
   // If images come from filters, then update those filters.
   if( m_FixedImage->GetSource() )
-    { 
+    {
     m_FixedImage->GetSource()->Update();
     }
   if( m_MovingImage->GetSource() )
-    { 
+    {
     m_MovingImage->GetSource()->Update();
     }
-  
+
   OutputVectorType  translationVector;
 
 
@@ -73,7 +73,7 @@ TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage >
 
     m_MovingCalculator->SetImage( m_MovingImage );
     m_MovingCalculator->Compute();
-    
+
     typename FixedImageCalculatorType::VectorType fixedCenter =
       m_FixedCalculator->GetCenterOfGravity();
 
@@ -85,20 +85,20 @@ TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage >
         translationVector[i] = movingCenter[i] - fixedCenter[i];
     }
   }
-  else 
+  else
   {
     // Here use the geometrical center of each image.
 
-    const typename FixedImageType::SpacingType& 
+    const typename FixedImageType::SpacingType&
       fixedSpacing = m_FixedImage->GetSpacing();
     const typename FixedImageType::PointType&
       fixedOrigin  = m_FixedImage->GetOrigin();
-    
-    typename FixedImageType::SizeType fixedSize = 
+
+    typename FixedImageType::SizeType fixedSize =
       m_FixedImage->GetLargestPossibleRegion().GetSize();
-    
+
     typename TransformType::InputPointType centerFixed;
-    
+
     for( unsigned int k=0; k<InputSpaceDimension; k++ )
     {
       centerFixed[k] = fixedOrigin[k] + fixedSpacing[k] * fixedSize[k] / 2.0;
@@ -109,12 +109,12 @@ TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage >
       movingSpacing = m_MovingImage->GetSpacing();
     const typename MovingImageType::PointType&
       movingOrigin  = m_MovingImage->GetOrigin();
-    
-    typename MovingImageType::SizeType movingSize = 
+
+    typename MovingImageType::SizeType movingSize =
       m_MovingImage->GetLargestPossibleRegion().GetSize();
-    
+
     typename TransformType::InputPointType centerMoving;
-    
+
     for( unsigned int m=0; m<InputSpaceDimension; m++ )
     {
       centerMoving[m] = movingOrigin[m] + movingSpacing[m] * movingSize[m] / 2.0;
@@ -131,69 +131,69 @@ TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage >
 
 
 }
-  
 
-      
+
+
 
 template < class TTransform, class TFixedImage, class TMovingImage >
-void 
+void
 TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage >
 ::PrintSelf(std::ostream& os, Indent indent) const
 {
   Superclass::PrintSelf(os,indent);
-     
+
   os << indent << "Transform   = " << std::endl;
   if (m_Transform)
-    { 
+    {
     os << indent << m_Transform  << std::endl;
     }
   else
     {
     os << indent << "None" << std::endl;
-    }      
+    }
 
   os << indent << "FixedImage   = " << std::endl;
   if (m_FixedImage)
-    { 
+    {
     os << indent << m_FixedImage  << std::endl;
     }
   else
     {
     os << indent << "None" << std::endl;
-    }      
+    }
 
   os << indent << "MovingImage   = " << std::endl;
   if (m_MovingImage)
-    { 
+    {
     os << indent << m_MovingImage  << std::endl;
     }
   else
     {
     os << indent << "None" << std::endl;
-    }      
+    }
 
   os << indent << "MovingMomentCalculator   = " << std::endl;
   if (m_MovingCalculator)
-    { 
+    {
     os << indent << m_MovingCalculator  << std::endl;
     }
   else
     {
     os << indent << "None" << std::endl;
-    }      
+    }
 
   os << indent << "FixedMomentCalculator   = " << std::endl;
   if (m_FixedCalculator)
-    { 
+    {
     os << indent << m_FixedCalculator  << std::endl;
     }
   else
     {
     os << indent << "None" << std::endl;
-    }      
+    }
 
 }
- 
+
 }  // namespace itk
 
 #endif /* __itkTranslationTransformInitializer_hxx */

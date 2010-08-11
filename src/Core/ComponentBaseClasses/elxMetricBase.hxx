@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -49,7 +49,7 @@ MetricBase<TElastix>
   unsigned int level
     = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
-  /** Check if the exact metric value, computed on all pixels, should be shown, 
+  /** Check if the exact metric value, computed on all pixels, should be shown,
    * and whether the all pixels should be used during optimisation.
    */
 
@@ -60,7 +60,7 @@ MetricBase<TElastix>
   /** Remove the ExactMetric-column, if it already existed. */
   xl::xout["iteration"].RemoveTargetCell( exactMetricColumn.c_str() );
 
-  /** Read the parameter file: Show the exact metric in every iteration? */ 
+  /** Read the parameter file: Show the exact metric in every iteration? */
   bool showExactMetricValue = false;
   this->GetConfiguration()->ReadParameter( showExactMetricValue,
     "ShowExactMetricValue", this->GetComponentLabel(), level, 0 );
@@ -82,7 +82,7 @@ MetricBase<TElastix>
   {
     /** Should the metric check for enough samples? */
     bool checkNumberOfSamples = true;
-    this->GetConfiguration()->ReadParameter( checkNumberOfSamples, 
+    this->GetConfiguration()->ReadParameter( checkNumberOfSamples,
       "CheckNumberOfSamples", this->GetComponentLabel(), level, 0 );
 
     /** Get the required ratio. */
@@ -112,7 +112,7 @@ template <class TElastix>
 void
 MetricBase<TElastix>
 ::AfterEachIterationBase( void )
-{ 
+{
   /** Show the metric value computed on all voxels, if the user wanted it. */
 
   /** Define the name of the ExactMetric column (ExactMetric<i>). */
@@ -149,7 +149,7 @@ MetricBase<TElastix>
      * method is called for a metric without sampler support.
      * To avoid the warning, this method may be overridden by a subclass.
      */
-    xl::xout["warning"] 
+    xl::xout["warning"]
       << "WARNING: The NewSamplesEveryIteration option was set to \"true\", but "
       << this->GetComponentLabel()
       << " does not use a sampler."
@@ -167,7 +167,7 @@ template <class TElastix>
 typename MetricBase<TElastix>::MeasureType
 MetricBase<TElastix>
 ::GetExactValue( const ParametersType& parameters )
-{ 
+{
   /** Get the current image sampler. */
   typename ImageSamplerBaseType::Pointer currentSampler
     = this->GetAdvancedMetricImageSampler();
@@ -177,7 +177,7 @@ MetricBase<TElastix>
    * essential for good registration...
    */
   if ( currentSampler.IsNull() )
-  {      
+  {
     return itk::NumericTraits<MeasureType>::Zero;
   }
 
@@ -200,7 +200,7 @@ MetricBase<TElastix>
 
   /** Copy settings from current sampler. */
   this->m_ExactMetricSampler->SetInput( currentSampler->GetInput() );
-  this->m_ExactMetricSampler->SetMask( currentSampler->GetMask() );      
+  this->m_ExactMetricSampler->SetMask( currentSampler->GetMask() );
   this->m_ExactMetricSampler->SetInputImageRegion(
     currentSampler->GetInputImageRegion() );
   this->SetAdvancedMetricImageSampler( this->m_ExactMetricSampler );

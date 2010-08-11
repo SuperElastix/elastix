@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -21,100 +21,100 @@
 
 namespace itk
 {
-  
-  
+
+
   /**
    * \class EulerGroup
    * \brief This class only contains a dummy class.
    *
    */
-  
+
   template< unsigned int Dimension >
     class EulerGroup
   {
   public:
-    
+
     template< class TScalarType >
       class Dummy
     {
     public:
-      
+
       /** Typedef's.*/
-      typedef AdvancedMatrixOffsetTransformBase< TScalarType, Dimension, Dimension >             EulerTransform_tmp;      
-      
+      typedef AdvancedMatrixOffsetTransformBase< TScalarType, Dimension, Dimension >             EulerTransform_tmp;
+
     }; // end class Dummy
-    
+
   }; // end class EulerGroup
-  
-  
+
+
   /**
    * \class EulerGroup<2>
    * \brief This class only contains a dummy class for the 2D case.
    *
    */
-  
+
   template<>
     class EulerGroup<2>
   {
   public:
-    
+
     template< class TScalarType >
       class Dummy
     {
     public:
-      
+
       /** Typedef's.*/
       typedef AdvancedRigid2DTransform< TScalarType >     EulerTransform_tmp;
-          
+
     }; // end class Dummy
-    
+
   }; // end class EulerGroup<2>
-  
-  
+
+
   /**
    * \class EulerGroup<3>
    * \brief This class only contains a dummy class for the 3D case.
    *
    */
-  
+
   template<>
     class EulerGroup<3>
   {
   public:
-    
+
     template< class TScalarType >
       class Dummy
     {
     public:
-      
+
       /** Typedef's.*/
       typedef AdvancedEuler3DTransform< TScalarType >           EulerTransform_tmp;
-            
+
     }; // end class Dummy
-    
+
   }; // end class EulerGroup<3>
 
-   
+
   /**
    * \class EulerGroupTemplate
    * \brief This class templates the EulerGroup over its dimension.
    *
    */
-  
+
   template< class TScalarType, unsigned int Dimension >
     class EulerGroupTemplate
   {
   public:
-          
+
     typedef EulerGroupTemplate Self;
-    typedef TScalarType ScalarType;       
-    itkStaticConstMacro( SpaceDimension, unsigned int, Dimension );         
-  
-    
+    typedef TScalarType ScalarType;
+    itkStaticConstMacro( SpaceDimension, unsigned int, Dimension );
+
+
     // This declaration of 'Euler' does not work with the GCC compiler
     //    typedef EulerGroup<  itkGetStaticConstMacro( SpaceDimension ) >       Euler;
     // The following trick works though:
-    template <unsigned int D> 
+    template <unsigned int D>
       class EulerGroupWrap
     {
     public:
@@ -122,12 +122,12 @@ namespace itk
     };
     typedef EulerGroupWrap<Dimension>               EulerGroupWrapInstance;
     typedef typename EulerGroupWrapInstance::Euler  Euler;
-    
+
     typedef typename Euler::template Dummy< ScalarType >      EulerDummy;
     typedef typename EulerDummy::EulerTransform_tmp EulerTransform_tmp;
-    
+
   }; // end class EulerGroupTemplate
-  
+
 
   /**
    * \class EulerTransform
@@ -137,7 +137,7 @@ namespace itk
    *
    * \ingroup Transforms
    */
-  
+
   template< class TScalarType, unsigned int Dimension >
     class EulerTransform:
   public EulerGroupTemplate<
@@ -152,16 +152,16 @@ namespace itk
       ::EulerTransform_tmp                      Superclass;
     typedef SmartPointer<Self>                  Pointer;
     typedef SmartPointer<const Self>            ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( EulerTransform, EulerGroupTemplate );
-    
+
     /** Dimension of the domain space. */
     itkStaticConstMacro( SpaceDimension, unsigned int, Dimension );
-    
+
     /** Typedefs inherited from the superclass. */
 
     /** These are both in Rigid2D and Euler3D. */
@@ -187,7 +187,7 @@ namespace itk
     typedef typename Superclass
       ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
     typedef typename Superclass::InternalMatrixType   InternalMatrixType;
-    
+
     /** Make sure SetComputeZYX() is available, also in 2D,
      * in which case, its just a dummy function.
      */
@@ -227,16 +227,16 @@ namespace itk
 
     EulerTransform(){};
     ~EulerTransform(){};
-    
+
   private:
 
     EulerTransform( const Self& ); // purposely not implemented
     void operator=( const Self& ); // purposely not implemented
-    
+
   }; // end class EulerTransform
-  
-  
-  
+
+
+
 } // end namespace itk
 
 #endif // end #ifndef __itkEulerTransform_H__

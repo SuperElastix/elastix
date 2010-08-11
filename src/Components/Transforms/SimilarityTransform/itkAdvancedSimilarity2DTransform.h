@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -29,7 +29,7 @@ namespace itk
  * This transform applies a homogenous scale and rigid transform in
  * 2D space. The transform is specified as a scale and rotation around
  * a arbitrary center and is followed by a translation.
- * given one angle for rotation, a homogeneous scale and a 2D offset for translation. 
+ * given one angle for rotation, a homogeneous scale and a 2D offset for translation.
  *
  * The parameters for this transform can be set either using
  * individual Set methods or in serialized form using
@@ -59,8 +59,8 @@ namespace itk
  * \ingroup Transforms
  */
 template < class TScalarType=double >    // Data type for scalars (float or double)
-class ITK_EXPORT AdvancedSimilarity2DTransform : 
-            public AdvancedRigid2DTransform< TScalarType > 
+class ITK_EXPORT AdvancedSimilarity2DTransform :
+            public AdvancedRigid2DTransform< TScalarType >
 {
 public:
   /** Standard class typedefs. */
@@ -68,7 +68,7 @@ public:
   typedef AdvancedRigid2DTransform< TScalarType >   Superclass;
   typedef SmartPointer<Self>        Pointer;
   typedef SmartPointer<const Self>  ConstPointer;
-    
+
   /** New macro for creation of through a Smart Pointer. */
   itkNewMacro( Self );
 
@@ -90,7 +90,7 @@ public:
 
   /** Jacobian type. */
   typedef typename Superclass::JacobianType  JacobianType;
-  
+
   /** Offset type. */
   typedef typename Superclass::OffsetType  OffsetType;
 
@@ -100,15 +100,15 @@ public:
   /** Point type. */
   typedef typename Superclass::InputPointType   InputPointType;
   typedef typename Superclass::OutputPointType  OutputPointType;
-  
+
   /** Vector type. */
   typedef typename Superclass::InputVectorType   InputVectorType;
   typedef typename Superclass::OutputVectorType  OutputVectorType;
-  
+
   /** CovariantVector type. */
   typedef typename Superclass::InputCovariantVectorType   InputCovariantVectorType;
   typedef typename Superclass::OutputCovariantVectorType  OutputCovariantVectorType;
-  
+
   /** VnlVector type. */
   typedef typename Superclass::InputVnlVectorType   InputVnlVectorType;
   typedef typename Superclass::OutputVnlVectorType  OutputVnlVectorType;
@@ -126,14 +126,14 @@ public:
   /** Set the Scale part of the transform. */
   void SetScale( ScaleType scale );
   itkGetConstReferenceMacro( Scale, ScaleType );
-  
+
   /** Set the transformation from a container of parameters
     * This is typically used by optimizers.
     * There are 4 parameters. The first one represents the
     * scale, the second represents the angle of rotation
     * and the last two represent the translation.
     * The center of rotation is fixed.
-    * 
+    *
     * \sa Transform::SetParameters()
     * \sa Transform::SetFixedParameters() */
   void SetParameters( const ParametersType & parameters );
@@ -147,13 +147,13 @@ public:
    *
    * \sa Transform::GetParameters()
    * \sa Transform::GetFixedParameters() */
-  const ParametersType & GetParameters( void ) const; 
- 
+  const ParametersType & GetParameters( void ) const;
+
   /** This method computes the Jacobian matrix of the transformation
    * at a given input point.
    *
    * \sa Transform::GetJacobian() */
-  
+
   /** Compute the Jacobian of the transformation. */
   virtual void GetJacobian(
     const InputPointType &,
@@ -192,20 +192,20 @@ public:
 
 protected:
   AdvancedSimilarity2DTransform();
-  AdvancedSimilarity2DTransform( unsigned int spaceDimension, 
+  AdvancedSimilarity2DTransform( unsigned int spaceDimension,
                          unsigned int parametersDimension);
 
   ~AdvancedSimilarity2DTransform(){};
   void PrintSelf(std::ostream &os, Indent indent) const;
 
   /** Compute matrix from angle and scale. This is used in Set methods
-   * to update the underlying matrix whenever a transform parameter 
+   * to update the underlying matrix whenever a transform parameter
    * is changed. */
   virtual void ComputeMatrix(void);
 
   /** Compute the angle and scale from the matrix. This is used to compute
    * transform parameters from a given matrix. This is used in
-   * MatrixOffsetTransformBase::Compose() and 
+   * MatrixOffsetTransformBase::Compose() and
    * MatrixOffsetTransformBase::GetInverse(). */
   virtual void ComputeMatrixParameters(void);
 
@@ -220,7 +220,7 @@ private:
   AdvancedSimilarity2DTransform(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
-  ScaleType     m_Scale; 
+  ScaleType     m_Scale;
 
 }; //class AdvancedSimilarity2DTransform
 

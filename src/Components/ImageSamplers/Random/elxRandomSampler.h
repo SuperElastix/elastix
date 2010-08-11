@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -26,14 +26,14 @@ using namespace itk;
   /**
    * \class RandomSampler
    * \brief An interpolator based on the itk::ImageRandomSampler.
-   * 
-   * This image sampler randomly samples 'NumberOfSamples' voxels in 
+   *
+   * This image sampler randomly samples 'NumberOfSamples' voxels in
    * the InputImageRegion. Voxels may be selected multiple times.
-   * If a mask is given, the sampler tries to find samples within the 
+   * If a mask is given, the sampler tries to find samples within the
    * mask. If the mask is very sparse, this may take some time. In this case,
    * consider using the RandomSparseMask image sampler.
-   * 
-   * This sampler is suitable to used in combination with the 
+   *
+   * This sampler is suitable to used in combination with the
    * NewSamplesEveryIteration parameter (defined in the elx::OptimizerBase).
    *
    * The parameters used in this class are:
@@ -51,32 +51,32 @@ using namespace itk;
     class RandomSampler :
     public
       ImageRandomSampler<
-      ITK_TYPENAME elx::ImageSamplerBase<TElastix>::InputImageType >, 
+      ITK_TYPENAME elx::ImageSamplerBase<TElastix>::InputImageType >,
     public
       elx::ImageSamplerBase<TElastix>
-  { 
+  {
   public:
-  
+
     /** Standard ITK-stuff. */
     typedef RandomSampler                       Self;
     typedef ImageRandomSampler<
-      typename elx::ImageSamplerBase<TElastix>::InputImageType >  Superclass1;    
-    typedef elx::ImageSamplerBase<TElastix>         Superclass2;    
+      typename elx::ImageSamplerBase<TElastix>::InputImageType >  Superclass1;
+    typedef elx::ImageSamplerBase<TElastix>         Superclass2;
     typedef SmartPointer<Self>                  Pointer;
     typedef SmartPointer<const Self>            ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro(Self);
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( RandomSampler, ImageRandomSampler );
-    
+
     /** Name of this class.
      * Use this name in the parameter file to select this specific interpolator. \n
      * example: <tt>(ImageSampler "Random")</tt>\n
      */
     elxClassNameMacro( "Random" );
-    
+
     /** Typedefs inherited from the superclass. */
     typedef typename Superclass1::DataObjectPointer            DataObjectPointer;
     typedef typename Superclass1::OutputVectorContainerType    OutputVectorContainerType;
@@ -90,11 +90,11 @@ using namespace itk;
     typedef typename Superclass1::ImageSampleContainerType     ImageSampleContainerType;
     typedef typename Superclass1::MaskType                     MaskType;
     typedef typename Superclass1::InputImageIndexType          InputImageIndexType;
-    typedef typename Superclass1::InputImagePointType          InputImagePointType; 
+    typedef typename Superclass1::InputImagePointType          InputImagePointType;
 
     /** The input image dimension. */
     itkStaticConstMacro( InputImageDimension, unsigned int, Superclass1::InputImageDimension );
-    
+
     /** Typedefs inherited from Elastix. */
     typedef typename Superclass2::ElastixType               ElastixType;
     typedef typename Superclass2::ElastixPointer            ElastixPointer;
@@ -122,7 +122,7 @@ using namespace itk;
     RandomSampler( const Self& ); // purposely not implemented
     /** The private copy constructor. */
     void operator=( const Self& );      // purposely not implemented
-      
+
   }; // end class RandomSampler
 
 

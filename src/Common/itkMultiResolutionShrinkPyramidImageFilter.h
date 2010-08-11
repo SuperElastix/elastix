@@ -6,7 +6,7 @@ Copyright (c) University Medical Center Utrecht. All rights reserved.
 See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
 details.
 
-This software is distributed WITHOUT ANY WARRANTY; without even 
+This software is distributed WITHOUT ANY WARRANTY; without even
 the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
@@ -33,10 +33,10 @@ namespace itk
  * \ingroup PyramidImageFilter Multithreaded Streamed
  */
 template <
-  class TInputImage, 
+  class TInputImage,
   class TOutputImage
   >
-class ITK_EXPORT MultiResolutionShrinkPyramidImageFilter : 
+class ITK_EXPORT MultiResolutionShrinkPyramidImageFilter :
     public MultiResolutionPyramidImageFilter< TInputImage, TOutputImage >
 {
 public:
@@ -89,7 +89,7 @@ protected:
 private:
   MultiResolutionShrinkPyramidImageFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
-  
+
 };
 
 

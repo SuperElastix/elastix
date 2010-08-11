@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -67,10 +67,10 @@ int main( int argc, char **argv )
 
   /** Put command line parameters into parameterFileList. */
   for ( unsigned int i = 1; static_cast<long>(i) < argc - 1; i += 2 )
-  { 
+  {
     std::string key( argv[ i ] );
     std::string value( argv[ i + 1 ] );
-  
+
     if ( key == "-out" )
     {
       /** Make sure that last character of the output folder equals a '/'. */
@@ -87,7 +87,7 @@ int main( int argc, char **argv )
 
     /** Attempt to save the arguments in the ArgumentMap. */
     if ( argMap.count( key ) == 0 )
-    { 
+    {
       argMap.insert( ArgumentMapEntryType( key.c_str(), value.c_str() ) );
     }
     else
@@ -182,14 +182,14 @@ int main( int argc, char **argv )
 
   /** Set transformix. */
   transformix = TransformixMainType::New();
-  
+
   /** Print a start message. */
   elxout << "Running transformix with parameter file \""
       << argMap[ "-tp" ] << "\".\n" << std::endl;
 
   /** Run transformix. */
   returndummy = transformix->Run( argMap );
-  
+
   /** Check if transformix run without errors. */
   if ( returndummy != 0 )
   {
@@ -252,7 +252,7 @@ void PrintHelp( void )
   std::cout << "-threads  set the maximum number of threads of transformix\n";
   std::cout << "At least one of the options \"-in\" or \"-def\" or \"-jac\" should be given.\n"
     << std::endl;
-  
+
   /** The parameter file. */
   std::cout << "The transform-parameter file must contain all the information "
     "necessary for transformix to run properly. That includes which transform "

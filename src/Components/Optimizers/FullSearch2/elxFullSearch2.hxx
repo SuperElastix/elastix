@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -28,13 +28,13 @@ using namespace itk;
   /**
    * ********************* Constructor ****************************
    */
-  
+
   template <class TElastix>
     FullSearch2<TElastix>
-    ::FullSearch2() 
+    ::FullSearch2()
   {
   } // end Constructor
-  
+
 
   /**
    * ***************** BeforeRegistration ***********************
@@ -47,9 +47,9 @@ using namespace itk;
     /** Add some target cells to xout["iteration"].*/
     xout["iteration"].AddTargetCell("2:Metric");
 
-    /** Format them as floats */      
+    /** Format them as floats */
     xl::xout["iteration"]["2:Metric"]   << std::showpoint << std::fixed;
-    
+
   } // end BeforeRegistration
 
 
@@ -86,11 +86,11 @@ using namespace itk;
 
     /** Plug in the base parameters. */
     this->SetBasePosition( this->GetElastix()->GetElxTransformBase()->GetInitialTransform()->GetParameters() );
-    
+
     /** Add some target cells to xout["iteration"].*/
     xout["iteration"].AddTargetCell("1:step");
 
-    /** Format them as floats */      
+    /** Format them as floats */
     xl::xout["iteration"]["1:step"]   << std::showpoint << std::fixed;
 
   } // end BeforeEachResolution
@@ -117,7 +117,7 @@ using namespace itk;
     {
       this->SelectNewSamples();
     }*/
-    
+
   } // end AfterEachIteration
 
 
@@ -130,35 +130,35 @@ using namespace itk;
     ::AfterEachResolution(void)
   {
     std::string stopcondition;
-    
+
     switch ( this->GetStopCondition() )
     {
       case FullRangeSearched :
         stopcondition = "The full range has been searched";
         break;
-  
+
       case MetricError :
-        stopcondition = "Error in metric";  
-        break;  
+        stopcondition = "Error in metric";
+        break;
 
       default:
         stopcondition = "Unknown";
         break;
-        
+
     }
 
     /** Print the stopping condition */
     elxout << "Stopping condition: " << stopcondition << "." << std::endl;
 
     /** Print the best metric value */
-    elxout 
-      << std::endl 
-      << "Best metric value in this resolution = " 
+    elxout
+      << std::endl
+      << "Best metric value in this resolution = "
       << this->GetBestValue()
       << std::endl;
 
   } // end AfterEachResolution
-  
+
 
   /**
    * ******************* AfterRegistration ************************
@@ -187,7 +187,7 @@ using namespace itk;
     this->Superclass1::StartOptimization();
 
   } //end StartOptimization */
-  
+
 
 } // end namespace elastix
 

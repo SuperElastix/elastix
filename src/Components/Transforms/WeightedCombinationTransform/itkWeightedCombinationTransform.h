@@ -6,7 +6,7 @@ Copyright (c) University Medical Center Utrecht. All rights reserved.
 See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
 details.
 
-This software is distributed WITHOUT ANY WARRANTY; without even 
+This software is distributed WITHOUT ANY WARRANTY; without even
 the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
@@ -19,7 +19,7 @@ PURPOSE. See the above copyright notices for more information.
 
 namespace itk
 {
-  
+
 /** \class WeightedCombinationTransform
  * \brief Implements a weighted linear combination of multiple transforms.
  *
@@ -36,7 +36,7 @@ namespace itk
  *
  */
 template <class TScalarType,
-  unsigned int NInputDimensions = 3, 
+  unsigned int NInputDimensions = 3,
   unsigned int NOutputDimensions = 3>
 class WeightedCombinationTransform
   : public AdvancedTransform< TScalarType, NInputDimensions, NOutputDimensions >
@@ -49,7 +49,7 @@ public:
     NOutputDimensions >               Superclass;
   typedef SmartPointer< Self >        Pointer;
   typedef SmartPointer< const Self >  ConstPointer;
-  
+
   /** New method for creating an object using a factory. */
   itkNewMacro( Self );
 
@@ -74,10 +74,10 @@ public:
   typedef typename Superclass::OutputVnlVectorType  OutputVnlVectorType;
   typedef typename Superclass::InputPointType       InputPointType;
   typedef typename Superclass::OutputPointType      OutputPointType;
-  typedef typename 
+  typedef typename
     Superclass::NonZeroJacobianIndicesType					NonZeroJacobianIndicesType;
   typedef typename Superclass::SpatialJacobianType	SpatialJacobianType;
-  typedef typename 
+  typedef typename
     Superclass::JacobianOfSpatialJacobianType    		JacobianOfSpatialJacobianType;
   typedef typename Superclass::SpatialHessianType		SpatialHessianType;
 
@@ -86,9 +86,9 @@ public:
     NInputDimensions,
     NOutputDimensions >               							TransformType;
   /** \todo: shouldn't these be ConstPointers? */
-  typedef typename TransformType::Pointer						TransformPointer;  
+  typedef typename TransformType::Pointer						TransformPointer;
   typedef std::vector< TransformPointer	>						TransformContainerType;
-  
+
   /**  Method to transform a point. */
   virtual OutputPointType TransformPoint(const InputPointType & ipp ) const;
 
@@ -124,7 +124,7 @@ public:
   itkSetMacro( NormalizeWeights, bool );
   itkGetConstMacro( NormalizeWeights, bool );
 
-  /** Set the vector of subtransforms. Calls a this->Modified() */ 
+  /** Set the vector of subtransforms. Calls a this->Modified() */
   virtual void SetTransformContainer( const TransformContainerType & transformContainer )
   {
     this->m_TransformContainer = transformContainer;
@@ -132,12 +132,12 @@ public:
   };
 
   /** Return the vector of subtransforms by const reference.
-   * So, if you want to add a subtransform, you should do something 
+   * So, if you want to add a subtransform, you should do something
    * like this:
    * TransformContainerType vec = transform->GetTransformContainer();
    * vec.push_back( newsubtransformPointer );
    * transform->SetTransformContainer( vec );
-   * Although perhaps not really efficient, this makes sure that 
+   * Although perhaps not really efficient, this makes sure that
    * this->Modified() is called when the transform container is updated.
    **/
   const TransformContainerType & GetTransformContainer(void) const

@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -35,14 +35,14 @@ AdvancedSimilarity2DTransform<TScalarType>
 // Constructor with arguments
 template<class TScalarType>
 AdvancedSimilarity2DTransform<TScalarType>::
-AdvancedSimilarity2DTransform( unsigned int spaceDimension, 
+AdvancedSimilarity2DTransform( unsigned int spaceDimension,
                   unsigned int parametersDimension):
   Superclass(spaceDimension,parametersDimension)
 {
   m_Scale = 1.0f;
   this->PrecomputeJacobianOfSpatialJacobian();
 }
- 
+
 // Set Parameters
 template <class TScalarType>
 void
@@ -53,13 +53,13 @@ AdvancedSimilarity2DTransform<TScalarType>
 
   // Set scale
   this->SetVarScale( parameters[0] );
- 
+
   // Set angle
   this->SetVarAngle( parameters[1] );
 
   // Set translation
   OffsetType translation;
-  for(unsigned int i=0; i < SpaceDimension; i++) 
+  for(unsigned int i=0; i < SpaceDimension; i++)
     {
     translation[i] = parameters[i+2];
     }
@@ -86,10 +86,10 @@ AdvancedSimilarity2DTransform<TScalarType>
 
   this->m_Parameters[0] = this->GetScale();
   this->m_Parameters[1] = this->GetAngle();
- 
+
   // Get the translation
   OffsetType translation = this->GetTranslation();
-  for(unsigned int i=0; i < SpaceDimension; i++) 
+  for(unsigned int i=0; i < SpaceDimension; i++)
     {
     this->m_Parameters[i+2] = translation[i];
     }
@@ -145,7 +145,7 @@ AdvancedSimilarity2DTransform<TScalarType>
   m_Scale = vcl_sqrt(vnl_math_sqr( this->GetMatrix()[0][0] ) +
                   vnl_math_sqr( this->GetMatrix()[0][1] ) );
 
-  this->SetVarAngle( vcl_acos(this->GetMatrix()[0][0] / m_Scale ) ); 
+  this->SetVarAngle( vcl_acos(this->GetMatrix()[0][0] / m_Scale ) );
 
   if(this->GetMatrix()[1][0]<0.0)
     {
@@ -176,7 +176,7 @@ GetJacobian( const InputPointType & p,
   j.SetSize( OutputSpaceDimension, ParametersDimension );
   j.Fill(0.0);
 
-  const InputPointType center = this->GetCenter();  
+  const InputPointType center = this->GetCenter();
   const double cx = center[0];
   const double cy = center[1];
 
@@ -184,11 +184,11 @@ GetJacobian( const InputPointType & p,
 
   // derivatives with respect to the scale
   j[0][0] =    ca * ( p[0] - cx ) - sa * ( p[1] - cy );
-  j[1][0] =    sa * ( p[0] - cx ) + ca * ( p[1] - cy ); 
+  j[1][0] =    sa * ( p[0] - cx ) + ca * ( p[1] - cy );
 
   // derivatives with respect to the angle
   j[0][1] = ( -sa * ( p[0] - cx ) - ca * ( p[1] - cy ) ) * m_Scale;
-  j[1][1] = (  ca * ( p[0] - cx ) - sa * ( p[1] - cy ) ) * m_Scale; 
+  j[1][1] = (  ca * ( p[0] - cx ) - sa * ( p[1] - cy ) ) * m_Scale;
 
   // compute derivatives with respect to the translation part
   // first with respect to tx
@@ -202,7 +202,7 @@ GetJacobian( const InputPointType & p,
 
 }
 
- 
+
 // Set Identity
 template <class TScalarType>
 void
@@ -213,7 +213,7 @@ AdvancedSimilarity2DTransform<TScalarType>
   m_Scale = static_cast< TScalarType >( 1.0f );
   this->PrecomputeJacobianOfSpatialJacobian();
 }
- 
+
 // Print self
 template<class TScalarType>
 void
@@ -256,15 +256,15 @@ void
 AdvancedSimilarity2DTransform<TScalarType>::
 SetMatrix(const MatrixType & matrix )
 {
-  itkDebugMacro("setting  m_Matrix  to " << matrix ); 
- 
-  typename MatrixType::InternalMatrixType test = 
+  itkDebugMacro("setting  m_Matrix  to " << matrix );
+
+  typename MatrixType::InternalMatrixType test =
     matrix.GetVnlMatrix() * matrix.GetTranspose();
 
   test /= test[0][0]; // factor out the scale
 
   const double tolerance = 1e-10;
-  if( !test.is_identity( tolerance ) ) 
+  if( !test.is_identity( tolerance ) )
     {
     itk::ExceptionObject ex(__FILE__,__LINE__,"Attempt to set a Non-Orthogonal matrix",ITK_LOCATION);
     throw ex;
@@ -286,7 +286,7 @@ AdvancedSimilarity2DTransform<TScalarType>
   /** The Jacobian of spatial Jacobian remains constant, so is precomputed */
   const double angle = this->GetAngle();
   double ca = vcl_cos( angle );
-  double sa = vcl_sin( angle );  
+  double sa = vcl_sin( angle );
   JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;
   jsj.resize(ParametersDimension);
   if ( ParametersDimension > 1 )

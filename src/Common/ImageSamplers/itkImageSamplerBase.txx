@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -38,7 +38,7 @@ namespace itk
   /**
    * ******************* SetMask *******************
    */
-  
+
   template< class TInputImage >
     void
     ImageSamplerBase< TInputImage >
@@ -71,7 +71,7 @@ namespace itk
   /**
    * ******************* GetMask *******************
    */
-  
+
   template< class TInputImage >
     const typename ImageSamplerBase< TInputImage >::MaskType *
     ImageSamplerBase< TInputImage >
@@ -89,7 +89,7 @@ namespace itk
   /**
    * ******************* SetNumberOfMasks *******************
    */
-  
+
   template< class TInputImage >
     void
     ImageSamplerBase< TInputImage >
@@ -108,7 +108,7 @@ namespace itk
   /**
    * ******************* SetInputImageRegion *******************
    */
-  
+
   template< class TInputImage >
     void
     ImageSamplerBase< TInputImage >
@@ -135,7 +135,7 @@ namespace itk
   /**
    * ******************* GetInputImageRegion *******************
    */
-  
+
   template< class TInputImage >
     const typename ImageSamplerBase< TInputImage >::InputImageRegionType &
     ImageSamplerBase< TInputImage >
@@ -153,7 +153,7 @@ namespace itk
   /**
    * ******************* SetNumberOfInputImageRegions *******************
    */
-  
+
   template< class TInputImage >
     void
     ImageSamplerBase< TInputImage >
@@ -172,7 +172,7 @@ namespace itk
   /**
    * ******************* GenerateInputRequestedRegion *******************
    */
-  
+
   template< class TInputImage >
     void
     ImageSamplerBase< TInputImage >
@@ -187,7 +187,7 @@ namespace itk
 
     /** Get a pointer to the input image. */
     InputImagePointer inputImage = const_cast< InputImageType * >( this->GetInput() );
-    
+
     /** Get and set the region. */
     if ( this->GetInputImageRegion().GetNumberOfPixels() != 0 )
     {
@@ -213,7 +213,7 @@ namespace itk
         e.SetDescription( "Requested region is (at least partially) outside the largest possible region." );
         e.SetDataObject( inputImage );
         throw e;
-      } 
+      }
     }
     else
     {
@@ -231,14 +231,14 @@ namespace itk
   /**
    * ******************* SelectNewSamplesOnUpdate *******************
    */
-  
+
   template< class TInputImage >
     bool
     ImageSamplerBase< TInputImage >
     ::SelectNewSamplesOnUpdate( void )
   {
-    /** Set the Modified flag, such that on calling Update(), 
-     * the GenerateData method is executed again. 
+    /** Set the Modified flag, such that on calling Update(),
+     * the GenerateData method is executed again.
      * Return true to indicate that indeed new samples will be selected.
      * Inheriting subclasses may just return false and do nothing.
      */
@@ -251,7 +251,7 @@ namespace itk
   /**
    * ******************* IsInsideAllMasks *******************
    */
-  
+
   template< class TInputImage >
     bool
     ImageSamplerBase< TInputImage >
@@ -271,7 +271,7 @@ namespace itk
   /**
    * ******************* UpdateAllMasks *******************
    */
-  
+
   template< class TInputImage >
     void
     ImageSamplerBase< TInputImage >
@@ -292,7 +292,7 @@ namespace itk
   /**
    * ******************* CheckInputImageRegions *******************
    */
-  
+
   template< class TInputImage >
     bool
     ImageSamplerBase< TInputImage >
@@ -342,26 +342,26 @@ namespace itk
        * spacing and origin, and that we need a region in terms
        * of the inputImage indices.
        */
-      
+
       typedef typename MaskType::BoundingBoxType BoundingBoxType;
       typedef typename BoundingBoxType::PointsContainer PointsContainerType;
       typename BoundingBoxType::Pointer bb = this->m_Mask->GetBoundingBox();
       typename BoundingBoxType::Pointer bbIndex = BoundingBoxType::New();
-      const PointsContainerType* cornersWorld = bb->GetPoints();      
+      const PointsContainerType* cornersWorld = bb->GetPoints();
       typename PointsContainerType::Pointer cornersIndex = PointsContainerType::New();
       cornersIndex->Reserve( cornersWorld->Size() );
       typename PointsContainerType::const_iterator itCW = cornersWorld->begin();
-      typename PointsContainerType::iterator itCI = cornersIndex->begin();      
-      typedef itk::ContinuousIndex< 
+      typename PointsContainerType::iterator itCI = cornersIndex->begin();
+      typedef itk::ContinuousIndex<
         InputImagePointValueType, InputImageDimension > CIndexType;
       CIndexType cindex;
       while(itCW != cornersWorld->end())
       {
         inputImage->TransformPhysicalPointToContinuousIndex(*itCW, cindex);
-        *itCI = cindex;        
+        *itCI = cindex;
         itCI++;
         itCW++;
-      }      
+      }
       bbIndex->SetPoints( cornersIndex );
       bbIndex->ComputeBoundingBox();
 
@@ -372,7 +372,7 @@ namespace itk
       InputImageRegionType boundingBoxRegion;
       for ( unsigned int i = 0; i < InputImageDimension; ++i )
       {
-        /** apply ceil/floor for max/min resp. to be sure that 
+        /** apply ceil/floor for max/min resp. to be sure that
          * the bounding box is not too small */
         maxIndex[i] = static_cast<IndexValueType>(
 				 	vcl_ceil( bbIndex->GetMaximum()[i] ) );
@@ -398,12 +398,12 @@ namespace itk
     }
 
   } // end CropInputImageRegion()
-  
+
 
   /**
    * ******************* PrintSelf *******************
    */
-  
+
   template< class TInputImage >
     void
     ImageSamplerBase< TInputImage >

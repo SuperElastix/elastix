@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -24,7 +24,7 @@ namespace itk
 /**
  * ************************ Constructor *************************
  */
-  
+
 template <class TFixedImage, class TMovingImage>
 KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 ::KNNGraphAlphaMutualInformationImageToImageMetric()
@@ -781,7 +781,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   double fixedFeatureValue = 0.0;
   double movingFeatureValue = 0.0;
   NonZeroJacobianIndicesType nzji(
-    this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );  
+    this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
   TransformJacobianType jacobian;
 
   /** Loop over the fixed image samples to calculate the list samples. */
@@ -797,7 +797,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     /** Check if point is inside all moving masks. */
     if ( sampleOk )
     {
-      sampleOk = this->IsInsideMovingMask( mappedPoint );        
+      sampleOk = this->IsInsideMovingMask( mappedPoint );
     }
 
     /** Compute the moving image value M(T(x)) and possibly the
@@ -973,7 +973,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 //  /** Set the gradient into the Array2D. */
 //  featureGradients.set_column( i, gradient.GetDataPointer() );
 //  } // end for-loop
-//  } // end if 
+//  } // end if
 
 } // end EvaluateMovingFeatureImageDerivatives()
 

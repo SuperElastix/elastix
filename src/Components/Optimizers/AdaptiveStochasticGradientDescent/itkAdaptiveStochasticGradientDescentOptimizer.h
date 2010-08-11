@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -26,7 +26,7 @@ namespace itk
   *
   * If \f$C(x)\f$ is a costfunction that has to be minimised, the following iterative
   * algorithm is used to find the optimal parameters \f$x\f$:
-  * 
+  *
   *     \f[ x(k+1) = x(k) - a(t_k) dC/dx \f]
   *
   * The gain \f$a(t_k)\f$ at each iteration \f$k\f$ is defined by:
@@ -36,7 +36,7 @@ namespace itk
   * And the time \f$t_k\f$ is updated according to:
   *
   *     \f[ t_{k+1} = [ t_k + sigmoid( -g_k^T g_{k-1} ) ]^+ \f]
-  * 
+  *
   * where \f$g_k\f$ equals \f$dC/dx\f$ at iteration \f$k\f$.
   * For \f$t_0\f$ the InitialTime is used, which is defined in the
   * the superclass (StandardGradientDescentOptimizer). Whereas in the
@@ -51,11 +51,11 @@ namespace itk
   *
   * It is very suitable to be used in combination with a stochastic estimate
   * of the gradient \f$dC/dx\f$. For example, in image registration problems it is
-  * often advantageous to compute the metric derivative (\f$dC/dx\f$) on a new set 
+  * often advantageous to compute the metric derivative (\f$dC/dx\f$) on a new set
   * of randomly selected image samples in each iteration. You may set the parameter
   * \c NewSamplesEveryIteration to \c "true" to achieve this effect.
   * For more information on this strategy, you may have a look at:
-  * 
+  *
   * \sa AdaptiveStochasticGradientDescent, StandardGradientDescentOptimizer
   * \ingroup Optimizers
   */
@@ -93,18 +93,18 @@ namespace itk
     itkSetMacro( UseAdaptiveStepSizes, bool );
     itkGetConstMacro( UseAdaptiveStepSizes, bool );
 
-    /** Set/Get the maximum of the sigmoid. 
-    * Should be >0. Default: 1.0 */     
+    /** Set/Get the maximum of the sigmoid.
+    * Should be >0. Default: 1.0 */
     itkSetMacro(SigmoidMax, double);
     itkGetConstMacro(SigmoidMax, double);
 
-    /** Set/Get the maximum of the sigmoid. 
-    * Should be <0. Default: -0.8 */     
+    /** Set/Get the maximum of the sigmoid.
+    * Should be <0. Default: -0.8 */
     itkSetMacro(SigmoidMin, double);
     itkGetConstMacro(SigmoidMin, double);
 
-    /** Set/Get the scaling of the sigmoid width. Large values 
-    * cause a more wide sigmoid. Default: 1e-8. Should be >0. */     
+    /** Set/Get the scaling of the sigmoid width. Large values
+    * cause a more wide sigmoid. Default: 1e-8. Should be >0. */
     itkSetMacro(SigmoidScale, double);
     itkGetConstMacro(SigmoidScale, double);
 
@@ -115,7 +115,7 @@ namespace itk
 
     /** Function to update the current time
     * If UseAdaptiveStepSizes is false this function just increments
-    * the CurrentTime by \f$E_0 = (sigmoid_{max} + sigmoid_{min})/2\f$. 
+    * the CurrentTime by \f$E_0 = (sigmoid_{max} + sigmoid_{min})/2\f$.
     * Else, the CurrentTime is updated according to:\n
     * time = max[ 0, time + sigmoid( -gradient*previousgradient) ]\n
     * In that case, also the m_PreviousGradient is updated.

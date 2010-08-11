@@ -6,7 +6,7 @@ Copyright (c) University Medical Center Utrecht. All rights reserved.
 See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
 details.
 
-This software is distributed WITHOUT ANY WARRANTY; without even 
+This software is distributed WITHOUT ANY WARRANTY; without even
 the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
@@ -23,8 +23,8 @@ PURPOSE. See the above copyright notices for more information.
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -46,18 +46,18 @@ namespace itk
 /** \class AdvancedBSplineDeformableTransform
  * \brief Deformable transform using a BSpline representation
  *
- * This class encapsulates a deformable transform of points from one 
+ * This class encapsulates a deformable transform of points from one
  * N-dimensional one space to another N-dimensional space.
- * The deformation field is modeled using B-splines. 
+ * The deformation field is modeled using B-splines.
  * A deformation is defined on a sparse regular grid of control points
- * \f$ \vec{\lambda}_j \f$ and is varied by defining a deformation 
- * \f$ \vec{g}(\vec{\lambda}_j) \f$ of each control point. 
+ * \f$ \vec{\lambda}_j \f$ and is varied by defining a deformation
+ * \f$ \vec{g}(\vec{\lambda}_j) \f$ of each control point.
  * The deformation \f$ D(\vec{x}) \f$ at any point \f$ \vec{x} \f$
  * is obtained by using a B-spline interpolation kernel.
  *
- * The deformation field grid is defined by a user specified GridRegion, 
+ * The deformation field grid is defined by a user specified GridRegion,
  * GridSpacing and GridOrigin. Each grid/control point has associated with it
- * N deformation coefficients \f$ \vec{\delta}_j \f$, representing the N 
+ * N deformation coefficients \f$ \vec{\delta}_j \f$, representing the N
  * directional components of the deformation. Deformation outside the grid
  * plus support region for the BSpline interpolation is assumed to be zero.
  *
@@ -86,7 +86,7 @@ namespace itk
  *
  * // NB: the region must be set first before setting the parameters
  *
- * TransformType::ParametersType parameters( 
+ * TransformType::ParametersType parameters(
  *                                       transform->GetNumberOfParameters() );
  *
  * // Fill the parameters with values
@@ -107,7 +107,7 @@ namespace itk
  *
  * // Fill the images up with values
  *
- * transform->SetCoefficientImages( images ); 
+ * transform->SetCoefficientImages( images );
  * outputPoint = transform->TransformPoint( inputPoint );
  *
  * \endverbatim
@@ -130,11 +130,11 @@ class ITK_EXPORT AdvancedBSplineDeformableTransform
 public:
   /** Standard class typedefs. */
   typedef AdvancedBSplineDeformableTransform        Self;
-  typedef AdvancedBSplineDeformableTransformBase< 
+  typedef AdvancedBSplineDeformableTransformBase<
     TScalarType, NDimensions >                      Superclass;
   typedef SmartPointer<Self>                        Pointer;
   typedef SmartPointer<const Self>                  ConstPointer;
-      
+
   /** New macro for creation of through the object factory. */
   itkNewMacro( Self );
 
@@ -157,7 +157,7 @@ public:
   typedef typename Superclass::OutputVectorType       OutputVectorType;
   typedef typename Superclass::InputVnlVectorType     InputVnlVectorType;
   typedef typename Superclass::OutputVnlVectorType    OutputVnlVectorType;
-  typedef typename Superclass::InputCovariantVectorType 
+  typedef typename Superclass::InputCovariantVectorType
     InputCovariantVectorType;
   typedef typename Superclass::OutputCovariantVectorType
     OutputCovariantVectorType;
@@ -171,7 +171,7 @@ public:
   typedef typename Superclass
     ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
   typedef typename Superclass::InternalMatrixType   InternalMatrixType;
-  
+
   /** Parameters as SpaceDimension number of images. */
   typedef typename Superclass::PixelType        PixelType;
   typedef typename Superclass::ImageType        ImageType;
@@ -179,7 +179,7 @@ public:
 
   /** Typedefs for specifying the extend to the grid. */
   typedef typename Superclass::RegionType       RegionType;
-  
+
   typedef typename Superclass::IndexType        IndexType;
   typedef typename Superclass::SizeType         SizeType;
   typedef typename Superclass::SpacingType      SpacingType;
@@ -215,8 +215,8 @@ public:
   /** Parameter index array type. */
   typedef typename Superclass::ParameterIndexArrayType  ParameterIndexArrayType;
 
-  /** Transform points by a BSpline deformable transformation. 
-   * On return, weights contains the interpolation weights used to compute the 
+  /** Transform points by a BSpline deformable transformation.
+   * On return, weights contains the interpolation weights used to compute the
    * deformation and indices of the x (zeroth) dimension coefficient parameters
    * in the support region used to compute the deformation.
    * Parameter indices for the i-th dimension can be obtained by adding
@@ -232,9 +232,9 @@ public:
   /** Get number of weights. */
   unsigned long GetNumberOfWeights( void ) const
   {
-    return this->m_WeightsFunction->GetNumberOfWeights();    
+    return this->m_WeightsFunction->GetNumberOfWeights();
   }
-    
+
   unsigned int GetNumberOfAffectedWeights( void ) const;
 
   virtual unsigned long GetNumberOfNonZeroJacobianIndices( void ) const;
@@ -322,7 +322,7 @@ protected:
   virtual void ComputeNonZeroJacobianIndices(
     NonZeroJacobianIndicesType & nonZeroJacobianIndices,
     const RegionType & supportRegion ) const;
-    
+
   typedef typename Superclass::JacobianImageType JacobianImageType;
   typedef typename Superclass::JacobianPixelType JacobianPixelType;
 
@@ -339,7 +339,7 @@ protected:
 private:
   AdvancedBSplineDeformableTransform(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
-  
+
 }; //class AdvancedBSplineDeformableTransform
 
 

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -20,7 +20,7 @@
 namespace itk
 {
 
-/** 
+/**
  * **************** Constructor ***************
  */
 
@@ -33,7 +33,7 @@ TransformixInputPointFileReader<TOutputMesh>
 } // end constructor
 
 
-/** 
+/**
  * **************** Destructor ***************
  */
 
@@ -48,7 +48,7 @@ TransformixInputPointFileReader<TOutputMesh>
 } // end constructor
 
 
-/** 
+/**
  * ***************GenerateOutputInformation ***********
  */
 
@@ -75,7 +75,7 @@ TransformixInputPointFileReader<TOutputMesh>
   if ( indexOrPoint == "point" )
   {
     /** Input points are specified in world coordinates. */
-    this->m_PointsAreIndices = false;   
+    this->m_PointsAreIndices = false;
     this->m_Reader >> this->m_NumberOfPoints;
   }
   else if ( indexOrPoint == "index" )
@@ -96,7 +96,7 @@ TransformixInputPointFileReader<TOutputMesh>
 } // end GenerateOutputInformation()
 
 
-/** 
+/**
  * ***************GenerateData ***********
  */
 
@@ -104,12 +104,12 @@ template <class TOutputMesh>
 void
 TransformixInputPointFileReader<TOutputMesh>
 ::GenerateData( void )
-{ 
+{
   typedef typename OutputMeshType::PointsContainer  PointsContainerType;
   typedef typename PointsContainerType::Pointer     PointsContainerPointer;
   typedef typename OutputMeshType::PointType        PointType;
   const unsigned int dimension = OutputMeshType::PointDimension;
-  
+
   OutputMeshPointer output = this->GetOutput();
   PointsContainerPointer points = PointsContainerType::New();
 
@@ -169,4 +169,4 @@ TransformixInputPointFileReader<TOutputMesh>
 
 } // end namespace itk
 
-#endif 
+#endif

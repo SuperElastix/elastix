@@ -6,7 +6,7 @@ Copyright (c) University Medical Center Utrecht. All rights reserved.
 See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
 details.
 
-This software is distributed WITHOUT ANY WARRANTY; without even 
+This software is distributed WITHOUT ANY WARRANTY; without even
 the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
@@ -27,7 +27,7 @@ PURPOSE. See the above copyright notices for more information.
 
 namespace itk
 {
-  
+
 /** \class ParameterMapInterface
  *
  * \brief Implements functionality to get parameters from a parameter map.
@@ -60,7 +60,7 @@ namespace itk
  * bool success = p_interface->ReadParameter( parameterValue,
  *   "ParameterName", index, printWarning, errorMessage );
  *
- * 
+ *
  * Note that some of the templated functions are defined in the header to
  * get it compiling on some platforms.
  *
@@ -70,13 +70,13 @@ namespace itk
 class ParameterMapInterface : public Object
 {
 public:
- 
+
   /** Standard ITK typedefs. */
   typedef ParameterMapInterface       Self;
   typedef Object                      Superclass;
   typedef SmartPointer< Self >        Pointer;
   typedef SmartPointer< const Self >  ConstPointer;
-  
+
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
 
@@ -164,7 +164,7 @@ public:
       }
       return false;
     }
-      
+
     /** Cast the string to type T. */
     bool castSuccesful = this->StringCast( vec[ entry_nr ], parameterValue );
 
@@ -335,7 +335,7 @@ public:
     /** Get the vector of parameters. */
     const ParameterValuesType & vec = this->m_ParameterMap.find( parameterName )->second;
 
-    /** The default is filled with zero's. 
+    /** The default is filled with zero's.
     parameterValues.clear();
     parameterValues.resize( entry_nr_end - entry_nr_start + 1,
       itk::NumericTraits<T>::Zero );

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -29,20 +29,20 @@ namespace itk
  * LimiterFunctionBase is the base class for ITK limiter function objects.
  * The abstract method Evaluate() should limit a function, i.e.
  * it should make sure that its output is below a certain value.
- * The derivative of a function that is limited also changes. 
+ * The derivative of a function that is limited also changes.
  *
  * In formula:
  * \f[ L(y) = L(f(x)), \f]
  * where \f$f(x)\f$ is the original function. and \f$L(f(x))\f$ the limited version.
  * The derivative with respect to \f$x\f$ should satisfy:
  * \f[ dL/dx = \frac{dL}{df} \cdot \frac{df}{dx} \f]
- * 
+ *
  * Subclasses must override Evaluate(value) and Evaluate(value, derivative) .
- * 
+ *
  * This class is template over the input type and the dimension of \f$x\f$.
- * 
+ *
  * \ingroup Functions
- * 
+ *
  */
 template < class TInput, unsigned int NDimension >
 class LimiterFunctionBase :
@@ -55,7 +55,7 @@ public:
     typename NumericTraits< TInput >::RealType >  Superclass;
   typedef SmartPointer<Self>                      Pointer;
   typedef SmartPointer<const Self>                ConstPointer;
-  
+
   /** Run-time type information (and related methods). */
   itkTypeMacro( LimiterFunctionBase, FunctionBase );
 
@@ -76,7 +76,7 @@ public:
   /** Limit the input value and change the input function derivative accordingly */
   virtual OutputType Evaluate( const InputType & input, DerivativeType & derivative) const = 0;
 
-  /** Set/Get the upper bound that the output should respect. Make sure it is higher 
+  /** Set/Get the upper bound that the output should respect. Make sure it is higher
    * than the lower bound. */
   itkSetMacro( UpperBound, OutputType );
   itkGetConstMacro( UpperBound, OutputType );
@@ -98,12 +98,12 @@ public:
 
   /** Initialize the limiter */
   virtual void Initialize( void ) throw (ExceptionObject) {};
-  
+
 protected:
   LimiterFunctionBase()
   {
     this->m_UpperBound =
-      itk::NumericTraits<OutputType>::One + 
+      itk::NumericTraits<OutputType>::One +
       itk::NumericTraits<OutputType>::One;
     this->m_LowerBound = itk::NumericTraits<OutputType>::Zero;
     this->m_UpperThreshold = itk::NumericTraits<InputType>::One;

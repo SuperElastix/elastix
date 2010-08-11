@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -28,7 +28,7 @@ using namespace itk;
    * \brief An interpolator based on the itkBSplineInterpolateImageFunction.
    *
    * This interpolator interpolates images with an underlying B-spline
-   * polynomial. 
+   * polynomial.
    *
    * NB: BSplineInterpolation with order 1 is slower than using a LinearInterpolator,
    * but it determines the derivative slightly more accurate at grid points. That's
@@ -51,28 +51,28 @@ using namespace itk;
       BSplineInterpolateImageFunction<
         ITK_TYPENAME InterpolatorBase<TElastix>::InputImageType,
         ITK_TYPENAME InterpolatorBase<TElastix>::CoordRepType,
-        double > , //CoefficientType 
+        double > , //CoefficientType
     public
       InterpolatorBase<TElastix>
-  { 
+  {
   public:
-  
+
     /** Standard ITK-stuff. */
     typedef BSplineInterpolator                 Self;
     typedef BSplineInterpolateImageFunction<
       typename InterpolatorBase<TElastix>::InputImageType,
       typename InterpolatorBase<TElastix>::CoordRepType,
-      double >                                  Superclass1;    
-    typedef InterpolatorBase<TElastix>          Superclass2;    
+      double >                                  Superclass1;
+    typedef InterpolatorBase<TElastix>          Superclass2;
     typedef SmartPointer<Self>                  Pointer;
     typedef SmartPointer<const Self>            ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro(Self);
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( BSplineInterpolator, BSplineInterpolateImageFunction );
-    
+
     /** Name of this class.
      * Use this name in the parameter file to select this specific interpolator. \n
      * example: <tt>(Interpolator "BSplineInterpolator")</tt>\n
@@ -81,20 +81,20 @@ using namespace itk;
 
     /** Get the ImageDimension. */
     itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
-    
+
     /** Typedefs inherited from the superclass. */
     typedef typename Superclass1::OutputType                OutputType;
     typedef typename Superclass1::InputImageType            InputImageType;
     typedef typename Superclass1::IndexType                 IndexType;
     typedef typename Superclass1::ContinuousIndexType       ContinuousIndexType;
-    typedef typename Superclass1::PointType                 PointType;    
+    typedef typename Superclass1::PointType                 PointType;
     typedef typename Superclass1::Iterator                  Iterator;
     typedef typename Superclass1::CoefficientDataType       CoefficientDataType;
     typedef typename Superclass1::CoefficientImageType      CoefficientImageType;
     typedef typename Superclass1::CoefficientFilter         CoefficientFilter;
     typedef typename Superclass1::CoefficientFilterPointer  CoefficientFilterPointer;
     typedef typename Superclass1::CovariantVectorType       CovariantVectorType;
-    
+
     /** Typedefs inherited from Elastix. */
     typedef typename Superclass2::ElastixType               ElastixType;
     typedef typename Superclass2::ElastixPointer            ElastixPointer;
@@ -115,14 +115,14 @@ using namespace itk;
     BSplineInterpolator() {}
     /** The destructor. */
     virtual ~BSplineInterpolator() {}
-    
+
   private:
 
     /** The private constructor. */
     BSplineInterpolator( const Self& ); // purposely not implemented
     /** The private copy constructor. */
     void operator=( const Self& );      // purposely not implemented
-      
+
   }; // end class BSplineInterpolator
 
 

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -53,8 +53,8 @@ using namespace itk;
   template < class TElastix >
     class DeformationFieldTransform:
   public
-    AdvancedCombinationTransform< 
-      ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,      
+    AdvancedCombinationTransform<
+      ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,
       elx::TransformBase<TElastix>::FixedImageDimension >,
   public
     TransformBase<TElastix>
@@ -71,18 +71,18 @@ using namespace itk;
       elx::TransformBase<TElastix>::FixedImageDimension,
       float >                                             DeformationFieldInterpolatingTransformType;
 
-    typedef AdvancedCombinationTransform< 
-      typename elx::TransformBase<TElastix>::CoordRepType,      
+    typedef AdvancedCombinationTransform<
+      typename elx::TransformBase<TElastix>::CoordRepType,
       elx::TransformBase<TElastix>::FixedImageDimension > Superclass1;
 
-    typedef elx::TransformBase< TElastix >                Superclass2;  
+    typedef elx::TransformBase< TElastix >                Superclass2;
 
     typedef SmartPointer< Self >                          Pointer;
     typedef SmartPointer< const Self >                    ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( DeformationFieldTransform, AdvancedCombinationTransform );
 
@@ -91,10 +91,10 @@ using namespace itk;
      * example: <tt>(Transform "DeformationFieldTransform")</tt>\n
      */
     elxClassNameMacro( "DeformationFieldTransform" );
-    
+
     /** Dimension of the domain space. */
     itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );
-    
+
     /** Typedefs inherited from the superclass. */
     typedef typename Superclass1::ScalarType                ScalarType;
     typedef typename Superclass1::ParametersType            ParametersType;
@@ -107,11 +107,11 @@ using namespace itk;
     typedef typename Superclass1::OutputVnlVectorType       OutputVnlVectorType;
     typedef typename Superclass1::InputPointType            InputPointType;
     typedef typename Superclass1::OutputPointType           OutputPointType;
-    
+
     /** Typedef's specific for the DeformationFieldInterpolatingTransform. */
     typedef typename DeformationFieldInterpolatingTransformType::DeformationFieldType DeformationFieldType;
     typedef typename DeformationFieldInterpolatingTransformType::DeformationFieldVectorType DeformationFieldVectorType;
-    
+
     typedef typename DeformationFieldInterpolatingTransformType::Pointer
       DeformationFieldInterpolatingTransformPointer;
 
@@ -127,7 +127,7 @@ using namespace itk;
     typedef typename Superclass2::MovingImageType           MovingImageType;
     typedef typename Superclass2::ITKBaseType               ITKBaseType;
     typedef typename Superclass2::CombinationTransformType  CombinationTransformType;
-  
+
     /** Function to read transform-parameters from a file. */
     virtual void ReadFromFile( void );
 
@@ -140,7 +140,7 @@ using namespace itk;
     DeformationFieldTransform();
     /** The destructor. */
     virtual ~DeformationFieldTransform() {};
-    
+
   private:
 
     /** The private constructor. */
@@ -150,15 +150,15 @@ using namespace itk;
 
     typedef typename DeformationFieldType::DirectionType   DirectionType;
 
-    /** The transform that is set as current transform in the 
+    /** The transform that is set as current transform in the
      * CcombinationTransform */
     DeformationFieldInterpolatingTransformPointer m_DeformationFieldInterpolatingTransform;
 
     /** Original direction cosines; stored to facilitate UseDirectionCosines option. */
     DirectionType           m_OriginalDeformationFieldDirection;
-    
+
   }; // end class DeformationFieldTransform
-  
+
 
 } // end namespace elastix
 

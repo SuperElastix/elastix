@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -28,10 +28,10 @@ using namespace itk;
   /**
    * ********************* Constructor ****************************
    */
-  
+
   template <class TElastix>
     ConjugateGradient<TElastix>
-    ::ConjugateGradient() 
+    ::ConjugateGradient()
   {
     this->m_LineOptimizer = LineOptimizerType::New();
     this->SetLineSearchOptimizer( this->m_LineOptimizer );
@@ -41,18 +41,18 @@ using namespace itk;
     this->m_LineOptimizer->AddObserver( StartEvent(), this->m_EventPasser );
 
     this->m_SearchDirectionMagnitude = 0.0;
-    this->m_StartLineSearch = false;  
+    this->m_StartLineSearch = false;
     this->m_GenerateLineSearchIterations = false;
     this->m_StopIfWolfeNotSatisfied = true;
     this->m_WolfeIsStopCondition = false;
 
   } // end Constructor
-  
-  
+
+
   /**
    * ***************** InvokeIterationEvent ************************
    */
-  
+
   template <class TElastix>
     void ConjugateGradient<TElastix>::
     InvokeIterationEvent(const EventObject & event)
@@ -67,7 +67,7 @@ using namespace itk;
     {
       this->m_StartLineSearch = false;
     }
-    
+
     if ( this->m_GenerateLineSearchIterations )
     {
       this->InvokeEvent( IterationEvent() );
@@ -80,7 +80,7 @@ using namespace itk;
   /**
    * ***************** StartOptimization ************************
    */
-  
+
   template <class TElastix>
     void ConjugateGradient<TElastix>::
     StartOptimization(void)
@@ -105,7 +105,7 @@ using namespace itk;
 
   } //end StartOptimization
 
-  
+
   /**
    * ***************** LineSearch ************************
    */
@@ -131,7 +131,7 @@ using namespace itk;
       {
         throw err;
       }
-      else if ( this->GetStopCondition() != LineSearchError )    
+      else if ( this->GetStopCondition() != LineSearchError )
       {
         throw err;
       }
@@ -143,14 +143,14 @@ using namespace itk;
         x = this->GetScaledCurrentPosition();
         f = this->GetCurrentValue();
         g = this->GetCurrentGradient();
-      }      
+      }
     }
   } // end LineSearch
 
 
   /**
    * ***************** DeterminePhase *****************************
-   * 
+   *
    * This method gives only sensible output if it is called
    * during iterating
    */
@@ -159,7 +159,7 @@ using namespace itk;
     std::string ConjugateGradient<TElastix>::
     DeterminePhase(void) const
   {
-    
+
     if ( this->GetInLineSearch() )
     {
       return std::string("LineOptimizing");
@@ -180,7 +180,7 @@ using namespace itk;
   {
 
     using namespace xl;
-    
+
     /** Add target cells to xout["iteration"].*/
     xout["iteration"].AddTargetCell("1a:SrchDirNr");
     xout["iteration"].AddTargetCell("1b:LineItNr");
@@ -193,8 +193,8 @@ using namespace itk;
     xout["iteration"].AddTargetCell("6a:Wolfe1");
     xout["iteration"].AddTargetCell("6b:Wolfe2");
     xout["iteration"].AddTargetCell("7:LinSrchStopCondition");
-  
-    /** Format the metric and stepsize as floats */     
+
+    /** Format the metric and stepsize as floats */
     xout["iteration"]["2:Metric"]   << std::showpoint << std::fixed;
     xout["iteration"]["3:StepLength"] << std::showpoint << std::fixed;
     xout["iteration"]["4a:||Gradient||"] << std::showpoint << std::fixed;
@@ -211,7 +211,7 @@ using namespace itk;
     {
       this->m_GenerateLineSearchIterations = true;
     }
-        
+
   } // end BeforeRegistration
 
 
@@ -226,26 +226,26 @@ using namespace itk;
     /** Get the current resolution level.*/
     unsigned int level = static_cast<unsigned int>(
       this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
-        
+
     /** Set the maximumNumberOfIterations.*/
     unsigned int maximumNumberOfIterations = 100;
     this->m_Configuration->ReadParameter( maximumNumberOfIterations,
       "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0 );
     this->SetMaximumNumberOfIterations( maximumNumberOfIterations );
-    
+
     /** Set the maximumNumberOfIterations used for a line search.*/
     unsigned int maximumNumberOfLineSearchIterations = 20;
     this->m_Configuration->ReadParameter( maximumNumberOfLineSearchIterations,
       "MaximumNumberOfLineSearchIterations", this->GetComponentLabel(), level, 0 );
     this->m_LineOptimizer->SetMaximumNumberOfIterations(
       maximumNumberOfLineSearchIterations );
-    
+
     /** Set the length of the initial step, used to bracket the minimum. */
-    double stepLength = 1.0; 
+    double stepLength = 1.0;
     this->m_Configuration->ReadParameter( stepLength,
       "StepLength", this->GetComponentLabel(), level, 0 );
     this->m_LineOptimizer->SetInitialStepLengthEstimate(stepLength);
-    
+
     /** Set the LineSearchValueTolerance */
     double lineSearchValueTolerance = 0.0001;
     this->m_Configuration->ReadParameter( lineSearchValueTolerance,
@@ -275,7 +275,7 @@ using namespace itk;
     this->m_Configuration->ReadParameter( betaDefinition,
       "ConjugateGradientType", this->GetComponentLabel(), level, 0 );
     this->SetBetaDefinition(betaDefinition);
-    
+
     /** Just guess this one: */
     this->SetMaxNrOfItWithoutImprovement(10);
 
@@ -289,10 +289,10 @@ using namespace itk;
       this->m_StopIfWolfeNotSatisfied = false;
     }
 
-    this->m_WolfeIsStopCondition = false;   
+    this->m_WolfeIsStopCondition = false;
     this->m_SearchDirectionMagnitude = 0.0;
     this->m_StartLineSearch = false;
-        
+
   } // end BeforeEachResolution
 
 
@@ -304,18 +304,18 @@ using namespace itk;
     void ConjugateGradient<TElastix>
     ::AfterEachIteration(void)
   {
-    
+
     using namespace xl;
 
     /** Print some information. */
-    
+
     if ( this->GetStartLineSearch() )
     {
       xout["iteration"]["1b:LineItNr"] << "start";
     }
     else
     {
-      /** 
+      /**
        * If we are in a line search iteration the current line search
        * iteration number is printed.
        * If we are in a "main" iteration (no line search) the last
@@ -341,17 +341,17 @@ using namespace itk;
     {
       xout["iteration"]["2:Metric"] <<
         this->GetCurrentValue();
-      xout["iteration"]["3:StepLength"] << 
-        this->GetCurrentStepLength(); 
-      xout["iteration"]["4a:||Gradient||"] << 
+      xout["iteration"]["3:StepLength"] <<
+        this->GetCurrentStepLength();
+      xout["iteration"]["4a:||Gradient||"] <<
         this->GetCurrentGradient().magnitude();
       xout["iteration"]["7:LinSrchStopCondition"] <<
         this->GetLineSearchStopCondition();
     } // end else (not in line search)
-  
+
     xout["iteration"]["1a:SrchDirNr"]   << this->GetCurrentIteration();
     xout["iteration"]["5:Phase"]    << this->DeterminePhase();
-    xout["iteration"]["4b:||SearchDir||"] << 
+    xout["iteration"]["4b:||SearchDir||"] <<
       this->m_SearchDirectionMagnitude ;
     xout["iteration"]["4c:DirGradient"] <<
       this->m_LineOptimizer->GetCurrentDirectionalDerivative();
@@ -387,7 +387,7 @@ using namespace itk;
         try
         {
           this->GetScaledValueAndDerivative(
-            this->GetScaledCurrentPosition(), 
+            this->GetScaledCurrentPosition(),
             this->m_CurrentValue,
             this->m_CurrentGradient );
         }
@@ -399,7 +399,7 @@ using namespace itk;
         }
       } //end if new samples every iteration
     } // end if not in line search
-    
+
   } // end AfterEachIteration
 
 
@@ -418,9 +418,9 @@ using namespace itk;
       MaximumNumberOfIterations,
       GradientMagnitudeTolerance,
       ValueTolerance,
-      Unknown } 
+      Unknown }
       */
-    
+
     std::string stopcondition;
 
     if ( this->m_WolfeIsStopCondition )
@@ -431,22 +431,22 @@ using namespace itk;
     {
       switch( this->GetStopCondition() )
       {
-    
+
         case MetricError :
-          stopcondition = "Error in metric";  
-          break;  
+          stopcondition = "Error in metric";
+          break;
 
         case LineSearchError :
           stopcondition = "Error in LineSearch";
           break;
-      
+
         case MaximumNumberOfIterations :
-          stopcondition = "Maximum number of iterations has been reached";  
-          break;  
-    
+          stopcondition = "Maximum number of iterations has been reached";
+          break;
+
         case GradientMagnitudeTolerance :
-          stopcondition = "The gradient magnitude has (nearly) vanished"; 
-          break;  
+          stopcondition = "The gradient magnitude has (nearly) vanished";
+          break;
 
         case ValueTolerance :
           stopcondition = "Almost no decrease in function value anymore";
@@ -455,7 +455,7 @@ using namespace itk;
         case InfiniteBeta :
           stopcondition = "The beta factor became infinite";
           break;
-            
+
         default:
           stopcondition = "Unknown";
           break;
@@ -466,7 +466,7 @@ using namespace itk;
     elxout << "Stopping condition: " << stopcondition << "." << std::endl;
 
   } // end AfterEachResolution
-  
+
   /**
    * ******************* AfterRegistration ************************
    */
@@ -476,17 +476,17 @@ using namespace itk;
     ::AfterRegistration(void)
   {
     /** Print the best metric value */
-    
+
     double bestValue = this->GetCurrentValue();
     elxout
       << std::endl
-      << "Final metric value  = " 
+      << "Final metric value  = "
       << bestValue
       << std::endl;
-    
+
   } // end AfterRegistration
 
-    
+
    /**
    * *********************** TestConvergence *****************
    */
@@ -501,7 +501,7 @@ using namespace itk;
      * NB: this check is only done when 'convergence' wasn't true already */
     if ( this->m_StopIfWolfeNotSatisfied && !convergence && firstLineSearchDone)
     {
-      if ( 
+      if (
         (!(this->m_LineOptimizer->GetCurvatureConditionSatisfied()))
         ||
         (!(this->m_LineOptimizer->GetSufficientDecreaseConditionSatisfied()))   )
@@ -544,42 +544,42 @@ using namespace itk;
     LineSearchStopConditionType lineSearchStopCondition
       = static_cast<LineSearchStopConditionType>(
       this->m_LineOptimizer->GetStopCondition() ) ;
-    
+
     switch( lineSearchStopCondition )
     {
-  
+
       case StrongWolfeConditionsSatisfied :
         stopcondition = "WolfeSatisfied";
         break;
 
       case MetricError :
-        stopcondition = "MetricError";  
-        break;  
-    
+        stopcondition = "MetricError";
+        break;
+
       case MaximumNumberOfIterations :
-        stopcondition = "MaxNrIterations";  
-        break;  
-  
+        stopcondition = "MaxNrIterations";
+        break;
+
       case StepTooSmall :
         stopcondition = "StepTooSmall";
-        break;  
+        break;
 
       case StepTooLarge :
-        stopcondition = "StepTooLarge"; 
-        break;  
+        stopcondition = "StepTooLarge";
+        break;
 
       case IntervalTooSmall :
-        stopcondition = "IntervalTooSmall"; 
-        break;  
-      
+        stopcondition = "IntervalTooSmall";
+        break;
+
       case RoundingError :
-        stopcondition = "RoundingError";  
-        break;  
+        stopcondition = "RoundingError";
+        break;
 
       case AscentSearchDirection :
-        stopcondition = "AscentSearchDir";  
-        break;  
-                
+        stopcondition = "AscentSearchDir";
+        break;
+
       default:
         stopcondition = "Unknown";
         break;

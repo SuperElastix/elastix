@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -29,15 +29,15 @@ using namespace itk;
 /**
  * ********************* Constructor ****************************
  */
-  
+
 template <class TElastix>
 FullSearch<TElastix>
-::FullSearch() 
+::FullSearch()
 {
   this->m_OptimizationSurface = 0;
 
 } // end Constructor
-  
+
 
 /**
  * ***************** BeforeRegistration ***********************
@@ -227,7 +227,7 @@ FullSearch<TElastix>
   NameIteratorType name_it = this->m_SearchSpaceDimensionNames.begin();
 
   for ( unsigned int dim = 0; dim < nrOfSSDims; dim++ )
-  { 
+  {
     xl::xout["iteration"][ name_it->second.c_str() ] << currentPoint[ dim ];
     name_it++;
   }
@@ -254,8 +254,8 @@ FullSearch<TElastix>
     break;
 
   case MetricError :
-    stopcondition = "Error in metric";  
-    break;  
+    stopcondition = "Error in metric";
+    break;
 
   default:
     stopcondition = "Unknown";
@@ -276,7 +276,7 @@ FullSearch<TElastix>
   }
   catch ( ExceptionObject& err )
   {
-    xl::xout["error"] 
+    xl::xout["error"]
       << "ERROR: Saving "
       << this->m_OptimizationSurface->GetOutputFileName()
       << " failed."
@@ -286,9 +286,9 @@ FullSearch<TElastix>
   }
 
   /** Print the best metric value */
-  elxout 
-    << std::endl 
-    << "Best metric value in this resolution = " 
+  elxout
+    << std::endl
+    << "Best metric value in this resolution = "
     << this->GetBestValue()
     << std::endl;
 
@@ -359,12 +359,12 @@ FullSearch<TElastix>
    */
   if ( !found && ( entry_nr == 0 || ( entry_nr % 5 != 0 ) ) )
   {
-    xl::xout["error"] 
+    xl::xout["error"]
       << "ERROR:\nNo (valid) range specified for the full search optimizer!\n"
-      << "Please define the field (" 
+      << "Please define the field ("
       << fullFieldName
       << " \"name\" parameter_nr min max stepsize) correctly in the "
-      << "parameter file" 
+      << "parameter file"
       << std::endl;
     return false;
   }

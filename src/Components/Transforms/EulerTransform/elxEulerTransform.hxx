@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -22,11 +22,11 @@
 namespace elastix
 {
 using namespace itk;
-  
+
 /**
  * ********************* Constructor ****************************
  */
-  
+
 template <class TElastix>
 EulerTransformElastix<TElastix>
 ::EulerTransformElastix()
@@ -70,10 +70,10 @@ EulerTransformElastix<TElastix>
   bool pointRead = false;
   bool indexRead = false;
 
-  /** Try first to read the CenterOfRotationPoint from the 
+  /** Try first to read the CenterOfRotationPoint from the
    * transform parameter file, this is the new, and preferred
    * way, since elastix 3.402.
-   */    
+   */
   pointRead = this->ReadCenterOfRotationPoint( centerOfRotationPoint );
 
   /** If this did not succeed, probably a transform parameter file
@@ -167,7 +167,7 @@ template <class TElastix>
 void
 EulerTransformElastix<TElastix>
 ::InitializeTransform( void )
-{   
+{
   /** Set all parameters to zero (no rotations, no translation). */
   this->m_EulerTransform->SetIdentity();
 
@@ -208,7 +208,7 @@ EulerTransformElastix<TElastix>
   bool CORIndexInImage = true;
   bool CORPointInImage = true;
   if ( centerGivenAsIndex )
-  {      
+  {
     CORIndexInImage =  this->m_Registration->GetAsITKBaseType()
       ->GetFixedImage()->GetLargestPossibleRegion().IsInside(
       centerOfRotationIndex );
@@ -238,7 +238,7 @@ EulerTransformElastix<TElastix>
   }
 
   /** Check if user wants automatic transform initialization; false by default.
-   * If an initial transform is given, automatic transform initialization is 
+   * If an initial transform is given, automatic transform initialization is
    * not possible.
    */
   bool automaticTransformInitialization = false;
@@ -250,26 +250,26 @@ EulerTransformElastix<TElastix>
     automaticTransformInitialization = true;
   }
 
-  /** 
+  /**
    * Run the itkTransformInitializer if:
    * - No center of rotation was given, or
    * - The user asked for AutomaticTransformInitialization
    */
   bool centerGiven = centerGivenAsIndex || centerGivenAsPoint;
-  if ( !centerGiven || automaticTransformInitialization ) 
+  if ( !centerGiven || automaticTransformInitialization )
   {
 
-    /** Use the TransformInitializer to determine a center of 
+    /** Use the TransformInitializer to determine a center of
      * of rotation and an initial translation.
      */
-    TransformInitializerPointer transformInitializer = 
+    TransformInitializerPointer transformInitializer =
       TransformInitializerType::New();
     transformInitializer->SetFixedImage(
       this->m_Registration->GetAsITKBaseType()->GetFixedImage() );
     transformInitializer->SetMovingImage(
       this->m_Registration->GetAsITKBaseType()->GetMovingImage() );
     transformInitializer->SetTransform( this->m_EulerTransform );
-    
+
     /** Select the method of initialization. Default: "GeometricalCenter". */
     transformInitializer->GeometryOn();
     std::string method = "GeometricalCenter";
@@ -279,7 +279,7 @@ EulerTransformElastix<TElastix>
     {
       transformInitializer->MomentsOn();
     }
-    
+
     transformInitializer->InitializeTransform();
   }
 
@@ -306,7 +306,7 @@ EulerTransformElastix<TElastix>
     this->m_EulerTransform->SetCenter( centerOfRotationPoint );
   }
 
-  /** Apply the initial transform to the center of rotation, if 
+  /** Apply the initial transform to the center of rotation, if
    * composition is used to combine the initial transform with the
    * the current (euler) transform.
    */
@@ -314,7 +314,7 @@ EulerTransformElastix<TElastix>
     && this->Superclass1::GetInitialTransform() != 0 )
   {
     InputPointType transformedCenterOfRotationPoint
-      = this->Superclass1::GetInitialTransform()->TransformPoint( 
+      = this->Superclass1::GetInitialTransform()->TransformPoint(
       this->m_EulerTransform->GetCenter() );
     this->m_EulerTransform->SetCenter( transformedCenterOfRotationPoint );
   }
@@ -334,7 +334,7 @@ template <class TElastix>
 void
 EulerTransformElastix<TElastix>
 ::SetScales( void )
-{  
+{
   /** Create the new scales. */
   const unsigned int N = this->GetNumberOfParameters();
   ScalesType newscales( N );
@@ -370,7 +370,7 @@ EulerTransformElastix<TElastix>
      * in the ranges of 0.001 if you are conservative, or
      * in the range of 0.1 if you want to live dangerously.
      * (0.1 radians is about 5.7 degrees).
-     * 
+     *
      * This heuristic rule is based on the naive assumption
      * that your registration may require translations as
      * large as 1/10 of the diagonal of the bounding box.
@@ -491,7 +491,7 @@ EulerTransformElastix<TElastix>
   for ( unsigned int i = 0; i < SpaceDimension; i++ )
   {
     /** Read size from the parameter file. Zero by default, which is illegal. */
-    size[ i ] = 0; 
+    size[ i ] = 0;
     this->m_Configuration->ReadParameter( size[ i ], "Size", i );
 
     /** Default index. Read index from the parameter file. */
@@ -510,7 +510,7 @@ EulerTransformElastix<TElastix>
     for ( unsigned int j = 0; j < SpaceDimension; j++ )
     {
       this->m_Configuration->ReadParameter( direction( j, i ),
-        "Direction", i * SpaceDimension + j );        
+        "Direction", i * SpaceDimension + j );
     }
   }
 
@@ -532,7 +532,7 @@ EulerTransformElastix<TElastix>
   /** Make a temporary image with the right region info,
    * so that the TransformIndexToPhysicalPoint-functions will be right.
    */
-  typedef FixedImageType DummyImageType; 
+  typedef FixedImageType DummyImageType;
   typename DummyImageType::Pointer dummyImage = DummyImageType::New();
   RegionType region;
   region.SetIndex( index );

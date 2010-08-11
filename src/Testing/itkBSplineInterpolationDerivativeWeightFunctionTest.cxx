@@ -17,7 +17,7 @@ int main( int argc, char *argv[] )
   const double distance = 1e-3; // the allowable distance
   //const double allowedTimeDifference = 0.1; // 10% is considered within limits
   /** The number of calls to Evaluate(). This number gives reasonably
-   * fast test results in Release mode. 
+   * fast test results in Release mode.
    */
   unsigned int N = static_cast<unsigned int>( 1e7 );
 

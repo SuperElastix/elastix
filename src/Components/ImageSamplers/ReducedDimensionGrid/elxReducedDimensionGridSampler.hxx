@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -36,11 +36,11 @@ namespace elastix
     unsigned int reducedDimension = InputImageDimension - 1;
     unsigned int reducedDimensionIndex = 0;
     this->GetConfiguration()->ReadParameter(
-      reducedDimension, "ReducedDimension", 
+      reducedDimension, "ReducedDimension",
       this->GetComponentLabel(), 0, 0 );
     this->SetReducedDimension( reducedDimension );
     this->GetConfiguration()->ReadParameter(
-      reducedDimensionIndex, "ReducedDimensionIndex", 
+      reducedDimensionIndex, "ReducedDimensionIndex",
       this->GetComponentLabel(), 0, 0 );
     this->SetReducedDimensionIndex( reducedDimensionIndex );
 
@@ -57,12 +57,12 @@ namespace elastix
   {
     const unsigned int level =
       this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
-    
+
     GridSpacingType gridspacing;
 
     /** Read the automatic grid estimation settings. */
     bool automaticGridEstimation = false;
-    this->GetConfiguration()->ReadParameter( 
+    this->GetConfiguration()->ReadParameter(
       automaticGridEstimation, "AutomaticSampleGridEstimation",
        this->GetComponentLabel(), 0, 0, false );
     float gridSpacingFactor = 1.0f;
@@ -73,8 +73,8 @@ namespace elastix
     if ( automaticGridEstimation )
     {
       /** Set grid spacing to b-spline grid spacing. */
-      typedef AdvancedBSplineDeformableTransform<typename ElastixType::CoordRepType, InputImageDimension, 2> BSpline2Type; 
-      typedef AdvancedBSplineDeformableTransform<typename ElastixType::CoordRepType, InputImageDimension, 3> BSpline3Type; 
+      typedef AdvancedBSplineDeformableTransform<typename ElastixType::CoordRepType, InputImageDimension, 2> BSpline2Type;
+      typedef AdvancedBSplineDeformableTransform<typename ElastixType::CoordRepType, InputImageDimension, 3> BSpline3Type;
 
       typedef typename ElastixType::TransformBaseType TransformBaseType;
       typedef typename TransformBaseType::CombinationTransformType CombinationTransformType;
@@ -83,21 +83,21 @@ namespace elastix
       if ( testPtr != NULL )
       {
 
-        BSpline2Type * bspline2 = 
+        BSpline2Type * bspline2 =
           dynamic_cast< BSpline2Type * > ( testPtr->GetCurrentTransform() );
-        BSpline3Type * bspline3 = 
+        BSpline3Type * bspline3 =
           dynamic_cast< BSpline3Type * > ( testPtr->GetCurrentTransform() );
-      
+
         typename BSpline2Type::SpacingType spacing;
-        if ( bspline2 != NULL ) 
+        if ( bspline2 != NULL )
         {
           spacing = bspline2->GetGridSpacing();
-        } 
-        else if ( bspline3 != NULL ) 
+        }
+        else if ( bspline3 != NULL )
         {
           spacing = bspline3->GetGridSpacing();
-        } 
-        else 
+        }
+        else
         {
           /** Not a bspline transform, fall back to reading grid spacing from parameter file. */
           automaticGridEstimation = false;
@@ -134,7 +134,7 @@ namespace elastix
       {
         spacing_dim = 2;
         this->GetConfiguration()->ReadParameter(
-          spacing_dim, "SampleGridSpacing", 
+          spacing_dim, "SampleGridSpacing",
           this->GetComponentLabel(), level * InputImageDimension + dim, -1 );
         gridspacing[ dim ] = static_cast<SampleGridSpacingValueType>( spacing_dim );
       }

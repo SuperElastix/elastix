@@ -3,8 +3,8 @@ Project( elxTesting )
 
 #---------------------------------------------------------------------
 # Macro that simplifies the addition of tests
-# 
-# Usage: 
+#
+# Usage:
 # ADD_ELX_TEST( <name_of_test> )
 #
 # We assume here that the name of the source which includes the main is:

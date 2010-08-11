@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -31,7 +31,7 @@ AdvancedTranslationTransform():Superclass(SpaceDimension,ParametersDimension)
   m_Offset.Fill( 0 );
 
   // The Jacobian of this transform is constant.
-  // Therefore the m_Jacobian variable can be 
+  // Therefore the m_Jacobian variable can be
   // initialized here and be shared among all the threads.
   this->m_Jacobian.Fill( 0.0 );
 
@@ -56,7 +56,7 @@ AdvancedTranslationTransform():Superclass(SpaceDimension,ParametersDimension)
 
   /** m_SpatialHessian is automatically initialized with zeros */
 }
-    
+
 
 // Destructor
 template<class TScalarType, unsigned int NDimensions>
@@ -100,7 +100,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>
   for( unsigned int i=0; i<SpaceDimension; i++ )
     {
     this->m_Parameters[i] = this->m_Offset[i];
-    }  
+    }
   return this->m_Parameters;
 }
 
@@ -113,7 +113,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::
 PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os,indent);
-  
+
   os << indent << "Offset: " << m_Offset << std::endl;
 }
 
@@ -150,7 +150,7 @@ Translate(const OutputVectorType &offset, bool )
 template<class TScalarType, unsigned int NDimensions>
 typename AdvancedTranslationTransform<TScalarType, NDimensions>::OutputPointType
 AdvancedTranslationTransform<TScalarType, NDimensions>::
-TransformPoint(const InputPointType &point) const 
+TransformPoint(const InputPointType &point) const
 {
   return point + m_Offset;
 }
@@ -160,7 +160,7 @@ TransformPoint(const InputPointType &point) const
 template<class TScalarType, unsigned int NDimensions>
 typename AdvancedTranslationTransform<TScalarType, NDimensions>::OutputVectorType
 AdvancedTranslationTransform<TScalarType, NDimensions>::
-TransformVector(const InputVectorType &vect) const 
+TransformVector(const InputVectorType &vect) const
 {
   return  vect;
 }
@@ -170,7 +170,7 @@ TransformVector(const InputVectorType &vect) const
 template<class TScalarType, unsigned int NDimensions>
 typename AdvancedTranslationTransform<TScalarType, NDimensions>::OutputVnlVectorType
 AdvancedTranslationTransform<TScalarType, NDimensions>::
-TransformVector(const InputVnlVectorType &vect) const 
+TransformVector(const InputVnlVectorType &vect) const
 {
   return  vect;
 }
@@ -180,7 +180,7 @@ TransformVector(const InputVnlVectorType &vect) const
 template<class TScalarType, unsigned int NDimensions>
 typename AdvancedTranslationTransform<TScalarType, NDimensions>::OutputCovariantVectorType
 AdvancedTranslationTransform<TScalarType, NDimensions>::
-TransformCovariantVector(const InputCovariantVectorType &vect) const 
+TransformCovariantVector(const InputCovariantVectorType &vect) const
 {
   return  vect;
 }
@@ -202,9 +202,9 @@ GetInverse( Self* inverse) const
 }
 
 
-// Compute the Jacobian in one position 
+// Compute the Jacobian in one position
 template<class TScalarType, unsigned int NDimensions>
-const typename AdvancedTranslationTransform<TScalarType, NDimensions>::JacobianType & 
+const typename AdvancedTranslationTransform<TScalarType, NDimensions>::JacobianType &
 AdvancedTranslationTransform< TScalarType, NDimensions >::
 GetJacobian( const InputPointType & ) const
 {
@@ -225,7 +225,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>
   const InputPointType & p,
   JacobianType & j,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
-{  
+{
   j = this->m_Jacobian;
   nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
 } // end GetJacobian()
@@ -294,7 +294,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
   sj = this->m_SpatialJacobian;
-  jsj = this->m_JacobianOfSpatialJacobian;  
+  jsj = this->m_JacobianOfSpatialJacobian;
   nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
 } // end GetJacobianOfSpatialJacobian()
 
@@ -311,9 +311,9 @@ AdvancedTranslationTransform<TScalarType, NDimensions>
   JacobianOfSpatialHessianType & jsh,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
-  /** The JacobianOfSpatialHessian contains only zeros.*/  
-  jsh = this->m_JacobianOfSpatialHessian;  
-  nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;  
+  /** The JacobianOfSpatialHessian contains only zeros.*/
+  jsh = this->m_JacobianOfSpatialHessian;
+  nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
 } // end GetJacobianOfSpatialHessian()
 
 
@@ -332,9 +332,9 @@ AdvancedTranslationTransform<TScalarType, NDimensions>
 {
   /** The Hessian and the JacobianOfSpatialHessian contain only zeros. */
   sh = this->m_SpatialHessian;
-  jsh = this->m_JacobianOfSpatialHessian;  
-  nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;  
-  
+  jsh = this->m_JacobianOfSpatialHessian;
+  nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
+
 } // end GetJacobianOfSpatialHessian()
 
 
@@ -347,8 +347,8 @@ SetIdentity()
 {
   m_Offset.Fill( 0.0 );
 }
- 
-  
+
+
 } // namespace
 
 #endif

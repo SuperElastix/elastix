@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -32,7 +32,7 @@ namespace elastix
   {
     const unsigned int level =
       ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
-  
+
     /** Set the NumberOfSpatialSamples. */
     unsigned long numberOfSpatialSamples = 5000;
     this->GetConfiguration()->ReadParameter( numberOfSpatialSamples,

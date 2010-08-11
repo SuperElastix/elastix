@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -23,7 +23,7 @@ namespace itk
 {
 
 
-/** 
+/**
  * ************* Constructor *******************
  */
 
@@ -41,7 +41,7 @@ ErodeMaskImageFilter< TImage >
 } // end Constructor
 
 
-/** 
+/**
  * ************* GenerateData *******************
  */
 
@@ -79,7 +79,7 @@ ErodeMaskImageFilter< TImage >
     radiusarray.SetElement( i, radius );
   }
 
-  /** Threshold the data first. Every voxel with intensity >= 1 is used. 
+  /** Threshold the data first. Every voxel with intensity >= 1 is used.
   // Not needed since IsInside of a mask checks for != 0.
   typename ThresholdFilterType::Pointer threshold = ThresholdFilterType::New();
   threshold->ThresholdAbove(  itk::NumericTraits<InputPixelType>::One );

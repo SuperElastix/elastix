@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -18,7 +18,7 @@
 #include "itkLineSearchOptimizer.h"
 
 namespace itk
-{ 
+{
   /**
    * \class MoreThuenteLineSearchOptimizer
    *
@@ -26,7 +26,7 @@ namespace itk
    *
    * This class is an ITK version of the netlib function mcsrch_. It
    * gives exactly the same results.
-   * 
+   *
    * The purpose of this optimizer is to find a step which satisfies
    * a sufficient decrease condition and a curvature condition.
    *
@@ -52,7 +52,7 @@ namespace itk
    *    \f[ \| gradf(x+stp*s)'s) \| <= GradientTolerance * \| gradf(x)'s \|. \f]
    *
    * (together also called the Strong Wolfe Conditions)
-   * 
+   *
    * if the ValueTolerance is less than the GradientTolerance and if,
    * for example, the function is bounded below, then there is always
    * a step which satisfies both conditions. If no step can be found
@@ -60,7 +60,7 @@ namespace itk
    * when rounding errors prevent further progress. In this case stp only
    * satisfies the sufficient decrease condition.
    *
-   * 
+   *
    * \ingroup Numerics Optimizers
    */
 
@@ -120,19 +120,19 @@ namespace itk
       1, NumericTraits<unsigned long>::max());
 
     /** Setting: the value tolerance. By default set to 1e-4.
-     * 
+     *
      * The line search tries to find a StepLength that satisfies
      * the sufficient decrease condition:
      * F(X + StepLength * s) <= F(X) + ValueTolerance * StepLength * dF/ds(X)
      * where s is the search direction
-     * 
+     *
      * It must be larger than 0.0, and smaller than the GradientTolerance.
      */
     itkSetClampMacro(ValueTolerance, double, 0.0, NumericTraits<double>::max() );
     itkGetConstMacro(ValueTolerance, double);
 
     /** Setting: the gradient tolerance. By default set to 0.9.
-     * 
+     *
      * The line search tries to find a StepLength that satisfies
      * the curvature condition:
      * ABS(dF/ds(X + StepLength * s) <= GradientTolerance * ABS(dF/ds(X)
@@ -143,12 +143,12 @@ namespace itk
     itkSetClampMacro(GradientTolerance, double, 0.0, NumericTraits<double>::max() );
     itkGetConstMacro(GradientTolerance, double);
 
-    /** Setting: the interval tolerance. By default set to the 
-     * the machine precision. 
+    /** Setting: the interval tolerance. By default set to the
+     * the machine precision.
      *
      * If value and gradient tolerance can not be satisfied
      * both, the algorithm stops when rounding errors prevent
-     * further progress: when the interval of uncertainty is 
+     * further progress: when the interval of uncertainty is
      * smaller than the interval tolerance.
      */
     itkSetClampMacro(IntervalTolerance, double, 0.0, NumericTraits<double>::max() );
@@ -179,7 +179,7 @@ namespace itk
     /** Initialize the interval of uncertainty etc. */
     virtual void InitializeLineSearch(void);
 
-    /** Set the minimum and maximum steps to correspond to the 
+    /** Set the minimum and maximum steps to correspond to the
      * the present interval of uncertainty. */
     virtual void UpdateIntervalMinimumAndMaximum(void);
 
@@ -210,12 +210,12 @@ namespace itk
       bool & brackt,
       const double & stpmin, const double & stpmax) const;
 
-    double m_step; 
-    double m_stepx; 
+    double m_step;
+    double m_stepx;
     double m_stepy;
     double m_stepmin;
     double m_stepmax;
-    
+
     MeasureType m_f;  // CurrentValue
     MeasureType m_fx;
     MeasureType m_fy;
@@ -251,7 +251,7 @@ namespace itk
 
 
 /** ***************** Original documentation ***********************************
- * 
+ *
  * The implementation of this class is based on the netlib function mcsrch_.
  * The original documentation of this function is included below
  */

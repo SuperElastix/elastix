@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -27,7 +27,7 @@ namespace xoutlibrary
 
   template< class charT, class traits >
     xoutcell<charT, traits>::xoutcell()
-  {   
+  {
     this->AddTargetCell( "InternalBuffer", &(this->m_InternalBuffer) );
 
   } // end Constructor
@@ -47,7 +47,7 @@ namespace xoutlibrary
 
   /**
    * ******************** WriteBufferedData ***********************
-   * 
+   *
    * The buffered data is sent to the outputs.
    */
 
@@ -56,7 +56,7 @@ namespace xoutlibrary
   {
     /** Make sure all data is written to the string */
     this->m_InternalBuffer << flush;
-    
+
     const std::string & strbuf = this->m_InternalBuffer.str();
 
     const char * charbuf = strbuf.c_str();
@@ -67,7 +67,7 @@ namespace xoutlibrary
     {
       *(cit->second) << charbuf << flush;
     }
-      
+
     /** Send the string to the outputs */
     for ( XStreamMapIteratorType xit = this->m_XOutputs.begin();
       xit != this->m_XOutputs.end(); ++xit )

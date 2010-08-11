@@ -6,7 +6,7 @@ Copyright (c) University Medical Center Utrecht. All rights reserved.
 See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
 details.
 
-This software is distributed WITHOUT ANY WARRANTY; without even 
+This software is distributed WITHOUT ANY WARRANTY; without even
 the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
@@ -27,20 +27,20 @@ namespace itk
 /**
  * **************** Constructor ***************
  */
-  
+
 ParameterFileParser
 ::ParameterFileParser()
 {
   this->m_ParameterFileName = "";
   this->m_ParameterMap.clear();
-    
+
 } // end Constructor()
 
 
 /**
  * **************** Destructor ***************
  */
-  
+
 ParameterFileParser
 ::~ParameterFileParser()
 {
@@ -55,7 +55,7 @@ ParameterFileParser
 /**
  * **************** GetParameterMap ***************
  */
-  
+
 const ParameterFileParser::ParameterMapType &
 ParameterFileParser
 ::GetParameterMap( void ) const
@@ -68,7 +68,7 @@ ParameterFileParser
 /**
  * **************** ReadParameterFile ***************
  */
-  
+
 void
 ParameterFileParser
 ::ReadParameterFile( void )
@@ -247,7 +247,7 @@ ParameterFileParser
     std::string hint = "Line does not contain a parameter name and value.";
     this->ThrowException( lineIn, hint );
   }
-  
+
   /** At this point we know its at least a line containing a parameter.
    * However, this line can still be invalid, for example:
    * (string &^%^*)
@@ -319,7 +319,7 @@ ParameterFileParser
       this->ThrowException( fullLine, hint );
     }
   }
-  
+
   /** 6) Insert this combination in the parameter map. */
   if ( this->m_ParameterMap.count( parameterName ) )
   {
@@ -360,7 +360,7 @@ ParameterFileParser
     std::string hint = "This line has an odd number of quotes (\").";
     this->ThrowException( fullLine, hint );
   }
-  
+
   /** Loop over the line. */
   std::string::const_iterator it;
   unsigned int index = 0;
@@ -424,7 +424,7 @@ ParameterFileParser
 /**
  * **************** ReturnParameterFileAsString ***************
  */
-  
+
 std::string
 ParameterFileParser
 ::ReturnParameterFileAsString( void )

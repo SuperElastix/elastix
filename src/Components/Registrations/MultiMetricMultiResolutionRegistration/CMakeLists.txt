@@ -7,7 +7,7 @@ ADD_ELXCOMPONENT( MultiMetricMultiResolutionRegistration
  itkMultiMetricMultiResolutionImageRegistrationMethod.h
  itkMultiMetricMultiResolutionImageRegistrationMethod.txx
  itkCombinationImageToImageMetric.h
- itkCombinationImageToImageMetric.txx 
+ itkCombinationImageToImageMetric.txx
  )
 
 

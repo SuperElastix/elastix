@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -69,10 +69,10 @@ AdvancedAffineTransformElastix<TElastix>
   bool pointRead = false;
   bool indexRead = false;
 
-  /** Try first to read the CenterOfRotationPoint from the 
+  /** Try first to read the CenterOfRotationPoint from the
    * transform parameter file, this is the new, and preferred
    * way, since elastix 3.402.
-   */     
+   */
   pointRead = this->ReadCenterOfRotationPoint( centerOfRotationPoint );
 
   /** If this did not succeed, probably a transform parameter file
@@ -144,7 +144,7 @@ template <class TElastix>
 void
 AdvancedAffineTransformElastix<TElastix>
 ::InitializeTransform( void )
-{    
+{
   /** Set all parameters to zero (no rotations, no translation). */
   this->m_AffineTransform->SetIdentity();
 
@@ -178,21 +178,21 @@ AdvancedAffineTransformElastix<TElastix>
     if ( !foundP )
     {
       centerGivenAsPoint &= false;
-    }           
+    }
   } // end loop over SpaceDimension
 
   /** Check if CenterOfRotation has index-values within image. */
   bool CORIndexInImage = true;
   bool CORPointInImage = true;
   if ( centerGivenAsIndex )
-  {      
+  {
     CORIndexInImage =  this->m_Registration->GetAsITKBaseType()
       ->GetFixedImage()->GetLargestPossibleRegion().IsInside(
       centerOfRotationIndex );
   }
 
   if ( centerGivenAsPoint )
-  {     
+  {
     typedef ContinuousIndex< double, SpaceDimension > ContinuousIndexType;
     ContinuousIndexType cindex;
     CORPointInImage = this->m_Registration->GetAsITKBaseType()
@@ -215,7 +215,7 @@ AdvancedAffineTransformElastix<TElastix>
   }
 
   /** Check if user wants automatic transform initialization; false by default.
-   * If an initial transform is given, automatic transform initialization is 
+   * If an initial transform is given, automatic transform initialization is
    * not possible.
    */
   bool automaticTransformInitialization = false;
@@ -232,13 +232,13 @@ AdvancedAffineTransformElastix<TElastix>
    * - The user asked for AutomaticTransformInitialization
    */
   bool centerGiven = centerGivenAsIndex || centerGivenAsPoint;
-  if ( !centerGiven || automaticTransformInitialization ) 
+  if ( !centerGiven || automaticTransformInitialization )
   {
 
-    /** Use the TransformInitializer to determine a center of 
+    /** Use the TransformInitializer to determine a center of
      * of rotation and an initial translation.
      */
-    TransformInitializerPointer transformInitializer = 
+    TransformInitializerPointer transformInitializer =
       TransformInitializerType::New();
     transformInitializer->SetFixedImage(
       this->m_Registration->GetAsITKBaseType()->GetFixedImage() );
@@ -285,7 +285,7 @@ AdvancedAffineTransformElastix<TElastix>
     this->m_AffineTransform->SetCenter( centerOfRotationPoint );
   }
 
-  /** Apply the initial transform to the center of rotation, if 
+  /** Apply the initial transform to the center of rotation, if
    * composition is used to combine the initial transform with the
    * the current (affine) transform.
    */
@@ -293,7 +293,7 @@ AdvancedAffineTransformElastix<TElastix>
     && this->Superclass1::GetInitialTransform() != 0 )
   {
     InputPointType transformedCenterOfRotationPoint
-      = this->Superclass1::GetInitialTransform()->TransformPoint( 
+      = this->Superclass1::GetInitialTransform()->TransformPoint(
       this->m_AffineTransform->GetCenter() );
     this->m_AffineTransform->SetCenter(
       transformedCenterOfRotationPoint );
@@ -314,7 +314,7 @@ template <class TElastix>
 void
 AdvancedAffineTransformElastix<TElastix>
 ::SetScales( void )
-{  
+{
   /** Create the new scales. */
   const unsigned int N = this->GetNumberOfParameters();
   ScalesType newscales( N );
@@ -349,12 +349,12 @@ AdvancedAffineTransformElastix<TElastix>
      * in the ranges of 0.001 if you are conservative, or
      * in the range of 0.1 if you want to live dangerously.
      * (0.1 radians is about 5.7 degrees).
-     * 
+     *
      * This heuristic rule is based on the naive assumption
      * that your registration may require translations as
      * large as 1/10 of the diagonal of the bounding box.
      */
-    
+
     /** The first SpaceDimension * SpaceDimension number of parameters
      * represent rotations (4 in 2D and 9 in 3D).
      */
@@ -462,13 +462,13 @@ AdvancedAffineTransformElastix<TElastix>
   SpacingType   spacing;
   IndexType     index;
   PointType     origin;
-  SizeType      size; 
+  SizeType      size;
   DirectionType direction;
   direction.SetIdentity();
   for ( unsigned int i = 0; i < SpaceDimension; i++ )
   {
     /** Read size from the parameter file. Zero by default, which is illegal. */
-    size[ i ] = 0; 
+    size[ i ] = 0;
     this->m_Configuration->ReadParameter( size[ i ], "Size", i );
 
     /** Default index. Read index from the parameter file. */
@@ -487,7 +487,7 @@ AdvancedAffineTransformElastix<TElastix>
     for ( unsigned int j = 0; j < SpaceDimension; j++ )
     {
       this->m_Configuration->ReadParameter( direction( j, i ),
-        "Direction", i * SpaceDimension + j );        
+        "Direction", i * SpaceDimension + j );
     }
   }
 
@@ -510,7 +510,7 @@ AdvancedAffineTransformElastix<TElastix>
   /** Make a temporary image with the right region info,
    * so that the TransformIndexToPhysicalPoint-functions will be right.
    */
-  typedef FixedImageType DummyImageType; 
+  typedef FixedImageType DummyImageType;
   typename DummyImageType::Pointer dummyImage = DummyImageType::New();
   RegionType region;
   region.SetIndex( index );

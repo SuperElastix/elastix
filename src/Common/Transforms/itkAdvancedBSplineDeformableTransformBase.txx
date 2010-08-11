@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -119,7 +119,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
     }
   }
 }
-    
+
 
 // Destructor
 template<class TScalarType, unsigned int NDimensions>
@@ -294,7 +294,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
     parameters->Fill( 0.0 );
     this->Modified();
     }
-  else 
+  else
     {
     itkExceptionMacro( << "Input parameters for the spline haven't been set ! "
        << "Set them using the SetParameters or SetCoefficientImage method first." );
@@ -313,7 +313,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
   if ( parameters.Size() != this->GetNumberOfParameters() )
     {
     itkExceptionMacro(<<"Mismatched between parameters size "
-                      << parameters.size() 
+                      << parameters.size()
                       << " and region size "
                       << this->m_GridRegion.GetNumberOfPixels() );
     }
@@ -338,7 +338,7 @@ void
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 ::SetFixedParameters( const ParametersType & passedParameters )
 {
- 
+
   ParametersType parameters( NDimensions * (3 + NDimensions) );
 
   // check if the number of parameters match the
@@ -358,7 +358,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
   else if ( passedParameters.Size() != NDimensions * (3 + NDimensions) )
     {
     itkExceptionMacro(<< "Mismatched between parameters size "
-                      << passedParameters.size() 
+                      << passedParameters.size()
                       << " and number of fixed parameters "
                       << NDimensions * (3 + NDimensions) );
     }
@@ -370,7 +370,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
       }
     }
 
-  /********************************************************* 
+  /*********************************************************
     Fixed Parameters store the following information:
         Grid Size
         Grid Origin
@@ -378,7 +378,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
         Grid Direction
      The size of these is equal to the  NInputDimensions
   *********************************************************/
-  
+
   /** Set the Grid Parameters */
   SizeType   gridSize;
   for (unsigned int i=0; i<NDimensions; i++)
@@ -387,14 +387,14 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
     }
   RegionType bsplineRegion;
   bsplineRegion.SetSize( gridSize );
-  
+
   /** Set the Origin Parameters */
   OriginType origin;
   for (unsigned int i=0; i<NDimensions; i++)
     {
     origin[i] = parameters[NDimensions+i];
     }
-  
+
   /** Set the Spacing Parameters */
   SpacingType spacing;
   for (unsigned int i=0; i<NDimensions; i++)
@@ -411,8 +411,8 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
       direction[di][dj] = parameters[3*NDimensions+(di*NDimensions+dj)];
       }
     }
-  
-  
+
+
   this->SetGridSpacing( spacing );
   this->SetGridDirection( direction );
   this->SetGridOrigin( origin );
@@ -477,7 +477,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
   if ( parameters.Size() != this->GetNumberOfParameters() )
     {
     itkExceptionMacro(<<"Mismatched between parameters size "
-                      << parameters.size() 
+                      << parameters.size()
                       << " and region size "
                       << this->m_GridRegion.GetNumberOfPixels() );
     }
@@ -497,14 +497,14 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 
 // Get the parameters
 template<class TScalarType, unsigned int NDimensions>
-const 
+const
 typename AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 ::ParametersType &
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 ::GetParameters( void ) const
 {
-  /** NOTE: For efficiency, this class does not keep a copy of the parameters - 
-   * it just keeps pointer to input parameters. 
+  /** NOTE: For efficiency, this class does not keep a copy of the parameters -
+   * it just keeps pointer to input parameters.
    */
   if (NULL == this->m_InputParametersPointer)
     {
@@ -517,14 +517,14 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 
 // Get the parameters
 template<class TScalarType, unsigned int NDimensions>
-const 
+const
 typename AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 ::ParametersType &
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 ::GetFixedParameters( void ) const
 {
   RegionType resRegion = this->GetGridRegion(  );
-  
+
   for (unsigned int i=0; i<NDimensions; i++)
     {
     this->m_FixedParameters[i] = (resRegion.GetSize())[i];
@@ -532,7 +532,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
   for (unsigned int i=0; i<NDimensions; i++)
     {
     this->m_FixedParameters[NDimensions+i] = (this->GetGridOrigin())[i];
-    } 
+    }
   for (unsigned int i=0; i<NDimensions; i++)
     {
     this->m_FixedParameters[2*NDimensions+i] =  (this->GetGridSpacing())[i];
@@ -544,15 +544,15 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
       this->m_FixedParameters[3*NDimensions+(di*NDimensions+dj)] = (this->GetGridDirection())[di][dj];
       }
     }
-  
+
   return (this->m_FixedParameters);
 }
 
 
-  
+
 // Set the B-Spline coefficients using input images
 template<class TScalarType, unsigned int NDimensions>
-void 
+void
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 ::SetCoefficientImage( ImagePointer images[] )
 {
@@ -575,7 +575,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 
     }
 
-}  
+}
 
 // Print self
 template<class TScalarType, unsigned int NDimensions>
@@ -606,8 +606,8 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
     os << this->m_WrappedImage[ j ].GetPointer() << ", ";
   }
   os << this->m_WrappedImage[ SpaceDimension - 1 ].GetPointer() << " ]" << std::endl;
- 
-  os << indent << "InputParametersPointer: " 
+
+  os << indent << "InputParametersPointer: "
      << this->m_InputParametersPointer << std::endl;
   os << indent << "ValidRegion: " << this->m_ValidRegion << std::endl;
   os << indent << "LastJacobianIndex: " << this->m_LastJacobianIndex << std::endl;
@@ -616,21 +616,21 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 
   if ( this->m_BulkTransform )
   {
-    os << indent << "BulkTransformType: " 
+    os << indent << "BulkTransformType: "
       << this->m_BulkTransform->GetNameOfClass() << std::endl;
   }
-     
+
 }
 
 // Transform a point
 template<class TScalarType, unsigned int NDimensions>
-bool 
+bool
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
-::InsideValidRegion( 
+::InsideValidRegion(
   const ContinuousIndexType& index ) const
 {
   bool inside = true;
-  
+
   /** Check if index can be evaluated given the current grid. */
   for ( unsigned int j = 0; j < SpaceDimension; j++ )
   {

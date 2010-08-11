@@ -9,8 +9,8 @@ Version:   $Revision: 1.1 $
 Copyright (c) Insight Software Consortium. All rights reserved.
 See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-This software is distributed WITHOUT ANY WARRANTY; without even 
-the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+This software is distributed WITHOUT ANY WARRANTY; without even
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -79,7 +79,7 @@ KernelTransform2<TScalarType, NDimensions>
     {
       this->m_NonZeroJacobianIndices[ i ] = i;
     }
-  } 
+  }
 
 } // end SetSourceLandmarks()
 
@@ -96,7 +96,7 @@ KernelTransform2<TScalarType, NDimensions>
   if ( this->m_TargetLandmarks != landmarks )
   {
     this->m_TargetLandmarks = landmarks;
-    
+
     // this is invalidated when the target landmarks change
     this->m_WMatrixComputed = false;
     this->ComputeWMatrix();
@@ -163,7 +163,7 @@ KernelTransform2<TScalarType, NDimensions>
     }
     ++sp;
   }
-  
+
 } // end ComputeDeformationContribution()
 
 
@@ -209,7 +209,7 @@ KernelTransform2<TScalarType, NDimensions>
   {
     this->ComputeL();
   }
-  
+
   this->ComputeY();
   SVDSolverType svd( this->m_LMatrix, 1e-8 );
   this->m_WMatrix = svd.solve( this->m_YMatrix );
@@ -247,10 +247,10 @@ KernelTransform2<TScalarType, NDimensions>
   const unsigned long numberOfLandmarks = this->m_SourceLandmarks->GetNumberOfPoints();
   vnl_matrix<TScalarType> O2( NDimensions * ( NDimensions + 1 ),
     NDimensions * ( NDimensions + 1 ), 0 );
-  
+
   this->ComputeP();
   this->ComputeK();
-  
+
   this->m_LMatrix.set_size( NDimensions * ( numberOfLandmarks + NDimensions + 1 ),
     NDimensions * ( numberOfLandmarks + NDimensions + 1 ) );
   this->m_LMatrix.fill( 0.0 );
@@ -281,7 +281,7 @@ KernelTransform2<TScalarType, NDimensions>
 
   PointsIterator p1  = this->m_SourceLandmarks->GetPoints()->Begin();
   PointsIterator end = this->m_SourceLandmarks->GetPoints()->End();
-  
+
   // K matrix is symmetric, so only evaluate the upper triangle and
   // store the values in bot the upper and lower triangle
   unsigned int i = 0;
@@ -328,7 +328,7 @@ KernelTransform2<TScalarType, NDimensions>
   this->m_PMatrix.set_size( NDimensions * numberOfLandmarks,
     NDimensions * ( NDimensions + 1 ) );
   this->m_PMatrix.fill( 0.0f );
-  
+
   for ( unsigned long i = 0; i < numberOfLandmarks; i++ )
   {
     this->m_SourceLandmarks->GetPoint( i, &p );
@@ -387,11 +387,11 @@ KernelTransform2<TScalarType, NDimensions>
 ::ReorganizeW( void )
 {
   const unsigned long numberOfLandmarks = this->m_SourceLandmarks->GetNumberOfPoints();
-  
+
   // The deformable (non-affine) part of the registration goes here
   this->m_DMatrix.set_size( NDimensions, numberOfLandmarks );
   unsigned int ci = 0;
-  
+
   for ( unsigned long lnd = 0; lnd < numberOfLandmarks; lnd++ )
   {
     for ( unsigned int dim = 0; dim < NDimensions; dim++ )
@@ -451,7 +451,7 @@ KernelTransform2<TScalarType, NDimensions>
   }
 
   return opp;
-  
+
 } // end TransformPoint()
 
 
@@ -497,9 +497,9 @@ KernelTransform2<TScalarType, NDimensions>
 
   PointsIterator itr = landmarks->Begin();
   PointsIterator end = landmarks->End();
-  InputPointType  landMark; 
+  InputPointType  landMark;
   unsigned int pcounter = 0;
-  
+
   while ( itr != end )
   {
     for ( unsigned int dim = 0; dim < NDimensions; dim++ )
@@ -542,7 +542,7 @@ KernelTransform2<TScalarType, NDimensions>
   PointsIterator end = landmarks->End();
   InputPointType  landMark;
   unsigned int pcounter = 0;
-  
+
   while ( itr != end )
   {
     for ( unsigned int dim = 0; dim < NDimensions; dim++ )
@@ -555,7 +555,7 @@ KernelTransform2<TScalarType, NDimensions>
   }
 
   this->m_SourceLandmarks->SetPoints( landmarks );
-  
+
   // these are invalidated when the source lms change
   this->m_WMatrixComputed = false;
   this->m_LMatrixComputed = false;
@@ -580,7 +580,7 @@ KernelTransform2<TScalarType, NDimensions>
   PointsIterator itr = this->m_TargetLandmarks->GetPoints()->Begin();
   PointsIterator end = this->m_TargetLandmarks->GetPoints()->End();
   unsigned int pcounter = 0;
-  
+
   while ( itr != end )
   {
     InputPointType landmark = itr.Value();
@@ -608,8 +608,8 @@ KernelTransform2<TScalarType, NDimensions>
 
 
   // Get the fixed parameters
-  // This returns the target landmark locations 
-  // This was added to support the Transform Reader/Writer mechanism 
+  // This returns the target landmark locations
+  // This was added to support the Transform Reader/Writer mechanism
 template <class TScalarType, unsigned int NDimensions>
 const typename KernelTransform2<TScalarType, NDimensions>::ParametersType &
 KernelTransform2<TScalarType, NDimensions>
@@ -620,7 +620,7 @@ KernelTransform2<TScalarType, NDimensions>
   PointsIterator itr = this->m_SourceLandmarks->GetPoints()->Begin();
   PointsIterator end = this->m_SourceLandmarks->GetPoints()->End();
   unsigned int pcounter = 0;
-  
+
   while ( itr != end )
   {
     InputPointType landmark = itr.Value();
@@ -651,7 +651,7 @@ KernelTransform2<TScalarType, NDimensions>
   j.SetSize( NDimensions, numberOfLandmarks * NDimensions );
   j.Fill( 0.0 );
   GMatrixType Gmatrix;
-  
+
   PointsIterator sp = this->m_SourceLandmarks->GetPoints()->Begin();
   for ( unsigned int lnd = 0; lnd < numberOfLandmarks; lnd++ )
   {

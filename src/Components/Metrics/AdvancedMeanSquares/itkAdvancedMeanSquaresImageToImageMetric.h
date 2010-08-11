@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -31,26 +31,26 @@ namespace itk
  * images to be compared.
  *
  * This metric computes the sum of squared differenced between pixels in
- * the moving image and pixels in the fixed image. The spatial correspondance 
+ * the moving image and pixels in the fixed image. The spatial correspondance
  * between both images is established through a Transform. Pixel values are
  * taken from the Moving image. Their positions are mapped to the Fixed image
  * and result in general in non-grid position on it. Values at these non-grid
  * position of the Fixed image are interpolated using a user-selected Interpolator.
  *
- * This implementation of the MeanSquareDifference is based on the 
+ * This implementation of the MeanSquareDifference is based on the
  * AdvancedImageToImageMetric, which means that:
  * \li It uses the ImageSampler-framework
  * \li It makes use of the compact support of B-splines, in case of B-spline transforms.
  * \li Image derivatives are computed using either the B-spline interpolator's implementation
  * or by nearest neighbor interpolation of a precomputed central difference image.
  * \li A minimum number of samples that should map within the moving image (mask) can be specified.
- * 
+ *
  * \ingroup RegistrationMetrics
  * \ingroup Metrics
  */
 
-template < class TFixedImage, class TMovingImage > 
-class AdvancedMeanSquaresImageToImageMetric : 
+template < class TFixedImage, class TMovingImage >
+class AdvancedMeanSquaresImageToImageMetric :
     public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
 {
 public:
@@ -64,12 +64,12 @@ public:
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
- 
+
   /** Run-time type information (and related methods). */
   itkTypeMacro( AdvancedMeanSquaresImageToImageMetric, AdvancedImageToImageMetric );
 
   /** Typedefs from the superclass. */
-  typedef typename 
+  typedef typename
     Superclass::CoordinateRepresentationType              CoordinateRepresentationType;
   typedef typename Superclass::MovingImageType            MovingImageType;
   typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
@@ -103,7 +103,7 @@ public:
   typedef typename Superclass::ImageSamplerType           ImageSamplerType;
   typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
   typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
-  typedef typename 
+  typedef typename
     Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
   typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
   typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
@@ -125,7 +125,7 @@ public:
   /** The moving image dimension. */
   itkStaticConstMacro( MovingImageDimension, unsigned int,
     MovingImageType::ImageDimension );
-  
+
   /** Get the value for single valued optimizers. */
   virtual MeasureType GetValue( const TransformParametersType & parameters ) const;
 
@@ -158,12 +158,12 @@ public:
    * This divides the MeanSquares by a factor (range/10)^2,
    * where range represents the maximum gray value range of the
    * images. Based on the ad hoc assumption that range/10 is the
-   * maximum average difference that will be observed. 
+   * maximum average difference that will be observed.
    * Dividing by range^2 sounds less ad hoc, but will yield
    * very small values. */
   itkSetMacro( UseNormalization, bool );
   itkGetConstMacro( UseNormalization, bool );
-   
+
 protected:
   AdvancedMeanSquaresImageToImageMetric();
   virtual ~AdvancedMeanSquaresImageToImageMetric() {};
@@ -180,7 +180,7 @@ protected:
   typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
   typedef typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
   typedef typename Superclass::CentralDifferenceGradientFilterType CentralDifferenceGradientFilterType;
-  typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType; 
+  typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
   typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
 
   /** Protected typedefs for SelfHessian */
@@ -189,24 +189,24 @@ protected:
   typedef BSplineInterpolateImageFunction<
     FixedImageType, CoordinateRepresentationType>                 FixedImageInterpolatorType;
   typedef NearestNeighborInterpolateImageFunction<
-    FixedImageType, CoordinateRepresentationType >                DummyFixedImageInterpolatorType;     
+    FixedImageType, CoordinateRepresentationType >                DummyFixedImageInterpolatorType;
   typedef ImageRandomCoordinateSampler<FixedImageType>            SelfHessianSamplerType;
 
   double m_NormalizationFactor;
-     
+
   /** Computes the innerproduct of transform Jacobian with moving image gradient.
    * The results are stored in imageJacobian, which is supposed
    * to have the right size (same length as Jacobian's number of columns). */
   void EvaluateTransformJacobianInnerProduct(
-    const TransformJacobianType & jacobian, 
+    const TransformJacobianType & jacobian,
     const MovingImageDerivativeType & movingImageDerivative,
     DerivativeType & imageJacobian) const;
 
   /** Compute a pixel's contribution to the measure and derivatives;
    * Called by GetValueAndDerivative(). */
-  void UpdateValueAndDerivativeTerms( 
+  void UpdateValueAndDerivativeTerms(
     const RealType fixedImageValue,
-    const RealType movingImageValue,    
+    const RealType movingImageValue,
     const DerivativeType & imageJacobian,
     const NonZeroJacobianIndicesType & nzji,
     MeasureType & measure,
@@ -214,11 +214,11 @@ protected:
 
   /** Compute a pixel's contribution to the SelfHessian;
    * Called by GetSelfHessian(). */
-  void UpdateSelfHessianTerms( 
-    const DerivativeType & imageJacobian,    
+  void UpdateSelfHessianTerms(
+    const DerivativeType & imageJacobian,
     const NonZeroJacobianIndicesType & nzji,
     HessianType & H) const;
- 
+
 private:
   AdvancedMeanSquaresImageToImageMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented

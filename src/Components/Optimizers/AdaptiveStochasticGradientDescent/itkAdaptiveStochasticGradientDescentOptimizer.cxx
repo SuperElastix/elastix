@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -33,10 +33,10 @@ namespace itk
     this->m_SigmoidMax = 1.0;
     this->m_SigmoidMin = -0.8;
     this->m_SigmoidScale = 1e-8;
-        
+
   } // end Constructor
 
- 
+
   /**
    * ************************** UpdateCurrentTime ********************
    *
@@ -52,8 +52,8 @@ namespace itk
     {
       if ( this->GetCurrentIteration() > 0 )
       {
-        /** Make sigmoid function 
-         * Compute beta such that sigmoid(0)=0 
+        /** Make sigmoid function
+         * Compute beta such that sigmoid(0)=0
          * We assume Max>0, min<0 */
         SigmoidType sigmoid;
         sigmoid.SetOutputMaximum( this->GetSigmoidMax() );
@@ -67,7 +67,7 @@ namespace itk
         const double inprod = inner_product(
           this->m_PreviousGradient, this->GetGradient() );
         this->m_CurrentTime += sigmoid(-inprod);
-        this->m_CurrentTime = vnl_math_max( 0.0, this->m_CurrentTime );        
+        this->m_CurrentTime = vnl_math_max( 0.0, this->m_CurrentTime );
       }
 
       /** Save for next iteration */
@@ -75,14 +75,14 @@ namespace itk
     }
     else
     {
-      /** Almost Robbins-Monro: time = time + E_0. 
-       * If you want the parameter estimation but no adaptive stuff, 
+      /** Almost Robbins-Monro: time = time + E_0.
+       * If you want the parameter estimation but no adaptive stuff,
        * this may be use useful:  */
       this->m_CurrentTime += ( this->GetSigmoidMax() + this->GetSigmoidMin() ) / 2.0;
     }
 
   } // end UpdateCurrentTime
-  
+
 
 } // end namespace itk
 

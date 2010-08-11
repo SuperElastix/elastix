@@ -2,11 +2,11 @@
 
 This file is part of the elastix software.
 
-Copyright (c) Erasmus MC University Medical Center Rotterdam. 
+Copyright (c) Erasmus MC University Medical Center Rotterdam.
 See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
 details.
 
-This software is distributed WITHOUT ANY WARRANTY; without even 
+This software is distributed WITHOUT ANY WARRANTY; without even
 the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
@@ -70,14 +70,14 @@ public:
     ::JacobianOfSpatialHessianType                    JacobianOfSpatialHessianType;
   typedef typename Superclass::InternalMatrixType     InternalMatrixType;
   typedef typename Superclass::ParametersType         ParametersType;
-  
+
   /** Parameters as SpaceDimension number of images. */
   typedef typename ParametersType::ValueType          PixelType;
   typedef Image< PixelType,
     itkGetStaticConstMacro( SpaceDimension )>         ImageType;
   typedef typename ImageType::Pointer                 ImagePointer;
 
-  typedef typename Superclass::RegionType       RegionType; 
+  typedef typename Superclass::RegionType       RegionType;
   typedef typename RegionType::IndexType        IndexType;
   typedef typename RegionType::SizeType         SizeType;
   typedef typename ImageType::SpacingType       SpacingType;
@@ -107,8 +107,8 @@ public:
   /** This method specifies the region over which the grid resides. */
   virtual void SetGridRegion( const RegionType& region );
 
-  /** Transform points by a BSpline deformable transformation. 
-   * On return, weights contains the interpolation weights used to compute the 
+  /** Transform points by a BSpline deformable transformation.
+   * On return, weights contains the interpolation weights used to compute the
    * deformation and indices of the x (zeroth) dimension coefficient parameters
    * in the support region used to compute the deformation.
    * Parameter indices for the i-th dimension can be obtained by adding
@@ -147,10 +147,10 @@ protected:
   bool InsideValidRegion( const ContinuousIndexType & index ) const;
 
   /** Split an image region into two regions based on the last dimension. */
-  virtual void SplitRegion( 
+  virtual void SplitRegion(
     const RegionType & imageRegion,
-    const RegionType & inRegion, 
-    RegionType & outRegion1, 
+    const RegionType & inRegion,
+    RegionType & outRegion1,
     RegionType & outRegion2) const;
 
 private:

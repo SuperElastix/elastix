@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -40,7 +40,7 @@ namespace itk
   } // end Constructor
 
 
-  /** 
+  /**
    * *************** PrintSelf *************************
    */
 
@@ -106,12 +106,12 @@ namespace itk
     this->m_Stop = false;
 
     InvokeEvent( StartEvent() );
-    while( ! this->m_Stop ) 
+    while( ! this->m_Stop )
     {
 
       try
       {
-        this->GetScaledValueAndDerivative( 
+        this->GetScaledValueAndDerivative(
           this->GetScaledCurrentPosition(), m_Value, m_Gradient );
       }
       catch ( ExceptionObject& err )
@@ -188,10 +188,10 @@ namespace itk
   void
     GradientDescentOptimizer2
     ::AdvanceOneStep( void )
-  { 
+  {
     itkDebugMacro("AdvanceOneStep");
 
-    const unsigned int spaceDimension = 
+    const unsigned int spaceDimension =
       this->GetScaledCostFunction()->GetNumberOfParameters();
 
     const ParametersType & currentPosition = this->GetScaledCurrentPosition();

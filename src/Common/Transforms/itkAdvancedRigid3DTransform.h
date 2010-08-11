@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -47,7 +47,7 @@ namespace itk
  */
 template < class TScalarType=double >    // type for scalars (float or double)
 class ITK_EXPORT AdvancedRigid3DTransform :
-   public AdvancedMatrixOffsetTransformBase< TScalarType, 3, 3> 
+   public AdvancedMatrixOffsetTransformBase< TScalarType, 3, 3>
 {
 public:
   /** Standard class typedefs. */
@@ -55,7 +55,7 @@ public:
   typedef AdvancedMatrixOffsetTransformBase< TScalarType, 3, 3 >   Superclass;
   typedef SmartPointer<Self>                               Pointer;
   typedef SmartPointer<const Self>                         ConstPointer;
-  
+
   /** Run-time type information (and related methods). */
   itkTypeMacro( AdvancedRigid3DTransform, AdvancedMatrixOffsetTransformBase );
 
@@ -73,9 +73,9 @@ public:
   typedef typename Superclass::ScalarType                 ScalarType;
   typedef typename Superclass::InputVectorType            InputVectorType;
   typedef typename Superclass::OutputVectorType           OutputVectorType;
-  typedef typename Superclass::InputCovariantVectorType  
+  typedef typename Superclass::InputCovariantVectorType
                                                      InputCovariantVectorType;
-  typedef typename Superclass::OutputCovariantVectorType  
+  typedef typename Superclass::OutputCovariantVectorType
                                                      OutputCovariantVectorType;
   typedef typename Superclass::InputVnlVectorType         InputVnlVectorType;
   typedef typename Superclass::OutputVnlVectorType        OutputVnlVectorType;
@@ -104,7 +104,7 @@ public:
    *
    * \warning The rotation matrix must be orthogonal to within a specified tolerance,
    * else an exception is thrown.
-   * 
+   *
    * \sa Transform::SetParameters()
    * \sa Transform::SetFixedParameters() */
    virtual void SetParameters( const ParametersType & parameters );
@@ -135,7 +135,7 @@ public:
    * with a certain tolerance.
    *
    * \deprecated Use SetMatrix instead
-   * 
+   *
    **/
   virtual void SetRotationMatrix(const MatrixType & matrix)
       { this->SetMatrix(matrix); }
@@ -160,9 +160,9 @@ public:
    *   transform using the result.
    *
    **/
-  InputPointType      BackTransform(const OutputPointType 
+  InputPointType      BackTransform(const OutputPointType
                                                    &point ) const;
-  InputVectorType     BackTransform(const OutputVectorType 
+  InputVectorType     BackTransform(const OutputVectorType
                                                    &vector) const;
   InputVnlVectorType  BackTransform( const OutputVnlVectorType
                                                    &vector) const;
@@ -170,7 +170,7 @@ public:
                                                    &vector) const;
 
    /**
-    * Utility function to test if a matrix is orthogonal within a specified 
+    * Utility function to test if a matrix is orthogonal within a specified
     * tolerance
     */
   bool MatrixIsOrthogonal( const MatrixType & matrix, double tol = 1e-10 );
@@ -182,7 +182,7 @@ protected:
                    const OutputVectorType & offset);
   AdvancedRigid3DTransform();
   ~AdvancedRigid3DTransform();
-  
+
   /**
    * Print contents of an AdvancedRigid3DTransform
    **/
@@ -191,7 +191,7 @@ protected:
 private:
   AdvancedRigid3DTransform(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
-  
+
 }; //class AdvancedRigid3DTransform
 
 

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -63,7 +63,7 @@ ElastixBase::ElastixBase()
   this->m_FinalTransform = 0;
 
   /** Ignore direction cosines by default, for backward compatability. */
-  this->m_UseDirectionCosines = false;  
+  this->m_UseDirectionCosines = false;
 
 } // end Constructor
 
@@ -81,7 +81,7 @@ void ElastixBase::SetDBIndex( DBIndexType _arg )
 
     Object * thisasobject = dynamic_cast<Object *>( this );
     if ( thisasobject )
-    { 
+    {
       thisasobject->Modified();
     }
   }
@@ -124,7 +124,7 @@ int ElastixBase::BeforeAllBase( void )
     "-m", returndummy, true, true );
 
   /** Read the fixed and moving mask filenames. These are not obliged options,
-   * so do not print any errors if they are not present. 
+   * so do not print any errors if they are not present.
    * Do print some info (second boolean = true).
    */
   int maskreturndummy = 0;
@@ -207,14 +207,14 @@ int ElastixBase::BeforeAllBase( void )
 
   /** Check the very important UseDirectionCosines parameter. */
   this->m_UseDirectionCosines = false;
-  bool retudc = this->GetConfiguration()->ReadParameter( this->m_UseDirectionCosines, 
+  bool retudc = this->GetConfiguration()->ReadParameter( this->m_UseDirectionCosines,
     "UseDirectionCosines", 0 );
   if ( !retudc )
   {
-    xl::xout["warning"] 
+    xl::xout["warning"]
       << "\nWARNING: From elastix 4.3 it is highly recommended to add\n"
       << "the UseDirectionCosines option to your parameter file! See\n"
-      << "http://elastix.isi.uu.nl/whatsnew_04_3.php for more information.\n" 
+      << "http://elastix.isi.uu.nl/whatsnew_04_3.php for more information.\n"
       << std::endl;
   }
 
@@ -294,14 +294,14 @@ int ElastixBase::BeforeAllTransformixBase( void )
 
   /** Check the very important UseDirectionCosines parameter. */
   this->m_UseDirectionCosines = false;
-  bool retudc = this->GetConfiguration()->ReadParameter( this->m_UseDirectionCosines, 
+  bool retudc = this->GetConfiguration()->ReadParameter( this->m_UseDirectionCosines,
     "UseDirectionCosines", 0 );
   if ( !retudc )
   {
-    xl::xout["warning"] 
+    xl::xout["warning"]
       << "\nWARNING: From elastix 4.3 it is highly recommended to add\n"
       << "the UseDirectionCosines option to your parameter file! See\n"
-      << "http://elastix.isi.uu.nl/whatsnew_04_3.php for more information.\n" 
+      << "http://elastix.isi.uu.nl/whatsnew_04_3.php for more information.\n"
       << std::endl;
   }
 
@@ -339,11 +339,11 @@ void ElastixBase::AfterRegistrationBase( void )
 } // end AfterRegistrationBase()
 
 
-/** 
+/**
  * ********************* GenerateFileNameContainer ******************
  */
 
-ElastixBase::FileNameContainerPointer 
+ElastixBase::FileNameContainerPointer
 ElastixBase::GenerateFileNameContainer(
   const std::string & optionkey, int & errorcode,
   bool printerrors, bool printinfo ) const
@@ -369,8 +369,8 @@ ElastixBase::GenerateFileNameContainer(
       /** Both failed; return an error message, if desired. */
       if ( printerrors )
       {
-        xl::xout["error"] 
-        << "ERROR: No CommandLine option \"" 
+        xl::xout["error"]
+        << "ERROR: No CommandLine option \""
           << optionkey << "\" or \""
           << optionkey << 0 << "\" given!" << std::endl;
       }
@@ -455,7 +455,7 @@ void ElastixBase::SetOriginalFixedImageDirectionFlat(
  * ******************** GetOriginalFixedImageDirectionFlat ********************
  */
 
-const ElastixBase::FlatDirectionCosinesType & 
+const ElastixBase::FlatDirectionCosinesType &
 ElastixBase::GetOriginalFixedImageDirectionFlat( void ) const
 {
   return this->m_OriginalFixedImageDirection;

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -59,7 +59,7 @@ namespace elastix
 
     /** Other typedef's. */
     typedef typename ElastixType::FixedImageType        InputImageType;
-    
+
     /** ITKBaseType. */
     typedef itk::ImageSamplerBase< InputImageType >     ITKBaseType;
 
@@ -76,11 +76,11 @@ namespace elastix
     }
 
     /** Execute stuff before each resolution:
-     * \li Give a warning when NewSamplesEveryIteration is specified, 
+     * \li Give a warning when NewSamplesEveryIteration is specified,
      * but the sampler is ignoring it.
      */
     virtual void BeforeEachResolutionBase(void);
-    
+
   protected:
 
     /** The constructor. */

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -21,11 +21,11 @@
 namespace elastix
 {
 using namespace itk;
-  
+
 /**
  * ********************* Constructor ****************************
  */
-  
+
 template <class TElastix>
 AffineDTITransformElastix<TElastix>
 ::AffineDTITransformElastix()
@@ -46,7 +46,7 @@ AffineDTITransformElastix<TElastix>
 ::BeforeRegistration( void )
 {
   if ( SpaceDimension != 3 )
-  {    
+  {
     itkExceptionMacro( << "AffineDTI transform only works for 3D images!" );
   }
 
@@ -73,10 +73,10 @@ AffineDTITransformElastix<TElastix>
   centerOfRotationPoint.Fill( 0.0 );
   bool pointRead = false;
 
-  /** Try first to read the CenterOfRotationPoint from the 
+  /** Try first to read the CenterOfRotationPoint from the
    * transform parameter file, this is the new, and preferred
    * way, since elastix 3.402.
-   */    
+   */
   pointRead = this->ReadCenterOfRotationPoint( centerOfRotationPoint );
 
   if ( !pointRead )
@@ -125,7 +125,7 @@ AffineDTITransformElastix<TElastix>
   }
   xout["transpar"] << rotationPoint[ SpaceDimension - 1 ] << ")" << std::endl;
 
-  xout["transpar"] << "(MatrixTranslation";  
+  xout["transpar"] << "(MatrixTranslation";
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     for ( unsigned int j = 0; j < SpaceDimension; ++j )
@@ -136,7 +136,7 @@ AffineDTITransformElastix<TElastix>
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     xout["transpar"] << " " << this->m_AffineDTITransform->GetTranslation()[i];
-  }  
+  }
   xout["transpar"] << ")" << std::endl;
 
   /** Set the precision back to default value. */
@@ -153,7 +153,7 @@ template <class TElastix>
 void
 AffineDTITransformElastix<TElastix>
 ::InitializeTransform( void )
-{   
+{
   /** Set all parameters to zero (no rotations, no translation). */
   this->m_AffineDTITransform->SetIdentity();
 
@@ -194,7 +194,7 @@ AffineDTITransformElastix<TElastix>
   bool CORIndexInImage = true;
   bool CORPointInImage = true;
   if ( centerGivenAsIndex )
-  {      
+  {
     CORIndexInImage =  this->m_Registration->GetAsITKBaseType()
       ->GetFixedImage()->GetLargestPossibleRegion().IsInside(
       centerOfRotationIndex );
@@ -224,7 +224,7 @@ AffineDTITransformElastix<TElastix>
   }
 
   /** Check if user wants automatic transform initialization; false by default.
-   * If an initial transform is given, automatic transform initialization is 
+   * If an initial transform is given, automatic transform initialization is
    * not possible.
    */
   bool automaticTransformInitialization = false;
@@ -236,26 +236,26 @@ AffineDTITransformElastix<TElastix>
     automaticTransformInitialization = true;
   }
 
-  /** 
+  /**
    * Run the itkTransformInitializer if:
    * - No center of rotation was given, or
    * - The user asked for AutomaticTransformInitialization
    */
   bool centerGiven = centerGivenAsIndex || centerGivenAsPoint;
-  if ( !centerGiven || automaticTransformInitialization ) 
+  if ( !centerGiven || automaticTransformInitialization )
   {
 
-    /** Use the TransformInitializer to determine a center of 
+    /** Use the TransformInitializer to determine a center of
      * of rotation and an initial translation.
      */
-    TransformInitializerPointer transformInitializer = 
+    TransformInitializerPointer transformInitializer =
       TransformInitializerType::New();
     transformInitializer->SetFixedImage(
       this->m_Registration->GetAsITKBaseType()->GetFixedImage() );
     transformInitializer->SetMovingImage(
       this->m_Registration->GetAsITKBaseType()->GetMovingImage() );
     transformInitializer->SetTransform( this->m_AffineDTITransform );
-    
+
     /** Select the method of initialization. Default: "GeometricalCenter". */
     transformInitializer->GeometryOn();
     std::string method = "GeometricalCenter";
@@ -265,7 +265,7 @@ AffineDTITransformElastix<TElastix>
     {
       transformInitializer->MomentsOn();
     }
-    
+
     transformInitializer->InitializeTransform();
   }
 
@@ -292,7 +292,7 @@ AffineDTITransformElastix<TElastix>
     this->m_AffineDTITransform->SetCenter( centerOfRotationPoint );
   }
 
-  /** Apply the initial transform to the center of rotation, if 
+  /** Apply the initial transform to the center of rotation, if
    * composition is used to combine the initial transform with the
    * the current (euler) transform.
    */
@@ -300,7 +300,7 @@ AffineDTITransformElastix<TElastix>
     && this->Superclass1::GetInitialTransform() != 0 )
   {
     InputPointType transformedCenterOfRotationPoint
-      = this->Superclass1::GetInitialTransform()->TransformPoint( 
+      = this->Superclass1::GetInitialTransform()->TransformPoint(
       this->m_AffineDTITransform->GetCenter() );
     this->m_AffineDTITransform->SetCenter( transformedCenterOfRotationPoint );
   }
@@ -320,7 +320,7 @@ template <class TElastix>
 void
 AffineDTITransformElastix<TElastix>
 ::SetScales( void )
-{  
+{
   /** Create the new scales. */
   const unsigned int N = this->GetNumberOfParameters();
   ScalesType newscales( N );
@@ -329,13 +329,13 @@ AffineDTITransformElastix<TElastix>
   /** Always estimate scales automatically */
   elxout << "Scales are estimated automatically." << std::endl;
   this->AutomaticScalesEstimation( newscales );
-  
+
   unsigned int count
     = this->m_Configuration->CountNumberOfParameterEntries( "Scales" );
 
   if ( count == this->GetNumberOfParameters() )
   {
-    /** Overrule the automatically estimated scales with the user-specified 
+    /** Overrule the automatically estimated scales with the user-specified
      * scales. Values <= 0 are not used; the default is kept then. */
     for ( unsigned int i = 0; i < this->GetNumberOfParameters(); i++ )
     {

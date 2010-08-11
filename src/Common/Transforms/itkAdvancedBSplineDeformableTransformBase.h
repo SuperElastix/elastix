@@ -6,7 +6,7 @@ Copyright (c) University Medical Center Utrecht. All rights reserved.
 See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
 details.
 
-This software is distributed WITHOUT ANY WARRANTY; without even 
+This software is distributed WITHOUT ANY WARRANTY; without even
 the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
@@ -26,9 +26,9 @@ namespace itk
 /** \class AdvancedBSplineDeformableTransformBase
  * \brief Base class for deformable transform using a BSpline representation
  *
- * This class is the base for the encapsulation of a deformable transform 
+ * This class is the base for the encapsulation of a deformable transform
  * of points from one N-dimensional one space to another N-dimensional space.
- * 
+ *
  * This class is not templated over the spline order, which makes the use of
  * different spline orders more convenient in subsequent code.
  *
@@ -46,7 +46,7 @@ public:
     TScalarType, NDimensions, NDimensions >         Superclass;
   typedef SmartPointer<Self>                        Pointer;
   typedef SmartPointer<const Self>                  ConstPointer;
-      
+
   /** Run-time type information (and related methods). */
   itkTypeMacro( AdvancedBSplineDeformableTransformBase, AdvancedTransform );
 
@@ -63,7 +63,7 @@ public:
   typedef typename Superclass::OutputVectorType       OutputVectorType;
   typedef typename Superclass::InputVnlVectorType     InputVnlVectorType;
   typedef typename Superclass::OutputVnlVectorType    OutputVnlVectorType;
-  typedef typename Superclass::InputCovariantVectorType 
+  typedef typename Superclass::InputCovariantVectorType
     InputCovariantVectorType;
   typedef typename Superclass::OutputCovariantVectorType
     OutputCovariantVectorType;
@@ -77,13 +77,13 @@ public:
   typedef typename Superclass
     ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
   typedef typename Superclass::InternalMatrixType   InternalMatrixType;
-  
+
   /** This method sets the parameters of the transform.
-     * For a BSpline deformation transform, the parameters are the BSpline 
-     * coefficients on a sparse grid. 
-     * 
-     * The parameters are N number of N-D grid of coefficients. Each N-D grid 
-     * is represented as a flat array of doubles 
+     * For a BSpline deformation transform, the parameters are the BSpline
+     * coefficients on a sparse grid.
+     *
+     * The parameters are N number of N-D grid of coefficients. Each N-D grid
+     * is represented as a flat array of doubles
      * (in the same configuration as an itk::Image).
      * The N arrays are then concatenated to form one parameter array.
      *
@@ -97,12 +97,12 @@ public:
      * NOTE: The grid region, spacing and origin must be set first.
      */
   void SetParameters( const ParametersType & parameters );
-  
+
   /** This method sets the fixed parameters of the transform.
    * For a BSpline deformation transform, the parameters are the following:
    *    Grid Size, Grid Origin, and Grid Spacing
-   * 
-   * The fixed parameters are the three times the size of the templated 
+   *
+   * The fixed parameters are the three times the size of the templated
    * dimensions.
    * This function has the effect of make the following calls:
    *       transform->SetGridSpacing( spacing );
@@ -110,17 +110,17 @@ public:
    *       transform->SetGridDirection( direction );
    *       transform->SetGridRegion( bsplineRegion );
    *
-   * This function was added to allow the transform to work with the 
+   * This function was added to allow the transform to work with the
    * itkTransformReader/Writer I/O filters.
    */
   void SetFixedParameters( const ParametersType & parameters );
 
   /** This method sets the parameters of the transform.
-   * For a BSpline deformation transform, the parameters are the BSpline 
-   * coefficients on a sparse grid. 
-   * 
-   * The parameters are N number of N-D grid of coefficients. Each N-D grid 
-   * is represented as a flat array of doubles 
+   * For a BSpline deformation transform, the parameters are the BSpline
+   * coefficients on a sparse grid.
+   *
+   * The parameters are N number of N-D grid of coefficients. Each N-D grid
+   * is represented as a flat array of doubles
    * (in the same configuration as an itk::Image).
    * The N arrays are then concatenated to form one parameter array.
    *
@@ -133,11 +133,11 @@ public:
    */
   void SetParametersByValue( const ParametersType & parameters );
 
-  /** This method can ONLY be invoked AFTER calling SetParameters(). 
+  /** This method can ONLY be invoked AFTER calling SetParameters().
    *  This restriction is due to the fact that the AdvancedBSplineDeformableTransform
-   *  does not copy the array of parameters internally, instead it keeps a 
+   *  does not copy the array of parameters internally, instead it keeps a
    *  pointer to the user-provided array of parameters. This method is also
-   *  in violation of the const-correctness of the parameters since the 
+   *  in violation of the const-correctness of the parameters since the
    *  parameter array has been passed to the transform on a 'const' basis but
    *  the values get modified when the user invokes SetIdentity().
    */
@@ -148,7 +148,7 @@ public:
 
   /** Get the Transformation Fixed Parameters. */
   virtual const ParametersType& GetFixedParameters( void ) const;
-  
+
   /** Parameters as SpaceDimension number of images. */
   typedef typename ParametersType::ValueType            PixelType;
   typedef Image< PixelType,
@@ -164,19 +164,19 @@ public:
   /** Set the array of coefficient images.
    *
    * This is an alternative API for setting the BSpline coefficients
-   * as an array of SpaceDimension images. The grid region spacing 
+   * as an array of SpaceDimension images. The grid region spacing
    * and origin is taken from the first image. It is assume that
-   * the buffered region of all the subsequent images are the same 
+   * the buffered region of all the subsequent images are the same
    * as the first image. Note that no error checking is done.
    *
    * Warning: use either the SetParameters() or SetCoefficientImage()
    * API. Mixing the two modes may results in unexpected results.
    */
-  virtual void SetCoefficientImage( ImagePointer images[] );  
+  virtual void SetCoefficientImage( ImagePointer images[] );
 
   /** Typedefs for specifying the extend to the grid. */
   typedef ImageRegion< itkGetStaticConstMacro( SpaceDimension ) > RegionType;
-  
+
   typedef typename RegionType::IndexType    IndexType;
   typedef typename RegionType::SizeType     SizeType;
   typedef typename ImageType::SpacingType   SpacingType;
@@ -210,7 +210,7 @@ public:
     itkGetStaticConstMacro( SpaceDimension ) >          BulkTransformType;
   typedef typename BulkTransformType::ConstPointer      BulkTransformPointer;
 
-  /** This method specifies the bulk transform to be applied. 
+  /** This method specifies the bulk transform to be applied.
    * The default is the identity transform.
    */
   itkSetConstObjectMacro( BulkTransform, BulkTransformType );
@@ -219,34 +219,34 @@ public:
   /** Parameter index array type. */
   typedef Array<unsigned long> ParameterIndexArrayType;
 
-  /** Method to transform a vector - 
+  /** Method to transform a vector -
    *  not applicable for this type of transform.
    */
   virtual OutputVectorType TransformVector( const InputVectorType & ) const
-    { 
+    {
     itkExceptionMacro( << "Method not applicable for deformable transform." );
-    return OutputVectorType(); 
+    return OutputVectorType();
     }
 
-  /** Method to transform a vnl_vector - 
+  /** Method to transform a vnl_vector -
    *  not applicable for this type of transform.
    */
   virtual OutputVnlVectorType TransformVector(const InputVnlVectorType & ) const
-    { 
+    {
     itkExceptionMacro( << "Method not applicable for deformable transform. ");
-    return OutputVnlVectorType(); 
+    return OutputVnlVectorType();
     }
 
-  /** Method to transform a CovariantVector - 
+  /** Method to transform a CovariantVector -
    *  not applicable for this type of transform.
    */
   virtual OutputCovariantVectorType TransformCovariantVector(
     const InputCovariantVectorType & ) const
-    { 
+    {
     itkExceptionMacro( << "Method not applicable for deformable transform. ");
-    return OutputCovariantVectorType(); 
-    } 
-    
+    return OutputCovariantVectorType();
+    }
+
   /** Return the number of parameters that completely define the Transform. */
   virtual unsigned int GetNumberOfParameters( void ) const;
 
@@ -266,7 +266,7 @@ public:
   virtual unsigned int GetNumberOfAffectedWeights( void ) const = 0;
 
   virtual unsigned long GetNumberOfNonZeroJacobianIndices( void ) const = 0;
-  
+
   /** This typedef should be equal to the typedef used in derived classes based on the weightsfunction. */
   typedef ContinuousIndex<ScalarType, SpaceDimension> ContinuousIndexType;
 
@@ -279,9 +279,9 @@ protected:
 
   /** Wrap flat array into images of coefficients. */
   void WrapAsImages( void );
-  
+
   /** Convert an input point to a continuous index inside the BSpline grid. */
-  void TransformPointToContinuousGridIndex( 
+  void TransformPointToContinuousGridIndex(
    const InputPointType & point, ContinuousIndexType & index ) const;
 
   virtual void ComputeNonZeroJacobianIndices(
@@ -294,7 +294,7 @@ protected:
   /** The bulk transform. */
   BulkTransformPointer  m_BulkTransform;
 
-  /** Array of images representing the B-spline coefficients 
+  /** Array of images representing the B-spline coefficients
   *  in each dimension. */
   ImagePointer    m_CoefficientImage[ NDimensions ];
 
@@ -318,7 +318,7 @@ protected:
   SizeType        m_SupportSize;
   ContinuousIndexType m_ValidRegionBegin;
   ContinuousIndexType m_ValidRegionEnd;
-  
+
   /** Odd or even order BSpline. */
   bool m_SplineOrderOdd;
 
@@ -342,7 +342,7 @@ protected:
 
   /** Internal parameters buffer. */
   ParametersType          m_InternalParametersBuffer;
-  
+
   void UpdateGridOffsetTable( void );
 
 private:

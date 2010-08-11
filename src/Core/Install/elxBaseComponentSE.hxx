@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -50,17 +50,17 @@ namespace elastix
       if ( this->m_Elastix.IsNotNull() )
       {
         this->m_Configuration = this->m_Elastix->GetConfiguration();
-        this->m_Registration = dynamic_cast<RegistrationPointer>( 
+        this->m_Registration = dynamic_cast<RegistrationPointer>(
           this->m_Elastix->GetElxRegistrationBase() );
       }
 
       Object * thisasobject = dynamic_cast<Object *>(this);
       if ( thisasobject )
-      { 
+      {
         thisasobject->Modified();
       }
     }
-        
+
   } // end SetElastix
 
 
@@ -80,11 +80,11 @@ namespace elastix
 
       Object * thisasobject = dynamic_cast<Object *>(this);
       if ( thisasobject )
-      { 
+      {
         thisasobject->Modified();
       }
     }
-        
+
   } // end SetConfiguration
 
 

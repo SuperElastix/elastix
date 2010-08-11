@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -44,8 +44,8 @@ namespace itk
  * \sa VersorRigid3DTransform
  */
 template < class TScalarType=double >    // Data type for scalars (float or double)
-class ITK_EXPORT AdvancedSimilarity3DTransform : 
-      public AdvancedVersorRigid3DTransform< TScalarType > 
+class ITK_EXPORT AdvancedSimilarity3DTransform :
+      public AdvancedVersorRigid3DTransform< TScalarType >
 {
 public:
   /** Standard class typedefs. */
@@ -53,7 +53,7 @@ public:
   typedef AdvancedVersorRigid3DTransform< TScalarType >  Superclass;
   typedef SmartPointer<Self>                     Pointer;
   typedef SmartPointer<const Self>               ConstPointer;
-    
+
   /** New macro for creation of through a Smart Pointer. */
   itkNewMacro( Self );
 
@@ -76,9 +76,9 @@ public:
   typedef typename Superclass::OutputVectorType       OutputVectorType;
   typedef typename Superclass::InputVnlVectorType     InputVnlVectorType;
   typedef typename Superclass::OutputVnlVectorType    OutputVnlVectorType;
-  typedef typename Superclass::InputCovariantVectorType 
+  typedef typename Superclass::InputCovariantVectorType
                                                       InputCovariantVectorType;
-  typedef typename Superclass::OutputCovariantVectorType      
+  typedef typename Superclass::OutputCovariantVectorType
                                                       OutputCovariantVectorType;
   typedef typename Superclass::MatrixType             MatrixType;
   typedef typename Superclass::InverseMatrixType      InverseMatrixType;
@@ -108,7 +108,7 @@ public:
   *
   * \sa MatrixOffsetTransformBase::SetMatrix() */
   virtual void SetMatrix(const MatrixType &matrix);
-  
+
   /** Set the transformation from a container of parameters This is typically
    * used by optimizers.  There are 7 parameters. The first three represent the
    * versor, the next three represent the translation and the last one
@@ -119,7 +119,7 @@ public:
   /** Set/Get the value of the isotropic scaling factor */
   void SetScale( ScaleType scale );
   itkGetConstReferenceMacro( Scale, ScaleType );
-  
+
   /** This method computes the Jacobian matrix of the transformation. */
   virtual void GetJacobian(
     const InputPointType &,
@@ -145,7 +145,7 @@ protected:
 
    /** Update the m_JacobianOfSpatialJacobian.  */
   virtual void PrecomputeJacobianOfSpatialJacobian(void);
-  
+
 private:
   AdvancedSimilarity3DTransform(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented

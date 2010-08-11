@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -28,10 +28,10 @@ namespace itk
   * PreconditionedGradientDescentOptimizer implements a simple gradient descent optimizer.
   * At each iteration the current position is updated according to
   *
-  * \f[ 
-  *        p_{n+1} = p_n 
-  *                + \mbox{learningRate} 
-  \, \frac{\partial f(p_n) }{\partial p_n} 
+  * \f[
+  *        p_{n+1} = p_n
+  *                + \mbox{learningRate}
+  \, \frac{\partial f(p_n) }{\partial p_n}
   * \f]
   *
   * The learning rate is a fixed scalar defined via SetLearningRate().
@@ -44,11 +44,11 @@ namespace itk
   * The difference of this class with the itk::GradientDescentOptimizer
   * is that it's based on the ScaledSingleValuedNonLinearOptimizer
   *
-  * \sa ScaledSingleValuedNonLinearOptimizer 
-  * 
+  * \sa ScaledSingleValuedNonLinearOptimizer
+  *
   * \ingroup Numerics Optimizers
-  */  
-  class PreconditionedGradientDescentOptimizer : 
+  */
+  class PreconditionedGradientDescentOptimizer :
     public ScaledSingleValuedNonLinearOptimizer
   {
   public:
@@ -78,8 +78,8 @@ namespace itk
     typedef Array2D<PreconditionValueType>                  PreconditionType;
     typedef vnl_symmetric_eigensystem<
       PreconditionValueType >                               EigenSystemType;
-    
-    /** Codes of stopping conditions 
+
+    /** Codes of stopping conditions
      * The MinimumStepSize stopcondition never occurs, but may
      * be implemented in inheriting classes */
     typedef enum {
@@ -128,7 +128,7 @@ namespace itk
     /** Get current gradient. */
     itkGetConstReferenceMacro( Gradient, DerivativeType );
 
-    /** Set the preconditioning matrix, whose inverse actually will be used to precondition. 
+    /** Set the preconditioning matrix, whose inverse actually will be used to precondition.
      * On setting the precondition matrix, an eigensystem is computed immediately, the
      * eigenvalues/vectors are modified and only the modified eigenvectors/values are stored
      * (in the EigenSystem) */
@@ -138,8 +138,8 @@ namespace itk
     {
       return this->m_EigenSystem;
     }
-           
-    /** Set the minimum condition number allowed for the PreconditionMatrix. Default: 0.01 
+
+    /** Set the minimum condition number allowed for the PreconditionMatrix. Default: 0.01
      * In the SetPreconditionMatrix, the supplied precondition matrix will be modified such
      * that the condition number >= minimum condition number, after reducing the rank. */
     itkSetMacro( MinimumConditionNumber, double );
@@ -151,7 +151,7 @@ namespace itk
     void PrintSelf(std::ostream& os, Indent indent) const;
 
     // made protected so subclass can access
-    DerivativeType                m_Gradient; 
+    DerivativeType                m_Gradient;
     double                        m_LearningRate;
     StopConditionType             m_StopCondition;
     EigenSystemType *             m_EigenSystem;
@@ -161,13 +161,13 @@ namespace itk
     void operator=(const Self&); //purposely not implemented
 
     bool                          m_Stop;
-    double                        m_Value; 
-    
+    double                        m_Value;
+
     unsigned long                 m_NumberOfIterations;
     unsigned long                 m_CurrentIteration;
 
     double                        m_MinimumConditionNumber;
-    
+
   };
 
 } // end namespace itk

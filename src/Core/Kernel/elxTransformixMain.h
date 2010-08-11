@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -17,10 +17,10 @@
 
 #include "elxElastixMain.h"
 
-namespace elastix 
+namespace elastix
 {
 using namespace itk;
-  
+
 /**
  * \class TransformixMain
  * \brief A class with all functionality to configure transformix.
@@ -33,7 +33,7 @@ using namespace itk;
  *
  * \ingroup Kernel
  */
-  
+
 class TransformixMain : public ElastixMain
 {
 public:

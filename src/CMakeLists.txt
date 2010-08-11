@@ -70,7 +70,7 @@ SET( elxCore_INCLUDE_DIRECTORIES
  ${elastix_SOURCE_DIR}/Core/Install
  ${elastix_SOURCE_DIR}/Core/Kernel
  ${elastix_SOURCE_DIR}/Core/ComponentBaseClasses
- ${elastix_SOURCE_DIR}/Core/Configuration 
+ ${elastix_SOURCE_DIR}/Core/Configuration
  ${elastix_SOURCE_DIR}/Core/Main
 )
 
@@ -87,7 +87,7 @@ SET( elxComponents_INCLUDE_DIRECTORIES
  ${elastix_SOURCE_DIR}/Components/Transforms
 )
 
-SET( elxINCLUDE_DIRECTORIES 
+SET( elxINCLUDE_DIRECTORIES
  ${elxCommon_INCLUDE_DIRECTORIES}
  ${elxCore_INCLUDE_DIRECTORIES}
  ${elxComponents_INCLUDE_DIRECTORIES}
@@ -180,7 +180,7 @@ IF( Doxygen_FOUND )
 
   # Get the version number of doxygen
   EXEC_PROGRAM( ${DOXYGEN} ARGS "--version" OUTPUT_VARIABLE ELASTIX_DOXYGEN_VERSION )
-  
+
   # Get date
   IF( UNIX OR CYGWIN )
     EXEC_PROGRAM( "date '+%d-%m-%Y'" OUTPUT_VARIABLE ELASTIX_DOXYGEN_DATE )

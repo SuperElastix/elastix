@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -34,7 +34,7 @@ using namespace itk;
    * This class contains all the common functionality for FixedImagePyramids.
    *
    * \parameter FixedImagePyramidSchedule: downsampling factors for the fixed image pyramid.\n
-   *    For each dimension, for each resolution level, the downsampling factor of the 
+   *    For each dimension, for each resolution level, the downsampling factor of the
    *    fixed image can be specified.\n
    *    Syntax for 2D images:\n
    *    <tt>(FixedImagePyramidSchedule <reslevel0,dim0> <reslevel0,dim1> <reslevel1,dim0> <reslevel1,dim1> ...)</tt>\n

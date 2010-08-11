@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -49,13 +49,13 @@ namespace itk
     typedef typename Superclass::DataObjectPointer        DataObjectPointer;
     typedef TOutputVectorContainer                        OutputVectorContainerType;
     typedef typename OutputVectorContainerType::Pointer   OutputVectorContainerPointer;
-  
+
     /** Get the vector container output of this process object. */
     OutputVectorContainerType * GetOutput( void );
 
     /** Get the vector container output of this process object. */
     OutputVectorContainerType * GetOutput( unsigned int idx );
-  
+
     /** Graft the specified DataObject onto this ProcessObject's output. */
     virtual void GraftOutput( DataObject *output );
 
@@ -74,10 +74,10 @@ namespace itk
 
     /** PrintSelf. */
     void PrintSelf( std::ostream& os, Indent indent ) const;
-    
+
     /** GenerateInputRequestedRegion. */
     void GenerateInputRequestedRegion( void );
-            
+
   private:
 
     /** The private constructor. */

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -21,8 +21,8 @@
 #include "vnl/vnl_math.h"
 
 namespace itk
-{ 
-  
+{
+
   /**
    * ********************* PrintSelf ******************************
    *
@@ -36,9 +36,9 @@ namespace itk
   {
     /** Call the superclass' PrintSelf. */
     Superclass::PrintSelf( os, indent );
-  
+
     /** This function is not complete, but we don't use it anyway. */
-    
+
   } // end PrintSelf
 
 
@@ -50,14 +50,14 @@ namespace itk
     void
     ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     ::ComputeLogMarginalPDF( MarginalPDFType & pdf ) const
-  { 
+  {
     /** Typedef iterator */
     typedef typename MarginalPDFType::iterator              MarginalPDFIteratorType;
 
     /** Prepare iterators for computing marginal logPDF. */
     MarginalPDFIteratorType PDFit = pdf.begin();
     const MarginalPDFIteratorType PDFend = pdf.end();
-    
+
     /** do it! */
     while ( PDFit != PDFend )
     {
@@ -71,7 +71,7 @@ namespace itk
       }
       ++PDFit;
     }
-    
+
   } // end ComputeLogMarginalPDF
 
 
@@ -86,21 +86,21 @@ namespace itk
     ::MeasureType
     ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     ::ComputeNormalizedMutualInformation( MeasureType & jointEntropy ) const
-  { 
+  {
     /** Typedef iterators */
     typedef ImageLinearConstIteratorWithIndex<JointPDFType> JointPDFConstIteratorType;
     typedef typename MarginalPDFType::const_iterator        MarginalPDFConstIteratorType;
-        
+
     /** Prepare iterators for computing measure */
     JointPDFConstIteratorType jointPDFconstit(
       this->m_JointPDF, this->m_JointPDF->GetLargestPossibleRegion() );
     jointPDFconstit.SetDirection(0);
-    jointPDFconstit.GoToBegin();    
+    jointPDFconstit.GoToBegin();
     MarginalPDFConstIteratorType fixedPDFconstit = this->m_FixedImageMarginalPDF.begin();
     MarginalPDFConstIteratorType movingPDFconstit = this->m_MovingImageMarginalPDF.begin();
     const MarginalPDFConstIteratorType fixedPDFend = this->m_FixedImageMarginalPDF.end();
     const MarginalPDFConstIteratorType movingPDFend = this->m_MovingImageMarginalPDF.end();
-       
+
     /** Loop over histogram to compute measure */
     double sumnum = 0.0;
     double sumden = 0.0;
@@ -115,9 +115,9 @@ namespace itk
         sumnum -= jointPDFValue * ( logFixedImagePDFValue + logMovingImagePDFValue );
         /** check for non-zero bin contribution */
         if( jointPDFValue > 1e-16 )
-        {          
+        {
           sumden -= jointPDFValue * vcl_log( jointPDFValue );
-        }  
+        }
         ++movingPDFconstit;
         ++jointPDFconstit;
       }  // end while-loop over moving index
@@ -128,8 +128,8 @@ namespace itk
     jointEntropy = sumden;
     return static_cast<MeasureType>( sumnum / sumden );
   } // end ComputeNormalizedMutualInformation
-  
-  
+
+
   /**
    * ************************** GetValue **************************
    * Get the match Measure.
@@ -140,33 +140,33 @@ namespace itk
     ::MeasureType
     ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     ::GetValue( const ParametersType& parameters ) const
-  {    
+  {
     /** Construct the JointPDF and Alpha */
-    this->ComputePDFs(parameters);          
+    this->ComputePDFs(parameters);
 
     /** Normalize the pdfs: p = alpha h */
     this->NormalizeJointPDF( this->m_JointPDF, this->m_Alpha  );
-    
+
     /** Compute the fixed and moving marginal pdfs, by summing over the joint pdf */
     this->ComputeMarginalPDF( this->m_JointPDF, this->m_FixedImageMarginalPDF, 0 );
     this->ComputeMarginalPDF( this->m_JointPDF, this->m_MovingImageMarginalPDF, 1 );
 
     /** Replace the probabilities by log(probabilities) */
-    this->ComputeLogMarginalPDF( this->m_FixedImageMarginalPDF );    
+    this->ComputeLogMarginalPDF( this->m_FixedImageMarginalPDF );
     this->ComputeLogMarginalPDF( this->m_MovingImageMarginalPDF );
 
     /** Compute the measure */
     MeasureType jointEntropy = 0.0;
     const MeasureType nMI = this->ComputeNormalizedMutualInformation( jointEntropy );
-   
+
     return static_cast<MeasureType>( -1.0 * nMI );
-    
+
   } // end GetValue
 
 
   /**
    * ******************** GetValueAndDerivative *******************
-   * Get both the Value and the Derivative of the Measure. 
+   * Get both the Value and the Derivative of the Measure.
    */
 
   template < class TFixedImage, class TMovingImage  >
@@ -176,7 +176,7 @@ namespace itk
     const ParametersType& parameters,
     MeasureType& value,
     DerivativeType& derivative) const
-  {    
+  {
     /** Initialize some variables */
     value = NumericTraits< MeasureType >::Zero;
     derivative = DerivativeType( this->GetNumberOfParameters() );
@@ -187,20 +187,20 @@ namespace itk
 
     /** Normalize the pdfs: p = alpha h*/
     this->NormalizeJointPDF( this->m_JointPDF, this->m_Alpha  );
-        
+
     /** Compute the fixed and moving marginal pdf by summing over the histogram */
     this->ComputeMarginalPDF( this->m_JointPDF, this->m_FixedImageMarginalPDF, 0 );
     this->ComputeMarginalPDF( this->m_JointPDF, this->m_MovingImageMarginalPDF, 1 );
 
     /** Replace the probabilities by log(probabilities) */
-    this->ComputeLogMarginalPDF( this->m_FixedImageMarginalPDF );    
+    this->ComputeLogMarginalPDF( this->m_FixedImageMarginalPDF );
     this->ComputeLogMarginalPDF( this->m_MovingImageMarginalPDF );
 
     /** Compute the measure and joint entropy (which we both need to compute the derivative) */
     MeasureType jointEntropy = 0.0;
     const MeasureType nMI = this->ComputeNormalizedMutualInformation( jointEntropy );
     value = static_cast<MeasureType>( -1.0 * nMI );
-    
+
     /** Now compute the derivatives:
      * -dNMI/dmu = - 1/Ej [
      *      sum_k sum_i dpdmu(i,k) ( NMI log(p(i,k)) - log(pf(k)) - log(pm(i)) ) ]
@@ -208,7 +208,7 @@ namespace itk
      * where:
      * dpdmu(i,k) = alpha dhdmu(i,k)
      *
-     * m_JointPDFDerivatives reflects dhdmu(i,k) at this point in the code. 
+     * m_JointPDFDerivatives reflects dhdmu(i,k) at this point in the code.
      * p = m_JointPDF reflects [alpha h(i,k)]
      *
      * So, we can write, following more or less the source code below:
@@ -222,26 +222,26 @@ namespace itk
     typedef typename DerivativeType::const_iterator         DerivativeConstIteratorType;
     typedef ImageLinearConstIteratorWithIndex<JointPDFType> JointPDFConstIteratorType;
     typedef typename MarginalPDFType::const_iterator        MarginalPDFConstIteratorType;
-    
+
     /** Setup iterators */
     JointPDFDerivativesConstIteratorType jointPDFDerivativesConstit(
       this->m_JointPDFDerivatives, this->m_JointPDFDerivatives->GetLargestPossibleRegion() );
     jointPDFDerivativesConstit.SetDirection(0);
-    jointPDFDerivativesConstit.GoToBegin();    
-    
+    jointPDFDerivativesConstit.GoToBegin();
+
     JointPDFConstIteratorType jointPDFconstit(
       this->m_JointPDF, this->m_JointPDF->GetLargestPossibleRegion() );
     jointPDFconstit.SetDirection(0);
-    jointPDFconstit.GoToBegin();  
-    
+    jointPDFconstit.GoToBegin();
+
     DerivativeIteratorType derivit = derivative.begin();
     const DerivativeConstIteratorType derivend = derivative.end();
-    
+
     MarginalPDFConstIteratorType fixedPDFconstit = this->m_FixedImageMarginalPDF.begin();
     MarginalPDFConstIteratorType movingPDFconstit = this->m_MovingImageMarginalPDF.begin();
     const MarginalPDFConstIteratorType fixedPDFend = this->m_FixedImageMarginalPDF.end();
     const MarginalPDFConstIteratorType movingPDFend = this->m_MovingImageMarginalPDF.end();
-       
+
     /** Compute the derivatives */
     while ( fixedPDFconstit != fixedPDFend )
     {
@@ -253,13 +253,13 @@ namespace itk
         const double jointPDFValue = jointPDFconstit.Get();
         if ( jointPDFValue > 1e-16 )
         {
-          const double pRatio = ( nMI * vcl_log( jointPDFValue ) 
+          const double pRatio = ( nMI * vcl_log( jointPDFValue )
               - logFixedImagePDFValue - logMovingImagePDFValue ) / jointEntropy;
           const double pRatioAlpha = this->m_Alpha * pRatio;
           /** check for non-zero bin contribution */
           derivit = derivative.begin();
           while ( derivit != derivend )
-          {                    
+          {
             (*derivit) -= jointPDFDerivativesConstit.Get() * pRatioAlpha;
             ++derivit;
             ++jointPDFDerivativesConstit;
@@ -272,11 +272,11 @@ namespace itk
       ++fixedPDFconstit;
       jointPDFconstit.NextLine();
     }  // end while-loop over fixed index
-        
+
   } // end GetValueAndDerivative
 
 
-} // end namespace itk 
+} // end namespace itk
 
 
 #endif // end #ifndef _itkParzenWindowNormalizedMutualInformationImageToImageMetric_HXX__

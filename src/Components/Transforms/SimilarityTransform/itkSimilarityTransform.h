@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -21,99 +21,99 @@
 
 namespace itk
 {
-  
+
   /**
    * \class SimilarityGroup
    * \brief This class only contains a dummy class.
    *
    */
-  
+
   template< unsigned int Dimension >
     class SimilarityGroup
   {
   public:
-    
+
     template< class TScalarType >
       class Dummy
     {
     public:
-      
+
       /** Typedef's.*/
-      typedef AdvancedMatrixOffsetTransformBase< 
+      typedef AdvancedMatrixOffsetTransformBase<
         TScalarType, Dimension, Dimension >            SimilarityTransform_tmp;
-            
+
     }; // end class Dummy
-    
+
   }; // end class SimilarityGroup
-  
-  
+
+
   /**
    * \class SimilarityGroup<2>
    * \brief This class only contains a dummy class for the 2D case.
    *
    */
-  
+
   template<>
     class SimilarityGroup<2>
   {
   public:
-    
+
     template< class TScalarType >
       class Dummy
     {
     public:
-      
+
       /** Typedef's.*/
       typedef AdvancedSimilarity2DTransform< TScalarType >      SimilarityTransform_tmp;
-          
+
     }; // end class Dummy
-    
+
   }; // end class SimilarityGroup<2>
-  
-  
+
+
   /**
    * \class SimilarityGroup<3>
    * \brief This class only contains a dummy class for the 3D case.
    *
    */
-  
+
   template<>
     class SimilarityGroup<3>
   {
   public:
-    
+
     template< class TScalarType >
       class Dummy
     {
     public:
-      
+
       /** Typedef's.*/
       typedef AdvancedSimilarity3DTransform< TScalarType >                  SimilarityTransform_tmp;
-            
+
     }; // end class Dummy
-    
+
   }; // end class SimilarityGroup<3>
-  
-  
+
+
   /**
    * \class SimilarityGroupTemplate
    * \brief This class templates the SimilarityGroup over its dimension.
    *
    */
-  
+
   template< class TScalarType, unsigned int Dimension >
     class SimilarityGroupTemplate
   {
   public:
-          
+
     typedef SimilarityGroupTemplate Self;
-    typedef TScalarType ScalarType;       
-    itkStaticConstMacro( SpaceDimension, unsigned int, Dimension );         
-    
+    typedef TScalarType ScalarType;
+    itkStaticConstMacro( SpaceDimension, unsigned int, Dimension );
+
     // This declaration of 'Similarity' does not work with the GCC compiler
     //    typedef SimilarityGroup<  itkGetStaticConstMacro( SpaceDimension ) >        Similarity;
     // The following trick works though:
-    template <unsigned int D> 
+    template <unsigned int D>
       class SimilarityGroupWrap
     {
     public:
@@ -121,12 +121,12 @@ namespace itk
     };
     typedef SimilarityGroupWrap<Dimension>                      SimilarityGroupWrapInstance;
     typedef typename SimilarityGroupWrapInstance::Similarity    Similarity;
-    
+
     typedef typename Similarity::template Dummy< ScalarType >   SimilarityDummy;
     typedef typename SimilarityDummy::SimilarityTransform_tmp   SimilarityTransform_tmp;
-    
+
   }; // end class SimilarityGroupTemplate
-  
+
 
   /**
    * \class SimilarityTransform
@@ -136,7 +136,7 @@ namespace itk
    *
    * \ingroup Transforms
    */
-  
+
   template< class TScalarType, unsigned int Dimension >
     class SimilarityTransform:
   public SimilarityGroupTemplate<
@@ -151,16 +151,16 @@ namespace itk
       ::SimilarityTransform_tmp                 Superclass;
     typedef SmartPointer<Self>                  Pointer;
     typedef SmartPointer<const Self>            ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( SimilarityTransform, SimilarityGroupTemplate );
-    
+
     /** Dimension of the domain space. */
     itkStaticConstMacro( SpaceDimension, unsigned int, Dimension );
-    
+
     /** Typedefs inherited from the superclass. */
 
     /** These are both in Similarity2D and Similarity3D. */
@@ -186,20 +186,20 @@ namespace itk
     typedef typename Superclass
       ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
     typedef typename Superclass::InternalMatrixType   InternalMatrixType;
-    
+
   protected:
 
     SimilarityTransform(){};
     ~SimilarityTransform(){};
-    
+
   private:
 
     SimilarityTransform( const Self& ); // purposely not implemented
     void operator=( const Self& ); // purposely not implemented
-    
+
   }; // end class SimilarityTransform
-    
-  
+
+
 } // end namespace itk
 
 #endif // end #ifndef __itkSimilarityTransform_H__

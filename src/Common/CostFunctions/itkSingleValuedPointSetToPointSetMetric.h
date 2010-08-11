@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -27,7 +27,7 @@
 
 namespace itk
 {
-  
+
 /** \class SingleValuedPointSetToPointSetMetric
  * \brief Computes similarity between two point sets.
  *
@@ -42,9 +42,9 @@ namespace itk
  *
  */
 
-template <class TFixedPointSet, class TMovingPointSet> 
+template <class TFixedPointSet, class TMovingPointSet>
 class ITK_EXPORT SingleValuedPointSetToPointSetMetric
-  : public SingleValuedCostFunction 
+  : public SingleValuedCostFunction
 {
 public:
 
@@ -75,7 +75,7 @@ public:
     TFixedPointSet::PointDimension );
   itkStaticConstMacro( MovingPointSetDimension, unsigned int,
     TMovingPointSet::PointDimension );
-  
+
   /**  More typedefs. */
   typedef AdvancedTransform< CoordinateRepresentationType,
     itkGetStaticConstMacro( FixedPointSetDimension ),
@@ -121,12 +121,12 @@ public:
 
   /** Get a pointer to the Transform.  */
   itkGetConstObjectMacro( Transform, TransformType );
- 
+
   /** Set the parameters defining the Transform. */
   void SetTransformParameters( const ParametersType & parameters ) const;
 
   /** Return the number of parameters required by the transform. */
-  unsigned int GetNumberOfParameters( void ) const 
+  unsigned int GetNumberOfParameters( void ) const
   { return this->m_Transform->GetNumberOfParameters(); }
 
   /** Initialize the Metric by making sure that all the components are
@@ -166,7 +166,7 @@ protected:
 private:
   SingleValuedPointSetToPointSetMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
-  
+
 }; // end class SingleValuedPointSetToPointSetMetric
 
 } // end namespace itk

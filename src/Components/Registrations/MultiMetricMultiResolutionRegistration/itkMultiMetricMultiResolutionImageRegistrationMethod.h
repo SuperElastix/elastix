@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -25,7 +25,7 @@
   virtual void Set##_name( _type _arg ) \
   { \
     this->Set##_name ( _arg, 0 ); \
-  } 
+  }
 
 /** defines for example: SetNumberOfInterpolators() */
 #define itkSetNumberOfMacro(_name) \
@@ -36,14 +36,14 @@
       this->m_##_name##s.resize( _arg ); \
       this->Modified(); \
     } \
-  } 
+  }
 
 /** defines for example: GetNumberOfInterpolators() */
 #define itkGetNumberOfMacro(_name) \
   virtual unsigned int GetNumberOf##_name##s(void) const \
   { \
     return this->m_##_name##s.size(); \
-  } 
+  }
 
 
 namespace itk
@@ -78,7 +78,7 @@ namespace itk
  */
 
 template <typename TFixedImage, typename TMovingImage>
-class ITK_EXPORT MultiMetricMultiResolutionImageRegistrationMethod : 
+class ITK_EXPORT MultiMetricMultiResolutionImageRegistrationMethod :
   public MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>
 {
 public:
@@ -91,7 +91,7 @@ public:
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
-  
+
   /** Run-time type information (and related methods). */
   itkTypeMacro( MultiMetricMultiResolutionImageRegistrationMethod,
     MultiResolutionImageRegistrationMethod2 );
@@ -102,7 +102,7 @@ public:
   typedef typename Superclass::FixedImageRegionType     FixedImageRegionType;
   typedef typename Superclass::MovingImageType          MovingImageType;
   typedef typename Superclass::MovingImageConstPointer  MovingImageConstPointer;
-   
+
   typedef typename Superclass::MetricType               MetricType;
   typedef typename Superclass::MetricPointer            MetricPointer;
   typedef typename Superclass::TransformType            TransformType;
@@ -119,9 +119,9 @@ public:
 
   typedef typename Superclass::TransformOutputType      TransformOutputType;
   typedef typename Superclass::TransformOutputPointer   TransformOutputPointer;
-  typedef typename 
+  typedef typename
     Superclass::TransformOutputConstPointer             TransformOutputConstPointer;
-  
+
   typedef typename Superclass::ParametersType           ParametersType;
   typedef typename Superclass::DataObjectPointer        DataObjectPointer;
 
@@ -142,7 +142,7 @@ public:
   /** Set the Metric. Reimplement this method to check if
    * the metric is a combination metric.
    * GetMetric returns the combination metric.
-   * By default, a combination metric is already set on constructing 
+   * By default, a combination metric is already set on constructing
    * this class.
    */
   virtual void SetMetric( MetricType * _arg );
@@ -155,10 +155,10 @@ public:
   {
     return this->m_CombinationMetric.GetPointer();
   }
-  
-  /** The following methods all have a similar pattern. The 
+
+  /** The following methods all have a similar pattern. The
    * SetFixedImage() just calls SetFixedImage(0).
-   * SetFixedImage(0) also calls the Superclass::SetFixedImage(). This 
+   * SetFixedImage(0) also calls the Superclass::SetFixedImage(). This
    * is defined by the itkSimpleSetMacro.
    * GetFixedImage() just returns GetFixedImage(0)==Superclass::m_FixedImage.
    */
@@ -220,25 +220,25 @@ public:
   /** Method to return the latest modified time of this object or
    * any of its cached ivars.
    */
-  unsigned long GetMTime( void ) const;  
+  unsigned long GetMTime( void ) const;
 
-  /** Get the last transformation parameters visited by 
-   * the optimizer. Return the member variable declared in this class, 
+  /** Get the last transformation parameters visited by
+   * the optimizer. Return the member variable declared in this class,
    * and not that of the superclass (which is declared private).
    */
   virtual const ParametersType & GetLastTransformParameters( void ) const
   {
     return this->m_LastTransformParameters;
   }
-  
+
 protected:
   MultiMetricMultiResolutionImageRegistrationMethod();
   virtual ~MultiMetricMultiResolutionImageRegistrationMethod() {};
   void PrintSelf( std::ostream& os, Indent indent ) const;
 
   typedef std::vector<FixedImageRegionType>  FixedImageRegionPyramidType;
-  
-  /** Method invoked by the pipeline in order to trigger the computation of 
+
+  /** Method invoked by the pipeline in order to trigger the computation of
    * the registration.
    */
   virtual void GenerateData( void );
@@ -285,12 +285,12 @@ protected:
 
   /** Dummy image region. */
   FixedImageRegionType m_NullFixedImageRegion;
-       
+
 private:
   MultiMetricMultiResolutionImageRegistrationMethod(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
-    
-}; // end class 
+
+}; // end class
 
 
 } // end namespace itk

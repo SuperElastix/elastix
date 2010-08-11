@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -28,26 +28,26 @@ namespace itk
    * It gives exactly the same results, if used in combination
    * with the itk::MoreThuenteLineSearchOptimizer.
    *
-   * The optimizer solves the unconstrained minimization problem 
+   * The optimizer solves the unconstrained minimization problem
    *
    *      \f[ \min F(x), \quad x = ( x_1,x_2,\ldots,x_N ), \f]
    *
-   * using the limited memory BFGS method. The routine is especially 
-   * effective on problems involving a large number of variables. In 
-   * a typical iteration of this method an approximation \f$H_k\f$ to the 
-   * inverse of the Hessian is obtained by applying \f$M\f$ BFGS updates to 
+   * using the limited memory BFGS method. The routine is especially
+   * effective on problems involving a large number of variables. In
+   * a typical iteration of this method an approximation \f$H_k\f$ to the
+   * inverse of the Hessian is obtained by applying \f$M\f$ BFGS updates to
    * a diagonal matrix \f$H_0\f$, using information from the previous \f$M\f$ steps.
-   * The user specifies the number \f$M\f$ (Memory), which determines the amount of 
+   * The user specifies the number \f$M\f$ (Memory), which determines the amount of
    * storage required by the routine.
    *
-   * The algorithm is described in "On the limited memory BFGS method 
-   * for large scale optimization", by D. Liu and J. Nocedal, 
-   * Mathematical Programming B 45 (1989) 503-528. 
+   * The algorithm is described in "On the limited memory BFGS method
+   * for large scale optimization", by D. Liu and J. Nocedal,
+   * Mathematical Programming B 45 (1989) 503-528.
    *
-   * The steplength is determined at each iteration by means of a 
-   * line search routine. The itk::MoreThuenteLineSearchOptimizer works well. 
-   *  
-   * 
+   * The steplength is determined at each iteration by means of a
+   * line search routine. The itk::MoreThuenteLineSearchOptimizer works well.
+   *
+   *
    * \ingroup Numerics Optimizers
    */
 
@@ -77,7 +77,7 @@ namespace itk
     typedef LineSearchOptimizer                   LineSearchOptimizerType;
 
     typedef LineSearchOptimizerType::Pointer      LineSearchOptimizerPointer;
-        
+
     typedef enum {
       MetricError,
       LineSearchError,
@@ -90,7 +90,7 @@ namespace itk
     virtual void StartOptimization(void);
     virtual void ResumeOptimization(void);
     virtual void StopOptimization(void);
-    
+
     /** Get information about optimization process: */
     itkGetConstMacro(CurrentIteration, unsigned long);
     itkGetConstMacro(CurrentValue, MeasureType);
@@ -98,9 +98,9 @@ namespace itk
     itkGetConstMacro(InLineSearch, bool);
     itkGetConstReferenceMacro(StopCondition, StopConditionType);
     itkGetConstMacro(CurrentStepLength, double);
-    
+
     /** Setting: the line search optimizer */
-    itkSetObjectMacro(LineSearchOptimizer, LineSearchOptimizerType); 
+    itkSetObjectMacro(LineSearchOptimizer, LineSearchOptimizerType);
     itkGetObjectMacro(LineSearchOptimizer, LineSearchOptimizerType);
 
     /** Setting: the maximum number of iterations */
@@ -109,7 +109,7 @@ namespace itk
       1, NumericTraits<unsigned long>::max());
 
     /** Setting: the mininum gradient magnitude.
-     * 
+     *
      * The optimizer stops when:
      * ||CurrentGradient|| < GradientMagnitudeTolerance * max(1, ||CurrentPosition||)
      */
@@ -121,7 +121,7 @@ namespace itk
      * descent search directions */
     itkSetClampMacro(Memory,unsigned int,0,NumericTraits<unsigned int>::max());
     itkGetConstMacro(Memory,unsigned int);
-    
+
 
   protected:
     QuasiNewtonLBFGSOptimizer();
@@ -138,17 +138,17 @@ namespace itk
 
     /** Is true when the LineSearchOptimizer has been started. */
     bool                          m_InLineSearch;
-    
+
     RhoType                       m_Rho;
     SType                         m_S;
     YType                         m_Y;
-    
+
     unsigned int                  m_Point;
     unsigned int                  m_PreviousPoint;
     unsigned int                  m_Bound;
 
     itkSetMacro(InLineSearch, bool);
-    
+
     /** Compute H0
      *
      * Override this method if not satisfied with the default choice.
@@ -157,16 +157,16 @@ namespace itk
 
     /** Compute -Hg
      *
-     *     COMPUTE -H*G USING THE FORMULA GIVEN IN: Nocedal, J. 1980, 
-     *     "Updating quasi-Newton matrices with limited storage", 
-     *     Mathematics of Computation, Vol.24, No.151, pp. 773-782. 
+     *     COMPUTE -H*G USING THE FORMULA GIVEN IN: Nocedal, J. 1980,
+     *     "Updating quasi-Newton matrices with limited storage",
+     *     Mathematics of Computation, Vol.24, No.151, pp. 773-782.
      */
     virtual void ComputeSearchDirection(
       const DerivativeType & gradient,
       ParametersType & searchDir);
 
     /** Perform a line search along the search direction. On calling, x, f, and g should
-     * contain the current position, the cost function value at this position, and 
+     * contain the current position, the cost function value at this position, and
      * the derivative. On return the step, x (new position), f (value at x), and g
      * (derivative at x) are updated. */
     virtual void LineSearch(
@@ -187,7 +187,7 @@ namespace itk
      * decide to skip a few convergence checks when no line search has performed yet
      * (so, before the actual optimisation begins)  */
     virtual bool TestConvergence(bool firstLineSearchDone);
-    
+
   private:
     QuasiNewtonLBFGSOptimizer(const Self&); //purposely not implemented
     void operator=(const Self&); //purposely not implemented
@@ -196,7 +196,7 @@ namespace itk
     double                        m_GradientMagnitudeTolerance;
     LineSearchOptimizerPointer    m_LineSearchOptimizer;
     unsigned int                  m_Memory;
-    
+
 
   }; // end class QuasiNewtonLBFGSOptimizer
 
@@ -205,7 +205,7 @@ namespace itk
 } // end namespace itk
 
 /** ********************* Original documentation **********************************
- * 
+ *
  * The implementation of this class is based on the netlib function lbfgs_
  *
  * Below the original documentation can be found:

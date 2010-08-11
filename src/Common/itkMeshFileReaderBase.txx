@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -23,7 +23,7 @@
 namespace itk
 {
 
-  /** 
+  /**
    * **************** Constructor ***************
    */
   template <class TOutputMesh>
@@ -34,7 +34,7 @@ namespace itk
   } // end constructor
 
 
-  /** 
+  /**
    * ***************GenerateOutputInformation ***********
    */
 
@@ -46,7 +46,7 @@ namespace itk
     OutputMeshPointer output = this->GetOutput();
 
     itkDebugMacro(<<"Reading file for GenerateOutputInformation()" << m_FileName);
-    
+
     /** Check to see if we can read the file given the name or prefix */
     if ( this->m_FileName == "" )
     {
@@ -56,11 +56,11 @@ namespace itk
     /** Test if the file exist and if it can be open.
      * and exception will be thrown otherwise. */
     this->TestFileExistanceAndReadability();
-        
+
     //Copy MetaDataDictionary from instantiated reader to output mesh?
     //output->SetMetaDataDictionary(m_ImageIO->GetMetaDataDictionary());
     //this->SetMetaDataDictionary(m_ImageIO->GetMetaDataDictionary());
-      
+
     // This makes not really sense i think.
     //MeshRegionType region;
     // region = ?
@@ -69,7 +69,7 @@ namespace itk
   }   // end GenerateOutputInformation
 
 
-  /** 
+  /**
    * *************TestFileExistanceAndReadability ***********
    */
 
@@ -110,7 +110,7 @@ namespace itk
   } // end TestFileExistanceAndReadability
 
 
-  /** 
+  /**
    * **************EnlargeOutputRequestedRegion***********
    */
 
@@ -130,7 +130,7 @@ namespace itk
       throw  MeshFileReaderException(__FILE__, __LINE__,
              "Invalid output object type");
     }
-     
+
   } // end EnlargeOutputRequestedRegion
 
 
@@ -139,4 +139,4 @@ namespace itk
 
 
 
-#endif 
+#endif

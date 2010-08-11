@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -48,7 +48,7 @@ using namespace itk;
  *    If only one argument is given, that factor is used for each dimension. The spacing
  *    is specified in millimeters.
  *    If not specified, the FinalGridSpacingInVoxels is used, or the FinalGridSpacing,
- *    to compute a FinalGridSpacingInPhysicalUnits. If those are not specified, the default 
+ *    to compute a FinalGridSpacingInPhysicalUnits. If those are not specified, the default
  *    value for FinalGridSpacingInVoxels is used to compute a FinalGridSpacingInPhysicalUnits.
  * \parameter GridSpacingSchedule: the grid spacing downsampling factors for the B-spline transform
  *    for each dimension and each resolution. \n
@@ -64,8 +64,8 @@ using namespace itk;
  *   The default is zero for all resolutions. A value of 4 will avoid all deformations
  *   at the edge of the image. Make sure that 2*PassiveEdgeWidth < ControlPointGridSize
  *   in each dimension.
- *   
- * 
+ *
+ *
  * The transform parameters necessary for transformix, additionally defined by this class, are:
  * \transformparameter GridSize: stores the size of the B-spline grid. \n
  *    example: <tt>(GridSize 16 16 16)</tt>
@@ -76,8 +76,8 @@ using namespace itk;
  * \transformparameter GridOrigin: stores the origin of the B-spline grid. \n
  *    example: <tt>(GridOrigin 0.0 0.0 0.0)</tt>
  *
- * \todo It is unsure what happens when one of the image dimensions has length 1. 
- * 
+ * \todo It is unsure what happens when one of the image dimensions has length 1.
+ *
  * \ingroup Transforms
  */
 
@@ -123,7 +123,7 @@ public:
     typename elx::TransformBase<TElastix>::CoordRepType,
     itkGetStaticConstMacro( SpaceDimension )>             BSplineTransformBaseType;
   typedef typename BSplineTransformBaseType::Pointer      BSplineTransformBasePointer;
-  
+
   /** Typedef for supported BSplineTransform types. */
   typedef itk::AdvancedBSplineDeformableTransform<
     typename elx::TransformBase<TElastix>::CoordRepType,
@@ -173,13 +173,13 @@ public:
   typedef typename BSplineTransformBaseType::SpacingType      SpacingType;
   typedef typename BSplineTransformBaseType::OriginType       OriginType;
   typedef typename BSplineTransformBaseType::DirectionType    DirectionType;
-  typedef typename 
+  typedef typename
     BSplineTransformBaseType::BulkTransformType               BulkTransformType;
-  typedef typename 
+  typedef typename
     BSplineTransformBaseType::BulkTransformPointer            BulkTransformPointer;
-  typedef typename 
+  typedef typename
     BSplineTransformBaseType::ContinuousIndexType             ContinuousIndexType;
-  typedef typename 
+  typedef typename
     BSplineTransformBaseType::ParameterIndexArrayType         ParameterIndexArrayType;
 
   /** Typedef's from TransformBase. */
@@ -206,7 +206,7 @@ public:
   typedef UpsampleBSplineParametersFilter<
     ParametersType, ImageType >                           GridUpsamplerType;
   typedef typename GridUpsamplerType::Pointer             GridUpsamplerPointer;
-  
+
   /** Execute stuff before anything else is done:
    * \li Initialize the right BSplineTransform.
    * \li Initialize the right grid schedule computer.
@@ -244,7 +244,7 @@ public:
    * \li Set these coefficients as InitialParametersOfNextLevel in the registration object.
    * Called by BeforeEachResolution().
    */
-  virtual void IncreaseScale( void );   
+  virtual void IncreaseScale( void );
 
   /** Function to read transform-parameters from a file. */
   virtual void ReadFromFile( void );
@@ -277,11 +277,11 @@ private:
   BSplineTransformBasePointer   m_BSplineTransform;
   GridScheduleComputerPointer   m_GridScheduleComputer;
   GridUpsamplerPointer          m_GridUpsampler;
-  
+
   /** Variables to remember order and periodicity of BSplineTransform. */
   unsigned int m_SplineOrder;
   bool m_Periodic;
-  
+
   /** Initialize the right BSplineTransfrom based on the spline order and periodicity. */
   unsigned int InitializeBSplineTransform();
 

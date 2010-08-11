@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -31,7 +31,7 @@ RSGDEachParameterApartBaseOptimizer
 {
 
   itkDebugMacro("Constructor");
-      
+
   m_MaximumStepLength = 1.0;
   m_MinimumStepLength = 1e-3;
   m_GradientMagnitudeTolerance = 1e-4;
@@ -40,10 +40,10 @@ RSGDEachParameterApartBaseOptimizer
   m_Value = 0;
   m_Maximize = false;
   m_CostFunction = 0;
-  
+
   m_CurrentStepLengths.Fill( 0.0f );
   m_CurrentStepLength = 0;
-  
+
   m_StopCondition = MaximumNumberOfIterations;
   m_Gradient.Fill( 0.0f );
   m_PreviousGradient.Fill( 0.0f );
@@ -63,10 +63,10 @@ RSGDEachParameterApartBaseOptimizer
 {
 
   itkDebugMacro("StartOptimization");
-  
+
   m_CurrentIteration          = 0;
 
-  const unsigned int spaceDimension = 
+  const unsigned int spaceDimension =
     m_CostFunction->GetNumberOfParameters();
 
   m_Gradient = DerivativeType( spaceDimension );
@@ -93,14 +93,14 @@ void
 RSGDEachParameterApartBaseOptimizer
 ::ResumeOptimization( void )
 {
-  
+
   itkDebugMacro("ResumeOptimization");
 
   m_Stop = false;
 
   this->InvokeEvent( StartEvent() );
 
-  while( !m_Stop ) 
+  while( !m_Stop )
     {
 
     /** inefficient:
@@ -147,9 +147,9 @@ RSGDEachParameterApartBaseOptimizer
       this->StopOptimization();
       break;
       }
-    
+
     }
-    
+
 
 }
 
@@ -166,7 +166,7 @@ RSGDEachParameterApartBaseOptimizer
 {
 
   itkDebugMacro("StopOptimization");
-  
+
   m_Stop = true;
   this->InvokeEvent( EndEvent() );
 }
@@ -180,7 +180,7 @@ RSGDEachParameterApartBaseOptimizer
 void
 RSGDEachParameterApartBaseOptimizer
 ::AdvanceOneStep( void )
-{ 
+{
 
   itkDebugMacro("AdvanceOneStep");
 
@@ -203,9 +203,9 @@ RSGDEachParameterApartBaseOptimizer
 
   for(unsigned int i = 0;  i < spaceDimension; i++)
     {
-    transformedGradient[i]  = m_Gradient[i] / scales[i];    
-    previousTransformedGradient[i] = 
-      m_PreviousGradient[i] / scales[i];    
+    transformedGradient[i]  = m_Gradient[i] / scales[i];
+    previousTransformedGradient[i] =
+      m_PreviousGradient[i] / scales[i];
     }
 
   double magnitudeSquare = 0;
@@ -214,30 +214,30 @@ RSGDEachParameterApartBaseOptimizer
     const double weighted = transformedGradient[dim];
     magnitudeSquare += weighted * weighted;
     }
-    
+
   m_GradientMagnitude = vcl_sqrt( magnitudeSquare );
 
-  if( m_GradientMagnitude < m_GradientMagnitudeTolerance ) 
+  if( m_GradientMagnitude < m_GradientMagnitudeTolerance )
     {
     m_StopCondition = GradientMagnitudeTolerance;
     StopOptimization();
     return;
     }
-    
+
   double sumOfCurrentStepLengths = 0.0;
   double biggestCurrentStepLength = 0.0;
   for(unsigned int i=0; i<spaceDimension; i++)
   {
     const bool signChange =
       ( transformedGradient[i] * previousTransformedGradient[i] ) < 0 ;
-    
+
     if (signChange)
     {
       m_CurrentStepLengths[i] /=2.0;
     }
 
     const double currentStepLengths_i = m_CurrentStepLengths[i];
-    
+
     sumOfCurrentStepLengths += currentStepLengths_i;
     if ( currentStepLengths_i > biggestCurrentStepLength )
     {
@@ -248,7 +248,7 @@ RSGDEachParameterApartBaseOptimizer
   /** The average current step length: */
   m_CurrentStepLength = sumOfCurrentStepLengths / spaceDimension;
 
-  /** if all current step lengths are smaller than the 
+  /** if all current step lengths are smaller than the
    * MinimumStepLength stop the optimization
    */
   if( biggestCurrentStepLength < m_MinimumStepLength )
@@ -259,23 +259,23 @@ RSGDEachParameterApartBaseOptimizer
     }
 
   double direction;
-  if( this->m_Maximize ) 
+  if( this->m_Maximize )
     {
     direction = 1.0;
     }
-  else 
+  else
     {
     direction = -1.0;
     }
 
   DerivativeType factor = DerivativeType(spaceDimension);
-   
+
   for(unsigned int i=0; i<spaceDimension; i++)
   {
     factor[i] = direction * m_CurrentStepLengths[i] / m_GradientMagnitude;
   }
 
-  // This method StepAlongGradient() will 
+  // This method StepAlongGradient() will
   // be overloaded in non-vector spaces
   this->StepAlongGradient( factor, transformedGradient );
 

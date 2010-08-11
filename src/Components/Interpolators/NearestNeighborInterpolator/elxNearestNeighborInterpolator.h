@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -42,27 +42,27 @@ using namespace itk;
     public
       NearestNeighborInterpolateImageFunction<
         ITK_TYPENAME InterpolatorBase<TElastix>::InputImageType,
-        ITK_TYPENAME InterpolatorBase<TElastix>::CoordRepType >, 
+        ITK_TYPENAME InterpolatorBase<TElastix>::CoordRepType >,
     public
       InterpolatorBase<TElastix>
-  { 
+  {
   public:
-  
+
     /** Standard ITK-stuff. */
     typedef NearestNeighborInterpolator                 Self;
     typedef NearestNeighborInterpolateImageFunction<
       typename InterpolatorBase<TElastix>::InputImageType,
-      typename InterpolatorBase<TElastix>::CoordRepType > Superclass1;    
-    typedef InterpolatorBase<TElastix>          Superclass2;    
+      typename InterpolatorBase<TElastix>::CoordRepType > Superclass1;
+    typedef InterpolatorBase<TElastix>          Superclass2;
     typedef SmartPointer<Self>                  Pointer;
     typedef SmartPointer<const Self>            ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro(Self);
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( NearestNeighborInterpolator, NearestNeighborInterpolateImageFunction );
-    
+
     /** Name of this class.
      * Use this name in the parameter file to select this specific interpolator. \n
      * example: <tt>(Interpolator "NearestNeighborInterpolator")</tt>\n
@@ -71,14 +71,14 @@ using namespace itk;
 
     /** Get the ImageDimension. */
     itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
-    
+
     /** Typedefs inherited from the superclass. */
     typedef typename Superclass1::OutputType                OutputType;
     typedef typename Superclass1::InputImageType            InputImageType;
     typedef typename Superclass1::IndexType                 IndexType;
     typedef typename Superclass1::ContinuousIndexType       ContinuousIndexType;
-    typedef typename Superclass1::PointType                 PointType;    
-    
+    typedef typename Superclass1::PointType                 PointType;
+
     /** Typedefs inherited from Elastix. */
     typedef typename Superclass2::ElastixType               ElastixType;
     typedef typename Superclass2::ElastixPointer            ElastixPointer;
@@ -94,14 +94,14 @@ using namespace itk;
     NearestNeighborInterpolator() {}
     /** The destructor. */
     virtual ~NearestNeighborInterpolator() {}
-    
+
   private:
 
     /** The private constructor. */
     NearestNeighborInterpolator( const Self& ); // purposely not implemented
     /** The private copy constructor. */
     void operator=( const Self& );      // purposely not implemented
-      
+
   }; // end class NearestNeighborInterpolator
 
 

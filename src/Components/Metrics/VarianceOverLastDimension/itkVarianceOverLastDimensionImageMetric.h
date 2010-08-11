@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -31,7 +31,7 @@ namespace itk
  * images to be compared.
  *
  * This metric computes the sum of variances over the slowest varying dimension in
- * the moving image. The spatial positions of the moving image are established 
+ * the moving image. The spatial positions of the moving image are established
  * through a Transform. Pixel values are taken from the Moving image.
  *
  * This implementation is based on the AdvancedImageToImageMetric, which means that:
@@ -40,13 +40,13 @@ namespace itk
  * \li Image derivatives are computed using either the B-spline interpolator's implementation
  * or by nearest neighbor interpolation of a precomputed central difference image.
  * \li A minimum number of samples that should map within the moving image (mask) can be specified.
- * 
+ *
  * \ingroup RegistrationMetrics
  * \ingroup Metrics
  */
 
-template < class TFixedImage, class TMovingImage > 
-class VarianceOverLastDimensionImageMetric : 
+template < class TFixedImage, class TMovingImage >
+class VarianceOverLastDimensionImageMetric :
     public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
 {
 public:
@@ -57,13 +57,13 @@ public:
     TFixedImage, TMovingImage >                   Superclass;
   typedef SmartPointer<Self>                      Pointer;
   typedef SmartPointer<const Self>                ConstPointer;
-  
+
   typedef typename Superclass::FixedImageRegionType       FixedImageRegionType;
   typedef typename FixedImageRegionType::SizeType         FixedImageSizeType;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
- 
+
   /** Run-time type information (and related methods). */
   itkTypeMacro( VarianceOverLastDimensionImageMetric, AdvancedImageToImageMetric );
 
@@ -81,7 +81,7 @@ public:
   itkGetConstMacro(NumSamplesLastDimension, int);
 
   /** Typedefs from the superclass. */
-  typedef typename 
+  typedef typename
     Superclass::CoordinateRepresentationType              CoordinateRepresentationType;
   typedef typename Superclass::MovingImageType            MovingImageType;
   typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
@@ -114,7 +114,7 @@ public:
   typedef typename Superclass::ImageSamplerType           ImageSamplerType;
   typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
   typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
-  typedef typename 
+  typedef typename
     Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
   typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
   typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
@@ -132,7 +132,7 @@ public:
   /** The moving image dimension. */
   itkStaticConstMacro( MovingImageDimension, unsigned int,
     MovingImageType::ImageDimension );
-  
+
   /** Get the value for single valued optimizers. */
   virtual MeasureType GetValue( const TransformParametersType & parameters ) const;
 
@@ -167,14 +167,14 @@ protected:
   typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
   typedef typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
   typedef typename Superclass::CentralDifferenceGradientFilterType CentralDifferenceGradientFilterType;
-  typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType; 
+  typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
   typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
 
   /** Computes the innerproduct of transform Jacobian with moving image gradient.
    * The results are stored in imageJacobian, which is supposed
    * to have the right size (same length as Jacobian's number of columns). */
   void EvaluateTransformJacobianInnerProduct(
-    const TransformJacobianType & jacobian, 
+    const TransformJacobianType & jacobian,
     const MovingImageDerivativeType & movingImageDerivative,
     DerivativeType & imageJacobian) const;
 
@@ -190,13 +190,13 @@ private:
   unsigned int m_NumSamplesLastDimension;
   unsigned int m_NumAdditionalSamplesFixed;
   unsigned int m_ReducedDimensionIndex;
-  
+
   /** Bool to determine if we want to subtract the mean derivate from the derivative elements. */
   bool m_SubtractMean;
 
   /** Initial variance in last dimension, used as normalization factor. */
   float m_InitialVariance;
-  
+
   /** GridSize of B-spline transform. */
   FixedImageSizeType m_GridSize;
 

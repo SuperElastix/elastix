@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -22,21 +22,21 @@
 
 namespace itk
 {
-  
+
   /**
    * \class BinaryTreeSearchBase
    *
-   * \brief 
+   * \brief
    *
-   * 
+   *
    * \ingroup ANNwrap
    */
-  
+
   template < class TListSample >
   class BinaryTreeSearchBase : public Object
   {
   public:
-    
+
     /** Standard itk. */
     typedef BinaryTreeSearchBase        Self;
     typedef Object                      Superclass;
@@ -65,9 +65,9 @@ namespace itk
     /** Search the nearest neighbours of a query point qp. */
     virtual void Search( const MeasurementVectorType & qp, IndexArrayType & ind,
       DistanceArrayType & dists ) = 0;
-    
+
   protected:
-    
+
     BinaryTreeSearchBase();
     virtual ~BinaryTreeSearchBase();
 
@@ -75,15 +75,15 @@ namespace itk
     typename BinaryTreeType::Pointer    m_BinaryTree;
     unsigned int   m_KNearestNeighbors;
     unsigned int   m_DataDimension;
-    
+
   private:
-    
+
     BinaryTreeSearchBase( const Self& );  // purposely not implemented
     void operator=( const Self& );        // purposely not implemented
 
   }; // end class BinaryTreeSearchBase
-    
-    
+
+
 } // end namespace itk
 
 

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -29,7 +29,7 @@ using namespace itk;
    *
    * This interpolator interpolates images with an underlying B-spline
    * polynomial. It only interpolates in the InputImageDimension - 1 dimensions
-   * of the image. 
+   * of the image.
    *
    * The parameters used in this class are:
    * \parameter Interpolator: Select this interpolator as follows:\n
@@ -49,28 +49,28 @@ using namespace itk;
       ReducedDimensionBSplineInterpolateImageFunction<
         ITK_TYPENAME InterpolatorBase<TElastix>::InputImageType,
         ITK_TYPENAME InterpolatorBase<TElastix>::CoordRepType,
-        double > , //CoefficientType 
+        double > , //CoefficientType
     public
       InterpolatorBase<TElastix>
-  { 
+  {
   public:
-  
+
     /** Standard ITK-stuff. */
     typedef ReducedDimensionBSplineInterpolator  Self;
     typedef ReducedDimensionBSplineInterpolateImageFunction<
       typename InterpolatorBase<TElastix>::InputImageType,
       typename InterpolatorBase<TElastix>::CoordRepType,
-      double >                                  Superclass1;    
-    typedef InterpolatorBase<TElastix>          Superclass2;    
+      double >                                  Superclass1;
+    typedef InterpolatorBase<TElastix>          Superclass2;
     typedef SmartPointer<Self>                  Pointer;
     typedef SmartPointer<const Self>            ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro(Self);
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( ReducedDimensionBSplineInterpolator, ReducedDimensionBSplineInterpolateImageFunction );
-    
+
     /** Name of this class.
      * Use this name in the parameter file to select this specific interpolator. \n
      * example: <tt>(Interpolator "ReducedDimensionBSplineInterpolator")</tt>\n
@@ -79,20 +79,20 @@ using namespace itk;
 
     /** Get the ImageDimension. */
     itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
-    
+
     /** Typedefs inherited from the superclass. */
     typedef typename Superclass1::OutputType                OutputType;
     typedef typename Superclass1::InputImageType            InputImageType;
     typedef typename Superclass1::IndexType                 IndexType;
     typedef typename Superclass1::ContinuousIndexType       ContinuousIndexType;
-    typedef typename Superclass1::PointType                 PointType;    
+    typedef typename Superclass1::PointType                 PointType;
     typedef typename Superclass1::Iterator                  Iterator;
     typedef typename Superclass1::CoefficientDataType       CoefficientDataType;
     typedef typename Superclass1::CoefficientImageType      CoefficientImageType;
     typedef typename Superclass1::CoefficientFilter         CoefficientFilter;
     typedef typename Superclass1::CoefficientFilterPointer  CoefficientFilterPointer;
     typedef typename Superclass1::CovariantVectorType       CovariantVectorType;
-    
+
     /** Typedefs inherited from Elastix. */
     typedef typename Superclass2::ElastixType               ElastixType;
     typedef typename Superclass2::ElastixPointer            ElastixPointer;
@@ -113,14 +113,14 @@ using namespace itk;
     ReducedDimensionBSplineInterpolator() {}
     /** The destructor. */
     virtual ~ReducedDimensionBSplineInterpolator() {}
-    
+
   private:
 
     /** The private constructor. */
     ReducedDimensionBSplineInterpolator( const Self& ); // purposely not implemented
     /** The private copy constructor. */
     void operator=( const Self& );      // purposely not implemented
-      
+
   }; // end class ReducedDimensionBSplineInterpolator
 
 

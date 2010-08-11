@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -115,11 +115,11 @@ MovingImagePyramidBase<TElastix>
   this->GetAsITKBaseType()->SetNumberOfLevels( numberOfResolutions );
   ScheduleType movingSchedule = this->GetAsITKBaseType()->GetSchedule();
 
-  /** Set the movingPyramidSchedule to the MovingImagePyramidSchedule given 
+  /** Set the movingPyramidSchedule to the MovingImagePyramidSchedule given
    * in the parameter-file. The following parameter file fields can be used:
    * ImagePyramidSchedule
    * MovingImagePyramidSchedule
-   * MovingImagePyramid<i>Schedule, for the i-th moving image pyramid used. 
+   * MovingImagePyramid<i>Schedule, for the i-th moving image pyramid used.
    */
   bool found = true;
   for ( unsigned int i = 0; i < numberOfResolutions; i++ )

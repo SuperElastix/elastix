@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -26,12 +26,12 @@ using namespace itk;
   /**
    * \class ReducedDimensionGridSampler
    * \brief An interpolator based on the itk::ReducedDimensionImageGridSampler.
-   * 
+   *
    * This image sampler samples voxels on a uniform grid, but ignores the
    * user-defined dimension during sampling and sets it to the given index.
    * This sampler is in most cases not recommended.
-   * 
-   * This sampler does not react on the 
+   *
+   * This sampler does not react on the
    * NewSamplesEveryIteration parameter.
    *
    * The parameters used in this class are:
@@ -47,26 +47,26 @@ using namespace itk;
     class ReducedDimensionGridSampler :
     public
       ReducedDimensionImageGridSampler<
-      ITK_TYPENAME elx::ImageSamplerBase<TElastix>::InputImageType >, 
+      ITK_TYPENAME elx::ImageSamplerBase<TElastix>::InputImageType >,
     public
       elx::ImageSamplerBase<TElastix>
-  { 
+  {
   public:
-  
+
     /** Standard ITK-stuff. */
     typedef ReducedDimensionGridSampler         Self;
     typedef ReducedDimensionImageGridSampler<
-      typename elx::ImageSamplerBase<TElastix>::InputImageType >  Superclass1;    
-    typedef elx::ImageSamplerBase<TElastix>     Superclass2;    
+      typename elx::ImageSamplerBase<TElastix>::InputImageType >  Superclass1;
+    typedef elx::ImageSamplerBase<TElastix>     Superclass2;
     typedef SmartPointer<Self>                  Pointer;
     typedef SmartPointer<const Self>            ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro(Self);
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( ReducedDimensionGridSampler, ReducedDimensionImageGridSampler );
-    
+
     /** Name of this class.
      * Use this name in the parameter file to select this specific interpolator. \n
      * example: <tt>(ImageSampler "ReducedDimensionGrid")</tt>\n
@@ -86,13 +86,13 @@ using namespace itk;
     typedef typename Superclass1::ImageSampleContainerType     ImageSampleContainerType;
     typedef typename Superclass1::MaskType                     MaskType;
     typedef typename Superclass1::InputImageIndexType          InputImageIndexType;
-    typedef typename Superclass1::InputImagePointType          InputImagePointType; 
+    typedef typename Superclass1::InputImagePointType          InputImagePointType;
     typedef typename Superclass1::SampleGridSpacingType        GridSpacingType;
     typedef typename Superclass1::SampleGridSpacingValueType   SampleGridSpacingValueType;
 
     /** The input image dimension. */
     itkStaticConstMacro( InputImageDimension, unsigned int, Superclass1::InputImageDimension );
-    
+
     /** Typedefs inherited from Elastix. */
     typedef typename Superclass2::ElastixType               ElastixType;
     typedef typename Superclass2::ElastixPointer            ElastixPointer;
@@ -118,14 +118,14 @@ using namespace itk;
     ReducedDimensionGridSampler() {}
     /** The destructor. */
     virtual ~ReducedDimensionGridSampler() {}
-    
+
   private:
 
     /** The private constructor. */
     ReducedDimensionGridSampler( const Self& ); // purposely not implemented
     /** The private copy constructor. */
     void operator=( const Self& );      // purposely not implemented
-      
+
   }; // end class GridSampler
 
 

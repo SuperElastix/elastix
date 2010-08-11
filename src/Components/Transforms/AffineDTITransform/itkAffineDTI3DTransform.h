@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -29,7 +29,7 @@ namespace itk
  *
  * This transform applies an affine transformation, but is parameterized by
  * angles, shear factors, scales, and translation, instead of by the affine matrix.
- * It is meant for registration of MR diffusion weighted images, but could be 
+ * It is meant for registration of MR diffusion weighted images, but could be
  * used for other images as well of course.
  *
  * The affine model is adopted from the following paper:
@@ -40,14 +40,14 @@ namespace itk
  *   T(x) = R G S (x-c) + t\n
  * with:
  *   - R = Rx Ry Rz (rotation matrices)
- *   - G = Gx Gy Gz (shear matrices) 
+ *   - G = Gx Gy Gz (shear matrices)
  *   - S = diag( [sx sy sz] ) (scaling matrix)
  *   - c = center of rotation
  *   - t = translation
  * See [1] for exact expressions for Rx, Gx etc.
- *  
- * Using this model, the rotation components can be easily extracted an applied 
- * to the B-matrix. 
+ *
+ * Using this model, the rotation components can be easily extracted an applied
+ * to the B-matrix.
  *
  * The parameters are ordered as follows:
  * <tt>[ AngleX AngleY AngleZ ShearX ShearY ShearZ ScaleX ScaleY ScaleZ TranslationX TranslationY TranslationZ ]</tt>
@@ -58,8 +58,8 @@ namespace itk
  * \ingroup Transforms
  */
 template < class TScalarType=double >    // Data type for scalars (float or double)
-class ITK_EXPORT AffineDTI3DTransform : 
-     public AdvancedMatrixOffsetTransformBase< TScalarType,3,3 > 
+class ITK_EXPORT AffineDTI3DTransform :
+     public AdvancedMatrixOffsetTransformBase< TScalarType,3,3 >
 {
 public:
   /** Standard class typedefs. */
@@ -67,7 +67,7 @@ public:
   typedef AdvancedMatrixOffsetTransformBase< TScalarType,3,3 >   Superclass;
   typedef SmartPointer<Self>                Pointer;
   typedef SmartPointer<const Self>          ConstPointer;
-    
+
   /** New macro for creation of through a Smart Pointer. */
   itkNewMacro( Self );
 
@@ -97,7 +97,7 @@ public:
   typedef typename Superclass::TranslationType            TranslationType;
   typedef typename Superclass::OffsetType                 OffsetType;
   typedef typename Superclass::ScalarType                 AngleType;
-  
+
   typedef typename Superclass
     ::NonZeroJacobianIndicesType                    NonZeroJacobianIndicesType;
   typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
@@ -109,7 +109,7 @@ public:
   typedef typename Superclass::InternalMatrixType   InternalMatrixType;
 
   typedef FixedArray< ScalarType >                  ScalarArrayType;
-  
+
   /** Set/Get the transformation from a container of parameters
    * This is typically used by optimizers.  There are 12 parameters.
    * [ Rx Ry Rz Gx Gy Gz Sx Sy Sz Tx Ty Tz ]
@@ -117,7 +117,7 @@ public:
    */
   void SetParameters( const ParametersType & parameters );
   const ParametersType & GetParameters(void) const;
-  
+
   /** Compute the Jacobian of the transformation. */
   virtual void GetJacobian(
     const InputPointType &,
@@ -142,7 +142,7 @@ protected:
     ScalarArrayType angle,
     ScalarArrayType shear,
     ScalarArrayType scale );
- 
+
   /** Compute the components of the rotation matrix in the superclass. */
   void ComputeMatrix(void);
   void ComputeMatrixParameters(void);
@@ -155,9 +155,9 @@ private:
   void operator=(const Self&); //purposely not implemented
 
   ScalarArrayType m_Angle;
-  ScalarArrayType m_Shear; 
-  ScalarArrayType m_Scale; 
-  
+  ScalarArrayType m_Shear;
+  ScalarArrayType m_Scale;
+
 }; //class AffineDTI3DTransform
 
 

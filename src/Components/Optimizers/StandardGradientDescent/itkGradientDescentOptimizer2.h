@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -26,10 +26,10 @@ namespace itk
   * GradientDescentOptimizer2 implements a simple gradient descent optimizer.
   * At each iteration the current position is updated according to
   *
-  * \f[ 
-  *        p_{n+1} = p_n 
-  *                + \mbox{learningRate} 
-  \, \frac{\partial f(p_n) }{\partial p_n} 
+  * \f[
+  *        p_{n+1} = p_n
+  *                + \mbox{learningRate}
+  \, \frac{\partial f(p_n) }{\partial p_n}
   * \f]
   *
   * The learning rate is a fixed scalar defined via SetLearningRate().
@@ -42,11 +42,11 @@ namespace itk
   * The difference of this class with the itk::GradientDescentOptimizer
   * is that it's based on the ScaledSingleValuedNonLinearOptimizer
   *
-  * \sa ScaledSingleValuedNonLinearOptimizer 
-  * 
+  * \sa ScaledSingleValuedNonLinearOptimizer
+  *
   * \ingroup Numerics Optimizers
-  */  
-  class GradientDescentOptimizer2 : 
+  */
+  class GradientDescentOptimizer2 :
     public ScaledSingleValuedNonLinearOptimizer
   {
   public:
@@ -71,7 +71,7 @@ namespace itk
     typedef Superclass::ScaledCostFunctionType    ScaledCostFunctionType;
     typedef Superclass::ScaledCostFunctionPointer ScaledCostFunctionPointer;
 
-    /** Codes of stopping conditions 
+    /** Codes of stopping conditions
      * The MinimumStepSize stopcondition never occurs, but may
      * be implemented in inheriting classes */
     typedef enum {
@@ -127,7 +127,7 @@ namespace itk
     void PrintSelf(std::ostream& os, Indent indent) const;
 
     // made protected so subclass can access
-    DerivativeType                m_Gradient; 
+    DerivativeType                m_Gradient;
     double                        m_LearningRate;
     StopConditionType             m_StopCondition;
 
@@ -136,8 +136,8 @@ namespace itk
     void operator=(const Self&); //purposely not implemented
 
     bool                          m_Stop;
-    double                        m_Value; 
-    
+    double                        m_Value;
+
     unsigned long                 m_NumberOfIterations;
     unsigned long                 m_CurrentIteration;
 

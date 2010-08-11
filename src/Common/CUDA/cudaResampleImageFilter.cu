@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -405,7 +405,7 @@ TOutputImageType* cuda::cudaCastToType( cudaExtent& volumeExtent,
     else
     {
       TOutputImageType* tmp = cuda::cudaMalloc<TOutputImageType>( voxelsPerSlice );
-      
+
       /* Process each slice separately, cast/copy in kernel and copy results to host. */
       for ( int slice = 0; slice != volumeExtent.depth; ++slice, offset += voxelsPerSlice )
       {

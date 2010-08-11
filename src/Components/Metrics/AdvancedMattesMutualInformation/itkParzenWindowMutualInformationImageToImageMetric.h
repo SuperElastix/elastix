@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -21,13 +21,13 @@
 
 namespace itk
 {
-  
+
   /**
    * \class ParzenWindowMutualInformationImageToImageMetric
-   * \brief Computes the mutual information between two images to be 
+   * \brief Computes the mutual information between two images to be
    * registered using the method of Mattes et al.
    *
-   * ParzenWindowMutualInformationImageToImageMetric computes the mutual 
+   * ParzenWindowMutualInformationImageToImageMetric computes the mutual
    * information between a fixed and moving image to be registered.
    *
    * The calculations are based on the method of Mattes et al. [1,2],
@@ -39,7 +39,7 @@ namespace itk
    * Construction of the PDFs is implemented in the superclass
    * ParzenWindowHistogramImageToImageMetric.
    *
-   * This implementation of the MattesMutualInformation is based on the 
+   * This implementation of the MattesMutualInformation is based on the
    * AdvancedImageToImageMetric, which means that:
    * \li It uses the ImageSampler-framework
    * \li It makes use of the compact support of B-splines, in case of B-spline transforms.
@@ -73,24 +73,24 @@ namespace itk
   public ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
   {
   public:
-    
+
     /** Standard class typedefs. */
     typedef ParzenWindowMutualInformationImageToImageMetric             Self;
     typedef ParzenWindowHistogramImageToImageMetric<
       TFixedImage, TMovingImage >                                       Superclass;
     typedef SmartPointer<Self>                                          Pointer;
     typedef SmartPointer<const Self>                                    ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro(
-      ParzenWindowMutualInformationImageToImageMetric, 
+      ParzenWindowMutualInformationImageToImageMetric,
       ParzenWindowHistogramImageToImageMetric );
 
     /** Typedefs from the superclass. */
-    typedef typename 
+    typedef typename
       Superclass::CoordinateRepresentationType              CoordinateRepresentationType;
     typedef typename Superclass::MovingImageType            MovingImageType;
     typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
@@ -125,7 +125,7 @@ namespace itk
     typedef typename Superclass::ImageSamplerType           ImageSamplerType;
     typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
     typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
-    typedef typename 
+    typedef typename
       Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
     typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
     typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
@@ -135,7 +135,7 @@ namespace itk
       Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
     typedef typename
       Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
-    
+
     /** The fixed image dimension. */
     itkStaticConstMacro( FixedImageDimension, unsigned int,
       FixedImageType::ImageDimension );
@@ -143,7 +143,7 @@ namespace itk
     /** The moving image dimension. */
     itkStaticConstMacro( MovingImageDimension, unsigned int,
       MovingImageType::ImageDimension );
-          
+
     /**  Get the value. */
     MeasureType GetValue( const ParametersType& parameters ) const;
 
@@ -152,7 +152,7 @@ namespace itk
     itkSetMacro( UseJacobianPreconditioning, bool );
 
   protected:
-    
+
     /** The constructor. */
     ParzenWindowMutualInformationImageToImageMetric();
 
@@ -160,7 +160,7 @@ namespace itk
     virtual ~ParzenWindowMutualInformationImageToImageMetric() {};
 
     /** Protected Typedefs ******************/
-  
+
     /** Typedefs inherited from superclass */
     typedef typename Superclass::FixedImageIndexType                FixedImageIndexType;
     typedef typename Superclass::FixedImageIndexValueType           FixedImageIndexValueType;
@@ -170,7 +170,7 @@ namespace itk
     typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
     typedef typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
     typedef typename Superclass::CentralDifferenceGradientFilterType        CentralDifferenceGradientFilterType;
-    typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;   
+    typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
     typedef typename Superclass::PDFValueType                       PDFValueType;
     typedef typename Superclass::MarginalPDFType                    MarginalPDFType;
     typedef typename Superclass::JointPDFType                       JointPDFType;
@@ -190,7 +190,7 @@ namespace itk
      * Called by GetValueAndDerivative if UseFiniteDifferenceDerivative == false.
      */
     virtual void GetValueAndAnalyticDerivative(
-      const ParametersType& parameters, 
+      const ParametersType& parameters,
       MeasureType& value, DerivativeType& derivative ) const;
 
     /** Get the value and analytic derivatives for single valued optimizers.
@@ -204,11 +204,11 @@ namespace itk
     /**  Get the value and finite difference derivatives for single valued optimizers.
      * Called by GetValueAndDerivative if UseFiniteDifferenceDerivative == true.
      */
-    virtual void GetValueAndFiniteDifferenceDerivative( const ParametersType& parameters, 
+    virtual void GetValueAndFiniteDifferenceDerivative( const ParametersType& parameters,
       MeasureType& value, DerivativeType& derivative ) const;
 
     /** Compute terms to implement preconditioning as proposed by Tustison et al. */
-    virtual void ComputeJacobianPreconditioner( 
+    virtual void ComputeJacobianPreconditioner(
       const TransformJacobianType & jac,
       const NonZeroJacobianIndicesType & nzji,
       DerivativeType & preconditioner,
@@ -216,9 +216,9 @@ namespace itk
 
     /** Some initialization functions, called by Initialize. */
     virtual void InitializeHistograms( void );
-  
+
   private:
-    
+
     /** The private constructor. */
     ParzenWindowMutualInformationImageToImageMetric( const Self& ); // purposely not implemented
     /** The private copy constructor. */

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -27,9 +27,9 @@ using namespace itk;
    * \class DisplacementMagnitudePenalty
    * \brief A penalty term that penalises ||T(x)-x||.
    *
-   * This penalty term may look a little unusual, but it can 
-   * be used as a way to compute an inverse transform, by supplying 
-   * the transform to be inverted as an initial transform and 
+   * This penalty term may look a little unusual, but it can
+   * be used as a way to compute an inverse transform, by supplying
+   * the transform to be inverted as an initial transform and
    * setting the HowToCombineTransforms parameter to "Compose".
    *
    * The parameters used in this class are:
@@ -58,13 +58,13 @@ using namespace itk;
     typedef MetricBase<TElastix>                          Superclass2;
     typedef SmartPointer<Self>                            Pointer;
     typedef SmartPointer<const Self>                      ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( DisplacementMagnitudePenalty, DisplacementMagnitudePenaltyTerm );
-    
+
     /** Name of this class.
      * Use this name in the parameter file to select this specific metric. \n
      * example: <tt>(Metric "DisplacementMagnitudePenalty")</tt>\n
@@ -72,7 +72,7 @@ using namespace itk;
     elxClassNameMacro( "DisplacementMagnitudePenalty" );
 
     /** Typedefs from the superclass. */
-    typedef typename 
+    typedef typename
       Superclass1::CoordinateRepresentationType              CoordinateRepresentationType;
     typedef typename Superclass1::MovingImageType            MovingImageType;
     typedef typename Superclass1::MovingImagePixelType       MovingImagePixelType;
@@ -106,7 +106,7 @@ using namespace itk;
     typedef typename Superclass1::ImageSamplerType           ImageSamplerType;
     typedef typename Superclass1::ImageSamplerPointer        ImageSamplerPointer;
     typedef typename Superclass1::ImageSampleContainerType   ImageSampleContainerType;
-    typedef typename 
+    typedef typename
       Superclass1::ImageSampleContainerPointer               ImageSampleContainerPointer;
     typedef typename Superclass1::FixedImageLimiterType      FixedImageLimiterType;
     typedef typename Superclass1::MovingImageLimiterType     MovingImageLimiterType;
@@ -114,7 +114,7 @@ using namespace itk;
       Superclass1::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
     typedef typename
       Superclass1::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
-    
+
     /** The fixed image dimension. */
     itkStaticConstMacro( FixedImageDimension, unsigned int,
       FixedImageType::ImageDimension );
@@ -122,7 +122,7 @@ using namespace itk;
     /** The moving image dimension. */
     itkStaticConstMacro( MovingImageDimension, unsigned int,
       MovingImageType::ImageDimension );
-    
+
     /** Typedef's inherited from elastix. */
     typedef typename Superclass2::ElastixType               ElastixType;
     typedef typename Superclass2::ElastixPointer            ElastixPointer;
@@ -131,12 +131,12 @@ using namespace itk;
     typedef typename Superclass2::RegistrationType          RegistrationType;
     typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
     typedef typename Superclass2::ITKBaseType               ITKBaseType;
-      
+
     /** Typedef for timer. */
     typedef tmr::Timer          TimerType;
     /** Typedef for timer. */
     typedef TimerType::Pointer  TimerPointer;
-  
+
     /** Sets up a timer to measure the initialisation time and
      * calls the Superclass' implementation.
      */
@@ -156,7 +156,7 @@ using namespace itk;
     DisplacementMagnitudePenalty( const Self& ); // purposely not implemented
     /** The private copy constructor. */
     void operator=( const Self& );              // purposely not implemented
-    
+
   }; // end class DisplacementMagnitudePenalty
 
 

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -40,7 +40,7 @@ namespace itk
   /**
    * ******************* GenerateData *******************
    */
-  
+
   template< class TInputImage >
     void
     ImageRandomSamplerSparseMask< TInputImage >
@@ -52,7 +52,7 @@ namespace itk
 
     /** Clear the container. */
     sampleContainer->Initialize();
-    
+
     /** Make sure the internal full sampler is up-to-date. */
     this->m_InternalFullSampler->SetInput( inputImage );
     this->m_InternalFullSampler->SetMask( this->GetMask() );
@@ -104,7 +104,7 @@ namespace itk
   /**
    * ******************* PrintSelf *******************
    */
-  
+
   template< class TInputImage >
     void
     ImageRandomSamplerSparseMask< TInputImage >

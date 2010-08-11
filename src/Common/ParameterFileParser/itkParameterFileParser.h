@@ -6,7 +6,7 @@ Copyright (c) University Medical Center Utrecht. All rights reserved.
 See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
 details.
 
-This software is distributed WITHOUT ANY WARRANTY; without even 
+This software is distributed WITHOUT ANY WARRANTY; without even
 the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
@@ -27,7 +27,7 @@ PURPOSE. See the above copyright notices for more information.
 
 namespace itk
 {
-  
+
 /** \class ParameterFileParser
  *
  * \brief Implements functionality to read a parameter file.
@@ -40,7 +40,7 @@ namespace itk
  *      values, all separated by spaces\n
  * 4) Values that are strings should be quoted using "\n
  * 5) Values that are numbers should be unquoted\n
- * 
+ *
  * For example: \n
  * (ParameterName1 "string1" "string2")\n
  * (ParameterName2 3 5.8)\n
@@ -77,13 +77,13 @@ namespace itk
 class ParameterFileParser : public Object
 {
 public:
- 
+
   /** Standard ITK typedefs. */
   typedef ParameterFileParser         Self;
   typedef Object                      Superclass;
   typedef SmartPointer< Self >        Pointer;
   typedef SmartPointer< const Self >  ConstPointer;
-  
+
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
 

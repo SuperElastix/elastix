@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -34,8 +34,8 @@ namespace itk
  * \ingroup Metrics
  */
 
-template < class TFixedImage, class TMovingImage > 
-class ZeroDeformationConstraintMetric : 
+template < class TFixedImage, class TMovingImage >
+class ZeroDeformationConstraintMetric :
     public TransformPenaltyTerm< TFixedImage, TMovingImage>
 {
 public:
@@ -49,14 +49,14 @@ public:
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
- 
+
   /** Run-time type information (and related methods). */
   itkTypeMacro( VarianceOverLastDimensionImageMetric, AdvancedImageToImageMetric );
 
   /** Set functions. */
   itkSetMacro( CurrentPenaltyTermMultiplier, float );
   itkSetMacro( InitialLangrangeMultiplier, float );
-  
+
   /** Get functions. */
   itkGetConstMacro( CurrentPenaltyTermMultiplier, float );
   itkGetConstMacro( CurrentMaximumAbsoluteDisplacement, float );
@@ -66,9 +66,9 @@ public:
   float GetCurrentPenaltyTermValue ( const int i ) const {
     return m_CurrentPenaltyTermValues[ i ];
   }
-  
+
   /** Typedefs from the superclass. */
-  typedef typename 
+  typedef typename
     Superclass::CoordinateRepresentationType              CoordinateRepresentationType;
   typedef typename Superclass::MovingImageType            MovingImageType;
   typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
@@ -102,7 +102,7 @@ public:
   typedef typename Superclass::ImageSamplerType           ImageSamplerType;
   typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
   typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
-  typedef typename 
+  typedef typename
     Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
   typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
   typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
@@ -122,7 +122,7 @@ public:
   /** The moving image dimension. */
   itkStaticConstMacro( MovingImageDimension, unsigned int,
     MovingImageType::ImageDimension );
-  
+
   /** Get the value for single valued optimizers. */
   virtual MeasureType GetValue( const TransformParametersType & parameters ) const;
 
@@ -158,7 +158,7 @@ protected:
   typedef typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
   typedef typename Superclass::CentralDifferenceGradientFilterType CentralDifferenceGradientFilterType;
   typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
-  
+
   /** Current penalty term value. */
   mutable std::vector< float > m_CurrentPenaltyTermValues;
 

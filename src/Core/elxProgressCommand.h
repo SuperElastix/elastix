@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -21,13 +21,13 @@
 namespace elastix
 {
   using namespace itk;
-  
+
   /**
    * \class ProgressCommand
    * \brief A specialized Command object for updating the progress of a
    *  filter.
    *
-   * There are 3 ways to use this class. 
+   * There are 3 ways to use this class.
    *
    * \li Whenever a filter, such as the itk::ResampleImageFilter, supports
    * a ProgressReporter, this class can be employed. This class makes
@@ -49,7 +49,7 @@ namespace elastix
    * \li In manually written loops, a call to UpdateAndPrintProgress() can be included.
    * Before the loop, the user should set the total number of loops, and the frequency
    * that the progress message should be printed with. For example
-   * 
+   *
    *   ProgressCommandType::Pointer command = ProgressCommandType::New();
    *   command->SetUpdateFrequency( maxnrofvoxels, 100 );
    *   command->SetStartString( "  Progress: " );
@@ -60,9 +60,9 @@ namespace elastix
    *     command->UpdateAndPrintProgress( i );
    *   }
    *   command->PrintProgress(1.0); // make sure the 100% is reached
-   * 
+   *
    * \li The last possibility is to directly use the PrintProgress function:
-   * 
+   *
    *   ProgressCommandType::Pointer command = ProgressCommandType::New();
    *   command->SetStartString( "  Progress: " );
    *   command->SetEndString( "%" );
@@ -75,7 +75,7 @@ namespace elastix
    *   writer->Update();
    *   command->PrintProgress( 1.0 );
    *   // example assumes reader, caster and writer have been configured before
-   *   
+   *
    *
    * //\ingroup ?
    */
@@ -113,14 +113,14 @@ public:
   virtual void Execute( Object *caller, const EventObject &event );
   virtual void Execute( const Object *caller, const EventObject &event );
 
-  /** Print the progress to screen. A float value between 0.0 and 1.0 
+  /** Print the progress to screen. A float value between 0.0 and 1.0
    * is expected as input.
    */
   virtual void PrintProgress( const float & progress ) const;
 
-  /** Update and possibly print the progress to screen. 
-   * The progress information on screen is refreshed according to the 
-   * UpdateFrequency, which is assumed being specified beforehand using the 
+  /** Update and possibly print the progress to screen.
+   * The progress information on screen is refreshed according to the
+   * UpdateFrequency, which is assumed being specified beforehand using the
    * SetUpdateFrequency function.
    */
   virtual void UpdateAndPrintProgress( const unsigned long & currentVoxelNumber ) const;
@@ -135,7 +135,7 @@ public:
 
   /** Get a boolean indicating if the output is a console. */
   itkGetConstReferenceMacro( StreamOutputIsConsole, bool );
-  
+
 protected:
 
   /** The constructor. */
@@ -143,9 +143,9 @@ protected:
 
   /** The destructor. */
   virtual ~ProgressCommand();
-  
+
 private:
-  
+
   /** Member variables to define a start and end string for printing. */
   std::string m_StartString;
   std::string m_EndString;
@@ -159,7 +159,7 @@ private:
   /** Member variables that define the update frequency. */
   unsigned long m_NumberOfVoxels;
   unsigned long m_NumberOfUpdates;
-  
+
 }; // end class ProgressCommand
 
 } // end namespace elastix

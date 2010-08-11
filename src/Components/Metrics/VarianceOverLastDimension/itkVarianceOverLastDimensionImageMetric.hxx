@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -27,7 +27,7 @@ namespace itk
   * ******************* Constructor *******************
   */
 
-  template <class TFixedImage, class TMovingImage> 
+  template <class TFixedImage, class TMovingImage>
     VarianceOverLastDimensionImageMetric<TFixedImage,TMovingImage>
       ::VarianceOverLastDimensionImageMetric():
         m_SampleLastDimensionRandomly( false ),
@@ -57,15 +57,15 @@ namespace itk
     /** Retrieve slowest varying dimension and its size. */
     const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
     const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
-    
+
     /** Check num last samples. */
-    if ( this->m_NumSamplesLastDimension > lastDimSize ) 
+    if ( this->m_NumSamplesLastDimension > lastDimSize )
     {
       this->m_NumSamplesLastDimension = lastDimSize;
     }
 
     /** Compute variance over last dimension for complete image to use as normalization factor. */
-    ImageLinearConstIteratorWithIndex< MovingImageType > it( this->GetMovingImage(), 
+    ImageLinearConstIteratorWithIndex< MovingImageType > it( this->GetMovingImage(),
                                          this->GetMovingImage()->GetLargestPossibleRegion() );
     it.SetDirection( lastDim );
     it.GoToBegin();
@@ -94,17 +94,17 @@ namespace itk
 
       it.NextLine();
     }
-    
+
     /** Compute average variance. */
     this->m_InitialVariance = sumvar / static_cast< float > ( num );
-  
+
   } // end Initialize
 
 
   /**
    * ******************* PrintSelf *******************
    */
-  template < class TFixedImage, class TMovingImage> 
+  template < class TFixedImage, class TMovingImage>
     void
     VarianceOverLastDimensionImageMetric<TFixedImage,TMovingImage>
     ::PrintSelf(std::ostream& os, Indent indent) const
@@ -116,7 +116,7 @@ namespace itk
   /**
   * ******************* SampleRandom *******************
   */
-  template < class TFixedImage, class TMovingImage> 
+  template < class TFixedImage, class TMovingImage>
   void
     VarianceOverLastDimensionImageMetric<TFixedImage,TMovingImage>
     ::SampleRandom ( const int n, const int m, std::vector<int> & numbers ) const
@@ -152,8 +152,8 @@ namespace itk
   template < class TFixedImage, class TMovingImage >
     void
     VarianceOverLastDimensionImageMetric<TFixedImage,TMovingImage>
-    ::EvaluateTransformJacobianInnerProduct( 
-    const TransformJacobianType & jacobian, 
+    ::EvaluateTransformJacobianInnerProduct(
+    const TransformJacobianType & jacobian,
     const MovingImageDerivativeType & movingImageDerivative,
     DerivativeType & imageJacobian ) const
   {
@@ -166,7 +166,7 @@ namespace itk
     {
       const double imDeriv = movingImageDerivative[ dim ];
       DerivativeIteratorType imjac = imageJacobian.begin();
-            
+
       for ( unsigned int mu = 0; mu < sizeImageJacobian; mu++ )
       {
         (*imjac) += (*jac) * imDeriv;
@@ -181,13 +181,13 @@ namespace itk
    * ******************* GetValue *******************
    */
 
-  template <class TFixedImage, class TMovingImage> 
+  template <class TFixedImage, class TMovingImage>
     typename VarianceOverLastDimensionImageMetric<TFixedImage,TMovingImage>::MeasureType
     VarianceOverLastDimensionImageMetric<TFixedImage,TMovingImage>
     ::GetValue( const TransformParametersType & parameters ) const
   {
     itkDebugMacro( "GetValue( " << parameters << " ) " );
-    
+
     /** Initialize some variables */
     this->m_NumberOfPixelsCounted = 0;
     MeasureType measure = NumericTraits< MeasureType >::Zero;
@@ -212,7 +212,7 @@ namespace itk
     /** Vector containing last dimension positions to use: initialize on all positions when random sampling turned off. */
     std::vector<int> lastDimPositions;
     if ( !this->m_SampleLastDimensionRandomly ) {
-      for ( unsigned int i = 0; i < lastDimSize; ++i ) 
+      for ( unsigned int i = 0; i < lastDimSize; ++i )
       {
         lastDimPositions.push_back( i );
       }
@@ -225,7 +225,7 @@ namespace itk
       FixedImagePointType fixedPoint = (*fiter).Value().m_ImageCoordinates;
 
       /** Determine random last dimension positions if needed. */
-      if ( this->m_SampleLastDimensionRandomly ) 
+      if ( this->m_SampleLastDimensionRandomly )
       {
         SampleRandom( numLastDimSamples, lastDimSize, lastDimPositions );
       }
@@ -250,14 +250,14 @@ namespace itk
 
         /** Transform sampled point back to world coordinates. */
         this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
-        
+
         /** Transform point and check if it is inside the bspline support region. */
         bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
         /** Check if point is inside mask. */
-        if ( sampleOk ) 
+        if ( sampleOk )
         {
-          sampleOk = this->IsInsideMovingMask( mappedPoint );        
+          sampleOk = this->IsInsideMovingMask( mappedPoint );
         }
 
         /** Compute the moving image value and check if the point is
@@ -301,13 +301,13 @@ namespace itk
     return measure;
 
   } // end GetValue
-  
+
 
   /**
    * ******************* GetDerivative *******************
    */
 
-  template < class TFixedImage, class TMovingImage> 
+  template < class TFixedImage, class TMovingImage>
     void
     VarianceOverLastDimensionImageMetric<TFixedImage,TMovingImage>
     ::GetDerivative( const TransformParametersType & parameters,
@@ -330,11 +330,11 @@ namespace itk
   template <class TFixedImage, class TMovingImage>
     void
     VarianceOverLastDimensionImageMetric<TFixedImage,TMovingImage>
-    ::GetValueAndDerivative( const TransformParametersType & parameters, 
+    ::GetValueAndDerivative( const TransformParametersType & parameters,
     MeasureType & value, DerivativeType & derivative ) const
   {
     itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
-    
+
     /** Define derivative and Jacobian types. */
     typedef typename DerivativeType::ValueType        DerivativeValueType;
     typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
@@ -344,7 +344,7 @@ namespace itk
     MeasureType measure = NumericTraits< MeasureType >::Zero;
     derivative = DerivativeType( this->GetNumberOfParameters() );
     derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
-    
+
     /** Make sure the transform parameters are up to date. */
     this->SetTransformParameters( parameters );
 
@@ -359,13 +359,13 @@ namespace itk
 
     /** Retrieve slowest varying dimension and its size. */
     const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
-    const unsigned int lastDimSize = 
+    const unsigned int lastDimSize =
       this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
 
     /** Vector containing last dimension positions to use: initialize on all positions when random sampling turned off. */
     std::vector<int> lastDimPositions;
     if ( this->m_SampleLastDimensionRandomly ) {
-      for ( unsigned int i = 0; i < lastDimSize; ++i ) 
+      for ( unsigned int i = 0; i < lastDimSize; ++i )
       {
         lastDimPositions.push_back( i );
       }
@@ -373,13 +373,13 @@ namespace itk
 
     /** Create variables to store intermediate results in. */
     TransformJacobianType jacobian;
-    DerivativeType imageJacobian( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );      
+    DerivativeType imageJacobian( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
 
     /** Get real last dim samples. */
     const unsigned int realNumLastDimPositions = this->m_SampleLastDimensionRandomly ? this->m_NumSamplesLastDimension + this->m_NumAdditionalSamplesFixed : lastDimSize;
 
     /** Variable to store and nzjis. */
-    std::vector<NonZeroJacobianIndicesType> nzjis ( 
+    std::vector<NonZeroJacobianIndicesType> nzjis (
       realNumLastDimPositions, NonZeroJacobianIndicesType() );
 
     std::vector< RealType > MT ( realNumLastDimPositions );
@@ -392,7 +392,7 @@ namespace itk
       FixedImagePointType fixedPoint = (*fiter).Value().m_ImageCoordinates;
 
       /** Determine random last dimension positions if needed. */
-      if ( this->m_SampleLastDimensionRandomly ) 
+      if ( this->m_SampleLastDimensionRandomly )
       {
         SampleRandom( this->m_NumSamplesLastDimension, lastDimSize, lastDimPositions );
       }
@@ -410,7 +410,7 @@ namespace itk
       unsigned int numSamplesOk = 0;
 
       /** First loop over t: compute M(T(x,t)), dM(T(x,t))/dmu, nzji and store. */
-      for ( unsigned int d = 0; d < realNumLastDimPositions; ++d ) 
+      for ( unsigned int d = 0; d < realNumLastDimPositions; ++d )
       {
         /** Initialize some variables. */
         RealType movingImageValue;
@@ -427,7 +427,7 @@ namespace itk
         /** Check if point is inside mask. */
         if ( sampleOk )
         {
-          sampleOk = this->IsInsideMovingMask( mappedPoint );        
+          sampleOk = this->IsInsideMovingMask( mappedPoint );
         }
 
         /** Compute the moving image value and check if the point is
@@ -449,15 +449,15 @@ namespace itk
           this->EvaluateTransformJacobian( fixedPoint, jacobian, nzjis[ d ] );
 
           /** Compute the innerproduct (dM/dx)^T (dT/dmu). */
-          this->EvaluateTransformJacobianInnerProduct( 
+          this->EvaluateTransformJacobianInnerProduct(
             jacobian, movingImageDerivative, imageJacobian );
 
           /** Store values. */
           MT[ d ] = movingImageValue;
           dMTdmu[ d ] = imageJacobian;
 
-        } 
-        else 
+        }
+        else
         {
           dMTdmu[ d ] = DerivativeType( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
           dMTdmu[ d ].Fill( itk::NumericTraits< DerivativeValueType >::Zero );
@@ -468,15 +468,15 @@ namespace itk
       if ( numSamplesOk > 0 )
       {
         this->m_NumberOfPixelsCounted++;
-        
+
         /** Compute average intensity value. */
         const float expectedValue = sumValues / static_cast< float > ( numSamplesOk );
         /** Add this variance to the variance sum. */
         const float expectedSquaredValue = sumValuesSquared / static_cast< float > ( numSamplesOk );
         measure += expectedSquaredValue - expectedValue * expectedValue;
-        
+
         /** Second loop over t: update derivative. */
-        for ( unsigned int d = 0; d < realNumLastDimPositions; ++d ) 
+        for ( unsigned int d = 0; d < realNumLastDimPositions; ++d )
         {
           for ( unsigned int j = 0; j < nzjis[ d ].size(); ++j )
           {
@@ -486,21 +486,21 @@ namespace itk
 
       }
     } // end for loop over the image sample container
-    
+
     /** Check if enough samples were valid. */
     this->CheckNumberOfSamples(
       sampleContainer->Size(), this->m_NumberOfPixelsCounted );
-    
+
     /** Compute average over variances and normalize with initial variance. */
     measure /= static_cast< float >( this->m_NumberOfPixelsCounted * this->m_InitialVariance );
     derivative /= static_cast< float >( this->m_NumberOfPixelsCounted * this->m_InitialVariance );
-    
+
     /** Subtract mean from derivative elements. */
     if ( this->m_SubtractMean )
     {
       if ( ! this->m_TransformIsStackTransform )
       {
-        /** Update derivative per dimension. 
+        /** Update derivative per dimension.
          * Parameters are ordered xxxxxxx yyyyyyy zzzzzzz ttttttt and
          * per dimension xyz.
          */
@@ -514,7 +514,7 @@ namespace itk
           mean.Fill( 0.0 );
           const unsigned int starti = numParametersPerDimension * d;
           for ( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
-          {       
+          {
             const unsigned int index = i % numControlPointsPerDimension;
             mean[ index ] += derivative[ i ];
           }
@@ -522,15 +522,15 @@ namespace itk
 
           /** Update derivative for every control point per dimension. */
           for ( unsigned int i = starti; i < starti + numParametersPerDimension; ++i )
-          {       
+          {
             const unsigned int index = i % numControlPointsPerDimension;
             derivative[ i ] -= mean[ index ];
           }
-        } 
+        }
       }
       else
       {
-        /** Update derivative per dimension. 
+        /** Update derivative per dimension.
          * Parameters are ordered x0x0x0y0y0y0z0z0z0x1x1x1y1y1y1z1z1z1 with
          * the number the time point index.
          */
@@ -555,7 +555,7 @@ namespace itk
         {
           const unsigned int startc = numParametersPerLastDimension * t;
           for ( unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c )
-          {       
+          {
             const unsigned int index = c % numParametersPerLastDimension;
             derivative[ c ] -= mean[ index ];
           }

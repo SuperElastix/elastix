@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -37,18 +37,18 @@ namespace itk
  */
 template <class TScalarType = double,   // Data type for scalars (float or double)
           unsigned int NDimensions = 3>          // Number of dimensions
-class ITK_EXPORT ElasticBodyReciprocalSplineKernelTransform2 : 
+class ITK_EXPORT ElasticBodyReciprocalSplineKernelTransform2 :
           public KernelTransform2<  TScalarType, NDimensions>
 {
 public:
   /** Standard class typedefs. */
   typedef ElasticBodyReciprocalSplineKernelTransform2   Self;
-  typedef KernelTransform2<  TScalarType, 
+  typedef KernelTransform2<  TScalarType,
                             NDimensions> Superclass;
 
   typedef SmartPointer<Self>        Pointer;
   typedef SmartPointer<const Self>  ConstPointer;
-    
+
   /** Run-time type information (and related methods). */
   itkTypeMacro( ElasticBodyReciprocalSplineKernelTransform2, KernelTransform2 );
 
@@ -80,7 +80,7 @@ public:
 
   /** Get alpha */
   itkGetConstMacro( Alpha, TScalarType );
-  
+
   /** Convenience method */
   virtual void SetPoissonRatio( const TScalarType Nu )
   {
@@ -90,11 +90,11 @@ public:
     }
   }
 
-  virtual const TScalarType GetPoissonRatio( void ) const 
+  virtual const TScalarType GetPoissonRatio( void ) const
   {
     return 1.0 - ( this->m_Alpha + 1.0 ) / 8.0;
   }
-  
+
   /** These (rather redundant) typedefs are needed because on SGI, typedefs
    * are not inherited */
   typedef typename Superclass::InputPointType  InputPointType;
@@ -103,13 +103,13 @@ public:
   typedef typename Superclass::OutputVectorType OutputVectorType;
   typedef typename Superclass::InputCovariantVectorType InputCovariantVectorType;
   typedef typename Superclass::OutputCovariantVectorType OutputCovariantVectorType;
-    
+
 
 protected:
   ElasticBodyReciprocalSplineKernelTransform2();
   virtual ~ElasticBodyReciprocalSplineKernelTransform2() {};
   void PrintSelf(std::ostream& os, Indent indent) const;
-  
+
   /** These (rather redundant) typedefs are needed because on SGI, typedefs
    * are not inherited */
   typedef typename Superclass::GMatrixType GMatrixType;

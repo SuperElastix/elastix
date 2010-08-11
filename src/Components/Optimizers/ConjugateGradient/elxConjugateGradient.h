@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -28,9 +28,9 @@ using namespace itk;
    * \class ConjugateGradient
    * \brief An optimizer based on the itk::GenericConjugateGradientOptimizer.
    *
-   * A ConjugateGradient optimizer, using the itk::MoreThuenteLineSearchOptimizer. 
+   * A ConjugateGradient optimizer, using the itk::MoreThuenteLineSearchOptimizer.
    * Different conjugate gradient methods can be selected with this optimizer.
-   * 
+   *
    * This optimizer support the NewSamplesEveryIteration option. It requests
    * new samples for the computation of each search direction (not during
    * the line search). Actually this makes no sense for a conjugate gradient optimizer.
@@ -62,21 +62,21 @@ using namespace itk;
    *    itk::MoreThuenteLineSearchOptimizer tries to satisfy.\n
    *    example: <tt>(LineSearchGradientTolerance 0.9 0.9 0.9)</tt> \n
    *    Default value: 0.9.\n
-   * \parameter ValueTolerance: Stopping criterion. See the documentation of the 
+   * \parameter ValueTolerance: Stopping criterion. See the documentation of the
    *    itk::GenericConjugateGradientOptimizer for more information.\n
    *    example: <tt>(ValueTolerance 0.001 0.0001 0.000001)</tt> \n
    *    Default value: 0.00001.\n
-   * \parameter GradientMagnitudeTolerance: Stopping criterion. See the documentation of the 
+   * \parameter GradientMagnitudeTolerance: Stopping criterion. See the documentation of the
    *    itk::GenericConjugateGradientOptimizer for more information.\n
    *    example: <tt>(GradientMagnitudeTolerance 0.001 0.0001 0.000001)</tt> \n
    *    Default value: 0.000001.\n
    * \parameter ConjugateGradientType: a string that defines how 'beta' is computed in each resolution.
-   *    The following methods are implemented: "SteepestDescent", "FletcherReeves", "PolakRibiere", 
+   *    The following methods are implemented: "SteepestDescent", "FletcherReeves", "PolakRibiere",
    *    "DaiYuan", "HestenesStiefel", and "DaiYuanHestenesStiefel". "SteepestDescent" simply sets beta=0.
    *    See the source code of the GenericConjugateGradientOptimizer for more information.\n
    *    example: <tt>(ConjugateGradientType "FletcherReeves" "PolakRibiere")</tt> \n
    *    Default value: "DaiYuanHestenesStiefel".\n
-   * \parameter StopIfWolfeNotSatisfied: Whether to stop the optimisation if in one iteration 
+   * \parameter StopIfWolfeNotSatisfied: Whether to stop the optimisation if in one iteration
    *    the Wolfe conditions can not be satisfied by the itk::MoreThuenteLineSearchOptimizer.\n
    *    In general it is wise to do so.\n
    *    example: <tt>(StopIfWolfeNotSatisfied "true" "false")</tt> \n
@@ -101,13 +101,13 @@ using namespace itk;
     typedef OptimizerBase<TElastix>             Superclass2;
     typedef SmartPointer<Self>                  Pointer;
     typedef SmartPointer<const Self>            ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( ConjugateGradient, GenericConjugateGradientOptimizer );
-    
+
     /** Name of this class.
      * Use this name in the parameter file to select this specific optimizer. \n
      * example: <tt>(Optimizer "ConjugateGradient")</tt>\n
@@ -119,9 +119,9 @@ using namespace itk;
     typedef Superclass1::CostFunctionPointer                CostFunctionPointer;
     typedef Superclass1::StopConditionType                  StopConditionType;
     typedef Superclass1::ParametersType                     ParametersType;
-    typedef Superclass1::DerivativeType                     DerivativeType; 
-    typedef Superclass1::ScalesType                         ScalesType; 
-    
+    typedef Superclass1::DerivativeType                     DerivativeType;
+    typedef Superclass1::ScalesType                         ScalesType;
+
     /** Typedef's inherited from Elastix.*/
     typedef typename Superclass2::ElastixType           ElastixType;
     typedef typename Superclass2::ElastixPointer        ElastixPointer;
@@ -136,8 +136,8 @@ using namespace itk;
     typedef LineOptimizerType::Pointer                  LineOptimizerPointer;
     typedef ReceptorMemberCommand<Self>                 EventPassThroughType;
     typedef typename EventPassThroughType::Pointer      EventPassThroughPointer;
-        
-    /** Check if any scales are set, and set the UseScales flag on or off; 
+
+    /** Check if any scales are set, and set the UseScales flag on or off;
      * after that call the superclass' implementation */
     virtual void StartOptimization(void);
 
@@ -150,8 +150,8 @@ using namespace itk;
     virtual void AfterRegistration(void);
 
     itkGetConstMacro(StartLineSearch, bool);
-      
-        
+
+
   protected:
 
     ConjugateGradient();
@@ -162,7 +162,7 @@ using namespace itk;
     /** Convert the line search stop condition to a string */
     virtual std::string GetLineSearchStopCondition(void) const;
 
-    /** Generate a string, representing the phase of optimisation 
+    /** Generate a string, representing the phase of optimisation
      * (line search, main) */
     virtual std::string DeterminePhase(void) const;
 
@@ -195,9 +195,9 @@ using namespace itk;
     bool                        m_GenerateLineSearchIterations;
     bool                        m_StopIfWolfeNotSatisfied;
     bool                        m_WolfeIsStopCondition;
-      
+
   }; // end class ConjugateGradient
-  
+
 
 } // end namespace elastix
 

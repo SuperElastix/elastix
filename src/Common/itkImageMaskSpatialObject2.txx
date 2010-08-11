@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -25,8 +25,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -59,11 +59,11 @@ ImageMaskSpatialObject2< TDimension>
 }
 
 
-/** Test whether a point is inside or outside the object 
+/** Test whether a point is inside or outside the object
 *  For computational speed purposes, it is faster if the method does not
-*  check the name of the class and the current depth */ 
+*  check the name of the class and the current depth */
 template< unsigned int TDimension >
-bool 
+bool
 ImageMaskSpatialObject2< TDimension >
 ::IsInside( const PointType & point) const
 {
@@ -85,7 +85,7 @@ ImageMaskSpatialObject2< TDimension >
     index[i] = static_cast<int>( vnl_math_rnd( p[i] ) );
   }
 
-  const bool insideBuffer = 
+  const bool insideBuffer =
     this->GetImage()->GetBufferedRegion().IsInside( index );
 
   if( !insideBuffer )
@@ -93,7 +93,7 @@ ImageMaskSpatialObject2< TDimension >
     return false;
   }
 
-  const bool insideMask = 
+  const bool insideMask =
     (this->GetImage()->GetPixel(index) != NumericTraits<PixelType>::Zero);
 
   return insideMask;
@@ -142,7 +142,7 @@ ImageMaskSpatialObject2< TDimension >
   region.SetSize( size );
 
   return region;
-  
+
 }  // end GetAxisAlignedBoundingBoxRegion()
 
 
@@ -157,7 +157,7 @@ ImageMaskSpatialObject2< TDimension >
   // slice iterator iterates from the outermost slice towards the image
   // center till it finds a mask pixel. For a 3D image, there will be six
   // slice iterators, iterating from the periphery inwards till the bounds
-  // along each axes are found. The slice iterators save time and avoid 
+  // along each axes are found. The slice iterators save time and avoid
   // having to walk the whole image. Since we are using slice iterators,
   // we will implement this only for 3D images.
 
@@ -181,7 +181,7 @@ ImageMaskSpatialObject2< TDimension >
           j++;
         }
       }
-      
+
       // Create the forward iterator to find lower bound
       SliceIteratorType  fit(  image,  image->GetRequestedRegion() );
       fit.SetFirstDirection(  direction[ 1 ] );
@@ -247,7 +247,7 @@ ImageMaskSpatialObject2< TDimension >
 		  // modified by stefan; old (commented) implemenation assumed zero start index
       index[ i ] = image->GetRequestedRegion().GetIndex( i ) + image->GetRequestedRegion().GetSize( i ) - 1;
       //index[ i ] = image->GetRequestedRegion().GetSize( i );
-			endindex[ i ] = image->GetRequestedRegion().GetIndex( i ); 
+			endindex[ i ] = image->GetRequestedRegion().GetIndex( i );
       //size[ i ]  = image->GetRequestedRegion().GetIndex( i );
     }
 
@@ -271,8 +271,8 @@ ImageMaskSpatialObject2< TDimension >
       //size[ i ] = size[ i ] - index[ i ] + 1;
       size[ i ] = endindex[ i ] - index[ i ] + 1;
     }
-  } // end else 
- 
+  } // end else
+
 } // end ComputeLocalBoundingBoxIndexAndSize()
 
 
@@ -309,7 +309,7 @@ ImageMaskSpatialObject2< TDimension >
     /** Take into account indextoworld transform: SK: itk implementation was buggy */
     typename PointsContainerType::Pointer cornersWorld = PointsContainerType::New();
     cornersWorld->Reserve( corners->Size() );
-    
+
     typename PointsContainerType::const_iterator itC = corners->begin();
     typename PointsContainerType::iterator itCW = cornersWorld->begin();
     while(itC != corners->end())

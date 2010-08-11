@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -59,13 +59,13 @@ using namespace itk;
     typedef MetricBase<TElastix>                          Superclass2;
     typedef SmartPointer<Self>                            Pointer;
     typedef SmartPointer<const Self>                      ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( AdvancedMeanSquaresMetric, AdvancedMeanSquaresImageToImageMetric );
-    
+
     /** Name of this class.
      * Use this name in the parameter file to select this specific metric. \n
      * example: <tt>(Metric "AdvancedMeanSquares")</tt>\n
@@ -73,7 +73,7 @@ using namespace itk;
     elxClassNameMacro( "AdvancedMeanSquares" );
 
     /** Typedefs from the superclass. */
-    typedef typename 
+    typedef typename
       Superclass1::CoordinateRepresentationType              CoordinateRepresentationType;
     typedef typename Superclass1::MovingImageType            MovingImageType;
     typedef typename Superclass1::MovingImagePixelType       MovingImagePixelType;
@@ -107,7 +107,7 @@ using namespace itk;
     typedef typename Superclass1::ImageSamplerType           ImageSamplerType;
     typedef typename Superclass1::ImageSamplerPointer        ImageSamplerPointer;
     typedef typename Superclass1::ImageSampleContainerType   ImageSampleContainerType;
-    typedef typename 
+    typedef typename
       Superclass1::ImageSampleContainerPointer               ImageSampleContainerPointer;
     typedef typename Superclass1::FixedImageLimiterType      FixedImageLimiterType;
     typedef typename Superclass1::MovingImageLimiterType     MovingImageLimiterType;
@@ -117,7 +117,7 @@ using namespace itk;
       Superclass1::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
     typedef typename
       Superclass1::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
-    
+
     /** The fixed image dimension. */
     itkStaticConstMacro( FixedImageDimension, unsigned int,
       FixedImageType::ImageDimension );
@@ -125,7 +125,7 @@ using namespace itk;
     /** The moving image dimension. */
     itkStaticConstMacro( MovingImageDimension, unsigned int,
       MovingImageType::ImageDimension );
-    
+
     /** Typedef's inherited from Elastix. */
     typedef typename Superclass2::ElastixType               ElastixType;
     typedef typename Superclass2::ElastixPointer            ElastixPointer;
@@ -134,18 +134,18 @@ using namespace itk;
     typedef typename Superclass2::RegistrationType          RegistrationType;
     typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
     typedef typename Superclass2::ITKBaseType               ITKBaseType;
-      
+
     /** Typedef for timer. */
     typedef tmr::Timer          TimerType;
     /** Typedef for timer. */
     typedef TimerType::Pointer  TimerPointer;
-  
+
     /** Sets up a timer to measure the initialisation time and
      * calls the Superclass' implementation.
      */
     virtual void Initialize(void) throw (ExceptionObject);
 
-    /** 
+    /**
      * Do some things before each resolution:
      * \li Set CheckNumberOfSamples setting
      * \li Set UseNormalization setting
@@ -165,7 +165,7 @@ using namespace itk;
     AdvancedMeanSquaresMetric( const Self& ); // purposely not implemented
     /** The private copy constructor. */
     void operator=( const Self& );              // purposely not implemented
-    
+
   }; // end class AdvancedMeanSquaresMetric
 
 

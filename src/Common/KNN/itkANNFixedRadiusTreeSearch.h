@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -20,27 +20,27 @@
 
 namespace itk
 {
-  
+
   /**
    * \class ANNFixedRadiusTreeSearch
    *
-   * \brief 
+   * \brief
    *
-   * 
+   *
    * \ingroup ANNwrap
    */
-  
+
   template < class TListSample >
   class ANNFixedRadiusTreeSearch : public BinaryANNTreeSearchBase< TListSample >
   {
   public:
-    
+
     /** Standard itk. */
     typedef ANNFixedRadiusTreeSearch                Self;
     typedef BinaryANNTreeSearchBase< TListSample >  Superclass;
     typedef SmartPointer< Self >                    Pointer;
     typedef SmartPointer< const Self >              ConstPointer;
-    
+
     /** New method for creating an object using a factory. */
     itkNewMacro( Self );
 
@@ -53,7 +53,7 @@ namespace itk
     typedef typename Superclass::MeasurementVectorType  MeasurementVectorType;
     typedef typename Superclass::IndexArrayType         IndexArrayType;
     typedef typename Superclass::DistanceArrayType      DistanceArrayType;
-    
+
     typedef typename Superclass::ANNPointType           ANNPointType;         // double *
     typedef typename Superclass::ANNIndexType           ANNIndexType;         // int
     typedef typename Superclass::ANNIndexArrayType      ANNIndexArrayType;    // int *
@@ -79,22 +79,22 @@ namespace itk
       DistanceArrayType & dists, double sqRad );
 
   protected:
-    
+
     ANNFixedRadiusTreeSearch();
     virtual ~ANNFixedRadiusTreeSearch();
 
     /** Member variables. */
     double  m_ErrorBound;
     double  m_SquaredRadius;
-    
+
   private:
-    
+
     ANNFixedRadiusTreeSearch( const Self& ); // purposely not implemented
     void operator=( const Self& );        // purposely not implemented
 
   }; // end class ANNFixedRadiusTreeSearch
-    
-    
+
+
 } // end namespace itk
 
 

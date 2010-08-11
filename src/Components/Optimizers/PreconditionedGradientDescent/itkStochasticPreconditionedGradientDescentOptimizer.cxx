@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -74,7 +74,7 @@ namespace itk
 
   double StochasticPreconditionedGradientDescentOptimizer
     ::Compute_a(double k) const
-  { 
+  {
     return static_cast<double>(
       this->m_Param_a / vcl_pow( this->m_Param_A + k + 1.0, this->m_Param_alpha ) );
 
@@ -89,7 +89,7 @@ namespace itk
 
   void StochasticPreconditionedGradientDescentOptimizer
     ::UpdateCurrentTime( void )
-  {    
+  {
     /** Simply Robbins-Monro: time=iterationnr. */
     this->m_CurrentTime += 1.0;
 

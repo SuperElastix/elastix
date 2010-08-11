@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -49,7 +49,7 @@ using namespace itk;
     ::BeforeEachResolution(void)
   {
     /** Get the current resolution level. */
-    unsigned int level = 
+    unsigned int level =
       ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
     /** Get and set the normalization. */
@@ -65,12 +65,12 @@ using namespace itk;
     this->GetConfiguration()->ReadParameter( numberOfSamplesForSelfHessian,
       "NumberOfSamplesForSelfHessian", this->GetComponentLabel(), level, 0 );
     this->SetNumberOfSamplesForSelfHessian( numberOfSamplesForSelfHessian );
-   
+
     /** Set the smoothing sigma used to compute the SelfHessian */
     double selfHessianSmoothingSigma = 1.0;
     this->GetConfiguration()->ReadParameter( selfHessianSmoothingSigma,
       "SelfHessianSmoothingSigma", this->GetComponentLabel(), level, 0 );
-    this->SetSelfHessianSmoothingSigma( selfHessianSmoothingSigma ); 
+    this->SetSelfHessianSmoothingSigma( selfHessianSmoothingSigma );
 
     /** Set moving image derivative scales. */
     this->SetUseMovingImageDerivativeScales( false );
@@ -89,7 +89,7 @@ using namespace itk;
       elxout << "Multiplying moving image derivatives by: "
         << movingImageDerivativeScales << std::endl;
     }
-    
+
   } // end BeforeEachResolution
 
 

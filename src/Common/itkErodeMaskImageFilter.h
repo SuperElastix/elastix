@@ -6,7 +6,7 @@ Copyright (c) University Medical Center Utrecht. All rights reserved.
 See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
 details.
 
-This software is distributed WITHOUT ANY WARRANTY; without even 
+This software is distributed WITHOUT ANY WARRANTY; without even
 the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
@@ -23,9 +23,9 @@ namespace itk
   /**
    * \class ErodeMaskImageFilter
    *
-   * This filter computes the Erosion of a mask image. 
+   * This filter computes the Erosion of a mask image.
    * It makes only sense for masks used in a multiresolution registration procedure.
-   * 
+   *
    * The input to this filter is a scalar-valued itk::Image of arbitrary
    * dimension. The output is a scalar-valued itk::Image, of the same type
    * as the input image. This restriction is not really necessary,
@@ -51,8 +51,8 @@ namespace itk
    **/
 
   template <class TImage>
-  class ErodeMaskImageFilter : 
-    public ImageToImageFilter< TImage, TImage > 
+  class ErodeMaskImageFilter :
+    public ImageToImageFilter< TImage, TImage >
   {
   public:
     /** Standard ITK stuff. */
@@ -89,7 +89,7 @@ namespace itk
     typedef typename ImagePyramidFilterType::ScheduleType ScheduleType;
 
     /** Set/Get the pyramid schedule used to downsample the image whose
-     * mask is the input of the ErodeMaskImageFilter 
+     * mask is the input of the ErodeMaskImageFilter
      * Default: filled with ones, one resolution.
      */
     virtual void SetSchedule( const ScheduleType & schedule )

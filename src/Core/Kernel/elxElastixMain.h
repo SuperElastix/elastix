@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -27,23 +27,23 @@
 
 
 
-namespace elastix 
+namespace elastix
 {
 using namespace itk;
 
-/// 
+///
 /// ********************** Global Functions **********************
-/// 
+///
 /// NB: not part of the ElastixMain class.
 ///
 
 /**
  * function xoutSetup
- * Configure the xl::xout variable, which has to be used for 
+ * Configure the xl::xout variable, which has to be used for
  * for writing messages. The function adds some default fields,
  * such as "warning", "error", "standard", "logonly" and "coutonly",
  * and it sets the outputs to std::cout and/or a logfile.
- * 
+ *
  * The method takes a logfile name as its input argument.
  * It returns 0 if everything went ok. 1 otherwise.
  */
@@ -56,7 +56,7 @@ extern int xoutSetup( const char * logfilename );
  * The ElastixMain initializes the MyConfiguration class with the
  * parameters and commandline arguments. After this, the class loads
  * and creates all components and sets them in ElastixTemplate.
- * 
+ *
  * \parameter FixedImageDimension: the dimension of the fixed image. \n
  * example: <tt>(FixedImageDimension 2)</tt>\n
  * \parameter MovingImageDimension: the dimension of the fixed image. \n
@@ -86,7 +86,7 @@ extern int xoutSetup( const char * logfilename );
  * to this type.\n
  * example: <tt>(MovingInternalImagePixelType "float")</tt>\n
  * Default/recommended: "float"\n
- * 
+ *
  * \ingroup Kernel
  */
 
@@ -172,7 +172,7 @@ public:
   itkSetObjectMacro( Configuration, ConfigurationType );
   itkGetObjectMacro( Configuration, ConfigurationType );
 
-  /** Functions to get pointers to the elastix components. 
+  /** Functions to get pointers to the elastix components.
    * The components are returned as Object::Pointer.
    * Before calling this functions, call run().
    */
@@ -191,7 +191,7 @@ public:
   itkGetObjectMacro( FinalTransform, ObjectType );
 
   /** Set/Get the initial transform
-   * the type is ObjectType, but the pointer should actually point 
+   * the type is ObjectType, but the pointer should actually point
    * to an itk::Transform type (or inherited from that one).
    */
   itkSetObjectMacro( InitialTransform, ObjectType );
@@ -201,7 +201,7 @@ public:
    * (d11 d21 d31 d21 d22 etc ) */
   virtual void SetOriginalFixedImageDirectionFlat(
     const FlatDirectionCosinesType & arg );
-  virtual const FlatDirectionCosinesType & 
+  virtual const FlatDirectionCosinesType &
     GetOriginalFixedImageDirectionFlat( void ) const;
 
   /** Get and Set the elastix level. */
@@ -216,13 +216,13 @@ public:
   itkGetConstMacro( DBIndex, DBIndexType );
 
   /** Enter the command line parameters, which were given by the user,
-   * if elastix.exe is used to do a registration. 
+   * if elastix.exe is used to do a registration.
    * The Configuration object will be initialized in this way.
    */
   virtual void EnterCommandLineArguments( ArgumentMapType & argmap );
 
   /** Start the registration
-   * run() without command line parameters; it assumes that 
+   * run() without command line parameters; it assumes that
    * EnterCommandLineParameters has been invoked already, or that
    * m_Configuration is initialised in a different way.
    */
@@ -234,13 +234,13 @@ public:
    */
   virtual int Run( ArgumentMapType & argmap );
 
-  /** Set process priority, which is read from the command line arguments. 
+  /** Set process priority, which is read from the command line arguments.
    * Syntax:
    * -priority \<high, belownormal\>
    */
   virtual void SetProcessPriority( void ) const;
 
-  /** Set maximum number of threads, which is read from the command line arguments. 
+  /** Set maximum number of threads, which is read from the command line arguments.
    * Syntax:
    * -threads \<int\>
    */
@@ -313,7 +313,7 @@ protected:
   virtual ObjectPointer CreateComponent( const ComponentDescriptionType & name );
 
   /** Create components. Reads from the configuration object (using the provided key)
-   * the names of the components to create and store their instantations in the 
+   * the names of the components to create and store their instantations in the
    * provided ObjectContainer.
    * The errorcode remains what it was if no error occurred. Otherwise it's set to 1.
    * The 'key' is the entry inspected in the parameter file
@@ -325,7 +325,7 @@ protected:
    *
    * NB: this function should never be called with:
    * ( !mandatoryComponent && defaultComponentName != "" ) == true
-   * 
+   *
    */
   virtual ObjectContainerPointer CreateComponents(
     const ComponentDescriptionType & key,

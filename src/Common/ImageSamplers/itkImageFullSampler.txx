@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -25,7 +25,7 @@ namespace itk
   /**
    * ******************* GenerateData *******************
    */
-  
+
   template< class TInputImage >
     void
     ImageFullSampler< TInputImage >
@@ -38,7 +38,7 @@ namespace itk
 
     /** Clear the container. */
     sampleContainer->Initialize();
-    
+
     /** Set up a region iterator within the user specified image region. */
     typedef ImageRegionConstIteratorWithIndex<InputImageType> InputImageIterator;
     InputImageIterator iter( inputImage, this->GetCroppedInputImageRegion() );
@@ -117,14 +117,14 @@ namespace itk
         } // end if
       } // end for
     } // end else (if mask exists)
- 
+
   } // end GenerateData
 
 
   /**
    * ******************* PrintSelf *******************
    */
-  
+
   template< class TInputImage >
     void
     ImageFullSampler< TInputImage >

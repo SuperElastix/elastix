@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -31,14 +31,14 @@
 
 namespace elastix
 {
-  
+
 using namespace xl;
 
 /**
  * ******************* Global variables *************************
- * 
+ *
  * Some global variables (not part of the ElastixMain class, used
- * by xoutSetup.   
+ * by xoutSetup.
  */
 
 /** \todo move to ElastixMain class, as static vars? */
@@ -54,7 +54,7 @@ std::ofstream   g_LogFileStream;
 
 /**
  * ********************* xoutSetup ******************************
- * 
+ *
  * NB: this function is a global function, not part of the ElastixMain
  * class!!
  */
@@ -92,7 +92,7 @@ int xoutSetup( const char * logfilename )
   g_ErrorXout.SetOutputs( xout.GetXOutputs() );
   g_StandardXout.SetOutputs( xout.GetXOutputs() );
 
-  /** Link the warning-, error- and standard-xouts to xout. */  
+  /** Link the warning-, error- and standard-xouts to xout. */
   returndummy |= xout.AddTargetCell( "warning", &g_WarningXout );
   returndummy |= xout.AddTargetCell( "error", &g_ErrorXout );
   returndummy |= xout.AddTargetCell( "standard", &g_StandardXout );
@@ -161,9 +161,9 @@ ElastixMain::~ElastixMain()
 void ElastixMain
 ::EnterCommandLineArguments( ArgumentMapType & argmap )
 {
-  /** Initialize the configuration object with the 
+  /** Initialize the configuration object with the
    * command line parameters entered by the user.
-   */   
+   */
   int dummy = this->m_Configuration->Initialize( argmap );
   if ( dummy )
   {
@@ -186,7 +186,7 @@ int ElastixMain::Run( void )
   this->SetProcessPriority();
   this->SetMaximumNumberOfThreads();
 
-  /** Initialize database. */   
+  /** Initialize database. */
   int errorCode = this->InitDBIndex();
   if ( errorCode != 0 )
   {
@@ -194,7 +194,7 @@ int ElastixMain::Run( void )
   }
 
   /** Create the elastix component. */
-  try 
+  try
   {
     /** Key "Elastix", see elxComponentLoader::InstallSupportedImageTypes(). */
     this->m_Elastix = this->CreateComponent( "Elastix" );
@@ -212,7 +212,7 @@ int ElastixMain::Run( void )
   this->GetElastixBase()->SetComponentDatabase( this->s_CDB );
   this->GetElastixBase()->SetDBIndex( this->m_DBIndex );
 
-  /** Populate the component containers. ImageSampler is not mandatory. 
+  /** Populate the component containers. ImageSampler is not mandatory.
    * No defaults are specified for ImageSampler, Metric, Transform
    * and Optimizer.
    */
@@ -271,7 +271,7 @@ int ElastixMain::Run( void )
   /** Set the initial transform, if it happens to be there. */
   this->GetElastixBase()->SetInitialTransform( this->GetInitialTransform() );
 
-  /** Set the original fixed image direction cosines (relevant in case the 
+  /** Set the original fixed image direction cosines (relevant in case the
    * UseDirectionCosines parameter was set to false.
    */
   this->GetElastixBase()->SetOriginalFixedImageDirectionFlat(
@@ -311,9 +311,9 @@ int ElastixMain::Run( void )
   this->SetFixedMaskContainer(  this->GetElastixBase()->GetFixedMaskContainer() );
   this->SetMovingMaskContainer( this->GetElastixBase()->GetMovingMaskContainer() );
 
-  /** Store the original fixed image direction cosines (relevant in case the 
+  /** Store the original fixed image direction cosines (relevant in case the
    * UseDirectionCosines parameter was set to false. */
-  this->SetOriginalFixedImageDirectionFlat(  
+  this->SetOriginalFixedImageDirectionFlat(
     this->GetElastixBase()->GetOriginalFixedImageDirectionFlat() );
 
   /** Return a value. */
@@ -349,7 +349,7 @@ int ElastixMain::InitDBIndex( void )
 {
   /** Only do something when the configuration object wasn't initialized yet. */
   if ( this->m_Configuration->IsInitialized() )
-  {     
+  {
     /** FixedImagePixelType. */
     if ( this->m_FixedImagePixelType.empty() )
     {
@@ -414,7 +414,7 @@ int ElastixMain::InitDBIndex( void )
       /** Get the DBIndex from the ComponentDatabase. */
       this->m_DBIndex = this->s_CDB->GetIndex(
         this->m_FixedImagePixelType,
-        this->m_FixedImageDimension,      
+        this->m_FixedImageDimension,
         this->m_MovingImagePixelType,
         this->m_MovingImageDimension );
       if ( this->m_DBIndex == 0 )
@@ -490,7 +490,7 @@ unsigned int ElastixMain::GetTotalNumberOfElastixLevels( void )
 /**
  * ********************* LoadComponents **************************
  *
- * Store the install function of each component in the 
+ * Store the install function of each component in the
  * component database.
  */
 
@@ -578,7 +578,7 @@ ElastixMain::ObjectPointer ElastixMain::CreateComponent(
 } // end CreateComponent()
 
 
-/** 
+/**
  * *********************** CreateComponents *****************************
  */
 
@@ -629,8 +629,8 @@ ElastixMain::ObjectContainerPointer ElastixMain::CreateComponents(
   }
   catch ( itk::ExceptionObject & excp )
   {
-    xout["error"] 
-      << "ERROR: error occurred while creating " 
+    xout["error"]
+      << "ERROR: error occurred while creating "
       << key << " "
       << componentnr << "." << std::endl;
     xout["error"] << excp << std::endl;
@@ -644,7 +644,7 @@ ElastixMain::ObjectContainerPointer ElastixMain::CreateComponents(
     ++componentnr;
     found = this->m_Configuration->ReadParameter(
       componentName, key, componentnr, false );
-    if ( found )   
+    if ( found )
     {
       try
       {
@@ -653,14 +653,14 @@ ElastixMain::ObjectContainerPointer ElastixMain::CreateComponents(
       }
       catch ( itk::ExceptionObject & excp )
       {
-        xout["error"] 
-          << "ERROR: error occurred while creating " 
+        xout["error"]
+          << "ERROR: error occurred while creating "
           << key << " "
           << componentnr  << "." << std::endl;
         xout["error"] << excp << std::endl;
         errorcode = 1;
         return objectContainer;
-      } 
+      }
     }  // end if
   } // end while
 
@@ -689,7 +689,7 @@ void ElastixMain::SetProcessPriority( void ) const
     #if defined(_WIN32) && !defined(__CYGWIN__)
     SetPriorityClass( GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS );
     #endif
-  }  
+  }
 
 } // end SetProcessPriority()
 
@@ -731,7 +731,7 @@ void ElastixMain::SetOriginalFixedImageDirectionFlat(
  * ******************** GetOriginalFixedImageDirectionFlat ********************
  */
 
-const ElastixMain::FlatDirectionCosinesType & 
+const ElastixMain::FlatDirectionCosinesType &
 ElastixMain::GetOriginalFixedImageDirectionFlat( void ) const
 {
   return this->m_OriginalFixedImageDirection;

@@ -6,7 +6,7 @@ Copyright (c) University Medical Center Utrecht. All rights reserved.
 See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
 details.
 
-This software is distributed WITHOUT ANY WARRANTY; without even 
+This software is distributed WITHOUT ANY WARRANTY; without even
 the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
@@ -39,7 +39,7 @@ namespace itk
 template < class TCoordRep = float,
   unsigned int VSpaceDimension = 2,
   unsigned int VSplineOrder = 3 >
-class ITK_EXPORT BSplineInterpolationDerivativeWeightFunction : 
+class ITK_EXPORT BSplineInterpolationDerivativeWeightFunction :
   public BSplineInterpolationWeightFunctionBase<
   TCoordRep, VSpaceDimension, VSplineOrder >
 {
@@ -53,7 +53,7 @@ public:
 
   /** New macro for creation of through the object factory. */
   itkNewMacro( Self );
-  
+
   /** Run-time type information (and related methods). */
   itkTypeMacro( BSplineInterpolationDerivativeWeightFunction,
     BSplineInterpolationWeightFunctionBase );
@@ -72,7 +72,7 @@ public:
 
   /** Set the first order derivative direction. */
   virtual void SetDerivativeDirection( unsigned int dir );
-  
+
 protected:
   BSplineInterpolationDerivativeWeightFunction();
   ~BSplineInterpolationDerivativeWeightFunction() {}
@@ -106,7 +106,7 @@ private:
 
   /** Member variables. */
   unsigned int m_DerivativeDirection;
-  
+
 };
 
 } // end namespace itk

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -21,7 +21,7 @@
 namespace elastix
 {
   using namespace itk;
-  
+
   /**
    * \class MyStandardResampler
    * \brief A resampler based on the itk::ResampleImageFilter.
@@ -33,23 +33,23 @@ namespace elastix
    * \ingroup Resamplers
    */
 
-  template < class TElastix > 
+  template < class TElastix >
     class MyStandardResampler :
       public ResamplerBase<TElastix>::ITKBaseType,
       public ResamplerBase<TElastix>
   {
   public:
-    
+
     /** Standard ITK-stuff. */
     typedef MyStandardResampler                             Self;
     typedef typename ResamplerBase<TElastix>::ITKBaseType   Superclass1;
     typedef ResamplerBase<TElastix>                         Superclass2;
     typedef SmartPointer<Self>                              Pointer;
     typedef SmartPointer<const Self>                        ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro(Self);
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( MyStandardResampler, ResampleImageFilter );
 
@@ -58,7 +58,7 @@ namespace elastix
      * example: <tt>(Resampler "DefaultResampler")</tt>\n
      */
     elxClassNameMacro( "DefaultResampler" );
-    
+
     /** Typedef's inherited from the superclass. */
     typedef typename Superclass1::InputImageType            InputImageType;
     typedef typename Superclass1::OutputImageType           OutputImageType;
@@ -76,7 +76,7 @@ namespace elastix
     typedef typename Superclass1::OutputImageRegionType     OutputImageRegionType;
     typedef typename Superclass1::SpacingType               SpacingType;
     typedef typename Superclass1::OriginPointType           OriginPointType;
-    
+
     /** Typedef's from the ResamplerBase. */
     typedef typename Superclass2::ElastixType           ElastixType;
     typedef typename Superclass2::ElastixPointer        ElastixPointer;
@@ -85,26 +85,26 @@ namespace elastix
     typedef typename Superclass2::RegistrationType      RegistrationType;
     typedef typename Superclass2::RegistrationPointer   RegistrationPointer;
     typedef typename Superclass2::ITKBaseType           ITKBaseType;
-        
+
     /* Nothing to add. In the baseclass already everything is done what should be done. */
-  
+
   protected:
 
     /** The constructor. */
     MyStandardResampler() {}
     /** The destructor. */
     virtual ~MyStandardResampler() {}
-    
+
   private:
 
     /** The private constructor. */
     MyStandardResampler( const Self& ); // purposely not implemented
     /** The private copy constructor. */
     void operator=( const Self& );      // purposely not implemented
-    
+
   }; // end class MyStandardResampler
-  
-  
+
+
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION

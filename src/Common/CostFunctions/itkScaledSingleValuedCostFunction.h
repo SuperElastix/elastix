@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -19,12 +19,12 @@
 
 namespace itk
 {
-  /** 
+  /**
    * \class ScaledSingleValuedCostFunction
    * \brief A cost function that applies a scaling to another cost function
    *
-   * This class can be used to adapt an existing, badly scaled, cost function. 
-   * 
+   * This class can be used to adapt an existing, badly scaled, cost function.
+   *
    * By default it does not apply any scaling. Use the method SetUseScales(true)
    * to enable the use of scales.
    *
@@ -55,7 +55,7 @@ namespace itk
 
     typedef Array<double>                   ScalesType;
 
-    /** Divide the parameters by the scales and call the GetValue routine 
+    /** Divide the parameters by the scales and call the GetValue routine
      * of the unscaled cost function.
      */
     virtual MeasureType GetValue( const ParametersType & parameters ) const;
@@ -82,7 +82,7 @@ namespace itk
     /** Get the cost function that needs scaling. */
     itkGetObjectMacro( UnscaledCostFunction, Superclass );
 
-    /** Set the scales. Also computes the squared scales, just in case users 
+    /** Set the scales. Also computes the squared scales, just in case users
      * call GetSquaredScales (for compatibility with the ITK convention). */
     virtual void SetScales( const ScalesType & scales );
 
@@ -90,12 +90,12 @@ namespace itk
     itkGetConstReferenceMacro( Scales, ScalesType );
 
     /** The ITK convention is to use the squared scales. This function
-     * takes the square root of the input scales and sets them as the 
+     * takes the square root of the input scales and sets them as the
      * the actual scales */
     virtual void SetSquaredScales( const ScalesType & squaredScales);
 
     /** The ITK convention is to use the squared scales. This function
-     * returns the squared actual scales. */     
+     * returns the squared actual scales. */
     itkGetConstReferenceMacro( SquaredScales, ScalesType );
 
     /** Set the flag to use scales or not. */
@@ -139,9 +139,9 @@ namespace itk
     ScalesType                            m_Scales;
     ScalesType                            m_SquaredScales;
     SingleValuedCostFunctionPointer       m_UnscaledCostFunction;
-    bool                                  m_UseScales;      
+    bool                                  m_UseScales;
     bool                                  m_NegateCostFunction;
-    
+
   }; // end class ScaledSingleValuedCostFunction
 
 } //end namespace itk

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -25,18 +25,18 @@
 
 namespace elastix
 {
-  
+
   /**
    * \class ComponentDatabase
    *
-   * \brief The ComponentDatabase class is a class that stores the 
+   * \brief The ComponentDatabase class is a class that stores the
    * ::New() functions of all components.
    *
    * In elastix the metric/transform/dimension/pixeltype etc. are all selected
-   * at runtime. To make this possible, all components (metric/transform etc) 
+   * at runtime. To make this possible, all components (metric/transform etc)
    * have to compiled for different dimension/pixeltype. The elx::ComponentDatabase
    * stores for each instance and ach pixeltype/dimension a pointers to a function
-   * that creates a component of the specific type. 
+   * that creates a component of the specific type.
    *
    * Each new component (a new metric for example should "make itself
    * known" by calling the elxInstallMacro, which is defined in
@@ -50,13 +50,13 @@ namespace elastix
     public itk::Object
   {
   public:
-    
+
     /** Standard.*/
     typedef ComponentDatabase             Self;
     typedef itk::Object                   Superclass;
     typedef itk::SmartPointer<Self>       Pointer;
     typedef itk::SmartPointer<const Self> ConstPointer;
-  
+
     itkNewMacro(Self);
     itkTypeMacro(ComponentDatabase, Object);
 
@@ -80,7 +80,7 @@ namespace elastix
       CreatorMapKeyType,
       CreatorMapValueType>              CreatorMapType;
     typedef CreatorMapType::value_type  CreatorMapEntryType;
-    
+
     /** Typedefs for the IndexMap.*/
 
     /** The ImageTypeDescription contains the pixeltype (as a string)
@@ -116,7 +116,7 @@ namespace elastix
 
     int SetIndex(
       const PixelTypeDescriptionType & fixedPixelType,
-      ImageDimensionType fixedDimension,  
+      ImageDimensionType fixedDimension,
       const PixelTypeDescriptionType & movingPixelType,
       ImageDimensionType movingDimension,
       IndexType i );
@@ -128,12 +128,12 @@ namespace elastix
 
     IndexType GetIndex(
       const PixelTypeDescriptionType & fixedPixelType,
-      ImageDimensionType fixedDimension,  
+      ImageDimensionType fixedDimension,
       const PixelTypeDescriptionType & movingPixelType,
       ImageDimensionType movingDimension );
 
   protected:
-    
+
     ComponentDatabase(){}
     virtual ~ComponentDatabase(){}
 
@@ -145,8 +145,8 @@ namespace elastix
     void operator=( const Self& );  // purposely not implemented
 
   }; // end class ComponentDatabase
-  
-  
+
+
 } // end namespace elastix
 
 

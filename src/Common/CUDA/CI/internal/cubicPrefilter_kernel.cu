@@ -40,7 +40,7 @@ policies, either expressed or implied.
 // See <http://bigwww.epfl.ch/thevenaz/interpolation/>
 
 #define Pole (sqrt(3.0f)-2.0f)  //pole for cubic b-spline
- 
+
 //--------------------------------------------------------------------------
 // Local GPU device procedures
 //--------------------------------------------------------------------------

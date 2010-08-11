@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -94,7 +94,7 @@ StackTransform< TScalarType, NInputDimensions, NOutputDimensions >
 
 template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
 typename StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::OutputPointType 
+::OutputPointType
 StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
 ::TransformPoint(const InputPointType & ipp ) const
 {
@@ -107,8 +107,8 @@ StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
 
   /** Transform point using right subtransform. */
   SubTransformOutputPointType oppr;
-  const unsigned int subt = vnl_math_min( this->m_NumberOfSubTransforms - 1, static_cast<unsigned int>( 
-                              vnl_math_max( 0, 
+  const unsigned int subt = vnl_math_min( this->m_NumberOfSubTransforms - 1, static_cast<unsigned int>(
+                              vnl_math_max( 0,
                                 vnl_math_rnd( ( ipp[ ReducedInputSpaceDimension ] - m_StackOrigin ) / m_StackSpacing ) ) ) );
   oppr = this->m_SubTransformContainer[ subt ]->TransformPoint( ippr );
 
@@ -131,7 +131,7 @@ StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
 
 template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
 const typename StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::JacobianType & 
+::JacobianType &
 StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
 ::GetJacobian( const InputPointType & ipp ) const
 {
@@ -162,8 +162,8 @@ StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
   }
 
   /** Get Jacobian from right subtransform. */
-  const unsigned int subt = vnl_math_min( this->m_NumberOfSubTransforms - 1, static_cast<unsigned int>( 
-                              vnl_math_max( 0, 
+  const unsigned int subt = vnl_math_min( this->m_NumberOfSubTransforms - 1, static_cast<unsigned int>(
+                              vnl_math_max( 0,
                                 vnl_math_rnd( ( ipp[ ReducedInputSpaceDimension ] - m_StackOrigin ) / m_StackSpacing ) ) ) );
   SubTransformJacobianType subjac;
   this->m_SubTransformContainer[ subt ]->GetJacobian( ippr, subjac, nzji );
@@ -184,7 +184,7 @@ StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
   {
     nzji[ i ] += subt * this->m_SubTransformContainer[ 0 ]->GetNumberOfParameters();
   }
-  
+
 } // end GetJacobian()
 
 

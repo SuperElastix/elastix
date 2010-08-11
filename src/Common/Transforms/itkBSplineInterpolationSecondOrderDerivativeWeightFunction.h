@@ -6,7 +6,7 @@ Copyright (c) University Medical Center Utrecht. All rights reserved.
 See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
 details.
 
-This software is distributed WITHOUT ANY WARRANTY; without even 
+This software is distributed WITHOUT ANY WARRANTY; without even
 the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
@@ -40,7 +40,7 @@ namespace itk
 template < class TCoordRep = float,
   unsigned int VSpaceDimension = 2,
   unsigned int VSplineOrder = 3 >
-class ITK_EXPORT BSplineInterpolationSecondOrderDerivativeWeightFunction : 
+class ITK_EXPORT BSplineInterpolationSecondOrderDerivativeWeightFunction :
   public BSplineInterpolationWeightFunctionBase<
   TCoordRep, VSpaceDimension, VSplineOrder >
 {
@@ -54,7 +54,7 @@ public:
 
   /** New macro for creation of through the object factory. */
   itkNewMacro( Self );
-  
+
   /** Run-time type information (and related methods). */
   itkTypeMacro( BSplineInterpolationSecondOrderDerivativeWeightFunction,
     BSplineInterpolationWeightFunctionBase );
@@ -73,7 +73,7 @@ public:
 
   /** Set the second order derivative directions. */
   virtual void SetDerivativeDirections( unsigned int dir0, unsigned int dir1 );
-  
+
 protected:
   BSplineInterpolationSecondOrderDerivativeWeightFunction();
   ~BSplineInterpolationSecondOrderDerivativeWeightFunction() {}
@@ -106,10 +106,10 @@ protected:
 private:
   BSplineInterpolationSecondOrderDerivativeWeightFunction(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
-  
+
   vnl_vector_fixed< double, 2 >   m_DerivativeDirections;
   bool                            m_EqualDerivativeDirections;
-  
+
 };
 
 } // end namespace itk

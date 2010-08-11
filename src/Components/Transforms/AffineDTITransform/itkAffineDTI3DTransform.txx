@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -28,7 +28,7 @@ template <class TScalarType>
 AffineDTI3DTransform<TScalarType>
 ::AffineDTI3DTransform():
   Superclass(SpaceDimension, ParametersDimension)
-{ 
+{
   this->m_Angle.Fill( itk::NumericTraits<ScalarType>::Zero );
   this->m_Shear.Fill( itk::NumericTraits<ScalarType>::Zero );
   this->m_Scale.Fill( itk::NumericTraits<ScalarType>::One );
@@ -40,8 +40,8 @@ AffineDTI3DTransform<TScalarType>
 template <class TScalarType>
 AffineDTI3DTransform<TScalarType>
 ::AffineDTI3DTransform(const MatrixType & matrix,
-                   const OutputPointType & offset) 
-{  
+                   const OutputPointType & offset)
+{
   this->SetMatrix(matrix);
 
   OffsetType off;
@@ -61,7 +61,7 @@ AffineDTI3DTransform<TScalarType>
 ::AffineDTI3DTransform(unsigned int spaceDimension,
                    unsigned int parametersDimension):
   Superclass(spaceDimension, parametersDimension)
-{  
+{
   this->m_Angle.Fill( itk::NumericTraits<ScalarType>::Zero );
   this->m_Shear.Fill( itk::NumericTraits<ScalarType>::Zero );
   this->m_Scale.Fill( itk::NumericTraits<ScalarType>::One );
@@ -78,8 +78,8 @@ AffineDTI3DTransform<TScalarType>
     ScalarArrayType scale )
 {
   this->m_Angle = angle;
-  this->m_Shear = shear;  
-  this->m_Scale = scale;  
+  this->m_Shear = shear;
+  this->m_Scale = scale;
 }
 
 
@@ -176,7 +176,7 @@ AffineDTI3DTransform<TScalarType>
   const double cx = vcl_cos( this->m_Angle[0] );
   const double sx = vcl_sin( this->m_Angle[0] );
   const double cy = vcl_cos( this->m_Angle[1] );
-  const double sy = vcl_sin( this->m_Angle[1] ); 
+  const double sy = vcl_sin( this->m_Angle[1] );
   const double cz = vcl_cos( this->m_Angle[2] );
   const double sz = vcl_sin( this->m_Angle[2] );
   const double gx = this->m_Shear[0];
@@ -185,7 +185,7 @@ AffineDTI3DTransform<TScalarType>
   const double ssx = this->m_Scale[0];
   const double ssy = this->m_Scale[1];
   const double ssz = this->m_Scale[2];
-  
+
   /** NB: opposite definition as in EulerTransform */
   MatrixType RotationX;
   RotationX[0][0]=1;RotationX[0][1]=0;RotationX[0][2]=0;
@@ -196,7 +196,7 @@ AffineDTI3DTransform<TScalarType>
   RotationY[0][0]=cy;RotationY[0][1]=0;RotationY[0][2]=-sy;
   RotationY[1][0]=0;RotationY[1][1]=1;RotationY[1][2]=0;
   RotationY[2][0]=sy;RotationY[2][1]=0;RotationY[2][2]=cy;
-  
+
   MatrixType RotationZ;
   RotationZ[0][0]=cz;RotationZ[0][1]=sz;RotationZ[0][2]=0;
   RotationZ[1][0]=-sz;RotationZ[1][1]=cz;RotationZ[1][2]=0;
@@ -243,9 +243,9 @@ GetJacobian( const InputPointType & p,
   const JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;
 
   /** Compute dR/dmu * (p-c) */
- 
+
   const InputVectorType pp = p - this->GetCenter();
-  for(unsigned int dim=0; dim < 9; dim++ ) 
+  for(unsigned int dim=0; dim < 9; dim++ )
   {
     const InputVectorType column = jsj[dim] * pp;
     for (unsigned int i=0; i < SpaceDimension; ++i)
@@ -256,7 +256,7 @@ GetJacobian( const InputPointType & p,
 
   // compute derivatives for the translation part
   const unsigned int blockOffset = 9;
-  for(unsigned int dim=0; dim < SpaceDimension; dim++ ) 
+  for(unsigned int dim=0; dim < SpaceDimension; dim++ )
   {
     j[ dim ][ blockOffset + dim ] = 1.0;
   }
@@ -284,7 +284,7 @@ AffineDTI3DTransform<TScalarType>
   const double cx = vcl_cos( this->m_Angle[0] );
   const double sx = vcl_sin( this->m_Angle[0] );
   const double cy = vcl_cos( this->m_Angle[1] );
-  const double sy = vcl_sin( this->m_Angle[1] ); 
+  const double sy = vcl_sin( this->m_Angle[1] );
   const double cz = vcl_cos( this->m_Angle[2] );
   const double sz = vcl_sin( this->m_Angle[2] );
   const double gx = this->m_Shear[0];
@@ -298,10 +298,10 @@ AffineDTI3DTransform<TScalarType>
   const double cxd = -vcl_sin( this->m_Angle[0] );
   const double sxd = vcl_cos( this->m_Angle[0] );
   const double cyd = -vcl_sin( this->m_Angle[1] );
-  const double syd = vcl_cos( this->m_Angle[1] ); 
+  const double syd = vcl_cos( this->m_Angle[1] );
   const double czd = -vcl_sin( this->m_Angle[2] );
   const double szd = vcl_cos( this->m_Angle[2] );
-  
+
   /** NB: opposite definition as in EulerTransform */
   MatrixType RotationX;
   RotationX[0][0]=1;RotationX[0][1]=0;RotationX[0][2]=0;
@@ -312,7 +312,7 @@ AffineDTI3DTransform<TScalarType>
   RotationY[0][0]=cy;RotationY[0][1]=0;RotationY[0][2]=-sy;
   RotationY[1][0]=0;RotationY[1][1]=1;RotationY[1][2]=0;
   RotationY[2][0]=sy;RotationY[2][1]=0;RotationY[2][2]=cy;
-  
+
   MatrixType RotationZ;
   RotationZ[0][0]=cz;RotationZ[0][1]=sz;RotationZ[0][2]=0;
   RotationZ[1][0]=-sz;RotationZ[1][1]=cz;RotationZ[1][2]=0;
@@ -358,7 +358,7 @@ AffineDTI3DTransform<TScalarType>
   RotationYd[0][0]=cyd;RotationYd[0][1]=0;RotationYd[0][2]=-syd;
   RotationYd[1][0]=0;RotationYd[1][1]=0;RotationYd[1][2]=0;
   RotationYd[2][0]=syd;RotationYd[2][1]=0;RotationYd[2][2]=cyd;
-  
+
   MatrixType RotationZd;
   RotationZd[0][0]=czd;RotationZd[0][1]=szd;RotationZd[0][2]=0;
   RotationZd[1][0]=-szd;RotationZd[1][1]=czd;RotationZd[1][2]=0;
@@ -393,7 +393,7 @@ AffineDTI3DTransform<TScalarType>
   ScaleZd[0][0]=0;ScaleZd[0][1]=0;ScaleZd[0][2]=0;
   ScaleZd[1][0]=0;ScaleZd[1][1]=0;ScaleZd[1][2]=0;
   ScaleZd[2][0]=0;ScaleZd[2][1]=0;ScaleZd[2][2]=1;
- 
+
   jsj[0] = RotationXd * RotationY * RotationZ *
     ShearX * ShearY * ShearZ * ScaleX * ScaleY * ScaleZ;
   jsj[1] = RotationX * RotationYd * RotationZ *
@@ -412,14 +412,14 @@ AffineDTI3DTransform<TScalarType>
     ShearX * ShearY * ShearZ * ScaleX * ScaleYd * ScaleZ;
   jsj[8] = RotationX * RotationY * RotationZ *
     ShearX * ShearY * ShearZ * ScaleX * ScaleY * ScaleZd;
-  
+
   /** Translation parameters: */
   for ( unsigned int par = 9; par < 12; ++par )
   {
     jsj[par].Fill(0.0);
   }
 }
-  
+
 // Print self
 template<class TScalarType>
 void
@@ -431,7 +431,7 @@ PrintSelf(std::ostream &os, Indent indent) const
   os << indent << "Angles: " << this->m_Angle  << std::endl;
   os << indent << "Shear: " << this->m_Shear  << std::endl;
   os << indent << "Scale: " << this->m_Scale  << std::endl;
-  
+
 }
 
 } // namespace

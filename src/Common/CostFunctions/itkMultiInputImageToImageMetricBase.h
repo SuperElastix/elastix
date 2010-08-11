@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -33,7 +33,7 @@
 
 namespace itk
 {
-  
+
 /** \class MultiInputImageToImageMetricBase
  *
  * \brief Implements a metric base class that takes multiple inputs.
@@ -58,7 +58,7 @@ public:
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( MultiInputImageToImageMetricBase, AdvancedImageToImageMetric );
-  
+
   /** Constants for the image dimensions */
   itkStaticConstMacro( MovingImageDimension, unsigned int,
     TMovingImage::ImageDimension );
@@ -300,10 +300,10 @@ public:
   itkGetConstMacro( NumberOfFixedImageInterpolators, unsigned int );
 
   /** ******************** Other public functions ******************** */
-  
+
   /** Initialisation. */
   virtual void Initialize( void ) throw ( ExceptionObject );
-  
+
 protected:
 
   /** Constructor. */
@@ -315,9 +315,9 @@ protected:
   /** Typedef's from the Superclass. */
   typedef typename Superclass::MovingImagePointType       MovingImagePointType;
   typedef typename Superclass::MovingImageIndexType       MovingImageIndexType;
-  typedef typename Superclass::MovingImageDerivativeType  MovingImageDerivativeType; 
+  typedef typename Superclass::MovingImageDerivativeType  MovingImageDerivativeType;
   typedef typename Superclass::MovingImageContinuousIndexType MovingImageContinuousIndexType;
-  
+
   /** Typedef's for the moving image interpolators. */
   typedef typename Superclass::BSplineInterpolatorType    BSplineInterpolatorType;
   typedef typename BSplineInterpolatorType::Pointer       BSplineInterpolatorPointer;
@@ -334,7 +334,7 @@ protected:
   /** Check if mappedPoint is inside all moving images.
    * If so, the moving image value and possibly derivative are computed.
    */
-  virtual bool EvaluateMovingImageValueAndDerivative( 
+  virtual bool EvaluateMovingImageValueAndDerivative(
     const MovingImagePointType & mappedPoint,
     RealType & movingImageValue,
     MovingImageDerivativeType * gradient ) const;
@@ -370,7 +370,7 @@ private:
   unsigned int  m_NumberOfMovingImageMasks;
   unsigned int  m_NumberOfInterpolators;
   unsigned int  m_NumberOfFixedImageInterpolators;
- 
+
 }; // end class MultiInputImageToImageMetricBase
 
 } // end namespace itk

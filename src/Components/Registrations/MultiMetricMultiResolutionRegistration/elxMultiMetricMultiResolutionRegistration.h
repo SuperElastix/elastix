@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -41,10 +41,10 @@ using namespace itk;
  * <tt>(ImageSampler "Random" "Random")</tt>\n
  * or:\n
  * <tt>(ImageSampler "Random" "Full")</tt>\n
- * 
+ *
  * Note, that the number of metrics should always be larger than or equal
  * to the number of fixed/moving images, interpolators, image pyramids etc.
- * Also, when all metrics need an image sampler, for each fixed image pyramid, 
+ * Also, when all metrics need an image sampler, for each fixed image pyramid,
  * an image sampler must be provided. In some cases, one sampler can be
  * used for all metrics. This is the case when multiple metrics are desired,
  * but
@@ -83,7 +83,7 @@ class MultiMetricMultiResolutionRegistration
   public RegistrationBase<TElastix>
 {
 public:
-  
+
   /** Standard ITK: Self */
   typedef MultiMetricMultiResolutionRegistration      Self;
 
@@ -173,18 +173,18 @@ public:
   /** Execute stuff before the actual registration:
    * \li Connect all components to the registration framework.
    * \li Set the number of resolution levels.
-   * \li Set the fixed image regions. 
+   * \li Set the fixed image regions.
    * \li Add the sub metric columns to the iteration info object.
    */
   virtual void BeforeRegistration( void );
 
   /** Execute stuff before each resolution:
-   * \li Update masks with an erosion. 
+   * \li Update masks with an erosion.
    * \li Set the metric weights.
    */
   virtual void BeforeEachResolution( void );
 
-  /** Execute stuff after each iteration 
+  /** Execute stuff after each iteration
    * \li Print the latest computed submetric values to screen.
    */
   virtual void AfterEachIteration( void );
@@ -217,7 +217,7 @@ protected:
   void UpdateMovingMasks( unsigned int level );
 
   /** Read the components from m_Elastix and set them in the Registration class. */
-  virtual void SetComponents( void );   
+  virtual void SetComponents( void );
 
 private:
 

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -25,8 +25,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -39,30 +39,30 @@
 
 namespace itk
 {
-  
+
 /** \class ImageMaskSpatialObject2
  * \brief Implementation of an image mask as spatial object.
  *
  * This class fixes a bug in the ITK. The ITK has implemented
  * the ImageSpatialObject with a wrong conversion between physical
- * coordinates and image coordinates. This class solves that. 
- * 
+ * coordinates and image coordinates. This class solves that.
+ *
  */
 
 template < unsigned int TDimension = 3 >
-class ImageMaskSpatialObject2 
+class ImageMaskSpatialObject2
   : public ImageSpatialObject2< TDimension, unsigned char >
 {
 
 public:
- 
+
   typedef ImageMaskSpatialObject2< TDimension >       Self;
   typedef ImageSpatialObject2< TDimension >           Superclass;
   typedef SmartPointer< Self >                        Pointer;
   typedef SmartPointer< const Self >                  ConstPointer;
 
-  typedef typename Superclass::ScalarType             ScalarType; 
-  typedef typename Superclass::PixelType              PixelType; 
+  typedef typename Superclass::ScalarType             ScalarType;
+  typedef typename Superclass::PixelType              PixelType;
   typedef typename Superclass::ImageType              ImageType;
   typedef typename Superclass::ImagePointer           ImagePointer;
   typedef typename Superclass::IndexType              IndexType;
@@ -72,7 +72,7 @@ public:
   typedef typename Superclass::PointType              PointType;
   typedef typename Superclass::BoundingBoxType        BoundingBoxType;
 
-  typedef itk::ImageSliceConstIteratorWithIndex< ImageType >  
+  typedef itk::ImageSliceConstIteratorWithIndex< ImageType >
                                                       SliceIteratorType;
 
   /** Method for creation through the object factory. */
@@ -85,9 +85,9 @@ public:
   bool IsInside( const PointType & point,
                  unsigned int depth, char *name) const;
 
-   /** Test whether a point is inside or outside the object 
+   /** Test whether a point is inside or outside the object
    *  For computational speed purposes, it is faster if the method does not
-   *  check the name of the class and the current depth */ 
+   *  check the name of the class and the current depth */
   virtual bool IsInside( const PointType & point) const;
 
   /** Compute axis aligned bounding box from the image mask. The bounding box

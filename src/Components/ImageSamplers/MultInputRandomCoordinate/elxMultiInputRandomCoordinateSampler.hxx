@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -32,7 +32,7 @@ namespace elastix
   {
     const unsigned int level =
       ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
-  
+
     /** Set the NumberOfSpatialSamples. */
     unsigned long numberOfSpatialSamples = 5000;
     this->GetConfiguration()->ReadParameter( numberOfSpatialSamples,
@@ -56,14 +56,14 @@ namespace elastix
 
     /** Set the SampleRegionSize. */
     if ( useRandomSampleRegion )
-    {      
+    {
       InputImageSpacingType sampleRegionSize;
       InputImageSpacingType fixedImageSpacing =
         this->GetElastix()->GetFixedImage()->GetSpacing();
       InputImageSizeType fixedImageSize =
         this->GetElastix()->GetFixedImage()->GetLargestPossibleRegion().GetSize();
-      
-      /** Estimate default: 
+
+      /** Estimate default:
        * sampleRegionSize[i] = min ( fixedImageSizeInMM[i], max_i ( fixedImageSizeInMM[i]/3 ) )
        */
       double maxthird = 0.0;
@@ -76,12 +76,12 @@ namespace elastix
       {
         sampleRegionSize[i] = vnl_math_min( maxthird, sampleRegionSize[i] );
       }
-      
+
       /** Read user's choice. */
       for ( unsigned int i = 0; i < InputImageDimension; ++i )
-      {                
+      {
         this->GetConfiguration()->ReadParameter(
-          sampleRegionSize[ i ], "SampleRegionSize", 
+          sampleRegionSize[ i ], "SampleRegionSize",
           this->GetComponentLabel(), level * InputImageDimension + i, 0 );
       }
       this->SetSampleRegionSize( sampleRegionSize );

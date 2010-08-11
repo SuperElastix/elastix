@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -27,10 +27,10 @@ namespace itk
    * \class GenericConjugateGradientOptimizer
    * \brief A set of conjugate gradient algorithms.
    *
-   * The steplength is determined at each iteration by means of a 
-   * line search routine. The itk::MoreThuenteLineSearchOptimizer works well. 
-   *  
-   * 
+   * The steplength is determined at each iteration by means of a
+   * line search routine. The itk::MoreThuenteLineSearchOptimizer works well.
+   *
+   *
    * \ingroup Numerics Optimizers
    */
 
@@ -57,7 +57,7 @@ namespace itk
 
     typedef LineSearchOptimizer                   LineSearchOptimizerType;
     typedef LineSearchOptimizerType::Pointer      LineSearchOptimizerPointer;
-    
+
     /** Typedef for a function that computes \f$\beta\f$, given the previousGradient,
      * the current gradient, and the previous search direction */
     typedef double (Self::*                       ComputeBetaFunctionType
@@ -67,7 +67,7 @@ namespace itk
     typedef std::string                           BetaDefinitionType;
     typedef std::map< BetaDefinitionType,
       ComputeBetaFunctionType >                   BetaDefinitionMapType;
-            
+
     typedef enum {
       MetricError,
       LineSearchError,
@@ -80,7 +80,7 @@ namespace itk
     virtual void StartOptimization(void);
     virtual void ResumeOptimization(void);
     virtual void StopOptimization(void);
-    
+
     /** Get information about optimization process: */
     itkGetConstMacro(CurrentIteration, unsigned long);
     itkGetConstMacro(CurrentValue, MeasureType);
@@ -88,9 +88,9 @@ namespace itk
     itkGetConstMacro(InLineSearch, bool);
     itkGetConstReferenceMacro(StopCondition, StopConditionType);
     itkGetConstMacro(CurrentStepLength, double);
-    
+
     /** Setting: the line search optimizer */
-    itkSetObjectMacro(LineSearchOptimizer, LineSearchOptimizerType); 
+    itkSetObjectMacro(LineSearchOptimizer, LineSearchOptimizerType);
     itkGetObjectMacro(LineSearchOptimizer, LineSearchOptimizerType);
 
     /** Setting: the maximum number of iterations */
@@ -99,26 +99,26 @@ namespace itk
       1, NumericTraits<unsigned long>::max());
 
     /** Setting: the mininum gradient magnitude. By default 1e-5.
-     * 
+     *
      * The optimizer stops when:
-     * \f$ \|CurrentGradient\| < 
+     * \f$ \|CurrentGradient\| <
      *   GradientMagnitudeTolerance * \max(1, \|CurrentPosition\| ) \f$
      */
     itkGetConstMacro(GradientMagnitudeTolerance, double);
     itkSetMacro(GradientMagnitudeTolerance, double)
 
     /** Setting: a stopping criterion, the value tolerance. By default 1e-5.
-     * 
+     *
      * The optimizer stops when
-     * \f[ 2.0 * | f_k - f_{k-1} | \le 
+     * \f[ 2.0 * | f_k - f_{k-1} | \le
      *   ValueTolerance * ( |f_k| + |f_{k-1}| + 1e-20 ) \f]
      * is satisfied MaxNrOfItWithoutImprovement times in a row.
      */
     itkGetConstMacro(ValueTolerance, double);
     itkSetMacro(ValueTolerance, double);
 
-    /** Setting: the maximum number of iterations in a row that 
-     * satisfy the value tolerance criterion. By default (if never set) 
+    /** Setting: the maximum number of iterations in a row that
+     * satisfy the value tolerance criterion. By default (if never set)
      * equal to the number of parameters. */
     virtual void SetMaxNrOfItWithoutImprovement(unsigned long arg);
     itkGetConstMacro(MaxNrOfItWithoutImprovement, unsigned long);
@@ -126,7 +126,7 @@ namespace itk
     /** Setting: the definition of \f$\beta\f$, by default "DaiYuanHestenesStiefel" */
     virtual void SetBetaDefinition(const BetaDefinitionType & arg);
     itkGetConstReferenceMacro(BetaDefinition, BetaDefinitionType);
-        
+
   protected:
     GenericConjugateGradientOptimizer();
     virtual ~GenericConjugateGradientOptimizer(){};
@@ -156,28 +156,28 @@ namespace itk
 
     /** The name of the BetaDefinition */
     BetaDefinitionType            m_BetaDefinition;
-    
+
     /** A mapping that links the names of the BetaDefinitions to functions that
      * compute \f$\beta\f$. */
     BetaDefinitionMapType         m_BetaDefinitionMap;
-    
-    /** Function to add a new beta definition. The first argument should be a name 
-     * via which a user can select this \f$\beta\f$ definition. The second argument is a 
+
+    /** Function to add a new beta definition. The first argument should be a name
+     * via which a user can select this \f$\beta\f$ definition. The second argument is a
      * pointer to a method that computes \f$\beta\f$.
      * Called in the constructor of this class, and possibly by subclasses.
      */
     virtual void AddBetaDefinition(
       const BetaDefinitionType & name,
       ComputeBetaFunctionType function);
-        
-    /** 
+
+    /**
      * Compute the search direction:
      *    \f[ d_{k} = - g_{k} + \beta_{k} d_{k-1} \f]
      *
      * In the first iteration the search direction is computed as:
      *    \f[ d_{0} = - g_{0} \f]
      *
-     * On calling, searchDir should equal \f$d_{k-1}\f$. On return searchDir 
+     * On calling, searchDir should equal \f$d_{k-1}\f$. On return searchDir
      * equals \f$d_{k}\f$.
      */
     virtual void ComputeSearchDirection(
@@ -186,7 +186,7 @@ namespace itk
       ParametersType & searchDir);
 
     /** Perform a line search along the search direction. On calling, \f$x, f\f$, and \f$g\f$ should
-     * contain the current position, the cost function value at this position, and 
+     * contain the current position, the cost function value at this position, and
      * the derivative. On return the step, \f$x\f$ (new position), \f$f\f$ (value at \f$x\f$), and \f$g\f$
      * (derivative at \f$x\f$) are updated. */
     virtual void LineSearch(
@@ -195,7 +195,7 @@ namespace itk
       ParametersType & x,
       MeasureType & f,
       DerivativeType & g );
-    
+
     /** Check if convergence has occured;
      * The firstLineSearchDone bool allows the implementation of TestConvergence to
      * decide to skip a few convergence checks when no line search has performed yet
@@ -240,8 +240,8 @@ namespace itk
       const DerivativeType & previousGradient,
       const DerivativeType & gradient,
       const ParametersType & previousSearchDir);
-      
-    
+
+
   private:
     GenericConjugateGradientOptimizer(const Self&); //purposely not implemented
     void operator=(const Self&); //purposely not implemented
@@ -250,10 +250,10 @@ namespace itk
     double                        m_ValueTolerance;
     double                        m_GradientMagnitudeTolerance;
     unsigned long                 m_MaxNrOfItWithoutImprovement;
-    
+
     LineSearchOptimizerPointer    m_LineSearchOptimizer;
-    
-    
+
+
   }; // end class GenericConjugateGradientOptimizer
 
 

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -24,12 +24,12 @@ namespace elastix
   /**
    * ********************* Constructor ****************************
    */
-  
+
   template <class TElastix>
     TranslationTransformElastix<TElastix>
     ::TranslationTransformElastix()
   {
-    this->m_TranslationTransform = 
+    this->m_TranslationTransform =
       TranslationTransformType::New();
     this->SetCurrentTransform( this->m_TranslationTransform );
   } // end Constructor
@@ -38,16 +38,16 @@ namespace elastix
   /*
    * ******************* BeforeRegistration ***********************
    */
-  
+
   template <class TElastix>
     void TranslationTransformElastix<TElastix>
     ::BeforeRegistration(void)
   {
     /** Give initial parameters to this->m_Registration.*/
     this->InitializeTransform();
-    
+
   } // end BeforeRegistration
-  
+
 
   /**
    * ************************* InitializeTransform *********************
@@ -57,10 +57,10 @@ namespace elastix
     void TranslationTransformElastix<TElastix>
     ::InitializeTransform( void )
   {
-    
+
     /** Set all parameters to zero (no translation */
     this->m_TranslationTransform->SetIdentity();
-    
+
     /** Check if user wants automatic transform initialization; false by default. */
     std::string automaticTransformInitializationString("false");
     bool automaticTransformInitialization = false;
@@ -73,14 +73,14 @@ namespace elastix
       automaticTransformInitialization = true;
     }
 
-    /** 
+    /**
      * Run the itkTransformInitializer if:
      *  the user asked for AutomaticTransformInitialization
      */
-    if ( automaticTransformInitialization ) 
+    if ( automaticTransformInitialization )
     {
       /** Use the TransformInitializer to determine an initial translation */
-      TransformInitializerPointer transformInitializer = 
+      TransformInitializerPointer transformInitializer =
         TransformInitializerType::New();
       transformInitializer->SetFixedImage(
         this->m_Registration->GetAsITKBaseType()->GetFixedImage() );
@@ -97,7 +97,7 @@ namespace elastix
       {
         transformInitializer->MomentsOn();
       }
-     
+
       transformInitializer->InitializeTransform();
     }
 
@@ -107,8 +107,8 @@ namespace elastix
 
 
   } // end InitializeTransform
-  
-  
+
+
 } // end namespace elastix
 
 

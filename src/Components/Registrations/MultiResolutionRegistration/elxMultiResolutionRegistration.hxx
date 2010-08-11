@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -21,7 +21,7 @@
 namespace elastix
 {
 using namespace itk;
-  
+
   /**
    * ******************* BeforeRegistration ***********************
    */
@@ -29,17 +29,17 @@ using namespace itk;
   template <class TElastix>
     void MultiResolutionRegistration<TElastix>
     ::BeforeRegistration(void)
-  { 
+  {
     /** Get the components from this->m_Elastix and set them. */
     this->SetComponents();
 
-    /** Set the number of resolutions. */   
+    /** Set the number of resolutions. */
     unsigned int numberOfResolutions = 3;
     this->m_Configuration->ReadParameter( numberOfResolutions, "NumberOfResolutions", 0 );
     this->SetNumberOfLevels( numberOfResolutions );
-        
+
     /** Set the FixedImageRegion. */
-    
+
     /** Make sure the fixed image is up to date. */
     try
     {
@@ -58,7 +58,7 @@ using namespace itk;
 
     /** Set the fixedImageRegion. */
     this->SetFixedImageRegion( this->GetElastix()->GetFixedImage()->GetBufferedRegion() );
-    
+
   } // end BeforeRegistration()
 
 
@@ -69,18 +69,18 @@ using namespace itk;
   template <class TElastix>
     void MultiResolutionRegistration<TElastix>
     ::BeforeEachResolution(void)
-  { 
+  {
     /** Get the current resolution level. */
     unsigned int level = this->GetCurrentLevel();
 
     /** Do erosion, or just reset the original masks in the metric, or
      * do nothing when no masks are used.
      */
-    this->UpdateMasks( level );   
+    this->UpdateMasks( level );
 
   } // end BeforeEachResolution
-  
-  
+
+
   /**
    * *********************** SetComponents ************************
    */
@@ -88,7 +88,7 @@ using namespace itk;
   template <class TElastix>
     void MultiResolutionRegistration<TElastix>
     ::SetComponents(void)
-  { 
+  {
     /** Get the component from this-GetElastix() (as elx::...BaseType *),
      * cast it to the appropriate type and set it in 'this'. */
 
@@ -155,13 +155,13 @@ using namespace itk;
       nrOfFixedMasks );
     const unsigned int oneOrNoMovingMasks = vnl_math_min( static_cast<unsigned int>(1),
       nrOfMovingMasks );
-    
+
     /** Array of bools, that remembers for each mask if erosion is wanted.
      * dummy, we will not use it.
      */
     UseMaskErosionArrayType useMaskErosionArray;
 
-    /** Bool that remembers if mask erosion is wanted in any of the masks 
+    /** Bool that remembers if mask erosion is wanted in any of the masks
      * remains false when no masks are used.
      */
     bool useFixedMaskErosion;
@@ -178,30 +178,30 @@ using namespace itk;
     /** Create and start timer, to time the whole fixed mask configuration procedure. */
     TimerPointer timer = TimerType::New();
     timer->StartTimer();
-        
-    FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject( 
+
+    FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject(
       this->GetElastix()->GetFixedMask(), useFixedMaskErosion,
       this->GetFixedImagePyramid(), level );
     this->GetMetric()->SetFixedImageMask( fixedMask );
-        
+
     /** Stop timer and print the elapsed time. */
     timer->StopTimer();
     elxout << "Setting the fixed masks took: "
-      << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) 
+      << static_cast<long>( timer->GetElapsedClockSec() * 1000 )
       << " ms." << std::endl;
 
     /** start timer, to time the whole moving mask configuration procedure. */
     timer->StartTimer();
-        
-    MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject( 
+
+    MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject(
       this->GetElastix()->GetMovingMask(), useMovingMaskErosion,
       this->GetMovingImagePyramid(), level );
     this->GetMetric()->SetMovingImageMask( movingMask );
-        
+
     /** Stop timer and print the elapsed time. */
     timer->StopTimer();
     elxout << "Setting the moving masks took: "
-      << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) 
+      << static_cast<long>( timer->GetElapsedClockSec() * 1000 )
       << " ms." << std::endl;
 
   } // end UpdateMasks

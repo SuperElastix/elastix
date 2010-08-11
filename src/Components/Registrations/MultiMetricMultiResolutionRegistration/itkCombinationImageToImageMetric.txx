@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -21,7 +21,7 @@
 /** Macros to reduce some copy-paste work.
  * These macros provide the implementation of
  * all Set/GetFixedImage, Set/GetInterpolator etc methods
- * 
+ *
  * The macros are undef'ed at the end of this file
  */
 
@@ -232,13 +232,13 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
 ::SetFixedImageRegion( const FixedImageRegionType _arg )
 {
   for ( unsigned int i = 0; i < this->GetNumberOfMetrics(); i++ )
-  { 
+  {
     this->SetFixedImageRegion( _arg, i );
   }
 
 } // end SetFixedImageRegion()
 
- 
+
 /**
  * ******************** GetFixedImageRegion ************************
  */
@@ -250,7 +250,7 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
 ::GetFixedImageRegion( unsigned int pos ) const
 {
   const ImageMetricType * testPtr
-    = dynamic_cast<const ImageMetricType *>( this->GetMetric( pos ) ); 
+    = dynamic_cast<const ImageMetricType *>( this->GetMetric( pos ) );
   if ( testPtr )
   {
     return testPtr->GetFixedImageRegion();
@@ -299,7 +299,7 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
   {
     this->SetNumberOfMetrics( pos + 1 );
   }
-  
+
   if ( metric != this->m_Metrics[ pos ] )
   {
     this->m_Metrics[ pos ] = metric;
@@ -502,7 +502,7 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
       sum += testPtr->GetNumberOfPixelsCounted();
     }
   }
-  
+
   this->m_NumberOfPixelsCounted = sum;
   return this->m_NumberOfPixelsCounted;
 
@@ -524,7 +524,7 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
    * which is a reasonable demand.
    */
   this->Superclass::Initialize();
-  
+
   /** Check if at least one (image)metric is provided */
   if ( this->GetNumberOfMetrics() == 0 )
   {

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -50,7 +50,7 @@ BSplineInterpolationWeightFunction2<TCoordRep, VSpaceDimension, VSplineOrder>
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     double x = index[ i ] - static_cast<double>( startIndex[ i ] );
-    
+
 //     for ( unsigned int k = 0; k < this->m_SupportSize[ i ]; ++k )
 //     {
 //       weights1D[ i ][ k ] = this->m_Kernel->Evaluate( x );
@@ -58,7 +58,7 @@ BSplineInterpolationWeightFunction2<TCoordRep, VSpaceDimension, VSplineOrder>
 //     }
     WeightArrayType weights;
     this->m_Kernel->Evaluate( x, weights );
-    
+
     for ( unsigned int k = 0; k < this->m_SupportSize[ i ]; ++k )
     {
       weights1D[ i ][ k ] = weights[ k ];

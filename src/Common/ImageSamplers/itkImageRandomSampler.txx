@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -25,7 +25,7 @@ namespace itk
   /**
    * ******************* GenerateData *******************
    */
-  
+
   template< class TInputImage >
     void
     ImageRandomSampler< TInputImage >
@@ -38,7 +38,7 @@ namespace itk
 
     /** Reserve memory for the output. */
     sampleContainer->Reserve( this->GetNumberOfSamples() );
- 
+
     /** Setup a random iterator over the input image. */
     typedef ImageRandomConstIteratorWithIndex< InputImageType > RandomIteratorType;
     RandomIteratorType randIter( inputImage, this->GetCroppedInputImageRegion() );
@@ -65,7 +65,7 @@ namespace itk
         (*iter).Value().m_ImageValue = randIter.Get();
         /** Jump to a random position. */
         ++randIter;
-        
+
       } // end for loop
     } // end if no mask
     else
@@ -82,7 +82,7 @@ namespace itk
       for ( iter = sampleContainer->Begin(); iter != end; ++iter )
       {
         /** Loop until a valid sample is found. */
-        do 
+        do
         {
           /** Jump to a random position. */
           ++randIter;
@@ -107,7 +107,7 @@ namespace itk
         /** Put the coordinates and the value in the sample. */
         (*iter).Value().m_ImageCoordinates = inputPoint;
         (*iter).Value().m_ImageValue = randIter.Get();
-        
+
       } // end for loop
 
       /** Extra random sample to make sure the same sequence is generated
@@ -115,7 +115,7 @@ namespace itk
       ++randIter;
 
     } // end if mask
-    
+
 
   } // end GenerateData()
 

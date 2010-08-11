@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -57,7 +57,7 @@ using namespace itk;
 
   } // end Initialize()
 
-  
+
   /**
    * ***************** BeforeEachResolution ***********************
    */
@@ -67,9 +67,9 @@ using namespace itk;
     ::BeforeEachResolution( void )
   {
     /** Get the current resolution level. */
-    unsigned int level = 
+    unsigned int level =
       ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
-    
+
     /** Get and set the number of histogram bins. */
     unsigned int numberOfHistogramBins = 32;
     this->GetConfiguration()->ReadParameter( numberOfHistogramBins,
@@ -91,7 +91,7 @@ using namespace itk;
     typedef ExponentialLimiterFunction< RealType, MovingImageDimension > MovingLimiterType;
     this->SetFixedImageLimiter( FixedLimiterType::New() );
     this->SetMovingImageLimiter( MovingLimiterType::New() );
-    
+
     /** Get and set the limit range ratios. */
     double fixedLimitRangeRatio = 0.01;
     double movingLimitRangeRatio = 0.01;
@@ -107,7 +107,7 @@ using namespace itk;
     unsigned int movingKernelBSplineOrder = 3;
     this->GetConfiguration()->ReadParameter( fixedKernelBSplineOrder,
       "FixedKernelBSplineOrder", this->GetComponentLabel(), level, 0 );
-    this->GetConfiguration()->ReadParameter( movingKernelBSplineOrder, 
+    this->GetConfiguration()->ReadParameter( movingKernelBSplineOrder,
       "MovingKernelBSplineOrder", this->GetComponentLabel(), level, 0 );
     this->SetFixedKernelBSplineOrder( fixedKernelBSplineOrder );
     this->SetMovingKernelBSplineOrder( movingKernelBSplineOrder );
@@ -163,10 +163,10 @@ using namespace itk;
       elxout << "Multiplying moving image derivatives by: "
         << movingImageDerivativeScales << std::endl;
     }
-    
+
   } // end BeforeEachResolution()
 
-  
+
   /**
    * ***************** AfterEachIteration ***********************
    */
@@ -178,29 +178,29 @@ using namespace itk;
     if ( this->GetUseFiniteDifferenceDerivative() )
     {
       this->m_CurrentIteration++;
-      this->SetFiniteDifferencePerturbation( 
+      this->SetFiniteDifferencePerturbation(
         this->Compute_c( this->m_CurrentIteration )  );
     }
   }  // end AfterEachIteration()
 
-    
+
   /**
    * ************************** Compute_c *************************
    *
    * This function computes the parameter a at iteration k, as
    * in the finite difference optimizer.
    */
-  
+
   template <class TElastix>
     double AdvancedMattesMutualInformationMetric<TElastix>
     ::Compute_c( unsigned long k ) const
-  { 
+  {
     return static_cast<double>(
       this->m_Param_c / vcl_pow( k + 1, this->m_Param_gamma ) );
 
   } // end Compute_c()
-  
-  
+
+
 } // end namespace elastix
 
 

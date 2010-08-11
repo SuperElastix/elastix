@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -93,8 +93,8 @@ using namespace itk;
      */
     virtual void BeforeEachResolutionBase();
 
-    /** Method that sets the scales defined by a sinus 
-     * scale[i] = amplitude^( sin(i/nrofparam*2pi*frequency) ) 
+    /** Method that sets the scales defined by a sinus
+     * scale[i] = amplitude^( sin(i/nrofparam*2pi*frequency) )
      */
     virtual void SetSinusScales(double amplitude, double frequency,
       unsigned long numberOfParameters);
@@ -113,7 +113,7 @@ using namespace itk;
 
     /** Check whether the user asked to select new samples every iteration. */
     virtual const bool GetNewSamplesEveryIteration(void) const;
-    
+
   private:
 
     /** The private constructor. */

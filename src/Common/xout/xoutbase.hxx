@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -22,7 +22,7 @@ namespace xoutlibrary
 {
   using namespace std;
 
-  
+
   /**
    * ********************* Constructor ****************************
    */
@@ -46,7 +46,7 @@ namespace xoutlibrary
 
   } // end Destructor
 
-  
+
   /**
    * ********************* operator[] *****************************
    */
@@ -62,8 +62,8 @@ namespace xoutlibrary
 
   /**
    * ******************** WriteBufferedData ***********************
-   * 
-   * This method can be overriden in inheriting classes. They 
+   *
+   * This method can be overriden in inheriting classes. They
    * could for example define a specific order in which the
    * cells are flushed.
    */
@@ -77,7 +77,7 @@ namespace xoutlibrary
     {
       *(cit->second) << flush;
     }
-      
+
     /** WriteBufferedData of the target xout-objects. */
     for ( XStreamMapIteratorType xit = this->m_XTargetCells.begin();
         xit != this->m_XTargetCells.end(); ++xit )
@@ -87,7 +87,7 @@ namespace xoutlibrary
 
   } // end WriteBufferedData
 
-  
+
   /**
    * **************** AddTargetCell (ostream_type) ****************
    */
@@ -128,7 +128,7 @@ namespace xoutlibrary
     int returndummy = 1;
 
     if ( this->m_CTargetCells.count( name ) )
-    { 
+    {
       /** a C-cell with the same name already exists */
       returndummy = 2;
     }
@@ -142,7 +142,7 @@ namespace xoutlibrary
     }
 
     return returndummy;
-  
+
   } // end AddTargetCell
 
 
@@ -161,13 +161,13 @@ namespace xoutlibrary
       this->m_XTargetCells.erase( name );
       returndummy = 0;
     }
-    
+
     if ( this->m_CTargetCells.count( name ) )
     {
       this->m_CTargetCells.erase( name );
       returndummy = 0;
     }
-    
+
     return returndummy;
 
   } // end RemoveTargetCell
@@ -180,19 +180,19 @@ namespace xoutlibrary
   template< class charT, class traits >
     void xoutbase<charT, traits>::
     SetTargetCells( const CStreamMapType & cellmap )
-  {   
+  {
     this->m_CTargetCells = cellmap;
 
   } // end SetTargetCells
 
-  
+
   /**
    * **************** SetTargetCells (xout objects) ***************
    */
   template< class charT, class traits >
     void xoutbase<charT, traits>::
     SetTargetCells( const XStreamMapType & cellmap )
-  {   
+  {
     this->m_XTargetCells = cellmap;
 
   } // end SetTargetCells
@@ -209,7 +209,7 @@ namespace xoutlibrary
     int returndummy = 1;
 
     if ( this->m_XOutputs.count( name ) )
-    { 
+    {
       returndummy = 2;
     }
     else
@@ -237,7 +237,7 @@ namespace xoutlibrary
     int returndummy = 1;
 
     if ( this->m_COutputs.count( name ) )
-    { 
+    {
       returndummy = 2;
     }
     else
@@ -269,13 +269,13 @@ namespace xoutlibrary
       this->m_XOutputs.erase( name );
       returndummy = 0;
     }
-    
+
     if ( this->m_COutputs.count( name ) )
     {
       this->m_COutputs.erase( name );
       returndummy = 0;
     }
-    
+
     return returndummy;
 
   } // end RemoveOutput
@@ -288,12 +288,12 @@ namespace xoutlibrary
   template< class charT, class traits >
     void xoutbase<charT, traits>::
     SetOutputs( const CStreamMapType & outputmap )
-  {   
+  {
     this->m_COutputs = outputmap;
 
   } // end SetOutputs
 
-  
+
   /**
    * **************** SetOutputs (xoutobjects) ********************
    */
@@ -301,7 +301,7 @@ namespace xoutlibrary
   template< class charT, class traits >
     void xoutbase<charT, traits>::
     SetOutputs( const XStreamMapType & outputmap )
-  {   
+  {
     this->m_XOutputs = outputmap;
 
   } // end SetOutputs
@@ -309,14 +309,14 @@ namespace xoutlibrary
 
   /**
    * ************************ SelectXCell *************************
-   * 
+   *
    * Returns a target cell.
    */
 
   template< class charT, class traits >
     xoutbase<charT, traits> &
     xoutbase<charT, traits>::SelectXCell( const char * name )
-  {   
+  {
     if ( this->m_XTargetCells.count( name ) )
     {
       return *( this->m_XTargetCells[ name ] );
@@ -336,12 +336,12 @@ namespace xoutlibrary
   template< class charT, class traits >
     const typename xoutbase<charT, traits>::XStreamMapType &
     xoutbase<charT, traits>::GetXOutputs(void)
-  {   
+  {
     return this->m_XOutputs;
 
   } // end GetOutputs
 
-  
+
   /**
    * **************** GetOutputs (map of c-streams) ***************
    */
@@ -349,7 +349,7 @@ namespace xoutlibrary
   template< class charT, class traits >
     const typename xoutbase<charT, traits>::CStreamMapType &
     xoutbase<charT, traits>::GetCOutputs(void)
-  {   
+  {
     return this->m_COutputs;
 
   } // end GetOutputs

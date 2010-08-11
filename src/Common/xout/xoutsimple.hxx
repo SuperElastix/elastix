@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -55,7 +55,7 @@ namespace xoutlibrary
     AddOutput( const char * name, ostream_type * output )
   {
     return this->AddTargetCell( name, output );
-    
+
   } // end AddOutput
 
 
@@ -92,12 +92,12 @@ namespace xoutlibrary
   template< class charT, class traits >
     void xoutsimple<charT, traits>::
     SetOutputs( const CStreamMapType & outputmap )
-  {   
+  {
     this->SetTargetCells( outputmap );
 
   } // end SetOutputs
 
-  
+
   /**
    * **************** SetOutputs (xoutobjects) ********************
    */
@@ -105,11 +105,11 @@ namespace xoutlibrary
   template< class charT, class traits >
     void xoutsimple<charT, traits>::
     SetOutputs( const XStreamMapType & outputmap )
-  {   
+  {
     this->SetTargetCells( outputmap );
 
   } // end SetOutputs()
-  
+
 
   /**
    * **************** GetOutputs (map of xoutobjects) *************
@@ -118,12 +118,12 @@ namespace xoutlibrary
   template< class charT, class traits >
     const typename xoutsimple<charT, traits>::XStreamMapType &
     xoutsimple<charT, traits>::GetXOutputs( void )
-  {   
+  {
     return this->m_XTargetCells;
 
   } // end GetXOutputs()
 
-  
+
   /**
    * **************** GetOutputs (map of c-streams) ***************
    */
@@ -131,7 +131,7 @@ namespace xoutlibrary
   template< class charT, class traits >
     const typename xoutsimple<charT, traits>::CStreamMapType &
     xoutsimple<charT, traits>::GetCOutputs( void )
-  {   
+  {
     return this->m_CTargetCells;
 
   } // end GetCOutputs()

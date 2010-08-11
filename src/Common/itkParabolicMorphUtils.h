@@ -6,7 +6,7 @@
 #include "itkProgressReporter.h"
 namespace itk {
 template <class LineBufferType, class RealType, bool doDilate>
-void DoLine(LineBufferType &LineBuf, LineBufferType &tmpLineBuf, 
+void DoLine(LineBufferType &LineBuf, LineBufferType &tmpLineBuf,
 	    const RealType magnitude, const RealType m_Extreme)
 {
   // contact point algorithm
@@ -51,11 +51,11 @@ void DoLine(LineBufferType &LineBuf, LineBufferType &tmpLineBuf,
     }
 }
 
-template <class TInIter, class TOutIter, class RealType, 
+template <class TInIter, class TOutIter, class RealType,
 	  class OutputPixelType, bool doDilate>
-void doOneDimension(TInIter &inputIterator, TOutIter &outputIterator, 
+void doOneDimension(TInIter &inputIterator, TOutIter &outputIterator,
 		    ProgressReporter &progress,
-		    const long LineLength, 
+		    const long LineLength,
 		    const unsigned direction,
 		    const int m_MagnitudeSign,
 		    const bool m_UseImageSpacing,
@@ -80,7 +80,7 @@ void doOneDimension(TInIter &inputIterator, TOutIter &outputIterator,
   outputIterator.SetDirection(direction);
   inputIterator.GoToBegin();
   outputIterator.GoToBegin();
-  
+
   while( !inputIterator.IsAtEnd() && !outputIterator.IsAtEnd() )
     {
     // process this direction
@@ -92,7 +92,7 @@ void doOneDimension(TInIter &inputIterator, TOutIter &outputIterator,
       LineBuf[i++]      = static_cast<RealType>(inputIterator.Get());
       ++inputIterator;
       }
-    
+
     DoLine<LineBufferType, RealType, doDilate>(LineBuf, tmpLineBuf, magnitude, m_Extreme);
     // copy the line back
     unsigned int j=0;
@@ -101,7 +101,7 @@ void doOneDimension(TInIter &inputIterator, TOutIter &outputIterator,
       outputIterator.Set( static_cast<OutputPixelType>( LineBuf[j++] ) );
       ++outputIterator;
       }
-    
+
     // now onto the next line
     inputIterator.NextLine();
     outputIterator.NextLine();

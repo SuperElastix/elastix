@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -24,12 +24,12 @@ namespace itk
    * \class RSGDEachParameterApartBaseOptimizer
    * \brief An optimizer based on gradient descent...
    *
-   * This optimizer 
+   * This optimizer
    *
    * \ingroup Optimizers
    */
 
-  class RSGDEachParameterApartBaseOptimizer : 
+  class RSGDEachParameterApartBaseOptimizer :
     public SingleValuedNonLinearOptimizer
   {
   public:
@@ -43,7 +43,7 @@ namespace itk
     itkNewMacro(Self);
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( RSGDEachParameterApartBaseOptimizer, 
+    itkTypeMacro( RSGDEachParameterApartBaseOptimizer,
       SingleValuedNonLinearOptimizer );
 
     /** Codes of stopping conditions. */
@@ -64,9 +64,9 @@ namespace itk
     { return !m_Maximize; }
     void SetMinimize(bool v)
     { this->SetMaximize(!v); }
-    void    MinimizeOn(void) 
+    void    MinimizeOn(void)
     { SetMaximize( false ); }
-    void    MinimizeOff(void) 
+    void    MinimizeOff(void)
     { SetMaximize( true ); }
 
     /** Start optimization. */
@@ -124,7 +124,7 @@ namespace itk
     * which contains the steplength for each parameter apart.
     *
     * \sa AdvanceOneStep */
-    virtual void StepAlongGradient( 
+    virtual void StepAlongGradient(
       const DerivativeType &,
       const DerivativeType&)
     {
@@ -141,8 +141,8 @@ namespace itk
 
   protected:
 
-    DerivativeType                m_Gradient; 
-    DerivativeType                m_PreviousGradient; 
+    DerivativeType                m_Gradient;
+    DerivativeType                m_PreviousGradient;
 
     bool                          m_Stop;
     bool                          m_Maximize;

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -19,7 +19,7 @@
 
 int main( int argc, char **argv )
 {
-  
+
   /** Check if "--help" or "--version" was asked for. */
   if ( argc == 1 )
   {
@@ -63,10 +63,10 @@ int main( int argc, char **argv )
   typedef std::pair< std::string, std::string >       ArgPairType;
   typedef std::queue< ArgPairType >                   ParameterFileListType;
   typedef ParameterFileListType::value_type           ParameterFileListEntryType;
-  
+
   /** Some declarations and initialisations. */
   ElastixMainVectorType elastices;
-  
+
   ObjectPointer transform = 0;
   DataObjectContainerPointer fixedImageContainer = 0;
   DataObjectContainerPointer movingImageContainer = 0;
@@ -86,12 +86,12 @@ int main( int argc, char **argv )
   {
     std::string key( argv[ i ] );
     std::string value( argv[ i + 1 ] );
-    
+
     if ( key == "-p" )
     {
       /** Queue the ParameterFileNames. */
       nrOfParameterFiles++;
-      parameterFileList.push( 
+      parameterFileList.push(
         ParameterFileListEntryType( key.c_str(), value.c_str() ) );
       /** The different '-p' are stored in the argMap, with
        * keys p(1), p(2), etc. */
@@ -115,10 +115,10 @@ int main( int argc, char **argv )
         outFolder = value;
 
       } // end if key == "-out"
-      
+
       /** Attempt to save the arguments in the ArgumentMap. */
       if ( argMap.count( key.c_str() ) == 0 )
-      { 
+      {
         argMap.insert( ArgumentMapEntryType( key.c_str(), value.c_str() ) );
       }
       else
@@ -132,7 +132,7 @@ int main( int argc, char **argv )
     } // end else (so, if key does not equal "-p")
 
   } // end for loop
-  
+
   /** The argv0 argument, required for finding the component.dll/so's. */
   argMap.insert( ArgumentMapEntryType( "-argv0", argv[ 0 ] )  );
 
@@ -208,7 +208,7 @@ int main( int argc, char **argv )
   {
     /** Create another instance of ElastixMain. */
     elastices.push_back( ElastixMainType::New() );
-    
+
     /** Set stuff we get from a former registration. */
     elastices[ i ]->SetInitialTransform( transform );
     elastices[ i ]->SetFixedImageContainer( fixedImageContainer );
@@ -220,7 +220,7 @@ int main( int argc, char **argv )
     /** Set the current elastix-level. */
     elastices[ i ]->SetElastixLevel( i );
     elastices[ i ]->SetTotalNumberOfElastixLevels( nrOfParameterFiles );
-    
+
     /** Delete the previous ParameterFileName. */
     if ( argMap.count( "-p" ) )
     {
@@ -246,24 +246,24 @@ int main( int argc, char **argv )
 
     /** Start registration. */
     returndummy = elastices[ i ]->Run( argMap );
-    
+
     /** Check for errors. */
     if ( returndummy != 0 )
     {
       xl::xout["error"] << "Errors occurred!" << std::endl;
       return returndummy;
     }
-    
+
     /** Get the transform, the fixedImage and the movingImage
      * in order to put it in the (possibly) next registration.
      */
-    transform            = elastices[ i ]->GetFinalTransform(); 
+    transform            = elastices[ i ]->GetFinalTransform();
     fixedImageContainer  = elastices[ i ]->GetFixedImageContainer();
     movingImageContainer = elastices[ i ]->GetMovingImageContainer();
     fixedMaskContainer   = elastices[ i ]->GetFixedMaskContainer();
     movingMaskContainer  = elastices[ i ]->GetMovingMaskContainer();
     fixedImageOriginalDirection = elastices[ i ]->GetOriginalFixedImageDirectionFlat();
-    
+
     /** Print a finish message. */
     elxout << "Running elastix with parameter file " << i
       << ": \"" << argMap[ "-p" ] << "\", has finished.\n" << std::endl;
@@ -279,14 +279,14 @@ int main( int argc, char **argv )
 
   } // end loop over registrations
 
-  elxout << "-------------------------------------------------------------------------" << "\n" << std::endl; 
+  elxout << "-------------------------------------------------------------------------" << "\n" << std::endl;
 
   /** Stop totaltimer and print it. */
   totaltimer->StopTimer();
   elxout << "Total time elapsed: " << totaltimer->PrintElapsedTimeDHMS() << ".\n" << std::endl;
 
-  /** 
-   * Make sure all the components that are defined in a Module (.DLL/.so) 
+  /**
+   * Make sure all the components that are defined in a Module (.DLL/.so)
    * are deleted before the modules are closed.
    */
 
@@ -300,10 +300,10 @@ int main( int argc, char **argv )
   movingImageContainer = 0;
   fixedMaskContainer = 0;
   movingMaskContainer = 0;
-  
+
   /** Close the modules. */
   ElastixMainType::UnloadComponents();
-  
+
   /** Exit and return the error code. */
   return returndummy;
 
@@ -344,7 +344,7 @@ void PrintHelp( void )
     "(Windows only)\n";
   std::cout << "-threads  set the maximum number of threads of elastix\n"
     << std::endl;
-  
+
   /** The parameter file.*/
   std::cout << "The parameter-file must contain all the information "
     "necessary for elastix to run properly. That includes which metric to "

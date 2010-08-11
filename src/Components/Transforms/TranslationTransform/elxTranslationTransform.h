@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -22,7 +22,7 @@
 namespace elastix
 {
   using namespace itk;
-  
+
   /**
    * \class TranslationTransformElastix
    * \brief A transform based on the itk::TranslationTransform.
@@ -48,28 +48,28 @@ namespace elastix
       public elx::TransformBase<TElastix>
   {
   public:
-    
+
     /** Standard ITK-stuff. */
     typedef TranslationTransformElastix                     Self;
-    
+
     typedef AdvancedCombinationTransform<
       typename elx::TransformBase<TElastix>::CoordRepType,
       elx::TransformBase<TElastix>::FixedImageDimension >   Superclass1;
-    
+
     typedef elx::TransformBase<TElastix>                    Superclass2;
-    
+
     /** The ITK-class that provides most of the functionality, and
      * that is set as the "CurrentTransform" in the CombinationTransform */
     typedef AdvancedTranslationTransform<
       typename elx::TransformBase<TElastix>::CoordRepType,
       elx::TransformBase<TElastix>::FixedImageDimension >   TranslationTransformType;
-    
+
     typedef SmartPointer<Self>                              Pointer;
     typedef SmartPointer<const Self>                        ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( TranslationTransformElastix, AdvancedCombinationTransform );
 
@@ -81,7 +81,7 @@ namespace elastix
 
     /** Dimension of the domain space. */
     itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );
-    
+
     /** Typedefs inherited from the superclass. */
     typedef typename Superclass1::ScalarType                ScalarType;
     typedef typename Superclass1::ParametersType            ParametersType;
@@ -94,7 +94,7 @@ namespace elastix
     typedef typename Superclass1::OutputVnlVectorType       OutputVnlVectorType;
     typedef typename Superclass1::InputPointType            InputPointType;
     typedef typename Superclass1::OutputPointType           OutputPointType;
-    
+
     /** Typedef's from the TransformBase class. */
     typedef typename Superclass2::ElastixType               ElastixType;
     typedef typename Superclass2::ElastixPointer            ElastixPointer;
@@ -107,7 +107,7 @@ namespace elastix
     typedef typename Superclass2::MovingImageType           MovingImageType;
     typedef typename Superclass2::ITKBaseType               ITKBaseType;
     typedef typename Superclass2::CombinationTransformType  CombinationTransformType;
-    
+
     /** Extra typedefs */
     typedef TranslationTransformInitializer<
       TranslationTransformType,
@@ -122,10 +122,10 @@ namespace elastix
     virtual void BeforeRegistration(void);
 
     /** Initialize Transform.
-     * \li Set all parameters to zero. 
+     * \li Set all parameters to zero.
      * \li Set initial translation:
      *  the initial translation between fixed and moving image is guessed,
-     *  if the user has set (AutomaticTransformInitialization "true"). 
+     *  if the user has set (AutomaticTransformInitialization "true").
      */
     virtual void InitializeTransform(void);
 
@@ -137,17 +137,17 @@ namespace elastix
     virtual ~TranslationTransformElastix() {};
 
     TranslationTransformPointer m_TranslationTransform;
-    
+
   private:
 
     /** The private constructor. */
     TranslationTransformElastix( const Self& ); // purposely not implemented
     /** The private copy constructor. */
     void operator=( const Self& );              // purposely not implemented
-    
+
   }; // end class TranslationTransformElastix
-  
-  
+
+
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION

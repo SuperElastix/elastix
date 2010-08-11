@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -35,7 +35,7 @@ namespace itk
  */
 
 template < class TFixedPointSet, class TMovingPointSet >
-class ITK_EXPORT CorrespondingPointsEuclideanDistancePointMetric : 
+class ITK_EXPORT CorrespondingPointsEuclideanDistancePointMetric :
     public SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>
 {
 public:
@@ -49,11 +49,11 @@ public:
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
- 
+
   /** Run-time type information (and related methods). */
   itkTypeMacro( CorrespondingPointsEuclideanDistancePointMetric,
     SingleValuedPointSetToPointSetMetric );
- 
+
   /** Types transferred from the base class */
   typedef typename Superclass::TransformType              TransformType;
   typedef typename Superclass::TransformPointer           TransformPointer;
@@ -75,7 +75,7 @@ public:
   typedef typename Superclass::OutputPointType            OutputPointType;
   typedef typename OutputPointType::CoordRepType          CoordRepType;
   typedef vnl_vector<CoordRepType>                        VnlVectorType;
-  
+
   typedef typename Superclass::NonZeroJacobianIndicesType NonZeroJacobianIndicesType;
 
   /**  Get the value for single valued optimizers. */

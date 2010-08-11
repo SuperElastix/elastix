@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -76,10 +76,10 @@ using namespace itk;
    * \sa ParzenWindowMutualInformationImageToImageMetric
    * \ingroup Metrics
    */
-  
+
 
 /** Note that we assume the FixedFeatureImageType to have the same
- * pixeltype as the FixedImageType 
+ * pixeltype as the FixedImageType
  */
   template <class TElastix >
   class KNNGraphAlphaMutualInformationMetric :
@@ -99,14 +99,14 @@ using namespace itk;
     typedef MetricBase<TElastix>                          Superclass2;
     typedef SmartPointer<Self>                            Pointer;
     typedef SmartPointer<const Self>                      ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( KNNGraphAlphaMutualInformationMetric,
       KNNGraphAlphaMutualInformationImageToImageMetric );
-    
+
     /** Name of this class.
      * Use this name in the parameter file to select this specific metric. \n
      * example: <tt>(Metric "KNNGraphAlphaMutualInformation")</tt>\n
@@ -125,14 +125,14 @@ using namespace itk;
     typedef typename Superclass1::MovingImageType           MovingImageType;
     typedef typename Superclass1::FixedImageConstPointer    FixedImageConstPointer;
     typedef typename Superclass1::MovingImageConstPointer   MovingImageConstPointer;
-    
+
     /** The fixed image dimension */
     itkStaticConstMacro (FixedImageDimension, unsigned int,
       FixedImageType::ImageDimension);
     /** The moving image dimension. */
     itkStaticConstMacro( MovingImageDimension, unsigned int,
       MovingImageType::ImageDimension );
-    
+
     /** Typedef's inherited from Elastix. */
     typedef typename Superclass2::ElastixType               ElastixType;
     typedef typename Superclass2::ElastixPointer            ElastixPointer;
@@ -145,7 +145,7 @@ using namespace itk;
     /** Typedefs for feature images. */
     typedef FixedImageType          FixedFeatureImageType;
     typedef MovingImageType         MovingFeatureImageType;
-      
+
     /** Typedef for timer. */
     typedef tmr::Timer          TimerType;
     /** Typedef for timer. */
@@ -173,26 +173,26 @@ using namespace itk;
      * \li Set the squared search radius, if appropiate.
      */
     virtual void BeforeEachResolution( void );
-  
+
     /** Sets up a timer to measure the intialisation time and
      * calls the Superclass' implementation.
      */
     virtual void Initialize(void) throw (ExceptionObject);
-  
+
   protected:
 
     /** The constructor. */
-    KNNGraphAlphaMutualInformationMetric() {}; 
-    /** The destructor. */ 
+    KNNGraphAlphaMutualInformationMetric() {};
+    /** The destructor. */
     virtual ~KNNGraphAlphaMutualInformationMetric() {}
-  
+
   private:
 
     /** The private constructor. */
     KNNGraphAlphaMutualInformationMetric( const Self& );  // purposely not implemented
     /** The private copy constructor. */
     void operator=( const Self& );                  // purposely not implemented
-    
+
   }; // end class KNNGraphAlphaMutualInformationMetric
 
 

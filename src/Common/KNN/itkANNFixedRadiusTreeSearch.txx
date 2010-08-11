@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -19,7 +19,7 @@
 
 namespace itk
 {
-  
+
   /**
    * ************************ Constructor *************************
    */
@@ -81,7 +81,7 @@ namespace itk
 
     /** Set the ANNIndices and ANNDistances in the corresponding itk::Array's.
      * Memory management is transfered to these itk::Array's, which have SmartPointers
-     * and therefore don't have to be regarded anymore. No deallocation of 
+     * and therefore don't have to be regarded anymore. No deallocation of
      * ANNIndices and ANNDistances is needed now.
      */
     ind.SetData( ANNIndices, k, true );
@@ -129,7 +129,7 @@ namespace itk
 
     /** Set the ANNIndices and ANNDistances in the corresponding itk::Array's.
      * Memory management is transfered to these itk::Array's, which have SmartPointers
-     * and therefore don't have to be regarded anymore. No deallocation of 
+     * and therefore don't have to be regarded anymore. No deallocation of
      * ANNIndices and ANNDistances is needed now.
      */
     ind.SetData( ANNIndices, k, true );

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -34,7 +34,7 @@ using namespace itk;
    * \ingroup ImagePyramids
    */
 
-  template <class TElastix> 
+  template <class TElastix>
     class MovingShrinkingPyramid :
     public
       MultiResolutionShrinkPyramidImageFilter<
@@ -49,17 +49,17 @@ using namespace itk;
     typedef MovingShrinkingPyramid                                  Self;
     typedef MultiResolutionShrinkPyramidImageFilter<
         typename MovingImagePyramidBase<TElastix>::InputImageType,
-        typename MovingImagePyramidBase<TElastix>::OutputImageType > Superclass1;    
+        typename MovingImagePyramidBase<TElastix>::OutputImageType > Superclass1;
     typedef MovingImagePyramidBase<TElastix>                        Superclass2;
     typedef SmartPointer<Self>                                      Pointer;
     typedef SmartPointer<const Self>                                ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( MovingShrinkingPyramid, MultiResolutionShrinkPyramidImageFilter );
-    
+
     /** Name of this class.
      * Use this name in the parameter file to select this specific pyramid. \n
      * example: <tt>(MovingImagePyramid "MovingShrinkingImagePyramid")</tt>\n
@@ -68,9 +68,9 @@ using namespace itk;
 
     /** Get the ImageDimension. */
     itkStaticConstMacro( ImageDimension, unsigned int, Superclass1::ImageDimension );
-    
+
     /** Typedefs inherited from the superclass. */
-    typedef typename Superclass1::InputImageType            InputImageType; 
+    typedef typename Superclass1::InputImageType            InputImageType;
     typedef typename Superclass1::OutputImageType           OutputImageType;
     typedef typename Superclass1::InputImagePointer         InputImagePointer;
     typedef typename Superclass1::OutputImagePointer        OutputImagePointer;
@@ -85,23 +85,23 @@ using namespace itk;
     typedef typename Superclass2::RegistrationType      RegistrationType;
     typedef typename Superclass2::RegistrationPointer   RegistrationPointer;
     typedef typename Superclass2::ITKBaseType           ITKBaseType;
-    
+
   protected:
 
     /** The constructor. */
     MovingShrinkingPyramid() {}
     /** The destructor. */
     virtual ~MovingShrinkingPyramid() {}
-      
+
   private:
 
     /** The private constructor. */
     MovingShrinkingPyramid( const Self& ); // purposely not implemented
     /** The private copy constructor. */
     void operator=( const Self& );        // purposely not implemented
-      
+
   }; // end class MovingShrinkingPyramid
-  
+
 
 } // end namespace elastix
 

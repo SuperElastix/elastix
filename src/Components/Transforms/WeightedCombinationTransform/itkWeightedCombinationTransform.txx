@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -64,7 +64,7 @@ WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>::Se
 
 template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
 typename WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::OutputPointType 
+::OutputPointType
 WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>
 ::TransformPoint(const InputPointType & ipp ) const
 {
@@ -74,10 +74,10 @@ WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>
   const TransformContainerType & tc = this->m_TransformContainer;
   const unsigned int N = tc.size();
   const ParametersType & param = this->m_Parameters;
-  
+
   /** Calculate sum_i w_i T_i(x) */
   for (unsigned int i=0; i < N; ++i )
-  { 
+  {
     tempopp = tc[i]->TransformPoint( ipp );
     const double w = param[i];
     for ( unsigned int d = 0; d < OutputSpaceDimension; ++d )
@@ -104,7 +104,7 @@ WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>
     }
   }
   return opp;
-  
+
 } // end TransformPoint
 
 
@@ -114,7 +114,7 @@ WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>
 
 template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
 const typename WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::JacobianType & 
+::JacobianType &
 WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>
 ::GetJacobian( const InputPointType & ipp ) const
 {
@@ -150,7 +150,7 @@ WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>
     OutputPointType opp;
     opp.Fill(0.0);
     for (unsigned int i=0; i < N; ++i )
-    { 
+    {
       tempopp = tc[i]->TransformPoint( ipp );
       const double w = param[i];
       for ( unsigned int d = 0; d < OutputSpaceDimension; ++d )
@@ -164,7 +164,7 @@ WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>
       opp[d] /= this->m_SumOfWeights;
     }
     for (unsigned int i=0; i < N; ++i )
-    { 
+    {
       for ( unsigned int d = 0; d < OutputSpaceDimension; ++d )
       {
         jac(d,i) = ( jac(d,i) - opp[d] ) / this->m_SumOfWeights;
@@ -175,7 +175,7 @@ WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>
   {
     /** dT/dmu_i = T_i(x) - x */
     for (unsigned int i=0; i < N; ++i )
-    { 
+    {
       tempopp = tc[i]->TransformPoint( ipp );
       for ( unsigned int d = 0; d < OutputSpaceDimension; ++d )
       {
@@ -184,7 +184,7 @@ WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>
     }
 
   }
-  
+
 } // end GetJacobian()
 
 

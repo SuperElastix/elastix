@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -27,8 +27,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -61,7 +61,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
 
   // Use MultiResolutionPyramidImageFilter as the default
   // image pyramids.
-  this->m_FixedImagePyramid  = FixedImagePyramidType::New(); 
+  this->m_FixedImagePyramid  = FixedImagePyramidType::New();
   this->m_MovingImagePyramid = MovingImagePyramidType::New();
 
   this->m_NumberOfLevels = 1;
@@ -78,8 +78,8 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
   this->m_LastTransformParameters.Fill( 0.0f );
 
 
-  TransformOutputPointer transformDecorator = 
-                 static_cast< TransformOutputType * >( 
+  TransformOutputPointer transformDecorator =
+                 static_cast< TransformOutputType * >(
                                   this->MakeOutput(0).GetPointer() );
 
   this->ProcessObject::SetNthOutput( 0, transformDecorator.GetPointer() );
@@ -88,7 +88,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
 
 
 /*
- * Initialize by setting the interconnects between components. 
+ * Initialize by setting the interconnects between components.
  */
 template < typename TFixedImage, typename TMovingImage >
 void
@@ -132,7 +132,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
   //
   // Connect the transform to the Decorator.
   //
-  TransformOutputType * transformOutput =  
+  TransformOutputType * transformOutput =
      static_cast< TransformOutputType * >( this->ProcessObject::GetOutput(0) );
 
   transformOutput->Set( this->m_Transform.GetPointer() );
@@ -168,10 +168,10 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
 
   this->m_InitialTransformParametersOfNextLevel = this->m_InitialTransformParameters;
 
-  if ( this->m_InitialTransformParametersOfNextLevel.Size() != 
+  if ( this->m_InitialTransformParametersOfNextLevel.Size() !=
        this->m_Transform->GetNumberOfParameters() )
     {
-    itkExceptionMacro(<<"Size mismatch between initial parameter and transform"); 
+    itkExceptionMacro(<<"Size mismatch between initial parameter and transform");
     }
 
   // Sanity checks
@@ -222,10 +222,10 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
   this->m_FixedImageRegionPyramid.reserve( this->m_NumberOfLevels );
   this->m_FixedImageRegionPyramid.resize( this->m_NumberOfLevels );
 
-  // Compute the FixedImageRegion corresponding to each level of the 
-  // pyramid. 
+  // Compute the FixedImageRegion corresponding to each level of the
+  // pyramid.
   //
-  // In the ITK implementation this uses the same algorithm of the ShrinkImageFilter 
+  // In the ITK implementation this uses the same algorithm of the ShrinkImageFilter
   // since the regions should be compatible. However, we inherited another
   // Multiresolution pyramid, which does not use the same shrinking pattern.
   // Instead of copying the shrinking code, we compute image regions from
@@ -240,16 +240,16 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
   PointType inputEndPoint;
   this->m_FixedImage->TransformIndexToPhysicalPoint(inputStart, inputStartPoint);
   this->m_FixedImage->TransformIndexToPhysicalPoint(inputEnd, inputEndPoint);
-  
+
   for ( unsigned int level=0; level < this->m_NumberOfLevels; level++ )
   {
     SizeType  size;
-    IndexType start;    
+    IndexType start;
     CIndexType startcindex;
     CIndexType endcindex;
     FixedImageType * fixedImageAtLevel = this->m_FixedImagePyramid->GetOutput(level);
-    /** map the original fixed image region to the image resulting from the 
-     * FixedImagePyramid at level l. 
+    /** map the original fixed image region to the image resulting from the
+     * FixedImagePyramid at level l.
      * To be on the safe side, the start point is ceiled, and the end point is
      * floored. To see why, consider an image of 4 by 4, and its downsampled version of 2 by 2. */
     fixedImageAtLevel->TransformPhysicalPointToContinuousIndex(inputStartPoint, startcindex);
@@ -257,13 +257,13 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
     for ( unsigned int dim = 0; dim < TFixedImage::ImageDimension; dim++)
     {
       start[ dim ] = static_cast<IndexValueType>( vcl_ceil( startcindex[ dim ] ) );
-      size[ dim ]  = static_cast<SizeValueType>( 
+      size[ dim ]  = static_cast<SizeValueType>(
         static_cast<SizeValueType>( vcl_floor( endcindex[ dim ] ) ) - start[ dim ] + 1 );
     }
 
     this->m_FixedImageRegionPyramid[ level ].SetSize( size );
     this->m_FixedImageRegionPyramid[ level ].SetIndex( start );
-    
+
   }
 
 } // end PreparePyramids()
@@ -276,7 +276,7 @@ template < typename TFixedImage, typename TMovingImage >
 void
 MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
 ::StartRegistration( void )
-{ 
+{
 
   // StartRegistration is an old API from before
   // this egistrationMethod was a subclass of ProcessObject.
@@ -287,7 +287,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
   //
   // Since we cannot eliminate StartRegistration for backward
   // compability reasons, we check whether StartRegistration was
-  // called directly or whether Update() (which in turn called 
+  // called directly or whether Update() (which in turn called
   // StartRegistration()).
   if (!this->m_Updating)
     {
@@ -296,24 +296,24 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
   else
     {
     this->m_Stop = false;
-    
+
     this->PreparePyramids();
-    
+
     for ( this->m_CurrentLevel = 0; this->m_CurrentLevel < this->m_NumberOfLevels;
           this->m_CurrentLevel++ )
       {
-      
+
       // Invoke an iteration event.
       // This allows a UI to reset any of the components between
       // resolution level.
       this->InvokeEvent( IterationEvent() );
-      
+
       // Check if there has been a stop request
-      if ( this->m_Stop ) 
+      if ( this->m_Stop )
         {
         break;
         }
-      
+
       try
         {
         // initialize the interconnects between components
@@ -323,11 +323,11 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
         {
         this->m_LastTransformParameters = ParametersType(1);
         this->m_LastTransformParameters.Fill( 0.0f );
-        
+
         // pass exception to caller
         throw err;
         }
-      
+
       try
         {
         // do the optimization
@@ -338,15 +338,15 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
         // An error has occurred in the optimization.
         // Update the parameters
         this->m_LastTransformParameters = this->m_Optimizer->GetCurrentPosition();
-        
+
         // Pass exception to caller
         throw err;
         }
-      
+
       // get the results
       this->m_LastTransformParameters = this->m_Optimizer->GetCurrentPosition();
       this->m_Transform->SetParameters( this->m_LastTransformParameters );
-      
+
       // setup the initial parameters for next level
       if ( this->m_CurrentLevel < this->m_NumberOfLevels - 1 )
         {
@@ -386,7 +386,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
     << this->m_MovingImagePyramid.GetPointer() << std::endl;
 
   os << indent << "NumberOfLevels: " << this->m_NumberOfLevels << std::endl;
-  os << indent << "CurrentLevel: " << this->m_CurrentLevel << std::endl;  
+  os << indent << "CurrentLevel: " << this->m_CurrentLevel << std::endl;
 
   os << indent << "InitialTransformParameters: "
     << this->m_InitialTransformParameters << std::endl;
@@ -430,7 +430,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
 
   // Some of the following should be removed once ivars are put in the
   // input and output lists
-  
+
   if (this->m_Transform)
     {
     m = this->m_Transform->GetMTime();
@@ -468,7 +468,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
     }
 
   return mtime;
-  
+
 } // end GetMTime()
 
 

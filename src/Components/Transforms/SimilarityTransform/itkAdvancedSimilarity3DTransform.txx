@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -39,12 +39,12 @@ AdvancedSimilarity3DTransform<TScalarType>
 // Constructor with arguments
 template<class TScalarType>
 AdvancedSimilarity3DTransform<TScalarType>::
-AdvancedSimilarity3DTransform( unsigned int outputSpaceDim, 
+AdvancedSimilarity3DTransform( unsigned int outputSpaceDim,
                         unsigned int paramDim) :
   Superclass(outputSpaceDim,paramDim)
 {
 }
- 
+
 
 // Constructor with arguments
 template<class TScalarType>
@@ -54,7 +54,7 @@ AdvancedSimilarity3DTransform( const MatrixType & matrix,
   Superclass(matrix,offset)
 {
 }
- 
+
 
 // Set the scale factor
 template <class TScalarType>
@@ -105,8 +105,8 @@ AdvancedSimilarity3DTransform<TScalarType>
   testForOrthogonal /= s;
 
   const double tolerance = 1e-10;
-  if( !this->MatrixIsOrthogonal( testForOrthogonal, tolerance ) ) 
-    {    
+  if( !this->MatrixIsOrthogonal( testForOrthogonal, tolerance ) )
+    {
     itkExceptionMacro( << "Attempting to set a non-orthogonal matrix (after removing scaling)" );
     }
 
@@ -126,7 +126,7 @@ AdvancedSimilarity3DTransform<TScalarType>
   itkDebugMacro( << "Setting parameters " << parameters );
 
   // Transfer the versor part
-  
+
   AxisType axis;
 
   double norm = parameters[0]*parameters[0];
@@ -152,8 +152,8 @@ AdvancedSimilarity3DTransform<TScalarType>
   this->ComputeMatrix();
 
   itkDebugMacro( <<"Versor is now " << this->GetVersor() );
-  
-   
+
+
   // Transfer the translation part
   TranslationType newTranslation;
   newTranslation[0] = parameters[3];
@@ -172,7 +172,7 @@ AdvancedSimilarity3DTransform<TScalarType>
 
 //
 // Get Parameters
-// 
+//
 // Parameters are ordered as:
 //
 // p[0:2] = right part of the versor (axis times vcl_sin(t/2))
@@ -213,7 +213,7 @@ GetJacobian( const InputPointType & p,
 {
   /**
   typedef typename VersorType::ValueType  ValueType;
-  
+
 
   // compute derivatives with respect to rotation
   const ValueType vx = this->GetVersor().GetX();
@@ -248,23 +248,23 @@ GetJacobian( const InputPointType & p,
   // SK: \todo: shoudn't these be multiplied by m_Scale?
   this->m_Jacobian[0][0] = 2.0 * (               (vyw+vxz)*py + (vzw-vxy)*pz)
                          / vw;
-  this->m_Jacobian[1][0] = 2.0 * ((vyw-vxz)*px   -2*vxw   *py + (vxx-vww)*pz) 
+  this->m_Jacobian[1][0] = 2.0 * ((vyw-vxz)*px   -2*vxw   *py + (vxx-vww)*pz)
                          / vw;
-  this->m_Jacobian[2][0] = 2.0 * ((vzw+vxy)*px + (vww-vxx)*py   -2*vxw   *pz) 
-                         / vw;
-
-  this->m_Jacobian[0][1] = 2.0 * ( -2*vyw  *px + (vxw+vyz)*py + (vww-vyy)*pz) 
-                         / vw;
-  this->m_Jacobian[1][1] = 2.0 * ((vxw-vyz)*px                + (vzw+vxy)*pz) 
-                         / vw;
-  this->m_Jacobian[2][1] = 2.0 * ((vyy-vww)*px + (vzw-vxy)*py   -2*vyw   *pz) 
+  this->m_Jacobian[2][0] = 2.0 * ((vzw+vxy)*px + (vww-vxx)*py   -2*vxw   *pz)
                          / vw;
 
-  this->m_Jacobian[0][2] = 2.0 * ( -2*vzw  *px + (vzz-vww)*py + (vxw-vyz)*pz) 
+  this->m_Jacobian[0][1] = 2.0 * ( -2*vyw  *px + (vxw+vyz)*py + (vww-vyy)*pz)
                          / vw;
-  this->m_Jacobian[1][2] = 2.0 * ((vww-vzz)*px   -2*vzw   *py + (vyw+vxz)*pz) 
+  this->m_Jacobian[1][1] = 2.0 * ((vxw-vyz)*px                + (vzw+vxy)*pz)
                          / vw;
-  this->m_Jacobian[2][2] = 2.0 * ((vxw+vyz)*px + (vyw-vxz)*py               ) 
+  this->m_Jacobian[2][1] = 2.0 * ((vyy-vww)*px + (vzw-vxy)*py   -2*vyw   *pz)
+                         / vw;
+
+  this->m_Jacobian[0][2] = 2.0 * ( -2*vzw  *px + (vzz-vww)*py + (vxw-vyz)*pz)
+                         / vw;
+  this->m_Jacobian[1][2] = 2.0 * ((vww-vzz)*px   -2*vzw   *py + (vyw+vxz)*pz)
+                         / vw;
+  this->m_Jacobian[2][2] = 2.0 * ((vxw+vyz)*px + (vyw-vxz)*py               )
                          / vw;
   */
 
@@ -274,7 +274,7 @@ GetJacobian( const InputPointType & p,
   const JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;
 
   /** Compute dR/dmu * (p-c) */
-  for(unsigned int dim=0; dim < SpaceDimension; dim++ ) 
+  for(unsigned int dim=0; dim < SpaceDimension; dim++ )
   {
     const InputVectorType column = jsj[dim] * pp;
     for (unsigned int i=0; i < SpaceDimension; ++i)
@@ -300,7 +300,7 @@ GetJacobian( const InputPointType & p,
   nzji = this->m_NonZeroJacobianIndices;
 
 }
- 
+
 
 // Set the scale factor
 template <class TScalarType>
@@ -325,7 +325,7 @@ AdvancedSimilarity3DTransform<TScalarType>
   MatrixType matrix = this->GetMatrix();
 
   m_Scale = vnl_math_cuberoot( vnl_det( matrix.GetVnlMatrix() )  ) ;
-  
+
   matrix /= m_Scale;
 
   VersorType v;
@@ -386,7 +386,7 @@ AdvancedSimilarity3DTransform<TScalarType>
   jsj[2](1,0) = vww-vzz; jsj[2](1,1) =-2.0*vzw; jsj[2](1,2) = vyw+vxz;
   jsj[2](2,0) = vxw+vyz; jsj[2](2,1) = vyw-vxz; jsj[2](2,2) = 0.0;
   jsj[2] *= ( this->m_Scale * 2.0 / vw );
-  
+
   for ( unsigned int par = 3; par < 7; ++par )
   {
     jsj[par].Fill(0.0);
@@ -397,7 +397,7 @@ AdvancedSimilarity3DTransform<TScalarType>
   }
 }
 
- 
+
 // Print self
 template<class TScalarType>
 void

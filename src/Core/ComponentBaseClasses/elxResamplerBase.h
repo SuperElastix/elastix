@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -25,7 +25,7 @@
 namespace elastix
 {
   using namespace itk;
-  
+
   /**
    * \class ResampleBase
    * \brief This class is the elastix base class for all Resamplers.
@@ -67,7 +67,7 @@ namespace elastix
     class ResamplerBase : public BaseComponentSE<TElastix>
   {
   public:
-    
+
     /** Standard ITK stuff. */
     typedef ResamplerBase               Self;
     typedef BaseComponentSE<TElastix>   Superclass;
@@ -82,14 +82,14 @@ namespace elastix
     typedef typename Superclass::ConfigurationPointer ConfigurationPointer;
     typedef typename Superclass::RegistrationType     RegistrationType;
     typedef typename Superclass::RegistrationPointer  RegistrationPointer;
-    
-    /** Typedef's from elastix. 
+
+    /** Typedef's from elastix.
      * NB: it is assumed that fixed and moving image dimension are equal!  */
     typedef typename ElastixType::MovingImageType     InputImageType;
     typedef typename ElastixType::MovingImageType     OutputImageType;
     //typedef typename ElastixType::FixedImageType      OutputImageType;
     typedef typename ElastixType::CoordRepType        CoordRepType;
-    
+
     /** Other typedef's. */
     typedef ResampleImageFilter<
       InputImageType, OutputImageType, CoordRepType>  ITKBaseType;
@@ -174,10 +174,10 @@ namespace elastix
 
     /** Release memory. */
     void ReleaseMemory( void );
-    
+
   }; // end class ResamplerBase
-  
-  
+
+
 } // end namespace elastix
 
 

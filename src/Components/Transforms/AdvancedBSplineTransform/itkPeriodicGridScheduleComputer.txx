@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -27,7 +27,7 @@ namespace itk
 /**
  * ********************* Constructor ****************************
  */
-  
+
 template < typename TTransformScalarType, unsigned int VImageDimension >
 PeriodicGridScheduleComputer<TTransformScalarType, VImageDimension>
 ::PeriodicGridScheduleComputer()
@@ -52,10 +52,10 @@ PeriodicGridScheduleComputer<TTransformScalarType, VImageDimension>
   SpacingType imageSpacing, finalGridSpacing;
   DirectionType imageDirection;
 
-  /** Apply the initial transform. */    
+  /** Apply the initial transform. */
   this->ApplyInitialTransform( imageOrigin, imageSpacing, imageDirection, finalGridSpacing );
 
-#ifndef ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE    
+#ifndef ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE
   /** Ignore direction cosines */
   imageDirection.SetIdentity();
 #endif
@@ -78,28 +78,28 @@ PeriodicGridScheduleComputer<TTransformScalarType, VImageDimension>
       double gridSpacing
         = finalGridSpacing[ dim ] * this->m_GridSpacingFactors[ res ][ dim ];
 
-      /** Check if the grid spacing matches the Periodic behaviour of this 
+      /** Check if the grid spacing matches the Periodic behaviour of this
        * transform. We want the spacing at the borders for the last dimension
        * to be half the grid spacing.
        */
       unsigned int bareGridSize = 0;
-      if (dim == Dimension - 1) 
+      if (dim == Dimension - 1)
       {
-        const float lastDimSizeInPhysicalUnits = 
+        const float lastDimSizeInPhysicalUnits =
                imageSpacing[ dim ] * this->GetImageRegion().GetSize( dim );
-        
+
         /** Compute closest correct spacing. */
-          
+
         /** Compute number of nodes. */
-        bareGridSize = static_cast<unsigned int>( lastDimSizeInPhysicalUnits / 
+        bareGridSize = static_cast<unsigned int>( lastDimSizeInPhysicalUnits /
                                                                    gridSpacing );
 
         /** Compute new (larger) gridspacing. */
-        gridSpacing = 
+        gridSpacing =
               lastDimSizeInPhysicalUnits / static_cast<float> ( bareGridSize );
-       
-      } 
-      else 
+
+      }
+      else
       {
         /** Compute the grid size without the extra grid points at the edges. */
         bareGridSize = static_cast<unsigned int>(
@@ -124,9 +124,9 @@ PeriodicGridScheduleComputer<TTransformScalarType, VImageDimension>
         - ( size[ dim ] - 1 ) * imageSpacing[ dim ] ) / 2.0;
     }
 
-    /** Take into account direction cosines: 
+    /** Take into account direction cosines:
      * rotate grid origin around image origin. */
-    this->m_GridOrigins[ res ] = imageOrigin + imageDirection * ( 
+    this->m_GridOrigins[ res ] = imageOrigin + imageDirection * (
       this->m_GridOrigins[ res ] - imageOrigin );
 
     /** Set the grid region. */

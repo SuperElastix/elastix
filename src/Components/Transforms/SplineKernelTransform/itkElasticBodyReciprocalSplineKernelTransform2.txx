@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -23,7 +23,7 @@ namespace itk
 
 template <class TScalarType, unsigned int NDimensions>
 ElasticBodyReciprocalSplineKernelTransform2<TScalarType, NDimensions>::
-ElasticBodyReciprocalSplineKernelTransform2() 
+ElasticBodyReciprocalSplineKernelTransform2()
 {
   this->m_Alpha = 8.0 * ( 1.0 - .25 ) - 1.0;
 }
@@ -49,7 +49,7 @@ ElasticBodyReciprocalSplineKernelTransform2<TScalarType, NDimensions>
       GMatrix[ j ][ i ] = value;
     }
     GMatrix[ i ][ i ] =  radial + xi * x[ i ];
-  }  
+  }
 
 } // end ComputeG()
 

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -19,23 +19,23 @@
 
 namespace itk
 {
-  
+
   /**
    * \class ParzenWindowNormalizedMutualInformationImageToImageMetric
-   * \brief Computes the normalized mutual information between two images to be 
+   * \brief Computes the normalized mutual information between two images to be
    * registered using a method based on Thevenaz&Unser [3].
    *
    * ParzenWindowNormalizedMutualInformationImageToImageMetric computes the
    * normalized mutual information between a fixed and moving image to be registered.
    * The calculations are based on the method of Mattes et al [1,2]
    * and Thevenaz&Unser [3], where the probability density distribution
-   * are estimated using Parzen histograms. The expression for the 
-   * derivative is derived following [3]. 
+   * are estimated using Parzen histograms. The expression for the
+   * derivative is derived following [3].
    *
    * Construction of the PDFs is implemented in the superclass
    * ParzenWindowHistogramImageToImageMetric.
    *
-   * This implementation of the NormalizedMutualInformation is based on the 
+   * This implementation of the NormalizedMutualInformation is based on the
    * AdvancedImageToImageMetric, which means that:
    * \li It uses the ImageSampler-framework
    * \li It makes use of the compact support of B-splines, in case of B-spline transforms.
@@ -69,24 +69,24 @@ namespace itk
   public ParzenWindowHistogramImageToImageMetric< TFixedImage, TMovingImage >
   {
   public:
-    
+
     /** Standard class typedefs. */
     typedef ParzenWindowNormalizedMutualInformationImageToImageMetric             Self;
     typedef ParzenWindowHistogramImageToImageMetric<
       TFixedImage, TMovingImage >                                       Superclass;
     typedef SmartPointer<Self>                                          Pointer;
     typedef SmartPointer<const Self>                                    ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro(
-      ParzenWindowNormalizedMutualInformationImageToImageMetric, 
+      ParzenWindowNormalizedMutualInformationImageToImageMetric,
       ParzenWindowHistogramImageToImageMetric );
 
     /** Typedefs from the superclass. */
-    typedef typename 
+    typedef typename
       Superclass::CoordinateRepresentationType              CoordinateRepresentationType;
     typedef typename Superclass::MovingImageType            MovingImageType;
     typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
@@ -120,7 +120,7 @@ namespace itk
     typedef typename Superclass::ImageSamplerType           ImageSamplerType;
     typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
     typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
-    typedef typename 
+    typedef typename
       Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
     typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
     typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
@@ -130,7 +130,7 @@ namespace itk
       Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
     typedef typename
       Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
-      
+
     /** The fixed image dimension. */
     itkStaticConstMacro( FixedImageDimension, unsigned int,
       FixedImageType::ImageDimension );
@@ -138,16 +138,16 @@ namespace itk
     /** The moving image dimension. */
     itkStaticConstMacro( MovingImageDimension, unsigned int,
       MovingImageType::ImageDimension );
-          
+
     /**  Get the value: the negative normalized mutual information. */
     MeasureType GetValue( const ParametersType& parameters ) const;
 
     /**  Get the value and derivatives for single valued optimizers. */
-    void GetValueAndDerivative( const ParametersType& parameters, 
+    void GetValueAndDerivative( const ParametersType& parameters,
       MeasureType& Value, DerivativeType& Derivative ) const;
-    
+
   protected:
-    
+
     /** The constructor. */
     ParzenWindowNormalizedMutualInformationImageToImageMetric() {};
 
@@ -158,7 +158,7 @@ namespace itk
     void PrintSelf( std::ostream& os, Indent indent ) const;
 
     /** Protected Typedefs ******************/
-  
+
     /** Typedefs inherited from superclass */
     typedef typename Superclass::FixedImageIndexType                FixedImageIndexType;
     typedef typename Superclass::FixedImageIndexValueType           FixedImageIndexValueType;
@@ -168,7 +168,7 @@ namespace itk
     typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
     typedef typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
     typedef typename Superclass::CentralDifferenceGradientFilterType        CentralDifferenceGradientFilterType;
-    typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;   
+    typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
     typedef typename Superclass::PDFValueType                       PDFValueType;
     typedef typename Superclass::MarginalPDFType                    MarginalPDFType;
     typedef typename Superclass::JointPDFType                       JointPDFType;
@@ -195,14 +195,14 @@ namespace itk
      * Ej = joint entropy = - sum_k sum_i p(i,k) log p(i,k)
      */
     virtual MeasureType ComputeNormalizedMutualInformation( MeasureType & jointEntropy ) const;
-   
+
   private:
-    
+
     /** The private constructor. */
     ParzenWindowNormalizedMutualInformationImageToImageMetric( const Self& ); // purposely not implemented
     /** The private copy constructor. */
     void operator=( const Self& );                              // purposely not implemented
-      
+
   }; // end class ParzenWindowNormalizedMutualInformationImageToImageMetric
 
 } // end namespace itk

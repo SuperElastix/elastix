@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -19,7 +19,7 @@
 namespace itk
 {
 
-/** 
+/**
  * \class DisplacementMagnitudePenaltyTerm
  * \brief A cost function that calculates \f$||T(x)-x||^2\f$.
  *
@@ -82,7 +82,7 @@ public:
   typedef typename Superclass::ImageSampleContainerPointer ImageSampleContainerPointer;
   typedef typename Superclass::ScalarType                 ScalarType;
 
-  /** Typedefs from the AdvancedTransform. */  
+  /** Typedefs from the AdvancedTransform. */
   typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
   typedef typename Superclass
     ::JacobianOfSpatialJacobianType                 JacobianOfSpatialJacobianType;
@@ -93,18 +93,18 @@ public:
 
   /** Define the dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
-  
-  /** Get the penalty term value. 
+
+  /** Get the penalty term value.
    * \f[ Value = 1/N sum_x ||T(x) - x||^2 \f]
    */
   virtual MeasureType GetValue( const ParametersType & parameters ) const;
 
-  /** Get the penalty term derivative. 
+  /** Get the penalty term derivative.
    * Simply calls GetValueAndDerivative and returns the derivative. */
   virtual void GetDerivative( const ParametersType & parameters,
     DerivativeType & derivative ) const;
 
-  /** Get the penalty term value and derivative. 
+  /** Get the penalty term value and derivative.
    * \f[ Value = C(\mu) = 1/N sum_x ||T_{\mu}(x) - x||^2 \f]
    * \f[ Derivative = \frac{\partial C}{\partial\mu} = 2/N sum_x (T_{\mu}(x)-x)' \frac{\partial T}{\partial \mu} \f]
    */

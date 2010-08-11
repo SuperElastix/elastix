@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -24,7 +24,7 @@ namespace itk
  * \brief Computes normalized correlation between two images, based on AdvancedImageToImageMetric...
  *
  * This metric computes the correlation between pixels in the fixed image
- * and pixels in the moving image. The spatial correspondance between 
+ * and pixels in the moving image. The spatial correspondance between
  * fixed and moving image is established through a Transform. Pixel values are
  * taken from the fixed image, their positions are mapped to the moving
  * image and result in general in non-grid position on it. Values at these
@@ -32,7 +32,7 @@ namespace itk
  * Interpolator. The correlation is normalized by the autocorrelations of both
  * the fixed and moving images.
  *
- * This implementation of the NormalizedCorrelation is based on the 
+ * This implementation of the NormalizedCorrelation is based on the
  * AdvancedImageToImageMetric, which means that:
  * \li It uses the ImageSampler-framework
  * \li It makes use of the compact support of B-splines, in case of B-spline transforms.
@@ -51,7 +51,7 @@ namespace itk
  * deformation of x depending on the transform parameters p. sfm, sff and smm
  * is notation used in the source code. The derivative of NC to p equals:
  *
- * \f[ 
+ * \f[
  *   \frac{\partial \mathrm{NC}}{\partial p} = \frac{\partial \mathrm{NC}}{\partial m} \frac{\partial m}{\partial x} \frac{\partial x}{\partial p} = \frac{\partial \mathrm{NC}}{\partial m} * \mathtt{gradient} * \mathtt{jacobian},
  * \f]
  *
@@ -79,8 +79,8 @@ namespace itk
  * \ingroup RegistrationMetrics
  * \ingroup Metrics
  */
-template < class TFixedImage, class TMovingImage > 
-class AdvancedNormalizedCorrelationImageToImageMetric : 
+template < class TFixedImage, class TMovingImage >
+class AdvancedNormalizedCorrelationImageToImageMetric :
     public AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 {
 public:
@@ -94,12 +94,12 @@ public:
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
- 
+
   /** Run-time type information (and related methods). */
   itkTypeMacro( AdvancedNormalizedCorrelationImageToImageMetric, AdvancedImageToImageMetric );
 
   /** Typedefs from the superclass. */
-  typedef typename 
+  typedef typename
     Superclass::CoordinateRepresentationType              CoordinateRepresentationType;
   typedef typename Superclass::MovingImageType            MovingImageType;
   typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
@@ -133,7 +133,7 @@ public:
   typedef typename Superclass::ImageSamplerType           ImageSamplerType;
   typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
   typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
-  typedef typename 
+  typedef typename
     Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
   typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
   typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
@@ -143,7 +143,7 @@ public:
     Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
   typedef typename
     Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
-  
+
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
     FixedImageType::ImageDimension );
@@ -163,7 +163,7 @@ public:
   void GetValueAndDerivative( const TransformParametersType & parameters,
     MeasureType& Value, DerivativeType& Derivative ) const;
 
-  /** Set/Get SubtractMean boolean. If true, the sample mean is subtracted 
+  /** Set/Get SubtractMean boolean. If true, the sample mean is subtracted
    * from the sample values in the cross-correlation formula and
    * typically results in narrower valleys in the cost fucntion.
    * Default value is false. */
@@ -194,15 +194,15 @@ protected:
    * The results are stored in imageJacobian, which is supposed
    * to have the right size (same length as Jacobian's number of columns). */
   void EvaluateTransformJacobianInnerProduct(
-    const TransformJacobianType & jacobian, 
+    const TransformJacobianType & jacobian,
     const MovingImageDerivativeType & movingImageDerivative,
     DerivativeType & imageJacobian) const;
 
   /** Compute a pixel's contribution to the derivative terms;
    * Called by GetValueAndDerivative(). */
-  void UpdateDerivativeTerms( 
+  void UpdateDerivativeTerms(
     const RealType fixedImageValue,
-    const RealType movingImageValue,    
+    const RealType movingImageValue,
     const DerivativeType & imageJacobian,
     const NonZeroJacobianIndicesType & nzji,
     DerivativeType & derivativeF,

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -26,14 +26,14 @@
 namespace elastix
 {
   using namespace itk;
-  
+
   /**
    * \class SplineKernelTransform
    * \brief A transform based on the itk::KernelTransform2.
    *
    * This transform is a nonrigid transformation, based on
    * thin-plate-spline-like kernels.
-   * 
+   *
    * The ITK code for this class is largely based on code by
    * Rupert Brooks. For elastix a few modifications were made
    * (making the transform thread safe, and make it support the
@@ -68,7 +68,7 @@ namespace elastix
    * Default: 0.3. You cannot specify this parameter for each resolution differently.\n
    * Valid values are withing -1.0 and 0.5. 0.5 means incompressible.
    * Negative values are a bit odd, but possible. See Wikipedia on PoissonRatio.
-   * 
+   *
    * \commandlinearg -ipp: a file specifying a set of points that will serve
    * as fixed image landmarks.\n
    *   example: <tt>-ipp fixedImagePoints.txt</tt> \n
@@ -84,7 +84,7 @@ namespace elastix
    * which must be one of { ThinPlateSpline, ThinPlateR2LogRSpline, VolumeSpline,
    * ElasticBodySpline, ElasticBodyReciprocalSpline). In 2D this option is
    * ignored and a ThinPlateSpline will always be used. \n
-   *   example: <tt>(SplineKernelType "ElasticBodySpline")</tt>\n   * 
+   *   example: <tt>(SplineKernelType "ElasticBodySpline")</tt>\n   *
    * \transformparameter SplineRelaxationFactor: make the spline interpolating
    * or approximating. A value of 0.0 gives an interpolating transform.
    * Higher values result in approximating splines.\n
@@ -92,13 +92,13 @@ namespace elastix
    * \transformparameter SplinePoissonRatio: Set the poisson ratio for the
    * ElasticBodySpline and the ElastixBodyReciprocalSpline. For other
    * SplineKernelTypes this parameters is ignored.\n
-   *   example: <tt>(SplinePoissonRatio 0.3 )</tt>\n   
+   *   example: <tt>(SplinePoissonRatio 0.3 )</tt>\n
    * Valid values are withing -1.0 and 0.5. 0.5 means incompressible.
    * Negative values are a bit odd, but possible. See Wikipedia on PoissonRatio.
    * \transformparameter FixedImageLandmarks: The landmark positions in the
    * fixed image, in world coordinates. Positions written as x1 y1 [z1] x2 y2 [z2] etc.\n
    *   example: <tt>(FixedImageLandmarks 10.0 11.0 12.0 4.0 4.0 4.0 6.0 6.0 6.0 )</tt>
-   * 
+   *
    * \ingroup Transforms
    */
 
@@ -170,8 +170,8 @@ public:
   /** Extra typedefs */
   typedef typename KernelTransformType::Pointer      KernelTransformPointer;
 
-  /** Execute stuff before everything else: 
-   * \li Check if -ipp command line argument was given 
+  /** Execute stuff before everything else:
+   * \li Check if -ipp command line argument was given
    */
   virtual int BeforeAll( void );
 
@@ -180,7 +180,7 @@ public:
    * \li Determine source landmarks
    * \li Call InitializeTransform.
    */
-  virtual void BeforeRegistration( void ); 
+  virtual void BeforeRegistration( void );
 
   /** Function to read transform-parameters from a file. */
   virtual void ReadFromFile( void );
@@ -213,7 +213,7 @@ protected:
 
   /** Read source landmarks from ipp file or try to place them smart.
    * \li Try reading -ipp file
-   * \li \todo: if no -ipp file was given, try to place landmarks 
+   * \li \todo: if no -ipp file was given, try to place landmarks
    * in a smart way.
    */
   virtual void DetermineSourceLandmarks( void );

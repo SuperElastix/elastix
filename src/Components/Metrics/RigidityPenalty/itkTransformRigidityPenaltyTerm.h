@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -35,7 +35,7 @@
 
 namespace itk
 {
-/** 
+/**
  * \class RigidityPenaltyTermMetric
  * \brief A cost function that calculates a rigidity penalty term
  * on the B-spline coefficients of a B-spline transformation.
@@ -43,8 +43,8 @@ namespace itk
  * derivatives of a transformation.
  *
  * The intended use for this metric is to filter a B-spline coefficient
- * image in order to calculate a rigidity penalty term on a B-spline transform. 
- * 
+ * image in order to calculate a rigidity penalty term on a B-spline transform.
+ *
  * \par
  * The RigidityPenaltyTermValueImageFilter at each pixel location is computed by
  * convolution with some separable 1D kernels.
@@ -58,7 +58,7 @@ namespace itk
  * [1] M. Staring, S. Klein and J.P.W. Pluim,
  *    "A Rigidity Penalty Term for Nonrigid Registration,"
  *    Medical Physics, vol. 34, no. 11, pp. 4098 - 4108, November 2007.
- * 
+ *
  * \sa BSplineTransform
  * \sa MattesMutualInformationImageToImageMetricWithRigidRegularization
  * \sa MattesMutualInformationMetricWithRigidRegularization

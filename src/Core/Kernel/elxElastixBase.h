@@ -6,18 +6,18 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
 
 /**
- * This file contains the declaration of the elx::ElastixBase class. 
+ * This file contains the declaration of the elx::ElastixBase class.
  * elx::ElastixTemplate<> inherits from this class. It is an abstract class,
  * since it contains pure virtual functions (which must be implemented
  * in ElastixTemplate<>).
- * 
+ *
  * The Configuration object is stored in this class.
  */
 
@@ -39,9 +39,9 @@
 #include <iomanip>
 
 /** Like itkGet/SetObjectMacro, but in these macros the itkDebugMacro is
- * not called. Besides, they are not virtual, since 
+ * not called. Besides, they are not virtual, since
  * for now we do not need to override them somewhere.
- * 
+ *
  * These macros are undef'd at the end of this file
  */
 #define elxGetObjectMacro(_name,_type) \
@@ -76,8 +76,8 @@
 
 namespace elastix
 {
-using namespace itk;  
-  
+using namespace itk;
+
 /**
  * \class ElastixBase
  * \brief This class creates an interface for elastix.
@@ -102,11 +102,11 @@ using namespace itk;
  *    are runned in sequence, with the output of some registration as input
  *    to the next.
  * \commandlinearg -fMask: Optional argument for elastix with the file name of a mask for
- *    the fixed image. The mask image should contain of zeros and ones, zeros indicating 
+ *    the fixed image. The mask image should contain of zeros and ones, zeros indicating
  *    pixels that are not used for the registration. \n
  *    example: <tt>-fMask fixedmask.mhd</tt> \n
  * \commandlinearg -mMask: Optional argument for elastix with the file name of a mask for
- *    the moving image. The mask image should contain of zeros and ones, zeros indicating 
+ *    the moving image. The mask image should contain of zeros and ones, zeros indicating
  *    pixels that are not used for the registration. \n
  *    example: <tt>-mMask movingmask.mhd</tt> \n
  * \commandlinearg -tp: mandatory argument for transformix with the name of
@@ -190,7 +190,7 @@ public:
   elxSetObjectMacro( ComponentDatabase, ComponentDatabaseType );
 
   /** Get the component containers.
-   * The component containers store components, such as 
+   * The component containers store components, such as
    * the metric, in the form of an itk::Object::Pointer.
    */
   elxGetObjectMacro( RegistrationContainer, ObjectContainerType );
@@ -205,7 +205,7 @@ public:
   elxGetObjectMacro( TransformContainer, ObjectContainerType );
 
   /** Set the component containers.
-   * The component containers store components, such as 
+   * The component containers store components, such as
    * the metric, in the form of an itk::Object::Pointer.
    */
   elxSetObjectMacro( RegistrationContainer, ObjectContainerType );
@@ -257,7 +257,7 @@ public:
   elxGetNumberOfMacro( Optimizer );
   elxGetNumberOfMacro( Resampler );
   elxGetNumberOfMacro( ResampleInterpolator );
-  elxGetNumberOfMacro( Transform );    
+  elxGetNumberOfMacro( Transform );
   elxGetNumberOfMacro( FixedImage );
   elxGetNumberOfMacro( MovingImage );
   elxGetNumberOfMacro( FixedImageFileName );
@@ -268,14 +268,14 @@ public:
   elxGetNumberOfMacro( MovingMaskFileName );
 
   /** Set/Get the initial transform
-   * The type is ObjectType, but the pointer should actually point 
+   * The type is ObjectType, but the pointer should actually point
    * to an itk::Transform type (or inherited from that one).
    */
   elxSetObjectMacro( InitialTransform, ObjectType );
   elxGetObjectMacro( InitialTransform, ObjectType );
 
   /** Set/Get the final transform
-   * The type is ObjectType, but the pointer should actually point 
+   * The type is ObjectType, but the pointer should actually point
    * to an itk::Transform type (or inherited from that one).
    * You can use this to set it as an initial transform in another
    * ElastixBase instantiation.
@@ -306,7 +306,7 @@ public:
   virtual void AfterRegistrationBase( void );
 
   /** Get the default precision of xout.
-   * (The value assumed when no DefaultOutputPrecision is given in the 
+   * (The value assumed when no DefaultOutputPrecision is given in the
    * parameter file.
    */
   virtual int GetDefaultOutputPrecision( void ) const
@@ -315,7 +315,7 @@ public:
   }
 
   /** Get whether direction cosines should be taken into account (true)
-   * or ignored (false). This depends on the UseDirectionCosines 
+   * or ignored (false). This depends on the UseDirectionCosines
    * parameter. */
   virtual bool GetUseDirectionCosines( void ) const;
 
@@ -323,7 +323,7 @@ public:
    * (d11 d21 d31 d21 d22 etc ) */
   virtual void SetOriginalFixedImageDirectionFlat(
     const FlatDirectionCosinesType & arg );
-  virtual const FlatDirectionCosinesType & 
+  virtual const FlatDirectionCosinesType &
     GetOriginalFixedImageDirectionFlat( void ) const;
 
 protected:
@@ -334,18 +334,18 @@ protected:
   ConfigurationPointer      m_Configuration;
   DBIndexType               m_DBIndex;
   ComponentDatabasePointer  m_ComponentDatabase;
-  
+
   FlatDirectionCosinesType     m_OriginalFixedImageDirection;
 
   /** Convenient mini class to load the files specified by a filename container
-   * The function GenerateImageContainer can be used without instantiating an 
-   * object of this class, since it is static. It has 2 arguments: the 
+   * The function GenerateImageContainer can be used without instantiating an
+   * object of this class, since it is static. It has 2 arguments: the
    * fileNameContainer, and a string containing a short description of the images
    * to be loaded. In case of errors, an itk::ExceptionObject is thrown that
    * includes this short description and the fileName which caused the error.
    * See ElastixTemplate::Run() for an example of usage.
    *
-   * The useDirection option is built in as a means to ignore the direction 
+   * The useDirection option is built in as a means to ignore the direction
    * cosines. Set it to false to force the direction cosines to identity.
    * The original direction cosines are returned separately.
    */
@@ -382,14 +382,14 @@ protected:
 
         /** Do the reading. */
         try
-        {          
+        {
           infoChanger->Update();
         }
         catch( itk::ExceptionObject & excp )
         {
           /** Add information to the exception. */
           std::string err_str = excp.GetDescription();
-          err_str += "\nError occurred while reading the image described as " 
+          err_str += "\nError occurred while reading the image described as "
             + imageDescription + ", with file name " + imageReader->GetFileName() + "\n";
           excp.SetDescription( err_str );
           /** Pass the exception to the caller of this function. */
@@ -413,7 +413,7 @@ protected:
     } // end static method GenerateImageContainer
 
     MultipleImageLoader(){};
-    ~MultipleImageLoader(){};         
+    ~MultipleImageLoader(){};
 
   }; // end class MultipleImageLoader
 
@@ -422,7 +422,7 @@ private:
   ElastixBase( const Self& );     // purposely not implemented
   void operator=( const Self& );  // purposely not implemented
 
-  xl::xoutrow_type      m_IterationInfo;  
+  xl::xoutrow_type      m_IterationInfo;
 
   int m_DefaultOutputPrecision;
 

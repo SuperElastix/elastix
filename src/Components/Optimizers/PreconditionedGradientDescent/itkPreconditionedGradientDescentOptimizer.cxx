@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -55,13 +55,13 @@ namespace itk
     {
       delete this->m_EigenSystem;
       this->m_EigenSystem = 0;
-    }    
+    }
 
   } // end Destructor
 
 
 
-  /** 
+  /**
    * *************** PrintSelf *************************
    */
 
@@ -127,12 +127,12 @@ namespace itk
     this->m_Stop = false;
 
     InvokeEvent( StartEvent() );
-    while( ! this->m_Stop ) 
+    while( ! this->m_Stop )
     {
 
       try
       {
-        this->GetScaledValueAndDerivative( 
+        this->GetScaledValueAndDerivative(
           this->GetScaledCurrentPosition(), m_Value, m_Gradient );
       }
       catch ( ExceptionObject& err )
@@ -209,10 +209,10 @@ namespace itk
   void
     PreconditionedGradientDescentOptimizer
     ::AdvanceOneStep( void )
-  { 
+  {
     itkDebugMacro("AdvanceOneStep");
 
-    const unsigned int spaceDimension = 
+    const unsigned int spaceDimension =
       this->GetScaledCostFunction()->GetNumberOfParameters();
 
     const ParametersType & currentPosition = this->GetScaledCurrentPosition();
@@ -224,7 +224,7 @@ namespace itk
     }
     else
     {
-      searchDirection = 
+      searchDirection =
         this->m_EigenSystem->V * ( this->m_EigenSystem->D * this->m_Gradient.post_multiply(
         this->m_EigenSystem->V ) );
     }
@@ -251,9 +251,9 @@ namespace itk
   void
     PreconditionedGradientDescentOptimizer
     ::SetPreconditionMatrix( const PreconditionType & precondition )
-  { 
+  {
     itkDebugMacro("SetPreconditionMatrix");
-   
+
     const unsigned int spaceDimension = precondition.cols();
 
     /** Compute eigen system */
@@ -267,19 +267,19 @@ namespace itk
     /** Max eigenvalue measured and minimum eigenvalue allowed */
     const double maxeig = this->m_EigenSystem->D[ spaceDimension-1  ];
     const double mineig = maxeig * this->GetMinimumConditionNumber();
-    
+
     /** The eigen vector with the lowest valid eigen value  */
     unsigned int lowestValidEigVec = spaceDimension-1;
 
     /** Invert eigenvalues if >= mineig and >0 and compute lowest valid eigen vector */
     for (unsigned int i = spaceDimension; i > 0; --i )
     {
-      const unsigned int eignr = i-1;      
+      const unsigned int eignr = i-1;
       double eigval = this->m_EigenSystem->D( eignr );
-      
+
       if ( eigval < mineig )
       {
-        eigval = mineig;        
+        eigval = mineig;
       }
       if (eigval > 1e-14 )
       {
@@ -289,13 +289,13 @@ namespace itk
       this->m_EigenSystem->D( eignr ) = eigval;
     }
     unsigned int numberOfValidEigVecs = spaceDimension - lowestValidEigVec;
-  
+
     /** Extract part of eigenvalue matrix that is >0 */
     this->m_EigenSystem->D = this->m_EigenSystem->D.diagonal().extract(
       numberOfValidEigVecs, lowestValidEigVec );
-    
+
     /** Extract corresponding part of eigenvector matrix */
-    this->m_EigenSystem->V = this->m_EigenSystem->V.extract( 
+    this->m_EigenSystem->V = this->m_EigenSystem->V.extract(
       spaceDimension, numberOfValidEigVecs, 0, lowestValidEigVec );
 
   } // end SetPreconditionMatrix

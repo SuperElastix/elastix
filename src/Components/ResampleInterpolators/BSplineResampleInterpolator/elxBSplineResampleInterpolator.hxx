@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -33,7 +33,7 @@ BSplineResampleInterpolator<TElastix>
   /** BSplineResampleInterpolator specific. */
 
   /** Set the SplineOrder, default = 3. */
-  unsigned int splineOrder = 3;  
+  unsigned int splineOrder = 3;
 
   /** Read the desired splineOrder from the parameterFile. */
   this->m_Configuration->ReadParameter( splineOrder,
@@ -60,7 +60,7 @@ BSplineResampleInterpolator<TElastix>
   /** BSplineResampleInterpolator specific. */
 
   /** Set the SplineOrder, default = 3. */
-  unsigned int splineOrder = 3;  
+  unsigned int splineOrder = 3;
 
   /** Read the desired splineOrder from the parameterFile. */
   this->m_Configuration->ReadParameter( splineOrder,

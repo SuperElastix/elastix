@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -24,10 +24,10 @@ namespace itk
   * ******************* Constructor *******************
   */
 
-  template <class TFixedImage, class TMovingImage> 
+  template <class TFixedImage, class TMovingImage>
     ZeroDeformationConstraintMetric<TFixedImage,TMovingImage>
       ::ZeroDeformationConstraintMetric():
-        m_CurrentPenaltyTermMultiplier( 1.0 ), 
+        m_CurrentPenaltyTermMultiplier( 1.0 ),
         m_CurrentLagrangeMultipliers( 0 ),
         m_CurrentMaximumAbsoluteDisplacement( 0.0 ),
         m_InitialLangrangeMultiplier( 0.0 )
@@ -48,12 +48,12 @@ namespace itk
     ZeroDeformationConstraintMetric<TFixedImage,TMovingImage>
     ::Initialize(void) throw ( ExceptionObject )
   {
-    
+
     /** Initialize transform, interpolator, etc. */
     Superclass::Initialize();
 
     /** Set right size of lagrangian multiplier vector and initialize to
-     * initial langrange multiplier value as supplied by the user. 
+     * initial langrange multiplier value as supplied by the user.
      */
     this->GetImageSampler()->Update();
     const unsigned int numConstraints = this->GetImageSampler()->GetOutput()->Size() * MovingImageDimension;
@@ -72,8 +72,8 @@ namespace itk
   /**
    * ******************* PrintSelf *******************
    */
-  
-  template < class TFixedImage, class TMovingImage> 
+
+  template < class TFixedImage, class TMovingImage>
     void
     ZeroDeformationConstraintMetric<TFixedImage,TMovingImage>
     ::PrintSelf(std::ostream& os, Indent indent) const
@@ -87,7 +87,7 @@ namespace itk
    * ******************* GetValue *******************
    */
 
-  template <class TFixedImage, class TMovingImage> 
+  template <class TFixedImage, class TMovingImage>
     typename ZeroDeformationConstraintMetric<TFixedImage,TMovingImage>::MeasureType
     ZeroDeformationConstraintMetric<TFixedImage,TMovingImage>
     ::GetValue( const TransformParametersType & parameters ) const
@@ -153,12 +153,12 @@ namespace itk
           ++i;
         }
       }
-      else 
+      else
       {
         /** Skip point. */
         i += 3;
       }
-      
+
     } // end for loop over the image sample container
 
     /** Average infeasibility measure. */
@@ -172,13 +172,13 @@ namespace itk
     return ( -sumDisplacement + this->m_CurrentPenaltyTermMultiplier / 2.0 * sumDisplacementSquared ) / static_cast< float > ( this->m_NumberOfPixelsCounted * MovingImageDimension );
 
   } // end GetValue
-  
+
 
   /**
    * ******************* GetDerivative *******************
    */
 
-  template < class TFixedImage, class TMovingImage> 
+  template < class TFixedImage, class TMovingImage>
     void
     ZeroDeformationConstraintMetric<TFixedImage,TMovingImage>
     ::GetDerivative( const TransformParametersType & parameters,
@@ -201,7 +201,7 @@ namespace itk
   template <class TFixedImage, class TMovingImage>
     void
     ZeroDeformationConstraintMetric<TFixedImage,TMovingImage>
-    ::GetValueAndDerivative( const TransformParametersType & parameters, 
+    ::GetValueAndDerivative( const TransformParametersType & parameters,
     MeasureType & value, DerivativeType & derivative ) const
   {
     itkDebugMacro( "GetValueAndDerivative( " << parameters << " ) ");
@@ -299,7 +299,7 @@ namespace itk
 
         }
       }
-      else 
+      else
       {
 
         /** Skip point. */
@@ -319,7 +319,7 @@ namespace itk
     value = ( -sumDisplacement + this->m_CurrentPenaltyTermMultiplier / 2.0 * sumDisplacementSquared ) / static_cast< float > ( this->m_NumberOfPixelsCounted * MovingImageDimension );
 
     /** Determine final derivative. */
-    for ( unsigned int p = 0; p < this->GetNumberOfParameters(); ++p) 
+    for ( unsigned int p = 0; p < this->GetNumberOfParameters(); ++p)
     {
       derivative[ p ] /= static_cast< float > ( this->m_NumberOfPixelsCounted * MovingImageDimension );
     }

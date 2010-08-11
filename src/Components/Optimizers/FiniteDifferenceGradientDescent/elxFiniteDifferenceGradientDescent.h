@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -30,7 +30,7 @@ using namespace itk;
    * It takes care of setting parameters and printing progress information.
    * For more information about the optimisation method, please read the documentation
    * of the FiniteDifferenceGradientDescentOptimizer class.
-   * 
+   *
    * Watch out for this optimizer; it may be very slow....
    *
    * The parameters used in this class are:
@@ -89,13 +89,13 @@ using namespace itk;
     typedef OptimizerBase<TElastix>                   Superclass2;
     typedef SmartPointer<Self>                        Pointer;
     typedef SmartPointer<const Self>                  ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( FiniteDifferenceGradientDescent, FiniteDifferenceGradientDescentOptimizer );
-    
+
     /** Name of this class.
      * Use this name in the parameter file to select this specific optimizer. \n
      * example: <tt>(Optimizer "FiniteDifferenceGradientDescent")</tt>\n
@@ -106,7 +106,7 @@ using namespace itk;
     typedef Superclass1::CostFunctionType     CostFunctionType;
     typedef Superclass1::CostFunctionPointer  CostFunctionPointer;
     typedef Superclass1::StopConditionType    StopConditionType;
-    
+
     /** Typedef's inherited from Elastix.*/
     typedef typename Superclass2::ElastixType           ElastixType;
     typedef typename Superclass2::ElastixPointer        ElastixPointer;
@@ -115,7 +115,7 @@ using namespace itk;
     typedef typename Superclass2::RegistrationType      RegistrationType;
     typedef typename Superclass2::RegistrationPointer   RegistrationPointer;
     typedef typename Superclass2::ITKBaseType           ITKBaseType;
-    
+
     /** Typedef for the ParametersType. */
     typedef typename Superclass1::ParametersType        ParametersType;
 
@@ -124,26 +124,26 @@ using namespace itk;
     virtual void BeforeEachResolution(void);
     virtual void AfterEachResolution(void);
     virtual void AfterEachIteration(void);
-    virtual void AfterRegistration(void);   
+    virtual void AfterRegistration(void);
 
-    /** Check if any scales are set, and set the UseScales flag on or off; 
+    /** Check if any scales are set, and set the UseScales flag on or off;
      * after that call the superclass' implementation */
     virtual void StartOptimization(void);
-            
+
   protected:
 
       FiniteDifferenceGradientDescent();
       virtual ~FiniteDifferenceGradientDescent() {};
-      
+
       bool m_ShowMetricValues;
-      
+
   private:
 
       FiniteDifferenceGradientDescent( const Self& ); // purposely not implemented
       void operator=( const Self& );              // purposely not implemented
-      
+
   }; // end class FiniteDifferenceGradientDescent
-  
+
 
 } // end namespace elastix
 

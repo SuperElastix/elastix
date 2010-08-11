@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -35,12 +35,12 @@ AdvancedVersorRigid3DTransform<TScalarType>
 // Constructor with arguments
 template<class TScalarType>
 AdvancedVersorRigid3DTransform<TScalarType>::
-AdvancedVersorRigid3DTransform( unsigned int outputSpaceDim, 
+AdvancedVersorRigid3DTransform( unsigned int outputSpaceDim,
                         unsigned int paramDim) :
   Superclass(outputSpaceDim,paramDim)
 {
 }
- 
+
 
 // Constructor with arguments
 template<class TScalarType>
@@ -50,7 +50,7 @@ AdvancedVersorRigid3DTransform( const MatrixType & matrix,
   Superclass(matrix,offset)
 {
 }
- 
+
 
 // Set Parameters
 template <class TScalarType>
@@ -62,7 +62,7 @@ AdvancedVersorRigid3DTransform<TScalarType>
   itkDebugMacro( << "Setting parameters " << parameters );
 
   // Transfer the versor part
-  
+
   AxisType axis;
 
   double norm = parameters[0]*parameters[0];
@@ -87,8 +87,8 @@ AdvancedVersorRigid3DTransform<TScalarType>
   this->ComputeMatrix();
 
   itkDebugMacro( <<"Versor is now " << this->GetVersor() );
-  
-   
+
+
   // Transfer the translation part
   TranslationType newTranslation;
   newTranslation[0] = parameters[3];
@@ -107,7 +107,7 @@ AdvancedVersorRigid3DTransform<TScalarType>
 
 //
 // Get Parameters
-// 
+//
 // Parameters are ordered as:
 //
 // p[0:2] = right part of the versor (axis times vcl_sin(t/2))
@@ -176,23 +176,23 @@ GetJacobian( const InputPointType & p,
   // compute Jacobian with respect to quaternion parameters
   j[0][0] = 2.0 * (               (vyw+vxz)*py + (vzw-vxy)*pz)
                          / vw;
-  j[1][0] = 2.0 * ((vyw-vxz)*px   -2*vxw   *py + (vxx-vww)*pz) 
+  j[1][0] = 2.0 * ((vyw-vxz)*px   -2*vxw   *py + (vxx-vww)*pz)
                          / vw;
-  j[2][0] = 2.0 * ((vzw+vxy)*px + (vww-vxx)*py   -2*vxw   *pz) 
-                         / vw;
-
-  j[0][1] = 2.0 * ( -2*vyw  *px + (vxw+vyz)*py + (vww-vyy)*pz) 
-                         / vw;
-  j[1][1] = 2.0 * ((vxw-vyz)*px                + (vzw+vxy)*pz) 
-                         / vw;
-  j[2][1] = 2.0 * ((vyy-vww)*px + (vzw-vxy)*py   -2*vyw   *pz) 
+  j[2][0] = 2.0 * ((vzw+vxy)*px + (vww-vxx)*py   -2*vxw   *pz)
                          / vw;
 
-  j[0][2] = 2.0 * ( -2*vzw  *px + (vzz-vww)*py + (vxw-vyz)*pz) 
+  j[0][1] = 2.0 * ( -2*vyw  *px + (vxw+vyz)*py + (vww-vyy)*pz)
                          / vw;
-  j[1][2] = 2.0 * ((vww-vzz)*px   -2*vzw   *py + (vyw+vxz)*pz) 
+  j[1][1] = 2.0 * ((vxw-vyz)*px                + (vzw+vxy)*pz)
                          / vw;
-  j[2][2] = 2.0 * ((vxw+vyz)*px + (vyw-vxz)*py               ) 
+  j[2][1] = 2.0 * ((vyy-vww)*px + (vzw-vxy)*py   -2*vyw   *pz)
+                         / vw;
+
+  j[0][2] = 2.0 * ( -2*vzw  *px + (vzz-vww)*py + (vxw-vyz)*pz)
+                         / vw;
+  j[1][2] = 2.0 * ((vww-vzz)*px   -2*vzw   *py + (vyw+vxz)*pz)
+                         / vw;
+  j[2][2] = 2.0 * ((vxw+vyz)*px + (vyw-vxz)*py               )
                          / vw;
 
   j[0][3] = 1.0;
@@ -201,7 +201,7 @@ GetJacobian( const InputPointType & p,
 
   nzji = this->m_NonZeroJacobianIndices;
 }
-  
+
 // Print self
 template<class TScalarType>
 void

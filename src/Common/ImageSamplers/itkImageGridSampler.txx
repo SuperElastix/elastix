@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -26,7 +26,7 @@ namespace itk
   /**
    * ******************* GenerateData *******************
    */
-  
+
   template< class TInputImage >
     void
     ImageGridSampler< TInputImage >
@@ -43,28 +43,28 @@ namespace itk
     /** Set up a region iterator within the user specified image region. */
     typedef ImageRegionConstIteratorWithIndex<InputImageType> InputImageIterator;
     InputImageIterator iter( inputImage, this->GetCroppedInputImageRegion() );
-    
+
     /** Take into account the possibility of a smaller bounding box around the mask */
     this->SetNumberOfSamples( this->m_RequestedNumberOfSamples );
 
-    /** Determine the grid. */ 
+    /** Determine the grid. */
     SampleGridIndexType index;
     SampleGridSizeType sampleGridSize;
     SampleGridIndexType sampleGridIndex =
-      this->GetCroppedInputImageRegion().GetIndex();    
+      this->GetCroppedInputImageRegion().GetIndex();
     const InputImageSizeType & inputImageSize =
       this->GetCroppedInputImageRegion().GetSize();
     unsigned long numberOfSamplesOnGrid = 1;
     for (unsigned int dim = 0; dim < InputImageDimension; dim++)
     {
       /** The number of sample point along one dimension. */
-      sampleGridSize[dim] = 1 + 
+      sampleGridSize[dim] = 1 +
         (( inputImageSize[dim] - 1 ) / this->GetSampleGridSpacing()[dim]);
 
-      /** The position of the first sample along this dimension is 
+      /** The position of the first sample along this dimension is
        * chosen to center the grid nicely on the input image region.
        */
-      sampleGridIndex[dim] += (   inputImageSize[dim] - 
+      sampleGridIndex[dim] += (   inputImageSize[dim] -
         ( (sampleGridSize[dim] - 1) * this->GetSampleGridSpacing()[dim] +1 )   ) / 2;
 
       /** Update the number of samples on the grid. */
@@ -127,7 +127,7 @@ namespace itk
           index[ 3 ] += this->m_SampleGridSpacing[ 3 ];
         }
       } // end t
-      
+
     } // end if no mask
     else
     {
@@ -180,7 +180,7 @@ namespace itk
         }
       } // end t
     } // else (if mask exists)
-   
+
   } // end GenerateData
 
 
@@ -200,7 +200,7 @@ namespace itk
       this->Modified();
     }
 
-    /** Compute an isotropic grid spacing which realises the nrofsamples 
+    /** Compute an isotropic grid spacing which realises the nrofsamples
      * approximately */
     if ( nrofsamples != 0 )
     {
@@ -212,7 +212,7 @@ namespace itk
 
       /** compute isotropic gridspacing */
       const double fraction = allvoxelsd / nrofsamplesd;
-      int gridspacing = static_cast<int>( 
+      int gridspacing = static_cast<int>(
         vnl_math_rnd( vcl_pow( fraction, 1.0/indimd ) )   );
       gridspacing = vnl_math_max( 1, gridspacing );
 
@@ -225,7 +225,7 @@ namespace itk
       {
         this->m_SampleGridSpacing = gridspacings;
         this->Modified();
-      }      
+      }
     }
 
   } // end SetNumberOfSamples
@@ -234,7 +234,7 @@ namespace itk
   /**
    * ******************* PrintSelf *******************
    */
-  
+
   template< class TInputImage >
     void
     ImageGridSampler< TInputImage >

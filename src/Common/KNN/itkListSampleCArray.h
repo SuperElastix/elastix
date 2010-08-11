@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -22,36 +22,36 @@
 namespace itk{
 namespace Statistics
 {
-  
+
   /**
    * \class ListSampleCArray
    *
-   * \brief A ListSampleBase that internally uses a CArray, which can be accessed 
-   * 
+   * \brief A ListSampleBase that internally uses a CArray, which can be accessed
+   *
    * This class is useful if some function expects a c-array, but you would
    * like to keep things as much as possible in the itk::Statistics-framework.
-   * 
+   *
    * \todo: the second template argument should be removed, since the GetMeasurementVector
    * method is incorrect when TMeasurementVector::ValueType != TInternalValue.
-   *  
+   *
    * \ingroup Miscellaneous
    */
-  
+
   template < class TMeasurementVector, class TInternalValue = typename TMeasurementVector::ValueType >
   class ListSampleCArray
     : public Sample< TMeasurementVector >
   {
   public:
-    
+
     /** Standard itk. */
     typedef ListSampleCArray              Self;
     typedef Sample< TMeasurementVector >  Superclass;
     typedef SmartPointer< Self >          Pointer;
     typedef SmartPointer< const Self >    ConstPointer;
-    
+
     /** New method for creating an object using a factory.*/
     itkNewMacro( Self );
-    
+
     /** ITK type info */
     itkTypeMacro( ListSampleCArray, Sample );
 
@@ -62,7 +62,7 @@ namespace Statistics
     typedef typename Superclass::AbsoluteFrequencyType      AbsoluteFrequencyType;
     typedef typename Superclass::TotalAbsoluteFrequencyType TotalAbsoluteFrequencyType;
     typedef typename Superclass::InstanceIdentifier         InstanceIdentifier;
-    
+
     /** Typedef's for the internal data container. */
     typedef TInternalValue          InternalValueType;
     typedef InternalValueType *     InternalDataType;
@@ -79,7 +79,7 @@ namespace Statistics
 
     /** Function to get the actual (not the allocated) size of the data container. */
     unsigned long GetActualSize( void );
-    
+
     /** Function to clear the data container. */
     void Clear( void );
 
@@ -88,15 +88,15 @@ namespace Statistics
     {
       return this->m_InternalContainerSize;
     }
-    
-    /** Function to get a point from the data container. 
+
+    /** Function to get a point from the data container.
      * NB: the reference to the returned value remains only valid until the next
      * call to this function.
      * The method GetMeasurementVector( const InstanceIdentifier &id, MeasurementVectorType & mv)
      * is actually a preferred way to get a measurement vector.
      */
    virtual const MeasurementVectorType & GetMeasurementVector(
-      InstanceIdentifier id ) const;    
+      InstanceIdentifier id ) const;
 
     /** Function to get a point from the data container. */
     void GetMeasurementVector( InstanceIdentifier id,
@@ -112,7 +112,7 @@ namespace Statistics
 
     /** Function to get the frequency of point i. 1.0 if it exist, 0.0 otherwise. */
     virtual AbsoluteFrequencyType GetFrequency( InstanceIdentifier id ) const;
-    
+
     /** Function to get the total frequency. */
     virtual TotalAbsoluteFrequencyType GetTotalFrequency( void ) const
     {
@@ -120,13 +120,13 @@ namespace Statistics
     }
 
   protected:
-    
+
     ListSampleCArray();
     virtual ~ListSampleCArray();
     void PrintSelf( std::ostream& os, Indent indent ) const;
-    
+
   private:
-    
+
     ListSampleCArray( const Self& );  // purposely not implemented
     void operator=( const Self& );    // purposely not implemented
 
@@ -143,7 +143,7 @@ namespace Statistics
 
     /** Function to deallocate the memory of the data container. */
     void DeallocateInternalContainer( void );
-        
+
   }; // end class ListSampleCArray
 
 

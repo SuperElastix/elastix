@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -28,7 +28,7 @@ namespace itk
  *
  * The class inherits from the 0th-order AdvancedBSplineDeformableTransform,
  * and converts a VectorImage to the BSpline CoefficientImage.
- * 
+ *
  * This is useful if you know for example how to deform each voxel
  * in an image and want to apply it to that image.
  *
@@ -44,24 +44,24 @@ class DeformationVectorFieldTransform
   : public AdvancedBSplineDeformableTransform< TScalarType, NDimensions, 0 >
 {
   public:
-    
+
     /** Standard class typedefs. */
     typedef DeformationVectorFieldTransform       Self;
     typedef AdvancedBSplineDeformableTransform<
       TScalarType, NDimensions, 0 >               Superclass;
     typedef SmartPointer< Self >                  Pointer;
     typedef SmartPointer< const Self >            ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( DeformationVectorFieldTransform, AdvancedBSplineDeformableTransform );
-    
+
     /** Dimension of the domain space. */
     itkStaticConstMacro( SpaceDimension, unsigned int, NDimensions );
     itkStaticConstMacro( SplineOrder, unsigned int, Superclass::SplineOrder );
-    
+
     /** Typedef's inherited from Superclass. */
     typedef typename Superclass::ScalarType             ScalarType;
     typedef typename Superclass::ParametersType         ParametersType;
@@ -80,7 +80,7 @@ class DeformationVectorFieldTransform
     typedef typename Superclass::BulkTransformPointer   BulkTransformPointer;
 
     /** Parameters as SpaceDimension number of images. */
-    typedef typename Superclass::PixelType              CoefficientPixelType; 
+    typedef typename Superclass::PixelType              CoefficientPixelType;
     typedef typename Superclass::ImageType              CoefficientImageType;
     typedef typename Superclass::ImagePointer           CoefficientImagePointer;
 
@@ -90,14 +90,14 @@ class DeformationVectorFieldTransform
     typedef Image< CoefficientVectorPixelType,
       itkGetStaticConstMacro( SpaceDimension ) >          CoefficientVectorImageType;
     typedef typename CoefficientVectorImageType::Pointer  CoefficientVectorImagePointer;
-    
+
     /** Set the coefficient image as a deformation field.
      * The superclass provides a similar function (SetCoeffficientImage),
      * but this function expects an array of nr_of_dim scalar images.
      * The SetCoefficientVectorImage method accepts a VectorImage,
      * which is often more convenient.
-     * The method internally just converts this vector image to 
-     * nr_of_dim scalar images and passes it on to the 
+     * The method internally just converts this vector image to
+     * nr_of_dim scalar images and passes it on to the
      * SetCoefficientImage function.
      */
     virtual void SetCoefficientVectorImage( const CoefficientVectorImageType * vecImage );
@@ -105,20 +105,20 @@ class DeformationVectorFieldTransform
     /** Get the coefficient image as a vector image.
      * The vector image is created only on demand. The caller is
      * expected to provide a smart pointer to the resulting image;
-     * this stresses the fact that this method does not return a member 
+     * this stresses the fact that this method does not return a member
      * variable, like most Get... methods.
      */
     virtual void GetCoefficientVectorImage( CoefficientVectorImagePointer & vecImage ) const;
-    
+
   protected:
-    
+
     /** The constructor. */
     DeformationVectorFieldTransform();
     /** The destructor. */
     virtual ~DeformationVectorFieldTransform();
 
   private:
-    
+
     /** The private constructor. */
     DeformationVectorFieldTransform( const Self& ); // purposely not implemented
     /** The private copy constructor. */
@@ -126,7 +126,7 @@ class DeformationVectorFieldTransform
 
     /** Member variables. */
     CoefficientImagePointer m_Images[ SpaceDimension ];
-  
+
   }; // end class DeformationVectorFieldTransform
 
 } // end namespace itk

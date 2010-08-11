@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -20,7 +20,7 @@
 
 namespace itk
 {
-  
+
   /**
    * \class DeformationFieldRegulizer
    * \brief This class combines any itk transform with the
@@ -32,30 +32,30 @@ namespace itk
    * \ingroup Transforms
    * \ingroup Common
    */
-  
+
   template <class TAnyITKTransform>
   class DeformationFieldRegulizer :
     public TAnyITKTransform
   {
   public:
-    
+
     /** Standard itk. */
     typedef DeformationFieldRegulizer   Self;
     typedef TAnyITKTransform            Superclass;
     typedef SmartPointer< Self >        Pointer;
     typedef SmartPointer< const Self >  ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( DeformationFieldRegulizer, TAnyITKTransform );
-    
+
     /** Input space dimension. */
     itkStaticConstMacro( InputSpaceDimension, unsigned int, Superclass::InputSpaceDimension );
     /** Output space dimension. */
     itkStaticConstMacro( OutputSpaceDimension, unsigned int, Superclass::OutputSpaceDimension );
-    
+
     /** Typedef's inherited from Superclass. */
     typedef typename Superclass::ScalarType                 ScalarType;
     typedef typename Superclass::ParametersType             ParametersType;
@@ -106,21 +106,21 @@ namespace itk
 
     /** Method to transform a point. */
     virtual OutputPointType TransformPoint( const InputPointType & inputPoint ) const;
-    
+
   protected:
-    
+
     /** The constructor. */
     DeformationFieldRegulizer();
     /** The destructor. */
     virtual ~DeformationFieldRegulizer() {};
-    
+
   private:
 
     /** The private constructor. */
     DeformationFieldRegulizer( const Self& ); // purposely not implemented
     /** The private copy constructor. */
     void operator=( const Self& );            // purposely not implemented
-    
+
     /** Declaration of members. */
     typename IntermediaryDFTransformType::Pointer   m_IntermediaryDeformationFieldTransform;
     bool    m_Initialized;
@@ -131,8 +131,8 @@ namespace itk
     SpacingType                             m_DeformationFieldSpacing;
 
   }; // end class DeformationFieldRegulizer
-    
-    
+
+
 } // end namespace itk
 
 

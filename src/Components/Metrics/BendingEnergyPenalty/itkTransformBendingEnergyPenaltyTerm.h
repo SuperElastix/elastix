@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -19,7 +19,7 @@
 namespace itk
 {
 
-/** 
+/**
  * \class TransformBendingEnergyPenaltyTerm
  * \brief A cost function that calculates the bending energy
  * of a transformation.
@@ -27,7 +27,7 @@ namespace itk
  * \par The bending energy is defined as the sum of the spatial
  * second order derivatives of the transformation, as defined in
  * [1]. For rigid and affine transformation this energy is always
- * zero. 
+ * zero.
  *
  *
  * [1]: D. Rueckert, L. I. Sonoda, C. Hayes, D. L. G. Hill,
@@ -94,7 +94,7 @@ public:
   typedef typename Superclass::ImageSampleContainerPointer ImageSampleContainerPointer;
   typedef typename Superclass::ScalarType                 ScalarType;
 
-  /** Typedefs from the AdvancedTransform. */  
+  /** Typedefs from the AdvancedTransform. */
   typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
   typedef typename Superclass
     ::JacobianOfSpatialJacobianType                 JacobianOfSpatialJacobianType;

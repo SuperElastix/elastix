@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -22,7 +22,7 @@
 #endif
 
 
-#include <iostream> 
+#include <iostream>
 #include <ostream>
 #include <map>
 #include <string>
@@ -36,12 +36,12 @@ namespace xoutlibrary
    * \class xoutbase
    * \brief Base class for xout.
    *
-   * An abstract base class, which defines the interface 
+   * An abstract base class, which defines the interface
    * for using xout.
    *
    * \ingroup xout
    */
-  
+
   template<class charT, class traits = char_traits<charT> >
     class xoutbase
   {
@@ -49,7 +49,7 @@ namespace xoutlibrary
 
     /** Typedef's.*/
     typedef xoutbase                        Self;
-    
+
     typedef traits                          traits_type;
     typedef charT                           char_type;
     typedef typename traits::int_type       int_type;
@@ -57,22 +57,22 @@ namespace xoutlibrary
     typedef typename traits::off_type       off_type;
     typedef basic_ostream<charT, traits>    ostream_type;
     typedef basic_ios<charT, traits>        ios_type;
-    
+
     typedef std::map< std::string, ostream_type * >     CStreamMapType;
     typedef std::map< std::string, Self * >             XStreamMapType;
     typedef typename CStreamMapType::iterator           CStreamMapIteratorType;
     typedef typename XStreamMapType::iterator           XStreamMapIteratorType;
     typedef typename CStreamMapType::value_type         CStreamMapEntryType;
     typedef typename XStreamMapType::value_type         XStreamMapEntryType;
-    
+
     /** Constructors */
     xoutbase();
-      
+
     /** Destructor */
     virtual ~xoutbase();
 
     /** The operator [] simply calls this->SelectXCell(cellname).
-     * It returns an x-cell */  
+     * It returns an x-cell */
     inline Self & operator[]( const char * cellname );
 
     /**
@@ -87,8 +87,8 @@ namespace xoutlibrary
       Self & operator<<(T &  _arg)
     {
       return this->SendToTargets(_arg);
-    }*/ 
-    
+    }*/
+
     template <class T>
       Self & operator<<( const T& _arg )
     {
@@ -109,7 +109,7 @@ namespace xoutlibrary
     {
       return this->SendToTargets( pf );
     }
-      
+
     virtual void WriteBufferedData(void);
 
     /**
@@ -122,7 +122,7 @@ namespace xoutlibrary
 
     virtual void SetTargetCells( const CStreamMapType & cellmap );
     virtual void SetTargetCells( const XStreamMapType & cellmap );
-      
+
     /** Add/Remove an output stream (like cout, or an fstream, or an xout-object).  */
     virtual int AddOutput( const char * name, ostream_type * output );
     virtual int AddOutput( const char * name, Self * output );
@@ -134,17 +134,17 @@ namespace xoutlibrary
     /** Get the output maps. */
     virtual const CStreamMapType & GetCOutputs(void);
     virtual const XStreamMapType & GetXOutputs(void);
-    
+
   protected:
 
     /** Returns a target cell. */
     virtual Self & SelectXCell( const char * name );
-    
+
     /** Maps that contain the outputs. */
     CStreamMapType m_COutputs;
     XStreamMapType m_XOutputs;
 
-    /** Maps that contain the target cells. The << operator passes its 
+    /** Maps that contain the target cells. The << operator passes its
      * input to these maps. */
     CStreamMapType m_CTargetCells;
     XStreamMapType m_XTargetCells;
@@ -189,14 +189,14 @@ namespace xoutlibrary
         {
           *(xit->second) << _arg;
         }
-        
+
       } // end ToTargets
-      
+
     }; // end class Send
 
-    
+
   }; // end class xoutbase
-  
+
 
 
 } // end namespace xoutlibrary

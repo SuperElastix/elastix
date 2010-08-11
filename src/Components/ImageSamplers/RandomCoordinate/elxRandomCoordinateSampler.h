@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -26,8 +26,8 @@ using namespace itk;
   /**
    * \class RandomCoordinateSampler
    * \brief An interpolator based on the itk::ImageRandomCoordinateSampler.
-   * 
-   * This image sampler randomly samples 'NumberOfSamples' coordinates in 
+   *
+   * This image sampler randomly samples 'NumberOfSamples' coordinates in
    * the InputImageRegion. If a mask is given, the sampler tries to find
    * samples within the mask. If the mask is very sparse, this may take some time.
    * The RandomCoordinate sampler samples not only positions that correspond
@@ -35,8 +35,8 @@ using namespace itk;
    * required. A B-spline interpolator is used, the order of which can be specified
    * by the user. Typically, the RandomCoordinate gives a smoother cost function,
    * because the so-called 'grid-effect' is avoided.
-   * 
-   * This sampler is suitable to used in combination with the 
+   *
+   * This sampler is suitable to used in combination with the
    * NewSamplesEveryIteration parameter (defined in the elx::OptimizerBase).
    *
    * The parameters used in this class are:
@@ -53,13 +53,13 @@ using namespace itk;
    *    of the presence of large inhomogeneities in the image, for example.\n
    *    example: <tt>(UseRandomSampleRegion "true")</tt>\n
    *    Default: false.
-   * \parameter SampleRegionSize: the size of the subregions that are selected when using 
+   * \parameter SampleRegionSize: the size of the subregions that are selected when using
    *    the UseRandomSampleRegion option. The size should be specified in mm, for each dimension.
    *    As a rule of thumb, you may try a value ~1/3 of the image size.\n
-   *    example: <tt>(SampleRegionSize 50.0 50.0 50.0)</tt>\n    
+   *    example: <tt>(SampleRegionSize 50.0 50.0 50.0)</tt>\n
    *    You can also specify one number, which will be used for all dimensions. Also, you
    *    can specify different values for each resolution:\n
-   *    example: <tt>(SampleRegionSize 50.0 50.0 50.0 30.0 30.0 30.0)</tt>\n    
+   *    example: <tt>(SampleRegionSize 50.0 50.0 50.0 30.0 30.0 30.0)</tt>\n
    *    In this example, in the first resolution 50mm is used for each of the 3 dimensions,
    *    and in the second resolution 30mm.\n
    *    Default: sampleRegionSize[i] = min ( fixedImageSize[i], max_i ( fixedImageSize[i]/3 ) ),
@@ -69,7 +69,7 @@ using namespace itk;
    *    With this option you can specify the order of interpolation.\n
    *    example: <tt>(FixedImageBSplineInterpolationOrder 0 0 1)</tt>\n
    *    Default value: 1. The parameter can be specified for each resolution.
-   *   
+   *
    * \ingroup ImageSamplers
    */
 
@@ -77,32 +77,32 @@ using namespace itk;
     class RandomCoordinateSampler :
     public
       ImageRandomCoordinateSampler<
-      ITK_TYPENAME elx::ImageSamplerBase<TElastix>::InputImageType >, 
+      ITK_TYPENAME elx::ImageSamplerBase<TElastix>::InputImageType >,
     public
       elx::ImageSamplerBase<TElastix>
-  { 
+  {
   public:
-  
+
     /** Standard ITK-stuff. */
     typedef RandomCoordinateSampler                       Self;
     typedef ImageRandomCoordinateSampler<
-      typename elx::ImageSamplerBase<TElastix>::InputImageType >  Superclass1;    
-    typedef elx::ImageSamplerBase<TElastix>         Superclass2;    
+      typename elx::ImageSamplerBase<TElastix>::InputImageType >  Superclass1;
+    typedef elx::ImageSamplerBase<TElastix>         Superclass2;
     typedef SmartPointer<Self>                  Pointer;
     typedef SmartPointer<const Self>            ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro(Self);
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( RandomCoordinateSampler, ImageRandomCoordinateSampler );
-    
+
     /** Name of this class.
      * Use this name in the parameter file to select this specific interpolator. \n
      * example: <tt>(ImageSampler "RandomCoordinate")</tt>\n
      */
     elxClassNameMacro( "RandomCoordinate" );
-  
+
     /** Typedefs inherited from the superclass. */
     typedef typename Superclass1::DataObjectPointer            DataObjectPointer;
     typedef typename Superclass1::OutputVectorContainerType    OutputVectorContainerType;
@@ -116,9 +116,9 @@ using namespace itk;
     typedef typename Superclass1::ImageSampleContainerType     ImageSampleContainerType;
     typedef typename Superclass1::MaskType                     MaskType;
     typedef typename Superclass1::InputImageIndexType          InputImageIndexType;
-    typedef typename Superclass1::InputImagePointType          InputImagePointType; 
+    typedef typename Superclass1::InputImagePointType          InputImagePointType;
     typedef typename Superclass1::InputImageSizeType           InputImageSizeType;
-    typedef typename Superclass1::InputImageSpacingType        InputImageSpacingType;    
+    typedef typename Superclass1::InputImageSpacingType        InputImageSpacingType;
     typedef typename Superclass1::InputImagePointValueType     InputImagePointValueType;
     typedef typename Superclass1::ImageSampleValueType         ImageSampleValueType;
 
@@ -130,7 +130,7 @@ using namespace itk;
 
     /** The input image dimension. */
     itkStaticConstMacro( InputImageDimension, unsigned int, Superclass1::InputImageDimension );
-    
+
     /** Typedefs inherited from Elastix. */
     typedef typename Superclass2::ElastixType               ElastixType;
     typedef typename Superclass2::ElastixPointer            ElastixPointer;
@@ -153,14 +153,14 @@ using namespace itk;
     RandomCoordinateSampler() {}
     /** The destructor. */
     virtual ~RandomCoordinateSampler() {}
-    
+
   private:
 
     /** The private constructor. */
     RandomCoordinateSampler( const Self& ); // purposely not implemented
     /** The private copy constructor. */
     void operator=( const Self& );      // purposely not implemented
-      
+
   }; // end class RandomCoordinateSampler
 
 

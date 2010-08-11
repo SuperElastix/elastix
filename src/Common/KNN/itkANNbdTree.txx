@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -19,7 +19,7 @@
 
 namespace itk
 {
-  
+
   /**
    * ************************ Constructor *************************
    */
@@ -29,7 +29,7 @@ namespace itk
     ::ANNbdTree()
   {
     this->m_ShrinkingRule = ANN_BD_SIMPLE;
-    
+
   } // end Constructor()
 
 
@@ -95,13 +95,13 @@ namespace itk
     int dim = static_cast< int >( this->GetDataDimension() );
     int nop = static_cast< int >( this->GetActualNumberOfDataPoints() );
     int bcs = static_cast< int >( this->m_BucketSize );
-    
+
     ANNBinaryTreeCreator::DeleteANNkDTree( this->m_ANNTree );
 
     this->m_ANNTree = ANNBinaryTreeCreator::CreateANNbdTree(
       this->GetSample()->GetInternalContainer(), nop, dim, bcs,
       this->m_SplittingRule, this->m_ShrinkingRule );
-    
+
 
   } // end GenerateTree()
 
@@ -120,7 +120,7 @@ namespace itk
     os << indent << "ShrinkingRule: " << this->m_ShrinkingRule << std::endl;
 
   } // end PrintSelf()
-  
+
 
 } // end namespace itk
 

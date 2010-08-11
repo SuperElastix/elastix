@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -24,20 +24,20 @@ using namespace itk;
 
 
   /**
-   * \class ConjugateGradientFRPR 
+   * \class ConjugateGradientFRPR
    * \brief The ConjugateGradientFRPR class.
    *
-   * This component is based on the itkFRPROptimizer. This is a 
-   * Fletcher-Reeves conjugate gradient optimizer, in combination 
+   * This component is based on the itkFRPROptimizer. This is a
+   * Fletcher-Reeves conjugate gradient optimizer, in combination
    * with an exact (dBrent) line search, based on the description
    * in Numerical Recipes in C++
-   * 
+   *
    * This optimizer support the NewSamplesEveryIteration option. It requests
    * new samples upon every derivative evaluation, but
    * actually this makes no sense for a conjugate gradient optimizer.
    * So, think twice before using it.
    *
-   * \note It prints out no stop conditions, since the itk superclass 
+   * \note It prints out no stop conditions, since the itk superclass
    * does not generate them.
    * \note It considers line search iterations as elastix iterations.
    *
@@ -84,13 +84,13 @@ using namespace itk;
     typedef OptimizerBase<TElastix>             Superclass2;
     typedef SmartPointer<Self>                  Pointer;
     typedef SmartPointer<const Self>            ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( ConjugateGradientFRPR, FRPROptimizer );
-    
+
     /** Name of this class.*/
     elxClassNameMacro( "ConjugateGradientFRPR" );
 
@@ -110,32 +110,32 @@ using namespace itk;
     typedef typename Superclass2::RegistrationType      RegistrationType;
     typedef typename Superclass2::RegistrationPointer   RegistrationPointer;
     typedef typename Superclass2::ITKBaseType           ITKBaseType;
-    
+
     /** Methods to set parameters and print output at different stages
      * in the registration process.*/
     virtual void BeforeRegistration(void);
     virtual void BeforeEachResolution(void);
     virtual void AfterEachResolution(void);
     virtual void AfterEachIteration(void);
-    virtual void AfterRegistration(void);   
-    
+    virtual void AfterRegistration(void);
+
     /** Override the SetInitialPosition.*/
     virtual void SetInitialPosition( const ParametersType & param );
-    
-    /** Check if the optimizer is currently Bracketing the minimum, or is 
+
+    /** Check if the optimizer is currently Bracketing the minimum, or is
      * optimizing along a line */
     itkGetConstMacro(LineOptimizing, bool);
     itkGetConstMacro(LineBracketing, bool);
 
     /** Return the magnitude of the cached derivative */
     itkGetConstReferenceMacro(CurrentDerivativeMagnitude, double);
-    
+
     /** Get the current gain */
     itkGetConstReferenceMacro(CurrentStepLength, double);
 
     /** Get the magnitude of the line search direction */
     itkGetConstReferenceMacro(CurrentSearchDirectionMagnitude, double);
-      
+
   protected:
 
       ConjugateGradientFRPR();
@@ -149,8 +149,8 @@ using namespace itk;
 
       /** the current gain */
       double          m_CurrentStepLength;
-      
-      /** Set if the optimizer is currently bracketing the minimum, or is 
+
+      /** Set if the optimizer is currently bracketing the minimum, or is
        * optimizing along a line */
       itkSetMacro(LineOptimizing, bool);
       itkSetMacro(LineBracketing, bool);
@@ -160,45 +160,45 @@ using namespace itk;
        * Line origin and distances are set via SetLine.
        *
        * This implementation calls the Superclass' implementation and caches
-       * the computed derivative's magnitude. Besides, it invokes the 
+       * the computed derivative's magnitude. Besides, it invokes the
        * SelectNewSamples method. */
       virtual void GetValueAndDerivative(ParametersType p, double * val,
         ParametersType * xi);
 
       /** The LineBracket routine from NRC. Uses current origin and line direction
        * (from SetLine) to find a triple of points (ax, bx, cx) that bracket the
-       * extreme "near" the origin.  Search first considers the point StepLength 
+       * extreme "near" the origin.  Search first considers the point StepLength
        * distance from ax.
        * IMPORTANT: The value of ax and the value of the function at ax (i.e., fa),
        * must both be provided to this function.
-       * 
-       * This implementation sets the LineBracketing flag to 'true', calls the 
-       * superclass' implementation, stores bx as the current step length, 
+       *
+       * This implementation sets the LineBracketing flag to 'true', calls the
+       * superclass' implementation, stores bx as the current step length,
        * invokes an iteration event, and sets the LineBracketing flag to 'false' */
       virtual void   LineBracket(double *ax, double *bx, double *cx,
                                   double *fa, double *fb, double *fc);
 
       /** Given a bracketing triple of points and their function values, returns
-       * a bounded extreme.  These values are in parameter space, along the 
+       * a bounded extreme.  These values are in parameter space, along the
        * current line and wrt the current origin set via SetLine.   Optimization
-       * terminates based on MaximumIteration, StepTolerance, or ValueTolerance. 
+       * terminates based on MaximumIteration, StepTolerance, or ValueTolerance.
        * Implemented as Brent line optimers from NRC.
        *
-       * This implementation sets the LineOptimizing flag to 'true', calls the 
+       * This implementation sets the LineOptimizing flag to 'true', calls the
        * the superclass's implementation, stores extX as the current step length,
        * and sets the LineOptimizing flag to 'false' again. */
       virtual void   BracketedLineOptimize(double ax, double bx, double cx,
                                             double fa, double fb, double fc,
                                             double * extX, double * extVal);
 
-      /** 
+      /**
        * store the line search direction's (xi) magnitude and call the superclass'
        * implementation.
        */
       virtual void   LineOptimize(ParametersType * p, ParametersType xi,
                               double * val );
 
-            
+
   private:
 
       ConjugateGradientFRPR( const Self& ); // purposely not implemented
@@ -209,9 +209,9 @@ using namespace itk;
 
       const char * DeterminePhase(void) const;
 
-      
+
   }; // end class ConjugateGradientFRPR
-  
+
 
 } // end namespace elastix
 

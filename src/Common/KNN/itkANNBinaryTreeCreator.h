@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -21,20 +21,20 @@
 
 namespace itk
 {
-  
+
   /**
    * \class ANNBinaryTreeCreator
    *
-   * \brief 
+   * \brief
    *
-   * 
+   *
    * \ingroup ANNwrap
    */
-  
+
   class ANNBinaryTreeCreator : public Object
   {
   public:
-    
+
     /** Standard itk. */
     typedef ANNBinaryTreeCreator        Self;
     typedef Object                      Superclass;
@@ -43,7 +43,7 @@ namespace itk
 
     /** New method for creating an object using a factory. */
     itkNewMacro( Self );
-    
+
     /** ITK type info. */
     itkTypeMacro( ANNBinaryTreeCreator, Object );
 
@@ -85,14 +85,14 @@ namespace itk
 
     /** Static function to decrease the reference count to ANN trees. */
     static void DecreaseReferenceCount( void );
-    
+
   protected:
-    
+
     ANNBinaryTreeCreator(){};
     virtual ~ANNBinaryTreeCreator(){};
-    
+
   private:
-    
+
     ANNBinaryTreeCreator( const Self& );  // purposely not implemented
     void operator=( const Self& );        // purposely not implemented
 
@@ -101,7 +101,7 @@ namespace itk
 
   }; // end class ANNBinaryTreeCreator
 
-    
+
 } // end namespace itk
 
 

@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -49,7 +49,7 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet,TMovingPointSet>
   {
     itkExceptionMacro( << "Fixed point set has not been assigned" );
   }
-  
+
   MovingPointSetConstPointer movingPointSet = this->GetMovingPointSet();
   if ( !movingPointSet )
   {
@@ -155,7 +155,7 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet,TMovingPointSet>
   {
     itkExceptionMacro( << "Fixed point set has not been assigned" );
   }
-  
+
   MovingPointSetConstPointer movingPointSet = this->GetMovingPointSet();
   if ( !movingPointSet )
   {
@@ -264,7 +264,7 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet,TMovingPointSet>
 ::PrintSelf( std::ostream& os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
-// 
+//
 //   if ( this->m_ComputeSquaredDistance )
 //   {
 //     os << indent << "m_ComputeSquaredDistance: True"<< std::endl;

@@ -2,11 +2,11 @@
 
   This file is part of the elastix software.
 
-  Copyright (c) Erasmus MC University Medical Center Rotterdam. 
-  All rights reserved.  See src/CopyrightElastix.txt or 
+  Copyright (c) Erasmus MC University Medical Center Rotterdam.
+  All rights reserved.  See src/CopyrightElastix.txt or
   http://elastix.isi.uu.nl/legal.php for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -44,14 +44,14 @@ PeriodicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 {
   /** Call superclass SetGridRegion. */
   Superclass::SetGridRegion( region );
-  
+
   /** Check if last dimension of supportregion < last dimension of grid. */
   const int lastDim = this->m_GridRegion.GetImageDimension() - 1;
   const int lastDimSize = this->m_GridRegion.GetSize( lastDim );
   const int supportLastDimSize = this->m_SupportSize.GetElement( lastDim );
   if (supportLastDimSize > lastDimSize)
   {
-    itkExceptionMacro( "Last dimension (" << lastDim << ") of support size (" 
+    itkExceptionMacro( "Last dimension (" << lastDim << ") of support size ("
                        << supportLastDimSize << ") is larger than the "
                        << "number of grid points in the last dimension ("
                        << lastDimSize << ")." );
@@ -61,9 +61,9 @@ PeriodicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 
 /** Check if the point lies inside a valid region. */
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-bool 
+bool
 PeriodicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
-::InsideValidRegion( 
+::InsideValidRegion(
   const ContinuousIndexType& index ) const
 {
   bool inside = true;
@@ -83,15 +83,15 @@ PeriodicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 /** Split region into two parts: 1) The part that reaches from
  * inRegion.index to the border of the inImage in the last dimension and
  * 2) The part that reaches from 0 in the last dimension to the end of the
- * inRegion. 
+ * inRegion.
  */
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-void 
+void
 PeriodicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 ::SplitRegion(
   const RegionType & imageRegion,
-  const RegionType & inRegion, 
-  RegionType & outRegion1, 
+  const RegionType & inRegion,
+  RegionType & outRegion1,
   RegionType & outRegion2) const
 {
   /** Set initial index and sizes of the two regions. */
@@ -119,7 +119,7 @@ PeriodicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
     index2.SetElement( lastDim, 0 );
     size2 = inRegion.GetSize();
     size2.SetElement( lastDim, supportLastDimSize + lastDimIndex );
-  } 
+  }
   else if ( lastDimIndex + supportLastDimSize > lastDimSize )
   {
     /** Set last dimension item of index2 to zero. */
@@ -132,7 +132,7 @@ PeriodicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
     size2 = inRegion.GetSize();
     size2.SetElement( lastDim, supportLastDimSize - size1.GetElement( lastDim ) );
   }
-  
+
   /** Set region indices and sizes. */
   outRegion1.SetIndex(index1);
   outRegion1.SetSize(size1);
@@ -142,12 +142,12 @@ PeriodicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 
 /** Transform a point. */
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-void 
+void
 PeriodicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
-::TransformPoint( 
-  const InputPointType & point, 
-  OutputPointType & outputPoint, 
-  WeightsType & weights, 
+::TransformPoint(
+  const InputPointType & point,
+  OutputPointType & outputPoint,
+  WeightsType & weights,
   ParameterIndexArrayType & indices,
   bool & inside ) const
 {
@@ -179,7 +179,7 @@ PeriodicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   this->TransformPointToContinuousGridIndex( point, cindex );
 
   /** NOTE: if the support region does not lie totally within the grid
-   * (except for the last dimension, which wraps around) we assume 
+   * (except for the last dimension, which wraps around) we assume
    * zero displacement and return the input point.
    */
   inside = this->InsideValidRegion( cindex );
@@ -203,22 +203,22 @@ PeriodicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   RegionType supportRegions[ 2 ];
   this->SplitRegion( this->m_CoefficientImage[ 0 ]->GetLargestPossibleRegion(),
     supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
-  
+
   /** Zero output point elements. */
   outputPoint.Fill( NumericTraits<ScalarType>::Zero );
 
   unsigned long counter = 0;
   for ( unsigned int r = 0; r < 2; ++r)
   {
-    /** Create iterators over the coefficient images 
-     * (for both supportRegion1 and supportRegion2. 
+    /** Create iterators over the coefficient images
+     * (for both supportRegion1 and supportRegion2.
      */
     typedef ImageRegionConstIterator<ImageType> IteratorType;
     IteratorType iterator[ SpaceDimension ];
-    
+
     const PixelType * basePointer
       = this->m_CoefficientImage[ 0 ]->GetBufferPointer();
-    
+
     for ( unsigned int j = 0; j < SpaceDimension - 1; j++ )
     {
       iterator[ j ] = IteratorType( this->m_CoefficientImage[ j ], supportRegions[ r ] );
@@ -251,9 +251,9 @@ PeriodicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 
 /** Compute the Jacobian in one position. */
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-const 
+const
 typename PeriodicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
-::JacobianType & 
+::JacobianType &
 PeriodicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 ::GetJacobian( const InputPointType & point ) const
 {
@@ -305,7 +305,7 @@ PeriodicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   this->TransformPointToContinuousGridIndex( point, cindex );
 
   /** NOTE: if the support region does not lie totally within the grid
-       * (except for the last dimension) we assume zero displacement and 
+       * (except for the last dimension) we assume zero displacement and
        * return the input point. */
   if ( !this->InsideValidRegion( cindex ) )
   {
@@ -371,7 +371,7 @@ PeriodicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 
   /** Tranform from world coordinates to grid coordinates. */
   ContinuousIndexType cindex;
-  this->TransformPointToContinuousGridIndex( point, cindex ); 
+  this->TransformPointToContinuousGridIndex( point, cindex );
 
   /** NOTE: if the support region does not lie totally within the grid
        * we assume zero displacement and return the input point.
@@ -382,7 +382,7 @@ PeriodicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     indexes.Fill(0);
     return;
   }
-  
+
   /** Compute interpolation weights. */
   IndexType supportIndex;
   this->m_WeightsFunction->ComputeStartIndex( cindex, supportIndex );
@@ -464,7 +464,7 @@ PeriodicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
      supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
 
   sj.Fill( 0.0 );
-  
+
   /** Compute the spatial Jacobian sj:
        *    dT_{dim} / dx_i = delta_{dim,i} + \sum coefs_{dim} * weights.
        */
@@ -472,7 +472,7 @@ PeriodicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   {
     /** Compute the derivative weights. */
     this->m_DerivativeWeightsFunctions[ i ]->Evaluate( cindex, supportIndex, weights );
-    
+
     /** Compute the spatial Jacobian sj:
             *    dT_{dim} / dx_i = \sum coefs_{dim} * weights.
             */
@@ -480,7 +480,7 @@ PeriodicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     {
       /** Compute the sum for this dimension. */
       double sum = 0.0;
-        
+
       typename WeightsType::const_iterator itWeights = weights.begin();
 
       for ( unsigned int r = 0; r < 2; ++r)
@@ -490,7 +490,7 @@ PeriodicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
                        */
         ImageRegionConstIterator<ImageType> itCoef(
           this->m_CoefficientImage[ dim ], supportRegions[ r ] );
-        
+
         while ( !itCoef.IsAtEnd() )
         {
           sum += itCoef.Value() * (*itWeights);
@@ -544,7 +544,7 @@ PeriodicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     /** Create iterator over the coefficient image (for current supportRegion). */
     ImageRegionConstIteratorWithIndex< ImageType >
       iterator( this->m_CoefficientImage[ 0 ], supportRegions[ r ] );
-  
+
     /** For all control points in the support region, set which of the
             * indices in the parameter array are non-zero.
             */

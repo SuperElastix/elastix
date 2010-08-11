@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -25,8 +25,8 @@ namespace itk
    * \brief An optimizer based on gradient descent.
    *
    * This class is almost a copy of the normal
-   * itk::RegularStepGradientDescentOptimizer. The difference 
-   * is that each parameter has its own step length, whereas the normal 
+   * itk::RegularStepGradientDescentOptimizer. The difference
+   * is that each parameter has its own step length, whereas the normal
    * RSGD has one step length that is used for all parameters.
    *
    * This could cause inaccuracies, if, for example, parameter
@@ -39,14 +39,14 @@ namespace itk
    * are smaller than the MinimumStepSize given in the parameter
    * file!
    *
-   * Note that this is a quite experimental optimizer, currently 
+   * Note that this is a quite experimental optimizer, currently
    * only used for some specific tests.
    *
    * \ingroup Optimizers
    * \sa RSGDEachParameterApart
    */
-  
-  class RSGDEachParameterApartOptimizer : 
+
+  class RSGDEachParameterApartOptimizer :
     public RSGDEachParameterApartBaseOptimizer
   {
   public:
@@ -60,7 +60,7 @@ namespace itk
     itkNewMacro(Self);
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( RSGDEachParameterApartOptimizer, 
+    itkTypeMacro( RSGDEachParameterApartOptimizer,
       RSGDEachParameterApartBaseOptimizer );
 
     /** Cost function typedefs. */
@@ -77,8 +77,8 @@ namespace itk
     * This method is invoked by AdvanceOneStep. It is expected
     * to be overrided by optimization methods in non-vector spaces
     * \sa AdvanceOneStep */
-    virtual void StepAlongGradient( 
-      const DerivativeType & factor, 
+    virtual void StepAlongGradient(
+      const DerivativeType & factor,
       const DerivativeType & transformedGradient );
 
   private:

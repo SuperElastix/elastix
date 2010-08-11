@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -26,7 +26,7 @@
   virtual void Set##_name( _type _arg ) \
   { \
     this->Set##_name ( _arg, 0 ); \
-  } 
+  }
 
 /** defines for example: SetNumberOfInterpolators(). */
 #define itkSetNumberOfMacro(_name) \
@@ -37,14 +37,14 @@
       this->m_##_name##s.resize( _arg ); \
       this->Modified(); \
     } \
-  } 
+  }
 
 /** defines for example: GetNumberOfInterpolators() */
 #define itkGetNumberOfMacro(_name) \
   virtual unsigned int GetNumberOf##_name##s(void) const \
   { \
     return this->m_##_name##s.size(); \
-  } 
+  }
 
 
 namespace itk
@@ -71,7 +71,7 @@ namespace itk
  */
 
 template <typename TFixedImage, typename TMovingImage>
-class ITK_EXPORT MultiInputMultiResolutionImageRegistrationMethodBase : 
+class ITK_EXPORT MultiInputMultiResolutionImageRegistrationMethodBase :
   public MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>
 {
 public:
@@ -84,7 +84,7 @@ public:
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
-  
+
   /** Run-time type information (and related methods). */
   itkTypeMacro( MultiInputMultiResolutionImageRegistrationMethodBase,
     MultiResolutionImageRegistrationMethod2 );
@@ -96,7 +96,7 @@ public:
   typedef typename Superclass::FixedImageRegionPyramidType  FixedImageRegionPyramidType;
   typedef typename Superclass::MovingImageType          MovingImageType;
   typedef typename Superclass::MovingImageConstPointer  MovingImageConstPointer;
-   
+
   typedef typename Superclass::MetricType               MetricType;
   typedef typename Superclass::MetricPointer            MetricPointer;
   typedef typename Superclass::TransformType            TransformType;
@@ -113,9 +113,9 @@ public:
 
   typedef typename Superclass::TransformOutputType      TransformOutputType;
   typedef typename Superclass::TransformOutputPointer   TransformOutputPointer;
-  typedef typename 
+  typedef typename
     Superclass::TransformOutputConstPointer             TransformOutputConstPointer;
-  
+
   typedef typename Superclass::ParametersType           ParametersType;
   typedef typename Superclass::DataObjectPointer        DataObjectPointer;
 
@@ -139,10 +139,10 @@ public:
     ::FixedImageInterpolatorVectorType                  FixedImageInterpolatorVectorType;
   typedef std::vector<FixedImagePyramidPointer>         FixedImagePyramidVectorType;
   typedef std::vector<MovingImagePyramidPointer>        MovingImagePyramidVectorType;
-  
-  /** The following methods all have a similar pattern. The 
+
+  /** The following methods all have a similar pattern. The
    * SetFixedImage() just calls SetFixedImage(0).
-   * SetFixedImage(0) also calls the Superclass::SetFixedImage(). This 
+   * SetFixedImage(0) also calls the Superclass::SetFixedImage(). This
    * is defined by the itkSimpleSetMacro.
    * GetFixedImage() just returns GetFixedImage(0)==Superclass::m_FixedImage,  */
 
@@ -219,7 +219,7 @@ public:
    * any of its cached ivars.
    */
   unsigned long GetMTime( void ) const;
-  
+
 protected:
 
   /** Constructor. */
@@ -230,8 +230,8 @@ protected:
 
   /** PrintSelf. */
   void PrintSelf( std::ostream& os, Indent indent ) const;
-  
-  /** Method invoked by the pipeline in order to trigger the computation of 
+
+  /** Method invoked by the pipeline in order to trigger the computation of
    * the registration.
    */
   virtual void GenerateData();
@@ -267,13 +267,13 @@ protected:
 
   /** Dummy image region */
   FixedImageRegionType              m_NullFixedImageRegion;
-       
+
 private:
   MultiInputMultiResolutionImageRegistrationMethodBase(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
   MultiInputMetricPointer m_MultiInputMetric;
-    
+
 }; // end class MultiInputMultiResolutionImageRegistrationMethodBase
 
 

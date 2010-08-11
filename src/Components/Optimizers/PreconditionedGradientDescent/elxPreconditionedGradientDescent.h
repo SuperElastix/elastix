@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -113,15 +113,15 @@ namespace elastix
     typedef typename Superclass::PreconditionType          PreconditionType;
     typedef typename Superclass::EigenSystemType           EigenSystemType;
 
-    /** Methods invoked by elastix, in which parameters can be set and 
+    /** Methods invoked by elastix, in which parameters can be set and
     * progress information can be printed. */
     virtual void BeforeRegistration( void );
     virtual void BeforeEachResolution( void );
     virtual void AfterEachResolution( void );
     virtual void AfterEachIteration( void );
-    virtual void AfterRegistration( void );   
+    virtual void AfterRegistration( void );
 
-    /** Check if any scales are set, and set the UseScales flag on or off; 
+    /** Check if any scales are set, and set the UseScales flag on or off;
     * after that call the superclass' implementation */
     virtual void StartOptimization( void );
 

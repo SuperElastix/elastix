@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -26,7 +26,7 @@ namespace elastix
   * \class NearestNeighborResampleInterpolator
   * \brief A nearest neighbor resample-interpolator.
   *
-  * Compared to the BSplineResampleInterpolator and BSplineResampleInterpolatorFloat 
+  * Compared to the BSplineResampleInterpolator and BSplineResampleInterpolatorFloat
   * with SplineOrder 0 this class uses less (in fact, no) memory. You can select
   * this resample interpolator if memory burden is an issue and nearest neighbor interpolation
   * is sufficient.

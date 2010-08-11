@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -26,7 +26,7 @@ using namespace itk;
 /**
  * ********************* Constructor ****************************
  */
-  
+
 template <class TElastix>
 SplineKernelTransform<TElastix>
 ::SplineKernelTransform()
@@ -38,7 +38,7 @@ SplineKernelTransform<TElastix>
 /*
  * ******************* SetKernelType ***********************
  */
-  
+
 template <class TElastix>
 bool
 SplineKernelTransform<TElastix>
@@ -97,7 +97,7 @@ SplineKernelTransform<TElastix>
 /*
  * ******************* BeforeAll ***********************
  */
-  
+
 template <class TElastix>
 int
 SplineKernelTransform<TElastix>
@@ -108,7 +108,7 @@ SplineKernelTransform<TElastix>
    * line arguments, then and only then we continue.
    */
   std::string ipp = this->GetConfiguration()->GetCommandLineArgument( "-ipp" );
-  
+
   /** If there is an inputpoint-file? */
   if ( ipp.empty() )
   {
@@ -126,7 +126,7 @@ SplineKernelTransform<TElastix>
   }
 
 } // end BeforeAll()
-  
+
 
 /*
  * ******************* BeforeRegistration ***********************
@@ -195,7 +195,7 @@ SplineKernelTransform<TElastix>
   typedef typename KernelTransformType::PointSetType            PointSetType;
   typedef itk::TransformixInputPointFileReader<
     PointSetType >                                      IPPReaderType;
-  
+
   elxout << "Loading fixed image landmarks for " << this->GetComponentLabel()
     << ":" << this->elxGetClassName() << "." << std::endl;
 
@@ -270,7 +270,7 @@ SplineKernelTransform<TElastix>
       inputPointSet->SetPoint( j, inputPoint );
     }
   }
-    
+
   /** Set the ipp as source landmarks. */
   this->m_KernelTransform->SetSourceLandmarks( inputPointSet );
 
@@ -350,7 +350,7 @@ SplineKernelTransform<TElastix>
 
 /**
  * ************************* WriteToFile ************************
- * Save the kernel type and the source landmarks 
+ * Save the kernel type and the source landmarks
  */
 
 template <class TElastix>

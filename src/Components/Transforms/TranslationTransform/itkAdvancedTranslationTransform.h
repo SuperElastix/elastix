@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -39,7 +39,7 @@ namespace itk
 template <
     class TScalarType=double,          // Data type for scalars (float or double)
     unsigned int NDimensions=3>        // Number of dimensions
-class ITK_EXPORT AdvancedTranslationTransform : 
+class ITK_EXPORT AdvancedTranslationTransform :
           public AdvancedTransform< TScalarType, NDimensions, NDimensions >
 {
 public:
@@ -48,7 +48,7 @@ public:
   typedef AdvancedTransform< TScalarType, NDimensions, NDimensions > Superclass;
   typedef SmartPointer<Self>        Pointer;
   typedef SmartPointer<const Self>  ConstPointer;
-      
+
   /** New macro for creation of through the object factory.*/
   itkNewMacro( Self );
 
@@ -75,11 +75,11 @@ public:
   /** Standard covariant vector type for this class. */
   typedef CovariantVector<TScalarType, itkGetStaticConstMacro(SpaceDimension)> InputCovariantVectorType;
   typedef CovariantVector<TScalarType, itkGetStaticConstMacro(SpaceDimension)> OutputCovariantVectorType;
-  
+
   /** Standard vnl_vector type for this class. */
   typedef vnl_vector_fixed<TScalarType, itkGetStaticConstMacro(SpaceDimension)> InputVnlVectorType;
   typedef vnl_vector_fixed<TScalarType, itkGetStaticConstMacro(SpaceDimension)> OutputVnlVectorType;
-  
+
   /** Standard coordinate point type for this class. */
   typedef Point<TScalarType, itkGetStaticConstMacro(SpaceDimension)> InputPointType;
   typedef Point<TScalarType, itkGetStaticConstMacro(SpaceDimension)> OutputPointType;
@@ -104,7 +104,7 @@ public:
   {
     return false;
   }
-  
+
   /** This method returns the value of the offset of the
    * AdvancedTranslationTransform. */
   const OutputVectorType & GetOffset(void) const
@@ -141,7 +141,7 @@ public:
   OutputVnlVectorType TransformVector(const InputVnlVectorType &vector) const;
   OutputCovariantVectorType TransformCovariantVector(
     const InputCovariantVectorType &vector) const;
-  
+
   /** This method finds the point or vector that maps to a given
    * point or vector under the affine transformation defined by
    * self.  If no such point exists, an exception is thrown. */
@@ -150,7 +150,7 @@ public:
   inline InputVnlVectorType BackTransform(const OutputVnlVectorType &vector) const;
   inline InputCovariantVectorType BackTransform(
     const OutputCovariantVectorType &vector) const;
-  
+
   /** Find inverse of an affine transformation.
    * This method creates and returns a new AdvancedTranslationTransform object
    * which is the inverse of self.  If self is not invertible,
@@ -208,7 +208,7 @@ public:
   void SetIdentity(void);
 
   /** Return the number of parameters that completely define the Transfom  */
-  virtual unsigned int GetNumberOfParameters(void) const 
+  virtual unsigned int GetNumberOfParameters(void) const
                       { return NDimensions; }
 
   /** Indicates that this transform is linear. That is, given two
@@ -221,7 +221,7 @@ public:
  /** Set the fixed parameters and update internal transformation.
    * The Translation Transform does not require fixed parameters,
    * therefore the implementation of this method is a null operation. */
-  virtual void SetFixedParameters( const ParametersType & ) 
+  virtual void SetFixedParameters( const ParametersType & )
     { /* purposely blank */ };
 
   /** Get the Fixed Parameters. The AdvancedTranslationTransform does not
@@ -229,8 +229,8 @@ public:
     * parameters array of size zero. */
   virtual const ParametersType& GetFixedParameters(void) const
     {
-    this->m_FixedParameters.SetSize(0); 
-    return this->m_FixedParameters; 
+    this->m_FixedParameters.SetSize(0);
+    return this->m_FixedParameters;
     };
 
 protected:
@@ -250,7 +250,7 @@ private:
   NonZeroJacobianIndicesType m_NonZeroJacobianIndices;
   JacobianOfSpatialJacobianType m_JacobianOfSpatialJacobian;
   JacobianOfSpatialHessianType m_JacobianOfSpatialHessian;
-  
+
 }; //class AdvancedTranslationTransform
 
 
@@ -271,7 +271,7 @@ template<class TScalarType, unsigned int NDimensions>
 inline
 typename AdvancedTranslationTransform<TScalarType, NDimensions>::InputVectorType
 AdvancedTranslationTransform<TScalarType, NDimensions>::
-BackTransform(const OutputVectorType &vect ) const 
+BackTransform(const OutputVectorType &vect ) const
 {
   return  vect;
 }
@@ -284,7 +284,7 @@ template<class TScalarType, unsigned int NDimensions>
 inline
 typename AdvancedTranslationTransform<TScalarType, NDimensions>::InputVnlVectorType
 AdvancedTranslationTransform<TScalarType, NDimensions>::
-BackTransform(const OutputVnlVectorType &vect ) const 
+BackTransform(const OutputVnlVectorType &vect ) const
 {
   return  vect;
 }
@@ -295,7 +295,7 @@ template<class TScalarType, unsigned int NDimensions>
 inline
 typename AdvancedTranslationTransform<TScalarType, NDimensions>::InputCovariantVectorType
 AdvancedTranslationTransform<TScalarType, NDimensions>::
-BackTransform(const OutputCovariantVectorType &vect) const 
+BackTransform(const OutputCovariantVectorType &vect) const
 {
   return vect;
 }

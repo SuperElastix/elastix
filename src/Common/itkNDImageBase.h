@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -23,16 +23,16 @@
 
 namespace itk
 {
-  
+
   /**
    * \class NDImageBase
    * \brief An image whose dimension can be specified at runtime.
    *
    * The NDImageBase class is needed for the FullSearch optimizer.
-   * It allows run-time construction of an N-dimensional image. It 
+   * It allows run-time construction of an N-dimensional image. It
    * has most of the functionality of a normal itk::Image. \todo not all!
-   * An internal writer and reader are included for convenience. 
-   * 
+   * An internal writer and reader are included for convenience.
+   *
    * The NewNDImage function defines the dimension of the image.
    * CreateNewImage creates an instance of an itk::Image, with
    * dimension as specified by NewNDImage.
@@ -50,30 +50,30 @@ namespace itk
    * \sa FullSearchOptimizer, NDImageTemplate
    * \ingroup Miscellaneous
    */
-  
+
   template < class TPixel >
     class NDImageBase : public Object
   {
   public:
-    
+
     /** Standard class typedefs.*/
     typedef NDImageBase                           Self;
     typedef Object                                Superclass;
     typedef SmartPointer<Self>                    Pointer;
     typedef SmartPointer<const Self>              ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     // itkNewMacro( Self );
     // not declared, because instantiating an object of this
     // (abstract) type makes no sense.
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( NDImageBase, Object );
-    
+
     typedef DataObject                                  DataObjectType;
     typedef DataObjectType::Pointer                     DataObjectPointer;
-    
-    /** Type definitions like normal itkImages, independent of the dimension */   
+
+    /** Type definitions like normal itkImages, independent of the dimension */
     typedef typename Image<TPixel,2>::PixelType                   PixelType;
     typedef typename Image<TPixel,2>::ValueType                   ValueType;
     typedef typename Image<TPixel,2>::InternalPixelType           InternalPixelType;
@@ -81,16 +81,16 @@ namespace itk
     typedef typename Image<TPixel,2>::PixelContainer              PixelContainer;
     typedef typename Image<TPixel,2>::PixelContainerPointer       PixelContainerPointer;
     typedef typename Image<TPixel,2>::PixelContainerConstPointer  PixelContainerConstPointer;
-    
+
     typedef typename ImageBase<2>::SpacingType          Spacing2DType;
     typedef typename ImageBase<2>::PointType            Point2DType;
-    
+
     typedef typename Spacing2DType::ValueType           SpacingValueType;
     typedef typename Point2DType::ValueType             PointValueType;
     typedef typename ImageBase<2>::IndexValueType       IndexValueType;
     typedef typename ImageBase<2>::SizeValueType        SizeValueType;
     typedef typename ImageBase<2>::OffsetValueType      OffsetValueType;
-    
+
     /** ND versions of the index and sizetypes. Unlike in
      * their counterparts in the itk::Image, their size
      * can be defined at runtime. The elx::NDImageTemplate
@@ -102,47 +102,47 @@ namespace itk
     typedef Array<PointValueType>                   PointType;
     typedef Array<OffsetValueType>                  OffsetType;
     /** \todo: extend to direction cosines; but not needed for now in elastix */
-        
+
     /** Region typedef support. A region is used to specify a subset of an image. */
 
     //typedef typename Superclass::RegionType  RegionType;
 
     /** \todo an NDRegionType should first be declared, in the same way as NDImage
-     * use SetRegions(size) for now. then knowlegde of the RegionType is not 
+     * use SetRegions(size) for now. then knowlegde of the RegionType is not
      * necessary.
      * alternative: forget about the regiontype and add the functions
      * SetLargestPossibleRegion, SetRegions etc with arguments (index,size)
      * or maybe: ImageIORegion
      */
-    
-    //void SetRegions(RegionType region) = 0; 
+
+    //void SetRegions(RegionType region) = 0;
     virtual void SetRegions(SizeType size) = 0;
     virtual void SetRequestedRegion(DataObject *data) = 0;
-    
+
     virtual void Allocate(void) = 0;
     virtual void Initialize(void) = 0;
-    
+
     virtual void FillBuffer (const TPixel& value) = 0;
-    
+
     virtual void SetPixel(const IndexType &index, const TPixel& value) = 0;
     virtual const TPixel& GetPixel(const IndexType &index) const = 0;
     virtual TPixel& GetPixel(const IndexType &index) = 0;
-    
-    TPixel & operator[](const IndexType &index) 
+
+    TPixel & operator[](const IndexType &index)
     { return this->GetPixel(index); }
     const TPixel& operator[](const IndexType &index) const
     { return this->GetPixel(index); }
-    
+
     virtual TPixel *GetBufferPointer() = 0;
     virtual const TPixel *GetBufferPointer() const = 0;
     virtual PixelContainer* GetPixelContainer() = 0;
     virtual const PixelContainer* GetPixelContainer() const = 0;
     virtual void SetPixelContainer( PixelContainer *container ) = 0;
-    
+
     virtual AccessorType GetPixelAccessor( void ) = 0;
     virtual const AccessorType GetPixelAccessor( void ) const = 0;
-    
-    
+
+
     virtual void SetSpacing( const SpacingType & spacing ) = 0;
     virtual void SetOrigin( const PointType & origin ) = 0;
 
@@ -150,25 +150,25 @@ namespace itk
      * itkImage; necessary because of the conversion to arrays */
     virtual SpacingType GetSpacing(void) = 0;
     virtual PointType GetOrigin(void) = 0;
-    
-    /** \todo Transform IndexToPoint methods. */    
-    
+
+    /** \todo Transform IndexToPoint methods. */
+
     virtual void CopyInformation(const DataObject *data) = 0;
     virtual const OffsetValueType *GetOffsetTable() const = 0;
     virtual OffsetValueType ComputeOffset(const IndexType &ind) const = 0;
     virtual IndexType ComputeIndex(OffsetValueType offset) const = 0;
-    
+
     /** Extra functions for NDImage. */
-    
+
     /** Get the Dimension.*/
     virtual unsigned int ImageDimension(void) = 0;
     virtual unsigned int GetImageDimension(void) = 0;
-    
+
     /** Get the actual image */
     virtual DataObject * GetImage(void) = 0;
     virtual ProcessObject * GetWriter(void) = 0;
     virtual ProcessObject * GetReader(void) = 0;
-    
+
     virtual void SetImageIOWriter (ImageIOBase *_arg) = 0;
     virtual ImageIOBase * GetImageIOWriter(void) = 0;
     virtual void SetImageIOReader (ImageIOBase *_arg) = 0;
@@ -176,13 +176,13 @@ namespace itk
 
     /** Write the actual image to file. */
     virtual void Write(void) = 0;
-    
+
     /** Read image data from file into the actual image */
     virtual void Read(void) = 0;
 
     /** Use ::New method to create a new actual image */
     virtual void CreateNewImage(void) = 0;
-    
+
     /** Set/Get the Input/OutputFileName */
     virtual void SetOutputFileName(const char *) = 0;
     virtual void SetInputFileName(const char *) = 0;
@@ -191,21 +191,21 @@ namespace itk
 
 
     static Pointer NewNDImage(unsigned int dim);
-    
+
   protected:
-    
-    NDImageBase(){}; 
+
+    NDImageBase(){};
     virtual ~NDImageBase(){};
-    
+
     //virtual void PrintSelf(std::ostream& os, Indent indent) const = 0;
-            
+
   private:
-    
+
     NDImageBase( const Self& );       // purposely not implemented
     void operator=( const Self& );  // purposely not implemented
-    
+
   }; // end class NDImageBase
-  
+
 } // end namespace itk
 
 #include "itkNDImageTemplate.h"
@@ -213,7 +213,7 @@ namespace itk
 
 namespace itk
 {
-  
+
   template < class TPixel>
     typename NDImageBase<TPixel>::Pointer
     NDImageBase<TPixel>::NewNDImage(unsigned int dim)

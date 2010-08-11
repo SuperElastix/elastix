@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -67,7 +67,7 @@ public:
   elxClassNameMacro( "TransformBendingEnergyPenalty" );
 
   /** Typedefs from the superclass. */
-  typedef typename 
+  typedef typename
     Superclass1::CoordinateRepresentationType              CoordinateRepresentationType;
   typedef typename Superclass1::MovingImageType            MovingImageType;
   typedef typename Superclass1::MovingImagePixelType       MovingImagePixelType;
@@ -101,7 +101,7 @@ public:
   typedef typename Superclass1::ImageSamplerType           ImageSamplerType;
   typedef typename Superclass1::ImageSamplerPointer        ImageSamplerPointer;
   typedef typename Superclass1::ImageSampleContainerType   ImageSampleContainerType;
-  typedef typename 
+  typedef typename
     Superclass1::ImageSampleContainerPointer               ImageSampleContainerPointer;
   typedef typename Superclass1::FixedImageLimiterType      FixedImageLimiterType;
   typedef typename Superclass1::MovingImageLimiterType     MovingImageLimiterType;
@@ -137,7 +137,7 @@ public:
    */
   virtual void Initialize( void ) throw (ExceptionObject);
 
-  /** 
+  /**
    * Do some things before each resolution:
    * \li ?
    */

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -45,7 +45,7 @@ namespace itk
     this->m_ScaledCostFunction->SetSquaredScales( this->GetScales() );
     this->Modified();
   } // end InitializeScales
-  
+
 
   /**
    * ****************** SetCostFunction ******************************
@@ -108,7 +108,7 @@ namespace itk
   {
     this->m_ScaledCostFunction->GetDerivative(parameters, derivative);
   } // end GetScaledDerivative
-  
+
 
   /**
    * ********************* GetScaledValueAndDerivative ***********************
@@ -124,7 +124,7 @@ namespace itk
     this->m_ScaledCostFunction->
       GetValueAndDerivative(parameters, value, derivative);
   } // end GetScaledValueAndDerivative
-  
+
 
   /**
    * ********************* GetCurrentPosition ***********************
@@ -135,25 +135,25 @@ namespace itk
   {
     /** Get the current unscaled position */
 
-    const ParametersType & scaledCurrentPosition = 
+    const ParametersType & scaledCurrentPosition =
         this->GetScaledCurrentPosition();
 
     if ( this->GetUseScales() )
     {
       /** Get the ScaledCurrentPosition and divide each
         * element through its scale. */
-      
+
       m_UnscaledCurrentPosition = scaledCurrentPosition;
       this->m_ScaledCostFunction->
         ConvertScaledToUnscaledParameters(m_UnscaledCurrentPosition);
-      
+
       return m_UnscaledCurrentPosition;
 
     }
     else
     {
-      /** If no scaling is used, simply return the 
-       * ScaledCurrentPosition, since it is not scaled anyway 
+      /** If no scaling is used, simply return the
+       * ScaledCurrentPosition, since it is not scaled anyway
        */
       return scaledCurrentPosition;
     }
@@ -201,7 +201,7 @@ namespace itk
   } // end SetCurrentPosition
 
 
-  /** 
+  /**
    * ******************** SetMaximize *******************************
    */
 
@@ -217,7 +217,7 @@ namespace itk
       this->Modified();
     }
   }  // end SetMaximize
-  
+
 
 
 } // end namespace itk

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -30,9 +30,9 @@ namespace itk
  */
 void
 RSGDEachParameterApartOptimizer
-::StepAlongGradient( const DerivativeType & factor, 
+::StepAlongGradient( const DerivativeType & factor,
                      const DerivativeType & transformedGradient )
-{ 
+{
 
   itkDebugMacro(<<"factor = " << factor << "  transformedGradient= " << transformedGradient );
 
@@ -47,7 +47,7 @@ RSGDEachParameterApartOptimizer
     /** Each parameters has its own factor! */
     newPosition[j] = currentPosition[j] + transformedGradient[j] * factor[j];
   }
-  
+
 
   itkDebugMacro(<<"new position = " << newPosition );
 

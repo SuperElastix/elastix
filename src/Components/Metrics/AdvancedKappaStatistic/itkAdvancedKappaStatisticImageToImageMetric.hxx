@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -32,7 +32,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
   this->SetUseImageSampler( true );
   this->SetUseFixedImageLimiter( false );
   this->SetUseMovingImageLimiter( false );
-  
+
   this->m_ForegroundValue = 1.0;
   this->m_Epsilon = 1e-3;
   this->m_Complement = true;
@@ -50,7 +50,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
 ::PrintSelf( std::ostream& os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
-  
+
   os << indent << "Complement: "      << ( this->m_Complement ? "On" : "Off" ) << std::endl;
   os << indent << "ForegroundValue: " << this->m_ForegroundValue << std::endl;
   os << indent << "Epsilon: " << this->m_Epsilon << std::endl;
@@ -188,7 +188,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
   return measure;
 
 } // end GetValue()
-  
+
 
 /**
  * ******************* GetDerivative *******************
@@ -417,7 +417,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
 {
   /** Typedefs. */
   typedef itk::ImageRegionIteratorWithIndex< GradientImageType >    GradientIteratorType;
-  typedef itk::ImageRegionConstIteratorWithIndex< MovingImageType > MovingIteratorType; 
+  typedef itk::ImageRegionConstIteratorWithIndex< MovingImageType > MovingIteratorType;
 
   /** Create a temporary moving gradient image. */
   typename GradientImageType::Pointer tempGradientImage = GradientImageType::New();

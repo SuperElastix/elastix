@@ -6,7 +6,7 @@ Copyright (c) University Medical Center Utrecht. All rights reserved.
 See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
 details.
 
-This software is distributed WITHOUT ANY WARRANTY; without even 
+This software is distributed WITHOUT ANY WARRANTY; without even
 the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
@@ -24,20 +24,20 @@ namespace itk
 /**
  * **************** Constructor ***************
  */
-  
+
 ParameterMapInterface
 ::ParameterMapInterface()
 {
   this->m_ParameterMap.clear();
   this->m_PrintErrorMessages = true;
-    
+
 } // end Constructor()
 
 
 /**
  * **************** Destructor ***************
  */
-  
+
 ParameterMapInterface
 ::~ParameterMapInterface()
 {
@@ -75,7 +75,7 @@ ParameterMapInterface
     return this->m_ParameterMap.find( parameterName )->second.size();
   }
   return 0;
-  
+
 } // end CountNumberOfParameterEntries()
 
 
@@ -213,7 +213,7 @@ ParameterMapInterface
   std::vector<std::string>::const_iterator it = vec.begin();
   parameterValues.clear();
   parameterValues.assign( it + entry_nr_start, it + entry_nr_end + 1 );
-  
+
   return true;
 }
 

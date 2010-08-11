@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -31,7 +31,7 @@ namespace itk
   class LineSearchOptimizer : public SingleValuedNonLinearOptimizer
   {
   public:
-    
+
     typedef LineSearchOptimizer                   Self;
     typedef SingleValuedNonLinearOptimizer        Superclass;
     typedef SmartPointer<Self>                    Pointer;
@@ -53,21 +53,21 @@ namespace itk
     }
     itkGetConstReferenceMacro(LineSearchDirection, ParametersType);
 
-    /** Inheriting classes may override these methods if they need 
-     * value/derivative information of the cost function at the 
-     * initial position 
-     * 
+    /** Inheriting classes may override these methods if they need
+     * value/derivative information of the cost function at the
+     * initial position
+     *
      * NB: It is not guaranteed that these methods are called.
      * If a main optimizer by chance has this information, it
      * should call these methods, to avoid possible unnecessary
      * computations.
-     * 
+     *
      */
     virtual void SetInitialDerivative(const DerivativeType & derivative){};
     virtual void SetInitialValue(MeasureType value){};
-    
-    /** These methods must be implemented by inheriting classes. It 
-     * depends on the specific line search algorithm if it already computed 
+
+    /** These methods must be implemented by inheriting classes. It
+     * depends on the specific line search algorithm if it already computed
      * the value/derivative at the current position (in this case it
      * can just copy the cached data). If it did not
      * compute the value/derivative, it should call the cost function
@@ -80,10 +80,10 @@ namespace itk
       MeasureType & value, DerivativeType & derivative) const = 0;
     virtual void GetCurrentDerivative(DerivativeType & derivative) const = 0;
     virtual MeasureType GetCurrentValue(void) const = 0;
-    
-    /** 
+
+    /**
      * StepLength is a a scalar, defined as:
-     * m_InitialPosition + StepLength * m_LineSearchDirection  = 
+     * m_InitialPosition + StepLength * m_LineSearchDirection  =
      * m_CurrentPosition
      */
     itkGetConstMacro(CurrentStepLength, double);
@@ -103,7 +103,7 @@ namespace itk
     itkGetConstMacro(MaximumStepLength, double);
     itkSetMacro(InitialStepLengthEstimate, double);
     itkGetConstMacro(InitialStepLengthEstimate, double);
-        
+
   protected:
 
     LineSearchOptimizer();
@@ -111,17 +111,17 @@ namespace itk
     void PrintSelf(std::ostream& os, Indent indent) const {};
 
     double        m_CurrentStepLength;
-    
+
     /** Set the current step length AND the current position, where
      * the current position is computed as:
-     * m_CurrentPosition = 
+     * m_CurrentPosition =
      * m_InitialPosition + StepLength * m_LineSearchDirection
      */
     virtual void SetCurrentStepLength(double step);
 
     /** Computes the inner product of the argument and the line search direction */
     double DirectionalDerivative(const DerivativeType & derivative) const;
-    
+
   private:
     LineSearchOptimizer(const Self&); //purposely not implemented
     void operator=(const Self&); //purposely not implemented

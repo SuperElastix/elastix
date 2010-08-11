@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -31,12 +31,12 @@ namespace xoutlibrary
    *
    * \ingroup xout
    */
-  
+
   template<class charT, class traits = char_traits<charT> >
     class xoutcell : public xoutbase<charT, traits>
   {
   public:
-    
+
     /** Typdef's. */
     typedef xoutcell                          Self;
     typedef xoutbase<charT, traits>           Superclass;
@@ -48,14 +48,14 @@ namespace xoutlibrary
     typedef typename Superclass::off_type       off_type;
     typedef typename Superclass::ostream_type   ostream_type;
     typedef typename Superclass::ios_type       ios_type;
-    
+
     typedef typename Superclass::CStreamMapType         CStreamMapType;
     typedef typename Superclass::XStreamMapType         XStreamMapType;
     typedef typename Superclass::CStreamMapIteratorType CStreamMapIteratorType;
     typedef typename Superclass::XStreamMapIteratorType XStreamMapIteratorType;
     typedef typename Superclass::CStreamMapEntryType    CStreamMapEntryType;
     typedef typename Superclass::XStreamMapEntryType    XStreamMapEntryType;
-    
+
     typedef std::basic_ostringstream<charT, traits>     InternalBufferType;
 
     /** Constructors */
@@ -70,7 +70,7 @@ namespace xoutlibrary
   protected:
 
     InternalBufferType m_InternalBuffer;
-    
+
 
   }; // end class xoutcell
 

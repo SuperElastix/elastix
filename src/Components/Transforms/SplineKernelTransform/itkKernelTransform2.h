@@ -9,8 +9,8 @@ Version:   $Revision: 1.1 $
 Copyright (c) Insight Software Consortium. All rights reserved.
 See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-This software is distributed WITHOUT ANY WARRANTY; without even 
-the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+This software is distributed WITHOUT ANY WARRANTY; without even
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -58,7 +58,7 @@ namespace itk
   *
   * This class was modified to support its use in the ITK registration framework
   * by Rupert Brooks, McGill Centre for Intelligent Machines, Montreal, Canada
-  * March 2007.  See the Insight Journal Paper  by Brooks, R., Arbel, T. 
+  * March 2007.  See the Insight Journal Paper  by Brooks, R., Arbel, T.
   * "Improvements to the itk::KernelTransform and its subclasses."
   *
   * Modified a bit to include it in elastix:
@@ -69,7 +69,7 @@ namespace itk
   * \ingroup Transforms
   *
   */
-  
+
 template <class TScalarType, // probably only float and double make sense here
   unsigned int NDimensions>   // Number of dimensions
 class KernelTransform2
@@ -186,7 +186,7 @@ public:
   /** Set the Transformation Parameters to be an identity transform. */
   virtual void SetIdentity( void );
 
-  /** Set the Transformation Parameters and update the internal transformation. 
+  /** Set the Transformation Parameters and update the internal transformation.
    * The parameters represent the source landmarks. Each landmark point is represented
    * by NDimensions doubles. All the landmarks are concatenated to form one flat
    * Array<double>.
@@ -194,7 +194,7 @@ public:
   virtual void SetParameters( const ParametersType & );
 
   /** Set Transform Fixed Parameters:
-   *     To support the transform file writer this function was 
+   *     To support the transform file writer this function was
    *     added to set the target landmarks similar to the
    *     SetParameters function setting the source landmarks
    */
@@ -219,7 +219,7 @@ public:
    * International Conference of the IEEE Engineering in Medicine and
    * Biology Society. 1996.
    */
-  virtual void SetStiffness( double stiffness ) 
+  virtual void SetStiffness( double stiffness )
   {
     this->m_Stiffness = stiffness > 0 ? stiffness : 0.0;
     this->m_LMatrixComputed = false;
@@ -230,8 +230,8 @@ public:
 
   /** This method makes only sense for the ElasticBody splines.
    * Declare here, so that you can always call it if you don't know
-   * the type of kernel beforehand. It will be overridden in the 
-   * ElasticBodySplineKernelTransform and in the 
+   * the type of kernel beforehand. It will be overridden in the
+   * ElasticBodySplineKernelTransform and in the
    * ElasticBodyReciprocalSplineKernelTransform.
    */
   virtual void SetAlpha( TScalarType Alpha ) {};
@@ -239,8 +239,8 @@ public:
 
   /** This method makes only sense for the ElasticBody splines.
    * Declare here, so that you can always call it if you don't know
-   * the type of kernel beforehand. It will be overridden in the 
-   * ElasticBodySplineKernelTransform and in the 
+   * the type of kernel beforehand. It will be overridden in the
+   * ElasticBodySplineKernelTransform and in the
    * ElasticBodyReciprocalSplineKernelTransform.
    */
   itkSetMacro( PoissonRatio, TScalarType );
@@ -254,7 +254,7 @@ protected:
   virtual ~KernelTransform2() {};
   void PrintSelf( std::ostream& os, Indent indent ) const;
 
-public:  
+public:
   /** 'G' matrix typedef. */
   typedef vnl_matrix_fixed<TScalarType, NDimensions, NDimensions> GMatrixType;
 
@@ -337,7 +337,7 @@ protected:
   /** Compute displacements \f$ q_i - p_i \f$. */
   void ComputeD( void );
 
-  /** Reorganize the components of W into D (deformable), A (rotation part 
+  /** Reorganize the components of W into D (deformable), A (rotation part
    * of affine) and B (translational part of affine ) components.
    * \warning This method release the memory of the W Matrix.
    */

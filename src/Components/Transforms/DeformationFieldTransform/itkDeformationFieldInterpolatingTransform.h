@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -33,15 +33,15 @@ namespace itk
   * This transform does not support optimizers. Its Set/GetParameters
   * is not implemented.
   * You may set your own interpolator!
-  * 
+  *
   * \ingroup Transforms
   */
 
   template <
     class TScalarType=double,          // Data type for scalars (float or double)
     unsigned int NDimensions=3,        // Number of input dimensions
-    class TComponentType=double>       // ComponentType of the deformation field 
-  class DeformationFieldInterpolatingTransform : 
+    class TComponentType=double>       // ComponentType of the deformation field
+  class DeformationFieldInterpolatingTransform :
     public AdvancedTransform< TScalarType, NDimensions, NDimensions >
   {
   public:
@@ -50,7 +50,7 @@ namespace itk
     typedef AdvancedTransform< TScalarType, NDimensions, NDimensions > Superclass;
     typedef SmartPointer<Self>        Pointer;
     typedef SmartPointer<const Self>  ConstPointer;
-        
+
     /** New macro for creation of through the object factory.*/
     itkNewMacro( Self );
 
@@ -75,19 +75,19 @@ namespace itk
     typedef typename Superclass::OutputPointType OutputPointType;
 
     typedef TComponentType                            DeformationFieldComponentType;
-    typedef Vector<DeformationFieldComponentType, 
+    typedef Vector<DeformationFieldComponentType,
       itkGetStaticConstMacro(OutputSpaceDimension) >  DeformationFieldVectorType;
     typedef Image< DeformationFieldVectorType,
       itkGetStaticConstMacro(InputSpaceDimension) >   DeformationFieldType;
 
     typedef VectorInterpolateImageFunction<
-      DeformationFieldType, ScalarType > 
+      DeformationFieldType, ScalarType >
                         DeformationFieldInterpolatorType;
     typedef VectorNearestNeighborInterpolateImageFunction<
-      DeformationFieldType, ScalarType >               
+      DeformationFieldType, ScalarType >
                         DefaultDeformationFieldInterpolatorType;
-    
-      
+
+
     /** Transform a point
      * This method adds a displacement to a given point,
      * returning the transformed point */
@@ -96,26 +96,26 @@ namespace itk
     /** Make this an identity transform ( the deformation field is replaced
      * by a zero deformation field */
     void SetIdentity(void);
-   
+
     /** Set/Get the deformation field that defines the displacements */
     virtual void SetDeformationField( DeformationFieldType * _arg );
     itkGetObjectMacro(DeformationField, DeformationFieldType);
-    
+
     /** Set/Get the deformation field interpolator */
     virtual void SetDeformationFieldInterpolator( DeformationFieldInterpolatorType * _arg );
     itkGetObjectMacro(DeformationFieldInterpolator, DeformationFieldInterpolatorType);
 
     virtual bool IsLinear( void ) const { return false; };
-         
+
   protected:
     DeformationFieldInterpolatingTransform();
     ~DeformationFieldInterpolatingTransform();
 
     /** Typedef which is used internally */
-    typedef typename DeformationFieldInterpolatorType::ContinuousIndexType 
+    typedef typename DeformationFieldInterpolatorType::ContinuousIndexType
       InputContinuousIndexType;
     typedef typename DeformationFieldInterpolatorType::OutputType InterpolatorOutputType;
-    
+
     /** Print contents of an DeformationFieldInterpolatingTransform. */
     void PrintSelf(std::ostream &os, Indent indent) const;
 

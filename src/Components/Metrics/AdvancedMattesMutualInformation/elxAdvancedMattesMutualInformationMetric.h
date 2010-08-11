@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -77,7 +77,7 @@ using namespace itk;
    *    you use high order bspline interpolator for the moving image.\n
    *    example: <tt>(MovingLimitRangeRatio 0.001 0.01 0.01)</tt> \n
    *    The default value is 0.01. Can be given for each resolution, or for
-   *    all resolutions at once. 
+   *    all resolutions at once.
    * \parameter FiniteDifferenceDerivative: Experimental feature, do not use.
    * \parameter UseFastAndLowMemoryVersion: Switch between a version of
    *    mutual information that explicitely computes the derivatives of the
@@ -95,8 +95,8 @@ using namespace itk;
    * \sa ParzenWindowMutualInformationImageToImageMetric
    * \ingroup Metrics
    */
-  
-  template <class TElastix >  
+
+  template <class TElastix >
     class AdvancedMattesMutualInformationMetric :
     public
       ParzenWindowMutualInformationImageToImageMetric<
@@ -114,14 +114,14 @@ using namespace itk;
     typedef MetricBase<TElastix>                          Superclass2;
     typedef SmartPointer<Self>                            Pointer;
     typedef SmartPointer<const Self>                      ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( AdvancedMattesMutualInformationMetric,
       ParzenWindowMutualInformationImageToImageMetric );
-    
+
     /** Name of this class.
      * Use this name in the parameter file to select this specific metric. \n
      * example: <tt>(Metric "AdvancedMattesMutualInformation")</tt>\n
@@ -129,7 +129,7 @@ using namespace itk;
     elxClassNameMacro( "AdvancedMattesMutualInformation" );
 
     /** Typedefs from the superclass. */
-    typedef typename 
+    typedef typename
       Superclass1::CoordinateRepresentationType              CoordinateRepresentationType;
     typedef typename Superclass1::MovingImageType            MovingImageType;
     typedef typename Superclass1::MovingImagePixelType       MovingImagePixelType;
@@ -163,7 +163,7 @@ using namespace itk;
     typedef typename Superclass1::ImageSamplerType           ImageSamplerType;
     typedef typename Superclass1::ImageSamplerPointer        ImageSamplerPointer;
     typedef typename Superclass1::ImageSampleContainerType   ImageSampleContainerType;
-    typedef typename 
+    typedef typename
       Superclass1::ImageSampleContainerPointer               ImageSampleContainerPointer;
     typedef typename Superclass1::FixedImageLimiterType      FixedImageLimiterType;
     typedef typename Superclass1::MovingImageLimiterType     MovingImageLimiterType;
@@ -173,7 +173,7 @@ using namespace itk;
       Superclass1::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
     typedef typename
       Superclass1::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
-    
+
     /** The fixed image dimension. */
     itkStaticConstMacro( FixedImageDimension, unsigned int,
       FixedImageType::ImageDimension );
@@ -181,7 +181,7 @@ using namespace itk;
     /** The moving image dimension. */
     itkStaticConstMacro( MovingImageDimension, unsigned int,
       MovingImageType::ImageDimension );
-    
+
     /** Typedef's inherited from Elastix. */
     typedef typename Superclass2::ElastixType               ElastixType;
     typedef typename Superclass2::ElastixPointer            ElastixPointer;
@@ -190,7 +190,7 @@ using namespace itk;
     typedef typename Superclass2::RegistrationType          RegistrationType;
     typedef typename Superclass2::RegistrationPointer       RegistrationPointer;
     typedef typename Superclass2::ITKBaseType               ITKBaseType;
-      
+
     /** Typedef for timer. */
     typedef tmr::Timer          TimerType;
     /** Typedef for timer. */
@@ -207,7 +207,7 @@ using namespace itk;
      * if a finite difference derivative estimation is used
      * (selected by the experimental parameter FiniteDifferenceDerivative)  */
     virtual void AfterEachIteration( void );
-  
+
     /** Set up a timer to measure the intialisation time and
      * call the Superclass' implementation. */
     virtual void Initialize(void) throw (ExceptionObject);
@@ -215,7 +215,7 @@ using namespace itk;
     /** Set/Get c. For finite difference derivative estimation */
     itkSetMacro( Param_c, double );
     itkGetConstMacro( Param_c, double );
-        
+
     /** Set/Get gamma. For finite difference derivative estimation */
     itkSetMacro( Param_gamma, double );
     itkGetConstMacro( Param_gamma, double );
@@ -229,14 +229,14 @@ using namespace itk;
     /** The constructor. */
     AdvancedMattesMutualInformationMetric();
 
-    /** The destructor. */ 
+    /** The destructor. */
     virtual ~AdvancedMattesMutualInformationMetric() {};
 
     unsigned long                 m_CurrentIteration;
 
     /** A function to compute the finite difference perturbation in each iteration */
     double Compute_c( unsigned long k ) const;
-    
+
   private:
 
     /** The private constructor. */
@@ -246,9 +246,9 @@ using namespace itk;
 
     double                        m_Param_c;
     double                        m_Param_gamma;
-    
-  
-    
+
+
+
   }; // end class AdvancedMattesMutualInformationMetric
 
 

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -40,7 +40,7 @@ ImageFileCastWriter<TInputImage>
 
 //---------------------------------------------------------
 template <class TInputImage>
-std::string  
+std::string
 ImageFileCastWriter<TInputImage>
 ::GetDefaultOutputComponentType(void) const
 {
@@ -48,7 +48,7 @@ ImageFileCastWriter<TInputImage>
   MetaImageIO::Pointer dummyImageIO = MetaImageIO::New();
   /** Set the pixeltype */
   typedef typename InputImageType::InternalPixelType ScalarType;
-  dummyImageIO->SetPixelTypeInfo(typeid(ScalarType));  
+  dummyImageIO->SetPixelTypeInfo(typeid(ScalarType));
   /** Get its description */
   return dummyImageIO->GetComponentTypeAsString(
     dummyImageIO->GetComponentType() );
@@ -66,50 +66,50 @@ ImageFileCastWriter<TInputImage>
 
 //---------------------------------------------------------
 template <class TInputImage>
-void 
+void
 ImageFileCastWriter<TInputImage>
 ::GenerateData(void)
 {
   const InputImageType * input = this->GetInput();
 
   itkDebugMacro(<<"Writing file: " << this->GetFileName() );
-  
-  // Make sure that the image is the right type and no more than 
+
+  // Make sure that the image is the right type and no more than
   // four components.
   typedef typename InputImageType::PixelType ScalarType;
 
-  if( strcmp( input->GetNameOfClass(), "VectorImage" ) == 0 ) 
+  if( strcmp( input->GetNameOfClass(), "VectorImage" ) == 0 )
     {
     typedef typename InputImageType::InternalPixelType VectorImageScalarType;
     this->GetImageIO()->SetPixelTypeInfo( typeid(VectorImageScalarType) );
-    
+
     typedef typename InputImageType::AccessorFunctorType AccessorFunctorType;
     this->GetImageIO()->SetNumberOfComponents( AccessorFunctorType::GetVectorLength(input) );
     }
   else
     {
     // Set the pixel and component type; the number of components.
-    this->GetImageIO()->SetPixelTypeInfo(typeid(ScalarType));  
+    this->GetImageIO()->SetPixelTypeInfo(typeid(ScalarType));
     }
 
   /** Setup the image IO for writing. */
   this->GetImageIO()->SetFileName( this->GetFileName() );
-  
+
   /** Get the number of Components */
   unsigned int numberOfComponents = this->GetImageIO()->GetNumberOfComponents();
-  
+
   /** Extract the data as a raw buffer pointer and possibly convert.
    * Converting is only possible if the number of components equals 1 */
-  if ( 
-    this->m_OutputComponentType != 
+  if (
+    this->m_OutputComponentType !=
       this->GetImageIO()->GetComponentTypeAsString( this->GetImageIO()->GetComponentType() )
     && numberOfComponents == 1 )
   {
     void * convertedDataBuffer = 0;
-    const DataObject * inputAsDataObject = 
+    const DataObject * inputAsDataObject =
       dynamic_cast< const DataObject * >( input );
 
-    /** convert the scalar image to a scalar image with another componenttype 
+    /** convert the scalar image to a scalar image with another componenttype
      * The imageIO's PixelType is also changed */
     if ( this->m_OutputComponentType == "char" )
     {
@@ -161,12 +161,12 @@ ImageFileCastWriter<TInputImage>
       double dummy;
       convertedDataBuffer = this->ConvertScalarImage( inputAsDataObject, dummy   );
     }
-           
+
     /** Do the writing */
     this->GetImageIO()->Write( convertedDataBuffer );
     /** Release the caster's memory */
     this->m_Caster = 0;
-    
+
   }
   else
   {

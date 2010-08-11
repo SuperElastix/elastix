@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -38,7 +38,7 @@ AdvancedEuler3DTransform<TScalarType>
 template <class TScalarType>
 AdvancedEuler3DTransform<TScalarType>
 ::AdvancedEuler3DTransform(const MatrixType & matrix,
-                   const OutputPointType & offset) 
+                   const OutputPointType & offset)
 {
   m_ComputeZYX = false;
   this->SetMatrix(matrix);
@@ -212,7 +212,7 @@ AdvancedEuler3DTransform<TScalarType>
   const double cx = vcl_cos(m_AngleX);
   const double sx = vcl_sin(m_AngleX);
   const double cy = vcl_cos(m_AngleY);
-  const double sy = vcl_sin(m_AngleY); 
+  const double sy = vcl_sin(m_AngleY);
   const double cz = vcl_cos(m_AngleZ);
   const double sz = vcl_sin(m_AngleZ);
 
@@ -225,7 +225,7 @@ AdvancedEuler3DTransform<TScalarType>
   RotationY[0][0]=cy;RotationY[0][1]=0;RotationY[0][2]=sy;
   RotationY[1][0]=0;RotationY[1][1]=1;RotationY[1][2]=0;
   RotationY[2][0]=-sy;RotationY[2][1]=0;RotationY[2][2]=cy;
-  
+
   Matrix<TScalarType,3,3> RotationZ;
   RotationZ[0][0]=cz;RotationZ[0][1]=-sz;RotationZ[0][2]=0;
   RotationZ[1][0]=sz;RotationZ[1][1]=cz;RotationZ[1][2]=0;
@@ -260,7 +260,7 @@ GetJacobian( const InputPointType & p,
 
   /** Compute dR/dmu * (p-c) */
   const InputVectorType pp = p - this->GetCenter();
-  for(unsigned int dim=0; dim < SpaceDimension; dim++ ) 
+  for(unsigned int dim=0; dim < SpaceDimension; dim++ )
   {
     const InputVectorType column = jsj[dim] * pp;
     for (unsigned int i=0; i < SpaceDimension; ++i)
@@ -270,8 +270,8 @@ GetJacobian( const InputPointType & p,
   }
 
   // compute derivatives for the translation part
-  const unsigned int blockOffset = 3;  
-  for(unsigned int dim=0; dim < SpaceDimension; dim++ ) 
+  const unsigned int blockOffset = 3;
+  for(unsigned int dim=0; dim < SpaceDimension; dim++ )
     {
     j[ dim ][ blockOffset + dim ] = 1.0;
     }
@@ -298,7 +298,7 @@ AdvancedEuler3DTransform<TScalarType>
   const double cx = vcl_cos(m_AngleX);
   const double sx = vcl_sin(m_AngleX);
   const double cy = vcl_cos(m_AngleY);
-  const double sy = vcl_sin(m_AngleY); 
+  const double sy = vcl_sin(m_AngleY);
   const double cz = vcl_cos(m_AngleZ);
   const double sz = vcl_sin(m_AngleZ);
 
@@ -306,7 +306,7 @@ AdvancedEuler3DTransform<TScalarType>
   const double cxd = -vcl_sin(m_AngleX);
   const double sxd = vcl_cos(m_AngleX);
   const double cyd = -vcl_sin(m_AngleY);
-  const double syd = vcl_cos(m_AngleY); 
+  const double syd = vcl_cos(m_AngleY);
   const double czd = -vcl_sin(m_AngleZ);
   const double szd = vcl_cos(m_AngleZ);
 
@@ -320,7 +320,7 @@ AdvancedEuler3DTransform<TScalarType>
   RotationY[0][0]=cy;RotationY[0][1]=0;RotationY[0][2]=sy;
   RotationY[1][0]=0;RotationY[1][1]=1;RotationY[1][2]=0;
   RotationY[2][0]=-sy;RotationY[2][1]=0;RotationY[2][2]=cy;
-  
+
   Matrix<TScalarType,3,3> RotationZ;
   RotationZ[0][0]=cz;RotationZ[0][1]=-sz;RotationZ[0][2]=0;
   RotationZ[1][0]=sz;RotationZ[1][1]=cz;RotationZ[1][2]=0;
@@ -336,7 +336,7 @@ AdvancedEuler3DTransform<TScalarType>
   RotationYd[0][0]=cyd;RotationYd[0][1]=0;RotationYd[0][2]=syd;
   RotationYd[1][0]=0;RotationYd[1][1]=0;RotationYd[1][2]=0;
   RotationYd[2][0]=-syd;RotationYd[2][1]=0;RotationYd[2][2]=cyd;
-  
+
   Matrix<TScalarType,3,3> RotationZd;
   RotationZd[0][0]=czd;RotationZd[0][1]=-szd;RotationZd[0][2]=0;
   RotationZd[1][0]=szd;RotationZd[1][1]=czd;RotationZd[1][2]=0;
@@ -352,7 +352,7 @@ AdvancedEuler3DTransform<TScalarType>
   }
   else
   {
-    // Like VTK transformation order    
+    // Like VTK transformation order
     jsj[0] = RotationZ*RotationXd*RotationY;
     jsj[1] = RotationZ*RotationX*RotationYd;
     jsj[2] = RotationZd*RotationX*RotationY;
@@ -364,7 +364,7 @@ AdvancedEuler3DTransform<TScalarType>
     jsj[par].Fill(0.0);
   }
 }
-  
+
 // Print self
 template<class TScalarType>
 void
@@ -373,9 +373,9 @@ PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os,indent);
 
-  os << indent << "Euler's angles: AngleX=" << m_AngleX  
-     << " AngleY=" << m_AngleY  
-     << " AngleZ=" << m_AngleZ  
+  os << indent << "Euler's angles: AngleX=" << m_AngleX
+     << " AngleY=" << m_AngleY
+     << " AngleZ=" << m_AngleZ
      << std::endl;
   os << indent << "m_ComputeZYX = " << m_ComputeZYX << std::endl;
 }

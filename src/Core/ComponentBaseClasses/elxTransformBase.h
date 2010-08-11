@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -49,16 +49,16 @@ namespace elastix
  *   example: <tt>(HowToCombineTransforms "Add")</tt>\n
  *   Default: "Add".
  *
- * \transformparameter UseDirectionCosines: Controls whether to use or ignore the 
+ * \transformparameter UseDirectionCosines: Controls whether to use or ignore the
  * direction cosines (world matrix, transform matrix) set in the images.
- * Voxel spacing and image origin are always taken into account, regardless 
+ * Voxel spacing and image origin are always taken into account, regardless
  * the setting of this parameter.\n
  *    example: <tt>(UseDirectionCosines "true")</tt>\n
  * Default: false. Recommended: true. The default value is false for
  * backward compatibility reasons. This parameter was introduced in
  * elastix 4.3. Setting it to false means that you choose to ignore important
  * information from the image, which relates voxel coordinates to world coordinates.
- * Ignoring it may easily lead to left/right swaps for example, which could 
+ * Ignoring it may easily lead to left/right swaps for example, which could
  * skrew up a (medical) analysis.
  * \transformparameter HowToCombineTransforms: Indicates how to use the initial transform
  *   (given by the command-line argument -t0, or, if using multiple parameter files,
@@ -97,7 +97,7 @@ namespace elastix
  * \transformparameter NumberOfParameters: the length of the transform parameter vector.\n
  * example <tt>(NumberOfParameters 722)</tt>\n
  * \transformparameter InitialTransformParametersFileName: The location/name of an initial
- * transform that will be loaded when loading the current transform parameter file. Note 
+ * transform that will be loaded when loading the current transform parameter file. Note
  * that transform parameter file can also contain an initial transform. Recursively all
  * transforms are thus automatically loaded when loading the last transform parameter file.\n
  * example <tt>(InitialTransformParametersFileName "./res/TransformParameters.0.txt")</tt>\n
@@ -150,7 +150,7 @@ public:
   typedef typename Superclass::RegistrationPointer    RegistrationPointer;
 
   /** Elastix typedef's. */
-  typedef typename ElastixType::CoordRepType          CoordRepType;   
+  typedef typename ElastixType::CoordRepType          CoordRepType;
   typedef typename ElastixType::FixedImageType        FixedImageType;
   typedef typename ElastixType::MovingImageType       MovingImageType;
 
@@ -175,19 +175,19 @@ public:
   typedef itk::AdvancedTransform<
     CoordRepType,
     itkGetStaticConstMacro( FixedImageDimension ),
-    itkGetStaticConstMacro( MovingImageDimension ) >  ITKBaseType;    
+    itkGetStaticConstMacro( MovingImageDimension ) >  ITKBaseType;
   typedef itk::AdvancedCombinationTransform<CoordRepType,
-    itkGetStaticConstMacro( FixedImageDimension ) >   CombinationTransformType;  
+    itkGetStaticConstMacro( FixedImageDimension ) >   CombinationTransformType;
   typedef typename
     CombinationTransformType::InitialTransformType    InitialTransformType;
-  
+
   /** Typedef's from Transform. */
   typedef typename ITKBaseType::ParametersType        ParametersType;
   typedef typename ParametersType::ValueType          ValueType;
 
   /** Typedef's for TransformPoint. */
   typedef typename ITKBaseType::InputPointType        InputPointType;
-  typedef typename ITKBaseType::OutputPointType       OutputPointType;  
+  typedef typename ITKBaseType::OutputPointType       OutputPointType;
 
   /** Typedefs needed for AutomaticScalesEstimation function */
   typedef typename RegistrationType::ITKBaseType      ITKRegistrationType;
@@ -290,7 +290,7 @@ protected:
   /** The destructor. */
   virtual ~TransformBase();
 
-  /** Estimate a scales vector 
+  /** Estimate a scales vector
    * AutomaticScalesEstimation works like this:
    * \li N=10000 points are sampled on a uniform grid on the fixed image.
    * \li Jacobians dT/dmu are computed
@@ -299,7 +299,7 @@ protected:
   void AutomaticScalesEstimation( ScalesType & scales ) const;
 
   /** Member variables. */
-  ParametersType *      m_TransformParametersPointer;  
+  ParametersType *      m_TransformParametersPointer;
   std::string           m_TransformParametersFileName;
   ParametersType        m_FinalParameters;
 

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -28,7 +28,7 @@ namespace itk
    *
    * \brief Samples an image by randomly composing a set of physical coordinates
    *
-   * This image sampler generates not only samples that correspond with 
+   * This image sampler generates not only samples that correspond with
    * pixel locations, but selects points in physical space.
 	 *
 	 * \ingroup ImageSamplers
@@ -70,7 +70,7 @@ namespace itk
     typedef typename Superclass::InputImagePointType          InputImagePointType;
     typedef typename Superclass::InputImagePointValueType     InputImagePointValueType;
     typedef typename Superclass::ImageSampleValueType         ImageSampleValueType;
-    
+
     /** The input image dimension. */
     itkStaticConstMacro( InputImageDimension, unsigned int,
       Superclass::InputImageDimension );
@@ -79,7 +79,7 @@ namespace itk
      * needs an interpolator.
      */
     typedef double                                              CoordRepType;
-    typedef InterpolateImageFunction< 
+    typedef InterpolateImageFunction<
       InputImageType, CoordRepType >                            InterpolatorType;
     typedef BSplineInterpolateImageFunction<
       InputImageType, CoordRepType, double>                     DefaultInterpolatorType;
@@ -101,7 +101,7 @@ namespace itk
      * Default: false. */
     itkGetConstMacro( UseRandomSampleRegion, bool );
     itkSetMacro( UseRandomSampleRegion, bool );
-    
+
   protected:
 
     typedef typename InterpolatorType::ContinuousIndexType   InputImageContinuousIndexType;
@@ -133,16 +133,16 @@ namespace itk
     virtual void GenerateSampleRegion(
       InputImageContinuousIndexType & smallestContIndex,
       InputImageContinuousIndexType & largestContIndex );
-            
+
   private:
 
     /** The private constructor. */
     MultiInputImageRandomCoordinateSampler( const Self& );          // purposely not implemented
     /** The private copy constructor. */
     void operator=( const Self& );            // purposely not implemented
-    
+
     bool          m_UseRandomSampleRegion;
-    
+
   }; // end class MultiInputImageRandomCoordinateSampler
 
 

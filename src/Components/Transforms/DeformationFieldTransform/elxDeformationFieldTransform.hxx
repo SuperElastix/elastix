@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -32,13 +32,13 @@ using namespace itk;
   /**
    * ********************* Constructor ****************************
    */
-  
+
   template <class TElastix>
     DeformationFieldTransform<TElastix>
     ::DeformationFieldTransform()
   {
     /** Initialize. */
-    this->m_DeformationFieldInterpolatingTransform = 
+    this->m_DeformationFieldInterpolatingTransform =
       DeformationFieldInterpolatingTransformType::New();
     this->SetCurrentTransform(
       this->m_DeformationFieldInterpolatingTransform );
@@ -51,8 +51,8 @@ using namespace itk;
     this->m_OriginalDeformationFieldDirection.SetIdentity();
 
   } // end Constructor
-  
-  
+
+
   /**
    * ************************* ReadFromFile ************************
    */
@@ -62,10 +62,10 @@ using namespace itk;
     ReadFromFile( void )
   {
     // \todo Test this ReadFromFile function.
-    
+
     /** Call the ReadFromFile from the TransformBase. */
     this->Superclass2::ReadFromFile();
-    
+
     typedef ChangeInformationImageFilter<DeformationFieldType> ChangeInfoFilterType;
     typedef typename ChangeInfoFilterType::Pointer  ChangeInfoFilterPointer;
 
@@ -110,7 +110,7 @@ using namespace itk;
     }
 
     /** Store the original direction for later use */
-    this->m_OriginalDeformationFieldDirection = 
+    this->m_OriginalDeformationFieldDirection =
       vectorReader->GetOutput()->GetDirection();
 
     /** Set the deformationFieldImage in the
@@ -125,18 +125,18 @@ using namespace itk;
       DeformationFieldType, CoordRepType>  NNInterpolatorType;
     typedef VectorLinearInterpolateImageFunction<
       DeformationFieldType, CoordRepType>  LinInterpolatorType;
-    
+
     typename InterpolatorType::Pointer interpolator = 0;
     unsigned int interpolationOrder = 0;
     this->m_Configuration->ReadParameter( interpolationOrder,
       "DeformationFieldInterpolationOrder", 0 );
     if ( interpolationOrder == 0 )
     {
-      interpolator = NNInterpolatorType::New(); 
+      interpolator = NNInterpolatorType::New();
     }
     else if ( interpolationOrder == 1 )
     {
-      interpolator = LinInterpolatorType::New(); 
+      interpolator = LinInterpolatorType::New();
     }
     else
     {
@@ -146,7 +146,7 @@ using namespace itk;
     }
     this->m_DeformationFieldInterpolatingTransform->
       SetDeformationFieldInterpolator( interpolator );
-    
+
   } // end ReadFromFile()
 
 
@@ -191,7 +191,7 @@ using namespace itk;
       << makeFileName.str() << "\")" << std::endl;
 
     /** Write the interpolation order to file */
-    std::string interpolatorName = 
+    std::string interpolatorName =
       this->m_DeformationFieldInterpolatingTransform->
       GetDeformationFieldInterpolator()->GetNameOfClass();
 
@@ -238,7 +238,7 @@ using namespace itk;
 
   } // end WriteToFile()
 
-  
+
 } // end namespace elastix
 
 

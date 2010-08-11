@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -101,7 +101,7 @@ public:
   typedef typename Superclass2::ITKBaseType               ITKBaseType;
   typedef typename Superclass2::FixedImageType            FixedImageType;
   typedef typename Superclass2::MovingImageType           MovingImageType;
-  
+
 	/** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
     FixedImageType::ImageDimension );

@@ -6,7 +6,7 @@ Copyright (c) University Medical Center Utrecht. All rights reserved.
 See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
 details.
 
-This software is distributed WITHOUT ANY WARRANTY; without even 
+This software is distributed WITHOUT ANY WARRANTY; without even
 the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
@@ -31,7 +31,7 @@ namespace elastix
  * \class Configuration
  * \brief A class that deals with user given parameters and command line arguments.
  *
- * The Configuration class provides the functions 
+ * The Configuration class provides the functions
  * ReadParameter() (to read parameters from the parameter file) and
  * ReadCommandLineArgument(), and provides an easy way to get the
  * current elastix level.
@@ -80,7 +80,7 @@ public:
   itkGetStringMacro( ParameterFileName );
   itkSetStringMacro( ParameterFileName );
 
-  /** Pass the command line arguments as a map. 
+  /** Pass the command line arguments as a map.
    * One of the command line arguments should be either:
    * -p \<parameter_file\>         or
    * -tp \<transform_parameter_file\>.
@@ -223,7 +223,7 @@ public:
 
     return found;
   }
-   
+
   protected:
 
     Configuration();

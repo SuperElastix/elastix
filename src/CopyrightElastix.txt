@@ -13,7 +13,7 @@ The ITK is required by Elastix for compilation of the source code.
 The copyright of the files in the Common/KNN/ann_1.1 subdirectory is held by a third
 party, the University of Maryland. The ANN package is distributed under the GNU
 Lesser Public Licence. Please read the content of the subdirectory for specific
-details on this third-party license. 
+details on this third-party license.
 
 
 Elastix Copyright Notice:

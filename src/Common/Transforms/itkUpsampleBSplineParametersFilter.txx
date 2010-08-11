@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -70,7 +70,7 @@ UpsampleBSplineParametersFilter<TArray,TImage>
     = const_cast<PixelType *>( parameters_in.data_block() );
 
   /** Get the number of parameters. */
-  const unsigned int currentNumberOfPixels = 
+  const unsigned int currentNumberOfPixels =
     this->m_CurrentGridRegion.GetNumberOfPixels();
 
   /** Create the new vector of output parameters, with the correct size. */
@@ -85,7 +85,7 @@ UpsampleBSplineParametersFilter<TArray,TImage>
   coeffs_in->SetRegions( this->m_CurrentGridRegion );
 
   /** Initialise iterator in the parameters_out. */
-  unsigned int i = 0; 
+  unsigned int i = 0;
 
   /** Loop over dimension: each direction is upsampled separately. */
   for ( unsigned int j = 0; j < Dimension; j++ )
@@ -100,9 +100,9 @@ UpsampleBSplineParametersFilter<TArray,TImage>
      * of the new control points, given the current coefficients
      * (note: it does not just interpolate the coefficient image,
      * which would be wrong). The B-spline coefficients that
-     * describe the resulting image are computed by the 
+     * describe the resulting image are computed by the
      * decomposition filter.
-     * 
+     *
      * This code is copied from the itk-example
      * DeformableRegistration6.cxx .
      */
@@ -174,7 +174,7 @@ UpsampleBSplineParametersFilter<TArray,TImage>
   bool ret = ( this->m_CurrentGridOrigin != this->m_RequiredGridOrigin );
   ret |= ( this->m_CurrentGridSpacing != this->m_RequiredGridSpacing );
   ret |= ( this->m_CurrentGridDirection != this->m_RequiredGridDirection );
-  ret |= ( this->m_CurrentGridRegion != this->m_RequiredGridRegion );  
+  ret |= ( this->m_CurrentGridRegion != this->m_RequiredGridRegion );
 
   return ret;
 

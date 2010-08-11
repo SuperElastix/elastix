@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -24,12 +24,12 @@ namespace elastix
   /**
    * ********************* Constructor ****************************
    */
-  
+
   template <class TElastix>
     WeightedCombinationTransformElastix<TElastix>
     ::WeightedCombinationTransformElastix()
   {
-    this->m_WeightedCombinationTransform = 
+    this->m_WeightedCombinationTransform =
       WeightedCombinationTransformType::New();
     this->SetCurrentTransform( this->m_WeightedCombinationTransform );
   } // end Constructor
@@ -38,12 +38,12 @@ namespace elastix
   /*
    * ******************* BeforeRegistration ***********************
    */
-  
+
   template <class TElastix>
     void WeightedCombinationTransformElastix<TElastix>
     ::BeforeRegistration(void)
   {
-    /** Set the normalizedWeights parameter. It must be correct in order to set the scales properly. 
+    /** Set the normalizedWeights parameter. It must be correct in order to set the scales properly.
      * \todo: this parameter may change each resolution. */
     bool normalizeWeights = false;
     this->m_Configuration->ReadParameter( normalizeWeights,
@@ -55,9 +55,9 @@ namespace elastix
 
     /** Set the scales. */
     this->SetScales();
-    
+
   } // end BeforeRegistration
-     
+
 
   /**
    * ************************* InitializeTransform *********************
@@ -67,7 +67,7 @@ namespace elastix
   template <class TElastix>
     void WeightedCombinationTransformElastix<TElastix>
     ::InitializeTransform( void )
-  {    
+  {
     /** Load subtransforms specified in parameter file. */
     this->LoadSubTransforms();
 
@@ -78,13 +78,13 @@ namespace elastix
     /** Equal weights */
     ParametersType parameters( N );
     if ( this->m_WeightedCombinationTransform->GetNormalizeWeights() )
-    {      
+    {
       parameters.Fill( 1.0 / Nd );
     }
     else
     {
       parameters.Fill( 0.0 );
-    }    
+    }
     this->m_WeightedCombinationTransform->SetParameters( parameters );
 
     /** Set the initial parameters in this->m_Registration.*/
@@ -110,7 +110,7 @@ namespace elastix
     this->m_Configuration->ReadParameter( normalizeWeights,
     "NormalizeCombinationWeights", 0 );
     this->m_WeightedCombinationTransform->SetNormalizeWeights( normalizeWeights );
-    
+
     /** Call the ReadFromFile from the TransformBase to read in the parameters.  */
     this->Superclass2::ReadFromFile();
 
@@ -144,9 +144,9 @@ namespace elastix
     xout["transpar"] << "(SubTransforms ";
     for (unsigned int i = 0; i < this->m_SubTransformFileNames.size(); ++i )
     {
-      xout["transpar"] << "\"" << this->m_SubTransformFileNames[i] << "\" ";       
+      xout["transpar"] << "\"" << this->m_SubTransformFileNames[i] << "\" ";
     }
-    xout["transpar"] << ")" << std::endl; 
+    xout["transpar"] << ")" << std::endl;
 
   } // end WriteToFile()
 
@@ -159,7 +159,7 @@ namespace elastix
   void
     WeightedCombinationTransformElastix<TElastix>
     ::SetScales( void )
-  {  
+  {
     /** Create the new scales. */
     const unsigned int N = this->GetNumberOfParameters();
     ScalesType newscales( N );
@@ -176,15 +176,15 @@ namespace elastix
       this->AutomaticScalesEstimation( newscales );
     }
     else
-    {  
-      const unsigned int count = 
+    {
+      const unsigned int count =
         this->m_Configuration->CountNumberOfParameterEntries( "Scales" );
-      
+
       if ( count == N )
       {
         /** Read the user-supplied values/ */
         std::vector<double> newscalesvec(N);
-        this->m_Configuration->ReadParameter( newscalesvec, "Scales", 0, N-1, true );        
+        this->m_Configuration->ReadParameter( newscalesvec, "Scales", 0, N-1, true );
         for ( unsigned int i = 0; i < N; i++ )
         {
           newscales[i] = newscalesvec[i];
@@ -217,24 +217,24 @@ namespace elastix
   void
     WeightedCombinationTransformElastix<TElastix>
     ::LoadSubTransforms( void )
-  {  
+  {
     /** Typedef's from ComponentDatabase. */
     typedef typename Superclass2::ComponentDatabaseType                ComponentDatabaseType;
     typedef typename Superclass2::ComponentDescriptionType             ComponentDescriptionType;
     typedef typename Superclass2::PtrToCreator                         PtrToCreator;
     typedef typename Superclass2::ObjectType                           ObjectType;
 
-    const unsigned int N = 
+    const unsigned int N =
       this->m_Configuration->CountNumberOfParameterEntries( "SubTransforms" );
 
     if ( N == 0)
-    {      
+    {
       itkExceptionMacro( << "ERROR: At least one SubTransform should be specified." );
     }
     else
     {
       this->m_SubTransformFileNames.resize( N );
-      this->m_Configuration->ReadParameter( this->m_SubTransformFileNames, 
+      this->m_Configuration->ReadParameter( this->m_SubTransformFileNames,
         "SubTransforms", 0, N-1, true );
     }
 
@@ -252,7 +252,7 @@ namespace elastix
       const std::string & subTransformFileName = this->m_SubTransformFileNames[i];
 
       /** Create a new configuration, which will be initialized with
-       * the subtransformFileName. */  
+       * the subtransformFileName. */
       ConfigurationPointer configurationSubTransform = ConfigurationType::New();
 
       /** Create argmapInitialTransform. */
@@ -281,30 +281,30 @@ namespace elastix
 
       /** Cast to TransformBase */
       Superclass2 * elx_subTransform = dynamic_cast< Superclass2 * >(
-        subTransform.GetPointer() );      
+        subTransform.GetPointer() );
 
       /** Call the ReadFromFile method of the elx_subTransform. */
       if ( elx_subTransform )
-      {        
+      {
         elx_subTransform->SetElastix( this->GetElastix() );
-        elx_subTransform->SetConfiguration( configurationSubTransform );      
+        elx_subTransform->SetConfiguration( configurationSubTransform );
         elx_subTransform->ReadFromFile();
-      
+
         /** Set in vector of subTransforms. */
         SubTransformType * testPointer =
           dynamic_cast<SubTransformType * >( subTransform.GetPointer() );
-        subTransforms[i] = testPointer;      
-      } 
+        subTransforms[i] = testPointer;
+      }
 
       /** Check if no errors occured: */
       if ( subTransforms[i].IsNull() )
       {
-        xl::xout["error"] << "ERROR: Error while trying to load the SubTransform " 
+        xl::xout["error"] << "ERROR: Error while trying to load the SubTransform "
           << subTransformFileName << std::endl;
         itkExceptionMacro( << "ERROR: Loading SubTransforms failed!" );
       }
 
-    }  // end for loop over subTransforms   
+    }  // end for loop over subTransforms
 
     /** Set the subTransforms in the WeightedCombination object. */
     this->m_WeightedCombinationTransform->SetTransformContainer( subTransforms );

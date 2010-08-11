@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -46,7 +46,7 @@ namespace itk
   {
     /** Call the superclass. */
     this->Superclass::Initialize();
-    
+
     /** Check the fixed stuff. */
     for ( unsigned int i = 0; i < m_NumberOfFixedFeatureImages; i++ )
     {
@@ -83,7 +83,7 @@ namespace itk
 
     /** Check if the moving feature image interpolators are B-spline interpolators. */
     this->CheckForBSplineFeatureInterpolators();
-        
+
   } // end Initialize()
 
 
@@ -103,7 +103,7 @@ namespace itk
       this->m_NumberOfFixedFeatureImages = arg;
       this->Modified();
     }
-    
+
   } // end SetNumberOfFixedFeatureImages
 
 
@@ -207,7 +207,7 @@ namespace itk
       this->m_NumberOfMovingFeatureImages = arg;
       this->Modified();
     }
-    
+
   } // end SetNumberOfMovingFeatureImages
 
 
@@ -314,10 +314,10 @@ namespace itk
     this->m_MovingFeatureBSplineInterpolators.resize( this->m_NumberOfMovingFeatureImages );
     for ( unsigned int i = 0; i < this->m_NumberOfMovingFeatureImages; ++i )
     {
-      BSplineInterpolatorType * testPtr = 
+      BSplineInterpolatorType * testPtr =
         dynamic_cast<BSplineInterpolatorType *>(
         this->m_MovingFeatureInterpolators[ i ].GetPointer() );
-      
+
       if ( testPtr )
       {
         this->m_FeatureInterpolatorsIsBSpline[ i ] = true;
@@ -372,7 +372,7 @@ namespace itk
       os << indent << "MovingFeatureInterpolators[" << i << "]: "
         << this->m_MovingFeatureInterpolators[ i ].GetPointer() << std::endl;
     }
- 
+
   } // end PrintSelf
 
 

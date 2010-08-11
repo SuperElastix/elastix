@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -35,12 +35,12 @@ namespace xoutlibrary
    *
    * \ingroup xout
    */
-  
+
   template<class charT, class traits = char_traits<charT> >
     class xoutrow : public xoutbase<charT, traits>
   {
   public:
-    
+
     typedef xoutrow                           Self;
     typedef xoutbase<charT, traits>           Superclass;
 
@@ -52,19 +52,19 @@ namespace xoutlibrary
     typedef typename Superclass::off_type       off_type;
     typedef typename Superclass::ostream_type   ostream_type;
     typedef typename Superclass::ios_type       ios_type;
-    
+
     typedef typename Superclass::CStreamMapType         CStreamMapType;
     typedef typename Superclass::XStreamMapType         XStreamMapType;
     typedef typename Superclass::CStreamMapIteratorType CStreamMapIteratorType;
     typedef typename Superclass::XStreamMapIteratorType XStreamMapIteratorType;
     typedef typename Superclass::CStreamMapEntryType    CStreamMapEntryType;
     typedef typename Superclass::XStreamMapEntryType    XStreamMapEntryType;
-    
-    /** Extra typedefs */   
+
+    /** Extra typedefs */
     typedef xoutcell<charT, traits> XOutCellType;
-    
+
     /** Constructors */
-    xoutrow();      
+    xoutrow();
 
     /** Destructor */
     virtual ~xoutrow();
@@ -84,11 +84,11 @@ namespace xoutlibrary
 
     /** Method to set all targets at once. The outputs of these targets
      * are not set automatically, so make sure to do it yourself.
-     */ 
+     */
     virtual void SetTargetCells( const XStreamMapType & cellmap );
 
-    /** Add/Remove an output stream (like cout, or an fstream, or an xout-object). 
-     * In addition to the behaviour of the Superclass's methods, these functions 
+    /** Add/Remove an output stream (like cout, or an fstream, or an xout-object).
+     * In addition to the behaviour of the Superclass's methods, these functions
      * set the outputs of the TargetCells as well; */
     virtual int AddOutput( const char * name, ostream_type * output );
     virtual int AddOutput( const char * name, Superclass * output );
@@ -105,7 +105,7 @@ namespace xoutlibrary
     virtual Superclass & SelectXCell( const char * name );
 
     XStreamMapType m_CellMap;
-    
+
   }; // end class xoutrow
 
 

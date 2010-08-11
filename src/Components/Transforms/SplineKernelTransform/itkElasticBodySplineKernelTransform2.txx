@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -23,7 +23,7 @@ namespace itk
 
 template <class TScalarType, unsigned int NDimensions>
 ElasticBodySplineKernelTransform2<TScalarType, NDimensions>::
-ElasticBodySplineKernelTransform2() 
+ElasticBodySplineKernelTransform2()
 {
   this->m_Alpha = 12.0 * ( 1.0 - .25 ) - 1.0;
 }

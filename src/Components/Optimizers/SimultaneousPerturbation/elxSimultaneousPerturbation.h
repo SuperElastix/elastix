@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -92,13 +92,13 @@ using namespace itk;
     typedef OptimizerBase<TElastix>             Superclass2;
     typedef SmartPointer<Self>                  Pointer;
     typedef SmartPointer<const Self>            ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( SimultaneousPerturbation, SPSAOptimizer );
-    
+
     /** Name of this class.
      * Use this name in the parameter file to select this specific optimizer. \n
      * example: <tt>(Optimizer "SimultaneousPerturbation")</tt>\n
@@ -109,7 +109,7 @@ using namespace itk;
     typedef Superclass1::CostFunctionType     CostFunctionType;
     typedef Superclass1::CostFunctionPointer  CostFunctionPointer;
     typedef Superclass1::StopConditionType    StopConditionType;
-    
+
     /** Typedef's inherited from Elastix.*/
     typedef typename Superclass2::ElastixType           ElastixType;
     typedef typename Superclass2::ElastixPointer        ElastixPointer;
@@ -118,7 +118,7 @@ using namespace itk;
     typedef typename Superclass2::RegistrationType      RegistrationType;
     typedef typename Superclass2::RegistrationPointer   RegistrationPointer;
     typedef typename Superclass2::ITKBaseType           ITKBaseType;
-    
+
     /** Typedef for the ParametersType. */
     typedef typename Superclass1::ParametersType        ParametersType;
 
@@ -127,28 +127,28 @@ using namespace itk;
     virtual void BeforeEachResolution(void);
     virtual void AfterEachResolution(void);
     virtual void AfterEachIteration(void);
-    virtual void AfterRegistration(void);   
-    
-    /** Override the SetInitialPosition. 
+    virtual void AfterRegistration(void);
+
+    /** Override the SetInitialPosition.
      * Override the implementation in itkOptimizer.h, to
      * ensure that the scales array and the parameters
      * array have the same size. */
     virtual void SetInitialPosition( const ParametersType & param );
-    
+
   protected:
 
       SimultaneousPerturbation();
       virtual ~SimultaneousPerturbation() {};
-      
+
       bool m_ShowMetricValues;
-      
+
   private:
 
       SimultaneousPerturbation( const Self& );  // purposely not implemented
       void operator=( const Self& );              // purposely not implemented
-      
+
   }; // end class SimultaneousPerturbation
-  
+
 
 } // end namespace elastix
 

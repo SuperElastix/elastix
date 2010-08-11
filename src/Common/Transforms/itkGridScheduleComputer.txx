@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -28,7 +28,7 @@ namespace itk
 /**
  * ********************* Constructor ****************************
  */
-  
+
 template < typename TTransformScalarType, unsigned int VImageDimension >
 GridScheduleComputer<TTransformScalarType, VImageDimension>
 ::GridScheduleComputer()
@@ -113,10 +113,10 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
   SpacingType imageSpacing, finalGridSpacing;
   DirectionType imageDirection;
 
-  /** Apply the initial transform.  */    
+  /** Apply the initial transform.  */
   this->ApplyInitialTransform( imageOrigin, imageSpacing, imageDirection, finalGridSpacing );
-  
-#ifndef ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE    
+
+#ifndef ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE
   /** Ignore direction cosines */
   imageDirection.SetIdentity();
 #endif
@@ -155,9 +155,9 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
         - ( size[ dim ] - 1 ) * imageSpacing[ dim ] ) / 2.0;
     }
 
-    /** Take into account direction cosines: 
+    /** Take into account direction cosines:
      * rotate grid origin around image origin. */
-    this->m_GridOrigins[ res ] = imageOrigin + imageDirection * ( 
+    this->m_GridOrigins[ res ] = imageOrigin + imageDirection * (
       this->m_GridOrigins[ res ] - imageOrigin );
 
     /** Set the grid region. */
@@ -197,8 +197,8 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
     return;
   }
 
-  /** We could rotate the image direction according 
-   * to the average rotation of the initial transformation. 
+  /** We could rotate the image direction according
+   * to the average rotation of the initial transformation.
    * For now leave it as is. */
   imageDirection = this->m_ImageDirection;
 	typename DirectionType::InternalMatrixType invImageDirectionTemp =
@@ -212,7 +212,7 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
    * coordinate in each dimension.
    *
    * NB: the possibility of non-identity direction cosines makes it
-   * a bit more complicated. This is dealt with by applying the inverse 
+   * a bit more complicated. This is dealt with by applying the inverse
    * direction matrix during computation of the bounding box.
    *
    * \todo: automatically estimate an optimal imageDirection?
@@ -261,7 +261,7 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
     }
   }
   RegionType insetImageRegion( insetImageSize );
-  const unsigned long numberOfBoundaryPoints = 
+  const unsigned long numberOfBoundaryPoints =
     this->m_ImageRegion.GetNumberOfPixels() - insetImageRegion.GetNumberOfPixels();
   boundaryPoints->reserve( numberOfBoundaryPoints );
 
@@ -276,10 +276,10 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
     IndexType inputIndex = bit.GetIndex();
     OriginType inputPoint;
     image->TransformIndexToPhysicalPoint( inputIndex, inputPoint );
-    typename TransformType::OutputPointType outputPoint = 
+    typename TransformType::OutputPointType outputPoint =
       this->m_InitialTransform->TransformPoint( inputPoint );
 
-#ifdef ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE    
+#ifdef ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE
     outputPoint = invImageDirection * outputPoint;
 #endif
 
@@ -299,10 +299,10 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
 
   /** Set minPoint as the new "ImageOrigin" (between quotes, since it
    * is not really the origin of the fixedImage anymore).
-   * Take into account direction cosines */   
+   * Take into account direction cosines */
   imageOrigin = minPoint;
 
-#ifdef ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE  
+#ifdef ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE
   imageOrigin = imageDirection * imageOrigin;
 #endif
 
@@ -311,7 +311,7 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
   for ( unsigned int i = 0; i < Dimension; i++ )
   {
     /** Compute the length of the fixed image (in mm) for dimension i. */
-    double oldLength_i = 
+    double oldLength_i =
       this->m_ImageSpacing[ i ] * static_cast<double>(
       this->m_ImageRegion.GetSize()[ i ] - 1 );
 

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -39,7 +39,7 @@ using namespace itk;
     xout["iteration"].AddTargetCell("3:StepSize");
     xout["iteration"].AddTargetCell("4:||Gradient||");
 
-    /** Format the metric and stepsize as floats */     
+    /** Format the metric and stepsize as floats */
     xl::xout["iteration"]["2:Metric"]   << std::showpoint << std::fixed;
     xl::xout["iteration"]["3:StepSize"] << std::showpoint << std::fixed;
     xl::xout["iteration"]["4:||Gradient||"] << std::showpoint << std::fixed;
@@ -58,7 +58,7 @@ using namespace itk;
     /** Get the current resolution level.*/
     unsigned int level = static_cast<unsigned int>(
       this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
-    
+
     /** Set the Gradient Magnitude Stopping Criterion.*/
     double minGradientMagnitude = 1e-8;
     this->m_Configuration->ReadParameter( minGradientMagnitude,
@@ -77,21 +77,21 @@ using namespace itk;
       "MinimumStepLength", this->GetComponentLabel(), level, 0 );
     this->SetMinimumStepLength( minStepLength );
 
-    /** Set the Relaxation factor 
+    /** Set the Relaxation factor
      */
     double relaxationFactor = 0.5;
-    this->m_Configuration->ReadParameter( relaxationFactor, 
+    this->m_Configuration->ReadParameter( relaxationFactor,
       "RelaxationFactor", this->GetComponentLabel(), level, 0 );
     this->SetRelaxationFactor( relaxationFactor );
 
     /** \todo max and min steplength should maybe depend on the imagespacing or on something else... */
-    
+
     /** Set the maximumNumberOfIterations.*/
     unsigned int maximumNumberOfIterations = 500;
     this->m_Configuration->ReadParameter( maximumNumberOfIterations,
       "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0 );
     this->SetNumberOfIterations( maximumNumberOfIterations );
-    
+
   } // end BeforeEachResolution
 
 
@@ -118,40 +118,40 @@ using namespace itk;
     void RegularStepGradientDescent<TElastix>
     ::AfterEachResolution(void)
   {
-    
+
     /**
      * enum   StopConditionType {   GradientMagnitudeTolerance = 1, StepTooSmall,
-     * ImageNotAvailable, CostFunctionError, MaximumNumberOfIterations  
+     * ImageNotAvailable, CostFunctionError, MaximumNumberOfIterations
      */
     std::string stopcondition;
 
     switch( this->GetStopCondition() )
     {
-      
+
     case GradientMagnitudeTolerance :
       stopcondition = "Minimum gradient magnitude has been reached";
       break;
-      
+
     case StepTooSmall :
-      stopcondition = "Minimum step size has been reached"; 
+      stopcondition = "Minimum step size has been reached";
       break;
 
     case MaximumNumberOfIterations :
-      stopcondition = "Maximum number of iterations has been reached";  
-      break;  
-    
+      stopcondition = "Maximum number of iterations has been reached";
+      break;
+
     case ImageNotAvailable :
-      stopcondition = "No image available"; 
-      break;  
-    
+      stopcondition = "No image available";
+      break;
+
     case CostFunctionError :
-      stopcondition = "Error in cost function"; 
-      break;  
-    
+      stopcondition = "Error in cost function";
+      break;
+
     default:
       stopcondition = "Unknown";
       break;
-      
+
     }
     /** Print the stopping condition */
 
@@ -159,7 +159,7 @@ using namespace itk;
     elxout << "Stopping condition: " << stopcondition << "." << std::endl;
 
   } // end AfterEachResolution
-  
+
   /**
    * ******************* AfterRegistration ************************
    */
@@ -201,7 +201,7 @@ using namespace itk;
       newscales.Fill(1.0);
       this->SetScales( newscales );
     }
-    
+
     /** \todo to optimizerbase? */
 
   } // end SetInitialPosition

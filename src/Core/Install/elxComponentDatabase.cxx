@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -14,7 +14,7 @@
 
 /**
  * Implementation of the ComponentDatabase class.
- * 
+ *
  */
 
 #ifndef __elxComponentDatabase_cxx
@@ -38,7 +38,7 @@ namespace elastix
     return CreatorMap;
 
   } // end GetCreatorMap
-  
+
 
   /**
    * ********************** GetIndexMap ***************************
@@ -59,7 +59,7 @@ namespace elastix
     const ComponentDescriptionType & name,
     IndexType i,
     PtrToCreator creator )
-  {   
+  {
     /** Get the map */
     CreatorMapType & map = GetCreatorMap();
 
@@ -90,20 +90,20 @@ namespace elastix
 
   int ComponentDatabase::SetIndex(
       const PixelTypeDescriptionType & fixedPixelType,
-      ImageDimensionType fixedDimension,  
+      ImageDimensionType fixedDimension,
       const PixelTypeDescriptionType & movingPixelType,
       ImageDimensionType movingDimension,
       IndexType i )
-  {   
+  {
     /** Get the map.*/
     IndexMapType & map = GetIndexMap();
-    
+
     /** Make a key with the input arguments.*/
     ImageTypeDescriptionType fixedImage( fixedPixelType, fixedDimension );
     ImageTypeDescriptionType movingImage( movingPixelType, movingDimension );
     IndexMapKeyType key( fixedImage, movingImage );
 
-    /** Insert the key+index in the map, if it hadn't been done before yet.*/ 
+    /** Insert the key+index in the map, if it hadn't been done before yet.*/
     if ( map.count(key) ) //==1
     {
       xout["error"] << "Error:" << std::endl;
@@ -158,13 +158,13 @@ namespace elastix
 
   ComponentDatabase::IndexType ComponentDatabase::GetIndex(
     const PixelTypeDescriptionType & fixedPixelType,
-    ImageDimensionType fixedDimension,  
+    ImageDimensionType fixedDimension,
     const PixelTypeDescriptionType & movingPixelType,
     ImageDimensionType movingDimension )
   {
     /** Get the map */
     IndexMapType map = GetIndexMap();
-    
+
     /** Make a key with the input arguments */
     ImageTypeDescriptionType fixedImage( fixedPixelType, fixedDimension );
     ImageTypeDescriptionType movingImage( movingPixelType, movingDimension );

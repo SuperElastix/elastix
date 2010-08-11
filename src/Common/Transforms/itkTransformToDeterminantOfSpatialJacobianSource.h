@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -22,7 +22,7 @@ Copyright (c) University Medical Center Utrecht. All rights reserved.
 See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
 details.
 
-This software is distributed WITHOUT ANY WARRANTY; without even 
+This software is distributed WITHOUT ANY WARRANTY; without even
 the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
@@ -56,7 +56,7 @@ namespace itk
  * ProcessObject::GenerateInputRequestedRegion() and
  * ProcessObject::GenerateOutputInformation().
  *
- * This filter is implemented as a multithreaded filter.  It provides a 
+ * This filter is implemented as a multithreaded filter.  It provides a
  * ThreadedGenerateData() method for its implementation.
  *
  * \author Marius Staring, Leiden University Medical Center, The Netherlands.
@@ -64,7 +64,7 @@ namespace itk
  * This class was taken from the Insight Journal paper:
  * http://hdl.handle.net/?/?
  *
- * 
+ *
  * \ingroup GeometricTransforms
  */
 template <class TOutputImage,
@@ -83,7 +83,7 @@ public:
   typedef typename OutputImageType::Pointer       OutputImagePointer;
   typedef typename OutputImageType::ConstPointer  OutputImageConstPointer;
   typedef typename OutputImageType::RegionType    OutputImageRegionType;
- 
+
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
 
@@ -95,8 +95,8 @@ public:
     TOutputImage::ImageDimension );
 
   /** Typedefs for transform. */
-  typedef AdvancedTransform<TTransformPrecisionType, 
-    itkGetStaticConstMacro( ImageDimension ), 
+  typedef AdvancedTransform<TTransformPrecisionType,
+    itkGetStaticConstMacro( ImageDimension ),
     itkGetStaticConstMacro( ImageDimension )>     TransformType;
   typedef typename TransformType::ConstPointer    TransformPointerType;
   typedef typename TransformType::SpatialJacobianType SpatialJacobianType;
@@ -114,7 +114,7 @@ public:
 
   /** Typedefs for base image. */
   typedef ImageBase< itkGetStaticConstMacro( ImageDimension ) > ImageBaseType;
-  
+
   /** Set the coordinate transformation.
    * Set the coordinate transform to use for resampling.  Note that this must
    * be in physical coordinates and it is the output-to-input transform, NOT
@@ -122,7 +122,7 @@ public:
    * the filter uses an Identity transform. You must provide a different
    * transform here, before attempting to run the filter, if you do not want to
    * use the default Identity transform. */
-  itkSetConstObjectMacro( Transform, TransformType ); 
+  itkSetConstObjectMacro( Transform, TransformType );
 
   /** Get a pointer to the coordinate transform. */
   itkGetConstObjectMacro( Transform, TransformType );
@@ -133,7 +133,7 @@ public:
   /** Get the size of the output image. */
   virtual const SizeType & GetOutputSize();
 
-  /** Set the start index of the output largest possible region. 
+  /** Set the start index of the output largest possible region.
   * The default is an index of all zeros. */
   virtual void SetOutputIndex( const IndexType & index );
 
@@ -145,7 +145,7 @@ public:
 
   /** Get the region of the output image. */
   itkGetConstReferenceMacro( OutputRegion, OutputImageRegionType );
-     
+
   /** Set the output image spacing. */
   itkSetMacro( OutputSpacing, SpacingType );
   virtual void SetOutputSpacing( const double* values );
@@ -166,7 +166,7 @@ public:
 
   /** Helper method to set the output parameters based on this image */
   void SetOutputParametersFromImage( const ImageBaseType * image );
-  
+
   /** TransformToDeterminantOfSpatialJacobianSource produces a floating value image. */
   virtual void GenerateOutputInformation( void );
 
@@ -197,12 +197,12 @@ protected:
     int threadId );
 
   /** Faster implementation for resampling that works for with linear
-   *  transformation types. 
+   *  transformation types.
    */
   void LinearThreadedGenerateData(
     const OutputImageRegionType & outputRegionForThread,
     int threadId );
-  
+
 private:
 
   TransformToDeterminantOfSpatialJacobianSource( const Self& ); //purposely not implemented
@@ -216,11 +216,11 @@ private:
   DirectionType           m_OutputDirection;   // output image direction cosines
 
 }; // end class TransformToDeterminantOfSpatialJacobianSource
-  
+
 } // end namespace itk
-  
+
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itkTransformToDeterminantOfSpatialJacobianSource.txx"
 #endif
-  
+
 #endif // end #ifndef __itkTransformToDeterminantOfSpatialJacobianSource_h

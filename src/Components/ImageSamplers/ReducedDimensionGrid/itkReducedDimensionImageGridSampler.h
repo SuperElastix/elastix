@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -86,11 +86,11 @@ namespace itk
     itkSetMacro( ReducedDimensionIndex, unsigned int );
     itkGetConstMacro( ReducedDimension, unsigned int );
     itkGetConstMacro( ReducedDimensionIndex, unsigned int );
-    
+
   protected:
 
     /** The constructor. */
-    ReducedDimensionImageGridSampler() 
+    ReducedDimensionImageGridSampler()
     {
       this->m_RequestedNumberOfSamples = 0;
     }
@@ -107,7 +107,7 @@ namespace itk
     /** The dimension to keep fixed during sampling. */
     unsigned int m_ReducedDimension;
     unsigned int m_ReducedDimensionIndex;
-            
+
   private:
 
     /** The private constructor. */

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -25,33 +25,33 @@ namespace itk
  * \brief Computes similarity between two objects to be registered
  *
  * This Class is templated over the type of the fixed and moving
- * images to be compared.  The metric here is designed for matching 
- * pixels in two images with the same exact value.  Only one value can 
- * be considered (the default is 255) and can be specified with the 
- * SetForegroundValue method.  In the computation of the metric, only 
- * foreground pixels are considered.  The metric value is given 
- * by 2*|A&B|/(|A|+|B|), where A is the foreground region in the moving 
- * image, B is the foreground region in the fixed image, & is intersection, 
- * and |.| indicates the area of the enclosed set.  The metric is 
- * described in "Morphometric Analysis of White Matter Lesions in MR 
- * Images: Method and Validation", A. P. Zijdenbos, B. M. Dawant, R. A. 
+ * images to be compared.  The metric here is designed for matching
+ * pixels in two images with the same exact value.  Only one value can
+ * be considered (the default is 255) and can be specified with the
+ * SetForegroundValue method.  In the computation of the metric, only
+ * foreground pixels are considered.  The metric value is given
+ * by 2*|A&B|/(|A|+|B|), where A is the foreground region in the moving
+ * image, B is the foreground region in the fixed image, & is intersection,
+ * and |.| indicates the area of the enclosed set.  The metric is
+ * described in "Morphometric Analysis of White Matter Lesions in MR
+ * Images: Method and Validation", A. P. Zijdenbos, B. M. Dawant, R. A.
  * Margolin, A. C. Palmer.
  *
  * This metric is especially useful when considering the similarity between
- * binary images.  Given the nature of binary images, a nearest neighbor 
+ * binary images.  Given the nature of binary images, a nearest neighbor
  * interpolator is the preferred interpolator.
  *
  * Metric values range from 0.0 (no foreground alignment) to 1.0
  * (perfect foreground alignment).  When dealing with optimizers that can
  * only minimize a metric, use the ComplementOn() method.
- * 
+ *
  *
  * \ingroup RegistrationMetrics
  * \ingroup Metrics
  */
 
-template < class TFixedImage, class TMovingImage > 
-class AdvancedKappaStatisticImageToImageMetric : 
+template < class TFixedImage, class TMovingImage >
+class AdvancedKappaStatisticImageToImageMetric :
     public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
 {
 public:
@@ -65,12 +65,12 @@ public:
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
- 
+
   /** Run-time type information (and related methods). */
   itkTypeMacro( AdvancedKappaStatisticImageToImageMetric, AdvancedImageToImageMetric );
 
   /** Typedefs from the superclass. */
-  typedef typename 
+  typedef typename
     Superclass::CoordinateRepresentationType              CoordinateRepresentationType;
   typedef typename Superclass::MovingImageType            MovingImageType;
   typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
@@ -105,7 +105,7 @@ public:
   typedef typename Superclass::ImageSamplerType           ImageSamplerType;
   typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
   typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
-  typedef typename 
+  typedef typename
     Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
   typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
   typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
@@ -123,7 +123,7 @@ public:
   /** The moving image dimension. */
   itkStaticConstMacro( MovingImageDimension, unsigned int,
     MovingImageType::ImageDimension );
-  
+
   /** Get the value for single valued optimizers. */
   virtual MeasureType GetValue( const TransformParametersType & parameters ) const;
 
@@ -139,11 +139,11 @@ public:
   virtual void ComputeGradient( void );
 
   /** This method allows the user to set the foreground value. The default value is 1.0. */
-  itkSetMacro( ForegroundValue, RealType ); 
+  itkSetMacro( ForegroundValue, RealType );
   itkGetConstReferenceMacro( ForegroundValue, RealType );
 
-  /** Set/Get whether this metric returns 2*|A&B|/(|A|+|B|) 
-   * (ComplementOff, the default) or 1.0 - 2*|A&B|/(|A|+|B|) 
+  /** Set/Get whether this metric returns 2*|A&B|/(|A|+|B|)
+   * (ComplementOff, the default) or 1.0 - 2*|A&B|/(|A|+|B|)
    * (ComplementOn). When using an optimizer that minimizes
    * metric values use ComplementOn().
    */
@@ -154,7 +154,7 @@ public:
   /** Set the precision. */
   itkSetMacro( Epsilon, RealType );
   itkGetConstReferenceMacro( Epsilon, RealType );
-   
+
 protected:
   AdvancedKappaStatisticImageToImageMetric();
   virtual ~AdvancedKappaStatisticImageToImageMetric() {};
@@ -175,20 +175,20 @@ protected:
   typedef typename Superclass::CentralDifferenceGradientFilterType  CentralDifferenceGradientFilterType;
   typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
   typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
- 
+
   /** Computes the inner product of transform Jacobian with moving image gradient.
    * The results are stored in the imageJacobian, which is supposed
    * to have the right size (same length as Jacobian's number of columns).
    */
   void EvaluateMovingImageAndTransformJacobianInnerProduct(
-    const TransformJacobianType & jacobian, 
+    const TransformJacobianType & jacobian,
     const MovingImageDerivativeType & movingImageDerivative,
     DerivativeType & innerProduct ) const;
 
   /** Compute a pixel's contribution to the measure and derivatives;
    * Called by GetValueAndDerivative().
    */
-  void UpdateValueAndDerivativeTerms( 
+  void UpdateValueAndDerivativeTerms(
     const RealType & fixedImageValue,
     const RealType & movingImageValue,
     std::size_t & fixedForegroundArea,
@@ -198,7 +198,7 @@ protected:
     const NonZeroJacobianIndicesType & nzji,
     DerivativeType & sum1,
     DerivativeType & sum2 ) const;
- 
+
 private:
   AdvancedKappaStatisticImageToImageMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented

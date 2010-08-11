@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -33,12 +33,12 @@ AdvancedRigid2DTransform():
   m_Angle = NumericTraits< TScalarType >::Zero;
   this->PrecomputeJacobianOfSpatialJacobian();
 }
- 
+
 
 // Constructor with arguments
 template<class TScalarType>
 AdvancedRigid2DTransform<TScalarType>::
-AdvancedRigid2DTransform( unsigned int spaceDimension, 
+AdvancedRigid2DTransform( unsigned int spaceDimension,
                   unsigned int parametersDimension):
   Superclass(spaceDimension,parametersDimension)
 {
@@ -72,14 +72,14 @@ void
 AdvancedRigid2DTransform<TScalarType>::
 SetMatrix(const MatrixType & matrix )
 {
-  itkDebugMacro("setting  m_Matrix  to " << matrix ); 
+  itkDebugMacro("setting  m_Matrix  to " << matrix );
   // The matrix must be orthogonal otherwise it is not
   // representing a valid rotaion in 2D space
-  typename MatrixType::InternalMatrixType test = 
+  typename MatrixType::InternalMatrixType test =
     matrix.GetVnlMatrix() * matrix.GetTranspose();
 
   const double tolerance = 1e-10;
-  if( !test.is_identity( tolerance ) ) 
+  if( !test.is_identity( tolerance ) )
     {
     itk::ExceptionObject ex(__FILE__,__LINE__,"Attempt to set a Non-Orthogonal matrix",ITK_LOCATION);
     throw ex;
@@ -107,7 +107,7 @@ AdvancedRigid2DTransform<TScalarType>
   vnl_matrix<TScalarType> r(2, 2);
   r = svd.U() * svd.V().transpose();
 
-  m_Angle = vcl_acos(r[0][0]); 
+  m_Angle = vcl_acos(r[0][0]);
 
   if(r[1][0]<0.0)
     {
@@ -116,7 +116,7 @@ AdvancedRigid2DTransform<TScalarType>
 
   if(r[1][0]-sin(m_Angle) > 0.000001)
     {
-    itkWarningMacro("Bad Rotation Matrix " << this->GetMatrix() ); 
+    itkWarningMacro("Bad Rotation Matrix " << this->GetMatrix() );
     }
 
   /** Update Jacobian of spatial Jacobian */
@@ -161,16 +161,16 @@ CloneTo( Pointer & result ) const
   result->SetTranslation( this->GetTranslation() );
 }
 
-  
-// Reset the transform to an identity transform 
+
+// Reset the transform to an identity transform
 template<class TScalarType >
 void
 AdvancedRigid2DTransform< TScalarType >::
-SetIdentity( void ) 
+SetIdentity( void )
 {
   this->Superclass::SetIdentity();
   m_Angle = NumericTraits< TScalarType >::Zero;
-  // make sure to also precompute Jacobian:  
+  // make sure to also precompute Jacobian:
   this->PrecomputeJacobianOfSpatialJacobian();
 }
 
@@ -226,10 +226,10 @@ SetParameters( const ParametersType & parameters )
 
   // Set angle
   this->SetVarAngle( parameters[0] );
- 
+
   // Set translation
   OutputVectorType translation;
-  for(unsigned int i=0; i < OutputSpaceDimension; i++) 
+  for(unsigned int i=0; i < OutputSpaceDimension; i++)
     {
     translation[i] = parameters[i+1];
     }
@@ -256,9 +256,9 @@ GetParameters( void ) const
 
   // Get the angle
   this->m_Parameters[0] = this->GetAngle();
- 
+
   // Get the translation
-  for(unsigned int i=0; i < OutputSpaceDimension; i++) 
+  for(unsigned int i=0; i < OutputSpaceDimension; i++)
     {
     this->m_Parameters[i+1] = this->GetTranslation()[i];
     }
@@ -287,11 +287,11 @@ GetJacobian( const InputPointType & p,
 
   // derivatives with respect to the angle
   j[0][0] = -sa * ( p[0] - cx ) - ca * ( p[1] - cy );
-  j[1][0] =  ca * ( p[0] - cx ) - sa * ( p[1] - cy ); 
+  j[1][0] =  ca * ( p[0] - cx ) - sa * ( p[1] - cy );
 
   // compute derivatives for the translation part
-  unsigned int blockOffset = 1;  
-  for(unsigned int dim=0; dim < OutputSpaceDimension; dim++ ) 
+  unsigned int blockOffset = 1;
+  for(unsigned int dim=0; dim < OutputSpaceDimension; dim++ )
     {
     j[ dim ][ blockOffset + dim ] = 1.0;
     }

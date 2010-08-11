@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -64,7 +64,7 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>
     if ( metricName == "CorrespondingPointsEuclideanDistanceMetric" ) count++;
   }
   if ( count == 0 ) return 0;
- 
+
   /** Check Command line options and print them to the log file. */
   elxout << "Command line options from CorrespondingPointsEuclideanDistanceMetric:" << std::endl;
   std::string check( "" );

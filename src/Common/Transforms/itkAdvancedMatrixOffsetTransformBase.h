@@ -6,7 +6,7 @@ Copyright (c) University Medical Center Utrecht. All rights reserved.
 See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
 details.
 
-This software is distributed WITHOUT ANY WARRANTY; without even 
+This software is distributed WITHOUT ANY WARRANTY; without even
 the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
@@ -23,8 +23,8 @@ PURPOSE. See the above copyright notices for more information.
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -52,7 +52,7 @@ namespace itk
  * using a center of rotation and a translation instead of an offset.
  *
  * As derived instances of this class are specializations of an affine
- * transform, any two of these transformations may be composed and the result 
+ * transform, any two of these transformations may be composed and the result
  * is an affine transformation.  However, the order is important.
  * Given two affine transformations T1 and T2, we will say that
  * "precomposing T1 with T2" yields the transformation which applies
@@ -75,12 +75,12 @@ namespace itk
  * NOutputDimensions   The number of dimensions of the output vector space.
  *
  * This class provides several methods for setting the matrix and offset
- * defining the transform. To support the registration framework, the 
+ * defining the transform. To support the registration framework, the
  * transform parameters can also be set as an Array<double> of size
- * (NInputDimension + 1) * NOutputDimension using method SetParameters(). 
+ * (NInputDimension + 1) * NOutputDimension using method SetParameters().
  * The first (NOutputDimension x NInputDimension) parameters defines the
- * matrix in row-major order (where the column index varies the fastest). 
- * The last NOutputDimension parameters defines the translation 
+ * matrix in row-major order (where the column index varies the fastest).
+ * The last NOutputDimension parameters defines the translation
  * in each dimensions.
  *
  * \ingroup Transforms
@@ -88,10 +88,10 @@ namespace itk
  */
 
 template <
-  class TScalarType=double,         // Data type for scalars 
+  class TScalarType=double,         // Data type for scalars
   unsigned int NInputDimensions=3,  // Number of dimensions in the input space
   unsigned int NOutputDimensions=3> // Number of dimensions in the output space
-class AdvancedMatrixOffsetTransformBase 
+class AdvancedMatrixOffsetTransformBase
   : public AdvancedTransform< TScalarType, NInputDimensions, NOutputDimensions >
 {
 public:
@@ -101,7 +101,7 @@ public:
     NInputDimensions, NOutputDimensions >       Superclass;
   typedef SmartPointer<Self>                    Pointer;
   typedef SmartPointer<const Self>              ConstPointer;
-  
+
   /** Run-time type information (and related methods). */
   itkTypeMacro( AdvancedMatrixOffsetTransformBase, AdvancedTransform );
 
@@ -138,7 +138,7 @@ public:
   typedef typename Superclass
     ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
   typedef typename Superclass::InternalMatrixType   InternalMatrixType;
-  
+
   /** Standard matrix type for this class. */
   typedef Matrix< TScalarType,
     itkGetStaticConstMacro( OutputSpaceDimension ),
@@ -183,7 +183,7 @@ public:
   /** Get matrix of an AdvancedMatrixOffsetTransformBase
    *
    * This method returns the value of the matrix of the
-   * AdvancedMatrixOffsetTransformBase. 
+   * AdvancedMatrixOffsetTransformBase.
    * To define an affine transform, you must set the matrix,
    * center, and translation OR the matrix and offset.
    */
@@ -221,8 +221,8 @@ public:
 
   /** Set center of rotation of an AdvancedMatrixOffsetTransformBase
    *
-   * This method sets the center of rotation of an AdvancedMatrixOffsetTransformBase 
-   * to a fixed point - for most transforms derived from this class, 
+   * This method sets the center of rotation of an AdvancedMatrixOffsetTransformBase
+   * to a fixed point - for most transforms derived from this class,
    * this point is not a "parameter" of the transform - the exception is that
    * "centered" transforms have center as a parameter during optimization.
    *
@@ -252,7 +252,7 @@ public:
   /** Get center of rotation of the AdvancedMatrixOffsetTransformBase
    *
    * This method returns the point used as the fixed
-   * center of rotation for the AdvancedMatrixOffsetTransformBase. 
+   * center of rotation for the AdvancedMatrixOffsetTransformBase.
    * To define an affine transform, you must set the matrix,
    * center, and translation OR the matrix and offset.
    */
@@ -278,7 +278,7 @@ public:
   /** Get translation component of the AdvancedMatrixOffsetTransformBase
    *
    * This method returns the translation used after rotation
-   * about the center point. 
+   * about the center point.
    * To define an affine transform, you must set the matrix,
    * center, and translation OR the matrix and offset.
    */
@@ -289,7 +289,7 @@ public:
 
   /** Set the transformation from a container of parameters.
    * The first (NOutputDimension x NInputDimension) parameters define the
-   * matrix and the last NOutputDimension parameters the translation. 
+   * matrix and the last NOutputDimension parameters the translation.
    * Offset is updated based on current center.
    */
   void SetParameters( const ParametersType & parameters );
@@ -312,7 +312,7 @@ public:
    * consists of first applying other to the source, followed by
    * self.  If pre is false or omitted, then other is post-composed
    * with self; that is the resulting transformation consists of
-   * first applying self to the source, followed by other. 
+   * first applying self to the source, followed by other.
    * This updates the Translation based on current center.
    */
   void Compose( const Self * other, bool pre = 0 );
@@ -330,29 +330,29 @@ public:
   OutputVnlVectorType TransformVector( const InputVnlVectorType & vector ) const;
   OutputCovariantVectorType TransformCovariantVector(
     const InputCovariantVectorType & vector ) const;
-  
-  /** Create inverse of an affine transformation   
-    *   
+
+  /** Create inverse of an affine transformation
+    *
     * This populates the parameters an affine transform such that
-    * the transform is the inverse of self. If self is not invertible,   
+    * the transform is the inverse of self. If self is not invertible,
     * an exception is thrown.
-    * Note that by default the inverese transform is centered at 
+    * Note that by default the inverese transform is centered at
     * the origin. If you need to compute the inverse centered at a point, p,
-    * 
+    *
     * \code
     * transform2->SetCenter( p );
     * transform1->GetInverse( transform2 );
     * \endcode
     *
-    * transform2 will now contain the inverse of transform1 and will 
-    * with its center set to p. Flipping the two statements will produce an 
-    * incorrect transform. 
+    * transform2 will now contain the inverse of transform1 and will
+    * with its center set to p. Flipping the two statements will produce an
+    * incorrect transform.
     */
   bool GetInverse( Self * inverse ) const;
 
   /** \deprecated Use GetInverse instead.
    *
-   * Method will eventually be made a protected member function. */ 
+   * Method will eventually be made a protected member function. */
   const InverseMatrixType & GetInverseMatrix( void ) const;
 
   /** Indicates that this transform is linear. That is, given two
@@ -410,7 +410,7 @@ public:
     SpatialHessianType & sh,
     JacobianOfSpatialHessianType & jsh,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
- 
+
 protected:
   /** Construct an AdvancedMatrixOffsetTransformBase object
    *
@@ -424,11 +424,11 @@ protected:
     const OutputVectorType & offset );
   AdvancedMatrixOffsetTransformBase( unsigned int outputDims,
     unsigned int paramDims );
-  AdvancedMatrixOffsetTransformBase();      
+  AdvancedMatrixOffsetTransformBase();
 
   /** Called by constructors: */
   virtual void PrecomputeJacobians(unsigned int outputDims, unsigned int paramDims);
-  
+
   /** Destroy an AdvancedMatrixOffsetTransformBase object. */
   virtual ~AdvancedMatrixOffsetTransformBase() {};
 
@@ -489,12 +489,12 @@ protected:
 
   /** (spatial) Jacobians and Hessians can mostly be precomputed by this transform.
    * Store them in these member variables.
-   * SpatialJacobian is simply m_Matrix */   
+   * SpatialJacobian is simply m_Matrix */
   NonZeroJacobianIndicesType m_NonZeroJacobianIndices;
   SpatialHessianType m_SpatialHessian;
   JacobianOfSpatialJacobianType m_JacobianOfSpatialJacobian;
   JacobianOfSpatialHessianType m_JacobianOfSpatialHessian;
-  
+
 private:
 
   AdvancedMatrixOffsetTransformBase(const Self & other);
@@ -516,7 +516,7 @@ private:
   /** Used by the GetJacobian() function which returns the
    * jacobian as an output variable. */
   mutable NonZeroJacobianIndicesType m_NonZeroJacobianIndicesTemp;
-  
+
 }; //class AdvancedMatrixOffsetTransformBase
 
 }  // namespace itk

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -29,9 +29,9 @@ namespace elastix
    * \brief The BaseComponentSE class is a base class for elastix
    * components that provides some basic functionality.
    *
-   * Most elastix component will not directly inherit from the 
+   * Most elastix component will not directly inherit from the
    * elx::BaseComponent class but from this one, since it adds
-   * some methods that most methods need anyway, such as 
+   * some methods that most methods need anyway, such as
    * Set/GetElastix, Set/GetConfiguration.
    *
    * \sa BaseComponent
@@ -64,7 +64,7 @@ public:
   /**
    * Get/Set functions for Elastix.
    * The Set-functions cannot be defined with the itkSetObjectMacro,
-   * since this class does not derive from itk::Object and 
+   * since this class does not derive from itk::Object and
    * thus does not have a ::Modified() method.
    *
    * This method checks if this instance of the class can be casted

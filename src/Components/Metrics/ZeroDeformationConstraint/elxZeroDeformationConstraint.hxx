@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -49,14 +49,14 @@ using namespace itk;
   void ZeroDeformationConstraint<TElastix>
     ::BeforeRegistration(void)
   {
-    
+
     /** Add columns for the penalty term and lagrange multipliers. */
     xout["iteration"].AddTargetCell("5:Penalty");
     xout["iteration"].AddTargetCell("6:Lagrange");
     xout["iteration"].AddTargetCell("7:Infeasibility");
     xout["iteration"].AddTargetCell("8:MaxAbsDisplacement");
 
-    /** Format the metric and stepsize as floats */     
+    /** Format the metric and stepsize as floats */
     xl::xout["iteration"]["5:Penalty"]  << std::showpoint << std::fixed;
     xl::xout["iteration"]["6:Lagrange"] << std::showpoint << std::fixed;
     xl::xout["iteration"]["7:Infeasibility"] << std::showpoint << std::fixed;
@@ -85,7 +85,7 @@ using namespace itk;
     this->m_PreviousMaximumAbsoluteDisplacement = itk::NumericTraits< double >::max();
 
     /** Get the current resolution level. */
-    unsigned int level = 
+    unsigned int level =
       ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
     /** Get and set the initial Lagrange multiplier value. */
@@ -132,7 +132,7 @@ using namespace itk;
       elxout << "Multiplying moving image derivatives by: "
         << movingImageDerivativeScales << std::endl;
     }
-    
+
   } // end BeforeEachResolution
 
   template <class TElastix>
@@ -155,14 +155,14 @@ using namespace itk;
     if ( m_CurrentIteration % this->m_NumSubIterations == 0 )
     {
       this->DetermineNewLagrangeMultipliers();
-        
+
       /** Reset ASGD current time parameter. */
       StandardGradientDescentOptimizer * ptr = dynamic_cast< StandardGradientDescentOptimizer * > ( this->GetElastix()->GetElxOptimizerBase() );
       if ( ptr != NULL )
       {
         ptr->ResetCurrentTimeToInitialTime();
       }
-      
+
       /** Check if maximum displacement decreased enough. If not update penalty term multiplier. */
       if ( this->GetCurrentMaximumAbsoluteDisplacement() > this->m_RequiredConstraintDecreaseFactor * this->m_PreviousMaximumAbsoluteDisplacement
              && this->GetCurrentMaximumAbsoluteDisplacement() > 10E-5  )
@@ -176,7 +176,7 @@ using namespace itk;
         }
       }
       this->m_PreviousMaximumAbsoluteDisplacement = this->GetCurrentMaximumAbsoluteDisplacement();
-    }    
+    }
   } // end AfterEachIteration
 
 
@@ -192,7 +192,7 @@ using namespace itk;
     m_AverageLagrangeMultiplier = 0.0;
     for ( std::vector< double >::size_type i = 0; i < this->m_CurrentLagrangeMultipliers.size(); ++i )
     {
-      this->m_CurrentLagrangeMultipliers[ i ] = vnl_math_min( 0.0f, this->m_CurrentLagrangeMultipliers[ i ] - 
+      this->m_CurrentLagrangeMultipliers[ i ] = vnl_math_min( 0.0f, this->m_CurrentLagrangeMultipliers[ i ] -
         this->m_CurrentPenaltyTermValues[ i ] * this->GetCurrentPenaltyTermMultiplier() );
       m_AverageLagrangeMultiplier += this->m_CurrentLagrangeMultipliers[ i ];
     }
@@ -207,9 +207,9 @@ using namespace itk;
 
   template <class TElastix>
   double ZeroDeformationConstraint<TElastix>
-    ::DetermineNewPenaltyTermMultiplier( const int iterationNumber ) const 
+    ::DetermineNewPenaltyTermMultiplier( const int iterationNumber ) const
   {
-    return static_cast< double > ( this->m_InitialPenaltyTermMultiplier * vcl_pow( 
+    return static_cast< double > ( this->m_InitialPenaltyTermMultiplier * vcl_pow(
       static_cast<double>( this->m_PenaltyTermMultiplierFactor ), static_cast<double> ( iterationNumber ) ) );
   } // end DetermineNewTermPenaltyMultiplier
 

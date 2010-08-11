@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -42,7 +42,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* PrintSelf *******************
  */
 
-template < class TFixedImage, class TMovingImage> 
+template < class TFixedImage, class TMovingImage>
 void
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 ::PrintSelf(std::ostream& os, Indent indent) const
@@ -60,8 +60,8 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 template < class TFixedImage, class TMovingImage >
 void
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
-::EvaluateTransformJacobianInnerProduct( 
-  const TransformJacobianType & jacobian, 
+::EvaluateTransformJacobianInnerProduct(
+  const TransformJacobianType & jacobian,
   const MovingImageDerivativeType & movingImageDerivative,
   DerivativeType & imageJacobian ) const
 {
@@ -92,7 +92,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 template < class TFixedImage, class TMovingImage >
 void
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
-::UpdateDerivativeTerms( 
+::UpdateDerivativeTerms(
   const RealType fixedImageValue,
   const RealType movingImageValue,
   const DerivativeType & imageJacobian,
@@ -143,7 +143,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* GetValue *******************
  */
 
-template <class TFixedImage, class TMovingImage> 
+template <class TFixedImage, class TMovingImage>
 typename AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>::MeasureType
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 ::GetValue( const TransformParametersType & parameters ) const
@@ -179,16 +179,16 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   {
     /** Read fixed coordinates and initialize some variables. */
     const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
-    RealType movingImageValue; 
+    RealType movingImageValue;
     MovingImagePointType mappedPoint;
 
     /** Transform point and check if it is inside the bspline support region. */
     bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
     /** Check if point is inside mask. */
-    if ( sampleOk ) 
+    if ( sampleOk )
     {
-      sampleOk = this->IsInsideMovingMask( mappedPoint );        
+      sampleOk = this->IsInsideMovingMask( mappedPoint );
     }
 
     /** Compute the moving image value and check if the point is
@@ -201,7 +201,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 
     if ( sampleOk )
     {
-      this->m_NumberOfPixelsCounted++; 
+      this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
       const RealType & fixedImageValue = static_cast<double>( (*fiter).Value().m_ImageValue );
@@ -210,7 +210,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
       sff += fixedImageValue  * fixedImageValue;
       smm += movingImageValue * movingImageValue;
       sfm += fixedImageValue  * movingImageValue;
-      if ( this->m_SubtractMean ) 
+      if ( this->m_SubtractMean )
       {
         sf += fixedImageValue;
         sm += movingImageValue;
@@ -256,7 +256,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
  * ******************* GetDerivative *******************
  */
 
-template < class TFixedImage, class TMovingImage> 
+template < class TFixedImage, class TMovingImage>
 void
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 ::GetDerivative( const TransformParametersType & parameters,
@@ -280,7 +280,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 template <class TFixedImage, class TMovingImage>
 void
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
-::GetValueAndDerivative( const TransformParametersType & parameters, 
+::GetValueAndDerivative( const TransformParametersType & parameters,
   MeasureType & value, DerivativeType & derivative ) const
 {
   itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
@@ -329,7 +329,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   {
     /** Read fixed coordinates and initialize some variables. */
     const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
-    RealType movingImageValue; 
+    RealType movingImageValue;
     MovingImagePointType mappedPoint;
     MovingImageDerivativeType movingImageDerivative;
 
@@ -337,9 +337,9 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
     bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint);
 
     /** Check if point is inside mask. */
-    if ( sampleOk ) 
+    if ( sampleOk )
     {
-      sampleOk = this->IsInsideMovingMask( mappedPoint );        
+      sampleOk = this->IsInsideMovingMask( mappedPoint );
     }
 
     /** Compute the moving image value M(T(x)) and derivative dM/dx and check if
@@ -347,13 +347,13 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
      */
     if ( sampleOk )
     {
-      sampleOk = this->EvaluateMovingImageValueAndDerivative( 
+      sampleOk = this->EvaluateMovingImageValueAndDerivative(
         mappedPoint, movingImageValue, &movingImageDerivative );
     }
 
     if ( sampleOk )
     {
-      this->m_NumberOfPixelsCounted++; 
+      this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
       const RealType & fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
@@ -362,7 +362,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
       this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
 
       /** Compute the innerproducts (dM/dx)^T (dT/dmu) and (dMask/dx)^T (dT/dmu). */
-      this->EvaluateTransformJacobianInnerProduct( 
+      this->EvaluateTransformJacobianInnerProduct(
         jacobian, movingImageDerivative, imageJacobian );
 
       /** Update some sums needed to calculate the value of NC. */
@@ -373,7 +373,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
       sm  += movingImageValue; // Only needed when m_SubtractMean == true
 
       /** Compute this pixel's contribution to the derivative terms. */
-      this->UpdateDerivativeTerms( 
+      this->UpdateDerivativeTerms(
         fixedImageValue, movingImageValue, imageJacobian, nzji,
         derivativeF, derivativeM, differential );
 

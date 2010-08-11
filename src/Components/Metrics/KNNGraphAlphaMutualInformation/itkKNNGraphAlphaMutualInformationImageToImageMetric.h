@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -64,10 +64,10 @@ namespace itk
  * "Registration of Cervical MRI Using Multifeature Mutual Information,"
  * IEEE Transactions on Medical Imaging, vol. 28, no. 9, pp. 1412 - 1421,
  * September 2009.
- * 
+ *
  * \ingroup RegistrationMetrics
  */
-  
+
 template < class TFixedImage, class TMovingImage>
 class KNNGraphAlphaMutualInformationImageToImageMetric :
   public MultiInputImageToImageMetricBase< TFixedImage, TMovingImage>
@@ -83,13 +83,13 @@ public:
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
- 
+
   /** Run-time type information (and related methods). */
   itkTypeMacro( KNNGraphAlphaMutualInformationImageToImageMetric,
     MultiInputImageToImageMetricBase );
- 
+
   /** Typedefs from the superclass. */
-  typedef typename 
+  typedef typename
     Superclass::CoordinateRepresentationType              CoordinateRepresentationType;
   typedef typename Superclass::MovingImageType            MovingImageType;
   typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
@@ -123,7 +123,7 @@ public:
   typedef typename Superclass::ImageSamplerType           ImageSamplerType;
   typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
   typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
-  typedef typename 
+  typedef typename
     Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
   typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
   typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
@@ -152,7 +152,7 @@ public:
   typedef typename Statistics::ListSampleCArray<
     MeasurementVectorType, double >                   ListSampleType;
   typedef typename ListSampleType::Pointer            ListSamplePointer;
-  
+
   /** Typedefs for trees. */
   typedef BinaryTreeBase< ListSampleType >            BinaryKNNTreeType;
   typedef ANNkDTree< ListSampleType >                 ANNkDTreeType;
@@ -242,7 +242,7 @@ public:
 
   /** Avoid division by a small number. */
   itkGetConstReferenceMacro( AvoidDivisionBy, double );
-  
+
 protected:
 
   /** Constructor. */
@@ -301,7 +301,7 @@ private:
     TransformJacobianIndicesContainerType & jacobiansIndices,
     SpatialDerivativeContainerType & spatialDerivatives ) const;
 
-  /** This function calculates the spatial derivative of the 
+  /** This function calculates the spatial derivative of the
    * featureNr feature image at the point mappedPoint.
    * \todo move this to base class.
    */

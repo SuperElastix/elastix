@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -22,22 +22,22 @@
 
 namespace itk
 {
-  
+
   /**
    * \class BinaryANNTreeSearchBase
    *
-   * \brief 
+   * \brief
    *
-   * 
+   *
    * \ingroup ANNwrap
    */
-  
+
   template < class TListSample >
   class BinaryANNTreeSearchBase :
     public BinaryTreeSearchBase< TListSample >
   {
   public:
-    
+
     /** Standard itk. */
     typedef BinaryANNTreeSearchBase     Self;
     typedef BinaryTreeSearchBase<
@@ -70,21 +70,21 @@ namespace itk
     //const BinaryTreeType * GetBinaryTree( void ) const;
 
   protected:
-    
+
     BinaryANNTreeSearchBase();
     virtual ~BinaryANNTreeSearchBase();
 
     /** Member variables. */
     typename BinaryANNTreeType::Pointer m_BinaryTreeAsITKANNType;
-    
+
   private:
-    
+
     BinaryANNTreeSearchBase( const Self& ); // purposely not implemented
     void operator=( const Self& );          // purposely not implemented
 
   }; // end class BinaryANNTreeSearchBase
-    
-    
+
+
 } // end namespace itk
 
 

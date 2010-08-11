@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -48,7 +48,7 @@ public:
   typedef SmartPointer<Self>      Pointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self ); 
+  itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( BSplineKernelFunction2, KernelFunction );
@@ -79,10 +79,10 @@ protected:
   ~BSplineKernelFunction2(){};
 
   void PrintSelf( std::ostream & os, Indent indent ) const
-  { 
+  {
     Superclass::PrintSelf( os, indent );
     os << indent << "Spline Order: " << SplineOrder << std::endl;
-  }  
+  }
 
 private:
   BSplineKernelFunction2(const Self&); //purposely not implemented
@@ -127,7 +127,7 @@ private:
     }
     else if ( absValue < 1.5 )
     {
-      return ( 9.0 - 12.0 * absValue + 4.0 * vnl_math_sqr( absValue ) ) / 8.0; 
+      return ( 9.0 - 12.0 * absValue + 4.0 * vnl_math_sqr( absValue ) ) / 8.0;
     }
     else return 0.0;
   }

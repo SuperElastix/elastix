@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -29,7 +29,7 @@ namespace itk
     ::ImageToVectorContainerFilter()
   {
     this->ProcessObject::SetNumberOfRequiredInputs( 1 );
-    
+
     OutputVectorContainerPointer output
       = dynamic_cast<OutputVectorContainerType*>( this->MakeOutput(0).GetPointer() );
 
@@ -108,7 +108,7 @@ namespace itk
       this->ProcessObject::GetInput( idx ) );
   } // end GetInput
 
-  
+
   /**
    * ******************* GetOutput *******************
    */
@@ -126,7 +126,7 @@ namespace itk
   /**
    * ******************* PrintSelf *******************
    */
-  
+
   template< class TInputImage, class TOutputVectorContainer >
     void
     ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
@@ -140,10 +140,10 @@ namespace itk
    * ******************* GenerateOutputInformation *******************
    *
    * Copy information from first input to all outputs.
-   * This is a void implementation to prevent the 
+   * This is a void implementation to prevent the
    * ProcessObject version to be called.
    *
-  
+
   template< class TInputImage, class TOutputVectorContainer >
     void
     ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >

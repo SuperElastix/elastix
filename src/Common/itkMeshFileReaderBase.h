@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -22,14 +22,14 @@ namespace itk
 {
 
   /** \brief Base exception class for IO conflicts. */
-  class MeshFileReaderException : public ExceptionObject 
+  class MeshFileReaderException : public ExceptionObject
   {
   public:
     /** Run-time information. */
     itkTypeMacro( MeshFileReaderException, ExceptionObject );
 
     /** Constructor. */
-    MeshFileReaderException(const char *file, unsigned int line, 
+    MeshFileReaderException(const char *file, unsigned int line,
                             const char* message = "Error in IO",
                             const char* loc = "Unknown") :
       ExceptionObject(file, line, message, loc)
@@ -37,9 +37,9 @@ namespace itk
     }
 
     /** Constructor. */
-    MeshFileReaderException(const std::string &file, unsigned int line, 
+    MeshFileReaderException(const std::string &file, unsigned int line,
                             const char* message = "Error in IO",
-                            const char* loc = "Unknown") : 
+                            const char* loc = "Unknown") :
       ExceptionObject(file, line, message, loc)
     {
     }
@@ -47,7 +47,7 @@ namespace itk
 
 
   /** \class MeshFileReaderBase
-   * 
+   *
    * \brief Base class for mesh readers
    *
    * A base class for classes that read a file containing
@@ -78,11 +78,11 @@ namespace itk
     /** Set/Get the filename */
     itkGetStringMacro(FileName);
     itkSetStringMacro(FileName);
-      
+
     /** Prepare the allocation of the output mesh during the first back
      * propagation of the pipeline. */
     virtual void GenerateOutputInformation(void);
-    
+
     /** Give the reader a chance to indicate that it will produce more
      * output than it was requested to produce. MeshFileReader cannot
      * currently read a portion of a mesh, so the MeshFileReader must
@@ -94,12 +94,12 @@ namespace itk
     virtual ~MeshFileReaderBase(){};
 
     /** Test whether the given filename exist and it is readable,
-     this is intended to be called before attempting to use 
+     this is intended to be called before attempting to use
      subclasses for actually reading the file. If the file
      doesn't exist or it is not readable, and exception with an
      approriate message will be thrown. */
     virtual void TestFileExistanceAndReadability();
-    
+
     std::string m_FileName;
 
   private:
@@ -117,4 +117,4 @@ namespace itk
 #endif
 
 
-#endif 
+#endif

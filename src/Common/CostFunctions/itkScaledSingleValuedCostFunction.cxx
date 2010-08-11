@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -28,14 +28,14 @@ namespace itk
   ScaledSingleValuedCostFunction::
     ScaledSingleValuedCostFunction()
   {
-  
+
     this->m_UnscaledCostFunction = 0;
-    this->m_UseScales = false;      
+    this->m_UseScales = false;
     this->m_NegateCostFunction = false;
 
   } // end constructor
 
-  
+
   /**
    * ******************** GetValue *****************************
    */
@@ -52,7 +52,7 @@ namespace itk
     {
       itkExceptionMacro(<<"Number of parameters is not like the unscaled cost function expects.");
     }
-    
+
     MeasureType returnvalue = NumericTraits<MeasureType>::Zero;
 
     if ( this->m_UseScales )
@@ -65,7 +65,7 @@ namespace itk
     {
       returnvalue = this->m_UnscaledCostFunction->GetValue(parameters);
     }
-    
+
     if ( this->GetNegateCostFunction() )
     {
       return -returnvalue;
@@ -114,7 +114,7 @@ namespace itk
     {
       derivative = -derivative;
     }
-    
+
   } // end GetDerivative
 
 
@@ -140,7 +140,7 @@ namespace itk
 
     if ( this->m_UseScales )
     {
-      
+
       ParametersType scaledParameters = parameters;
       this->ConvertScaledToUnscaledParameters(scaledParameters);
       this->m_UnscaledCostFunction->GetValueAndDerivative(scaledParameters, value, derivative);
@@ -155,13 +155,13 @@ namespace itk
     {
       this->m_UnscaledCostFunction->GetValueAndDerivative(parameters, value, derivative);
     }
-  
+
     if ( this->GetNegateCostFunction() )
     {
       value = -value;
       derivative = -derivative;
     }
-  
+
 
   } // end GetValueAndDerivative
 
@@ -180,7 +180,7 @@ namespace itk
     return this->m_UnscaledCostFunction->GetNumberOfParameters();
   } // end GetNumberOfParameters
 
-  
+
   /**
    * **************** SetScales **********************************
    */
@@ -198,7 +198,7 @@ namespace itk
     this->Modified();
   } // end SetScales
 
-  
+
   /**
    * **************** SetSquaredScales *****************************
    */
@@ -233,7 +233,7 @@ namespace itk
       {
         itkExceptionMacro(<<"Number of scales is not correct.");
       }
-    
+
       for (unsigned int i = 0; i < numberOfParameters; ++i)
       {
         parameters[i] /= scales[i];
@@ -260,7 +260,7 @@ namespace itk
       {
         itkExceptionMacro(<<"Number of scales is not correct.");
       }
-    
+
       for (unsigned int i = 0; i < numberOfParameters; ++i)
       {
         parameters[i] *= scales[i];

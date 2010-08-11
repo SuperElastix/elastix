@@ -38,7 +38,7 @@ int main( int argc, char *argv[] )
   typedef WeightFunctionType2D::WeightsType           WeightsType2D;
   typedef WeightFunctionType3D::ContinuousIndexType   ContinuousIndexType3D;
   typedef WeightFunctionType3D::WeightsType           WeightsType3D;
-  
+
   /**
    * *********** 2D TESTING ***********************************************
    */
@@ -124,7 +124,7 @@ int main( int argc, char *argv[] )
       << "% faster than our implementation." << std::endl;
     return 1;
   }
-  
+
   /**
    * *********** 3D TESTING ***********************************************
    */
@@ -232,7 +232,7 @@ int main( int argc, char *argv[] )
     std::cerr << "ERROR: wrong start index was computed." << std::endl;
     return 1;
   }
-  
+
   WeightFunction2Type2D::SizeType trueSize;
   trueSize.Fill( SplineOrder + 1 );
   if ( weight2Function2D->GetSupportSize() != trueSize )
@@ -240,7 +240,7 @@ int main( int argc, char *argv[] )
     std::cerr << "ERROR: wrong support size was computed." << std::endl;
     return 1;
   }
-  
+
   if ( weight2Function2D->GetNumberOfWeights()
     != static_cast<unsigned long>( vcl_pow(
     static_cast<float>( SplineOrder + 1 ), 2.0f ) ) )
@@ -248,7 +248,7 @@ int main( int argc, char *argv[] )
     std::cerr << "ERROR: wrong number of weights was computed." << std::endl;
     return 1;
   }
-  
+
   std::cerr << "All public functions returned valid output." << std::endl;
 
   /**
@@ -265,7 +265,7 @@ int main( int argc, char *argv[] )
   weightFunction3D->Print( std::cerr, 0 );
   std::cerr << "\n--------------------------------------------------------\n";
   weight2Function3D->Print( std::cerr, 0 );
-  
+
   /** Return a value. */
   return 0;
 

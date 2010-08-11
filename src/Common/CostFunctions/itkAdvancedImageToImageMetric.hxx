@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -32,12 +32,12 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 {
   /** don't use the default gradient image as implemented by ITK.
    * It uses a Gaussian derivative, which introduces extra smoothing,
-   * which may not always be desired. Also, when the derivatives are 
+   * which may not always be desired. Also, when the derivatives are
    * computed using Gaussian filtering, the gray-values should also be
    * blurred, to have a consistent 'image model'.
    */
   this->SetComputeGradient( false );
-  
+
   this->m_ImageSampler = 0;
   this->m_UseImageSampler = false;
   this->m_RequiredRatioOfValidSamples = 0.25;
@@ -101,7 +101,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
  * ****************** ComputeFixedImageExtrema ***************************
  */
 
-template <class TFixedImage, class TMovingImage> 
+template <class TFixedImage, class TMovingImage>
 void
 AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 ::ComputeFixedImageExtrema(
@@ -165,7 +165,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
  * ****************** ComputeMovingImageExtrema ***************************
  */
 
-template <class TFixedImage, class TMovingImage> 
+template <class TFixedImage, class TMovingImage>
 void
 AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 ::ComputeMovingImageExtrema(
@@ -228,7 +228,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
  * ****************** InitializeLimiter *****************************
  */
 
-template <class TFixedImage, class TMovingImage> 
+template <class TFixedImage, class TMovingImage>
 void
 AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 ::InitializeLimiters( void )
@@ -310,7 +310,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
  * ****************** CheckForBSplineInterpolator **********************
  */
 
-template <class TFixedImage, class TMovingImage> 
+template <class TFixedImage, class TMovingImage>
 void
 AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 ::CheckForBSplineInterpolator( void )
@@ -321,7 +321,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
    * and do evaluate the gradient using nearest neighbour interpolation.
    */
   this->m_InterpolatorIsBSpline = false;
-  BSplineInterpolatorType * testPtr = 
+  BSplineInterpolatorType * testPtr =
     dynamic_cast<BSplineInterpolatorType *>( this->m_Interpolator.GetPointer() );
   if ( testPtr )
   {
@@ -336,7 +336,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   }
 
   this->m_InterpolatorIsBSplineFloat = false;
-  BSplineInterpolatorFloatType * testPtr2 = 
+  BSplineInterpolatorFloatType * testPtr2 =
     dynamic_cast<BSplineInterpolatorFloatType *>( this->m_Interpolator.GetPointer() );
   if ( testPtr2 )
   {
@@ -363,7 +363,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
       this->m_CentralDifferenceGradientFilter->SetInput( this->m_MovingImage );
       this->m_CentralDifferenceGradientFilter->Update();
       this->m_GradientImage = this->m_CentralDifferenceGradientFilter->GetOutput();
-    } 
+    }
     else
     {
       this->m_CentralDifferenceGradientFilter = 0;
@@ -378,11 +378,11 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
  * ****************** CheckForAdvancedTransform **********************
  * Check if the transform is of type AdvancedTransform.
  * If so, we can speed up derivative calculations by only inspecting
- * the parameters in the support region of a point. 
+ * the parameters in the support region of a point.
  *
  */
 
-template <class TFixedImage, class TMovingImage> 
+template <class TFixedImage, class TMovingImage>
 void
 AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 ::CheckForAdvancedTransform( void )
@@ -402,7 +402,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   {
     this->m_TransformIsAdvanced = true;
     this->m_AdvancedTransform = testPtr;
-    itkDebugMacro( "Transform is Advanced" );    
+    itkDebugMacro( "Transform is Advanced" );
   }
 
 } // end CheckForBSplineTransform()
@@ -482,11 +482,11 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 template < class TFixedImage, class TMovingImage >
 bool
 AdvancedImageToImageMetric<TFixedImage,TMovingImage>
-::TransformPoint( 
+::TransformPoint(
   const FixedImagePointType & fixedImagePoint,
   MovingImagePointType & mappedPoint ) const
 {
-  mappedPoint = this->m_Transform->TransformPoint( fixedImagePoint );     
+  mappedPoint = this->m_Transform->TransformPoint( fixedImagePoint );
 
   /** For future use: return whether the sample is valid */
   const bool valid = true;
@@ -502,19 +502,19 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 template < class TFixedImage, class TMovingImage >
 bool
 AdvancedImageToImageMetric<TFixedImage,TMovingImage>
-::EvaluateTransformJacobian( 
+::EvaluateTransformJacobian(
   const FixedImagePointType & fixedImagePoint,
   TransformJacobianType & jacobian,
   NonZeroJacobianIndicesType & nzji) const
 {
-  /** Advanced transform: generic sparse Jacobian support */  
+  /** Advanced transform: generic sparse Jacobian support */
   this->m_AdvancedTransform->GetJacobian(
     fixedImagePoint, jacobian, nzji );
 
   /** For future use: return whether the sample is valid */
   const bool valid = true;
   return valid;
-  
+
 } // end EvaluateTransformJacobian()
 
 
@@ -523,7 +523,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
  * Check if point is inside moving mask
  */
 
-template < class TFixedImage, class TMovingImage> 
+template < class TFixedImage, class TMovingImage>
 bool
 AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 ::IsInsideMovingMask( const MovingImagePointType & point ) const
@@ -624,10 +624,10 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   /** Variables used when the transform is a B-spline transform. */
   os << indent << "Variables store the transform as an AdvancedTransform: " << std::endl;
   os << indent.GetNextIndent() << "TransformIsAdvanced: "
-    << this->m_TransformIsAdvanced << std::endl;  
+    << this->m_TransformIsAdvanced << std::endl;
   os << indent.GetNextIndent() << "AdvancedTransform: "
-    << this->m_AdvancedTransform.GetPointer() << std::endl; 
- 
+    << this->m_AdvancedTransform.GetPointer() << std::endl;
+
   /** Other variables. */
   os << indent << "Other variables of the AdvancedImageToImageMetric: " << std::endl;
   os << indent.GetNextIndent() << "RequiredRatioOfValidSamples: "

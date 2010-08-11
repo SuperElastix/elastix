@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -140,7 +140,7 @@ using namespace itk;
    *    the grayvalueimage.
    *    example: <tt>(DefaultPixelValueForGVI 0)</tt>
    *    The default is 0.
-   * 
+   *
    * The transform parameters necessary for transformix, additionally defined by this class, are:
    * \transformparameter DeformationFieldFileName: stores the name of the deformation field. \n
    *    example: <tt>(DeformationFieldFileName "defField.mhd")</tt>
@@ -333,18 +333,18 @@ public:
   void DiffuseDeformationField( void );
 
   /** Method to transform a point.
-   * This method just calls the implementation from the 
+   * This method just calls the implementation from the
    * GenericDeformationFieldRegulizer. This is necessary, since:
    * The DeformationFieldRegulizerFor is used which expects
-   * that its template argument is a BSplineDeformableTransform. This is 
+   * that its template argument is a BSplineDeformableTransform. This is
    * not the case, because we gave it a BSplineCombinationTransform.
-   * This last class has a slightly different behavior of the 
+   * This last class has a slightly different behavior of the
    * TransformPoint() method (it does not call the TransformPoint() with
    * with 5 arguments, as the BSplineDeformableTransform does).
    */
   virtual OutputPointType TransformPoint( const InputPointType  & point ) const;
 
-  /**  Method to transform a point with extra arguments. Just calls 
+  /**  Method to transform a point with extra arguments. Just calls
    * the Superclass1's implementation. Has to be present here since it is an
    * overloaded function.
    *
@@ -402,7 +402,7 @@ private:
   /** The B-spline parameters, which is going to be filled with zeros. */
   ParametersType m_BSplineParameters;
 
-  /** The internal BSplineTransform, set as a current transform in 
+  /** The internal BSplineTransform, set as a current transform in
    * the combination transform.
    */
   BSplineTransformPointer m_BSplineTransform;

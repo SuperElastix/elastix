@@ -6,7 +6,7 @@ Copyright (c) University Medical Center Utrecht. All rights reserved.
 See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
 details.
 
-This software is distributed WITHOUT ANY WARRANTY; without even 
+This software is distributed WITHOUT ANY WARRANTY; without even
 the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
@@ -63,8 +63,8 @@ namespace itk
 template < class TCoordRep = float,
   unsigned int VSpaceDimension = 2,
   unsigned int VSplineOrder = 3 >
-class ITK_EXPORT BSplineInterpolationWeightFunctionBase : 
-public FunctionBase< ContinuousIndex<TCoordRep,VSpaceDimension>, Array<double> > 
+class ITK_EXPORT BSplineInterpolationWeightFunctionBase :
+public FunctionBase< ContinuousIndex<TCoordRep,VSpaceDimension>, Array<double> >
 {
 public:
   /** Standard class typedefs. */
@@ -74,7 +74,7 @@ public:
     Array<double> >                               Superclass;
   typedef SmartPointer<Self>                      Pointer;
   typedef SmartPointer<const Self>                ConstPointer;
-  
+
   /** Run-time type information (and related methods). */
   itkTypeMacro( BSplineInterpolationWeightFunctionBase, FunctionBase );
 
@@ -122,7 +122,7 @@ public:
 
   /** Get number of weights. */
   itkGetConstMacro( NumberOfWeights, unsigned long );
-  
+
 protected:
   BSplineInterpolationWeightFunctionBase();
   ~BSplineInterpolationWeightFunctionBase() {};
@@ -157,7 +157,7 @@ protected:
   virtual void PrintSelf( std::ostream & os, Indent indent ) const;
 
   /** Member variables. */
-  unsigned long m_NumberOfWeights; 
+  unsigned long m_NumberOfWeights;
   SizeType      m_SupportSize;
   TableType     m_OffsetToIndexTable;
 
@@ -179,7 +179,7 @@ private:
    * keep track where is what.
    */
   void InitializeOffsetToIndexTable( void );
-  
+
 };
 
 } // end namespace itk

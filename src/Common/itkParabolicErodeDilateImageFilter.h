@@ -20,12 +20,12 @@ namespace itk
  * reasonably efficient. Improved versions, that are nearly
  * independent of structuring function size, are also known but
  * haven't been implemented here.
- * 
+ *
  * Parabolic structuring functions can be used as a fast alternative
  * to the "rolling ball" structuring element classically used in
  * background estimation, for example in ImageJ, have applications in
  * image sharpening and distance transform computation.
- * 
+ *
  * This class uses an internal buffer of RealType pixels for each
  * line. This line is cast to the output pixel type when written back
  * to the output image. Since the filter uses dimensional
@@ -110,7 +110,7 @@ public:
   itkGetConstReferenceMacro(UseImageSpacing, bool);
   itkBooleanMacro(UseImageSpacing);
   /** Image related typedefs. */
- 
+
 #ifdef ITK_USE_CONCEPT_CHECKING
   /** Begin concept checking */
   itkConceptMacro(SameDimension,
@@ -126,7 +126,7 @@ protected:
   ParabolicErodeDilateImageFilter();
   virtual ~ParabolicErodeDilateImageFilter() {};
   void PrintSelf(std::ostream& os, Indent indent) const;
-  
+
   /** Generate Data */
   void GenerateData( void );
   int SplitRequestedRegion(int i, int num, OutputImageRegionType& splitRegion);
@@ -137,7 +137,7 @@ protected:
   void EnlargeOutputRequestedRegion(DataObject *output);
 
   bool m_UseImageSpacing;
-  
+
 private:
   ParabolicErodeDilateImageFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented

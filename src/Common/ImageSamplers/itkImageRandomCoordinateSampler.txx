@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -25,7 +25,7 @@ namespace itk
   /**
    * ******************* Constructor ********************
    */
-  
+
   template< class TInputImage >
     ImageRandomCoordinateSampler< TInputImage > ::
     ImageRandomCoordinateSampler()
@@ -43,13 +43,13 @@ namespace itk
     this->m_UseRandomSampleRegion = false;
     this->m_SampleRegionSize.Fill( 1.0 );
 
-  } // end constructor 
+  } // end constructor
 
 
   /**
    * ******************* GenerateData *******************
    */
-  
+
   template< class TInputImage >
     void
     ImageRandomCoordinateSampler< TInputImage >
@@ -72,15 +72,15 @@ namespace itk
     InputImageIndexType largestIndex
       = smallestIndex + this->GetCroppedInputImageRegion().GetSize() - unitSize;
     InputImageContinuousIndexType smallestImageContIndex( smallestIndex );
-    InputImageContinuousIndexType largestImageContIndex( largestIndex );    
+    InputImageContinuousIndexType largestImageContIndex( largestIndex );
     InputImageContinuousIndexType smallestContIndex;
     InputImageContinuousIndexType largestContIndex;
-    this->GenerateSampleRegion( smallestImageContIndex, largestImageContIndex, 
+    this->GenerateSampleRegion( smallestImageContIndex, largestImageContIndex,
       smallestContIndex, largestContIndex );
-    
+
     /** Reserve memory for the output. */
     sampleContainer->Reserve( this->GetNumberOfSamples() );
-   
+
     /** Setup an iterator over the output, which is of ImageSampleContainerType. */
     typename ImageSampleContainerType::Iterator iter;
     typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
@@ -97,7 +97,7 @@ namespace itk
         ImageSampleValueType & sampleValue = (*iter).Value().m_ImageValue;
 
         /** Walk over the image until we find a valid point. */
-        do 
+        do
         {
           /** Generate a point in the input image region. */
           this->GenerateRandomCoordinate( smallestContIndex, largestContIndex, sampleContIndex );
@@ -132,7 +132,7 @@ namespace itk
         ImageSampleValueType & sampleValue = (*iter).Value().m_ImageValue;
 
         /** Walk over the image until we find a valid point */
-        do 
+        do
         {
           /** Check if we are not trying eternally to find a valid point. */
           ++numberOfSamplesTried;
@@ -151,23 +151,23 @@ namespace itk
           this->GenerateRandomCoordinate( smallestContIndex, largestContIndex, sampleContIndex );
           inputImage->TransformContinuousIndexToPhysicalPoint( sampleContIndex, samplePoint );
 
-        } while ( !interpolator->IsInsideBuffer( sampleContIndex ) || 
+        } while ( !interpolator->IsInsideBuffer( sampleContIndex ) ||
                   !mask->IsInside( samplePoint ) );
 
         /** Compute the value at the point. */
-        sampleValue = static_cast<ImageSampleValueType>( 
+        sampleValue = static_cast<ImageSampleValueType>(
           this->m_Interpolator->EvaluateAtContinuousIndex( sampleContIndex ) );
 
       } // end for loop
     } // end if mask
-   
+
   } // end GenerateData()
 
 
   /**
    * ******************* GenerateRandomCoordinate *******************
    */
-  
+
   template< class TInputImage >
     void
     ImageRandomCoordinateSampler< TInputImage >::
@@ -178,7 +178,7 @@ namespace itk
   {
     for ( unsigned int i = 0; i < InputImageDimension; ++i)
     {
-      randomContIndex[ i ] = static_cast<InputImagePointValueType>( 
+      randomContIndex[ i ] = static_cast<InputImagePointValueType>(
         this->m_RandomGenerator->GetUniformVariate(
         smallestContIndex[ i ], largestContIndex[ i ] ) );
     }
@@ -188,7 +188,7 @@ namespace itk
   /**
    * ******************* GenerateSampleRegion *******************
    */
-  
+
   template< class TInputImage >
     void
     ImageRandomCoordinateSampler< TInputImage >::
@@ -204,7 +204,7 @@ namespace itk
       largestContIndex = largestImageContIndex;
       return;
     }
-    /** Convert sampleRegionSize to continuous index space and 
+    /** Convert sampleRegionSize to continuous index space and
      * compute the maximum allowed value for the smallestContIndex,
      * such that a sampleregion of size SampleRegionSize still fits. */
     typedef typename InputImageContinuousIndexType::VectorType   CIndexVectorType;
@@ -213,22 +213,22 @@ namespace itk
     for (unsigned int i = 0; i < InputImageDimension; ++i)
     {
       sampleRegionSize[i] = this->GetSampleRegionSize()[i] /
-        this->GetInput()->GetSpacing()[i];            
+        this->GetInput()->GetSpacing()[i];
       maxSmallestContIndex[i] = largestImageContIndex[i] - sampleRegionSize[i];
       /** make sure it is larger than the lower bound */
-      maxSmallestContIndex[i] = vnl_math_max( maxSmallestContIndex[i], smallestImageContIndex[i] );      
-    }      
-    this->GenerateRandomCoordinate( smallestImageContIndex, maxSmallestContIndex, smallestContIndex );  
+      maxSmallestContIndex[i] = vnl_math_max( maxSmallestContIndex[i], smallestImageContIndex[i] );
+    }
+    this->GenerateRandomCoordinate( smallestImageContIndex, maxSmallestContIndex, smallestContIndex );
     largestContIndex = smallestContIndex;
-    largestContIndex += sampleRegionSize; 
-    
+    largestContIndex += sampleRegionSize;
+
   } // end GenerateSampleRegion()
 
 
   /**
    * ******************* PrintSelf *******************
    */
-  
+
   template< class TInputImage >
     void
     ImageRandomCoordinateSampler< TInputImage >

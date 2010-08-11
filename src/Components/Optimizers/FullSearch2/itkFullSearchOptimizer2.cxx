@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -36,7 +36,7 @@ namespace itk
     ::FullSearchOptimizer2()
   {
     itkDebugMacro( "Constructor" );
-    
+
     this->m_Maximize = false;
     this->m_NumberOfIterations = 100;
     this->m_CurrentIteration = 0;
@@ -44,10 +44,10 @@ namespace itk
     this->m_BestValue = 0.0;
     this->m_StopCondition = FullRangeSearched;
     this->m_Step.resize( 0 );
-    
+
   } // end Constructor
-  
-  
+
+
   /**
    * ************************* PrintSelf **************************
    */
@@ -57,7 +57,7 @@ namespace itk
     ::PrintSelf( std::ostream& os, Indent indent ) const
   {
     Superclass::PrintSelf( os, indent );
-    
+
     os << indent << "NumberOfIterations: "
       << this->m_NumberOfIterations << std::endl;
     os << indent << "CurrentIteration: "
@@ -67,10 +67,10 @@ namespace itk
     os << indent << "StopCondition: "
       << this->m_StopCondition;
     os << std::endl;
-    
+
   } // end PrintSelf
-  
-  
+
+
   /**
    * *********************** StartOptimization ********************
    */
@@ -78,14 +78,14 @@ namespace itk
   void
     FullSearchOptimizer2
     ::StartOptimization(void)
-  {   
+  {
     itkDebugMacro( "StartOptimization" );
-    
+
     this->m_CurrentIteration = 0;
     this->m_Stop = false;
 
     /** Set the initial position */
-    const unsigned int spaceDimension = 
+    const unsigned int spaceDimension =
       this->GetCostFunction()->GetNumberOfParameters();
     ParametersType initialPosition( spaceDimension );
     for ( unsigned int j = 0; j < spaceDimension; j++ )
@@ -109,10 +109,10 @@ namespace itk
     {
       this->ResumeOptimization();
     }
-      
-  } // end StartOptimization  
-  
-  
+
+  } // end StartOptimization
+
+
   /**
    * ********************** ResumeOptimization ********************
    */
@@ -120,14 +120,14 @@ namespace itk
   void
     FullSearchOptimizer2
     ::ResumeOptimization( void )
-  {   
+  {
     itkDebugMacro( "ResumeOptimization" );
-    
+
     this->m_Stop = false;
-    
+
     InvokeEvent( StartEvent() );
-    while ( ! this->m_Stop ) 
-    {   
+    while ( ! this->m_Stop )
+    {
       /** Compute the current value. */
       try
       {
@@ -135,11 +135,11 @@ namespace itk
       }
       catch( ExceptionObject& err )
       {
-        // An exception has occurred. 
+        // An exception has occurred.
         // Terminate immediately.
         this->m_StopCondition = MetricError;
         StopOptimization();
-          
+
         // Pass exception to caller
         throw err;
       }
@@ -160,7 +160,7 @@ namespace itk
 
       /** Prepare for next step */
       this->m_CurrentIteration++;
-      
+
       if( this->m_CurrentIteration >= this->m_NumberOfIterations )
       {
         this->m_StopCondition = FullRangeSearched;
@@ -169,12 +169,12 @@ namespace itk
       }
 
       this->AdvanceOneStep();
-      
+
     } // while !m_stop
-        
+
   } // end ResumeOptimization
-  
-  
+
+
   /**
    * ********************** StopOptimization **********************
    */
@@ -182,16 +182,16 @@ namespace itk
   void
     FullSearchOptimizer2
     ::StopOptimization( void )
-  {   
+  {
     itkDebugMacro( "StopOptimization" );
-    
+
     this->m_Stop = true;
     //this->SetCurrentPosition( this->GetCurrentPosition() );
     InvokeEvent( EndEvent() );
 
   } // end StopOptimization
-  
-  
+
+
   /**
    * ********************** AdvanceOneStep ************************
    */
@@ -199,27 +199,27 @@ namespace itk
   void
     FullSearchOptimizer2
     ::AdvanceOneStep( void )
-  {   
+  {
     itkDebugMacro( "AdvanceOneStep" );
-    
+
     double step = this->m_Step[ this->m_CurrentIteration ];
 
-    const unsigned int spaceDimension = 
+    const unsigned int spaceDimension =
       this->GetCostFunction()->GetNumberOfParameters();
-    
+
     ParametersType newPosition( spaceDimension );
     for ( unsigned int j = 0; j < spaceDimension; j++ )
     {
       newPosition[ j ] = step * m_BasePosition[ j ];
     }
-    
+
     this->SetCurrentPosition( newPosition );
-    
+
     //this->InvokeEvent( IterationEvent() );
-    
+
   } // end AdvanceOneStep
-  
-    
+
+
 } // end namespace itk
 
 

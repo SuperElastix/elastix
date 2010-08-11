@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -55,8 +55,8 @@ namespace itk
     typedef TInputImage                             InputImageType;
     typedef typename InputImageType::Pointer        InputImagePointer;
     typedef typename InputImageType::ConstPointer   InputImageConstPointer;
-    typedef typename InputImageType::RegionType     InputImageRegionType; 
-    typedef typename InputImageType::PixelType      InputImagePixelType; 
+    typedef typename InputImageType::RegionType     InputImageRegionType;
+    typedef typename InputImageType::PixelType      InputImagePixelType;
 
     /** Create a valid output. */
     DataObject::Pointer MakeOutput(unsigned int idx);
@@ -88,7 +88,7 @@ namespace itk
 
     /** PrintSelf. */
     void PrintSelf( std::ostream& os, Indent indent ) const;
-            
+
   private:
 
     /** The private constructor. */

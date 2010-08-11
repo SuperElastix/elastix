@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -20,7 +20,7 @@
 namespace elastix
 {
 using namespace itk;
-  
+
   /**
    * ******************* BeforeRegistration ***********************
    */
@@ -28,7 +28,7 @@ using namespace itk;
   template <class TElastix>
     void MultiResolutionRegistrationWithFeatures<TElastix>
     ::BeforeRegistration( void )
-  { 
+  {
     /** Get the components from this->m_Elastix and set them. */
     this->GetAndSetComponents();
 
@@ -36,13 +36,13 @@ using namespace itk;
     unsigned int numberOfResolutions = 3;
     this->m_Configuration->ReadParameter( numberOfResolutions, "NumberOfResolutions", 0 );
     this->SetNumberOfLevels( numberOfResolutions );
-        
+
     /** Set the FixedImageRegions to the buffered regions. */
     this->GetAndSetFixedImageRegions();
-  
+
     /** Set the fixed image interpolators. */
     this->GetAndSetFixedImageInterpolators();
-  
+
   } // end BeforeRegistration()
 
 
@@ -53,7 +53,7 @@ using namespace itk;
   template <class TElastix>
     void MultiResolutionRegistrationWithFeatures<TElastix>
     ::BeforeEachResolution( void )
-  { 
+  {
     /** Get the current resolution level. */
     unsigned int level = this->GetCurrentLevel();
 
@@ -62,8 +62,8 @@ using namespace itk;
     this->UpdateMovingMasks( level );
 
   } // end BeforeEachResolution()
-  
-  
+
+
   /**
    * *********************** GetAndSetComponents ************************
    */
@@ -114,7 +114,7 @@ using namespace itk;
       this->SetMovingImagePyramid( this->GetElastix()->
         GetElxMovingImagePyramidBase( i )->GetAsITKBaseType(), i );
     }
-     
+
     /** Set the moving image interpolators. */
     for ( unsigned int i = 0; i < this->GetElastix()->GetNumberOfInterpolators(); ++i )
     {
@@ -125,7 +125,7 @@ using namespace itk;
     /** Set the optimizer. */
     this->SetOptimizer( dynamic_cast<OptimizerType*>(
       this->GetElastix()->GetElxOptimizerBase()->GetAsITKBaseType() ) );
-    
+
     /** Set the transform. */
     this->SetTransform( this->GetElastix()->
       GetElxTransformBase()->GetAsITKBaseType() );
@@ -144,7 +144,7 @@ using namespace itk;
         itkExceptionMacro( << "The metric requires an ImageSampler, but it is not available!" );
       }
     }
-    
+
   } // end GetAndSetComponents()
 
 
@@ -224,18 +224,18 @@ using namespace itk;
   template <class TElastix>
     void MultiResolutionRegistrationWithFeatures<TElastix>
     ::UpdateFixedMasks( unsigned int level )
-  {    
+  {
     /** Use only one mask. */
     const unsigned int nrOfFixedImageMasks = 1;//this->GetElastix()->GetNumberOfFixedMasks();
 
     /** Array of bools, that remembers for each mask if erosion is wanted. */
     UseMaskErosionArrayType useMaskErosionArray;
 
-    /** Bool that remembers if mask erosion is wanted in any of the masks 
+    /** Bool that remembers if mask erosion is wanted in any of the masks
      * remains false when no masks are used.
      */
     bool useMaskErosion;
-    
+
     /** Read whether mask erosion is wanted, if any masks were supplied. */
     useMaskErosion = this->ReadMaskParameters( useMaskErosionArray,
       nrOfFixedImageMasks, "Fixed", level );
@@ -253,11 +253,11 @@ using namespace itk;
     /** Stop timer and print the elapsed time. */
     timer->StopTimer();
     elxout << "Setting the fixed masks took: "
-      << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) 
+      << static_cast<long>( timer->GetElapsedClockSec() * 1000 )
       << " ms." << std::endl;
-      
+
   } // end UpdateFixedMasks()
-  
+
 
   /**
    * ************************* UpdateMovingMasks ************************
@@ -273,15 +273,15 @@ using namespace itk;
     /** Array of bools, that remembers for each mask if erosion is wanted. */
     UseMaskErosionArrayType useMaskErosionArray;
 
-    /** Bool that remembers if mask erosion is wanted in any of the masks 
+    /** Bool that remembers if mask erosion is wanted in any of the masks
      * remains false when no masks are used.
      */
     bool useMaskErosion;
-    
+
     /** Read whether mask erosion is wanted, if any masks were supplied. */
     useMaskErosion = this->ReadMaskParameters( useMaskErosionArray,
       nrOfMovingImageMasks, "Moving", level );
-    
+
     /** Create and start timer, to time the whole mask configuration procedure. */
     TimerPointer timer = TimerType::New();
     timer->StartTimer();
@@ -295,9 +295,9 @@ using namespace itk;
     /** Stop timer and print the elapsed time. */
     timer->StopTimer();
     elxout << "Setting the moving masks took: "
-      << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) 
+      << static_cast<long>( timer->GetElapsedClockSec() * 1000 )
       << " ms." << std::endl;
-      
+
   } // end UpdateMovingMasks()
 
 

@@ -6,7 +6,7 @@ Copyright (c) University Medical Center Utrecht. All rights reserved.
 See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
 details.
 
-This software is distributed WITHOUT ANY WARRANTY; without even 
+This software is distributed WITHOUT ANY WARRANTY; without even
 the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
@@ -23,8 +23,8 @@ PURPOSE. See the above copyright notices for more information.
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -37,22 +37,22 @@ PURPOSE. See the above copyright notices for more information.
 
 namespace itk
 {
-  
+
 /** \class AdvancedTransform
  * \brief Transform maps points, vectors and covariant vectors from an input
  * space to an output space.
  *
- * This abstract class define the generic interface for a geometrical 
+ * This abstract class define the generic interface for a geometrical
  * transformation from one space to another. The class provides methods
- * for mapping points, vectors and covariant vectors from the input space 
- * to the output space. 
+ * for mapping points, vectors and covariant vectors from the input space
+ * to the output space.
  *
  * Given that transformation are not necessarily invertible, this basic
  * class does not provide the methods for back transformation. Back transform
  * methods are implemented in derived classes where appropriate.
- * 
+ *
  * \par Registration Framework Support
- * Typically a Transform class has several methods for setting its 
+ * Typically a Transform class has several methods for setting its
  * parameters. For use in the registration framework, the parameters must
  * also be represented by an array of doubles to allow communication
  * with generic optimizers. The Array of transformation parameters is set using
@@ -64,7 +64,7 @@ namespace itk
  * derivatives. The Jacobian is a matrix whose element are the partial
  * derivatives of the transformation with respect to the array of parameters
  * mu that defines the transform, evaluated at a point p: dT/dmu(p).
- * 
+ *
  * If penalty terms are included in the registration, the transforms also
  * need to implement other derivatives of T. Often, penalty terms are functions
  * of the spatial derivatives of T. Therefore, e.g. the SpatialJacobian dT/dx
@@ -77,7 +77,7 @@ namespace itk
  *
  */
 template <class TScalarType,
-  unsigned int NInputDimensions = 3, 
+  unsigned int NInputDimensions = 3,
   unsigned int NOutputDimensions = 3>
 class ITK_EXPORT AdvancedTransform
   : public Transform< TScalarType, NInputDimensions, NOutputDimensions >
@@ -90,7 +90,7 @@ public:
     NOutputDimensions >               Superclass;
   typedef SmartPointer< Self >        Pointer;
   typedef SmartPointer< const Self >  ConstPointer;
-  
+
   /** New method for creating an object using a factory. */
   itkNewMacro( Self );
 
@@ -147,17 +147,17 @@ public:
    *
    * \f[
       J=\left[ \begin{array}{cccc}
-      \frac{\partial T_{1}}{\partial \mu_{1}}(p) & 
-      \frac{\partial T_{1}}{\partial \mu_{2}}(p) & 
+      \frac{\partial T_{1}}{\partial \mu_{1}}(p) &
+      \frac{\partial T_{1}}{\partial \mu_{2}}(p) &
       \cdots &
       \frac{\partial T_{1}}{\partial \mu_{m}}(p) \\
-      \frac{\partial T_{2}}{\partial \mu_{1}}(p) & 
-      \frac{\partial T_{2}}{\partial \mu_{2}}(p) & 
+      \frac{\partial T_{2}}{\partial \mu_{1}}(p) &
+      \frac{\partial T_{2}}{\partial \mu_{2}}(p) &
       \cdots &
       \frac{\partial T_{2}}{\partial \mu_{m}}(p) \\
       \vdots & \vdots & \ddots & \vdots \\
-      \frac{\partial T_{d}}{\partial \mu_{1}}(p) & 
-      \frac{\partial T_{d}}{\partial \mu_{2}}(p) & 
+      \frac{\partial T_{d}}{\partial \mu_{1}}(p) &
+      \frac{\partial T_{d}}{\partial \mu_{2}}(p) &
       \cdots &
       \frac{\partial T_{d}}{\partial \mu_{m}}(p)
       \end{array}\right],
@@ -184,17 +184,17 @@ public:
    *
    * \f[
       sJ=\left[ \begin{array}{cccc}
-      \frac{\partial T_{1}}{\partial x_{1}}(p) & 
-      \frac{\partial T_{1}}{\partial x_{2}}(p) & 
+      \frac{\partial T_{1}}{\partial x_{1}}(p) &
+      \frac{\partial T_{1}}{\partial x_{2}}(p) &
       \cdots &
       \frac{\partial T_{1}}{\partial x_{m}}(p) \\
-      \frac{\partial T_{2}}{\partial x_{1}}(p) & 
-      \frac{\partial T_{2}}{\partial x_{2}}(p) & 
+      \frac{\partial T_{2}}{\partial x_{1}}(p) &
+      \frac{\partial T_{2}}{\partial x_{2}}(p) &
       \cdots &
       \frac{\partial T_{2}}{\partial x_{m}}(p) \\
       \vdots & \vdots & \ddots & \vdots \\
-      \frac{\partial T_{d}}{\partial x_{1}}(p) & 
-      \frac{\partial T_{d}}{\partial x_{2}}(p) & 
+      \frac{\partial T_{d}}{\partial x_{1}}(p) &
+      \frac{\partial T_{d}}{\partial x_{2}}(p) &
       \cdots &
       \frac{\partial T_{d}}{\partial x_{m}}(p)
       \end{array}\right],
@@ -205,7 +205,7 @@ public:
   virtual void GetSpatialJacobian(
     const InputPointType & ipp,
     SpatialJacobianType & sj ) const;
-  
+
   /** Compute the spatial Hessian of the transformation.
    *
    * The spatial Hessian is the vector of matrices of partial second order
@@ -214,7 +214,7 @@ public:
    *
    * \f[
       sH=\left[ \begin{array}{cc}
-      \frac{\partial^2 T_{i}}{\partial x_{1} \partial x_{1}}(p) & 
+      \frac{\partial^2 T_{i}}{\partial x_{1} \partial x_{1}}(p) &
       \frac{\partial^2 T_{i}}{\partial x_{1} \partial x_{2}}(p) \\
       \frac{\partial^2 T_{i}}{\partial x_{1} \partial x_{2}}(p) &
       \frac{\partial^2 T_{i}}{\partial x_{2} \partial x_{2}}(p) \\

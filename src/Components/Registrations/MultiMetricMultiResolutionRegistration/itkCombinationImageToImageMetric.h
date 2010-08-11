@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -20,17 +20,17 @@
 
 namespace itk
 {
-  
+
 /** \class CombinationImageToImageMetric
  * \brief Combines multiple metrics.
  *
- * This metric is meant to be used in the 
+ * This metric is meant to be used in the
  * MultiMetricMultiResolutionImageRegistrationMethod.
  *
  * NB: The first metric must be of type itk::ImageToImageMetric!
  *
  * NB: while it may seem not logical that the SetInterpolator(arg)
- * sets the interpolator in all submetrics whereas the 
+ * sets the interpolator in all submetrics whereas the
  * GetInterpolator(void) returns GetInterpolator(0) it is logical.
  * If you set the interpolator the same in all metrics, you will
  * receive the correct interpolator with GetInterpolator(0).
@@ -38,9 +38,9 @@ namespace itk
  * logical action is to return GetInterpolator(0) when GetInterpolator()
  * is invoked.
  *
- * Note: If you use Set{Transform,Interpolator etc}(0) or 
- * Set{Transform,Interpolator}(), the member variables of the 
- * superclass m_{Transform,Interpolator} are set as well. 
+ * Note: If you use Set{Transform,Interpolator etc}(0) or
+ * Set{Transform,Interpolator}(), the member variables of the
+ * superclass m_{Transform,Interpolator} are set as well.
  * So, it is not strictly necessary to reimplement the functions
  * Get{Transform,Interpolator}(), which return Get{Transform,Interpolator}(0),
  * which would result in the same as returning m_{Transform,Interpolator}
@@ -166,7 +166,7 @@ public:
   itkGetConstMacro( NumberOfMetrics, unsigned int );
 
   /** Set metric i. It may be a SingleValuedCostFunction, instead of
-   * a ImageToImageMetric, but the first one should be an 
+   * a ImageToImageMetric, but the first one should be an
    * ImageToImageMetric in all cases.
    */
   void SetMetric( SingleValuedCostFunctionType * metric, unsigned int pos );
@@ -205,12 +205,12 @@ public:
 
   /** Pass the transform to all sub metrics.  */
   virtual void SetTransform( TransformType * _arg );
-  
+
   /** Pass a transform to a specific metric.
    * Only use this if you really know what you are doing.
    *
    * In fact, in general it makes no sense to specify a different
-   * transform for every metric, because in the GetValue/GetDerivative 
+   * transform for every metric, because in the GetValue/GetDerivative
    * methods, the same set of parameters will be used in all cases.
    * Also, SetTransformParameters and GetNumberOfParameters may give
    * unpredictable results if you use this method. They only refer to
@@ -231,7 +231,7 @@ public:
 
   /** Pass the interpolator to all sub metrics. */
   virtual void SetInterpolator( InterpolatorType *_arg );
-  
+
   /** Pass an interpolator to a specific metric */
   virtual void SetInterpolator( InterpolatorType * _arg, unsigned int pos );
 
@@ -245,14 +245,14 @@ public:
   {
     return this->GetInterpolator(0);
   };
-  
+
   /** Pass the fixed image to all sub metrics. */
   virtual void SetFixedImage( const FixedImageType *_arg );
 
   /** Pass a fixed image to a specific metric */
   virtual void SetFixedImage( const FixedImageType *_arg, unsigned int pos );
 
-  /** Returns the fixedImage set in a specific metric. If the 
+  /** Returns the fixedImage set in a specific metric. If the
    * submetric is a singlevalued costfunction a zero pointer will
    * be returned */
   virtual const FixedImageType * GetFixedImage( unsigned int pos ) const;
@@ -269,7 +269,7 @@ public:
   /** Pass a fixed image mask to a specific metric */
   virtual void SetFixedImageMask( FixedImageMaskType *_arg, unsigned int pos );
 
-  /** Returns the fixedImageMask set in a specific metric. If the 
+  /** Returns the fixedImageMask set in a specific metric. If the
    * submetric is a singlevalued costfunction a zero pointer will
    * be returned */
   virtual const FixedImageMaskType * GetFixedImageMask( unsigned int pos ) const;
@@ -286,8 +286,8 @@ public:
   /** Pass a fixed image region to a specific metric. */
   virtual void SetFixedImageRegion( const FixedImageRegionType _arg, unsigned int pos );
 
-  /** Returns the fixedImageRegion set in a specific metric. If the 
-   * submetric is a singlevalued costfunction a region with size zero will 
+  /** Returns the fixedImageRegion set in a specific metric. If the
+   * submetric is a singlevalued costfunction a region with size zero will
    * be returned */
   virtual const FixedImageRegionType & GetFixedImageRegion( unsigned int pos ) const;
 
@@ -303,7 +303,7 @@ public:
   /** Pass a moving image to a specific metric */
   virtual void SetMovingImage( const MovingImageType *_arg, unsigned int pos );
 
-  /** Returns the movingImage set in a specific metric. If the 
+  /** Returns the movingImage set in a specific metric. If the
    * submetric is a singlevalued costfunction a zero pointer will
    * be returned */
   virtual const MovingImageType * GetMovingImage( unsigned int pos ) const;
@@ -320,7 +320,7 @@ public:
   /** Pass a moving image mask to a specific metric */
   virtual void SetMovingImageMask( MovingImageMaskType *_arg, unsigned int pos );
 
-  /** Returns the movingImageMask set in a specific metric. If the 
+  /** Returns the movingImageMask set in a specific metric. If the
    * submetric is a singlevalued costfunction a zero pointer will
    * be returned */
   virtual const MovingImageMaskType * GetMovingImageMask( unsigned int pos ) const;
@@ -335,10 +335,10 @@ public:
    * of pixels counted by all metrics.
    */
   virtual const unsigned long & GetNumberOfPixelsCounted( void ) const;
-  
+
   /** Pass initialization to all sub metrics. */
   virtual void Initialize( void ) throw ( ExceptionObject );
-  
+
   /**
    * Combine all sub metrics by adding them.
    */
@@ -360,8 +360,8 @@ public:
   /** Method to return the latest modified time of this object or any of its
    * cached ivars.
    */
-  virtual unsigned long GetMTime() const;  
-  
+  virtual unsigned long GetMTime() const;
+
 protected:
   CombinationImageToImageMetric();
   virtual ~CombinationImageToImageMetric() {};
@@ -374,15 +374,15 @@ protected:
   std::vector< bool >                               m_UseMetric;
   mutable std::vector< MeasureType >                m_MetricValues;
   mutable std::vector< DerivativeType >             m_MetricDerivatives;
-    
+
   /** dummy image region and derivatives */
   FixedImageRegionType        m_NullFixedImageRegion;
   DerivativeType              m_NullDerivative;
-   
+
 private:
   CombinationImageToImageMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
- 
+
 }; // end class CombinationImageToImageMetric
 
 } // end namespace itk

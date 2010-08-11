@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -31,7 +31,7 @@ namespace itk
  */
 template <class TScalarType,         // Data type for scalars (float or double)
           unsigned int NDimensions = 3>          // Number of dimensions
-class ITK_EXPORT VolumeSplineKernelTransform2 : 
+class ITK_EXPORT VolumeSplineKernelTransform2 :
                 public KernelTransform2<   TScalarType, NDimensions>
 {
 public:
@@ -40,7 +40,7 @@ public:
   typedef KernelTransform2<TScalarType, NDimensions>   Superclass;
   typedef SmartPointer<Self>                          Pointer;
   typedef SmartPointer<const Self>                    ConstPointer;
-  
+
   /** New macro for creation of through a Smart Pointer */
   itkNewMacro( Self );
 
@@ -58,28 +58,28 @@ public:
 
   /** Dimension of the domain space. */
   itkStaticConstMacro(SpaceDimension, unsigned int,Superclass::SpaceDimension);
-                              
+
   /** These (rather redundant) typedefs are needed because on SGI, typedefs
    * are not inherited */
   typedef typename Superclass::InputPointType     InputPointType;
   typedef typename Superclass::OutputPointType    OutputPointType;
   typedef typename Superclass::InputVectorType    InputVectorType;
   typedef typename Superclass::OutputVectorType   OutputVectorType;
-  typedef typename Superclass::InputCovariantVectorType  
+  typedef typename Superclass::InputCovariantVectorType
                                                   InputCovariantVectorType;
-  typedef typename Superclass::OutputCovariantVectorType 
+  typedef typename Superclass::OutputCovariantVectorType
                                                   OutputCovariantVectorType;
   typedef typename Superclass::PointsIterator     PointsIterator;
-    
+
 
 protected:
   VolumeSplineKernelTransform2() {};
   virtual ~VolumeSplineKernelTransform2() {}
-  
+
   /** These (rather redundant) typedefs are needed because on SGI, typedefs
    * are not inherited. */
   typedef typename Superclass::GMatrixType GMatrixType;
-  
+
   /** Compute G(x)
    * For the volume plate spline, this is:
    * G(x) = r(x)^3*I

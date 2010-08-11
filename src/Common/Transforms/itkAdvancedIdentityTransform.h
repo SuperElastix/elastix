@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -31,15 +31,15 @@
 
 namespace itk
 {
-  
+
 /** \class AdvancedIdentityTransform
  * \brief Implementation of an Identity Transform.
  *
  * This class defines the generic interface for an Identity Transform.
- * 
+ *
  * It will map every point to itself, every vector to itself and
  * every covariant vector to itself.
- * 
+ *
  * This class is intended to be used primarily as a default Transform
  * for initializing those classes supporting a generic Transform.
  *
@@ -63,7 +63,7 @@ public:
 		TScalarType,NDimensions,NDimensions>    								Superclass;
   typedef SmartPointer< Self >                              Pointer;
   typedef SmartPointer< const Self >                        ConstPointer;
-  
+
   /** New method for creating an object using a factory. */
   itkNewMacro(Self);
 
@@ -74,7 +74,7 @@ public:
   itkStaticConstMacro( InputSpaceDimension, unsigned int, NDimensions );
   itkStaticConstMacro( OutputSpaceDimension, unsigned int, NDimensions );
 	itkStaticConstMacro( ParametersDimension, unsigned int, 1 );
-  
+
   /** Type of the input parameters. */
   typedef  TScalarType     ScalarType;
 
@@ -89,19 +89,19 @@ public:
                 itkGetStaticConstMacro(InputSpaceDimension)>  InputVectorType;
   typedef Vector<TScalarType,
                 itkGetStaticConstMacro(OutputSpaceDimension)> OutputVectorType;
-  
+
   /** Standard covariant vector type for this class */
   typedef CovariantVector<TScalarType,
                           itkGetStaticConstMacro(InputSpaceDimension)>  InputCovariantVectorType;
   typedef CovariantVector<TScalarType,
                           itkGetStaticConstMacro(OutputSpaceDimension)> OutputCovariantVectorType;
-  
+
   /** Standard vnl_vector type for this class. */
   typedef vnl_vector_fixed<TScalarType,
                            itkGetStaticConstMacro(InputSpaceDimension)>  InputVnlVectorType;
   typedef vnl_vector_fixed<TScalarType,
                            itkGetStaticConstMacro(OutputSpaceDimension)> OutputVnlVectorType;
-  
+
   /** Standard coordinate point type for this class */
   typedef Point<TScalarType,
                 itkGetStaticConstMacro(InputSpaceDimension)> InputPointType;
@@ -112,7 +112,7 @@ public:
    * concrete inverse transform type or inheritance would be lost.*/
   typedef typename Superclass::InverseTransformBaseType InverseTransformBaseType;
   typedef typename InverseTransformBaseType::Pointer    InverseTransformBasePointer;
-  
+
 	 /** AdvancedTransform typedefs */
   typedef typename Superclass
     ::NonZeroJacobianIndicesType                    NonZeroJacobianIndicesType;
@@ -161,22 +161,22 @@ public:
    * \f[
    *
       J=\left[ \begin{array}{cccc}
-      \frac{\partial x_{1}}{\partial p_{1}} & 
-      \frac{\partial x_{2}}{\partial p_{1}} & 
+      \frac{\partial x_{1}}{\partial p_{1}} &
+      \frac{\partial x_{2}}{\partial p_{1}} &
       \cdots  & \frac{\partial x_{n}}{\partial p_{1}}\\
-      \frac{\partial x_{1}}{\partial p_{2}} & 
-      \frac{\partial x_{2}}{\partial p_{2}} & 
+      \frac{\partial x_{1}}{\partial p_{2}} &
+      \frac{\partial x_{2}}{\partial p_{2}} &
       \cdots  & \frac{\partial x_{n}}{\partial p_{2}}\\
       \vdots  & \vdots  & \ddots  & \vdots \\
-      \frac{\partial x_{1}}{\partial p_{m}} & 
-      \frac{\partial x_{2}}{\partial p_{m}} & 
+      \frac{\partial x_{1}}{\partial p_{m}} &
+      \frac{\partial x_{2}}{\partial p_{m}} &
       \cdots  & \frac{\partial x_{n}}{\partial p_{m}}
-      \end{array}\right] 
+      \end{array}\right]
    *
    * \f]
    */
   virtual const JacobianType & GetJacobian(const InputPointType  & ) const
-    { 
+    {
     return this->m_Jacobian;
     }
 
@@ -185,7 +185,7 @@ public:
     {
     return this->New().GetPointer();
     }
-  
+
   /** Indicates that this transform is linear. That is, given two
    * points P and Q, and scalar coefficients a and b, then
    *
@@ -256,7 +256,7 @@ public:
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 	{
 		sj = this->m_SpatialJacobian;
-		jsj = this->m_JacobianOfSpatialJacobian;  
+		jsj = this->m_JacobianOfSpatialJacobian;
 		nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
 	}
 
@@ -266,8 +266,8 @@ public:
     JacobianOfSpatialHessianType & jsh,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 	{
-		jsh = this->m_JacobianOfSpatialHessian;  
-		nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;  
+		jsh = this->m_JacobianOfSpatialHessian;
+		nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
 	}
 
   /** Compute both the spatial Hessian and the Jacobian of the
@@ -280,16 +280,16 @@ public:
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 	{
 		sh = this->m_SpatialHessian;
-		jsh = this->m_JacobianOfSpatialHessian;  
-		nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;  
+		jsh = this->m_JacobianOfSpatialHessian;
+		nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
 	}
 
 protected:
   AdvancedIdentityTransform():AdvancedTransform<TScalarType,NDimensions,NDimensions>(NDimensions,1)
 	{
     // The Jacobian is constant, therefore it can be initialized in the constructor.
-    this->m_Jacobian = JacobianType( NDimensions, 1 ); 
-    this->m_Jacobian.Fill(0.0); 
+    this->m_Jacobian = JacobianType( NDimensions, 1 );
+    this->m_Jacobian.Fill(0.0);
 
 		/** SpatialJacobian is also constant */
 		this->m_SpatialJacobian.SetIdentity();
@@ -308,7 +308,7 @@ protected:
 		this->m_JacobianOfSpatialHessian.resize( ParametersDimension );
 		
 		/** m_SpatialHessian is automatically initialized with zeros. */
-	} 
+	}
   virtual ~AdvancedIdentityTransform() {}
 
 private:
@@ -320,7 +320,7 @@ private:
   NonZeroJacobianIndicesType m_NonZeroJacobianIndices;
   JacobianOfSpatialJacobianType m_JacobianOfSpatialJacobian;
   JacobianOfSpatialHessianType m_JacobianOfSpatialHessian;
-  
+
 }; // end class AdvancedIdentityTransform
 
 } // end namespace itk

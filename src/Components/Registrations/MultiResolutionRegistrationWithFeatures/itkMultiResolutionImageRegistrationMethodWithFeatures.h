@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -50,7 +50,7 @@ namespace itk
  */
 
 template <typename TFixedImage, typename TMovingImage>
-class ITK_EXPORT MultiResolutionImageRegistrationMethodWithFeatures : 
+class ITK_EXPORT MultiResolutionImageRegistrationMethodWithFeatures :
   public MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>
 {
 public:
@@ -63,7 +63,7 @@ public:
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
-  
+
   /** Run-time type information (and related methods). */
   itkTypeMacro( MultiResolutionImageRegistrationMethodWithFeatures,
     MultiInputMultiResolutionImageRegistrationMethodBase );
@@ -75,7 +75,7 @@ public:
   typedef typename Superclass::FixedImageRegionPyramidType  FixedImageRegionPyramidType;
   typedef typename Superclass::MovingImageType          MovingImageType;
   typedef typename Superclass::MovingImageConstPointer  MovingImageConstPointer;
-   
+
   typedef typename Superclass::MetricType               MetricType;
   typedef typename Superclass::MetricPointer            MetricPointer;
   typedef typename Superclass::TransformType            TransformType;
@@ -92,12 +92,12 @@ public:
 
   typedef typename Superclass::TransformOutputType      TransformOutputType;
   typedef typename Superclass::TransformOutputPointer   TransformOutputPointer;
-  typedef typename 
+  typedef typename
     Superclass::TransformOutputConstPointer             TransformOutputConstPointer;
-  
+
   typedef typename Superclass::ParametersType           ParametersType;
   typedef typename Superclass::DataObjectPointer        DataObjectPointer;
-  
+
 protected:
 
   /** Constructor. */
@@ -105,16 +105,16 @@ protected:
 
   /** Destructor. */
   virtual ~MultiResolutionImageRegistrationMethodWithFeatures() {};
-  
+
   /** Function called by PreparePyramids, which checks if the user input
    * regarding the image pyramids is ok.
    */
   virtual void CheckPyramids( void ) throw (ExceptionObject);
-     
+
 private:
   MultiResolutionImageRegistrationMethodWithFeatures(const Self&); // purposely not implemented
   void operator=(const Self&); // purposely not implemented
-    
+
 }; // end class MultiResolutionImageRegistrationMethodWithFeatures
 
 

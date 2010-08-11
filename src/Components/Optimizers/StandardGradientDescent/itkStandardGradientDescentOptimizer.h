@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -26,16 +26,16 @@ namespace itk
   *
   * If \f$C(x)\f$ is a costfunction that has to be minimised, the following iterative
   * algorithm is used to find the optimal parameters \f$x\f$:
-  * 
+  *
   *     \f[ x(k+1) = x(k) - a(k) dC/dx \f]
   *
   * The gain \f$a(k)\f$ at each iteration \f$k\f$ is defined by:
   *
   *     \f[ a(k) =  a / (A + k + 1)^alpha \f].
-  * 
+  *
   * It is very suitable to be used in combination with a stochastic estimate
   * of the gradient \f$dC/dx\f$. For example, in image registration problems it is
-  * often advantageous to compute the metric derivative (\f$dC/dx\f$) on a new set 
+  * often advantageous to compute the metric derivative (\f$dC/dx\f$) on a new set
   * of randomly selected image samples in each iteration. You may set the parameter
   * \c NewSamplesEveryIteration to \c "true" to achieve this effect.
   * For more information on this strategy, you may have a look at:
@@ -44,16 +44,16 @@ namespace itk
   * "Comparison of gradient approximation techniques for optimisation of mutual information in nonrigid registration",
   * in: SPIE Medical Imaging: Image Processing,
   * Editor(s): J.M. Fitzpatrick, J.M. Reinhardt, SPIE press, 2005, vol. 5747, Proceedings of SPIE, pp. 192-203.
-  *  
+  *
   * Or:
   *
   * S. Klein, M. Staring, J.P.W. Pluim,
   * "Evaluation of Optimization Methods for Nonrigid Medical Image Registration using Mutual Information and B-Splines"
   * IEEE Transactions on Image Processing, 2007, nr. 16(12), December.
-  * 
+  *
   * This class also serves as a base class for other GradientDescent type
   * algorithms, like the AcceleratedGradientDescentOptimizer.
-  * 
+  *
   * \sa StandardGradientDescent, AcceleratedGradientDescentOptimizer
   * \ingroup Optimizers
   */
@@ -106,10 +106,10 @@ namespace itk
     virtual void StartOptimization( void );
 
     /** Set/Get the initial time. Should be >=0. This function is
-    * superfluous, since Param_A does effectively the same. 
+    * superfluous, since Param_A does effectively the same.
     * However, in inheriting classes, like the AcceleratedGradientDescent
-    * the initial time may have a different function than Param_A.  
-    * Default: 0.0 */     
+    * the initial time may have a different function than Param_A.
+    * Default: 0.0 */
     itkSetMacro( InitialTime, double );
     itkGetConstMacro( InitialTime, double );
 
@@ -118,13 +118,13 @@ namespace itk
     itkGetConstMacro( CurrentTime, double );
 
     /** Set the current time to the initial time. This can be useful
-     * to 'reset' the optimisation, for example if you changed the 
+     * to 'reset' the optimisation, for example if you changed the
      * cost function while optimisation. Be careful with this function. */
     virtual void ResetCurrentTimeToInitialTime( void )
     {
       this->m_CurrentTime = this->m_InitialTime;
     }
-     
+
   protected:
 
     StandardGradientDescentOptimizer();
@@ -134,7 +134,7 @@ namespace itk
     virtual double Compute_a( double k ) const;
 
     /** Function to update the current time
-    * This function just increments the CurrentTime by 1. 
+    * This function just increments the CurrentTime by 1.
     * Inheriting functions may implement something smarter,
     * for example, dependent on the progress */
     virtual void UpdateCurrentTime( void );

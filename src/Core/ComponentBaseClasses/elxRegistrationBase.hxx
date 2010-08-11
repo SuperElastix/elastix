@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -32,13 +32,13 @@ RegistrationBase<TElastix>
 ::ReadMaskParameters( UseMaskErosionArrayType & useMaskErosionArray,
   const unsigned int nrOfMasks, const std::string & whichMask,
   const unsigned int level ) const
-{    
+{
   /** Read whether mask erosion is wanted, if any masks were supplied. */
 
-  /** Bool that remembers if mask erosion is wanted in any of the masks 
+  /** Bool that remembers if mask erosion is wanted in any of the masks
    * remains false when no masks are used. This bool will be output.
    */
-  bool useMaskErosion = false; 
+  bool useMaskErosion = false;
 
   /** Array of bools, that remembers for each mask if erosion is wanted. */
   useMaskErosionArray.resize( nrOfMasks, false );
@@ -63,7 +63,7 @@ RegistrationBase<TElastix>
       useMaskErosionArray.clear();
       useMaskErosionArray.resize( nrOfMasks, true );
     }
-   
+
     /** Try to read an erode mask parameter given for a specified mask only:
      * (ErodeFixedMask0 "true" "false" ) for example.
      */
@@ -97,7 +97,7 @@ RegistrationBase<TElastix>
  */
 
 template <class TElastix>
-typename RegistrationBase<TElastix>::FixedMaskSpatialObjectPointer 
+typename RegistrationBase<TElastix>::FixedMaskSpatialObjectPointer
 RegistrationBase<TElastix>
 ::GenerateFixedMaskSpatialObject(
   const FixedMaskImageType * maskImage, bool useMaskErosion,
@@ -157,7 +157,7 @@ RegistrationBase<TElastix>
  */
 
 template <class TElastix>
-typename RegistrationBase<TElastix>::MovingMaskSpatialObjectPointer 
+typename RegistrationBase<TElastix>::MovingMaskSpatialObjectPointer
 RegistrationBase<TElastix>
 ::GenerateMovingMaskSpatialObject(
   const MovingMaskImageType * maskImage, bool useMaskErosion,

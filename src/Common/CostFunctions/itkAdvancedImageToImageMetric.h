@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -26,7 +26,7 @@
 
 namespace itk
 {
-  
+
 /** \class AdvancedImageToImageMetric
  *
  * \brief An extension of the ITK ImageToImageMetric. It is the intended base
@@ -41,13 +41,13 @@ namespace itk
  * \li Gray value limiters: for some metrics it is important to know the range of expected
  *   gray values in the fixed and moving image, beforehand. However, when a third order
  *   B-spline interpolator is used to interpolate the images, the interpolated values may
- *   be larger than the range of voxel values, because of so-called overshoot. The 
- *   gray-value limiters make sure this doesn't happen. 
+ *   be larger than the range of voxel values, because of so-called overshoot. The
+ *   gray-value limiters make sure this doesn't happen.
  * \li Fast implementation when a B-spline transform is used. The B-spline transform
  *   has a sparse Jacobian. The AdvancedImageToImageMetric provides functions that make
  *   it easier for inheriting metrics to exploit this fact.
  * \li MovingImageDerivativeScales: an experimental option, which allows scaling of the
- *   moving image derivatives. This is a kind of fast hack, which makes it possible to 
+ *   moving image derivatives. This is a kind of fast hack, which makes it possible to
  *   avoid transformation in one direction (x, y, or z). Do not use this functionality
  *   unless you have a good reason for it...
  * \li Some convenience functions are provided, such as the IsInsideMovingMask
@@ -120,11 +120,11 @@ public:
   /** Typedefs for the ImageSampler. */
   typedef ImageSamplerBase< FixedImageType >              ImageSamplerType;
   typedef typename ImageSamplerType::Pointer              ImageSamplerPointer;
-  typedef typename 
+  typedef typename
     ImageSamplerType::OutputVectorContainerType           ImageSampleContainerType;
-  typedef typename 
+  typedef typename
     ImageSamplerType::OutputVectorContainerPointer        ImageSampleContainerPointer;
-    
+
   /** Typedefs for Limiter support. */
   typedef LimiterFunctionBase<
     RealType, FixedImageDimension>                        FixedImageLimiterType;
@@ -164,17 +164,17 @@ public:
   };
 
   /** Inheriting classes can specify whether they use the image sampler functionality;
-   * This method allows the user to inspect this setting. */ 
+   * This method allows the user to inspect this setting. */
   itkGetConstMacro( UseImageSampler, bool );
 
   /** Set/Get the required ratio of valid samples; default 0.25.
-   * When less than this ratio*numberOfSamplesTried samples map 
+   * When less than this ratio*numberOfSamplesTried samples map
    * inside the moving image buffer, an exception will be thrown. */
   itkSetMacro( RequiredRatioOfValidSamples, double );
   itkGetConstMacro( RequiredRatioOfValidSamples, double );
 
-  /** Set/Get the Moving/Fixed limiter. Its thresholds and bounds are set by the metric. 
-   * Setting a limiter is only mandatory if GetUse{Fixed,Moving}Limiter() returns true. */ 
+  /** Set/Get the Moving/Fixed limiter. Its thresholds and bounds are set by the metric.
+   * Setting a limiter is only mandatory if GetUse{Fixed,Moving}Limiter() returns true. */
   itkSetObjectMacro( MovingImageLimiter, MovingImageLimiterType );
   itkGetConstObjectMacro( MovingImageLimiter, MovingImageLimiterType );
   itkSetObjectMacro( FixedImageLimiter, FixedImageLimiterType );
@@ -190,9 +190,9 @@ public:
   itkGetConstMacro( MovingLimitRangeRatio, double );
   itkSetMacro( FixedLimitRangeRatio, double );
   itkGetConstMacro( FixedLimitRangeRatio, double );
-  
+
   /** Inheriting classes can specify whether they use the image limiter functionality.
-   * This method allows the user to inspect this setting. */ 
+   * This method allows the user to inspect this setting. */
   itkGetConstMacro( UseFixedImageLimiter, bool );
   itkGetConstMacro( UseMovingImageLimiter, bool );
 
@@ -206,13 +206,13 @@ public:
   itkGetConstMacro( UseMovingImageDerivativeScales, bool );
   itkSetMacro( MovingImageDerivativeScales, MovingImageDerivativeScalesType );
   itkGetConstReferenceMacro( MovingImageDerivativeScales, MovingImageDerivativeScalesType );
-  
+
   /** Initialize the Metric by making sure that all the components
    *  are present and plugged together correctly.
    * \li Call the superclass' implementation
    * \li Cache the number of transform parameters
    * \li Initialize the image sampler, if used.
-   * \li Check if a B-spline interpolator has been set   
+   * \li Check if a B-spline interpolator has been set
    * \li Check if an AdvancedTransform has been set
    */
   virtual void Initialize( void ) throw ( ExceptionObject );
@@ -229,7 +229,7 @@ protected:
   void PrintSelf( std::ostream& os, Indent indent ) const;
 
   /** Protected Typedefs ******************/
-  
+
   /** Typedefs for indices and points. */
   typedef typename FixedImageType::IndexType                    FixedImageIndexType;
   typedef typename FixedImageIndexType::IndexValueType          FixedImageIndexValueType;
@@ -237,7 +237,7 @@ protected:
   typedef typename TransformType::InputPointType                FixedImagePointType;
   typedef typename TransformType::OutputPointType               MovingImagePointType;
   typedef typename InterpolatorType::ContinuousIndexType        MovingImageContinuousIndexType;
-  
+
   /** Typedefs used for computing image derivatives. */
   typedef BSplineInterpolateImageFunction<
     MovingImageType, CoordinateRepresentationType, double>      BSplineInterpolatorType;
@@ -246,11 +246,11 @@ protected:
   typedef typename BSplineInterpolatorType::CovariantVectorType MovingImageDerivativeType;
   typedef GradientImageFilter<
     MovingImageType, RealType, RealType>                        CentralDifferenceGradientFilterType;
-      
+
   /** Typedefs for support of sparse Jacobians and compact support of transformations. */
-  typedef typename 
+  typedef typename
     AdvancedTransformType::NonZeroJacobianIndicesType           NonZeroJacobianIndicesType;
-    
+
   /** Protected Variables **************/
 
   /** Variables for ImageSampler support. m_ImageSampler is mutable, because it is
@@ -264,10 +264,10 @@ protected:
   typename BSplineInterpolatorFloatType::Pointer             m_BSplineInterpolatorFloat;
   typename CentralDifferenceGradientFilterType::Pointer m_CentralDifferenceGradientFilter;
 
-  /** Variables to store the AdvancedTransform. */  
+  /** Variables to store the AdvancedTransform. */
   bool m_TransformIsAdvanced;
   typename AdvancedTransformType::Pointer           m_AdvancedTransform;
- 
+
   /** Variables for the Limiters. */
   typename FixedImageLimiterType::Pointer            m_FixedImageLimiter;
   typename MovingImageLimiterType::Pointer           m_MovingImageLimiter;
@@ -279,26 +279,26 @@ protected:
   FixedImageLimiterOutputType                        m_FixedImageMaxLimit;
   MovingImageLimiterOutputType                       m_MovingImageMinLimit;
   MovingImageLimiterOutputType                       m_MovingImageMaxLimit;
-  
+
   /** Protected methods ************** */
 
   /** Methods for image sampler support **********/
 
   /** Initialize variables related to the image sampler; called by Initialize. */
   virtual void InitializeImageSampler( void ) throw ( ExceptionObject );
-  
+
   /** Inheriting classes can specify whether they use the image sampler functionality
    * Make sure to set it before calling Initialize; default: false. */
   itkSetMacro( UseImageSampler, bool );
 
-  /** Check if enough samples have been found to compute a reliable 
+  /** Check if enough samples have been found to compute a reliable
    * estimate of the value/derivative; throws an exception if not. */
   virtual void CheckNumberOfSamples(
     unsigned long wanted, unsigned long found ) const;
-  
+
   /** Methods for image derivative evaluation support **********/
 
-  /** Initialize variables for image derivative computation; this 
+  /** Initialize variables for image derivative computation; this
    * method is called by Initialize. */
   virtual void CheckForBSplineInterpolator( void );
 
@@ -306,7 +306,7 @@ protected:
    * Checks if the point lies within the moving image buffer (bool return).
    * If no gradient is wanted, set the gradient argument to 0.
    * If a BSplineInterpolationFunction is used, this class obtain
-   * image derivatives from the BSpline interpolator. Otherwise, 
+   * image derivatives from the BSpline interpolator. Otherwise,
    * image derivatives are computed using nearest neighbor interpolation
    * of a precomputed (central difference) gradient image. */
   virtual bool EvaluateMovingImageValueAndDerivative(
@@ -323,41 +323,41 @@ protected:
    * This function also checks if mapped point is within support region of
    * the transform. It returns true if so, and false otherwise.
    */
-  virtual bool TransformPoint( 
+  virtual bool TransformPoint(
     const FixedImagePointType & fixedImagePoint,
     MovingImagePointType & mappedPoint ) const;
- 
+
   /** This function returns a reference to the transform Jacobians.
    * This is either a reference to the full TransformJacobian or
-   * a reference to a sparse Jacobians. 
+   * a reference to a sparse Jacobians.
    * The m_NonZeroJacobianIndices contains the indices that are nonzero.
    * The length of NonZeroJacobianIndices is set in the CheckForAdvancedTransform
-   * function. */ 
+   * function. */
   virtual bool EvaluateTransformJacobian(
     const FixedImagePointType & fixedImagePoint,
     TransformJacobianType & jacobian,
     NonZeroJacobianIndicesType & nzji ) const;
-  
+
   /** Convenience method: check if point is inside the moving mask. *****************/
   virtual bool IsInsideMovingMask( const MovingImagePointType & point ) const;
 
   /** Methods for the support of gray value limiters. ***************/
 
-  /** Compute the extrema of fixed image over a region 
+  /** Compute the extrema of fixed image over a region
    * Initializes the m_Fixed[True]{Max,Min}[Limit]
    * This method is called by InitializeLimiters() and uses the FixedLimitRangeRatio */
   virtual void ComputeFixedImageExtrema(
     const FixedImageType * image,
-    const FixedImageRegionType & region );   
+    const FixedImageRegionType & region );
 
   /** Compute the extrema of the moving image over a region
    * Initializes the m_Moving[True]{Max,Min}[Limit]
    * This method is called by InitializeLimiters() and uses the MovingLimitRangeRatio; */
   virtual void ComputeMovingImageExtrema(
     const MovingImageType * image,
-    const MovingImageRegionType & region );   
+    const MovingImageRegionType & region );
 
-  /** Initialize the {Fixed,Moving}[True]{Max,Min}[Limit] and the {Fixed,Moving}ImageLimiter 
+  /** Initialize the {Fixed,Moving}[True]{Max,Min}[Limit] and the {Fixed,Moving}ImageLimiter
    * Only does something when Use{Fixed,Moving}Limiter is set to true; */
   virtual void InitializeLimiters( void );
 
@@ -365,7 +365,7 @@ protected:
    * Make sure to set it before calling Initialize; default: false. */
   itkSetMacro( UseFixedImageLimiter, bool );
   itkSetMacro( UseMovingImageLimiter, bool );
-    
+
 private:
   AdvancedImageToImageMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
@@ -379,7 +379,7 @@ private:
   double  m_RequiredRatioOfValidSamples;
   bool    m_UseMovingImageDerivativeScales;
   MovingImageDerivativeScalesType m_MovingImageDerivativeScales;
-   
+
 }; // end class AdvancedImageToImageMetric
 
 } // end namespace itk

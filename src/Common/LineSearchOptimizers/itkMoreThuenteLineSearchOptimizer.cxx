@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -23,7 +23,7 @@ namespace itk
 {
 
 
-  /** 
+  /**
    * ****************** Constructor *****************************
    */
 
@@ -41,17 +41,17 @@ namespace itk
     this->m_IntervalTolerance = std::numeric_limits<double>::epsilon();
     this->SetMinimumStepLength(1e-20);
     this->SetMaximumStepLength(1e20);
-    
+
     this->InitializeLineSearch();
 
   } // end constructor
 
 
-  /** 
+  /**
    * *************** SetInitialValue *****************************
    */
 
-  void 
+  void
     MoreThuenteLineSearchOptimizer::
     SetInitialValue(MeasureType value)
   {
@@ -60,12 +60,12 @@ namespace itk
     this->Modified();
   } // end SetInitialValue
 
-  
-  /** 
+
+  /**
    * *************** SetInitialDerivative *****************************
    */
 
-  void 
+  void
     MoreThuenteLineSearchOptimizer::
     SetInitialDerivative(const DerivativeType & derivative)
   {
@@ -75,11 +75,11 @@ namespace itk
   } // end SetInitialDerivative
 
 
-  /** 
+  /**
    * *************** GetCurrentValueAndDerivative *********************
    */
 
-  void 
+  void
     MoreThuenteLineSearchOptimizer::
     GetCurrentValueAndDerivative(
       MeasureType & value, DerivativeType & derivative) const
@@ -87,22 +87,22 @@ namespace itk
     value = m_f;
     derivative = m_g;
   } // end GetCurrentValueAndDerivative
-    
-  
-  /** 
+
+
+  /**
    * ************************ GetCurrentDerivative *********************
    */
 
-  void 
+  void
     MoreThuenteLineSearchOptimizer::
     GetCurrentDerivative(
       DerivativeType & derivative) const
   {
     derivative = m_g;
   } // end GetCurrentValueAndDerivative
-  
 
-  /** 
+
+  /**
    * ************************ GetCurrentValue *********************
    */
 
@@ -112,9 +112,9 @@ namespace itk
   {
     return m_f;
   } // end GetCurrentValueAndDerivative
-  
 
-  /** 
+
+  /**
    * ************ GetCurrentDirectionalDerivative *********************
    */
 
@@ -126,16 +126,16 @@ namespace itk
   } // end GetCurrentDirectionalDerivative
 
 
-  /** 
+  /**
    * ************************** StartOptimization *********************
    */
 
-  void 
+  void
     MoreThuenteLineSearchOptimizer::
     StartOptimization(void)
   {
     this->CheckSettings();
-            
+
     this->SetCurrentPosition( this->GetInitialPosition() );
     this->GetInitialValueAndDerivative();
     this->m_dg = this->DirectionalDerivative( this->m_g );
@@ -149,7 +149,7 @@ namespace itk
       this->m_StopCondition = AscentSearchDirection;
       this->StopOptimization();
     }
-    
+
     while (! this->m_Stop)
     {
 
@@ -171,19 +171,19 @@ namespace itk
       this->ForceSufficientDecreaseInIntervalWidth();
 
     } // end while
-        
+
 
   } // end StartOptimization
 
-  
+
   /**
    * ******************** StopOptimization******************************
-   */ 
+   */
 
   void
     MoreThuenteLineSearchOptimizer::
     StopOptimization(void)
-  { 
+  {
     this->m_Stop = true;
     this->InvokeEvent( EndEvent() );
   } // end StopOptimization
@@ -191,7 +191,7 @@ namespace itk
 
   /**
    * ******************** CheckSettings *********************************
-   */ 
+   */
 
   int
     MoreThuenteLineSearchOptimizer::
@@ -202,7 +202,7 @@ namespace itk
       itkExceptionMacro(<<"CostFunction has not been set!");
     }
 
-    const unsigned int numberOfParameters = 
+    const unsigned int numberOfParameters =
       this->GetCostFunction()->GetNumberOfParameters();
 
     if ( this->GetInitialPosition().GetSize() != numberOfParameters )
@@ -214,12 +214,12 @@ namespace itk
     {
       itkExceptionMacro(<<"LineSearchDirection has incorrect dimension!");
     }
-     
+
     if (this->GetMinimumStepLength() <= 0. )
     {
       itkExceptionMacro(<<"MinimumStepLength must be higher than zero!");
     }
-    
+
     if (this->GetMinimumStepLength() > this->GetMaximumStepLength() )
     {
       itkExceptionMacro(<<"MinimumStepLength must be smaller than MaximumStepLength!");
@@ -234,11 +234,11 @@ namespace itk
   }  // end CheckSettings
 
 
-  /** 
+  /**
    * *************** GetInitialValueAndDerivative *********************
    */
-  
-  void 
+
+  void
     MoreThuenteLineSearchOptimizer::
     GetInitialValueAndDerivative(void)
   {
@@ -274,7 +274,7 @@ namespace itk
 
         this->m_StopCondition = MetricError;
         //this->StopOptimization(); //not here since no start event has been generated yet
-        
+
         /** Any user provided initial values/derivatives may not be
         * valid anymore */
         this->m_InitialDerivativeProvided = false;
@@ -288,7 +288,7 @@ namespace itk
 
     /** Any user provided initial values/derivatives are not
      * valid anymore */
-     
+
     this->m_InitialDerivativeProvided = false;
     this->m_InitialValueProvided = false;
 
@@ -297,12 +297,12 @@ namespace itk
 
   /**
    * ***************** InitializeLineSearch ******************************
-   * 
+   *
    * Set some member variables to their initial values.
    * Assumes m_f and m_dg have been set already.
-   */ 
+   */
 
-  void 
+  void
     MoreThuenteLineSearchOptimizer::
     InitializeLineSearch(void)
   {
@@ -312,7 +312,7 @@ namespace itk
     this->m_SufficientDecreaseConditionSatisfied = false;
     this->m_CurvatureConditionSatisfied = false;
     this->m_CurrentStepLength = 0.0;
-      
+
     this->m_finit = this->m_f;
     this->m_fx = this->m_finit;
     this->m_fy = this->m_finit;
@@ -330,17 +330,17 @@ namespace itk
     this->m_brackt = false;
     this->m_stage1 = true;
     this->m_SafeGuardedStepFailed = false;
-    
+
   } // end InitializeLineSearch
 
 
-  /** 
+  /**
    * *************** UpdateIntervalMinimumAndMaximum ********************
    *
    * Set the minimum and maximum steps to correspond to the present
    * interval of uncertainty
    */
-  
+
   void
     MoreThuenteLineSearchOptimizer::
     UpdateIntervalMinimumAndMaximum(void)
@@ -361,8 +361,8 @@ namespace itk
 
   } // end UpdateIntervalMinimumAndMaximum
 
-  
-  /** 
+
+  /**
    * ************************* BoundStep ********************************
    *
    * Force a step to be within the bounds MinimumStepLength and
@@ -378,14 +378,14 @@ namespace itk
     } // end BoundStep
 
 
-  /** 
+  /**
    * ******************** PrepareForUnusualTermination ********************
    *
    * If an unusual termination is to occur then let m_step be the lowest
    * point obtained so far
    */
 
-  void 
+  void
     MoreThuenteLineSearchOptimizer::
     PrepareForUnusualTermination(void)
   {
@@ -404,7 +404,7 @@ namespace itk
   } // end PrepareForUnusualTermination
 
 
-  /** 
+  /**
    * ***************** ComputeCurrentValueAndDerivative ********************
    *
    * Ask the cost function to compute m_f and m_g at the current position.
@@ -427,14 +427,14 @@ namespace itk
     }
   } // end ComputeCurrentValueAndDerivative
 
-  
-  /** 
+
+  /**
    * ************************** TestConvergence ****************************
    *
    * Test for convergence.
    */
-  
-  void 
+
+  void
     MoreThuenteLineSearchOptimizer::
     TestConvergence(bool & stop)
   {
@@ -456,7 +456,7 @@ namespace itk
     }
 
     if ( step == this->GetMaximumStepLength()
-         && this->m_SufficientDecreaseConditionSatisfied 
+         && this->m_SufficientDecreaseConditionSatisfied
          && this->m_dg <= this->m_dgtest )
     {
       this->m_StopCondition = StepTooLarge;
@@ -464,7 +464,7 @@ namespace itk
     }
 
     if ( step == this->GetMinimumStepLength()
-         && ( !(this->m_SufficientDecreaseConditionSatisfied) 
+         && ( !(this->m_SufficientDecreaseConditionSatisfied)
            || this->m_dg >= this->m_dgtest) )
     {
       this->m_StopCondition = StepTooSmall;
@@ -495,7 +495,7 @@ namespace itk
   } // end TestConvergence
 
 
-  /** 
+  /**
    * ****************** ComputeNewStepAndInterval ************************
    *
    * Update the interval of uncertainty and compute the new step
@@ -507,7 +507,7 @@ namespace itk
   {
 
     int returncode = 0;
-    
+
     /** In the first stage we seek a step for which the modified
      * function has a nonpositive value and nonnegative derivative. */
 
@@ -528,8 +528,8 @@ namespace itk
     * derivative, and if a lower function value has been
     * obtained but the decrease is not sufficient. */
 
-    if ( this->m_stage1 
-         && this->m_f <= this->m_fx 
+    if ( this->m_stage1
+         && this->m_f <= this->m_fx
          && !(this->m_SufficientDecreaseConditionSatisfied)   )
     {
       /* Define the modified function and derivative values. */
@@ -583,7 +583,7 @@ namespace itk
   } //end ComputeNewStepAndInterval
 
 
-  /** 
+  /**
    * ************** ForceSufficientDecreaseInIntervalWidth ******************
    *
    * Force a sufficient decrease in the size of the interval of uncertainty
@@ -597,7 +597,7 @@ namespace itk
     {
       const double & stx = this->m_stepx;
       const double & sty = this->m_stepy;
-      
+
       if ( vnl_math_abs(sty - stx) >= .66 * this->m_width1 )
       {
          this->m_step = stx + .5 * (sty - stx);
@@ -609,13 +609,13 @@ namespace itk
   } // end ForceSufficientDecreaseInIntervalWidth
 
 
-  /** 
+  /**
    * ************************** SafeGuardedStep ****************************
    *
    * Advance a step along the line search direction and update
-   * the interval of uncertainty. Returns 0 if an error has occurred. 
+   * the interval of uncertainty. Returns 0 if an error has occurred.
    */
-  
+
   int
     MoreThuenteLineSearchOptimizer::
     SafeGuardedStep(
@@ -628,7 +628,7 @@ namespace itk
 
     /** This function is largely just a copy of the following function
      * taken from netlib/lbfgs.c */
-    
+
     /** Original documentation: */
 
     /**    void mcstep_(stx, fx, dx, sty, fy, dy, stp, fp, dp,
@@ -640,7 +640,7 @@ namespace itk
     */
 
     /*     SUBROUTINE MCSTEP */
-    
+
     /*     THE PURPOSE OF MCSTEP IS TO COMPUTE A SAFEGUARDED STEP FOR */
     /*     A LINESEARCH AND TO UPDATE AN INTERVAL OF UNCERTAINTY FOR */
     /*     A MINIMIZER OF THE FUNCTION. */
@@ -695,7 +695,7 @@ namespace itk
     /*     ARGONNE NATIONAL LABORATORY. MINPACK PROJECT. JUNE 1983 */
     /*     JORGE J. MORE', DAVID J. THUENTE */
 
-    
+
     /** The info variable is now replaced by the returncode. */
     /** The variables are no longer passed as pointers, but by reference. */
 
@@ -705,14 +705,14 @@ namespace itk
     /* Local variables */
     double sgnd, stpc, stpf, stpq, p, q, gamma, r, s, theta;
     bool bound;
-    
+
     int returncode = 0;
 
     /* CHECK THE INPUT PARAMETERS FOR ERRORS. */
 
-    if ( (brackt && ( stp <= vnl_math_min(stx,sty) 
+    if ( (brackt && ( stp <= vnl_math_min(stx,sty)
            || stp >= vnl_math_max(stx,sty) ))
-         || dx * (stp - stx) >= 0. 
+         || dx * (stp - stx) >= 0.
          || stpmax < stpmin   )
     {
       return returncode;
@@ -907,7 +907,7 @@ namespace itk
       fy = fp;
       dy = dp;
     }
-    else 
+    else
     {
       if (sgnd < 0.)
       {
@@ -941,7 +941,7 @@ namespace itk
 
     return returncode;
 
-  } // end SafeGuardedStep 
+  } // end SafeGuardedStep
 
 
 

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -21,7 +21,7 @@
 
 namespace itk
 {
-  
+
 /** \class ImageToImageMetricWithFeatures
  * \brief Computes similarity between regions of two images.
  *
@@ -47,9 +47,9 @@ public:
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( ImageToImageMetricWithFeatures, AdvancedImageToImageMetric );
-  
+
   /** Typedefs from the superclass. */
-  typedef typename 
+  typedef typename
     Superclass::CoordinateRepresentationType              CoordinateRepresentationType;
   typedef typename Superclass::MovingImageType            MovingImageType;
   typedef typename Superclass::MovingImagePixelType       MovingImagePixelType;
@@ -83,12 +83,12 @@ public:
   typedef typename Superclass::ImageSamplerType           ImageSamplerType;
   typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
   typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
-  typedef typename 
+  typedef typename
     Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
   typedef typename Superclass::InternalMaskPixelType      InternalMaskPixelType;
   typedef typename
     Superclass::InternalMovingImageMaskType               InternalMovingImageMaskType;
-  typedef typename 
+  typedef typename
     Superclass::MovingImageMaskInterpolatorType           MovingImageMaskInterpolatorType;
   typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
   typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
@@ -96,7 +96,7 @@ public:
     Superclass::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
   typedef typename
     Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
-  
+
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
     FixedImageType::ImageDimension );
@@ -104,7 +104,7 @@ public:
   /** The moving image dimension. */
   itkStaticConstMacro( MovingImageDimension, unsigned int,
     MovingImageType::ImageDimension );
- 
+
   /** Typedefs for the feature images. */
   typedef TFixedFeatureImage                                FixedFeatureImageType;
   typedef typename FixedFeatureImageType::Pointer           FixedFeatureImagePointer;
@@ -193,7 +193,7 @@ public:
 
   /** Initialize the metric. */
   virtual void Initialize( void ) throw ( ExceptionObject );
- 
+
 protected:
   ImageToImageMetricWithFeatures();
   virtual ~ImageToImageMetricWithFeatures() {};
@@ -206,7 +206,7 @@ protected:
   typedef typename Superclass::MovingImagePointType       MovingImagePointType;
   typedef typename Superclass::MovingImageDerivativeType  MovingImageDerivativeType;
   typedef typename Superclass::MovingImageContinuousIndexType  MovingImageContinuousIndexType;
-  
+
   /** Member variables. */
   unsigned int                          m_NumberOfFixedFeatureImages;
   unsigned int                          m_NumberOfMovingFeatureImages;
@@ -219,7 +219,7 @@ protected:
   bool                                  m_FeatureInterpolatorsAreBSpline;
   BSplineFeatureInterpolatorVectorType  m_MovingFeatureBSplineInterpolators;
 
-  /** Initialize variables for image derivative computation; this 
+  /** Initialize variables for image derivative computation; this
    * method is called by Initialize.
    */
   virtual void CheckForBSplineFeatureInterpolators( void );
@@ -227,7 +227,7 @@ protected:
 private:
   ImageToImageMetricWithFeatures(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
-  
+
 }; // end class ImageToImageMetricWithFeatures
 
 } // end namespace itk

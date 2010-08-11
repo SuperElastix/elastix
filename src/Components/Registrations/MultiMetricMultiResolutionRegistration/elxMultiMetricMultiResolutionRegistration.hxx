@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -20,7 +20,7 @@
 namespace elastix
 {
 using namespace itk;
-  
+
 /**
  * ******************* BeforeRegistration ***********************
  */
@@ -29,7 +29,7 @@ template <class TElastix>
 void
 MultiMetricMultiResolutionRegistration<TElastix>
 ::BeforeRegistration( void )
-{ 
+{
   /** Get the components from this->m_Elastix and set them. */
   this->SetComponents();
 
@@ -91,19 +91,19 @@ template <class TElastix>
 void
 MultiMetricMultiResolutionRegistration<TElastix>
 ::AfterEachIteration( void )
-{ 
+{
   /** Print the submetric values and gradients to xout["iteration"]. */
   const unsigned int nrOfMetrics = this->GetCombinationMetric()->GetNumberOfMetrics();
   for ( unsigned int i = 0; i < nrOfMetrics; ++i )
   {
     std::ostringstream makestring1;
     makestring1 << "Metric" << i;
-    xl::xout["iteration"][ makestring1.str().c_str() ] << 
+    xl::xout["iteration"][ makestring1.str().c_str() ] <<
       this->GetCombinationMetric()->GetMetricValue(i);
 
     std::ostringstream makestring2;
     makestring2 << "||Gradient" << i << "||";
-    xl::xout["iteration"][ makestring2.str().c_str() ] << 
+    xl::xout["iteration"][ makestring2.str().c_str() ] <<
       this->GetCombinationMetric()->GetMetricDerivative(i).magnitude();
   }
 
@@ -118,7 +118,7 @@ template <class TElastix>
 void
 MultiMetricMultiResolutionRegistration<TElastix>
 ::BeforeEachResolution( void )
-{ 
+{
   /** Get the current resolution level. */
   unsigned int level = this->GetCurrentLevel();
 
@@ -161,7 +161,7 @@ template <class TElastix>
 void
 MultiMetricMultiResolutionRegistration<TElastix>
 ::SetComponents( void )
-{ 
+{
   /** Get the component from this->GetElastix() (as elx::...BaseType *),
    * cast it to the appropriate type and set it in 'this'.
    */
@@ -223,10 +223,10 @@ MultiMetricMultiResolutionRegistration<TElastix>
         /** When a different fixed image pyramid is used for each metric,
          * using one sampler for all metrics makes no sense.
          */
-        if ( this->GetElastix()->GetElxFixedImagePyramidBase( i ) )            
+        if ( this->GetElastix()->GetElxFixedImagePyramidBase( i ) )
         {
-          xl::xout["error"] 
-          << "ERROR: An ImageSamper for metric " 
+          xl::xout["error"]
+          << "ERROR: An ImageSamper for metric "
             << i
             << " must be provided!" << std::endl;
           itkExceptionMacro( << "Not enough ImageSamplers provided!" );
@@ -237,13 +237,13 @@ MultiMetricMultiResolutionRegistration<TElastix>
         {
           this->GetElastix()->GetElxMetricBase( i )->SetAdvancedMetricImageSampler(
             this->GetElastix()->GetElxImageSamplerBase( 0 )->GetAsITKBaseType() );
-        } 
+        }
         else
         {
           xl::xout["error"] << "ERROR: No ImageSampler has been specified." << std::endl;
           itkExceptionMacro( << "One of the metrics requires an ImageSampler, but it is not available!" );
         }
-      } 
+      }
 
     } // if sampler required by metric
   } // for loop over metrics
@@ -259,7 +259,7 @@ template <class TElastix>
 void
 MultiMetricMultiResolutionRegistration<TElastix>
 ::UpdateFixedMasks( unsigned int level )
-{    
+{
   /** some shortcuts */
   const unsigned int nrOfMetrics
     = this->GetElastix()->GetNumberOfMetrics();
@@ -290,15 +290,15 @@ MultiMetricMultiResolutionRegistration<TElastix>
   if (  ( ( nrOfFixedImages == 1 ) || ( nrOfFixedMasks == 0 ) )
     && ( nrOfFixedMasks <= 1 )
     && ( (nrOfFixedImagePyramids == 1) || !useMaskErosion || (nrOfFixedMasks == 0 ) )   )
-  {      
-    /** 1 image || nomask, <=1 mask, 1 pyramid || noerosion || nomask: 
+  {
+    /** 1 image || nomask, <=1 mask, 1 pyramid || noerosion || nomask:
      * --> we can use one mask for all metrics! (or no mask at all).
      */
-    FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject( 
+    FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject(
       this->GetElastix()->GetFixedMask(), useMaskErosion,
       this->GetFixedImagePyramid(), level );
     this->GetCombinationMetric()->SetFixedImageMask( fixedMask );
-  } 
+  }
   else if ( ( nrOfFixedImages == 1 ) && ( nrOfFixedMasks == 1 ) )
   {
     /** 1 image, 1 mask, erosion && multiple pyramids
@@ -307,8 +307,8 @@ MultiMetricMultiResolutionRegistration<TElastix>
      * different pyramid settings.
      */
     for ( unsigned int i = 0; i < nrOfMetrics; ++i )
-    { 
-      FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject( 
+    {
+      FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject(
         this->GetElastix()->GetFixedMask(), useMaskErosion,
         this->GetFixedImagePyramid( i ), level );
       this->GetCombinationMetric()->SetFixedImageMask( fixedMask, i );
@@ -317,7 +317,7 @@ MultiMetricMultiResolutionRegistration<TElastix>
   else
   {
     /** All other cases. Note that the number of pyramids should equal 1 or
-     * should equal the number of metrics. 
+     * should equal the number of metrics.
      * Set each supplied mask in its corresponding metric, possibly after erosion.
      * If more metrics than masks are present, the last metrics will not use a mask.
      * If less metrics than masks are present, the last masks will be ignored.
@@ -334,7 +334,7 @@ MultiMetricMultiResolutionRegistration<TElastix>
       {
         pyramid_i = this->GetFixedImagePyramid( i );
       }
-      FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject( 
+      FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject(
         this->GetElastix()->GetFixedMask( i ), useMask_i, pyramid_i, level );
       this->GetCombinationMetric()->SetFixedImageMask( fixedMask, i );
     }
@@ -343,7 +343,7 @@ MultiMetricMultiResolutionRegistration<TElastix>
   /** Stop timer and print the elapsed time. */
   timer->StopTimer();
   elxout << "Setting the fixed masks took: "
-    << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) 
+    << static_cast<long>( timer->GetElapsedClockSec() * 1000 )
     << " ms." << std::endl;
 
 } // end UpdateFixedMasks()
@@ -371,7 +371,7 @@ MultiMetricMultiResolutionRegistration<TElastix>
   /** Array of bools, that remembers for each mask if erosion is wanted. */
   UseMaskErosionArrayType useMaskErosionArray;
 
-  /** Bool that remembers if mask erosion is wanted in any of the masks 
+  /** Bool that remembers if mask erosion is wanted in any of the masks
    * remains false when no masks are used.
    */
   bool useMaskErosion;
@@ -388,15 +388,15 @@ MultiMetricMultiResolutionRegistration<TElastix>
   if (  ( ( nrOfMovingImages == 1 ) || ( nrOfMovingMasks == 0 ) )
     && ( nrOfMovingMasks <= 1 )
     && ( ( nrOfMovingImagePyramids == 1 ) || !useMaskErosion || ( nrOfMovingMasks == 0 ) )   )
-  {      
-    /** 1 image || nomask, <=1 mask, 1 pyramid || noerosion || nomask: 
+  {
+    /** 1 image || nomask, <=1 mask, 1 pyramid || noerosion || nomask:
      * --> we can use one mask for all metrics! (or no mask at all).
      */
-    MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject( 
+    MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject(
       this->GetElastix()->GetMovingMask(), useMaskErosion,
       this->GetMovingImagePyramid(), level );
     this->GetCombinationMetric()->SetMovingImageMask( movingMask );
-  } 
+  }
   else if ( ( nrOfMovingImages == 1 ) && ( nrOfMovingMasks == 1 ) )
   {
     /** 1 image, 1 mask, erosion && multiple pyramids
@@ -405,8 +405,8 @@ MultiMetricMultiResolutionRegistration<TElastix>
      * different pyramid settings.
      */
     for ( unsigned int i = 0; i < nrOfMetrics; ++i )
-    { 
-      MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject( 
+    {
+      MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject(
         this->GetElastix()->GetMovingMask(), useMaskErosion,
         this->GetMovingImagePyramid( i ), level );
       this->GetCombinationMetric()->SetMovingImageMask( movingMask, i );
@@ -415,7 +415,7 @@ MultiMetricMultiResolutionRegistration<TElastix>
   else
   {
     /** All other cases. Note that the number of pyramids should equal 1 or
-     * should equal the number of metrics. 
+     * should equal the number of metrics.
      * Set each supplied mask in its corresponding metric, possibly after erosion.
      * If more metrics than masks are present, the last metrics will not use a mask.
      * If less metrics than masks are present, the last masks will be ignored.
@@ -432,7 +432,7 @@ MultiMetricMultiResolutionRegistration<TElastix>
       {
         pyramid_i = this->GetMovingImagePyramid( i );
       }
-      MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject( 
+      MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject(
         this->GetElastix()->GetMovingMask( i ), useMask_i, pyramid_i, level );
       this->GetCombinationMetric()->SetMovingImageMask( movingMask, i );
     }
@@ -441,7 +441,7 @@ MultiMetricMultiResolutionRegistration<TElastix>
   /** Stop timer and print the elapsed time. */
   timer->StopTimer();
   elxout << "Setting the moving masks took: "
-    << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) 
+    << static_cast<long>( timer->GetElapsedClockSec() * 1000 )
     << " ms." << std::endl;
 
 } // end UpdateMovingMasks()

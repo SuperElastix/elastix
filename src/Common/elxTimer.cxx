@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -21,11 +21,11 @@ namespace tmr
 {
 using namespace itk;
 
-  
+
   /**
    * ********************* Constructor ****************************
    */
-  
+
   Timer::Timer()
   {
     /** Initialize.*/
@@ -34,72 +34,72 @@ using namespace itk;
     this->m_StartClock = 0;
     this->m_StopTime = 0;
     this->m_StopClock = 0;
-    
+
   } // end Constructor
-  
-  
+
+
   /**
    * ********************** Destructor ****************************
    */
-  
+
   Timer::~Timer()
   {
   } // end Destructor
-  
-  
+
+
   /**
    * ********************** StartTimer ****************************
    */
-  
+
   void Timer::StartTimer(void)
   {
     /** Get the current time.*/
     this->m_StartTime = time( '\0' );
     this->m_StartClock = clock();
-    
+
   } // end StartTimer
-  
-  
+
+
   /**
    * *********************** StopTimer ****************************
    */
-  
+
   int Timer::StopTimer(void)
   {
     /** Check if m_StartTime != 0.*/
     if ( this->m_StartTime == 0 ) return 1;
-    
+
     /** Get the current time.*/
     this->m_StopTime = time( '\0' );
     this->m_StopClock = clock();
-    
+
     /** Get the elapsed time.*/
     this->ElapsedClockAndTime();
-    
+
     return 0;
-    
+
   } // end StoptTimer
-  
-  
+
+
   /**
    * *********************** ElapsedClockAndTime **************************
    */
-  
+
   int Timer::ElapsedClockAndTime(void)
   {
     /** Check if if m_StopTime != 0.*/
     if ( this->m_StopTime == 0 ) return 1;
-    
+
     /** Calculate time difference = m_Elapsedtime.*/
     this->m_ElapsedTime = static_cast<time_t>( difftime( this->m_StopTime, this->m_StartTime ) );
     this->m_ElapsedClock = this->m_StopClock - this->m_StartClock;
-    
+
     /** Fill m_ElapsedTimeSec.*/
     this->m_ElapsedTimeSec = static_cast<int>( this->m_ElapsedTime );
-    
+
     /** Fill m_ElapsedClockSec.*/
     this->m_ElapsedClockSec = static_cast<double>( this->m_ElapsedClock ) / CLOCKS_PER_SEC;
-    
+
     /** Fill m_TimeDHMS.*/
     struct tm *sElapsedTime = localtime( &(this->m_ElapsedTime) );
 //    struct tm sElapsedTime;
@@ -116,19 +116,19 @@ using namespace itk;
 //    this->m_ElapsedTimeDHMS[ 1 ] = sElapsedTime.tm_hour - 1;
 //    this->m_ElapsedTimeDHMS[ 2 ] = sElapsedTime.tm_min;
 //    this->m_ElapsedTimeDHMS[ 3 ] = sElapsedTime.tm_sec;
-    
+
     return 0;
 
   } // end ElapsedClockAndTime
-  
-  
+
+
   /**
    * ******************** PrintStartTime **************************
    */
-  
+
   const std::string & Timer::PrintStartTime( void )
   {
-        
+
     /** Convert time to string.*/
     struct tm *sStartTime = localtime( &(this->m_StartTime) );
     //struct tm sStartTime;
@@ -148,20 +148,20 @@ using namespace itk;
 //    }
 
     this->m_StartTimeString.erase( this->m_StartTimeString.end() - 1 );
-    
+
     /** Return a value. */
     return this->m_StartTimeString;
 
   } // end PrintStartTime
-  
-  
+
+
   /**
    * ******************** PrintStopTime **************************
    */
-  
+
   const std::string & Timer::PrintStopTime( void )
   {
-        
+
     /** Convert time to string.*/
     struct tm *sStopTime = localtime( &(this->m_StopTime) );
 //    struct tm sStopTime;
@@ -186,15 +186,15 @@ using namespace itk;
     return this->m_StopTimeString;
 
   } // end PrintStopTime
-    
-  
+
+
   /**
    * ***************** PrintElapsedTimeDHMS ***********************
    */
-  
+
   const std::string & Timer::PrintElapsedTimeDHMS( void )
   {
-    
+
     /** Print m_ElapsedTime in Days, Hours, Minutes and Seconds.*/
     std::ostringstream make_string( "" );
     if ( this->m_ElapsedTimeDHMS[ 0 ] != 0 )
@@ -204,19 +204,19 @@ using namespace itk;
     if ( this->m_ElapsedTimeDHMS[ 2 ] != 0 )
       make_string << this->m_ElapsedTimeDHMS[ 2 ] << " Minutes, ";
     make_string << this->m_ElapsedTimeDHMS[ 3 ] << " Seconds";
-    
+
     this->m_ElapsedTimeDHMSString = make_string.str();
-    
+
     /** Return a value. */
     return this->m_ElapsedTimeDHMSString;
 
   } // end PrintElapsedTimeDHMS
-  
-  
+
+
   /**
    * ***************** PrintElapsedTimeSec ************************
    */
-  
+
   const std::string & Timer::PrintElapsedTimeSec( void )
   {
     /** Print m_ElapsedTime in seconds.*/
@@ -224,16 +224,16 @@ using namespace itk;
     make_string << this->m_ElapsedTimeSec;
 
     this->m_ElapsedTimeSecString = make_string.str();
-    
+
     return this->m_ElapsedTimeSecString;
 
   } // end PrintElapsedTimeSec
-  
-  
+
+
   /**
    * ******************* PrintElapsedClock ************************
    */
-  
+
   const std::string & Timer::PrintElapsedClock( void )
   {
     /** Print m_ElapsedClock.*/
@@ -241,30 +241,30 @@ using namespace itk;
     make_string << this->m_ElapsedClock;
 
     this->m_ElapsedClockString = make_string.str();
-    
+
     return this->m_ElapsedClockString;
 
   } // end PrintElapsedClock
 
-  
+
   /**
    * ******************* PrintElapsedClockSec ************************
    */
-  
+
   const std::string & Timer::PrintElapsedClockSec( void )
   {
     /** Print m_ElapsedClockSec.*/
     std::ostringstream make_string( "" );
     make_string << this->m_ElapsedClockSec;
-    
+
     this->m_ElapsedClockSecString = make_string.str();
-    
+
     return this->m_ElapsedClockSecString;
 
   } // end PrintElapsedClockSec
-  
 
-  
+
+
 
 } // end namespace tmr
 

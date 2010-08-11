@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -25,7 +25,7 @@ namespace itk
 {
 
 /** \class BSplineDerivativeKernelFunction2
- * \brief Derivative of a BSpline kernel used for density estimation and 
+ * \brief Derivative of a BSpline kernel used for density estimation and
  *  nonparametric regression.
  *
  * This class encapsulates the derivative of a BSpline kernel for
@@ -49,10 +49,10 @@ public:
   typedef SmartPointer<Self>              Pointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro(Self); 
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(BSplineDerivativeKernelFunction2, KernelFunction); 
+  itkTypeMacro(BSplineDerivativeKernelFunction2, KernelFunction);
 
   /** Enum of for spline order. */
   itkStaticConstMacro(SplineOrder, unsigned int, VSplineOrder);
@@ -60,7 +60,7 @@ public:
   /** Evaluate the function. */
   //inline double Evaluate( const double & u ) const
   //  {
-  //  return ( m_KernelFunction->Evaluate( u + 0.5 ) - 
+  //  return ( m_KernelFunction->Evaluate( u + 0.5 ) -
   //    m_KernelFunction->Evaluate( u - 0.5 ) );
   //  }
   /** Evaluate the function. */
@@ -74,10 +74,10 @@ protected:
   ~BSplineDerivativeKernelFunction2(){};
 
   void PrintSelf(std::ostream& os, Indent indent) const
-    { 
-    Superclass::PrintSelf( os, indent ); 
+    {
+    Superclass::PrintSelf( os, indent );
     os << indent  << "Spline Order: " << SplineOrder << std::endl;
-    }  
+    }
 
 private:
   BSplineDerivativeKernelFunction2(const Self&); //purposely not implemented
@@ -134,7 +134,7 @@ private:
   inline double Evaluate ( const Dispatch<2>&, const double& u) const
   {
     double absValue = vnl_math_abs( u );
-    
+
     if ( absValue < 0.5 )
     {
       return -2.0 * u;
@@ -194,7 +194,7 @@ private:
   {
     itkExceptionMacro("Evaluate not implemented for spline\
                       order " << SplineOrder);
-    return 0.0; // This is to avoid compiler warning about missing 
+    return 0.0; // This is to avoid compiler warning about missing
     // return statement.  It should never be evaluated.
   }
 

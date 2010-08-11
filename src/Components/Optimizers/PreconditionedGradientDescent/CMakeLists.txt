@@ -3,9 +3,9 @@ ADD_ELXCOMPONENT( PreconditionedGradientDescent OFF
  elxPreconditionedGradientDescent.h
  elxPreconditionedGradientDescent.hxx
  elxPreconditionedGradientDescent.cxx
- itkStochasticPreconditionedGradientDescentOptimizer.h 
+ itkStochasticPreconditionedGradientDescentOptimizer.h
  itkStochasticPreconditionedGradientDescentOptimizer.cxx
- itkPreconditionedGradientDescentOptimizer.h 
- itkPreconditionedGradientDescentOptimizer.cxx 
+ itkPreconditionedGradientDescentOptimizer.h
+ itkPreconditionedGradientDescentOptimizer.cxx
 )
 

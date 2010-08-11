@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -21,7 +21,7 @@
 namespace elastix
 {
 using namespace itk;
-  
+
 /**
  * \class CUDAResampler
  * \brief A resampler based on the itk::CUDAResampleImageFilter.
@@ -33,7 +33,7 @@ using namespace itk;
  * \ingroup Resamplers
  */
 
-template < class TElastix > 
+template < class TElastix >
 class CUDAResampler :
   public itkCUDAResampleImageFilter<
   ITK_TYPENAME ResamplerBase<TElastix>::InputImageType,
@@ -82,7 +82,7 @@ public:
   typedef typename Superclass1::OutputImageRegionType     OutputImageRegionType;
   typedef typename Superclass1::SpacingType               SpacingType;
   typedef typename Superclass1::OriginPointType           OriginPointType;
-  
+
   /** Typedef's from the ResamplerBase. */
   typedef typename Superclass2::ElastixType           ElastixType;
   typedef typename Superclass2::ElastixPointer        ElastixPointer;
@@ -91,7 +91,7 @@ public:
   typedef typename Superclass2::RegistrationType      RegistrationType;
   typedef typename Superclass2::RegistrationPointer   RegistrationPointer;
   typedef typename Superclass2::ITKBaseType           ITKBaseType;
-   
+
   /* . */
   virtual int BeforeAll( void );
   virtual void BeforeRegistration( void );
@@ -111,8 +111,8 @@ private:
   void operator=( const Self& );  // purposely not implemented
 
 }; // end class CUDAResampler
-  
-  
+
+
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION

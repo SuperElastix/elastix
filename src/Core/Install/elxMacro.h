@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -19,7 +19,7 @@
 /**
 * Macro for installing support new components (like a new metric, interpolator,
 * or transform).
-* Must be invoked in the .cxx file of the component, after declaration of the 
+* Must be invoked in the .cxx file of the component, after declaration of the
 * class.
 *
 * Example of usage:
@@ -34,7 +34,7 @@
 *     class MyMetric : public MetricBase<TElastix>,
 *      public itk::MattesMutualInformationImageToImageMetric
 *           < MetricBase<TElastix>::FixedImageType
-*             MetricBase<TElastix>::MovingImageType > 
+*             MetricBase<TElastix>::MovingImageType >
 *   {
 *     typedef MyMetric Self;
 *     itkNewMacro( Self ); //needed for the elxInstallMacro
@@ -57,12 +57,12 @@
 *   elxMyMetric.hxx
 *   elxMyMetric.cxx
 *   [<any other source files needed>] )
-* 
-* 
+*
+*
 * The class to be installed should inherit from the appropriate base class.
 * (elx::MetricBase, elx::TransformBase etc,) and from a specific itk object.
-* 
-* IMPORTANT: only one template argument <class TElastix> is allowed. Not more, 
+*
+* IMPORTANT: only one template argument <class TElastix> is allowed. Not more,
 * not less.
 *
 * Details: a function "int _classname##InstallComponent( _cdb )" is defined.
@@ -104,13 +104,13 @@
   }//ignore semicolon
 
 
-/** 
+/**
  * elxInstallComponentFunctionDeclarationMacro
  *
  * Usage example:
  *   elxInstallComponentFunctionDeclarationMacro( BSplineTransform );
  *
- * This macro declares the function implemented by 
+ * This macro declares the function implemented by
  * the elxInstallMacro. This macro is used by the
  * CMake generated file
  * elxInstallComponentFunctionDeclarations.h
@@ -126,13 +126,13 @@ extern "C" int _classname##InstallComponent( \
     ::elx::ComponentDatabase * _cdb )
 
 
-/** 
+/**
  * elxInstallComponentFunctionCallMacro
  *
  * Usage example:
  *   elxInstallComponentFunctionCallMacro( BSplineTransform );
  *
- * This macro calls the function implemented by 
+ * This macro calls the function implemented by
  * the elxInstallMacro. This macro is used by the
  * CMake generated file
  * elxInstallComponentFunctionCalls.h
@@ -175,9 +175,9 @@ extern "C" int _classname##InstallComponent( \
     /** this function will return 'true' */ \
     static bool Defined(void) \
       { return false;} \
-  } 
-  
-    
+  }
+
+
 /**
 * Macro for installing support for new ImageTypes.
 * Used in elxSupportedImageTypes.cxx .
@@ -189,7 +189,7 @@ extern "C" int _classname##InstallComponent( \
 * elxSupportedImageTypeMacro(unsigned short, 3, float, 3, 2);
 * etc.
 * } //end namespace elastix
-* 
+*
 * The first line adds support for the following combination of ImageTypes:
 * fixedImage: 2D unsigned short
 * movingImage 3D float
@@ -201,8 +201,8 @@ extern "C" int _classname##InstallComponent( \
 * IMPORTANT: the macro must be invoked in namespace elastix!
 *
 * Details: the macro adds a class template specialization for the class
-* ElastixTypedef<VIndex>. 
-* 
+* ElastixTypedef<VIndex>.
+*
 */
 
 #define elxSupportedImageTypeMacro(_fPixelType,_fDim,_mPixelType,_mDim,_VIndex) \
@@ -224,21 +224,21 @@ extern "C" int _classname##InstallComponent( \
       { return _mDim ;} \
     static bool Defined(void) \
     { return true; }  \
-  } 
+  }
 
 
 /**
  * elxClassNameMacro(_name)
  *
  * Example of usage:
- * 
+ *
  * class MyMetric
  * {
  * public:
  *   elxClassNameMacro("MyFirstMetric");
  * }
  *
- * This macro defines two functions. 
+ * This macro defines two functions.
  *
  * static const char * elxGetClassNameStatic(void){return _name;}
  * virtual const char * elxGetClassName(void){return _name;}
@@ -254,13 +254,13 @@ virtual const char * elxGetClassName( void ) const { return _name ; }
 /**
  *  elxout
  *
- *  This macro replaces 'elxout' by '::xl::xout["standard"]'. 
+ *  This macro replaces 'elxout' by '::xl::xout["standard"]'.
  *  This simplifies writing messages to screen and logfile.
- *  
- *  NB: for error and warning messages, for writing to the 
- *  transformparameterfile etc. do not use elxout, but 
+ *
+ *  NB: for error and warning messages, for writing to the
+ *  transformparameterfile etc. do not use elxout, but
  *  xout["{error, warning, etc}"].
- *  
+ *
  */
 #define elxout ::xl::xout["standard"]
 

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -28,14 +28,14 @@ using namespace itk;
   /**
    * ********************* Constructor ****************************
    */
-  
+
   template <class TElastix>
     FiniteDifferenceGradientDescent<TElastix>
-    ::FiniteDifferenceGradientDescent() 
+    ::FiniteDifferenceGradientDescent()
   {
     this->m_ShowMetricValues = false;
   } // end Constructor
-  
+
 
   /**
    * ***************** BeforeRegistration ***********************
@@ -64,11 +64,11 @@ using namespace itk;
     xout["iteration"].AddTargetCell("3:Gain a_k");
     xout["iteration"].AddTargetCell("4:||Gradient||");
 
-    /** Format them as floats */      
+    /** Format them as floats */
     xl::xout["iteration"]["2:Metric"]   << std::showpoint << std::fixed;
     xl::xout["iteration"]["3:Gain a_k"] << std::showpoint << std::fixed;
     xl::xout["iteration"]["4:||Gradient||"] << std::showpoint << std::fixed;
-    
+
   } // end BeforeRegistration
 
 
@@ -83,7 +83,7 @@ using namespace itk;
     /** Get the current resolution level.*/
     unsigned int level = static_cast<unsigned int>(
       this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
-        
+
     /** Set the maximumNumberOfIterations.*/
     unsigned int maximumNumberOfIterations = 500;
     this->m_Configuration->ReadParameter( maximumNumberOfIterations,
@@ -96,7 +96,7 @@ using namespace itk;
     double A = 50.0;
     double alpha = 0.602;
     double gamma = 0.101;
-    
+
     this->GetConfiguration()->ReadParameter(a, "SP_a", this->GetComponentLabel(), level, 0 );
     this->GetConfiguration()->ReadParameter(c, "SP_c", this->GetComponentLabel(), level, 0 );
     this->GetConfiguration()->ReadParameter(A, "SP_A", this->GetComponentLabel(), level, 0 );
@@ -108,7 +108,7 @@ using namespace itk;
     this->SetParam_A( A );
     this->SetParam_alpha( alpha );
     this->SetParam_gamma( gamma );
-    
+
   } // end BeforeEachResolution
 
 
@@ -121,7 +121,7 @@ using namespace itk;
     ::AfterEachIteration(void)
   {
     /** Print some information */
-    
+
     if (this->m_ShowMetricValues)
     {
       xl::xout["iteration"]["2:Metric"]   << this->GetValue();
@@ -140,7 +140,7 @@ using namespace itk;
     {
       this->SelectNewSamples();
     }
-    
+
 
   } // end AfterEachIteration
 
@@ -153,28 +153,28 @@ using namespace itk;
     void FiniteDifferenceGradientDescent<TElastix>
     ::AfterEachResolution(void)
   {
-    
+
     /**
-     * enum   StopConditionType {  MaximumNumberOfIterations, MetricError }  
+     * enum   StopConditionType {  MaximumNumberOfIterations, MetricError }
      */
     std::string stopcondition;
 
-    
+
     switch( this->GetStopCondition() )
     {
-  
+
     case MaximumNumberOfIterations :
-      stopcondition = "Maximum number of iterations has been reached";  
-      break;  
-    
+      stopcondition = "Maximum number of iterations has been reached";
+      break;
+
     case MetricError :
-      stopcondition = "Error in metric";  
-      break;  
-        
+      stopcondition = "Error in metric";
+      break;
+
     default:
       stopcondition = "Unknown";
       break;
-      
+
     }
     /** Print the stopping condition */
 
@@ -182,7 +182,7 @@ using namespace itk;
     elxout << "Stopping condition: " << stopcondition << "." << std::endl;
 
   } // end AfterEachResolution
-  
+
   /**
    * ******************* AfterRegistration ************************
    */
@@ -198,13 +198,13 @@ using namespace itk;
       bestValue = this->GetValue();
       elxout
         << std::endl
-        << "Final metric value  = " 
+        << "Final metric value  = "
         << bestValue
         << std::endl;
     }
     else
     {
-      elxout 
+      elxout
       << std::endl
       << "Run Elastix again with the option \"ShowMetricValues\" set"
       << " to \"true\", to see information about the metric values. "
@@ -241,7 +241,7 @@ using namespace itk;
     this->Superclass1::StartOptimization();
 
   } //end StartOptimization
-  
+
 
 } // end namespace elastix
 

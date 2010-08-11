@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -30,9 +30,9 @@ namespace itk
  * \brief Casts pixel type and writes image data.
  *
  * This filter saves an image and casts the data on the fly,
- * if necessary. This is useful in some cases, to avoid the use of 
+ * if necessary. This is useful in some cases, to avoid the use of
  * a itk::CastImageFilter (to save memory for example).
- *  
+ *
  */
 template <class TInputImage >
   class ImageFileCastWriter : public ImageFileWriter<TInputImage>
@@ -53,24 +53,24 @@ public:
   /** Some convenient typedefs. */
   typedef typename Superclass::InputImageType         InputImageType;
   typedef typename Superclass::InputImagePointer      InputImagePointer;
-  typedef typename Superclass::InputImageRegionType   InputImageRegionType;  
-  typedef typename Superclass::InputImagePixelType    InputImagePixelType; 
+  typedef typename Superclass::InputImageRegionType   InputImageRegionType;
+  typedef typename Superclass::InputImagePixelType    InputImagePixelType;
 
   itkStaticConstMacro( InputImageDimension, unsigned int, InputImageType::ImageDimension );
 
-  /** Set the component type for writing to disk; default: the same as 
+  /** Set the component type for writing to disk; default: the same as
    * the InputImagePixelType::ComponentType. This setting is ignored when
    * the inputImagePixelType is not a scalar*/
   itkSetStringMacro(OutputComponentType);
   itkGetStringMacro(OutputComponentType);
-  
+
   /** Determine the default outputcomponentType */
   std::string GetDefaultOutputComponentType(void) const;
 
 protected:
   ImageFileCastWriter();
   ~ImageFileCastWriter();
- 
+
   /** Does the real work. */
   void GenerateData(void);
 
@@ -85,7 +85,7 @@ protected:
     typedef typename PixelTraits<InputImagePixelType>::ValueType  InputImageComponentType;
     typedef Image<InputImageComponentType, InputImageDimension>   ScalarInputImageType;
     typedef CastImageFilter< ScalarInputImageType, DiskImageType> CasterType;
-    
+
     /** Reconfigure the imageIO */
     this->GetImageIO()->SetPixelTypeInfo( typeid(OutputComponentType) );
 
@@ -99,12 +99,12 @@ protected:
 
     /** return the pixel buffer of the casted image */
     OutputComponentType * pixelBuffer = caster->GetOutput()->GetBufferPointer();
-    void * convertedBuffer = static_cast<void *>(pixelBuffer); 
+    void * convertedBuffer = static_cast<void *>(pixelBuffer);
     return convertedBuffer;
   }
 
   ProcessObject::Pointer m_Caster;
-    
+
 private:
   ImageFileCastWriter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
@@ -112,12 +112,12 @@ private:
   std::string m_OutputComponentType;
 };
 
-  
+
 } // end namespace itk
-  
+
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itkImageFileCastWriter.txx"
 #endif
 
 #endif // __itkImageFileCastWriter_h
-  
+

@@ -6,7 +6,7 @@ Copyright (c) University Medical Center Utrecht. All rights reserved.
 See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
 details.
 
-This software is distributed WITHOUT ANY WARRANTY; without even 
+This software is distributed WITHOUT ANY WARRANTY; without even
 the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
@@ -162,7 +162,7 @@ Configuration
   /** Connect the parameter file reader to the interface. */
   this->m_ParameterMapInterface->SetParameterMap(
     this->m_ParameterFileParser->GetParameterMap() );
-  
+
   /** Silently check in the parameter file if error messages should be printed. */
   this->m_ParameterMapInterface->SetPrintErrorMessages( false );
   bool printErrorMessages = true;

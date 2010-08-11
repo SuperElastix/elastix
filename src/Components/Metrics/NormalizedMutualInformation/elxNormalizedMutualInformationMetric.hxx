@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -41,7 +41,7 @@ using namespace itk;
 
   } // end Initialize
 
-  
+
   /**
    * ***************** BeforeEachResolution ***********************
    */
@@ -51,9 +51,9 @@ using namespace itk;
     ::BeforeEachResolution(void)
   {
     /** Get the current resolution level. */
-    unsigned int level = 
+    unsigned int level =
       ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
-    
+
     /** Get and set the number of histogram bins. */
     unsigned int numberOfHistogramBins = 32;
     this->GetConfiguration()->ReadParameter( numberOfHistogramBins,
@@ -75,13 +75,13 @@ using namespace itk;
     typedef ExponentialLimiterFunction< RealType, MovingImageDimension > MovingLimiterType;
     this->SetFixedImageLimiter( FixedLimiterType::New() );
     this->SetMovingImageLimiter( MovingLimiterType::New() );
-    
+
     /** Get and set the number of histogram bins. */
     double fixedLimitRangeRatio = 0.01;
     double movingLimitRangeRatio = 0.01;
     this->GetConfiguration()->ReadParameter( fixedLimitRangeRatio,
       "FixedLimitRangeRatio", this->GetComponentLabel(), level, 0 );
-    this->GetConfiguration()->ReadParameter( movingLimitRangeRatio, 
+    this->GetConfiguration()->ReadParameter( movingLimitRangeRatio,
       "MovingLimitRangeRatio", this->GetComponentLabel(), level, 0 );
     this->SetFixedLimitRangeRatio( fixedLimitRangeRatio );
     this->SetMovingLimitRangeRatio( movingLimitRangeRatio );
@@ -115,8 +115,8 @@ using namespace itk;
     }
 
   } // end BeforeEachResolution
-  
-  
+
+
 } // end namespace elastix
 
 

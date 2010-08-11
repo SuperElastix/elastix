@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -58,7 +58,7 @@ VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
   Superclass::GenerateInputRequestedRegion();
 
   // get pointers to the input and output
-  typename Superclass::InputImagePointer inputPtr = 
+  typename Superclass::InputImagePointer inputPtr =
     const_cast< TInputImage * >( this->GetInput() );
   typename Superclass::OutputImagePointer outputPtr = this->GetOutput();
 
@@ -189,13 +189,13 @@ VectorMeanDiffusionImageFilter< TInputImage, TGrayValueImage >
   }
 
   /** Setup neighborhood iterator for the output deformation image. */
-  nit = NeighborhoodIterator< InputImageType >( 
+  nit = NeighborhoodIterator< InputImageType >(
     this->m_Radius, output, output->GetLargestPossibleRegion() );
   unsigned int neighborhoodSize = nit.Size();
   nit.OverrideBoundaryCondition( &nbc );
 
   /** Setup neighborhood iterator for the "stiffness coefficient" image. */
-  nit2 = NeighborhoodIterator< DoubleImageType >( 
+  nit2 = NeighborhoodIterator< DoubleImageType >(
     this->m_Radius, this->m_Cx, this->m_Cx->GetLargestPossibleRegion() );
   nit2.OverrideBoundaryCondition( &nbc2 );
 

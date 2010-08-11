@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -20,7 +20,7 @@
 /** Macros to reduce some copy-paste work.
  * These macros provide the implementation of
  * all Set/GetFixedImage, Set/GetInterpolator etc methods
- * 
+ *
  * The macros are undef'ed at the end of this file
  */
 
@@ -169,7 +169,7 @@ namespace itk
 
   template <class TFixedImage, class TMovingImage>
     const typename MultiInputImageToImageMetricBase<TFixedImage,TMovingImage>
-    ::FixedImageRegionType & 
+    ::FixedImageRegionType &
     MultiInputImageToImageMetricBase<TFixedImage,TMovingImage>
     ::GetFixedImageRegion( unsigned int pos ) const
   {
@@ -200,10 +200,10 @@ namespace itk
 
     for ( unsigned int i = 0; i < this->m_NumberOfMovingImages; ++i )
     {
-      BSplineInterpolatorType * testPtr = 
+      BSplineInterpolatorType * testPtr =
         dynamic_cast<BSplineInterpolatorType *>(
         this->m_InterpolatorVector[ i ].GetPointer() );
-      
+
       if ( testPtr )
       {
         this->m_InterpolatorsAreBSpline &= true;
@@ -297,7 +297,7 @@ namespace itk
   template <class TFixedImage, class TMovingImage>
   bool
   MultiInputImageToImageMetricBase<TFixedImage,TMovingImage>
-  ::EvaluateMovingImageValueAndDerivative( 
+  ::EvaluateMovingImageValueAndDerivative(
     const MovingImagePointType & mappedPoint,
     RealType & movingImageValue,
     MovingImageDerivativeType * gradient ) const
@@ -322,7 +322,7 @@ namespace itk
   /**
    * ************************ IsInsideMovingMask *************************
    */
-  
+
   template <class TFixedImage, class TMovingImage>
   bool
   MultiInputImageToImageMetricBase<TFixedImage,TMovingImage>
@@ -339,7 +339,7 @@ namespace itk
       MovingImageMaskPointer movingImageMask = this->GetMovingImageMask( i );
       if ( movingImageMask.IsNotNull() )
       {
-        inside &= movingImageMask->IsInside( mappedPoint );        
+        inside &= movingImageMask->IsInside( mappedPoint );
       }
 
       /** If the point falls outside one mask, we can skip the rest. */

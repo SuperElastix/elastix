@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -50,7 +50,7 @@ namespace itk
     {
       itkExceptionMacro( << "Moving image pyramid is not present" );
     }
-    
+
     /** Check if the number if fixed/moving pyramids == nr of fixed/moving images,
      * and whether the number of fixed image regions == the number of fixed images.
      */

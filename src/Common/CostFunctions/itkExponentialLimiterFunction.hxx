@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -21,7 +21,7 @@
 namespace itk
 {
 
-  /** 
+  /**
    * *************** Constructor ********************
    */
 
@@ -32,18 +32,18 @@ namespace itk
     this->ComputeLimiterSettings();
   } // end Constructor
 
-  /** 
+  /**
    * **************** Initialize ***********************
    */
 
     template<class TInput, unsigned int NDimension>
-    void 
+    void
     ExponentialLimiterFunction<TInput, NDimension>::
     Initialize(void) throw ( ExceptionObject )
   {
     this->ComputeLimiterSettings();
   } // end Initialize
-  
+
 
   /**
    * ******************** Evaluate ***********************
@@ -61,15 +61,15 @@ namespace itk
       return static_cast<OutputType>(
         this->m_UTminUB * vcl_exp( this->m_UTminUBinv * diffU ) + this->m_UpperBound ) ;
     }
-        
+
     /** Apply a soft limit if the input is smaller than the LowerThreshold */
     const double diffL = static_cast<double>( input - this->m_LowerThreshold );
     if ( diffL < -1e-10 )
     {
-      return static_cast<OutputType>( 
+      return static_cast<OutputType>(
         this->m_LTminLB * vcl_exp( this->m_LTminLBinv * diffL ) + this->m_LowerBound );
-    }           
-        
+    }
+
     /** Leave the value as it is */
     return static_cast<OutputType>(input);
   } // end Evaluate (one argument)
@@ -97,7 +97,7 @@ namespace itk
       }
       return static_cast<OutputType>( temp + this->m_UpperBound );
     }
-        
+
     /** Apply a soft limit if the input is smaller than the LowerThreshold */
     const double diffL = static_cast<double>( input - this->m_LowerThreshold );
     if ( diffL < -1e-10 )
@@ -109,8 +109,8 @@ namespace itk
         derivative[i] = static_cast<DerivativeValueType>( derivative[i] * gradientfactor );
       }
       return static_cast<OutputType>( temp + this->m_LowerBound );
-    }           
-        
+    }
+
     /** Leave the value and derivative as they are */
     return static_cast<OutputType>(input);
   } // end Evaluate (two arguments)

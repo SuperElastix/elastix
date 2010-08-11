@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -31,13 +31,13 @@ namespace itk
  * Computes an image where a given pixel is the mean value of the
  * the pixels in a neighborhood about the corresponding input pixel.
  *
- * A mean filter is one of the family of linear filters.  
+ * A mean filter is one of the family of linear filters.
  *
  * \sa Image
  * \sa Neighborhood
  * \sa NeighborhoodOperator
  * \sa NeighborhoodIterator
- * 
+ *
  * \ingroup IntensityImageFilters
  */
 
@@ -46,7 +46,7 @@ class ITK_EXPORT VectorMeanDiffusionImageFilter
   : public ImageToImageFilter< TInputImage, TInputImage >
 {
 public:
-    
+
   /** Convenient typedefs for simplifying declarations. */
   typedef TInputImage         InputImageType;
   typedef TGrayValueImage     GrayValueImageType;

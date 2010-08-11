@@ -50,7 +50,7 @@ inline __device__ __host__ uint PowTwoDivider(uint n)
 {
   if (n == 0) return 0;
   uint divider = 1;
-  while ((n & divider) == 0) divider <<= 1; 
+  while ((n & divider) == 0) divider <<= 1;
   return divider;
 }
 

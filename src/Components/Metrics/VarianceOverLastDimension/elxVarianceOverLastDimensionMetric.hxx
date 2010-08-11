@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -49,7 +49,7 @@ using namespace itk;
     ::BeforeEachResolution(void)
   {
     /** Get the current resolution level. */
-    unsigned int level = 
+    unsigned int level =
       ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
 
     /** Get and set the random sampling in the last dimension. */
@@ -57,13 +57,13 @@ using namespace itk;
     this->GetConfiguration()->ReadParameter( useRandomSampling,
       "SampleLastDimensionRandomly", this->GetComponentLabel(), level, 0 );
     this->SetSampleLastDimensionRandomly( useRandomSampling );
-    
+
     /** Get and set if we want to subtract the mean from the derivative. */
     bool subtractMean = false;
     this->GetConfiguration()->ReadParameter( subtractMean,
       "SubtractMean", this->GetComponentLabel(), 0, 0 );
     this->SetSubtractMean( subtractMean );
-    
+
     /** Get and set the number of random samples for the last dimension. */
     int numSamplesLastDimension = 10;
     this->GetConfiguration()->ReadParameter( numSamplesLastDimension,
@@ -100,7 +100,7 @@ using namespace itk;
       elxout << "Multiplying moving image derivatives by: "
         << movingImageDerivativeScales << std::endl;
     }
-    
+
     /** Check if this transform is a B-spline transform. */
     CombinationTransformType * testPtr1
       = dynamic_cast<CombinationTransformType *>( this->GetElastix()->GetElxTransformBase() );
@@ -138,9 +138,9 @@ using namespace itk;
         }
       }
     }
-    
+
   } // end BeforeEachResolution
-  
+
 } // end namespace elastix
 
 

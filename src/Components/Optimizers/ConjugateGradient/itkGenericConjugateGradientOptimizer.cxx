@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -44,7 +44,7 @@ namespace itk
     this->m_UseDefaultMaxNrOfItWithoutImprovement = true;
     this->m_LineSearchOptimizer = 0;
     this->m_PreviousGradientAndSearchDirValid = false;
-    
+
     this->AddBetaDefinition(
       "SteepestDescent", &Self::ComputeBetaSD );
     this->AddBetaDefinition(
@@ -59,7 +59,7 @@ namespace itk
       "DaiYuanHestenesStiefel", &Self::ComputeBetaDYHS );
 
     this->SetBetaDefinition("DaiYuanHestenesStiefel");
-            
+
   } // end constructor
 
 
@@ -81,7 +81,7 @@ namespace itk
     this->m_CurrentStepLength = 0.0;
     this->m_CurrentValue = NumericTraits<MeasureType>::Zero;
     this->m_PreviousGradientAndSearchDirValid = false;
-        
+
     /** Get the number of parameters; checks also if a cost function has been set at all.
     * if not: an exception is thrown */
     const unsigned int numberOfParameters =
@@ -106,7 +106,7 @@ namespace itk
     {
       this->ResumeOptimization();
     }
-    
+
   } // end StartOptimization
 
 
@@ -125,18 +125,18 @@ namespace itk
     this->m_PreviousGradientAndSearchDirValid = false;
     const double TINY_NUMBER = 1e-20;
     unsigned int limitCount = 0;
-    
+
     ParametersType searchDir;
     ParametersType previousSearchDir;
     DerivativeType previousGradient;
-    MeasureType previousValue;    
-        
+    MeasureType previousValue;
+
     this->InvokeEvent( StartEvent() );
 
     try
     {
       this->GetScaledValueAndDerivative(
-        this->GetScaledCurrentPosition(), 
+        this->GetScaledCurrentPosition(),
         this->m_CurrentValue,
         this->m_CurrentGradient );
     }
@@ -186,14 +186,14 @@ namespace itk
         this->m_ScaledCurrentPosition,
         this->m_CurrentValue,
         this->m_CurrentGradient);
-      
+
       if ( this->m_Stop )
       {
         break;
       }
-     
+
       this->InvokeEvent( IterationEvent() );
-            
+
       if ( this->m_Stop )
       {
         break;
@@ -201,7 +201,7 @@ namespace itk
 
       /** Check for convergence
        * \todo: move this code to TestConvergence() */
-      if ( 2.0 * vcl_abs( this->GetCurrentValue() - previousValue ) <= 
+      if ( 2.0 * vcl_abs( this->GetCurrentValue() - previousValue ) <=
         this->GetValueTolerance() *
         ( vcl_abs(this->GetCurrentValue()) +
         vcl_abs(previousValue) + TINY_NUMBER )   )
@@ -233,7 +233,7 @@ namespace itk
         this->StopOptimization();
         break;
       }
-        
+
       /** Next iteration */
       this->m_CurrentIteration++;
 
@@ -243,7 +243,7 @@ namespace itk
   } // end ResumeOptimization
 
 
-  /** 
+  /**
    * *********************** StopOptimization *****************************
    */
 
@@ -257,7 +257,7 @@ namespace itk
   } // end StopOptimization()
 
 
-  /** 
+  /**
    * *********************** ComputeSearchDirection ************************
    */
 
@@ -280,7 +280,7 @@ namespace itk
       return;
     }
 
-    /** Compute \beta, based on the previousGradient, the current gradient, 
+    /** Compute \beta, based on the previousGradient, the current gradient,
      * and the previous search direction */
     double beta = this->ComputeBeta(previousGradient, gradient, searchDir);
 
@@ -294,11 +294,11 @@ namespace itk
     {
       searchDir[i] = - gradient[i] + beta * searchDir[i];
     }
-    
+
   } // end ComputeSearchDirection
 
 
-  /** 
+  /**
    * ********************* LineSearch *******************************
    *
    * Perform a line search along the search direction. On return the
@@ -315,7 +315,7 @@ namespace itk
       MeasureType & f,
       DerivativeType & g )
   {
-  
+
     itkDebugMacro("LineSearch");
 
     LineSearchOptimizerPointer LSO = this->GetLineSearchOptimizer();
@@ -332,7 +332,7 @@ namespace itk
     LSO->SetInitialPosition(x);
     LSO->SetInitialValue(f);
     LSO->SetInitialDerivative(g);
-    
+
     this->SetInLineSearch(true);
     try
     {
@@ -348,7 +348,7 @@ namespace itk
 
     step = LSO->GetCurrentStepLength();
     x = LSO->GetCurrentPosition();
-    
+
     try
     {
       LSO->GetCurrentValueAndDerivative(f,g);
@@ -362,36 +362,36 @@ namespace itk
 
     /** For the next iteration: */
     //LSO->SetInitialStepLengthEstimate(step); for now in elx.
-    
+
   } // end LineSearch
 
 
-  /** 
+  /**
    * *********************** ComputeBeta ******************************
    */
 
-  double 
+  double
     GenericConjugateGradientOptimizer::
     ComputeBeta(
       const DerivativeType & previousGradient,
       const DerivativeType & gradient,
       const ParametersType & previousSearchDir)
   {
-    
-    ComputeBetaFunctionType betaComputer = 
+
+    ComputeBetaFunctionType betaComputer =
       this->m_BetaDefinitionMap[ this->GetBetaDefinition() ];
-      
+
     return ((*this).*betaComputer)(
       previousGradient, gradient, previousSearchDir );
-    
+
   } // end ComputeBeta
 
 
-  /** 
+  /**
    * ********************** ComputeBetaSD ******************************
    */
 
-  double 
+  double
     GenericConjugateGradientOptimizer::
     ComputeBetaSD(
       const DerivativeType & previousGradient,
@@ -404,11 +404,11 @@ namespace itk
   } // end ComputeBetaSD
 
 
-  /** 
+  /**
    * ********************** ComputeBetaFR ******************************
    */
 
-  double 
+  double
     GenericConjugateGradientOptimizer::
     ComputeBetaFR(
       const DerivativeType & previousGradient,
@@ -438,11 +438,11 @@ namespace itk
   } // end ComputeBetaFR
 
 
-  /** 
+  /**
    * ********************** ComputeBetaPR ******************************
    */
 
-  double 
+  double
     GenericConjugateGradientOptimizer::
     ComputeBetaPR(
       const DerivativeType & previousGradient,
@@ -472,11 +472,11 @@ namespace itk
   } // end ComputeBetaPR
 
 
-  /** 
+  /**
    * ********************** ComputeBetaDY ******************************
    */
 
-  double 
+  double
     GenericConjugateGradientOptimizer::
     ComputeBetaDY(
       const DerivativeType & previousGradient,
@@ -504,11 +504,11 @@ namespace itk
   } // end ComputeBetaDY
 
 
-  /** 
+  /**
    * ********************** ComputeBetaHS ******************************
    */
 
-  double 
+  double
     GenericConjugateGradientOptimizer::
     ComputeBetaHS(
       const DerivativeType & previousGradient,
@@ -525,7 +525,7 @@ namespace itk
       num += gradient[i] * diff;
       den += previousSearchDir[i] * diff;
     }
-    
+
     if ( den <= NumericTraits<double>::epsilon() )
     {
       this->m_StopCondition = InfiniteBeta;
@@ -537,11 +537,11 @@ namespace itk
   } // end ComputeBetaHS
 
 
-  /** 
+  /**
    * ********************** ComputeBetaDYHS ***************************
    */
 
-  double 
+  double
     GenericConjugateGradientOptimizer::
     ComputeBetaDYHS(
       const DerivativeType & previousGradient,
@@ -550,7 +550,7 @@ namespace itk
   {
     const double beta_DY = this->ComputeBetaDY(
       previousGradient, gradient, previousSearchDir);
-    
+
     const double beta_HS = this->ComputeBetaHS(
       previousGradient, gradient, previousSearchDir);
 
@@ -559,7 +559,7 @@ namespace itk
   } // end ComputeBetaDYHS
 
 
-  /** 
+  /**
    * *********************** SetBetaDefinition **************************
    */
 
@@ -593,7 +593,7 @@ namespace itk
     itkDebugMacro("Adding BetaDefinition: " << name);
 
     this->m_BetaDefinitionMap[name] = function;
-    
+
   } // end AddBetaDefinition
 
 
@@ -607,12 +607,12 @@ namespace itk
   {
     itkDebugMacro("Setting  to " << arg);
     this->m_UseDefaultMaxNrOfItWithoutImprovement = false;
-    this->m_MaxNrOfItWithoutImprovement = arg; 
+    this->m_MaxNrOfItWithoutImprovement = arg;
     this->Modified();
   } // end SetMaxNrOfItWithoutImprovement
 
-  
-  /** 
+
+  /**
    * ********************* TestConvergence ************************
    */
 
@@ -638,7 +638,7 @@ namespace itk
     }
 
     return false;
-    
+
   } // end TestConvergence
 
 

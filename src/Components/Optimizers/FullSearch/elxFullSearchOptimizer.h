@@ -6,13 +6,13 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
 
-  
+
 #ifndef __elxFullSearchOptimizer_h
 #define __elxFullSearchOptimizer_h
 
@@ -38,7 +38,7 @@ using namespace itk;
    * OptimizationSurface.\<elastixlevel\>.R\<resolution\>.mhd",
    * which is an N-dimensional float image, where N is the
    * dimension of the search space.
-   * 
+   *
    * The parameters used in this class are:
    * \parameter Optimizer: Select this optimizer as follows:\n
    *    <tt>(Optimizer "FullSearch")</tt>
@@ -47,8 +47,8 @@ using namespace itk;
    *   example: <tt>(FullSearchSpace0 "translation_x" 2 -4.0 3.0 1.0 "rotation_y" 3 -1.0 1.0 0.5)</tt> \n
    *   This varies the second transform parameter in the range [-4.0 3.0] with steps of 1.0
    *   and the third parameter in the range [-1.0 1.0] with steps of 0.5. The names are used
-   *   as column headers in the screen output. 
-   *   
+   *   as column headers in the screen output.
+   *
    * \ingroup Optimizers
    * \sa FullSearchOptimizer
    */
@@ -68,13 +68,13 @@ using namespace itk;
     typedef OptimizerBase<TElastix>             Superclass2;
     typedef SmartPointer<Self>                  Pointer;
     typedef SmartPointer<const Self>            ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( FullSearch, FullSearchOptimizer );
-    
+
     /** Name of this class.
      * Use this name in the parameter file to select this specific optimizer. \n
      * example: <tt>(Optimizer "FullSearch")</tt>\n
@@ -86,7 +86,7 @@ using namespace itk;
     typedef Superclass1::CostFunctionPointer            CostFunctionPointer;
     typedef Superclass1::ParametersType                 ParametersType;
     typedef Superclass1::MeasureType                    MeasureType;
-    typedef Superclass1::ParameterValueType             ParameterValueType; 
+    typedef Superclass1::ParameterValueType             ParameterValueType;
     typedef Superclass1::RangeValueType                 RangeValueType;
     typedef Superclass1::RangeType                      RangeType;
     typedef Superclass1::SearchSpaceType                SearchSpaceType;
@@ -95,7 +95,7 @@ using namespace itk;
     typedef Superclass1::SearchSpacePointType           SearchSpacePointType;
     typedef Superclass1::SearchSpaceIndexType           SearchSpaceIndexType;
     typedef Superclass1::SearchSpaceSizeType            SearchSpaceSizeType;
-    
+
     /** Typedef's inherited from Elastix.*/
     typedef typename Superclass2::ElastixType           ElastixType;
     typedef typename Superclass2::ElastixPointer        ElastixPointer;
@@ -104,7 +104,7 @@ using namespace itk;
     typedef typename Superclass2::RegistrationType      RegistrationType;
     typedef typename Superclass2::RegistrationPointer   RegistrationPointer;
     typedef typename Superclass2::ITKBaseType           ITKBaseType;
-    
+
     /** To store the results of the full search */
     typedef NDImageBase<float>                          NDImageType;
     typedef typename NDImageType::Pointer               NDImagePointer;
@@ -118,7 +118,7 @@ using namespace itk;
     virtual void BeforeEachResolution(void);
     virtual void AfterEachResolution(void);
     virtual void AfterEachIteration(void);
-    virtual void AfterRegistration(void);   
+    virtual void AfterRegistration(void);
     /** \todo BeforeAll, checking parameters. */
 
     /** Get a pointer to the image containing the optimization surface. */
@@ -140,14 +140,14 @@ using namespace itk;
     //virtual int CheckSearchSpaceRangeDefinition(const std::string & fullFieldName, int errorcode, unsigned int entry_nr);
     virtual bool CheckSearchSpaceRangeDefinition( const std::string & fullFieldName,
       const bool found, const unsigned int entry_nr ) const;
-      
+
   private:
 
     FullSearch( const Self& );      // purposely not implemented
     void operator=( const Self& );  // purposely not implemented
-    
+
   }; // end class FullSearch
-  
+
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION

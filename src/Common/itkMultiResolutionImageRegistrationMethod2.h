@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -28,8 +28,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -58,8 +58,8 @@ namespace itk
  * ---------------------------
  *
  * Original ITK documentation:
- * 
- * This class provides a generic interface for multi-resolution 
+ *
+ * This class provides a generic interface for multi-resolution
  * registration using components of the registration framework.
  * See documentation for ImageRegistrationMethod for a description
  * of the registration framework components.
@@ -69,9 +69,9 @@ namespace itk
  * this method.
  *
  * The number of resolution level to process can be set via
- * SetNumberOfLevels(). At each resolution level, the user specified 
- * registration components are used to register downsampled version of the 
- * images by computing the transform parameters that will map one image onto 
+ * SetNumberOfLevels(). At each resolution level, the user specified
+ * registration components are used to register downsampled version of the
+ * images by computing the transform parameters that will map one image onto
  * the other image.
  *
  * The downsampled images are provided by user specified
@@ -93,7 +93,7 @@ namespace itk
  * \ingroup RegistrationFilters
  */
 template <typename TFixedImage, typename TMovingImage>
-class MultiResolutionImageRegistrationMethod2 : public ProcessObject 
+class MultiResolutionImageRegistrationMethod2 : public ProcessObject
 {
 public:
   /** Standard class typedefs. */
@@ -104,7 +104,7 @@ public:
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
-  
+
   /** Run-time type information (and related methods). */
   itkTypeMacro( MultiResolutionImageRegistrationMethod2, ProcessObject );
 
@@ -133,7 +133,7 @@ public:
   typedef  DataObjectDecorator< TransformType >       TransformOutputType;
   typedef typename TransformOutputType::Pointer       TransformOutputPointer;
   typedef typename TransformOutputType::ConstPointer  TransformOutputConstPointer;
-  
+
   /**  Type of the Interpolator. */
   typedef typename MetricType::InterpolatorType       InterpolatorType;
   typedef typename InterpolatorType::Pointer          InterpolatorPointer;
@@ -145,7 +145,7 @@ public:
   typedef MultiResolutionPyramidImageFilter<
     FixedImageType, FixedImageType >                  FixedImagePyramidType;
   typedef typename FixedImagePyramidType::Pointer     FixedImagePyramidPointer;
-  
+
   /** Type of the moving image multiresolution pyramid. */
   typedef MultiResolutionPyramidImageFilter<
     MovingImageType, MovingImageType >                MovingImagePyramidType;
@@ -167,7 +167,7 @@ public:
 
   /** Set/Get the Fixed image. */
   itkSetConstObjectMacro( FixedImage, FixedImageType );
-  itkGetConstObjectMacro( FixedImage, FixedImageType ); 
+  itkGetConstObjectMacro( FixedImage, FixedImageType );
 
   /** Set/Get the Moving image. */
   itkSetConstObjectMacro( MovingImage, MovingImageType );
@@ -195,7 +195,7 @@ public:
 
   /** Set/Get the Fixed image pyramid. */
   itkSetObjectMacro( FixedImagePyramid, FixedImagePyramidType );
-  itkGetObjectMacro( FixedImagePyramid, FixedImagePyramidType ); 
+  itkGetObjectMacro( FixedImagePyramid, FixedImagePyramidType );
 
   /** Set/Get the Moving image pyramid. */
   itkSetObjectMacro( MovingImagePyramid, MovingImagePyramidType );
@@ -220,10 +220,10 @@ public:
   itkSetMacro( InitialTransformParametersOfNextLevel, ParametersType );
   itkGetConstReferenceMacro( InitialTransformParametersOfNextLevel, ParametersType );
 
-  /** Get the last transformation parameters visited by 
+  /** Get the last transformation parameters visited by
    * the optimizer.
    */
-  itkGetConstReferenceMacro( LastTransformParameters, ParametersType );  
+  itkGetConstReferenceMacro( LastTransformParameters, ParametersType );
 
   /** Returns the transform resulting from the registration process. */
   const TransformOutputType * GetOutput( void ) const;
@@ -236,8 +236,8 @@ public:
   /** Method to return the latest modified time of this object or
    * any of its cached ivars.
    */
-  unsigned long GetMTime( void ) const;  
-  
+  unsigned long GetMTime( void ) const;
+
 protected:
 
   /** Constructor. */
@@ -249,7 +249,7 @@ protected:
   /** PrintSelf. */
   virtual void PrintSelf(std::ostream& os, Indent indent) const;
 
-  /** Method invoked by the pipeline in order to trigger the computation of 
+  /** Method invoked by the pipeline in order to trigger the computation of
    * the registration.
    */
   virtual void GenerateData( void );
@@ -263,7 +263,7 @@ protected:
   /** Compute the size of the fixed region for each level of the pyramid. */
   virtual void PreparePyramids( void );
 
-  /** Set the current level to be processed. */  
+  /** Set the current level to be processed. */
   itkSetMacro( CurrentLevel, unsigned long );
 
   /** The last transform parameters. Compared to the ITK class
@@ -276,7 +276,7 @@ protected:
 private:
   MultiResolutionImageRegistrationMethod2(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
-  
+
   /** Member variables. */
   MetricPointer                    m_Metric;
   OptimizerType::Pointer           m_Optimizer;
@@ -290,13 +290,13 @@ private:
   FixedImageConstPointer           m_FixedImage;
   MovingImagePyramidPointer        m_MovingImagePyramid;
   FixedImagePyramidPointer         m_FixedImagePyramid;
-  
+
   FixedImageRegionType             m_FixedImageRegion;
   FixedImageRegionPyramidType      m_FixedImageRegionPyramid;
 
   unsigned long                    m_NumberOfLevels;
   unsigned long                    m_CurrentLevel;
-  
+
 }; // end class MultiResolutionImageRegistrationMethod2
 
 

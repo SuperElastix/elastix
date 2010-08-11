@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -45,8 +45,8 @@ namespace itk
  * \ingroup Transforms
  */
 template < class TScalarType=double >//Data type for scalars (float or double)
-class ITK_EXPORT AdvancedVersorRigid3DTransform : 
-      public AdvancedVersorTransform< TScalarType > 
+class ITK_EXPORT AdvancedVersorRigid3DTransform :
+      public AdvancedVersorTransform< TScalarType >
 {
 public:
   /** Standard class typedefs. */
@@ -54,7 +54,7 @@ public:
   typedef AdvancedVersorTransform< TScalarType >    Superclass;
   typedef SmartPointer<Self>                Pointer;
   typedef SmartPointer<const Self>          ConstPointer;
-    
+
   /** New macro for creation of through a Smart Pointer. */
   itkNewMacro( Self );
 
@@ -77,7 +77,7 @@ public:
   typedef typename Superclass::OutputVectorType       OutputVectorType;
   typedef typename Superclass::InputVnlVectorType     InputVnlVectorType;
   typedef typename Superclass::OutputVnlVectorType    OutputVnlVectorType;
-  typedef typename Superclass::InputCovariantVectorType 
+  typedef typename Superclass::InputCovariantVectorType
                                                       InputCovariantVectorType;
   typedef typename Superclass::OutputCovariantVectorType
                                                       OutputCovariantVectorType;
@@ -101,7 +101,7 @@ public:
   typedef typename Superclass
     ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
   typedef typename Superclass::InternalMatrixType   InternalMatrixType;
-  
+
   /** Set the transformation from a container of parameters
    * This is typically used by optimizers.
    * There are 6 parameters. The first three represent the
@@ -129,7 +129,7 @@ protected:
    * initializing the Versor */
   virtual void SetRotationMatrix(const MatrixType & matrix)
     { this->Superclass::SetRotationMatrix( matrix ); }
- 
+
 private:
   AdvancedVersorRigid3DTransform(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented

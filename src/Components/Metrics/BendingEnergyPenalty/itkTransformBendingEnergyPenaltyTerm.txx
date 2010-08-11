@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -79,14 +79,14 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
     bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
     /** Check if point is inside mask. */
-    if ( sampleOk ) 
+    if ( sampleOk )
     {
-      sampleOk = this->IsInsideMovingMask( mappedPoint );        
+      sampleOk = this->IsInsideMovingMask( mappedPoint );
     }
 
     if ( sampleOk )
     {
-      this->m_NumberOfPixelsCounted++; 
+      this->m_NumberOfPixelsCounted++;
 
       /** Get the spatial Hessian of the transformation at the current point.
        * This is needed to compute the bending energy.
@@ -131,7 +131,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   /** Slower, but works. */
   MeasureType dummyvalue = NumericTraits< MeasureType >::Zero;
   this->GetValueAndDerivative( parameters, dummyvalue, derivative );
-  
+
 } // end GetDerivative()
 
 
@@ -204,12 +204,12 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
     /** Check if point is inside mask. */
     if ( sampleOk )
     {
-      sampleOk = this->IsInsideMovingMask( mappedPoint );        
+      sampleOk = this->IsInsideMovingMask( mappedPoint );
     }
 
     if ( sampleOk )
     {
-      this->m_NumberOfPixelsCounted++; 
+      this->m_NumberOfPixelsCounted++;
 
       /** Get the spatial Hessian of the transformation at the current point.
        * This is needed to compute the bending energy.

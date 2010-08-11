@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -25,12 +25,12 @@ namespace itk
  * \class HardLimiterFunction
  * \brief A hard limiter
  *
- * If the input value exceeds the upper/lower bound the output is 
+ * If the input value exceeds the upper/lower bound the output is
  * set to the upper/lower bound and the derivative is filled with zeros.
- * 
+ *
  * \ingroup Functions
  * \sa LimiterFunctionBase, ExponentialLimiterFunction
- * 
+ *
  */
 template < class TInput, unsigned int NDimension >
 class HardLimiterFunction :
@@ -42,7 +42,7 @@ public:
   typedef LimiterFunctionBase<TInput, NDimension> Superclass;
   typedef SmartPointer<Self> Pointer;
   typedef SmartPointer<const Self> ConstPointer;
-  
+
   /** Run-time type information (and related methods). */
   itkTypeMacro(HardLimiterFunction, LimiterFunctionBase);
 
@@ -51,7 +51,7 @@ public:
 
   /** Superclass' static consts */
   itkStaticConstMacro( Dimension, unsigned int, Superclass::Dimension );
-  
+
   /** Superclass' typedefs */
   typedef typename Superclass::InputType            InputType;
   typedef typename Superclass::OutputType           OutputType;
@@ -63,7 +63,7 @@ public:
 
   /** Limit the input value and change the input function derivative accordingly */
   virtual OutputType Evaluate( const InputType & input, DerivativeType & derivative) const;
-  
+
 protected:
   HardLimiterFunction(){};
   ~HardLimiterFunction(){};

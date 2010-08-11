@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -28,7 +28,7 @@ namespace itk
  * given the image information and the desired grid spacing. It differs from
  * the GridScheduleComputer in how the nodes are placed in the last dimension.
  *
- * \ingroup 
+ * \ingroup
  */
 
 template < typename TTransformScalarType, unsigned int VImageDimension >

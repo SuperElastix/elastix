@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -62,7 +62,7 @@ using namespace itk;
     typedef typename ElastixType::CoordRepType          CoordRepType;
 
     /** ITKBaseType. */
-    typedef InterpolateImageFunction< 
+    typedef InterpolateImageFunction<
       InputImageType, CoordRepType>                     ITKBaseType;
 
     /** Cast to ITKBaseType. */
@@ -76,7 +76,7 @@ using namespace itk;
     {
       return dynamic_cast<const ITKBaseType *>(this);
     }
-    
+
   protected:
 
     /** The constructor. */

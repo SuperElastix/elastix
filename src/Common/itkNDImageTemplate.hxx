@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -19,18 +19,18 @@
 
 namespace itk
 {
-  
+
   /** Constructor */
   template < class TPixel, unsigned int VDimension >
     NDImageTemplate<TPixel, VDimension>::
-    NDImageTemplate() 
+    NDImageTemplate()
   {
     this->m_Image = 0;
     this->m_Writer = 0;
     this->m_Reader = 0;
   }
-  
-  
+
+
   template < class TPixel, unsigned int VDimension >
     void NDImageTemplate<TPixel, VDimension>::
     SetRegions(SizeType size)
@@ -39,23 +39,23 @@ namespace itk
       ConvertToStaticArray<SizeType,SizeTypeD>::DO(size)   );
   }
 
-    
+
   template < class TPixel, unsigned int VDimension >
     void NDImageTemplate<TPixel, VDimension>::
     SetRequestedRegion(DataObject *data)
   {
     this->m_Image->SetRequestedRegion(data);
   }
-  
-  
+
+
   template < class TPixel, unsigned int VDimension >
     void NDImageTemplate<TPixel, VDimension>::
     Allocate(void)
   {
     this->m_Image->Allocate();
   }
-  
-  
+
+
   template < class TPixel, unsigned int VDimension >
     void NDImageTemplate<TPixel, VDimension>::
     Initialize(void)
@@ -164,8 +164,8 @@ namespace itk
     void NDImageTemplate<TPixel, VDimension>::
     SetSpacing( const SpacingType & spacing )
   {
-    this->m_Image->SetSpacing( 
-      ConvertToStaticArray<SpacingType, SpacingTypeD>::DO(spacing)  );      
+    this->m_Image->SetSpacing(
+      ConvertToStaticArray<SpacingType, SpacingTypeD>::DO(spacing)  );
   }
 
 
@@ -173,8 +173,8 @@ namespace itk
     void NDImageTemplate<TPixel, VDimension>::
     SetOrigin( const PointType & origin )
   {
-    this->m_Image->SetOrigin( 
-      ConvertToStaticArray<PointType, PointTypeD>::DO(origin)  );     
+    this->m_Image->SetOrigin(
+      ConvertToStaticArray<PointType, PointTypeD>::DO(origin)  );
   }
 
 
@@ -224,7 +224,7 @@ namespace itk
       ConvertToStaticArray<IndexType, IndexTypeD>::DO(ind)   );
   }
 
-  
+
   template < class TPixel, unsigned int VDimension >
     typename NDImageTemplate<TPixel, VDimension>::IndexType
     NDImageTemplate<TPixel, VDimension>::
@@ -233,24 +233,24 @@ namespace itk
     return ConvertToDynamicArray<IndexTypeD, IndexType>::DO(
       this->m_Image->ComputeIndex(offset )   );
   }
-  
-  
+
+
   template < class TPixel, unsigned int VDimension >
     unsigned int  NDImageTemplate<TPixel, VDimension>::
     ImageDimension(void)
   {
     return this->m_Image->GetImageDimension();
   }
-      
-    
+
+
   template < class TPixel, unsigned int VDimension >
     unsigned int NDImageTemplate<TPixel, VDimension>::
     GetImageDimension(void)
   {
     return this->m_Image->GetImageDimension();
   }
-   
-     
+
+
   template < class TPixel, unsigned int VDimension >
     void NDImageTemplate<TPixel, VDimension>::
     Write(void)
@@ -260,8 +260,8 @@ namespace itk
       this->m_Writer->SetInput(this->m_Image);
       this->m_Writer->Write();
     }
-  }  
-    
+  }
+
 
   template < class TPixel, unsigned int VDimension >
     void NDImageTemplate<TPixel, VDimension>::
@@ -270,17 +270,17 @@ namespace itk
     if (this->m_Reader)
     {
       this->m_Reader->Update();
-      this->m_Image = this->m_Reader->GetOutput(); 
+      this->m_Image = this->m_Reader->GetOutput();
     }
-  }  
+  }
 
-  
+
   template < class TPixel, unsigned int VDimension >
     void NDImageTemplate<TPixel, VDimension>::
     CreateNewImage(void)
   {
     this->m_Image = ImageType::New();
-  }  
+  }
 
 
   template < class TPixel, unsigned int VDimension >
@@ -292,7 +292,7 @@ namespace itk
       this->m_Writer=WriterType::New();
     }
     this->m_Writer->SetImageIO(_arg);
-  }  
+  }
 
 
   template < class TPixel, unsigned int VDimension >
@@ -307,7 +307,7 @@ namespace itk
     {
       return 0;
     }
-  }  
+  }
 
 
   template < class TPixel, unsigned int VDimension >
@@ -319,7 +319,7 @@ namespace itk
       this->m_Reader=ReaderType::New();
     }
     this->m_Reader->SetImageIO(_arg);
-  }  
+  }
 
 
   template < class TPixel, unsigned int VDimension >
@@ -334,9 +334,9 @@ namespace itk
     {
       return 0;
     }
-  }  
+  }
 
-  
+
   template < class TPixel, unsigned int VDimension >
     void NDImageTemplate<TPixel, VDimension>::
     SetOutputFileName(const char * name)
@@ -346,9 +346,9 @@ namespace itk
       this->m_Writer=WriterType::New();
     }
     this->m_Writer->SetFileName(name);
-  }  
+  }
 
-    
+
   template < class TPixel, unsigned int VDimension >
     void NDImageTemplate<TPixel, VDimension>::
     SetInputFileName(const char * name )
@@ -358,14 +358,14 @@ namespace itk
       this->m_Reader=ReaderType::New();
     }
     this->m_Reader->SetFileName(name);
-  }  
+  }
 
-    
+
   template < class TPixel, unsigned int VDimension >
     const char * NDImageTemplate<TPixel, VDimension>::
     GetOutputFileName(void)
   {
-    if (this->m_Writer) 
+    if (this->m_Writer)
     {
       return this->m_Writer->GetFileName();
     }
@@ -373,9 +373,9 @@ namespace itk
     {
       return "";
     }
-  }  
+  }
 
-    
+
   template < class TPixel, unsigned int VDimension >
     const char * NDImageTemplate<TPixel, VDimension>::
     GetInputFileName(void)
@@ -388,9 +388,9 @@ namespace itk
     {
       return "";
     }
-  }  
+  }
 
-            
+
 } // end namespace itk
 
 

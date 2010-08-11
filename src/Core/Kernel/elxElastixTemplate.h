@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -40,13 +40,13 @@
 #include <sstream>
 #include <fstream>
 
-/** 
- * Macro that defines to functions. In the case of 
+/**
+ * Macro that defines to functions. In the case of
  *   _name = Metric and _elxBaseType = MetricBaseType
  * this results in:
  * MetricBaseType * GetElxMetricBase(void) const;
  * MetricBaseType * GetElxMetricBase(unsigned int idx) const;
- * 
+ *
  * The first function simply calls the second with argument = 0.
  * The second retrieves the metric component from the MetricContainer
  * and casts it to a MetricBaseType*;
@@ -74,7 +74,7 @@
 namespace elastix
 {
 using namespace itk;
-  
+
 /**
  * \class ElastixTemplate
  * \brief The main elastix class, which connects components
@@ -82,7 +82,7 @@ using namespace itk;
  * etc. methods.
  *
  * The ElastixTemplate class ...
- * 
+ *
  * \parameter WriteTransformParametersEachIteration: Controls whether
  *    to save a transform parameter file to disk in every iteration.\n
  *    example: <tt>(WriteTransformParametersEachIteration "true")</tt>\n
@@ -93,21 +93,21 @@ using namespace itk;
  *    example: <tt>(WriteTransformParametersEachResolution "true")</tt>\n
  *    This parameter can not be specified for each resolution separately.
  *    Default value: "false".
- * \parameter UseDirectionCosines: Controls whether to use or ignore the 
+ * \parameter UseDirectionCosines: Controls whether to use or ignore the
  * direction cosines (world matrix, transform matrix) set in the images.
- * Voxel spacing and image origin are always taken into account, regardless 
+ * Voxel spacing and image origin are always taken into account, regardless
  * the setting of this parameter.\n
  *    example: <tt>(UseDirectionCosines "true")</tt>\n
  * Default: false. Recommended: true. The default value is false for
  * backward compatibility reasons. This parameter was introduced in
  * elastix 4.3. Setting it to false means that you choose to ignore important
  * information from the image, which relates voxel coordinates to world coordinates.
- * Ignoring it may easily lead to left/right swaps for example, which could 
+ * Ignoring it may easily lead to left/right swaps for example, which could
  * skrew up a (medical) analysis.
  *
  * \ingroup Kernel
  */
-  
+
 template <class TFixedImage, class TMovingImage>
   class ElastixTemplate : public Object, public ElastixBase
 {
@@ -133,10 +133,10 @@ public:
   typedef Superclass2::DataObjectType                               DataObjectType; //for the images
   typedef Superclass2::ObjectPointer                                ObjectPointer;
   typedef Superclass2::DataObjectPointer                            DataObjectPointer;
-  typedef Superclass2::ObjectContainerType                          ObjectContainerType;      
+  typedef Superclass2::ObjectContainerType                          ObjectContainerType;
   typedef Superclass2::DataObjectContainerType                      DataObjectContainerType;
   typedef Superclass2::FileNameContainerType                        FileNameContainerType;
-  typedef Superclass2::ObjectContainerPointer                       ObjectContainerPointer;      
+  typedef Superclass2::ObjectContainerPointer                       ObjectContainerPointer;
   typedef Superclass2::DataObjectContainerPointer                   DataObjectContainerPointer;
   typedef Superclass2::FileNameContainerPointer                     FileNameContainerPointer;
 
@@ -155,7 +155,7 @@ public:
   typedef unsigned char                                             MaskPixelType;
   typedef Image<MaskPixelType, FixedDimension>                      FixedMaskType;
   typedef Image<MaskPixelType, MovingDimension>                     MovingMaskType;
-  typedef typename FixedMaskType::Pointer                           FixedMaskPointer;    
+  typedef typename FixedMaskType::Pointer                           FixedMaskPointer;
   typedef typename MovingMaskType::Pointer                          MovingMaskPointer;
 
   /** Typedef for the UseDirectionCosines option. */
@@ -195,7 +195,7 @@ public:
   typedef tmr::Timer                                                TimerType;
   typedef TimerType::Pointer                                        TimerPointer;
 
-  /** Typedef's for ApplyTransform. 
+  /** Typedef's for ApplyTransform.
    * \todo How useful is this? It is not consequently supported, since the
    * the input image is stored in the MovingImageContainer anyway.
    */
@@ -216,7 +216,7 @@ public:
   elxGetBaseMacro( ResampleInterpolator, ResampleInterpolatorBaseType );
   elxGetBaseMacro( Transform, TransformBaseType );
 
-  /** Get pointers to the images. They are obtained from the 
+  /** Get pointers to the images. They are obtained from the
    * {Fixed,Moving}ImageContainer and casted to the appropriate type.
    */
   virtual FixedImageType * GetFixedImage( void ) const
@@ -230,7 +230,7 @@ public:
   }
   virtual MovingImageType * GetMovingImage( unsigned int idx ) const;
 
-  /** Get pointers to the masks. They are obtained from the 
+  /** Get pointers to the masks. They are obtained from the
    * {Fixed,Moving}MaskContainer and casted to the appropriate type.
    */
   virtual FixedMaskType * GetFixedMask( void ) const
@@ -318,7 +318,7 @@ protected:
    * \li FixedImagePyramid
    * \li MovingImagePyramid
    * \li ResampleInterpolator
-   * \li Resampler 
+   * \li Resampler
    */
   void CallInEachComponent( PtrToMemberFunction func );
   int CallInEachComponentInt( PtrToMemberFunction2 func );

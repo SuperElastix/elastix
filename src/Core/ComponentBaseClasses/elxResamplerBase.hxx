@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -27,7 +27,7 @@ using namespace itk;
 /*
  * ******************* BeforeRegistrationBase *******************
  */
-  
+
 template<class TElastix>
 void
 ResamplerBase<TElastix>
@@ -38,7 +38,7 @@ ResamplerBase<TElastix>
 
   /** Set the size of the image to be produced by the resampler. */
 
-  /** Get a pointer to the fixedImage. 
+  /** Get a pointer to the fixedImage.
    * \todo make it a cast to the fixed image type
    */
   typedef typename ElastixType::FixedImageType FixedImageType;
@@ -151,7 +151,7 @@ ResamplerBase<TElastix>
   /** Release memory to be able to resample in case a limited
    * amount of memory is available.
    */
-  this->ReleaseMemory();    
+  this->ReleaseMemory();
 
   /** Writing result image. */
   if ( writeResultImage == "true" )
@@ -282,7 +282,7 @@ ResamplerBase<TElastix>
     OutputImageType >                             ChangeInfoFilterType;
 
   /** Possibly change direction cosines to their original value, as specified
-   * in the tp-file, or by the fixed image. This is only necessary when 
+   * in the tp-file, or by the fixed image. This is only necessary when
    * the UseDirectionCosines flag was set to false.
    */
   typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
@@ -366,7 +366,7 @@ ResamplerBase<TElastix>
     for ( unsigned int j = 0; j < ImageDimension; j++ )
     {
       this->m_Configuration->ReadParameter( direction( j, i ),
-        "Direction", i * ImageDimension + j );        
+        "Direction", i * ImageDimension + j );
     }
   }
 
@@ -389,7 +389,7 @@ ResamplerBase<TElastix>
   this->GetAsITKBaseType()->SetOutputSpacing( spacing );
 
   /** Set the direction cosines. If no direction cosines
-   * should be used, set identity cosines, to simulate the 
+   * should be used, set identity cosines, to simulate the
    * old ITK behavior.
    */
   if ( ! this->GetElastix()->GetUseDirectionCosines() )
@@ -481,7 +481,7 @@ void ResamplerBase<TElastix>
     {
       this->GetElastix()->GetFixedImage( i )->ReleaseData();
     }
-    
+
     /** Release fixed mask image memory. */
     const unsigned int nofm = this->GetElastix()->GetNumberOfFixedMasks();
     for ( unsigned int i = 0; i < nofm; ++i )

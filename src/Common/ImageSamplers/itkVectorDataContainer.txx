@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -26,8 +26,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -254,7 +254,7 @@ VectorDataContainer< TElementIdentifier , TElement >
 template <typename TElementIdentifier, typename TElement>
 typename VectorDataContainer< TElementIdentifier , TElement >::Iterator
 VectorDataContainer< TElementIdentifier , TElement >
-::Begin(void) 
+::Begin(void)
 {
   return Iterator(0, this->VectorType::begin());
 }
@@ -266,7 +266,7 @@ VectorDataContainer< TElementIdentifier , TElement >
 template <typename TElementIdentifier, typename TElement>
 typename VectorDataContainer< TElementIdentifier , TElement >::Iterator
 VectorDataContainer< TElementIdentifier , TElement >
-::End(void) 
+::End(void)
 {
   return Iterator(this->VectorType::size()-1, this->VectorType::end());
 }
@@ -288,9 +288,9 @@ VectorDataContainer< TElementIdentifier , TElement >
  * Clear the elements. The final size will be zero.
  */
 template <typename TElementIdentifier, typename TElement>
-void 
+void
 VectorDataContainer< TElementIdentifier , TElement >
-::Initialize(void) 
+::Initialize(void)
 {
   this->VectorType::clear();
 }

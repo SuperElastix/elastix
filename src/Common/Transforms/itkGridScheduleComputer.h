@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -26,12 +26,12 @@ namespace itk
  * \class GridScheduleComputer
  * \brief This class computes all information about the B-spline grid,
  * given the image information and the desired grid spacing.
- * 
+ *
  * NB: the Direction Cosines of the B-spline grid are set identical
- * to the user-supplied ImageDirection if the 
+ * to the user-supplied ImageDirection if the
  * ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE macro is set.
  *
- * \ingroup 
+ * \ingroup
  */
 
 template < typename TTransformScalarType, unsigned int VImageDimension >
@@ -116,7 +116,7 @@ public:
 
   /** Get the final grid spacing. */
   itkGetConstMacro( FinalGridSpacing, SpacingType );
-  
+
   /** Set a default grid spacing schedule. */
   virtual void SetDefaultSchedule(
     unsigned int levels,
@@ -151,7 +151,7 @@ protected:
   virtual ~GridScheduleComputer() {};
 
   /** Declare member variables, needed for B-spline grid. */
-  VectorSpacingType     m_GridSpacings;  
+  VectorSpacingType     m_GridSpacings;
   VectorOriginType      m_GridOrigins;
   VectorDirectionType   m_GridDirections;
   VectorRegionType      m_GridRegions;
@@ -183,7 +183,7 @@ private:
   DirectionType         m_ImageDirection;
   unsigned int          m_BSplineOrder;
   unsigned int          m_NumberOfLevels;
-  SpacingType           m_FinalGridSpacing;  
+  SpacingType           m_FinalGridSpacing;
 
   /** Clamp the upsampling factor. */
   itkSetClampMacro( UpsamplingFactor, float, 1.0, NumericTraits<float>::max() );

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -22,7 +22,7 @@
 namespace elastix
 {
   using namespace itk;
-  
+
   /**
    * \class WeightedCombinationTransformElastix
    * \brief A transform based on the itk::WeightedCombinationTransform.
@@ -30,9 +30,9 @@ namespace elastix
    * This transform is a weighted combination transformation. It implements
    * \f$T(x) = \sum_i w_i T_i(x)\f$.
    *
-   * The transformparameters are the weighting factors \f$w_i\f$ for each 
+   * The transformparameters are the weighting factors \f$w_i\f$ for each
    * subtransform \f$T_i(x)\f$. You could use this to implement registration
-   * using a statistical deformation model. Each subtransform would then be 
+   * using a statistical deformation model. Each subtransform would then be
    * a principal component that follows from your statistical model for example.
    *
    * A normalization factor can optionally be used:
@@ -57,12 +57,12 @@ namespace elastix
    *    Default: "false".
    * \parameter Scales: The scale factor for each transform parameter, during optimization.\n
    *    If your input subtransforms have very different magnitudes, you may compensate for that
-   *    by supplying scales, which will make the optimization CostFunction better behaving. 
+   *    by supplying scales, which will make the optimization CostFunction better behaving.
    *    For subtransforms with a high magnitude, provide a large scale then. NB: not in all cases
    *    you may want this.
    *    example: <tt>(Scales 1.0 1.0 10.0) </tt> \n
    *    Default: 1 for each parameter. See also AutomaticScalesEstimation, which is more convenient.
-   * 
+   *
    * The transform parameters necessary for transformix, additionally defined by this class, are:
    * \transformparameter NormalizeCombinationWeights: use the normalized expression
    * \f$T(x) = \sum_i w_i T_i(x) / \sum_i w_i \f$.\n
@@ -84,29 +84,29 @@ namespace elastix
       public elx::TransformBase<TElastix>
   {
   public:
-    
+
     /** Standard ITK-stuff. */
     typedef WeightedCombinationTransformElastix                     Self;
-    
+
     typedef AdvancedCombinationTransform<
       typename elx::TransformBase<TElastix>::CoordRepType,
       elx::TransformBase<TElastix>::FixedImageDimension >   Superclass1;
-    
+
     typedef elx::TransformBase<TElastix>                    Superclass2;
-    
+
     /** The ITK-class that provides most of the functionality, and
      * that is set as the "CurrentTransform" in the CombinationTransform */
     typedef WeightedCombinationTransform<
       typename elx::TransformBase<TElastix>::CoordRepType,
       elx::TransformBase<TElastix>::FixedImageDimension,
       elx::TransformBase<TElastix>::MovingImageDimension >  WeightedCombinationTransformType;
-    
+
     typedef SmartPointer<Self>                              Pointer;
     typedef SmartPointer<const Self>                        ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( WeightedCombinationTransformElastix, AdvancedCombinationTransform );
 
@@ -118,7 +118,7 @@ namespace elastix
 
     /** Dimension of the domain space. */
     itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );
-    
+
     /** Typedefs inherited from the superclass. */
     typedef typename Superclass1::ScalarType                ScalarType;
     typedef typename Superclass1::ParametersType            ParametersType;
@@ -131,7 +131,7 @@ namespace elastix
     typedef typename Superclass1::OutputVnlVectorType       OutputVnlVectorType;
     typedef typename Superclass1::InputPointType            InputPointType;
     typedef typename Superclass1::OutputPointType           OutputPointType;
-    
+
     /** Typedef's from the TransformBase class. */
     typedef typename Superclass2::ElastixType               ElastixType;
     typedef typename Superclass2::ElastixPointer            ElastixPointer;
@@ -146,19 +146,19 @@ namespace elastix
     typedef typename Superclass2::CombinationTransformType  CombinationTransformType;
     typedef typename Superclass2::CommandLineArgumentMapType CommandLineArgumentMapType;
     typedef typename Superclass2::CommandLineEntryType      CommandLineEntryType;
-    
+
     /** Extra typedefs */
     typedef typename WeightedCombinationTransformType::Pointer      WeightedCombinationTransformPointer;
-    typedef typename 
+    typedef typename
       WeightedCombinationTransformType::TransformContainerType      TransformContainerType;
-    typedef typename 
+    typedef typename
       WeightedCombinationTransformType::TransformType               SubTransformType;
     typedef typename
       WeightedCombinationTransformType::TransformPointer            SubTransformPointer;
 
     /** For scales setting in the optimizer */
     typedef typename Superclass2::ScalesType                ScalesType;
-    
+
     /** Execute stuff before the actual registration:
      * \li Read some parameters
      * \li Call InitializeTransform.
@@ -168,8 +168,8 @@ namespace elastix
     /** Initialize Transform.
      * \li Load subtransforms
      * \li Set all parameters to 1/NrOfSubTransforms (if NormalizeCombinationWeights=true)
-     * or 0, (if NormalizeCombinationWeights=false)  
-     * \li Set the initial parameters in the Registration object 
+     * or 0, (if NormalizeCombinationWeights=false)
+     * \li Set the initial parameters in the Registration object
      * This function is called by BeforeRegistration().
      */
     virtual void InitializeTransform(void);
@@ -179,18 +179,18 @@ namespace elastix
      * \li If scales are provided by the user use those,
      * \li Otherwise use some default value: 1.
      * This function is called by BeforeRegistration, after
-     * the InitializeTransform function is called 
+     * the InitializeTransform function is called
      */
     virtual void SetScales( void );
 
-    /** Function to read transform-parameters from a file. 
-     * 
-     * It loads the subtransforms, the NormalizeWeights option, 
+    /** Function to read transform-parameters from a file.
+     *
+     * It loads the subtransforms, the NormalizeWeights option,
      * and calls the superclass' implementation.
      */
     virtual void ReadFromFile( void );
-    
-    /** Function to write transform-parameters to a file. 
+
+    /** Function to write transform-parameters to a file.
      * It writes the names of the subTransform parameterFiles.
      * and the NormalizeWeights option, and calls the superclass' implementation.
      */
@@ -209,17 +209,17 @@ namespace elastix
 
     WeightedCombinationTransformPointer m_WeightedCombinationTransform;
     std::vector< std::string > m_SubTransformFileNames;
-    
+
   private:
 
     /** The private constructor. */
     WeightedCombinationTransformElastix( const Self& ); // purposely not implemented
     /** The private copy constructor. */
     void operator=( const Self& );              // purposely not implemented
-    
+
   }; // end class WeightedCombinationTransformElastix
-  
-  
+
+
 } // end namespace elastix
 
 #ifndef ITK_MANUAL_INSTANTIATION

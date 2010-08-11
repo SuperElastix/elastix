@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -20,77 +20,77 @@
 
 namespace itk
 {
-  
-  
+
+
   /**
    * \class AffineDTIGroup
    * \brief This class only contains a dummy class.
    *
    */
-  
+
   template< unsigned int Dimension >
     class AffineDTIGroup
   {
   public:
-    
+
     template< class TScalarType >
       class Dummy
     {
     public:
-      
+
       /** Typedef's.*/
-      typedef AdvancedMatrixOffsetTransformBase< TScalarType, Dimension, Dimension >             AffineDTITransform_tmp;      
-      
+      typedef AdvancedMatrixOffsetTransformBase< TScalarType, Dimension, Dimension >             AffineDTITransform_tmp;
+
     }; // end class Dummy
-    
+
   }; // end class AffineDTIGroup
-  
-  
-  
+
+
+
   /**
    * \class AffineDTIGroup<3>
    * \brief This class only contains a dummy class for the 3D case.
    *
    */
-  
+
   template<>
     class AffineDTIGroup<3>
   {
   public:
-    
+
     template< class TScalarType >
       class Dummy
     {
     public:
-      
+
       /** Typedef's.*/
       typedef AffineDTI3DTransform< TScalarType >           AffineDTITransform_tmp;
-            
+
     }; // end class Dummy
-    
+
   }; // end class AffineDTIGroup<3>
 
-   
+
   /**
    * \class AffineDTIGroupTemplate
    * \brief This class templates the AffineDTIGroup over its dimension.
    *
    */
-  
+
   template< class TScalarType, unsigned int Dimension >
     class AffineDTIGroupTemplate
   {
   public:
-          
+
     typedef AffineDTIGroupTemplate Self;
-    typedef TScalarType ScalarType;       
-    itkStaticConstMacro( SpaceDimension, unsigned int, Dimension );         
-  
-    
+    typedef TScalarType ScalarType;
+    itkStaticConstMacro( SpaceDimension, unsigned int, Dimension );
+
+
     // This declaration of 'AffineDTI' does not work with the GCC compiler
     //    typedef AffineDTIGroup<  itkGetStaticConstMacro( SpaceDimension ) >       AffineDTI;
     // The following trick works though:
-    template <unsigned int D> 
+    template <unsigned int D>
       class AffineDTIGroupWrap
     {
     public:
@@ -98,12 +98,12 @@ namespace itk
     };
     typedef AffineDTIGroupWrap<Dimension>               AffineDTIGroupWrapInstance;
     typedef typename AffineDTIGroupWrapInstance::AffineDTI  AffineDTI;
-    
+
     typedef typename AffineDTI::template Dummy< ScalarType >      AffineDTIDummy;
     typedef typename AffineDTIDummy::AffineDTITransform_tmp AffineDTITransform_tmp;
-    
+
   }; // end class AffineDTIGroupTemplate
-  
+
 
   /**
    * \class AffineDTITransform
@@ -114,7 +114,7 @@ namespace itk
    *
    * \ingroup Transforms
    */
-  
+
   template< class TScalarType, unsigned int Dimension >
     class AffineDTITransform:
   public AffineDTIGroupTemplate<
@@ -129,16 +129,16 @@ namespace itk
       ::AffineDTITransform_tmp                      Superclass;
     typedef SmartPointer<Self>                  Pointer;
     typedef SmartPointer<const Self>            ConstPointer;
-    
+
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
-    
+
     /** Run-time type information (and related methods). */
     itkTypeMacro( AffineDTITransform, AffineDTIGroupTemplate );
-    
+
     /** Dimension of the domain space. */
     itkStaticConstMacro( SpaceDimension, unsigned int, Dimension );
-    
+
     /** Typedefs inherited from the superclass. */
     typedef typename Superclass::ScalarType                   ScalarType;
     typedef typename Superclass::ParametersType               ParametersType;
@@ -162,22 +162,22 @@ namespace itk
     typedef typename Superclass
       ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
     typedef typename Superclass::InternalMatrixType   InternalMatrixType;
-    
+
 
   protected:
 
     AffineDTITransform(){};
     ~AffineDTITransform(){};
-    
+
   private:
 
     AffineDTITransform( const Self& ); // purposely not implemented
     void operator=( const Self& ); // purposely not implemented
-    
+
   }; // end class AffineDTITransform
-  
-  
-  
+
+
+
 } // end namespace itk
 
 #endif // end #ifndef __itkAffineDTITransform_H__

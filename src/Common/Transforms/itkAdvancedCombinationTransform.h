@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -21,7 +21,7 @@
 
 namespace itk
 {
-  
+
   /**
    * \class AdvancedCombinationTransform
    *
@@ -45,11 +45,11 @@ namespace itk
    * parameters of the CurrentTransform \f$T_1\f$.
    *
    * Note: It is mandatory to set a current transform. An initial transform
-   * is not mandatory. 
-   * 
+   * is not mandatory.
+   *
    * \ingroup Transforms
    */
-  
+
 template < typename TScalarType, unsigned int NDimensions = 3 >
 class AdvancedCombinationTransform :
   public AdvancedTransform<TScalarType, NDimensions, NDimensions>
@@ -136,7 +136,7 @@ public:
   /** Set the transformation parameters in the CurrentTransform. */
   virtual void SetParameters( const ParametersType & param );
 
-  /** Set the transformation parameters in the CurrentTransform.  
+  /** Set the transformation parameters in the CurrentTransform.
    * This method forces the transform to copy the parameters.
    */
   virtual void SetParametersByValue( const ParametersType & param );
@@ -212,7 +212,7 @@ public:
     SpatialHessianType & sh,
     JacobianOfSpatialHessianType & jsh,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
-  
+
   /** Typedefs for function pointers. */
   typedef OutputPointType (Self::*TransformPointFunctionPointer)( const InputPointType & ) const;
   typedef const JacobianType & (Self::*GetJacobianFunctionPointer)( const InputPointType & ) const;
@@ -257,7 +257,7 @@ protected:
   InitialTransformConstPointer  m_InitialTransform;
   CurrentTransformPointer       m_CurrentTransform;
 
-  /** Set the SelectedTransformPointFunction and the 
+  /** Set the SelectedTransformPointFunction and the
    * SelectedGetJacobianFunction.
    */
   virtual void UpdateCombinationMethod( void );
@@ -469,7 +469,7 @@ protected:
     SpatialJacobianType & sj,
     JacobianOfSpatialJacobianType & jsj,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
-  
+
   /** ************************************************
    * Methods to compute the Jacobian of the spatial Hessian.
    */
@@ -529,13 +529,13 @@ protected:
   bool m_UseComposition;
 
 private:
-  
+
   AdvancedCombinationTransform( const Self& );  // purposely not implemented
   void operator=( const Self& );        // purposely not implemented
 
 }; // end class AdvancedCombinationTransform
-    
-    
+
+
 } // end namespace itk
 
 

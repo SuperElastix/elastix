@@ -12,8 +12,8 @@
   Portions of this code are covered under the VTK copyright.
   See VTKCopyright.txt or http://www.kitware.com/VTKCopyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -60,19 +60,19 @@ template <class TImageType, class TCoordRep, class TCoefficientType>
 void
 ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficientType>
 ::PrintSelf(
-  std::ostream& os, 
+  std::ostream& os,
   Indent indent) const
 {
   Superclass::PrintSelf( os, indent );
   os << indent << "Spline Order: " << m_SplineOrder << std::endl;
-  os << indent << "UseImageDirection = " 
+  os << indent << "UseImageDirection = "
      << (this->m_UseImageDirection ? "On" : "Off") << std::endl;
 
 }
 
 
 template <class TImageType, class TCoordRep, class TCoefficientType>
-void 
+void
 ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficientType>
 ::SetInputImage(const TImageType * inputData)
 {
@@ -82,7 +82,7 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficien
 
     // the Coefficient Filter requires that the spline order and the input data be set.
     // TODO:  We need to ensure that this is only run once and only after both input and
-    //        spline order have been set. Should we force an update after the 
+    //        spline order have been set. Should we force an update after the
     //        splineOrder has been set also?
 
     m_CoefficientFilter->Update();
@@ -102,7 +102,7 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficien
 
 
 template <class TImageType, class TCoordRep, class TCoefficientType>
-void 
+void
 ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficientType>
 ::SetSplineOrder(unsigned int SplineOrder)
 {
@@ -110,7 +110,7 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficien
     {
     return;
     }
-  
+
   // SplineOrder not implemented yet.
   if (SplineOrder > 1)
     {
@@ -128,13 +128,13 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficien
   for (unsigned int n=0; n < ImageDimension - 1; n++)
     {
     m_MaxNumberInterpolationPoints *= ( m_SplineOrder + 1);
-    } 
+    }
   this->GeneratePointsToIndex( );
 }
 
 
 template <class TImageType, class TCoordRep, class TCoefficientType>
-typename 
+typename
 ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficientType>
 ::OutputType
 ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficientType>
@@ -148,8 +148,8 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficien
 
   vnl_matrix_ref<long>        EvaluateIndex(ImageDimension - 1, ( m_SplineOrder + 1 ), evaluateIndexData);
 
-  // compute the interpolation indexes 
-  this->DetermineRegionOfSupport(EvaluateIndex, x, m_SplineOrder); 
+  // compute the interpolation indexes
+  this->DetermineRegionOfSupport(EvaluateIndex, x, m_SplineOrder);
 
   // Determine weights
   vnl_matrix_ref<double>        weights(ImageDimension - 1, ( m_SplineOrder + 1 ), weightsData);
@@ -158,8 +158,8 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficien
 
   // Modify EvaluateIndex at the boundaries using mirror boundary conditions
   this->ApplyMirrorBoundaryConditions(EvaluateIndex, m_SplineOrder);
-  
-  // perform interpolation 
+
+  // perform interpolation
   double interpolated = 0.0;
   IndexType coefficientIndex;
   coefficientIndex[ ImageDimension - 1 ] = vnl_math_rnd ( x[ ImageDimension - 1 ] );
@@ -181,12 +181,12 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficien
     interpolated += w * m_Coefficients->GetPixel(coefficientIndex);
   }
   return(interpolated);
-    
+
 }
 
 
 template <class TImageType, class TCoordRep, class TCoefficientType>
-typename 
+typename
 ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficientType>
 :: CovariantVectorType
 ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficientType>
@@ -201,7 +201,7 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficien
 
   vnl_matrix_ref<long>        EvaluateIndex(ImageDimension - 1, ( m_SplineOrder + 1 ), evaluateIndexData);
 
-  // compute the interpolation indexes 
+  // compute the interpolation indexes
   // TODO: Do we need to revisit region of support for the derivatives?
   this->DetermineRegionOfSupport(EvaluateIndex, x, m_SplineOrder);
 
@@ -215,7 +215,7 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficien
 
   // Modify EvaluateIndex at the boundaries using mirror boundary conditions
   this->ApplyMirrorBoundaryConditions(EvaluateIndex, m_SplineOrder);
-  
+
   const InputImageType * inputImage = this->GetInputImage();
   const typename InputImageType::SpacingType & spacing = inputImage->GetSpacing();
 
@@ -228,7 +228,7 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficien
     derivativeValue[n] = 0.0;
     for (unsigned int p = 0; p < m_MaxNumberInterpolationPoints; p++)
       {
-      tempValue = 1.0; 
+      tempValue = 1.0;
       for (unsigned int n1 = 0; n1 < ImageDimension - 1; n1++)
         {
         coefficientIndex[n1] = EvaluateIndex[n1][m_PointsToIndex[p][n1]];
@@ -262,16 +262,16 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficien
 
 
 template <class TImageType, class TCoordRep, class TCoefficientType>
-void 
+void
 ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficientType>
-::SetInterpolationWeights( const ContinuousIndexType & x, const vnl_matrix<long> & EvaluateIndex, 
+::SetInterpolationWeights( const ContinuousIndexType & x, const vnl_matrix<long> & EvaluateIndex,
                            vnl_matrix<double> & weights, unsigned int splineOrder ) const
 {
   // For speed improvements we could make each case a separate function and use
   // function pointers to reference the correct weight order.
   // Left as is for now for readability.
   double w, w2, w4, t, t0, t1;
-  
+
   switch (splineOrder)
     {
     case 3:
@@ -356,13 +356,13 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficien
       throw err;
       break;
     }
-    
+
 }
 
 template <class TImageType, class TCoordRep, class TCoefficientType>
-void 
+void
 ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficientType>
-::SetDerivativeWeights( const ContinuousIndexType & x, const vnl_matrix<long> & EvaluateIndex, 
+::SetDerivativeWeights( const ContinuousIndexType & x, const vnl_matrix<long> & EvaluateIndex,
                         vnl_matrix<double> & weights, unsigned int splineOrder ) const
 {
   // For speed improvements we could make each case a separate function and use
@@ -372,10 +372,10 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficien
   // Left as is for now for readability.
   double w, w1, w2, w3, w4, w5, t, t0, t1, t2;
   int derivativeSplineOrder = (int) splineOrder -1;
-  
+
   switch (derivativeSplineOrder)
     {
-    
+
     // Calculates B(splineOrder) ( (x + 1/2) - xi) - B(splineOrder -1) ( (x - 1/2) - xi)
     case -1:
       // Why would we want to do this?
@@ -400,11 +400,11 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficien
 
         weights[n][0] = 0.0 - w1;
         weights[n][1] = w1 - w;
-        weights[n][2] = w; 
+        weights[n][2] = w;
         }
       break;
     case 2:
-      
+
       for (unsigned int n = 0; n < ImageDimension - 1; n++)
         {
         w = x[n] + .5 - (double)EvaluateIndex[n][2];
@@ -415,11 +415,11 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficien
         weights[n][0] = 0.0 - w1;
         weights[n][1] = w1 - w2;
         weights[n][2] = w2 - w3;
-        weights[n][3] = w3; 
+        weights[n][3] = w3;
         }
       break;
     case 3:
-      
+
       for (unsigned int n = 0; n < ImageDimension - 1; n++)
         {
         w = x[n] + 0.5 - (double)EvaluateIndex[n][2];
@@ -459,7 +459,7 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficien
         weights[n][5] = w5;
         }
       break;
-      
+
     default:
       // SplineOrder not implemented yet.
       ExceptionObject err(__FILE__, __LINE__);
@@ -468,7 +468,7 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficien
       throw err;
       break;
     }
-    
+
 }
 
 
@@ -501,13 +501,13 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficien
 template <class TImageType, class TCoordRep, class TCoefficientType>
 void
 ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficientType>
-::DetermineRegionOfSupport( vnl_matrix<long> & evaluateIndex, 
-                            const ContinuousIndexType & x, 
+::DetermineRegionOfSupport( vnl_matrix<long> & evaluateIndex,
+                            const ContinuousIndexType & x,
                             unsigned int splineOrder ) const
-{ 
+{
   long indx;
 
-// compute the interpolation indexes 
+// compute the interpolation indexes
   for (unsigned int n = 0; n< ImageDimension - 1; n++)
     {
     if (splineOrder & 1)     // Use this index calculation for odd splineOrder
@@ -519,7 +519,7 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficien
         }
       }
     else                       // Use this index calculation for even splineOrder
-      { 
+      {
       indx = (long)vcl_floor((float)(x[n] + 0.5)) - splineOrder / 2;
       for (unsigned int k = 0; k <= splineOrder; k++)
         {
@@ -532,14 +532,14 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficien
 template <class TImageType, class TCoordRep, class TCoefficientType>
 void
 ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficientType>
-::ApplyMirrorBoundaryConditions(vnl_matrix<long> & evaluateIndex, 
+::ApplyMirrorBoundaryConditions(vnl_matrix<long> & evaluateIndex,
                                 unsigned int splineOrder) const
 {
   for (unsigned int n = 0; n < ImageDimension - 1; n++)
     {
     long dataLength2 = 2 * m_DataLength[n] - 2;
 
-    // apply the mirror boundary conditions 
+    // apply the mirror boundary conditions
     // TODO:  We could implement other boundary options beside mirror
     if (m_DataLength[n] == 1)
       {

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -53,7 +53,7 @@ namespace itk
     return static_cast<DataObject*>( TOutputVectorContainer::New().GetPointer() );
   } // end MakeOutput
 
-  
+
   /**
    * ******************* GetOutput *******************
    */
@@ -67,7 +67,7 @@ namespace itk
     {
       return 0;
     }
-    
+
     return static_cast<OutputVectorContainerType *>(
       this->ProcessObject::GetOutput(0) );
   } // end GetOutput
@@ -85,7 +85,7 @@ namespace itk
     return static_cast<OutputVectorContainerType *>(
       this->ProcessObject::GetOutput( idx ) );
   } // end GetOutput
-  
+
 
   /**
    * ******************* GenerateInputRequestedRegion *******************
@@ -128,7 +128,7 @@ namespace itk
       itkExceptionMacro( << "Requested to graft output " << idx
         << " but this filter only has " << this->GetNumberOfOutputs() << " Outputs." );
     }
-    
+
     /** Check graft. */
     if ( !graft )
     {
@@ -137,7 +137,7 @@ namespace itk
 
     /** Get a pointer to the output. */
     DataObject * output = this->GetOutput( idx );
-    
+
     /** Call Graft on the vector container in order to
      * copy meta-information, and containers. */
     output->Graft( graft );
@@ -148,7 +148,7 @@ namespace itk
   /**
    * ******************* PrintSelf *******************
    */
-  
+
   template< class TOutputVectorContainer >
     void
     VectorContainerSource< TOutputVectorContainer >

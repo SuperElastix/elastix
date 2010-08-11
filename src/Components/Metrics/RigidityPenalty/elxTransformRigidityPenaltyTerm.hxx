@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -208,7 +208,7 @@ TransformRigidityPenalty<TElastix>
 
   /** Get and set the dilateRigidityImages. */
   bool dilateRigidityImages = true;
-  this->GetConfiguration()->ReadParameter( dilateRigidityImages, 
+  this->GetConfiguration()->ReadParameter( dilateRigidityImages,
     "DilateRigidityImages", this->GetComponentLabel(), level, 0 );
   this->SetDilateRigidityImages( dilateRigidityImages );
 
@@ -218,7 +218,7 @@ TransformRigidityPenalty<TElastix>
     "DilationRadiusMultiplier", this->GetComponentLabel(), level, 0 );
   this->SetDilationRadiusMultiplier( dilationRadiusMultiplier );
 
-  /** Get and set the usage of the linearity condition part. */ 
+  /** Get and set the usage of the linearity condition part. */
   bool useLinearityCondition = true;
   this->GetConfiguration()->ReadParameter( useLinearityCondition,
     "UseLinearityCondition", this->GetComponentLabel(), level, 0 );

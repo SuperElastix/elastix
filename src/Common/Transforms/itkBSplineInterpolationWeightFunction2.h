@@ -6,7 +6,7 @@ Copyright (c) University Medical Center Utrecht. All rights reserved.
 See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
 details.
 
-This software is distributed WITHOUT ANY WARRANTY; without even 
+This software is distributed WITHOUT ANY WARRANTY; without even
 the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
@@ -38,7 +38,7 @@ namespace itk
 template < class TCoordRep = float,
   unsigned int VSpaceDimension = 2,
   unsigned int VSplineOrder = 3 >
-class ITK_EXPORT BSplineInterpolationWeightFunction2 : 
+class ITK_EXPORT BSplineInterpolationWeightFunction2 :
   public BSplineInterpolationWeightFunctionBase<
   TCoordRep, VSpaceDimension, VSplineOrder >
 {
@@ -52,7 +52,7 @@ public:
 
   /** New macro for creation of through the object factory.*/
   itkNewMacro( Self );
-  
+
   /** Run-time type information (and related methods). */
   itkTypeMacro( BSplineInterpolationWeightFunction2,
     BSplineInterpolationWeightFunctionBase );
@@ -68,7 +68,7 @@ public:
   typedef typename Superclass::IndexType            IndexType;
   typedef typename Superclass::SizeType             SizeType;
   typedef typename Superclass::ContinuousIndexType  ContinuousIndexType;
-  
+
 protected:
   BSplineInterpolationWeightFunction2();
   ~BSplineInterpolationWeightFunction2() {};
@@ -94,7 +94,7 @@ protected:
 private:
   BSplineInterpolationWeightFunction2(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
-  
+
 };
 
 } // end namespace itk

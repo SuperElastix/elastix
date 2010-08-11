@@ -20,7 +20,7 @@ int main( int argc, char *argv[] )
   //const double distance = 1e-3; // the allowable distance
   //const double allowedTimeDifference = 0.1; // 10% is considered within limits
   /** The number of calls to Evaluate(). This number gives reasonably
-   * fast test results in Release mode. 
+   * fast test results in Release mode.
    */
   unsigned int N = static_cast<unsigned int>( 1e5 );
 
@@ -31,7 +31,7 @@ int main( int argc, char *argv[] )
       << "transformation parameters." << std::endl;
     return 1;
   }
-  
+
   /** Other typedefs. */
   typedef itk::AdvancedBSplineDeformableTransform<
     CoordinateRepresentationType, Dimension, SplineOrder >    TransformType;
@@ -74,8 +74,8 @@ int main( int argc, char *argv[] )
   OriginType gridOrigin;
   gridOrigin[ 0 ] = -237.6759555555;
   gridOrigin[ 1 ] = -239.9488431747;
-  gridOrigin[ 2 ] = -344.2315805162; 
-  
+  gridOrigin[ 2 ] = -344.2315805162;
+
   transform->SetGridOrigin( gridOrigin );
   transform->SetGridSpacing( gridSpacing );
   transform->SetGridRegion( gridRegion );
@@ -153,7 +153,7 @@ int main( int argc, char *argv[] )
 //   {
 //     std::cerr << spatialHessian[ i ] << std::endl;
 //   }
-// 
+//
 //   /***/
 //   transform->GetJacobianOfSpatialHessian( inputPoint,
 //     spatialHessian, jacobianOfSpatialHessian, nzji );
@@ -181,7 +181,7 @@ int main( int argc, char *argv[] )
   clock_t clockITK = endClock - startClock;
   std::cerr << "The elapsed time for the spatial Jacobian is: "
     << clockITK << std::endl;
-  
+
   /** Time the implementation of the spatial Hessian. */
   startClock = clock();
   for ( unsigned int i = 0; i < N; ++i )

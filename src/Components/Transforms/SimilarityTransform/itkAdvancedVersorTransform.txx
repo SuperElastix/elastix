@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -34,7 +34,7 @@ AdvancedVersorTransform<TScalarType>
 /** Constructor with default arguments */
 template<class TScalarType>
 AdvancedVersorTransform<TScalarType>::
-AdvancedVersorTransform(unsigned int spaceDimension, 
+AdvancedVersorTransform(unsigned int spaceDimension,
                 unsigned int parametersDimension) :
   Superclass(spaceDimension,parametersDimension)
 {
@@ -66,10 +66,10 @@ AdvancedVersorTransform<TScalarType>
   rightPart[2] = parameters[2];
 
   // The versor will compute the scalar part.
-  m_Versor.Set( rightPart ); 
+  m_Versor.Set( rightPart );
 
   itkDebugMacro( <<"Versor is now " << m_Versor );
-  
+
   this->ComputeMatrix();
 
   // Modified is always called since we just have a pointer to the
@@ -81,7 +81,7 @@ AdvancedVersorTransform<TScalarType>
 
 /** Set Parameters */
 template <class TScalarType>
-const typename AdvancedVersorTransform<TScalarType>::ParametersType & 
+const typename AdvancedVersorTransform<TScalarType>::ParametersType &
 AdvancedVersorTransform<TScalarType>
 ::GetParameters( void ) const
 {
@@ -124,7 +124,7 @@ AdvancedVersorTransform<TScalarType>
   Superclass::SetIdentity();
 
   m_Versor.SetIdentity();
-  
+
   this->Modified();
 }
 
@@ -140,7 +140,7 @@ AdvancedVersorTransform<TScalarType>
   const TScalarType vy = m_Versor.GetY();
   const TScalarType vz = m_Versor.GetZ();
   const TScalarType vw = m_Versor.GetW();
-      
+
   const TScalarType xx = vx * vx;
   const TScalarType yy = vy * vy;
   const TScalarType zz = vz * vz;
@@ -188,7 +188,7 @@ GetJacobian( const InputPointType & p,
   const ValueType vy = m_Versor.GetY();
   const ValueType vz = m_Versor.GetZ();
   const ValueType vw = m_Versor.GetW();
-  
+
   j.SetSize( OutputSpaceDimension, ParametersDimension );
   j.Fill(0.0);
 
@@ -214,29 +214,29 @@ GetJacobian( const InputPointType & p,
   // compute Jacobian with respect to quaternion parameters
   j[0][0] = 2.0 * (               (vyw+vxz)*py + (vzw-vxy)*pz)
                          / vw;
-  j[1][0] = 2.0 * ((vyw-vxz)*px   -2*vxw   *py + (vxx-vww)*pz) 
+  j[1][0] = 2.0 * ((vyw-vxz)*px   -2*vxw   *py + (vxx-vww)*pz)
                          / vw;
-  j[2][0] = 2.0 * ((vzw+vxy)*px + (vww-vxx)*py   -2*vxw   *pz) 
-                         / vw;
-
-  j[0][1] = 2.0 * ( -2*vyw  *px + (vxw+vyz)*py + (vww-vyy)*pz) 
-                         / vw;
-  j[1][1] = 2.0 * ((vxw-vyz)*px                + (vzw+vxy)*pz) 
-                         / vw;
-  j[2][1] = 2.0 * ((vyy-vww)*px + (vzw-vxy)*py   -2*vyw   *pz) 
+  j[2][0] = 2.0 * ((vzw+vxy)*px + (vww-vxx)*py   -2*vxw   *pz)
                          / vw;
 
-  j[0][2] = 2.0 * ( -2*vzw  *px + (vzz-vww)*py + (vxw-vyz)*pz) 
+  j[0][1] = 2.0 * ( -2*vyw  *px + (vxw+vyz)*py + (vww-vyy)*pz)
                          / vw;
-  j[1][2] = 2.0 * ((vww-vzz)*px   -2*vzw   *py + (vyw+vxz)*pz) 
+  j[1][1] = 2.0 * ((vxw-vyz)*px                + (vzw+vxy)*pz)
                          / vw;
-  j[2][2] = 2.0 * ((vxw+vyz)*px + (vyw-vxz)*py               ) 
+  j[2][1] = 2.0 * ((vyy-vww)*px + (vzw-vxy)*py   -2*vyw   *pz)
                          / vw;
-  
+
+  j[0][2] = 2.0 * ( -2*vzw  *px + (vzz-vww)*py + (vxw-vyz)*pz)
+                         / vw;
+  j[1][2] = 2.0 * ((vww-vzz)*px   -2*vzw   *py + (vyw+vxz)*pz)
+                         / vw;
+  j[2][2] = 2.0 * ((vxw+vyz)*px + (vyw-vxz)*py               )
+                         / vw;
+
   nzji = this->m_NonZeroJacobianIndices;
 
 }
-  
+
 /** Print self */
 template<class TScalarType>
 void
@@ -245,7 +245,7 @@ PrintSelf(std::ostream &os, Indent indent) const
 {
 
   Superclass::PrintSelf(os,indent);
-  
+
   os << indent << "Versor: " << m_Versor  << std::endl;
 }
 

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -30,7 +30,7 @@ namespace xoutlibrary
    *
    * \ingroup xout
    */
-  
+
   template<class charT, class traits = char_traits<charT> >
     class xoutsimple : public xoutbase<charT, traits>
   {
@@ -47,7 +47,7 @@ namespace xoutlibrary
     typedef typename Superclass::off_type     off_type;
     typedef typename Superclass::ostream_type ostream_type;
     typedef typename Superclass::ios_type     ios_type;
-    
+
     typedef typename Superclass::CStreamMapType         CStreamMapType;
     typedef typename Superclass::XStreamMapType         XStreamMapType;
     typedef typename Superclass::CStreamMapIteratorType CStreamMapIteratorType;
@@ -60,7 +60,7 @@ namespace xoutlibrary
 
     /** Destructor */
     virtual ~xoutsimple();
-  
+
     /** Add/Remove an output stream (like cout, or an fstream, or an xout-object).  */
     virtual int AddOutput( const char * name, ostream_type * output );
     virtual int AddOutput( const char * name, Superclass * output );
@@ -72,7 +72,7 @@ namespace xoutlibrary
     /** Get the output maps. */
     virtual const CStreamMapType & GetCOutputs(void);
     virtual const XStreamMapType & GetXOutputs(void);
-        
+
   }; // end class xoutsimple
 
 

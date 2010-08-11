@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -25,16 +25,16 @@
 
 namespace elastix
 {
-  
+
   elxPrepareImageTypeSupportMacro();
-  
+
 
   /**
    * ******************** SupportedImageTypes *********************
    *
    * Add here the combinations of ImageTypes that elastix should support.
    *
-   * Syntax: 
+   * Syntax:
    *
    * elxSupportedImageTypeMacro( FixedImagePixelType,
    *                             FixedImageDimension,
@@ -48,13 +48,13 @@ namespace elastix
    *    ( index_{i} - index_{i-1} == 1 ).
    *
    * The NrOfSupportedImageTypes must also be set to the right value.
-   * 
+   *
    * elastix, and all its components, must be recompiled after adding
    * a line in this file.
    */
-  
+
   const unsigned int NrOfSupportedImageTypes = 3;
-  
+
 //  elxSupportedImageTypeMacro( short,            2, short,             2,  1 );
   elxSupportedImageTypeMacro( short,            3, short,             3,  1 );
 //  elxSupportedImageTypeMacro( char,             2, char,              2,  3 );
@@ -73,10 +73,10 @@ namespace elastix
 //  elxSupportedImageTypeMacro( unsigned char,    3, unsigned char,     3,  4 );
 //  elxSupportedImageTypeMacro( unsigned int,     2, unsigned int,      2,  15 );
 //  elxSupportedImageTypeMacro( unsigned int,     3, unsigned int,      3,  16 );
-    
+
 
   //etc
-  
+
 
 } // end namespace elastix
 

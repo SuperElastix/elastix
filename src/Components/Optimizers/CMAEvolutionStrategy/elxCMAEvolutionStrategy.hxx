@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -25,11 +25,11 @@ namespace elastix
 using namespace itk;
 
 
-    
+
   /**
    * ***************** StartOptimization ************************
    */
-  
+
   template <class TElastix>
     void CMAEvolutionStrategy<TElastix>::
     StartOptimization(void)
@@ -57,13 +57,13 @@ using namespace itk;
   /**
    * ***************** InitializeProgressVariables ************************
    */
-  
+
   template <class TElastix>
     void CMAEvolutionStrategy<TElastix>::
     InitializeProgressVariables(void)
   {
     this->Superclass1::InitializeProgressVariables();
-    
+
     /** Print some settings that can be automatically determined by the optimizer. */
     elxout
       << "The CMAEvolutionStrategy optimizer uses the following settings:\n"
@@ -74,7 +74,7 @@ using namespace itk;
 
   } // end InitializeProgressVariables
 
-  
+
   /**
    * ***************** BeforeRegistration ***********************
    */
@@ -84,7 +84,7 @@ using namespace itk;
     BeforeRegistration(void)
   {
     using namespace xl;
-    
+
     /** Add target cells to xout["iteration"].*/
     xout["iteration"].AddTargetCell("2:Metric");
     xout["iteration"].AddTargetCell("3:StepLength");
@@ -92,12 +92,12 @@ using namespace itk;
     xout["iteration"].AddTargetCell("5a:Sigma");
     xout["iteration"].AddTargetCell("5b:MaximumD");
     xout["iteration"].AddTargetCell("5c:MinimumD");
-    
-    /** Format the metric and stepsize as floats */     
+
+    /** Format the metric and stepsize as floats */
     xout["iteration"]["2:Metric"]   << std::showpoint << std::fixed;
     xout["iteration"]["3:StepLength"] << std::showpoint << std::fixed;
     xout["iteration"]["4:||Step||"] << std::showpoint << std::fixed;
-    xout["iteration"]["5a:Sigma"] << std::showpoint << std::fixed;    
+    xout["iteration"]["5a:Sigma"] << std::showpoint << std::fixed;
     xout["iteration"]["5b:MaximumD"] << std::showpoint << std::fixed;
     xout["iteration"]["5c:MinimumD"] << std::showpoint << std::fixed;
 
@@ -115,19 +115,19 @@ using namespace itk;
     /** Get the current resolution level.*/
     unsigned int level = static_cast<unsigned int>(
       this->m_Registration->GetAsITKBaseType()->GetCurrentLevel() );
-        
+
     /** Set MaximumNumberOfIterations.*/
     unsigned int maximumNumberOfIterations = 500;
     this->m_Configuration->ReadParameter( maximumNumberOfIterations,
       "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0 );
     this->SetMaximumNumberOfIterations( maximumNumberOfIterations );
-      
+
     /** Set the length of the initial step (InitialSigma). */
-    double stepLength = 1.0; 
+    double stepLength = 1.0;
     this->m_Configuration->ReadParameter( stepLength,
       "StepLength", this->GetComponentLabel(), level, 0 );
     this->SetInitialSigma( stepLength );
-        
+
     /** Set ValueTolerance */
     double valueTolerance = 0.00001;
     this->m_Configuration->ReadParameter( valueTolerance,
@@ -139,7 +139,7 @@ using namespace itk;
     this->m_Configuration->ReadParameter( populationSize,
       "PopulationSize", this->GetComponentLabel(), level, 0 );
     this->SetPopulationSize( populationSize );
-    
+
     /** Set NumberOfParents */
     unsigned int numberOfParents = 0;
     this->m_Configuration->ReadParameter( numberOfParents,
@@ -205,7 +205,7 @@ using namespace itk;
     this->m_Configuration->ReadParameter( minimumDeviation,
       "MinimumDeviation", this->GetComponentLabel(), level, 0 );
     this->SetMinimumDeviation( minimumDeviation );
-      
+
   } // end BeforeEachResolution
 
 
@@ -221,19 +221,19 @@ using namespace itk;
 
     /** Print some information. */
     xout["iteration"]["2:Metric"] << this->GetCurrentValue();
-    xout["iteration"]["3:StepLength"] << this->GetCurrentStepLength(); 
+    xout["iteration"]["3:StepLength"] << this->GetCurrentStepLength();
     xout["iteration"]["4:||Step||"] << this->GetCurrentScaledStep().magnitude();
     xout["iteration"]["5a:Sigma"] << this->GetCurrentSigma();
     xout["iteration"]["5b:MaximumD"] << this->GetCurrentMaximumD();
     xout["iteration"]["5c:MinimumD"] << this->GetCurrentMinimumD();
-        
+
     /** Select new samples if desired. These
      * will be used in the next iteration */
     if ( this->GetNewSamplesEveryIteration() )
     {
       this->SelectNewSamples();
-    } 
-    
+    }
+
   } // end AfterEachIteration
 
 
@@ -254,26 +254,26 @@ using namespace itk;
       ValueTolerance,
       ZeroStepLength,
       Unknown }    StopConditionType;  */
-    
+
     std::string stopcondition;
 
     switch( this->GetStopCondition() )
     {
     case MetricError :
-      stopcondition = "Error in metric";  
-      break;  
+      stopcondition = "Error in metric";
+      break;
 
     case MaximumNumberOfIterations :
-      stopcondition = "Maximum number of iterations has been reached";  
-      break;  
+      stopcondition = "Maximum number of iterations has been reached";
+      break;
 
     case PositionToleranceMin :
-      stopcondition = "The minimum step length condition has been reached"; 
-      break;  
+      stopcondition = "The minimum step length condition has been reached";
+      break;
 
     case PositionToleranceMax :
-      stopcondition = "The maximum step length condition has been reached"; 
-      break;  
+      stopcondition = "The maximum step length condition has been reached";
+      break;
 
     case ValueTolerance :
       stopcondition = "Almost no decrease in function value anymore";
@@ -281,7 +281,7 @@ using namespace itk;
 
     case ZeroStepLength :
       stopcondition = "The step length is 0";
-      break;          
+      break;
 
     default:
       stopcondition = "Unknown";
@@ -294,7 +294,7 @@ using namespace itk;
 
   } // end AfterEachResolution
 
-  
+
   /**
    * ******************* AfterRegistration ************************
    */
@@ -304,14 +304,14 @@ using namespace itk;
     ::AfterRegistration(void)
   {
     /** Print the best metric value */
-    
+
     double bestValue = this->GetCurrentValue();
     elxout
       << std::endl
-      << "Final metric value  = " 
+      << "Final metric value  = "
       << bestValue
       << std::endl;
-    
+
   } // end AfterRegistration
 
 

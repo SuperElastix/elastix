@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -19,7 +19,7 @@
 
 namespace itk
 {
-  
+
   unsigned int ANNBinaryTreeCreator::m_NumberOfANNBinaryTrees = 0;
 
   /**
@@ -88,12 +88,12 @@ namespace itk
       DecreaseReferenceCount();
     }
   } // end DeleteANNBruteForceTree
-  
+
 
   /**
    * ************************ IncreaseReferenceCount *************************
    */
-  
+
   void ANNBinaryTreeCreator::IncreaseReferenceCount( void )
   {
     m_NumberOfANNBinaryTrees++;
@@ -103,7 +103,7 @@ namespace itk
   /**
    * ************************ DecreaseReferenceCount *************************
    */
-  
+
   void ANNBinaryTreeCreator::DecreaseReferenceCount( void )
   {
     m_NumberOfANNBinaryTrees--;

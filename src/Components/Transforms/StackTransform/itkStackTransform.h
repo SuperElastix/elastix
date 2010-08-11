@@ -6,7 +6,7 @@ Copyright (c) University Medical Center Utrecht. All rights reserved.
 See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
 details.
 
-This software is distributed WITHOUT ANY WARRANTY; without even 
+This software is distributed WITHOUT ANY WARRANTY; without even
 the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
@@ -20,19 +20,19 @@ PURPOSE. See the above copyright notices for more information.
 
 namespace itk
 {
-  
+
 /** \class StackTransform
  * \brief Implements stack of transforms: one for every last dimension index.
  *
  * A list of transforms with dimension of Dimension - 1 is maintained:
- * one for every last dimension index. This transform selects the right 
+ * one for every last dimension index. This transform selects the right
  * transform based on the last dimension index of the input point.
  *
  * \ingroup Transforms
  *
  */
 template <class TScalarType,
-  unsigned int NInputDimensions = 3, 
+  unsigned int NInputDimensions = 3,
   unsigned int NOutputDimensions = 3>
 class StackTransform
   : public AdvancedTransform< TScalarType, NInputDimensions, NOutputDimensions >
@@ -45,7 +45,7 @@ public:
     NOutputDimensions >               Superclass;
   typedef SmartPointer< Self >        Pointer;
   typedef SmartPointer< const Self >  ConstPointer;
-  
+
   /** New method for creating an object using a factory. */
   itkNewMacro( Self );
 
@@ -64,21 +64,21 @@ public:
   typedef typename Superclass::JacobianType         JacobianType;
   typedef typename Superclass::InputPointType       InputPointType;
   typedef typename Superclass::OutputPointType      OutputPointType;
-  typedef typename 
+  typedef typename
     Superclass::NonZeroJacobianIndicesType					NonZeroJacobianIndicesType;
 
   /** Sub transform types, having a reduced dimension. */
   typedef AdvancedTransform< TScalarType,
     itkGetStaticConstMacro( ReducedInputSpaceDimension ),
     itkGetStaticConstMacro( ReducedOutputSpaceDimension ) >  SubTransformType;
-  typedef typename SubTransformType::Pointer				SubTransformPointer;  
+  typedef typename SubTransformType::Pointer				SubTransformPointer;
   typedef std::vector< SubTransformPointer	>				SubTransformContainerType;
   typedef typename SubTransformType::JacobianType   SubTransformJacobianType;
 
   /** Dimension - 1 point types. */
   typedef typename SubTransformType::InputPointType     SubTransformInputPointType;
   typedef typename SubTransformType::OutputPointType    SubTransformOutputPointType;
-  
+
   /**  Method to transform a point. */
   virtual OutputPointType TransformPoint( const InputPointType & ipp ) const;
 

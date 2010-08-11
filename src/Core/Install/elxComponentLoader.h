@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -44,15 +44,15 @@ namespace elastix
     typedef itk::Object                     Superclass;
     typedef itk::SmartPointer<Self>         Pointer;
     typedef itk::SmartPointer<const Self>   ConstPointer;
-  
+
     /** Standard ITK stuff. */
     itkNewMacro(Self);
     itkTypeMacro(ComponentLoader, Object);
-    
+
     /** Typedef's. */
     typedef ComponentDatabase               ComponentDatabaseType;
     typedef ComponentDatabaseType::Pointer  ComponentDatabasePointer;
-    
+
     /** Set and get the ComponentDatabase. */
     itkSetObjectMacro( ComponentDatabase, ComponentDatabaseType);
     itkGetObjectMacro( ComponentDatabase, ComponentDatabaseType);
@@ -70,7 +70,7 @@ namespace elastix
     virtual ~ComponentLoader();
 
     ComponentDatabasePointer  m_ComponentDatabase;
-    
+
     bool          m_ImageTypeSupportInstalled;
     virtual int   InstallSupportedImageTypes(void);
 
@@ -78,7 +78,7 @@ namespace elastix
     /** Standard private (copy)constructor. */
     ComponentLoader( const Self& ); // purposely not implemented
     void operator=( const Self& );  // purposely not implemented
-      
+
   }; // end class ComponentLoader
 
 } //end namespace elastix

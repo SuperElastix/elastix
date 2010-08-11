@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -32,7 +32,7 @@ DisplacementMagnitudePenaltyTerm< TFixedImage, TScalarType >
 
   /** Turn on the sampler functionality */
   this->SetUseImageSampler( true );
-   
+
 } // end constructor
 
 
@@ -65,7 +65,7 @@ DisplacementMagnitudePenaltyTerm< TFixedImage, TScalarType >
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
   RealType measure = NumericTraits<RealType>::Zero;
-  
+
   /** Make sure the transform parameters are up to date. */
   this->SetTransformParameters( parameters );
 
@@ -89,22 +89,22 @@ DisplacementMagnitudePenaltyTerm< TFixedImage, TScalarType >
     bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
     /** Check if point is inside mask. */
-    if ( sampleOk ) 
+    if ( sampleOk )
     {
-      sampleOk = this->IsInsideMovingMask( mappedPoint );        
+      sampleOk = this->IsInsideMovingMask( mappedPoint );
     }
 
     if ( sampleOk )
     {
-      this->m_NumberOfPixelsCounted++; 
-      
-      /** Compute the contribution of this point: ||T(x)-x||^2 
-      * \todo FixedImageDimension should be MovingImageDimension  */      
+      this->m_NumberOfPixelsCounted++;
+
+      /** Compute the contribution of this point: ||T(x)-x||^2
+      * \todo FixedImageDimension should be MovingImageDimension  */
       for ( unsigned int d = 0; d < FixedImageDimension; ++d )
       {
         measure += vnl_math_sqr( mappedPoint[d] - fixedPoint[d] );
       }
-      
+
     } // end if sampleOk
 
   } // end for loop over the image sample container
@@ -112,7 +112,7 @@ DisplacementMagnitudePenaltyTerm< TFixedImage, TScalarType >
   /** Check if enough samples were valid. */
   this->CheckNumberOfSamples(
     sampleContainer->Size(), this->m_NumberOfPixelsCounted );
-  
+
   /** Update measure value. Avoid division by zero. */
   measure /= vnl_math_max( NumericTraits<RealType>::One,
     static_cast<RealType>( this->m_NumberOfPixelsCounted ) );
@@ -137,7 +137,7 @@ DisplacementMagnitudePenaltyTerm< TFixedImage, TScalarType >
   /** Slower, but works. */
   MeasureType dummyvalue = NumericTraits< MeasureType >::Zero;
   this->GetValueAndDerivative( parameters, dummyvalue, derivative );
-  
+
 } // end GetDerivative()
 
 
@@ -162,13 +162,13 @@ DisplacementMagnitudePenaltyTerm< TFixedImage, TScalarType >
   derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
 
   /** Array that stores sparse jacobian+indices. */
-  NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );  
+  NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
   TransformJacobianType jacobian;
   const unsigned long nrNonZeroJacobianIndices = nzji.size();
-  
+
   /** Make sure the transform parameters are up to date. */
   this->SetTransformParameters( parameters );
- 
+
   /** Update the imageSampler and get a handle to the sample container. */
   this->GetImageSampler()->Update();
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
@@ -184,31 +184,31 @@ DisplacementMagnitudePenaltyTerm< TFixedImage, TScalarType >
     /** Read fixed coordinates and initialize some variables. */
     const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
     MovingImagePointType mappedPoint;
- 
+
     /** Transform point and check if it is inside the B-spline support region. */
     bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
     /** Check if point is inside mask. */
     if ( sampleOk )
     {
-      sampleOk = this->IsInsideMovingMask( mappedPoint );        
+      sampleOk = this->IsInsideMovingMask( mappedPoint );
     }
 
     if ( sampleOk )
     {
-      this->m_NumberOfPixelsCounted++; 
+      this->m_NumberOfPixelsCounted++;
 
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
-  
+
       /** Compute displacement */
       VectorType vec = mappedPoint - fixedPoint;
 
       /** Compute the contribution to the metric value of this point. */
       measure += vec.GetSquaredNorm();
 
-      /** Compute the contribution to the derivative; (T(x)-x)' dT/dmu 
-       * \todo FixedImageDimension should be MovingImageDimension  */      
+      /** Compute the contribution to the derivative; (T(x)-x)' dT/dmu
+       * \todo FixedImageDimension should be MovingImageDimension  */
       for ( unsigned int d = 0; d < FixedImageDimension; ++d )
       {
         const double vecd = vec[d];
@@ -216,8 +216,8 @@ DisplacementMagnitudePenaltyTerm< TFixedImage, TScalarType >
         {
           const unsigned int mu = nzji[i];
           derivative[mu] += vecd * jacobian(d,i);
-        }              
-      }   
+        }
+      }
     } // end if sampleOk
 
   } // end for loop over the image sample container
@@ -228,10 +228,10 @@ DisplacementMagnitudePenaltyTerm< TFixedImage, TScalarType >
 
   /** Update measure value and derivative. The factor 2 in the derivative
    * originates from the square in ||T(x)-x||^2 */
-  RealType normalizationConstant = vnl_math_max( 
-    NumericTraits<RealType>::One, 
+  RealType normalizationConstant = vnl_math_max(
+    NumericTraits<RealType>::One,
     static_cast<RealType>( this->m_NumberOfPixelsCounted ) );
-  measure /= normalizationConstant;  
+  measure /= normalizationConstant;
   derivative /= (normalizationConstant/2.0);
 
   /** The return value. */

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -30,7 +30,7 @@ using namespace itk;
 /**
  * ********************* Constructor ****************************
  */
-  
+
 template <class TElastix>
 BSplineTransformWithDiffusion<TElastix>
 ::BSplineTransformWithDiffusion()
@@ -358,7 +358,7 @@ BSplineTransformWithDiffusion<TElastix>
   {
     this->m_Configuration->ReadParameter( defaultPixelValueForGVI,
       "DefaultPixelValueForGVI", 0 );
-    this->m_Resampler2->SetDefaultPixelValue( 
+    this->m_Resampler2->SetDefaultPixelValue(
       static_cast<GrayValuePixelType>( defaultPixelValueForGVI ) );
   }
   else
@@ -424,14 +424,14 @@ BSplineTransformWithDiffusion<TElastix>
   if ( level == 0 )
   {
     /** Set grid equal to lowest resolution fixed image. */
-    this->SetInitialGrid( upsampleGridOption );     
-  } 
+    this->SetInitialGrid( upsampleGridOption );
+  }
   else
   {
     /** If wanted, we upsample the grid of control points. */
     if ( upsampleGridOption ) this->IncreaseScale();
     /** Otherwise, nothing is done with the BSpline-Grid. */
-  } 
+  }
 
 } // end BeforeEachResolution()
 
@@ -590,12 +590,12 @@ BSplineTransformWithDiffusion<TElastix>
  *
  * Set the size of the initial control point grid.
  *
- * If multiresolution (UpsampleGridOption is "true") then the 
+ * If multiresolution (UpsampleGridOption is "true") then the
  * grid size is equal to the size of the fixed image, divided by
  * desired final gridspacing and a factor 2^(NrOfImageResolutions-1).
  * Otherwise it's equal to the size of the fixed image, divided by
  * the desired final gridspacing.
- *   
+ *
  * In both cases some extra grid points are put at the edges,
  * to take into account the support region of the B-splines.
  */
@@ -622,7 +622,7 @@ BSplineTransformWithDiffusion<TElastix>
   /** In elastix <=3.001: gridregion  = fixedimage->GetRequestedRegion();  */
   /** later (because requested regions were not supported anyway consistently: */
   gridregion = fixedimage->GetLargestPossibleRegion();
-  /** \todo: allow the user to enter a region of interest for the registration. 
+  /** \todo: allow the user to enter a region of interest for the registration.
    * Especially the boundary conditions have to be dealt with carefully then.
    */
   gridindex   = gridregion.GetIndex();
@@ -694,7 +694,7 @@ BSplineTransformWithDiffusion<TElastix>
     UpsampleFilterType;
   typedef itk::IdentityTransform<CoordRepType, SpaceDimension>
     IdentityTransformType;
-  typedef itk::BSplineResampleImageFunction<ImageType, CoordRepType> 
+  typedef itk::BSplineResampleImageFunction<ImageType, CoordRepType>
     CoefficientUpsampleFunctionType;
   typedef itk::BSplineDecompositionImageFilter<ImageType,ImageType>
     DecompositionFilterType;
@@ -742,7 +742,7 @@ BSplineTransformWithDiffusion<TElastix>
   /** Get the pointer to the data in latestParameters. */
   PixelType * dataPointer = static_cast<PixelType *>( latestParameters.data_block() );
   /** Get the number of pixels that should go into one coefficient image. */
-  unsigned int numberOfPixels = 
+  unsigned int numberOfPixels =
     ( this->m_BSplineTransform->GetGridRegion() ).GetNumberOfPixels();
 
   /** Set the correct region/size info of the coefficient image
@@ -755,8 +755,8 @@ BSplineTransformWithDiffusion<TElastix>
   //coeffs1->Allocate() not needed because the data is set by directly pointing
   // to an existing piece of memory.
 
-  /** 
-   * Create the new vector of parameters, with the 
+  /**
+   * Create the new vector of parameters, with the
    * correct size (which is now approx 2^dim as big as the
    * size in the previous resolution!).
    */
@@ -764,26 +764,26 @@ BSplineTransformWithDiffusion<TElastix>
     gridregionHigh.GetNumberOfPixels() * SpaceDimension );
 
   /** Initialize iterator in the parameters_out. */
-  unsigned int i = 0; 
+  unsigned int i = 0;
 
   /** Loop over dimension. */
   for ( unsigned int j = 0; j < SpaceDimension; j++ )
   {
     /** Fill the coefficient image with parameter data (displacements
      * of the control points in the direction of dimension j).
-     */   
+     */
     coeffs1->GetPixelContainer()->
       SetImportPointer( dataPointer, numberOfPixels );
     dataPointer += numberOfPixels;
 
     /*
-     * Set this image as the input of the upsampler filter. The 
+     * Set this image as the input of the upsampler filter. The
      * upsampler samples the deformation field at the locations
      * of the new control points (note: it does not just interpolate
      * the coefficient image, which would be wrong). The b-spline
      * coefficients that describe the resulting image are computed
      * by the decomposition filter.
-     * 
+     *
      * This code is copied from the itk-example
      * DeformableRegistration6.cxx .
      */
@@ -958,7 +958,7 @@ BSplineTransformWithDiffusion<TElastix>
 
   /** Call the function ReadInitialTransformFromFile.*/
   if ( fileName != "NoInitialTransform" )
-  {     
+  {
     this->ReadInitialTransformFromFile( fileName.c_str() );
   }
 
@@ -972,7 +972,7 @@ BSplineTransformWithDiffusion<TElastix>
   /** Convert 'this' to a pointer to a CombinationTransformType and set how
    * to combine the current transform with the initial transform */
   /** Cast to transform grouper. */
-  CombinationTransformType * thisAsGrouper = 
+  CombinationTransformType * thisAsGrouper =
     dynamic_cast< CombinationTransformType * >(this);
   if ( thisAsGrouper )
   {
@@ -1126,7 +1126,7 @@ BSplineTransformWithDiffusion<TElastix>
    *    with this diffused deformation field.
    * 6) Reset the parameters of the BSplineTransform
    *    and the optimizer. Reset the initial transform.
-   * 7) If wanted, write the deformationField, the 
+   * 7) If wanted, write the deformationField, the
    *    GrayValueImage and the diffusedField.
    */
 

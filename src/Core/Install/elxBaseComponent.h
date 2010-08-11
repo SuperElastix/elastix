@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -15,12 +15,12 @@
 /**
  * ******************* elxBaseComponent.h *************************
  *
- * This file defines the class elx::BaseComponent, from which all 
- * elastix components should inherit. It contains some methods that 
+ * This file defines the class elx::BaseComponent, from which all
+ * elastix components should inherit. It contains some methods that
  * each component is supposed to have.
  *
  * The namespace alias elx is defined in this file.
- * 
+ *
  * Some header files are included that most components need.
  */
 
@@ -52,10 +52,10 @@ namespace elastix
    * Most elastix component inherit both from an ITK class and
    * from the elx::BaseComponent class. The BaseComponent class
    * contains some methods that each component is supposed
-   * to have, but are not defined in itk::Object. 
-   * 
+   * to have, but are not defined in itk::Object.
+   *
    * \sa BaseComponentSE
-   * \ingroup Install 
+   * \ingroup Install
    */
 
   class BaseComponent
@@ -94,10 +94,10 @@ namespace elastix
     virtual void AfterEachResolution(void) {};
     virtual void AfterEachIteration(void) {};
     virtual void AfterRegistration(void) {};
-    
+
     /**
      * The name of the component in the ComponentDatabase.
-     * Override this function not directly, but with the 
+     * Override this function not directly, but with the
      * elxClassNameMacro("name").
      */
     virtual const char * elxGetClassName( void ) const
@@ -105,7 +105,7 @@ namespace elastix
       return "BaseComponent";
     }
 
-    /** Set the component label, which consists of a label 
+    /** Set the component label, which consists of a label
      * ( "Metric", "Transform") and an index number. In case
      * more metrics are used simultaneously each metric will have
      * its own index number. This can be used when reading the
@@ -124,11 +124,11 @@ namespace elastix
     {
       return this->m_ComponentLabel.c_str();
     }
-    
+
   protected:
 
     BaseComponent() {}
-    virtual ~BaseComponent() {} 
+    virtual ~BaseComponent() {}
 
   private:
 
@@ -138,8 +138,8 @@ namespace elastix
     std::string m_ComponentLabel;
 
   }; // end class BaseComponent
-  
-  
+
+
 } // end namespace elastix
 
 /** Define an alias for the elastix namespace.*/

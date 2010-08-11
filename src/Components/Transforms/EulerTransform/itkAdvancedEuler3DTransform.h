@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -44,8 +44,8 @@ namespace itk
  * \ingroup Transforms
  */
 template < class TScalarType=double >    // Data type for scalars (float or double)
-class ITK_EXPORT AdvancedEuler3DTransform : 
-            public AdvancedRigid3DTransform< TScalarType > 
+class ITK_EXPORT AdvancedEuler3DTransform :
+            public AdvancedRigid3DTransform< TScalarType >
 {
 public:
   /** Standard class typedefs. */
@@ -53,7 +53,7 @@ public:
   typedef AdvancedRigid3DTransform< TScalarType >   Superclass;
   typedef SmartPointer<Self>                Pointer;
   typedef SmartPointer<const Self>          ConstPointer;
-    
+
   /** New macro for creation of through a Smart Pointer. */
   itkNewMacro( Self );
 
@@ -93,7 +93,7 @@ public:
   typedef typename Superclass
     ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
   typedef typename Superclass::InternalMatrixType   InternalMatrixType;
-  
+
   /** Set/Get the transformation from a container of parameters
    * This is typically used by optimizers.  There are 6 parameters. The first
    * three represent the angles to rotate around the coordinate axis, and the
@@ -106,7 +106,7 @@ public:
   itkGetConstMacro(AngleX, ScalarType);
   itkGetConstMacro(AngleY, ScalarType);
   itkGetConstMacro(AngleZ, ScalarType);
-  
+
   /** Compute the Jacobian of the transformation. */
   virtual void GetJacobian(
     const InputPointType &,
@@ -145,8 +145,8 @@ private:
   AdvancedEuler3DTransform(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
-  ScalarType  m_AngleX; 
-  ScalarType  m_AngleY; 
+  ScalarType  m_AngleX;
+  ScalarType  m_AngleY;
   ScalarType  m_AngleZ;
   bool        m_ComputeZYX;
 

@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -27,7 +27,7 @@ using namespace itk;
 /**
  * ********************* Constructor ****************************
  */
-  
+
 template <class TElastix>
 AdvancedBSplineTransform<TElastix>
 ::AdvancedBSplineTransform()
@@ -43,12 +43,12 @@ template <class TElastix>
 unsigned int AdvancedBSplineTransform<TElastix>
 ::InitializeBSplineTransform() {
   /** Initialize the right BSplineTransform and GridScheduleComputer. */
-  if ( m_Periodic ) 
+  if ( m_Periodic )
   {
     this->m_GridScheduleComputer = PeriodicGridScheduleComputerType::New();
     this->m_GridScheduleComputer->SetBSplineOrder( m_SplineOrder );
 
-    if ( m_SplineOrder == 1) 
+    if ( m_SplineOrder == 1)
     {
       this->m_BSplineTransform = PeriodicBSplineTransformLinearType::New();
     }
@@ -59,8 +59,8 @@ unsigned int AdvancedBSplineTransform<TElastix>
     else if ( m_SplineOrder == 3)
     {
       this->m_BSplineTransform = PeriodicBSplineTransformCubicType::New();
-    } 
-    else 
+    }
+    else
     {
       itkExceptionMacro( << "ERROR: The provided spline order is not supported." );
       return 1;
@@ -71,7 +71,7 @@ unsigned int AdvancedBSplineTransform<TElastix>
     this->m_GridScheduleComputer = GridScheduleComputerType::New();
     this->m_GridScheduleComputer->SetBSplineOrder( m_SplineOrder );
 
-    if ( m_SplineOrder == 1) 
+    if ( m_SplineOrder == 1)
     {
       this->m_BSplineTransform = BSplineTransformLinearType::New();
     }
@@ -82,8 +82,8 @@ unsigned int AdvancedBSplineTransform<TElastix>
     else if ( m_SplineOrder == 3)
     {
       this->m_BSplineTransform = BSplineTransformCubicType::New();
-    } 
-    else 
+    }
+    else
     {
       itkExceptionMacro( << "ERROR: The provided spline order is not supported." );
       return 1;
@@ -93,7 +93,7 @@ unsigned int AdvancedBSplineTransform<TElastix>
   this->SetCurrentTransform( this->m_BSplineTransform );
   this->m_GridUpsampler = GridUpsamplerType::New();
   this->m_GridUpsampler->SetBSplineOrder( m_SplineOrder );
-  
+
   return 0;
 }
 
@@ -112,7 +112,7 @@ int AdvancedBSplineTransform<TElastix>
   m_Periodic = false;
   this->GetConfiguration()->ReadParameter( m_Periodic,
     "UseTransformPeriodicity", this->GetComponentLabel(), 0, 0, true );
-    
+
   return InitializeBSplineTransform();
 }
 
@@ -147,7 +147,7 @@ void AdvancedBSplineTransform<TElastix>
   gridindex.Fill( 0 );
   gridspacing.Fill( 1.0 );
   gridorigin.Fill( 0.0 );
-  
+
   /** Set gridsize for large dimension to 4 to prevent errors when checking
      * on support region size.
      */
@@ -183,14 +183,14 @@ void AdvancedBSplineTransform<TElastix>
 ::BeforeEachResolution( void )
 {
   /** What is the current resolution level? */
-  unsigned int level = 
+  unsigned int level =
     this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
   /** Define the grid. */
   if ( level == 0 )
   {
     this->InitializeTransform();
-  } 
+  }
   else
   {
     /** Upsample the B-spline grid, if required. */
@@ -215,7 +215,7 @@ void AdvancedBSplineTransform<TElastix>
 ::PreComputeGridInformation( void )
 {
   /** Get the total number of resolution levels. */
-  unsigned int nrOfResolutions = 
+  unsigned int nrOfResolutions =
     this->m_Registration->GetAsITKBaseType()->GetNumberOfLevels();
 
   /** Set up grid schedule computer with image info. */
@@ -240,7 +240,7 @@ void AdvancedBSplineTransform<TElastix>
    * Method 2: The user specifies "FinalGridSpacingInPhysicalUnits"
    *
    * Method 1 and 2 additionally take the "GridSpacingSchedule".
-   * The GridSpacingSchedule is defined by downsampling factors 
+   * The GridSpacingSchedule is defined by downsampling factors
    * for each resolution, for each dimension (just like the image
    * pyramid schedules). So, for 2D images, and 3 resulutions,
    * we can specify:
@@ -275,7 +275,7 @@ void AdvancedBSplineTransform<TElastix>
   /** Declare variables and set defaults. */
   SpacingType finalGridSpacingInVoxels;
   SpacingType finalGridSpacingInPhysicalUnits;
-  finalGridSpacingInVoxels.Fill( 16.0 );    
+  finalGridSpacingInVoxels.Fill( 16.0 );
   finalGridSpacingInPhysicalUnits.Fill( 8.0 );
 
   /** Method 1: Read the FinalGridSpacingInVoxels. */
@@ -291,7 +291,7 @@ void AdvancedBSplineTransform<TElastix>
     /** Compute the grid spacing in physical units. */
     for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
-      finalGridSpacingInPhysicalUnits[ dim ] = 
+      finalGridSpacingInPhysicalUnits[ dim ] =
         finalGridSpacingInVoxels[ dim ] *
         this->GetElastix()->GetFixedImage()->GetSpacing()[ dim ];
     }
@@ -299,7 +299,7 @@ void AdvancedBSplineTransform<TElastix>
 
   /** Method 2: Read the FinalGridSpacingInPhysicalUnits. */
   if ( method2 )
-  { 
+  {
     for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
     {
       this->m_Configuration->ReadParameter(
@@ -348,26 +348,26 @@ void AdvancedBSplineTransform<TElastix>
   }
   else
   {
-    xl::xout["error"] 
+    xl::xout["error"]
       << "ERROR: Invalid GridSpacingSchedule! The number of entries"
       << " behind the GridSpacingSchedule option should equal the"
       << " numberOfResolutions, or the numberOfResolutions * ImageDimension."
       << std::endl;
     itkExceptionMacro( << "ERROR: Invalid GridSpacingSchedule!" );
   }
-  
+
   /** Output a warning that the gridspacing may be adapted to fit the Periodic
      * behavior of the transform.
      */
   if ( m_Periodic )
   {
-    xl::xout["warning"] 
+    xl::xout["warning"]
          << "WARNING: The provided grid spacing may be adapted to fit the Periodic "
          << "behavior of the PeriodicBSplineTransform." << std::endl;
   }
 
   /** Set the grid schedule and final grid spacing in the schedule computer. */
-  this->m_GridScheduleComputer->SetFinalGridSpacing( 
+  this->m_GridScheduleComputer->SetFinalGridSpacing(
     finalGridSpacingInPhysicalUnits );
   this->m_GridScheduleComputer->SetSchedule( gridSchedule );
 
@@ -422,7 +422,7 @@ void AdvancedBSplineTransform<TElastix>
 ::IncreaseScale( void )
 {
   /** What is the current resolution level? */
-  unsigned int level = 
+  unsigned int level =
     this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
   /** The current grid. */
@@ -461,7 +461,7 @@ void AdvancedBSplineTransform<TElastix>
   this->m_BSplineTransform->SetGridOrigin( requiredGridOrigin );
   this->m_BSplineTransform->SetGridSpacing( requiredGridSpacing );
   this->m_BSplineTransform->SetGridRegion( requiredGridRegion );
-  this->m_BSplineTransform->SetGridDirection( requiredGridDirection );  
+  this->m_BSplineTransform->SetGridDirection( requiredGridDirection );
 
   /** Set the initial parameters for the next level. */
   this->m_Registration->GetAsITKBaseType()
@@ -491,7 +491,7 @@ void AdvancedBSplineTransform<TElastix>
   this->GetConfiguration()->ReadParameter( m_Periodic,
     "UseTransformPeriodicity", this->GetComponentLabel(), 0, 0 );
   InitializeBSplineTransform();
-  
+
   /** Read and Set the Grid: this is a BSplineTransform specific task. */
 
   /** Declarations. */
@@ -520,7 +520,7 @@ void AdvancedBSplineTransform<TElastix>
     {
       this->m_Configuration->ReadParameter( griddirection( j, i),
         "GridDirection", i * SpaceDimension + j );
-    }  
+    }
   }
 
   /** Set it all. */
@@ -530,7 +530,7 @@ void AdvancedBSplineTransform<TElastix>
   this->m_BSplineTransform->SetGridSpacing( gridspacing );
   this->m_BSplineTransform->SetGridOrigin( gridorigin );
   this->m_BSplineTransform->SetGridDirection( griddirection );
-  
+
   /** Call the ReadFromFile from the TransformBase.
    * This must be done after setting the Grid, because later the
    * ReadFromFile from TransformBase calls SetParameters, which
@@ -656,7 +656,7 @@ SetOptimizerScales( const unsigned int edgeWidth )
   const ScalesValueType infScale = 10000.0;
 
   if ( edgeWidth == 0 )
-  { 
+  {
     /** Just set the unit scales into the optimizer. */
     this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newScales );
     return;
@@ -680,10 +680,10 @@ SetOptimizerScales( const unsigned int edgeWidth )
       0, static_cast<int>( gridsize[ i ] - 2 * edgeWidth ) ) );
     if ( insetgridsize[ i ] == 0 )
     {
-      xl::xout["error"] 
+      xl::xout["error"]
         << "ERROR: you specified a PassiveEdgeWidth of "
         << edgeWidth
-        << ", while the total grid size in dimension " 
+        << ", while the total grid size in dimension "
         << i
         << " is only "
         << gridsize[ i ] << "." << std::endl;
@@ -697,7 +697,7 @@ SetOptimizerScales( const unsigned int edgeWidth )
   /** Set up iterator over the coefficient image. */
   IteratorType cIt( coeff, coeff->GetLargestPossibleRegion() );
   cIt.SetExclusionRegion( insetgridregion );
-  cIt.GoToBegin();   
+  cIt.GoToBegin();
 
   /** Set the scales to infinity that correspond to edge coefficients
    * This (hopefully) makes sure they are not optimized during registration.

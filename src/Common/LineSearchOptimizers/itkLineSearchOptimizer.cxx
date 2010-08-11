@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -38,7 +38,7 @@ namespace itk
    *
    * Set the current step length AND the current position, where
    * the current position is computed as:
-   * m_CurrentPosition = 
+   * m_CurrentPosition =
    * m_InitialPosition + StepLength * m_LineSearchDirection
    */
 
@@ -46,7 +46,7 @@ namespace itk
     LineSearchOptimizer::SetCurrentStepLength(double step)
   {
     itkDebugMacro("Setting current step length to " << step );
-  
+
     this->m_CurrentStepLength = step;
 
     ParametersType newPosition =  this->GetInitialPosition();
@@ -57,7 +57,7 @@ namespace itk
     {
       newPosition[i] += (step * LSD[i]);
     }
-    
+
     this->SetCurrentPosition(newPosition);
 
   } // end SetCurrentStepLength
@@ -76,7 +76,7 @@ namespace itk
     /** Easy, thanks to the functions defined in vnl_vector.h */
     return inner_product( derivative, this->GetLineSearchDirection() );
   } // end DirectionalDerivative
-  
+
 
 
 } // end namespace itk

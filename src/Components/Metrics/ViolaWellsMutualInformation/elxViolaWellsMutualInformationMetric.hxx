@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -50,7 +50,7 @@ using namespace itk;
 
   } // end Initialize
 
-  
+
   /**
    * ***************** BeforeEachResolution ***********************
    */
@@ -60,9 +60,9 @@ using namespace itk;
     BeforeEachResolution(void)
   {
     /** Get the current resolution level. */
-    unsigned int level = 
+    unsigned int level =
       ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
-    
+
     /** Set the number of histogram bins and spatial samples. */
     unsigned int numberOfSpatialSamples = 10000;
 
@@ -76,7 +76,7 @@ using namespace itk;
     double fixedImageStandardDeviation = 0.4;
     double movingImageStandardDeviation = 0.4;
     /** \todo calculate them??? */
-    
+
     /** Read the parameters from the ParameterFile. */
     this->m_Configuration->ReadParameter( numberOfSpatialSamples,
       "NumberOfSpatialSamples", this->GetComponentLabel(), level, 0 );
@@ -84,15 +84,15 @@ using namespace itk;
       "FixedImageStandardDeviation", this->GetComponentLabel(), level, 0 );
     this->m_Configuration->ReadParameter( movingImageStandardDeviation,
       "MovingImageStandardDeviation", this->GetComponentLabel(), level, 0 );
-    
+
     /** Set them. */
     this->SetNumberOfSpatialSamples( numberOfSpatialSamples );
     this->SetFixedImageStandardDeviation( fixedImageStandardDeviation );
     this->SetMovingImageStandardDeviation( movingImageStandardDeviation );
-          
+
   } // end BeforeEachResolution
-  
-  
+
+
 } // end namespace elastix
 
 

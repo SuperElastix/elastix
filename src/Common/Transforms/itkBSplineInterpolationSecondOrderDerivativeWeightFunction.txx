@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -82,7 +82,7 @@ BSplineInterpolationSecondOrderDerivativeWeightFunction<TCoordRep, VSpaceDimensi
 ::PrintSelf( std::ostream & os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
-  
+
   os << indent << "DerivativeDirections: ["
     << this->m_DerivativeDirections[ 0 ] << ", "
     << this->m_DerivativeDirections[ 1 ] << "]"
@@ -109,7 +109,7 @@ BSplineInterpolationSecondOrderDerivativeWeightFunction<TCoordRep, VSpaceDimensi
   for ( unsigned int i = 0; i < SpaceDimension; ++i )
   {
     double x = index[ i ] - static_cast<double>( startIndex[ i ] );
-    
+
     if ( i != this->m_DerivativeDirections[ 0 ]
       && i != this->m_DerivativeDirections[ 1 ] )
     {

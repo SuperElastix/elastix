@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -22,7 +22,7 @@
 
 namespace itk
 {
-  
+
 
 /**
  * *********************** Constructor **************************
@@ -72,7 +72,7 @@ DeformationVectorFieldTransform< TScalarType, NDimensions >
 {
   /** Typedef's for iterators. */
   typedef ImageRegionConstIterator< CoefficientVectorImageType >  VectorIteratorType;
-  typedef ImageRegionIterator< CoefficientImageType >             IteratorType;   
+  typedef ImageRegionIterator< CoefficientImageType >             IteratorType;
 
   /** Create array of images representing the B-spline
    * coefficients in each dimension.
@@ -120,7 +120,7 @@ DeformationVectorFieldTransform< TScalarType, NDimensions >
  * ******************* GetCoefficientVectorImage **********************
  *
  * Convert series of coefficient images to VectorImage (= deformation field).
- * 
+ *
  */
 
 template< class TScalarType, unsigned int NDimensions >

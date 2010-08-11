@@ -69,12 +69,12 @@ protected:
   ParabolicErodeImageFilter(){};
   virtual ~ParabolicErodeImageFilter() {};
 //   void PrintSelf(std::ostream& os, Indent indent) const;
-  
+
 private:
   ParabolicErodeImageFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
-  
+
 };
 
 } // end namespace itk

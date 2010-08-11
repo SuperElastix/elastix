@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -208,7 +208,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
     {
       spacing = this->m_BSplineTransform->GetGridSpacing();
     }
-   
+
     /** Set stuff for the separate dilation. */
     for ( unsigned int i = 0; i < FixedImageDimension; i++ )
     {
@@ -359,7 +359,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
   movingValue = NumericTraits<RigidityPixelType>::Zero;
   in = NumericTraits<RigidityPixelType>::Zero;
   bool isInFixedImage = false;
-  bool	isInMovingImage = false;		 
+  bool	isInMovingImage = false;		
   while ( !it.IsAtEnd() )
   {
     /** Get current pixel in world coordinates. */
@@ -477,7 +477,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 
   /** TASK 0:
    * Compute the rigidityCoefficientSum and check on it.
-   * 
+   *
    ************************************************************************* */
 
   /** Create iterator over the rigidity coeficient image. */
@@ -485,7 +485,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
     m_RigidityCoefficientImage->GetLargestPossibleRegion() );
   it_RCI.GoToBegin();
   ScalarType rigidityCoefficientSum = NumericTraits< ScalarType >::Zero;
-  
+
   /** Add the rigidity coefficients together. */
   while ( !it_RCI.IsAtEnd() )
   {
@@ -502,7 +502,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 
   /** TASK 1:
    * Prepare for the calculation of the rigidity penalty term.
-   * 
+   *
    ************************************************************************* */
 
   /** Create 1D neighbourhood operators. */
@@ -555,7 +555,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 
   /** TASK 2:
    * Filter the B-spline coefficient images.
-   * 
+   *
    ************************************************************************* */
 
   /** Filter the inputImages. */
@@ -577,8 +577,8 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 
   /** TASK 3:
    * Create iterators.
-   * 
-   ************************************************************************* */    
+   *
+   ************************************************************************* */
 
   /** Create iterators over ui_F?. */
   std::vector< CoefficientImageIteratorType > itA( ImageDimension ),
@@ -616,7 +616,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
   /** TASK 4A:
    * Do the actual calculation of the rigidity penalty term value.
    * Calculate the orthonormality term.
-   * 
+   *
    ************************************************************************* */
 
   /** Reset all iterators. */
@@ -709,7 +709,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
   /** TASK 4B:
    * Do the actual calculation of the rigidity penalty term value.
    * Calculate the properness term.
-   * 
+   *
    ************************************************************************* */
 
   /** Reset all iterators. */
@@ -775,7 +775,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
   /** TASK 4C:
    * Do the actual calculation of the rigidity penalty term value.
    * Calculate the linearity term.
-   * 
+   *
    ************************************************************************* */
 
   /** Reset all iterators. */
@@ -820,7 +820,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 
   /** TASK 5:
    * Do the actual calculation of the rigidity penalty term value.
-   * 
+   *
    ************************************************************************* */
 
   /** Calculate the rigidity penalty term value. */
@@ -927,7 +927,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 
   /** TASK 0:
    * Compute the rigidityCoefficientSum and check on it.
-   * 
+   *
    ************************************************************************* */
 
   /** Create iterator over the rigidity coeficient image. */
@@ -935,7 +935,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
     m_RigidityCoefficientImage->GetLargestPossibleRegion() );
   it_RCI.GoToBegin();
   ScalarType rigidityCoefficientSum = NumericTraits< ScalarType >::Zero;
-  
+
   /** Add the rigidity coefficients together. */
   while ( !it_RCI.IsAtEnd() )
   {
@@ -952,7 +952,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 
   /** TASK 1:
    * Prepare for the calculation of the rigidity penalty term.
-   * 
+   *
    ************************************************************************* */
 
   /** Create 1D neighbourhood operators. */
@@ -1005,7 +1005,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 
   /** TASK 2:
    * Filter the B-spline coefficient images.
-   * 
+   *
    ************************************************************************* */
 
   /** Filter the inputImages. */
@@ -1027,8 +1027,8 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 
   /** TASK 3:
    * Create subparts and iterators.
-   * 
-   ************************************************************************* */    
+   *
+   ************************************************************************* */
 
   /** Create iterators over ui_F?. */
   std::vector< CoefficientImageIteratorType > itA( ImageDimension ),
@@ -1123,7 +1123,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
 
   /** TASK 4A:
    * Do the calculation of the orthonormality subparts.
-   * 
+   *
    ************************************************************************* */
 
   /** Reset all iterators. */
@@ -1367,12 +1367,12 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
           ++itOCp[ i ][ j ];
         }
       }
-    } // end while 
+    } // end while
   } // end if do orthonormality
 
   /** TASK 4B:
    * Do the calculation of the properness parts.
-   * 
+   *
    ************************************************************************* */
 
   /** Reset all iterators. */
@@ -1505,7 +1505,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
           + mu1_C * mu1_C * mu2_A * mu3_B * mu3_B
           + mu1_B * mu1_B * mu2_A * ( 1.0 + mu3_C ) * ( 1.0 + mu3_C )
           - mu1_C * mu1_C * ( 1.0 + mu2_B ) * mu3_A * mu3_B
-          + mu1_B * mu1_C * ( 1.0 + mu2_B ) * mu3_A * ( 1.0 + mu3_C ) 
+          + mu1_B * mu1_C * ( 1.0 + mu2_B ) * mu3_A * ( 1.0 + mu3_C )
           + mu1_B * mu1_C * mu2_C * mu3_A * mu3_B
           - mu1_B * mu1_B * mu2_C * mu3_A * ( 1.0 + mu3_C )
           - ( 1.0 + mu1_A ) * mu1_C * mu2_C * mu3_B * mu3_B
@@ -1608,12 +1608,12 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
           ++itPCp[ i ][ j ];
         }
       }
-    } // end while 
+    } // end while
   } // end if do properness
 
   /** TASK 4C:
    * Do the calculation of the linearity parts.
-   * 
+   *
    ************************************************************************* */
 
   /** Reset all iterators. */
@@ -1690,12 +1690,12 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
         }
       }
 
-    } // end while 
+    } // end while
   } // end if do linearity
 
   /** TASK 5:
    * Do the actual calculation of the rigidity penalty term value.
-   * 
+   *
    ************************************************************************* */
 
   /** Calculate the rigidity penalty term value. */

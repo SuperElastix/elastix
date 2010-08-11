@@ -6,7 +6,7 @@ Copyright (c) University Medical Center Utrecht. All rights reserved.
 See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
 details.
 
-This software is distributed WITHOUT ANY WARRANTY; without even 
+This software is distributed WITHOUT ANY WARRANTY; without even
 the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the above copyright notices for more information.
 
@@ -21,7 +21,7 @@ namespace itk
 {
 
 /** \class BSplineSecondOrderDerivativeKernelFunction
- * \brief Derivative of a BSpline kernel used for density estimation and 
+ * \brief Derivative of a BSpline kernel used for density estimation and
  *  nonparameteric regression.
  *
  * This class encapsulates the derivative of a BSpline kernel for
@@ -45,10 +45,10 @@ public:
   typedef SmartPointer<Self>              Pointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro(Self); 
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(BSplineSecondOrderDerivativeKernelFunction, KernelFunction); 
+  itkTypeMacro(BSplineSecondOrderDerivativeKernelFunction, KernelFunction);
 
   /** Enum of for spline order. */
   itkStaticConstMacro(SplineOrder, unsigned int, VSplineOrder);
@@ -73,10 +73,10 @@ protected:
 
   ~BSplineSecondOrderDerivativeKernelFunction(){};
   void PrintSelf(std::ostream& os, Indent indent) const
-    { 
-    Superclass::PrintSelf( os, indent ); 
+    {
+    Superclass::PrintSelf( os, indent );
     os << indent  << "Spline Order: " << SplineOrder << std::endl;
-    }  
+    }
 
 private:
   BSplineSecondOrderDerivativeKernelFunction(const Self&); //purposely not implemented

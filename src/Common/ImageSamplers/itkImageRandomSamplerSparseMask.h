@@ -6,7 +6,7 @@
   See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
   details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
+     This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE. See the above copyright notices for more information.
 
@@ -25,7 +25,7 @@ namespace itk
   /** \class ImageRandomSamplerSparseMask
    *
    * \brief Samples randomly some voxels of an image.
-   * 
+   *
    * This version takes into account that the mask may be very small.
    * Also, it may be more efficient when very many different sample sets
    * of the same input image are required, because it does some precomputation.
@@ -73,7 +73,7 @@ namespace itk
 
     /** The random number generator used to generate random indices. */
     typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
-        
+
   protected:
 
     typedef itk::ImageFullSampler<InputImageType>           InternalFullSamplerType;
@@ -91,7 +91,7 @@ namespace itk
 
     typename RandomGeneratorType::Pointer     m_RandomGenerator;
     typename InternalFullSamplerType::Pointer m_InternalFullSampler;
-            
+
   private:
 
     /** The private constructor. */
@@ -99,7 +99,7 @@ namespace itk
     /** The private copy constructor. */
     void operator=( const Self& );            // purposely not implemented
 
-    
+
   }; // end class ImageRandomSamplerSparseMask
 
 
