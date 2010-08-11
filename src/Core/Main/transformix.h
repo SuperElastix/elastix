@@ -15,6 +15,10 @@
 #ifndef __transformix_h
 #define __transformix_h
 
+#ifdef _ELASTIX_USE_MEVISDICOMTIFF
+  #include "itkUseMevisDicomTiff.h"
+#endif
+
 #include "elxTransformixMain.h"
 #include <iostream>
 #include <string>

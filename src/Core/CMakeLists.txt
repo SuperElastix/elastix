@@ -111,6 +111,16 @@ TARGET_LINK_LIBRARIES( elxCore
 #param
 
 #---------------------------------------------------------------------
+# Add macro if mevisdicomtiff should be used
+IF ( ELASTIX_USE_MEVISDICOMTIFF )
+	ADD_DEFINITIONS( -D_ELASTIX_USE_MEVISDICOMTIFF)
+	SET( mevisdcmtifflib mevisdcmtiff)
+ELSE ( ELASTIX_USE_MEVISDICOMTIFF )
+	SET( mevisdcmtifflib  )
+ENDIF( ELASTIX_USE_MEVISDICOMTIFF )
+
+
+#---------------------------------------------------------------------
 # Create the elastix executable.
 
 ADD_EXECUTABLE( elastix
@@ -142,6 +152,7 @@ TARGET_LINK_LIBRARIES( elastix
  elxCore
  param
  xoutlib
+ ${mevisdcmtifflib}
  ITKBasicFilters
  ITKNumerics
  ITKIO
@@ -157,6 +168,7 @@ TARGET_LINK_LIBRARIES( transformix
  elxCore
  param
  xoutlib
+ ${mevisdcmtifflib}
  ITKBasicFilters
  ITKNumerics
  ITKIO

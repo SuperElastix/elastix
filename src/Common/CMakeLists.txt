@@ -8,6 +8,10 @@ SUBDIRS( KNN )
 SUBDIRS( ParameterFileParser )
 SUBDIRS( xout )
 
+IF ( ELASTIX_USE_MEVISDICOMTIFF )
+  SUBDIRS( MevisDicomTiff )
+ENDIF()
+
 IF( ELASTIX_USE_CUDA )
   SUBDIRS( CUDA )
 ENDIF()
