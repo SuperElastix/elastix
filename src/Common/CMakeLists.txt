@@ -4,9 +4,12 @@ PROJECT( elxCommon )
 #---------------------------------------------------------------------
 # Sub-projects.
 
-SUBDIRS( KNN )
 SUBDIRS( ParameterFileParser )
 SUBDIRS( xout )
+
+IF( USE_KNNGraphAlphaMutualInformationMetric )
+  SUBDIRS( KNN )
+ENDIF()
 
 IF ( ELASTIX_USE_MEVISDICOMTIFF )
   SUBDIRS( MevisDicomTiff )
