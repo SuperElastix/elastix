@@ -319,6 +319,8 @@ IF( ELASTIX_ENABLE_PACKAGER )
     #SET(CPACK_SOURCE_STRIP_FILES "")
   ENDIF()
 
+	# TODO: does this installer also include all necessary dlls? 
+	# for example cuda, zlib (if using mevisdicomtiff), etc
   # This include will do all the work
   INCLUDE( CPack )
 ENDIF()
