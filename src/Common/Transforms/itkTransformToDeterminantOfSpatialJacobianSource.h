@@ -170,7 +170,8 @@ public:
   /** TransformToDeterminantOfSpatialJacobianSource produces a floating value image. */
   virtual void GenerateOutputInformation( void );
 
-  /** Just checking if transform is set. */
+  /** Checking if transform is set. In case of linear transformations,
+	 * the LinearGenerateData is called. */
   virtual void BeforeThreadedGenerateData( void );
 
   /** Compute the Modified Time based on changes to the components. */
@@ -197,11 +198,8 @@ protected:
     int threadId );
 
   /** Faster implementation for resampling that works for with linear
-   *  transformation types.
-   */
-  void LinearThreadedGenerateData(
-    const OutputImageRegionType & outputRegionForThread,
-    int threadId );
+   *  transformation types. Unthreaded. */
+  void LinearGenerateData( void );
 
 private:
 

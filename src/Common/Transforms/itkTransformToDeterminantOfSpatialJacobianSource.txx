@@ -196,6 +196,14 @@ TransformToDeterminantOfSpatialJacobianSource<TOutputImage,TTransformPrecisionTy
     itkExceptionMacro(<< "Transform not set");
     }
 
+  // Check whether we can use a fast path for resampling. Fast path
+  // can be used if the transformation is linear. Transform respond
+  // to the IsLinear() call.
+  if ( this->m_Transform->IsLinear() )
+    {
+    this->LinearGenerateData();
+    }
+
 } // end BeforeThreadedGenerateData()
 
 
@@ -209,12 +217,10 @@ TransformToDeterminantOfSpatialJacobianSource<TOutputImage,TTransformPrecisionTy
   const OutputImageRegionType & outputRegionForThread,
   int threadId )
 {
-  // Check whether we can use a fast path for resampling. Fast path
-  // can be used if the transformation is linear. Transform respond
-  // to the IsLinear() call.
+  // In case of linear transforms, the computation has already been
+  // completed in the BeforeThreadedGenerateData
   if ( this->m_Transform->IsLinear() )
     {
-    this->LinearThreadedGenerateData( outputRegionForThread, threadId );
     return;
     }
 
@@ -270,11 +276,10 @@ TransformToDeterminantOfSpatialJacobianSource<TOutputImage,TTransformPrecisionTy
 template <class TOutputImage, class TTransformPrecisionType>
 void
 TransformToDeterminantOfSpatialJacobianSource<TOutputImage,TTransformPrecisionType>
-::LinearThreadedGenerateData(
-  const OutputImageRegionType & outputRegionForThread,
-  int threadId )
+::LinearGenerateData( void )
 {
-  // TODO: should be nonthreaded.
+  // Use an unthreaded implementation here, since the FillBuffer method
+  // is used.
 
   // Get the output pointer
   OutputImagePointer      outputPtr = this->GetOutput();
@@ -288,7 +293,7 @@ TransformToDeterminantOfSpatialJacobianSource<TOutputImage,TTransformPrecisionTy
   this->m_Transform->GetSpatialJacobian( point, sj );
   const PixelType detjac = static_cast<PixelType>( vnl_det( sj.GetVnlMatrix() ) );
 
-  outputPtr->FillBuffer( detjac ); // maybe use memcopy?
+  outputPtr->FillBuffer( detjac );
 
 } // end LinearThreadedGenerateData()
 

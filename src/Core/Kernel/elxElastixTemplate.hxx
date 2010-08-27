@@ -357,7 +357,7 @@ int ElastixTemplate<TFixedImage, TMovingImage>
     << timer->PrintElapsedTimeSec()
     << " s" << std::endl;
 
-  /** Call ComputeSpatialJacobian.
+  /** Call ComputeDeterminantOfSpatialJacobian.
    * Actually we could loop over all transforms.
    * But for now, there seems to be no use yet for that.
    */
@@ -374,6 +374,26 @@ int ElastixTemplate<TFixedImage, TMovingImage>
   }
   timer->StopTimer();
   elxout << "  Computing determinant of spatial Jacobian done, it took "
+    << timer->PrintElapsedTimeSec()
+    << " s" << std::endl;
+
+/** Call ComputeSpatialJacobian.
+   * Actually we could loop over all transforms.
+   * But for now, there seems to be no use yet for that.
+   */
+  timer->StartTimer();
+  elxout << "Compute spatial Jacobian (full matrix)..." << std::endl;
+  try
+  {
+    this->GetElxTransformBase()->ComputeSpatialJacobian();
+  }
+  catch( itk::ExceptionObject & excp )
+  {
+    xout["error"] << excp << std::endl;
+    xout["error"] << "However, transformix continues anyway." << std::endl;
+  }
+  timer->StopTimer();
+  elxout << "  Computing spatial Jacobian done, it took "
     << timer->PrintElapsedTimeSec()
     << " s" << std::endl;
 

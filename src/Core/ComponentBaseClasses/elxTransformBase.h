@@ -278,6 +278,9 @@ public:
   /** Function to compute the determinant of the spatial Jacobian. */
   virtual void ComputeDeterminantOfSpatialJacobian( void ) const;
 
+  /** Function to compute the determinant of the spatial Jacobian. */
+  virtual void ComputeSpatialJacobian( void ) const;
+
   /** Makes sure that the final parameters from the registration components
    * are copied, set, and stored.
    */

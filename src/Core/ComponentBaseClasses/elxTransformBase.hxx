@@ -25,6 +25,7 @@
 #include "itkVector.h"
 #include "itkTransformToDeformationFieldSource.h"
 #include "itkTransformToDeterminantOfSpatialJacobianSource.h"
+#include "itkTransformToSpatialJacobianSource.h"
 #include "itkImageFileWriter.h"
 #include "itkImageGridSampler.h"
 #include "itkContinuousIndex.h"
@@ -144,6 +145,17 @@ int TransformBase<TElastix>
   else
   {
     elxout << "-jac      " << check << std::endl;
+  }
+
+  /** Check for appearance of "-jacmat". */
+  check = this->m_Configuration->GetCommandLineArgument( "-jacmat" );
+  if ( check == "" )
+  {
+    elxout << "-jacmat   unspecified, so no dT/dx computed" << std::endl;
+  }
+  else
+  {
+    elxout << "-jacmat   " << check << std::endl;
   }
 
   /** Return a value. */
@@ -1328,7 +1340,7 @@ TransformBase<TElastix>
   jacWriter->SetFileName( makeFileName.str().c_str() );
 
   /** Do the writing. */
-  elxout << "  Computing and writing the spatial Jacobian ..." << std::endl;
+  elxout << "  Computing and writing the spatial Jacobian determinant..." << std::endl;
   try
   {
     jacWriter->Update();
@@ -1346,6 +1358,106 @@ TransformBase<TElastix>
   }
 
 } // end ComputeDeterminantOfSpatialJacobian()
+
+
+/**
+ * ************** ComputeSpatialJacobian **********************
+ */
+
+template <class TElastix>
+void
+TransformBase<TElastix>
+::ComputeSpatialJacobian( void ) const
+{
+  /** If the optional command "-jacmat" is given in the command line arguments,
+   * then and only then we continue.
+   */
+  std::string jac = this->GetConfiguration()->GetCommandLineArgument( "-jacmat" );
+  if ( jac != "all" )
+  {
+    elxout << "  The command-line option \"-jacmat\" is not used, "
+      << "so no dT/dx computed." << std::endl;
+    return;
+  }
+
+  /** Typedef's. */
+  typedef itk::Matrix<float, MovingImageDimension,
+    FixedImageDimension>                              OutputSpatialJacobianType;
+  typedef itk::Image<OutputSpatialJacobianType, 
+    FixedImageDimension>                              JacobianImageType;
+  typedef itk::TransformToSpatialJacobianSource<
+    JacobianImageType, CoordRepType >                 JacobianGeneratorType;
+  typedef itk::ImageFileWriter< JacobianImageType >   JacobianWriterType;
+  typedef itk::ChangeInformationImageFilter<
+    JacobianImageType >                               ChangeInfoFilterType;
+  typedef typename FixedImageType::DirectionType      FixedImageDirectionType;
+
+  /** Create an setup Jacobian generator. */
+  typename JacobianGeneratorType::Pointer jacGenerator = JacobianGeneratorType::New();
+  jacGenerator->SetTransform( const_cast<const ITKBaseType *>(
+    this->GetAsITKBaseType() ) );
+  jacGenerator->SetOutputSize(
+    this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetSize() );
+  jacGenerator->SetOutputSpacing(
+    this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputSpacing() );
+  jacGenerator->SetOutputOrigin(
+    this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputOrigin() );
+  jacGenerator->SetOutputIndex(
+    this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputStartIndex() );
+  jacGenerator->SetOutputDirection(
+    this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->GetOutputDirection() );
+  // NOTE: We can not use the following, since the fixed image does not exist in transformix
+  //   jacGenerator->SetOutputParametersFromImage(
+  //     this->GetRegistration()->GetAsITKBaseType()->GetFixedImage() );
+
+  /** Possibly change direction cosines to their original value, as specified
+   * in the tp-file, or by the fixed image. This is only necessary when
+   * the UseDirectionCosines flag was set to false. 
+   */
+  typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
+  FixedImageDirectionType originalDirection;
+  bool retdc = this->GetElastix()->GetOriginalFixedImageDirection( originalDirection );
+  infoChanger->SetOutputDirection( originalDirection );
+  infoChanger->SetChangeDirection( retdc & !this->GetElastix()->GetUseDirectionCosines() );
+  infoChanger->SetInput( jacGenerator->GetOutput() );
+
+  /** Track the progress of the generation of the deformation field. */
+  typename ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
+  progressObserver->ConnectObserver( jacGenerator );
+  progressObserver->SetStartString( "  Progress: " );
+  progressObserver->SetEndString( "%" );
+
+  /** Create a name for the deformation field file. */
+  std::string resultImageFormat = "mhd";
+  this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, false );
+  std::ostringstream makeFileName( "" );
+  makeFileName << this->m_Configuration->GetCommandLineArgument( "-out" )
+    << "fullSpatialJacobian." << resultImageFormat;
+
+  /** Write outputImage to disk. */
+  typename JacobianWriterType::Pointer jacWriter = JacobianWriterType::New();
+  jacWriter->SetInput( infoChanger->GetOutput() );
+  jacWriter->SetFileName( makeFileName.str().c_str() );
+
+  /** Do the writing. */
+  elxout << "  Computing and writing the spatial Jacobian..." << std::endl;
+  try
+  {
+    jacWriter->Update();
+  }
+  catch( itk::ExceptionObject & excp )
+  {
+    /** Add information to the exception. */
+    excp.SetLocation( "TransformBase - ComputeSpatialJacobian()" );
+    std::string err_str = excp.GetDescription();
+    err_str += "\nError occurred while writing spatial Jacobian image.\n";
+    excp.SetDescription( err_str );
+
+    /** Pass the exception to an higher level. */
+    throw excp;
+  }
+
+} // end ComputeSpatialJacobian()
 
 
 /**

@@ -156,7 +156,7 @@ ENDIF( WIN32 )
 MAKE_DIRECTORY( ${ELASTIX_HELP_DIR}/exampleinput )
 MAKE_DIRECTORY( ${ELASTIX_HELP_DIR}/exampleoutput )
 
-SET( elxEXAMPLE_INPUT_FILES
+SET( ELX_EXAMPLEINPUTFILES
  fixed.mhd
  fixed.raw
  mask_fixed.mhd
