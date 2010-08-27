@@ -181,6 +181,18 @@ FOREACH( ELX_EXAMPLEINPUTFILE ${ELX_EXAMPLEINPUTFILES} )
 ENDFOREACH( ELX_EXAMPLEINPUTFILE )
 
 #---------------------------------------------------------------------
+# Get version information.
+
+# Get the version number of elastix
+FILE( STRINGS ${elastix_SOURCE_DIR}/Core/Install/elxBaseComponent.h
+  ELASTIX_VERSION REGEX "\(#define\ __ELASTIX_VERSION\)" )
+STRING( SUBSTRING ${ELASTIX_VERSION} 26 3 ELASTIX_VERSION )
+
+# Split version in major minor. Assuming no patch number, just x.y
+STRING( REGEX MATCH "[0-9]+" ELASTIX_VERSION_MAJOR "${ELASTIX_VERSION}" )
+STRING( REGEX REPLACE "([0-9]+)\\." "" ELASTIX_VERSION_MINOR "${ELASTIX_VERSION}" )
+
+#---------------------------------------------------------------------
 # Configure the doxygen-configuration
 
 FIND_PACKAGE( Doxygen QUIET )
@@ -206,11 +218,6 @@ IF( Doxygen_FOUND )
     ENDIF( NOT CYGWIN )
   ENDIF( WIN32 )
 
-  # Get the version number of elastix
-  FILE( STRINGS ${elastix_SOURCE_DIR}/Core/Install/elxBaseComponent.h
-    ELASTIX_VERSION REGEX "\(#define\ __ELASTIX_VERSION\)" )
-  STRING( SUBSTRING ${ELASTIX_VERSION} 26 3 ELASTIX_VERSION )
-
   # Configure the doxygen configuration
   CONFIGURE_FILE(
     ${ELASTIX_DOXYGEN_DIR}/doxyfile.in
@@ -234,5 +241,85 @@ SET( ELASTIX_BUILD_TESTING OFF CACHE BOOL
 IF( ELASTIX_BUILD_TESTING )
   ENABLE_TESTING()
   SUBDIRS( Testing )
+ENDIF()
+
+#---------------------------------------------------------------------
+# Packaging
+
+MARK_AS_ADVANCED( ELASTIX_ENABLE_PACKAGER )
+OPTION( ELASTIX_ENABLE_PACKAGER "Enable elastix packager using CPack" OFF )
+
+IF( ELASTIX_ENABLE_PACKAGER )
+  # Version information
+  #SET( CPACK_PACKAGE_VERSION ${ELASTIX_VERSION} )
+  SET( CPACK_PACKAGE_VERSION_MAJOR ${ELASTIX_VERSION_MAJOR} )
+  SET( CPACK_PACKAGE_VERSION_MINOR ${ELASTIX_VERSION_MINOR} )
+  SET( CPACK_PACKAGE_VERSION_PATCH "0")
+
+  # The default package filename is
+  # ${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_SYSTEM_NAME}
+  # which is like elastix-4.3-win64, or elastix-4.3-linux-i686
+  # Currently however we use elastix_windows64_v4.3
+  # We can change our naming schedule or come close to it using:
+  #SET( CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}_${CPACK_SYSTEM_NAME}_v${CPACK_PACKAGE_VERSION}" )
+  # but it doesn't work since these variables are not defined yet
+  # Moving include(CPack) to above introduces other errors.
+  #SET( CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}_${CMAKE_SYSTEM_NAME}_v${ELASTIX_VERSION}" )
+  # also does not work properly. Just use the default for now.
+
+  # General information
+  SET( CPACK_PACKAGE_VENDOR "Stefan Klein and Marius Staring" )
+  SET( CPACK_PACKAGE_DESCRIPTION_SUMMARY "elastix is an image registration toolkit" )
+  #SET( CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/ReadMe.txt" )
+  SET( CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/CopyrightElastix.txt" )
+
+  # The default install directories: .../elastix_v4.3
+  SET( CPACK_PACKAGE_INSTALL_DIRECTORY "elastix_v${ELASTIX_VERSION_MAJOR}.${ELASTIX_VERSION_MINOR}" )
+  SET( CPACK_PACKAGE_INSTALL_REGISTRY_KEY "elastix_v${ELASTIX_VERSION_MAJOR}.${ELASTIX_VERSION_MINOR}" )
+
+  # Do not include a subdirectory in the zip
+  SET( CPACK_INCLUDE_TOPLEVEL_DIRECTORY 0 )
+
+  # ??
+  #SET(CPACK_PACKAGE_EXECUTABLES "MyExecutable" "My Executable")
+
+  # For the windows nsis installer only (is this if-check necessary?)
+  IF( WIN32 AND NOT UNIX )
+    # NOTE: There is a bug in NSI that does not handle full unix paths properly.
+    # Make sure there is at least one set of four (4) backlashes
+    # (CMake escapes 2, and the other gets escaped too in some second step)
+
+    # Set the generators?
+    #SET( CPACK_GENERATOR "NSIS;ZIP")
+
+    # Adding information
+    SET( CPACK_NSIS_DISPLAY_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY} elastix" )
+    SET( CPACK_NSIS_HELP_LINK "http:\\\\\\\\elastix.isi.uu.nl" )
+    SET( CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\elastix.isi.uu.nl" )
+    SET( CPACK_NSIS_CONTACT "elastix@bigr.nl" )
+    SET( CPACK_NSIS_PACKAGE_NAME "elastix" )
+    SET( CPACK_NSIS_DISPLAY_NAME "elastix" )
+
+    # Adding icons and images to make it look nice:
+    # 1 A branding image that will be displayed inside the installer
+    # 2 The icon file (.ico) for the generated install program
+    # 3 The icon file (.ico) for the generated uninstall program
+    SET( CPACK_PACKAGE_ICON "${CMAKE_CURRENT_SOURCE_DIR}/../dox/art\\\\elastix_logo_full_small.bmp" )
+    SET( CPACK_NSIS_MUI_ICON "${CMAKE_CURRENT_SOURCE_DIR}/../dox/art\\\\elastix_logo_64.ico" )
+    SET( CPACK_NSIS_MUI_UNIICON "${CMAKE_CURRENT_SOURCE_DIR}/../dox/art\\\\elastix_logo_64.ico" )
+
+    # Create an option in the installer that asks if elastix
+    # needs to be added to the system path
+    SET( CPACK_NSIS_MODIFY_PATH ON )
+
+  #ELSE(WIN32 AND NOT UNIX)
+    # Set the generators?
+    #SET( CPACK_GENERATOR "NSIS;ZIP")
+    # SET(CPACK_STRIP_FILES "bin/MyExecutable")
+    #SET(CPACK_SOURCE_STRIP_FILES "")
+  ENDIF()
+
+  # This include will do all the work
+  INCLUDE( CPack )
 ENDIF()
 
