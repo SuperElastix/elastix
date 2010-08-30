@@ -52,7 +52,7 @@ TransformToSpatialJacobianSource<TOutputImage,TTransformPrecisionType>
   {
     itkExceptionMacro( "The specified output image type is not allowed for this filter" );
   }
-    
+
 } // end Constructor
 
 
@@ -247,7 +247,7 @@ TransformToSpatialJacobianSource<TOutputImage,TTransformPrecisionType>
   SpatialJacobianType sj;
   PixelType sjOut;
   const unsigned int nrElements = sj.GetVnlMatrix().size();
-  
+
   // Walk the output region
   while ( !it.IsAtEnd() )
   {
@@ -287,16 +287,16 @@ TransformToSpatialJacobianSource<TOutputImage,TTransformPrecisionType>
   IndexType index; index.Fill( 1 );
   PointType point;
   outputPtr->TransformIndexToPhysicalPoint( index, point );
-  
+
   SpatialJacobianType sj;
   PixelType sjOut;
   const unsigned int nrElements = sj.GetVnlMatrix().size();
   this->m_Transform->GetSpatialJacobian( point, sj );
-  
+
   // cast spatial jacobian to output pixel type
   vnl_copy( sj.GetVnlMatrix().begin(), sjOut.GetVnlMatrix().begin(),
     nrElements );
-  
+
   outputPtr->FillBuffer( sjOut );
 
 } // end LinearThreadedGenerateData()

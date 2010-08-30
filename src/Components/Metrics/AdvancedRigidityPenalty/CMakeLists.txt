@@ -1,0 +1,10 @@
+
+
+ADD_ELXCOMPONENT( AdvancedTransformRigidityPenalty
+ elxAdvancedTransformRigidityPenaltyTerm.h
+ elxAdvancedTransformRigidityPenaltyTerm.hxx
+ elxAdvancedTransformRigidityPenaltyTerm.cxx
+ itkAdvancedTransformRigidityPenaltyTerm.h
+ itkAdvancedTransformRigidityPenaltyTerm.txx
+)
+

@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -27,17 +27,17 @@ namespace itk
  */
 class ITK_EXPORT MevisDicomTiffImageIOFactory : public ObjectFactoryBase
 {
-public:  
+public:
   /** Standard class typedefs. */
   typedef MevisDicomTiffImageIOFactory       Self;
   typedef ObjectFactoryBase        Superclass;
   typedef SmartPointer<Self>       Pointer;
   typedef SmartPointer<const Self> ConstPointer;
-  
+
   /** Class methods used to interface with the registered factories. */
   virtual const char* GetITKSourceVersion() const;
   virtual const char* GetDescription() const;
-  
+
   /** Method for class instantiation. */
   itkFactorylessNewMacro(Self);
 
@@ -60,7 +60,7 @@ private:
   void operator=(const Self&); //purposely not implemented
 
 };
- 
+
 } // end namespace itk
 
 #endif

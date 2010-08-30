@@ -24,16 +24,16 @@ namespace itk
 /** \class TransformToSpatialJacobianSource
  * \brief Generate the spatial Jacobian matrix from a coordinate transform
  *
- * This class was inspired on an the 
+ * This class was inspired on an the
  * itkTransformToDeterminantOfSpatialJacobianSource class.
  * It generates the full spatial jacobian matrix. The output image
  * type should thus be an image with a matrix-pixeltype, e.g., the
  * SpatialJacobianType defined in the itkAdvancedTransform class.
- * Suggested/recommended choices are the 
+ * Suggested/recommended choices are the
  * itk::Matrix<double, ImageDimension, ImageDimension> (=SpatialJacobianType)
  * or
  * itk::Matrix<float, ImageDimension, ImageDimension>
- *  
+ *
  * Output information (spacing, size and direction) for the output
  * image should be set. This information has the normal defaults of
  * unit spacing, zero origin and identity direction. Optionally, the

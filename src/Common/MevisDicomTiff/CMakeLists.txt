@@ -16,7 +16,7 @@ ADD_LIBRARY( mevisdcmtiff
  itkMevisDicomTiffImageIO.cxx
  itkMevisDicomTiffImageIOFactory.cxx
  itkUseMevisDicomTiff.h
-) 
+)
 TARGET_LINK_LIBRARIES( mevisdcmtiff ITKIO ITKCommon )
 
 

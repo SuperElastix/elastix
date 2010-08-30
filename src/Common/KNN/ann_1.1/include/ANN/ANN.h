@@ -8,15 +8,15 @@
 // Copyright (c) 1997-2005 University of Maryland and Sunil Arya and
 // David Mount.  All Rights Reserved.
 //
-// This software and related documentation is part of the 
+// This software and related documentation is part of the
 // Approximate Nearest Neighbor Library (ANN).
-// 
-// Permission to use, copy, and distribute this software and its 
-// documentation is hereby granted free of charge, provided that 
-// (1) it is not a component of a commercial product, and 
+//
+// Permission to use, copy, and distribute this software and its
+// documentation is hereby granted free of charge, provided that
+// (1) it is not a component of a commercial product, and
 // (2) this notice appears in all copies of the software and
-//   related documentation. 
-// 
+//   related documentation.
+//
 // The University of Maryland (U.M.) and the authors make no representations
 // about the suitability or fitness of this software for any purpose.  It is
 // provided "as is" without express or implied warranty.
@@ -166,7 +166,7 @@ typedef double  ANNdist;        // distance data type
 //    returned as an integer index into this array.  To make it
 //    clearer when this is happening, we define the integer type
 //    ANNidx.  Indexing starts from 0.
-//    
+//
 //    For fixed-radius near neighbor searching, it is possible that
 //    there are not k nearest neighbors within the search radius.  To
 //    indicate this, the algorithm returns ANN_NULL_IDX as its result.
@@ -294,10 +294,10 @@ const ANNbool ANN_ALLOW_SELF_MATCH  = ANNfalse;
 //    we assume that there is an incremental update function DIFF(x,y)
 //    for #, such that if:
 //
-//          s = x0 # ... # xi # ... # xk 
+//          s = x0 # ... # xi # ... # xk
 //
-//    then if s' is equal to s but with xi replaced by y, that is, 
-//    
+//    then if s' is equal to s but with xi replaced by y, that is,
+//
 //          s' = x0 # ... # y # ... # xk
 //
 //    then the length of s' can be computed by:
@@ -320,7 +320,7 @@ const ANNbool ANN_ALLOW_SELF_MATCH  = ANNfalse;
 //        POW(v)      = v^p     POW(v)      = |v|^p
 //        ROOT(x)     = x^(1/p)   ROOT(x)     = x^(1/p)
 //        #       = +       #       = +
-//        DIFF(x,y)   = y - x     DIFF(x,y)   = y - x 
+//        DIFF(x,y)   = y - x     DIFF(x,y)   = y - x
 //
 //    L_inf:
 //        POW(v)      = |v|
@@ -375,8 +375,8 @@ const ANNbool ANN_ALLOW_SELF_MATCH  = ANNfalse;
 //----------------------------------------------------------------------
 
 typedef ANNcoord* ANNpoint;     // a point
-typedef ANNpoint* ANNpointArray;  // an array of points 
-typedef ANNdist*  ANNdistArray;   // an array of distances 
+typedef ANNpoint* ANNpointArray;  // an array of points
+typedef ANNdist*  ANNdistArray;   // an array of distances
 typedef ANNidx*   ANNidxArray;    // an array of point indices
 
 //----------------------------------------------------------------------
@@ -415,7 +415,7 @@ typedef ANNidx*   ANNidxArray;    // an array of point indices
 //        the new point.  It returns a pointer to the newly
 //        allocated copy.
 //----------------------------------------------------------------------
-   
+
 DLL_API ANNdist annDist(
   int       dim,    // dimension of space
   ANNpoint    p,      // points
@@ -431,7 +431,7 @@ DLL_API ANNpointArray annAllocPts(
 
 DLL_API void annDeallocPt(
   ANNpoint    &p);    // deallocate 1 point
-   
+
 DLL_API void annDeallocPts(
   ANNpointArray &pa);   // point array
 
@@ -649,7 +649,7 @@ const int ANN_N_SHRINK_RULES  = 4;  // number of shrink rules
 //    format that is suitable reading by another program.  There is a
 //    "load" constructor, which constructs a tree which is assumed to
 //    have been saved by the Dump() procedure.
-//    
+//
 //    Performance and Structure Statistics:
 //    -------------------------------------
 //    The procedure getStats() collects statistics information on the
@@ -778,10 +778,10 @@ public:
   virtual void Dump(          // dump entire tree
     ANNbool     with_pts,   // print points as well?
     std::ostream& out);     // output stream
-                
+
   virtual void getStats(        // compute tree statistics
     ANNkdStats&   st);      // the statistics (modified)
-};                
+};
 
 //----------------------------------------------------------------------
 //  Box decomposition tree (bd-tree)

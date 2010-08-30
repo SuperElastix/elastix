@@ -289,8 +289,8 @@ IF( ELASTIX_ENABLE_PACKAGER )
     # Make sure there is at least one set of four (4) backlashes
     # (CMake escapes 2, and the other gets escaped too in some second step)
 
-    # Set the generators?
-    #SET( CPACK_GENERATOR "NSIS;ZIP")
+    # Set the generators
+    SET( CPACK_GENERATOR "NSIS;ZIP")
 
     # Adding information
     SET( CPACK_NSIS_DISPLAY_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY} elastix" )
@@ -312,14 +312,15 @@ IF( ELASTIX_ENABLE_PACKAGER )
     # needs to be added to the system path
     SET( CPACK_NSIS_MODIFY_PATH ON )
 
-  #ELSE(WIN32 AND NOT UNIX)
-    # Set the generators?
-    #SET( CPACK_GENERATOR "NSIS;ZIP")
+  ELSE()
+    # Set the generators
+    SET( CPACK_GENERATOR "TBZ2;ZIP" )
+
     # SET(CPACK_STRIP_FILES "bin/MyExecutable")
     #SET(CPACK_SOURCE_STRIP_FILES "")
   ENDIF()
 
-	# TODO: does this installer also include all necessary dlls? 
+	# TODO: does this installer also include all necessary dlls?
 	# for example cuda, zlib (if using mevisdicomtiff), etc
   # This include will do all the work
   INCLUDE( CPack )

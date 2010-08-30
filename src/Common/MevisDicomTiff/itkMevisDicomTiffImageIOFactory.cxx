@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -19,7 +19,7 @@
 #include "itkMevisDicomTiffImageIO.h"
 #include "itkVersion.h"
 
-  
+
 namespace itk
 {
 MevisDicomTiffImageIOFactory::MevisDicomTiffImageIOFactory()
@@ -30,18 +30,18 @@ MevisDicomTiffImageIOFactory::MevisDicomTiffImageIOFactory()
                          1,
                          CreateObjectFunction<MevisDicomTiffImageIO>::New());
 }
-  
+
 MevisDicomTiffImageIOFactory::~MevisDicomTiffImageIOFactory()
 {
 }
 
-const char* 
+const char*
 MevisDicomTiffImageIOFactory::GetITKSourceVersion() const
 {
   return ITK_SOURCE_VERSION;
 }
 
-const char* 
+const char*
 MevisDicomTiffImageIOFactory::GetDescription() const
 {
   return "Mevis Dicom/TIFF ImageIO Factory, allows the loading of Mevis images into insight";

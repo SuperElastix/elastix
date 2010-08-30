@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -41,7 +41,7 @@ namespace itk
  *  - input/output tiff image expected to be tiled
  *  - types supported uchar, char, ushort, short, uint, int, and float
  *    (double is not accepted by MevisLab)
- *  - writing defaults is tiled tiff, tilesize is 128, 128, 
+ *  - writing defaults is tiled tiff, tilesize is 128, 128,
  *    LZW compression and cm metric system
  *  - default extension for tiff-image is ".tif" to comply with mevislab
  *    standards
@@ -55,20 +55,20 @@ namespace itk
  *  TIFF (current 3.9.1):
  *
  *  ITK (current 3.14.0):
- 
+
  *  FUNCTIONALITIES:
- *  - reading gdcm file 
+ *  - reading gdcm file
  *    always 3D to allocate memory for spacing, dimensions etc
  *    gdcm::DataSet header, storing header into metadict
  *    using attribute to read standard values, except min/max
  *    (somehow is not supported by gdcm). The superclass may
  *    resize the variables depending on the dimensions (eg spacing,
- *    dimensions etc). Therefore when reading we check whether the 
+ *    dimensions etc). Therefore when reading we check whether the
  *    image is 2d or 3d based on dcm header file, and do a re-sizing
- *    of the vector if required. 
- *  - writing gdcm file 
+ *    of the vector if required.
+ *  - writing gdcm file
  *    fixed adding comments to see which version has been used
- *    pixeltype of dcm header is unsigned short for int, float 
+ *    pixeltype of dcm header is unsigned short for int, float
  *    and double images (see bugfix 20 feb 09)
  *
  *  todo
@@ -77,7 +77,7 @@ namespace itk
  *  - user selection of compression
  *  - implementing writing tiffimages if x,y < 16 (tilesize)
  *  - add uniform testing for linux, windows, 32/64 bits
- *    in particular for reading/creating/writing dcm files 
+ *    in particular for reading/creating/writing dcm files
  *    and all header values, as well 2d/3d. Things to consider
  *    for testing 1. proper handling position 2. proper handling
  *    pixeltype and sign 3. windows/linux testing 4. both dcm
@@ -92,7 +92,7 @@ namespace itk
  *    thanks to Stefan Klein for pointing out of this bug which
  *    revealed after usage on 2d on windows and thanks for
  *    his suggestions to fix this.
- * 
+ *
  *
  *  email: rashindra@gmail.com
  *
@@ -108,7 +108,7 @@ public:
   typedef MevisDicomTiffImageIO         Self;
   typedef ImageIOBase                   Superclass;
   typedef SmartPointer<Self>            Pointer;
-  
+
   itkNewMacro(Self);
   itkTypeMacro(MevisDicomTiffImageIO, Superclass);
   itkGetMacro(RescaleSlope, double);
@@ -134,9 +134,9 @@ protected:
   MevisDicomTiffImageIO();
   ~MevisDicomTiffImageIO();
   void PrintSelf(std::ostream& os, Indent indent) const;
-  
+
 private:
-  
+
   MevisDicomTiffImageIO(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 

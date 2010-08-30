@@ -1383,7 +1383,7 @@ TransformBase<TElastix>
   /** Typedef's. */
   typedef itk::Matrix<float, MovingImageDimension,
     FixedImageDimension>                              OutputSpatialJacobianType;
-  typedef itk::Image<OutputSpatialJacobianType, 
+  typedef itk::Image<OutputSpatialJacobianType,
     FixedImageDimension>                              JacobianImageType;
   typedef itk::TransformToSpatialJacobianSource<
     JacobianImageType, CoordRepType >                 JacobianGeneratorType;
@@ -1412,7 +1412,7 @@ TransformBase<TElastix>
 
   /** Possibly change direction cosines to their original value, as specified
    * in the tp-file, or by the fixed image. This is only necessary when
-   * the UseDirectionCosines flag was set to false. 
+   * the UseDirectionCosines flag was set to false.
    */
   typename ChangeInfoFilterType::Pointer infoChanger = ChangeInfoFilterType::New();
   FixedImageDirectionType originalDirection;

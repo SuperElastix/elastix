@@ -26,4 +26,4 @@ int __UseMevisDicomTiff(void)
 /** Dummy return variable, to call the UseMevisDicomTiff function. */
 int __UseMevisDicomTiffDummy = __UseMevisDicomTiff();
 
-#endif 
+#endif
