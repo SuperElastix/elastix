@@ -1,8 +1,8 @@
-# 
+#
 # ############## COMMON #####################
 #
 
-/** 
+/**
  \defgroup Common Common
 
 Common contains different types of common functionality.
@@ -39,11 +39,11 @@ xout contains functionality to print all output of the program to whatever.
 */
 
 
-# 
+#
 # ############## COMPONENTS #####################
 #
 
-/** 
+/**
  \defgroup Components Components
 
 Components contains the different registration components.
@@ -103,11 +103,11 @@ Transforms model the underlying deformation field during registration.
 ImagePyramids are used in a multiresolution framework in order to avoid local minima and increase the capture range of a registration.
 */
 
-# 
+#
 # ############## CORE #####################
 #
 
-/** 
+/**
  \defgroup Core Core
 
 This group contains the elastix core.

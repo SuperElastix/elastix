@@ -4,8 +4,8 @@
 #
 # createElastixWebsite <action>
 #
-# with 
-# <action> one of: 
+# with
+# <action> one of:
 #   exportwin
 #   exportlinux64
 #   exportlinux32 (only on rashindra's computer)
@@ -66,7 +66,7 @@ websitebase="http://elastix.isi.uu.nl"
 copyright="$exportdirwin/src/CopyrightElastix.txt"
 
 # The stuff we do not want to distribute
-leaveouts="src/Components/ImageSamplers/ReducedDimensionGrid src/Components/Metrics/VarianceOverLastDimension src/Components/Metrics/ZeroDeformationConstraint src/Components/Optimizers/FullSearch2 src/Components/Optimizers/PreconditionedGradientDescent src/Components/Transforms/CyclicBSplineTransform src/Testing"
+leaveouts="src/Components/ImageSamplers/ReducedDimensionGrid src/Components/Metrics/AdvancedRigidityPenalty src/Components/Metrics/VarianceOverLastDimension src/Components/Metrics/ZeroDeformationConstraint src/Components/Optimizers/FullSearch2 src/Components/Optimizers/PreconditionedGradientDescent src/Components/Transforms/CyclicBSplineTransform src/Testing"
 
 # checkout linux64 export:
 if [ "$arg" = "exportlinux64" ]
@@ -75,7 +75,7 @@ then
   for leaveout in $leaveouts
   do
     rm -r $exportdirlinux64/$leaveout
-  done  
+  done
   mkdir -p $exportdirlinux64/install
   mkdir -p $exportdirlinux64/release
   mkdir -p $exportdirlinux64/help
@@ -89,7 +89,7 @@ then
   for leaveout in $leaveouts
   do
     rm -r $exportdirlinux32/$leaveout
-  done  
+  done
   mkdir -p $exportdirlinux32/install
   mkdir -p $exportdirlinux32/release
   mkdir -p $exportdirlinux32/help
@@ -103,7 +103,7 @@ then
   for leaveout in $leaveouts
   do
     rm -r $exportdirwin/$leaveout
-  done  
+  done
   mkdir -p $exportdirwin/install
   mkdir -p $exportdirwin/bin
   mkdir -p $exportdirwin/help
@@ -201,7 +201,7 @@ then
 #  cp $exportdirlinux32grid/*.tar.bz2 $tempdir/download
   cp $exportdirwin/dox/manual/manual.pdf $tempdir/download/elastix_manual_v$version.pdf
   cp -r $exportdirwin/help/html $tempdir/doxygen
-    
+
   # Create a version.txt file with the version number in it.
   echo "v"$version > $tempdir/download/version.txt
 
