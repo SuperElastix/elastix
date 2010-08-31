@@ -111,10 +111,10 @@ private:
   CudaResampleImageFilterType m_CudaResampleImageFilter;
 
   /** Helper function to check for a valid transform.
-   * Currently, only GPU resampling for 3-rd order B-splines is supported,
+   * Currently, only GPU resampling of 3D images for 3-rd order B-splines is supported,
    * and only for one transform, so no concatenations.
    */
-  bool CheckForValidTransform( ValidTransformPointer bSplineTransform ) const;
+  bool CheckForValidTransform( ValidTransformPointer & bSplineTransform ) const;
 
   /** Helper function to copy data. */
   void CopyParameters( ValidTransformPointer bSplineTransform );

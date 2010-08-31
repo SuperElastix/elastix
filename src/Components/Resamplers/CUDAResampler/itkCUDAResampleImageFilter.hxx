@@ -104,16 +104,16 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
 template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
 bool
 itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>
-::CheckForValidTransform( ValidTransformPointer bSplineTransform ) const
+::CheckForValidTransform( ValidTransformPointer & bSplineTransform ) const
 {
   /** First check if the Transform is valid for CUDA. */
-  InternalBSplineTransformType * testPtr1a
+  InternalBSplineTransformType::Pointer testPtr1a
     = const_cast<InternalBSplineTransformType *>(
     dynamic_cast<const InternalBSplineTransformType *>( this->GetTransform() ) );
-  InternalAdvancedBSplineTransformType * testPtr1b
+  InternalAdvancedBSplineTransformType::Pointer testPtr1b
     = const_cast<InternalAdvancedBSplineTransformType *>(
     dynamic_cast<const InternalAdvancedBSplineTransformType *>( this->GetTransform() ) );
-  InternalComboTransformType * testPtr2a
+  InternalComboTransformType::Pointer testPtr2a
     = const_cast<InternalComboTransformType *>(
     dynamic_cast<const InternalComboTransformType *>( this->GetTransform() ) );
 
@@ -139,7 +139,7 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
     /** The transform is of type AdvancedCombinationTransform. */
     if ( !testPtr2a->GetInitialTransform() )
     {
-      InternalAdvancedBSplineTransformType * testPtr2b
+      InternalAdvancedBSplineTransformType::Pointer testPtr2b
         = dynamic_cast<InternalAdvancedBSplineTransformType *>(
         testPtr2a->GetCurrentTransform() );
       if ( testPtr2b )
@@ -172,21 +172,21 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
   }
 
   /** Check! */
-  ValidTransformPointer tempTransform;
+  ValidTransformPointer tempTransform = NULL;
   try // why try/catch?
   {
     /** Check for valid transform. */
     bool transformIsValid = this->CheckForValidTransform( tempTransform );
     if ( !transformIsValid )
     {
-      itkWarningMacro( << "Using CPU (no B-spline transform set)" );
+      itkWarningMacro( << "WARNING: Using CPU (no B-spline transform set)" );
     }
 
     /** Check if proper CUDA device. */
     bool cuda_device = ( CudaResampleImageFilterType::checkExecutionParameters() == 0 );
     if ( !cuda_device )
     {
-      itkWarningMacro( << "Using CPU (no CUDA capable GPU found, and/or update driver)" );
+      itkWarningMacro( << "WARNING: Using CPU (no CUDA capable GPU found, and/or up-to-date driver)" );
     }
 
     m_UseCuda = transformIsValid && cuda_device;
