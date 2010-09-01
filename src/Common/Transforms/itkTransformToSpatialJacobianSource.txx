@@ -46,9 +46,12 @@ TransformToSpatialJacobianSource<TOutputImage,TTransformPrecisionType>
   this->m_Transform = AdvancedIdentityTransform<TTransformPrecisionType, ImageDimension>::New();
 
   // Check if the output pixel type is valid
-  // TODO: should be done at compile time, using concept checking.
-  if ( (PixelType::RowDimensions != SpatialJacobianType::RowDimensions) ||
-       (PixelType::ColumnDimensions != SpatialJacobianType::ColumnDimensions) )
+  // TODO: should maybe be done at compile time, using concept checking.
+	const unsigned int pixrow = PixelType::RowDimensions;
+	const unsigned int pixcol = PixelType::ColumnDimensions;
+	const unsigned int spatrow = SpatialJacobianType::RowDimensions;
+	const unsigned int spatcol = SpatialJacobianType::ColumnDimensions;
+  if ( (pixrow != spatrow) || (pixcol != spatcol) )
   {
     itkExceptionMacro( "The specified output image type is not allowed for this filter" );
   }
