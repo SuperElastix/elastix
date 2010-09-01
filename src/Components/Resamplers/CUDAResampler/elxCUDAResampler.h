@@ -45,7 +45,7 @@ public:
 
   /** Standard ITK-stuff. */
   typedef CUDAResampler                                   Self;
-  typedef typename itkCUDAResampleImageFilter<
+  typedef itkCUDAResampleImageFilter<
     typename ResamplerBase<TElastix>::InputImageType,
     typename ResamplerBase<TElastix>::OutputImageType,
     typename ResamplerBase<TElastix>::CoordRepType >      Superclass1;

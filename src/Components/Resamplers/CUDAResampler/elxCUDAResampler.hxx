@@ -29,7 +29,7 @@ int
 CUDAResampler<TElastix>
 ::BeforeAll( void )
 {
-  int res = this->Superclass1::CudaResampleImageFilterType::checkExecutionParameters();
+  int res = Superclass1::CudaResampleImageFilterType::checkExecutionParameters();
   if ( res != 0 )
   {
     itkExceptionMacro( "ERROR: no valid CUDA devices found!" );

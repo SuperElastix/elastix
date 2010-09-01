@@ -56,16 +56,16 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
 ::CopyParameters( typename InternalAdvancedBSplineTransformType::Pointer bSplineTransform )
 {
   /* Copy parameters to the GPU memory space. */
-  const SizeType        itkOutputSize    = GetSize();
-  const SizeType        itkInputSize     = GetInput()->GetLargestPossibleRegion().GetSize();
-  const SpacingType     itkOutputSpacing = GetOutputSpacing();
-  const OriginPointType itkOutputOrigin  = GetOutputOrigin();
-  const SpacingType     itkInputSpacing  = GetInput()->GetSpacing();
-  const OriginPointType itkInputOrigin   = GetInput()->GetOrigin();
+  const SizeType        itkOutputSize    = this->GetSize();
+  const SizeType        itkInputSize     = this->GetInput()->GetLargestPossibleRegion().GetSize();
+  const SpacingType     itkOutputSpacing = this->GetOutputSpacing();
+  const OriginPointType itkOutputOrigin  = this->GetOutputOrigin();
+  const SpacingType     itkInputSpacing  = this->GetInput()->GetSpacing();
+  const OriginPointType itkInputOrigin   = this->GetInput()->GetOrigin();
 
   int3 inputsize             = make_int3( itkInputSize[0],  itkInputSize[1],  itkInputSize[2] );
   int3 outputsize            = make_int3( itkOutputSize[0], itkOutputSize[1], itkOutputSize[2] );
-  const InputPixelType* data = GetInput()->GetBufferPointer();
+  const InputPixelType* data = this->GetInput()->GetBufferPointer();
   m_CudaResampleImageFilter.cudaMallocImageData( inputsize, outputsize, data );
 
   float3 outputimageSpacing = make_float3( itkOutputSpacing[0], itkOutputSpacing[1], itkOutputSpacing[2] );
@@ -73,7 +73,7 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
   float3 inputimageSpacing  = make_float3( itkInputSpacing[0],  itkInputSpacing[1],  itkInputSpacing[2] );
   float3 inputimageOrigin   = make_float3( itkInputOrigin[0],   itkInputOrigin[1],   itkInputOrigin[2] );
 
-  float defaultPixelValue   = GetDefaultPixelValue();
+  float defaultPixelValue   = this->GetDefaultPixelValue();
   m_CudaResampleImageFilter.cudaCopyImageSymbols( inputimageSpacing, inputimageOrigin,
     outputimageSpacing, outputimageOrigin, defaultPixelValue );
 
@@ -89,7 +89,7 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
   int3   gridSize           = make_int3  ( ITKgridSize[0],      ITKgridSize[1],      ITKgridSize[2] );
   m_CudaResampleImageFilter.cudaCopyGridSymbols( gridSpacing, gridOrigin, gridSize );
 
-  const InternalBSplineTransformType::ParametersType params
+  const typename InternalBSplineTransformType::ParametersType params
     = bSplineTransform->GetParameters();
 
   m_CudaResampleImageFilter.cudaMallocTransformationData( gridSize, params.data_block() );
@@ -107,13 +107,13 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
 ::CheckForValidTransform( ValidTransformPointer & bSplineTransform ) const
 {
   /** First check if the Transform is valid for CUDA. */
-  InternalBSplineTransformType::Pointer testPtr1a
+  typename InternalBSplineTransformType::Pointer testPtr1a
     = const_cast<InternalBSplineTransformType *>(
     dynamic_cast<const InternalBSplineTransformType *>( this->GetTransform() ) );
-  InternalAdvancedBSplineTransformType::Pointer testPtr1b
+  typename InternalAdvancedBSplineTransformType::Pointer testPtr1b
     = const_cast<InternalAdvancedBSplineTransformType *>(
     dynamic_cast<const InternalAdvancedBSplineTransformType *>( this->GetTransform() ) );
-  InternalComboTransformType::Pointer testPtr2a
+  typename InternalComboTransformType::Pointer testPtr2a
     = const_cast<InternalComboTransformType *>(
     dynamic_cast<const InternalComboTransformType *>( this->GetTransform() ) );
 
@@ -139,7 +139,7 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
     /** The transform is of type AdvancedCombinationTransform. */
     if ( !testPtr2a->GetInitialTransform() )
     {
-      InternalAdvancedBSplineTransformType::Pointer testPtr2b
+      typename InternalAdvancedBSplineTransformType::Pointer testPtr2b
         = dynamic_cast<InternalAdvancedBSplineTransformType *>(
         testPtr2a->GetCurrentTransform() );
       if ( testPtr2b )
@@ -213,7 +213,7 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
 
   /** Allocate host memory for the output and copy/cast the result back to the host. */
   this->AllocateOutputs();
-  InputPixelType* data = GetOutput()->GetBufferPointer();
+  InputPixelType* data = this->GetOutput()->GetBufferPointer();
 
   /** Run the CUDA resampler. */
   m_CudaResampleImageFilter.GenerateData( data );
@@ -224,3 +224,4 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
 }; /* namespace itk */
 
 #endif // end #ifndef __itkCUDAResamplerImageFilter_txx
+
