@@ -57,7 +57,10 @@ FILE( GLOB_RECURSE cudartlibnames ${CUDA_TOOLKIT_ROOT_DIR}/*${CMAKE_SHARED_LIBRA
 # On Windows also cudartemu files exist
 FILE( GLOB_RECURSE cudartemulibnames ${CUDA_TOOLKIT_ROOT_DIR}/*${CMAKE_SHARED_LIBRARY_PREFIX}cudartemu*${CMAKE_SHARED_LIBRARY_SUFFIX} )
 # Remove the cudartemu files from the list
-LIST( REMOVE_ITEM cudartlibnames ${cudartemulibnames} )
+LIST( LENGTH cudartemulibnames noemus )
+IF( NOT ${noemus} EQUAL "0" )
+  LIST( REMOVE_ITEM cudartlibnames ${cudartemulibnames} )
+ENDIF()
 
 # STEP 3: Determine which lib we need to install
 #

@@ -12,7 +12,7 @@
 
 ======================================================================*/
 #include "cudaResampleImageFilter.cuh"
-#include "CI/cubicPreFilter3D.cu"
+#include "CI/cubicPrefilter3D.cu"
 #include "cudaInlineFunctions.h"
 
 __constant__ float3 CUInputImageSpacing;
