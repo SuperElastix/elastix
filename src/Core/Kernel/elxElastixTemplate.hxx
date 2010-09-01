@@ -377,7 +377,7 @@ int ElastixTemplate<TFixedImage, TMovingImage>
     << timer->PrintElapsedTimeSec()
     << " s" << std::endl;
 
-/** Call ComputeSpatialJacobian.
+  /** Call ComputeSpatialJacobian.
    * Actually we could loop over all transforms.
    * But for now, there seems to be no use yet for that.
    */

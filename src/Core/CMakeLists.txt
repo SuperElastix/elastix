@@ -112,12 +112,12 @@ TARGET_LINK_LIBRARIES( elxCore
 
 #---------------------------------------------------------------------
 # Add macro if mevisdicomtiff should be used
-IF ( ELASTIX_USE_MEVISDICOMTIFF )
-	ADD_DEFINITIONS( -D_ELASTIX_USE_MEVISDICOMTIFF)
-	SET( mevisdcmtifflib mevisdcmtiff)
-ELSE ( ELASTIX_USE_MEVISDICOMTIFF )
-	SET( mevisdcmtifflib  )
-ENDIF( ELASTIX_USE_MEVISDICOMTIFF )
+IF( ELASTIX_USE_MEVISDICOMTIFF )
+  ADD_DEFINITIONS( -D_ELASTIX_USE_MEVISDICOMTIFF )
+  SET( mevisdcmtifflib mevisdcmtiff )
+ELSE()
+  SET( mevisdcmtifflib )
+ENDIF()
 
 
 #---------------------------------------------------------------------
@@ -179,5 +179,7 @@ TARGET_LINK_LIBRARIES( transformix
 #---------------------------------------------------------------------
 # Define the install directory.
 
-INSTALL( TARGETS elastix transformix RUNTIME DESTINATION . )
+INSTALL( TARGETS elastix transformix
+  RUNTIME DESTINATION .
+  COMPONENT core )
 

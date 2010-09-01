@@ -1,5 +1,6 @@
 #---------------------------------------------------------------------
 CMAKE_MINIMUM_REQUIRED( VERSION 2.6 )
+CMAKE_POLICY( SET CMP0012 NEW )
 
 #---------------------------------------------------------------------
 PROJECT( elastix )
@@ -251,14 +252,27 @@ OPTION( ELASTIX_ENABLE_PACKAGER "Enable elastix packager using CPack" OFF )
 
 IF( ELASTIX_ENABLE_PACKAGER )
   # Version information
+  # If the next line is uncommented the package name will be like
+  # elastix-4.3-win64 instead of elastix-4.3.0-win64
   #SET( CPACK_PACKAGE_VERSION ${ELASTIX_VERSION} )
   SET( CPACK_PACKAGE_VERSION_MAJOR ${ELASTIX_VERSION_MAJOR} )
   SET( CPACK_PACKAGE_VERSION_MINOR ${ELASTIX_VERSION_MINOR} )
   SET( CPACK_PACKAGE_VERSION_PATCH "0")
 
+  # We have split the elastix package into two components:
+  # The core (elastix and transformix) and the libraries (ANNlib and possibly cudart)
+  SET( CPACK_COMPONENTS_ALL core libraries )
+  SET( CPACK_COMPONENT_CORE_DISPLAY_NAME "Core files" )
+  SET( CPACK_COMPONENT_LIBRARIES_DISPLAY_NAME "Libraries" )
+  SET( CPACK_COMPONENT_CORE_DESCRIPTION "Contains elastix and transformix" )
+  SET( CPACK_COMPONENT_LIBRARIES_DESCRIPTION "Contains the libraries" )
+  SET( CPACK_COMPONENT_CORE_DEPENDS libraries )
+  SET( CPACK_COMPONENT_CORE_REQUIRED ON )
+  SET( CPACK_COMPONENT_LIBRARIES_REQUIRED ON )
+
   # The default package filename is
   # ${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_SYSTEM_NAME}
-  # which is like elastix-4.3-win64, or elastix-4.3-linux-i686
+  # which is like elastix-4.3.0-win64, or elastix-4.3.0-linux-i686
   # Currently however we use elastix_windows64_v4.3
   # We can change our naming schedule or come close to it using:
   #SET( CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}_${CPACK_SYSTEM_NAME}_v${CPACK_PACKAGE_VERSION}" )
