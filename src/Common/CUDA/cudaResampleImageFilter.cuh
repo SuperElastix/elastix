@@ -25,6 +25,12 @@ TOutputImageType* cudaCastToType( cudaExtent& volumeExtent,
   const TInputImageType* src, TOutputImageType* dst,
   cudaMemcpyKind direction, bool UseCPU );
 
+// Specialization
+template <>
+float* cudaCastToType( cudaExtent& volumeExtent,
+  const float* src, float* dst,
+  cudaMemcpyKind direction, bool UseCPU );
+
 /**
  * Helper class
  */

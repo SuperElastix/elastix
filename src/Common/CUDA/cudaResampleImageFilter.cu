@@ -15,8 +15,6 @@
 #include "CI/cubicPrefilter3D.cu"
 #include "cudaInlineFunctions.h"
 
-namespace cuda
-{
 
 __constant__ float3 CUInputImageSpacing;
 __constant__ float3 CUInputImageOrigin;
@@ -431,5 +429,4 @@ TOutputImageType* cuda::cudaCastToType( cudaExtent& volumeExtent,
   return dst;
 }
 
-} // end namespace cuda
 
