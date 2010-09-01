@@ -19,9 +19,9 @@ namespace cuda
 {
 
 #define DBG_FUNC(NAME, PARAMETERS_DECLR, PARAMETERS_CALL) \
-  inline  cudaError_t NAME##PARAMETERS_DECLR { \
-  cudaError_t err = ::NAME##PARAMETERS_CALL;   \
-  cudaCheckMsg(#NAME##" failed!");             \
+  inline  cudaError_t NAME PARAMETERS_DECLR { \
+  cudaError_t err = ::NAME PARAMETERS_CALL;   \
+  cudaCheckMsg(#NAME" failed!");             \
   return err;                                  \
 }
 
