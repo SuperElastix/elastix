@@ -2,7 +2,7 @@
 CUDA_ADD_LIBRARY( elastix_cuda cudaResampleImageFilter.cu cudaResampleImageFilter.cuh )
 CUDA_INCLUDE_DIRECTORIES( ${CUDA_SDK_ROOT_DIR}/C/common/inc )
 
-#add some additional options to the nvcc compiler
+# Add some additional options to the nvcc compiler
 SET( CUDA_NVCC_FLAGS "--ptxas-options=-v;-use_fast_math;-gencode=arch=compute_11,code=\\\"sm_11,compute_11\\\";-gencode=arch=compute_13,code=\\\"sm_13,compute_13\\\";-gencode=arch=compute_20,code=\\\"sm_20,compute_20\\\"" CACHE STRING "Over original CUDA_NVCC_FLAGS" FORCE )
 
 #ADD_LIBRARY( elastix_cuda cudaDeformationsKernel.cu )
@@ -58,7 +58,7 @@ FILE( GLOB_RECURSE cudartlibnames ${CUDA_TOOLKIT_ROOT_DIR}/*${CMAKE_SHARED_LIBRA
 FILE( GLOB_RECURSE cudartemulibnames ${CUDA_TOOLKIT_ROOT_DIR}/*${CMAKE_SHARED_LIBRARY_PREFIX}cudartemu*${CMAKE_SHARED_LIBRARY_SUFFIX} )
 # Remove the cudartemu files from the list
 LIST( LENGTH cudartemulibnames noemus )
-IF( NOT ${noemus} EQUAL "0" )
+IF( NOT ${noemus} EQUAL 0 )
   LIST( REMOVE_ITEM cudartlibnames ${cudartemulibnames} )
 ENDIF()
 

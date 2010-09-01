@@ -15,6 +15,9 @@
 #include "CI/cubicPrefilter3D.cu"
 #include "cudaInlineFunctions.h"
 
+namespace cuda
+{
+
 __constant__ float3 CUInputImageSpacing;
 __constant__ float3 CUInputImageOrigin;
 __constant__ float3 CUOutputImageSpacing;
@@ -318,7 +321,7 @@ cuda::CUDAResampleImageFilter<TInterpolatorPrecisionType, TImageType, TInternalI
 /* check for double TInputImageType or TOutputImageType */
 template <class T> inline bool is_double();
 template <class T> inline bool is_double() {return false;}
-template <     > inline bool is_double<double>() {return true;}
+template <       > inline bool is_double<double>() {return true;}
 
 template <>
 float* cuda::cudaCastToType<float, float>( cudaExtent& volumeExtent,
@@ -337,7 +340,9 @@ TOutputImageType* cuda::cudaCastToType( cudaExtent& volumeExtent,
   size_t offset = 0;
   const size_t voxelsPerSlice = volumeExtent.width * volumeExtent.height;
 
-  dim3 dimBlock( min((int)max(volumeExtent.width, volumeExtent.height), 512 ) );
+  // std::max( size_t, size_t ) does not exist
+  dim3 dimBlock( std::min( static_cast<int>(
+    std::max( (long long)volumeExtent.width, (long long)volumeExtent.height ) ), 512 ) );
   dim3 dimGrid( (unsigned int)( voxelsPerSlice / dimBlock.x ) );
 
   /* Not a perfect fit, fix it */
@@ -354,7 +359,8 @@ TOutputImageType* cuda::cudaCastToType( cudaExtent& volumeExtent,
   case cudaMemcpyHostToDevice:
     if ( is_double<TOutputImageType>() && device_less_2_0 )
     {
-      throw itk::ExceptionObject( "GPU doesn't support double-precision" );
+      //throw itk::ExceptionObject( "GPU doesn't support double-precision" );
+      throw std::exception();
     }
 
     if ( !UseGPU )
@@ -387,7 +393,8 @@ TOutputImageType* cuda::cudaCastToType( cudaExtent& volumeExtent,
   case cudaMemcpyDeviceToHost:
     if ( is_double<TInputImageType>() && device_less_2_0 )
     {
-      throw itk::ExceptionObject( "GPU doesn't support double-precision" );
+      //throw itk::ExceptionObject( "GPU doesn't support double-precision" );
+      throw std::exception();
     }
 
     if ( !UseGPU )
@@ -423,3 +430,6 @@ TOutputImageType* cuda::cudaCastToType( cudaExtent& volumeExtent,
 //     << voxelsPerSlice * volumeExtent.depth << " elements" << std::endl;
   return dst;
 }
+
+} // end namespace cuda
+
