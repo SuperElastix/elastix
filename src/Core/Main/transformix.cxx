@@ -110,14 +110,15 @@ int main( int argc, char **argv )
     returndummy |= -1;
   }
 
-  /** Check that at least one of the options "-in" or "-ipp" or "-jac" is given. */
+  /** Check that at least one of the following options is given. */
   if ( argMap.count( "-in" ) == 0
     && argMap.count( "-ipp" ) == 0
     && argMap.count( "-def" ) == 0
-    && argMap.count( "-jac" ) == 0 )
+    && argMap.count( "-jac" ) == 0
+    && argMap.count( "-jacmat" ) == 0 )
   {
-    std::cerr << "ERROR: At least one of the CommandLine options \"-in\" or "
-      << "\"-def\" or \"-jac\" should be given!" << std::endl;
+    std::cerr << "ERROR: At least one of the CommandLine options \"-in\",	"
+      << "\"-def\", \"-jac\", or \"-jacmat\" should be given!" << std::endl;
     returndummy |= -1;
   }
 
@@ -247,10 +248,12 @@ void PrintHelp( void )
     "input-image, which effectively generates a deformation field.\n";
   std::cout << "-jac      use \"-jac all\" to generate an image with the "
     << "determinant of the spatial Jacobian\n";
+  std::cout << "-jacmat   use \"-jacmat all\" to generate an image with the "
+    << "spatial Jacobian matrix at each voxel\n";
   std::cout << "-priority set the process priority to high or belownormal "
     "(Windows only)\n";
   std::cout << "-threads  set the maximum number of threads of transformix\n";
-  std::cout << "At least one of the options \"-in\" or \"-def\" or \"-jac\" should be given.\n"
+  std::cout << "At least one of the options \"-in\", \"-def\", \"-jac\", or \"-jacmat\" should be given.\n"
     << std::endl;
 
   /** The parameter file. */
