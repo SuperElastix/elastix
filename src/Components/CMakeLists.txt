@@ -126,3 +126,18 @@ FOREACH( component ${ListOfComponents} )
   ADD_SUBDIRECTORY( ${relative_path_to_comp} )
 ENDFOREACH()
 
+#----------------------------------------------------------------------
+# Search for user components
+
+#FOREACH( USER_COMPONENT_DIR ${ELASTIX_USER_COMPONENT_DIRS} )
+#
+#  FILE( GLOB_RECURSE ListOfUserComponents "${USER_COMPONENT_DIR}/CMakeLists.txt" )
+#
+#  FOREACH( component ${ListOfUserComponents} )
+#    GET_FILENAME_COMPONENT( path_to_comp ${component} PATH )
+#	  # Use the full absolute path for user components:
+#		ADD_SUBDIRECTORY( ${path_to_comp} )
+#  ENDFOREACH( component )
+#
+#ENDFOREACH( USER_COMPONENT_DIR )
+
