@@ -31,12 +31,22 @@ ENDIF()
 MARK_AS_ADVANCED( EXECUTABLE_OUTPUT_PATH )
 MARK_AS_ADVANCED( LIBRARY_OUTPUT_PATH )
 
-
 #---------------------------------------------------------------------
 # Check if Mevis DicomTiff support is desired
 MARK_AS_ADVANCED( ELASTIX_USE_MEVISDICOMTIFF )
 OPTION( ELASTIX_USE_MEVISDICOMTIFF
   "Support MevisLab DicomTiff image format" OFF )
+
+#----------------------------------------------------------------------
+# Define cmake variable to define extra user component directories
+# These directories will be added to the list of include directories
+# and they will be searched for CMakeLists.txt files for further 
+# processing. In these directories, users may put code for their own
+# components.
+
+MARK_AS_ADVANCED( ELASTIX_USER_COMPONENT_DIRS )
+SET( ELASTIX_USER_COMPONENT_DIRS ${elastix_SOURCE_DIR}/../UserComponents CACHE PATH "directories with user defined elastix components" )
+
 
 #-------------------------------------------------------------------------
 # elastix depends on some ITK settings
@@ -102,11 +112,13 @@ SET( elxComponents_INCLUDE_DIRECTORIES
   ${elastix_SOURCE_DIR}/Components/Transforms
 )
 
+
 SET( elxINCLUDE_DIRECTORIES
   ${elxCommon_INCLUDE_DIRECTORIES}
   ${elxCore_INCLUDE_DIRECTORIES}
   ${elxComponents_INCLUDE_DIRECTORIES}
   ${elastix_BINARY_DIR}
+ ${ELASTIX_USER_COMPONENT_DIRS}
 )
 
 INCLUDE_DIRECTORIES( ${elxINCLUDE_DIRECTORIES} )
@@ -130,9 +142,17 @@ ENDIF()
 #---------------------------------------------------------------------
 # Process the sub-directories
 
+# Common dir: code that is neither related to the core of elastix or 
+# to specific components.
 ADD_SUBDIRECTORY( Common )
+
+# Components: the registration components such as metrics, transforms,
+# optimizers, etc.
 ADD_SUBDIRECTORY( Components )
-ADD_SUBDIRECTORY( Core )
+
+# Core dir: code that takes care of starting elastix, loading
+# components, definitions of macros etc.
+ADD_SUBSUBDIRECTORY( Core )
 
 #--------------------------------------------------------------------
 # Configure the examples
