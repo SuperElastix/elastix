@@ -25,10 +25,6 @@ __constant__ float3 CUGridOrigin;
 __constant__ int3   CUGridSize;
 __constant__ float  CUDefaultPixelValue;
 
-/* template linker errors... http://www.parashift.com/c++-faq-lite/templates.html#faq-35.14 */
-template class cuda::CUDAResampleImageFilter<double, short, float>;
-template class cuda::CUDAResampleImageFilter<double, int  , float>;
-template class cuda::CUDAResampleImageFilter<double, float, float>;
 
 #include "cudaDeformationsKernel.cu"
 
@@ -429,4 +425,12 @@ TOutputImageType* cuda::cudaCastToType( cudaExtent& volumeExtent,
   return dst;
 }
 
+
+/** Template linker errors...
+ * http://www.parashift.com/c++-faq-lite/templates.html#faq-35.14
+ * Note that gcc requires these lines at the bottom of this file.
+ */
+template class cuda::CUDAResampleImageFilter<double, short, float>;
+template class cuda::CUDAResampleImageFilter<double, int  , float>;
+template class cuda::CUDAResampleImageFilter<double, float, float>;
 
