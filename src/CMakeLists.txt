@@ -1,5 +1,5 @@
 #---------------------------------------------------------------------
-CMAKE_MINIMUM_REQUIRED( VERSION 2.6 )
+CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
 CMAKE_POLICY( SET CMP0012 NEW )
 
 #---------------------------------------------------------------------
@@ -260,8 +260,12 @@ IF( ELASTIX_ENABLE_PACKAGER )
   SET( CPACK_PACKAGE_VERSION_PATCH "0")
 
   # We have split the elastix package into two components:
-  # The core (elastix and transformix) and the libraries (ANNlib and possibly cudart)
-  SET( CPACK_COMPONENTS_ALL core libraries )
+  # - the core: elastix and transformix
+  # - the libraries: ANNlib and cudart when ELASTIX_USE_CUDA ON
+  # NOTE: Currently does not work for nsis. A bug related to this
+  # seems to be fixed in the upcoming CMake 2.8.3
+  # Therefore, disable component support for now.
+  #SET( CPACK_COMPONENTS_ALL core libraries Unspecified )
   SET( CPACK_COMPONENT_CORE_DISPLAY_NAME "Core files" )
   SET( CPACK_COMPONENT_LIBRARIES_DISPLAY_NAME "Libraries" )
   SET( CPACK_COMPONENT_CORE_DESCRIPTION "Contains elastix and transformix" )
@@ -294,6 +298,8 @@ IF( ELASTIX_ENABLE_PACKAGER )
   # Do not include a subdirectory in the zip
   SET( CPACK_INCLUDE_TOPLEVEL_DIRECTORY 0 )
 
+  SET( CPACK_SET_DESTDIR "OFF")
+
   # ??
   #SET(CPACK_PACKAGE_EXECUTABLES "MyExecutable" "My Executable")
 
@@ -303,7 +309,7 @@ IF( ELASTIX_ENABLE_PACKAGER )
     # Make sure there is at least one set of four (4) backlashes
     # (CMake escapes 2, and the other gets escaped too in some second step)
 
-    # Set the generators
+    # Set the generators. If left blank the user has all options.
     SET( CPACK_GENERATOR "NSIS;ZIP")
 
     # Adding information
@@ -334,9 +340,11 @@ IF( ELASTIX_ENABLE_PACKAGER )
     #SET(CPACK_SOURCE_STRIP_FILES "")
   ENDIF()
 
-	# TODO: does this installer also include all necessary dlls?
-	# for example cuda, zlib (if using mevisdicomtiff), etc
-  # This include will do all the work
+  # Uncomment the following line if we want to include the system
+  # dll's in the distribution!
+  #INCLUDE( InstallRequiredSystemLibraries )
+
+  # This include will do all the work.
   INCLUDE( CPack )
 ENDIF()
 
