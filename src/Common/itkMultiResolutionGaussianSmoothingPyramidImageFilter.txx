@@ -155,6 +155,12 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>
     outputPtr->SetBufferedRegion( outputPtr->GetRequestedRegion() );
     outputPtr->Allocate();
 
+    // Force caster to regenerate data
+    // This is necessary because the caster may have to regenerate
+    // data for each output. (because this filter has n outputs, but
+    // for generating each output the caster filter is used.
+    caster->Modified();
+
     // compute shrink factors and variances
     for( idim = 0; idim < ImageDimension; idim++ )
     {
@@ -167,7 +173,7 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>
       stdev[idim] = 0.5 * static_cast<float>( factors[idim] )*spacing[idim];
       smootherArray[idim]->SetSigma( stdev[idim] );
       // force to always update in case shrink factors are the same
-      // (SK: why? is this because we reuse this filter for every resolution?)
+      // (SK: this is necessary because we reuse this filter for every resolution?)
       smootherArray[idim]->Modified();
 
       // Update smoother pointer array for this dimension
