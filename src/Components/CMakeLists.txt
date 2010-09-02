@@ -68,10 +68,10 @@ FILE( WRITE ${InstallFunctionCallFile}
 
 MACRO( ADD_ELXCOMPONENT name )
   # Compile this component or not
-  SET ( defaultValue ON )
-  IF ( ${ARGV1} STREQUAL "OFF" )
-    SET ( defaultValue OFF )
-  ENDIF ( ${ARGV1} STREQUAL "OFF" )
+  SET( defaultValue ON )
+  IF( ${ARGV1} STREQUAL "OFF" )
+    SET( defaultValue OFF )
+  ENDIF()
   MARK_AS_ADVANCED( USE_${name} )
   OPTION( USE_${name} "Compile this component" ${defaultValue} )
 
@@ -85,14 +85,14 @@ MACRO( ADD_ELXCOMPONENT name )
     ADD_LIBRARY( ${name} STATIC ${filelist} )
     TARGET_LINK_LIBRARIES( ${name} ${elxLinkLibs} )
 
-    # Update AllComponentLibsTemp, while avoiding duplicates:
+    # Update AllComponentLibs, while avoiding duplicates:
     IF( DEFINED AllComponentLibs )
       SET( dummy ${AllComponentLibs} )
       LIST( REMOVE_ITEM dummy ${name} )
       SET( dummy ${dummy} ${name} )
-    ELSE( DEFINED AllComponentLibs )
+    ELSE()
       SET( dummy ${name} )
-    ENDIF ( DEFINED AllComponentLibs )
+    ENDIF()
     SET( AllComponentLibs ${dummy} CACHE INTERNAL "All component libraries for elastix/transformix" )
 
     # Write lines to two files
@@ -106,11 +106,11 @@ MACRO( ADD_ELXCOMPONENT name )
     IF( DEFINED AllComponentLibs )
       SET( dummy ${AllComponentLibs} )
       LIST( REMOVE_ITEM dummy ${name} )
-    ELSE( DEFINED AllComponentLibs )
+    ELSE()
       SET( dummy "" )
-    ENDIF ( DEFINED AllComponentLibs )
+    ENDIF()
     SET( AllComponentLibs ${dummy} CACHE INTERNAL "All component libraries for elastix/transformix"  )
-  ENDIF( USE_${name} )
+  ENDIF()
 
 ENDMACRO( ADD_ELXCOMPONENT )
 
@@ -123,6 +123,6 @@ FILE( GLOB_RECURSE ListOfComponents "*/CMakeLists.txt" )
 FOREACH( component ${ListOfComponents} )
   GET_FILENAME_COMPONENT( path_to_comp ${component} PATH )
   STRING( REGEX REPLACE "${elxComponents_SOURCE_DIR}/" "" relative_path_to_comp ${path_to_comp} )
-  SUBDIRS( ${relative_path_to_comp} )
-ENDFOREACH( component )
+  ADD_SUBDIRECTORY( ${relative_path_to_comp} )
+ENDFOREACH()
 

@@ -14,8 +14,8 @@ ENDIF( ITK_FOUND )
 
 #---------------------------------------------------------------------
 # Find CUDA.
-MARK_AS_ADVANCED(ELASTIX_USE_CUDA)
-OPTION(ELASTIX_USE_CUDA "Use CUDA enabled GPU" OFF)
+MARK_AS_ADVANCED( ELASTIX_USE_CUDA )
+OPTION( ELASTIX_USE_CUDA "Use CUDA enabled GPU" OFF )
 
 IF( ELASTIX_USE_CUDA )
   FIND_PACKAGE( CUDA REQUIRED )
@@ -24,7 +24,7 @@ IF( ELASTIX_USE_CUDA )
 	MARK_AS_ADVANCED( CUDA_BUILD_EMULATION )
 	MARK_AS_ADVANCED( CUDA_VERBOSE_BUILD )
 	MARK_AS_ADVANCED( CUDA_SDK_ROOT_DIR )
-ENDIF( ELASTIX_USE_CUDA )
+ENDIF()
 
 #----------------------------------------------------------------------
 # Mark some mostly unused variables as advanced
@@ -34,8 +34,9 @@ MARK_AS_ADVANCED( LIBRARY_OUTPUT_PATH )
 
 #---------------------------------------------------------------------
 # Check if Mevis DicomTiff support is desired
-MARK_AS_ADVANCED(ELASTIX_USE_MEVISDICOMTIFF)
-OPTION(ELASTIX_USE_MEVISDICOMTIFF "Support MevisLab DicomTiff image format" OFF)
+MARK_AS_ADVANCED( ELASTIX_USE_MEVISDICOMTIFF )
+OPTION( ELASTIX_USE_MEVISDICOMTIFF
+  "Support MevisLab DicomTiff image format" OFF )
 
 #-------------------------------------------------------------------------
 # elastix depends on some ITK settings
@@ -66,46 +67,46 @@ ENDIF()
 # Include directories
 
 SET( elxCommon_INCLUDE_DIRECTORIES
- ${elastix_SOURCE_DIR}/Common
- ${elastix_SOURCE_DIR}/Common/CostFunctions
- ${elastix_SOURCE_DIR}/Common/CUDA
- ${elastix_SOURCE_DIR}/Common/ImageSamplers
- ${elastix_SOURCE_DIR}/Common/KNN
- ${elastix_SOURCE_DIR}/Common/KNN/ann_1.1/include
- ${elastix_SOURCE_DIR}/Common/LineSearchOptimizers
- ${elastix_SOURCE_DIR}/Common/ParameterFileParser
- ${elastix_SOURCE_DIR}/Common/Transforms
- ${elastix_SOURCE_DIR}/Common/xout
- ${elastix_SOURCE_DIR}/Common/MevisDicomTiff
+  ${elastix_SOURCE_DIR}/Common
+  ${elastix_SOURCE_DIR}/Common/CostFunctions
+  ${elastix_SOURCE_DIR}/Common/CUDA
+  ${elastix_SOURCE_DIR}/Common/ImageSamplers
+  ${elastix_SOURCE_DIR}/Common/KNN
+  ${elastix_SOURCE_DIR}/Common/KNN/ann_1.1/include
+  ${elastix_SOURCE_DIR}/Common/LineSearchOptimizers
+  ${elastix_SOURCE_DIR}/Common/ParameterFileParser
+  ${elastix_SOURCE_DIR}/Common/Transforms
+  ${elastix_SOURCE_DIR}/Common/xout
+  ${elastix_SOURCE_DIR}/Common/MevisDicomTiff
 )
 
 SET( elxCore_INCLUDE_DIRECTORIES
- ${elastix_SOURCE_DIR}/Core
- ${elastix_SOURCE_DIR}/Core/Install
- ${elastix_SOURCE_DIR}/Core/Kernel
- ${elastix_SOURCE_DIR}/Core/ComponentBaseClasses
- ${elastix_SOURCE_DIR}/Core/Configuration
- ${elastix_SOURCE_DIR}/Core/Main
+  ${elastix_SOURCE_DIR}/Core
+  ${elastix_SOURCE_DIR}/Core/Install
+  ${elastix_SOURCE_DIR}/Core/Kernel
+  ${elastix_SOURCE_DIR}/Core/ComponentBaseClasses
+  ${elastix_SOURCE_DIR}/Core/Configuration
+  ${elastix_SOURCE_DIR}/Core/Main
 )
 
 SET( elxComponents_INCLUDE_DIRECTORIES
- ${elastix_SOURCE_DIR}/Components/FixedImagePyramids
- ${elastix_SOURCE_DIR}/Components/ImageSamplers
- ${elastix_SOURCE_DIR}/Components/Interpolators
- ${elastix_SOURCE_DIR}/Components/Metrics
- ${elastix_SOURCE_DIR}/Components/MovingImagePyramids
- ${elastix_SOURCE_DIR}/Components/Optimizers
- ${elastix_SOURCE_DIR}/Components/Registrations
- ${elastix_SOURCE_DIR}/Components/ResampleInterpolators
- ${elastix_SOURCE_DIR}/Components/Resamplers
- ${elastix_SOURCE_DIR}/Components/Transforms
+  ${elastix_SOURCE_DIR}/Components/FixedImagePyramids
+  ${elastix_SOURCE_DIR}/Components/ImageSamplers
+  ${elastix_SOURCE_DIR}/Components/Interpolators
+  ${elastix_SOURCE_DIR}/Components/Metrics
+  ${elastix_SOURCE_DIR}/Components/MovingImagePyramids
+  ${elastix_SOURCE_DIR}/Components/Optimizers
+  ${elastix_SOURCE_DIR}/Components/Registrations
+  ${elastix_SOURCE_DIR}/Components/ResampleInterpolators
+  ${elastix_SOURCE_DIR}/Components/Resamplers
+  ${elastix_SOURCE_DIR}/Components/Transforms
 )
 
 SET( elxINCLUDE_DIRECTORIES
- ${elxCommon_INCLUDE_DIRECTORIES}
- ${elxCore_INCLUDE_DIRECTORIES}
- ${elxComponents_INCLUDE_DIRECTORIES}
- ${elastix_BINARY_DIR}
+  ${elxCommon_INCLUDE_DIRECTORIES}
+  ${elxCore_INCLUDE_DIRECTORIES}
+  ${elxComponents_INCLUDE_DIRECTORIES}
+  ${elastix_BINARY_DIR}
 )
 
 INCLUDE_DIRECTORIES( ${elxINCLUDE_DIRECTORIES} )
@@ -118,20 +119,20 @@ IF( MSVC )
     /D_SCL_SECURE_NO_DEPRECATE
     /D_CRT_SECURE_NO_DEPRECATE
     /D_CRT_TIME_FUNCTIONS_NO_DEPRECATE
-    )
+  )
   # Increases address capacity
   IF ( WIN32 )
-    SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /bigobj")
-    SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /bigobj")
-  ENDIF ( WIN32 )
-ENDIF( MSVC )
+    SET( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /bigobj" )
+    SET( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /bigobj" )
+  ENDIF()
+ENDIF()
 
 #---------------------------------------------------------------------
 # Process the sub-directories
 
-SUBDIRS( Common )
-SUBDIRS( Components )
-SUBDIRS( Core )
+ADD_SUBDIRECTORY( Common )
+ADD_SUBDIRECTORY( Components )
+ADD_SUBDIRECTORY( Core )
 
 #--------------------------------------------------------------------
 # Configure the examples
@@ -147,31 +148,31 @@ IF( WIN32 )
     ${ELASTIX_DOX_DIR}/example.bat
     ${ELASTIX_HELP_DIR}/example.bat
     COPYONLY )
-ELSE( WIN32 )
+ELSE()
   CONFIGURE_FILE(
     ${ELASTIX_DOX_DIR}/example
     ${ELASTIX_HELP_DIR}/example
     COPYONLY )
-ENDIF( WIN32 )
+ENDIF()
 
 MAKE_DIRECTORY( ${ELASTIX_HELP_DIR}/exampleinput )
 MAKE_DIRECTORY( ${ELASTIX_HELP_DIR}/exampleoutput )
 
 SET( ELX_EXAMPLEINPUTFILES
- fixed.mhd
- fixed.raw
- mask_fixed.mhd
- mask_fixed.raw
- mask_moving.mhd
- mask_moving.raw
- moving.mhd
- moving.raw
- parameters_Affine.txt
- parameters_BSpline.txt
- parameters_Rigid.txt
- parameters_Translation.txt
- solution_deformedmovingimage.mhd
- solution_deformedmovingimage.raw
+  fixed.mhd
+  fixed.raw
+  mask_fixed.mhd
+  mask_fixed.raw
+  mask_moving.mhd
+  mask_moving.raw
+  moving.mhd
+  moving.raw
+  parameters_Affine.txt
+  parameters_BSpline.txt
+  parameters_Rigid.txt
+  parameters_Translation.txt
+  solution_deformedmovingimage.mhd
+  solution_deformedmovingimage.raw
 )
 
 FOREACH( ELX_EXAMPLEINPUTFILE ${ELX_EXAMPLEINPUTFILES} )
@@ -179,7 +180,7 @@ FOREACH( ELX_EXAMPLEINPUTFILE ${ELX_EXAMPLEINPUTFILES} )
     ${ELASTIX_DOX_DIR}/exampleinput/${ELX_EXAMPLEINPUTFILE}
     ${ELASTIX_HELP_DIR}/exampleinput/${ELX_EXAMPLEINPUTFILE}
     COPYONLY )
-ENDFOREACH( ELX_EXAMPLEINPUTFILE )
+ENDFOREACH()
 
 #---------------------------------------------------------------------
 # Get version information.
@@ -210,14 +211,14 @@ IF( Doxygen_FOUND )
   # Get date
   IF( UNIX OR CYGWIN )
     EXEC_PROGRAM( "date '+%d-%m-%Y'" OUTPUT_VARIABLE ELASTIX_DOXYGEN_DATE )
-  ENDIF( UNIX OR CYGWIN )
+  ENDIF()
   IF( WIN32 )
     IF( NOT CYGWIN )
       EXECUTE_PROCESS( COMMAND "${ELASTIX_DOXYGEN_DIR}/doxdate.bat"
         OUTPUT_VARIABLE ELASTIX_DOXYGEN_DATETEMP )
       STRING( REPLACE "/" "-" ELASTIX_DOXYGEN_DATE ${ELASTIX_DOXYGEN_DATETEMP} )
-    ENDIF( NOT CYGWIN )
-  ENDIF( WIN32 )
+    ENDIF()
+  ENDIF()
 
   # Configure the doxygen configuration
   CONFIGURE_FILE(
@@ -226,13 +227,13 @@ IF( Doxygen_FOUND )
   # Configure the footer of the help website.
   CONFIGURE_FILE(
     ${ELASTIX_DOXYGEN_DIR}/DoxygenFooter.html.in
-    ${ELASTIX_HELP_DIR}/DoxygenFooter.html @ONLY)
+    ${ELASTIX_HELP_DIR}/DoxygenFooter.html @ONLY )
   # Configure the MainPage.dox
   CONFIGURE_FILE(
     ${ELASTIX_DOXYGEN_DIR}/MainPage.dox.in
     ${ELASTIX_HELP_DIR}/MainPage.dox @ONLY )
 
-ENDIF( Doxygen_FOUND )
+ENDIF()
 
 #---------------------------------------------------------------------
 # Testing
@@ -241,7 +242,7 @@ SET( ELASTIX_BUILD_TESTING OFF CACHE BOOL
   "Perform some tests on basic functionality of elastix." )
 IF( ELASTIX_BUILD_TESTING )
   ENABLE_TESTING()
-  SUBDIRS( Testing )
+  ADD_SUBDIRECTORY( Testing )
 ENDIF()
 
 #---------------------------------------------------------------------
@@ -257,7 +258,7 @@ IF( ELASTIX_ENABLE_PACKAGER )
   #SET( CPACK_PACKAGE_VERSION ${ELASTIX_VERSION} )
   SET( CPACK_PACKAGE_VERSION_MAJOR ${ELASTIX_VERSION_MAJOR} )
   SET( CPACK_PACKAGE_VERSION_MINOR ${ELASTIX_VERSION_MINOR} )
-  SET( CPACK_PACKAGE_VERSION_PATCH "0")
+  SET( CPACK_PACKAGE_VERSION_PATCH "0" )
 
   # We have split the elastix package into two components:
   # - the core: elastix and transformix
@@ -287,13 +288,18 @@ IF( ELASTIX_ENABLE_PACKAGER )
 
   # General information
   SET( CPACK_PACKAGE_VENDOR "Stefan Klein and Marius Staring" )
-  SET( CPACK_PACKAGE_DESCRIPTION_SUMMARY "elastix is an image registration toolkit" )
-  #SET( CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/ReadMe.txt" )
-  SET( CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/CopyrightElastix.txt" )
+  SET( CPACK_PACKAGE_DESCRIPTION_SUMMARY
+    "elastix is an image registration toolkit" )
+  #SET( CPACK_PACKAGE_DESCRIPTION_FILE
+  #  "${CMAKE_CURRENT_SOURCE_DIR}/ReadMe.txt" )
+  SET( CPACK_RESOURCE_FILE_LICENSE
+    "${CMAKE_CURRENT_SOURCE_DIR}/CopyrightElastix.txt" )
 
   # The default install directories: .../elastix_v4.3
-  SET( CPACK_PACKAGE_INSTALL_DIRECTORY "elastix_v${ELASTIX_VERSION_MAJOR}.${ELASTIX_VERSION_MINOR}" )
-  SET( CPACK_PACKAGE_INSTALL_REGISTRY_KEY "elastix_v${ELASTIX_VERSION_MAJOR}.${ELASTIX_VERSION_MINOR}" )
+  SET( CPACK_PACKAGE_INSTALL_DIRECTORY
+    "elastix_v${ELASTIX_VERSION_MAJOR}.${ELASTIX_VERSION_MINOR}" )
+  SET( CPACK_PACKAGE_INSTALL_REGISTRY_KEY
+    "elastix_v${ELASTIX_VERSION_MAJOR}.${ELASTIX_VERSION_MINOR}" )
 
   # Do not include a subdirectory in the zip
   SET( CPACK_INCLUDE_TOPLEVEL_DIRECTORY 0 )
@@ -313,7 +319,8 @@ IF( ELASTIX_ENABLE_PACKAGER )
     SET( CPACK_GENERATOR "NSIS;ZIP")
 
     # Adding information
-    SET( CPACK_NSIS_DISPLAY_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY} elastix" )
+    SET( CPACK_NSIS_DISPLAY_NAME
+      "${CPACK_PACKAGE_INSTALL_DIRECTORY} elastix" )
     SET( CPACK_NSIS_HELP_LINK "http:\\\\\\\\elastix.isi.uu.nl" )
     SET( CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\elastix.isi.uu.nl" )
     SET( CPACK_NSIS_CONTACT "elastix@bigr.nl" )
@@ -324,9 +331,12 @@ IF( ELASTIX_ENABLE_PACKAGER )
     # 1 A branding image that will be displayed inside the installer
     # 2 The icon file (.ico) for the generated install program
     # 3 The icon file (.ico) for the generated uninstall program
-    SET( CPACK_PACKAGE_ICON "${CMAKE_CURRENT_SOURCE_DIR}/../dox/art\\\\elastix_logo_full_small.bmp" )
-    SET( CPACK_NSIS_MUI_ICON "${CMAKE_CURRENT_SOURCE_DIR}/../dox/art\\\\elastix_logo_64.ico" )
-    SET( CPACK_NSIS_MUI_UNIICON "${CMAKE_CURRENT_SOURCE_DIR}/../dox/art\\\\elastix_logo_64.ico" )
+    SET( CPACK_PACKAGE_ICON
+      "${CMAKE_CURRENT_SOURCE_DIR}/../dox/art\\\\elastix_logo_full_small.bmp" )
+    SET( CPACK_NSIS_MUI_ICON
+      "${CMAKE_CURRENT_SOURCE_DIR}/../dox/art\\\\elastix_logo_64.ico" )
+    SET( CPACK_NSIS_MUI_UNIICON
+      "${CMAKE_CURRENT_SOURCE_DIR}/../dox/art\\\\elastix_logo_64.ico" )
 
     # Create an option in the installer that asks if elastix
     # needs to be added to the system path
