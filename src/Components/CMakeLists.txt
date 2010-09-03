@@ -122,6 +122,7 @@ FILE( GLOB_RECURSE ListOfComponents "*/CMakeLists.txt" )
 
 FOREACH( component ${ListOfComponents} )
   GET_FILENAME_COMPONENT( path_to_comp ${component} PATH )
+  # Make the path relative to the elxComponents_SOURCE_DIR
   STRING( REGEX REPLACE "${elxComponents_SOURCE_DIR}/" "" relative_path_to_comp ${path_to_comp} )
   ADD_SUBDIRECTORY( ${relative_path_to_comp} )
 ENDFOREACH()
@@ -129,15 +130,45 @@ ENDFOREACH()
 #----------------------------------------------------------------------
 # Search for user components
 
-#FOREACH( USER_COMPONENT_DIR ${ELASTIX_USER_COMPONENT_DIRS} )
-#
-#  FILE( GLOB_RECURSE ListOfUserComponents "${USER_COMPONENT_DIR}/CMakeLists.txt" )
-#
-#  FOREACH( component ${ListOfUserComponents} )
-#    GET_FILENAME_COMPONENT( path_to_comp ${component} PATH )
-#	  # Use the full absolute path for user components:
-#		ADD_SUBDIRECTORY( ${path_to_comp} )
-#  ENDFOREACH( component )
-#
-#ENDFOREACH( USER_COMPONENT_DIR )
+FOREACH( UserComponentDir ${ELASTIX_USER_COMPONENT_DIRS} )
+
+  MESSAGE( STATUS "Searching for user components in: ${UserComponentDir}" )
+
+
+  FILE( GLOB_RECURSE ListOfUserComponents "${UserComponentDir}/CMakeLists.txt" )
+
+  FOREACH( UserComponent ${ListOfUserComponents} )
+
+    GET_FILENAME_COMPONENT( path_to_comp ${UserComponent} PATH )
+
+    # read project name from cmakelists.txt
+
+    MESSAGE( STATUS "Reading: ${UserComponent}" )
+
+    # Find the first line that has the following structure:
+    # PROJECT(projectname)
+    # spaces before/after/inbetween are allowed.
+    # PROJECT does not have to be capitalized.
+    # Commented lines (where the first nonwhite character is a #) are ignored.
+    FILE( STRINGS ${UserComponent} projectline LIMIT_COUNT 1 REGEX
+        "^[ \t]*[Pp][Rr][Oo][Jj][Ee][Cc][Tt][ \t]*[(][ \t]*[^ #\t()]+[ \t]*[)][ \t]*" )
+
+    #MESSAGE( STATUS "${filelines}" )
+
+    # Extract the projectname.
+    STRING(REGEX REPLACE
+        "^[ \t]*[Pp][Rr][Oo][Jj][Ee][Cc][Tt][ \t]*[(][ \t]*([^ #\t()]+)[ \t]*[)][ \t]*"
+        "\\1" projectname "${projectline}")
+
+    MESSAGE( STATUS "Found user component: ${projectname}" )
+
+    # For non-subdirectories, the binarydir should be specified
+    SET( binarydir "${elastix_BINARY_DIR}/UserComponents/${projectname}" )
+
+    # Add
+		ADD_SUBDIRECTORY( ${path_to_comp} ${binarydir} )
+
+  ENDFOREACH()
+
+ENDFOREACH()
 

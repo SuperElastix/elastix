@@ -45,7 +45,7 @@ OPTION( ELASTIX_USE_MEVISDICOMTIFF
 # components.
 
 MARK_AS_ADVANCED( ELASTIX_USER_COMPONENT_DIRS )
-SET( ELASTIX_USER_COMPONENT_DIRS ${elastix_SOURCE_DIR}/../UserComponents CACHE PATH "directories with user defined elastix components" )
+SET( ELASTIX_USER_COMPONENT_DIRS "" CACHE PATH "directories with user defined elastix components" )
 
 
 #-------------------------------------------------------------------------
@@ -152,7 +152,7 @@ ADD_SUBDIRECTORY( Components )
 
 # Core dir: code that takes care of starting elastix, loading
 # components, definitions of macros etc.
-ADD_SUBSUBDIRECTORY( Core )
+ADD_SUBDIRECTORY( Core )
 
 #--------------------------------------------------------------------
 # Configure the examples
