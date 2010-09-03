@@ -88,7 +88,9 @@ MACRO( ADD_ELXCOMPONENT name )
     # Update AllComponentLibs, while avoiding duplicates:
     IF( DEFINED AllComponentLibs )
       SET( dummy ${AllComponentLibs} )
-      LIST( REMOVE_ITEM dummy ${name} )
+			IF( NOT "${dummy}" STREQUAL "")
+			  LIST( REMOVE_ITEM dummy ${name} )
+			ENDIF()
       SET( dummy ${dummy} ${name} )
     ELSE()
       SET( dummy ${name} )
@@ -105,7 +107,9 @@ MACRO( ADD_ELXCOMPONENT name )
     # Remove from link list
     IF( DEFINED AllComponentLibs )
       SET( dummy ${AllComponentLibs} )
-      LIST( REMOVE_ITEM dummy ${name} )
+			IF( NOT "${dummy}" STREQUAL "")
+        LIST( REMOVE_ITEM dummy ${name} )
+			ENDIF()
     ELSE()
       SET( dummy "" )
     ENDIF()
@@ -117,6 +121,9 @@ ENDMACRO( ADD_ELXCOMPONENT )
 #---------------------------------------------------------------------
 # Search for all components
 #
+
+# Initialize the list of link libs.
+SET( AllComponentLibs "" CACHE INTERNAL "All component libraries for elastix/transformix"  )
 
 FILE( GLOB_RECURSE ListOfComponents "*/CMakeLists.txt" )
 
@@ -130,43 +137,49 @@ ENDFOREACH()
 #----------------------------------------------------------------------
 # Search for user components
 
-FOREACH( UserComponentDir ${ELASTIX_USER_COMPONENT_DIRS} )
+FOREACH( userComponentDir ${ELASTIX_USER_COMPONENT_DIRS} )
 
-  MESSAGE( STATUS "Searching for user components in: ${UserComponentDir}" )
+  MESSAGE( STATUS "Searching for user components in: ${userComponentDir}" )
 
+  FILE( GLOB_RECURSE listOfUserComponents "${userComponentDir}/CMakeLists.txt" )
 
-  FILE( GLOB_RECURSE ListOfUserComponents "${UserComponentDir}/CMakeLists.txt" )
+  FOREACH( userComponent ${listOfUserComponents} )
 
-  FOREACH( UserComponent ${ListOfUserComponents} )
-
-    GET_FILENAME_COMPONENT( path_to_comp ${UserComponent} PATH )
+    GET_FILENAME_COMPONENT( pathToComp ${userComponent} PATH )
 
     # read project name from cmakelists.txt
 
-    MESSAGE( STATUS "Reading: ${UserComponent}" )
+    MESSAGE( STATUS "Reading: ${userComponent}" )
 
     # Find the first line that has the following structure:
-    # PROJECT(projectname)
+    # ADD_ELXCOMPONENT(projectname [....]
     # spaces before/after/inbetween are allowed.
-    # PROJECT does not have to be capitalized.
+    # ADD_ELXCOMPONENT does not have to be capitalized.
     # Commented lines (where the first nonwhite character is a #) are ignored.
-    FILE( STRINGS ${UserComponent} projectline LIMIT_COUNT 1 REGEX
-        "^[ \t]*[Pp][Rr][Oo][Jj][Ee][Cc][Tt][ \t]*[(][ \t]*[^ #\t()]+[ \t]*[)][ \t]*" )
-
-    #MESSAGE( STATUS "${filelines}" )
-
+    FILE( STRINGS ${userComponent} addElxComponentLine LIMIT_COUNT 1 REGEX
+      "^[ \t]*[Aa][Dd][Dd]_[Ee][Ll][Xx][Cc][Oo][Mm][Pp][Oo][Nn][Ee][Nn][Tt][ \t]*[(][ \t]*[^ #\t()]+" )
+		
     # Extract the projectname.
     STRING(REGEX REPLACE
-        "^[ \t]*[Pp][Rr][Oo][Jj][Ee][Cc][Tt][ \t]*[(][ \t]*([^ #\t()]+)[ \t]*[)][ \t]*"
-        "\\1" projectname "${projectline}")
+      "^[ \t]*[Aa][Dd][Dd]_[Ee][Ll][Xx][Cc][Oo][Mm][Pp][Oo][Nn][Ee][Nn][Tt][ \t]*[(][ \t]*([^ #\t()]+).*" 
+      "\\1" componentName "${addElxComponentLine}")
 
-    MESSAGE( STATUS "Found user component: ${projectname}" )
 
-    # For non-subdirectories, the binarydir should be specified
-    SET( binarydir "${elastix_BINARY_DIR}/UserComponents/${projectname}" )
+		IF( NOT "${componentName}" STREQUAL "" )
+					
+      MESSAGE( STATUS "Found user component: ${componentName}" )
+  
+      # For non-subdirectories, the binarydir should be specified. We use the name 
+  		# of the component for that.
+      SET( binaryDir "${elastix_BINARY_DIR}/UserComponents/${componentName}" )
+  
+      # Add
+  		ADD_SUBDIRECTORY( ${pathToComp} ${binaryDir} )
 
-    # Add
-		ADD_SUBDIRECTORY( ${path_to_comp} ${binarydir} )
+		ELSE()
+      MESSAGE( STATUS "No user component definition found in: ${userComponent}" )
+
+  	ENDIF()
 
   ENDFOREACH()
 
