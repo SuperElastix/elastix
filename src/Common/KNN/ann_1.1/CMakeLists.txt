@@ -31,6 +31,9 @@ ADD_LIBRARY( ANNlib SHARED ${ANN_SRCS} )
 # dll, but dll_import for using it in a program.
 SET_TARGET_PROPERTIES( ANNlib PROPERTIES DEFINE_SYMBOL DLL_EXPORTS )
 
+# Group in IDE's like Visual Studio
+SET_PROPERTY( TARGET ANNlib PROPERTY FOLDER "libraries" )
+
 # Install
 INSTALL( TARGETS ANNlib
   RUNTIME DESTINATION .

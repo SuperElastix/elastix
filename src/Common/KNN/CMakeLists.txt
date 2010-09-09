@@ -38,3 +38,6 @@ ADD_LIBRARY( KNNlib ${KNN_Files} )
 # Link it against the necessary libraries.
 TARGET_LINK_LIBRARIES( KNNlib ANNlib ITKBasicFilters ITKCommon ITKStatistics )
 
+# Group in IDE's like Visual Studio
+SET_PROPERTY( TARGET KNNlib PROPERTY FOLDER "libraries" )
+

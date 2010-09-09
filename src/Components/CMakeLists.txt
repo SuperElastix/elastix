@@ -85,6 +85,10 @@ MACRO( ADD_ELXCOMPONENT name )
     ADD_LIBRARY( ${name} STATIC ${filelist} )
     TARGET_LINK_LIBRARIES( ${name} ${elxLinkLibs} )
 
+    # Group in IDE's like Visual Studio
+    STRING( REGEX MATCH "[a-zA-Z]+" comp_group ${relative_path_to_comp} )
+    SET_PROPERTY( TARGET ${name} PROPERTY FOLDER ${comp_group} )
+
     # Update AllComponentLibs, while avoiding duplicates:
     IF( DEFINED AllComponentLibs )
       SET( dummy ${AllComponentLibs} )
@@ -140,7 +144,6 @@ ENDFOREACH()
 FOREACH( userComponentDir ${ELASTIX_USER_COMPONENT_DIRS} )
 
   MESSAGE( STATUS "Searching for user components in: ${userComponentDir}" )
-
   FILE( GLOB_RECURSE listOfUserComponents "${userComponentDir}/CMakeLists.txt" )
 
   FOREACH( userComponent ${listOfUserComponents} )
@@ -148,7 +151,6 @@ FOREACH( userComponentDir ${ELASTIX_USER_COMPONENT_DIRS} )
     GET_FILENAME_COMPONENT( pathToComp ${userComponent} PATH )
 
     # read project name from cmakelists.txt
-
     MESSAGE( STATUS "Reading: ${userComponent}" )
 
     # Find the first line that has the following structure:
@@ -158,30 +160,26 @@ FOREACH( userComponentDir ${ELASTIX_USER_COMPONENT_DIRS} )
     # Commented lines (where the first nonwhite character is a #) are ignored.
     FILE( STRINGS ${userComponent} addElxComponentLine LIMIT_COUNT 1 REGEX
       "^[ \t]*[Aa][Dd][Dd]_[Ee][Ll][Xx][Cc][Oo][Mm][Pp][Oo][Nn][Ee][Nn][Tt][ \t]*[(][ \t]*[^ #\t()]+" )
-		
+
     # Extract the projectname.
     STRING(REGEX REPLACE
-      "^[ \t]*[Aa][Dd][Dd]_[Ee][Ll][Xx][Cc][Oo][Mm][Pp][Oo][Nn][Ee][Nn][Tt][ \t]*[(][ \t]*([^ #\t()]+).*" 
+      "^[ \t]*[Aa][Dd][Dd]_[Ee][Ll][Xx][Cc][Oo][Mm][Pp][Oo][Nn][Ee][Nn][Tt][ \t]*[(][ \t]*([^ #\t()]+).*"
       "\\1" componentName "${addElxComponentLine}")
 
-
 		IF( NOT "${componentName}" STREQUAL "" )
-					
       MESSAGE( STATUS "Found user component: ${componentName}" )
-  
-      # For non-subdirectories, the binarydir should be specified. We use the name 
+
+      # For non-subdirectories, the binarydir should be specified. We use the name
   		# of the component for that.
       SET( binaryDir "${elastix_BINARY_DIR}/UserComponents/${componentName}" )
-  
+
       # Add
   		ADD_SUBDIRECTORY( ${pathToComp} ${binaryDir} )
 
 		ELSE()
       MESSAGE( STATUS "No user component definition found in: ${userComponent}" )
-
   	ENDIF()
 
   ENDFOREACH()
-
 ENDFOREACH()
 
