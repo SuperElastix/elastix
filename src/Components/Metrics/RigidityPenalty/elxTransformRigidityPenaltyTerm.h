@@ -31,6 +31,71 @@ using namespace itk;
    * \parameter Metric: Select this metric as follows:\n
    *    <tt>(Metric "TransformRigidityPenalty")</tt>
    *
+   * \parameter LinearityConditionWeight: A parameter to weigh the linearity
+   *    condition term of the rigidity term. \n
+   *    example: <tt>(LinearityConditionWeight 2.0)</tt> \n
+   *    Default is 1.0.
+   * \parameter OrthonormalityConditionWeight: A parameter to weigh the
+   *    orthonormality condition term of the rigidity term. \n
+   *    example: <tt>(OrthonormalityConditionWeight 2.0)</tt> \n
+   *    Default is 1.0.
+   * \parameter PropernessConditionWeight: A parameter to weigh the properness
+   *    condition term of the rigidity term. \n
+   *    example: <tt>(PropernessConditionWeight 2.0)</tt> \n
+   *    Default is 1.0.
+   * \parameter UseLinearityCondition: A flag to specify the usage of the
+   *    linearity condition term for optimisation. \n
+   *    example: <tt>(UseLinearityCondition "false")</tt> \n
+   *    Default is "true".
+   * \parameter UseOrthonormalityCondition: A flag to specify the usage of
+   *    the orthonormality condition term for optimisation. \n
+   *    example: <tt>(UseOrthonormalityCondition "false")</tt> \n
+   *    Default is "true".
+   * \parameter UsePropernessCondition: A flag to specify the usage of the
+   *    properness condition term for optimisation. \n
+   *    example: <tt>(UsePropernessCondition "false")</tt> \n
+   *    Default is "true".
+   * \parameter CalculateLinearityCondition: A flag to specify if the linearity
+   *    condition should still be calculated, even if it is not used for
+   *    optimisation. \n
+   *    example: <tt>(CalculateLinearityCondition "false")</tt> \n
+   *    Default is "true".
+   * \parameter CalculateOrthonormalityCondition: A flag to specify if the
+   *    orthonormality condition should still be calculated, even if it is
+   *    not used for optimisation. \n
+   *    example: <tt>(CalculateOrthonormalityCondition "false")</tt> \n
+   *    Default is "true".
+   * \parameter CalculatePropernessCondition: A flag to specify if the properness
+   *    condition should still be calculated, even if it is not used for
+   *    optimisation. \n
+   *    example: <tt>(CalculatePropernessCondition "false")</tt> \n
+   *    Default is "true".
+   * \parameter FixedRigidityImageName: the name of a coefficient image to
+   *    specify the rigidity index of voxels in the fixed image. \n
+   *    example: <tt>(FixedRigidityImageName "fixedRigidityImage.mhd")</tt> \n
+   *    If not supplied the rigidity coefficient is not based on the fixed
+   *    image, which is recommended.\n
+   *    If neither FixedRigidityImageName nor MovingRigidityImageName are
+   *    supplied, the rigidity penalty term is evaluated on the whole transform
+   *    input domain.
+   * \parameter MovingRigidityImageName: the name of a coefficient image to
+   *    specify the rigidity index of voxels in the moving image. \n
+   *    example: <tt>(MovingRigidityImageName "movingRigidityImage.mhd")</tt> \n
+   *    If not supplied the rigidity coefficient is not based on the moving
+   *    image, which is NOT recommended.\n
+   *    If neither FixedRigidityImageName nor MovingRigidityImageName are
+   *    supplied, the rigidity penalty term is evaluated on the whole transform
+   *    input domain.
+   * \parameter DilateRigidityImages: flag to specify the dilation of the
+   *    rigidity coefficient images. With this the region of rigidity can be
+   *    extended to force rigidity of the inner region. \n
+   *    example: <tt>(DilateRigidityImages "false" "false" "true")</tt> \n
+   *    Default is "true".
+   * \parameter DilationRadiusMultiplier: the dilation radius is a multiplier
+   *    times the grid spacing of the B-spline transform. \n
+   *    example: <tt>(DilationRadiusMultiplier 1.0 1.0 2.0)</tt> \n
+   *    Default is 1.0.
+   *
    * \ingroup Metrics
    *
    */
