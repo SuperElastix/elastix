@@ -97,14 +97,7 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet,TMovingPointSet>
       this->m_NumberOfPointsCounted++;
 
       VnlVectorType diffPoint = ( movingPoint - mappedPoint ).GetVnlVector();
-      MeasureType distance = diffPoint.magnitude();
-//      MeasureType distance = diffPoint.GetVnlVector().squared_magnitude();
-//       if ( !this->m_ComputeSquaredDistance )
-//       {
-//         distance = vcl_sqrt( distance );
-//       }
-
-      measure += distance;
+      measure += diffPoint.magnitude();
 
     } // end if sampleOk
 
@@ -214,21 +207,13 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet,TMovingPointSet>
 
       VnlVectorType diffPoint = ( movingPoint - mappedPoint ).GetVnlVector();
       MeasureType distance = diffPoint.magnitude();
-      //MeasureType distance = diffPoint.squared_magnitude();
-//       if ( !this->m_ComputeSquaredDistance )
-//       {
-//         distance = vcl_sqrt( distance );
-//       }
       measure += distance;
 
       /** Calculate the contributions to the derivatives with respect to each parameter. */
-      //const MeasureType diff_2 = distance * 2.0;
       VnlVectorType diff_2 = diffPoint / distance;
       if ( nzji.size() == this->GetNumberOfParameters() )
       {
         /** Loop over all Jacobians. */
-        //VnlVectorType vec = diffPoint * jacobian;
-        //derivative -= diff_2 * vec;
         derivative -= diff_2 * jacobian;
       }
       else
@@ -238,7 +223,6 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet,TMovingPointSet>
         {
           const unsigned int index = nzji[ i ];
           VnlVectorType column = jacobian.get_column( i );
-          //derivative[ index ] -= diff_2 * dot_product( diffPoint, column );
           derivative[ index ] -= dot_product( diff_2, column );
         }
       }
@@ -255,28 +239,6 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet,TMovingPointSet>
   value = measure / this->m_NumberOfPointsCounted;
 
 } // end GetValueAndDerivative()
-
-
-/**
- * ******************* PrintSelf *******************
- */
-
-template <class TFixedPointSet, class TMovingPointSet>
-void
-CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet,TMovingPointSet>
-::PrintSelf( std::ostream& os, Indent indent ) const
-{
-  Superclass::PrintSelf( os, indent );
-//
-//   if ( this->m_ComputeSquaredDistance )
-//   {
-//     os << indent << "m_ComputeSquaredDistance: True"<< std::endl;
-//   }
-//   else
-//   {
-//     os << indent << "m_ComputeSquaredDistance: False"<< std::endl;
-//   }
-} // end PrintSelf()
 
 
 } // end namespace itk

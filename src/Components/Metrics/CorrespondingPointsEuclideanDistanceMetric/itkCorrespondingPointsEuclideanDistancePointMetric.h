@@ -89,23 +89,13 @@ public:
   void GetValueAndDerivative( const TransformParametersType & parameters,
     MeasureType& Value, DerivativeType& Derivative ) const;
 
-  /** Set/Get if the distance should be squared. Default is true for computation speed */
-//   itkSetMacro(ComputeSquaredDistance,bool);
-//   itkGetConstMacro(ComputeSquaredDistance,bool);
-//   itkBooleanMacro(ComputeSquaredDistance);
-
 protected:
   CorrespondingPointsEuclideanDistancePointMetric();
   virtual ~CorrespondingPointsEuclideanDistancePointMetric() {};
 
-  /** PrintSelf. */
-  void PrintSelf(std::ostream& os, Indent indent) const;
-
 private:
   CorrespondingPointsEuclideanDistancePointMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
-
-  //bool               m_ComputeSquaredDistance;
 
 }; // end class CorrespondingPointsEuclideanDistancePointMetric
 
