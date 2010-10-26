@@ -12,8 +12,8 @@ PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
 
-#ifndef __itkPeriodicBSplineDeformableTransform_h
-#define __itkPeriodicBSplineDeformableTransform_h
+#ifndef __itkCyclicBSplineDeformableTransform_h
+#define __itkCyclicBSplineDeformableTransform_h
 
 #include "itkAdvancedTransform.h"
 #include "itkImage.h"
@@ -22,26 +22,26 @@ PURPOSE. See the above copyright notices for more information.
 #include "itkBSplineInterpolationDerivativeWeightFunction.h"
 #include "itkBSplineInterpolationSecondOrderDerivativeWeightFunction.h"
 #include "itkAdvancedBSplineDeformableTransform.h"
-#include "itkPeriodicBSplineDeformableTransform.h"
+#include "itkCyclicBSplineDeformableTransform.h"
 
 namespace itk
 {
 
-/** \class PeriodicBSplineDeformableTransform
+/** \class CyclicBSplineDeformableTransform
  * \brief Deformable transform using a BSpline representation in which the
- *   B-spline grid is formulated in a Periodic way
+ *   B-spline grid is formulated in a Cyclic way
  * \ingroup Transforms
  */
 template <
     class TScalarType = double,          // Data type for scalars
     unsigned int NDimensions = 3,        // Number of dimensions
     unsigned int VSplineOrder = 3 >      // Spline order
-class ITK_EXPORT PeriodicBSplineDeformableTransform
+class ITK_EXPORT CyclicBSplineDeformableTransform
   : public AdvancedBSplineDeformableTransform< TScalarType, NDimensions, VSplineOrder >
 {
 public:
   /** Standard class typedefs. */
-  typedef PeriodicBSplineDeformableTransform          Self;
+  typedef CyclicBSplineDeformableTransform          Self;
   typedef AdvancedBSplineDeformableTransform<
     TScalarType, NDimensions, VSplineOrder >          Superclass;
   typedef SmartPointer<Self>                          Pointer;
@@ -51,7 +51,7 @@ public:
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( PeriodicBSplineDeformableTransform, AdvancedBSplineDeformableTransform );
+  itkTypeMacro( CyclicBSplineDeformableTransform, AdvancedBSplineDeformableTransform );
 
   /** Dimension of the domain space. */
   itkStaticConstMacro( SpaceDimension, unsigned int, NDimensions );
@@ -136,8 +136,8 @@ public:
     SpatialJacobianType & sj ) const;
 
 protected:
-  PeriodicBSplineDeformableTransform();
-  virtual ~PeriodicBSplineDeformableTransform();
+  CyclicBSplineDeformableTransform();
+  virtual ~CyclicBSplineDeformableTransform();
 
   void ComputeNonZeroJacobianIndices(
     NonZeroJacobianIndicesType & nonZeroJacobianIndices,
@@ -154,27 +154,27 @@ protected:
     RegionType & outRegion2) const;
 
 private:
-  PeriodicBSplineDeformableTransform(const Self&); //purposely not implemented
+  CyclicBSplineDeformableTransform(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
-}; //class PeriodicBSplineDeformableTransform
+}; //class CyclicBSplineDeformableTransform
 
 
 }  // namespace itk
 
 // Define instantiation macro for this template.
-#define ITK_TEMPLATE_PeriodicBSplineDeformableTransform(_, EXPORT, x, y) namespace itk { \
-  _(3(class EXPORT PeriodicBSplineDeformableTransform< ITK_TEMPLATE_3 x >)) \
-  namespace Templates { typedef PeriodicBSplineDeformableTransform< ITK_TEMPLATE_3 x > \
-                                                   PeriodicBSplineDeformableTransform##y; } \
+#define ITK_TEMPLATE_CyclicBSplineDeformableTransform(_, EXPORT, x, y) namespace itk { \
+  _(3(class EXPORT CyclicBSplineDeformableTransform< ITK_TEMPLATE_3 x >)) \
+  namespace Templates { typedef CyclicBSplineDeformableTransform< ITK_TEMPLATE_3 x > \
+                                                   CyclicBSplineDeformableTransform##y; } \
   }
 
 #if ITK_TEMPLATE_EXPLICIT
-# include "Templates/itkPeriodicBSplineDeformableTransform+-.h"
+# include "Templates/itkCyclicBSplineDeformableTransform+-.h"
 #endif
 
 #if ITK_TEMPLATE_TXX
-# include "itkPeriodicBSplineDeformableTransform.txx"
+# include "itkCyclicBSplineDeformableTransform.txx"
 #endif
 
-#endif /* __itkPeriodicBSplineDeformableTransform_h */
+#endif /* __itkCyclicBSplineDeformableTransform_h */

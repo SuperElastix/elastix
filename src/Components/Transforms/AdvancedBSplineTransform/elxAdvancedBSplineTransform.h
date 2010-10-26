@@ -18,8 +18,8 @@
 #include "itkAdvancedBSplineDeformableTransform.h"
 
 #include "itkGridScheduleComputer.h"
-#include "itkPeriodicBSplineDeformableTransform.h"
-#include "itkPeriodicGridScheduleComputer.h"
+#include "itkCyclicBSplineDeformableTransform.h"
+#include "itkCyclicGridScheduleComputer.h"
 #include "itkUpsampleBSplineParametersFilter.h"
 
 #include "elxIncludes.h"
@@ -137,18 +137,18 @@ public:
     typename elx::TransformBase<TElastix>::CoordRepType,
     itkGetStaticConstMacro( SpaceDimension ),
     3 >                                                   BSplineTransformCubicType;
-  typedef itk::PeriodicBSplineDeformableTransform<
+  typedef itk::CyclicBSplineDeformableTransform<
     typename elx::TransformBase<TElastix>::CoordRepType,
     itkGetStaticConstMacro( SpaceDimension ),
-    1 >                                                   PeriodicBSplineTransformLinearType;
-  typedef itk::PeriodicBSplineDeformableTransform<
+    1 >                                                   CyclicBSplineTransformLinearType;
+  typedef itk::CyclicBSplineDeformableTransform<
     typename elx::TransformBase<TElastix>::CoordRepType,
     itkGetStaticConstMacro( SpaceDimension ),
-    2 >                                                   PeriodicBSplineTransformQuadraticType;
-  typedef itk::PeriodicBSplineDeformableTransform<
+    2 >                                                   CyclicBSplineTransformQuadraticType;
+  typedef itk::CyclicBSplineDeformableTransform<
     typename elx::TransformBase<TElastix>::CoordRepType,
     itkGetStaticConstMacro( SpaceDimension ),
-    3 >                                                   PeriodicBSplineTransformCubicType;
+    3 >                                                   CyclicBSplineTransformCubicType;
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::ScalarType                ScalarType;
@@ -198,8 +198,8 @@ public:
   /** Typedef's for the GridScheduleComputer and the UpsampleBSplineParametersFilter. */
   typedef GridScheduleComputer<
     CoordRepType, SpaceDimension >                        GridScheduleComputerType;
-  typedef PeriodicGridScheduleComputer<
-    CoordRepType, SpaceDimension >                        PeriodicGridScheduleComputerType;
+  typedef CyclicGridScheduleComputer<
+    CoordRepType, SpaceDimension >                        CyclicGridScheduleComputerType;
   typedef typename GridScheduleComputerType::Pointer      GridScheduleComputerPointer;
   typedef typename GridScheduleComputerType
     ::VectorGridSpacingFactorType                         GridScheduleType;
@@ -280,7 +280,7 @@ private:
 
   /** Variables to remember order and periodicity of BSplineTransform. */
   unsigned int m_SplineOrder;
-  bool m_Periodic;
+  bool m_Cyclic;
 
   /** Initialize the right BSplineTransfrom based on the spline order and periodicity. */
   unsigned int InitializeBSplineTransform();

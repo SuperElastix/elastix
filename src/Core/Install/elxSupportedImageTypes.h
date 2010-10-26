@@ -53,7 +53,7 @@ namespace elastix
    * a line in this file.
    */
 
-  const unsigned int NrOfSupportedImageTypes = 3;
+  const unsigned int NrOfSupportedImageTypes = 4;
 
 //  elxSupportedImageTypeMacro( short,            2, short,             2,  1 );
   elxSupportedImageTypeMacro( short,            3, short,             3,  1 );
@@ -64,7 +64,7 @@ namespace elastix
   elxSupportedImageTypeMacro( float,            2, float,             2,  2 );
   elxSupportedImageTypeMacro( float,            3, float,             3,  3 );
 //   elxSupportedImageTypeMacro( short,            4, short,             4,  4 );
-//   elxSupportedImageTypeMacro( float,            4, float,             4,  5 );
+  elxSupportedImageTypeMacro( short,            4, short,             4,  4 );
 //  elxSupportedImageTypeMacro( double,           2, double,            2,  9 );
 //  elxSupportedImageTypeMacro( double,           3, double,            3,  10 );
 //  elxSupportedImageTypeMacro( unsigned short,   2, unsigned short,    2,  11 );

@@ -43,22 +43,22 @@ template <class TElastix>
 unsigned int AdvancedBSplineTransform<TElastix>
 ::InitializeBSplineTransform() {
   /** Initialize the right BSplineTransform and GridScheduleComputer. */
-  if ( m_Periodic )
+  if ( m_Cyclic )
   {
-    this->m_GridScheduleComputer = PeriodicGridScheduleComputerType::New();
+    this->m_GridScheduleComputer = CyclicGridScheduleComputerType::New();
     this->m_GridScheduleComputer->SetBSplineOrder( m_SplineOrder );
 
     if ( m_SplineOrder == 1)
     {
-      this->m_BSplineTransform = PeriodicBSplineTransformLinearType::New();
+      this->m_BSplineTransform = CyclicBSplineTransformLinearType::New();
     }
     else if ( m_SplineOrder == 2)
     {
-      this->m_BSplineTransform = PeriodicBSplineTransformQuadraticType::New();
+      this->m_BSplineTransform = CyclicBSplineTransformQuadraticType::New();
     }
     else if ( m_SplineOrder == 3)
     {
-      this->m_BSplineTransform = PeriodicBSplineTransformCubicType::New();
+      this->m_BSplineTransform = CyclicBSplineTransformCubicType::New();
     }
     else
     {
@@ -109,9 +109,9 @@ int AdvancedBSplineTransform<TElastix>
   m_SplineOrder = 3;
   this->GetConfiguration()->ReadParameter( m_SplineOrder,
     "BSplineTransformSplineOrder", this->GetComponentLabel(), 0, 0, true );
-  m_Periodic = false;
-  this->GetConfiguration()->ReadParameter( m_Periodic,
-    "UseTransformPeriodicity", this->GetComponentLabel(), 0, 0, true );
+  m_Cyclic = false;
+  this->GetConfiguration()->ReadParameter( m_Cyclic,
+    "UseCyclicTransform", this->GetComponentLabel(), 0, 0, true );
 
   return InitializeBSplineTransform();
 }
@@ -356,14 +356,14 @@ void AdvancedBSplineTransform<TElastix>
     itkExceptionMacro( << "ERROR: Invalid GridSpacingSchedule!" );
   }
 
-  /** Output a warning that the gridspacing may be adapted to fit the Periodic
+  /** Output a warning that the gridspacing may be adapted to fit the Cyclic
      * behavior of the transform.
      */
-  if ( m_Periodic )
+  if ( m_Cyclic )
   {
     xl::xout["warning"]
-         << "WARNING: The provided grid spacing may be adapted to fit the Periodic "
-         << "behavior of the PeriodicBSplineTransform." << std::endl;
+         << "WARNING: The provided grid spacing may be adapted to fit the cyclic "
+         << "behavior of the CyclicBSplineTransform." << std::endl;
   }
 
   /** Set the grid schedule and final grid spacing in the schedule computer. */
@@ -487,9 +487,9 @@ void AdvancedBSplineTransform<TElastix>
   m_SplineOrder = 3;
   this->GetConfiguration()->ReadParameter( m_SplineOrder,
     "BSplineTransformSplineOrder", this->GetComponentLabel(), 0, 0 );
-  m_Periodic = false;
-  this->GetConfiguration()->ReadParameter( m_Periodic,
-    "UseTransformPeriodicity", this->GetComponentLabel(), 0, 0 );
+  m_Cyclic = false;
+  this->GetConfiguration()->ReadParameter( m_Cyclic,
+    "UseCyclicTransform", this->GetComponentLabel(), 0, 0 );
   InitializeBSplineTransform();
 
   /** Read and Set the Grid: this is a BSplineTransform specific task. */
@@ -616,12 +616,12 @@ void AdvancedBSplineTransform<TElastix>
 
   /** Write the spline order and periodicity of this transform. */
   xout["transpar"] << "(BSplineTransformSplineOrder " << m_SplineOrder << ")" << std::endl;
-  std::string m_PeriodicString = "false";
-  if ( m_Periodic )
+  std::string m_CyclicString = "false";
+  if ( m_Cyclic )
   {
-    m_PeriodicString = "true";
+    m_CyclicString = "true";
   }
-  xout["transpar"] << "(UseTransformPeriodicity \"" << m_PeriodicString << "\")" << std::endl;
+  xout["transpar"] << "(UseCyclicTransform \"" << m_CyclicString << "\")" << std::endl;
 
   /** Set the precision back to default value. */
   xout["transpar"] << std::setprecision(

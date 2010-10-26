@@ -12,8 +12,8 @@
 
 ======================================================================*/
 
-#ifndef __itkPeriodicGridScheduleComputer_H__
-#define __itkPeriodicGridScheduleComputer_H__
+#ifndef __itkCyclicGridScheduleComputer_H__
+#define __itkCyclicGridScheduleComputer_H__
 
 #include "itkImageBase.h"
 #include "itkTransform.h"
@@ -23,7 +23,7 @@ namespace itk
 {
 
 /**
- * \class PeriodicGridScheduleComputer
+ * \class CyclicGridScheduleComputer
  * \brief This class computes all information about the B-spline grid,
  * given the image information and the desired grid spacing. It differs from
  * the GridScheduleComputer in how the nodes are placed in the last dimension.
@@ -32,13 +32,13 @@ namespace itk
  */
 
 template < typename TTransformScalarType, unsigned int VImageDimension >
-class ITK_EXPORT PeriodicGridScheduleComputer
+class ITK_EXPORT CyclicGridScheduleComputer
   : public GridScheduleComputer< TTransformScalarType, VImageDimension >
 {
 public:
 
   /** Standard class typedefs. */
-  typedef PeriodicGridScheduleComputer          Self;
+  typedef CyclicGridScheduleComputer          Self;
   typedef GridScheduleComputer<
       TTransformScalarType, VImageDimension>  Superclass;
   typedef SmartPointer< Self >                Pointer;
@@ -48,7 +48,7 @@ public:
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( PeriodicGridScheduleComputer, GridScheduleComputer );
+  itkTypeMacro( CyclicGridScheduleComputer, GridScheduleComputer );
 
   /** Dimension of the domain space. */
   itkStaticConstMacro( Dimension, unsigned int, VImageDimension );
@@ -84,23 +84,23 @@ public:
 protected:
 
   /** The constructor. */
-  PeriodicGridScheduleComputer();
+  CyclicGridScheduleComputer();
 
   /** The destructor. */
-  virtual ~PeriodicGridScheduleComputer() {};
+  virtual ~CyclicGridScheduleComputer() {};
 
 private:
 
-  PeriodicGridScheduleComputer( const Self& );  // purposely not implemented
+  CyclicGridScheduleComputer( const Self& );  // purposely not implemented
   void operator=( const Self& );        // purposely not implemented
 
-}; // end class PeriodicGridScheduleComputer
+}; // end class CyclicGridScheduleComputer
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkPeriodicGridScheduleComputer.txx"
+#include "itkCyclicGridScheduleComputer.txx"
 #endif
 
-#endif // end #ifndef __itkPeriodicGridScheduleComputer_H__
+#endif // end #ifndef __itkCyclicGridScheduleComputer_H__
 
