@@ -39,9 +39,11 @@ AdvancedBSplineTransform<TElastix>
 /**
  * ************ InitializeBSplineTransform ***************
  */
+
 template <class TElastix>
 unsigned int AdvancedBSplineTransform<TElastix>
-::InitializeBSplineTransform() {
+::InitializeBSplineTransform( void )
+{
   /** Initialize the right BSplineTransform and GridScheduleComputer. */
   if ( m_Cyclic )
   {
@@ -96,6 +98,7 @@ unsigned int AdvancedBSplineTransform<TElastix>
 
   return 0;
 }
+
 
 /**
  * ******************* BeforeAll ***********************

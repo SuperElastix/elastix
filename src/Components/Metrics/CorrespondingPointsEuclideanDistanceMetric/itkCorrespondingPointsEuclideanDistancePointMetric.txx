@@ -222,12 +222,14 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet,TMovingPointSet>
       measure += distance;
 
       /** Calculate the contributions to the derivatives with respect to each parameter. */
-      const MeasureType diff_2 = distance * 2.0;
+      //const MeasureType diff_2 = distance * 2.0;
+      VnlVectorType diff_2 = diffPoint / distance;
       if ( nzji.size() == this->GetNumberOfParameters() )
       {
         /** Loop over all Jacobians. */
-        VnlVectorType vec = diffPoint * jacobian;
-        derivative -= diff_2 * vec;
+        //VnlVectorType vec = diffPoint * jacobian;
+        //derivative -= diff_2 * vec;
+        derivative -= diff_2 * jacobian;
       }
       else
       {
@@ -236,7 +238,8 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet,TMovingPointSet>
         {
           const unsigned int index = nzji[ i ];
           VnlVectorType column = jacobian.get_column( i );
-          derivative[ index ] -= diff_2 * dot_product( diffPoint, column );
+          //derivative[ index ] -= diff_2 * dot_product( diffPoint, column );
+          derivative[ index ] -= dot_product( diff_2, column );
         }
       }
 
