@@ -47,7 +47,6 @@ OPTION( ELASTIX_USE_MEVISDICOMTIFF
 MARK_AS_ADVANCED( ELASTIX_USER_COMPONENT_DIRS )
 SET( ELASTIX_USER_COMPONENT_DIRS "" CACHE PATH "directories with user defined elastix components" )
 
-
 #-------------------------------------------------------------------------
 # elastix depends on some ITK settings
 
@@ -72,6 +71,11 @@ ENDIF()
 #IF( NOT ITK_USE_CENTERED_PIXEL_COORDINATES_CONSISTENTLY )
 # message( SEND_ERROR "ITK_USE_CENTERED_PIXEL_COORDINATES_CONSISTENTLY has not been set to ON when compiling ITK. This option is mandatory for elastix to build.\nPlease recompile your ITK installation." )
 #ENDIF()
+
+#---------------------------------------------------------------------
+# If IDE supports it, do use folder view.
+
+SET_PROPERTY( GLOBAL PROPERTY USE_FOLDERS ON )
 
 #---------------------------------------------------------------------
 # Include directories
