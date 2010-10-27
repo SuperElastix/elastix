@@ -1,0 +1,9 @@
+
+ADD_ELXCOMPONENT( VarianceOverLastDimensionMetric OFF
+ elxVarianceOverLastDimensionMetric.h
+ elxVarianceOverLastDimensionMetric.hxx
+ elxVarianceOverLastDimensionMetric.cxx
+ itkVarianceOverLastDimensionImageMetric.h
+ itkVarianceOverLastDimensionImageMetric.hxx
+ )
+
