@@ -194,9 +194,11 @@ int main( int argc, char **argv )
   elxout << "elastix runs at: " << info.GetHostname() << std::endl;
   elxout << "  " << info.GetOSName() << " "
     << info.GetOSRelease() << ( info.Is64Bits() ? " (x64), " : ", " )
-    << info.GetOSVersion()
-    << ", with " << info.GetTotalPhysicalMemory() << " MB memory."
-    << std::endl;
+    << info.GetOSVersion() << std::endl;
+  elxout << "  with " << info.GetTotalPhysicalMemory() << " MB memory, and "
+    << info.GetNumberOfPhysicalCPU() << " cores @ "
+    << static_cast<unsigned int>( info.GetProcessorClockFrequency() )
+    << " MHz." << std::endl;
 
   /**
    * ********************* START REGISTRATION *********************
