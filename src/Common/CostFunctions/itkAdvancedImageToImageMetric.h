@@ -140,6 +140,10 @@ public:
     FixedImageDimension,
     MovingImageDimension >                                AdvancedTransformType;
 
+  /** Hessian type; for SelfHessian (experimental feature) */
+  typedef typename DerivativeType::ValueType              HessianValueType;
+  typedef Array2D<HessianValueType>                       HessianType;
+
   /** Public methods ********************/
 
   virtual void SetTransform( AdvancedTransformType * arg )
@@ -217,6 +221,10 @@ public:
    */
   virtual void Initialize( void ) throw ( ExceptionObject );
 
+  /** Experimental feature: compute SelfHessian.
+   * This base class just returns an identity matrix of the right size. */
+  virtual void GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const;
+  
 protected:
 
   /** Constructor. */

@@ -139,9 +139,9 @@ public:
 
   /**
    * Do some things before each resolution:
-   * \li ?
+   * \li Set options for SelfHessian
    */
-  //virtual void BeforeEachResolution( void );
+  virtual void BeforeEachResolution( void );
 
 protected:
 

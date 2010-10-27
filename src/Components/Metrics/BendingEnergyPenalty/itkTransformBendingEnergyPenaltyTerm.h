@@ -15,6 +15,7 @@
 #define __itkTransformBendingEnergyPenaltyTerm_h
 
 #include "itkTransformPenaltyTerm.h"
+#include "itkImageGridSampler.h"
 
 namespace itk
 {
@@ -119,6 +120,13 @@ public:
     MeasureType & value,
     DerivativeType & derivative ) const;
 
+  /** Experimental feature: compute SelfHessian */
+  virtual void GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const;
+
+  /** Default: 100000 */
+  itkSetMacro( NumberOfSamplesForSelfHessian, unsigned int );
+  itkGetConstMacro( NumberOfSamplesForSelfHessian, unsigned int );
+
 protected:
 
   /** Typedefs for indices and points. */
@@ -130,15 +138,18 @@ protected:
   typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
   typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
 
+  /** Typedefs for the B-spline transform. */
+  typedef typename Superclass::BSplineTransformType       BSplineTransformType;
+  typedef typename Superclass::CombinationTransformType   CombinationTransformType;
+
+  /** Typedefs for SelfHessian */
+  typedef ImageGridSampler<FixedImageType>                SelfHessianSamplerType;
+
   /** The constructor. */
   TransformBendingEnergyPenaltyTerm();
 
   /** The destructor. */
   virtual ~TransformBendingEnergyPenaltyTerm() {};
-
-  /** Typedef's for the B-spline transform. */
-  typedef typename Superclass::BSplineTransformType       BSplineTransformType;
-  typedef typename Superclass::CombinationTransformType   CombinationTransformType;
 
 private:
 
@@ -146,6 +157,8 @@ private:
   TransformBendingEnergyPenaltyTerm( const Self& ); // purposely not implemented
   /** The private copy constructor. */
   void operator=( const Self& );                    // purposely not implemented
+
+  unsigned int m_NumberOfSamplesForSelfHessian;
 
 }; // end class TransformBendingEnergyPenaltyTerm
 

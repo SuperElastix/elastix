@@ -33,6 +33,8 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   /** Turn on the sampler functionality. */
   this->SetUseImageSampler( true );
 
+  this->m_NumberOfSamplesForSelfHessian = 100000;
+
 } // end constructor
 
 
@@ -324,6 +326,147 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   value = static_cast<MeasureType>( measure );
 
 } // end GetValueAndDerivative()
+
+/**
+ * ******************* GetSelfHessian *******************
+ */
+
+template <class TFixedImage, class TScalarType>
+void
+TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
+::GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const
+{
+  itkDebugMacro("GetSelfHessian()");
+
+  typedef typename DerivativeType::ValueType        DerivativeValueType;
+  typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
+
+  /** Initialize some variables. */
+  this->m_NumberOfPixelsCounted = 0;
+
+  /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
+  NonZeroJacobianIndicesType nonZeroJacobianIndices(
+    this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+  JacobianOfSpatialHessianType jacobianOfSpatialHessian;
+
+  /** Make sure the transform parameters are up to date. */
+  this->SetTransformParameters( parameters );
+
+  /** Prepare Hessian */
+  H.SetSize( this->GetNumberOfParameters(),
+    this->GetNumberOfParameters() );
+  H.Fill(0.0);
+  if ( !this->m_AdvancedTransform->GetHasNonZeroJacobianOfSpatialHessian() )
+  {
+    H.fill_diagonal(1.0);
+    return;
+  }
+
+  /** Set up grid sampler */
+  typename SelfHessianSamplerType::Pointer sampler = SelfHessianSamplerType::New();
+  sampler->SetInputImageRegion( this->GetImageSampler()->GetInputImageRegion() );
+  sampler->SetMask( this->GetImageSampler()->GetMask() );
+  sampler->SetInput( this->GetFixedImage() );
+  sampler->SetNumberOfSamples( this->m_NumberOfSamplesForSelfHessian );
+  
+  /** Update the imageSampler and get a handle to the sample container. */
+  sampler->Update();
+  ImageSampleContainerPointer sampleContainer = sampler->GetOutput();
+
+  /** Create iterator over the sample container. */
+  typename ImageSampleContainerType::ConstIterator fiter;
+  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
+  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+
+  /** Loop over the fixed image to calculate the d/dmu dT/dxdx terms. */
+  for ( fiter = fbegin; fiter != fend; ++fiter )
+  {
+    /** Read fixed coordinates and initialize some variables. */
+    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    MovingImagePointType mappedPoint;
+
+    /** Although the mapped point is not needed to compute the penalty term,
+     * we compute in order to check if it maps inside the support region of
+     * the B-spline and if it maps inside the moving image mask.
+     */
+
+    /** Transform point and check if it is inside the B-spline support region. */
+    bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
+
+    /** Check if point is inside mask. */
+    if ( sampleOk )
+    {
+      sampleOk = this->IsInsideMovingMask( mappedPoint );
+    }
+
+    if ( sampleOk )
+    {
+      this->m_NumberOfPixelsCounted++;
+
+      this->m_AdvancedTransform->GetJacobianOfSpatialHessian( fixedPoint,
+        jacobianOfSpatialHessian, nonZeroJacobianIndices );
+
+      /** Compute the contribution to the metric derivative of this point. */
+      for ( unsigned int muA = 0; muA < nonZeroJacobianIndices.size(); ++muA )
+      {         
+        for ( unsigned int muB = muA; muB < nonZeroJacobianIndices.size(); ++muB )
+        {
+          for ( unsigned int k = 0; k < FixedImageDimension; ++k )
+          {
+            /** This computes:
+             * \sum_i \sum_j A_ij B_ij = element_product(A,B).mean()*B.size()
+             */
+            const InternalMatrixType & A
+              = jacobianOfSpatialHessian[ muA ][ k ].GetVnlMatrix();
+            const InternalMatrixType & B
+              = jacobianOfSpatialHessian[ muB ][ k ].GetVnlMatrix();
+
+            RealType matrixProduct = 0.0;
+            typename InternalMatrixType::const_iterator itA = A.begin();
+            typename InternalMatrixType::const_iterator itB = B.begin();
+            typename InternalMatrixType::const_iterator itAend = A.end();
+            while ( itA != itAend )
+            {
+              matrixProduct += (*itA) * (*itB);
+              ++itA;
+              ++itB;
+            }
+
+            /** Store at the right location in the H matrix. Exploit symmetry */
+            const unsigned int nmA = nonZeroJacobianIndices[ muA ];
+            const unsigned int nmB = nonZeroJacobianIndices[ muB ];
+            H( nmA, nmB ) += 2.0 * matrixProduct;
+            if ( nmA != nmB )
+            { 
+              H( nmB, nmA ) += 2.0 * matrixProduct;
+            }
+
+          }
+        }
+      }
+
+    } // end if sampleOk
+
+
+  } // end for loop over the image sample container
+
+  /** Check if enough samples were valid. */
+  this->CheckNumberOfSamples(
+    sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+
+  /** Compute the measure value and derivative. */
+  if ( this->m_NumberOfPixelsCounted > 0 )
+  {
+    const double normal_sum = 1.0 / static_cast<double>( this->m_NumberOfPixelsCounted );
+    H *= normal_sum;
+  }
+  else
+  {
+    H.Fill(0.0);
+    H.fill_diagonal(1.0);
+  }
+
+} // end GetSelfHessian()
 
 
 } // end namespace itk

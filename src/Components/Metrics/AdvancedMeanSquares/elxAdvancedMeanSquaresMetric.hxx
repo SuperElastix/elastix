@@ -72,6 +72,12 @@ using namespace itk;
       "SelfHessianSmoothingSigma", this->GetComponentLabel(), level, 0 );
     this->SetSelfHessianSmoothingSigma( selfHessianSmoothingSigma );
 
+    /** Set the smoothing sigma used to compute the SelfHessian */
+    double selfHessianNoiseRange = 1.0;
+    this->GetConfiguration()->ReadParameter( selfHessianNoiseRange,
+      "SelfHessianNoiseRange", this->GetComponentLabel(), level, 0 );
+    this->SetSelfHessianNoiseRange( selfHessianNoiseRange );
+
     /** Set moving image derivative scales. */
     this->SetUseMovingImageDerivativeScales( false );
     MovingImageDerivativeScalesType movingImageDerivativeScales;

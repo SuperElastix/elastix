@@ -669,6 +669,48 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
 
 } // end GetValueAndDerivative()
 
+/**
+ * ********************* GetSelfHessian ****************************
+ */
+
+template <class TFixedImage, class TMovingImage>
+void
+CombinationImageToImageMetric<TFixedImage,TMovingImage>
+::GetSelfHessian( const TransformParametersType & parameters,
+  HessianType & H ) const
+{
+  /** Prepare Hessian */
+  H.SetSize( this->GetNumberOfParameters(),
+    this->GetNumberOfParameters() );
+  H.Fill(0.0);
+  HessianType tmpH( this->GetNumberOfParameters(),
+    this->GetNumberOfParameters() );
+ 
+  /** Add all metrics' selfhessians. */
+  bool initialized = false;
+  for ( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
+  {    
+    if ( this->m_UseMetric[ i ] )
+    {
+      ImageMetricType * metric = dynamic_cast<ImageMetricType *>( this->GetMetric( i ) );
+      if ( metric )
+      {
+        initialized = true;
+        metric->GetSelfHessian( parameters, tmpH );
+        H += this->m_MetricWeights[ i ] * tmpH;
+      }
+    }
+  }
+
+  /** If none of the submetrics has a valid implementation of GetSelfHessian, 
+   * then return an identity matrix */
+  if ( ! initialized )
+  {
+    H.fill_diagonal(1.0);
+  }
+
+} // end GetSelfHessian()
+
 
 /**
  * ********************* GetMTime ****************************

@@ -17,6 +17,7 @@
 
 #include "itkAdvancedMeanSquaresImageToImageMetric.h"
 #include "vnl/algo/vnl_matrix_update.h"
+#include "itkMersenneTwisterRandomVariateGenerator.h"
 
 namespace itk
 {
@@ -421,9 +422,12 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 
   typedef typename DerivativeType::ValueType        DerivativeValueType;
   typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
-
+  typedef Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
+  
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
+  RandomGeneratorType::Pointer randomGenerator = RandomGeneratorType::New();
+  randomGenerator->Initialize();
 
   /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
   NonZeroJacobianIndicesType nzji(
@@ -444,7 +448,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   smoother->SetInput( this->GetFixedImage() );
   smoother->SetSigma( this->GetSelfHessianSmoothingSigma() );
   smoother->Update();
-
+  
   /** Set up interpolator for fixed image */
   typename FixedImageInterpolatorType::Pointer fixedInterpolator = FixedImageInterpolatorType::New();
   if ( this->m_BSplineInterpolator.IsNotNull() )
@@ -511,7 +515,12 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 
       /** Use the derivative of the fixed image for the self Hessian! */
       movingImageDerivative = fixedInterpolator->EvaluateDerivative( fixedPoint );
-
+      for ( unsigned int d = 0; d < FixedImageDimension; ++d )
+      {
+        movingImageDerivative[d] += randomGenerator->GetVariateWithClosedRange(
+          this->m_SelfHessianNoiseRange ) - this->m_SelfHessianNoiseRange / 2.0;
+      }
+      
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
 

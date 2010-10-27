@@ -541,6 +541,26 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 
 
 /**
+ * *********************** GetSelfHessian ***********************
+ */
+
+template < class TFixedImage, class TMovingImage >
+void
+AdvancedImageToImageMetric<TFixedImage,TMovingImage>
+::GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const
+{
+  itkDebugMacro("GetSelfHessian()");
+
+  /** Set identity matrix as default implementation. */
+  H.SetSize( this->GetNumberOfParameters(),
+    this->GetNumberOfParameters() );
+  H.Fill(0.0);
+  H.fill_diagonal(1.0);
+
+} // end GetSelfHessian
+
+
+/**
  * *********************** CheckNumberOfSamples ***********************
  */
 

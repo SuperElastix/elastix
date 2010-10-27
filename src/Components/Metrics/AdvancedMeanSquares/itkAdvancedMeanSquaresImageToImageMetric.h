@@ -115,8 +115,8 @@ public:
     Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
 
   /** Some typedefs for computing the SelfHessian */
-  typedef typename DerivativeType::ValueType              HessianValueType;
-  typedef Array2D<HessianValueType>                       HessianType;
+  typedef typename Superclass::HessianValueType           HessianValueType;
+  typedef typename Superclass::HessianType                HessianType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
@@ -143,6 +143,10 @@ public:
   /** Default: 1.0 mm */
   itkSetMacro( SelfHessianSmoothingSigma, double );
   itkGetConstMacro( SelfHessianSmoothingSigma, double );
+
+  /** Default: 1.0 mm */
+  itkSetMacro( SelfHessianNoiseRange, double );
+  itkGetConstMacro( SelfHessianNoiseRange, double );
 
   /** Default: 100000 */
   itkSetMacro( NumberOfSamplesForSelfHessian, unsigned int );
@@ -225,6 +229,7 @@ private:
 
   bool m_UseNormalization;
   double m_SelfHessianSmoothingSigma;
+  double m_SelfHessianNoiseRange;
   unsigned int m_NumberOfSamplesForSelfHessian;
 
 }; // end class AdvancedMeanSquaresImageToImageMetric
