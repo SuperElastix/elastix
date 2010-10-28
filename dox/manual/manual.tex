@@ -328,9 +328,10 @@ is able to store the relevant information (e.g. \texttt{mhd},
 DICOM). Some image formats, like \texttt{vpx}, do not store the
 origin and spacing. This may cause serious problems!
 
-Up to \elastix\ version 4.2, the image orientation (direction cosines) was not
-yet fully supported in \elastix. From \elastix\ 4.3, image orientation is fully
-supported, but can be disabled for backward compatibility reasons.
+Up to \elastix\ version 4.2, the image orientation (direction
+cosines) was not yet fully supported in \elastix. From \elastix\
+4.3, image orientation is fully supported, but can be disabled for
+backward compatibility reasons.
 
 \section{Metrics}\label{sec:comp:metric}
 
@@ -962,7 +963,7 @@ time. The continued development brings us today (\today) to version 4.3.
 what & where \\
 \hline
 website        & \url{http://elastix.isi.uu.nl} \\
-SVN repository & \url{https://svn.bigr.nl/elastix} \\
+SVN repository & \url{https://svn.bigr.nl/elastix/trunkpublic} \\
 WIKI           & \url{http://elastix.isi.uu.nl/wiki.php} \\
 FAQ            & \url{http://elastix.isi.uu.nl/FAQ.php} \\
 Mailing list   & \url{elastix@bigr.nl} (subscription via website) \\
@@ -1001,12 +1002,11 @@ often used (medical) image formats are: .mhd (MetaIO), .hdr
 (Analyze/NIfTI), .gipl, .dcm (DICOM slices). DICOM directories are
 not directly supported by \elastix;
 
-\item multi-platform (at least Windows and Linux; a previous version was
-    reported to work on Mac OS), multi-compiler (at least Visual C++ 2005,
-    2008, gcc 3.2, 4.02, 4.1.2), and supports 32 and 64 bit systems. The
-    underlying ITK code builds on many more platforms, see
-    \url{www.itk.org/Wiki/ITK_Prerequisites}. So, it is highly portable to
-    the platform of the user's choice;
+\item multi-platform (at least Windows, Linux and Mac OS), multi-compiler
+(at least Visual C++ 2005, 2008, gcc 3.2, 4.02, 4.1.2), and supports
+32 and 64 bit systems. The underlying ITK code builds on many more
+platforms, see \url{www.itk.org/Wiki/ITK_Prerequisites}. So, it is
+highly portable to the platform of the user's choice;
 
 \item highly configurable: there is a lot of choice for all the registration
 components. Choosing the configuration that suits your needs is easy
@@ -1060,11 +1060,15 @@ freely available. In this section, we assume you use the Microsoft Visual C++
 \begin{enumerate}
 \item Download and install CMake: \url{www.cmake.org}.
 
-\item Download and compile the ITK version 3.16: \url{www.itk.org}. Make
-    sure to set the (advanced) CMake variable \texttt{ITK\_USE\_REVIEW} to
-    \texttt{ON} and \texttt{ITK\_USE\_REVIEW\_STATISTICS} to \texttt{ON}.
-    On Linux systems with the GCC compiler: set \texttt{CMAKE\_BUILD\_TYPE}
-    to ``Release''.
+\item Download and compile the ITK version 3.20: \url{www.itk.org}.
+Make sure to set the following (advanced) CMake variables to
+\texttt{ON}: \texttt{ITK\_USE\_REVIEW},
+\texttt{ITK\_USE\_REVIEW\_STATISTICS},
+\texttt{ITK\_USE\_ORIENTED\_IMAGE\_DIRECTION},
+\texttt{ITK\_IMAGE\_BEHAVES\_AS\_ORIENTED\_IMAGE},
+\texttt{ITK\_USE\_CENTERED\_PIXEL\_COORDINATES\_CONSISTENTLY}. On
+Linux systems with the GCC compiler: set \texttt{CMAKE\_BUILD\_TYPE}
+to ``Release''.
 
 %1. Download cmake from www.cmake.org and install it according to instructions
 %2. Download itk 3.12 from www.itk.org (not version 3.10).
@@ -1304,6 +1308,24 @@ The deformation field is stored as a vector image
 displacement vector $\vTmx-\vx$ in physical coordinates. The
 elements of the vectors are stored as \texttt{float} values.
 
+In addition to computing the deformation field, \transformix\ has
+the capability to compute the spatial Jacobian of the
+transformation. The determinant of the spatial Jacobian identifies
+the amount of local compression or expansion and can be quite
+useful, for example in lung ventilation studies. The determinant of
+the spatial Jacobian can be computed on the entire image only using:
+\begin{quote}
+\texttt{transformix -jac all -out outputDirectory -tp
+TransformParameters.txt}
+\end{quote}
+The complete spatial Jacobian matrix can also be computed:
+\begin{quote}
+\texttt{transformix -jacmat all -out outputDirectory -tp
+TransformParameters.txt}
+\end{quote}
+where each voxel is filled with a $d \times d$ matrix, with $d$ the
+image dimension, instead of a simply a scalar value.
+
 With the command-line option \texttt{-threads unsigned\_int} the
 user can specify the maximum number of threads that \transformix\
 will use.
@@ -1518,7 +1540,6 @@ similarity measure is obtained, which sometimes gives better
 registration results. See \cite{Kle08:Automatic} for more
 information on this approach. For the sample region size a
 reasonable value to try is $\approx1/3$ of the image size.
-
 
 \subsection{Interpolator}\label{sec:interpolatortuning}
 
