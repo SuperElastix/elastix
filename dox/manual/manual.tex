@@ -2079,37 +2079,9 @@ etc
 Another way of registering multi-spectral data is to use the
 $\alpha$-mutual information measure, described below.
 
-\subsection{Additional metrics}
+\subsection{$\alpha$-mutual information}
 
-Some more advanced metrics, not found in the ITK, are available in
-\elastix:
-\begin{description}
-\item[Mutual information with rigidity penalty] This metric computes the combined
-cost function
-\begin{align}
-\CC &= \mathit{MI}(\vTm;I_F,I_M) + \omega
-\mathcal{P}^{\mathrm{rigid}}(\vTm;I_M)
-\end{align}
-with $\mathcal{P}^{\mathrm{rigid}}$ the rigidity penalty term
-described in \cite{Staring07}. It is specified in the parameter file
-with: \small
-\begin{verbatim}
-(Metric "MattesMutualInformationWithRigidityPenalty")
-// normal Mattes MI parameters
-...
-
-// Rigidity penalty parameters:
-(RigidityPenaltyWeight 0.1)
-(LinearityConditionWeight 10.0)
-(OrthonormalityConditionWeight 1.0)
-(PropernessConditionWeight 100.0)
-(MovingRigidityImageName "movingRigidityImage.mhd")
-\end{verbatim}
-\normalsize A complete list of the available parameters can be found at
-\url{http://elastix.isi.uu.nl/doxygen/a00056.html}. See also
-Section~\ref{sec:penaltyterms}.
-
-\item[$\alpha$-mutual information] This metric computes true multi-channel
+The $\alpha$-mutual information metric computes true multi-channel
 $\alpha$-mutual information. It does not use high-dimensional joint
 histograms, but instead relies on $k$-nearest neighbour graphs to
 estimate $\alpha$-MI. Details can be found in \cite{Staring09}. It
@@ -2135,7 +2107,6 @@ is specified in the parameter file with: \small
 \end{verbatim}
 \normalsize A complete list of the available parameters can be found
 at \url{http://elastix.isi.uu.nl/doxygen/a00053.html}.
-\end{description}
 
 \subsection{Penalty terms}\label{sec:penaltyterms}
 
@@ -2145,27 +2116,15 @@ In order to regularise the transformation $\vT_{\vmu}$ often a
 penalty term $\mathcal{P}(\vmu)$ is added to the cost function, so
 it becomes:
 \begin{align}
-\mathcal{C} &= \omega_1 \mathcal{S} + \omega_2 \mathcal{P},
+\mathcal{C} &= \gamma_1 \mathcal{S} + \gamma_2 \mathcal{P},
 \end{align}
-where $\omega_1, \omega_2$ user-defined constants that weigh
+where $\gamma_1, \gamma_2$ user-defined constants that weigh
 similarity against regularity.
 
 Penalty term are often based on the first or second order spatial
-derivatives of the transformation. For example the bending energy of
-the transformation, which is arguably the most common penalty term,
-is defined in 2D as:
-\begin{align}
-\mathcal{P}_{\mathrm{BE}}(\vmu) &= \frac{1}{P} \sum_{\vxt[i]}
-\left\| \frac{\partial^2 \vT}{\partial \vx \partial \vx^T}(\vxt[i])
-\right\|_F^2 \\
-&= \frac{1}{P} \sum_{\vxt[i]} \sum_{j = 1}^2 \left( \frac{\partial^2
-T_j}{\partial x_1^2}(\vxt[i]) \right)^2  + 2 \left( \frac{\partial^2
-T_j}{\partial x_1 \partial x_2}(\vxt[i]) \right)^2 + \left(
-\frac{\partial^2 T_j}{\partial x_2^2}(\vxt[i]) \right)^2,
-\end{align}
-where $P$ is the number of points $\vxt[i]$, and the tilde denotes
-the difference between a variable and a given point over which a
-term is evaluated.
+derivatives of the transformation. An example is the bending energy
+of the transformation, which is arguably the most common penalty
+term, see Section \ref{sec:advanced:be}.
 
 The derivative of the similarity measure usually involves
 computation of the spatial derivative of the moving image:
@@ -2189,16 +2148,72 @@ These we call the `JacobianOfSpatialJacobian' and
 The transform class as defined in the ITK does not support the computation of
 spatial derivatives $\partial \vT / \partial \vx$ and $\partial^2 \vT /
 \partial \vx^2$, and their derivatives to $\vmu$. Initially, we created
-non-generic classes that combine MI and the mentioned penalty terms
-specifically (the \texttt{MattesMutualInformationWithRigidityPenalty} component
-in \elastix). Recently, however, we created a more advanced version of the ITK
-transform that does implement these spatial derivatives. Additionally, we
-created a bending energy regularisation class that takes advantage of these
-functions. We also reimplemented the rigidity penalty term.
+non-generic classes that combine mutual information and the
+mentioned penalty terms specifically (the
+\texttt{MattesMutualInformationWithRigidityPenalty} component in
+\elastix\ version 4.3 and earlier). In 2010, however, we created a
+more advanced version of the ITK transform that does implement these
+spatial derivatives. Additionally, we created a bending energy
+regularisation class that takes advantage of these functions, see
+Section \ref{sec:advanced:be}. We also reimplemented the rigidity
+penalty term, see Section \ref{sec:advanced:rp}; it currently
+however does not yet use these spatial derivatives. More detailed
+information can be found in \cite{StaringKlein2010a}.
 
 This all means that it is possible in \elastix\ to combine any similarity
 metric with any of the available penalty terms (currently the bending energy
 and the rigidity penalty term).
+
+\subsection{Bending energy penalty}\label{sec:advanced:be}
+
+The bending energy penalty term is defined in 2D as:
+\begin{align}
+\mathcal{P}_{\mathrm{BE}}(\vmu) &= \frac{1}{P} \sum_{\vxt[i]}
+\left\| \frac{\partial^2 \vT}{\partial \vx \partial \vx^T}(\vxt[i])
+\right\|_F^2 \\
+&= \frac{1}{P} \sum_{\vxt[i]} \sum_{j = 1}^2 \left( \frac{\partial^2
+T_j}{\partial x_1^2}(\vxt[i]) \right)^2  + 2 \left( \frac{\partial^2
+T_j}{\partial x_1 \partial x_2}(\vxt[i]) \right)^2 + \left(
+\frac{\partial^2 T_j}{\partial x_2^2}(\vxt[i]) \right)^2,
+\end{align}
+where $P$ is the number of points $\vxt[i]$, and the tilde denotes
+the difference between a variable and a given point over which a
+term is evaluated. As you can see it penalises sharp deviations of
+the transformation (e.g. no high compression followed by a nearby
+high expansion). You can use it to regularize your nonrigid
+transformation if you experience problems such as foldings. In our
+current implementation the computation time of this term is
+relatively large, though.
+
+It can be selected in \elastix\ using \small
+\begin{verbatim}
+(Metric "AnySimilarityMetric" "TransformBendingEnergy")
+(Metric0Weight 1.0)
+(Metric1Weight <weight>)
+\end{verbatim}
+\normalsize and has no further parameters.
+
+\subsection{Rigidity penalty}\label{sec:advanced:rp}
+
+Some more advanced metrics, not found in the ITK, are available in
+\elastix: The rigidity penalty term
+$\mathcal{P}^{\mathrm{rigid}}(\vTm;I_M)$ described in
+\cite{Staring07}. It is specified in the parameter file with: \small
+\begin{verbatim}
+(Metric "AnySimilarityMetric" "TransformRigidityPenalty")
+// normal similarity metric parameters
+...
+
+// Rigidity penalty parameters:
+(RigidityPenaltyWeight 0.1)
+(LinearityConditionWeight 10.0)
+(OrthonormalityConditionWeight 1.0)
+(PropernessConditionWeight 100.0)
+(MovingRigidityImageName "movingRigidityImage.mhd")
+\end{verbatim}
+\normalsize A complete list of the available parameters can be found
+at \url{http://elastix.isi.uu.nl/doxygen/a00056.html}. See also
+Section~\ref{sec:penaltyterms}.
 
 \subsection{DisplacementMagnitudePenalty: inverting transformations}
 
@@ -2212,13 +2227,57 @@ transform in the last parameter file to
 \texttt{"NoInitialTransform"}, and voila, you have the inverse
 transform! Strictly speaking, you should then also change the
 Size/Spacing/Origin/Index settings to match that of the moving
-image. Select it with:
+image. Select it with: \small
 \begin{verbatim}
 (Metric "DisplacementMagnitudePenalty")
 \end{verbatim}
-Note that inverting a transformation becomes conceptually very similar to
-performing an image registration in this way. Consequently, the same choices
-are relevant: optimisation algorithm, multiresolution etc...
+\normalsize Note that inverting a transformation becomes
+conceptually very similar to performing an image registration in
+this way. Consequently, the same choices are relevant: optimisation
+algorithm, multiresolution etc...
+
+\subsection{Corresponding points: help the registration}
+
+Most of the similarity measures in \elastix\ are based on
+corresponding characteristics of the fixed and moving image. It is
+possible, however, to register based on point correspondence.
+Therefore, in \elastix\ 4.4 we introduced a metric that minimizes
+the distance of two point sets with known correspondence. It is
+defined as:
+\begin{align}
+\Sim_{\mathrm{CP}} &= \frac{1}{P} \sum_{\vx_{Fi}} \left\| \vx_{Mi} -
+\vTm(\vx_{Fi}) \right\|
+\end{align}
+where $P$ is the number of points $\vx_i$, and $\vx_{Fi}, \vx_{Mi}$
+corresponding points from the fixed and moving image point sets,
+respectively. The metric can be used to help in a difficult image
+registration task that fails if performed fully automatically. A
+user can manually click corresponding points (or maybe automatically
+extract), and setup \elastix\ to not only minimize based on
+intensity, but also taking into account that some positions are
+known to correspond. The derivative of $\Sim_{\mathrm{CP}}$ reads:
+\begin{align}
+\frac{\partial}{\partial \vmu} \Sim_{\mathrm{CP}} &= -\frac{1}{P}
+\sum_{\vx_{Fi}} \frac{1}{\left\| \vx_{Mi} - \vTm(\vx_{Fi})
+\right\|^2} \left( \vx_{Mi} - \vTm(\vx_{Fi}) \right) \frac{\partial
+\vT}{\partial \vmu}(\vx_{Fi}).
+\end{align}
+
+In \elastix\ this metric can be selected using: \small
+\begin{verbatim}
+(Metric "AnySimilarityMetric" "CorrespondingPointsEuclideanDistancePointMetric")
+(Metric0Weight 1.0)
+(Metric1Weight <weight>)
+\end{verbatim}
+\normalsize Note that this metric must be specified as the last
+metric, due to some technical constraints. The fixed and moving
+point set can be specified on the command line:
+\begin{quote}
+\texttt{elastix ... -fp fixedPointSet.txt -mp movingPointSet.txt}
+\end{quote}
+The point set files have to be defined in a specific format,
+identical to supplying points to \transformix, see Section
+\ref{sec:calltransformix}.
 
 \section{Image samplers}
 
