@@ -579,15 +579,9 @@ RECURSIVE              = YES
 # subdirectory from a directory tree whose root is specified with the INPUT tag.
 
 EXCLUDE = "@elastix_SOURCE_DIR@/Common/KNN/ann_1.1" \
+    "@elastix_SOURCE_DIR@/Components/Transforms/AffineDTITransform/itkAffineDTITransform.h" \
     "@elastix_SOURCE_DIR@/Components/Transforms/EulerTransform/itkEulerTransform.h" \
     "@elastix_SOURCE_DIR@/Components/Transforms/SimilarityTransform/itkSimilarityTransform.h" \
-		"@elastix_SOURCE_DIR@/Components/ImageSamplers/ReducedDimensionGrid" \
-    "@elastix_SOURCE_DIR@/Components/Metrics/AdvancedRigidityPenalty" \
-		"@elastix_SOURCE_DIR@/Components/Metrics/VarianceOverLastDimension" \
-		"@elastix_SOURCE_DIR@/Components/Metrics/ZeroDeformationConstraint" \
-		"@elastix_SOURCE_DIR@/Components/Transforms/CyclicBSplineTransform" \
-    "@elastix_SOURCE_DIR@/Components/Optimizers/PreconditionedGradientDescent" \
-    "@elastix_SOURCE_DIR@/Components/Optimizers/FullSearch2" \
     "@elastix_SOURCE_DIR@/Testing"
 
 # The EXCLUDE_SYMLINKS tag can be used select whether or not files or
@@ -602,7 +596,7 @@ EXCLUDE_SYMLINKS       = NO
 # against the file with absolute path, so to exclude all test directories
 # for example use the pattern */test/*
 
-EXCLUDE_PATTERNS       =
+EXCLUDE_PATTERNS       = */.svn/*
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the
