@@ -1,5 +1,5 @@
 
-ADD_ELXCOMPONENT( BSplineInterpolatorFloat
+ADD_ELXCOMPONENT( BSplineInterpolatorFloat OFF
  elxBSplineInterpolatorFloat.h
  elxBSplineInterpolatorFloat.hxx
  elxBSplineInterpolatorFloat.cxx )
