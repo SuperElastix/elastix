@@ -64,6 +64,13 @@ using namespace itk;
  *   The default is zero for all resolutions. A value of 4 will avoid all deformations
  *   at the edge of the image. Make sure that 2*PassiveEdgeWidth < ControlPointGridSize
  *   in each dimension.
+ * \parameter UseCyclicTransform: use the cyclic version of the BSplineTransform which
+ *   ensures that the B-spline polynomials wrap around in the slowest varying dimension.
+ *   This is usefull for dynamic imaging data in which the motion is assumed to be cyclic,
+ *   for example in ECG-gated or respiratory gated CTA. For more information see the paper: 
+ *   <em>Nonrigid registration of dynamic medical imaging data using nD+t B-splines and a 
+ *   groupwise optimization approach</em>, C.T. Metz, S. Klein, M. Schaap, T. van Walsum and 
+ *   W.J. Niessen, Medical Image Analysis, in press.
  *
  *
  * The transform parameters necessary for transformix, additionally defined by this class, are:
