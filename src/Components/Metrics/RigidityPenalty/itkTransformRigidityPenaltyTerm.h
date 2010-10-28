@@ -36,8 +36,10 @@
 namespace itk
 {
 /**
- * \class RigidityPenaltyTermMetric
- * \brief A cost function that calculates a rigidity penalty term
+ * \class TransformRigidityPenaltyTerm
+ * \brief A cost function that calculates a rigidity penalty term.
+ *
+ * A cost function that calculates a rigidity penalty term based
  * on the B-spline coefficients of a B-spline transformation.
  * This penalty term is a function of the 1st and 2nd order spatial
  * derivatives of a transformation.
@@ -45,7 +47,6 @@ namespace itk
  * The intended use for this metric is to filter a B-spline coefficient
  * image in order to calculate a rigidity penalty term on a B-spline transform.
  *
- * \par
  * The RigidityPenaltyTermValueImageFilter at each pixel location is computed by
  * convolution with some separable 1D kernels.
  *
@@ -54,14 +55,13 @@ namespace itk
  *
  * This metric only works with B-splines as a transformation model.
  *
- * References:
+ * References:\n
  * [1] M. Staring, S. Klein and J.P.W. Pluim,
  *    "A Rigidity Penalty Term for Nonrigid Registration,"
  *    Medical Physics, vol. 34, no. 11, pp. 4098 - 4108, November 2007.
  *
  * \sa BSplineTransform
- * \sa MattesMutualInformationImageToImageMetricWithRigidRegularization
- * \sa MattesMutualInformationMetricWithRigidRegularization
+ *
  * \ingroup Metrics
  */
 

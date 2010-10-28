@@ -29,7 +29,7 @@ namespace itk
  * \brief A cost function that calculates a penalty term
  * on a transformation.
  *
- * \par We decided to make it an itk::ImageToImageMetric, since possibly
+ * We decided to make it an itk::ImageToImageMetric, since possibly
  * all the stuff in there is also needed for penalty terms.
  *
  * A transformation penalty terms has some extra demands on the transform.

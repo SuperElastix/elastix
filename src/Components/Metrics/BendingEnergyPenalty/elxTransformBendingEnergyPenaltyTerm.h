@@ -27,6 +27,14 @@ using namespace itk;
    * \class TransformBendingEnergyPenalty
    * \brief A penalty term based on the bending energy of a thin metal sheet.
    *
+   *
+   * [1]: D. Rueckert, L. I. Sonoda, C. Hayes, D. L. G. Hill,
+   *      M. O. Leach, and D. J. Hawkes, "Nonrigid registration
+   *      using free-form deformations: Application to breast MR
+   *      images", IEEE Trans. Med. Imaging 18, 712-721, 1999.\n
+   * [2]: M. Staring and S. Klein,
+   *      "Itk::Transforms supporting spatial derivatives"",
+   *      Insight Journal, http://hdl.handle.net/10380/3215.
    * The parameters used in this class are:
    * \parameter Metric: Select this metric as follows:\n
    *    <tt>(Metric "TransformBendingEnergyPenalty")</tt>

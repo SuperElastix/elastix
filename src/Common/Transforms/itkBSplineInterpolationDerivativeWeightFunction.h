@@ -86,10 +86,10 @@ protected:
   typedef typename Superclass::OneDWeightsType      OneDWeightsType;
 
   /** Compute the 1D weights, which are:
-   * [ \B( x[i] - startIndex[i] ), \B( x[i] - startIndex[i] - 1 ),
-   * \B( x[i] - startIndex[i] - 2 ), \B( x[i] - startIndex[i] - 3 ) ],
-   * with \B( x ) = \beta^2( x + 1/2 ) - \beta^2( x - 1/2 ), in case of the
-   * derivative direction, and just \B(x) = \beta^3(x) for the non-derivative
+   * \f[ \beta( x[i] - startIndex[i] ), \beta( x[i] - startIndex[i] - 1 ),
+   * \beta( x[i] - startIndex[i] - 2 ), \beta( x[i] - startIndex[i] - 3 ) \f],
+   * with \f$\beta( x ) = \beta^2( x + 1/2 ) - \beta^2( x - 1/2 )\f$, in case of the
+   * derivative direction, and just \f$\beta(x) = \beta^3(x)\f$ for the non-derivative
    * directions.
    */
   virtual void Compute1DWeights(

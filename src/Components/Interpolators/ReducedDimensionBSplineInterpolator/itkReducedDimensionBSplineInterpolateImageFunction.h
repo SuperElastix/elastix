@@ -36,20 +36,20 @@ namespace itk
  * \brief Evaluates the B-Spline interpolation of an image.  Spline order may be from 0 to 5.
  *
  * This class defines N-Dimension B-Spline transformation.
- * It is based on:
+ * It is based on:\n
  *    [1] M. Unser,
  *       "Splines: A Perfect Fit for Signal and Image Processing,"
  *        IEEE Signal Processing Magazine, vol. 16, no. 6, pp. 22-38,
- *        November 1999.
+ *        November 1999.\n
  *    [2] M. Unser, A. Aldroubi and M. Eden,
  *        "B-Spline Signal Processing: Part I--Theory,"
  *        IEEE Transactions on Signal Processing, vol. 41, no. 2, pp. 821-832,
- *        February 1993.
+ *        February 1993.\n
  *    [3] M. Unser, A. Aldroubi and M. Eden,
  *        "B-Spline Signal Processing: Part II--Efficient Design and Applications,"
  *        IEEE Transactions on Signal Processing, vol. 41, no. 2, pp. 834-848,
- *        February 1993.
- * And code obtained from bigwww.epfl.ch by Philippe Thevenaz
+ *        February 1993.\n
+ * And code obtained from bigwww.epfl.ch by Philippe Thevenaz.
  *
  * The B spline coefficients are calculated through the
  * BSplineDecompositionImageFilter

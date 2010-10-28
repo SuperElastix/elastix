@@ -423,7 +423,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   typedef typename DerivativeType::ValueType        DerivativeValueType;
   typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
   typedef Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
-  
+
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
   RandomGeneratorType::Pointer randomGenerator = RandomGeneratorType::New();
@@ -448,7 +448,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   smoother->SetInput( this->GetFixedImage() );
   smoother->SetSigma( this->GetSelfHessianSmoothingSigma() );
   smoother->Update();
-  
+
   /** Set up interpolator for fixed image */
   typename FixedImageInterpolatorType::Pointer fixedInterpolator = FixedImageInterpolatorType::New();
   if ( this->m_BSplineInterpolator.IsNotNull() )
@@ -520,7 +520,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
         movingImageDerivative[d] += randomGenerator->GetVariateWithClosedRange(
           this->m_SelfHessianNoiseRange ) - this->m_SelfHessianNoiseRange / 2.0;
       }
-      
+
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
 

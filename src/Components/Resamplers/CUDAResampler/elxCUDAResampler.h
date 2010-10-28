@@ -26,6 +26,10 @@ using namespace itk;
  * \class CUDAResampler
  * \brief A resampler based on the itk::CUDAResampleImageFilter.
  *
+ * \warning The implementation is currently very limited: only
+ * a single third order B-spline transform is supported for 3D
+ * images together with third order B-spline interpolation.
+ *
  * The parameters used in this class are:
  * \parameter Resampler: Select this resampler as follows:\n
  *    <tt>(Resampler "CUDAResampler")</tt>

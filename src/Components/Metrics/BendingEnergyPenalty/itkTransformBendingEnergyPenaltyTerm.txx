@@ -368,7 +368,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   sampler->SetMask( this->GetImageSampler()->GetMask() );
   sampler->SetInput( this->GetFixedImage() );
   sampler->SetNumberOfSamples( this->m_NumberOfSamplesForSelfHessian );
-  
+
   /** Update the imageSampler and get a handle to the sample container. */
   sampler->Update();
   ImageSampleContainerPointer sampleContainer = sampler->GetOutput();
@@ -408,7 +408,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
 
       /** Compute the contribution to the metric derivative of this point. */
       for ( unsigned int muA = 0; muA < nonZeroJacobianIndices.size(); ++muA )
-      {         
+      {
         for ( unsigned int muB = muA; muB < nonZeroJacobianIndices.size(); ++muB )
         {
           for ( unsigned int k = 0; k < FixedImageDimension; ++k )
@@ -437,7 +437,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
             const unsigned int nmB = nonZeroJacobianIndices[ muB ];
             H( nmA, nmB ) += 2.0 * matrixProduct;
             if ( nmA != nmB )
-            { 
+            {
               H( nmB, nmA ) += 2.0 * matrixProduct;
             }
 

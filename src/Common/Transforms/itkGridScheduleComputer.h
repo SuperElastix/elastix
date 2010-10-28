@@ -31,7 +31,7 @@ namespace itk
  * to the user-supplied ImageDirection if the
  * ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE macro is set.
  *
- * \ingroup
+ * \ingroup Transforms
  */
 
 template < typename TTransformScalarType, unsigned int VImageDimension >

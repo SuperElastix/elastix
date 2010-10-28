@@ -25,7 +25,7 @@ namespace itk
  * \brief A cost function that calculates the bending energy
  * of a transformation.
  *
- * \par The bending energy is defined as the sum of the spatial
+ * The bending energy is defined as the sum of the spatial
  * second order derivatives of the transformation, as defined in
  * [1]. For rigid and affine transformation this energy is always
  * zero.
@@ -34,7 +34,10 @@ namespace itk
  * [1]: D. Rueckert, L. I. Sonoda, C. Hayes, D. L. G. Hill,
  *      M. O. Leach, and D. J. Hawkes, "Nonrigid registration
  *      using free-form deformations: Application to breast MR
- *      images", IEEE Trans. Med. Imaging 18, 712-721, 1999.
+ *      images", IEEE Trans. Med. Imaging 18, 712-721, 1999.\n
+ * [2]: M. Staring and S. Klein,
+ *      "Itk::Transforms supporting spatial derivatives"",
+ *      Insight Journal, http://hdl.handle.net/10380/3215.
  *
  * \ingroup Metrics
  */

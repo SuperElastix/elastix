@@ -116,14 +116,12 @@ protected:
 
   /** Compute G(x)
    * For the elastic body spline, this is:
-   * G(x) = [alpha*r(x)*I - 3*x*x'/r(x)]
-   * \f$ G(x) = [\alpha*r(x)*I - 3*x*x'/r(x) ]\f$
+   * \f[ G(x) = [\alpha*r(x)*I - 3*x*x'/r(x) ] \f]
    * where
-   * \f$\alpha = 8 ( 1 - \nu ) - 1\f$
-   * \f$\nu\f$ is Poisson's Ratio
-   * r(x) = Euclidean norm = sqrt[x1^2 + x2^2 + x3^2]
-   * \f[ r(x) = \sqrt{ x_1^2 + x_2^2 + x_3^2 }  \f]
-   * I = identity matrix */
+   * \f$\alpha = 8 ( 1 - \nu ) - 1\f$, \f$\nu\f$ is Poisson's Ratio,
+   * \f$r(x) = \sqrt{ x_1^2 + x_2^2 + x_3^2 } \f$ and
+   * \f$I\f$ is the identity matrix.
+   */
   void ComputeG(const InputVectorType& x, GMatrixType & GMatrix) const;
 
   /** alpha, Poisson's ratio */

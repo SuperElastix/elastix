@@ -27,6 +27,11 @@ using namespace itk;
    * \class TransformRigidityPenalty
    * \brief A penalty term based on non-rigidity.
    *
+   * For more information check the paper:\n
+   * M. Staring, S. Klein and J.P.W. Pluim,
+   * "A Rigidity Penalty Term for Nonrigid Registration,"
+   * Medical Physics, vol. 34, no. 11, pp. 4098 - 4108, November 2007.
+   *
    * The parameters used in this class are:
    * \parameter Metric: Select this metric as follows:\n
    *    <tt>(Metric "TransformRigidityPenalty")</tt>

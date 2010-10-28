@@ -28,8 +28,10 @@ namespace itk
 {
 
 /** \class CyclicBSplineDeformableTransform
- * \brief Deformable transform using a BSpline representation in which the
- *   B-spline grid is formulated in a cyclic way
+ *
+ * \brief Deformable transform using a B-spline representation in which the
+ *   B-spline grid is formulated in a cyclic way.
+ *
  * \ingroup Transforms
  */
 template <

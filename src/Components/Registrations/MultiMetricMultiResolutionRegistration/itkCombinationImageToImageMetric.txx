@@ -685,11 +685,11 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
   H.Fill(0.0);
   HessianType tmpH( this->GetNumberOfParameters(),
     this->GetNumberOfParameters() );
- 
+
   /** Add all metrics' selfhessians. */
   bool initialized = false;
   for ( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
-  {    
+  {
     if ( this->m_UseMetric[ i ] )
     {
       ImageMetricType * metric = dynamic_cast<ImageMetricType *>( this->GetMetric( i ) );
@@ -702,7 +702,7 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
     }
   }
 
-  /** If none of the submetrics has a valid implementation of GetSelfHessian, 
+  /** If none of the submetrics has a valid implementation of GetSelfHessian,
    * then return an identity matrix */
   if ( ! initialized )
   {

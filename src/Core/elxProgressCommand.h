@@ -34,12 +34,14 @@ namespace elastix
    * sure that the progress of a filter is printed to screen. It works
    * as follows:
    *
+   * \code
    *   ProgressCommandType::Pointer command = ProgressCommandType::New();
    *   command->ConnectObserver( filterpointer );
    *   command->SetStartString( "  Progress: " );
    *   command->SetEndString( "%" );
    *   filterpointer->Update(); // run the filter, progress messages are printed now
    *   command->DisconnectObserver( filterPointer );
+   * \endcode
    *
    * So, first an instantiation of this class is created, then it is
    * connected to a filter, and some options are set. Whenever the filter
@@ -50,6 +52,7 @@ namespace elastix
    * Before the loop, the user should set the total number of loops, and the frequency
    * that the progress message should be printed with. For example
    *
+   * \code
    *   ProgressCommandType::Pointer command = ProgressCommandType::New();
    *   command->SetUpdateFrequency( maxnrofvoxels, 100 );
    *   command->SetStartString( "  Progress: " );
@@ -60,9 +63,11 @@ namespace elastix
    *     command->UpdateAndPrintProgress( i );
    *   }
    *   command->PrintProgress(1.0); // make sure the 100% is reached
+   * \endcode
    *
    * \li The last possibility is to directly use the PrintProgress function:
    *
+   * \code
    *   ProgressCommandType::Pointer command = ProgressCommandType::New();
    *   command->SetStartString( "  Progress: " );
    *   command->SetEndString( "%" );
@@ -75,9 +80,8 @@ namespace elastix
    *   writer->Update();
    *   command->PrintProgress( 1.0 );
    *   // example assumes reader, caster and writer have been configured before
+   * \endcode
    *
-   *
-   * //\ingroup ?
    */
 
 class ProgressCommand : public Command

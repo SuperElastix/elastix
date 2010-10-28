@@ -224,7 +224,7 @@ public:
   /** Experimental feature: compute SelfHessian.
    * This base class just returns an identity matrix of the right size. */
   virtual void GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const;
-  
+
 protected:
 
   /** Constructor. */

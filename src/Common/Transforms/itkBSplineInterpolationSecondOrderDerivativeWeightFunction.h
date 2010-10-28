@@ -87,13 +87,13 @@ protected:
   typedef typename Superclass::OneDWeightsType      OneDWeightsType;
 
   /** Compute the 1D weights, which are:
-   * [ \B( x[i] - startIndex[i] ), \B( x[i] - startIndex[i] - 1 ),
-   * \B( x[i] - startIndex[i] - 2 ), \B( x[i] - startIndex[i] - 3 ) ],
-   * with \B( x ) = \beta^2( x + 1/2 ) - \beta^2( x - 1/2 ), in case of
-   * non-equal derivative directions,
-   * with \B( x ) = \beta^1( x + 1 ) - 2 * \beta^1( x ) + \beta^1( x - 1 ),
+   * \f[ \beta( x[i] - startIndex[i] ), \beta( x[i] - startIndex[i] - 1 ),
+   * \beta( x[i] - startIndex[i] - 2 ), \beta( x[i] - startIndex[i] - 3 ), \f]
+   * with \f$\beta( x ) = \beta^2( x + 1/2 ) - \beta^2( x - 1/2 )\f$,
+   * in case of non-equal derivative directions,
+   * with \f$\beta( x ) = \beta^1( x + 1 ) - 2 * \beta^1( x ) + \beta^1( x - 1 ),\f$
    * in case of equal derivative directions,
-   * with \B(x) = \beta^3(x) for the non-derivative directions.
+   * with \f$\beta(x) = \beta^3(x)\f$ for the non-derivative directions.
    */
   virtual void Compute1DWeights(
     const ContinuousIndexType & index,

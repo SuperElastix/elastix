@@ -37,7 +37,7 @@ using namespace itk;
    *    Choose a value between 0.0 and 1.0. The default is 0.5.
    * \parameter TreeType: The type of the kNN binary tree. \n
    *    <tt>(TreeType "BDTree" "BruteForceTree")</tt> \n
-   *    Choose one of \{ KDTree, BDTree, BruteForceTree \}. \n
+   *    Choose one of { KDTree, BDTree, BruteForceTree }. \n
    *    The default is "KDTree" for all resolutions.
    * \parameter BucketSize: The maximum number of samples in one bucket. \n
    *    This parameter influences the calculation time only, and is not appropiate for the BruteForceTree. \n
@@ -45,15 +45,15 @@ using namespace itk;
    *    The default is 50 for all resolutions.
    * \parameter SplittingRule: This rule defines how the feature space is split. \n
    *    <tt>(SplittingRule "ANN_KD_STD" "ANN_KD_FAIR")</tt> \n
-   *    Choose one of \{ ANN_KD_STD, ANN_KD_MIDPT, ANN_KD_SL_MIDPT, ANN_KD_FAIR, ANN_KD_SL_FAIR, ANN_KD_SUGGEST \} \n
+   *    Choose one of { ANN_KD_STD, ANN_KD_MIDPT, ANN_KD_SL_MIDPT, ANN_KD_FAIR, ANN_KD_SL_FAIR, ANN_KD_SUGGEST } \n
    *    The default is "ANN_KD_SL_MIDPT" for all resolutions.
    * \parameter ShrinkingRule: This rule defines how the feature space is shrinked. \n
    *    <tt>(ShrinkingRule "ANN_BD_CENTROID" "ANN_BD_NONE")</tt> \n
-   *    Choose one of \{ ANN_BD_NONE, ANN_BD_SIMPLE, ANN_BD_CENTROID, ANN_BD_SUGGEST \} \n
+   *    Choose one of { ANN_BD_NONE, ANN_BD_SIMPLE, ANN_BD_CENTROID, ANN_BD_SUGGEST } \n
    *    The default is "ANN_BD_SIMPLE" for all resolutions.
    * \parameter TreeSearchType: The type of the binary tree searcher. \n
    *    <tt>(TreeSearchType "Standard" "FixedRadius")</tt> \n
-   *    Choose one of \{ Standard, FixedRadius, Priority \} \n
+   *    Choose one of { Standard, FixedRadius, Priority } \n
    *    The default is "Standard" for all resolutions.
    * \parameter KNearestNeighbours: The number of nearest neighbours to be searched. \n
    *    <tt>(KNearestNeighbours 50 20 35)</tt> \n
@@ -71,16 +71,13 @@ using namespace itk;
    *    <tt>(AvoidDivisionBy 0.000000001)</tt> \n
    *    The default is 1e-5.
    *
+   * \warning Note that we assume the FixedFeatureImageType to have the same
+   * pixeltype as the FixedImageType
    *
-   * \sa KNNGraphAlphaMutualInformationImageToImageMetric
-   * \sa ParzenWindowMutualInformationImageToImageMetric
+   * \sa KNNGraphAlphaMutualInformationImageToImageMetric, ParzenWindowMutualInformationImageToImageMetric
    * \ingroup Metrics
    */
 
-
-/** Note that we assume the FixedFeatureImageType to have the same
- * pixeltype as the FixedImageType
- */
   template <class TElastix >
   class KNNGraphAlphaMutualInformationMetric :
     public

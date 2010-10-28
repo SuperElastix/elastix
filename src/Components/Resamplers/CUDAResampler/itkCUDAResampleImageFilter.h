@@ -25,9 +25,13 @@ namespace itk
 {
 
 /** \class itkCUDAResampleImageFilter
- * \brief Resample an image on the GPU via a coordinate transform
+ * \brief Resample an image on the GPU via a coordinate transform.
  *
  * This class is an ITK wrap around a pure CUDA resampling class.
+ *
+ * \warning The implementation is currently very limited: only
+ * a single third order B-spline transform is supported for 3D
+ * images together with third order B-spline interpolation.
  *
  * \ingroup GeometricTransforms
  */

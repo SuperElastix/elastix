@@ -24,11 +24,14 @@ namespace itk
 
 /**
  * \class CyclicGridScheduleComputer
- * \brief This class computes all information about the B-spline grid,
+ *
+ * \brief This class computes all information about the B-spline grid.
+ *
+ * This class computes all information about the B-spline grid
  * given the image information and the desired grid spacing. It differs from
  * the GridScheduleComputer in how the nodes are placed in the last dimension.
  *
- * \ingroup
+ * \ingroup Transforms
  */
 
 template < typename TTransformScalarType, unsigned int VImageDimension >

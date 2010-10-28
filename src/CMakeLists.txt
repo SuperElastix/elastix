@@ -40,7 +40,7 @@ OPTION( ELASTIX_USE_MEVISDICOMTIFF
 #----------------------------------------------------------------------
 # Define cmake variable to define extra user component directories
 # These directories will be added to the list of include directories
-# and they will be searched for CMakeLists.txt files for further 
+# and they will be searched for CMakeLists.txt files for further
 # processing. In these directories, users may put code for their own
 # components.
 
@@ -146,7 +146,7 @@ ENDIF()
 #---------------------------------------------------------------------
 # Process the sub-directories
 
-# Common dir: code that is neither related to the core of elastix or 
+# Common dir: code that is neither related to the core of elastix or
 # to specific components.
 ADD_SUBDIRECTORY( Common )
 
