@@ -27,13 +27,16 @@ namespace elastix
 using namespace itk;
 
   /** \class VarianceOverLastDimensionMetric
-   * \brief Compute the sum of variances over the slowest varying dimension in the moving image, based on AdvancedImageToImageMetric.
-   *    For a description of this metric see the paper: <em>Nonrigid registration of 
-   *    dynamic medical imaging data using nD+t B-splines and a groupwise optimization 
-   *    approach</em>, C.T. Metz, S. Klein, M. Schaap, T. van Walsum and W.J. Niessen, 
-   *    Medical Image Analysis, in press.
+   * \brief Compute the sum of variances over the slowest varying dimension in the moving image.
    *
-   * This Class is templated over the type of the fixed and moving images to be compared.
+   * For a description of this metric see the paper:\n
+   * <em>Nonrigid registration of dynamic medical imaging data using
+   * nD+t B-splines and a groupwise optimization approach</em>,
+   * C.T. Metz, S. Klein, M. Schaap, T. van Walsum and W.J. Niessen,
+   * Medical Image Analysis, in press.
+   *
+   * This metric is based on the AdvancedImageToImageMetric.
+   * It is templated over the type of the fixed and moving images to be compared.
    *
    * This metric computes the sum of variances over the slowest varying dimension in
    * the moving image. The spatial positions of the moving image are established
@@ -46,7 +49,7 @@ using namespace itk;
    * or by nearest neighbor interpolation of a precomputed central difference image.
    * \li A minimum number of samples that should map within the moving image (mask) can be specified.
    *
-   * \parameter SampleLastDimensionRandomly: randomly sample a number of time points to 
+   * \parameter SampleLastDimensionRandomly: randomly sample a number of time points to
    *    to compute the variance from. When set to "false", all time points are taken into
    *    account. When set to "true", a random number of time points is selected, which can
    *    be set with parameter NumSamplesLastDimension. \n

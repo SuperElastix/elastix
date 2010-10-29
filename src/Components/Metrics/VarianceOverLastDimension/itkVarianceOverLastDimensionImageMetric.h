@@ -25,10 +25,10 @@ namespace itk
 {
 
 /** \class VarianceOverLastDimensionImageMetric
- * \brief Compute the sum of variances over the slowest varying dimension in the moving image, based on AdvancedImageToImageMetric...
+ * \brief Compute the sum of variances over the slowest varying dimension in the moving image.
  *
- * This Class is templated over the type of the fixed and moving
- * images to be compared.
+ * This metric is based on the AdvancedImageToImageMetric.
+ * It is templated over the type of the fixed and moving images to be compared.
  *
  * This metric computes the sum of variances over the slowest varying dimension in
  * the moving image. The spatial positions of the moving image are established
