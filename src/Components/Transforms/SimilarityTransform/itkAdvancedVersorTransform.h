@@ -39,7 +39,7 @@ namespace itk
  * The serialization of the fixed parameters is an array of 3 elements defining
  * the center of rotation.
  *
- * \TODO Need to make sure that the translation parameters in the baseclass
+ * \todo Need to make sure that the translation parameters in the baseclass
  * cannot be set to non-zero values.
  *
  * NB: SK: this class is just to have the AdvancedSimilarity3DTransform. It is not complete.

@@ -70,20 +70,6 @@ namespace itk
     virtual void Search( const MeasurementVectorType & qp, IndexArrayType & ind,
       DistanceArrayType & dists );
 
-    /** Set the maximum number of points that are to be visited. */
-    //void SetMaximumNumberOfPointsToVisit( unsigned int num )
-    //{
-    //  annMaxPtsVisit( static_cast<int>( num ) );
-    //}
-
-    /** Get the number of points that are visited in the last search. *
-    unsigned int GetNumberOfVisitedPoints(void)
-    {
-      //return this->m_BinaryTree->GetANNTree()::ANNptsVisited;
-      return ANNptsVisited;
-    }*/
-
-
   protected:
 
     ANNStandardTreeSearch();

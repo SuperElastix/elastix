@@ -1,19 +1,16 @@
-/*=========================================================================
+/*======================================================================
 
-  Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkCorrespondingPointsEuclideanDistancePointMetric.h,v $
-  Language:  C++
-  Date:      $Date: 2009-04-23 03:53:35 $
-  Version:   $Revision: 1.5 $
+  This file is part of the elastix software.
 
-  Copyright (c) Insight Software Consortium. All rights reserved.
-  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
 
      This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
+     PURPOSE. See the above copyright notices for more information.
 
-=========================================================================*/
+======================================================================*/
 #ifndef __itkCorrespondingPointsEuclideanDistancePointMetric_h
 #define __itkCorrespondingPointsEuclideanDistancePointMetric_h
 

@@ -563,7 +563,7 @@ ElastixMain::ElastixBaseType * ElastixMain::GetElastixBase( void ) const
 ElastixMain::ObjectPointer ElastixMain::CreateComponent(
   const ComponentDescriptionType & name )
 {
-  /** A pointer to the ::New() function. */
+  /** A pointer to the New() function. */
   PtrToCreator testcreator = 0;
   ObjectPointer testpointer = 0;
   testcreator = this->s_CDB->GetCreator( name,  this->m_DBIndex );

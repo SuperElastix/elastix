@@ -69,7 +69,7 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro( CombinationImageToImageMetric, AdvancedImageToImageMetric );
 
-  /** Define the ::New() method */
+  /** Define the New() method */
   itkNewMacro( Self );
 
   /** Constants for the image dimensions */

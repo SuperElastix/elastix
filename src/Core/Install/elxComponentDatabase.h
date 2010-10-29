@@ -30,12 +30,12 @@ namespace elastix
    * \class ComponentDatabase
    *
    * \brief The ComponentDatabase class is a class that stores the
-   * ::New() functions of all components.
+   * New() functions of all components.
    *
    * In elastix the metric/transform/dimension/pixeltype etc. are all selected
    * at runtime. To make this possible, all components (metric/transform etc)
    * have to compiled for different dimension/pixeltype. The elx::ComponentDatabase
-   * stores for each instance and ach pixeltype/dimension a pointers to a function
+   * stores for each instance and each pixeltype/dimension a pointers to a function
    * that creates a component of the specific type.
    *
    * Each new component (a new metric for example should "make itself

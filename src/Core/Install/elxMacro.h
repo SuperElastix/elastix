@@ -17,61 +17,66 @@
 
 
 /**
-* Macro for installing support new components (like a new metric, interpolator,
-* or transform).
-* Must be invoked in the .cxx file of the component, after declaration of the
-* class.
-*
-* Example of usage:
-*
-* // elxMyMetric.h //
-* #include "elxMetricBase.h"
-* #include "itkMattesMutualInformationImageToImageMetric.h"
-*
-* namespace elastix {
-*
-*   template <class TElastix>
-*     class MyMetric : public MetricBase<TElastix>,
-*      public itk::MattesMutualInformationImageToImageMetric
-*           < MetricBase<TElastix>::FixedImageType
-*             MetricBase<TElastix>::MovingImageType >
-*   {
-*     typedef MyMetric Self;
-*     itkNewMacro( Self ); //needed for the elxInstallMacro
-*     elxClassNameMacro("MattesMutualInformation"); //also needed
-*     .......
-*   };
-*
-* } // end namespace elastix
-*
-* // elxMyMetric.hxx //
-* definitions of the methods of the MyMetric class template
-*
-* // elxMyMetric.cxx //
-* #include elxMyMetric.h
-* elxInstallMacro(MyMetric);
-*
-* // CMakeLists.txt //
-* ADD_ELXCOMPONENT( MyMetric
-*   elxMyMetric.h
-*   elxMyMetric.hxx
-*   elxMyMetric.cxx
-*   [<any other source files needed>] )
-*
-*
-* The class to be installed should inherit from the appropriate base class.
-* (elx::MetricBase, elx::TransformBase etc,) and from a specific itk object.
-*
-* IMPORTANT: only one template argument <class TElastix> is allowed. Not more,
-* not less.
-*
-* Details: a function "int _classname##InstallComponent( _cdb )" is defined.
-* In this function a template is defined, _classname##_install<VIndex>.
-* It contains the ElastixTypedef<VIndex>, and recursive function DO(cdb).
-* DO installs the component for all defined ElastixTypedefs (so for all
-* supported image types).
-*
-*/
+ * Macro for installing support new components
+ * (like a new metric, interpolator, or transform).
+ * Must be invoked in the .cxx file of the component,
+ * after declaration of the class.
+ *
+ * Example of usage:
+ *
+ * \code
+ * // elxMyMetric.h //
+ * #include "elxMetricBase.h"
+ * #include "itkMattesMutualInformationImageToImageMetric.h"
+ *
+ * namespace elastix {
+ *
+ *   template <class TElastix>
+ *     class MyMetric : public MetricBase<TElastix>,
+ *      public itk::MattesMutualInformationImageToImageMetric
+ *           < MetricBase<TElastix>::FixedImageType
+ *             MetricBase<TElastix>::MovingImageType >
+ *   {
+ *     typedef MyMetric Self;
+ *     itkNewMacro( Self ); //needed for the elxInstallMacro
+ *     elxClassNameMacro("MattesMutualInformation"); //also needed
+ *     .......
+ *   };
+ *
+ * } // end namespace elastix
+ * \endcode
+ *
+ * \code
+ * // elxMyMetric.hxx //
+ * // Definitions of the methods of the MyMetric class template
+ * \endcode
+ *
+ * \code
+ * // elxMyMetric.cxx //
+ * #include elxMyMetric.h
+ * elxInstallMacro(MyMetric);
+ *
+ * // CMakeLists.txt //
+ * ADD_ELXCOMPONENT( MyMetric
+ *   elxMyMetric.h
+ *   elxMyMetric.hxx
+ *   elxMyMetric.cxx
+ *   [<any other source files needed>] )
+ * \endcode
+ *
+ * The class to be installed should inherit from the appropriate base class.
+ * (elx::MetricBase, elx::TransformBase etc,) and from a specific itk object.
+ *
+ * IMPORTANT: only one template argument <class TElastix> is allowed. Not more,
+ * not less.
+ *
+ * Details: a function "int _classname##InstallComponent( _cdb )" is defined.
+ * In this function a template is defined, _classname##_install<VIndex>.
+ * It contains the ElastixTypedef<VIndex>, and recursive function DO(cdb).
+ * DO installs the component for all defined ElastixTypedefs (so for all
+ * supported image types).
+ *
+ */
 #define elxInstallMacro(_classname) \
   template < ::elx::ComponentDatabase::IndexType VIndex> \
     class _classname##_install \
@@ -148,11 +153,11 @@ extern "C" int _classname##InstallComponent( \
 
 
 /**
-* elxPrepareImageTypeSupportMacro
-* To be called once, before the elxSupportImageTypeMacro()
-*
-* IMPORTANT: the macro must be invoked in namespace elastix!
-*/
+ * elxPrepareImageTypeSupportMacro
+ * To be called once, before the elxSupportImageTypeMacro()
+ *
+ * IMPORTANT: the macro must be invoked in namespace elastix!
+ */
 
 #define elxPrepareImageTypeSupportMacro() \
   template < ::elx::ComponentDatabase::IndexType VIndex >  /**unsigned int*/ \
@@ -179,31 +184,31 @@ extern "C" int _classname##InstallComponent( \
 
 
 /**
-* Macro for installing support for new ImageTypes.
-* Used in elxSupportedImageTypes.cxx .
-*
-* Example of usage:
-*
-* namespace elastix {
-* elxSupportedImageTypeMacro(unsigned short, 2, float, 3, 1);
-* elxSupportedImageTypeMacro(unsigned short, 3, float, 3, 2);
-* etc.
-* } //end namespace elastix
-*
-* The first line adds support for the following combination of ImageTypes:
-* fixedImage: 2D unsigned short
-* movingImage 3D float
-* The Index (last argument) of this combination of ImageTypes is 1.
-*
-* The Index should not be 0. This value is reserved for errormessages.
-* Besides, duplicate indices are not allowed.
-*
-* IMPORTANT: the macro must be invoked in namespace elastix!
-*
-* Details: the macro adds a class template specialization for the class
-* ElastixTypedef<VIndex>.
-*
-*/
+ * Macro for installing support for new ImageTypes.
+ * Used in elxSupportedImageTypes.cxx .
+ *
+ * Example of usage:
+ *
+ * namespace elastix {
+ * elxSupportedImageTypeMacro(unsigned short, 2, float, 3, 1);
+ * elxSupportedImageTypeMacro(unsigned short, 3, float, 3, 2);
+ * etc.
+ * } //end namespace elastix
+ *
+ * The first line adds support for the following combination of ImageTypes:
+ * fixedImage: 2D unsigned short
+ * movingImage 3D float
+ * The Index (last argument) of this combination of ImageTypes is 1.
+ *
+ * The Index should not be 0. This value is reserved for errormessages.
+ * Besides, duplicate indices are not allowed.
+ *
+ * IMPORTANT: the macro must be invoked in namespace elastix!
+ *
+ * Details: the macro adds a class template specialization for the class
+ * ElastixTypedef<VIndex>.
+ *
+ */
 
 #define elxSupportedImageTypeMacro(_fPixelType,_fDim,_mPixelType,_mDim,_VIndex) \
   template<> \
@@ -254,7 +259,7 @@ virtual const char * elxGetClassName( void ) const { return _name ; }
 /**
  *  elxout
  *
- *  This macro replaces 'elxout' by '::xl::xout["standard"]'.
+ *  This macro replaces 'elxout' by 'xl::xout["standard"]'.
  *  This simplifies writing messages to screen and logfile.
  *
  *  NB: for error and warning messages, for writing to the

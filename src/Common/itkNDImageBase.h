@@ -180,7 +180,7 @@ namespace itk
     /** Read image data from file into the actual image */
     virtual void Read(void) = 0;
 
-    /** Use ::New method to create a new actual image */
+    /** Use New method to create a new actual image */
     virtual void CreateNewImage(void) = 0;
 
     /** Set/Get the Input/OutputFileName */

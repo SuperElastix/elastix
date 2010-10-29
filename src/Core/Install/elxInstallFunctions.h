@@ -29,7 +29,7 @@ namespace elastix
    * In elastix the metric/transform/dimension/pixeltype etc. are all selected
    * at runtime. To make this possible, all components (metric/transform etc)
    * have to compiled for different dimension/pixeltype. The elx::ComponentDatabase
-   * stores for each instance and ach pixeltype/dimension a pointers to a function
+   * stores for each instance and each pixeltype/dimension a pointers to a function
    * that creates a component of the specific type. The InstallFunctions
    * class provides functions that aid in filling the elx::ComponentDatabase.
    * The functions are called when elastix is started. Do not do this
@@ -53,20 +53,20 @@ namespace elastix
     typedef ComponentDatabase::ObjectPointer              ObjectPointer;
 
     /** The type of the index in the component database.
-     * Each combination of pixeltype/dimension coresponds
+     * Each combination of pixeltype/dimension corresponds
      * a specific number, the index (unsigned int). */
     typedef ComponentDatabase::IndexType                  IndexType;
 
     /** The type of the key in the component database (=string) */
     typedef ComponentDatabase::ComponentDescriptionType   ComponentDescriptionType;
 
-    /** A wrap around the ::New() functions of itkObjects. */
+    /** A wrap around the New() functions of itkObjects. */
     static ObjectPointer Creator(void)
     {
       return dynamic_cast< ObjectType * >( AnyItkObjectType::New().GetPointer() );
     }
 
-    /** This function places the address of the ::New() function
+    /** This function places the address of the New() function
      * of AnyItkObjectType in the ComponentDatabase. Returns 0 in
      * case of no errors.  */
     static int InstallComponent(

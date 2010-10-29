@@ -160,14 +160,16 @@ public:
    * SetFixedImage() just calls SetFixedImage(0).
    * SetFixedImage(0) also calls the Superclass::SetFixedImage(). This
    * is defined by the itkSimpleSetMacro.
-   * GetFixedImage() just returns GetFixedImage(0)==Superclass::m_FixedImage.
+   * GetFixedImage() just returns GetFixedImage(0) == Superclass::m_FixedImage.
    */
 
   /** Set/Get the fixed image. */
   virtual void SetFixedImage( const FixedImageType * _arg, unsigned int pos );
   virtual const FixedImageType * GetFixedImage( unsigned int pos ) const;
   virtual const FixedImageType * GetFixedImage( void ) const
-  { return this->GetFixedImage(0); }
+  {
+    return this->GetFixedImage(0);
+  }
   itkSimpleSetMacro( FixedImage, const FixedImageType * );
   itkSetNumberOfMacro( FixedImage );
   itkGetNumberOfMacro( FixedImage );

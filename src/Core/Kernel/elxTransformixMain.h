@@ -68,7 +68,7 @@ public:
   typedef Superclass::ObjectContainerPointer      ObjectContainerPointer;
   typedef Superclass::DataObjectContainerPointer  DataObjectContainerPointer;
 
-  /** Typedefs for the database that holds pointers to ::New() functions.
+  /** Typedefs for the database that holds pointers to New() functions.
    * Those functions are used to instantiate components, such as the metric etc.
    */
   typedef Superclass::ComponentDatabaseType       ComponentDatabaseType;

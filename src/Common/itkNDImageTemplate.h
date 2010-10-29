@@ -87,7 +87,6 @@ namespace itk
     typedef typename Superclass::PointType PointType;
     typedef typename Superclass::OffsetType OffsetType;
 
-
     /** Typedefs dependent on the dimension */
     typedef Image<TPixel, VDimension>       ImageType;
     typedef typename ImageType::Pointer     ImagePointer;
@@ -154,7 +153,7 @@ namespace itk
     /** Read image data from file into the actual image */
     virtual void Read(void);
 
-    /** Use ::New method to create a new actual image */
+    /** Use New method to create a new actual image */
     virtual void CreateNewImage(void);
 
     virtual void SetImageIOWriter (ImageIOBase *_arg);

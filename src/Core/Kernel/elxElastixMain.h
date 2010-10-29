@@ -125,7 +125,7 @@ public:
   typedef ElastixBase::DataObjectContainerPointer         DataObjectContainerPointer;
   typedef ElastixBase::FlatDirectionCosinesType           FlatDirectionCosinesType;
 
-  /** Typedefs for the database that holds pointers to ::New() functions.
+  /** Typedefs for the database that holds pointers to New() functions.
    * Those functions are used to instantiate components, such as the metric etc.
    */
   typedef ComponentDatabase                               ComponentDatabaseType;

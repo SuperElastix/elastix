@@ -65,10 +65,10 @@ public:
    * Get/Set functions for Elastix.
    * The Set-functions cannot be defined with the itkSetObjectMacro,
    * since this class does not derive from itk::Object and
-   * thus does not have a ::Modified() method.
+   * thus does not have a Modified() method.
    *
    * This method checks if this instance of the class can be casted
-   * (dynamically) to an itk::Object. If yes, it calls ::Modified()
+   * (dynamically) to an itk::Object. If yes, it calls Modified()
    *
    * Besides setting m_Elastix, this method also sets m_Configuration
    * and m_Registration.

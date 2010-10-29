@@ -46,7 +46,7 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro(HardLimiterFunction, LimiterFunctionBase);
 
-  /** Define the ::New() function, for creation via the ObjectFactory */
+  /** Define the New() function, for creation via the ObjectFactory */
   itkNewMacro(Self);
 
   /** Superclass' static consts */

@@ -28,7 +28,7 @@ namespace elastix
   * \brief Determines which components (metrics, transforms, etc.) are available.
   *
   * This file defines the class elx::ComponentLoader. This class
-  * stores pointers to the ::New() functions of
+  * stores pointers to the New() functions of
   * each component in the elx::ComponentDatabase.
   *
   * Each new component (a new metric for example should "make itself

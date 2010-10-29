@@ -144,7 +144,8 @@ public:
    * SetFixedImage() just calls SetFixedImage(0).
    * SetFixedImage(0) also calls the Superclass::SetFixedImage(). This
    * is defined by the itkSimpleSetMacro.
-   * GetFixedImage() just returns GetFixedImage(0)==Superclass::m_FixedImage,  */
+   * GetFixedImage() just returns GetFixedImage(0) == Superclass::m_FixedImage.
+   */
 
   /** Set/Get the Fixed image. */
   virtual void SetFixedImage( const FixedImageType * _arg, unsigned int pos );
