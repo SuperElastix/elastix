@@ -106,6 +106,8 @@ public:
   typedef typename Superclass
     ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
   typedef typename Superclass::InternalMatrixType   InternalMatrixType;
+	typedef typename Superclass::HessianValueType			HessianValueType;
+	typedef typename Superclass::HessianType					HessianType;
 
   /** Define the dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
