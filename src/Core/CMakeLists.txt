@@ -179,7 +179,14 @@ TARGET_LINK_LIBRARIES( transformix
 #---------------------------------------------------------------------
 # Define the install directory.
 
-INSTALL( TARGETS elastix transformix
-  RUNTIME DESTINATION .
-  COMPONENT core )
+IF (WIN32)
+  INSTALL( TARGETS elastix transformix
+    RUNTIME DESTINATION .
+    COMPONENT core )
+ELSE()
+  INSTALL( TARGETS elastix transformix
+    RUNTIME DESTINATION bin
+    COMPONENT core )
+ENDIF()
+
 

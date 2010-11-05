@@ -107,11 +107,11 @@ ENDIF( WIN32 )
 #
 IF( WIN32 )
   INSTALL( FILES ${cudartlibtoinstall}
-    DESTINATION .
+    DESTINATION .    
     COMPONENT libraries )
 ELSE()
   INSTALL( FILES ${cudartlibtoinstall}
-    DESTINATION .
+    DESTINATION lib
     COMPONENT libraries
 #  NAMELINK_ONLY )
     RENAME ${cudartlibrenamed} )
