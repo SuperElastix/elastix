@@ -662,7 +662,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   progressObserver->SetUpdateFrequency(
     this->m_NumberOfGradientMeasurements, this->m_NumberOfGradientMeasurements );
   progressObserver->SetStartString( "  Progress: " );
-  elxout << "  Sampling gradients ... " << std::endl;
+  elxout << "  Sampling gradients ..." << std::endl;
 
   /** Initialize some variables for storing gradients and their magnitudes. */
   DerivativeType approxgradient;
@@ -842,7 +842,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   ProgressCommandPointer progressObserver = ProgressCommandType::New();
   progressObserver->SetUpdateFrequency( nrofsamples * 2, 100 );
   progressObserver->SetStartString( "  Progress: " );
-  elxout << "  Computing JacobianTerms ... " << std::endl;
+  elxout << "  Computing JacobianTerms ..." << std::endl;
 
   /** Variables for the band cov matrix. */
   const unsigned int maxbandcovsize = m_MaxBandCovSize;
