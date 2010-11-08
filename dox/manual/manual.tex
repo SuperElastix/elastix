@@ -600,35 +600,43 @@ a_{21}, a_{22}, t_x, t_y)^T$. In 3D, this gives a vector of length 12.
     transformations, B-splines \citep{RueckertEA99} are often used as a
     parameterisation:
 \begin{align}
-\vTmx = \vx + \sum_{\vx_k \in \Ncal_{\vx}} \bm{p}_k \bm{\beta}^3(\vx
-- \vx_k),\label{eq:bspline}
+\vTmx = \vx + \sum_{\vx_k \in \Ncal_{\vx}} \bm{p}_k
+\bm{\beta}^3\left( \frac{\vx - \vx_k}{\bm{\sigma}}
+\right),\label{eq:bspline}
 \end{align}
 with $\vx_k$ the control points, $\bm{\beta}^3(x)$ the cubic
 multidimensional B-spline polynomial \citep{Unser99}, $\bm{p}_k$ the
 B-spline coefficient vectors (loosely speaking, the control point
-displacements), and $\Ncal_{\vx}$ the set of all control points within the
-compact support of the B-spline at $\vx$. The control points $\vx_k$ are
-defined on a regular grid, overlayed on the fixed image. In this context we
-talk about `the control point grid that is put on the fixed image', and
-about `control points that are moved around'. Note that $\vTm(\vx_k)\neq
-\vx_k + \bm{p}_k$, a common misunderstanding. Calling $\bm{p}_k$ the
-control point displacements is, therefore, actually somewhat misleading.
-Also note that the control point grid is entirely unrelated to the grid
-used by the Grid image sampler, see Section~\ref{sec:comp:sampler}.
+displacements), $\bm{\sigma}$ the B-spline control point spacing,
+and $\Ncal_{\vx}$ the set of all control points within the compact
+support of the B-spline at $\vx$. The control points $\vx_k$ are
+defined on a regular grid, overlayed on the fixed image. In this
+context we talk about `the control point grid that is put on the
+fixed image', and about `control points that are moved around'. Note
+that $\vTm(\vx_k)\neq \vx_k + \bm{p}_k$, a common misunderstanding.
+Calling $\bm{p}_k$ the control point displacements is, therefore,
+actually somewhat misleading. Also note that the control point grid
+is entirely unrelated to the grid used by the Grid image sampler,
+see Section~\ref{sec:comp:sampler}.
 
 The control point grid is defined by the amount of space between the
-control points, which can be different for each direction. B-splines
-have local support ($|\Ncal_{\vx}|$ is small), which means that the
-transformation of a point can be computed from only a couple of
-surrounding control points. This is beneficial both for modelling
-local transformations, and for fast computation. The parameters
-$\vmu$ are formed by the B-spline coefficients $\bm{p}_k$. The
-number of control points $P$ determines the number of parameters.
-For 3D images, $\approx 10000$ parameters is not an unusual case.
-The parameter vector is (for 2D images) composed as follows: $\vmu =
-(p_{1x}, p_{2x}, \ldots, p_{Px}, p_{1y}, p_{2y}, \ldots, p_{Py}
-)^T$.
-
+control points $\bm{\sigma} = (\sigma_1, \ldots, \sigma_d)$ (with
+$d$ the image dimension), which can be different for each direction.
+B-splines have local support ($|\Ncal_{\vx}|$ is small), which means
+that the transformation of a point can be computed from only a
+couple of surrounding control points. This is beneficial both for
+modelling local transformations, and for fast computation. The
+parameters $\vmu$ are formed by the B-spline coefficients
+$\bm{p}_k$. The number of control points $\bm{P} = (P_1, \ldots,
+P_d)$ determines the number of parameters $M$, by $M = ( P_1 \times
+\ldots \times P_d ) \times d$. $P_i$ in turn is determined by the
+image size $\bm{s}$ and the B-spline grid spacing, i.e. $P_i \approx
+s_i / \sigma_i$ (where we use $\approx$ since some additional
+control points are placed just outside the image). For 3D images, $M
+\approx 10000$ parameters is not an unusual case, and $M$ can easily
+grow to $10^5 - 10^6$. The parameter vector (for 2D images) is
+composed as follows: $\vmu = (p_{1x}, p_{2x}, \ldots, p_{P_1},
+p_{1y}, p_{2y}, \ldots, p_{P_2} )^T$.
 
 \item[Thin-plate splines:] (\texttt{SplineKernelTransform}) Thin-plate
     splines are another well-known representation for nonrigid
