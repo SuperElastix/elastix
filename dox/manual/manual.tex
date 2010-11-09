@@ -1659,6 +1659,12 @@ of 8 voxels this is almost 100.000 parameters. The amount of
 parameters can be directly related to memory consumption and
 registration time, depending on the specific implementation.
 
+In most literature, \emph{cubic} (3$^\text{rd}$-order) B-splines are used for
+image registration. Other spline orders are also possible of course. You may
+experiment with the \texttt{BSplineTransformSplineOrder} option. Order 1, 2,
+and 3 are supported. A lower order will reduce the computation time, but may
+cause less smooth deformations.
+
 As an alternative to the B-spline transform, \elastix\ includes the
 \texttt{SplineKernelTransform}, which implements a thin-plate spline type of
 transform. See Sections \ref{sec:comp:transform} and \ref{sec:adv:transform}
@@ -2321,8 +2327,8 @@ an initial transformation (supplied by the option \texttt{-t0}) or
 as input for \transformix.
 
 \item[SplineKernelTransform] As an alternative to the B-spline transform,
-    \elastix\ includes a the \texttt{SplineKernelTransform}, which
-    implements a thin-plate spline type of transform; see also Section
+    \elastix\ includes a \texttt{SplineKernelTransform}, which implements a
+    thin-plate spline type of transform; see also Section
     \ref{sec:comp:transform}. This transformation requires a list of fixed
     image landmarks (control points) to be specified, by means of an input
     points file which has the same format as the \texttt{-def} file used by
@@ -2338,8 +2344,8 @@ as input for \transformix.
     principal component analysis. See the \texttt{doxygen} documentation on
     the website for a list of its parameters.
 
-\item[BSplineDeformableTransformWithDiffusion] This transform implements
-    the work described in \cite{Staring07a}.
+\item[BSplineTransformWithDiffusion] This transform implements the work
+    described in \cite{Staring07a}.
 \end{description}
 
 \section{Optimisation methods}
