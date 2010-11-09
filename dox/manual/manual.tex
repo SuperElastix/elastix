@@ -328,10 +328,9 @@ is able to store the relevant information (e.g. \texttt{mhd},
 DICOM). Some image formats, like \texttt{vpx}, do not store the
 origin and spacing. This may cause serious problems!
 
-Up to \elastix\ version 4.2, the image orientation (direction
-cosines) was not yet fully supported in \elastix. From \elastix\
-4.3, image orientation is fully supported, but can be disabled for
-backward compatibility reasons.
+Up to \elastix\ version 4.2, the image orientation (direction cosines) was not
+yet fully supported in \elastix. From \elastix\ 4.3, image orientation is fully
+supported, but can be disabled for backward compatibility reasons.
 
 \section{Metrics}\label{sec:comp:metric}
 
@@ -1052,11 +1051,15 @@ pre-compiled binaries.
     the tab ``Advanced'', click ``Environmental variables'', add \texttt{folder}
     to the variable ``path''.
 
-    \item Linux: Add \texttt{folder} to the path by adding the line
-    ``\texttt{export PATH=folder:\$PATH}'' to your \texttt{.bashrc} file.
+    \item Linux: Add the following lines to your \texttt{.bashrc} file:
+       \begin{quote}
+       \texttt{export PATH=folder/bin:\$PATH}\\
+       \texttt{export LD\_LIBRARY\_PATH=folder/lib:\$LD\_LIBRARY\_PATH}
+       \end{quote}
     \end{enumerate}
     or call \elastix\ with the full path:
-    \texttt{fullPathToFolder$\backslash$folder$\backslash$elastix}
+    \texttt{fullPathToFolder$\backslash$elastix}. Note that in Linux, you
+    will have to set the \texttt{LD\_LIBRARY\_PATH} anyway.
 \end{enumerate}
 
 \subsection{Getting started the easy way}
