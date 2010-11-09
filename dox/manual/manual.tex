@@ -1081,23 +1081,6 @@ Make sure to set the following (advanced) CMake variables to
 Linux systems with the GCC compiler: set \texttt{CMAKE\_BUILD\_TYPE}
 to ``Release''.
 
-%1. Download cmake from www.cmake.org and install it according to instructions
-%2. Download itk 3.12 from www.itk.org (not version 3.10).
-%3. Unpack the ITK tarball
-%4. make a directory where you want to generate the binaries and go that directory
-%5. run: ccmake <ITKsourcedir>
-%    In the Cmake interface you have to repeatedly press c (configure) until the "generate" option becomes available.
-%    Also you have to make some choices:
-%    BuildType = Release
-%    BuildExamples / BuildTesting / BuildSharedLibs = Off
-%    At the end, press generate (g)
-%7. download the elastix sources and unpack
-%8. follow the same procedure as with itk: generate a directory for the binaries, go to there, and run: ccmake <elastixsourcedir>
-%9. BuildType= Release
-%    ITK_DIR = the binary directory where you compiled itk
-%    CMAKE_INSTALL_PREFIX = choose a directory where you would like to install the elastix executables
-%10. run: make install
-
 \item Download the compressed sources from the website.
 
 \item Extract the archive to a \texttt{folderSrc} of your choice.
@@ -1123,18 +1106,22 @@ compiler.
 
 \item Compile \elastix\ by opening the project and selecting ``compile'' in
     release mode, or on Linux by running \texttt{make install}. Your
-    compiler will now create the \elastix\ binaries.
+    compiler will now create the \elastix\ binaries. On Windows you can
+    perform the installation step (which copies the binaries to the
+    \texttt{CMAKE\_INSTALL\_PREFIX} directory) by also `compiling' the
+    \texttt{INSTALL} project.
 
 \item Make sure your operating system can find the program, see
 above.
 \end{enumerate}
 
-For developers: When running CMake, you may toggle the display of
-the ``advanced'' options. In this list you will find several
-options like \texttt{USE\_BSplineTransform ON/OFF}. By default all
-are ON. To reduce compilation time, you may turn some components
-OFF, which you do not plan to use anyway. Be careful though to not
-turn off essential components.
+For developers: When running CMake, you may toggle the display of the
+``advanced'' options. In this list you will find several options like
+\texttt{USE\_BSplineTransform ON/OFF}. By default only the most commonly used
+components are ON. To reduce compilation time, you may turn some components
+OFF, which you do not plan to use anyway. Be careful though to not turn off
+essential components. The released binaries are compiled with most components
+ON.
 
 \section{How to call \elastix}\label{sec:elastix:call}
 
@@ -1308,6 +1295,17 @@ The first line indicates whether the points are given as
 coordinates). The second line stores the number of points that
 will be specified. After that the point data is given.
 
+Instead of the custom \texttt{.txt} format for the input points, \transformix\
+also supports \texttt{.vtk} files:
+\begin{quote}
+\texttt{transformix -def inputPoints.vtk -out outputDirectory -tp
+TransformParameters.txt}
+\end{quote}
+The output is then saved as \texttt{outputpoints.vtk}. The support for
+\texttt{.vtk} files is still a bit limited. Currently, only ASCII files are
+supported, with triangle meshes. Any meta point data is lost in the output
+file.
+
 If you want to know the deformation at all voxels of the fixed
 image, simply use \texttt{-def all}:
 \begin{quote}
@@ -1377,8 +1375,8 @@ interpolation.
 The run-time of \transformix\ is built up of the following parts:
 
 \begin{enumerate}
-\item Computing the B-spline decomposition of the input image (in case you selected the
-\texttt{FinalBSplineInterpolator});
+\item Computing the B-spline decomposition of the input image (in case you
+    selected the \texttt{FinalBSpline}-\texttt{Interpolator});
 
 \item Computing the transformation for each voxel;
 
