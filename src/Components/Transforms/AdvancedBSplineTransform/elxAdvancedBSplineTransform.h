@@ -86,7 +86,7 @@ using namespace itk;
  * \transformparameter GridOrigin: stores the origin of the B-spline grid. \n
  *    example: <tt>(GridOrigin 0.0 0.0 0.0)</tt>
  * \transformparameter GridDirection: stores the direction cosines of the B-spline grid. \n
- *    example: <tt>(GridDirection 1.0 0.0 0.0 1.0)</tt>
+ *    example: <tt>(GridDirection 1.0 0.0 0.0  0.0 1.0 0.0  0.0 0.0 0.1)</tt>
  * \transformparameter BSplineTransformSplineOrder: stores the B-spline order 1,2, or 3. \n
  *    example: <tt>(BSplineTransformSplineOrder 3)</tt>
  *    Default value: 3 (cubic B-splines).

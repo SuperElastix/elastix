@@ -47,6 +47,9 @@ using namespace itk;
  * The parameters used in this class are:
  * \parameter Transform: Select this transform as follows:\n
  *    <tt>(%Transform "BSplineStackTransform")</tt>
+ * \parameter BSplineTransformSplineOrder: choose a B-spline order 1,2, or 3. \n
+ *    example: <tt>(BSplineTransformSplineOrder 3)</tt>\n
+ *    Default value: 3 (cubic B-splines).
  * \parameter FinalGridSpacingInVoxels: the grid spacing of the B-spline transform for each dimension. \n
  *    example: <tt>(FinalGridSpacingInVoxels 8.0 8.0 8.0)</tt> \n
  *    If only one argument is given, that factor is used for each dimension. The spacing
@@ -84,6 +87,11 @@ using namespace itk;
  *    example: <tt>(GridSpacing 16.0 16.0 16.0)</tt>
  * \transformparameter GridOrigin: stores the origin of the B-spline grid. \n
  *    example: <tt>(GridOrigin 0.0 0.0 0.0)</tt>
+ * \transformparameter GridDirection: stores the direction cosines of the B-spline grid. \n
+ *    example: <tt>(GridDirection 1.0 0.0 0.0  0.0 1.0 0.0  0.0 0.0 0.1)</tt>
+ * \transformparameter BSplineTransformSplineOrder: stores the B-spline order 1,2, or 3. \n
+ *    example: <tt>(BSplineTransformSplineOrder 3)</tt>
+ *    Default value: 3 (cubic B-splines).
  * \transformparameter StackSpacing: stores the spacing between the sub transforms. \n
  *    exanoke: <tt>(StackSpacing 1.0)</tt>
  * \transformparameter StackOrigin: stores the origin of the first sub transform. \n
