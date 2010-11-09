@@ -1081,25 +1081,42 @@ Make sure to set the following (advanced) CMake variables to
 Linux systems with the GCC compiler: set \texttt{CMAKE\_BUILD\_TYPE}
 to ``Release''.
 
-\item Download the compressed sources from the website.
+\item Obtain the sources. There are three possibilities:
+  \begin{enumerate}
+  \item Download the compressed sources from the website. Extract the
+      archive to \texttt{<your-elastix-folder>} of your choice.
+  \item Use \texttt{subversion} (\url{https://subversion.tigris.org})
+      to check out the release from the subversion repository:
+\begin{verbatim}
+svn co --username elastixguest --password elastixguest
+  https://svn.bigr.nl/elastix/tagspublic/elastix_XX_X <your-elastix-folder>
+\end{verbatim}
+      where XX\_X is the major version number (first 2 digits) and the
+      minor version number (1 digit). So, for example, for version 4.5
+      this would be 04\_5.
+  \item Use \texttt{subversion} to check out the latest development
+      version. NB: this version might be unstable!
+\begin{verbatim}
+svn co --username elastixguest --password elastixguest
+  https://svn.bigr.nl/elastix/trunkpublic <your-elastix-folder>
+\end{verbatim}
+  \end{enumerate}
 
-\item Extract the archive to a \texttt{folderSrc} of your choice.
-
-\item Run CMake on \elastix:
+\item Run CMake for \elastix:
     \begin{enumerate}
-    \item Windows: start CMake. Find the \texttt{folderSrc} with the
-    source code. Set the folder where you want the binaries to be
-    created. Click ``Configure'' and select the compiler that you
-    use. Set the \texttt{CMAKE\_INSTALL\_PREFIX} to the directory
-    where you want \elastix\ installed. Click ``Configure'' until
-    all cache values are no longer red, and click OK.
+    \item Windows: start CMake. Find the \texttt{src} folder with the
+        source code. Set the folder where you want the binaries to be
+        created. Click ``Configure'' and select the compiler that you
+        use. Set the \texttt{CMAKE\_INSTALL\_PREFIX} to the directory
+        where you want \elastix\ installed. Click ``Configure'' until
+        all cache values are no longer red, and click OK.
 
-    \item Linux: run CMake from the folder where you want the
-    binaries to be created, with as command line argument the folder
-    in which the sources were extracted: \texttt{ccmake folderSrc}.
-    Set the \texttt{CMAKE\_BUILD\_TYPE} to ``Release'' and the
-    \texttt{CMAKE\_INSTALL\_PREFIX} to the directory where you want
-    \elastix\ installed.
+    \item Linux: run CMake from the folder where you want the binaries
+        to be created, with as command line argument the folder in
+        which the sources were extracted: \texttt{ccmake <src-folder>}.
+        Set the \texttt{CMAKE\_BUILD\_TYPE} to ``Release'' and the
+        \texttt{CMAKE\_INSTALL\_PREFIX} to the directory where you want
+        \elastix\ installed.
     \end{enumerate}
 CMake will create a project or solution or make file for your
 compiler.
