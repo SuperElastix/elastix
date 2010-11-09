@@ -1120,7 +1120,7 @@ For developers: When running CMake, you may toggle the display of the
 \texttt{USE\_BSplineTransform ON/OFF}. By default only the most commonly used
 components are ON. To reduce compilation time, you may turn some components
 OFF, which you do not plan to use anyway. Be careful though to not turn off
-essential components. The released binaries are compiled with most components
+essential components. The released binaries are compiled with all components
 ON.
 
 \section{How to call \elastix}\label{sec:elastix:call}
@@ -1661,8 +1661,8 @@ registration time, depending on the specific implementation.
 
 As an alternative to the B-spline transform, \elastix\ includes the
 \texttt{SplineKernelTransform}, which implements a thin-plate spline type of
-transform. See Chapter~\ref{chp:advanced} for more information on this
-transform.
+transform. See Sections \ref{sec:comp:transform} and \ref{sec:adv:transform}
+for more information on this transform.
 
 Lastly, it is wise to include the following line in every
 parameter file:
@@ -2114,8 +2114,9 @@ is specified in the parameter file with: \small
 (KNearestNeighbours 20)
 (ErrorBound 10.0)
 \end{verbatim}
-\normalsize A complete list of the available parameters can be found
-at \url{http://elastix.isi.uu.nl/doxygen/a00053.html}.
+\normalsize A complete list of the available parameters can be found in the
+doxygen documentation $\rightarrow$ \linebreak
+\texttt{elx::KNNGraphAlphaMutualInformationMetric}.
 
 \subsection{Penalty terms}\label{sec:penaltyterms}
 
@@ -2220,8 +2221,9 @@ $\mathcal{P}^{\mathrm{rigid}}(\vTm;I_M)$ described in
 (PropernessConditionWeight 100.0)
 (MovingRigidityImageName "movingRigidityImage.mhd")
 \end{verbatim}
-\normalsize A complete list of the available parameters can be found
-at \url{http://elastix.isi.uu.nl/doxygen/a00056.html}. See also
+\normalsize A complete list of the available parameters can be found in the
+doxygen documentation $\rightarrow$ \linebreak
+\texttt{elx::TransformRigidityPenalty}. See also
 Section~\ref{sec:penaltyterms}.
 
 \subsection{DisplacementMagnitudePenalty: inverting transformations}
@@ -2244,6 +2246,8 @@ image. Select it with: \small
 conceptually very similar to performing an image registration in
 this way. Consequently, the same choices are relevant: optimisation
 algorithm, multiresolution etc...
+
+Note that this procedure was described and evaluated in \cite{Metz10}.
 
 \subsection{Corresponding points: help the registration}
 
@@ -2268,7 +2272,7 @@ known to correspond. The derivative of $\Sim_{\mathrm{CP}}$ reads:
 \begin{align}
 \frac{\partial}{\partial \vmu} \Sim_{\mathrm{CP}} &= -\frac{1}{P}
 \sum_{\vx_{Fi}} \frac{1}{\left\| \vx_{Mi} - \vTm(\vx_{Fi})
-\right\|^2} \left( \vx_{Mi} - \vTm(\vx_{Fi}) \right) \frac{\partial
+\right\|} \left( \vx_{Mi} - \vTm(\vx_{Fi}) \right) \frac{\partial
 \vT}{\partial \vmu}(\vx_{Fi}).
 \end{align}
 
@@ -2295,7 +2299,7 @@ identical to supplying points to \transformix, see Section
     fixed image mask is sparse (i.e. consists of many zeros).
 \end{description}
 
-\section{Transforms}
+\section{Transforms}\label{sec:adv:transform}
 
 \begin{description}
 \item[DeformationFieldTransform] This transform serves as a wrapper around
@@ -2318,12 +2322,13 @@ as input for \transformix.
 
 \item[SplineKernelTransform] As an alternative to the B-spline transform,
     \elastix\ includes a the \texttt{SplineKernelTransform}, which
-    implements a thin-plate spline type of transform. This transformation
-    requires a list of fixed image landmarks (control points) to be
-    specified, by means of an input points file which has the same format
-    as the \texttt{-def} file used by \transformix\
-    (Section~\ref{sec:calltransformix}. See the \texttt{doxygen}
-    documentation on the website for a list of its parameters.
+    implements a thin-plate spline type of transform; see also Section
+    \ref{sec:comp:transform}. This transformation requires a list of fixed
+    image landmarks (control points) to be specified, by means of an input
+    points file which has the same format as the \texttt{-def} file used by
+    \transformix\ (Section~\ref{sec:calltransformix}. See the
+    \texttt{doxygen} documentation on the website for a list of its
+    parameters.
 
 \item[WeightedCombinationTransform] This is a transformation that is
     modelled as a weighted combination of user-specified transformations:
