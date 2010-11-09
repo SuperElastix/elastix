@@ -2443,14 +2443,22 @@ registration process. This is ``layer B'' of \elastix.
 
 \subsection{Directory structure}
 
+The basic directory structure is as follows:
 \begin{itemize}
 \item dox
 \item src/Common: itk classes. layer A stuff.
 \item src/Core: this is the main \elastix\ kernel, responsible for the
     execution flow, connecting the classes, reading parameters etc.
 \item src/Components: this directory contains the components and their
-    \elastix\ wrappers (layer B)
+    \elastix\ wrappers (layer B). Very component-specific layer A code can
+    also be found here.
 \end{itemize}
+
+From \elastix\ 4.4 it is also possible to add your own Component directories.
+These can be located anywhere outside the \elastix\ source tree. See Section
+\ref{sec:dev:newcomp} for more details about this.
+
+
 
 %\subsection{\elastix\ execution flow}
 %\begin{enumerate}
@@ -2490,10 +2498,10 @@ registration process. This is ``layer B'' of \elastix.
 %\begin{itemize}
 %\item Parameter file parser
 %\item xout
-%\item ANN license! used for a not yet released component.
+%\item ANN license!
 %\end{itemize}
 
-\section{Functional differences with the ITK}
+\section{Position with respect to ITK}
 
 %Although \elastix\ is based on the ITK registration framework, it
 %implements several functional enhancements.
@@ -2503,23 +2511,24 @@ registration process. This is ``layer B'' of \elastix.
 %- Advanced transformation, .....
 
 A large part of the \elastix\ code is based on the ITK
-\cite{ITKSoftwareGuideSecondEdition}. The use of the ITK implies
-that the low-level functionality (image classes, memory allocation
-etc.) is thoroughly tested. Naturally, all image formats supported
-by the ITK are supported by \elastix\ as well. The C++ source code
-can be compiled on multiple operating systems (Windows XP, Linux,
-Mac OS X), using various compilers (MS Visual Studio up to version
-2008, GCC up to version 4.3), and supports both 32 and 64 bit
-systems. In addition to the existing ITK image registration classes,
-\elastix\ implements new functionality. The most important
-enhancements are listed in Table \ref{table:extras}.
+\cite{ITKSoftwareGuideSecondEdition}. The use of the ITK implies that the
+low-level functionality (image classes, memory allocation etc.) is thoroughly
+tested. Naturally, all image formats supported by the ITK are supported by
+\elastix\ as well. The C++ source code can be compiled on multiple operating
+systems (Windows XP, Linux, Mac OS X), using various compilers (MS Visual
+Studio up to version 2010, GCC up to version 4.3), and supports both 32 and 64
+bit systems.
+
+In addition to the existing ITK image registration classes, \elastix\
+implements new functionality. The most important enhancements are listed in
+Table \ref{table:extras}.
 
 \begin{table}
 \centering
 \begin{tabular}{p{30pc}}
 \toprule \toprule
 \begin{list}{\labelitemi}{\leftmargin=1em}
-\item A modular framework for sampling strategies.
+\item A modular framework for sampling strategies. See for more details \cite{StaringKlein2010b}.
 
 \item Several new optimisers: Kiefer-Wolfowitz, Robbins-Monro,
 adaptive stochastic gradient descent, evolutionary strategy.
@@ -2536,12 +2545,12 @@ bending energy penalty term, rigidity penalty term.
 \item The ability to concatenate any number of geometric
 transformations.
 
-\item The transformations support computation of not only
-$\partial \vT / \partial \vmu$, but also of spatial derivatives
-$\partial \vT / \partial \vx$ and $\partial^2 \vT / \partial \vx^2$,
-and their derivatives to $\vmu$, frequently required for the
-computation of regularisation terms. Additionally, the compact
-support of certain transformations is integrated more generally.
+\item The transformations support computation of not only $\partial \vT /
+    \partial \vmu$, but also of spatial derivatives $\partial \vT / \partial
+    \vx$ and $\partial^2 \vT / \partial \vx^2$, and their derivatives to
+    $\vmu$, frequently required for the computation of regularisation terms.
+    Additionally, the compact support of certain transformations is integrated
+    more generally. See for more details \cite{StaringKlein2010a}.
 
 \item Linear combinations of cost functions, instead of just a single cost
 function.
@@ -2558,7 +2567,7 @@ compared to the ITK.}\label{table:extras}
 %%- registration classes: what's the difference? Should we just file a
 %bug fix?
 
-\section{Creating new components}
+\section{Creating new components}\label{sec:dev:newcomp}
 
 If you want to create your own component, it is natural to start
 writing the layer A filter, without bothering about \elastix. The
@@ -2569,6 +2578,12 @@ make a small test program that reads an image, runs the sampler, and
 verifies its output. Once you got the new sampler to work, it is
 trivial to write the layer B wrapper in \elastix\ (some copy-paste
 from existing samplers).
+
+With CMake, you can tell \elastix\ in which directories the source code of your
+new components is located, using the \texttt{ELASTIX\_USER\_COMPONENT\_DIRS}
+option. \elastix\ will search all subdirectories of these directories for
+\texttt{CMakeLists.txt} files that contain the command
+\texttt{ADD_ELXCOMPONENT( <name> ... )}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
