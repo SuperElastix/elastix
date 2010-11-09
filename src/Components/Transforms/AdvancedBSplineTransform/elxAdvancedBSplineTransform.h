@@ -38,6 +38,9 @@ using namespace itk;
  * The parameters used in this class are:
  * \parameter Transform: Select this transform as follows:\n
  *    <tt>(%Transform "BSplineTransform")</tt>
+ * \parameter BSplineTransformSplineOrder: choose a B-spline order 1,2, or 3. \n
+ *    example: <tt>(BSplineTransformSplineOrder 3)</tt>\n
+ *    Default value: 3 (cubic B-splines).
  * \parameter FinalGridSpacingInVoxels: the grid spacing of the B-spline transform for each dimension. \n
  *    example: <tt>(FinalGridSpacingInVoxels 8.0 8.0 8.0)</tt> \n
  *    If only one argument is given, that factor is used for each dimension. The spacing
@@ -66,7 +69,7 @@ using namespace itk;
  *   in each dimension.
  * \parameter UseCyclicTransform: use the cyclic version of the BSplineTransform which
  *   ensures that the B-spline polynomials wrap around in the slowest varying dimension.
- *   This is usefull for dynamic imaging data in which the motion is assumed to be cyclic,
+ *   This is useful for dynamic imaging data in which the motion is assumed to be cyclic,
  *   for example in ECG-gated or respiratory gated CTA. For more information see the paper: 
  *   <em>Nonrigid registration of dynamic medical imaging data using nD+t B-splines and a 
  *   groupwise optimization approach</em>, C.T. Metz, S. Klein, M. Schaap, T. van Walsum and 
@@ -82,6 +85,18 @@ using namespace itk;
  *    example: <tt>(GridSpacing 16.0 16.0 16.0)</tt>
  * \transformparameter GridOrigin: stores the origin of the B-spline grid. \n
  *    example: <tt>(GridOrigin 0.0 0.0 0.0)</tt>
+ * \transformparameter GridDirection: stores the direction cosines of the B-spline grid. \n
+ *    example: <tt>(GridDirection 1.0 0.0 0.0 1.0)</tt>
+ * \transformparameter BSplineTransformSplineOrder: stores the B-spline order 1,2, or 3. \n
+ *    example: <tt>(BSplineTransformSplineOrder 3)</tt>
+ *    Default value: 3 (cubic B-splines).
+ * \transformparameter UseCyclicTransform: use the cyclic version of the BSplineTransform which
+ *   ensures that the B-spline polynomials wrap around in the slowest varying dimension.
+ *   This is useful for dynamic imaging data in which the motion is assumed to be cyclic,
+ *   for example in ECG-gated or respiratory gated CTA. For more information see the paper: 
+ *   <em>Nonrigid registration of dynamic medical imaging data using nD+t B-splines and a 
+ *   groupwise optimization approach</em>, C.T. Metz, S. Klein, M. Schaap, T. van Walsum and 
+ *   W.J. Niessen, Medical Image Analysis, in press.
  *
  * \todo It is unsure what happens when one of the image dimensions has length 1.
  *
