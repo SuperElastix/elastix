@@ -1661,9 +1661,10 @@ registration time, depending on the specific implementation.
 
 In most literature, \emph{cubic} (3$^\text{rd}$-order) B-splines are used for
 image registration. Other spline orders are also possible of course. You may
-experiment with the \texttt{BSplineTransformSplineOrder} option. Order 1, 2,
+experiment with the \texttt{BSplineTransformSplineOrder} option. Orders 1, 2,
 and 3 are supported. A lower order will reduce the computation time, but may
-cause less smooth deformations.
+cause less smooth deformations. With order 1, the deformation field is not even
+differentiable anymore, strictly speaking.
 
 As an alternative to the B-spline transform, \elastix\ includes the
 \texttt{SplineKernelTransform}, which implements a thin-plate spline type of
@@ -2051,9 +2052,8 @@ all channels.
 
 \elastix\ should be called like:
 \begin{quote}
-\texttt{elastix -f0 fixed0.ext -f1 fixed1.ext -f<>... -m0
-moving0.ext
- -m1 moving1.ext -m<>... -out outDir -p parameterFile.txt}
+\texttt{elastix -f0 fixed0.ext -f1 fixed1.ext -f<>... -m0 moving0.ext -m1
+moving1.ext -m<>... -out outDir -p parameterFile.txt}
 \end{quote}
 
 \item[both] In this case the registration cost function is defined
@@ -2298,11 +2298,31 @@ The point set files have to be defined in a specific format,
 identical to supplying points to \transformix, see Section
 \ref{sec:calltransformix}.
 
+\subsection{VarianceOverLastDimensionMetric: aligning time series}
+
+This metric is explained in \cite{Metz10}. Example parameter files can be found
+on the wiki parameter file database, entry \texttt{par0012}.
+
+This metric should be used to estimate the motion in dynamic imaging data (time
+series). The variance of intensities over time is measured. Two- to
+four-dimensional imaging data is supported.
+
 \section{Image samplers}
 
 \begin{description}
 \item[RandomSparseMask] This variant of the random sampler is useful if the
     fixed image mask is sparse (i.e. consists of many zeros).
+\end{description}
+
+\section{Interpolators}
+
+\begin{description}
+\item[ReducedDimensionBSplineInterpolator] This is a variant of the normal
+    B-spline interpolator, which uses a 0$^\text{th}$ order spline in the
+    last dimension. This saves time when aligning time-series, when you do
+    not have to interpolate in the last (time) dimension anyway. Its usage
+    is illustrated in entry \texttt{par0012} of the parameter file
+    database.
 \end{description}
 
 \section{Transforms}\label{sec:adv:transform}
@@ -2346,6 +2366,11 @@ as input for \transformix.
 
 \item[BSplineTransformWithDiffusion] This transform implements the work
     described in \cite{Staring07a}.
+
+\item[BSplineStackTransform] This transformation model defines a stack of
+    independent B-spline transformations. Its usage is illustrated in
+    \cite{Metz10}. Example parameter files can be found on the wiki
+    parameter file database, entry \texttt{par0012}.
 \end{description}
 
 \section{Optimisation methods}
