@@ -2417,8 +2417,69 @@ default value equals the average voxel spacing of fixed and moving image.
 
 \chapter{Developers guide}\label{chp:develop}
 
+\section{Relation to ITK}
+
+%Although \elastix\ is based on the ITK registration framework, it
+%implements several functional enhancements.
 %
-\section{Setup of the code}
+%- AdvancedImageToImageMetric: ImageSampler's, ...
+%
+%- Advanced transformation, .....
+
+A large part of the \elastix\ code is based on the ITK
+\cite{ITKSoftwareGuideSecondEdition}. The use of the ITK implies that the
+low-level functionality (image classes, memory allocation etc.) is thoroughly
+tested. Naturally, all image formats supported by the ITK are supported by
+\elastix\ as well. The C++ source code can be compiled on multiple operating
+systems (Windows XP, Linux, Mac OS X), using various compilers (MS Visual
+Studio up to version 2010, GCC up to version 4.3), and supports both 32 and 64
+bit systems.
+
+In addition to the existing ITK image registration classes, \elastix\
+implements new functionality. The most important enhancements are listed in
+Table \ref{table:extras}.
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{p{30pc}}
+\toprule \toprule
+\begin{list}{\labelitemi}{\leftmargin=1em}
+\item A modular framework for sampling strategies. See for more details \cite{StaringKlein2010b}.
+
+\item Several new optimisers: Kiefer-Wolfowitz, Robbins-Monro, adaptive
+    stochastic gradient descent, evolutionary strategy. Complete rework of existing ITK optimisers, adding more user control and
+    better error handling: quasi-Newton, nonlinear conjugate gradient.
+
+\item Several new or more flexible cost functions: (normalised) mutual
+    information, implemented with Parzen windowing similar to
+    \cite{ThevenazEA00a}, multifeature $\alpha$-mutual information, bending
+    energy penalty term, rigidity penalty term.
+
+\item The ability to concatenate any number of geometric transformations.
+
+\item The transformations support computation of not only $\partial \vT /
+    \partial \vmu$, but also of spatial derivatives $\partial \vT / \partial
+    \vx$ and $\partial^2 \vT / \partial \vx^2$, and their derivatives to
+    $\vmu$, frequently required for the computation of regularisation terms.
+    Additionally, the compact support of certain transformations is integrated
+    more generally. See for more details \cite{StaringKlein2010a}.
+
+\item Linear combinations of cost functions, instead of just a single cost
+    function.
+
+%\item A Gaussian pyramid without downsampling.
+\end{list}\\
+ \bottomrule \bottomrule
+\end{tabular}
+\caption{The most important enhancements and additions in \elastix, compared to
+the ITK.}\label{table:extras}
+\end{table}
+
+%%- registration classes: what's the difference? Should we just file a
+%bug fix?
+
+%
+\section{Overview of the \elastix\ code}
 
 The \elastix\ source code consists roughly of two layers, both
 written in C++: A) ITK-style classes that implement image
@@ -2432,21 +2493,22 @@ compiled and tested independent of layer B. Subsequently, a small
 layer B wrapper needs to be written, which connects the layer A
 class to the other parts of \elastix.
 
-The image samplers, for example, are implemented as ITK classes that
-all inherit from a base class \texttt{itk::ImageSamplerBase}. These
-can be found in \texttt{src/Common/ImageSamplers}. So, this is
-``layer A'' in \elastix. For each sampler (random, grid, full... ) a
-wrapper is written, located in
-\texttt{src/Components/ImageSamplers}, which takes care of
-configuring the sampler before each new resolution of the
-registration process. This is ``layer B'' of \elastix.
+The image samplers, for example, are implemented as ITK classes that all
+inherit from a base class \texttt{itk::ImageSamplerBase}. These can be found in
+\texttt{src/Common/ImageSamplers}. This is ``layer A'' in \elastix. For each
+sampler (random, grid, full... ) a wrapper is written, located in
+\texttt{src/Components/ImageSamplers}, which takes care of configuring the
+sampler before each new resolution of the registration process. This is ``layer
+B'' of \elastix.
 
 \subsection{Directory structure}
 
 The basic directory structure is as follows:
 \begin{itemize}
 \item dox
-\item src/Common: itk classes. layer A stuff.
+\item src/Common: ITK classes, Layer A stuff. This directory also contains
+    some external libraries, unrelated to ITK, like xout (which is written
+    by us) and the ANNlib.
 \item src/Core: this is the main \elastix\ kernel, responsible for the
     execution flow, connecting the classes, reading parameters etc.
 \item src/Components: this directory contains the components and their
@@ -2454,9 +2516,9 @@ The basic directory structure is as follows:
     also be found here.
 \end{itemize}
 
-From \elastix\ 4.4 it is also possible to add your own Component directories.
-These can be located anywhere outside the \elastix\ source tree. See Section
-\ref{sec:dev:newcomp} for more details about this.
+In \elastix\ 4.4 and later versions, it is also possible to add your own
+Component directories. These can be located anywhere outside the \elastix\
+source tree. See Section \ref{sec:dev:newcomp} for more details about this.
 
 
 
@@ -2501,89 +2563,68 @@ These can be located anywhere outside the \elastix\ source tree. See Section
 %\item ANN license!
 %\end{itemize}
 
-\section{Position with respect to ITK}
 
-%Although \elastix\ is based on the ITK registration framework, it
-%implements several functional enhancements.
-%
-%- AdvancedImageToImageMetric: ImageSampler's, ...
-%
-%- Advanced transformation, .....
-
-A large part of the \elastix\ code is based on the ITK
-\cite{ITKSoftwareGuideSecondEdition}. The use of the ITK implies that the
-low-level functionality (image classes, memory allocation etc.) is thoroughly
-tested. Naturally, all image formats supported by the ITK are supported by
-\elastix\ as well. The C++ source code can be compiled on multiple operating
-systems (Windows XP, Linux, Mac OS X), using various compilers (MS Visual
-Studio up to version 2010, GCC up to version 4.3), and supports both 32 and 64
-bit systems.
-
-In addition to the existing ITK image registration classes, \elastix\
-implements new functionality. The most important enhancements are listed in
-Table \ref{table:extras}.
-
-\begin{table}
-\centering
-\begin{tabular}{p{30pc}}
-\toprule \toprule
-\begin{list}{\labelitemi}{\leftmargin=1em}
-\item A modular framework for sampling strategies. See for more details \cite{StaringKlein2010b}.
-
-\item Several new optimisers: Kiefer-Wolfowitz, Robbins-Monro,
-adaptive stochastic gradient descent, evolutionary strategy.
-
-\item Complete rework of existing ITK optimisers, adding more user
-control and better error handling: quasi-Newton, nonlinear conjugate
-gradient.
-
-\item Several new or more flexible cost functions: (normalised) mutual
-information, implemented with Parzen windowing similar to
-\cite{ThevenazEA00a}, multifeature $\alpha$-mutual information,
-bending energy penalty term, rigidity penalty term.
-
-\item The ability to concatenate any number of geometric
-transformations.
-
-\item The transformations support computation of not only $\partial \vT /
-    \partial \vmu$, but also of spatial derivatives $\partial \vT / \partial
-    \vx$ and $\partial^2 \vT / \partial \vx^2$, and their derivatives to
-    $\vmu$, frequently required for the computation of regularisation terms.
-    Additionally, the compact support of certain transformations is integrated
-    more generally. See for more details \cite{StaringKlein2010a}.
-
-\item Linear combinations of cost functions, instead of just a single cost
-function.
-
-\item A Gaussian pyramid without downsampling.
-\end{list}\\
- \bottomrule \bottomrule
-\end{tabular}
-\caption{The most important enhancements and additions in \elastix,
-compared to the ITK.}\label{table:extras}
-\end{table}
-
-
-%%- registration classes: what's the difference? Should we just file a
-%bug fix?
 
 \section{Creating new components}\label{sec:dev:newcomp}
 
-If you want to create your own component, it is natural to start
-writing the layer A filter, without bothering about \elastix. The
-layer A filter should implement all basic functionality,
-
-You can simply extract the ImageSampler directory from \elastix\ and
-make a small test program that reads an image, runs the sampler, and
-verifies its output. Once you got the new sampler to work, it is
-trivial to write the layer B wrapper in \elastix\ (some copy-paste
-from existing samplers).
+If you want to create your own component, it is natural to start writing the
+layer A class, without bothering about \elastix. The layer A filter should
+implement all basic functionality and you can test in a separate ITK program if
+it does what it is supposed to do. Once you got this ITK class to work, it is
+trivial to write the layer B wrapper in \elastix\ (start by copy-pasting from
+existing components).
 
 With CMake, you can tell \elastix\ in which directories the source code of your
 new components is located, using the \texttt{ELASTIX\_USER\_COMPONENT\_DIRS}
 option. \elastix\ will search all subdirectories of these directories for
-\texttt{CMakeLists.txt} files that contain the command
-\texttt{ADD_ELXCOMPONENT( <name> ... )}.
+CMakeLists.txt files that contain the command \texttt{ADD\_ELXCOMPONENT( <name>
+... )}. The CMakeLists.txt file that accompanies an \elastix\ component looks
+typically like this:
+\begin{quote}
+\begin{verbatim}
+ADD_ELXCOMPONENT( AdvancedMeanSquaresMetric
+  elxAdvancedMeanSquaresMetric.h
+  elxAdvancedMeanSquaresMetric.hxx
+  elxAdvancedMeanSquaresMetric.cxx
+  itkAdvancedMeanSquaresImageToImageMetric.h
+  itkAdvancedMeanSquaresImageToImageMetric.hxx )
+ \end{verbatim}
+ \end{quote}
+The \texttt{ADD\_ELXCOMPONENT} command is a macro defined in
+\texttt{src/Components/CMakeLists.txt}. The first argument is the name of the
+layer B wrapper class, which is declared in ``elxAdvancedMeanSquaresMetric.h''.
+After that, you can specify the source files on which the component relies. In
+the example above, the files that start with ``itk'' form the layer A code.
+Files that start with ``elx'' are the layer B code. The file
+``elxAdvancedMeanSquaresMetric.cxx'' is particularly simple. It just consists
+of two lines:
+\begin{quote}
+\begin{verbatim}
+#include "elxAdvancedMeanSquaresMetric.h"
+elxInstallMacro( AdvancedMeanSquaresMetric );
+\end{verbatim}
+\end{quote}
+The \texttt{elxInstallMacro} is defined in
+\texttt{src/Core/Install/elxMacro.h}.
+
+The files \texttt{elxAdvancedMeanSquaresMetric.h/hxx} together define the layer
+B wrapper class. That class inherits from the corresponding layer A class, but
+also from an \texttt{elx::BaseComponent}. This gives us the opportunity to add
+a common interface to all elastix components, regardless of the ITK classes
+from which they inherit. Examples of this interface are the following methods:
+\begin{quote}
+\begin{verbatim}
+  void BeforeAll(void)
+  void BeforeRegistration(void)
+  void BeforeEachResolution(void)
+  void AfterEachResolution(void)
+  void AfterEachIteration(void)
+  void AfterRegistration(void)
+\end{verbatim}
+\end{quote}
+These methods are automatically invoked at the moments indicated by the name of
+the function. This gives you a chance to read/set some parameters, print some
+output, save some results etc.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
