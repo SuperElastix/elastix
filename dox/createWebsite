@@ -21,7 +21,7 @@
 # 3. call this script with argument exportwin
 # 4. call this script with argument exportlinux64
 # 5. Run cmake on windows and linux.
-# 6. run make install on linux
+# 6. run make install on linux, make package, and make package_source
 # 7. compile and install on windows using vc2008.
 # 8. create the manual on windows, using latex.
 # 9. call this script with argument doxygen
@@ -150,8 +150,11 @@ if [ "$arg" = "zipwin" ]
 then
   currentdir=`pwd`
   cd $exportdirwin
-	# add dlls to binzip
   cd bin 
+	# call cpack
+	cpack -C Release --config CPackConfig.cmake
+	cpack -C Release --config CPackSourceConfig.cmake
+	# add dlls to binzip
 	binzip="elastix-$fullversion-win32.zip"
 	cp d:/tk/install/libtiff3.dll .
 	cp d:/tk/install/jpeg62.dll .
@@ -173,6 +176,7 @@ then
   mkdir -p $tempdir
   mkdir -p $tempdir/download
   cp $exportdirwin/bin/*.zip $tempdir/download
+  cp $exportdirwin/bin/*.exe $tempdir/download
   cp $exportdirlinux64/release/*.tar.bz2 $tempdir/download
 #  cp $exportdirlinux32grid/release/*.tar.bz2 $tempdir/download
   cp $exportdirwin/dox/manual/manual.pdf $tempdir/download/elastix_manual_v$version.pdf
