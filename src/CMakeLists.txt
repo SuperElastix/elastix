@@ -116,7 +116,6 @@ SET( elxComponents_INCLUDE_DIRECTORIES
   ${elastix_SOURCE_DIR}/Components/Transforms
 )
 
-
 SET( elxINCLUDE_DIRECTORIES
   ${elxCommon_INCLUDE_DIRECTORIES}
   ${elxCore_INCLUDE_DIRECTORIES}
@@ -291,13 +290,27 @@ IF( ELASTIX_ENABLE_PACKAGER )
   # seems to be fixed in the upcoming CMake 2.8.3
   # Therefore, disable component support for now.
   #SET( CPACK_COMPONENTS_ALL core libraries Unspecified )
-  #SET( CPACK_COMPONENT_CORE_DISPLAY_NAME "Core files" )
-  #SET( CPACK_COMPONENT_LIBRARIES_DISPLAY_NAME "Libraries" )
-  #SET( CPACK_COMPONENT_CORE_DESCRIPTION "Contains elastix and transformix" )
-  #SET( CPACK_COMPONENT_LIBRARIES_DESCRIPTION "Contains the libraries" )
-  #SET( CPACK_COMPONENT_CORE_DEPENDS libraries )
-  #SET( CPACK_COMPONENT_CORE_REQUIRED ON )
-  #SET( CPACK_COMPONENT_LIBRARIES_REQUIRED ON )
+  #  CPACK_ADD_COMPONENT( core
+  #  "Core files"
+  #  DESCRIPTION "Contains elastix and transformix"
+  #  REQUIRED
+  #  DEPENDS libraries )
+#   [GROUP group]
+#   [DEPENDS comp1 comp2 ... ]
+#   [INSTALL_TYPES type1 type2 ... ]
+#   [DOWNLOADED]
+#   [ARCHIVE_FILE filename])
+  #CPACK_ADD_COMPONENT( libraries
+  #  "Libraries"
+  #  DESCRIPTION "Contains the libraries"
+  #  REQUIRED )
+#SET( CPACK_COMPONENT_CORE_DISPLAY_NAME "Core files" )
+#SET( CPACK_COMPONENT_LIBRARIES_DISPLAY_NAME "Libraries" )
+#SET( CPACK_COMPONENT_CORE_DESCRIPTION "Contains elastix and transformix" )
+#SET( CPACK_COMPONENT_LIBRARIES_DESCRIPTION "Contains the libraries" )
+#SET( CPACK_COMPONENT_CORE_DEPENDS libraries )
+#SET( CPACK_COMPONENT_CORE_REQUIRED ON )
+#SET( CPACK_COMPONENT_LIBRARIES_REQUIRED ON )
 
   # The default package filename is
   # ${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_SYSTEM_NAME}
@@ -330,7 +343,7 @@ IF( ELASTIX_ENABLE_PACKAGER )
 
   SET( CPACK_SET_DESTDIR "OFF")
 
-	SET( CPACK_SOURCE_INSTALLED_DIRECTORIES "${elastix_SOURCE_DIR};/src;${ELASTIX_DOXYGEN_DIR};/dox" ) 
+  SET( CPACK_SOURCE_INSTALLED_DIRECTORIES "${elastix_SOURCE_DIR};/src;${ELASTIX_DOX_DIR};/dox" ) 
 
   # ??
   #SET(CPACK_PACKAGE_EXECUTABLES "MyExecutable" "My Executable")
