@@ -42,40 +42,35 @@
 arg="$1"
 
 # You have to set the following
-version="4.3"
-tag="elastix_04_3"
+version="4.4"
+fullversion="4.4.0"
+tag="elastix_04_4"
 
 username="sklein"
 
 # Some base directories
-exportbasedirwin="d:/tk/elastix/exports"
-exportbasedirlinux64="m:/tk/elastix/exports"
+exportbasedirwin="d:/tk/elastix/export/tagspublic"
+exportbasedirlinux64="m:/tk/elastix/export/tagspublic"
 # when using rashindra's machine:
-exportbasedirlinux32="/home/stefan/tk/elastix/exports"
+exportbasedirlinux32="/home/stefan/tk/elastix/export/tagspublic"
 # when using the biggrid
-exportbasedirlinux32grid="m:/tk/elastix/exports"
-exportdirwin="$exportbasedirwin/tags/$tag"
-exportdirlinux64="$exportbasedirlinux64/tags/$tag"
+exportbasedirlinux32grid="m:/tk/elastix/export/tagspublic"
+exportdirwin="$exportbasedirwin/$tag"
+exportdirlinux64="$exportbasedirlinux64/$tag"
 # when using rashindra's computer:
-exportdirlinux32="$exportbasedirlinux32/tags/$tag"
+exportdirlinux32="$exportbasedirlinux32/$tag"
 # when using the biggrid
-exportdirlinux32grid="$exportbasedirlinux32grid/tags/$tag""linux32"
+exportdirlinux32grid="$exportbasedirlinux32grid/$tag""linux32"
 svnurl="https://svn.bigr.nl/elastix"
 tempdir="d:/dox/elastixwebsite/$tag"
 websitebase="http://elastix.isi.uu.nl"
 copyright="$exportdirwin/src/CopyrightElastix.txt"
 
-# The stuff we do not want to distribute
-leaveouts="src/Components/ImageSamplers/ReducedDimensionGrid src/Components/Metrics/AdvancedRigidityPenalty src/Components/Metrics/VarianceOverLastDimension src/Components/Metrics/ZeroDeformationConstraint src/Components/Optimizers/FullSearch2 src/Components/Optimizers/PreconditionedGradientDescent src/Components/Transforms/CyclicBSplineTransform src/Testing"
 
 # checkout linux64 export:
 if [ "$arg" = "exportlinux64" ]
 then
-  svn export --force --native-eol LF $svnurl/tags/$tag $exportdirlinux64
-  for leaveout in $leaveouts
-  do
-    rm -r $exportdirlinux64/$leaveout
-  done
+  svn export --native-eol LF $svnurl/tagspublic/$tag $exportdirlinux64
   mkdir -p $exportdirlinux64/install
   mkdir -p $exportdirlinux64/release
   mkdir -p $exportdirlinux64/help
@@ -85,11 +80,7 @@ fi
 # checkout linux32 export; Run this one directly on rashindra's computer!
 if [ "$arg" = "exportlinux32" ]
 then
-  svn export --native-eol LF $svnurl/tags/$tag $exportdirlinux32
-  for leaveout in $leaveouts
-  do
-    rm -r $exportdirlinux32/$leaveout
-  done
+  svn export --native-eol LF $svnurl/tagspublic/$tag $exportdirlinux32
   mkdir -p $exportdirlinux32/install
   mkdir -p $exportdirlinux32/release
   mkdir -p $exportdirlinux32/help
@@ -99,11 +90,7 @@ fi
 # checkout windows export:
 if [ "$arg" = "exportwin" ]
 then
-  svn export --native-eol CRLF $svnurl/tags/$tag $exportdirwin
-  for leaveout in $leaveouts
-  do
-    rm -r $exportdirwin/$leaveout
-  done
+  svn export --native-eol CRLF $svnurl/tagspublic/$tag $exportdirwin
   mkdir -p $exportdirwin/install
   mkdir -p $exportdirwin/bin
   mkdir -p $exportdirwin/help
@@ -127,14 +114,9 @@ then
   cd $exportdirlinux64
   # tar does not recognise m:/... filenames; convert to cygwin style.
   cwdir=`pwd`
-  # select which documentation to include in the source zip/tar
-  doxfordistribution=`find dox -type f | grep -v "dox/manual" | grep -v "dox/createWebsite"`
-  tar -cjvf $cwdir/elastix_sources_v$version.tar.bz2 src $doxfordistribution
-  cd install
-  cp ../src/CopyrightElastix.txt .
-  tar -cjvf $cwdir/elastix_linux64_v$version.tar.bz2 *
-  cd ../help
-  tar -cjvf $cwdir/elastix_example_v$version.tar.bz2 exampleinput example
+	# zip the example. todo: use cpack for this as well.
+  cd help
+  tar -cjvf $cwdir/release/elastix_example_v$version.tar.bz2 exampleinput example
   cd $currentdir
   exit
 fi
@@ -146,11 +128,7 @@ then
   cd $exportdirlinux32grid
   # tar does not recognise m:/... filenames; convert to cygwin style.
   cwdir=`pwd`
-  # select which documentation to include in the source zip/tar
-  doxfordistribution=`find dox -type f | grep -v "dox/manual" | grep -v "dox/createWebsite"`
-  cd install
-  cp ../src/CopyrightElastix.txt .
-  tar -cjvf $cwdir/elastix_linux32_v$version.tar.bz2 *
+	# do nothing
   cd $currentdir
   exit
 fi
@@ -162,9 +140,7 @@ then
   currentdir=`pwd`
   cd $exportdirlinux32
   cwdir=`pwd`
-  cd install
-  cp ../src/CopyrightElastix.txt .
-  tar -cjvf $cwdir/elastix_linux32_v$version.tar.bz2 *
+	# do nothing
   cd $currentdir
   exit
 fi
@@ -174,18 +150,18 @@ if [ "$arg" = "zipwin" ]
 then
   currentdir=`pwd`
   cd $exportdirwin
-  rm elastix*.zip
-  doxfordistribution=`find dox -type f | grep -v "dox/manual" | grep -v "dox/createWebsite"`
-  wzzip -ex -a -P $exportdirwin/elastix_sources_v$version.zip $doxfordistribution
-  wzzip -ex -a -r -P $exportdirwin/elastix_sources_v$version.zip src
-  cd install
-  cp ../src/CopyrightElastix.txt .
+	# add dlls to binzip
+  cd bin 
+	binzip="elastix-$fullversion-win32.zip"
 	cp d:/tk/install/libtiff3.dll .
 	cp d:/tk/install/jpeg62.dll .
 	cp d:/tk/install/zlib1.dll .
-  wzzip -ex -a -r -P $exportdirwin/elastix_windows32_v$version.zip *
+  wzzip -ex -a -r -P $exportdirwin/bin/$binzip *.dll
+	# create help zip
   cd ../help
-  wzzip -ex -a -r -P $exportdirwin/elastix_example_v$version.zip exampleinput example.bat
+	helpzip="elastix_example_v$version.zip"
+	rm $exportdirwin/bin/$helpzip
+  wzzip -ex -a -r -P $exportdirwin/bin/$helpzip exampleinput example.bat
   cd $currentdir
   exit
 fi
@@ -196,9 +172,9 @@ then
   rm -r $tempdir
   mkdir -p $tempdir
   mkdir -p $tempdir/download
-  cp $exportdirwin/*.zip $tempdir/download
-  cp $exportdirlinux64/*.tar.bz2 $tempdir/download
-#  cp $exportdirlinux32grid/*.tar.bz2 $tempdir/download
+  cp $exportdirwin/bin/*.zip $tempdir/download
+  cp $exportdirlinux64/release/*.tar.bz2 $tempdir/download
+#  cp $exportdirlinux32grid/release/*.tar.bz2 $tempdir/download
   cp $exportdirwin/dox/manual/manual.pdf $tempdir/download/elastix_manual_v$version.pdf
   cp -r $exportdirwin/help/html $tempdir/doxygen
 
