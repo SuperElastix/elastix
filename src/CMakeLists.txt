@@ -283,6 +283,10 @@ IF( ELASTIX_ENABLE_PACKAGER )
   SET( CPACK_PACKAGE_VERSION_MINOR ${ELASTIX_VERSION_MINOR} )
   SET( CPACK_PACKAGE_VERSION_PATCH "0" )
 
+  # Also install the copyright file, since when the user enables packaging
+  # we assume that the package is meant to distribute.
+  INSTALL( FILES "${elastix_SOURCE_DIR}/CopyrightElastix.txt" DESTINATION . )
+
   # We have split the elastix package into two components:
   # - the core: elastix and transformix
   # - the libraries: ANNlib and cudart when ELASTIX_USE_CUDA ON
@@ -343,6 +347,7 @@ IF( ELASTIX_ENABLE_PACKAGER )
 
   SET( CPACK_SET_DESTDIR "OFF")
 
+  # Manually set the source dirs to src and dox.
   SET( CPACK_SOURCE_INSTALLED_DIRECTORIES "${elastix_SOURCE_DIR};/src;${ELASTIX_DOX_DIR};/dox" ) 
 
   # ??
