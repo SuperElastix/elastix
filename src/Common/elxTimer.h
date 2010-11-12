@@ -71,7 +71,7 @@ public:
   itkTypeMacro( Timer, Object );
 
   /** My typedef's.*/
-  typedef std::vector<int>            TimeDHMSType;
+  typedef std::vector<std::size_t>         TimeDHMSType;
 
   /** Member functions.*/
   void StartTimer( void );
@@ -93,7 +93,7 @@ public:
   itkGetConstMacro( StopTime, time_t );
   itkGetConstMacro( ElapsedTime, time_t );
   //  itkGetConstMacro( ElapsedTimeDHMS, TimeDHMSType );
-  itkGetConstMacro( ElapsedTimeSec, int );
+  itkGetConstMacro( ElapsedTimeSec, std::size_t );
   itkGetConstMacro( ElapsedClock, double );
   itkGetConstMacro( ElapsedClockSec, double );
 

@@ -91,9 +91,9 @@ int Timer::ElapsedClockAndTime( void )
   this->m_ElapsedClockSec = static_cast<double>( this->m_ElapsedClock ) / CLOCKS_PER_SEC;
 
   /** Fill m_TimeDHMS. */
-  const unsigned int secondsPerMinute = 60;
-  const unsigned int secondsPerHour = 60 * secondsPerMinute;
-  const unsigned int secondsPerDay = 24 * secondsPerHour;
+  const std::size_t secondsPerMinute = 60;
+  const std::size_t secondsPerHour = 60 * secondsPerMinute;
+  const std::size_t secondsPerDay = 24 * secondsPerHour;
 
   std::size_t elapsedSeconds = this->m_ElapsedTimeSec;
   this->m_ElapsedTimeDHMS[ 0 ] = elapsedSeconds / secondsPerDay;
