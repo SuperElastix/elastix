@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxTimer_H_
 #define __elxTimer_H_
 
@@ -46,94 +45,91 @@ namespace tmr
 {
 using namespace itk;
 
-  /**
-   * \class Timer
-   * \brief A class to time the different parts of the registration.
-   *
-   * This class is a wrap around ctime.h. It is used to time the registration,
-   * to get the time per iteration, or whatever.
-   *
-   * \ingroup Timer
+/**
+ * \class Timer
+ * \brief A class to time the different parts of the registration.
+ *
+ * This class is a wrap around ctime.h. It is used to time the registration,
+ * to get the time per iteration, or whatever.
+ *
+ * \ingroup Timer
+ */
+
+class Timer : public Object
+{
+public:
+  /** Standard ITK-stuff.*/
+  typedef Timer                       Self;
+  typedef Object                      Superclass;
+  typedef SmartPointer<Self>          Pointer;
+  typedef SmartPointer<const Self>    ConstPointer;
+
+  /** Method for creation through the object factory.*/
+  itkNewMacro( Self );
+
+  /** Run-time type information (and related methods).*/
+  itkTypeMacro( Timer, Object );
+
+  /** My typedef's.*/
+  typedef std::vector<int>            TimeDHMSType;
+
+  /** Member functions.*/
+  void StartTimer( void );
+  int StopTimer( void );
+  int ElapsedClockAndTime( void );
+
+  /** Formatted Output Functions
+   * (return the time as a string, with comments)
    */
+  const std::string & PrintStartTime( void );
+  const std::string & PrintStopTime( void );
+  const std::string & PrintElapsedTimeDHMS( void );
+  const std::string & PrintElapsedTimeSec( void );
+  const std::string & PrintElapsedClock( void );
+  const std::string & PrintElapsedClockSec( void );
 
-  class Timer : public Object
-  {
-  public:
+  /** Communication with outside world.*/
+  itkGetConstMacro( StartTime, time_t );
+  itkGetConstMacro( StopTime, time_t );
+  itkGetConstMacro( ElapsedTime, time_t );
+  //  itkGetConstMacro( ElapsedTimeDHMS, TimeDHMSType );
+  itkGetConstMacro( ElapsedTimeSec, int );
+  itkGetConstMacro( ElapsedClock, double );
+  itkGetConstMacro( ElapsedClockSec, double );
 
-    /** Standard ITK-stuff.*/
-    typedef Timer                       Self;
-    typedef Object                      Superclass;
-    typedef SmartPointer<Self>          Pointer;
-    typedef SmartPointer<const Self>    ConstPointer;
+protected:
 
-    /** Method for creation through the object factory.*/
-    itkNewMacro( Self );
+  Timer();
+  virtual ~Timer(){};
 
-    /** Run-time type information (and related methods).*/
-    itkTypeMacro( Timer, Object );
+  /** Variables that store program arguments.*/
+  time_t        m_StartTime;
+  clock_t       m_StartClock;
+  time_t        m_StopTime;
+  clock_t       m_StopClock;
+  double        m_ElapsedTime;
+  clock_t       m_ElapsedClock;
+  TimeDHMSType  m_ElapsedTimeDHMS;
+  std::size_t   m_ElapsedTimeSec;
+  double        m_ElapsedClockSec;
 
-    /** My typedef's.*/
-    typedef std::vector<int>            TimeDHMSType;
+  /** Strings that serve as output of the Formatted Output Functions */
+  std::string m_StartTimeString;
+  std::string m_StopTimeString;
+  std::string m_ElapsedTimeDHMSString;
+  std::string m_ElapsedTimeSecString;
+  std::string m_ElapsedClockString;
+  std::string m_ElapsedClockSecString;
 
-    /** Member functions.*/
-    void  StartTimer(void);
-    int   StopTimer(void);
-    int   ElapsedClockAndTime(void);
+private:
 
-    /** Formatted Output Functions
-     * (return the time as a string, with comments)
-     */
-    const std::string & PrintStartTime(void);
-    const std::string & PrintStopTime(void);
-    const std::string & PrintElapsedTimeDHMS(void);
-    const std::string & PrintElapsedTimeSec(void);
-    const std::string & PrintElapsedClock(void);
-    const std::string & PrintElapsedClockSec(void);
+  Timer( const Self& );           // purposely not implemented
+  void operator=( const Self& );  // purposely not implemented
 
-
-    /** Communication with outside world.*/
-    itkGetConstMacro( StartTime, time_t );
-    itkGetConstMacro( StopTime, time_t );
-    itkGetConstMacro( ElapsedTime, time_t );
-    //  itkGetConstMacro( ElapsedTimeDHMS, TimeDHMSType );
-    itkGetConstMacro( ElapsedTimeSec, int );
-    itkGetConstMacro( ElapsedClock, double );
-    itkGetConstMacro( ElapsedClockSec, double );
-
-  protected:
-
-    Timer();
-    virtual ~Timer();
-
-    /** Variables that store program arguments.*/
-    time_t        m_StartTime;
-    clock_t       m_StartClock;
-    time_t        m_StopTime;
-    clock_t       m_StopClock;
-    time_t        m_ElapsedTime;
-    clock_t       m_ElapsedClock;
-    TimeDHMSType  m_ElapsedTimeDHMS;
-    int           m_ElapsedTimeSec;
-    double        m_ElapsedClockSec;
-
-    /** Strings that serve as output of the Formatted Output Functions */
-    std::string m_StartTimeString;
-    std::string m_StopTimeString;
-    std::string m_ElapsedTimeDHMSString;
-    std::string m_ElapsedTimeSecString;
-    std::string m_ElapsedClockString;
-    std::string m_ElapsedClockSecString;
-
-  private:
-
-    Timer( const Self& );           // purposely not implemented
-    void operator=( const Self& );  // purposely not implemented
-
-  }; // end class Timer
+}; // end class Timer
 
 
 } // end namespace tmr
 
 
 #endif // end #ifndef __elxTimer_H_
-
