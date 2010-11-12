@@ -347,8 +347,10 @@ IF( ELASTIX_ENABLE_PACKAGER )
 
   SET( CPACK_SET_DESTDIR "OFF")
 
-  # Manually set the source dirs to src and dox.
-  SET( CPACK_SOURCE_INSTALLED_DIRECTORIES "${elastix_SOURCE_DIR};/src;${ELASTIX_DOX_DIR};/dox" ) 
+  # Make sure the directory structure is kept in the source zip
+  # and that also the dox directory is included.
+  SET( CPACK_SOURCE_INSTALLED_DIRECTORIES
+    "${elastix_SOURCE_DIR};/src;${ELASTIX_DOX_DIR};/dox" )
 
   # ??
   #SET(CPACK_PACKAGE_EXECUTABLES "MyExecutable" "My Executable")
