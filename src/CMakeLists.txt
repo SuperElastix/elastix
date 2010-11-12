@@ -359,6 +359,16 @@ IF( ELASTIX_ENABLE_PACKAGER )
     # Make sure there is at least one set of four (4) backlashes
     # (CMake escapes 2, and the other gets escaped too in some second step)
 
+    # Manually indicate the location of the DLLs needed for libtiff. 
+    # This process should be automated somehow. 
+    # jpeg62.dll and zlib1.dll also should be present in this directory.
+    IF( ELASTIX_USE_MEVISDICOMTIFF )
+      SET ( ELASTIX_LIBTIFF3_BIN_DIR "" CACHE PATH "Directory that contains libtiff3.dll")
+      INSTALL( FILES "${ELASTIX_LIBTIFF3_BIN_DIR}/libtiff3.dll" DESTINATION . )
+      INSTALL( FILES "${ELASTIX_LIBTIFF3_BIN_DIR}/jpeg62.dll" DESTINATION . )
+      INSTALL( FILES "${ELASTIX_LIBTIFF3_BIN_DIR}/zlib1.dll" DESTINATION . )
+    ENDIF() 
+
     # Set the generators. If left blank the user has all options.
     SET( CPACK_GENERATOR "NSIS;ZIP")
 
