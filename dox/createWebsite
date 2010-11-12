@@ -49,12 +49,12 @@ tag="elastix_04_4"
 username="sklein"
 
 # Some base directories
-exportbasedirwin="d:/tk/elastix/export/tagspublic"
-exportbasedirlinux64="m:/tk/elastix/export/tagspublic"
+exportbasedirwin="d:/tk/elastix/exports/tagspublic"
+exportbasedirlinux64="m:/tk/elastix/exports/tagspublic"
 # when using rashindra's machine:
-exportbasedirlinux32="/home/stefan/tk/elastix/export/tagspublic"
+exportbasedirlinux32="/home/stefan/tk/elastix/exports/tagspublic"
 # when using the biggrid
-exportbasedirlinux32grid="m:/tk/elastix/export/tagspublic"
+exportbasedirlinux32grid="m:/tk/elastix/exports/tagspublic"
 exportdirwin="$exportbasedirwin/$tag"
 exportdirlinux64="$exportbasedirlinux64/$tag"
 # when using the biggrid
@@ -147,7 +147,8 @@ then
 	cpack -C Release --config CPackSourceConfig.cmake
 	# rename zips to website convention
 	mv elastix-$fullversion-win32.zip elastix_windows32_v$version.zip
-	mv elastix-$fullversion-Source.zip 
+	mv elastix-$fullversion-win32.exe elastix_windows32_v$version.exe
+	mv elastix-$fullversion-Source.zip elastix_sources_v$version.zip 
 	# create help zip
   cd ../help
 	helpzip="elastix_example_v$version.zip"
