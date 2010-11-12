@@ -23,7 +23,10 @@ MACRO( ADD_ELX_TEST name )
 
   # Link against other libraries.
   TARGET_LINK_LIBRARIES( ${ELXTEST_EXECUTABLE_NAME}
-    ITKCommon ITKBasicFilters )
+    ITKCommon ITKBasicFilters elxCommon )
+
+  # Group in IDE's like Visual Studio
+  SET_PROPERTY( TARGET ${ELXTEST_EXECUTABLE_NAME} PROPERTY FOLDER "tests" )
 
   # Add the test.
   ADD_TEST( ${ELXTEST_TEST_NAME} ${ELXTEST_EXECUTABLE_NAME} ${ARGN} )
@@ -38,3 +41,5 @@ ADD_ELX_TEST( BSplineInterpolationWeightFunctionTest )
 ADD_ELX_TEST( BSplineInterpolationDerivativeWeightFunctionTest )
 ADD_ELX_TEST( BSplineInterpolationSODerivativeWeightFunctionTest )
 ADD_ELX_TEST( AdvancedBSplineDeformableTransformTest ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt)
+ADD_ELX_TEST( TimerTest )
+
