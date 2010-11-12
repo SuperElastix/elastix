@@ -57,8 +57,6 @@ exportbasedirlinux32="/home/stefan/tk/elastix/export/tagspublic"
 exportbasedirlinux32grid="m:/tk/elastix/export/tagspublic"
 exportdirwin="$exportbasedirwin/$tag"
 exportdirlinux64="$exportbasedirlinux64/$tag"
-# when using rashindra's computer:
-exportdirlinux32="$exportbasedirlinux32/$tag"
 # when using the biggrid
 exportdirlinux32grid="$exportbasedirlinux32grid/$tag""linux32"
 svnurl="https://svn.bigr.nl/elastix"
@@ -77,7 +75,7 @@ then
   exit
 fi
 
-# checkout linux32 export; Run this one directly on rashindra's computer!
+# checkout linux32 export; Run this one directly on a linux32 system!
 if [ "$arg" = "exportlinux32" ]
 then
   svn export --native-eol LF $svnurl/tagspublic/$tag $exportdirlinux32
@@ -114,6 +112,9 @@ then
   cd $exportdirlinux64
   # tar does not recognise m:/... filenames; convert to cygwin style.
   cwdir=`pwd`
+	# rename the tar.bz2 to the website convention
+	mv release/elastix-$fullversion-Linux.tar.bz2 release/elastix_linux64_v$version.tar.bz2
+	mv release/elastix-$fullversion-Source.tar.bz2 release/elastix_sources_v$version.tar.bz2
 	# zip the example. todo: use cpack for this as well.
   cd help
   tar -cjvf $cwdir/release/elastix_example_v$version.tar.bz2 exampleinput example
@@ -128,18 +129,8 @@ then
   cd $exportdirlinux32grid
   # tar does not recognise m:/... filenames; convert to cygwin style.
   cwdir=`pwd`
-	# do nothing
-  cd $currentdir
-  exit
-fi
-
-# zip linux32: run this one directly on rashindra's computer
-if [ "$arg" = "ziplinux32" ]
-then
-  # zip only binaries
-  currentdir=`pwd`
-  cd $exportdirlinux32
-  cwdir=`pwd`
+	# rename the tar.bz2 to the website convention
+	mv release/elastix-$fullversion-Linux.tar.bz2 release/elastix_linux64_v$version.tar.bz2
 	# do nothing
   cd $currentdir
   exit
@@ -154,12 +145,9 @@ then
 	# call cpack
 	cpack -C Release --config CPackConfig.cmake
 	cpack -C Release --config CPackSourceConfig.cmake
-	# add dlls to binzip
-	binzip="elastix-$fullversion-win32.zip"
-	cp d:/tk/install/libtiff3.dll .
-	cp d:/tk/install/jpeg62.dll .
-	cp d:/tk/install/zlib1.dll .
-  wzzip -ex -a -r -P $exportdirwin/bin/$binzip *.dll
+	# rename zips to website convention
+	mv elastix-$fullversion-win32.zip elastix_windows32_v$version.zip
+	mv elastix-$fullversion-Source.zip 
 	# create help zip
   cd ../help
 	helpzip="elastix_example_v$version.zip"
