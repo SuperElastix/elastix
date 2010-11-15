@@ -159,6 +159,7 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
 ::CombinationImageToImageMetric()
 {
   this->m_NumberOfMetrics = 0;
+  this->m_UseRelativeWeights = false;
   this->ComputeGradientOff();
 
 } // end Constructor
@@ -177,23 +178,18 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
   Superclass::PrintSelf( os, indent );
 
   /** Add debugging information. */
-  os << indent << "NumberOfMetrics: "
+  os << "NumberOfMetrics: "
     << this->m_NumberOfMetrics << std::endl;
-  os << indent << "Metric pointer, weight, value:" << std::endl;
   for ( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
   {
-    os << indent << "Metric " << i << ": "
-      << this->m_Metrics[ i ].GetPointer() << ", "
-      << this->m_MetricWeights[ i ] << ", "
-      << this->m_MetricValues[ i ] << ", ";
-    if ( this->m_UseMetric[ i ] )
-    {
-      os << "used" << std::endl;
-    }
-    else
-    {
-      os << "not used" << std::endl;
-    }
+    os << "Metric " << i << ":\n";
+    os << indent << "MetricPointer: " << this->m_Metrics[ i ].GetPointer() << "\n";
+    os << indent << "MetricWeight: " << this->m_MetricWeights[ i ] << "\n";
+    os << indent << "MetricRelativeWeight: " << this->m_MetricRelativeWeights[ i ] << "\n";
+    os << indent << "UseRelativeWeights: " << ( this->m_UseRelativeWeights ? "true\n" : "false\n" );
+    os << indent << "MetricValue: " << this->m_MetricValues[ i ] << "\n";
+    os << indent << "MetricDerivativesMagnitude: "  << this->m_MetricDerivativesMagnitude[ i ] << "\n";
+    os << indent << "UseMetric: " << ( this->m_UseMetric[ i ] ? "true\n" : "false\n" );
   }
 
 } // end PrintSelf()
@@ -277,9 +273,11 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
     this->m_NumberOfMetrics = count;
     this->m_Metrics.resize( count );
     this->m_MetricWeights.resize( count );
+    this->m_MetricRelativeWeights.resize( count );
     this->m_UseMetric.resize( count );
     this->m_MetricValues.resize( count );
     this->m_MetricDerivatives.resize( count );
+    this->m_MetricDerivativesMagnitude.resize( count );
     this->Modified();
   }
 
@@ -351,7 +349,7 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
     this->Modified();
   }
 
-} // end SetMetricsWeight()
+} // end SetMetricWeight()
 
 
 /**
@@ -373,6 +371,50 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
   }
 
 } // end GetMetricWeight()
+
+
+/**
+ * ********************* SetMetricRelativeWeight ****************************
+ */
+
+template <class TFixedImage, class TMovingImage>
+void
+CombinationImageToImageMetric<TFixedImage,TMovingImage>
+::SetMetricRelativeWeight( double weight, unsigned int pos )
+{
+  if ( pos >= this->GetNumberOfMetrics() )
+  {
+    this->SetNumberOfMetrics( pos + 1 );
+  }
+
+  if ( weight != this->m_MetricRelativeWeights[ pos ] )
+  {
+    this->m_MetricRelativeWeights[ pos ] = weight;
+    this->Modified();
+  }
+
+} // end SetMetricRelativeWeight()
+
+
+/**
+ * ********************* GetMetricRelativeWeight ****************************
+ */
+
+template <class TFixedImage, class TMovingImage>
+double
+CombinationImageToImageMetric<TFixedImage,TMovingImage>
+::GetMetricRelativeWeight( unsigned int pos ) const
+{
+  if ( pos >= this->GetNumberOfMetrics() )
+  {
+    return 0.0;
+  }
+  else
+  {
+    return this->m_MetricRelativeWeights[ pos ];
+  }
+
+} // end GetMetricRelativeWeight()
 
 
 /**
@@ -480,7 +522,28 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
     return this->m_MetricDerivatives[ pos ];
   }
 
-} // end GetMetricValue()
+} // end GetMetricDerivative()
+
+
+/**
+ * ********************* GetMetricDerivativeMagnitude ****************************
+ */
+
+template <class TFixedImage, class TMovingImage>
+double
+CombinationImageToImageMetric<TFixedImage,TMovingImage>
+::GetMetricDerivativeMagnitude( unsigned int pos ) const
+{
+  if ( pos >= this->GetNumberOfMetrics() )
+  {
+    return 0.0;
+  }
+  else
+  {
+    return this->m_MetricDerivativesMagnitude[ pos ];
+  }
+
+} // end GetMetricDerivativeMagnitude()
 
 
 /**
@@ -575,18 +638,36 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
   /** Initialise. */
   MeasureType measure = NumericTraits< MeasureType >::Zero;
 
-  /** Add all metric values. */
+  /** Compute, store and combine all metric values. */
   for ( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
   {
+    /** Compute ... */
     MeasureType tmpValue = this->m_Metrics[ i ]->GetValue( parameters );
 
+    /** store ... */
+    this->m_MetricValues[ i ] = tmpValue;
+
+    /** and combine. */
     if ( this->m_UseMetric[ i ] )
     {
-      measure += this->m_MetricWeights[ i ] * tmpValue;
+      if ( !this->m_UseRelativeWeights )
+      {
+        measure += this->m_MetricWeights[ i ] * this->m_MetricValues[ i ];
+      }
+      else
+      {
+        /** The relative weight of metric i is such that the
+         * value of metric i is rescaled
+         * to be a fraction of that of metric 0; the fraction is
+         * defined by the fraction of the two relative weights.
+         * Note that this weight is different in each iteration.
+         */
+        double weight = this->m_MetricRelativeWeights[ i ]
+          * this->m_MetricValues[ 0 ]
+          / this->m_MetricValues[ i ];
+        measure += weight * this->m_MetricValues[ i ];
+      }
     }
-
-    /** Store for later, for interested users. */
-    this->m_MetricValues[ i ] = tmpValue;
   }
 
   /** Return a value. */
@@ -610,19 +691,38 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
   derivative = DerivativeType( this->GetNumberOfParameters() );
   derivative.Fill( NumericTraits< MeasureType >::Zero );
 
-  /** Add all metric derivatives. */
+  /** Compute, store and combine all metric derivatives. */
   for ( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
   {
+    /** Compute ... */
     tmpDerivative.Fill( NumericTraits< MeasureType >::Zero );
     this->m_Metrics[ i ]->GetDerivative( parameters, tmpDerivative );
 
+    /** store ... */
+    this->m_MetricDerivatives[ i ] = tmpDerivative;
+    this->m_MetricDerivativesMagnitude[ i ] = tmpDerivative.magnitude();
+  
+    /** and combine. */
     if ( this->m_UseMetric[ i ] )
     {
-      derivative += this->m_MetricWeights[ i ] * tmpDerivative;
+      if ( !this->m_UseRelativeWeights )
+      {
+        derivative += this->m_MetricWeights[ i ] * this->m_MetricDerivatives[ i ];
+      }
+      else
+      {
+        /** The relative weight of metric i is such that the
+         * magnitude of the derivative of metric i is rescaled
+         * to be a fraction of that of metric 0; the fraction is
+         * defined by the fraction of the two relative weights.
+         * Note that this weight is different in each iteration.
+         */
+        double weight = this->m_MetricRelativeWeights[ i ]
+          * this->m_MetricDerivativesMagnitude[ 0 ]
+          / this->m_MetricDerivativesMagnitude[ i ];
+        derivative += weight * this->m_MetricDerivatives[ i ];
+      }
     }
-
-    /** Store for later, for interested users. */
-    this->m_MetricDerivatives[ i ] = tmpDerivative;
   }
 
 } // end GetDerivative()
@@ -648,26 +748,46 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
   derivative = DerivativeType( this->GetNumberOfParameters() );
   derivative.Fill( NumericTraits< MeasureType >::Zero );
 
-  /** Add all metric values and derivatives. */
+  /** Compute, store and combine all metric values and derivatives. */
   for ( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
   {
+    /** Compute ... */
     tmpValue = NumericTraits< MeasureType >::Zero;
     tmpDerivative.Fill( NumericTraits< MeasureType >::Zero );
     this->m_Metrics[ i ]->GetValueAndDerivative( parameters, tmpValue, tmpDerivative );
 
-    if ( this->m_UseMetric[ i ] )
-    {
-      value += this->m_MetricWeights[ i ] * tmpValue;
-      derivative += this->m_MetricWeights[ i ] * tmpDerivative;
-    }
-
-    /** Store for later, for interested users. */
+    /** store ... */
     this->m_MetricValues[ i ] = tmpValue;
     this->m_MetricDerivatives[ i ] = tmpDerivative;
-
+    this->m_MetricDerivativesMagnitude[ i ] = tmpDerivative.magnitude();
+  
+    /** and combine. */
+    if ( this->m_UseMetric[ i ] )
+    {
+      if ( !this->m_UseRelativeWeights )
+      {
+        value += this->m_MetricWeights[ i ] * this->m_MetricValues[ i ];
+        derivative += this->m_MetricWeights[ i ] * this->m_MetricDerivatives[ i ];
+      }
+      else
+      {
+        /** The relative weight of metric i is such that the
+         * magnitude of the derivative of metric i is rescaled
+         * to be a fraction of that of metric 0; the fraction is
+         * defined by the fraction of the two relative weights.
+         * Note that this weight is different in each iteration.
+         */
+        double weight = this->m_MetricRelativeWeights[ i ]
+          * this->m_MetricDerivativesMagnitude[ 0 ]
+          / this->m_MetricDerivativesMagnitude[ i ];
+        value += weight * this->m_MetricValues[ i ];
+        derivative += weight * this->m_MetricDerivatives[ i ];
+      }
+    }
   }
 
 } // end GetValueAndDerivative()
+
 
 /**
  * ********************* GetSelfHessian ****************************

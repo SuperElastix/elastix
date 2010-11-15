@@ -27,8 +27,6 @@ namespace itk
  * This metric is meant to be used in the
  * MultiMetricMultiResolutionImageRegistrationMethod.
  *
- * NB: The first metric must be of type itk::ImageToImageMetric!
- *
  * NB: while it may seem not logical that the SetInterpolator(arg)
  * sets the interpolator in all submetrics whereas the
  * GetInterpolator(void) returns GetInterpolator(0) it is logical.
@@ -115,7 +113,6 @@ public:
   typedef typename Superclass::HessianValueType           HessianValueType;
   typedef typename Superclass::HessianType                HessianType;
 
-
   /**
   typedef typename Superclass::ImageSamplerType             ImageSamplerType;
   typedef typename Superclass::ImageSamplerPointer          ImageSamplerPointer;
@@ -185,6 +182,16 @@ public:
   /** Get the weight for metric i. */
   double GetMetricWeight( unsigned int pos ) const;
 
+  /** Set the relative weight for metric i. */
+  void SetMetricRelativeWeight( double weight, unsigned int pos );
+
+  /** Get the relative weight for metric i. */
+  double GetMetricRelativeWeight( unsigned int pos ) const;
+
+  /** Set and Get the UseRelativeWeights variable. */
+  itkSetMacro( UseRelativeWeights, bool );
+  itkGetMacro( UseRelativeWeights, bool );
+
   /** Select which metrics are used.
    * This is useful in case you want to compute a certain measure, but not
    * actually use it during the registration.
@@ -204,9 +211,12 @@ public:
   /** Get the last computed derivative for metric i. */
   const DerivativeType & GetMetricDerivative( unsigned int pos ) const;
 
+  /** Get the last computed derivative magnitude for metric i. */
+  double GetMetricDerivativeMagnitude( unsigned int pos ) const;
+
   /**
    * Set/Get functions for the metric components
-   **/
+   */
 
   /** Pass the transform to all sub metrics.  */
   virtual void SetTransform( TransformType * _arg );
@@ -362,8 +372,10 @@ public:
     MeasureType & value,
     DerivativeType & derivative ) const;
 
-  /** Experimental feature: compute SelfHessian */
-  virtual void GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const;
+  /** Experimental feature: compute SelfHessian. */
+  virtual void GetSelfHessian(
+    const TransformParametersType & parameters,
+    HessianType & H ) const;
 
   /** Method to return the latest modified time of this object or any of its
    * cached ivars.
@@ -379,11 +391,14 @@ protected:
   unsigned int                                      m_NumberOfMetrics;
   std::vector< SingleValuedCostFunctionPointer >    m_Metrics;
   std::vector< double >                             m_MetricWeights;
+  std::vector< double >                             m_MetricRelativeWeights;
+  bool                                              m_UseRelativeWeights;
   std::vector< bool >                               m_UseMetric;
   mutable std::vector< MeasureType >                m_MetricValues;
   mutable std::vector< DerivativeType >             m_MetricDerivatives;
+  mutable std::vector< double >                     m_MetricDerivativesMagnitude;
 
-  /** dummy image region and derivatives */
+  /** Dummy image region and derivatives. */
   FixedImageRegionType        m_NullFixedImageRegion;
   DerivativeType              m_NullDerivative;
 

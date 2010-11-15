@@ -61,10 +61,27 @@ using namespace itk;
  * \parameter NumberOfResolutions: the number of resolutions used. \n
  *    example: <tt>(NumberOfResolutions 4)</tt> \n
  *    The default is 3.\n
- * \parameter Metric\<i\>Weight: The weight for the i-th metric, in each resolution \n
+ * \parameter Metric\<i\>Weight: The weight for the i-th metric,
+ *    in each resolution. \n
  *    example: <tt>(Metric0Weight 0.5 0.5 0.8)</tt> \n
  *    example: <tt>(Metric1Weight 0.5 0.5 0.2)</tt> \n
- *    The default is 1.0.
+ *    The default is 1 / numberOfMetrics.
+ * \parameter Metric\<i\>RelativeWeight: The relative weight \f$rw_i\f$
+ *    for the i-th metric, in each resolution. \n
+ *    This is an alternative to the default Metric\<i\>Weight and can
+ *    be selected with the parameter UseRelativeWeights. The weight \f$w_i\f$
+ *    is computed in each iteration based on the magnitude of the metric
+ *    derivative (gradient) \f$|g_i|\f$ related to that of the first metric
+ *    \f$|g_0|\f$. It is done such that the fraction \f$|g_0|/|g_i|\f$ is
+ *    identical to \f$rw_0/rw_i\f$, so
+ *      \f[w_i = rw_i |g_0|/|g_i|.\f]
+ *    example: <tt>(Metric0RelativeWeight 0.5 0.5 0.8)</tt> \n
+ *    example: <tt>(Metric1RelativeWeight 0.5 0.5 0.2)</tt> \n
+ *    The default is 1 / numberOfMetrics.
+ * \parameter UseRelativeWeights: Whether relative weights are used
+ *    or simple static, fixed weights. \n
+ *    example: <tt>(UseRelativeWeights "false" "true")</tt> \n
+ *    The default is "false", which means using Metric\<i\>Weight.
  * \parameter Metric\<i\>Use: Whether the i-th metric is only computed or
  *    also used, in each resolution. \n
  *    example: <tt>(Metric0Use "false" "true")</tt> \n
