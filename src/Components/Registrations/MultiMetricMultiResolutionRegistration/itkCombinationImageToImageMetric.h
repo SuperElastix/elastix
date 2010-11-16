@@ -214,6 +214,9 @@ public:
   /** Get the last computed derivative magnitude for metric i. */
   double GetMetricDerivativeMagnitude( unsigned int pos ) const;
 
+  /** Get the last computed derivative magnitude for metric i. */
+  std::size_t GetMetricComputationTime( unsigned int pos ) const;
+
   /**
    * Set/Get functions for the metric components
    */
@@ -397,6 +400,7 @@ protected:
   mutable std::vector< MeasureType >                m_MetricValues;
   mutable std::vector< DerivativeType >             m_MetricDerivatives;
   mutable std::vector< double >                     m_MetricDerivativesMagnitude;
+  mutable std::vector< std::size_t >                m_MetricComputationTime;
 
   /** Dummy image region and derivatives. */
   FixedImageRegionType        m_NullFixedImageRegion;

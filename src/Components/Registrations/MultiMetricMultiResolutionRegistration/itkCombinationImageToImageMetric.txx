@@ -16,6 +16,7 @@
 #define _itkCombinationImageToImageMetric_txx
 
 #include "itkCombinationImageToImageMetric.h"
+#include "elxTimer.h"
 
 
 /** Macros to reduce some copy-paste work.
@@ -190,6 +191,7 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
     os << indent << "MetricValue: " << this->m_MetricValues[ i ] << "\n";
     os << indent << "MetricDerivativesMagnitude: "  << this->m_MetricDerivativesMagnitude[ i ] << "\n";
     os << indent << "UseMetric: " << ( this->m_UseMetric[ i ] ? "true\n" : "false\n" );
+    os << indent << "MetricComputationTime: " << this->m_MetricComputationTime[ i ] << "\n";
   }
 
 } // end PrintSelf()
@@ -278,6 +280,7 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
     this->m_MetricValues.resize( count );
     this->m_MetricDerivatives.resize( count );
     this->m_MetricDerivativesMagnitude.resize( count );
+    this->m_MetricComputationTime.resize( count );
     this->Modified();
   }
 
@@ -547,6 +550,27 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
 
 
 /**
+ * ********************* GetMetricComputationTime ****************************
+ */
+
+template <class TFixedImage, class TMovingImage>
+std::size_t
+CombinationImageToImageMetric<TFixedImage,TMovingImage>
+::GetMetricComputationTime( unsigned int pos ) const
+{
+  if ( pos >= this->GetNumberOfMetrics() )
+  {
+    return 0;
+  }
+  else
+  {
+    return this->m_MetricComputationTime[ pos ];
+  }
+
+} // end GetMetricComputationTime()
+
+
+/**
  * **************** GetNumberOfPixelsCounted ************************
  */
 
@@ -594,15 +618,6 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
     itkExceptionMacro( << "At least one metric should be set!" );
   }
 
-  /** Check the first metric. */
-//   ImageMetricType * firstMetric = dynamic_cast<ImageMetricType *>(
-//     this->GetMetric( 0 ) );
-//   if ( !firstMetric )
-//   {
-//     itkExceptionMacro( << "The first sub metric must be of type ImageToImageMetric!" );
-//     itkWarningMacro( << "The first sub metric is not of type ImageToImageMetric!" );
-//   }
-
   /** Call Initialize for all metrics. */
   for ( unsigned int i = 0; i < this->GetNumberOfMetrics() ; i++ )
   {
@@ -641,11 +656,17 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
   /** Compute, store and combine all metric values. */
   for ( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
   {
+    /** Time the computation per metric. */
+    typename tmr::Timer::Pointer timer = tmr::Timer::New();
+    timer->StartTimer();
+
     /** Compute ... */
     MeasureType tmpValue = this->m_Metrics[ i ]->GetValue( parameters );
+    timer->StopTimer();
 
     /** store ... */
     this->m_MetricValues[ i ] = tmpValue;
+    this->m_MetricComputationTime[ i ] = timer->GetElapsedClockSec() * 1000;
 
     /** and combine. */
     if ( this->m_UseMetric[ i ] )
@@ -662,10 +683,14 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
          * defined by the fraction of the two relative weights.
          * Note that this weight is different in each iteration.
          */
-        double weight = this->m_MetricRelativeWeights[ i ]
-          * this->m_MetricValues[ 0 ]
-          / this->m_MetricValues[ i ];
-        measure += weight * this->m_MetricValues[ i ];
+        double weight = 1.0;
+        if ( this->m_MetricValues[ i ] > 1e-10 )
+        {
+          weight = this->m_MetricRelativeWeights[ i ]
+            * this->m_MetricValues[ 0 ]
+            / this->m_MetricValues[ i ];
+          measure += weight * this->m_MetricValues[ i ];
+        }
       }
     }
   }
@@ -694,13 +719,19 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
   /** Compute, store and combine all metric derivatives. */
   for ( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
   {
+    /** Time the computation per metric. */
+    typename tmr::Timer::Pointer timer = tmr::Timer::New();
+    timer->StartTimer();
+
     /** Compute ... */
     tmpDerivative.Fill( NumericTraits< MeasureType >::Zero );
     this->m_Metrics[ i ]->GetDerivative( parameters, tmpDerivative );
+    timer->StopTimer();
 
     /** store ... */
     this->m_MetricDerivatives[ i ] = tmpDerivative;
     this->m_MetricDerivativesMagnitude[ i ] = tmpDerivative.magnitude();
+    this->m_MetricComputationTime[ i ] = timer->GetElapsedClockSec() * 1000;
   
     /** and combine. */
     if ( this->m_UseMetric[ i ] )
@@ -717,10 +748,14 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
          * defined by the fraction of the two relative weights.
          * Note that this weight is different in each iteration.
          */
-        double weight = this->m_MetricRelativeWeights[ i ]
-          * this->m_MetricDerivativesMagnitude[ 0 ]
-          / this->m_MetricDerivativesMagnitude[ i ];
-        derivative += weight * this->m_MetricDerivatives[ i ];
+        double weight = 1.0;
+        if ( this->m_MetricDerivativesMagnitude[ i ] > 1e-10 )
+        {
+          weight = this->m_MetricRelativeWeights[ i ]
+            * this->m_MetricDerivativesMagnitude[ 0 ]
+            / this->m_MetricDerivativesMagnitude[ i ];
+          derivative += weight * this->m_MetricDerivatives[ i ];
+        }
       }
     }
   }
@@ -751,15 +786,21 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
   /** Compute, store and combine all metric values and derivatives. */
   for ( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
   {
+    /** Time the computation per metric. */
+    typename tmr::Timer::Pointer timer = tmr::Timer::New();
+    timer->StartTimer();
+
     /** Compute ... */
     tmpValue = NumericTraits< MeasureType >::Zero;
     tmpDerivative.Fill( NumericTraits< MeasureType >::Zero );
     this->m_Metrics[ i ]->GetValueAndDerivative( parameters, tmpValue, tmpDerivative );
+    timer->StopTimer();
 
     /** store ... */
     this->m_MetricValues[ i ] = tmpValue;
     this->m_MetricDerivatives[ i ] = tmpDerivative;
     this->m_MetricDerivativesMagnitude[ i ] = tmpDerivative.magnitude();
+    this->m_MetricComputationTime[ i ] = timer->GetElapsedClockSec() * 1000;
   
     /** and combine. */
     if ( this->m_UseMetric[ i ] )
@@ -777,9 +818,13 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
          * defined by the fraction of the two relative weights.
          * Note that this weight is different in each iteration.
          */
-        double weight = this->m_MetricRelativeWeights[ i ]
-          * this->m_MetricDerivativesMagnitude[ 0 ]
-          / this->m_MetricDerivativesMagnitude[ i ];
+        double weight = 1.0;
+        if ( this->m_MetricDerivativesMagnitude[ i ] > 1e-10 )
+        {
+          weight = this->m_MetricRelativeWeights[ i ]
+            * this->m_MetricDerivativesMagnitude[ 0 ]
+            / this->m_MetricDerivativesMagnitude[ i ];
+        }
         value += weight * this->m_MetricValues[ i ];
         derivative += weight * this->m_MetricDerivatives[ i ];
       }

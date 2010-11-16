@@ -78,6 +78,11 @@ MultiMetricMultiResolutionRegistration<TElastix>
     makestring2 << "4:||Gradient" << i << "||";
     xout["iteration"].AddTargetCell( makestring2.str().c_str() );
     xl::xout["iteration"][ makestring2.str().c_str() ] << std::showpoint << std::fixed;
+
+    std::ostringstream makestring3;
+    makestring3 << "Time" << i << "[ms]";
+    xout["iteration"].AddTargetCell( makestring3.str().c_str() );
+    xl::xout["iteration"][ makestring3.str().c_str() ] << std::showpoint << std::fixed;
   }
 
 } // end BeforeRegistration()
@@ -105,6 +110,11 @@ MultiMetricMultiResolutionRegistration<TElastix>
     makestring2 << "4:||Gradient" << i << "||";
     xl::xout["iteration"][ makestring2.str().c_str() ] <<
       this->GetCombinationMetric()->GetMetricDerivativeMagnitude( i );
+
+    std::ostringstream makestring3;
+    makestring3 << "Time" << i << "[ms]";
+    xl::xout["iteration"][ makestring3.str().c_str() ] <<
+      this->GetCombinationMetric()->GetMetricComputationTime( i );
   }
 
 } // end AfterEachIteration()
@@ -129,33 +139,38 @@ MultiMetricMultiResolutionRegistration<TElastix>
   this->UpdateFixedMasks( level );
   this->UpdateMovingMasks( level );
 
-  /** Set the metric weights. The default metric weight is 1.0 / nrOfMetrics. */
-  double defaultWeight = 1.0 / static_cast<double>( nrOfMetrics );
-  for ( unsigned int metricnr = 0; metricnr < nrOfMetrics; ++metricnr )
-  {
-    double weight = defaultWeight;
-    std::ostringstream makestring;
-    makestring << "Metric" << metricnr << "Weight";
-    this->GetConfiguration()->ReadParameter( weight, makestring.str(), "", level, 0 );
-    this->GetCombinationMetric()->SetMetricWeight( weight, metricnr );
-  }
-
   /** Set the use of relative metric weights. */
   bool useRelativeWeights = false;
   this->GetConfiguration()->ReadParameter( useRelativeWeights, "UseRelativeWeights", 0 );
   this->GetCombinationMetric()->SetUseRelativeWeights( useRelativeWeights );
 
-  /** Set the relative metric weights.
-   * The default relative metric weight is 1.0 / nrOfMetrics.
-   */
-  double defaultRelativeWeight = 1.0 / static_cast<double>( nrOfMetrics );
-  for ( unsigned int metricnr = 0; metricnr < nrOfMetrics; ++metricnr )
+  /** Set the metric weights. The default metric weight is 1.0 / nrOfMetrics. */
+  if ( !useRelativeWeights )
   {
-    double weight = defaultRelativeWeight;
-    std::ostringstream makestring;
-    makestring << "Metric" << metricnr << "RelativeWeight";
-    this->GetConfiguration()->ReadParameter( weight, makestring.str(), "", level, 0 );
-    this->GetCombinationMetric()->SetMetricRelativeWeight( weight, metricnr );
+    double defaultWeight = 1.0 / static_cast<double>( nrOfMetrics );
+    for ( unsigned int metricnr = 0; metricnr < nrOfMetrics; ++metricnr )
+    {
+      double weight = defaultWeight;
+      std::ostringstream makestring;
+      makestring << "Metric" << metricnr << "Weight";
+      this->GetConfiguration()->ReadParameter( weight, makestring.str(), "", level, 0 );
+      this->GetCombinationMetric()->SetMetricWeight( weight, metricnr );
+    }
+  }
+  else
+  {
+    /** Set the relative metric weights.
+     * The default relative metric weight is 1.0 / nrOfMetrics.
+     */
+    double defaultRelativeWeight = 1.0 / static_cast<double>( nrOfMetrics );
+    for ( unsigned int metricnr = 0; metricnr < nrOfMetrics; ++metricnr )
+    {
+      double weight = defaultRelativeWeight;
+      std::ostringstream makestring;
+      makestring << "Metric" << metricnr << "RelativeWeight";
+      this->GetConfiguration()->ReadParameter( weight, makestring.str(), "", level, 0 );
+      this->GetCombinationMetric()->SetMetricRelativeWeight( weight, metricnr );
+    }
   }
 
   /** Set whether to use a specific metric. */
