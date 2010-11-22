@@ -53,30 +53,9 @@ namespace elastix
    * a line in this file.
    */
 
-  const unsigned int NrOfSupportedImageTypes = 4;
-
-//  elxSupportedImageTypeMacro( short,            2, short,             2,  1 );
-  elxSupportedImageTypeMacro( short,            3, short,             3,  1 );
-//  elxSupportedImageTypeMacro( char,             2, char,              2,  3 );
-//  elxSupportedImageTypeMacro( char,             3, char,              3,  4 );
-//  elxSupportedImageTypeMacro( int,              2, int,               2,  5 );
-//  elxSupportedImageTypeMacro( int,              3, int,               3,  6 );
-  elxSupportedImageTypeMacro( float,            2, float,             2,  2 );
-  elxSupportedImageTypeMacro( float,            3, float,             3,  3 );
-//   elxSupportedImageTypeMacro( short,            4, short,             4,  4 );
-  elxSupportedImageTypeMacro( short,            4, short,             4,  4 );
-//  elxSupportedImageTypeMacro( double,           2, double,            2,  9 );
-//  elxSupportedImageTypeMacro( double,           3, double,            3,  10 );
-//  elxSupportedImageTypeMacro( unsigned short,   2, unsigned short,    2,  11 );
-//  elxSupportedImageTypeMacro( unsigned short,   3, unsigned short,    3,  12 );
-//  elxSupportedImageTypeMacro( unsigned char,    2, unsigned char,     2,  5 );
-//  elxSupportedImageTypeMacro( unsigned char,    3, unsigned char,     3,  4 );
-//  elxSupportedImageTypeMacro( unsigned int,     2, unsigned int,      2,  15 );
-//  elxSupportedImageTypeMacro( unsigned int,     3, unsigned int,      3,  16 );
-
-
-  //etc
-
+  // CMake will substitute the following line with
+  // user-defined image types:
+  @UserDefinedSupportedImageTypes@
 
 } // end namespace elastix
 

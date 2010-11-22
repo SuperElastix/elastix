@@ -122,8 +122,9 @@ MACRO( ADD_ELXCOMPONENT name )
 
 ENDMACRO( ADD_ELXCOMPONENT )
 
+
 #---------------------------------------------------------------------
-# Search for all components
+# Search for all components in the elastix source directory
 #
 
 # Initialize the list of link libs.
@@ -138,8 +139,11 @@ FOREACH( component ${ListOfComponents} )
   ADD_SUBDIRECTORY( ${relative_path_to_comp} )
 ENDFOREACH()
 
+
 #----------------------------------------------------------------------
 # Search for user components
+# These are components defined in external directories
+# outside elastix, defined by the user.
 
 FOREACH( userComponentDir ${ELASTIX_USER_COMPONENT_DIRS} )
 
@@ -154,7 +158,7 @@ FOREACH( userComponentDir ${ELASTIX_USER_COMPONENT_DIRS} )
     MESSAGE( STATUS "Reading: ${userComponent}" )
 
     # Find the first line that has the following structure:
-    # ADD_ELXCOMPONENT(projectname [....]
+    # ADD_ELXCOMPONENT( projectname [....]
     # spaces before/after/inbetween are allowed.
     # ADD_ELXCOMPONENT does not have to be capitalized.
     # Commented lines (where the first nonwhite character is a #) are ignored.
@@ -169,8 +173,8 @@ FOREACH( userComponentDir ${ELASTIX_USER_COMPONENT_DIRS} )
 		IF( NOT "${componentName}" STREQUAL "" )
       MESSAGE( STATUS "Found user component: ${componentName}" )
 
-      # For non-subdirectories, the binarydir should be specified. We use the name
-  		# of the component for that.
+      # For non-subdirectories, the binarydir should be specified.
+      # We use the name of the component for that.
       SET( binaryDir "${elastix_BINARY_DIR}/UserComponents/${componentName}" )
 
       # Add

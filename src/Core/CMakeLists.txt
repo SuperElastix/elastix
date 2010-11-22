@@ -33,7 +33,6 @@ SET( InstallFilesForComponents
   Install/elxInstallFunctions.h
   Install/elxMacro.h
   Install/elxIncludes.h
-  Install/elxSupportedImageTypes.h
 )
 
 SET( ConfigurationFiles
@@ -108,7 +107,6 @@ TARGET_LINK_LIBRARIES( elxCore
   ITKIO
   ITKCommon
 )
-#param
 
 #---------------------------------------------------------------------
 # Add macro if mevisdicomtiff should be used
@@ -177,7 +175,7 @@ TARGET_LINK_LIBRARIES( transformix
 )
 
 #---------------------------------------------------------------------
-# Define the install directory.
+# Define the install directory for elastix and transformix.
 
 IF( WIN32 )
   INSTALL( TARGETS elastix transformix
@@ -189,4 +187,9 @@ ELSE()
     #COMPONENT core )
 ENDIF()
 
+#---------------------------------------------------------------------
+# The Core/Install directory contains a CMakeLists file for
+# defining the elastix compilation types.
+
+ADD_SUBDIRECTORY( Install )
 
