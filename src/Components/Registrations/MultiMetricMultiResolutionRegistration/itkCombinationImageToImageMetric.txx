@@ -845,9 +845,9 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
   HessianType & H ) const
 {
   /** Prepare Hessian */
-  H.SetSize( this->GetNumberOfParameters(),
+  H.set_size( this->GetNumberOfParameters(),
     this->GetNumberOfParameters() );
-  H.Fill(0.0);
+  //H.Fill(0.0);
   HessianType tmpH( this->GetNumberOfParameters(),
     this->GetNumberOfParameters() );
 
@@ -857,21 +857,33 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
   {
     if ( this->m_UseMetric[ i ] )
     {
+      const double w = this->m_MetricWeights[ i ]; 
       ImageMetricType * metric = dynamic_cast<ImageMetricType *>( this->GetMetric( i ) );
       if ( metric )
       {
         initialized = true;
         metric->GetSelfHessian( parameters, tmpH );
-        H += this->m_MetricWeights[ i ] * tmpH;
-      }
-    }
-  }
+        
+        /** H=H+tmpH; \todo: maybe this can be done more efficiently. */
+        tmpH.reset();
+        while ( tmpH.next() )
+        {
+          H( tmpH.getrow(), tmpH.getcolumn() ) += w * tmpH.value();
+        }
+
+      } // end if metric i exists
+    } // end if use metric i
+  } // end for metrics
 
   /** If none of the submetrics has a valid implementation of GetSelfHessian,
    * then return an identity matrix */
   if ( ! initialized )
   {
-    H.fill_diagonal(1.0);
+    //H.fill_diagonal(1.0);
+    for (unsigned int j = 0; j < this->GetNumberOfParameters(); ++j )
+    {
+      H(j,j) = 1.0;
+    }
   }
 
 } // end GetSelfHessian()

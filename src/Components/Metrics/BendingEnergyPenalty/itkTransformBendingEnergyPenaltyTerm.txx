@@ -353,12 +353,16 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   this->SetTransformParameters( parameters );
 
   /** Prepare Hessian */
-  H.SetSize( this->GetNumberOfParameters(),
+  H.set_size( this->GetNumberOfParameters(),
     this->GetNumberOfParameters() );
-  H.Fill(0.0);
+  //H.Fill(0.0); //done by set_size for sparse matrix
   if ( !this->m_AdvancedTransform->GetHasNonZeroJacobianOfSpatialHessian() )
   {
-    H.fill_diagonal(1.0);
+    //H.fill_diagonal(1.0);
+    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    {
+      H(i,i) = 1.0;
+    }    
     return;
   }
 
@@ -432,14 +436,15 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
               ++itB;
             }
 
-            /** Store at the right location in the H matrix. Exploit symmetry */
+            /** Store at the right location in the H matrix. 
+             * Only upper triangular part is stored */
             const unsigned int nmA = nonZeroJacobianIndices[ muA ];
             const unsigned int nmB = nonZeroJacobianIndices[ muB ];
             H( nmA, nmB ) += 2.0 * matrixProduct;
-            if ( nmA != nmB )
+            /*if ( nmA != nmB )
             {
               H( nmB, nmA ) += 2.0 * matrixProduct;
-            }
+            }*/
 
           }
         }
@@ -458,14 +463,20 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   if ( this->m_NumberOfPixelsCounted > 0 )
   {
     const double normal_sum = 1.0 / static_cast<double>( this->m_NumberOfPixelsCounted );
-    H *= normal_sum;
+    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    { 
+      H.scale_row(i, normal_sum);
+    }
   }
   else
   {
-    H.Fill(0.0);
-    H.fill_diagonal(1.0);
+    //H.fill_diagonal(1.0);
+    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    {
+      H(i,i) = 1.0;
+    }    
   }
-
+    
 } // end GetSelfHessian()
 
 

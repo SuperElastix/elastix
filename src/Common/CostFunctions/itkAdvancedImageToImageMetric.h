@@ -23,6 +23,7 @@
 #include "itkLimiterFunctionBase.h"
 #include "itkFixedArray.h"
 #include "itkAdvancedTransform.h"
+#include "vnl/vnl_sparse_matrix.h"
 
 namespace itk
 {
@@ -142,8 +143,9 @@ public:
 
   /** Hessian type; for SelfHessian (experimental feature) */
   typedef typename DerivativeType::ValueType              HessianValueType;
-  typedef Array2D<HessianValueType>                       HessianType;
-
+  //typedef Array2D<HessianValueType>                       HessianType;
+  typedef vnl_sparse_matrix<HessianValueType>             HessianType;
+    
   /** Public methods ********************/
 
   virtual void SetTransform( AdvancedTransformType * arg )

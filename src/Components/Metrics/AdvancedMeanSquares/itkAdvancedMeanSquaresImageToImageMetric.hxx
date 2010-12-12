@@ -439,9 +439,9 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   this->SetTransformParameters( parameters );
 
   /** Prepare Hessian */
-  H.SetSize( this->GetNumberOfParameters(),
+  H.set_size( this->GetNumberOfParameters(),
     this->GetNumberOfParameters() );
-  H.Fill(0.0);
+  //H.Fill(0.0); // done by set_size if sparse matrix
 
   /** Smooth fixed image */
   typename SmootherType::Pointer smoother = SmootherType::New();
@@ -544,12 +544,18 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   {
     const double normal_sum = 2.0 * this->m_NormalizationFactor /
       static_cast<double>( this->m_NumberOfPixelsCounted );
-    H *= normal_sum;
+    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    {
+      H.scale_row(i, normal_sum);
+    }
   }
   else
   {
-    H.Fill(0.0);
-    H.fill_diagonal(1.0);
+    //H.fill_diagonal(1.0);
+    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    {
+      H(i,i) = 1.0;
+    }    
   }
 
 } // end GetSelfHessian()
@@ -567,28 +573,29 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   const NonZeroJacobianIndicesType & nzji,
   HessianType & H ) const
 {
-  /** Do rank-1 update of H */
-  if ( nzji.size() == this->GetNumberOfParameters() )
-  {
-    /** Loop over all Jacobians. */
-    vnl_matrix_update( H, imageJacobian, imageJacobian );
-  }
-  else
-  {
+  // does not work for sparse matrix. \todo: distinguish between sparse and nonsparse
+  ///** Do rank-1 update of H */
+  //if ( nzji.size() == this->GetNumberOfParameters() )
+  //{
+  //  /** Loop over all Jacobians. */
+  //  vnl_matrix_update( H, imageJacobian, imageJacobian );
+  //}
+  //else
+  //{
     /** Only pick the nonzero Jacobians.
-    * Todo: we could use the symmetry here. Anyway, it won't give much probably. */
+    * Save only upper triangular part of the matrix */
     unsigned int imjacsize = imageJacobian.GetSize();
     for ( unsigned int i = 0; i < imjacsize; ++i )
     {
       const unsigned int row = nzji[ i ];
       const double imjacrow = imageJacobian[ i ];
-      for ( unsigned int j = 0; j < imjacsize; ++j )
+      for ( unsigned int j = i; j < imjacsize; ++j )
       {
         const unsigned int col = nzji[ j ];
         H(row,col) += imjacrow * imageJacobian[ j ];
       }
     }
-  } // end else
+  //} // end else
 
 } // end UpdateSelfHessianTerms()
 

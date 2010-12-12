@@ -27,6 +27,19 @@ IF( ELASTIX_USE_CUDA )
 ENDIF()
 
 #----------------------------------------------------------------------
+# Check for the SuiteSparse package
+# We need to do that here, because the link_directories should be set
+# before declaring any targets.
+
+IF( USE_PreconditionedGradientDescent )
+ SET( SUITESPARSE_BINARY_DIR "" CACHE PATH "Path to SuiteSparse" )
+ SET( SUITESPARSE_USE_FILE ${SUITESPARSE_BINARY_DIR}/UseSuiteSparse.cmake )
+ IF( EXISTS ${SUITESPARSE_USE_FILE} )
+  INCLUDE( ${SUITESPARSE_USE_FILE} )			 
+ ENDIF()
+ENDIF()
+
+#----------------------------------------------------------------------
 # Mark some mostly unused variables as advanced
 MARK_AS_ADVANCED( EXECUTABLE_OUTPUT_PATH )
 MARK_AS_ADVANCED( LIBRARY_OUTPUT_PATH )

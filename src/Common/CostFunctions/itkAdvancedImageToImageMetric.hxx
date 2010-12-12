@@ -552,10 +552,14 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   itkDebugMacro("GetSelfHessian()");
 
   /** Set identity matrix as default implementation. */
-  H.SetSize( this->GetNumberOfParameters(),
+  H.set_size( this->GetNumberOfParameters(),
     this->GetNumberOfParameters() );
-  H.Fill(0.0);
-  H.fill_diagonal(1.0);
+  //H.Fill(0.0);
+  //H.fill_diagonal(1.0);
+  for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+  {
+    H(i,i) = 1.0;
+  }
 
 } // end GetSelfHessian
 
