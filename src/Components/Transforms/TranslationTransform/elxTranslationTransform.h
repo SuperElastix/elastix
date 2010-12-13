@@ -36,6 +36,10 @@ namespace elastix
    *    between images should be estimated as the distance between their centers.\n
    *    example: <tt>(AutomaticTransformInitialization "true")</tt> \n
    *    By default "false" is assumed. So, no initial translation.
+   * \parameter AutomaticTransformInitializationMethod: how to initialize this
+   *    transform. Should be one of {GeometricalCenter, CenterOfGravity}.\n
+   *    example: <tt>(AutomaticTransformInitializationMethod "CenterOfGravity")</tt> \n
+   *    By default "GeometricalCenter" is assumed.\n
    *
    * \ingroup Transforms
    */

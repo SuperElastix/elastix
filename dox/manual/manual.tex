@@ -1932,7 +1932,20 @@ following line to your parameter file:
 \begin{quote}
   \texttt{(AutomaticTransformInitialization "true")}
 \end{quote}
-which aligns the centres of the fixed and moving image.
+This parameter facilitates the automatic estimation of an initial
+alignment for the aforementioned transformations. Three methods to
+do so are supported: the default method which aligns the centres of
+the fixed and moving image, a method that aligns the centres of
+gravity, and a method that simply aligns the image origins. A method
+can be selected by adding one of the following lines to the
+parameter file:
+\begin{quote}
+  \texttt{(AutomaticTransformInitializationMethod "GeometricalCenter")} \\
+  \texttt{(AutomaticTransformInitializationMethod "CenterOfGravity")} \\
+  \texttt{(AutomaticTransformInitializationMethod "Origins")}
+\end{quote}
+Note that ``\texttt{Origins}'' is currently only available for the
+affine transformation.
 
 \item You need a good multi-resolution strategy, i.e.
 quite a bit of resolution levels. This way a lot of smoothing is

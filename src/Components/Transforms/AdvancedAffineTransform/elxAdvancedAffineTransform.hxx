@@ -255,7 +255,7 @@ AdvancedAffineTransformElastix<TElastix>
     {
       transformInitializer->MomentsOn();
     }
-    if ( method == "Origins" )
+    else if ( method == "Origins" )
     {
       transformInitializer->OriginsOn();
     }

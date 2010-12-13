@@ -53,6 +53,10 @@ using namespace itk;
    *    between images should be estimated as the distance between their centers.\n
    *    example: <tt>(AutomaticTransformInitialization "true")</tt> \n
    *    By default "false" is assumed. So, no initial translation.
+   * \parameter AutomaticTransformInitializationMethod: how to initialize this
+   *    transform. Should be one of {GeometricalCenter, CenterOfGravity}.\n
+   *    example: <tt>(AutomaticTransformInitializationMethod "CenterOfGravity")</tt> \n
+   *    By default "GeometricalCenter" is assumed.\n
    *
    * The transform parameters necessary for transformix, additionally defined by this class, are:
    * \transformparameter CenterOfRotation: stores the center of rotation as an index. \n
