@@ -732,7 +732,7 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
     this->m_MetricDerivatives[ i ] = tmpDerivative;
     this->m_MetricDerivativesMagnitude[ i ] = tmpDerivative.magnitude();
     this->m_MetricComputationTime[ i ] = timer->GetElapsedClockSec() * 1000;
-  
+
     /** and combine. */
     if ( this->m_UseMetric[ i ] )
     {

@@ -54,6 +54,12 @@ namespace itk
  * \li Some convenience functions are provided, such as the IsInsideMovingMask
  *   and CheckNumberOfSamples.
  *
+ * The parameters used in this class are:
+ * \parameter MovingImageDerivativeScales: scale the moving image derivatives. Use\n
+ *    <tt>(MovingImageDerivativeScales 1 1 0)</tt>\n
+ *    to penalize deformations in the z-direction. The default value is that
+ *    this feature is not used. 
+ *
  * \ingroup RegistrationMetrics
  *
  */
