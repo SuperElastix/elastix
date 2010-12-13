@@ -573,6 +573,10 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   const NonZeroJacobianIndicesType & nzji,
   HessianType & H ) const
 {
+  typedef HessianType::row RowType;
+  typedef RowType::iterator RowIteratorType;
+  typedef HessianType::pair_t ElementType;
+
   // does not work for sparse matrix. \todo: distinguish between sparse and nonsparse
   ///** Do rank-1 update of H */
   //if ( nzji.size() == this->GetNumberOfParameters() )
@@ -584,17 +588,42 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   //{
     /** Only pick the nonzero Jacobians.
     * Save only upper triangular part of the matrix */
-    unsigned int imjacsize = imageJacobian.GetSize();
+    const unsigned int imjacsize = imageJacobian.GetSize();
     for ( unsigned int i = 0; i < imjacsize; ++i )
     {
       const unsigned int row = nzji[ i ];
       const double imjacrow = imageJacobian[ i ];
+
+      RowType & rowVector = H.get_row( row );
+      RowIteratorType rowIt = rowVector.begin();
+
       for ( unsigned int j = i; j < imjacsize; ++j )
       {
         const unsigned int col = nzji[ j ];
-        H(row,col) += imjacrow * imageJacobian[ j ];
+        const double val = imjacrow * imageJacobian[ j ];
+
+        /** The following implements:
+         * H(row,col) += imjacrow * imageJacobian[ j ]; 
+         * But more efficient.
+         */
+        
+        /** Go to next element */
+        for (; (rowIt != rowVector.end()) && ((*rowIt).first < col); ++rowIt);
+
+        if ((rowIt == rowVector.end()) || ((*rowIt).first != col))
+        {
+          /** Add new column to the row and set iterator to that column. */
+          rowIt = rowVector.insert(rowIt, ElementType( col, val ) );
+        }
+        else
+        {
+          /** Add to existing value */
+          (*rowIt).second += val;
+        }        
+        
       }
     }
+
   //} // end else
 
 } // end UpdateSelfHessianTerms()
