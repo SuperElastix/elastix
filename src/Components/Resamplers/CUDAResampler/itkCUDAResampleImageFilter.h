@@ -84,6 +84,7 @@ public:
   typedef AdvancedBSplineDeformableTransform<
     TInterpolatorPrecisionType, 3, 3 >                  InternalAdvancedBSplineTransformType;
   typedef typename InternalAdvancedBSplineTransformType::Pointer ValidTransformPointer;
+  typedef typename InternalAdvancedBSplineTransformType::ConstPointer ValidTransformConstPointer;
   typedef BSplineDeformableTransform<
     TInterpolatorPrecisionType, 3, 3 >                  InternalBSplineTransformType;
   typedef cuda::CUDAResampleImageFilter<

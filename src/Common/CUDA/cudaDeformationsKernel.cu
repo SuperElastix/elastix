@@ -55,22 +55,22 @@ __device__ void operator+=(float3& a, float b)
 }
 
 /* Convert an index that is an offset to a 3D matrix into its xyz coordinates */
-__device__ __host__ int3 index2coord(int index, const int3 DIM)
+__device__ __host__ uint3 index2coord( const unsigned int index, const uint3 dimension )
 {
   /** WARNING: Direction is not yet taken into account! */
 
-  int tmp = DIM.x * DIM.y;
-  int3 res;
+  int tmp = dimension.x * dimension.y;
+  uint3 res;
   res.z = index / tmp;
   tmp = index - (res.z * tmp);
 
-  res.y = tmp / DIM.x;
-  res.x = tmp - (res.y * DIM.x);
+  res.y = tmp / dimension.x;
+  res.x = tmp - (res.y * dimension.x);
   return res;
 }
 
 /* Apply a 3D B-spline transformation on a coordinate. */
-__device__ float3 deform_at_coord(float3 coord)
+__device__ float3 deform_at_coord( float3 coord )
 {
   float3 res;
   /** Coordinate shift, since appearantly the space Ruijters lives in is
@@ -86,7 +86,7 @@ __device__ float3 deform_at_coord(float3 coord)
   return res;
 }
 
-__device__ float3 deform_at_coord_simple(float3 coord)
+__device__ float3 deform_at_coord_simple( float3 coord )
 {
   float3 res;
   /** Coordinate shift, since appearantly the space Ruijters lives in is
@@ -105,12 +105,12 @@ __device__ float3 deform_at_coord_simple(float3 coord)
 /* Apply deformation to all voxels based on transform parameters and retrieve result. */
 template <typename TImageType>
 __global__ void resample_image( TImageType* dst,
-  int3 inputImageSize, int3 outputImageSize, size_t offset )
+  uint3 inputImageSize, uint3 outputImageSize, size_t offset )
 {
   size_t id = threadIdx.x + ( blockIdx.x * blockDim.x );
 
   /* Convert single index to coordinates. */
-  int3 coord = index2coord( id + offset, outputImageSize );
+  uint3 coord = index2coord( id + offset, outputImageSize );
   float3 out_coord = make_float3( coord.x, coord.y, coord.z );
 
   /* Translate normal coordinates into world coordinates.
@@ -138,7 +138,8 @@ __global__ void resample_image( TImageType* dst,
     float3 inp_coord = ( (inp_coord_world - CUInputImageOrigin) / CUInputImageSpacing ) + 0.5f;
 
     /** Check if sample is inside input image. */
-    isValidSample = ( inp_coord > 0.0f ) && inp_coord < make_float3( inputImageSize );
+    isValidSample = ( inp_coord > 0.0f )
+      && inp_coord < make_float3( inputImageSize.x, inputImageSize.y, inputImageSize.z );
 
     /* Interpolate the moving/input image using 3-rd order B-spline. */
     if ( isValidSample )
@@ -152,8 +153,8 @@ __global__ void resample_image( TImageType* dst,
 
 /* Cast from one type to another type on the GPU. */
 template <class TInputImageType, class TOutputImageType>
-__global__ void cast_to_type( TOutputImageType* dst
-  , const TInputImageType* src, size_t nrOfVoxels )
+__global__ void cast_to_type( TOutputImageType* dst,
+  const TInputImageType* src, size_t nrOfVoxels )
 {
   int id = threadIdx.x + (blockIdx.x * blockDim.x);
   if ( id >= nrOfVoxels ) return;

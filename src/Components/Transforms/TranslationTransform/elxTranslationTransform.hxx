@@ -62,13 +62,11 @@ namespace elastix
     this->m_TranslationTransform->SetIdentity();
 
     /** Check if user wants automatic transform initialization; false by default. */
-    std::string automaticTransformInitializationString("false");
     bool automaticTransformInitialization = false;
-    this->m_Configuration->ReadParameter(
-      automaticTransformInitializationString,
-      "AutomaticTransformInitialization", 0);
-    if ( (automaticTransformInitializationString == "true") &&
-      (this->Superclass1::GetInitialTransform() == 0) )
+    bool tmpBool = false;
+    this->m_Configuration->ReadParameter( tmpBool,
+      "AutomaticTransformInitialization", 0 );
+    if ( tmpBool && this->Superclass1::GetInitialTransform() == 0 )
     {
       automaticTransformInitialization = true;
     }

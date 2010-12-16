@@ -28,8 +28,8 @@ template <typename TInputImage, typename TOutputImage, typename TInterpolatorPre
 itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>
 ::itkCUDAResampleImageFilter()
 {
-  m_UseCuda = true;
-  m_UseGPUToCastData = false;
+  this->m_UseCuda = true;
+  this->m_UseGPUToCastData = false;
 
 } // end Constructor
 
@@ -42,7 +42,10 @@ template <typename TInputImage, typename TOutputImage, typename TInterpolatorPre
 itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>
 ::~itkCUDAResampleImageFilter()
 {
-  if ( m_UseCuda ) m_CudaResampleImageFilter.cudaUnInit();
+  if ( this->m_UseCuda )
+  {
+    this->m_CudaResampleImageFilter.cudaUnInit();
+  }
 }
 
 
@@ -53,7 +56,7 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
 template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
 void
 itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>
-::CopyParameters( typename InternalAdvancedBSplineTransformType::Pointer bSplineTransform )
+::CopyParameters( ValidTransformPointer bSplineTransform )
 {
   /* Copy parameters to the GPU memory space. */
   const SizeType        itkOutputSize    = this->GetSize();
@@ -63,30 +66,30 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
   const SpacingType     itkInputSpacing  = this->GetInput()->GetSpacing();
   const OriginPointType itkInputOrigin   = this->GetInput()->GetOrigin();
 
-  int3 inputsize             = make_int3( itkInputSize[0],  itkInputSize[1],  itkInputSize[2] );
-  int3 outputsize            = make_int3( itkOutputSize[0], itkOutputSize[1], itkOutputSize[2] );
+  uint3 inputSize            = make_uint3( itkInputSize[0],  itkInputSize[1],  itkInputSize[2] );
+  uint3 outputSize           = make_uint3( itkOutputSize[0], itkOutputSize[1], itkOutputSize[2] );
   const InputPixelType* data = this->GetInput()->GetBufferPointer();
-  m_CudaResampleImageFilter.cudaMallocImageData( inputsize, outputsize, data );
+  m_CudaResampleImageFilter.cudaMallocImageData( inputSize, outputSize, data );
 
-  float3 outputimageSpacing = make_float3( itkOutputSpacing[0], itkOutputSpacing[1], itkOutputSpacing[2] );
-  float3 outputimageOrigin  = make_float3( itkOutputOrigin[0],  itkOutputOrigin[1],  itkOutputOrigin[2] );
-  float3 inputimageSpacing  = make_float3( itkInputSpacing[0],  itkInputSpacing[1],  itkInputSpacing[2] );
-  float3 inputimageOrigin   = make_float3( itkInputOrigin[0],   itkInputOrigin[1],   itkInputOrigin[2] );
+  float3 outputImageSpacing = make_float3( itkOutputSpacing[0], itkOutputSpacing[1], itkOutputSpacing[2] );
+  float3 outputImageOrigin  = make_float3( itkOutputOrigin[0],  itkOutputOrigin[1],  itkOutputOrigin[2] );
+  float3 inputImageSpacing  = make_float3( itkInputSpacing[0],  itkInputSpacing[1],  itkInputSpacing[2] );
+  float3 inputImageOrigin   = make_float3( itkInputOrigin[0],   itkInputOrigin[1],   itkInputOrigin[2] );
 
   float defaultPixelValue   = this->GetDefaultPixelValue();
-  m_CudaResampleImageFilter.cudaCopyImageSymbols( inputimageSpacing, inputimageOrigin,
-    outputimageSpacing, outputimageOrigin, defaultPixelValue );
+  m_CudaResampleImageFilter.cudaCopyImageSymbols( inputImageSpacing, inputImageOrigin,
+    outputImageSpacing, outputImageOrigin, defaultPixelValue );
 
-  const typename InternalBSplineTransformType::OriginType  ITKgridOrigin
+  const typename InternalBSplineTransformType::OriginType  itkGridOrigin
     = bSplineTransform->GetGridOrigin();
-  const typename InternalBSplineTransformType::SpacingType ITKgridSpacing
+  const typename InternalBSplineTransformType::SpacingType itkGridSpacing
     = bSplineTransform->GetGridSpacing();
-  const typename InternalBSplineTransformType::SizeType    ITKgridSize
+  const typename InternalBSplineTransformType::SizeType    itkGridSize
     = bSplineTransform->GetGridRegion().GetSize();
 
-  float3 gridSpacing        = make_float3( ITKgridSpacing[0],   ITKgridSpacing[1],   ITKgridSpacing[2] );
-  float3 gridOrigin         = make_float3( ITKgridOrigin[0],    ITKgridOrigin[1],    ITKgridOrigin[2] );
-  int3   gridSize           = make_int3  ( ITKgridSize[0],      ITKgridSize[1],      ITKgridSize[2] );
+  float3 gridSpacing        = make_float3( itkGridSpacing[0], itkGridSpacing[1], itkGridSpacing[2] );
+  float3 gridOrigin         = make_float3( itkGridOrigin[0],  itkGridOrigin[1],  itkGridOrigin[2] );
+  uint3  gridSize           = make_uint3 ( itkGridSize[0],    itkGridSize[1],    itkGridSize[2] );
   m_CudaResampleImageFilter.cudaCopyGridSymbols( gridSpacing, gridOrigin, gridSize );
 
   const typename InternalBSplineTransformType::ParametersType params

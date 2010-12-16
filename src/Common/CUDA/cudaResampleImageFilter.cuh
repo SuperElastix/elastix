@@ -21,15 +21,15 @@ namespace cuda
 {
 
 template <class TInputImageType, class TOutputImageType>
-TOutputImageType* cudaCastToType( cudaExtent& volumeExtent,
+TOutputImageType* cudaCastToType( const cudaExtent & volumeExtent,
   const TInputImageType* src, TOutputImageType* dst,
-  cudaMemcpyKind direction, bool UseCPU );
+  cudaMemcpyKind direction, bool useCPU );
 
 // Specialization
 template <>
-float* cudaCastToType( cudaExtent& volumeExtent,
+float* cudaCastToType( const cudaExtent & volumeExtent,
   const float* src, float* dst,
-  cudaMemcpyKind direction, bool UseCPU );
+  cudaMemcpyKind direction, bool useCPU );
 
 /**
  * Helper class
@@ -68,21 +68,22 @@ public:
   void cudaInit( void );
   void cudaUnInit( void );
 
-  void cudaCopyImageSymbols( float3& InputImageSpacing, float3& InputImageOrigin,
-    float3& OutputImageSpacing, float3& OutputImageOrigin, float DefaultPixelValue );
-  void cudaCopyGridSymbols( float3& GridSpacing, float3& GridOrigin, int3& GridSize );
+  void cudaCopyImageSymbols( const float3 & InputImageSpacing, const float3 & InputImageOrigin,
+    const float3 & OutputImageSpacing, const float3 & OutputImageOrigin, const float DefaultPixelValue );
+  void cudaCopyGridSymbols( const float3 & GridSpacing, const float3 & GridOrigin, const uint3 & GridSize );
 
-  void cudaMallocTransformationData( int3 gridSize, const TInterpolatorPrecisionType* params );
-  void cudaMallocImageData( int3 inputsize, int3 outputsize, const TImageType* data );
+  void cudaMallocTransformationData( const uint3 & gridSize, const TInterpolatorPrecisionType* params );
+  void cudaMallocImageData( const uint3 & inputsize, const uint3 & outputsize, const TImageType* data );
 
-  void cudaCastToHost( size_t size, const TInternalImageType* src, TInternalImageType* tmp_src, TImageType* dst );
-  void cudaCastToHost( int3 size, const TInternalImageType* src, TImageType* dst );
-  void cudaCastToDevice( int3 size, const TImageType* src, TInternalImageType* dst );
+  void cudaCastToHost( const size_t sizevalue, const TInternalImageType* src,
+    TInternalImageType* tmp_src, TImageType* dst );
+  void cudaCastToHost( const uint3 & sizevalue, const TInternalImageType* src, TImageType* dst );
+  void cudaCastToDevice( const uint3 & sizevalue, const TImageType* src, TInternalImageType* dst );
 
   void GenerateData( TImageType* dst );
 
   cudaGetConstMacro( OutputImage, TInternalImageType* );
-  cudaGetConstMacro( OutputImageSize, int3 );
+  cudaGetConstMacro( OutputImageSize, uint3 );
   cudaGetConstMacro( Device, int );
   cudaSetMacro( Device, int );
 
@@ -94,25 +95,25 @@ public:
 private:
 
   /** Private member variables. */
-  cudaArray*      m_coeffsX;
-  cudaArray*      m_coeffsY;
-  cudaArray*      m_coeffsZ;
+  cudaArray*      m_CoeffsX;
+  cudaArray*      m_CoeffsY;
+  cudaArray*      m_CoeffsZ;
   cudaArray*      m_InputImage;
   TInternalImageType*   m_OutputImage;
-  int3            m_InputImageSize;
-  int3            m_OutputImageSize;
-  size_t          m_nrOfInputVoxels;
-  size_t          m_nrOfOutputVoxels;
-  cudaChannelFormatDesc m_channelDescCoeff;
+  uint3           m_InputImageSize;
+  uint3           m_OutputImageSize;
+  size_t          m_NumberOfInputVoxels;
+  size_t          m_NumberOfOutputVoxels;
+  cudaChannelFormatDesc m_ChannelDescCoeff;
   int             m_Device;
   bool            m_CastOnGPU;
 
-  unsigned int    m_MaxnrOfVoxelsPerIteration;
+  unsigned int    m_MaxNumberOfVoxelsPerIteration;
 
 #if defined(__CUDACC__)
   template <typename tex_t> cudaError_t cudaBindTextureToArray(
     cudaArray* dst, const TInternalImageType* src,
-    cudaExtent& extent, tex_t& tex, cudaChannelFormatDesc& desc,
+    const cudaExtent & extent, tex_t & tex, cudaChannelFormatDesc & desc,
     bool normalized = false, bool onDevice = false );
 #endif /* __CUDACC__ */
 
