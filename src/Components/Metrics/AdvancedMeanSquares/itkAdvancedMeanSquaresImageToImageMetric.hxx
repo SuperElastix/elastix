@@ -573,9 +573,9 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   const NonZeroJacobianIndicesType & nzji,
   HessianType & H ) const
 {
-  typedef HessianType::row RowType;
-  typedef RowType::iterator RowIteratorType;
-  typedef HessianType::pair_t ElementType;
+  typedef typename HessianType::row RowType;
+  typedef typename RowType::iterator RowIteratorType;
+  typedef typename HessianType::pair_t ElementType;
 
   // does not work for sparse matrix. \todo: distinguish between sparse and nonsparse
   ///** Do rank-1 update of H */
