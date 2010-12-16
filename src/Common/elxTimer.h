@@ -91,7 +91,7 @@ public:
   /** Communication with outside world.*/
   itkGetConstMacro( StartTime, time_t );
   itkGetConstMacro( StopTime, time_t );
-  itkGetConstMacro( ElapsedTime, time_t );
+  itkGetConstMacro( ElapsedTime, double );
   //  itkGetConstMacro( ElapsedTimeDHMS, TimeDHMSType );
   itkGetConstMacro( ElapsedTimeSec, std::size_t );
   itkGetConstMacro( ElapsedClock, double );
