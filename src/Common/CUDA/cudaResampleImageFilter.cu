@@ -479,7 +479,7 @@ TOutputImageType* cuda
       TInputImageType* tmp = cuda::cudaMalloc<TInputImageType>( voxelsPerSlice );
 
       /* Process each slice separately, copy source to GPU, and cast/copy in kernel. */
-      for ( int slice = 0; slice != volumeExtent.depth; ++slice, offset += voxelsPerSlice )
+      for ( unsigned int slice = 0; slice != volumeExtent.depth; ++slice, offset += voxelsPerSlice )
       {
         cuda::cudaMemcpy( tmp, src + offset, voxelsPerSlice, cudaMemcpyHostToDevice );
         cast_to_type<TInputImageType, TOutputImageType><<<dimGrid, dimBlock>>>(
@@ -513,7 +513,7 @@ TOutputImageType* cuda
       TOutputImageType* tmp = cuda::cudaMalloc<TOutputImageType>( voxelsPerSlice );
 
       /* Process each slice separately, cast/copy in kernel and copy results to host. */
-      for ( int slice = 0; slice != volumeExtent.depth; ++slice, offset += voxelsPerSlice )
+      for ( unsigned int slice = 0; slice != volumeExtent.depth; ++slice, offset += voxelsPerSlice )
       {
         cast_to_type<TInputImageType, TOutputImageType><<<dimGrid, dimBlock>>>(
           tmp, src + offset, voxelsPerSlice );
@@ -522,6 +522,8 @@ TOutputImageType* cuda
       }
       cudaFree( tmp );
     }
+    break;
+  case cudaMemcpyHostToHost:
     break;
   case cudaMemcpyDeviceToDevice:
     break;
