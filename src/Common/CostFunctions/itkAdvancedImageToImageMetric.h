@@ -58,7 +58,7 @@ namespace itk
  * \parameter MovingImageDerivativeScales: scale the moving image derivatives. Use\n
  *    <tt>(MovingImageDerivativeScales 1 1 0)</tt>\n
  *    to penalize deformations in the z-direction. The default value is that
- *    this feature is not used. 
+ *    this feature is not used.
  *
  * \ingroup RegistrationMetrics
  *
@@ -151,7 +151,7 @@ public:
   typedef typename DerivativeType::ValueType              HessianValueType;
   //typedef Array2D<HessianValueType>                       HessianType;
   typedef vnl_sparse_matrix<HessianValueType>             HessianType;
-    
+
   /** Public methods ********************/
 
   virtual void SetTransform( AdvancedTransformType * arg )

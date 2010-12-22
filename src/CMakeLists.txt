@@ -35,7 +35,7 @@ IF( USE_PreconditionedGradientDescent )
  SET( SUITESPARSE_BINARY_DIR "" CACHE PATH "Path to SuiteSparse" )
  SET( SUITESPARSE_USE_FILE ${SUITESPARSE_BINARY_DIR}/UseSuiteSparse.cmake )
  IF( EXISTS ${SUITESPARSE_USE_FILE} )
-  INCLUDE( ${SUITESPARSE_USE_FILE} )			 
+  INCLUDE( ${SUITESPARSE_USE_FILE} )
  ENDIF()
 ENDIF()
 
@@ -283,6 +283,7 @@ SET( ELASTIX_BUILD_TESTING OFF CACHE BOOL
 IF( ELASTIX_BUILD_TESTING )
   ENABLE_TESTING()
   ADD_SUBDIRECTORY( Testing )
+  INCLUDE( CTest )
 ENDIF()
 
 #---------------------------------------------------------------------
