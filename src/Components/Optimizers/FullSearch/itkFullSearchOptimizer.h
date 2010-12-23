@@ -118,33 +118,37 @@ namespace itk
     virtual void UpdateCurrentPosition(void);
 
     /** Start optimization.
-     * Make sure to set the initial position before starting the optimization */
+     * Make sure to set the initial position before starting the optimization
+     */
     virtual void StartOptimization( void );
 
     /** Resume previously stopped optimization with current parameters
-    * \sa StopOptimization. */
-    virtual void    ResumeOptimization( void );
+     * \sa StopOptimization.
+     */
+    virtual void ResumeOptimization( void );
 
     /** Stop optimization.
-    * \sa ResumeOptimization */
-    virtual void    StopOptimization( void );
+     * \sa ResumeOptimization
+     */
+    virtual void StopOptimization( void );
 
     /**
-    * Set/Get the SearchSpace, which is defined by a pointer to an
-    * itkMapContainer<unsigned int, FixedArray(double,3)>
-    * The unsigned int is the number of a parameter to be
-    * investigated. The FixedArray contains its range and the
-    * resolution of the search (min, max, step).
-    *
-    * Instead of using this function, the Add/RemoveSearchDimension methods can be used,
-    * to define a search space.
-    */
+     * Set/Get the SearchSpace, which is defined by a pointer to an
+     * itkMapContainer<unsigned int, FixedArray(double,3)>
+     * The unsigned int is the number of a parameter to be
+     * investigated. The FixedArray contains its range and the
+     * resolution of the search (min, max, step).
+     *
+     * Instead of using this function, the Add/RemoveSearchDimension methods can be used,
+     * to define a search space.
+     */
     itkSetObjectMacro( SearchSpace, SearchSpaceType );
     itkGetObjectMacro( SearchSpace, SearchSpaceType);
 
     /** Add/Remove a dimension to/from the SearchSpace */
-    virtual void AddSearchDimension(unsigned int param_nr, RangeValueType minimum, RangeValueType maximum, RangeValueType step);
-    virtual void RemoveSearchDimension(unsigned int param_nr);
+    virtual void AddSearchDimension( unsigned int param_nr,
+        RangeValueType minimum, RangeValueType maximum, RangeValueType step );
+    virtual void RemoveSearchDimension( unsigned int param_nr );
 
     /** Get the total number of iterations = sizes[0]*sizes[1]*sizes[2]* etc..... */
     virtual const unsigned long GetNumberOfIterations(void);
@@ -218,6 +222,4 @@ namespace itk
 
 
 #endif
-
-
 
