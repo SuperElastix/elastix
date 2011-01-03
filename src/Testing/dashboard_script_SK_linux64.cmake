@@ -28,6 +28,7 @@ SET( CTEST_COMMAND
   "/home/sklein/pk/install/bin/ctest -D ${MODEL}" )
 
 # Specify svn update command;
+# todo: why use elastixguest username? why not just default user?
 SET( CTEST_SVN_COMMAND "/usr/bin/svn" )
 SET( $ENV{LC_MESSAGES}    "en_EN" )
 set( CTEST_UPDATE_COMMAND "${CTEST_SVN_COMMAND}" )
