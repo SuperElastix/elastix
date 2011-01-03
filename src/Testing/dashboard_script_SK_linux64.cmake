@@ -72,7 +72,7 @@ ELASTIX_IMAGE_2D_PIXELTYPES:STRING=float
 ELASTIX_IMAGE_3D_PIXELTYPES:STRING=float
 ELASTIX_IMAGE_4D_PIXELTYPES:STRING=short
 
-// Compile all elastix components
+// Compile all elastix components; todo: automate this
 USE_AffineDTITransformElastix:BOOL=ON
 USE_BSplineInterpolatorFloat:BOOL=ON
 USE_BSplineResampleInterpolatorFloat:BOOL=ON
