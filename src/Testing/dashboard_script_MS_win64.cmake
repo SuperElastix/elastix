@@ -1,6 +1,10 @@
 #
 # This script runs a dashboard
 #
+# It has 1 optional argument: the build model.
+# The build model should be one of {Experimental, Continuous, Nightly}
+# and defaults to Nightly.
+#
 # Setup: Windows 7, Visual Studio 9 2008 Win64, Release mode, ITK 3.20.0
 # PC: LKEB, MS personal computer
 
@@ -28,39 +32,43 @@ SET( CTEST_COMMAND
 
 # Specify svn update command
 SET( CTEST_SVN_CHECKOUT
-  "${CTEST_SVN_COMMAND} co --username elastixguest --password elastixguest https://svn.bigr.nl/elastix/trunkpublic/src \"${CTEST_SOURCE_DIRECTORY}\"" )
+  "${CTEST_SVN_COMMAND} co --username elastixguest --password elastixguest https://svn.bigr.nl/elastix/trunkpublic \"${CTEST_SOURCE_DIRECTORY}\"" )
+
+# Ctest should wipe the binary tree before running
+# to keep harddisk space usage from growing
+SET( CTEST_START_WITH_EMPTY_BINARY_DIRECTORY TRUE )
+
+# Build elastix in release mode
+SET( CTEST_BUILD_CONFIGURATION "Release" )
 
 # The following does not seem to work:
 # find_program( CTEST_SVN_COMMAND NAMES svn )
 #SET( CTEST_SVN_COMMAND "C:/cygwin/bin/svn.exe" )
 #set( CTEST_UPDATE_COMMAND "${CTEST_SVN_COMMAND}" )
 #SET( $ENV{LC_MESSAGES}    "en_EN" )
-# should ctest wipe the binary tree before running
-SET( CTEST_START_WITH_EMPTY_BINARY_DIRECTORY TRUE )
 
 #SET( CTEST_BUILD_NAME "win7-64-vs2008" )
 #set( CTEST_CMAKE_GENERATOR "Visual Studio 9 2008 Win64" )
-
-set( CTEST_BUILD_CONFIGURATION "Release" )
 #set(WITH_KWSTYLE FALSE)
 #set(WITH_MEMCHECK FALSE)
 #set(WITH_COVERAGE FALSE)
 #set(WITH_DOCUMENTATION FALSE)
 
 # Usage of the initial cache seems to do the trick:
-# Configure the dashboard.
+# Configure the dashboard:
 set( CTEST_INITIAL_CACHE "
-// Specify build, generator
+// Specify build, generator:
 BUILDNAME:STRING=win7-64-vs2008
 CMAKE_GENERATOR:INTERNAL=Visual Studio 9 2008 Win64
 CMAKE_CONFIGURATION_TYPES:STRING=Release
 
+// Specify svn command:
 SVNCOMMAND:FILEPATH=C:/cygwin/bin/svn.exe
 
-// Which ITK to use
+// Which ITK to use:
 ITK_DIR:PATH=D:/toolkits/ITK/3.20.0/bin
 
-// Some elastix settings, defining the configuration
+// Some elastix settings, defining the configuration:
 ELASTIX_BUILD_TESTING:BOOL=ON
 ELASTIX_ENABLE_PACKAGER:BOOL=ON
 ELASTIX_USE_CUDA:BOOL=ON
@@ -69,7 +77,7 @@ ELASTIX_IMAGE_2D_PIXELTYPES:STRING=float
 ELASTIX_IMAGE_3D_PIXELTYPES:STRING=float
 ELASTIX_IMAGE_4D_PIXELTYPES:STRING=short
 
-// Compile all elastix components
+// Compile all elastix components:
 USE_AffineDTITransformElastix:BOOL=ON
 USE_BSplineInterpolatorFloat:BOOL=ON
 USE_BSplineResampleInterpolatorFloat:BOOL=ON
@@ -85,5 +93,4 @@ USE_NearestNeighborResampleInterpolator:BOOL=ON
 USE_RSGDEachParameterApart:BOOL=ON
 USE_ViolaWellsMutualInformationMetric:BOOL=ON
 ")
-
 
