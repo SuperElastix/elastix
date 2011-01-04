@@ -2,9 +2,9 @@
 #
 # This script runs a dashboard
 # Usage:
-#   ctest -S <nameofthisscript>
+#   ctest -S <nameofthisscript> -V
 #   OR
-#   ctest -S <nameofthisscript>,Model
+#   ctest -S <nameofthisscript>,Model -V
 #
 # It has 1 optional argument: the build model.
 # The build model should be one of {Experimental, Continuous, Nightly}
