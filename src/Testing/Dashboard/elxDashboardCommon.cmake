@@ -112,6 +112,7 @@ foreach(v
     CTEST_UPDATE_COMMAND
     CTEST_CHECKOUT_COMMAND
     CTEST_SCRIPT_DIRECTORY
+    dashboard_model
     )
   set(vars "${vars}  ${v}=[${${v}}]\n")
 endforeach(v)

@@ -3,12 +3,13 @@
 # This script runs a dashboard
 # Usage:
 #   ctest -S <nameofthisscript>
+#   OR
+#   ctest -S <nameofthisscript>,Model
 #
 # It has 1 optional argument: the build model.
 # The build model should be one of {Experimental, Continuous, Nightly}
 # and defaults to Nightly.
-# Usage:
-#   ctest -S <nameofthisscript>,Model
+# NOTE that Model should directly follow the comma: no space allowed!
 #
 # Setup: Windows 7, Visual Studio 9 2008 Win64, Release mode, ITK 3.20.0
 # PC: LKEB, MS personal computer

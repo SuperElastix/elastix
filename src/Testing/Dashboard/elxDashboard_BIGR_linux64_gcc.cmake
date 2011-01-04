@@ -1,7 +1,20 @@
 # Elastix Dashboard Script
 #
-# Copy this example script and edit as necessary for your client.
-# See elxDashboardCommon.cmake for more instructions.
+# This script runs a dashboard
+# Usage:
+#   ctest -S <nameofthisscript>
+#   OR
+#   ctest -S <nameofthisscript>,Model
+#
+# It has 1 optional argument: the build model.
+# The build model should be one of {Experimental, Continuous, Nightly}
+# and defaults to Nightly.
+# NOTE that Model should directly follow the comma: no space allowed!
+#
+# Setup: linux 64bit
+# gcc 4.1.2 20061115 (prerelease) (SUSE Linux),
+# Release mode, ITK 3.20.0
+# PC: linux cluster at BIGR (SK).
 
 # Client maintainer: s.klein@erasmusmc.nl
 set(CTEST_SITE "BIGR.cluster")
@@ -14,9 +27,14 @@ set(CTEST_DASHBOARD_ROOT "/home/sklein/tk/elastix/nightlybuild" )
 # default: automatically determined
 #set(CTEST_UPDATE_COMMAND /path/to/svn)
 
+# Specify the kind of dashboard to submit
 # default: Nightly
-#set(dashboard_model Experimental)
-#set(dashboard_model Continuous)
+SET( dashboard_model Nightly )
+IF( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
+  SET( dashboard_model Experimental )
+ELSEIF( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
+  SET( dashboard_model Continuous )
+ENDIF()
 
 #set(dashboard_do_memcheck 1)
 #set(dashboard_do_coverage 1)
