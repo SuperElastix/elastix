@@ -1,10 +1,10 @@
-# Elastix Example Dashboard Script
+# Elastix Dashboard Script
 #
 # Copy this example script and edit as necessary for your client.
 # See elxDashboardCommon.cmake for more instructions.
 
-# Client maintainer: someone@users.sourceforge.net
-set(CTEST_SITE "bigrcluster.erasmusmc")
+# Client maintainer: s.klein@erasmusmc.nl
+set(CTEST_SITE "BIGR.cluster")
 set(CTEST_BUILD_NAME "Linux-64bit-gcc4.1.2")
 #set(CTEST_BUILD_FLAGS "-j2") # parallel build for makefiles
 set(CTEST_BUILD_CONFIGURATION Release)
