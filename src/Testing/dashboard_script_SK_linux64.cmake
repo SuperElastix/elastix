@@ -3,6 +3,12 @@
 # Usage:
 #   ctest -S <nameofthisscript> -V
 #
+# It has 1 optional argument: the build model.
+# The build model should be one of {Experimental, Continuous, Nightly}
+# and defaults to Nightly.
+# Usage:
+#   ctest -S <nameofthisscript>,Model
+#
 # Setup: linux 64bit,
 # gcc 4.1.2 20061115 (prerelease) (SUSE Linux),
 # Release mode, ITK 3.20.0
@@ -31,38 +37,41 @@ SET( CTEST_COMMAND
 # todo: why use elastixguest username? why not just default user?
 SET( CTEST_SVN_COMMAND "/usr/bin/svn" )
 SET( $ENV{LC_MESSAGES}    "en_EN" )
-set( CTEST_UPDATE_COMMAND "${CTEST_SVN_COMMAND}" )
+SET( CTEST_UPDATE_COMMAND "${CTEST_SVN_COMMAND}" )
 SET( CTEST_SVN_CHECKOUT
   "${CTEST_SVN_COMMAND} co --username elastixguest --password elastixguest https://svn.bigr.nl/elastix/trunkpublic \"${CTEST_CHECKOUT_DIRECTORY}\"" )
+
+# Ctest should wipe the binary tree before running
+# to keep harddisk space usage from growing
+SET( CTEST_START_WITH_EMPTY_BINARY_DIRECTORY TRUE )
+
+# Build elastix in release mode
+SET( CTEST_BUILD_CONFIGURATION "Release" )
 
 # The following does not seem to work:
 # find_program( CTEST_SVN_COMMAND NAMES svn )
 #SET( CTEST_SVN_COMMAND "C:/cygwin/bin/svn.exe" )
 # should ctest wipe the binary tree before running
-SET( CTEST_START_WITH_EMPTY_BINARY_DIRECTORY TRUE )
 
 #SET( CTEST_BUILD_NAME "win7-64-vs2008" )
 #set( CTEST_CMAKE_GENERATOR "Visual Studio 9 2008 Win64" )
-
-set( CTEST_BUILD_CONFIGURATION "Release" )
 #set(WITH_KWSTYLE FALSE)
 #set(WITH_MEMCHECK FALSE)
 #set(WITH_COVERAGE FALSE)
 #set(WITH_DOCUMENTATION FALSE)
 
 # Send this script as a note.
-list(APPEND CTEST_NOTES_FILES
-  "${CMAKE_CURRENT_LIST_FILE}"
-)
+LIST( APPEND CTEST_NOTES_FILES "${CMAKE_CURRENT_LIST_FILE}" )
 
 # Usage of the initial cache seems to do the trick:
 # Configure the dashboard.
-set( CTEST_INITIAL_CACHE "
+SET( CTEST_INITIAL_CACHE "
 // Specify build, generator
 BUILDNAME:STRING=linux-64-gcc4.1.2
-SITE:STRING=BIGR-ERASMUSMC
+SITE:STRING=BIGR-ErasmusMC-node7
 CMAKE_CONFIGURATION_TYPES:STRING=Release
 
+// Specify svn command:
 SVNCOMMAND:FILEPATH=/usr/bin/svn
 
 // Which ITK to use

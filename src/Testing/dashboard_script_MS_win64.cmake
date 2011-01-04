@@ -1,9 +1,13 @@
 #
 # This script runs a dashboard
+# Usage:
+#   ctest -S <nameofthisscript>
 #
 # It has 1 optional argument: the build model.
 # The build model should be one of {Experimental, Continuous, Nightly}
 # and defaults to Nightly.
+# Usage:
+#   ctest -S <nameofthisscript>,Model
 #
 # Setup: Windows 7, Visual Studio 9 2008 Win64, Release mode, ITK 3.20.0
 # PC: LKEB, MS personal computer
@@ -11,6 +15,7 @@
 
 # Where to find the src directory, and where to build the binaries
 SET( CTEST_SOURCE_DIRECTORY "D:/toolkits/elastix/nightly/elastix_src/src" )
+SET( CTEST_CHECKOUT_DIRECTORY "D:/toolkits/elastix/nightly/elastix_src" )
 SET( CTEST_BINARY_DIRECTORY "D:/toolkits/elastix/nightly/elastix_bin" )
 
 # Where to find CMake on my system
@@ -32,7 +37,7 @@ SET( CTEST_COMMAND
 
 # Specify svn update command
 SET( CTEST_SVN_CHECKOUT
-  "${CTEST_SVN_COMMAND} co --username elastixguest --password elastixguest https://svn.bigr.nl/elastix/trunkpublic \"${CTEST_SOURCE_DIRECTORY}\"" )
+  "${CTEST_SVN_COMMAND} co --username elastixguest --password elastixguest https://svn.bigr.nl/elastix/trunkpublic \"${CTEST_CHECKOUT_DIRECTORY}\"" )
 
 # Ctest should wipe the binary tree before running
 # to keep harddisk space usage from growing
@@ -54,11 +59,15 @@ SET( CTEST_BUILD_CONFIGURATION "Release" )
 #set(WITH_COVERAGE FALSE)
 #set(WITH_DOCUMENTATION FALSE)
 
+# Send this script as a note.
+LIST( APPEND CTEST_NOTES_FILES "${CMAKE_CURRENT_LIST_FILE}" )
+
 # Usage of the initial cache seems to do the trick:
 # Configure the dashboard:
 set( CTEST_INITIAL_CACHE "
-// Specify build, generator:
-BUILDNAME:STRING=win7-64-vs2008
+// Specify site, build, generator:
+SITE:STRING=LKEB-PCMarius
+BUILDNAME:STRING=win7-64-VS2008
 CMAKE_GENERATOR:INTERNAL=Visual Studio 9 2008 Win64
 CMAKE_CONFIGURATION_TYPES:STRING=Release
 
