@@ -17,12 +17,12 @@
 # PC: linux cluster at BIGR (SK).
 
 # Client maintainer: s.klein@erasmusmc.nl
-set(CTEST_SITE "BIGR.cluster")
-set(CTEST_BUILD_NAME "Linux-64bit-gcc4.1.2")
-#set(CTEST_BUILD_FLAGS "-j2") # parallel build for makefiles
-set(CTEST_BUILD_CONFIGURATION Release)
-set(CTEST_CMAKE_GENERATOR "Unix Makefiles")
-set(CTEST_DASHBOARD_ROOT "/home/sklein/tk/elastix/nightlybuild" )
+set( CTEST_SITE "BIGR.cluster" )
+set( CTEST_BUILD_NAME "Linux-64bit-gcc4.1.2" )
+#set( CTEST_BUILD_FLAGS "-j2" ) # parallel build for makefiles
+set( CTEST_BUILD_CONFIGURATION Release )
+set( CTEST_CMAKE_GENERATOR "Unix Makefiles" )
+set( CTEST_DASHBOARD_ROOT "/home/sklein/tk/elastix/nightlybuild" )
 
 # default: automatically determined
 #set(CTEST_UPDATE_COMMAND /path/to/svn)
@@ -72,5 +72,5 @@ USE_ViolaWellsMutualInformationMetric:BOOL=ON
 
 
 # Load the common dashboard script.
-include(${CTEST_SCRIPT_DIRECTORY}/elxDashboardCommon.cmake)
+include( ${CTEST_SCRIPT_DIRECTORY}/elxDashboardCommon.cmake )
 

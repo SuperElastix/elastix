@@ -155,9 +155,9 @@ if(dashboard_model STREQUAL Continuous)
     ctest_update(RETURN_VALUE res)
     message("Found ${res} changed files")
     if(res GREATER 0)
-      ctest_configure()
-      # run cmake twice; this seems to be necessary, otherwise the 
+      # run cmake twice; this seems to be necessary, otherwise the
       # KNN lib is not built
+      ctest_configure()
       ctest_configure()
       ctest_read_custom_files(${CTEST_BINARY_DIRECTORY})
       ctest_build()
@@ -172,9 +172,9 @@ else()
   write_cache()
   ctest_start(${dashboard_model})
   ctest_update()
-  ctest_configure()
-  # run cmake twice; this seems to be necessary, otherwise the 
+  # run cmake twice; this seems to be necessary, otherwise the
   # KNN lib is not built
+  ctest_configure()
   ctest_configure()
   ctest_read_custom_files(${CTEST_BINARY_DIRECTORY})
   ctest_build()
