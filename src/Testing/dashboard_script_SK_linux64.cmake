@@ -1,7 +1,7 @@
 #
 # This script runs a dashboard
 # Usage:
-#   ctest -S <nameofthisscript>
+#   ctest -S <nameofthisscript> -V
 #
 # Setup: linux 64bit,
 # gcc 4.1.2 20061115 (prerelease) (SUSE Linux),
@@ -50,11 +50,17 @@ set( CTEST_BUILD_CONFIGURATION "Release" )
 #set(WITH_COVERAGE FALSE)
 #set(WITH_DOCUMENTATION FALSE)
 
+# Send this script as a note.
+list(APPEND CTEST_NOTES_FILES
+  "${CMAKE_CURRENT_LIST_FILE}"
+)
+
 # Usage of the initial cache seems to do the trick:
 # Configure the dashboard.
 set( CTEST_INITIAL_CACHE "
 // Specify build, generator
 BUILDNAME:STRING=linux-64-gcc4.1.2
+SITE:STRING=BIGR-ERASMUSMC
 CMAKE_CONFIGURATION_TYPES:STRING=Release
 
 SVNCOMMAND:FILEPATH=/usr/bin/svn
