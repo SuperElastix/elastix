@@ -17,6 +17,7 @@
 
 #include "itkCombinationImageToImageMetric.h"
 #include "elxTimer.h"
+#include "itkMath.h"
 
 
 /** Macros to reduce some copy-paste work.
@@ -666,7 +667,8 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
 
     /** store ... */
     this->m_MetricValues[ i ] = tmpValue;
-    this->m_MetricComputationTime[ i ] = timer->GetElapsedClockSec() * 1000;
+    this->m_MetricComputationTime[ i ] = static_cast<std::size_t>(
+      Math::Round( timer->GetElapsedClockSec() * 1000.0 ) );
 
     /** and combine. */
     if ( this->m_UseMetric[ i ] )
@@ -731,7 +733,8 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
     /** store ... */
     this->m_MetricDerivatives[ i ] = tmpDerivative;
     this->m_MetricDerivativesMagnitude[ i ] = tmpDerivative.magnitude();
-    this->m_MetricComputationTime[ i ] = timer->GetElapsedClockSec() * 1000;
+    this->m_MetricComputationTime[ i ] = static_cast<std::size_t>(
+      Math::Round( timer->GetElapsedClockSec() * 1000.0 ) );
 
     /** and combine. */
     if ( this->m_UseMetric[ i ] )
@@ -800,7 +803,8 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
     this->m_MetricValues[ i ] = tmpValue;
     this->m_MetricDerivatives[ i ] = tmpDerivative;
     this->m_MetricDerivativesMagnitude[ i ] = tmpDerivative.magnitude();
-    this->m_MetricComputationTime[ i ] = timer->GetElapsedClockSec() * 1000;
+    this->m_MetricComputationTime[ i ] = static_cast<std::size_t>(
+      Math::Round( timer->GetElapsedClockSec() * 1000.0 ) );
   
     /** and combine. */
     if ( this->m_UseMetric[ i ] )
