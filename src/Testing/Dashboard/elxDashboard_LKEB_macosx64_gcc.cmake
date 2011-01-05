@@ -1,0 +1,76 @@
+# Elastix Dashboard Script
+#
+# This script runs a dashboard
+# Usage:
+#   ctest -S <nameofthisscript>
+#   OR
+#   ctest -S <nameofthisscript>,Model
+#
+# It has 1 optional argument: the build model.
+# The build model should be one of {Experimental, Continuous, Nightly}
+# and defaults to Nightly.
+# NOTE that Model should directly follow the comma: no space allowed!
+#
+# Setup: MacOSX 64bit, 10.6.5
+# gcc 4.2.1
+# Release mode, ITK 3.20.0
+# PC: LKEB (MS), MacMini PC of Patrick de Koning
+
+# Client maintainer: m.staring@lumc.nl
+set( CTEST_SITE "LKEB.MacMini" )
+set( CTEST_BUILD_NAME "MacOSX-64bit-gcc4.2.1" )
+set( CTEST_BUILD_FLAGS "-j2" ) # parallel build for makefiles
+set( CTEST_BUILD_CONFIGURATION Release )
+set( CTEST_CMAKE_GENERATOR "Unix Makefiles" )
+set( CTEST_DASHBOARD_ROOT "/elastix-nightly/build/" )
+
+# default: automatically determined
+#set(CTEST_UPDATE_COMMAND /path/to/svn)
+
+# Specify the kind of dashboard to submit
+# default: Nightly
+SET( dashboard_model Nightly )
+IF( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
+  SET( dashboard_model Experimental )
+ELSEIF( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
+  SET( dashboard_model Continuous )
+ENDIF()
+
+#set(dashboard_do_memcheck 1)
+#set(dashboard_do_coverage 1)
+
+SET( dashboard_cache "
+// Which ITK to use
+ITK_DIR:PATH=/elastix-nightly/itk/release
+
+// Some elastix settings, defining the configuration
+ELASTIX_BUILD_TESTING:BOOL=ON
+ELASTIX_ENABLE_PACKAGER:BOOL=ON
+ELASTIX_USE_CUDA:BOOL=OFF
+ELASTIX_USE_MEVISDICOMTIFF:BOOL=OFF
+ELASTIX_IMAGE_DIMENSION:STRING=2;3;4
+ELASTIX_IMAGE_2D_PIXELTYPES:STRING=float
+ELASTIX_IMAGE_3D_PIXELTYPES:STRING=float
+ELASTIX_IMAGE_4D_PIXELTYPES:STRING=short
+
+// Compile all elastix components; todo: automate this
+USE_AffineDTITransformElastix:BOOL=ON
+USE_BSplineInterpolatorFloat:BOOL=ON
+USE_BSplineResampleInterpolatorFloat:BOOL=ON
+USE_BSplineTransformWithDiffusion:BOOL=ON
+USE_ConjugateGradientFRPR:BOOL=ON
+USE_FixedShrinkingPyramid:BOOL=ON
+USE_LinearInterpolator:BOOL=ON
+USE_LinearResampleInterpolator:BOOL=ON
+USE_MovingShrinkingPyramid:BOOL=ON
+USE_MutualInformationHistogramMetric:BOOL=ON
+USE_NearestNeighborInterpolator:BOOL=ON
+USE_NearestNeighborResampleInterpolator:BOOL=ON
+USE_RSGDEachParameterApart:BOOL=ON
+USE_ViolaWellsMutualInformationMetric:BOOL=ON
+")
+
+
+# Load the common dashboard script.
+include( ${CTEST_SCRIPT_DIRECTORY}/elxDashboardCommon.cmake )
+
