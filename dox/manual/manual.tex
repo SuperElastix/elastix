@@ -638,33 +638,41 @@ composed as follows: $\vmu = (p_{1x}, p_{2x}, \ldots, p_{P_1},
 p_{1y}, p_{2y}, \ldots, p_{P_2} )^T$.
 
 \item[Thin-plate splines:] (\texttt{SplineKernelTransform}) Thin-plate
-    splines are another well-known representation for nonrigid
-    transformations. The thin-plate spline is an instance of the more
-    general class of kernel-based transforms \cite{Davis97,Brooks07}. The
-    transformation is based on a set of $k=1\ldots K$ corresponding
-    landmarks in fixed and moving image. The landmark displacements
-    $\bm{d}_k = \vx_k^{\mathrm{mov}} - \vx_k^{\mathrm{fix}}$ form the
-    parameter vector $\vmu$. The fixed landmark positions
-    $\vx_k^{\mathrm{fix}}$ are given by the user. The transformation is
-    expressed as a sum of an affine component and a nonrigid component:
+splines are another well-known representation for nonrigid
+transformations. The thin-plate spline is an instance of the more
+general class of kernel-based transforms \cite{Davis97,Brooks07}.
+The transformation is based on a set of $K$ corresponding landmarks
+in the fixed and moving image: $\vx_k^{\mathrm{fix}}$ and
+$\vx_k^{\mathrm{mov}}, k = 1, \ldots, K$, respectively. The
+transformation is expressed as a sum of an affine component and a
+nonrigid component:
 \begin{align}
-\vTmx = \vx + A \vx + \bm{t} + \sum_{\vx_k} \bm{c}_k \bm{G}(\vx
-- \vx_k^{\mathrm{fix}}),\label{eq:splinekernel}
+\vTmx = \vx + A \vx + \bm{t} + \sum_{\vx_k^{\mathrm{fix}}} \bm{c}_k
+\bm{G}(\vx - \vx_k^{\mathrm{fix}}),\label{eq:splinekernel}
 \end{align}
- where $\vx_k$ are landmark positions in the fixed image, $\bm{G}(\bm{r})$
- is a basis function and $\bm{c}_k$ are the coefficients corresponding to
- each landmark. The coefficients $\bm{c}_k$ and the elements of $\bm{A}$
- and $\bm{t}$ are computed from the landmark displacements. The specific
- choice of basis function $\bm{G}(\bm{r})$ determines the ``physical
- behaviour''. The most often used choice of $\bm{G}(\bm{r})$ leads to the
- thin-plate spline, but another useful alternative is the elastic-body
- spline \cite{Davis97}. The spline kernel transforms are often less
- efficient than the B-splines (because they lack the compact support
- property of the B-splines), but they allow for more flexibility in placing
- the control points $\vx_k^{\mathrm{fix}})$. The parameter vector is (for
- 2D images) composed as follows: $\vmu = (d_{1x}, d_{1y}, d_{2x}, d_{2y},
- \ldots, d_{Kx}, d_{Ky} )^T$. Note the difference in ordering of $\vmu$
- compared to the B-splines transform.
+where $\bm{G}(\bm{r})$ is a basis function and $\bm{c}_k$ are the
+coefficients corresponding to each landmark. The coefficients
+$\bm{c}_k$ and the elements of $\bm{A}$ and $\bm{t}$ are computed
+from the landmark displacements $\bm{d}_k = \vx_k^{\mathrm{mov}} -
+\vx_k^{\mathrm{fix}}$. The specific choice of basis function
+$\bm{G}(\bm{r})$ determines the ``physical behaviour''. The most
+often used choice of $\bm{G}(\bm{r})$ leads to the thin-plate
+spline, but another useful alternative is the elastic-body spline
+\cite{Davis97}. The spline kernel transforms are often less
+efficient than the B-splines (because they lack the compact support
+property of the B-splines), but they allow for more flexibility in
+placing the control points $\vx_k^{\mathrm{fix}}$. The moving
+landmarks form the parameter vector $\vmu$. Both landmark sets are
+needed to define a transformation. Note that in order to perform a
+registration, only the fixed landmark positions are given by the
+user; the moving landmarks are initialized to equal the fixed
+landmarks, corresponding to the identity transformation, and are
+subsequently optimized. The parameter vector is (for 2D images)
+composed as follows: $\vmu = (x_{1x}^{\mathrm{mov}},
+x_{1y}^{\mathrm{mov}}, x_{2x}^{\mathrm{mov}}, x_{2y}^{\mathrm{mov}},
+\ldots, x_{Kx}^{\mathrm{mov}}, x_{Ky}^{\mathrm{mov}} )^T$. Note the
+difference in ordering of $\vmu$ compared to the B-splines
+transform.
 \end{description}
 
 \begin{figure}
@@ -2377,14 +2385,20 @@ an initial transformation (supplied by the option \texttt{-t0}) or
 as input for \transformix.
 
 \item[SplineKernelTransform] As an alternative to the B-spline transform,
-    \elastix\ includes a \texttt{SplineKernelTransform}, which implements a
-    thin-plate spline type of transform; see also Section
-    \ref{sec:comp:transform}. This transformation requires a list of fixed
-    image landmarks (control points) to be specified, by means of an input
-    points file which has the same format as the \texttt{-def} file used by
-    \transformix\ (Section~\ref{sec:calltransformix}. See the
-    \texttt{doxygen} documentation on the website for a list of its
-    parameters.
+\elastix\ includes a \texttt{SplineKernelTransform}, which
+implements a thin-plate spline type of transform; see also Section
+\ref{sec:comp:transform}. This transformation requires a list of
+fixed image landmarks (control points) to be specified with the
+command line option ``\texttt{-ipp ipp.txt}'', by means of an input
+points file which has the same format as the \texttt{-def} file used
+by \transformix\ (see Section~\ref{sec:calltransformix}). See the
+\texttt{doxygen} documentation on the website for a list of its
+parameters.
+
+The moving image landmarks are optimized during the registration,
+and can be found in the resulting \texttt{TransformParameters.txt}
+file, in the parameter ``\texttt{TransformParameters}''. See Section
+\ref{sec:comp:transform} for the ordering of the parameters.
 
 \item[WeightedCombinationTransform] This is a transformation that is
     modelled as a weighted combination of user-specified transformations:
