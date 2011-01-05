@@ -72,8 +72,9 @@ endif()
 make_directory(${CTEST_BINARY_DIRECTORY})
 
 # Look for a Subversion command-line client.
-if(NOT DEFINED CTEST_UPDATE_COMMAND)
-  find_program(CTEST_UPDATE_COMMAND svn)
+if( NOT DEFINED CTEST_UPDATE_COMMAND )
+  find_program( CTEST_UPDATE_COMMAND svn
+    HINTS "C:/cygwin/bin/" )
 endif()
 
 # Support initial checkout if necessary;
