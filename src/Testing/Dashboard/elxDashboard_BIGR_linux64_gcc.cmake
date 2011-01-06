@@ -22,7 +22,7 @@ set( CTEST_BUILD_NAME "Linux-64bit-gcc4.1.2" )
 #set( CTEST_BUILD_FLAGS "-j2" ) # parallel build for makefiles
 set( CTEST_BUILD_CONFIGURATION Release )
 set( CTEST_CMAKE_GENERATOR "Unix Makefiles" )
-set( CTEST_DASHBOARD_ROOT "/home/sklein/tk/elastix/nightlybuild" )
+set( CTEST_DASHBOARD_ROOT "/home/sklein/tk/mydash/${CTEST_SCRIPT_NAME}" )
 
 # default: automatically determined
 #set(CTEST_UPDATE_COMMAND /path/to/svn)
