@@ -24,6 +24,7 @@ set( CTEST_DASHBOARD_ROOT "D:/tk/mydash/${CTEST_SCRIPT_NAME}" )
 
 # default: automatically determined
 #set(CTEST_UPDATE_COMMAND /path/to/svn)
+set(CTEST_UPDATE_COMMAND "C:/Program Files/Subversion/bin")
 
 # Specify the kind of dashboard to submit
 # default: Nightly
