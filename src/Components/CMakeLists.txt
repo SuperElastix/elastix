@@ -56,7 +56,7 @@ FILE( WRITE ${InstallFunctionCallFile}
 
 
 #---------------------------------------------------------------------
-# Macro that simplifies the addition of elx-components
+# Macros that simplify the addition (and removal) of elx-components
 #
 # Usage:
 # ADD_ELXCOMPONENT( <name_of_lib> <list_of_source_and_header_files> )
@@ -65,15 +65,68 @@ FILE( WRITE ${InstallFunctionCallFile}
 # which also should be the name used in the elxInstallMacro, in the
 # the .cxx file of the component.
 #
+# The REMOVE_ELXCOMPONENT is in some cases useful, if you want to
+# skip building the component in case some other cmake setting is not
+# correct. Most users will not need to invoke this macro though.
+# 
+# Usage: 
+# REMOVE_ELXCOMPONENT( <name_of_lib> )
+#
+INCLUDE( CMakeDependentOption )
+
+MACRO( REMOVE_ELXCOMPONENT name )
+  # remove lib from link list
+  IF( DEFINED AllComponentLibs )
+    SET( dummy ${AllComponentLibs} )
+	IF( NOT "${dummy}" STREQUAL "")
+      LIST( REMOVE_ITEM dummy ${name} )
+	ENDIF()
+  ELSE()
+    SET( dummy "" )
+  ENDIF()
+  SET( AllComponentLibs ${dummy} CACHE INTERNAL "All component libraries for elastix/transformix"  )
+ENDMACRO( REMOVE_ELXCOMPONENT )
 
 MACRO( ADD_ELXCOMPONENT name )
+
   # Compile this component or not
   SET( defaultValue ON )
   IF( ${ARGV1} STREQUAL "OFF" )
     SET( defaultValue OFF )
-  ENDIF()
+  ENDIF()     
   MARK_AS_ADVANCED( USE_${name} )
-  OPTION( USE_${name} "Compile this component" ${defaultValue} )
+  SET( USE_${name} ${defaultValue} CACHE BOOL "Compile this component")
+  
+  # If USE_ALL_COMPONENTS is turned ON, we make a backup of the 
+  # current value, and force the use_var to ON. If USE_ALL_COMPONENTS
+  # is OFF, and there is a backup, set the use_var to the backed-up 
+  # value and remove the backup; otherwise, leave the use_var to its
+  # current (default or user-specified) value.
+  IF( USE_ALL_COMPONENTS )
+    # make backup
+    IF( NOT DEFINED USE_${name}_BACKUP )
+      IF( USE_${name} )
+        SET( USE_${name}_BACKUP ON CACHE INTERNAL "Backup of USE_var" FORCE )
+      ELSE()
+        SET( USE_${name}_BACKUP OFF CACHE INTERNAL "Backup of USE_var" FORCE )
+      ENDIF()
+    ENDIF()
+    # turn use_var to on;
+    SET( USE_${name} ON CACHE BOOL "Compile this component" FORCE )
+  ELSE()
+    # if there is a backup, set the use_var to the backed-up value
+    # and remove the backup.
+    IF( DEFINED USE_${name}_BACKUP )
+      # this unset command is important; it makes sure the use_var is reset
+      UNSET( USE_${name} CACHE )
+      IF( USE_${name}_BACKUP )
+        SET( USE_${name} ON CACHE BOOL "Compile this component")
+      ELSE()
+        SET( USE_${name} OFF CACHE BOOL "Compile this component")
+      ENDIF()
+      UNSET( USE_${name}_BACKUP CACHE )
+    ENDIF()
+  ENDIF()
 
   IF( USE_${name} )
     # Create the list of files which create the library
@@ -109,18 +162,15 @@ MACRO( ADD_ELXCOMPONENT name )
 
   ELSE( USE_${name} )
     # Remove from link list
-    IF( DEFINED AllComponentLibs )
-      SET( dummy ${AllComponentLibs} )
-			IF( NOT "${dummy}" STREQUAL "")
-        LIST( REMOVE_ITEM dummy ${name} )
-			ENDIF()
-    ELSE()
-      SET( dummy "" )
-    ENDIF()
-    SET( AllComponentLibs ${dummy} CACHE INTERNAL "All component libraries for elastix/transformix"  )
+    REMOVE_ELXCOMPONENT( ${name} )   
   ENDIF()
 
 ENDMACRO( ADD_ELXCOMPONENT )
+
+#---------------------------------------------------------------------
+# Option to turn on all components by default
+MARK_AS_ADVANCED( USE_ALL_COMPONENTS )
+SET( USE_ALL_COMPONENTS OFF CACHE BOOL "Compile all components" )
 
 
 #---------------------------------------------------------------------

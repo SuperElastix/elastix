@@ -25,5 +25,5 @@ ELSE()
 
   # This is required to get the CUDAResampler out of the AllComponentLibs
   # list defined in Components/CMakeLists.txt.
-  ADD_ELXCOMPONENT( CUDAResampler elxCUDAResampler.cxx )
+  REMOVE_ELXCOMPONENT( CUDAResampler )
 ENDIF()

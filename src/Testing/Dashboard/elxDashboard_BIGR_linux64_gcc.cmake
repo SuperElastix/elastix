@@ -53,21 +53,8 @@ ELASTIX_IMAGE_2D_PIXELTYPES:STRING=float
 ELASTIX_IMAGE_3D_PIXELTYPES:STRING=float
 ELASTIX_IMAGE_4D_PIXELTYPES:STRING=short
 
-// Compile all elastix components; todo: automate this
-USE_AffineDTITransformElastix:BOOL=ON
-USE_BSplineInterpolatorFloat:BOOL=ON
-USE_BSplineResampleInterpolatorFloat:BOOL=ON
-USE_BSplineTransformWithDiffusion:BOOL=ON
-USE_ConjugateGradientFRPR:BOOL=ON
-USE_FixedShrinkingPyramid:BOOL=ON
-USE_LinearInterpolator:BOOL=ON
-USE_LinearResampleInterpolator:BOOL=ON
-USE_MovingShrinkingPyramid:BOOL=ON
-USE_MutualInformationHistogramMetric:BOOL=ON
-USE_NearestNeighborInterpolator:BOOL=ON
-USE_NearestNeighborResampleInterpolator:BOOL=ON
-USE_RSGDEachParameterApart:BOOL=ON
-USE_ViolaWellsMutualInformationMetric:BOOL=ON
+// Compile all elastix components;
+USE_ALL_COMPONENTS:BOOL=ON
 ")
 
 
