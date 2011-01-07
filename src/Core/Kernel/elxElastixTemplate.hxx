@@ -382,7 +382,7 @@ int ElastixTemplate<TFixedImage, TMovingImage>
    * But for now, there seems to be no use yet for that.
    */
   timer->StartTimer();
-  elxout << "Compute spatial Jacobian (full matrix)..." << std::endl;
+  elxout << "Compute spatial Jacobian (full matrix) ..." << std::endl;
   try
   {
     this->GetElxTransformBase()->ComputeSpatialJacobian();

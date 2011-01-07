@@ -61,7 +61,7 @@ KernelTransform2<TScalarType, NDimensions>
   if ( this->m_SourceLandmarks != landmarks )
   {
     this->m_SourceLandmarks = landmarks;
-    this->UpdateParameters();
+    //this->UpdateParameters(); // Not affected by source landmark change
     this->Modified();
 
     // these are invalidated when the source landmarks change

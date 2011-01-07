@@ -18,6 +18,7 @@
 #include "elxSplineKernelTransform.h"
 #include "itkTransformixInputPointFileReader.h"
 #include "vnl/vnl_math.h"
+#include "elxTimer.h"
 
 namespace elastix
 {
@@ -272,7 +273,14 @@ SplineKernelTransform<TElastix>
   }
 
   /** Set the ipp as source landmarks. */
+  tmr::Timer::Pointer timer = tmr::Timer::New();
+  timer->StartTimer();
+  elxout << "  Setting the fixed image landmarks ..." << std::endl;
   this->m_KernelTransform->SetSourceLandmarks( inputPointSet );
+  timer->StopTimer();
+  elxout << "  Setting the fixed image landmarks "
+    << timer->PrintElapsedTimeDHMS()
+    << std::endl;
 
 } // end DetermineSourceLandmarks()
 
