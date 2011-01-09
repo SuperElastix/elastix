@@ -1567,13 +1567,12 @@ coordinates). An example for 3D images:
   \texttt{(SampleRegionSize 50.0 50.0 50.0)}\\
   \texttt{(NumberOfSpatialSamples 2000)}\\
 \end{quote}
-In every iteration, a square region of $50^3$\,mm is randomly
-selected. In that region, 2000 samples are selected according to a
-uniform distribution. Effectively, a kind of \emph{localized}
-similarity measure is obtained, which sometimes gives better
-registration results. See \cite{Kle08:Automatic} for more
-information on this approach. For the sample region size a
-reasonable value to try is $\approx1/3$ of the image size.
+In every iteration, a square region of $50^3$\,mm is randomly selected. In that
+region, 2000 samples are selected according to a uniform distribution.
+Effectively, a kind of \emph{localised} similarity measure is obtained, which
+sometimes gives better registration results. See \cite{Kle08:Automatic} for
+more information on this approach. For the sample region size a reasonable
+value to try is $\approx1/3$ of the image size.
 
 \subsection{Interpolator}\label{sec:interpolatortuning}
 
@@ -2230,13 +2229,12 @@ T_j}{\partial x_1^2}(\vxt[i]) \right)^2  + 2 \left( \frac{\partial^2
 T_j}{\partial x_1 \partial x_2}(\vxt[i]) \right)^2 + \left(
 \frac{\partial^2 T_j}{\partial x_2^2}(\vxt[i]) \right)^2,
 \end{align}
-where $P$ is the number of points $\vxt[i]$, and the tilde denotes
-the difference between a variable and a given point over which a
-term is evaluated. As you can see it penalises sharp deviations of
-the transformation (e.g. no high compression followed by a nearby
-high expansion). You can use it to regularize your nonrigid
-transformation if you experience problems such as foldings. In our
-current implementation the computation time of this term is
+where $P$ is the number of points $\vxt[i]$, and the tilde denotes the
+difference between a variable and a given point over which a term is evaluated.
+As you can see it penalises sharp deviations of the transformation (e.g. no
+high compression followed by a nearby high expansion). You can use it to
+regularise your nonrigid transformation if you experience problems such as
+foldings. In our current implementation the computation time of this term is
 relatively large, though.
 
 It can be selected in \elastix\ using \small
@@ -2272,47 +2270,43 @@ Section~\ref{sec:penaltyterms}.
 
 \subsection{DisplacementMagnitudePenalty: inverting transformations}
 
-The \texttt{DisplacementMagnitudePenalty} is a cost function that
-penalises $||\vTm(\vx)-\vx||^2$. You can use this to invert
-transforms, by setting the transform to be inverted as an initial
-transform (using \texttt{-t0}), setting
-\texttt{(HowToCombineTransforms "Compose")}, and running \elastix\
-with this metric. After that you can manually set the initial
-transform in the last parameter file to
-\texttt{"NoInitialTransform"}, and voila, you have the inverse
-transform! Strictly speaking, you should then also change the
-Size/Spacing/Origin/Index settings to match that of the moving
-image. Select it with: \small
+The \texttt{DisplacementMagnitudePenalty} is a cost function that penalises
+$||\vTm(\vx)-\vx||^2$. You can use this to invert transforms, by setting the
+transform to be inverted as an initial transform (using \texttt{-t0}), setting
+\texttt{(HowToCombineTransforms "Compose")}, and running \elastix\ with this
+metric, using the original fixed image set both as fixed (\texttt{-f}) and
+moving (\texttt{-m}) image. After that you can manually set the initial
+transform in the last parameter file to \texttt{"NoInitialTransform"}, and
+voila, you have the inverse transform! Strictly speaking, you should then also
+change the Size/Spacing/Origin/Index/Direction settings to match that of the
+moving image. Select it with: \small
 \begin{verbatim}
 (Metric "DisplacementMagnitudePenalty")
 \end{verbatim}
-\normalsize Note that inverting a transformation becomes
-conceptually very similar to performing an image registration in
-this way. Consequently, the same choices are relevant: optimisation
-algorithm, multiresolution etc...
+\normalsize Note that inverting a transformation becomes conceptually very
+similar to performing an image registration in this way. Consequently, the same
+choices are relevant: optimisation algorithm, multiresolution etc...
 
 Note that this procedure was described and evaluated in \cite{Metz10}.
 
 \subsection{Corresponding points: help the registration}
 
-Most of the similarity measures in \elastix\ are based on
-corresponding characteristics of the fixed and moving image. It is
-possible, however, to register based on point correspondence.
-Therefore, in \elastix\ 4.4 we introduced a metric that minimizes
-the distance of two point sets with known correspondence. It is
-defined as:
+Most of the similarity measures in \elastix\ are based on corresponding
+characteristics of the fixed and moving image. It is possible, however, to
+register based on point correspondence. Therefore, in \elastix\ 4.4 we
+introduced a metric that minimises the distance of two point sets with known
+correspondence. It is defined as:
 \begin{align}
 \Sim_{\mathrm{CP}} &= \frac{1}{P} \sum_{\vx_{Fi}} \left\| \vx_{Mi} -
 \vTm(\vx_{Fi}) \right\|
 \end{align}
 where $P$ is the number of points $\vx_i$, and $\vx_{Fi}, \vx_{Mi}$
-corresponding points from the fixed and moving image point sets,
-respectively. The metric can be used to help in a difficult image
-registration task that fails if performed fully automatically. A
-user can manually click corresponding points (or maybe automatically
-extract), and setup \elastix\ to not only minimize based on
-intensity, but also taking into account that some positions are
-known to correspond. The derivative of $\Sim_{\mathrm{CP}}$ reads:
+corresponding points from the fixed and moving image point sets, respectively.
+The metric can be used to help in a difficult image registration task that
+fails if performed fully automatically. A user can manually click corresponding
+points (or maybe automatically extract), and setup \elastix\ to not only
+minimise based on intensity, but also taking into account that some positions
+are known to correspond. The derivative of $\Sim_{\mathrm{CP}}$ reads:
 \begin{align}
 \frac{\partial}{\partial \vmu} \Sim_{\mathrm{CP}} &= -\frac{1}{P}
 \sum_{\vx_{Fi}} \frac{1}{\left\| \vx_{Mi} - \vTm(\vx_{Fi})
