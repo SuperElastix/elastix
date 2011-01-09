@@ -2558,8 +2558,6 @@ In \elastix\ 4.4 and later versions, it is also possible to add your own
 Component directories. These can be located anywhere outside the \elastix\
 source tree. See Section \ref{sec:dev:newcomp} for more details about this.
 
-
-
 %\subsection{\elastix\ execution flow}
 %\begin{enumerate}
 %\item elastix.cxx
@@ -2601,7 +2599,23 @@ source tree. See Section \ref{sec:dev:newcomp} for more details about this.
 %\item ANN license!
 %\end{itemize}
 
+\section{Including \elastix\ code in your own program}
 
+You may find some \elastix\ classes useful to integrate in your own project.
+For example, if you are developing a new \elastix\ component and first would
+like to test it outside elastix (see Section \ref{sec:dev:newcomp}. In such a
+case, you could of course copy the required \elastix\ files to your own
+project, or set the include-paths manually, but this would not be very
+convenient.
+
+To make it easier, a \texttt{UseElastix.cmake} file is generated in the
+\elastix\ binary directory. You can include this in the \texttt{CMakeLists.txt}
+file of your own project, and CMake will make sure that all necessary
+include\_directories are set. Also, you can link to the \elastix\ libraries,
+such as elxCommon, to avoid recompiling code.
+
+An example of this can be found in the directory \texttt{dox/externalproject}
+of the elastix source distribution.
 
 \section{Creating new components}\label{sec:dev:newcomp}
 
