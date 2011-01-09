@@ -40,9 +40,20 @@ IF( USE_PreconditionedGradientDescent )
 ENDIF()
 
 #----------------------------------------------------------------------
-# Mark some mostly unused variables as advanced
-MARK_AS_ADVANCED( EXECUTABLE_OUTPUT_PATH )
-MARK_AS_ADVANCED( LIBRARY_OUTPUT_PATH )
+# Set single output directories for all executables and libraries.
+# This makes it easier to create an elxUseFile.cmake, that users can
+# include in their programs to borrow elastix functionality.
+
+IF(NOT LIBRARY_OUTPUT_PATH)
+  SET (LIBRARY_OUTPUT_PATH ${elastix_BINARY_DIR}/bin CACHE INTERNAL "Single output directory for building all libraries.")
+ENDIF(NOT LIBRARY_OUTPUT_PATH)
+
+IF(NOT EXECUTABLE_OUTPUT_PATH)
+  SET (EXECUTABLE_OUTPUT_PATH ${elastix_BINARY_DIR}/bin CACHE INTERNAL "Single output directory for building all executables.")
+ENDIF(NOT EXECUTABLE_OUTPUT_PATH)
+
+# Mark these variables as advanced; their default value is usually fine
+MARK_AS_ADVANCED(LIBRARY_OUTPUT_PATH EXECUTABLE_OUTPUT_PATH)
 
 #---------------------------------------------------------------------
 # Check if Mevis DicomTiff support is desired
@@ -432,4 +443,23 @@ IF( ELASTIX_ENABLE_PACKAGER )
   # This include will do all the work.
   INCLUDE( CPack )
 ENDIF()
+
+#----------------------------------------------------------------------
+# Make it easier to include elastix functionality in other programs.
+
+# Save library dependencies.
+# The library dependencies file.
+SET(elxLIBRARY_DEPENDS_FILE ${elastix_BINARY_DIR}/elxLibraryDepends.cmake)
+EXPORT_LIBRARY_DEPENDENCIES(${elxLIBRARY_DEPENDS_FILE} )
+
+# The "use" file.
+SET(elxUSE_FILE ${elastix_BINARY_DIR}/UseElastix.cmake)
+
+# The build settings file. (necessary for elastix?)
+#SET(ITK_BUILD_SETTINGS_FILE ${ITK_BINARY_DIR}/ITKBuildSettings.cmake)
+
+# Create the use file. 
+CONFIGURE_FILE( ${elastix_SOURCE_DIR}/UseElastix.cmake.in
+ ${elxUSE_FILE} @ONLY )	
+
 
