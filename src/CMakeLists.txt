@@ -44,16 +44,18 @@ ENDIF()
 # This makes it easier to create an elxUseFile.cmake, that users can
 # include in their programs to borrow elastix functionality.
 
-IF(NOT LIBRARY_OUTPUT_PATH)
-  SET (LIBRARY_OUTPUT_PATH ${elastix_BINARY_DIR}/bin CACHE INTERNAL "Single output directory for building all libraries.")
-ENDIF(NOT LIBRARY_OUTPUT_PATH)
+IF( NOT LIBRARY_OUTPUT_PATH )
+  SET( LIBRARY_OUTPUT_PATH ${elastix_BINARY_DIR}/bin CACHE INTERNAL
+    "Single output directory for building all libraries." )
+ENDIF()
 
-IF(NOT EXECUTABLE_OUTPUT_PATH)
-  SET (EXECUTABLE_OUTPUT_PATH ${elastix_BINARY_DIR}/bin CACHE INTERNAL "Single output directory for building all executables.")
-ENDIF(NOT EXECUTABLE_OUTPUT_PATH)
+IF( NOT EXECUTABLE_OUTPUT_PATH )
+  SET( EXECUTABLE_OUTPUT_PATH ${elastix_BINARY_DIR}/bin CACHE INTERNAL
+    "Single output directory for building all executables." )
+ENDIF()
 
 # Mark these variables as advanced; their default value is usually fine
-MARK_AS_ADVANCED(LIBRARY_OUTPUT_PATH EXECUTABLE_OUTPUT_PATH)
+MARK_AS_ADVANCED( LIBRARY_OUTPUT_PATH EXECUTABLE_OUTPUT_PATH )
 
 #---------------------------------------------------------------------
 # Check if Mevis DicomTiff support is desired
@@ -69,7 +71,8 @@ OPTION( ELASTIX_USE_MEVISDICOMTIFF
 # components.
 
 MARK_AS_ADVANCED( ELASTIX_USER_COMPONENT_DIRS )
-SET( ELASTIX_USER_COMPONENT_DIRS "" CACHE PATH "directories with user defined elastix components" )
+SET( ELASTIX_USER_COMPONENT_DIRS "" CACHE PATH
+  "directories with user defined elastix components" )
 
 #-------------------------------------------------------------------------
 # elastix depends on some ITK settings
@@ -449,17 +452,17 @@ ENDIF()
 
 # Save library dependencies.
 # The library dependencies file.
-SET(elxLIBRARY_DEPENDS_FILE ${elastix_BINARY_DIR}/elxLibraryDepends.cmake)
-EXPORT_LIBRARY_DEPENDENCIES(${elxLIBRARY_DEPENDS_FILE} )
+SET( elxLIBRARY_DEPENDS_FILE ${elastix_BINARY_DIR}/elxLibraryDepends.cmake )
+EXPORT_LIBRARY_DEPENDENCIES( ${elxLIBRARY_DEPENDS_FILE} )
 
 # The "use" file.
-SET(elxUSE_FILE ${elastix_BINARY_DIR}/UseElastix.cmake)
+SET( elxUSE_FILE ${elastix_BINARY_DIR}/UseElastix.cmake )
 
 # The build settings file. (necessary for elastix?)
-#SET(ITK_BUILD_SETTINGS_FILE ${ITK_BINARY_DIR}/ITKBuildSettings.cmake)
+#SET( ITK_BUILD_SETTINGS_FILE ${ITK_BINARY_DIR}/ITKBuildSettings.cmake )
 
-# Create the use file. 
+# Create the use file.
 CONFIGURE_FILE( ${elastix_SOURCE_DIR}/UseElastix.cmake.in
- ${elxUSE_FILE} @ONLY )	
+ ${elxUSE_FILE} @ONLY )
 
 
