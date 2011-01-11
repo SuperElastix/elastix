@@ -86,6 +86,9 @@ if( NOT EXISTS "${CTEST_SOURCE_DIRECTORY}"
   set( CTEST_CHECKOUT_COMMAND "\"${CTEST_UPDATE_COMMAND}\" co --username elastixguest --password elastixguest \"${dashboard_url}\" ." )
 endif()
 
+# Also check the dox directory for updates, not only the src directory.
+SET( CTEST_EXTRA_UPDATES_1 "${CTEST_DASHBOARD_ROOT}/dox" )
+
 # Send the main script as a note, and this script
 list( APPEND CTEST_NOTES_FILES
   "${CTEST_SCRIPT_DIRECTORY}/${CTEST_SCRIPT_NAME}"
