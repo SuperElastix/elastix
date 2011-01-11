@@ -166,8 +166,8 @@ if( dashboard_model STREQUAL Continuous )
       ctest_submit()
     endif()
 
-    # Delay until at least 5 minutes past START_TIME
-    ctest_sleep( ${START_TIME} 300 ${CTEST_ELAPSED_TIME} )
+    # Delay until at least 10 minutes past START_TIME
+    ctest_sleep( ${START_TIME} 600 ${CTEST_ELAPSED_TIME} )
   endwhile()
 else()
   write_cache()
