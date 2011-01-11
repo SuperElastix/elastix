@@ -79,7 +79,6 @@ if( NOT DEFINED CTEST_UPDATE_COMMAND )
 endif()
 
 # Support initial checkout if necessary;
-# dashboard_root is working dir?
 if( NOT EXISTS "${CTEST_SOURCE_DIRECTORY}"
     AND NOT DEFINED CTEST_CHECKOUT_COMMAND
     AND CTEST_UPDATE_COMMAND)
