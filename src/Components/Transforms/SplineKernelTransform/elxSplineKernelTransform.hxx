@@ -193,7 +193,7 @@ SplineKernelTransform<TElastix>
   /** Typedef's. */
   typedef typename FixedImageType::IndexType            FixedImageIndexType;
   typedef typename FixedImageIndexType::IndexValueType  FixedImageIndexValueType;
-  typedef typename KernelTransformType::PointSetType            PointSetType;
+  typedef typename KernelTransformType::PointSetType    PointSetType;
   typedef itk::TransformixInputPointFileReader<
     PointSetType >                                      IPPReaderType;
 

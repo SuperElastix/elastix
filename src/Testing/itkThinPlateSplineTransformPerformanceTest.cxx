@@ -41,6 +41,7 @@ public:
   itkNewMacro( Self );
 
   typedef typename Superclass::PointSetType   PointSetType;
+  typedef typename Superclass::LMatrixType    LMatrixType;
 
   void SetSourceLandmarksPublic( PointSetType * landmarks )
   {
@@ -59,7 +60,7 @@ public:
   {
     return this->m_LMatrix;
   }
-};
+}; // end helper class
 } // end namespace itk
 
 //-------------------------------------------------------------------------------------
