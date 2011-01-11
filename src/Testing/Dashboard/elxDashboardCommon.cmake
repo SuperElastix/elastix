@@ -82,7 +82,18 @@ endif()
 if( NOT EXISTS "${CTEST_SOURCE_DIRECTORY}"
     AND NOT DEFINED CTEST_CHECKOUT_COMMAND
     AND CTEST_UPDATE_COMMAND)
-  set( CTEST_CHECKOUT_COMMAND "\"${CTEST_UPDATE_COMMAND}\" co --username elastixguest --password elastixguest \"${dashboard_url}\" ${CTEST_DASHBOARD_ROOT}" )
+  set( CTEST_CHECKOUT_COMMAND 
+    "\"${CTEST_UPDATE_COMMAND}\" co --username elastixguest --password elastixguest \"${dashboard_url}\" ${CTEST_DASHBOARD_ROOT}" )
+  # CTest delayed initialization is broken, so we copy the
+  # CTestConfig.cmake info here.
+  # SK: Otherwise submission fails.
+  set( CTEST_PROJECT_NAME "elastix" )
+  set( CTEST_NIGHTLY_START_TIME "00:01:00 CET" )
+  set( CTEST_DROP_METHOD "http" )
+  set( CTEST_DROP_SITE "my.cdash.org" )
+  set( CTEST_DROP_LOCATION "/submit.php?project=elastix" )
+  set( CTEST_DROP_SITE_CDASH TRUE )
+
 endif()
 
 # Send the main script as a note, and this script
@@ -153,8 +164,14 @@ if( dashboard_model STREQUAL Continuous )
       set( FRESH_BUILD ON )
     endif()
 
+    # Check for changes
     ctest_update( SOURCE ${CTEST_DASHBOARD_ROOT} RETURN_VALUE res )
     message( "Found ${res} changed files" )
+    # SK: Only do initial checkout at the first iteration.
+    # After that, the CHECKOUT_COMMAND has to be removed, otherwise
+    # "svn update" will never see any changes.
+    set( CTEST_CHECKOUT_COMMAND ) 
+
     if( (res GREATER 0) OR (FRESH_BUILD) )
       # run cmake twice; this seems to be necessary, otherwise the
       # KNN lib is not built
