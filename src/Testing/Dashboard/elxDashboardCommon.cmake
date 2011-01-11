@@ -86,9 +86,6 @@ if( NOT EXISTS "${CTEST_SOURCE_DIRECTORY}"
   set( CTEST_CHECKOUT_COMMAND "\"${CTEST_UPDATE_COMMAND}\" co --username elastixguest --password elastixguest \"${dashboard_url}\" ." )
 endif()
 
-# Also check the dox directory for updates, not only the src directory.
-SET( CTEST_EXTRA_UPDATES_1 "${CTEST_DASHBOARD_ROOT}/dox" )
-
 # Send the main script as a note, and this script
 list( APPEND CTEST_NOTES_FILES
   "${CTEST_SCRIPT_DIRECTORY}/${CTEST_SCRIPT_NAME}"
@@ -150,15 +147,16 @@ if( dashboard_model STREQUAL Continuous )
     ctest_start( Continuous )
 
     # always build if the tree is missing
+    set( FRESH_BUILD OFF )
     if( NOT EXISTS "${CTEST_BINARY_DIRECTORY}/CMakeCache.txt" )
       message( "Starting fresh build..." )
       write_cache()
-      set( res 1 )
+      set( FRESH_BUILD ON )
     endif()
 
-    ctest_update( RETURN_VALUE res )
+    ctest_update( SOURCE ${CTEST_DASHBOARD_ROOT} RETURN_VALUE res )
     message( "Found ${res} changed files" )
-    if( res GREATER 0 )
+    if( (res GREATER 0) OR (FRESH_BUILD) )
       # run cmake twice; this seems to be necessary, otherwise the
       # KNN lib is not built
       ctest_configure()
@@ -175,7 +173,7 @@ if( dashboard_model STREQUAL Continuous )
 else()
   write_cache()
   ctest_start( ${dashboard_model} )
-  ctest_update()
+  ctest_update( SOURCE ${CTEST_DASHBOARD_ROOT} ) 
   # run cmake twice; this seems to be necessary, otherwise the
   # KNN lib is not built
   ctest_configure()
