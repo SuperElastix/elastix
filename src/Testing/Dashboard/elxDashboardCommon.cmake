@@ -79,11 +79,11 @@ if( NOT DEFINED CTEST_UPDATE_COMMAND )
 endif()
 
 # Support initial checkout if necessary;
-# dashboard_root is working dir.
+# dashboard_root is working dir?
 if( NOT EXISTS "${CTEST_SOURCE_DIRECTORY}"
     AND NOT DEFINED CTEST_CHECKOUT_COMMAND
     AND CTEST_UPDATE_COMMAND)
-  set( CTEST_CHECKOUT_COMMAND "\"${CTEST_UPDATE_COMMAND}\" co --username elastixguest --password elastixguest \"${dashboard_url}\" ." )
+  set( CTEST_CHECKOUT_COMMAND "\"${CTEST_UPDATE_COMMAND}\" co --username elastixguest --password elastixguest \"${dashboard_url}\" ${CTEST_DASHBOARD_ROOT}" )
 endif()
 
 # Send the main script as a note, and this script
