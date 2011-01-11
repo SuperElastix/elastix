@@ -119,7 +119,7 @@ int main( int argc, char *argv[] )
 
   /** Get the set of input points. */
   PointSetType::Pointer sourceLandmarks = ippReader->GetOutput();
-  const unsigned long realNumberOfLandmarks = ippReader->GetNumberOfPoints();
+  //const unsigned long realNumberOfLandmarks = ippReader->GetNumberOfPoints();
 
   std::vector<unsigned long> usedNumberOfLandmarks;
   usedNumberOfLandmarks.push_back( 100 );
