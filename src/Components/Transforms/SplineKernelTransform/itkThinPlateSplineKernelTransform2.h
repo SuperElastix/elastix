@@ -71,7 +71,10 @@ public:
   typedef typename Superclass::PointsIterator PointsIterator;
 
 protected:
-  ThinPlateSplineKernelTransform2() {};
+  ThinPlateSplineKernelTransform2()
+  {
+    this->m_FastComputationPossible = true;
+  };
   virtual ~ThinPlateSplineKernelTransform2() {}
 
   /** These (rather redundant) typedefs are needed because on SGI, typedefs

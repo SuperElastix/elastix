@@ -38,7 +38,8 @@ MACRO( ADD_ELX_TEST name )
   SET_PROPERTY( TARGET ${ELXTEST_EXECUTABLE_NAME} PROPERTY FOLDER "tests" )
 
   # Add the test.
-  ADD_TEST( ${ELXTEST_TEST_NAME} ${EXECUTABLE_OUTPUT_PATH}/${ELXTEST_EXECUTABLE_NAME} ${ARGN} )
+  ADD_TEST( ${ELXTEST_TEST_NAME}
+    ${EXECUTABLE_OUTPUT_PATH}/${ELXTEST_EXECUTABLE_NAME} ${ARGN} )
 
 ENDMACRO( ADD_ELX_TEST )
 
@@ -53,7 +54,8 @@ ADD_ELX_TEST( BSplineInterpolationDerivativeWeightFunctionTest )
 ADD_ELX_TEST( BSplineInterpolationSODerivativeWeightFunctionTest )
 ADD_ELX_TEST( MevisDicomTiffImageIOTest )
 ADD_ELX_TEST( ThinPlateSplineTransformPerformanceTest
-  ${elastix_SOURCE_DIR}/Testing/parameters_TPSTransformTest.txt )
+  ${elastix_SOURCE_DIR}/Testing/parameters_TPSTransformTest.txt
+  ${elastix_BINARY_DIR}/Testing )
 ADD_ELX_TEST( TimerTest )
 
 

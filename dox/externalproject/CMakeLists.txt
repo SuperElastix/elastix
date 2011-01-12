@@ -13,7 +13,7 @@ ENDIF( ITK_FOUND )
 SET( ELASTIX_BINARY_DIR "" CACHE PATH "Path to elastix binary folder" )
 SET( ELASTIX_USE_FILE ${ELASTIX_BINARY_DIR}/UseElastix.cmake )
 IF( EXISTS ${ELASTIX_USE_FILE} )
- MESSAGE( STATUS "Including Elastix settings.") 
+ MESSAGE( STATUS "Including Elastix settings." )
  INCLUDE( ${ELASTIX_USE_FILE} )
 ENDIF()
 

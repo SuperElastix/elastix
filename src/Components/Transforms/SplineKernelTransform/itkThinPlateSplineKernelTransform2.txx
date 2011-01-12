@@ -28,10 +28,11 @@ ThinPlateSplineKernelTransform2<TScalarType, NDimensions>
 {
   const TScalarType r = x.GetNorm();
   GMatrix.fill( NumericTraits< TScalarType >::Zero );
-  for ( unsigned int i = 0; i < NDimensions; i++ )
-  {
-    GMatrix[ i ][ i ] = r;
-  }
+  GMatrix.fill_diagonal( r );
+//   for ( unsigned int i = 0; i < NDimensions; i++ )
+//   {
+//     GMatrix[ i ][ i ] = r;
+//   }
 } // end ComputeG()
 
 

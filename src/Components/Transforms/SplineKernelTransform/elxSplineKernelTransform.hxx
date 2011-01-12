@@ -166,6 +166,12 @@ SplineKernelTransform<TElastix>
     this->m_KernelTransform->SetPoissonRatio( poissonRatio );
   }
 
+  /** Set the matrix inversion method (one of {SVD, QR}). */
+  std::string matrixInversionMethod = "SVD";
+  this->GetConfiguration()->ReadParameter(
+    matrixInversionMethod, "TPSMatrixInversionMethod", 0, true );
+  this->m_KernelTransform->SetMatrixInversionMethod( matrixInversionMethod );
+
   /** Load source landmark positions. */
   this->DetermineSourceLandmarks();
 
@@ -275,10 +281,10 @@ SplineKernelTransform<TElastix>
   /** Set the ipp as source landmarks. */
   tmr::Timer::Pointer timer = tmr::Timer::New();
   timer->StartTimer();
-  elxout << "  Setting the fixed image landmarks ..." << std::endl;
+  elxout << "  Setting the fixed image landmarks (requiring large matrix inversion) ..." << std::endl;
   this->m_KernelTransform->SetSourceLandmarks( inputPointSet );
   timer->StopTimer();
-  elxout << "  Setting the fixed image landmarks "
+  elxout << "  Setting the fixed image landmarks took: "
     << timer->PrintElapsedTimeDHMS()
     << std::endl;
 

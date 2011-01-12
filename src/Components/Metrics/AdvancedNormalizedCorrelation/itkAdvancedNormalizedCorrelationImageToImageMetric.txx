@@ -69,6 +69,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   typedef typename DerivativeType::iterator              DerivativeIteratorType;
   JacobianIteratorType jac = jacobian.begin();
   imageJacobian.Fill( 0.0 );
+
   const unsigned int sizeImageJacobian = imageJacobian.GetSize();
   for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
   {
@@ -283,7 +284,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 ::GetValueAndDerivative( const TransformParametersType & parameters,
   MeasureType & value, DerivativeType & derivative ) const
 {
-  itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
+  itkDebugMacro( << "GetValueAndDerivative( " << parameters << " ) " );
 
   typedef typename DerivativeType::ValueType        DerivativeValueType;
   typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
@@ -334,7 +335,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
     MovingImageDerivativeType movingImageDerivative;
 
     /** Transform point and check if it is inside the B-spline support region. */
-    bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint);
+    bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
     /** Check if point is inside mask. */
     if ( sampleOk )

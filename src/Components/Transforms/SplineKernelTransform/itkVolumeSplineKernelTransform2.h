@@ -73,7 +73,10 @@ public:
 
 
 protected:
-  VolumeSplineKernelTransform2() {};
+  VolumeSplineKernelTransform2()
+  {
+    this->m_FastComputationPossible = true;
+  };
   virtual ~VolumeSplineKernelTransform2() {}
 
   /** These (rather redundant) typedefs are needed because on SGI, typedefs

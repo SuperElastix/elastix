@@ -16,7 +16,9 @@ PURPOSE.  See the above copyright notices for more information.
 =========================================================================*/
 #ifndef _itkKernelTransform2_txx
 #define _itkKernelTransform2_txx
+
 #include "itkKernelTransform2.h"
+
 
 namespace itk
 {
@@ -38,16 +40,34 @@ KernelTransform2<TScalarType, NDimensions>
   this->m_TargetLandmarks = PointSetType::New();
   this->m_Displacements   = VectorSetType::New();
   this->m_WMatrixComputed = false;
+  
 
   this->m_LMatrixComputed = false;
   this->m_LInverseComputed = false;
+  this->m_LMatrixDecompositionComputed = false;
+
+  this->m_LMatrixDecompositionSVD = 0;
+  this->m_LMatrixDecompositionQR = 0;
 
   this->m_Stiffness = 0.0;
 
   // dummy value:
   this->m_PoissonRatio = 0.3;
-}
 
+  this->m_MatrixInversionMethod = "SVD";
+  this->m_FastComputationPossible = false;
+
+} // end constructor
+
+
+template <class TScalarType, unsigned int NDimensions>
+KernelTransform2<TScalarType, NDimensions>
+::~KernelTransform2()
+{
+  delete m_LMatrixDecompositionSVD;
+  delete m_LMatrixDecompositionQR;
+
+} // end destructor
 
   /**
   *
@@ -68,6 +88,7 @@ KernelTransform2<TScalarType, NDimensions>
     this->m_WMatrixComputed = false;
     this->m_LMatrixComputed = false;
     this->m_LInverseComputed = false;
+    this->m_LMatrixDecompositionComputed = false;
 
     // you must recompute L and Linv - this does not require the targ landmarks
     this->ComputeLInverse();
@@ -204,15 +225,51 @@ void
 KernelTransform2<TScalarType, NDimensions>
 ::ComputeWMatrix( void )
 {
-  typedef vnl_svd<TScalarType>  SVDSolverType;
+  /** Compute L and Y. */
   if ( !this->m_LMatrixComputed )
   {
     this->ComputeL();
   }
-
   this->ComputeY();
-  SVDSolverType svd( this->m_LMatrix, 1e-8 );
-  this->m_WMatrix = svd.solve( this->m_YMatrix );
+
+  /** L matrix decomposition and solving for Y matrix. */
+  if ( this->m_MatrixInversionMethod == "SVD" )
+  {
+    if ( !this->m_LMatrixDecompositionComputed )
+    {
+      if ( this->m_LMatrixDecompositionSVD != 0 )
+      {
+        delete this->m_LMatrixDecompositionSVD;
+      }
+      this->m_LMatrixDecompositionSVD = new SVDDecompositionType( this->m_LMatrix, 1e-8 );
+      this->m_LMatrixDecompositionComputed = true;
+    }
+    this->m_WMatrix = this->m_LMatrixDecompositionSVD->solve( this->m_YMatrix );
+    //vnl_svd<TScalarType> svd( this->m_LMatrix, 1e-8 );
+    //this->m_WMatrix = svd.solve( this->m_YMatrix );
+  }
+  else if ( this->m_MatrixInversionMethod == "QR" )
+  {
+    if ( !this->m_LMatrixDecompositionComputed )
+    {
+      if ( this->m_LMatrixDecompositionQR != 0 )
+      {
+        delete this->m_LMatrixDecompositionQR;
+      }
+      this->m_LMatrixDecompositionQR = new QRDecompositionType( this->m_LMatrix );
+      this->m_LMatrixDecompositionComputed = true;
+    }
+    this->m_WMatrix = this->m_LMatrixDecompositionQR->solve( this->m_YMatrix );
+//     vnl_qr<TScalarType> qr( this->m_LMatrix );
+//     this->m_WMatrix = qr.solve( this->m_YMatrix );
+  }
+  else
+  {
+    itkExceptionMacro( << "ERROR: invalid matrix inversion method ("
+      << this->m_MatrixInversionMethod << ")" );
+  }
+
+  /** Reorganize W. */
   this->ReorganizeW();
   this->m_WMatrixComputed = true;
 
@@ -228,9 +285,28 @@ void
 KernelTransform2<TScalarType, NDimensions>
 ::ComputeLInverse( void )
 {
-  if ( !this->m_LMatrixComputed ) this->ComputeL();
-  this->m_LMatrixInverse = vnl_matrix_inverse<TScalarType>( this->m_LMatrix );
-  this->m_LInverseComputed = true;
+  if ( !this->m_LMatrixComputed )
+  {
+    this->ComputeL();
+  }
+
+  if ( this->m_MatrixInversionMethod == "SVD" )
+  {
+    //this->m_LMatrixInverse = vnl_matrix_inverse<TScalarType>( this->m_LMatrix );
+    this->m_LMatrixInverse = vnl_svd<TScalarType>( this->m_LMatrix ).inverse();
+    this->m_LInverseComputed = true;
+  }
+  else if ( this->m_MatrixInversionMethod == "QR" )
+  {
+    this->m_LMatrixInverse = vnl_qr<TScalarType>( this->m_LMatrix ).inverse();
+    this->m_LInverseComputed = true;
+  }
+  else
+  {
+    itkExceptionMacro( << "ERROR: invalid matrix inversion method ("
+      << this->m_MatrixInversionMethod << ")" );
+    this->m_LInverseComputed = false;
+  }
 
 } // end ComputeLInverse()
 
@@ -259,6 +335,7 @@ KernelTransform2<TScalarType, NDimensions>
   this->m_LMatrix.update( this->m_PMatrix.transpose(), this->m_KMatrix.rows(), 0 );
   this->m_LMatrix.update( O2, this->m_KMatrix.rows(), this->m_KMatrix.columns() );
   this->m_LMatrixComputed = true;
+  this->m_LMatrixDecompositionComputed = false;
 
 } // end ComputeL()
 
@@ -301,8 +378,21 @@ KernelTransform2<TScalarType, NDimensions>
       const InputVectorType s = p1.Value() - p2.Value();
       this->ComputeG( s, G );
       // write value in upper and lower triangle of matrix
-      this->m_KMatrix.update( G, i * NDimensions, j * NDimensions );
-      this->m_KMatrix.update( G, j * NDimensions, i * NDimensions );
+//       if ( !this->m_FastComputationPossible )
+//       {
+        this->m_KMatrix.update( G, i * NDimensions, j * NDimensions );
+        this->m_KMatrix.update( G, j * NDimensions, i * NDimensions );
+// Possible, but no speed gain
+//       }
+//       else
+//       {
+//         ScalarType g = G( 0,0 );
+//         for ( unsigned int idx = 0; idx < NDimensions; idx++ )
+//         {
+//           this->m_KMatrix( i * NDimensions + idx, j * NDimensions + idx ) = g;
+//           this->m_KMatrix( j * NDimensions + idx, i * NDimensions + idx ) = g;
+//         }
+//       }
       p2++; j++;
     }
     p1++; i++;
@@ -560,6 +650,7 @@ KernelTransform2<TScalarType, NDimensions>
   this->m_WMatrixComputed = false;
   this->m_LMatrixComputed = false;
   this->m_LInverseComputed = false;
+  this->m_LMatrixDecompositionComputed = false;
 
   // you must recompute L and Linv - this does not require the targ lms
   this->ComputeLInverse();
@@ -644,45 +735,138 @@ KernelTransform2<TScalarType, NDimensions>
 template <class TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>
-::GetJacobian(const InputPointType & p, JacobianType & j,
+::GetJacobian( const InputPointType & p, JacobianType & jac,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
   const unsigned long numberOfLandmarks = this->m_SourceLandmarks->GetNumberOfPoints();
-  j.SetSize( NDimensions, numberOfLandmarks * NDimensions );
-  j.Fill( 0.0 );
-  GMatrixType Gmatrix;
-
+  jac.SetSize( NDimensions, numberOfLandmarks * NDimensions );
+  jac.Fill( 0.0 );
+  GMatrixType Gmatrix, GMatrixSym; // dim x dim
   PointsIterator sp = this->m_SourceLandmarks->GetPoints()->Begin();
-  for ( unsigned int lnd = 0; lnd < numberOfLandmarks; lnd++ )
-  {
-    this->ComputeG( p - sp->Value(), Gmatrix );
-    for ( unsigned int dim = 0; dim < NDimensions; dim++ )
-    {
-      for ( unsigned int odim = 0; odim < NDimensions; odim++ )
-      {
-        for ( unsigned int lidx = 0; lidx < numberOfLandmarks * NDimensions; lidx++ )
-        {
-          j[ odim ] [lidx] += Gmatrix( dim, odim )
-            * this->m_LMatrixInverse[ lnd * NDimensions + dim ][ lidx ];
-        }
-      }
-    }
-    ++sp;
-  }
 
-  for ( unsigned int odim = 0; odim < NDimensions; odim++ )
+  // General route working for all kernels (but slow)
+  if ( !this->m_FastComputationPossible )
   {
-    for ( unsigned long lidx = 0; lidx < numberOfLandmarks * NDimensions; lidx++ )
+    for ( unsigned int lnd = 0; lnd < numberOfLandmarks; lnd++ )
     {
+      this->ComputeG( p - sp->Value(), Gmatrix );
       for ( unsigned int dim = 0; dim < NDimensions; dim++ )
       {
-        j[ odim ][lidx] += p[ dim ]
-          * this->m_LMatrixInverse[ ( numberOfLandmarks + dim ) * NDimensions + odim ][ lidx ];
+        for ( unsigned int odim = 0; odim < NDimensions; odim++ )
+        {
+          for ( unsigned int lidx = 0; lidx < numberOfLandmarks * NDimensions; lidx++ )
+          {
+            jac[ odim ][ lidx ] += Gmatrix( dim, odim )
+              * this->m_LMatrixInverse[ lnd * NDimensions + dim ][ lidx ];
+          }
+        }
       }
-      const unsigned long index = ( numberOfLandmarks + NDimensions ) * NDimensions + odim;
-      j[ odim ][lidx] += this->m_LMatrixInverse[ index ][ lidx ];
+      ++sp;
     }
-  }
+
+    for ( unsigned int odim = 0; odim < NDimensions; odim++ )
+    {
+      for ( unsigned long lidx = 0; lidx < numberOfLandmarks * NDimensions; lidx++ )
+      {
+        for ( unsigned int dim = 0; dim < NDimensions; dim++ )
+        {
+          jac[ odim ][lidx] += p[ dim ]
+            * this->m_LMatrixInverse[ ( numberOfLandmarks + dim ) * NDimensions + odim ][ lidx ];
+        }
+        const unsigned long index = ( numberOfLandmarks + NDimensions ) * NDimensions + odim;
+        jac[ odim ][lidx] += this->m_LMatrixInverse[ index ][ lidx ];
+      }
+    }
+  } // if !this->m_FastComputationPossible
+  // Define n = the number of landmarks, d = dimension, Linv = inverse L matrix.
+  // For some of the kernel transform it is possible to use optimized paths:
+  //   - ThinPlateR2LogRSplineKernelTransform2
+  //   - ThinPlateSplineKernelTransform2
+  //   - VolumeSplineKernelTransform2
+  // These kernel transforms have the following properties, that can be exploited
+  // to increase Jacobian computation performance:
+  // A1) G is a d x d diagonal matrix, meaning it is sparse
+  // A2) G is diagonal, with identical values on the main diagonal,
+  //     i.e. G = G(0,0) * I_d, so it is fully defined by just 1 value G(0,0).
+  // A1 and A2 together reduce the memory access to G from d x d to 1.
+  //
+  // B1) Linv is an ( n x d + y )^2 block diagonal matrix:
+  //     it is very sparse, with 2/4 = 50%, resp. 3/9 = 33% non-zero values.
+  // B2) Linv is block diagonal, with identical values on the main diagonal
+  //     of each block, i.e. each block is fully defined by just 1 value.
+  // B1 and B2 together reduce the memory access to Linv also with a factor d x d.
+  //
+  // C) For all kernels, both Linv and G are symmetric.
+  //    Reduces memory access to Linv by a factor 2.
+  else
+  {
+    // Precompute G's.
+    std::vector<ScalarType> gVector( numberOfLandmarks );
+    for ( unsigned int lnd = 0; lnd < numberOfLandmarks; lnd++ )
+    {
+      // Property A: G = G(0,0) * I_d.
+      this->ComputeG( p - sp->Value(), Gmatrix );
+      gVector[ lnd ] = Gmatrix( 0, 0 );
+      ++sp;
+    }
+
+    // Deformation part of the transform:
+    sp = this->m_SourceLandmarks->GetPoints()->Begin();
+    for ( unsigned int lnd = 0; lnd < numberOfLandmarks; lnd++ )
+    {
+      // Property A: G = G(0,0) * I_d.
+      ScalarType g = gVector[ lnd ];
+
+      // Property C: First process the diagonal only
+      unsigned int lIdx = lnd * NDimensions;
+      ScalarType linv = this->m_LMatrixInverse[ lIdx ][ lIdx ];
+      // Property B: only access non-zero values
+      for ( unsigned int dim = 0; dim < NDimensions; dim++ )
+      {
+        jac[ dim ][ lIdx + dim ] += g * linv;
+      }
+
+      // Property C: Then process right of diagonal
+      for ( unsigned int lidx = lnd + 1; lidx < numberOfLandmarks; lidx++ )
+      {
+        // Property C: Get G value at mirrored position
+        ScalarType gSym = gVector[ lidx ];
+
+        // Property B: only access non-zero values
+        unsigned int lIdx = lidx * NDimensions;
+        ScalarType linv = this->m_LMatrixInverse[ lnd * NDimensions ][ lIdx ];
+
+        // Property B: only access non-zero values
+        for ( unsigned int dim = 0; dim < NDimensions; dim++ )
+        {
+          jac[ dim ][ lIdx + dim ] += g * linv;
+          // Property C: mirroring
+          jac[ dim ][ lnd * NDimensions + dim ] += gSym * linv;
+        }
+      } // end for lidx
+
+      // Next source landmark
+      ++sp;
+    }
+
+    // Affine part of the transform:
+    for ( unsigned int odim = 0; odim < NDimensions; odim++ )
+    {
+      const unsigned long index = ( numberOfLandmarks + NDimensions ) * NDimensions + odim;
+
+      for ( unsigned long lidx = 0; lidx < numberOfLandmarks * NDimensions; lidx++ )
+      {
+        ScalarType tmp = 0.0;
+        for ( unsigned int dim = 0; dim < NDimensions; dim++ )
+        {
+          unsigned int indtmp = ( numberOfLandmarks + dim ) * NDimensions + odim;
+          tmp += p[ dim ] * this->m_LMatrixInverse[ indtmp ][ lidx ];
+        }
+        jac[ odim ][ lidx ] += tmp + this->m_LMatrixInverse[ index ][ lidx ];
+      }
+    }
+  } // end if this->m_FastComputationPossible
+
   nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
 
 } // end GetJacobian()

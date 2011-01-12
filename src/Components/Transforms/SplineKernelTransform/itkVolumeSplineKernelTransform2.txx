@@ -29,10 +29,11 @@ VolumeSplineKernelTransform2<TScalarType, NDimensions>
   const TScalarType r = x.GetNorm();
   GMatrix.fill( NumericTraits< TScalarType >::Zero );
   const TScalarType r3 = r * r * r;
-  for ( unsigned int i = 0; i < NDimensions; i++ )
-  {
-    GMatrix[ i ][ i ] = r3;
-  }
+  GMatrix.fill_diagonal( r3 );
+//   for ( unsigned int i = 0; i < NDimensions; i++ )
+//   {
+//     GMatrix[ i ][ i ] = r3;
+//   }
 
 } // end ComputeG()
 

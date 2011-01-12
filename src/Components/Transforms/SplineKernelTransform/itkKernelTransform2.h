@@ -28,8 +28,10 @@ PURPOSE.  See the above copyright notices for more information.
 #include "vnl/vnl_matrix.h"
 #include "vnl/vnl_vector.h"
 #include "vnl/vnl_vector_fixed.h"
-#include "vnl/algo/vnl_svd.h"
 #include "vnl/vnl_sample.h"
+#include "vnl/algo/vnl_svd.h"
+#include "vnl/algo/vnl_qr.h"
+
 
 namespace itk
 {
@@ -61,10 +63,13 @@ namespace itk
   * March 2007.  See the Insight Journal Paper  by Brooks, R., Arbel, T.
   * "Improvements to the itk::KernelTransform and its subclasses."
   *
-  * Modified a bit to include it in elastix:
+  * Modified to include it in elastix:
   * - style
   * - make it inherit from AdvancedTransform
   * - make it threadsafe, like was done in the itk as well.
+  * - Support for matrix inversion by QR decomposition, instead of SVD.
+  *   QR is much faster. Used in SetParameters() and SetFixedParameters().
+  * - Much faster Jacobian computation for some of the derived kernel transforms.
   *
   * \ingroup Transforms
   *
@@ -249,9 +254,12 @@ public:
     return this->m_PoissonRatio;
   };
 
+  itkSetMacro( MatrixInversionMethod, std::string );
+  itkGetConstReferenceMacro( MatrixInversionMethod, std::string );
+
 protected:
   KernelTransform2();
-  virtual ~KernelTransform2() {};
+  virtual ~KernelTransform2();
   void PrintSelf( std::ostream& os, Indent indent ) const;
 
 public:
@@ -395,6 +403,20 @@ protected:
   bool m_LMatrixComputed;
   /** Has the L inverse matrix been computed? */
   bool m_LInverseComputed;
+  /** Has the L matrix decomposition been computed? */
+  bool m_LMatrixDecompositionComputed;
+
+  /** Decompositions, needed for the L matrix.
+   * These decompositions are cached for performance reasons during registration.
+   * During registration, in every iteration SetParameters() is called, which in
+   * turn calls ComputeWMatrix(). The L matrix is not changed however, and therefore
+   * it is not needed to redo the decomposition.
+   */
+  typedef vnl_svd< ScalarType >   SVDDecompositionType;
+  typedef vnl_qr< ScalarType >    QRDecompositionType;
+
+  SVDDecompositionType  * m_LMatrixDecompositionSVD;
+  QRDecompositionType   * m_LMatrixDecompositionQR;
 
   /** Identity matrix. */
   IMatrixType m_I;
@@ -405,11 +427,19 @@ protected:
   /** for old GetJacobian() method: */
   mutable NonZeroJacobianIndicesType m_NonZeroJacobianIndicesTemp;
 
+  /** The Jacobian can be computed much faster for some of the 
+   * derived kerbel transforms, most notably the TPS.
+   */
+  bool m_FastComputationPossible;
+
 private:
   KernelTransform2(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
   TScalarType m_PoissonRatio;
+
+  /** Using SVD or QR decomposition. */
+  std::string m_MatrixInversionMethod;
 
 };
 

@@ -73,7 +73,10 @@ public:
 
 
 protected:
-  ThinPlateR2LogRSplineKernelTransform2() {};
+  ThinPlateR2LogRSplineKernelTransform2()
+  {
+    this->m_FastComputationPossible = true;
+  };
   virtual ~ThinPlateR2LogRSplineKernelTransform2() {}
 
   /** These (rather redundant) typedefs are needed because on SGI, typedefs
