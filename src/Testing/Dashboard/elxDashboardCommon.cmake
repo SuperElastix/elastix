@@ -83,7 +83,7 @@ if( NOT EXISTS "${CTEST_SOURCE_DIRECTORY}"
     AND NOT DEFINED CTEST_CHECKOUT_COMMAND
     AND CTEST_UPDATE_COMMAND)
   set( CTEST_CHECKOUT_COMMAND 
-    "\"${CTEST_UPDATE_COMMAND}\" co --username elastixguest --password elastixguest \"${dashboard_url}\" ${CTEST_DASHBOARD_ROOT}" )
+    "\"${CTEST_UPDATE_COMMAND}\" --non-interactive --trust-server-cert co --username elastixguest --password elastixguest \"${dashboard_url}\" ${CTEST_DASHBOARD_ROOT}" )
   # CTest delayed initialization is broken, so we copy the
   # CTestConfig.cmake info here.
   # SK: Otherwise submission fails.

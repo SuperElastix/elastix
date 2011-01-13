@@ -26,8 +26,10 @@ set( CTEST_DASHBOARD_ROOT "D:/tk/mydash/${CTEST_SCRIPT_NAME}" )
 #set(CTEST_UPDATE_COMMAND /path/to/svn)
 # this does not work, because quotes are put around it later:
 #set(CTEST_UPDATE_COMMAND "C:/Program Files/Subversion/bin/svn.exe --config-dir d:/dox/rest/confignoext")
-# this seems to work:
-set(CTEST_UPDATE_COMMAND "D:/scripts/svn.bat")
+# this gives strange xml parse errors:
+#set(CTEST_UPDATE_COMMAND "D:/scripts/svn.bat")
+# this works:
+set(CTEST_UPDATE_COMMAND "C:/Program Files/Subversion/bin/svn.exe")
 
 # Specify the kind of dashboard to submit
 # default: Nightly
