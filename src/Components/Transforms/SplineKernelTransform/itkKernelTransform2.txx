@@ -23,9 +23,11 @@ PURPOSE.  See the above copyright notices for more information.
 namespace itk
 {
 
+
  /**
-  *
+  * ******************* Constructor *******************
   */
+
 template <class TScalarType, unsigned int NDimensions>
 KernelTransform2<TScalarType, NDimensions>
 ::KernelTransform2() : Superclass( NDimensions, 0 )
@@ -41,7 +43,6 @@ KernelTransform2<TScalarType, NDimensions>
   this->m_Displacements   = VectorSetType::New();
   this->m_WMatrixComputed = false;
   
-
   this->m_LMatrixComputed = false;
   this->m_LInverseComputed = false;
   this->m_LMatrixDecompositionComputed = false;
@@ -50,8 +51,6 @@ KernelTransform2<TScalarType, NDimensions>
   this->m_LMatrixDecompositionQR = 0;
 
   this->m_Stiffness = 0.0;
-
-  // dummy value:
   this->m_PoissonRatio = 0.3;
 
   this->m_MatrixInversionMethod = "SVD";
@@ -59,6 +58,10 @@ KernelTransform2<TScalarType, NDimensions>
 
 } // end constructor
 
+
+/**
+ * ******************* Destructor *******************
+ */
 
 template <class TScalarType, unsigned int NDimensions>
 KernelTransform2<TScalarType, NDimensions>
@@ -69,9 +72,11 @@ KernelTransform2<TScalarType, NDimensions>
 
 } // end destructor
 
-  /**
-  *
-  */
+
+/**
+ * ******************* SetSourceLandmarks *******************
+ */
+
 template <class TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>
@@ -93,7 +98,7 @@ KernelTransform2<TScalarType, NDimensions>
     // you must recompute L and Linv - this does not require the targ landmarks
     this->ComputeLInverse();
 
-    // precompute the nonzerojacobianindices vector
+    // Precompute the nonzerojacobianindices vector
     unsigned long nrParams = this->GetNumberOfParameters();
     this->m_NonZeroJacobianIndices.resize( nrParams );
     for ( unsigned int i = 0; i < nrParams; ++i )
@@ -105,9 +110,10 @@ KernelTransform2<TScalarType, NDimensions>
 } // end SetSourceLandmarks()
 
 
-  /**
-  *
-  */
+/**
+ * ******************* SetTargetLandmarks *******************
+ */
+
 template <class TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>
@@ -142,7 +148,7 @@ KernelTransform2<TScalarType, NDimensions>
 
 
 /**
- *
+ * ******************* ComputeReflexiveG *******************
  */
 
 template <class TScalarType, unsigned int NDimensions>
@@ -157,6 +163,8 @@ KernelTransform2<TScalarType, NDimensions>
 
 
 /**
+ * ******************* ComputeDeformationContribution *******************
+ *
  * Default implementation of the the method. This can be overloaded
  * in transforms whose kernel produce diagonal G matrices.
  */
@@ -189,7 +197,7 @@ KernelTransform2<TScalarType, NDimensions>
 
 
 /**
- *
+ * ******************* ComputeD *******************
  */
 
 template <class TScalarType, unsigned int NDimensions>
@@ -217,7 +225,7 @@ KernelTransform2<TScalarType, NDimensions>
 
 
 /**
- *
+ * ******************* ComputeWMatrix *******************
  */
 
 template <class TScalarType, unsigned int NDimensions>
@@ -277,7 +285,7 @@ KernelTransform2<TScalarType, NDimensions>
 
 
 /**
- *
+ * ******************* ComputeLInverse *******************
  */
 
 template <class TScalarType, unsigned int NDimensions>
@@ -312,7 +320,7 @@ KernelTransform2<TScalarType, NDimensions>
 
 
 /**
- *
+ * ******************* ComputeL *******************
  */
 
 template <class TScalarType, unsigned int NDimensions>
@@ -341,7 +349,7 @@ KernelTransform2<TScalarType, NDimensions>
 
 
 /**
- *
+ * ******************* ComputeK *******************
  */
 
 template <class TScalarType, unsigned int NDimensions>
@@ -360,7 +368,7 @@ KernelTransform2<TScalarType, NDimensions>
   PointsIterator end = this->m_SourceLandmarks->GetPoints()->End();
 
   // K matrix is symmetric, so only evaluate the upper triangle and
-  // store the values in bot the upper and lower triangle
+  // store the values in both the upper and lower triangle
   unsigned int i = 0;
   while ( p1 != end )
   {
@@ -378,21 +386,8 @@ KernelTransform2<TScalarType, NDimensions>
       const InputVectorType s = p1.Value() - p2.Value();
       this->ComputeG( s, G );
       // write value in upper and lower triangle of matrix
-//       if ( !this->m_FastComputationPossible )
-//       {
-        this->m_KMatrix.update( G, i * NDimensions, j * NDimensions );
-        this->m_KMatrix.update( G, j * NDimensions, i * NDimensions );
-// Possible, but no speed gain
-//       }
-//       else
-//       {
-//         ScalarType g = G( 0,0 );
-//         for ( unsigned int idx = 0; idx < NDimensions; idx++ )
-//         {
-//           this->m_KMatrix( i * NDimensions + idx, j * NDimensions + idx ) = g;
-//           this->m_KMatrix( j * NDimensions + idx, i * NDimensions + idx ) = g;
-//         }
-//       }
+      this->m_KMatrix.update( G, i * NDimensions, j * NDimensions );
+      this->m_KMatrix.update( G, j * NDimensions, i * NDimensions );
       p2++; j++;
     }
     p1++; i++;
@@ -402,7 +397,7 @@ KernelTransform2<TScalarType, NDimensions>
 
 
 /**
- *
+ * ******************* ComputeP *******************
  */
 
 template <class TScalarType, unsigned int NDimensions>
@@ -434,7 +429,7 @@ KernelTransform2<TScalarType, NDimensions>
 
 
 /**
- *
+ * ******************* ComputeY *******************
  */
 
 template <class TScalarType, unsigned int NDimensions>
@@ -442,10 +437,10 @@ void
 KernelTransform2<TScalarType, NDimensions>
 ::ComputeY( void )
 {
-  const unsigned long numberOfLandmarks = this->m_SourceLandmarks->GetNumberOfPoints();
-  this->ComputeD();
-
   typename VectorSetType::ConstIterator displacement = this->m_Displacements->Begin();
+  const unsigned long numberOfLandmarks = this->m_SourceLandmarks->GetNumberOfPoints();
+
+  this->ComputeD();
 
   this->m_YMatrix.set_size( NDimensions * ( numberOfLandmarks + NDimensions + 1 ), 1 );
   this->m_YMatrix.fill( 0.0 );
@@ -468,8 +463,8 @@ KernelTransform2<TScalarType, NDimensions>
 
 
 /**
-*
-*/
+ * ******************* ReorganizeW *******************
+ */
 
 template <class TScalarType, unsigned int NDimensions>
 void
@@ -513,7 +508,7 @@ KernelTransform2<TScalarType, NDimensions>
 
 
 /**
- *
+ * ******************* TransformPoint *******************
  */
 
 template <class TScalarType, unsigned int NDimensions>
@@ -545,7 +540,9 @@ KernelTransform2<TScalarType, NDimensions>
 } // end TransformPoint()
 
 
-// Compute the Jacobian in one position
+/**
+ * ******************* GetJacobian *******************
+ */
 
 template <class TScalarType, unsigned int NDimensions>
 const typename KernelTransform2<TScalarType,NDimensions>::JacobianType &
@@ -557,7 +554,13 @@ KernelTransform2< TScalarType,NDimensions>
 
 } // end GetJacobian()
 
-// Set to the identity transform - ie make the  Source and target lm the same
+
+/**
+ * ******************* SetIdentity *******************
+ *
+ * Set to the identity transform, i.e. make the source
+ * and target landmarks the same.
+ */
 
 template <class TScalarType, unsigned int NDimensions>
 void
@@ -568,12 +571,15 @@ KernelTransform2<TScalarType, NDimensions>
 } // end SetIdentity()
 
 
-  // Set the parameters
-  // NOTE that in this transformation both the Source and Target
-  // landmarks could be considered as parameters. It is assumed
-  // here that the Target landmarks are provided by the user and
-  // are not changed during the optimization process required for
-  // registration.
+/**
+ * ******************* SetParameters *******************
+ *
+ * NOTE that in this transformation both the source and target
+ * landmarks could be considered as parameters. It is assumed
+ * here that the target landmarks are provided by the user and
+ * are not changed during the optimization process required for
+ * registration.
+ */
 
 template <class TScalarType, unsigned int NDimensions>
 void
@@ -613,11 +619,14 @@ KernelTransform2<TScalarType, NDimensions>
 } // end SetParameters()
 
 
-  // Set the fixed parameters
-  // Since the API of the SetParameters() function sets the
-  // source landmarks, this function was added to support the
-  // setting of the target landmarks, and allowing the Transform
-  // I/O mechanism to be supported.
+/**
+ * ******************* SetFixedParameters *******************
+ *
+ * Since the API of the SetParameters() function sets the
+ * source landmarks, this function was added to support the
+ * setting of the target landmarks, and allowing the Transform
+ * I/O mechanism to be supported.
+ */
 
 template <class TScalarType, unsigned int NDimensions>
 void
@@ -658,15 +667,17 @@ KernelTransform2<TScalarType, NDimensions>
 } // end SetFixedParameters()
 
 
-// Update parameters array
-// They are the components of all the landmarks in the source space
+/**
+ * ******************* UpdateParameters *******************
+ */
 
 template <class TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>
 ::UpdateParameters( void )
 {
-  this->m_Parameters = ParametersType( this->m_TargetLandmarks->GetNumberOfPoints() * NDimensions );
+  this->m_Parameters = ParametersType(
+    this->m_TargetLandmarks->GetNumberOfPoints() * NDimensions );
 
   PointsIterator itr = this->m_TargetLandmarks->GetPoints()->Begin();
   PointsIterator end = this->m_TargetLandmarks->GetPoints()->End();
@@ -686,8 +697,9 @@ KernelTransform2<TScalarType, NDimensions>
 } // end UpdateParameters()
 
 
-// Get the parameters
-// They are the components of all the landmarks in the source space
+/**
+ * ******************* GetParameters *******************
+ */
 
 template <class TScalarType, unsigned int NDimensions>
 const typename KernelTransform2<TScalarType, NDimensions>::ParametersType &
@@ -698,9 +710,10 @@ KernelTransform2<TScalarType, NDimensions>
 } // end GetParameters()
 
 
-  // Get the fixed parameters
-  // This returns the target landmark locations
-  // This was added to support the Transform Reader/Writer mechanism
+/**
+ * ******************* GetFixedParameters *******************
+ */
+
 template <class TScalarType, unsigned int NDimensions>
 const typename KernelTransform2<TScalarType, NDimensions>::ParametersType &
 KernelTransform2<TScalarType, NDimensions>
@@ -728,9 +741,9 @@ KernelTransform2<TScalarType, NDimensions>
 } // end GetFixedParameters()
 
 
- /**
-  * ********************* GetJacobian ****************************
-  */
+/**
+ * ********************* GetJacobian ****************************
+ */
 
 template <class TScalarType, unsigned int NDimensions>
 void
@@ -872,10 +885,14 @@ KernelTransform2<TScalarType, NDimensions>
 } // end GetJacobian()
 
 
+/**
+ * ******************* PrintSelf *******************
+ */
+
 template <class TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>
-::PrintSelf(std::ostream& os, Indent indent) const
+::PrintSelf( std::ostream& os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
 
@@ -901,5 +918,4 @@ KernelTransform2<TScalarType, NDimensions>
 
 } // namespace itk
 
-
-#endif
+#endif // end #ifndef _itkKernelTransform2_txx

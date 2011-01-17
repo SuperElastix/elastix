@@ -427,7 +427,7 @@ protected:
   /** for old GetJacobian() method: */
   mutable NonZeroJacobianIndicesType m_NonZeroJacobianIndicesTemp;
 
-  /** The Jacobian can be computed much faster for some of the 
+  /** The Jacobian can be computed much faster for some of the
    * derived kerbel transforms, most notably the TPS.
    */
   bool m_FastComputationPossible;

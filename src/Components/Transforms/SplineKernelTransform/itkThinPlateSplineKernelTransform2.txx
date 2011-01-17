@@ -21,6 +21,11 @@
 namespace itk
 {
 
+
+ /**
+  * ******************* Constructor *******************
+  */
+
 template <class TScalarType, unsigned int NDimensions>
 void
 ThinPlateSplineKernelTransform2<TScalarType, NDimensions>
@@ -29,12 +34,13 @@ ThinPlateSplineKernelTransform2<TScalarType, NDimensions>
   const TScalarType r = x.GetNorm();
   GMatrix.fill( NumericTraits< TScalarType >::Zero );
   GMatrix.fill_diagonal( r );
-//   for ( unsigned int i = 0; i < NDimensions; i++ )
-//   {
-//     GMatrix[ i ][ i ] = r;
-//   }
+
 } // end ComputeG()
 
+
+/**
+ * ******************* ComputeDeformationContribution *******************
+ */
 
 template <class TScalarType, unsigned int NDimensions>
 void

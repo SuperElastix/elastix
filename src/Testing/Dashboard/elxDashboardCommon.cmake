@@ -83,11 +83,11 @@ if( NOT EXISTS "${CTEST_SOURCE_DIRECTORY}"
     AND NOT DEFINED CTEST_CHECKOUT_COMMAND
     AND CTEST_UPDATE_COMMAND)
 
-  #  set( CTEST_CHECKOUT_COMMAND 
+  #  set( CTEST_CHECKOUT_COMMAND
   #  "\"${CTEST_UPDATE_COMMAND}\" --non-interactive --trust-server-cert co --username elastixguest --password elastixguest \"${dashboard_url}\" ${CTEST_DASHBOARD_ROOT}" )
 
   # --trust-server-cert is only supported in newer subversions
-   set( CTEST_CHECKOUT_COMMAND 
+   set( CTEST_CHECKOUT_COMMAND
    "\"${CTEST_UPDATE_COMMAND}\" --non-interactive co --username elastixguest --password elastixguest \"${dashboard_url}\" ${CTEST_DASHBOARD_ROOT}" )
 
   # CTest delayed initialization is broken, so we copy the
@@ -176,7 +176,7 @@ if( dashboard_model STREQUAL Continuous )
     # SK: Only do initial checkout at the first iteration.
     # After that, the CHECKOUT_COMMAND has to be removed, otherwise
     # "svn update" will never see any changes.
-    set( CTEST_CHECKOUT_COMMAND ) 
+    set( CTEST_CHECKOUT_COMMAND )
 
     if( (res GREATER 0) OR (FRESH_BUILD) )
       # run cmake twice; this seems to be necessary, otherwise the
@@ -195,7 +195,7 @@ if( dashboard_model STREQUAL Continuous )
 else()
   write_cache()
   ctest_start( ${dashboard_model} )
-  ctest_update( SOURCE ${CTEST_DASHBOARD_ROOT} ) 
+  ctest_update( SOURCE ${CTEST_DASHBOARD_ROOT} )
   # run cmake twice; this seems to be necessary, otherwise the
   # KNN lib is not built
   ctest_configure()
