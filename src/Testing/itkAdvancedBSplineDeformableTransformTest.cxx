@@ -34,7 +34,11 @@ int main( int argc, char *argv[] )
   /** The number of calls to Evaluate(). This number gives reasonably
    * fast test results in Release mode.
    */
+#ifdef _DEBUG
+  unsigned int N = static_cast<unsigned int>( 1e3 );
+#else
   unsigned int N = static_cast<unsigned int>( 1e5 );
+#endif
 
   /** Check. */
   if ( argc != 2 )
