@@ -83,6 +83,11 @@ if( NOT DEFINED CTEST_COVERAGE_COMMAND )
   find_program( CTEST_COVERAGE_COMMAND gcov )
 endif()
 
+# Look for a memory check command-line client.
+if( NOT DEFINED CTEST_MEMORYCHECK_COMMAND )
+  find_program( CTEST_MEMORYCHECK_COMMAND valgrind )
+endif()
+
 # Support initial checkout if necessary;
 if( NOT EXISTS "${CTEST_SOURCE_DIRECTORY}"
     AND NOT DEFINED CTEST_CHECKOUT_COMMAND
@@ -134,6 +139,7 @@ foreach( v
   CTEST_UPDATE_COMMAND
   CTEST_CHECKOUT_COMMAND
   CTEST_COVERAGE_COMMAND
+  CTEST_MEMORYCHECK_COMMAND
   CTEST_SCRIPT_DIRECTORY
   dashboard_model
   )

@@ -20,13 +20,10 @@
 set( CTEST_SITE "LKEB.goliath" )
 set( CTEST_BUILD_NAME "Linux-64bit-gcc4.4.3" )
 set( CTEST_BUILD_FLAGS "-j6" ) # parallel build for makefiles
-set( CTEST_TEST_ARGS PARALLEL_LEVEL 6 )
+set( CTEST_TEST_ARGS PARALLEL_LEVEL 6 ) # parallel testing
 set( CTEST_BUILD_CONFIGURATION Debug )
 set( CTEST_CMAKE_GENERATOR "Unix Makefiles" )
 set( CTEST_DASHBOARD_ROOT "/home/marius/elastix-nightly/build/" )
-
-# default: automatically determined
-#set(CTEST_UPDATE_COMMAND /path/to/svn)
 
 # Specify the kind of dashboard to submit
 # default: Nightly
@@ -37,9 +34,15 @@ ELSEIF( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
   SET( dashboard_model Continuous )
 ENDIF()
 
-#set( dashboard_do_memcheck ON )
+# This machine performs code coverage analysis and dynamic memory checking.
 set( dashboard_do_coverage ON )
+set( dashboard_do_memcheck ON )
 
+# Valgrind options
+#set( CTEST_MEMORYCHECK_COMMAND_OPTIONS "--trace-children=yes --quiet --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=100 --verbose --demangle=yes --gen-suppressions=all" )
+#set( CTEST_MEMORYCHECK_SUPPRESSIONS_FILE ${CTEST_SOURCE_DIRECTORY}/CMake/InsightValgrind.supp )
+
+# Dashboard settings
 SET( dashboard_cache "
 // Which ITK to use
 ITK_DIR:PATH=/usr/local/toolkits/ITK/3.20.0/bin_debug
@@ -48,6 +51,10 @@ ITK_DIR:PATH=/usr/local/toolkits/ITK/3.20.0/bin_debug
 CMAKE_CXX_FLAGS_DEBUG:STRING=-g -O0 -fprofile-arcs -ftest-coverage
 CMAKE_C_FLAGS_DEBUG:STRING=-g -O0 -fprofile-arcs -ftest-coverage
 CMAKE_EXE_LINKER_FLAGS_DEBUG:STRING=-g -O0 -fprofile-arcs -ftest-coverage
+
+// Memory check setting for valgrind:
+//MEMORYCHECK_COMMAND_OPTIONS:STRING=${CTEST_MEMORYCHECK_COMMAND_OPTIONS}
+//MEMORYCHECK_SUPPRESSIONS_FILE:FILEPATH=${CTEST_MEMORYCHECK_SUPPRESSIONS_FILE}
 
 // Some elastix settings, defining the configuration
 ELASTIX_BUILD_TESTING:BOOL=ON
