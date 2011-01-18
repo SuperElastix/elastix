@@ -78,6 +78,11 @@ if( NOT DEFINED CTEST_UPDATE_COMMAND )
     HINTS "C:/cygwin/bin/" )
 endif()
 
+# Look for a coverage command-line client.
+if( NOT DEFINED CTEST_COVERAGE_COMMAND )
+  find_program( CTEST_COVERAGE_COMMAND gcov )
+endif()
+
 # Support initial checkout if necessary;
 if( NOT EXISTS "${CTEST_SOURCE_DIRECTORY}"
     AND NOT DEFINED CTEST_CHECKOUT_COMMAND
@@ -88,7 +93,7 @@ if( NOT EXISTS "${CTEST_SOURCE_DIRECTORY}"
 
   # --trust-server-cert is only supported in newer subversions
    set( CTEST_CHECKOUT_COMMAND
-   "\"${CTEST_UPDATE_COMMAND}\" --non-interactive co --username elastixguest --password elastixguest \"${dashboard_url}\" ${CTEST_DASHBOARD_ROOT}" )
+     "\"${CTEST_UPDATE_COMMAND}\" --non-interactive co --username elastixguest --password elastixguest \"${dashboard_url}\" ${CTEST_DASHBOARD_ROOT}" )
 
   # CTest delayed initialization is broken, so we copy the
   # CTestConfig.cmake info here.
@@ -128,6 +133,7 @@ foreach( v
   CTEST_BUILD_CONFIGURATION
   CTEST_UPDATE_COMMAND
   CTEST_CHECKOUT_COMMAND
+  CTEST_COVERAGE_COMMAND
   CTEST_SCRIPT_DIRECTORY
   dashboard_model
   )
@@ -185,7 +191,7 @@ if( dashboard_model STREQUAL Continuous )
       ctest_configure()
       ctest_read_custom_files( ${CTEST_BINARY_DIRECTORY} )
       ctest_build()
-      ctest_test()
+      ctest_test( ${CTEST_TEST_ARGS} )
       ctest_submit()
     endif()
 
@@ -202,7 +208,7 @@ else()
   ctest_configure()
   ctest_read_custom_files( ${CTEST_BINARY_DIRECTORY} )
   ctest_build()
-  ctest_test()
+  ctest_test( ${CTEST_TEST_ARGS} )
   if( dashboard_do_coverage )
     ctest_coverage()
   endif()
