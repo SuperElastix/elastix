@@ -31,14 +31,16 @@ int main( int argc, char *argv[] )
   typedef float CoordinateRepresentationType;
   //const double distance = 1e-3; // the allowable distance
   //const double allowedTimeDifference = 0.1; // 10% is considered within limits
-  /** The number of calls to Evaluate(). This number gives reasonably
-   * fast test results in Release mode.
+
+  /** The number of calls to Evaluate(). Distinguish between
+   * Debug and Release mode.
    */
-#ifdef _DEBUG
+#ifndef NDEBUG
   unsigned int N = static_cast<unsigned int>( 1e3 );
 #else
   unsigned int N = static_cast<unsigned int>( 1e5 );
 #endif
+  std::cerr << "N = " << N << std::endl;
 
   /** Check. */
   if ( argc != 2 )
@@ -196,7 +198,7 @@ int main( int argc, char *argv[] )
   clock_t endClock = clock();
   clock_t clockITK = endClock - startClock;
   std::cerr << "The elapsed time for the spatial Jacobian is: "
-    << clockITK << std::endl;
+    << clockITK / 1000.0 << " s." << std::endl;
 
   /** Time the implementation of the spatial Hessian. */
   startClock = clock();
@@ -207,7 +209,7 @@ int main( int argc, char *argv[] )
   endClock = clock();
   clockITK = endClock - startClock;
   std::cerr << "The elapsed time for the spatial Hessian is: "
-    << clockITK << std::endl;
+    << clockITK / 1000.0 << " s." << std::endl;
 
   /** Time the implementation of the Jacobian of the spatial Jacobian. */
   startClock = clock();
@@ -221,7 +223,7 @@ int main( int argc, char *argv[] )
   endClock = clock();
   clockITK = endClock - startClock;
   std::cerr << "The elapsed time for the Jacobian of the spatial Jacobian is: "
-    << clockITK << std::endl;
+    << clockITK / 1000.0 << " s." << std::endl;
 
   /** Time the implementation of the Jacobian of the spatial Hessian. */
   startClock = clock();
@@ -235,7 +237,7 @@ int main( int argc, char *argv[] )
   endClock = clock();
   clockITK = endClock - startClock;
   std::cerr << "The elapsed time for the Jacobian of the spatial Hessian is: "
-    << clockITK << std::endl;
+    << clockITK / 1000.0 << " s." << std::endl;
 
   /** Time the implementation of the spatial Jacobian and its Jacobian. */
   startClock = clock();
@@ -248,7 +250,7 @@ int main( int argc, char *argv[] )
   endClock = clock();
   clockITK = endClock - startClock;
   std::cerr << "The elapsed time for the spatial Jacobian (2 func) is: "
-    << clockITK << std::endl;
+    << clockITK / 1000.0 << " s." << std::endl;
 
   /** Time the implementation of the spatial Jacobian and its Jacobian. */
   startClock = clock();
@@ -260,7 +262,7 @@ int main( int argc, char *argv[] )
   endClock = clock();
   clockITK = endClock - startClock;
   std::cerr << "The elapsed time for the spatial Jacobian (1 func) is: "
-    << clockITK << std::endl;
+    << clockITK / 1000.0 << " s." << std::endl;
 
   /** Time the implementation of the spatial Hessian. */
   startClock = clock();
@@ -273,7 +275,7 @@ int main( int argc, char *argv[] )
   endClock = clock();
   clockITK = endClock - startClock;
   std::cerr << "The elapsed time for the spatial Hessian (2 func) is: "
-    << clockITK << std::endl;
+    << clockITK / 1000.0 << " s." << std::endl;
 
   /** Time the implementation of the Jacobian of the spatial Hessian. */
   startClock = clock();
@@ -285,7 +287,7 @@ int main( int argc, char *argv[] )
   endClock = clock();
   clockITK = endClock - startClock;
   std::cerr << "The elapsed time for the spatial Hessian (1 func) is: "
-    << clockITK << std::endl;
+    << clockITK / 1000.0 << " s." << std::endl;
 
   /** Return a value. */
   return 0;
