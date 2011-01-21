@@ -32,7 +32,6 @@ template <class TElastix>
 AdvancedBSplineTransform<TElastix>
 ::AdvancedBSplineTransform()
 {
-
 } // end Constructor()
 
 
@@ -45,20 +44,20 @@ unsigned int AdvancedBSplineTransform<TElastix>
 ::InitializeBSplineTransform( void )
 {
   /** Initialize the right BSplineTransform and GridScheduleComputer. */
-  if ( m_Cyclic )
+  if ( this->m_Cyclic )
   {
     this->m_GridScheduleComputer = CyclicGridScheduleComputerType::New();
-    this->m_GridScheduleComputer->SetBSplineOrder( m_SplineOrder );
+    this->m_GridScheduleComputer->SetBSplineOrder( this->m_SplineOrder );
 
-    if ( m_SplineOrder == 1)
+    if ( this->m_SplineOrder == 1 )
     {
       this->m_BSplineTransform = CyclicBSplineTransformLinearType::New();
     }
-    else if ( m_SplineOrder == 2)
+    else if ( this->m_SplineOrder == 2 )
     {
       this->m_BSplineTransform = CyclicBSplineTransformQuadraticType::New();
     }
-    else if ( m_SplineOrder == 3)
+    else if ( this->m_SplineOrder == 3 )
     {
       this->m_BSplineTransform = CyclicBSplineTransformCubicType::New();
     }
@@ -71,17 +70,17 @@ unsigned int AdvancedBSplineTransform<TElastix>
   else
   {
     this->m_GridScheduleComputer = GridScheduleComputerType::New();
-    this->m_GridScheduleComputer->SetBSplineOrder( m_SplineOrder );
+    this->m_GridScheduleComputer->SetBSplineOrder( this->m_SplineOrder );
 
-    if ( m_SplineOrder == 1)
+    if ( this->m_SplineOrder == 1 )
     {
       this->m_BSplineTransform = BSplineTransformLinearType::New();
     }
-    else if ( m_SplineOrder == 2)
+    else if ( this->m_SplineOrder == 2 )
     {
       this->m_BSplineTransform = BSplineTransformQuadraticType::New();
     }
-    else if ( m_SplineOrder == 3)
+    else if ( this->m_SplineOrder == 3 )
     {
       this->m_BSplineTransform = BSplineTransformCubicType::New();
     }
@@ -94,10 +93,10 @@ unsigned int AdvancedBSplineTransform<TElastix>
 
   this->SetCurrentTransform( this->m_BSplineTransform );
   this->m_GridUpsampler = GridUpsamplerType::New();
-  this->m_GridUpsampler->SetBSplineOrder( m_SplineOrder );
+  this->m_GridUpsampler->SetBSplineOrder( this->m_SplineOrder );
 
   return 0;
-}
+} // end InitializeBSplineTransform()
 
 
 /**
@@ -109,15 +108,15 @@ int AdvancedBSplineTransform<TElastix>
 ::BeforeAll( void )
 {
   /** Read spline order and periodicity setting from configuration file. */
-  m_SplineOrder = 3;
-  this->GetConfiguration()->ReadParameter( m_SplineOrder,
+  this->m_SplineOrder = 3;
+  this->GetConfiguration()->ReadParameter( this->m_SplineOrder,
     "BSplineTransformSplineOrder", this->GetComponentLabel(), 0, 0, true );
-  m_Cyclic = false;
-  this->GetConfiguration()->ReadParameter( m_Cyclic,
+  this->m_Cyclic = false;
+  this->GetConfiguration()->ReadParameter( this->m_Cyclic,
     "UseCyclicTransform", this->GetComponentLabel(), 0, 0, true );
 
-  return InitializeBSplineTransform();
-}
+  return this->InitializeBSplineTransform();
+} // end BeforeAll()
 
 
 /**

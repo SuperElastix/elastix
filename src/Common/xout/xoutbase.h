@@ -204,5 +204,5 @@ namespace xoutlibrary
 
 #include "xoutbase.hxx"
 
-#endif // end #ifdef __xoutbase_h
+#endif // end #ifndef __xoutbase_h
 

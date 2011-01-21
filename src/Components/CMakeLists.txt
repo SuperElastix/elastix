@@ -68,8 +68,8 @@ FILE( WRITE ${InstallFunctionCallFile}
 # The REMOVE_ELXCOMPONENT is in some cases useful, if you want to
 # skip building the component in case some other cmake setting is not
 # correct. Most users will not need to invoke this macro though.
-# 
-# Usage: 
+#
+# Usage:
 # REMOVE_ELXCOMPONENT( <name_of_lib> )
 #
 INCLUDE( CMakeDependentOption )
@@ -93,13 +93,13 @@ MACRO( ADD_ELXCOMPONENT name )
   SET( defaultValue ON )
   IF( ${ARGV1} STREQUAL "OFF" )
     SET( defaultValue OFF )
-  ENDIF()     
+  ENDIF()
   MARK_AS_ADVANCED( USE_${name} )
   SET( USE_${name} ${defaultValue} CACHE BOOL "Compile this component")
-  
-  # If USE_ALL_COMPONENTS is turned ON, we make a backup of the 
+
+  # If USE_ALL_COMPONENTS is turned ON, we make a backup of the
   # current value, and force the use_var to ON. If USE_ALL_COMPONENTS
-  # is OFF, and there is a backup, set the use_var to the backed-up 
+  # is OFF, and there is a backup, set the use_var to the backed-up
   # value and remove the backup; otherwise, leave the use_var to its
   # current (default or user-specified) value.
   IF( USE_ALL_COMPONENTS )
@@ -162,7 +162,7 @@ MACRO( ADD_ELXCOMPONENT name )
 
   ELSE( USE_${name} )
     # Remove from link list
-    REMOVE_ELXCOMPONENT( ${name} )   
+    REMOVE_ELXCOMPONENT( ${name} )
   ENDIF()
 
 ENDMACRO( ADD_ELXCOMPONENT )

@@ -358,5 +358,5 @@ namespace xoutlibrary
 } // end namespace xoutlibrary
 
 
-#endif // end #ifdef __xoutbase_hxx
+#endif // end #ifndef __xoutbase_hxx
 

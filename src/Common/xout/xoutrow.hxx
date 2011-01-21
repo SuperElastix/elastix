@@ -365,5 +365,5 @@ xoutrow<charT, traits>
 } // end namespace xoutlibrary
 
 
-#endif // end #ifdef __xoutrow_hxx
+#endif // end #ifndef __xoutrow_hxx
 
