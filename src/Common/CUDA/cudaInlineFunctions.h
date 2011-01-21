@@ -29,20 +29,21 @@ namespace cuda
 inline void __cudaCheckMsg( const char *msg, const char *file, const int line )
 {
   cudaError_t err = ::cudaGetLastError();
-  if ( cudaSuccess != err )
+  if ( err != cudaSuccess )
   {
     const char* errcmsg = ::cudaGetErrorString( err );
     fprintf( stderr, "CUDA error: %s in file <%s>, line %i : %s.\n",
       msg, file, line, errcmsg );
-    assert( false );
+    //assert( false );
 
     std::string errmsg = std::string( msg ) + ":: " + std::string( errcmsg );
 //    throw itk::ExceptionObject( file, line, errmsg );
+    throw errmsg;
   }
 
-#if defined( _DEBUG )
+#ifndef NDEBUG
   err = ::cudaThreadSynchronize();
-  if ( cudaSuccess != err )
+  if ( err != cudaSuccess )
   {
     const char* errcmsg = ::cudaGetErrorString( err );
     fprintf( stderr, "cudaThreadSynchronize error: %s in file <%s>, line %i : %s.\n",
@@ -51,8 +52,9 @@ inline void __cudaCheckMsg( const char *msg, const char *file, const int line )
 
     std::string errmsg = std::string( msg ) + ":: " + std::string( errcmsg );
 //    throw itk::ExceptionObject( file, line, errmsg );
+    throw errmsg;
   }
-#endif /* _DEBUG */
+#endif /* NDEBUG */
 }
 
 
