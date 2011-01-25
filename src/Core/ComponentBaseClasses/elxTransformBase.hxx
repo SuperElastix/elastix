@@ -34,6 +34,62 @@
 #include "itkVTKPolyDataWriter.h"
 #include "itkTransformMeshFilter.h"
 
+namespace itk
+{
+
+/** \class PixelTypeChangeCommand
+ * \brief Command that modifies the PixelType of an ImageIO object.
+ *
+ * This class is used for writing the fullSpatialJacobian image.
+ * It is a hack to ensure that a matrix image is seen as a
+ * vector image, which most IO classes understand.
+ *
+ * \ingroup ITKSystemObjects
+ */
+template <class T>
+class PixelTypeChangeCommand : public Command
+{ 
+public:
+  
+  /** Standard class typedefs. */
+  typedef PixelTypeChangeCommand    Self;
+  typedef SmartPointer<Self>        Pointer;
+
+  /** This is supposed to be an ImageFileWriter */
+  typedef T       CallerType;
+  
+  /** Run-time type information (and related methods). */
+  itkTypeMacro(PixelTypeChangeCommand, Command);
+
+  /** Method for creation through the object factory. */
+  itkNewMacro(Self);
+    
+  /** Set the pixel type to VECTOR */
+  virtual void Execute(Object * caller, const EventObject & ) 
+  { 
+    CallerType * castcaller = dynamic_cast< CallerType * >( caller );
+    castcaller->GetImageIO()->SetPixelType( ImageIOBase::VECTOR );
+  }
+  virtual void Execute(const Object * caller, const EventObject & ) 
+  { 
+    CallerType * castcaller = const_cast< CallerType * >(
+      dynamic_cast< const CallerType * >( caller )  );
+    castcaller->GetImageIO()->SetPixelType( ImageIOBase::VECTOR );
+  }
+  
+protected:
+  PixelTypeChangeCommand() {}
+  virtual ~PixelTypeChangeCommand() {} 
+
+private:
+  PixelTypeChangeCommand(const Self&); //purposely not implemented
+  void operator=(const Self&); //purposely not implemented
+  
+};
+
+} // end namespace itk
+
+
 namespace elastix
 {
 //using namespace itk; //Not here because the ITK also started to define a TransformBase class....
@@ -1381,8 +1437,9 @@ TransformBase<TElastix>
   }
 
   /** Typedef's. */
-  typedef itk::Matrix<float, MovingImageDimension,
-    FixedImageDimension>                              OutputSpatialJacobianType;
+  typedef float                                       SpatialJacobianComponentType;
+  typedef itk::Matrix<SpatialJacobianComponentType,
+    MovingImageDimension, FixedImageDimension>        OutputSpatialJacobianType;
   typedef itk::Image<OutputSpatialJacobianType,
     FixedImageDimension>                              JacobianImageType;
   typedef itk::TransformToSpatialJacobianSource<
@@ -1391,6 +1448,8 @@ TransformBase<TElastix>
   typedef itk::ChangeInformationImageFilter<
     JacobianImageType >                               ChangeInfoFilterType;
   typedef typename FixedImageType::DirectionType      FixedImageDirectionType;
+  typedef itk::PixelTypeChangeCommand< 
+    JacobianWriterType >                              PixelTypeChangeCommandType;       
 
   /** Create an setup Jacobian generator. */
   typename JacobianGeneratorType::Pointer jacGenerator = JacobianGeneratorType::New();
@@ -1427,7 +1486,7 @@ TransformBase<TElastix>
   progressObserver->SetStartString( "  Progress: " );
   progressObserver->SetEndString( "%" );
 
-  /** Create a name for the deformation field file. */
+    /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
   this->m_Configuration->ReadParameter( resultImageFormat, "ResultImageFormat", 0, false );
   std::ostringstream makeFileName( "" );
@@ -1438,6 +1497,13 @@ TransformBase<TElastix>
   typename JacobianWriterType::Pointer jacWriter = JacobianWriterType::New();
   jacWriter->SetInput( infoChanger->GetOutput() );
   jacWriter->SetFileName( makeFileName.str().c_str() );
+  /** Hack to change the pixel type to vector. Not necessary for mhd. */
+  typename PixelTypeChangeCommandType::Pointer jacStartWriteCommand =
+    PixelTypeChangeCommandType::New();
+  if ( resultImageFormat != "mhd" )
+  {
+    jacWriter->AddObserver( itk::StartEvent(), jacStartWriteCommand );
+  }
 
   /** Do the writing. */
   elxout << "  Computing and writing the spatial Jacobian..." << std::endl;
