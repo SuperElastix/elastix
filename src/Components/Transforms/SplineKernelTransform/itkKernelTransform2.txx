@@ -376,6 +376,7 @@ KernelTransform2<TScalarType, NDimensions>
     unsigned int j = i;
 
     // Compute the block diagonal element, i.e. kernel for pi->pi
+    // Can ignore GMatrix, since p1 - p1 = 0
     this->ComputeReflexiveG( p1, G );
     this->m_KMatrix.update( G, i * NDimensions, i * NDimensions );
     p2++; j++;
@@ -437,10 +438,10 @@ void
 KernelTransform2<TScalarType, NDimensions>
 ::ComputeY( void )
 {
+  this->ComputeD();
+
   typename VectorSetType::ConstIterator displacement = this->m_Displacements->Begin();
   const unsigned long numberOfLandmarks = this->m_SourceLandmarks->GetNumberOfPoints();
-
-  this->ComputeD();
 
   this->m_YMatrix.set_size( NDimensions * ( numberOfLandmarks + NDimensions + 1 ), 1 );
   this->m_YMatrix.fill( 0.0 );
