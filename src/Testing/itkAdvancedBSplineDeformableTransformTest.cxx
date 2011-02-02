@@ -12,6 +12,7 @@
 
 ======================================================================*/
 #include "itkAdvancedBSplineDeformableTransform.h"
+#include "itkBSplineDeformableTransform.h" // original ITK
 #include "itkGridScheduleComputer.h"
 
 #include <ctime>
@@ -53,6 +54,8 @@ int main( int argc, char *argv[] )
   /** Other typedefs. */
   typedef itk::AdvancedBSplineDeformableTransform<
     CoordinateRepresentationType, Dimension, SplineOrder >    TransformType;
+  typedef itk::BSplineDeformableTransform<
+    CoordinateRepresentationType, Dimension, SplineOrder >    ITKTransformType;
   typedef TransformType::JacobianType                   JacobianType;
   typedef TransformType::SpatialJacobianType            SpatialJacobianType;
   typedef TransformType::SpatialHessianType             SpatialHessianType;
@@ -60,6 +63,7 @@ int main( int argc, char *argv[] )
   typedef TransformType::JacobianOfSpatialHessianType   JacobianOfSpatialHessianType;
   typedef TransformType::NonZeroJacobianIndicesType     NonZeroJacobianIndicesType;
   typedef TransformType::InputPointType                 InputPointType;
+  typedef TransformType::OutputPointType                OutputPointType;
   typedef TransformType::ParametersType                 ParametersType;
   typedef itk::Image< CoordinateRepresentationType,
     Dimension >                                         InputImageType;
@@ -68,9 +72,11 @@ int main( int argc, char *argv[] )
   typedef InputImageType::IndexType     IndexType;
   typedef InputImageType::SpacingType   SpacingType;
   typedef InputImageType::PointType     OriginType;
+  typedef InputImageType::DirectionType DirectionType;
 
   /** Create the transform. */
   TransformType::Pointer transform = TransformType::New();
+  ITKTransformType::Pointer transformITK = ITKTransformType::New();
 
   /** Setup the B-spline transform:
    * (GridSize 44 43 35)
@@ -93,10 +99,18 @@ int main( int argc, char *argv[] )
   gridOrigin[ 0 ] = -237.6759555555;
   gridOrigin[ 1 ] = -239.9488431747;
   gridOrigin[ 2 ] = -344.2315805162;
+  DirectionType gridDirection;
+  gridDirection.SetIdentity();
 
   transform->SetGridOrigin( gridOrigin );
   transform->SetGridSpacing( gridSpacing );
   transform->SetGridRegion( gridRegion );
+  transform->SetGridDirection( gridDirection );
+
+  transformITK->SetGridOrigin( gridOrigin );
+  transformITK->SetGridSpacing( gridSpacing );
+  transformITK->SetGridRegion( gridRegion );
+  transformITK->SetGridDirection( gridDirection );
 
   /** Now read the parameters as defined in the file par.txt. */
   ParametersType parameters( transform->GetNumberOfParameters() );
@@ -116,6 +130,7 @@ int main( int argc, char *argv[] )
     return 1;
   }
   transform->SetParameters( parameters );
+  transformITK->SetParameters( parameters );
 
   /** Get the number of nonzero Jacobian indices. */
   unsigned long nonzji = transform->GetNumberOfNonZeroJacobianIndices();
@@ -288,6 +303,55 @@ int main( int argc, char *argv[] )
   clockITK = endClock - startClock;
   std::cerr << "The elapsed time for the spatial Hessian (1 func) is: "
     << clockITK / 1000.0 << " s." << std::endl;
+
+  /** Additional checks. */
+  if ( !transform->GetHasNonZeroSpatialHessian() )
+  {
+    std::cerr << "ERROR: GetHasNonZeroSpatialHessian() should return true." << std::endl;
+    return 1;
+  }
+  if ( !transform->HasNonZeroJacobianOfSpatialHessian() )
+  {
+    std::cerr << "ERROR: HasNonZeroJacobianOfSpatialHessian() should return true." << std::endl;
+    return 1;
+  }
+
+  /** These should return the same values as the original ITK functions. */
+  OutputPointType opp1 = transform->TransformPoint( inputPoint );
+  OutputPointType opp2 = transformITK->TransformPoint( inputPoint );
+  double differenceNorm = 0.0;
+  for ( unsigned int i = 0; i < Dimension; ++i )
+  {
+    differenceNorm += ( opp1[ i ] - opp2[ i ] ) * ( opp1[ i ] - opp2[ i ] );
+  }
+  if ( vcl_sqrt( differenceNorm ) > 1e-10 )
+  {
+    std::cerr << "ERROR: Advanced B-spline TransformPoint() returning incorrect result." << std::endl;
+    return 1;
+  }
+
+  JacobianType jacobianDifferenceMatrix
+    = transform->GetJacobian( inputPoint ) - transformITK->GetJacobian( inputPoint );
+  if ( jacobianDifferenceMatrix.frobenius_norm() > 1e-10 )
+  {
+    std::cerr << "ERROR: Advanced B-spline GetJacobian() returning incorrect result." << std::endl;
+    return 1;
+  }
+
+  if ( ( transform->GetParameters() - transformITK->GetParameters() ).two_norm() > 1e-10 )
+  {
+    std::cerr << "ERROR: Advanced B-spline GetParameters() returning incorrect result." << std::endl;
+    return 1;
+  }
+
+  if ( ( transform->GetFixedParameters() - transformITK->GetFixedParameters() ).two_norm() > 1e-10 )
+  {
+    std::cerr << "ERROR: Advanced B-spline GetFixedParameters() returning incorrect result." << std::endl;
+    return 1;
+  }
+  
+  /** Exercise PrintSelf(). */
+  transform->Print( std::cerr );
 
   /** Return a value. */
   return 0;
