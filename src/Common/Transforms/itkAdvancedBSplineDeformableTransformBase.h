@@ -195,7 +195,7 @@ public:
   itkGetConstMacro( GridSpacing, SpacingType );
 
   /** This method specifies the grid directions . */
-  virtual void SetGridDirection( const DirectionType & spacing );
+  virtual void SetGridDirection( const DirectionType & direction );
   itkGetMacro( GridDirection, DirectionType );
   itkGetConstMacro( GridDirection, DirectionType );
 

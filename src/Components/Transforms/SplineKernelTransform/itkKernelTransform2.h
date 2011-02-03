@@ -96,7 +96,7 @@ public:
   itkNewMacro( Self );
 
   /** Dimension of the domain space. */
-  itkStaticConstMacro(SpaceDimension, unsigned int, NDimensions);
+  itkStaticConstMacro( SpaceDimension, unsigned int, NDimensions );
 
   /** Typedefs. */
   typedef typename Superclass::ScalarType       ScalarType;

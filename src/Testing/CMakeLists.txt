@@ -56,6 +56,8 @@ ADD_ELX_TEST( MevisDicomTiffImageIOTest )
 ADD_ELX_TEST( ThinPlateSplineTransformPerformanceTest
   ${elastix_SOURCE_DIR}/Testing/parameters_TPSTransformTest.txt
   ${elastix_BINARY_DIR}/Testing )
+ADD_ELX_TEST( ThinPlateSplineTransformTest
+  ${elastix_SOURCE_DIR}/Testing/parameters_TPSTransformTest.txt )
 ADD_ELX_TEST( TimerTest )
 
 

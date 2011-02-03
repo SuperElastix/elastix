@@ -438,6 +438,7 @@ void
 KernelTransform2<TScalarType, NDimensions>
 ::ComputeY( void )
 {
+  /** In ComputeD() the displacements are computed. */
   this->ComputeD();
 
   typename VectorSetType::ConstIterator displacement = this->m_Displacements->Begin();
@@ -912,7 +913,42 @@ KernelTransform2<TScalarType, NDimensions>
     os << indent << "Displacements: " << std::endl;
     this->m_Displacements->Print( os, indent.GetNextIndent() );
   }
-  os << indent << "Stiffness: " << m_Stiffness << std::endl;
+
+  os << indent << "Stiffness: "
+    << this->m_Stiffness << std::endl;
+  os << indent << "FastComputationPossible: "
+    << this->m_FastComputationPossible << std::endl;
+  os << indent << "PoissonRatio: "
+    << this->m_PoissonRatio << std::endl;
+  os << indent << "MatrixInversionMethod: "
+    << this->m_MatrixInversionMethod << std::endl;
+
+  /** Just print the sizes of these matrices, not their contents. */
+  os << indent << "LMatrix: " << this->m_LMatrix.rows()
+    << " x " << this->m_LMatrix.cols() << std::endl;
+  os << indent << "LMatrixInverse: " << this->m_LMatrixInverse.rows()
+    << " x " << this->m_LMatrixInverse.cols() << std::endl;
+  os << indent << "KMatrix: " << this->m_KMatrix.rows()
+    << " x " << this->m_KMatrix.cols() << std::endl;
+  os << indent << "PMatrix: " << this->m_PMatrix.rows()
+    << " x " << this->m_PMatrix.cols() << std::endl;
+  os << indent << "YMatrix: " << this->m_YMatrix.rows()
+    << " x " << this->m_YMatrix.cols() << std::endl;
+  os << indent << "WMatrix: " << this->m_WMatrix.rows()
+    << " x " << this->m_WMatrix.cols() << std::endl;
+  os << indent << "DMatrix: " << this->m_DMatrix.rows()
+    << " x " << this->m_DMatrix.cols() << std::endl;
+  os << indent << "AMatrix: " << this->m_AMatrix.rows()
+    << " x " << this->m_AMatrix.cols() << std::endl;
+  os << indent << "BVector: " << this->m_BVector.size() << std::endl;
+  os << indent << "WMatrixComputed: "
+    << this->m_WMatrixComputed << std::endl;
+  os << indent << "LMatrixComputed: "
+    << this->m_LMatrixComputed << std::endl;
+  os << indent << "LInverseComputed: "
+    << this->m_LInverseComputed << std::endl;
+  os << indent << "LMatrixDecompositionComputed: "
+    << this->m_LMatrixDecompositionComputed << std::endl;
 
 } // end PrintSelf()
 

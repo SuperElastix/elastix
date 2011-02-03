@@ -100,6 +100,7 @@ int main( int argc, char *argv[] )
   typedef itk::KernelTransformPublic<
     ScalarType, Dimension >                             TransformType;
   typedef TransformType::JacobianType                   JacobianType;
+  typedef TransformType::NonZeroJacobianIndicesType     NonZeroJacobianIndicesType;
   typedef TransformType::PointSetType                   PointSetType;
   typedef itk::TransformixInputPointFileReader<
     PointSetType >                                      IPPReaderType;
@@ -109,6 +110,8 @@ int main( int argc, char *argv[] )
   typedef PointSetType::PointType                       PointType;
   typedef TransformType::LMatrixType                    LMatrixType;
   typedef vnl_sparse_matrix<ScalarType>                 LSparseMatrixType;
+
+  PointSetType::Pointer dummyLandmarks = PointSetType::New();
 
   /** Create the kernel transform. */
   TransformType::Pointer kernelTransform = TransformType::New();
@@ -328,66 +331,14 @@ int main( int argc, char *argv[] )
       << clock() - startClock << " ms." << std::endl;
 
     // NEW way:
+
+    /** Reset source landmarks, otherwise L is not recomputed. */
+    kernelTransform->SetSourceLandmarks( dummyLandmarks );
+    kernelTransform->SetSourceLandmarks( usedLandmarks );
     startClock = clock();
     JacobianType jac2;
-    jac2.SetSize( Dimension, numberOfLandmarks * Dimension );
-    jac2.Fill( 0.0 );
-    sp = usedLandmarks->GetPoints()->Begin();
-
-    // Precompute G's.
-    std::vector<ScalarType> gVector( numberOfLandmarks );
-    for ( unsigned int lnd = 0; lnd < numberOfLandmarks; lnd++ )
-    {
-      // Property A: G = G(0,0) * I_d.
-      kernelTransform->ComputeGPublic( p - sp->Value(), Gmatrix );
-      gVector[ lnd ] = Gmatrix( 0, 0 );
-      ++sp;
-    }
-
-    // Deformation part of the transform:
-    sp = usedLandmarks->GetPoints()->Begin();
-    for ( unsigned int lnd = 0; lnd < numberOfLandmarks; lnd++ )
-    {
-      ScalarType g = gVector[ lnd ];
-
-      unsigned int lIdx = lnd * Dimension;
-      ScalarType linv = lMatrixInverse2[ lIdx ][ lIdx ];
-      for ( unsigned int dim = 0; dim < Dimension; dim++ )
-      {
-        jac2[ dim ][ lIdx + dim ] += g * linv;
-      }
-
-      for ( unsigned int lidx = lnd + 1; lidx < numberOfLandmarks; lidx++ )
-      {
-        ScalarType gSym = gVector[ lidx ];
-        unsigned int lIdx = lidx * Dimension;
-        ScalarType linv = lMatrixInverse2[ lnd * Dimension ][ lIdx ];
-
-        for ( unsigned int dim = 0; dim < Dimension; dim++ )
-        {
-          jac2[ dim ][ lIdx + dim ] += g * linv;
-          jac2[ dim ][ lnd * Dimension + dim ] += gSym * linv;
-        }
-      } // end for lidx
-
-      // Next source landmark
-      ++sp;
-    }
-
-    for ( unsigned int odim = 0; odim < Dimension; odim++ )
-    {
-      const unsigned long index = ( numberOfLandmarks + Dimension ) * Dimension + odim;
-
-      for ( unsigned long lidx = 0; lidx < numberOfLandmarks * Dimension; lidx++ )
-      {
-        ScalarType tmp = 0.0;
-        for ( unsigned int dim = 0; dim < Dimension; dim++ )
-        {
-          tmp += p[ dim ] * lMatrixInverse2[ ( numberOfLandmarks + dim ) * Dimension + odim ][ lidx ];
-        }
-        jac2[ odim ][ lidx ] += tmp + lMatrixInverse2[ index ][ lidx ];
-      }
-    }
+    NonZeroJacobianIndicesType nzji;
+    kernelTransform->GetJacobian( p, jac2, nzji );
     std::cerr << "Jacobian computation (NEW) took: "
       << clock() - startClock << " ms." << std::endl;
 
