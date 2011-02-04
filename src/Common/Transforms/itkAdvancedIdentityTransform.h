@@ -65,7 +65,7 @@ public:
   typedef SmartPointer< const Self >                        ConstPointer;
 
   /** New method for creating an object using a factory. */
-  itkNewMacro(Self);
+  itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( AdvancedIdentityTransform, AdvancedTransform );
@@ -125,20 +125,20 @@ public:
   typedef typename Superclass::InternalMatrixType   InternalMatrixType;
 
   /**  Method to transform a point. */
-  virtual OutputPointType TransformPoint(const InputPointType  &point ) const
+  virtual OutputPointType TransformPoint( const InputPointType  &point ) const
     { return point; }
 
   /**  Method to transform a vector. */
-  virtual OutputVectorType TransformVector(const InputVectorType &vector) const
+  virtual OutputVectorType TransformVector( const InputVectorType &vector ) const
     { return vector; }
 
   /**  Method to transform a vnl_vector. */
-  virtual OutputVnlVectorType TransformVector(const InputVnlVectorType &vector) const
+  virtual OutputVnlVectorType TransformVector( const InputVnlVectorType &vector ) const
     { return vector; }
 
   /**  Method to transform a CovariantVector. */
   virtual OutputCovariantVectorType TransformCovariantVector(
-    const InputCovariantVectorType &vector) const
+    const InputCovariantVectorType &vector ) const
     { return vector; }
 
   /** Set the transformation to an Identity
@@ -175,13 +175,13 @@ public:
    *
    * \f]
    */
-  virtual const JacobianType & GetJacobian(const InputPointType  & ) const
+  virtual const JacobianType & GetJacobian( const InputPointType  & ) const
     {
     return this->m_Jacobian;
     }
 
   /** Return an inverse of the identity transform - another identity transform. */
-  virtual InverseTransformBasePointer GetInverseTransform() const
+  virtual InverseTransformBasePointer GetInverseTransform( void ) const
     {
     return this->New().GetPointer();
     }
@@ -194,7 +194,7 @@ public:
   virtual bool IsLinear() const { return true; }
 
   /** Get the Fixed Parameters. */
-  virtual const ParametersType& GetFixedParameters(void) const
+  virtual const ParametersType& GetFixedParameters( void ) const
     {
     return this->m_FixedParameters;
     }
@@ -203,7 +203,7 @@ public:
   virtual void SetFixedParameters( const ParametersType & ) {}
 
   /** Get the Parameters. */
-  virtual const ParametersType& GetParameters(void) const
+  virtual const ParametersType& GetParameters( void ) const
     {
     return this->m_Parameters;
     }
@@ -285,20 +285,21 @@ public:
 	}
 
 protected:
-  AdvancedIdentityTransform():AdvancedTransform<TScalarType,NDimensions,NDimensions>(NDimensions,1)
+  AdvancedIdentityTransform()
+    : AdvancedTransform<TScalarType,NDimensions,NDimensions>( NDimensions, 1 )
 	{
     // The Jacobian is constant, therefore it can be initialized in the constructor.
     this->m_Jacobian = JacobianType( NDimensions, 1 );
-    this->m_Jacobian.Fill(0.0);
+    this->m_Jacobian.Fill( 0.0 );
 
-		/** SpatialJacobian is also constant */
+		/** SpatialJacobian is also constant. */
 		this->m_SpatialJacobian.SetIdentity();
 
-		/** Nonzero Jacobian indices, for GetJacobian */
+		/** Nonzero Jacobian indices, for GetJacobian. */
 		this->m_NonZeroJacobianIndices.resize( ParametersDimension );
 		for ( unsigned int i = 0; i < ParametersDimension; ++i )
 		{
-			this->m_NonZeroJacobianIndices[i] = i;
+			this->m_NonZeroJacobianIndices[ i ] = i;
 		}
 
 		/** Set to correct size. The elements are automatically initialized to 0. */
@@ -315,11 +316,11 @@ private:
   AdvancedIdentityTransform(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
-	SpatialJacobianType m_SpatialJacobian;
-  SpatialHessianType m_SpatialHessian;
-  NonZeroJacobianIndicesType m_NonZeroJacobianIndices;
+	SpatialJacobianType           m_SpatialJacobian;
+  SpatialHessianType            m_SpatialHessian;
+  NonZeroJacobianIndicesType    m_NonZeroJacobianIndices;
   JacobianOfSpatialJacobianType m_JacobianOfSpatialJacobian;
-  JacobianOfSpatialHessianType m_JacobianOfSpatialHessian;
+  JacobianOfSpatialHessianType  m_JacobianOfSpatialHessian;
 
 }; // end class AdvancedIdentityTransform
 
