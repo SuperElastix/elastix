@@ -107,9 +107,10 @@ StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
 
   /** Transform point using right subtransform. */
   SubTransformOutputPointType oppr;
-  const unsigned int subt = vnl_math_min( this->m_NumberOfSubTransforms - 1, static_cast<unsigned int>(
-                              vnl_math_max( 0,
-                                vnl_math_rnd( ( ipp[ ReducedInputSpaceDimension ] - m_StackOrigin ) / m_StackSpacing ) ) ) );
+  const unsigned int subt
+    = vnl_math_min( this->m_NumberOfSubTransforms - 1, static_cast<unsigned int>(
+      vnl_math_max( 0,
+      vnl_math_rnd( ( ipp[ ReducedInputSpaceDimension ] - m_StackOrigin ) / m_StackSpacing ) ) ) );
   oppr = this->m_SubTransformContainer[ subt ]->TransformPoint( ippr );
 
   /** Increase dimension of input point. */
@@ -162,9 +163,10 @@ StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
   }
 
   /** Get Jacobian from right subtransform. */
-  const unsigned int subt = vnl_math_min( this->m_NumberOfSubTransforms - 1, static_cast<unsigned int>(
-                              vnl_math_max( 0,
-                                vnl_math_rnd( ( ipp[ ReducedInputSpaceDimension ] - m_StackOrigin ) / m_StackSpacing ) ) ) );
+  const unsigned int subt
+    = vnl_math_min( this->m_NumberOfSubTransforms - 1, static_cast<unsigned int>(
+      vnl_math_max( 0,
+      vnl_math_rnd( ( ipp[ ReducedInputSpaceDimension ] - m_StackOrigin ) / m_StackSpacing ) ) ) );
   SubTransformJacobianType subjac;
   this->m_SubTransformContainer[ subt ]->GetJacobian( ippr, subjac, nzji );
 

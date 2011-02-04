@@ -40,7 +40,8 @@ WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>
 
 template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
 void
-WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>::SetParameters( const ParametersType & param )
+WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>
+::SetParameters( const ParametersType & param )
 {
   if ( param.GetSize() != this->m_TransformContainer.size() )
   {
@@ -54,8 +55,10 @@ WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>::Se
   {
     itkExceptionMacro( << "Weights sum to 0." );
   }
+
   this->Modified();
-} // end SetParameters
+
+} // end SetParameters()
 
 
 /**

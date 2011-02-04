@@ -128,7 +128,7 @@ TransformixInputPointFileReader<TOutputMesh>
         }
         else
         {
-          OStringStream msg;
+          std::ostringstream msg;
           msg << "The file is not large enough. "
             << std::endl << "Filename: " << this->m_FileName
             << std::endl;
@@ -142,7 +142,7 @@ TransformixInputPointFileReader<TOutputMesh>
   }
   else
   {
-    OStringStream msg;
+    std::ostringstream msg;
     msg << "The file has unexpectedly been closed. "
       << std::endl << "Filename: " << this->m_FileName
       << std::endl;

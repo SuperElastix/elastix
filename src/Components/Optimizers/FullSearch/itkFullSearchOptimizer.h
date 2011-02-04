@@ -80,10 +80,10 @@ namespace itk
 
     /** The same values, but transformed to integer indices.
     * These can be used to create an image visualizing the search space. */
-    typedef Array<long>                               SearchSpaceIndexType;
+    typedef Array<IndexValueType>                     SearchSpaceIndexType;
 
     /** The size of each dimension to be searched ((max-min)/step)) */
-    typedef Array<unsigned long>                      SearchSpaceSizeType;
+    typedef Array<SizeValueType>                      SearchSpaceSizeType;
 
 
     /** NB: The methods SetScales has no influence! */

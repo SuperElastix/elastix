@@ -169,24 +169,6 @@ public:
   /** Set the input image.  This must be set by the user. */
   virtual void SetInputImage(const TImageType * inputData);
 
-
-  /** The UseImageDirection flag determines whether image derivatives are
-   * computed with respect to the image grid or with respect to the physical
-   * space. When this flag is ON the derivatives are computed with respect to
-   * the coordinate system of physical space. The difference is whether we take
-   * into account the image Direction or not. The flag ON will take into
-   * account the image direction and will result in an extra matrix
-   * multiplication compared to the amount of computation performed when the
-   * flag is OFF.
-   * The default value of this flag is the same as the CMAKE option
-   * ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE (i.e ON by default when ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE is ON,
-   * and  OFF by default when ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE is
-   * OFF). */
-  itkSetMacro( UseImageDirection, bool );
-  itkGetConstMacro( UseImageDirection, bool );
-  itkBooleanMacro( UseImageDirection );
-
-
 protected:
   ReducedDimensionBSplineInterpolateImageFunction();
   virtual ~ReducedDimensionBSplineInterpolateImageFunction() {};
@@ -235,10 +217,6 @@ private:
   std::vector<IndexType>    m_PointsToIndex;  // Preallocation of interpolation neighborhood indicies
 
   CoefficientFilterPointer     m_CoefficientFilter;
-
-  // flag to take or not the image direction into account when computing the
-  // derivatives.
-  bool m_UseImageDirection;
 
 };
 

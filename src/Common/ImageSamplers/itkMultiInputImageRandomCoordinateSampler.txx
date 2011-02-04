@@ -220,10 +220,8 @@ namespace itk
       largestIndex, largestImagePoint );
 
       /** apply inverse direction, so that next max-operation makes sense. */
-#ifdef ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE
       smallestImagePoint = dir0inv * smallestImagePoint;
       largestImagePoint = dir0inv * largestImagePoint;
-#endif
 
       /** Determine intersection. */
       for ( unsigned int j = 0; j < InputImageDimension; ++j )
@@ -237,10 +235,8 @@ namespace itk
     }
 
     /** Convert to continuous index in input image 0. */
-#ifdef ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE
     smallestPoint = dir0 * smallestPoint;
     largestPoint = dir0 * largestPoint;
-#endif
     this->GetInput( 0 )->TransformPhysicalPointToContinuousIndex( smallestPoint, smallestContIndex );
     this->GetInput( 0 )->TransformPhysicalPointToContinuousIndex( largestPoint, largestContIndex );
 

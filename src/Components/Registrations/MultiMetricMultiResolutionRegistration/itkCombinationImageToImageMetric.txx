@@ -576,11 +576,11 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
  */
 
 template <class TFixedImage, class TMovingImage>
-const unsigned long &
+const SizeValueType &
 CombinationImageToImageMetric<TFixedImage,TMovingImage>
 ::GetNumberOfPixelsCounted( void ) const
 {
-  unsigned long sum = 0;
+  SizeValueType sum = 0;
   for ( unsigned int i = 0; i < this->GetNumberOfMetrics(); ++i )
   {
     const ImageMetricType * testPtr

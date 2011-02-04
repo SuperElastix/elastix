@@ -318,36 +318,38 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
      * the initial and the current transforms are defined.
      */
 
-    /** Try create the inverse of the initial transform. */
-    InitialTransformPointer inverseT0 = InitialTransformType::New();
-    bool T0invertable = this->m_InitialTransform->GetInverse( inverseT0 );
+    itkExceptionMacro( << "ERROR: not implemented" );
+    return false;
 
-    if ( T0invertable )
-    {
-      /** Try to create the inverse of the current transform. */
-      CurrentTransformPointer inverseT1 = CurrentTransformType::New();
-      bool T1invertable = this->m_CurrentTransform->GetInverse( inverseT1 );
-
-      if ( T1invertable )
-      {
-        /** The transform can be inverted! */
-        inverse->SetUseComposition( true );
-        inverse->SetInitialTransform( inverseT1 );
-        inverse->SetCurrentTransform( inverseT0 );
-        return true;
-      }
-      else
-      {
-        /** The initial transform is invertible, but the current one not. */
-        return false;
-      }
-    }
-    else
-    {
-      /** The initial transform is not invertible. */
-      return false;
-    }
-
+//     /** Try create the inverse of the initial transform. */
+//     InitialTransformPointer inverseT0 = InitialTransformType::New();
+//     bool T0invertable = this->m_InitialTransform->GetInverse( inverseT0 );
+// 
+//     if ( T0invertable )
+//     {
+//       /** Try to create the inverse of the current transform. */
+//       CurrentTransformPointer inverseT1 = CurrentTransformType::New();
+//       bool T1invertable = this->m_CurrentTransform->GetInverse( inverseT1 );
+// 
+//       if ( T1invertable )
+//       {
+//         /** The transform can be inverted! */
+//         inverse->SetUseComposition( true );
+//         inverse->SetInitialTransform( inverseT1 );
+//         inverse->SetCurrentTransform( inverseT0 );
+//         return true;
+//       }
+//       else
+//       {
+//         /** The initial transform is invertible, but the current one not. */
+//         return false;
+//       }
+//     }
+//     else
+//     {
+//       /** The initial transform is not invertible. */
+//       return false;
+//     }
   } // end else: UseComposition
 
 } // end GetInverse()

@@ -55,11 +55,6 @@ CyclicGridScheduleComputer<TTransformScalarType, VImageDimension>
   /** Apply the initial transform. */
   this->ApplyInitialTransform( imageOrigin, imageSpacing, imageDirection, finalGridSpacing );
 
-#ifndef ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE
-  /** Ignore direction cosines */
-  imageDirection.SetIdentity();
-#endif
-
   /** Set the appropriate sizes. */
   this->m_GridOrigins.resize( this->GetNumberOfLevels() );
   this->m_GridRegions.resize( this->GetNumberOfLevels() );

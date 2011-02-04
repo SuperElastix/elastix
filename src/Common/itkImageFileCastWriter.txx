@@ -46,10 +46,13 @@ ImageFileCastWriter<TInputImage>
 {
   /** Make a dummy imageIO object, which has some handy functions */
   MetaImageIO::Pointer dummyImageIO = MetaImageIO::New();
-  /** Set the pixeltype */
+
+  /** Set the pixeltype. */
   typedef typename InputImageType::InternalPixelType ScalarType;
-  dummyImageIO->SetPixelTypeInfo(typeid(ScalarType));
-  /** Get its description */
+  //dummyImageIO->SetPixelTypeInfo(typeid(ScalarType));
+  dummyImageIO->SetPixelTypeInfo( static_cast<const ScalarType *>(0) );
+
+  /** Get its description. */
   return dummyImageIO->GetComponentTypeAsString(
     dummyImageIO->GetComponentType() );
 }
@@ -68,11 +71,11 @@ ImageFileCastWriter<TInputImage>
 template <class TInputImage>
 void
 ImageFileCastWriter<TInputImage>
-::GenerateData(void)
+::GenerateData( void )
 {
   const InputImageType * input = this->GetInput();
 
-  itkDebugMacro(<<"Writing file: " << this->GetFileName() );
+  itkDebugMacro( << "Writing file: " << this->GetFileName() );
 
   // Make sure that the image is the right type and no more than
   // four components.
@@ -81,7 +84,8 @@ ImageFileCastWriter<TInputImage>
   if( strcmp( input->GetNameOfClass(), "VectorImage" ) == 0 )
     {
     typedef typename InputImageType::InternalPixelType VectorImageScalarType;
-    this->GetImageIO()->SetPixelTypeInfo( typeid(VectorImageScalarType) );
+    //this->GetImageIO()->SetPixelTypeInfo( typeid(VectorImageScalarType) );
+    this->GetImageIO()->SetPixelTypeInfo( static_cast<const VectorImageScalarType *>(0) );
 
     typedef typename InputImageType::AccessorFunctorType AccessorFunctorType;
     this->GetImageIO()->SetNumberOfComponents( AccessorFunctorType::GetVectorLength(input) );
@@ -89,7 +93,8 @@ ImageFileCastWriter<TInputImage>
   else
     {
     // Set the pixel and component type; the number of components.
-    this->GetImageIO()->SetPixelTypeInfo(typeid(ScalarType));
+    //this->GetImageIO()->SetPixelTypeInfo(typeid(ScalarType));
+    this->GetImageIO()->SetPixelTypeInfo( static_cast<const ScalarType *>(0) );
     }
 
   /** Setup the image IO for writing. */

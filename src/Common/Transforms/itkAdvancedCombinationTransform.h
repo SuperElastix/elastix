@@ -89,15 +89,25 @@ public:
   typedef typename Superclass::SpatialHessianType             SpatialHessianType;
   typedef typename Superclass::JacobianOfSpatialHessianType   JacobianOfSpatialHessianType;
   typedef typename Superclass::InternalMatrixType             InternalMatrixType;
+  typedef typename Superclass::InverseTransformBaseType    InverseTransformBaseType;
+  typedef typename Superclass::InverseTransformBasePointer InverseTransformBasePointer;
 
   /** Typedefs for the InitialTransform. */
   typedef Superclass                                      InitialTransformType;
   typedef typename InitialTransformType::Pointer          InitialTransformPointer;
   typedef typename InitialTransformType::ConstPointer     InitialTransformConstPointer;
+  typedef typename InitialTransformType::InverseTransformBaseType
+    InitialTransformInverseTransformBaseType;
+  typedef typename InitialTransformType::InverseTransformBasePointer
+    InitialTransformInverseTransformBasePointer;
 
   /** Typedefs for the CurrentTransform. */
   typedef Superclass                                      CurrentTransformType;
   typedef typename CurrentTransformType::Pointer          CurrentTransformPointer;
+  typedef typename CurrentTransformType::InverseTransformBaseType
+    CurrentTransformInverseTransformBaseType;
+  typedef typename CurrentTransformType::InverseTransformBasePointer
+    CurrentTransformInverseTransformBasePointer;
 
   /** Set/Get a pointer to the InitialTransform. */
   virtual void SetInitialTransform( const InitialTransformType * _arg );
@@ -120,6 +130,29 @@ public:
 
   /**  Method to transform a point. */
   virtual OutputPointType TransformPoint( const InputPointType  & point ) const;
+
+  /** ITK4 change:
+   * The following pure virtual functions must be overloaded.
+   * For now just throw an exception, since these are not used in elastix.
+   */
+  virtual OutputVectorType TransformVector( const InputVectorType & ) const
+  {
+    itkExceptionMacro(
+      << "TransformVector(const InputVectorType &) is not implemented "
+      << "for AdvancedCombinationTransform" );
+  }
+  virtual OutputVnlVectorType       TransformVector( const InputVnlVectorType & ) const
+  {
+    itkExceptionMacro(
+      << "TransformVector(const InputVnlVectorType &) is not implemented "
+      << "for AdvancedCombinationTransform" );
+  }
+  virtual OutputCovariantVectorType TransformCovariantVector( const InputCovariantVectorType & ) const
+  {
+    itkExceptionMacro(
+      << "TransformCovariantVector(const InputCovariantVectorType &) is not implemented "
+      << "for AdvancedCombinationTransform" );
+  }
 
   /** Return the number of parameters that completely define the CurrentTransform. */
   virtual unsigned int GetNumberOfParameters( void ) const;

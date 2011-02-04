@@ -303,7 +303,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   }
 
   /** Allocate memory on the stack: */
-  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  const SizeValueType numberOfWeights = WeightsFunctionType::NumberOfWeights;
   typename WeightsType::ValueType weightsArray[ numberOfWeights ];
   WeightsType weights( weightsArray, numberOfWeights, false );
 
@@ -437,7 +437,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 
   /** Compute the number of affected B-spline parameters. */
   /** Allocate memory on the stack: */
-  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  const SizeValueType numberOfWeights = WeightsFunctionType::NumberOfWeights;
   typename WeightsType::ValueType weightsArray[ numberOfWeights ];
   WeightsType weights( weightsArray, numberOfWeights, false );
 
@@ -525,8 +525,8 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
 
   /** Initialize some helper variables. */
-  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
-  const unsigned long parametersPerDim
+  const SizeValueType numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  const SizeValueType parametersPerDim
     = this->GetNumberOfParametersPerDimension();
   unsigned long mu = 0;
 
@@ -542,7 +542,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     while ( !iterator.IsAtEnd() )
     {
       /** Translate the index into a parameter number for the x-direction. */
-      const unsigned long parameterNumber = &(iterator.Value()) - basePointer;
+      const IdentifierType parameterNumber = &(iterator.Value()) - basePointer;
 
       /** Update the nonZeroJacobianIndices for all directions. */
       for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )

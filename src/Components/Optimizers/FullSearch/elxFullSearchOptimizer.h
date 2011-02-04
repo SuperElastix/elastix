@@ -114,15 +114,15 @@ using namespace itk;
     typedef typename DimensionNameMapType::const_iterator   NameIteratorType;
 
     /** Methods that have to be present everywhere.*/
-    virtual void BeforeRegistration(void);
-    virtual void BeforeEachResolution(void);
-    virtual void AfterEachResolution(void);
-    virtual void AfterEachIteration(void);
-    virtual void AfterRegistration(void);
+    virtual void BeforeRegistration( void );
+    virtual void BeforeEachResolution( void );
+    virtual void AfterEachResolution( void );
+    virtual void AfterEachIteration( void );
+    virtual void AfterRegistration( void );
     /** \todo BeforeAll, checking parameters. */
 
     /** Get a pointer to the image containing the optimization surface. */
-    itkGetObjectMacro(OptimizationSurface, NDImageType);
+    itkGetObjectMacro( OptimizationSurface, NDImageType );
 
   protected:
 
@@ -137,7 +137,8 @@ using namespace itk;
      * ranges from the parameter file is a real error. Prints some
      * error message if so.
      */
-    //virtual int CheckSearchSpaceRangeDefinition(const std::string & fullFieldName, int errorcode, unsigned int entry_nr);
+    //virtual int CheckSearchSpaceRangeDefinition(const std::string & fullFieldName,
+    //  int errorcode, unsigned int entry_nr);
     virtual bool CheckSearchSpaceRangeDefinition( const std::string & fullFieldName,
       const bool found, const unsigned int entry_nr ) const;
 

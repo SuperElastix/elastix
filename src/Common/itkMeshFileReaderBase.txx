@@ -82,7 +82,7 @@ namespace itk
     if( ! itksys::SystemTools::FileExists( this->m_FileName.c_str() ) )
       {
       MeshFileReaderException e(__FILE__, __LINE__);
-      OStringStream msg;
+      std::ostringstream msg;
       msg <<"The file doesn't exists. "
           << std::endl << "Filename = " << this->m_FileName
           << std::endl;
@@ -97,7 +97,7 @@ namespace itk
     if( readTester.fail() )
       {
       readTester.close();
-      OStringStream msg;
+      std::ostringstream msg;
       msg <<"The file couldn't be opened for reading. "
           << std::endl << "Filename: " << this->m_FileName
           << std::endl;
