@@ -55,6 +55,8 @@ AdvancedTranslationTransform():Superclass(SpaceDimension,ParametersDimension)
   this->m_JacobianOfSpatialHessian.resize(ParametersDimension);
 
   /** m_SpatialHessian is automatically initialized with zeros */
+  this->m_HasNonZeroSpatialHessian = false;
+  this->m_HasNonZeroJacobianOfSpatialHessian = false;
 }
 
 

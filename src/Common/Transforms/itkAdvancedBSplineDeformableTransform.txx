@@ -65,11 +65,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   }
   this->m_SupportSize = this->m_WeightsFunction->GetSupportSize();
 
-  // Instantiate an identity transform
-  typedef IdentityTransform<ScalarType, SpaceDimension> IdentityTransformType;
-  typename IdentityTransformType::Pointer id = IdentityTransformType::New();
-  this->m_BulkTransform = id;
-
   // Default grid size is zero
   typename RegionType::SizeType size;
   typename RegionType::IndexType index;
@@ -162,7 +157,11 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
         = static_cast<ScalarType>( this->m_PointToIndexMatrixTransposed[ i ][ j ] );
     }
   }
-}
+
+  this->m_HasNonZeroSpatialHessian = true;
+  this->m_HasNonZeroJacobianOfSpatialHessian = true;
+
+} // end Constructor
 
 
 // Destructor
@@ -170,7 +169,6 @@ template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 ::~AdvancedBSplineDeformableTransform()
 {
-
 }
 
 
@@ -257,17 +255,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   bool & inside ) const
 {
   inside = true;
-
-  /** Take care of the initial transform. */
-  InputPointType transformedPoint;
-  if ( this->m_BulkTransform )
-  {
-    transformedPoint = this->m_BulkTransform->TransformPoint( point );
-  }
-  else
-  {
-    transformedPoint = point;
-  }
+  InputPointType transformedPoint = point;
 
   /** Check if the coefficient image has been set. */
   if ( !this->m_CoefficientImage[ 0 ] )

@@ -75,10 +75,6 @@ class DeformationVectorFieldTransform
     typedef typename Superclass::InputPointType         InputPointType;
     typedef typename Superclass::OutputPointType        OutputPointType;
 
-    /** Typedef's for BulkTransform. */
-    typedef typename Superclass::BulkTransformType      BulkTransformType;
-    typedef typename Superclass::BulkTransformPointer   BulkTransformPointer;
-
     /** Parameters as SpaceDimension number of images. */
     typedef typename Superclass::PixelType              CoefficientPixelType;
     typedef typename Superclass::ImageType              CoefficientImageType;

@@ -31,11 +31,6 @@ template<class TScalarType, unsigned int NDimensions>
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 ::AdvancedBSplineDeformableTransformBase():Superclass(SpaceDimension,0)
 {
-  // Instantiate an identity transform
-  typedef IdentityTransform<ScalarType, SpaceDimension> IdentityTransformType;
-  typename IdentityTransformType::Pointer id = IdentityTransformType::New();
-  this->m_BulkTransform = id;
-
   // Default grid size is zero
   typename RegionType::SizeType size;
   typename RegionType::IndexType index;
@@ -126,7 +121,6 @@ template<class TScalarType, unsigned int NDimensions>
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 ::~AdvancedBSplineDeformableTransformBase()
 {
-
 }
 
 
@@ -611,15 +605,6 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
      << this->m_InputParametersPointer << std::endl;
   os << indent << "ValidRegion: " << this->m_ValidRegion << std::endl;
   os << indent << "LastJacobianIndex: " << this->m_LastJacobianIndex << std::endl;
-  os << indent << "BulkTransform: ";
-  os << m_BulkTransform.GetPointer() << std::endl;
-
-  if ( this->m_BulkTransform )
-  {
-    os << indent << "BulkTransformType: "
-      << this->m_BulkTransform->GetNameOfClass() << std::endl;
-  }
-
 }
 
 // Transform a point

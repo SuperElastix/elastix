@@ -143,6 +143,23 @@ int main( int argc, char *argv[] )
   std::cerr << "GetJacobian() computation took: "
     << clock() - startClock << " ms." << std::endl;
 
+  /** Additional checks. */
+  if ( !kernelTransform->GetHasNonZeroSpatialHessian() )
+  {
+    std::cerr << "ERROR: GetHasNonZeroSpatialHessian() should return true." << std::endl;
+    return 1;
+  }
+  if ( !kernelTransform->GetHasNonZeroJacobianOfSpatialHessian() )
+  {
+    std::cerr << "ERROR: GetHasNonZeroJacobianOfSpatialHessian() should return true." << std::endl;
+    return 1;
+  }
+  if ( kernelTransform->GetMatrixInversionMethod() != "QR" )
+  {
+    std::cerr << "ERROR: GetMatrixInversionMethod() should return \"QR\"." << std::endl;
+    return 1;
+  }
+
   /** Exercise PrintSelf() method. */
   kernelTransform->Print( std::cerr );
 

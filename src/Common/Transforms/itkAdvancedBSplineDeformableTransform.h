@@ -190,10 +190,6 @@ public:
   /** This method specifies the region over which the grid resides. */
   virtual void SetGridRegion( const RegionType& region );
 
-  /** Typedef of the bulk transform. */
-  typedef typename Superclass::BulkTransformType      BulkTransformType;
-  typedef typename Superclass::BulkTransformPointer   BulkTransformPointer;
-
   /** Transform points by a BSpline deformable transformation. */
   OutputPointType TransformPoint( const InputPointType & point ) const;
 
@@ -238,16 +234,6 @@ public:
   unsigned int GetNumberOfAffectedWeights( void ) const;
 
   virtual unsigned long GetNumberOfNonZeroJacobianIndices( void ) const;
-
-  /** Whether the advanced transform has nonzero matrices. */
-  virtual bool GetHasNonZeroSpatialHessian( void ) const
-  {
-    return true;
-  }
-  virtual bool HasNonZeroJacobianOfSpatialHessian( void ) const
-  {
-    return true;
-  }
 
   /** Compute the Jacobian matrix of the transformation at one point. */
   virtual const JacobianType & GetJacobian( const InputPointType & point ) const;

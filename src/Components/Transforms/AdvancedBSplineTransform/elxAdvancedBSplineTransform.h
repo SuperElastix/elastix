@@ -196,10 +196,6 @@ public:
   typedef typename BSplineTransformBaseType::OriginType       OriginType;
   typedef typename BSplineTransformBaseType::DirectionType    DirectionType;
   typedef typename
-    BSplineTransformBaseType::BulkTransformType               BulkTransformType;
-  typedef typename
-    BSplineTransformBaseType::BulkTransformPointer            BulkTransformPointer;
-  typedef typename
     BSplineTransformBaseType::ContinuousIndexType             ContinuousIndexType;
   typedef typename
     BSplineTransformBaseType::ParameterIndexArrayType         ParameterIndexArrayType;

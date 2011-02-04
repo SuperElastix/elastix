@@ -137,16 +137,6 @@ public:
   /** 'I' (identity) matrix typedef. */
   typedef vnl_matrix_fixed<TScalarType, NDimensions, NDimensions> IMatrixType;
 
-  /** Whether the advanced transform has nonzero matrices. */
-  virtual bool GetHasNonZeroSpatialHessian( void ) const
-  {
-    return true;
-  }
-  virtual bool HasNonZeroJacobianOfSpatialHessian( void ) const
-  {
-    return true;
-  }
-
   /** Return the number of parameters that completely define the Transform. */
   virtual unsigned int GetNumberOfParameters(void) const
   {

@@ -152,17 +152,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   bool & inside ) const
 {
   inside = true;
-
-  /** Take care of the initial transform. */
-  InputPointType transformedPoint;
-  if ( this->m_BulkTransform )
-  {
-    transformedPoint = this->m_BulkTransform->TransformPoint( point );
-  }
-  else
-  {
-    transformedPoint = point;
-  }
+  InputPointType transformedPoint = point;
 
   /** Check if the coefficient image has been set. */
   if ( !this->m_CoefficientImage[ 0 ] )

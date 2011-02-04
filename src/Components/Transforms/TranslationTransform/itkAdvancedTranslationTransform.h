@@ -95,18 +95,9 @@ public:
     ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
   typedef typename Superclass::InternalMatrixType   InternalMatrixType;
 
-  /** Whether the advanced transform has nonzero matrices. */
-  virtual bool GetHasNonZeroSpatialHessian( void ) const
-  {
-    return false;
-  }
-  virtual bool HasNonZeroJacobianOfSpatialHessian( void ) const
-  {
-    return false;
-  }
-
   /** This method returns the value of the offset of the
-   * AdvancedTranslationTransform. */
+   * AdvancedTranslationTransform.
+   */
   const OutputVectorType & GetOffset(void) const
     { return m_Offset; }
 

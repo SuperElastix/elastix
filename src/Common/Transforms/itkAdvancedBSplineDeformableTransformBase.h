@@ -156,8 +156,6 @@ public:
   typedef typename ImageType::Pointer                   ImagePointer;
 
   /** Get the array of coefficient images. */
-  virtual ImagePointer * GetCoefficientImage( void )
-    { return this->m_CoefficientImage; }
   virtual const ImagePointer * GetCoefficientImage( void ) const
     { return this->m_CoefficientImage; }
 
@@ -186,35 +184,23 @@ public:
 
   /** This method specifies the region over which the grid resides. */
   virtual void SetGridRegion( const RegionType& region ) = 0;
-  itkGetMacro( GridRegion, RegionType );
+  //itkGetMacro( GridRegion, RegionType );
   itkGetConstMacro( GridRegion, RegionType );
 
   /** This method specifies the grid spacing or resolution. */
   virtual void SetGridSpacing( const SpacingType & spacing );
-  itkGetMacro( GridSpacing, SpacingType );
+  //itkGetMacro( GridSpacing, SpacingType );
   itkGetConstMacro( GridSpacing, SpacingType );
 
   /** This method specifies the grid directions . */
   virtual void SetGridDirection( const DirectionType & direction );
-  itkGetMacro( GridDirection, DirectionType );
+  //itkGetMacro( GridDirection, DirectionType );
   itkGetConstMacro( GridDirection, DirectionType );
 
   /** This method specifies the grid origin. */
   virtual void SetGridOrigin( const OriginType& origin );
-  itkGetMacro( GridOrigin, OriginType );
+  //itkGetMacro( GridOrigin, OriginType );
   itkGetConstMacro( GridOrigin, OriginType );
-
-  /** Typedef of the bulk transform. */
-  typedef Transform< ScalarType,
-    itkGetStaticConstMacro( SpaceDimension ),
-    itkGetStaticConstMacro( SpaceDimension ) >          BulkTransformType;
-  typedef typename BulkTransformType::ConstPointer      BulkTransformPointer;
-
-  /** This method specifies the bulk transform to be applied.
-   * The default is the identity transform.
-   */
-  itkSetConstObjectMacro( BulkTransform, BulkTransformType );
-  itkGetConstObjectMacro( BulkTransform, BulkTransformType );
 
   /** Parameter index array type. */
   typedef Array<unsigned long> ParameterIndexArrayType;
@@ -231,7 +217,7 @@ public:
   /** Method to transform a vnl_vector -
    *  not applicable for this type of transform.
    */
-  virtual OutputVnlVectorType TransformVector(const InputVnlVectorType & ) const
+  virtual OutputVnlVectorType TransformVector( const InputVnlVectorType & ) const
     {
     itkExceptionMacro( << "Method not applicable for deformable transform. ");
     return OutputVnlVectorType();
@@ -267,7 +253,9 @@ public:
 
   virtual unsigned long GetNumberOfNonZeroJacobianIndices( void ) const = 0;
 
-  /** This typedef should be equal to the typedef used in derived classes based on the weightsfunction. */
+  /** This typedef should be equal to the typedef used
+   * in derived classes based on the weights function.
+   */
   typedef ContinuousIndex<ScalarType, SpaceDimension> ContinuousIndexType;
 
 protected:
@@ -291,12 +279,10 @@ protected:
   /** Check if a continuous index is inside the valid region. */
   virtual bool InsideValidRegion( const ContinuousIndexType& index ) const;
 
-  /** The bulk transform. */
-  BulkTransformPointer  m_BulkTransform;
-
   /** Array of images representing the B-spline coefficients
-  *  in each dimension. */
-  ImagePointer    m_CoefficientImage[ NDimensions ];
+   *  in each dimension.
+   */
+  ImagePointer        m_CoefficientImage[ NDimensions ];
 
   /** Variables defining the coefficient grid extend. */
   RegionType          m_GridRegion;
@@ -311,11 +297,11 @@ protected:
   SpatialJacobianType m_PointToIndexMatrixTransposed2;
   DirectionType       m_IndexToPoint;
 
-  RegionType      m_ValidRegion;
+  RegionType          m_ValidRegion;
 
   /** Variables defining the interpolation support region. */
-  unsigned long   m_Offset;
-  SizeType        m_SupportSize;
+  unsigned long       m_Offset;
+  SizeType            m_SupportSize;
   ContinuousIndexType m_ValidRegionBegin;
   ContinuousIndexType m_ValidRegionEnd;
 
@@ -338,10 +324,10 @@ protected:
   mutable IndexType m_LastJacobianIndex;
 
   /** Array holding images wrapped from the flat parameters. */
-  ImagePointer    m_WrappedImage[ NDimensions ];
+  ImagePointer      m_WrappedImage[ NDimensions ];
 
   /** Internal parameters buffer. */
-  ParametersType          m_InternalParametersBuffer;
+  ParametersType    m_InternalParametersBuffer;
 
   void UpdateGridOffsetTable( void );
 

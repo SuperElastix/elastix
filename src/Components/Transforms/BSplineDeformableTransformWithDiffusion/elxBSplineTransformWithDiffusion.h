@@ -232,8 +232,6 @@ public:
   typedef typename BSplineTransformType::SizeType                   SizeType;
   typedef typename BSplineTransformType::SpacingType                SpacingType;
   typedef typename BSplineTransformType::OriginType                 OriginType;
-  typedef typename BSplineTransformType::BulkTransformType          BulkTransformType;
-  typedef typename BSplineTransformType::BulkTransformPointer       BulkTransformPointer;
   typedef typename BSplineTransformType::WeightsFunctionType        WeightsFunctionType;
   typedef typename BSplineTransformType::WeightsType                WeightsType;
   typedef typename BSplineTransformType::ContinuousIndexType        ContinuousIndexType;

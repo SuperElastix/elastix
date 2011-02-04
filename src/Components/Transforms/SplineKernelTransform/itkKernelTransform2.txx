@@ -56,6 +56,9 @@ KernelTransform2<TScalarType, NDimensions>
   this->m_MatrixInversionMethod = "SVD";
   this->m_FastComputationPossible = false;
 
+  this->m_HasNonZeroSpatialHessian = true;
+  this->m_HasNonZeroJacobianOfSpatialHessian = true;
+
 } // end constructor
 
 

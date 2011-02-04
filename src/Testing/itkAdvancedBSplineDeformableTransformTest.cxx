@@ -310,9 +310,9 @@ int main( int argc, char *argv[] )
     std::cerr << "ERROR: GetHasNonZeroSpatialHessian() should return true." << std::endl;
     return 1;
   }
-  if ( !transform->HasNonZeroJacobianOfSpatialHessian() )
+  if ( !transform->GetHasNonZeroJacobianOfSpatialHessian() )
   {
-    std::cerr << "ERROR: HasNonZeroJacobianOfSpatialHessian() should return true." << std::endl;
+    std::cerr << "ERROR: GetHasNonZeroJacobianOfSpatialHessian() should return true." << std::endl;
     return 1;
   }
 

@@ -57,7 +57,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   this->m_FixedParameters.SetSize( NInputDimensions );
   this->m_FixedParameters.Fill( 0.0 );
 
-  this->PrecomputeJacobians(OutputSpaceDimension,ParametersDimension);
+  this->PrecomputeJacobians( OutputSpaceDimension,ParametersDimension );
 }
 
 
@@ -78,7 +78,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   this->m_InverseMatrix.SetIdentity();
   this->m_InverseMatrixMTime = this->m_MatrixMTime;
 
-  this->PrecomputeJacobians(outputDims, paramDims);
+  this->PrecomputeJacobians( outputDims, paramDims );
 }
 
 
@@ -109,7 +109,7 @@ template<class TScalarType, unsigned int NInputDimensions,
                             unsigned int NOutputDimensions>
 void
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>
-::PrecomputeJacobians(unsigned int outputDims, unsigned int paramDims)
+::PrecomputeJacobians( unsigned int outputDims, unsigned int paramDims )
 {
   /** Nonzero Jacobian indices, for GetJacobian */
   this->m_NonZeroJacobianIndices.resize(paramDims);

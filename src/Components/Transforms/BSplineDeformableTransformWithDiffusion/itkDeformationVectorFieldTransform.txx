@@ -132,13 +132,8 @@ DeformationVectorFieldTransform< TScalarType, NDimensions >
   typedef ScalarToArrayCastImageFilter<
     CoefficientImageType, CoefficientVectorImageType >      ScalarImageCombineType;
 
-  /** Get a handle to the series of coefficient images.
-   * we have to apply a painful hack, because the GetCoefficientImage method
-   * is not const.
-   */
-  CoefficientImagePointer * coefImage;
-  Self * thisNonConst = const_cast<Self *>(this);
-  coefImage = thisNonConst->GetCoefficientImage();
+  /** Get a handle to the series of coefficient images. */
+  const CoefficientImagePointer * coefImage = this->GetCoefficientImage();
 
   /** Combine the coefficient images to a vector image. */
   typename ScalarImageCombineType::Pointer combiner = ScalarImageCombineType::New();
