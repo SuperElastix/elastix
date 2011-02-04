@@ -70,9 +70,10 @@ int main( int argc, char *argv[] )
   /** Time some dummy work. */
   tmr::Timer::Pointer pTmr = tmr::Timer::New();
   pTmr->StartTimer();
+  double dummy = 0.0;
   for ( double i = 0; i < N; i++ )
   {
-    double dummy = vcl_sqrt( static_cast<double>( i ) );
+    dummy += vcl_sqrt( static_cast<double>( i ) );
   }
   pTmr->StopTimer();
 

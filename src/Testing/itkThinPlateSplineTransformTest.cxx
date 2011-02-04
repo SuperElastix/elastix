@@ -31,7 +31,6 @@ int main( int argc, char *argv[] )
   const unsigned long usedNumberOfLandmarks = 100;
   std::cerr << "Number of used landmarks: "
     << usedNumberOfLandmarks << std::endl;
-  const ScalarType tolerance = 1e-8;
 
   /** Check. */
   if ( argc != 2 )
