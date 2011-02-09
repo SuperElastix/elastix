@@ -101,8 +101,14 @@ ENDIF()
 
 #---------------------------------------------------------------------
 # If IDE supports it, do use folder view.
-
-SET_PROPERTY( GLOBAL PROPERTY USE_FOLDERS ON )
+# gcc automatically ignores it. VC Express does not support and gives
+# annoying warnings when this option is turned on.
+# VC pro does support it.
+SET( CMAKE_USE_FOLDERS ON CACHE INTERNAL "Use folder view in IDE" )
+IF( CMAKE_MAKE_PROGRAM MATCHES ".?VCExpress.?" )
+  SET( CMAKE_USE_FOLDERS OFF CACHE INTERNAL "Use folder view in IDE" )
+ENDIF()
+SET_PROPERTY( GLOBAL PROPERTY USE_FOLDERS ${CMAKE_USE_FOLDERS} )
 
 #---------------------------------------------------------------------
 # Include directories
