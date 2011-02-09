@@ -244,6 +244,7 @@ public:
     return this->m_PoissonRatio;
   };
 
+  /** Matrix inversion by SVD or QR decomposition. */
   itkSetMacro( MatrixInversionMethod, std::string );
   itkGetConstReferenceMacro( MatrixInversionMethod, std::string );
 
