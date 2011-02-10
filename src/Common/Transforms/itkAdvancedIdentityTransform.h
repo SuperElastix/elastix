@@ -60,7 +60,7 @@ public:
   /** Standard class typedefs. */
   typedef AdvancedIdentityTransform                         Self;
   typedef AdvancedTransform<
-		TScalarType,NDimensions,NDimensions>    								Superclass;
+    TScalarType,NDimensions,NDimensions>                    Superclass;
   typedef SmartPointer< Self >                              Pointer;
   typedef SmartPointer< const Self >                        ConstPointer;
 
@@ -73,7 +73,7 @@ public:
   /** Dimension of the domain space. */
   itkStaticConstMacro( InputSpaceDimension, unsigned int, NDimensions );
   itkStaticConstMacro( OutputSpaceDimension, unsigned int, NDimensions );
-	itkStaticConstMacro( ParametersDimension, unsigned int, 1 );
+  itkStaticConstMacro( ParametersDimension, unsigned int, 1 );
 
   /** Type of the input parameters. */
   typedef  TScalarType     ScalarType;
@@ -113,7 +113,7 @@ public:
   typedef typename Superclass::InverseTransformBaseType InverseTransformBaseType;
   typedef typename InverseTransformBaseType::Pointer    InverseTransformBasePointer;
 
-	 /** AdvancedTransform typedefs */
+  /** AdvancedTransform typedefs */
   typedef typename Superclass
     ::NonZeroJacobianIndicesType                    NonZeroJacobianIndicesType;
   typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
@@ -211,64 +211,64 @@ public:
   /** Set the fixed parameters and update internal transformation. */
   virtual void SetParameters( const ParametersType & ) {}
 
-	/** Compute the Jacobian of the transformation. */
+  /** Compute the Jacobian of the transformation. */
   virtual void GetJacobian(
     const InputPointType &,
     JacobianType & j,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
-	{
-		j = this->m_Jacobian;
-		nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
-	}
+  {
+    j = this->m_Jacobian;
+    nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
+  }
 
 
   /** Compute the spatial Jacobian of the transformation. */
   virtual void GetSpatialJacobian(
     const InputPointType &,
     SpatialJacobianType & sj ) const
-	{
-		sj = this->m_SpatialJacobian;
-	}
+  {
+    sj = this->m_SpatialJacobian;
+  }
 
   /** Compute the spatial Hessian of the transformation. */
   virtual void GetSpatialHessian(
     const InputPointType &,
     SpatialHessianType & sh ) const
-	{
-	  sh = this->m_SpatialHessian;
-	}
+  {
+    sh = this->m_SpatialHessian;
+  }
 
   /** Compute the Jacobian of the spatial Jacobian of the transformation. */
   virtual void GetJacobianOfSpatialJacobian(
     const InputPointType &,
     JacobianOfSpatialJacobianType & jsj,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
-	{
-		jsj = this->m_JacobianOfSpatialJacobian;
-		nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
-	}
+  {
+    jsj = this->m_JacobianOfSpatialJacobian;
+    nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
+  }
 
-	/** Compute the Jacobian of the spatial Jacobian of the transformation. */
+  /** Compute the Jacobian of the spatial Jacobian of the transformation. */
   virtual void GetJacobianOfSpatialJacobian(
     const InputPointType &,
     SpatialJacobianType & sj,
     JacobianOfSpatialJacobianType & jsj,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
-	{
-		sj = this->m_SpatialJacobian;
-		jsj = this->m_JacobianOfSpatialJacobian;
-		nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
-	}
+  {
+    sj = this->m_SpatialJacobian;
+    jsj = this->m_JacobianOfSpatialJacobian;
+    nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
+  }
 
   /** Compute the Jacobian of the spatial Hessian of the transformation. */
   virtual void GetJacobianOfSpatialHessian(
     const InputPointType &,
     JacobianOfSpatialHessianType & jsh,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
-	{
-		jsh = this->m_JacobianOfSpatialHessian;
-		nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
-	}
+  {
+    jsh = this->m_JacobianOfSpatialHessian;
+    nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
+  }
 
   /** Compute both the spatial Hessian and the Jacobian of the
    * spatial Hessian of the transformation.
@@ -278,45 +278,45 @@ public:
     SpatialHessianType & sh,
     JacobianOfSpatialHessianType & jsh,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
-	{
-		sh = this->m_SpatialHessian;
-		jsh = this->m_JacobianOfSpatialHessian;
-		nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
-	}
+  {
+    sh = this->m_SpatialHessian;
+    jsh = this->m_JacobianOfSpatialHessian;
+    nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
+  }
 
 protected:
   AdvancedIdentityTransform()
     : AdvancedTransform<TScalarType,NDimensions,NDimensions>( NDimensions, 1 )
-	{
+  {
     // The Jacobian is constant, therefore it can be initialized in the constructor.
     this->m_Jacobian = JacobianType( NDimensions, 1 );
     this->m_Jacobian.Fill( 0.0 );
 
-		/** SpatialJacobian is also constant. */
-		this->m_SpatialJacobian.SetIdentity();
+    /** SpatialJacobian is also constant. */
+    this->m_SpatialJacobian.SetIdentity();
 
-		/** Nonzero Jacobian indices, for GetJacobian. */
-		this->m_NonZeroJacobianIndices.resize( ParametersDimension );
-		for ( unsigned int i = 0; i < ParametersDimension; ++i )
-		{
-			this->m_NonZeroJacobianIndices[ i ] = i;
-		}
+    /** Nonzero Jacobian indices, for GetJacobian. */
+    this->m_NonZeroJacobianIndices.resize( ParametersDimension );
+    for ( unsigned int i = 0; i < ParametersDimension; ++i )
+    {
+      this->m_NonZeroJacobianIndices[ i ] = i;
+    }
 
-		/** Set to correct size. The elements are automatically initialized to 0. */
+    /** Set to correct size. The elements are automatically initialized to 0. */
     this->m_HasNonZeroSpatialHessian = false;
     this->m_HasNonZeroJacobianOfSpatialHessian = false;
-		this->m_JacobianOfSpatialJacobian.resize( ParametersDimension );
-		this->m_JacobianOfSpatialHessian.resize( ParametersDimension );
-		
-		/** m_SpatialHessian is automatically initialized with zeros. */
-	}
+    this->m_JacobianOfSpatialJacobian.resize( ParametersDimension );
+    this->m_JacobianOfSpatialHessian.resize( ParametersDimension );
+    
+    /** m_SpatialHessian is automatically initialized with zeros. */
+  }
   virtual ~AdvancedIdentityTransform() {}
 
 private:
   AdvancedIdentityTransform(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
-	SpatialJacobianType           m_SpatialJacobian;
+  SpatialJacobianType           m_SpatialJacobian;
   SpatialHessianType            m_SpatialHessian;
   NonZeroJacobianIndicesType    m_NonZeroJacobianIndices;
   JacobianOfSpatialJacobianType m_JacobianOfSpatialJacobian;

@@ -221,6 +221,7 @@ else()
   if( dashboard_do_memcheck )
     ctest_memcheck()
   endif()
-  ctest_submit()
+  # Submit results, retry every 5 minutes for a maximum of two hours
+  ctest_submit( RETRY_COUNT 24 RETRY_DELAY 300 )
 endif()
 
