@@ -108,11 +108,11 @@ int main( int argc, char *argv[] )
       {
         kernel_ITK->Evaluate( u[ j ] );
       }
-      std::cerr << " " << clock() - startClockRegion;
+      std::cerr << " " << ( clock() - startClockRegion ) * 1000.0 / CLOCKS_PER_SEC;
     }
     clock_t endClock = clock();
     clock_t clockDiff = endClock - startClock;
-    std::cerr << " " << clockDiff << " ms" << std::endl;
+    std::cerr << " " << clockDiff * 1000.0 / CLOCKS_PER_SEC << " ms" << std::endl;
 
     /** Time the elx implementation. */
     std::cerr << "elastix:";
@@ -124,11 +124,11 @@ int main( int argc, char *argv[] )
       {
         kernel_elx->Evaluate( u[ j ] );
       }
-      std::cerr << " " << clock() - startClockRegion;
+      std::cerr << " " << ( clock() - startClockRegion ) * 1000.0 / CLOCKS_PER_SEC;
     }
     endClock = clock();
     clockDiff = endClock - startClock;
-    std::cerr << " " << clockDiff << " ms" << std::endl;
+    std::cerr << " " << clockDiff * 1000.0 / CLOCKS_PER_SEC << " ms" << std::endl;
 
     /** Compare the results. */
     for ( unsigned int i = 0; i < u.size(); ++i )
