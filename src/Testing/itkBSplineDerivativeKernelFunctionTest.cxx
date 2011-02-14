@@ -30,6 +30,7 @@ int main( int argc, char *argv[] )
 
   /** The number of calls to Evaluate(). This number gives reasonably
    * fast test results in Release mode.
+   * Increase it for real time testing.
    */
   unsigned int N = static_cast<unsigned int>( 1e7 );
   const double maxAllowedDistance = 1e-5; // the allowable distance
@@ -44,20 +45,20 @@ int main( int argc, char *argv[] )
   typedef itk::BSplineDerivativeKernelFunction2<3>  KernelType_elx_3;
 
   /** Create the evaluation points. */
-  const unsigned int size_u = 15;
-  std::vector<double> u( size_u );
-  u[ 0 ] = -2.5;
-  u[ 1 ] = -2.0;
-  u[ 2 ] = -1.9;
-  u[ 3 ] = -1.5;
-  u[ 4 ] = -1.0;
-  u[ 5 ] = -0.8;
-  u[ 6 ] = -0.5;
-  u[ 7 ] = -0.1;
-  u[ 8 ] =  0.0;
-  for ( unsigned int i = ( size_u + 3 ) / 2; i < size_u; ++i )
+  //const unsigned int size_u = 17;
+  std::vector<double> u;
+  u.push_back( -2.5 );
+  u.push_back( -2.0 );
+  u.push_back( -1.9 );
+  u.push_back( -1.5 );
+  u.push_back( -1.0 );
+  u.push_back( -0.8 );
+  u.push_back( -0.5 );
+  u.push_back( -0.1 );
+  u.push_back(  0.0 );
+  for ( int i = static_cast<int>( u.size() ) - 2; i > -1; --i )
   {
-    u[ i ] = -u[ -i + size_u + 1 ];
+    u.push_back( -u[ i ] );
   }
 
   /** For all spline orders. */
@@ -89,36 +90,48 @@ int main( int argc, char *argv[] )
       return 1;
     }
 
-    /** Time the ITK implementation. */
-    clock_t startClock = clock();
-    for ( unsigned int i = 0; i < N; ++i )
+    /** Print header. */
+    std::cerr << "eval at:";
+    for ( unsigned int j = 0; j < u.size(); j++ )
     {
-      for ( unsigned int j = 0; j < size_u; j++ )
+      std::cerr << " " << u[ j ];
+    }
+    std::cerr << " average" << std::endl;
+
+    /** Time the ITK implementation. */
+    std::cerr << "ITK new:";
+    clock_t startClock = clock();
+    for ( unsigned int j = 0; j < u.size(); j++ )
+    {
+      clock_t startClockRegion = clock();
+      for ( unsigned int i = 0; i < N; ++i )
       {
         kernel_ITK->Evaluate( u[ j ] );
       }
+      std::cerr << " " << clock() - startClockRegion;
     }
     clock_t endClock = clock();
     clock_t clockDiff = endClock - startClock;
-    std::cerr << "The elapsed time for ITK implementation is: "
-      << clockDiff << " ms" << std::endl;
+    std::cerr << " " << clockDiff << " ms" << std::endl;
 
     /** Time the elx implementation. */
+    std::cerr << "elastix:";
     startClock = clock();
-    for ( unsigned int i = 0; i < N; ++i )
+    for ( unsigned int j = 0; j < u.size(); j++ )
     {
-      for ( unsigned int j = 0; j < size_u; j++ )
+      clock_t startClockRegion = clock();
+      for ( unsigned int i = 0; i < N; ++i )
       {
         kernel_elx->Evaluate( u[ j ] );
       }
+      std::cerr << " " << clock() - startClockRegion;
     }
     endClock = clock();
     clockDiff = endClock - startClock;
-    std::cerr << "The elapsed time for the elastix implementation is: "
-      << clockDiff << " ms"  << std::endl;
+    std::cerr << " " << clockDiff << " ms" << std::endl;
 
     /** Compare the results. */
-    for ( unsigned int i = 0; i < size_u; ++i )
+    for ( unsigned int i = 0; i < u.size(); ++i )
     {
       double diff = kernel_ITK->Evaluate( u[ i ] ) - kernel_elx->Evaluate( u[ i ] );
       if ( diff > maxAllowedDistance )
