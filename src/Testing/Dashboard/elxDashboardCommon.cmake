@@ -36,7 +36,7 @@
 # Note: this script is based on the vxl_common.cmake script.
 #
 
-cmake_minimum_required( VERSION 2.8 )
+cmake_minimum_required( VERSION 2.8.3 )
 
 set( CTEST_PROJECT_NAME elastix )
 
