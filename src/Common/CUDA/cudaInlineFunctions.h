@@ -18,7 +18,6 @@
 #include <stdio.h>
 #include <string>
 #include <assert.h>
-//#include "itkExceptionObject.h"
 #include "cudaMacro.h"
 
 namespace cuda
@@ -37,7 +36,6 @@ inline void __cudaCheckMsg( const char *msg, const char *file, const int line )
     //assert( false );
 
     std::string errmsg = std::string( msg ) + ":: " + std::string( errcmsg );
-//    throw itk::ExceptionObject( file, line, errmsg );
     throw errmsg;
   }
 
@@ -51,7 +49,6 @@ inline void __cudaCheckMsg( const char *msg, const char *file, const int line )
     assert( false );
 
     std::string errmsg = std::string( msg ) + ":: " + std::string( errcmsg );
-//    throw itk::ExceptionObject( file, line, errmsg );
     throw errmsg;
   }
 #endif /* NDEBUG */

@@ -417,11 +417,12 @@ int ElastixTemplate<TFixedImage, TMovingImage>
      */
     this->GetElxResamplerBase()->WriteResultImage( makeFileName.str().c_str() );
 
-    /** Tell the user. */
+    /** Print the elapsed time for the resampling. */
     timer->StopTimer();
+    elxout << std::setprecision( 2 );
     elxout << "  Resampling took "
-      << timer->PrintElapsedTimeSec()
-      << " s" << std::endl;
+      << timer->GetElapsedClockSec() << " s" << std::endl;
+    elxout << std::setprecision( this->GetDefaultOutputPrecision() );
   }
 
   /** Return a value. */

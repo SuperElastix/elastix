@@ -105,7 +105,7 @@ __device__ float3 deform_at_coord_simple( float3 coord )
 /* Apply deformation to all voxels based on transform parameters and retrieve result. */
 template <typename TImageType>
 __global__ void resample_image( TImageType* dst,
-  uint3 inputImageSize, uint3 outputImageSize, size_t offset )
+  uint3 inputImageSize, uint3 outputImageSize, size_t offset, bool useFastKernel = false )
 {
   size_t id = threadIdx.x + ( blockIdx.x * blockDim.x );
 
@@ -144,7 +144,14 @@ __global__ void resample_image( TImageType* dst,
     /* Interpolate the moving/input image using 3-rd order B-spline. */
     if ( isValidSample )
     {
-      res = cubicTex3D( m_tex_inputImage, inp_coord );
+      if ( useFastKernel )
+      {
+        res = cubicTex3D( m_tex_inputImage, inp_coord );
+      }
+      else
+      {
+        res = cubicTex3DSimple( m_tex_inputImage, inp_coord );
+      }
     }
   }
 
