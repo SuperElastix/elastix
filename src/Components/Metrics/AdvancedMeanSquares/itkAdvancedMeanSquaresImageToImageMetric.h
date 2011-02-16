@@ -17,7 +17,8 @@
 #define __itkAdvancedMeanSquaresImageToImageMetric_h
 
 #include "itkSmoothingRecursiveGaussianImageFilter.h"
-#include "itkImageRandomCoordinateSampler.h"
+//#include "itkImageRandomCoordinateSampler.h"
+#include "itkImageGridSampler.h"
 #include "itkNearestNeighborInterpolateImageFunction.h"
 #include "itkAdvancedImageToImageMetric.h"
 
@@ -194,7 +195,8 @@ protected:
     FixedImageType, CoordinateRepresentationType>                 FixedImageInterpolatorType;
   typedef NearestNeighborInterpolateImageFunction<
     FixedImageType, CoordinateRepresentationType >                DummyFixedImageInterpolatorType;
-  typedef ImageRandomCoordinateSampler<FixedImageType>            SelfHessianSamplerType;
+  //typedef ImageRandomCoordinateSampler<FixedImageType>            SelfHessianSamplerType;
+  typedef ImageGridSampler<FixedImageType>                        SelfHessianSamplerType;
 
   double m_NormalizationFactor;
 
