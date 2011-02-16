@@ -52,6 +52,15 @@ using namespace itk;
  * This class is a wrap around ctime.h. It is used to time the registration,
  * to get the time per iteration, or whatever.
  *
+ * For precise timings we use clock() or clock_gettime().
+ * On Windows clock_gettime() does not exist. clock() seems to give accurate
+ * timings, also on multi-threaded systems.
+ * For GCC / linux we use clock_gettime(), since clock() reports erroneous
+ * results on linux on multi-threaded systems: it reports the elapsed time
+ * multiplied by the number of threads that have been used.
+ * Ugly #ifdefs are needed however, and elxCommon requires linking to the
+ * library rt, but on linux only.
+ *
  * \ingroup Timer
  */
 
@@ -112,6 +121,13 @@ protected:
   TimeDHMSType  m_ElapsedTimeDHMS;
   std::size_t   m_ElapsedTimeSec;
   double        m_ElapsedClockSec;
+
+  /** GCC specific. We can use clock_gettime(). */
+#ifdef __GNUC__
+#define USE_CLOCK_GETTIME
+  struct timespec m_StartClockMonotonic;
+  struct timespec m_StopClockMonotonic;
+#endif
 
   /** Strings that serve as output of the Formatted Output Functions */
   std::string m_StartTimeString;

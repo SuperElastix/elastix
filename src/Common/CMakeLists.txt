@@ -171,10 +171,20 @@ ADD_LIBRARY( elxCommon
 #---------------------------------------------------------------------
 # Link against other libraries.
 
-TARGET_LINK_LIBRARIES( elxCommon
-  ITKBasicFilters
-  ITKNumerics
-  ITKIO
-  ITKCommon
-)
+IF( UNIX )
+  TARGET_LINK_LIBRARIES( elxCommon
+    ITKBasicFilters
+    ITKNumerics
+    ITKIO
+    ITKCommon
+    rt # Needed for elxTimer, clock_gettime()
+  )
+ELSE()
+  TARGET_LINK_LIBRARIES( elxCommon
+    ITKBasicFilters
+    ITKNumerics
+    ITKIO
+    ITKCommon
+  )
+ENDIF()
 

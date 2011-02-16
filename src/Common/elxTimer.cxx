@@ -16,6 +16,7 @@
 
 #include "elxTimer.h"
 
+
 namespace tmr
 {
 using namespace itk;
@@ -47,6 +48,10 @@ void Timer::StartTimer( void )
   this->m_StartTime = time( '\0' );
   this->m_StartClock = clock();
 
+#ifdef USE_CLOCK_GETTIME
+  clock_gettime( CLOCK_MONOTONIC, &this->m_StartClockMonotonic );
+#endif
+
 } // end StartTimer()
 
 
@@ -62,6 +67,10 @@ int Timer::StopTimer( void )
   /** Get the current time. */
   this->m_StopTime = time( '\0' );
   this->m_StopClock = clock();
+
+#ifdef USE_CLOCK_GETTIME
+  clock_gettime( CLOCK_MONOTONIC, &this->m_StopClockMonotonic );
+#endif
 
   /** Get the elapsed time. */
   this->ElapsedClockAndTime();
@@ -88,7 +97,12 @@ int Timer::ElapsedClockAndTime( void )
   this->m_ElapsedTimeSec = static_cast<std::size_t>( this->m_ElapsedTime );
 
   /** Fill m_ElapsedClockSec. */
+#ifndef USE_CLOCK_GETTIME
   this->m_ElapsedClockSec = static_cast<double>( this->m_ElapsedClock ) / CLOCKS_PER_SEC;
+#else
+  this->m_ElapsedClockSec = ( this->m_StopClockMonotonic.tv_sec - this->m_StartClockMonotonic.tv_sec );
+  this->m_ElapsedClockSec += ( this->m_StopClockMonotonic.tv_nsec - this->m_StartClockMonotonic.tv_nsec ) / 1.0e9;
+#endif
 
   /** Fill m_TimeDHMS. */
   const std::size_t secondsPerMinute = 60;
