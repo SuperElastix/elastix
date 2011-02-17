@@ -415,6 +415,13 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
       {
         for ( unsigned int muB = muA; muB < nonZeroJacobianIndices.size(); ++muB )
         {
+          /** Store at the right location in the H matrix. 
+          * Only upper triangular part is stored */
+          const unsigned int nmA = nonZeroJacobianIndices[ muA ];
+          const unsigned int nmB = nonZeroJacobianIndices[ muB ];
+
+          RealType matrixProduct = 0.0;
+
           for ( unsigned int k = 0; k < FixedImageDimension; ++k )
           {
             /** This computes:
@@ -424,8 +431,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
               = jacobianOfSpatialHessian[ muA ][ k ].GetVnlMatrix();
             const InternalMatrixType & B
               = jacobianOfSpatialHessian[ muB ][ k ].GetVnlMatrix();
-
-            RealType matrixProduct = 0.0;
+            
             typename InternalMatrixType::const_iterator itA = A.begin();
             typename InternalMatrixType::const_iterator itB = B.begin();
             typename InternalMatrixType::const_iterator itAend = A.end();
@@ -435,18 +441,20 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
               ++itA;
               ++itB;
             }
-
-            /** Store at the right location in the H matrix. 
-             * Only upper triangular part is stored */
-            const unsigned int nmA = nonZeroJacobianIndices[ muA ];
-            const unsigned int nmB = nonZeroJacobianIndices[ muB ];
-            H( nmA, nmB ) += 2.0 * matrixProduct;
-            /*if ( nmA != nmB )
-            {
-              H( nmB, nmA ) += 2.0 * matrixProduct;
-            }*/
-
+ 
           }
+
+          /** Update hessian element */
+          if ( (matrixProduct > 1e-12) || (matrixProduct < 1e-12) )
+          {
+            H( nmA, nmB ) += 2.0 * matrixProduct;
+          }
+
+          /*if ( nmA != nmB )
+          {
+            H( nmB, nmA ) += 2.0 * matrixProduct;
+          }*/
+
         }
       }
 
