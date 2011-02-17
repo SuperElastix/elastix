@@ -340,6 +340,9 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
 
   typedef typename DerivativeType::ValueType        DerivativeValueType;
   typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
+  typedef typename HessianType::row RowType;
+  typedef typename RowType::iterator RowIteratorType;
+  typedef typename HessianType::pair_t ElementType;
 
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
@@ -413,15 +416,15 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
       /** Compute the contribution to the metric derivative of this point. */
       for ( unsigned int muA = 0; muA < nonZeroJacobianIndices.size(); ++muA )
       {
+        const unsigned int nmA = nonZeroJacobianIndices[ muA ];
+        RowType & rowVector = H.get_row( nmA );
+        RowIteratorType rowIt = rowVector.begin();
+
         for ( unsigned int muB = muA; muB < nonZeroJacobianIndices.size(); ++muB )
         {
-          /** Store at the right location in the H matrix. 
-          * Only upper triangular part is stored */
-          const unsigned int nmA = nonZeroJacobianIndices[ muA ];
           const unsigned int nmB = nonZeroJacobianIndices[ muB ];
-
+          
           RealType matrixProduct = 0.0;
-
           for ( unsigned int k = 0; k < FixedImageDimension; ++k )
           {
             /** This computes:
@@ -444,16 +447,33 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
  
           }
 
+          /** Store at the right location in the H matrix. 
+          * Only upper triangular part is stored */
+
           /** Update hessian element */
           if ( (matrixProduct > 1e-12) || (matrixProduct < 1e-12) )
           {
-            H( nmA, nmB ) += 2.0 * matrixProduct;
-          }
+            /** 
+            * H( nmA, nmB ) += 2.0 * matrixProduct;
+            * But more efficient
+            */
+            const double val = 2.0 * matrixProduct;
 
-          /*if ( nmA != nmB )
-          {
-            H( nmB, nmA ) += 2.0 * matrixProduct;
-          }*/
+            /** Go to next element */
+            for (; (rowIt != rowVector.end()) && ((*rowIt).first < nmB); ++rowIt);
+
+            if ((rowIt == rowVector.end()) || ((*rowIt).first != nmB))
+            {
+              /** Add new column to the row and set iterator to that column. */
+              rowIt = rowVector.insert(rowIt, ElementType( nmB, val ) );
+            }
+            else
+            {
+              /** Add to existing value */
+              (*rowIt).second += val;
+            }    
+
+          }
 
         }
       }
