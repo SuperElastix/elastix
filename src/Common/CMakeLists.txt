@@ -171,7 +171,7 @@ ADD_LIBRARY( elxCommon
 #---------------------------------------------------------------------
 # Link against other libraries.
 
-IF( UNIX )
+IF( UNIX AND NOT APPLE )
   TARGET_LINK_LIBRARIES( elxCommon
     ITKBasicFilters
     ITKNumerics
