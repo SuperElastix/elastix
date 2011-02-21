@@ -32,6 +32,7 @@ MetricBase<TElastix>
   /** Initialize. */
   this->m_ShowExactMetricValue = false;
   this->m_ExactMetricSampler = 0;
+  this->m_CurrentExactMetricValue = 0.0;
 
 } // end Constructor
 
@@ -49,9 +50,7 @@ MetricBase<TElastix>
   unsigned int level
     = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
-  /** Check if the exact metric value, computed on all pixels, should be shown,
-   * and whether the all pixels should be used during optimisation.
-   */
+  /** Check if the exact metric value, computed on all pixels, should be shown. */
 
   /** Define the name of the ExactMetric column */
   std::string exactMetricColumn = "Exact";
@@ -119,11 +118,15 @@ MetricBase<TElastix>
   std::string exactMetricColumn = "Exact";
   exactMetricColumn += this->GetComponentLabel();
 
+  this->m_CurrentExactMetricValue = 0.0;
   if ( this->m_ShowExactMetricValue )
   {
+    this->m_CurrentExactMetricValue = this->GetExactValue( 
+      this->GetElastix()->GetElxOptimizerBase()
+      ->GetAsITKBaseType()->GetCurrentPosition()  );
+
     xl::xout["iteration"][ exactMetricColumn.c_str() ]
-      << this->GetExactValue( this->GetElastix()->GetElxOptimizerBase()
-      ->GetAsITKBaseType()->GetCurrentPosition() );
+      << this->m_CurrentExactMetricValue;
   }
 
 } // end AfterEachIterationBase()

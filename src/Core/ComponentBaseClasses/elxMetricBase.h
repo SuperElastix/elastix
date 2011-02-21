@@ -116,6 +116,9 @@ public:
   /** Typedefs for sampler support. */
   typedef typename AdvancedMetricType::ImageSamplerType  ImageSamplerBaseType;
 
+  /** Return type of GetValue */
+  typedef typename ITKBaseType::MeasureType       MeasureType;
+
   /** Cast to ITKBaseType. */
   virtual ITKBaseType * GetAsITKBaseType( void )
   {
@@ -161,10 +164,17 @@ public:
    */
   virtual ImageSamplerBaseType * GetAdvancedMetricImageSampler( void ) const;
 
+  /** Get if the exact metric value is computed */
+  virtual const bool GetShowExactMetricValue( void ) const 
+  { return this->m_ShowExactMetricValue; }
+
+  /** Get the last computed exact metric value */
+  virtual const MeasureType GetCurrentExactMetricValue( void ) const 
+  { return this->m_CurrentExactMetricValue; }
+
 protected:
 
-  /** The type returned by the GetValue methods. Used by the GetExactValue method. */
-  typedef typename ITKBaseType::MeasureType       MeasureType;
+  /** The parameters type. */  
   typedef typename ITKBaseType::ParametersType    ParametersType;
 
   /** The full sampler used by the GetExactValue method. */
@@ -189,6 +199,7 @@ protected:
 
   bool m_ShowExactMetricValue;
   typename ImageFullSamplerType::Pointer m_ExactMetricSampler;
+  MeasureType m_CurrentExactMetricValue;
 
 private:
 
