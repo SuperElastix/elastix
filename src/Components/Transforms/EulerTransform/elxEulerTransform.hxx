@@ -396,7 +396,7 @@ EulerTransformElastix<TElastix>
      *   own scale.
      */
 
-    unsigned int count
+    std::size_t count
       = this->m_Configuration->CountNumberOfParameterEntries( "Scales" );
 
     /** Check which of the above options is used. */

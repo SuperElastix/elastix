@@ -46,7 +46,7 @@ namespace itk
  *
  * \ingroup ITKSystemObjects
  */
-template <class T>
+template<class T>
 class PixelTypeChangeCommand : public Command
 { 
 public:
@@ -56,21 +56,21 @@ public:
   typedef SmartPointer<Self>        Pointer;
 
   /** This is supposed to be an ImageFileWriter */
-  typedef T       CallerType;
+  typedef T                         CallerType;
   
   /** Run-time type information (and related methods). */
-  itkTypeMacro(PixelTypeChangeCommand, Command);
+  itkTypeMacro( PixelTypeChangeCommand, Command );
 
   /** Method for creation through the object factory. */
-  itkNewMacro(Self);
+  itkNewMacro( Self );
     
   /** Set the pixel type to VECTOR */
-  virtual void Execute(Object * caller, const EventObject & ) 
+  virtual void Execute( Object * caller, const EventObject & ) 
   { 
     CallerType * castcaller = dynamic_cast< CallerType * >( caller );
     castcaller->GetImageIO()->SetPixelType( ImageIOBase::VECTOR );
   }
-  virtual void Execute(const Object * caller, const EventObject & ) 
+  virtual void Execute( const Object * caller, const EventObject & ) 
   { 
     CallerType * castcaller = const_cast< CallerType * >(
       dynamic_cast< const CallerType * >( caller )  );
@@ -85,7 +85,7 @@ private:
   PixelTypeChangeCommand(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
   
-};
+}; // end class PixelTypeChangeCommand
 
 } // end namespace itk
 
@@ -402,16 +402,16 @@ void TransformBase<TElastix>
 
     /** Sanity check. Are the number of found parameters the same as
      * the number of specified parameters?
+     * Do not rely on vecPar.size(), since it is unchanged by ReadParameter(),
+     * so we cannot use: numberOfParametersFound = vecPar.size().
      */
-    //if ( vecPar.size() != numberOfParameters )
-    // Do not rely on vecPar.size(), since it is unchanged by ReadParameter().
-    const unsigned int numberOfParametersFound
+    const std::size_t numberOfParametersFound
       = this->m_Configuration->CountNumberOfParameterEntries( "TransformParameters" );
 
     if ( numberOfParametersFound != numberOfParameters )
     {
       std::ostringstream makeMessage( "" );
-      makeMessage << "ERROR: Invalid transform parameter file!\n"
+      makeMessage << "\nERROR: Invalid transform parameter file!\n"
         << "The number of parameters in \"TransformParameters\" is "
         << numberOfParametersFound
         << ", which does not match the number specified in \"NumberOfParameters\" ("
@@ -419,7 +419,6 @@ void TransformBase<TElastix>
         << "The transform parameters should be specified as:\n"
         << "  (TransformParameters num num ... num)\n"
         << "with " << numberOfParameters << " parameters." << std::endl;
-      xl::xout["error"] << makeMessage.str() << std::endl;
       itkExceptionMacro( << makeMessage.str().c_str() );
 
       /** Historical note:

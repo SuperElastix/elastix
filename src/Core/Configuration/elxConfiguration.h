@@ -127,7 +127,7 @@ public:
   /** Interface to the ParameterMapInterface. */
 
   /** Count the number of parameters. */
-  unsigned int CountNumberOfParameterEntries(
+  std::size_t CountNumberOfParameterEntries(
     const std::string & parameterName ) const
   {
     return this->m_ParameterMapInterface->CountNumberOfParameterEntries(

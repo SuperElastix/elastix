@@ -65,7 +65,7 @@ ParameterMapInterface
  * **************** CountNumberOfParameterEntries ***************
  */
 
-unsigned int
+std::size_t
 ParameterMapInterface
 ::CountNumberOfParameterEntries(
   const std::string & parameterName ) const
@@ -164,7 +164,7 @@ ParameterMapInterface
   errorMessage = "";
 
   /** Get the number of entries. */
-  unsigned int numberOfEntries = this->CountNumberOfParameterEntries(
+  std::size_t numberOfEntries = this->CountNumberOfParameterEntries(
     parameterName );
 
   /** Check if the requested parameter exists. */
