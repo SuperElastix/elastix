@@ -233,7 +233,7 @@ TransformBase<TElastix>
    * transform with the current transform.
    */
   std::string howToCombineTransforms = "Compose";
-  bool isSpecifiedByUser = this->m_Configuration->ReadParameter(
+  this->m_Configuration->ReadParameter(
     howToCombineTransforms, "HowToCombineTransforms", 0, false );
 
   /** Check if this is a CombinationTransform. */
