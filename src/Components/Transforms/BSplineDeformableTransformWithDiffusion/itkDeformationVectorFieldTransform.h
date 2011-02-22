@@ -27,7 +27,7 @@ namespace itk
  * as a Transform-object.
  *
  * The class inherits from the 0th-order AdvancedBSplineDeformableTransform,
- * and converts a VectorImage to the BSpline CoefficientImage.
+ * and converts a VectorImage to the B-spline CoefficientImage.
  *
  * This is useful if you know for example how to deform each voxel
  * in an image and want to apply it to that image.

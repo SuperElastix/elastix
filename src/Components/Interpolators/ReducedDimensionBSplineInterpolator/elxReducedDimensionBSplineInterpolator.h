@@ -38,7 +38,7 @@ using namespace itk;
    *    example: <tt>(BSplineInterpolationOrder 1 1 1)</tt> \n
    *    The default order is 1. The parameter can be specified for each resolution.\n
    *    If only given for one resolution, that value is used for the other resolutions as well. \n
-   *    Currently only first order BSpline interpolation is supported.
+   *    Currently only first order B-spline interpolation is supported.
    *
    * \ingroup Interpolators
    */

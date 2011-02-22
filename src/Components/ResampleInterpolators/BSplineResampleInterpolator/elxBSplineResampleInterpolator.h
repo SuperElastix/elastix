@@ -29,13 +29,13 @@ namespace elastix
   * The parameters used in this class are:
   * \parameter ResampleInterpolator: Select this resample interpolator as follows:\n
   *   <tt>(ResampleInterpolator "FinalBSplineInterpolator")</tt>
-  * \parameter FinalBSplineInterpolationOrder: the order of the b-spline used to resample
+  * \parameter FinalBSplineInterpolationOrder: the order of the B-spline used to resample
   *    the deformed moving image; possible values: (0-5) \n
   *    example: <tt>(FinalBSplineInterpolationOrder 3) </tt> \n
   *    Default: 3.
   *
   * The transform parameters necessary for transformix, additionally defined by this class, are:
-  * \transformparameter FinalBSplineInterpolationOrder: the order of the b-spline used to resample
+  * \transformparameter FinalBSplineInterpolationOrder: the order of the B-spline used to resample
   *    the deformed moving image; possible values: (0-5) \n
   *    example: <tt>(FinalBSplineInterpolationOrder 3) </tt> \n
   *    Default: 3.

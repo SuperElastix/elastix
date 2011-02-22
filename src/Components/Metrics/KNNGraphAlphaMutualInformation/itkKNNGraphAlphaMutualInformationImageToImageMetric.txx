@@ -939,7 +939,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
    */
   if ( this->m_InterpolatorsAreBSpline && !this->GetComputeGradient() )
   {
-    /** Computed moving image gradient using derivative BSpline kernel. */
+    /** Computed moving image gradient using derivative B-spline kernel. */
     MovingImageDerivativeType gradient;
     for ( unsigned int i = 1; i < this->GetNumberOfMovingImages(); ++i )
     {

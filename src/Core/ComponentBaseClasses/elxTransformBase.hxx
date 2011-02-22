@@ -236,18 +236,6 @@ TransformBase<TElastix>
   bool isSpecifiedByUser = this->m_Configuration->ReadParameter(
     howToCombineTransforms, "HowToCombineTransforms", 0, false );
 
-  /** Warn the user about changed default behavior.
-   * This warning can be removed in elastix 4.5.
-   */
-  if ( !isSpecifiedByUser )
-  {
-    elxout << "\nWARNING: In elastix 4.3 the default value for "
-      << "\"HowToCombineTransforms\" was changed from \"Add\" to \"Compose\"!\n"
-      << "Use \"(HowToCombineTransforms \"Add\")\" to reproduce previous "
-      << "behavior.\n"
-      << std::endl;
-  }
-
   /** Check if this is a CombinationTransform. */
   CombinationTransformType * thisAsGrouper =
     dynamic_cast< CombinationTransformType * >( this );
@@ -353,7 +341,7 @@ void TransformBase<TElastix>
 ::SetFinalParameters( void )
 {
   /** Make a local copy, since some transforms do not do this,
-   * like the BSpline-transform.
+   * like the B-spline transform.
    */
   this->m_FinalParameters = this->GetElastix()->GetElxOptimizerBase()
     ->GetAsITKBaseType()->GetCurrentPosition();
@@ -386,7 +374,7 @@ template <class TElastix>
 void TransformBase<TElastix>
 ::ReadFromFile( void )
 {
-  /**
+  /** NOTE:
    * This method assumes this->m_Configuration is initialized with a
    * transform parameter file, so not an elastix parameter file!!
    */
@@ -400,122 +388,57 @@ void TransformBase<TElastix>
   if ( this->m_ReadWriteTransformParameters )
   {
     /** Get the TransformParameters pointer. */
-    if ( this->m_TransformParametersPointer ) delete this->m_TransformParametersPointer;
+    if ( this->m_TransformParametersPointer )
+    {
+      delete this->m_TransformParametersPointer;
+    }
     this->m_TransformParametersPointer = new ParametersType( numberOfParameters );
 
     /** Read the TransformParameters. */
-    if ( this->m_Configuration->CountNumberOfParameterEntries( "TransformParameters" ) > 0 )
+    std::vector<ValueType> vecPar( numberOfParameters,
+      itk::NumericTraits<ValueType>::Zero );
+    this->m_Configuration->ReadParameter( vecPar, "TransformParameters",
+      0, numberOfParameters - 1, true );
+
+    /** Sanity check. Are the number of found parameters the same as
+     * the number of specified parameters?
+     */
+    //if ( vecPar.size() != numberOfParameters )
+    // Do not rely on vecPar.size(), since it is unchanged by ReadParameter().
+    const unsigned int numberOfParametersFound
+      = this->m_Configuration->CountNumberOfParameterEntries( "TransformParameters" );
+
+    if ( numberOfParametersFound != numberOfParameters )
     {
-      /** This is the way parameters should be specified since elastix 4.2:
-       * (TransformParameters num num ... num)
-       * Just like any other parameter.
+      std::ostringstream makeMessage( "" );
+      makeMessage << "ERROR: Invalid transform parameter file!\n"
+        << "The number of parameters in \"TransformParameters\" is "
+        << numberOfParametersFound
+        << ", which does not match the number specified in \"NumberOfParameters\" ("
+        << numberOfParameters << ").\n"
+        << "The transform parameters should be specified as:\n"
+        << "  (TransformParameters num num ... num)\n"
+        << "with " << numberOfParameters << " parameters." << std::endl;
+      xl::xout["error"] << makeMessage.str() << std::endl;
+      itkExceptionMacro( << makeMessage.str().c_str() );
+
+      /** Historical note:
+       * The old way of specifying parameters was
+       *  - for less than 20 parameters:
+       *      (TransformParameters num num ... num)
+       *  - Otherwise:
+       *      // (TransformParameters)
+       *      // num num ... num
+       *
+       * This behavior was deprecated since elastix 4.2, and removed in elastix 4.5.
        */
-      std::vector<ValueType> vecPar( numberOfParameters,
-        itk::NumericTraits<ValueType>::Zero );
-      this->m_Configuration->ReadParameter( vecPar, "TransformParameters",
-        0, numberOfParameters - 1, true );
-      for ( unsigned int i = 0; i < numberOfParameters; i++ )
-      {
-        (*(this->m_TransformParametersPointer))[ i ] = vecPar[ i ];
-      }
     }
-    else
+
+    /** Copy to m_TransformParametersPointer. */
+    for ( unsigned int i = 0; i < numberOfParameters; i++ )
     {
-      /** We still support the old way of specifying parameters, which was:
-       * For less than 20 parameters:
-       * (TransformParameters num num ... num)
-       * Otherwise:
-       * // (TransformParameters)
-       * // num num ... num
-       */
-      std::string errorString1 = "ERROR: Invalid transform parameter file! ";
-      errorString1 += "The parameters could not be found.";
-      std::string errorString2 = "Error during reading the transform ";
-      errorString2 += "parameter file!";
-      std::string hint = "The transform parameters should be specified as:\n";
-      hint += "(TransformParameters num num ... num)";
-      if ( numberOfParameters < 20 )
-      {
-        xl::xout["error"] << errorString1 << "\n" << hint << std::endl;
-        itkGenericExceptionMacro( << errorString2.c_str() );
-      }
-      else
-      {
-        /** Otherwise, do the reading more 'manually'. This used to be necessary,
-         * because the old parser could not handle many parameters.
-         */
-
-        /** Open the transform parameter file for reading. */
-        std::string tpFilename
-          = this->GetConfiguration()->GetCommandLineArgument( "-tp" );
-        std::ifstream input( tpFilename.c_str(), std::fstream::in );
-        if ( !input.is_open() )
-        {
-          xl::xout["error"]
-            << "The transform parameter file could not opened!" << std::endl;
-          itkGenericExceptionMacro( << errorString2.c_str() );
-        }
-
-        /** Find the line "// (TransformParameters)". */
-        bool found = false;
-        std::string teststring = "";
-        while ( !found && input.good() )
-        {
-          /** Extract a line. */
-          itksys::SystemTools::GetLineFromStream( input, teststring );
-
-          if ( teststring == "// (TransformParameters)" )
-          {
-            found = true;
-
-            /** We have found the line "// (TransformParameters)",
-             * the next one should be "// num num num ..."
-             */
-            itksys::SystemTools::GetLineFromStream( input, teststring );
-
-            /** Put it in a string stream and read the first word. */
-            std::stringstream ss( teststring );
-            ss >> teststring;
-            if ( teststring != "//" )
-            {
-              xl::xout["error"] << errorString1 << "\n" << hint << std::endl;
-              itkGenericExceptionMacro( << errorString2.c_str() );
-            }
-
-            /** All the other words are parameter values. */
-            unsigned int i = 0;
-            while ( ss.good() && i < numberOfParameters )
-            {
-              ss >> (*(this->m_TransformParametersPointer))[ i ];
-              i++;
-            }
-
-            /** Check for failbit, indicative of a failed read or cast. */
-            if ( ss.bad() || ss.fail() )
-            {
-              itkGenericExceptionMacro( << errorString2.c_str() );
-            }
-          }
-        }
-        input.close();
-
-        /** Check if old way was found. */
-        if ( !found )
-        {
-          xl::xout["error"] << errorString1 << "\n" << hint << std::endl;
-          itkGenericExceptionMacro( << errorString2.c_str() );
-        }
-        else
-        {
-          /** Issue a deprecation warning. */
-          xl::xout["warning"] << "\nWARNING: This way of supplying parameters"
-            << " is deprecated since elastix 4.2.\n"
-            << "Use\n\t\t(TransformParameters num num ... num)\ninstead.\n"
-            << std::endl;
-          // Currently, just continue, it's only a warning.
-        }
-      } // end else > 20
-    } // end new way / old way
+      (*(this->m_TransformParametersPointer))[ i ] = vecPar[ i ];
+    }
 
     /** Set the parameters into this transform. */
     this->GetAsITKBaseType()->SetParameters( *(this->m_TransformParametersPointer) );
@@ -554,7 +477,7 @@ void TransformBase<TElastix>
   /** Task 3 - Read from the configuration file how to combine the
    * initial transform with the current transform.
    */
-  std::string howToCombineTransforms = "Add"; // default
+  std::string howToCombineTransforms = "Compose"; // default
   this->m_Configuration->ReadParameter( howToCombineTransforms,
     "HowToCombineTransforms", 0, true );
 

@@ -174,7 +174,7 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
  * ********************* ApplyInitialTransform ****************************
  *
  * This function adapts the m_ImageOrigin and m_ImageSpacing.
- * This makes sure that the BSpline grid is located at the position
+ * This makes sure that the B-spline grid is located at the position
  * of the fixed image after undergoing the initial transform.
  */
 

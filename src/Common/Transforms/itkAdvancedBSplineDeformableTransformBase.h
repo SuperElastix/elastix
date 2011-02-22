@@ -24,7 +24,7 @@ namespace itk
 {
 
 /** \class AdvancedBSplineDeformableTransformBase
- * \brief Base class for deformable transform using a BSpline representation
+ * \brief Base class for deformable transform using a B-spline representation
  *
  * This class is the base for the encapsulation of a deformable transform
  * of points from one N-dimensional one space to another N-dimensional space.
@@ -79,7 +79,7 @@ public:
   typedef typename Superclass::InternalMatrixType   InternalMatrixType;
 
   /** This method sets the parameters of the transform.
-     * For a BSpline deformation transform, the parameters are the BSpline
+     * For a B-spline deformation transform, the parameters are the BSpline
      * coefficients on a sparse grid.
      *
      * The parameters are N number of N-D grid of coefficients. Each N-D grid
@@ -99,7 +99,7 @@ public:
   void SetParameters( const ParametersType & parameters );
 
   /** This method sets the fixed parameters of the transform.
-   * For a BSpline deformation transform, the parameters are the following:
+   * For a B-spline deformation transform, the parameters are the following:
    *    Grid Size, Grid Origin, and Grid Spacing
    *
    * The fixed parameters are the three times the size of the templated
@@ -116,7 +116,7 @@ public:
   void SetFixedParameters( const ParametersType & parameters );
 
   /** This method sets the parameters of the transform.
-   * For a BSpline deformation transform, the parameters are the BSpline
+   * For a B-spline deformation transform, the parameters are the BSpline
    * coefficients on a sparse grid.
    *
    * The parameters are N number of N-D grid of coefficients. Each N-D grid
@@ -161,7 +161,7 @@ public:
 
   /** Set the array of coefficient images.
    *
-   * This is an alternative API for setting the BSpline coefficients
+   * This is an alternative API for setting the B-spline coefficients
    * as an array of SpaceDimension images. The grid region spacing
    * and origin is taken from the first image. It is assume that
    * the buffered region of all the subsequent images are the same
@@ -268,7 +268,7 @@ protected:
   /** Wrap flat array into images of coefficients. */
   void WrapAsImages( void );
 
-  /** Convert an input point to a continuous index inside the BSpline grid. */
+  /** Convert an input point to a continuous index inside the B-spline grid. */
   void TransformPointToContinuousGridIndex(
    const InputPointType & point, ContinuousIndexType & index ) const;
 
@@ -305,7 +305,7 @@ protected:
   ContinuousIndexType m_ValidRegionBegin;
   ContinuousIndexType m_ValidRegionEnd;
 
-  /** Odd or even order BSpline. */
+  /** Odd or even order B-spline. */
   bool m_SplineOrderOdd;
 
   /** Keep a pointer to the input parameters. */

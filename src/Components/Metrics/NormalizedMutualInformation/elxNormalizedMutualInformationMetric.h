@@ -44,24 +44,24 @@ using namespace itk;
    *    resolution, or for all resolutions at once. If not given, NumberOfHistograms is used.\n
    *    example: <tt>(NumberOfMovingHistogramBins 32 32 64)</tt> \n
    *    The default is the value of NumberOfHistograms.
-   * \parameter FixedKernelBSplineOrder: The bspline order of the Parzen window, used to estimate
+   * \parameter FixedKernelBSplineOrder: The B-spline order of the Parzen window, used to estimate
    *    the joint histogram. Can be given for each resolution, or for all resolutions at once. \n
    *    example: <tt>(FixedKernelBSplineOrder 0 1 1)</tt> \n
    *    The default value is 0.
-   * \parameter MovingKernelBSplineOrder: The bspline order of the Parzen window, used to estimate
+   * \parameter MovingKernelBSplineOrder: The B-spline order of the Parzen window, used to estimate
    *    the joint histogram. Can be given for each resolution, or for all resolutions at once. \n
    *    example: <tt>(MovingKernelBSplineOrder 3 3 3)</tt> \n
    *    The default value is 3.
    * \parameter FixedLimitRangeRatio: The relative extension of the intensity range of the fixed image.\n
-   *    If your image has grey values from 0 to 1000 and the FixedLimitRangeRatio is 0.001, the
-   *    joint histogram will expect fixed image grey values from -0.001 to 1000.001. This may be
-   *    usefull if you use high order bspline interpolator for the fixed image.\n
+   *    If your image has gray values from 0 to 1000 and the FixedLimitRangeRatio is 0.001, the
+   *    joint histogram will expect fixed image gray values from -0.001 to 1000.001. This may be
+   *    useful if you use high order B-spline interpolator for the fixed image.\n
    *    example: <tt>(FixedLimitRangeRatio 0.001 0.01 0.01)</tt> \n
    *    The default value is 0.01. Can be given for each resolution, or for all resolutions at once.
    * \parameter MovingLimitRangeRatio: The relative extension of the intensity range of the moving image.\n
-   *    If your image has grey values from 0 to 1000 and the MovingLimitRangeRatio is 0.001, the
-   *    joint histogram will expect moving image grey values from -0.001 to 1000.001. This may be
-   *    usefull if you use high order bspline interpolator for the moving image.\n
+   *    If your image has gray values from 0 to 1000 and the MovingLimitRangeRatio is 0.001, the
+   *    joint histogram will expect moving image gray values from -0.001 to 1000.001. This may be
+   *    useful if you use high order B-spline interpolator for the moving image.\n
    *    example: <tt>(MovingLimitRangeRatio 0.001 0.01 0.01)</tt> \n
    *    The default value is 0.01. Can be given for each resolution, or for all resolutions at once.
    *

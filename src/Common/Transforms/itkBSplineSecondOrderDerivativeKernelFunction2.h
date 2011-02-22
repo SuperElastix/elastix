@@ -25,7 +25,7 @@ namespace itk
 {
 
 /** \class BSplineSecondOrderDerivativeKernelFunction2
- * \brief Derivative of a BSpline kernel used for density estimation and
+ * \brief Derivative of a B-spline kernel used for density estimation and
  *  nonparametric regression.
  *
  * This class encapsulates the derivative of a B-spline kernel for

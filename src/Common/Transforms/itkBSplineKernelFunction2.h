@@ -24,10 +24,10 @@ namespace itk
 {
 
 /** \class BSplineKernelFunction2
- * \brief BSpline kernel used for density estimation and nonparameteric
+ * \brief B-spline kernel used for density estimation and nonparameteric
  *  regression.
  *
- * This class encapsulates BSpline kernel for
+ * This class encapsulates B-spline kernel for
  * density estimation or nonparametric regression.
  * See documentation for KernelFunction for more details.
  *

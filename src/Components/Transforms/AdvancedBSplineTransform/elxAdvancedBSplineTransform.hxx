@@ -153,7 +153,7 @@ void AdvancedBSplineTransform<TElastix>
   /** Set gridsize for large dimension to 4 to prevent errors when checking
      * on support region size.
      */
-  gridsize.SetElement( gridsize.GetSizeDimension()-1, 4 );
+  gridsize.SetElement( gridsize.GetSizeDimension() - 1, 4 );
 
   /** Set it all. */
   gridregion.SetIndex( gridindex );
@@ -361,7 +361,7 @@ void AdvancedBSplineTransform<TElastix>
   /** Output a warning that the gridspacing may be adapted to fit the Cyclic
      * behavior of the transform.
      */
-  if ( m_Cyclic )
+  if ( this->m_Cyclic )
   {
     xl::xout["warning"]
          << "WARNING: The provided grid spacing may be adapted to fit the cyclic "

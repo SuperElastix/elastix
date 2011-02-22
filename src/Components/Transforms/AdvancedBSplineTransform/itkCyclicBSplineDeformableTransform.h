@@ -58,7 +58,7 @@ public:
   /** Dimension of the domain space. */
   itkStaticConstMacro( SpaceDimension, unsigned int, NDimensions );
 
-  /** The BSpline order. */
+  /** The B-spline order. */
   itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
 
   typedef typename Superclass::JacobianType           JacobianType;
@@ -109,7 +109,7 @@ public:
   /** This method specifies the region over which the grid resides. */
   virtual void SetGridRegion( const RegionType& region );
 
-  /** Transform points by a BSpline deformable transformation.
+  /** Transform points by a B-spline deformable transformation.
    * On return, weights contains the interpolation weights used to compute the
    * deformation and indices of the x (zeroth) dimension coefficient parameters
    * in the support region used to compute the deformation.

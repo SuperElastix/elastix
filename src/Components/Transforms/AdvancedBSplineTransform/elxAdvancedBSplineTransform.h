@@ -61,13 +61,13 @@ using namespace itk;
  *    example: <tt>(GridSpacingSchedule 4.0 2.0 1.0 )</tt> \n
  *    which is equivalent to the example above.
  * \parameter PassiveEdgeWidth: the width of a band of control points at the border of the
- *   BSpline coefficient image that should remain passive during optimisation. \n
+ *   B-spline coefficient image that should remain passive during optimisation. \n
  *   Can be specified for each resolution. \n
  *   example: <tt>(PassiveEdgeWidth 0 1 2)</tt> \n
  *   The default is zero for all resolutions. A value of 4 will avoid all deformations
  *   at the edge of the image. Make sure that 2*PassiveEdgeWidth < ControlPointGridSize
  *   in each dimension.
- * \parameter UseCyclicTransform: use the cyclic version of the BSplineTransform which
+ * \parameter UseCyclicTransform: use the cyclic version of the B-spline transform which
  *   ensures that the B-spline polynomials wrap around in the slowest varying dimension.
  *   This is useful for dynamic imaging data in which the motion is assumed to be cyclic,
  *   for example in ECG-gated or respiratory gated CTA. For more information see the paper: 
@@ -90,7 +90,7 @@ using namespace itk;
  * \transformparameter BSplineTransformSplineOrder: stores the B-spline order 1,2, or 3. \n
  *    example: <tt>(BSplineTransformSplineOrder 3)</tt>
  *    Default value: 3 (cubic B-splines).
- * \transformparameter UseCyclicTransform: use the cyclic version of the BSplineTransform which
+ * \transformparameter UseCyclicTransform: use the cyclic version of the B-spline transform which
  *   ensures that the B-spline polynomials wrap around in the slowest varying dimension.
  *   This is useful for dynamic imaging data in which the motion is assumed to be cyclic,
  *   for example in ECG-gated or respiratory gated CTA. For more information see the paper: 
@@ -250,14 +250,14 @@ public:
    */
   virtual void BeforeEachResolution( void );
 
-  /** Method to set the initial BSpline grid and initialize the parameters (to 0).
+  /** Method to set the initial B-spline grid and initialize the parameters (to 0).
    * \li Define the initial grid region, origin and spacing, using the precomputed grid information.
    * \li Set the initial parameters to zero and set then as InitialParametersOfNextLevel in the registration object.
    * Called by BeforeEachResolution().
    */
   virtual void InitializeTransform( void );
 
-  /** Method to increase the density of the BSpline grid.
+  /** Method to increase the density of the B-spline grid.
    * \li Determine the new B-spline coefficients that describe the current deformation field.
    * \li Set these coefficients as InitialParametersOfNextLevel in the registration object.
    * Called by BeforeEachResolution().
@@ -296,11 +296,11 @@ private:
   GridScheduleComputerPointer   m_GridScheduleComputer;
   GridUpsamplerPointer          m_GridUpsampler;
 
-  /** Variables to remember order and periodicity of BSplineTransform. */
+  /** Variables to remember order and periodicity of B-spline transform. */
   unsigned int m_SplineOrder;
   bool m_Cyclic;
 
-  /** Initialize the right BSplineTransfrom based on the spline order and periodicity. */
+  /** Initialize the right B-spline transform based on the spline order and periodicity. */
   unsigned int InitializeBSplineTransform();
 
 }; // end class AdvancedBSplineTransform

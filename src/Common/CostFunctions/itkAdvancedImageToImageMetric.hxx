@@ -327,12 +327,12 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   {
     this->m_InterpolatorIsBSpline = true;
     this->m_BSplineInterpolator = testPtr;
-    itkDebugMacro( "Interpolator is BSpline" );
+    itkDebugMacro( "Interpolator is B-spline" );
   }
   else
   {
     this->m_BSplineInterpolator = 0;
-    itkDebugMacro( "Interpolator is not BSpline" );
+    itkDebugMacro( "Interpolator is not B-spline" );
   }
 
   this->m_InterpolatorIsBSplineFloat = false;
@@ -352,7 +352,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Don't overwrite the gradient image if GetComputeGradient() == true.
    * Otherwise we can use a forward difference derivative, or the derivative
-   * provided by the BSpline interpolator.
+   * provided by the B-spline interpolator.
    */
   if ( !this->GetComputeGradient() )
   {
@@ -434,13 +434,13 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     {
       if ( this->m_InterpolatorIsBSpline && !this->GetComputeGradient() )
       {
-        /** Computed moving image gradient using derivative BSpline kernel. */
+        /** Computed moving image gradient using derivative B-spline kernel. */
         (*gradient)
           = this->m_BSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
       }
       else if ( this->m_InterpolatorIsBSplineFloat && !this->GetComputeGradient() )
       {
-        /** Computed moving image gradient using derivative BSpline kernel. */
+        /** Computed moving image gradient using derivative B-spline kernel. */
         (*gradient)
           = this->m_BSplineInterpolatorFloat->EvaluateDerivativeAtContinuousIndex( cindex );
       }

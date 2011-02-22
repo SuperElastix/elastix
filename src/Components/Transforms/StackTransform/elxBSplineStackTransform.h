@@ -32,7 +32,7 @@ using namespace itk;
 
 /**
  * \class BSplineStackTransform
- * \brief A BSpline transform based on the itkStackTransform.
+ * \brief A B-spline transform based on the itkStackTransform.
  *
  * This transform is a B-spline transformation, with for every time point a separate
  * D-1 dimensional B-spline transform. Calls to TransformPoint and GetJacobian are
@@ -70,7 +70,7 @@ using namespace itk;
  *    example: <tt>(GridSpacingSchedule 4.0 2.0 1.0 )</tt> \n
  *    which is equivalent to the example above.
  * \parameter PassiveEdgeWidth: the width of a band of control points at the border of the
- *   BSpline coefficient image that should remain passive during optimisation. \n
+ *   B-spline coefficient image that should remain passive during optimisation. \n
  *   Can be specified for each resolution. \n
  *   example: <tt>(PassiveEdgeWidth 0 1 2)</tt> \n
  *   The default is zero for all resolutions. A value of 4 will avoid all deformations
@@ -251,14 +251,14 @@ public:
    */
   virtual void BeforeEachResolution( void );
 
-  /** Method to set the initial BSpline grid and grid scheduler and initialize the parameters (to 0).
+  /** Method to set the initial B-spline grid and grid scheduler and initialize the parameters (to 0).
    * \li Define the initial grid region, origin and spacing, using the precomputed grid information.
    * \li Set the initial parameters to zero and set then as InitialParametersOfNextLevel in the registration object.
    * Called by BeforeEachResolution().
    */
   virtual void InitializeTransform( void );
 
-  /** Method to increase the density of the BSpline grid.
+  /** Method to increase the density of the B-spline grid.
    * \li Determine the new B-spline coefficients that describe the current deformation field
    *     for all sub transforms.
    * \li Set these coefficients as InitialParametersOfNextLevel in the registration object.
@@ -292,7 +292,7 @@ private:
   BSplineStackTransform( const Self& );  // purposely not implemented
   void operator=( const Self& );         // purposely not implemented
 
-  /** The BSpline stack transform. */
+  /** The B-spline stack transform. */
   BSplineStackTransformPointer  m_BSplineStackTransform;
   /** Dummy sub transform to be used to set sub transforms of stack transform. */
   ReducedDimensionBSplineTransformBasePointer  m_BSplineDummySubTransform;
@@ -301,14 +301,14 @@ private:
   GridScheduleComputerPointer   m_GridScheduleComputer;
   GridUpsamplerPointer          m_GridUpsampler;
 
-  /** Variable to remember order of BSplineTransform. */
+  /** Variable to remember order of B-spline transform. */
   unsigned int m_SplineOrder;
 
   /** Stack variables. */
   unsigned int m_NumberOfSubTransforms;
   double m_StackOrigin, m_StackSpacing;
 
-  /** Initialize the right BSplineTransfrom based on the spline order. */
+  /** Initialize the right B-spline transform based on the spline order. */
   unsigned int InitializeBSplineTransform();
 
 }; // end class BSplineStackTransform
