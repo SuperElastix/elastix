@@ -20,7 +20,7 @@
 
 #include "elxBaseComponentSE.h"
 #include "itkAdvancedImageToImageMetric.h"
-#include "itkImageFullSampler.h"
+#include "itkImageGridSampler.h"
 #include "itkPointSet.h"
 
 #include "elxTimer.h"
@@ -43,6 +43,17 @@ using namespace itk;
    *    iteration. Must be given for each resolution. \n
    *    example: <tt>(ShowExactMetricValue "true" "true" "false")</tt> \n
    *    Default is "false" for all resolutions.
+   * \parameter ExactMetricSampleGridSpacing: Set an integer downsampling rate for 
+   *    computing the "exact" metric. Only meaningful if set in combination with the
+   *    ShowExactMetricValue set to "true". In some cases, it might be an overkill
+   *    to really compute the exact metric with the ShowExactMetricValue. 
+   *    The metric computed on a downsampled image might already be accurate
+   *    enough to draw conclusions about the rate of convergence for example. 
+   *    The downsampling rate must be given for each resolution, for each dimension.\n
+   *    example: <tt>(ExactMetricSampleGridSpacing 1 1 2 2 )</tt> \n
+   *    This example for a 2D registration of 2 resolutions sets the downsampling rate
+   *    to 1 in the first resolution (so: use really all pixels), and to 2 in the 
+   *    second resolution. Default: 1 in each resolution and each dimension. 
    * \parameter CheckNumberOfSamples: Whether the metric checks if at least
    *    a certain fraction (default 1/4) of the samples map inside the moving
    *    image. Can be given for each resolution or for all resolutions at once. \n
@@ -178,8 +189,10 @@ protected:
   typedef typename ITKBaseType::ParametersType    ParametersType;
 
   /** The full sampler used by the GetExactValue method. */
-  typedef itk::ImageFullSampler<FixedImageType>   ImageFullSamplerType;
-
+  typedef itk::ImageGridSampler<FixedImageType>   ExactMetricImageSamplerType;
+  typedef typename 
+    ExactMetricImageSamplerType::SampleGridSpacingType  ExactMetricSampleGridSpacingType;
+  
   /** The constructor. */
   MetricBase();
   /** The destructor. */
@@ -198,8 +211,9 @@ protected:
   /** \todo the method GetExactDerivative could as well be added here. */
 
   bool m_ShowExactMetricValue;
-  typename ImageFullSamplerType::Pointer m_ExactMetricSampler;
+  typename ExactMetricImageSamplerType::Pointer m_ExactMetricSampler;
   MeasureType m_CurrentExactMetricValue;
+  ExactMetricSampleGridSpacingType m_ExactMetricSampleGridSpacing;
 
 private:
 
