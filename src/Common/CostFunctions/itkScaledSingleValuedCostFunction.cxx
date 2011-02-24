@@ -283,6 +283,9 @@ void
 ScaledSingleValuedCostFunction
 ::PrintSelf( std::ostream & os, Indent indent ) const
 {
+  /** Call the superclass' PrintSelf. */
+  Superclass::PrintSelf( os, indent );
+
   os << indent << "UseScales: "
     << ( this->m_UseScales ? "true" : "false" ) << std::endl;
   os << indent << "Scales: " << this->m_Scales << std::endl;

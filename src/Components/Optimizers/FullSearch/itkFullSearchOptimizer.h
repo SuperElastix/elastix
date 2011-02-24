@@ -151,10 +151,10 @@ namespace itk
     virtual void RemoveSearchDimension( unsigned int param_nr );
 
     /** Get the total number of iterations = sizes[0]*sizes[1]*sizes[2]* etc..... */
-    virtual const unsigned long GetNumberOfIterations(void);
+    virtual unsigned long GetNumberOfIterations(void);
 
     /** Get the Dimension of the SearchSpace. Calculated from the SearchSpace. */
-    virtual const unsigned int GetNumberOfSearchSpaceDimensions(void);
+    virtual unsigned int GetNumberOfSearchSpaceDimensions(void);
 
     /** Returns an array containing trunc((max-min)/step) for each SearchSpaceDimension) */
     virtual const SearchSpaceSizeType & GetSearchSpaceSize(void);

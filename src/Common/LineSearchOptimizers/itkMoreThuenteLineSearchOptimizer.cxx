@@ -943,6 +943,9 @@ void
 MoreThuenteLineSearchOptimizer
 ::PrintSelf( std::ostream& os, Indent indent ) const
 {
+  /** Call the superclass' PrintSelf. */
+  Superclass::PrintSelf( os, indent );
+
   os << indent << "m_CurrentIteration: "
     << this->m_CurrentIteration << std::endl;
   os << indent << "m_InitialDerivativeProvided: "

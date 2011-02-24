@@ -236,6 +236,9 @@ void
 ScaledSingleValuedNonLinearOptimizer
 ::PrintSelf( std::ostream & os, Indent indent ) const
 {
+  /** Call the superclass' PrintSelf. */
+  Superclass::PrintSelf( os, indent );
+
   os << indent << "ScaledCurrentPosition: "
     << this->m_ScaledCurrentPosition << std::endl;
   os << indent << "UnscaledCurrentPosition: "

@@ -713,10 +713,11 @@ namespace itk
     void
     ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
     ::ComputeMarginalPDF(
-      const JointPDFType * jointPDF,
+      const JointPDFType * itkNotUsed( jointPDF ),
       MarginalPDFType & marginalPDF, unsigned int direction ) const
   {
     typedef ImageLinearIteratorWithIndex<JointPDFType> JointPDFLinearIterator;
+    // \todo: bug? shouldn't this be over the function argument jointPDF ?
     JointPDFLinearIterator linearIter(
       this->m_JointPDF, this->m_JointPDF->GetBufferedRegion() );
     linearIter.SetDirection( direction );

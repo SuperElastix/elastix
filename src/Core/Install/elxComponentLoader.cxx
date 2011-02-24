@@ -66,8 +66,9 @@ namespace elastix
   {
   public:
     typedef ComponentDatabase::ComponentDescriptionType ComponentDescriptionType;
-    static int DO(const ComponentDescriptionType & name, ComponentDatabase * cdb)
-      { return 0; }
+    static int DO( const ComponentDescriptionType & /** name */,
+      ComponentDatabase * /** cdb */ )
+    { return 0; }
   }; // end template class specialization
 
 

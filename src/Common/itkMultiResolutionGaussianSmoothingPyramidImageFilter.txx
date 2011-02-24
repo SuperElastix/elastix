@@ -80,15 +80,7 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>
   {
     for( dim = 0; dim < ImageDimension; dim++ )
     {
-
-      this->m_Schedule[level][dim] = schedule[level][dim];
-
-      /** Minimum schedule of 0. For the rest no restrictions
-       * as imposed in the superclass */
-      if( this->m_Schedule[level][dim] < 0 )
-      {
-        this->m_Schedule[level][dim] = 0;
-      }
+      this->m_Schedule[ level ][ dim ] = schedule[ level ][ dim ];
     }
   }
 }

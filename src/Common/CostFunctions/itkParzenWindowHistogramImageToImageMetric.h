@@ -422,19 +422,23 @@ namespace itk
     virtual void InitializeHistograms( void );
     virtual void InitializeKernels( void );
 
-    /**  Get the value and analytic derivatives for single valued optimizers.
+    /** Get the value and analytic derivatives for single valued optimizers.
      * Called by GetValueAndDerivative if UseFiniteDifferenceDerivative == false
      * Implement this method in subclasses.
      */
-    virtual void GetValueAndAnalyticDerivative( const ParametersType& parameters,
-      MeasureType& value, DerivativeType& derivative ) const {};
+    virtual void GetValueAndAnalyticDerivative(
+      const ParametersType & itkNotUsed( parameters ),
+      MeasureType & itkNotUsed( value ),
+      DerivativeType & itkNotUsed( derivative ) ) const {};
 
-    /**  Get the value and finite difference derivatives for single valued optimizers.
+    /** Get the value and finite difference derivatives for single valued optimizers.
      * Called by GetValueAndDerivative if UseFiniteDifferenceDerivative == true
      * Implement this method in subclasses.
      */
-    virtual void GetValueAndFiniteDifferenceDerivative( const ParametersType& parameters,
-      MeasureType& value, DerivativeType& derivative ) const {};
+    virtual void GetValueAndFiniteDifferenceDerivative(
+      const ParametersType & itkNotUsed( parameters ),
+      MeasureType & itkNotUsed( value ),
+      DerivativeType & itkNotUsed( derivative ) ) const {};
 
   private:
 

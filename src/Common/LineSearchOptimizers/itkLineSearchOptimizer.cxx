@@ -90,6 +90,9 @@ void
 LineSearchOptimizer
 ::PrintSelf( std::ostream& os, Indent indent ) const
 {
+  /** Call the superclass' PrintSelf. */
+  Superclass::PrintSelf( os, indent );
+
   os << indent << "CurrentStepLength: "
     << this->m_CurrentStepLength << std::endl;
   os << indent << "MinimumStepLength: "
