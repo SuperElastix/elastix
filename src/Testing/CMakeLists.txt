@@ -47,7 +47,6 @@ ENDMACRO( ADD_ELX_TEST )
 
 ADD_ELX_TEST( AdvancedBSplineDeformableTransformTest
   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt )
-ADD_ELX_TEST( BSplineDerivativeKernelFunctionTest )
 ADD_ELX_TEST( BSplineSODerivativeKernelFunctionTest )
 ADD_ELX_TEST( BSplineInterpolationWeightFunctionTest )
 ADD_ELX_TEST( BSplineInterpolationDerivativeWeightFunctionTest )

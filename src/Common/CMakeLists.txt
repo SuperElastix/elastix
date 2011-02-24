@@ -93,7 +93,6 @@ SET( TransformFiles
   Transforms/itkAdvancedRigid3DTransform.txx
   Transforms/itkAdvancedTransform.h
   Transforms/itkAdvancedTransform.txx
-  Transforms/itkBSplineDerivativeKernelFunction2.h
   Transforms/itkBSplineInterpolationDerivativeWeightFunction.h
   Transforms/itkBSplineInterpolationDerivativeWeightFunction.txx
   Transforms/itkBSplineInterpolationSecondOrderDerivativeWeightFunction.h
