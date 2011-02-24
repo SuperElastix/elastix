@@ -394,9 +394,9 @@ namespace itk
   double
     GenericConjugateGradientOptimizer::
     ComputeBetaSD(
-      const DerivativeType & previousGradient,
-      const DerivativeType & gradient,
-      const ParametersType & previousSearchDir)
+      const DerivativeType & itkNotUsed( previousGradient ),
+      const DerivativeType & itkNotUsed( gradient ),
+      const ParametersType & itkNotUsed( previousSearchDir ) )
   {
     /** A simple hack that makes the conjugate gradient equal to
      * a steepest descent method */
@@ -413,7 +413,7 @@ namespace itk
     ComputeBetaFR(
       const DerivativeType & previousGradient,
       const DerivativeType & gradient,
-      const ParametersType & previousSearchDir)
+      const ParametersType & itkNotUsed( previousSearchDir ) )
   {
     const unsigned int numberOfParameters = gradient.GetSize();
     double num = 0.0;
@@ -447,7 +447,7 @@ namespace itk
     ComputeBetaPR(
       const DerivativeType & previousGradient,
       const DerivativeType & gradient,
-      const ParametersType & previousSearchDir)
+      const ParametersType & itkNotUsed( previousSearchDir ) )
   {
     const unsigned int numberOfParameters = gradient.GetSize();
     double num = 0.0;
@@ -617,7 +617,7 @@ namespace itk
    */
 
   bool GenericConjugateGradientOptimizer::
-    TestConvergence(bool firstLineSearchDone)
+    TestConvergence( bool itkNotUsed( firstLineSearchDone ) )
   {
     itkDebugMacro("TestConvergence");
 

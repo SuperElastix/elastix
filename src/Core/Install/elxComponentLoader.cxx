@@ -125,7 +125,7 @@ namespace elastix
    * ****************** LoadComponents *****************************
    */
 
-  int ComponentLoader::LoadComponents(const char * argv0)
+  int ComponentLoader::LoadComponents( const char * /** argv0 */ )
   {
     int installReturnCode = 0;
 
