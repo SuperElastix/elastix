@@ -96,13 +96,16 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 template < class TFixedImage, class TMovingImage>
 void
 AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-::PrintSelf(std::ostream& os, Indent indent) const
+::PrintSelf( std::ostream& os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
 
-  os << "UseNormalization: " << this->m_UseNormalization << std::endl;
-  os << "SelfHessianSmoothingSigma: " << this->m_SelfHessianSmoothingSigma << std::endl;
-  os << "NumberOfSamplesForSelfHessian: " << this->m_NumberOfSamplesForSelfHessian << std::endl;
+  os << "UseNormalization: "
+    << this->m_UseNormalization << std::endl;
+  os << "SelfHessianSmoothingSigma: "
+    << this->m_SelfHessianSmoothingSigma << std::endl;
+  os << "NumberOfSamplesForSelfHessian: "
+    << this->m_NumberOfSamplesForSelfHessian << std::endl;
 
 } // end PrintSelf()
 
@@ -327,7 +330,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
 
-      /** Compute the innerproducts (dM/dx)^T (dT/dmu). */
+      /** Compute the inner products (dM/dx)^T (dT/dmu). */
       this->EvaluateTransformJacobianInnerProduct(
         jacobian, movingImageDerivative, imageJacobian );
 

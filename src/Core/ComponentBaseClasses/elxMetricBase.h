@@ -176,11 +176,11 @@ public:
   virtual ImageSamplerBaseType * GetAdvancedMetricImageSampler( void ) const;
 
   /** Get if the exact metric value is computed */
-  virtual const bool GetShowExactMetricValue( void ) const 
+  virtual bool GetShowExactMetricValue( void ) const 
   { return this->m_ShowExactMetricValue; }
 
   /** Get the last computed exact metric value */
-  virtual const MeasureType GetCurrentExactMetricValue( void ) const 
+  virtual MeasureType GetCurrentExactMetricValue( void ) const 
   { return this->m_CurrentExactMetricValue; }
 
 protected:

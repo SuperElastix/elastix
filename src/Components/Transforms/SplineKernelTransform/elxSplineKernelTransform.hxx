@@ -22,7 +22,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 /**
  * ********************* Constructor ****************************
@@ -104,27 +103,54 @@ int
 SplineKernelTransform<TElastix>
 ::BeforeAll( void )
 {
-  /** Check if -ipp is given */
-  /** If the optional command "-ipp" is given in the command
+  /** Check if -fp is given */
+  /** If the optional command "-fp" is given in the command
    * line arguments, then and only then we continue.
    */
+  // fp used to be ipp, added in elastix 4.5
   std::string ipp = this->GetConfiguration()->GetCommandLineArgument( "-ipp" );
+  std::string fp = this->GetConfiguration()->GetCommandLineArgument( "-fp" );
 
-  /** If there is an inputpoint-file? */
-  if ( ipp.empty() )
+  // Backwards compatibility stuff:
+  if ( !ipp.empty() )
+  {
+    xl::xout["warning"]
+      << "WARNING: -ipp is deprecated, use -fp instead."
+      << std::endl;
+    fp = ipp;
+  }
+
+  /** Is the fixed landmark file specified? */
+  if ( ipp.empty() && fp.empty() )
   {
     xl::xout["error"]
-      << "ERROR: -ipp should be given for "
+      << "ERROR: -fp should be given for "
       << this->elxGetClassName()
-      << " in order to define the source landmarks."
+      << " in order to define the fixed image (source) landmarks."
       << std::endl;
       return 1;
   }
   else
   {
-    elxout << "-ipp      " << ipp << std::endl;
-    return 0;
+    elxout << "-fp       " << fp << std::endl;
   }
+
+  /** Check if -mp is given. If the optional command "-mp"
+   * is given in the command line arguments, then we print it.
+   */
+  std::string mp = this->GetConfiguration()->GetCommandLineArgument( "-mp" );
+
+  /** Is the moving landmark file specified? */
+  if ( mp.empty() )
+  {
+    elxout << "-mp       " << "unspecified, assumed equal to -fp" << std::endl;
+  }
+  else
+  {
+    elxout << "-mp       " << mp << std::endl;
+  }
+
+  return 0;
 
 } // end BeforeAll()
 
@@ -172,11 +198,17 @@ SplineKernelTransform<TElastix>
     matrixInversionMethod, "TPSMatrixInversionMethod", 0, true );
   this->m_KernelTransform->SetMatrixInversionMethod( matrixInversionMethod );
 
-  /** Load source landmark positions. */
+  /** Load fixed image (source) landmark positions. */
   this->DetermineSourceLandmarks();
 
-  /** Set all parameters to zero. */
-  this->m_KernelTransform->SetIdentity();
+  /** Load moving image (target) landmark positions. */
+  bool movingLandmarksGiven = this->DetermineTargetLandmarks();
+
+  /** Set all parameters to identity if no moving landmarks were given. */
+  if ( !movingLandmarksGiven )
+  {
+    this->m_KernelTransform->SetIdentity();
+  }
 
   /** Set the initial parameters in this->m_Registration. */
   this->m_Registration->GetAsITKBaseType()
@@ -196,99 +228,168 @@ void
 SplineKernelTransform<TElastix>
 ::DetermineSourceLandmarks( void )
 {
-  /** Typedef's. */
-  typedef typename FixedImageType::IndexType            FixedImageIndexType;
-  typedef typename FixedImageIndexType::IndexValueType  FixedImageIndexValueType;
-  typedef typename KernelTransformType::PointSetType    PointSetType;
-  typedef itk::TransformixInputPointFileReader<
-    PointSetType >                                      IPPReaderType;
-
-  elxout << "Loading fixed image landmarks for " << this->GetComponentLabel()
+  /** Load the fixed image landmarks. */
+  elxout << "Loading fixed image landmarks for "
+    << this->GetComponentLabel()
     << ":" << this->elxGetClassName() << "." << std::endl;
 
-  /** Construct an ipp-file reader and read the points. */
-  typename IPPReaderType::Pointer ippReader = IPPReaderType::New();
+  // fp used to be ipp
   std::string ipp = this->GetConfiguration()->GetCommandLineArgument( "-ipp" );
-  ippReader->SetFileName( ipp.c_str() );
-  elxout << "  Reading input point file: " << ipp << std::endl;
-  try
-  {
-    ippReader->Update();
-  }
-  catch ( itk::ExceptionObject & err )
-  {
-    xl::xout["error"] << "  Error while opening input point file." << std::endl;
-    xl::xout["error"] << err << std::endl;
-    itkExceptionMacro( << "ERROR: unable to configure " << this->GetComponentLabel() );
-  }
+  std::string fp = this->GetConfiguration()->GetCommandLineArgument( "-fp" );
+  if ( fp.empty() ) fp = ipp; // backwards compatibility, added in elastix 4.5
+  PointSetPointer landmarkPointSet = 0;
+  this->ReadLandmarkFile( fp, landmarkPointSet, true );
 
-  /** Some user-feedback. */
-  if ( ippReader->GetPointsAreIndices() )
-  {
-    elxout << "  Input points are specified as image indices." << std::endl;
-  }
-  else
-  {
-    elxout << "  Input points are specified in world coordinates." << std::endl;
-  }
-  const unsigned int nrofpoints = ippReader->GetNumberOfPoints();
-  elxout << "  Number of specified input points: " << nrofpoints << std::endl;
-
-  /** Get the set of input points. */
-  typename PointSetType::Pointer inputPointSet = ippReader->GetOutput();
-
-  /** Convert from index to point if necessary */
-  inputPointSet->DisconnectPipeline();
-  if ( ippReader->GetPointsAreIndices() )
-  {
-    /** Convert to world coordinates. */
-    typename FixedImageType::Pointer fixedImage = this->GetElastix()->GetFixedImage();
-    InputPointType inputPoint; inputPoint.Fill( 0.0f );
-    FixedImageIndexType inputIndex;
-    for ( unsigned int j = 0; j < nrofpoints; ++j )
-    {
-      /** The read point from the inputPointSet is actually an index
-       * Cast to the proper type.
-       */
-      inputPointSet->GetPoint( j, &inputPoint );
-      for ( unsigned int d = 0; d < SpaceDimension; ++d )
-      {
-        inputIndex[ d ] = static_cast<FixedImageIndexValueType>(
-          vnl_math_rnd( inputPoint[ d ] ) );
-      }
-
-      /** Compute the input point in physical coordinates. */
-      fixedImage->TransformIndexToPhysicalPoint(
-        inputIndex, inputPoint );
-      inputPointSet->SetPoint( j, inputPoint );
-    }
-  }
-
-  /** Apply initial transform if necessary. */
-  if ( this->GetUseComposition()
-    && this->Superclass1::GetInitialTransform() != 0 )
-  {
-    InputPointType inputPoint; inputPoint.Fill( 0.0f );
-    for ( unsigned int j = 0; j < nrofpoints; ++j )
-    {
-      inputPointSet->GetPoint( j, &inputPoint );
-      inputPoint = this->Superclass1::GetInitialTransform()
-        ->TransformPoint( inputPoint );
-      inputPointSet->SetPoint( j, inputPoint );
-    }
-  }
-
-  /** Set the ipp as source landmarks. */
+  /** Set the fp as source landmarks. */
   tmr::Timer::Pointer timer = tmr::Timer::New();
   timer->StartTimer();
   elxout << "  Setting the fixed image landmarks (requiring large matrix inversion) ..." << std::endl;
-  this->m_KernelTransform->SetSourceLandmarks( inputPointSet );
+  this->m_KernelTransform->SetSourceLandmarks( landmarkPointSet );
   timer->StopTimer();
   elxout << "  Setting the fixed image landmarks took: "
     << timer->PrintElapsedTimeDHMS()
     << std::endl;
 
 } // end DetermineSourceLandmarks()
+
+
+/**
+ * ************************* DetermineTargetLandmarks *********************
+ */
+
+template <class TElastix>
+bool
+SplineKernelTransform<TElastix>
+::DetermineTargetLandmarks( void )
+{
+  /** The moving landmark file name. */
+  std::string mp = this->GetConfiguration()->GetCommandLineArgument( "-mp" );
+  if ( mp.empty() )
+  {
+    return false;
+  }
+
+  /** Load the moving image landmarks. */
+  elxout << "Loading moving image landmarks for "
+    << this->GetComponentLabel()
+    << ":" << this->elxGetClassName() << "." << std::endl;
+
+  PointSetPointer landmarkPointSet = 0;
+  this->ReadLandmarkFile( mp, landmarkPointSet, false );
+
+  /** Set the mp as target landmarks. */
+  tmr::Timer::Pointer timer = tmr::Timer::New();
+  timer->StartTimer();
+  elxout << "  Setting the moving image landmarks ..." << std::endl;
+  this->m_KernelTransform->SetTargetLandmarks( landmarkPointSet );
+  timer->StopTimer();
+  elxout << "  Setting the moving image landmarks took: "
+    << timer->PrintElapsedTimeDHMS()
+    << std::endl;
+
+  return true;
+
+} // end DetermineTargetLandmarks()
+
+
+/**
+ * ************************* ReadLandmarkFile *********************
+ */
+
+template <class TElastix>
+void
+SplineKernelTransform<TElastix>
+::ReadLandmarkFile( const std::string & filename,
+  PointSetPointer landmarkPointSet,
+  const bool & landmarksInFixedImage )
+{
+  /** Typedef's. */
+  typedef typename FixedImageType::IndexType            IndexType;
+  typedef typename IndexType::IndexValueType            IndexValueType;
+  typedef itk::TransformixInputPointFileReader<
+    PointSetType >                                      LandmarkReaderType;
+
+  /** Construct a landmark file reader and read the points. */
+  typename LandmarkReaderType::Pointer landmarkReader = LandmarkReaderType::New();
+  landmarkReader->SetFileName( filename.c_str() );
+  try
+  {
+    landmarkReader->Update();
+  }
+  catch ( itk::ExceptionObject & err )
+  {
+    xl::xout["error"] << "  Error while opening landmark file." << std::endl;
+    xl::xout["error"] << err << std::endl;
+    itkExceptionMacro( << "ERROR: unable to configure " << this->GetComponentLabel() );
+  }
+
+  /** Some user-feedback. */
+  if ( landmarkReader->GetPointsAreIndices() )
+  {
+    elxout << "  Landmarks are specified as image indices." << std::endl;
+  }
+  else
+  {
+    elxout << "  Landmarks are specified in world coordinates." << std::endl;
+  }
+  const unsigned int nrofpoints = landmarkReader->GetNumberOfPoints();
+  elxout << "  Number of specified input points: " << nrofpoints << std::endl;
+
+  /** Get the set of input points. */
+  landmarkPointSet = landmarkReader->GetOutput();
+
+  /** Convert from index to point if necessary */
+  landmarkPointSet->DisconnectPipeline();
+  if ( landmarkReader->GetPointsAreIndices() )
+  {
+    /** Get handles to the fixed and moving images. */
+    typename FixedImageType::Pointer fixedImage = this->GetElastix()->GetFixedImage();
+    typename MovingImageType::Pointer movingImage = this->GetElastix()->GetMovingImage();
+
+    InputPointType landmarkPoint; landmarkPoint.Fill( 0.0f );
+    IndexType landmarkIndex;
+    for ( unsigned int j = 0; j < nrofpoints; ++j )
+    {
+      /** The read point from the inputPointSet is actually an index
+       * Cast to the proper type.
+       */
+      landmarkPointSet->GetPoint( j, &landmarkPoint );
+      for ( unsigned int d = 0; d < SpaceDimension; ++d )
+      {
+        landmarkIndex[ d ] = static_cast<IndexValueType>(
+          vnl_math_rnd( landmarkPoint[ d ] ) );
+      }
+
+      /** Compute the input point in physical coordinates and replace the point. */
+      if ( landmarksInFixedImage )
+      {
+        fixedImage->TransformIndexToPhysicalPoint(
+          landmarkIndex, landmarkPoint );
+      }
+      else
+      {
+        movingImage->TransformIndexToPhysicalPoint(
+          landmarkIndex, landmarkPoint );
+      }
+      landmarkPointSet->SetPoint( j, landmarkPoint );
+    }
+  }
+
+  /** Apply initial transform if necessary, for fixed image landmarks only. */
+  if ( landmarksInFixedImage && this->GetUseComposition()
+    && this->Superclass1::GetInitialTransform() != 0 )
+  {
+    InputPointType inputPoint; inputPoint.Fill( 0.0f );
+    for ( unsigned int j = 0; j < nrofpoints; ++j )
+    {
+      landmarkPointSet->GetPoint( j, &inputPoint );
+      inputPoint = this->Superclass1::GetInitialTransform()
+        ->TransformPoint( inputPoint );
+      landmarkPointSet->SetPoint( j, inputPoint );
+    }
+  }
+
+} // end ReadLandmarkFile()
 
 
 /**

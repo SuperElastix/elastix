@@ -19,232 +19,233 @@
 
 namespace itk
 {
-  /**
-   * \class MoreThuenteLineSearchOptimizer
-   *
-   * \brief ITK version of the MoreThuente line search algorithm.
-   *
-   * This class is an ITK version of the netlib function mcsrch_. It
-   * gives exactly the same results.
-   *
-   * The purpose of this optimizer is to find a step which satisfies
-   * a sufficient decrease condition and a curvature condition.
-   *
-   * At each stage the subroutine updates an interval of
-   * uncertainty with endpoints stx and sty. The interval of
-   * uncertainty is initially chosen so that it contains a
-   * minimizer of the modified function
-   *
-   *    \f[ f(x+stp*s) - f(x) - ValueTolerance*stp*(gradf(x)'s). \f]
-   *
-   * If a step is obtained for which the modified function
-   * has a nonpositive function value and nonnegative derivative,
-   * then the interval of uncertainty is chosen so that it
-   * contains a minimizer of \f$f(x+stp*s)\f$.
-   *
-   * The algorithm is designed to find a step which satisfies
-   * the sufficient decrease condition
-   *
-   *    \f[ f(x+stp*s) <= f(x) + ValueTolerance*stp*(gradf(x)'s), \f]
-   *
-   * and the curvature condition
-   *
-   *    \f[ \| gradf(x+stp*s)'s) \| <= GradientTolerance * \| gradf(x)'s \|. \f]
-   *
-   * (together also called the Strong Wolfe Conditions)
-   *
-   * if the ValueTolerance is less than the GradientTolerance and if,
-   * for example, the function is bounded below, then there is always
-   * a step which satisfies both conditions. If no step can be found
-   * which satisfies both conditions, then the algorithm usually stops
-   * when rounding errors prevent further progress. In this case stp only
-   * satisfies the sufficient decrease condition.
-   *
-   *
-   * \ingroup Numerics Optimizers
+/**
+ * \class MoreThuenteLineSearchOptimizer
+ *
+ * \brief ITK version of the MoreThuente line search algorithm.
+ *
+ * This class is an ITK version of the netlib function mcsrch_. It
+ * gives exactly the same results.
+ *
+ * The purpose of this optimizer is to find a step which satisfies
+ * a sufficient decrease condition and a curvature condition.
+ *
+ * At each stage the subroutine updates an interval of
+ * uncertainty with endpoints stx and sty. The interval of
+ * uncertainty is initially chosen so that it contains a
+ * minimizer of the modified function
+ *
+ *    \f[ f(x+stp*s) - f(x) - ValueTolerance*stp*(gradf(x)'s). \f]
+ *
+ * If a step is obtained for which the modified function
+ * has a nonpositive function value and nonnegative derivative,
+ * then the interval of uncertainty is chosen so that it
+ * contains a minimizer of \f$f(x+stp*s)\f$.
+ *
+ * The algorithm is designed to find a step which satisfies
+ * the sufficient decrease condition
+ *
+ *    \f[ f(x+stp*s) <= f(x) + ValueTolerance*stp*(gradf(x)'s), \f]
+ *
+ * and the curvature condition
+ *
+ *    \f[ \| gradf(x+stp*s)'s) \| <= GradientTolerance * \| gradf(x)'s \|. \f]
+ *
+ * (together also called the Strong Wolfe Conditions)
+ *
+ * if the ValueTolerance is less than the GradientTolerance and if,
+ * for example, the function is bounded below, then there is always
+ * a step which satisfies both conditions. If no step can be found
+ * which satisfies both conditions, then the algorithm usually stops
+ * when rounding errors prevent further progress. In this case stp only
+ * satisfies the sufficient decrease condition.
+ *
+ *
+ * \ingroup Numerics Optimizers
+ */
+
+class MoreThuenteLineSearchOptimizer : public LineSearchOptimizer
+{
+public:
+  typedef MoreThuenteLineSearchOptimizer  Self;
+  typedef LineSearchOptimizer             Superclass;
+  typedef SmartPointer<Self>              Pointer;
+  typedef SmartPointer<const Self>        ConstPointer;
+
+  itkNewMacro( Self );
+  itkTypeMacro( MoreThuenteLineSearchOptimizer, LineSearchOptimizer );
+
+  typedef Superclass::MeasureType               MeasureType;
+  typedef Superclass::ParametersType            ParametersType;
+  typedef Superclass::DerivativeType            DerivativeType;
+  typedef Superclass::CostFunctionType          CostFunctionType;
+
+  typedef enum {
+    StrongWolfeConditionsSatisfied,
+    MetricError,
+    MaximumNumberOfIterations,
+    StepTooSmall,
+    StepTooLarge,
+    IntervalTooSmall,
+    RoundingError,
+    AscentSearchDirection,
+    Unknown }                                   StopConditionType;
+
+  virtual void StartOptimization( void );
+  virtual void StopOptimization( void );
+
+  /** If initial derivative and/or value are given we can save some
+   * computation time!
    */
+  virtual void SetInitialDerivative( const DerivativeType & derivative );
+  virtual void SetInitialValue( MeasureType value );
 
-  class MoreThuenteLineSearchOptimizer :
-    public LineSearchOptimizer
-  {
-  public:
-    typedef MoreThuenteLineSearchOptimizer  Self;
-    typedef LineSearchOptimizer             Superclass;
-    typedef SmartPointer<Self>              Pointer;
-    typedef SmartPointer<const Self>        ConstPointer;
+  /** Progress information: value, derivative, and directional derivative
+   * at the current position.
+   */
+  virtual void GetCurrentValueAndDerivative(
+    MeasureType & value, DerivativeType & derivative ) const;
+  virtual void GetCurrentDerivative( DerivativeType & derivative ) const;
+  virtual MeasureType GetCurrentValue( void ) const;
+  virtual double GetCurrentDirectionalDerivative( void ) const;
 
-    itkNewMacro(Self);
-    itkTypeMacro(MoreThuenteLineSearchOptimizer, LineSearchOptimizer);
+  /** Progress information: about the state of convergence */
+  itkGetConstMacro( CurrentIteration, unsigned long );
+  itkGetConstReferenceMacro( StopCondition, StopConditionType );
+  itkGetConstMacro( SufficientDecreaseConditionSatisfied, bool );
+  itkGetConstMacro( CurvatureConditionSatisfied, bool );
 
-    typedef Superclass::MeasureType               MeasureType;
-    typedef Superclass::ParametersType            ParametersType;
-    typedef Superclass::DerivativeType            DerivativeType;
-    typedef Superclass::CostFunctionType          CostFunctionType;
+  /** Setting: the maximum number of iterations. 20 by default. */
+  itkGetConstMacro( MaximumNumberOfIterations, unsigned long );
+  itkSetClampMacro( MaximumNumberOfIterations, unsigned long,
+    1, NumericTraits<unsigned long>::max() );
 
-    typedef enum {
-      StrongWolfeConditionsSatisfied,
-      MetricError,
-      MaximumNumberOfIterations,
-      StepTooSmall,
-      StepTooLarge,
-      IntervalTooSmall,
-      RoundingError,
-      AscentSearchDirection,
-      Unknown }                                   StopConditionType;
+  /** Setting: the value tolerance. By default set to 1e-4.
+   *
+   * The line search tries to find a StepLength that satisfies
+   * the sufficient decrease condition:
+   * F(X + StepLength * s) <= F(X) + ValueTolerance * StepLength * dF/ds(X)
+   * where s is the search direction
+   *
+   * It must be larger than 0.0, and smaller than the GradientTolerance.
+   */
+  itkSetClampMacro( ValueTolerance, double, 0.0, NumericTraits<double>::max() );
+  itkGetConstMacro( ValueTolerance, double );
 
-    virtual void StartOptimization(void);
-    virtual void StopOptimization(void);
+  /** Setting: the gradient tolerance. By default set to 0.9.
+   *
+   * The line search tries to find a StepLength that satisfies
+   * the curvature condition:
+   * ABS(dF/ds(X + StepLength * s) <= GradientTolerance * ABS(dF/ds(X)
+   *
+   * The lower this value, the more accurate the line search. It must
+   * be larger than the ValueTolerance.
+   */
+  itkSetClampMacro( GradientTolerance, double, 0.0, NumericTraits<double>::max() );
+  itkGetConstMacro( GradientTolerance, double );
 
-    /** If initial derivative and/or value are given we can save some
-     * computation time! */
-    virtual void SetInitialDerivative(const DerivativeType & derivative);
-    virtual void SetInitialValue(MeasureType value);
+  /** Setting: the interval tolerance. By default set to the
+   * the machine precision.
+   *
+   * If value and gradient tolerance can not be satisfied
+   * both, the algorithm stops when rounding errors prevent
+   * further progress: when the interval of uncertainty is
+   * smaller than the interval tolerance.
+   */
+  itkSetClampMacro( IntervalTolerance, double, 0.0, NumericTraits<double>::max() );
+  itkGetConstMacro( IntervalTolerance, double );
 
-    /** Progress information: value, derivative, and directional derivative
-     * at the current position */
-    virtual void GetCurrentValueAndDerivative(
-      MeasureType & value, DerivativeType & derivative) const;
-    virtual void GetCurrentDerivative(DerivativeType & derivative) const;
-    virtual MeasureType GetCurrentValue(void) const;
-    virtual const double GetCurrentDirectionalDerivative(void) const;
+protected:
+  MoreThuenteLineSearchOptimizer();
+  virtual ~MoreThuenteLineSearchOptimizer() {};
 
-    /** Progress information: about the state of convergence */
-    itkGetConstMacro(CurrentIteration, unsigned long);
-    itkGetConstReferenceMacro(StopCondition, StopConditionType);
-    itkGetConstMacro(SufficientDecreaseConditionSatisfied, bool);
-    itkGetConstMacro(CurvatureConditionSatisfied, bool);
+  void PrintSelf( std::ostream& os, Indent indent ) const;
 
-    /** Setting: the maximum number of iterations. 20 by default. */
-    itkGetConstMacro(MaximumNumberOfIterations, unsigned long);
-    itkSetClampMacro(MaximumNumberOfIterations, unsigned long,
-      1, NumericTraits<unsigned long>::max());
+  unsigned long     m_CurrentIteration;
+  bool              m_InitialDerivativeProvided;
+  bool              m_InitialValueProvided;
+  StopConditionType m_StopCondition;
+  bool              m_Stop;
+  bool              m_SufficientDecreaseConditionSatisfied;
+  bool              m_CurvatureConditionSatisfied;
 
-    /** Setting: the value tolerance. By default set to 1e-4.
-     *
-     * The line search tries to find a StepLength that satisfies
-     * the sufficient decrease condition:
-     * F(X + StepLength * s) <= F(X) + ValueTolerance * StepLength * dF/ds(X)
-     * where s is the search direction
-     *
-     * It must be larger than 0.0, and smaller than the GradientTolerance.
-     */
-    itkSetClampMacro(ValueTolerance, double, 0.0, NumericTraits<double>::max() );
-    itkGetConstMacro(ValueTolerance, double);
+  /** Load the initial value and derivative into m_f and m_g. */
+  virtual void GetInitialValueAndDerivative( void );
 
-    /** Setting: the gradient tolerance. By default set to 0.9.
-     *
-     * The line search tries to find a StepLength that satisfies
-     * the curvature condition:
-     * ABS(dF/ds(X + StepLength * s) <= GradientTolerance * ABS(dF/ds(X)
-     *
-     * The lower this value, the more accurate the line search. It must
-     * be larger than the ValueTolerance.
-     */
-    itkSetClampMacro(GradientTolerance, double, 0.0, NumericTraits<double>::max() );
-    itkGetConstMacro(GradientTolerance, double);
+  /** Check the input settings for errors. */
+  virtual int CheckSettings( void );
 
-    /** Setting: the interval tolerance. By default set to the
-     * the machine precision.
-     *
-     * If value and gradient tolerance can not be satisfied
-     * both, the algorithm stops when rounding errors prevent
-     * further progress: when the interval of uncertainty is
-     * smaller than the interval tolerance.
-     */
-    itkSetClampMacro(IntervalTolerance, double, 0.0, NumericTraits<double>::max() );
-    itkGetConstMacro(IntervalTolerance, double);
+  /** Initialize the interval of uncertainty etc. */
+  virtual void InitializeLineSearch( void );
 
+  /** Set the minimum and maximum steps to correspond to the
+   * the present interval of uncertainty.
+   */
+  virtual void UpdateIntervalMinimumAndMaximum( void );
 
-  protected:
-    MoreThuenteLineSearchOptimizer();
-    virtual ~MoreThuenteLineSearchOptimizer() {};
+  /** Force a step to be within the bounds MinimumStepLength and MaximumStepLength */
+  void BoundStep( double & step ) const;
 
-    void PrintSelf(std::ostream& os, Indent indent) const {};
+  /** Set m_step to the best step until now, if unusual termination is expected */
+  virtual void PrepareForUnusualTermination( void );
 
-    unsigned long     m_CurrentIteration;
-    bool              m_InitialDerivativeProvided;
-    bool              m_InitialValueProvided;
-    StopConditionType m_StopCondition;
-    bool              m_Stop;
-    bool              m_SufficientDecreaseConditionSatisfied;
-    bool              m_CurvatureConditionSatisfied;
+  /** Ask the cost function to compute m_f and m_g at the current position. */
+  virtual void ComputeCurrentValueAndDerivative( void );
 
-    /** Load the initial value and derivative
-     * into m_f and m_g.    */
-    virtual void      GetInitialValueAndDerivative(void);
+  /** Check for convergence */
+  virtual void TestConvergence( bool & stop );
 
-    /** Check the input settings for errors. */
-    virtual int CheckSettings(void);
+  /** Update the interval of uncertainty and compute the new step */
+  virtual void ComputeNewStepAndInterval( void );
 
-    /** Initialize the interval of uncertainty etc. */
-    virtual void InitializeLineSearch(void);
+  /** Force a sufficient decrease in the size of the interval of uncertainty */
+  virtual void ForceSufficientDecreaseInIntervalWidth( void );
 
-    /** Set the minimum and maximum steps to correspond to the
-     * the present interval of uncertainty. */
-    virtual void UpdateIntervalMinimumAndMaximum(void);
+  /** Advance a step along the line search direction and update
+   * the interval of uncertainty.
+   */
+  virtual int SafeGuardedStep(
+    double & stx, double & fx, double & dx,
+    double & sty, double & fy, double & dy,
+    double & stp, const double & fp, const double & dp,
+    bool & brackt,
+    const double & stpmin, const double & stpmax ) const;
 
-    /** Force a step to be within the bounds MinimumStepLength and MaximumStepLength */
-    void BoundStep(double & step) const;
+  double m_step;
+  double m_stepx;
+  double m_stepy;
+  double m_stepmin;
+  double m_stepmax;
 
-    /** Set m_step to the best step until now, if unusual termination is expected */
-    virtual void PrepareForUnusualTermination(void);
+  MeasureType m_f;  // CurrentValue
+  MeasureType m_fx;
+  MeasureType m_fy;
+  MeasureType m_finit;
 
-    /** Ask the cost function to compute m_f and m_g at the current position. */
-    virtual void ComputeCurrentValueAndDerivative(void);
+  DerivativeType m_g; // CurrentDerivative
+  double m_dg; // CurrentDirectionalDerivative
+  double m_dginit;
+  double m_dgx;
+  double m_dgy;
+  double m_dgtest;
 
-    /** Check for convergence */
-    virtual void TestConvergence(bool & stop);
+  double m_width;
+  double m_width1;
 
-    /** Update the interval of uncertainty and compute the new step */
-    virtual void ComputeNewStepAndInterval(void);
+  bool m_brackt;
+  bool m_stage1;
+  bool m_SafeGuardedStepFailed;
 
-    /** Force a sufficient decrease in the size of the interval of uncertainty */
-    virtual void ForceSufficientDecreaseInIntervalWidth(void);
+private:
+  MoreThuenteLineSearchOptimizer(const Self&); //purposely not implemented
+  void operator=(const Self&); //purposely not implemented
 
-    /** Advance a step along the line search direction and update
-     * the interval of uncertainty */
-    virtual int SafeGuardedStep(
-      double & stx, double & fx, double & dx,
-      double & sty, double & fy, double & dy,
-      double & stp, const double & fp, const double & dp,
-      bool & brackt,
-      const double & stpmin, const double & stpmax) const;
+  unsigned long     m_MaximumNumberOfIterations;
+  double            m_ValueTolerance;
+  double            m_GradientTolerance;
+  double            m_IntervalTolerance;
 
-    double m_step;
-    double m_stepx;
-    double m_stepy;
-    double m_stepmin;
-    double m_stepmax;
-
-    MeasureType m_f;  // CurrentValue
-    MeasureType m_fx;
-    MeasureType m_fy;
-    MeasureType m_finit;
-
-    DerivativeType m_g; // CurrentDerivative
-    double m_dg; // CurrentDirectionalDerivative
-    double m_dginit;
-    double m_dgx;
-    double m_dgy;
-    double m_dgtest;
-
-    double m_width;
-    double m_width1;
-
-    bool m_brackt;
-    bool m_stage1;
-    bool m_SafeGuardedStepFailed;
-
-  private:
-    MoreThuenteLineSearchOptimizer(const Self&); //purposely not implemented
-    void operator=(const Self&); //purposely not implemented
-
-    unsigned long     m_MaximumNumberOfIterations;
-    double            m_ValueTolerance;
-    double            m_GradientTolerance;
-    double            m_IntervalTolerance;
-
-  }; // end class MoreThuenteLineSearchOptimizer
+}; // end class MoreThuenteLineSearchOptimizer
 
 
 } // end namespace itk

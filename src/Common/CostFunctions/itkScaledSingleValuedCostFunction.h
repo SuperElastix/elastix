@@ -75,7 +75,7 @@ namespace itk
       DerivativeType & derivative ) const;
 
     /** Ask the UnscaledCostFunction how many parameters it has. */
-    virtual unsigned int GetNumberOfParameters(void) const;
+    virtual unsigned int GetNumberOfParameters( void ) const;
 
     /** Set the cost function that needs scaling. */
     itkSetObjectMacro( UnscaledCostFunction, Superclass );
@@ -92,7 +92,7 @@ namespace itk
     /** The ITK convention is to use the squared scales. This function
      * takes the square root of the input scales and sets them as the
      * the actual scales */
-    virtual void SetSquaredScales( const ScalesType & squaredScales);
+    virtual void SetSquaredScales( const ScalesType & squaredScales );
 
     /** The ITK convention is to use the squared scales. This function
      * returns the squared actual scales. */
@@ -126,7 +126,7 @@ namespace itk
     virtual ~ScaledSingleValuedCostFunction() {};
 
     /** PrintSelf. */
-    void PrintSelf( std::ostream& os, Indent indent ) const {};
+    void PrintSelf( std::ostream & os, Indent indent ) const;
 
   private:
 

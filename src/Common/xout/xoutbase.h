@@ -117,7 +117,7 @@ namespace xoutlibrary
      */
     virtual int AddTargetCell( const char * name, ostream_type * cell );
     virtual int AddTargetCell( const char * name, Self * cell );
-    virtual int AddTargetCell( const char * name ){ return 1; }
+    virtual int AddTargetCell( const char * /** name */ ){ return 1; }
     virtual int RemoveTargetCell( const char * name );
 
     virtual void SetTargetCells( const CStreamMapType & cellmap );
@@ -132,8 +132,8 @@ namespace xoutlibrary
     virtual void SetOutputs( const XStreamMapType & outputmap );
 
     /** Get the output maps. */
-    virtual const CStreamMapType & GetCOutputs(void);
-    virtual const XStreamMapType & GetXOutputs(void);
+    virtual const CStreamMapType & GetCOutputs( void );
+    virtual const XStreamMapType & GetXOutputs( void );
 
   protected:
 

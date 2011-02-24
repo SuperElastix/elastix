@@ -547,21 +547,23 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 template < class TFixedImage, class TMovingImage >
 void
 AdvancedImageToImageMetric<TFixedImage,TMovingImage>
-::GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const
+::GetSelfHessian(
+  const TransformParametersType & itkNotUsed( parameters ),
+  HessianType & H ) const
 {
-  itkDebugMacro("GetSelfHessian()");
+  itkDebugMacro( "GetSelfHessian()" );
 
   /** Set identity matrix as default implementation. */
   H.set_size( this->GetNumberOfParameters(),
     this->GetNumberOfParameters() );
   //H.Fill(0.0);
   //H.fill_diagonal(1.0);
-  for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+  for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
   {
-    H(i,i) = 1.0;
+    H( i, i ) = 1.0;
   }
 
-} // end GetSelfHessian
+} // end GetSelfHessian()
 
 
 /**
@@ -580,6 +582,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     itkExceptionMacro( "Too many samples map outside moving image buffer: "
       << found << " / " << wanted << std::endl );
   }
+
 } // end CheckNumberOfSamples()
 
 

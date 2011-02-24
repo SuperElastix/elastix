@@ -104,7 +104,7 @@ OptimizerBase<TElastix>
  */
 
 template <class TElastix>
-const bool
+bool
 OptimizerBase<TElastix>
 ::GetNewSamplesEveryIteration( void ) const
 {

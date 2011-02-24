@@ -48,7 +48,7 @@ namespace itk
   template< class TOutputVectorContainer >
     typename VectorContainerSource< TOutputVectorContainer >::DataObjectPointer
     VectorContainerSource< TOutputVectorContainer >
-    ::MakeOutput( unsigned int idx )
+    ::MakeOutput( unsigned int itkNotUsed( idx ) )
   {
     return static_cast<DataObject*>( TOutputVectorContainer::New().GetPointer() );
   } // end MakeOutput

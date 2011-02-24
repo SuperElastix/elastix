@@ -27,8 +27,6 @@
 
 namespace elastix
 {
-using namespace itk;
-
 /**
  * \class AdvancedBSplineTransform
  * \brief A transform based on the itkAdvancedBSplineTransform.
@@ -106,7 +104,7 @@ using namespace itk;
 template < class TElastix >
 class AdvancedBSplineTransform
   : public
-  AdvancedCombinationTransform<
+  itk::AdvancedCombinationTransform<
   ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,
   elx::TransformBase<TElastix>::FixedImageDimension > ,
   public
@@ -116,7 +114,7 @@ public:
 
   /** Standard ITK-stuff. */
   typedef AdvancedBSplineTransform                Self;
-  typedef AdvancedCombinationTransform<
+  typedef itk::AdvancedCombinationTransform<
     typename elx::TransformBase<TElastix>::CoordRepType,
     elx::TransformBase<TElastix>::FixedImageDimension > Superclass1;
   typedef elx::TransformBase<TElastix>            Superclass2;
@@ -281,7 +279,7 @@ protected:
   /** The destructor. */
   virtual ~AdvancedBSplineTransform() {}
 
-  /** Read user-specified gridspacing and call the itkGridScheduleComputer. */
+  /** Read user-specified grid spacing and call the itkGridScheduleComputer. */
   virtual void PreComputeGridInformation( void );
 
 private:
