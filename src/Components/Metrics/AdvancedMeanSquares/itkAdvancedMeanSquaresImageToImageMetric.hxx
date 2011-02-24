@@ -96,13 +96,16 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 template < class TFixedImage, class TMovingImage>
 void
 AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-::PrintSelf(std::ostream& os, Indent indent) const
+::PrintSelf( std::ostream& os, Indent indent ) const
 {
   Superclass::PrintSelf( os, indent );
 
-  os << "UseNormalization: " << this->m_UseNormalization << std::endl;
-  os << "SelfHessianSmoothingSigma: " << this->m_SelfHessianSmoothingSigma << std::endl;
-  os << "NumberOfSamplesForSelfHessian: " << this->m_NumberOfSamplesForSelfHessian << std::endl;
+  os << "UseNormalization: "
+    << this->m_UseNormalization << std::endl;
+  os << "SelfHessianSmoothingSigma: "
+    << this->m_SelfHessianSmoothingSigma << std::endl;
+  os << "NumberOfSamplesForSelfHessian: "
+    << this->m_NumberOfSamplesForSelfHessian << std::endl;
 
 } // end PrintSelf()
 
@@ -327,7 +330,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
 
-      /** Compute the innerproducts (dM/dx)^T (dT/dmu). */
+      /** Compute the inner products (dM/dx)^T (dT/dmu). */
       this->EvaluateTransformJacobianInnerProduct(
         jacobian, movingImageDerivative, imageJacobian );
 
@@ -465,13 +468,13 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
    * Actually we could do without a sampler, but it's easy like this.
    */
   typename SelfHessianSamplerType::Pointer sampler = SelfHessianSamplerType::New();
-  typename DummyFixedImageInterpolatorType::Pointer dummyInterpolator =
-    DummyFixedImageInterpolatorType::New();
+  //typename DummyFixedImageInterpolatorType::Pointer dummyInterpolator =
+  //  DummyFixedImageInterpolatorType::New();
   sampler->SetInputImageRegion( this->GetImageSampler()->GetInputImageRegion() );
   sampler->SetMask( this->GetImageSampler()->GetMask() );
   sampler->SetInput( smoother->GetInput() );
   sampler->SetNumberOfSamples( this->m_NumberOfSamplesForSelfHessian );
-  sampler->SetInterpolator( dummyInterpolator );
+  //sampler->SetInterpolator( dummyInterpolator );
 
   /** Update the imageSampler and get a handle to the sample container. */
   sampler->Update();
@@ -513,7 +516,11 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
     {
       this->m_NumberOfPixelsCounted++;
 
-      /** Use the derivative of the fixed image for the self Hessian! */
+      /** Use the derivative of the fixed image for the self Hessian! 
+       * \todo: we can do this more efficient without the interpolation, 
+       * without the sampler, and with a precomputed gradient image, 
+       * but is this the bottleneck?
+       */
       movingImageDerivative = fixedInterpolator->EvaluateDerivative( fixedPoint );
       for ( unsigned int d = 0; d < FixedImageDimension; ++d )
       {
@@ -601,6 +608,10 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
       {
         const unsigned int col = nzji[ j ];
         const double val = imjacrow * imageJacobian[ j ];
+        if ( ( val < 1e-14 ) && ( val > -1e-14 ) )
+        {
+          continue;
+        }
 
         /** The following implements:
          * H(row,col) += imjacrow * imageJacobian[ j ]; 

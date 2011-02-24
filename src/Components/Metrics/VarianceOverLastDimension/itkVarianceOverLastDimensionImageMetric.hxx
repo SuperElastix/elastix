@@ -251,7 +251,7 @@ namespace itk
         /** Transform sampled point back to world coordinates. */
         this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
 
-        /** Transform point and check if it is inside the bspline support region. */
+        /** Transform point and check if it is inside the B-spline support region. */
         bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
         /** Check if point is inside mask. */
@@ -421,7 +421,7 @@ namespace itk
         voxelCoord[ lastDim ] = lastDimPositions[ d ];
         /** Transform sampled point back to world coordinates. */
         this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint( voxelCoord, fixedPoint );
-        /** Transform point and check if it is inside the bspline support region. */
+        /** Transform point and check if it is inside the B-spline support region. */
         bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
         /** Check if point is inside mask. */

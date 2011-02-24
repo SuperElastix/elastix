@@ -330,7 +330,7 @@ AffineDTITransformElastix<TElastix>
   elxout << "Scales are estimated automatically." << std::endl;
   this->AutomaticScalesEstimation( newscales );
 
-  unsigned int count
+  std::size_t count
     = this->m_Configuration->CountNumberOfParameterEntries( "Scales" );
 
   if ( count == this->GetNumberOfParameters() )

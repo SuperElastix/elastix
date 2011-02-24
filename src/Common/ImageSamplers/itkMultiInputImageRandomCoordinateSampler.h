@@ -87,7 +87,7 @@ namespace itk
     /** The random number generator used to generate random coordinates. */
     typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
 
-    /** Set/Get the interpolator. A 3rd order BSpline interpolator is used by default. */
+    /** Set/Get the interpolator. A 3rd order B-spline interpolator is used by default. */
     itkSetObjectMacro( Interpolator, InterpolatorType );
     itkGetObjectMacro( Interpolator, InterpolatorType );
 

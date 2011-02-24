@@ -30,6 +30,7 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
 {
   this->m_UseCuda = true;
   this->m_UseGPUToCastData = false;
+  this->m_UseFastCUDAKernel = false; // accurate by default
 
 } // end Constructor
 
@@ -66,18 +67,25 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
   const SpacingType     itkInputSpacing  = this->GetInput()->GetSpacing();
   const OriginPointType itkInputOrigin   = this->GetInput()->GetOrigin();
 
-  uint3 inputSize            = make_uint3( itkInputSize[0],  itkInputSize[1],  itkInputSize[2] );
-  uint3 outputSize           = make_uint3( itkOutputSize[0], itkOutputSize[1], itkOutputSize[2] );
+  uint3 inputSize            = make_uint3(
+    itkInputSize[0],  itkInputSize[1],  itkInputSize[2] );
+  uint3 outputSize           = make_uint3(
+    itkOutputSize[0], itkOutputSize[1], itkOutputSize[2] );
   const InputPixelType* data = this->GetInput()->GetBufferPointer();
-  m_CudaResampleImageFilter.cudaMallocImageData( inputSize, outputSize, data );
+  this->m_CudaResampleImageFilter.cudaMallocImageData( inputSize, outputSize, data );
 
-  float3 outputImageSpacing = make_float3( itkOutputSpacing[0], itkOutputSpacing[1], itkOutputSpacing[2] );
-  float3 outputImageOrigin  = make_float3( itkOutputOrigin[0],  itkOutputOrigin[1],  itkOutputOrigin[2] );
-  float3 inputImageSpacing  = make_float3( itkInputSpacing[0],  itkInputSpacing[1],  itkInputSpacing[2] );
-  float3 inputImageOrigin   = make_float3( itkInputOrigin[0],   itkInputOrigin[1],   itkInputOrigin[2] );
+  float3 outputImageSpacing = make_float3(
+    itkOutputSpacing[0], itkOutputSpacing[1], itkOutputSpacing[2] );
+  float3 outputImageOrigin  = make_float3(
+    itkOutputOrigin[0],  itkOutputOrigin[1],  itkOutputOrigin[2] );
+  float3 inputImageSpacing  = make_float3(
+    itkInputSpacing[0],  itkInputSpacing[1],  itkInputSpacing[2] );
+  float3 inputImageOrigin   = make_float3(
+    itkInputOrigin[0],   itkInputOrigin[1],   itkInputOrigin[2] );
 
   float defaultPixelValue   = this->GetDefaultPixelValue();
-  m_CudaResampleImageFilter.cudaCopyImageSymbols( inputImageSpacing, inputImageOrigin,
+  this->m_CudaResampleImageFilter.cudaCopyImageSymbols(
+    inputImageSpacing, inputImageOrigin,
     outputImageSpacing, outputImageOrigin, defaultPixelValue );
 
   const typename InternalBSplineTransformType::OriginType  itkGridOrigin
@@ -87,15 +95,16 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
   const typename InternalBSplineTransformType::SizeType    itkGridSize
     = bSplineTransform->GetGridRegion().GetSize();
 
-  float3 gridSpacing        = make_float3( itkGridSpacing[0], itkGridSpacing[1], itkGridSpacing[2] );
-  float3 gridOrigin         = make_float3( itkGridOrigin[0],  itkGridOrigin[1],  itkGridOrigin[2] );
-  uint3  gridSize           = make_uint3 ( itkGridSize[0],    itkGridSize[1],    itkGridSize[2] );
-  m_CudaResampleImageFilter.cudaCopyGridSymbols( gridSpacing, gridOrigin, gridSize );
+  float3 gridSpacing = make_float3( itkGridSpacing[0], itkGridSpacing[1], itkGridSpacing[2] );
+  float3 gridOrigin  = make_float3( itkGridOrigin[0],  itkGridOrigin[1],  itkGridOrigin[2] );
+  uint3  gridSize    = make_uint3 ( itkGridSize[0],    itkGridSize[1],    itkGridSize[2] );
+  this->m_CudaResampleImageFilter.cudaCopyGridSymbols( gridSpacing, gridOrigin, gridSize );
 
   const typename InternalBSplineTransformType::ParametersType params
     = bSplineTransform->GetParameters();
 
-  m_CudaResampleImageFilter.cudaMallocTransformationData( gridSize, params.data_block() );
+  this->m_CudaResampleImageFilter.cudaMallocTransformationData(
+    gridSize, params.data_block() );
 
 } // end CopyParameters()
 
@@ -169,7 +178,7 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
 ::GenerateData( void )
 {
   /** If we are not using CUDA simply use the CPU implementation. */
-  if ( !m_UseCuda )
+  if ( !this->m_UseCuda )
   {
     return Superclass::GenerateData();
   }
@@ -192,24 +201,27 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
       itkWarningMacro( << "WARNING: Using CPU (no CUDA capable GPU found, and/or up-to-date driver)" );
     }
 
-    m_UseCuda = transformIsValid && cuda_device;
+    this->m_UseCuda = transformIsValid && cuda_device;
   }
   catch ( itk::ExceptionObject & excep )
   {
     // FIXME: no printing
     std::cerr << excep << std::endl;
-    m_UseCuda = false;
+    this->m_UseCuda = false;
   }
 
   /** The GPU can't be used. Use CPU instead. */
-  if ( !m_UseCuda )
+  if ( !this->m_UseCuda )
   {
-    return Superclass::GenerateData();
+    return this->Superclass::GenerateData();
   }
 
   /** Initialize CUDA device. */
-  m_CudaResampleImageFilter.cudaInit();
-  m_CudaResampleImageFilter.SetCastOnGPU( m_UseGPUToCastData );
+  this->m_CudaResampleImageFilter.cudaInit();
+  this->m_CudaResampleImageFilter.SetCastOnGPU(
+    this->m_UseGPUToCastData );
+  this->m_CudaResampleImageFilter.SetUseFastCUDAKernel(
+    this->m_UseFastCUDAKernel );
 
   /** Copy the parameters to the GPU. */
   this->CopyParameters( tempTransform );
@@ -219,7 +231,7 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
   InputPixelType* data = this->GetOutput()->GetBufferPointer();
 
   /** Run the CUDA resampler. */
-  m_CudaResampleImageFilter.GenerateData( data );
+  this->m_CudaResampleImageFilter.GenerateData( data );
 
 } // end GenerateData()
 
@@ -227,4 +239,3 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
 }; /* namespace itk */
 
 #endif // end #ifndef __itkCUDAResamplerImageFilter_txx
-

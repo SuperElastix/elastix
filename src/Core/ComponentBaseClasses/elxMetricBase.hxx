@@ -32,6 +32,8 @@ MetricBase<TElastix>
   /** Initialize. */
   this->m_ShowExactMetricValue = false;
   this->m_ExactMetricSampler = 0;
+  this->m_CurrentExactMetricValue = 0.0;
+  this->m_ExactMetricSampleGridSpacing.Fill(1);
 
 } // end Constructor
 
@@ -49,9 +51,7 @@ MetricBase<TElastix>
   unsigned int level
     = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
-  /** Check if the exact metric value, computed on all pixels, should be shown,
-   * and whether the all pixels should be used during optimisation.
-   */
+  /** Check if the exact metric value, computed on all pixels, should be shown. */
 
   /** Define the name of the ExactMetric column */
   std::string exactMetricColumn = "Exact";
@@ -71,6 +71,26 @@ MetricBase<TElastix>
     xl::xout["iteration"].AddTargetCell( exactMetricColumn.c_str() );
     xl::xout["iteration"][ exactMetricColumn.c_str() ]
       << std::showpoint << std::fixed;
+  }
+
+  /** Read the sample grid spacing for computing the "exact" metric */
+  if ( showExactMetricValue )
+  {    
+    typedef typename ExactMetricImageSamplerType::SampleGridSpacingValueType
+      SampleGridSpacingValueType;
+    this->m_ExactMetricSampleGridSpacing.Fill(1);
+
+    /** Read the desired grid spacing of the samples. */
+    unsigned int spacing_dim;
+    for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
+    {
+      spacing_dim = this->m_ExactMetricSampleGridSpacing[dim];
+      this->GetConfiguration()->ReadParameter(
+        spacing_dim, "ExactMetricSampleGridSpacing",
+        this->GetComponentLabel(), level * FixedImageDimension + dim, -1 );
+      this->m_ExactMetricSampleGridSpacing[dim] =
+        static_cast<SampleGridSpacingValueType>( spacing_dim );
+    }    
   }
 
   /** Cast this to AdvancedMetricType. */
@@ -119,11 +139,15 @@ MetricBase<TElastix>
   std::string exactMetricColumn = "Exact";
   exactMetricColumn += this->GetComponentLabel();
 
+  this->m_CurrentExactMetricValue = 0.0;
   if ( this->m_ShowExactMetricValue )
   {
+    this->m_CurrentExactMetricValue = this->GetExactValue( 
+      this->GetElastix()->GetElxOptimizerBase()
+      ->GetAsITKBaseType()->GetCurrentPosition()  );
+
     xl::xout["iteration"][ exactMetricColumn.c_str() ]
-      << this->GetExactValue( this->GetElastix()->GetElxOptimizerBase()
-      ->GetAsITKBaseType()->GetCurrentPosition() );
+      << this->m_CurrentExactMetricValue;
   }
 
 } // end AfterEachIterationBase()
@@ -182,20 +206,20 @@ MetricBase<TElastix>
   }
 
   /** Try to cast the current Sampler to a FullSampler. */
-  ImageFullSamplerType * testPointer
-    = dynamic_cast<ImageFullSamplerType *>( currentSampler.GetPointer() );
+  ExactMetricImageSamplerType * testPointer
+    = dynamic_cast<ExactMetricImageSamplerType *>( currentSampler.GetPointer() );
   if ( testPointer != 0 )
   {
     /** GetValue gives us the exact value! */
     return this->GetAsITKBaseType()->GetValue(parameters);
   }
 
-  /** We have to provide the metric a full sampler, calls its GetValue
-   * and set back its original sampler.
+  /** We have to provide the metric a full (or actually 'grid') sampler,
+   * calls its GetValue and set back its original sampler.
    */
   if ( this->m_ExactMetricSampler.IsNull() )
   {
-    this->m_ExactMetricSampler = ImageFullSamplerType::New();
+    this->m_ExactMetricSampler = ExactMetricImageSamplerType::New();
   }
 
   /** Copy settings from current sampler. */
@@ -203,6 +227,8 @@ MetricBase<TElastix>
   this->m_ExactMetricSampler->SetMask( currentSampler->GetMask() );
   this->m_ExactMetricSampler->SetInputImageRegion(
     currentSampler->GetInputImageRegion() );
+  this->m_ExactMetricSampler->SetSampleGridSpacing( 
+    this->m_ExactMetricSampleGridSpacing );
   this->SetAdvancedMetricImageSampler( this->m_ExactMetricSampler );
 
   /** Compute the metric value on the full images. */

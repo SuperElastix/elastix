@@ -322,7 +322,7 @@ protected:
    * Checks if the point lies within the moving image buffer (bool return).
    * If no gradient is wanted, set the gradient argument to 0.
    * If a BSplineInterpolationFunction is used, this class obtain
-   * image derivatives from the BSpline interpolator. Otherwise,
+   * image derivatives from the B-spline interpolator. Otherwise,
    * image derivatives are computed using nearest neighbor interpolation
    * of a precomputed (central difference) gradient image. */
   virtual bool EvaluateMovingImageValueAndDerivative(

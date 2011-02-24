@@ -45,7 +45,7 @@ namespace itk
   template< class TInputImage, class TOutputVectorContainer >
     DataObject::Pointer
     ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
-    ::MakeOutput( unsigned int idx )
+    ::MakeOutput( unsigned int itkNotUsed( idx ) )
   {
     OutputVectorContainerPointer outputVectorContainer = OutputVectorContainerType::New();
     return dynamic_cast< DataObject * >( outputVectorContainer.GetPointer() );

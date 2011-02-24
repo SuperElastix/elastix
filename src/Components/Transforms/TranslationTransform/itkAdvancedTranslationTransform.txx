@@ -207,8 +207,8 @@ GetInverse( Self* inverse) const
 // Compute the Jacobian in one position
 template<class TScalarType, unsigned int NDimensions>
 const typename AdvancedTranslationTransform<TScalarType, NDimensions>::JacobianType &
-AdvancedTranslationTransform< TScalarType, NDimensions >::
-GetJacobian( const InputPointType & ) const
+AdvancedTranslationTransform< TScalarType, NDimensions >
+::GetJacobian( const InputPointType & itkNotUsed( p ) ) const
 {
   // the Jacobian is constant for this transform, and it has already been
   // initialized in the constructor, so we just need to return it here.
@@ -224,7 +224,7 @@ template<class TScalarType, unsigned int NDimensions>
 void
 AdvancedTranslationTransform<TScalarType, NDimensions>
 ::GetJacobian(
-  const InputPointType & p,
+  const InputPointType & itkNotUsed( p ),
   JacobianType & j,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
@@ -241,7 +241,7 @@ template<class TScalarType, unsigned int NDimensions>
 void
 AdvancedTranslationTransform<TScalarType, NDimensions>
 ::GetSpatialJacobian(
-  const InputPointType &,
+  const InputPointType & itkNotUsed( p ),
   SpatialJacobianType & sj ) const
 {
   /** Return pre-stored spatial Jacobian */
@@ -257,7 +257,7 @@ template<class TScalarType, unsigned int NDimensions>
 void
 AdvancedTranslationTransform<TScalarType, NDimensions>
 ::GetSpatialHessian(
-  const InputPointType &,
+  const InputPointType & itkNotUsed( p ),
   SpatialHessianType & sh ) const
 {
   /** The SpatialHessian contains only zeros. */
@@ -273,7 +273,7 @@ template<class TScalarType, unsigned int NDimensions>
 void
 AdvancedTranslationTransform<TScalarType, NDimensions>
 ::GetJacobianOfSpatialJacobian(
-  const InputPointType &,
+  const InputPointType & itkNotUsed( p ),
   JacobianOfSpatialJacobianType & jsj,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
@@ -290,7 +290,7 @@ template<class TScalarType, unsigned int NDimensions>
 void
 AdvancedTranslationTransform<TScalarType, NDimensions>
 ::GetJacobianOfSpatialJacobian(
-  const InputPointType &,
+  const InputPointType & itkNotUsed( p ),
   SpatialJacobianType & sj,
   JacobianOfSpatialJacobianType & jsj,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
@@ -309,7 +309,7 @@ template<class TScalarType, unsigned int NDimensions>
 void
 AdvancedTranslationTransform<TScalarType, NDimensions>
 ::GetJacobianOfSpatialHessian(
-  const InputPointType &,
+  const InputPointType & itkNotUsed( p ),
   JacobianOfSpatialHessianType & jsh,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
@@ -327,7 +327,7 @@ template<class TScalarType, unsigned int NDimensions>
 void
 AdvancedTranslationTransform<TScalarType, NDimensions>
 ::GetJacobianOfSpatialHessian(
-  const InputPointType &,
+  const InputPointType & itkNotUsed( p ),
   SpatialHessianType & sh,
   JacobianOfSpatialHessianType & jsh,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
@@ -340,12 +340,11 @@ AdvancedTranslationTransform<TScalarType, NDimensions>
 } // end GetJacobianOfSpatialHessian()
 
 
-
 // Set the parameters for an Identity transform of this class
 template<class TScalarType, unsigned int NDimensions>
 void
-AdvancedTranslationTransform<TScalarType, NDimensions>::
-SetIdentity()
+AdvancedTranslationTransform<TScalarType, NDimensions>
+::SetIdentity( void )
 {
   m_Offset.Fill( 0.0 );
 }

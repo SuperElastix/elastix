@@ -131,7 +131,7 @@ namespace itk
     GenericConjugateGradientOptimizer();
     virtual ~GenericConjugateGradientOptimizer(){};
 
-    void PrintSelf(std::ostream& os, Indent indent) const {};
+    void PrintSelf( std::ostream & os, Indent indent ) const;
 
     DerivativeType                m_CurrentGradient;
     MeasureType                   m_CurrentValue;
@@ -252,7 +252,6 @@ namespace itk
     unsigned long                 m_MaxNrOfItWithoutImprovement;
 
     LineSearchOptimizerPointer    m_LineSearchOptimizer;
-
 
   }; // end class GenericConjugateGradientOptimizer
 

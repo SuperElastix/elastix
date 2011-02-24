@@ -81,7 +81,7 @@ void
 BSplineResampleInterpolator<TElastix>
 ::WriteToFile( void ) const
 {
-  /** Call WriteTiFile of the ResamplerBase. */
+  /** Call WriteToFile of the ResamplerBase. */
   this->Superclass2::WriteToFile();
 
   /** The BSplineResampleInterpolator adds: */

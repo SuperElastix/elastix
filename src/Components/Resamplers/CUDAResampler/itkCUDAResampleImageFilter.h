@@ -101,6 +101,11 @@ public:
   itkGetConstMacro( UseGPUToCastData, bool );
   itkBooleanMacro( UseGPUToCastData );
 
+  /** Set whether to use the fast or the accurate CUDA kernel. */
+  itkSetMacro( UseFastCUDAKernel, bool );
+  itkGetConstMacro( UseFastCUDAKernel, bool );
+  itkBooleanMacro( UseFastCUDAKernel );
+
   /** Implements GPU resampling. */
   virtual void GenerateData( void );
 
@@ -113,6 +118,8 @@ private:
   /** Private members. */
   bool      m_UseCuda;
   bool      m_UseGPUToCastData;
+  bool      m_UseFastCUDAKernel;
+
   CudaResampleImageFilterType m_CudaResampleImageFilter;
 
   /** Helper function to check for a valid transform.

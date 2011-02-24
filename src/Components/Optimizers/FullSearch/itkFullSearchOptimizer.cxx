@@ -341,7 +341,7 @@ namespace itk
    *
    * Get the total number of iterations = sizes[0]*sizes[1]*sizes[2]* etc.....
    */
-  const unsigned long
+  unsigned long
     FullSearchOptimizer
     ::GetNumberOfIterations(void)
   {
@@ -367,7 +367,7 @@ namespace itk
    *
    * Get the Dimension of the SearchSpace.
    */
-  const unsigned int
+  unsigned int
     FullSearchOptimizer
     ::GetNumberOfSearchSpaceDimensions(void)
   {

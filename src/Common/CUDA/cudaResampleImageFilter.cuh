@@ -84,11 +84,15 @@ public:
 
   cudaGetConstMacro( OutputImage, TInternalImageType* );
   cudaGetConstMacro( OutputImageSize, uint3 );
+
   cudaGetConstMacro( Device, int );
   cudaSetMacro( Device, int );
 
   cudaSetMacro( CastOnGPU, bool );
   cudaGetConstMacro( CastOnGPU, bool );
+
+  cudaSetMacro( UseFastCUDAKernel, bool );
+  cudaGetConstMacro( UseFastCUDAKernel, bool );
 
   static int checkExecutionParameters( void );
 
@@ -107,6 +111,7 @@ private:
   cudaChannelFormatDesc m_ChannelDescCoeff;
   int             m_Device;
   bool            m_CastOnGPU;
+  bool            m_UseFastCUDAKernel;
 
   unsigned int    m_MaxNumberOfVoxelsPerIteration;
 

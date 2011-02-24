@@ -39,6 +39,7 @@
 #include "itkImageRegionConstIteratorWithIndex.h"
 #include "itkIdentityTransform.h"
 #include "vnl/vnl_math.h"
+#include <vector>
 
 namespace itk
 {
@@ -622,13 +623,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   const InputPointType & ipp,
   SpatialJacobianType & sj ) const
 {
-  // Can only compute Jacobian if parameters are set via
-  // SetParameters or SetParametersByValue
-  if ( this->m_InputParametersPointer == NULL )
-  {
-    itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
-  }
-
   /** Convert the physical point to a continuous index, which
    * is needed for the 'Evaluate()' functions below.
    */
@@ -715,13 +709,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   const InputPointType & ipp,
   SpatialHessianType & sh ) const
 {
-  // Can only compute Jacobian if parameters are set via
-  // SetParameters or SetParametersByValue
-  if ( this->m_InputParametersPointer == NULL )
-  {
-    itkExceptionMacro( << "Cannot compute Jacobian: parameters not set" );
-  }
-
+  typedef typename WeightsType::ValueType WeightsValueType;
+  
   /** Convert the physical point to a continuous index, which
    * is needed for the evaluate functions below.
    */
@@ -742,15 +731,34 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** Helper variables. */
   /** Allocate memory on the stack: */
   const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
-  typename WeightsType::ValueType weightsArray[ numberOfWeights ];
+  WeightsValueType weightsArray[ numberOfWeights ];
   WeightsType weights( weightsArray, numberOfWeights, false );
 
+  /** Array for CoefficientImage values */
+  WeightsValueType coeffArray[ numberOfWeights * SpaceDimension ];
+  WeightsType coeffs( coeffArray, numberOfWeights * SpaceDimension, false );
+  
   IndexType supportIndex;
   this->m_SODerivativeWeightsFunctions[ 0 ][ 0 ]->ComputeStartIndex(
     cindex, supportIndex );
   RegionType supportRegion;
   supportRegion.SetSize( this->m_SupportSize );
   supportRegion.SetIndex( supportIndex );
+
+  /** Copy values from coefficient image to linear coeffs array. */
+  typename WeightsType::iterator itCoeffsLinear = coeffs.begin();
+  for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+  {    
+    ImageRegionConstIterator<ImageType> itCoef(
+      this->m_CoefficientImage[ dim ], supportRegion );
+        
+    for ( unsigned int mu = 0; mu < numberOfWeights; ++mu )
+    {
+      (*itCoeffsLinear) = itCoef.Value();
+      ++itCoeffsLinear;
+      ++itCoef;      
+    }
+  }
 
   /** For all derivative directions, compute the spatial Hessian.
    * The derivatives are d^2T / dx_i dx_j.
@@ -765,26 +773,31 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
       this->m_SODerivativeWeightsFunctions[ i ][ j ]
         ->Evaluate( cindex, supportIndex, weights );
 
+      /** Create an iterator over the coeffs vector.  */
+      typename WeightsType::const_iterator itCoeffs = coeffs.begin();
+
       /** Compute d^2T_{dim} / dx_i dx_j = \sum coefs_{dim} * weights. */
       for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
       {
-        /** Create an iterator over the correct part of the coefficient image. */
-        ImageRegionConstIterator<ImageType> itCoef(
-          this->m_CoefficientImage[ dim ], supportRegion );
+        /** Create an iterator over the weights vector.  */
+        typename WeightsType::const_iterator itWeights = weights.begin();
 
         /** Compute the sum for this dimension. */
         double sum = 0.0;
-        unsigned int mu = 0;
-        while ( !itCoef.IsAtEnd() )
+
+        for ( unsigned int mu = 0; mu < numberOfWeights; ++mu )
         {
-          sum += itCoef.Value() * weights[ mu ];
-          ++itCoef;
-          ++mu;
+          sum += (*itCoeffs) * (*itWeights);          
+          ++itWeights;
+          ++itCoeffs;
         }
 
         /** Update the spatial Hessian sh. The Hessian is symmetrical. */
-        sh[ dim ][ i ][ j ] = sum;
-        sh[ dim ][ j ][ i ] = sum;
+        sh[ dim ]( i, j ) = sum;
+        if (j<i)
+        {
+          sh[ dim ]( j, i ) = sum;
+        }
       }
     }
   }
@@ -1181,6 +1194,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   JacobianOfSpatialHessianType & jsh,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
+  typedef typename WeightsType::ValueType WeightsValueType;
+
   // Can only compute Jacobian if parameters are set via
   // SetParameters or SetParametersByValue
   if ( this->m_InputParametersPointer == NULL )
@@ -1225,13 +1240,32 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
   typename WeightsType::ValueType weightsArray[ numberOfWeights ];
   WeightsType weights( weightsArray, numberOfWeights, false );
-
+  
+  /** Array for CoefficientImage values */
+  WeightsValueType coeffArray[ numberOfWeights * SpaceDimension ];
+  WeightsType coeffs( coeffArray, numberOfWeights * SpaceDimension, false );
+  
   IndexType supportIndex;
   this->m_SODerivativeWeightsFunctions[ 0 ][ 0 ]->ComputeStartIndex(
     cindex, supportIndex );
   RegionType supportRegion;
   supportRegion.SetSize( this->m_SupportSize );
   supportRegion.SetIndex( supportIndex );
+
+  /** Copy values from coefficient image to linear coeffs array. */
+  typename WeightsType::iterator itCoeffsLinear = coeffs.begin();
+  for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+  {    
+    ImageRegionConstIterator<ImageType> itCoef(
+      this->m_CoefficientImage[ dim ], supportRegion );
+        
+    for ( unsigned int mu = 0; mu < numberOfWeights; ++mu )
+    {
+      (*itCoeffsLinear) = itCoef.Value();
+      ++itCoeffsLinear;
+      ++itCoef;      
+    }
+  }
 
   /** On the stack instead of heap is faster. */
   const unsigned int d = SpaceDimension * ( SpaceDimension + 1 ) / 2;
@@ -1257,30 +1291,32 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
         weights.data_block(), numberOfWeights * sizeof( double ) );
       count++;
 
+      /** Reset coeffs iterator */
+      typename WeightsType::const_iterator itCoeffs = coeffs.begin();
+      
       /** Compute the spatial Hessian sh:
        *    d^2T_{dim} / dx_i dx_j = \sum coefs_{dim} * weights.
        */
       for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
       {
-        /** Create an iterator over the correct part of the coefficient
-         * image. Create an iterator over the weights vector.
-         */
-        ImageRegionConstIterator<ImageType> itCoef(
-          this->m_CoefficientImage[ dim ], supportRegion );
+        /** Create an iterator over the weights vector.  */
         typename WeightsType::const_iterator itWeights = weights.begin();
 
         /** Compute the sum for this dimension. */
         double sum = 0.0;
-        while ( !itCoef.IsAtEnd() )
+        for ( unsigned int mu = 0; mu < numberOfWeights; ++mu )
         {
-          sum += itCoef.Value() * (*itWeights);
+          sum += (*itCoeffs) * (*itWeights);          
           ++itWeights;
-          ++itCoef;
+          ++itCoeffs;
         }
 
         /** Update the spatial Hessian sh. The Hessian is symmetrical. */
         sh[ dim ]( i, j ) = sum;
-        sh[ dim ]( j, i ) = sum;
+        if (j<i)
+        {
+          sh[ dim ]( j, i ) = sum;
+        }
       }
 
     } // end for j

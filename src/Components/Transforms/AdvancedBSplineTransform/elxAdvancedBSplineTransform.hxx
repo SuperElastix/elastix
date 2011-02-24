@@ -21,8 +21,6 @@
 
 namespace elastix
 {
-using namespace itk;
-
 
 /**
  * ********************* Constructor ****************************
@@ -153,7 +151,7 @@ void AdvancedBSplineTransform<TElastix>
   /** Set gridsize for large dimension to 4 to prevent errors when checking
      * on support region size.
      */
-  gridsize.SetElement( gridsize.GetSizeDimension()-1, 4 );
+  gridsize.SetElement( gridsize.GetSizeDimension() - 1, 4 );
 
   /** Set it all. */
   gridregion.SetIndex( gridindex );
@@ -252,7 +250,7 @@ void AdvancedBSplineTransform<TElastix>
 
   /** Determine which method is used. */
   bool method1 = false;
-  unsigned int count1 = this->m_Configuration
+  std::size_t count1 = this->m_Configuration
     ->CountNumberOfParameterEntries( "FinalGridSpacingInVoxels" );
   if ( count1 > 0 )
   {
@@ -260,7 +258,7 @@ void AdvancedBSplineTransform<TElastix>
   }
 
   bool method2 = false;
-  unsigned int count2 = this->m_Configuration
+  std::size_t count2 = this->m_Configuration
     ->CountNumberOfParameterEntries( "FinalGridSpacingInPhysicalUnits" );
   if ( count2 > 0 )
   {
@@ -361,7 +359,7 @@ void AdvancedBSplineTransform<TElastix>
   /** Output a warning that the gridspacing may be adapted to fit the Cyclic
      * behavior of the transform.
      */
-  if ( m_Cyclic )
+  if ( this->m_Cyclic )
   {
     xl::xout["warning"]
          << "WARNING: The provided grid spacing may be adapted to fit the cyclic "

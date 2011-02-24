@@ -373,7 +373,7 @@ AdvancedAffineTransformElastix<TElastix>
      */
     const double defaultScalingvalue = 100000.0;
 
-    unsigned int count
+    std::size_t count
       = this->m_Configuration->CountNumberOfParameterEntries( "Scales" );
 
     /** Check which of the above options is used. */

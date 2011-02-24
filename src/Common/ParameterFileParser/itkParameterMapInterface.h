@@ -99,7 +99,7 @@ public:
   itkGetConstMacro( PrintErrorMessages, bool );
 
   /** Get the number of entries for a given parameter. */
-  unsigned int CountNumberOfParameterEntries(
+  std::size_t CountNumberOfParameterEntries(
     const std::string & parameterName ) const;
 
   /** Get the desired parameter from the parameter map as type T.
@@ -127,7 +127,7 @@ public:
     errorMessage = "";
 
     /** Get the number of entries. */
-    unsigned int numberOfEntries = this->CountNumberOfParameterEntries(
+    std::size_t numberOfEntries = this->CountNumberOfParameterEntries(
       parameterName );
 
     /** Check if the requested parameter exists. */
@@ -289,7 +289,7 @@ public:
     errorMessage = "";
 
     /** Get the number of entries. */
-    unsigned int numberOfEntries = this->CountNumberOfParameterEntries(
+    std::size_t numberOfEntries = this->CountNumberOfParameterEntries(
       parameterName );
 
     /** Check if the requested parameter exists. */

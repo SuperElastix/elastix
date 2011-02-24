@@ -21,6 +21,19 @@ namespace elastix
 {
 using namespace itk;
 
+
+/**
+ * ******************* Constructor ***********************
+ */
+
+template <class TElastix>
+MultiMetricMultiResolutionRegistration<TElastix>
+::MultiMetricMultiResolutionRegistration()
+{
+  this->m_ShowExactMetricValue = false;
+} // end constructor
+
+
 /**
  * ******************* BeforeRegistration ***********************
  */
@@ -116,6 +129,26 @@ MultiMetricMultiResolutionRegistration<TElastix>
     xl::xout["iteration"][ makestring3.str().c_str() ] <<
       this->GetCombinationMetric()->GetMetricComputationTime( i );
   }
+  
+  if ( this->m_ShowExactMetricValue )
+  {
+    double currentExactMetricValue = 0.0;
+
+    for ( unsigned int i = 0; i < nrOfMetrics; ++i )
+    {
+      if ( this->GetCombinationMetric()->GetUseMetric( i ) )
+      {
+        const double currentExactMetricValue_i = this->GetElastix()->
+          GetElxMetricBase( i )->GetCurrentExactMetricValue();
+  
+        const double weight_i = this->GetCombinationMetric()->GetMetricWeight( i );
+  
+        currentExactMetricValue += weight_i * currentExactMetricValue_i;
+      }
+    }
+
+    xl::xout["iteration"][ "ExactMetric" ] << currentExactMetricValue;
+  }
 
 } // end AfterEachIteration()
 
@@ -181,6 +214,32 @@ MultiMetricMultiResolutionRegistration<TElastix>
     makestring << "Metric" << metricnr << "Use";
     this->GetConfiguration()->ReadParameter( use, makestring.str(), "", level, 0, false );
     this->GetCombinationMetric()->SetUseMetric( use, metricnr );
+  }
+
+  /** Check if the exact metric value, computed on all pixels, should be shown.
+   * If at least one of the metrics has it enabled, show also the weighted sum of all
+   * exact metric values. */
+
+  /** Show the exact metric in every iteration? */
+  this->m_ShowExactMetricValue = false;
+  for ( unsigned int metricnr = 0; metricnr < nrOfMetrics; ++metricnr )
+  {
+    this->m_ShowExactMetricValue |= this->GetElastix()->
+      GetElxMetricBase( metricnr )->GetShowExactMetricValue();
+  }
+    
+  if ( this->m_ShowExactMetricValue )
+  {
+    /** Define the name of the ExactMetric column */
+    std::string exactMetricColumn = "ExactMetric";
+
+    /** Remove the ExactMetric-column, if it already existed. */
+    xl::xout["iteration"].RemoveTargetCell( exactMetricColumn.c_str() );
+  
+    /** Create a new column in the iteration info table */
+    xl::xout["iteration"].AddTargetCell( exactMetricColumn.c_str() );
+    xl::xout["iteration"][ exactMetricColumn.c_str() ]
+      << std::showpoint << std::fixed;
   }
 
 } // end BeforeEachResolution()

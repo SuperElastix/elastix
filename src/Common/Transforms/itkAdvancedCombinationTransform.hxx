@@ -764,7 +764,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
 template <typename TScalarType, unsigned int NDimensions>
 const typename AdvancedCombinationTransform<TScalarType, NDimensions>::JacobianType &
 AdvancedCombinationTransform<TScalarType, NDimensions>
-::GetJacobianNoCurrentTransform( const InputPointType & point ) const
+::GetJacobianNoCurrentTransform( const InputPointType & itkNotUsed( point ) ) const
 {
   /** Throw an exception. */
   this->NoCurrentTransformSet();
@@ -836,9 +836,9 @@ template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedCombinationTransform<TScalarType, NDimensions>
 ::GetJacobianNoCurrentTransform(
-  const InputPointType & ipp,
-  JacobianType & j,
-  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+  const InputPointType & itkNotUsed( ipp ),
+  JacobianType & itkNotUsed( j ),
+  NonZeroJacobianIndicesType & itkNotUsed( nonZeroJacobianIndices ) ) const
 {
   /** Throw an exception. */
   this->NoCurrentTransformSet();
@@ -911,8 +911,8 @@ template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedCombinationTransform<TScalarType, NDimensions>
 ::GetSpatialJacobianNoCurrentTransform(
-  const InputPointType & ipp,
-  SpatialJacobianType & sj ) const
+  const InputPointType & itkNotUsed( ipp ),
+  SpatialJacobianType & itkNotUsed( sj ) ) const
 {
   /** Throw an exception. */
   this->NoCurrentTransformSet();
@@ -1012,8 +1012,8 @@ template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedCombinationTransform<TScalarType, NDimensions>
 ::GetSpatialHessianNoCurrentTransform(
-  const InputPointType & ipp,
-  SpatialHessianType & sh ) const
+  const InputPointType & itkNotUsed( ipp ),
+  SpatialHessianType & itkNotUsed( sh ) ) const
 {
   /** Throw an exception. */
   this->NoCurrentTransformSet();
@@ -1161,9 +1161,9 @@ template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedCombinationTransform<TScalarType, NDimensions>
 ::GetJacobianOfSpatialJacobianNoCurrentTransform(
-  const InputPointType & ipp,
-  JacobianOfSpatialJacobianType & jsj,
-  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+  const InputPointType & itkNotUsed( ipp ),
+  JacobianOfSpatialJacobianType & itkNotUsed( jsj ),
+  NonZeroJacobianIndicesType & itkNotUsed( nonZeroJacobianIndices ) ) const
 {
   /** Throw an exception. */
   this->NoCurrentTransformSet();
@@ -1179,10 +1179,10 @@ template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedCombinationTransform<TScalarType, NDimensions>
 ::GetJacobianOfSpatialJacobianNoCurrentTransform(
-  const InputPointType & ipp,
-  SpatialJacobianType & sj,
-  JacobianOfSpatialJacobianType & jsj,
-  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+  const InputPointType & itkNotUsed( ipp ),
+  SpatialJacobianType & itkNotUsed( sj ),
+  JacobianOfSpatialJacobianType & itkNotUsed( jsj ),
+  NonZeroJacobianIndicesType & itkNotUsed( nonZeroJacobianIndices ) ) const
 {
   /** Throw an exception. */
   this->NoCurrentTransformSet();
@@ -1423,9 +1423,9 @@ template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedCombinationTransform<TScalarType, NDimensions>
 ::GetJacobianOfSpatialHessianNoCurrentTransform(
-  const InputPointType & ipp,
-  JacobianOfSpatialHessianType & jsh,
-  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+  const InputPointType & itkNotUsed( ipp ),
+  JacobianOfSpatialHessianType & itkNotUsed( jsh ),
+  NonZeroJacobianIndicesType & itkNotUsed( nonZeroJacobianIndices ) ) const
 {
   /** Throw an exception. */
   this->NoCurrentTransformSet();
@@ -1441,10 +1441,10 @@ template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedCombinationTransform<TScalarType, NDimensions>
 ::GetJacobianOfSpatialHessianNoCurrentTransform(
-  const InputPointType & ipp,
-  SpatialHessianType & sh,
-  JacobianOfSpatialHessianType & jsh,
-  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+  const InputPointType & itkNotUsed( ipp ),
+  SpatialHessianType & itkNotUsed( sh ),
+  JacobianOfSpatialHessianType & itkNotUsed( jsh ),
+  NonZeroJacobianIndicesType & itkNotUsed( nonZeroJacobianIndices ) ) const
 {
   /** Throw an exception. */
   this->NoCurrentTransformSet();

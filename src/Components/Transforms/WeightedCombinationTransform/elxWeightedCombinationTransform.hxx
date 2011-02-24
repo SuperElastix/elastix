@@ -177,7 +177,7 @@ namespace elastix
     }
     else
     {
-      const unsigned int count =
+      const std::size_t count =
         this->m_Configuration->CountNumberOfParameterEntries( "Scales" );
 
       if ( count == N )
@@ -224,7 +224,7 @@ namespace elastix
     typedef typename Superclass2::PtrToCreator                         PtrToCreator;
     typedef typename Superclass2::ObjectType                           ObjectType;
 
-    const unsigned int N =
+    const std::size_t N =
       this->m_Configuration->CountNumberOfParameterEntries( "SubTransforms" );
 
     if ( N == 0)

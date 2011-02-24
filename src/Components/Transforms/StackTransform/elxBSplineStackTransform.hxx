@@ -273,7 +273,7 @@ void BSplineStackTransform<TElastix>
 
   /** Determine which method is used. */
   bool method1 = false;
-  unsigned int count1 = this->m_Configuration
+  std::size_t count1 = this->m_Configuration
     ->CountNumberOfParameterEntries( "FinalGridSpacingInVoxels" );
   if ( count1 > 0 )
   {
@@ -281,7 +281,7 @@ void BSplineStackTransform<TElastix>
   }
 
   bool method2 = false;
-  unsigned int count2 = this->m_Configuration
+  std::size_t count2 = this->m_Configuration
     ->CountNumberOfParameterEntries( "FinalGridSpacingInPhysicalUnits" );
   if ( count2 > 0 )
   {

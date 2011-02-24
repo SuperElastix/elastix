@@ -43,7 +43,7 @@ namespace elastix
    * at application-specific positions, unlike the BSplineTransform, which always
    * uses a regular grid of control points.
    *
-   * NB: in order to use this class for registration, the -ipp command line
+   * NB: in order to use this class for registration, the -fp command line
    * argument is mandatory! It is used to place the fixed image landmarks.
    *
    * The parameters used in this class are:
@@ -69,14 +69,21 @@ namespace elastix
    * Valid values are withing -1.0 and 0.5. 0.5 means incompressible.
    * Negative values are a bit odd, but possible. See Wikipedia on PoissonRatio.
    *
-   * \commandlinearg -ipp: a file specifying a set of points that will serve
+   * \commandlinearg -fp: a file specifying a set of points that will serve
    * as fixed image landmarks.\n
-   *   example: <tt>-ipp fixedImagePoints.txt</tt> \n
+   *   example: <tt>-fp fixedImagePoints.txt</tt> \n
    *   The fixedImagePoints.txt file should be structured: first line should
    * be "index" or "point", depending if the user supplies voxel indices or
    * real world coordinates. The second line should be the number of points
    * that should be transformed. The third and following lines give the
    * indices or points. The same structure thus as used for transformix.\n
+   * \commandlinearg -mp: an optional file specifying a set of points that will serve
+   * as moving image landmarks, used to initialize the transformation.\n
+   *   example: <tt>-mp movingImagePoints.txt</tt> \n
+   *   The movingImagePoints.txt should be structured like the fixedImagePoints.txt.
+   *  The moving landmarks should be corresponding to the fixed landmarks.
+   *  If no file is provided, the transformation is initialized to be the identity,
+   *  i.e. the moving landmarks are chosen identical to the fixed landmarks.
    *
    * \transformparameter Transform: Select this transform as follows:\n
    *    <tt>(%Transform "SplineKernelTransform")</tt>
@@ -89,7 +96,7 @@ namespace elastix
    * or approximating. A value of 0.0 gives an interpolating transform.
    * Higher values result in approximating splines.\n
    *   example: <tt>(SplineRelaxationFactor 0.01 )</tt>\n   *
-   * \transformparameter SplinePoissonRatio: Set the poisson ratio for the
+   * \transformparameter SplinePoissonRatio: Set the Poisson ratio for the
    * ElasticBodySpline and the ElastixBodyReciprocalSpline. For other
    * SplineKernelTypes this parameters is ignored.\n
    *   example: <tt>(SplinePoissonRatio 0.3 )</tt>\n
@@ -168,16 +175,20 @@ public:
   typedef typename Superclass2::CombinationTransformType  CombinationTransformType;
 
   /** Extra typedefs */
-  typedef typename KernelTransformType::Pointer      KernelTransformPointer;
+  typedef typename KernelTransformType::Pointer           KernelTransformPointer;
+  typedef typename KernelTransformType::PointSetType      PointSetType;
+  typedef typename PointSetType::Pointer                  PointSetPointer;
 
   /** Execute stuff before everything else:
-   * \li Check if -ipp command line argument was given
+   * \li Check if -fp command line argument was given
+   * \li Check if -mp command line argument was given
    */
   virtual int BeforeAll( void );
 
   /** Execute stuff before the actual registration:
    * \li Setup transform
-   * \li Determine source landmarks
+   * \li Determine fixed image (source) landmarks
+   * \li Determine moving image (target) landmarks
    * \li Call InitializeTransform.
    */
   virtual void BeforeRegistration( void );
@@ -211,13 +222,24 @@ protected:
    */
   virtual bool SetKernelType( const std::string & kernelType );
 
-  /** Read source landmarks from ipp file or try to place them smart.
-   * \li Try reading -ipp file
-   * \li \todo: if no -ipp file was given, try to place landmarks
-   * in a smart way.
+  /** Read source landmarks from fp file
+   * \li Try reading -fp file
    */
   virtual void DetermineSourceLandmarks( void );
 
+  /** Read target landmarks from mp file or load identity.
+   * \li Try reading -mp file
+   * \li If no -mp file was given, place landmarks as identity.
+   */
+  virtual bool DetermineTargetLandmarks( void );
+
+  /** General function to read all landmarks. */
+  virtual void ReadLandmarkFile(
+    const std::string & filename,
+    PointSetPointer landmarkPointSet,
+    const bool & landmarksInFixedImage );
+
+  /** The itk kernel transform. */
   KernelTransformPointer m_KernelTransform;
 
 private:

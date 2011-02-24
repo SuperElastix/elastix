@@ -52,7 +52,7 @@ namespace itk
     if ( mask.IsNull() )
     {
       /** number of samples + 1, because of the initial ++randIter. */
-      randIter.SetNumberOfSamples( this->GetNumberOfSamples()+1 );
+      randIter.SetNumberOfSamples( this->GetNumberOfSamples() + 1 );
       /** Advance one, in order to generate the same sequence as when using a mask */
       ++randIter;
       for ( iter = sampleContainer->Begin(); iter != end; ++iter )

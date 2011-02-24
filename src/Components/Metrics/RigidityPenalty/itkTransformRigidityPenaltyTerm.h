@@ -194,7 +194,7 @@ public:
     MeasureType & value,
     DerivativeType & derivative ) const;
 
-  /** Set the BSpline transform in this class.
+  /** Set the B-spline transform in this class.
    * This class expects a BSplineTransform! It is not suited for others.
    */
   itkSetObjectMacro( BSplineTransform, BSplineTransformType );

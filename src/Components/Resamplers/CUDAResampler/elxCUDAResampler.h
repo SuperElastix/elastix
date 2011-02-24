@@ -100,6 +100,12 @@ public:
   virtual int BeforeAll( void );
   virtual void BeforeRegistration( void );
 
+  /** Function to read parameters from a file. */
+  virtual void ReadFromFile( void );
+
+  /** Function to write parameters to a file. */
+  virtual void WriteToFile( void ) const;
+
 protected:
 
   /** The constructor. */

@@ -112,7 +112,7 @@ using namespace itk;
     virtual void SelectNewSamples(void);
 
     /** Check whether the user asked to select new samples every iteration. */
-    virtual const bool GetNewSamplesEveryIteration(void) const;
+    virtual bool GetNewSamplesEveryIteration( void ) const;
 
   private:
 

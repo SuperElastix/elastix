@@ -98,7 +98,7 @@
   { \
   public: \
     typedef ::elx::ComponentDatabase::ComponentDescriptionType ComponentDescriptionType; \
-    static int DO(::elx::ComponentDatabase * cdb) \
+    static int DO(::elx::ComponentDatabase * /** cdb */ ) \
     { return 0; } \
   }; \
   extern "C" int _classname##InstallComponent( \

@@ -55,7 +55,75 @@ CUDAResampler<TElastix>
   this->m_Configuration->ReadParameter( useCUDA, "UseCUDA", 0 );
   this->SetUseCuda( useCUDA );
 
+  /** Are we using the fast CUDA kernel for resampling,
+   * or the accurate kernel? Default = accurate.
+   */
+  bool useFastCUDAKernel = false;
+  this->m_Configuration->ReadParameter( useFastCUDAKernel, "UseFastCUDAKernel", 0 );
+  this->SetUseFastCUDAKernel( useFastCUDAKernel );
+
 } // end BeforeRegistration()
+
+
+/*
+ * ******************* ReadFromFile  ****************************
+ */
+
+template <class TElastix>
+void
+CUDAResampler<TElastix>
+::ReadFromFile( void )
+{
+  /** Call ReadFromFile of the ResamplerBase. */
+  this->Superclass2::ReadFromFile();
+
+  /** CUDAResampler specific. */
+
+  /** Are we using a CUDA enabled GPU for resampling? */
+  bool useCUDA = false;
+  this->m_Configuration->ReadParameter( useCUDA, "UseCUDA", 0 );
+  this->SetUseCuda( useCUDA );
+
+  /** Are we using the fast CUDA kernel for resampling,
+   * or the accurate kernel? Default = accurate.
+   */
+  bool useFastCUDAKernel = false;
+  this->m_Configuration->ReadParameter( useFastCUDAKernel, "UseFastCUDAKernel", 0 );
+  this->SetUseFastCUDAKernel( useFastCUDAKernel );
+
+} // end ReadFromFile()
+
+
+/**
+ * ************************* WriteToFile ************************
+ */
+
+template <class TElastix>
+void
+CUDAResampler<TElastix>
+::WriteToFile( void ) const
+{
+  /** Call the WriteToFile from the ResamplerBase. */
+  this->Superclass2::WriteToFile();
+
+  /** Add some CUDAResampler specific lines. */
+  xout["transpar"] << std::endl << "// CUDAResampler specific" << std::endl;
+
+  /** Is CUDA used or not? */
+  std::string useCUDA = "false";
+  if ( this->GetUseCuda() ) useCUDA = "true";
+  xout["transpar"] << "(UseCUDA \"" << useCUDA << "\")" << std::endl;
+
+  /** Are we using the fast CUDA kernel for resampling,
+   * or the accurate kernel? Default = accurate.
+   */
+  std::string useFastCUDAKernel = "false";
+  if ( this->GetUseFastCUDAKernel() ) useFastCUDAKernel = "true";
+  xout["transpar"] << "(UseFastCUDAKernel \""
+    << useFastCUDAKernel << "\")" << std::endl;
+
+} // end WriteToFile()
+
 
 } /* namespace elastix */
 

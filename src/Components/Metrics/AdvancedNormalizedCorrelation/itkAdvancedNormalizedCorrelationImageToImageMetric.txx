@@ -183,7 +183,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
     RealType movingImageValue;
     MovingImagePointType mappedPoint;
 
-    /** Transform point and check if it is inside the bspline support region. */
+    /** Transform point and check if it is inside the B-spline support region. */
     bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
     /** Check if point is inside mask. */

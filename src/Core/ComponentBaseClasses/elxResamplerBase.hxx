@@ -188,9 +188,11 @@ ResamplerBase<TElastix>
 
     /** Print the elapsed time for the resampling. */
     timer->StopTimer();
+    elxout << std::setprecision( 2 );
     elxout << "  Applying final transform took "
-      << static_cast<long>( timer->GetElapsedClockSec() )
-      << " s." << std::endl;
+      << timer->GetElapsedClockSec() << " s" << std::endl;
+    elxout << std::setprecision(
+      this->m_Elastix->GetDefaultOutputPrecision() );
   }
   else
   {

@@ -77,7 +77,7 @@ AdaptiveStochasticGradientDescent<TElastix>
 
   /** Format the metric and stepsize as floats. */
   xl::xout["iteration"]["2:Metric"]   << std::showpoint << std::fixed;
-  xl::xout["iteration"]["3a:StepSize"] << std::showpoint << std::fixed;
+  xl::xout["iteration"]["3a:Time"] << std::showpoint << std::fixed;
   xl::xout["iteration"]["3b:StepSize"] << std::showpoint << std::fixed;
   xl::xout["iteration"]["4:||Gradient||"] << std::showpoint << std::fixed;
 
@@ -239,8 +239,6 @@ void AdaptiveStochasticGradientDescent<TElastix>
 
   } // end else: no automatic parameter estimation
 
-  //temp save gradients
-
 } // end BeforeEachResolution()
 
 
@@ -397,6 +395,11 @@ void
 AdaptiveStochasticGradientDescent<TElastix>
 ::ResumeOptimization( void )
 {
+  /** The following code relies on the fact that all 
+  * components have been set up and that the initial 
+  * position has been set, so must be called in this 
+  * function. */
+
   if ( this->GetAutomaticParameterEstimation()
     && !this->m_AutomaticParameterEstimationDone )
   {

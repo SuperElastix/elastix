@@ -207,7 +207,7 @@ public:
   /** Dimension of the domain space. */
   itkStaticConstMacro( SpaceDimension, unsigned int, Superclass2::FixedImageDimension );
 
-  /** The BSpline order. */
+  /** The B-spline order. */
   itkStaticConstMacro( SplineOrder, unsigned int, __VSplineOrder );
 
   /** Typedefs inherited from the superclass. */

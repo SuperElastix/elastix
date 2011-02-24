@@ -42,13 +42,18 @@ namespace itk
   * the superclass (StandardGradientDescentOptimizer). Whereas in the
   * superclass this parameter is superfluous, in this class it makes sense.
   *
-  * This method is described in the following reference:
+  * This method is described in the following references:
   *
-  * P. Cruz,
-  * Almost sure convergence and asymptotical normality of a generalization of Kesten's
-  * stochastic approximation algorithm for multidimensional case.
+  * [1] P. Cruz,
+  * "Almost sure convergence and asymptotical normality of a generalization of Kesten's
+  * stochastic approximation algorithm for multidimensional case."
   * Technical Report, 2005. http://hdl.handle.net/2052/74
   *
+  * [2] S. Klein, J.P.W. Pluim, and M. Staring, M.A. Viergever, 
+  * "Adaptive stochastic gradient descent optimisation for image registration,"
+  * International Journal of Computer Vision, vol. 81, no. 3, pp. 227-239, 2009.
+  * http://dx.doi.org/10.1007/s11263-008-0168-y
+
   * It is very suitable to be used in combination with a stochastic estimate
   * of the gradient \f$dC/dx\f$. For example, in image registration problems it is
   * often advantageous to compute the metric derivative (\f$dC/dx\f$) on a new set

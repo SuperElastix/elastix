@@ -100,7 +100,7 @@ namespace itk
      * scaling is desired.
      */
     virtual void SetUseScales( bool arg );
-    const bool GetUseScales(void) const;
+    bool GetUseScales( void ) const;
 
     /** Get the current scaled position. */
     itkGetConstReferenceMacro( ScaledCurrentPosition, ParametersType );
@@ -108,7 +108,7 @@ namespace itk
     /** Get the current unscaled position: get the ScaledCurrentPosition
      * and divide each element through its scale.
      */
-    virtual const ParametersType & GetCurrentPosition() const;
+    virtual const ParametersType & GetCurrentPosition( void ) const;
 
     /** Get a pointer to the scaled cost function. */
     itkGetConstObjectMacro( ScaledCostFunction, ScaledCostFunctionType );
@@ -129,7 +129,7 @@ namespace itk
     virtual ~ScaledSingleValuedNonLinearOptimizer() {};
 
     /** PrintSelf. */
-    void PrintSelf( std::ostream& os, Indent indent ) const{};
+    void PrintSelf( std::ostream & os, Indent indent ) const;
 
     /** Member variables. */
     ParametersType                  m_ScaledCurrentPosition;
@@ -183,7 +183,6 @@ namespace itk
      * because the GetCurrentPosition return something by reference.
      */
     mutable ParametersType          m_UnscaledCurrentPosition;
-
     bool                            m_Maximize;
 
   }; // end class ScaledSingleValuedNonLinearOptimizer

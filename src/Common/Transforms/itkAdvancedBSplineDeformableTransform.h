@@ -44,7 +44,7 @@ namespace itk
 {
 
 /** \class AdvancedBSplineDeformableTransform
- * \brief Deformable transform using a BSpline representation
+ * \brief Deformable transform using a B-spline representation
  *
  * This class encapsulates a deformable transform of points from one
  * N-dimensional one space to another N-dimensional space.
@@ -59,7 +59,7 @@ namespace itk
  * GridSpacing and GridOrigin. Each grid/control point has associated with it
  * N deformation coefficients \f$ \vec{\delta}_j \f$, representing the N
  * directional components of the deformation. Deformation outside the grid
- * plus support region for the BSpline interpolation is assumed to be zero.
+ * plus support region for the B-spline interpolation is assumed to be zero.
  *
  * Additionally, the user can specified an addition bulk transform \f$ B \f$
  * such that the transformed point is given by:
@@ -144,7 +144,7 @@ public:
   /** Dimension of the domain space. */
   itkStaticConstMacro( SpaceDimension, unsigned int, NDimensions );
 
-  /** The BSpline order. */
+  /** The B-spline order. */
   itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
 
   /** Typedefs from Superclass. */
@@ -190,7 +190,7 @@ public:
   /** This method specifies the region over which the grid resides. */
   virtual void SetGridRegion( const RegionType& region );
 
-  /** Transform points by a BSpline deformable transformation. */
+  /** Transform points by a B-spline deformable transformation. */
   OutputPointType TransformPoint( const InputPointType & point ) const;
 
   /** Interpolation weights function type. */
@@ -211,7 +211,7 @@ public:
   /** Parameter index array type. */
   typedef typename Superclass::ParameterIndexArrayType  ParameterIndexArrayType;
 
-  /** Transform points by a BSpline deformable transformation.
+  /** Transform points by a B-spline deformable transformation.
    * On return, weights contains the interpolation weights used to compute the
    * deformation and indices of the x (zeroth) dimension coefficient parameters
    * in the support region used to compute the deformation.

@@ -209,7 +209,7 @@ public:
 protected:
 
   /** The constructor. */
-  MultiMetricMultiResolutionRegistration(){};
+  MultiMetricMultiResolutionRegistration();
   /** The destructor. */
   virtual ~MultiMetricMultiResolutionRegistration() {};
 
@@ -235,6 +235,8 @@ protected:
 
   /** Read the components from m_Elastix and set them in the Registration class. */
   virtual void SetComponents( void );
+
+  bool m_ShowExactMetricValue;
 
 private:
 

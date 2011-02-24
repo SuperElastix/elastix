@@ -86,7 +86,7 @@ using namespace itk;
     this->SetFixedLimitRangeRatio( fixedLimitRangeRatio );
     this->SetMovingLimitRangeRatio( movingLimitRangeRatio );
 
-    /** Set bspline parzen kernel orders */
+    /** Set B-spline parzen kernel orders */
     unsigned int fixedKernelBSplineOrder = 0;
     unsigned int movingKernelBSplineOrder = 3;
     this->GetConfiguration()->ReadParameter( fixedKernelBSplineOrder,

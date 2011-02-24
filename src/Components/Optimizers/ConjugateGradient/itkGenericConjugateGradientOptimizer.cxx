@@ -394,9 +394,9 @@ namespace itk
   double
     GenericConjugateGradientOptimizer::
     ComputeBetaSD(
-      const DerivativeType & previousGradient,
-      const DerivativeType & gradient,
-      const ParametersType & previousSearchDir)
+      const DerivativeType & itkNotUsed( previousGradient ),
+      const DerivativeType & itkNotUsed( gradient ),
+      const ParametersType & itkNotUsed( previousSearchDir ) )
   {
     /** A simple hack that makes the conjugate gradient equal to
      * a steepest descent method */
@@ -413,7 +413,7 @@ namespace itk
     ComputeBetaFR(
       const DerivativeType & previousGradient,
       const DerivativeType & gradient,
-      const ParametersType & previousSearchDir)
+      const ParametersType & itkNotUsed( previousSearchDir ) )
   {
     const unsigned int numberOfParameters = gradient.GetSize();
     double num = 0.0;
@@ -447,7 +447,7 @@ namespace itk
     ComputeBetaPR(
       const DerivativeType & previousGradient,
       const DerivativeType & gradient,
-      const ParametersType & previousSearchDir)
+      const ParametersType & itkNotUsed( previousSearchDir ) )
   {
     const unsigned int numberOfParameters = gradient.GetSize();
     double num = 0.0;
@@ -617,7 +617,7 @@ namespace itk
    */
 
   bool GenericConjugateGradientOptimizer::
-    TestConvergence(bool firstLineSearchDone)
+    TestConvergence( bool itkNotUsed( firstLineSearchDone ) )
   {
     itkDebugMacro("TestConvergence");
 
@@ -640,6 +640,56 @@ namespace itk
     return false;
 
   } // end TestConvergence
+
+
+/**
+ * ********************* PrintSelf ************************
+ */
+
+void
+GenericConjugateGradientOptimizer
+::PrintSelf( std::ostream & os, Indent indent ) const
+{
+  /** Call the superclass' PrintSelf. */
+  Superclass::PrintSelf( os, indent );
+
+  os << indent << "m_CurrentGradient: "
+    << this->m_CurrentGradient << std::endl;
+  os << indent << "m_CurrentValue: "
+    << this->m_CurrentValue << std::endl;
+  os << indent << "m_CurrentIteration: "
+    << this->m_CurrentIteration << std::endl;
+  os << indent << "m_StopCondition: "
+    << this->m_StopCondition << std::endl;
+  os << indent << "m_Stop: "
+    << ( this->m_Stop ? "true" : "false" ) << std::endl;
+  os << indent << "m_CurrentStepLength: "
+    << this->m_CurrentStepLength << std::endl;
+  os << indent << "m_UseDefaultMaxNrOfItWithoutImprovement: "
+    << ( this->m_UseDefaultMaxNrOfItWithoutImprovement ? "true" : "false" ) << std::endl;
+  os << indent << "m_InLineSearch: "
+    << ( this->m_InLineSearch ? "true" : "false" ) << std::endl;
+  os << indent << "m_PreviousGradientAndSearchDirValid: "
+    << ( this->m_PreviousGradientAndSearchDirValid ? "true" : "false" ) << std::endl;
+
+  os << indent << "m_BetaDefinition: "
+    << this->m_BetaDefinition << std::endl;
+//   os << indent << "m_BetaDefinitionMap: "
+//     << this->m_BetaDefinitionMap << std::endl;
+
+  os << indent << "m_MaximumNumberOfIterations: "
+    << this->m_MaximumNumberOfIterations << std::endl;
+  os << indent << "m_ValueTolerance: "
+    << this->m_ValueTolerance << std::endl;
+  os << indent << "m_GradientMagnitudeTolerance: "
+    << this->m_GradientMagnitudeTolerance << std::endl;
+  os << indent << "m_MaxNrOfItWithoutImprovement: "
+    << this->m_MaxNrOfItWithoutImprovement << std::endl;
+
+  os << indent << "m_LineSearchOptimizer: "
+    << this->m_LineSearchOptimizer.GetPointer() << std::endl;
+
+} // end PrintSelf()
 
 
 } // end namespace itk

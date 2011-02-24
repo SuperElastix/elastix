@@ -430,7 +430,7 @@ BSplineTransformWithDiffusion<TElastix>
   {
     /** If wanted, we upsample the grid of control points. */
     if ( upsampleGridOption ) this->IncreaseScale();
-    /** Otherwise, nothing is done with the BSpline-Grid. */
+    /** Otherwise, nothing is done with the B-spline grid. */
   }
 
 } // end BeforeEachResolution()
@@ -780,7 +780,7 @@ BSplineTransformWithDiffusion<TElastix>
      * Set this image as the input of the upsampler filter. The
      * upsampler samples the deformation field at the locations
      * of the new control points (note: it does not just interpolate
-     * the coefficient image, which would be wrong). The b-spline
+     * the coefficient image, which would be wrong). The B-spline
      * coefficients that describe the resulting image are computed
      * by the decomposition filter.
      *

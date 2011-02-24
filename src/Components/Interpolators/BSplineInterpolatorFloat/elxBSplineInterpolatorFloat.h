@@ -25,7 +25,7 @@ using namespace itk;
 
   /**
    * \class BSplineInterpolatorFloat
-   * \brief An interpolator based on the itkBSplineInterpolateImageFunction.
+   * \brief An interpolator based on the itk::BSplineInterpolateImageFunction.
    *
    * This interpolator interpolates images with an underlying B-spline
    * polynomial.

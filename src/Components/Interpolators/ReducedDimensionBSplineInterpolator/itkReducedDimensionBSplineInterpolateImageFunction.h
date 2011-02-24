@@ -127,7 +127,7 @@ public:
                      itkGetStaticConstMacro(ImageDimension)
     >                      CoefficientImageType;
 
-  /** Define filter for calculating the BSpline coefficients */
+  /** Define filter for calculating the B-spline coefficients */
   typedef BSplineDecompositionImageFilter<TImageType, CoefficientImageType>
   CoefficientFilter;
 

@@ -42,9 +42,11 @@ cuda::CUDAResampleImageFilter<TInterpolatorPrecisionType, TImageType, TInternalI
   , m_InputImage( NULL )
   , m_InputImageSize( make_uint3( 0, 0, 0 ) )
   , m_Device( 0 )
-  , m_CastOnGPU( false )
   , m_MaxNumberOfVoxelsPerIteration( 1 << 20 )
 {
+  this->m_CastOnGPU = false;
+  this->m_UseFastCUDAKernel = false;
+
 } // end Constructor
 
 
@@ -68,9 +70,9 @@ void
 cuda::CUDAResampleImageFilter<TInterpolatorPrecisionType, TImageType, TInternalImageType>
 ::cudaInit( void )
 {
-  checkExecutionParameters();
-  cuda::cudaSetDevice( m_Device );
-  m_ChannelDescCoeff = cudaCreateChannelDesc<TInternalImageType>();
+  this->checkExecutionParameters();
+  cuda::cudaSetDevice( this->m_Device ); // always 0?
+  this->m_ChannelDescCoeff = cudaCreateChannelDesc<TInternalImageType>();
 
 } // end cudaInit()
 
@@ -88,10 +90,10 @@ cuda::CUDAResampleImageFilter<TInterpolatorPrecisionType, TImageType, TInternalI
   cuda::cudaUnbindTexture( m_tex_coeffsY );
   cuda::cudaUnbindTexture( m_tex_coeffsZ );
   cuda::cudaUnbindTexture( m_tex_inputImage );
-  cuda::cudaFreeArray( m_CoeffsX );
-  cuda::cudaFreeArray( m_CoeffsY );
-  cuda::cudaFreeArray( m_CoeffsZ );
-  cuda::cudaFreeArray( m_InputImage );
+  cuda::cudaFreeArray( this->m_CoeffsX );
+  cuda::cudaFreeArray( this->m_CoeffsY );
+  cuda::cudaFreeArray( this->m_CoeffsZ );
+  cuda::cudaFreeArray( this->m_InputImage );
 
 } // end cudaUnInit()
 
@@ -125,11 +127,16 @@ cuda::CUDAResampleImageFilter<TInterpolatorPrecisionType, TImageType, TInternalI
   const float defaultPixelValue )
 {
   /* Copy some constant parameters to the GPU's constant cache. */
-  cuda::cudaMemcpyToSymbol( CUInputImageSpacing,  inputImageSpacing,  cudaMemcpyHostToDevice );
-  cuda::cudaMemcpyToSymbol( CUInputImageOrigin,   inputImageOrigin,   cudaMemcpyHostToDevice );
-  cuda::cudaMemcpyToSymbol( CUOutputImageSpacing, outputImageSpacing, cudaMemcpyHostToDevice );
-  cuda::cudaMemcpyToSymbol( CUOutputImageOrigin,  outputImageOrigin,  cudaMemcpyHostToDevice );
-  cuda::cudaMemcpyToSymbol( CUDefaultPixelValue,  defaultPixelValue,  cudaMemcpyHostToDevice );
+  cuda::cudaMemcpyToSymbol( CUInputImageSpacing,  inputImageSpacing,
+    cudaMemcpyHostToDevice );
+  cuda::cudaMemcpyToSymbol( CUInputImageOrigin,   inputImageOrigin,
+    cudaMemcpyHostToDevice );
+  cuda::cudaMemcpyToSymbol( CUOutputImageSpacing, outputImageSpacing,
+    cudaMemcpyHostToDevice );
+  cuda::cudaMemcpyToSymbol( CUOutputImageOrigin,  outputImageOrigin,
+    cudaMemcpyHostToDevice );
+  cuda::cudaMemcpyToSymbol( CUDefaultPixelValue,  defaultPixelValue,
+    cudaMemcpyHostToDevice );
 
 } // end cudaCopyImageSymbols()
 
@@ -141,7 +148,8 @@ cuda::CUDAResampleImageFilter<TInterpolatorPrecisionType, TImageType, TInternalI
 template <typename TInterpolatorPrecisionType, typename TImageType, typename TInternalImageType>
 void
 cuda::CUDAResampleImageFilter<TInterpolatorPrecisionType, TImageType, TInternalImageType>
-::cudaCopyGridSymbols( const float3 & gridSpacing, const float3 & gridOrigin, const uint3 & gridSize )
+::cudaCopyGridSymbols( const float3 & gridSpacing,
+  const float3 & gridOrigin, const uint3 & gridSize )
 {
   /* Copy some constant parameters to the GPU's constant cache. */
   cuda::cudaMemcpyToSymbol( CUGridSpacing, gridSpacing, cudaMemcpyHostToDevice );
@@ -158,15 +166,16 @@ cuda::CUDAResampleImageFilter<TInterpolatorPrecisionType, TImageType, TInternalI
 template <typename TInterpolatorPrecisionType, typename TImageType, typename TInternalImageType>
 void
 cuda::CUDAResampleImageFilter<TInterpolatorPrecisionType, TImageType, TInternalImageType>
-::cudaMallocTransformationData( const uint3 & gridSize, const TInterpolatorPrecisionType* params )
+::cudaMallocTransformationData( const uint3 & gridSize,
+  const TInterpolatorPrecisionType* params )
 {
   const unsigned int nrOfParametersPerDimension = gridSize.x * gridSize.y * gridSize.z;
   cudaExtent gridExtent = make_cudaExtent( gridSize.x, gridSize.y, gridSize.z );
 
   /* Allocate memory on the GPU for the interpolation texture. */
-  cuda::cudaMalloc3DArray( &m_CoeffsX, &m_ChannelDescCoeff, gridExtent );
-  cuda::cudaMalloc3DArray( &m_CoeffsY, &m_ChannelDescCoeff, gridExtent );
-  cuda::cudaMalloc3DArray( &m_CoeffsZ, &m_ChannelDescCoeff, gridExtent );
+  cuda::cudaMalloc3DArray( &this->m_CoeffsX, &this->m_ChannelDescCoeff, gridExtent );
+  cuda::cudaMalloc3DArray( &this->m_CoeffsY, &this->m_ChannelDescCoeff, gridExtent );
+  cuda::cudaMalloc3DArray( &this->m_CoeffsZ, &this->m_ChannelDescCoeff, gridExtent );
 
   /* Convert TInterpolatorPrecisionType to float, only thing textures support. */
 #if 1
@@ -180,11 +189,11 @@ cuda::CUDAResampleImageFilter<TInterpolatorPrecisionType, TImageType, TInternalI
   //  << clock() - start << "ms for "
   //  << nrOfParametersPerDimension * 3 << " elements" << std::endl;
   cudaBindTextureToArray( m_CoeffsX, &params_tmp[ 0 * nrOfParametersPerDimension ],
-    gridExtent, m_tex_coeffsX, m_ChannelDescCoeff );
+    gridExtent, m_tex_coeffsX, this->m_ChannelDescCoeff );
   cudaBindTextureToArray( m_CoeffsY, &params_tmp[ 1 * nrOfParametersPerDimension ],
-    gridExtent, m_tex_coeffsY, m_ChannelDescCoeff );
+    gridExtent, m_tex_coeffsY, this->m_ChannelDescCoeff );
   cudaBindTextureToArray( m_CoeffsZ, &params_tmp[ 2 * nrOfParametersPerDimension ],
-    gridExtent, m_tex_coeffsZ, m_ChannelDescCoeff );
+    gridExtent, m_tex_coeffsZ, this->m_ChannelDescCoeff );
   delete[] params_tmp;
 #else
   /* There are some problems with Device2Device copy when src is not a pitched or 3D array. */
@@ -223,7 +232,8 @@ cuda::CUDAResampleImageFilter<TInterpolatorPrecisionType, TImageType, TInternalI
 template <typename TInterpolatorPrecisionType, typename TImageType, typename TInternalImageType>
 void
 cuda::CUDAResampleImageFilter<TInterpolatorPrecisionType, TImageType, TInternalImageType>
-::cudaMallocImageData( const uint3 & inputSize, const uint3 & outputSize, const TImageType* data )
+::cudaMallocImageData( const uint3 & inputSize,
+  const uint3 & outputSize, const TImageType* data )
 {
   this->m_InputImageSize        = inputSize;
   this->m_OutputImageSize       = outputSize;
@@ -232,33 +242,42 @@ cuda::CUDAResampleImageFilter<TInterpolatorPrecisionType, TImageType, TInternalI
   size_t nrOfOutputVoxels       = this->m_OutputImageSize.x
     * this->m_OutputImageSize.y * this->m_OutputImageSize.z;
   this->m_MaxNumberOfVoxelsPerIteration = std::min(
-    static_cast<unsigned int>( nrOfOutputVoxels ), m_MaxNumberOfVoxelsPerIteration );
+    static_cast<unsigned int>( nrOfOutputVoxels ),
+    this->m_MaxNumberOfVoxelsPerIteration );
 
   cudaExtent volumeExtent = make_cudaExtent(
     this->m_InputImageSize.x, this->m_InputImageSize.y, this->m_InputImageSize.z );
 
   /* Allocate in memory and PreFilter image. We need to cast to float if not
-   *already, because linear filtering only works with floating point values.
+   * already, because linear filtering only works with floating point values.
+   * NOTE: the input image needs to be allocated on the GPU entirely,
+   * which may fail for large images and low-end GPU's.
    */
-  TInternalImageType* inputImage = cuda::cudaMalloc<TInternalImageType>( this->m_NumberOfInputVoxels );
+  TInternalImageType* inputImage
+    = cuda::cudaMalloc<TInternalImageType>( this->m_NumberOfInputVoxels );
   cudaCastToDevice( this->m_InputImageSize, data, inputImage );
+  /** Prefiltering is performed in-place. */
   CubicBSplinePrefilter3D( inputImage,
     volumeExtent.width, volumeExtent.height, volumeExtent.depth );
 
   /* XXX - cudaMemcpy3D fails if a DeviceToDevice copy src is not allocated
    * with cudaMallocPitch or cudaMalloc3D, so we need this hack to get the data there.
    */
-  TInternalImageType* tmpImage = new TInternalImageType[ this->m_NumberOfInputVoxels ];
-  cuda::cudaMemcpy( tmpImage, inputImage, m_NumberOfInputVoxels, cudaMemcpyDeviceToHost );
+  TInternalImageType* tmpImage
+    = new TInternalImageType[ this->m_NumberOfInputVoxels ];
+  cuda::cudaMemcpy( tmpImage, inputImage,
+    this->m_NumberOfInputVoxels, cudaMemcpyDeviceToHost );
   cuda::cudaFree( inputImage );
 
   /* Create the image interpolation texture. */
-  cuda::cudaMalloc3DArray( &m_InputImage, &m_ChannelDescCoeff, volumeExtent );
-  cudaBindTextureToArray( m_InputImage, tmpImage, volumeExtent, m_tex_inputImage, m_ChannelDescCoeff );
+  cuda::cudaMalloc3DArray( &this->m_InputImage, &this->m_ChannelDescCoeff, volumeExtent );
+  cudaBindTextureToArray( this->m_InputImage, tmpImage,
+    volumeExtent, m_tex_inputImage, this->m_ChannelDescCoeff );
   delete[] tmpImage;
 
   /* Allocate destination array. */
-  m_OutputImage = cuda::cudaMalloc<TInternalImageType>( m_MaxNumberOfVoxelsPerIteration );
+  this->m_OutputImage = cuda::cudaMalloc<TInternalImageType>(
+    this->m_MaxNumberOfVoxelsPerIteration );
 
 } // end cudaMallocImageData()
 
@@ -278,7 +297,7 @@ cuda::CUDAResampleImageFilter<TInterpolatorPrecisionType, TImageType, TInternalI
   const size_t nrOfOutputVoxels = this->m_OutputImageSize.x
     * this->m_OutputImageSize.y * this->m_OutputImageSize.z;
   dim3 dimBlock( 256 );
-  dim3 dimGrid( m_MaxNumberOfVoxelsPerIteration / dimBlock.x );
+  dim3 dimGrid( this->m_MaxNumberOfVoxelsPerIteration / dimBlock.x );
   size_t offset = 0;
 
   TInternalImageType* tmp_src = new TInternalImageType[ this->m_MaxNumberOfVoxelsPerIteration ];
@@ -286,21 +305,22 @@ cuda::CUDAResampleImageFilter<TInterpolatorPrecisionType, TImageType, TInternalI
   {
     /* Do a full run of m_MaxnrOfVoxelsPerIteration voxels. */
     for ( offset = 0; offset <= nrOfOutputVoxels - this->m_MaxNumberOfVoxelsPerIteration;
-      offset += m_MaxNumberOfVoxelsPerIteration )
+      offset += this->m_MaxNumberOfVoxelsPerIteration )
     {
-      resample_image<<<dimGrid, dimBlock>>>( m_OutputImage,
-        m_InputImageSize, m_OutputImageSize, offset );
+      resample_image<<<dimGrid, dimBlock>>>( this->m_OutputImage,
+        this->m_InputImageSize, this->m_OutputImageSize, offset, this->m_UseFastCUDAKernel );
       cuda::cudaCheckMsg( "kernel launch failed: resample_image" );
-      cudaCastToHost( m_MaxNumberOfVoxelsPerIteration, m_OutputImage, tmp_src, &dst[offset] );
+      cudaCastToHost( this->m_MaxNumberOfVoxelsPerIteration,
+        this->m_OutputImage, tmp_src, &dst[ offset ] );
     }
   }
 
   /* Do the remainder ensuring again dimGrid * dimBlock is less than image size. */
   dimGrid = dim3((unsigned int)(nrOfOutputVoxels - offset)) / dimBlock;
-  resample_image<<<dimGrid, dimBlock>>>( m_OutputImage,
-    m_InputImageSize, m_OutputImageSize, offset );
+  resample_image<<<dimGrid, dimBlock>>>( this->m_OutputImage,
+    this->m_InputImageSize, this->m_OutputImageSize, offset, this->m_UseFastCUDAKernel );
   cuda::cudaCheckMsg( "kernel launch failed: resample_image" );
-  cudaCastToHost( dimGrid.x * dimBlock.x, m_OutputImage, tmp_src, &dst[offset] );
+  cudaCastToHost( dimGrid.x * dimBlock.x, m_OutputImage, tmp_src, &dst[ offset ] );
 
   /* Do the final amount of voxels < dimBlock. */
   offset += dimGrid.x * dimBlock.x;
@@ -309,10 +329,10 @@ cuda::CUDAResampleImageFilter<TInterpolatorPrecisionType, TImageType, TInternalI
 
   if ( dimBlock.x > 0 )
   {
-    resample_image<<<dimGrid, dimBlock>>>( m_OutputImage,
-      m_InputImageSize, m_OutputImageSize, offset );
+    resample_image<<<dimGrid, dimBlock>>>( this->m_OutputImage,
+      this->m_InputImageSize, this->m_OutputImageSize, offset, this->m_UseFastCUDAKernel );
     cuda::cudaCheckMsg( "kernel launch failed: resample_image" );
-    cudaCastToHost( dimGrid.x * dimBlock.x, m_OutputImage, tmp_src, &dst[offset] );
+    cudaCastToHost( dimGrid.x * dimBlock.x, m_OutputImage, tmp_src, &dst[ offset ] );
   }
   delete[] tmp_src;
 
@@ -458,8 +478,7 @@ TOutputImageType* cuda
   case cudaMemcpyHostToDevice:
     if ( is_double<TOutputImageType>() && device_less_2_0 )
     {
-      //throw itk::ExceptionObject( "GPU doesn't support double-precision" );
-      throw std::exception();
+      throw std::string( "GPU doesn't support double-precision" );
     }
 
     if ( !useGPU )
@@ -492,8 +511,7 @@ TOutputImageType* cuda
   case cudaMemcpyDeviceToHost:
     if ( is_double<TInputImageType>() && device_less_2_0 )
     {
-      //throw itk::ExceptionObject( "GPU doesn't support double-precision" );
-      throw std::exception();
+      throw std::string( "GPU doesn't support double-precision" );
     }
 
     if ( !useGPU )
@@ -529,8 +547,6 @@ TOutputImageType* cuda
     break;
   }
 
-//   std::cout << "type conversion took " << clock() - start << "ms for "
-//     << voxelsPerSlice * volumeExtent.depth << " elements" << std::endl;
   return dst;
 
 } // end cudaCastToType()
