@@ -319,6 +319,8 @@ protected:
   /** RandomGenerator for AddRandomPerturbation. */
   typename RandomGeneratorType::Pointer             m_RandomGenerator;
 
+  double m_SigmoidScaleFactor;
+
   /** Check if the transform is an advanced transform. Called by Initialize. */
   virtual void CheckForAdvancedTransform( void );
 
