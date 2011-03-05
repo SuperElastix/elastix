@@ -30,7 +30,7 @@ using namespace itk;
    * \brief A transform based on a DeformationField.
    *
    * This transform models the transformation by a deformation vector field.
-   * This transform is meant to be used for optimisation. Just use it as an initial
+   * This transform is NOT meant to be used for optimisation. Just use it as an initial
    * transform, or with transformix.
    *
    * The parameters used in this class are:

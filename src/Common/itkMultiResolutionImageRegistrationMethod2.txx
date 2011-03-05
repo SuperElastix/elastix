@@ -69,9 +69,9 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
 
   this->m_Stop = false;
 
-  this->m_InitialTransformParameters = ParametersType(1);
-  this->m_InitialTransformParametersOfNextLevel = ParametersType(1);
-  this->m_LastTransformParameters = ParametersType(1);
+  this->m_InitialTransformParameters = ParametersType(0);
+  this->m_InitialTransformParametersOfNextLevel = ParametersType(0);
+  this->m_LastTransformParameters = ParametersType(0);
 
   this->m_InitialTransformParameters.Fill( 0.0f );
   this->m_InitialTransformParametersOfNextLevel.Fill( 0.0f );
@@ -160,19 +160,20 @@ void
 MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
 ::PreparePyramids( void )
 {
-
   if( !this->m_Transform )
-    {
-    itkExceptionMacro(<<"Transform is not present");
-    }
+  {
+    itkExceptionMacro( << "Transform is not present" );
+  }
 
   this->m_InitialTransformParametersOfNextLevel = this->m_InitialTransformParameters;
 
-  if ( this->m_InitialTransformParametersOfNextLevel.Size() !=
-       this->m_Transform->GetNumberOfParameters() )
-    {
-    itkExceptionMacro(<<"Size mismatch between initial parameter and transform");
-    }
+  if ( this->m_InitialTransformParametersOfNextLevel.Size()
+    != this->m_Transform->GetNumberOfParameters() )
+  {
+    itkExceptionMacro( << "Size mismatch between initial parameters ("
+      << this->m_InitialTransformParametersOfNextLevel.Size()
+      << ") and transform (" << this->m_Transform->GetNumberOfParameters() << ")" );
+  }
 
   // Sanity checks
   if( !this->m_FixedImage )

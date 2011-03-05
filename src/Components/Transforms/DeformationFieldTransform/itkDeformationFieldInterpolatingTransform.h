@@ -31,7 +31,7 @@ namespace itk
   * A simple transform that allows the user to set a deformation field.
   * TransformPoint adds the displacement to the input point.
   * This transform does not support optimizers. Its Set/GetParameters
-  * is not implemented.
+  * is not implemented. DO NOT USE IT FOR REGISTRATION.
   * You may set your own interpolator!
   *
   * \ingroup Transforms
@@ -91,11 +91,11 @@ namespace itk
     /** Transform a point
      * This method adds a displacement to a given point,
      * returning the transformed point */
-    OutputPointType TransformPoint(const InputPointType  &point ) const;
+    OutputPointType TransformPoint( const InputPointType & point ) const;
 
     /** Make this an identity transform ( the deformation field is replaced
      * by a zero deformation field */
-    void SetIdentity(void);
+    void SetIdentity( void );
 
     /** Set/Get the deformation field that defines the displacements */
     virtual void SetDeformationField( DeformationFieldType * _arg );
@@ -106,6 +106,14 @@ namespace itk
     itkGetObjectMacro(DeformationFieldInterpolator, DeformationFieldInterpolatorType);
 
     virtual bool IsLinear( void ) const { return false; };
+
+    virtual void SetParameters( const ParametersType & ) 
+    {
+      itkExceptionMacro( << "ERROR: The DeformationFieldInterpolatingTransform is "
+        << "NOT suited for image registration. Just use it as an (initial) fixed transform "
+        << "that is not optimized." );
+    }
+
 
   protected:
     DeformationFieldInterpolatingTransform();
