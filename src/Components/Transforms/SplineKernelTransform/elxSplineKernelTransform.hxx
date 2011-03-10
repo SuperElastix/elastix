@@ -300,7 +300,7 @@ template <class TElastix>
 void
 SplineKernelTransform<TElastix>
 ::ReadLandmarkFile( const std::string & filename,
-  PointSetPointer landmarkPointSet,
+  PointSetPointer & landmarkPointSet,
   const bool & landmarksInFixedImage )
 {
   /** Typedef's. */

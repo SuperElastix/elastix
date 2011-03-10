@@ -236,7 +236,7 @@ protected:
   /** General function to read all landmarks. */
   virtual void ReadLandmarkFile(
     const std::string & filename,
-    PointSetPointer landmarkPointSet,
+    PointSetPointer & landmarkPointSet,
     const bool & landmarksInFixedImage );
 
   /** The itk kernel transform. */
