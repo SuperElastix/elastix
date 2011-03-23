@@ -190,22 +190,29 @@ registration results are discussed.
 \centering
 \includegraphics[width=8cm]{ImageRegistrationConcept.eps}
 \caption{Image registration is the task of finding a spatial
-transformation mapping one image to another. Adopted from
+transformation mapping one image to another. Left is the fixed image
+and right the moving image. Adopted from
 \citet{ITKSoftwareGuideSecondEdition}.} \label{fig:concept}
 \end{figure}
 
 Two images are involved in the registration process. One image, the
 \emph{moving image} $I_M(\vx)$, is deformed to fit the other image,
-the \emph{fixed image} $I_F(\vx)$. Registration is the problem of
-finding a \emph{displacement} $\vux$ that makes $I_M(\vx + \vux)$
-spatially aligned to $I_F(\vx)$. An equivalent formulation is to say
-that registration is the problem of finding a \emph{transformation}
-$\vT(\vx) = \vx + \vux $ that makes $I_M(\vT(\vx))$ spatially aligned
-to $I_F(\vx)$. The quality of alignment is defined by a distance or
-similarity measure $\Sim$, such as the sum of squared differences
-(SSD), the correlation ratio, or the mutual information (MI) measure.
-Because this problem is ill-posed for nonrigid transformations $\vT$,
-a regularisation or penalty term $\Pen$ is often introduced that
+the \emph{fixed image} $I_F(\vx)$. The fixed and moving image are of
+dimension $d$ and are each defined on their own spatial domain:
+$\Omega_F \subset \mathbb{R}^d$ and $\Omega_M \subset \mathbb{R}^d$,
+respectively. Registration is the problem of finding a
+\emph{displacement} $\vux$ that makes $I_M(\vx + \vux)$ spatially
+aligned to $I_F(\vx)$. An equivalent formulation is to say that
+registration is the problem of finding a \emph{transformation}
+$\vT(\vx) = \vx + \vux $ that makes $I_M(\vT(\vx))$ spatially
+aligned to $I_F(\vx)$. The transformation is defined as a mapping
+from the fixed image to the moving image, i.e. $\vT: \Omega_F
+\subset \mathbb{R}^d \rightarrow \Omega_M \subset \mathbb{R}^d$. The
+quality of alignment is defined by a distance or similarity measure
+$\Sim$, such as the sum of squared differences (SSD), the
+correlation ratio, or the mutual information (MI) measure. Because
+this problem is ill-posed for nonrigid transformations $\vT$, a
+regularisation or penalty term $\Pen$ is often introduced that
 constrains $\vT$.
 
 Commonly, the registration problem is formulated as an optimisation
@@ -538,6 +545,28 @@ you need to prepend the name with \texttt{Final}, for example:
 \end{figure}
 
 \section{Transforms}\label{sec:comp:transform}
+
+A frequent confusion about the transformation is its direction. In
+\elastix\ the transformation is defined as a \textbf{coordinate
+mapping from the fixed image domain to the moving image domain}:
+$\vT: \Omega_F \subset \mathbb{R}^d \rightarrow \Omega_M \subset
+\mathbb{R}^d$. The transformation is only defined at the fixed image
+domain $\Omega_F$ and is assumed zero everywhere else
+($\mathbb{R}^d/\Omega_F$). The confusion usually stems from the
+phrase: ``the moving image is deformed to fit the fixed image''.
+Although one can speak about image registration like this, such a
+phrase is not meant to reflect mathematical underlyings: one deforms
+the moving image, but the transformation is still defined from fixed
+to moving image. The reason for this becomes clear when trying to
+compute the deformed moving image (the registration result)
+$I_M(\vTmx)$ (this process is frequently called \emph{resampling}).
+If the transformation would be defined from moving to fixed image,
+not all voxels in the fixed image domain would be mapped to (e.g. in
+case of a scaling), and holes would occur in the deformed moving
+image. With the transformation defined as it is, resampling is quite
+simple: loop over all voxels $\vx$ in the fixed image domain
+$\Omega_F$, compute its mapped position $\bm{y} = \vTmx$, and
+interpolate the moving image at $\bm{y}$.
 
 The transformation model used for $\vT_{\vmu}$ determines what type of
 deformations between the fixed and moving image you can handle. In order of
