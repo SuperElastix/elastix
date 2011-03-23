@@ -546,27 +546,23 @@ you need to prepend the name with \texttt{Final}, for example:
 
 \section{Transforms}\label{sec:comp:transform}
 
-A frequent confusion about the transformation is its direction. In
-\elastix\ the transformation is defined as a \textbf{coordinate
-mapping from the fixed image domain to the moving image domain}:
-$\vT: \Omega_F \subset \mathbb{R}^d \rightarrow \Omega_M \subset
-\mathbb{R}^d$. The transformation is only defined at the fixed image
-domain $\Omega_F$ and is assumed zero everywhere else
-($\mathbb{R}^d/\Omega_F$). The confusion usually stems from the
-phrase: ``the moving image is deformed to fit the fixed image''.
-Although one can speak about image registration like this, such a
-phrase is not meant to reflect mathematical underlyings: one deforms
-the moving image, but the transformation is still defined from fixed
-to moving image. The reason for this becomes clear when trying to
-compute the deformed moving image (the registration result)
-$I_M(\vTmx)$ (this process is frequently called \emph{resampling}).
-If the transformation would be defined from moving to fixed image,
-not all voxels in the fixed image domain would be mapped to (e.g. in
-case of a scaling), and holes would occur in the deformed moving
-image. With the transformation defined as it is, resampling is quite
-simple: loop over all voxels $\vx$ in the fixed image domain
-$\Omega_F$, compute its mapped position $\bm{y} = \vTmx$, and
-interpolate the moving image at $\bm{y}$.
+A frequent confusion about the transformation is its direction. In \elastix\
+the transformation is defined as a \textbf{coordinate mapping from the fixed
+image domain to the moving image domain}: $\vT: \Omega_F \subset \mathbb{R}^d
+\rightarrow \Omega_M \subset \mathbb{R}^d$. The confusion usually stems from
+the phrase: ``the moving image is deformed to fit the fixed image''. Although
+one can speak about image registration like this, such a phrase is not meant to
+reflect mathematical underlyings: one deforms the moving image, but the
+transformation is still defined from fixed to moving image. The reason for this
+becomes clear when trying to compute the deformed moving image (the
+registration result) $I_M(\vTmx)$ (this process is frequently called
+\emph{resampling}). If the transformation would be defined from moving to fixed
+image, not all voxels in the fixed image domain would be mapped to (e.g. in
+case of a scaling), and holes would occur in the deformed moving image. With
+the transformation defined as it is, resampling is quite simple: loop over all
+voxels $\vx$ in the fixed image domain $\Omega_F$, compute its mapped position
+$\bm{y} = \vTmx$, interpolate the moving image at $\bm{y}$, and fill in this
+value at $\vx$ in the output image.
 
 The transformation model used for $\vT_{\vmu}$ determines what type of
 deformations between the fixed and moving image you can handle. In order of
