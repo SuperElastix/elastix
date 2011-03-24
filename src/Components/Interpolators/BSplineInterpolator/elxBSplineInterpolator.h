@@ -68,7 +68,7 @@ using namespace itk;
     typedef SmartPointer<const Self>            ConstPointer;
 
     /** Method for creation through the object factory. */
-    itkNewMacro(Self);
+    itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
     itkTypeMacro( BSplineInterpolator, BSplineInterpolateImageFunction );
@@ -107,7 +107,7 @@ using namespace itk;
     /** Execute stuff before each new pyramid resolution:
      * \li Set the spline order.
      */
-    virtual void BeforeEachResolution(void);
+    virtual void BeforeEachResolution( void );
 
   protected:
 

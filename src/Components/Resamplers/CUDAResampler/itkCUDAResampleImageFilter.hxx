@@ -16,6 +16,7 @@
 
 #include <cuda_runtime.h>
 #include "itkCUDAResampleImageFilter.h"
+#include "itkBSplineInterpolateImageFunction.h"
 
 namespace itk
 {
@@ -67,6 +68,7 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
   const SpacingType     itkInputSpacing  = this->GetInput()->GetSpacing();
   const OriginPointType itkInputOrigin   = this->GetInput()->GetOrigin();
 
+  /** Copy the input image data. */
   uint3 inputSize            = make_uint3(
     itkInputSize[0],  itkInputSize[1],  itkInputSize[2] );
   uint3 outputSize           = make_uint3(
@@ -74,6 +76,7 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
   const InputPixelType* data = this->GetInput()->GetBufferPointer();
   this->m_CudaResampleImageFilter.cudaMallocImageData( inputSize, outputSize, data );
 
+  /** Copy output image information. */
   float3 outputImageSpacing = make_float3(
     itkOutputSpacing[0], itkOutputSpacing[1], itkOutputSpacing[2] );
   float3 outputImageOrigin  = make_float3(
@@ -82,27 +85,26 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
     itkInputSpacing[0],  itkInputSpacing[1],  itkInputSpacing[2] );
   float3 inputImageOrigin   = make_float3(
     itkInputOrigin[0],   itkInputOrigin[1],   itkInputOrigin[2] );
-
   float defaultPixelValue   = this->GetDefaultPixelValue();
   this->m_CudaResampleImageFilter.cudaCopyImageSymbols(
     inputImageSpacing, inputImageOrigin,
     outputImageSpacing, outputImageOrigin, defaultPixelValue );
 
+  /** Copy B-spline grid data. */
   const typename InternalBSplineTransformType::OriginType  itkGridOrigin
     = bSplineTransform->GetGridOrigin();
   const typename InternalBSplineTransformType::SpacingType itkGridSpacing
     = bSplineTransform->GetGridSpacing();
   const typename InternalBSplineTransformType::SizeType    itkGridSize
     = bSplineTransform->GetGridRegion().GetSize();
-
   float3 gridSpacing = make_float3( itkGridSpacing[0], itkGridSpacing[1], itkGridSpacing[2] );
   float3 gridOrigin  = make_float3( itkGridOrigin[0],  itkGridOrigin[1],  itkGridOrigin[2] );
   uint3  gridSize    = make_uint3 ( itkGridSize[0],    itkGridSize[1],    itkGridSize[2] );
   this->m_CudaResampleImageFilter.cudaCopyGridSymbols( gridSpacing, gridOrigin, gridSize );
 
+  /** Copy B-spline parameters. */
   const typename InternalBSplineTransformType::ParametersType params
     = bSplineTransform->GetParameters();
-
   this->m_CudaResampleImageFilter.cudaMallocTransformationData(
     gridSize, params.data_block() );
 
@@ -169,6 +171,93 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
 
 
 /**
+ * ******************* CheckForValidInterpolator ***********************
+ */
+
+template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
+bool
+itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>
+::CheckForValidInterpolator( void ) const
+{
+  /** Check if the interpolator is valid for CUDA. */
+  // ImageType = ElastixType::MovingImageType = InputImageType
+  // CoordRepType = ElastixType::CoordRepType = TInterpolatorPrecisionType
+  // CoefficientType = float or double, does not matter
+  typedef BSplineInterpolateImageFunction<
+    InputImageType, TInterpolatorPrecisionType, float >   ValidInterpolatorFloatType;
+  typedef BSplineInterpolateImageFunction<
+    InputImageType, TInterpolatorPrecisionType, double >  ValidInterpolatorDoubleType;
+
+  typename ValidInterpolatorFloatType::Pointer testPtr1
+    = const_cast<ValidInterpolatorFloatType *>(
+    dynamic_cast<const ValidInterpolatorFloatType *>( this->GetInterpolator() ) );
+  typename ValidInterpolatorDoubleType::Pointer testPtr2
+    = const_cast<ValidInterpolatorDoubleType *>(
+    dynamic_cast<const ValidInterpolatorDoubleType *>( this->GetInterpolator() ) );
+
+  bool interpolatorIsValid = false;
+  if ( testPtr1 )
+  {
+    if ( testPtr1->GetSplineOrder() == 3 )
+    {
+      interpolatorIsValid = true;
+    }
+  }
+  else if ( testPtr2 )
+  {
+    if ( testPtr2->GetSplineOrder() == 3 )
+    {
+      interpolatorIsValid = true;
+    }
+  }
+
+  return interpolatorIsValid;
+
+} // end CheckForValidInterpolator()
+
+
+/**
+ * ******************* CheckForValidDirectionCosines ***********************
+ */
+
+template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
+bool
+itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>
+::CheckForValidDirectionCosines( ValidTransformPointer bSplineTransform )// const
+{
+  /** Check if the direction cosines are valid for CUDA. */
+  bool directionCosinesAreValid = true;
+  DirectionType identityDC; identityDC.SetIdentity();
+  typedef typename InternalAdvancedBSplineTransformType::DirectionType GridDirectionType;
+  GridDirectionType identityDCGrid; identityDCGrid.SetIdentity();
+
+  /** Check input image direction cosines. */
+  DirectionType inputImageDC = this->GetInput()->GetDirection();
+  if ( inputImageDC != identityDC )
+  {
+    directionCosinesAreValid = false;
+  }
+
+  /** Check output image direction cosines. */
+  DirectionType outputImageDC = this->GetOutputDirection();
+  if ( outputImageDC != identityDC )
+  {
+    directionCosinesAreValid = false;
+  }
+
+  /** Check B-spline grid direction cosines. */
+  GridDirectionType bsplineGridDC = bSplineTransform->GetGridDirection();
+  if ( bsplineGridDC != identityDCGrid )
+  {
+    directionCosinesAreValid = false;
+  }
+
+  return directionCosinesAreValid;
+
+} // end CheckForValidDirectionCosines()
+
+
+/**
  * ******************* GenerateData ***********************
  */
 
@@ -183,25 +272,52 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
     return Superclass::GenerateData();
   }
 
-  /** Check! */
+  /** Checks! */
   ValidTransformPointer tempTransform = NULL;
   try // why try/catch?
   {
-    /** Check for valid transform. */
+    /** Check for valid transform: 3rd order B-spline, no initial transform, dimension 3. */
     bool transformIsValid = this->CheckForValidTransform( tempTransform );
     if ( !transformIsValid )
     {
-      itkWarningMacro( << "WARNING: Using CPU (no B-spline transform set)" );
+      this->m_UseCuda = false;
+      itkWarningMacro( << "WARNING: No valid transform set:\n"
+        << "3rd order B-spline, 3D image, no initial transform.\n"
+        << "Falling back to CPU implementation." );
+    }
+
+    /** Check for valid interpolator: 3rd order B-spline. */
+    bool interpolatorIsValid = this->CheckForValidInterpolator();
+    if ( !interpolatorIsValid )
+    {
+      this->m_UseCuda = false;
+      itkWarningMacro( << "WARNING: No valid interpolator set:\n"
+        << "3rd order B-spline, 3D image\n"
+        << "Falling back to CPU implementation." );
+    }
+
+    /** Check for identity cosines. */
+    if ( transformIsValid )
+    {
+      bool directionCosinesAreValid = this->CheckForValidDirectionCosines( tempTransform );
+      if ( !directionCosinesAreValid )
+      {
+        this->m_UseCuda = false;
+        itkWarningMacro( << "WARNING: No valid direction cosines:\n"
+          << "The input image, output image, and B-spline grid direction should all be the identity.\n"
+          << "Falling back to CPU implementation." );
+      }
     }
 
     /** Check if proper CUDA device. */
     bool cuda_device = ( CudaResampleImageFilterType::checkExecutionParameters() == 0 );
     if ( !cuda_device )
     {
-      itkWarningMacro( << "WARNING: Using CPU (no CUDA capable GPU found, and/or up-to-date driver)" );
+      this->m_UseCuda = false;
+      itkWarningMacro( << "WARNING: No valid GPU found:\n"
+        << "The GPU should support CUDA, and the driver should be up-to-date.\n"
+        << "Falling back to CPU implementation." );
     }
-
-    this->m_UseCuda = transformIsValid && cuda_device;
   }
   catch ( itk::ExceptionObject & excep )
   {

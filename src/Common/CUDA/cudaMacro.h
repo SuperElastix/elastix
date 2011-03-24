@@ -51,3 +51,4 @@ namespace cuda
 }; /* namespace cuda */
 
 #endif // end #ifndef __cudaMacro_h
+

@@ -128,11 +128,22 @@ private:
    */
   bool CheckForValidTransform( ValidTransformPointer & bSplineTransform ) const;
 
+  /** Helper function to check for a valid interpolator.
+   * Currently, only GPU resampling using 3-rd order B-spline interpolation is supported.
+   */
+  bool CheckForValidInterpolator( void ) const;
+
+  /** Helper function to check for a valid direction cosines.
+   * Currently, only GPU resampling using identity cosines is supported.
+   */
+  bool CheckForValidDirectionCosines( ValidTransformPointer bSplineTransform ) ;//const;
+  // NOTE: const can be added again in ITK4. It's due to GetInput() being not const-correct.
+
   /** Helper function to copy data. */
   void CopyParameters( ValidTransformPointer bSplineTransform );
 };
 
-}; /* namespace itk */
+}; // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itkCUDAResampleImageFilter.hxx"
