@@ -109,9 +109,34 @@ public:
   /** Implements GPU resampling. */
   virtual void GenerateData( void );
 
+  /** For reporting warnings. */
+  class WarningReportType
+  {
+  public:
+    std::vector<std::string>  m_Warnings;
+
+    void ResetWarningReport( void )
+    {
+      this->m_Warnings.resize( 0 );
+    }
+    std::string GetWarningReportAsString( void ) const
+    {
+      std::string warnings = "\n---------------------------------\n";
+      for ( std::size_t i = 0; i < this->m_Warnings.size(); i++ )
+      {
+        warnings += "itkCUDAResampleImageFilter: " + this->m_Warnings[ i ];
+        warnings += "\n---------------------------------\n";
+      }
+      return warnings;
+    }
+  };
+  itkGetConstReferenceMacro( WarningReport, WarningReportType );
+
 protected:
   itkCUDAResampleImageFilter();
   ~itkCUDAResampleImageFilter();
+
+  virtual void CheckForValidConfiguration( ValidTransformPointer & bSplineTransform );
 
 private:
 
@@ -121,6 +146,7 @@ private:
   bool      m_UseFastCUDAKernel;
 
   CudaResampleImageFilterType m_CudaResampleImageFilter;
+  WarningReportType           m_WarningReport;
 
   /** Helper function to check for a valid transform.
    * Currently, only GPU resampling of 3D images for 3-rd order B-splines is supported,
@@ -141,7 +167,8 @@ private:
 
   /** Helper function to copy data. */
   void CopyParameters( ValidTransformPointer bSplineTransform );
-};
+
+}; // end class itkCUDAResampleImageFilter
 
 }; // end namespace itk
 

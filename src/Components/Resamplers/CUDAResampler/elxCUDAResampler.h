@@ -86,6 +86,7 @@ public:
   typedef typename Superclass1::OutputImageRegionType     OutputImageRegionType;
   typedef typename Superclass1::SpacingType               SpacingType;
   typedef typename Superclass1::OriginPointType           OriginPointType;
+  typedef typename Superclass1::ValidTransformPointer     ValidTransformPointer;
 
   /** Typedef's from the ResamplerBase. */
   typedef typename Superclass2::ElastixType           ElastixType;
@@ -112,6 +113,11 @@ protected:
   CUDAResampler() {}
   /** The destructor. */
   virtual ~CUDAResampler() {}
+
+  /** Overwrite from itkCUDAResampleImageFilter.
+   * We simply call the Superclass and print the warning messages to elxout.
+   */
+  virtual void CheckForValidConfiguration( ValidTransformPointer & bSplineTransform );
 
 private:
 

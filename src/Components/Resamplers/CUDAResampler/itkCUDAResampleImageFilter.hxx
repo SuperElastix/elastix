@@ -258,6 +258,76 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
 
 
 /**
+ * ******************* CheckForValidConfiguration ***********************
+ */
+
+template <typename TInputImage, typename TOutputImage, typename TInterpolatorPrecisionType>
+void
+itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType>
+::CheckForValidConfiguration( ValidTransformPointer & bSplineTransform )// const
+{
+  try // why try/catch?
+  {
+    this->m_WarningReport.ResetWarningReport();
+
+    /** Check for valid transform: 3rd order B-spline, no initial transform, dimension 3. */
+    bool transformIsValid = this->CheckForValidTransform( bSplineTransform );
+    if ( !transformIsValid )
+    {
+      this->m_UseCuda = false;
+      std::string message = "WARNING: No valid transform set:\n"
+        + std::string( "The transform should be 3rd order B-spline, 3D image, no initial transform.\n" )
+        + std::string( "Falling back to CPU implementation." );
+      this->m_WarningReport.m_Warnings.push_back( message );
+    }
+
+    /** Check for valid interpolator: 3rd order B-spline. */
+    bool interpolatorIsValid = this->CheckForValidInterpolator();
+    if ( !interpolatorIsValid )
+    {
+      this->m_UseCuda = false;
+      std::string message = "WARNING: No valid interpolator set:\n"
+        + std::string( "The interpolator should be 3rd order B-spline, 3D image\n" )
+        + std::string( "Falling back to CPU implementation." );
+      this->m_WarningReport.m_Warnings.push_back( message );
+    }
+
+    /** Check for identity cosines. */
+    if ( transformIsValid )
+    {
+      bool directionCosinesAreValid = this->CheckForValidDirectionCosines( bSplineTransform );
+      if ( !directionCosinesAreValid )
+      {
+        this->m_UseCuda = false;
+        std::string message = "WARNING: No valid direction cosines:\n"
+          + std::string( "The input image, output image, and B-spline grid direction should all be the identity.\n" )
+          + std::string( "Falling back to CPU implementation." );
+        this->m_WarningReport.m_Warnings.push_back( message );
+      }
+    }
+
+    /** Check if proper CUDA device. */
+    bool cuda_device = ( CudaResampleImageFilterType::checkExecutionParameters() == 0 );
+    if ( !cuda_device )
+    {
+      this->m_UseCuda = false;
+      std::string message = "WARNING: No valid GPU found:\n"
+        + std::string( "The GPU should support CUDA, and the driver should be up-to-date.\n" )
+        + std::string( "Falling back to CPU implementation." );
+      this->m_WarningReport.m_Warnings.push_back( message );
+    }
+  }
+  catch ( itk::ExceptionObject & excep )
+  {
+    // FIXME: no printing
+    std::cerr << excep << std::endl;
+    this->m_UseCuda = false;
+  }
+
+} // end CheckForValidConfiguration()
+
+
+/**
  * ******************* GenerateData ***********************
  */
 
@@ -274,58 +344,8 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
 
   /** Checks! */
   ValidTransformPointer tempTransform = NULL;
-  try // why try/catch?
-  {
-    /** Check for valid transform: 3rd order B-spline, no initial transform, dimension 3. */
-    bool transformIsValid = this->CheckForValidTransform( tempTransform );
-    if ( !transformIsValid )
-    {
-      this->m_UseCuda = false;
-      itkWarningMacro( << "WARNING: No valid transform set:\n"
-        << "3rd order B-spline, 3D image, no initial transform.\n"
-        << "Falling back to CPU implementation." );
-    }
-
-    /** Check for valid interpolator: 3rd order B-spline. */
-    bool interpolatorIsValid = this->CheckForValidInterpolator();
-    if ( !interpolatorIsValid )
-    {
-      this->m_UseCuda = false;
-      itkWarningMacro( << "WARNING: No valid interpolator set:\n"
-        << "3rd order B-spline, 3D image\n"
-        << "Falling back to CPU implementation." );
-    }
-
-    /** Check for identity cosines. */
-    if ( transformIsValid )
-    {
-      bool directionCosinesAreValid = this->CheckForValidDirectionCosines( tempTransform );
-      if ( !directionCosinesAreValid )
-      {
-        this->m_UseCuda = false;
-        itkWarningMacro( << "WARNING: No valid direction cosines:\n"
-          << "The input image, output image, and B-spline grid direction should all be the identity.\n"
-          << "Falling back to CPU implementation." );
-      }
-    }
-
-    /** Check if proper CUDA device. */
-    bool cuda_device = ( CudaResampleImageFilterType::checkExecutionParameters() == 0 );
-    if ( !cuda_device )
-    {
-      this->m_UseCuda = false;
-      itkWarningMacro( << "WARNING: No valid GPU found:\n"
-        << "The GPU should support CUDA, and the driver should be up-to-date.\n"
-        << "Falling back to CPU implementation." );
-    }
-  }
-  catch ( itk::ExceptionObject & excep )
-  {
-    // FIXME: no printing
-    std::cerr << excep << std::endl;
-    this->m_UseCuda = false;
-  }
-
+  this->CheckForValidConfiguration( tempTransform );
+  
   /** The GPU can't be used. Use CPU instead. */
   if ( !this->m_UseCuda )
   {
@@ -352,6 +372,6 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
 } // end GenerateData()
 
 
-}; /* namespace itk */
+}; // end namespace itk
 
 #endif // end #ifndef __itkCUDAResamplerImageFilter_txx
