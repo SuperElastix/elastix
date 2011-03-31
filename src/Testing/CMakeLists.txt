@@ -32,7 +32,10 @@ MACRO( ADD_ELX_TEST name )
 
   # Link against other libraries.
   TARGET_LINK_LIBRARIES( ${ELXTEST_EXECUTABLE_NAME}
-    ITKCommon ITKBasicFilters elxCommon ${mevisdcmtifflib} )
+    elxCommon # needed for elxTimer
+    ${mevisdcmtifflib} # needed for MevisDicomTiffImageIOTest
+    ${ITK_LIBRARIES}
+  )
 
   # Group in IDE's like Visual Studio
   SET_PROPERTY( TARGET ${ELXTEST_EXECUTABLE_NAME} PROPERTY FOLDER "tests" )

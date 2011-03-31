@@ -171,19 +171,10 @@ ADD_LIBRARY( elxCommon
 # Link against other libraries.
 
 IF( UNIX AND NOT APPLE )
-  TARGET_LINK_LIBRARIES( elxCommon
-    ITKBasicFilters
-    ITKNumerics
-    ITKIO
-    ITKCommon
+  TARGET_LINK_LIBRARIES( elxCommon ${ITK_LIBRARIES}
     rt # Needed for elxTimer, clock_gettime()
   )
 ELSE()
-  TARGET_LINK_LIBRARIES( elxCommon
-    ITKBasicFilters
-    ITKNumerics
-    ITKIO
-    ITKCommon
-  )
+  TARGET_LINK_LIBRARIES( elxCommon ${ITK_LIBRARIES} )
 ENDIF()
 

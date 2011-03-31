@@ -36,7 +36,7 @@ ADD_SUBDIRECTORY( ann_1.1 )
 ADD_LIBRARY( KNNlib ${KNN_Files} )
 
 # Link it against the necessary libraries.
-TARGET_LINK_LIBRARIES( KNNlib ANNlib ITKBasicFilters ITKCommon ITKStatistics )
+TARGET_LINK_LIBRARIES( KNNlib ANNlib ${ITK_LIBRARIES} )
 
 # Group in IDE's like Visual Studio
 SET_PROPERTY( TARGET KNNlib PROPERTY FOLDER "libraries" )
