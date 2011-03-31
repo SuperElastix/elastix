@@ -1002,7 +1002,7 @@ time. The continued development brings us today (\today) to version 4.4.
 \begin{tabular}{l|l}
 what & where \\
 \hline
-website        & \url{http://elastix.isi.uu.nl} \\
+Website        & \url{http://elastix.isi.uu.nl} \\
 SVN repository & \url{https://svn.bigr.nl/elastix/trunkpublic} \\
 Dashboard      & \url{http://my.cdash.org/index.php?project=elastix} \\
 WIKI           & \url{http://elastix.isi.uu.nl/wiki.php} \\
@@ -1315,25 +1315,28 @@ Section~\ref{sec:transformix:tp} explains the structure and
 contents that a transform parameter file should have.
 
 Besides using \transformix\ for deforming images, you can also use
-\transformix\ to evaluate the transformation $\vTmx$ at some
-points $\vx$. If you want to deform a set of user-specified
-points, the appropriate call is:
+\transformix\ to evaluate the transformation $\vTmx$ at some points
+$\vx \in \Omega_F$. This means that the input points are specified
+in the fixed image domain (!), since the transformation direction is
+from fixed to moving image, as explained in Section
+\ref{sec:comp:transform}. If you want to deform a set of
+user-specified points, the appropriate call is:
 \begin{quote}
 \texttt{transformix -def inputPoints.txt -out outputDirectory -tp
 TransformParameters.txt}
 \end{quote}
 This will create a file \texttt{outputpoints.txt} containing the
-input points $\vx$ and the transformed points $\vTmx$ (both given
-as voxel indices of the fixed image and as physical coordinates),
-the displacement vector $\vTmx-\vx$ (in physical coordinates),
-and, if \texttt{-in inputImage.ext} is also specified, the
-transformed output points as indices of the input
-image\footnote{The downside of this is that the input image is
-also deformed, which consumes time and may not be needed by the
-user. If this is a problem, just run \transformix\ without
-\texttt{-in} and compute the voxel indices yourself, based on the
-$\vTmx$ physical coordinate data.}. The \texttt{inputPoints.txt}
-file should have the following structure:
+input points $\vx$ and the transformed points $\vTmx$ (given as
+voxel indices of the fixed image and additionally as physical
+coordinates), the displacement vector $\vTmx - \vx$ (in physical
+coordinates), and, if \texttt{-in inputImage.ext} is also specified,
+the transformed output points as indices of the input
+image\footnote{The downside of this is that the input image is also
+deformed, which consumes time and may not be needed by the user. If
+this is a problem, just run \transformix\ without \texttt{-in} and
+compute the voxel indices yourself, based on the $\vTmx$ physical
+coordinate data.}. The \texttt{inputPoints.txt} file should have the
+following structure:
 \begin{quote}
 \texttt{<index, point>}\\
 \texttt{<number of points>}\\
