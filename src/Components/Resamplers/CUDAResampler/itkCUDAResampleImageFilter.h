@@ -109,9 +109,34 @@ public:
   /** Implements GPU resampling. */
   virtual void GenerateData( void );
 
+  /** For reporting warnings. */
+  class WarningReportType
+  {
+  public:
+    std::vector<std::string>  m_Warnings;
+
+    void ResetWarningReport( void )
+    {
+      this->m_Warnings.resize( 0 );
+    }
+    std::string GetWarningReportAsString( void ) const
+    {
+      std::string warnings = "\n---------------------------------\n";
+      for ( std::size_t i = 0; i < this->m_Warnings.size(); i++ )
+      {
+        warnings += "itkCUDAResampleImageFilter: " + this->m_Warnings[ i ];
+        warnings += "\n---------------------------------\n";
+      }
+      return warnings;
+    }
+  };
+  itkGetConstReferenceMacro( WarningReport, WarningReportType );
+
 protected:
   itkCUDAResampleImageFilter();
   ~itkCUDAResampleImageFilter();
+
+  virtual void CheckForValidConfiguration( ValidTransformPointer & bSplineTransform );
 
 private:
 
@@ -121,6 +146,7 @@ private:
   bool      m_UseFastCUDAKernel;
 
   CudaResampleImageFilterType m_CudaResampleImageFilter;
+  WarningReportType           m_WarningReport;
 
   /** Helper function to check for a valid transform.
    * Currently, only GPU resampling of 3D images for 3-rd order B-splines is supported,
@@ -128,11 +154,23 @@ private:
    */
   bool CheckForValidTransform( ValidTransformPointer & bSplineTransform ) const;
 
+  /** Helper function to check for a valid interpolator.
+   * Currently, only GPU resampling using 3-rd order B-spline interpolation is supported.
+   */
+  bool CheckForValidInterpolator( void ) const;
+
+  /** Helper function to check for a valid direction cosines.
+   * Currently, only GPU resampling using identity cosines is supported.
+   */
+  bool CheckForValidDirectionCosines( ValidTransformPointer bSplineTransform ) ;//const;
+  // NOTE: const can be added again in ITK4. It's due to GetInput() being not const-correct.
+
   /** Helper function to copy data. */
   void CopyParameters( ValidTransformPointer bSplineTransform );
-};
 
-}; /* namespace itk */
+}; // end class itkCUDAResampleImageFilter
+
+}; // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itkCUDAResampleImageFilter.hxx"

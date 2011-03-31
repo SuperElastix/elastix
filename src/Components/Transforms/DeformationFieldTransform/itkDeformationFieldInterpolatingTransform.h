@@ -31,7 +31,7 @@ namespace itk
   * A simple transform that allows the user to set a deformation field.
   * TransformPoint adds the displacement to the input point.
   * This transform does not support optimizers. Its Set/GetParameters
-  * is not implemented.
+  * is not implemented. DO NOT USE IT FOR REGISTRATION.
   * You may set your own interpolator!
   *
   * \ingroup Transforms
@@ -92,7 +92,9 @@ namespace itk
     {
       itkExceptionMacro( << "ERROR: SetParameters() is not implemented "
         << "for DeformationFieldInterpolatingTransform.\n"
-        << "Use SetDeformationField() instead." );
+        << "Use SetDeformationField() instead.\n"
+        << "Note that this transform is NOT suited for image registration.\n"
+        << "Just use it as an (initial) fixed transform that is not optimized." );
     }
 
     /** Get the transformation parameters is not supported.

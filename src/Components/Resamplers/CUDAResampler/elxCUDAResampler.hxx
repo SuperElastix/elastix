@@ -125,7 +125,23 @@ CUDAResampler<TElastix>
 } // end WriteToFile()
 
 
-} /* namespace elastix */
+/**
+ * ************************* CheckForValidConfiguration ************************
+ */
 
-#endif
+template <class TElastix>
+void
+CUDAResampler<TElastix>
+::CheckForValidConfiguration( ValidTransformPointer & bSplineTransform )
+{
+  this->Superclass1::CheckForValidConfiguration( bSplineTransform );
 
+  elxout << this->Superclass1::GetWarningReport().GetWarningReportAsString()
+    << std::endl;
+
+} // end CheckForValidConfiguration()
+
+
+} // end namespace elastix
+
+#endif // end #ifndef __elxCUDAResampler_hxx

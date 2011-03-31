@@ -53,6 +53,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   this->m_NumberOfGradientMeasurements = 0;
   this->m_NumberOfJacobianMeasurements = 0;
   this->m_NumberOfSamplesForExactGradient = 100000;
+  this->m_SigmoidScaleFactor = 0.1;
 
   this->m_RandomGenerator = RandomGeneratorType::New();
   this->m_AdvancedTransform = 0;
@@ -203,6 +204,14 @@ void AdaptiveStochasticGradientDescent<TElastix>
       this->m_NumberOfSamplesForExactGradient,
       "NumberOfSamplesForExactGradient",
       this->GetComponentLabel(), level, 0 );
+
+    /** Set/Get the scaling factor zeta of the sigmoid width. Large values
+      * cause a more wide sigmoid. Default: 0.1. Should be >0.
+      */
+      double sigmoidScaleFactor = 0.1;
+      this->GetConfiguration()->ReadParameter( sigmoidScaleFactor,
+        "SigmoidScaleFactor", this->GetComponentLabel(), level, 0 );
+      this->m_SigmoidScaleFactor = sigmoidScaleFactor;
 
   } // end if automatic parameter estimation
   else
@@ -554,7 +563,8 @@ AdaptiveStochasticGradientDescent<TElastix>
     / ( sigma1 * sigma1 + sigma3 * sigma3 + 1e-14 );
   const double a = a_max * noisefactor;
 
-  const double omega = vnl_math_max( 1e-14, 0.1 * sigma3 * sigma3 * vcl_sqrt( TrCC ) );
+  const double omega = vnl_math_max( 1e-14, 
+    this->m_SigmoidScaleFactor * sigma3 * sigma3 * vcl_sqrt( TrCC ) );
   const double fmax = 1.0;
   const double fmin = -0.99 + 0.98 * noisefactor;
 
