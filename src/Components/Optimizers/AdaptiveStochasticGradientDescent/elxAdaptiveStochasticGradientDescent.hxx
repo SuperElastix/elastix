@@ -404,9 +404,9 @@ void
 AdaptiveStochasticGradientDescent<TElastix>
 ::ResumeOptimization( void )
 {
-  /** The following code relies on the fact that all 
-  * components have been set up and that the initial 
-  * position has been set, so must be called in this 
+  /** The following code relies on the fact that all
+  * components have been set up and that the initial
+  * position has been set, so must be called in this
   * function. */
 
   if ( this->GetAutomaticParameterEstimation()
@@ -563,7 +563,7 @@ AdaptiveStochasticGradientDescent<TElastix>
     / ( sigma1 * sigma1 + sigma3 * sigma3 + 1e-14 );
   const double a = a_max * noisefactor;
 
-  const double omega = vnl_math_max( 1e-14, 
+  const double omega = vnl_math_max( 1e-14,
     this->m_SigmoidScaleFactor * sigma3 * sigma3 * vcl_sqrt( TrCC ) );
   const double fmax = 1.0;
   const double fmin = -0.99 + 0.98 * noisefactor;

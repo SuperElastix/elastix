@@ -49,7 +49,7 @@ namespace itk
   * stochastic approximation algorithm for multidimensional case."
   * Technical Report, 2005. http://hdl.handle.net/2052/74
   *
-  * [2] S. Klein, J.P.W. Pluim, and M. Staring, M.A. Viergever, 
+  * [2] S. Klein, J.P.W. Pluim, and M. Staring, M.A. Viergever,
   * "Adaptive stochastic gradient descent optimisation for image registration,"
   * International Journal of Computer Vision, vol. 81, no. 3, pp. 227-239, 2009.
   * http://dx.doi.org/10.1007/s11263-008-0168-y

@@ -36,7 +36,7 @@ TransformRigidityPenalty<TElastix>
   this->GetConfiguration()->ReadParameter( fixedRigidityImageName,
     "FixedRigidityImageName", this->GetComponentLabel(), 0, -1, false );
 
-  typedef typename Superclass1::RigidityImageType RigidityImageType;	
+  typedef typename Superclass1::RigidityImageType RigidityImageType;
   typedef ImageFileReader<RigidityImageType> RigidityImageReaderType;
   typename RigidityImageReaderType::Pointer fixedRigidityReader;
   typedef ChangeInformationImageFilter<RigidityImageType> ChangeInfoFilterType;

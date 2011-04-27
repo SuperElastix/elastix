@@ -516,9 +516,9 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
     {
       this->m_NumberOfPixelsCounted++;
 
-      /** Use the derivative of the fixed image for the self Hessian! 
-       * \todo: we can do this more efficient without the interpolation, 
-       * without the sampler, and with a precomputed gradient image, 
+      /** Use the derivative of the fixed image for the self Hessian!
+       * \todo: we can do this more efficient without the interpolation,
+       * without the sampler, and with a precomputed gradient image,
        * but is this the bottleneck?
        */
       movingImageDerivative = fixedInterpolator->EvaluateDerivative( fixedPoint );
@@ -562,7 +562,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
     for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
       H(i,i) = 1.0;
-    }    
+    }
   }
 
 } // end GetSelfHessian()
@@ -614,10 +614,10 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
         }
 
         /** The following implements:
-         * H(row,col) += imjacrow * imageJacobian[ j ]; 
+         * H(row,col) += imjacrow * imageJacobian[ j ];
          * But more efficient.
          */
-        
+
         /** Go to next element */
         for (; (rowIt != rowVector.end()) && ((*rowIt).first < col); ++rowIt);
 
@@ -630,8 +630,8 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
         {
           /** Add to existing value */
           (*rowIt).second += val;
-        }        
-        
+        }
+
       }
     }
 

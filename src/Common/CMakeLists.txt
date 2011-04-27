@@ -25,6 +25,8 @@ ENDIF()
 SET( CommonFiles
   elxTimer.cxx
   elxTimer.h
+  itkAdvancedRayCastInterpolateImageFunction.h
+  itkAdvancedRayCastInterpolateImageFunction.txx
   itkImageFileCastWriter.h
   itkImageFileCastWriter.txx
   itkMeshFileReaderBase.h
