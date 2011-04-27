@@ -28,7 +28,6 @@ using namespace itk;
    * \class PatternIntensityMetric
    * \brief An metric based on the itk::PatternIntensityImageToImageMetric.
    *
-
    *
    * \ingroup Metrics
    *
@@ -170,4 +169,3 @@ using namespace itk;
 #endif
 
 #endif // end #ifndef __elxPatternIntensityMetric_H__
-

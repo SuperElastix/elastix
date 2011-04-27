@@ -93,16 +93,15 @@ using namespace itk;
      * array have the same size. */
     virtual void SetInitialPosition( const ParametersType & param );
 
-
   protected:
 
     Simplex(){};
-      virtual ~Simplex() {};
+    virtual ~Simplex() {};
 
   private:
 
-      Simplex( const Self& );  // purposely not implemented
-      void operator=( const Self& );              // purposely not implemented
+    Simplex( const Self& );  // purposely not implemented
+    void operator=( const Self& );              // purposely not implemented
 
   }; // end class Simplex
 

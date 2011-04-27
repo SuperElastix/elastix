@@ -28,7 +28,6 @@ using namespace itk;
    * \class NormalizedGradientCorrelationMetric
    * \brief An metric based on the itk::NormalizedGradientCorrelationImageToImageMetric.
    *
-
    *
    * \ingroup Metrics
    *
@@ -170,4 +169,3 @@ using namespace itk;
 #endif
 
 #endif // end #ifndef __elxNormalizedGradientCorrelationMetric_H__
-

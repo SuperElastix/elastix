@@ -24,6 +24,7 @@
 
 #include "itkSimpleFilterWatcher.h"
 #include "itkImageFileWriter.h"
+
 namespace itk
 {
 
@@ -43,13 +44,13 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
   this->m_FixedMeasure = 0;
   this->m_OptimizeNormalizationFactor = false;
 
-  m_TransformMovingImageFilter = TransformMovingImageFilterType::New();
-  m_CombinationTransform = CombinationTransformType::New();
-  m_RescaleImageFilter = RescaleIntensityImageFilterType::New();
-  m_DifferenceImageFilter = DifferenceImageFilterType::New();
-  m_MultiplyByConstantImageFilter = MultiplyByConstantImageFilterType::New();
+  this->m_TransformMovingImageFilter = TransformMovingImageFilterType::New();
+  this->m_CombinationTransform = CombinationTransformType::New();
+  this->m_RescaleImageFilter = RescaleIntensityImageFilterType::New();
+  this->m_DifferenceImageFilter = DifferenceImageFilterType::New();
+  this->m_MultiplyByConstantImageFilter = MultiplyByConstantImageFilterType::New();
 
-}
+} // end Constructor
 
 
 /**
@@ -60,59 +61,60 @@ void
 PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
 ::Initialize(void) throw ( ExceptionObject )
 {
-
   Superclass::Initialize();
 
   /* resampling for 3D->2D */
+  this->m_TransformMovingImageFilter->SetTransform(
+    dynamic_cast<CombinationTransformType *>(
+    dynamic_cast<RayCastInterpolatorType *>(
+    const_cast<  InterpolatorType *>(
+    (this->GetInterpolator())
+    ) )->GetTransform()) );
+  this->m_TransformMovingImageFilter->SetInterpolator( this->m_Interpolator );
+  this->m_TransformMovingImageFilter->SetInput( this->m_MovingImage );
 
-  m_TransformMovingImageFilter->SetTransform( dynamic_cast<CombinationTransformType *>(
-		  		dynamic_cast<RayCastInterpolatorType *>(
-			  		const_cast<  InterpolatorType *>(
-				  	(this->GetInterpolator())
-					)
-				)->GetTransform()) );
-  m_TransformMovingImageFilter->SetInterpolator( this->m_Interpolator );
-  m_TransformMovingImageFilter->SetInput( this->m_MovingImage );
+  this->m_TransformMovingImageFilter->SetDefaultPixelValue( 0 );
 
-  m_TransformMovingImageFilter->SetDefaultPixelValue( 0 );
+  this->m_TransformMovingImageFilter->SetSize(
+    this->m_FixedImage->GetLargestPossibleRegion().GetSize() );
+  this->m_TransformMovingImageFilter->SetOutputOrigin(
+    this->m_FixedImage->GetOrigin() );
+  this->m_TransformMovingImageFilter->SetOutputSpacing(
+    this->m_FixedImage->GetSpacing() );
+  this->m_TransformMovingImageFilter->SetOutputDirection(
+    this->m_FixedImage->GetDirection() );
 
-  m_TransformMovingImageFilter->SetSize( this->m_FixedImage->GetLargestPossibleRegion().GetSize() );
-  m_TransformMovingImageFilter->SetOutputOrigin( this->m_FixedImage->GetOrigin() );
-  m_TransformMovingImageFilter->SetOutputSpacing( this->m_FixedImage->GetSpacing() );
-  m_TransformMovingImageFilter->SetOutputDirection( this->m_FixedImage->GetDirection() );
-
-  m_TransformMovingImageFilter->UpdateLargestPossibleRegion();
+  this->m_TransformMovingImageFilter->UpdateLargestPossibleRegion();
 
   this->ComputeFixedImageExtrema(
-  this->GetFixedImage(),
-  this->GetFixedImageRegion() );
+    this->GetFixedImage(), this->GetFixedImageRegion() );
 
   this->ComputeMovingImageExtrema(
-  m_TransformMovingImageFilter->GetOutput(),
-  m_TransformMovingImageFilter->GetOutput()->GetBufferedRegion() );
+    this->m_TransformMovingImageFilter->GetOutput(),
+    this->m_TransformMovingImageFilter->GetOutput()->GetBufferedRegion() );
 
   this->m_NormalizationFactor = this->m_FixedImageTrueMax / this->m_MovingImageTrueMax;
 
-  m_MultiplyByConstantImageFilter->SetInput( m_TransformMovingImageFilter->GetOutput() );
-  m_MultiplyByConstantImageFilter->SetConstant( this->m_NormalizationFactor );
+  this->m_MultiplyByConstantImageFilter->SetInput(
+    this->m_TransformMovingImageFilter->GetOutput() );
+  this->m_MultiplyByConstantImageFilter->SetConstant(
+    this->m_NormalizationFactor );
 
-  m_DifferenceImageFilter->SetInput1( this->m_FixedImage );
-  m_DifferenceImageFilter->SetInput2( m_MultiplyByConstantImageFilter->GetOutput() );
-  m_DifferenceImageFilter->UpdateLargestPossibleRegion();
+  this->m_DifferenceImageFilter->SetInput1( this->m_FixedImage );
+  this->m_DifferenceImageFilter->SetInput2( this->m_MultiplyByConstantImageFilter->GetOutput() );
+  this->m_DifferenceImageFilter->UpdateLargestPossibleRegion();
 
   this->m_FixedMeasure = this->ComputePIFixed();
 
   /* to rescale the similarity measure between 0-1;*/
-
   MeasureType tmpmeasure = this->GetValue( this->m_CombinationTransform->GetParameters() );
 
-  while( (fabs(tmpmeasure)/m_Rescalingfactor) > 1 ){
-
-    m_Rescalingfactor*=10;
-
+  while ( (fabs( tmpmeasure ) / this->m_Rescalingfactor ) > 1 )
+  {
+    this->m_Rescalingfactor *= 10;
   }
 
-}
+} // end Initialize()
 
 
 /**
@@ -145,12 +147,11 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
   typename FixedImageType::SizeType neighborIterationSize;
   typename FixedImageType::PointType point;
 
-  for( iDimension = 0; iDimension < this->m_FixedImage->GetImageDimension(); iDimension++ ){
-
+  for( iDimension = 0; iDimension < this->m_FixedImage->GetImageDimension(); iDimension++ )
+  {
     iterationSize[iDimension] -= ( 2 * m_NeighborhoodRadius );
     iterationStartIndex[iDimension] = m_NeighborhoodRadius;
     neighborIterationSize[iDimension] = (2 * m_NeighborhoodRadius) + 1;
-
   }
 
   /** replace this by checking the size of the 3rd dimension of fixedimage */
@@ -413,7 +414,7 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
   this->GetDerivative( parameters, Derivative );
 }
 
+
 } // end namespace itk
 
-
-#endif
+#endif // end __itkPatternIntensityImageToImageMetric_txx

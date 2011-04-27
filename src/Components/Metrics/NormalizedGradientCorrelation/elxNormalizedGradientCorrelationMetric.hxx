@@ -30,22 +30,24 @@ using namespace itk;
 template <class TElastix>
 void NormalizedGradientCorrelationMetric<TElastix>
 ::Initialize(void) throw (ExceptionObject)
-  {
-    TimerPointer timer = TimerType::New();
-    timer->StartTimer();
-    this->Superclass1::Initialize();
-    timer->StopTimer();
-    elxout << "Initialization of NormalizedGradientCorrelation metric took: "
-      << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
+{
+  TimerPointer timer = TimerType::New();
+  timer->StartTimer();
+  this->Superclass1::Initialize();
+  timer->StopTimer();
+  elxout << "Initialization of NormalizedGradientCorrelation metric took: "
+    << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
 
-  } // end Initialize
+} // end Initialize()
 
-  /**
-   * ***************** BeforeEachResolution ***********************
-   */
+
+/**
+ * ***************** BeforeEachResolution ***********************
+ */
 
 template <class TElastix>
-void NormalizedGradientCorrelationMetric<TElastix>
+void
+NormalizedGradientCorrelationMetric<TElastix>
 ::BeforeEachResolution(void)
 {
     /** Get the current resolution level. */
@@ -75,12 +77,9 @@ void NormalizedGradientCorrelationMetric<TElastix>
    ScalesType scales = this->m_Elastix->GetElxOptimizerBase()->GetAsITKBaseType()->GetScales();
    this->SetScales( scales );
 
-
-} // end BeforeEachResolution
+} // end BeforeEachResolution()
 
 
 } // end namespace elastix
 
-
 #endif // end #ifndef __elxNormalizedGradientCorrelationMetric_HXX__
-

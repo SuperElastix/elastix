@@ -37,7 +37,7 @@ using namespace itk;
     elxout << "Initialization of PatternIntensity metric took: "
       << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
 
-  } // end Initialize
+  } // end Initialize()
 
 
   /**
@@ -86,11 +86,10 @@ using namespace itk;
    ScalesType scales = this->m_Elastix->GetElxOptimizerBase()->GetAsITKBaseType()->GetScales();
    this->SetScales( scales );
 
-  } // end BeforeEachResolution
+  } // end BeforeEachResolution()
 
 
 } // end namespace elastix
 
 
 #endif // end #ifndef __elxPatternIntensityMetric_HXX__
-

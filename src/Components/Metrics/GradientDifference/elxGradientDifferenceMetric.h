@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxGradientDifferenceMetric_H__
 #define __elxGradientDifferenceMetric_H__
 

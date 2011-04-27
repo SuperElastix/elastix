@@ -1,4 +1,16 @@
+/*======================================================================
 
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
 #ifndef __itkNormalizedGradientCorrelationImageToImageMetric_hxx
 #define __itkNormalizedGradientCorrelationImageToImageMetric_hxx
 
@@ -24,22 +36,22 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 ::NormalizedGradientCorrelationImageToImageMetric()
 {
 
-  m_CastFixedImageFilter = CastFixedImageFilterType::New();
-  m_CastMovedImageFilter = CastMovedImageFilterType::New();
-  m_CombinationTransform = CombinationTransformType::New();
-  m_TransformMovingImageFilter = TransformMovingImageFilterType::New();
+  this->m_CastFixedImageFilter = CastFixedImageFilterType::New();
+  this->m_CastMovedImageFilter = CastMovedImageFilterType::New();
+  this->m_CombinationTransform = CombinationTransformType::New();
+  this->m_TransformMovingImageFilter = TransformMovingImageFilterType::New();
 
   this->m_DerivativeDelta = 0.001;
 
   unsigned iDimension = 0;
 
-  for (iDimension=0; iDimension<MovedImageDimension; iDimension++)
-    {
-    m_MeanFixedGradient[iDimension] = 0;
-    m_MeanMovedGradient[iDimension] = 0;
-    }
+  for ( iDimension=0; iDimension<MovedImageDimension; iDimension++ )
+  {
+    this->m_MeanFixedGradient[iDimension] = 0;
+    this->m_MeanMovedGradient[iDimension] = 0;
+  }
 
-}
+} // end Constructor
 
 
 /**
@@ -53,74 +65,60 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   unsigned int iFilter;  // Index of Sobel filters for each dimension
 
   /** Initialise the base class */
-
   Superclass::Initialize();
 
   typedef typename FixedImageType::SizeType SizeType;
   SizeType size = this->m_FixedImage->GetLargestPossibleRegion().GetSize();
 
   /** Compute the gradient of the fixed images */
+  this->m_CastFixedImageFilter->SetInput( this->m_FixedImage );
+  this->m_CastFixedImageFilter->Update();
 
-  m_CastFixedImageFilter->SetInput( this->m_FixedImage );
-  m_CastFixedImageFilter->Update();
+  for ( iFilter=0; iFilter < FixedImageDimension; iFilter++ )
+  {
+    this->m_FixedSobelOperators[iFilter].SetDirection( iFilter );
+    this->m_FixedSobelOperators[iFilter].CreateDirectional();
 
-  for (iFilter=0; iFilter<FixedImageDimension; iFilter++)
-    {
-    m_FixedSobelOperators[iFilter].SetDirection( iFilter );
-
-    m_FixedSobelOperators[iFilter].CreateDirectional();
-
-    m_FixedSobelFilters[iFilter] = FixedSobelFilter::New();
-
-    m_FixedSobelFilters[iFilter]->OverrideBoundaryCondition( &m_FixedBoundCond );
-
-    m_FixedSobelFilters[iFilter]->SetOperator( m_FixedSobelOperators[iFilter] );
-
-    m_FixedSobelFilters[iFilter]->SetInput( m_CastFixedImageFilter->GetOutput() );
-
-    m_FixedSobelFilters[iFilter]->UpdateLargestPossibleRegion();
-    }
+    this->m_FixedSobelFilters[iFilter] = FixedSobelFilter::New();
+    this->m_FixedSobelFilters[iFilter]->OverrideBoundaryCondition( &this->m_FixedBoundCond );
+    this->m_FixedSobelFilters[iFilter]->SetOperator( this->m_FixedSobelOperators[iFilter] );
+    this->m_FixedSobelFilters[iFilter]->SetInput( this->m_CastFixedImageFilter->GetOutput() );
+    this->m_FixedSobelFilters[iFilter]->UpdateLargestPossibleRegion();
+  }
 
   this->ComputeMeanFixedGradient();
 
   /* resampling for 3D->2D */
+  this->m_TransformMovingImageFilter->SetTransform(
+    dynamic_cast<CombinationTransformType *>(
+    dynamic_cast<RayCastInterpolatorType *>(
+    const_cast<  InterpolatorType *>(
+    (this->GetInterpolator() ) ) )->GetTransform()) );
+  this->m_TransformMovingImageFilter->SetInterpolator( this->m_Interpolator );
+  this->m_TransformMovingImageFilter->SetInput( this->m_MovingImage );
+  this->m_TransformMovingImageFilter->SetDefaultPixelValue( 0 );
+  this->m_TransformMovingImageFilter->SetSize( this->m_FixedImage->GetLargestPossibleRegion().GetSize() );
+  this->m_TransformMovingImageFilter->SetOutputOrigin( this->m_FixedImage->GetOrigin() );
+  this->m_TransformMovingImageFilter->SetOutputSpacing( this->m_FixedImage->GetSpacing() );
+  this->m_TransformMovingImageFilter->SetOutputDirection( this->m_FixedImage->GetDirection() );
+  this->m_TransformMovingImageFilter->Update();
 
-  m_TransformMovingImageFilter->SetTransform( dynamic_cast<CombinationTransformType *>(
-		  		dynamic_cast<RayCastInterpolatorType *>(
-			  		const_cast<  InterpolatorType *>(
-				  	(this->GetInterpolator())
-					)
-				)->GetTransform()) );
-  m_TransformMovingImageFilter->SetInterpolator( this->m_Interpolator );
-  m_TransformMovingImageFilter->SetInput( this->m_MovingImage );
+  this->m_CastMovedImageFilter->SetInput(
+    this->m_TransformMovingImageFilter->GetOutput() );
 
-  m_TransformMovingImageFilter->SetDefaultPixelValue( 0 );
+  for ( iFilter=0; iFilter < MovedImageDimension; iFilter++ )
+  {
+    this->m_MovedSobelOperators[iFilter].SetDirection( iFilter );
+    this->m_MovedSobelOperators[iFilter].CreateDirectional();
 
-  m_TransformMovingImageFilter->SetSize( this->m_FixedImage->GetLargestPossibleRegion().GetSize() );
-  m_TransformMovingImageFilter->SetOutputOrigin( this->m_FixedImage->GetOrigin() );
-  m_TransformMovingImageFilter->SetOutputSpacing( this->m_FixedImage->GetSpacing() );
-  m_TransformMovingImageFilter->SetOutputDirection( this->m_FixedImage->GetDirection() );
-  m_TransformMovingImageFilter->Update();
+    this->m_MovedSobelFilters[iFilter] = MovedSobelFilter::New();
+    this->m_MovedSobelFilters[iFilter]->OverrideBoundaryCondition( &this->m_MovedBoundCond );
+    this->m_MovedSobelFilters[iFilter]->SetOperator( this->m_MovedSobelOperators[iFilter] );
+    this->m_MovedSobelFilters[iFilter]->SetInput( this->m_CastMovedImageFilter->GetOutput() );
+    this->m_MovedSobelFilters[iFilter]->UpdateLargestPossibleRegion();
+  }
 
-  m_CastMovedImageFilter->SetInput( m_TransformMovingImageFilter->GetOutput() );
-
-  for (iFilter=0; iFilter<MovedImageDimension; iFilter++)
-    {
-    m_MovedSobelOperators[iFilter].SetDirection( iFilter );
-    m_MovedSobelOperators[iFilter].CreateDirectional();
-
-    m_MovedSobelFilters[iFilter] = MovedSobelFilter::New();
-
-    m_MovedSobelFilters[iFilter]->OverrideBoundaryCondition( &m_MovedBoundCond );
-    m_MovedSobelFilters[iFilter]->SetOperator( m_MovedSobelOperators[iFilter] );
-
-    m_MovedSobelFilters[iFilter]->SetInput( m_CastMovedImageFilter->GetOutput() );
-
-    m_MovedSobelFilters[iFilter]->UpdateLargestPossibleRegion();
-
-    }
-
-}
+} // end Initialize()
 
 
 /**
@@ -143,73 +141,70 @@ void
 NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 ::ComputeMeanFixedGradient( void ) const
 {
-
-
   typename FixedGradientImageType::IndexType currentIndex;
   typename FixedGradientImageType::PointType point;
 
-    for (int iDimension=0; iDimension<FixedImageDimension; iDimension++)
+  for ( int iDimension=0; iDimension < FixedImageDimension; iDimension++ )
+  {
+    this->m_FixedSobelFilters[iDimension]->UpdateLargestPossibleRegion();
+  }
+
+  typedef  itk::ImageRegionConstIteratorWithIndex< FixedGradientImageType >
+    FixedIteratorType;
+  FixedIteratorType fixedIteratorx( this->m_FixedSobelFilters[0]->GetOutput(),
+    this->GetFixedImageRegion() );
+  FixedIteratorType fixedIteratory( this->m_FixedSobelFilters[1]->GetOutput(),
+    this->GetFixedImageRegion() );
+
+  fixedIteratorx.GoToBegin();
+  fixedIteratory.GoToBegin();
+
+  bool sampleOK = false;
+  FixedGradientPixelType fixedGradient[FixedImageDimension];
+  for ( int i = 0; i < FixedImageDimension; i++ )
+  {
+    fixedGradient[i] = 0.0;
+  }
+  unsigned long nPixels = 0;
+
+  if ( this->m_FixedImageMask.IsNull() ) sampleOK = true;
+
+  while ( ! fixedIteratorx.IsAtEnd() )
+  {
+    /** Get current index */
+    currentIndex = fixedIteratorx.GetIndex();
+    this->m_FixedImage->TransformIndexToPhysicalPoint( currentIndex, point );
+
+    /** if fixedMask is given */
+    if ( !this->m_FixedImageMask.IsNull() )
+    {
+      if ( this->m_FixedImageMask->IsInside( point ) ) // sample is good
       {
-
- 	m_FixedSobelFilters[iDimension]->UpdateLargestPossibleRegion();
-
+        sampleOK = true;
       }
-
-   typedef  itk::ImageRegionConstIteratorWithIndex< FixedGradientImageType >
-     FixedIteratorType;
-
-    FixedIteratorType fixedIteratorx( m_FixedSobelFilters[0]->GetOutput(),
-                                     this->GetFixedImageRegion() );
-    FixedIteratorType fixedIteratory( m_FixedSobelFilters[1]->GetOutput(),
-                                     this->GetFixedImageRegion() );
-
-    fixedIteratorx.GoToBegin();
-    fixedIteratory.GoToBegin();
-
-    bool sampleOK = false;
-    FixedGradientPixelType fixedGradient[FixedImageDimension];
-		for (int i = 0; i < FixedImageDimension; i++)
-			fixedGradient[i] = 0.0;
-    unsigned long nPixels = 0;
-
-    if ( this->m_FixedImageMask.IsNull() )
-		sampleOK = true;
-
-    while ( ! fixedIteratorx.IsAtEnd() ) {
-
-      /** Get current index */
-
-      currentIndex = fixedIteratorx.GetIndex();
-      this->m_FixedImage->TransformIndexToPhysicalPoint( currentIndex, point );
-
-      /** if fixedMask is given */
-
-      if ( !this->m_FixedImageMask.IsNull() ){
-
-        if ( this->m_FixedImageMask->IsInside( point ) ) // sample is good
-	  sampleOK = true;
-	else // sample no good
-	  sampleOK = false;
+      else // sample no good
+      {
+        sampleOK = false;
       }
+    }
 
-      if(sampleOK){ //go on
-
+    if( sampleOK )
+    { //go on
       // Get the moving and fixed image gradients
+      fixedGradient[0] += fixedIteratorx.Get();
+      fixedGradient[1] += fixedIteratory.Get();
+      nPixels++;
+    } // end if sampleOK
 
-      	fixedGradient[0] += fixedIteratorx.Get();
-      	fixedGradient[1] += fixedIteratory.Get();
-	nPixels++;
+    ++fixedIteratorx;
+    ++fixedIteratory;
+  } // end while
 
-      } // end if sampleOK
+  this->m_MeanFixedGradient[0] = fixedGradient[0] / nPixels;
+  this->m_MeanFixedGradient[1] = fixedGradient[1] / nPixels;
 
-      	++fixedIteratorx;
-      	++fixedIteratory;
+} // end ComputeMeanFixedGradient()
 
-    } // end while
-
-  m_MeanFixedGradient[0] = fixedGradient[0]/nPixels;
-  m_MeanFixedGradient[1] = fixedGradient[1]/nPixels;
-}
 
 /**
  * Get the mean of the moved gradients
@@ -219,11 +214,10 @@ void
 NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 ::ComputeMeanMovedGradient( void ) const
 {
-
   typename MovedGradientImageType::IndexType currentIndex;
   typename MovedGradientImageType::PointType point;
 
-    for (int iDimension=0; iDimension<MovedImageDimension; iDimension++)
+  for ( int iDimension=0; iDimension<MovedImageDimension; iDimension++)
       {
 
  	m_MovedSobelFilters[iDimension]->UpdateLargestPossibleRegion();
@@ -462,24 +456,23 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 ::GetDerivative( const TransformParametersType & parameters,
                  DerivativeType & derivative           ) const
 {
-
   TransformParametersType testPoint;
   testPoint = parameters;
 
   const unsigned int numberOfParameters = this->GetNumberOfParameters();
   derivative = DerivativeType( numberOfParameters );
 
-  for( unsigned int i=0; i<numberOfParameters; i++)
-    {
-    testPoint[i] -= this->m_DerivativeDelta / sqrt(m_Scales[i]);
+  for ( unsigned int i = 0; i < numberOfParameters; i++ )
+  {
+    testPoint[i] -= this->m_DerivativeDelta / sqrt( this->m_Scales[i]);
     const MeasureType valuep0 = this->GetValue( testPoint );
-    testPoint[i] += 2* this->m_DerivativeDelta / sqrt(m_Scales[i]);
+    testPoint[i] += 2 * this->m_DerivativeDelta / sqrt( this->m_Scales[i]);
     const MeasureType valuep1 = this->GetValue( testPoint );
-    derivative[i] = (valuep1 - valuep0 ) / ( 2 * this->m_DerivativeDelta / sqrt(m_Scales[i]) );
+    derivative[i] = (valuep1 - valuep0 ) / ( 2 * this->m_DerivativeDelta / sqrt( this->m_Scales[i] ) );
     testPoint[i] = parameters[i];
-    }
+  }
 
-}
+} // end GetDerivative()
 
 
 /**
@@ -488,16 +481,15 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 template <class TFixedImage, class TMovingImage>
 void
 NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
-::GetValueAndDerivative(const TransformParametersType & parameters,
-                        MeasureType & Value, DerivativeType  & Derivative) const
+::GetValueAndDerivative( const TransformParametersType & parameters,
+  MeasureType & value, DerivativeType & derivative ) const
 {
-  Value      = this->GetValue( parameters );
-  this->GetDerivative( parameters, Derivative );
-}
+  value = this->GetValue( parameters );
+  this->GetDerivative( parameters, derivative );
+
+} // end GetValueAndDerivative()
+
 
 } // end namespace itk
 
-
 #endif
-
-

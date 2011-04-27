@@ -35,6 +35,7 @@ namespace itk
  *
  * \ingroup RegistrationMetrics
  */
+
 template < class TFixedImage, class TMovingImage >
 class ITK_EXPORT PatternIntensityImageToImageMetric :
 public AdvancedImageToImageMetric< TFixedImage, TMovingImage>
@@ -53,7 +54,6 @@ public:
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(PatternIntensityImageToImageMetric, ImageToImageMetric);
-
 
   /** Typedefs from the superclass. */
   typedef typename
@@ -187,17 +187,17 @@ private:
   typename RescaleIntensityImageFilterType::Pointer m_RescaleImageFilter;
   typename MultiplyByConstantImageFilterType::Pointer m_MultiplyByConstantImageFilter;
 
-  double     	 	m_NoiseConstant;
-  double			m_NeighborhoodRadius;
+  double     	 	  m_NoiseConstant;
+  double			    m_NeighborhoodRadius;
   double      		m_DerivativeDelta;
-  double			m_NormalizationFactor;
-  double			m_Rescalingfactor;
-  bool				m_OptimizeNormalizationFactor;
-  ScalesType		m_Scales;
-  MeasureType		m_FixedMeasure;
+  double			    m_NormalizationFactor;
+  double			    m_Rescalingfactor;
+  bool				    m_OptimizeNormalizationFactor;
+  ScalesType		  m_Scales;
+  MeasureType		  m_FixedMeasure;
   CombinationTransformPointer	m_CombinationTransform;
 
-};
+}; // end class
 
 } // end namespace itk
 
@@ -205,4 +205,4 @@ private:
 #include "itkPatternIntensityImageToImageMetric.hxx"
 #endif
 
-#endif
+#endif // end #ifndef __itkPatternIntensityImageToImageMetric_h

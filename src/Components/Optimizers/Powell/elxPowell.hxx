@@ -25,7 +25,6 @@ namespace elastix
 using namespace itk;
 
 
-
   /**
    * ***************** BeforeRegistration ***********************
    */
@@ -108,7 +107,6 @@ using namespace itk;
     void Powell<TElastix>
     ::AfterEachResolution(void)
   {
-
     /**
      * enum   StopConditionType {   GradientMagnitudeTolerance = 1, StepTooSmall,
      * ImageNotAvailable, CostFunctionError, MaximumNumberOfIterations
@@ -116,8 +114,6 @@ using namespace itk;
     std::string stopcondition = this->GetStopConditionDescription();
 
     /** Print the stopping condition */
-
-
     elxout << "Stopping condition: " << stopcondition << "." << std::endl;
 
   } // end AfterEachResolution
@@ -172,4 +168,3 @@ using namespace itk;
 } // end namespace elastix
 
 #endif // end #ifndef __elxPowell_hxx
-

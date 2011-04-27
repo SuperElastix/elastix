@@ -93,16 +93,15 @@ using namespace itk;
      * array have the same size. */
     virtual void SetInitialPosition( const ParametersType & param );
 
-
   protected:
 
     Powell(){};
-      virtual ~Powell() {};
+    virtual ~Powell() {};
 
   private:
 
-      Powell( const Self& );  // purposely not implemented
-      void operator=( const Self& );              // purposely not implemented
+    Powell( const Self& );  // purposely not implemented
+    void operator=( const Self& );              // purposely not implemented
 
   }; // end class Powell
 

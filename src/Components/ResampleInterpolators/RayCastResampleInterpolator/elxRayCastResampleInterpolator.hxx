@@ -21,12 +21,12 @@
 
 namespace elastix
 {
-  using namespace itk;
+using namespace itk;
+
 
 /*
  * ***************** BeforeAll *****************
  */
-
 
 template <class TElastix>
 int
@@ -46,7 +46,7 @@ RayCastResampleInterpolator<TElastix>
   }
 
  return 0;
-}
+} // end BeforeAll()
 
 
 /*
@@ -58,71 +58,68 @@ void
 RayCastResampleInterpolator<TElastix>
 ::BeforeRegistration( void )
 {
-
- 	m_CombinationTransform = CombinationTransformType::New();
-	m_CombinationTransform->SetUseComposition( true );
+ 	this->m_CombinationTransform = CombinationTransformType::New();
+	this->m_CombinationTransform->SetUseComposition( true );
 
 	typedef typename elastix::OptimizerBase<TElastix>::ITKBaseType::ParametersType ParametersType;
-   	unsigned int numberofparameters = this->m_Elastix->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
-   	TransformParametersType preParameters( numberofparameters );
-	preParameters.Fill(0.);
+  
+  unsigned int numberofparameters
+    = this->m_Elastix->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
+  TransformParametersType preParameters( numberofparameters );
+	preParameters.Fill( 0.0 );
 
-   		for( unsigned int i = 0; i < numberofparameters ; i++ )
-		{
-
-   		  bool ret = this->GetConfiguration()->ReadParameter( preParameters[i],
-              	  "PreParameters", this->GetComponentLabel(), i, 0 );
-   			if (!ret)
-   			{
-			  std::cerr<<" Error, not enough PreParameters are given"<<std::endl;
-   			}
-
-		}
+  for ( unsigned int i = 0; i < numberofparameters; i++ )
+  {
+    bool ret = this->GetConfiguration()->ReadParameter( preParameters[ i ],
+      "PreParameters", this->GetComponentLabel(), i, 0 );
+    if ( !ret )
+    {
+      std::cerr << " Error, not enough PreParameters are given" << std::endl;
+    }
+  }
 
 	EulerTransformType::InputPointType centerofrotation;
-	centerofrotation.Fill(0.);
+	centerofrotation.Fill( 0.0 );
 
-		for( unsigned int i = 0; i < this->m_Elastix->GetMovingImage()->GetImageDimension() ; i++ )
-		{
+  for( unsigned int i = 0; i < this->m_Elastix->GetMovingImage()->GetImageDimension() ; i++ )
+  {
+    bool ret = this->GetConfiguration()->ReadParameter( centerofrotation[ i ],
+      "CenterOfRotationPoint", this->GetComponentLabel(), i, 0 );
+  }
 
-   		  bool ret = this->GetConfiguration()->ReadParameter( centerofrotation[i],
-              	  "CenterOfRotationPoint", this->GetComponentLabel(), i, 0 );
+	this->m_PreTransform = EulerTransformType::New();
+	this->m_PreTransform->SetParameters( preParameters );
+	this->m_PreTransform->SetCenter( centerofrotation );
+	this->m_CombinationTransform->SetInitialTransform( this->m_PreTransform );
+	this->m_CombinationTransform->SetCurrentTransform(
+    this->m_Elastix->GetElxTransformBase()->GetAsITKBaseType() );
 
-		}
-
-	m_PreTransform = EulerTransformType::New();
-	m_PreTransform->SetParameters( preParameters );
-	m_PreTransform->SetCenter( centerofrotation );
-	m_CombinationTransform->SetInitialTransform( m_PreTransform );
-	m_CombinationTransform->SetCurrentTransform( this->m_Elastix->GetElxTransformBase()->GetAsITKBaseType() );
-
-	this->SetTransform( m_CombinationTransform );
+	this->SetTransform( this->m_CombinationTransform );
 	this->SetInputImage( this->m_Elastix->GetMovingImage() );
 
 	PointType focalPoint;
-	focalPoint.Fill( 0. );
+	focalPoint.Fill( 0.0 );
 
-		for( unsigned int i = 0; i < this->m_Elastix->GetFixedImage()->GetImageDimension()  ; i++ )
-		{
-
-   		  bool ret = this->GetConfiguration()->ReadParameter( focalPoint[i],
-              	  "FocalPoint", this->GetComponentLabel(), i, 0 );
-   			if (!ret)
-   			{
-			  std::cerr<<" Error, FocalPoint not assigned"<<std::endl;
-   			}
-
-		}
+  for ( unsigned int i = 0; i < this->m_Elastix->GetFixedImage()->GetImageDimension(); i++ )
+  {
+    bool ret = this->GetConfiguration()->ReadParameter( focalPoint[ i ],
+      "FocalPoint", this->GetComponentLabel(), i, 0 );
+    if ( !ret )
+    {
+      std::cerr << " Error, FocalPoint not assigned" << std::endl;
+    }
+  }
 
 	this->SetFocalPoint( focalPoint );
 
-	this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->SetTransform( this->m_CombinationTransform );
+	this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->SetTransform(
+    this->m_CombinationTransform );
 
 	double threshold = 0.;
-	this->GetConfiguration()->ReadParameter( threshold, "Threshold", 0);
+	this->GetConfiguration()->ReadParameter( threshold, "Threshold", 0 );
 	this->SetThreshold( threshold );
 
-}
+} // end BeforeRegistration()
 
 
 /*
@@ -134,54 +131,50 @@ void
 RayCastResampleInterpolator<TElastix>
 ::AfterEachResolution( void )
 {
-
-
-	m_CombinationTransform = CombinationTransformType::New();
-	m_CombinationTransform->SetUseComposition( true );
+	this->m_CombinationTransform = CombinationTransformType::New();
+	this->m_CombinationTransform->SetUseComposition( true );
 
 	typedef typename elastix::OptimizerBase<TElastix>::ITKBaseType::ParametersType ParametersType;
-   	unsigned int numberofparameters = this->m_Elastix->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
-   	TransformParametersType preParameters( numberofparameters );
+  unsigned int numberofparameters
+    = this->m_Elastix->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
+  TransformParametersType preParameters( numberofparameters );
 	TransformParametersType finalParameters( numberofparameters );
-	finalParameters.Fill(0.);
-	preParameters.Fill(0.);
+	finalParameters.Fill( 0.0 );
+	preParameters.Fill( 0.0 );
 
-   		for( unsigned int i = 0; i < numberofparameters ; i++ )
-		{
+  for ( unsigned int i = 0; i < numberofparameters; i++ )
+  {
+    bool ret = this->GetConfiguration()->ReadParameter( preParameters[i],
+      "PreParameters", this->GetComponentLabel(), i, 0 );
+    if ( !ret )
+    {
+      std::cerr << " Error, not enough PreParameters are given" << std::endl;
+    }
+  }
 
-   		  bool ret = this->GetConfiguration()->ReadParameter( preParameters[i],
-              	  "PreParameters", this->GetComponentLabel(), i, 0 );
-   			if (!ret)
-   			{
-			  std::cerr<<" Error, not enough PreParameters are given"<<std::endl;
-   			}
-
-		}
-
-	m_PreTransform = EulerTransformType::New();
-	m_PreTransform->SetParameters( preParameters );
-	m_CombinationTransform->SetInitialTransform( m_PreTransform );
+	this->m_PreTransform = EulerTransformType::New();
+	this->m_PreTransform->SetParameters( preParameters );
+	this->m_CombinationTransform->SetInitialTransform( this->m_PreTransform );
 	finalParameters = this->m_Elastix->GetElxTransformBase()->GetAsITKBaseType()->GetParameters();
 
-	m_CombinationTransform->SetCurrentTransform( this->m_Elastix->GetElxTransformBase()->GetAsITKBaseType() );
+	this->m_CombinationTransform->SetCurrentTransform(
+    this->m_Elastix->GetElxTransformBase()->GetAsITKBaseType() );
 
-	this->SetTransform( m_CombinationTransform );
+	this->SetTransform( this->m_CombinationTransform );
 	this->SetInputImage( this->m_Elastix->GetMovingImage() );
 
 	PointType focalPoint;
-	focalPoint.Fill( 0. );
+	focalPoint.Fill( 0.0 );
 
-		for( unsigned int i = 0; i < this->m_Elastix->GetFixedImage()->GetImageDimension()  ; i++ )
-		{
-
-   		  bool ret = this->GetConfiguration()->ReadParameter( focalPoint[i],
-              	  "FocalPoint", this->GetComponentLabel(), i, 0 );
-   			if (!ret)
-   			{
-			  std::cerr<<" Error, FocalPoint not assigned"<<std::endl;
-   			}
-
-		}
+  for ( unsigned int i = 0; i < this->m_Elastix->GetFixedImage()->GetImageDimension(); i++ )
+  {
+    bool ret = this->GetConfiguration()->ReadParameter( focalPoint[i],
+      "FocalPoint", this->GetComponentLabel(), i, 0 );
+    if ( !ret )
+    {
+      std::cerr << " Error, FocalPoint not assigned" << std::endl;
+    }
+  }
 
 	this->SetFocalPoint( focalPoint );
 
@@ -189,8 +182,7 @@ RayCastResampleInterpolator<TElastix>
 	this->GetConfiguration()->ReadParameter( threshold, "Threshold", 0);
 	this->SetThreshold( threshold );
 
-
-}
+} // end AfterEachResolution()
 
 
 /*
@@ -202,35 +194,33 @@ void
 RayCastResampleInterpolator<TElastix>
 ::ReadFromFile( void )
 {
-
 	/** Call ReadFromFile of the ResamplerBase. */
-  	this->Superclass2::ReadFromFile();
+  this->Superclass2::ReadFromFile();
 
- 	m_CombinationTransform = CombinationTransformType::New();
-	m_CombinationTransform->SetUseComposition( true );
+ 	this->m_CombinationTransform = CombinationTransformType::New();
+	this->m_CombinationTransform->SetUseComposition( true );
 
 	typedef typename elastix::OptimizerBase<TElastix>::ITKBaseType::ParametersType ParametersType;
-   	unsigned int numberofparameters = this->m_Elastix->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
-   	TransformParametersType preParameters( numberofparameters );
+  unsigned int numberofparameters
+    = this->m_Elastix->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
+  TransformParametersType preParameters( numberofparameters );
 
-   		for( unsigned int i = 0; i < numberofparameters ; i++ )
-		{
+  for ( unsigned int i = 0; i < numberofparameters; i++ )
+  {
+    bool ret = this->GetConfiguration()->ReadParameter( preParameters[i],
+      "PreParameters", this->GetComponentLabel(), i, 0 );
+    if ( !ret )
+    {
+      std::cerr << " Error, not enough PreParameters are given" << std::endl;
+    }
+  }
 
-   		  bool ret = this->GetConfiguration()->ReadParameter( preParameters[i],
-              	  "PreParameters", this->GetComponentLabel(), i, 0 );
-   			if (!ret)
-   			{
-			  std::cerr<<" Error, not enough PreParameters are given"<<std::endl;
-   			}
+	this->m_PreTransform = EulerTransformType::New();
+	this->m_PreTransform->SetParameters( preParameters );
+	this->m_CombinationTransform->SetInitialTransform( this->m_PreTransform );
+	this->m_CombinationTransform->SetCurrentTransform( this->m_Elastix->GetElxTransformBase()->GetAsITKBaseType() );
 
-		}
-
-	m_PreTransform = EulerTransformType::New();
-	m_PreTransform->SetParameters( preParameters );
-	m_CombinationTransform->SetInitialTransform( m_PreTransform );
-	m_CombinationTransform->SetCurrentTransform( this->m_Elastix->GetElxTransformBase()->GetAsITKBaseType() );
-
-	this->SetTransform( m_CombinationTransform );
+	this->SetTransform( this->m_CombinationTransform );
 	this->SetInputImage( this->m_Elastix->GetMovingImage() );
 
 	PointType imageorigin;
@@ -238,7 +228,7 @@ RayCastResampleInterpolator<TElastix>
 	SizeType imagesize;
 	unsigned int dim = 0;
 
-	for( dim = 0; dim < ImageDimension; dim++ )
+	for ( dim = 0; dim < ImageDimension; dim++ )
 	{
 	  this->m_Configuration->ReadParameter( imageorigin[ dim ], "Origin", dim );
 	  this->m_Configuration->ReadParameter( imagesize[ dim ], "Size", dim );
@@ -248,17 +238,15 @@ RayCastResampleInterpolator<TElastix>
 	PointType focalPoint;
 	focalPoint.Fill( 0. );
 
-		for( unsigned int i = 0; i < this->m_Elastix->GetFixedImage()->GetImageDimension()  ; i++ )
-		{
-
-   		  bool ret = this->GetConfiguration()->ReadParameter( focalPoint[i],
-              	  "FocalPoint", this->GetComponentLabel(), i, 0 );
-   			if (!ret)
-   			{
-			  std::cerr<<" Error, FocalPoint not assigned"<<std::endl;
-   			}
-
-		}
+  for ( unsigned int i = 0; i < this->m_Elastix->GetFixedImage()->GetImageDimension(); i++ )
+  {
+    bool ret = this->GetConfiguration()->ReadParameter( focalPoint[i],
+      "FocalPoint", this->GetComponentLabel(), i, 0 );
+    if ( !ret )
+    {
+      std::cerr << " Error, FocalPoint not assigned" << std::endl;
+    }
+  }
 
 	this->SetFocalPoint( focalPoint );
 
@@ -266,7 +254,8 @@ RayCastResampleInterpolator<TElastix>
 	this->GetConfiguration()->ReadParameter( threshold, "Threshold", 0);
 	this->SetThreshold( threshold );
 
-}
+} // end ReadFromFile()
+
 
 /**
  * ******************* WriteToFile ******************************
@@ -281,10 +270,10 @@ RayCastResampleInterpolator<TElastix>
   this->Superclass2::WriteToFile();
 
   PointType imageorigin;
-  imageorigin.Fill(0);
+  imageorigin.Fill( 0.0 );
   unsigned int dim = 0;
 
-  for( dim = 0; dim < ImageDimension; dim++ )
+  for ( dim = 0; dim < ImageDimension; dim++ )
   {
     this->m_Configuration->ReadParameter( imageorigin[ dim ], "Origin", dim );
   }
@@ -300,7 +289,7 @@ RayCastResampleInterpolator<TElastix>
 
 } // end WriteToFile()
 
+
 } // end namespace elastix
 
-#endif // end #ifndef __elxBSplineResampleInterpolator_hxx
-
+#endif // end #ifndef __elxRayCastResampleInterpolator_hxx

@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxRayCastInterpolator_h
 #define __elxRayCastInterpolator_h
 
@@ -144,4 +143,3 @@ using namespace itk;
 #endif
 
 #endif // end #ifndef __elxRayCastInterpolator_h
-
