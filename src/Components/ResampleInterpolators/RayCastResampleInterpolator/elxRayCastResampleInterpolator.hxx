@@ -62,7 +62,7 @@ RayCastResampleInterpolator<TElastix>
 	this->m_CombinationTransform->SetUseComposition( true );
 
 	typedef typename elastix::OptimizerBase<TElastix>::ITKBaseType::ParametersType ParametersType;
-  
+
   unsigned int numberofparameters
     = this->m_Elastix->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
   TransformParametersType preParameters( numberofparameters );
@@ -78,12 +78,12 @@ RayCastResampleInterpolator<TElastix>
     }
   }
 
-	EulerTransformType::InputPointType centerofrotation;
+	typename EulerTransformType::InputPointType centerofrotation;
 	centerofrotation.Fill( 0.0 );
 
   for( unsigned int i = 0; i < this->m_Elastix->GetMovingImage()->GetImageDimension() ; i++ )
   {
-    bool ret = this->GetConfiguration()->ReadParameter( centerofrotation[ i ],
+    this->GetConfiguration()->ReadParameter( centerofrotation[ i ],
       "CenterOfRotationPoint", this->GetComponentLabel(), i, 0 );
   }
 
