@@ -53,7 +53,7 @@ using namespace itk;
 		*/
 
     /** Set moving image derivative scales. */
-    this->SetUseMovingImageDerivativeScales( false );
+	this->SetUseMovingImageDerivativeScales( false );
     MovingImageDerivativeScalesType movingImageDerivativeScales;
     bool usescales = true;
     for ( unsigned int i = 0; i < MovingImageDimension; ++i )
@@ -70,9 +70,9 @@ using namespace itk;
         << movingImageDerivativeScales << std::endl;
     }
 
-	 typedef typename elastix::OptimizerBase<TElastix>::ITKBaseType::ScalesType	ScalesType;
-   ScalesType scales = this->m_Elastix->GetElxOptimizerBase()->GetAsITKBaseType()->GetScales();
-   this->SetScales( scales );
+	typedef typename elastix::OptimizerBase<TElastix>::ITKBaseType::ScalesType	ScalesType;
+	ScalesType scales = this->m_Elastix->GetElxOptimizerBase()->GetAsITKBaseType()->GetScales();
+	this->SetScales( scales );
 
   } // end BeforeEachResolution
 
