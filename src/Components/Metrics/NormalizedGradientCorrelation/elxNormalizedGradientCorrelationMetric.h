@@ -43,7 +43,7 @@ using namespace itk;
   {
   public:
 
-    /** Standard ITK-stuff. */
+	/** Standard ITK-stuff. */
     typedef NormalizedGradientCorrelationMetric                             Self;
     typedef NormalizedGradientCorrelationImageToImageMetric<
       typename MetricBase<TElastix>::FixedImageType,
