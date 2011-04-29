@@ -55,7 +55,7 @@ using namespace itk;
     typename InterpolatorBase<TElastix>::InputImageType,
     typename InterpolatorBase<TElastix>::CoordRepType > Superclass1;
     typedef InterpolatorBase<TElastix>          Superclass2;
-    typedef SmartPointer<Self>                  Pointer;
+	typedef SmartPointer<Self>                  Pointer;
     typedef SmartPointer<const Self>            ConstPointer;
 
     /** Method for creation through the object factory. */
@@ -80,7 +80,6 @@ using namespace itk;
     typedef typename Superclass1::ContinuousIndexType       ContinuousIndexType;
     typedef typename Superclass1::PointType                 PointType;
     typedef typename Superclass1::SizeType                  SizeType;
-
     typedef typename InputImageType::SpacingType            SpacingType;
 
     /** Typedefs inherited from Elastix. */
@@ -94,44 +93,46 @@ using namespace itk;
 
     /** Typedef's for CombinationTransform */
     typedef typename itk::EulerTransform<
-	    typename InterpolatorBase<TElastix>::CoordRepType,
-		     ImageDimension >						EulerTransformType;
-    typedef typename EulerTransformType::ParametersType				TransformParametersType;
-    typedef typename EulerTransformType::Pointer				EulerTransformPointer;
+	  typename InterpolatorBase<TElastix>::CoordRepType,
+	  ImageDimension >										EulerTransformType;
+    typedef typename EulerTransformType::ParametersType		TransformParametersType;
+    typedef typename EulerTransformType::Pointer			EulerTransformPointer;
     typedef typename itk::AdvancedTransform<
-	    typename InterpolatorBase<TElastix>::CoordRepType,
+	  typename InterpolatorBase<TElastix>::CoordRepType,
 	    itkGetStaticConstMacro( ImageDimension ),
-	    itkGetStaticConstMacro( ImageDimension )> 				AdvancedTransformType;
-    typedef typename AdvancedTransformType::Pointer 				AdvancedTransformPointer;
+	    itkGetStaticConstMacro( ImageDimension )> 			AdvancedTransformType;
+    typedef typename AdvancedTransformType::Pointer 		AdvancedTransformPointer;
     typedef typename itk::AdvancedCombinationTransform<
-	    typename InterpolatorBase<TElastix>::CoordRepType,
-	    itkGetStaticConstMacro( ImageDimension ) >
-	  									CombinationTransformType;
-    typedef typename CombinationTransformType::Pointer 				CombinationTransformPointer;
+	  typename InterpolatorBase<TElastix>::CoordRepType,
+	  itkGetStaticConstMacro( ImageDimension ) >
+	  														CombinationTransformType;
+    typedef typename CombinationTransformType::Pointer 		CombinationTransformPointer;
 
   protected:
 
-    /** The constructor. */
+	/** The constructor. */
     RayCastInterpolator() {}
-    /** The destructor. */
+    
+	/** The destructor. */
     virtual ~RayCastInterpolator() {}
 
-		virtual int BeforeAll( void );
+	virtual int BeforeAll( void );
 
-		virtual void BeforeRegistration( void );
+	virtual void BeforeRegistration( void );
 
-		virtual void BeforeEachResolution( void );
+	virtual void BeforeEachResolution( void );
 
   private:
 
     /** The private constructor. */
     RayCastInterpolator( const Self& );  // purposely not implemented
-    /** The private copy constructor. */
+    
+	/** The private copy constructor. */
     void operator=( const Self& );      // purposely not implemented
 
-    EulerTransformPointer		m_PreTransform;
-    TransformParametersType		m_PreParameters;
-    CombinationTransformPointer	m_CombinationTransform;
+    EulerTransformPointer			m_PreTransform;
+    TransformParametersType			m_PreParameters;
+    CombinationTransformPointer		m_CombinationTransform;
 
   }; // end class RayCastInterpolator
 
