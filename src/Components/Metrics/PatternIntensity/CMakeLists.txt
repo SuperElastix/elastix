@@ -5,7 +5,6 @@ ADD_ELXCOMPONENT( PatternIntensityMetric
  elxPatternIntensityMetric.hxx
  elxPatternIntensityMetric.cxx
  itkPatternIntensityImageToImageMetric.h
- itkPatternIntensityImageToImageMetric.hxx
- itkMultiplyByConstantImageFilter.h )
+ itkPatternIntensityImageToImageMetric.hxx )
 
 
