@@ -26,9 +26,8 @@ using namespace itk;
   /**
    * \class GradientDifferenceMetric
    * \brief An metric based on the itk::GradientDifferenceImageToImageMetric.
-   *
-
-   *
+   * 
+   * 
    * \ingroup Metrics
    *
    */
