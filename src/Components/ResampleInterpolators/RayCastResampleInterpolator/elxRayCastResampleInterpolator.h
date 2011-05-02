@@ -123,6 +123,11 @@ using namespace itk;
   /** The destructor. */
   virtual ~RayCastResampleInterpolator() {}
 
+  /** Helper function to initialize the combination transform
+   * with a pre-transform.
+   */
+  void InitializeRayCastInterpolator( void );
+
   private:
 
   /** The private constructor. */

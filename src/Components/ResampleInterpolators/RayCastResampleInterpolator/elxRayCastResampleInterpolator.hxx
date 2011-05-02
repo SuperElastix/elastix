@@ -91,7 +91,9 @@ using namespace itk;
   this->GetConfiguration()->ReadParameter( threshold, "Threshold", 0 );
   this->SetThreshold( threshold );
 
-  }
+} // end InitializeRayCastInterpolator()
+
+
   /*
    * ***************** BeforeAll *****************
    */
