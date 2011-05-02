@@ -31,7 +31,7 @@ namespace itk
 /** \class MevisDicomTiffImageIO
  *
  *  ImageIO for handling Mevis dcm/tiff images,
- *  - first public version (no 4D support) 
+ *  - first public version (no 4D support)
  *      developed using gdcm 2.0.10, tiff 3.8.2 and itk 3.10.0
  *
  *  PROPERTIES:
@@ -39,7 +39,7 @@ namespace itk
  *  - input/output tiff image expected to be tiled
  *  - types supported uchar, char, ushort, short, uint, int, and float
  *    (double is not accepted by MevisLab)
- *  - writing defaults is tiled tiff, tilesize is 128, 128, 
+ *  - writing defaults is tiled tiff, tilesize is 128, 128,
  *    LZW compression and cm metric system
  *  - default extension for tiff-image is ".tif" to comply with mevislab
  *    standards
@@ -77,7 +77,7 @@ namespace itk
  *  11 dec 2010
  *    added 4d support, note tiff image is always 2D or 3D
  *
- * 
+ *
  *
  *  email: rashindra@gmail.com
  *
@@ -93,7 +93,7 @@ public:
   typedef MevisDicomTiffImageIO         Self;
   typedef ImageIOBase                   Superclass;
   typedef SmartPointer<Self>            Pointer;
-  
+
   itkNewMacro(Self);
   itkTypeMacro(MevisDicomTiffImageIO, Superclass);
   itkGetMacro(RescaleSlope, double);
@@ -120,9 +120,9 @@ protected:
   MevisDicomTiffImageIO();
   ~MevisDicomTiffImageIO();
   void PrintSelf(std::ostream& os, Indent indent) const;
-  
+
 private:
-  
+
   MevisDicomTiffImageIO(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 

@@ -75,7 +75,7 @@ MetricBase<TElastix>
 
   /** Read the sample grid spacing for computing the "exact" metric */
   if ( showExactMetricValue )
-  {    
+  {
     typedef typename ExactMetricImageSamplerType::SampleGridSpacingValueType
       SampleGridSpacingValueType;
     this->m_ExactMetricSampleGridSpacing.Fill(1);
@@ -90,7 +90,7 @@ MetricBase<TElastix>
         this->GetComponentLabel(), level * FixedImageDimension + dim, -1 );
       this->m_ExactMetricSampleGridSpacing[dim] =
         static_cast<SampleGridSpacingValueType>( spacing_dim );
-    }    
+    }
   }
 
   /** Cast this to AdvancedMetricType. */
@@ -142,7 +142,7 @@ MetricBase<TElastix>
   this->m_CurrentExactMetricValue = 0.0;
   if ( this->m_ShowExactMetricValue )
   {
-    this->m_CurrentExactMetricValue = this->GetExactValue( 
+    this->m_CurrentExactMetricValue = this->GetExactValue(
       this->GetElastix()->GetElxOptimizerBase()
       ->GetAsITKBaseType()->GetCurrentPosition()  );
 
@@ -227,7 +227,7 @@ MetricBase<TElastix>
   this->m_ExactMetricSampler->SetMask( currentSampler->GetMask() );
   this->m_ExactMetricSampler->SetInputImageRegion(
     currentSampler->GetInputImageRegion() );
-  this->m_ExactMetricSampler->SetSampleGridSpacing( 
+  this->m_ExactMetricSampler->SetSampleGridSpacing(
     this->m_ExactMetricSampleGridSpacing );
   this->SetAdvancedMetricImageSampler( this->m_ExactMetricSampler );
 

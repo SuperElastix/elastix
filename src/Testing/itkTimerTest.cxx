@@ -93,7 +93,7 @@ int main( int argc, char *argv[] )
   std::cerr << "Elapsed time (Sec)  : " << pTmr->PrintElapsedTimeSec () << std::endl;
   std::cerr << "Elapsed clock       : " << pTmr->PrintElapsedClock () << std::endl;
   std::cerr << "Elapsed clock (Sec) : " << pTmr->PrintElapsedClockSec () << std::endl;
- 
+
   /** Zero test. */
   return TestStartStop() || TestZeroTimeOutput();
 

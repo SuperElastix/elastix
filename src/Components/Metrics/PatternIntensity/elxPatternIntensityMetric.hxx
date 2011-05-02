@@ -22,74 +22,76 @@ namespace elastix
 {
 using namespace itk;
 
-  /**
-   * ******************* Initialize ***********************
-   */
+/**
+ * ******************* Initialize ***********************
+ */
 
-  template <class TElastix>
-    void PatternIntensityMetric<TElastix>
-    ::Initialize(void) throw (ExceptionObject)
+template <class TElastix>
+void
+PatternIntensityMetric<TElastix>
+::Initialize( void ) throw (ExceptionObject)
+{
+  TimerPointer timer = TimerType::New();
+  timer->StartTimer();
+  this->Superclass1::Initialize();
+  timer->StopTimer();
+  elxout << "Initialization of PatternIntensity metric took: "
+    << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
+
+} // end Initialize()
+
+
+/**
+ * ***************** BeforeEachResolution ***********************
+ */
+
+template <class TElastix>
+void
+PatternIntensityMetric<TElastix>
+::BeforeEachResolution(void)
+{
+  /** Get the current resolution level.*/
+  unsigned int level =
+    ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+
+  /** Set noise constant, */
+  double sigma = 100;
+  this->m_Configuration->ReadParameter( sigma,
+    "Sigma", this->GetComponentLabel(), level, 0 );
+  this->SetNoiseConstant( sigma*sigma );
+
+  /** Set optimization of normalization factor. */
+  bool optimizenormalizationfactor = false;
+  this->m_Configuration->ReadParameter( optimizenormalizationfactor,
+    "OptimizeNormalizationFactor", this->GetComponentLabel(), level, 0 );
+  this->SetOptimizeNormalizationFactor( optimizenormalizationfactor );
+
+  /** Set moving image derivative scales. */
+  this->SetUseMovingImageDerivativeScales( false );
+  MovingImageDerivativeScalesType movingImageDerivativeScales;
+  bool usescales = true;
+  for ( unsigned int i = 0; i < MovingImageDimension; ++i )
   {
-    TimerPointer timer = TimerType::New();
-    timer->StartTimer();
-    this->Superclass1::Initialize();
-    timer->StopTimer();
-    elxout << "Initialization of PatternIntensity metric took: "
-      << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
-
-  } // end Initialize()
-
-
-  /**
-   * ***************** BeforeEachResolution ***********************
-   */
-
-  template <class TElastix>
-    void PatternIntensityMetric<TElastix>
-    ::BeforeEachResolution(void)
+    usescales &= this->GetConfiguration()->ReadParameter(
+      movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
+    this->GetComponentLabel(), i, -1, false );
+  }
+  if ( usescales )
   {
-    /** Get the current resolution level.*/
-    unsigned int level =
-      ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+    this->SetUseMovingImageDerivativeScales( true );
+    this->SetMovingImageDerivativeScales( movingImageDerivativeScales );
+    elxout << "Multiplying moving image derivatives by: "
+      << movingImageDerivativeScales << std::endl;
+  }
 
-    /** set noiseconstant */
-    double sigma = 100;
-    this->m_Configuration->ReadParameter( sigma,
-      "Sigma", this->GetComponentLabel(), level, 0 );
-    this->SetNoiseConstant( sigma*sigma );
+  typedef typename elastix::OptimizerBase<TElastix>::ITKBaseType::ScalesType ScalesType;
+  ScalesType scales = this->m_Elastix->GetElxOptimizerBase()->GetAsITKBaseType()->GetScales();
+  this->SetScales( scales );
 
-    /** set optimization of normalization factor */
-    bool optimizenormalizationfactor = false;
-    this->m_Configuration->ReadParameter( optimizenormalizationfactor,
-      "OptimizeNormalizationFactor", this->GetComponentLabel(), level, 0 );
-    this->SetOptimizeNormalizationFactor( optimizenormalizationfactor );
-
-    /** Set moving image derivative scales. */
-    this->SetUseMovingImageDerivativeScales( false );
-    MovingImageDerivativeScalesType movingImageDerivativeScales;
-    bool usescales = true;
-    for ( unsigned int i = 0; i < MovingImageDimension; ++i )
-    {
-      usescales &= this->GetConfiguration()->ReadParameter(
-        movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
-        this->GetComponentLabel(), i, -1, false );
-    }
-    if ( usescales )
-    {
-      this->SetUseMovingImageDerivativeScales( true );
-      this->SetMovingImageDerivativeScales( movingImageDerivativeScales );
-      elxout << "Multiplying moving image derivatives by: "
-        << movingImageDerivativeScales << std::endl;
-    }
-
-	 typedef typename elastix::OptimizerBase<TElastix>::ITKBaseType::ScalesType	ScalesType;
-   ScalesType scales = this->m_Elastix->GetElxOptimizerBase()->GetAsITKBaseType()->GetScales();
-   this->SetScales( scales );
-
-  } // end BeforeEachResolution()
+} // end BeforeEachResolution()
 
 
 } // end namespace elastix
 
-
 #endif // end #ifndef __elxPatternIntensityMetric_HXX__
+

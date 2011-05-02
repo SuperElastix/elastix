@@ -24,17 +24,17 @@ namespace itk
  */
 class ITK_EXPORT MevisDicomTiffImageIOFactory : public ObjectFactoryBase
 {
-public:  
+public:
   /** Standard class typedefs. */
   typedef MevisDicomTiffImageIOFactory       Self;
   typedef ObjectFactoryBase        Superclass;
   typedef SmartPointer<Self>       Pointer;
   typedef SmartPointer<const Self> ConstPointer;
-  
+
   /** Class methods used to interface with the registered factories. */
   virtual const char* GetITKSourceVersion() const;
   virtual const char* GetDescription() const;
-  
+
   /** Method for class instantiation. */
   itkFactorylessNewMacro(Self);
 
@@ -57,7 +57,7 @@ private:
   void operator=(const Self&); //purposely not implemented
 
 };
- 
+
 } // end namespace itk
 
 #endif

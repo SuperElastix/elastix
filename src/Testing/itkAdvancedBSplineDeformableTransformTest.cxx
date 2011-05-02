@@ -349,7 +349,7 @@ int main( int argc, char *argv[] )
     std::cerr << "ERROR: Advanced B-spline GetFixedParameters() returning incorrect result." << std::endl;
     return 1;
   }
-  
+
   /** Exercise PrintSelf(). */
   transform->Print( std::cerr );
 

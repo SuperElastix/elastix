@@ -31,6 +31,7 @@ namespace itk
   /**
    * ********************* Constructor ******************************
    */
+
   template <class TFixedImage, class TMovingImage>
 	PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
 	::PatternIntensityImageToImageMetric()

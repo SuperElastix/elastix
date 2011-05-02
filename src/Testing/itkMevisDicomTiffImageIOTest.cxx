@@ -29,7 +29,7 @@ PURPOSE. See the above copyright notices for more information.
 
 //-------------------------------------------------------------------------------------
 // This test tests the itkMevisDicomTiffImageIO library. The test is performed
-// in 2D, 3D, and 4D, for a unsigned char image. An artificial image is generated, 
+// in 2D, 3D, and 4D, for a unsigned char image. An artificial image is generated,
 // written to disk, read from disk, and compared to the original.
 
 template< unsigned int Dimension >
@@ -48,7 +48,7 @@ int testMevis( void )
   typedef itk::DifferenceImageFilter< ImageType, ImageType > DiffType;
   typedef typename ImageType::SizeType SizeType;
   typedef typename ImageType::SpacingType SpacingType;
-  typedef typename ImageType::PointType OriginType;  
+  typedef typename ImageType::PointType OriginType;
   typedef typename ImageType::DirectionType DirectionType;
   typedef itk::ImageRegionIterator< ImageType > IteratorType;
 
@@ -67,7 +67,7 @@ int testMevis( void )
     spacing[i] = 0.5 + 0.1*i;
     origin[i] = 5 + 3*i;
     direction[i][i] = 1.0; // default, will be changed below
-  } 
+  }
   // Difficult direction cosines:
   if ( Dimension == 2 )
   {
@@ -116,7 +116,7 @@ int testMevis( void )
   unsigned long pixnr = 0;
   for ( it.GoToBegin(); !it.IsAtEnd(); ++it )
   {
-    pixval = static_cast<PixelType>( 
+    pixval = static_cast<PixelType>(
       itk::Math::Floor( static_cast<double>( pixnr * factor ) )  );
     it.Set( pixval );
   }
@@ -137,11 +137,11 @@ int testMevis( void )
   catch ( itk::ExceptionObject & err )
   {
     std::cerr << "ERROR: " << task << " mevis dicomtiff failed in . " << std::endl;
-    std::cerr << err << std::endl;    
+    std::cerr << err << std::endl;
     return 1;
   }
 
-  std::cerr << "\nPrintSelf():\n" << std::endl;  
+  std::cerr << "\nPrintSelf():\n" << std::endl;
   typename itk::ImageIOBase::Pointer mevisIO = reader->GetImageIO();
   mevisIO->Print( std::cerr, 2 );
 
@@ -183,7 +183,7 @@ int main( int argc, char *argv[] )
 {
 
 #ifdef _ELASTIX_USE_MEVISDICOMTIFF
- 
+
   /** Test for 2d, 3d, and 4d images */
   int ret2d = testMevis<2>();
   int ret3d = testMevis<3>();
@@ -198,5 +198,5 @@ int main( int argc, char *argv[] )
   return 0;
 
 #endif
-  
+
 } // end main

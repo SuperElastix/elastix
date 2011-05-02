@@ -710,7 +710,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   SpatialHessianType & sh ) const
 {
   typedef typename WeightsType::ValueType WeightsValueType;
-  
+
   /** Convert the physical point to a continuous index, which
    * is needed for the evaluate functions below.
    */
@@ -737,7 +737,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** Array for CoefficientImage values */
   WeightsValueType coeffArray[ numberOfWeights * SpaceDimension ];
   WeightsType coeffs( coeffArray, numberOfWeights * SpaceDimension, false );
-  
+
   IndexType supportIndex;
   this->m_SODerivativeWeightsFunctions[ 0 ][ 0 ]->ComputeStartIndex(
     cindex, supportIndex );
@@ -748,15 +748,15 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** Copy values from coefficient image to linear coeffs array. */
   typename WeightsType::iterator itCoeffsLinear = coeffs.begin();
   for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
-  {    
+  {
     ImageRegionConstIterator<ImageType> itCoef(
       this->m_CoefficientImage[ dim ], supportRegion );
-        
+
     for ( unsigned int mu = 0; mu < numberOfWeights; ++mu )
     {
       (*itCoeffsLinear) = itCoef.Value();
       ++itCoeffsLinear;
-      ++itCoef;      
+      ++itCoef;
     }
   }
 
@@ -787,7 +787,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 
         for ( unsigned int mu = 0; mu < numberOfWeights; ++mu )
         {
-          sum += (*itCoeffs) * (*itWeights);          
+          sum += (*itCoeffs) * (*itWeights);
           ++itWeights;
           ++itCoeffs;
         }
@@ -1240,11 +1240,11 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
   typename WeightsType::ValueType weightsArray[ numberOfWeights ];
   WeightsType weights( weightsArray, numberOfWeights, false );
-  
+
   /** Array for CoefficientImage values */
   WeightsValueType coeffArray[ numberOfWeights * SpaceDimension ];
   WeightsType coeffs( coeffArray, numberOfWeights * SpaceDimension, false );
-  
+
   IndexType supportIndex;
   this->m_SODerivativeWeightsFunctions[ 0 ][ 0 ]->ComputeStartIndex(
     cindex, supportIndex );
@@ -1255,15 +1255,15 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   /** Copy values from coefficient image to linear coeffs array. */
   typename WeightsType::iterator itCoeffsLinear = coeffs.begin();
   for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
-  {    
+  {
     ImageRegionConstIterator<ImageType> itCoef(
       this->m_CoefficientImage[ dim ], supportRegion );
-        
+
     for ( unsigned int mu = 0; mu < numberOfWeights; ++mu )
     {
       (*itCoeffsLinear) = itCoef.Value();
       ++itCoeffsLinear;
-      ++itCoef;      
+      ++itCoef;
     }
   }
 
@@ -1293,7 +1293,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 
       /** Reset coeffs iterator */
       typename WeightsType::const_iterator itCoeffs = coeffs.begin();
-      
+
       /** Compute the spatial Hessian sh:
        *    d^2T_{dim} / dx_i dx_j = \sum coefs_{dim} * weights.
        */
@@ -1306,7 +1306,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
         double sum = 0.0;
         for ( unsigned int mu = 0; mu < numberOfWeights; ++mu )
         {
-          sum += (*itCoeffs) * (*itWeights);          
+          sum += (*itCoeffs) * (*itWeights);
           ++itWeights;
           ++itCoeffs;
         }

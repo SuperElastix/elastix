@@ -307,7 +307,7 @@ protected:
     this->m_HasNonZeroJacobianOfSpatialHessian = false;
     this->m_JacobianOfSpatialJacobian.resize( ParametersDimension );
     this->m_JacobianOfSpatialHessian.resize( ParametersDimension );
-    
+
     /** m_SpatialHessian is automatically initialized with zeros. */
   }
   virtual ~AdvancedIdentityTransform() {}
