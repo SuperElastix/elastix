@@ -14,5 +14,5 @@
 
 #include "elxGradientDifferenceMetric.h"
 
-  elxInstallMacro( GradientDifferenceMetric );
+elxInstallMacro( GradientDifferenceMetric );
 

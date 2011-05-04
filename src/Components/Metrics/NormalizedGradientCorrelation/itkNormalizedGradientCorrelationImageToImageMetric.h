@@ -45,8 +45,8 @@ public:
   /** Standard class typedefs. */
   typedef NormalizedGradientCorrelationImageToImageMetric         Self;
   typedef AdvancedImageToImageMetric<TFixedImage, TMovingImage >  Superclass;
-  typedef SmartPointer<Self>         Pointer;
-  typedef SmartPointer<const Self>   ConstPointer;
+  typedef SmartPointer<Self>                                      Pointer;
+  typedef SmartPointer<const Self>                                ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -110,7 +110,6 @@ public:
   typedef typename CastFixedImageFilterType::Pointer      CastFixedImageFilterPointer;
   typedef typename FixedGradientImageType::PixelType      FixedGradientPixelType;
 
-
   /** Sobel filters to compute the gradients of the Moved Image */
   itkStaticConstMacro( MovedImageDimension, unsigned int, MovingImageType::ImageDimension );
   typedef itk::Image< RealType,
@@ -136,7 +135,7 @@ public:
   /** Initialize the Metric by making sure that all the components
    *  are present and plugged together correctly.
    */
-  virtual void Initialize(void) throw ( ExceptionObject );
+  virtual void Initialize( void ) throw ( ExceptionObject );
 
   /** Write gradient images to a files for debugging purposes. */
   void WriteGradientImagesToFiles( void ) const;
@@ -174,15 +173,15 @@ public:
     NormalizedGradientCorrelationImageToImageMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
-  ScalesType            m_Scales;
-  double                m_DerivativeDelta;
+  ScalesType                    m_Scales;
+  double                        m_DerivativeDelta;
   CombinationTransformPointer   m_CombinationTransform;
 
   /** The mean of the moving image gradients. */
-  mutable MovedGradientPixelType m_MeanMovedGradient[MovedImageDimension];
+  mutable MovedGradientPixelType m_MeanMovedGradient[ MovedImageDimension ];
 
   /** The mean of the fixed image gradients. */
-  mutable FixedGradientPixelType m_MeanFixedGradient[FixedImageDimension];
+  mutable FixedGradientPixelType m_MeanFixedGradient[ FixedImageDimension ];
 
   /** The filter for transforming the moving images. */
   TransformMovingImageFilterPointer m_TransformMovingImageFilter;
@@ -203,19 +202,20 @@ public:
   /** The Sobel gradients of the moving image */
   CastMovedImageFilterPointer m_CastMovedImageFilter;
   SobelOperator< MovedGradientPixelType,
-      itkGetStaticConstMacro(MovedImageDimension) >
-      m_MovedSobelOperators[MovedImageDimension];
+    itkGetStaticConstMacro(MovedImageDimension) >
+    m_MovedSobelOperators[MovedImageDimension];
 
   typename MovedSobelFilter::Pointer m_MovedSobelFilters[
-    itkGetStaticConstMacro( MovedImageDimension )];
+    itkGetStaticConstMacro( MovedImageDimension ) ];
 
-  };
+};
+
 
 } // end namespace itk
+
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itkNormalizedGradientCorrelationImageToImageMetric.hxx"
 #endif
 
 #endif
-

@@ -93,16 +93,16 @@ public:
   typedef typename Superclass::ImageSamplerType           ImageSamplerType;
   typedef typename Superclass::ImageSamplerPointer        ImageSamplerPointer;
   typedef typename Superclass::ImageSampleContainerType   ImageSampleContainerType;
-  typedef typename
-      Superclass::ImageSampleContainerPointer             ImageSampleContainerPointer;
+  typedef typename 
+    Superclass::ImageSampleContainerPointer               ImageSampleContainerPointer;
   typedef typename Superclass::FixedImageLimiterType      FixedImageLimiterType;
   typedef typename Superclass::MovingImageLimiterType     MovingImageLimiterType;
   typedef typename
-      Superclass::FixedImageLimiterOutputType             FixedImageLimiterOutputType;
+    Superclass::FixedImageLimiterOutputType               FixedImageLimiterOutputType;
   typedef typename
-      Superclass::MovingImageLimiterOutputType            MovingImageLimiterOutputType;
+    Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
   typedef typename
-      Superclass::MovingImageDerivativeScalesType         MovingImageDerivativeScalesType;
+    Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
   typedef typename itk::Optimizer                         OptimizerType;
   typedef typename OptimizerType::ScalesType              ScalesType;
 
@@ -134,7 +134,7 @@ public:
 
   /** The moving image dimension. */
   itkStaticConstMacro( MovingImageDimension, unsigned int,
-      MovingImageType::ImageDimension );
+    MovingImageType::ImageDimension );
 
   /** Get the value for single valued optimizers. */
   virtual MeasureType GetValue( const TransformParametersType & parameters ) const;

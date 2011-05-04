@@ -86,7 +86,7 @@ using namespace itk;
 
   this->SetFocalPoint( focalPoint );
   this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType()->SetTransform(
-      this->m_CombinationTransform );
+    this->m_CombinationTransform );
   double threshold = 0.;
   this->GetConfiguration()->ReadParameter( threshold, "Threshold", 0 );
   this->SetThreshold( threshold );

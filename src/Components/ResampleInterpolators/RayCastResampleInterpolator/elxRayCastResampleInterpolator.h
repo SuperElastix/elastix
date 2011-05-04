@@ -32,24 +32,24 @@ using namespace itk;
  * \ingroup Interpolators
  */
 
-  template < class TElastix >
-  class RayCastResampleInterpolator: 
-  public
-    AdvancedRayCastInterpolateImageFunction<
-      ITK_TYPENAME ResampleInterpolatorBase<TElastix>::InputImageType,
-      ITK_TYPENAME ResampleInterpolatorBase<TElastix>::CoordRepType >,
-  public ResampleInterpolatorBase<TElastix>
-  {
-  public:
+template < class TElastix >
+class RayCastResampleInterpolator: 
+public
+  AdvancedRayCastInterpolateImageFunction<
+    ITK_TYPENAME ResampleInterpolatorBase<TElastix>::InputImageType,
+    ITK_TYPENAME ResampleInterpolatorBase<TElastix>::CoordRepType >,
+public ResampleInterpolatorBase<TElastix>
+{
+public:
 
   /** Standard ITK-stuff. */
-  typedef RayCastResampleInterpolator                 Self;
+  typedef RayCastResampleInterpolator                               Self;
   typedef AdvancedRayCastInterpolateImageFunction<
       typename ResampleInterpolatorBase<TElastix>::InputImageType,
       typename ResampleInterpolatorBase<TElastix>::CoordRepType>    Superclass1;
-  typedef ResampleInterpolatorBase<TElastix>          Superclass2;
-  typedef SmartPointer<Self>                          Pointer;
-  typedef SmartPointer<const Self>                    ConstPointer;
+  typedef ResampleInterpolatorBase<TElastix>                        Superclass2;
+  typedef SmartPointer<Self>                                        Pointer;
+  typedef SmartPointer<const Self>                                  ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -73,7 +73,7 @@ using namespace itk;
   typedef typename Superclass1::ContinuousIndexType       ContinuousIndexType;
   typedef typename Superclass1::PointType                 PointType;
   typedef typename Superclass1::SizeType                  SizeType;
-  typedef typename InputImageType::SpacingType          SpacingType;
+  typedef typename InputImageType::SpacingType            SpacingType;
 
   /** Typedef's from ResampleInterpolatorBase. */
   typedef typename Superclass2::ElastixType               ElastixType;
@@ -86,23 +86,20 @@ using namespace itk;
 
   /** Typedef's for CombinationTransform */
   typedef typename itk::EulerTransform<
-      typename InterpolatorBase<TElastix>::CoordRepType,
-    ImageDimension >                    EulerTransformType;
-  typedef typename EulerTransformType::ParametersType   TransformParametersType;
-  typedef typename EulerTransformType::Pointer      EulerTransformPointer;
+    typename InterpolatorBase<TElastix>::CoordRepType,ImageDimension >                    
+                                                          EulerTransformType;
+  typedef typename EulerTransformType::ParametersType     TransformParametersType;
+  typedef typename EulerTransformType::Pointer            EulerTransformPointer;
   typedef typename itk::AdvancedTransform<
-      typename InterpolatorBase<TElastix>::CoordRepType,
-      itkGetStaticConstMacro( ImageDimension ),
-      itkGetStaticConstMacro( ImageDimension )>       AdvancedTransformType;
-  typedef typename AdvancedTransformType::Pointer     AdvancedTransformPointer;
+    typename InterpolatorBase<TElastix>::CoordRepType,
+    itkGetStaticConstMacro( ImageDimension ),
+    itkGetStaticConstMacro( ImageDimension )>             AdvancedTransformType;
+  typedef typename AdvancedTransformType::Pointer         AdvancedTransformPointer;
   typedef typename itk::AdvancedCombinationTransform<
-      typename InterpolatorBase<TElastix>::CoordRepType,
-      itkGetStaticConstMacro( ImageDimension ) >      CombinationTransformType;
-  typedef typename CombinationTransformType::Pointer    CombinationTransformPointer;
+    typename InterpolatorBase<TElastix>::CoordRepType,
+    itkGetStaticConstMacro( ImageDimension ) >            CombinationTransformType;
+  typedef typename CombinationTransformType::Pointer      CombinationTransformPointer;
 
-  /** Execute stuff before the actual registration:
-   * \li Set the spline order.
-     */
   virtual int BeforeAll( void );
 
   virtual void BeforeRegistration( void );
@@ -115,7 +112,7 @@ using namespace itk;
   /** Function to write transform-parameters to a file. */
   virtual void WriteToFile( void ) const;
 
-  protected:
+protected:
 
   /** The constructor. */
   RayCastResampleInterpolator() {}
@@ -128,7 +125,7 @@ using namespace itk;
    */
   void InitializeRayCastInterpolator( void );
 
-  private:
+private:
 
   /** The private constructor. */
   RayCastResampleInterpolator( const Self& ); // purposely not implemented
@@ -136,17 +133,19 @@ using namespace itk;
   /** The private copy constructor. */
   void operator=( const Self& );              // purposely not implemented
 
-  EulerTransformPointer                 m_PreTransform;
-  TransformParametersType                 m_PreParameters;
+  EulerTransformPointer                     m_PreTransform;
+  TransformParametersType                   m_PreParameters;
   CombinationTransformPointer               m_CombinationTransform;
 
-  }; // end class RayCastResampleInterpolator
+}; // end class RayCastResampleInterpolator
 
 
 } // end namespace elastix
 
+
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "elxRayCastResampleInterpolator.hxx"
 #endif
+
 
 #endif // end __elxRayCastResampleInterpolator_h
