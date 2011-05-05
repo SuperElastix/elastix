@@ -1,16 +1,19 @@
-/*======================================================================
+/*=========================================================================
 
-  This file is part of the elastix software.
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    $RCSfile: itkMevisDicomTiffImageIO.h,v $
+  Language:  C++
+  Date:      $Date: 2009/10/13 15:11:01 $
+  Version:   $Revision: 1.23 $
 
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
+  Copyright (c) Insight Software Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
 
-======================================================================*/
+=========================================================================*/
 #ifndef __itkMevisDicomTiffImageIO_h
 #define __itkMevisDicomTiffImageIO_h
 
@@ -18,11 +21,14 @@
 #pragma warning ( disable : 4786 )
 #endif
 
+#include "itkImageIOBase.h"
+#include "itk_tiff.h"
+#include "gdcmTag.h"
+#include "gdcmAttribute.h"
+
 #include <fstream>
 #include <string>
 
-#include "itkImageIOBase.h"
-#include "itk_tiff.h"
 
 namespace itk
 {
@@ -31,15 +37,28 @@ namespace itk
 /** \class MevisDicomTiffImageIO
  *
  *  ImageIO for handling Mevis dcm/tiff images,
- *  - first public version (no 4D support)
+ *  - first public version (no 4D support) 
  *      developed using gdcm 2.0.10, tiff 3.8.2 and itk 3.10.0
  *
+ *  NOTES:
+ *  - if a 2d dcm/tiff file from a 3d dataset (e.g. one slice
+ *    of a patient) is converted, then the third value for spacing
+ *    and position are lost (this is the way itk works, while in
+ *    dcm file these values are defined)
+ *  - tiff image is always 2D or 3D
+ *  - IMPORTANT: tiff has been designed for max 32 bits addressable memory block,
+ *    the use of 64 bits has been specified in bigtiff.org, and is supported
+ *    from libtiff version 4.0 and above. Unfortunately, ML does not
+ *    support bigtiff, and probably will not in the future. Therefore, this
+ *    class remain as is as long ML will not upgrade, only bug fixes will
+ *    be considered
+ 
  *  PROPERTIES:
  *  - 2D/3D/4D, scalar types supported
  *  - input/output tiff image expected to be tiled
  *  - types supported uchar, char, ushort, short, uint, int, and float
  *    (double is not accepted by MevisLab)
- *  - writing defaults is tiled tiff, tilesize is 128, 128,
+ *  - writing defaults is tiled tiff, tilesize is 128, 128, 
  *    LZW compression and cm metric system
  *  - default extension for tiff-image is ".tif" to comply with mevislab
  *    standards
@@ -52,13 +71,6 @@ namespace itk
  *    these vars are contained.
  *  - BUG in ML: the x/y spacing of the tiff file is swapped with respect
  *    to the x/y spacing in dcm file (dcm info is used btw)
- *
- *  NOTES:
- *  - if a 2d dcm/tiff file from a 3d dataset (e.g. one slice
- *    of a patient) is converted, then the third value for spacing
- *    and position are lost (this is the way itk works, while in
- *    dcm file these values are defined)
- *  - tiff image is always 2D or 3D
  *
  *  todo
  *  - implementing writing tiffimages if x,y < 16 (tilesize)
@@ -76,8 +88,9 @@ namespace itk
  *    his suggestions to fix this.
  *  11 dec 2010
  *    added 4d support, note tiff image is always 2D or 3D
- *
- *
+ *  18 apr 2011
+ *    added reading dicom tags from sequences of tags, suggestion and
+ *    code proposal by Reinhard Hameeteman
  *
  *  email: rashindra@gmail.com
  *
@@ -93,7 +106,7 @@ public:
   typedef MevisDicomTiffImageIO         Self;
   typedef ImageIOBase                   Superclass;
   typedef SmartPointer<Self>            Pointer;
-
+  
   itkNewMacro(Self);
   itkTypeMacro(MevisDicomTiffImageIO, Superclass);
   itkGetMacro(RescaleSlope, double);
@@ -120,14 +133,16 @@ protected:
   MevisDicomTiffImageIO();
   ~MevisDicomTiffImageIO();
   void PrintSelf(std::ostream& os, Indent indent) const;
-
+  
 private:
+  
+  MevisDicomTiffImageIO(const Self&);
+  void operator=(const Self&);
 
-  MevisDicomTiffImageIO(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  bool FindElement(const gdcm::DataSet ds, const gdcm::Tag tag, gdcm::DataElement &de,
+                        const bool breadthfirstsearch);
 
-  // the following includes the pathname
-  // (if these are given)!
+  // the following may include the pathname
   std::string                           m_DcmFileName;
   std::string                           m_TiffFileName;
 

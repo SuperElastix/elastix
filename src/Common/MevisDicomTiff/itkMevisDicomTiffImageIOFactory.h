@@ -1,16 +1,19 @@
-/*======================================================================
+/*=========================================================================
 
-  This file is part of the elastix software.
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    $RCSfile: itkMevisDicomTiffImageIOFactory.h,v $
+  Language:  C++
+  Date:      $Date: 2008/12/07 16:38:38 $
+  Version:   $Revision: 1.1 $
 
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
+  Copyright (c) Insight Software Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
 
-======================================================================*/
+=========================================================================*/
 #ifndef __itkMevisDicomTiffImageIOFactory_h
 #define __itkMevisDicomTiffImageIOFactory_h
 
@@ -24,17 +27,17 @@ namespace itk
  */
 class ITK_EXPORT MevisDicomTiffImageIOFactory : public ObjectFactoryBase
 {
-public:
+public:  
   /** Standard class typedefs. */
   typedef MevisDicomTiffImageIOFactory       Self;
   typedef ObjectFactoryBase        Superclass;
   typedef SmartPointer<Self>       Pointer;
   typedef SmartPointer<const Self> ConstPointer;
-
+  
   /** Class methods used to interface with the registered factories. */
   virtual const char* GetITKSourceVersion() const;
   virtual const char* GetDescription() const;
-
+  
   /** Method for class instantiation. */
   itkFactorylessNewMacro(Self);
 
@@ -57,7 +60,7 @@ private:
   void operator=(const Self&); //purposely not implemented
 
 };
-
+ 
 } // end namespace itk
 
 #endif

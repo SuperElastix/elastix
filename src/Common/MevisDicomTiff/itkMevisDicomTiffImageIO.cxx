@@ -1,16 +1,19 @@
-/*======================================================================
+/*=========================================================================
 
-  This file is part of the elastix software.
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    $RCSfile: itkMevisDicomTiffImageIO.cxx,v $
+  Language:  C++
+  Date:      $Date: 2009/10/03 15:37:40 $
+  Version:   $Revision: 1.51 $
 
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
+  Copyright (c) Insight Software Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
 
-======================================================================*/
+=========================================================================*/
 #ifdef _MSC_VER
 #pragma warning ( disable : 4786 )
 #endif
@@ -74,7 +77,7 @@ MevisDicomTiffImageIO::MevisDicomTiffImageIO():
     m_EstimatedMinimum(NumericTraits<double>::Zero),
     m_EstimatedMaximum(NumericTraits<double>::Zero)
 {
-  //this->SetNumberOfDimensions(4);
+  //this->SetNumberOfDimensions(4); 
   this->SetFileType(Binary);
 
   this->AddSupportedWriteExtension(".dcm");
@@ -91,7 +94,7 @@ MevisDicomTiffImageIO::MevisDicomTiffImageIO():
   this->AddSupportedReadExtension(".TIF");
   this->AddSupportedReadExtension(".TIFF");
 
-}
+} 
 // destructor
 MevisDicomTiffImageIO::~MevisDicomTiffImageIO()
 {
@@ -104,7 +107,7 @@ MevisDicomTiffImageIO::~MevisDicomTiffImageIO()
 void MevisDicomTiffImageIO::PrintSelf(std::ostream& os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);
-  os << indent << "DcmFileName      : " << m_DcmFileName << std::endl;
+  os << indent << "DcmFileName      : " << m_DcmFileName << std::endl; 
   os << indent << "TiffFileName     : " << m_TiffFileName << std::endl;
   os << indent << "TIFFDimension    : " << m_TIFFDimension << std::endl;
   os << indent << "IsOpen           : " << m_IsOpen << std::endl;
@@ -122,9 +125,59 @@ void MevisDicomTiffImageIO::PrintSelf(std::ostream& os, Indent indent) const
   os << indent << "RescaleSlope     : " << m_RescaleSlope << std::endl;
   os << indent << "GantryTilt       : " << m_GantryTilt << std::endl;
 }
-// canreadfile
-bool MevisDicomTiffImageIO::CanReadFile( const char* filename )
+// findelement
+bool MevisDicomTiffImageIO::FindElement( const gdcm::DataSet ds, 
+                                         const gdcm::Tag tag, 
+                                         gdcm::DataElement &de,
+                                         bool breadthfirstsearch = true)
+                                            
 {
+    if (breadthfirstsearch)
+    {
+        if (!ds.GetDataElement(tag).IsEmpty())
+        {
+            de = ds.GetDataElement(tag); 
+            return true;
+        }
+    }
+
+ 
+    bool found(false);
+    gdcm::DataSet::ConstIterator it(ds.Begin());
+
+    for (; it !=ds.End(); ++it)
+    {
+        const gdcm::Tag ct(it->GetTag());
+        if (ct == tag)
+        {
+            de = *it;
+            found = true;
+        }
+        else
+        {
+            if (it->GetVR() == gdcm::VR::SQ)
+            {
+                if (it->GetValueAsSQ() != NULL)
+                {
+                    if (!it->GetValueAsSQ()->Begin()->GetNestedDataSet().IsEmpty())
+                    {
+                        found = FindElement(it->GetValueAsSQ()->Begin()->GetNestedDataSet(), tag, de, false);
+                    }
+                    if (found)
+                    {
+                        std::cout << "mevisIO: warning image orientation in dcm file is frame dependent!" << std::endl;
+                    }
+                }
+            }
+        }
+        if (found) { return true;}
+    }
+
+    return false;
+}
+// canreadfile
+bool MevisDicomTiffImageIO::CanReadFile( const char* filename ) 
+{ 
     // get names
     const std::string fn(filename);
 	const std::string basename(itksys::SystemTools::GetFilenameWithoutLastExtension(fn));
@@ -144,7 +197,7 @@ bool MevisDicomTiffImageIO::CanReadFile( const char* filename )
 
     // prevent from reading same basenames in dir but with dcm/tiff
     // extension!
-    if (ext != ".dcm" && ext != ".DCM" &&
+    if (ext != ".dcm" && ext != ".DCM" && 
             ext != ".tif" && ext != ".TIF" &&
             ext != ".tiff" && ext != ".TIFF" )
     {
@@ -155,8 +208,8 @@ bool MevisDicomTiffImageIO::CanReadFile( const char* filename )
     const std::string dname = pathname + basename + ".dcm";
     const std::string Dname = pathname + basename + ".DCM";
 
-    const std::string d = itksys::SystemTools::ConvertToOutputPath(dname.c_str());
-    const std::string D = itksys::SystemTools::ConvertToOutputPath(Dname.c_str());
+    const std::string d = itksys::SystemTools::ConvertToOutputPath(dname.c_str()); 
+    const std::string D = itksys::SystemTools::ConvertToOutputPath(Dname.c_str()); 
 
     std::ifstream f(d.c_str(), std::ios::in | std::ios::binary);
     std::ifstream F(D.c_str(), std::ios::in | std::ios::binary);
@@ -223,7 +276,7 @@ bool MevisDicomTiffImageIO::CanReadFile( const char* filename )
         std::cout << "mevisIO:canreadfile(): error opening dcm file " << m_DcmFileName << std::endl;
         return false;
     }
-
+    
     // checking if tiff is valid tif
     m_TIFFImage = TIFFOpen(m_TiffFileName.c_str(), "rc"); // c is disable strip chopping
     if (m_TIFFImage == NULL)
@@ -273,7 +326,7 @@ bool MevisDicomTiffImageIO::CanReadFile( const char* filename )
             {
                 m_TileDepth = 0;
             }
-
+ 
         }
     }
 
@@ -281,7 +334,7 @@ bool MevisDicomTiffImageIO::CanReadFile( const char* filename )
 }
 // readimageinformation
 void MevisDicomTiffImageIO::ReadImageInformation()
-{
+{ 
 
     // INFO from DICOM
     //
@@ -291,7 +344,7 @@ void MevisDicomTiffImageIO::ReadImageInformation()
     // currently taken from tiff file, since this actually contains
     // the image hence we assume more trustworthy
     //
-    // note: if a 3D image is provided, then we need to
+    // note: if a 3D image is provided, then we need to 
     // read spacingbetweenslices
     //
     // spacing
@@ -302,7 +355,7 @@ void MevisDicomTiffImageIO::ReadImageInformation()
     // dcm file), since somehow eg spacing does not
     // return the correct values. Also, in case of mevis,
     // the dcmfile does not contain an image, which causes
-    // reader.Read() to return an error.
+    // reader.Read() to return an error. 
     //
     // We trust the dcm header information instead
     gdcm::ImageReader reader;
@@ -461,9 +514,11 @@ void MevisDicomTiffImageIO::ReadImageInformation()
         m_Direction.resize(3);
     }
     gdcm::Attribute<0x0020,0x0037> atio;
-    if (!header.GetDataElement(atio.GetTag()).IsEmpty())
+    gdcm::DataElement de;
+
+    if (FindElement(header, atio.GetTag(),de))    
     {
-        atio.SetFromDataElement(header.GetDataElement(atio.GetTag()));
+        atio.SetFromDataElement(de);
         if (is3d)
         {
             vnl_vector<double> row(3), col(3);
@@ -484,7 +539,7 @@ void MevisDicomTiffImageIO::ReadImageInformation()
         {
             // take outerproduct to define third row in direction
             // matrix, assuming 3d vectors (because in dicom only
-            // 3d directions are assumed). The fourth element is
+            // 3d directions are assumed). The fourth element is 
             // therefore simply set at unity.
 
             // take outerproduct
@@ -541,7 +596,7 @@ void MevisDicomTiffImageIO::ReadImageInformation()
         std::cout << "mevisIO:readimageinformation(): warning: intercept (0x0028,0x1052) not found in dcm header!" << std::endl;
         m_RescaleIntercept = NumericTraits<double>::Zero ; // default
     }
-
+ 
     // slope
     gdcm::Attribute<0x0028,0x1053> atrs;
     if (!header.GetDataElement(atrs.GetTag()).IsEmpty())
@@ -573,17 +628,17 @@ void MevisDicomTiffImageIO::ReadImageInformation()
     // copying the gdcm dictionary to the itk dictionary, organization
     // dcm header
     //
-    // DataSet       (==header) contains DataElements
-    // DataElement   an unit of information as defined by a single entry
+    // DataSet       (==header) contains DataElements 
+    // DataElement   an unit of information as defined by a single entry 
     //               in the data dictionary, contains
     //               Tag     (0x000,0x0000)
     //               VL      value length field
     //               VR      value representation field
     //               Value   the value itself
-    // Value         is either bytes array
+    // Value         is either bytes array 
     //               sequence of items or sequence of fragments
     // SeqOfItems    contains items, item contains again a
-    //               DataSet (!).
+    //               DataSet (!). 
     //
     // We simply put the whole header as value in the meta
     // dictionary, then no interpretation is required
@@ -593,7 +648,7 @@ void MevisDicomTiffImageIO::ReadImageInformation()
     EncapsulateMetaData<gdcm::DataSet>(dic, tag, header);
 
 
-    // INFO from TIFF
+    // INFO from TIFF 
     // determine size
     // numberofcomponents
     // data type
@@ -605,15 +660,15 @@ void MevisDicomTiffImageIO::ReadImageInformation()
     }
 
     // sanity checks, dim and sizes
-    if (  (is2d && m_TIFFDimension != 2)
+    if (  (is2d && m_TIFFDimension != 2) 
             || (is3d && m_TIFFDimension != 3)
                 || (is4d && m_TIFFDimension != 3)
        )
     {
         std::cout << "mevisIO:readimageinformation: dcm/tiff dimensions do not correspond!" << std::endl;
     }
-    if ( (m_Width != m_Dimensions[0])
-            || (m_Length != m_Dimensions[1])
+    if ( (m_Width != m_Dimensions[0]) 
+            || (m_Length != m_Dimensions[1]) 
                 || (is3d && m_Depth != m_Dimensions[2])
                     || (is4d && m_Depth != m_Dimensions[2] * m_Dimensions[3])
        )
@@ -627,9 +682,9 @@ void MevisDicomTiffImageIO::ReadImageInformation()
     // format 3 float
     // format 4 undefined
     // samplesperpixel : number of components per pixel (1 grayscale, 3 rgb)
-    // bitspersample: number of bits per component
+    // bitspersample: number of bits per component 
     uint16 format, pixel;
-
+    
     if (!TIFFGetField(m_TIFFImage, TIFFTAG_SAMPLEFORMAT, &format))
     {
         std::cout << "mevisIO:readimageinformation: error getting SAMPLEFORMAT" << std::endl;
@@ -721,10 +776,10 @@ void MevisDicomTiffImageIO::ReadImageInformation()
    }
    return;
 
-}
+} 
 // read
 void MevisDicomTiffImageIO::Read(void* buffer)
-{
+{ 
     // always assume contigous data (PLANARCONFIG =1)
     // image is either tiled or stripped
     //
@@ -764,7 +819,7 @@ void MevisDicomTiffImageIO::Read(void* buffer)
         // buffer pointer is scanline based (one dimensional array)
         // tile is positioned on x,y,z; we read each tile, and fill
         // the corresponding positions in the onedimensional array
-    	unsigned char *vol = reinterpret_cast<unsigned char*>(buffer);
+    	unsigned char *vol = reinterpret_cast<unsigned char*>(buffer); 
 
         const unsigned int tilesize = TIFFTileSize(m_TIFFImage);
         const unsigned int tilerowbytes = TIFFTileRowSize(m_TIFFImage);
@@ -773,7 +828,7 @@ void MevisDicomTiffImageIO::Read(void* buffer)
         unsigned char *tilebuf = static_cast<unsigned char*>(_TIFFmalloc(tilesize));
 
         //
-        // special cases, if the tilexy is larger than or equal to the image
+        // special cases, if the tilexy is larger than or equal to the image 
         // size itself, treat as three separate cases, both are larger/equal,
         // or only direction
         //
@@ -824,7 +879,7 @@ void MevisDicomTiffImageIO::Read(void* buffer)
                 const unsigned int tilexbytes = lenx * bytespersample;
 
                 const bool my = ( m_Length%m_TileLength == 0) ? true : false;
-                for (unsigned int z0 = 0; z0 < (m_TIFFDimension == 3 ? m_Depth : 1); z0++)
+                for (unsigned int z0 = 0; z0 < (m_TIFFDimension == 3 ? m_Depth : 1); z0++) 
                 {
                     for (unsigned int y0 = 0; y0 < (my ? m_Length : m_Length-m_TileLength); y0 += m_TileLength)
                     {
@@ -888,7 +943,7 @@ void MevisDicomTiffImageIO::Read(void* buffer)
                 const unsigned leny = m_Length;
                 const bool mx = ( m_Width%m_TileWidth == 0) ? true: false;
 
-                for (unsigned int z0 = 0; z0 < (m_TIFFDimension == 3 ? m_Depth : 1); z0++)
+                for (unsigned int z0 = 0; z0 < (m_TIFFDimension == 3 ? m_Depth : 1); z0++) 
                 {
                     for (unsigned int x0 = 0; x0 < (mx ? m_Width : m_Width-m_TileWidth); x0 += m_TileWidth)
                     {
@@ -931,7 +986,7 @@ void MevisDicomTiffImageIO::Read(void* buffer)
                         {
                             unsigned char * pb = tilebuf;
                             unsigned char * pv = vol;
-                            const unsigned int p = z0 * m_Length * m_Width + x0;
+                            const unsigned int p = z0 * m_Length * m_Width + x0; 
                             pv += p * bytespersample;
 
                             for (unsigned int r = 0; r<leny; ++r)
@@ -943,7 +998,7 @@ void MevisDicomTiffImageIO::Read(void* buffer)
                         }
                     }
                 }
-
+         
             } // end case three
 
         } // end oversized tile
@@ -959,7 +1014,7 @@ void MevisDicomTiffImageIO::Read(void* buffer)
             const bool my = ( m_Length%m_TileLength == 0) ? true : false;
 
             // fill everything inside ie from topleft
-            for (unsigned int z0 = 0; z0 < (m_TIFFDimension == 3 ? m_Depth : 1); z0++)
+            for (unsigned int z0 = 0; z0 < (m_TIFFDimension == 3 ? m_Depth : 1); z0++) 
             {
                 for (unsigned int y0 = 0; y0 < (my ? m_Length : m_Length-m_TileLength); y0 += m_TileLength)
                     for (unsigned int x0 = 0; x0 < (mx ? m_Width : m_Width-m_TileWidth); x0 += m_TileWidth)
@@ -1090,9 +1145,9 @@ void MevisDicomTiffImageIO::Read(void* buffer)
                 }
             }
         }
-
+        
         _TIFFfree(tilebuf);
-    }
+    } 
     else
     {
         // if not tiled then img is stripped
@@ -1100,7 +1155,7 @@ void MevisDicomTiffImageIO::Read(void* buffer)
         return;
     }
     return;
-}
+} 
 // canwritefile
 bool MevisDicomTiffImageIO::CanWriteFile( const char * name )
 {
@@ -1130,7 +1185,7 @@ bool MevisDicomTiffImageIO::CanWriteFile( const char * name )
     }
 
     // expect extension dcm or tif(f)
-    if (ext == ".tif" || ext == ".tiff")
+    if (ext == ".tif" || ext == ".tiff") 
     {
         m_TiffFileName = pathname + basename + ext;
         m_DcmFileName = pathname + basename + ".dcm";
@@ -1165,13 +1220,13 @@ void MevisDicomTiffImageIO
 
 // write
 void MevisDicomTiffImageIO
-::Write( const void* buffer)
+::Write( const void* buffer) 
 {
-    if (this->GetNumberOfDimensions() != 2
+    if (this->GetNumberOfDimensions() != 2 
             && this->GetNumberOfDimensions() != 3
                 && this->GetNumberOfDimensions() != 4)
     {
-        itkExceptionMacro(<< "mevisIO:write(): dcm/tiff writer only supports 2D/3D/4D");
+        itkExceptionMacro(<< "mevisIO:write(): dcm/tiff writer only supports 2D/3D/4D"); 
     }
 
     std::ofstream dcmfile(m_DcmFileName.c_str(), std::ios::out|std::ios::binary);
@@ -1190,7 +1245,7 @@ void MevisDicomTiffImageIO
     // - dicom rescale intercept/slope values
     // - min/max (code below is after setting bits)
     // - photometric (default min-is-black)
-    // - sop imagetype (0008,0008)
+    // - sop imagetype (0008,0008) 
     // - sop class uid (0008,0016)
     // - sop instance uid (0008,0018)
     // - study instance uid (0020,000d)
@@ -1206,11 +1261,11 @@ void MevisDicomTiffImageIO
     // - bits stored (always nbits)
     // - high bit (always nbits-1)
     // - pixel representation (0 unsigned, 1 signed)
-
+ 
     gdcm::Writer writer;
     writer.SetCheckFileMetaInformation(false);
     gdcm::DataSet &header = writer.GetFile().GetDataSet();
-
+     
     MetaDataDictionary &dict = this->GetMetaDataDictionary();
 
     const bool emptydict(dict.Begin()==dict.End());
@@ -1223,7 +1278,7 @@ void MevisDicomTiffImageIO
     }
 
     // copy from metaheader if exists otherwise replace
-     // intercept
+     // intercept 
     gdcm::Attribute<0x0028,0x1052> atri;
     if (!emptydict && !header.GetDataElement(atri.GetTag()).IsEmpty())
     {
@@ -1234,7 +1289,7 @@ void MevisDicomTiffImageIO
         atri.SetValue(m_RescaleIntercept);
     }
     header.Replace(atri.GetAsDataElement());
-    // slope
+    // slope 
     gdcm::Attribute<0x0028,0x1053> atrs;
     if (!emptydict && !header.GetDataElement(atrs.GetTag()).IsEmpty())
     {
@@ -1333,7 +1388,7 @@ void MevisDicomTiffImageIO
 
 
     // following attributes are always replaced
-    // comments
+    // comments 
     gdcm::Attribute<0x0020,0x4000> atc;
     const std::string v(Version::GetITKVersion());
     const std::string g(gdcm::Version::GetVersion());
@@ -1383,7 +1438,7 @@ void MevisDicomTiffImageIO
     atps.SetValue(m_Spacing[1],1);
     header.Replace(atps.GetAsDataElement());
 
-    // spacing between slices
+    // spacing between slices 
     gdcm::Attribute<0x0018,0x0088> atss;
     if (m_Spacing.size() > 2)
     {
@@ -1394,7 +1449,7 @@ void MevisDicomTiffImageIO
         atss.SetValue(1.0);
     }
     header.Replace(atss.GetAsDataElement());
-
+ 
 
     // samples per pixel
     switch(this->GetPixelType())
@@ -1416,7 +1471,7 @@ void MevisDicomTiffImageIO
             std::cout << "mevisIO:write(): only SCALAR pixeltypes supported" << std::endl;
             return;
     }
-
+ 
    // bits allocated, stored, high
    // default is always 16 bits, only for pixeltype with are shorter
     unsigned int    nbits(16);
@@ -1533,7 +1588,7 @@ void MevisDicomTiffImageIO
     }
     header.Replace(atmax.GetAsDataElement());
 
-    // position (origin)
+    // position (origin) 
     gdcm::Attribute<0x0020,0x0032> atpp;
     atpp.SetValue(m_Origin[0],0);
     atpp.SetValue(m_Origin[1],1);
@@ -1576,7 +1631,7 @@ void MevisDicomTiffImageIO
 
     header.Replace(atio.GetAsDataElement());
 
-
+     
     writer.SetFileName(m_DcmFileName.c_str());
     if (!writer.Write())
     {
@@ -1596,7 +1651,7 @@ void MevisDicomTiffImageIO
     m_TIFFImage = TIFFOpen(m_TiffFileName.c_str(),"w");
     if (!m_TIFFImage)
     {
-        itkExceptionMacro(<< "mevisIO:write(): error opening tiff file for writing");
+        itkExceptionMacro(<< "mevisIO:write(): error opening tiff file for writing"); 
     }
 
     // software comment
@@ -1869,7 +1924,7 @@ void MevisDicomTiffImageIO
         // now left open.
         std::cout << "mevisIO:write(): image x,y smaller than tilesize (16)! Consider" << std::endl;
         std::cout << "         different layout for tif (eg scanline layout)" << std::endl;
-
+            
         TIFFClose(m_TIFFImage);
         return;
     }
@@ -1879,7 +1934,7 @@ void MevisDicomTiffImageIO
         const unsigned int tilerowbytes = TIFFTileRowSize(m_TIFFImage);
         const unsigned int bytespersample = m_BitsPerSample/8;
 
-        const unsigned char *vol = reinterpret_cast<const unsigned char*>(buffer);
+        const unsigned char *vol = reinterpret_cast<const unsigned char*>(buffer); 
         unsigned char *tilebuf = static_cast<unsigned char*>(_TIFFmalloc(tilesize));
 
         // is volume direction a multiple of tiledirection?
@@ -1896,7 +1951,7 @@ void MevisDicomTiffImageIO
                     const unsigned int p = z0 * m_Length * m_Width + y0 * m_Width + x0;
                     pv += p * bytespersample;
 
-                    // fill tile
+                    // fill tile 
                     unsigned char * pb = tilebuf;
                     for (unsigned int r=0; r<m_TileLength; ++r)
                     {
@@ -2022,4 +2077,3 @@ void MevisDicomTiffImageIO
 
 
 } // end namespace itk
-
