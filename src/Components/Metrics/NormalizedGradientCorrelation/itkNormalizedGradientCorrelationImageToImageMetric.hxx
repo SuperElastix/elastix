@@ -17,14 +17,13 @@
 #include "itkNormalizedGradientCorrelationImageToImageMetric.h"
 #include "itkImageRegionConstIteratorWithIndex.h"
 #include "itkNumericTraits.h"
-
-#include "itkImageFileWriter.h"
+#include "itkSimpleFilterWatcher.h"
 
 #include <iostream>
 #include <iomanip>
 #include <stdio.h>
 
-#include "itkSimpleFilterWatcher.h"
+
 namespace itk
 {
 
@@ -42,12 +41,10 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   this->m_TransformMovingImageFilter = TransformMovingImageFilterType::New();
   this->m_DerivativeDelta = 0.001;
 
-  unsigned iDimension = 0;
-
-  for ( iDimension = 0; iDimension<MovedImageDimension; iDimension++ )
+  for ( unsigned int iDimension = 0; iDimension < MovedImageDimension; iDimension++ )
   {
-    this->m_MeanFixedGradient[iDimension] = 0;
-    this->m_MeanMovedGradient[iDimension] = 0;
+    this->m_MeanFixedGradient[ iDimension ] = 0;
+    this->m_MeanMovedGradient[ iDimension ] = 0;
   }
 
 } // end Constructor
@@ -61,7 +58,7 @@ template <class TFixedImage, class TMovingImage>
 void NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 ::Initialize( void ) throw ( ExceptionObject )
 {
-  /** Initialise the base class */
+  /** Initialize the base class */
   Superclass::Initialize();
   
   unsigned int iFilter;
@@ -127,7 +124,7 @@ void NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 {
   Superclass::PrintSelf( os, indent );
     os << indent << "DerivativeDelta: " << this->m_DerivativeDelta << std::endl;
-}
+} // end PrintSelf()
 
 
 /**
@@ -141,7 +138,7 @@ void NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   typename FixedGradientImageType::IndexType currentIndex;
   typename FixedGradientImageType::PointType point;
 
-  for ( int iDimension=0; iDimension < FixedImageDimension; iDimension++ )
+  for ( int iDimension = 0; iDimension < FixedImageDimension; iDimension++ )
   {
     this->m_FixedSobelFilters[ iDimension ]->UpdateLargestPossibleRegion();
   }
@@ -166,7 +163,9 @@ void NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   unsigned long nPixels = 0;
 
   if ( this->m_FixedImageMask.IsNull() ) 
+  {
     sampleOK = true;
+  }
 
   while ( !fixedIteratorx.IsAtEnd() )
   {
@@ -207,14 +206,16 @@ void NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 /**
  * ***************** ComputeMeanMovedGradient *****************
  */
+
 template <class TFixedImage, class TMovingImage>
-void NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
+void
+NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 ::ComputeMeanMovedGradient( void ) const
 {
   typename MovedGradientImageType::IndexType currentIndex;
   typename MovedGradientImageType::PointType point;
 
-  for ( int iDimension = 0; iDimension<MovedImageDimension; iDimension++)
+  for ( int iDimension = 0; iDimension < MovedImageDimension; iDimension++)
   {
     this->m_MovedSobelFilters[ iDimension ]->UpdateLargestPossibleRegion();
   }
@@ -233,12 +234,16 @@ void NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   bool sampleOK = false;
 
   if ( this->m_FixedImageMask.IsNull() )
+  {
     sampleOK = true;
+  }
 
-  MovedGradientPixelType movedGradient[MovedImageDimension];
+  MovedGradientPixelType movedGradient[ MovedImageDimension ];
   
-  for (int i = 0; i < MovedImageDimension; i++)
+  for ( int i = 0; i < MovedImageDimension; i++ )
+  {
     movedGradient[ i ] = 0.0;
+  }
 
   unsigned long nPixels = 0;
 
@@ -252,12 +257,16 @@ void NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
     if ( !this->m_FixedImageMask.IsNull() )
     {
       if ( this->m_FixedImageMask->IsInside( point ) )
+      {
         sampleOK = true;
+      }
       else
+      {
         sampleOK = false;
+      }
     }
 
-    if( sampleOK )
+    if ( sampleOK )
     { 
         movedGradient[ 0 ] += movedIteratorx.Get();
         movedGradient[ 1 ] += movedIteratory.Get();
@@ -271,7 +280,7 @@ void NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   this->m_MeanMovedGradient[ 0 ] = movedGradient[ 0 ] / nPixels;
   this->m_MeanMovedGradient[ 1 ] = movedGradient[ 1 ] / nPixels;
 
-}
+} // end ComputeMeanMovedGradient()
 
 
 /**
@@ -300,7 +309,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   MeasureType NGautocorrelationmoving = NumericTraits< MeasureType >::Zero;
 
   /** Make sure all is updated */
-  for (int iDimension=0; iDimension<FixedImageDimension; iDimension++)
+  for ( int iDimension=0; iDimension < FixedImageDimension; iDimension++ )
   {
     this->m_FixedSobelFilters[ iDimension ]->UpdateLargestPossibleRegion();
     this->m_MovedSobelFilters[ iDimension ]->UpdateLargestPossibleRegion();
@@ -343,9 +352,13 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
     if ( !this->m_FixedImageMask.IsNull() )
     {
       if ( this->m_FixedImageMask->IsInside( point ) )
+      {
         sampleOK = true;
+      }
       else
+      {
         sampleOK = false;
+      }
     }
 
     if ( sampleOK )
@@ -367,10 +380,11 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 
   } // end while
 
-  measure = -1 * ( NGcrosscorrelation / ( sqrt ( NGautocorrelationfixed ) * sqrt( NGautocorrelationmoving ) ) );
+  measure = -1.0 * ( NGcrosscorrelation
+    / ( vcl_sqrt( NGautocorrelationfixed ) * vcl_sqrt( NGautocorrelationmoving ) ) );
   return measure;
 
-}
+} // end ComputeMeasure()
 
 
 /**
@@ -387,7 +401,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   this->m_TransformMovingImageFilter->Modified();
   this->m_TransformMovingImageFilter->UpdateLargestPossibleRegion();
 
-  for ( iFilter = 0; iFilter<MovedImageDimension; iFilter++ )
+  for ( iFilter = 0; iFilter < MovedImageDimension; iFilter++ )
   {
     this->m_MovedSobelFilters[iFilter]->UpdateLargestPossibleRegion();
   }
@@ -397,8 +411,8 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   currentMeasure = this->ComputeMeasure( parameters );
 
   return currentMeasure;
-  
-}
+
+} // end GetValue()
 
 
 /**
@@ -409,21 +423,22 @@ template <class TFixedImage, class TMovingImage>
 void NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 ::SetTransformParameters( const TransformParametersType & parameters ) const
 {
-  if( !this->m_Transform )
+  if ( !this->m_Transform )
   {
-    itkExceptionMacro(<<"Transform has not been assigned");
+    itkExceptionMacro( << "Transform has not been assigned" );
   }
-  
   this->m_Transform->SetParameters( parameters );
-  
-}
+
+} // end SetTransformParameters()
+
 
 /**
  * ***************** GetDerivative *****************
  */
 
 template < class TFixedImage, class TMovingImage>
-void NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
+void
+NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 ::GetDerivative( const TransformParametersType & parameters,
 DerivativeType & derivative ) const
 {
@@ -434,11 +449,11 @@ DerivativeType & derivative ) const
 
   for ( unsigned int i = 0; i < numberOfParameters; i++ )
   {
-    testPoint[ i ] -= this->m_DerivativeDelta / sqrt( this->m_Scales[ i ]);
+    testPoint[ i ] -= this->m_DerivativeDelta / vcl_sqrt( this->m_Scales[ i ]);
     const MeasureType valuep0 = this->GetValue( testPoint );
-    testPoint[ i ] += 2 * this->m_DerivativeDelta / sqrt( this->m_Scales[ i ]);
+    testPoint[ i ] += 2 * this->m_DerivativeDelta / vcl_sqrt( this->m_Scales[ i ]);
     const MeasureType valuep1 = this->GetValue( testPoint );
-    derivative[ i ] = ( valuep1 - valuep0 ) / ( 2 * this->m_DerivativeDelta / sqrt( this->m_Scales[ i ] ) );
+    derivative[ i ] = ( valuep1 - valuep0 ) / ( 2 * this->m_DerivativeDelta / vcl_sqrt( this->m_Scales[ i ] ) );
     testPoint[ i ] = parameters[ i ];
   }
 
@@ -448,8 +463,10 @@ DerivativeType & derivative ) const
 /**
  * ***************** GetValueAndDerivative *****************
  */
+
 template <class TFixedImage, class TMovingImage>
-void NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
+void
+NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 ::GetValueAndDerivative( const TransformParametersType & parameters,
 MeasureType & value, DerivativeType & derivative ) const
 {

@@ -263,7 +263,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   const TransformParametersType & parameters,
   MeasureType & value, DerivativeType & derivative ) const
 {
-  itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
+  itkDebugMacro( "GetValueAndDerivative( " << parameters << " ) " );
 
   typedef typename DerivativeType::ValueType        DerivativeValueType;
   typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
@@ -619,19 +619,18 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
          */
 
         /** Go to next element */
-        for (; (rowIt != rowVector.end()) && ((*rowIt).first < col); ++rowIt);
+        for (; (rowIt != rowVector.end()) && ((*rowIt).first < col); ++rowIt );
 
-        if ((rowIt == rowVector.end()) || ((*rowIt).first != col))
+        if ( (rowIt == rowVector.end()) || ((*rowIt).first != col) )
         {
           /** Add new column to the row and set iterator to that column. */
-          rowIt = rowVector.insert(rowIt, ElementType( col, val ) );
+          rowIt = rowVector.insert( rowIt, ElementType( col, val ) );
         }
         else
         {
           /** Add to existing value */
           (*rowIt).second += val;
         }
-
       }
     }
 

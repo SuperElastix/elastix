@@ -28,7 +28,8 @@ using namespace itk;
  */
 
 template <class TElastix>
-void NormalizedGradientCorrelationMetric<TElastix>
+void
+NormalizedGradientCorrelationMetric<TElastix>
 ::Initialize( void ) throw ( ExceptionObject )
 {
   TimerPointer timer = TimerType::New();

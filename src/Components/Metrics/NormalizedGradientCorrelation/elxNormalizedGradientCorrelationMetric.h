@@ -135,7 +135,7 @@ public:
   /** Sets up a timer to measure the initialisation time and
    * calls the Superclass' implementation.
    */
-  virtual void Initialize(void) throw (ExceptionObject);
+  virtual void Initialize( void ) throw (ExceptionObject);
 
   /**
    * Do some things before each resolution:
@@ -168,6 +168,5 @@ private:
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "elxNormalizedGradientCorrelationMetric.hxx"
 #endif
-
 
 #endif // end #ifndef __elxNormalizedGradientCorrelationMetric_H__

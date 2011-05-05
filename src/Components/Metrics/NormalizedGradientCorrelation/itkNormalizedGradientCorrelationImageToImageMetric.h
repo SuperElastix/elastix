@@ -116,20 +116,18 @@ public:
     itkGetStaticConstMacro( MovedImageDimension ) >       MovedGradientImageType;
   typedef itk::CastImageFilter< TransformedMovingImageType,
     MovedGradientImageType >                              CastMovedImageFilterType;
-
   typedef typename CastMovedImageFilterType::Pointer      CastMovedImageFilterPointer;
-
   typedef typename MovedGradientImageType::PixelType      MovedGradientPixelType;
 
   /** Get the derivatives of the match measure. */
-  void GetDerivative( const TransformParametersType & parameters,
+  virtual void GetDerivative( const TransformParametersType & parameters,
     DerivativeType  & derivative ) const;
 
   /**  Get the value for single valued optimizers. */
-  MeasureType GetValue( const TransformParametersType & parameters ) const;
+  virtual MeasureType GetValue( const TransformParametersType & parameters ) const;
 
   /**  Get value and derivatives for multiple valued optimizers. */
-  void GetValueAndDerivative( const TransformParametersType & parameters,
+  virtual void GetValueAndDerivative( const TransformParametersType & parameters,
     MeasureType& Value, DerivativeType& derivative ) const;
 
   /** Initialize the Metric by making sure that all the components
@@ -156,7 +154,7 @@ public:
   protected:
   NormalizedGradientCorrelationImageToImageMetric();
   virtual ~NormalizedGradientCorrelationImageToImageMetric() {};
-  void PrintSelf( std::ostream& os, Indent indent ) const;
+  virtual void PrintSelf( std::ostream& os, Indent indent ) const;
 
   /** Compute the mean of the fixed and moved image gradients. */
   void ComputeMeanMovedGradient( void ) const;
@@ -169,8 +167,8 @@ public:
   typedef NeighborhoodOperatorImageFilter<
       MovedGradientImageType, MovedGradientImageType >        MovedSobelFilter;
 
-  private:
-    NormalizedGradientCorrelationImageToImageMetric(const Self&); //purposely not implemented
+private:
+  NormalizedGradientCorrelationImageToImageMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
   ScalesType                    m_Scales;
@@ -212,7 +210,6 @@ public:
 
 
 } // end namespace itk
-
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "itkNormalizedGradientCorrelationImageToImageMetric.hxx"

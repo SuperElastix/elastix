@@ -741,7 +741,7 @@ RayCastHelper<TInputImage, TCoordRep>
 
   m_ValidRay = this->CalcRayIntercepts();
 
-  if (! m_ValidRay)
+  if ( !m_ValidRay)
     {
     Reset();
     return false;
@@ -808,9 +808,9 @@ RayCastHelper<TInputImage, TCoordRep>
 
   // Calculate the number of voxels in each direction
 
-  xNum = vcl_fabs(m_RayVoxelStartPosition[0] - m_RayVoxelEndPosition[0]);
-  yNum = vcl_fabs(m_RayVoxelStartPosition[1] - m_RayVoxelEndPosition[1]);
-  zNum = vcl_fabs(m_RayVoxelStartPosition[2] - m_RayVoxelEndPosition[2]);
+  xNum = vcl_fabs( this->m_RayVoxelStartPosition[0] - this->m_RayVoxelEndPosition[0] );
+  yNum = vcl_fabs( this->m_RayVoxelStartPosition[1] - this->m_RayVoxelEndPosition[1] );
+  zNum = vcl_fabs( this->m_RayVoxelStartPosition[2] - this->m_RayVoxelEndPosition[2] );
 
   // The direction iterated in is that with the greatest number of voxels
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

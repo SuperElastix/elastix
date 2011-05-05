@@ -27,7 +27,7 @@ using namespace itk;
 
 template <class TElastix>
 void GradientDifferenceMetric<TElastix>
-::Initialize(void) throw (ExceptionObject)
+::Initialize( void ) throw (ExceptionObject)
 {
   TimerPointer timer = TimerType::New();
   timer->StartTimer();
@@ -36,7 +36,7 @@ void GradientDifferenceMetric<TElastix>
   elxout << "Initialization of GradientDifference metric took: "
     << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
 
-} // end Initialize
+} // end Initialize()
 
 
 /**
@@ -44,8 +44,9 @@ void GradientDifferenceMetric<TElastix>
  */
 
 template <class TElastix>
-void GradientDifferenceMetric<TElastix>
-::BeforeEachResolution(void)
+void
+GradientDifferenceMetric<TElastix>
+::BeforeEachResolution( void )
 {
   /** Set moving image derivative scales. */
   this->SetUseMovingImageDerivativeScales( false );
@@ -56,23 +57,22 @@ void GradientDifferenceMetric<TElastix>
     usescales &= this->GetConfiguration()->ReadParameter(
     movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
     this->GetComponentLabel(), i, -1, false );
-   }
-   if ( usescales )
-   {
+  }
+  if ( usescales )
+  {
     this->SetUseMovingImageDerivativeScales( true );
     this->SetMovingImageDerivativeScales( movingImageDerivativeScales );
     elxout << "Multiplying moving image derivatives by: "
       << movingImageDerivativeScales << std::endl;
-    }
+  }
 
   typedef typename elastix::OptimizerBase<TElastix>::ITKBaseType::ScalesType  ScalesType;
   ScalesType scales = this->m_Elastix->GetElxOptimizerBase()->GetAsITKBaseType()->GetScales();
   this->SetScales( scales );
 
-} // end BeforeEachResolution
+} // end BeforeEachResolution()
 
 
 } // end namespace elastix
-
 
 #endif // end #ifndef __elxGradientDifferenceMetric_HXX__
