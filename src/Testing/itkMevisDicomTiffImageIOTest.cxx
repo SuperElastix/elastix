@@ -147,10 +147,11 @@ int testMevis( void )
 
   typename ImageType::Pointer outputImage = reader->GetOutput();
   bool same = true;
-  same &= size != outputImage->GetLargestPossibleRegion().GetSize();
-  same &= spacing != outputImage->GetSpacing();
-  same &= origin != outputImage->GetOrigin();
-  same &= direction != outputImage->GetDirection();
+  same &= size == outputImage->GetLargestPossibleRegion().GetSize();
+  same &= spacing == outputImage->GetSpacing();
+  same &= origin == outputImage->GetOrigin();
+  same &= direction == outputImage->GetDirection();
+  
 
   if ( ! same )
   {
