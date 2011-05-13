@@ -17,6 +17,7 @@
 
 #include "elxElastixBase.h"
 #include <sstream>
+#include "itkMersenneTwisterRandomVariateGenerator.h"
 
 namespace elastix
 {
@@ -217,6 +218,16 @@ int ElastixBase::BeforeAllBase( void )
       << "http://elastix.isi.uu.nl/whatsnew_04_3.php for more information.\n"
       << std::endl;
   }
+
+  /** Set the random seed. Use 121212 as a default, which is the same as
+   * the default in the MersenneTwister code. */
+  typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
+  typedef RandomGeneratorType::IntegerType SeedType;
+  unsigned int randomSeed = 121212;
+  bool retseed = this->GetConfiguration()->ReadParameter(
+    randomSeed, "RandomSeed", 0 );
+  RandomGeneratorType::Pointer randomGenerator = RandomGeneratorType::New();
+  randomGenerator->SetSeed( static_cast<SeedType>( randomSeed ) );  
 
   /** Return a value. */
   return returndummy;

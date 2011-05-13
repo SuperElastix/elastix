@@ -106,6 +106,7 @@ TARGET_LINK_LIBRARIES( elxCore
   ITKNumerics
   ITKIO
   ITKCommon
+  ITKStatistics
 )
 
 #---------------------------------------------------------------------
@@ -155,6 +156,7 @@ TARGET_LINK_LIBRARIES( elastix
   ITKNumerics
   ITKIO
   ITKCommon
+  ITKStatistics
   ${AllComponentLibs}
 )
 
@@ -171,6 +173,7 @@ TARGET_LINK_LIBRARIES( transformix
   ITKNumerics
   ITKIO
   ITKCommon
+  ITKStatistics
   ${AllComponentLibs}
 )
 
