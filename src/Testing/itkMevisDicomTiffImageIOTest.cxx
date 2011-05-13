@@ -68,6 +68,14 @@ int testMevis( void )
     origin[i] = 5 + 3*i;
     direction[i][i] = 1.0; // default, will be changed below
   }
+  // 4th dimension origin/spacing are lost using dcm/tiff format!
+  if (Dimension == 4)
+  {
+      // default values
+      spacing[3] = 1.0;
+      origin[3] = 0.0;
+  }
+
   // Difficult direction cosines:
   if ( Dimension == 2 )
   {
@@ -78,15 +86,25 @@ int testMevis( void )
   else if ( Dimension == 3 )
   {
     // Test axis permutations
+    // RM: won't work, because dicom always assume right hand
+    // coordinate system when reconstructing the third direction
+    /*
     direction[0][0] = 1; direction[0][1] = 0; direction[0][2] = 0;
     direction[1][0] = 0; direction[1][1] = 0; direction[1][2] = 1;
     direction[2][0] = 0; direction[2][1] = 1; direction[2][2] = 0;
+    */
+
+    // this works:
+    direction[0][0] = 1; direction[0][1] = 0; direction[0][2] = 0;
+    direction[1][0] = 0; direction[1][1] = 0; direction[1][2] = -1;
+    direction[2][0] = 0; direction[2][1] = 1; direction[2][2] = 0;
+ 
   }
   else if ( Dimension == 4 )
   {
-    // Test 4D.
+    // Test 4D. RM: also make sure it is a right hand coordinate system
     direction[0][0] = 1; direction[0][1] = 0; direction[0][2] = 0; direction[0][3] = 0;
-    direction[1][0] = 0; direction[1][1] = 0; direction[1][2] = 1; direction[1][3] = 0;
+    direction[1][0] = 0; direction[1][1] = 0; direction[1][2] = -1; direction[1][3] = 0;
     direction[2][0] = 0; direction[2][1] = 1; direction[2][2] = 0; direction[2][3] = 0;
     direction[3][0] = 0; direction[3][1] = 0; direction[3][2] = 0; direction[3][3] = 1;
   }
