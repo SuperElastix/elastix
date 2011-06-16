@@ -46,7 +46,7 @@ namespace itk
   void AdaptiveStochasticGradientDescentOptimizer
     ::UpdateCurrentTime( void )
   {
-    typedef itk::Function::Sigmoid<double, double> SigmoidType;
+    typedef itk::Functor::Sigmoid<double, double> SigmoidType;
 
     if ( this->m_UseAdaptiveStepSizes )
     {
