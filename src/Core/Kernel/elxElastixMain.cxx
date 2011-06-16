@@ -12,10 +12,6 @@
 
 ======================================================================*/
 
-#ifndef __elxElastixMain_cxx
-#define __elxElastixMain_cxx
-
-
 /** If running on a Windows-system, include "windows.h".
  *  This is to set the priority, but which does not work on cygwin.
  */
@@ -739,6 +735,4 @@ ElastixMain::GetOriginalFixedImageDirectionFlat( void ) const
 
 
 } // end namespace elastix
-
-#endif // end #ifndef __elxElastixMain_cxx
 

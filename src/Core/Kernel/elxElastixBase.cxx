@@ -11,10 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
-#ifndef __elxElastixBase_cxx
-#define __elxElastixBase_cxx
-
 #include "elxElastixBase.h"
 #include <sstream>
 #include "itkMersenneTwisterRandomVariateGenerator.h"
@@ -474,7 +470,4 @@ ElastixBase::GetOriginalFixedImageDirectionFlat( void ) const
 
 
 } // end namespace elastix
-
-
-#endif // end #ifndef __elxElastixBase_cxx
 

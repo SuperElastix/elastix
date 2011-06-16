@@ -12,9 +12,6 @@
 
 ======================================================================*/
 
-#ifndef __elxTransformixMain_CXX_
-#define __elxTransformixMain_CXX_
-
 /** If running on a Windows-system, include "windows.h".
  *  This is to set the priority, but which does not work on cygwin.
  */
@@ -22,7 +19,6 @@
 #if defined(_WIN32) && !defined(__CYGWIN__)
   #include <windows.h>
 #endif
-
 
 #include "elxTransformixMain.h"
 #include "elxMacro.h"
@@ -241,7 +237,4 @@ int TransformixMain::InitDBIndex( void )
 
 
 } // end namespace elastix
-
-
-#endif // end #ifndef __elxTransformixMain_cxx
 
