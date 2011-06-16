@@ -2709,6 +2709,155 @@ the function. This gives you a chance to read/set some parameters, print some
 output, save some results etc.
 
 
+\section{Coding style}\label{sec:dev:style}
+
+In order to improve code readability and consistency, which has a
+positive influence on maintainability we have adopted a coding
+style. he\textvisiblespace pete
+
+\begin{description}
+\item[White spacing] Good spacing improves code readability. Therefore,
+
+\begin{itemize}
+\item Don't use tabs. Tabs depend on tab size, which will make the
+code appearance dependent on the viewer. We use 2 spaces per tab. In
+Visual Studio this can be set as a preference: go to tools
+$\rightarrow$ options $\rightarrow$ text editor $\rightarrow$ All
+languages $\rightarrow$ Tabs, then tab size = indent size = 2 and
+mark ``insert spaces''. In vim you can adapt your \texttt{.vimrc} to include
+the lines \texttt{set ts=2; set sw=2; set expandtab}.
+
+\item No spaces at the end of a line, like in ITK. It's just ugly. To
+make them (very) noticeable add the following in your \texttt{.vimrc}:
+\begin{verbatim}
+  :highlight ExtraWhitespace ctermbg=red guibg=red
+  :match ExtraWhitespace /\s\+$/
+\end{verbatim}
+
+\item Use spaces in functions, \texttt{for} loops, indices, etc. So,
+\begin{verbatim}
+  FunctionName(.void.);
+  for.(.i.=.0;.i.<.10;.i++.)
+  vector[.i.].=.3;
+\end{verbatim}
+\end{itemize}
+
+\item[Indentation] l
+
+\begin{itemize}
+\item Not too much, not too long lines
+\begin{verbatim}
+namespace itk
+{
+^
+^
+/**
+.* ********************* Function ******************************
+.*/
+^
+template <class TTemplate1, class TTemplate2>
+void
+ClassName<TTemplate1, TTemplate2>
+::Function(.void.)
+{
+..//Function body
+..this->OtherMemberFunction(.arguments.);
+..for.(.i.=.0;.i.<.10;.i++.)
+..{
+....x.+=.i.*.i;
+..}
+^
+} // end Function()
+^
+}.//.end.namespace.itk
+\end{verbatim}
+
+\item A class looks like
+\begin{verbatim}
+namespace itk
+{
+^
+/**.\class.ClassName
+.*.\brief.Brief.description
+.*
+.*.Detailed.description
+.*
+.*.\ingroup.Group
+.*/
+^
+template < templateArguments >
+class.ClassName:
+public.SuperclassName
+{
+public:
+^
+../**.Standard.class.typedefs..*/
+..typedef.ClassName..................Self;
+..typedef.SuperclassName.............Superclass;
+\end{verbatim}
+\end{itemize}
+
+\item[Variable and function naming] It's nice if from the name of a variable you know
+that it's local or a class member. Therefore,
+
+\begin{itemize}
+\item Member variables are prepended with \texttt{m\_}, followed by
+a capital. In the implementation refer to them using
+\verb|this->|. So, \verb|this->m_MemberVariable| is correct.
+
+\item Local variables should start with a lower case character.
+
+\item Functions should start with a capital.
+
+\item Member functions should also be called using \texttt{this->}
+\end{itemize}
+
+\item[Better code] Some simple things to look at:
+
+\begin{itemize}
+\item Use const wherever you can
+
+\item use vnl math functions instead of their std counterparts
+
+\item For floats don't use 0, but 0.0 to avoid possible bugs.
+
+\item Use the virtual keyword when overriding a virtual function in a derived
+class. This is not strictly needed in C++, but when you use it, it is immediately
+clear that a function overridden or meant to be overridden.
+
+\item Always use opening and closing brackets. Although it is not always needed for C++, do
+\begin{verbatim}
+  if.(.condition.)
+  {
+  ..valid = true;
+  }
+\end{verbatim}
+instead of
+\begin{verbatim}
+  if.(.condition.)
+  ..valid = true;
+\end{verbatim}
+Also for \texttt{for}-loops.
+\end{itemize}
+
+\item[Commenting] Code is mean to be read by others, or you in years time. So,
+
+\begin{itemize}
+\item Comment a lot
+
+\item End functions with \verb|} // end FunctionName()|
+\end{itemize}
+
+%not too long lines,
+%Dit is voor de leesbaarheid en om niet alles teveel naar rechts te
+%indenten. Ook handig voor niet zo brede schermen.
+%
+%
+%- 1 witregel aan het eind van een file. Die ene is nodig voor
+%sommige oude compilers, en meer is niet nodig.
+
+\end{description}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \appendix
