@@ -220,10 +220,9 @@ int ElastixBase::BeforeAllBase( void )
   typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
   typedef RandomGeneratorType::IntegerType SeedType;
   unsigned int randomSeed = 121212;
-  bool retseed = this->GetConfiguration()->ReadParameter(
-    randomSeed, "RandomSeed", 0 );
+  this->GetConfiguration()->ReadParameter( randomSeed, "RandomSeed", 0 );
   RandomGeneratorType::Pointer randomGenerator = RandomGeneratorType::New();
-  randomGenerator->SetSeed( static_cast<SeedType>( randomSeed ) );  
+  randomGenerator->SetSeed( static_cast<SeedType>( randomSeed ) );
 
   /** Return a value. */
   return returndummy;
