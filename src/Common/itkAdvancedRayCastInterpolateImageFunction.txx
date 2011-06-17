@@ -1134,6 +1134,7 @@ RayCastHelper<TInputImage, TCoordRep>
 ::InitialiseVoxelPointers(void)
 {
   IndexType index;
+  index.Fill( 0 );
 
   int Ix, Iy, Iz;
 
