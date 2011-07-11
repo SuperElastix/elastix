@@ -11,12 +11,10 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxNormalizedGradientCorrelationMetric_HXX__
 #define __elxNormalizedGradientCorrelationMetric_HXX__
 
 #include "elxNormalizedGradientCorrelationMetric.h"
-#include "itkImageFileReader.h"
 
 
 namespace elastix
@@ -28,8 +26,7 @@ using namespace itk;
  */
 
 template <class TElastix>
-void
-NormalizedGradientCorrelationMetric<TElastix>
+void NormalizedGradientCorrelationMetric<TElastix>
 ::Initialize( void ) throw ( ExceptionObject )
 {
   TimerPointer timer = TimerType::New();
