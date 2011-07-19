@@ -23,7 +23,7 @@
 #include <stdio.h>
 
 #include "itkSimpleFilterWatcher.h"
-#include "itkImageFileWriter.h"
+//#include "itkImageFileWriter.h"
 
 namespace itk
 {
@@ -98,8 +98,8 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
 
   /* to rescale the similarity measure between 0-1;*/
   MeasureType tmpmeasure = this->GetValue( this->m_Transform->GetParameters() );
-  
-  while ( ( fabs( tmpmeasure ) / this->m_Rescalingfactor ) > 1 )
+
+  while ( ( vcl_fabs( tmpmeasure ) / this->m_Rescalingfactor ) > 1 )
 	{
     this->m_Rescalingfactor *= 10;
 	}
@@ -118,7 +118,8 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
 {
   Superclass::PrintSelf( os, indent );
     os << indent << "DerivativeDelta: " << this->m_DerivativeDelta << std::endl;
-}
+
+} // end PrintSelf()
 
 
 /**
@@ -134,7 +135,7 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
   MeasureType measure = NumericTraits< MeasureType >::Zero;
   MeasureType diff = NumericTraits< MeasureType >::Zero;
 
-  typename FixedImageType::SizeType iterationSize = 
+  typename FixedImageType::SizeType iterationSize =
     this->m_FixedImage->GetLargestPossibleRegion().GetSize();
   typename FixedImageType::IndexType iterationStartIndex, currentIndex, neighborIndex;
   typename FixedImageType::SizeType neighborIterationSize;
@@ -165,9 +166,11 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
   bool sampleOK = false;
 
   if ( this->m_FixedImageMask.IsNull() )
+  {
     sampleOK = true;
+  }
 
-  while ( !fixedImageIt.IsAtEnd() ) 
+  while ( !fixedImageIt.IsAtEnd() )
   {
     /** Get current index */
     currentIndex = fixedImageIt.GetIndex();
@@ -177,12 +180,16 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
     if ( !this->m_FixedImageMask.IsNull() )
     {
       if ( this->m_FixedImageMask->IsInside( point ) )
+      {
         sampleOK = true;
+      }
       else
+      {
         sampleOK = false;
+      }
 		}
 
-    if( sampleOK )
+    if ( sampleOK )
     {
       /** setup the neighborhood iterator */
       for( iDimension = 0; iDimension < this->m_FixedImage->GetImageDimension(); iDimension++ )
@@ -198,7 +205,7 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
       while ( ! neighborIt.IsAtEnd() )
       {
         diff = fixedImageIt.Value() - neighborIt.Value();
-        measure += ( this->m_NoiseConstant )/( this->m_NoiseConstant + ( diff ) * ( diff ) );
+        measure += ( this->m_NoiseConstant ) / ( this->m_NoiseConstant + ( diff * diff ) );
         ++neighborIt;
       } // end while neighborIt
 
@@ -209,7 +216,7 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
 
   return measure;
 
-}
+} // end ComputePIFixed()
 
 
 /**
@@ -234,7 +241,7 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
   typename FixedImageType::SizeType neighborIterationSize;
   typename FixedImageType::PointType point;
 
-  for( iDimension = 0; iDimension < this->m_FixedImage->GetImageDimension(); iDimension++ )
+  for ( iDimension = 0; iDimension < this->m_FixedImage->GetImageDimension(); iDimension++ )
   {
     iterationSize[iDimension] -= static_cast<int>( 2 * this->m_NeighborhoodRadius );
     iterationStartIndex[iDimension] = static_cast<int>( this->m_NeighborhoodRadius );
@@ -258,7 +265,9 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
   bool sampleOK = false;
 
   if ( this->m_FixedImageMask.IsNull() )
+  {
     sampleOK = true;
+  }
 
   while ( !differenceImageIt.IsAtEnd() )
   {
@@ -270,19 +279,22 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
     if ( !this->m_FixedImageMask.IsNull() )
     {
       if ( this->m_FixedImageMask->IsInside( point ) )
+      {
         sampleOK = true;
-      else	
+      }
+      else
+      {
         sampleOK = false;
-
+      }
     }
 
-    if( sampleOK )
+    if ( sampleOK )
     {
       /** setup the neighborhood iterator */
       for ( iDimension = 0; iDimension < this->m_FixedImage->GetImageDimension(); iDimension++ )
       {
         neighborIndex[ iDimension ] = currentIndex[ iDimension ] - this->m_NeighborhoodRadius;
-        neighborIndex[ 2] = 0; // 2D only
+        neighborIndex[ 2 ] = 0; // 2D only
       }
 
       neighboriterationRegion.SetIndex( neighborIndex );
@@ -292,7 +304,7 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
       while ( !neighborIt.IsAtEnd() )
       {
         diff = differenceImageIt.Value() - neighborIt.Value();
-        measure += ( this->m_NoiseConstant )/( this->m_NoiseConstant + ( ( diff ) * ( diff ) ) );
+        measure += ( this->m_NoiseConstant )/( this->m_NoiseConstant + ( diff * diff ) );
         ++neighborIt;
       } // end while neighborIt
 
@@ -302,7 +314,8 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
   } // end while differenceImageIt
 
   return measure;
-}
+
+} // end ComputePIDiff()
 
 
 /**
@@ -340,9 +353,7 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
 
       tmpfactor += factorstep;
     }
-
   }
-
   else
   {
     measure = this->ComputePIDiff( parameters, this->m_NormalizationFactor );
@@ -351,7 +362,8 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
 
 	return currentMeasure;
 
-}
+} // end GetValue()
+
 
 /**
  * ********************* GetDerivative ******************************
@@ -361,7 +373,7 @@ template < class TFixedImage, class TMovingImage>
 void
 PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
 ::GetDerivative( const TransformParametersType & parameters,
-DerivativeType & derivative ) const
+  DerivativeType & derivative ) const
 {
   TransformParametersType testPoint;
   testPoint = parameters;
@@ -370,31 +382,32 @@ DerivativeType & derivative ) const
 
   for ( unsigned int i = 0; i < numberOfParameters; i++ )
   {
-    testPoint[ i ] -= this->m_DerivativeDelta / sqrt( this->m_Scales[ i ] );
+    testPoint[ i ] -= this->m_DerivativeDelta / vcl_sqrt( this->m_Scales[ i ] );
     const MeasureType valuep0 = this->GetValue( testPoint );
-    testPoint[ i ] += 2* this->m_DerivativeDelta / sqrt( this->m_Scales[ i ] );
+    testPoint[ i ] += 2 * this->m_DerivativeDelta / vcl_sqrt( this->m_Scales[ i ] );
     const MeasureType valuep1 = this->GetValue( testPoint );
-    derivative[ i ] = ( valuep1 - valuep0 ) / ( 2 * this->m_DerivativeDelta / sqrt( this->m_Scales[ i ] ) );
+    derivative[ i ] = ( valuep1 - valuep0 ) / ( 2 * this->m_DerivativeDelta / vcl_sqrt( this->m_Scales[ i ] ) );
     testPoint[ i ] = parameters[ i ];
 	}
-}
+
+} // end GetDerivative()
 
 
 /**
  * ********************* GetValueAndDerivative ******************************
  */
-  
+
 template <class TFixedImage, class TMovingImage>
 void
 PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
 ::GetValueAndDerivative( const TransformParametersType & parameters,
-MeasureType & Value, DerivativeType  & Derivative ) const
+  MeasureType & Value, DerivativeType & derivative ) const
 {
   Value = this->GetValue( parameters );
-  this->GetDerivative( parameters, Derivative );
-}
+  this->GetDerivative( parameters, derivative );
+
+} // end GetValueAndDerivative()
 
 } // end namespace itk
 
 #endif // end __itkPatternIntensityImageToImageMetric_txx
-

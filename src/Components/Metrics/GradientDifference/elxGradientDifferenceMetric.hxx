@@ -27,7 +27,7 @@ using namespace itk;
 
 template <class TElastix>
 void GradientDifferenceMetric<TElastix>
-::Initialize(void) throw (ExceptionObject)
+::Initialize( void ) throw (ExceptionObject)
 {
   TimerPointer timer = TimerType::New();
   timer->StartTimer();
@@ -36,7 +36,7 @@ void GradientDifferenceMetric<TElastix>
   elxout << "Initialization of GradientDifference metric took: "
     << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
 
-} // end Initialize
+} // end Initialize()
 
 
 /**
@@ -44,8 +44,9 @@ void GradientDifferenceMetric<TElastix>
  */
 
 template <class TElastix>
-void GradientDifferenceMetric<TElastix>
-::BeforeEachResolution(void)
+void
+GradientDifferenceMetric<TElastix>
+::BeforeEachResolution( void )
 {
   /** Set moving image derivative scales. */
   this->SetUseMovingImageDerivativeScales( false );
