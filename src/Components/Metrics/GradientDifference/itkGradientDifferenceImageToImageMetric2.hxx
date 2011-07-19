@@ -147,7 +147,6 @@ void GradientDifferenceImageToImageMetric<TFixedImage,TMovingImage>
   {
     this->m_Rescalingfactor *= 10;
   }
-  std::cout<<" end initialize "<<std::endl;
   
 } // end Initialize()
 

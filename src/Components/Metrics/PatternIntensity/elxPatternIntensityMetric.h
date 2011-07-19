@@ -142,6 +142,8 @@ public:
    * \li Set CheckNumberOfSamples setting
    * \li Set UseNormalization setting
    */
+  virtual void BeforeRegistration( void );
+
   virtual void BeforeEachResolution( void );
 
 protected:

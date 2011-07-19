@@ -38,6 +38,25 @@ void GradientDifferenceMetric<TElastix>
 
 } // end Initialize()
 
+/**
+ * ***************** BeforeRegistration ***********************
+ */
+
+template <class TElastix>
+void GradientDifferenceMetric<TElastix>
+::BeforeRegistration(void)
+{
+
+  if ( this->m_Elastix->GetFixedImage()->GetImageDimension() == 3 )
+  {
+    if ( this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetSize()[2] > 1 )
+    {
+      itkExceptionMacro( << "Metric can only be used for 2D-3D registration. FixedImageSize[2] must be 1" );
+    }
+  }
+  
+} // end BeforeRegistration
+
 
 /**
  * ***************** BeforeEachResolution ***********************
