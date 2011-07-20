@@ -49,6 +49,10 @@ void PatternIntensityMetric<TElastix>
 ::BeforeRegistration(void)
 {
 
+  if ( this->m_Elastix->GetFixedImage()->GetImageDimension() != 3 )
+  {
+    itkExceptionMacro( << "FixedImage must be 3D" );
+  }
   if ( this->m_Elastix->GetFixedImage()->GetImageDimension() == 3 )
   {
     if ( this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetSize()[2] != 1 )
