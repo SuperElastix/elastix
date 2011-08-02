@@ -183,12 +183,28 @@ using namespace itk;
 
   PointType focalpoint = this->GetFocalPoint();
 
-  xout["transpar"] << "(FocalPoint "
-      << focalpoint << ")" << std::endl;
+  xout["transpar"] << "(" << this->GetComponentLabel() << "FocalPoint ";
+  for( unsigned int i = 0; i < this->m_Elastix->GetMovingImage()->GetImageDimension() ; i++ )
+  {
+      xout["transpar"] << focalpoint[i] << " ";
+  }
+  xout["transpar"] << ")" << std::endl;
 
   double threshold = this->GetThreshold();
     xout["transpar"] << "(Threshold "
       << threshold << ")" << std::endl;
+
+  typedef typename elastix::OptimizerBase<TElastix>::ITKBaseType::ParametersType ParametersType;
+  TransformParametersType preParameters = this->m_PreTransform->GetParameters();
+
+  xout["transpar"] << "(" << this->GetComponentLabel() << "PreParameters ";
+  
+  for( unsigned int i = 0; i < this->m_Elastix->GetMovingImage()->GetImageDimension() ; i++ )
+  {
+    xout["transpar"] << preParameters[i] << " ";
+  } 
+    xout["transpar"]<< ")" << std::endl;
+
 
   } // end WriteToFile()
 
