@@ -205,7 +205,6 @@ using namespace itk;
   } 
     xout["transpar"]<< ")" << std::endl;
 
-
   } // end WriteToFile()
 
 
