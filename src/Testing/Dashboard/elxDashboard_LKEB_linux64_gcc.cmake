@@ -23,7 +23,7 @@ set( CTEST_BUILD_FLAGS "-j6" ) # parallel build for makefiles
 set( CTEST_TEST_ARGS PARALLEL_LEVEL 6 ) # parallel testing
 set( CTEST_BUILD_CONFIGURATION Debug )
 set( CTEST_CMAKE_GENERATOR "Unix Makefiles" )
-set( CTEST_DASHBOARD_ROOT "/home/marius/elastix-nightly/build/" )
+set( CTEST_DASHBOARD_ROOT "/home/marius/nightly-builds/elastix/" )
 
 # Specify the kind of dashboard to submit
 # default: Nightly
