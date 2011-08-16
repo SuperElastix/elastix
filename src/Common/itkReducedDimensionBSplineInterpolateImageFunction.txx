@@ -125,17 +125,11 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficien
     return;
     }
 
-  // SplineOrder not implemented yet.
-  if (SplineOrder > 1)
-    {
-      ExceptionObject err(__FILE__, __LINE__);
-      err.SetLocation( ITK_LOCATION );
-      err.SetDescription( "SplineOrder must be between 0 and 1. Requested spline order has not been implemented yet." );
-      throw err;
-    }
-
   m_SplineOrder = SplineOrder;
   m_CoefficientFilter->SetSplineOrder( SplineOrder );
+  // Set spline order of coefficient filter for last dimension to zero,
+  // to use nearest neighbour interpolation in the last dimension.
+  m_CoefficientFilter->SetSplineOrder( ImageDimension - 1, 0 );
 
   //this->SetPoles();
   m_MaxNumberInterpolationPoints = 1;
@@ -202,76 +196,78 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficien
 template <class TImageType, class TCoordRep, class TCoefficientType>
 typename
 ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficientType>
-:: CovariantVectorType
+::CovariantVectorType
 ReducedDimensionBSplineInterpolateImageFunction<TImageType,TCoordRep,TCoefficientType>
 ::EvaluateDerivativeAtContinuousIndex( const ContinuousIndexType & x ) const
 {
   /** Allocate memory on the stack: */
   const unsigned int maxSplineOrder = 5;
-  const unsigned int maxMatrixSize = (ImageDimension - 1) * (maxSplineOrder+1);
-  long evaluateIndexData[maxMatrixSize];
-  double weightsData[maxMatrixSize];
-  double weightsDerivativeData[maxMatrixSize];
+  const unsigned int maxMatrixSize = ( ImageDimension - 1 ) * ( maxSplineOrder + 1 );
+  long evaluateIndexData[ maxMatrixSize ];
+  double weightsData[ maxMatrixSize ];
+  double weightsDerivativeData[ maxMatrixSize ];
 
-  vnl_matrix_ref<long>        EvaluateIndex(ImageDimension - 1, ( m_SplineOrder + 1 ), evaluateIndexData);
+  vnl_matrix_ref< long > EvaluateIndex( ImageDimension - 1, ( m_SplineOrder + 1 ), evaluateIndexData );
 
   // compute the interpolation indexes
   // TODO: Do we need to revisit region of support for the derivatives?
-  this->DetermineRegionOfSupport(EvaluateIndex, x, m_SplineOrder);
+  this->DetermineRegionOfSupport( EvaluateIndex, x, m_SplineOrder );
 
   // Determine weights
-  vnl_matrix_ref<double>        weights(ImageDimension - 1, ( m_SplineOrder + 1 ), weightsData);
+  vnl_matrix_ref< double > weights( ImageDimension - 1, ( m_SplineOrder + 1 ), weightsData );
 
   SetInterpolationWeights( x, EvaluateIndex, weights, m_SplineOrder );
 
-  vnl_matrix_ref<double>        weightsDerivative(ImageDimension - 1, ( m_SplineOrder + 1), weightsDerivativeData);
+  vnl_matrix_ref< double > weightsDerivative( ImageDimension - 1, ( m_SplineOrder + 1), weightsDerivativeData );
   SetDerivativeWeights( x, EvaluateIndex, weightsDerivative, ( m_SplineOrder ) );
 
   // Modify EvaluateIndex at the boundaries using mirror boundary conditions
-  this->ApplyMirrorBoundaryConditions(EvaluateIndex, m_SplineOrder);
+  this->ApplyMirrorBoundaryConditions( EvaluateIndex, m_SplineOrder );
 
   const InputImageType * inputImage = this->GetInputImage();
   const typename InputImageType::SpacingType & spacing = inputImage->GetSpacing();
 
   // Calculate derivative
   CovariantVectorType derivativeValue;
+  derivativeValue[ ImageDimension - 1 ] = static_cast< OutputType >( 0.0 );
   double tempValue;
   IndexType coefficientIndex;
-  for (unsigned int n = 0; n < ImageDimension - 1; n++)
+  coefficientIndex[ ImageDimension - 1 ] = vnl_math_rnd ( x[ ImageDimension - 1 ] );
+  for ( unsigned int n = 0; n < ImageDimension - 1; n++ )
+  {
+    derivativeValue[ n ] = 0.0;
+    for ( unsigned int p = 0; p < m_MaxNumberInterpolationPoints; p++ )
     {
-    derivativeValue[n] = 0.0;
-    for (unsigned int p = 0; p < m_MaxNumberInterpolationPoints; p++)
-      {
       tempValue = 1.0;
-      for (unsigned int n1 = 0; n1 < ImageDimension - 1; n1++)
-        {
-        coefficientIndex[n1] = EvaluateIndex[n1][m_PointsToIndex[p][n1]];
+      for ( unsigned int n1 = 0; n1 < ImageDimension - 1; n1++ )
+      {
+        coefficientIndex[ n1 ] = EvaluateIndex[ n1 ][ m_PointsToIndex[ p ][ n1 ] ];
 
-        if (n1 == n)
-          {
-          //w *= weights[n][ m_PointsToIndex[p][n] ];
-          tempValue *= weightsDerivative[n1][ m_PointsToIndex[p][n1] ];
-          }
-        else
-          {
-          tempValue *= weights[n1][ m_PointsToIndex[p][n1] ];
-          }
+        if ( n1 == n )
+        {
+          //w *= weights[ n ][ m_PointsToIndex[ p ][ n ] ];
+          tempValue *= weightsDerivative[ n1 ][ m_PointsToIndex[ p ][ n1 ] ];
         }
-      derivativeValue[n] += m_Coefficients->GetPixel(coefficientIndex) * tempValue;
+        else
+        {
+          tempValue *= weights[ n1 ][ m_PointsToIndex[ p ][ n1 ] ];
+        }
       }
-    derivativeValue[n] /= spacing[n];   // take spacing into account
+      derivativeValue[ n ] += m_Coefficients->GetPixel( coefficientIndex ) * tempValue;
     }
+    derivativeValue[ n ] /= spacing[ n ];  // take spacing into account
+  }
 
 #ifdef ITK_USE_ORIENTED_IMAGE_DIRECTION
   if( this->m_UseImageDirection )
-    {
+  {
     CovariantVectorType orientedDerivative;
     inputImage->TransformLocalVectorToPhysicalVector( derivativeValue, orientedDerivative );
     return orientedDerivative;
-    }
+  }
 #endif
 
-  return(derivativeValue);
+  return derivativeValue;
 }
 
 

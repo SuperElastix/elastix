@@ -46,6 +46,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   this->m_BSplineInterpolatorFloat = 0;
   this->m_InterpolatorIsBSpline = false;
   this->m_InterpolatorIsBSplineFloat = false;
+  this->m_InterpolatorIsReducedBSpline = false;
   this->m_CentralDifferenceGradientFilter = 0;
 
   this->m_AdvancedTransform = 0;
@@ -350,13 +351,28 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     itkDebugMacro( "Interpolator is not BSplineFloat" );
   }
 
+  this->m_InterpolatorIsReducedBSpline = false;
+  ReducedBSplineInterpolatorType * testPtr3 =
+    dynamic_cast<ReducedBSplineInterpolatorType *>( this->m_Interpolator.GetPointer() );
+  if ( testPtr3 )
+  {
+    this->m_InterpolatorIsReducedBSpline = true;
+    this->m_ReducedBSplineInterpolator = testPtr3;
+    itkDebugMacro( "Interpolator is ReducedBSpline" );
+  }
+  else
+  {
+    this->m_ReducedBSplineInterpolator = 0;
+    itkDebugMacro( "Interpolator is not ReducedBSpline" );
+  }
+
   /** Don't overwrite the gradient image if GetComputeGradient() == true.
    * Otherwise we can use a forward difference derivative, or the derivative
    * provided by the B-spline interpolator.
    */
   if ( !this->GetComputeGradient() )
   {
-    if ( !this->m_InterpolatorIsBSpline && !this->m_InterpolatorIsBSplineFloat )
+    if ( !this->m_InterpolatorIsBSpline && !this->m_InterpolatorIsBSplineFloat && !this->m_InterpolatorIsReducedBSpline )
     {
       this->m_CentralDifferenceGradientFilter = CentralDifferenceGradientFilterType::New();
       this->m_CentralDifferenceGradientFilter->SetUseImageSpacing( true );
@@ -443,6 +459,12 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
         /** Computed moving image gradient using derivative B-spline kernel. */
         (*gradient)
           = this->m_BSplineInterpolatorFloat->EvaluateDerivativeAtContinuousIndex( cindex );
+      }
+      else if ( this->m_InterpolatorIsReducedBSpline && !this->GetComputeGradient() )
+      {
+        /** Computed moving image gradient using derivative BSpline kernel. */
+        (*gradient)
+          = this->m_ReducedBSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
       }
       else
       {

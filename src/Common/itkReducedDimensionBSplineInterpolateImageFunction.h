@@ -40,7 +40,7 @@
 #include "itkInterpolateImageFunction.h"
 #include "vnl/vnl_matrix.h"
 
-#include "itkBSplineDecompositionImageFilter.h"
+#include "itkMultiOrderBSplineDecompositionImageFilter.h"
 #include "itkConceptChecking.h"
 #include "itkCovariantVector.h"
 
@@ -66,16 +66,17 @@ namespace itk
  * And code obtained from bigwww.epfl.ch by Philippe Thevenaz.
  *
  * The B spline coefficients are calculated through the
- * BSplineDecompositionImageFilter
+ * MultiOrderBSplineDecompositionImageFilter to enable a zero-th order
+ * for the last dimension.
  *
  * Limitations:  Spline order must be between 0 and 5.
  *               Spline order must be set before setting the image.
+ *               Requires same spline order for every dimension.
  *               Uses mirror boundary conditions.
- *               Requires the same order of Spline for each dimension.
  *               Spline is determined in all dimensions, cannot selectively
  *                  pick dimension for calculating spline.
  *
- * \sa BSplineDecompositionImageFilter
+ * \sa MultiOrderBSplineDecompositionImageFilter
  *
  * \ingroup ImageFunctions
  */
@@ -127,8 +128,8 @@ public:
                      itkGetStaticConstMacro(ImageDimension)
     >                      CoefficientImageType;
 
-  /** Define filter for calculating the B-spline coefficients */
-  typedef BSplineDecompositionImageFilter<TImageType, CoefficientImageType>
+  /** Define filter for calculating the BSpline coefficients */
+  typedef MultiOrderBSplineDecompositionImageFilter<TImageType, CoefficientImageType>
   CoefficientFilter;
 
   typedef typename CoefficientFilter::Pointer CoefficientFilterPointer;
