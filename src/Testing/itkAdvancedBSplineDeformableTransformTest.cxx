@@ -12,7 +12,9 @@
 
 ======================================================================*/
 #include "itkAdvancedBSplineDeformableTransform.h"
-#include "itkBSplineDeformableTransform.h" // original ITK
+
+#define ITKV3_COMPATIBILITY
+#include "itkBSplineDeformableTransform.h" // original ITK, requires flag ITKV3_COMPATIBILITY
 #include "itkGridScheduleComputer.h"
 
 #include <ctime>
@@ -357,3 +359,5 @@ int main( int argc, char *argv[] )
   return 0;
 
 } // end main
+
+#undef ITKV3_COMPATIBILITY

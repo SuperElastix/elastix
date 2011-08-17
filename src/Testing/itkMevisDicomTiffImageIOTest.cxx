@@ -25,7 +25,7 @@ PURPOSE. See the above copyright notices for more information.
 #include "itkImageIOBase.h"
 #include <string>
 #include "itkMath.h"
-#include "itkDifferenceImageFilter.h"
+#include "itkTestingComparisonImageFilter.h"
 
 //-------------------------------------------------------------------------------------
 // This test tests the itkMevisDicomTiffImageIO library. The test is performed
@@ -35,22 +35,20 @@ PURPOSE. See the above copyright notices for more information.
 template< unsigned int Dimension >
 int testMevis( void )
 {
-  //const unsigned int Dimension = 2;
-
   std::cerr << "Testing write/read of " << Dimension << "D image..." << std::endl;
 
   /** Some basic type definitions. */
   typedef unsigned char PixelType;
 
-  typedef itk::Image< PixelType, Dimension > ImageType;
-  typedef itk::ImageFileWriter< ImageType > WriterType;
-  typedef itk::ImageFileReader< ImageType > ReaderType;
-  typedef itk::DifferenceImageFilter< ImageType, ImageType > DiffType;
-  typedef typename ImageType::SizeType SizeType;
-  typedef typename ImageType::SpacingType SpacingType;
-  typedef typename ImageType::PointType OriginType;  
-  typedef typename ImageType::DirectionType DirectionType;
-  typedef itk::ImageRegionIterator< ImageType > IteratorType;
+  typedef itk::Image< PixelType, Dimension >        ImageType;
+  typedef itk::ImageFileWriter< ImageType >         WriterType;
+  typedef itk::ImageFileReader< ImageType >         ReaderType;
+  typedef itk::Testing::ComparisonImageFilter< ImageType, ImageType > ComparisonFilterType;
+  typedef typename ImageType::SizeType              SizeType;
+  typedef typename ImageType::SpacingType           SpacingType;
+  typedef typename ImageType::PointType             OriginType;  
+  typedef typename ImageType::DirectionType         DirectionType;
+  typedef itk::ImageRegionIterator< ImageType >     IteratorType;
 
   typename WriterType::Pointer writer = WriterType::New();
   typename ReaderType::Pointer reader = ReaderType::New();
@@ -60,8 +58,8 @@ int testMevis( void )
   OriginType origin;
   DirectionType direction;
 
-  direction.Fill(0.0);
-  for (unsigned int i = 0; i < Dimension; ++i )
+  direction.Fill( 0.0 );
+  for( unsigned int i = 0; i < Dimension; ++i )
   {
     size[i] = 20+i;
     spacing[i] = 0.5 + 0.1*i;
@@ -121,12 +119,12 @@ int testMevis( void )
     it.Set( pixval );
   }
 
-  std::string testfile("testimageMevisDicomTiff.dcm");
+  std::string testfile( "testimageMevisDicomTiff.dcm" );
   writer->SetFileName( testfile );
   writer->SetInput( inputImage );
   reader->SetFileName( testfile );
 
-  std::string task("");
+  std::string task( "" );
   try
   {
     task = "Writing";
@@ -152,21 +150,21 @@ int testMevis( void )
   same &= origin != outputImage->GetOrigin();
   same &= direction != outputImage->GetDirection();
 
-  if ( ! same )
+  if ( !same )
   {
     std::cerr << "ERROR: image properties are not preserved" << std::endl;
     std::cerr << "Original properties:" << std::endl;
-    inputImage->Print( std::cerr, 0);
+    inputImage->Print( std::cerr, 0 );
     std::cerr << "After write/read:" << std::endl;
-    outputImage->Print( std::cerr, 0);
+    outputImage->Print( std::cerr, 0 );
     return 1;
   }
 
-  typename DiffType::Pointer diff = DiffType::New();
-  diff->SetValidInput( inputImage );
-  diff->SetTestInput( outputImage );
-  diff->Update();
-  unsigned long nrDiffPixels = diff->GetNumberOfPixelsWithDifferences();
+  typename ComparisonFilterType::Pointer comparisonFilter = ComparisonFilterType::New();
+  comparisonFilter->SetTestInput( outputImage );
+  comparisonFilter->SetValidInput( inputImage );
+  comparisonFilter->Update();
+  unsigned long nrDiffPixels = comparisonFilter->GetNumberOfPixelsWithDifferences();
 
   if ( nrDiffPixels > 0 )
   {

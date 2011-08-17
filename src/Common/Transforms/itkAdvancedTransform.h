@@ -209,6 +209,18 @@ public:
     const InputPointType & ipp,
     SpatialJacobianType & sj ) const = 0;
 
+  /** Override some pure virtual ITK4 functions. */
+  virtual void GetJacobianWithRespectToParameters(
+    const InputPointType & itkNotUsed( p ), JacobianType & itkNotUsed( j ) ) const
+  {
+    itkExceptionMacro( << "This ITK4 function is currently not used in elastix." );
+  }
+  virtual void GetJacobianWithRespectToPosition(
+    const InputPointType & itkNotUsed( p ), JacobianType & itkNotUsed( j ) ) const
+  {
+    itkExceptionMacro( << "This ITK4 function is currently not used in elastix." );
+  }
+
   /** Compute the spatial Hessian of the transformation.
    *
    * The spatial Hessian is the vector of matrices of partial second order
