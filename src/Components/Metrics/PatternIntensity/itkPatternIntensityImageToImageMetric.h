@@ -186,7 +186,7 @@ public:
   typename RescaleIntensityImageFilterType::Pointer   m_RescaleImageFilter;
   typename MultiplyByConstantImageFilterType::Pointer m_MultiplyByConstantImageFilter;
   double                      m_NoiseConstant;
-  double                      m_NeighborhoodRadius;
+  unsigned int                m_NeighborhoodRadius;
   double                      m_DerivativeDelta;
   double                      m_NormalizationFactor;
   double                      m_Rescalingfactor;
