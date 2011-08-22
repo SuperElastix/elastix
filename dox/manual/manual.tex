@@ -631,17 +631,16 @@ a_{21}, a_{22}, t_x, t_y)^T$. In 3D, this gives a vector of length 12.
 with $\vx_k$ the control points, $\bm{\beta}^3(x)$ the cubic
 multidimensional B-spline polynomial \citep{Unser99}, $\bm{p}_k$ the
 B-spline coefficient vectors (loosely speaking, the control point
-displacements), $\bm{\sigma}$ the B-spline control point spacing,
-and $\Ncal_{\vx}$ the set of all control points within the compact
-support of the B-spline at $\vx$. The control points $\vx_k$ are
-defined on a regular grid, overlayed on the fixed image. In this
-context we talk about `the control point grid that is put on the
-fixed image', and about `control points that are moved around'. Note
-that $\vTm(\vx_k)\neq \vx_k + \bm{p}_k$, a common misunderstanding.
-Calling $\bm{p}_k$ the control point displacements is, therefore,
-actually somewhat misleading. Also note that the control point grid
-is entirely unrelated to the grid used by the Grid image sampler,
-see Section~\ref{sec:comp:sampler}.
+displacements), $\bm{\sigma}$ the B-spline control point spacing, and
+$\Ncal_{\vx}$ the set of all control points within the compact support of
+the B-spline at $\vx$. The control points $\vx_k$ are defined on a regular
+grid, overlayed on the fixed image. In this context we talk about `the
+control point grid that is put on the fixed image', and about `control
+points that are moved around'. Note that $\vTm(\vx_k)\neq \vx_k +
+\bm{p}_k$, a common misunderstanding. Calling $\bm{p}_k$ the control point
+displacements is, therefore, actually somewhat misleading. Also note that
+the control point grid is entirely unrelated to the grid used by the Grid
+image sampler, see Section~\ref{sec:comp:sampler}.
 
 The control point grid is defined by the amount of space between the
 control points $\bm{\sigma} = (\sigma_1, \ldots, \sigma_d)$ (with
@@ -663,14 +662,14 @@ composed as follows: $\vmu = (p_{1x}, p_{2x}, \ldots, p_{P_1},
 p_{1y}, p_{2y}, \ldots, p_{P_2} )^T$.
 
 \item[Thin-plate splines:] (\texttt{SplineKernelTransform}) Thin-plate
-splines are another well-known representation for nonrigid
-transformations. The thin-plate spline is an instance of the more
-general class of kernel-based transforms \cite{Davis97,Brooks07}.
-The transformation is based on a set of $K$ corresponding landmarks
-in the fixed and moving image: $\vx_k^{\mathrm{fix}}$ and
-$\vx_k^{\mathrm{mov}}, k = 1, \ldots, K$, respectively. The
-transformation is expressed as a sum of an affine component and a
-nonrigid component:
+    splines are another well-known representation for nonrigid
+    transformations. The thin-plate spline is an instance of the more
+    general class of kernel-based transforms \cite{Davis97,Brooks07}. The
+    transformation is based on a set of $K$ corresponding landmarks in the
+    fixed and moving image: $\vx_k^{\mathrm{fix}}$ and
+    $\vx_k^{\mathrm{mov}}, k = 1, \ldots, K$, respectively. The
+    transformation is expressed as a sum of an affine component and a
+    nonrigid component:
 \begin{align}
 \vTmx = \vx + A \vx + \bm{t} + \sum_{\vx_k^{\mathrm{fix}}} \bm{c}_k
 \bm{G}(\vx - \vx_k^{\mathrm{fix}}),\label{eq:splinekernel}
@@ -996,7 +995,7 @@ facilitate our registration research. After some initial versions we decided to
 put the separate components of \elastix\ in separate libraries. This resulted
 in major version 3.0 in November 2004. \elastix\ 3.0 was also the first version
 that was made publicly available on the \elastix\ website, around the same
-time. The continued development brings us today (\today) to version 4.4.
+time. The continued development brings us today (\today) to version 4.5.
 
 \begin{table}[h!]
 \begin{tabular}{l|l}
@@ -1044,10 +1043,10 @@ often used (medical) image formats are: .mhd (MetaIO), .hdr
 not directly supported by \elastix;
 
 \item multi-platform (at least Windows, Linux and Mac OS), multi-compiler
-(at least Visual C++ 2005, 2008, gcc 3.2, 4.02, 4.1.2), and supports
-32 and 64 bit systems. The underlying ITK code builds on many more
-platforms, see \url{www.itk.org/Wiki/ITK_Prerequisites}. So, it is
-highly portable to the platform of the user's choice;
+    (at least Visual C++ 2008, 2010, gcc 4.1.2, 4.2.1, 4.4.3), and supports
+    32 and 64 bit systems. The underlying ITK code builds on many more
+    platforms, see \url{www.itk.org/Wiki/ITK_Prerequisites}. So, it is
+    highly portable to the platform of the user's choice;
 
 \item highly configurable: there is a lot of choice for all the registration
 components. Choosing the configuration that suits your needs is easy
@@ -1100,7 +1099,8 @@ pre-compiled binaries.
 
 It is also possible to compile \elastix\ yourself, since the source code is
 freely available. In this section, we assume you use the Microsoft Visual C++
-2003 (or higher) compiler under Windows, and the GCC compiler under Linux.
+2005 (or higher) compiler under Windows, and the GCC compiler under
+Linux/MacOS.
 
 \begin{enumerate}
 \item Download and install CMake: \url{www.cmake.org}.
@@ -2500,8 +2500,8 @@ low-level functionality (image classes, memory allocation etc.) is thoroughly
 tested. Naturally, all image formats supported by the ITK are supported by
 \elastix\ as well. The C++ source code can be compiled on multiple operating
 systems (Windows XP, Linux, Mac OS X), using various compilers (MS Visual
-Studio up to version 2010, GCC up to version 4.3), and supports both 32 and 64
-bit systems.
+Studio up to version 2010, GCC up to version 4.4.3), and supports both 32 and
+64 bit systems.
 
 In addition to the existing ITK image registration classes, \elastix\
 implements new functionality. The most important enhancements are listed in
