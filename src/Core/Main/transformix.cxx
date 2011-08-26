@@ -266,7 +266,7 @@ void PrintHelp( void )
     "elastix.\n" << std::endl;
 
   std::cout << "Need further help? Check the website http://elastix.isi.uu.nl, "
-    "or mail elastix.support@gmail.com." << std::endl;
+    "or mail elastix@bigr.nl." << std::endl;
 
 } // end PrintHelp()
 
