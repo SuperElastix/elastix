@@ -243,30 +243,28 @@ void PrintHelp( void )
   /** Optional arguments. */
   std::cout << "Optional extra commands:\n";
   std::cout << "-in       input image to deform\n";
-  std::cout << "-def      file containing input-image points\n";
-  std::cout << "          the point are transformed according to the specified "
-    "transform-parameter file\n";
-  std::cout << "          use \"-def all\" to transform all points from the "
-    "input-image, which effectively generates a deformation field.\n";
-  std::cout << "-jac      use \"-jac all\" to generate an image with the "
-    << "determinant of the spatial Jacobian\n";
-  std::cout << "-jacmat   use \"-jacmat all\" to generate an image with the "
-    << "spatial Jacobian matrix at each voxel\n";
-  std::cout << "-priority set the process priority to high or belownormal "
-    "(Windows only)\n";
+  std::cout << "-def      file containing input-image points; the point are transformed\n"
+               "          according to the specified transform-parameter file\n";
+  std::cout << "          use \"-def all\" to transform all points from the input-image, which\n"
+               "          effectively generates a deformation field.\n";
+  std::cout << "-jac      use \"-jac all\" to generate an image with the determinant of the\n"
+               "          spatial Jacobian\n";
+  std::cout << "-jacmat   use \"-jacmat all\" to generate an image with the spatial Jacobian\n"
+               "          matrix at each voxel\n";
+  std::cout << "-priority set the process priority to high, abovenormal, normal (default),\n"
+               "          belownormal, or idle (Windows only option)\n";
   std::cout << "-threads  set the maximum number of threads of transformix\n";
-  std::cout << "At least one of the options \"-in\", \"-def\", \"-jac\", or \"-jacmat\" should be given.\n"
+  std::cout << "\nAt least one of the options \"-in\", \"-def\", \"-jac\", or \"-jacmat\" should be given.\n"
     << std::endl;
 
   /** The parameter file. */
   std::cout << "The transform-parameter file must contain all the information "
     "necessary for transformix to run properly. That includes which transform "
-    "to use, with which parameters, etc.\n";
-  std::cout << "For a usable transform-parameter file, see the output of "
-    "elastix.\n" << std::endl;
+    "to use, with which parameters, etc. For a usable transform-parameter file, "
+    "run elastix, and inspect the output file \"TransformParameters.0.txt\".\n" << std::endl;
 
-  std::cout << "Need further help? Check the website http://elastix.isi.uu.nl, "
-    "or mail elastix@bigr.nl." << std::endl;
+  std::cout << "Need further help?\n"
+    "Check the website http://elastix.isi.uu.nl, or mail elastix@bigr.nl." << std::endl;
 
 } // end PrintHelp()
 

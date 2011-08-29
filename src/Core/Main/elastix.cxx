@@ -342,20 +342,19 @@ void PrintHelp( void )
   std::cout << "-fMask    mask for fixed image\n";
   std::cout << "-mMask    mask for moving image\n";
   std::cout << "-t0       parameter file for initial transform\n";
-  std::cout << "-priority set the process priority to high or belownormal "
-    "(Windows only)\n";
+  std::cout << "-priority set the process priority to high, abovenormal, normal (default),\n"
+               "          belownormal, or idle (Windows only option)\n";
   std::cout << "-threads  set the maximum number of threads of elastix\n"
     << std::endl;
 
   /** The parameter file.*/
   std::cout << "The parameter-file must contain all the information "
-    "necessary for elastix to run properly. That includes which metric to "
-    "use, which optimizer, which transform, etc.\n";
-  std::cout << "It must also contain information specific for the metric, "
-    "optimizer, transform, ...\n";
-  std::cout << "For a usable parameter-file, see the website.\n" << std::endl;
+    "necessary for elastix to runproperly. That includes which metric to "
+    "use, which optimizer, which transform, etc. It must also contain "
+    "information specific for the metric, optimizer, transform, ... "
+    "For a usable parameter-file, see the website.\n" << std::endl;
 
-  std::cout << "Need further help? Check the website http://elastix.isi.uu.nl, "
+  std::cout << "Need further help?\nCheck the website http://elastix.isi.uu.nl, "
     "or mail elastix@bigr.nl." << std::endl;
 
 } // end PrintHelp()
