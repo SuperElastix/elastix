@@ -18,6 +18,7 @@
 #include "elxResamplerBase.h"
 #include "itkImageFileCastWriter.h"
 #include "itkChangeInformationImageFilter.h"
+#include "itkAdvancedRayCastInterpolateImageFunction.h"
 #include "elxTimer.h"
 
 namespace elastix
@@ -262,6 +263,22 @@ ResamplerBase<TElastix>
 
     /** Pass the exception to an higher level. */
     throw excp;
+  }
+
+  /** Check if ResampleInterpolator is the RayCastResampleInterpolator */
+  typedef itk::AdvancedRayCastInterpolateImageFunction<  InputImageType, 
+  CoordRepType > RayCastInterpolatorType;
+
+  const RayCastInterpolatorType * testptr = dynamic_cast<const 
+  RayCastInterpolatorType *>( this->GetAsITKBaseType()->GetInterpolator() );
+
+  /** If RayCastResampleInterpolator is used reset the Transform to 
+   * overrule default Resampler settings */
+
+  if (testptr)
+  {
+    this->GetAsITKBaseType()->SetTransform(   
+    (const_cast<RayCastInterpolatorType *>( testptr ))->GetTransform()   );
   }
 
   /** Read output pixeltype from parameter the file. Replace possible " " with "_". */

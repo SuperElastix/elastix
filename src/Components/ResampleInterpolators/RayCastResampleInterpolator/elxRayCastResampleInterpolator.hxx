@@ -16,7 +16,6 @@
 #define __elxRayCastResampleInterpolator_hxx
 
 #include "elxRayCastResampleInterpolator.h"
-#include "itkBSplineInterpolateImageFunction.h"
 #include "itkImageFileWriter.h"
 
 namespace elastix
@@ -38,8 +37,8 @@ using namespace itk;
   typedef typename elastix::OptimizerBase<
     TElastix>::ITKBaseType::ParametersType ParametersType;
 
-  unsigned int numberofparameters
-      = this->m_Elastix->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
+  this->m_PreTransform = EulerTransformType::New();
+  unsigned int numberofparameters = this->m_PreTransform->GetNumberOfParameters();
   TransformParametersType preParameters( numberofparameters );
   preParameters.Fill( 0.0 );
 
@@ -61,8 +60,7 @@ using namespace itk;
       this->GetConfiguration()->ReadParameter( centerofrotation[ i ],
         "CenterOfRotationPoint", this->GetComponentLabel(), i, 0 );
   }
-
-  this->m_PreTransform = EulerTransformType::New();
+  
   this->m_PreTransform->SetParameters( preParameters );
   this->m_PreTransform->SetCenter( centerofrotation );
   this->m_CombinationTransform->SetInitialTransform( this->m_PreTransform );
@@ -137,21 +135,6 @@ using namespace itk;
 
 
   /*
-   * ***************** AfterEachResolution *****************
-   */
-
-  template <class TElastix>
-  void
-  RayCastResampleInterpolator<TElastix>
-  ::AfterEachResolution( void )
-  {
-
-  this->InitializeRayCastInterpolator();
-
-  } // end AfterEachResolution()
-
-
-  /*
    * ***************** ReadFromFile *****************
    */
 
@@ -183,27 +166,30 @@ using namespace itk;
 
   PointType focalpoint = this->GetFocalPoint();
 
-  xout["transpar"] << "(" << this->GetComponentLabel() << "FocalPoint ";
+  xout["transpar"] << "(" << "FocalPoint ";
   for( unsigned int i = 0; i < this->m_Elastix->GetMovingImage()->GetImageDimension() ; i++ )
   {
       xout["transpar"] << focalpoint[i] << " ";
   }
   xout["transpar"] << ")" << std::endl;
 
-  double threshold = this->GetThreshold();
-    xout["transpar"] << "(Threshold "
-      << threshold << ")" << std::endl;
-
   typedef typename elastix::OptimizerBase<TElastix>::ITKBaseType::ParametersType ParametersType;
   TransformParametersType preParameters = this->m_PreTransform->GetParameters();
 
-  xout["transpar"] << "(" << this->GetComponentLabel() << "PreParameters ";
+  xout["transpar"] << "(" << "PreParameters ";
   
-  for( unsigned int i = 0; i < this->m_Elastix->GetMovingImage()->GetImageDimension() ; i++ )
+  unsigned int numberofparameters = 
+    this->m_Elastix->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
+  for( unsigned int i = 0; i < numberofparameters; i++ )
   {
     xout["transpar"] << preParameters[i] << " ";
   } 
     xout["transpar"]<< ")" << std::endl;
+
+  double threshold = this->GetThreshold();
+    xout["transpar"] << "(Threshold "
+    << threshold << ")" << std::endl;
+
 
   } // end WriteToFile()
 

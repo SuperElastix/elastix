@@ -104,8 +104,6 @@ public:
 
   virtual void BeforeRegistration( void );
 
-  virtual void AfterEachResolution( void );
-
   /** Function to read transform-parameters from a file. */
   virtual void ReadFromFile( void );
 
