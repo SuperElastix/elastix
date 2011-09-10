@@ -178,8 +178,7 @@ using namespace itk;
 
   xout["transpar"] << "(" << "PreParameters ";
   
-  unsigned int numberofparameters = 
-    this->m_Elastix->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
+  unsigned int numberofparameters = preParameters.GetSize();
   for( unsigned int i = 0; i < numberofparameters; i++ )
   {
     xout["transpar"] << preParameters[i] << " ";
