@@ -39,7 +39,7 @@ int main( int argc, char *argv[] )
 #ifndef NDEBUG
   unsigned int N = static_cast<unsigned int>( 1e3 );
 #else
-  unsigned int N = static_cast<unsigned int>( 1e5 );
+  unsigned int N = static_cast<unsigned int>( 0.5e5 );
 #endif
   std::cerr << "N = " << N << std::endl;
 
