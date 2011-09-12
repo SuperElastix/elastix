@@ -7,6 +7,10 @@ set( TestBaselineDir ${elastix_SOURCE_DIR}/Testing/Baselines)
 set( TestOutputDir ${elastix_BINARY_DIR}/Testing )
 
 #---------------------------------------------------------------------
+# Python is used by some tests
+find_program( python_executable python )
+
+#---------------------------------------------------------------------
 # Add macro if mevisdicomtiff should be used
 IF( ELASTIX_USE_MEVISDICOMTIFF )
   ADD_DEFINITIONS( -D_ELASTIX_USE_MEVISDICOMTIFF )
@@ -19,7 +23,7 @@ ENDIF()
 # Macro that simplifies the addition of tests
 #
 # Usage:
-# ADD_ELX_TEST( <name_of_test> )
+# elx_add_test( <name_of_test> )
 #
 # We assume here that the name of the source which includes the main is:
 #   "itk"name_of_test".cxx".
@@ -50,10 +54,9 @@ endmacro()
 # Macro that simplifies the addition of tests that run elastix
 #
 # Usage:
-# ADD_ELX_TEST( <name_of_test> )
-#
-# We assume here that the name of the source which includes the main is:
-#   "itk"name_of_test".cxx".
+# elx_add_run_test( <name_of_test>
+#                   IMAGE <name_of_baseline> | METRICVALUE "string"
+#                   <elastix_commandline_arguments> )
 #
 
 # Helper macro
@@ -69,7 +72,7 @@ macro( list_count listvar value count )
 endmacro()
 
 # Main elastix_run add_test macro
-macro( elx_add_run_test testbasename baseline )
+macro( elx_add_run_test testbasename howtocompare baseline )
   # Create output directory
   set( testname elastix_run_${testbasename} )
   set( output_dir ${TestOutputDir}/${testname} )
@@ -79,17 +82,30 @@ macro( elx_add_run_test testbasename baseline )
   list_count( "${ARGN}" "-p" countp )
   math( EXPR countp "${countp} - 1" )
 
-  # Run elastix and compare output with baseline
+  # Run elastix
   add_test( NAME ${testname}_OUTPUT
     COMMAND ${EXECUTABLE_OUTPUT_PATH}/elastix
     ${ARGN}
     -out ${output_dir} )
-  add_test( NAME ${testname}_COMPARE
-    COMMAND elxImageCompare
-    -base ${baseline}
-    -test ${output_dir}/result.${countp}.mhd )
-  set_tests_properties( ${testname}_COMPARE
-    PROPERTIES DEPENDS  ${testname}_OUTPUT )
+  # Compare elastix output image with baseline image
+  if( ${howtocompare} STREQUAL "IMAGE" )
+    add_test( NAME ${testname}_COMPARE
+      COMMAND elxImageCompare
+      -base ${baseline}
+      -test ${output_dir}/result.${countp}.mhd )
+    set_tests_properties( ${testname}_COMPARE
+      PROPERTIES DEPENDS  ${testname}_OUTPUT )
+  # Compare elastix output from IterationInfo with a baseline string
+  elseif( ${howtocompare} STREQUAL "METRICVALUE" )
+    # Only run when python was found
+    if( python_executable )
+      add_test( NAME ${testname}_COMPARE
+        COMMAND ${python_executable} ${elastix_SOURCE_DIR}/Testing/elx_compare_finalmetricvalue.py
+        -b ${baseline} -d ${output_dir} )
+      set_tests_properties( ${testname}_COMPARE
+        PROPERTIES DEPENDS  ${testname}_OUTPUT )
+    endif()
+  endif()
 endmacro()
 
 #---------------------------------------------------------------------
@@ -122,16 +138,23 @@ elx_add_test( TimerTest )
 
 # Run example
 elx_add_run_test( example
-  ${TestBaselineDir}/example.mha
+  "IMAGE" ${TestBaselineDir}/example.mha
   -f ${ELASTIX_DOX_DIR}/exampleinput/fixed.mhd
   -m ${ELASTIX_DOX_DIR}/exampleinput/moving.mhd
   -p ${ELASTIX_DOX_DIR}/exampleinput/parameters_Rigid.txt
   -p ${ELASTIX_DOX_DIR}/exampleinput/parameters_BSpline.txt )
 
 elx_add_run_test( 3DCT_lung
-  ${TestBaselineDir}/3DCT_lung.mha
+  "IMAGE" ${TestBaselineDir}/3DCT_lung.mha
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.A.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.A.txt )
+
+elx_add_run_test( 3DCT_lung2
+  "METRICVALUE" "999 -1.145772 336.001917 374.164715 0.007813 x"
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.A.txt
+  -p ${TestDataDir}/parameters.3D.MI.bspline.ASGD.B.txt )
 
