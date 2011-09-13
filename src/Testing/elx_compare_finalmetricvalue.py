@@ -48,7 +48,7 @@ def main():
     print "The latest iteration file is '%s'" % latestFile
 
     # Read last line of IterationInfo file
-    fileName = options.directory + "\\" + latestFile
+    fileName = options.directory + "/" + latestFile
     f = open( fileName )
     lineList = f.readlines()
     f.close()
