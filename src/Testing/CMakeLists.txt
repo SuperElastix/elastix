@@ -82,11 +82,15 @@ macro( elx_add_run_test testbasename howtocompare baseline )
   list_count( "${ARGN}" "-p" countp )
   math( EXPR countp "${countp} - 1" )
 
-  # Run elastix
+  # Run elastix, but only in release mode
+  # Set maximum test length to 10 minutes
   add_test( NAME ${testname}_OUTPUT
+    CONFIGURATIONS Release
     COMMAND ${EXECUTABLE_OUTPUT_PATH}/elastix
     ${ARGN}
     -out ${output_dir} )
+  set_tests_properties( ${testname}_OUTPUT
+    PROPERTIES TIMEOUT 600 )
   # Compare elastix output image with baseline image
   if( ${howtocompare} STREQUAL "IMAGE" )
     add_test( NAME ${testname}_COMPARE
