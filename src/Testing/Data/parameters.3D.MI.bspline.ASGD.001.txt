@@ -36,7 +36,7 @@
 // ********** Optimizer
 
 // Maximum number of iterations in each resolution level:
-(MaximumNumberOfIterations 1000)
+(MaximumNumberOfIterations 500)
 
 (AutomaticParameterEstimation "true")
 (UseAdaptiveStepSizes "true")
