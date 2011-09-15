@@ -17,6 +17,11 @@
 
 #include "elxOptimizerBase.h"
 
+#include "itkSingleValuedNonLinearOptimizer.h"
+
+//#include <kwsys/MD5.h.in> // for MD5 hash
+//#include KWSYS_HEADER(MD5.h)
+
 namespace elastix
 {
 using namespace itk;
@@ -77,6 +82,39 @@ OptimizerBase<TElastix>
     "NewSamplesEveryIteration", this->GetComponentLabel(), level, 0 );
 
 } // end BeforeEachResolutionBase()
+
+
+/**
+ * ****************** AfterRegistrationBase **********************
+ */
+
+template <class TElastix>
+void
+OptimizerBase<TElastix>
+::AfterRegistrationBase( void )
+{
+//   /** Get the final parameters. */
+//   ParametersType finalTP = this->GetAsITKBaseType()->GetCurrentPosition();
+// 
+//   /** Compute the MD5 Checksum. */
+//   unsigned char * md5InputData = reinterpret_cast<unsigned char *>( finalTP );
+// 
+//   kwsysMD5* md5 = kwsysMD5_New();
+//   kwsysMD5_Initialize( md5 );
+//   kwsysMD5_Append( md5, md5InputData, md5InputData->GetSize() );
+//   unsigned char digest[16];
+//   kwsysMD5_Finalize( md5, digest );
+//   kwsysMD5_Delete( md5 );
+// 
+// //   char md5out[33];
+// //   kwsysMD5_DigestToHex(digest, md5out);
+// //   md5out[32] = 0;
+// 
+//   elxout << "\nRegistration result checksum: "
+//     << digest
+//     << std::endl;
+
+} // end AfterRegistrationBase()
 
 
 /**
@@ -143,4 +181,3 @@ OptimizerBase<TElastix>
 } // end namespace elastix
 
 #endif // end #ifndef __elxOptimizerBase_hxx
-
