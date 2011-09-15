@@ -69,6 +69,7 @@ def main():
     index = 0
     for i in baselineValues:
         if i == 'x':
+            index = index + 1
             continue
 
         fValueBaseline = float( i )
