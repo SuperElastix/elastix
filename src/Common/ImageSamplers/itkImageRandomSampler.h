@@ -20,7 +20,6 @@
 
 namespace itk
 {
-
   /** \class ImageRandomSampler
    *
    * \brief Samples randomly some voxels of an image.
@@ -34,63 +33,67 @@ namespace itk
 	 * \ingroup ImageSamplers
 	 * */
 
-  template < class TInputImage >
-  class ImageRandomSampler :
-    public ImageRandomSamplerBase< TInputImage >
-  {
-  public:
+template < class TInputImage >
+class ImageRandomSampler :
+  public ImageRandomSamplerBase< TInputImage >
+{
+public:
 
-    /** Standard ITK-stuff. */
-    typedef ImageRandomSampler                     Self;
-    typedef ImageRandomSamplerBase< TInputImage >  Superclass;
-    typedef SmartPointer<Self>                     Pointer;
-    typedef SmartPointer<const Self>               ConstPointer;
+  /** Standard ITK-stuff. */
+  typedef ImageRandomSampler                     Self;
+  typedef ImageRandomSamplerBase< TInputImage >  Superclass;
+  typedef SmartPointer<Self>                     Pointer;
+  typedef SmartPointer<const Self>               ConstPointer;
 
-    /** Method for creation through the object factory. */
-    itkNewMacro( Self );
+  /** Method for creation through the object factory. */
+  itkNewMacro( Self );
 
-    /** Run-time type information (and related methods). */
-    itkTypeMacro( ImageRandomSampler, ImageRandomSamplerBase );
+  /** Run-time type information (and related methods). */
+  itkTypeMacro( ImageRandomSampler, ImageRandomSamplerBase );
 
-    /** Typedefs inherited from the superclass. */
-    typedef typename Superclass::DataObjectPointer            DataObjectPointer;
-    typedef typename Superclass::OutputVectorContainerType    OutputVectorContainerType;
-    typedef typename Superclass::OutputVectorContainerPointer OutputVectorContainerPointer;
-    typedef typename Superclass::InputImageType               InputImageType;
-    typedef typename Superclass::InputImagePointer            InputImagePointer;
-    typedef typename Superclass::InputImageConstPointer       InputImageConstPointer;
-    typedef typename Superclass::InputImageRegionType         InputImageRegionType;
-    typedef typename Superclass::InputImagePixelType          InputImagePixelType;
-    typedef typename Superclass::ImageSampleType              ImageSampleType;
-    typedef typename Superclass::ImageSampleContainerType     ImageSampleContainerType;
-    typedef typename Superclass::MaskType                     MaskType;
+  /** Typedefs inherited from the superclass. */
+  typedef typename Superclass::DataObjectPointer            DataObjectPointer;
+  typedef typename Superclass::OutputVectorContainerType    OutputVectorContainerType;
+  typedef typename Superclass::OutputVectorContainerPointer OutputVectorContainerPointer;
+  typedef typename Superclass::InputImageType               InputImageType;
+  typedef typename Superclass::InputImagePointer            InputImagePointer;
+  typedef typename Superclass::InputImageConstPointer       InputImageConstPointer;
+  typedef typename Superclass::InputImageRegionType         InputImageRegionType;
+  typedef typename Superclass::InputImagePixelType          InputImagePixelType;
+  typedef typename Superclass::ImageSampleType              ImageSampleType;
+  typedef typename Superclass::ImageSampleContainerType     ImageSampleContainerType;
+  typedef typename Superclass::MaskType                     MaskType;
 
-    /** The input image dimension. */
-    itkStaticConstMacro( InputImageDimension, unsigned int,
-      Superclass::InputImageDimension );
+  /** The input image dimension. */
+  itkStaticConstMacro( InputImageDimension, unsigned int,
+    Superclass::InputImageDimension );
 
-    /** Other typedefs. */
-    typedef typename InputImageType::IndexType    InputImageIndexType;
-    typedef typename InputImageType::PointType    InputImagePointType;
+  /** Other typedefs. */
+  typedef typename InputImageType::IndexType    InputImageIndexType;
+  typedef typename InputImageType::PointType    InputImagePointType;
 
-  protected:
+protected:
 
-    /** The constructor. */
-    ImageRandomSampler(){};
-    /** The destructor. */
-    virtual ~ImageRandomSampler() {};
+  /** The constructor. */
+  ImageRandomSampler() {};
+  /** The destructor. */
+  virtual ~ImageRandomSampler() {};
 
-    /** Function that does the work. */
-    virtual void GenerateData( void );
+  /** Functions that do the work. */
+  virtual void GenerateData( void );
 
-  private:
+  virtual void ThreadedGenerateData(
+    const InputImageRegionType & inputRegionForThread,
+    unsigned int threadId ) ITK_NO_RETURN;
 
-    /** The private constructor. */
-    ImageRandomSampler( const Self& );          // purposely not implemented
-    /** The private copy constructor. */
-    void operator=( const Self& );            // purposely not implemented
+private:
 
-  }; // end class ImageRandomSampler
+  /** The private constructor. */
+  ImageRandomSampler( const Self& );        // purposely not implemented
+  /** The private copy constructor. */
+  void operator=( const Self& );            // purposely not implemented
+
+}; // end class ImageRandomSampler
 
 
 } // end namespace itk
@@ -100,4 +103,3 @@ namespace itk
 #endif
 
 #endif // end #ifndef __ImageRandomSampler_h
-

@@ -76,7 +76,7 @@ namespace itk
     void PrintSelf( std::ostream& os, Indent indent ) const;
 
     /** GenerateInputRequestedRegion. */
-    void GenerateInputRequestedRegion( void );
+    //void GenerateInputRequestedRegion( void );
 
   private:
 
