@@ -20,6 +20,7 @@
 #include "itkImageSamplerBase.h"
 #include "itkGradientImageFilter.h"
 #include "itkBSplineInterpolateImageFunction.h"
+#include "itkReducedDimensionBSplineInterpolateImageFunction.h"
 #include "itkLimiterFunctionBase.h"
 #include "itkFixedArray.h"
 #include "itkAdvancedTransform.h"
@@ -259,6 +260,8 @@ protected:
     MovingImageType, CoordinateRepresentationType, double>      BSplineInterpolatorType;
   typedef BSplineInterpolateImageFunction<
     MovingImageType, CoordinateRepresentationType, float>       BSplineInterpolatorFloatType;
+  typedef ReducedDimensionBSplineInterpolateImageFunction<
+    MovingImageType, CoordinateRepresentationType, double>      ReducedBSplineInterpolatorType;
   typedef typename BSplineInterpolatorType::CovariantVectorType MovingImageDerivativeType;
   typedef GradientImageFilter<
     MovingImageType, RealType, RealType>                        CentralDifferenceGradientFilterType;
@@ -276,8 +279,10 @@ protected:
   /** Variables for image derivative computation. */
   bool m_InterpolatorIsBSpline;
   bool m_InterpolatorIsBSplineFloat;
+  bool m_InterpolatorIsReducedBSpline;
   typename BSplineInterpolatorType::Pointer             m_BSplineInterpolator;
-  typename BSplineInterpolatorFloatType::Pointer             m_BSplineInterpolatorFloat;
+  typename BSplineInterpolatorFloatType::Pointer        m_BSplineInterpolatorFloat;
+  typename ReducedBSplineInterpolatorType::Pointer      m_ReducedBSplineInterpolator;
   typename CentralDifferenceGradientFilterType::Pointer m_CentralDifferenceGradientFilter;
 
   /** Variables to store the AdvancedTransform. */

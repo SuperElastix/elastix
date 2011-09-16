@@ -130,7 +130,11 @@ public:
       return warnings;
     }
   };
-  itkGetConstReferenceMacro( WarningReport, WarningReportType );
+  //itkGetConstReferenceMacro( WarningReport, WarningReportType );
+  virtual const WarningReportType & GetWarningReport( void ) const
+  {
+    return this->m_WarningReport;
+  }
 
 protected:
   itkCUDAResampleImageFilter();

@@ -27,7 +27,7 @@ namespace itk
 template <class TScalarType>
 AdvancedVersorRigid3DTransform<TScalarType>
 ::AdvancedVersorRigid3DTransform() :
-  Superclass(OutputSpaceDimension, ParametersDimension)
+  Superclass(ParametersDimension)
 {
 }
 
@@ -37,7 +37,7 @@ template<class TScalarType>
 AdvancedVersorRigid3DTransform<TScalarType>::
 AdvancedVersorRigid3DTransform( unsigned int outputSpaceDim,
                         unsigned int paramDim) :
-  Superclass(outputSpaceDim,paramDim)
+  Superclass(paramDim)
 {
 }
 

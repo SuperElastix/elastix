@@ -17,6 +17,8 @@
 
 #include "itkSingleValuedNonLinearOptimizer.h"
 
+#include "itkIntTypes.h"//tmp
+
 namespace itk
 {
 
@@ -42,6 +44,7 @@ public:
 
   typedef Superclass::MeasureType               MeasureType;
   typedef Superclass::ParametersType            ParametersType;
+  typedef IdentifierType NumberOfParametersType;//tmp
   typedef Superclass::DerivativeType            DerivativeType;
   typedef Superclass::CostFunctionType          CostFunctionType;
 

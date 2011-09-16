@@ -12,10 +12,6 @@
 
 ======================================================================*/
 
-#ifndef __elxElastixMain_cxx
-#define __elxElastixMain_cxx
-
-
 /** If running on a Windows-system, include "windows.h".
  *  This is to set the priority, but which does not work on cygwin.
  */
@@ -684,11 +680,34 @@ void ElastixMain::SetProcessPriority( void ) const
     SetPriorityClass( GetCurrentProcess(), HIGH_PRIORITY_CLASS );
     #endif
   }
+  else if ( processPriority == "abovenormal" )
+  {
+    #if defined(_WIN32) && !defined(__CYGWIN__)
+    SetPriorityClass( GetCurrentProcess(), ABOVE_NORMAL_PRIORITY_CLASS );
+    #endif
+  }  
+  else if ( processPriority == "normal" ) 
+  {
+    #if defined(_WIN32) && !defined(__CYGWIN__)
+    SetPriorityClass( GetCurrentProcess(), NORMAL_PRIORITY_CLASS );
+    #endif
+  }  
   else if ( processPriority == "belownormal" )
   {
     #if defined(_WIN32) && !defined(__CYGWIN__)
     SetPriorityClass( GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS );
     #endif
+  }  
+  else if ( processPriority == "idle" )
+  {
+    #if defined(_WIN32) && !defined(__CYGWIN__)
+    SetPriorityClass( GetCurrentProcess(), IDLE_PRIORITY_CLASS );
+    #endif
+  }  
+  else if ( processPriority != "" )
+  {
+	  xl::xout["warning"] 
+		  << "Unsupported -priority value. Specify one of <high, abovenormal, normal, belownormal, idle, ''>." << std::endl; 
   }
 
 } // end SetProcessPriority()
@@ -739,6 +758,4 @@ ElastixMain::GetOriginalFixedImageDirectionFlat( void ) const
 
 
 } // end namespace elastix
-
-#endif // end #ifndef __elxElastixMain_cxx
 

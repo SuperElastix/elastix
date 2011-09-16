@@ -44,7 +44,7 @@ using namespace itk;
     class DisplacementMagnitudePenalty:
     public
       DisplacementMagnitudePenaltyTerm<
-        ITK_TYPENAME MetricBase<TElastix>::FixedImageType,
+        typename MetricBase<TElastix>::FixedImageType,
         double >,
     public MetricBase<TElastix>
   {

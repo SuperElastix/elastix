@@ -97,16 +97,6 @@ namespace itk
         << "Just use it as an (initial) fixed transform that is not optimized." );
     }
 
-    /** Get the transformation parameters is not supported.
-     * Use GetDeformationField() instead
-     */
-    virtual const ParametersType & GetParameters( void ) const
-    {
-      itkExceptionMacro( << "ERROR: GetParameters() is not implemented "
-        << "for DeformationFieldInterpolatingTransform.\n"
-        << "Use GetDeformationField() instead." );
-    }
-
     /** Set the fixed parameters. */
     virtual void SetFixedParameters( const ParametersType & )
     {
@@ -160,17 +150,13 @@ namespace itk
     virtual bool IsLinear( void ) const { return false; };
 
     /** Must be provided. */
-    virtual void GetJacobian( const InputPointType & ipp, JacobianType & j,
+    virtual void GetJacobian(
+      const InputPointType & ipp, JacobianType & j,
       NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
     {
       itkExceptionMacro( << "Not implemented for DeformationFieldInterpolatingTransform" );
     }
-    virtual const JacobianType & GetJacobian( const InputPointType & ) const
-    {
-      itkExceptionMacro( << "Not implemented for DeformationFieldInterpolatingTransform" );
-      // Next line is needed to avoid errors due to: "function must return a value".
-      return this->m_Jacobian;
-    }
+
     virtual void GetSpatialJacobian(
       const InputPointType & ipp, SpatialJacobianType & sj ) const
     {

@@ -149,6 +149,7 @@ public:
 
   /** Typedefs from Superclass. */
   typedef typename Superclass::ParametersType         ParametersType;
+  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
   typedef typename Superclass::JacobianType           JacobianType;
   typedef typename Superclass::ScalarType             ScalarType;
   typedef typename Superclass::InputPointType         InputPointType;
@@ -234,15 +235,6 @@ public:
   unsigned int GetNumberOfAffectedWeights( void ) const;
 
   virtual unsigned long GetNumberOfNonZeroJacobianIndices( void ) const;
-
-  /** Compute the Jacobian matrix of the transformation at one point. */
-  virtual const JacobianType & GetJacobian( const InputPointType & point ) const;
-
-  /** Compute the Jacobian of the transformation. */
-  virtual void GetJacobian(
-    const InputPointType & ipp,
-    WeightsType & weights,
-    ParameterIndexArrayType & indices ) const;
 
   /** Compute the Jacobian of the transformation. */
   virtual void GetJacobian(

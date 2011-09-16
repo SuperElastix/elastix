@@ -79,7 +79,7 @@ using namespace itk;
      * metric->SetAlpha( config.GetAlpha(level) );
      */
 
-    unsigned int nrOfParameters = this->m_Elastix->GetElxTransformBase()
+    const unsigned int nrOfParameters = this->m_Elastix->GetElxTransformBase()
       ->GetAsITKBaseType()->GetNumberOfParameters();
     ScalesType derivativeStepLengthScales( nrOfParameters );
     derivativeStepLengthScales.Fill( 1.0 );

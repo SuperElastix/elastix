@@ -27,7 +27,7 @@ namespace itk
 template<class TScalarType>
 AdvancedRigid3DTransform<TScalarType>::
 AdvancedRigid3DTransform() :
-  Superclass(OutputSpaceDimension, ParametersDimension)
+  Superclass(ParametersDimension)
 {
 }
 
@@ -35,9 +35,8 @@ AdvancedRigid3DTransform() :
 // Constructor with default arguments
 template<class TScalarType>
 AdvancedRigid3DTransform<TScalarType>::
-AdvancedRigid3DTransform(unsigned int spaceDim,
-                 unsigned int paramDim) :
-  Superclass(spaceDim, paramDim)
+AdvancedRigid3DTransform(unsigned int paramDim) :
+  Superclass(paramDim)
 {
 }
 

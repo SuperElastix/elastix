@@ -122,9 +122,6 @@ public:
     JacobianType & jac,
     NonZeroJacobianIndicesType & nzji ) const;
 
-  /** The GetJacobian from the superclass. */
-  virtual const JacobianType & GetJacobian( const InputPointType & ipp) const;
-
   /** Set the parameters. Computes the sum of weights (which is
    * the normalization term). And checks if the number of parameters
    * is correct */
@@ -147,7 +144,7 @@ public:
   }
 
   /** Return the number of sub-transforms that have been set. */
-  virtual unsigned int GetNumberOfParameters( void ) const
+  virtual NumberOfParametersType GetNumberOfParameters( void ) const
   {	
     return this->m_TransformContainer.size();
   };

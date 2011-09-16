@@ -129,7 +129,7 @@ int main( int argc, char *argv[] )
     << clock() - startClock << " ms." << std::endl;
 
   InputPointType ipp; ipp[ 0 ] = 10.0; ipp[ 0 ] = 20.0; ipp[ 0 ] = 30.0;
-  
+
   /** Test TransformPoint(). */
   startClock = clock();
   OutputPointType opp = kernelTransform->TransformPoint( ipp );

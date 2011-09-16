@@ -72,7 +72,7 @@ namespace elastix
     this->LoadSubTransforms();
 
     /** Some helper variables */
-    const unsigned long N = this->GetNumberOfParameters();
+    const NumberOfParametersType N = this->GetNumberOfParameters();
     const double Nd = static_cast<double>(N);
 
     /** Equal weights */
@@ -161,7 +161,7 @@ namespace elastix
     ::SetScales( void )
   {
     /** Create the new scales. */
-    const unsigned int N = this->GetNumberOfParameters();
+    const NumberOfParametersType N = this->GetNumberOfParameters();
     ScalesType newscales( N );
     newscales.Fill( 1.0 );
 

@@ -47,8 +47,8 @@ using namespace itk;
     class ReducedDimensionBSplineInterpolator :
     public
       ReducedDimensionBSplineInterpolateImageFunction<
-        ITK_TYPENAME InterpolatorBase<TElastix>::InputImageType,
-        ITK_TYPENAME InterpolatorBase<TElastix>::CoordRepType,
+        typename InterpolatorBase<TElastix>::InputImageType,
+        typename InterpolatorBase<TElastix>::CoordRepType,
         double > , //CoefficientType
     public
       InterpolatorBase<TElastix>

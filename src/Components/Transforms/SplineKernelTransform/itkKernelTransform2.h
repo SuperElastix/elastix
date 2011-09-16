@@ -101,6 +101,7 @@ public:
   /** Typedefs. */
   typedef typename Superclass::ScalarType       ScalarType;
   typedef typename Superclass::ParametersType   ParametersType;
+  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
   typedef typename Superclass::JacobianType     JacobianType;
   typedef typename Superclass::InputPointType   InputPointType;
   typedef typename Superclass::OutputPointType  OutputPointType;
@@ -142,7 +143,7 @@ public:
   typedef vnl_matrix_fixed<TScalarType, NDimensions, NDimensions> IMatrixType;
 
   /** Return the number of parameters that completely define the Transform. */
-  virtual unsigned int GetNumberOfParameters(void) const
+  virtual NumberOfParametersType GetNumberOfParameters( void ) const
   {
     return ( this->m_SourceLandmarks->GetNumberOfPoints() * SpaceDimension );
   }
@@ -192,9 +193,6 @@ public:
       << "TransformCovariantVector(const InputCovariantVectorType &) is not implemented "
       << "for KernelTransform" );
   }
-
-  /** Compute the Jacobian of the transformation at one point. */
-  virtual const JacobianType & GetJacobian( const InputPointType & point ) const;
 
   /** Compute the Jacobian of the transformation. */
   virtual void GetJacobian(

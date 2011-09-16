@@ -185,7 +185,7 @@ const std::string & Timer::PrintElapsedTimeDHMS( void )
   /** Return a value. */
   this->m_ElapsedTimeDHMSString = make_string.str();
   return this->m_ElapsedTimeDHMSString;
-  
+
 } // end PrintElapsedTimeDHMS()
 
 

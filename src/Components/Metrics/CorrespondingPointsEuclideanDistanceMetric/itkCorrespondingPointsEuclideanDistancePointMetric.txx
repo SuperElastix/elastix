@@ -207,22 +207,25 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet,TMovingPointSet>
       measure += distance;
 
       /** Calculate the contributions to the derivatives with respect to each parameter. */
-      VnlVectorType diff_2 = diffPoint / distance;
-      if ( nzji.size() == this->GetNumberOfParameters() )
+      if ( distance > vcl_numeric_limits< MeasureType >::epsilon() )
       {
-        /** Loop over all Jacobians. */
-        derivative -= diff_2 * jacobian;
-      }
-      else
-      {
-        /** Only pick the nonzero Jacobians. */
-        for ( unsigned int i = 0; i < nzji.size(); ++i )
+        VnlVectorType diff_2 = diffPoint / distance;
+        if ( nzji.size() == this->GetNumberOfParameters() )
         {
-          const unsigned int index = nzji[ i ];
-          VnlVectorType column = jacobian.get_column( i );
-          derivative[ index ] -= dot_product( diff_2, column );
+          /** Loop over all Jacobians. */
+          derivative -= diff_2 * jacobian;
         }
-      }
+        else
+        {
+          /** Only pick the nonzero Jacobians. */
+          for ( unsigned int i = 0; i < nzji.size(); ++i )
+          {
+            const unsigned int index = nzji[ i ];
+            VnlVectorType column = jacobian.get_column( i );
+            derivative[ index ] -= dot_product( diff_2, column );
+          }
+        }
+      } // end if distance != 0
 
     } // end if sampleOk
 
@@ -231,9 +234,17 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet,TMovingPointSet>
 
   } // end loop over all corresponding points
 
+  /** Check if enough samples were valid. */
+//   this->CheckNumberOfSamples(
+//     fixedPointSet->GetNumberOfPoints(), this->m_NumberOfPointsCounted );
+
   /** Copy the measure to value. */
-  derivative /= this->m_NumberOfPointsCounted;
-  value = measure / this->m_NumberOfPointsCounted;
+  value = measure;
+  if ( this->m_NumberOfPointsCounted > 0 )
+  {
+    derivative /= this->m_NumberOfPointsCounted;
+    value = measure / this->m_NumberOfPointsCounted;
+  }
 
 } // end GetValueAndDerivative()
 

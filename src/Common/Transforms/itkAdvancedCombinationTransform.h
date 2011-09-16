@@ -74,6 +74,7 @@ public:
   /** Typedefs inherited from Superclass.*/
   typedef typename Superclass::ScalarType                 ScalarType;
   typedef typename Superclass::ParametersType             ParametersType;
+  typedef typename Superclass::NumberOfParametersType     NumberOfParametersType;
   typedef typename Superclass::JacobianType               JacobianType;
   typedef typename Superclass::InputVectorType            InputVectorType;
   typedef typename Superclass::OutputVectorType           OutputVectorType;
@@ -155,7 +156,7 @@ public:
   }
 
   /** Return the number of parameters that completely define the CurrentTransform. */
-  virtual unsigned int GetNumberOfParameters( void ) const;
+  virtual NumberOfParametersType GetNumberOfParameters( void ) const;
 
   /** Get the number of nonzero Jacobian indices. By default all. */
   virtual unsigned long GetNumberOfNonZeroJacobianIndices( void ) const;
@@ -196,9 +197,6 @@ public:
   /** Whether the advanced transform has nonzero matrices. */
   virtual bool GetHasNonZeroSpatialHessian( void ) const;
   virtual bool HasNonZeroJacobianOfSpatialHessian( void ) const;
-
-  /** Compute the Jacobian of the transformation. */
-  virtual const JacobianType & GetJacobian( const InputPointType & point ) const;
 
   /** Compute the (sparse) Jacobian of the transformation. */
   virtual void GetJacobian(
@@ -248,7 +246,6 @@ public:
 
   /** Typedefs for function pointers. */
   typedef OutputPointType (Self::*TransformPointFunctionPointer)( const InputPointType & ) const;
-  typedef const JacobianType & (Self::*GetJacobianFunctionPointer)( const InputPointType & ) const;
   typedef void (Self::*GetSparseJacobianFunctionPointer)(
     const InputPointType &,
     JacobianType &,
@@ -312,7 +309,7 @@ protected:
    * - GetJacobianNoCurrentTransform
    * - GetJacobianNoInitialTransform.
    */
-  GetJacobianFunctionPointer m_SelectedGetJacobianFunction;
+  //GetJacobianFunctionPointer m_SelectedGetJacobianFunction;
 
   /** More of these. */
   GetSparseJacobianFunctionPointer    m_SelectedGetSparseJacobianFunction;
@@ -343,28 +340,6 @@ protected:
 
   /** NO CURRENT TRANSFORM SET: throw an exception. */
   inline OutputPointType TransformPointNoCurrentTransform(
-    const InputPointType & point ) const;
-
-  /** ************************************************
-   * Methods to compute the Jacobian.
-   */
-
-  /** ADDITION: \f$J(x) = J_1(x)\f$ */
-  inline const JacobianType & GetJacobianUseAddition(
-    const InputPointType & point ) const;
-
-  /** COMPOSITION: \f$J(x) = J_1( T_0(x) )\f$
-   * \warning: assumes that input and output point type are the same.
-   */
-  inline const JacobianType & GetJacobianUseComposition(
-    const InputPointType & point ) const;
-
-  /** CURRENT ONLY: \f$J(x) = J_1(x)\f$ */
-  inline const JacobianType & GetJacobianNoInitialTransform(
-    const InputPointType & point ) const;
-
-  /** NO CURRENT TRANSFORM SET: throw an exception. */
-  inline const JacobianType & GetJacobianNoCurrentTransform(
     const InputPointType & point ) const;
 
   /** ************************************************

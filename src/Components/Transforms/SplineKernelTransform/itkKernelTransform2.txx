@@ -30,7 +30,7 @@ namespace itk
 
 template <class TScalarType, unsigned int NDimensions>
 KernelTransform2<TScalarType, NDimensions>
-::KernelTransform2() : Superclass( NDimensions, 0 )
+::KernelTransform2() : Superclass( NDimensions )
     // the 0 is provided as
     // a tentative number for initializing the Jacobian.
     // The matrix can be resized at run time so this number
@@ -102,7 +102,7 @@ KernelTransform2<TScalarType, NDimensions>
     this->ComputeLInverse();
 
     // Precompute the nonzerojacobianindices vector
-    unsigned long nrParams = this->GetNumberOfParameters();
+    const NumberOfParametersType nrParams = this->GetNumberOfParameters();
     this->m_NonZeroJacobianIndices.resize( nrParams );
     for ( unsigned int i = 0; i < nrParams; ++i )
     {
@@ -543,21 +543,6 @@ KernelTransform2<TScalarType, NDimensions>
   return opp;
 
 } // end TransformPoint()
-
-
-/**
- * ******************* GetJacobian *******************
- */
-
-template <class TScalarType, unsigned int NDimensions>
-const typename KernelTransform2<TScalarType,NDimensions>::JacobianType &
-KernelTransform2< TScalarType,NDimensions>
-::GetJacobian( const InputPointType & thisPoint ) const
-{
-  this->GetJacobian( thisPoint, this->m_Jacobian, this->m_NonZeroJacobianIndicesTemp );
-  return this->m_Jacobian;
-
-} // end GetJacobian()
 
 
 /**

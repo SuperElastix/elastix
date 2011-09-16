@@ -805,7 +805,7 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
     this->m_MetricDerivativesMagnitude[ i ] = tmpDerivative.magnitude();
     this->m_MetricComputationTime[ i ]
       = Math::Round<std::size_t>( timer->GetElapsedClockSec() * 1000.0 );
-  
+
     /** and combine. */
     if ( this->m_UseMetric[ i ] )
     {
@@ -861,13 +861,13 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
   {
     if ( this->m_UseMetric[ i ] )
     {
-      const double w = this->m_MetricWeights[ i ]; 
+      const double w = this->m_MetricWeights[ i ];
       ImageMetricType * metric = dynamic_cast<ImageMetricType *>( this->GetMetric( i ) );
       if ( metric )
       {
         initialized = true;
         metric->GetSelfHessian( parameters, tmpH );
-        
+
         /** H=H+tmpH; \todo: maybe this can be done more efficiently. */
         tmpH.reset();
         while ( tmpH.next() )
@@ -884,7 +884,7 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
   if ( ! initialized )
   {
     //H.fill_diagonal(1.0);
-    for (unsigned int j = 0; j < this->GetNumberOfParameters(); ++j )
+    for ( unsigned int j = 0; j < this->GetNumberOfParameters(); ++j )
     {
       H(j,j) = 1.0;
     }

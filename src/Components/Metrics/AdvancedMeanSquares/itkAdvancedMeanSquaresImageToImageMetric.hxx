@@ -263,7 +263,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   const TransformParametersType & parameters,
   MeasureType & value, DerivativeType & derivative ) const
 {
-  itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
+  itkDebugMacro( "GetValueAndDerivative( " << parameters << " ) " );
 
   typedef typename DerivativeType::ValueType        DerivativeValueType;
   typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
@@ -516,9 +516,9 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
     {
       this->m_NumberOfPixelsCounted++;
 
-      /** Use the derivative of the fixed image for the self Hessian! 
-       * \todo: we can do this more efficient without the interpolation, 
-       * without the sampler, and with a precomputed gradient image, 
+      /** Use the derivative of the fixed image for the self Hessian!
+       * \todo: we can do this more efficient without the interpolation,
+       * without the sampler, and with a precomputed gradient image,
        * but is this the bottleneck?
        */
       movingImageDerivative = fixedInterpolator->EvaluateDerivative( fixedPoint );
@@ -551,7 +551,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   {
     const double normal_sum = 2.0 * this->m_NormalizationFactor /
       static_cast<double>( this->m_NumberOfPixelsCounted );
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
       H.scale_row(i, normal_sum);
     }
@@ -559,10 +559,10 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   else
   {
     //H.fill_diagonal(1.0);
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
       H(i,i) = 1.0;
-    }    
+    }
   }
 
 } // end GetSelfHessian()
@@ -614,24 +614,23 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
         }
 
         /** The following implements:
-         * H(row,col) += imjacrow * imageJacobian[ j ]; 
+         * H(row,col) += imjacrow * imageJacobian[ j ];
          * But more efficient.
          */
-        
-        /** Go to next element */
-        for (; (rowIt != rowVector.end()) && ((*rowIt).first < col); ++rowIt);
 
-        if ((rowIt == rowVector.end()) || ((*rowIt).first != col))
+        /** Go to next element */
+        for (; (rowIt != rowVector.end()) && ((*rowIt).first < col); ++rowIt );
+
+        if ( (rowIt == rowVector.end()) || ((*rowIt).first != col) )
         {
           /** Add new column to the row and set iterator to that column. */
-          rowIt = rowVector.insert(rowIt, ElementType( col, val ) );
+          rowIt = rowVector.insert( rowIt, ElementType( col, val ) );
         }
         else
         {
           /** Add to existing value */
           (*rowIt).second += val;
-        }        
-        
+        }
       }
     }
 

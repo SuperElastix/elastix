@@ -12,9 +12,7 @@
 
 ======================================================================*/
 #include "itkAdvancedBSplineDeformableTransform.h"
-
-#define ITKV3_COMPATIBILITY
-#include "itkBSplineDeformableTransform.h" // original ITK, requires flag ITKV3_COMPATIBILITY
+#include "itkBSplineDeformableTransform.h" // original ITK
 #include "itkGridScheduleComputer.h"
 
 #include <ctime>
@@ -41,7 +39,7 @@ int main( int argc, char *argv[] )
 #ifndef NDEBUG
   unsigned int N = static_cast<unsigned int>( 1e3 );
 #else
-  unsigned int N = static_cast<unsigned int>( 1e5 );
+  unsigned int N = static_cast<unsigned int>( 0.5e5 );
 #endif
   std::cerr << "N = " << N << std::endl;
 
@@ -332,8 +330,11 @@ int main( int argc, char *argv[] )
     return 1;
   }
 
-  JacobianType jacobianDifferenceMatrix
-    = transform->GetJacobian( inputPoint ) - transformITK->GetJacobian( inputPoint );
+  JacobianType jacobianITK;
+  transformITK->ComputeJacobianWithRespectToParameters( inputPoint, jacobianITK );
+  JacobianType jacobianElastix;
+  transform->GetJacobian( inputPoint, jacobianElastix, nzji );
+  JacobianType jacobianDifferenceMatrix = jacobianElastix - jacobianITK;
   if ( jacobianDifferenceMatrix.frobenius_norm() > 1e-10 )
   {
     std::cerr << "ERROR: Advanced B-spline GetJacobian() returning incorrect result." << std::endl;
@@ -351,7 +352,7 @@ int main( int argc, char *argv[] )
     std::cerr << "ERROR: Advanced B-spline GetFixedParameters() returning incorrect result." << std::endl;
     return 1;
   }
-  
+
   /** Exercise PrintSelf(). */
   transform->Print( std::cerr );
 
@@ -359,5 +360,3 @@ int main( int argc, char *argv[] )
   return 0;
 
 } // end main
-
-#undef ITKV3_COMPATIBILITY

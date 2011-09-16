@@ -690,7 +690,7 @@ SetOptimizerScales( const unsigned int edgeWidth )
   typedef typename ScalesType::ValueType                  ScalesValueType;
 
   /** Define new scales. */
-  const unsigned long numberOfParameters
+  const NumberOfParametersType numberOfParameters
     = this->m_BSplineDummySubTransform->GetNumberOfParameters();
   const unsigned long offset = numberOfParameters / SpaceDimension;
   ScalesType newScales( numberOfParameters );

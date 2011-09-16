@@ -102,10 +102,6 @@ ADD_LIBRARY( elxCore
 TARGET_LINK_LIBRARIES( elxCore
   elxCommon
   xoutlib
-  #ITK-Common
-  #ITKBasicFilters
-  #ITKNumerics
-  #ITK-IO-Base
 )
 
 #---------------------------------------------------------------------
@@ -176,6 +172,10 @@ IF( WIN32 )
     RUNTIME DESTINATION . )
     #COMPONENT core )
 ELSE()
+  # Tell the executables where to find the required .so files.
+  SET_TARGET_PROPERTIES(elastix transformix
+    PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib:${ITK_DIR}" )  
+  # Put executables in bin and libraries in lib.
   INSTALL( TARGETS elastix transformix
     RUNTIME DESTINATION bin )
     #COMPONENT core )

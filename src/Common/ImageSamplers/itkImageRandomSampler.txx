@@ -116,7 +116,6 @@ namespace itk
 
     } // end if mask
 
-
   } // end GenerateData()
 
 

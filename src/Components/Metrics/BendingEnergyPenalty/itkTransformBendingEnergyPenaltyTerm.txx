@@ -362,10 +362,10 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   if ( !this->m_AdvancedTransform->GetHasNonZeroJacobianOfSpatialHessian() )
   {
     //H.fill_diagonal(1.0);
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
       H(i,i) = 1.0;
-    }    
+    }
     return;
   }
 
@@ -423,7 +423,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
         for ( unsigned int muB = muA; muB < nonZeroJacobianIndices.size(); ++muB )
         {
           const unsigned int nmB = nonZeroJacobianIndices[ muB ];
-          
+
           RealType matrixProduct = 0.0;
           for ( unsigned int k = 0; k < FixedImageDimension; ++k )
           {
@@ -434,7 +434,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
               = jacobianOfSpatialHessian[ muA ][ k ].GetVnlMatrix();
             const InternalMatrixType & B
               = jacobianOfSpatialHessian[ muB ][ k ].GetVnlMatrix();
-            
+
             typename InternalMatrixType::const_iterator itA = A.begin();
             typename InternalMatrixType::const_iterator itB = B.begin();
             typename InternalMatrixType::const_iterator itAend = A.end();
@@ -444,16 +444,15 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
               ++itA;
               ++itB;
             }
- 
           }
 
-          /** Store at the right location in the H matrix. 
-          * Only upper triangular part is stored */
+          /** Store at the right location in the H matrix.
+           * Only upper triangular part is stored */
 
           /** Update hessian element */
           if ( (matrixProduct > 1e-12) || (matrixProduct < 1e-12) )
           {
-            /** 
+            /**
             * H( nmA, nmB ) += 2.0 * matrixProduct;
             * But more efficient
             */
@@ -471,10 +470,8 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
             {
               /** Add to existing value */
               (*rowIt).second += val;
-            }    
-
+            }
           }
-
         }
       }
 
@@ -491,20 +488,20 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   if ( this->m_NumberOfPixelsCounted > 0 )
   {
     const double normal_sum = 1.0 / static_cast<double>( this->m_NumberOfPixelsCounted );
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
-    { 
+    for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    {
       H.scale_row(i, normal_sum);
     }
   }
   else
   {
     //H.fill_diagonal(1.0);
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
       H(i,i) = 1.0;
-    }    
+    }
   }
-    
+
 } // end GetSelfHessian()
 
 

@@ -16,6 +16,7 @@
 #define __itkScaledSingleValuedCostFunction_h
 
 #include "itkSingleValuedCostFunction.h"
+#include "itkIntTypes.h"//temp, needed for IdentifierType
 
 namespace itk
 {
@@ -51,6 +52,9 @@ namespace itk
     typedef Superclass::MeasureType         MeasureType;
     typedef Superclass::DerivativeType      DerivativeType;
     typedef Superclass::ParametersType      ParametersType;
+    // temporary, untill it is fixed in the ITK4
+    //typedef IdentifierType NumberOfParametersType; // temp, copied from itk::TransformBase
+    typedef unsigned int NumberOfParametersType; // temp, copied from itk::CostFunction
     typedef Superclass::Pointer             SingleValuedCostFunctionPointer;
 
     typedef Array<double>                   ScalesType;
@@ -75,7 +79,7 @@ namespace itk
       DerivativeType & derivative ) const;
 
     /** Ask the UnscaledCostFunction how many parameters it has. */
-    virtual unsigned int GetNumberOfParameters( void ) const;
+    virtual NumberOfParametersType GetNumberOfParameters( void ) const;
 
     /** Set the cost function that needs scaling. */
     itkSetObjectMacro( UnscaledCostFunction, Superclass );

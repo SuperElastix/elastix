@@ -27,7 +27,7 @@ namespace itk
 template <class TScalarType>
 AdvancedEuler3DTransform<TScalarType>
 ::AdvancedEuler3DTransform():
-  Superclass(SpaceDimension, ParametersDimension)
+  Superclass(ParametersDimension)
 {
   m_ComputeZYX = false;
   m_AngleX = m_AngleY = m_AngleZ = NumericTraits<ScalarType>::Zero;
@@ -56,9 +56,8 @@ AdvancedEuler3DTransform<TScalarType>
 // Constructor with arguments
 template <class TScalarType>
 AdvancedEuler3DTransform<TScalarType>
-::AdvancedEuler3DTransform(unsigned int spaceDimension,
-                   unsigned int parametersDimension):
-  Superclass(spaceDimension, parametersDimension)
+::AdvancedEuler3DTransform( unsigned int parametersDimension):
+  Superclass(parametersDimension)
 {
   m_ComputeZYX = false;
   m_AngleX = m_AngleY = m_AngleZ = NumericTraits<ScalarType>::Zero;
@@ -159,7 +158,7 @@ AdvancedEuler3DTransform<TScalarType>
     {
     m_AngleY = -asin(this->GetMatrix()[2][0]);
     double C = vcl_cos(m_AngleY);
-    if(fabs(C)>0.00005)
+    if ( vcl_fabs( C ) > 0.00005 )
       {
       double x = this->GetMatrix()[2][2] / C;
       double y = this->GetMatrix()[2][1] / C;
@@ -180,7 +179,7 @@ AdvancedEuler3DTransform<TScalarType>
     {
     m_AngleX = vcl_asin(this->GetMatrix()[2][1]);
     double A = vcl_cos(m_AngleX);
-    if(fabs(A)>0.00005)
+    if ( vcl_fabs( A ) > 0.00005 )
       {
       double x = this->GetMatrix()[2][2] / A;
       double y = -this->GetMatrix()[2][0] / A;

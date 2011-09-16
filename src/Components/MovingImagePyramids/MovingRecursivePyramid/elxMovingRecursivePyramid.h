@@ -37,8 +37,8 @@ using namespace itk;
     class MovingRecursivePyramid :
     public
       RecursiveMultiResolutionPyramidImageFilter<
-        ITK_TYPENAME MovingImagePyramidBase<TElastix>::InputImageType,
-        ITK_TYPENAME MovingImagePyramidBase<TElastix>::OutputImageType >,
+        typename MovingImagePyramidBase<TElastix>::InputImageType,
+        typename MovingImagePyramidBase<TElastix>::OutputImageType >,
     public
       MovingImagePyramidBase<TElastix>
   {

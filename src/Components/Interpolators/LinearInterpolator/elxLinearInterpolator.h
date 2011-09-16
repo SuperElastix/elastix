@@ -58,8 +58,8 @@ using namespace itk;
     class LinearInterpolator :
     public
       LinearInterpolateImageFunction<
-        ITK_TYPENAME InterpolatorBase<TElastix>::InputImageType,
-        ITK_TYPENAME InterpolatorBase<TElastix>::CoordRepType >,
+        typename InterpolatorBase<TElastix>::InputImageType,
+        typename InterpolatorBase<TElastix>::CoordRepType >,
     public
       InterpolatorBase<TElastix>
   {

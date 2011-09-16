@@ -108,7 +108,7 @@ using namespace itk;
 template <class TElastix >
 class TransformRigidityPenalty
   : public TransformRigidityPenaltyTerm<
-  ITK_TYPENAME MetricBase<TElastix>::FixedImageType,
+  typename MetricBase<TElastix>::FixedImageType,
   double >,
   public MetricBase<TElastix>
 {

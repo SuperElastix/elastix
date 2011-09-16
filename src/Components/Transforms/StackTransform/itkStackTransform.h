@@ -112,9 +112,6 @@ public:
     JacobianType & jac,
     NonZeroJacobianIndicesType & nzji ) const;
 
-  /** The GetJacobian from the superclass. */
-  virtual const JacobianType & GetJacobian( const InputPointType & ipp) const;
-
   /** Set the parameters. Checks if the number of parameters
    * is correct and sets parameters of sub transforms. */
   virtual void SetParameters( const ParametersType & param );
@@ -137,7 +134,7 @@ public:
   }
 
   /** Return the number of sub transforms that have been set. */
-  virtual unsigned int GetNumberOfParameters(void) const
+  virtual NumberOfParametersType GetNumberOfParameters( void ) const
   {	
     if ( this->m_SubTransformContainer.size() == 0 )
     {

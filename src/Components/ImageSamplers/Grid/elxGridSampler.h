@@ -48,7 +48,7 @@ using namespace itk;
     class GridSampler :
     public
       ImageGridSampler<
-      ITK_TYPENAME elx::ImageSamplerBase<TElastix>::InputImageType >,
+      typename elx::ImageSamplerBase<TElastix>::InputImageType >,
     public
       elx::ImageSamplerBase<TElastix>
   {

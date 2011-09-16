@@ -1,4 +1,4 @@
-elastix 4.4 compiles with ITK 3.20 compiled with the following options:
+elastix 4.5 compiles with ITK 3.20 compiled with the following options:
 
 
 ITK_USE_OPTIMIZED_REGISTRATION_METHODS                false

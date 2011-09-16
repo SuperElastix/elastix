@@ -190,22 +190,29 @@ registration results are discussed.
 \centering
 \includegraphics[width=8cm]{ImageRegistrationConcept.eps}
 \caption{Image registration is the task of finding a spatial
-transformation mapping one image to another. Adopted from
+transformation mapping one image to another. Left is the fixed image
+and right the moving image. Adopted from
 \citet{ITKSoftwareGuideSecondEdition}.} \label{fig:concept}
 \end{figure}
 
 Two images are involved in the registration process. One image, the
 \emph{moving image} $I_M(\vx)$, is deformed to fit the other image,
-the \emph{fixed image} $I_F(\vx)$. Registration is the problem of
-finding a \emph{displacement} $\vux$ that makes $I_M(\vx + \vux)$
-spatially aligned to $I_F(\vx)$. An equivalent formulation is to say
-that registration is the problem of finding a \emph{transformation}
-$\vT(\vx) = \vx + \vux $ that makes $I_M(\vT(\vx))$ spatially aligned
-to $I_F(\vx)$. The quality of alignment is defined by a distance or
-similarity measure $\Sim$, such as the sum of squared differences
-(SSD), the correlation ratio, or the mutual information (MI) measure.
-Because this problem is ill-posed for nonrigid transformations $\vT$,
-a regularisation or penalty term $\Pen$ is often introduced that
+the \emph{fixed image} $I_F(\vx)$. The fixed and moving image are of
+dimension $d$ and are each defined on their own spatial domain:
+$\Omega_F \subset \mathbb{R}^d$ and $\Omega_M \subset \mathbb{R}^d$,
+respectively. Registration is the problem of finding a
+\emph{displacement} $\vux$ that makes $I_M(\vx + \vux)$ spatially
+aligned to $I_F(\vx)$. An equivalent formulation is to say that
+registration is the problem of finding a \emph{transformation}
+$\vT(\vx) = \vx + \vux $ that makes $I_M(\vT(\vx))$ spatially
+aligned to $I_F(\vx)$. The transformation is defined as a mapping
+from the fixed image to the moving image, i.e. $\vT: \Omega_F
+\subset \mathbb{R}^d \rightarrow \Omega_M \subset \mathbb{R}^d$. The
+quality of alignment is defined by a distance or similarity measure
+$\Sim$, such as the sum of squared differences (SSD), the
+correlation ratio, or the mutual information (MI) measure. Because
+this problem is ill-posed for nonrigid transformations $\vT$, a
+regularisation or penalty term $\Pen$ is often introduced that
 constrains $\vT$.
 
 Commonly, the registration problem is formulated as an optimisation
@@ -539,6 +546,24 @@ you need to prepend the name with \texttt{Final}, for example:
 
 \section{Transforms}\label{sec:comp:transform}
 
+A frequent confusion about the transformation is its direction. In \elastix\
+the transformation is defined as a \textbf{coordinate mapping from the fixed
+image domain to the moving image domain}: $\vT: \Omega_F \subset \mathbb{R}^d
+\rightarrow \Omega_M \subset \mathbb{R}^d$. The confusion usually stems from
+the phrase: ``the moving image is deformed to fit the fixed image''. Although
+one can speak about image registration like this, such a phrase is not meant to
+reflect mathematical underlyings: one deforms the moving image, but the
+transformation is still defined from fixed to moving image. The reason for this
+becomes clear when trying to compute the deformed moving image (the
+registration result) $I_M(\vTmx)$ (this process is frequently called
+\emph{resampling}). If the transformation would be defined from moving to fixed
+image, not all voxels in the fixed image domain would be mapped to (e.g. in
+case of a scaling), and holes would occur in the deformed moving image. With
+the transformation defined as it is, resampling is quite simple: loop over all
+voxels $\vx$ in the fixed image domain $\Omega_F$, compute its mapped position
+$\bm{y} = \vTmx$, interpolate the moving image at $\bm{y}$, and fill in this
+value at $\vx$ in the output image.
+
 The transformation model used for $\vT_{\vmu}$ determines what type of
 deformations between the fixed and moving image you can handle. In order of
 increasing flexibility, these are the translation, the rigid, the similarity,
@@ -606,17 +631,16 @@ a_{21}, a_{22}, t_x, t_y)^T$. In 3D, this gives a vector of length 12.
 with $\vx_k$ the control points, $\bm{\beta}^3(x)$ the cubic
 multidimensional B-spline polynomial \citep{Unser99}, $\bm{p}_k$ the
 B-spline coefficient vectors (loosely speaking, the control point
-displacements), $\bm{\sigma}$ the B-spline control point spacing,
-and $\Ncal_{\vx}$ the set of all control points within the compact
-support of the B-spline at $\vx$. The control points $\vx_k$ are
-defined on a regular grid, overlayed on the fixed image. In this
-context we talk about `the control point grid that is put on the
-fixed image', and about `control points that are moved around'. Note
-that $\vTm(\vx_k)\neq \vx_k + \bm{p}_k$, a common misunderstanding.
-Calling $\bm{p}_k$ the control point displacements is, therefore,
-actually somewhat misleading. Also note that the control point grid
-is entirely unrelated to the grid used by the Grid image sampler,
-see Section~\ref{sec:comp:sampler}.
+displacements), $\bm{\sigma}$ the B-spline control point spacing, and
+$\Ncal_{\vx}$ the set of all control points within the compact support of
+the B-spline at $\vx$. The control points $\vx_k$ are defined on a regular
+grid, overlayed on the fixed image. In this context we talk about `the
+control point grid that is put on the fixed image', and about `control
+points that are moved around'. Note that $\vTm(\vx_k)\neq \vx_k +
+\bm{p}_k$, a common misunderstanding. Calling $\bm{p}_k$ the control point
+displacements is, therefore, actually somewhat misleading. Also note that
+the control point grid is entirely unrelated to the grid used by the Grid
+image sampler, see Section~\ref{sec:comp:sampler}.
 
 The control point grid is defined by the amount of space between the
 control points $\bm{\sigma} = (\sigma_1, \ldots, \sigma_d)$ (with
@@ -638,14 +662,14 @@ composed as follows: $\vmu = (p_{1x}, p_{2x}, \ldots, p_{P_1},
 p_{1y}, p_{2y}, \ldots, p_{P_2} )^T$.
 
 \item[Thin-plate splines:] (\texttt{SplineKernelTransform}) Thin-plate
-splines are another well-known representation for nonrigid
-transformations. The thin-plate spline is an instance of the more
-general class of kernel-based transforms \cite{Davis97,Brooks07}.
-The transformation is based on a set of $K$ corresponding landmarks
-in the fixed and moving image: $\vx_k^{\mathrm{fix}}$ and
-$\vx_k^{\mathrm{mov}}, k = 1, \ldots, K$, respectively. The
-transformation is expressed as a sum of an affine component and a
-nonrigid component:
+    splines are another well-known representation for nonrigid
+    transformations. The thin-plate spline is an instance of the more
+    general class of kernel-based transforms \cite{Davis97,Brooks07}. The
+    transformation is based on a set of $K$ corresponding landmarks in the
+    fixed and moving image: $\vx_k^{\mathrm{fix}}$ and
+    $\vx_k^{\mathrm{mov}}, k = 1, \ldots, K$, respectively. The
+    transformation is expressed as a sum of an affine component and a
+    nonrigid component:
 \begin{align}
 \vTmx = \vx + A \vx + \bm{t} + \sum_{\vx_k^{\mathrm{fix}}} \bm{c}_k
 \bm{G}(\vx - \vx_k^{\mathrm{fix}}),\label{eq:splinekernel}
@@ -971,14 +995,15 @@ facilitate our registration research. After some initial versions we decided to
 put the separate components of \elastix\ in separate libraries. This resulted
 in major version 3.0 in November 2004. \elastix\ 3.0 was also the first version
 that was made publicly available on the \elastix\ website, around the same
-time. The continued development brings us today (\today) to version 4.4.
+time. The continued development brings us today (\today) to version 4.5.
 
 \begin{table}[h!]
 \begin{tabular}{l|l}
 what & where \\
 \hline
-website        & \url{http://elastix.isi.uu.nl} \\
+Website        & \url{http://elastix.isi.uu.nl} \\
 SVN repository & \url{https://svn.bigr.nl/elastix/trunkpublic} \\
+Dashboard      & \url{http://my.cdash.org/index.php?project=elastix} \\
 WIKI           & \url{http://elastix.isi.uu.nl/wiki.php} \\
 FAQ            & \url{http://elastix.isi.uu.nl/FAQ.php} \\
 Mailing list   & \url{elastix@bigr.nl} (subscription via website) \\
@@ -1018,10 +1043,10 @@ often used (medical) image formats are: .mhd (MetaIO), .hdr
 not directly supported by \elastix;
 
 \item multi-platform (at least Windows, Linux and Mac OS), multi-compiler
-(at least Visual C++ 2005, 2008, gcc 3.2, 4.02, 4.1.2), and supports
-32 and 64 bit systems. The underlying ITK code builds on many more
-platforms, see \url{www.itk.org/Wiki/ITK_Prerequisites}. So, it is
-highly portable to the platform of the user's choice;
+    (at least Visual C++ 2008, 2010, gcc 4.1.2, 4.2.1, 4.4.3), and supports
+    32 and 64 bit systems. The underlying ITK code builds on many more
+    platforms, see \url{www.itk.org/Wiki/ITK_Prerequisites}. So, it is
+    highly portable to the platform of the user's choice;
 
 \item highly configurable: there is a lot of choice for all the registration
 components. Choosing the configuration that suits your needs is easy
@@ -1074,7 +1099,8 @@ pre-compiled binaries.
 
 It is also possible to compile \elastix\ yourself, since the source code is
 freely available. In this section, we assume you use the Microsoft Visual C++
-2003 (or higher) compiler under Windows, and the GCC compiler under Linux.
+2005 (or higher) compiler under Windows, and the GCC compiler under
+Linux/MacOS.
 
 \begin{enumerate}
 \item Download and install CMake: \url{www.cmake.org}.
@@ -1289,25 +1315,28 @@ Section~\ref{sec:transformix:tp} explains the structure and
 contents that a transform parameter file should have.
 
 Besides using \transformix\ for deforming images, you can also use
-\transformix\ to evaluate the transformation $\vTmx$ at some
-points $\vx$. If you want to deform a set of user-specified
-points, the appropriate call is:
+\transformix\ to evaluate the transformation $\vTmx$ at some points
+$\vx \in \Omega_F$. This means that the input points are specified
+in the fixed image domain (!), since the transformation direction is
+from fixed to moving image, as explained in Section
+\ref{sec:comp:transform}. If you want to deform a set of
+user-specified points, the appropriate call is:
 \begin{quote}
 \texttt{transformix -def inputPoints.txt -out outputDirectory -tp
 TransformParameters.txt}
 \end{quote}
 This will create a file \texttt{outputpoints.txt} containing the
-input points $\vx$ and the transformed points $\vTmx$ (both given
-as voxel indices of the fixed image and as physical coordinates),
-the displacement vector $\vTmx-\vx$ (in physical coordinates),
-and, if \texttt{-in inputImage.ext} is also specified, the
-transformed output points as indices of the input
-image\footnote{The downside of this is that the input image is
-also deformed, which consumes time and may not be needed by the
-user. If this is a problem, just run \transformix\ without
-\texttt{-in} and compute the voxel indices yourself, based on the
-$\vTmx$ physical coordinate data.}. The \texttt{inputPoints.txt}
-file should have the following structure:
+input points $\vx$ and the transformed points $\vTmx$ (given as
+voxel indices of the fixed image and additionally as physical
+coordinates), the displacement vector $\vTmx - \vx$ (in physical
+coordinates), and, if \texttt{-in inputImage.ext} is also specified,
+the transformed output points as indices of the input
+image\footnote{The downside of this is that the input image is also
+deformed, which consumes time and may not be needed by the user. If
+this is a problem, just run \transformix\ without \texttt{-in} and
+compute the voxel indices yourself, based on the $\vTmx$ physical
+coordinate data.}. The \texttt{inputPoints.txt} file should have the
+following structure:
 \begin{quote}
 \texttt{<index, point>}\\
 \texttt{<number of points>}\\
@@ -2239,9 +2268,8 @@ relatively large, though.
 
 It can be selected in \elastix\ using \small
 \begin{verbatim}
-(Metric "AnySimilarityMetric" "TransformBendingEnergy")
-(Metric0Weight 1.0)
-(Metric1Weight <weight>)
+(Metric "AnySimilarityMetric" "TransformBendingEnergyPenalty")
+(Metric0Weight 1.0) (Metric1Weight <weight>)
 \end{verbatim}
 \normalsize and has no further parameters.
 
@@ -2316,7 +2344,7 @@ are known to correspond. The derivative of $\Sim_{\mathrm{CP}}$ reads:
 
 In \elastix\ this metric can be selected using: \small
 \begin{verbatim}
-(Metric "AnySimilarityMetric" "CorrespondingPointsEuclideanDistancePointMetric")
+(Metric "AnySimilarityMetric" "CorrespondingPointsEuclideanDistanceMetric")
 (Metric0Weight 1.0)
 (Metric1Weight <weight>)
 \end{verbatim}
@@ -2472,8 +2500,8 @@ low-level functionality (image classes, memory allocation etc.) is thoroughly
 tested. Naturally, all image formats supported by the ITK are supported by
 \elastix\ as well. The C++ source code can be compiled on multiple operating
 systems (Windows XP, Linux, Mac OS X), using various compilers (MS Visual
-Studio up to version 2010, GCC up to version 4.3), and supports both 32 and 64
-bit systems.
+Studio up to version 2010, GCC up to version 4.4.3), and supports both 32 and
+64 bit systems.
 
 In addition to the existing ITK image registration classes, \elastix\
 implements new functionality. The most important enhancements are listed in
@@ -2680,6 +2708,155 @@ These methods are automatically invoked at the moments indicated by the name of
 the function. This gives you a chance to read/set some parameters, print some
 output, save some results etc.
 
+
+\section{Coding style}\label{sec:dev:style}
+
+In order to improve code readability and consistency, which has a
+positive influence on maintainability we have adopted a coding
+style. he\textvisiblespace pete
+
+\begin{description}
+\item[White spacing] Good spacing improves code readability. Therefore,
+
+\begin{itemize}
+\item Don't use tabs. Tabs depend on tab size, which will make the
+code appearance dependent on the viewer. We use 2 spaces per tab. In
+Visual Studio this can be set as a preference: go to tools
+$\rightarrow$ options $\rightarrow$ text editor $\rightarrow$ All
+languages $\rightarrow$ Tabs, then tab size = indent size = 2 and
+mark ``insert spaces''. In vim you can adapt your \texttt{.vimrc} to include
+the lines \texttt{set ts=2; set sw=2; set expandtab}.
+
+\item No spaces at the end of a line, like in ITK. It's just ugly. To
+make them (very) noticeable add the following in your \texttt{.vimrc}:
+\begin{verbatim}
+  :highlight ExtraWhitespace ctermbg=red guibg=red
+  :match ExtraWhitespace /\s\+$/
+\end{verbatim}
+
+\item Use spaces in functions, \texttt{for} loops, indices, etc. So,
+\begin{verbatim}
+  FunctionName(.void.);
+  for.(.i.=.0;.i.<.10;.i++.)
+  vector[.i.].=.3;
+\end{verbatim}
+\end{itemize}
+
+\item[Indentation] l
+
+\begin{itemize}
+\item Not too much, not too long lines
+\begin{verbatim}
+namespace itk
+{
+^
+^
+/**
+.* ********************* Function ******************************
+.*/
+^
+template <class TTemplate1, class TTemplate2>
+void
+ClassName<TTemplate1, TTemplate2>
+::Function(.void.)
+{
+..//Function body
+..this->OtherMemberFunction(.arguments.);
+..for.(.i.=.0;.i.<.10;.i++.)
+..{
+....x.+=.i.*.i;
+..}
+^
+} // end Function()
+^
+}.//.end.namespace.itk
+\end{verbatim}
+
+\item A class looks like
+\begin{verbatim}
+namespace itk
+{
+^
+/**.\class.ClassName
+.*.\brief.Brief.description
+.*
+.*.Detailed.description
+.*
+.*.\ingroup.Group
+.*/
+^
+template < templateArguments >
+class.ClassName:
+public.SuperclassName
+{
+public:
+^
+../**.Standard.class.typedefs..*/
+..typedef.ClassName..................Self;
+..typedef.SuperclassName.............Superclass;
+\end{verbatim}
+\end{itemize}
+
+\item[Variable and function naming] It's nice if from the name of a variable you know
+that it's local or a class member. Therefore,
+
+\begin{itemize}
+\item Member variables are prepended with \texttt{m\_}, followed by
+a capital. In the implementation refer to them using
+\verb|this->|. So, \verb|this->m_MemberVariable| is correct.
+
+\item Local variables should start with a lower case character.
+
+\item Functions should start with a capital.
+
+\item Member functions should also be called using \texttt{this->}
+\end{itemize}
+
+\item[Better code] Some simple things to look at:
+
+\begin{itemize}
+\item Use const wherever you can
+
+\item use vnl math functions instead of their std counterparts
+
+\item For floats don't use 0, but 0.0 to avoid possible bugs.
+
+\item Use the virtual keyword when overriding a virtual function in a derived
+class. This is not strictly needed in C++, but when you use it, it is immediately
+clear that a function overridden or meant to be overridden.
+
+\item Always use opening and closing brackets. Although it is not always needed for C++, do
+\begin{verbatim}
+  if.(.condition.)
+  {
+  ..valid = true;
+  }
+\end{verbatim}
+instead of
+\begin{verbatim}
+  if.(.condition.)
+  ..valid = true;
+\end{verbatim}
+Also for \texttt{for}-loops.
+\end{itemize}
+
+\item[Commenting] Code is mean to be read by others, or you in years time. So,
+
+\begin{itemize}
+\item Comment a lot
+
+\item End functions with \verb|} // end FunctionName()|
+\end{itemize}
+
+%not too long lines,
+%Dit is voor de leesbaarheid en om niet alles teveel naar rechts te
+%indenten. Ook handig voor niet zo brede schermen.
+%
+%
+%- 1 witregel aan het eind van een file. Die ene is nodig voor
+%sommige oude compilers, en meer is niet nodig.
+
+\end{description}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

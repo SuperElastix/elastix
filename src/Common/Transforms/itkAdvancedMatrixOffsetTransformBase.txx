@@ -44,7 +44,7 @@ template<class TScalarType, unsigned int NInputDimensions,
                             unsigned int NOutputDimensions>
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>
 ::AdvancedMatrixOffsetTransformBase()
-  : Superclass(OutputSpaceDimension, ParametersDimension)
+  : Superclass(ParametersDimension)
 {
   this->m_Matrix.SetIdentity();
   this->m_MatrixMTime.Modified();
@@ -57,7 +57,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   this->m_FixedParameters.SetSize( NInputDimensions );
   this->m_FixedParameters.Fill( 0.0 );
 
-  this->PrecomputeJacobians( OutputSpaceDimension,ParametersDimension );
+  this->PrecomputeJacobians( ParametersDimension );
 }
 
 
@@ -65,9 +65,8 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 template<class TScalarType, unsigned int NInputDimensions,
                             unsigned int NOutputDimensions>
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>
-::AdvancedMatrixOffsetTransformBase( unsigned int outputDims,
-                             unsigned int paramDims   )
-  : Superclass(outputDims, paramDims)
+::AdvancedMatrixOffsetTransformBase( unsigned int paramDims )
+  : Superclass( paramDims )
 {
   this->m_Matrix.SetIdentity();
   this->m_MatrixMTime.Modified();
@@ -78,7 +77,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   this->m_InverseMatrix.SetIdentity();
   this->m_InverseMatrixMTime = this->m_MatrixMTime;
 
-  this->PrecomputeJacobians( outputDims, paramDims );
+  this->PrecomputeJacobians( paramDims );
 }
 
 
@@ -100,7 +99,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   }
   this->ComputeMatrixParameters();
 
-  this->PrecomputeJacobians(OutputSpaceDimension,ParametersDimension);
+  this->PrecomputeJacobians( ParametersDimension );
 }
 
 
@@ -109,22 +108,22 @@ template<class TScalarType, unsigned int NInputDimensions,
                             unsigned int NOutputDimensions>
 void
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>
-::PrecomputeJacobians( unsigned int outputDims, unsigned int paramDims )
+::PrecomputeJacobians( unsigned int paramDims )
 {
   /** Nonzero Jacobian indices, for GetJacobian */
-  this->m_NonZeroJacobianIndices.resize(paramDims);
-  for (unsigned int par = 0; par < paramDims; ++par )
+  this->m_NonZeroJacobianIndices.resize( paramDims );
+  for( unsigned int par = 0; par < paramDims; ++par )
   {
     this->m_NonZeroJacobianIndices[par] = par;
   }
 
   /** Set to correct size and fill. This may be different for inheriting classes,
    * such as the RigidTransform. */
-  this->m_JacobianOfSpatialJacobian.resize(paramDims);
+  this->m_JacobianOfSpatialJacobian.resize( paramDims );
   unsigned int par = 0;
-  for(unsigned int row=0; row < outputDims; row++)
+  for( unsigned int row=0; row < OutputSpaceDimension; row++ )
   {
-    for(unsigned int col=0; col < InputSpaceDimension; col++)
+    for( unsigned int col=0; col < InputSpaceDimension; col++ )
     {
       if ( par < paramDims )
       {
@@ -139,10 +138,10 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 
   /** Set to correct size and initialize to 0 */
   this->m_HasNonZeroJacobianOfSpatialHessian = false;
-  this->m_JacobianOfSpatialHessian.resize(paramDims);
-  for ( par = 0; par < paramDims; ++par )
+  this->m_JacobianOfSpatialHessian.resize( paramDims );
+  for( par = 0; par < paramDims; ++par )
   {
-    for (unsigned int d = 0; d < outputDims; ++d )
+    for( unsigned int d = 0; d < OutputSpaceDimension; ++d )
     {
       //SK: \todo: how can outputDims ever be different from OutputSpaceDimension?
        this->m_JacobianOfSpatialHessian[par][d].Fill(0.0);
@@ -151,10 +150,10 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 
   /** m_SpatialHessian is initialized with zeros */
   this->m_HasNonZeroSpatialHessian = false;
-  for (unsigned int d = 0; d < outputDims; ++d )
+  for ( unsigned int d = 0; d < OutputSpaceDimension; ++d )
   {
     //SK: \todo: how can outputDims ever be different from OutputSpaceDimension?
-    this->m_SpatialHessian[d].Fill(0.0);
+    this->m_SpatialHessian[d].Fill( 0.0 );
   }
 
   /** m_SpatialJacobian simply equals m_Matrix */
@@ -481,18 +480,6 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   // parameters and cannot know if the parameters have changed.
   this->Modified();
 
-}
-
-
-// Compute the Jacobian in one position
-template<class TScalarType, unsigned int NInputDimensions,
-                            unsigned int NOutputDimensions>
-const typename AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::JacobianType &
-AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>
-::GetJacobian( const InputPointType & p ) const
-{
-  this->GetJacobian(p, this->m_Jacobian, this->m_NonZeroJacobianIndicesTemp );
-  return this->m_Jacobian;
 }
 
 // Computes offset based on center, matrix, and translation variables

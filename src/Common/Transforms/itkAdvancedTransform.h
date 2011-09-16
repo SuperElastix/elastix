@@ -104,6 +104,7 @@ public:
   /** Typedefs from the Superclass. */
   typedef typename Superclass::ScalarType           ScalarType;
   typedef typename Superclass::ParametersType       ParametersType;
+  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
   typedef typename Superclass::JacobianType         JacobianType;
   typedef typename Superclass::InputVectorType      InputVectorType;
   typedef typename Superclass::OutputVectorType     OutputVectorType;
@@ -136,7 +137,7 @@ public:
   typedef typename SpatialJacobianType::InternalMatrixType  InternalMatrixType;
 
   /** Get the number of nonzero Jacobian indices. By default all. */
-  virtual unsigned long GetNumberOfNonZeroJacobianIndices( void ) const;
+  virtual NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const;
 
   /** Whether the advanced transform has nonzero matrices. */
   itkGetConstMacro( HasNonZeroSpatialHessian, bool );
@@ -173,12 +174,6 @@ public:
     JacobianType & j,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const = 0;
 
-  /** The GetJacobian from the superclass.
-   * It is needed to override this method, otherwise the VS2008 compiler gets
-   * confused. It complained: "Function does not take 1 arguments".
-   */
-  virtual const JacobianType & GetJacobian( const InputPointType & ) const = 0;
-
 	/** Compute the spatial Jacobian of the transformation.
    *
    * The spatial Jacobian is expressed as a vector of partial derivatives of the
@@ -210,12 +205,12 @@ public:
     SpatialJacobianType & sj ) const = 0;
 
   /** Override some pure virtual ITK4 functions. */
-  virtual void GetJacobianWithRespectToParameters(
+  virtual void ComputeJacobianWithRespectToParameters(
     const InputPointType & itkNotUsed( p ), JacobianType & itkNotUsed( j ) ) const
   {
     itkExceptionMacro( << "This ITK4 function is currently not used in elastix." );
   }
-  virtual void GetJacobianWithRespectToPosition(
+  virtual void ComputeJacobianWithRespectToPosition(
     const InputPointType & itkNotUsed( p ), JacobianType & itkNotUsed( j ) ) const
   {
     itkExceptionMacro( << "This ITK4 function is currently not used in elastix." );
@@ -283,7 +278,7 @@ public:
 
 protected:
   AdvancedTransform();
-  AdvancedTransform( unsigned int Dimension, unsigned int NumberOfParameters );
+  AdvancedTransform( NumberOfParametersType numberOfParameters );
   virtual ~AdvancedTransform() {};
 
   bool m_HasNonZeroSpatialHessian;

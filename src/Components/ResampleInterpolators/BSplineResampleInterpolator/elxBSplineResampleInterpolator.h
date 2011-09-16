@@ -53,8 +53,8 @@ namespace elastix
   class BSplineResampleInterpolator :
     public
     BSplineInterpolateImageFunction<
-    ITK_TYPENAME ResampleInterpolatorBase<TElastix>::InputImageType,
-    ITK_TYPENAME ResampleInterpolatorBase<TElastix>::CoordRepType,
+    typename ResampleInterpolatorBase<TElastix>::InputImageType,
+    typename ResampleInterpolatorBase<TElastix>::CoordRepType,
     double >, //CoefficientType
     public ResampleInterpolatorBase<TElastix>
   {

@@ -43,7 +43,7 @@ namespace itk
 
 template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
 AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::AdvancedTransform()
+::AdvancedTransform() : Superclass()
 {
   this->m_HasNonZeroSpatialHessian = true;
   this->m_HasNonZeroJacobianOfSpatialHessian = true;
@@ -57,8 +57,8 @@ AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
 
 template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
 AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::AdvancedTransform( unsigned int dimension, unsigned int numberOfParameters ) :
-  Superclass( dimension, numberOfParameters )
+::AdvancedTransform( NumberOfParametersType numberOfParameters ) :
+  Superclass( numberOfParameters )
 {
   this->m_HasNonZeroSpatialHessian = true;
   this->m_HasNonZeroJacobianOfSpatialHessian = true;
@@ -70,7 +70,7 @@ AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
  */
 
 template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
-unsigned long
+typename AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>::NumberOfParametersType
 AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
 ::GetNumberOfNonZeroJacobianIndices( void ) const
 {

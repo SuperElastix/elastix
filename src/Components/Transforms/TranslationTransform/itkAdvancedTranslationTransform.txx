@@ -26,18 +26,18 @@ namespace itk
 // Constructor with default arguments
 template<class TScalarType, unsigned int NDimensions>
 AdvancedTranslationTransform<TScalarType, NDimensions>::
-AdvancedTranslationTransform():Superclass(SpaceDimension,ParametersDimension)
+AdvancedTranslationTransform():Superclass(ParametersDimension)
 {
   m_Offset.Fill( 0 );
 
   // The Jacobian of this transform is constant.
   // Therefore the m_Jacobian variable can be
   // initialized here and be shared among all the threads.
-  this->m_Jacobian.Fill( 0.0 );
+  this->m_LocalJacobian.Fill( 0.0 );
 
   for(unsigned int i=0; i<NDimensions; i++)
   {
-    this->m_Jacobian(i,i) = 1.0;
+    this->m_LocalJacobian(i,i) = 1.0;
   }
 
   /** SpatialJacobian is also constant */
@@ -204,18 +204,6 @@ GetInverse( Self* inverse) const
 }
 
 
-// Compute the Jacobian in one position
-template<class TScalarType, unsigned int NDimensions>
-const typename AdvancedTranslationTransform<TScalarType, NDimensions>::JacobianType &
-AdvancedTranslationTransform< TScalarType, NDimensions >
-::GetJacobian( const InputPointType & itkNotUsed( p ) ) const
-{
-  // the Jacobian is constant for this transform, and it has already been
-  // initialized in the constructor, so we just need to return it here.
-  return this->m_Jacobian;
-}
-
-
 /**
  * ********************* GetJacobian ****************************
  */
@@ -228,7 +216,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>
   JacobianType & j,
   NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
 {
-  j = this->m_Jacobian;
+  j = this->m_LocalJacobian;
   nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
 } // end GetJacobian()
 

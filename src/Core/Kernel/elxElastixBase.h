@@ -87,6 +87,15 @@ using namespace itk;
  * Functionality that does not depend on the pixel type and the dimension
  * of the images to be registered, is defined in this class.
  *
+ * The parameters used by this class are:
+ * \parameter RandomSeed: Sets a global seed for the random generator.\n
+ *   example: <tt>(RandomSeed 121212)</tt>\n
+ *   It must be a positive integer number. Default: 121212.
+ * \parameter DefaultOutputPrecision: Set the default precision of floating values in the output.
+ *   Most importantly, it affects the output precision of the parameters in the transform parameter file.\n
+ *   example: <tt>(DefaultOutputPrecision 6)</tt>\n
+ *   Default value: 6. 
+ *
  * The command line arguments used by this class are:
  * \commandlinearg -f: mandatory argument for elastix with the file name of the fixed image. \n
  *    example: <tt>-f fixedImage.mhd</tt> \n

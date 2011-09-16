@@ -29,7 +29,7 @@ namespace itk
 // Constructor with default arguments
 template<class TScalarType, unsigned int NDimensions>
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
-::AdvancedBSplineDeformableTransformBase():Superclass(SpaceDimension,0)
+::AdvancedBSplineDeformableTransformBase():Superclass(SpaceDimension)
 {
   // Default grid size is zero
   typename RegionType::SizeType size;
@@ -126,7 +126,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 
 // Get the number of parameters
 template<class TScalarType, unsigned int NDimensions>
-unsigned int
+typename AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::NumberOfParametersType
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 ::GetNumberOfParameters(void) const
 {
@@ -141,7 +141,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 
 // Get the number of parameters per dimension
 template<class TScalarType, unsigned int NDimensions>
-unsigned int
+typename AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::NumberOfParametersType
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 ::GetNumberOfParametersPerDimension(void) const
 {
@@ -445,17 +445,17 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
    * Allocate memory for Jacobian and wrap into SpaceDimension number
    * of ITK images
    */
-  this->m_Jacobian.set_size( SpaceDimension, this->GetNumberOfParameters() );
-  this->m_Jacobian.Fill( NumericTraits<JacobianPixelType>::Zero );
+//   this->m_Jacobian.set_size( SpaceDimension, this->GetNumberOfParameters() );
+//   this->m_Jacobian.Fill( NumericTraits<JacobianPixelType>::Zero );
   this->m_LastJacobianIndex = this->m_ValidRegion.GetIndex();
-  JacobianPixelType * jacobianDataPointer = this->m_Jacobian.data_block();
-
-  for ( unsigned int j = 0; j < SpaceDimension; j++ )
-    {
-    m_JacobianImage[j]->GetPixelContainer()->
-      SetImportPointer( jacobianDataPointer, numberOfPixels );
-    jacobianDataPointer += this->GetNumberOfParameters() + numberOfPixels;
-    }
+//   JacobianPixelType * jacobianDataPointer = this->m_Jacobian.data_block();
+// 
+//   for ( unsigned int j = 0; j < SpaceDimension; j++ )
+//     {
+//     m_JacobianImage[j]->GetPixelContainer()->
+//       SetImportPointer( jacobianDataPointer, numberOfPixels );
+//     jacobianDataPointer += this->GetNumberOfParameters() + numberOfPixels;
+//     }
 }
 
 

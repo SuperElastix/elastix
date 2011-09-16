@@ -26,7 +26,7 @@ namespace itk
 /** Constructor with default arguments */
 template <class TScalarType>
 AdvancedVersorTransform<TScalarType>
-::AdvancedVersorTransform() : Superclass(OutputSpaceDimension, ParametersDimension)
+::AdvancedVersorTransform() : Superclass(ParametersDimension)
 {
   m_Versor.SetIdentity();
 }
@@ -34,9 +34,8 @@ AdvancedVersorTransform<TScalarType>
 /** Constructor with default arguments */
 template<class TScalarType>
 AdvancedVersorTransform<TScalarType>::
-AdvancedVersorTransform(unsigned int spaceDimension,
-                unsigned int parametersDimension) :
-  Superclass(spaceDimension,parametersDimension)
+AdvancedVersorTransform(unsigned int parametersDimension) :
+  Superclass(parametersDimension)
 {
   m_Versor.SetIdentity();
 }

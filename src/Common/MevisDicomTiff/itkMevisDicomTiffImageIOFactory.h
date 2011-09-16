@@ -1,16 +1,19 @@
-/*======================================================================
+/*=========================================================================
 
-  This file is part of the elastix software.
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    $RCSfile: itkMevisDicomTiffImageIOFactory.h,v $
+  Language:  C++
+  Date:      $Date: 2008/12/07 16:38:38 $
+  Version:   $Revision: 1.1 $
 
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
+  Copyright (c) Insight Software Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
 
-======================================================================*/
+=========================================================================*/
 #ifndef __itkMevisDicomTiffImageIOFactory_h
 #define __itkMevisDicomTiffImageIOFactory_h
 

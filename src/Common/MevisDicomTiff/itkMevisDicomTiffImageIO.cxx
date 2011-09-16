@@ -1,16 +1,19 @@
-/*======================================================================
+/*=========================================================================
 
-  This file is part of the elastix software.
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    $RCSfile: itkMevisDicomTiffImageIO.cxx,v $
+  Language:  C++
+  Date:      $Date: 2009/10/03 15:37:40 $
+  Version:   $Revision: 1.51 $
 
-  Copyright (c) University Medical Center Utrecht. All rights reserved.
-  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
-  details.
+  Copyright (c) Insight Software Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE. See the above copyright notices for more information.
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
 
-======================================================================*/
+=========================================================================*/
 #ifdef _MSC_VER
 #pragma warning ( disable : 4786 )
 #endif
@@ -121,6 +124,56 @@ void MevisDicomTiffImageIO::PrintSelf(std::ostream& os, Indent indent) const
   os << indent << "RescaleIntercept : " << m_RescaleIntercept << std::endl;
   os << indent << "RescaleSlope     : " << m_RescaleSlope << std::endl;
   os << indent << "GantryTilt       : " << m_GantryTilt << std::endl;
+}
+// findelement
+bool MevisDicomTiffImageIO::FindElement( const gdcm::DataSet ds, 
+                                         const gdcm::Tag tag, 
+                                         gdcm::DataElement &de,
+                                         bool breadthfirstsearch = true)
+                                            
+{
+    if (breadthfirstsearch)
+    {
+        if (!ds.GetDataElement(tag).IsEmpty())
+        {
+            de = ds.GetDataElement(tag); 
+            return true;
+        }
+    }
+
+ 
+    bool found(false);
+    gdcm::DataSet::ConstIterator it(ds.Begin());
+
+    for (; it !=ds.End(); ++it)
+    {
+        const gdcm::Tag ct(it->GetTag());
+        if (ct == tag)
+        {
+            de = *it;
+            found = true;
+        }
+        else
+        {
+            if (it->GetVR() == gdcm::VR::SQ)
+            {
+                if (it->GetValueAsSQ() != NULL)
+                {
+                    if (!it->GetValueAsSQ()->Begin()->GetNestedDataSet().IsEmpty())
+                    {
+                        found = FindElement(it->GetValueAsSQ()->Begin()->GetNestedDataSet(), tag, de, false);
+                    }
+                    if (found)
+                    {
+                        std::cout << "mevisIO: warning image orientation in dcm file is frame dependent!" << std::endl;
+                    }
+                }
+            }
+        }
+        if (found) { return true;}
+    }
+
+    return false;
 }
 // canreadfile
 bool MevisDicomTiffImageIO::CanReadFile( const char* filename ) 
@@ -400,11 +453,7 @@ void MevisDicomTiffImageIO::ReadImageInformation()
         std::cout << "mevisIO:readimageinformation(): error reading dimensions-row from dcm-file" << std::endl;
     }
 
-    // spacing, always 3d vector also for 2d
-    if (is2d)
-    {
-        m_Spacing.resize(3);
-    }
+    // pixel spacing (x,y)
     gdcm::Attribute<0x0028,0x0030> atps;
     if (!header.GetDataElement(atps.GetTag()).IsEmpty())
     {
@@ -417,22 +466,33 @@ void MevisDicomTiffImageIO::ReadImageInformation()
         std::cout << "mevisIO:readimageinformation(): error reading pixelspacing from dcm-file" << std::endl;
     }
 
+    // slice spacing (may be defined for 2d dicom files, if so 
+    // then re-adjust size of spacing vector)
     gdcm::Attribute<0x0018,0x0088> atss;
     if (!header.GetDataElement(atss.GetTag()).IsEmpty())
     {
         atss.SetFromDataElement(header.GetDataElement(atss.GetTag()));
+        if (is2d)
+        {
+            m_Spacing.resize(3);
+        }
         m_Spacing[2] = atss.GetValue();
         if (is4d)
         {
-            m_Spacing[3] = 1;
+            // default (for 4D spacing is not stored in dcm file)
+            m_Spacing[3] = 1.0;
         }
     }
     else
     {
-        m_Spacing[2] = 1;
-        std::cout << "mevisIO:readimageinformation(): error reading slicespacing from dcm-file" << std::endl;
+        if (is3d||is4d)
+        {
+            std::cout << "mevisIO:readimageinformation(): error reading slicespacing from dcm-file" << std::endl;
+        }
     }
-    // patient position (origin), always 3d vector
+    // patient position (origin), always 3d vector in dcm file
+    // re-adjusting size of m_origin is strictly not necessary
+    // because ITK throws away this information
     if (is2d)
     {
         m_Origin.resize(3);
@@ -447,7 +507,8 @@ void MevisDicomTiffImageIO::ReadImageInformation()
 
         if (is4d)
         {
-            m_Origin[3] = 0;
+            // default (for 4D, origin is not defined in dcm)
+            m_Origin[3] = 0.0;
         }
     }
     else
@@ -456,15 +517,19 @@ void MevisDicomTiffImageIO::ReadImageInformation()
     }
 
     // orientation (image orientation), always 3d vector
+    // re-adjusting size is not necessary
     if (is2d)
     {
         m_Direction.resize(3);
     }
     gdcm::Attribute<0x0020,0x0037> atio;
-    if (!header.GetDataElement(atio.GetTag()).IsEmpty())
+
+    gdcm::DataElement de;
+
+    if (FindElement(header, atio.GetTag(),de))    
     {
-        atio.SetFromDataElement(header.GetDataElement(atio.GetTag()));
-        if (is3d)
+        atio.SetFromDataElement(de);
+        if (is2d || is3d)
         {
             vnl_vector<double> row(3), col(3);
 
@@ -475,7 +540,11 @@ void MevisDicomTiffImageIO::ReadImageInformation()
             col[1] = atio.GetValue(4);
             col[2] = atio.GetValue(5);
 
+            // right hand orientation
             vnl_vector<double> slice = vnl_cross_3d(row, col);
+            
+            // check orientation
+
             this->SetDirection(0, row);
             this->SetDirection(1, col);
             this->SetDirection(2, slice);
@@ -1370,30 +1439,29 @@ void MevisDicomTiffImageIO
         atnf.SetValue(m_Dimensions[2]*m_Dimensions[3]);
     }
     header.Replace(atnf.GetAsDataElement());
-    if (this->GetNumberOfDimensions() > 3)
+
+    // number of temporal positions
+    if (this->GetNumberOfDimensions() == 4)
     {
         gdcm::Attribute<0x0020,0x0105> attp;
         attp.SetValue(m_Dimensions[3]);
         header.Replace(attp.GetAsDataElement());
     }
 
-    // spacing
+    // spacing (only x,y)
     gdcm::Attribute<0x0028,0x0030> atps;
     atps.SetValue(m_Spacing[0],0);
     atps.SetValue(m_Spacing[1],1);
     header.Replace(atps.GetAsDataElement());
 
-    // spacing between slices 
-    gdcm::Attribute<0x0018,0x0088> atss;
+    // spacing between slices (z) 
+    // note: 4th dimension is disregarded in dcm
     if (m_Spacing.size() > 2)
     {
+        gdcm::Attribute<0x0018,0x0088> atss;
         atss.SetValue(m_Spacing[2]);
+        header.Replace(atss.GetAsDataElement());
     }
-    else
-    {
-        atss.SetValue(1.0);
-    }
-    header.Replace(atss.GetAsDataElement());
  
 
     // samples per pixel
@@ -1534,6 +1602,8 @@ void MevisDicomTiffImageIO
     header.Replace(atmax.GetAsDataElement());
 
     // position (origin) 
+    // 4th dimension is disregarded in dicom
+    // always 3d position for this tag
     gdcm::Attribute<0x0020,0x0032> atpp;
     atpp.SetValue(m_Origin[0],0);
     atpp.SetValue(m_Origin[1],1);
@@ -1543,7 +1613,7 @@ void MevisDicomTiffImageIO
     }
     else
     {
-        atpp.SetValue(0,2);
+        atpp.SetValue(0.0,2);
     }
     header.Replace(atpp.GetAsDataElement());
 
@@ -1555,17 +1625,17 @@ void MevisDicomTiffImageIO
 
     atio.SetValue(row[0],0);
     atio.SetValue(row[1],1);
-    if (row.size() > 2)
+    if (this->GetNumberOfDimensions() > 2)
     {
         atio.SetValue(row[2],2);
     }
     else
     {
-        atio.SetValue(0,2);
+        atio.SetValue(0.0, 2);
     }
     atio.SetValue(col[0],3);
     atio.SetValue(col[1],4);
-    if (col.size() > 2)
+    if (this->GetNumberOfDimensions() > 2)
     {
         atio.SetValue(col[2],5);
     }
@@ -1573,7 +1643,6 @@ void MevisDicomTiffImageIO
     {
         atio.SetValue( 0.0, 5);
     }
-
     header.Replace(atio.GetAsDataElement());
 
      
@@ -2022,4 +2091,3 @@ void MevisDicomTiffImageIO
 
 
 } // end namespace itk
-

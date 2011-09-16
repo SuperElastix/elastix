@@ -27,7 +27,7 @@ namespace itk
 
 template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
 StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::StackTransform(): Superclass( OutputSpaceDimension, 0 ),
+::StackTransform(): Superclass( OutputSpaceDimension ),
   m_NumberOfSubTransforms( 0 ),
   m_StackSpacing( 1.0 ),
   m_StackOrigin( 0.0 )
@@ -52,7 +52,7 @@ StackTransform<TScalarType,NInputDimensions,NOutputDimensions>::SetParameters( c
   }
 
   // Set separate subtransform parameters
-  const unsigned int numSubTransformParameters = this->m_SubTransformContainer[ 0 ]->GetNumberOfParameters();
+  const NumberOfParametersType numSubTransformParameters = this->m_SubTransformContainer[ 0 ]->GetNumberOfParameters();
   for ( unsigned int t = 0; t < this->m_NumberOfSubTransforms; ++t )
   {
     // MS, \todo: the new itk::TransformParameters only have constructors taking 1 argument
@@ -125,23 +125,6 @@ StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
   return opp;
 
 } // end TransformPoint
-
-
-/**
- * ********************* GetJacobian ****************************
- */
-
-template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
-const typename StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::JacobianType &
-StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::GetJacobian( const InputPointType & ipp ) const
-{
-  NonZeroJacobianIndicesType dummy( 0 );
-  this->GetJacobian( ipp, this->m_Jacobian, dummy );
-  return this->m_Jacobian;
-
-} // end GetJacobian()
 
 
 /**

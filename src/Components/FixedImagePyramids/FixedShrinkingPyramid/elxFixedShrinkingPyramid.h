@@ -38,8 +38,8 @@ using namespace itk;
     class FixedShrinkingPyramid :
     public
       MultiResolutionShrinkPyramidImageFilter<
-        ITK_TYPENAME FixedImagePyramidBase<TElastix>::InputImageType,
-        ITK_TYPENAME FixedImagePyramidBase<TElastix>::OutputImageType >,
+        typename FixedImagePyramidBase<TElastix>::InputImageType,
+        typename FixedImagePyramidBase<TElastix>::OutputImageType >,
     public
       FixedImagePyramidBase<TElastix>
   {

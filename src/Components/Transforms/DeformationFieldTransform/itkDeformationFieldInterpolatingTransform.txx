@@ -25,7 +25,7 @@ namespace itk
 template<class TScalarType, unsigned int NDimensions, class TComponentType>
 DeformationFieldInterpolatingTransform<TScalarType, NDimensions,  TComponentType>::
 DeformationFieldInterpolatingTransform() :
-Superclass(OutputSpaceDimension,0)
+Superclass(OutputSpaceDimension)
 {
   this->m_DeformationField = 0;
   this->m_ZeroDeformationField = DeformationFieldType::New();

@@ -52,8 +52,8 @@ using namespace itk;
     class MultiResolutionRegistrationWithFeatures :
     public
       MultiResolutionImageRegistrationMethodWithFeatures<
-      ITK_TYPENAME RegistrationBase<TElastix>::FixedImageType,
-      ITK_TYPENAME RegistrationBase<TElastix>::MovingImageType >,
+      typename RegistrationBase<TElastix>::FixedImageType,
+      typename RegistrationBase<TElastix>::MovingImageType >,
     public
       RegistrationBase<TElastix>
   {

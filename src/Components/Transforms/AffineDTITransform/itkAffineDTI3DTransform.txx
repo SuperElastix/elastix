@@ -41,7 +41,7 @@ namespace itk
 template <class TScalarType>
 AffineDTI3DTransform<TScalarType>
 ::AffineDTI3DTransform():
-  Superclass(SpaceDimension, ParametersDimension)
+  Superclass(ParametersDimension)
 {
   this->m_Angle.Fill( itk::NumericTraits<ScalarType>::Zero );
   this->m_Shear.Fill( itk::NumericTraits<ScalarType>::Zero );

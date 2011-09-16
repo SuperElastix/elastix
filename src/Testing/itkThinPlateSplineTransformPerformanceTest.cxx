@@ -236,7 +236,7 @@ int main( int argc, char *argv[] )
 //     }
 //     std::cerr << "Conversion to sparse matrix took: "
 //       << clock() - startClock << " ms." << std::endl;
-// 
+//
 //     // Method 4: LU Decomposition
 //     // Depends on local ITK vnl_sparse_lu modification
 //     startClock = clock();

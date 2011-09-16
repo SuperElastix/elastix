@@ -54,7 +54,7 @@ using namespace itk;
     class DeformationFieldTransform:
   public
     AdvancedCombinationTransform<
-      ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,
+      typename elx::TransformBase<TElastix>::CoordRepType,
       elx::TransformBase<TElastix>::FixedImageDimension >,
   public
     TransformBase<TElastix>

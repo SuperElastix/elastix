@@ -42,8 +42,8 @@ namespace elastix
   class NearestNeighborResampleInterpolator :
     public
     NearestNeighborInterpolateImageFunction<
-    ITK_TYPENAME ResampleInterpolatorBase<TElastix>::InputImageType,
-    ITK_TYPENAME ResampleInterpolatorBase<TElastix>::CoordRepType >,
+    typename ResampleInterpolatorBase<TElastix>::InputImageType,
+    typename ResampleInterpolatorBase<TElastix>::CoordRepType >,
     public ResampleInterpolatorBase<TElastix>
   {
   public:

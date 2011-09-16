@@ -23,7 +23,7 @@
 #include "vnl/vnl_math.h"
 #include <itksys/SystemTools.hxx>
 #include "itkVector.h"
-#include "itkTransformToDeformationFieldSource.h"
+#include "itkTransformToDisplacementFieldSource.h"
 #include "itkTransformToDeterminantOfSpatialJacobianSource.h"
 #include "itkTransformToSpatialJacobianSource.h"
 #include "itkImageFileWriter.h"
@@ -48,43 +48,43 @@ namespace itk
  */
 template<class T>
 class PixelTypeChangeCommand : public Command
-{ 
+{
 public:
-  
+
   /** Standard class typedefs. */
   typedef PixelTypeChangeCommand    Self;
   typedef SmartPointer<Self>        Pointer;
 
   /** This is supposed to be an ImageFileWriter */
   typedef T                         CallerType;
-  
+
   /** Run-time type information (and related methods). */
   itkTypeMacro( PixelTypeChangeCommand, Command );
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
-    
+
   /** Set the pixel type to VECTOR */
-  virtual void Execute( Object * caller, const EventObject & ) 
-  { 
+  virtual void Execute( Object * caller, const EventObject & )
+  {
     CallerType * castcaller = dynamic_cast< CallerType * >( caller );
     castcaller->GetImageIO()->SetPixelType( ImageIOBase::VECTOR );
   }
-  virtual void Execute( const Object * caller, const EventObject & ) 
-  { 
+  virtual void Execute( const Object * caller, const EventObject & )
+  {
     CallerType * castcaller = const_cast< CallerType * >(
       dynamic_cast< const CallerType * >( caller )  );
     castcaller->GetImageIO()->SetPixelType( ImageIOBase::VECTOR );
   }
-  
+
 protected:
   PixelTypeChangeCommand() {}
-  virtual ~PixelTypeChangeCommand() {} 
+  virtual ~PixelTypeChangeCommand() {}
 
 private:
   PixelTypeChangeCommand(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
-  
+
 }; // end class PixelTypeChangeCommand
 
 } // end namespace itk
@@ -1170,7 +1170,7 @@ void TransformBase<TElastix>
   typedef itk::Image<
     VectorPixelType, FixedImageDimension >            DeformationFieldImageType;
   typedef typename DeformationFieldImageType::Pointer DeformationFieldImagePointer;
-  typedef itk::TransformToDeformationFieldSource<
+  typedef itk::TransformToDisplacementFieldSource<
     DeformationFieldImageType, CoordRepType >         DeformationFieldGeneratorType;
   typedef itk::ChangeInformationImageFilter<
     DeformationFieldImageType >                       ChangeInfoFilterType;
@@ -1370,8 +1370,8 @@ TransformBase<TElastix>
   typedef itk::ChangeInformationImageFilter<
     JacobianImageType >                               ChangeInfoFilterType;
   typedef typename FixedImageType::DirectionType      FixedImageDirectionType;
-  typedef itk::PixelTypeChangeCommand< 
-    JacobianWriterType >                              PixelTypeChangeCommandType;       
+  typedef itk::PixelTypeChangeCommand<
+    JacobianWriterType >                              PixelTypeChangeCommandType;
 
   /** Create an setup Jacobian generator. */
   typename JacobianGeneratorType::Pointer jacGenerator = JacobianGeneratorType::New();
@@ -1509,6 +1509,7 @@ TransformBase<TElastix>
     ImageSamplerType::ImageSampleContainerType        ImageSampleContainerType;
   typedef typename ImageSampleContainerType::Pointer  ImageSampleContainerPointer;
   typedef typename ITKBaseType::JacobianType          JacobianType;
+  typedef typename ITKBaseType::NonZeroJacobianIndicesType  NonZeroJacobianIndicesType;
 
   const ITKBaseType * const thisITK = this->GetAsITKBaseType();
   const unsigned int outdim = MovingImageDimension;
@@ -1548,7 +1549,9 @@ TransformBase<TElastix>
   for ( iter = begin; iter != end; ++iter )
   {
     const InputPointType & point = (*iter).Value().m_ImageCoordinates;
-    const JacobianType & jacobian = thisITK->GetJacobian( point );
+    //const JacobianType & jacobian = thisITK->GetJacobian( point );
+    JacobianType jacobian; NonZeroJacobianIndicesType nzji;
+    thisITK->GetJacobian( point, jacobian, nzji );
 
     /** Square each element of the Jacobian and add each row
      * to the newscales.

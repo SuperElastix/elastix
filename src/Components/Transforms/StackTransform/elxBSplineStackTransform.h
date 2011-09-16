@@ -108,7 +108,7 @@ template < class TElastix >
 class BSplineStackTransform
   : public
   AdvancedCombinationTransform<
-  ITK_TYPENAME elx::TransformBase<TElastix>::CoordRepType,
+  typename elx::TransformBase<TElastix>::CoordRepType,
   elx::TransformBase<TElastix>::FixedImageDimension > ,
   public
   TransformBase<TElastix>

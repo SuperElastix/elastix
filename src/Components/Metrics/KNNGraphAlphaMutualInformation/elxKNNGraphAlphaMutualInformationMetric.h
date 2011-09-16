@@ -82,8 +82,8 @@ using namespace itk;
   class KNNGraphAlphaMutualInformationMetric :
     public
       KNNGraphAlphaMutualInformationImageToImageMetric<
-        ITK_TYPENAME MetricBase<TElastix>::FixedImageType,
-        ITK_TYPENAME MetricBase<TElastix>::MovingImageType >,
+        typename MetricBase<TElastix>::FixedImageType,
+        typename MetricBase<TElastix>::MovingImageType >,
     public MetricBase<TElastix>
   {
   public:

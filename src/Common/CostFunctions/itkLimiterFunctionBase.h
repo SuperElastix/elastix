@@ -46,7 +46,7 @@ namespace itk
  */
 template < class TInput, unsigned int NDimension >
 class LimiterFunctionBase :
-  public FunctionBase<TInput, ITK_TYPENAME NumericTraits<TInput>::RealType>
+  public FunctionBase<TInput, typename NumericTraits<TInput>::RealType>
 {
 public:
   /** Standard class typedefs. */
