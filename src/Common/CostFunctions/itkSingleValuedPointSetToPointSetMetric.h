@@ -147,6 +147,14 @@ public:
   /** Get the moving mask. */
   itkGetConstObjectMacro( MovingImageMask, MovingImageMaskType );
 
+  /** Contains calls from GetValueAndDerivative that are thread-unsafe. */
+  virtual void BeforeThreadedGetValueAndDerivative( const TransformParametersType & parameters ) const;
+
+  /** Switch the function BeforeThreadedGetValueAndDerivative on or off. */
+  itkSetMacro( UseMetricSingleThreaded, bool );
+  itkGetConstReferenceMacro( UseMetricSingleThreaded, bool );
+  itkBooleanMacro( UseMetricSingleThreaded );
+
 protected:
   SingleValuedPointSetToPointSetMetric();
   virtual ~SingleValuedPointSetToPointSetMetric() {};
@@ -162,6 +170,9 @@ protected:
   mutable TransformPointer    m_Transform;
 
   mutable unsigned int        m_NumberOfPointsCounted;
+
+  /** Variables for multi-threading. */
+  bool m_UseMetricSingleThreaded;
 
 private:
   SingleValuedPointSetToPointSetMetric(const Self&); //purposely not implemented

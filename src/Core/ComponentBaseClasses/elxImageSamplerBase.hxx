@@ -53,9 +53,17 @@ ImageSamplerBase<TElastix>
     }
   }
 
+  /** Temporary?: Use the multi-threaded version or not. */
+  bool useMultiThread = false;
+  std::string tmp = this->m_Configuration->GetCommandLineArgument( "-mts" );
+  if ( tmp == "true" )
+  {
+    this->GetAsITKBaseType()->SetUseMultiThread( true );
+  }
+  else this->GetAsITKBaseType()->SetUseMultiThread( false );
+
 } // end BeforeEachResolutionBase()
 
 } // end namespace elastix
 
 #endif //#ifndef __elxImageSamplerBase_hxx
-

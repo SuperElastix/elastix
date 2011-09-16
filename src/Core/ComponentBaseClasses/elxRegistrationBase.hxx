@@ -240,4 +240,3 @@ RegistrationBase<TElastix>
 } // end namespace elastix
 
 #endif // end #ifndef __elxRegistrationBase_hxx
-

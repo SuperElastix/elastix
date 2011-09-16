@@ -17,6 +17,7 @@
 
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkSingleValuedPointSetToPointSetMetric.h"
+#include "itkMultiThreader.h"
 
 namespace itk
 {
@@ -51,6 +52,9 @@ namespace itk
  * \ingroup RegistrationMetrics
  *
  */
+
+static std::vector< std::size_t > m_MetricComputationTimeStatic; // ugly
+
 
 template <class TFixedImage, class TMovingImage>
 class CombinationImageToImageMetric :
@@ -124,7 +128,7 @@ public:
   typedef typename Superclass::MovingImageLimiterOutputType MovingImageLimiterOutputType;
   typedef typename Superclass::ScalarType                   ScalarType;
   typedef typename Superclass::AdvancedTransformType        AdvancedTransformType;
-	*/
+    */
 
   /** Typedefs for the metrics. */
   typedef Superclass                                      ImageMetricType;
@@ -156,6 +160,13 @@ public:
       CoordinateRepresentationType > >                    MovingPointSetType;
   typedef SingleValuedPointSetToPointSetMetric<
     FixedPointSetType, MovingPointSetType > 					    PointSetMetricType;
+
+  /** Typedefs for multi-threading. */
+  typedef itk::MultiThreader                        ThreaderType;
+  typedef typename ThreaderType::ThreadInfoStruct   ThreadInfoType;
+
+  /** Thrader callback function */
+  static ITK_THREAD_RETURN_TYPE GetValueAndDerivativeThreaderCallback( void * arg );
 
   /**
    * Get and set the metrics and their weights.
@@ -191,6 +202,9 @@ public:
   /** Set and Get the UseRelativeWeights variable. */
   itkSetMacro( UseRelativeWeights, bool );
   itkGetMacro( UseRelativeWeights, bool );
+
+  /** \todo: Temporary, should think about interface. */
+  itkSetMacro( UseMultiThread, bool );
 
   /** Select which metrics are used.
    * This is useful in case you want to compute a certain measure, but not
@@ -352,7 +366,7 @@ public:
   /** Get the number of pixels considered in the computation. Return the sum
    * of pixels counted by all metrics.
    */
-  virtual const SizeValueType & GetNumberOfPixelsCounted( void ) const;
+  virtual const unsigned long & GetNumberOfPixelsCounted( void ) const;
 
   /** Pass initialization to all sub metrics. */
   virtual void Initialize( void ) throw ( ExceptionObject );
@@ -410,6 +424,19 @@ private:
   CombinationImageToImageMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
+  /** For threading: store thread data. */
+  struct tmp_MultiThreaderParameterType
+  {
+    std::vector<SingleValuedCostFunctionPointer> m_tmpMetrics;
+    std::vector<MeasureType>                     m_tmpMetricValues;
+    std::vector<DerivativeType >                 m_tmpMetricDerivatives;
+    ParametersType                               m_tmpParameters;
+  };
+
+  // tmp?
+  typename ThreaderType::Pointer m_threader; // not needed, can be local ?
+  bool m_UseMultiThread;
+
 }; // end class CombinationImageToImageMetric
 
 } // end namespace itk
@@ -419,6 +446,3 @@ private:
 #endif
 
 #endif // end #ifndef __itkCombinationImageToImageMetric_h
-
-
-

@@ -188,6 +188,10 @@ public:
     const ParametersType & parameters,
     DerivativeType & derivative ) const;
 
+  /** Contains calls from GetValueAndDerivative that are thread-unsafe. */
+  virtual void BeforeThreadedGetValueAndDerivative(
+    const TransformParametersType & parameters ) const;
+
   /** The GetValueAndDerivative()-method returns the rigid penalty value and its derivative. */
   virtual void GetValueAndDerivative(
     const ParametersType & parameters,

@@ -234,6 +234,14 @@ public:
    * This base class just returns an identity matrix of the right size. */
   virtual void GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const;
 
+  /** Contains calls from GetValueAndDerivative that are thread-unsafe. */
+  virtual void BeforeThreadedGetValueAndDerivative( const TransformParametersType & parameters ) const;
+
+  /** Switch the function BeforeThreadedGetValueAndDerivative on or off. */
+  itkSetMacro( UseMetricSingleThreaded, bool );
+  itkGetConstReferenceMacro( UseMetricSingleThreaded, bool );
+  itkBooleanMacro( UseMetricSingleThreaded );
+
 protected:
 
   /** Constructor. */
@@ -300,6 +308,9 @@ protected:
   FixedImageLimiterOutputType                        m_FixedImageMaxLimit;
   MovingImageLimiterOutputType                       m_MovingImageMinLimit;
   MovingImageLimiterOutputType                       m_MovingImageMaxLimit;
+
+  /** Variables for multi-threading. */
+  bool m_UseMetricSingleThreaded;
 
   /** Protected methods ************** */
 

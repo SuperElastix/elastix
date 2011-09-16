@@ -321,11 +321,11 @@ IF( ELASTIX_ENABLE_PACKAGER )
   #  DESCRIPTION "Contains elastix and transformix"
   #  REQUIRED
   #  DEPENDS libraries )
-#   [GROUP group]
-#   [DEPENDS comp1 comp2 ... ]
-#   [INSTALL_TYPES type1 type2 ... ]
-#   [DOWNLOADED]
-#   [ARCHIVE_FILE filename])
+  #   [GROUP group]
+  #   [DEPENDS comp1 comp2 ... ]
+  #   [INSTALL_TYPES type1 type2 ... ]
+  #   [DOWNLOADED]
+  #   [ARCHIVE_FILE filename])
   #CPACK_ADD_COMPONENT( libraries
   #  "Libraries"
   #  DESCRIPTION "Contains the libraries"

@@ -657,7 +657,7 @@ void ElastixTemplate<TFixedImage, TMovingImage>
   /** Time in this iteration. */
   this->m_IterationTimer->StopTimer();
   xout["iteration"]["Time[ms]"]
-    << static_cast<unsigned long>( this->m_IterationTimer->GetElapsedClockSec() *1000 );
+    << static_cast<unsigned long>( this->m_IterationTimer->GetElapsedClockSec() * 1000 );
 
   /** Write the iteration info of this iteration. */
   xout["iteration"].WriteBufferedData();

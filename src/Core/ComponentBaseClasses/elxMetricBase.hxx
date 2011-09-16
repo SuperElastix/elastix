@@ -332,4 +332,3 @@ MetricBase<TElastix>
 
 
 #endif // end #ifndef __elxMetricBase_hxx
-

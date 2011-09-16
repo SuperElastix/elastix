@@ -35,7 +35,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
 
   this->m_NumberOfSamplesForSelfHessian = 100000;
 
-} // end constructor
+} // end Constructor
 
 
 /**
@@ -58,11 +58,22 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
     return static_cast<MeasureType>( measure );
   }
 
-  /** Make sure the transform parameters are up to date. */
-  this->SetTransformParameters( parameters );
+  /** Call non-thread-safe stuff, such as:
+   *   this->SetTransformParameters( parameters );
+   *   this->GetImageSampler()->Update();
+   * Because of these calls GetValueAndDerivative itself is not thread-safe,
+   * so cannot be called multiple times simultaneously.
+   * This is however needed in the CombinationImageToImageMetric.
+   * In that case, you need to:
+   * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
+   * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
+   *   calling GetValueAndDerivative
+   * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
+   * - Now you can call GetValueAndDerivative multi-threaded.
+   */
+  this->BeforeThreadedGetValueAndDerivative( parameters );
 
-  /** Update the imageSampler and get a handle to the sample container. */
-  this->GetImageSampler()->Update();
+  /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
   /** Create iterator over the sample container. */
@@ -172,15 +183,26 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   }
   // TODO: This is only required once! and not every iteration.
 
-  /** Make sure the transform parameters are up to date. */
-  this->SetTransformParameters( parameters );
-
   /** Check if this transform is a B-spline transform. */
   typename BSplineTransformType::Pointer dummy = 0;
   bool transformIsBSpline = this->CheckForBSplineTransform( dummy );
 
-  /** Update the imageSampler and get a handle to the sample container. */
-  this->GetImageSampler()->Update();
+  /** Call non-thread-safe stuff, such as:
+   *   this->SetTransformParameters( parameters );
+   *   this->GetImageSampler()->Update();
+   * Because of these calls GetValueAndDerivative itself is not thread-safe,
+   * so cannot be called multiple times simultaneously.
+   * This is however needed in the CombinationImageToImageMetric.
+   * In that case, you need to:
+   * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
+   * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
+   *   calling GetValueAndDerivative
+   * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
+   * - Now you can call GetValueAndDerivative multi-threaded.
+   */
+  this->BeforeThreadedGetValueAndDerivative( parameters );
+
+  /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
   /** Create iterator over the sample container. */
@@ -353,7 +375,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   JacobianOfSpatialHessianType jacobianOfSpatialHessian;
 
   /** Make sure the transform parameters are up to date. */
-  this->SetTransformParameters( parameters );
+  //this->SetTransformParameters( parameters );
 
   /** Prepare Hessian */
   H.set_size( this->GetNumberOfParameters(),
@@ -362,7 +384,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   if ( !this->m_AdvancedTransform->GetHasNonZeroJacobianOfSpatialHessian() )
   {
     //H.fill_diagonal(1.0);
-    for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
       H(i,i) = 1.0;
     }
@@ -444,10 +466,11 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
               ++itA;
               ++itB;
             }
+
           }
 
           /** Store at the right location in the H matrix.
-           * Only upper triangular part is stored */
+          * Only upper triangular part is stored */
 
           /** Update hessian element */
           if ( (matrixProduct > 1e-12) || (matrixProduct < 1e-12) )
@@ -471,7 +494,9 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
               /** Add to existing value */
               (*rowIt).second += val;
             }
+
           }
+
         }
       }
 
@@ -488,7 +513,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   if ( this->m_NumberOfPixelsCounted > 0 )
   {
     const double normal_sum = 1.0 / static_cast<double>( this->m_NumberOfPixelsCounted );
-    for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
       H.scale_row(i, normal_sum);
     }
@@ -496,7 +521,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   else
   {
     //H.fill_diagonal(1.0);
-    for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
       H(i,i) = 1.0;
     }

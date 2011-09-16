@@ -227,8 +227,23 @@ typename PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>::MeasureTy
 PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
 ::ComputePIDiff( const TransformParametersType & parameters, float scalingfactor ) const
 {
+  /** Call non-thread-safe stuff, such as:
+   *   this->SetTransformParameters( parameters );
+   *   this->GetImageSampler()->Update();
+   * Because of these calls GetValueAndDerivative itself is not thread-safe,
+   * so cannot be called multiple times simultaneously.
+   * This is however needed in the CombinationImageToImageMetric.
+   * In that case, you need to:
+   * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
+   * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
+   *   calling GetValueAndDerivative
+   * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
+   * - Now you can call GetValueAndDerivative multi-threaded.
+   */
+  this->BeforeThreadedGetValueAndDerivative( parameters );
+  //this->SetTransformParameters( parameters );
+
   unsigned int iDimension;
-  this->SetTransformParameters( parameters );
   this->m_TransformMovingImageFilter->Modified();
   this->m_MultiplyByConstantImageFilter->SetConstant( scalingfactor );
   this->m_DifferenceImageFilter->UpdateLargestPossibleRegion();
@@ -326,7 +341,22 @@ typename PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>::MeasureTy
 PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
 ::GetValue( const TransformParametersType & parameters ) const
 {
-  this->SetTransformParameters( parameters );
+  /** Call non-thread-safe stuff, such as:
+   *   this->SetTransformParameters( parameters );
+   *   this->GetImageSampler()->Update();
+   * Because of these calls GetValueAndDerivative itself is not thread-safe,
+   * so cannot be called multiple times simultaneously.
+   * This is however needed in the CombinationImageToImageMetric.
+   * In that case, you need to:
+   * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
+   * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
+   *   calling GetValueAndDerivative
+   * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
+   * - Now you can call GetValueAndDerivative multi-threaded.
+   */
+  this->BeforeThreadedGetValueAndDerivative( parameters );
+  //this->SetTransformParameters( parameters );
+
   this->m_TransformMovingImageFilter->Modified();
   this->m_DifferenceImageFilter->UpdateLargestPossibleRegion();
   MeasureType measure = 1e10;

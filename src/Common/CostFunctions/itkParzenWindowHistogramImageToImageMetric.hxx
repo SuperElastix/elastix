@@ -984,403 +984,435 @@ namespace itk
   } // end UpdateJointPDFAndIncrementalPDFs()
 
 
-  /**
-   * ************************ ComputePDFs **************************
+/**
+ * ************************ ComputePDFs **************************
+ */
+
+template < class TFixedImage, class TMovingImage >
+void
+ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+::ComputePDFs( const ParametersType& parameters ) const
+{
+  /** Initialize some variables. */
+  this->m_JointPDF->FillBuffer( 0.0 );
+  this->m_NumberOfPixelsCounted = 0;
+  this->m_Alpha = 0.0;
+
+  /** Call non-thread-safe stuff, such as:
+   *   this->SetTransformParameters( parameters );
+   *   this->GetImageSampler()->Update();
+   * Because of these calls GetValueAndDerivative itself is not thread-safe,
+   * so cannot be called multiple times simultaneously.
+   * This is however needed in the CombinationImageToImageMetric.
+   * In that case, you need to:
+   * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
+   * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
+   *   calling GetValueAndDerivative
+   * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
+   * - Now you can call GetValueAndDerivative multi-threaded.
    */
+  this->BeforeThreadedGetValueAndDerivative( parameters );
 
-  template < class TFixedImage, class TMovingImage >
-    void
-    ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
-    ::ComputePDFs( const ParametersType& parameters ) const
+  /** Get a handle to the sample container. */
+  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+
+  /** Create iterator over the sample container. */
+  typename ImageSampleContainerType::ConstIterator fiter;
+  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
+  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+
+  /** Loop over sample container and compute contribution of each sample to pdfs. */
+  for ( fiter = fbegin; fiter != fend; ++fiter )
   {
-    /** Initialize some variables. */
-    this->m_JointPDF->FillBuffer( 0.0 );
-    this->m_NumberOfPixelsCounted = 0;
-    this->m_Alpha = 0.0;
+    /** Read fixed coordinates and initialize some variables. */
+    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    RealType movingImageValue;
+    MovingImagePointType mappedPoint;
 
-    /** Set up the parameters in the transform. */
-    this->SetTransformParameters( parameters );
+    /** Transform point and check if it is inside the B-spline support region. */
+    bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
-    /** Update the imageSampler and get a handle to the sample container. */
-    this->GetImageSampler()->Update();
-    ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-
-    /** Create iterator over the sample container. */
-    typename ImageSampleContainerType::ConstIterator fiter;
-    typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-    typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
-
-    /** Loop over sample container and compute contribution of each sample to pdfs. */
-    for ( fiter = fbegin; fiter != fend; ++fiter )
+    /** Check if point is inside mask. */
+    if ( sampleOk )
     {
-      /** Read fixed coordinates and initialize some variables. */
-      const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
-      RealType movingImageValue;
-      MovingImagePointType mappedPoint;
+      sampleOk = this->IsInsideMovingMask( mappedPoint );
+    }
 
-      /** Transform point and check if it is inside the B-spline support region. */
-      bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
+    /** Compute the moving image value and check if the point is
+     * inside the moving image buffer.
+     */
+    if ( sampleOk )
+    {
+      sampleOk = this->EvaluateMovingImageValueAndDerivative(
+        mappedPoint, movingImageValue, 0 );
+    }
+
+    if ( sampleOk )
+    {
+      this->m_NumberOfPixelsCounted++;
+
+      /** Get the fixed image value. */
+      RealType fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
+
+      /** Make sure the values fall within the histogram range. */
+      fixedImageValue = this->GetFixedImageLimiter()->Evaluate( fixedImageValue );
+      movingImageValue = this->GetMovingImageLimiter()->Evaluate( movingImageValue );
+
+      /** Compute this sample's contribution to the joint distributions. */
+      this->UpdateJointPDFAndDerivatives(
+        fixedImageValue, movingImageValue, 0, 0 );
+    }
+
+  } // end iterating over fixed image spatial sample container for loop
+
+  /** Check if enough samples were valid. */
+  this->CheckNumberOfSamples( sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+
+  /** Compute alpha. */
+  this->m_Alpha = 0.0;
+  if ( this->m_NumberOfPixelsCounted > 0 )
+  {
+    this->m_Alpha = 1.0 / static_cast<double>( this->m_NumberOfPixelsCounted );
+  }
+
+} // end ComputePDFs()
+
+
+/**
+ * ************************ ComputePDFsAndPDFDerivatives *******************
+ */
+
+template < class TFixedImage, class TMovingImage >
+void
+ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+::ComputePDFsAndPDFDerivatives( const ParametersType & parameters ) const
+{
+  /** Initialize some variables. */
+  this->m_JointPDF->FillBuffer( 0.0 );
+  this->m_JointPDFDerivatives->FillBuffer( 0.0 );
+  this->m_Alpha = 0.0;
+  this->m_NumberOfPixelsCounted = 0;
+
+  /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
+  NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+  DerivativeType imageJacobian( nzji.size() );
+  TransformJacobianType jacobian;
+
+  /** Call non-thread-safe stuff, such as:
+   *   this->SetTransformParameters( parameters );
+   *   this->GetImageSampler()->Update();
+   * Because of these calls GetValueAndDerivative itself is not thread-safe,
+   * so cannot be called multiple times simultaneously.
+   * This is however needed in the CombinationImageToImageMetric.
+   * In that case, you need to:
+   * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
+   * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
+   *   calling GetValueAndDerivative
+   * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
+   * - Now you can call GetValueAndDerivative multi-threaded.
+   */
+  this->BeforeThreadedGetValueAndDerivative( parameters );
+
+  /** Get a handle to the sample container. */
+  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+
+  /** Create iterator over the sample container. */
+  typename ImageSampleContainerType::ConstIterator fiter;
+  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
+  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+
+  /** Loop over sample container and compute contribution of each sample to pdfs. */
+  for ( fiter = fbegin; fiter != fend; ++fiter )
+  {
+    /** Read fixed coordinates and initialize some variables. */
+    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    RealType movingImageValue;
+    MovingImagePointType mappedPoint;
+    MovingImageDerivativeType movingImageDerivative;
+
+    /** Transform point and check if it is inside the B-spline support region. */
+    bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint);
+
+    /** Check if point is inside mask. */
+    if ( sampleOk )
+    {
+      sampleOk = this->IsInsideMovingMask( mappedPoint );
+    }
+
+    /** Compute the moving image value M(T(x)) and derivative dM/dx and check if
+     * the point is inside the moving image buffer.
+     */
+    if ( sampleOk )
+    {
+      sampleOk = this->EvaluateMovingImageValueAndDerivative(
+        mappedPoint, movingImageValue, &movingImageDerivative );
+    }
+
+    if ( sampleOk )
+    {
+      this->m_NumberOfPixelsCounted++;
+
+      /** Get the fixed image value. */
+      RealType fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
+
+      /** Make sure the values fall within the histogram range. */
+      fixedImageValue = this->GetFixedImageLimiter()->Evaluate( fixedImageValue );
+      movingImageValue = this->GetMovingImageLimiter()->Evaluate(
+        movingImageValue, movingImageDerivative );
+
+      /** Get the TransformJacobian dT/dmu. */
+      this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
+
+      /** Compute the inner product (dM/dx)^T (dT/dmu). */
+      this->EvaluateTransformJacobianInnerProduct(
+        jacobian, movingImageDerivative, imageJacobian );
+
+      /** Update the joint pdf and the joint pdf derivatives. */
+      this->UpdateJointPDFAndDerivatives(
+        fixedImageValue, movingImageValue, &imageJacobian, &nzji );
+
+    } //end if-block check sampleOk
+  } // end iterating over fixed image spatial sample container for loop
+
+  /** Check if enough samples were valid. */
+  this->CheckNumberOfSamples(
+    sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+
+  /** Compute alpha. */
+  this->m_Alpha = 0.0;
+  if ( this->m_NumberOfPixelsCounted > 0 )
+  {
+    this->m_Alpha = 1.0 / static_cast<double>( this->m_NumberOfPixelsCounted );
+  }
+
+} // end ComputePDFsAndPDFDerivatives()
+
+
+/**
+ * ************************ ComputePDFsAndIncrementalPDFs *******************
+ */
+
+template < class TFixedImage, class TMovingImage >
+void
+ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+::ComputePDFsAndIncrementalPDFs( const ParametersType& parameters ) const
+{
+  /** Initialize some variables. */
+  this->m_JointPDF->FillBuffer( 0.0 );
+  this->m_IncrementalJointPDFRight->FillBuffer( 0.0 );
+  this->m_IncrementalJointPDFLeft->FillBuffer( 0.0 );
+  this->m_Alpha = 0.0;
+  this->m_PerturbedAlphaRight.Fill( 0.0 );
+  this->m_PerturbedAlphaLeft.Fill( 0.0 );
+
+  this->m_NumberOfPixelsCounted = 0;
+  double sumOfMovingMaskValues = 0.0;
+  const double delta = this->GetFiniteDifferencePerturbation();
+
+  /** sparse jacobian+indices. */
+  NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+  TransformJacobianType jacobian;
+
+  /** Arrays that store dM(x)/dmu and dMask(x)/dmu. */
+  DerivativeType movingImageValuesRight( nzji.size() );
+  DerivativeType movingImageValuesLeft( nzji.size() );
+  DerivativeType movingMaskValuesRight( nzji.size() );
+  DerivativeType movingMaskValuesLeft( nzji.size() );
+
+  /** Call non-thread-safe stuff, such as:
+   *   this->SetTransformParameters( parameters );
+   *   this->GetImageSampler()->Update();
+   * Because of these calls GetValueAndDerivative itself is not thread-safe,
+   * so cannot be called multiple times simultaneously.
+   * This is however needed in the CombinationImageToImageMetric.
+   * In that case, you need to:
+   * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
+   * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
+   *   calling GetValueAndDerivative
+   * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
+   * - Now you can call GetValueAndDerivative multi-threaded.
+   */
+  this->BeforeThreadedGetValueAndDerivative( parameters );
+
+  /** Get a handle to the sample container. */
+  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+
+  /** Create iterator over the sample container. */
+  typename ImageSampleContainerType::ConstIterator fiter;
+  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
+  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
+
+  /** Loop over sample container and compute contribution of each sample to pdfs. */
+  for ( fiter = fbegin; fiter != fend; ++fiter )
+  {
+    /** Read fixed coordinates. */
+    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+
+    /** Transform point and check if it is inside the B-spline support region.
+     * if not, skip this sample.
+     */
+    MovingImagePointType mappedPoint;
+    bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
+
+    if ( sampleOk )
+    {
+      /** Get the fixed image value and make sure the value falls within the histogram range. */
+      RealType fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
+      fixedImageValue = this->GetFixedImageLimiter()->Evaluate( fixedImageValue );
 
       /** Check if point is inside mask. */
-      if ( sampleOk )
-      {
-        sampleOk = this->IsInsideMovingMask( mappedPoint );
-      }
+      sampleOk = this->IsInsideMovingMask( mappedPoint );
+      RealType movingMaskValue =
+        static_cast<RealType>( static_cast<unsigned char>( sampleOk ) );
 
-      /** Compute the moving image value and check if the point is
-       * inside the moving image buffer.
+      /** Compute the moving image value M(T(x)) and check if
+       * the point is inside the moving image buffer.
        */
+      RealType movingImageValue = itk::NumericTraits<RealType>::Zero;
       if ( sampleOk )
       {
         sampleOk = this->EvaluateMovingImageValueAndDerivative(
           mappedPoint, movingImageValue, 0 );
-      }
-
-      if ( sampleOk )
-      {
-        this->m_NumberOfPixelsCounted++;
-
-        /** Get the fixed image value. */
-        RealType fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
-
-        /** Make sure the values fall within the histogram range. */
-        fixedImageValue = this->GetFixedImageLimiter()->Evaluate( fixedImageValue );
-        movingImageValue = this->GetMovingImageLimiter()->Evaluate( movingImageValue );
-
-        /** Compute this sample's contribution to the joint distributions. */
-        this->UpdateJointPDFAndDerivatives(
-          fixedImageValue, movingImageValue, 0, 0 );
-      }
-
-    } // end iterating over fixed image spatial sample container for loop
-
-    /** Check if enough samples were valid. */
-    this->CheckNumberOfSamples( sampleContainer->Size(), this->m_NumberOfPixelsCounted );
-
-    /** Compute alpha. */
-    this->m_Alpha = 0.0;
-    if ( this->m_NumberOfPixelsCounted > 0 )
-    {
-      this->m_Alpha = 1.0 / static_cast<double>( this->m_NumberOfPixelsCounted );
-    }
-
-  } // end ComputePDFs()
-
-
-  /**
-   * ************************ ComputePDFsAndPDFDerivatives *******************
-   */
-
-  template < class TFixedImage, class TMovingImage >
-    void
-    ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
-    ::ComputePDFsAndPDFDerivatives( const ParametersType& parameters ) const
-  {
-    /** Initialize some variables. */
-    this->m_JointPDF->FillBuffer( 0.0 );
-    this->m_JointPDFDerivatives->FillBuffer( 0.0 );
-    this->m_Alpha = 0.0;
-    this->m_NumberOfPixelsCounted = 0;
-
-    /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
-    NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
-    DerivativeType imageJacobian( nzji.size() );
-    TransformJacobianType jacobian;
-
-    /** Set up the parameters in the transform. */
-    this->SetTransformParameters( parameters );
-
-    /** Update the imageSampler and get a handle to the sample container. */
-    this->GetImageSampler()->Update();
-    ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-
-    /** Create iterator over the sample container. */
-    typename ImageSampleContainerType::ConstIterator fiter;
-    typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-    typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
-
-    /** Loop over sample container and compute contribution of each sample to pdfs. */
-    for ( fiter = fbegin; fiter != fend; ++fiter )
-    {
-      /** Read fixed coordinates and initialize some variables. */
-      const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
-      RealType movingImageValue;
-      MovingImagePointType mappedPoint;
-      MovingImageDerivativeType movingImageDerivative;
-
-      /** Transform point and check if it is inside the B-spline support region. */
-      bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint);
-
-      /** Check if point is inside mask. */
-      if ( sampleOk )
-      {
-        sampleOk = this->IsInsideMovingMask( mappedPoint );
-      }
-
-      /** Compute the moving image value M(T(x)) and derivative dM/dx and check if
-       * the point is inside the moving image buffer.
-       */
-      if ( sampleOk )
-      {
-        sampleOk = this->EvaluateMovingImageValueAndDerivative(
-          mappedPoint, movingImageValue, &movingImageDerivative );
-      }
-
-      if ( sampleOk )
-      {
-        this->m_NumberOfPixelsCounted++;
-
-        /** Get the fixed image value. */
-        RealType fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
-
-        /** Make sure the values fall within the histogram range. */
-        fixedImageValue = this->GetFixedImageLimiter()->Evaluate( fixedImageValue );
-        movingImageValue = this->GetMovingImageLimiter()->Evaluate(
-          movingImageValue, movingImageDerivative );
-
-        /** Get the TransformJacobian dT/dmu. */
-        this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
-
-        /** Compute the inner product (dM/dx)^T (dT/dmu). */
-        this->EvaluateTransformJacobianInnerProduct(
-          jacobian, movingImageDerivative, imageJacobian );
-
-        /** Update the joint pdf and the joint pdf derivatives. */
-        this->UpdateJointPDFAndDerivatives(
-          fixedImageValue, movingImageValue, &imageJacobian, &nzji );
-
-      } //end if-block check sampleOk
-    } // end iterating over fixed image spatial sample container for loop
-
-    /** Check if enough samples were valid. */
-    this->CheckNumberOfSamples(
-      sampleContainer->Size(), this->m_NumberOfPixelsCounted );
-
-    /** Compute alpha. */
-    this->m_Alpha = 0.0;
-    if ( this->m_NumberOfPixelsCounted > 0 )
-    {
-      this->m_Alpha = 1.0 / static_cast<double>( this->m_NumberOfPixelsCounted );
-    }
-
-  } // end ComputePDFsAndPDFDerivatives()
-
-
-   /**
-   * ************************ ComputePDFsAndIncrementalPDFs *******************
-   */
-
-  template < class TFixedImage, class TMovingImage >
-    void
-    ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
-    ::ComputePDFsAndIncrementalPDFs( const ParametersType& parameters ) const
-  {
-    /** Initialize some variables. */
-    this->m_JointPDF->FillBuffer( 0.0 );
-    this->m_IncrementalJointPDFRight->FillBuffer( 0.0 );
-    this->m_IncrementalJointPDFLeft->FillBuffer( 0.0 );
-    this->m_Alpha = 0.0;
-    this->m_PerturbedAlphaRight.Fill( 0.0 );
-    this->m_PerturbedAlphaLeft.Fill( 0.0 );
-
-    this->m_NumberOfPixelsCounted = 0;
-    double sumOfMovingMaskValues = 0.0;
-    const double delta = this->GetFiniteDifferencePerturbation();
-
-    /** sparse jacobian+indices. */
-    NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
-    TransformJacobianType jacobian;
-
-    /** Arrays that store dM(x)/dmu and dMask(x)/dmu. */
-    DerivativeType movingImageValuesRight( nzji.size() );
-    DerivativeType movingImageValuesLeft( nzji.size() );
-    DerivativeType movingMaskValuesRight( nzji.size() );
-    DerivativeType movingMaskValuesLeft( nzji.size() );
-
-    /** Set up the parameters in the transform. */
-    this->SetTransformParameters( parameters );
-
-    /** Update the imageSampler and get a handle to the sample container. */
-    this->GetImageSampler()->Update();
-    ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-
-    /** Create iterator over the sample container. */
-    typename ImageSampleContainerType::ConstIterator fiter;
-    typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-    typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
-
-    /** Loop over sample container and compute contribution of each sample to pdfs. */
-    for ( fiter = fbegin; fiter != fend; ++fiter )
-    {
-      /** Read fixed coordinates. */
-      const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
-
-      /** Transform point and check if it is inside the B-spline support region.
-       * if not, skip this sample.
-       */
-      MovingImagePointType mappedPoint;
-      bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
-
-      if ( sampleOk )
-      {
-        /** Get the fixed image value and make sure the value falls within the histogram range. */
-        RealType fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
-        fixedImageValue = this->GetFixedImageLimiter()->Evaluate( fixedImageValue );
-
-        /** Check if point is inside mask. */
-        sampleOk = this->IsInsideMovingMask( mappedPoint );
-        RealType movingMaskValue =
-          static_cast<RealType>( static_cast<unsigned char>( sampleOk ) );
-
-        /** Compute the moving image value M(T(x)) and check if
-         * the point is inside the moving image buffer.
-         */
-        RealType movingImageValue = itk::NumericTraits<RealType>::Zero;
         if ( sampleOk )
         {
+          movingImageValue = this->GetMovingImageLimiter()->Evaluate( movingImageValue );
+        }
+        else
+        {
+          /** this movingImageValueRight is invalid, even though the mask indicated it is valid. */
+          movingMaskValue = 0.0;
+        }
+      }
+
+      /** Stop with this sample. It may be possible that with a perturbed parameter
+       * a valid voxel pair is obtained, but:
+       * - this chance is small,
+       * - quitting now saves a lot of time, especially because this situation
+       *   occurs at border pixels (there are a lot of those)
+       * - if we would analytically compute the gradient the same choice is
+       *   somehow made.
+       */
+      if ( !sampleOk ) continue;
+
+      /** count how many samples were used. */
+      sumOfMovingMaskValues += movingMaskValue;
+      this->m_NumberOfPixelsCounted += static_cast<unsigned int>( sampleOk );
+
+      /** Get the TransformJacobian dT/dmu. We assume the transform is a linear
+       * function of its parameters, so that we can evaluate T(x;\mu+delta_ek)
+       * as T(x) + delta * dT/dmu_k.
+       */
+      this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
+
+      MovingImagePointType mappedPointRight;
+      MovingImagePointType mappedPointLeft;
+
+      /** Loop over all parameters to perturb (parameters with nonzero Jacobian). */
+      for ( unsigned int i = 0; i < nzji.size(); ++i )
+      {
+        /** Compute the transformed input point after perturbation. */
+        for ( unsigned int j = 0; j < MovingImageDimension; ++j )
+        {
+          const double delta_jac = delta * jacobian[ j ][ i ];
+          mappedPointRight[ j ] = mappedPoint[ j ] + delta_jac;
+          mappedPointLeft[ j ] = mappedPoint[ j ] - delta_jac;
+        }
+
+        /** Compute the moving mask 'value' and moving image value at the right perturbed positions. */
+        sampleOk = this->IsInsideMovingMask( mappedPointRight );
+        RealType movingMaskValueRight =
+          static_cast<RealType>( static_cast<unsigned char>( sampleOk ) );
+        if ( sampleOk )
+        {
+          RealType movingImageValueRight = 0.0;
           sampleOk = this->EvaluateMovingImageValueAndDerivative(
-            mappedPoint, movingImageValue, 0 );
+            mappedPointRight, movingImageValueRight, 0 );
           if ( sampleOk )
           {
-            movingImageValue = this->GetMovingImageLimiter()->Evaluate( movingImageValue );
+            movingImageValueRight =
+              this->GetMovingImageLimiter()->Evaluate( movingImageValueRight );
+            movingImageValuesRight[ i ] = movingImageValueRight;
           }
           else
           {
             /** this movingImageValueRight is invalid, even though the mask indicated it is valid. */
-            movingMaskValue = 0.0;
+            movingMaskValueRight = 0.0;
           }
         }
+        movingMaskValuesRight[i] = movingMaskValueRight;
 
-        /** Stop with this sample. It may be possible that with a perturbed parameter
-         * a valid voxel pair is obtained, but:
-         * - this chance is small,
-         * - quitting now saves a lot of time, especially because this situation
-         *   occurs at border pixels (there are a lot of those)
-         * - if we would analytically compute the gradient the same choice is
-         *   somehow made.
-         */
-        if ( !sampleOk ) continue;
-
-        /** count how many samples were used. */
-        sumOfMovingMaskValues += movingMaskValue;
-        this->m_NumberOfPixelsCounted += static_cast<unsigned int>( sampleOk );
-
-        /** Get the TransformJacobian dT/dmu. We assume the transform is a linear
-         * function of its parameters, so that we can evaluate T(x;\mu+delta_ek)
-         * as T(x) + delta * dT/dmu_k.
-         */
-        this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
-
-        MovingImagePointType mappedPointRight;
-        MovingImagePointType mappedPointLeft;
-
-        /** Loop over all parameters to perturb (parameters with nonzero Jacobian). */
-        for ( unsigned int i = 0; i < nzji.size(); ++i )
+        /** Compute the moving mask and moving image value at the left perturbed positions. */
+        sampleOk = this->IsInsideMovingMask( mappedPointLeft );
+        RealType movingMaskValueLeft =
+          static_cast<RealType>( static_cast<unsigned char>( sampleOk ) );
+        if ( sampleOk )
         {
-          /** Compute the transformed input point after perturbation. */
-          for ( unsigned int j = 0; j < MovingImageDimension; ++j )
-          {
-            const double delta_jac = delta * jacobian[ j ][ i ];
-            mappedPointRight[ j ] = mappedPoint[ j ] + delta_jac;
-            mappedPointLeft[ j ] = mappedPoint[ j ] - delta_jac;
-          }
-
-          /** Compute the moving mask 'value' and moving image value at the right perturbed positions. */
-          sampleOk = this->IsInsideMovingMask( mappedPointRight );
-          RealType movingMaskValueRight =
-            static_cast<RealType>( static_cast<unsigned char>( sampleOk ) );
+          RealType movingImageValueLeft = 0.0;
+          sampleOk = this->EvaluateMovingImageValueAndDerivative(
+            mappedPointLeft, movingImageValueLeft, 0 );
           if ( sampleOk )
           {
-            RealType movingImageValueRight = 0.0;
-            sampleOk = this->EvaluateMovingImageValueAndDerivative(
-              mappedPointRight, movingImageValueRight, 0 );
-            if ( sampleOk )
-            {
-              movingImageValueRight =
-                this->GetMovingImageLimiter()->Evaluate( movingImageValueRight );
-              movingImageValuesRight[ i ] = movingImageValueRight;
-            }
-            else
-            {
-              /** this movingImageValueRight is invalid, even though the mask indicated it is valid. */
-              movingMaskValueRight = 0.0;
-            }
+            movingImageValueLeft =
+              this->GetMovingImageLimiter()->Evaluate( movingImageValueLeft );
+            movingImageValuesLeft[ i ] = movingImageValueLeft;
           }
-          movingMaskValuesRight[i] = movingMaskValueRight;
-
-          /** Compute the moving mask and moving image value at the left perturbed positions. */
-          sampleOk = this->IsInsideMovingMask( mappedPointLeft );
-          RealType movingMaskValueLeft =
-            static_cast<RealType>( static_cast<unsigned char>( sampleOk ) );
-          if ( sampleOk )
+          else
           {
-            RealType movingImageValueLeft = 0.0;
-            sampleOk = this->EvaluateMovingImageValueAndDerivative(
-              mappedPointLeft, movingImageValueLeft, 0 );
-            if ( sampleOk )
-            {
-              movingImageValueLeft =
-                this->GetMovingImageLimiter()->Evaluate( movingImageValueLeft );
-              movingImageValuesLeft[ i ] = movingImageValueLeft;
-            }
-            else
-            {
-              /** this movingImageValueLeft is invalid, even though the mask indicated it is valid. */
-              movingMaskValueLeft = 0.0;
-            }
+            /** this movingImageValueLeft is invalid, even though the mask indicated it is valid. */
+            movingMaskValueLeft = 0.0;
           }
-          movingMaskValuesLeft[ i ] = movingMaskValueLeft;
+        }
+        movingMaskValuesLeft[ i ] = movingMaskValueLeft;
 
-        } // next parameter to perturb
+      } // next parameter to perturb
 
-        /** Update the joint pdf and the incremental joint pdfs, and the
-         * perturbed alpha arrays.
-         */
-        this->UpdateJointPDFAndIncrementalPDFs(
-          fixedImageValue, movingImageValue, movingMaskValue,
-          movingImageValuesRight, movingImageValuesLeft,
-          movingMaskValuesRight, movingMaskValuesLeft, nzji );
+      /** Update the joint pdf and the incremental joint pdfs, and the
+       * perturbed alpha arrays.
+       */
+      this->UpdateJointPDFAndIncrementalPDFs(
+        fixedImageValue, movingImageValue, movingMaskValue,
+        movingImageValuesRight, movingImageValuesLeft,
+        movingMaskValuesRight, movingMaskValuesLeft, nzji );
 
-      } //end if-block check sampleOk
-    } // end iterating over fixed image spatial sample container for loop
+    } //end if-block check sampleOk
+  } // end iterating over fixed image spatial sample container for loop
 
-    /** Check if enough samples were valid. */
-    this->CheckNumberOfSamples(
-      sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+  /** Check if enough samples were valid. */
+  this->CheckNumberOfSamples(
+    sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
-    /** Compute alpha and its perturbed versions. */
-    this->m_Alpha = 0.0;
-    if ( sumOfMovingMaskValues > 1e-14 )
+  /** Compute alpha and its perturbed versions. */
+  this->m_Alpha = 0.0;
+  if ( sumOfMovingMaskValues > 1e-14 )
+  {
+    this->m_Alpha = 1.0 / sumOfMovingMaskValues;
+  }
+  for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+  {
+    this->m_PerturbedAlphaRight[ i ] += sumOfMovingMaskValues;
+    this->m_PerturbedAlphaLeft[ i ] += sumOfMovingMaskValues;
+    if ( this->m_PerturbedAlphaRight[i] > 1e-10 )
     {
-      this->m_Alpha = 1.0 / sumOfMovingMaskValues;
+      this->m_PerturbedAlphaRight[ i ] = 1.0 / this->m_PerturbedAlphaRight[ i ];
     }
-    for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    else
     {
-      this->m_PerturbedAlphaRight[ i ] += sumOfMovingMaskValues;
-      this->m_PerturbedAlphaLeft[ i ] += sumOfMovingMaskValues;
-      if ( this->m_PerturbedAlphaRight[i] > 1e-10 )
-      {
-        this->m_PerturbedAlphaRight[ i ] = 1.0 / this->m_PerturbedAlphaRight[ i ];
-      }
-      else
-      {
-         this->m_PerturbedAlphaRight[ i ] = 0.0;
-      }
-      if ( this->m_PerturbedAlphaLeft[ i ] > 1e-10 )
-      {
-        this->m_PerturbedAlphaLeft[ i ] = 1.0 / this->m_PerturbedAlphaLeft[ i ];
-      }
-      else
-      {
-         this->m_PerturbedAlphaLeft[ i ] = 0.0;
-      }
+      this->m_PerturbedAlphaRight[ i ] = 0.0;
     }
+    if ( this->m_PerturbedAlphaLeft[ i ] > 1e-10 )
+    {
+      this->m_PerturbedAlphaLeft[ i ] = 1.0 / this->m_PerturbedAlphaLeft[ i ];
+    }
+    else
+    {
+      this->m_PerturbedAlphaLeft[ i ] = 0.0;
+    }
+  }
 
-  } // end ComputePDFsAndIncrementalPDFs()
+} // end ComputePDFsAndIncrementalPDFs()
 
 
 } // end namespace itk
 
 
 #endif // end #ifndef _itkParzenWindowHistogramImageToImageMetric_HXX__
-

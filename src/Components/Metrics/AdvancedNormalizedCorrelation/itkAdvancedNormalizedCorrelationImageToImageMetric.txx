@@ -313,11 +313,22 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   AccumulateType sf  = NumericTraits< AccumulateType >::Zero;
   AccumulateType sm  = NumericTraits< AccumulateType >::Zero;
 
-  /** Make sure the transform parameters are up to date. */
-  this->SetTransformParameters( parameters );
+  /** Call non-thread-safe stuff, such as:
+   *   this->SetTransformParameters( parameters );
+   *   this->GetImageSampler()->Update();
+   * Because of these calls GetValueAndDerivative itself is not thread-safe,
+   * so cannot be called multiple times simultaneously.
+   * This is however needed in the CombinationImageToImageMetric.
+   * In that case, you need to:
+   * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
+   * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
+   *   calling GetValueAndDerivative
+   * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
+   * - Now you can call GetValueAndDerivative multi-threaded.
+   */
+  this->BeforeThreadedGetValueAndDerivative( parameters );
 
-  /** Update the imageSampler and get a handle to the sample container. */
-  this->GetImageSampler()->Update();
+  /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
   /** Create iterator over the sample container. */

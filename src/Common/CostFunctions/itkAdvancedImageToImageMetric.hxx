@@ -68,6 +68,8 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   this->m_MovingImageMinLimit = NumericTraits< MovingImageLimiterOutputType >::Zero;
   this->m_MovingImageMaxLimit = NumericTraits< MovingImageLimiterOutputType >::One;
 
+  this->m_UseMetricSingleThreaded = true;
+
 } // end Constructor
 
 
@@ -586,6 +588,41 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   }
 
 } // end GetSelfHessian()
+
+
+/**
+ * *********************** BeforeThreadedGetValueAndDerivative ***********************
+ */
+
+template < class TFixedImage, class TMovingImage >
+void
+AdvancedImageToImageMetric<TFixedImage,TMovingImage>
+::BeforeThreadedGetValueAndDerivative( const TransformParametersType & parameters ) const
+{
+  /** In this function do all stuff that cannot be multi-threaded.
+   * Meant for use in the combo-metric. So, I did not think about general usage yet.
+   */
+  if ( this->m_UseMetricSingleThreaded )
+  {
+    typename tmr::Timer::Pointer timer = tmr::Timer::New();
+    timer->StartTimer();
+    this->SetTransformParameters( parameters );
+    timer->StopTimer();
+    std::cout << "  SetTransformParameters took: "
+      << static_cast<std::size_t>( Math::Round( timer->GetElapsedClockSec() * 1000.0 ) )
+      << " ms. " << std::endl;
+    if ( this->m_UseImageSampler )
+    {
+      timer->StartTimer();
+      this->GetImageSampler()->Update();
+      timer->StopTimer();
+      std::cout << "  GetImageSampler()->Update() took: "
+        << static_cast<std::size_t>( Math::Round( timer->GetElapsedClockSec() * 1000.0 ) )
+        << " ms. " << std::endl;
+    }
+  }
+
+} // end BeforeThreadedGetValueAndDerivative()
 
 
 /**

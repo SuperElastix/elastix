@@ -21,13 +21,13 @@
 namespace itk
 {
 
-  /**
-  * ************************* Constructor ************************
-  */
+/**
+ * ************************* Constructor ************************
+ */
 
-  StandardGradientDescentOptimizer
-    ::StandardGradientDescentOptimizer()
-  {
+StandardGradientDescentOptimizer
+::StandardGradientDescentOptimizer()
+{
     this->m_Param_a = 1.0;
     this->m_Param_A = 1.0;
     this->m_Param_alpha = 0.602;
@@ -53,7 +53,9 @@ namespace itk
   * ******************** AdvanceOneStep **************************
   */
 
-  void StandardGradientDescentOptimizer::AdvanceOneStep(void)
+  void
+    StandardGradientDescentOptimizer
+    ::AdvanceOneStep(void)
   {
 
     this->SetLearningRate( this->Compute_a( this->m_CurrentTime ) );
@@ -99,4 +101,3 @@ namespace itk
 } // end namespace itk
 
 #endif // end #ifndef __itkStandardGradientDescentOptimizer_cxx
-

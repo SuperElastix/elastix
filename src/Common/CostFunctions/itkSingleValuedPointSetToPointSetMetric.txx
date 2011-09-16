@@ -38,6 +38,8 @@ SingleValuedPointSetToPointSetMetric<TFixedPointSet,TMovingPointSet>
 
   this->m_NumberOfPointsCounted = 0;
 
+  this->m_UseMetricSingleThreaded = true;
+
 } // end Constructor
 
 
@@ -96,6 +98,31 @@ SingleValuedPointSetToPointSetMetric<TFixedPointSet,TMovingPointSet>
   }
 
 } // end Initialize()
+
+
+/**
+ * *********************** BeforeThreadedGetValueAndDerivative ***********************
+ */
+
+template <class TFixedPointSet, class TMovingPointSet>
+void
+SingleValuedPointSetToPointSetMetric<TFixedPointSet,TMovingPointSet>
+::BeforeThreadedGetValueAndDerivative( const TransformParametersType & parameters ) const
+{
+  /** In this function do all stuff that cannot be multi-threaded.
+   * Meant for use in the combo-metric. So, I did not think about general usage yet.
+   */
+  if ( this->m_UseMetricSingleThreaded )
+  {
+    typename tmr::Timer::Pointer timer = tmr::Timer::New();
+    timer->StartTimer();
+    this->SetTransformParameters( parameters );
+    std::cout << "  SetTransformParameters took: "
+      << static_cast<std::size_t>( Math::Round( timer->GetElapsedClockSec() * 1000.0 ) )
+      << " ms. " << std::endl;
+  }
+
+} // end BeforeThreadedGetValueAndDerivative()
 
 
 /**

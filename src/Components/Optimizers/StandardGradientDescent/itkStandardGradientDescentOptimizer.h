@@ -162,5 +162,3 @@ namespace itk
 
 
 #endif // end #ifndef __itkStandardGradientDescentOptimizer_h
-
-

@@ -23,9 +23,9 @@
 namespace itk
 {
 
-  /**
-  * ****************** Constructor ************************
-  */
+/**
+ * ****************** Constructor ************************
+ */
 
   GradientDescentOptimizer2
     ::GradientDescentOptimizer2()
@@ -197,7 +197,7 @@ namespace itk
     const ParametersType & currentPosition = this->GetScaledCurrentPosition();
 
     ParametersType newPosition( spaceDimension );
-    for(unsigned int j = 0; j < spaceDimension; j++)
+    for( unsigned int j = 0; j < spaceDimension; j++ ) // \todo: candidate for parallel loop
     {
       newPosition[j] = currentPosition[j] - this->m_LearningRate * this->m_Gradient[j];
     }
@@ -206,7 +206,7 @@ namespace itk
 
     this->InvokeEvent( IterationEvent() );
 
-  } // end AdvanceOneStep
+  } // end AdvanceOneStep()
 
 
 } // end namespace itk
