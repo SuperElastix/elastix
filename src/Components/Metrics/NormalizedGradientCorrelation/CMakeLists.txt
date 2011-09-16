@@ -1,0 +1,10 @@
+
+
+ADD_ELXCOMPONENT( NormalizedGradientCorrelationMetric
+ elxNormalizedGradientCorrelationMetric.h
+ elxNormalizedGradientCorrelationMetric.hxx
+ elxNormalizedGradientCorrelationMetric.cxx
+ itkNormalizedGradientCorrelationImageToImageMetric.h
+ itkNormalizedGradientCorrelationImageToImageMetric.hxx )
+
+
