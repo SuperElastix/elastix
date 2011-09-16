@@ -29,7 +29,7 @@ namespace itk
 // Constructor with default arguments
 template<class TScalarType, unsigned int NDimensions>
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
-::AdvancedBSplineDeformableTransformBase():Superclass(SpaceDimension)
+::AdvancedBSplineDeformableTransformBase():Superclass(SpaceDimension,0)
 {
   // Default grid size is zero
   typename RegionType::SizeType size;
@@ -62,14 +62,14 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
   this->m_ValidRegion = this->m_GridRegion;
 
   // Initialize Jacobian images
-  for ( unsigned int j = 0; j < SpaceDimension; j++ )
-    {
-    this->m_JacobianImage[j] = ImageType::New();
-    this->m_JacobianImage[j]->SetRegions( this->m_GridRegion );
-    this->m_JacobianImage[j]->SetOrigin( this->m_GridOrigin.GetDataPointer() );
-    this->m_JacobianImage[j]->SetSpacing( this->m_GridSpacing.GetDataPointer() );
-    this->m_JacobianImage[j]->SetDirection( this->m_GridDirection );
-    }
+//   for ( unsigned int j = 0; j < SpaceDimension; j++ )
+//     {
+//     this->m_JacobianImage[j] = ImageType::New();
+//     this->m_JacobianImage[j]->SetRegions( this->m_GridRegion );
+//     this->m_JacobianImage[j]->SetOrigin( this->m_GridOrigin.GetDataPointer() );
+//     this->m_JacobianImage[j]->SetSpacing( this->m_GridSpacing.GetDataPointer() );
+//     this->m_JacobianImage[j]->SetDirection( this->m_GridDirection );
+//     }
 
   /** Fixed Parameters store the following information:
    *     Grid Size
@@ -126,7 +126,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 
 // Get the number of parameters
 template<class TScalarType, unsigned int NDimensions>
-typename AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::NumberOfParametersType
+unsigned int
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 ::GetNumberOfParameters(void) const
 {
@@ -141,7 +141,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 
 // Get the number of parameters per dimension
 template<class TScalarType, unsigned int NDimensions>
-typename AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::NumberOfParametersType
+unsigned int
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 ::GetNumberOfParametersPerDimension(void) const
 {
@@ -182,7 +182,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
     for ( unsigned int j = 0; j < SpaceDimension; j++ )
     {
       this->m_WrappedImage[j]->SetSpacing( this->m_GridSpacing.GetDataPointer() );
-      this->m_JacobianImage[j]->SetSpacing( this->m_GridSpacing.GetDataPointer() );
+      //this->m_JacobianImage[j]->SetSpacing( this->m_GridSpacing.GetDataPointer() );
     }
 
     DirectionType scale;
@@ -223,7 +223,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
     for ( unsigned int j = 0; j < SpaceDimension; j++ )
       {
       this->m_WrappedImage[j]->SetDirection( this->m_GridDirection );
-      this->m_JacobianImage[j]->SetDirection( this->m_GridDirection );
+      //this->m_JacobianImage[j]->SetDirection( this->m_GridDirection );
       }
 
     DirectionType scale;
@@ -266,7 +266,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
     for ( unsigned int j = 0; j < SpaceDimension; j++ )
       {
       this->m_WrappedImage[j]->SetOrigin( this->m_GridOrigin.GetDataPointer() );
-      this->m_JacobianImage[j]->SetOrigin( this->m_GridOrigin.GetDataPointer() );
+      //this->m_JacobianImage[j]->SetOrigin( this->m_GridOrigin.GetDataPointer() );
       }
 
     this->Modified();
@@ -447,7 +447,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
    */
 //   this->m_Jacobian.set_size( SpaceDimension, this->GetNumberOfParameters() );
 //   this->m_Jacobian.Fill( NumericTraits<JacobianPixelType>::Zero );
-  this->m_LastJacobianIndex = this->m_ValidRegion.GetIndex();
+//   this->m_LastJacobianIndex = this->m_ValidRegion.GetIndex();
 //   JacobianPixelType * jacobianDataPointer = this->m_Jacobian.data_block();
 // 
 //   for ( unsigned int j = 0; j < SpaceDimension; j++ )
