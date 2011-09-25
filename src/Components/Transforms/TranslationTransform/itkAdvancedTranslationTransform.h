@@ -59,6 +59,8 @@ public:
   itkStaticConstMacro(SpaceDimension, unsigned int, NDimensions);
   itkStaticConstMacro(ParametersDimension, unsigned int, NDimensions);
 
+  typedef typename Superclass::NumberOfParametersType    NumberOfParametersType;
+
   /** Standard scalar type for this class. */
   typedef typename Superclass::ScalarType ScalarType;
 

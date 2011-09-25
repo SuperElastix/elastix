@@ -46,6 +46,16 @@ MultiMetricMultiResolutionRegistration<TElastix>
   /** Get the components from this->m_Elastix and set them. */
   this->SetComponents();
 
+  /** Set the number of Threads per metric */
+  unsigned int numberOfThreads = 1;
+  std::string strNbOfThreads = this->m_Configuration->GetCommandLineArgument( "-nt" );
+  if(!strNbOfThreads.empty())
+  {
+    numberOfThreads = (unsigned int) atoi(strNbOfThreads.c_str());
+    numberOfThreads = (numberOfThreads == 0) ? 1 : numberOfThreads ;
+  }
+  this->SetNumberOfThreadsPerMetric(numberOfThreads);
+
   /** Set the number of resolutions.*/
   unsigned int numberOfResolutions = 3;
   this->m_Configuration->ReadParameter(
@@ -98,8 +108,8 @@ MultiMetricMultiResolutionRegistration<TElastix>
     xl::xout["iteration"][ makestring3.str().c_str() ] << std::showpoint << std::fixed;
   }
 
-  /** Temporary?: Use the multi-threaded version or not. */
-  bool useMultiThread = false;
+  /** Use the multi-threaded version or not. */
+
   std::string tmp = this->m_Configuration->GetCommandLineArgument( "-mt" );
   if ( tmp == "true" )
   {
@@ -138,7 +148,7 @@ MultiMetricMultiResolutionRegistration<TElastix>
     xl::xout["iteration"][ makestring3.str().c_str() ] <<
       this->GetCombinationMetric()->GetMetricComputationTime( i );
   }
-  
+
   if ( this->m_ShowExactMetricValue )
   {
     double currentExactMetricValue = 0.0;
@@ -149,9 +159,9 @@ MultiMetricMultiResolutionRegistration<TElastix>
       {
         const double currentExactMetricValue_i = this->GetElastix()->
           GetElxMetricBase( i )->GetCurrentExactMetricValue();
-  
+
         const double weight_i = this->GetCombinationMetric()->GetMetricWeight( i );
-  
+
         currentExactMetricValue += weight_i * currentExactMetricValue_i;
       }
     }
@@ -236,7 +246,7 @@ MultiMetricMultiResolutionRegistration<TElastix>
     this->m_ShowExactMetricValue |= this->GetElastix()->
       GetElxMetricBase( metricnr )->GetShowExactMetricValue();
   }
-    
+
   if ( this->m_ShowExactMetricValue )
   {
     /** Define the name of the ExactMetric column */
@@ -244,7 +254,7 @@ MultiMetricMultiResolutionRegistration<TElastix>
 
     /** Remove the ExactMetric-column, if it already existed. */
     xl::xout["iteration"].RemoveTargetCell( exactMetricColumn.c_str() );
-  
+
     /** Create a new column in the iteration info table */
     xl::xout["iteration"].AddTargetCell( exactMetricColumn.c_str() );
     xl::xout["iteration"][ exactMetricColumn.c_str() ]
@@ -551,4 +561,3 @@ MultiMetricMultiResolutionRegistration<TElastix>
 } // end namespace elastix
 
 #endif // end #ifndef __elxMultiMetricMultiResolutionRegistration_HXX__
-

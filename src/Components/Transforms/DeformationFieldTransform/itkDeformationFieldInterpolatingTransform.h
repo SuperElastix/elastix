@@ -62,17 +62,22 @@ namespace itk
     itkStaticConstMacro(OutputSpaceDimension, unsigned int, Superclass::OutputSpaceDimension);
 
     /** Superclass typedefs */
-    typedef typename Superclass::ScalarType           ScalarType;
-    typedef typename Superclass::ParametersType       ParametersType;
-    typedef typename Superclass::JacobianType         JacobianType;
-    typedef typename Superclass::InputVectorType      InputVectorType;
-    typedef typename Superclass::OutputVectorType     OutputVectorType;
-    typedef typename Superclass::InputCovariantVectorType   InputCovariantVectorType;
-    typedef typename Superclass::OutputCovariantVectorType  OutputCovariantVectorType;
-    typedef typename Superclass::InputVnlVectorType   InputVnlVectorType;
-    typedef typename Superclass::OutputVnlVectorType  OutputVnlVectorType;
-    typedef typename Superclass::InputPointType       InputPointType;
-    typedef typename Superclass::OutputPointType      OutputPointType;
+    typedef typename Superclass::ScalarType                     ScalarType;
+    typedef typename Superclass::ParametersType                 ParametersType;
+    typedef typename Superclass::JacobianType                   JacobianType;
+    typedef typename Superclass::InputVectorType                InputVectorType;
+    typedef typename Superclass::OutputVectorType               OutputVectorType;
+    typedef typename Superclass::InputCovariantVectorType       InputCovariantVectorType;
+    typedef typename Superclass::OutputCovariantVectorType      OutputCovariantVectorType;
+    typedef typename Superclass::InputVnlVectorType             InputVnlVectorType;
+    typedef typename Superclass::OutputVnlVectorType            OutputVnlVectorType;
+    typedef typename Superclass::InputPointType                 InputPointType;
+    typedef typename Superclass::OutputPointType                OutputPointType;
+    typedef typename Superclass::NonZeroJacobianIndicesType     NonZeroJacobianIndicesType;
+    typedef typename Superclass::SpatialHessianType             SpatialHessianType;
+    typedef typename Superclass::SpatialJacobianType            SpatialJacobianType;
+    typedef typename Superclass::JacobianOfSpatialHessianType   JacobianOfSpatialHessianType;
+    typedef typename Superclass::JacobianOfSpatialJacobianType  JacobianOfSpatialJacobianType;
 
     typedef TComponentType                            DeformationFieldComponentType;
     typedef Vector<DeformationFieldComponentType,
@@ -107,7 +112,7 @@ namespace itk
     virtual const ParametersType & GetFixedParameters( void ) const
     {
       // This transform has no fixed parameters.
-      return m_FixedParameters;
+      //return m_FixedParameters;
     }
 
     /** Transform a point. This method adds a displacement to a given point,

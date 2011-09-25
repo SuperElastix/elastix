@@ -157,7 +157,7 @@ ImageRandomSampler< TInputImage >
   }
 
   /** Get a reference to the output and reserve memory for it. */
-  ImageSampleContainerPointer & sampleContainerThisThread
+  typename ImageSamplerBase< TInputImage >::ImageSampleContainerPointer & sampleContainerThisThread
     = this->m_ThreaderSampleContainer[ threadId ];
   sampleContainerThisThread->Reserve( chunkSize );
 

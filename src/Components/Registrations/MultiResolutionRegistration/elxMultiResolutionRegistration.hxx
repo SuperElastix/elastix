@@ -33,6 +33,16 @@ using namespace itk;
     /** Get the components from this->m_Elastix and set them. */
     this->SetComponents();
 
+    /** Set the number of Threads per metric */
+    unsigned int numberOfThreads = 1;
+    std::string strNbOfThreads = this->m_Configuration->GetCommandLineArgument( "-nt" );
+    if(!strNbOfThreads.empty())
+    {
+      numberOfThreads = (unsigned int) atoi(strNbOfThreads.c_str());
+      numberOfThreads = (numberOfThreads == 0) ? 1 : numberOfThreads ;
+    }
+    this->SetNumberOfThreadsPerMetric(numberOfThreads);
+
     /** Set the number of resolutions. */
     unsigned int numberOfResolutions = 3;
     this->m_Configuration->ReadParameter( numberOfResolutions, "NumberOfResolutions", 0 );

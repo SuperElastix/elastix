@@ -81,6 +81,9 @@ public:
     Superclass::JacobianOfSpatialJacobianType    		JacobianOfSpatialJacobianType;
   typedef typename Superclass::SpatialHessianType		SpatialHessianType;
 
+  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
+  typedef typename Superclass::JacobianOfSpatialHessianType JacobianOfSpatialHessianType;
+
   /** New typedefs in this class: */
   typedef Transform< TScalarType,
     NInputDimensions,
@@ -140,14 +143,14 @@ public:
   virtual const ParametersType & GetFixedParameters( void ) const
   {
     // \todo: to be implemented by Stefan: check this:
-    return m_FixedParameters;
+    return this->m_FixedParameters;
   }
 
   /** Return the number of sub-transforms that have been set. */
   virtual NumberOfParametersType GetNumberOfParameters( void ) const
   {	
     return this->m_TransformContainer.size();
-  };
+  }
 
   /** Set/get if the weights (parameters) should be normalized.
    * Default: false. */
@@ -159,7 +162,7 @@ public:
   {
     this->m_TransformContainer = transformContainer;
     this->Modified();
-  };
+  }
 
   /** Return the vector of sub-transforms by const reference.
    * So, if you want to add a sub-transform, you should do something

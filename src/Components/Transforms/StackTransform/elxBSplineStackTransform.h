@@ -177,6 +177,7 @@ public:
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::ParametersType            ParametersType;
+  typedef typename Superclass1::NumberOfParametersType    NumberOfParametersType;
 
   /** Typedef's specific for the BSplineTransform. */
   typedef typename BSplineTransformBaseType::PixelType        PixelType;

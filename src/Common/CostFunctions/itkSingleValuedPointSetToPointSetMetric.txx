@@ -118,7 +118,7 @@ SingleValuedPointSetToPointSetMetric<TFixedPointSet,TMovingPointSet>
     timer->StartTimer();
     this->SetTransformParameters( parameters );
     std::cout << "  SetTransformParameters took: "
-      << static_cast<std::size_t>( Math::Round( timer->GetElapsedClockSec() * 1000.0 ) )
+      << Math::Round<std::size_t,double>( timer->GetElapsedClockSec() * 1000.0 )
       << " ms. " << std::endl;
   }
 

@@ -127,6 +127,7 @@ using namespace itk;
     typedef typename Superclass1::OutputCovariantVectorType   OutputCovariantVectorType;
     typedef typename Superclass1::InputVnlVectorType          InputVnlVectorType;
     typedef typename Superclass1::OutputVnlVectorType         OutputVnlVectorType;
+    typedef typename Superclass1::NumberOfParametersType      NumberOfParametersType;
 
     /** NOTE: use this one only in 3D (otherwise it's just an int). */
     typedef typename SimilarityTransformType::Pointer         SimilarityTransformPointer;

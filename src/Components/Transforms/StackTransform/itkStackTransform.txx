@@ -56,7 +56,10 @@ StackTransform<TScalarType,NInputDimensions,NOutputDimensions>::SetParameters( c
   for ( unsigned int t = 0; t < this->m_NumberOfSubTransforms; ++t )
   {
     // MS, \todo: the new itk::TransformParameters only have constructors taking 1 argument
-    ParametersType subparams ( &( param.data_block()[ t * numSubTransformParameters ] ), numSubTransformParameters, false );
+    //ParametersType subparams ( &( param.data_block()[ t * numSubTransformParameters ] ), numSubTransformParameters, false );
+    // NTA, split the parameter by number of subparameters
+    const Array<double> subarray ( &( param.data_block()[ t * numSubTransformParameters ] ), numSubTransformParameters,false) ;
+    ParametersType subparams( subarray );
     this->m_SubTransformContainer[ t ]->SetParametersByValue( subparams );
   }
 

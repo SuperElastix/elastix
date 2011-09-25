@@ -20,11 +20,13 @@
 #include "itkImageSamplerBase.h"
 #include "itkGradientImageFilter.h"
 #include "itkBSplineInterpolateImageFunction.h"
-#include "itkReducedDimensionBSplineInterpolateImageFunction.h"
 #include "itkLimiterFunctionBase.h"
 #include "itkFixedArray.h"
 #include "itkAdvancedTransform.h"
 #include "vnl/vnl_sparse_matrix.h"
+#include "elxTimer.h"
+
+#include "itkMultiThreader.h"
 
 namespace itk
 {
@@ -153,6 +155,11 @@ public:
   //typedef Array2D<HessianValueType>                       HessianType;
   typedef vnl_sparse_matrix<HessianValueType>             HessianType;
 
+
+  /** Typedefs for multi-threading. */
+  typedef itk::MultiThreader                        ThreaderType;
+  typedef typename ThreaderType::ThreadInfoStruct   ThreadInfoType;
+
   /** Public methods ********************/
 
   virtual void SetTransform( AdvancedTransformType * arg )
@@ -174,7 +181,7 @@ public:
   virtual ImageSamplerType * GetImageSampler( void ) const
   {
     return this->m_ImageSampler.GetPointer();
-  };
+  }
 
   /** Inheriting classes can specify whether they use the image sampler functionality;
    * This method allows the user to inspect this setting. */
@@ -237,18 +244,33 @@ public:
   /** Contains calls from GetValueAndDerivative that are thread-unsafe. */
   virtual void BeforeThreadedGetValueAndDerivative( const TransformParametersType & parameters ) const;
 
+  virtual inline void ThreadedGetValueAndDerivative(unsigned int threadID ){};
+
+  virtual inline void AfterThreadedGetValueAndDerivative(MeasureType & value, DerivativeType & derivative){};
+
+  static ITK_THREAD_RETURN_TYPE GetValueAndDerivativeThreaderCallback(void *arg);
+
   /** Switch the function BeforeThreadedGetValueAndDerivative on or off. */
   itkSetMacro( UseMetricSingleThreaded, bool );
   itkGetConstReferenceMacro( UseMetricSingleThreaded, bool );
   itkBooleanMacro( UseMetricSingleThreaded );
 
+
+  /** Set and Get number of Threads */
+  void SetNumberOfThreadsPerMetric(unsigned int numberOfThreads) const;
+
+  unsigned int GetNumberOfThreadsPerMetric(void) const;
+
 protected:
+
+  /** Launch MultiThread GetValueAndDerivative */
+  void LaunchGetValueAndDerivativeThreaderCallback(void) const;
 
   /** Constructor. */
   AdvancedImageToImageMetric();
 
   /** Destructor. */
-  virtual ~AdvancedImageToImageMetric() {};
+  virtual ~AdvancedImageToImageMetric();
 
   /** PrintSelf. */
   void PrintSelf( std::ostream& os, Indent indent ) const;
@@ -268,8 +290,6 @@ protected:
     MovingImageType, CoordinateRepresentationType, double>      BSplineInterpolatorType;
   typedef BSplineInterpolateImageFunction<
     MovingImageType, CoordinateRepresentationType, float>       BSplineInterpolatorFloatType;
-  typedef ReducedDimensionBSplineInterpolateImageFunction<
-    MovingImageType, CoordinateRepresentationType, double>      ReducedBSplineInterpolatorType;
   typedef typename BSplineInterpolatorType::CovariantVectorType MovingImageDerivativeType;
   typedef GradientImageFilter<
     MovingImageType, RealType, RealType>                        CentralDifferenceGradientFilterType;
@@ -287,15 +307,13 @@ protected:
   /** Variables for image derivative computation. */
   bool m_InterpolatorIsBSpline;
   bool m_InterpolatorIsBSplineFloat;
-  bool m_InterpolatorIsReducedBSpline;
   typename BSplineInterpolatorType::Pointer             m_BSplineInterpolator;
   typename BSplineInterpolatorFloatType::Pointer        m_BSplineInterpolatorFloat;
-  typename ReducedBSplineInterpolatorType::Pointer      m_ReducedBSplineInterpolator;
   typename CentralDifferenceGradientFilterType::Pointer m_CentralDifferenceGradientFilter;
 
   /** Variables to store the AdvancedTransform. */
   bool m_TransformIsAdvanced;
-  typename AdvancedTransformType::Pointer           m_AdvancedTransform;
+  typename AdvancedTransformType::Pointer            m_AdvancedTransform;
 
   /** Variables for the Limiters. */
   typename FixedImageLimiterType::Pointer            m_FixedImageLimiter;
@@ -312,7 +330,18 @@ protected:
   /** Variables for multi-threading. */
   bool m_UseMetricSingleThreaded;
 
+  mutable unsigned int m_NumberOfThreadsPerMetric;
+
+  struct MultiThreaderParameterType
+  {
+    AdvancedImageToImageMetric* metric;
+  };
+
+  MultiThreaderParameterType m_ThreaderMetricParameters;
+
+
   /** Protected methods ************** */
+
 
   /** Methods for image sampler support **********/
 

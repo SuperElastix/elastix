@@ -29,7 +29,7 @@ namespace itk
 // Constructor with default arguments
 template<class TScalarType, unsigned int NDimensions>
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
-::AdvancedBSplineDeformableTransformBase():Superclass(SpaceDimension,0)
+::AdvancedBSplineDeformableTransformBase()/*:Superclass(SpaceDimension,0)*/
 {
   // Default grid size is zero
   typename RegionType::SizeType size;
@@ -126,28 +126,28 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 
 // Get the number of parameters
 template<class TScalarType, unsigned int NDimensions>
-unsigned int
+typename AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::NumberOfParametersType
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 ::GetNumberOfParameters(void) const
 {
 
   // The number of parameters equal SpaceDimension * number of
   // of pixels in the grid region.
-  return ( static_cast<unsigned int>( SpaceDimension ) *
-           static_cast<unsigned int>( this->m_GridRegion.GetNumberOfPixels() ) );
+  return ( static_cast<NumberOfParametersType>( SpaceDimension ) *
+           static_cast<NumberOfParametersType>( this->m_GridRegion.GetNumberOfPixels() ) );
 
 }
 
 
 // Get the number of parameters per dimension
 template<class TScalarType, unsigned int NDimensions>
-unsigned int
+typename AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::NumberOfParametersType
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 ::GetNumberOfParametersPerDimension(void) const
 {
   // The number of parameters per dimension equal number of
   // of pixels in the grid region.
-  return ( static_cast<unsigned int>( this->m_GridRegion.GetNumberOfPixels() ) );
+  return ( static_cast<NumberOfParametersType>( this->m_GridRegion.GetNumberOfPixels() ) );
 
 }
 

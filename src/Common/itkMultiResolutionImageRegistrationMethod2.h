@@ -209,6 +209,10 @@ public:
   /** Get the current resolution level being processed. */
   itkGetMacro( CurrentLevel, unsigned long );
 
+  /** Set/Get the number of threads to compute the metric. */
+  itkSetMacro( NumberOfThreadsPerMetric, unsigned int );
+  itkGetMacro( NumberOfThreadsPerMetric, unsigned int );
+
   /** Set/Get the initial transformation parameters. */
   itkSetMacro( InitialTransformParameters, ParametersType );
   itkGetConstReferenceMacro( InitialTransformParameters, ParametersType );
@@ -296,6 +300,8 @@ private:
 
   unsigned long                    m_NumberOfLevels;
   unsigned long                    m_CurrentLevel;
+
+  unsigned int                     m_NumberOfThreadsPerMetric;
 
 }; // end class MultiResolutionImageRegistrationMethod2
 

@@ -17,7 +17,7 @@
 
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkSingleValuedPointSetToPointSetMetric.h"
-#include "itkMultiThreader.h"
+//#include "itkMultiThreader.h"
 
 namespace itk
 {
@@ -53,8 +53,8 @@ namespace itk
  *
  */
 
-static std::vector< std::size_t > m_MetricComputationTimeStatic; // ugly
-
+//static std::vector< std::size_t > m_MetricComputationTimeStatic; // ugly
+// put time to an templete var
 
 template <class TFixedImage, class TMovingImage>
 class CombinationImageToImageMetric :
@@ -162,11 +162,8 @@ public:
     FixedPointSetType, MovingPointSetType > 					    PointSetMetricType;
 
   /** Typedefs for multi-threading. */
-  typedef itk::MultiThreader                        ThreaderType;
-  typedef typename ThreaderType::ThreadInfoStruct   ThreadInfoType;
-
-  /** Thrader callback function */
-  static ITK_THREAD_RETURN_TYPE GetValueAndDerivativeThreaderCallback( void * arg );
+  typedef typename Superclass::ThreaderType         ThreaderType;
+  typedef typename Superclass::ThreadInfoType       ThreadInfoType;
 
   /**
    * Get and set the metrics and their weights.
@@ -399,6 +396,15 @@ public:
    */
   virtual unsigned long GetMTime() const;
 
+  /** GetValueAndDerivatives threader callback function */
+  static ITK_THREAD_RETURN_TYPE GetValueAndDerivativeComboThreaderCallback( void * arg );
+
+  /** CombineDerivatives threader callback function */
+  static ITK_THREAD_RETURN_TYPE CombineDerivativesThreaderCallback( void * arg );
+
+  /** Compute Derivatives Magnitude threader callback function */
+  static ITK_THREAD_RETURN_TYPE ComputeDerivativesMagnitudeThreaderCallback( void * arg );
+
 protected:
   CombinationImageToImageMetric();
   virtual ~CombinationImageToImageMetric() {};
@@ -425,16 +431,31 @@ private:
   void operator=(const Self&); //purposely not implemented
 
   /** For threading: store thread data. */
-  struct tmp_MultiThreaderParameterType
+  struct MultiThreaderComboMetricsType
   {
-    std::vector<SingleValuedCostFunctionPointer> m_tmpMetrics;
-    std::vector<MeasureType>                     m_tmpMetricValues;
-    std::vector<DerivativeType >                 m_tmpMetricDerivatives;
-    ParametersType                               m_tmpParameters;
+    std::vector<SingleValuedCostFunctionPointer>   m_MetricsIterator;
+    typename std::vector<MeasureType>::iterator    m_MetricValuesIterator;
+    typename std::vector<DerivativeType>::iterator m_MetricDerivativesIterator;
+    std::vector< std::size_t >                     m_MetricComputationTime;
   };
 
-  // tmp?
-  typename ThreaderType::Pointer m_threader; // not needed, can be local ?
+  struct MultiThreaderCombineDerivativeType
+  {
+    typename std::vector<DerivativeType>::iterator m_MetricDerivativesIterator;
+    typename std::vector<MeasureType>::iterator    m_MetricDerivativesMagnitudeIterator;
+    std::vector< double >                          m_MetricRelativeWeights;
+    std::vector< double >                          m_MetricWeights;
+    std::vector< bool   >                          m_UseMetric;
+    bool                                           m_UseRelativeWeights;
+    typename DerivativeType::iterator              m_ThreaderDerivatives;
+    unsigned int                                   size;
+    unsigned int                                   m_NumberOfMetrics;
+    unsigned int                                   numberOfParameters;
+    unsigned int                                   numberOfThreads;
+    std::vector< double >                          threaderDerivativesMagnitude;
+  };
+
+
   bool m_UseMultiThread;
 
 }; // end class CombinationImageToImageMetric

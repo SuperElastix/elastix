@@ -323,7 +323,7 @@ VectorDataContainer< TElementIdentifier , TElement >
   // vector<Person>(persons).swap(persons);
   // After that, persons is "shrunk to fit".
   // Note that swap does an explicit copy step
-  VectorType(this).this->VectorType::swap( this );
+  //VectorType(this).this->VectorType::swap( this );
 }
 
 } // end namespace itk

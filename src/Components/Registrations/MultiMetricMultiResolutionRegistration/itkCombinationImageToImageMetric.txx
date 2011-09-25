@@ -164,7 +164,6 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
   this->m_UseRelativeWeights = false;
   this->ComputeGradientOff();
 
-  m_threader = ThreaderType::New();
   m_UseMultiThread = true;
 
 } // end Constructor
@@ -284,7 +283,6 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
     this->m_MetricDerivatives.resize( count );
     this->m_MetricDerivativesMagnitude.resize( count );
     this->m_MetricComputationTime.resize( count );
-    m_MetricComputationTimeStatic.resize( count );
     this->Modified();
   }
 
@@ -634,7 +632,11 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
     PointSetMetricType * testPtr2 = dynamic_cast<PointSetMetricType *>( this->GetMetric( i ) );
     if ( testPtr1 )
     {
+      // The NumberOfThreadsPerMetric is changed after Initialize() so we save it before and then
+      // set it on.
+      unsigned nrOfThreadsPerMetric = this->GetNumberOfThreadsPerMetric ();
       testPtr1->Initialize();
+      testPtr1->SetNumberOfThreadsPerMetric(nrOfThreadsPerMetric);
     }
     else if ( testPtr2 )
     {
@@ -670,8 +672,8 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
 
     /** store ... */
     this->m_MetricValues[ i ] = tmpValue;
-    this->m_MetricComputationTime[ i ] = static_cast<std::size_t>(
-      Math::Round( timer->GetElapsedClockSec() * 1000.0 ) );
+    this->m_MetricComputationTime[ i ] =
+        Math::Round<std::size_t,double>( timer->GetElapsedClockSec() * 1000.0 );
 
     /** and combine. */
     if ( this->m_UseMetric[ i ] )
@@ -736,8 +738,8 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
     /** store ... */
     this->m_MetricDerivatives[ i ] = tmpDerivative;
     this->m_MetricDerivativesMagnitude[ i ] = tmpDerivative.magnitude();
-    this->m_MetricComputationTime[ i ] = static_cast<std::size_t>(
-      Math::Round( timer->GetElapsedClockSec() * 1000.0 ) );
+    this->m_MetricComputationTime[ i ] =
+      Math::Round<std::size_t,double>( timer->GetElapsedClockSec() * 1000.0 );
 
     /** and combine. */
     if ( this->m_UseMetric[ i ] )
@@ -776,31 +778,109 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
 template <class TFixedImage, class TMovingImage>
 ITK_THREAD_RETURN_TYPE
 CombinationImageToImageMetric<TFixedImage,TMovingImage>
-::GetValueAndDerivativeThreaderCallback( void * arg )
+::GetValueAndDerivativeComboThreaderCallback( void * arg )
 {
   ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
-  int threadId = infoStruct->ThreadID;
+  int threadID = infoStruct->ThreadID;
 
-  tmp_MultiThreaderParameterType * temp
-    = static_cast<tmp_MultiThreaderParameterType * >( infoStruct->UserData );
+  MultiThreaderComboMetricsType * temp
+    = static_cast<MultiThreaderComboMetricsType * >( infoStruct->UserData );
 
-  const ParametersType parameters;// = temp->m_tmpParameters;
+  const ParametersType parameters ;
 
   typename tmr::Timer::Pointer timer = tmr::Timer::New();
   timer->StartTimer();
-  temp->m_tmpMetrics[ threadId ]->GetValueAndDerivative(
-    parameters, // not used in multi-threaded version
-    temp->m_tmpMetricValues[ threadId ],
-    temp->m_tmpMetricDerivatives[ threadId ] );
+  temp->m_MetricsIterator[ threadID ]->GetValueAndDerivative(
+    parameters,
+    temp->m_MetricValuesIterator[ threadID ],
+    temp->m_MetricDerivativesIterator[ threadID ] );
   timer->StopTimer();
-
-  m_MetricComputationTimeStatic[ threadId ] = static_cast<std::size_t>(
-    Math::Round( timer->GetElapsedClockSec() * 1000.0 ) );
+  temp->m_MetricComputationTime[ threadID ] =
+      Math::Round<std::size_t,double>( timer->GetElapsedClockSec() * 1000.0 );
 
   return ITK_THREAD_RETURN_VALUE;
 
 } // end GetValueAndDerivativeThreaderCallback()
 
+/**
+ *********** Compute Derivatives Magnitude threader callback function *************
+ */
+template <class TFixedImage, class TMovingImage>
+ITK_THREAD_RETURN_TYPE
+CombinationImageToImageMetric<TFixedImage,TMovingImage>
+::ComputeDerivativesMagnitudeThreaderCallback( void * arg )
+{
+  ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
+  unsigned int threadID = (unsigned int)infoStruct->ThreadID;
+
+  MultiThreaderCombineDerivativeType * temp
+    = static_cast<MultiThreaderCombineDerivativeType * >( infoStruct->UserData );
+
+  unsigned int jmin = threadID*temp->size;
+  unsigned int jmax = (threadID+1)*temp->size;
+  jmax = (jmax > temp->numberOfParameters) ? temp->numberOfParameters :jmax ;
+
+  double derivativeValue = 0.0;
+
+  for(unsigned int i = 0; i < temp->m_NumberOfMetrics;i++)
+  {
+    if ( temp->m_UseMetric[i] )
+    {
+      temp->threaderDerivativesMagnitude[i * temp->numberOfThreads + threadID] = 0.0;
+      for(unsigned int j = jmin; j< jmax;j++)
+      {
+        derivativeValue = temp->m_MetricDerivativesIterator[i][j];
+        temp->threaderDerivativesMagnitude[i * temp->numberOfThreads + threadID] += derivativeValue*derivativeValue;
+      }
+    }
+  }
+  return ITK_THREAD_RETURN_VALUE;
+}
+
+/**
+ *********** CombineDerivatives threader callback function *************
+ */
+template <class TFixedImage, class TMovingImage>
+ITK_THREAD_RETURN_TYPE
+CombinationImageToImageMetric<TFixedImage,TMovingImage>
+::CombineDerivativesThreaderCallback( void * arg )
+{
+  ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
+  unsigned int threadID = (unsigned int)infoStruct->ThreadID;
+
+  MultiThreaderCombineDerivativeType * temp
+    = static_cast<MultiThreaderCombineDerivativeType * >( infoStruct->UserData );
+
+  unsigned int jmin = threadID*temp->size;
+  unsigned int jmax = (threadID+1)*temp->size;
+  jmax = (jmax > temp->numberOfParameters) ? temp->numberOfParameters :jmax ;
+
+  for(unsigned int i = 0; i < temp->m_NumberOfMetrics;i++)
+  {
+    if ( temp->m_UseMetric[i] )
+    {
+      if ( !temp->m_UseRelativeWeights )
+      {
+        for(unsigned int j = jmin; j< jmax;j++)
+          temp->m_ThreaderDerivatives[j] += temp->m_MetricWeights[i]*temp->m_MetricDerivativesIterator[i][j];
+      }
+      else
+      {
+        double weight = 1.0;
+        if ( temp->m_MetricDerivativesMagnitudeIterator[ i ] > 1e-10 )
+        {
+          weight = temp->m_MetricRelativeWeights[ i ]
+            * temp->m_MetricDerivativesMagnitudeIterator[ 0 ]
+            / temp->m_MetricDerivativesMagnitudeIterator[ i ];
+        }
+        for(unsigned int j = jmin; j< jmax;j++)
+          temp->m_ThreaderDerivatives[j] += weight * temp->m_MetricDerivativesIterator[i][j];
+
+      }
+    }
+  }
+  return ITK_THREAD_RETURN_VALUE;
+}// end CombineDerivativesThreaderCallback()
 
 /**
  * ********************* GetValueAndDerivative ****************************
@@ -818,31 +898,74 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
   value = NumericTraits< MeasureType >::Zero;
   derivative = DerivativeType( this->GetNumberOfParameters() );
   derivative.Fill( NumericTraits< MeasureType >::Zero );
+  unsigned int numberOfThreads = 8;
+  typename ThreaderType::Pointer local_threader = ThreaderType::New();
+
+  typename tmr::Timer::Pointer timer = tmr::Timer::New();
+
+  /** Copy contex to the templet variable */
+  MultiThreaderComboMetricsType * temp = new MultiThreaderComboMetricsType;
+  temp->m_MetricsIterator = this->m_Metrics;
+  temp->m_MetricDerivativesIterator = this->m_MetricDerivatives.begin();
+  temp->m_MetricValuesIterator = this->m_MetricValues.begin();
+
+  MultiThreaderCombineDerivativeType * temp1 = new MultiThreaderCombineDerivativeType;
+  temp1->m_MetricDerivativesIterator = this->m_MetricDerivatives.begin();
+  temp1->m_MetricDerivativesMagnitudeIterator = this->m_MetricDerivativesMagnitude.begin();
+  temp1->m_MetricRelativeWeights = this->m_MetricRelativeWeights;
+  temp1->m_UseRelativeWeights = this->m_UseRelativeWeights;
+  temp1->m_MetricWeights = this->m_MetricWeights;
+  temp1->m_UseMetric = this->m_UseMetric;
+  temp1->m_NumberOfMetrics = this->m_NumberOfMetrics;
+  temp1->numberOfParameters = this->GetNumberOfParameters();
+  temp1->m_ThreaderDerivatives = derivative.begin();
+
+  timer->StartTimer();
+
+  /** This function must be called before the multi-threaded code,
+   * since it is not thread-safe. We have outcommented this in the metrics.
+   */
+  for ( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
+  {
+    ImageMetricType * testPtr1 = dynamic_cast<ImageMetricType *>( this->GetMetric( i ) );
+    PointSetMetricType * testPtr2 = dynamic_cast<PointSetMetricType *>( this->GetMetric( i ) );
+    if ( testPtr1 )
+    {
+      testPtr1->SetUseMetricSingleThreaded( true );
+      testPtr1->BeforeThreadedGetValueAndDerivative( parameters);
+      testPtr1->SetUseMetricSingleThreaded( false );
+    }
+    if ( testPtr2 )
+    {
+      testPtr2->SetUseMetricSingleThreaded( true );
+      testPtr2->BeforeThreadedGetValueAndDerivative( parameters );
+      testPtr2->SetUseMetricSingleThreaded( false );
+    }
+  }
+
+  timer->StopTimer();
+  std::cout << " before threaded took: "
+    << Math::Round<std::size_t,double>( timer->GetElapsedClockSec() * 1000.0 )
+    << " ms. " << std::endl;
 
   if( !this->m_UseMultiThread )
   {
-    MeasureType tmpValue = NumericTraits< MeasureType >::Zero;
-    DerivativeType tmpDerivative = DerivativeType( this->GetNumberOfParameters() );
+#if 0
 
     /** Compute, store and combine all metric values and derivatives. */
     for ( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
     {
       /** Time the computation per metric. */
-      typename tmr::Timer::Pointer timer = tmr::Timer::New();
       timer->StartTimer();
 
       /** Compute ... */
-      //tmpValue = NumericTraits< MeasureType >::Zero;
-      //tmpDerivative.Fill( NumericTraits< MeasureType >::Zero ); // done in metric itself
-      this->m_Metrics[ i ]->GetValueAndDerivative( parameters, tmpValue, tmpDerivative );
+      this->m_Metrics[ i ]->GetValueAndDerivative( parameters, m_MetricValues[i],m_MetricDerivatives[i]);
       timer->StopTimer();
 
       /** store ... */
-      this->m_MetricValues[ i ] = tmpValue;
-      //this->m_MetricDerivatives[ i ] = tmpDerivative; // why needed?
-      this->m_MetricDerivativesMagnitude[ i ] = tmpDerivative.magnitude();
-      this->m_MetricComputationTime[ i ] = static_cast<std::size_t>(
-        Math::Round( timer->GetElapsedClockSec() * 1000.0 ) );
+      this->m_MetricDerivativesMagnitude[i] = m_MetricDerivatives[i].magnitude();
+      this->m_MetricComputationTime[ i ] =
+          Math::Round<std::size_t,double>( timer->GetElapsedClockSec() * 1000.0 );
 
       /** and combine. */
       if ( this->m_UseMetric[ i ] )
@@ -850,8 +973,7 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
         if ( !this->m_UseRelativeWeights )
         {
           value += this->m_MetricWeights[ i ] * this->m_MetricValues[ i ];
-          //derivative += this->m_MetricWeights[ i ] * this->m_MetricDerivatives[ i ];
-          derivative += this->m_MetricWeights[ i ] * tmpDerivative;
+          derivative += this->m_MetricWeights[ i ] * this->m_MetricDerivatives[i];
         }
         else
         {
@@ -869,92 +991,107 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
               / this->m_MetricDerivativesMagnitude[ i ];
           }
           value += weight * this->m_MetricValues[ i ];
-          //derivative += weight * this->m_MetricDerivatives[ i ];
-          derivative += weight * tmpDerivative;
+          derivative += weight * this->m_MetricDerivatives[i];
         }
       }
-    } // end for all metrics
-  } // end if single-threaded
-  else
-  {
-    unsigned int numberOfThreads = this->m_NumberOfMetrics; // think about this
-    // maybe min( #cores, #metrics ), what to do with rest?
+    } // end of combine metrics
 
-    typename tmr::Timer::Pointer timer = tmr::Timer::New();
-    timer->StartTimer();
+#else
 
-    /** This function must be called before the multi-threaded code,
-     * since it is not thread-safe. We have outcommented this in the metrics.
-     */
+    numberOfThreads = this->m_NumberOfThreadsPerMetric* this->m_NumberOfMetrics;
+    unsigned int subVectorSize = (unsigned int)(ceil(double(this->GetNumberOfParameters())/double(numberOfThreads)));
+
+    temp1->size = subVectorSize;
+    temp1->threaderDerivativesMagnitude.resize(numberOfThreads * this->m_NumberOfMetrics);
+    temp1->numberOfThreads = numberOfThreads;
+
+    /** Compute and store all metric values and derivatives. */
     for ( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
     {
-      ImageMetricType * testPtr1 = dynamic_cast<ImageMetricType *>( this->GetMetric( i ) );
-      PointSetMetricType * testPtr2 = dynamic_cast<PointSetMetricType *>( this->GetMetric( i ) );
-      if ( testPtr1 )
+      /** Time the computation per metric. */
+      timer->StartTimer();
+
+      /** Compute ... */
+      this->m_Metrics[ i ]->GetValueAndDerivative( parameters, m_MetricValues[i],m_MetricDerivatives[i] );
+
+      timer->StopTimer();
+      this->m_MetricComputationTime[ i ] =
+          Math::Round<std::size_t,double>( timer->GetElapsedClockSec() * 1000.0 );
+
+      temp1->m_MetricDerivativesMagnitudeIterator[i] = 0;
+    }
+
+    timer->StartTimer();
+
+    /** compute derivatives magnitude */
+
+    local_threader->SetNumberOfThreads( numberOfThreads );
+    local_threader->SetSingleMethod( ComputeDerivativesMagnitudeThreaderCallback, temp1 );
+    local_threader->SingleMethodExecute();
+
+    for(unsigned int i=0; i < this->m_NumberOfMetrics;i++)
+      for(unsigned int j = 0; j< numberOfThreads;j++)
+        temp1->m_MetricDerivativesMagnitudeIterator[i] += temp1->threaderDerivativesMagnitude[i*numberOfThreads + j];
+
+    for(unsigned int i=0; i < this->m_NumberOfMetrics;i++)
+      temp1->m_MetricDerivativesMagnitudeIterator[i] = sqrt(temp1->m_MetricDerivativesMagnitudeIterator[i]);
+
+    for ( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
+    {
+      if ( this->m_UseMetric[ i ] )
       {
-        testPtr1->SetUseMetricSingleThreaded( true );
-        testPtr1->BeforeThreadedGetValueAndDerivative( parameters );
-        testPtr1->SetUseMetricSingleThreaded( false );
-      }
-      if ( testPtr2 )
-      {
-        testPtr2->SetUseMetricSingleThreaded( true );
-        testPtr2->BeforeThreadedGetValueAndDerivative( parameters );
-        testPtr2->SetUseMetricSingleThreaded( false );
+        /** combine metric values */
+        if ( !this->m_UseRelativeWeights )
+          value += this->m_MetricWeights[ i ] * this->m_MetricValues[ i ];
+
+        else
+        {
+          double weight = 1.0;
+          if ( this->m_MetricDerivativesMagnitude[ i ] > 1e-10 )
+          {
+            weight = this->m_MetricRelativeWeights[ i ]
+              * this->m_MetricDerivativesMagnitude[ 0 ]
+              / this->m_MetricDerivativesMagnitude[ i ];
+          }
+          value += weight * this->m_MetricValues[ i ];
+        }
       }
     }
 
-    timer->StopTimer();
-    std::cout << "before threaded took: "
-      << static_cast<std::size_t>( Math::Round( timer->GetElapsedClockSec() * 1000.0 ) )
-      << " ms. " << std::endl;
-
-    timer->StartTimer();
-
-    /***/
-    tmp_MultiThreaderParameterType * temp = new tmp_MultiThreaderParameterType; // where is delete?
-
-    temp->m_tmpMetricDerivatives.resize( numberOfThreads );
-    temp->m_tmpMetrics.resize( numberOfThreads );
-    temp->m_tmpMetricValues.resize( numberOfThreads );
-
-    /** Copy contex to the templet variable */
-    temp->m_tmpMetrics = m_Metrics; // move to initialize? only needed once?
-    //temp->m_tmpMetricDerivatives = m_MetricDerivatives;
-    temp->m_tmpMetricValues = m_MetricValues;
-    //temp->m_tmpParameters = parameters; // only needed for setting up transform, which is already done
-    // note: a lot of expensive copying. Can it be pointers?
-    // m_MetricValues and m_MetricDerivatives don't need to be copied forth, only back
-
-    timer->StopTimer();
-    std::cout << "setting up struct took: "
-      << static_cast<std::size_t>( Math::Round( timer->GetElapsedClockSec() * 1000.0 ) )
-      << " ms. " << std::endl;
-
-#if 1
-    ThreaderType::Pointer local_threader = ThreaderType::New();
+    /** combine derivatives */
     local_threader->SetNumberOfThreads( numberOfThreads );
-    local_threader->SetSingleMethod( GetValueAndDerivativeThreaderCallback, temp );
+    local_threader->SetSingleMethod( CombineDerivativesThreaderCallback, temp1 );
     local_threader->SingleMethodExecute();
-#else
-    m_threader->SetNumberOfThreads( numberOfThreads );
-    m_threader->SetSingleMethod( GetValueAndDerivativeThreaderCallback, temp );
-    m_threader->SingleMethodExecute();
+
+    timer->StopTimer();
+    std::cout << "combining took: "
+      << Math::Round<std::size_t,double>( timer->GetElapsedClockSec() * 1000.0 )
+      << " ms. Size of Derivative vector = " << temp1->numberOfParameters << std::endl;
+
 #endif
 
-    m_MetricValues = temp->m_tmpMetricValues;
-    //m_MetricDerivatives = temp->m_tmpMetricDerivatives;
-    // note: a lot of expensive copying. again
+  } // end if single-threaded
+
+  else
+  {
+    /** GetValueAndDerivative */
+    numberOfThreads = this->m_NumberOfMetrics;
+    temp->m_MetricComputationTime.resize(numberOfThreads,0);
+
+    local_threader->SetNumberOfThreads( numberOfThreads );
+    local_threader->SetSingleMethod( GetValueAndDerivativeComboThreaderCallback, temp );
+    local_threader->SingleMethodExecute();
 
     /** Combine all metric values and derivatives. */
     timer->StartTimer();
+
+#if 0   // single thread combine derivatives
+
     for ( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
+
     {
-      //this->m_MetricDerivativesMagnitude[ i ] = m_MetricDerivatives[i].magnitude();
-      this->m_MetricDerivativesMagnitude[ i ] = temp->m_tmpMetricDerivatives[i].magnitude();
-//       this->m_MetricComputationTime[ i ] = static_cast<std::size_t>(
-//         Math::Round( timer->GetElapsedClockSec() * 1000.0 ) );
-      this->m_MetricComputationTime[ i ] = m_MetricComputationTimeStatic[ i ];
+      this->m_MetricDerivativesMagnitude[ i ] = m_MetricDerivatives[i].magnitude();
+      this->m_MetricComputationTime[ i ] = temp->m_MetricComputationTime[ i ];
 
       /** and combine. */
       if ( this->m_UseMetric[ i ] )
@@ -962,17 +1099,10 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
         if ( !this->m_UseRelativeWeights )
         {
           value += this->m_MetricWeights[ i ] * this->m_MetricValues[ i ];
-          //derivative += this->m_MetricWeights[ i ] * this->m_MetricDerivatives[ i ];
-          derivative += this->m_MetricWeights[ i ] * temp->m_tmpMetricDerivatives[ i ];
+          derivative += this->m_MetricWeights[ i ] * this->m_MetricDerivatives[ i ];
         }
         else
         {
-          /** The relative weight of metric i is such that the
-           * magnitude of the derivative of metric i is rescaled
-           * to be a fraction of that of metric 0; the fraction is
-           * defined by the fraction of the two relative weights.
-           * Note that this weight is different in each iteration.
-           */
           double weight = 1.0;
           if ( this->m_MetricDerivativesMagnitude[ i ] > 1e-10 )
           {
@@ -981,22 +1111,75 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
               / this->m_MetricDerivativesMagnitude[ i ];
           }
           value += weight * this->m_MetricValues[ i ];
-          //derivative += weight * this->m_MetricDerivatives[ i ];
-          derivative += weight * temp->m_tmpMetricDerivatives[ i ];
+          derivative += weight * this->m_MetricDerivatives[ i ];
         }
       }
     } // end for all metrics
 
+#else  // multi-thread combination derivatives
+
+    numberOfThreads = this->m_NumberOfThreadsPerMetric* this->m_NumberOfMetrics;
+    unsigned int subVectorSize = (unsigned int)(ceil(double(this->GetNumberOfParameters())/double(numberOfThreads)));
+
+    temp1->size = subVectorSize;
+    temp1->threaderDerivativesMagnitude.resize(numberOfThreads *this->m_NumberOfMetrics);
+    temp1->numberOfThreads = numberOfThreads;
+
+    /** compute derivatives magnitude in the case using relative weight */
+
+    local_threader->SetNumberOfThreads( numberOfThreads );
+    local_threader->SetSingleMethod( ComputeDerivativesMagnitudeThreaderCallback, temp1 );
+    local_threader->SingleMethodExecute();
+
+    for(unsigned int i=0; i < this->m_NumberOfMetrics;i++)
+      for(unsigned int j = 0; j< numberOfThreads;j++)
+        temp1->m_MetricDerivativesMagnitudeIterator[i] += temp1->threaderDerivativesMagnitude[i*numberOfThreads + j];
+
+    for(unsigned int i=0; i < this->m_NumberOfMetrics;i++)
+      temp1->m_MetricDerivativesMagnitudeIterator[i] = sqrt(temp1->m_MetricDerivativesMagnitudeIterator[i]);
+
+
+    for ( unsigned int i = 0; i < this->m_NumberOfMetrics; i++ )
+    {
+      if( this->m_UseMetric[i])
+      {
+        /** combine metric values */
+        this->m_MetricComputationTime[ i ] = temp->m_MetricComputationTime[ i ];
+
+        if ( !this->m_UseRelativeWeights )
+          value += this->m_MetricWeights[ i ] * this->m_MetricValues[ i ];
+
+        else
+        {
+          double weight = 1.0;
+          if ( this->m_MetricDerivativesMagnitude[ i ] > 1e-10 )
+          {
+            weight = this->m_MetricRelativeWeights[ i ]
+              * this->m_MetricDerivativesMagnitude[ 0 ]
+              / this->m_MetricDerivativesMagnitude[ i ];
+          }
+          value += weight * this->m_MetricValues[ i ];
+        }
+      }
+    }
+
+    /** combine derivatives */
+    local_threader->SetNumberOfThreads( numberOfThreads );
+    local_threader->SetSingleMethod( CombineDerivativesThreaderCallback, temp1 );
+    local_threader->SingleMethodExecute();
+
+#endif
+
     timer->StopTimer();
     std::cout << "combining took: "
-      << static_cast<std::size_t>( Math::Round( timer->GetElapsedClockSec() * 1000.0 ) )
-      << " ms. " << std::endl;
+      << Math::Round<std::size_t,double>( timer->GetElapsedClockSec() * 1000.0 )
+      << " ms. Size of Derivative vector = " << temp1->numberOfParameters << std::endl;
 
-    delete temp;
   } // end if multi-threaded
 
+  delete temp;
+  delete temp1;
 } // end GetValueAndDerivative()
-
 
 /**
  * ********************* GetSelfHessian ****************************

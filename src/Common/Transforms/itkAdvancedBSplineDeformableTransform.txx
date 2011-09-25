@@ -353,7 +353,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   return outputPoint;
 }
 
-
+/*
 // Compute the Jacobian in one position
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 const
@@ -415,7 +415,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   // Compute interpolation weights
   IndexType supportIndex;
 
-  /** Allocate memory on the stack: */
+  //** Allocate memory on the stack:
   const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
   typename WeightsType::ValueType weightsArray[ numberOfWeights ];
   WeightsType weights( weightsArray, numberOfWeights, false );
@@ -505,7 +505,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   }
 
 }
-
+*/
 
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 unsigned int

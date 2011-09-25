@@ -133,7 +133,7 @@ public:
     Matrix< ScalarType,
     InputSpaceDimension, InputSpaceDimension >,
     OutputSpaceDimension >                          SpatialHessianType;
-  typedef std::vector< SpatialHessianType >         JacobianOfSpatialHessianType;
+  typedef typename std::vector< SpatialHessianType >         JacobianOfSpatialHessianType;
   typedef typename SpatialJacobianType::InternalMatrixType  InternalMatrixType;
 
   /** Get the number of nonzero Jacobian indices. By default all. */

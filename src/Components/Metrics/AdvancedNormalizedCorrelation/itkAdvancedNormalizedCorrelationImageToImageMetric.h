@@ -144,6 +144,10 @@ public:
   typedef typename
     Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
 
+  /** Multithreading type */
+  typedef typename Superclass::ThreaderType     ThreaderType;
+  typedef typename Superclass::ThreadInfoType   ThreadInfoType;
+
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
     FixedImageType::ImageDimension );
@@ -163,6 +167,15 @@ public:
   void GetValueAndDerivative( const TransformParametersType & parameters,
     MeasureType& Value, DerivativeType& Derivative ) const;
 
+  /** Get value and derivatives for each thread. */
+  inline void ThreadedGetValueAndDerivative(unsigned int threadID );
+
+  /** Gather the values and derivatives from all threads */
+  inline void AfterThreadedGetValueAndDerivative(MeasureType & value, DerivativeType & derivative )const;
+
+  /** ComputeDerivatives threader callback function */
+  static ITK_THREAD_RETURN_TYPE ComputeDerivativesThreaderCallback( void * arg );
+
   /** Set/Get SubtractMean boolean. If true, the sample mean is subtracted
    * from the sample values in the cross-correlation formula and
    * typically results in narrower valleys in the cost fucntion.
@@ -173,7 +186,7 @@ public:
 
 protected:
   AdvancedNormalizedCorrelationImageToImageMetric();
-  virtual ~AdvancedNormalizedCorrelationImageToImageMetric() {};
+  virtual ~AdvancedNormalizedCorrelationImageToImageMetric();
   void PrintSelf( std::ostream& os, Indent indent ) const;
 
   /** Protected Typedefs ******************/
@@ -213,8 +226,40 @@ private:
   AdvancedNormalizedCorrelationImageToImageMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
-  bool    m_SubtractMean;
+  mutable bool    m_SubtractMean;
 
+  typedef typename NumericTraits< MeasureType >::AccumulateType   AccumulateType;
+
+  mutable std::vector< AccumulateType > m_ThreaderSff;
+  mutable std::vector< AccumulateType > m_ThreaderSmm;
+  mutable std::vector< AccumulateType > m_ThreaderSfm;
+  mutable std::vector< AccumulateType > m_ThreaderSf ;
+  mutable std::vector< AccumulateType > m_ThreaderSm ;
+
+  mutable std::vector< DerivativeType > m_ThreaderDerivativeF;
+  mutable std::vector< DerivativeType > m_ThreaderDerivativeM;
+  mutable std::vector< DerivativeType > m_ThreaderDifferential;
+  mutable std::vector< unsigned long > m_ThreaderNbOfPixelCounted;
+
+  mutable unsigned long m_SampleContainerSize;
+
+  mutable ImageSampleContainerPointer m_SampleContainer;
+
+  struct MultiThreaderComputeDerivativeType
+  {
+    typename std::vector<DerivativeType>::iterator m_ThreaderDerivativeFIterator;
+    typename std::vector<DerivativeType>::iterator m_ThreaderDerivativeMIterator;
+    typename std::vector<DerivativeType>::iterator m_ThreaderDifferentialIterator;
+    typename DerivativeType::iterator derivativeIterator;
+
+    AccumulateType sf_N;
+    AccumulateType sm_N;
+    AccumulateType sfm_smm;
+    RealType invDenom;
+
+    unsigned int numberOfParameters;
+
+  };
 }; // end class AdvancedNormalizedCorrelationImageToImageMetric
 
 } // end namespace itk

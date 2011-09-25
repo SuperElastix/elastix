@@ -254,6 +254,7 @@ ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
   // itkExceptionMacro("subclass should override this method!!!");
   // The ExceptionMacro is not used because gcc warns that a 
   // 'noreturn' function does return
+  typedef std::ostringstream OStringStream;
   OStringStream message;
   message << "itk::ERROR: " << this->GetNameOfClass()
     << "(" << this << "): " << "Subclass should override this method!!!";
