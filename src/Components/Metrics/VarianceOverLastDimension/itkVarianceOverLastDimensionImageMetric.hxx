@@ -364,7 +364,7 @@ namespace itk
 
     /** Vector containing last dimension positions to use: initialize on all positions when random sampling turned off. */
     std::vector<int> lastDimPositions;
-    if ( this->m_SampleLastDimensionRandomly ) {
+    if ( ! this->m_SampleLastDimensionRandomly ) {
       for ( unsigned int i = 0; i < lastDimSize; ++i )
       {
         lastDimPositions.push_back( i );
