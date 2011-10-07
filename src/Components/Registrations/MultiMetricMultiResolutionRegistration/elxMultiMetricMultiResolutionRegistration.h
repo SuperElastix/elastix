@@ -95,8 +95,8 @@ template <class TElastix>
 class MultiMetricMultiResolutionRegistration
   : public
   MultiMetricMultiResolutionImageRegistrationMethod<
-  ITK_TYPENAME RegistrationBase<TElastix>::FixedImageType,
-  ITK_TYPENAME RegistrationBase<TElastix>::MovingImageType >,
+  typename RegistrationBase<TElastix>::FixedImageType,
+  typename RegistrationBase<TElastix>::MovingImageType >,
   public RegistrationBase<TElastix>
 {
 public:
@@ -237,7 +237,6 @@ protected:
   virtual void SetComponents( void );
 
   bool m_ShowExactMetricValue;
-
 
 private:
 

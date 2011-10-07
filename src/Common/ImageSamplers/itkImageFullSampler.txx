@@ -129,12 +129,12 @@ template< class TInputImage >
 void
 ImageFullSampler< TInputImage >
 ::ThreadedGenerateData( const InputImageRegionType & inputRegionForThread,
-  unsigned int threadId )
+  ThreadIdType threadId )
 {
   /** Get handles to the input image, mask and the output. */
   InputImageConstPointer inputImage = this->GetInput();
   typename MaskType::ConstPointer mask = this->GetMask();
-  typename ImageSamplerBase< TInputImage >::ImageSampleContainerPointer & sampleContainerThisThread // & ???
+  ImageSampleContainerPointer & sampleContainerThisThread // & ???
     = this->m_ThreaderSampleContainer[ threadId ];
 
   /** Set up a region iterator within the user specified image region. */

@@ -61,6 +61,7 @@ public:
   typedef typename Superclass::InputImagePixelType          InputImagePixelType;
   typedef typename Superclass::ImageSampleType              ImageSampleType;
   typedef typename Superclass::ImageSampleContainerType     ImageSampleContainerType;
+  typedef typename Superclass::ImageSampleContainerPointer  ImageSampleContainerPointer;
   typedef typename Superclass::MaskType                     MaskType;
 
   /** The input image dimension. */
@@ -93,7 +94,7 @@ protected:
   virtual void BeforeThreadedGenerateData( void );
   virtual void ThreadedGenerateData(
     const InputImageRegionType & inputRegionForThread,
-    unsigned int threadId ) ITK_NO_RETURN;
+    ThreadIdType threadId ) ITK_NO_RETURN;
 
   typename RandomGeneratorType::Pointer     m_RandomGenerator;
   typename InternalFullSamplerType::Pointer m_InternalFullSampler;

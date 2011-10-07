@@ -46,6 +46,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   this->m_BSplineInterpolatorFloat = 0;
   this->m_InterpolatorIsBSpline = false;
   this->m_InterpolatorIsBSplineFloat = false;
+  this->m_InterpolatorIsReducedBSpline = false;
   this->m_CentralDifferenceGradientFilter = 0;
 
   this->m_AdvancedTransform = 0;
@@ -68,13 +69,13 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   this->m_MovingImageMaxLimit = NumericTraits< MovingImageLimiterOutputType >::One;
 
   this->m_UseMetricSingleThreaded = true;
-
   this->m_NumberOfThreadsPerMetric = 1;
 
   /** Initialise the m_ThreaderMetricParameters */
-  this->m_ThreaderMetricParameters.metric = this;
+  this->m_ThreaderMetricParameters.m_Metric = this;
 
 } // end Constructor
+
 
 /**
  * ********************* Destructor ****************************
@@ -83,7 +84,9 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 template <class TFixedImage, class TMovingImage>
 AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 ::~AdvancedImageToImageMetric()
-{}
+{
+} // end Destructor
+
 
 /**
  * ********************* Initialize ****************************
@@ -365,13 +368,30 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     itkDebugMacro( "Interpolator is not BSplineFloat" );
   }
 
+  this->m_InterpolatorIsReducedBSpline = false;
+  ReducedBSplineInterpolatorType * testPtr3 =
+    dynamic_cast<ReducedBSplineInterpolatorType *>( this->m_Interpolator.GetPointer() );
+  if ( testPtr3 )
+  {
+    this->m_InterpolatorIsReducedBSpline = true;
+    this->m_ReducedBSplineInterpolator = testPtr3;
+    itkDebugMacro( "Interpolator is ReducedBSpline" );
+  }
+  else
+  {
+    this->m_ReducedBSplineInterpolator = 0;
+    itkDebugMacro( "Interpolator is not ReducedBSpline" );
+  }
+
   /** Don't overwrite the gradient image if GetComputeGradient() == true.
    * Otherwise we can use a forward difference derivative, or the derivative
    * provided by the B-spline interpolator.
    */
   if ( !this->GetComputeGradient() )
   {
-    if ( !this->m_InterpolatorIsBSpline && !this->m_InterpolatorIsBSplineFloat )
+    if ( !this->m_InterpolatorIsBSpline
+      && !this->m_InterpolatorIsBSplineFloat
+      && !this->m_InterpolatorIsReducedBSpline )
     {
       this->m_CentralDifferenceGradientFilter = CentralDifferenceGradientFilterType::New();
       this->m_CentralDifferenceGradientFilter->SetUseImageSpacing( true );
@@ -458,6 +478,12 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
         /** Computed moving image gradient using derivative B-spline kernel. */
         (*gradient)
           = this->m_BSplineInterpolatorFloat->EvaluateDerivativeAtContinuousIndex( cindex );
+      }
+      else if ( this->m_InterpolatorIsReducedBSpline && !this->GetComputeGradient() )
+      {
+        /** Computed moving image gradient using derivative BSpline kernel. */
+        (*gradient)
+          = this->m_ReducedBSplineInterpolator->EvaluateDerivativeAtContinuousIndex( cindex );
       }
       else
       {
@@ -580,33 +606,6 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 
 } // end GetSelfHessian()
 
-/**
- * *********************** SetNumberOfThreads*************************************
- */
-
-template < class TFixedImage, class TMovingImage >
-void
-AdvancedImageToImageMetric<TFixedImage,TMovingImage>
-::SetNumberOfThreadsPerMetric(unsigned int numberOfThreads) const
-{
-  if(this->m_NumberOfThreadsPerMetric != numberOfThreads)
-  {
-    this->m_NumberOfThreadsPerMetric = numberOfThreads;
-  }
-}
-
-
-/**
- * *********************** GetNumberOfThreads*************************************
- */
-
-template < class TFixedImage, class TMovingImage >
-unsigned int
-AdvancedImageToImageMetric<TFixedImage,TMovingImage>
-::GetNumberOfThreadsPerMetric(void) const
-{
-  return this->m_NumberOfThreadsPerMetric;
-}
 
 /**
  * *********************** BeforeThreadedGetValueAndDerivative ***********************
@@ -627,7 +626,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     this->SetTransformParameters( parameters );
     timer->StopTimer();
     std::cout << "  SetTransformParameters took: "
-      << Math::Round<std::size_t,double>( timer->GetElapsedClockSec() * 1000.0 )
+      << Math::Round<std::size_t, double>( timer->GetElapsedClockSec() * 1000.0 )
       << " ms. " << std::endl;
     if ( this->m_UseImageSampler )
     {
@@ -635,7 +634,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
       this->GetImageSampler()->Update();
       timer->StopTimer();
       std::cout << "  GetImageSampler()->Update() took: "
-        << Math::Round<std::size_t,double>( timer->GetElapsedClockSec() * 1000.0 )
+        << Math::Round<std::size_t, double>( timer->GetElapsedClockSec() * 1000.0 )
         << " ms. " << std::endl;
     }
   }
@@ -653,16 +652,17 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 ::GetValueAndDerivativeThreaderCallback( void * arg )
 {
   ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
-  unsigned int threadID = (unsigned int) infoStruct->ThreadID;
+  ThreadIdType threadID = infoStruct->ThreadID;
 
   MultiThreaderParameterType * temp
     = static_cast<MultiThreaderParameterType * >( infoStruct->UserData );
 
-  temp->metric->ThreadedGetValueAndDerivative(threadID);
+  temp->m_Metric->ThreadedGetValueAndDerivative( threadID );
 
   return ITK_THREAD_RETURN_VALUE;
 
 } // end GetValueAndDerivativeThreaderCallback()
+
 
 /**
  * *********************** LaunchGetValueAndDerivativeThreaderCallback***************
@@ -673,12 +673,18 @@ void
 AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 ::LaunchGetValueAndDerivativeThreaderCallback( void ) const
 {
+  /** Setup local threader. */
+  // \todo: is a global threader better performance-wise? check
   ThreaderType::Pointer local_threader = ThreaderType::New();
-  local_threader->SetNumberOfThreads( m_NumberOfThreadsPerMetric );
+  local_threader->SetNumberOfThreads( this->m_NumberOfThreadsPerMetric );
   local_threader->SetSingleMethod( GetValueAndDerivativeThreaderCallback,
-                                   const_cast<void* >(static_cast<const void*>(&m_ThreaderMetricParameters)));
+    const_cast<void *>( static_cast<const void *>( &this->m_ThreaderMetricParameters ) ) );
+
+  /** Launch. */
   local_threader->SingleMethodExecute();
-}
+
+} // end LaunchGetValueAndDerivativeThreaderCallback()
+
 
 /**
  * *********************** CheckNumberOfSamples ***********************

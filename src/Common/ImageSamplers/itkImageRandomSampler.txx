@@ -128,6 +128,7 @@ ImageRandomSampler< TInputImage >
 
 } // end GenerateData()
 
+
 /**
  * ******************* ThreadedGenerateData *******************
  */
@@ -135,7 +136,7 @@ ImageRandomSampler< TInputImage >
 template< class TInputImage >
 void
 ImageRandomSampler< TInputImage >
-::ThreadedGenerateData( const InputImageRegionType &, unsigned int threadId )
+::ThreadedGenerateData( const InputImageRegionType &, ThreadIdType threadId )
 {
   /** Sanity check. */
   typename MaskType::ConstPointer mask = this->GetMask();
@@ -157,7 +158,7 @@ ImageRandomSampler< TInputImage >
   }
 
   /** Get a reference to the output and reserve memory for it. */
-  typename ImageSamplerBase< TInputImage >::ImageSampleContainerPointer & sampleContainerThisThread
+  ImageSampleContainerPointer & sampleContainerThisThread
     = this->m_ThreaderSampleContainer[ threadId ];
   sampleContainerThisThread->Reserve( chunkSize );
 

@@ -17,7 +17,7 @@
 
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkSingleValuedPointSetToPointSetMetric.h"
-//#include "itkMultiThreader.h"
+
 
 namespace itk
 {
@@ -52,9 +52,6 @@ namespace itk
  * \ingroup RegistrationMetrics
  *
  */
-
-//static std::vector< std::size_t > m_MetricComputationTimeStatic; // ugly
-// put time to an templete var
 
 template <class TFixedImage, class TMovingImage>
 class CombinationImageToImageMetric :
@@ -451,10 +448,9 @@ private:
     unsigned int                                   size;
     unsigned int                                   m_NumberOfMetrics;
     unsigned int                                   numberOfParameters;
-    unsigned int                                   numberOfThreads;
+    ThreadIdType                                   numberOfThreads;
     std::vector< double >                          threaderDerivativesMagnitude;
   };
-
 
   bool m_UseMultiThread;
 

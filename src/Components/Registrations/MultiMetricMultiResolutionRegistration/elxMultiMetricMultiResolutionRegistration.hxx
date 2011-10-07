@@ -48,13 +48,13 @@ MultiMetricMultiResolutionRegistration<TElastix>
 
   /** Set the number of Threads per metric */
   unsigned int numberOfThreads = 1;
-  std::string strNbOfThreads = this->m_Configuration->GetCommandLineArgument( "-nt" );
-  if(!strNbOfThreads.empty())
+  std::string strNumberOfThreads = this->m_Configuration->GetCommandLineArgument( "-nt" );
+  if( !strNumberOfThreads.empty() )
   {
-    numberOfThreads = (unsigned int) atoi(strNbOfThreads.c_str());
+    numberOfThreads = (unsigned int) atoi( strNumberOfThreads.c_str() );
     numberOfThreads = (numberOfThreads == 0) ? 1 : numberOfThreads ;
   }
-  this->SetNumberOfThreadsPerMetric(numberOfThreads);
+  this->SetNumberOfThreadsPerMetric( numberOfThreads );
 
   /** Set the number of resolutions.*/
   unsigned int numberOfResolutions = 3;
@@ -108,8 +108,7 @@ MultiMetricMultiResolutionRegistration<TElastix>
     xl::xout["iteration"][ makestring3.str().c_str() ] << std::showpoint << std::fixed;
   }
 
-  /** Use the multi-threaded version or not. */
-
+  /** Temporary? Use the multi-threaded version or not. */
   std::string tmp = this->m_Configuration->GetCommandLineArgument( "-mt" );
   if ( tmp == "true" )
   {

@@ -60,6 +60,7 @@ public:
   typedef typename Superclass::InputImagePixelType          InputImagePixelType;
   typedef typename Superclass::ImageSampleType              ImageSampleType;
   typedef typename Superclass::ImageSampleContainerType     ImageSampleContainerType;
+  typedef typename Superclass::ImageSampleContainerPointer  ImageSampleContainerPointer;
   typedef typename Superclass::MaskType                     MaskType;
 
   /** The input image dimension. */
@@ -100,7 +101,7 @@ protected:
   /** Multi-threaded function that does the work. */
   virtual void ThreadedGenerateData(
     const InputImageRegionType & inputRegionForThread,
-    unsigned int threadId ) ITK_NO_RETURN;
+    ThreadIdType threadId ) ITK_NO_RETURN;
 
 private:
 

@@ -35,13 +35,13 @@ using namespace itk;
 
     /** Set the number of Threads per metric */
     unsigned int numberOfThreads = 1;
-    std::string strNbOfThreads = this->m_Configuration->GetCommandLineArgument( "-nt" );
-    if(!strNbOfThreads.empty())
+    std::string strNumberOfThreads = this->m_Configuration->GetCommandLineArgument( "-nt" );
+    if( !strNumberOfThreads.empty() )
     {
-      numberOfThreads = (unsigned int) atoi(strNbOfThreads.c_str());
+      numberOfThreads = (unsigned int) atoi( strNumberOfThreads.c_str() );
       numberOfThreads = (numberOfThreads == 0) ? 1 : numberOfThreads ;
     }
-    this->SetNumberOfThreadsPerMetric(numberOfThreads);
+    this->SetNumberOfThreadsPerMetric( numberOfThreads );
 
     /** Set the number of resolutions. */
     unsigned int numberOfResolutions = 3;

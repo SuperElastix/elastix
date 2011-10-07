@@ -112,7 +112,7 @@ namespace itk
     virtual const ParametersType & GetFixedParameters( void ) const
     {
       // This transform has no fixed parameters.
-      //return m_FixedParameters;
+      return m_FixedParameters;
     }
 
     /** Transform a point. This method adds a displacement to a given point,

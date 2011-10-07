@@ -147,8 +147,8 @@ ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
 template< class TInputImage, class TOutputVectorContainer >
 unsigned int
 ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
-::SplitRequestedRegion( const unsigned int & threadId,
-  const unsigned int & numberOfSplits, InputImageRegionType & splitRegion )
+::SplitRequestedRegion( const ThreadIdType & threadId,
+  const ThreadIdType & numberOfSplits, InputImageRegionType & splitRegion )
 {
   // Get the input pointer
   const InputImageType * inputPtr = this->GetInput();
@@ -248,14 +248,13 @@ ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
 template< class TInputImage, class TOutputVectorContainer >
 void
 ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
-::ThreadedGenerateData( const InputImageRegionType &, unsigned int )
+::ThreadedGenerateData( const InputImageRegionType &, ThreadIdType )
 {
   // The following code is equivalent to:
   // itkExceptionMacro("subclass should override this method!!!");
   // The ExceptionMacro is not used because gcc warns that a 
   // 'noreturn' function does return
-  typedef std::ostringstream OStringStream;
-  OStringStream message;
+  std::ostringstream message;
   message << "itk::ERROR: " << this->GetNameOfClass()
     << "(" << this << "): " << "Subclass should override this method!!!";
   ExceptionObject e_(__FILE__, __LINE__, message.str().c_str(),ITK_LOCATION);
@@ -277,8 +276,8 @@ ImageToVectorContainerFilter< TInputImage, TOutputVectorContainer >
 ::ThreaderCallback( void *arg )
 {
   ThreadStruct *str;
-  unsigned int threadId = ((MultiThreader::ThreadInfoStruct *)(arg))->ThreadID;
-  unsigned int threadCount = ((MultiThreader::ThreadInfoStruct *)(arg))->NumberOfThreads;
+  ThreadIdType threadId = ((MultiThreader::ThreadInfoStruct *)(arg))->ThreadID;
+  ThreadIdType threadCount = ((MultiThreader::ThreadInfoStruct *)(arg))->NumberOfThreads;
 
   str = (ThreadStruct *)(((MultiThreader::ThreadInfoStruct *)(arg))->UserData);
 

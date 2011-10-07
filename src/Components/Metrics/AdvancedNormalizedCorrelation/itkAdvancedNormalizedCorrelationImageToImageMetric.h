@@ -161,24 +161,25 @@ public:
 
   /** Get the derivatives of the match measure. */
   void GetDerivative( const TransformParametersType & parameters,
-    DerivativeType & Derivative ) const;
+    DerivativeType & derivative ) const;
 
   /** Get value and derivatives for multiple valued optimizers. */
   void GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType& Value, DerivativeType& Derivative ) const;
+    MeasureType & value, DerivativeType & derivative ) const;
 
   /** Get value and derivatives for each thread. */
-  inline void ThreadedGetValueAndDerivative(unsigned int threadID );
+  inline void ThreadedGetValueAndDerivative( ThreadIdType threadID );
 
   /** Gather the values and derivatives from all threads */
-  inline void AfterThreadedGetValueAndDerivative(MeasureType & value, DerivativeType & derivative )const;
+  inline void AfterThreadedGetValueAndDerivative(
+    MeasureType & value, DerivativeType & derivative )const;
 
   /** ComputeDerivatives threader callback function */
   static ITK_THREAD_RETURN_TYPE ComputeDerivativesThreaderCallback( void * arg );
 
   /** Set/Get SubtractMean boolean. If true, the sample mean is subtracted
    * from the sample values in the cross-correlation formula and
-   * typically results in narrower valleys in the cost fucntion.
+   * typically results in narrower valleys in the cost function.
    * Default value is false. */
   itkSetMacro( SubtractMean, bool );
   itkGetConstReferenceMacro( SubtractMean, bool );
@@ -239,10 +240,9 @@ private:
   mutable std::vector< DerivativeType > m_ThreaderDerivativeF;
   mutable std::vector< DerivativeType > m_ThreaderDerivativeM;
   mutable std::vector< DerivativeType > m_ThreaderDifferential;
-  mutable std::vector< unsigned long > m_ThreaderNbOfPixelCounted;
+  mutable std::vector< unsigned long >  m_ThreaderNumberOfPixelsCounted;
 
   mutable unsigned long m_SampleContainerSize;
-
   mutable ImageSampleContainerPointer m_SampleContainer;
 
   struct MultiThreaderComputeDerivativeType

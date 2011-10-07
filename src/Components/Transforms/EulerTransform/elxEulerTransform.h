@@ -126,7 +126,7 @@ using namespace itk;
     typedef typename Superclass1::OutputCovariantVectorType   OutputCovariantVectorType;
     typedef typename Superclass1::InputVnlVectorType          InputVnlVectorType;
     typedef typename Superclass1::OutputVnlVectorType         OutputVnlVectorType;
-    typedef typename Superclass1::NumberOfParametersType    NumberOfParametersType;
+    typedef typename Superclass1::NumberOfParametersType      NumberOfParametersType;
 
     typedef typename EulerTransformType::Pointer              EulerTransformPointer;
     typedef typename EulerTransformType::OffsetType           OffsetType;

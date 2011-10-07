@@ -120,8 +120,8 @@ public:
   typedef typename Superclass::HessianType                HessianType;
 
   /** Multithreading type */
-  typedef typename Superclass::ThreaderType     ThreaderType;
-  typedef typename Superclass::ThreadInfoType   ThreadInfoType;
+  typedef typename Superclass::ThreaderType               ThreaderType;
+  typedef typename Superclass::ThreadInfoType             ThreadInfoType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
@@ -140,13 +140,14 @@ public:
 
   /** Get value and derivatives for multiple valued optimizers. */
   virtual void GetValueAndDerivative( const TransformParametersType & parameters,
-    MeasureType& Value, DerivativeType& Derivative ) const;
+    MeasureType & value, DerivativeType & derivative ) const;
 
   /** Get value and derivatives for each thread. */
-  inline void ThreadedGetValueAndDerivative(unsigned int threadID );
+  inline void ThreadedGetValueAndDerivative( ThreadIdType threadID );
 
   /** Gather the values and derivatives from all threads */
-  inline void AfterThreadedGetValueAndDerivative(MeasureType & value, DerivativeType & derivative )const;
+  inline void AfterThreadedGetValueAndDerivative(
+    MeasureType & value, DerivativeType & derivative )const;
 
   /** ComputeDerivatives threader callback function */
   static ITK_THREAD_RETURN_TYPE ComputeDerivativesThreaderCallback( void * arg );
@@ -242,18 +243,17 @@ private:
   AdvancedMeanSquaresImageToImageMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
-  bool m_UseNormalization;
-  double m_SelfHessianSmoothingSigma;
-  double m_SelfHessianNoiseRange;
-  unsigned int m_NumberOfSamplesForSelfHessian;
+  bool            m_UseNormalization;
+  double          m_SelfHessianSmoothingSigma;
+  double          m_SelfHessianNoiseRange;
+  unsigned int    m_NumberOfSamplesForSelfHessian;
 
-  mutable std::vector< MeasureType > m_ThreaderValues;
+  mutable ImageSampleContainerPointer   m_SampleContainer;
+  mutable unsigned long                 m_SampleContainerSize;
+
+  mutable std::vector< MeasureType >    m_ThreaderValues;
   mutable std::vector< DerivativeType > m_ThreaderDerivatives;
-  mutable std::vector< unsigned long > m_ThreaderNbOfPixelCounted;
-
-  mutable unsigned long m_SampleContainerSize;
-
-  mutable ImageSampleContainerPointer m_SampleContainer;
+  mutable std::vector< unsigned long >  m_ThreaderNumberOfPixelsCounted;
 
   struct MultiThreaderComputeDerivativeType
   {
@@ -272,4 +272,3 @@ private:
 #endif
 
 #endif // end #ifndef __itkAdvancedMeanSquaresImageToImageMetric_h
-

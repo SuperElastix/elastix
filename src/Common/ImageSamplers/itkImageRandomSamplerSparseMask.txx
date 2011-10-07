@@ -57,7 +57,7 @@ ImageRandomSamplerSparseMask< TInputImage >
 
   /** Get handles to the input image and output sample container. */
   InputImageConstPointer inputImage = this->GetInput();
-  typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
+  ImageSampleContainerPointer sampleContainer = this->GetOutput();
 
   /** Clear the container. */
   sampleContainer->Initialize();
@@ -159,7 +159,7 @@ ImageRandomSamplerSparseMask< TInputImage >
 template< class TInputImage >
 void
 ImageRandomSamplerSparseMask< TInputImage >
-::ThreadedGenerateData( const InputImageRegionType &, unsigned int threadId )
+::ThreadedGenerateData( const InputImageRegionType &, ThreadIdType threadId )
 {
   /** Get a handle to the full sampler output. */
   typename ImageSampleContainerType::Pointer allValidSamples
@@ -176,7 +176,7 @@ ImageRandomSamplerSparseMask< TInputImage >
   }
 
   /** Get a reference to the output and reserve memory for it. */
-  typename ImageSamplerBase< TInputImage >::ImageSampleContainerPointer & sampleContainerThisThread
+  ImageSampleContainerPointer & sampleContainerThisThread
     = this->m_ThreaderSampleContainer[ threadId ];
   sampleContainerThisThread->Reserve( chunkSize );
 

@@ -120,7 +120,7 @@ public:
    * \sa GenerateData(), SplitRequestedRegion() */
   virtual void ThreadedGenerateData(
     const InputImageRegionType & inputRegionForThread,
-    unsigned int threadId ) ITK_NO_RETURN;
+    ThreadIdType threadId ) ITK_NO_RETURN;
 
   /** If an imaging filter needs to perform processing after the buffer
    * has been allocated but before threads are spawned, the filter can
@@ -151,8 +151,8 @@ public:
    * regions must not overlap. The method returns the number of pieces that
    * the routine is capable of splitting the output RequestedRegion,
    * i.e. return value is less than or equal to "numberOfSplits". */
-  virtual unsigned int SplitRequestedRegion( const unsigned int & threadId,
-    const unsigned int & numberOfSplits, InputImageRegionType & splitRegion );
+  virtual unsigned int SplitRequestedRegion( const ThreadIdType & threadId,
+    const ThreadIdType & numberOfSplits, InputImageRegionType & splitRegion );
 
   /** Static function used as a "callback" by the MultiThreader.  The threading
    * library will call this routine for each thread, which will delegate the

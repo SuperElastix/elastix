@@ -50,7 +50,7 @@ public:
     TInputImage,
     VectorDataContainer<
     unsigned long,
-    ImageSample< TInputImage > > >        Superclass;
+    ImageSample< TInputImage > > >          Superclass;
   typedef SmartPointer<Self>                Pointer;
   typedef SmartPointer<const Self>          ConstPointer;
 

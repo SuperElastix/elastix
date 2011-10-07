@@ -29,7 +29,7 @@ namespace itk
 // Constructor with default arguments
 template<class TScalarType, unsigned int NDimensions>
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
-::AdvancedBSplineDeformableTransformBase()/*:Superclass(SpaceDimension,0)*/
+::AdvancedBSplineDeformableTransformBase():Superclass(SpaceDimension)
 {
   // Default grid size is zero
   typename RegionType::SizeType size;

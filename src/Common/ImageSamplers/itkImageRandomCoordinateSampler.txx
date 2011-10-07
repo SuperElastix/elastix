@@ -224,7 +224,7 @@ ImageRandomCoordinateSampler< TInputImage >
 template< class TInputImage >
 void
 ImageRandomCoordinateSampler< TInputImage >
-::ThreadedGenerateData( const InputImageRegionType &, unsigned int threadId )
+::ThreadedGenerateData( const InputImageRegionType &, ThreadIdType threadId )
 {
   /** Sanity check. */
   typename MaskType::ConstPointer mask = this->GetMask();

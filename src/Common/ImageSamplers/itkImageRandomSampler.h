@@ -63,10 +63,9 @@ public:
   typedef typename Superclass::ImageSampleType              ImageSampleType;
   typedef typename Superclass::ImageSampleValueType         ImageSampleValueType ;
   typedef typename Superclass::ImageSampleContainerType     ImageSampleContainerType;
+  typedef typename Superclass::ImageSampleContainerPointer  ImageSampleContainerPointer;
   typedef typename Superclass::MaskType                     MaskType;
   typedef typename Superclass::InputImageSizeType           InputImageSizeType;
-
-  //typedef typename Superclass::InputImageIndexType          InputImageIndexType;
 
   /** The input image dimension. */
   itkStaticConstMacro( InputImageDimension, unsigned int,
@@ -88,7 +87,7 @@ protected:
 
   virtual void ThreadedGenerateData(
     const InputImageRegionType & inputRegionForThread,
-    unsigned int threadId ) ITK_NO_RETURN;
+    ThreadIdType threadId ) ITK_NO_RETURN;
 
 private:
 
