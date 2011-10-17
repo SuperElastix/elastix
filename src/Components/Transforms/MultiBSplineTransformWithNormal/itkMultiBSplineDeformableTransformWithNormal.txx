@@ -597,15 +597,17 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 inline void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>
-::PointToLabel(const InputPointType& p, int& l) const
+::PointToLabel( const InputPointType & p, int & l) const
 {
   l = 0;
-  if (m_Labels)
+  if ( this->m_Labels )
   {
     typename ImageLabelInterpolator::IndexType idx;
-    m_LabelsInterpolator->ConvertPointToNearestIndex(p, idx);
-    if (m_LabelsInterpolator->IsInsideBuffer(idx))
-      l = m_LabelsInterpolator->EvaluateAtIndex(idx);
+    this->m_LabelsInterpolator->ConvertPointToNearestIndex( p, idx );
+    if ( this->m_LabelsInterpolator->IsInsideBuffer( idx ) )
+    {
+      l = static_cast<int>( this->m_LabelsInterpolator->EvaluateAtIndex( idx ) );
+    }
   }
 }
 
@@ -615,11 +617,13 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 ::TransformPoint( const InputPointType & point ) const
 {
   int lidx = 0;
-  PointToLabel(point, lidx);
-  if (lidx == 0)
-      return point;
+  this->PointToLabel( point, lidx );
+  if ( lidx == 0 )
+  {
+    return point;
+  }
 
-  OutputPointType res = m_Trans[0]->TransformPoint(point) + (m_Trans[lidx]->TransformPoint(point) - point);
+  OutputPointType res = m_Trans[0]->TransformPoint( point ) + (m_Trans[lidx]->TransformPoint(point) - point);
   return res;
 }
 
