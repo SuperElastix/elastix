@@ -18,9 +18,8 @@
 #include "elxOptimizerBase.h"
 
 #include "itkSingleValuedNonLinearOptimizer.h"
+#include "itk_zlib.h"
 
-//#include <kwsys/MD5.h.in> // for MD5 hash
-//#include KWSYS_HEADER(MD5.h)
 
 namespace elastix
 {
@@ -93,26 +92,19 @@ void
 OptimizerBase<TElastix>
 ::AfterRegistrationBase( void )
 {
-//   /** Get the final parameters. */
-//   ParametersType finalTP = this->GetAsITKBaseType()->GetCurrentPosition();
-// 
-//   /** Compute the MD5 Checksum. */
-//   unsigned char * md5InputData = reinterpret_cast<unsigned char *>( finalTP );
-// 
-//   kwsysMD5* md5 = kwsysMD5_New();
-//   kwsysMD5_Initialize( md5 );
-//   kwsysMD5_Append( md5, md5InputData, md5InputData->GetSize() );
-//   unsigned char digest[16];
-//   kwsysMD5_Finalize( md5, digest );
-//   kwsysMD5_Delete( md5 );
-// 
-// //   char md5out[33];
-// //   kwsysMD5_DigestToHex(digest, md5out);
-// //   md5out[32] = 0;
-// 
-//   elxout << "\nRegistration result checksum: "
-//     << digest
-//     << std::endl;
+  typedef typename ParametersType::ValueType ParametersValueType;
+
+  /** Get the final parameters. */
+  ParametersType finalTP = this->GetAsITKBaseType()->GetCurrentPosition();
+ 
+  /** Compute the crc checksum using zlib crc32 function. */
+  const unsigned char * crcInputData = reinterpret_cast<const unsigned char *>( finalTP.data_block() );
+  uLong crc = crc32(0L, Z_NULL, 0);
+  crc = crc32(crc, crcInputData, finalTP.Size()* sizeof(ParametersValueType) );
+  
+  elxout << "\nRegistration result checksum: "
+    << crc
+    << std::endl;
 
 } // end AfterRegistrationBase()
 
