@@ -321,7 +321,9 @@ MultiMetricMultiResolutionRegistration<TElastix>
           << "ERROR: An ImageSamper for metric "
             << i
             << " must be provided!" << std::endl;
-          itkExceptionMacro( << "Not enough ImageSamplers provided!" );
+          itkExceptionMacro( << "Not enough ImageSamplers provided!"
+            << "\nProvide an ImageSampler for metric " << i << ", like:"
+            << "\n  (ImageSampler \"Random\" ... \"Random\")" );
         }
 
         /** Try the zeroth image sampler for each metric. */
