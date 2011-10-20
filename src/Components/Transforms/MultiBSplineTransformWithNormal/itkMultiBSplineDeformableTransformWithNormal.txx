@@ -16,9 +16,6 @@
 #include <itkSmoothingRecursiveGaussianImageFilter.h>
 #endif
 
-#include "itkTransformToDeformationFieldSource.h"
-#include "itkImageFileWriter.h"
-
 namespace itk
 {
 
@@ -1001,93 +998,6 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
       for (unsigned d = 1; d < SpaceDimension; ++d)
         nonZeroJacobianIndices[d * nweights + i] += to_add;
   }
-}
-
-template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-void
-MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>
-::WriteDVF( std::string fname ) const
-{
-  typedef itk::Vector<float, SpaceDimension>                                    DisplacementType;
-  typedef itk::Image< DisplacementType, SpaceDimension >                        DeformationFieldType;
-  typedef itk::TransformToDeformationFieldSource<DeformationFieldType, double>  ConvertorType;
-
-  typename ConvertorType::Pointer filter = ConvertorType::New();
-  filter->SetNumberOfThreads(1);
-  filter->SetTransform(this);
-  filter->SetOutputParametersFromImage(m_Labels);
-  filter->Update();
-  typename DeformationFieldType::Pointer field = filter->GetOutput();
-
-  typedef itk::ImageFileWriter< DeformationFieldType >  FieldWriterType;
-  typename FieldWriterType::Pointer fieldWriter = FieldWriterType::New();
-  fieldWriter->SetFileName(fname);
-  fieldWriter->SetInput(field);
-  fieldWriter->Update();
-
-  unsigned i = fname.size() - 1;
-  while (i != 0 && fname[i] != '.')
-    --i;
-  std::string ext = fname.substr(i);
-  fname.resize(i);
-
-  // Normal Field
-  filter = ConvertorType::New();
-  filter->SetNumberOfThreads(1);
-  filter->SetTransform(this->m_Trans[0]);
-  filter->SetOutputParametersFromImage(m_Labels);
-  filter->Update();
-  field = filter->GetOutput();
-
-  fieldWriter = FieldWriterType::New();
-  fieldWriter->SetFileName(fname + std::string("_Trans0") + ext);
-  fieldWriter->SetInput(field);
-  fieldWriter->Update();
-
-  /*
-  for (unsigned i = 1; i <= m_NbLabels; ++i)
-  {
-    filter = ConvertorType::New();
-    filter->SetNumberOfThreads(1);
-    filter->SetTransform(this->m_Trans[i]);
-    filter->SetOutputParametersFromImage(m_Labels);
-    filter->Update();
-    field = filter->GetOutput();
-
-    fieldWriter = FieldWriterType::New();
-    std::string i_str(2, '_');
-    i_str[1] = '0' + i;
-    fieldWriter->SetFileName(fname + i_str + ext);
-    fieldWriter->SetInput(field);
-    fieldWriter->Update();
-  }
-  */
-
-  typedef itk::ImageFileWriter< ImageVectorType >  FieldWriterType2;
-  typename FieldWriterType2::Pointer fieldWriter2;
-
-  /*
-  fieldWriter2 = FieldWriterType2::New();
-  fieldWriter2->SetFileName(fname + std::string("_Normals") + ext);
-  fieldWriter2->SetInput(m_Normals);
-  fieldWriter2->Update();
-
-  fieldWriter2 = FieldWriterType2::New();
-  fieldWriter2->SetFileName(fname + std::string("_UVect") + ext);
-  fieldWriter2->SetInput(m_UVect);
-  fieldWriter2->Update();
-
-  fieldWriter2 = FieldWriterType2::New();
-  fieldWriter2->SetFileName(fname + std::string("_VVect") + ext);
-  fieldWriter2->SetInput(m_VVect);
-  fieldWriter2->Update();
-  */
-
-  fieldWriter2 = FieldWriterType2::New();
-  fieldWriter2->SetFileName(fname + std::string("_LabelsNormals") + ext);
-  fieldWriter2->SetInput(m_LabelsNormals);
-  fieldWriter2->Update();
-
 }
 
 } // namespace

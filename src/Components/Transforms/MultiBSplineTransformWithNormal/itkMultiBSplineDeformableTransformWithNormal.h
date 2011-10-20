@@ -337,8 +337,6 @@ public:
       JacobianOfSpatialHessianType &,
       NonZeroJacobianIndicesType & ) const;
 
-  void WriteDVF( std::string fname ) const;
-
 protected:
   /** Print contents of an MultiBSplineDeformableTransformWithNormal. */
   virtual void PrintSelf( std::ostream &os, Indent indent ) const;

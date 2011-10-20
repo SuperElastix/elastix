@@ -20,6 +20,7 @@
 #include "itkImageRegionExclusionConstIteratorWithIndex.h"
 #include "itkResampleImageFilter.h"
 #include "itkNearestNeighborInterpolateImageFunction.h"
+#include "itksys/System.h"
 #include "vnl/vnl_math.h"
 
 namespace elastix
@@ -90,14 +91,22 @@ int MultiBSplineTransformWithNormal<TElastix>
   m_SplineOrder = 3;
   this->GetConfiguration()->ReadParameter( m_SplineOrder,
     "BSplineTransformSplineOrder", this->GetComponentLabel(), 0, 0, true );
-  m_Labels = NULL;
-  if (this->GetConfiguration()->ReadParameter( m_LabelsPath,
-        "MultiBSplineTransformWithNormalLabels", this->GetComponentLabel(), 0, 0, true))
+
+  m_LabelsPath = this->m_Configuration->GetCommandLineArgument("-labels");
+  if (m_LabelsPath != "")
   {
     typename ImageFileReader<ImageLabelType>::Pointer reader = ImageFileReader<ImageLabelType>::New();
     reader->SetFileName(m_LabelsPath);
     reader->Update();
     m_Labels = reader->GetOutput();
+  }
+  else
+  {
+    xl::xout["error"]
+      << "ERROR: The MultiBSplineTransformWithNormal need a -labels command line option"
+      << " that indicates where to find the sliding objects segmentation."
+      << std::endl;
+    itkExceptionMacro( << "ERROR: Missing -labels argument!" );
   }
 
   return InitializeBSplineTransform();
@@ -588,6 +597,19 @@ void MultiBSplineTransformWithNormal<TElastix>
   this->m_MultiBSplineTransformWithNormal->SetGridOrigin( gridorigin );
   this->m_MultiBSplineTransformWithNormal->SetGridDirection( griddirection );
 
+  /** Read the labels map */
+  this->GetConfiguration()->ReadParameter( m_LabelsPath,
+    "MultiBSplineTransformWithNormalLabels", this->GetComponentLabel(), 0, 0 );
+  if (m_LabelsPath != "")
+  {
+    typename ImageFileReader<ImageLabelType>::Pointer reader = ImageFileReader<ImageLabelType>::New();
+    reader->SetFileName(m_LabelsPath);
+    reader->Update();
+    m_Labels = reader->GetOutput();
+  }
+  this->m_MultiBSplineTransformWithNormal->SetLabels(m_Labels);
+  this->m_MultiBSplineTransformWithNormal->UpdateLocalBases();
+
   /** Call the ReadFromFile from the TransformBase.
    * This must be done after setting the Grid, because later the
    * ReadFromFile from TransformBase calls SetParameters, which
@@ -675,7 +697,7 @@ void MultiBSplineTransformWithNormal<TElastix>
   xout["transpar"] << "(BSplineTransformSplineOrder " << m_SplineOrder << ")" << std::endl;
 
   /** Write the label map path of this transform. */
-  xout["transpar"] << "(MultiBSplineTransformWithNormalLabels " << m_LabelsPath << ")" << std::endl;
+  xout["transpar"] << "(MultiBSplineTransformWithNormalLabels \"" << itksys::SystemTools::CollapseFullPath(m_LabelsPath.c_str()) << "\" )" << std::endl;
 
 
   /** Set the precision back to default value. */
@@ -774,18 +796,6 @@ SetOptimizerScales( const unsigned int edgeWidth )
   this->m_Registration->GetAsITKBaseType()->GetOptimizer()->SetScales( newScales );
 
 } // end SetOptimizerScales()
-
-
-template <class TElastix>
-void MultiBSplineTransformWithNormal<TElastix>
-::AfterRegistration( void )
-{
-  // FIXME include all informations in the transformation Parameters to be able to use transformix for this
-  std::ostringstream makeFileName( "" );
-  makeFileName << this->m_Configuration->GetCommandLineArgument("-out") << "deformationField.mhd";
-  m_MultiBSplineTransformWithNormal->WriteDVF(makeFileName.str());
-}
-
 
 } // end namespace elastix
 

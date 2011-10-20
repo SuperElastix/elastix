@@ -242,8 +242,6 @@ public:
   /** Set the scales of the edge B-spline coefficients to zero. */
   virtual void SetOptimizerScales( const unsigned int edgeWidth );
 
-  virtual void AfterRegistration( void );
-
 protected:
 
   /** The constructor. */
