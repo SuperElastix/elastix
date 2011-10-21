@@ -165,10 +165,8 @@ ${dashboard_cache}
 endmacro()
 
 # Start with a fresh build tree.
-if ( NOT dashboard_model STREQUAL Experimental )
-  message( "Clearing build tree..." )
-  ctest_empty_binary_directory( ${CTEST_BINARY_DIRECTORY} )
-endif()
+message( "Clearing build tree..." )
+ctest_empty_binary_directory( ${CTEST_BINARY_DIRECTORY} )
 
 # Support each testing model
 if( dashboard_model STREQUAL Continuous )
