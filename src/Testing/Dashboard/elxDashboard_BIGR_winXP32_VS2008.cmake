@@ -41,7 +41,7 @@ ELSEIF( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
 ENDIF()
 
 # name of output directory
-set( CTEST_DASHBOARD_ROOT "D:/tk/mydash/${CTEST_SCRIPT_NAME}.${dashboard_model} )
+set( CTEST_DASHBOARD_ROOT "D:/tk/mydash/${CTEST_SCRIPT_NAME}.${dashboard_model}" )
 
 #set(dashboard_do_memcheck 1)
 #set(dashboard_do_coverage 1)
