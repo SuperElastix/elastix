@@ -21,7 +21,7 @@ def main():
     (options, args) = parser.parse_args()
 
     # Equivalent to: fileName = options.directory + "/" + "elastix.log"
-    filename = os.path.join( options.directory, "elastix.log" );
+    fileName = os.path.join( options.directory, "elastix.log" );
 
     # Read elastix.log and find line with checksum
     f = open( fileName )    
