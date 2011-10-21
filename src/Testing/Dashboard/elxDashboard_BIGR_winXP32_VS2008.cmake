@@ -18,9 +18,9 @@
 set( CTEST_SITE "BIGR.PCStefan" )
 set( CTEST_BUILD_NAME "WinXP-32bit-VS2008" )
 #set( CTEST_BUILD_FLAGS "-j2" ) # parallel build for makefiles
+set( CTEST_TEST_ARGS PARALLEL_LEVEL 2 ) # parallel testing
 set( CTEST_BUILD_CONFIGURATION Release )
 set( CTEST_CMAKE_GENERATOR "Visual Studio 9 2008" )
-set( CTEST_DASHBOARD_ROOT "D:/tk/mydash/${CTEST_SCRIPT_NAME}" )
 
 # default: automatically determined
 #set(CTEST_UPDATE_COMMAND /path/to/svn)
@@ -39,6 +39,9 @@ IF( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
 ELSEIF( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
   SET( dashboard_model Continuous )
 ENDIF()
+
+# name of output directory
+set( CTEST_DASHBOARD_ROOT "D:/tk/mydash/${CTEST_SCRIPT_NAME}.${dashboard_model} )
 
 #set(dashboard_do_memcheck 1)
 #set(dashboard_do_coverage 1)

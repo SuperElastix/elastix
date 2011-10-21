@@ -19,10 +19,8 @@
 # Client maintainer: s.klein@erasmusmc.nl
 set( CTEST_SITE "BIGR.cluster" )
 set( CTEST_BUILD_NAME "Linux-64bit-gcc4.1.2" )
-#set( CTEST_BUILD_FLAGS "-j2" ) # parallel build for makefiles
 set( CTEST_BUILD_CONFIGURATION Release )
 set( CTEST_CMAKE_GENERATOR "Unix Makefiles" )
-set( CTEST_DASHBOARD_ROOT "/home/sklein/tk/mydash/${CTEST_SCRIPT_NAME}" )
 
 # default: automatically determined
 #set(CTEST_UPDATE_COMMAND /path/to/svn)
@@ -32,9 +30,15 @@ set( CTEST_DASHBOARD_ROOT "/home/sklein/tk/mydash/${CTEST_SCRIPT_NAME}" )
 SET( dashboard_model Nightly )
 IF( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
   SET( dashboard_model Experimental )
+  # speed up the experimental build a bit:
+  set( CTEST_BUILD_FLAGS "-j2" ) # parallel build for makefiles
+  set( CTEST_TEST_ARGS PARALLEL_LEVEL 2 ) # parallel testing
 ELSEIF( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
   SET( dashboard_model Continuous )
 ENDIF()
+
+# Output directory
+set( CTEST_DASHBOARD_ROOT "/home/sklein/tk/mydash/${CTEST_SCRIPT_NAME}.${dashboard_model}" )
 
 #set(dashboard_do_memcheck 1)
 #set(dashboard_do_coverage 1)
