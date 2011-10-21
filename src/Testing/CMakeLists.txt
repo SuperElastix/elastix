@@ -169,27 +169,13 @@ elx_add_run_test( example
   -p ${ELASTIX_DOX_DIR}/exampleinput/parameters_Rigid.txt
   -p ${ELASTIX_DOX_DIR}/exampleinput/parameters_BSpline.txt )
 
-# and replace it by this one:
-elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001
+# Run 3D registration with a 'common' parameter file:
+elx_add_run_test( 3DCT_lung.example
   "IMAGE" ${TestBaselineDir}/3DCT_lung.mha
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001.txt )
-
-# this checksum is made on win32, visual2008
-elx_add_run_test( 3DCT_lung.NC.affine.ASGD.001
-  "CHECKSUM" 2212427187
-  -f ${TestDataDir}/3DCT_lung_baseline.mha
-  -m ${TestDataDir}/3DCT_lung_followup.mha
-  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt )
-
-# temporary test, to check if the test fails if it should fail:
-elx_add_run_test( 3DCT_lung.NC.affine.ASGD.001shouldfail
-  "CHECKSUM" 2212427188
-  -f ${TestDataDir}/3DCT_lung_baseline.mha
-  -m ${TestDataDir}/3DCT_lung_followup.mha
-  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt )
 
 # Test some transforms
 elx_add_run_test( 3DCT_lung.NC.translation.ASGD.001
@@ -204,8 +190,15 @@ elx_add_run_test( 3DCT_lung.NC.euler.ASGD.001
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -p ${TestDataDir}/parameters.3D.NC.euler.ASGD.001.txt )
 
-elx_add_run_test( 3DCT_lung.NC.affine.ASGD.001
+elx_add_run_test( 3DCT_lung.NC.affine.ASGD.001metric
   "METRICVALUE" "499 -0.917434 147.732214 6.247953 0.005693 x"#
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt )
+
+# this checksum is made on win32, visual2008
+elx_add_run_test( 3DCT_lung.NC.affine.ASGD.001checksum
+  "CHECKSUM" 2212427187
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt )
