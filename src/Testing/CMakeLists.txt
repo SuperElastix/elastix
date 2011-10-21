@@ -169,19 +169,12 @@ elx_add_run_test( example
   -p ${ELASTIX_DOX_DIR}/exampleinput/parameters_Rigid.txt
   -p ${ELASTIX_DOX_DIR}/exampleinput/parameters_BSpline.txt )
 
-# remove this test:
-elx_add_run_test( 3DCT_lung.tobereplaced
-  "IMAGE" ${TestBaselineDir}/3DCT_lung.mha
-  -f ${TestDataDir}/3DCT_lung_baseline.mha
-  -m ${TestDataDir}/3DCT_lung_followup.mha
-  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt  
-  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001.txt )
 # and replace it by this one:
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001
   "IMAGE" ${TestBaselineDir}/3DCT_lung.mha
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
-  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt  
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001.txt )
 
 # this checksum is made on win32, visual2008
@@ -222,21 +215,21 @@ elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.001
   "METRICVALUE" "99 7096.689847 32.307007 0.019832 855.319746 x"#
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
-  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.001.txt )
 
 elx_add_run_test( 3DCT_lung.MI.bspline.ASGD.001
   "METRICVALUE" "499 -1.136692 187.234245 603.377080 0.004836 x"#
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
-  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.MI.bspline.ASGD.001.txt )
 
 elx_add_run_test( 3DCT_lun.NMI.bspline.ASGD.001
   "METRICVALUE" "99 -1.342389 61.264050 4558.392221 0.002384 x"#
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
-  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NMI.bspline.ASGD.001.txt )
 
 # Test some combo metrics
@@ -246,21 +239,21 @@ elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.002
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -fp ${TestDataDir}/3DCT_lung_baseline.txt
   -mp ${TestDataDir}/3DCT_lung_followup.txt
-  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.002.txt )
 
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.003
   "METRICVALUE" "49 -0.981680 -0.981777 0.000971 10.673041 23783.231320 0.000699 0.000015 0.000699 x x x"#
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
-  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.003.txt )
 
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.004
   "METRICVALUE" "49 -0.969652 -0.979208 0.095563 16.496939 21033.767226 0.000800 0.000652 0.000798 0.0001288746 0.0602022919 0.0112364764 x x x 0.0001707896 0.0003848968 0.0002337033"#
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
-  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.004.txt )
 
 # Test some optimizers
@@ -268,14 +261,14 @@ elx_add_run_test( 3DCT_lung.NC.bspline.SGD.001
   "METRICVALUE" "99 -0.933783 56.557637 0.000768 x"#
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
-  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.SGD.001.txt )
 
 elx_add_run_test( 3DCT_lung.NC.bspline.QN.001
   "METRICVALUE" "99 99 0 -0.992011 1.000000 0.000871 3.651948 0.001700 x x x x x"#
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
-  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.QN.001.txt )
 
 # Test some samplers
@@ -283,21 +276,21 @@ elx_add_run_test( 3DCT_lung.MI.bspline.SGD.001
   "METRICVALUE" "99 -0.936908 56.557637 0.004449 x"#
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
-  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.001.txt )
 
 elx_add_run_test( 3DCT_lung.MI.bspline.SGD.002
   "METRICVALUE" "99 -1.035576 56.557637 0.001980 x"#
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
-  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.002.txt )
 
 elx_add_run_test( 3DCT_lung.MI.bspline.SGD.003
   "METRICVALUE" "2 -0.826970 304.784793 0.001133 x"#
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
-  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.003.txt )
 
 elx_add_run_test( 3DCT_lung.MI.bspline.SGD.004
@@ -305,7 +298,7 @@ elx_add_run_test( 3DCT_lung.MI.bspline.SGD.004
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -fMask ${TestDataDir}/3DCT_lung_baseline_mask.mha
-  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.004.txt )
 
 # Test some interpolators
@@ -313,13 +306,13 @@ elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.002
   "METRICVALUE" "99 -0.985803 30.804875 9703.960481 0.001238 x"#
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
-  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.002.txt )
 
 elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.003
   "METRICVALUE" "99 -0.979751 24.438035 8486.512890 0.000785 x"#
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
-  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.003.txt )
 
