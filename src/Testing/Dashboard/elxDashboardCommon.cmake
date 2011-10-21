@@ -19,7 +19,8 @@
 #   ctest -S /.../Dashboards/ctest-scripts/my_dashboard.cmake -V
 #
 # By default the source and build trees will be placed in the path
-# "/.../Dashboards/MyTests/".
+# "/.../Dashboards/MyTests/". If it exists, the binary directory will
+# cleaned first, unless the dasboard_model is set to Experimental.
 #
 # The following variables may be set before including this script
 # to configure it:
@@ -164,8 +165,10 @@ ${dashboard_cache}
 endmacro()
 
 # Start with a fresh build tree.
-message( "Clearing build tree..." )
-ctest_empty_binary_directory( ${CTEST_BINARY_DIRECTORY} )
+if ( NOT dashboard_model STREQUAL Experimental )
+  message( "Clearing build tree..." )
+  ctest_empty_binary_directory( ${CTEST_BINARY_DIRECTORY} )
+endif()
 
 # Support each testing model
 if( dashboard_model STREQUAL Continuous )
