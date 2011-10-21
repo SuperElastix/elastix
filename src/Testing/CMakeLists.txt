@@ -63,7 +63,8 @@ endmacro()
 #
 
 # Python script used for comparing elastix output with baseline strings
-set( pythonscript ${elastix_SOURCE_DIR}/Testing/elx_compare_finalmetricvalue.py )
+set( pythonfinalmetric ${elastix_SOURCE_DIR}/Testing/elx_compare_finalmetricvalue.py )
+set( pythonchecksum ${elastix_SOURCE_DIR}/Testing/elx_compare_checksum.py )
 
 # Helper macro
 macro( list_count listvar value count )
@@ -112,11 +113,23 @@ macro( elx_add_run_test testbasename howtocompare baseline )
     if( python_executable )
       add_test( NAME ${testname}_COMPARE
         CONFIGURATIONS Release
-        COMMAND ${python_executable} ${pythonscript}
+        COMMAND ${python_executable} ${pythonfinalmetric}
         -b ${baseline} -d ${output_dir} )
       set_tests_properties( ${testname}_COMPARE
         PROPERTIES DEPENDS  ${testname}_OUTPUT )
     endif()
+  # Compare elastix output using checksum
+  elseif( ${howtocompare} STREQUAL "CHECKSUM" )
+    # Only run when python was found
+    if( python_executable )
+      add_test( NAME ${testname}_COMPARE
+        CONFIGURATIONS Release
+        COMMAND ${python_executable} ${pythonchecksum}
+        -b ${baseline} -d ${output_dir} -v )
+      set_tests_properties( ${testname}_COMPARE
+        PROPERTIES DEPENDS  ${testname}_OUTPUT )
+    endif()
+
   endif()
 endmacro()
 
@@ -156,12 +169,34 @@ elx_add_run_test( example
   -p ${ELASTIX_DOX_DIR}/exampleinput/parameters_Rigid.txt
   -p ${ELASTIX_DOX_DIR}/exampleinput/parameters_BSpline.txt )
 
-elx_add_run_test( 3DCT_lung
+# remove this test:
+elx_add_run_test( 3DCT_lung.tobereplaced
   "IMAGE" ${TestBaselineDir}/3DCT_lung.mha
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
-  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt
+  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt  
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001.txt )
+# and replace it by this one:
+elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001
+  "IMAGE" ${TestBaselineDir}/3DCT_lung.mha
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt  
+  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001.txt )
+
+# this checksum is made on win32, visual2008
+elx_add_run_test( 3DCT_lung.NC.affine.ASGD.001
+  "CHECKSUM" 2212427187
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt )
+
+# temporary test, to check if the test fails if it should fail:
+elx_add_run_test( 3DCT_lung.NC.affine.ASGD.001shouldfail
+  "CHECKSUM" 2212427188
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt )
 
 elx_add_run_test( 3DCT_lung2
   "METRICVALUE" "499 -1.136692 187.234245 603.377080 0.004836 x"#
