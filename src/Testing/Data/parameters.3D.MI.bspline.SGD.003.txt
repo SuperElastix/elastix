@@ -22,21 +22,22 @@
 // ********** Pyramid
 
 // Total number of resolutions
-(NumberOfResolutions 3)
-(ImagePyramidSchedule 4 4 4 2 2 2 1 1 1)
+(NumberOfResolutions 2)
+// To allow for fast testing:
+(ImagePyramidSchedule 4 4 4 2 2 2)
 
 
 // ********** Transform
 
 (FinalGridSpacingInPhysicalUnits 10.0 10.0 10.0)
-(GridSpacingSchedule 4.0 2.0 1.0)
+(GridSpacingSchedule 2.0 1.0)
 (HowToCombineTransforms "Compose")
 
 
 // ********** Optimizer
 
 // Maximum number of iterations in each resolution level:
-(MaximumNumberOfIterations 10 5 3)
+(MaximumNumberOfIterations 10 5)
 
 (SP_A 20)
 (SP_a 2000)
@@ -64,8 +65,6 @@
 
 //Number of spatial samples used to compute the mutual information in each resolution level:
 (ImageSampler "Full")
-(UseRandomSampleRegion "false")
-//(SampleRegionSize 50.0 50.0 50.0)
 (MaximumNumberOfSamplingAttempts 5)
 
 

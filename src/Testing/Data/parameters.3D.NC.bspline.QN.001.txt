@@ -36,14 +36,14 @@
 // ********** Optimizer
 
 // Maximum number of iterations in each resolution level:
-(MaximumNumberOfIterations 100)
+(MaximumNumberOfIterations 20)
 
-(GenerateLineSearchIterations "false")
+(GenerateLineSearchIterations "true")
 (MaximumNumberOfLineSearchIterations 10)
 (StepLength 1)
-(LineSearchValueTolerance 0.0000001)
+(LineSearchValueTolerance 0.0001)
 (LineSearchGradientTolerance 0.9)
-(GradientMagnitudeTolerance 0.000000001)
+(GradientMagnitudeTolerance 0.00000001)
 (LBFGSUpdateAccuracy 5)
 (StopIfWolfeNotSatisfied "true")
 
@@ -68,9 +68,10 @@
 // ********** ImageSampler
 
 //Number of spatial samples used to compute the mutual information in each resolution level:
+// No new samples every iteration for the QN optimizer
 (ImageSampler "RandomCoordinate")
-(NumberOfSpatialSamples 2000)
-(NewSamplesEveryIteration "true")
+(NumberOfSpatialSamples 20000)
+(NewSamplesEveryIteration "false")
 (UseRandomSampleRegion "false")
 //(SampleRegionSize 50.0 50.0 50.0)
 (MaximumNumberOfSamplingAttempts 5)
