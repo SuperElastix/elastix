@@ -23,12 +23,11 @@ def main():
     # Equivalent to: fileName = options.directory + "/" + "elastix.log"
     fileName = os.path.join( options.directory, "elastix.log" );
 
-    # Read elastix.log and find line with checksum
+    # Read elastix.log and find last line with checksum
     f = open( fileName )    
     for line in f:
       if "Registration result checksum:" in line:
         checksumline = line
-        break
 
     # Extract checksum
     checksum = checksumline.split(': ')[1].rstrip( "\n" );
