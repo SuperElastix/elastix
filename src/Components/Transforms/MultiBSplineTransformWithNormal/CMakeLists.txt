@@ -1,4 +1,4 @@
-ADD_ELXCOMPONENT( MultiBSplineTransformWithNormal
+ADD_ELXCOMPONENT( MultiBSplineTransformWithNormal OFF
  elxMultiBSplineTransformWithNormal.h
  elxMultiBSplineTransformWithNormal.hxx
  elxMultiBSplineTransformWithNormal.cxx
