@@ -1005,63 +1005,58 @@ TransformBase<TElastix>
   outputPointsFile << std::showpoint << std::fixed;
   elxout << "  The transformed points are saved in: "
     <<  outputPointsFileName << std::endl;
-  //\todo do not write opp to log file, but only to outputPointsFile.
-  elxout.AddOutput( "opp", &outputPointsFile );
-
+  
   /** Print the results. */
   for ( unsigned int j = 0; j < nrofpoints; j++ )
   {
     /** The input index. */
-    elxout << "Point\t" << j << "\t; InputIndex = [ ";
+    outputPointsFile << "Point\t" << j << "\t; InputIndex = [ ";
     for ( unsigned int i = 0; i < FixedImageDimension; i++ )
     {
-      elxout << inputindexvec[ j ][ i ] << " ";
+      outputPointsFile << inputindexvec[ j ][ i ] << " ";
     }
 
     /** The input point. */
-    elxout << "]\t; InputPoint = [ ";
+    outputPointsFile << "]\t; InputPoint = [ ";
     for ( unsigned int i = 0; i < FixedImageDimension; i++ )
     {
-      elxout << inputpointvec[ j ][ i ] << " ";
+      outputPointsFile << inputpointvec[ j ][ i ] << " ";
     }
 
     /** The output index in fixed image. */
-    elxout << "]\t; OutputIndexFixed = [ ";
+    outputPointsFile << "]\t; OutputIndexFixed = [ ";
     for ( unsigned int i = 0; i < FixedImageDimension; i++ )
     {
-      elxout << outputindexfixedvec[ j ][ i ] << " ";
+      outputPointsFile << outputindexfixedvec[ j ][ i ] << " ";
     }
 
     /** The output point. */
-    elxout << "]\t; OutputPoint = [ ";
+    outputPointsFile << "]\t; OutputPoint = [ ";
     for ( unsigned int i = 0; i < FixedImageDimension; i++ )
     {
-      elxout << outputpointvec[ j ][ i ] << " ";
+      outputPointsFile << outputpointvec[ j ][ i ] << " ";
     }
 
     /** The output point minus the input point. */
-    elxout << "]\t; Deformation = [ ";
+    outputPointsFile << "]\t; Deformation = [ ";
     for ( unsigned int i = 0; i < MovingImageDimension; i++ )
     {
-      elxout << deformationvec[ j ][ i ] << " ";
+      outputPointsFile << deformationvec[ j ][ i ] << " ";
     }
 
     if ( alsoMovingIndices )
     {
       /** The output index in moving image. */
-      elxout << "]\t; OutputIndexMoving = [ ";
+      outputPointsFile << "]\t; OutputIndexMoving = [ ";
       for ( unsigned int i = 0; i < MovingImageDimension; i++ )
       {
-        elxout << outputindexmovingvec[ j ][ i ] << " ";
+        outputPointsFile << outputindexmovingvec[ j ][ i ] << " ";
       }
     }
 
-    elxout << "]" << std::endl;
+    outputPointsFile << "]" << std::endl;
   } // end for nrofpoints
-
-  /** Stop writing to the output file. */
-  elxout.RemoveOutput( "opp" );
-
+  
 } // end TransformPointsSomePoints()
 
 /**
