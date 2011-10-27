@@ -80,6 +80,7 @@ namespace itk
       ImageSampleType >                                 ImageSampleContainerType;
     typedef typename InputImageType::SizeType           InputImageSizeType;
     typedef typename InputImageType::IndexType          InputImageIndexType;
+    typedef typename InputImageType::SpacingType        InputImageSpacingType;
     typedef typename InputImageType::PointType          InputImagePointType;
     typedef typename InputImagePointType::ValueType     InputImagePointValueType;
     typedef typename ImageSampleType::RealType          ImageSampleValueType;
