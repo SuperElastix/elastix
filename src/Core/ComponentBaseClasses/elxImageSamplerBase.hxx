@@ -19,7 +19,6 @@
 
 namespace elastix
 {
-//using namespace itk; not here because itk::ImageSamplerBase also exists.
 
 /**
  * ******************* BeforeEachResolutionBase ******************
@@ -58,4 +57,3 @@ ImageSamplerBase<TElastix>
 } // end namespace elastix
 
 #endif //#ifndef __elxImageSamplerBase_hxx
-

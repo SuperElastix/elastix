@@ -221,13 +221,6 @@ void
 ImageGridSampler< TInputImage >
 ::SetNumberOfSamples( unsigned long nrofsamples )
 {
-  /** This function assumes that the input has been set. */
-  if ( !this->GetInput() )
-  {
-    itkExceptionMacro( << "ERROR: only call this function after "
-      << "the input has been set." );
-  }
-
   /** Store what the user wanted. */
   if ( this->m_RequestedNumberOfSamples != nrofsamples )
   {
@@ -237,6 +230,13 @@ ImageGridSampler< TInputImage >
 
   /** Do nothing if nothing is needed. */
   if ( nrofsamples == 0 ) return;
+
+  /** This function assumes that the input has been set. */
+  if ( !this->GetInput() )
+  {
+    itkExceptionMacro( << "ERROR: only call the function SetNumberOfSamples() "
+      << "after the input has been set." );
+  }
 
   /** Compute an isotropic grid spacing (in voxels),
    * which realises the nrofsamples approximately.
