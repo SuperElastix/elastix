@@ -244,31 +244,13 @@ ImageGridSampler< TInputImage >
    * the volume of the bounding box of the mask.
    */
 
-#if 0
-  /** Get the image region volume in voxels. */
-  const double allvoxels = static_cast<double>( 
-    this->GetInputImageRegion().GetNumberOfPixels() );
-#else
   /** Get the cropped image region volume in voxels. */
   this->CropInputImageRegion();
   const double allvoxels = static_cast<double>(
     this->GetCroppedInputImageRegion().GetNumberOfPixels() );
-#endif
 
-#if 1
-  /** Compute the isotropic gridspacing in voxels. */
+  /** Compute the fraction in voxels. */
   const double fraction = allvoxels / static_cast<double>( nrofsamples );
-#else
-  /** Compute the isotropic gridspacing in mm^3. */
-  InputImageSpacingType spacing = this->GetInput()->GetSpacing();
-  double voxelVolume = spacing[ 0 ];
-  for ( unsigned int i = 1; i < InputImageDimension; i++ )
-  {
-    voxelVolume *= spacing[ i ];
-  }
-  const double imageRegionVolume = allvoxels * voxelVolume;
-  const double fraction = imageRegionVolume / static_cast<double>( nrofsamples );
-#endif
 
   /** Compute the grid spacing. */
   const double indimd = static_cast<double>( InputImageDimension );
