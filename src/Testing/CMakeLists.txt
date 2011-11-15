@@ -185,7 +185,7 @@ elx_add_run_test( 3DCT_lung.NC.translation.ASGD.001
   -p ${TestDataDir}/parameters.3D.NC.translation.ASGD.001.txt )
 
 elx_add_run_test( 3DCT_lung.NC.euler.ASGD.001
-  "CHECKSUM" 3164583274 
+  "CHECKSUM" 3164583274
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -p ${TestDataDir}/parameters.3D.NC.euler.ASGD.001.txt )
@@ -308,4 +308,36 @@ elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.003
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.003.txt )
+
+
+
+### TEMPORARY TESTING TO FIND THE PLATFORM INCONSISTENCIES
+# Checksums defined on windows 64 bit machine LKEB PC Marius
+elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001a
+  "CHECKSUM" 792071748
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001a.txt )
+
+elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001b
+  "CHECKSUM" 2618589300
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001b.txt )
+
+elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001c
+  "CHECKSUM" 3105983252
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001c.txt )
+
+elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001d
+  "CHECKSUM" 2549300057
+  -f ${TestDataDir}/3DCT_lung_baseline.mha
+  -m ${TestDataDir}/3DCT_lung_followup.mha
+  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001d.txt )
 

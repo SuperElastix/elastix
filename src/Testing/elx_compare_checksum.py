@@ -24,7 +24,7 @@ def main():
     fileName = os.path.join( options.directory, "elastix.log" );
 
     # Read elastix.log and find last line with checksum
-    f = open( fileName )    
+    f = open( fileName )
     for line in f:
       if "Registration result checksum:" in line:
         checksumline = line
@@ -34,7 +34,7 @@ def main():
 
     # Print result
     print "The registration result checksum is: %s" % checksum
-    print "The baseline values is: %s" % options.baseline
+    print "The baseline checksum is: %s" % options.baseline
 
     if options.baseline != checksum:
       print "FAILURE: These values are NOT the same.\n"

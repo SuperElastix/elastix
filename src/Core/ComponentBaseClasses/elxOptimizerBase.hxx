@@ -93,21 +93,22 @@ OptimizerBase<TElastix>
 ::AfterRegistrationBase( void )
 {
   typedef typename ParametersType::ValueType ParametersValueType;
-  
+
   /** Get the final parameters, round to six decimals. */
   ParametersType finalTP = this->GetAsITKBaseType()->GetCurrentPosition();
   const unsigned long N = finalTP.GetSize();
-  ParametersType roundTP( N );
-  for (unsigned int i = 0; i < N; ++i )
+  ParametersType roundedTP( N );
+  for( unsigned int i = 0; i < N; ++i )
   {
-    roundTP[i] = itk::Math::Round( finalTP[i] * static_cast<double>(1e6) );
+    roundedTP[ i ] = itk::Math::Round( finalTP[ i ] * static_cast<double>(1e6) );
   }
- 
+
   /** Compute the crc checksum using zlib crc32 function. */
-  const unsigned char * crcInputData = reinterpret_cast<const unsigned char *>( roundTP.data_block() );
-  uLong crc = crc32(0L, Z_NULL, 0);
-  crc = crc32(crc, crcInputData, roundTP.Size()* sizeof(ParametersValueType) );
-  
+  const unsigned char * crcInputData
+    = reinterpret_cast<const unsigned char *>( roundedTP.data_block() );
+  uLong crc = crc32( 0L, Z_NULL, 0 );
+  crc = crc32( crc, crcInputData, N * sizeof( ParametersValueType ) );
+
   elxout << "\nRegistration result checksum: "
     << crc
     << std::endl;
