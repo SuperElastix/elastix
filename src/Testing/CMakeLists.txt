@@ -10,16 +10,18 @@ set( TestOutputDir ${elastix_BINARY_DIR}/Testing )
 #---------------------------------------------------------------------
 # Python is used by some tests
 find_program( python_executable python )
-
+if( NOT python_executable )
+  message( WARNING "WARNING: python not found! Some test results can not be evaluated." )
+endif()
 
 #---------------------------------------------------------------------
 # Add macro if mevisdicomtiff should be used
-IF( ELASTIX_USE_MEVISDICOMTIFF )
-  ADD_DEFINITIONS( -D_ELASTIX_USE_MEVISDICOMTIFF )
-  SET( mevisdcmtifflib mevisdcmtiff )
-ELSE()
-  SET( mevisdcmtifflib )
-ENDIF()
+if( ELASTIX_USE_MEVISDICOMTIFF )
+  add_definitions( -D_ELASTIX_USE_MEVISDICOMTIFF )
+  set( mevisdcmtifflib mevisdcmtiff )
+else()
+  set( mevisdcmtifflib )
+endif()
 
 
 #---------------------------------------------------------------------
