@@ -9,7 +9,8 @@ set( TestOutputDir ${elastix_BINARY_DIR}/Testing )
 
 #---------------------------------------------------------------------
 # Python is used by some tests
-find_program( python_executable python )
+find_program( python_executable python
+  HINTS "C:/Program Files/Python2.7" )
 if( NOT python_executable )
   message( WARNING "WARNING: python not found! Some test results can not be evaluated." )
 endif()
