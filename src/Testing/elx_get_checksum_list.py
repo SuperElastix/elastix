@@ -39,15 +39,21 @@ def main():
         print "%s No elastix.log found" % directory
         continue
 
+      checksumFound = False;
       for line in f:
         if "Registration result checksum:" in line:
-          checksumline = line
+          checksumline = line;
+          checksumFound = True;
 
       # Extract checksum
-      checksum = checksumline.split(': ')[1].rstrip( "\n" );
+      if checksumFound:
+        checksum = checksumline.split(': ')[1].rstrip( "\n" );
 
-      # Print result
-      print "%s %s" % (directory, checksum)
+        # Print result
+        print "%s %s" % (directory, checksum)
+      else:
+        print "%s -" % directory
+
       f.close();
 
     return 0
