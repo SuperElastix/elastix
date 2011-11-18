@@ -107,7 +107,8 @@ macro( elx_add_run_test testbasename howtocompare baseline )
       CONFIGURATIONS Release
       COMMAND elxImageCompare
       -base ${baseline}
-      -test ${output_dir}/result.${countp}.mhd )
+      -test ${output_dir}/result.${countp}.mhd
+      -t 1.0 )
     set_tests_properties( ${testname}_COMPARE
       PROPERTIES DEPENDS  ${testname}_OUTPUT )
   # Compare elastix output from IterationInfo with a baseline string

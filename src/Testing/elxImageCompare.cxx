@@ -13,7 +13,7 @@
 ======================================================================*/
 /** \file
  \brief Compare two images.
- 
+
  \verbinclude imagecompare.help
  */
 #include "itkCommandLineArgumentParser.h"
@@ -40,8 +40,9 @@ std::string GetHelpString( void )
   std::stringstream ss;
   ss << "Usage:" << std::endl
     << "pximagecompare" << std::endl
-    << "  -test      image filename to test against baseline" << std::endl
-    << "  -base      baseline image filename";
+    << "  -test      image filename to test against baseline\n"
+    << "  -base      baseline image filename\n"
+    << "  [-t]       intensity difference threshold, default 0";
   return ss.str();
 
 } // end GetHelpString()
@@ -77,6 +78,9 @@ int main( int argc, char **argv )
 
   std::string baselineImageFileName;
   parser->GetCommandLineArgument( "-base", baselineImageFileName );
+
+  double diffThreshold = 0.0;
+  parser->GetCommandLineArgument( "-t", diffThreshold );
 
   // Read images
   typedef itk::Image<double,ITK_TEST_DIMENSION_MAX>           ImageType;
@@ -130,6 +134,7 @@ int main( int argc, char **argv )
   ComparisonFilterType::Pointer comparisonFilter = ComparisonFilterType::New();
   comparisonFilter->SetTestInput(testReader->GetOutput());
   comparisonFilter->SetValidInput(baselineReader->GetOutput());
+  comparisonFilter->SetDifferenceThreshold( diffThreshold );
   try
   {
     comparisonFilter->Update();
@@ -146,7 +151,7 @@ int main( int argc, char **argv )
   if( numberOfDifferentPixels > 0 )
   {
     std::cerr << "There are " << numberOfDifferentPixels << " different pixels!" << std::endl;
-        
+
     // Create name for diff image
     std::string diffImageFileName =
       itksys::SystemTools::GetFilenameWithoutLastExtension( testImageFileName );
