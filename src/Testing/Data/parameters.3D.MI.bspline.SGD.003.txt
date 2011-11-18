@@ -46,7 +46,10 @@
 
 // ********** Metric
 
-// Just using the default values for the NC metric
+(NumberOfHistogramBins 32)
+(FixedKernelBSplineOrder 0)
+(MovingKernelBSplineOrder 3)
+(UseFastAndLowMemoryVersion "true")
 
 
 // ********** Several
