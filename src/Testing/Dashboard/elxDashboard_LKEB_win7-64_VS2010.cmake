@@ -18,6 +18,7 @@
 # Client maintainer: m.staring@lumc.nl
 set( CTEST_SITE "LKEB.PCMarius" )
 set( CTEST_BUILD_NAME "Win7-64bit-VS2010" )
+set( CTEST_TEST_ARGS PARALLEL_LEVEL 3 ) # parallel testing
 set( CTEST_BUILD_CONFIGURATION Release )
 set( CTEST_CMAKE_GENERATOR "Visual Studio 10 Win64" )
 set( CTEST_DASHBOARD_ROOT "D:/toolkits/elastix/nightly" )
@@ -34,9 +35,6 @@ IF( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
 ELSEIF( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
   SET( dashboard_model Continuous )
 ENDIF()
-
-#set(dashboard_do_memcheck 1)
-#set(dashboard_do_coverage 1)
 
 # CUDA does not support MSVC 2010 compiler
 # nvcc fatal: nvcc cannot find a supported cl version. Only MSVC 8.0 and MSVC 9.0 are supported

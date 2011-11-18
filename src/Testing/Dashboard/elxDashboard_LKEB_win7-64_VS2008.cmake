@@ -18,6 +18,7 @@
 # Client maintainer: m.staring@lumc.nl
 set( CTEST_SITE "LKEB.PCMarius" )
 set( CTEST_BUILD_NAME "Win7-64bit-VS2008" )
+set( CTEST_TEST_ARGS PARALLEL_LEVEL 3 ) # parallel testing
 set( CTEST_BUILD_CONFIGURATION Release )
 set( CTEST_CMAKE_GENERATOR "Visual Studio 9 2008 Win64" )
 set( CTEST_DASHBOARD_ROOT "D:/toolkits/elastix/nightly" )
@@ -33,9 +34,6 @@ IF( ${CTEST_SCRIPT_ARG} MATCHES Experimental )
 ELSEIF( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
   SET( dashboard_model Continuous )
 ENDIF()
-
-#set(dashboard_do_memcheck 1)
-#set(dashboard_do_coverage 1)
 
 SET( dashboard_cache "
 // Which ITK to use:
