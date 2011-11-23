@@ -3,18 +3,12 @@
 
 #include "itkMultiBSplineDeformableTransformWithNormal.h"
 #include "itkStatisticsImageFilter.h"
-#if 0
-#include "itkSparseImage.h"
-#include "itkImplicitManifoldNormalVectorFilter.h"
-#include "itkNormalVectorDiffusionFunction.h"
-#else
 #include <itkApproximateSignedDistanceMapImageFilter.h>
 #include <itkGradientImageFilter.h>
 #include <itkVectorCastImageFilter.h>
 // Used only to solve a bug in the distance map algorithm
 #include <itkMultiplyByConstantImageFilter.h>
 #include <itkSmoothingRecursiveGaussianImageFilter.h>
-#endif
 
 namespace itk
 {
@@ -128,25 +122,6 @@ GET_FIRST_LABEL(GridOrigin, OriginType);
 #undef SET_ALL_LABELS
 #undef GET_FIRST_LABEL
 
-// Node class for Normal Sparse Image
-template <class TScalarType, unsigned NDimensions>
-struct NormalBandNode
-{
-  typedef Image<unsigned char, NDimensions>       LevelSetImageType;
-  typedef TScalarType                             NodeValueType;
-  typedef typename LevelSetImageType::IndexType   IndexType;
-  typedef Vector<NodeValueType, NDimensions>      NodeDataType;
-
-  NodeDataType m_Data, m_InputData, m_Update;
-  NodeDataType
-    m_ManifoldNormal [NDimensions];
-  NodeDataType m_Flux [NDimensions];
-
-  IndexType m_Index;
-  NormalBandNode *Next;
-  NormalBandNode *Previous;
-};
-
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>
@@ -171,46 +146,6 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
     // Restore settings
     this->SetFixedParameters(para);
 
-#if 0
-    const TScalarType base_x[] = {1, 0, 0, 0};
-
-    typedef NormalBandNode<TScalarType, NDimensions> NormalBandNode;
-    typedef itk::SparseImage <NormalBandNode,
-            itkGetStaticConstMacro(SpaceDimension)> SparseImageVectorType;
-    typedef itk::ImplicitManifoldNormalVectorFilter<ImageLabelType,
-            SparseImageVectorType> FilterType;
-    typedef itk::NormalVectorDiffusionFunction<SparseImageVectorType> FunctionType;
-
-    // FIXME : This filter is really really slow because we don't really have LevelSet
-    // so it completely instanciate the sparse image leading to an incredible memory consumption
-    typename FilterType::Pointer filter = FilterType::New();
-    typename FunctionType::Pointer function = FunctionType::New();
-    filter->SetInput(m_Labels);
-    filter->SetNormalFunction(function);
-    filter->SetIsoLevelLow (0);
-    filter->SetIsoLevelHigh (m_NbLabels);
-    // Should try to find a limit automatically
-    filter->SetMaxIteration (50);
-    filter->SetMinVectorNorm(0.001);
-    filter->Update();
-
-    m_LabelsNormals = ImageVectorType::New();
-    m_LabelsNormals->SetRegions(m_Labels->GetLargestPossibleRegion());
-    m_LabelsNormals->SetSpacing(m_Labels->GetSpacing());
-    m_LabelsNormals->SetOrigin(m_Labels->GetOrigin());
-    m_LabelsNormals->SetDirection(m_Labels->GetDirection());
-    m_LabelsNormals->Allocate();
-
-    // This part forces us to work in 3D
-    {
-      typename SparseImageVectorType::NodeListType::Iterator it(filter->GetOutput()->GetNodeList()->Front());
-      for (it = filter->GetOutput()->GetNodeList()->Begin(); it != filter->GetOutput()->GetNodeList()->End(); ++it)
-        if (it->m_Data == itk::NumericTraits<typename NormalBandNode::NodeDataType>::Zero)
-          m_LabelsNormals->SetPixel(it->m_Index, VectorType(base_x));
-        else
-          m_LabelsNormals->SetPixel(it->m_Index, it->m_Data);
-    }
-#else
     typedef itk::Image< double, itkGetStaticConstMacro( SpaceDimension ) >                          ImageDoubleType;
     typedef itk::ApproximateSignedDistanceMapImageFilter<ImageLabelType, ImageDoubleType>           DistFilterType;
     typedef itk::SmoothingRecursiveGaussianImageFilter<ImageDoubleType, ImageDoubleType>            SmoothFilterType;
@@ -239,8 +174,6 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
     castFilter->Update();
 
     m_LabelsNormals = castFilter->GetOutput();
-
-#endif
   }
 }
 
