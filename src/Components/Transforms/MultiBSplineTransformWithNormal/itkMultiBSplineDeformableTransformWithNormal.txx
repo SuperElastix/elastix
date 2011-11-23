@@ -136,7 +136,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
     typename StatisticsType::Pointer stat = StatisticsType::New();
     stat->SetInput(m_Labels);
     stat->Update();
-    m_NbLabels = stat->GetMaximum();
+    m_NbLabels = stat->GetMaximum() + 1;
     m_Trans.resize(m_NbLabels + 1);
     m_Para.resize(m_NbLabels + 1);
     for (unsigned i = 0; i <= m_NbLabels; ++i)
@@ -158,8 +158,8 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
     multFilter->SetConstant(2);
 
     typename DistFilterType::Pointer distFilter = DistFilterType::New();
-    distFilter->SetInsideValue(4);
-    distFilter->SetOutsideValue(2);
+    distFilter->SetInsideValue(2);
+    distFilter->SetOutsideValue(0);
     distFilter->SetInput(multFilter->GetOutput());
 
     typename SmoothFilterType::Pointer smoothFilter = SmoothFilterType::New();
@@ -530,15 +530,11 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 ::PointToLabel( const InputPointType & p, int & l) const
 {
   l = 0;
-  if ( this->m_Labels )
-  {
-    typename ImageLabelInterpolator::IndexType idx;
-    this->m_LabelsInterpolator->ConvertPointToNearestIndex( p, idx );
-    if ( this->m_LabelsInterpolator->IsInsideBuffer( idx ) )
-    {
-      l = static_cast<int>( this->m_LabelsInterpolator->EvaluateAtIndex( idx ) );
-    }
-  }
+  assert(this->m_Labels);
+  typename ImageLabelInterpolator::IndexType idx;
+  this->m_LabelsInterpolator->ConvertPointToNearestIndex( p, idx );
+  if ( this->m_LabelsInterpolator->IsInsideBuffer( idx ) )
+    l = static_cast<int>( this->m_LabelsInterpolator->EvaluateAtIndex( idx ) ) + 1;
 }
 
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>

@@ -516,7 +516,7 @@ void MultiBSplineTransformWithNormal<TElastix>
       for (unsigned d = 0; d < itkGetStaticConstMacro(SpaceDimension); ++d)
         tmp[d] = upsampledLabelParameters.GetElement(i + d * new_ParametersPerDimension);
 
-      if (labels[i] == l)
+      if (labels[i] + 1 == l)
         for (unsigned d = 0; d < itkGetStaticConstMacro(SpaceDimension); ++d)
           tmp[d] += upsampledNormalParameters.GetElement(i + d * new_ParametersPerDimension);
 
@@ -525,7 +525,7 @@ void MultiBSplineTransformWithNormal<TElastix>
         for (unsigned b = 0; b < itkGetStaticConstMacro(SpaceDimension); ++b)
           P[a][b] = new_bases[i][a][b];
       tmp = P * tmp;
-      if (labels[i] == l)
+      if (labels[i] + 1 == l)
         upsampledParameters.SetElement(i, tmp[0]);
       upsampledParameters.SetElement(i + (2 * l - 1) * new_ParametersPerDimension, tmp[1]);
       upsampledParameters.SetElement(i + 2 * l * new_ParametersPerDimension, tmp[2]);
