@@ -1,5 +1,4 @@
 
-
 ADD_ELXCOMPONENT( EulerTransformElastix
  elxEulerTransform.h
  elxEulerTransform.hxx
@@ -7,6 +6,4 @@ ADD_ELXCOMPONENT( EulerTransformElastix
  itkAdvancedEuler3DTransform.h
  itkAdvancedEuler3DTransform.txx
  itkEulerTransform.h )
-
-
 

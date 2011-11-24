@@ -1,6 +1,5 @@
 
-
-ADD_ELXCOMPONENT( SimilarityTransformElastix
+ADD_ELXCOMPONENT( SimilarityTransformElastix OFF
  elxSimilarityTransform.h
  elxSimilarityTransform.hxx
  elxSimilarityTransform.cxx
@@ -13,6 +12,4 @@ ADD_ELXCOMPONENT( SimilarityTransformElastix
  itkAdvancedVersorRigid3DTransform.h
  itkAdvancedVersorRigid3DTransform.txx
  itkSimilarityTransform.h )
-
-
 

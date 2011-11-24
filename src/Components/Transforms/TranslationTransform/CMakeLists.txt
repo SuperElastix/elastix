@@ -1,5 +1,4 @@
 
-
 ADD_ELXCOMPONENT( TranslationTransformElastix
  itkTranslationTransformInitializer.h
  itkTranslationTransformInitializer.hxx
@@ -8,6 +7,4 @@ ADD_ELXCOMPONENT( TranslationTransformElastix
  elxTranslationTransform.h
  elxTranslationTransform.hxx
  elxTranslationTransform.cxx )
-
-
 

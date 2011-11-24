@@ -4,5 +4,3 @@ ADD_ELXCOMPONENT( LinearInterpolator OFF
  elxLinearInterpolator.hxx
  elxLinearInterpolator.cxx )
 
-
-

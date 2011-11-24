@@ -1,6 +1,5 @@
 
-
-ADD_ELXCOMPONENT( DisplacementMagnitudePenalty
+ADD_ELXCOMPONENT( DisplacementMagnitudePenalty OFF
  elxDisplacementMagnitudePenalty.h
  elxDisplacementMagnitudePenalty.hxx
  elxDisplacementMagnitudePenalty.cxx

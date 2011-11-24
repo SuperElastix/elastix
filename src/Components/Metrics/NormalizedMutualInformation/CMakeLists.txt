@@ -1,5 +1,4 @@
 
-
 ADD_ELXCOMPONENT( NormalizedMutualInformationMetric
  elxNormalizedMutualInformationMetric.h
  elxNormalizedMutualInformationMetric.hxx

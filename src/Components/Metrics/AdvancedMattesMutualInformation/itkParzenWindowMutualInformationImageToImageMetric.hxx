@@ -868,4 +868,3 @@ namespace itk
 
 
 #endif // end #ifndef _itkParzenWindowMutualInformationImageToImageMetric_HXX__
-

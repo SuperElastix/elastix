@@ -1,8 +1,6 @@
 
-ADD_ELXCOMPONENT( RayCastInterpolator
+ADD_ELXCOMPONENT( RayCastInterpolator OFF
  elxRayCastInterpolator.h
  elxRayCastInterpolator.hxx
- elxRayCastInterpolator.cxx)
-
-
+ elxRayCastInterpolator.cxx )
 

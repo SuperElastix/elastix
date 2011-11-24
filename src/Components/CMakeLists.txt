@@ -21,8 +21,8 @@ IF( UNIX )
       ITKIO
       ITKCommon
       ITKStatistics )
-  ENDIF( NOT APPLE )
-ENDIF( UNIX )
+  ENDIF()
+ENDIF()
 
 # Interestingly, visual c++ and MAC-GCC do need param
 IF( WIN32 OR APPLE )
@@ -36,7 +36,7 @@ IF( WIN32 OR APPLE )
     ITKIO
     ITKCommon
     ITKStatistics )
-ENDIF( WIN32 OR APPLE )
+ENDIF()
 
 #--------------------------------------------------------------------
 # Prepare elxInstallComponentFunctionDeclarations.h and

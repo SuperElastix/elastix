@@ -4,5 +4,3 @@ ADD_ELXCOMPONENT( MutualInformationHistogramMetric OFF
  elxMutualInformationHistogramMetric.hxx
  elxMutualInformationHistogramMetric.cxx )
 
-
-

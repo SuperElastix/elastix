@@ -1,5 +1,4 @@
 
-
 ADD_ELXCOMPONENT( KNNGraphAlphaMutualInformationMetric
  elxKNNGraphAlphaMutualInformationMetric.h
  elxKNNGraphAlphaMutualInformationMetric.hxx
@@ -9,7 +8,6 @@ ADD_ELXCOMPONENT( KNNGraphAlphaMutualInformationMetric
 )
 
 IF( USE_KNNGraphAlphaMutualInformationMetric )
-  TARGET_LINK_LIBRARIES( KNNGraphAlphaMutualInformationMetric KNNlib ANNlib)
-ENDIF( USE_KNNGraphAlphaMutualInformationMetric )
-
+  TARGET_LINK_LIBRARIES( KNNGraphAlphaMutualInformationMetric KNNlib ANNlib )
+ENDIF()
 
