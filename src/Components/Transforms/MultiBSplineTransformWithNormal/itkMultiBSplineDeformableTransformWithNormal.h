@@ -1,12 +1,36 @@
-#ifndef ITKMULTIBSPLINEDEFORMABLETRANSFORMWITHNORMAL_H
-# define ITKMULTIBSPLINEDEFORMABLETRANSFORMWITHNORMAL_H
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+#ifndef __itkMultiBSplineDeformableTransformWithNormal_h
+#define __itkMultiBSplineDeformableTransformWithNormal_h
 
 #include "itkAdvancedBSplineDeformableTransform.h"
-
 #include "itkNearestNeighborInterpolateImageFunction.h"
+
 
 namespace itk
 {
+/**
+ * \class MultiBSplineDeformableTransformWithNormal
+ * \brief This transform is a composition of B-spline transformations,
+ *   allowing sliding motion between different labels.
+ *
+ * Detailed explanation ...
+ *
+ * \author Vivien Delmon
+ *
+ * \ingroup Transforms
+ */
 
 template <
     class TScalarType = double,          // Data type for scalars
@@ -17,7 +41,7 @@ class ITK_EXPORT MultiBSplineDeformableTransformWithNormal
 {
 public:
   /** Standard class typedefs. */
-  typedef MultiBSplineDeformableTransformWithNormal           Self;
+  typedef MultiBSplineDeformableTransformWithNormal Self;
   typedef AdvancedTransform<
     TScalarType, NDimensions, NDimensions >         Superclass;
   typedef SmartPointer<Self>                        Pointer;
@@ -67,23 +91,23 @@ public:
   typedef typename WeightsFunctionType::WeightsType         WeightsType;
 
   /** This method sets the parameters of the transform.
-     * For a BSpline deformation transform, the parameters are the BSpline
-     * coefficients on a sparse grid.
-     *
-     * The parameters are N number of N-D grid of coefficients. Each N-D grid
-     * is represented as a flat array of doubles
-     * (in the same configuration as an itk::Image).
-     * The N arrays are then concatenated to form one parameter array.
-     *
-     * For efficiency, this transform does not make a copy of the parameters.
-     * It only keeps a pointer to the input parameters. It assumes that the memory
-     * is managed by the caller. Use SetParametersByValue to force the transform
-     * to call copy the parameters.
-     *
-     * This method wraps each grid as itk::Image's using the user specified
-     * grid region, spacing and origin.
-     * NOTE: The grid region, spacing and origin must be set first.
-     */
+   * For a BSpline deformation transform, the parameters are the BSpline
+   * coefficients on a sparse grid.
+   *
+   * The parameters are N number of N-D grid of coefficients. Each N-D grid
+   * is represented as a flat array of doubles
+   * (in the same configuration as an itk::Image).
+   * The N arrays are then concatenated to form one parameter array.
+   *
+   * For efficiency, this transform does not make a copy of the parameters.
+   * It only keeps a pointer to the input parameters. It assumes that the memory
+   * is managed by the caller. Use SetParametersByValue to force the transform
+   * to call copy the parameters.
+   *
+   * This method wraps each grid as itk::Image's using the user specified
+   * grid region, spacing and origin.
+   * NOTE: The grid region, spacing and origin must be set first.
+   */
   void SetParameters( const ParametersType & parameters );
 
   /** This method sets the fixed parameters of the transform.
@@ -173,48 +197,47 @@ public:
   typedef IndexType                         GridOffsetType;
 
   /** This method specifies the region over which the grid resides. */
-  virtual void SetGridRegion( const RegionType& region );
-  virtual RegionType GetGridRegion() const;
+  virtual void SetGridRegion( const RegionType & region );
+  virtual RegionType GetGridRegion( void ) const;
 
   /** This method specifies the grid spacing or resolution. */
   virtual void SetGridSpacing( const SpacingType & spacing );
-  virtual SpacingType GetGridSpacing() const;
+  virtual SpacingType GetGridSpacing( void ) const;
 
   /** This method specifies the grid directions . */
   virtual void SetGridDirection( const DirectionType & spacing );
-  virtual DirectionType GetGridDirection() const;
+  virtual DirectionType GetGridDirection( void ) const;
 
   /** This method specifies the grid origin. */
-  virtual void SetGridOrigin( const OriginType& origin );
-  virtual OriginType GetGridOrigin() const;
+  virtual void SetGridOrigin( const OriginType & origin );
+  virtual OriginType GetGridOrigin( void ) const;
 
   /** Typedef of the label image. */
   typedef Image< unsigned char,
     itkGetStaticConstMacro( SpaceDimension ) >          ImageLabelType;
   typedef typename ImageLabelType::Pointer              ImageLabelPointer;
 
-  typedef itk::NearestNeighborInterpolateImageFunction<ImageLabelType, TScalarType> ImageLabelInterpolator;
-  typedef typename ImageLabelInterpolator::Pointer ImageLabelInterpolatorPointer;
+  typedef itk::NearestNeighborInterpolateImageFunction<
+    ImageLabelType, TScalarType>                        ImageLabelInterpolator;
+  typedef typename ImageLabelInterpolator::Pointer      ImageLabelInterpolatorPointer;
 
   /** Typedef of the Normal Grid. */
   typedef Vector<TScalarType, itkGetStaticConstMacro(SpaceDimension)>   VectorType;
   typedef Vector<VectorType, itkGetStaticConstMacro(SpaceDimension)>    BaseType;
-  typedef Image<VectorType, itkGetStaticConstMacro( SpaceDimension ) >	ImageVectorType;
-  typedef typename ImageVectorType::Pointer				ImageVectorPointer;
-  typedef Image<BaseType, itkGetStaticConstMacro( SpaceDimension ) >	ImageBaseType;
-  typedef typename ImageBaseType::Pointer				ImageBasePointer;
-
+  typedef Image<VectorType, itkGetStaticConstMacro( SpaceDimension ) >  ImageVectorType;
+  typedef typename ImageVectorType::Pointer       ImageVectorPointer;
+  typedef Image<BaseType, itkGetStaticConstMacro( SpaceDimension ) >    ImageBaseType;
+  typedef typename ImageBaseType::Pointer                               ImageBasePointer;
 
   /** This method specifies the label image. */
-  void SetLabels(ImageLabelType* labels);
-  itkGetMacro( Labels, ImageLabelType* );
+  void SetLabels( ImageLabelType* labels );
+  itkGetMacro( Labels, ImageLabelType * );
 
   itkGetConstMacro( NbLabels, unsigned char );
 
   /** Update Local Bases : call to it should become automatic and the function should become private */
-  void UpdateLocalBases();
-
-  itkGetMacro(LocalBases, ImageBaseType*);
+  void UpdateLocalBases( void );
+  itkGetMacro( LocalBases, ImageBaseType * );
 
   /** Parameter index array type. */
   typedef Array<unsigned long> ParameterIndexArrayType;
@@ -254,7 +277,7 @@ public:
   virtual unsigned int GetNumberOfParametersPerDimension( void ) const;
 
   /** Return the region of the grid wholly within the support region */
-  virtual const RegionType& GetValidRegion()
+  virtual const RegionType& GetValidRegion( void )
   {
     return m_Trans[0]->GetValidRegion();
   }
@@ -428,17 +451,18 @@ protected:
   ImageBasePointer                                  m_LocalBases;
 
 private:
-  void DispatchParameters(const ParametersType & parameters);
-  void PointToLabel(const InputPointType& p, int& l) const;
-  MultiBSplineDeformableTransformWithNormal(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
+  MultiBSplineDeformableTransformWithNormal(const Self&); // purposely not implemented
+  void operator=(const Self&); // purposely not implemented
 
-}; //class MultiBSplineDeformableTransformWithNormal
+  void DispatchParameters( const ParametersType & parameters );
+  void PointToLabel( const InputPointType & p, int & l ) const;
 
-}
+}; // end class MultiBSplineDeformableTransformWithNormal
 
-#if ITK_TEMPLATE_TXX
-# include "itkMultiBSplineDeformableTransformWithNormal.txx"
+} // end namespace itk
+
+#ifndef ITK_MANUAL_INSTANTIATION
+#include "itkMultiBSplineDeformableTransformWithNormal.txx"
 #endif
 
-#endif // ! ITKMULTIBSPLINEDEFORMABLETRANSFORMWITHNORMAL_H
+#endif // end __itkMultiBSplineDeformableTransformWithNormal_h

@@ -1,12 +1,8 @@
+
 ADD_ELXCOMPONENT( MultiBSplineTransformWithNormal OFF
  elxMultiBSplineTransformWithNormal.h
  elxMultiBSplineTransformWithNormal.hxx
  elxMultiBSplineTransformWithNormal.cxx
  itkMultiBSplineDeformableTransformWithNormal.h
- itkMultiBSplineDeformableTransformWithNormal.txx
-# itkCyclicBSplineDeformableTransform.h
-# itkCyclicBSplineDeformableTransform.txx
-# itkCyclicGridScheduleComputer.h
-# itkCyclicGridScheduleComputer.txx
-)
+ itkMultiBSplineDeformableTransformWithNormal.txx )
 

@@ -36,7 +36,6 @@ template <class TElastix>
 MultiBSplineTransformWithNormal<TElastix>
 ::MultiBSplineTransformWithNormal()
 {
-
 } // end Constructor()
 
 
@@ -50,18 +49,18 @@ unsigned int MultiBSplineTransformWithNormal<TElastix>
 {
   /** Initialize the right BSplineTransform and GridScheduleComputer. */
   this->m_GridScheduleComputer = GridScheduleComputerType::New();
-  this->m_GridScheduleComputer->SetBSplineOrder( m_SplineOrder );
+  this->m_GridScheduleComputer->SetBSplineOrder( this->m_SplineOrder );
 
   /*
-  if ( m_SplineOrder == 1)
+  if ( this->m_SplineOrder == 1)
   {
     this->m_MultiBSplineTransformWithNormal = MultiBSplineTransformWithNormalLinearType::New();
   }
-  else if ( m_SplineOrder == 2)
+  else if ( this->m_SplineOrder == 2)
   {
     this->m_MultiBSplineTransformWithNormal = MultiBSplineTransformWithNormalQuadraticType::New();
   }
-  else */if ( m_SplineOrder == 3)
+  else */if ( this->m_SplineOrder == 3)
   {
     this->m_MultiBSplineTransformWithNormal = MultiBSplineTransformWithNormalCubicType::New();
   }
@@ -76,7 +75,7 @@ unsigned int MultiBSplineTransformWithNormal<TElastix>
   this->m_GridUpsampler->SetBSplineOrder( m_SplineOrder );
 
   return 0;
-}
+} // end InitializeBSplineTransform()
 
 
 /**
@@ -88,17 +87,18 @@ int MultiBSplineTransformWithNormal<TElastix>
 ::BeforeAll( void )
 {
   /** Read spline order and periodicity setting from configuration file. */
-  m_SplineOrder = 3;
-  this->GetConfiguration()->ReadParameter( m_SplineOrder,
+  this->m_SplineOrder = 3;
+  this->GetConfiguration()->ReadParameter( this->m_SplineOrder,
     "BSplineTransformSplineOrder", this->GetComponentLabel(), 0, 0, true );
 
-  m_LabelsPath = this->m_Configuration->GetCommandLineArgument("-labels");
-  if (m_LabelsPath != "")
+  this->m_LabelsPath = this->m_Configuration->GetCommandLineArgument( "-labels" );
+  if ( this->m_LabelsPath != "" )
   {
-    typename ImageFileReader<ImageLabelType>::Pointer reader = ImageFileReader<ImageLabelType>::New();
-    reader->SetFileName(m_LabelsPath);
+    typename ImageFileReader<ImageLabelType>::Pointer reader
+      = ImageFileReader<ImageLabelType>::New();
+    reader->SetFileName( this->m_LabelsPath );
     reader->Update();
-    m_Labels = reader->GetOutput();
+    this->m_Labels = reader->GetOutput();
   }
   else
   {
@@ -110,7 +110,8 @@ int MultiBSplineTransformWithNormal<TElastix>
   }
 
   return InitializeBSplineTransform();
-}
+
+} // end BeforeAll()
 
 
 /**
@@ -443,24 +444,27 @@ void MultiBSplineTransformWithNormal<TElastix>
   typedef typename ImageVectorType::PixelContainer                          VectorContainer;
 
   typedef itk::Vector<VectorType, itkGetStaticConstMacro(SpaceDimension)>   BaseType;
-  typedef itk::Image<BaseType, itkGetStaticConstMacro(SpaceDimension)>	    ImageBaseType;
+  typedef itk::Image<BaseType, itkGetStaticConstMacro(SpaceDimension)>      ImageBaseType;
   typedef typename ImageBaseType::Pointer                                   ImageBasePointer;
   typedef typename ImageBaseType::PixelContainer                            BaseContainer;
 
   ImageBasePointer Bases = this->m_MultiBSplineTransformWithNormal->GetLocalBases();
-  const BaseContainer& bases = *Bases->GetPixelContainer();
+  const BaseContainer & bases = *Bases->GetPixelContainer();
 
-  unsigned ParametersPerDimension = this->m_MultiBSplineTransformWithNormal->GetNumberOfParametersPerDimension();
+  unsigned ParametersPerDimension
+    = this->m_MultiBSplineTransformWithNormal->GetNumberOfParametersPerDimension();
 
   ParametersType upsampledNormalParameters, tmpParameters;
-  tmpParameters.SetSize(ParametersPerDimension * itkGetStaticConstMacro(SpaceDimension));
-  for (unsigned i = 0; i < ParametersPerDimension; ++i)
+  tmpParameters.SetSize( ParametersPerDimension * SpaceDimension );
+  for ( unsigned int i = 0; i < ParametersPerDimension; ++i )
   {
-    VectorType tmp = latestParameters.GetElement(i) * bases[i][0];
-    for (unsigned d = 0; d < itkGetStaticConstMacro(SpaceDimension); ++d)
-      tmpParameters.SetElement(i + d * ParametersPerDimension, tmp[d]);
+    VectorType tmp = latestParameters.GetElement( i ) * bases[i][0];
+    for ( unsigned int d = 0; d < SpaceDimension; ++d )
+    {
+      tmpParameters.SetElement( i + d * ParametersPerDimension, tmp[d] );
+    }
   }
-  this->m_GridUpsampler->UpsampleParameters( tmpParameters, upsampledNormalParameters);
+  this->m_GridUpsampler->UpsampleParameters( tmpParameters, upsampledNormalParameters );
 
   this->m_MultiBSplineTransformWithNormal->SetGridOrigin( requiredGridOrigin );
   this->m_MultiBSplineTransformWithNormal->SetGridSpacing( requiredGridSpacing );
@@ -469,66 +473,84 @@ void MultiBSplineTransformWithNormal<TElastix>
   this->m_MultiBSplineTransformWithNormal->UpdateLocalBases();
 
   ImageBasePointer new_Bases = this->m_MultiBSplineTransformWithNormal->GetLocalBases();
-  const BaseContainer& new_bases = *new_Bases->GetPixelContainer();
+  const BaseContainer & new_bases = *new_Bases->GetPixelContainer();
 
   typedef itk::Image<unsigned char, itkGetStaticConstMacro(SpaceDimension)> ImageLabelType;
-  typename ImageLabelType::Pointer Labels = this->m_MultiBSplineTransformWithNormal->GetLabels();
-  typename itk::ResampleImageFilter<ImageLabelType, ImageLabelType>::Pointer filter = itk::ResampleImageFilter<ImageLabelType, ImageLabelType>::New();
-  filter->SetInterpolator(itk::NearestNeighborInterpolateImageFunction<ImageLabelType, double>::New());
-  filter->SetInput(Labels);
-  filter->SetOutputParametersFromImage(new_Bases);
+  typename ImageLabelType::Pointer labels1 = this->m_MultiBSplineTransformWithNormal->GetLabels();
+  typename itk::ResampleImageFilter<ImageLabelType, ImageLabelType>::Pointer filter
+    = itk::ResampleImageFilter<ImageLabelType, ImageLabelType>::New();
+  filter->SetInterpolator( itk::NearestNeighborInterpolateImageFunction<ImageLabelType, double>::New() );
+  filter->SetInput( labels1 );
+  filter->SetOutputParametersFromImage( new_Bases );
   filter->Update();
-  typedef typename ImageLabelType::PixelContainer LabelContainer;
-  const LabelContainer& labels = *filter->GetOutput()->GetPixelContainer();
 
-  unsigned new_ParametersPerDimension = this->m_MultiBSplineTransformWithNormal->GetNumberOfParametersPerDimension();
+  typedef typename ImageLabelType::PixelContainer LabelContainer;
+  const LabelContainer & labels = *filter->GetOutput()->GetPixelContainer();
+
+  unsigned new_ParametersPerDimension
+    = this->m_MultiBSplineTransformWithNormal->GetNumberOfParametersPerDimension();
 
   unsigned char NbLabels = this->m_MultiBSplineTransformWithNormal->GetNbLabels();
   ParametersType upsampledParameters;
-  upsampledParameters.SetSize((1 + (itkGetStaticConstMacro(SpaceDimension) - 1) * NbLabels) * new_ParametersPerDimension);
-  upsampledParameters.Fill(0.0);
+  upsampledParameters.SetSize( (1 + (SpaceDimension - 1) * NbLabels) * new_ParametersPerDimension );
+  upsampledParameters.Fill( 0.0 );
 
-  for (unsigned l = 1; l <= NbLabels; ++l)
+  for ( unsigned int l = 1; l <= NbLabels; ++l )
   {
     ParametersType upsampledLabelParameters;
-    for (unsigned i = 0; i < ParametersPerDimension; ++i)
+    for ( unsigned int i = 0; i < ParametersPerDimension; ++i )
     {
       VectorType tmp;
-      for (unsigned d = 0; d < itkGetStaticConstMacro(SpaceDimension); ++d)
-        tmp[d] = 0;
-
-      for (unsigned d = 1; d < itkGetStaticConstMacro(SpaceDimension); ++d)
+      for ( unsigned int d = 0; d < SpaceDimension; ++d )
       {
-        tmp += bases[i][d] * latestParameters.GetElement(i + ((itkGetStaticConstMacro(SpaceDimension) - 1) *
-                                                              (l - 1) + d)
-                                                             * ParametersPerDimension);
+        tmp[d] = 0;
       }
 
-      for (unsigned d = 0; d < itkGetStaticConstMacro(SpaceDimension); ++d)
-        tmpParameters.SetElement(i + d * ParametersPerDimension, tmp[d]);
+      for ( unsigned int d = 1; d < SpaceDimension; ++d )
+      {
+        tmp += bases[i][d] * latestParameters.GetElement(
+          i + ( (SpaceDimension - 1) * (l - 1) + d) * ParametersPerDimension );
+      }
+
+      for ( unsigned int d = 0; d < SpaceDimension; ++d )
+      {
+        tmpParameters.SetElement( i + d * ParametersPerDimension, tmp[d] );
+      }
     }
-    this->m_GridUpsampler->UpsampleParameters( tmpParameters, upsampledLabelParameters);
+    this->m_GridUpsampler->UpsampleParameters( tmpParameters, upsampledLabelParameters );
 
     // Redecompose N / U / V
-    for (unsigned i = 0; i < new_ParametersPerDimension; ++i)
+    for ( unsigned int i = 0; i < new_ParametersPerDimension; ++i )
     {
       VectorType tmp;
-      for (unsigned d = 0; d < itkGetStaticConstMacro(SpaceDimension); ++d)
-        tmp[d] = upsampledLabelParameters.GetElement(i + d * new_ParametersPerDimension);
+      for ( unsigned int d = 0; d < SpaceDimension; ++d )
+      {
+        tmp[d] = upsampledLabelParameters.GetElement( i + d * new_ParametersPerDimension );
+      }
 
-      if (labels[i] + 1 == l)
-        for (unsigned d = 0; d < itkGetStaticConstMacro(SpaceDimension); ++d)
-          tmp[d] += upsampledNormalParameters.GetElement(i + d * new_ParametersPerDimension);
+      if ( labels[i] + 1 == l )
+      {
+        for ( unsigned int d = 0; d < SpaceDimension; ++d )
+        {
+          tmp[d] += upsampledNormalParameters.GetElement( i + d * new_ParametersPerDimension );
+        }
+      }
 
-      itk::Matrix<double, itkGetStaticConstMacro(SpaceDimension), itkGetStaticConstMacro(SpaceDimension)> P;
-      for (unsigned a = 0; a < itkGetStaticConstMacro(SpaceDimension); ++a)
-        for (unsigned b = 0; b < itkGetStaticConstMacro(SpaceDimension); ++b)
+      itk::Matrix<double, SpaceDimension, SpaceDimension> P;
+      for ( unsigned int a = 0; a < SpaceDimension; ++a )
+      {
+        for ( unsigned int b = 0; b < SpaceDimension; ++b )
+        {
           P[a][b] = new_bases[i][a][b];
+        }
+      }
       tmp = P * tmp;
-      if (labels[i] + 1 == l)
-        upsampledParameters.SetElement(i, tmp[0]);
-      upsampledParameters.SetElement(i + (2 * l - 1) * new_ParametersPerDimension, tmp[1]);
-      upsampledParameters.SetElement(i + 2 * l * new_ParametersPerDimension, tmp[2]);
+      if ( labels[ i ] + 1 == l )
+      {
+        upsampledParameters.SetElement( i, tmp[0] );
+      }
+      upsampledParameters.SetElement( i + (2 * l - 1) * new_ParametersPerDimension, tmp[1] );
+      upsampledParameters.SetElement( i + 2 * l * new_ParametersPerDimension, tmp[2] );
     }
   }
 
@@ -553,10 +575,10 @@ void MultiBSplineTransformWithNormal<TElastix>
 ::ReadFromFile( void )
 {
   /** Read spline order and periodicity settings and initialize BSplineTransform. */
-  m_SplineOrder = 3;
-  this->GetConfiguration()->ReadParameter( m_SplineOrder,
+  this->m_SplineOrder = 3;
+  this->GetConfiguration()->ReadParameter( this->m_SplineOrder,
     "BSplineTransformSplineOrder", this->GetComponentLabel(), 0, 0 );
-  InitializeBSplineTransform();
+  this->InitializeBSplineTransform();
 
   /** Read and Set the Grid: this is a BSplineTransform specific task. */
 
@@ -598,16 +620,17 @@ void MultiBSplineTransformWithNormal<TElastix>
   this->m_MultiBSplineTransformWithNormal->SetGridDirection( griddirection );
 
   /** Read the labels map */
-  this->GetConfiguration()->ReadParameter( m_LabelsPath,
+  this->GetConfiguration()->ReadParameter( this->m_LabelsPath,
     "MultiBSplineTransformWithNormalLabels", this->GetComponentLabel(), 0, 0 );
-  if (m_LabelsPath != "")
+  if ( this->m_LabelsPath != "" )
   {
-    typename ImageFileReader<ImageLabelType>::Pointer reader = ImageFileReader<ImageLabelType>::New();
-    reader->SetFileName(m_LabelsPath);
+    typename ImageFileReader<ImageLabelType>::Pointer reader
+      = ImageFileReader<ImageLabelType>::New();
+    reader->SetFileName( this->m_LabelsPath );
     reader->Update();
-    m_Labels = reader->GetOutput();
+    this->m_Labels = reader->GetOutput();
   }
-  this->m_MultiBSplineTransformWithNormal->SetLabels(m_Labels);
+  this->m_MultiBSplineTransformWithNormal->SetLabels( this->m_Labels );
   this->m_MultiBSplineTransformWithNormal->UpdateLocalBases();
 
   /** Call the ReadFromFile from the TransformBase.
@@ -694,10 +717,13 @@ void MultiBSplineTransformWithNormal<TElastix>
   xout["transpar"] << ")" << std::endl;
 
   /** Write the spline order and periodicity of this transform. */
-  xout["transpar"] << "(BSplineTransformSplineOrder " << m_SplineOrder << ")" << std::endl;
+  xout["transpar"] << "(BSplineTransformSplineOrder "
+    << this->m_SplineOrder << ")" << std::endl;
 
   /** Write the label map path of this transform. */
-  xout["transpar"] << "(MultiBSplineTransformWithNormalLabels \"" << itksys::SystemTools::CollapseFullPath(m_LabelsPath.c_str()) << "\" )" << std::endl;
+  xout["transpar"] << "(MultiBSplineTransformWithNormalLabels \""
+    << itksys::SystemTools::CollapseFullPath( this->m_LabelsPath.c_str() )
+    << "\" )" << std::endl;
 
 
   /** Set the precision back to default value. */
@@ -801,4 +827,3 @@ SetOptimizerScales( const unsigned int edgeWidth )
 
 
 #endif // end #ifndef __elxMultiBSplineTransformWithNormal_hxx
-

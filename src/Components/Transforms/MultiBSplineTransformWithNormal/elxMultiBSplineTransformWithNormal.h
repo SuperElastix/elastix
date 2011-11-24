@@ -78,6 +78,8 @@ using namespace itk;
  *
  * \todo It is unsure what happens when one of the image dimensions has length 1.
  *
+ * \author Vivien Delmon
+ *
  * \ingroup Transforms
  */
 
@@ -93,7 +95,7 @@ class MultiBSplineTransformWithNormal
 public:
 
   /** Standard ITK-stuff. */
-  typedef MultiBSplineTransformWithNormal                   Self;
+  typedef MultiBSplineTransformWithNormal         Self;
   typedef AdvancedCombinationTransform<
     typename elx::TransformBase<TElastix>::CoordRepType,
     elx::TransformBase<TElastix>::FixedImageDimension > Superclass1;
@@ -265,7 +267,7 @@ private:
   GridScheduleComputerPointer   m_GridScheduleComputer;
   GridUpsamplerPointer          m_GridUpsampler;
   ImageLabelPointer             m_Labels;
-  std::string			m_LabelsPath;
+  std::string     m_LabelsPath;
 
   /** Variable to remember order of MultiBSplineTransformWithNormal. */
   unsigned int m_SplineOrder;

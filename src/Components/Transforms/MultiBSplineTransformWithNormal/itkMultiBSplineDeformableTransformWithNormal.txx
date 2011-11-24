@@ -1,5 +1,18 @@
-#ifndef ITKMULTIBSPLINEDEFORMABLETRANSFORMWITHNORMAL_TXX
-# define ITKMULTIBSPLINEDEFORMABLETRANSFORMWITHNORMAL_TXX
+/*======================================================================
+
+  This file is part of the elastix software.
+
+  Copyright (c) University Medical Center Utrecht. All rights reserved.
+  See src/CopyrightElastix.txt or http://elastix.isi.uu.nl/legal.php for
+  details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+     PURPOSE. See the above copyright notices for more information.
+
+======================================================================*/
+#ifndef __itkMultiBSplineDeformableTransformWithNormal_txx
+#define __itkMultiBSplineDeformableTransformWithNormal_txx
 
 #include "itkMultiBSplineDeformableTransformWithNormal.h"
 #include "itkStatisticsImageFilter.h"
@@ -182,9 +195,9 @@ struct UpdateLocalBases_impl
 {
   typedef itk::Vector<TScalarType, NDimensions> VectorType;
   typedef itk::Vector<VectorType, NDimensions>  BaseType;
-  typedef itk::Image<VectorType, NDimensions>	ImageVectorType;
+  typedef itk::Image<VectorType, NDimensions> ImageVectorType;
   typedef typename ImageVectorType::Pointer     ImageVectorPointer;
-  typedef itk::Image<BaseType, NDimensions>	ImageBaseType;
+  typedef itk::Image<BaseType, NDimensions> ImageBaseType;
   typedef typename ImageBaseType::Pointer       ImageBasePointer;
 
   static void Do(ImageBaseType*, ImageVectorType*)
@@ -199,9 +212,9 @@ struct UpdateLocalBases_impl<TScalarType, 2>
   static const unsigned NDimensions = 2;
   typedef itk::Vector<TScalarType, NDimensions> VectorType;
   typedef itk::Vector<VectorType, NDimensions>  BaseType;
-  typedef itk::Image<VectorType, NDimensions>	ImageVectorType;
+  typedef itk::Image<VectorType, NDimensions> ImageVectorType;
   typedef typename ImageVectorType::Pointer     ImageVectorPointer;
-  typedef itk::Image<BaseType, NDimensions>	ImageBaseType;
+  typedef itk::Image<BaseType, NDimensions> ImageBaseType;
   typedef typename ImageBaseType::Pointer       ImageBasePointer;
 
   static void Do(ImageBaseType* bases, ImageVectorType* normals)
@@ -258,9 +271,9 @@ struct UpdateLocalBases_impl<TScalarType, 3>
   static const unsigned NDimensions = 3;
   typedef itk::Vector<TScalarType, NDimensions> VectorType;
   typedef itk::Vector<VectorType, NDimensions>  BaseType;
-  typedef itk::Image<VectorType, NDimensions>	ImageVectorType;
+  typedef itk::Image<VectorType, NDimensions> ImageVectorType;
   typedef typename ImageVectorType::Pointer     ImageVectorPointer;
-  typedef itk::Image<BaseType, NDimensions>	ImageBaseType;
+  typedef itk::Image<BaseType, NDimensions> ImageBaseType;
   typedef typename ImageBaseType::Pointer       ImageBasePointer;
 
   static void Do(ImageBaseType* bases, ImageVectorType* normals)
@@ -929,6 +942,6 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   }
 }
 
-} // namespace
+} // end namespace itk
 
-#endif // ! ITKMULTIBSPLINEDEFORMABLETRANSFORMWITHNORMAL_TXX
+#endif // end #ifndef __itkMultiBSplineDeformableTransformWithNormal_txx
