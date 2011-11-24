@@ -528,7 +528,7 @@ void MultiBSplineTransformWithNormal<TElastix>
         tmp[d] = upsampledLabelParameters.GetElement( i + d * new_ParametersPerDimension );
       }
 
-      if ( labels[i] + 1 == l )
+      if ( static_cast<unsigned int>( labels[i] + 1 ) == l )
       {
         for ( unsigned int d = 0; d < SpaceDimension; ++d )
         {
@@ -545,7 +545,7 @@ void MultiBSplineTransformWithNormal<TElastix>
         }
       }
       tmp = P * tmp;
-      if ( labels[ i ] + 1 == l )
+      if ( static_cast<unsigned int>( labels[ i ] + 1 ) == l )
       {
         upsampledParameters.SetElement( i, tmp[0] );
       }
