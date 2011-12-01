@@ -2,10 +2,9 @@
 Project( elxTesting )
 
 # Set some directories
-set( TestDataDir ${elastix_SOURCE_DIR}/Testing/Data)
-set( TestBaselineDir ${elastix_SOURCE_DIR}/Testing/Baselines)
+set( TestDataDir ${elastix_SOURCE_DIR}/Testing/Data )
+set( TestBaselineDir ${elastix_SOURCE_DIR}/Testing/Baselines )
 set( TestOutputDir ${elastix_BINARY_DIR}/Testing )
-
 
 #---------------------------------------------------------------------
 # Python is used by some tests
@@ -23,7 +22,6 @@ if( ELASTIX_USE_MEVISDICOMTIFF )
 else()
   set( mevisdcmtifflib )
 endif()
-
 
 #---------------------------------------------------------------------
 # Macro that simplifies the addition of tests
@@ -57,13 +55,55 @@ macro( elx_add_test name )
 endmacro()
 
 #---------------------------------------------------------------------
-# Macro that simplifies the addition of tests that run elastix
+# Macro's that simplifies the addition of tests that run elastix
 #
 # Usage:
 # elx_add_run_test( <name_of_test>
 #                   IMAGE <name_of_baseline> | METRICVALUE "string"
+#                     | CHECKSUM "string"
 #                   <elastix_commandline_arguments> )
 #
+
+# Get the baseline checksum values file
+#
+# Ideally, a registration returns exactly the same result, regardless of
+# platform, OS and compiler. We observed however, that this is not the case.
+# Therefore, for some tests we accept differences between systems, and only
+# test for consistency over time for the same system.
+#
+# To this end we have defined baseline checksum values for several systems.
+# The code below checks what the current system is and finds the corresponding
+# baseline file. We currently do this by means of the generator and system name.
+#
+# TEmporary note: We can't use CTEST_BUILD_NAME, since the tests may not be run through the
+# dasboard scripts, which define this value.
+# What if not one of these ? Find nearest? For now default to Linux-64bit-gcc4
+message( STATUS ${CMAKE_GENERATOR} )
+message( STATUS ${CMAKE_SYSTEM} )
+message( STATUS ${CMAKE_SYSTEM_NAME} )
+if( CMAKE_GENERATOR STREQUAL "Visual Studio 9 2008 Win64"
+    AND CMAKE_SYSTEM STREQUAL "Windows-6.1" ) # LKEB, PC Marius
+  set( checksumBaselineFile ${TestBaselineDir}/checksums_Win7-64bit-VS2008.txt )
+elseif( CMAKE_GENERATOR STREQUAL "Visual Studio 10 Win64"
+    AND CMAKE_SYSTEM STREQUAL "Windows-6.1" ) # LKEB, PC Marius
+  set( checksumBaselineFile ${TestBaselineDir}/checksums_Win7-64bit-VS2010.txt )
+elseif( CMAKE_GENERATOR STREQUAL "Visual Studio 9 2008"
+    AND CMAKE_SYSTEM STREQUAL "Windows-5.1" ) # BIGR, PC Stefan
+  set( checksumBaselineFile ${TestBaselineDir}/checksums_Win7-32bit-VS2008.txt )
+elseif( CMAKE_GENERATOR STREQUAL "Unix Makefiles"
+    AND CMAKE_SYSTEM STREQUAL "Linux" ) # LKEB, goliath
+  set( checksumBaselineFile ${TestBaselineDir}/checksums_Linux-64bit-gcc4.txt )
+elseif( CMAKE_GENERATOR STREQUAL "Unix Makefiles"
+    AND CMAKE_SYSTEM STREQUAL "Mac OSX" ) # LKEB, MacMini
+  set( checksumBaselineFile ${TestBaselineDir}/checksums_Linux-64bit-gcc4.txt )
+elseif( CMAKE_GENERATOR STREQUAL "Unix Makefiles"
+    AND CMAKE_SYSTEM STREQUAL "Linux" ) # BIGR, linux cluster
+  set( checksumBaselineFile ${TestBaselineDir}/checksums_Linux-64bit-gcc4.txt )
+else()
+  # Default
+  set( checksumBaselineFile ${TestBaselineDir}/checksums_Linux-64bit-gcc4.txt )
+endif()
+message( STATUS ${checksumBaselineFile} )
 
 # Python script used for comparing elastix output with baseline strings
 set( pythonfinalmetric ${elastix_SOURCE_DIR}/Testing/elx_compare_finalmetricvalue.py )
@@ -115,6 +155,7 @@ macro( elx_add_run_test testbasename howtocompare baseline )
   elseif( ${howtocompare} STREQUAL "METRICVALUE" )
     # Only run when python was found
     if( python_executable )
+      # Add comparison test, checking the final metric value and more
       add_test( NAME ${testname}_COMPARE
         CONFIGURATIONS Release
         COMMAND ${python_executable} ${pythonfinalmetric}
@@ -126,10 +167,19 @@ macro( elx_add_run_test testbasename howtocompare baseline )
   elseif( ${howtocompare} STREQUAL "CHECKSUM" )
     # Only run when python was found
     if( python_executable )
+      # Did the test provide auto or a fixed checksum ?
+      if( ${baseline} STREQUAL "auto" )
+        set( baselineOptionCommand "-f" )
+        set( baselineOptionValue ${checksumBaselineFile} )
+      else()
+        set( baselineOptionCommand "-b" )
+        set( baselineOptionValue ${baseline} )
+      endif()
+      # Add comparison test, checking the registration checksum
       add_test( NAME ${testname}_COMPARE
         CONFIGURATIONS Release
         COMMAND ${python_executable} ${pythonchecksum}
-        -b ${baseline} -d ${output_dir} -v )
+        ${baselineOptionCommand} ${baselineOptionValue} -d ${output_dir} -v )
       set_tests_properties( ${testname}_COMPARE
         PROPERTIES DEPENDS  ${testname}_OUTPUT )
     endif()
@@ -209,21 +259,24 @@ elx_add_run_test( 3DCT_lung.NC.affine.ASGD.001checksum
 
 # Test some metrics
 elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.001
-  "CHECKSUM" 2209466441
+  #  "CHECKSUM" 2209466441
+  "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.001.txt )
 
 elx_add_run_test( 3DCT_lung.MI.bspline.ASGD.001
-  "CHECKSUM" 2234356863
+  #  "CHECKSUM" 2234356863
+  "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.MI.bspline.ASGD.001.txt )
 
 elx_add_run_test( 3DCT_lung.NMI.bspline.ASGD.001
-  "CHECKSUM" 3201757062
+  #  "CHECKSUM" 3201757062
+  "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
@@ -231,7 +284,8 @@ elx_add_run_test( 3DCT_lung.NMI.bspline.ASGD.001
 
 # Test some combo metrics
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.002
-  "CHECKSUM" 1374321245
+  #  "CHECKSUM" 1374321245
+  "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -fp ${TestDataDir}/3DCT_lung_baseline.txt
@@ -262,7 +316,8 @@ elx_add_run_test( 3DCT_lung.NC.bspline.SGD.001
   -p ${TestDataDir}/parameters.3D.NC.bspline.SGD.001.txt )
 
 elx_add_run_test( 3DCT_lung.NC.bspline.QN.001
-  "CHECKSUM" 869048287
+  #  "CHECKSUM" 869048287
+  "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
@@ -270,28 +325,32 @@ elx_add_run_test( 3DCT_lung.NC.bspline.QN.001
 
 # Test some samplers
 elx_add_run_test( 3DCT_lung.MI.bspline.SGD.001
-  "CHECKSUM" 947853335
+  #  "CHECKSUM" 947853335
+  "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.001.txt )
 
 elx_add_run_test( 3DCT_lung.MI.bspline.SGD.002
-  "CHECKSUM" 3495426412
+  #  "CHECKSUM" 3495426412
+  "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.002.txt )
 
 elx_add_run_test( 3DCT_lung.MI.bspline.SGD.003
-  "CHECKSUM" 1158326297
+  #  "CHECKSUM" 1158326297
+  "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.003.txt )
 
 elx_add_run_test( 3DCT_lung.MI.bspline.SGD.004
-  "CHECKSUM" 2710903580
+  #  "CHECKSUM" 2710903580
+  "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -fMask ${TestDataDir}/3DCT_lung_baseline_mask.mha
@@ -318,28 +377,32 @@ elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.003
 ### TEMPORARY TESTING TO FIND THE PLATFORM INCONSISTENCIES
 # Checksums defined on windows 64 bit machine LKEB PC Marius
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001a
-  "CHECKSUM" 792071748
+  #  "CHECKSUM" 792071748
+  "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001a.txt )
 
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001b
-  "CHECKSUM" 2618589300
+  #  "CHECKSUM" 2618589300
+  "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001b.txt )
 
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001c
-  "CHECKSUM" 3105983252
+  #  "CHECKSUM" 3105983252
+  "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001c.txt )
 
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001d
-  "CHECKSUM" 2549300057
+  #  "CHECKSUM" 2549300057
+  "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt

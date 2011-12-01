@@ -5,7 +5,13 @@ from optparse import OptionParser
 
 #-------------------------------------------------------------------------------
 # the main function
-def main():
+# This python script compares are registration result with a baseline value.
+# The registration result is summarized by the registration checksum as printed
+# in the elastix.log file. The baseline checksum value is given through the
+# command line, either via -b checksum or via -f filename containing the baseline
+# value. The latter file can be automatically generated per system via the python
+# script elx_get_checksum_list.py.
+def main() :
     # usage, parse parameters
     usage = "usage: %prog [options] arg"
     parser = OptionParser( usage )
@@ -17,26 +23,68 @@ def main():
     # options to control files
     parser.add_option( "-d", "--directory", dest="directory", help="elastix output directory" )
     parser.add_option( "-b", "--baseline", dest="baseline", help="baseline checksum" )
+    parser.add_option( "-f", "--baselinefile", dest="baselineFile", help="baseline file" )
 
-    (options, args) = parser.parse_args()
+    (options, args) = parser.parse_args();
+
+    # Check if option -d is given
+    if options.directory == None :
+      parser.error( "The option directory (-d) should be given" )
+
+    # Check if either option -b or -f is given
+    if options.baseline != None and options.baselineFile != None :
+      parser.error( "Use either option -d OR -f" )
+    if options.baseline == None and options.baselineFile == None :
+      parser.error( "Use either option -d OR -f" )
+
+    # Get the baseline checksum. Either it is provided through the commandline
+    # by -b, or by means of a text file using -f.
+    if options.baselineFile != None :
+      if os.path.exists( options.baselineFile ) :
+        fb = open( options.baselineFile )
+        checksumlineBaseline = ""
+        dirString = options.directory.rsplit( "/", 1 )[1];
+        for line in fb:
+          if dirString in line:
+            checksumlineBaseline = line
+        fb.close();
+
+        # Extract checksum
+        tmp = checksumlineBaseline.split(' ');
+        if len( tmp ) > 1 :
+          baselineChecksum = tmp[1].rstrip( "\n" );
+        else :
+          baselineChecksum = "";
+      else :
+        print "ERROR: the checksum baseline file %s does not exist!" % options.baselineFile
+        return 1
+    else :
+      baselineChecksum = options.baseline;
+
+    # todo check if baselineChecksum now is defined to something
 
     # Equivalent to: fileName = options.directory + "/" + "elastix.log"
-    fileName = os.path.join( options.directory, "elastix.log" );
+    elastixLogFileName = os.path.join( options.directory, "elastix.log" );
 
     # Read elastix.log and find last line with checksum
-    f = open( fileName )
+    f = open( elastixLogFileName )
+    checksumline = ""
     for line in f:
       if "Registration result checksum:" in line:
         checksumline = line
 
     # Extract checksum
-    checksum = checksumline.split(': ')[1].rstrip( "\n" );
+    tmp = checksumline.split(': ');
+    if len( tmp ) > 1 :
+      testChecksum = tmp[1].rstrip( "\n" );
+    else :
+      testChecksum = "";
 
     # Print result
-    print "The registration result checksum is: %s" % checksum
-    print "The baseline checksum is: %s" % options.baseline
+    print "The registration result checksum is: %s" % testChecksum
+    print "The baseline checksum is: %s" % baselineChecksum
 
-    if options.baseline != checksum:
+    if baselineChecksum != testChecksum:
       print "FAILURE: These values are NOT the same.\n"
       if options.verbose:
         print "Complete elastix.log file:\n"
