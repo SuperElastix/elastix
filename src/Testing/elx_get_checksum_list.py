@@ -12,22 +12,23 @@ def main():
 
     # option to debug and verbose
     parser.add_option( "-v", "--verbose",
-        action="store_true", dest="verbose" )
+      action="store_true", dest="verbose" )
 
     # options to control files
     parser.add_option( "-l", "--list", type="string", dest="directoryList", help="list of elastix output directories" )
-    #parser.add_option( "-o", "--output", dest="output", help="output text file" )
 
     (options, args) = parser.parse_args()
+
+    # Check if option -l is given
+    if options.directoryList == None :
+      parser.error( "The option directory list (-l) should be given" )
 
     # Convert string -l to list
     dirList = options.directoryList.split( ' ' )
     # Add everything not processed
     dirList.extend( args );
-    #print "dirList: %s" % dirList
 
     print "directory checksum"
-
     for directory in dirList:
       # Equivalent to: fileName = options.directory + "/" + "elastix.log"
       fileName = os.path.join( directory, "elastix.log" );

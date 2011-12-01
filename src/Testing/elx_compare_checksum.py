@@ -54,7 +54,7 @@ def main() :
         if len( tmp ) > 1 :
           baselineChecksum = tmp[1].rstrip( "\n" );
         else :
-          baselineChecksum = "";
+          baselineChecksum = "not found";
       else :
         print "ERROR: the checksum baseline file %s does not exist!" % options.baselineFile
         return 1
@@ -78,7 +78,7 @@ def main() :
     if len( tmp ) > 1 :
       testChecksum = tmp[1].rstrip( "\n" );
     else :
-      testChecksum = "";
+      testChecksum = "not found";
 
     # Print result
     print "The registration result checksum is: %s" % testChecksum
