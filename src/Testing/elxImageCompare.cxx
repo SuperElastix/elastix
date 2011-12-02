@@ -42,7 +42,8 @@ std::string GetHelpString( void )
     << "pximagecompare" << std::endl
     << "  -test      image filename to test against baseline\n"
     << "  -base      baseline image filename\n"
-    << "  [-t]       intensity difference threshold, default 0";
+    << "  [-t]       intensity difference threshold, default 0\n"
+    << "  [-a]       allowable tolerance (# voxels different), default 0";
   return ss.str();
 
 } // end GetHelpString()
@@ -81,6 +82,9 @@ int main( int argc, char **argv )
 
   double diffThreshold = 0.0;
   parser->GetCommandLineArgument( "-t", diffThreshold );
+
+  unsigned long allowedTolerance = 0;
+  parser->GetCommandLineArgument( "-a", allowedTolerance );
 
   // Read images
   typedef itk::Image<double,ITK_TEST_DIMENSION_MAX>           ImageType;
@@ -132,8 +136,8 @@ int main( int argc, char **argv )
   //typedef itk::Testing::ComparisonImageFilter< ImageType, ImageType > ComparisonFilterType; // in ITK4
   typedef itk::DifferenceImageFilter< ImageType, ImageType > ComparisonFilterType; // in ITK4
   ComparisonFilterType::Pointer comparisonFilter = ComparisonFilterType::New();
-  comparisonFilter->SetTestInput(testReader->GetOutput());
-  comparisonFilter->SetValidInput(baselineReader->GetOutput());
+  comparisonFilter->SetTestInput( testReader->GetOutput() );
+  comparisonFilter->SetValidInput( baselineReader->GetOutput() );
   comparisonFilter->SetDifferenceThreshold( diffThreshold );
   try
   {
@@ -154,6 +158,9 @@ int main( int argc, char **argv )
 
     // Create name for diff image
     std::string diffImageFileName =
+      itksys::SystemTools::GetFilenamePath( testImageFileName );
+    diffImageFileName += "/";
+    diffImageFileName +=
       itksys::SystemTools::GetFilenameWithoutLastExtension( testImageFileName );
     diffImageFileName += "_DIFF";
     diffImageFileName += itksys::SystemTools::GetFilenameLastExtension( testImageFileName );
@@ -172,7 +179,10 @@ int main( int argc, char **argv )
       return EXIT_FAILURE;
     }
 
-    return EXIT_FAILURE;
+    if ( numberOfDifferentPixels > allowedTolerance )
+    {
+      return EXIT_FAILURE;
+    }
 
   } // end if discrepancies
 
