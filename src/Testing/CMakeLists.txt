@@ -73,37 +73,32 @@ endmacro()
 #
 # To this end we have defined baseline checksum values for several systems.
 # The code below checks what the current system is and finds the corresponding
-# baseline file. We currently do this by means of the generator and system name.
+# baseline file. We currently do this by means of the CTEST_SITE and CTEST_BUILD_NAME.
+# Different sites can give different results, so we only test the checksum for
+# the sites that are known to us, and those are the sites that submit to the
+# nightly dashboard. Note that this means that these checksum comparison test
+# only work if run via the dashboard scripts.
 #
-# TEmporary note: We can't use CTEST_BUILD_NAME, since the tests may not be run through the
-# dasboard scripts, which define this value.
-# What if not one of these ? Find nearest? For now default to Linux-64bit-gcc4
-message( STATUS ${CMAKE_GENERATOR} )
-message( STATUS ${CMAKE_SYSTEM} )
-message( STATUS ${CMAKE_SYSTEM_NAME} )
-if( CMAKE_GENERATOR STREQUAL "Visual Studio 9 2008 Win64"
-    AND CMAKE_SYSTEM STREQUAL "Windows-6.1" ) # LKEB, PC Marius
-  set( checksumBaselineFile ${TestBaselineDir}/checksums_Win7-64bit-VS2008.txt )
-elseif( CMAKE_GENERATOR STREQUAL "Visual Studio 10 Win64"
-    AND CMAKE_SYSTEM STREQUAL "Windows-6.1" ) # LKEB, PC Marius
-  set( checksumBaselineFile ${TestBaselineDir}/checksums_Win7-64bit-VS2010.txt )
-elseif( CMAKE_GENERATOR STREQUAL "Visual Studio 9 2008"
-    AND CMAKE_SYSTEM STREQUAL "Windows-5.1" ) # BIGR, PC Stefan
-  set( checksumBaselineFile ${TestBaselineDir}/checksums_Win7-32bit-VS2008.txt )
-elseif( CMAKE_GENERATOR STREQUAL "Unix Makefiles"
-    AND CMAKE_SYSTEM STREQUAL "Linux" ) # LKEB, goliath
-  set( checksumBaselineFile ${TestBaselineDir}/checksums_Linux-64bit-gcc4.txt )
-elseif( CMAKE_GENERATOR STREQUAL "Unix Makefiles"
-    AND CMAKE_SYSTEM STREQUAL "Mac OSX" ) # LKEB, MacMini
-  set( checksumBaselineFile ${TestBaselineDir}/checksums_Linux-64bit-gcc4.txt )
-elseif( CMAKE_GENERATOR STREQUAL "Unix Makefiles"
-    AND CMAKE_SYSTEM STREQUAL "Linux" ) # BIGR, linux cluster
-  set( checksumBaselineFile ${TestBaselineDir}/checksums_Linux-64bit-gcc4.txt )
-else()
-  # Default
-  set( checksumBaselineFile ${TestBaselineDir}/checksums_Linux-64bit-gcc4.txt )
+set( knownChecksumSystem false )
+if( CTEST_SITE STREQUAL "LKEB.PCMarius"
+    AND CTEST_BUILD_NAME STREQUAL "Win7-64bit-VS2008" )
+  set( checksumBaselineFile ${TestBaselineDir}checksums_LKEB.PCMarius_Win7-64bit-VS2008.txt )
+  set( knownChecksumSystem true )
+elseif( CTEST_SITE STREQUAL "LKEB.PCMarius"
+    AND CTEST_BUILD_NAME STREQUAL "Win7-64bit-VS2010" )
+  set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.PCMarius_Win7-64bit-VS2010.txt )
+  set( knownChecksumSystem true )
+elseif( CTEST_SITE STREQUAL "LKEB.goliath"
+    AND CTEST_BUILD_NAME STREQUAL "Linux-64bit-gcc4.4.3-Release" )
+  set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.goliath_Linux-64bit-gcc4.txt )
+  set( knownChecksumSystem true )
+elseif( CTEST_SITE STREQUAL "LKEB.MacMini"
+    AND CTEST_BUILD_NAME STREQUAL "MacOSX-64bit-gcc4.2.1" )
+  set( checksumBaselineFile ${TestBaselineDir}/checksums_MacOSX-64bit-gcc4.txt )
+elseif( CTEST_SITE STREQUAL "BIGR.PCStefan"
+    AND CTEST_BUILD_NAME STREQUAL "WinXP-32bit-VS2008" )
+  set( checksumBaselineFile ${TestBaselineDir}/checksums_BIGR.PCStefan_WinXP-32bit-VS2008.txt )
 endif()
-message( STATUS ${checksumBaselineFile} )
 
 # Python script used for comparing elastix output with baseline strings
 set( pythonfinalmetric ${elastix_SOURCE_DIR}/Testing/elx_compare_finalmetricvalue.py )
@@ -141,6 +136,7 @@ macro( elx_add_run_test testbasename howtocompare baseline )
     -out ${output_dir} )
   set_tests_properties( ${testname}_OUTPUT
     PROPERTIES TIMEOUT 600 )
+
   # Compare elastix output image with baseline image
   if( ${howtocompare} STREQUAL "IMAGE" )
     add_test( NAME ${testname}_COMPARE
@@ -165,8 +161,8 @@ macro( elx_add_run_test testbasename howtocompare baseline )
     endif()
   # Compare elastix output using checksum
   elseif( ${howtocompare} STREQUAL "CHECKSUM" )
-    # Only run when python was found
-    if( python_executable )
+    # Only run when python was found and if this is a known system
+    if( python_executable AND knownChecksumSystem )
       # Did the test provide auto or a fixed checksum ?
       if( ${baseline} STREQUAL "auto" )
         set( baselineOptionCommand "-f" )
@@ -182,17 +178,34 @@ macro( elx_add_run_test testbasename howtocompare baseline )
         ${baselineOptionCommand} ${baselineOptionValue} -d ${output_dir} -v )
       set_tests_properties( ${testname}_COMPARE
         PROPERTIES DEPENDS  ${testname}_OUTPUT )
-    endif()
+    endif() # end python found
+  endif() # end howtocompare
 
-  endif()
+  # Always compare against a baseline TransformParameters file
+  # Baselines have been generated on LKEB, PCMarius, Win7, 64 bit, VS2008
+  set( baselineTP ${TestBaselineDir}/TransformParameters_${testbasename}.txt )
+  set( testTP ${output_dir}/TransformParameters.${countp}.txt )
+  add_test( NAME ${testname}_COMPARE_TP
+    CONFIGURATIONS Release
+    COMMAND elxTransformParametersCompare
+    -base ${baselineTP}
+    -test ${testTP}
+    -a 1e-6 )
+  set_tests_properties( ${testname}_COMPARE_TP
+    PROPERTIES DEPENDS  ${testname}_OUTPUT )
 endmacro()
 
 #---------------------------------------------------------------------
 
-# Create imagecompare.
+# Create elxImageCompare
 add_executable( elxImageCompare elxImageCompare.cxx itkCommandLineArgumentParser.cxx )
 target_link_libraries( elxImageCompare ${ITK_LIBRARIES} )
 set_property( TARGET elxImageCompare PROPERTY FOLDER "tests" )
+
+# Create elxTransformParametersCompare
+add_executable( elxTransformParametersCompare elxTransformParametersCompare.cxx itkCommandLineArgumentParser.cxx )
+target_link_libraries( elxTransformParametersCompare param ${ITK_LIBRARIES} )
+set_property( TARGET elxTransformParametersCompare PROPERTY FOLDER "tests" )
 
 #---------------------------------------------------------------------
 # Add tests

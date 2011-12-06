@@ -39,7 +39,7 @@ std::string GetHelpString( void )
 {
   std::stringstream ss;
   ss << "Usage:" << std::endl
-    << "pximagecompare" << std::endl
+    << "elxImageCompare" << std::endl
     << "  -test      image filename to test against baseline\n"
     << "  -base      baseline image filename\n"
     << "  [-t]       intensity difference threshold, default 0\n"
