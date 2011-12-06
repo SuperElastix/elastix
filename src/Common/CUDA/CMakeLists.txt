@@ -1,5 +1,12 @@
 
+# The compiler flag -ftemplate-depth-50 is by default propagated to the CUDA compiler.
+# This, however, generates a compiler warning. We temporarily remove the flag, and add
+# it again after CUDA_ADD_LIBRARY.
+set( remember_flags ${CMAKE_CXX_FLAGS} )
+string( REGEX REPLACE "-ftemplate-depth-50" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" )
 CUDA_ADD_LIBRARY( elastix_cuda cudaResampleImageFilter.cu cudaResampleImageFilter.cuh )
+set( CMAKE_CXX_FLAGS ${remember_flags} )
+
 CUDA_INCLUDE_DIRECTORIES( ${CUDA_SDK_ROOT_DIR}/C/common/inc )
 
 # Add some additional options to the nvcc compiler
