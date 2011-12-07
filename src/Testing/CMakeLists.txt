@@ -99,6 +99,7 @@ elseif( CTEST_SITE STREQUAL "BIGR.PCStefan"
     AND CTEST_BUILD_NAME STREQUAL "WinXP-32bit-VS2008" )
   set( checksumBaselineFile ${TestBaselineDir}/checksums_BIGR.PCStefan_WinXP-32bit-VS2008.txt )
 endif()
+message( STATUS "Known checksum system? "${knownChecksumSystem} )
 
 # Python script used for comparing elastix output with baseline strings
 set( pythonfinalmetric ${elastix_SOURCE_DIR}/Testing/elx_compare_finalmetricvalue.py )
@@ -139,24 +140,24 @@ macro( elx_add_run_test testbasename howtocompare baseline )
 
   # Compare elastix output image with baseline image
   if( ${howtocompare} STREQUAL "IMAGE" )
-    add_test( NAME ${testname}_COMPARE
+    add_test( NAME ${testname}_COMPARE_IM
       CONFIGURATIONS Release
       COMMAND elxImageCompare
       -base ${baseline}
       -test ${output_dir}/result.${countp}.mhd
       -t 1.0 )
-    set_tests_properties( ${testname}_COMPARE
+    set_tests_properties( ${testname}_COMPARE_IM
       PROPERTIES DEPENDS  ${testname}_OUTPUT )
   # Compare elastix output from IterationInfo with a baseline string
   elseif( ${howtocompare} STREQUAL "METRICVALUE" )
     # Only run when python was found
     if( python_executable )
       # Add comparison test, checking the final metric value and more
-      add_test( NAME ${testname}_COMPARE
+      add_test( NAME ${testname}_COMPARE_METRIC
         CONFIGURATIONS Release
         COMMAND ${python_executable} ${pythonfinalmetric}
         -b ${baseline} -d ${output_dir} )
-      set_tests_properties( ${testname}_COMPARE
+      set_tests_properties( ${testname}_COMPARE_METRIC
         PROPERTIES DEPENDS  ${testname}_OUTPUT )
     endif()
   # Compare elastix output using checksum
@@ -172,11 +173,11 @@ macro( elx_add_run_test testbasename howtocompare baseline )
         set( baselineOptionValue ${baseline} )
       endif()
       # Add comparison test, checking the registration checksum
-      add_test( NAME ${testname}_COMPARE
+      add_test( NAME ${testname}_COMPARE_CHECKSUM
         CONFIGURATIONS Release
         COMMAND ${python_executable} ${pythonchecksum}
         ${baselineOptionCommand} ${baselineOptionValue} -d ${output_dir} -v )
-      set_tests_properties( ${testname}_COMPARE
+      set_tests_properties( ${testname}_COMPARE_CHECKSUM
         PROPERTIES DEPENDS  ${testname}_OUTPUT )
     endif() # end python found
   endif() # end howtocompare
