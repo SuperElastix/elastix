@@ -80,26 +80,27 @@ endmacro()
 # only work if run via the dashboard scripts.
 #
 set( knownChecksumSystem false )
-if( CTEST_SITE STREQUAL "LKEB.PCMarius"
-    AND CTEST_BUILD_NAME STREQUAL "Win7-64bit-VS2008" )
-  set( checksumBaselineFile ${TestBaselineDir}checksums_LKEB.PCMarius_Win7-64bit-VS2008.txt )
+if( SITE STREQUAL "LKEB.PCMarius"
+    AND BUILDNAME STREQUAL "Win7-64bit-VS2008" )
+  set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.PCMarius_Win7-64bit-VS2008.txt )
   set( knownChecksumSystem true )
-elseif( CTEST_SITE STREQUAL "LKEB.PCMarius"
-    AND CTEST_BUILD_NAME STREQUAL "Win7-64bit-VS2010" )
+elseif( SITE STREQUAL "LKEB.PCMarius"
+    AND BUILDNAME STREQUAL "Win7-64bit-VS2010" )
   set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.PCMarius_Win7-64bit-VS2010.txt )
   set( knownChecksumSystem true )
-elseif( CTEST_SITE STREQUAL "LKEB.goliath"
-    AND CTEST_BUILD_NAME STREQUAL "Linux-64bit-gcc4.4.3-Release" )
+elseif( SITE STREQUAL "LKEB.goliath"
+    AND BUILDNAME STREQUAL "Linux-64bit-gcc4.4.3-Release" )
   set( checksumBaselineFile ${TestBaselineDir}/checksums_LKEB.goliath_Linux-64bit-gcc4.txt )
   set( knownChecksumSystem true )
-elseif( CTEST_SITE STREQUAL "LKEB.MacMini"
-    AND CTEST_BUILD_NAME STREQUAL "MacOSX-64bit-gcc4.2.1" )
+elseif( SITE STREQUAL "LKEB.MacMini"
+    AND BUILDNAME STREQUAL "MacOSX-64bit-gcc4.2.1" )
   set( checksumBaselineFile ${TestBaselineDir}/checksums_MacOSX-64bit-gcc4.txt )
-elseif( CTEST_SITE STREQUAL "BIGR.PCStefan"
-    AND CTEST_BUILD_NAME STREQUAL "WinXP-32bit-VS2008" )
+elseif( SITE STREQUAL "BIGR.PCStefan"
+    AND BUILDNAME STREQUAL "WinXP-32bit-VS2008" )
   set( checksumBaselineFile ${TestBaselineDir}/checksums_BIGR.PCStefan_WinXP-32bit-VS2008.txt )
 endif()
 message( STATUS "Known checksum system? "${knownChecksumSystem} )
+message( STATUS "checksumBaselineFile: "${checksumBaselineFile} )
 
 # Python script used for comparing elastix output with baseline strings
 set( pythonfinalmetric ${elastix_SOURCE_DIR}/Testing/elx_compare_finalmetricvalue.py )
