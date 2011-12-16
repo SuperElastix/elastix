@@ -1,6 +1,7 @@
 import sys
 import os
 import os.path
+import glob
 from optparse import OptionParser
 
 #-------------------------------------------------------------------------------
@@ -23,8 +24,8 @@ def main():
     if options.directoryList == None :
       parser.error( "The option directory list (-l) should be given" )
 
-    # Convert string -l to list
-    dirList = options.directoryList.split( ' ' )
+    # Use glob, this works not only on Linux
+    dirList = glob.glob( options.directoryList );
     # Add everything not processed
     dirList.extend( args );
 
