@@ -28,7 +28,6 @@ PURPOSE. See the above copyright notices for more information.
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
 #ifndef __itkAdvancedBSplineDeformableTransform_h
 #define __itkAdvancedBSplineDeformableTransform_h
 

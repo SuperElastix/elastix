@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxOptimizerBase_hxx
 #define __elxOptimizerBase_hxx
 
