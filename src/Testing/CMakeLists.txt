@@ -250,13 +250,13 @@ elx_add_run_test( 3DCT_lung.example
 
 # Test some transforms
 elx_add_run_test( 3DCT_lung.NC.translation.ASGD.001
-  "CHECKSUM" 2711524819
+  "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -p ${TestDataDir}/parameters.3D.NC.translation.ASGD.001.txt )
 
 elx_add_run_test( 3DCT_lung.NC.euler.ASGD.001
-  "CHECKSUM" 3164583274
+  "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -p ${TestDataDir}/parameters.3D.NC.euler.ASGD.001.txt )
@@ -269,14 +269,13 @@ elx_add_run_test( 3DCT_lung.NC.affine.ASGD.001metric
   -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt )
 
 elx_add_run_test( 3DCT_lung.NC.affine.ASGD.001checksum
-  "CHECKSUM" 2212427187
+  "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt )
 
 # Test some metrics
 elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.001
-  #  "CHECKSUM" 2209466441
   "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
@@ -284,7 +283,6 @@ elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.001
   -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.001.txt )
 
 elx_add_run_test( 3DCT_lung.MI.bspline.ASGD.001
-  #  "CHECKSUM" 2234356863
   "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
@@ -292,7 +290,6 @@ elx_add_run_test( 3DCT_lung.MI.bspline.ASGD.001
   -p ${TestDataDir}/parameters.3D.MI.bspline.ASGD.001.txt )
 
 elx_add_run_test( 3DCT_lung.NMI.bspline.ASGD.001
-  #  "CHECKSUM" 3201757062
   "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
@@ -301,7 +298,6 @@ elx_add_run_test( 3DCT_lung.NMI.bspline.ASGD.001
 
 # Test some combo metrics
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.002
-  #  "CHECKSUM" 1374321245
   "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
@@ -311,14 +307,14 @@ elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.002
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.002.txt )
 
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.003
-  "CHECKSUM" 392325787
+  "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.003.txt )
 
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.004
-  "CHECKSUM" 3464268329
+  "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
@@ -326,14 +322,13 @@ elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.004
 
 # Test some optimizers
 elx_add_run_test( 3DCT_lung.NC.bspline.SGD.001
-  "CHECKSUM" 3274775574
+  "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.NC.bspline.SGD.001.txt )
 
 elx_add_run_test( 3DCT_lung.NC.bspline.QN.001
-  #  "CHECKSUM" 869048287
   "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
@@ -342,7 +337,6 @@ elx_add_run_test( 3DCT_lung.NC.bspline.QN.001
 
 # Test some samplers
 elx_add_run_test( 3DCT_lung.MI.bspline.SGD.001
-  #  "CHECKSUM" 947853335
   "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
@@ -350,7 +344,6 @@ elx_add_run_test( 3DCT_lung.MI.bspline.SGD.001
   -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.001.txt )
 
 elx_add_run_test( 3DCT_lung.MI.bspline.SGD.002
-  #  "CHECKSUM" 3495426412
   "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
@@ -358,7 +351,6 @@ elx_add_run_test( 3DCT_lung.MI.bspline.SGD.002
   -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.002.txt )
 
 elx_add_run_test( 3DCT_lung.MI.bspline.SGD.003
-  #  "CHECKSUM" 1158326297
   "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
@@ -366,7 +358,6 @@ elx_add_run_test( 3DCT_lung.MI.bspline.SGD.003
   -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.003.txt )
 
 elx_add_run_test( 3DCT_lung.MI.bspline.SGD.004
-  #  "CHECKSUM" 2710903580
   "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
@@ -376,14 +367,14 @@ elx_add_run_test( 3DCT_lung.MI.bspline.SGD.004
 
 # Test some interpolators
 elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.002
-  "CHECKSUM" 1740515246
+  "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.002.txt )
 
 elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.003
-  "CHECKSUM" 2043650983
+  "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
@@ -394,7 +385,6 @@ elx_add_run_test( 3DCT_lung.SSD.bspline.ASGD.003
 ### TEMPORARY TESTING TO FIND THE PLATFORM INCONSISTENCIES
 # Checksums defined on windows 64 bit machine LKEB PC Marius
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001a
-  #  "CHECKSUM" 792071748
   "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
@@ -402,7 +392,6 @@ elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001a
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001a.txt )
 
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001b
-  #  "CHECKSUM" 2618589300
   "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
@@ -410,7 +399,6 @@ elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001b
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001b.txt )
 
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001c
-  #  "CHECKSUM" 3105983252
   "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
@@ -418,7 +406,6 @@ elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001c
   -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001c.txt )
 
 elx_add_run_test( 3DCT_lung.NC.bspline.ASGD.001d
-  #  "CHECKSUM" 2549300057
   "CHECKSUM" "auto"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
