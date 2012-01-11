@@ -263,7 +263,7 @@ elx_add_run_test( 3DCT_lung.NC.euler.ASGD.001
 
 # temporarily keep this test:
 elx_add_run_test( 3DCT_lung.NC.affine.ASGD.001metric
-  "METRICVALUE" "499 -0.917434 147.732214 6.247953 0.005693 x"#
+  "METRICVALUE" "499 -0.935885 130.979467 6.349671 0.004575 x"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt )
