@@ -194,7 +194,7 @@ macro( elx_add_run_test testbasename howtocompare baseline )
     COMMAND elxTransformParametersCompare
     -base ${baselineTP}
     -test ${testTP}
-    -a 1e-6 )
+    -a 1e-3 )
   set_tests_properties( ${testname}_COMPARE_TP
     PROPERTIES DEPENDS  ${testname}_OUTPUT )
 endmacro()
