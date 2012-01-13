@@ -83,7 +83,7 @@ using namespace itk;
     class MultiInputRandomCoordinateSampler :
     public
       MultiInputImageRandomCoordinateSampler<
-      ITK_TYPENAME elx::ImageSamplerBase<TElastix>::InputImageType >,
+      typename elx::ImageSamplerBase<TElastix>::InputImageType >,
     public
       elx::ImageSamplerBase<TElastix>
   {

@@ -47,7 +47,7 @@ template <class TElastix >
 class TransformBendingEnergyPenalty:
   public
   TransformBendingEnergyPenaltyTerm<
-  ITK_TYPENAME MetricBase<TElastix>::FixedImageType,
+  typename MetricBase<TElastix>::FixedImageType,
   double >,
   public MetricBase<TElastix>
 {

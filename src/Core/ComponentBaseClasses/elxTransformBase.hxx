@@ -23,15 +23,16 @@
 #include "vnl/vnl_math.h"
 #include <itksys/SystemTools.hxx>
 #include "itkVector.h"
-#include "itkTransformToDeformationFieldSource.h"
+#include "itkTransformToDisplacementFieldSource.h"
 #include "itkTransformToDeterminantOfSpatialJacobianSource.h"
 #include "itkTransformToSpatialJacobianSource.h"
 #include "itkImageFileWriter.h"
 #include "itkImageGridSampler.h"
 #include "itkContinuousIndex.h"
 #include "itkChangeInformationImageFilter.h"
-#include "itkVTKPolyDataReader.h"
-#include "itkVTKPolyDataWriter.h"
+#include "itkMesh.h"
+#include "itkMeshFileReader.h"
+#include "itkMeshFileWriter.h"
 #include "itkTransformMeshFilter.h"
 
 
@@ -93,8 +94,6 @@ private:
 
 namespace elastix
 {
-//using namespace itk; //Not here because the ITK also started to define a TransformBase class....
-
 
 /**
  * ********************* Constructor ****************************
@@ -1060,6 +1059,7 @@ TransformBase<TElastix>
   
 } // end TransformPointsSomePoints()
 
+
 /**
  * ************** TransformPointsSomePointsVTK *********************
  *
@@ -1083,8 +1083,8 @@ TransformBase<TElastix>
     FixedImageDimension, CoordRepType>                  MeshTraitsType;
   typedef itk::Mesh<
     DummyIPPPixelType, FixedImageDimension, MeshTraitsType > MeshType;
-  typedef itk::VTKPolyDataReader< MeshType >            MeshReaderType;
-  typedef itk::VTKPolyDataWriter< MeshType >            MeshWriterType;
+  typedef itk::MeshFileReader< MeshType >               MeshReaderType;
+  typedef itk::MeshFileWriter< MeshType >               MeshWriterType;
   typedef itk::TransformMeshFilter<
     MeshType, MeshType, CombinationTransformType>       TransformMeshFilterType;
 
@@ -1166,7 +1166,7 @@ void TransformBase<TElastix>
   typedef itk::Image<
     VectorPixelType, FixedImageDimension >            DeformationFieldImageType;
   typedef typename DeformationFieldImageType::Pointer DeformationFieldImagePointer;
-  typedef itk::TransformToDeformationFieldSource<
+  typedef itk::TransformToDisplacementFieldSource<
     DeformationFieldImageType, CoordRepType >         DeformationFieldGeneratorType;
   typedef itk::ChangeInformationImageFilter<
     DeformationFieldImageType >                       ChangeInfoFilterType;
@@ -1505,6 +1505,7 @@ TransformBase<TElastix>
     ImageSamplerType::ImageSampleContainerType        ImageSampleContainerType;
   typedef typename ImageSampleContainerType::Pointer  ImageSampleContainerPointer;
   typedef typename ITKBaseType::JacobianType          JacobianType;
+  typedef typename ITKBaseType::NonZeroJacobianIndicesType  NonZeroJacobianIndicesType;
 
   const ITKBaseType * const thisITK = this->GetAsITKBaseType();
   const unsigned int outdim = MovingImageDimension;
@@ -1544,7 +1545,9 @@ TransformBase<TElastix>
   for ( iter = begin; iter != end; ++iter )
   {
     const InputPointType & point = (*iter).Value().m_ImageCoordinates;
-    const JacobianType & jacobian = thisITK->GetJacobian( point );
+    //const JacobianType & jacobian = thisITK->GetJacobian( point );
+    JacobianType jacobian; NonZeroJacobianIndicesType nzji;
+    thisITK->GetJacobian( point, jacobian, nzji );
 
     /** Square each element of the Jacobian and add each row
      * to the newscales.

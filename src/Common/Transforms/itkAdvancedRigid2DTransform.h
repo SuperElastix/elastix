@@ -81,6 +81,7 @@ public:
 
   /** Parameters type. */
   typedef typename Superclass::ParametersType  ParametersType;
+  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
 
   /** Jacobian type. */
   typedef typename Superclass::JacobianType  JacobianType;
@@ -228,8 +229,8 @@ public:
 
 protected:
   AdvancedRigid2DTransform();
-  AdvancedRigid2DTransform( unsigned int outputSpaceDimension,
-                    unsigned int parametersDimension);
+  AdvancedRigid2DTransform( unsigned int parametersDimension );
+  AdvancedRigid2DTransform( unsigned int outputSpaceDimension, unsigned int parametersDimension );
 
  ~AdvancedRigid2DTransform();
 

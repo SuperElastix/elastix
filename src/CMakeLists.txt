@@ -81,24 +81,6 @@ IF( NOT ITK_USE_REVIEW )
   message( SEND_ERROR "ITK_USE_REVIEW has not been set to ON when compiling ITK. This option is mandatory for elastix to build.\nPlease recompile your ITK installation." )
 ENDIF()
 
-IF( NOT ITK_USE_REVIEW_STATISTICS )
-  message( SEND_ERROR "ITK_USE_REVIEW_STATISTICS has not been set to ON when compiling ITK. This option is mandatory for elastix to build.\nPlease recompile your ITK installation." )
-ENDIF()
-
-# This variable seems to be internal
-#IF( NOT ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE )
-#  message( SEND_ERROR "ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE has not been set to ON when compiling ITK. This option is mandatory for elastix to build.\nPlease recompile your ITK installation." )
-#ENDIF()
-
-IF( NOT ITK_USE_ORIENTED_IMAGE_DIRECTION )
-  message( SEND_ERROR "ITK_USE_ORIENTED_IMAGE_DIRECTION has not been set to ON when compiling ITK. This option is mandatory for elastix to build.\nPlease recompile your ITK installation." )
-ENDIF()
-
-# This variable seems to be internal
-#IF( NOT ITK_USE_CENTERED_PIXEL_COORDINATES_CONSISTENTLY )
-# message( SEND_ERROR "ITK_USE_CENTERED_PIXEL_COORDINATES_CONSISTENTLY has not been set to ON when compiling ITK. This option is mandatory for elastix to build.\nPlease recompile your ITK installation." )
-#ENDIF()
-
 #---------------------------------------------------------------------
 # If IDE supports it, do use folder view.
 # gcc automatically ignores it. VC Express does not support and gives

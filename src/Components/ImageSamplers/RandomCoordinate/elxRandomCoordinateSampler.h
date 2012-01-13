@@ -76,7 +76,7 @@ template < class TElastix >
 class RandomCoordinateSampler :
   public
   ImageRandomCoordinateSampler<
-  ITK_TYPENAME elx::ImageSamplerBase<TElastix>::InputImageType >,
+  typename elx::ImageSamplerBase<TElastix>::InputImageType >,
   public
   elx::ImageSamplerBase<TElastix>
 {

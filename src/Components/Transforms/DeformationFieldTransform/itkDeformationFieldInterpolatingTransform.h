@@ -62,17 +62,17 @@ namespace itk
     itkStaticConstMacro(OutputSpaceDimension, unsigned int, Superclass::OutputSpaceDimension);
 
     /** Superclass typedefs */
-    typedef typename Superclass::ScalarType ScalarType;
-    typedef typename Superclass::ParametersType ParametersType;
-    typedef typename Superclass::JacobianType JacobianType;
-    typedef typename Superclass::InputVectorType InputVectorType;
-    typedef typename Superclass::OutputVectorType OutputVectorType;
-    typedef typename Superclass::InputCovariantVectorType InputCovariantVectorType;
-    typedef typename Superclass::OutputCovariantVectorType OutputCovariantVectorType;
-    typedef typename Superclass::InputVnlVectorType InputVnlVectorType;
-    typedef typename Superclass::OutputVnlVectorType OutputVnlVectorType;
-    typedef typename Superclass::InputPointType InputPointType;
-    typedef typename Superclass::OutputPointType OutputPointType;
+    typedef typename Superclass::ScalarType           ScalarType;
+    typedef typename Superclass::ParametersType       ParametersType;
+    typedef typename Superclass::JacobianType         JacobianType;
+    typedef typename Superclass::InputVectorType      InputVectorType;
+    typedef typename Superclass::OutputVectorType     OutputVectorType;
+    typedef typename Superclass::InputCovariantVectorType   InputCovariantVectorType;
+    typedef typename Superclass::OutputCovariantVectorType  OutputCovariantVectorType;
+    typedef typename Superclass::InputVnlVectorType   InputVnlVectorType;
+    typedef typename Superclass::OutputVnlVectorType  OutputVnlVectorType;
+    typedef typename Superclass::InputPointType       InputPointType;
+    typedef typename Superclass::OutputPointType      OutputPointType;
 
     typedef TComponentType                            DeformationFieldComponentType;
     typedef Vector<DeformationFieldComponentType,
@@ -81,17 +81,59 @@ namespace itk
       itkGetStaticConstMacro(InputSpaceDimension) >   DeformationFieldType;
 
     typedef VectorInterpolateImageFunction<
-      DeformationFieldType, ScalarType >
-                        DeformationFieldInterpolatorType;
+      DeformationFieldType, ScalarType >              DeformationFieldInterpolatorType;
     typedef VectorNearestNeighborInterpolateImageFunction<
-      DeformationFieldType, ScalarType >
-                        DefaultDeformationFieldInterpolatorType;
+      DeformationFieldType, ScalarType >              DefaultDeformationFieldInterpolatorType;
 
+    /** Set the transformation parameters is not supported.
+     * Use SetDeformationField() instead
+     */
+    virtual void SetParameters( const ParametersType & )
+    {
+      itkExceptionMacro( << "ERROR: SetParameters() is not implemented "
+        << "for DeformationFieldInterpolatingTransform.\n"
+        << "Use SetDeformationField() instead.\n"
+        << "Note that this transform is NOT suited for image registration.\n"
+        << "Just use it as an (initial) fixed transform that is not optimized." );
+    }
 
-    /** Transform a point
-     * This method adds a displacement to a given point,
-     * returning the transformed point */
+    /** Set the fixed parameters. */
+    virtual void SetFixedParameters( const ParametersType & )
+    {
+      // This transform has no fixed parameters.
+    }
+
+    /** Get the Fixed Parameters. */
+    virtual const ParametersType & GetFixedParameters( void ) const
+    {
+      // This transform has no fixed parameters.
+      return m_FixedParameters;
+    }
+
+    /** Transform a point. This method adds a displacement to a given point,
+     * returning the transformed point.
+     */
     OutputPointType TransformPoint( const InputPointType & point ) const;
+
+    /** These vector transforms are not implemented for this transform. */
+    virtual OutputVectorType TransformVector( const InputVectorType & ) const
+    {
+      itkExceptionMacro(
+        << "TransformVector(const InputVectorType &) is not implemented "
+        << "for DeformationFieldInterpolatingTransform" );
+    }
+    virtual OutputVnlVectorType TransformVector( const InputVnlVectorType & ) const
+    {
+      itkExceptionMacro(
+        << "TransformVector(const InputVnlVectorType &) is not implemented "
+        << "for DeformationFieldInterpolatingTransform" );
+    }
+    virtual OutputCovariantVectorType TransformCovariantVector( const InputCovariantVectorType & ) const
+    {
+      itkExceptionMacro(
+        << "TransformCovariantVector(const InputCovariantVectorType &) is not implemented "
+        << "for DeformationFieldInterpolatingTransform" );
+    }
 
     /** Make this an identity transform ( the deformation field is replaced
      * by a zero deformation field */
@@ -99,21 +141,58 @@ namespace itk
 
     /** Set/Get the deformation field that defines the displacements */
     virtual void SetDeformationField( DeformationFieldType * _arg );
-    itkGetObjectMacro(DeformationField, DeformationFieldType);
+    itkGetObjectMacro( DeformationField, DeformationFieldType );
 
     /** Set/Get the deformation field interpolator */
     virtual void SetDeformationFieldInterpolator( DeformationFieldInterpolatorType * _arg );
-    itkGetObjectMacro(DeformationFieldInterpolator, DeformationFieldInterpolatorType);
+    itkGetObjectMacro( DeformationFieldInterpolator, DeformationFieldInterpolatorType );
 
     virtual bool IsLinear( void ) const { return false; };
 
-    virtual void SetParameters( const ParametersType & ) 
+    /** Must be provided. */
+    virtual void GetJacobian(
+      const InputPointType & ipp, JacobianType & j,
+      NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
     {
-      itkExceptionMacro( << "ERROR: The DeformationFieldInterpolatingTransform is "
-        << "NOT suited for image registration. Just use it as an (initial) fixed transform "
-        << "that is not optimized." );
+      itkExceptionMacro( << "Not implemented for DeformationFieldInterpolatingTransform" );
     }
 
+    virtual void GetSpatialJacobian(
+      const InputPointType & ipp, SpatialJacobianType & sj ) const
+    {
+      itkExceptionMacro( << "Not implemented for DeformationFieldInterpolatingTransform" );
+    }
+    virtual void GetSpatialHessian(
+      const InputPointType & ipp, SpatialHessianType & sh ) const
+    {
+      itkExceptionMacro( << "Not implemented for DeformationFieldInterpolatingTransform" );
+    }
+    virtual void GetJacobianOfSpatialJacobian(
+      const InputPointType & ipp, JacobianOfSpatialJacobianType & jsj,
+      NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    {
+      itkExceptionMacro( << "Not implemented for DeformationFieldInterpolatingTransform" );
+    }
+    virtual void GetJacobianOfSpatialJacobian(
+      const InputPointType & ipp, SpatialJacobianType & sj,
+      JacobianOfSpatialJacobianType & jsj,
+      NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    {
+      itkExceptionMacro( << "Not implemented for DeformationFieldInterpolatingTransform" );
+    }
+    virtual void GetJacobianOfSpatialHessian(
+      const InputPointType & ipp, JacobianOfSpatialHessianType & jsh,
+      NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    {
+      itkExceptionMacro( << "Not implemented for DeformationFieldInterpolatingTransform" );
+    }
+    virtual void GetJacobianOfSpatialHessian(
+      const InputPointType & ipp, SpatialHessianType & sh,
+      JacobianOfSpatialHessianType & jsh,
+      NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+    {
+      itkExceptionMacro( << "Not implemented for DeformationFieldInterpolatingTransform" );
+    }
 
   protected:
     DeformationFieldInterpolatingTransform();
@@ -134,7 +213,6 @@ namespace itk
   private:
     DeformationFieldInterpolatingTransform(const Self&); //purposely not implemented
     void operator=(const Self&); //purposely not implemented
-
 
   }; //class DeformationFieldInterpolatingTransform
 

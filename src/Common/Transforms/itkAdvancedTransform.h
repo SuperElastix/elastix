@@ -92,7 +92,7 @@ public:
   typedef SmartPointer< const Self >  ConstPointer;
 
   /** New method for creating an object using a factory. */
-  itkNewMacro( Self );
+  //itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( AdvancedTransform, Transform );
@@ -104,6 +104,7 @@ public:
   /** Typedefs from the Superclass. */
   typedef typename Superclass::ScalarType           ScalarType;
   typedef typename Superclass::ParametersType       ParametersType;
+  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
   typedef typename Superclass::JacobianType         JacobianType;
   typedef typename Superclass::InputVectorType      InputVectorType;
   typedef typename Superclass::OutputVectorType     OutputVectorType;
@@ -115,6 +116,9 @@ public:
   typedef typename Superclass::OutputVnlVectorType  OutputVnlVectorType;
   typedef typename Superclass::InputPointType       InputPointType;
   typedef typename Superclass::OutputPointType      OutputPointType;
+
+  typedef typename Superclass::InverseTransformBaseType    InverseTransformBaseType;
+  typedef typename Superclass::InverseTransformBasePointer InverseTransformBasePointer;
 
   /** Types for the (Spatial)Jacobian/Hessian.
    * Using an itk::FixedArray instead of an std::vector gives a performance
@@ -133,7 +137,7 @@ public:
   typedef typename SpatialJacobianType::InternalMatrixType  InternalMatrixType;
 
   /** Get the number of nonzero Jacobian indices. By default all. */
-  virtual unsigned long GetNumberOfNonZeroJacobianIndices( void ) const;
+  virtual NumberOfParametersType GetNumberOfNonZeroJacobianIndices( void ) const;
 
   /** Whether the advanced transform has nonzero matrices. */
   itkGetConstMacro( HasNonZeroSpatialHessian, bool );
@@ -168,13 +172,7 @@ public:
   virtual void GetJacobian(
     const InputPointType & ipp,
     JacobianType & j,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
-
-  /** The GetJacobian from the superclass.
-   * It is needed to override this method, otherwise the VS2008 compiler gets
-   * confused. It complained: "Function does not take 1 arguments".
-   */
-  virtual const JacobianType & GetJacobian( const InputPointType & ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const = 0;
 
 	/** Compute the spatial Jacobian of the transformation.
    *
@@ -204,7 +202,19 @@ public:
    */
   virtual void GetSpatialJacobian(
     const InputPointType & ipp,
-    SpatialJacobianType & sj ) const;
+    SpatialJacobianType & sj ) const = 0;
+
+  /** Override some pure virtual ITK4 functions. */
+  virtual void ComputeJacobianWithRespectToParameters(
+    const InputPointType & itkNotUsed( p ), JacobianType & itkNotUsed( j ) ) const
+  {
+    itkExceptionMacro( << "This ITK4 function is currently not used in elastix." );
+  }
+  virtual void ComputeJacobianWithRespectToPosition(
+    const InputPointType & itkNotUsed( p ), JacobianType & itkNotUsed( j ) ) const
+  {
+    itkExceptionMacro( << "This ITK4 function is currently not used in elastix." );
+  }
 
   /** Compute the spatial Hessian of the transformation.
    *
@@ -224,7 +234,7 @@ public:
    */
   virtual void GetSpatialHessian(
     const InputPointType & ipp,
-    SpatialHessianType & sh ) const;
+    SpatialHessianType & sh ) const = 0;
 
   /** Compute the Jacobian of the spatial Jacobian of the transformation.
    *
@@ -235,7 +245,7 @@ public:
   virtual void GetJacobianOfSpatialJacobian(
     const InputPointType & ipp,
     JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const = 0;
 
   /** Compute both the spatial Jacobian and the Jacobian of the
    * spatial Jacobian of the transformation.
@@ -244,7 +254,7 @@ public:
     const InputPointType & ipp,
     SpatialJacobianType & sj,
     JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const = 0;
 
   /** Compute the Jacobian of the spatial Hessian of the transformation.
    *
@@ -255,7 +265,7 @@ public:
   virtual void GetJacobianOfSpatialHessian(
     const InputPointType & ipp,
     JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const = 0;
 
   /** Compute both the spatial Hessian and the Jacobian of the
    * spatial Hessian of the transformation.
@@ -264,11 +274,11 @@ public:
     const InputPointType & ipp,
     SpatialHessianType & sh,
     JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const = 0;
 
 protected:
   AdvancedTransform();
-  AdvancedTransform( unsigned int Dimension, unsigned int NumberOfParameters );
+  AdvancedTransform( NumberOfParametersType numberOfParameters );
   virtual ~AdvancedTransform() {};
 
   bool m_HasNonZeroSpatialHessian;

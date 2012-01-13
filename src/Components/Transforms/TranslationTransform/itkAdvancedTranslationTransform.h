@@ -148,9 +148,6 @@ public:
    * false is returned.  */
   bool GetInverse(Self* inverse) const;
 
-  /** Compute the Jacobian Matrix of the transformation at one point */
-  virtual const JacobianType & GetJacobian(const InputPointType  &point ) const;
-
   /** Compute the Jacobian of the transformation. */
   virtual void GetJacobian(
     const InputPointType &,
@@ -198,9 +195,9 @@ public:
   /** Set the parameters to the IdentityTransform */
   void SetIdentity(void);
 
-  /** Return the number of parameters that completely define the Transfom  */
-  virtual unsigned int GetNumberOfParameters(void) const
-                      { return NDimensions; }
+  /** Return the number of parameters that completely define the Transform  */
+  virtual NumberOfParametersType GetNumberOfParameters( void ) const
+  { return NDimensions; }
 
   /** Indicates that this transform is linear. That is, given two
    * points P and Q, and scalar coefficients a and b, then
@@ -236,11 +233,12 @@ private:
 
   OutputVectorType   m_Offset;       // Offset of the transformation
 
-  SpatialJacobianType m_SpatialJacobian;
-  SpatialHessianType m_SpatialHessian;
-  NonZeroJacobianIndicesType m_NonZeroJacobianIndices;
+  JacobianType                  m_LocalJacobian;
+  SpatialJacobianType           m_SpatialJacobian;
+  SpatialHessianType            m_SpatialHessian;
+  NonZeroJacobianIndicesType    m_NonZeroJacobianIndices;
   JacobianOfSpatialJacobianType m_JacobianOfSpatialJacobian;
-  JacobianOfSpatialHessianType m_JacobianOfSpatialHessian;
+  JacobianOfSpatialHessianType  m_JacobianOfSpatialHessian;
 
 }; //class AdvancedTranslationTransform
 

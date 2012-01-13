@@ -102,11 +102,7 @@ ADD_LIBRARY( elxCore
 TARGET_LINK_LIBRARIES( elxCore
   elxCommon
   xoutlib
-  ITKBasicFilters
-  ITKNumerics
-  ITKIO
-  ITKCommon
-  ITKStatistics
+  #ITKStatistics
 )
 
 #---------------------------------------------------------------------
@@ -147,34 +143,26 @@ ADD_EXECUTABLE( transformix
 # Link elastix against other libraries.
 
 TARGET_LINK_LIBRARIES( elastix
-  elxCommon
-  elxCore
   param
   xoutlib
+  elxCommon
+  elxCore
   ${mevisdcmtifflib}
-  ITKBasicFilters
-  ITKNumerics
-  ITKIO
-  ITKCommon
-  ITKStatistics
   ${AllComponentLibs}
+  ${ITK_LIBRARIES}
 )
 
 #---------------------------------------------------------------------
 # Link transformix against other libraries.
 
 TARGET_LINK_LIBRARIES( transformix
-  elxCommon
-  elxCore
   param
   xoutlib
+  elxCommon
+  elxCore
   ${mevisdcmtifflib}
-  ITKBasicFilters
-  ITKNumerics
-  ITKIO
-  ITKCommon
-  ITKStatistics
   ${AllComponentLibs}
+  ${ITK_LIBRARIES}
 )
 
 #---------------------------------------------------------------------

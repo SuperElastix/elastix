@@ -74,6 +74,7 @@ public:
   /** Typedefs inherited from Superclass.*/
   typedef typename Superclass::ScalarType                 ScalarType;
   typedef typename Superclass::ParametersType             ParametersType;
+  typedef typename Superclass::NumberOfParametersType     NumberOfParametersType;
   typedef typename Superclass::JacobianType               JacobianType;
   typedef typename Superclass::InputVectorType            InputVectorType;
   typedef typename Superclass::OutputVectorType           OutputVectorType;
@@ -89,15 +90,25 @@ public:
   typedef typename Superclass::SpatialHessianType             SpatialHessianType;
   typedef typename Superclass::JacobianOfSpatialHessianType   JacobianOfSpatialHessianType;
   typedef typename Superclass::InternalMatrixType             InternalMatrixType;
+  typedef typename Superclass::InverseTransformBaseType    InverseTransformBaseType;
+  typedef typename Superclass::InverseTransformBasePointer InverseTransformBasePointer;
 
   /** Typedefs for the InitialTransform. */
   typedef Superclass                                      InitialTransformType;
   typedef typename InitialTransformType::Pointer          InitialTransformPointer;
   typedef typename InitialTransformType::ConstPointer     InitialTransformConstPointer;
+  typedef typename InitialTransformType::InverseTransformBaseType
+    InitialTransformInverseTransformBaseType;
+  typedef typename InitialTransformType::InverseTransformBasePointer
+    InitialTransformInverseTransformBasePointer;
 
   /** Typedefs for the CurrentTransform. */
   typedef Superclass                                      CurrentTransformType;
   typedef typename CurrentTransformType::Pointer          CurrentTransformPointer;
+  typedef typename CurrentTransformType::InverseTransformBaseType
+    CurrentTransformInverseTransformBaseType;
+  typedef typename CurrentTransformType::InverseTransformBasePointer
+    CurrentTransformInverseTransformBasePointer;
 
   /** Set/Get a pointer to the InitialTransform. */
   virtual void SetInitialTransform( const InitialTransformType * _arg );
@@ -121,8 +132,31 @@ public:
   /**  Method to transform a point. */
   virtual OutputPointType TransformPoint( const InputPointType  & point ) const;
 
+  /** ITK4 change:
+   * The following pure virtual functions must be overloaded.
+   * For now just throw an exception, since these are not used in elastix.
+   */
+  virtual OutputVectorType TransformVector( const InputVectorType & ) const
+  {
+    itkExceptionMacro(
+      << "TransformVector(const InputVectorType &) is not implemented "
+      << "for AdvancedCombinationTransform" );
+  }
+  virtual OutputVnlVectorType       TransformVector( const InputVnlVectorType & ) const
+  {
+    itkExceptionMacro(
+      << "TransformVector(const InputVnlVectorType &) is not implemented "
+      << "for AdvancedCombinationTransform" );
+  }
+  virtual OutputCovariantVectorType TransformCovariantVector( const InputCovariantVectorType & ) const
+  {
+    itkExceptionMacro(
+      << "TransformCovariantVector(const InputCovariantVectorType &) is not implemented "
+      << "for AdvancedCombinationTransform" );
+  }
+
   /** Return the number of parameters that completely define the CurrentTransform. */
-  virtual unsigned int GetNumberOfParameters( void ) const;
+  virtual NumberOfParametersType GetNumberOfParameters( void ) const;
 
   /** Get the number of nonzero Jacobian indices. By default all. */
   virtual unsigned long GetNumberOfNonZeroJacobianIndices( void ) const;
@@ -163,9 +197,6 @@ public:
   /** Whether the advanced transform has nonzero matrices. */
   virtual bool GetHasNonZeroSpatialHessian( void ) const;
   virtual bool HasNonZeroJacobianOfSpatialHessian( void ) const;
-
-  /** Compute the Jacobian of the transformation. */
-  virtual const JacobianType & GetJacobian( const InputPointType & point ) const;
 
   /** Compute the (sparse) Jacobian of the transformation. */
   virtual void GetJacobian(
@@ -215,7 +246,6 @@ public:
 
   /** Typedefs for function pointers. */
   typedef OutputPointType (Self::*TransformPointFunctionPointer)( const InputPointType & ) const;
-  typedef const JacobianType & (Self::*GetJacobianFunctionPointer)( const InputPointType & ) const;
   typedef void (Self::*GetSparseJacobianFunctionPointer)(
     const InputPointType &,
     JacobianType &,
@@ -279,7 +309,7 @@ protected:
    * - GetJacobianNoCurrentTransform
    * - GetJacobianNoInitialTransform.
    */
-  GetJacobianFunctionPointer m_SelectedGetJacobianFunction;
+  //GetJacobianFunctionPointer m_SelectedGetJacobianFunction;
 
   /** More of these. */
   GetSparseJacobianFunctionPointer    m_SelectedGetSparseJacobianFunction;
@@ -310,28 +340,6 @@ protected:
 
   /** NO CURRENT TRANSFORM SET: throw an exception. */
   inline OutputPointType TransformPointNoCurrentTransform(
-    const InputPointType & point ) const;
-
-  /** ************************************************
-   * Methods to compute the Jacobian.
-   */
-
-  /** ADDITION: \f$J(x) = J_1(x)\f$ */
-  inline const JacobianType & GetJacobianUseAddition(
-    const InputPointType & point ) const;
-
-  /** COMPOSITION: \f$J(x) = J_1( T_0(x) )\f$
-   * \warning: assumes that input and output point type are the same.
-   */
-  inline const JacobianType & GetJacobianUseComposition(
-    const InputPointType & point ) const;
-
-  /** CURRENT ONLY: \f$J(x) = J_1(x)\f$ */
-  inline const JacobianType & GetJacobianNoInitialTransform(
-    const InputPointType & point ) const;
-
-  /** NO CURRENT TRANSFORM SET: throw an exception. */
-  inline const JacobianType & GetJacobianNoCurrentTransform(
     const InputPointType & point ) const;
 
   /** ************************************************

@@ -14,7 +14,7 @@ PURPOSE. See the above copyright notices for more information.
 #ifndef __itkBSplineSecondOrderDerivativeKernelFunction_h
 #define __itkBSplineSecondOrderDerivativeKernelFunction_h
 
-#include "itkKernelFunction.h"
+#include "itkKernelFunctionBase.h"
 #include "itkBSplineKernelFunction.h"
 
 namespace itk
@@ -36,22 +36,22 @@ namespace itk
  * \ingroup Functions
  */
 template <unsigned int VSplineOrder = 3>
-class ITK_EXPORT BSplineSecondOrderDerivativeKernelFunction : public KernelFunction
+class ITK_EXPORT BSplineSecondOrderDerivativeKernelFunction : public KernelFunctionBase<double>
 {
 public:
   /** Standard class typedefs. */
   typedef BSplineSecondOrderDerivativeKernelFunction Self;
-  typedef KernelFunction                  Superclass;
+  typedef KernelFunctionBase<double>      Superclass;
   typedef SmartPointer<Self>              Pointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro(Self);
+  itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(BSplineSecondOrderDerivativeKernelFunction, KernelFunction);
+  itkTypeMacro( BSplineSecondOrderDerivativeKernelFunction, KernelFunctionBase );
 
   /** Enum of for spline order. */
-  itkStaticConstMacro(SplineOrder, unsigned int, VSplineOrder);
+  itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
 
   /** Evaluate the function. */
   inline double Evaluate( const double & u ) const

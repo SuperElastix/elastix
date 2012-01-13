@@ -17,7 +17,7 @@
 #ifndef __itkBSplineDerivativeKernelFunction2_h
 #define __itkBSplineDerivativeKernelFunction2_h
 
-#include "itkKernelFunction.h"
+#include "itkKernelFunctionBase.h"
 #include "vnl/vnl_math.h"
 
 
@@ -40,22 +40,22 @@ namespace itk
  * \ingroup Functions
  */
 template <unsigned int VSplineOrder = 3>
-class ITK_EXPORT BSplineDerivativeKernelFunction2 : public KernelFunction
+class ITK_EXPORT BSplineDerivativeKernelFunction2 : public KernelFunctionBase<double>
 {
 public:
   /** Standard class typedefs. */
-  typedef BSplineDerivativeKernelFunction2 Self;
-  typedef KernelFunction                  Superclass;
-  typedef SmartPointer<Self>              Pointer;
+  typedef BSplineDerivativeKernelFunction2  Self;
+  typedef KernelFunctionBase<double>        Superclass;
+  typedef SmartPointer<Self>                Pointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro(Self);
+  itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(BSplineDerivativeKernelFunction2, KernelFunction);
+  itkTypeMacro( BSplineDerivativeKernelFunction2, KernelFunctionBase );
 
   /** Enum of for spline order. */
-  itkStaticConstMacro(SplineOrder, unsigned int, VSplineOrder);
+  itkStaticConstMacro( SplineOrder, unsigned int, VSplineOrder );
 
   /** Evaluate the function. */
   //inline double Evaluate( const double & u ) const

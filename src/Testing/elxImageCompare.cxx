@@ -27,8 +27,7 @@
 #include "itksys/SystemTools.hxx"
 
 #include "itkImageSource.h" // This should not be necessary after ITK patch is merged
-// #include "itkTestingComparisonImageFilter.h" //in ITK4
-#include "itkDifferenceImageFilter.h" // in ITK3
+#include "itkTestingComparisonImageFilter.h"
 
 
 /**
@@ -47,7 +46,6 @@ std::string GetHelpString( void )
   return ss.str();
 
 } // end GetHelpString()
-
 
 
 // This comparison works on all image types by reading images in a 6D double images. If images > 6 dimensions
@@ -133,8 +131,7 @@ int main( int argc, char **argv )
   }
 
   // Now compare the two images
-  //typedef itk::Testing::ComparisonImageFilter< ImageType, ImageType > ComparisonFilterType; // in ITK4
-  typedef itk::DifferenceImageFilter< ImageType, ImageType > ComparisonFilterType; // in ITK4
+  typedef itk::Testing::ComparisonImageFilter< ImageType, ImageType > ComparisonFilterType;
   ComparisonFilterType::Pointer comparisonFilter = ComparisonFilterType::New();
   comparisonFilter->SetTestInput( testReader->GetOutput() );
   comparisonFilter->SetValidInput( baselineReader->GetOutput() );

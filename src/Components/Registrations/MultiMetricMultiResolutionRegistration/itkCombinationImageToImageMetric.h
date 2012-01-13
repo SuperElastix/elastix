@@ -352,7 +352,7 @@ public:
   /** Get the number of pixels considered in the computation. Return the sum
    * of pixels counted by all metrics.
    */
-  virtual const unsigned long & GetNumberOfPixelsCounted( void ) const;
+  virtual const SizeValueType & GetNumberOfPixelsCounted( void ) const;
 
   /** Pass initialization to all sub metrics. */
   virtual void Initialize( void ) throw ( ExceptionObject );

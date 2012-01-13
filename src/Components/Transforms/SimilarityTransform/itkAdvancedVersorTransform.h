@@ -139,8 +139,7 @@ protected:
   /** Construct an AdvancedVersorTransform object */
   AdvancedVersorTransform(const MatrixType &matrix,
                   const OutputVectorType &offset);
-  AdvancedVersorTransform(unsigned int outputDims,
-                  unsigned int paramDims);
+  AdvancedVersorTransform(unsigned int paramDims);
   AdvancedVersorTransform();
 
   /** Destroy an AdvancedVersorTransform object */

@@ -101,11 +101,16 @@ public:
   /** Typedefs. */
   typedef typename Superclass::ScalarType       ScalarType;
   typedef typename Superclass::ParametersType   ParametersType;
+  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
   typedef typename Superclass::JacobianType     JacobianType;
   typedef typename Superclass::InputPointType   InputPointType;
   typedef typename Superclass::OutputPointType  OutputPointType;
   typedef typename Superclass::InputVectorType  InputVectorType;
   typedef typename Superclass::OutputVectorType OutputVectorType;
+  typedef typename Superclass::InputCovariantVectorType   InputCovariantVectorType;
+  typedef typename Superclass::OutputCovariantVectorType  OutputCovariantVectorType;
+  typedef typename Superclass::InputVnlVectorType         InputVnlVectorType;
+  typedef typename Superclass::OutputVnlVectorType        OutputVnlVectorType;
 
   /** AdvancedTransform typedefs. */
   typedef typename Superclass
@@ -138,7 +143,7 @@ public:
   typedef vnl_matrix_fixed<TScalarType, NDimensions, NDimensions> IMatrixType;
 
   /** Return the number of parameters that completely define the Transform. */
-  virtual unsigned int GetNumberOfParameters(void) const
+  virtual NumberOfParametersType GetNumberOfParameters( void ) const
   {
     return ( this->m_SourceLandmarks->GetNumberOfPoints() * SpaceDimension );
   }
@@ -169,8 +174,25 @@ public:
   /** Compute the position of point in the new space */
   virtual OutputPointType TransformPoint( const InputPointType & thisPoint ) const;
 
-  /** Compute the Jacobian of the transformation at one point. */
-  virtual const JacobianType & GetJacobian( const InputPointType & point ) const;
+  /** These vector transforms are not implemented for this transform. */
+  virtual OutputVectorType TransformVector( const InputVectorType & ) const
+  {
+    itkExceptionMacro(
+      << "TransformVector(const InputVectorType &) is not implemented "
+      << "for KernelTransform" );
+  }
+  virtual OutputVnlVectorType TransformVector( const InputVnlVectorType & ) const
+  {
+    itkExceptionMacro(
+      << "TransformVector(const InputVnlVectorType &) is not implemented "
+      << "for KernelTransform" );
+  }
+  virtual OutputCovariantVectorType TransformCovariantVector( const InputCovariantVectorType & ) const
+  {
+    itkExceptionMacro(
+      << "TransformCovariantVector(const InputCovariantVectorType &) is not implemented "
+      << "for KernelTransform" );
+  }
 
   /** Compute the Jacobian of the transformation. */
   virtual void GetJacobian(
@@ -247,6 +269,44 @@ public:
   /** Matrix inversion by SVD or QR decomposition. */
   itkSetMacro( MatrixInversionMethod, std::string );
   itkGetConstReferenceMacro( MatrixInversionMethod, std::string );
+
+  /** Must be provided. */
+  virtual void GetSpatialJacobian(
+    const InputPointType & ipp, SpatialJacobianType & sj ) const
+  {
+    itkExceptionMacro( << "Not implemented for KernelTransform2" );
+  }
+  virtual void GetSpatialHessian(
+    const InputPointType & ipp, SpatialHessianType & sh ) const
+  {
+    itkExceptionMacro( << "Not implemented for KernelTransform2" );
+  }
+  virtual void GetJacobianOfSpatialJacobian(
+    const InputPointType & ipp, JacobianOfSpatialJacobianType & jsj,
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+  {
+    itkExceptionMacro( << "Not implemented for KernelTransform2" );
+  }
+  virtual void GetJacobianOfSpatialJacobian(
+    const InputPointType & ipp, SpatialJacobianType & sj,
+    JacobianOfSpatialJacobianType & jsj,
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+  {
+    itkExceptionMacro( << "Not implemented for KernelTransform2" );
+  }
+  virtual void GetJacobianOfSpatialHessian(
+    const InputPointType & ipp, JacobianOfSpatialHessianType & jsh,
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+  {
+    itkExceptionMacro( << "Not implemented for KernelTransform2" );
+  }
+  virtual void GetJacobianOfSpatialHessian(
+    const InputPointType & ipp, SpatialHessianType & sh,
+    JacobianOfSpatialHessianType & jsh,
+    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+  {
+    itkExceptionMacro( << "Not implemented for KernelTransform2" );
+  }
 
 protected:
   KernelTransform2();

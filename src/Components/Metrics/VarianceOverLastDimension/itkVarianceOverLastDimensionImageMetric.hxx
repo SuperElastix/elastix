@@ -505,7 +505,8 @@ namespace itk
          * per dimension xyz.
          */
         const unsigned int lastDimGridSize = this->m_GridSize[ lastDim ];
-        const unsigned int numParametersPerDimension = this->GetNumberOfParameters() / this->GetMovingImage()->GetImageDimension();
+        const unsigned int numParametersPerDimension
+          = this->GetNumberOfParameters() / this->GetMovingImage()->GetImageDimension();
         const unsigned int numControlPointsPerDimension = numParametersPerDimension / lastDimGridSize;
         DerivativeType mean ( numControlPointsPerDimension );
         for ( unsigned int d = 0; d < this->GetMovingImage()->GetImageDimension(); ++d )

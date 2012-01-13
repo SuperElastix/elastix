@@ -330,8 +330,11 @@ int main( int argc, char *argv[] )
     return 1;
   }
 
-  JacobianType jacobianDifferenceMatrix
-    = transform->GetJacobian( inputPoint ) - transformITK->GetJacobian( inputPoint );
+  JacobianType jacobianITK;
+  transformITK->ComputeJacobianWithRespectToParameters( inputPoint, jacobianITK );
+  JacobianType jacobianElastix;
+  transform->GetJacobian( inputPoint, jacobianElastix, nzji );
+  JacobianType jacobianDifferenceMatrix = jacobianElastix - jacobianITK;
   if ( jacobianDifferenceMatrix.frobenius_norm() > 1e-10 )
   {
     std::cerr << "ERROR: Advanced B-spline GetJacobian() returning incorrect result." << std::endl;

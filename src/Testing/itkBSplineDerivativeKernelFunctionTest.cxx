@@ -13,7 +13,7 @@
 ======================================================================*/
 #include "itkBSplineDerivativeKernelFunction.h"
 #include "itkBSplineDerivativeKernelFunction2.h"
-#include "itkKernelFunction.h"
+#include "itkKernelFunctionBase.h"
 
 #include <ctime>
 #include <iomanip>
@@ -36,7 +36,7 @@ int main( int argc, char *argv[] )
   const double maxAllowedDistance = 1e-5; // the allowable distance
 
   /** Other typedefs. */
-  typedef itk::KernelFunction                       BaseKernelType;
+  typedef itk::KernelFunctionBase<double>           BaseKernelType;
   typedef itk::BSplineDerivativeKernelFunction<1>   KernelType_ITK_1;
   typedef itk::BSplineDerivativeKernelFunction2<1>  KernelType_elx_1;
   typedef itk::BSplineDerivativeKernelFunction<2>   KernelType_ITK_2;

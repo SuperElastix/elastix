@@ -362,7 +362,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   if ( !this->m_AdvancedTransform->GetHasNonZeroJacobianOfSpatialHessian() )
   {
     //H.fill_diagonal(1.0);
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
       H(i,i) = 1.0;
     }
@@ -444,11 +444,10 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
               ++itA;
               ++itB;
             }
-
           }
 
           /** Store at the right location in the H matrix.
-          * Only upper triangular part is stored */
+           * Only upper triangular part is stored */
 
           /** Update hessian element */
           if ( (matrixProduct > 1e-12) || (matrixProduct < 1e-12) )
@@ -472,7 +471,6 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
               /** Add to existing value */
               (*rowIt).second += val;
             }
-
           }
 
         }
@@ -491,7 +489,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   if ( this->m_NumberOfPixelsCounted > 0 )
   {
     const double normal_sum = 1.0 / static_cast<double>( this->m_NumberOfPixelsCounted );
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
       H.scale_row(i, normal_sum);
     }
@@ -499,7 +497,7 @@ TransformBendingEnergyPenaltyTerm< TFixedImage, TScalarType >
   else
   {
     //H.fill_diagonal(1.0);
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
       H(i,i) = 1.0;
     }

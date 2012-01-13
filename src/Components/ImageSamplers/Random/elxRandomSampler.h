@@ -51,7 +51,7 @@ using namespace itk;
     class RandomSampler :
     public
       ImageRandomSampler<
-      ITK_TYPENAME elx::ImageSamplerBase<TElastix>::InputImageType >,
+      typename elx::ImageSamplerBase<TElastix>::InputImageType >,
     public
       elx::ImageSamplerBase<TElastix>
   {

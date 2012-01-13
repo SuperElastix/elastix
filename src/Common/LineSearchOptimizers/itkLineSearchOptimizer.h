@@ -17,6 +17,8 @@
 
 #include "itkSingleValuedNonLinearOptimizer.h"
 
+#include "itkIntTypes.h"//tmp
+
 namespace itk
 {
 

@@ -40,9 +40,9 @@ using namespace itk;
 template < class TElastix >
 class CUDAResampler :
   public itkCUDAResampleImageFilter<
-  ITK_TYPENAME ResamplerBase<TElastix>::InputImageType,
-  ITK_TYPENAME ResamplerBase<TElastix>::OutputImageType,
-  ITK_TYPENAME ResamplerBase<TElastix>::CoordRepType >,
+  typename ResamplerBase<TElastix>::InputImageType,
+  typename ResamplerBase<TElastix>::OutputImageType,
+  typename ResamplerBase<TElastix>::CoordRepType >,
   public ResamplerBase<TElastix>
 {
 public:

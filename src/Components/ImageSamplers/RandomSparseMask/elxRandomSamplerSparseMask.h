@@ -53,7 +53,7 @@ using namespace itk;
     class RandomSamplerSparseMask :
     public
       ImageRandomSamplerSparseMask<
-      ITK_TYPENAME elx::ImageSamplerBase<TElastix>::InputImageType >,
+      typename elx::ImageSamplerBase<TElastix>::InputImageType >,
     public
       elx::ImageSamplerBase<TElastix>
   {

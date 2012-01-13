@@ -27,7 +27,7 @@ namespace itk
 
 template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
 StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::StackTransform(): Superclass( OutputSpaceDimension, 0 ),
+::StackTransform(): Superclass( OutputSpaceDimension ),
   m_NumberOfSubTransforms( 0 ),
   m_StackSpacing( 1.0 ),
   m_StackOrigin( 0.0 )
@@ -52,9 +52,10 @@ StackTransform<TScalarType,NInputDimensions,NOutputDimensions>::SetParameters( c
   }
 
   // Set separate subtransform parameters
-  const unsigned int numSubTransformParameters = this->m_SubTransformContainer[ 0 ]->GetNumberOfParameters();
+  const NumberOfParametersType numSubTransformParameters = this->m_SubTransformContainer[ 0 ]->GetNumberOfParameters();
   for ( unsigned int t = 0; t < this->m_NumberOfSubTransforms; ++t )
   {
+    // MS, \todo: the new itk::TransformParameters only have constructors taking 1 argument
     ParametersType subparams ( &( param.data_block()[ t * numSubTransformParameters ] ), numSubTransformParameters, false );
     this->m_SubTransformContainer[ t ]->SetParametersByValue( subparams );
   }
@@ -107,9 +108,10 @@ StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
 
   /** Transform point using right subtransform. */
   SubTransformOutputPointType oppr;
-  const unsigned int subt = vnl_math_min( this->m_NumberOfSubTransforms - 1, static_cast<unsigned int>(
-                              vnl_math_max( 0,
-                                vnl_math_rnd( ( ipp[ ReducedInputSpaceDimension ] - m_StackOrigin ) / m_StackSpacing ) ) ) );
+  const unsigned int subt
+    = vnl_math_min( this->m_NumberOfSubTransforms - 1, static_cast<unsigned int>(
+      vnl_math_max( 0,
+      vnl_math_rnd( ( ipp[ ReducedInputSpaceDimension ] - m_StackOrigin ) / m_StackSpacing ) ) ) );
   oppr = this->m_SubTransformContainer[ subt ]->TransformPoint( ippr );
 
   /** Increase dimension of input point. */
@@ -123,23 +125,6 @@ StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
   return opp;
 
 } // end TransformPoint
-
-
-/**
- * ********************* GetJacobian ****************************
- */
-
-template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
-const typename StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::JacobianType &
-StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::GetJacobian( const InputPointType & ipp ) const
-{
-  NonZeroJacobianIndicesType dummy( 0 );
-  this->GetJacobian( ipp, this->m_Jacobian, dummy );
-  return this->m_Jacobian;
-
-} // end GetJacobian()
 
 
 /**
@@ -162,9 +147,10 @@ StackTransform<TScalarType,NInputDimensions,NOutputDimensions>
   }
 
   /** Get Jacobian from right subtransform. */
-  const unsigned int subt = vnl_math_min( this->m_NumberOfSubTransforms - 1, static_cast<unsigned int>(
-                              vnl_math_max( 0,
-                                vnl_math_rnd( ( ipp[ ReducedInputSpaceDimension ] - m_StackOrigin ) / m_StackSpacing ) ) ) );
+  const unsigned int subt
+    = vnl_math_min( this->m_NumberOfSubTransforms - 1, static_cast<unsigned int>(
+      vnl_math_max( 0,
+      vnl_math_rnd( ( ipp[ ReducedInputSpaceDimension ] - m_StackOrigin ) / m_StackSpacing ) ) ) );
   SubTransformJacobianType subjac;
   this->m_SubTransformContainer[ subt ]->GetJacobian( ippr, subjac, nzji );
 

@@ -103,7 +103,7 @@ void AdaptiveStochasticGradientDescent<TElastix>
     ->GetAsITKBaseType()->GetNumberOfParameters();
 
   /** Set the maximumNumberOfIterations. */
-  unsigned int maximumNumberOfIterations = 500;
+  SizeValueType maximumNumberOfIterations = 500;
   this->GetConfiguration()->ReadParameter( maximumNumberOfIterations,
     "MaximumNumberOfIterations", this->GetComponentLabel(), level, 0 );
   this->SetNumberOfIterations( maximumNumberOfIterations );
@@ -115,7 +115,7 @@ void AdaptiveStochasticGradientDescent<TElastix>
   this->SetParam_A( A );
 
   /** Set the MaximumNumberOfSamplingAttempts. */
-  unsigned int maximumNumberOfSamplingAttempts = 0;
+  SizeValueType maximumNumberOfSamplingAttempts = 0;
   this->GetConfiguration()->ReadParameter( maximumNumberOfSamplingAttempts,
     "MaximumNumberOfSamplingAttempts", this->GetComponentLabel(), level, 0 );
   this->SetMaximumNumberOfSamplingAttempts( maximumNumberOfSamplingAttempts );
@@ -514,7 +514,7 @@ AdaptiveStochasticGradientDescent<TElastix>
       this->m_NumberOfGradientMeasurements = 2;
     }
     this->m_NumberOfGradientMeasurements = vnl_math_max(
-      static_cast<unsigned int>( 2 ),
+      static_cast<SizeValueType>( 2 ),
       this->m_NumberOfGradientMeasurements );
     elxout << "  NumberOfGradientMeasurements to estimate sigma_i: "
       << this->m_NumberOfGradientMeasurements << std::endl;
@@ -655,7 +655,7 @@ AdaptiveStochasticGradientDescent<TElastix>
 
         } // end if random coordinate sampler
 
-        /** Set up the grid samper for the "exact" gradients.
+        /** Set up the grid sampler for the "exact" gradients.
          * Copy settings from the random sampler and update.
          */
         gridSamplerVec[ m ] = ImageGridSamplerType::New();
@@ -798,7 +798,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   typedef vnl_sparse_matrix<CovarianceValueType>      SparseCovarianceMatrixType;
   typedef typename SparseCovarianceMatrixType::row    SparseRowType;
   typedef typename SparseCovarianceMatrixType::pair_t SparseCovarianceElementType;
-  typedef Array<unsigned int>           NonZeroJacobianIndicesExpandedType;
+  typedef Array<SizeValueType>                        NonZeroJacobianIndicesExpandedType;
   typedef vnl_diag_matrix<CovarianceValueType>        DiagCovarianceMatrixType;
   typedef vnl_vector<CovarianceValueType>             JacobianColumnType;
 
@@ -810,7 +810,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   /** Get samples. */
   ImageSampleContainerPointer sampleContainer = 0;
   this->SampleFixedImageForJacobianTerms( sampleContainer );
-  const unsigned int nrofsamples = sampleContainer->Size();
+  const SizeValueType nrofsamples = sampleContainer->Size();
   const double n = static_cast<double>( nrofsamples );
 
   /** Get the number of parameters. */
@@ -833,7 +833,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   unsigned int samplenr = 0;
 
   /** Variables for nonzerojacobian indices and the Jacobian. */
-  const unsigned int sizejacind
+  const SizeValueType sizejacind
     = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   JacobianType jacj( outdim, sizejacind );
   jacj.Fill( 0.0 );
@@ -1286,7 +1286,7 @@ AdaptiveStochasticGradientDescent<TElastix>
    * Note that the actually obtained number of samples may be lower, due to masks.
    * This is taken into account at the end of this function.
    */
-  unsigned int nrofsamples = this->m_NumberOfJacobianMeasurements;
+  SizeValueType nrofsamples = this->m_NumberOfJacobianMeasurements;
   sampler->SetNumberOfSamples( nrofsamples );
 
   /** Get samples and check the actually obtained number of samples. */

@@ -123,9 +123,6 @@ public:
     ParameterIndexArrayType & indices,
     bool & inside ) const;
 
-  /** Compute the Jacobian matrix of the transformation at one point. */
-  virtual const JacobianType & GetJacobian( const InputPointType & point ) const;
-
   /** Compute the Jacobian of the transformation. */
   virtual void GetJacobian(
     const InputPointType & ipp,

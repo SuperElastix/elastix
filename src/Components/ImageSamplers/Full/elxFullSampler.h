@@ -43,7 +43,7 @@ using namespace itk;
     class FullSampler :
     public
       ImageFullSampler<
-      ITK_TYPENAME elx::ImageSamplerBase<TElastix>::InputImageType >,
+      typename elx::ImageSamplerBase<TElastix>::InputImageType >,
     public
       elx::ImageSamplerBase<TElastix>
   {

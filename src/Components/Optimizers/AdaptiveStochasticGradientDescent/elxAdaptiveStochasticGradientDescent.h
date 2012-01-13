@@ -249,10 +249,10 @@ public:
   itkGetConstMacro( MaximumStepLength, double );
 
   /** Set the MaximumNumberOfSamplingAttempts. */
-  itkSetMacro( MaximumNumberOfSamplingAttempts, unsigned long );
+  itkSetMacro( MaximumNumberOfSamplingAttempts, SizeValueType );
 
   /** Get the MaximumNumberOfSamplingAttempts. */
-  itkGetConstReferenceMacro( MaximumNumberOfSamplingAttempts, unsigned long );
+  itkGetConstReferenceMacro( MaximumNumberOfSamplingAttempts, SizeValueType );
 
 protected:
 
@@ -309,9 +309,9 @@ protected:
   SettingsVectorType m_SettingsVector;
 
   /** Some options for automatic parameter estimation. */
-  unsigned int m_NumberOfGradientMeasurements;
-  unsigned int m_NumberOfJacobianMeasurements;
-  unsigned int m_NumberOfSamplesForExactGradient;
+  SizeValueType m_NumberOfGradientMeasurements;
+  SizeValueType m_NumberOfJacobianMeasurements;
+  SizeValueType m_NumberOfSamplesForExactGradient;
 
   /** The transform stored as AdvancedTransform */
   typename AdvancedTransformType::Pointer           m_AdvancedTransform;
@@ -380,14 +380,14 @@ private:
   double m_MaximumStepLength;
 
   /** Private variables for the sampling attempts. */
-  unsigned long m_MaximumNumberOfSamplingAttempts;
-  unsigned long m_CurrentNumberOfSamplingAttempts;
-  unsigned long m_PreviousErrorAtIteration;
+  SizeValueType m_MaximumNumberOfSamplingAttempts;
+  SizeValueType m_CurrentNumberOfSamplingAttempts;
+  SizeValueType m_PreviousErrorAtIteration;
   bool          m_AutomaticParameterEstimationDone;
 
   /** Private variables for band size estimation of covariance matrix. */
-  unsigned long m_MaxBandCovSize;
-  unsigned long m_NumberOfBandStructureSamples;
+  SizeValueType m_MaxBandCovSize;
+  SizeValueType m_NumberOfBandStructureSamples;
 
 }; // end class AdaptiveStochasticGradientDescent
 

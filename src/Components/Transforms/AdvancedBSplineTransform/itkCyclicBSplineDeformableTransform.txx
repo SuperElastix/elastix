@@ -239,115 +239,6 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
   }
 }
 
-/** Compute the Jacobian in one position. */
-template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-const
-typename CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
-::JacobianType &
-CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
-::GetJacobian( const InputPointType & point ) const
-{
-  /** Can only compute Jacobian if parameters are set via
-       * SetParameters or SetParametersByValue.
-       */
-  if( this->m_InputParametersPointer == NULL )
-  {
-    itkExceptionMacro( <<"Cannot compute Jacobian: parameters not set" );
-  }
-
-  /** Zero all components of Jacobian
-       * NOTE: for efficiency, we only need to zero out the coefficients
-       * that got fill last time this method was called.
-       */
-  RegionType supportRegion;
-  supportRegion.SetSize( this->m_SupportSize );
-  supportRegion.SetIndex( this->m_LastJacobianIndex );
-
-  /** Split support region into two parts. */
-  RegionType supportRegions[ 2 ];
-  this->SplitRegion( this->m_JacobianImage[ 0 ]->GetLargestPossibleRegion(),
-    supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
-
-  /** Create iterators over Jacobian images. */
-  for ( unsigned int r = 0; r < 2; ++r )
-  {
-    typedef ImageRegionIterator<JacobianImageType> IteratorType;
-    IteratorType iterator[ SpaceDimension ];
-    unsigned int j;
-    for ( j = 0; j < SpaceDimension; j++ )
-    {
-      iterator[ j ] = IteratorType( this->m_JacobianImage[ j ], supportRegions[ r ] );
-    }
-
-    /** Zero out Jacobian elements for both support regions. */
-    while ( !iterator[ 0 ].IsAtEnd() )
-    {
-      for ( j = 0; j < SpaceDimension; j++ )
-      {
-        iterator[ j ].Set( NumericTraits<JacobianPixelType>::Zero );
-        ++( iterator[ j ] );
-      }
-    }
-  }
-
-  /** Transform from world to grid coordinates. */
-  ContinuousIndexType cindex;
-  this->TransformPointToContinuousGridIndex( point, cindex );
-
-  /** NOTE: if the support region does not lie totally within the grid
-       * (except for the last dimension) we assume zero displacement and
-       * return the input point. */
-  if ( !this->InsideValidRegion( cindex ) )
-  {
-    return this->m_Jacobian;
-  }
-
-  /** Allocate memory on the stack: */
-  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
-  typename WeightsType::ValueType weightsArray[ numberOfWeights ];
-  WeightsType weights( weightsArray, numberOfWeights, false );
-
-  /** Compute interpolation weights. */
-  IndexType supportIndex;
-  this->m_WeightsFunction->ComputeStartIndex( cindex, supportIndex );
-  this->m_WeightsFunction->Evaluate( cindex, supportIndex, weights );
-  this->m_LastJacobianIndex = supportIndex;
-
-  /** Set new support region index. */
-  supportRegion.SetIndex( supportIndex );
-
-  /** Split support region into two parts. */
-  this->SplitRegion( this->m_JacobianImage[ 0 ]->GetLargestPossibleRegion(),
-    supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
-
-  /** For each dimension, copy the weight to the support region. */
-  unsigned long counter = 0;
-  for ( unsigned int r = 0; r < 2; ++r )
-  {
-    typedef ImageRegionIterator<JacobianImageType> IteratorType;
-    IteratorType iterator[ SpaceDimension ];
-    for ( unsigned int j = 0; j < SpaceDimension; j++ )
-    {
-      iterator[ j ] = IteratorType( this->m_JacobianImage[ j ], supportRegions[ r ] );
-    }
-    while ( !iterator[ 0 ].IsAtEnd() )
-    {
-      /** Copy weight to Jacobian image. */
-      for ( unsigned int j = 0; j < SpaceDimension; j++ )
-      {
-        iterator[ j ].Set( static_cast<JacobianPixelType>( weights[ counter ] ) );
-        ++( iterator[ j ] );
-      }
-
-      /** Go to next coefficient in the support region. */
-      ++ counter;
-    }
-  }
-
-  /** Return the results. */
-  return this->m_Jacobian;
-}
-
 
 /** Compute the Jacobian in one position. */
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
@@ -437,7 +328,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
 
   /** Compute the number of affected B-spline parameters. */
   /** Allocate memory on the stack: */
-  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  const SizeValueType numberOfWeights = WeightsFunctionType::NumberOfWeights;
   typename WeightsType::ValueType weightsArray[ numberOfWeights ];
   WeightsType weights( weightsArray, numberOfWeights, false );
 
@@ -525,8 +416,8 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     supportRegion, supportRegions[ 0 ], supportRegions[ 1 ] );
 
   /** Initialize some helper variables. */
-  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
-  const unsigned long parametersPerDim
+  const SizeValueType numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  const SizeValueType parametersPerDim
     = this->GetNumberOfParametersPerDimension();
   unsigned long mu = 0;
 
@@ -542,7 +433,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     while ( !iterator.IsAtEnd() )
     {
       /** Translate the index into a parameter number for the x-direction. */
-      const unsigned long parameterNumber = &(iterator.Value()) - basePointer;
+      const IdentifierType parameterNumber = &(iterator.Value()) - basePointer;
 
       /** Update the nonZeroJacobianIndices for all directions. */
       for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )

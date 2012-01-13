@@ -49,8 +49,8 @@ using namespace itk;
     class BSplineInterpolatorFloat :
     public
       BSplineInterpolateImageFunction<
-        ITK_TYPENAME InterpolatorBase<TElastix>::InputImageType,
-        ITK_TYPENAME InterpolatorBase<TElastix>::CoordRepType,
+        typename InterpolatorBase<TElastix>::InputImageType,
+        typename InterpolatorBase<TElastix>::CoordRepType,
         float > , //CoefficientType
     public
       InterpolatorBase<TElastix>

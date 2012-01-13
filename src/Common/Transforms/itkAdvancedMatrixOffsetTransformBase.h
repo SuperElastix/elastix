@@ -117,6 +117,7 @@ public:
   /** Typedefs from the Superclass. */
   typedef typename Superclass::ScalarType           ScalarType;
   typedef typename Superclass::ParametersType       ParametersType;
+  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
   typedef typename Superclass::JacobianType         JacobianType;
   typedef typename Superclass::InputVectorType      InputVectorType;
   typedef typename Superclass::OutputVectorType     OutputVectorType;
@@ -365,9 +366,6 @@ public:
     return true;
   }
 
-  /** Compute the Jacobian of the transformation */
-  const JacobianType & GetJacobian( const InputPointType & point ) const;
-
   /** Compute the Jacobian of the transformation. */
   virtual void GetJacobian(
     const InputPointType &,
@@ -422,12 +420,11 @@ protected:
    */
   AdvancedMatrixOffsetTransformBase( const MatrixType & matrix,
     const OutputVectorType & offset );
-  AdvancedMatrixOffsetTransformBase( unsigned int outputDims,
-    unsigned int paramDims );
+  AdvancedMatrixOffsetTransformBase( unsigned int paramDims );
   AdvancedMatrixOffsetTransformBase();
 
   /** Called by constructors: */
-  virtual void PrecomputeJacobians(unsigned int outputDims, unsigned int paramDims);
+  virtual void PrecomputeJacobians( unsigned int paramDims );
 
   /** Destroy an AdvancedMatrixOffsetTransformBase object. */
   virtual ~AdvancedMatrixOffsetTransformBase() {};

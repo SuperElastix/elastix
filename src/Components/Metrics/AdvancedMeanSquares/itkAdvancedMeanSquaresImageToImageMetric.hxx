@@ -551,7 +551,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   {
     const double normal_sum = 2.0 * this->m_NormalizationFactor /
       static_cast<double>( this->m_NumberOfPixelsCounted );
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
       H.scale_row(i, normal_sum);
     }
@@ -559,7 +559,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   else
   {
     //H.fill_diagonal(1.0);
-    for (unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
+    for ( unsigned int i = 0; i < this->GetNumberOfParameters(); ++i )
     {
       H(i,i) = 1.0;
     }

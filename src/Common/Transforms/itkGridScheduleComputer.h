@@ -28,8 +28,7 @@ namespace itk
  * given the image information and the desired grid spacing.
  *
  * NB: the Direction Cosines of the B-spline grid are set identical
- * to the user-supplied ImageDirection if the
- * ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE macro is set.
+ * to the user-supplied ImageDirection.
  *
  * \ingroup Transforms
  */

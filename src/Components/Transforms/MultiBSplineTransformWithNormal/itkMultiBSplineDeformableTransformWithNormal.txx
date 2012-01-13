@@ -29,7 +29,7 @@ namespace itk
 // Constructor with default arguments
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>
-::MultiBSplineDeformableTransformWithNormal():Superclass(SpaceDimension,0)
+::MultiBSplineDeformableTransformWithNormal():Superclass(SpaceDimension)
 {
   // By default this class handle a unique Transform
   this->m_NbLabels = 0;
@@ -57,7 +57,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 
 // Get the number of parameters
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-unsigned int
+typename MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::NumberOfParametersType
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>
 ::GetNumberOfParameters(void) const
 {
@@ -71,7 +71,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 // Get the number of parameters per dimension
 // FIXME :  Do we need to declare this function ?
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-unsigned int
+typename MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::NumberOfParametersType
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>
 ::GetNumberOfParametersPerDimension(void) const
 {
@@ -566,21 +566,21 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   return res;
 }
 
-template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
-const typename MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::JacobianType&
-MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>
-::GetJacobian( const InputPointType & point ) const
-{
-  this->m_Jacobian.set_size(SpaceDimension, this->GetNumberOfParameters());
-  this->m_Jacobian.Fill(0.0);
-  JacobianType jacobian;
-  NonZeroJacobianIndicesType nonZeroJacobianIndices;
-  this->GetJacobian(point, jacobian, nonZeroJacobianIndices);
-  for (unsigned i = 0; i < nonZeroJacobianIndices.size(); ++i)
-    for (unsigned j = 0; j < SpaceDimension; ++j)
-    this->m_Jacobian[j][nonZeroJacobianIndices[i]] = jacobian[j][i];
-  return this->m_Jacobian;
-}
+//template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+//const typename MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::JacobianType&
+//MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>
+//::GetJacobian( const InputPointType & point ) const
+//{
+//  this->m_Jacobian.set_size(SpaceDimension, this->GetNumberOfParameters());
+//  this->m_Jacobian.Fill(0.0);
+//  JacobianType jacobian;
+//  NonZeroJacobianIndicesType nonZeroJacobianIndices;
+//  this->GetJacobian(point, jacobian, nonZeroJacobianIndices);
+//  for (unsigned i = 0; i < nonZeroJacobianIndices.size(); ++i)
+//    for (unsigned j = 0; j < SpaceDimension; ++j)
+//    this->m_Jacobian[j][nonZeroJacobianIndices[i]] = jacobian[j][i];
+//  return this->m_Jacobian;
+//}
 
 /**
  * ********************* GetJacobian ****************************
@@ -754,6 +754,19 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
       for (unsigned k = 0; k < SpaceDimension; ++k)
         sh[i][j][k] = lsh[i][j][k] + nsh[i][j][k];
 }
+
+
+template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+void
+MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>
+::GetJacobianOfSpatialJacobian(
+  const InputPointType & ipp,
+  JacobianOfSpatialJacobianType & jsj,
+  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+{
+  itkExceptionMacro( << "ERROR: GetJacobianOfSpatialJacobian() not yet implemented "
+    << "in the MultiBSplineDeformableTransformWithNormal class." );
+} // end GetJacobianOfSpatialJacobian()
 
 template<class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void

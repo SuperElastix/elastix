@@ -36,8 +36,8 @@ using namespace itk;
 template <class TElastix >
 class NormalizedGradientCorrelationMetric:
 public NormalizedGradientCorrelationImageToImageMetric<
-  ITK_TYPENAME MetricBase<TElastix>::FixedImageType,
-  ITK_TYPENAME MetricBase<TElastix>::MovingImageType >,
+  typename MetricBase<TElastix>::FixedImageType,
+  typename MetricBase<TElastix>::MovingImageType >,
 public MetricBase<TElastix>
 {
 public:

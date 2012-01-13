@@ -99,7 +99,8 @@ OptimizerBase<TElastix>
   ParametersType roundedTP( N );
   for( unsigned int i = 0; i < N; ++i )
   {
-    roundedTP[ i ] = itk::Math::Round( finalTP[ i ] * static_cast<double>(1e6) );
+    roundedTP[ i ] = itk::Math::Round<ParametersValueType>(
+      finalTP[ i ] * 1.0e6 );
   }
 
   /** Compute the crc checksum using zlib crc32 function. */

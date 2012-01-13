@@ -116,11 +116,6 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
   /** Apply the initial transform.  */
   this->ApplyInitialTransform( imageOrigin, imageSpacing, imageDirection, finalGridSpacing );
 
-#ifndef ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE
-  /** Ignore direction cosines */
-  imageDirection.SetIdentity();
-#endif
-
   /** Set the appropriate sizes. */
   this->m_GridOrigins.resize( this->m_NumberOfLevels );
   this->m_GridRegions.resize( this->m_NumberOfLevels );
@@ -279,9 +274,8 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
     typename TransformType::OutputPointType outputPoint =
       this->m_InitialTransform->TransformPoint( inputPoint );
 
-#ifdef ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE
+    // CHECK: shouldn't TransformIndexToPhysicalPoint do this?
     outputPoint = invImageDirection * outputPoint;
-#endif
 
     /** Store transformed point */
     boundaryPoints->push_back( outputPoint );
@@ -301,10 +295,7 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
    * is not really the origin of the fixedImage anymore).
    * Take into account direction cosines */
   imageOrigin = minPoint;
-
-#ifdef ITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE
   imageOrigin = imageDirection * imageOrigin;
-#endif
 
   /** Compute the new "ImageSpacing" in each dimension. */
   const double smallnumber = NumericTraits<double>::epsilon();

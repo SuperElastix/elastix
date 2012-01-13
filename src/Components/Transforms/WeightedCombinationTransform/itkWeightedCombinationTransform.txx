@@ -27,7 +27,7 @@ namespace itk
 
 template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
 WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::WeightedCombinationTransform(): Superclass(OutputSpaceDimension,0)
+::WeightedCombinationTransform(): Superclass(OutputSpaceDimension)
 {
   this->m_SumOfWeights = 1.0;
   this->m_NormalizeWeights = false;
@@ -40,22 +40,25 @@ WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>
 
 template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
 void
-WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>::SetParameters( const ParametersType & param )
+WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>
+::SetParameters( const ParametersType & param )
 {
   if ( param.GetSize() != this->m_TransformContainer.size() )
   {
     itkExceptionMacro( << "Number of parameters does not match the number of transforms set in the transform container." );
   }
 
-  this->m_Jacobian.SetSize( OutputSpaceDimension, param.GetSize() );
+  //this->m_Jacobian.SetSize( OutputSpaceDimension, param.GetSize() );
   this->m_Parameters = param;
   this->m_SumOfWeights = param.sum();
   if ( this->m_SumOfWeights < 1e-10 && this->m_NormalizeWeights )
   {
     itkExceptionMacro( << "Weights sum to 0." );
   }
+
   this->Modified();
-} // end SetParameters
+
+} // end SetParameters()
 
 
 /**
@@ -106,23 +109,6 @@ WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>
   return opp;
 
 } // end TransformPoint
-
-
-/**
- * ********************* GetJacobian ****************************
- */
-
-template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
-const typename WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::JacobianType &
-WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::GetJacobian( const InputPointType & ipp ) const
-{
-  NonZeroJacobianIndicesType dummy(0);
-  this->GetJacobian( ipp, this->m_Jacobian, dummy );
-  return this->m_Jacobian;
-
-} // end GetJacobian()
 
 
 /**

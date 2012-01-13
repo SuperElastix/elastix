@@ -23,6 +23,7 @@ else()
   set( mevisdcmtifflib )
 endif()
 
+
 #---------------------------------------------------------------------
 # Macro that simplifies the addition of tests
 #
@@ -44,7 +45,14 @@ macro( elx_add_test name )
 
   # Link against other libraries.
   target_link_libraries( ${ELXTEST_EXECUTABLE_NAME}
-    ITKCommon ITKBasicFilters elxCommon ${mevisdcmtifflib} )
+    elxCommon # needed for elxTimer
+    ${ITK_LIBRARIES}
+  )
+
+  if( ELASTIX_USE_MEVISDICOMTIFF )
+    target_link_libraries( ${ELXTEST_EXECUTABLE_NAME}
+      ${mevisdcmtifflib} ) # needed for MevisDicomTiffImageIOTest
+  endif()
 
   # Group in IDE's like Visual Studio
   set_property( TARGET ${ELXTEST_EXECUTABLE_NAME} PROPERTY FOLDER "tests" )

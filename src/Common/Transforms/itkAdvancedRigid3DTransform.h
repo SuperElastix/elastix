@@ -69,6 +69,7 @@ public:
   itkStaticConstMacro(ParametersDimension, unsigned int, 12);
 
   typedef typename Superclass::ParametersType             ParametersType;
+  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
   typedef typename Superclass::JacobianType               JacobianType;
   typedef typename Superclass::ScalarType                 ScalarType;
   typedef typename Superclass::InputVectorType            InputVectorType;
@@ -176,8 +177,7 @@ public:
   bool MatrixIsOrthogonal( const MatrixType & matrix, double tol = 1e-10 );
 
 protected:
-  AdvancedRigid3DTransform(unsigned int spaceDim,
-                   unsigned int paramDim);
+  AdvancedRigid3DTransform(unsigned int paramDim);
   AdvancedRigid3DTransform(const MatrixType & matrix,
                    const OutputVectorType & offset);
   AdvancedRigid3DTransform();

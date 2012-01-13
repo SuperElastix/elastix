@@ -95,7 +95,6 @@ SET( TransformFiles
   Transforms/itkAdvancedRigid3DTransform.txx
   Transforms/itkAdvancedTransform.h
   Transforms/itkAdvancedTransform.txx
-  Transforms/itkBSplineDerivativeKernelFunction2.h
   Transforms/itkBSplineInterpolationDerivativeWeightFunction.h
   Transforms/itkBSplineInterpolationDerivativeWeightFunction.txx
   Transforms/itkBSplineInterpolationSecondOrderDerivativeWeightFunction.h
@@ -104,7 +103,7 @@ SET( TransformFiles
   Transforms/itkBSplineInterpolationWeightFunction2.txx
   Transforms/itkBSplineInterpolationWeightFunctionBase.h
   Transforms/itkBSplineInterpolationWeightFunctionBase.txx
-  Transforms/itkBSplineKernelFunction2.h
+  #Transforms/itkBSplineKernelFunction2.h
   #Transforms/itkBSplineSecondOrderDerivativeKernelFunction.h
   Transforms/itkBSplineSecondOrderDerivativeKernelFunction2.h
   Transforms/itkTransformToDeterminantOfSpatialJacobianSource.h
@@ -175,18 +174,12 @@ ADD_LIBRARY( elxCommon
 
 IF( UNIX AND NOT APPLE )
   TARGET_LINK_LIBRARIES( elxCommon
-    ITKBasicFilters
-    ITKNumerics
-    ITKIO
-    ITKCommon
+    ${ITK_LIBRARIES}
     rt # Needed for elxTimer, clock_gettime()
   )
 ELSE()
   TARGET_LINK_LIBRARIES( elxCommon
-    ITKBasicFilters
-    ITKNumerics
-    ITKIO
-    ITKCommon
+    ${ITK_LIBRARIES}
   )
 ENDIF()
 

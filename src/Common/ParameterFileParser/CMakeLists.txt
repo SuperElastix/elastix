@@ -10,7 +10,7 @@ SOURCE_GROUP( "Parser" FILES ${param_SRCS} )
 
 ADD_LIBRARY( param ${param_SRCS} )
 
-TARGET_LINK_LIBRARIES( param ITKCommon )
+TARGET_LINK_LIBRARIES( param ${ITK_LIBRARIES} )
 
 # Group in IDE's like Visual Studio
 SET_PROPERTY( TARGET param PROPERTY FOLDER "libraries" )

@@ -88,7 +88,8 @@ protected:
     typedef CastImageFilter< ScalarInputImageType, DiskImageType> CasterType;
 
     /** Reconfigure the imageIO */
-    this->GetImageIO()->SetPixelTypeInfo( typeid(OutputComponentType) );
+    //this->GetImageIO()->SetPixelTypeInfo( typeid(OutputComponentType) );
+    this->GetImageIO()->SetPixelTypeInfo( static_cast<const OutputComponentType *>(0) );
 
     /** cast the input image */
     typename CasterType::Pointer caster = CasterType::New();

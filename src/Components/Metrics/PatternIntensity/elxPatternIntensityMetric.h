@@ -37,8 +37,8 @@ template <class TElastix >
 class PatternIntensityMetric:
 public
   PatternIntensityImageToImageMetric<
-    ITK_TYPENAME MetricBase<TElastix>::FixedImageType,
-    ITK_TYPENAME MetricBase<TElastix>::MovingImageType >,
+    typename MetricBase<TElastix>::FixedImageType,
+    typename MetricBase<TElastix>::MovingImageType >,
 public MetricBase<TElastix>
 {
 public:

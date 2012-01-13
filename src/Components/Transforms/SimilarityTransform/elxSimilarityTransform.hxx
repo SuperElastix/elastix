@@ -309,7 +309,7 @@ SimilarityTransformElastix<TElastix>
 ::SetScales( void )
 {
   /** Create the new scales. */
-  const unsigned int N = this->GetNumberOfParameters();
+  const NumberOfParametersType N = this->GetNumberOfParameters();
   ScalesType newscales( N );
   newscales.Fill( 1.0 );
 

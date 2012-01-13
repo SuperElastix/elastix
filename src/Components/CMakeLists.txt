@@ -12,15 +12,11 @@ PROJECT( elxComponents )
 # about the missing param, just leave it out.
 IF( UNIX )
   IF ( NOT APPLE )
-    SET(elxLinkLibs
+    SET( elxLinkLibs
       xoutlib
       elxCommon
       elxCore
-      ITKBasicFilters
-      ITKNumerics
-      ITKIO
-      ITKCommon
-      ITKStatistics )
+      ${ITK_LIBRARIES} )
   ENDIF()
 ENDIF()
 
@@ -31,11 +27,7 @@ IF( WIN32 OR APPLE )
     xoutlib
     elxCommon
     elxCore
-    ITKBasicFilters
-    ITKNumerics
-    ITKIO
-    ITKCommon
-    ITKStatistics )
+    ${ITK_LIBRARIES} )
 ENDIF()
 
 #--------------------------------------------------------------------

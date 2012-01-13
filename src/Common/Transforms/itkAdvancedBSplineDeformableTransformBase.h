@@ -55,6 +55,7 @@ public:
 
   /** Typedefs from Superclass. */
   typedef typename Superclass::ParametersType         ParametersType;
+  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
   typedef typename Superclass::JacobianType           JacobianType;
   typedef typename Superclass::ScalarType             ScalarType;
   typedef typename Superclass::InputPointType         InputPointType;
@@ -234,10 +235,10 @@ public:
     }
 
   /** Return the number of parameters that completely define the Transform. */
-  virtual unsigned int GetNumberOfParameters( void ) const;
+  virtual NumberOfParametersType GetNumberOfParameters( void ) const;
 
   /** Return the number of parameters per dimension */
-  virtual unsigned int GetNumberOfParametersPerDimension( void ) const;
+  virtual NumberOfParametersType GetNumberOfParametersPerDimension( void ) const;
 
   /** Return the region of the grid wholly within the support region */
   itkGetConstReferenceMacro( ValidRegion, RegionType );

@@ -27,21 +27,21 @@ namespace itk
 
 template <typename TScalarType, unsigned int NDimensions>
 AdvancedCombinationTransform<TScalarType, NDimensions>
-::AdvancedCombinationTransform() : Superclass(NDimensions,1)
+::AdvancedCombinationTransform() : Superclass( NDimensions )
 {
   /** Initialize. */
   this->m_InitialTransform = 0;
   this->m_CurrentTransform = 0;
 
-  /** Set composition by default.*/
+  /** Set composition by default. */
   this->m_UseAddition = false;
   this->m_UseComposition = true;
 
   /** Set everything to have no current transform. */
   this->m_SelectedTransformPointFunction
     = &Self::TransformPointNoCurrentTransform;
-  this->m_SelectedGetJacobianFunction
-    = &Self::GetJacobianNoCurrentTransform;
+//   this->m_SelectedGetJacobianFunction
+//     = &Self::GetJacobianNoCurrentTransform;
   this->m_SelectedGetSparseJacobianFunction
     = &Self::GetJacobianNoCurrentTransform;
   this->m_SelectedGetSpatialJacobianFunction
@@ -75,7 +75,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
  */
 
 template <typename TScalarType, unsigned int NDimensions>
-unsigned int
+typename AdvancedCombinationTransform<TScalarType, NDimensions>::NumberOfParametersType
 AdvancedCombinationTransform<TScalarType, NDimensions>
 ::GetNumberOfParameters( void ) const
 {
@@ -318,36 +318,38 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
      * the initial and the current transforms are defined.
      */
 
-    /** Try create the inverse of the initial transform. */
-    InitialTransformPointer inverseT0 = InitialTransformType::New();
-    bool T0invertable = this->m_InitialTransform->GetInverse( inverseT0 );
+    itkExceptionMacro( << "ERROR: not implemented" );
+    return false;
 
-    if ( T0invertable )
-    {
-      /** Try to create the inverse of the current transform. */
-      CurrentTransformPointer inverseT1 = CurrentTransformType::New();
-      bool T1invertable = this->m_CurrentTransform->GetInverse( inverseT1 );
-
-      if ( T1invertable )
-      {
-        /** The transform can be inverted! */
-        inverse->SetUseComposition( true );
-        inverse->SetInitialTransform( inverseT1 );
-        inverse->SetCurrentTransform( inverseT0 );
-        return true;
-      }
-      else
-      {
-        /** The initial transform is invertible, but the current one not. */
-        return false;
-      }
-    }
-    else
-    {
-      /** The initial transform is not invertible. */
-      return false;
-    }
-
+//     /** Try create the inverse of the initial transform. */
+//     InitialTransformPointer inverseT0 = InitialTransformType::New();
+//     bool T0invertable = this->m_InitialTransform->GetInverse( inverseT0 );
+// 
+//     if ( T0invertable )
+//     {
+//       /** Try to create the inverse of the current transform. */
+//       CurrentTransformPointer inverseT1 = CurrentTransformType::New();
+//       bool T1invertable = this->m_CurrentTransform->GetInverse( inverseT1 );
+// 
+//       if ( T1invertable )
+//       {
+//         /** The transform can be inverted! */
+//         inverse->SetUseComposition( true );
+//         inverse->SetInitialTransform( inverseT1 );
+//         inverse->SetCurrentTransform( inverseT0 );
+//         return true;
+//       }
+//       else
+//       {
+//         /** The initial transform is invertible, but the current one not. */
+//         return false;
+//       }
+//     }
+//     else
+//     {
+//       /** The initial transform is not invertible. */
+//       return false;
+//     }
   } // end else: UseComposition
 
 } // end GetInverse()
@@ -519,8 +521,8 @@ void AdvancedCombinationTransform<TScalarType, NDimensions>
   {
     this->m_SelectedTransformPointFunction
       = &Self::TransformPointNoCurrentTransform;
-    this->m_SelectedGetJacobianFunction
-      = &Self::GetJacobianNoCurrentTransform;
+//     this->m_SelectedGetJacobianFunction
+//       = &Self::GetJacobianNoCurrentTransform;
     this->m_SelectedGetSparseJacobianFunction
       = &Self::GetJacobianNoCurrentTransform;
     this->m_SelectedGetSpatialJacobianFunction
@@ -540,8 +542,8 @@ void AdvancedCombinationTransform<TScalarType, NDimensions>
   {
     this->m_SelectedTransformPointFunction
       = &Self::TransformPointNoInitialTransform;
-    this->m_SelectedGetJacobianFunction
-      = &Self::GetJacobianNoInitialTransform;
+//     this->m_SelectedGetJacobianFunction
+//       = &Self::GetJacobianNoInitialTransform;
     this->m_SelectedGetSparseJacobianFunction
       = &Self::GetJacobianNoInitialTransform;
     this->m_SelectedGetSpatialJacobianFunction
@@ -561,8 +563,8 @@ void AdvancedCombinationTransform<TScalarType, NDimensions>
   {
     this->m_SelectedTransformPointFunction
       = &Self::TransformPointUseAddition;
-    this->m_SelectedGetJacobianFunction
-      = &Self::GetJacobianUseAddition;
+//     this->m_SelectedGetJacobianFunction
+//       = &Self::GetJacobianUseAddition;
     this->m_SelectedGetSparseJacobianFunction
       = &Self::GetJacobianUseAddition;
     this->m_SelectedGetSpatialJacobianFunction
@@ -582,8 +584,8 @@ void AdvancedCombinationTransform<TScalarType, NDimensions>
   {
     this->m_SelectedTransformPointFunction
       = &Self::TransformPointUseComposition;
-    this->m_SelectedGetJacobianFunction
-      = &Self::GetJacobianUseComposition;
+//     this->m_SelectedGetJacobianFunction
+//       = &Self::GetJacobianUseComposition;
     this->m_SelectedGetSparseJacobianFunction
       = &Self::GetJacobianUseComposition;
     this->m_SelectedGetSpatialJacobianFunction
@@ -710,67 +712,6 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
   return point;
 
 } // end TransformPointNoCurrentTransform()
-
-
-/**
- * ************* GetJacobianUseAddition ***************************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-const typename AdvancedCombinationTransform<TScalarType, NDimensions>::JacobianType &
-AdvancedCombinationTransform<TScalarType, NDimensions>
-::GetJacobianUseAddition( const InputPointType & point ) const
-{
-  return this->m_CurrentTransform->GetJacobian( point );
-
-} // end GetJacobianUseAddition()
-
-
-/**
- * **************** GetJacobianUseComposition *************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-const typename AdvancedCombinationTransform<TScalarType, NDimensions>::JacobianType &
-AdvancedCombinationTransform<TScalarType, NDimensions>
-::GetJacobianUseComposition( const InputPointType & point ) const
-{
-  return this->m_CurrentTransform->GetJacobian(
-    this->m_InitialTransform->TransformPoint( point ) );
-
-} // end GetJacobianUseComposition()
-
-
-/**
- * **************** GetJacobianNoInitialTransform ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-const typename AdvancedCombinationTransform<TScalarType, NDimensions>::JacobianType &
-AdvancedCombinationTransform<TScalarType, NDimensions>
-::GetJacobianNoInitialTransform( const InputPointType & point ) const
-{
-  return this->m_CurrentTransform->GetJacobian( point );
-
-} // end GetJacobianNoInitialTransform()
-
-
-/**
- * ******** GetJacobianNoCurrentTransform ******************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-const typename AdvancedCombinationTransform<TScalarType, NDimensions>::JacobianType &
-AdvancedCombinationTransform<TScalarType, NDimensions>
-::GetJacobianNoCurrentTransform( const InputPointType & itkNotUsed( point ) ) const
-{
-  /** Throw an exception. */
-  this->NoCurrentTransformSet();
-
-  /** dummy return. */
-  return this->m_Jacobian;
-
-} // end GetJacobianNoCurrentTransform()
 
 
 /**
@@ -1473,21 +1414,6 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
   return ((*this).*m_SelectedTransformPointFunction)( point );
 
 } // end TransformPoint()
-
-
-/**
- * ****************** GetJacobian ****************************
- */
-
-template <typename TScalarType, unsigned int NDimensions>
-const typename AdvancedCombinationTransform<TScalarType, NDimensions>::JacobianType &
-AdvancedCombinationTransform<TScalarType, NDimensions>
-::GetJacobian( const InputPointType & point ) const
-{
-  /** Call the selected GetJacobian. */
-  return ((*this).*m_SelectedGetJacobianFunction)( point );
-
-} // end GetJacobian()
 
 
 /**

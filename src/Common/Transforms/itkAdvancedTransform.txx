@@ -43,7 +43,7 @@ namespace itk
 
 template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
 AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::AdvancedTransform()
+::AdvancedTransform() : Superclass()
 {
   this->m_HasNonZeroSpatialHessian = true;
   this->m_HasNonZeroJacobianOfSpatialHessian = true;
@@ -57,8 +57,8 @@ AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
 
 template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
 AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::AdvancedTransform( unsigned int dimension, unsigned int numberOfParameters ) :
-  Superclass( dimension, numberOfParameters )
+::AdvancedTransform( NumberOfParametersType numberOfParameters ) :
+  Superclass( numberOfParameters )
 {
   this->m_HasNonZeroSpatialHessian = true;
   this->m_HasNonZeroJacobianOfSpatialHessian = true;
@@ -70,150 +70,13 @@ AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
  */
 
 template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
-unsigned long
+typename AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>::NumberOfParametersType
 AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
 ::GetNumberOfNonZeroJacobianIndices( void ) const
 {
   return this->GetNumberOfParameters();
 
 } // end GetNumberOfNonZeroJacobianIndices()
-
-
-/**
- * ********************* GetJacobian ****************************
- */
-
-template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
-const typename AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::JacobianType &
-AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::GetJacobian( const InputPointType & ) const
-{
-  itkExceptionMacro( << "Subclass should override this method" );
-  // Next line is needed to avoid errors due to:
-  // "function must return a value".
-  return this->m_Jacobian;
-
-} // end GetJacobian()
-
-
-/**
- * ********************* GetJacobian ****************************
- */
-
-template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
-void
-AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::GetJacobian(
-  const InputPointType &,
-  JacobianType &,
-  NonZeroJacobianIndicesType & ) const
-{
-  itkExceptionMacro( << "Subclass should override this method" );
-
-} // end GetJacobian()
-
-
-/**
- * ********************* GetSpatialJacobian ****************************
- */
-
-template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
-void
-AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::GetSpatialJacobian(
-  const InputPointType &,
-  SpatialJacobianType & ) const
-{
-  itkExceptionMacro( << "Subclass should override this method" );
-
-} // end GetSpatialJacobian()
-
-
-/**
- * ********************* GetSpatialHessian ****************************
- */
-
-template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
-void
-AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::GetSpatialHessian(
-  const InputPointType &,
-  SpatialHessianType & ) const
-{
-  itkExceptionMacro( << "Subclass should override this method" );
-
-} // end GetSpatialHessian()
-
-
-/**
- * ********************* GetJacobianOfSpatialJacobian ****************************
- */
-
-template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
-void
-AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::GetJacobianOfSpatialJacobian(
-  const InputPointType &,
-  JacobianOfSpatialJacobianType &,
-  NonZeroJacobianIndicesType & ) const
-{
-  itkExceptionMacro( << "Subclass should override this method" );
-
-} // end GetJacobianOfSpatialJacobian()
-
-
-/**
- * ********************* GetJacobianOfSpatialJacobian ****************************
- */
-
-template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
-void
-AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::GetJacobianOfSpatialJacobian(
-  const InputPointType &,
-  SpatialJacobianType &,
-  JacobianOfSpatialJacobianType &,
-  NonZeroJacobianIndicesType & ) const
-{
-  itkExceptionMacro( << "Subclass should override this method" );
-
-} // end GetJacobianOfSpatialJacobian()
-
-
-/**
- * ********************* GetJacobianOfSpatialHessian ****************************
- */
-
-template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
-void
-AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::GetJacobianOfSpatialHessian(
-  const InputPointType &,
-  JacobianOfSpatialHessianType &,
-  NonZeroJacobianIndicesType & ) const
-{
-  itkExceptionMacro( << "Subclass should override this method" );
-
-} // end GetJacobianOfSpatialHessian()
-
-
-/**
- * ********************* GetJacobianOfSpatialHessian ****************************
- */
-
-template < class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
-void
-AdvancedTransform<TScalarType,NInputDimensions,NOutputDimensions>
-::GetJacobianOfSpatialHessian(
-  const InputPointType &,
-  SpatialHessianType &,
-  JacobianOfSpatialHessianType &,
-  NonZeroJacobianIndicesType & ) const
-{
-  itkExceptionMacro( << "Subclass should override this method" );
-
-} // end GetJacobianOfSpatialHessian()
 
 
 } // end namespace itk

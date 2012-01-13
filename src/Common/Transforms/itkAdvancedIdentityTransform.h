@@ -79,7 +79,8 @@ public:
   typedef  TScalarType     ScalarType;
 
   /** Type of the input parameters. */
-  typedef  typename Superclass::ParametersType                 ParametersType;
+  typedef  typename Superclass::ParametersType                ParametersType;
+  typedef typename Superclass::NumberOfParametersType         NumberOfParametersType;
 
   /** Type of the Jacobian matrix. */
   typedef  typename Superclass::JacobianType                   JacobianType;
@@ -147,39 +148,6 @@ public:
      The method is provided only to comply with the interface of other transforms. */
   void SetIdentity( void ) { }
 
-  /** Compute the Jacobian of the transformation
-   *
-   * This method computes the Jacobian matrix of the transformation.
-   * given point or vector, returning the transformed point or
-   * vector. The rank of the Jacobian will also indicate if the transform
-   * is invertible at this point.
-   *
-   * The Jacobian can be expressed as a set of partial derivatives of the
-   * output point components with respect to the parameters that defined
-   * the transform:
-   *
-   * \f[
-   *
-      J=\left[ \begin{array}{cccc}
-      \frac{\partial x_{1}}{\partial p_{1}} &
-      \frac{\partial x_{2}}{\partial p_{1}} &
-      \cdots  & \frac{\partial x_{n}}{\partial p_{1}}\\
-      \frac{\partial x_{1}}{\partial p_{2}} &
-      \frac{\partial x_{2}}{\partial p_{2}} &
-      \cdots  & \frac{\partial x_{n}}{\partial p_{2}}\\
-      \vdots  & \vdots  & \ddots  & \vdots \\
-      \frac{\partial x_{1}}{\partial p_{m}} &
-      \frac{\partial x_{2}}{\partial p_{m}} &
-      \cdots  & \frac{\partial x_{n}}{\partial p_{m}}
-      \end{array}\right]
-   *
-   * \f]
-   */
-  virtual const JacobianType & GetJacobian( const InputPointType  & ) const
-    {
-    return this->m_Jacobian;
-    }
-
   /** Return an inverse of the identity transform - another identity transform. */
   virtual InverseTransformBasePointer GetInverseTransform( void ) const
     {
@@ -217,10 +185,9 @@ public:
     JacobianType & j,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
   {
-    j = this->m_Jacobian;
+    j = this->m_LocalJacobian;
     nonZeroJacobianIndices = this->m_NonZeroJacobianIndices;
   }
-
 
   /** Compute the spatial Jacobian of the transformation. */
   virtual void GetSpatialJacobian(
@@ -286,11 +253,11 @@ public:
 
 protected:
   AdvancedIdentityTransform()
-    : AdvancedTransform<TScalarType,NDimensions,NDimensions>( NDimensions, 1 )
+    : AdvancedTransform<TScalarType,NDimensions,NDimensions>( NDimensions )
   {
     // The Jacobian is constant, therefore it can be initialized in the constructor.
-    this->m_Jacobian = JacobianType( NDimensions, 1 );
-    this->m_Jacobian.Fill( 0.0 );
+    this->m_LocalJacobian = JacobianType( NDimensions, 1 );
+    this->m_LocalJacobian.Fill( 0.0 );
 
     /** SpatialJacobian is also constant. */
     this->m_SpatialJacobian.SetIdentity();
@@ -316,6 +283,7 @@ private:
   AdvancedIdentityTransform(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
+  JacobianType                  m_LocalJacobian;
   SpatialJacobianType           m_SpatialJacobian;
   SpatialHessianType            m_SpatialHessian;
   NonZeroJacobianIndicesType    m_NonZeroJacobianIndices;

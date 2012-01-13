@@ -260,7 +260,7 @@ namespace itk
     typedef Array<double>                           ParzenValueContainerType;
 
     /** Typedefs for Parzen kernel. */
-    typedef KernelFunction KernelFunctionType;
+    typedef KernelFunctionBase<double>              KernelFunctionType;
 
     /** Protected variables **************************** */
 

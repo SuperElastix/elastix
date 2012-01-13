@@ -37,8 +37,8 @@ using namespace itk;
     class FixedSmoothingPyramid :
     public
       MultiResolutionGaussianSmoothingPyramidImageFilter<
-        ITK_TYPENAME FixedImagePyramidBase<TElastix>::InputImageType,
-        ITK_TYPENAME FixedImagePyramidBase<TElastix>::OutputImageType >,
+        typename FixedImagePyramidBase<TElastix>::InputImageType,
+        typename FixedImagePyramidBase<TElastix>::OutputImageType >,
     public
       FixedImagePyramidBase<TElastix>
   {

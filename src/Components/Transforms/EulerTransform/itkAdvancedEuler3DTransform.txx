@@ -27,7 +27,7 @@ namespace itk
 template <class TScalarType>
 AdvancedEuler3DTransform<TScalarType>
 ::AdvancedEuler3DTransform():
-  Superclass(SpaceDimension, ParametersDimension)
+  Superclass(ParametersDimension)
 {
   m_ComputeZYX = false;
   m_AngleX = m_AngleY = m_AngleZ = NumericTraits<ScalarType>::Zero;
@@ -56,9 +56,8 @@ AdvancedEuler3DTransform<TScalarType>
 // Constructor with arguments
 template <class TScalarType>
 AdvancedEuler3DTransform<TScalarType>
-::AdvancedEuler3DTransform(unsigned int spaceDimension,
-                   unsigned int parametersDimension):
-  Superclass(spaceDimension, parametersDimension)
+::AdvancedEuler3DTransform( unsigned int parametersDimension):
+  Superclass(parametersDimension)
 {
   m_ComputeZYX = false;
   m_AngleX = m_AngleY = m_AngleZ = NumericTraits<ScalarType>::Zero;
