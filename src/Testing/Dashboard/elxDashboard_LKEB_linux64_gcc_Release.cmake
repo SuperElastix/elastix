@@ -38,7 +38,7 @@ ENDIF()
 # Dashboard settings
 SET( dashboard_cache "
 // Which ITK to use
-ITK_DIR:PATH=/usr/local/toolkits/ITK/3.20.0/bin
+ITK_DIR:PATH=/usr/local/toolkits/ITK/4.0.0/bin
 
 // Some elastix settings, defining the configuration
 ELASTIX_BUILD_TESTING:BOOL=ON
