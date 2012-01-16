@@ -89,12 +89,13 @@ public:
   itkTypeMacro( AffineDTI3DTransform, AdvancedMatrixOffsetTransformBase );
 
   /** Dimension of the space. */
-  itkStaticConstMacro(SpaceDimension, unsigned int, 3);
-  itkStaticConstMacro(InputSpaceDimension, unsigned int, 3);
-  itkStaticConstMacro(OutputSpaceDimension, unsigned int, 3);
-  itkStaticConstMacro(ParametersDimension, unsigned int, 12);
+  itkStaticConstMacro( SpaceDimension, unsigned int, 3 );
+  itkStaticConstMacro( InputSpaceDimension, unsigned int, 3 );
+  itkStaticConstMacro( OutputSpaceDimension, unsigned int, 3 );
+  itkStaticConstMacro( ParametersDimension, unsigned int, 12 );
 
   typedef typename Superclass::ParametersType             ParametersType;
+  typedef typename Superclass::NumberOfParametersType     NumberOfParametersType;
   typedef typename Superclass::JacobianType               JacobianType;
   typedef typename Superclass::ScalarType                 ScalarType;
   typedef typename Superclass::InputVectorType            InputVectorType;

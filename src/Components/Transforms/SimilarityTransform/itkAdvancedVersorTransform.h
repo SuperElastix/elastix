@@ -72,6 +72,7 @@ public:
 
   /** Parameters Type   */
   typedef typename Superclass::ParametersType         ParametersType;
+  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
   typedef typename Superclass::JacobianType           JacobianType;
   typedef typename Superclass::ScalarType             ScalarType;
   typedef typename Superclass::InputPointType         InputPointType;

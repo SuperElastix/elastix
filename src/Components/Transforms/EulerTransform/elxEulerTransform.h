@@ -116,6 +116,7 @@ using namespace itk;
     /** These are both in Euler2D and Euler3D. */
     typedef typename Superclass1::ScalarType                  ScalarType;
     typedef typename Superclass1::ParametersType              ParametersType;
+    typedef typename Superclass1::NumberOfParametersType      NumberOfParametersType;
     typedef typename Superclass1::JacobianType                JacobianType;
 
     typedef typename Superclass1::InputPointType              InputPointType;

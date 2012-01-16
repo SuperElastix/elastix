@@ -63,6 +63,7 @@ public:
   /** Typedefs from the Superclass. */
   typedef typename Superclass::ScalarType           ScalarType;
   typedef typename Superclass::ParametersType       ParametersType;
+  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
   typedef typename Superclass::JacobianType         JacobianType;
   typedef typename Superclass::InputVectorType      InputVectorType;
   typedef typename Superclass::OutputVectorType     OutputVectorType;
@@ -80,6 +81,8 @@ public:
   typedef typename
     Superclass::JacobianOfSpatialJacobianType    		JacobianOfSpatialJacobianType;
   typedef typename Superclass::SpatialHessianType		SpatialHessianType;
+  typedef typename Superclass
+    ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
 
   /** New typedefs in this class: */
   typedef Transform< TScalarType,
@@ -140,12 +143,12 @@ public:
   virtual const ParametersType & GetFixedParameters( void ) const
   {
     // \todo: to be implemented by Stefan: check this:
-    return m_FixedParameters;
+    return this->m_FixedParameters;
   }
 
   /** Return the number of sub-transforms that have been set. */
   virtual NumberOfParametersType GetNumberOfParameters( void ) const
-  {	
+  {
     return this->m_TransformContainer.size();
   };
 

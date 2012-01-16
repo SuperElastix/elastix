@@ -82,13 +82,13 @@ using namespace itk;
   public:
 
     /** Standard ITK-stuff.*/
-    typedef AffineDTITransformElastix                               Self;
-
+    typedef AffineDTITransformElastix                           Self;
     typedef AdvancedCombinationTransform<
       typename elx::TransformBase< TElastix >::CoordRepType,
       elx::TransformBase< TElastix >::FixedImageDimension >     Superclass1;
-
     typedef elx::TransformBase< TElastix >                      Superclass2;
+    typedef SmartPointer<Self>                                  Pointer;
+    typedef SmartPointer<const Self>                            ConstPointer;
 
     /** The ITK-class that provides most of the functionality, and
      * that is set as the "CurrentTransform" in the CombinationTransform */
@@ -96,14 +96,10 @@ using namespace itk;
       typename elx::TransformBase< TElastix >::CoordRepType,
       elx::TransformBase< TElastix >::FixedImageDimension >     AffineDTITransformType;
 
-    typedef SmartPointer<Self>                                  Pointer;
-    typedef SmartPointer<const Self>                            ConstPointer;
-
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
-    //itkTypeMacro( AffineDTITransformElastix, AffineDTITransform );
     itkTypeMacro( AffineDTITransformElastix, AdvancedCombinationTransform );
 
     /** Name of this class.
@@ -120,6 +116,7 @@ using namespace itk;
     /** These are both in AffineDTI2D and AffineDTI3D. */
     typedef typename Superclass1::ScalarType                  ScalarType;
     typedef typename Superclass1::ParametersType              ParametersType;
+    typedef typename Superclass1::NumberOfParametersType      NumberOfParametersType;
     typedef typename Superclass1::JacobianType                JacobianType;
 
     typedef typename Superclass1::InputPointType              InputPointType;
@@ -131,8 +128,8 @@ using namespace itk;
     typedef typename Superclass1::InputVnlVectorType          InputVnlVectorType;
     typedef typename Superclass1::OutputVnlVectorType         OutputVnlVectorType;
 
-    typedef typename AffineDTITransformType::Pointer              AffineDTITransformPointer;
-    typedef typename AffineDTITransformType::OffsetType           OffsetType;
+    typedef typename AffineDTITransformType::Pointer          AffineDTITransformPointer;
+    typedef typename AffineDTITransformType::OffsetType       OffsetType;
 
     /** Typedef's inherited from TransformBase. */
     typedef typename Superclass2::ElastixType               ElastixType;
@@ -167,7 +164,7 @@ using namespace itk;
      * \li Call InitializeTransform
      * \li Set the scales.
      */
-    virtual void BeforeRegistration(void);
+    virtual void BeforeRegistration( void );
 
     /** Initialize Transform.
      * \li Set all parameters to zero.
@@ -184,7 +181,7 @@ using namespace itk;
      *
      * It is not yet possible to enter an initial rotation angle.
      */
-    virtual void InitializeTransform(void);
+    virtual void InitializeTransform( void );
 
     /** Set the scales
      * \li If AutomaticScalesEstimation is "true" estimate scales
@@ -193,13 +190,13 @@ using namespace itk;
      * This function is called by BeforeRegistration, after
      * the InitializeTransform function is called
      */
-    virtual void SetScales(void);
+    virtual void SetScales( void );
 
     /** Function to read transform-parameters from a file.
      *
      * It reads the center of rotation and calls the superclass' implementation.
      */
-    virtual void ReadFromFile(void);
+    virtual void ReadFromFile( void );
 
     /** Function to write transform-parameters to a file.
      * It writes the center of rotation to file and calls the superclass' implementation.

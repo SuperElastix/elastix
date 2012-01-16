@@ -142,6 +142,7 @@ namespace itk
     /** Typedefs inherited from the superclass. */
     typedef typename Superclass::ScalarType                   ScalarType;
     typedef typename Superclass::ParametersType               ParametersType;
+    typedef typename Superclass::NumberOfParametersType       NumberOfParametersType;
     typedef typename Superclass::JacobianType                 JacobianType;
     typedef typename Superclass::OffsetType                   OffsetType;
     typedef typename Superclass::InputPointType               InputPointType;

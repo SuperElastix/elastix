@@ -102,7 +102,8 @@ ADD_LIBRARY( elxCore
 TARGET_LINK_LIBRARIES( elxCore
   elxCommon
   xoutlib
-  #ITKStatistics
+  param # Needed for elxConfiguration
+  #  ${ITK_LIBRARIES}
 )
 
 #---------------------------------------------------------------------

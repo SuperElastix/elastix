@@ -72,6 +72,7 @@ public:
     ::JacobianOfSpatialHessianType                    JacobianOfSpatialHessianType;
   typedef typename Superclass::InternalMatrixType     InternalMatrixType;
   typedef typename Superclass::ParametersType         ParametersType;
+  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
 
   /** Parameters as SpaceDimension number of images. */
   typedef typename ParametersType::ValueType          PixelType;

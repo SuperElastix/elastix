@@ -117,6 +117,7 @@ using namespace itk;
     /** These are both in Similarity2D and Similarity3D. */
     typedef typename Superclass1::ScalarType                  ScalarType;
     typedef typename Superclass1::ParametersType              ParametersType;
+    typedef typename Superclass1::NumberOfParametersType      NumberOfParametersType;
     typedef typename Superclass1::JacobianType                JacobianType;
 
     typedef typename Superclass1::InputPointType              InputPointType;
