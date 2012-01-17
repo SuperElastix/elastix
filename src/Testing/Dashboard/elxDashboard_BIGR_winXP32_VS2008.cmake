@@ -48,7 +48,7 @@ set( CTEST_DASHBOARD_ROOT "D:/tk/mydash/${CTEST_SCRIPT_NAME}.${dashboard_model}"
 
 SET( dashboard_cache "
 // Which ITK to use
-ITK_DIR:PATH=D:/tk/itk/3.20/bin
+ITK_DIR:PATH=D:/tk/itk/4.0.0/bin
 
 // Some elastix settings, defining the configuration
 ELASTIX_BUILD_TESTING:BOOL=ON
