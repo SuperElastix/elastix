@@ -63,7 +63,21 @@ public:
   typedef typename Superclass::ParametersType       ParametersType;
   typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
   typedef typename Superclass::JacobianType         JacobianType;
+  typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
+  typedef typename Superclass::JacobianOfSpatialJacobianType  
+                                                    JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType   SpatialHessianType;
+  typedef typename Superclass::JacobianOfSpatialHessianType   
+                                                    JacobianOfSpatialHessianType;
   typedef typename Superclass::InputPointType       InputPointType;
+  typedef typename Superclass::InputVectorType      InputVectorType;
+  typedef typename Superclass::OutputVectorType     OutputVectorType;
+  typedef typename Superclass::InputVnlVectorType   InputVnlVectorType;
+  typedef typename Superclass::OutputVnlVectorType  OutputVnlVectorType;
+  typedef typename Superclass::OutputCovariantVectorType     
+                                                    OutputCovariantVectorType;
+  typedef typename Superclass::InputCovariantVectorType     
+                                                    InputCovariantVectorType;
   typedef typename Superclass::OutputPointType      OutputPointType;
   typedef typename
     Superclass::NonZeroJacobianIndicesType					NonZeroJacobianIndicesType;
@@ -131,7 +145,7 @@ public:
   virtual const ParametersType & GetFixedParameters( void ) const
   {
     // \todo: to be implemented by Coert: check this:
-    return m_FixedParameters;
+    return this->m_FixedParameters;
   }
 
   /** Return the number of sub transforms that have been set. */
