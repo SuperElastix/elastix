@@ -61,7 +61,8 @@ public:
   /** Typedefs from the Superclass. */
   typedef typename Superclass::ScalarType           ScalarType;
   typedef typename Superclass::ParametersType       ParametersType;
-  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
+  typedef typename Superclass::NumberOfParametersType 
+                                                    NumberOfParametersType;
   typedef typename Superclass::JacobianType         JacobianType;
   typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
   typedef typename Superclass::JacobianOfSpatialJacobianType  
@@ -80,7 +81,7 @@ public:
                                                     InputCovariantVectorType;
   typedef typename Superclass::OutputPointType      OutputPointType;
   typedef typename
-    Superclass::NonZeroJacobianIndicesType					NonZeroJacobianIndicesType;
+    Superclass::NonZeroJacobianIndicesType			NonZeroJacobianIndicesType;
 
   /** Sub transform types, having a reduced dimension. */
   typedef AdvancedTransform< TScalarType,
@@ -93,6 +94,9 @@ public:
   /** Dimension - 1 point types. */
   typedef typename SubTransformType::InputPointType     SubTransformInputPointType;
   typedef typename SubTransformType::OutputPointType    SubTransformOutputPointType;
+
+  /** Array type for parameter vector instantiation. */
+  typedef typename ParametersType::ArrayType            ParametersArrayType;
 
   /**  Method to transform a point. */
   virtual OutputPointType TransformPoint( const InputPointType & ipp ) const;
