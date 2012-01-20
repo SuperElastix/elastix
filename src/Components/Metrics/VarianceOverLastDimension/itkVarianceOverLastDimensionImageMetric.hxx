@@ -126,6 +126,7 @@ namespace itk
 
     /** Initialize random number generator. */
     Statistics::MersenneTwisterRandomVariateGenerator::Pointer randomGenerator = Statistics::MersenneTwisterRandomVariateGenerator::New();
+    randomGenerator->Initialize();
 
     /** Sample additional at fixed timepoint. */
     for ( unsigned int i = 0; i < m_NumAdditionalSamplesFixed; ++i )
@@ -492,9 +493,9 @@ namespace itk
       sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
     /** Compute average over variances and normalize with initial variance. */
-    measure /= static_cast< float >( this->m_NumberOfPixelsCounted * this->m_InitialVariance );
-    derivative /= static_cast< float >( this->m_NumberOfPixelsCounted * this->m_InitialVariance );
-
+    measure /= static_cast< float >( this->m_NumberOfPixelsCounted ) * this->m_InitialVariance;
+    derivative /= static_cast< float >( this->m_NumberOfPixelsCounted ) * this->m_InitialVariance;
+    
     /** Subtract mean from derivative elements. */
     if ( this->m_SubtractMean )
     {
