@@ -35,6 +35,10 @@ ELSEIF( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
   SET( dashboard_model Continuous )
 ENDIF()
 
+# Note:
+# ITK4 can currently not be used in combination with CUDA
+# The commandline for nvcc is too long
+# A bug is outstanding: http://www.itk.org/Bug/view.php?id=12198
 SET( dashboard_cache "
 // Which ITK to use:
 ITK_DIR:PATH=D:/toolkits/ITK/4.0.0/binVS2008
@@ -42,7 +46,7 @@ ITK_DIR:PATH=D:/toolkits/ITK/4.0.0/binVS2008
 // Some elastix settings, defining the configuration:
 ELASTIX_BUILD_TESTING:BOOL=ON
 ELASTIX_ENABLE_PACKAGER:BOOL=ON
-ELASTIX_USE_CUDA:BOOL=ON
+//ELASTIX_USE_CUDA:BOOL=ON
 ELASTIX_USE_MEVISDICOMTIFF:BOOL=OFF
 ELASTIX_IMAGE_DIMENSION:STRING=2;3;4
 ELASTIX_IMAGE_2D_PIXELTYPES:STRING=float
