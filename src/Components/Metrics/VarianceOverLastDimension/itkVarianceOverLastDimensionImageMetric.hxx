@@ -23,9 +23,9 @@
 namespace itk
 {
 
-  /**
-  * ******************* Constructor *******************
-  */
+/**
+ * ******************* Constructor *******************
+ */
 
   template <class TFixedImage, class TMovingImage>
     VarianceOverLastDimensionImageMetric<TFixedImage,TMovingImage>
@@ -42,9 +42,9 @@ namespace itk
   } // end constructor
 
 
-  /**
-   * ******************* Initialize *******************
-   */
+/**
+ * ******************* Initialize *******************
+ */
 
   template <class TFixedImage, class TMovingImage>
     void
@@ -101,9 +101,10 @@ namespace itk
   } // end Initialize
 
 
-  /**
-   * ******************* PrintSelf *******************
-   */
+/**
+ * ******************* PrintSelf *******************
+ */
+
   template < class TFixedImage, class TMovingImage>
     void
     VarianceOverLastDimensionImageMetric<TFixedImage,TMovingImage>
@@ -113,9 +114,11 @@ namespace itk
 
   } // end PrintSelf
 
-  /**
-  * ******************* SampleRandom *******************
-  */
+
+/**
+ * ******************* SampleRandom *******************
+ */
+
   template < class TFixedImage, class TMovingImage>
   void
     VarianceOverLastDimensionImageMetric<TFixedImage,TMovingImage>
@@ -125,7 +128,8 @@ namespace itk
     numbers.clear();
 
     /** Initialize random number generator. */
-    Statistics::MersenneTwisterRandomVariateGenerator::Pointer randomGenerator = Statistics::MersenneTwisterRandomVariateGenerator::New();
+    Statistics::MersenneTwisterRandomVariateGenerator::Pointer randomGenerator
+      = Statistics::MersenneTwisterRandomVariateGenerator::GetInstance();
     randomGenerator->Initialize();
 
     /** Sample additional at fixed timepoint. */
@@ -146,9 +150,10 @@ namespace itk
     }
   } // end SampleRandom
 
-  /**
-   * *************** EvaluateTransformJacobianInnerProduct ****************
-   */
+
+/**
+ * *************** EvaluateTransformJacobianInnerProduct ****************
+ */
 
   template < class TFixedImage, class TMovingImage >
     void
@@ -178,9 +183,9 @@ namespace itk
   } // end EvaluateTransformJacobianInnerProduct
 
 
-  /**
-   * ******************* GetValue *******************
-   */
+/**
+ * ******************* GetValue *******************
+ */
 
   template <class TFixedImage, class TMovingImage>
     typename VarianceOverLastDimensionImageMetric<TFixedImage,TMovingImage>::MeasureType
@@ -304,9 +309,9 @@ namespace itk
   } // end GetValue
 
 
-  /**
-   * ******************* GetDerivative *******************
-   */
+/**
+ * ******************* GetDerivative *******************
+ */
 
   template < class TFixedImage, class TMovingImage>
     void
@@ -324,9 +329,9 @@ namespace itk
   } // end GetDerivative
 
 
-  /**
-   * ******************* GetValueAndDerivative *******************
-   */
+/**
+ * ******************* GetValueAndDerivative *******************
+ */
 
   template <class TFixedImage, class TMovingImage>
     void
@@ -495,7 +500,7 @@ namespace itk
     /** Compute average over variances and normalize with initial variance. */
     measure /= static_cast< float >( this->m_NumberOfPixelsCounted ) * this->m_InitialVariance;
     derivative /= static_cast< float >( this->m_NumberOfPixelsCounted ) * this->m_InitialVariance;
-    
+
     /** Subtract mean from derivative elements. */
     if ( this->m_SubtractMean )
     {

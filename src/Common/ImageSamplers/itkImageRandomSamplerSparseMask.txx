@@ -29,8 +29,7 @@ namespace itk
     ::ImageRandomSamplerSparseMask()
   {
     /** Setup random generator. */
-    this->m_RandomGenerator = RandomGeneratorType::New();
-    //this->m_RandomGenerator->Initialize();
+    this->m_RandomGenerator = RandomGeneratorType::GetInstance();
 
     this->m_InternalFullSampler = InternalFullSamplerType::New();
 

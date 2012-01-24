@@ -429,7 +429,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
-  RandomGeneratorType::Pointer randomGenerator = RandomGeneratorType::New();
+  RandomGeneratorType::Pointer randomGenerator = RandomGeneratorType::GetInstance();
   randomGenerator->Initialize();
 
   /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */

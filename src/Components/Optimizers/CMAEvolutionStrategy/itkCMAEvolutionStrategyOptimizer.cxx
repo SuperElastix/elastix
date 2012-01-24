@@ -36,7 +36,7 @@ namespace itk
   {
     itkDebugMacro("Constructor");
 
-    this->m_RandomGenerator = RandomGeneratorType::New();
+    this->m_RandomGenerator = RandomGeneratorType::GetInstance();
 
     this->m_CurrentValue = NumericTraits<MeasureType>::Zero;
     this->m_CurrentIteration = 0;

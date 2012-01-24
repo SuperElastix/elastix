@@ -177,7 +177,7 @@ int ElastixBase::BeforeAllBase( void )
   }
 
   /** Check for appearance of "-priority", if this is a Windows station. */
-  #ifdef _WIN32
+#ifdef _WIN32
   check = "";
   check = this->GetConfiguration()->GetCommandLineArgument( "-priority" );
   if ( check == "" )
@@ -188,7 +188,7 @@ int ElastixBase::BeforeAllBase( void )
   {
     elxout << "-priority " << check << std::endl;
   }
-  #endif
+#endif
 
   /** Check for appearance of -threads, which specifies the maximum number of threads. */
   check = "";
@@ -216,14 +216,14 @@ int ElastixBase::BeforeAllBase( void )
   }
 
   /** Set the random seed. Use 121212 as a default, which is the same as
-   * the default in the MersenneTwister code. 
+   * the default in the MersenneTwister code.
    * Use silent parameter file readout, to avoid annoying warning when
    * starting elastix */
   typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomGeneratorType;
   typedef RandomGeneratorType::IntegerType SeedType;
   unsigned int randomSeed = 121212;
   this->GetConfiguration()->ReadParameter( randomSeed, "RandomSeed", 0, false );
-  RandomGeneratorType::Pointer randomGenerator = RandomGeneratorType::New();
+  RandomGeneratorType::Pointer randomGenerator = RandomGeneratorType::GetInstance();
   randomGenerator->SetSeed( static_cast<SeedType>( randomSeed ) );
 
   /** Return a value. */
