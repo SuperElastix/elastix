@@ -128,9 +128,7 @@ namespace itk
     numbers.clear();
 
     /** Initialize random number generator. */
-    Statistics::MersenneTwisterRandomVariateGenerator::Pointer randomGenerator
-      = Statistics::MersenneTwisterRandomVariateGenerator::GetInstance();
-    randomGenerator->Initialize();
+    Statistics::MersenneTwisterRandomVariateGenerator::Pointer randomGenerator = Statistics::MersenneTwisterRandomVariateGenerator::GetInstance();
 
     /** Sample additional at fixed timepoint. */
     for ( unsigned int i = 0; i < m_NumAdditionalSamplesFixed; ++i )
