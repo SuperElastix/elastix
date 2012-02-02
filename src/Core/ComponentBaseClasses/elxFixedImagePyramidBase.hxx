@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxFixedImagePyramidBase_hxx
 #define __elxFixedImagePyramidBase_hxx
 
@@ -102,14 +101,10 @@ FixedImagePyramidBase<TElastix>
   const unsigned int FixedImageDimension = InputImageType::ImageDimension;
 
   /** Read numberOfResolutions. */
-  unsigned int numberOfResolutions = 0;
+  unsigned int numberOfResolutions = 3;
   this->m_Configuration->ReadParameter( numberOfResolutions,
     "NumberOfResolutions", 0, true );
-  if ( numberOfResolutions == 0 )
-  {
-    xl::xout["error"] << "ERROR: NumberOfResolutions not specified!" << std::endl;
-  }
-  /** \todo quit program? Actually this check should be in the ::BeforeAll() method. */
+  if ( numberOfResolutions == 0 ) numberOfResolutions = 1;
 
   /** Create a default fixedSchedule. Set the numberOfLevels first. */
   this->GetAsITKBaseType()->SetNumberOfLevels( numberOfResolutions );
@@ -155,7 +150,7 @@ FixedImagePyramidBase<TElastix>
 } // end SetFixedSchedule()
 
 
-/*
+/**
  * ******************* WritePyramidImage ********************
  */
 
@@ -213,4 +208,3 @@ FixedImagePyramidBase<TElastix>
 } // end namespace elastix
 
 #endif // end #ifndef __elxFixedImagePyramidBase_hxx
-

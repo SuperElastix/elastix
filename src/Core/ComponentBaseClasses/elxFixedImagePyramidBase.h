@@ -27,31 +27,31 @@ namespace elastix
 {
 using namespace itk;
 
-  /**
-   * \class FixedImagePyramidBase
-   * \brief This class is the elastix base class for all FixedImagePyramids.
-   *
-   * This class contains all the common functionality for FixedImagePyramids.
-   *
-   * \parameter FixedImagePyramidSchedule: downsampling factors for the fixed image pyramid.\n
-   *    For each dimension, for each resolution level, the downsampling factor of the
-   *    fixed image can be specified.\n
-   *    Syntax for 2D images:\n
-   *    <tt>(FixedImagePyramidSchedule <reslevel0,dim0> <reslevel0,dim1> <reslevel1,dim0> <reslevel1,dim1> ...)</tt>\n
-   *    example: <tt>(FixedImagePyramidSchedule 4 4 2 2 1 1)</tt>\n
-   *    Default: isotropic, halved in each resolution, so, like in the example. If
-   *    ImagePyramidSchedule is specified, that schedule is used for both fixed and moving image pyramid.
-   * \parameter ImagePyramidSchedule: downsampling factors for fixed and moving image pyramids.\n
-   *    example: <tt>(ImagePyramidSchedule 4 4 2 2 1 1)</tt> \n
-   *    Used as a default when FixedImagePyramidSchedule is not specified. If both are omitted,
-   *    a default schedule is assumed: isotropic, halved in each resolution, so, like in the example.
-   * \parameter WritePyramidImagesAfterEachResolution: ...\n
-   *    example: <tt>(WritePyramidImagesAfterEachResolution "true")</tt>\n
-   *    default "false".
-   *
-   * \ingroup ImagePyramids
-   * \ingroup ComponentBaseClasses
-   */
+/**
+ * \class FixedImagePyramidBase
+ * \brief This class is the elastix base class for all FixedImagePyramids.
+ *
+ * This class contains all the common functionality for FixedImagePyramids.
+ *
+ * \parameter FixedImagePyramidSchedule: downsampling factors for the fixed image pyramid.\n
+ *    For each dimension, for each resolution level, the downsampling factor of the
+ *    fixed image can be specified.\n
+ *    Syntax for 2D images:\n
+ *    <tt>(FixedImagePyramidSchedule <reslevel0,dim0> <reslevel0,dim1> <reslevel1,dim0> <reslevel1,dim1> ...)</tt>\n
+ *    example: <tt>(FixedImagePyramidSchedule 4 4 2 2 1 1)</tt>\n
+ *    Default: isotropic, halved in each resolution, so, like in the example. If
+ *    ImagePyramidSchedule is specified, that schedule is used for both fixed and moving image pyramid.
+ * \parameter ImagePyramidSchedule: downsampling factors for fixed and moving image pyramids.\n
+ *    example: <tt>(ImagePyramidSchedule 4 4 2 2 1 1)</tt> \n
+ *    Used as a default when FixedImagePyramidSchedule is not specified. If both are omitted,
+ *    a default schedule is assumed: isotropic, halved in each resolution, so, like in the example.
+ * \parameter WritePyramidImagesAfterEachResolution: ...\n
+ *    example: <tt>(WritePyramidImagesAfterEachResolution "true")</tt>\n
+ *    default "false".
+ *
+ * \ingroup ImagePyramids
+ * \ingroup ComponentBaseClasses
+ */
 
 template <class TElastix>
 class FixedImagePyramidBase : public BaseComponentSE<TElastix>
