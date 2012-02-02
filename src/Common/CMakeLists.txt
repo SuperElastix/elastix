@@ -27,14 +27,10 @@ SET( CommonFiles
   elxTimer.h
   itkAdvancedRayCastInterpolateImageFunction.h
   itkAdvancedRayCastInterpolateImageFunction.txx
-  itkGenericMultiResolutionPyramidImageFilter.h
-  itkGenericMultiResolutionPyramidImageFilter.hxx
   itkImageFileCastWriter.h
   itkImageFileCastWriter.txx
   itkMeshFileReaderBase.h
   itkMeshFileReaderBase.txx
-  itkMultiResolutionGaussianSmoothingPyramidImageFilter.h
-  itkMultiResolutionGaussianSmoothingPyramidImageFilter.txx
   itkMultiResolutionImageRegistrationMethod2.h
   itkMultiResolutionImageRegistrationMethod2.txx
   itkNDImageBase.h

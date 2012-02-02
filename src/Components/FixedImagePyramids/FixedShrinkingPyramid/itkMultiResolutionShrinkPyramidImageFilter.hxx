@@ -14,8 +14,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkMultiResolutionShrinkPyramidImageFilter_txx
-#define __itkMultiResolutionShrinkPyramidImageFilter_txx
+#ifndef __itkMultiResolutionShrinkPyramidImageFilter_hxx
+#define __itkMultiResolutionShrinkPyramidImageFilter_hxx
 
 #include "itkMultiResolutionShrinkPyramidImageFilter.h"
 
@@ -82,4 +82,4 @@ MultiResolutionShrinkPyramidImageFilter<TInputImage, TOutputImage>
 
 } // namespace itk
 
-#endif
+#endif // end #ifndef __itkMultiResolutionShrinkPyramidImageFilter_hxx
