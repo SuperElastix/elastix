@@ -169,8 +169,17 @@ int TransformixMain::InitDBIndex( void )
     if ( this->m_MovingImageDimension == 0 )
     {
       /** Try to read it from the parameter file. */
-      this->m_Configuration->ReadParameter( this->m_MovingImageDimension,
+      bool found = this->m_Configuration->ReadParameter( this->m_MovingImageDimension,
         "MovingImageDimension", 0 );
+
+      /** If not found in the parameter file, get it from the moving image. */
+      if ( !found )
+      {
+        std::string movingImageFileName
+          = this->m_Configuration->GetCommandLineArgument( "-m" );
+        this->GetImageInformationFromFile( movingImageFileName,
+          this->m_MovingImageDimension );
+      } // end if !found
 
       if ( this->m_MovingImageDimension == 0 )
       {
@@ -184,8 +193,17 @@ int TransformixMain::InitDBIndex( void )
     if ( this->m_FixedImageDimension == 0 )
     {
       /** Try to read it from the parameter file. */
-      this->m_Configuration->ReadParameter( this->m_FixedImageDimension,
+      bool found = this->m_Configuration->ReadParameter( this->m_FixedImageDimension,
         "FixedImageDimension", 0 );
+
+      /** If not found in the parameter file, get it from the fixed image. */
+      if ( !found )
+      {
+        std::string fixedImageFileName
+          = this->m_Configuration->GetCommandLineArgument( "-f" );
+        this->GetImageInformationFromFile( fixedImageFileName,
+          this->m_FixedImageDimension );
+      } // end if !found
 
       if ( this->m_FixedImageDimension == 0 )
       {

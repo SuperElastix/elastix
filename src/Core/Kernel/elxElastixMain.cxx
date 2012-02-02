@@ -163,7 +163,8 @@ void ElastixMain
   int dummy = this->m_Configuration->Initialize( argmap );
   if ( dummy )
   {
-    xout["error"] << "ERROR: Something went wrong during initialisation of the configuration object." << std::endl;
+    xout["error"] << "ERROR: Something went wrong during initialisation "
+      << "of the configuration object." << std::endl;
   }
 
 } // end EnterCommandLineParameters()
@@ -284,17 +285,17 @@ int ElastixMain::Run( void )
     xl::xout["error"] << excp1 << std::endl;
     errorCode = 1;
   }
-  catch ( std::exception & excp2 )
+  catch( std::exception & excp2 )
   {
     /** We just print the std::exception and let the program quit. */
     xl::xout["error"] << "std: " << excp2.what() << std::endl;
     errorCode = 1;
   }
-  catch ( ... )
+  catch( ... )
   {
     /** We don't know what happened and just print a general message. */
     xl::xout["error"] << "ERROR: an unknown non-ITK, non-std exception was caught.\n"
-      << "Please report this to elastix.support@gmail.com." << std::endl;
+      << "Please report this to elastix@bigr.nl." << std::endl;
     errorCode = 1;
   }
 
@@ -326,7 +327,6 @@ int ElastixMain::Run( void )
 
 int ElastixMain::Run( ArgumentMapType & argmap )
 {
-
   this->EnterCommandLineArguments( argmap );
   return this->Run();
 
@@ -346,6 +346,8 @@ int ElastixMain::InitDBIndex( void )
   /** Only do something when the configuration object wasn't initialized yet. */
   if ( this->m_Configuration->IsInitialized() )
   {
+    bool found = false;
+
     /** FixedImagePixelType. */
     if ( this->m_FixedImagePixelType.empty() )
     {
@@ -353,23 +355,36 @@ int ElastixMain::InitDBIndex( void )
       this->m_FixedImagePixelType = "float";
       this->m_Configuration->ReadParameter( this->m_FixedImagePixelType,
         "FixedInternalImagePixelType", 0 );
-    }
 
-    /** MovingImagePixelType. */
-    if ( this->m_MovingImagePixelType.empty() )
-    {
-      /** Try to read it from the parameter file. */
-      this->m_MovingImagePixelType = "float";
-      this->m_Configuration->ReadParameter( this->m_MovingImagePixelType,
-        "MovingInternalImagePixelType", 0 );
+      /** If not found in the parameter file, get it from the fixed image. */
+      //if ( !found )
+      //{
+      //  std::string fixedImageFileName
+      //    = this->m_Configuration->GetCommandLineArgument( "-f" );
+      //  ImageDimensionType dummyDim = 0;
+      //  this->GetImageInformationFromFile( fixedImageFileName,
+      //    this->m_FixedImagePixelType, dummyDim );
+      //} // end if !found
+      // else use default
     }
 
     /** FixedImageDimension. */
     if ( this->m_FixedImageDimension == 0 )
     {
       /** Try to read it from the parameter file. */
-      this->m_Configuration->ReadParameter( this->m_FixedImageDimension,
+      found = this->m_Configuration->ReadParameter( this->m_FixedImageDimension,
         "FixedImageDimension", 0 );
+
+      /** If not found in the parameter file, get it from the fixed image. */
+      if ( !found )
+      {
+        std::string fixedImageFileName
+          = this->m_Configuration->GetCommandLineArgument( "-f" );
+        //PixelTypeDescriptionType dummyPixelType = "";
+        this->GetImageInformationFromFile( fixedImageFileName,
+          //dummyPixelType,
+          this->m_FixedImageDimension );
+      } // end if !found
 
       if ( this->m_FixedImageDimension == 0 )
       {
@@ -379,12 +394,43 @@ int ElastixMain::InitDBIndex( void )
       }
     }
 
+    /** MovingImagePixelType. */
+    if ( this->m_MovingImagePixelType.empty() )
+    {
+      /** Try to read it from the parameter file. */
+      this->m_MovingImagePixelType = "float";
+      this->m_Configuration->ReadParameter( this->m_MovingImagePixelType,
+        "MovingInternalImagePixelType", 0 );
+
+      /** If not found in the parameter file, get it from the moving image. */
+      //if ( !found )
+      //{
+      //  std::string movingImageFileName
+      //    = this->m_Configuration->GetCommandLineArgument( "-m" );
+      //  ImageDimensionType dummyDim = 0;
+      //  this->GetImageInformationFromFile( movingImageFileName,
+      //    this->m_MovingImagePixelType, dummyDim );
+      //} // end if !found
+      //// else use default
+    }
+
     /** MovingImageDimension. */
     if ( this->m_MovingImageDimension == 0 )
     {
       /** Try to read it from the parameter file. */
-      this->m_Configuration->ReadParameter( this->m_MovingImageDimension,
+      found = this->m_Configuration->ReadParameter( this->m_MovingImageDimension,
         "MovingImageDimension", 0 );
+
+      /** If not found in the parameter file, get it from the moving image. */
+      if ( !found )
+      {
+        std::string movingImageFileName
+          = this->m_Configuration->GetCommandLineArgument( "-m" );
+        //PixelTypeDescriptionType dummyPixelType = "";
+        this->GetImageInformationFromFile( movingImageFileName,
+          //dummyPixelType,
+          this->m_MovingImageDimension );
+      } // end if !found
 
       if ( this->m_MovingImageDimension == 0 )
       {
@@ -685,29 +731,29 @@ void ElastixMain::SetProcessPriority( void ) const
     #if defined(_WIN32) && !defined(__CYGWIN__)
     SetPriorityClass( GetCurrentProcess(), ABOVE_NORMAL_PRIORITY_CLASS );
     #endif
-  }  
-  else if ( processPriority == "normal" ) 
+  }
+  else if ( processPriority == "normal" )
   {
     #if defined(_WIN32) && !defined(__CYGWIN__)
     SetPriorityClass( GetCurrentProcess(), NORMAL_PRIORITY_CLASS );
     #endif
-  }  
+  }
   else if ( processPriority == "belownormal" )
   {
     #if defined(_WIN32) && !defined(__CYGWIN__)
     SetPriorityClass( GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS );
     #endif
-  }  
+  }
   else if ( processPriority == "idle" )
   {
     #if defined(_WIN32) && !defined(__CYGWIN__)
     SetPriorityClass( GetCurrentProcess(), IDLE_PRIORITY_CLASS );
     #endif
-  }  
+  }
   else if ( processPriority != "" )
   {
-	  xl::xout["warning"] 
-		  << "Unsupported -priority value. Specify one of <high, abovenormal, normal, belownormal, idle, ''>." << std::endl; 
+    xl::xout["warning"]
+      << "Unsupported -priority value. Specify one of <high, abovenormal, normal, belownormal, idle, ''>." << std::endl;
   }
 
 } // end SetProcessPriority()
@@ -746,6 +792,7 @@ void ElastixMain::SetOriginalFixedImageDirectionFlat(
   this->m_OriginalFixedImageDirection = arg;
 }
 
+
 /**
  * ******************** GetOriginalFixedImageDirectionFlat ********************
  */
@@ -757,5 +804,47 @@ ElastixMain::GetOriginalFixedImageDirectionFlat( void ) const
 }
 
 
-} // end namespace elastix
+/**
+ * ******************** GetImageInformationFromFile ********************
+ */
 
+void
+ElastixMain::GetImageInformationFromFile(
+  const std::string & filename,
+  //PixelTypeDescriptionType & pixelType,
+  ImageDimensionType & imageDimension ) const
+{
+  if ( filename != "" )
+  {
+    /** Dummy image type. */
+    const unsigned int DummyDimension = 3;
+    typedef short      DummyPixelType;
+    typedef itk::Image< DummyPixelType, DummyDimension > DummyImageType;
+
+    /** Create a testReader. */
+    typedef itk::ImageFileReader< DummyImageType > ReaderType;
+    ReaderType::Pointer testReader = ReaderType::New();
+    testReader->SetFileName( filename.c_str() );
+
+    /** Generate all information. */
+    try
+    {
+      testReader->GenerateOutputInformation();
+    }
+    catch ( itk::ExceptionObject & itkNotUsed( excp ) )
+    {
+      /** Just return, this error will be caught somewhere else. */
+      return;
+    }
+
+    /** Extract the required information. */
+    itk::ImageIOBase::Pointer testImageIO = testReader->GetImageIO();
+    //itk::ImageIOBase::IOComponentType componentType = testImageIO->GetComponentType();
+    //pixelType = itk::ImageIOBase::GetComponentTypeAsString( componentType );
+    imageDimension = testImageIO->GetNumberOfDimensions();
+  } // end if
+
+} // end GetImageInformationFromFile()
+
+
+} // end namespace elastix

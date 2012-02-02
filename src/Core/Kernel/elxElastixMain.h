@@ -117,7 +117,7 @@ public:
   /** elastix components. */
   typedef ElastixBase                                     ElastixBaseType;
   typedef ElastixBase::ConfigurationType                  ConfigurationType;
-  typedef ConfigurationType::CommandLineArgumentMapType              ArgumentMapType;
+  typedef ConfigurationType::CommandLineArgumentMapType   ArgumentMapType;
   typedef ConfigurationType::Pointer                      ConfigurationPointer;
   typedef ElastixBase::ObjectContainerType                ObjectContainerType;
   typedef ElastixBase::DataObjectContainerType            DataObjectContainerType;
@@ -181,7 +181,7 @@ public:
   /** Convenience function that returns the elastix component as
    * a pointer to an ElastixBaseType. Use only after having called run()!
    */
-  virtual ElastixBaseType * GetElastixBase(void) const;
+  virtual ElastixBaseType * GetElastixBase( void ) const;
 
   /** Get the final transform (the result of running elastix).
    * You may pass this as an InitialTransform in an other instantiation
@@ -333,6 +333,11 @@ protected:
     int & errorcode,
     bool mandatoryComponent = true );
 
+  /** Helper function to obtain information from images on disk. */
+  void GetImageInformationFromFile( const std::string & filename,
+    //PixelTypeDescriptionType & pixelType,
+    ImageDimensionType & imageDimension ) const;
+
 private:
 
   ElastixMain( const Self& );     // purposely not implemented
@@ -345,4 +350,3 @@ private:
 
 
 #endif // end #ifndef __elxElastixMain_h
-
