@@ -1251,10 +1251,17 @@ TransformBase<TElastix>
    * then and only then we continue.
    */
   std::string jac = this->GetConfiguration()->GetCommandLineArgument( "-jac" );
-  if ( jac != "all" )
+  if ( jac == "" )
   {
     elxout << "  The command-line option \"-jac\" is not used, "
       << "so no det(dT/dx) computed." << std::endl;
+    return;
+  }
+  else if ( jac != "all" )
+  {
+    elxout << "  WARNING: The command-line option \"-jac\" should be used as \"-jac all\",\n"
+      << "    but is specified as \"-jac " << jac << "\"\n"
+      << "    Therefore det(dT/dx) is not computed." << std::endl;
     return;
   }
 
