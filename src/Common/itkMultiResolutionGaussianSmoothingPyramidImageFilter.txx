@@ -30,8 +30,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef _itkMultiResolutionGaussianSmoothingPyramidImageFilter_hxx
-#define _itkMultiResolutionGaussianSmoothingPyramidImageFilter_hxx
+#ifndef _itkMultiResolutionGaussianSmoothingPyramidImageFilter_txx
+#define _itkMultiResolutionGaussianSmoothingPyramidImageFilter_txx
 
 #include "itkMultiResolutionGaussianSmoothingPyramidImageFilter.h"
 #include "itkCastImageFilter.h"
@@ -375,4 +375,4 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>
 
 } // namespace itk
 
-#endif // end #ifndef _itkMultiResolutionGaussianSmoothingPyramidImageFilter_hxx
+#endif

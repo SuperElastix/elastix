@@ -2,7 +2,5 @@
 ADD_ELXCOMPONENT( FixedSmoothingPyramid
  elxFixedSmoothingPyramid.h
  elxFixedSmoothingPyramid.hxx
- elxFixedSmoothingPyramid.cxx
- itkMultiResolutionGaussianSmoothingPyramidImageFilter.h
- itkMultiResolutionGaussianSmoothingPyramidImageFilter.hxx )
+ elxFixedSmoothingPyramid.cxx )
 

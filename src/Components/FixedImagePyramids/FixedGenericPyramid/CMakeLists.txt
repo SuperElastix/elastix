@@ -2,7 +2,5 @@
 ADD_ELXCOMPONENT( FixedGenericPyramid
  elxFixedGenericPyramid.h
  elxFixedGenericPyramid.hxx
- elxFixedGenericPyramid.cxx
- itkGenericMultiResolutionPyramidImageFilter.h
- itkGenericMultiResolutionPyramidImageFilter.hxx )
+ elxFixedGenericPyramid.cxx )
 
