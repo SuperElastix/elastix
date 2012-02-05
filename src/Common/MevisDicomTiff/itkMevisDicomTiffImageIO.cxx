@@ -1211,6 +1211,11 @@ bool MevisDicomTiffImageIO::CanWriteFile( const char * name )
         m_DcmFileName = pathname + basename + ".DCM";
         return true;
     }
+    
+    /**
+    * SK: Commented the following lines, otherwise we can 
+    * not write a normal DICOM anymore. If you want 
+    * MevisDicomTiff, specify .tif as extension. 
     if (ext == ".dcm")
     {
         m_TiffFileName = pathname + basename + ".tif";
@@ -1223,6 +1228,7 @@ bool MevisDicomTiffImageIO::CanWriteFile( const char * name )
         m_DcmFileName = pathname + basename + ".DCM";
         return true;
     }
+    */
 
     return false;
 }
