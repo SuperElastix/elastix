@@ -13,7 +13,7 @@
 #
 # Setup: linux 64bit
 # gcc 4.1.2 20061115 (prerelease) (SUSE Linux),
-# Release mode, ITK 3.20.0
+# Release mode, ITK 4.1rc01
 # PC: linux cluster at BIGR (SK).
 
 # Client maintainer: s.klein@erasmusmc.nl
@@ -45,7 +45,7 @@ set( CTEST_DASHBOARD_ROOT "/home/sklein/tk/mydash/${CTEST_SCRIPT_NAME}.${dashboa
 
 SET( dashboard_cache "
 // Which ITK to use
-ITK_DIR:PATH=/home/sklein/tk/itk/4.0.0/release
+ITK_DIR:PATH=/home/sklein/tk/itk/4.1rc01/release
 
 // Some elastix settings, defining the configuration
 ELASTIX_BUILD_TESTING:BOOL=ON

@@ -11,7 +11,7 @@
 # and defaults to Nightly.
 # NOTE that Model should directly follow the comma: no space allowed!
 #
-# Setup: Windows XP, 32bit, Visual Studio 9 2008, Release mode, ITK 3.20.0
+# Setup: Windows XP, 32bit, Visual Studio 9 2008, Release mode, ITK 4.1rc01
 # PC: BIGR, SK personal computer.
 
 # Client maintainer: s.klein@erasmusmc.nl
@@ -48,13 +48,13 @@ set( CTEST_DASHBOARD_ROOT "D:/tk/mydash/${CTEST_SCRIPT_NAME}.${dashboard_model}"
 
 SET( dashboard_cache "
 // Which ITK to use
-ITK_DIR:PATH=D:/tk/itk/4.0.0/bin
+ITK_DIR:PATH=D:/tk/itk/4.1rc01/bin
 
 // Some elastix settings, defining the configuration
 ELASTIX_BUILD_TESTING:BOOL=ON
 ELASTIX_ENABLE_PACKAGER:BOOL=ON
 ELASTIX_USE_CUDA:BOOL=OFF
-ELASTIX_USE_MEVISDICOMTIFF:BOOL=OFF
+ELASTIX_USE_MEVISDICOMTIFF:BOOL=ON
 ELASTIX_IMAGE_DIMENSION:STRING=2;3;4
 ELASTIX_IMAGE_2D_PIXELTYPES:STRING=float
 ELASTIX_IMAGE_3D_PIXELTYPES:STRING=float
