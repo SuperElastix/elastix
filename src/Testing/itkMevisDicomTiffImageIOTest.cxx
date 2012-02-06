@@ -138,7 +138,7 @@ int testMevis( void )
     it.Set( pixval );
   }
 
-  std::string testfile( "testimageMevisDicomTiff.dcm" );
+  std::string testfile( "testimageMevisDicomTiff.tif" );
   writer->SetFileName( testfile );
   writer->SetInput( inputImage );
   reader->SetFileName( testfile );
