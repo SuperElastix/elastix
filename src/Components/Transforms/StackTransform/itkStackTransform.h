@@ -61,34 +61,34 @@ public:
   /** Typedefs from the Superclass. */
   typedef typename Superclass::ScalarType           ScalarType;
   typedef typename Superclass::ParametersType       ParametersType;
-  typedef typename Superclass::NumberOfParametersType 
+  typedef typename Superclass::NumberOfParametersType
                                                     NumberOfParametersType;
   typedef typename Superclass::JacobianType         JacobianType;
   typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
-  typedef typename Superclass::JacobianOfSpatialJacobianType  
+  typedef typename Superclass::JacobianOfSpatialJacobianType
                                                     JacobianOfSpatialJacobianType;
   typedef typename Superclass::SpatialHessianType   SpatialHessianType;
-  typedef typename Superclass::JacobianOfSpatialHessianType   
+  typedef typename Superclass::JacobianOfSpatialHessianType
                                                     JacobianOfSpatialHessianType;
   typedef typename Superclass::InputPointType       InputPointType;
   typedef typename Superclass::InputVectorType      InputVectorType;
   typedef typename Superclass::OutputVectorType     OutputVectorType;
   typedef typename Superclass::InputVnlVectorType   InputVnlVectorType;
   typedef typename Superclass::OutputVnlVectorType  OutputVnlVectorType;
-  typedef typename Superclass::OutputCovariantVectorType     
+  typedef typename Superclass::OutputCovariantVectorType
                                                     OutputCovariantVectorType;
-  typedef typename Superclass::InputCovariantVectorType     
+  typedef typename Superclass::InputCovariantVectorType
                                                     InputCovariantVectorType;
   typedef typename Superclass::OutputPointType      OutputPointType;
   typedef typename
-    Superclass::NonZeroJacobianIndicesType			NonZeroJacobianIndicesType;
+    Superclass::NonZeroJacobianIndicesType      NonZeroJacobianIndicesType;
 
   /** Sub transform types, having a reduced dimension. */
   typedef AdvancedTransform< TScalarType,
     itkGetStaticConstMacro( ReducedInputSpaceDimension ),
     itkGetStaticConstMacro( ReducedOutputSpaceDimension ) >  SubTransformType;
-  typedef typename SubTransformType::Pointer				SubTransformPointer;
-  typedef std::vector< SubTransformPointer	>				SubTransformContainerType;
+  typedef typename SubTransformType::Pointer        SubTransformPointer;
+  typedef std::vector< SubTransformPointer  >       SubTransformContainerType;
   typedef typename SubTransformType::JacobianType   SubTransformJacobianType;
 
   /** Dimension - 1 point types. */
@@ -154,7 +154,7 @@ public:
 
   /** Return the number of sub transforms that have been set. */
   virtual NumberOfParametersType GetNumberOfParameters( void ) const
-  {	
+  {
     if ( this->m_SubTransformContainer.size() == 0 )
     {
       return 0;
@@ -262,7 +262,7 @@ private:
 
   // Number of transforms and transform container
   unsigned int m_NumberOfSubTransforms;
-  SubTransformContainerType	 m_SubTransformContainer;
+  SubTransformContainerType  m_SubTransformContainer;
 
   // Stack spacing and origin of last dimension
   TScalarType m_StackSpacing, m_StackOrigin;
