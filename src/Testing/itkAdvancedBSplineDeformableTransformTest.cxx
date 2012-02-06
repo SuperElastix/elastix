@@ -13,6 +13,7 @@
 ======================================================================*/
 #include "itkAdvancedBSplineDeformableTransform.h"
 #include "itkBSplineDeformableTransform.h" // original ITK
+//#include "itkBSplineTransform.h" // new ITK4
 #include "itkGridScheduleComputer.h"
 
 #include <ctime>
@@ -55,6 +56,7 @@ int main( int argc, char *argv[] )
   typedef itk::AdvancedBSplineDeformableTransform<
     CoordinateRepresentationType, Dimension, SplineOrder >    TransformType;
   typedef itk::BSplineDeformableTransform<
+  //typedef itk::BSplineTransform<
     CoordinateRepresentationType, Dimension, SplineOrder >    ITKTransformType;
   typedef TransformType::JacobianType                   JacobianType;
   typedef TransformType::SpatialJacobianType            SpatialJacobianType;
@@ -112,9 +114,17 @@ int main( int argc, char *argv[] )
   transformITK->SetGridRegion( gridRegion );
   transformITK->SetGridDirection( gridDirection );
 
+  //ParametersType fixPar( Dimension * ( 3 + Dimension ) );
+  //fixPar[ 0 ] = gridSize[ 0 ]; fixPar[ 1 ] = gridSize[ 1 ]; fixPar[ 2 ] = gridSize[ 2 ];
+  //fixPar[ 3 ] = gridOrigin[ 0 ]; fixPar[ 4 ] = gridOrigin[ 1 ]; fixPar[ 5 ] = gridOrigin[ 2 ];
+  //fixPar[ 6 ] = gridSpacing[ 0 ]; fixPar[ 7 ] = gridSpacing[ 1 ]; fixPar[ 8 ] = gridSpacing[ 2 ];
+  //fixPar[ 9 ] = gridDirection[ 0 ][ 0 ]; fixPar[ 10 ] = gridDirection[ 0 ][ 1 ]; fixPar[ 11 ] = gridDirection[ 0 ][ 2 ];
+  //fixPar[ 12 ] = gridDirection[ 1 ][ 0 ]; fixPar[ 13 ] = gridDirection[ 1 ][ 1 ]; fixPar[ 14 ] = gridDirection[ 1 ][ 2 ];
+  //fixPar[ 15 ] = gridDirection[ 2 ][ 0 ]; fixPar[ 16 ] = gridDirection[ 2 ][ 1 ]; fixPar[ 17 ] = gridDirection[ 2 ][ 2 ];
+  //transformITK->SetFixedParameters( fixPar );
+
   /** Now read the parameters as defined in the file par.txt. */
   ParametersType parameters( transform->GetNumberOfParameters() );
-  //std::ifstream input( "D:/toolkits/elastix/src/Testing/par.txt" );
   std::ifstream input( argv[ 1 ] );
   if ( input.is_open() )
   {
@@ -334,8 +344,19 @@ int main( int argc, char *argv[] )
   transformITK->ComputeJacobianWithRespectToParameters( inputPoint, jacobianITK );
   JacobianType jacobianElastix;
   transform->GetJacobian( inputPoint, jacobianElastix, nzji );
-  JacobianType jacobianDifferenceMatrix = jacobianElastix - jacobianITK;
-  if ( jacobianDifferenceMatrix.frobenius_norm() > 1e-10 )
+  // ITK4 B-spline is non-local and returns a full matrix. Cannot compute diff like this anymore:
+  //JacobianType jacobianDifferenceMatrix = jacobianElastix - jacobianITK;
+  // I believe there are future plans to re-enable local support B-splines
+  double jacDiff = 0.0;
+  for( unsigned int i = 0; i < nzji.size(); i++ )
+  {
+    for( unsigned int j = 0; j < Dimension; j++ )
+    {
+      jacDiff += vnl_math_sqr( jacobianElastix[ j ][ i ] - jacobianITK[ j ][ nzji[ i ] ] );
+    }
+  }
+  //if ( jacobianDifferenceMatrix.frobenius_norm() > 1e-10 )
+  if ( vcl_sqrt( jacDiff ) > 1e-10 )
   {
     std::cerr << "ERROR: Advanced B-spline GetJacobian() returning incorrect result." << std::endl;
     return 1;
