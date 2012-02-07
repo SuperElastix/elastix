@@ -101,7 +101,16 @@ int main( int argc, char **argv )
 
   /** Read test parameters. */
   parameterFileParser->SetParameterFileName( testFileName.c_str() );
-  parameterFileParser->ReadParameterFile();
+  try
+  {
+    parameterFileParser->ReadParameterFile();
+  }
+  catch ( itk::ExceptionObject & err )
+  {
+    std::cerr << "Error during reading test transform parameters: " << err << std::endl;
+    return EXIT_FAILURE;
+  }
+  
   config->SetParameterMap( parameterFileParser->GetParameterMap() );
 
   unsigned int numberOfParametersTest = 0;
@@ -114,7 +123,15 @@ int main( int argc, char **argv )
 
   /** Read baseline parameters. */
   parameterFileParser->SetParameterFileName( baselineFileName.c_str() );
-  parameterFileParser->ReadParameterFile();
+  try
+  {
+    parameterFileParser->ReadParameterFile();
+  }
+  catch ( itk::ExceptionObject & err )
+  {
+    std::cerr << "Error during reading baseline transform parameters: " << err << std::endl;
+    return EXIT_FAILURE;
+  }
   config->SetParameterMap( parameterFileParser->GetParameterMap() );
 
   unsigned int numberOfParametersBaseline = 0;
