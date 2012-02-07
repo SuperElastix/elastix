@@ -40,6 +40,8 @@
 #include "gdcmVR.h"
 #include "gdcmVersion.h"
 #include "gdcmPrinter.h"
+#include "gdcmException.h"
+#include "gdcmFileMetaInformation.h"
 
 #include <sstream>
 #include <string>
@@ -165,7 +167,7 @@ bool MevisDicomTiffImageIO::FindElement( const gdcm::DataSet ds,
                     }
                     if (found)
                     {
-                        std::cout << "mevisIO: warning image orientation in dcm file is frame dependent!" << std::endl;
+                        itkDebugMacro( << "mevisIO: warning image orientation in dcm file is frame dependent!" );
                     }
                 }
             }
@@ -191,7 +193,7 @@ bool MevisDicomTiffImageIO::CanReadFile( const char* filename )
 
     if ( basename.empty() )
     {
-        std::cout << "mevisIO:canreadfile(): no filename specified" << std::endl;;
+        itkExceptionMacro( << "mevisIO:canreadfile(): no filename specified" );
         return false;
     }
 
@@ -216,7 +218,7 @@ bool MevisDicomTiffImageIO::CanReadFile( const char* filename )
 
     if (!f.is_open() && !F.is_open())
     {
-        std::cout << "mevisIO:canreadfile(): cannot read (corresponding) dcm file" << std::endl;
+        itkDebugMacro( << "mevisIO:canreadfile(): cannot read (corresponding) dcm file" );
         return false;
     }
     if (f.is_open())
@@ -244,7 +246,7 @@ bool MevisDicomTiffImageIO::CanReadFile( const char* filename )
 
     if (!t1.is_open() && !t2.is_open() && !t3.is_open() && !t4.is_open())
     {
-        std::cout << "mevisIO:canreadfile(): cannot read (corresponding) tif file" << std::endl;
+        itkDebugMacro( << "mevisIO:canreadfile(): cannot read (corresponding) tif file" );
         return false;
     }
     if (t1.is_open())
@@ -273,7 +275,7 @@ bool MevisDicomTiffImageIO::CanReadFile( const char* filename )
     reader.SetFileName(m_DcmFileName.c_str());
     if (! reader.Read())
     {
-        std::cout << "mevisIO:canreadfile(): error opening dcm file " << m_DcmFileName << std::endl;
+        itkDebugMacro( << "mevisIO:canreadfile(): error opening dcm file " << m_DcmFileName );
         return false;
     }
     
@@ -281,7 +283,7 @@ bool MevisDicomTiffImageIO::CanReadFile( const char* filename )
     m_TIFFImage = TIFFOpen(m_TiffFileName.c_str(), "rc"); // c is disable strip chopping
     if (m_TIFFImage == NULL)
     {
-        std::cout << "mevisIO:canreadfile(): error opening tif file " << m_TiffFileName << std::endl;
+        itkDebugMacro( << "mevisIO:canreadfile(): error opening tif file " << m_TiffFileName );
         return false;
     }
     else
@@ -289,11 +291,13 @@ bool MevisDicomTiffImageIO::CanReadFile( const char* filename )
         m_IsOpen = true;
         if (!TIFFGetField(m_TIFFImage, TIFFTAG_IMAGEWIDTH, &m_Width))
         {
-            std::cout << "mevisIO:canreadfile(): error getting IMAGEWIDTH " << std::endl;
+            itkDebugMacro( << "mevisIO:canreadfile(): error getting IMAGEWIDTH " );
+            return false;
         }
         if (!TIFFGetField(m_TIFFImage, TIFFTAG_IMAGELENGTH, &m_Length))
         {
-            std::cout << "mevisIO:canreadfile(): error getting IMAGELENGTH " << std::endl;
+            itkDebugMacro( << "mevisIO:canreadfile(): error getting IMAGELENGTH " );
+            return false;
         }
         if (!TIFFGetField(m_TIFFImage, TIFFTAG_IMAGEDEPTH, &m_Depth))
         {
@@ -306,7 +310,8 @@ bool MevisDicomTiffImageIO::CanReadFile( const char* filename )
         }
         if (!TIFFGetField(m_TIFFImage, TIFFTAG_COMPRESSION, &m_Compression))
         {
-            std::cout << "mevisIO:canreadfile(): error getting COMPRESSION" << std::endl;
+            itkDebugMacro( << "mevisIO:canreadfile(): error getting COMPRESSION" );
+            // try resuming?
         }
 
         m_IsTiled = TIFFIsTiled(m_TIFFImage);
@@ -316,11 +321,13 @@ bool MevisDicomTiffImageIO::CanReadFile( const char* filename )
 
             if (!TIFFGetField(m_TIFFImage,TIFFTAG_TILEWIDTH,&m_TileWidth))
             {
-                std::cout << "mevisIO:canreadfile(): error getting TILEWIDTH " << std::endl;
+                itkDebugMacro( << "mevisIO:canreadfile(): error getting TILEWIDTH " );
+                return false;
             }
             if (!TIFFGetField(m_TIFFImage,TIFFTAG_TILELENGTH,&m_TileLength))
             {
-                std::cout << "mevisIO:canreadfile(): error getting TILELength" << std::endl;
+                itkDebugMacro( << "mevisIO:canreadfile(): error getting TILELength" );
+                return false;
             }
             if (!TIFFGetField(m_TIFFImage, TIFFTAG_TILEDEPTH, &m_TileDepth))
             {
@@ -407,7 +414,7 @@ void MevisDicomTiffImageIO::ReadImageInformation()
     // sanity check
     if ( (is2d && is3d) || (is3d && is4d) || (is2d && is4d))
     {
-        std::cout << "mevisIO:readimageinformation(): error determining dimensionality from dcm file " << std::endl;
+        itkExceptionMacro( << "mevisIO:readimageinformation(): error determining dimensionality from dcm file " );
     }
     if (is2d)
     {
@@ -423,7 +430,7 @@ void MevisDicomTiffImageIO::ReadImageInformation()
         this->SetNumberOfDimensions(4);
         if (atnf.GetValue()% attp.GetValue() != 0)
         {
-            std::cout << "mevisIO:readimageinformation(): error determining number of frames (== size z) in 4D file" << std::endl;
+            itkExceptionMacro( << "mevisIO:readimageinformation(): error determining number of frames (== size z) in 4D file" );
         }
         m_Dimensions[2] = atnf.GetValue() / attp.GetValue();
         m_Dimensions[3] = attp.GetValue();
@@ -438,7 +445,7 @@ void MevisDicomTiffImageIO::ReadImageInformation()
     }
     else
     {
-        std::cout << "mevisIO:readimageinformation(): error reading dimensions-row from dcm-file" << std::endl;
+        itkExceptionMacro( << "mevisIO:readimageinformation(): error reading dimensions-col from dcm-file" );
     }
 
     // dimensions - row
@@ -450,7 +457,7 @@ void MevisDicomTiffImageIO::ReadImageInformation()
     }
     else
     {
-        std::cout << "mevisIO:readimageinformation(): error reading dimensions-row from dcm-file" << std::endl;
+        itkExceptionMacro( << "mevisIO:readimageinformation(): error reading dimensions-row from dcm-file" );
     }
 
     // pixel spacing (x,y)
@@ -463,7 +470,7 @@ void MevisDicomTiffImageIO::ReadImageInformation()
     }
     else
     {
-        std::cout << "mevisIO:readimageinformation(): error reading pixelspacing from dcm-file" << std::endl;
+        itkExceptionMacro( << "mevisIO:readimageinformation(): error reading pixelspacing from dcm-file" );
     }
 
     // slice spacing (may be defined for 2d dicom files, if so 
@@ -487,7 +494,8 @@ void MevisDicomTiffImageIO::ReadImageInformation()
     {
         if (is3d||is4d)
         {
-            std::cout << "mevisIO:readimageinformation(): error reading slicespacing from dcm-file" << std::endl;
+            // throw an exception; this is dangerous.
+            itkExceptionMacro( << "mevisIO:readimageinformation(): error reading slicespacing from dcm-file" );
         }
     }
     // patient position (origin), always 3d vector in dcm file
@@ -513,7 +521,7 @@ void MevisDicomTiffImageIO::ReadImageInformation()
     }
     else
     {
-        std::cout << "mevisIO:readimageinformation(): error reading patient position (origin) from dcm-file" << std::endl;
+        itkExceptionMacro( << "mevisIO:readimageinformation(): error reading patient position (origin) from dcm-file" );
     }
 
     // orientation (image orientation), always 3d vector
@@ -594,8 +602,9 @@ void MevisDicomTiffImageIO::ReadImageInformation()
         }
     }
     else
-    {
-        std::cout << "mevisIO:readimageinformation(): error reading image orientation from dcm-file" << std::endl;
+    { 
+      // Throw an exception, to avoid headaches later
+      itkExceptionMacro( << "mevisIO:readimageinformation(): error reading image orientation from dcm-file" );
     }
 
     // rescale
@@ -607,8 +616,9 @@ void MevisDicomTiffImageIO::ReadImageInformation()
     }
     else
     {
-        std::cout << "mevisIO:readimageinformation(): warning: intercept (0x0028,0x1052) not found in dcm header!" << std::endl;
-        m_RescaleIntercept = NumericTraits<double>::Zero ; // default
+      // not necessary to throw an exception for this.
+      itkDebugMacro( << "mevisIO:readimageinformation(): warning: intercept (0x0028,0x1052) not found in dcm header!" );
+      m_RescaleIntercept = NumericTraits<double>::Zero ; // default
     }
  
     // slope
@@ -620,7 +630,8 @@ void MevisDicomTiffImageIO::ReadImageInformation()
     }
     else
     {
-        std::cout << "mevisIO:readimageinformation(): warning: slope (0x0028,0x1053) not found in dcm header!" << std::endl;
+        // not necessary to throw an exception for this.
+        itkDebugMacro( << "mevisIO:readimageinformation(): warning: slope (0x0028,0x1053) not found in dcm header!" );
         m_RescaleSlope = NumericTraits<double>::One; // default
     }
     // gantry tilt
@@ -632,7 +643,8 @@ void MevisDicomTiffImageIO::ReadImageInformation()
     }
     else
     {
-        std::cout << "mevisIO: readimageinformation(): warning: gantry tilt (0x0018,0x1120) not found in dcm header!" << std::endl;
+        // not necessary to throw an exception for this.
+        itkDebugMacro( << "mevisIO: readimageinformation(): warning: gantry tilt (0x0018,0x1120) not found in dcm header!" );
         m_GantryTilt = NumericTraits<double>::Zero; // default
     }
 
@@ -668,18 +680,18 @@ void MevisDicomTiffImageIO::ReadImageInformation()
     // data type
     if (m_TIFFImage == NULL)
     {
-        std::cout << "mevisIO:readimageinformation: error opening file " << m_TiffFileName << std::endl;
+        itkExceptionMacro( << "mevisIO:readimageinformation: error opening file " << m_TiffFileName );
         return;
 
     }
 
-    // sanity checks, dim and sizes
+    // sanity checks, dim and sizes; NB: the value 3 below for the 4d case is not a typo! :)
     if (  (is2d && m_TIFFDimension != 2) 
             || (is3d && m_TIFFDimension != 3)
                 || (is4d && m_TIFFDimension != 3)
        )
     {
-        std::cout << "mevisIO:readimageinformation: dcm/tiff dimensions do not correspond!" << std::endl;
+        itkExceptionMacro( << "mevisIO:readimageinformation: dcm/tiff dimensions do not correspond!" );
     }
     if ( (m_Width != m_Dimensions[0]) 
             || (m_Length != m_Dimensions[1]) 
@@ -688,7 +700,7 @@ void MevisDicomTiffImageIO::ReadImageInformation()
        )
 
     {
-        std::cout << "mevisIO:readimageinformation: dcm/tiff sizes do not correspond!" << std::endl;
+        itkExceptionMacro( << "mevisIO:readimageinformation: dcm/tiff sizes do not correspond!" );
     }
 
     // format 1 unsigned int
@@ -701,15 +713,15 @@ void MevisDicomTiffImageIO::ReadImageInformation()
     
     if (!TIFFGetField(m_TIFFImage, TIFFTAG_SAMPLEFORMAT, &format))
     {
-        std::cout << "mevisIO:readimageinformation: error getting SAMPLEFORMAT" << std::endl;
+        itkExceptionMacro( << "mevisIO:readimageinformation: error getting SAMPLEFORMAT" );
     }
     if (!TIFFGetField(m_TIFFImage, TIFFTAG_SAMPLESPERPIXEL, &pixel))
     {
-        std::cout << "mevisIO:readimageinformation: error getting SAMPLESPERPIXEL" << std::endl;
+        itkExceptionMacro( << "mevisIO:readimageinformation: error getting SAMPLESPERPIXEL" );
     }
     if (!TIFFGetField(m_TIFFImage, TIFFTAG_BITSPERSAMPLE, &m_BitsPerSample))
     {
-        std::cout << "mevisIO:readimageinformation: error getting BITSPERSAMPLE" << std::endl;
+        itkExceptionMacro( << "mevisIO:readimageinformation: error getting BITSPERSAMPLE" );
     }
 
    // currently we only support grayscale
@@ -720,7 +732,7 @@ void MevisDicomTiffImageIO::ReadImageInformation()
    }
    else
    {
-       std::cout << "mevisIO:readimageinformation: currently only support grayscale" << std::endl;
+       itkExceptionMacro( << "mevisIO:readimageinformation: currently only support grayscale" );
    }
 
    bool typeassign(false);
@@ -771,7 +783,7 @@ void MevisDicomTiffImageIO::ReadImageInformation()
    }
    if (!typeassign)
    {
-       std::cout << "mevisIO:readimageinformation: unsupported pixeltype " << std::endl;
+       itkExceptionMacro( << "mevisIO:readimageinformation: unsupported pixeltype " );
    }
    // set compression
    // 1 none
@@ -808,13 +820,13 @@ void MevisDicomTiffImageIO::Read(void* buffer)
     short int p;
     if (!TIFFGetField(m_TIFFImage,TIFFTAG_PLANARCONFIG,&p))
     {
-        std::cout << "mevisIO:read(): error getting PLANARCONFIG" << std::endl;
+        itkExceptionMacro( << "mevisIO:read(): error getting PLANARCONFIG" );
     }
     else
     {
         if (p != 1)
         {
-            std::cout << "mevisIO:read(): non-contiguous data!" << std::endl;
+            itkExceptionMacro( << "mevisIO:read(): non-contiguous data!" );
             return;
         }
     }
@@ -826,7 +838,7 @@ void MevisDicomTiffImageIO::Read(void* buffer)
         // if the volume is multiple of tile.
         if (m_TIFFDimension == 3 && m_TileDepth != 1)
         {
-            std::cout << "mevisIO:read(): unsupported tiledepth (should be one)! " << std::endl;
+            itkExceptionMacro( << "mevisIO:read(): unsupported tiledepth (should be one)! " );
             return;
         }
 
@@ -859,8 +871,8 @@ void MevisDicomTiffImageIO::Read(void* buffer)
                 {
                     if (TIFFReadTile(m_TIFFImage, tilebuf, 0, 0, z0, 0) < 0)
                     {
-                        std::cout << "mevisIO:read(): error reading tile (topleft)" << std::endl;
                         _TIFFfree(tilebuf);
+                        itkExceptionMacro( << "mevisIO:read(): error reading tile (topleft)" );
                         return;
                     }
                     else
@@ -899,8 +911,8 @@ void MevisDicomTiffImageIO::Read(void* buffer)
                     {
                         if (TIFFReadTile(m_TIFFImage, tilebuf, 0, y0, z0, 0) < 0)
                         {
-                            std::cout << "mevisIO:read(): error reading tile (top image)" << std::endl;
                             _TIFFfree(tilebuf);
+                            itkExceptionMacro( << "mevisIO:read(): error reading tile (top image)" );
                             return;
                         }
                         else
@@ -927,8 +939,8 @@ void MevisDicomTiffImageIO::Read(void* buffer)
 
                         if (TIFFReadTile(m_TIFFImage, tilebuf, 0, y0, z0, 0) < 0)
                         {
-                            std::cout << "mevisIO:read(): error reading tile (strip bottom)" << std::endl;
                             _TIFFfree(tilebuf);
+                            itkExceptionMacro( << "mevisIO:read(): error reading tile (strip bottom)" );
                             return;
                         }
                         else
@@ -964,8 +976,8 @@ void MevisDicomTiffImageIO::Read(void* buffer)
                         // read tile
                         if (TIFFReadTile(m_TIFFImage, tilebuf, x0, 0, z0, 0) < 0)
                         {
-                            std::cout << "mevisIO:read(): error reading tile (top image)" << std::endl;
                             _TIFFfree(tilebuf);
+                            itkExceptionMacro( << "mevisIO:read(): error reading tile (top image)" );
                             return;
                         }
                         else
@@ -992,8 +1004,8 @@ void MevisDicomTiffImageIO::Read(void* buffer)
 
                         if (TIFFReadTile(m_TIFFImage, tilebuf, x0, 0, z0, 0) < 0)
                         {
-                            std::cout << "mevisIO:read(): error reading tile (strip right)" << std::endl;
                             _TIFFfree(tilebuf);
+                            itkExceptionMacro( << "mevisIO:read(): error reading tile (strip right)" );
                             return;
                         }
                         else
@@ -1043,9 +1055,9 @@ void MevisDicomTiffImageIO::Read(void* buffer)
 
                         // read tile
                         if (TIFFReadTile(m_TIFFImage, tilebuf, x0, y0, z0, 0) < 0)
-                        {
-                            std::cout << "mevisIO:read(): error reading tile (topleft image)" << std::endl;
+                        {                            
                             _TIFFfree(tilebuf);
+                            itkExceptionMacro( << "mevisIO:read(): error reading tile (topleft image)" );
                             return;
                         }
                         else
@@ -1080,8 +1092,8 @@ void MevisDicomTiffImageIO::Read(void* buffer)
 
                         if (TIFFReadTile(m_TIFFImage, tilebuf, x0, y0, z0, 0) < 0)
                         {
-                            std::cout << "mevisIO:read(): error reading tile (ydirection)" << std::endl;
                             _TIFFfree(tilebuf);
+                            itkExceptionMacro( << "mevisIO:read(): error reading tile (ydirection)" );
                             return;
                         }
                         else
@@ -1110,8 +1122,8 @@ void MevisDicomTiffImageIO::Read(void* buffer)
 
                         if (TIFFReadTile(m_TIFFImage, tilebuf, x0, y0, z0, 0) < 0)
                         {
-                            std::cout << "mevisIO:read(): error reading tile (x-direction)" << std::endl;
                             _TIFFfree(tilebuf);
+                            itkExceptionMacro( << "mevisIO:read(): error reading tile (x-direction)");
                             return;
                         }
                         else
@@ -1142,8 +1154,8 @@ void MevisDicomTiffImageIO::Read(void* buffer)
 
                     if (TIFFReadTile(m_TIFFImage, tilebuf, x0, y0, z0, 0) < 0)
                     {
-                        std::cout << "mevisIO:read(): error reading tile (corner bottom)" << std::endl;
                         _TIFFfree(tilebuf);
+                        itkExceptionMacro( << "mevisIO:read(): error reading tile (corner bottom)" );
                         return;
                     }
                     else
@@ -1165,7 +1177,7 @@ void MevisDicomTiffImageIO::Read(void* buffer)
     else
     {
         // if not tiled then img is stripped
-        std::cout << "mevisIO:read(): non-tiled dcm/tiff reading not (yet) implemented" << std::endl;
+        itkExceptionMacro( << "mevisIO:read(): non-tiled dcm/tiff reading not (yet) implemented" );
         return;
     }
     return;
@@ -1182,8 +1194,8 @@ bool MevisDicomTiffImageIO::CanWriteFile( const char * name )
 
     // get basename/extension
     const std::string fn = filename;
-	const std::string basename = itksys::SystemTools::GetFilenameWithoutLastExtension(fn);
-	const std::string ext = itksys::SystemTools::GetFilenameLastExtension(fn);
+	  const std::string basename = itksys::SystemTools::GetFilenameWithoutLastExtension(fn);
+	  const std::string ext = itksys::SystemTools::GetFilenameLastExtension(fn);
 
     std::string pathname = itksys::SystemTools::GetFilenamePath(fn).c_str();
 
@@ -1194,7 +1206,9 @@ bool MevisDicomTiffImageIO::CanWriteFile( const char * name )
 
     if ( basename.empty() )
     {
-        std::cout << "mevisIO:canwritefile(): no filename specified" << std::endl;
+        // SK: throw an exception instead of writing to cerr. This is clearly
+        // a situation that asks for an exception to be thrown.
+        itkExceptionMacro( << "mevisIO:canwritefile(): no filename specified" );
         return false;
     }
 
@@ -1252,7 +1266,7 @@ void MevisDicomTiffImageIO
     std::ofstream dcmfile(m_DcmFileName.c_str(), std::ios::out|std::ios::binary);
     if (!dcmfile.is_open())
     {
-        std::cout << "mevisIO:write(): error opening dcm file for writing " << m_DcmFileName << std::endl;
+        itkExceptionMacro( << "mevisIO:write(): error opening dcm file for writing " << m_DcmFileName );
     }
     dcmfile.close();
 
@@ -1285,6 +1299,11 @@ void MevisDicomTiffImageIO
     gdcm::Writer writer;
     writer.SetCheckFileMetaInformation(false);
     gdcm::DataSet &header = writer.GetFile().GetDataSet();
+    gdcm::FileMetaInformation & metaInformation = writer.GetFile().GetHeader();
+
+    // SK: From gdcm 2.0.16 this is required. I checked a few Mevislab files and they used
+    // this transfer syntax ( "1.2.840.10008.1.2.1" )
+    metaInformation.SetDataSetTransferSyntax( gdcm::TransferSyntax::ExplicitVRLittleEndian );
      
     MetaDataDictionary &dict = this->GetMetaDataDictionary();
 
@@ -1478,7 +1497,7 @@ void MevisDicomTiffImageIO
                 // number of components should be one
                 if (this->GetNumberOfComponents() != 1)
                 {
-                    std::cout << "mevisIO:write(): nr of Components should be 1 for SCALAR" << std::endl;
+                    itkExceptionMacro( << "mevisIO:write(): nr of Components should be 1 for SCALAR" );
                     return;
                 }
                 gdcm::Attribute<0x0028,0x0002> atsamples;
@@ -1487,7 +1506,7 @@ void MevisDicomTiffImageIO
             }
             break;
         default:
-            std::cout << "mevisIO:write(): only SCALAR pixeltypes supported" << std::endl;
+            itkExceptionMacro( "mevisIO:write(): only SCALAR pixeltypes supported" );
             return;
     }
  
@@ -1549,7 +1568,7 @@ void MevisDicomTiffImageIO
             }break;
         default:
             {
-                std::cout << "mevisIO:write(): error writing dcm-file unsupported component type" << std::endl;
+                itkExceptionMacro( << "mevisIO:write(): error writing dcm-file unsupported component type" );
                 return;
             }
     }
@@ -1653,11 +1672,20 @@ void MevisDicomTiffImageIO
 
      
     writer.SetFileName(m_DcmFileName.c_str());
-    if (!writer.Write())
+    bool retwrite = false;
+    try
     {
-        std::cout << "mevisIO:write(): error writing dcm header file" << std::endl;
+      retwrite = writer.Write();      
     }
-
+    catch (gdcm::Exception & err)
+    {
+      itkExceptionMacro( << "mevisIO:write(): gdcm has thrown exception: " << err.GetDescription() );
+    }
+    if( !retwrite )
+    {
+      // Will only be called when gdcm did not throw an exception.
+      itkExceptionMacro( "mevisIO:write(): error writing dcm header file" );
+    }
 
     //TIFF
     //
@@ -1671,25 +1699,25 @@ void MevisDicomTiffImageIO
     m_TIFFImage = TIFFOpen(m_TiffFileName.c_str(),"w");
     if (!m_TIFFImage)
     {
-        itkExceptionMacro(<< "mevisIO:write(): error opening tiff file for writing"); 
+      itkExceptionMacro(<< "mevisIO:write(): error opening tiff file for writing"); 
     }
 
     // software comment
     if (!TIFFSetField(m_TIFFImage, TIFFTAG_SOFTWARE,c.c_str()))
     {
-        std::cout << "mevisIO:write(): error setting SOFTWARE" << std::endl;
+      itkDebugMacro( << "mevisIO:write(): error setting SOFTWARE" );
     }
 
     // set sizes
     m_Width = m_Dimensions[0];
     if (!TIFFSetField(m_TIFFImage, TIFFTAG_IMAGEWIDTH, m_Width))
     {
-        std::cout << "mevisIO:write(): error setting IMAGEWIDTH" << std::endl;
+      itkExceptionMacro( << "mevisIO:write(): error setting IMAGEWIDTH" );
     }
     m_Length = m_Dimensions[1];
     if (!TIFFSetField(m_TIFFImage, TIFFTAG_IMAGELENGTH, m_Length))
     {
-        std::cout << "mevisIO:write(): error setting IMAGELENGTH" << std::endl;
+      itkExceptionMacro( << "mevisIO:write(): error setting IMAGELENGTH" );
     }
 
     // dimensions
@@ -1704,7 +1732,7 @@ void MevisDicomTiffImageIO
         m_Depth = m_Dimensions[2];
         if (!TIFFSetField(m_TIFFImage, TIFFTAG_IMAGEDEPTH, m_Depth))
         {
-            std::cout << "mevisIO:write(): error setting IMAGEDEPTH" << std::endl;
+          itkExceptionMacro( << "mevisIO:write(): error setting IMAGEDEPTH" );
         }
     }
     if (m_NumberOfDimensions == 4)
@@ -1713,32 +1741,32 @@ void MevisDicomTiffImageIO
         m_Depth = m_Dimensions[2] * m_Dimensions[3];
         if (!TIFFSetField(m_TIFFImage, TIFFTAG_IMAGEDEPTH, m_Depth))
         {
-            std::cout << "mevisIO:write(): error setting IMAGEDEPTH" << std::endl;
+          itkExceptionMacro( << "mevisIO:write(): error setting IMAGEDEPTH" );
         }
     }
     // photometric (default min-is-black)
     if (!TIFFSetField(m_TIFFImage, TIFFTAG_PHOTOMETRIC,PHOTOMETRIC_MINISBLACK))
     {
-        std::cout << "mevisIO:write(): error setting PHOTOMETRIC" << std::endl;
+      itkDebugMacro( << "mevisIO:write(): error setting PHOTOMETRIC" );
     }
     // orientation (default row 0 top, col 0 lhs == 1)
     if (!TIFFSetField(m_TIFFImage, TIFFTAG_ORIENTATION,ORIENTATION_TOPLEFT))
     {
-        std::cout << "mevisIO:write(): error setting ORIENTATION" << std::endl;
+      itkDebugMacro( << "mevisIO:write(): error setting ORIENTATION" );
     }
     // minimumn
     if (sign)
     {
         if (!TIFFSetField(m_TIFFImage, TIFFTAG_SMINSAMPLEVALUE,m_EstimatedMinimum))
         {
-            std::cout << "mevisIO:write(): error setting SMINSAMPLEVALUE" << std::endl;
+          itkDebugMacro( << "mevisIO:write(): error setting SMINSAMPLEVALUE" );
         }
     }
     else
     {
         if (!TIFFSetField(m_TIFFImage, TIFFTAG_MINSAMPLEVALUE,static_cast<unsigned int>(m_EstimatedMinimum)))
         {
-            std::cout << "mevisIO:write(): error setting MINSAMPLEVALUE" << std::endl;
+          itkDebugMacro( << "mevisIO:write(): error setting MINSAMPLEVALUE" );
         }
     }
     // maximum
@@ -1746,14 +1774,14 @@ void MevisDicomTiffImageIO
     {
         if (!TIFFSetField(m_TIFFImage, TIFFTAG_SMAXSAMPLEVALUE,m_EstimatedMaximum))
         {
-            std::cout << "mevisIO:write(): error setting SMAXSAMPLEVALUE" << std::endl;
+          itkDebugMacro( << "mevisIO:write(): error setting SMAXSAMPLEVALUE" );
         }
     }
     else
     {
         if (!TIFFSetField(m_TIFFImage,TIFFTAG_MAXSAMPLEVALUE,static_cast<unsigned int>(m_EstimatedMaximum)))
         {
-            std::cout << "mevisIO:write(): error setting MAXSAMPLEVALUE" << std::endl;
+          itkDebugMacro( << "mevisIO:write(): error setting MAXSAMPLEVALUE" );
         }
     }
     // pixeltype
@@ -1764,17 +1792,17 @@ void MevisDicomTiffImageIO
                 // number of components should be one
                 if (this->GetNumberOfComponents() != 1)
                 {
-                    std::cout << "mevisIO:write(): nr of Components should be 1 for SCALAR" << std::endl;
+                    itkExceptionMacro( << "mevisIO:write(): nr of Components should be 1 for SCALAR" );
                     return;
                 }
                 if (!TIFFSetField(m_TIFFImage, TIFFTAG_SAMPLESPERPIXEL, 1))
                 {
-                    std::cout << "mevisIO:write(): error setting SAMPLESPERPIXEL" << std::endl;
+                    itkExceptionMacro( << "mevisIO:write(): error setting SAMPLESPERPIXEL" );
                 }
             }
             break;
         default:
-            std::cout << "mevisIO:write(): only SCALAR pixeltypes supported" << std::endl;
+            itkExceptionMacro( << "mevisIO:write(): only SCALAR pixeltypes supported" );
             return;
     }
     // componenttype
@@ -1818,17 +1846,17 @@ void MevisDicomTiffImageIO
             }break;
         default:
             {
-                std::cout << "mevisIO:write(): unsupported component type" << std::endl;
+                itkExceptionMacro( "mevisIO:write(): unsupported component type" );
                 return;
             }
     }
     if (!suc)
     {
-        std::cout << "mevisIO:write(): error setting SAMPLEFORMAT" << std::endl;
+        itkExceptionMacro( << "mevisIO:write(): error setting SAMPLEFORMAT" );
     }
     if (!TIFFSetField(m_TIFFImage, TIFFTAG_BITSPERSAMPLE, m_BitsPerSample))
     {
-        std::cout << "mevisIO:write(): error setting BITSPERSAMPLE " << std::endl;
+        itkExceptionMacro( << "mevisIO:write(): error setting BITSPERSAMPLE " );
     }
 
     // compression, default always using lzw (overriding
@@ -1842,27 +1870,27 @@ void MevisDicomTiffImageIO
     {
         if (!TIFFSetField(m_TIFFImage, TIFFTAG_COMPRESSION, 5))
         {
-            std::cout << "mevisIO:write(): error setting COMPRESSION to LZW" << std::endl;
+          itkDebugMacro( << "WARNING: mevisIO:write(): error setting COMPRESSION to LZW" );
         }
     }else
     {
         if (!TIFFSetField(m_TIFFImage, TIFFTAG_COMPRESSION, 1))
         {
-            std::cout << "mevisIO:write(): error setting COMPRESSION to NONE" << std::endl;
+          itkDebugMacro( << "WARNING: mevisIO:write(): error setting COMPRESSION to NONE" );
         }
     }
     // resolution (always assuming cm)
     if (!TIFFSetField(m_TIFFImage, TIFFTAG_RESOLUTIONUNIT, RESUNIT_CENTIMETER))
     {
-        std::cout << "mevisIO:write(): error setting RESOLUTIONUNIT" << std::endl;
+        itkExceptionMacro( << "mevisIO:write(): error setting RESOLUTIONUNIT" );
     }
     if (!TIFFSetField(m_TIFFImage, TIFFTAG_XRESOLUTION, static_cast<float>(10.0/m_Spacing[0])))
     {
-        std::cout << "mevisIO:write(): error setting XRESOLUTION " << std::endl;
+        itkExceptionMacro( << "mevisIO:write(): error setting XRESOLUTION" );
     }
     if (!TIFFSetField(m_TIFFImage, TIFFTAG_YRESOLUTION, static_cast<float>(10.0/m_Spacing[1])))
     {
-        std::cout << "mevisIO:write(): error setting XRESOLUTION " << std::endl;
+        itkExceptionMacro( << "mevisIO:write(): error setting YRESOLUTION" );
     }
 
     // setting tilespecs
@@ -1876,7 +1904,7 @@ void MevisDicomTiffImageIO
         m_TileDepth = 1;
         if (!TIFFSetField(m_TIFFImage,TIFFTAG_TILEDEPTH,m_TileDepth))
         {
-            std::cout << "mevisIO:write(): error setting TILEDEPTH" << std::endl;
+            itkExceptionMacro( << "mevisIO:write(): error setting TILEDEPTH" );
         }
     }
 
@@ -1921,11 +1949,11 @@ void MevisDicomTiffImageIO
 
     if (!TIFFSetField(m_TIFFImage, TIFFTAG_TILEWIDTH, m_TileWidth))
     {
-        std::cout << "mevisIO:write(): error setting TILEWIDTH, m_TileWidth" << std::endl;
+        itkExceptionMacro( << "mevisIO:write(): error setting TILEWIDTH, m_TileWidth" );
     }
     if (!TIFFSetField(m_TIFFImage, TIFFTAG_TILELENGTH, m_TileLength))
     {
-        std::cout << "mevisIO:write(): error setting TILELENGTH, m_TileLength" << std::endl;
+        itkExceptionMacro( << "mevisIO:write(): error setting TILELENGTH, m_TileLength" );
     }
 
 
@@ -1942,10 +1970,9 @@ void MevisDicomTiffImageIO
         // case, but selecting tile as layout is really not the best
         // choice! For robustness, should also be implemented, but for
         // now left open.
-        std::cout << "mevisIO:write(): image x,y smaller than tilesize (16)! Consider" << std::endl;
-        std::cout << "         different layout for tif (eg scanline layout)" << std::endl;
             
         TIFFClose(m_TIFFImage);
+        itkExceptionMacro( << "mevisIO:write(): image x,y smaller than tilesize (16)! Consider different layout for tif (eg scanline layout)");
         return;
     }
     else
@@ -1982,9 +2009,10 @@ void MevisDicomTiffImageIO
                     // write tile
                     if (TIFFWriteTile(m_TIFFImage, tilebuf,x0,y0,z0,0)< 0)
                     {
-                        std::cout << "mevisIO:write(): error writing tile " << std::endl;
+                        
                         _TIFFfree(tilebuf);
                         TIFFClose(m_TIFFImage);
+                        itkExceptionMacro( << "mevisIO:write(): error writing tile." );
                         return;
                     }
                 }
@@ -2014,10 +2042,10 @@ void MevisDicomTiffImageIO
                     }
 
                     if (TIFFWriteTile(m_TIFFImage, tilebuf, x0, y0, z0, 0) < 0)
-                    {
-                        std::cout << "mevisIO:write(): error writing tile (ydirection)" << std::endl;
+                    {                        
                         _TIFFfree(tilebuf);
                         TIFFClose(m_TIFFImage);
+                        itkExceptionMacro( << "mevisIO:write(): error writing tile (ydirection)" );
                         return;
                     }
                 }
@@ -2045,9 +2073,9 @@ void MevisDicomTiffImageIO
 
                     if (TIFFWriteTile(m_TIFFImage, tilebuf, x0, y0, z0, 0) < 0)
                     {
-                        std::cout << "mevisIO:write(): error writing tile (x-direction)" << std::endl;
                         _TIFFfree(tilebuf);
                         TIFFClose(m_TIFFImage);
+                        itkExceptionMacro( << "mevisIO:write(): error writing tile (x-direction)" );
                         return;
                     }
                 }
@@ -2077,9 +2105,9 @@ void MevisDicomTiffImageIO
 
                 if (TIFFWriteTile(m_TIFFImage, tilebuf, x0, y0, z0, 0) < 0)
                 {
-                    std::cout << "mevisIO:write(): error writing tile (corner bottom)" << std::endl;
                     _TIFFfree(tilebuf);
                     TIFFClose(m_TIFFImage);
+                    itkExceptionMacro( << "mevisIO:write(): error writing tile (corner bottom)" );
                     return;
                 }
             }

@@ -136,6 +136,7 @@ int testMevis( void )
     pixval = static_cast<PixelType>(
       itk::Math::Floor<double>( pixnr * factor ) );
     it.Set( pixval );
+    ++pixnr;
   }
 
   std::string testfile( "testimageMevisDicomTiff.tif" );
@@ -153,7 +154,7 @@ int testMevis( void )
   }
   catch ( itk::ExceptionObject & err )
   {
-    std::cerr << "ERROR: " << task << " mevis dicomtiff failed in . " << std::endl;
+    std::cerr << "ERROR: " << task << " mevis dicomtiff failed." << std::endl;
     std::cerr << err << std::endl;
     return 1;
   }
