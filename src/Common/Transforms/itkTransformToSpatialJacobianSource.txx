@@ -47,10 +47,10 @@ TransformToSpatialJacobianSource<TOutputImage,TTransformPrecisionType>
 
   // Check if the output pixel type is valid
   // TODO: should maybe be done at compile time, using concept checking.
-	const unsigned int pixrow = PixelType::RowDimensions;
-	const unsigned int pixcol = PixelType::ColumnDimensions;
-	const unsigned int spatrow = SpatialJacobianType::RowDimensions;
-	const unsigned int spatcol = SpatialJacobianType::ColumnDimensions;
+  const unsigned int pixrow = PixelType::RowDimensions;
+  const unsigned int pixcol = PixelType::ColumnDimensions;
+  const unsigned int spatrow = SpatialJacobianType::RowDimensions;
+  const unsigned int spatcol = SpatialJacobianType::ColumnDimensions;
   if ( (pixrow != spatrow) || (pixcol != spatcol) )
   {
     itkExceptionMacro( "The specified output image type is not allowed for this filter" );

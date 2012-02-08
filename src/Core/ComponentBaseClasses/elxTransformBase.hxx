@@ -526,11 +526,11 @@ void TransformBase<TElastix>
 
   int initfailure = configurationInitialTransform->Initialize(
     argmapInitialTransform );
-	if ( initfailure != 0 )
+  if ( initfailure != 0 )
   {
-	  itkGenericExceptionMacro( << "ERROR: Reading initial transform "
+    itkGenericExceptionMacro( << "ERROR: Reading initial transform "
       << "parameters failed: " << transformParametersFileName );
-	}
+  }
 
   /** Read the InitialTransform name. */
   ComponentDescriptionType initialTransformName = "AffineTransform";
@@ -1005,7 +1005,7 @@ TransformBase<TElastix>
   outputPointsFile << std::showpoint << std::fixed;
   elxout << "  The transformed points are saved in: "
     <<  outputPointsFileName << std::endl;
-  
+
   /** Print the results. */
   for ( unsigned int j = 0; j < nrofpoints; j++ )
   {
@@ -1056,7 +1056,7 @@ TransformBase<TElastix>
 
     outputPointsFile << "]" << std::endl;
   } // end for nrofpoints
-  
+
 } // end TransformPointsSomePoints()
 
 

@@ -29,7 +29,7 @@ namespace itk
    * This version takes into account that the mask may be very small.
    * Also, it may be more efficient when very many different sample sets
    * of the same input image are required, because it does some precomputation.
-	 * \ingroup ImageSamplers
+   * \ingroup ImageSamplers
    */
 
   template < class TInputImage >

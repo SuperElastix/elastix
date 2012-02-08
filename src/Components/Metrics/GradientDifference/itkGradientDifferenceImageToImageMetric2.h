@@ -93,7 +93,7 @@ public:
   #else
     typedef typename Superclass::RealType               RealType;
   #endif
-  
+
   typedef typename Superclass::TransformType            TransformType;
   typedef typename TransformType::ScalarType            ScalarType;
   typedef typename Superclass::TransformPointer         TransformPointer;
@@ -112,7 +112,7 @@ public:
   typedef typename MovingImageType::RegionType          MovingImageRegionType;
   typedef typename itk::Optimizer                       OptimizerType;
   typedef typename OptimizerType::ScalesType            ScalesType;
-  
+
   itkStaticConstMacro( FixedImageDimension, unsigned int,
     FixedImageType::ImageDimension );
   itkStaticConstMacro( MovedImageDimension, unsigned int,
@@ -125,7 +125,7 @@ public:
     TransformedMovingImageType;
   typedef itk::ResampleImageFilter< MovingImageType, TransformedMovingImageType >
     TransformMovingImageFilterType;
-  typedef typename itk::AdvancedRayCastInterpolateImageFunction< 
+  typedef typename itk::AdvancedRayCastInterpolateImageFunction<
     MovingImageType, ScalarType >             RayCastInterpolatorType;
   typedef typename RayCastInterpolatorType::Pointer   RayCastInterpolatorPointer;
   typedef itk::Image< RealType, itkGetStaticConstMacro( FixedImageDimension ) >
@@ -197,7 +197,7 @@ private:
   /** The range of the moving image gradients. */
   mutable MovedGradientPixelType m_MinMovedGradient[MovedImageDimension];
   mutable MovedGradientPixelType m_MaxMovedGradient[MovedImageDimension];
-  
+
   /** The range of the fixed image gradients. */
   mutable FixedGradientPixelType m_MinFixedGradient[FixedImageDimension];
   mutable FixedGradientPixelType m_MaxFixedGradient[FixedImageDimension];

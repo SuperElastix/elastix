@@ -60,7 +60,7 @@ void NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 {
   /** Initialize the base class */
   Superclass::Initialize();
-  
+
   unsigned int iFilter;
   typedef typename FixedImageType::SizeType SizeType;
   SizeType size = this->m_FixedImage->GetLargestPossibleRegion().GetSize();
@@ -157,10 +157,10 @@ void NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   {
     fixedGradient[ i ] = 0.0;
   }
-  
+
   unsigned long nPixels = 0;
 
-  if ( this->m_FixedImageMask.IsNull() ) 
+  if ( this->m_FixedImageMask.IsNull() )
   {
     sampleOK = true;
   }
@@ -174,18 +174,18 @@ void NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
     /** if fixedMask is given */
     if ( !this->m_FixedImageMask.IsNull() )
     {
-      if ( this->m_FixedImageMask->IsInside( point ) ) 
+      if ( this->m_FixedImageMask->IsInside( point ) )
       {
         sampleOK = true;
       }
-      else 
+      else
       {
         sampleOK = false;
       }
     }
 
     if( sampleOK )
-    { 
+    {
       fixedGradient[ 0 ] += fixedIteratorx.Get();
       fixedGradient[ 1 ] += fixedIteratory.Get();
       nPixels++;
@@ -237,7 +237,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   }
 
   MovedGradientPixelType movedGradient[ MovedImageDimension ];
-  
+
   for ( int i = 0; i < MovedImageDimension; i++ )
   {
     movedGradient[ i ] = 0.0;
@@ -245,7 +245,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 
   unsigned long nPixels = 0;
 
-  while ( !movedIteratorx.IsAtEnd() ) 
+  while ( !movedIteratorx.IsAtEnd() )
   {
     /** Get current index */
     currentIndex = movedIteratorx.GetIndex();
@@ -265,7 +265,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
     }
 
     if ( sampleOK )
-    { 
+    {
         movedGradient[ 0 ] += movedIteratorx.Get();
         movedGradient[ 1 ] += movedIteratory.Get();
         nPixels++;
@@ -341,7 +341,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   if ( this->m_FixedImageMask.IsNull() )
     sampleOK = true;
 
-  while ( ! fixedIteratorx.IsAtEnd() ) 
+  while ( ! fixedIteratorx.IsAtEnd() )
   {
     currentIndex = fixedIteratorx.GetIndex();
     this->m_FixedImage->TransformIndexToPhysicalPoint( currentIndex, point );
@@ -394,7 +394,7 @@ typename NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImag
 NormalizedGradientCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 ::GetValue( const TransformParametersType & parameters ) const
 {
-  unsigned int iFilter;                 
+  unsigned int iFilter;
   this->SetTransformParameters( parameters );
   this->m_TransformMovingImageFilter->Modified();
   this->m_TransformMovingImageFilter->UpdateLargestPossibleRegion();

@@ -2,9 +2,9 @@
 #
 # runtransformixlinux
 #
-# Script to run transformix on linux when the 
+# Script to run transformix on linux when the
 # libANNlib.so cannot be found.
-# 
+#
 # Usage:
 #
 #   runtransformixlinux ...

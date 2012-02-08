@@ -30,8 +30,8 @@ namespace itk
    *
    * This image sampler generates not only samples that correspond with
    * pixel locations, but selects points in physical space.
-	 *
-	 * \ingroup ImageSamplers
+   *
+   * \ingroup ImageSamplers
    */
 
   template < class TInputImage >

@@ -236,13 +236,13 @@ ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>
       RealType image_scale = this->GetInput()->GetSpacing()[0];
 
       doOneDimension<InputConstIteratorType,OutputIteratorType,
-	RealType, OutputPixelType, doDilate>(inputIterator, outputIterator,
-					     *progress, LineLength, 0,
-					     this->m_MagnitudeSign,
-					     this->m_UseImageSpacing,
-					     this->m_Extreme,
-					     image_scale,
-					     this->m_Scale[0]);
+  RealType, OutputPixelType, doDilate>(inputIterator, outputIterator,
+               *progress, LineLength, 0,
+               this->m_MagnitudeSign,
+               this->m_UseImageSpacing,
+               this->m_Extreme,
+               image_scale,
+               this->m_Scale[0]);
       }
     else
       {
@@ -253,32 +253,32 @@ ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>
       InItType InIt(inputImage, region);
       OutItType OutIt(outputImage, region);
       while (!InIt.IsAtEnd())
-	{
-	OutIt.Set(static_cast<OutputPixelType>(InIt.Get()));
-	++InIt;
-	++OutIt;
-	}
+  {
+  OutIt.Set(static_cast<OutputPixelType>(InIt.Get()));
+  ++InIt;
+  ++OutIt;
+  }
       }
     }
   else
     {
       // other dimensions
       if (m_Scale[m_CurrentDimension] > 0)
-	{
-	// create a vector to buffer lines
-	unsigned long LineLength = region.GetSize()[m_CurrentDimension];
-	//RealType magnitude = 1.0/(2.0 * m_Scale[dd]);
+  {
+  // create a vector to buffer lines
+  unsigned long LineLength = region.GetSize()[m_CurrentDimension];
+  //RealType magnitude = 1.0/(2.0 * m_Scale[dd]);
       RealType image_scale = this->GetInput()->GetSpacing()[m_CurrentDimension];
 
       doOneDimension<OutputConstIteratorType,OutputIteratorType,
-	RealType, OutputPixelType, doDilate>(inputIteratorStage2, outputIterator,
-					     *progress, LineLength, m_CurrentDimension,
-					     this->m_MagnitudeSign,
-					     this->m_UseImageSpacing,
-					     this->m_Extreme,
-					     image_scale,
-					     this->m_Scale[m_CurrentDimension]);
-	}
+  RealType, OutputPixelType, doDilate>(inputIteratorStage2, outputIterator,
+               *progress, LineLength, m_CurrentDimension,
+               this->m_MagnitudeSign,
+               this->m_UseImageSpacing,
+               this->m_Extreme,
+               image_scale,
+               this->m_Scale[m_CurrentDimension]);
+  }
     }
 }
 

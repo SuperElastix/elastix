@@ -85,11 +85,11 @@ CommandLineArgumentParser
 ::PrintAllArguments() const
 {
   ArgumentMapType::const_iterator iter = this->m_ArgumentMap.begin();
- 
-  for(; iter != this->m_ArgumentMap.end(); ++iter) 
+
+  for(; iter != this->m_ArgumentMap.end(); ++iter)
   {
    std::cout << iter->first << std::endl;
-  } 
+  }
 
 } // end PrintAllArguments()
 
@@ -250,7 +250,7 @@ CommandLineArgumentParser
     std::cerr << this->m_ProgramHelpText << std::endl;
     return HELPREQUESTED;
   }
-    
+
   // Display the help text if the user asked for it.
   if ( this->ArgumentExists( "--help" )
     || this->ArgumentExists( "-help" )
@@ -293,12 +293,12 @@ CommandLineArgumentParser
       allRequiredArgumentsSpecified = false;
     }
   }
-  
+
   if(!allRequiredArgumentsSpecified)
   {
     return FAILED;
   }
-  
+
   return PASSED;
 
 } // end CheckForRequiredArguments()

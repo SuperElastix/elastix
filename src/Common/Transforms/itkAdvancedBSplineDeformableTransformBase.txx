@@ -449,7 +449,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
 //   this->m_Jacobian.Fill( NumericTraits<JacobianPixelType>::Zero );
   this->m_LastJacobianIndex = this->m_ValidRegion.GetIndex();
 //   JacobianPixelType * jacobianDataPointer = this->m_Jacobian.data_block();
-// 
+//
 //   for ( unsigned int j = 0; j < SpaceDimension; j++ )
 //     {
 //     m_JacobianImage[j]->GetPixelContainer()->

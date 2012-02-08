@@ -31,8 +31,8 @@ namespace itk
    * mask. If the mask is very sparse, this may take some time. In this case,
    * consider using the ImageRandomSamplerSparseMask.
    *
-	 * \ingroup ImageSamplers
-	 * */
+   * \ingroup ImageSamplers
+   * */
 
   template < class TInputImage >
   class ImageRandomSampler :

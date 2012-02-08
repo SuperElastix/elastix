@@ -367,7 +367,7 @@ namespace itk
 
       /** Create a bounding box region. */
       InputImageIndexType minIndex, maxIndex;
-			typedef typename InputImageIndexType::IndexValueType IndexValueType;
+      typedef typename InputImageIndexType::IndexValueType IndexValueType;
       InputImageSizeType size;
       InputImageRegionType boundingBoxRegion;
       for ( unsigned int i = 0; i < InputImageDimension; ++i )
@@ -375,9 +375,9 @@ namespace itk
         /** apply ceil/floor for max/min resp. to be sure that
          * the bounding box is not too small */
         maxIndex[i] = static_cast<IndexValueType>(
-				 	vcl_ceil( bbIndex->GetMaximum()[i] ) );
+          vcl_ceil( bbIndex->GetMaximum()[i] ) );
         minIndex[i] = static_cast<IndexValueType>(
-					vcl_floor( bbIndex->GetMinimum()[i] ) );
+          vcl_floor( bbIndex->GetMinimum()[i] ) );
         size[i] = maxIndex[i] - minIndex[i] + 1;
       }
       boundingBoxRegion.SetIndex( minIndex );

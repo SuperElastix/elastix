@@ -25,7 +25,7 @@ template <typename TInputImage,
           typename TOutputImage= TInputImage >
 class ITK_EXPORT ParabolicErodeImageFilter:
     public ParabolicErodeDilateImageFilter<TInputImage, false,
-					   TOutputImage>
+             TOutputImage>
 {
 
 public:

@@ -102,7 +102,7 @@ public:
   typedef typename Superclass2::FixedImageType            FixedImageType;
   typedef typename Superclass2::MovingImageType           MovingImageType;
 
-	/** The fixed image dimension. */
+  /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,
     FixedImageType::ImageDimension );
 

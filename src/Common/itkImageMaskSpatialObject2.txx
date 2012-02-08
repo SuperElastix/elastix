@@ -240,14 +240,14 @@ ImageMaskSpatialObject2< TDimension >
     typedef ImageRegionConstIteratorWithIndex<ImageType> IteratorType;
     IteratorType it( image, image->GetRequestedRegion() );
     it.GoToBegin();
-		IndexType endindex;
+    IndexType endindex;
 
     for ( unsigned int i = 0; i < ImageType::ImageDimension; ++i )
     {
-		  // modified by stefan; old (commented) implemenation assumed zero start index
+      // modified by stefan; old (commented) implemenation assumed zero start index
       index[ i ] = image->GetRequestedRegion().GetIndex( i ) + image->GetRequestedRegion().GetSize( i ) - 1;
       //index[ i ] = image->GetRequestedRegion().GetSize( i );
-			endindex[ i ] = image->GetRequestedRegion().GetIndex( i );
+      endindex[ i ] = image->GetRequestedRegion().GetIndex( i );
       //size[ i ]  = image->GetRequestedRegion().GetIndex( i );
     }
 

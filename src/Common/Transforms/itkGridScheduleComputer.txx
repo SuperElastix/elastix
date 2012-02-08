@@ -196,9 +196,9 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>
    * to the average rotation of the initial transformation.
    * For now leave it as is. */
   imageDirection = this->m_ImageDirection;
-	typename DirectionType::InternalMatrixType invImageDirectionTemp =
+  typename DirectionType::InternalMatrixType invImageDirectionTemp =
     vnl_inverse( imageDirection.GetVnlMatrix() );
-	DirectionType invImageDirection( invImageDirectionTemp );
+  DirectionType invImageDirection( invImageDirectionTemp );
 
   /** We have to determine a bounding box around the fixed image after
    * applying the initial transform. This is done by iterating over the

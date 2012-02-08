@@ -62,7 +62,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
   this->m_ComputeOnlyForCurrentLevel = false;
   this->m_UseMultiResolutionRescaleSchedule = true;   // Default behavior of MultiResolutionPyramidImageFilter
   this->m_UseMultiResolutionSmoothingSchedule = true; // Default behavior of MultiResolutionPyramidImageFilter
-  
+
   SmoothingScheduleType temp( this->GetNumberOfLevels(), ImageDimension );
   temp.Fill( 0 );
   this->m_SmoothingSchedule = temp;
@@ -239,9 +239,9 @@ void
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
 ::GenerateData( void )
 {
-  // Depending on user setting of the SetUseMultiResolutionRescaleSchedule() and 
+  // Depending on user setting of the SetUseMultiResolutionRescaleSchedule() and
   // SetUseMultiResolutionSmoothingSchedule()
-  // in combination with SetUseShrinkImageFilter() different pipelines will be 
+  // in combination with SetUseShrinkImageFilter() different pipelines will be
   // created below. The most common is:
   // 1. m_UseMultiResolutionSmoothingSchedule = true
   //    m_UseMultiResolutionRescaleSchedule = true
@@ -255,11 +255,11 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
   // 4. m_UseMultiResolutionSmoothingSchedule = false
   //    m_UseMultiResolutionRescaleSchedule = false
   //    Then pipeline is: input -> caster -> output
-  // 
+  //
   // But for example the smoother can be skipped if AreSigmasAllZeros(...)
   // returns true for the current level. Then pipeline 1 transforms to:
   // input -> caster -> shrinker/resample -> output for the computing level.
-  // 
+  //
   // Pipeline also takes care of memory allocation for N'th output if
   // SetComputeOnlyForCurrentLevel has been set to true.
 

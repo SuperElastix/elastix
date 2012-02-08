@@ -171,7 +171,7 @@ public:
   virtual void GenerateOutputInformation( void );
 
   /** Checking if transform is set. In case of linear transformations,
-	 * the LinearGenerateData is called. */
+   * the LinearGenerateData is called. */
   virtual void BeforeThreadedGenerateData( void );
 
   /** Compute the Modified Time based on changes to the components. */

@@ -49,7 +49,7 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
   this->m_DifferenceImageFilter = DifferenceImageFilterType::New();
   this->m_MultiplyByConstantImageFilter = MultiplyByConstantImageFilterType::New();
 
-	} // end Constructor
+} // end Constructor
 
 
 /**
@@ -99,9 +99,9 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
   MeasureType tmpmeasure = this->GetValue( this->m_Transform->GetParameters() );
 
   while ( ( vcl_fabs( tmpmeasure ) / this->m_Rescalingfactor ) > 1 )
-	{
+  {
     this->m_Rescalingfactor *= 10;
-	}
+  }
 
 } // end Initialize()
 
@@ -145,7 +145,7 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
     iterationSize[ iDimension ] -= static_cast<int>( 2 * this->m_NeighborhoodRadius );
     iterationStartIndex[ iDimension ] = static_cast<int>( this->m_NeighborhoodRadius );
     neighborIterationSize[ iDimension ] = static_cast<int>(2 * this->m_NeighborhoodRadius) + 1;
-	}
+  }
 
   /** replace this by checking the size of the 3rd dimension of fixedimage */
   iterationSize[ 2 ] = neighborIterationSize[ 2 ] = 1;
@@ -186,7 +186,7 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
       {
         sampleOK = false;
       }
-		}
+    }
 
     if ( sampleOK )
     {
@@ -359,7 +359,7 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
     currentMeasure = -( measure - this->m_FixedMeasure ) / this->m_Rescalingfactor;
   }
 
-	return currentMeasure;
+  return currentMeasure;
 
 } // end GetValue()
 
@@ -387,7 +387,7 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
     const MeasureType valuep1 = this->GetValue( testPoint );
     derivative[ i ] = ( valuep1 - valuep0 ) / ( 2 * this->m_DerivativeDelta / vcl_sqrt( this->m_Scales[ i ] ) );
     testPoint[ i ] = parameters[ i ];
-	}
+  }
 
 } // end GetDerivative()
 

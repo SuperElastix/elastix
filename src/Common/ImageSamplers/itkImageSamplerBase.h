@@ -33,8 +33,8 @@ namespace itk
    *    Can be given for each resolution. Select one of {Random, Full, Grid, RandomCoordinate}.\n
    *    example: <tt>(ImageSampler "Random")</tt> \n
    *    The default is Random.
-	 *
-	 * \ingroup ImageSamplers
+   *
+   * \ingroup ImageSamplers
    */
 
   template < class TInputImage >

@@ -88,7 +88,7 @@ void GradientDifferenceImageToImageMetric<TFixedImage,TMovingImage>
 {
   /** Initialise the base class */
   Superclass::Initialize();
-  
+
   unsigned int iFilter;
   typedef typename FixedImageType::SizeType SizeType;
   SizeType size = this->m_FixedImage->GetLargestPossibleRegion().GetSize();
@@ -145,7 +145,7 @@ void GradientDifferenceImageToImageMetric<TFixedImage,TMovingImage>
   {
     this->m_Rescalingfactor *= 10;
   }
-  
+
 } // end Initialize()
 
 
@@ -159,7 +159,7 @@ void GradientDifferenceImageToImageMetric<TFixedImage,TMovingImage>
 {
   Superclass::PrintSelf( os, indent );
   os << indent << "DerivativeDelta: " << this->m_DerivativeDelta << std::endl;
-  
+
   }
 
 
@@ -181,7 +181,7 @@ void GradientDifferenceImageToImageMetric<TFixedImage,TMovingImage>
 
     IteratorType iterate( m_MovedSobelFilters[ iDimension ]->GetOutput(),
       this->GetFixedImageRegion() );
-  
+
     gradient = iterate.Get();
 
     m_MinMovedGradient[iDimension] = gradient;
@@ -265,7 +265,7 @@ void GradientDifferenceImageToImageMetric<TFixedImage,TMovingImage>
       }
 
       if( sampleOK )
-      { 
+      {
         gradient = iterate.Get();
         mean[ iDimension ] += gradient;
 
@@ -283,7 +283,7 @@ void GradientDifferenceImageToImageMetric<TFixedImage,TMovingImage>
 
       } // end if sampleOK
 
-      ++iterate; 
+      ++iterate;
     } // end while iterate
 
     if ( nPixels > 0 )
@@ -314,7 +314,7 @@ void GradientDifferenceImageToImageMetric<TFixedImage,TMovingImage>
       }
 
       if ( sampleOK )
-      { 
+      {
         gradient = iterate.Get();
         gradient -= mean[ iDimension ];
         this->m_Variance[ iDimension ] += gradient * gradient;
@@ -326,7 +326,7 @@ void GradientDifferenceImageToImageMetric<TFixedImage,TMovingImage>
 
     this->m_Variance[iDimension] /= nPixels;
   } // end for iDimension
-  
+
 } // end ComputeVariance()
 
 
@@ -351,12 +351,12 @@ GradientDifferenceImageToImageMetric<TFixedImage,TMovingImage>
 
   for ( iDimension = 0; iDimension < FixedImageDimension; iDimension++ )
   {
-  
+
     if ( this->m_Variance[ iDimension ] == NumericTraits< MovedGradientPixelType >::Zero )
     {
       continue;
     }
-    
+
     /** Iterate over the fixed and moving gradient images
      *  calculating the similarity measure
      */
@@ -367,7 +367,7 @@ GradientDifferenceImageToImageMetric<TFixedImage,TMovingImage>
 
     typedef  itk::ImageRegionConstIteratorWithIndex< FixedGradientImageType >
       FixedIteratorType;
-    
+
     FixedIteratorType fixedIterator( this->m_FixedSobelFilters[ iDimension ]->GetOutput(),
       this->GetFixedImageRegion() );
 
@@ -419,7 +419,7 @@ GradientDifferenceImageToImageMetric<TFixedImage,TMovingImage>
       ++fixedIterator;
       ++movedIterator;
     } // end while fixedIterator
-    
+
   } // end for iDimension
 
   return measure /= -this->m_Rescalingfactor; //negative for minimization
@@ -436,7 +436,7 @@ typename GradientDifferenceImageToImageMetric<TFixedImage,TMovingImage>::Measure
 GradientDifferenceImageToImageMetric<TFixedImage,TMovingImage>
 ::GetValue( const TransformParametersType & parameters ) const
 {
-  unsigned int iFilter;                       
+  unsigned int iFilter;
   unsigned int iDimension;
   this->SetTransformParameters( parameters );
   this->m_TransformMovingImageFilter->Modified();
@@ -456,7 +456,7 @@ GradientDifferenceImageToImageMetric<TFixedImage,TMovingImage>
 
   for ( iDimension = 0; iDimension < FixedImageDimension; iDimension++ )
   {
-    subtractionFactor[ iDimension ] = this->m_MaxFixedGradient[ iDimension ] / 
+    subtractionFactor[ iDimension ] = this->m_MaxFixedGradient[ iDimension ] /
       this->m_MaxMovedGradient[ iDimension ];
   }
 

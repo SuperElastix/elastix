@@ -55,7 +55,7 @@ ImageSpatialObject2< TDimension,  PixelType >
     m_SlicePosition[i]=0;
     }
 
-	this->ComputeBoundingBox();
+  this->ComputeBoundingBox();
   if(typeid(PixelType) == typeid(short))
     {
     m_PixelType = "short";
@@ -128,7 +128,7 @@ ImageSpatialObject2< TDimension,  PixelType >
     return false;
     }
 
-	if( !this->SetInternalInverseTransformToWorldToIndexTransform() )
+  if( !this->SetInternalInverseTransformToWorldToIndexTransform() )
     {
     return false;
     }

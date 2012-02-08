@@ -28,7 +28,7 @@ namespace itk
    * If a mask is given: only those voxels within the mask AND the
    * InputImageRegion.
    *
-	 * \ingroup ImageSamplers
+   * \ingroup ImageSamplers
    */
 
   template < class TInputImage >

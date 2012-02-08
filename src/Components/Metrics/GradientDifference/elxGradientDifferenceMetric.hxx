@@ -58,7 +58,7 @@ void GradientDifferenceMetric<TElastix>
       itkExceptionMacro( << "Metric can only be used for 2D-3D registration. FixedImageSize[2] must be 1" );
     }
   }
-  
+
 } // end BeforeRegistration
 
 

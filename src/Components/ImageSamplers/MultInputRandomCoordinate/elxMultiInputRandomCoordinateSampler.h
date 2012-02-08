@@ -93,7 +93,7 @@ using namespace itk;
     typedef MultiInputRandomCoordinateSampler   Self;
     typedef MultiInputImageRandomCoordinateSampler<
       typename elx::ImageSamplerBase<TElastix>
-			::InputImageType >                        Superclass1;
+      ::InputImageType >                        Superclass1;
     typedef elx::ImageSamplerBase<TElastix>     Superclass2;
     typedef SmartPointer<Self>                  Pointer;
     typedef SmartPointer<const Self>            ConstPointer;

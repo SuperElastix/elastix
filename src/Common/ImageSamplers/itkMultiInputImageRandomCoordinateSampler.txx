@@ -179,9 +179,9 @@ namespace itk
 
     typedef typename InputImageType::DirectionType DirectionType;
     DirectionType dir0 = this->GetInput( 0 )->GetDirection();
-		typename DirectionType::InternalMatrixType dir0invtemp =
+    typename DirectionType::InternalMatrixType dir0invtemp =
       vnl_inverse( dir0.GetVnlMatrix() );
-		DirectionType dir0inv( dir0invtemp );
+    DirectionType dir0inv( dir0invtemp );
     for (unsigned int i = 1; i < numberOfInputs; ++i )
     {
       DirectionType diri = this->GetInput( i )->GetDirection();

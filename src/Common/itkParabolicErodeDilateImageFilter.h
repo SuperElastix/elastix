@@ -43,7 +43,7 @@ namespace itk
 
 
 template <typename TInputImage,
-	  bool doDilate,
+    bool doDilate,
           typename TOutputImage= TInputImage >
 class ITK_EXPORT ParabolicErodeDilateImageFilter:
     public ImageToImageFilter<TInputImage,TOutputImage>
@@ -117,7 +117,7 @@ public:
                   (Concept::SameDimension<itkGetStaticConstMacro(InputImageDimension),itkGetStaticConstMacro(OutputImageDimension)>));
 
   itkConceptMacro(Comparable,
-		  (Concept::Comparable<PixelType>));
+      (Concept::Comparable<PixelType>));
 
   /** End concept checking */
 #endif

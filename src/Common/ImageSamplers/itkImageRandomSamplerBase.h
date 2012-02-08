@@ -25,8 +25,8 @@ namespace itk
    * \brief This class is a base class for any image sampler that randomly picks samples.
    *
    * It adds the Set/GetNumberOfSamples function.
-	 *
-	 * \ingroup ImageSamplers
+   *
+   * \ingroup ImageSamplers
    */
 
   template < class TInputImage >

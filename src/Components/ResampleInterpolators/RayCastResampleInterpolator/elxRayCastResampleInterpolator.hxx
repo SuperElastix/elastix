@@ -60,7 +60,7 @@ using namespace itk;
       this->GetConfiguration()->ReadParameter( centerofrotation[ i ],
         "CenterOfRotationPoint", this->GetComponentLabel(), i, 0 );
   }
-  
+
   this->m_PreTransform->SetParameters( preParameters );
   this->m_PreTransform->SetCenter( centerofrotation );
   this->m_CombinationTransform->SetInitialTransform( this->m_PreTransform );
@@ -101,7 +101,7 @@ using namespace itk;
   RayCastResampleInterpolator<TElastix>
   ::BeforeAll( void )
   {
-  
+
   // Check if 2D-3D
   if ( this->m_Elastix->GetFixedImage()->GetImageDimension() != 3 )
   {
@@ -128,7 +128,7 @@ using namespace itk;
   RayCastResampleInterpolator<TElastix>
   ::BeforeRegistration( void )
   {
- 
+
   this->InitializeRayCastInterpolator();
 
   } // end BeforeRegistration()
@@ -160,7 +160,7 @@ using namespace itk;
   RayCastResampleInterpolator<TElastix>
   ::WriteToFile( void ) const
   {
-   
+
   /** Call WriteToFile of the ResamplerBase. */
   this->Superclass2::WriteToFile();
 
@@ -177,12 +177,12 @@ using namespace itk;
   TransformParametersType preParameters = this->m_PreTransform->GetParameters();
 
   xout["transpar"] << "(" << "PreParameters ";
-  
+
   unsigned int numberofparameters = preParameters.GetSize();
   for( unsigned int i = 0; i < numberofparameters; i++ )
   {
     xout["transpar"] << preParameters[i] << " ";
-  } 
+  }
     xout["transpar"]<< ")" << std::endl;
 
   double threshold = this->GetThreshold();

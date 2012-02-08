@@ -55,7 +55,7 @@ public:
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( NormalizedGradientCorrelationMetric, 
+  itkTypeMacro( NormalizedGradientCorrelationMetric,
     NormalizedGradientCorrelationImageToImageMetric );
 
   /** Name of this class.

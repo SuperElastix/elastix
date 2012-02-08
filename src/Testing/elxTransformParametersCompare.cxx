@@ -110,7 +110,7 @@ int main( int argc, char **argv )
     std::cerr << "Error during reading test transform parameters: " << err << std::endl;
     return EXIT_FAILURE;
   }
-  
+
   config->SetParameterMap( parameterFileParser->GetParameterMap() );
 
   unsigned int numberOfParametersTest = 0;

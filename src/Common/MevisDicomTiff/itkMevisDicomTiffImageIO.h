@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -37,7 +37,7 @@ namespace itk
 /** \class MevisDicomTiffImageIO
  *
  *  ImageIO for handling Mevis dcm/tiff images,
- *  - first public version (no 4D support) 
+ *  - first public version (no 4D support)
  *      developed using gdcm 2.0.10, tiff 3.8.2 and itk 3.10.0
  *
  *  NOTES:
@@ -60,13 +60,13 @@ namespace itk
  *  - IMPORTANT: 4d information is lost in the writing of the dicom files!
  *    This severely limits the use of this format in the future. Default values
  *    for 4D spacing is set at 1.0 and for origin at 0.0 (when reading)
- 
+
  *  PROPERTIES:
  *  - 2D/3D/4D, scalar types supported
  *  - input/output tiff image expected to be tiled
  *  - types supported uchar, char, ushort, short, uint, int, and float
  *    (double is not accepted by MevisLab)
- *  - writing defaults is tiled tiff, tilesize is 128, 128, 
+ *  - writing defaults is tiled tiff, tilesize is 128, 128,
  *    LZW compression and cm metric system
  *  - default extension for tiff-image is ".tif" to comply with mevislab
  *    standards
@@ -114,7 +114,7 @@ public:
   typedef MevisDicomTiffImageIO         Self;
   typedef ImageIOBase                   Superclass;
   typedef SmartPointer<Self>            Pointer;
-  
+
   itkNewMacro(Self);
   itkTypeMacro(MevisDicomTiffImageIO, Superclass);
   itkGetMacro(RescaleSlope, double);
@@ -141,9 +141,8 @@ protected:
   MevisDicomTiffImageIO();
   ~MevisDicomTiffImageIO();
   void PrintSelf(std::ostream& os, Indent indent) const;
-  
+
 private:
-  
   MevisDicomTiffImageIO(const Self&);
   void operator=(const Self&);
 
@@ -173,7 +172,6 @@ private:
   double                                m_GantryTilt;
   double                                m_EstimatedMinimum;
   double                                m_EstimatedMaximum;
-
 
 };
 

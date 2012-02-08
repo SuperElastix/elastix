@@ -266,18 +266,18 @@ ResamplerBase<TElastix>
   }
 
   /** Check if ResampleInterpolator is the RayCastResampleInterpolator */
-  typedef itk::AdvancedRayCastInterpolateImageFunction<  InputImageType, 
+  typedef itk::AdvancedRayCastInterpolateImageFunction<  InputImageType,
   CoordRepType > RayCastInterpolatorType;
 
-  const RayCastInterpolatorType * testptr = dynamic_cast<const 
+  const RayCastInterpolatorType * testptr = dynamic_cast<const
   RayCastInterpolatorType *>( this->GetAsITKBaseType()->GetInterpolator() );
 
-  /** If RayCastResampleInterpolator is used reset the Transform to 
+  /** If RayCastResampleInterpolator is used reset the Transform to
    * overrule default Resampler settings */
 
   if (testptr)
   {
-    this->GetAsITKBaseType()->SetTransform(   
+    this->GetAsITKBaseType()->SetTransform(
     (const_cast<RayCastInterpolatorType *>( testptr ))->GetTransform()   );
   }
 
