@@ -406,6 +406,28 @@ private:
 
   } // end StringCast()
 
+  /** For (unsigned) char we need a workaround, because ">>" casts it wrongly. 
+   * It takes the first digit and thinks it is a char. */  
+  template <>
+  bool StringCast( const std::string & parameterValue, unsigned char & casted ) const
+  {
+    unsigned short tempCasted;
+    bool returnbool = this->StringCast<unsigned short>( parameterValue, tempCasted );
+    casted = static_cast<unsigned char>( tempCasted );
+    return returnbool;
+  } // end StringCast<unsigned char>()
+
+  /** For (unsigned) char we need a workaround, because ">>" casts it wrongly. 
+   * It takes the first digit and thinks it is a char. */  
+  template <>
+  bool StringCast( const std::string & parameterValue, char & casted ) const
+  {
+    short tempCasted;
+    bool returnbool = this->StringCast<short>( parameterValue, tempCasted );
+    casted = static_cast<char>( tempCasted );
+    return returnbool;
+  } // end StringCast<char>()
+
   /** Provide a specialization for std::string, since the general StringCast
    * (especially ss >> casted) will not work for strings containing spaces.
    */
