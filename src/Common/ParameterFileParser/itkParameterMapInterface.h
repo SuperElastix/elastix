@@ -397,7 +397,14 @@ private:
   bool StringCast( const std::string & parameterValue, T & casted ) const
   {
     std::stringstream ss( parameterValue );
-    ss >> casted;
+    
+    /** For (unsigned) char we need a workaround, because ">>" casts it wrongly. 
+    * It takes the first digit and thinks it is a char. For example:
+    * 84 becomes '8', which is asci number 56. So, as a workaround, we use
+    * the accumulate type, and then cast back to T.*/  
+    typename NumericTraits<T>::AccumulateType tempCasted;
+    ss >> tempCasted;
+    casted = static_cast<T>( tempCasted );    
     if ( ss.bad() || ss.fail() )
     {
       return false;
@@ -405,29 +412,7 @@ private:
     return true;
 
   } // end StringCast()
-
-  /** For (unsigned) char we need a workaround, because ">>" casts it wrongly. 
-   * It takes the first digit and thinks it is a char. */  
-  template <>
-  bool StringCast( const std::string & parameterValue, unsigned char & casted ) const
-  {
-    unsigned short tempCasted;
-    bool returnbool = this->StringCast<unsigned short>( parameterValue, tempCasted );
-    casted = static_cast<unsigned char>( tempCasted );
-    return returnbool;
-  } // end StringCast<unsigned char>()
-
-  /** For (unsigned) char we need a workaround, because ">>" casts it wrongly. 
-   * It takes the first digit and thinks it is a char. */  
-  template <>
-  bool StringCast( const std::string & parameterValue, char & casted ) const
-  {
-    short tempCasted;
-    bool returnbool = this->StringCast<short>( parameterValue, tempCasted );
-    casted = static_cast<char>( tempCasted );
-    return returnbool;
-  } // end StringCast<char>()
-
+ 
   /** Provide a specialization for std::string, since the general StringCast
    * (especially ss >> casted) will not work for strings containing spaces.
    */
