@@ -40,6 +40,10 @@ ENDIF()
 # Output directory
 set( CTEST_DASHBOARD_ROOT "/cm/shared/apps/elastix/nightly" )
 
+# Use 'release' instead of 'bin', for consistency with other
+# elastix versions on the cluster2
+set( CTEST_BINARY_DIRECTORY ${CTEST_DASHBOARD_ROOT}/release )
+
 #set(dashboard_do_memcheck 1)
 #set(dashboard_do_coverage 1)
 
