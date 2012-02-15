@@ -173,13 +173,17 @@ namespace elastix
     /** Check if this key has been defined. If yes, return the 'index'
      * that is linked to it.
      */
-    if ( map.count( key ) == 0 )  // of gewoon !map.count( key ) als boven??
+    if ( map.count( key ) == 0 )
     {
-      xout["error"] << "Error:" << std::endl;
-      xout["error"] << "FixedImageType: " << fixedDimension << "D " << fixedPixelType << std::endl;
-      xout["error"] << "MovingImageType: " << movingDimension << "D " << movingPixelType << std::endl;
-      xout["error"] << "Elastix does not support this combination of ImageTypes!" << std::endl;
-      xout["error"] << "Add the combination in /ElastixCore/elxSupportedImageTypes.h and recompile!" << std::endl;
+      xout["error"] << "ERROR:\n"
+        << "  FixedImageType:  " << fixedDimension << "D " << fixedPixelType << std::endl
+        << "  MovingImageType: " << movingDimension << "D " << movingPixelType << std::endl
+        << "  elastix was not compiled with this combination of ImageTypes!\n"
+        << "  You have two options to solve this:\n"
+        << "  1. Add the combination to the CMake parameters ELASTIX_IMAGE_nD_PIXELTYPES and "
+        << "ELASTIX_IMAGE_DIMENSIONS, re-cmake and re-compile.\n"
+        << "  2. Change the parameters FixedInternalImagePixelType and/or MovingInternalImagePixelType "
+        << "in the elastix parameter file.\n" << std::endl;
       return 0;
     }
     else

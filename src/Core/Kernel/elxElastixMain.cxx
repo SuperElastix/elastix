@@ -346,46 +346,48 @@ int ElastixMain::InitDBIndex( void )
   /** Only do something when the configuration object wasn't initialized yet. */
   if ( this->m_Configuration->IsInitialized() )
   {
-    bool found = false;
-
     /** FixedImagePixelType. */
     if ( this->m_FixedImagePixelType.empty() )
     {
       /** Try to read it from the parameter file. */
-      this->m_FixedImagePixelType = "float";
+      this->m_FixedImagePixelType = "float"; // \note: this assumes elastix was compiled for float
       this->m_Configuration->ReadParameter( this->m_FixedImagePixelType,
         "FixedInternalImagePixelType", 0 );
-
-      /** If not found in the parameter file, get it from the fixed image. */
-      //if ( !found )
-      //{
-      //  std::string fixedImageFileName
-      //    = this->m_Configuration->GetCommandLineArgument( "-f" );
-      //  ImageDimensionType dummyDim = 0;
-      //  this->GetImageInformationFromFile( fixedImageFileName,
-      //    this->m_FixedImagePixelType, dummyDim );
-      //} // end if !found
-      // else use default
     }
 
     /** FixedImageDimension. */
     if ( this->m_FixedImageDimension == 0 )
     {
-      /** Try to read it from the parameter file. */
-      found = this->m_Configuration->ReadParameter( this->m_FixedImageDimension,
-        "FixedImageDimension", 0 );
+      /** Read it from the fixed image header. */
+      std::string fixedImageFileName
+        = this->m_Configuration->GetCommandLineArgument( "-f" );
+      this->GetImageInformationFromFile( fixedImageFileName,
+        this->m_FixedImageDimension );
 
-      /** If not found in the parameter file, get it from the fixed image. */
-      if ( !found )
+      /** Try to read it from the parameter file.
+       * This only serves as a check; elastix versions prior to 4.6 read the dimension
+       * from the parameter file, but now we read it from the image header.
+       */
+      unsigned int fixDimParameterFile = 0;
+      bool foundInParameterFile = this->m_Configuration->ReadParameter( fixDimParameterFile,
+        "FixedImageDimension", 0, false );
+
+      /** Check. */
+      if ( foundInParameterFile )
       {
-        std::string fixedImageFileName
-          = this->m_Configuration->GetCommandLineArgument( "-f" );
-        //PixelTypeDescriptionType dummyPixelType = "";
-        this->GetImageInformationFromFile( fixedImageFileName,
-          //dummyPixelType,
-          this->m_FixedImageDimension );
-      } // end if !found
+        if ( fixDimParameterFile != this->m_FixedImageDimension )
+        {
+          xout["error"] << "ERROR: problem defining fixed image dimension.\n"
+            << "  The parameter file says:     " << fixDimParameterFile << "\n"
+            << "  The fixed image header says: " << this->m_FixedImageDimension << "\n"
+            << "  Note that from elastix 4.6 the parameter file definition \"FixedImageDimension\" "
+            << "is not needed anymore.\n  Please remove this entry from your parameter file."
+            << std::endl;
+          return 1;
+        }
+      }
 
+      /** Just a sanity check, probably not needed. */
       if ( this->m_FixedImageDimension == 0 )
       {
         xout["error"] << "ERROR:" << std::endl;
@@ -398,40 +400,44 @@ int ElastixMain::InitDBIndex( void )
     if ( this->m_MovingImagePixelType.empty() )
     {
       /** Try to read it from the parameter file. */
-      this->m_MovingImagePixelType = "float";
+      this->m_MovingImagePixelType = "float"; // \note: this assumes elastix was compiled for float
       this->m_Configuration->ReadParameter( this->m_MovingImagePixelType,
         "MovingInternalImagePixelType", 0 );
-
-      /** If not found in the parameter file, get it from the moving image. */
-      //if ( !found )
-      //{
-      //  std::string movingImageFileName
-      //    = this->m_Configuration->GetCommandLineArgument( "-m" );
-      //  ImageDimensionType dummyDim = 0;
-      //  this->GetImageInformationFromFile( movingImageFileName,
-      //    this->m_MovingImagePixelType, dummyDim );
-      //} // end if !found
-      //// else use default
     }
 
     /** MovingImageDimension. */
     if ( this->m_MovingImageDimension == 0 )
     {
-      /** Try to read it from the parameter file. */
-      found = this->m_Configuration->ReadParameter( this->m_MovingImageDimension,
-        "MovingImageDimension", 0 );
+      /** Read it from the moving image header. */
+      std::string movingImageFileName
+        = this->m_Configuration->GetCommandLineArgument( "-m" );
+      this->GetImageInformationFromFile( movingImageFileName,
+        this->m_MovingImageDimension );
 
-      /** If not found in the parameter file, get it from the moving image. */
-      if ( !found )
+      /** Try to read it from the parameter file.
+       * This only serves as a check; elastix versions prior to 4.6 read the dimension
+       * from the parameter file, but now we read it from the image header.
+       */
+      unsigned int movDimParameterFile = 0;
+      bool foundInParameterFile = this->m_Configuration->ReadParameter( movDimParameterFile,
+        "MovingImageDimension", 0, false );
+
+      /** Check. */
+      if ( foundInParameterFile )
       {
-        std::string movingImageFileName
-          = this->m_Configuration->GetCommandLineArgument( "-m" );
-        //PixelTypeDescriptionType dummyPixelType = "";
-        this->GetImageInformationFromFile( movingImageFileName,
-          //dummyPixelType,
-          this->m_MovingImageDimension );
-      } // end if !found
+        if ( movDimParameterFile != this->m_MovingImageDimension )
+        {
+          xout["error"] << "ERROR: problem defining moving image dimension.\n"
+            << "  The parameter file says:      " << movDimParameterFile << "\n"
+            << "  The moving image header says: " << this->m_MovingImageDimension << "\n"
+            << "  Note that from elastix 4.6 the parameter file definition \"MovingImageDimension\" "
+            << "is not needed anymore.\n  Please remove this entry from your parameter file."
+            << std::endl;
+          return 1;
+        }
+      }
 
+      /** Just a sanity check, probably not needed. */
       if ( this->m_MovingImageDimension == 0 )
       {
         xout["error"] << "ERROR:" << std::endl;
@@ -465,7 +471,7 @@ int ElastixMain::InitDBIndex( void )
         xout["error"] << "Something went wrong in the ComponentDatabase" << std::endl;
         return 1;
       }
-    } //end if s_CDB!=0
+    } // end if s_CDB!=0
 
   } // end if m_Configuration->Initialized();
   else
@@ -778,7 +784,6 @@ void ElastixMain::SetMaximumNumberOfThreads( void ) const
     itk::MultiThreader::SetGlobalMaximumNumberOfThreads(
       maximumNumberOfThreads );
   }
-
 } // end SetMaximumNumberOfThreads()
 
 
@@ -786,11 +791,12 @@ void ElastixMain::SetMaximumNumberOfThreads( void ) const
  * ******************** SetOriginalFixedImageDirectionFlat ********************
  */
 
-void ElastixMain::SetOriginalFixedImageDirectionFlat(
+void
+ElastixMain::SetOriginalFixedImageDirectionFlat(
   const FlatDirectionCosinesType & arg )
 {
   this->m_OriginalFixedImageDirection = arg;
-}
+} // end SetOriginalFixedImageDirectionFlat()
 
 
 /**
@@ -801,7 +807,7 @@ const ElastixMain::FlatDirectionCosinesType &
 ElastixMain::GetOriginalFixedImageDirectionFlat( void ) const
 {
   return this->m_OriginalFixedImageDirection;
-}
+} // end GetOriginalFixedImageDirectionFlat()
 
 
 /**
@@ -811,7 +817,6 @@ ElastixMain::GetOriginalFixedImageDirectionFlat( void ) const
 void
 ElastixMain::GetImageInformationFromFile(
   const std::string & filename,
-  //PixelTypeDescriptionType & pixelType,
   ImageDimensionType & imageDimension ) const
 {
   if ( filename != "" )

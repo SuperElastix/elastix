@@ -29,7 +29,7 @@ int main( int argc, char **argv )
   else if ( argc == 2 )
   {
     std::string argument( argv[ 1 ] );
-    if ( argument == "-help" || argument == "--help" )
+    if ( argument == "-help" || argument == "--help" || argument == "-h" )
     {
       PrintHelp();
       return 0;
@@ -232,28 +232,29 @@ void PrintHelp( void )
   /** What is transformix? */
   std::cout << "transformix applies a transform on an input image and/or "
     "generates a deformation field.\n";
-  std::cout << "The transform is specified in the transform-parameter file.\n"
-    << std::endl;
+  std::cout << "The transform is specified in the transform-parameter file.\n";
+  std::cout << "  --help, -h displays this message and exit\n";
+  std::cout << "  --version  output version information and exit\n" << std::endl;
 
   /** Mandatory arguments. */
   std::cout << "Call transformix from the command line with mandatory arguments:\n";
-  std::cout << "-out      output directory\n";
-  std::cout << "-tp       transform-parameter file, only 1\n" << std::endl;
+  std::cout << "  -out      output directory\n";
+  std::cout << "  -tp       transform-parameter file, only 1\n" << std::endl;
 
   /** Optional arguments. */
   std::cout << "Optional extra commands:\n";
-  std::cout << "-in       input image to deform\n";
-  std::cout << "-def      file containing input-image points; the point are transformed\n"
-               "          according to the specified transform-parameter file\n";
-  std::cout << "          use \"-def all\" to transform all points from the input-image, which\n"
-               "          effectively generates a deformation field.\n";
-  std::cout << "-jac      use \"-jac all\" to generate an image with the determinant of the\n"
-               "          spatial Jacobian\n";
-  std::cout << "-jacmat   use \"-jacmat all\" to generate an image with the spatial Jacobian\n"
-               "          matrix at each voxel\n";
-  std::cout << "-priority set the process priority to high, abovenormal, normal (default),\n"
-               "          belownormal, or idle (Windows only option)\n";
-  std::cout << "-threads  set the maximum number of threads of transformix\n";
+  std::cout << "  -in       input image to deform\n";
+  std::cout << "  -def      file containing input-image points; the point are transformed\n"
+               "            according to the specified transform-parameter file\n";
+  std::cout << "            use \"-def all\" to transform all points from the input-image, which\n"
+               "            effectively generates a deformation field.\n";
+  std::cout << "  -jac      use \"-jac all\" to generate an image with the determinant of the\n"
+               "            spatial Jacobian\n";
+  std::cout << "  -jacmat   use \"-jacmat all\" to generate an image with the spatial Jacobian\n"
+               "            matrix at each voxel\n";
+  std::cout << "  -priority set the process priority to high, abovenormal, normal (default),\n"
+               "            belownormal, or idle (Windows only option)\n";
+  std::cout << "  -threads  set the maximum number of threads of transformix\n";
   std::cout << "\nAt least one of the options \"-in\", \"-def\", \"-jac\", or \"-jacmat\" should be given.\n"
     << std::endl;
 
@@ -270,4 +271,3 @@ void PrintHelp( void )
 
 
 #endif // end #ifndef __transformix_CXX_
-

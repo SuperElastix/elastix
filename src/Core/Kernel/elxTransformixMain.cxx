@@ -156,30 +156,21 @@ int TransformixMain::InitDBIndex( void )
   if ( this->m_Configuration->IsInitialized() )
   {
     /** Try to read MovingImagePixelType from the parameter file. */
-    this->m_MovingImagePixelType = "float";
+    this->m_MovingImagePixelType = "float"; // \note: this assumes elastix was compiled for float
     this->m_Configuration->ReadParameter( this->m_MovingImagePixelType,
       "MovingInternalImagePixelType", 0 );
 
     /** Try to read FixedImagePixelType from the parameter file. */
-    this->m_FixedImagePixelType = "float";
+    this->m_FixedImagePixelType = "float"; // \note: this assumes elastix was compiled for float
     this->m_Configuration->ReadParameter( this->m_FixedImagePixelType,
       "FixedInternalImagePixelType", 0 );
 
     /** MovingImageDimension. */
     if ( this->m_MovingImageDimension == 0 )
     {
-      /** Try to read it from the parameter file. */
-      bool found = this->m_Configuration->ReadParameter( this->m_MovingImageDimension,
+      /** Try to read it from the transform parameter file. */
+      this->m_Configuration->ReadParameter( this->m_MovingImageDimension,
         "MovingImageDimension", 0 );
-
-      /** If not found in the parameter file, get it from the moving image. */
-      if ( !found )
-      {
-        std::string movingImageFileName
-          = this->m_Configuration->GetCommandLineArgument( "-m" );
-        this->GetImageInformationFromFile( movingImageFileName,
-          this->m_MovingImageDimension );
-      } // end if !found
 
       if ( this->m_MovingImageDimension == 0 )
       {
@@ -192,18 +183,9 @@ int TransformixMain::InitDBIndex( void )
     /** FixedImageDimension. */
     if ( this->m_FixedImageDimension == 0 )
     {
-      /** Try to read it from the parameter file. */
-      bool found = this->m_Configuration->ReadParameter( this->m_FixedImageDimension,
+      /** Try to read it from the transform parameter file. */
+      this->m_Configuration->ReadParameter( this->m_FixedImageDimension,
         "FixedImageDimension", 0 );
-
-      /** If not found in the parameter file, get it from the fixed image. */
-      if ( !found )
-      {
-        std::string fixedImageFileName
-          = this->m_Configuration->GetCommandLineArgument( "-f" );
-        this->GetImageInformationFromFile( fixedImageFileName,
-          this->m_FixedImageDimension );
-      } // end if !found
 
       if ( this->m_FixedImageDimension == 0 )
       {

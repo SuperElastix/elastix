@@ -335,7 +335,6 @@ protected:
 
   /** Helper function to obtain information from images on disk. */
   void GetImageInformationFromFile( const std::string & filename,
-    //PixelTypeDescriptionType & pixelType,
     ImageDimensionType & imageDimension ) const;
 
 private:
