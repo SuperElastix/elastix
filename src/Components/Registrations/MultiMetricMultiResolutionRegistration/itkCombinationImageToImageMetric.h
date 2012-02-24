@@ -124,7 +124,7 @@ public:
   typedef typename Superclass::MovingImageLimiterOutputType MovingImageLimiterOutputType;
   typedef typename Superclass::ScalarType                   ScalarType;
   typedef typename Superclass::AdvancedTransformType        AdvancedTransformType;
-	*/
+  */
 
   /** Typedefs for the metrics. */
   typedef Superclass                                      ImageMetricType;
@@ -155,7 +155,7 @@ public:
       CoordinateRepresentationType, CoordinateRepresentationType,
       CoordinateRepresentationType > >                    MovingPointSetType;
   typedef SingleValuedPointSetToPointSetMetric<
-    FixedPointSetType, MovingPointSetType > 					    PointSetMetricType;
+    FixedPointSetType, MovingPointSetType >               PointSetMetricType;
 
   /**
    * Get and set the metrics and their weights.
@@ -419,6 +419,4 @@ private:
 #endif
 
 #endif // end #ifndef __itkCombinationImageToImageMetric_h
-
-
 

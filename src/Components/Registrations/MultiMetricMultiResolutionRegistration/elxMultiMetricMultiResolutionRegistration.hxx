@@ -129,7 +129,7 @@ MultiMetricMultiResolutionRegistration<TElastix>
     xl::xout["iteration"][ makestring3.str().c_str() ] <<
       this->GetCombinationMetric()->GetMetricComputationTime( i );
   }
-  
+
   if ( this->m_ShowExactMetricValue )
   {
     double currentExactMetricValue = 0.0;
@@ -140,9 +140,9 @@ MultiMetricMultiResolutionRegistration<TElastix>
       {
         const double currentExactMetricValue_i = this->GetElastix()->
           GetElxMetricBase( i )->GetCurrentExactMetricValue();
-  
+
         const double weight_i = this->GetCombinationMetric()->GetMetricWeight( i );
-  
+
         currentExactMetricValue += weight_i * currentExactMetricValue_i;
       }
     }
@@ -227,7 +227,7 @@ MultiMetricMultiResolutionRegistration<TElastix>
     this->m_ShowExactMetricValue |= this->GetElastix()->
       GetElxMetricBase( metricnr )->GetShowExactMetricValue();
   }
-    
+
   if ( this->m_ShowExactMetricValue )
   {
     /** Define the name of the ExactMetric column */
@@ -235,7 +235,7 @@ MultiMetricMultiResolutionRegistration<TElastix>
 
     /** Remove the ExactMetric-column, if it already existed. */
     xl::xout["iteration"].RemoveTargetCell( exactMetricColumn.c_str() );
-  
+
     /** Create a new column in the iteration info table */
     xl::xout["iteration"].AddTargetCell( exactMetricColumn.c_str() );
     xl::xout["iteration"][ exactMetricColumn.c_str() ]

@@ -70,9 +70,9 @@ MACRO( REMOVE_ELXCOMPONENT name )
   # remove lib from link list
   IF( DEFINED AllComponentLibs )
     SET( dummy ${AllComponentLibs} )
-	IF( NOT "${dummy}" STREQUAL "")
+    IF( NOT "${dummy}" STREQUAL "")
       LIST( REMOVE_ITEM dummy ${name} )
-	ENDIF()
+    ENDIF()
   ELSE()
     SET( dummy "" )
   ENDIF()
@@ -137,9 +137,9 @@ MACRO( ADD_ELXCOMPONENT name )
     # Update AllComponentLibs, while avoiding duplicates:
     IF( DEFINED AllComponentLibs )
       SET( dummy ${AllComponentLibs} )
-			IF( NOT "${dummy}" STREQUAL "")
-			  LIST( REMOVE_ITEM dummy ${name} )
-			ENDIF()
+      IF( NOT "${dummy}" STREQUAL "")
+        LIST( REMOVE_ITEM dummy ${name} )
+      ENDIF()
       SET( dummy ${dummy} ${name} )
     ELSE()
       SET( dummy ${name} )
@@ -212,7 +212,7 @@ FOREACH( userComponentDir ${ELASTIX_USER_COMPONENT_DIRS} )
       "^[ \t]*[Aa][Dd][Dd]_[Ee][Ll][Xx][Cc][Oo][Mm][Pp][Oo][Nn][Ee][Nn][Tt][ \t]*[(][ \t]*([^ #\t()]+).*"
       "\\1" componentName "${addElxComponentLine}")
 
-		IF( NOT "${componentName}" STREQUAL "" )
+    IF( NOT "${componentName}" STREQUAL "" )
       MESSAGE( STATUS "Found user component: ${componentName}" )
 
       # For non-subdirectories, the binarydir should be specified.
@@ -220,11 +220,11 @@ FOREACH( userComponentDir ${ELASTIX_USER_COMPONENT_DIRS} )
       SET( binaryDir "${elastix_BINARY_DIR}/UserComponents/${componentName}" )
 
       # Add
-  		ADD_SUBDIRECTORY( ${pathToComp} ${binaryDir} )
+      ADD_SUBDIRECTORY( ${pathToComp} ${binaryDir} )
 
-		ELSE()
+    ELSE()
       MESSAGE( STATUS "No user component definition found in: ${userComponent}" )
-  	ENDIF()
+    ENDIF()
 
   ENDFOREACH()
 ENDFOREACH()

@@ -131,7 +131,7 @@ WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>
   const ParametersType & param = this->m_Parameters;
 
   if ( this->m_NormalizeWeights )
-  {	
+  {
     /** dT/dmu_i = ( T_i(x) - T(x) ) / ( \sum_i w_i ) */
     OutputPointType opp;
     opp.Fill(0.0);
@@ -178,3 +178,4 @@ WeightedCombinationTransform<TScalarType,NInputDimensions,NOutputDimensions>
 
 
 #endif
+

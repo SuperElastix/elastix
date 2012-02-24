@@ -76,21 +76,21 @@ public:
   typedef typename Superclass::InputPointType       InputPointType;
   typedef typename Superclass::OutputPointType      OutputPointType;
   typedef typename
-    Superclass::NonZeroJacobianIndicesType					NonZeroJacobianIndicesType;
-  typedef typename Superclass::SpatialJacobianType	SpatialJacobianType;
+    Superclass::NonZeroJacobianIndicesType          NonZeroJacobianIndicesType;
+  typedef typename Superclass::SpatialJacobianType  SpatialJacobianType;
   typedef typename
-    Superclass::JacobianOfSpatialJacobianType    		JacobianOfSpatialJacobianType;
-  typedef typename Superclass::SpatialHessianType		SpatialHessianType;
+    Superclass::JacobianOfSpatialJacobianType       JacobianOfSpatialJacobianType;
+  typedef typename Superclass::SpatialHessianType   SpatialHessianType;
   typedef typename Superclass
     ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
 
   /** New typedefs in this class: */
   typedef Transform< TScalarType,
     NInputDimensions,
-    NOutputDimensions >               							TransformType;
+    NOutputDimensions >                             TransformType;
   /** \todo: shouldn't these be ConstPointers? */
-  typedef typename TransformType::Pointer						TransformPointer;
-  typedef std::vector< TransformPointer	>						TransformContainerType;
+  typedef typename TransformType::Pointer           TransformPointer;
+  typedef std::vector< TransformPointer >           TransformContainerType;
 
   /**  Method to transform a point. */
   virtual OutputPointType TransformPoint( const InputPointType & ipp ) const;
@@ -220,15 +220,15 @@ protected:
   WeightedCombinationTransform();
   virtual ~WeightedCombinationTransform() {};
 
-  TransformContainerType	 m_TransformContainer;
-  double 	m_SumOfWeights;
+  TransformContainerType m_TransformContainer;
+  double m_SumOfWeights;
 
 private:
 
   WeightedCombinationTransform(const Self&); // purposely not implemented
   void operator=(const Self&);    // purposely not implemented
 
-  bool	m_NormalizeWeights;
+  bool m_NormalizeWeights;
 
 }; // end class WeightedCombinationTransform
 
@@ -251,3 +251,4 @@ private:
 #endif
 
 #endif
+

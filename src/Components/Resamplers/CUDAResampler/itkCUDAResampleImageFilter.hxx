@@ -345,7 +345,7 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
   /** Checks! */
   ValidTransformPointer tempTransform = NULL;
   this->CheckForValidConfiguration( tempTransform );
-  
+
   /** The GPU can't be used. Use CPU instead. */
   if ( !this->m_UseCuda )
   {
@@ -375,3 +375,4 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
 }; // end namespace itk
 
 #endif // end #ifndef __itkCUDAResamplerImageFilter_txx
+

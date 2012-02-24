@@ -228,7 +228,7 @@ namespace itk
       jointPDFit.NextLine();
     }  // end while-loop over fixed index
 
-		value = static_cast<MeasureType>( -1.0 * MI );
+    value = static_cast<MeasureType>( -1.0 * MI );
 
   } // end GetValueAndAnalyticDerivative()
 
@@ -411,8 +411,8 @@ namespace itk
     const MarginalPDFIteratorType movingPDFbegin = this->m_MovingImageMarginalPDF.begin();
     const MarginalPDFIteratorType movingPDFend = this->m_MovingImageMarginalPDF.end();
 
-		/** Initialize */
-		this->m_PRatioArray.Fill( itk::NumericTraits<PRatioType>::Zero  );
+    /** Initialize */
+    this->m_PRatioArray.Fill( itk::NumericTraits<PRatioType>::Zero  );
 
     /** Loop over the joint histogram. */
     MI = 0.0;
@@ -421,11 +421,11 @@ namespace itk
     while ( fixedPDFit != fixedPDFend )
     {
       const double fixedPDFValue = *fixedPDFit;
-			double logFixedPDFValue = 0.0;
-		  if ( fixedPDFValue > 1e-16 )
-			{
-				logFixedPDFValue = vcl_log( fixedPDFValue );
-			}
+      double logFixedPDFValue = 0.0;
+      if ( fixedPDFValue > 1e-16 )
+      {
+        logFixedPDFValue = vcl_log( fixedPDFValue );
+      }
       movingPDFit = movingPDFbegin;
       movingIndex = 0;
 
@@ -440,7 +440,7 @@ namespace itk
           const double pRatio = vcl_log( jointPDFValue / movingPDFValue );
           // bETTER with ITERATORS TOO
           this->m_PRatioArray[ fixedIndex ][ movingIndex ] = static_cast<PRatioType>(
-						this->m_Alpha * pRatio );
+            this->m_Alpha * pRatio );
 
           if ( fixedPDFValue > 1e-16 )
           {
@@ -868,3 +868,4 @@ namespace itk
 
 
 #endif // end #ifndef _itkParzenWindowMutualInformationImageToImageMetric_HXX__
+
