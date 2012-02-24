@@ -42,7 +42,7 @@ KernelTransform2<TScalarType, NDimensions>
   this->m_TargetLandmarks = PointSetType::New();
   this->m_Displacements   = VectorSetType::New();
   this->m_WMatrixComputed = false;
-  
+
   this->m_LMatrixComputed = false;
   this->m_LInverseComputed = false;
   this->m_LMatrixDecompositionComputed = false;
