@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxFixedImagePyramidBase_h
 #define __elxFixedImagePyramidBase_h
 
@@ -139,3 +138,4 @@ private:
 
 
 #endif // end #ifndef __elxFixedImagePyramidBase_h
+

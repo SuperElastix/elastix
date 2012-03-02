@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxRegistrationBase_hxx
 #define __elxRegistrationBase_hxx
 
@@ -212,32 +211,6 @@ RegistrationBase<TElastix>
 } // end GenerateMovingMaskSpatialObject()
 
 
-/**
- * ******************* AfterEachResolutionBase **********************
- */
-
-template <class TElastix>
-void
-RegistrationBase<TElastix>
-::AfterEachResolutionBase( void )
-{
-  /** What is the current resolution level? */
-  const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
-
-  /** Release memory of the previous resolution.
-   * This is already done in for example MultiResolutionImageRegistrationMethod2,
-   * but perhaps we used another registration method that was not as careful
-   * with memory. Therefore, we do it again.
-   */
-  this->GetElastix()->GetElxFixedImagePyramidBase()->GetAsITKBaseType()
-    ->GetOutput( level )->ReleaseData();
-  this->GetElastix()->GetElxMovingImagePyramidBase()->GetAsITKBaseType()
-    ->GetOutput( level )->ReleaseData();
-
-} // end AfterEachResolutionBase()
-
-
 } // end namespace elastix
 
 #endif // end #ifndef __elxRegistrationBase_hxx
-

@@ -831,3 +831,4 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
 } // end namespace itk
 
 #endif // end #ifndef __itkGenericMultiResolutionPyramidImageFilter_hxx
+

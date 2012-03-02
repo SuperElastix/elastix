@@ -178,7 +178,7 @@ FixedGenericPyramid<TElastix>
 ::AfterEachResolution( void )
 {
   //temp
-  Superclass1::Print( std::cout );
+  //Superclass1::Print( std::cout );
 
 } // end BeforeEachResolution()
 

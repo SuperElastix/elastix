@@ -354,12 +354,6 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
         this->m_InitialTransformParametersOfNextLevel =
           this->m_LastTransformParameters;
         }
-
-      // Remove pyramid output of current level to release memory
-      this->m_FixedImagePyramid->GetOutput( this->m_CurrentLevel )
-        ->ReleaseData();
-      this->m_MovingImagePyramid->GetOutput( this->m_CurrentLevel )
-        ->ReleaseData();
       }
     }
 
@@ -505,3 +499,4 @@ MultiResolutionImageRegistrationMethod2<TFixedImage,TMovingImage>
 
 
 #endif
+

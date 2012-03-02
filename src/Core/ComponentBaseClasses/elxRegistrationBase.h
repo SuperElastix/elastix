@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxRegistrationBase_h
 #define __elxRegistrationBase_h
 
@@ -144,11 +143,6 @@ using namespace itk;
       const std::string & whichMask,
       const unsigned int level ) const;
 
-    /** Execute stuff after each resolution:
-     * \li Release memory.
-     */
-    virtual void AfterEachResolutionBase( void );
-
   protected:
 
     /** The constructor. */
@@ -230,3 +224,4 @@ using namespace itk;
 #endif
 
 #endif // end #ifndef __elxRegistrationBase_h
+
