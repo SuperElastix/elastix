@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxTransformBase_hxx
 #define __elxTransformBase_hxx
 
@@ -703,7 +702,7 @@ void TransformBase<TElastix>
   }
   xout["transpar"] << index[ FixedImageDimension - 1 ] << ")" << std::endl;
 
-  /** Set the precision of cout to 2, because Spacing and
+  /** Set the precision of cout to 10, because Spacing and
    * Origin must have at least one digit precision.
    */
   xout["transpar"] << std::setprecision(10);
@@ -1574,4 +1573,3 @@ TransformBase<TElastix>
 
 
 #endif // end #ifndef __elxTransformBase_hxx
-

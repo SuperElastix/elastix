@@ -223,9 +223,22 @@ add_executable( elxTransformParametersCompare elxTransformParametersCompare.cxx 
 target_link_libraries( elxTransformParametersCompare param ${ITK_LIBRARIES} )
 set_property( TARGET elxTransformParametersCompare PROPERTY FOLDER "tests" )
 
+# Create elxInvertTransform
+add_executable( elxInvertTransform elxInvertTransform.cxx itkCommandLineArgumentParser.cxx )
+target_link_libraries( elxInvertTransform param ${ITK_LIBRARIES} )
+set_property( TARGET elxInvertTransform PROPERTY FOLDER "tests" )
+
 #---------------------------------------------------------------------
 # Add tests
 
+# Add a test for inverting an affine transform
+add_test( NAME InvertTransformTest
+  COMMAND elxInvertTransform
+  -tp  ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+  -out ${elastix_BINARY_DIR}/TransformParameters_3DCT_lung.affine.inverse.txt
+  -m   ${TestDataDir}/3DCT_lung_followup.mha )
+
+# Add other tests
 elx_add_test( AdvancedBSplineDeformableTransformTest
   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt )
 elx_add_test( BSplineDerivativeKernelFunctionTest )

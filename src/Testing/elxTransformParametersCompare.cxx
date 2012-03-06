@@ -15,8 +15,6 @@
  \brief Compare two transform parameter files.
 
  Currently we only compare the transform parameter vector and not the fixed parameters.
-
- \verbinclude imagecompare.help
  */
 #include "itkCommandLineArgumentParser.h"
 #include "itkParameterFileParser.h"
@@ -273,3 +271,4 @@ int main( int argc, char **argv )
   return EXIT_SUCCESS;
 
 } // end main
+
