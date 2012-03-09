@@ -130,7 +130,7 @@ protected:
   /** Generate Data */
   void GenerateData( void );
   int SplitRequestedRegion(int i, int num, OutputImageRegionType& splitRegion);
-  void ThreadedGenerateData(const OutputImageRegionType& outputRegionForThread, int threadId );
+  void ThreadedGenerateData(const OutputImageRegionType& outputRegionForThread, ThreadIdType threadId );
 
 //  virtual void GenerateInputRequestedRegion() throw(InvalidRequestedRegionError);
   // Override since the filter produces the entire dataset.
