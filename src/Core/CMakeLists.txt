@@ -107,14 +107,8 @@ TARGET_LINK_LIBRARIES( elxCore
 )
 
 #---------------------------------------------------------------------
-# Add macro if mevisdicomtiff should be used
-IF( ELASTIX_USE_MEVISDICOMTIFF )
-  ADD_DEFINITIONS( -D_ELASTIX_USE_MEVISDICOMTIFF )
-  SET( mevisdcmtifflib mevisdcmtiff )
-ELSE()
-  SET( mevisdcmtifflib )
-ENDIF()
-
+# Define the mevis dcm tiff lib to which we should link. 
+SET( mevisdcmtifflib mevisdcmtiff )
 
 #---------------------------------------------------------------------
 # Create the elastix executable.

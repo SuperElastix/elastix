@@ -55,6 +55,9 @@ int main( int argc, char **argv )
   typedef TransformixMainType::ArgumentMapType      ArgumentMapType;
   typedef ArgumentMapType::value_type               ArgumentMapEntryType;
 
+  /** Support Mevis Dicom Tiff (if selected in cmake) */
+  RegisterMevisDicomTiff();
+
   /** Declare an instance of the Transformix class. */
   TransformixMainPointer  transformix;
 

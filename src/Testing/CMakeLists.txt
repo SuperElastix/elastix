@@ -15,13 +15,11 @@ if( NOT python_executable )
 endif()
 
 #---------------------------------------------------------------------
-# Add macro if mevisdicomtiff should be used
+# Add macro to decide if mevisdicomtiff should be tested
 if( ELASTIX_USE_MEVISDICOMTIFF )
   add_definitions( -D_ELASTIX_USE_MEVISDICOMTIFF )
-  set( mevisdcmtifflib mevisdcmtiff )
-else()
-  set( mevisdcmtifflib )
 endif()
+set( mevisdcmtifflib mevisdcmtiff )
 
 
 #---------------------------------------------------------------------
@@ -47,12 +45,8 @@ macro( elx_add_test name )
   target_link_libraries( ${ELXTEST_EXECUTABLE_NAME}
     elxCommon # needed for elxTimer
     ${ITK_LIBRARIES}
+    ${mevisdcmtifflib}
   )
-
-  if( ELASTIX_USE_MEVISDICOMTIFF )
-    target_link_libraries( ${ELXTEST_EXECUTABLE_NAME}
-      ${mevisdcmtifflib} ) # needed for MevisDicomTiffImageIOTest
-  endif()
 
   # Group in IDE's like Visual Studio
   set_property( TARGET ${ELXTEST_EXECUTABLE_NAME} PROPERTY FOLDER "tests" )

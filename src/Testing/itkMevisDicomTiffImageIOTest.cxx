@@ -14,9 +14,7 @@ PURPOSE. See the above copyright notices for more information.
 
 #include <iomanip>
 
-#ifdef _ELASTIX_USE_MEVISDICOMTIFF
-  #include "itkUseMevisDicomTiff.h"
-#endif
+#include "itkUseMevisDicomTiff.h"
 
 #include "itkImage.h"
 #include "itkImageFileReader.h"
@@ -200,6 +198,9 @@ int testMevis( void )
 
 int main( int argc, char *argv[] )
 {
+
+  /** Support Mevis Dicom Tiff (if selected in cmake) */
+  RegisterMevisDicomTiff();
 
 #ifdef _ELASTIX_USE_MEVISDICOMTIFF
 

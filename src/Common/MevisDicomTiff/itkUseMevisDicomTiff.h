@@ -20,23 +20,9 @@
 #pragma warning ( disable : 4786 )
 #endif
 
-#include "itkUseMevisDicomTiff.h"
-#include "itkMevisDicomTiffImageIOFactory.h"
-#include "itkObjectFactoryBase.h"
+/** Function that registers the Mevis DicomTiff IO factory. 
+ *  Call this in your program, before you load/write any images. */
+void RegisterMevisDicomTiff(void);
 
-/** Function that registers the Mevis DicomTiff IO factory. */
-int __UseMevisDicomTiff(void)
-{
-  static bool firsttime = true;
-  if (firsttime)
-  {
-    itk::ObjectFactoryBase::RegisterFactory( itk::MevisDicomTiffImageIOFactory::New() );
-    firsttime=false;
-  }
-  return 0;
-}
-
-/** Dummy return variable, to call the UseMevisDicomTiff function. */
-int __UseMevisDicomTiffDummy = __UseMevisDicomTiff();
 
 #endif
