@@ -11,7 +11,7 @@
 # and defaults to Nightly.
 # NOTE that Model should directly follow the comma: no space allowed!
 #
-# Setup: Windows XP, 32bit, Visual Studio 9 2008, Release mode, ITK 4.1rc01
+# Setup: Windows XP, 32bit, Visual Studio 9 2008, Release mode, ITK 4.1.0
 # PC: BIGR, SK personal computer.
 
 # Client maintainer: s.klein@erasmusmc.nl
@@ -48,7 +48,7 @@ set( CTEST_DASHBOARD_ROOT "D:/tk/mydash/${CTEST_SCRIPT_NAME}.${dashboard_model}"
 
 SET( dashboard_cache "
 // Which ITK to use
-ITK_DIR:PATH=D:/tk/itk/4.1rc01/bin
+ITK_DIR:PATH=D:/tk/itk/4.1.0/bin
 
 // Some elastix settings, defining the configuration
 ELASTIX_BUILD_TESTING:BOOL=ON
