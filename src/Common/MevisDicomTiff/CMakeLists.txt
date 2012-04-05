@@ -13,5 +13,8 @@ ADD_LIBRARY( mevisdcmtiff
 
 TARGET_LINK_LIBRARIES( mevisdcmtiff ${ITK_LIBRARIES} )
 
+# Group in IDE's like Visual Studio
+SET_PROPERTY( TARGET mevisdcmtiff PROPERTY FOLDER "libraries" )
+
 # add mevisdcmtiff to the list of target_link_libraries in your cmakelists.txt file.
 
