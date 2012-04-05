@@ -41,7 +41,7 @@ ENDIF()
 # A bug is outstanding: http://www.itk.org/Bug/view.php?id=12198
 SET( dashboard_cache "
 // Which ITK to use:
-ITK_DIR:PATH=D:/toolkits/ITK/4.0.0/binVS2008
+ITK_DIR:PATH=D:/toolkits/ITK/git/binVS2008
 
 // Some elastix settings, defining the configuration:
 ELASTIX_BUILD_TESTING:BOOL=ON

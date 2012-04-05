@@ -40,7 +40,7 @@ ENDIF()
 # nvcc fatal: nvcc cannot find a supported cl version. Only MSVC 8.0 and MSVC 9.0 are supported
 SET( dashboard_cache "
 // Which ITK to use:
-ITK_DIR:PATH=D:/toolkits/ITK/4.0.0/binVS2010
+ITK_DIR:PATH=D:/toolkits/ITK/git/binVS2010
 
 // Some elastix settings, defining the configuration:
 ELASTIX_BUILD_TESTING:BOOL=ON
