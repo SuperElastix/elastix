@@ -226,11 +226,19 @@ set_property( TARGET elxInvertTransform PROPERTY FOLDER "tests" )
 # Add tests
 
 # Add a test for inverting an affine transform
-add_test( NAME InvertTransformTest
+# Add a test for comparing the inverse against the ground truth
+add_test( NAME InvertTransformTest_OUTPUT
   COMMAND elxInvertTransform
   -tp  ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -out ${elastix_BINARY_DIR}/TransformParameters_3DCT_lung.affine.inverse.txt
+  -out ${TestOutputDir}/TransformParameters_3DCT_lung.affine.inverse.txt
   -m   ${TestDataDir}/3DCT_lung_followup.mha )
+add_test( NAME InvertTransformTest_COMPARE_TP
+  COMMAND elxTransformParametersCompare
+  -base ${TestBaselineDir}/TransformParameters_3DCT_lung.affine.inverse.txt
+  -test ${TestOutputDir}/TransformParameters_3DCT_lung.affine.inverse.txt
+  -a 1e-3 )
+set_tests_properties( InvertTransformTest_COMPARE_TP
+  PROPERTIES DEPENDS InvertTransformTest_OUTPUT )
 
 # Add other tests
 elx_add_test( AdvancedBSplineDeformableTransformTest

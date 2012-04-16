@@ -142,14 +142,16 @@ for some common problems.
 
 \section{Acknowledgements}
 
-This manual has mainly been written while the authors worked at the Image
-Sciences Institute (ISI, \url{http://www.isi.uu.nl}), Utrecht, The Netherlands.
-We thank the users of \elastix, whose questions and remarks helped improving
-the usability and documentation of \elastix. Specifically, we want to thank the
-following people for proofreading (parts of) this manual when we constructed a
-first version: Josien Pluim, Keelin Murphy, Martijn van der Bom, Sascha
-M\"{u}nzing, Jeroen de Bresser, Bram van Ginneken, Kajo van der Marel,
-Adri\"{e}nne Mendrik (in no specific order).
+The first version of this manual has been written while the authors
+worked at the Image Sciences Institute (ISI,
+\url{http://www.isi.uu.nl}), Utrecht, The Netherlands. We thank the
+users of \elastix, whose questions and remarks helped improving the
+usability and documentation of \elastix. Specifically, we want to
+thank the following people for proofreading (parts of) this manual
+when we constructed a first version: Josien Pluim, Keelin Murphy,
+Martijn van der Bom, Sascha M\"{u}nzing, Jeroen de Bresser, Bram van
+Ginneken, Kajo van der Marel, Adri\"{e}nne Mendrik (in no specific
+order).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -186,7 +188,7 @@ registration results are discussed.
 
 \section{Registration framework}\label{sec:framework}
 
-\begin{figure}
+\begin{figure}[tb]
 \centering
 \includegraphics[width=8cm]{ImageRegistrationConcept.eps}
 \caption{Image registration is the task of finding a spatial
@@ -251,7 +253,7 @@ over a ``space of functions $\vT$'', we now optimise over the
 elements of $\vmu$. Examples of other transformation models are given
 in Section~\ref{sec:comp:transform}.
 
-\begin{figure}
+\begin{figure}[tb]
 \centering
 \includegraphics[width=\textwidth]{images/registrationcomponents.eps}
 \caption{The basic registration components.}
@@ -322,7 +324,7 @@ of the figure. Linear interpolation of image values is performed
 inside the Delaunay region whose corners are pixel centres.
 \end{quote}
 
-\begin{figure}
+\begin{figure}[tb]
 \centering
 \includegraphics[width=12cm]{ImageOriginAndSpacing.eps}
 \caption{Geometrical concepts associated with the ITK image.
@@ -533,15 +535,16 @@ final result is generated in \elastix\ by a so-called
 you need to prepend the name with \texttt{Final}, for example:
 \texttt{FinalLinearInterpolator}.
 
-\begin{figure}
+\begin{figure}[tb]
 \centering
 \subfigure[]{\includegraphics[width=2.5cm]{nn.eps}}\label{sfig:interpolation:nn}
 \subfigure[]{\includegraphics[width=2.5cm]{linear.eps}}\label{sfig:interpolation:lin}
 \subfigure[]{\includegraphics[width=2.5cm]{bs2.eps}}\label{sfig:interpolation:bs2}
 \subfigure[]{\includegraphics[width=2.5cm]{bs3.eps}}\label{sfig:interpolation:bs3}
 \subfigure[]{\includegraphics[width=2.5cm]{bs5.eps}}\label{sfig:interpolation:bs5}
-\caption{Interpolation. (a) nearest neighbour, (b) linear, (c) B-spline $N=2$,
-(d) B-spline $N=3$, (e) B-spline $N=5$.} \label{fig:interpolation}
+\caption{Interpolation. (a) nearest neighbour, (b) linear, (c)
+B-spline $N=2$, (d) B-spline $N=3$, (e) B-spline $N=5$.}
+\label{fig:interpolation}
 \end{figure}
 
 \section{Transforms}\label{sec:comp:transform}
@@ -699,7 +702,7 @@ difference in ordering of $\vmu$ compared to the B-splines
 transform.
 \end{description}
 
-\begin{figure}
+\begin{figure}[tb]
 \centering
 % was fixed.eps, moving.eps, deformed.eps
 \subfigure[fixed]{\includegraphics[width=4.5cm,height=4.5cm]{transformexample_fixed.eps}}\label{sfig:transformexample:a}
@@ -741,7 +744,7 @@ straightforward.
 
 \section{Optimisers}\label{sec:comp:optimiser}
 
-\begin{figure}
+\begin{figure}[tb]
 \centering
 % was: Gradient_descent.eps
 \includegraphics[width=0.8\textwidth]{gd_example.eps}
@@ -873,11 +876,13 @@ sampler, or RandomCoordinate, the downsampling step is not necessary,
 since the random samplers select a user-defined number of samples
 anyway, independent of the image size.
 
-\begin{figure}
-\centering
-\subfigure[resolution 0]{\includegraphics[width=3cm]{moving_pd.R0d.eps}}
-\subfigure[resolution 1]{\includegraphics[width=3cm]{moving_pd.R1d.eps}}
-\subfigure[resolution 2]{\includegraphics[width=3cm]{moving_pd.R2d.eps}}
+\begin{figure}[tb]
+\centering \subfigure[resolution
+0]{\includegraphics[width=3cm]{moving_pd.R0d.eps}}
+\subfigure[resolution
+1]{\includegraphics[width=3cm]{moving_pd.R1d.eps}}
+\subfigure[resolution
+2]{\includegraphics[width=3cm]{moving_pd.R2d.eps}}
 \subfigure[original]{\includegraphics[width=3cm]{moving_pd.128.eps}} \\
 \subfigure[resolution
 0]{\includegraphics[width=3cm]{moving_pd.R0.eps}}
@@ -1105,15 +1110,9 @@ Linux/MacOS.
 \begin{enumerate}
 \item Download and install CMake: \url{www.cmake.org}.
 
-\item Download and compile the ITK version 3.20: \url{www.itk.org}.
-Make sure to set the following (advanced) CMake variables to
-\texttt{ON}: \texttt{ITK\_USE\_REVIEW},
-\texttt{ITK\_USE\_REVIEW\_STATISTICS},
-\texttt{ITK\_USE\_ORIENTED\_IMAGE\_DIRECTION},
-\texttt{ITK\_IMAGE\_BEHAVES\_AS\_ORIENTED\_IMAGE},
-\texttt{ITK\_USE\_CENTERED\_PIXEL\_COORDINATES\_CONSISTENTLY}. On
-Linux systems with the GCC compiler: set \texttt{CMAKE\_BUILD\_TYPE}
-to ``Release''.
+\item Download and compile the ITK version 4.1.0: \url{www.itk.org}.
+Make sure to set the following (advanced) CMake variable to
+\texttt{ON}: \texttt{ITK\_USE\_REVIEW}.
 
 \item Obtain the sources. There are three possibilities:
   \begin{enumerate}
@@ -1758,7 +1757,7 @@ needs a choice for the step size $a_k$, which is in \elastix\
 defined as in Equation (\ref{eq:gain}). Figure~\ref{fig:stepsize}
 gives some examples.
 
-\begin{figure}
+\begin{figure}[tb]
 \centering \psfrag{k}[tc][tc]{$k$} \psfrag{ak}[tc][tc]{$a_k$}
 \includegraphics[width=8cm]{ak.eps}
 \caption{Sequence 1: $a = 1000$, $A = 50$, $\alpha = 0.602$.
@@ -1781,7 +1780,8 @@ not! If $a$ is set too high, the iterative solving algorithm
 beyond recognition. If $a$ is set too low, you will never make it
 to the optimum, or may get stuck in a very small nearby local
 optimum. Figure~\ref{fig:stepsize} illustrates this.
-\begin{figure}
+
+\begin{figure}[tb]
 \centering
 \subfigure[]{\includegraphics[width=4cm]{fixed.eps}}\label{sfig:stepsize:fixed}
 \subfigure[]{\includegraphics[width=4cm]{moving.eps}}\label{sfig:stepsize:moving} \\
@@ -1795,6 +1795,7 @@ optimum. Figure~\ref{fig:stepsize} illustrates this.
 small, (d) $a = 3200$ as in the downloadable example is good, (e)
 $a = 32000$ is too large.} \label{fig:stepsize}
 \end{figure}
+
 A good choice for $a$ is dependent on the cost function that is used
 for registration: the $a$ that will give you a good result for SSD
 is not the same as the one that gives a good result for MI. Finally,

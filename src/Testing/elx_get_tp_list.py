@@ -2,6 +2,7 @@ import sys
 import os
 import re
 import os.path
+import glob
 import shutil
 from optparse import OptionParser
 
@@ -28,7 +29,7 @@ def main():
 
     # Check if option -d is given
     if options.outputDirectory == None :
-      parser.error( "The option output directory (-d) should be given" )
+      parser.error( "The option output directory (-o) should be given" )
 
     if not os.path.exists( options.outputDirectory ) :
       print "The output directory %s does not exist. Create it before running" % options.outputDirectory
@@ -40,9 +41,9 @@ def main():
 
     for directory in dirList:
       # Find the largest TransformParameters.?.txt
-      # Equivalent to: fileName = options.directory + "/" + "elastix.log"
-      inputFileName = os.path.join( directory, "TransformParameters.0.txt" );#todo, find largest
-      #print inputFileName
+      inputFileNames = glob.glob( os.path.join( directory, "TransformParameters.?.txt" ) );
+      inputFileNames.sort( reverse = True );
+      inputFileName = inputFileNames[0];
 
       # Create a name for the output file name
       directory = re.sub( '\/$', '', directory )
@@ -52,6 +53,7 @@ def main():
       outputFileName = os.path.join( options.outputDirectory, outputFileName )
       print outputFileName
 
+      # Copy the results as the new baselines
       shutil.copy( inputFileName, outputFileName )
 
     return 0
