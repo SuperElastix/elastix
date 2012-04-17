@@ -163,7 +163,7 @@ public:
   virtual void GenerateOutputInformation( void );
 
   /** Checking if transform is set. If a linear transformation is used,
-	 * the unthreaded LinearGenerateData is called. */
+   * the unthreaded LinearGenerateData is called. */
   virtual void BeforeThreadedGenerateData( void );
 
   /** Compute the Modified Time based on changes to the components. */

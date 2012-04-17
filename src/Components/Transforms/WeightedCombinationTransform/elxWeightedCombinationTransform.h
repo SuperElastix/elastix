@@ -122,6 +122,7 @@ namespace elastix
     /** Typedefs inherited from the superclass. */
     typedef typename Superclass1::ScalarType                ScalarType;
     typedef typename Superclass1::ParametersType            ParametersType;
+    typedef typename Superclass1::NumberOfParametersType    NumberOfParametersType;
     typedef typename Superclass1::JacobianType              JacobianType;
     typedef typename Superclass1::InputVectorType           InputVectorType;
     typedef typename Superclass1::OutputVectorType          OutputVectorType;
@@ -131,7 +132,6 @@ namespace elastix
     typedef typename Superclass1::OutputVnlVectorType       OutputVnlVectorType;
     typedef typename Superclass1::InputPointType            InputPointType;
     typedef typename Superclass1::OutputPointType           OutputPointType;
-    typedef typename Superclass1::NumberOfParametersType    NumberOfParametersType;
 
     /** Typedef's from the TransformBase class. */
     typedef typename Superclass2::ElastixType               ElastixType;

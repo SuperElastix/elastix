@@ -21,7 +21,6 @@
 
 namespace itk
 {
-
 /** \class ImageRandomSamplerSparseMask
  *
  * \brief Samples randomly some voxels of an image.
@@ -94,7 +93,7 @@ protected:
   virtual void BeforeThreadedGenerateData( void );
   virtual void ThreadedGenerateData(
     const InputImageRegionType & inputRegionForThread,
-    ThreadIdType threadId ) ITK_NO_RETURN;
+    ThreadIdType threadId );
 
   typename RandomGeneratorType::Pointer     m_RandomGenerator;
   typename InternalFullSamplerType::Pointer m_InternalFullSampler;
@@ -116,3 +115,4 @@ private:
 #endif
 
 #endif // end #ifndef __ImageRandomSamplerSparseMask_h
+

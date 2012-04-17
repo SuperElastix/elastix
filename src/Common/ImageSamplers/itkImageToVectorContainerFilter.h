@@ -11,9 +11,8 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
-#ifndef __ImageToVectorContainerFilter_h
-#define __ImageToVectorContainerFilter_h
+#ifndef __itkImageToVectorContainerFilter_h
+#define __itkImageToVectorContainerFilter_h
 
 #include "itkVectorContainerSource.h"
 
@@ -32,7 +31,6 @@ class ImageToVectorContainerFilter :
   public VectorContainerSource< TOutputVectorContainer >
 {
 public:
-
   /** Standard ITK-stuff. */
   typedef ImageToVectorContainerFilter  Self;
   typedef VectorContainerSource<
@@ -120,7 +118,7 @@ public:
    * \sa GenerateData(), SplitRequestedRegion() */
   virtual void ThreadedGenerateData(
     const InputImageRegionType & inputRegionForThread,
-    ThreadIdType threadId ) ITK_NO_RETURN;
+    ThreadIdType threadId );
 
   /** If an imaging filter needs to perform processing after the buffer
    * has been allocated but before threads are spawned, the filter can
@@ -191,4 +189,4 @@ private:
 #include "itkImageToVectorContainerFilter.txx"
 #endif
 
-#endif // end #ifndef __ImageToVectorContainerFilter_h
+#endif // end #ifndef __itkImageToVectorContainerFilter_h

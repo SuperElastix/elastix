@@ -151,6 +151,7 @@ public:
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::ScalarType                ScalarType;
   typedef typename Superclass1::ParametersType            ParametersType;
+  typedef typename Superclass1::NumberOfParametersType    NumberOfParametersType;
   typedef typename Superclass1::JacobianType              JacobianType;
   typedef typename Superclass1::InputVectorType           InputVectorType;
   typedef typename Superclass1::OutputVectorType          OutputVectorType;

@@ -33,7 +33,7 @@ using namespace itk;
  */
 
 template < class TElastix >
-class RayCastResampleInterpolator: 
+class RayCastResampleInterpolator:
 public
   AdvancedRayCastInterpolateImageFunction<
     typename ResampleInterpolatorBase<TElastix>::InputImageType,
@@ -86,7 +86,7 @@ public:
 
   /** Typedef's for CombinationTransform */
   typedef typename itk::EulerTransform<
-    typename InterpolatorBase<TElastix>::CoordRepType,ImageDimension >                    
+    typename InterpolatorBase<TElastix>::CoordRepType,ImageDimension >
                                                           EulerTransformType;
   typedef typename EulerTransformType::ParametersType     TransformParametersType;
   typedef typename EulerTransformType::Pointer            EulerTransformPointer;
@@ -114,7 +114,7 @@ protected:
 
   /** The constructor. */
   RayCastResampleInterpolator() {}
-  
+
   /** The destructor. */
   virtual ~RayCastResampleInterpolator() {}
 
@@ -127,7 +127,7 @@ private:
 
   /** The private constructor. */
   RayCastResampleInterpolator( const Self& ); // purposely not implemented
-  
+
   /** The private copy constructor. */
   void operator=( const Self& );              // purposely not implemented
 

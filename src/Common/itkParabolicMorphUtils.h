@@ -7,7 +7,7 @@
 namespace itk {
 template <class LineBufferType, class RealType, bool doDilate>
 void DoLine(LineBufferType &LineBuf, LineBufferType &tmpLineBuf,
-	    const RealType magnitude, const RealType m_Extreme)
+      const RealType magnitude, const RealType m_Extreme)
 {
   // contact point algorithm
   long koffset = 0, newcontact=0;  // how far away the search starts.
@@ -17,17 +17,17 @@ void DoLine(LineBufferType &LineBuf, LineBufferType &tmpLineBuf,
   for (long pos = 0; pos < LineLength; pos++)
     {
     RealType BaseVal = (RealType)m_Extreme; // the base value for
-					    // comparison
+              // comparison
     for (long krange = koffset; krange <= 0; krange++)
       {
       // difference needs to be paramaterised
       RealType T = LineBuf[pos + krange] - magnitude * krange * krange;
       // switch on template parameter - hopefully gets optimized away.
       if (doDilate ? (T >= BaseVal) : (T <= BaseVal) )
-	{
-	BaseVal = T;
-	newcontact = krange;
-	}
+  {
+  BaseVal = T;
+  newcontact = krange;
+  }
       }
     tmpLineBuf[pos] = BaseVal;
     koffset = newcontact - 1;
@@ -41,10 +41,10 @@ void DoLine(LineBufferType &LineBuf, LineBufferType &tmpLineBuf,
       {
       RealType T = tmpLineBuf[pos + krange] - magnitude * krange * krange;
       if (doDilate ? (T >= BaseVal) : (T <= BaseVal))
-	{
-	BaseVal = T;
-	newcontact = krange;
-	}
+  {
+  BaseVal = T;
+  newcontact = krange;
+  }
       }
     LineBuf[pos] = BaseVal;
     koffset = newcontact + 1;
@@ -52,16 +52,16 @@ void DoLine(LineBufferType &LineBuf, LineBufferType &tmpLineBuf,
 }
 
 template <class TInIter, class TOutIter, class RealType,
-	  class OutputPixelType, bool doDilate>
+    class OutputPixelType, bool doDilate>
 void doOneDimension(TInIter &inputIterator, TOutIter &outputIterator,
-		    ProgressReporter &progress,
-		    const long LineLength,
-		    const unsigned direction,
-		    const int m_MagnitudeSign,
-		    const bool m_UseImageSpacing,
-		    const RealType m_Extreme,
-		    const RealType image_scale,
-		    const RealType Sigma)
+        ProgressReporter &progress,
+        const long LineLength,
+        const unsigned direction,
+        const int m_MagnitudeSign,
+        const bool m_UseImageSpacing,
+        const RealType m_Extreme,
+        const RealType image_scale,
+        const RealType Sigma)
 {
 //  typedef typename std::vector<RealType> LineBufferType;
 

@@ -31,6 +31,13 @@ void
 ImageFullSampler< TInputImage >
 ::GenerateData( void )
 {
+  /** If desired we exercise a multi-threaded version. */
+  if ( this->m_UseMultiThread )
+  {
+    /** Calls ThreadedGenerateData(). */
+    return Superclass::GenerateData();
+  }
+
   /** Get handles to the input image, output sample container, and the mask. */
   InputImageConstPointer inputImage = this->GetInput();
   typename ImageSampleContainerType::Pointer sampleContainer = this->GetOutput();
@@ -68,23 +75,22 @@ ImageFullSampler< TInputImage >
     }
 
     /** Simply loop over the image and store all samples in the container. */
+    ImageSampleType tempSample;
     unsigned long ind = 0;
     for( iter.GoToBegin(); !iter.IsAtEnd(); ++iter, ++ind )
     {
-      ImageSampleType tempsample;
-
       /** Get sampled index */
       InputImageIndexType index = iter.GetIndex();
 
       /** Translate index to point */
       inputImage->TransformIndexToPhysicalPoint( index,
-        tempsample.m_ImageCoordinates );
+        tempSample.m_ImageCoordinates );
 
       /** Get sampled image value */
-      tempsample.m_ImageValue = iter.Get();
+      tempSample.m_ImageValue = iter.Get();
 
       /** Store in container */
-      sampleContainer->SetElement( ind, tempsample );
+      sampleContainer->SetElement( ind, tempSample );
 
     } // end for
   } // end if no mask
@@ -94,25 +100,25 @@ ImageFullSampler< TInputImage >
     {
       mask->GetSource()->Update();
     }
+
     /** Loop over the image and check if the points falls within the mask. */
+    ImageSampleType tempSample;
     for( iter.GoToBegin(); ! iter.IsAtEnd(); ++iter )
     {
-      ImageSampleType tempsample;
-
       /** Get sampled index. */
       InputImageIndexType index = iter.GetIndex();
 
       /** Translate index to point. */
       inputImage->TransformIndexToPhysicalPoint( index,
-        tempsample.m_ImageCoordinates );
+        tempSample.m_ImageCoordinates );
 
-      if ( mask->IsInside( tempsample.m_ImageCoordinates ) )
+      if ( mask->IsInside( tempSample.m_ImageCoordinates ) )
       {
         /** Get sampled image value. */
-        tempsample.m_ImageValue = iter.Get();
+        tempSample.m_ImageValue = iter.Get();
 
-        /**  Store in container. */
-        sampleContainer->push_back (tempsample );
+        /** Store in container. */
+        sampleContainer->push_back( tempSample );
 
       } // end if
     } // end for
@@ -168,7 +174,8 @@ ImageFullSampler< TInputImage >
 
     /** Simply loop over the image and store all samples in the container. */
     ImageSampleType tempSample;
-    for( iter.GoToBegin(); !iter.IsAtEnd(); ++iter )
+    unsigned long ind = 0;
+    for( iter.GoToBegin(); !iter.IsAtEnd(); ++iter, ++ind )
     {
       /** Get sampled index */
       InputImageIndexType index = iter.GetIndex();
@@ -180,8 +187,8 @@ ImageFullSampler< TInputImage >
       /** Get sampled image value */
       tempSample.m_ImageValue = iter.Get();
 
-      /** Store in container */
-      sampleContainerThisThread->push_back( tempSample );
+      /** Store in container. */
+      sampleContainerThisThread->SetElement( ind, tempSample );
 
     } // end for
   } // end if no mask
@@ -210,6 +217,7 @@ ImageFullSampler< TInputImage >
 
         /**  Store in container. */
         sampleContainerThisThread->push_back( tempSample );
+
       } // end if
     } // end for
   } // end else (if mask exists)

@@ -55,7 +55,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   this->m_NumberOfSamplesForExactGradient = 100000;
   this->m_SigmoidScaleFactor = 0.1;
 
-  this->m_RandomGenerator = RandomGeneratorType::New();
+  this->m_RandomGenerator = RandomGeneratorType::GetInstance();
   this->m_AdvancedTransform = 0;
 
 } // Constructor

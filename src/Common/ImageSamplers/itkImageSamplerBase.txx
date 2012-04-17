@@ -491,3 +491,4 @@ ImageSamplerBase< TInputImage >
 } // end namespace itk
 
 #endif // end #ifndef __ImageSamplerBase_txx
+

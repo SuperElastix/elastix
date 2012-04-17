@@ -20,18 +20,18 @@
 
 namespace itk
 {
-  /** \class ImageRandomSampler
-   *
-   * \brief Samples randomly some voxels of an image.
-   *
-   * This image sampler randomly samples 'NumberOfSamples' voxels in
-   * the InputImageRegion. Voxels may be selected multiple times.
-   * If a mask is given, the sampler tries to find samples within the
-   * mask. If the mask is very sparse, this may take some time. In this case,
-   * consider using the ImageRandomSamplerSparseMask.
-   *
-	 * \ingroup ImageSamplers
-	 * */
+/** \class ImageRandomSampler
+ *
+ * \brief Samples randomly some voxels of an image.
+ *
+ * This image sampler randomly samples 'NumberOfSamples' voxels in
+ * the InputImageRegion. Voxels may be selected multiple times.
+ * If a mask is given, the sampler tries to find samples within the
+ * mask. If the mask is very sparse, this may take some time. In this case,
+ * consider using the ImageRandomSamplerSparseMask.
+ *
+ * \ingroup ImageSamplers
+ */
 
 template < class TInputImage >
 class ImageRandomSampler :
@@ -87,7 +87,7 @@ protected:
 
   virtual void ThreadedGenerateData(
     const InputImageRegionType & inputRegionForThread,
-    ThreadIdType threadId ) ITK_NO_RETURN;
+    ThreadIdType threadId );
 
 private:
 

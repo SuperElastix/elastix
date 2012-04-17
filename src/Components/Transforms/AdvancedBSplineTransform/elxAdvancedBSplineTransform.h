@@ -68,9 +68,9 @@ namespace elastix
  * \parameter UseCyclicTransform: use the cyclic version of the B-spline transform which
  *   ensures that the B-spline polynomials wrap around in the slowest varying dimension.
  *   This is useful for dynamic imaging data in which the motion is assumed to be cyclic,
- *   for example in ECG-gated or respiratory gated CTA. For more information see the paper: 
- *   <em>Nonrigid registration of dynamic medical imaging data using nD+t B-splines and a 
- *   groupwise optimization approach</em>, C.T. Metz, S. Klein, M. Schaap, T. van Walsum and 
+ *   for example in ECG-gated or respiratory gated CTA. For more information see the paper:
+ *   <em>Nonrigid registration of dynamic medical imaging data using nD+t B-splines and a
+ *   groupwise optimization approach</em>, C.T. Metz, S. Klein, M. Schaap, T. van Walsum and
  *   W.J. Niessen, Medical Image Analysis, in press.
  *
  *
@@ -91,9 +91,9 @@ namespace elastix
  * \transformparameter UseCyclicTransform: use the cyclic version of the B-spline transform which
  *   ensures that the B-spline polynomials wrap around in the slowest varying dimension.
  *   This is useful for dynamic imaging data in which the motion is assumed to be cyclic,
- *   for example in ECG-gated or respiratory gated CTA. For more information see the paper: 
- *   <em>Nonrigid registration of dynamic medical imaging data using nD+t B-splines and a 
- *   groupwise optimization approach</em>, C.T. Metz, S. Klein, M. Schaap, T. van Walsum and 
+ *   for example in ECG-gated or respiratory gated CTA. For more information see the paper:
+ *   <em>Nonrigid registration of dynamic medical imaging data using nD+t B-splines and a
+ *   groupwise optimization approach</em>, C.T. Metz, S. Klein, M. Schaap, T. van Walsum and
  *   W.J. Niessen, Medical Image Analysis, in press.
  *
  * \todo It is unsure what happens when one of the image dimensions has length 1.
@@ -173,6 +173,7 @@ public:
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass1::ScalarType                ScalarType;
   typedef typename Superclass1::ParametersType            ParametersType;
+  typedef typename Superclass1::NumberOfParametersType    NumberOfParametersType;
   typedef typename Superclass1::JacobianType              JacobianType;
   typedef typename Superclass1::InputVectorType           InputVectorType;
   typedef typename Superclass1::OutputVectorType          OutputVectorType;

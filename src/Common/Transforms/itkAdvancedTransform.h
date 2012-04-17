@@ -146,7 +146,7 @@ public:
   /** This returns a sparse version of the Jacobian of the transformation.
    *
    * The Jacobian is expressed as a vector of partial derivatives of the
-	 * transformation components with respect to the parameters \f$\mu\f$ that
+   * transformation components with respect to the parameters \f$\mu\f$ that
    * define the transformation \f$T\f$, evaluated at a point \f$p\f$.
    *
    * \f[
@@ -174,7 +174,7 @@ public:
     JacobianType & j,
     NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const = 0;
 
-	/** Compute the spatial Jacobian of the transformation.
+  /** Compute the spatial Jacobian of the transformation.
    *
    * The spatial Jacobian is expressed as a vector of partial derivatives of the
    * transformation components with respect to the spatial position \f$x\f$,

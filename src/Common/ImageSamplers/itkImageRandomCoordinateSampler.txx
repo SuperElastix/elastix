@@ -37,8 +37,7 @@ ImageRandomCoordinateSampler()
   this->m_Interpolator = bsplineInterpolator;
 
   /** Setup random generator. */
-  this->m_RandomGenerator = RandomGeneratorType::New();
-  //this->m_RandomGenerator->Initialize();
+  this->m_RandomGenerator = RandomGeneratorType::GetInstance();
 
   this->m_UseRandomSampleRegion = false;
   this->m_SampleRegionSize.Fill( 1.0 );
@@ -235,7 +234,7 @@ ImageRandomCoordinateSampler< TInputImage >
 
   /** Get handle to the input image. */
   InputImageConstPointer inputImage = this->GetInput();
-  
+
   /** Figure out which samples to process. */
   unsigned long chunkSize = this->GetNumberOfSamples() / this->GetNumberOfThreads();
   unsigned long sampleStart = threadId * chunkSize * InputImageDimension;
@@ -362,3 +361,4 @@ ImageRandomCoordinateSampler< TInputImage >
 } // end namespace itk
 
 #endif // end #ifndef __ImageRandomCoordinateSampler_txx
+

@@ -33,6 +33,7 @@ AdvancedTranslationTransform():Superclass(ParametersDimension)
   // The Jacobian of this transform is constant.
   // Therefore the m_Jacobian variable can be
   // initialized here and be shared among all the threads.
+  this->m_LocalJacobian.SetSize(SpaceDimension, ParametersDimension);
   this->m_LocalJacobian.Fill( 0.0 );
 
   for(unsigned int i=0; i<NDimensions; i++)

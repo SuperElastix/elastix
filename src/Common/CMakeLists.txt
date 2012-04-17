@@ -11,9 +11,7 @@ IF( USE_KNNGraphAlphaMutualInformationMetric )
   ADD_SUBDIRECTORY( KNN )
 ENDIF()
 
-IF( ELASTIX_USE_MEVISDICOMTIFF )
-  ADD_SUBDIRECTORY( MevisDicomTiff )
-ENDIF()
+ADD_SUBDIRECTORY( MevisDicomTiff )
 
 IF( ELASTIX_USE_CUDA )
   ADD_SUBDIRECTORY( CUDA )
@@ -27,6 +25,8 @@ SET( CommonFiles
   elxTimer.h
   itkAdvancedRayCastInterpolateImageFunction.h
   itkAdvancedRayCastInterpolateImageFunction.txx
+  itkGenericMultiResolutionPyramidImageFilter.h
+  itkGenericMultiResolutionPyramidImageFilter.hxx
   itkImageFileCastWriter.h
   itkImageFileCastWriter.txx
   itkMeshFileReaderBase.h
@@ -35,6 +35,8 @@ SET( CommonFiles
   itkMultiResolutionGaussianSmoothingPyramidImageFilter.txx
   itkMultiResolutionImageRegistrationMethod2.h
   itkMultiResolutionImageRegistrationMethod2.txx
+  itkMultiResolutionShrinkPyramidImageFilter.h
+  itkMultiResolutionShrinkPyramidImageFilter.txx
   itkNDImageBase.h
   itkNDImageTemplate.h
   itkNDImageTemplate.hxx
@@ -103,7 +105,7 @@ SET( TransformFiles
   Transforms/itkBSplineInterpolationWeightFunction2.txx
   Transforms/itkBSplineInterpolationWeightFunctionBase.h
   Transforms/itkBSplineInterpolationWeightFunctionBase.txx
-  Transforms/itkBSplineKernelFunction2.h
+  #Transforms/itkBSplineKernelFunction2.h
   #Transforms/itkBSplineSecondOrderDerivativeKernelFunction.h
   Transforms/itkBSplineSecondOrderDerivativeKernelFunction2.h
   Transforms/itkTransformToDeterminantOfSpatialJacobianSource.h

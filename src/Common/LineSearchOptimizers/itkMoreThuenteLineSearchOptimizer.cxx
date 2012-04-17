@@ -205,7 +205,7 @@ MoreThuenteLineSearchOptimizer
     itkExceptionMacro( << "CostFunction has not been set!" );
   }
 
-  const NumberOfParametersType numberOfParameters
+  const unsigned int numberOfParameters
     = this->GetCostFunction()->GetNumberOfParameters();
 
   if ( this->GetInitialPosition().GetSize() != numberOfParameters )

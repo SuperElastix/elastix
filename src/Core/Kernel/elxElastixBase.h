@@ -94,7 +94,7 @@ using namespace itk;
  * \parameter DefaultOutputPrecision: Set the default precision of floating values in the output.
  *   Most importantly, it affects the output precision of the parameters in the transform parameter file.\n
  *   example: <tt>(DefaultOutputPrecision 6)</tt>\n
- *   Default value: 6. 
+ *   Default value: 6.
  *
  * The command line arguments used by this class are:
  * \commandlinearg -f: mandatory argument for elastix with the file name of the fixed image. \n

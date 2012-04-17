@@ -2,9 +2,9 @@
 #
 # runelastixlinux
 #
-# Script to run elastix on linux when the 
+# Script to run elastix on linux when the
 # libANNlib.so cannot be found.
-# 
+#
 # Usage:
 #
 #   runelastixlinux ...

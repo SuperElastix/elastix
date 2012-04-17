@@ -26,8 +26,8 @@ using namespace itk;
 /**
  * \class GradientDifferenceMetric
  * \brief An metric based on the itk::GradientDifferenceImageToImageMetric.
- * 
- * 
+ *
+ *
  * \ingroup Metrics
  *
  */
@@ -64,7 +64,7 @@ public:
   elxClassNameMacro( "GradientDifference" );
 
   /** Typedefs from the superclass. */
-  typedef typename 
+  typedef typename
     Superclass1::CoordinateRepresentationType              CoordinateRepresentationType;
   typedef typename Superclass1::MovingImageType            MovingImageType;
   typedef typename Superclass1::MovingImagePixelType       MovingImagePixelType;
@@ -128,7 +128,7 @@ public:
 
   /** Typedef for timer. */
   typedef tmr::Timer          TimerType;
-  
+
   /** Typedef for timer. */
   typedef TimerType::Pointer  TimerPointer;
 
@@ -151,7 +151,7 @@ protected:
 
   /** The constructor. */
   GradientDifferenceMetric(){};
-  
+
   /** The destructor. */
   virtual ~GradientDifferenceMetric() {}
 

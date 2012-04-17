@@ -102,17 +102,13 @@ ADD_LIBRARY( elxCore
 TARGET_LINK_LIBRARIES( elxCore
   elxCommon
   xoutlib
+  param # Needed for elxConfiguration
+  #  ${ITK_LIBRARIES}
 )
 
 #---------------------------------------------------------------------
-# Add macro if mevisdicomtiff should be used
-IF( ELASTIX_USE_MEVISDICOMTIFF )
-  ADD_DEFINITIONS( -D_ELASTIX_USE_MEVISDICOMTIFF )
-  SET( mevisdcmtifflib mevisdcmtiff )
-ELSE()
-  SET( mevisdcmtifflib )
-ENDIF()
-
+# Define the mevis dcm tiff lib to which we should link. 
+SET( mevisdcmtifflib mevisdcmtiff )
 
 #---------------------------------------------------------------------
 # Create the elastix executable.
@@ -142,24 +138,26 @@ ADD_EXECUTABLE( transformix
 # Link elastix against other libraries.
 
 TARGET_LINK_LIBRARIES( elastix
-  elxCommon
-  elxCore
   param
   xoutlib
+  elxCommon
+  elxCore
   ${mevisdcmtifflib}
   ${AllComponentLibs}
+  ${ITK_LIBRARIES}
 )
 
 #---------------------------------------------------------------------
 # Link transformix against other libraries.
 
 TARGET_LINK_LIBRARIES( transformix
-  elxCommon
-  elxCore
   param
   xoutlib
+  elxCommon
+  elxCore
   ${mevisdcmtifflib}
   ${AllComponentLibs}
+  ${ITK_LIBRARIES}
 )
 
 #---------------------------------------------------------------------
@@ -171,7 +169,7 @@ IF( WIN32 )
     #COMPONENT core )
 ELSE()
   # Tell the executables where to find the required .so files.
-  SET_TARGET_PROPERTIES( elastix transformix
+  SET_TARGET_PROPERTIES(elastix transformix
     PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib:${ITK_DIR}" )
   # Put executables in bin and libraries in lib.
   INSTALL( TARGETS elastix transformix

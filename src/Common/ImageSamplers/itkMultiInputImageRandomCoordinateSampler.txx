@@ -38,7 +38,7 @@ namespace itk
     this->m_Interpolator = bsplineInterpolator;
 
     /** Setup the random generator. */
-    this->m_RandomGenerator = RandomGeneratorType::New();
+    this->m_RandomGenerator = RandomGeneratorType::GetInstance();
 
     this->m_UseRandomSampleRegion = false;
     this->m_SampleRegionSize.Fill( 1.0 );
@@ -179,9 +179,9 @@ namespace itk
 
     typedef typename InputImageType::DirectionType DirectionType;
     DirectionType dir0 = this->GetInput( 0 )->GetDirection();
-		typename DirectionType::InternalMatrixType dir0invtemp =
+    typename DirectionType::InternalMatrixType dir0invtemp =
       vnl_inverse( dir0.GetVnlMatrix() );
-		DirectionType dir0inv( dir0invtemp );
+    DirectionType dir0inv( dir0invtemp );
     for (unsigned int i = 1; i < numberOfInputs; ++i )
     {
       DirectionType diri = this->GetInput( i )->GetDirection();

@@ -33,7 +33,7 @@ class DisplacementMagnitudePenaltyTerm
 public:
 
   /** Standard ITK stuff. */
-  typedef DisplacementMagnitudePenaltyTerm			Self;
+  typedef DisplacementMagnitudePenaltyTerm      Self;
   typedef TransformPenaltyTerm<
     TFixedImage, TScalarType >                  Superclass;
   typedef SmartPointer<Self>                    Pointer;

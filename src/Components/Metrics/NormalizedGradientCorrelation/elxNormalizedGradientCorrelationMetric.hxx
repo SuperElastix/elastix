@@ -75,7 +75,7 @@ void NormalizedGradientCorrelationMetric<TElastix>
   this->SetUseMovingImageDerivativeScales( false );
   MovingImageDerivativeScalesType movingImageDerivativeScales;
   bool usescales = true;
-    
+
   for ( unsigned int i = 0; i < MovingImageDimension; ++i )
   {
     usescales &= this->GetConfiguration()->ReadParameter(

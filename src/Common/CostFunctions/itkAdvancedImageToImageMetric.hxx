@@ -621,21 +621,21 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
    */
   if ( this->m_UseMetricSingleThreaded )
   {
-    typename tmr::Timer::Pointer timer = tmr::Timer::New();
-    timer->StartTimer();
+    //typename tmr::Timer::Pointer timer = tmr::Timer::New();
+    //timer->StartTimer();
     this->SetTransformParameters( parameters );
-    timer->StopTimer();
-    std::cout << "  SetTransformParameters took: "
-      << Math::Round<std::size_t, double>( timer->GetElapsedClockSec() * 1000.0 )
-      << " ms. " << std::endl;
+    //timer->StopTimer();
+    //std::cout << "  SetTransformParameters took: "
+    //  << Math::Round<std::size_t, double>( timer->GetElapsedClockSec() * 1000.0 )
+    //  << " ms. " << std::endl;
     if ( this->m_UseImageSampler )
     {
-      timer->StartTimer();
+      //timer->StartTimer();
       this->GetImageSampler()->Update();
-      timer->StopTimer();
-      std::cout << "  GetImageSampler()->Update() took: "
-        << Math::Round<std::size_t, double>( timer->GetElapsedClockSec() * 1000.0 )
-        << " ms. " << std::endl;
+      //timer->StopTimer();
+      //std::cout << "  GetImageSampler()->Update() took: "
+      //  << Math::Round<std::size_t, double>( timer->GetElapsedClockSec() * 1000.0 )
+      //  << " ms. " << std::endl;
     }
   }
 

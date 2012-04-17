@@ -14,9 +14,7 @@ PURPOSE. See the above copyright notices for more information.
 
 #include <iomanip>
 
-#ifdef _ELASTIX_USE_MEVISDICOMTIFF
-  #include "itkUseMevisDicomTiff.h"
-#endif
+#include "itkUseMevisDicomTiff.h"
 
 #include "itkImage.h"
 #include "itkImageFileReader.h"
@@ -40,14 +38,15 @@ int testMevis( void )
   /** Some basic type definitions. */
   typedef unsigned char PixelType;
 
-  typedef itk::Image< PixelType, Dimension > ImageType;
-  typedef itk::ImageFileWriter< ImageType > WriterType;
-  typedef itk::ImageFileReader< ImageType > ReaderType;
-  typedef itk::DifferenceImageFilter< ImageType, ImageType > DiffType;
-  typedef typename ImageType::SizeType SizeType;
-  typedef typename ImageType::SpacingType SpacingType;
-  typedef typename ImageType::PointType OriginType;
-  typedef typename ImageType::DirectionType DirectionType;
+  typedef itk::Image< PixelType, Dimension >  ImageType;
+  typedef itk::ImageFileWriter< ImageType >   WriterType;
+  typedef itk::ImageFileReader< ImageType >   ReaderType;
+  typedef itk::Testing::ComparisonImageFilter<
+    ImageType, ImageType >                    ComparisonFilterType;
+  typedef typename ImageType::SizeType        SizeType;
+  typedef typename ImageType::SpacingType     SpacingType;
+  typedef typename ImageType::PointType       OriginType;
+  typedef typename ImageType::DirectionType   DirectionType;
   typedef itk::ImageRegionIterator< ImageType > IteratorType;
 
   typename WriterType::Pointer writer = WriterType::New();
@@ -96,7 +95,7 @@ int testMevis( void )
     direction[0][0] = 1; direction[0][1] = 0; direction[0][2] = 0;
     direction[1][0] = 0; direction[1][1] = 0; direction[1][2] = -1;
     direction[2][0] = 0; direction[2][1] = 1; direction[2][2] = 0;
- 
+
   }
   else if ( Dimension == 4 )
   {
@@ -133,11 +132,12 @@ int testMevis( void )
   for ( it.GoToBegin(); !it.IsAtEnd(); ++it )
   {
     pixval = static_cast<PixelType>(
-      itk::Math::Floor( static_cast<double>( pixnr * factor ) )  );
+      itk::Math::Floor<double>( pixnr * factor ) );
     it.Set( pixval );
+    ++pixnr;
   }
 
-  std::string testfile( "testimageMevisDicomTiff.dcm" );
+  std::string testfile( "testimageMevisDicomTiff.tif" );
   writer->SetFileName( testfile );
   writer->SetInput( inputImage );
   reader->SetFileName( testfile );
@@ -152,7 +152,7 @@ int testMevis( void )
   }
   catch ( itk::ExceptionObject & err )
   {
-    std::cerr << "ERROR: " << task << " mevis dicomtiff failed in . " << std::endl;
+    std::cerr << "ERROR: " << task << " mevis dicomtiff failed." << std::endl;
     std::cerr << err << std::endl;
     return 1;
   }
@@ -167,7 +167,7 @@ int testMevis( void )
   same &= spacing == outputImage->GetSpacing();
   same &= origin == outputImage->GetOrigin();
   same &= direction == outputImage->GetDirection();
-  
+
 
   if ( !same )
   {
@@ -198,6 +198,9 @@ int testMevis( void )
 
 int main( int argc, char *argv[] )
 {
+
+  /** Support Mevis Dicom Tiff (if selected in cmake) */
+  RegisterMevisDicomTiff();
 
 #ifdef _ELASTIX_USE_MEVISDICOMTIFF
 

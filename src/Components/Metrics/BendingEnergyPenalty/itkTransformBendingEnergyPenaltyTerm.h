@@ -49,7 +49,7 @@ class TransformBendingEnergyPenaltyTerm
 public:
 
   /** Standard ITK stuff. */
-  typedef TransformBendingEnergyPenaltyTerm			Self;
+  typedef TransformBendingEnergyPenaltyTerm     Self;
   typedef TransformPenaltyTerm<
     TFixedImage, TScalarType >                  Superclass;
   typedef SmartPointer<Self>                    Pointer;
@@ -106,8 +106,8 @@ public:
   typedef typename Superclass
     ::JacobianOfSpatialHessianType                  JacobianOfSpatialHessianType;
   typedef typename Superclass::InternalMatrixType   InternalMatrixType;
-	typedef typename Superclass::HessianValueType			HessianValueType;
-	typedef typename Superclass::HessianType					HessianType;
+  typedef typename Superclass::HessianValueType     HessianValueType;
+  typedef typename Superclass::HessianType          HessianType;
 
   /** Define the dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );

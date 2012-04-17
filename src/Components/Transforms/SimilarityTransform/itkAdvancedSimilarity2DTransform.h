@@ -87,6 +87,7 @@ public:
 
   /** Parameters type. */
   typedef typename Superclass::ParametersType  ParametersType;
+  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
 
   /** Jacobian type. */
   typedef typename Superclass::JacobianType  JacobianType;

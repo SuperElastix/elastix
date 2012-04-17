@@ -11,16 +11,16 @@
 # and defaults to Nightly.
 # NOTE that Model should directly follow the comma: no space allowed!
 #
-# Setup: Windows XP, 32bit, Visual Studio 9 2008, Release mode, ITK 3.20.0
+# Setup: Windows XP, 32bit, Visual Studio 9 2008, Release mode, ITK 4.1.0
 # PC: BIGR, SK personal computer.
 
 # Client maintainer: s.klein@erasmusmc.nl
 set( CTEST_SITE "BIGR.PCStefan" )
 set( CTEST_BUILD_NAME "WinXP-32bit-VS2008" )
 #set( CTEST_BUILD_FLAGS "-j2" ) # parallel build for makefiles
+set( CTEST_TEST_ARGS PARALLEL_LEVEL 2 ) # parallel testing
 set( CTEST_BUILD_CONFIGURATION Release )
 set( CTEST_CMAKE_GENERATOR "Visual Studio 9 2008" )
-set( CTEST_DASHBOARD_ROOT "D:/tk/mydash/${CTEST_SCRIPT_NAME}" )
 
 # default: automatically determined
 #set(CTEST_UPDATE_COMMAND /path/to/svn)
@@ -40,18 +40,21 @@ ELSEIF( ${CTEST_SCRIPT_ARG} MATCHES Continuous )
   SET( dashboard_model Continuous )
 ENDIF()
 
+# name of output directory
+set( CTEST_DASHBOARD_ROOT "D:/tk/mydash/${CTEST_SCRIPT_NAME}.${dashboard_model}" )
+
 #set(dashboard_do_memcheck 1)
 #set(dashboard_do_coverage 1)
 
 SET( dashboard_cache "
 // Which ITK to use
-ITK_DIR:PATH=D:/tk/itk/3.20/bin
+ITK_DIR:PATH=D:/tk/itk/4.1.0/bin
 
 // Some elastix settings, defining the configuration
 ELASTIX_BUILD_TESTING:BOOL=ON
 ELASTIX_ENABLE_PACKAGER:BOOL=ON
 ELASTIX_USE_CUDA:BOOL=OFF
-ELASTIX_USE_MEVISDICOMTIFF:BOOL=OFF
+ELASTIX_USE_MEVISDICOMTIFF:BOOL=ON
 ELASTIX_IMAGE_DIMENSION:STRING=2;3;4
 ELASTIX_IMAGE_2D_PIXELTYPES:STRING=float
 ELASTIX_IMAGE_3D_PIXELTYPES:STRING=float

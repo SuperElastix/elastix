@@ -29,8 +29,7 @@ ImageRandomSamplerSparseMask< TInputImage >
 ::ImageRandomSamplerSparseMask()
 {
   /** Setup random generator. */
-  this->m_RandomGenerator = RandomGeneratorType::New();
-  //this->m_RandomGenerator->Initialize();
+  this->m_RandomGenerator = RandomGeneratorType::GetInstance();
 
   this->m_InternalFullSampler = InternalFullSamplerType::New();
 
@@ -186,10 +185,11 @@ ImageRandomSamplerSparseMask< TInputImage >
 
   /** Take random samples from the allValidSamples-container. */
   unsigned long sampleId = sampleStart;
+  unsigned long sampleIdThisThread = 0;
   for ( iter = sampleContainerThisThread->Begin(); iter != end; ++iter, sampleId++ )
   {
     unsigned long randomIndex = static_cast<unsigned long>( this->m_RandomNumberList[ sampleId ] );
-    sampleContainerThisThread->push_back( allValidSamples->ElementAt( randomIndex ) );
+    (*iter).Value() = allValidSamples->ElementAt( randomIndex );
   }
 
 } // end ThreadedGenerateData()
@@ -215,3 +215,4 @@ ImageRandomSamplerSparseMask< TInputImage >
 } // end namespace itk
 
 #endif // end #ifndef __ImageRandomSamplerSparseMask_txx
+

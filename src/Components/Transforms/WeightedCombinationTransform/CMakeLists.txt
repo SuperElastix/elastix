@@ -1,11 +1,8 @@
 
-
-ADD_ELXCOMPONENT( WeightedCombinationTransformElastix
+ADD_ELXCOMPONENT( WeightedCombinationTransformElastix OFF
  elxWeightedCombinationTransform.h
  elxWeightedCombinationTransform.hxx
  elxWeightedCombinationTransform.cxx
  itkWeightedCombinationTransform.h
  itkWeightedCombinationTransform.txx )
-
-
 

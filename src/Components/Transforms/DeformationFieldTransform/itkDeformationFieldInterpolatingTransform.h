@@ -64,6 +64,7 @@ namespace itk
     /** Superclass typedefs */
     typedef typename Superclass::ScalarType                     ScalarType;
     typedef typename Superclass::ParametersType                 ParametersType;
+    typedef typename Superclass::NumberOfParametersType         NumberOfParametersType;
     typedef typename Superclass::JacobianType                   JacobianType;
     typedef typename Superclass::InputVectorType                InputVectorType;
     typedef typename Superclass::OutputVectorType               OutputVectorType;
@@ -79,16 +80,26 @@ namespace itk
     typedef typename Superclass::JacobianOfSpatialHessianType   JacobianOfSpatialHessianType;
     typedef typename Superclass::JacobianOfSpatialJacobianType  JacobianOfSpatialJacobianType;
 
-    typedef TComponentType                            DeformationFieldComponentType;
+    typedef typename Superclass
+      ::NonZeroJacobianIndicesType                      NonZeroJacobianIndicesType;
+    typedef typename Superclass::SpatialJacobianType    SpatialJacobianType;
+    typedef typename Superclass
+      ::JacobianOfSpatialJacobianType                   JacobianOfSpatialJacobianType;
+    typedef typename Superclass::SpatialHessianType     SpatialHessianType;
+    typedef typename Superclass
+      ::JacobianOfSpatialHessianType                    JacobianOfSpatialHessianType;
+    typedef typename Superclass::InternalMatrixType     InternalMatrixType;
+
+    typedef TComponentType                              DeformationFieldComponentType;
     typedef Vector<DeformationFieldComponentType,
-      itkGetStaticConstMacro(OutputSpaceDimension) >  DeformationFieldVectorType;
+      itkGetStaticConstMacro(OutputSpaceDimension) >    DeformationFieldVectorType;
     typedef Image< DeformationFieldVectorType,
-      itkGetStaticConstMacro(InputSpaceDimension) >   DeformationFieldType;
+      itkGetStaticConstMacro(InputSpaceDimension) >     DeformationFieldType;
 
     typedef VectorInterpolateImageFunction<
-      DeformationFieldType, ScalarType >              DeformationFieldInterpolatorType;
+      DeformationFieldType, ScalarType >                DeformationFieldInterpolatorType;
     typedef VectorNearestNeighborInterpolateImageFunction<
-      DeformationFieldType, ScalarType >              DefaultDeformationFieldInterpolatorType;
+      DeformationFieldType, ScalarType >                DefaultDeformationFieldInterpolatorType;
 
     /** Set the transformation parameters is not supported.
      * Use SetDeformationField() instead
@@ -112,7 +123,7 @@ namespace itk
     virtual const ParametersType & GetFixedParameters( void ) const
     {
       // This transform has no fixed parameters.
-      return m_FixedParameters;
+      return this->m_FixedParameters;
     }
 
     /** Transform a point. This method adds a displacement to a given point,
@@ -230,3 +241,4 @@ namespace itk
 #endif
 
 #endif /* __itkDeformationFieldInterpolatingTransform_h */
+

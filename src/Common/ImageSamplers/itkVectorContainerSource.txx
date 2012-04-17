@@ -11,9 +11,8 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
-#ifndef __VectorContainerSource_txx
-#define __VectorContainerSource_txx
+#ifndef __itkVectorContainerSource_txx
+#define __itkVectorContainerSource_txx
 
 #include "itkVectorContainerSource.h"
 
@@ -89,19 +88,6 @@ VectorContainerSource< TOutputVectorContainer >
 
 
 /**
- * ******************* GenerateInputRequestedRegion *******************
- *
-
-template< class TOutputVectorContainer >
-void
-VectorContainerSource< TOutputVectorContainer >
-::GenerateInputRequestedRegion( void )
-{
-  Superclass::GenerateInputRequestedRegion();
-} // end GenerateInputRequestedRegion()
-
-
-/**
  * ******************* GraftOutput *******************
  */
 
@@ -164,5 +150,4 @@ VectorContainerSource< TOutputVectorContainer >
 
 } // end namespace itk
 
-#endif // end #ifndef __VectorContainerSource_txx
-
+#endif // end #ifndef __itkVectorContainerSource_txx

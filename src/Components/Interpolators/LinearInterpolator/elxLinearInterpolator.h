@@ -33,7 +33,7 @@ using namespace itk;
    * is slightly faster. If you use an optimizer that does not use the
    * image derivatives (such as the FullSearch, or the
    * FiniteDifferenceGradientDescent) you can safely use the LinearInterpolator.
-   * With other optimizer that do use the image derivatives, you may also use
+   * With other optimizers that do use the image derivatives, you may also use
    * the LinearInterpolator, but the results may be slightly different than
    * those obtained with the BSplineInterpolator. This is due to a different
    * implementation of the computation of the image derivatives. The
@@ -75,7 +75,7 @@ using namespace itk;
     typedef SmartPointer<const Self>            ConstPointer;
 
     /** Method for creation through the object factory. */
-    itkNewMacro(Self);
+    itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
     itkTypeMacro( LinearInterpolator, LinearInterpolateImageFunction );

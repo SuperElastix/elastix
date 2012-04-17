@@ -1,3 +1,4 @@
+
 IF( ELASTIX_USE_CUDA )
   ADD_ELXCOMPONENT( CUDAResampler
    elxCUDAResampler.h
@@ -27,3 +28,4 @@ ELSE()
   # list defined in Components/CMakeLists.txt.
   REMOVE_ELXCOMPONENT( CUDAResampler )
 ENDIF()
+

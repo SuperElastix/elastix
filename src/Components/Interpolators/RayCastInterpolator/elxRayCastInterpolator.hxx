@@ -60,8 +60,7 @@ RayCastInterpolator<TElastix>
   this->m_CombinationTransform->SetUseComposition( true );
 
   typedef typename elastix::OptimizerBase<TElastix>::ITKBaseType::ParametersType ParametersType;
-  const unsigned int numberofparameters
-    = this->m_Elastix->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
+  unsigned int numberofparameters = this->m_Elastix->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
   TransformParametersType preParameters( numberofparameters );
   preParameters.Fill( 0.0 );
 

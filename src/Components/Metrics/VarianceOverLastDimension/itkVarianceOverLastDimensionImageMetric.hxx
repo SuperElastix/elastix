@@ -128,7 +128,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage,TMovingImage>
 
   /** Initialize random number generator. */
   Statistics::MersenneTwisterRandomVariateGenerator::Pointer randomGenerator
-    = Statistics::MersenneTwisterRandomVariateGenerator::New();
+    = Statistics::MersenneTwisterRandomVariateGenerator::GetInstance();
 
   /** Sample additional at fixed timepoint. */
   for ( unsigned int i = 0; i < m_NumAdditionalSamplesFixed; ++i )
@@ -397,7 +397,8 @@ VarianceOverLastDimensionImageMetric<TFixedImage,TMovingImage>
    * initialize on all positions when random sampling turned off.
    */
   std::vector<int> lastDimPositions;
-  if ( this->m_SampleLastDimensionRandomly ) {
+  if ( ! this->m_SampleLastDimensionRandomly )
+  {
     for ( unsigned int i = 0; i < lastDimSize; ++i )
     {
       lastDimPositions.push_back( i );
@@ -491,7 +492,6 @@ VarianceOverLastDimensionImageMetric<TFixedImage,TMovingImage>
         /** Store values. */
         MT[ d ] = movingImageValue;
         dMTdmu[ d ] = imageJacobian;
-
       }
       else
       {
@@ -608,3 +608,4 @@ VarianceOverLastDimensionImageMetric<TFixedImage,TMovingImage>
 } // end namespace itk
 
 #endif // end #ifndef _itkVarianceOverLastDimensionImageMetric_hxx
+

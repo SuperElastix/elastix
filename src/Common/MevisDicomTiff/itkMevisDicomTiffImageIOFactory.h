@@ -9,8 +9,8 @@
   Copyright (c) Insight Software Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -22,34 +22,36 @@
 
 namespace itk
 {
+
 /** \class MevisDicomTiffImageIOFactory
  * \brief Create instances of MevisDicomTiffImageIO objects using an object factory.
  */
+
 class ITK_EXPORT MevisDicomTiffImageIOFactory : public ObjectFactoryBase
 {
-public:  
+public:
   /** Standard class typedefs. */
-  typedef MevisDicomTiffImageIOFactory       Self;
-  typedef ObjectFactoryBase        Superclass;
-  typedef SmartPointer<Self>       Pointer;
-  typedef SmartPointer<const Self> ConstPointer;
-  
+  typedef MevisDicomTiffImageIOFactory    Self;
+  typedef ObjectFactoryBase               Superclass;
+  typedef SmartPointer<Self>              Pointer;
+  typedef SmartPointer<const Self>        ConstPointer;
+
   /** Class methods used to interface with the registered factories. */
-  virtual const char* GetITKSourceVersion() const;
-  virtual const char* GetDescription() const;
-  
+  virtual const char* GetITKSourceVersion( void ) const;
+  virtual const char* GetDescription( void ) const;
+
   /** Method for class instantiation. */
-  itkFactorylessNewMacro(Self);
+  itkFactorylessNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(MevisDicomTiffImageIOFactory, ObjectFactoryBase);
+  itkTypeMacro( MevisDicomTiffImageIOFactory, ObjectFactoryBase );
 
   /** Register one factory of this type  */
-  static void RegisterOneFactory()
-    {
+  static void RegisterOneFactory( void )
+  {
     MevisDicomTiffImageIOFactory::Pointer metaFactory = MevisDicomTiffImageIOFactory::New();
-    ObjectFactoryBase::RegisterFactory(metaFactory);
-    }
+    ObjectFactoryBase::RegisterFactory( metaFactory );
+  }
 
 protected:
   MevisDicomTiffImageIOFactory();
@@ -59,8 +61,8 @@ private:
   MevisDicomTiffImageIOFactory(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
-};
- 
+}; // end class MevisDicomTiffImageIOFactory
+
 } // end namespace itk
 
-#endif
+#endif // end #ifndef __itkMevisDicomTiffImageIOFactory_h

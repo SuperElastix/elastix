@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxElastixTemplate_h
 #define __elxElastixTemplate_h
 

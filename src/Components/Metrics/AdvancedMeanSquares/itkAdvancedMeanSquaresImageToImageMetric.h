@@ -11,16 +11,15 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
-
 #ifndef __itkAdvancedMeanSquaresImageToImageMetric_h
 #define __itkAdvancedMeanSquaresImageToImageMetric_h
 
-#include "itkSmoothingRecursiveGaussianImageFilter.h"
-//#include "itkImageRandomCoordinateSampler.h"
-#include "itkImageGridSampler.h"
-#include "itkNearestNeighborInterpolateImageFunction.h"
 #include "itkAdvancedImageToImageMetric.h"
+
+#include "itkSmoothingRecursiveGaussianImageFilter.h" // needed for SelfHessian
+#include "itkImageGridSampler.h" // needed for SelfHessian
+#include "itkNearestNeighborInterpolateImageFunction.h" // needed for SelfHessian
+
 
 namespace itk
 {
@@ -142,14 +141,14 @@ public:
   virtual void GetValueAndDerivative( const TransformParametersType & parameters,
     MeasureType & value, DerivativeType & derivative ) const;
 
-  /** Get value and derivatives for each thread. */
+  /** Get value and derivatives for each thread. *
   inline void ThreadedGetValueAndDerivative( ThreadIdType threadID );
 
-  /** Gather the values and derivatives from all threads */
+  /** Gather the values and derivatives from all threads *
   inline void AfterThreadedGetValueAndDerivative(
     MeasureType & value, DerivativeType & derivative )const;
 
-  /** ComputeDerivatives threader callback function */
+  /** ComputeDerivatives threader callback function *
   static ITK_THREAD_RETURN_TYPE ComputeDerivativesThreaderCallback( void * arg );
 
   /** Experimental feature: compute SelfHessian */
@@ -209,7 +208,6 @@ protected:
     FixedImageType, CoordinateRepresentationType>                 FixedImageInterpolatorType;
   typedef NearestNeighborInterpolateImageFunction<
     FixedImageType, CoordinateRepresentationType >                DummyFixedImageInterpolatorType;
-  //typedef ImageRandomCoordinateSampler<FixedImageType>            SelfHessianSamplerType;
   typedef ImageGridSampler<FixedImageType>                        SelfHessianSamplerType;
 
   double m_NormalizationFactor;
@@ -248,20 +246,19 @@ private:
   double          m_SelfHessianNoiseRange;
   unsigned int    m_NumberOfSamplesForSelfHessian;
 
-  mutable ImageSampleContainerPointer   m_SampleContainer;
-  mutable unsigned long                 m_SampleContainerSize;
+  //mutable ImageSampleContainerPointer   m_SampleContainer;
+  //mutable unsigned long                 m_SampleContainerSize;
+  //mutable std::vector< MeasureType >    m_ThreaderValues;
+  //mutable std::vector< DerivativeType > m_ThreaderDerivatives;
+  //mutable std::vector< unsigned long >  m_ThreaderNumberOfPixelsCounted;
 
-  mutable std::vector< MeasureType >    m_ThreaderValues;
-  mutable std::vector< DerivativeType > m_ThreaderDerivatives;
-  mutable std::vector< unsigned long >  m_ThreaderNumberOfPixelsCounted;
-
-  struct MultiThreaderComputeDerivativeType
-  {
-    typename DerivativeType::iterator derivativeIterator;
-    typename std::vector< DerivativeType >::iterator  m_ThreaderDerivativesIterator;
-    unsigned int numberOfParameters;
-    double normal_sum;
-  };
+  //struct MultiThreaderComputeDerivativeType
+  //{
+  //  typename DerivativeType::iterator derivativeIterator;
+  //  typename std::vector< DerivativeType >::iterator  m_ThreaderDerivativesIterator;
+  //  unsigned int numberOfParameters;
+  //  double normal_sum;
+  //};
 
 }; // end class AdvancedMeanSquaresImageToImageMetric
 

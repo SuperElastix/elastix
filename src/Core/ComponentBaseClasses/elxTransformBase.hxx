@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __elxTransformBase_hxx
 #define __elxTransformBase_hxx
 
@@ -30,9 +29,11 @@
 #include "itkImageGridSampler.h"
 #include "itkContinuousIndex.h"
 #include "itkChangeInformationImageFilter.h"
-#include "itkVTKPolyDataReader.h"
-#include "itkVTKPolyDataWriter.h"
+#include "itkMesh.h"
+#include "itkMeshFileReader.h"
+#include "itkMeshFileWriter.h"
 #include "itkTransformMeshFilter.h"
+
 
 namespace itk
 {
@@ -92,8 +93,6 @@ private:
 
 namespace elastix
 {
-//using namespace itk; //Not here because the ITK also started to define a TransformBase class....
-
 
 /**
  * ********************* Constructor ****************************
@@ -526,11 +525,11 @@ void TransformBase<TElastix>
 
   int initfailure = configurationInitialTransform->Initialize(
     argmapInitialTransform );
-	if ( initfailure != 0 )
+  if ( initfailure != 0 )
   {
-	  itkGenericExceptionMacro( << "ERROR: Reading initial transform "
+    itkGenericExceptionMacro( << "ERROR: Reading initial transform "
       << "parameters failed: " << transformParametersFileName );
-	}
+  }
 
   /** Read the InitialTransform name. */
   ComponentDescriptionType initialTransformName = "AffineTransform";
@@ -703,7 +702,7 @@ void TransformBase<TElastix>
   }
   xout["transpar"] << index[ FixedImageDimension - 1 ] << ")" << std::endl;
 
-  /** Set the precision of cout to 2, because Spacing and
+  /** Set the precision of cout to 10, because Spacing and
    * Origin must have at least one digit precision.
    */
   xout["transpar"] << std::setprecision(10);
@@ -1005,64 +1004,60 @@ TransformBase<TElastix>
   outputPointsFile << std::showpoint << std::fixed;
   elxout << "  The transformed points are saved in: "
     <<  outputPointsFileName << std::endl;
-  //\todo do not write opp to log file, but only to outputPointsFile.
-  elxout.AddOutput( "opp", &outputPointsFile );
 
   /** Print the results. */
   for ( unsigned int j = 0; j < nrofpoints; j++ )
   {
     /** The input index. */
-    elxout << "Point\t" << j << "\t; InputIndex = [ ";
+    outputPointsFile << "Point\t" << j << "\t; InputIndex = [ ";
     for ( unsigned int i = 0; i < FixedImageDimension; i++ )
     {
-      elxout << inputindexvec[ j ][ i ] << " ";
+      outputPointsFile << inputindexvec[ j ][ i ] << " ";
     }
 
     /** The input point. */
-    elxout << "]\t; InputPoint = [ ";
+    outputPointsFile << "]\t; InputPoint = [ ";
     for ( unsigned int i = 0; i < FixedImageDimension; i++ )
     {
-      elxout << inputpointvec[ j ][ i ] << " ";
+      outputPointsFile << inputpointvec[ j ][ i ] << " ";
     }
 
     /** The output index in fixed image. */
-    elxout << "]\t; OutputIndexFixed = [ ";
+    outputPointsFile << "]\t; OutputIndexFixed = [ ";
     for ( unsigned int i = 0; i < FixedImageDimension; i++ )
     {
-      elxout << outputindexfixedvec[ j ][ i ] << " ";
+      outputPointsFile << outputindexfixedvec[ j ][ i ] << " ";
     }
 
     /** The output point. */
-    elxout << "]\t; OutputPoint = [ ";
+    outputPointsFile << "]\t; OutputPoint = [ ";
     for ( unsigned int i = 0; i < FixedImageDimension; i++ )
     {
-      elxout << outputpointvec[ j ][ i ] << " ";
+      outputPointsFile << outputpointvec[ j ][ i ] << " ";
     }
 
     /** The output point minus the input point. */
-    elxout << "]\t; Deformation = [ ";
+    outputPointsFile << "]\t; Deformation = [ ";
     for ( unsigned int i = 0; i < MovingImageDimension; i++ )
     {
-      elxout << deformationvec[ j ][ i ] << " ";
+      outputPointsFile << deformationvec[ j ][ i ] << " ";
     }
 
     if ( alsoMovingIndices )
     {
       /** The output index in moving image. */
-      elxout << "]\t; OutputIndexMoving = [ ";
+      outputPointsFile << "]\t; OutputIndexMoving = [ ";
       for ( unsigned int i = 0; i < MovingImageDimension; i++ )
       {
-        elxout << outputindexmovingvec[ j ][ i ] << " ";
+        outputPointsFile << outputindexmovingvec[ j ][ i ] << " ";
       }
     }
 
-    elxout << "]" << std::endl;
+    outputPointsFile << "]" << std::endl;
   } // end for nrofpoints
 
-  /** Stop writing to the output file. */
-  elxout.RemoveOutput( "opp" );
-
 } // end TransformPointsSomePoints()
+
 
 /**
  * ************** TransformPointsSomePointsVTK *********************
@@ -1087,8 +1082,8 @@ TransformBase<TElastix>
     FixedImageDimension, CoordRepType>                  MeshTraitsType;
   typedef itk::Mesh<
     DummyIPPPixelType, FixedImageDimension, MeshTraitsType > MeshType;
-  typedef itk::VTKPolyDataReader< MeshType >            MeshReaderType;
-  typedef itk::VTKPolyDataWriter< MeshType >            MeshWriterType;
+  typedef itk::MeshFileReader< MeshType >               MeshReaderType;
+  typedef itk::MeshFileWriter< MeshType >               MeshWriterType;
   typedef itk::TransformMeshFilter<
     MeshType, MeshType, CombinationTransformType>       TransformMeshFilterType;
 
@@ -1255,10 +1250,17 @@ TransformBase<TElastix>
    * then and only then we continue.
    */
   std::string jac = this->GetConfiguration()->GetCommandLineArgument( "-jac" );
-  if ( jac != "all" )
+  if ( jac == "" )
   {
     elxout << "  The command-line option \"-jac\" is not used, "
       << "so no det(dT/dx) computed." << std::endl;
+    return;
+  }
+  else if ( jac != "all" )
+  {
+    elxout << "  WARNING: The command-line option \"-jac\" should be used as \"-jac all\",\n"
+      << "    but is specified as \"-jac " << jac << "\"\n"
+      << "    Therefore det(dT/dx) is not computed." << std::endl;
     return;
   }
 
@@ -1571,4 +1573,3 @@ TransformBase<TElastix>
 
 
 #endif // end #ifndef __elxTransformBase_hxx
-

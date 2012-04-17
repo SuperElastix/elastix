@@ -5,82 +5,98 @@
 #
 
 # User specified variables:
-MARK_AS_ADVANCED( ELASTIX_IMAGE_DIMENSIONS )
-SET( ELASTIX_IMAGE_DIMENSIONS 2 3 4
+mark_as_advanced( ELASTIX_IMAGE_DIMENSIONS )
+set( ELASTIX_IMAGE_DIMENSIONS 2 3 4
   CACHE STRING "Specify image dimensions" )
 
-MARK_AS_ADVANCED( ELASTIX_IMAGE_2D_PIXELTYPES )
-SET( ELASTIX_IMAGE_2D_PIXELTYPES "float"
+mark_as_advanced( ELASTIX_IMAGE_2D_PIXELTYPES )
+set( ELASTIX_IMAGE_2D_PIXELTYPES "float"
   CACHE STRING "Specify 2D pixel types" )
 
-MARK_AS_ADVANCED( ELASTIX_IMAGE_3D_PIXELTYPES )
-SET( ELASTIX_IMAGE_3D_PIXELTYPES "short" "float"
+mark_as_advanced( ELASTIX_IMAGE_3D_PIXELTYPES )
+set( ELASTIX_IMAGE_3D_PIXELTYPES "short" "float"
   CACHE STRING "Specify 3D pixel types" )
 
-MARK_AS_ADVANCED( ELASTIX_IMAGE_4D_PIXELTYPES )
-SET( ELASTIX_IMAGE_4D_PIXELTYPES "short"
+mark_as_advanced( ELASTIX_IMAGE_4D_PIXELTYPES )
+set( ELASTIX_IMAGE_4D_PIXELTYPES "short"
   CACHE STRING "Specify 4D pixel types" )
 
 # Define supported dimensions and types for sanity checks.
 # Gives protection against typo's.
-SET( supportedDimensions 2 3 4 )
-SET( supportedTypes "char" "unsigned char"
+set( supportedDimensions 2 3 4 )
+set( supportedTypes "char" "unsigned char"
   "short" "unsigned short" "int" "unsigned int"
   "long" "unsigned long" "float" "double" )
 
+# Sanity check if > 0 number of dimensions are requested
+list( LENGTH ELASTIX_IMAGE_DIMENSIONS numDims )
+if( ${numDims} EQUAL 0 )
+  message( FATAL_ERROR "ERROR: you should set one or more values "
+    " to ELASTIX_IMAGE_DIMENSIONS!\n"
+    "Choose a subset of {${supportedDimensions}}." )
+endif()
+
 # Start a string containing the supported image types
 # and initialize some variables.
-SET( supportString "" )
-SET( index 1 )
-SET( numSupported 0 )
+set( supportString "" )
+set( index 1 )
+set( numSupported 0 )
 
 # Add supported image types to the string
-FOREACH( dim ${ELASTIX_IMAGE_DIMENSIONS} )
+foreach( dim ${ELASTIX_IMAGE_DIMENSIONS} )
 
   # Check dimension
-  IF( ${dim} EQUAL 2 )
-    SET( pixelTypeList ${ELASTIX_IMAGE_2D_PIXELTYPES} )
-    SET( whichList "ELASTIX_IMAGE_2D_PIXELTYPES" )
-  ELSEIF( ${dim} EQUAL 3 )
-    SET( pixelTypeList ${ELASTIX_IMAGE_3D_PIXELTYPES} )
-    SET( whichList "ELASTIX_IMAGE_3D_PIXELTYPES" )
-  ELSEIF( ${dim} EQUAL 4 )
-    SET( pixelTypeList ${ELASTIX_IMAGE_4D_PIXELTYPES} )
-    SET( whichList "ELASTIX_IMAGE_4D_PIXELTYPES" )
-  ELSE()
-    MESSAGE( FATAL_ERROR "WARNING: you selected ELASTIX_IMAGE_DIMENSIONS"
+  if( ${dim} EQUAL 2 )
+    set( pixelTypeList ${ELASTIX_IMAGE_2D_PIXELTYPES} )
+    set( whichList "ELASTIX_IMAGE_2D_PIXELTYPES" )
+  elseif( ${dim} EQUAL 3 )
+    set( pixelTypeList ${ELASTIX_IMAGE_3D_PIXELTYPES} )
+    set( whichList "ELASTIX_IMAGE_3D_PIXELTYPES" )
+  elseif( ${dim} EQUAL 4 )
+    set( pixelTypeList ${ELASTIX_IMAGE_4D_PIXELTYPES} )
+    set( whichList "ELASTIX_IMAGE_4D_PIXELTYPES" )
+  else()
+    message( FATAL_ERROR "ERROR: you selected ELASTIX_IMAGE_DIMENSIONS"
       " to include ${dim}, which is not supported!\n"
-      "Choose one of {${supportedDimensions}}." )
-  ENDIF()
+      "Choose a subset of {${supportedDimensions}}." )
+  endif()
+
+  # Sanity check if > 0 number of pixel types are requested
+  list( LENGTH pixelTypeList pixelTypeListLength )
+  if( ${pixelTypeListLength} EQUAL 0 )
+    message( FATAL_ERROR "ERROR: you should set one or more values"
+      " to ${whichList}!\n"
+      "Choose a subset of {${supportedTypes}}." )
+  endif()
 
   # Add types
-  FOREACH( type ${pixelTypeList} )
+  foreach( type ${pixelTypeList} )
     # Sanity check
-    LIST( FIND supportedTypes ${type} foundIndex )
-    IF( ${foundIndex} EQUAL -1 )
-      MESSAGE( FATAL_ERROR "WARNING: you selected ${whichList}"
+    list( FIND supportedTypes ${type} foundIndex )
+    if( ${foundIndex} EQUAL -1 )
+      message( FATAL_ERROR "ERROR: you selected ${whichList}"
         " to include ${type}, which is not supported!\n"
-        "Choose one of {${supportedTypes}}." )
-    ENDIF()
+        "Choose a subset of {${supportedTypes}}." )
+    endif()
 
     # Add type to supportString
-    SET( supportString
+    set( supportString
       "${supportString}  elxSupportedImageTypeMacro( ${type}, ${dim}, ${type}, ${dim}, ${index} );\n" )
 
     # Increase some variables
-    MATH( EXPR index "${index} + 1" )
-    MATH( EXPR numSupported "${numSupported} + 1" )
-  ENDFOREACH()
-ENDFOREACH()
+    math( EXPR index "${index} + 1" )
+    math( EXPR numSupported "${numSupported} + 1" )
+  endforeach()
+endforeach()
 
 # Prepend the string with the number of supported images.
-SET( supportString
+set( supportString
   "const unsigned int NrOfSupportedImageTypes = ${numSupported};\n\n${supportString}" )
 
 # Put the generated string in the elxSupportedImageTypes.h
 # header using configure_file.
-SET( UserDefinedSupportedImageTypes ${supportString} )
-CONFIGURE_FILE(
+set( UserDefinedSupportedImageTypes ${supportString} )
+configure_file(
   ${elastix_SOURCE_DIR}/Core/Install/elxSupportedImageTypes.h.in
   ${elastix_BINARY_DIR}/elxSupportedImageTypes.h
   @ONLY )

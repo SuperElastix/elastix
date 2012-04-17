@@ -4,5 +4,3 @@ ADD_ELXCOMPONENT( FullSampler
  elxFullSampler.hxx
  elxFullSampler.cxx )
 
-
-

@@ -167,14 +167,14 @@ public:
   void GetValueAndDerivative( const TransformParametersType & parameters,
     MeasureType & value, DerivativeType & derivative ) const;
 
-  /** Get value and derivatives for each thread. */
+  /** Get value and derivatives for each thread. *
   inline void ThreadedGetValueAndDerivative( ThreadIdType threadID );
 
-  /** Gather the values and derivatives from all threads */
+  /** Gather the values and derivatives from all threads *
   inline void AfterThreadedGetValueAndDerivative(
     MeasureType & value, DerivativeType & derivative )const;
 
-  /** ComputeDerivatives threader callback function */
+  /** ComputeDerivatives threader callback function *
   static ITK_THREAD_RETURN_TYPE ComputeDerivativesThreaderCallback( void * arg );
 
   /** Set/Get SubtractMean boolean. If true, the sample mean is subtracted
@@ -231,7 +231,7 @@ private:
 
   typedef typename NumericTraits< MeasureType >::AccumulateType   AccumulateType;
 
-  mutable std::vector< AccumulateType > m_ThreaderSff;
+  /*mutable std::vector< AccumulateType > m_ThreaderSff;
   mutable std::vector< AccumulateType > m_ThreaderSmm;
   mutable std::vector< AccumulateType > m_ThreaderSfm;
   mutable std::vector< AccumulateType > m_ThreaderSf ;
@@ -259,7 +259,7 @@ private:
 
     unsigned int numberOfParameters;
 
-  };
+  };*/
 }; // end class AdvancedNormalizedCorrelationImageToImageMetric
 
 } // end namespace itk

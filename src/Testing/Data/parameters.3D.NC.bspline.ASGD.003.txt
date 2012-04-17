@@ -36,7 +36,12 @@
 // ********** Optimizer
 
 // Maximum number of iterations in each resolution level:
-(MaximumNumberOfIterations 50)
+// Keep it low here to allow fast testing. Not recommended values!
+(MaximumNumberOfIterations 25 25 25)
+(NumberOfSamplesForExactGradient 10000)
+
+// For fast testing:
+(NumberOfJacobianMeasurements 2500 5000 10000)
 
 (AutomaticParameterEstimation "true")
 (UseAdaptiveStepSizes "true")
@@ -66,7 +71,7 @@
 
 //Number of spatial samples used to compute the mutual information in each resolution level:
 (ImageSampler "RandomCoordinate")
-(NumberOfSpatialSamples 2000)
+(NumberOfSpatialSamples 500)
 (NewSamplesEveryIteration "true")
 (UseRandomSampleRegion "false")
 //(SampleRegionSize 50.0 50.0 50.0)

@@ -78,10 +78,10 @@ public:
 
   /** Set the command line arguments in a vector of strings. */
   void SetCommandLineArguments( int argc, char **argv );
-  
+
   /** Ensure that all required arguments have been passed. */
   ReturnValue CheckForRequiredArguments() const;
-  
+
   /** Map to store the arguments and their indices. */
   typedef std::size_t                           IndexType;
   typedef std::map< std::string, IndexType >    ArgumentMapType;
@@ -89,7 +89,7 @@ public:
 
   /** Copy argv in a map. */
   void CreateArgumentMap( void );
-  
+
   /** Print all arguments. */
   void PrintAllArguments( void ) const;
 
@@ -185,7 +185,7 @@ public:
 
   }; // end GetCommandLineArgument()
 
-  /** Get command line argument if arg is not a vector type. 
+  /** Get command line argument if arg is not a vector type.
     * We do this by creating a 1D vector, using the GetCommandLineArgument
     * for vector types, and then returning the first element.
     */

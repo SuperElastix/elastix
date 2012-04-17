@@ -19,7 +19,8 @@
 #   ctest -S /.../Dashboards/ctest-scripts/my_dashboard.cmake -V
 #
 # By default the source and build trees will be placed in the path
-# "/.../Dashboards/MyTests/".
+# "/.../Dashboards/MyTests/". If it exists, the binary directory will
+# cleaned first, unless the dasboard_model is set to Experimental.
 #
 # The following variables may be set before including this script
 # to configure it:
@@ -91,7 +92,7 @@ endif()
 # Support initial checkout if necessary;
 if( NOT EXISTS "${CTEST_SOURCE_DIRECTORY}"
     AND NOT DEFINED CTEST_CHECKOUT_COMMAND
-    AND CTEST_UPDATE_COMMAND)
+    AND CTEST_UPDATE_COMMAND )
 
   #  set( CTEST_CHECKOUT_COMMAND
   #  "\"${CTEST_UPDATE_COMMAND}\" --non-interactive --trust-server-cert co --username elastixguest --password elastixguest \"${dashboard_url}\" ${CTEST_DASHBOARD_ROOT}" )

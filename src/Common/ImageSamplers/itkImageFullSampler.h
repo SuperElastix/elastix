@@ -19,7 +19,6 @@
 
 namespace itk
 {
-
 /** \class ImageFullSampler
  *
  * \brief Samples all voxels in the InputImageRegion.
@@ -101,7 +100,7 @@ protected:
   /** Multi-threaded function that does the work. */
   virtual void ThreadedGenerateData(
     const InputImageRegionType & inputRegionForThread,
-    ThreadIdType threadId ) ITK_NO_RETURN;
+    ThreadIdType threadId );
 
 private:
 

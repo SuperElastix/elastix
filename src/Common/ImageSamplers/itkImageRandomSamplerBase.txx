@@ -47,7 +47,7 @@ ImageRandomSamplerBase< TInputImage >
 {
   /** Create a random number generator. Also used in the ImageRandomConstIteratorWithIndex. */
   typedef typename Statistics::MersenneTwisterRandomVariateGenerator::Pointer GeneratorPointer;
-  GeneratorPointer localGenerator = Statistics::MersenneTwisterRandomVariateGenerator::New();
+  GeneratorPointer localGenerator = Statistics::MersenneTwisterRandomVariateGenerator::GetInstance();
   // \todo: should probably be global?
 
   /** Clear the random number list. */

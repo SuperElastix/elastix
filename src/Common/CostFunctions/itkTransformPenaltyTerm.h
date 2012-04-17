@@ -46,7 +46,7 @@ class TransformPenaltyTerm
 public:
 
   /** Standard ITK stuff. */
-  typedef TransformPenaltyTerm				    Self;
+  typedef TransformPenaltyTerm            Self;
   typedef AdvancedImageToImageMetric<
     TFixedImage, TFixedImage >            Superclass;
   typedef SmartPointer<Self>              Pointer;
@@ -93,7 +93,7 @@ public:
   typedef typename Superclass::ImageSampleContainerPointer ImageSampleContainerPointer;
 
   /** Template parameters. FixedImageType has already been taken from superclass. */
-  typedef TScalarType		ScalarType; // \todo: not really meaningful name.
+  typedef TScalarType   ScalarType; // \todo: not really meaningful name.
 
   /** Typedefs from the AdvancedTransform. */
   typedef typename Superclass
@@ -145,9 +145,9 @@ protected:
 private:
 
   /** The private constructor. */
-  TransformPenaltyTerm( const Self& );	// purposely not implemented
+  TransformPenaltyTerm( const Self& );  // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self& );			  // purposely not implemented
+  void operator=( const Self& );        // purposely not implemented
 
 }; // end class TransformPenaltyTerm
 

@@ -1,5 +1,4 @@
 
-
 ADD_ELXCOMPONENT( SplineKernelTransform
  elxSplineKernelTransform.h
  elxSplineKernelTransform.hxx
@@ -15,6 +14,5 @@ ADD_ELXCOMPONENT( SplineKernelTransform
  itkThinPlateSplineKernelTransform2.h
  itkThinPlateSplineKernelTransform2.txx
  itkVolumeSplineKernelTransform2.h
- itkVolumeSplineKernelTransform2.txx
-)
+ itkVolumeSplineKernelTransform2.txx )
 

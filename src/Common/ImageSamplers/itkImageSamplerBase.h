@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef __ImageSamplerBase_h
 #define __ImageSamplerBase_h
 
@@ -23,7 +22,6 @@
 
 namespace itk
 {
-
 /** \class ImageSamplerBase
  *
  * \brief This class is a base class for any image sampler.

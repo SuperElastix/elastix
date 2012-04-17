@@ -324,13 +324,13 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
 //     /** Try create the inverse of the initial transform. */
 //     InitialTransformPointer inverseT0 = InitialTransformType::New();
 //     bool T0invertable = this->m_InitialTransform->GetInverse( inverseT0 );
-// 
+//
 //     if ( T0invertable )
 //     {
 //       /** Try to create the inverse of the current transform. */
 //       CurrentTransformPointer inverseT1 = CurrentTransformType::New();
 //       bool T1invertable = this->m_CurrentTransform->GetInverse( inverseT1 );
-// 
+//
 //       if ( T1invertable )
 //       {
 //         /** The transform can be inverted! */
@@ -1414,21 +1414,6 @@ AdvancedCombinationTransform<TScalarType, NDimensions>
   return ((*this).*m_SelectedTransformPointFunction)( point );
 
 } // end TransformPoint()
-
-
-/**
- * ****************** GetJacobian ****************************
- *
-
-template <typename TScalarType, unsigned int NDimensions>
-const typename AdvancedCombinationTransform<TScalarType, NDimensions>::JacobianType &
-AdvancedCombinationTransform<TScalarType, NDimensions>
-::GetJacobian( const InputPointType & point ) const
-{
-  /** Call the selected GetJacobian. *
-  return ((*this).*m_SelectedGetJacobianFunction)( point );
-
-} // end GetJacobian()
 
 
 /**

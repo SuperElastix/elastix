@@ -46,7 +46,7 @@ ScaledSingleValuedCostFunction
   /** F(y)= f(y/s) */
 
   /** This function also checks if the UnscaledCostFunction has been set */
-  const NumberOfParametersType numberOfParameters = this->GetNumberOfParameters();
+  const unsigned int numberOfParameters = this->GetNumberOfParameters();
   if ( parameters.GetSize() != numberOfParameters )
   {
     itkExceptionMacro( << "Number of parameters is not like the unscaled cost function expects." );
@@ -86,7 +86,7 @@ ScaledSingleValuedCostFunction
   /** dF/dy(y)= 1/s * df/dx(y/s) */
 
   /** This function also checks if the UnscaledCostFunction has been set */
-  const NumberOfParametersType numberOfParameters = this->GetNumberOfParameters();
+  const unsigned int numberOfParameters = this->GetNumberOfParameters();
   if ( parameters.GetSize() != numberOfParameters )
   {
     itkExceptionMacro( << "Number of parameters is not like the unscaled cost function expects." );
@@ -131,7 +131,7 @@ ScaledSingleValuedCostFunction
   /** dF/dy(y)= 1/s * df/dx(y/s) */
 
   /** This function also checks if the UnscaledCostFunction has been set */
-  const NumberOfParametersType numberOfParameters = this->GetNumberOfParameters();
+  const unsigned int numberOfParameters = this->GetNumberOfParameters();
   if ( parameters.GetSize() != numberOfParameters )
   {
     itkExceptionMacro( << "Number of parameters is not like the unscaled cost function expects." );
@@ -168,9 +168,9 @@ ScaledSingleValuedCostFunction
  * **************** GetNumberOfParameters ************************
  */
 
-ScaledSingleValuedCostFunction::NumberOfParametersType
+unsigned int
 ScaledSingleValuedCostFunction
-::GetNumberOfParameters( void ) const
+::GetNumberOfParameters(void) const
 {
   if ( this->m_UnscaledCostFunction.IsNull() )
   {

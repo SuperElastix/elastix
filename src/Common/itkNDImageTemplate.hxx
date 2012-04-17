@@ -378,11 +378,11 @@ namespace itk
 
   template < class TPixel, unsigned int VDimension >
     const char * NDImageTemplate<TPixel, VDimension>::
-    GetInputFileName(void)
+    GetInputFileName( void )
   {
     if (this->m_Reader)
     {
-      return this->m_Reader->GetFileName();
+      return this->m_Reader->GetFileName().c_str();
     }
     else
     {

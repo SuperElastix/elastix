@@ -11,7 +11,6 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-
 #ifndef _itkMultiInputMultiResolutionImageRegistrationMethodBase_txx
 #define _itkMultiInputMultiResolutionImageRegistrationMethodBase_txx
 
@@ -548,20 +547,6 @@ namespace itk
         this->SetInitialTransformParametersOfNextLevel(
           this->m_LastTransformParameters );
       }
-
-      // Remove pyramid output of current level to release memory
-      // This will generate a bug, and will also cause the pyramids to be re-run
-      // every resolution.
-      /*for ( unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i )
-      {
-        this->GetFixedImagePyramid( i )->GetOutput( currentLevel )
-          ->ReleaseData();
-      }
-      for ( unsigned int i = 0; i < this->GetNumberOfMovingImagePyramids(); ++i )
-      {
-        this->GetMovingImagePyramid( i )->GetOutput( currentLevel )
-          ->ReleaseData();
-      }*/
 
     } // end for loop over res levels
 

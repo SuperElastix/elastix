@@ -330,5 +330,4 @@ MetricBase<TElastix>
 
 } // end namespace elastix
 
-
 #endif // end #ifndef __elxMetricBase_hxx

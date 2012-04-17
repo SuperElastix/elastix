@@ -119,7 +119,7 @@ protected:
   virtual void BeforeThreadedGenerateData( void );
   virtual void ThreadedGenerateData(
     const InputImageRegionType & inputRegionForThread,
-    ThreadIdType threadId ) ITK_NO_RETURN;
+    ThreadIdType threadId );
 
   /** Generate a point randomly in a bounding box. */
   virtual void GenerateRandomCoordinate(

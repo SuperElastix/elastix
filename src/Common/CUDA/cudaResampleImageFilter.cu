@@ -545,6 +545,8 @@ TOutputImageType* cuda
     break;
   case cudaMemcpyDeviceToDevice:
     break;
+  case cudaMemcpyDefault:
+    break;
   }
 
   return dst;

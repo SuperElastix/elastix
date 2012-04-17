@@ -359,7 +359,7 @@ TransformRigidityPenaltyTerm< TFixedImage, TScalarType >
   movingValue = NumericTraits<RigidityPixelType>::Zero;
   in = NumericTraits<RigidityPixelType>::Zero;
   bool isInFixedImage = false;
-  bool	isInMovingImage = false;
+  bool isInMovingImage = false;
   while ( !it.IsAtEnd() )
   {
     /** Get current pixel in world coordinates. */

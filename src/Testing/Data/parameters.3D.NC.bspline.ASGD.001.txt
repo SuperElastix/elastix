@@ -1,3 +1,6 @@
+// This parameter file has kind of realistic values.
+// In most other parameter files for testing, the number of samples and iterations is rather low, to allow fast testing.
+
 // ********** Image Types
 
 (FixedInternalImagePixelType "float")
