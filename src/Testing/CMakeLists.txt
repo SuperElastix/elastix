@@ -103,7 +103,7 @@ elseif( SITE STREQUAL "BIGR.PCStefan"
   set( checksumBaselineFile ${TestBaselineDir}/checksums_BIGR.PCStefan_WinXP-32bit-VS2008.txt )
   set( knownChecksumSystem true )
 elseif( SITE STREQUAL "BIGR.cluster"
-    AND BUILDNAME STREQUAL "Linux-64bit-gcc4.1.2" )
+    AND BUILDNAME STREQUAL "Linux-64bit-gcc4.4.6" )
   set( checksumBaselineFile ${TestBaselineDir}/checksums_BIGR.cluster_Linux-64bit-gcc4.txt )
   set( knownChecksumSystem true )
 endif()
