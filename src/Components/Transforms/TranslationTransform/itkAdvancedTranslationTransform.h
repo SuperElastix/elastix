@@ -66,7 +66,7 @@ public:
 
   /** Standard parameters container. */
   typedef typename Superclass::ParametersType ParametersType;
-  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
+//  typedef typename Superclass::NumberOfParametersType NumberOfParametersType;
 
   /** Standard Jacobian container. */
   typedef typename Superclass::JacobianType JacobianType;

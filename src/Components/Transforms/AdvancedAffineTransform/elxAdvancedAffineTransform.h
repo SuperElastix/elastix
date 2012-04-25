@@ -125,7 +125,7 @@ using namespace itk;
     typedef typename Superclass1::OutputVnlVectorType       OutputVnlVectorType;
     typedef typename Superclass1::InputPointType            InputPointType;
     typedef typename Superclass1::OutputPointType           OutputPointType;
-    typedef typename Superclass1::NumberOfParametersType    NumberOfParametersType;
+//    typedef typename Superclass1::NumberOfParametersType    NumberOfParametersType;
 
     /** Typedef's from the TransformBase class. */
     typedef typename Superclass2::ElastixType               ElastixType;

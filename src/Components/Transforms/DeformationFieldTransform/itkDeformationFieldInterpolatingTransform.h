@@ -80,14 +80,14 @@ namespace itk
     typedef typename Superclass::JacobianOfSpatialHessianType   JacobianOfSpatialHessianType;
     typedef typename Superclass::JacobianOfSpatialJacobianType  JacobianOfSpatialJacobianType;
 
-    typedef typename Superclass
-      ::NonZeroJacobianIndicesType                      NonZeroJacobianIndicesType;
-    typedef typename Superclass::SpatialJacobianType    SpatialJacobianType;
-    typedef typename Superclass
-      ::JacobianOfSpatialJacobianType                   JacobianOfSpatialJacobianType;
-    typedef typename Superclass::SpatialHessianType     SpatialHessianType;
-    typedef typename Superclass
-      ::JacobianOfSpatialHessianType                    JacobianOfSpatialHessianType;
+//    typedef typename Superclass
+//      ::NonZeroJacobianIndicesType                      NonZeroJacobianIndicesType;
+//    typedef typename Superclass::SpatialJacobianType    SpatialJacobianType;
+//    typedef typename Superclass
+//      ::JacobianOfSpatialJacobianType                   JacobianOfSpatialJacobianType;
+//    typedef typename Superclass::SpatialHessianType     SpatialHessianType;
+//    typedef typename Superclass
+//      ::JacobianOfSpatialHessianType                    JacobianOfSpatialHessianType;
     typedef typename Superclass::InternalMatrixType     InternalMatrixType;
 
     typedef TComponentType                              DeformationFieldComponentType;

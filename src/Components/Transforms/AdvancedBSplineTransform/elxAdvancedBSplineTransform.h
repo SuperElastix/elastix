@@ -183,7 +183,7 @@ public:
   typedef typename Superclass1::OutputVnlVectorType       OutputVnlVectorType;
   typedef typename Superclass1::InputPointType            InputPointType;
   typedef typename Superclass1::OutputPointType           OutputPointType;
-  typedef typename Superclass1::NumberOfParametersType    NumberOfParametersType;
+//  typedef typename Superclass1::NumberOfParametersType    NumberOfParametersType;
 
   /** Typedef's specific for the BSplineTransform. */
   typedef typename BSplineTransformBaseType::PixelType        PixelType;
