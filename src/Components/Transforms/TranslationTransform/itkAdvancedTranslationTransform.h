@@ -24,8 +24,6 @@
 #include "itkMatrix.h"
 
 
-
-
 namespace itk
 {
 
@@ -37,10 +35,10 @@ namespace itk
  * \ingroup Transforms
  */
 template <
-    class TScalarType=double,          // Data type for scalars (float or double)
-    unsigned int NDimensions=3>        // Number of dimensions
+  class TScalarType=double,          // Data type for scalars (float or double)
+  unsigned int NDimensions=3>        // Number of dimensions
 class ITK_EXPORT AdvancedTranslationTransform :
-          public AdvancedTransform< TScalarType, NDimensions, NDimensions >
+  public AdvancedTransform< TScalarType, NDimensions, NDimensions >
 {
 public:
   /** Standard class typedefs. */
@@ -58,8 +56,6 @@ public:
   /** Dimension of the domain space. */
   itkStaticConstMacro(SpaceDimension, unsigned int, NDimensions);
   itkStaticConstMacro(ParametersDimension, unsigned int, NDimensions);
-
-  typedef typename Superclass::NumberOfParametersType    NumberOfParametersType;
 
   /** Standard scalar type for this class. */
   typedef typename Superclass::ScalarType ScalarType;

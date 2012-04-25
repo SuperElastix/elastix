@@ -127,7 +127,6 @@ using namespace itk;
     typedef typename Superclass1::OutputCovariantVectorType   OutputCovariantVectorType;
     typedef typename Superclass1::InputVnlVectorType          InputVnlVectorType;
     typedef typename Superclass1::OutputVnlVectorType         OutputVnlVectorType;
-//    typedef typename Superclass1::NumberOfParametersType      NumberOfParametersType;
 
     typedef typename AffineDTITransformType::Pointer          AffineDTITransformPointer;
     typedef typename AffineDTITransformType::OffsetType       OffsetType;
