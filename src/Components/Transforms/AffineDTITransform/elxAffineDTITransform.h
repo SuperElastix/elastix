@@ -22,7 +22,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
   /**
    * \class AffineDTITransformElastix
@@ -74,7 +73,7 @@ using namespace itk;
 
   template < class TElastix >
     class AffineDTITransformElastix:
-      public AdvancedCombinationTransform<
+      public itk::AdvancedCombinationTransform<
         typename elx::TransformBase< TElastix >::CoordRepType,
         elx::TransformBase< TElastix >::FixedImageDimension >,
       public elx::TransformBase< TElastix >
@@ -87,12 +86,12 @@ using namespace itk;
       typename elx::TransformBase< TElastix >::CoordRepType,
       elx::TransformBase< TElastix >::FixedImageDimension >     Superclass1;
     typedef elx::TransformBase< TElastix >                      Superclass2;
-    typedef SmartPointer<Self>                                  Pointer;
-    typedef SmartPointer<const Self>                            ConstPointer;
+    typedef itk::SmartPointer<Self>                                  Pointer;
+    typedef itk::SmartPointer<const Self>                            ConstPointer;
 
     /** The ITK-class that provides most of the functionality, and
      * that is set as the "CurrentTransform" in the CombinationTransform */
-    typedef AffineDTITransform<
+    typedef itk::AffineDTITransform<
       typename elx::TransformBase< TElastix >::CoordRepType,
       elx::TransformBase< TElastix >::FixedImageDimension >     AffineDTITransformType;
 
@@ -153,7 +152,7 @@ using namespace itk;
     typedef typename FixedImageType::RegionType             RegionType;
     typedef typename FixedImageType::DirectionType          DirectionType;
 
-    typedef CenteredTransformInitializer<
+    typedef itk::CenteredTransformInitializer<
       AffineDTITransformType, FixedImageType, MovingImageType>  TransformInitializerType;
     typedef typename TransformInitializerType::Pointer      TransformInitializerPointer;
 

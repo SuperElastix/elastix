@@ -20,7 +20,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
   /**
    * \class FixedRecursivePyramid
@@ -36,7 +35,7 @@ using namespace itk;
   template <class TElastix>
     class FixedRecursivePyramid :
     public
-      RecursiveMultiResolutionPyramidImageFilter<
+      itk::RecursiveMultiResolutionPyramidImageFilter<
         typename FixedImagePyramidBase<TElastix>::InputImageType,
         typename FixedImagePyramidBase<TElastix>::OutputImageType >,
     public
@@ -46,18 +45,18 @@ using namespace itk;
 
     /** Standard ITK-stuff. */
     typedef FixedRecursivePyramid                                   Self;
-    typedef RecursiveMultiResolutionPyramidImageFilter<
+    typedef itk::RecursiveMultiResolutionPyramidImageFilter<
         typename FixedImagePyramidBase<TElastix>::InputImageType,
         typename FixedImagePyramidBase<TElastix>::OutputImageType > Superclass1;
     typedef FixedImagePyramidBase<TElastix>                         Superclass2;
-    typedef SmartPointer<Self>                                      Pointer;
-    typedef SmartPointer<const Self>                                ConstPointer;
+    typedef itk::SmartPointer<Self>                                 Pointer;
+    typedef itk::SmartPointer<const Self>                           ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( FixedRecursivePyramid, RecursiveMultiResolutionPyramidImageFilter );
+    itkTypeMacro( FixedRecursivePyramid, itk::RecursiveMultiResolutionPyramidImageFilter );
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific pyramid. \n

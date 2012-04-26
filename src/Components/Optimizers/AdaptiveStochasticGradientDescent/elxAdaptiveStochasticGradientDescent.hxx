@@ -32,7 +32,6 @@
 
 namespace elastix
 {
-  using namespace itk;
 
 /**
  * ********************** Constructor ***********************
@@ -429,7 +428,7 @@ AdaptiveStochasticGradientDescent<TElastix>
 template <class TElastix>
 void
 AdaptiveStochasticGradientDescent<TElastix>
-::MetricErrorResponse( ExceptionObject & err )
+::MetricErrorResponse( itk::ExceptionObject & err )
 {
   if ( this->GetCurrentIteration() != this->m_PreviousErrorAtIteration )
   {
@@ -794,11 +793,11 @@ AdaptiveStochasticGradientDescent<TElastix>
    */
 
   typedef double                                      CovarianceValueType;
-  typedef Array2D<CovarianceValueType>                CovarianceMatrixType;
+  typedef itk::Array2D<CovarianceValueType>           CovarianceMatrixType;
   typedef vnl_sparse_matrix<CovarianceValueType>      SparseCovarianceMatrixType;
   typedef typename SparseCovarianceMatrixType::row    SparseRowType;
   typedef typename SparseCovarianceMatrixType::pair_t SparseCovarianceElementType;
-  typedef Array<SizeValueType>                        NonZeroJacobianIndicesExpandedType;
+  typedef itk::Array<SizeValueType>                   NonZeroJacobianIndicesExpandedType;
   typedef vnl_diag_matrix<CovarianceValueType>        DiagCovarianceMatrixType;
   typedef vnl_vector<CovarianceValueType>             JacobianColumnType;
 
@@ -1412,7 +1411,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   {
     this->GetScaledValueAndDerivative( parameters, dummyvalue, derivative );
   }
-  catch ( ExceptionObject & err )
+  catch ( itk::ExceptionObject & err )
   {
     this->m_StopCondition = MetricError;
     this->StopOptimization();

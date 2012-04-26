@@ -21,7 +21,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 /**
  * \class GradientDifferenceMetric
@@ -35,7 +34,7 @@ using namespace itk;
 template <class TElastix >
 class GradientDifferenceMetric:
 public
-GradientDifferenceImageToImageMetric<
+itk::GradientDifferenceImageToImageMetric<
   typename MetricBase<TElastix>::FixedImageType,
   typename MetricBase<TElastix>::MovingImageType >,
   public MetricBase<TElastix>
@@ -43,13 +42,13 @@ GradientDifferenceImageToImageMetric<
 public:
 
   /** Standard ITK-stuff. */
-  typedef GradientDifferenceMetric                             Self;
-  typedef GradientDifferenceImageToImageMetric<
+  typedef GradientDifferenceMetric                      Self;
+  typedef itk::GradientDifferenceImageToImageMetric<
     typename MetricBase<TElastix>::FixedImageType,
     typename MetricBase<TElastix>::MovingImageType >    Superclass1;
   typedef MetricBase<TElastix>                          Superclass2;
-  typedef SmartPointer<Self>                            Pointer;
-  typedef SmartPointer<const Self>                      ConstPointer;
+  typedef itk::SmartPointer<Self>                       Pointer;
+  typedef itk::SmartPointer<const Self>                 ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -135,7 +134,7 @@ public:
   /** Sets up a timer to measure the initialisation time and
    * calls the Superclass' implementation.
    */
-  virtual void Initialize(void) throw (ExceptionObject);
+  virtual void Initialize(void) throw (itk::ExceptionObject);
 
   /**
    * Do some things before each resolution:

@@ -21,7 +21,6 @@
 
 namespace elastix
 {
-  using namespace itk;
 
   /**
    * \class BaseComponentSE

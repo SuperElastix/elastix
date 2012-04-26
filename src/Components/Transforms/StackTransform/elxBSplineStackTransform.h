@@ -28,7 +28,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 /**
  * \class BSplineStackTransform
@@ -107,7 +106,7 @@ using namespace itk;
 template < class TElastix >
 class BSplineStackTransform
   : public
-  AdvancedCombinationTransform<
+  itk::AdvancedCombinationTransform<
   typename elx::TransformBase<TElastix>::CoordRepType,
   elx::TransformBase<TElastix>::FixedImageDimension > ,
   public
@@ -116,19 +115,19 @@ class BSplineStackTransform
 public:
 
   /** Standard ITK-stuff. */
-  typedef BSplineStackTransform                   Self;
-  typedef AdvancedCombinationTransform<
+  typedef BSplineStackTransform                         Self;
+  typedef itk::AdvancedCombinationTransform<
     typename elx::TransformBase<TElastix>::CoordRepType,
     elx::TransformBase<TElastix>::FixedImageDimension > Superclass1;
-  typedef elx::TransformBase<TElastix>            Superclass2;
-  typedef SmartPointer<Self>                      Pointer;
-  typedef SmartPointer<const Self>                ConstPointer;
+  typedef elx::TransformBase<TElastix>                  Superclass2;
+  typedef itk::SmartPointer<Self>                       Pointer;
+  typedef itk::SmartPointer<const Self>                 ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( BSplineStackTransform, AdvancedCombinationTransform );
+  itkTypeMacro( BSplineStackTransform, itk::AdvancedCombinationTransform );
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific transform. \n
@@ -204,9 +203,9 @@ public:
   typedef typename Superclass2::CombinationTransformType  CombinationTransformType;
 
   /** Reduced dimension image typedefs. */
-  typedef Image< PixelType,
+  typedef itk::Image< PixelType,
     itkGetStaticConstMacro( ReducedSpaceDimension )>         ReducedDimensionImageType;
-  typedef ImageRegion<
+  typedef itk::ImageRegion<
     itkGetStaticConstMacro( ReducedSpaceDimension ) >        ReducedDimensionRegionType;
   typedef typename ReducedDimensionRegionType::SizeType      ReducedDimensionSizeType;
   typedef typename ReducedDimensionRegionType::IndexType     ReducedDimensionIndexType;
@@ -215,12 +214,12 @@ public:
   typedef typename ReducedDimensionImageType::PointType      ReducedDimensionOriginType;
 
   /** Typedef's for the GridScheduleComputer and the UpsampleBSplineParametersFilter. */
-  typedef GridScheduleComputer<
+  typedef itk::GridScheduleComputer<
     CoordRepType, ReducedSpaceDimension >                 GridScheduleComputerType;
   typedef typename GridScheduleComputerType::Pointer      GridScheduleComputerPointer;
   typedef typename GridScheduleComputerType
     ::VectorGridSpacingFactorType                         GridScheduleType;
-  typedef UpsampleBSplineParametersFilter<
+  typedef itk::UpsampleBSplineParametersFilter<
     ParametersType, ReducedDimensionImageType >           GridUpsamplerType;
   typedef typename GridUpsamplerType::Pointer             GridUpsamplerPointer;
 

@@ -19,7 +19,6 @@
 
 namespace elastix
 {
-  using namespace itk;
 
   /**
    * ********************* Constructor ****************************
@@ -54,7 +53,7 @@ namespace elastix
           this->m_Elastix->GetElxRegistrationBase() );
       }
 
-      Object * thisasobject = dynamic_cast<Object *>(this);
+      itk::Object * thisasobject = dynamic_cast<itk::Object *>(this);
       if ( thisasobject )
       {
         thisasobject->Modified();
@@ -78,7 +77,7 @@ namespace elastix
     {
       this->m_Configuration = _arg;
 
-      Object * thisasobject = dynamic_cast<Object *>(this);
+      itk::Object * thisasobject = dynamic_cast<itk::Object *>(this);
       if ( thisasobject )
       {
         thisasobject->Modified();

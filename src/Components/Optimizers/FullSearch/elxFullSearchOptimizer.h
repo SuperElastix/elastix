@@ -25,7 +25,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
   /**
    * \class FullSearch
@@ -56,24 +55,24 @@ using namespace itk;
   template <class TElastix>
     class FullSearch :
     public
-      FullSearchOptimizer,
+    itk::FullSearchOptimizer,
     public
       OptimizerBase<TElastix>
   {
   public:
 
     /** Standard ITK.*/
-    typedef FullSearch                          Self;
-    typedef FullSearchOptimizer                 Superclass1;
-    typedef OptimizerBase<TElastix>             Superclass2;
-    typedef SmartPointer<Self>                  Pointer;
-    typedef SmartPointer<const Self>            ConstPointer;
+    typedef FullSearch                               Self;
+    typedef itk::FullSearchOptimizer                 Superclass1;
+    typedef OptimizerBase<TElastix>                  Superclass2;
+    typedef itk::SmartPointer<Self>                  Pointer;
+    typedef itk::SmartPointer<const Self>            ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( FullSearch, FullSearchOptimizer );
+    itkTypeMacro( FullSearch, itk::FullSearchOptimizer );
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific optimizer. \n
@@ -106,7 +105,7 @@ using namespace itk;
     typedef typename Superclass2::ITKBaseType           ITKBaseType;
 
     /** To store the results of the full search */
-    typedef NDImageBase<float>                          NDImageType;
+    typedef itk::NDImageBase<float>                          NDImageType;
     typedef typename NDImageType::Pointer               NDImagePointer;
 
     /** To store the names of the search space dimensions */

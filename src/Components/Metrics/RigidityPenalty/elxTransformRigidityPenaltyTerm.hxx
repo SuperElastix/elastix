@@ -36,12 +36,12 @@ TransformRigidityPenalty<TElastix>
   this->GetConfiguration()->ReadParameter( fixedRigidityImageName,
     "FixedRigidityImageName", this->GetComponentLabel(), 0, -1, false );
 
-  typedef typename Superclass1::RigidityImageType RigidityImageType;
-  typedef ImageFileReader<RigidityImageType> RigidityImageReaderType;
+  typedef typename Superclass1::RigidityImageType              RigidityImageType;
+  typedef itk::ImageFileReader<RigidityImageType>              RigidityImageReaderType;
   typename RigidityImageReaderType::Pointer fixedRigidityReader;
-  typedef ChangeInformationImageFilter<RigidityImageType> ChangeInfoFilterType;
-  typedef typename ChangeInfoFilterType::Pointer  ChangeInfoFilterPointer;
-  typedef typename RigidityImageType::DirectionType        DirectionType;
+  typedef itk::ChangeInformationImageFilter<RigidityImageType> ChangeInfoFilterType;
+  typedef typename ChangeInfoFilterType::Pointer               ChangeInfoFilterPointer;
+  typedef typename RigidityImageType::DirectionType            DirectionType;
 
   if ( fixedRigidityImageName != "" )
   {
@@ -65,7 +65,7 @@ TransformRigidityPenalty<TElastix>
     {
       infoChanger->Update();
     }
-    catch( ExceptionObject & excp )
+    catch( itk::ExceptionObject & excp )
     {
       /** Add information to the exception. */
       excp.SetLocation( "MattesMutualInformationWithRigidityPenalty - BeforeRegistration()" );
@@ -112,7 +112,7 @@ TransformRigidityPenalty<TElastix>
     {
       infoChanger->Update();
     }
-    catch( ExceptionObject & excp )
+    catch( itk::ExceptionObject & excp )
     {
       /** Add information to the exception. */
       excp.SetLocation( "MattesMutualInformationWithRigidityPenalty - BeforeRegistration()" );
@@ -172,7 +172,7 @@ TransformRigidityPenalty<TElastix>
 template <class TElastix>
 void
 TransformRigidityPenalty<TElastix>
-::Initialize( void ) throw (ExceptionObject)
+::Initialize( void ) throw (itk::ExceptionObject)
 {
   /** Create and start a timer. */
   TimerPointer timer = TimerType::New();

@@ -20,7 +20,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
   /**
    * \class RSGDEachParameterApart
@@ -79,8 +78,8 @@ using namespace itk;
     typedef RSGDEachParameterApart              Self;
     typedef RSGDEachParameterApartOptimizer     Superclass1;
     typedef OptimizerBase<TElastix>             Superclass2;
-    typedef SmartPointer<Self>                  Pointer;
-    typedef SmartPointer<const Self>            ConstPointer;
+    typedef itk::SmartPointer<Self>             Pointer;
+    typedef itk::SmartPointer<const Self>       ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );

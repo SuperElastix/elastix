@@ -20,7 +20,6 @@
 
 namespace elastix
 {
-  using namespace itk;
 
 
   /**
@@ -76,8 +75,8 @@ namespace elastix
     typedef StandardGradientDescent             Self;
     typedef StandardGradientDescentOptimizer    Superclass1;
     typedef OptimizerBase<TElastix>             Superclass2;
-    typedef SmartPointer<Self>                  Pointer;
-    typedef SmartPointer<const Self>            ConstPointer;
+    typedef itk::SmartPointer<Self>             Pointer;
+    typedef itk::SmartPointer<const Self>       ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -121,7 +120,7 @@ namespace elastix
     virtual void StartOptimization( void );
 
     /** Stop optimisation and pass on exception. */
-    virtual void MetricErrorResponse( ExceptionObject & err );
+    virtual void MetricErrorResponse( itk::ExceptionObject & err );
 
     /** Add SetCurrentPositionPublic, which calls the protected
     * SetCurrentPosition of the itkStandardGradientDescentOptimizer class.

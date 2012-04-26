@@ -20,7 +20,6 @@
 
 namespace elastix
 {
-  using namespace itk;
 
   /**
   * \class ReducedDimensionBSplineResampleInterpolator
@@ -51,7 +50,7 @@ namespace elastix
   template < class TElastix >
   class ReducedDimensionBSplineResampleInterpolator :
     public
-    ReducedDimensionBSplineInterpolateImageFunction<
+    itk::ReducedDimensionBSplineInterpolateImageFunction<
     typename ResampleInterpolatorBase<TElastix>::InputImageType,
     typename ResampleInterpolatorBase<TElastix>::CoordRepType,
     double >, //CoefficientType
@@ -61,19 +60,19 @@ namespace elastix
 
     /** Standard ITK-stuff. */
     typedef ReducedDimensionBSplineResampleInterpolator  Self;
-    typedef BSplineInterpolateImageFunction<
+    typedef itk::BSplineInterpolateImageFunction<
       typename ResampleInterpolatorBase<TElastix>::InputImageType,
       typename ResampleInterpolatorBase<TElastix>::CoordRepType,
       double >                                    Superclass1;
     typedef ResampleInterpolatorBase<TElastix>    Superclass2;
-    typedef SmartPointer<Self>                    Pointer;
-    typedef SmartPointer<const Self>              ConstPointer;
+    typedef itk::SmartPointer<Self>               Pointer;
+    typedef itk::SmartPointer<const Self>         ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( ReducedDimensionBSplineResampleInterpolator, ReducedDimensionBSplineInterpolateImageFunction );
+    itkTypeMacro( ReducedDimensionBSplineResampleInterpolator, itk::ReducedDimensionBSplineInterpolateImageFunction );
 
     /** Name of this class.
     * Use this name in the parameter file to select this specific resample interpolator. \n

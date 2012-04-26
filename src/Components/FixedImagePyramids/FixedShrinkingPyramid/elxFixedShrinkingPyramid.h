@@ -21,7 +21,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
   /**
    * \class FixedShrinkingPyramid
@@ -37,7 +36,7 @@ using namespace itk;
   template <class TElastix>
     class FixedShrinkingPyramid :
     public
-      MultiResolutionShrinkPyramidImageFilter<
+      itk::MultiResolutionShrinkPyramidImageFilter<
         typename FixedImagePyramidBase<TElastix>::InputImageType,
         typename FixedImagePyramidBase<TElastix>::OutputImageType >,
     public
@@ -47,18 +46,18 @@ using namespace itk;
 
     /** Standard ITK-stuff. */
     typedef FixedShrinkingPyramid                                   Self;
-    typedef MultiResolutionShrinkPyramidImageFilter<
+    typedef itk::MultiResolutionShrinkPyramidImageFilter<
         typename FixedImagePyramidBase<TElastix>::InputImageType,
         typename FixedImagePyramidBase<TElastix>::OutputImageType > Superclass1;
     typedef FixedImagePyramidBase<TElastix>                         Superclass2;
-    typedef SmartPointer<Self>                                      Pointer;
-    typedef SmartPointer<const Self>                                ConstPointer;
+    typedef itk::SmartPointer<Self>                                 Pointer;
+    typedef itk::SmartPointer<const Self>                           ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( FixedShrinkingPyramid, MultiResolutionShrinkPyramidImageFilter );
+    itkTypeMacro( FixedShrinkingPyramid, itk::MultiResolutionShrinkPyramidImageFilter );
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific pyramid. \n

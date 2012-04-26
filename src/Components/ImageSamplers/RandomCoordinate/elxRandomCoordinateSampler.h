@@ -20,7 +20,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 /**
  * \class RandomCoordinateSampler
@@ -75,7 +74,7 @@ using namespace itk;
 template < class TElastix >
 class RandomCoordinateSampler :
   public
-  ImageRandomCoordinateSampler<
+  itk::ImageRandomCoordinateSampler<
   typename elx::ImageSamplerBase<TElastix>::InputImageType >,
   public
   elx::ImageSamplerBase<TElastix>
@@ -83,15 +82,16 @@ class RandomCoordinateSampler :
 public:
 
   /** Standard ITK-stuff. */
-  typedef RandomCoordinateSampler             Self;
-  typedef ImageRandomCoordinateSampler<
-    typename elx::ImageSamplerBase<TElastix>::InputImageType >  Superclass1;
-  typedef elx::ImageSamplerBase<TElastix>     Superclass2;
-  typedef SmartPointer<Self>                  Pointer;
-  typedef SmartPointer<const Self>            ConstPointer;
+  typedef RandomCoordinateSampler                  Self;
+  typedef itk::ImageRandomCoordinateSampler<
+    typename elx::ImageSamplerBase<TElastix>::InputImageType >
+                                                   Superclass1;
+  typedef elx::ImageSamplerBase<TElastix>          Superclass2;
+  typedef itk::SmartPointer<Self>                  Pointer;
+  typedef itk::SmartPointer<const Self>            ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( RandomCoordinateSampler, ImageRandomCoordinateSampler );

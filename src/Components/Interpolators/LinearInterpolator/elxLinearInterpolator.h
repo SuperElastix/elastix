@@ -21,7 +21,6 @@
 namespace elastix
 {
 
-using namespace itk;
 
   /**
    * \class LinearInterpolator
@@ -57,7 +56,7 @@ using namespace itk;
   template < class TElastix >
     class LinearInterpolator :
     public
-      LinearInterpolateImageFunction<
+      itk::LinearInterpolateImageFunction<
         typename InterpolatorBase<TElastix>::InputImageType,
         typename InterpolatorBase<TElastix>::CoordRepType >,
     public
@@ -67,18 +66,19 @@ using namespace itk;
 
     /** Standard ITK-stuff. */
     typedef LinearInterpolator                  Self;
-    typedef LinearInterpolateImageFunction<
+    typedef itk::LinearInterpolateImageFunction<
       typename InterpolatorBase<TElastix>::InputImageType,
-      typename InterpolatorBase<TElastix>::CoordRepType > Superclass1;
+      typename InterpolatorBase<TElastix>::CoordRepType >
+                                                Superclass1;
     typedef InterpolatorBase<TElastix>          Superclass2;
-    typedef SmartPointer<Self>                  Pointer;
-    typedef SmartPointer<const Self>            ConstPointer;
+    typedef itk::SmartPointer<Self>             Pointer;
+    typedef itk::SmartPointer<const Self>       ConstPointer;
 
     /** Method for creation through the object factory. */
-    itkNewMacro( Self );
+    itkNewMacro(Self);
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( LinearInterpolator, LinearInterpolateImageFunction );
+    itkTypeMacro( LinearInterpolator, itk::LinearInterpolateImageFunction );
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific interpolator. \n

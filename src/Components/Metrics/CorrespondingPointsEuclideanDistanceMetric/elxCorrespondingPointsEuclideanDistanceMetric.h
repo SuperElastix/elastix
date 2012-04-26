@@ -22,7 +22,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 /**
  * \class CorrespondingPointsEuclideanDistanceMetric
@@ -39,7 +38,7 @@ using namespace itk;
 template <class TElastix >
 class CorrespondingPointsEuclideanDistanceMetric
   : public
-  CorrespondingPointsEuclideanDistancePointMetric<
+  itk::CorrespondingPointsEuclideanDistancePointMetric<
     typename MetricBase<TElastix>::FixedPointSetType,
     typename MetricBase<TElastix>::MovingPointSetType >,
   public MetricBase<TElastix>
@@ -48,19 +47,19 @@ public:
 
   /** Standard ITK-stuff. */
   typedef CorrespondingPointsEuclideanDistanceMetric    Self;
-  typedef CorrespondingPointsEuclideanDistancePointMetric<
+  typedef itk::CorrespondingPointsEuclideanDistancePointMetric<
     typename MetricBase<TElastix>::FixedPointSetType,
     typename MetricBase<TElastix>::MovingPointSetType > Superclass1;
   typedef MetricBase<TElastix>                          Superclass2;
-  typedef SmartPointer<Self>                            Pointer;
-  typedef SmartPointer<const Self>                      ConstPointer;
+  typedef itk::SmartPointer<Self>                       Pointer;
+  typedef itk::SmartPointer<const Self>                 ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( CorrespondingPointsEuclideanDistanceMetric,
-    CorrespondingPointsEuclideanDistancePointMetric );
+     itk::CorrespondingPointsEuclideanDistancePointMetric );
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific metric. \n
@@ -123,7 +122,7 @@ public:
   /** Sets up a timer to measure the initialization time and calls the
    * Superclass' implementation.
    */
-  virtual void Initialize( void ) throw ( ExceptionObject );
+  virtual void Initialize( void ) throw ( itk::ExceptionObject );
 
   /**
    * Do some things before all:

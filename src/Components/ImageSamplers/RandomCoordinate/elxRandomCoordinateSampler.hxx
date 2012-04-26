@@ -20,7 +20,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 
 /**
@@ -47,7 +46,7 @@ RandomCoordinateSampler<TElastix>
     "FixedImageBSplineInterpolationOrder", this->GetComponentLabel(), level, 0 );
   if ( splineOrder == 1 )
   {
-    typedef LinearInterpolateImageFunction<
+    typedef itk::LinearInterpolateImageFunction<
       InputImageType, CoordRepType >    LinearInterpolatorType;
     typename LinearInterpolatorType::Pointer fixedImageLinearInterpolator
       = LinearInterpolatorType::New();

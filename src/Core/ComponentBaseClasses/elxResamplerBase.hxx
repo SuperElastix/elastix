@@ -23,7 +23,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 /*
  * ******************* BeforeRegistrationBase *******************
@@ -55,7 +54,7 @@ ResamplerBase<TElastix>
   /** Set the DefaultPixelValue (for pixels in the resampled image
    * that come from outside the original (moving) image.
    */
-  double defaultPixelValue = NumericTraits<double>::Zero;
+  double defaultPixelValue = itk::NumericTraits<double>::Zero;
   bool found = this->m_Configuration->ReadParameter(
     defaultPixelValue, "DefaultPixelValue", 0, false );
 
@@ -295,9 +294,9 @@ ResamplerBase<TElastix>
     doCompression, "CompressResultImage", 0, false );
 
   /** Typedef's for writing the output image. */
-  typedef ImageFileCastWriter< OutputImageType >  WriterType;
+  typedef itk::ImageFileCastWriter< OutputImageType >  WriterType;
   typedef typename WriterType::Pointer            WriterPointer;
-  typedef ChangeInformationImageFilter<
+  typedef itk::ChangeInformationImageFilter<
     OutputImageType >                             ChangeInfoFilterType;
 
   /** Possibly change direction cosines to their original value, as specified
@@ -420,7 +419,7 @@ ResamplerBase<TElastix>
   /** Set the DefaultPixelValue (for pixels in the resampled image
    * that come from outside the original (moving) image.
    */
-  double defaultPixelValue = NumericTraits<double>::Zero;
+  double defaultPixelValue = itk::NumericTraits<double>::Zero;
   bool found = this->m_Configuration->ReadParameter( defaultPixelValue,
     "DefaultPixelValue", 0, false );
 

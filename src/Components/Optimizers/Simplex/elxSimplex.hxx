@@ -22,7 +22,6 @@ PURPOSE. See the above copyright notices for more information.
 
 namespace elastix
 {
-  using namespace itk;
 
 /**
  * ***************** BeforeRegistration ***********************

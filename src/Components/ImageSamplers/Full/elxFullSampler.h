@@ -21,7 +21,6 @@
 namespace elastix
 {
 
-using namespace itk;
 
   /**
    * \class FullSampler
@@ -42,7 +41,7 @@ using namespace itk;
   template < class TElastix >
     class FullSampler :
     public
-      ImageFullSampler<
+      itk::ImageFullSampler<
       typename elx::ImageSamplerBase<TElastix>::InputImageType >,
     public
       elx::ImageSamplerBase<TElastix>
@@ -50,18 +49,19 @@ using namespace itk;
   public:
 
     /** Standard ITK-stuff. */
-    typedef FullSampler                       Self;
-    typedef ImageFullSampler<
-      typename elx::ImageSamplerBase<TElastix>::InputImageType >  Superclass1;
-    typedef elx::ImageSamplerBase<TElastix>         Superclass2;
-    typedef SmartPointer<Self>                  Pointer;
-    typedef SmartPointer<const Self>            ConstPointer;
+    typedef FullSampler                              Self;
+    typedef itk::ImageFullSampler<
+      typename elx::ImageSamplerBase<TElastix>::InputImageType >
+                                                     Superclass1;
+    typedef elx::ImageSamplerBase<TElastix>          Superclass2;
+    typedef itk::SmartPointer<Self>                  Pointer;
+    typedef itk::SmartPointer<const Self>            ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro(Self);
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( FullSampler, ImageFullSampler );
+    itkTypeMacro( FullSampler, itk::ImageFullSampler );
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific interpolator. \n

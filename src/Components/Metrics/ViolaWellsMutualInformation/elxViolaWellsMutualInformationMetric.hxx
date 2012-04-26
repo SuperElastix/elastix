@@ -19,7 +19,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 
   /**
@@ -39,7 +38,7 @@ using namespace itk;
 
   template <class TElastix>
     void ViolaWellsMutualInformationMetric<TElastix>::
-    Initialize(void) throw (ExceptionObject)
+    Initialize(void) throw ( itk::ExceptionObject )
   {
     TimerPointer timer = TimerType::New();
     timer->StartTimer();

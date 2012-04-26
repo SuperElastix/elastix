@@ -23,7 +23,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
   /**
    * \class DeformationFieldTransform
@@ -53,7 +52,7 @@ using namespace itk;
   template < class TElastix >
     class DeformationFieldTransform:
   public
-    AdvancedCombinationTransform<
+    itk::AdvancedCombinationTransform<
       typename elx::TransformBase<TElastix>::CoordRepType,
       elx::TransformBase<TElastix>::FixedImageDimension >,
   public
@@ -66,25 +65,25 @@ using namespace itk;
 
     /** The ITK-class that provides most of the functionality, and
      * that is set as the "CurrentTransform" in the CombinationTransform */
-    typedef DeformationFieldInterpolatingTransform<
+    typedef itk::DeformationFieldInterpolatingTransform<
       typename elx::TransformBase<TElastix>::CoordRepType,
       elx::TransformBase<TElastix>::FixedImageDimension,
       float >                                             DeformationFieldInterpolatingTransformType;
 
-    typedef AdvancedCombinationTransform<
+    typedef itk::AdvancedCombinationTransform<
       typename elx::TransformBase<TElastix>::CoordRepType,
       elx::TransformBase<TElastix>::FixedImageDimension > Superclass1;
 
     typedef elx::TransformBase< TElastix >                Superclass2;
 
-    typedef SmartPointer< Self >                          Pointer;
-    typedef SmartPointer< const Self >                    ConstPointer;
+    typedef itk::SmartPointer< Self >                     Pointer;
+    typedef itk::SmartPointer< const Self >               ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( DeformationFieldTransform, AdvancedCombinationTransform );
+    itkTypeMacro( DeformationFieldTransform, itk::AdvancedCombinationTransform );
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific transform. \n

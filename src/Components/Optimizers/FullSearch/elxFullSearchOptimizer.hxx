@@ -23,7 +23,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 
 /**
@@ -274,7 +273,7 @@ FullSearch<TElastix>
       << this->m_OptimizationSurface->GetOutputFileName()
       << std::endl;
   }
-  catch ( ExceptionObject& err )
+  catch ( itk::ExceptionObject& err )
   {
     xl::xout["error"]
       << "ERROR: Saving "

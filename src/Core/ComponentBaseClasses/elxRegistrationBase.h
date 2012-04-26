@@ -27,7 +27,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
   /**
    * \class RegistrationBase
@@ -151,28 +150,28 @@ using namespace itk;
     virtual ~RegistrationBase() {}
 
     /** Typedef's for mask support. */
-    typedef typename ElastixType::MaskPixelType           MaskPixelType;
-    typedef typename ElastixType::FixedMaskType           FixedMaskImageType;
-    typedef typename ElastixType::MovingMaskType          MovingMaskImageType;
-    typedef typename FixedMaskImageType::Pointer          FixedMaskImagePointer;
-    typedef typename MovingMaskImageType::Pointer         MovingMaskImagePointer;
-    typedef ImageMaskSpatialObject2<
-      itkGetStaticConstMacro( FixedImageDimension ) >     FixedMaskSpatialObjectType;
-    typedef ImageMaskSpatialObject2<
-      itkGetStaticConstMacro( MovingImageDimension ) >    MovingMaskSpatialObjectType;
+    typedef typename ElastixType::MaskPixelType                MaskPixelType;
+    typedef typename ElastixType::FixedMaskType                FixedMaskImageType;
+    typedef typename ElastixType::MovingMaskType               MovingMaskImageType;
+    typedef typename FixedMaskImageType::Pointer               FixedMaskImagePointer;
+    typedef typename MovingMaskImageType::Pointer              MovingMaskImagePointer;
+    typedef itk::ImageMaskSpatialObject2<
+      itkGetStaticConstMacro( FixedImageDimension ) >          FixedMaskSpatialObjectType;
+    typedef itk::ImageMaskSpatialObject2<
+      itkGetStaticConstMacro( MovingImageDimension ) >         MovingMaskSpatialObjectType;
     typedef typename
-      FixedMaskSpatialObjectType::Pointer                 FixedMaskSpatialObjectPointer;
+      FixedMaskSpatialObjectType::Pointer                      FixedMaskSpatialObjectPointer;
     typedef typename
-      MovingMaskSpatialObjectType::Pointer                MovingMaskSpatialObjectPointer;
+      MovingMaskSpatialObjectType::Pointer                     MovingMaskSpatialObjectPointer;
 
-    typedef typename ITKBaseType::FixedImagePyramidType   FixedImagePyramidType;
-    typedef typename ITKBaseType::MovingImagePyramidType  MovingImagePyramidType;
+    typedef typename ITKBaseType::FixedImagePyramidType        FixedImagePyramidType;
+    typedef typename ITKBaseType::MovingImagePyramidType       MovingImagePyramidType;
 
     /** Some typedef's used for eroding the masks */
-    typedef ErodeMaskImageFilter< FixedMaskImageType >    FixedMaskErodeFilterType;
-    typedef typename FixedMaskErodeFilterType::Pointer    FixedMaskErodeFilterPointer;
-    typedef ErodeMaskImageFilter< MovingMaskImageType >   MovingMaskErodeFilterType;
-    typedef typename MovingMaskErodeFilterType::Pointer   MovingMaskErodeFilterPointer;
+    typedef itk::ErodeMaskImageFilter< FixedMaskImageType >    FixedMaskErodeFilterType;
+    typedef typename FixedMaskErodeFilterType::Pointer         FixedMaskErodeFilterPointer;
+    typedef itk::ErodeMaskImageFilter< MovingMaskImageType >   MovingMaskErodeFilterType;
+    typedef typename MovingMaskErodeFilterType::Pointer        MovingMaskErodeFilterPointer;
 
     /** Generate a spatial object from a mask image, possibly after eroding the image
      * Input:

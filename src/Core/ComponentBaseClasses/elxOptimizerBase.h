@@ -24,7 +24,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 /**
  * \class OptimizerBase

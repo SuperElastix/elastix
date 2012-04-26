@@ -22,7 +22,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
   /**
    * \class AdvancedMattesMutualInformationMetric
@@ -99,7 +98,7 @@ using namespace itk;
   template <class TElastix >
     class AdvancedMattesMutualInformationMetric :
     public
-      ParzenWindowMutualInformationImageToImageMetric<
+      itk::ParzenWindowMutualInformationImageToImageMetric<
         typename MetricBase<TElastix>::FixedImageType,
         typename MetricBase<TElastix>::MovingImageType >,
     public MetricBase<TElastix>
@@ -108,19 +107,19 @@ using namespace itk;
 
     /** Standard ITK-stuff. */
     typedef AdvancedMattesMutualInformationMetric         Self;
-    typedef ParzenWindowMutualInformationImageToImageMetric<
+    typedef itk::ParzenWindowMutualInformationImageToImageMetric<
       typename MetricBase<TElastix>::FixedImageType,
       typename MetricBase<TElastix>::MovingImageType >    Superclass1;
     typedef MetricBase<TElastix>                          Superclass2;
-    typedef SmartPointer<Self>                            Pointer;
-    typedef SmartPointer<const Self>                      ConstPointer;
+    typedef itk::SmartPointer<Self>                       Pointer;
+    typedef itk::SmartPointer<const Self>                 ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
     itkTypeMacro( AdvancedMattesMutualInformationMetric,
-      ParzenWindowMutualInformationImageToImageMetric );
+      itk::ParzenWindowMutualInformationImageToImageMetric );
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific metric. \n
@@ -210,7 +209,7 @@ using namespace itk;
 
     /** Set up a timer to measure the intialisation time and
      * call the Superclass' implementation. */
-    virtual void Initialize(void) throw (ExceptionObject);
+    virtual void Initialize(void) throw (itk::ExceptionObject);
 
     /** Set/Get c. For finite difference derivative estimation */
     itkSetMacro( Param_c, double );

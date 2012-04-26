@@ -22,7 +22,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 
   /**
@@ -215,7 +214,7 @@ using namespace itk;
 
   template <class TElastix>
     void StandardGradientDescent<TElastix>
-    ::MetricErrorResponse( ExceptionObject & err )
+       ::MetricErrorResponse( itk::ExceptionObject & err )
   {
     if ( this->GetCurrentIteration() != this->m_PreviousErrorAtIteration )
     {

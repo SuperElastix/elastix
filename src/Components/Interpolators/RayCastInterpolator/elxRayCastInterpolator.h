@@ -23,7 +23,6 @@
 namespace elastix
 {
 
-using namespace itk;
 
 /**
  * \class RayCastInterpolator
@@ -41,7 +40,7 @@ using namespace itk;
 template < class TElastix >
 class RayCastInterpolator :
 public
-  AdvancedRayCastInterpolateImageFunction<
+  itk::AdvancedRayCastInterpolateImageFunction<
     typename InterpolatorBase<TElastix>::InputImageType,
     typename InterpolatorBase<TElastix>::CoordRepType >,
 public
@@ -51,12 +50,12 @@ public:
 
   /** Standard ITK-stuff. */
   typedef RayCastInterpolator                  Self;
-  typedef AdvancedRayCastInterpolateImageFunction<
+  typedef itk::AdvancedRayCastInterpolateImageFunction<
     typename InterpolatorBase<TElastix>::InputImageType,
     typename InterpolatorBase<TElastix>::CoordRepType > Superclass1;
   typedef InterpolatorBase<TElastix>          Superclass2;
-  typedef SmartPointer<Self>                  Pointer;
-  typedef SmartPointer<const Self>            ConstPointer;
+  typedef itk::SmartPointer<Self>             Pointer;
+  typedef itk::SmartPointer<const Self>       ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );

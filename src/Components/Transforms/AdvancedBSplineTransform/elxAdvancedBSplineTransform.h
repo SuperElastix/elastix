@@ -118,14 +118,14 @@ public:
     typename elx::TransformBase<TElastix>::CoordRepType,
     elx::TransformBase<TElastix>::FixedImageDimension > Superclass1;
   typedef elx::TransformBase<TElastix>            Superclass2;
-  typedef SmartPointer<Self>                      Pointer;
-  typedef SmartPointer<const Self>                ConstPointer;
+  typedef itk::SmartPointer<Self>                 Pointer;
+  typedef itk::SmartPointer<const Self>           ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( AdvancedBSplineTransform, AdvancedCombinationTransform );
+  itkTypeMacro( AdvancedBSplineTransform, itk::AdvancedCombinationTransform );
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific transform. \n
@@ -213,14 +213,14 @@ public:
   typedef typename Superclass2::CombinationTransformType  CombinationTransformType;
 
   /** Typedef's for the GridScheduleComputer and the UpsampleBSplineParametersFilter. */
-  typedef GridScheduleComputer<
+  typedef itk::GridScheduleComputer<
     CoordRepType, SpaceDimension >                        GridScheduleComputerType;
-  typedef CyclicGridScheduleComputer<
+  typedef itk::CyclicGridScheduleComputer<
     CoordRepType, SpaceDimension >                        CyclicGridScheduleComputerType;
   typedef typename GridScheduleComputerType::Pointer      GridScheduleComputerPointer;
   typedef typename GridScheduleComputerType
     ::VectorGridSpacingFactorType                         GridScheduleType;
-  typedef UpsampleBSplineParametersFilter<
+  typedef itk::UpsampleBSplineParametersFilter<
     ParametersType, ImageType >                           GridUpsamplerType;
   typedef typename GridUpsamplerType::Pointer             GridUpsamplerPointer;
 

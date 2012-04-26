@@ -21,7 +21,6 @@
 namespace elastix
 {
 
-using namespace itk;
 
   /**
    * \class GridSampler
@@ -47,7 +46,7 @@ using namespace itk;
   template < class TElastix >
     class GridSampler :
     public
-      ImageGridSampler<
+      itk::ImageGridSampler<
       typename elx::ImageSamplerBase<TElastix>::InputImageType >,
     public
       elx::ImageSamplerBase<TElastix>
@@ -55,18 +54,19 @@ using namespace itk;
   public:
 
     /** Standard ITK-stuff. */
-    typedef GridSampler                       Self;
-    typedef ImageGridSampler<
-      typename elx::ImageSamplerBase<TElastix>::InputImageType >  Superclass1;
+    typedef GridSampler                             Self;
+    typedef itk::ImageGridSampler<
+      typename elx::ImageSamplerBase<TElastix>::InputImageType >
+                                                    Superclass1;
     typedef elx::ImageSamplerBase<TElastix>         Superclass2;
-    typedef SmartPointer<Self>                  Pointer;
-    typedef SmartPointer<const Self>            ConstPointer;
+    typedef itk::SmartPointer<Self>                 Pointer;
+    typedef itk::SmartPointer<const Self>           ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro(Self);
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( GridSampler, ImageGridSampler );
+    itkTypeMacro( GridSampler, itk::ImageGridSampler );
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific interpolator. \n

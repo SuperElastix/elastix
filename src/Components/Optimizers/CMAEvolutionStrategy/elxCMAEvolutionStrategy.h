@@ -20,7 +20,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 
   /**
@@ -122,9 +121,9 @@ using namespace itk;
     /** Standard ITK.*/
     typedef CMAEvolutionStrategy                    Self;
     typedef CMAEvolutionStrategyOptimizer           Superclass1;
-    typedef OptimizerBase<TElastix>             Superclass2;
-    typedef SmartPointer<Self>                  Pointer;
-    typedef SmartPointer<const Self>            ConstPointer;
+    typedef OptimizerBase<TElastix>                 Superclass2;
+    typedef itk::SmartPointer<Self>                 Pointer;
+    typedef itk::SmartPointer<const Self>           ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );

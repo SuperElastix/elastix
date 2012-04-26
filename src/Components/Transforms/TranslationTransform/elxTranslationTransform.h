@@ -21,7 +21,6 @@
 
 namespace elastix
 {
-  using namespace itk;
 
   /**
    * \class TranslationTransformElastix
@@ -46,7 +45,7 @@ namespace elastix
 
   template < class TElastix >
     class TranslationTransformElastix:
-      public AdvancedCombinationTransform<
+      public itk::AdvancedCombinationTransform<
           typename elx::TransformBase<TElastix>::CoordRepType,
           elx::TransformBase<TElastix>::FixedImageDimension > ,
       public elx::TransformBase<TElastix>
@@ -56,7 +55,7 @@ namespace elastix
     /** Standard ITK-stuff. */
     typedef TranslationTransformElastix                     Self;
 
-    typedef AdvancedCombinationTransform<
+    typedef itk::AdvancedCombinationTransform<
       typename elx::TransformBase<TElastix>::CoordRepType,
       elx::TransformBase<TElastix>::FixedImageDimension >   Superclass1;
 
@@ -64,18 +63,18 @@ namespace elastix
 
     /** The ITK-class that provides most of the functionality, and
      * that is set as the "CurrentTransform" in the CombinationTransform */
-    typedef AdvancedTranslationTransform<
+    typedef itk::AdvancedTranslationTransform<
       typename elx::TransformBase<TElastix>::CoordRepType,
       elx::TransformBase<TElastix>::FixedImageDimension >   TranslationTransformType;
 
-    typedef SmartPointer<Self>                              Pointer;
-    typedef SmartPointer<const Self>                        ConstPointer;
+    typedef itk::SmartPointer<Self>                         Pointer;
+    typedef itk::SmartPointer<const Self>                   ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( TranslationTransformElastix, AdvancedCombinationTransform );
+    itkTypeMacro( TranslationTransformElastix, itk::AdvancedCombinationTransform );
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific transform. \n
@@ -113,7 +112,7 @@ namespace elastix
     typedef typename Superclass2::CombinationTransformType  CombinationTransformType;
 
     /** Extra typedefs */
-    typedef TranslationTransformInitializer<
+    typedef itk::TranslationTransformInitializer<
       TranslationTransformType,
       FixedImageType,
       MovingImageType>                                      TransformInitializerType;

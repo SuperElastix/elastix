@@ -25,7 +25,6 @@
 
 namespace elastix
 {
-  using namespace itk;
 
 
   /**
@@ -176,8 +175,8 @@ public:
   typedef AdaptiveStochasticGradientDescent           Self;
   typedef AdaptiveStochasticGradientDescentOptimizer  Superclass1;
   typedef OptimizerBase<TElastix>                     Superclass2;
-  typedef SmartPointer<Self>                          Pointer;
-  typedef SmartPointer<const Self>                    ConstPointer;
+  typedef itk::SmartPointer<Self>                     Pointer;
+  typedef itk::SmartPointer<const Self>               ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -205,6 +204,7 @@ public:
   typedef typename Superclass2::RegistrationType      RegistrationType;
   typedef typename Superclass2::RegistrationPointer   RegistrationPointer;
   typedef typename Superclass2::ITKBaseType           ITKBaseType;
+  typedef itk::SizeValueType                          SizeValueType;
 
   /** Typedef for the ParametersType. */
   typedef typename Superclass1::ParametersType        ParametersType;
@@ -230,7 +230,7 @@ public:
   virtual void ResumeOptimization( void );
 
   /** Stop optimization and pass on exception. */
-  virtual void MetricErrorResponse( ExceptionObject & err );
+  virtual void MetricErrorResponse( itk::ExceptionObject & err );
 
   /** Set/Get whether automatic parameter estimation is desired.
    * If true, make sure to set the maximum step length.
@@ -279,7 +279,7 @@ protected:
     itk::ImageRandomCoordinateSampler<FixedImageType> ImageRandomCoordinateSamplerType;
   typedef typename
     ImageRandomCoordinateSamplerType::Pointer         ImageRandomCoordinateSamplerPointer;
-  typedef ImageGridSampler< FixedImageType >          ImageGridSamplerType;
+  typedef itk::ImageGridSampler< FixedImageType >     ImageGridSamplerType;
   typedef typename ImageGridSamplerType::Pointer      ImageGridSamplerPointer;
   typedef typename
     ImageGridSamplerType::ImageSampleContainerType    ImageSampleContainerType;
@@ -295,7 +295,7 @@ protected:
   itkStaticConstMacro( FixedImageDimension, unsigned int, FixedImageType::ImageDimension );
   itkStaticConstMacro( MovingImageDimension, unsigned int, MovingImageType::ImageDimension );
   typedef typename TransformType::ScalarType          CoordinateRepresentationType;
-  typedef AdvancedTransform<
+  typedef itk::AdvancedTransform<
     CoordinateRepresentationType,
     itkGetStaticConstMacro(FixedImageDimension),
     itkGetStaticConstMacro(MovingImageDimension) >    AdvancedTransformType;

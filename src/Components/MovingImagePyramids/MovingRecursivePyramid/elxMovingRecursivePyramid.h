@@ -20,7 +20,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
   /**
    * \class MovingRecursivePyramid
@@ -36,7 +35,7 @@ using namespace itk;
   template <class TElastix>
     class MovingRecursivePyramid :
     public
-      RecursiveMultiResolutionPyramidImageFilter<
+      itk::RecursiveMultiResolutionPyramidImageFilter<
         typename MovingImagePyramidBase<TElastix>::InputImageType,
         typename MovingImagePyramidBase<TElastix>::OutputImageType >,
     public
@@ -46,12 +45,12 @@ using namespace itk;
 
     /** Standard ITK. */
     typedef MovingRecursivePyramid                                    Self;
-    typedef RecursiveMultiResolutionPyramidImageFilter<
+    typedef itk::RecursiveMultiResolutionPyramidImageFilter<
         typename MovingImagePyramidBase<TElastix>::InputImageType,
         typename MovingImagePyramidBase<TElastix>::OutputImageType >  Superclass1;
     typedef MovingImagePyramidBase<TElastix>                          Superclass2;
-    typedef SmartPointer<Self>                                        Pointer;
-    typedef SmartPointer<const Self>                                  ConstPointer;
+    typedef itk::SmartPointer<Self>                                   Pointer;
+    typedef itk::SmartPointer<const Self>                             ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );

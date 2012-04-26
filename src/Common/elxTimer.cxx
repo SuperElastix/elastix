@@ -19,7 +19,6 @@
 
 namespace tmr
 {
-using namespace itk;
 
 
 /**

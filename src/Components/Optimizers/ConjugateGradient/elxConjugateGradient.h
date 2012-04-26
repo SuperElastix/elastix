@@ -21,7 +21,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 
   /**
@@ -96,11 +95,11 @@ using namespace itk;
   public:
 
     /** Standard ITK.*/
-    typedef ConjugateGradient                   Self;
-    typedef GenericConjugateGradientOptimizer           Superclass1;
-    typedef OptimizerBase<TElastix>             Superclass2;
-    typedef SmartPointer<Self>                  Pointer;
-    typedef SmartPointer<const Self>            ConstPointer;
+    typedef ConjugateGradient                        Self;
+    typedef GenericConjugateGradientOptimizer        Superclass1;
+    typedef OptimizerBase<TElastix>                  Superclass2;
+    typedef itk::SmartPointer<Self>                  Pointer;
+    typedef itk::SmartPointer<const Self>            ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
@@ -132,9 +131,9 @@ using namespace itk;
     typedef typename Superclass2::ITKBaseType           ITKBaseType;
 
     /** Extra typedefs */
-    typedef MoreThuenteLineSearchOptimizer              LineOptimizerType;
+    typedef itk::MoreThuenteLineSearchOptimizer              LineOptimizerType;
     typedef LineOptimizerType::Pointer                  LineOptimizerPointer;
-    typedef ReceptorMemberCommand<Self>                 EventPassThroughType;
+    typedef itk::ReceptorMemberCommand<Self>                 EventPassThroughType;
     typedef typename EventPassThroughType::Pointer      EventPassThroughPointer;
 
     /** Check if any scales are set, and set the UseScales flag on or off;
@@ -171,7 +170,7 @@ using namespace itk;
      * Wolfe conditions satisfied. */
     virtual bool TestConvergence( bool firstLineSearchDone );
 
-    /** Call the superclass' implementation. If an ExceptionObject is caught,
+    /** Call the superclass' implementation. If an itk::ExceptionObject is caught,
      * because the line search optimizer tried a too big step, the exception
      * is printed, but ignored further. The optimizer stops, but elastix
      * just goes on to the next resolution. */
@@ -187,7 +186,7 @@ using namespace itk;
     ConjugateGradient( const Self& ); // purposely not implemented
     void operator=( const Self& );              // purposely not implemented
 
-    void InvokeIterationEvent(const EventObject & event);
+    void InvokeIterationEvent(const itk::EventObject & event);
 
     EventPassThroughPointer     m_EventPasser;
     double                      m_SearchDirectionMagnitude;

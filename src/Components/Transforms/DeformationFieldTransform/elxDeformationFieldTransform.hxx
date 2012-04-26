@@ -26,7 +26,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 
   /**
@@ -66,11 +65,11 @@ using namespace itk;
     /** Call the ReadFromFile from the TransformBase. */
     this->Superclass2::ReadFromFile();
 
-    typedef ChangeInformationImageFilter<DeformationFieldType> ChangeInfoFilterType;
-    typedef typename ChangeInfoFilterType::Pointer  ChangeInfoFilterPointer;
+    typedef itk::ChangeInformationImageFilter<DeformationFieldType> ChangeInfoFilterType;
+    typedef typename ChangeInfoFilterType::Pointer                  ChangeInfoFilterPointer;
 
     /** Setup VectorImageReader. */
-    typedef ImageFileReader< DeformationFieldType > VectorReaderType;
+    typedef itk::ImageFileReader< DeformationFieldType >            VectorReaderType;
     typename VectorReaderType::Pointer vectorReader
       = VectorReaderType::New();
 
@@ -120,10 +119,10 @@ using namespace itk;
       SetDeformationField( infoChanger->GetOutput() );
 
     typedef typename DeformationFieldInterpolatingTransformType::
-      DeformationFieldInterpolatorType InterpolatorType;
-    typedef VectorNearestNeighborInterpolateImageFunction<
+      DeformationFieldInterpolatorType     InterpolatorType;
+    typedef itk::VectorNearestNeighborInterpolateImageFunction<
       DeformationFieldType, CoordRepType>  NNInterpolatorType;
-    typedef VectorLinearInterpolateImageFunction<
+    typedef itk::VectorLinearInterpolateImageFunction<
       DeformationFieldType, CoordRepType>  LinInterpolatorType;
 
     typename InterpolatorType::Pointer interpolator = 0;
@@ -166,7 +165,7 @@ using namespace itk;
     /** Call the WriteToFile from the TransformBase. */
     this->Superclass2::WriteToFile( param );
 
-    typedef ChangeInformationImageFilter<DeformationFieldType> ChangeInfoFilterType;
+    typedef itk::ChangeInformationImageFilter<DeformationFieldType> ChangeInfoFilterType;
     typedef typename ChangeInfoFilterType::Pointer  ChangeInfoFilterPointer;
 
     /** Add some DeformationFieldTransform specific lines. */

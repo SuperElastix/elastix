@@ -20,7 +20,6 @@
 
 namespace elastix
 {
-  using namespace itk;
 
   /**
   * \class LinearResampleInterpolator
@@ -41,7 +40,7 @@ namespace elastix
   template < class TElastix >
   class LinearResampleInterpolator :
     public
-    LinearInterpolateImageFunction<
+    itk::LinearInterpolateImageFunction<
     typename ResampleInterpolatorBase<TElastix>::InputImageType,
     typename ResampleInterpolatorBase<TElastix>::CoordRepType >,
     public ResampleInterpolatorBase<TElastix>
@@ -50,18 +49,18 @@ namespace elastix
 
     /** Standard ITK-stuff. */
     typedef LinearResampleInterpolator                              Self;
-    typedef LinearInterpolateImageFunction<
+    typedef itk::LinearInterpolateImageFunction<
       typename ResampleInterpolatorBase<TElastix>::InputImageType,
       typename ResampleInterpolatorBase<TElastix>::CoordRepType >   Superclass1;
     typedef ResampleInterpolatorBase<TElastix>                      Superclass2;
-    typedef SmartPointer<Self>                                      Pointer;
-    typedef SmartPointer<const Self>                                ConstPointer;
+    typedef itk::SmartPointer<Self>                                 Pointer;
+    typedef itk::SmartPointer<const Self>                           ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( LinearResampleInterpolator, LinearInterpolateImageFunction );
+    itkTypeMacro( LinearResampleInterpolator, itk::LinearInterpolateImageFunction );
 
     /** Name of this class.
     * Use this name in the parameter file to select this specific resample interpolator. \n

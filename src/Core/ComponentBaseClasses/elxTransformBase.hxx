@@ -54,7 +54,7 @@ public:
 
   /** Standard class typedefs. */
   typedef PixelTypeChangeCommand    Self;
-  typedef SmartPointer<Self>        Pointer;
+  typedef itk::SmartPointer<Self>   Pointer;
 
   /** This is supposed to be an ImageFileWriter */
   typedef T                         CallerType;

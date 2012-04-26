@@ -43,7 +43,6 @@
 
 namespace tmr
 {
-using namespace itk;
 
 /**
  * \class Timer
@@ -64,20 +63,20 @@ using namespace itk;
  * \ingroup Timer
  */
 
-class Timer : public Object
+class Timer : public itk::Object
 {
 public:
   /** Standard ITK-stuff.*/
-  typedef Timer                       Self;
-  typedef Object                      Superclass;
-  typedef SmartPointer<Self>          Pointer;
-  typedef SmartPointer<const Self>    ConstPointer;
+  typedef Timer                            Self;
+  typedef itk::Object                      Superclass;
+  typedef itk::SmartPointer<Self>          Pointer;
+  typedef itk::SmartPointer<const Self>    ConstPointer;
 
   /** Method for creation through the object factory.*/
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods).*/
-  itkTypeMacro( Timer, Object );
+  itkTypeMacro( Timer, itk::Object );
 
   /** My typedef's.*/
   typedef std::vector<std::size_t>         TimeDHMSType;

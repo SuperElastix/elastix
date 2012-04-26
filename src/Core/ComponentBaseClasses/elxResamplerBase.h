@@ -24,7 +24,6 @@
 
 namespace elastix
 {
-  using namespace itk;
 
   /**
    * \class ResampleBase
@@ -91,7 +90,7 @@ namespace elastix
     typedef typename ElastixType::CoordRepType        CoordRepType;
 
     /** Other typedef's. */
-    typedef ResampleImageFilter<
+    typedef itk::ResampleImageFilter<
       InputImageType, OutputImageType, CoordRepType>  ITKBaseType;
 
     /** Typedef's from ResampleImageFiler. */

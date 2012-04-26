@@ -19,7 +19,6 @@
 
 namespace elastix
 {
-  using namespace itk;
 
 
   /**
@@ -98,7 +97,7 @@ namespace elastix
    */
 
   void ProgressCommand
-    ::ConnectObserver( ProcessObject * filter )
+    ::ConnectObserver( itk::ProcessObject * filter )
   {
     /** Disconnect from old observed filters. */
     this->DisconnectObserver( this->m_ObservedProcessObject );
@@ -119,7 +118,7 @@ namespace elastix
    */
 
   void ProgressCommand
-    ::DisconnectObserver( ProcessObject * filter )
+    ::DisconnectObserver( itk::ProcessObject * filter )
   {
     if ( this->m_StreamOutputIsConsole )
     {
@@ -139,12 +138,12 @@ namespace elastix
    */
 
   void ProgressCommand
-    ::Execute( Object *caller, const EventObject &event )
+    ::Execute( itk::Object *caller, const itk::EventObject &event )
   {
-    ProcessObject *po = dynamic_cast<ProcessObject *>( caller );
+    itk::ProcessObject *po = dynamic_cast<itk::ProcessObject *>( caller );
     if ( !po ) return;
 
-    if ( typeid( event ) == typeid( ProgressEvent ) )
+    if ( typeid( event ) == typeid( itk::ProgressEvent ) )
     {
       this->PrintProgress( po->GetProgress() );
     }
@@ -157,12 +156,12 @@ namespace elastix
    */
 
   void ProgressCommand
-    ::Execute( const Object *caller, const EventObject &event )
+    ::Execute( const itk::Object *caller, const itk::EventObject &event )
   {
-    const ProcessObject *po = dynamic_cast<const ProcessObject *>( caller );
+    const itk::ProcessObject *po = dynamic_cast<const itk::ProcessObject *>( caller );
     if ( !po ) return;
 
-    if ( typeid( event ) == typeid( ProgressEvent ) )
+    if ( typeid( event ) == typeid( itk::ProgressEvent ) )
     {
       this->PrintProgress( po->GetProgress() );
     }

@@ -20,7 +20,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 /**
  * \class CUDAResampler
@@ -54,8 +53,8 @@ public:
     typename ResamplerBase<TElastix>::OutputImageType,
     typename ResamplerBase<TElastix>::CoordRepType >      Superclass1;
   typedef ResamplerBase<TElastix>                         Superclass2;
-  typedef SmartPointer<Self>                              Pointer;
-  typedef SmartPointer<const Self>                        ConstPointer;
+  typedef itk::SmartPointer<Self>                         Pointer;
+  typedef itk::SmartPointer<const Self>                   ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );

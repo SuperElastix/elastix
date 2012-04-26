@@ -24,7 +24,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 
 /**
@@ -353,7 +352,7 @@ BSplineTransformWithDiffusion<TElastix>
   }
 
   /** Get the default pixel value. */
-  float defaultPixelValueForGVI = NumericTraits<float>::Zero;
+  float defaultPixelValueForGVI = itk::NumericTraits<float>::Zero;
   if ( this->m_UseMovingSegmentation && !this->m_ThresholdBool )
   {
     this->m_Configuration->ReadParameter( defaultPixelValueForGVI,
@@ -698,7 +697,8 @@ BSplineTransformWithDiffusion<TElastix>
     CoefficientUpsampleFunctionType;
   typedef itk::BSplineDecompositionImageFilter<ImageType,ImageType>
     DecompositionFilterType;
-  typedef ImageRegionConstIterator<ImageType>   IteratorType;
+  typedef itk::ImageRegionConstIterator<ImageType>   
+    IteratorType;
 
   /** The current region/spacing settings of the grid. */
   RegionType gridregionLow = this->m_BSplineTransform->GetGridRegion();

@@ -22,7 +22,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 /**
  * \class NormalizedGradientCorrelationMetric
@@ -35,7 +34,7 @@ using namespace itk;
 
 template <class TElastix >
 class NormalizedGradientCorrelationMetric:
-public NormalizedGradientCorrelationImageToImageMetric<
+public itk::NormalizedGradientCorrelationImageToImageMetric<
   typename MetricBase<TElastix>::FixedImageType,
   typename MetricBase<TElastix>::MovingImageType >,
 public MetricBase<TElastix>
@@ -44,19 +43,19 @@ public:
 
   /** Standard ITK-stuff. */
   typedef NormalizedGradientCorrelationMetric               Self;
-  typedef NormalizedGradientCorrelationImageToImageMetric<
+  typedef itk::NormalizedGradientCorrelationImageToImageMetric<
     typename MetricBase<TElastix>::FixedImageType,
     typename MetricBase<TElastix>::MovingImageType >        Superclass1;
   typedef MetricBase<TElastix>                              Superclass2;
-  typedef SmartPointer<Self>                                Pointer;
-  typedef SmartPointer<const Self>                          ConstPointer;
+  typedef itk::SmartPointer<Self>                           Pointer;
+  typedef itk::SmartPointer<const Self>                     ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( NormalizedGradientCorrelationMetric,
-    NormalizedGradientCorrelationImageToImageMetric );
+  itkTypeMacro( NormalizedGradientCorrelationMetric, 
+    itk::NormalizedGradientCorrelationImageToImageMetric );
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific metric. \n
@@ -135,7 +134,7 @@ public:
   /** Sets up a timer to measure the initialisation time and
    * calls the Superclass' implementation.
    */
-  virtual void Initialize( void ) throw (ExceptionObject);
+  virtual void Initialize( void ) throw (itk::ExceptionObject);
 
   /**
    * Do some things before each resolution:

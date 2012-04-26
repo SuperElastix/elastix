@@ -22,7 +22,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 /**
  * \class PatternIntensityMetric
@@ -36,7 +35,7 @@ using namespace itk;
 template <class TElastix >
 class PatternIntensityMetric:
 public
-  PatternIntensityImageToImageMetric<
+  itk::PatternIntensityImageToImageMetric<
     typename MetricBase<TElastix>::FixedImageType,
     typename MetricBase<TElastix>::MovingImageType >,
 public MetricBase<TElastix>
@@ -45,18 +44,18 @@ public:
 
   /** Standard ITK-stuff. */
   typedef PatternIntensityMetric                        Self;
-  typedef PatternIntensityImageToImageMetric<
+  typedef itk::PatternIntensityImageToImageMetric<
     typename MetricBase<TElastix>::FixedImageType,
     typename MetricBase<TElastix>::MovingImageType >    Superclass1;
   typedef MetricBase<TElastix>                          Superclass2;
-  typedef SmartPointer<Self>                            Pointer;
-  typedef SmartPointer<const Self>                      ConstPointer;
+  typedef itk::SmartPointer<Self>                       Pointer;
+  typedef itk::SmartPointer<const Self>                 ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( PatternIntensityMetric, PatternIntensityImageToImageMetric );
+  itkTypeMacro( PatternIntensityMetric, itk::PatternIntensityImageToImageMetric );
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific metric. \n
@@ -135,7 +134,7 @@ public:
   /** Sets up a timer to measure the initialisation time and
    * calls the Superclass' implementation.
    */
-  virtual void Initialize( void ) throw (ExceptionObject);
+  virtual void Initialize( void ) throw (itk::ExceptionObject);
 
   /**
    * Do some things before each resolution:

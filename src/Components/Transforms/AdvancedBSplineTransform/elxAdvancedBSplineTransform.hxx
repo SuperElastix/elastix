@@ -641,7 +641,7 @@ void AdvancedBSplineTransform<TElastix>::
 SetOptimizerScales( const unsigned int edgeWidth )
 {
   /** Some typedefs. */
-  typedef ImageRegionExclusionConstIteratorWithIndex<ImageType>   IteratorType;
+  typedef itk::ImageRegionExclusionConstIteratorWithIndex<ImageType>   IteratorType;
   typedef typename RegistrationType::ITKBaseType          ITKRegistrationType;
   typedef typename ITKRegistrationType::OptimizerType     OptimizerType;
   typedef typename OptimizerType::ScalesType              ScalesType;
@@ -652,7 +652,7 @@ SetOptimizerScales( const unsigned int edgeWidth )
     = this->m_BSplineTransform->GetNumberOfParameters();
   const unsigned long offset = numberOfParameters / SpaceDimension;
   ScalesType newScales( numberOfParameters );
-  newScales.Fill( NumericTraits<ScalesValueType>::One );
+  newScales.Fill( itk::NumericTraits<ScalesValueType>::One );
   const ScalesValueType infScale = 10000.0;
 
   if ( edgeWidth == 0 )
