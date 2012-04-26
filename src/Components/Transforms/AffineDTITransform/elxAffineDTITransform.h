@@ -82,12 +82,12 @@ namespace elastix
 
     /** Standard ITK-stuff.*/
     typedef AffineDTITransformElastix                           Self;
-    typedef AdvancedCombinationTransform<
+    typedef itk::AdvancedCombinationTransform<
       typename elx::TransformBase< TElastix >::CoordRepType,
       elx::TransformBase< TElastix >::FixedImageDimension >     Superclass1;
     typedef elx::TransformBase< TElastix >                      Superclass2;
-    typedef itk::SmartPointer<Self>                                  Pointer;
-    typedef itk::SmartPointer<const Self>                            ConstPointer;
+    typedef itk::SmartPointer<Self>                             Pointer;
+    typedef itk::SmartPointer<const Self>                       ConstPointer;
 
     /** The ITK-class that provides most of the functionality, and
      * that is set as the "CurrentTransform" in the CombinationTransform */
