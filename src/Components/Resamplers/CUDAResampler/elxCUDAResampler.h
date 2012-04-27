@@ -38,7 +38,7 @@ namespace elastix
 
 template < class TElastix >
 class CUDAResampler :
-  public itkCUDAResampleImageFilter<
+  public itk::itkCUDAResampleImageFilter<
   typename ResamplerBase<TElastix>::InputImageType,
   typename ResamplerBase<TElastix>::OutputImageType,
   typename ResamplerBase<TElastix>::CoordRepType >,
@@ -48,7 +48,7 @@ public:
 
   /** Standard ITK-stuff. */
   typedef CUDAResampler                                   Self;
-  typedef itkCUDAResampleImageFilter<
+  typedef itk::itkCUDAResampleImageFilter<
     typename ResamplerBase<TElastix>::InputImageType,
     typename ResamplerBase<TElastix>::OutputImageType,
     typename ResamplerBase<TElastix>::CoordRepType >      Superclass1;
@@ -60,7 +60,7 @@ public:
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( CUDAResampler, itkCUDAResampleImageFilter );
+  itkTypeMacro( CUDAResampler, itk::itkCUDAResampleImageFilter );
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific resampler. \n
