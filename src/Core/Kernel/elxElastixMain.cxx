@@ -361,8 +361,18 @@ int ElastixMain::InitDBIndex( void )
       /** Read it from the fixed image header. */
       std::string fixedImageFileName
         = this->m_Configuration->GetCommandLineArgument( "-f" );
-      this->GetImageInformationFromFile( fixedImageFileName,
-        this->m_FixedImageDimension );
+      try 
+      {
+        this->GetImageInformationFromFile( fixedImageFileName,
+          this->m_FixedImageDimension );
+      }
+      catch ( itk::ExceptionObject & err )
+      {
+        xout["error"] << "ERROR: could not read fixed image." << std::endl;
+        xout["error"] << err << std::endl;
+        return 1;
+      }
+
 
       /** Try to read it from the parameter file.
        * This only serves as a check; elastix versions prior to 4.6 read the dimension
@@ -411,8 +421,18 @@ int ElastixMain::InitDBIndex( void )
       /** Read it from the moving image header. */
       std::string movingImageFileName
         = this->m_Configuration->GetCommandLineArgument( "-m" );
-      this->GetImageInformationFromFile( movingImageFileName,
-        this->m_MovingImageDimension );
+
+      try
+      {
+        this->GetImageInformationFromFile( movingImageFileName,
+          this->m_MovingImageDimension );
+      }
+      catch ( itk::ExceptionObject & err )
+      {
+        xout["error"] << "ERROR: could not read moving image." << std::endl;
+        xout["error"] << err << std::endl;
+        return 1;
+      }
 
       /** Try to read it from the parameter file.
        * This only serves as a check; elastix versions prior to 4.6 read the dimension
@@ -832,20 +852,18 @@ ElastixMain::GetImageInformationFromFile(
     testReader->SetFileName( filename.c_str() );
 
     /** Generate all information. */
-    try
-    {
-      testReader->GenerateOutputInformation();
-    }
-    catch ( itk::ExceptionObject & itkNotUsed( excp ) )
-    {
-      /** Just return, this error will be caught somewhere else. */
-      return;
-    }
+    testReader->GenerateOutputInformation();
 
     /** Extract the required information. */
     itk::ImageIOBase::Pointer testImageIO = testReader->GetImageIO();
     //itk::ImageIOBase::IOComponentType componentType = testImageIO->GetComponentType();
     //pixelType = itk::ImageIOBase::GetComponentTypeAsString( componentType );
+    if ( testImageIO.IsNull() )
+    {
+      /** Extra check. In principal, ITK the testreader should already have thrown an exception
+       * if it was not possible to create the ImageIO object */
+      itkExceptionMacro( << "ERROR: ImageIO object was not created, but no exception was thrown." );
+    }
     imageDimension = testImageIO->GetNumberOfDimensions();
   } // end if
 
