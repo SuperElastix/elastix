@@ -995,12 +995,13 @@ the lower the metric value, the better the registration.
 
 \section{Introduction}\label{sec:elastix:intro}
 
-The development of \elastix\ started half to late 2003, and was intended to
-facilitate our registration research. After some initial versions we decided to
-put the separate components of \elastix\ in separate libraries. This resulted
-in major version 3.0 in November 2004. \elastix\ 3.0 was also the first version
-that was made publicly available on the \elastix\ website, around the same
-time. The continued development brings us today (\today) to version 4.5.
+The development of \elastix\ started half to late 2003, and was
+intended to facilitate our registration research. After some initial
+versions we decided to put the separate components of \elastix\ in
+separate libraries. This resulted in major version 3.0 in November
+2004. \elastix\ 3.0 was also the first version that was made
+publicly available on the \elastix\ website, around the same time.
+The continued development brings us today (\today) to version 4.6.
 
 \begin{table}[h!]
 \begin{tabular}{l|l}
@@ -1125,8 +1126,8 @@ svn co --username elastixguest --password elastixguest
   https://svn.bigr.nl/elastix/tagspublic/elastix_XX_X <your-elastix-folder>
 \end{verbatim}
       where XX\_X is the major version number (first 2 digits) and the
-      minor version number (1 digit). So, for example, for version 4.5
-      this would be 04\_5.
+      minor version number (1 digit). So, for example, for version
+      4.6 this would be 04\_6.
   \item Use \texttt{subversion} to check out the latest development
       version. NB: this version might be unstable!
 \begin{verbatim}
@@ -1502,7 +1503,7 @@ Interpolator & \texttt{BSplineInterpolator} \\
 ResampleInterpolator & \texttt{FinalBSplineInterpolator} \\
 Resampler    & \texttt{DefaultResampler}\\
 Transform    & Depends on the application \\
-Optimizer    & \texttt{StandardGradientDescent}/ \texttt{AdaptiveStochasticGradientDescent} \\
+Optimizer    & \texttt{AdaptiveStochasticGradientDescent} \\
 FixedImagePyramid   & \texttt{FixedSmoothingImagePyramid} \\
 MovingImagePyramid  & \texttt{MovingSmoothingImagePyramid} \\
 \end{tabular}
@@ -2869,9 +2870,8 @@ Also for \texttt{for}-loops.
 \begin{verbatim}
 //ImageTypes
 (FixedInternalImagePixelType "float")
-(FixedImageDimension 2)
 (MovingInternalImagePixelType "float")
-(MovingImageDimension 2)
+(UseDirectionCosines "true")
 
 //Components
 (Registration "MultiResolutionRegistration")
@@ -2879,7 +2879,7 @@ Also for \texttt{for}-loops.
 (MovingImagePyramid "MovingRecursiveImagePyramid")
 (Interpolator "BSplineInterpolator")
 (Metric "AdvancedMattesMutualInformation")
-(Optimizer "StandardGradientDescent")
+(Optimizer "AdaptiveStochasticGradientDescent")
 (ResampleInterpolator "FinalBSplineInterpolator")
 (Resampler "DefaultResampler")
 (Transform "EulerTransform")
@@ -2903,15 +2903,8 @@ Also for \texttt{for}-loops.
 // Maximum number of iterations in each resolution level:
 (MaximumNumberOfIterations 300 300 600)
 
-//SP: Param_a in each resolution level. a_k = a/(A+k+1)^alpha
-(SP_a 0.001)
-
-//SP: Param_alpha in each resolution level. a_k = a/(A+k+1)^alpha
-(SP_alpha 0.602)
-
-//SP: Param_A in each resolution level. a_k = a/(A+k+1)^alpha
-(SP_A 50.0)
-
+(AutomaticParameterEstimation "true")
+(UseAdaptiveStepSizes "true")
 
 // ********** Metric
 
@@ -3019,7 +3012,7 @@ third-party license.
 
 Elastix Copyright Notice:
 
-      Copyright (c) 2004-2010 University Medical Center Utrecht
+      Copyright (c) 2004-2012 University Medical Center Utrecht
       All rights reserved.
 
 
