@@ -450,7 +450,8 @@ ResamplerBase<TElastix>
 
   /** Write the DefaultPixelValue. */
   xl::xout["transpar"] << "(DefaultPixelValue "
-    << this->GetAsITKBaseType()->GetDefaultPixelValue() << ")" << std::endl;
+    << static_cast<double>( this->GetAsITKBaseType()->GetDefaultPixelValue() )
+    << ")" << std::endl;
 
   /** Write the output image format. */
   std::string resultImageFormat = "mhd";
