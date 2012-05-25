@@ -12,12 +12,10 @@
 (MovingInternalImagePixelType "float")
 
 // The dimensions of the fixed and moving image
-// NB: This has to be specified by the user. The dimension of
-// the images is currently NOT read from the images.
-// Also note that some other settings may have to specified
-// for each dimension separately.
-(FixedImageDimension 2)
-(MovingImageDimension 2)
+// Up to elastix 4.5 this had to be specified by the user.
+// From elastix 4.6, this is not necessary anymore.
+//(FixedImageDimension 2)
+//(MovingImageDimension 2)
 
 // Specify whether you want to take into account the so-called
 // direction cosines of the images. Recommended: true.
