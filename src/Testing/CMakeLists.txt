@@ -285,7 +285,7 @@ elx_add_test( TimerTest )
 # Maybe the use of CompensatedSummation for MI may improve the results
 set( baselineImage ${TestBaselineDir}/example.mha )
 if( knownChecksumSystem )
-  if ( ( SITE STREQUAL "LKEB.goliath" ) OR (SITE STREQUAL "LKEB.MacMini") OR (SITE STREQUAL "BIGR.cluster") )
+  if ( ( SITE STREQUAL "LKEB.goliath" ) OR (SITE STREQUAL "LKEB.MacMini") OR (SITE STREQUAL "BIGR.cluster") OR (SITE STREQUAL "BIGR.PCStefan") )
     set( baselineImage ${TestBaselineDir}/example_${SITE}.mha )
   endif()
 endif()
