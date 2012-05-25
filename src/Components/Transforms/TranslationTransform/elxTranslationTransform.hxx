@@ -83,7 +83,9 @@ namespace elastix
         this->m_Registration->GetAsITKBaseType()->GetFixedImage() );
       transformInitializer->SetMovingImage(
         this->m_Registration->GetAsITKBaseType()->GetMovingImage() );
-      transformInitializer->SetTransform(this->m_TranslationTransform);
+      transformInitializer->SetFixedMask( this->GetElastix()->GetFixedMask() );
+      transformInitializer->SetMovingMask( this->GetElastix()->GetMovingMask() );
+      transformInitializer->SetTransform( this->m_TranslationTransform );
 
       /** Select the method of initialization. Default: "GeometricalCenter". */
       transformInitializer->GeometryOn();
