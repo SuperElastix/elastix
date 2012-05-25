@@ -203,7 +203,7 @@ macro( elx_add_run_test testbasename howtocompare baseline )
   # They all seem to be using ASGD and B-splines and (N)MI
   # Maybe the use of CompensatedSummation for MI may improve the results
   if( knownChecksumSystem )
-    if ( ( SITE STREQUAL "LKEB.goliath" ) OR (SITE STREQUAL "LKEB.MacMini") OR (SITE STREQUAL "BIGR.cluster") )
+    if ( ( SITE STREQUAL "LKEB.goliath" ) OR (SITE STREQUAL "LKEB.MacMini") OR (SITE STREQUAL "BIGR.cluster") OR (SITE STREQUAL "BIGR.PCStefan") )
       if( ${testbasename} STREQUAL "3DCT_lung.MI.bspline.ASGD.001"
         OR ${testbasename} STREQUAL "3DCT_lung.NMI.bspline.ASGD.001"
         OR ( ${testbasename} STREQUAL "example" ) )
