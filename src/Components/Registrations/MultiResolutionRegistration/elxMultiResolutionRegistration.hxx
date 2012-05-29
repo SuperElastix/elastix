@@ -29,6 +29,21 @@ namespace elastix
     void MultiResolutionRegistration<TElastix>
     ::BeforeRegistration(void)
   {
+    /** Check for a common mistake that people make in their parameter
+     * file: using MultiResolutionRegistration in combination with
+     * more than 1 metric.
+     */
+    const unsigned int nrOfMetrics = this->GetElastix()->GetNumberOfMetrics();
+    if ( nrOfMetrics > 1 )
+    {
+      itkExceptionMacro( "\nERROR: the parameter file specifies \n"
+        << "  (Registration \"MultiResolutionRegistration\")\n"
+        << "  in combination with " << nrOfMetrics << " metrics.\n"
+        << "  This registration only allows for 1 metric.\n"
+        << "  You probably mean to use:\n"
+        << "  (Registration \"MultiMetricMultiResolutionRegistration\")" );
+    }
+
     /** Get the components from this->m_Elastix and set them. */
     this->SetComponents();
 
