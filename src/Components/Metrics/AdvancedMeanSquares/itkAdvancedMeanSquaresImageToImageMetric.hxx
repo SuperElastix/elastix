@@ -39,10 +39,10 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   this->m_SelfHessianSmoothingSigma = 1.0;
   this->m_NumberOfSamplesForSelfHessian = 100000;
 
-  //this->m_ThreaderValues.resize( 0 );
-  //this->m_ThreaderDerivatives.resize( 0 );
-  //this->m_ThreaderNumberOfPixelsCounted.resize( 0 );
-  //this->m_SampleContainerSize = 0;
+  this->m_ThreaderValues.resize( 0 );
+  this->m_ThreaderDerivatives.resize( 0 );
+  this->m_ThreaderNumberOfPixelsCounted.resize( 0 );
+  this->m_SampleContainerSize = 0;
 
 } // end Constructor
 
@@ -55,9 +55,9 @@ template <class TFixedImage, class TMovingImage>
 AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 ::~AdvancedMeanSquaresImageToImageMetric()
 {
-  //this->m_ThreaderValues.resize( 0 );
-  //this->m_ThreaderDerivatives.resize( 0 );
-  //this->m_ThreaderNumberOfPixelsCounted.resize( 0 );
+  this->m_ThreaderValues.resize( 0 );
+  this->m_ThreaderDerivatives.resize( 0 );
+  this->m_ThreaderNumberOfPixelsCounted.resize( 0 );
 
 } // end Destructor
 
@@ -288,7 +288,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 template <class TFixedImage, class TMovingImage>
 void
 AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
-::GetValueAndDerivative(
+::GetValueAndDerivativeSingleThreaded(
   const TransformParametersType & parameters,
   MeasureType & value, DerivativeType & derivative ) const
 {
@@ -401,10 +401,9 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   /** The return value. */
   value = measure;
 
-} // end GetValueAndDerivative()
+} // end GetValueAndDerivativeSingleThreaded()
 
 
-#if 0
 /**
  * ******************* GetValueAndDerivative *******************
  */
@@ -416,6 +415,13 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   const TransformParametersType & parameters,
   MeasureType & value, DerivativeType & derivative ) const
 {
+  /** Option for now to still use the single threaded code. */
+  if ( !this->m_UseMultiThread )
+  {
+    return this->GetValueAndDerivativeSingleThreaded(
+      parameters, value, derivative );
+  }
+
   itkDebugMacro( "GetValueAndDerivative( " << parameters << " ) " );
 
   typedef typename DerivativeType::ValueType        DerivativeValueType;
@@ -447,7 +453,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   this->m_ThreaderDerivatives.resize( this->m_NumberOfThreadsPerMetric );
   this->m_ThreaderNumberOfPixelsCounted.resize( this->m_NumberOfThreadsPerMetric, 0 );
 
-  for( ThreadIdType i = 0; i < this->m_NumberOfThreadsPerMetric;i++ )
+  for( ThreadIdType i = 0; i < this->m_NumberOfThreadsPerMetric; i++ )
   {
     this->m_ThreaderValues[ i ] = 0;
     this->m_ThreaderNumberOfPixelsCounted[ i ] = 0;
@@ -485,8 +491,11 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   DerivativeType imageJacobian = DerivativeType( nzji.size() );
   TransformJacobianType jacobian;
 
-  unsigned long nrOfSamplerPerThreads = (unsigned long)ceil(double(this->m_SampleContainerSize)
-                                                            / double(this->m_NumberOfThreadsPerMetric));
+  // bug?
+  const unsigned long nrOfSamplerPerThreads
+    = static_cast<unsigned long>( vcl_ceil( static_cast<double>( this->m_SampleContainerSize )
+      / static_cast<double>( this->m_NumberOfThreadsPerMetric ) ) );
+
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator threader_fiter;
   typename ImageSampleContainerType::ConstIterator threader_fbegin = this->m_SampleContainer->Begin();
@@ -514,7 +523,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
     /** Check if point is inside mask. */
     if ( sampleOk )
     {
-      sampleOk = this->IsInsideMovingMask( mappedPoint );
+      sampleOk = this->IsInsideMovingMask( mappedPoint ); // thread-safe?
     }
 
     /** Compute the moving image value M(T(x)) and derivative dM/dx and check if
@@ -528,7 +537,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 
     if ( sampleOk )
     {
-      this->m_ThreaderNumberOfPixelsCounted[threadID]++;
+      this->m_ThreaderNumberOfPixelsCounted[ threadID ]++;
 
       /** Get the fixed image value. */
       const RealType & fixedImageValue
@@ -545,7 +554,8 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
       this->UpdateValueAndDerivativeTerms(
         fixedImageValue, movingImageValue,
         imageJacobian, nzji,
-        this->m_ThreaderValues[threadID], this->m_ThreaderDerivatives[threadID] );
+        this->m_ThreaderValues[ threadID ],
+        this->m_ThreaderDerivatives[ threadID ] ); // thread-safe?
 
     } // end if sampleOk
 
@@ -564,11 +574,16 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 ::AfterThreadedGetValueAndDerivative(
   MeasureType & value, DerivativeType & derivative ) const
 {
+  /** Accumulate the number of pixels. */
   for( ThreadIdType i = 0; i < this->m_NumberOfThreadsPerMetric; i++ )
   {
     this->m_NumberOfPixelsCounted += this->m_ThreaderNumberOfPixelsCounted[ i ];
   }
+  /** Check if enough samples were valid. */
+  this->CheckNumberOfSamples(
+    this->m_SampleContainerSize, this->m_NumberOfPixelsCounted );
 
+  /** The normalization factor. */
   double normal_sum = 0.0;
   if ( this->m_NumberOfPixelsCounted > 0 )
   {
@@ -576,21 +591,21 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
       static_cast<double>( this->m_NumberOfPixelsCounted );
   }
 
+  /** Compute the measure value. */
   for( ThreadIdType i = 0; i < this->m_NumberOfThreadsPerMetric; i++ )
   {
-    /** Check if enough samples were valid. */
-    this->CheckNumberOfSamples(
-      this->m_SampleContainerSize, this->m_NumberOfPixelsCounted );
+    value += this->m_ThreaderValues[ i ];
+  }
+  value *= normal_sum;
 
-    /** Compute the measure value and derivative. */
-    value += this->m_ThreaderValues[ i ] * normal_sum;
-#if 0
+  /** Compute the measure derivative. */
+#if 0 // compute single-threadedly
+  for( ThreadIdType i = 0; i < this->m_NumberOfThreadsPerMetric; i++ )
+  {
     derivative += this->m_ThreaderDerivatives[ i ] * normal_sum;
   }
-#else
-  }
+#else // compute multi-threadedly
   MultiThreaderComputeDerivativeType * temp = new  MultiThreaderComputeDerivativeType;
-
   temp->normal_sum = normal_sum ;
   temp->m_ThreaderDerivativesIterator = this->m_ThreaderDerivatives.begin();
   temp->derivativeIterator = derivative.begin();
@@ -602,7 +617,6 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   local_threader->SingleMethodExecute();
 
   delete[] temp;
-
 #endif
 
 } // end AfterThreadedGetValueAndDerivative()
@@ -641,7 +655,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   return ITK_THREAD_RETURN_VALUE;
 
 } // end ComputeDerivativesThreaderCallback()
-#endif
+
 
 /**
  * *************** UpdateValueAndDerivativeTerms ***************************

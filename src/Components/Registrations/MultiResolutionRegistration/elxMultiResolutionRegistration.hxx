@@ -33,7 +33,7 @@ using namespace itk;
     /** Get the components from this->m_Elastix and set them. */
     this->SetComponents();
 
-    /** Set the number of Threads per metric */
+    /** Set the number of Threads per metric *
     unsigned int numberOfThreads = 1;
     std::string strNumberOfThreads = this->m_Configuration->GetCommandLineArgument( "-nt" );
     if( !strNumberOfThreads.empty() )

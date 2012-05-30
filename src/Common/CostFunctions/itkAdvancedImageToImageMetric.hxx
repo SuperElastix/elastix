@@ -12,8 +12,8 @@
 
 ======================================================================*/
 
-#ifndef _itkAdvancedImageToImageMetric_txx
-#define _itkAdvancedImageToImageMetric_txx
+#ifndef _itkAdvancedImageToImageMetric_hxx
+#define _itkAdvancedImageToImageMetric_hxx
 
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkImageRegionConstIterator.h"
@@ -440,7 +440,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     itkDebugMacro( "Transform is Advanced" );
   }
 
-} // end CheckForBSplineTransform()
+} // end CheckForAdvancedTransform()
 
 
 /**
@@ -790,5 +790,5 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 } // end namespace itk
 
 
-#endif // end #ifndef _itkAdvancedImageToImageMetric_txx
+#endif // end #ifndef _itkAdvancedImageToImageMetric_hxx
 

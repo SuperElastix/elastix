@@ -137,18 +137,21 @@ public:
   virtual void GetDerivative( const TransformParametersType & parameters,
     DerivativeType & derivative ) const;
 
-  /** Get value and derivatives for multiple valued optimizers. */
+  /** Get value and derivative. */
+  void GetValueAndDerivativeSingleThreaded( const TransformParametersType & parameters,
+    MeasureType & value, DerivativeType & derivative ) const;
+
   virtual void GetValueAndDerivative( const TransformParametersType & parameters,
     MeasureType & value, DerivativeType & derivative ) const;
 
-  /** Get value and derivatives for each thread. *
+  /** Get value and derivatives for each thread. */
   inline void ThreadedGetValueAndDerivative( ThreadIdType threadID );
 
-  /** Gather the values and derivatives from all threads *
+  /** Gather the values and derivatives from all threads */
   inline void AfterThreadedGetValueAndDerivative(
     MeasureType & value, DerivativeType & derivative )const;
 
-  /** ComputeDerivatives threader callback function *
+  /** ComputeDerivatives threader callback function */
   static ITK_THREAD_RETURN_TYPE ComputeDerivativesThreaderCallback( void * arg );
 
   /** Experimental feature: compute SelfHessian */
@@ -246,19 +249,19 @@ private:
   double          m_SelfHessianNoiseRange;
   unsigned int    m_NumberOfSamplesForSelfHessian;
 
-  //mutable ImageSampleContainerPointer   m_SampleContainer;
-  //mutable unsigned long                 m_SampleContainerSize;
-  //mutable std::vector< MeasureType >    m_ThreaderValues;
-  //mutable std::vector< DerivativeType > m_ThreaderDerivatives;
-  //mutable std::vector< unsigned long >  m_ThreaderNumberOfPixelsCounted;
+  mutable ImageSampleContainerPointer   m_SampleContainer;
+  mutable unsigned long                 m_SampleContainerSize;
+  mutable std::vector< MeasureType >    m_ThreaderValues;
+  mutable std::vector< DerivativeType > m_ThreaderDerivatives;
+  mutable std::vector< unsigned long >  m_ThreaderNumberOfPixelsCounted;
 
-  //struct MultiThreaderComputeDerivativeType
-  //{
-  //  typename DerivativeType::iterator derivativeIterator;
-  //  typename std::vector< DerivativeType >::iterator  m_ThreaderDerivativesIterator;
-  //  unsigned int numberOfParameters;
-  //  double normal_sum;
-  //};
+  struct MultiThreaderComputeDerivativeType
+  {
+    typename DerivativeType::iterator derivativeIterator;
+    typename std::vector< DerivativeType >::iterator  m_ThreaderDerivativesIterator;
+    unsigned int numberOfParameters;
+    double normal_sum;
+  };
 
 }; // end class AdvancedMeanSquaresImageToImageMetric
 

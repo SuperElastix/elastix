@@ -244,6 +244,8 @@ public:
    */
   virtual void GetSelfHessian( const TransformParametersType & parameters, HessianType & H ) const;
 
+  /** Multi-threaded metric computation. */
+
   /** Contains calls from GetValueAndDerivative that are thread-unsafe,
    * together with preparation for multi-threading.
    */
@@ -265,15 +267,16 @@ public:
   itkGetConstReferenceMacro( UseMetricSingleThreaded, bool );
   itkBooleanMacro( UseMetricSingleThreaded );
 
+  // \todo: maybe these can be united
+  itkSetMacro( UseMultiThread, bool );
+  itkGetConstReferenceMacro( UseMultiThread, bool );
+  itkBooleanMacro( UseMultiThread );
+
   /** Set and Get number of threads. */
   itkSetMacro( NumberOfThreadsPerMetric, ThreadIdType );
   itkGetConstReferenceMacro( NumberOfThreadsPerMetric, ThreadIdType );
 
 protected:
-
-  /** Launch MultiThread GetValueAndDerivative */
-  void LaunchGetValueAndDerivativeThreaderCallback( void ) const;
-
   /** Constructor. */
   AdvancedImageToImageMetric();
 
@@ -339,17 +342,19 @@ protected:
   MovingImageLimiterOutputType                       m_MovingImageMinLimit;
   MovingImageLimiterOutputType                       m_MovingImageMaxLimit;
 
-  /** Variables for multi-threading. */
-  bool m_UseMetricSingleThreaded;
+  /** Launch MultiThread GetValueAndDerivative */
+  void LaunchGetValueAndDerivativeThreaderCallback( void ) const;
 
-  mutable ThreadIdType m_NumberOfThreadsPerMetric;
+  /** Variables for multi-threading. */
+  bool                  m_UseMetricSingleThreaded;
+  bool                  m_UseMultiThread;
+  mutable ThreadIdType  m_NumberOfThreadsPerMetric;
 
   struct MultiThreaderParameterType
   {
     AdvancedImageToImageMetric * m_Metric;
   };
-
-  MultiThreaderParameterType m_ThreaderMetricParameters;
+  MultiThreaderParameterType  m_ThreaderMetricParameters;
 
 
   /** Protected methods ************** */

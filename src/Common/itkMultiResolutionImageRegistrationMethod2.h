@@ -209,7 +209,7 @@ public:
   /** Get the current resolution level being processed. */
   itkGetMacro( CurrentLevel, unsigned long );
 
-  /** Set/Get the number of threads to compute the metric. */
+  /** Set/Get the number of threads to compute the metric. *
   itkSetMacro( NumberOfThreadsPerMetric, ThreadIdType );
   itkGetMacro( NumberOfThreadsPerMetric, ThreadIdType );
 
@@ -301,7 +301,7 @@ private:
   unsigned long                    m_NumberOfLevels;
   unsigned long                    m_CurrentLevel;
 
-  ThreadIdType                     m_NumberOfThreadsPerMetric;
+  //ThreadIdType                     m_NumberOfThreadsPerMetric;
 
 }; // end class MultiResolutionImageRegistrationMethod2
 

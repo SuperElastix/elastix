@@ -1013,7 +1013,7 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
 
 #else
 
-    numberOfThreads = this->m_NumberOfThreadsPerMetric* this->m_NumberOfMetrics;
+    numberOfThreads = this->m_NumberOfThreadsPerMetric * this->m_NumberOfMetrics;
     unsigned int subVectorSize
       = (unsigned int)(ceil(double(this->GetNumberOfParameters())/double(numberOfThreads)));
 
@@ -1143,7 +1143,7 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
 
 #else  // multi-thread combination derivatives
 
-    numberOfThreads = this->m_NumberOfThreadsPerMetric* this->m_NumberOfMetrics;
+    numberOfThreads = this->m_NumberOfThreadsPerMetric * this->m_NumberOfMetrics;
     unsigned int subVectorSize = (unsigned int)(ceil(double(this->GetNumberOfParameters())/double(numberOfThreads)));
 
     temp1->size = subVectorSize;
