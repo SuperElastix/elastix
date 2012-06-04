@@ -616,7 +616,8 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   local_threader->SetSingleMethod( ComputeDerivativesThreaderCallback, temp );
   local_threader->SingleMethodExecute();
 
-  delete[] temp;
+  //delete[] temp;
+  delete temp;
 #endif
 
 } // end AfterThreadedGetValueAndDerivative()

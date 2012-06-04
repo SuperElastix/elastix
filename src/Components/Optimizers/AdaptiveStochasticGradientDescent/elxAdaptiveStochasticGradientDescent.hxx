@@ -84,6 +84,23 @@ AdaptiveStochasticGradientDescent<TElastix>
 
   this->m_SettingsVector.clear();
 
+
+  /** Temporary?: Use the multi-threaded version or not. */
+  bool useMultiThread = false;
+  std::string tmp = this->m_Configuration->GetCommandLineArgument( "-mto" ); // mtm: multi-threaded optimizers
+  if ( tmp == "true" )
+  {
+    //thisAsAdvanced->SetUseMultiThread( true );
+    this->SetNumberOfThreads( 4 );
+    std::string tmp2 = this->m_Configuration->GetCommandLineArgument( "-threads" );
+    unsigned int nrOfThreads = atoi( tmp2.c_str() );
+    if ( tmp2 != "" )
+    {
+      this->SetNumberOfThreads( nrOfThreads );
+    }
+  }
+  //else thisAsAdvanced->SetUseMultiThread( false );
+
 } // end BeforeRegistration()
 
 
@@ -248,6 +265,8 @@ void AdaptiveStochasticGradientDescent<TElastix>
 
   } // end else: no automatic parameter estimation
 
+
+  this->m_AdvanceOneStepTimings.clear();//tmp
 } // end BeforeEachResolution()
 
 
@@ -336,6 +355,14 @@ AdaptiveStochasticGradientDescent<TElastix>
     << "Settings of " << this->elxGetClassName()
     << " in resolution " << level << ":" << std::endl;
   this->PrintSettingsVector( tempSettingsVector );
+
+  //tmp
+  elxout << "\n" << std::endl;
+  for ( std::size_t i = 0; i < this->m_AdvanceOneStepTimings.size(); ++i )
+  {
+    elxout << this->m_AdvanceOneStepTimings[ i ] << " ";
+  }
+  elxout << "\n" << std::endl;
 
 } // end AfterEachResolution()
 

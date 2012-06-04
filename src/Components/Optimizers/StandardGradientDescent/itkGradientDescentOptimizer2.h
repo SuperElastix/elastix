@@ -16,6 +16,7 @@
 #define __itkGradientDescentOptimizer2_h
 
 #include "itkScaledSingleValuedNonLinearOptimizer.h"
+#include "itkMultiThreader.h"
 
 namespace itk
 {
@@ -120,6 +121,11 @@ namespace itk
     /** Get current gradient. */
     itkGetConstReferenceMacro( Gradient, DerivativeType );
 
+    std::vector<double> m_AdvanceOneStepTimings; // tmp
+
+    //void SetNumberOfThreads( ThreadIdType numberOfThreads );
+    itkSetMacro( NumberOfThreads, ThreadIdType );
+    itkGetConstReferenceMacro( NumberOfThreads, ThreadIdType );
 
   protected:
     GradientDescentOptimizer2();
@@ -141,7 +147,24 @@ namespace itk
     unsigned long                 m_NumberOfIterations;
     unsigned long                 m_CurrentIteration;
 
+    // multi-threaded AdvanceOneStep:
 
+    /** Typedefs for multi-threading. */
+    typedef itk::MultiThreader               ThreaderType;
+    typedef ThreaderType::ThreadInfoStruct   ThreadInfoType;
+
+    ThreadIdType m_NumberOfThreads;
+    struct MultiThreaderParameterType
+    {
+      ParametersType *  t_NewPosition;
+      Self *            t_Optimizer;
+    };
+
+    /** The callback function. */
+    static ITK_THREAD_RETURN_TYPE AdvanceOneStepThreaderCallback( void * arg );
+
+    /** The threaded implementation of AdvanceOneStep(). */
+    inline void ThreadedAdvanceOneStep( ThreadIdType threadId, ParametersType & newPosition );
 
   };
 
