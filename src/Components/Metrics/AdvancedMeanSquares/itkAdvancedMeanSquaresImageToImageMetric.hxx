@@ -18,6 +18,8 @@
 #include "vnl/algo/vnl_matrix_update.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 
+#include "elxTimer.h"//tmp
+
 namespace itk
 {
 
@@ -42,7 +44,9 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   this->m_ThreaderValues.resize( 0 );
   this->m_ThreaderDerivatives.resize( 0 );
   this->m_ThreaderNumberOfPixelsCounted.resize( 0 );
-  this->m_SampleContainerSize = 0;
+
+  //this->m_SampleContainerSize = 0;
+  this->m_FillDerivativesTimings.clear();//tmp
 
 } // end Constructor
 
@@ -282,7 +286,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 
 
 /**
- * ******************* GetValueAndDerivative *******************
+ * ******************* GetValueAndDerivativeSingleThreaded *******************
  */
 
 template <class TFixedImage, class TMovingImage>
@@ -453,22 +457,31 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   this->m_ThreaderDerivatives.resize( this->m_NumberOfThreadsPerMetric );
   this->m_ThreaderNumberOfPixelsCounted.resize( this->m_NumberOfThreadsPerMetric, 0 );
 
+  // time this:
+  typedef tmr::Timer          TimerType; typedef TimerType::Pointer  TimerPointer;
+  TimerPointer timer = TimerType::New();
+  timer->StartTimer();
   for( ThreadIdType i = 0; i < this->m_NumberOfThreadsPerMetric; i++ )
   {
     this->m_ThreaderValues[ i ] = 0;
     this->m_ThreaderNumberOfPixelsCounted[ i ] = 0;
+    // only resizes when different size, is good:
     this->m_ThreaderDerivatives[ i ].SetSize( this->GetNumberOfParameters() );
+    // Does not use memcopy, probably slow:
     this->m_ThreaderDerivatives[ i ].Fill( 0 );
+    // measured to be 3ms on PCMarius for 300k parameters, while total iter took 25 ms
   }
+  timer->StopTimer();
+  this->m_FillDerivativesTimings.push_back( timer->GetElapsedClockSec() * 1000.0 );
 
-  /** Get a handle to the sample container. */
+  /** Get a handle to the sample container. *
   this->m_SampleContainer = this->GetImageSampler()->GetOutput();
   this->m_SampleContainerSize = this->m_SampleContainer->Size();
 
   /** Launch multi-threading metric */
   this->LaunchGetValueAndDerivativeThreaderCallback();
 
-  /** gather the metric value and derivatives from value vectors and derivative vectors */
+  /** Gather the metric values and derivatives from all threads. */
   this->AfterThreadedGetValueAndDerivative( value, derivative );
 
 } // end GetValueAndDerivative()
@@ -483,27 +496,30 @@ void
 AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 ::ThreadedGetValueAndDerivative( ThreadIdType threadID )
 {
-//  std::cerr << "Thread["<< threadID <<"] start " << std::endl;
-
   /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
-  NonZeroJacobianIndicesType nzji = NonZeroJacobianIndicesType(
-    this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+  const unsigned int nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
+  NonZeroJacobianIndicesType nzji = NonZeroJacobianIndicesType( nnzji );
   DerivativeType imageJacobian = DerivativeType( nzji.size() );
-  TransformJacobianType jacobian;
+  TransformJacobianType jacobian( FixedImageDimension, nnzji );
+  jacobian.Fill( 0.0 ); // needed?
 
-  // bug?
+  /** Get a handle to the sample container. */
+  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+  const unsigned long sampleContainerSize = sampleContainer->Size();
+
+  /** Get the samples for this thread. */
   const unsigned long nrOfSamplerPerThreads
-    = static_cast<unsigned long>( vcl_ceil( static_cast<double>( this->m_SampleContainerSize )
+    = static_cast<unsigned long>( vcl_ceil( static_cast<double>( sampleContainerSize )
       / static_cast<double>( this->m_NumberOfThreadsPerMetric ) ) );
+
+  const unsigned long pos_begin = nrOfSamplerPerThreads * threadID;
+  unsigned long pos_end = nrOfSamplerPerThreads * ( threadID + 1 );
+  pos_end = ( pos_end > sampleContainerSize ) ? sampleContainerSize : pos_end;
 
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator threader_fiter;
-  typename ImageSampleContainerType::ConstIterator threader_fbegin = this->m_SampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator threader_fend = this->m_SampleContainer->Begin();
-
-  unsigned long pos_begin = nrOfSamplerPerThreads * threadID;
-  unsigned long pos_end = nrOfSamplerPerThreads * ( threadID + 1 );
-  pos_end = ( pos_end > this->m_SampleContainerSize ) ? this->m_SampleContainerSize : pos_end;
+  typename ImageSampleContainerType::ConstIterator threader_fbegin = sampleContainer->Begin();
+  typename ImageSampleContainerType::ConstIterator threader_fend = sampleContainer->Begin();
 
   threader_fbegin += (int)pos_begin;
   threader_fend += (int)pos_end;
@@ -555,7 +571,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
         fixedImageValue, movingImageValue,
         imageJacobian, nzji,
         this->m_ThreaderValues[ threadID ],
-        this->m_ThreaderDerivatives[ threadID ] ); // thread-safe?
+        this->m_ThreaderDerivatives[ threadID ] );
 
     } // end if sampleOk
 
@@ -579,9 +595,11 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   {
     this->m_NumberOfPixelsCounted += this->m_ThreaderNumberOfPixelsCounted[ i ];
   }
+
   /** Check if enough samples were valid. */
+  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
   this->CheckNumberOfSamples(
-    this->m_SampleContainerSize, this->m_NumberOfPixelsCounted );
+    sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
   /** The normalization factor. */
   double normal_sum = 0.0;
@@ -606,7 +624,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   }
 #else // compute multi-threadedly
   MultiThreaderComputeDerivativeType * temp = new  MultiThreaderComputeDerivativeType;
-  temp->normal_sum = normal_sum ;
+  temp->normal_sum = normal_sum;
   temp->m_ThreaderDerivativesIterator = this->m_ThreaderDerivatives.begin();
   temp->derivativeIterator = derivative.begin();
   temp->numberOfParameters = this->GetNumberOfParameters();
@@ -616,7 +634,6 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   local_threader->SetSingleMethod( ComputeDerivativesThreaderCallback, temp );
   local_threader->SingleMethodExecute();
 
-  //delete[] temp;
   delete temp;
 #endif
 
@@ -640,11 +657,12 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   MultiThreaderComputeDerivativeType * temp
     = static_cast<MultiThreaderComputeDerivativeType * >( infoStruct->UserData );
 
-  unsigned int subSize = (unsigned int)ceil(double(temp->numberOfParameters)/double(nrOfThreads));
-
-  unsigned int jmin = threadID * subSize;
-  unsigned int jmax = (threadID+1) * subSize;
-  jmax = (jmax > temp->numberOfParameters) ? temp->numberOfParameters :jmax ;
+  const unsigned int subSize = static_cast<unsigned int>(
+    vcl_ceil( static_cast<double>( temp->numberOfParameters )
+    / static_cast<double>( nrOfThreads ) ) );
+  const unsigned int jmin = threadID * subSize;
+  unsigned int jmax = ( threadID + 1 ) * subSize;
+  jmax = ( jmax > temp->numberOfParameters ) ? temp->numberOfParameters :jmax;
 
   for( ThreadIdType i = 0; i < nrOfThreads; i++ )
   {
@@ -653,6 +671,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
       temp->derivativeIterator[ j ] += temp->m_ThreaderDerivativesIterator[ i ][ j ] * temp->normal_sum;
     }
   }
+
   return ITK_THREAD_RETURN_VALUE;
 
 } // end ComputeDerivativesThreaderCallback()

@@ -409,7 +409,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   {
     jacobian.SetSize( SpaceDimension, nnzji );
   }
-  jacobian.Fill( 0.0 );
+  //jacobian.Fill( 0.0 );
 
   // NOTE: if the support region does not lie totally within the grid
   // we assume zero displacement and zero Jacobian
@@ -1227,6 +1227,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   NonZeroJacobianIndicesType & nonZeroJacobianIndices,
   const RegionType & supportRegion ) const
 {
+#if 0
   nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );
 
   /** Create an iterator over the coefficient image. */
@@ -1260,6 +1261,68 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     ++mu;
 
   } // end while
+#else
+  // check if needed / expensive
+  nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );
+
+  /** Initialize some helper variables. */
+  const unsigned long numberOfWeights = WeightsFunctionType::NumberOfWeights;
+  const unsigned long parametersPerDim
+    = this->GetNumberOfParametersPerDimension();
+
+  // Can be computed beforehand
+  GridOffsetType supportRegionOffset; supportRegionOffset[ 0 ] = 1;
+  for ( unsigned int dim = 1; dim < SpaceDimension; ++dim )
+  {
+    supportRegionOffset[ dim ] = supportRegionOffset[ dim - 1 ] * supportRegion.GetSize()[ dim - 1 ];
+  }
+
+  /***/
+  for ( unsigned int localParNum = 0; localParNum < numberOfWeights; ++localParNum )
+  // Note that numberOfWeights == supportRegion.GetNumberOfPixels()
+  {
+    // translate localParNum to a local index
+    GridOffsetType localParIndex;
+    unsigned int remainder = localParNum;
+    for ( int dim = SpaceDimension - 1; dim >= 0; --dim )
+    {
+      localParIndex[ dim ] = remainder / supportRegionOffset[ dim ];
+      remainder = remainder % supportRegionOffset[ dim ];
+    }
+
+    // translate local index to global index
+    GridOffsetType globalParIndex;
+    for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+    {
+      globalParIndex[ dim ] = localParIndex[ dim ] + supportRegion.GetIndex()[ dim ];
+    }
+
+    // translate global index to global parameter number
+    unsigned int globalParNum = 0;
+    for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+    {
+      globalParNum += globalParIndex[ dim ] * this->m_GridOffsetTable[ dim ];
+    }
+
+    /** Update the nonZeroJacobianIndices for all directions. */
+    for ( unsigned int dim = 0; dim < SpaceDimension; ++dim )
+    {
+      nonZeroJacobianIndices[ localParNum + dim * numberOfWeights ]
+        = globalParNum + dim * parametersPerDim;
+    }
+  } // end for
+
+#endif
+  //std::cerr << "\n\nparametersPerDim = " << parametersPerDim << "\n";
+  //std::cerr << "numberOfWeights = " << numberOfWeights << "\n";
+  //std::cerr << "supportRegion.GetIndex() = " << supportRegion.GetIndex() << "\n";
+  //std::cerr << "supportRegionOffset = " << supportRegionOffset << "\n";
+  //for ( unsigned int i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i )
+  //{
+  //    std::cerr << nonZeroJacobianIndices[i] << " ";
+  //}
+  //std::cerr << std::endl << std::endl;
+  //itkExceptionMacro( << "no error, just quiting" );
 
 } // end ComputeNonZeroJacobianIndices()
 

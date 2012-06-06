@@ -96,8 +96,23 @@ using namespace itk;
         << movingImageDerivativeScales << std::endl;
     }
 
+    this->m_FillDerivativesTimings.clear();//tmp
+
   } // end BeforeEachResolution
 
+
+    template <class TElastix>
+    void AdvancedMeanSquaresMetric<TElastix>
+    ::AfterEachResolution(void)
+  {
+    //tmp
+    elxout << "\n FillDerivativesTimings" << std::endl;
+    for ( std::size_t i = 0; i < this->m_FillDerivativesTimings.size(); ++i )
+    {
+      elxout << this->m_FillDerivativesTimings[ i ] << " ";
+    }
+    elxout << "\n" << std::endl;
+  }
 
 } // end namespace elastix
 

@@ -185,6 +185,8 @@ public:
   itkSetMacro( UseNormalization, bool );
   itkGetConstMacro( UseNormalization, bool );
 
+  mutable std::vector<double> m_FillDerivativesTimings;//tmp
+
 protected:
   AdvancedMeanSquaresImageToImageMetric();
   virtual ~AdvancedMeanSquaresImageToImageMetric();
@@ -249,8 +251,8 @@ private:
   double          m_SelfHessianNoiseRange;
   unsigned int    m_NumberOfSamplesForSelfHessian;
 
-  mutable ImageSampleContainerPointer   m_SampleContainer;
-  mutable unsigned long                 m_SampleContainerSize;
+  //mutable ImageSampleContainerPointer   m_SampleContainer;
+  //mutable unsigned long                 m_SampleContainerSize;
   mutable std::vector< MeasureType >    m_ThreaderValues;
   mutable std::vector< DerivativeType > m_ThreaderDerivatives;
   mutable std::vector< unsigned long >  m_ThreaderNumberOfPixelsCounted;

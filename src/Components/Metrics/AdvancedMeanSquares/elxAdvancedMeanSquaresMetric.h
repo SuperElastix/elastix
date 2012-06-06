@@ -152,6 +152,8 @@ using namespace itk;
      */
     virtual void BeforeEachResolution(void);
 
+    virtual void AfterEachResolution(void);
+
   protected:
 
     /** The constructor. */
