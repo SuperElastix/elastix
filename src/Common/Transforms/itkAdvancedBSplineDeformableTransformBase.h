@@ -259,6 +259,9 @@ public:
    */
   typedef ContinuousIndex<ScalarType, SpaceDimension> ContinuousIndexType;
 
+  itkSetMacro( UseMultiThread, bool );// tmp for testing
+  bool m_UseMultiThread;
+
 protected:
   /** Print contents of an AdvancedBSplineDeformableTransformBase. */
   virtual void PrintSelf( std::ostream &os, Indent indent ) const;

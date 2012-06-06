@@ -41,6 +41,7 @@ namespace itk
     this->m_StopCondition = MaximumNumberOfIterations;
 
     this->m_NumberOfThreads = 1;
+    this->m_UseMultiThread = false;
 
   } // end Constructor
 
@@ -212,7 +213,8 @@ namespace itk
       this->GetScaledCostFunction()->GetNumberOfParameters();
     ParametersType newPosition( spaceDimension );
 
-#if 0
+  if ( !this->m_UseMultiThread )
+  {
     /** Get a reference to the current position. */
     const ParametersType & currentPosition = this->GetScaledCurrentPosition();
 
@@ -221,7 +223,9 @@ namespace itk
     {
       newPosition[j] = currentPosition[j] - this->m_LearningRate * this->m_Gradient[j];
     }
-#else
+  }
+  else
+  {
     /** Fill the threader parameter struct with information. */
     MultiThreaderParameterType * temp = new  MultiThreaderParameterType;
     temp->t_NewPosition = &newPosition;
@@ -234,7 +238,7 @@ namespace itk
     local_threader->SingleMethodExecute();
 
     delete temp;
-#endif
+  }
 
     this->SetScaledCurrentPosition( newPosition );
 

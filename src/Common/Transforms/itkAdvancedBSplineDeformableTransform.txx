@@ -1227,7 +1227,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   NonZeroJacobianIndicesType & nonZeroJacobianIndices,
   const RegionType & supportRegion ) const
 {
-#if 0
+if ( !this->m_UseMultiThread )
+{
   nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );
 
   /** Create an iterator over the coefficient image. */
@@ -1261,7 +1262,9 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     ++mu;
 
   } // end while
-#else
+}
+else
+{
   // check if needed / expensive
   nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );
 
@@ -1312,17 +1315,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
     }
   } // end for
 
-#endif
-  //std::cerr << "\n\nparametersPerDim = " << parametersPerDim << "\n";
-  //std::cerr << "numberOfWeights = " << numberOfWeights << "\n";
-  //std::cerr << "supportRegion.GetIndex() = " << supportRegion.GetIndex() << "\n";
-  //std::cerr << "supportRegionOffset = " << supportRegionOffset << "\n";
-  //for ( unsigned int i = 0; i < this->GetNumberOfNonZeroJacobianIndices(); ++i )
-  //{
-  //    std::cerr << nonZeroJacobianIndices[i] << " ";
-  //}
-  //std::cerr << std::endl << std::endl;
-  //itkExceptionMacro( << "no error, just quiting" );
+}
 
 } // end ComputeNonZeroJacobianIndices()
 

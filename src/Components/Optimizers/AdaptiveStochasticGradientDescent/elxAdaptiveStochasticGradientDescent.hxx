@@ -87,11 +87,11 @@ AdaptiveStochasticGradientDescent<TElastix>
 
   /** Temporary?: Use the multi-threaded version or not. */
   bool useMultiThread = false;
-  std::string tmp = this->m_Configuration->GetCommandLineArgument( "-mto" ); // mtm: multi-threaded optimizers
+  std::string tmp = this->m_Configuration->GetCommandLineArgument( "-mto" ); // mto: multi-threaded optimizers
   if ( tmp == "true" )
   {
-    //thisAsAdvanced->SetUseMultiThread( true );
-    this->SetNumberOfThreads( 4 );
+    this->SetUseMultiThread( true );
+    //this->SetNumberOfThreads( 4 );
     std::string tmp2 = this->m_Configuration->GetCommandLineArgument( "-threads" );
     unsigned int nrOfThreads = atoi( tmp2.c_str() );
     if ( tmp2 != "" )
@@ -99,7 +99,7 @@ AdaptiveStochasticGradientDescent<TElastix>
       this->SetNumberOfThreads( nrOfThreads );
     }
   }
-  //else thisAsAdvanced->SetUseMultiThread( false );
+  else this->SetUseMultiThread( false );
 
 } // end BeforeRegistration()
 
@@ -283,7 +283,15 @@ AdaptiveStochasticGradientDescent<TElastix>
   xl::xout["iteration"]["2:Metric"] << this->GetValue();
   xl::xout["iteration"]["3a:Time"] << this->GetCurrentTime();
   xl::xout["iteration"]["3b:StepSize"] << this->GetLearningRate();
-  xl::xout["iteration"]["4:||Gradient||"] << this->GetGradient().magnitude();
+  bool asFastAsPossible = true;
+  if ( asFastAsPossible )
+  {
+    xl::xout["iteration"]["4:||Gradient||"] << "---";
+  }
+  else
+  {
+    xl::xout["iteration"]["4:||Gradient||"] << this->GetGradient().magnitude();
+  }
 
   /** Select new spatial samples for the computation of the metric. */
   if ( this->GetNewSamplesEveryIteration() )

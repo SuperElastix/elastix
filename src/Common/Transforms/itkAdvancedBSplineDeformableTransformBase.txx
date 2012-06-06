@@ -113,6 +113,8 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>
         = static_cast<ScalarType>( this->m_PointToIndexMatrixTransposed[ i ][ j ] );
     }
   }
+
+  this->m_UseMultiThread = false;//tmp
 }
 
 

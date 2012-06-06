@@ -126,6 +126,7 @@ namespace itk
     //void SetNumberOfThreads( ThreadIdType numberOfThreads );
     itkSetMacro( NumberOfThreads, ThreadIdType );
     itkGetConstReferenceMacro( NumberOfThreads, ThreadIdType );
+    itkSetMacro( UseMultiThread, bool );
 
   protected:
     GradientDescentOptimizer2();
@@ -154,6 +155,7 @@ namespace itk
     typedef ThreaderType::ThreadInfoStruct   ThreadInfoType;
 
     ThreadIdType m_NumberOfThreads;
+    bool m_UseMultiThread;
     struct MultiThreaderParameterType
     {
       ParametersType *  t_NewPosition;
