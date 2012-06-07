@@ -51,6 +51,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 
   this->m_AdvancedTransform = 0;
   this->m_TransformIsAdvanced = false;
+  this->m_TransformIsBSpline = false;
   this->m_UseMovingImageDerivativeScales = false;
 
   this->m_FixedImageLimiter = 0;
@@ -111,6 +112,9 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Check if the transform is an advanced transform. */
   this->CheckForAdvancedTransform();
+
+  /** Check if the transform is a B-spline transform. */
+  this->CheckForBSplineTransform();
 
 } // end Initialize()
 
@@ -441,6 +445,55 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   }
 
 } // end CheckForAdvancedTransform()
+
+
+/**
+ * ****************** CheckForBSplineTransform **********************
+ */
+
+template <class TFixedImage, class TMovingImage>
+void
+AdvancedImageToImageMetric<TFixedImage,TMovingImage>
+::CheckForBSplineTransform( void )
+{
+  /** Check if this transform is a combo transform. */
+  CombinationTransformType * testPtr_combo
+    = dynamic_cast<CombinationTransformType *>( this->m_AdvancedTransform.GetPointer() );
+
+  /** Check if this transform is a B-spline transform. */
+  BSplineOrder1TransformType * testPtr_1
+    = dynamic_cast<BSplineOrder1TransformType *>( this->m_AdvancedTransform.GetPointer() );
+  BSplineOrder2TransformType * testPtr_2
+    = dynamic_cast<BSplineOrder2TransformType *>( this->m_AdvancedTransform.GetPointer() );
+  BSplineOrder3TransformType * testPtr_3
+    = dynamic_cast<BSplineOrder3TransformType *>( this->m_AdvancedTransform.GetPointer() );
+  
+  bool transformIsBSpline = false;
+  if ( testPtr_1 || testPtr_2 || testPtr_3 )
+  {
+    transformIsBSpline = true;
+  }
+  else if ( testPtr_combo )
+  {
+    /** Check if the current transform is a B-spline transform. */
+    BSplineOrder1TransformType * testPtr_1b = dynamic_cast<BSplineOrder1TransformType *>(
+      testPtr_combo->GetCurrentTransform() );
+    BSplineOrder2TransformType * testPtr_2b = dynamic_cast<BSplineOrder2TransformType *>(
+      testPtr_combo->GetCurrentTransform() );
+    BSplineOrder3TransformType * testPtr_3b = dynamic_cast<BSplineOrder3TransformType *>(
+      testPtr_combo->GetCurrentTransform() );
+    //BSplineTransformType * testPtr = dynamic_cast<BSplineOrder3TransformType *>(
+    //  (testPtr_combo->GetCurrentTransform()) );
+    if ( testPtr_1b || testPtr_2b || testPtr_3b )
+    {
+      transformIsBSpline = true;
+    }
+  }
+
+  /** Store the result. */
+  this->m_TransformIsBSpline = transformIsBSpline;
+
+} // end CheckForBSplineTransform()
 
 
 /**

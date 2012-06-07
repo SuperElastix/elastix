@@ -146,19 +146,56 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 {
   typedef typename TransformJacobianType::const_iterator JacobianIteratorType;
   typedef typename DerivativeType::iterator              DerivativeIteratorType;
-  JacobianIteratorType jac = jacobian.begin();
-  imageJacobian.Fill( 0.0 );
-  const unsigned int sizeImageJacobian = imageJacobian.GetSize();
-  for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
-  {
-    const double imDeriv = movingImageDerivative[ dim ];
-    DerivativeIteratorType imjac = imageJacobian.begin();
 
-    for ( unsigned int mu = 0; mu < sizeImageJacobian; mu++ )
+  /** Multiple the 1-by-dim vector movingImageDerivative with the
+   * dim-by-length matrix jacobian, to get a 1-by-length vector imageJacobian.
+   * An optimized route can be taken for B-spline transforms.
+   */
+  if ( this->m_TransformIsBSpline )
+  {
+    // For the B-spline we know that the Jacobian is mostly empty.
+    //       [ j ... j 0 ... 0 0 ... 0 ]
+    // jac = [ 0 ... 0 j ... j.0 ... 0 ]
+    //       [ 0 ... 0 0 ... 0.j ... j ]
+    //JacobianIteratorType jac = jacobian.begin();
+    //DerivativeIteratorType imjac = imageJacobian.begin();
+
+    const unsigned int sizeImageJacobian = imageJacobian.GetSize();
+    const unsigned int numberOfParametersPerDimension = sizeImageJacobian / FixedImageDimension;
+    unsigned int counter = 0;
+    for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
     {
-      (*imjac) += (*jac) * imDeriv;
-      ++imjac;
-      ++jac;
+      const double imDeriv = movingImageDerivative[ dim ];
+      for ( unsigned int mu = 0; mu < numberOfParametersPerDimension; mu++ )
+      {
+        imageJacobian( counter )
+          = jacobian( dim, counter ) * imDeriv; // is correct, pointers more efficient?
+        //(*imjac) = (*jac) * imDeriv;
+        //++imjac;
+        //++jac;
+        ++counter;
+      }
+      //jac += numberOfParametersPerDimension;
+    }
+  }
+  else
+  {
+    /** Otherwise perform a full multiplication. */
+    JacobianIteratorType jac = jacobian.begin();
+    imageJacobian.Fill( 0.0 );
+    const unsigned int sizeImageJacobian = imageJacobian.GetSize();
+
+    for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
+    {
+      const double imDeriv = movingImageDerivative[ dim ];
+      DerivativeIteratorType imjac = imageJacobian.begin();
+
+      for ( unsigned int mu = 0; mu < sizeImageJacobian; mu++ )
+      {
+        (*imjac) += (*jac) * imDeriv;
+        ++imjac;
+        ++jac;
+      }
     }
   }
 

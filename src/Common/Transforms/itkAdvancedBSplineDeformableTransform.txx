@@ -409,7 +409,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions,VSplineOrder>
   {
     jacobian.SetSize( SpaceDimension, nnzji );
   }
-  //jacobian.Fill( 0.0 );
+  if ( !m_UseMultiThread ) jacobian.Fill( 0.0 );
 
   // NOTE: if the support region does not lie totally within the grid
   // we assume zero displacement and zero Jacobian

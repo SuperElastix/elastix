@@ -27,6 +27,10 @@
 #include "vnl/vnl_sparse_matrix.h"
 #include "elxTimer.h" // temp? for timing stuff
 
+// Needed for checking for B-spline for faster implementation
+#include "itkAdvancedBSplineDeformableTransform.h"
+#include "itkAdvancedCombinationTransform.h"
+
 #include "itkMultiThreader.h"
 
 namespace itk
@@ -150,6 +154,16 @@ public:
     ScalarType,
     FixedImageDimension,
     MovingImageDimension >                                AdvancedTransformType;
+
+  /** Typedef's for the B-spline transform. */
+  typedef AdvancedCombinationTransform<
+    ScalarType, FixedImageDimension >             CombinationTransformType;
+  typedef AdvancedBSplineDeformableTransform<
+    ScalarType, FixedImageDimension, 1 >          BSplineOrder1TransformType;
+  typedef AdvancedBSplineDeformableTransform<
+    ScalarType, FixedImageDimension, 2 >          BSplineOrder2TransformType;
+  typedef AdvancedBSplineDeformableTransform<
+    ScalarType, FixedImageDimension, 3 >          BSplineOrder3TransformType;
 
   /** Hessian type; for SelfHessian (experimental feature) */
   typedef typename DerivativeType::ValueType              HessianValueType;
@@ -329,6 +343,7 @@ protected:
   /** Variables to store the AdvancedTransform. */
   bool m_TransformIsAdvanced;
   typename AdvancedTransformType::Pointer            m_AdvancedTransform;
+  bool m_TransformIsBSpline;
 
   /** Variables for the Limiters. */
   typename FixedImageLimiterType::Pointer            m_FixedImageLimiter;
@@ -396,6 +411,9 @@ protected:
 
   /** Check if the transform is an AdvancedTransform. Called by Initialize. */
   virtual void CheckForAdvancedTransform( void );
+
+  /** Check if the transform is a B-spline. Called by Initialize. */
+  virtual void CheckForBSplineTransform( void );
 
   /** Transform a point from FixedImage domain to MovingImage domain.
    * This function also checks if mapped point is within support region of
