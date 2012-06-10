@@ -2982,6 +2982,121 @@ Also for \texttt{for}-loops.
 \normalsize
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Practical exercise: using VV with \elastix}
+
+\textbf{This exercise has been kindly provided by Simon Rit (Creatis).}
+
+The goal of these practical exercises is to introduce you to the problem of
+image registration. Because software development is time consuming, you will
+not develop your own software but use existing open-source programs:
+\begin{itemize}
+\item Elastix (\url{http://elastix.isi.uu.nl/}, [1]) is an open-source
+    platform for automated image registration based on the Insight
+    Segmentation and Registration Toolkit (\url{www.itk.org}). The
+    development was initiated by the Image Sciences Institute of the
+    University Medical Center of Utrecht (The Netherlands). It is command
+    line driven with configuration settings defined in a parameter file.
+    The user manual is available here:
+    \url{http://elastix.isi.uu.nl/download/elastix_manual_v4.5.pdf}.
+\item vv (\url{http://vv.creatis.insa-lyon.fr/}), [2]) is an open-source
+    and cross platform image viewer, designed for fast and simple
+    visualization, based on ITK and the Visualization Toolkit
+    (\url{www.vtk.org}). The development was initiated by the CREATIS
+    laboratory of Lyon (France). It can also be command line driven.
+    Command line options are accessible with \verb+vv --help+, key
+    shortcuts with \verb+F1+.
+\end{itemize}
+
+To run a command window in Windows, click on \verb+Executer+ in the Windows
+menu and type \verb+cmd+. In this window, you can:
+\begin{itemize}
+	\item Change drive by typing, e.g., \verb+D:+ to go to drive D.
+	\item Change folder by typing, e.g., \verb+cd tmp+ to go to subfolder
+\textit{tmp}.
+	\item Create a directory by typing, e.g., \verb+mkdir toto+ to create a
+\textit{toto} subfolder.
+\end{itemize}
+
+At the end of the exercises, you should be able to do rigid (manual and
+automated) as well as non-rigid registrations and to visualize the results. You
+will write a report to answer the instructions with a bold font which will
+contain concise comments supported with screenshots whenever possible.
+
+\section{Manual rigid registration}
+
+\begin{itemize}
+ \item Download the images \textit{ct.mha} and \textit{cbct.mha}:
+     \url{http://www.creatis.insa-lyon.fr/~srit/tete}.
+ \item Open them in vv with the command line \verb+vv ct.mha cbct.mha+.
+     Observe them, change image on each slicer and analyze the effect of
+     each shortcut and mouse option in the help menu (\verb+F1+).
+ \item Open them in vv with the command line %
+  \verb+vv --linkall ct.mha cbct.mha+ and observe the difference.
+ \item Open them in vv with the command line %
+  \verb+vv ct.mha --overlay cbct.mha+ and observe the difference.
+ \item In the menu \verb+Tools+, open the manual registration tool and play
+     with the sliders. Check that the behavior of vv manual registration is
+     consistent with that described in the elastix manual, section 2.6.
+ \item \textbf{Manually register the two images.}
+ \item \textbf{Knowing that the convention is Euler angles with YXZ,
+     explain how the resulting matrix is computed from the parameters.}
+ \item The software is not robust to the gimbal lock. \textbf{Explain for
+     which parameter(s) the gimbal lock is reached and observe the
+     consequence in vv.}
+\end{itemize}
+
+\section{Automated rigid registration}
+
+\begin{itemize}
+ \item Download the elastix parameter file \textit{Par0005.MI.rigid.txt}
+     which has been taken from the elastix database on their website.
+ \item Create a \textit{rigid} directory with \verb+mkdir rigid+ and run elastix with the command line\\
+ \verb+elastix -f cbct.mha -m ct.mha -p Par0005.MI.rigid.txt -out rigid+\\
+ \textbf{Observe the result with vv by typing the result parameters in the
+ manual registration window (in the file
+ \textit{rigid/TransformParameters.0.txt}).}
+ \item \textbf{Detect a not so well aligned region and elaborate on the
+     cause.}
+ \item \textbf{Compare 3 similarity measures and plot their evolution
+     during optimization.}
+\end{itemize}
+
+%\section{Local rigid registration}
+%\begin{itemize}
+% \item In vv, open the fixed image \verb+Tools+ / \verb+Crop+, and crop a small region which was not well aligned.
+% \item \textbf{Rerun the registration and comment on the alignment result for this region as well as the rest of the image.}
+%\end{itemize}
+
+\section{Non-rigid registration}
+
+\begin{itemize}
+ \item Download the pre-registered image \textit{ct.mhd} and check that
+     only deformations are left with\\\verb+vv ct.mhd --overlay cbct.mha+.
+ \item Download the elastix parameter file \textit{Par0005.MI.1.txt}. The
+     latter has been modified to account for the embedded rigid
+     registration with the parameter\\\verb+(UseDirectionCosines "true")+.
+ \item Create a \textit{dir} directory with \verb+mkdir dir+ and
+     run\\\verb+elastix -f cbct.mha -m ct.mhd -p Par0005.MI.1.txt -out dir+
+ \item Create a \textit{dirres} directory with \verb+mkdir dirres+ and
+     run\\\verb+transformix -in ct.mhd -out dirres -tp dir/TransformParameters.0.R1.txt -def all+ %
+ \item \textbf{Discuss the results using the two commands:}\\
+ \verb+vv cbct.mha --vf dirres/deformationField.mhd+\\
+ \verb+vv --linkall cbct.mha --overlay ct.mhd cbct.mha --overlay dirres/result.mhd+ %
+
+\end{itemize}
+
+\noindent[1] S.~Klein, M.~Staring, K.~Murphy, M.A. Viergever, and J.P.W. Pluim.
+elastix: a toolbox for intensity-based medical image registration. {\em IEEE
+Trans Med Imaging}, 29(1):196--205, Jan 2010.
+
+\noindent[2] S.~Rit, R.~Pinho, V.~Delmon, M.~Pech, G.~Bouilhol, J.~Schaerer,
+B.~Navalpakkam, J.~Vandemeulebroucke, P.~Seroul, and D.~Sarrut. {VV}, a {4D}
+slicer. In {\em Proceedings of the Fourth International Workshop on Pulmonary
+Image Analysis}, pages 171--175, Toronto, Canada, September 2011.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Software License} \label{chp:License}
 
