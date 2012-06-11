@@ -10,6 +10,8 @@
 
 % For figures
 \usepackage{graphicx,subfigure,psfrag,epsfig}
+\usepackage{pifont}% for symbol cross
+
 \graphicspath{{images/}}
 
 % Url's and clickable pdf
@@ -988,6 +990,51 @@ the lower the metric value, the better the registration.
 
 % There are papers about evaluation of registration
 
+\section{Visualizing registration}\label{sec:visualization}
+
+\elastix\ is a command line program and does not do visualization.
+It takes the input fixed and moving image and at the end of the
+registration generates an output (result) image. Usually, however,
+you will need to inspect the end result visually. For this you can
+use an external viewer. Such a viewer does not come with the
+\elastix\ package, but is a stand-alone application, with dedicated
+functionality for visualization. We have listed a number of
+visualization tools in Table \ref{table:visualization}. All of them
+are freely available, sometimes even with open source. The list is
+not exhaustive.
+
+\begin{table}[h!]
+\begin{tabular*}{\textwidth}%
+    {l|% tool name
+    c% open source?
+    c% platforms
+    p{112mm}}% url and comments
+Tool & \rotatebox{90}{Open source?} & Platforms & url and comments \\
+\hline MeVisLab   & \ding{53} & $\checkmark\checkmark\checkmark$ &
+\url{http://www.mevislab.de/} MeVisLab has modular framework for the
+development of image processing algorithms and visualization and
+interaction methods, with a special focus on medical imaging. Quite
+easy in use. \\
+ITK-SNAP & $\checkmark$ & $\checkmark\checkmark\checkmark$ &
+\url{http://www.itksnap.org} Visualization, mostly targeted to
+segmentation. \\
+ParaView & $\checkmark$ & $\checkmark\checkmark\checkmark$ &
+\url{http://www.paraview.org/} Data analysis, exploration and
+visualization application. Renderings are nice. Sometimes difficult
+in use. \\
+3DSlicer & $\checkmark$ & $\checkmark\checkmark\checkmark$ &
+\url{http://www.slicer.org/} Application and framework
+for medical image analysis, visualization, and surgical navigation. \\
+VV & $\checkmark$ & $\checkmark\checkmark\checkmark$ &
+\url{http://www.creatis.insa-lyon.fr/rio/vv} The 4D Slicer, a fast
+and simple viewer. VV is more specifically designed for qualitative
+evaluation of image registration and deformation field
+visualization. \\
+\end{tabular*}
+\caption{A number of visualization tools. The three marks for the
+platforms column denote Windows, Linux and Mac OSX support,
+respectively.}\label{table:visualization}
+\end{table}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -2990,7 +3037,7 @@ The goal of these practical exercises is to introduce you to the problem of
 image registration. Because software development is time consuming, you will
 not develop your own software but use existing open-source programs:
 \begin{itemize}
-\item Elastix (\url{http://elastix.isi.uu.nl/}, [1]) is an open-source
+\item \elastix\ (\url{http://elastix.isi.uu.nl/}, [1]) is an open-source
     platform for automated image registration based on the Insight
     Segmentation and Registration Toolkit (\url{www.itk.org}). The
     development was initiated by the Image Sciences Institute of the
@@ -3010,10 +3057,10 @@ not develop your own software but use existing open-source programs:
 To run a command window in Windows, click on \verb+Executer+ in the Windows
 menu and type \verb+cmd+. In this window, you can:
 \begin{itemize}
-	\item Change drive by typing, e.g., \verb+D:+ to go to drive D.
-	\item Change folder by typing, e.g., \verb+cd tmp+ to go to subfolder
+    \item Change drive by typing, e.g., \verb+D:+ to go to drive D.
+    \item Change folder by typing, e.g., \verb+cd tmp+ to go to subfolder
 \textit{tmp}.
-	\item Create a directory by typing, e.g., \verb+mkdir toto+ to create a
+    \item Create a directory by typing, e.g., \verb+mkdir toto+ to create a
 \textit{toto} subfolder.
 \end{itemize}
 
@@ -3036,7 +3083,7 @@ contain concise comments supported with screenshots whenever possible.
   \verb+vv ct.mha --overlay cbct.mha+ and observe the difference.
  \item In the menu \verb+Tools+, open the manual registration tool and play
      with the sliders. Check that the behavior of vv manual registration is
-     consistent with that described in the elastix manual, section 2.6.
+     consistent with that described in the \elastix\ manual, section 2.6.
  \item \textbf{Manually register the two images.}
  \item \textbf{Knowing that the convention is Euler angles with YXZ,
      explain how the resulting matrix is computed from the parameters.}
@@ -3048,9 +3095,10 @@ contain concise comments supported with screenshots whenever possible.
 \section{Automated rigid registration}
 
 \begin{itemize}
- \item Download the elastix parameter file \textit{Par0005.MI.rigid.txt}
-     which has been taken from the elastix database on their website.
- \item Create a \textit{rigid} directory with \verb+mkdir rigid+ and run elastix with the command line\\
+ \item Download the \elastix\ parameter file \textit{Par0005.MI.rigid.txt}
+     which has been taken from the \elastix\ database on their website.
+ \item Create a \textit{rigid} directory with \verb+mkdir rigid+ and run \elastix\ with the command
+ line \\
  \verb+elastix -f cbct.mha -m ct.mha -p Par0005.MI.rigid.txt -out rigid+\\
  \textbf{Observe the result with vv by typing the result parameters in the
  manual registration window (in the file
@@ -3072,7 +3120,7 @@ contain concise comments supported with screenshots whenever possible.
 \begin{itemize}
  \item Download the pre-registered image \textit{ct.mhd} and check that
      only deformations are left with\\\verb+vv ct.mhd --overlay cbct.mha+.
- \item Download the elastix parameter file \textit{Par0005.MI.1.txt}. The
+ \item Download the \elastix\ parameter file \textit{Par0005.MI.1.txt}. The
      latter has been modified to account for the embedded rigid
      registration with the parameter\\\verb+(UseDirectionCosines "true")+.
  \item Create a \textit{dir} directory with \verb+mkdir dir+ and
@@ -3085,9 +3133,10 @@ contain concise comments supported with screenshots whenever possible.
 
 \end{itemize}
 
-\noindent[1] S.~Klein, M.~Staring, K.~Murphy, M.A. Viergever, and J.P.W. Pluim.
-elastix: a toolbox for intensity-based medical image registration. {\em IEEE
-Trans Med Imaging}, 29(1):196--205, Jan 2010.
+\noindent[1] S.~Klein, M.~Staring, K.~Murphy, M.A. Viergever, and
+J.P.W. Pluim. \elastix: a toolbox for intensity-based medical image
+registration. {\em IEEE Trans Med Imaging}, 29(1):196--205, Jan
+2010.
 
 \noindent[2] S.~Rit, R.~Pinho, V.~Delmon, M.~Pech, G.~Bouilhol, J.~Schaerer,
 B.~Navalpakkam, J.~Vandemeulebroucke, P.~Seroul, and D.~Sarrut. {VV}, a {4D}
