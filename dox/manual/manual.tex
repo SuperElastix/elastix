@@ -433,11 +433,12 @@ written as:
 KS is defined as:
 \begin{align}
 \mathrm{KS}(\vmu;I_F,I_M) &= \frac{ 2 \sum\limits_{\vx_i \in
-\Omega_F} \mathbf{1}_{I_F(\vx_i) > 0, I_M(\vT_{\vmu}(\vx_i)) >
-0}}{\sum\limits_{\vx_i \in \Omega_F} \mathbf{1}_{I_F(\vx_i) > 0} +
-\mathbf{1}_{I_M(\vT_{\vmu}(\vx_i)) > 0}}, \label{eq:KS}
+\Omega_F} \mathbf{1}_{I_F(\vx_i) = f, I_M(\vT_{\vmu}(\vx_i)) =
+f}}{\sum\limits_{\vx_i \in \Omega_F} \mathbf{1}_{I_F(\vx_i) = f} +
+\mathbf{1}_{I_M(\vT_{\vmu}(\vx_i)) = f}}, \label{eq:KS}
 \end{align}
-where $\mathbf{1}$ is the indicator function.
+where $\mathbf{1}$ is the indicator function, and $f$ a user-defined
+foreground value that defaults to 1.
 
 \end{description}
 
