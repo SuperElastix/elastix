@@ -31,7 +31,8 @@ namespace elastix
    * \parameter Metric: Select this metric as follows:\n
    *    <tt>(Metric "AdvancedKappaStatistic")</tt>
    * \parameter UseComplement: Bool to use the complement of the metric or not.\n
-   *    If true, the 1 - KappaStatistic is returned, which is useful since most optimizers search by default for a minimum.\n
+   *    If true, the 1 - KappaStatistic is returned, which is useful since most 
+   *    optimizers search by default for a minimum.\n
    *    <tt>(UseComplement "true")</tt>\n
    *    The default value is true.
    * \parameter ForeGroundvalue: the overlap of structures with this value is

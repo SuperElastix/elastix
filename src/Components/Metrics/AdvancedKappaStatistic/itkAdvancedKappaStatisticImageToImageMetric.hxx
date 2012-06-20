@@ -33,6 +33,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
   this->SetUseFixedImageLimiter( false );
   this->SetUseMovingImageLimiter( false );
 
+  this->m_UseForegroundValue = true; // for backwards compatibility
   this->m_ForegroundValue = 1.0;
   this->m_Epsilon = 1e-3;
   this->m_Complement = true;
@@ -51,7 +52,10 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
 {
   Superclass::PrintSelf( os, indent );
 
-  os << indent << "Complement: "      << ( this->m_Complement ? "On" : "Off" ) << std::endl;
+  os << indent << "UseForegroundValue: "
+    << ( this->m_UseForegroundValue ? "On" : "Off" ) << std::endl;
+  os << indent << "Complement: "
+    << ( this->m_Complement ? "On" : "Off" ) << std::endl;
   os << indent << "ForegroundValue: " << this->m_ForegroundValue << std::endl;
   os << indent << "Epsilon: " << this->m_Epsilon << std::endl;
 
@@ -157,12 +161,22 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
         = static_cast<RealType>( (*fiter).Value().m_ImageValue );
 
       /** Update the intermediate values. */
-      const RealType diffFixed = vnl_math_abs( fixedImageValue - this->m_ForegroundValue );
-      const RealType diffMoving = vnl_math_abs( movingImageValue - this->m_ForegroundValue );
-      if ( diffFixed < this->m_Epsilon ){ fixedForegroundArea++; }
-      if ( diffMoving < this->m_Epsilon ){ movingForegroundArea++; }
-      if ( diffFixed < this->m_Epsilon
-        && diffMoving < this->m_Epsilon ){ intersection++; }
+      if ( this->m_UseForegroundValue )
+      {
+        const RealType diffFixed = vnl_math_abs( fixedImageValue - this->m_ForegroundValue );
+        const RealType diffMoving = vnl_math_abs( movingImageValue - this->m_ForegroundValue );
+        if ( diffFixed < this->m_Epsilon ){ fixedForegroundArea++; }
+        if ( diffMoving < this->m_Epsilon ){ movingForegroundArea++; }
+        if ( diffFixed < this->m_Epsilon
+          && diffMoving < this->m_Epsilon ){ intersection++; }
+      }
+      else
+      {
+        if ( fixedImageValue  > this->m_Epsilon ){ fixedForegroundArea++; }
+        if ( movingImageValue > this->m_Epsilon ){ movingForegroundArea++; }
+        if ( fixedImageValue  > this->m_Epsilon
+          && movingImageValue > this->m_Epsilon ){ intersection++; }
+      }
 
     } // end if samplOk
 
@@ -335,6 +349,10 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
   {
     derivative = tmp1 * vecSum1 - tmp2 * vecSum2;
   }
+  else
+  {
+    derivative.Fill( 0.0 );
+  }
 
 } // end GetValueAndDerivative()
 
@@ -357,14 +375,24 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
   DerivativeType & sum1,
   DerivativeType & sum2 ) const
 {
-  const RealType diffFixed = vnl_math_abs( fixedImageValue - this->m_ForegroundValue );
-  const RealType diffMoving = vnl_math_abs( movingImageValue - this->m_ForegroundValue );
-
   /** Update the intermediate values. */
-  if ( diffFixed < this->m_Epsilon ) fixedForegroundArea++;
-  if ( diffMoving < this->m_Epsilon ) movingForegroundArea++;
-  if ( diffFixed < this->m_Epsilon
-    && diffMoving < this->m_Epsilon ) intersection++;
+  bool usableFixedSample = false;
+  if ( this->m_UseForegroundValue )
+  {
+    const RealType diffFixed = vnl_math_abs( fixedImageValue - this->m_ForegroundValue );
+    const RealType diffMoving = vnl_math_abs( movingImageValue - this->m_ForegroundValue );
+    if ( diffFixed < this->m_Epsilon ){ fixedForegroundArea++; usableFixedSample = true; }
+    if ( diffMoving < this->m_Epsilon ){ movingForegroundArea++; }
+    if ( diffFixed < this->m_Epsilon
+      && diffMoving < this->m_Epsilon ){ intersection++; }
+  }
+  else
+  {
+    if ( fixedImageValue  > this->m_Epsilon ){ fixedForegroundArea++; usableFixedSample = true; }
+    if ( movingImageValue > this->m_Epsilon ){ movingForegroundArea++; }
+    if ( fixedImageValue  > this->m_Epsilon
+      && movingImageValue > this->m_Epsilon ){ intersection++; }
+  }
 
   /** Calculate the contributions to the derivatives with respect to each parameter. */
   if ( nzji.size() == this->GetNumberOfParameters() )
@@ -375,7 +403,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
     typename DerivativeType::iterator sum2it = sum2.begin();
     for ( unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu )
     {
-      if ( diffFixed < this->m_Epsilon )
+      if ( usableFixedSample )
       {
         (*sum1it) += 2.0 * (*imjacit);
       }
@@ -392,7 +420,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage,TMovingImage>
     {
       const unsigned int index = nzji[ i ];
       const DerivativeValueType imjac = imageJacobian[ i ];
-      if ( diffFixed < this->m_Epsilon )
+      if ( usableFixedSample )
       {
         sum1[ index ] += 2.0 * imjac;
       }
