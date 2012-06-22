@@ -21,6 +21,9 @@
 #include "itkExceptionObject.h"
 
 #include "elxTimer.h" // tmp
+#include <omp.h> // OpenMP
+#include <Eigen/Dense> // Eigen
+#include <Eigen/Core> // Eigen
 
 namespace itk
 {
@@ -42,6 +45,8 @@ namespace itk
 
     this->m_NumberOfThreads = 1;
     this->m_UseMultiThread = false;
+    this->m_UseOpenMP  = false;
+    this->m_UseEigen = false;
 
   } // end Constructor
 
@@ -70,6 +75,7 @@ namespace itk
     os << indent << "Gradient: "
       << this->m_Gradient;
     os << std::endl;
+
   } // end PrintSelf
 
 
@@ -209,38 +215,96 @@ namespace itk
     itkDebugMacro("AdvanceOneStep");
 
     /** Get space dimension and allocate new position. */
-    const unsigned int spaceDimension =
-      this->GetScaledCostFunction()->GetNumberOfParameters();
-    ParametersType newPosition( spaceDimension );
+    const unsigned int spaceDimension
+      = this->GetScaledCostFunction()->GetNumberOfParameters();
+    const double learningRate = this->m_LearningRate;
+    // This old way creates a vector, fills it later, and copies it at the end
+    //ParametersType newPosition( spaceDimension );
+    // This new way gets a reference to a previously allocated vector and fills it
+    // This saves and allocation and a copy at every iteration
+    ParametersType & newPosition = this->m_ScaledCurrentPosition;
 
-  if ( !this->m_UseMultiThread )
-  {
-    /** Get a reference to the current position. */
-    const ParametersType & currentPosition = this->GetScaledCurrentPosition();
-
-    /** Update the new position. */
-    for( unsigned int j = 0; j < spaceDimension; j++ ) // \todo: candidate for parallel loop
+    if ( !this->m_UseMultiThread )
     {
-      newPosition[j] = currentPosition[j] - this->m_LearningRate * this->m_Gradient[j];
+      /** Get a reference to the current position. */
+      const ParametersType & currentPosition = this->GetScaledCurrentPosition();
+
+      /** Update the new position. */
+      for( unsigned int j = 0; j < spaceDimension; j++ )
+      {
+        newPosition[j] = currentPosition[j] - this->m_LearningRate * this->m_Gradient[j];
+      }
     }
-  }
-  else
-  {
-    /** Fill the threader parameter struct with information. */
-    MultiThreaderParameterType * temp = new  MultiThreaderParameterType;
-    temp->t_NewPosition = &newPosition;
-    temp->t_Optimizer = this;
+    else if ( this->m_UseOpenMP && !this->m_UseEigen )
+    {
+      /** Get a reference to the current position. */
+      const ParametersType & currentPosition = this->GetScaledCurrentPosition();
 
-    /** Call multi-threaded AdvanceOneStep(). */
-    ThreaderType::Pointer local_threader = ThreaderType::New();
-    local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
-    local_threader->SetSingleMethod( AdvanceOneStepThreaderCallback, (void *)( temp ) );
-    local_threader->SingleMethodExecute();
+      /** Update the new position. */
+      #pragma omp parallel for
+      for( int j = 0; j < spaceDimension; j++ )
+      {
+        newPosition[j] = currentPosition[j] - this->m_LearningRate * this->m_Gradient[j];
+      }
+    }
+    else if ( !this->m_UseOpenMP && this->m_UseEigen )
+    {
+      /** Get a reference to the current position. */
+      const ParametersType & currentPosition = this->GetScaledCurrentPosition();
 
-    delete temp;
-  }
+      /** Wrap itk::Arrays into Eigen jackets. */
+      typedef Eigen::VectorXd ParametersTypeEigen;
+      Eigen::Map<ParametersTypeEigen> newPositionE( newPosition.data_block(), spaceDimension );
+      Eigen::Map<const ParametersTypeEigen> currentPositionE( currentPosition.data_block(), spaceDimension );
+      Eigen::Map<ParametersTypeEigen> gradientE( this->m_Gradient.data_block(), spaceDimension );
 
-    this->SetScaledCurrentPosition( newPosition );
+      /** Update the new position. */
+      newPositionE = currentPositionE - learningRate * gradientE;
+    }
+    else if ( this->m_UseOpenMP && this->m_UseEigen )
+    {
+      /** Get a reference to the current position. */
+      const ParametersType & currentPosition = this->GetScaledCurrentPosition();
+
+      /** Wrap itk::Arrays into Eigen jackets. */
+      typedef Eigen::VectorXd ParametersTypeEigen;
+      Eigen::Map<ParametersTypeEigen> newPositionE( newPosition.data_block(), spaceDimension );
+      Eigen::Map<const ParametersTypeEigen> currentPositionE( currentPosition.data_block(), spaceDimension );
+      Eigen::Map<ParametersTypeEigen> gradientE( this->m_Gradient.data_block(), spaceDimension );
+
+      /** Update the new position. */
+      const int nthreads = this->m_NumberOfThreads;
+      omp_set_num_threads( nthreads );
+      #pragma omp parallel for
+      for( int i = 0; i < nthreads; i += 1 )
+      {
+        int threadId = omp_get_thread_num();
+        int chunk = ( spaceDimension + nthreads - 1 ) / nthreads;
+        int jmin = threadId * chunk;
+        int jmax = (threadId + 1) * chunk < spaceDimension ? (threadId + 1) * chunk : spaceDimension;
+        int subSize = jmax - jmin;
+
+        newPositionE.segment( jmin, subSize ) = currentPositionE.segment( jmin, subSize )
+          - learningRate * gradientE.segment( jmin, subSize );
+      }
+    }
+    else
+    {
+      /** Fill the threader parameter struct with information. */
+      MultiThreaderParameterType * temp = new  MultiThreaderParameterType;
+      temp->t_NewPosition = &newPosition;
+      temp->t_Optimizer = this;
+
+      /** Call multi-threaded AdvanceOneStep(). */
+      ThreaderType::Pointer local_threader = ThreaderType::New();
+      local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
+      local_threader->SetSingleMethod( AdvanceOneStepThreaderCallback, (void *)( temp ) );
+      local_threader->SingleMethodExecute();
+
+      delete temp;
+    }
+
+    //this->SetScaledCurrentPosition( newPosition ); // has explicit copy
 
     this->InvokeEvent( IterationEvent() );
 
@@ -287,11 +351,14 @@ void GradientDescentOptimizer2
 
   /** Get a reference to the current position. */
   const ParametersType & currentPosition = this->GetScaledCurrentPosition();
+  const double learningRate = this->m_LearningRate;
+  const DerivativeType & gradient = this->m_Gradient;
 
   /** Advance one step: mu_{k+1} = mu_k - a_k * gradient_k */
   for( unsigned int j = jmin; j < jmax; j++ )
   {
-    newPosition[ j ] = currentPosition[ j ] - this->m_LearningRate * this->m_Gradient[ j ];
+    //newPosition[ j ] = currentPosition[ j ] - this->m_LearningRate * this->m_Gradient[ j ];
+    newPosition[ j ] = currentPosition[ j ] - learningRate * gradient[ j ];
   }
 
 } // end ThreadedAdvanceOneStep()

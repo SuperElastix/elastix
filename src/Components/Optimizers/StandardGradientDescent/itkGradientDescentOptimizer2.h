@@ -128,6 +128,9 @@ namespace itk
     itkGetConstReferenceMacro( NumberOfThreads, ThreadIdType );
     itkSetMacro( UseMultiThread, bool );
 
+    itkSetMacro( UseOpenMP, bool );
+    itkSetMacro( UseEigen, bool );
+
   protected:
     GradientDescentOptimizer2();
     virtual ~GradientDescentOptimizer2() {};
@@ -161,6 +164,9 @@ namespace itk
       ParametersType *  t_NewPosition;
       Self *            t_Optimizer;
     };
+
+    bool m_UseOpenMP;
+    bool m_UseEigen;
 
     /** The callback function. */
     static ITK_THREAD_RETURN_TYPE AdvanceOneStepThreaderCallback( void * arg );

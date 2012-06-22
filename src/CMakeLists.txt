@@ -27,6 +27,23 @@ IF( ELASTIX_USE_CUDA )
 ENDIF()
 
 #----------------------------------------------------------------------
+
+# Find Eigen
+list( APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR} )
+find_package( Eigen3 REQUIRED )
+include_directories( ${EIGEN3_INCLUDE_DIR} )
+#message( STATUS EIGEN3_INCLUDE_DIR: ${EIGEN3_INCLUDE_DIR} )
+
+# Find OpenMP
+find_package( OpenMP )
+if( OPENMP_FOUND )
+  set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}" )
+  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}" )
+  #  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}
+  #  ${OpenMP_EXE_LINKER_FLAGS}")
+endif()
+
+#----------------------------------------------------------------------
 # Check for the SuiteSparse package
 # We need to do that here, because the link_directories should be set
 # before declaring any targets.

@@ -86,20 +86,31 @@ AdaptiveStochasticGradientDescent<TElastix>
 
 
   /** Temporary?: Use the multi-threaded version or not. */
+  std::string tmp2 = this->m_Configuration->GetCommandLineArgument( "-threads" );
+  unsigned int nrOfThreads = 4;
+  if ( tmp2 != "" )
+  {
+    nrOfThreads = atoi( tmp2.c_str() );
+  }
+
   bool useMultiThread = false;
   std::string tmp = this->m_Configuration->GetCommandLineArgument( "-mto" ); // mto: multi-threaded optimizers
   if ( tmp == "true" )
   {
     this->SetUseMultiThread( true );
-    //this->SetNumberOfThreads( 4 );
-    std::string tmp2 = this->m_Configuration->GetCommandLineArgument( "-threads" );
-    unsigned int nrOfThreads = atoi( tmp2.c_str() );
-    if ( tmp2 != "" )
-    {
-      this->SetNumberOfThreads( nrOfThreads );
-    }
+    this->SetNumberOfThreads( nrOfThreads );
   }
   else this->SetUseMultiThread( false );
+
+  bool useEigen = false;
+  tmp = this->m_Configuration->GetCommandLineArgument( "-useEigen" );
+  if ( tmp == "true" ) this->SetUseEigen( true );
+  bool useOpenMP = false;
+  tmp = this->m_Configuration->GetCommandLineArgument( "-useOpenMP" );
+  if ( tmp == "true" )
+  {
+    this->SetUseOpenMP( true );
+  }
 
 } // end BeforeRegistration()
 
