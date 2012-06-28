@@ -361,7 +361,9 @@ int ElastixMain::InitDBIndex( void )
       /** Read it from the fixed image header. */
       std::string fixedImageFileName
         = this->m_Configuration->GetCommandLineArgument( "-f" );
-      try 
+      if (fixedImageFileName == "")
+        fixedImageFileName = this->m_Configuration->GetCommandLineArgument( "-f0" );
+      try
       {
         this->GetImageInformationFromFile( fixedImageFileName,
           this->m_FixedImageDimension );
@@ -421,7 +423,8 @@ int ElastixMain::InitDBIndex( void )
       /** Read it from the moving image header. */
       std::string movingImageFileName
         = this->m_Configuration->GetCommandLineArgument( "-m" );
-
+      if (movingImageFileName == "")
+        movingImageFileName = this->m_Configuration->GetCommandLineArgument( "-m0" );
       try
       {
         this->GetImageInformationFromFile( movingImageFileName,
