@@ -18,6 +18,7 @@
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkImageRegionConstIterator.h"
 #include "itkImageRegionConstIteratorWithIndex.h"
+#include "itkAdvancedRayCastInterpolateImageFunction.h"
 
 namespace itk
 {
@@ -372,7 +373,9 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
    */
   if ( !this->GetComputeGradient() )
   {
-    if ( !this->m_InterpolatorIsBSpline && !this->m_InterpolatorIsBSplineFloat && !this->m_InterpolatorIsReducedBSpline )
+    typedef itk::AdvancedRayCastInterpolateImageFunction<MovingImageType, CoordinateRepresentationType> RayCastInterpolatorType;
+    if ( !dynamic_cast<RayCastInterpolatorType *>( this->m_Interpolator.GetPointer() ) &&
+         !this->m_InterpolatorIsBSpline && !this->m_InterpolatorIsBSplineFloat && !this->m_InterpolatorIsReducedBSpline )
     {
       this->m_CentralDifferenceGradientFilter = CentralDifferenceGradientFilterType::New();
       this->m_CentralDifferenceGradientFilter->SetUseImageSpacing( true );
