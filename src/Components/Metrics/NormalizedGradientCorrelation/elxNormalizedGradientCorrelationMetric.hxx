@@ -78,8 +78,8 @@ void NormalizedGradientCorrelationMetric<TElastix>
   for ( unsigned int i = 0; i < MovingImageDimension; ++i )
   {
     usescales &= this->GetConfiguration()->ReadParameter(
-    movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
-    this->GetComponentLabel(), i, -1, false );
+      movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
+      this->GetComponentLabel(), i, -1, false );
   }
   if ( usescales )
   {

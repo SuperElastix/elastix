@@ -110,9 +110,17 @@ void GradientDifferenceImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Resampling for 3D->2D */
   RayCastInterpolatorType * rayCaster = dynamic_cast<RayCastInterpolatorType *>(
-    const_cast<  InterpolatorType *>( ( this->GetInterpolator() ) ) );
-  if (rayCaster != 0)
-    this->m_TransformMovingImageFilter->SetTransform(rayCaster->GetTransform() );
+    const_cast<InterpolatorType *>( this->GetInterpolator() ) );
+  if ( rayCaster != 0 )
+  {
+    this->m_TransformMovingImageFilter->SetTransform( rayCaster->GetTransform() );
+  }
+  else
+  {
+    itkExceptionMacro( << "ERROR: the NormalizedGradientCorrelationImageToImageMetric is currently "
+        << "only suitable for 2D-3D registration.\n"
+        << "  Therefore it expects an interpolator of type RayCastInterpolator." );
+  }
   this->m_TransformMovingImageFilter->SetInterpolator( this->m_Interpolator );
   this->m_TransformMovingImageFilter->SetInput( this->m_MovingImage );
   this->m_TransformMovingImageFilter->SetDefaultPixelValue( 0 );
