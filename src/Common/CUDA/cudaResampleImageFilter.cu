@@ -58,6 +58,7 @@ template <typename TInterpolatorPrecisionType, typename TImageType, typename TIn
 cuda::CUDAResampleImageFilter<TInterpolatorPrecisionType, TImageType, TInternalImageType>
 ::~CUDAResampleImageFilter()
 {
+  this->cudaUnInit();
 } // end Destructor
 
 
@@ -94,6 +95,7 @@ cuda::CUDAResampleImageFilter<TInterpolatorPrecisionType, TImageType, TInternalI
   cuda::cudaFreeArray( this->m_CoeffsY );
   cuda::cudaFreeArray( this->m_CoeffsZ );
   cuda::cudaFreeArray( this->m_InputImage );
+  cuda::cudaFree( this->m_OutputImage );
 
 } // end cudaUnInit()
 

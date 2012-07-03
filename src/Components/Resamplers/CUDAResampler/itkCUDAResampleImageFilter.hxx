@@ -369,6 +369,10 @@ itkCUDAResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType
   /** Run the CUDA resampler. */
   this->m_CudaResampleImageFilter.GenerateData( data );
 
+  /** Release the GPU memory. */
+  this->m_CudaResampleImageFilter.cudaUnInit();
+  // \todo: a user reported more leakage, not sure where.
+
 } // end GenerateData()
 
 
