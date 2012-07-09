@@ -79,20 +79,25 @@ MultiMetricMultiResolutionRegistration<TElastix>
    * and format as floats.
    */
   const unsigned int nrOfMetrics = this->GetCombinationMetric()->GetNumberOfMetrics();
+  unsigned int width = 0;
+  for ( unsigned int i = nrOfMetrics; i > 0; i /= 10 )
+  {
+    width++;
+  }
   for ( unsigned int i = 0; i < nrOfMetrics; ++i )
   {
     std::ostringstream makestring1;
-    makestring1 << "2:Metric" << i;
+    makestring1 << "2:Metric" << std::setfill('0') << std::setw(width) << i;
     xout["iteration"].AddTargetCell( makestring1.str().c_str() );
     xl::xout["iteration"][ makestring1.str().c_str() ] << std::showpoint << std::fixed;
 
     std::ostringstream makestring2;
-    makestring2 << "4:||Gradient" << i << "||";
+    makestring2 << "4:||Gradient" << std::setfill('0') << std::setw(width) << i << "||";
     xout["iteration"].AddTargetCell( makestring2.str().c_str() );
     xl::xout["iteration"][ makestring2.str().c_str() ] << std::showpoint << std::fixed;
 
     std::ostringstream makestring3;
-    makestring3 << "Time" << i << "[ms]";
+    makestring3 << "Time" << std::setfill('0') << std::setw(width) << i << "[ms]";
     xout["iteration"].AddTargetCell( makestring3.str().c_str() );
     xl::xout["iteration"][ makestring3.str().c_str() ] << std::showpoint << std::fixed;
   }
@@ -111,20 +116,25 @@ MultiMetricMultiResolutionRegistration<TElastix>
 {
   /** Print the submetric values and gradients to xout["iteration"]. */
   const unsigned int nrOfMetrics = this->GetCombinationMetric()->GetNumberOfMetrics();
+  unsigned int width = 0;
+  for ( unsigned int i = nrOfMetrics; i > 0; i /= 10 )
+  {
+    width++;
+  }
   for ( unsigned int i = 0; i < nrOfMetrics; ++i )
   {
     std::ostringstream makestring1;
-    makestring1 << "2:Metric" << i;
+    makestring1 << "2:Metric" << std::setfill('0') << std::setw(width) << i;
     xl::xout["iteration"][ makestring1.str().c_str() ] <<
       this->GetCombinationMetric()->GetMetricValue( i );
 
     std::ostringstream makestring2;
-    makestring2 << "4:||Gradient" << i << "||";
+    makestring2 << "4:||Gradient" << std::setfill('0') << std::setw(width) << i << "||";
     xl::xout["iteration"][ makestring2.str().c_str() ] <<
       this->GetCombinationMetric()->GetMetricDerivativeMagnitude( i );
 
     std::ostringstream makestring3;
-    makestring3 << "Time" << i << "[ms]";
+    makestring3 << "Time" << std::setfill('0') << std::setw(width) << i << "[ms]";
     xl::xout["iteration"][ makestring3.str().c_str() ] <<
       this->GetCombinationMetric()->GetMetricComputationTime( i );
   }
