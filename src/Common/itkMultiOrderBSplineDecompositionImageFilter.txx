@@ -333,7 +333,6 @@ void
 MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>
 ::CopyImageToImage()
 {
-
   typedef ImageRegionConstIteratorWithIndex< TInputImage > InputIterator;
   typedef ImageRegionIterator< TOutputImage >              OutputIterator;
   typedef typename TOutputImage::PixelType                 OutputPixelType;
@@ -341,16 +340,14 @@ MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>
   InputIterator inIt( this->GetInput(), this->GetInput()->GetBufferedRegion() );
   OutputIterator outIt( this->GetOutput(), this->GetOutput()->GetBufferedRegion() );
 
-  inIt = inIt.Begin();
-  outIt = outIt.Begin();
-
+  inIt.GoToBegin();
+  outIt.GoToBegin();
   while ( !outIt.IsAtEnd() )
     {
     outIt.Set( static_cast<OutputPixelType>( inIt.Get() ) );
     ++inIt;
     ++outIt;
     }
-
 }
 
 
