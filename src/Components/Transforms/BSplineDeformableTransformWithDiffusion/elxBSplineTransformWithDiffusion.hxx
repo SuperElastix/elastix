@@ -1151,8 +1151,8 @@ BSplineTransformWithDiffusion<TElastix>
   IndexType       inputIndex;
 
   /** Calculate the TransformPoint of all voxels of the image. */
-  iter.Begin();
-  iterout.Begin();
+  iter.GoToBegin();
+  iterout.GoToBegin();
   while ( !iter.IsAtEnd() )
   {
     inputIndex = iter.GetIndex();
