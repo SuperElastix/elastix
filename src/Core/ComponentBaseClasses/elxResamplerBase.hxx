@@ -24,7 +24,7 @@
 namespace elastix
 {
 
-/*
+/**
  * ******************* BeforeRegistrationBase *******************
  */
 
@@ -58,17 +58,14 @@ ResamplerBase<TElastix>
   bool found = this->m_Configuration->ReadParameter(
     defaultPixelValue, "DefaultPixelValue", 0, false );
 
-  /** Set the defaultPixelValue. int values overrule double values. */
-  if ( found )
-  {
-    this->GetAsITKBaseType()->SetDefaultPixelValue(
-      static_cast<OutputPixelType>( defaultPixelValue ) );
-  }
+  /** Set the defaultPixelValue. */
+  this->GetAsITKBaseType()->SetDefaultPixelValue(
+    static_cast<OutputPixelType>( defaultPixelValue ) );
 
 } // end BeforeRegistrationBase()
 
 
-/*
+/**
  * ******************* AfterEachResolutionBase ********************
  */
 
@@ -131,7 +128,74 @@ ResamplerBase<TElastix>
 } // end AfterEachResolutionBase()
 
 
-/*
+/**
+ * ******************* AfterEachIterationBase ********************
+ */
+
+template<class TElastix>
+void
+ResamplerBase<TElastix>
+::AfterEachIterationBase( void )
+{
+  /** Set the final transform parameters. */
+  this->GetElastix()->GetElxTransformBase()->SetFinalParameters();
+
+  /** What is the current resolution level? */
+  const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
+
+  /** What is the current iteration number? */
+  const unsigned int iter = this->m_Elastix->GetIterationCounter();
+
+  /** Decide whether or not to write the result image this iteration. */
+  bool writeResultImageThisIteration = false;
+  this->m_Configuration->ReadParameter( writeResultImageThisIteration,
+    "WriteResultImageAfterEachIteration", "", level, 0, false );
+
+  /** Writing result image. */
+  if ( writeResultImageThisIteration )
+  {
+    /** Create a name for the final result. */
+    std::string resultImageFormat = "mhd";
+    this->m_Configuration->ReadParameter( resultImageFormat,
+      "ResultImageFormat", 0, false );
+    std::ostringstream makeFileName( "" );
+    makeFileName
+      << this->m_Configuration->GetCommandLineArgument( "-out" )
+      << "result." << this->m_Configuration->GetElastixLevel()
+      << ".R" << level
+      << ".It" << std::setfill( '0' ) << std::setw( 7 ) << iter
+      << "." << resultImageFormat;
+
+    /** Time the resampling. */
+    //typedef tmr::Timer TimerType;
+    //TimerType::Pointer timer = TimerType::New();
+    //timer->StartTimer();
+
+    /** Apply the final transform, and save the result. */
+    //elxout << "Applying transform this iteration ..." << std::endl;
+    try
+    {
+      this->WriteResultImage( makeFileName.str().c_str(), false );
+    }
+    catch( itk::ExceptionObject & excp )
+    {
+      xl::xout["error"] << "Exception caught: " << std::endl;
+      xl::xout["error"] << excp
+        << "Resuming elastix." << std::endl;
+    }
+
+    /** Print the elapsed time for the resampling. */
+    //timer->StopTimer();
+    //elxout << "  Applying transform took "
+    //  << static_cast<long>( timer->GetElapsedClockSec() )
+    //  << " s." << std::endl;
+
+  } // end if
+
+} // end AfterEachIterationBase()
+
+
+/**
  * ******************* AfterRegistrationBase ********************
  */
 
@@ -205,9 +269,9 @@ ResamplerBase<TElastix>
 } // end AfterRegistrationBase()
 
 
-/*
-* *********************** SetComponents ************************
-*/
+/**
+ * *********************** SetComponents ************************
+ */
 
 template <class TElastix>
 void
@@ -229,23 +293,26 @@ ResamplerBase<TElastix>
 } // end SetComponents()
 
 
-/*
+/**
  * ******************* WriteResultImage ********************
  */
 
 template<class TElastix>
 void
 ResamplerBase<TElastix>
-::WriteResultImage( const char * filename )
+::WriteResultImage( const char * filename, const bool & showProgress )
 {
   /** Make sure the resampler is updated. */
   this->GetAsITKBaseType()->Modified();
 
   /** Add a progress observer to the resampler. */
   typename ProgressCommandType::Pointer progressObserver = ProgressCommandType::New();
-  progressObserver->ConnectObserver( this->GetAsITKBaseType() );
-  progressObserver->SetStartString( "  Progress: " );
-  progressObserver->SetEndString( "%" );
+  if ( showProgress )
+  {
+    progressObserver->ConnectObserver( this->GetAsITKBaseType() );
+    progressObserver->SetStartString( "  Progress: " );
+    progressObserver->SetEndString( "%" );
+  }
 
   /** Do the resampling. */
   try
@@ -264,20 +331,20 @@ ResamplerBase<TElastix>
     throw excp;
   }
 
-  /** Check if ResampleInterpolator is the RayCastResampleInterpolator */
+  /** Check if ResampleInterpolator is the RayCastResampleInterpolator  */
   typedef itk::AdvancedRayCastInterpolateImageFunction<  InputImageType,
-  CoordRepType > RayCastInterpolatorType;
-
+    CoordRepType > RayCastInterpolatorType;
   const RayCastInterpolatorType * testptr = dynamic_cast<const
-  RayCastInterpolatorType *>( this->GetAsITKBaseType()->GetInterpolator() );
+    RayCastInterpolatorType *>( this->GetAsITKBaseType()->GetInterpolator() );
 
   /** If RayCastResampleInterpolator is used reset the Transform to
-   * overrule default Resampler settings */
+   * overrule default Resampler settings.
+   */
 
-  if (testptr)
+  if ( testptr )
   {
     this->GetAsITKBaseType()->SetTransform(
-    (const_cast<RayCastInterpolatorType *>( testptr ))->GetTransform()   );
+      (const_cast<RayCastInterpolatorType *>( testptr ))->GetTransform() );
   }
 
   /** Read output pixeltype from parameter the file. Replace possible " " with "_". */
@@ -294,10 +361,10 @@ ResamplerBase<TElastix>
     doCompression, "CompressResultImage", 0, false );
 
   /** Typedef's for writing the output image. */
-  typedef itk::ImageFileCastWriter< OutputImageType >  WriterType;
-  typedef typename WriterType::Pointer            WriterPointer;
+  typedef itk::ImageFileCastWriter< OutputImageType > WriterType;
+  typedef typename WriterType::Pointer                WriterPointer;
   typedef itk::ChangeInformationImageFilter<
-    OutputImageType >                             ChangeInfoFilterType;
+    OutputImageType >                                 ChangeInfoFilterType;
 
   /** Possibly change direction cosines to their original value, as specified
    * in the tp-file, or by the fixed image. This is only necessary when
@@ -320,8 +387,11 @@ ResamplerBase<TElastix>
   writer->SetUseCompression( doCompression );
 
   /** Do the writing. */
-  xl::xout["coutonly"] << std::flush;
-  xl::xout["coutonly"] << "\n  Writing image ..." << std::endl;
+  if ( showProgress )
+  {
+    xl::xout["coutonly"] << std::flush;
+    xl::xout["coutonly"] << "\n  Writing image ..." << std::endl;
+  }
   try
   {
     writer->Update();
@@ -339,12 +409,15 @@ ResamplerBase<TElastix>
   }
 
   /** Disconnect from the resampler. */
-  progressObserver->DisconnectObserver( this->GetAsITKBaseType() );
+  if( showProgress )
+  {
+    progressObserver->DisconnectObserver( this->GetAsITKBaseType() );
+  }
 
 } // end WriteResultImage()
 
 
-/*
+/**
  * ************************* ReadFromFile ***********************
  */
 
@@ -477,7 +550,7 @@ ResamplerBase<TElastix>
 } // end WriteToFile()
 
 
-/*
+/**
  * ******************* ReleaseMemory ********************
  */
 
@@ -539,4 +612,3 @@ void ResamplerBase<TElastix>
 
 
 #endif // end #ifndef __elxResamplerBase_hxx
-
