@@ -72,11 +72,11 @@ template<unsigned int Dimension>
 bool TestInterpolators( void )
 {
   typedef itk::Image< short, Dimension >    InputImageType;
-  typedef InputImageType::SizeType    SizeType;
-  typedef InputImageType::SpacingType SpacingType;
-  typedef InputImageType::PointType   OriginType;
-  typedef InputImageType::RegionType  RegionType;
-  typedef RegionType::IndexType       IndexType;
+  typedef typename InputImageType::SizeType    SizeType;
+  typedef typename InputImageType::SpacingType SpacingType;
+  typedef typename InputImageType::PointType   OriginType;
+  typedef typename InputImageType::RegionType  RegionType;
+  typedef typename RegionType::IndexType       IndexType;
   typedef double CoordRepType;
   typedef double CoefficientType;
 
@@ -86,9 +86,9 @@ bool TestInterpolators( void )
     InputImageType, CoordRepType > AdvancedLinearInterpolatorType;
   typedef itk::BSplineInterpolateImageFunction<
     InputImageType, CoordRepType, CoefficientType > BSplineInterpolatorType;
-  typedef LinearInterpolatorType::ContinuousIndexType ContinuousIndexType;
-  typedef AdvancedLinearInterpolatorType::CovariantVectorType CovariantVectorType;
-  typedef AdvancedLinearInterpolatorType::OutputType  OutputType; // double scalar
+  typedef typename LinearInterpolatorType::ContinuousIndexType ContinuousIndexType;
+  typedef typename AdvancedLinearInterpolatorType::CovariantVectorType CovariantVectorType;
+  typedef typename AdvancedLinearInterpolatorType::OutputType  OutputType; // double scalar
 
   typedef itk::ImageRegionIterator< InputImageType > IteratorType;
   typedef itk::Statistics::MersenneTwisterRandomVariateGenerator RandomNumberGeneratorType;
@@ -105,7 +105,7 @@ bool TestInterpolators( void )
     origin[ i ] = randomNum->GetUniformVariate( -1, 0 );
   }
   RegionType region; region.SetSize( size );
-  InputImageType::Pointer image = InputImageType::New();
+  typename InputImageType::Pointer image = InputImageType::New();
   image->SetRegions( region );
   image->SetOrigin( origin );
   image->SetSpacing( spacing );
@@ -127,9 +127,9 @@ bool TestInterpolators( void )
   //writer->Update();
 
   /** Create and setup interpolators. */
-  LinearInterpolatorType::Pointer linear = LinearInterpolatorType::New();
-  AdvancedLinearInterpolatorType::Pointer linearA = AdvancedLinearInterpolatorType::New();
-  BSplineInterpolatorType::Pointer bspline = BSplineInterpolatorType::New();
+  typename LinearInterpolatorType::Pointer linear = LinearInterpolatorType::New();
+  typename AdvancedLinearInterpolatorType::Pointer linearA = AdvancedLinearInterpolatorType::New();
+  typename BSplineInterpolatorType::Pointer bspline = BSplineInterpolatorType::New();
   linear->SetInputImage( image );
   linearA->SetInputImage( image );
   bspline->SetSplineOrder( 1 ); // prior to SetInputImage()
@@ -215,7 +215,7 @@ bool TestInterpolators( void )
   const unsigned int runs = 1e5;
   TimerHelper timerHelper;
   TimerHelper::TimeType start, end;
-  
+
   timerHelper.GetTheTime( start );
   for( unsigned int i = 0; i < runs; ++i )
   {

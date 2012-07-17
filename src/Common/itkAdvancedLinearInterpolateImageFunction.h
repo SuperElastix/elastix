@@ -139,7 +139,7 @@ private:
     OutputType & value,
     CovariantVectorType & deriv ) const
   {
-    return this->EvaluateValueAndDerivativeUnOptimized( x, value, derivative );
+    return this->EvaluateValueAndDerivativeUnOptimized( x, value, deriv );
   }
 
   /** Method to compute both the value and the derivative. Generic. */
