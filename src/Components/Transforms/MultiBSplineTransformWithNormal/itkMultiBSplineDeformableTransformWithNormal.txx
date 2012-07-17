@@ -16,12 +16,12 @@
 
 #include "itkMultiBSplineDeformableTransformWithNormal.h"
 #include "itkStatisticsImageFilter.h"
-#include <itkApproximateSignedDistanceMapImageFilter.h>
-#include <itkGradientImageFilter.h>
-#include <itkVectorCastImageFilter.h>
+#include "itkApproximateSignedDistanceMapImageFilter.h"
+#include "itkGradientImageFilter.h"
+#include "itkVectorCastImageFilter.h"
 // Used only to solve a bug in the distance map algorithm
-#include <itkMultiplyByConstantImageFilter.h>
-#include <itkSmoothingRecursiveGaussianImageFilter.h>
+#include "itkMultiplyImageFilter.h"
+#include "itkSmoothingRecursiveGaussianImageFilter.h"
 
 namespace itk
 {
@@ -141,52 +141,54 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 ::SetLabels(ImageLabelType* labels)
 {
   typedef StatisticsImageFilter<ImageLabelType> StatisticsType;
-  if (labels != m_Labels)
+  if( labels != this->m_Labels )
   {
     // Save current settings
-    m_Labels = labels;
+    this->m_Labels = labels;
     ParametersType para = this->GetFixedParameters();
     typename StatisticsType::Pointer stat = StatisticsType::New();
-    stat->SetInput(m_Labels);
+    stat->SetInput( this->m_Labels );
     stat->Update();
-    m_NbLabels = stat->GetMaximum() + 1;
-    m_Trans.resize(m_NbLabels + 1);
-    m_Para.resize(m_NbLabels + 1);
-    for (unsigned i = 0; i <= m_NbLabels; ++i)
-      m_Trans[i] = TransformType::New();
-    m_LabelsInterpolator = ImageLabelInterpolator::New();
-    m_LabelsInterpolator->SetInputImage(m_Labels);
+    this->m_NbLabels = stat->GetMaximum() + 1;
+    this->m_Trans.resize( this->m_NbLabels + 1 );
+    this->m_Para.resize( this->m_NbLabels + 1 );
+    for( unsigned i = 0; i <= this->m_NbLabels; ++i )
+    {
+      this->m_Trans[i] = TransformType::New();
+    }
+    this->m_LabelsInterpolator = ImageLabelInterpolator::New();
+    this->m_LabelsInterpolator->SetInputImage( this->m_Labels );
     // Restore settings
-    this->SetFixedParameters(para);
+    this->SetFixedParameters( para );
 
     typedef itk::Image< double, itkGetStaticConstMacro( SpaceDimension ) >                          ImageDoubleType;
     typedef itk::ApproximateSignedDistanceMapImageFilter<ImageLabelType, ImageDoubleType>           DistFilterType;
     typedef itk::SmoothingRecursiveGaussianImageFilter<ImageDoubleType, ImageDoubleType>            SmoothFilterType;
     typedef itk::GradientImageFilter<ImageDoubleType, double, double>                               GradFilterType;
-    typedef itk::MultiplyByConstantImageFilter<ImageLabelType, unsigned char, ImageLabelType>       MultiplyFilterType;
+    typedef itk::MultiplyImageFilter<ImageLabelType, ImageLabelType, ImageLabelType>                MultiplyFilterType;
     typedef itk::VectorCastImageFilter<typename GradFilterType::OutputImageType, ImageVectorType>   CastVectorType;
 
     typename MultiplyFilterType::Pointer multFilter = MultiplyFilterType::New();
-    multFilter->SetInput(m_Labels);
-    multFilter->SetConstant(2);
+    multFilter->SetInput( this->m_Labels );
+    multFilter->SetConstant( 2 );
 
     typename DistFilterType::Pointer distFilter = DistFilterType::New();
     distFilter->SetInsideValue(2);
     distFilter->SetOutsideValue(0);
-    distFilter->SetInput(multFilter->GetOutput());
+    distFilter->SetInput( multFilter->GetOutput() );
 
     typename SmoothFilterType::Pointer smoothFilter = SmoothFilterType::New();
-    smoothFilter->SetInput(distFilter->GetOutput());
-    smoothFilter->SetSigma(4.);
+    smoothFilter->SetInput( distFilter->GetOutput() );
+    smoothFilter->SetSigma( 4.0 );
 
     typename GradFilterType::Pointer gradFilter = GradFilterType::New();
-    gradFilter->SetInput(smoothFilter->GetOutput());
+    gradFilter->SetInput( smoothFilter->GetOutput() );
 
     typename CastVectorType::Pointer castFilter = CastVectorType::New();
-    castFilter->SetInput(gradFilter->GetOutput());
+    castFilter->SetInput( gradFilter->GetOutput() );
     castFilter->Update();
 
-    m_LabelsNormals = castFilter->GetOutput();
+    this->m_LabelsNormals = castFilter->GetOutput();
   }
 }
 
