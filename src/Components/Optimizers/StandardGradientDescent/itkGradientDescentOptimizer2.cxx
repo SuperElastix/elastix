@@ -148,7 +148,6 @@ namespace itk
         << static_cast<long>( timer->GetElapsedClockSec() * 1000 )
         << " ms." << std::endl;*/
       this->m_AdvanceOneStepTimings.push_back( timer->GetElapsedClockSec() * 1000 );
-      
 
       /** StopOptimization may have been called. */
       if ( this->m_Stop )
@@ -312,8 +311,8 @@ namespace itk
 
 
 /**
-  * ************ AdvanceOneStepThreaderCallback ****************************
-  */
+ * ************ AdvanceOneStepThreaderCallback ****************************
+ */
 
 ITK_THREAD_RETURN_TYPE GradientDescentOptimizer2
 ::AdvanceOneStepThreaderCallback( void * arg )
