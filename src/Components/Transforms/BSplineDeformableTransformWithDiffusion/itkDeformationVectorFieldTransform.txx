@@ -18,7 +18,7 @@
 #include "itkDeformationVectorFieldTransform.h"
 #include "itkImageRegionIterator.h"
 #include "itkImageRegionConstIterator.h"
-#include "itkScalarToArrayCastImageFilter.h"
+#include "itkComposeImageFilter.h"
 
 namespace itk
 {
@@ -129,7 +129,7 @@ DeformationVectorFieldTransform< TScalarType, NDimensions >
 ::GetCoefficientVectorImage( CoefficientVectorImagePointer & vecImage ) const
 {
   /** Typedef for the combiner. */
-  typedef ScalarToArrayCastImageFilter<
+  typedef ComposeImageFilter<
     CoefficientImageType, CoefficientVectorImageType >      ScalarImageCombineType;
 
   /** Get a handle to the series of coefficient images. */
