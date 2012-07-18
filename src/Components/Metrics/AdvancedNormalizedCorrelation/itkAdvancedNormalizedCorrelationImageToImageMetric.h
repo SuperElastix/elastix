@@ -50,17 +50,19 @@ namespace itk
  * where x a voxel in the fixed image f, m the moving image, u(x,p) the
  * deformation of x depending on the transform parameters p. sfm, sff and smm
  * is notation used in the source code. The derivative of NC to p equals:
- *
  * \f[
- *   \frac{\partial \mathrm{NC}}{\partial p} = \frac{\partial \mathrm{NC}}{\partial m} \frac{\partial m}{\partial x} \frac{\partial x}{\partial p} = \frac{\partial \mathrm{NC}}{\partial m} * \mathtt{gradient} * \mathtt{jacobian},
+ *   \frac{\partial \mathrm{NC}}{\partial p} = \frac{\partial \mathrm{NC}}{\partial m}
+ *     \frac{\partial m}{\partial x} \frac{\partial x}{\partial p}
+ *     = \frac{\partial \mathrm{NC}}{\partial m} * \mathtt{gradient} * \mathtt{jacobian},
  * \f]
- *
  * where gradient is the derivative of the moving image m to x, and where Jacobian is the
  * derivative of the transformation to its parameters. gradient * Jacobian is called the differential.
  * This yields for the derivative:
  *
  * \f[
- *   \frac{\partial \mathrm{NC}}{\partial p} = \frac{\sum_x[ f(x) * \mathtt{differential} ] - ( \mathtt{sfm} / \mathtt{smm} ) * \sum_x[ m(x+u(x,p)) * \mathtt{differential} ]}{\sqrt{\mathtt{sff} * \mathtt{smm}}}
+ *   \frac{\partial \mathrm{NC}}{\partial p}
+ *     = \frac{\sum_x[ f(x) * \mathtt{differential} ] - ( \mathtt{sfm} / \mathtt{smm} )
+ *     * \sum_x[ m(x+u(x,p)) * \mathtt{differential} ]}{\sqrt{\mathtt{sff} * \mathtt{smm}}}
  * \f]
  *
  * This class has an option to subtract the sample mean from the sample values
@@ -69,8 +71,10 @@ namespace itk
  * the NC is defined as:
  *
  * \f[
- * \mathrm{NC} = \frac{\sum_x ( f(x) - \mathtt{Af} ) * ( m(x+u(x,p)) - \mathtt{Am})}{\sqrt{\sum_x (f(x) - \mathtt{Af})^2 * \sum_x (m(x+u(x,p)) - \mathtt{Am})^2}}
- *    = \frac{\mathtt{sfm} - \mathtt{sf} * \mathtt{sm} / N}{\sqrt{(\mathtt{sff} - \mathtt{sf} * \mathtt{sf} / N) * (\mathtt{smm} - \mathtt{sm} *\mathtt{sm} / N)}},
+ * \mathrm{NC} = \frac{\sum_x ( f(x) - \mathtt{Af} ) * ( m(x+u(x,p)) - \mathtt{Am})}
+ *     {\sqrt{\sum_x (f(x) - \mathtt{Af})^2 * \sum_x (m(x+u(x,p)) - \mathtt{Am})^2}}
+ *    = \frac{\mathtt{sfm} - \mathtt{sf} * \mathtt{sm} / N}
+ *   {\sqrt{(\mathtt{sff} - \mathtt{sf} * \mathtt{sf} / N) * (\mathtt{smm} - \mathtt{sm} *\mathtt{sm} / N)}},
  * \f]
  *
  * where Af and Am are the average of f and m, respectively.
@@ -79,9 +83,10 @@ namespace itk
  * \ingroup RegistrationMetrics
  * \ingroup Metrics
  */
+
 template < class TFixedImage, class TMovingImage >
 class AdvancedNormalizedCorrelationImageToImageMetric :
-    public AdvancedImageToImageMetric< TFixedImage, TMovingImage >
+  public AdvancedImageToImageMetric< TFixedImage, TMovingImage >
 {
 public:
 
@@ -160,27 +165,34 @@ public:
   MeasureType GetValue( const TransformParametersType & parameters ) const;
 
   /** Get the derivatives of the match measure. */
-  void GetDerivative( const TransformParametersType & parameters,
+  void GetDerivative(
+    const TransformParametersType & parameters,
     DerivativeType & derivative ) const;
 
   /** Get value and derivatives for multiple valued optimizers. */
-  void GetValueAndDerivative( const TransformParametersType & parameters,
+  void GetValueAndDerivativeSingleThreaded(
+    const TransformParametersType & parameters,
     MeasureType & value, DerivativeType & derivative ) const;
 
-  /** Get value and derivatives for each thread. *
+  void GetValueAndDerivative(
+    const TransformParametersType & parameters,
+    MeasureType & value, DerivativeType & derivative ) const;
+
+  /** Get value and derivatives for each thread. */
   inline void ThreadedGetValueAndDerivative( ThreadIdType threadID );
 
-  /** Gather the values and derivatives from all threads *
+  /** Gather the values and derivatives from all threads */
   inline void AfterThreadedGetValueAndDerivative(
-    MeasureType & value, DerivativeType & derivative )const;
+    MeasureType & value, DerivativeType & derivative ) const;
 
-  /** ComputeDerivatives threader callback function *
+  /** ComputeDerivatives threader callback function */
   static ITK_THREAD_RETURN_TYPE ComputeDerivativesThreaderCallback( void * arg );
 
   /** Set/Get SubtractMean boolean. If true, the sample mean is subtracted
    * from the sample values in the cross-correlation formula and
    * typically results in narrower valleys in the cost function.
-   * Default value is false. */
+   * Default value is false.
+   */
   itkSetMacro( SubtractMean, bool );
   itkGetConstReferenceMacro( SubtractMean, bool );
   itkBooleanMacro( SubtractMean );
@@ -188,6 +200,7 @@ public:
 protected:
   AdvancedNormalizedCorrelationImageToImageMetric();
   virtual ~AdvancedNormalizedCorrelationImageToImageMetric();
+
   void PrintSelf( std::ostream& os, Indent indent ) const;
 
   /** Protected Typedefs ******************/
@@ -204,19 +217,12 @@ protected:
   typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
   typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
 
-  /** Computes the innerproduct of transform Jacobian with moving image gradient.
-   * The results are stored in imageJacobian, which is supposed
-   * to have the right size (same length as Jacobian's number of columns). */
-  void EvaluateTransformJacobianInnerProduct(
-    const TransformJacobianType & jacobian,
-    const MovingImageDerivativeType & movingImageDerivative,
-    DerivativeType & imageJacobian) const;
-
   /** Compute a pixel's contribution to the derivative terms;
-   * Called by GetValueAndDerivative(). */
+   * Called by GetValueAndDerivative().
+   */
   void UpdateDerivativeTerms(
-    const RealType fixedImageValue,
-    const RealType movingImageValue,
+    const RealType & fixedImageValue,
+    const RealType & movingImageValue,
     const DerivativeType & imageJacobian,
     const NonZeroJacobianIndicesType & nzji,
     DerivativeType & derivativeF,
@@ -231,20 +237,26 @@ private:
 
   typedef typename NumericTraits< MeasureType >::AccumulateType   AccumulateType;
 
-  /*mutable std::vector< AccumulateType > m_ThreaderSff;
-  mutable std::vector< AccumulateType > m_ThreaderSmm;
-  mutable std::vector< AccumulateType > m_ThreaderSfm;
-  mutable std::vector< AccumulateType > m_ThreaderSf ;
-  mutable std::vector< AccumulateType > m_ThreaderSm ;
+  /** Threading related parameters. */
+  mutable std::vector<AccumulateType> m_ThreaderSff;
+  mutable std::vector<AccumulateType> m_ThreaderSmm;
+  mutable std::vector<AccumulateType> m_ThreaderSfm;
+  mutable std::vector<AccumulateType> m_ThreaderSf;
+  mutable std::vector<AccumulateType> m_ThreaderSm;
 
-  mutable std::vector< DerivativeType > m_ThreaderDerivativeF;
-  mutable std::vector< DerivativeType > m_ThreaderDerivativeM;
-  mutable std::vector< DerivativeType > m_ThreaderDifferential;
-  mutable std::vector< unsigned long >  m_ThreaderNumberOfPixelsCounted;
+  mutable std::vector<DerivativeType> m_ThreaderDerivativeF;
+  mutable std::vector<DerivativeType> m_ThreaderDerivativeM;
+  mutable std::vector<DerivativeType> m_ThreaderDifferential;
 
-  mutable unsigned long m_SampleContainerSize;
-  mutable ImageSampleContainerPointer m_SampleContainer;
+  /** Initialize some multi-threading related parameters.
+   * Overrides function in AdvancedImageToImageMetric, because
+   * here we use other parameters.
+   */
+  virtual void InitializeThreadingParameters( void ) const;
 
+  /** Helper struct that multi-threads the computation of
+   * the metric derivative using ITK threads.
+   */
   struct MultiThreaderComputeDerivativeType
   {
     typename std::vector<DerivativeType>::iterator m_ThreaderDerivativeFIterator;
@@ -258,8 +270,9 @@ private:
     RealType invDenom;
 
     unsigned int numberOfParameters;
+    bool subtractMean;
+  };
 
-  };*/
 }; // end class AdvancedNormalizedCorrelationImageToImageMetric
 
 } // end namespace itk
@@ -269,4 +282,3 @@ private:
 #endif
 
 #endif // end #ifndef __itkAdvancedNormalizedCorrelationImageToImageMetric_h
-

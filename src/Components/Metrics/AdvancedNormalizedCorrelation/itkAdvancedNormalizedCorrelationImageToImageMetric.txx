@@ -35,16 +35,14 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   this->SetUseFixedImageLimiter( false );
   this->SetUseMovingImageLimiter( false );
 
-  //this->m_ThreaderSff.resize( 0 );
-  //this->m_ThreaderSmm.resize( 0 );
-  //this->m_ThreaderSfm.resize( 0 );
-  //this->m_ThreaderSf.resize( 0 );
-  //this->m_ThreaderSm.resize( 0 );
-  //this->m_ThreaderDerivativeF.resize( 0 );
-  //this->m_ThreaderDerivativeM.resize( 0 );
-  //this->m_ThreaderDifferential.resize( 0 );
-  //this->m_ThreaderNumberOfPixelsCounted.resize( 0 );
-  //this->m_SampleContainerSize = 0;
+  this->m_ThreaderSff.resize( 0 );
+  this->m_ThreaderSmm.resize( 0 );
+  this->m_ThreaderSfm.resize( 0 );
+  this->m_ThreaderSf.resize( 0 );
+  this->m_ThreaderSm.resize( 0 );
+  this->m_ThreaderDerivativeF.resize( 0 );
+  this->m_ThreaderDerivativeM.resize( 0 );
+  this->m_ThreaderDifferential.resize( 0 );
 
 } // end Constructor
 
@@ -57,17 +55,53 @@ template <class TFixedImage, class TMovingImage>
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 ::~AdvancedNormalizedCorrelationImageToImageMetric()
 {
-  //this->m_ThreaderSff.resize( 0 );
-  //this->m_ThreaderSmm.resize( 0 );
-  //this->m_ThreaderSfm.resize( 0 );
-  //this->m_ThreaderSf.resize( 0 );
-  //this->m_ThreaderSm.resize( 0 );
-  //this->m_ThreaderDerivativeF.resize( 0 );
-  //this->m_ThreaderDerivativeM.resize( 0 );
-  //this->m_ThreaderDifferential.resize( 0 );
-  //this->m_ThreaderNumberOfPixelsCounted.resize( 0 );
-
 } // end Destructor
+
+
+/**
+ * ******************* InitializeThreadingParameters *******************
+ */
+
+template < class TFixedImage, class TMovingImage>
+void
+AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
+::InitializeThreadingParameters( void ) const
+{
+  // tmp: time this:
+  typedef tmr::Timer          TimerType; typedef TimerType::Pointer  TimerPointer;
+  TimerPointer timer = TimerType::New();
+  timer->StartTimer();
+
+  /** Resize and initialize the threading related parameters. */
+  this->m_ThreaderNumberOfPixelsCounted.resize(
+    this->m_NumberOfThreads, NumericTraits<SizeValueType>::Zero );
+  const AccumulateType zero = NumericTraits< AccumulateType >::Zero;
+  this->m_ThreaderSff.resize( this->m_NumberOfThreads, zero );
+  this->m_ThreaderSmm.resize( this->m_NumberOfThreads, zero );
+  this->m_ThreaderSfm.resize( this->m_NumberOfThreads, zero );
+  this->m_ThreaderSf.resize(  this->m_NumberOfThreads, zero );
+  this->m_ThreaderSm.resize(  this->m_NumberOfThreads, zero );
+
+  this->m_ThreaderDerivativeF.resize(  this->m_NumberOfThreads );
+  this->m_ThreaderDerivativeM.resize(  this->m_NumberOfThreads );
+  this->m_ThreaderDifferential.resize( this->m_NumberOfThreads );
+
+  /** Initialize the derivatives. */
+  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  {
+    this->m_ThreaderDerivativeF[ i ].SetSize( this->GetNumberOfParameters() );
+    this->m_ThreaderDerivativeF[ i ].Fill( NumericTraits< DerivativeValueType >::Zero );
+    this->m_ThreaderDerivativeM[ i ].SetSize( this->GetNumberOfParameters() );
+    this->m_ThreaderDerivativeM[ i ].Fill( NumericTraits< DerivativeValueType >::Zero );
+    this->m_ThreaderDifferential[ i ].SetSize( this->GetNumberOfParameters() );
+    this->m_ThreaderDifferential[ i ].Fill( NumericTraits< DerivativeValueType >::Zero );
+  }
+
+  // end timer and store
+  timer->StopTimer();
+  this->m_FillDerivativesTimings.push_back( timer->GetElapsedClockSec() * 1000.0 );
+
+} // end InitializeThreadingParameters()
 
 
 /**
@@ -86,39 +120,6 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 
 
 /**
- * *************** EvaluateTransformJacobianInnerProduct ****************
- */
-
-template < class TFixedImage, class TMovingImage >
-void
-AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
-::EvaluateTransformJacobianInnerProduct(
-  const TransformJacobianType & jacobian,
-  const MovingImageDerivativeType & movingImageDerivative,
-  DerivativeType & imageJacobian ) const
-{
-  typedef typename TransformJacobianType::const_iterator JacobianIteratorType;
-  typedef typename DerivativeType::iterator              DerivativeIteratorType;
-  JacobianIteratorType jac = jacobian.begin();
-  imageJacobian.Fill( 0.0 );
-
-  const unsigned int sizeImageJacobian = imageJacobian.GetSize();
-  for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
-  {
-    const double imDeriv = movingImageDerivative[ dim ];
-    DerivativeIteratorType imjac = imageJacobian.begin();
-
-    for ( unsigned int mu = 0; mu < sizeImageJacobian; mu++ )
-    {
-      (*imjac) += (*jac) * imDeriv;
-      ++imjac;
-      ++jac;
-    }
-  }
-} // end EvaluateTransformJacobianInnerProduct()
-
-
-/**
  * *************** UpdateDerivativeTerms ***************************
  */
 
@@ -126,8 +127,8 @@ template < class TFixedImage, class TMovingImage >
 void
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 ::UpdateDerivativeTerms(
-  const RealType fixedImageValue,
-  const RealType movingImageValue,
+  const RealType & fixedImageValue,
+  const RealType & movingImageValue,
   const DerivativeType & imageJacobian,
   const NonZeroJacobianIndicesType & nzji,
   DerivativeType & derivativeF,
@@ -211,7 +212,6 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
 
   /** Create variables to store intermediate results. */
-  typedef typename NumericTraits< MeasureType >::AccumulateType   AccumulateType;
   AccumulateType sff = NumericTraits< AccumulateType >::Zero;
   AccumulateType smm = NumericTraits< AccumulateType >::Zero;
   AccumulateType sfm = NumericTraits< AccumulateType >::Zero;
@@ -316,96 +316,15 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 
 } // end GetDerivative()
 
-#if 0
+
 /**
- * ******************* GetValueAndDerivative *******************
+ * ******************* GetValueAndDerivativeSingleThreaded *******************
  */
 
 template <class TFixedImage, class TMovingImage>
 void
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
-::GetValueAndDerivative(
-  const TransformParametersType & parameters,
-  MeasureType & value, DerivativeType & derivative ) const
-{
-  itkDebugMacro( "GetValueAndDerivative( " << parameters << " ) " );
-
-  typedef typename DerivativeType::ValueType        DerivativeValueType;
-  typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
-
-  derivative = DerivativeType( this->GetNumberOfParameters() );
-  derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
-  value = NumericTraits< DerivativeValueType >::Zero;
-
-  /** Call non-thread-safe stuff, such as:
-   *   this->SetTransformParameters( parameters );
-   *   this->GetImageSampler()->Update();
-   * Because of these calls GetValueAndDerivative itself is not thread-safe,
-   * so cannot be called multiple times simultaneously.
-   * This is however needed in the CombinationImageToImageMetric.
-   * In that case, you need to:
-   * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
-   * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
-   *   calling GetValueAndDerivative
-   * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
-   * - Now you can call GetValueAndDerivative multi-threaded.
-   */
-  this->BeforeThreadedGetValueAndDerivative( parameters );
-
-  /** Initialize some variables. */
-  this->m_NumberOfPixelsCounted = 0;
-  const AccumulateType zero = NumericTraits< AccumulateType >::Zero;
-  this->m_ThreaderSff.resize( this->m_NumberOfThreadsPerMetric, zero );
-  this->m_ThreaderSmm.resize( this->m_NumberOfThreadsPerMetric, zero );
-  this->m_ThreaderSfm.resize( this->m_NumberOfThreadsPerMetric, zero );
-  this->m_ThreaderSf.resize( this->m_NumberOfThreadsPerMetric, zero );
-  this->m_ThreaderSm.resize( this->m_NumberOfThreadsPerMetric, zero );
-
-  this->m_ThreaderDerivativeF.resize( this->m_NumberOfThreadsPerMetric );
-  this->m_ThreaderDerivativeM.resize( this->m_NumberOfThreadsPerMetric );
-  this->m_ThreaderDifferential.resize( this->m_NumberOfThreadsPerMetric );
-
-  this->m_ThreaderNumberOfPixelsCounted.resize( this->m_NumberOfThreadsPerMetric, 0 );
-
-  for( ThreadIdType i = 0; i < this->m_NumberOfThreadsPerMetric; i++ )
-  {
-    this->m_ThreaderSff[ i ] = zero;
-    this->m_ThreaderSmm[ i ] = zero;
-    this->m_ThreaderSfm[ i ] = zero;
-    this->m_ThreaderSf[ i ]  = zero;
-    this->m_ThreaderSm[ i ]  = zero;
-
-    this->m_ThreaderDerivativeF[ i ].SetSize( this->GetNumberOfParameters() );
-    this->m_ThreaderDerivativeF[ i ].Fill( NumericTraits< DerivativeValueType >::Zero );
-    this->m_ThreaderDerivativeM[ i ].SetSize( this->GetNumberOfParameters() );
-    this->m_ThreaderDerivativeM[ i ].Fill( NumericTraits< DerivativeValueType >::Zero );
-    this->m_ThreaderDifferential[ i ].SetSize( this->GetNumberOfParameters() );
-    this->m_ThreaderDifferential[ i ].Fill( NumericTraits< DerivativeValueType >::Zero );
-
-    this->m_ThreaderNumberOfPixelsCounted[ i ] = 0;
-  }
-
-  /** Get a handle to the sample container. */
-  this->m_SampleContainer = this->GetImageSampler()->GetOutput();
-  this->m_SampleContainerSize = this->m_SampleContainer->Size();
-
-  /** launch multithreading metric */
-  this->LaunchGetValueAndDerivativeThreaderCallback();
-
-  /** gather the metric value and derivatives from value vectors and derivative vectors */
-  this->AfterThreadedGetValueAndDerivative( value, derivative );
-
-} // end GetValueAndDerivative()
-#endif
-#if 1
-/**
- * ******************* GetValueAndDerivative *******************
- */
-
-template <class TFixedImage, class TMovingImage>
-void
-AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
-::GetValueAndDerivative( const TransformParametersType & parameters,
+::GetValueAndDerivativeSingleThreaded( const TransformParametersType & parameters,
   MeasureType & value, DerivativeType & derivative ) const
 {
   itkDebugMacro( << "GetValueAndDerivative( " << parameters << " ) " );
@@ -430,7 +349,6 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   TransformJacobianType jacobian;
 
   /** Initialize some variables for intermediate results. */
-  typedef typename NumericTraits< MeasureType >::AccumulateType   AccumulateType;
   AccumulateType sff = NumericTraits< AccumulateType >::Zero;
   AccumulateType smm = NumericTraits< AccumulateType >::Zero;
   AccumulateType sfm = NumericTraits< AccumulateType >::Zero;
@@ -557,9 +475,53 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
     derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
   }
 
+} // end GetValueAndDerivativeSingleThreaded()
+
+
+/**
+ * ******************* GetValueAndDerivative *******************
+ */
+
+template <class TFixedImage, class TMovingImage>
+void
+AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
+::GetValueAndDerivative(
+  const TransformParametersType & parameters,
+  MeasureType & value, DerivativeType & derivative ) const
+{
+  /** Option for now to still use the single threaded code. */
+  if ( !this->m_UseMultiThread )
+  {
+    return this->GetValueAndDerivativeSingleThreaded(
+      parameters, value, derivative );
+  }
+
+  /** Call non-thread-safe stuff, such as:
+   *   this->SetTransformParameters( parameters );
+   *   this->GetImageSampler()->Update();
+   * Because of these calls GetValueAndDerivative itself is not thread-safe,
+   * so cannot be called multiple times simultaneously.
+   * This is however needed in the CombinationImageToImageMetric.
+   * In that case, you need to:
+   * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
+   * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
+   *   calling GetValueAndDerivative
+   * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
+   * - Now you can call GetValueAndDerivative multi-threaded.
+   */
+  this->BeforeThreadedGetValueAndDerivative( parameters );
+  
+  /** Initialize some threading related parameters. */
+  this->InitializeThreadingParameters();
+
+  /** launch multithreading metric */
+  this->LaunchGetValueAndDerivativeThreaderCallback();
+
+  /** Gather the metric values and derivatives from all threads. */
+  this->AfterThreadedGetValueAndDerivative( value, derivative );
+
 } // end GetValueAndDerivative()
 
-#else
 
 /**
  * ******************* ThreadedGetValueAndDerivative *******************
@@ -568,32 +530,51 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 template <class TFixedImage, class TMovingImage>
 void
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
-::ThreadedGetValueAndDerivative( ThreadIdType threadID )
+::ThreadedGetValueAndDerivative( ThreadIdType threadId )
 {
-  /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
-  NonZeroJacobianIndicesType nzji
-    = NonZeroJacobianIndicesType( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+  /** Initialize array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
+  const unsigned int nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
+  NonZeroJacobianIndicesType nzji = NonZeroJacobianIndicesType( nnzji );
   DerivativeType imageJacobian = DerivativeType( nzji.size() );
-  TransformJacobianType jacobian;
+  TransformJacobianType jacobian( FixedImageDimension, nnzji );
+  jacobian.Fill( 0.0 ); // needed?
 
-  unsigned long nrOfSamplerPerThreads = (unsigned long)ceil(double(this->m_SampleContainerSize)
-                                                            / double(this->m_NumberOfThreadsPerMetric));
+  /** Get a handle to the sample container. */
+  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+  const unsigned long sampleContainerSize = sampleContainer->Size();
+
+  /** Get the samples for this thread. */
+  const unsigned long nrOfSamplesPerThreads
+    = static_cast<unsigned long>( vcl_ceil( static_cast<double>( sampleContainerSize )
+      / static_cast<double>( this->m_NumberOfThreads ) ) );
+
+  const unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
+  unsigned long pos_end = nrOfSamplesPerThreads * ( threadId + 1 );
+  pos_end = ( pos_end > sampleContainerSize ) ? sampleContainerSize : pos_end;
+
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator threader_fiter;
-  typename ImageSampleContainerType::ConstIterator threader_fbegin = this->m_SampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator threader_fend = this->m_SampleContainer->Begin();
+  typename ImageSampleContainerType::ConstIterator threader_fbegin = sampleContainer->Begin();
+  typename ImageSampleContainerType::ConstIterator threader_fend = sampleContainer->Begin();
 
-  unsigned long pos_begin = nrOfSamplerPerThreads*threadID;
-  unsigned long pos_end = nrOfSamplerPerThreads*(threadID+1);
+  threader_fbegin += (int)pos_begin;
+  threader_fend += (int)pos_end;
 
-  pos_end = ( pos_end > this->m_SampleContainerSize ) ? this->m_SampleContainerSize : pos_end;
+  /** Create variables to store intermediate results. */
+  AccumulateType sff = NumericTraits< AccumulateType >::Zero;
+  AccumulateType smm = NumericTraits< AccumulateType >::Zero;
+  AccumulateType sfm = NumericTraits< AccumulateType >::Zero;
+  AccumulateType sf  = NumericTraits< AccumulateType >::Zero;
+  AccumulateType sm  = NumericTraits< AccumulateType >::Zero;
+  unsigned long numberOfPixelsCounted = 0;
 
-  threader_fbegin+= (int)pos_begin;
-  threader_fend+= (int)pos_end;
+  // circumvent false sharing?
+  DerivativeType & derivativeF = this->m_ThreaderDerivativeF[ threadId ];
+  DerivativeType & derivativeM = this->m_ThreaderDerivativeM[ threadId ];
+  DerivativeType & differential = this->m_ThreaderDifferential[ threadId ];
 
   /** Loop over the fixed image to calculate the mean squares. */
-  for ( threader_fiter = threader_fbegin; threader_fiter != threader_fend;
-        ++threader_fiter)
+  for ( threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter )
   {
     /** Read fixed coordinates and initialize some variables. */
     const FixedImagePointType & fixedPoint = (*threader_fiter).Value().m_ImageCoordinates;
@@ -621,7 +602,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 
     if ( sampleOk )
     {
-      this->m_ThreaderNumberOfPixelsCounted[ threadID ]++;
+      numberOfPixelsCounted++;
 
       /** Get the fixed image value. */
       const RealType & fixedImageValue
@@ -635,22 +616,31 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
         jacobian, movingImageDerivative, imageJacobian );
 
       /** Update some sums needed to calculate the value of NC. */
-      this->m_ThreaderSff[ threadID ] += fixedImageValue  * fixedImageValue;
-      this->m_ThreaderSmm[ threadID ] += movingImageValue * movingImageValue;
-      this->m_ThreaderSfm[ threadID ] += fixedImageValue  * movingImageValue;
-      this->m_ThreaderSf[ threadID ]  += fixedImageValue;  // Only needed when m_SubtractMean == true
-      this->m_ThreaderSm[ threadID ]  += movingImageValue; // Only needed when m_SubtractMean == true
+      sff += fixedImageValue  * fixedImageValue;
+      smm += movingImageValue * movingImageValue;
+      sfm += fixedImageValue  * movingImageValue;
+      sf  += fixedImageValue;  // Only needed when m_SubtractMean == true
+      sm  += movingImageValue; // Only needed when m_SubtractMean == true
 
       /** Compute this pixel's contribution to the derivative terms. */
       this->UpdateDerivativeTerms(
         fixedImageValue, movingImageValue, imageJacobian, nzji,
-        this->m_ThreaderDerivativeF[ threadID ],
-        this->m_ThreaderDerivativeM[ threadID ],
-        this->m_ThreaderDifferential[ threadID ] );
+        derivativeF, derivativeM, differential );
+        //this->m_ThreaderDerivativeF[ threadId ],
+        //this->m_ThreaderDerivativeM[ threadId ],
+        //this->m_ThreaderDifferential[ threadId ] );
 
     } // end if sampleOk
 
   } // end for loop over the image sample container
+
+  /** Only update these variables at the end to prevent unnessary "false sharing". */
+  this->m_ThreaderSff[ threadId ] = sff;
+  this->m_ThreaderSmm[ threadId ] = smm;
+  this->m_ThreaderSfm[ threadId ] = sfm;
+  this->m_ThreaderSf[  threadId ] = sf;
+  this->m_ThreaderSm[  threadId ] = sm;
+  this->m_ThreaderNumberOfPixelsCounted[ threadId ] = numberOfPixelsCounted;
 
 } // end ThreadedGetValueAndDerivative()
 
@@ -665,76 +655,26 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 ::AfterThreadedGetValueAndDerivative(
   MeasureType & value, DerivativeType & derivative ) const
 {
-#if 0
-  typedef typename DerivativeType::ValueType        DerivativeValueType;
-  DerivativeType & derivativeF = this->m_ThreaderDerivativeF[0];
-  DerivativeType & derivativeM = this->m_ThreaderDerivativeM[0];
-  DerivativeType & differential= this->m_ThreaderDifferential[0];
-
-  AccumulateType & sff = this->m_ThreaderSff[0];
-  AccumulateType & smm = this->m_ThreaderSmm[0];
-  AccumulateType & sfm = this->m_ThreaderSfm[0];
-  AccumulateType & sf  = this->m_ThreaderSf[0];
-  AccumulateType & sm  = this->m_ThreaderSm[0];
-
-  this->m_NumberOfPixelsCounted = this->m_ThreaderNbOfPixelCounted[0];
-  for(unsigned int i=1; i< this->m_NumberOfThreadsPerMetric;i++)
-  {
-    this->m_NumberOfPixelsCounted += this->m_ThreaderNbOfPixelCounted[i];
-    sff += this->m_ThreaderSff[i];
-    smm += this->m_ThreaderSmm[i];
-    sfm += this->m_ThreaderSfm[i];
-    sf  += this->m_ThreaderSf[ i];
-    sm  += this->m_ThreaderSm[ i];
-
-    derivativeF += this->m_ThreaderDerivativeF[i];
-    derivativeM += this->m_ThreaderDerivativeM[i];
-    differential+= this->m_ThreaderDifferential[i];
-  }
-  /** If SubtractMean, then subtract things from sff, smm, sfm,
-   * derivativeF and derivativeM.
-   */
-  const RealType N = static_cast<RealType>( this->m_NumberOfPixelsCounted );
-  if ( this->m_SubtractMean && this->m_NumberOfPixelsCounted > 0 )
-  {
-    sff -= ( sf * sf / N );
-    smm -= ( sm * sm / N );
-    sfm -= ( sf * sm / N );
-
-    derivativeF -= (sf/N) * differential;
-    derivativeM -= (sm/N) * differential;
-
-  }
-
-  /** The denominator of the value and the derivative. */
-  const RealType denom = -1.0 * vcl_sqrt( sff * smm );
-
-  /** Calculate the value and the derivative. */
-  if ( this->m_NumberOfPixelsCounted > 0 && denom < -1e-14 )
-  {
-    value = sfm / denom;
-    derivative = ( derivativeF - ( sfm / smm )*derivativeM ) / denom;
-  }
-  else
-  {
-    value = NumericTraits< MeasureType >::Zero;
-    derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
-  }
-
-#else
-
-  typedef typename DerivativeType::ValueType        DerivativeValueType;
-
-  AccumulateType & sff = this->m_ThreaderSff[0];
-  AccumulateType & smm = this->m_ThreaderSmm[0];
-  AccumulateType & sfm = this->m_ThreaderSfm[0];
-  AccumulateType & sf  = this->m_ThreaderSf[0];
-  AccumulateType & sm  = this->m_ThreaderSm[0];
-
+  /** Accumulate the number of pixels. */
   this->m_NumberOfPixelsCounted = this->m_ThreaderNumberOfPixelsCounted[ 0 ];
-  for( ThreadIdType i = 1; i < this->m_NumberOfThreadsPerMetric; i++ )
+  for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
   {
     this->m_NumberOfPixelsCounted += this->m_ThreaderNumberOfPixelsCounted[ i ];
+  }
+
+  /** Check if enough samples were valid. */
+  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+  this->CheckNumberOfSamples(
+    sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+
+  /** Accumulate values. */
+  AccumulateType sff = this->m_ThreaderSff[ 0 ];
+  AccumulateType smm = this->m_ThreaderSmm[ 0 ];
+  AccumulateType sfm = this->m_ThreaderSfm[ 0 ];
+  AccumulateType sf  = this->m_ThreaderSf[ 0 ];
+  AccumulateType sm  = this->m_ThreaderSm[ 0 ];
+  for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+  {
     sff += this->m_ThreaderSff[ i ];
     smm += this->m_ThreaderSmm[ i ];
     sfm += this->m_ThreaderSfm[ i ];
@@ -742,11 +682,9 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
     sm  += this->m_ThreaderSm[ i ];
   }
 
-  /** If SubtractMean, then subtract things from sff, smm, sfm,
-   * derivativeF and derivativeM.
-   */
+  /** If SubtractMean, then subtract things from sff, smm and sfm. */
   const RealType N = static_cast<RealType>( this->m_NumberOfPixelsCounted );
-  if ( this->m_SubtractMean && this->m_NumberOfPixelsCounted > 0 )
+  if ( this->m_SubtractMean )
   {
     sff -= ( sf * sf / N );
     smm -= ( sm * sm / N );
@@ -756,35 +694,58 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   /** The denominator of the value and the derivative. */
   const RealType denom = -1.0 * vcl_sqrt( sff * smm );
 
-  /** Calculate the value and the derivative. */
-  if ( this->m_NumberOfPixelsCounted > 0 && denom < -1e-14 )
-  {
-    value = sfm / denom;
-
-    MultiThreaderComputeDerivativeType * temp = new  MultiThreaderComputeDerivativeType;
-
-    temp->sf_N = sf / N ;
-    temp->sm_N = sm / N ;
-    temp->sfm_smm = sfm / smm ;
-    temp->invDenom = 1.0 / denom ;
-    temp->derivativeIterator = derivative.begin ();
-    temp->m_ThreaderDerivativeFIterator = this->m_ThreaderDerivativeF.begin ();
-    temp->m_ThreaderDerivativeMIterator = this->m_ThreaderDerivativeM.begin ();
-    temp->m_ThreaderDifferentialIterator = this->m_ThreaderDifferential.begin ();
-    temp->numberOfParameters = this->GetNumberOfParameters ();
-
-    typename ThreaderType::Pointer local_threader = ThreaderType::New();
-    local_threader->SetNumberOfThreads( this->m_NumberOfThreadsPerMetric );
-    local_threader->SetSingleMethod( ComputeDerivativesThreaderCallback, temp );
-    local_threader->SingleMethodExecute();
-
-    delete[] temp;
-  }
-  else
+  /** Check for sufficiently large denominator. */
+  if ( denom > -1e-14 )
   {
     value = NumericTraits< MeasureType >::Zero;
     derivative.Fill( NumericTraits< DerivativeValueType >::Zero );
+    return;
   }
+
+  /** Calculate the metric value. */
+  value = sfm / denom;
+
+  /** Calculate the metric derivative. */
+#if 0 // single-threaded
+  DerivativeType & derivativeF = this->m_ThreaderDerivativeF[0];
+  DerivativeType & derivativeM = this->m_ThreaderDerivativeM[0];
+  DerivativeType & differential= this->m_ThreaderDifferential[0];
+
+  for( ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i )
+  {
+    derivativeF  += this->m_ThreaderDerivativeF[ i ];
+    derivativeM  += this->m_ThreaderDerivativeM[ i ];
+    differential += this->m_ThreaderDifferential[ i ];
+  }
+
+  /** If SubtractMean, then subtract things from  derivativeF and derivativeM. */
+  const RealType N = static_cast<RealType>( this->m_NumberOfPixelsCounted );
+  if ( this->m_SubtractMean )
+  {
+    derivativeF -= (sf/N) * differential;
+    derivativeM -= (sm/N) * differential;
+  }
+  derivative = ( derivativeF - ( sfm / smm )*derivativeM ) / denom;
+#else // multi-threaded
+  MultiThreaderComputeDerivativeType * temp = new  MultiThreaderComputeDerivativeType;
+
+  temp->sf_N = sf / N;
+  temp->sm_N = sm / N;
+  temp->sfm_smm = sfm / smm;
+  temp->invDenom = 1.0 / denom;
+  temp->subtractMean = this->m_SubtractMean;
+  temp->derivativeIterator = derivative.begin();
+  temp->m_ThreaderDerivativeFIterator = this->m_ThreaderDerivativeF.begin();
+  temp->m_ThreaderDerivativeMIterator = this->m_ThreaderDerivativeM.begin();
+  temp->m_ThreaderDifferentialIterator = this->m_ThreaderDifferential.begin();
+  temp->numberOfParameters = this->GetNumberOfParameters();
+
+  typename ThreaderType::Pointer local_threader = ThreaderType::New();
+  local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
+  local_threader->SetSingleMethod( ComputeDerivativesThreaderCallback, temp );
+  local_threader->SingleMethodExecute();
+
+  delete[] temp;
 
 #endif
 
@@ -802,45 +763,47 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
 {
   typedef typename DerivativeType::ValueType        DerivativeValueType;
   ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
-  ThreadIdType threadID = infoStruct->ThreadID;
+  ThreadIdType threadId = infoStruct->ThreadID;
   ThreadIdType nrOfThreads = infoStruct->NumberOfThreads;
 
   MultiThreaderComputeDerivativeType * temp
     = static_cast<MultiThreaderComputeDerivativeType * >( infoStruct->UserData );
 
-  unsigned int subSize = (unsigned int)ceil(double(temp->numberOfParameters)/double(nrOfThreads));
+  const unsigned int subSize = static_cast<unsigned int>(
+    vcl_ceil( static_cast<double>( temp->numberOfParameters ) / static_cast<double>( nrOfThreads ) ) );
 
-  unsigned int jmin = threadID * subSize;
-  unsigned int jmax = (threadID+1) * subSize;
-  jmax = (jmax > temp->numberOfParameters) ? temp->numberOfParameters :jmax ;
+  unsigned int jmin = threadId * subSize;
+  unsigned int jmax = (threadId+1) * subSize;
+  jmax = ( jmax > temp->numberOfParameters ) ? temp->numberOfParameters : jmax;
 
   DerivativeValueType derivativeF, derivativeM, differential;
 
   for( unsigned int j = jmin; j < jmax; j++ )
   {
-    derivativeF = NumericTraits<DerivativeValueType>::Zero;
-    derivativeM = NumericTraits<DerivativeValueType>::Zero;
-    differential = NumericTraits<DerivativeValueType>::Zero;
+    derivativeF = temp->m_ThreaderDerivativeFIterator [0][j];
+    derivativeM = temp->m_ThreaderDerivativeMIterator [0][j];
+    differential = temp->m_ThreaderDifferentialIterator[0][j];
 
-    for( ThreadIdType i = 0; i < nrOfThreads; i++ )
+    for( ThreadIdType i = 1; i < nrOfThreads; i++ )
     {
       derivativeF += temp->m_ThreaderDerivativeFIterator [i][j];
       derivativeM += temp->m_ThreaderDerivativeMIterator [i][j];
       differential+= temp->m_ThreaderDifferentialIterator[i][j];
     }
 
-    derivativeF -= temp->sf_N * differential;
-    derivativeM -= temp->sm_N * differential;
+    if ( temp->subtractMean )
+    {
+      derivativeF -= temp->sf_N * differential;
+      derivativeM -= temp->sm_N * differential;
+    }
 
     temp->derivativeIterator[j] = ( derivativeF - temp->sfm_smm * derivativeM ) * temp->invDenom;
-
   }
 
   return ITK_THREAD_RETURN_VALUE;
 
 } // end ComputeDerivativesThreaderCallback()
 
-#endif
 
 } // end namespace itk
 
