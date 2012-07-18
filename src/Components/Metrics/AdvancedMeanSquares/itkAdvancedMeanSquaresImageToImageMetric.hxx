@@ -18,7 +18,6 @@
 #include "vnl/algo/vnl_matrix_update.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 
-#include "elxTimer.h"//tmp
 #include <omp.h> // OpenMP
 #include <Eigen/Dense> // Eigen
 #include <Eigen/Core> // Eigen

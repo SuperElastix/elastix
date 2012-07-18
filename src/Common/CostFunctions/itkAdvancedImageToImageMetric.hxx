@@ -19,6 +19,8 @@
 #include "itkImageRegionConstIterator.h"
 #include "itkImageRegionConstIteratorWithIndex.h"
 
+#include "elxTimer.h"//tmp
+
 namespace itk
 {
 
@@ -138,7 +140,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 ::InitializeThreadingParameters( void ) const
 {
   // tmp: time this:
-  typedef tmr::Timer          TimerType; typedef TimerType::Pointer  TimerPointer;
+  typedef tmr::Timer TimerType; typedef typename TimerType::Pointer  TimerPointer;
   TimerPointer timer = TimerType::New();
   timer->StartTimer();
 
