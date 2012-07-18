@@ -126,12 +126,12 @@ MetricBase<TElastix>
     if ( tmp == "true" )
     {
       thisAsAdvanced->SetUseMultiThread( true );
-      thisAsAdvanced->SetNumberOfThreadsPerMetric( 4 );
+      thisAsAdvanced->SetNumberOfThreads( 4 );
       std::string tmp2 = this->m_Configuration->GetCommandLineArgument( "-threads" );
       unsigned int nrOfThreads = atoi( tmp2.c_str() );
       if ( tmp2 != "" )
       {
-        thisAsAdvanced->SetNumberOfThreadsPerMetric( nrOfThreads );
+        thisAsAdvanced->SetNumberOfThreads( nrOfThreads );
       }
     }
     else thisAsAdvanced->SetUseMultiThread( false );

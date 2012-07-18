@@ -97,6 +97,7 @@ public:
   typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
   typedef typename Superclass::MeasureType                MeasureType;
   typedef typename Superclass::DerivativeType             DerivativeType;
+  typedef typename Superclass::DerivativeValueType        DerivativeValueType;
   typedef typename Superclass::ParametersType             ParametersType;
   typedef typename Superclass::FixedImagePixelType        FixedImagePixelType;
   typedef typename Superclass::MovingImageRegionType      MovingImageRegionType;
@@ -139,6 +140,9 @@ public:
 
   /** Get value and derivative. */
   void GetValueAndDerivativeSingleThreaded( const TransformParametersType & parameters,
+    MeasureType & value, DerivativeType & derivative ) const;
+
+  void GetValueAndDerivativeOpenMP( const TransformParametersType & parameters,
     MeasureType & value, DerivativeType & derivative ) const;
 
   virtual void GetValueAndDerivative( const TransformParametersType & parameters,
@@ -185,11 +189,12 @@ public:
   itkSetMacro( UseNormalization, bool );
   itkGetConstMacro( UseNormalization, bool );
 
-  mutable std::vector<double> m_FillDerivativesTimings;//tmp
+  itkSetMacro( UseOpenMP, bool );
 
 protected:
   AdvancedMeanSquaresImageToImageMetric();
   virtual ~AdvancedMeanSquaresImageToImageMetric();
+
   void PrintSelf( std::ostream& os, Indent indent ) const;
 
   /** Protected Typedefs ******************/
@@ -217,14 +222,6 @@ protected:
 
   double m_NormalizationFactor;
 
-  /** Computes the innerproduct of transform Jacobian with moving image gradient.
-   * The results are stored in imageJacobian, which is supposed
-   * to have the right size (same length as Jacobian's number of columns). */
-  void EvaluateTransformJacobianInnerProduct(
-    const TransformJacobianType & jacobian,
-    const MovingImageDerivativeType & movingImageDerivative,
-    DerivativeType & imageJacobian) const;
-
   /** Compute a pixel's contribution to the measure and derivatives;
    * Called by GetValueAndDerivative(). */
   void UpdateValueAndDerivativeTerms(
@@ -251,11 +248,7 @@ private:
   double          m_SelfHessianNoiseRange;
   unsigned int    m_NumberOfSamplesForSelfHessian;
 
-  //mutable ImageSampleContainerPointer   m_SampleContainer;
-  //mutable unsigned long                 m_SampleContainerSize;
-  mutable std::vector< MeasureType >    m_ThreaderValues;
-  mutable std::vector< DerivativeType > m_ThreaderDerivatives;
-  mutable std::vector< unsigned long >  m_ThreaderNumberOfPixelsCounted;
+  bool m_UseOpenMP;
 
   struct MultiThreaderComputeDerivativeType
   {

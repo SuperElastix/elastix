@@ -287,9 +287,7 @@ public:
   itkGetConstReferenceMacro( UseMultiThread, bool );
   itkBooleanMacro( UseMultiThread );
 
-  /** Set and Get number of threads. */
-  itkSetMacro( NumberOfThreadsPerMetric, ThreadIdType );
-  itkGetConstReferenceMacro( NumberOfThreadsPerMetric, ThreadIdType );
+  mutable std::vector<double> m_FillDerivativesTimings;//tmp
 
 protected:
   /** Constructor. */
@@ -368,14 +366,27 @@ protected:
   /** Variables for multi-threading. */
   bool                  m_UseMetricSingleThreaded;
   bool                  m_UseMultiThread;
-  mutable ThreadIdType  m_NumberOfThreadsPerMetric;
 
   struct MultiThreaderParameterType
   {
     AdvancedImageToImageMetric * m_Metric;
   };
-  MultiThreaderParameterType  m_ThreaderMetricParameters;
+  MultiThreaderParameterType  m_ThreaderMetricParameters; // is this re-used?
 
+  /** Most metrics will perform multi-threading by letting
+   * each thread compute a part of the value and derivative.
+   *
+   * These parameters are initialized at every call of GetValueAndDerivative
+   * in the function InitializeThreadingParameters(). Since GetValueAndDerivative
+   * is const, also InitializeThreadingParameters should be const, and therefore
+   * these member variables are mutable.
+   */
+  mutable std::vector<MeasureType>    m_ThreaderValues;
+  mutable std::vector<DerivativeType> m_ThreaderDerivatives;
+  mutable std::vector<SizeValueType>  m_ThreaderNumberOfPixelsCounted;
+
+  /** Initialize some multi-threading related parameters. */
+  virtual void InitializeThreadingParameters( void ) const;
 
   /** Protected methods ************** */
 
@@ -406,11 +417,21 @@ protected:
    * If a BSplineInterpolationFunction is used, this class obtain
    * image derivatives from the B-spline interpolator. Otherwise,
    * image derivatives are computed using nearest neighbor interpolation
-   * of a precomputed (central difference) gradient image. */
+   * of a precomputed (central difference) gradient image.
+   */
   virtual bool EvaluateMovingImageValueAndDerivative(
     const MovingImagePointType & mappedPoint,
     RealType & movingImageValue,
     MovingImageDerivativeType * gradient ) const;
+
+  /** Computes the innerproduct of transform Jacobian with moving image gradient.
+   * The results are stored in imageJacobian, which is supposed
+   * to have the right size (same length as Jacobian's number of columns).
+   */
+  virtual void EvaluateTransformJacobianInnerProduct(
+    const TransformJacobianType & jacobian,
+    const MovingImageDerivativeType & movingImageDerivative,
+    DerivativeType & imageJacobian ) const;
 
   /** Methods to support transforms with sparse Jacobians, like the BSplineTransform **********/
 

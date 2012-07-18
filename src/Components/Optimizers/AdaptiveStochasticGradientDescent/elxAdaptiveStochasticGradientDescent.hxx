@@ -294,7 +294,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   xl::xout["iteration"]["2:Metric"] << this->GetValue();
   xl::xout["iteration"]["3a:Time"] << this->GetCurrentTime();
   xl::xout["iteration"]["3b:StepSize"] << this->GetLearningRate();
-  bool asFastAsPossible = true;
+  bool asFastAsPossible = false;
   if ( asFastAsPossible )
   {
     xl::xout["iteration"]["4:||Gradient||"] << "---";
@@ -724,8 +724,10 @@ AdaptiveStochasticGradientDescent<TElastix>
   elxout << "  Sampling gradients ..." << std::endl;
 
   /** Initialize some variables for storing gradients and their magnitudes. */
-  DerivativeType approxgradient;
-  DerivativeType exactgradient;
+  const unsigned int P = this->GetElastix()->GetElxTransformBase()
+    ->GetAsITKBaseType()->GetNumberOfParameters();
+  DerivativeType approxgradient( P );
+  DerivativeType exactgradient( P );
   DerivativeType diffgradient;
   double exactgg = 0.0;
   double diffgg = 0.0;

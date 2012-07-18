@@ -118,6 +118,11 @@ namespace itk
     this->m_Stop = false;
 
     InvokeEvent( StartEvent() );
+
+    const unsigned int spaceDimension
+      = this->GetScaledCostFunction()->GetNumberOfParameters();
+    this->m_Gradient = DerivativeType( spaceDimension );
+
     while( ! this->m_Stop )
     {
 

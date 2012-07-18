@@ -423,6 +423,8 @@ protected:
   FixedImageRegionType        m_NullFixedImageRegion;
   DerivativeType              m_NullDerivative;
 
+  ThreadIdType  m_NumberOfThreadsPerMetric;
+
 private:
   CombinationImageToImageMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented

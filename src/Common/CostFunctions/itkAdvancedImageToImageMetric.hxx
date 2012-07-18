@@ -72,11 +72,17 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   this->m_MovingImageMinLimit = NumericTraits< MovingImageLimiterOutputType >::Zero;
   this->m_MovingImageMaxLimit = NumericTraits< MovingImageLimiterOutputType >::One;
 
+  /** Threading related variables. */
+  this->m_ThreaderValues.resize( 0 );
+  this->m_ThreaderDerivatives.resize( 0 );
+  this->m_ThreaderNumberOfPixelsCounted.resize( 0 );
+
   this->m_UseMetricSingleThreaded = true;
-  this->m_NumberOfThreadsPerMetric = 1;
 
   /** Initialise the m_ThreaderMetricParameters */
   this->m_ThreaderMetricParameters.m_Metric = this;
+
+  this->m_FillDerivativesTimings.clear();//tmp
 
 } // end Constructor
 
@@ -120,6 +126,49 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   this->CheckForBSplineTransform();
 
 } // end Initialize()
+
+
+/**
+ * ********************* InitializeThreadingParameters ****************************
+ */
+
+template <class TFixedImage, class TMovingImage>
+void
+AdvancedImageToImageMetric<TFixedImage,TMovingImage>
+::InitializeThreadingParameters( void ) const
+{
+  // tmp: time this:
+  typedef tmr::Timer          TimerType; typedef TimerType::Pointer  TimerPointer;
+  TimerPointer timer = TimerType::New();
+  timer->StartTimer();
+
+  /** Resize and initialize the threading related parameters. */
+  this->m_ThreaderValues.resize(
+    this->m_NumberOfThreads, NumericTraits<MeasureType>::Zero );
+  this->m_ThreaderDerivatives.resize( this->m_NumberOfThreads );
+  this->m_ThreaderNumberOfPixelsCounted.resize(
+    this->m_NumberOfThreads, NumericTraits<SizeValueType>::Zero );
+
+  /** Initialize the derivatives. */
+  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  {
+    // only resizes when different size, is good:
+    this->m_ThreaderDerivatives[ i ].SetSize( this->GetNumberOfParameters() );
+#if 1 //#ifdef FillDerivatives
+    // Does not use memcopy, probably slow:
+    this->m_ThreaderDerivatives[ i ].Fill( 0 );
+    // measured to be 3ms on PCMarius for 300k parameters, while total iter took 25 ms
+#else
+    DerivativeValueType * derivativePointer = this->m_ThreaderDerivatives[ i ].data_block();
+    ::memset( derivativePointer, 0, sizeof( DerivativeValueType ) * this->GetNumberOfParameters() );
+#endif
+  }
+
+  // end timer and store
+  timer->StopTimer();
+  this->m_FillDerivativesTimings.push_back( timer->GetElapsedClockSec() * 1000.0 );
+
+} // end InitializeThreadingParameters()
 
 
 /**
@@ -600,6 +649,76 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 
 
 /**
+ * *************** EvaluateTransformJacobianInnerProduct ****************
+ */
+
+template < class TFixedImage, class TMovingImage >
+void
+AdvancedImageToImageMetric<TFixedImage,TMovingImage>
+::EvaluateTransformJacobianInnerProduct(
+  const TransformJacobianType & jacobian,
+  const MovingImageDerivativeType & movingImageDerivative,
+  DerivativeType & imageJacobian ) const
+{
+  typedef typename TransformJacobianType::const_iterator JacobianIteratorType;
+  typedef typename DerivativeType::iterator              DerivativeIteratorType;
+
+  /** Multiple the 1-by-dim vector movingImageDerivative with the
+   * dim-by-length matrix jacobian, to get a 1-by-length vector imageJacobian.
+   * An optimized route can be taken for B-spline transforms.
+   */
+  if ( this->m_TransformIsBSpline )
+  {
+    // For the B-spline we know that the Jacobian is mostly empty.
+    //       [ j ... j 0 ... 0 0 ... 0 ]
+    // jac = [ 0 ... 0 j ... j.0 ... 0 ]
+    //       [ 0 ... 0 0 ... 0.j ... j ]
+    //JacobianIteratorType jac = jacobian.begin();
+    //DerivativeIteratorType imjac = imageJacobian.begin();
+
+    const unsigned int sizeImageJacobian = imageJacobian.GetSize();
+    const unsigned int numberOfParametersPerDimension = sizeImageJacobian / FixedImageDimension;
+    unsigned int counter = 0;
+    for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
+    {
+      const double imDeriv = movingImageDerivative[ dim ];
+      for ( unsigned int mu = 0; mu < numberOfParametersPerDimension; mu++ )
+      {
+        imageJacobian( counter )
+          = jacobian( dim, counter ) * imDeriv; // is correct, pointers more efficient?
+        //(*imjac) = (*jac) * imDeriv;
+        //++imjac;
+        //++jac;
+        ++counter;
+      }
+      //jac += numberOfParametersPerDimension;
+    }
+  }
+  else
+  {
+    /** Otherwise perform a full multiplication. */
+    JacobianIteratorType jac = jacobian.begin();
+    imageJacobian.Fill( 0.0 );
+    const unsigned int sizeImageJacobian = imageJacobian.GetSize();
+
+    for ( unsigned int dim = 0; dim < FixedImageDimension; dim++ )
+    {
+      const double imDeriv = movingImageDerivative[ dim ];
+      DerivativeIteratorType imjac = imageJacobian.begin();
+
+      for ( unsigned int mu = 0; mu < sizeImageJacobian; mu++ )
+      {
+        (*imjac) += (*jac) * imDeriv;
+        ++imjac;
+        ++jac;
+      }
+    }
+  }
+
+} // end EvaluateTransformJacobianInnerProduct()
+
+
+/**
  * ********************** TransformPoint ************************
  *
  * Transform a point from FixedImage domain to MovingImage domain.
@@ -763,7 +882,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
   /** Setup local threader. */
   // \todo: is a global threader better performance-wise? check
   ThreaderType::Pointer local_threader = ThreaderType::New();
-  local_threader->SetNumberOfThreads( this->m_NumberOfThreadsPerMetric );
+  local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
   local_threader->SetSingleMethod( GetValueAndDerivativeThreaderCallback,
     const_cast<void *>( static_cast<const void *>( &this->m_ThreaderMetricParameters ) ) );
 

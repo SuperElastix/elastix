@@ -98,6 +98,13 @@ using namespace itk;
 
     this->m_FillDerivativesTimings.clear();//tmp
 
+    bool useOpenMP = false;
+    std::string tmp = this->m_Configuration->GetCommandLineArgument( "-useOpenMP_SSD" );
+    if ( tmp == "true" )
+    {
+      this->SetUseOpenMP( true );
+    }
+
   } // end BeforeEachResolution
 
 
@@ -106,12 +113,14 @@ using namespace itk;
     ::AfterEachResolution(void)
   {
     //tmp
-    elxout << "\n FillDerivativesTimings" << std::endl;
+    double average = 0;
     for ( std::size_t i = 0; i < this->m_FillDerivativesTimings.size(); ++i )
     {
-      elxout << this->m_FillDerivativesTimings[ i ] << " ";
+      average += this->m_FillDerivativesTimings[ i ];
     }
-    elxout << "\n" << std::endl;
+    elxout << "\n  FillDerivatives, average time: "
+      << average / this->m_FillDerivativesTimings.size()
+      << " ms.\n" << std::endl;
   }
 
 } // end namespace elastix

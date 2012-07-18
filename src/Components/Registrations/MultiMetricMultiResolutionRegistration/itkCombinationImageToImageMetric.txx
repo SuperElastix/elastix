@@ -166,6 +166,8 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
 
   this->m_UseMultiThread = true;
 
+  this->m_NumberOfThreadsPerMetric = 1;
+
 } // end Constructor
 
 
@@ -634,9 +636,9 @@ CombinationImageToImageMetric<TFixedImage,TMovingImage>
     {
       // The NumberOfThreadsPerMetric is changed after Initialize() so we save it before and then
       // set it on.
-      unsigned nrOfThreadsPerMetric = this->GetNumberOfThreadsPerMetric();
+      unsigned nrOfThreadsPerMetric = this->GetNumberOfThreads();
       testPtr1->Initialize();
-      testPtr1->SetNumberOfThreadsPerMetric( nrOfThreadsPerMetric );
+      testPtr1->SetNumberOfThreads( nrOfThreadsPerMetric );
     }
     else if ( testPtr2 )
     {
