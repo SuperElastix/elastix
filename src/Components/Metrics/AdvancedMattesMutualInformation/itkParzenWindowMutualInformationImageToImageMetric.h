@@ -134,6 +134,8 @@ public:
     Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
   typedef typename
     Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
+  typedef typename Superclass::ThreaderType               ThreaderType;
+  typedef typename Superclass::ThreadInfoType             ThreadInfoType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,

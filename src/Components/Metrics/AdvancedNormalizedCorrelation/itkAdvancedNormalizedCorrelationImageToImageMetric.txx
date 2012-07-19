@@ -75,7 +75,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   /** Resize and initialize the threading related parameters. */
   this->m_ThreaderNumberOfPixelsCounted.resize(
     this->m_NumberOfThreads, NumericTraits<SizeValueType>::Zero );
-  const AccumulateType zero = NumericTraits< AccumulateType >::Zero;
+  const AccumulateType zero = NumericTraits<AccumulateType>::Zero;
   this->m_ThreaderSff.resize( this->m_NumberOfThreads, zero );
   this->m_ThreaderSmm.resize( this->m_NumberOfThreads, zero );
   this->m_ThreaderSfm.resize( this->m_NumberOfThreads, zero );
@@ -90,11 +90,11 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
   {
     this->m_ThreaderDerivativeF[ i ].SetSize( this->GetNumberOfParameters() );
-    this->m_ThreaderDerivativeF[ i ].Fill( NumericTraits< DerivativeValueType >::Zero );
+    this->m_ThreaderDerivativeF[ i ].Fill( NumericTraits<DerivativeValueType>::Zero );
     this->m_ThreaderDerivativeM[ i ].SetSize( this->GetNumberOfParameters() );
-    this->m_ThreaderDerivativeM[ i ].Fill( NumericTraits< DerivativeValueType >::Zero );
+    this->m_ThreaderDerivativeM[ i ].Fill( NumericTraits<DerivativeValueType>::Zero );
     this->m_ThreaderDifferential[ i ].SetSize( this->GetNumberOfParameters() );
-    this->m_ThreaderDifferential[ i ].Fill( NumericTraits< DerivativeValueType >::Zero );
+    this->m_ThreaderDifferential[ i ].Fill( NumericTraits<DerivativeValueType>::Zero );
   }
 
   // end timer and store

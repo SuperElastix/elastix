@@ -1288,9 +1288,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
 {
   /** Setup local threader. */
   // \todo: is a global threader better performance-wise? check
-  ThreaderType::Pointer local_threader = ThreaderType::New();
+  typename ThreaderType::Pointer local_threader = ThreaderType::New();
   local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
-  local_threader->SetSingleMethod( ComputePDFsThreaderCallback,
+  local_threader->SetSingleMethod( this->ComputePDFsThreaderCallback,
     const_cast<void *>( static_cast<const void *>(
     &this->m_ParzenWindowHistogramThreaderParameters ) ) );
 

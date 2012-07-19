@@ -114,12 +114,8 @@ public:
     Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
   typedef typename
     Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
-
-  /** Some typedefs for computing the SelfHessian */
   typedef typename Superclass::HessianValueType           HessianValueType;
   typedef typename Superclass::HessianType                HessianType;
-
-  /** Multithreading type */
   typedef typename Superclass::ThreaderType               ThreaderType;
   typedef typename Superclass::ThreadInfoType             ThreadInfoType;
 

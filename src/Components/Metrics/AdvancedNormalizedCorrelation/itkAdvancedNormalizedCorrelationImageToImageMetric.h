@@ -132,6 +132,7 @@ public:
   typedef typename Superclass::MovingImageMaskPointer     MovingImageMaskPointer;
   typedef typename Superclass::MeasureType                MeasureType;
   typedef typename Superclass::DerivativeType             DerivativeType;
+  typedef typename Superclass::DerivativeValueType        DerivativeValueType;
   typedef typename Superclass::ParametersType             ParametersType;
   typedef typename Superclass::FixedImagePixelType        FixedImagePixelType;
   typedef typename Superclass::MovingImageRegionType      MovingImageRegionType;
@@ -148,10 +149,8 @@ public:
     Superclass::MovingImageLimiterOutputType              MovingImageLimiterOutputType;
   typedef typename
     Superclass::MovingImageDerivativeScalesType           MovingImageDerivativeScalesType;
-
-  /** Multithreading type */
-  typedef typename Superclass::ThreaderType     ThreaderType;
-  typedef typename Superclass::ThreadInfoType   ThreadInfoType;
+  typedef typename Superclass::ThreaderType               ThreaderType;
+  typedef typename Superclass::ThreadInfoType             ThreadInfoType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro( FixedImageDimension, unsigned int,

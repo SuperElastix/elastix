@@ -535,7 +535,7 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
     = dynamic_cast<BSplineOrder2TransformType *>( this->m_AdvancedTransform.GetPointer() );
   BSplineOrder3TransformType * testPtr_3
     = dynamic_cast<BSplineOrder3TransformType *>( this->m_AdvancedTransform.GetPointer() );
-  
+
   bool transformIsBSpline = false;
   if ( testPtr_1 || testPtr_2 || testPtr_3 )
   {
@@ -883,9 +883,9 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
 {
   /** Setup local threader. */
   // \todo: is a global threader better performance-wise? check
-  ThreaderType::Pointer local_threader = ThreaderType::New();
+  typename ThreaderType::Pointer local_threader = ThreaderType::New();
   local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
-  local_threader->SetSingleMethod( GetValueAndDerivativeThreaderCallback,
+  local_threader->SetSingleMethod( this->GetValueAndDerivativeThreaderCallback,
     const_cast<void *>( static_cast<const void *>( &this->m_ThreaderMetricParameters ) ) );
 
   /** Launch. */
