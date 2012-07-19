@@ -245,6 +245,8 @@ namespace itk
       const ParametersType & currentPosition = this->GetScaledCurrentPosition();
 
       /** Update the new position. */
+      const int nthreads = static_cast<int>( this->m_NumberOfThreads );
+      omp_set_num_threads( nthreads );
       #pragma omp parallel for
       for( int j = 0; j < spaceDimension; j++ )
       {

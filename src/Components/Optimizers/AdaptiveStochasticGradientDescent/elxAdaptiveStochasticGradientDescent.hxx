@@ -376,12 +376,14 @@ AdaptiveStochasticGradientDescent<TElastix>
   this->PrintSettingsVector( tempSettingsVector );
 
   //tmp
-  elxout << "\n" << std::endl;
+  double average = 0.0;
   for ( std::size_t i = 0; i < this->m_AdvanceOneStepTimings.size(); ++i )
   {
-    elxout << this->m_AdvanceOneStepTimings[ i ] << " ";
+    average += this->m_AdvanceOneStepTimings[ i ];
   }
-  elxout << "\n" << std::endl;
+  elxout << "\n\nAdvanceOneStepTimings (average): "
+    << average / this->m_AdvanceOneStepTimings.size()
+    << " ms\n" << std::endl;
 
 } // end AfterEachResolution()
 

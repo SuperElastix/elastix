@@ -150,7 +150,10 @@ public:
   itkGetConstMacro( UseJacobianPreconditioning, bool );
   itkSetMacro( UseJacobianPreconditioning, bool );
 
-  //m_FinalLoopTimings
+  // tmp
+  mutable double m_ComputePDFsTimings;
+  mutable double m_HistogramLoopsTimings;
+  mutable double m_FinalLoopTimings;
 
 protected:
 
@@ -170,7 +173,7 @@ protected:
   typedef typename Superclass::MovingImagePointType               MovingImagePointType;
   typedef typename Superclass::MovingImageContinuousIndexType     MovingImageContinuousIndexType;
   typedef typename Superclass::BSplineInterpolatorType            BSplineInterpolatorType;
-  typedef typename Superclass::CentralDifferenceGradientFilterType        CentralDifferenceGradientFilterType;
+  typedef typename Superclass::CentralDifferenceGradientFilterType CentralDifferenceGradientFilterType;
   typedef typename Superclass::MovingImageDerivativeType          MovingImageDerivativeType;
   typedef typename Superclass::PDFValueType                       PDFValueType;
   typedef typename Superclass::MarginalPDFType                    MarginalPDFType;
@@ -187,23 +190,34 @@ protected:
   typedef typename Superclass::KernelFunctionType                 KernelFunctionType;
   typedef typename Superclass::NonZeroJacobianIndicesType         NonZeroJacobianIndicesType;
 
-  /**  Get the value and analytic derivatives for single valued optimizers.
+  /**  Get the value and analytic derivative.
    * Called by GetValueAndDerivative if UseFiniteDifferenceDerivative == false.
+   *
+   * Implements a version that only loops once over the samples, but uses
+   * a large block of memory to explicitely store the joint histogram derivative.
+   * It's size is #FixedHistogramBins * #MovingHistogramBins * #parameters * float.
    */
   virtual void GetValueAndAnalyticDerivative(
     const ParametersType & parameters,
     MeasureType & value, DerivativeType & derivative ) const;
 
-  /** Get the value and analytic derivatives for single valued optimizers.
+  /** Get the value and analytic derivative.
    * Called by GetValueAndDerivative if UseFiniteDifferenceDerivative == false
    * and UseExplicitPDFDerivatives == false.
+   *
+   * Implements a version that avoids the large memory allocation of the
+   * explicit joint histogram derivative. This comes at the cost of looping
+   * over the samples twice, instead of once. The first time does not require
+   * GetJacobian() and moving image derivatives, however.
    */
   virtual void GetValueAndAnalyticDerivativeLowMemory(
     const ParametersType & parameters,
     MeasureType & value, DerivativeType & derivative ) const;
 
-  /**  Get the value and finite difference derivatives for single valued optimizers.
+  /**  Get the value and finite difference derivative.
    * Called by GetValueAndDerivative if UseFiniteDifferenceDerivative == true.
+   *
+   * This is really only here for experimental purposes.
    */
   virtual void GetValueAndFiniteDifferenceDerivative( const ParametersType& parameters,
     MeasureType & value, DerivativeType & derivative ) const;
@@ -217,6 +231,29 @@ protected:
 
   /** Some initialization functions, called by Initialize. */
   virtual void InitializeHistograms( void );
+
+  /** Threading related parameters. */
+  struct ParzenWindowMutualInformationMultiThreaderParameterType
+  {
+    Self * m_Metric;
+  };
+  ParzenWindowMutualInformationMultiThreaderParameterType  m_ParzenWindowMutualInformationThreaderParameters;
+
+  /** Initialize threading related parameters. */
+  virtual void InitializeThreadingParameters( void ) const;
+
+  /** Multi-threaded versions of the ComputePDF function. */
+  inline void ThreadedComputeDerivativeLowMemory( ThreadIdType threadId );
+
+  /** Single-threadedly accumulate results. */
+  inline void AfterThreadedComputeDerivativeLowMemory(
+    DerivativeType & derivative ) const;
+
+  /** Helper function to launch the threads. */
+  static ITK_THREAD_RETURN_TYPE ComputeDerivativeLowMemoryThreaderCallback( void * arg );
+
+  /** Helper function to launch the threads. */
+  void LaunchComputeDerivativeLowMemoryThreaderCallback( void ) const;
 
 private:
 
@@ -233,7 +270,11 @@ private:
   /** Setting */
   bool  m_UseJacobianPreconditioning;
 
-  /** Helper function to update the derivative in case of low memory consumption. */
+  /** Helper function to compute the derivative for the low memory variant. */
+  void ComputeDerivativeLowMemorySingleThreaded( DerivativeType & derivative ) const;
+  void ComputeDerivativeLowMemory( DerivativeType & derivative ) const;
+
+  /** Helper function to update the derivative for the low memory variant. */
   void UpdateDerivativeLowMemory(
     const RealType & fixedImageValue,
     const RealType & movingImageValue,

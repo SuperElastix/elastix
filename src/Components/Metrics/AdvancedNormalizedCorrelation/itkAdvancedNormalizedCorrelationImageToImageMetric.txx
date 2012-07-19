@@ -535,7 +535,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,TMovingImage>
   /** Initialize array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
   const unsigned int nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   NonZeroJacobianIndicesType nzji = NonZeroJacobianIndicesType( nnzji );
-  DerivativeType imageJacobian = DerivativeType( nzji.size() );
+  DerivativeType imageJacobian( nzji.size() );
   TransformJacobianType jacobian( FixedImageDimension, nnzji );
   jacobian.Fill( 0.0 ); // needed?
 

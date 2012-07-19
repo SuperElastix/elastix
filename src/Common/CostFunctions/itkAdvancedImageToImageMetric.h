@@ -273,7 +273,7 @@ public:
 
   /** Finalize multi-threaded metric computation. */
   virtual inline void AfterThreadedGetValueAndDerivative(
-    MeasureType & value, DerivativeType & derivative ){};
+    MeasureType & value, DerivativeType & derivative ) const {};
 
   static ITK_THREAD_RETURN_TYPE GetValueAndDerivativeThreaderCallback( void * arg );
 

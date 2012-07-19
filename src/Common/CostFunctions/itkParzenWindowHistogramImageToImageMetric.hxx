@@ -66,6 +66,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
 
   this->m_UseExplicitPDFDerivatives = true;
 
+  /** Initialise the m_ParzenWindowHistogramThreaderParameters */
+  this->m_ParzenWindowHistogramThreaderParameters.m_Metric = this;
+
 } // end Constructor
 
 
@@ -421,6 +424,41 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
 
 
 /**
+ * ********************* InitializeThreadingParameters ****************************
+ */
+
+template <class TFixedImage, class TMovingImage>
+void
+ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+::InitializeThreadingParameters( void ) const
+{
+  /** Resize and initialize the threading related parameters. */
+  this->m_ThreaderJointPDFs.resize( this->m_NumberOfThreads, 0 );
+  this->m_ThreaderNumberOfPixelsCounted.resize(
+    this->m_NumberOfThreads, NumericTraits<SizeValueType>::Zero );
+
+  /** Initialize the joint histograms. */
+  JointPDFRegionType            jointPDFRegion;
+  JointPDFIndexType             jointPDFIndex;
+  JointPDFSizeType              jointPDFSize;
+  jointPDFIndex.Fill( 0 );
+  jointPDFSize[0] = this->m_NumberOfMovingHistogramBins;
+  jointPDFSize[1] = this->m_NumberOfFixedHistogramBins;
+  jointPDFRegion.SetIndex( jointPDFIndex );
+  jointPDFRegion.SetSize( jointPDFSize );
+
+  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  {
+    this->m_ThreaderJointPDFs[ i ] = JointPDFType::New();
+    this->m_ThreaderJointPDFs[ i ]->SetRegions( jointPDFRegion );
+    this->m_ThreaderJointPDFs[ i ]->Allocate();
+    this->m_ThreaderJointPDFs[ i ]->FillBuffer( 0.0 );
+  }
+
+} // end InitializeThreadingParameters()
+
+
+/**
  * ******************** GetDerivative ***************************
  *
  * Get the match measure derivative.
@@ -489,9 +527,11 @@ template < class TFixedImage, class TMovingImage >
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
 ::UpdateJointPDFAndDerivatives(
-  RealType fixedImageValue, RealType movingImageValue,
+  const RealType & fixedImageValue,
+  const RealType & movingImageValue,
   const DerivativeType * imageJacobian,
-  const NonZeroJacobianIndicesType * nzji ) const
+  const NonZeroJacobianIndicesType * nzji,
+  JointPDFType * jointPDF ) const
 {
   typedef ImageSliceIteratorWithIndex< JointPDFType >  PDFIteratorType;
 
@@ -523,9 +563,13 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   JointPDFIndexType pdfWindowIndex;
   pdfWindowIndex[ 0 ] = movingImageParzenWindowIndex;
   pdfWindowIndex[ 1 ] = fixedImageParzenWindowIndex;
-  this->m_JointPDFWindow.SetIndex( pdfWindowIndex );
+  /** Make a local copy of the support region. */
+  //this->m_JointPDFWindow.SetIndex( pdfWindowIndex ); // not thread-safe
+  JointPDFRegionType jointPDFWindow = this->m_JointPDFWindow;
+  jointPDFWindow.SetIndex( pdfWindowIndex );
 
-  PDFIteratorType it( this->m_JointPDF, this->m_JointPDFWindow );
+  //PDFIteratorType it( this->m_JointPDF, this->m_JointPDFWindow ); // not thread-safe
+  PDFIteratorType it( jointPDF, jointPDFWindow );
   it.GoToBegin();
   it.SetFirstDirection( 0 );
   it.SetSecondDirection( 1 );
@@ -533,10 +577,10 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   if( !imageJacobian )
   {
     /** Loop over the Parzen window region and increment the values. */
-    for ( unsigned int f = 0; f < fixedParzenValues.GetSize(); ++f )
+    for( unsigned int f = 0; f < fixedParzenValues.GetSize(); ++f )
     {
       const double fv = fixedParzenValues[ f ];
-      for ( unsigned int m = 0; m < movingParzenValues.GetSize(); ++m )
+      for( unsigned int m = 0; m < movingParzenValues.GetSize(); ++m )
       {
         it.Value() += static_cast<PDFValueType>( fv * movingParzenValues[ m ] );
         ++it;
@@ -945,13 +989,13 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
 
 
 /**
- * ************************ ComputePDFs **************************
+ * ************************ ComputePDFsSingleThreaded **************************
  */
 
 template < class TFixedImage, class TMovingImage >
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
-::ComputePDFs( const ParametersType & parameters ) const
+::ComputePDFsSingleThreaded( const ParametersType & parameters ) const
 {
   /** Initialize some variables. */
   this->m_JointPDF->FillBuffer( 0.0 );
@@ -1020,7 +1064,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
 
       /** Compute this sample's contribution to the joint distributions. */
       this->UpdateJointPDFAndDerivatives(
-        fixedImageValue, movingImageValue, 0, 0 );
+        fixedImageValue, movingImageValue, 0, 0, this->m_JointPDF.GetPointer() );
     }
 
   } // end iterating over fixed image spatial sample container for loop
@@ -1029,13 +1073,231 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
   this->CheckNumberOfSamples( sampleContainer->Size(), this->m_NumberOfPixelsCounted );
 
   /** Compute alpha. */
-  this->m_Alpha = 0.0;
-  if ( this->m_NumberOfPixelsCounted > 0 )
+  this->m_Alpha = 1.0 / static_cast<double>( this->m_NumberOfPixelsCounted );
+
+} // end ComputePDFsSingleThreaded()
+
+
+/**
+ * ************************ ComputePDFs **************************
+ */
+
+template < class TFixedImage, class TMovingImage >
+void
+ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+::ComputePDFs( const ParametersType & parameters ) const
+{
+  /** Option for now to still use the single threaded code. */
+  if ( !this->m_UseMultiThread )
   {
-    this->m_Alpha = 1.0 / static_cast<double>( this->m_NumberOfPixelsCounted );
+    return this->ComputePDFsSingleThreaded( parameters );
   }
 
+  /** Call non-thread-safe stuff, such as:
+   *   this->SetTransformParameters( parameters );
+   *   this->GetImageSampler()->Update();
+   * Because of these calls GetValueAndDerivative itself is not thread-safe,
+   * so cannot be called multiple times simultaneously.
+   * This is however needed in the CombinationImageToImageMetric.
+   * In that case, you need to:
+   * - switch the use of this function to on, using m_UseMetricSingleThreaded = true
+   * - call BeforeThreadedGetValueAndDerivative once (single-threaded) before
+   *   calling GetValueAndDerivative
+   * - switch the use of this function to off, using m_UseMetricSingleThreaded = false
+   * - Now you can call GetValueAndDerivative multi-threaded.
+   */
+  this->BeforeThreadedGetValueAndDerivative( parameters );
+
+  /** Initialize some threading related parameters. */
+  this->InitializeThreadingParameters();
+
+  /** Launch multi-threading JointPDF computation. */
+  this->LaunchComputePDFsThreaderCallback();
+
+  /** Gather the results from all threads. */
+  this->AfterThreadedComputePDFs();
+
 } // end ComputePDFs()
+
+
+/**
+ * ******************* ThreadedComputePDFs *******************
+ */
+
+template <class TFixedImage, class TMovingImage>
+void
+ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+::ThreadedComputePDFs( ThreadIdType threadId )
+{
+  /** Get a handle to the sample container. */
+  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+  const unsigned long sampleContainerSize = sampleContainer->Size();
+
+  /** Get the samples for this thread. */
+  const unsigned long nrOfSamplesPerThreads
+    = static_cast<unsigned long>( vcl_ceil( static_cast<double>( sampleContainerSize )
+      / static_cast<double>( this->m_NumberOfThreads ) ) );
+
+  const unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
+  unsigned long pos_end = nrOfSamplesPerThreads * ( threadId + 1 );
+  pos_end = ( pos_end > sampleContainerSize ) ? sampleContainerSize : pos_end;
+
+  /** Create iterator over the sample container. */
+  typename ImageSampleContainerType::ConstIterator fiter;
+  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
+  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->Begin();
+  fbegin += (int)pos_begin;
+  fend += (int)pos_end;
+
+  /** Create variables to store intermediate results. circumvent false sharing */
+  unsigned long numberOfPixelsCounted = 0;
+
+  /** Loop over sample container and compute contribution of each sample to pdfs. */
+  for( fiter = fbegin; fiter != fend; ++fiter )
+  {
+    /** Read fixed coordinates and initialize some variables. */
+    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    RealType movingImageValue;
+    MovingImagePointType mappedPoint;
+
+    /** Transform point and check if it is inside the B-spline support region. */
+    bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
+
+    /** Check if point is inside mask. */
+    if( sampleOk )
+    {
+      sampleOk = this->IsInsideMovingMask( mappedPoint );
+    }
+
+    /** Compute the moving image value and check if the point is
+     * inside the moving image buffer.
+     */
+    if( sampleOk )
+    {
+      sampleOk = this->EvaluateMovingImageValueAndDerivative(
+        mappedPoint, movingImageValue, 0 );
+    }
+
+    if( sampleOk )
+    {
+      numberOfPixelsCounted++;
+
+      /** Get the fixed image value. */
+      RealType fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
+
+      /** Make sure the values fall within the histogram range. */
+      fixedImageValue = this->GetFixedImageLimiter()->Evaluate( fixedImageValue );
+      movingImageValue = this->GetMovingImageLimiter()->Evaluate( movingImageValue );
+
+      /** Compute this sample's contribution to the joint distributions. */
+      this->UpdateJointPDFAndDerivatives(
+        fixedImageValue, movingImageValue, 0, 0,
+        this->m_ThreaderJointPDFs[ threadId ].GetPointer() );
+    }
+  } // end iterating over fixed image spatial sample container for loop
+
+  /** Only update these variables at the end to prevent unnessary "false sharing". */
+  this->m_ThreaderNumberOfPixelsCounted[ threadId ] = numberOfPixelsCounted;
+
+} // end ThreadedComputePDFs()
+
+
+/**
+ * ******************* AfterThreadedComputePDFs *******************
+ */
+
+template <class TFixedImage, class TMovingImage>
+void
+ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+::AfterThreadedComputePDFs( void ) const
+{
+  /** Accumulate the number of pixels. */
+  this->m_NumberOfPixelsCounted = this->m_ThreaderNumberOfPixelsCounted[ 0 ];
+  for( ThreadIdType i = 1; i < this->m_NumberOfThreads; i++ )
+  {
+    this->m_NumberOfPixelsCounted += this->m_ThreaderNumberOfPixelsCounted[ i ];
+  }
+
+  /** Check if enough samples were valid. */
+  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+  this->CheckNumberOfSamples(
+    sampleContainer->Size(), this->m_NumberOfPixelsCounted );
+
+  /** Compute alpha. */
+  this->m_Alpha = 1.0 / static_cast<double>( this->m_NumberOfPixelsCounted );
+
+  /** Accumulate joint histogram. */
+  // could be multi-threaded too, by each thread updating only a part of the JointPDF.
+  typedef ImageRegionIterator<JointPDFType> JointPDFIteratorType;
+  JointPDFIteratorType it( this->m_JointPDF, this->m_JointPDF->GetBufferedRegion() );
+  it.GoToBegin();
+  std::vector<JointPDFIteratorType> itT( this->m_NumberOfThreads );
+  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  {
+    itT[ i ] = JointPDFIteratorType(
+      this->m_ThreaderJointPDFs[ i ], this->m_JointPDF->GetBufferedRegion() );
+    itT[ i ].GoToBegin();
+  }
+
+  PDFValueType sum;
+  while ( !it.IsAtEnd() )
+  {
+    sum = NumericTraits<PDFValueType>::Zero;
+    for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+    {
+      sum += itT[ i ].Value();
+      ++itT[ i ];
+    }
+    it.Set( sum );
+    ++it;
+  }
+
+} // end AfterThreadedComputePDFs()
+
+
+/**
+ * **************** ComputePDFsThreaderCallback *******
+ */
+
+template < class TFixedImage, class TMovingImage >
+ITK_THREAD_RETURN_TYPE
+ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+::ComputePDFsThreaderCallback( void * arg )
+{
+  ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
+  ThreadIdType threadId = infoStruct->ThreadID;
+
+  ParzenWindowHistogramMultiThreaderParameterType * temp
+    = static_cast<ParzenWindowHistogramMultiThreaderParameterType * >( infoStruct->UserData );
+
+  temp->m_Metric->ThreadedComputePDFs( threadId );
+
+  return ITK_THREAD_RETURN_VALUE;
+
+} // end ComputePDFsThreaderCallback()
+
+
+/**
+ * *********************** LaunchComputePDFsThreaderCallback***************
+ */
+
+template < class TFixedImage, class TMovingImage >
+void
+ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
+::LaunchComputePDFsThreaderCallback( void ) const
+{
+  /** Setup local threader. */
+  // \todo: is a global threader better performance-wise? check
+  ThreaderType::Pointer local_threader = ThreaderType::New();
+  local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
+  local_threader->SetSingleMethod( ComputePDFsThreaderCallback,
+    const_cast<void *>( static_cast<const void *>(
+    &this->m_ParzenWindowHistogramThreaderParameters ) ) );
+
+  /** Launch. */
+  local_threader->SingleMethodExecute();
+
+} // end LaunchComputePDFsThreaderCallback()
 
 
 /**
@@ -1129,7 +1391,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
 
       /** Update the joint pdf and the joint pdf derivatives. */
       this->UpdateJointPDFAndDerivatives(
-        fixedImageValue, movingImageValue, &imageJacobian, &nzji );
+        fixedImageValue, movingImageValue, &imageJacobian, &nzji, this->m_JointPDF.GetPointer() );
 
     } //end if-block check sampleOk
   } // end iterating over fixed image spatial sample container for loop
@@ -1155,7 +1417,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
 template < class TFixedImage, class TMovingImage >
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage,TMovingImage>
-::ComputePDFsAndIncrementalPDFs( const ParametersType& parameters ) const
+::ComputePDFsAndIncrementalPDFs( const ParametersType & parameters ) const
 {
   /** Initialize some variables. */
   this->m_JointPDF->FillBuffer( 0.0 );

@@ -242,8 +242,10 @@ protected:
 
   /** Typedefs for the PDFs and PDF derivatives. */
   typedef float                                   PDFValueType;
+  //typedef double                                  PDFValueType;
   typedef Array<PDFValueType>                     MarginalPDFType;
   typedef Image<PDFValueType,2>                   JointPDFType;
+  typedef typename JointPDFType::Pointer          JointPDFPointer;
   typedef Image<PDFValueType,3>                   JointPDFDerivativesType;
   typedef Image<PDFValueType,2>                   IncrementalMarginalPDFType;
   typedef JointPDFType::IndexType                 JointPDFIndexType;
@@ -270,7 +272,7 @@ protected:
   /** Variables for the pdfs (actually: histograms). */
   mutable MarginalPDFType                       m_FixedImageMarginalPDF;
   mutable MarginalPDFType                       m_MovingImageMarginalPDF;
-  typename JointPDFType::Pointer                m_JointPDF;
+  JointPDFPointer                               m_JointPDF;
   typename JointPDFDerivativesType::Pointer     m_JointPDFDerivatives;
   typename JointPDFDerivativesType::Pointer     m_IncrementalJointPDFRight;
   typename JointPDFDerivativesType::Pointer     m_IncrementalJointPDFLeft;
@@ -278,7 +280,7 @@ protected:
   typename IncrementalMarginalPDFType::Pointer  m_MovingIncrementalMarginalPDFRight;
   typename IncrementalMarginalPDFType::Pointer  m_FixedIncrementalMarginalPDFLeft;
   typename IncrementalMarginalPDFType::Pointer  m_MovingIncrementalMarginalPDFLeft;
-  mutable JointPDFRegionType                    m_JointPDFWindow;
+  mutable JointPDFRegionType                    m_JointPDFWindow;// no need for mutable anymore?
   double m_MovingImageNormalizedMin;
   double m_FixedImageNormalizedMin;
   double m_FixedImageBinSize;
@@ -291,6 +293,30 @@ protected:
   typename KernelFunctionType::Pointer m_MovingKernel;
   typename KernelFunctionType::Pointer m_DerivativeMovingKernel;
 
+  /** Threading related parameters. */
+  mutable std::vector<JointPDFPointer>  m_ThreaderJointPDFs;
+
+  struct ParzenWindowHistogramMultiThreaderParameterType
+  {
+    Self * m_Metric;
+  };
+  ParzenWindowHistogramMultiThreaderParameterType  m_ParzenWindowHistogramThreaderParameters;
+
+  /** Initialize threading related parameters. */
+  virtual void InitializeThreadingParameters( void ) const;
+
+  /** Multi-threaded versions of the ComputePDF function. */
+  inline void ThreadedComputePDFs( ThreadIdType threadId );
+
+  /** Single-threadedly accumulate results. */
+  inline void AfterThreadedComputePDFs( void ) const;
+
+  /** Helper function to launch the threads. */
+  static ITK_THREAD_RETURN_TYPE ComputePDFsThreaderCallback( void * arg );
+
+  /** Helper function to launch the threads. */
+  void LaunchComputePDFsThreaderCallback( void ) const;
+
   /** Compute the Parzen values given an image value and a starting histogram index
    * Compute the values at (parzenWindowIndex - parzenWindowTerm + k) for
    * k = 0 ... kernelsize-1
@@ -299,14 +325,18 @@ protected:
    */
   void EvaluateParzenValues(
     double parzenWindowTerm, OffsetValueType parzenWindowIndex,
-    const KernelFunctionType * kernel, ParzenValueContainerType & parzenValues ) const;
+    const KernelFunctionType * kernel,
+    ParzenValueContainerType & parzenValues ) const;
 
   /** Update the joint PDF with a pixel pair; on demand also updates the
    * pdf derivatives (if the Jacobian pointers are nonzero).
    */
   virtual void UpdateJointPDFAndDerivatives(
-    RealType fixedImageValue, RealType movingImageValue,
-    const DerivativeType * imageJacobian, const NonZeroJacobianIndicesType * nzji ) const;
+    const RealType & fixedImageValue,
+    const RealType & movingImageValue,
+    const DerivativeType * imageJacobian,
+    const NonZeroJacobianIndicesType * nzji,
+    JointPDFType * jointPDF ) const;
 
   /** Update the joint PDF and the incremental pdfs.
    * The input is a pixel pair (fixed, moving, moving mask) and
@@ -405,6 +435,7 @@ protected:
    * The histogram is left unnormalised since it may be faster to
    * not do this explicitly.
    */
+  virtual void ComputePDFsSingleThreaded( const ParametersType & parameters ) const;
   virtual void ComputePDFs( const ParametersType & parameters ) const;
 
   /** Some initialization functions, called by Initialize. */
@@ -439,13 +470,12 @@ private:
   /** Variables that can/should be accessed by their Set/Get functions. */
   unsigned long m_NumberOfFixedHistogramBins;
   unsigned long m_NumberOfMovingHistogramBins;
-  unsigned int m_FixedKernelBSplineOrder;
-  unsigned int m_MovingKernelBSplineOrder;
-  bool m_UseDerivative;
-  bool m_UseFiniteDifferenceDerivative;
-  double m_FiniteDifferencePerturbation;
-
-  bool m_UseExplicitPDFDerivatives;
+  unsigned int  m_FixedKernelBSplineOrder;
+  unsigned int  m_MovingKernelBSplineOrder;
+  bool          m_UseDerivative;
+  bool          m_UseExplicitPDFDerivatives;
+  bool          m_UseFiniteDifferenceDerivative;
+  double        m_FiniteDifferencePerturbation;
 
 }; // end class ParzenWindowHistogramImageToImageMetric
 

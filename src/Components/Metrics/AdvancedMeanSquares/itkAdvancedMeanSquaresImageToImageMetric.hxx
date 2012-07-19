@@ -22,7 +22,6 @@
 #include <Eigen/Dense> // Eigen
 #include <Eigen/Core> // Eigen
 
-//#define FillDerivatives
 
 namespace itk
 {
@@ -577,7 +576,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
   /** Initialize array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
   const unsigned int nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   NonZeroJacobianIndicesType nzji = NonZeroJacobianIndicesType( nnzji );
-  DerivativeType imageJacobian = DerivativeType( nzji.size() );
+  DerivativeType imageJacobian( nzji.size() );
   TransformJacobianType jacobian( FixedImageDimension, nnzji );
   jacobian.Fill( 0.0 ); // needed?
 
@@ -726,6 +725,8 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage,TMovingImage>
 
   delete temp;
 #elif 0 // compute multi-threadedly with openmp
+  const int nthreads = static_cast<int>( this->m_NumberOfThreads );
+  omp_set_num_threads( nthreads );
   const unsigned int spaceDimension = this->GetNumberOfParameters();
   #pragma omp parallel for
   for( int j = 0; j < spaceDimension; ++j )

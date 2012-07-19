@@ -153,7 +153,7 @@ public:
 
   /** Gather the values and derivatives from all threads */
   inline void AfterThreadedGetValueAndDerivative(
-    MeasureType & value, DerivativeType & derivative )const;
+    MeasureType & value, DerivativeType & derivative ) const;
 
   /** ComputeDerivatives threader callback function */
   static ITK_THREAD_RETURN_TYPE ComputeDerivativesThreaderCallback( void * arg );

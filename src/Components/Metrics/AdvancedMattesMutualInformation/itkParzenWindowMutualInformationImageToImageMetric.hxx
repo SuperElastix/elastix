@@ -23,6 +23,7 @@
 #include "vnl/vnl_inverse.h"
 #include "vnl/vnl_det.h"
 
+#include <omp.h> // OpenMP
 #include "elxTimer.h"//tmp
 
 namespace itk
@@ -36,6 +37,10 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 ::ParzenWindowMutualInformationImageToImageMetric()
 {
   this->m_UseJacobianPreconditioning = false;
+
+  /** Initialise the m_ParzenWindowHistogramThreaderParameters */
+  this->m_ParzenWindowMutualInformationThreaderParameters.m_Metric = this;
+
 } // end constructor
 
 
@@ -60,6 +65,32 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   }
 
 } // end InitializeHistograms()
+
+
+/**
+ * ********************* InitializeThreadingParameters ****************************
+ */
+
+template <class TFixedImage, class TMovingImage>
+void
+ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+::InitializeThreadingParameters( void ) const
+{
+  /** Call superclass implementation. */
+  Superclass::InitializeThreadingParameters();
+
+  /** Resize and initialize the threading related parameters. */
+  this->m_ThreaderDerivatives.resize( this->m_NumberOfThreads );
+
+  /** Initialize the derivatives. */
+  for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+  {
+    // only resizes when different size, is good:
+    this->m_ThreaderDerivatives[ i ].SetSize( this->GetNumberOfParameters() );
+    this->m_ThreaderDerivatives[ i ].Fill( 0 );
+  }
+
+} // end InitializeThreadingParameters()
 
 
 /**
@@ -244,21 +275,11 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   MeasureType& value,
   DerivativeType& derivative ) const
 {
-  /** Initialize some variables. */
-  value = NumericTraits< MeasureType >::Zero;
-  derivative = DerivativeType( this->GetNumberOfParameters() );
-  derivative.Fill( NumericTraits<double>::Zero );
-
   /** Construct the JointPDF and Alpha.
    * This function contains a loop over the samples.
+   * It executes multi-threadedly when m_UseMultiThread == true.
    */
-  //typedef tmr::Timer TimerType; typedef typename TimerType::Pointer  TimerPointer;
-  //TimerPointer timer = TimerType::New();
-  //timer->StartTimer();
   this->ComputePDFs( parameters );
-  //timer->StopTimer();
-  //this->m_ComputePDFsTimings.push_back( timer->GetElapsedClockSec() * 1000.0 );
-  //timer->StartTimer();
 
   /** Normalize the joint histogram by alpha. */
   this->NormalizeJointPDF( this->m_JointPDF, this->m_Alpha );
@@ -271,33 +292,43 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   // one loop, maybe also include the next loop to generate m_PRatioArray.
   // The effort is probably not worth the gain in performance.
 
-  /** Compute the metric and the intermediate m_PRatioArray
+  /** Compute the metric value and the intermediate m_PRatioArray
    * by summation over the joint histogram.
-   */
-
-  /** Another loop over the joint histogram to compute the intermediate
-   * m_PRatioArray. Also the MI is computed.
    */
   double MI = 0.0;
   this->ComputeValueAndPRatioArray( MI );
-
-  /** We can compute the mutual information measure now. */
   value = static_cast<MeasureType>( -1.0 * MI );
 
-  //timer->StopTimer();
-  //this->m_HistogramLoopsTimings.push_back( timer->GetElapsedClockSec() * 1000.0 );
-  //timer->StartTimer();
+  /* Compute the derivative.
+   * This function contains a second loop over the samples.
+   * It executes multi-threadedly when m_UseMultiThread == true.
+   */
+  this->ComputeDerivativeLowMemory( derivative );
 
-  // NOW A SECOND PASS OVER THE SAMPLES to compute the derivative
+} // end GetValueAndAnalyticDerivativeLowMemory()
 
-  /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
-  NonZeroJacobianIndicesType nzji( this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices() );
+
+/**
+ * ******************** ComputeDerivativeLowMemorySingleThreaded *******************
+ */
+
+template < class TFixedImage, class TMovingImage >
+void
+ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+::ComputeDerivativeLowMemorySingleThreaded( DerivativeType & derivative ) const
+{
+  /** Initialize array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
+  const unsigned int nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
+  NonZeroJacobianIndicesType nzji = NonZeroJacobianIndicesType( nnzji );
   DerivativeType imageJacobian( nzji.size() );
+  //TransformJacobianType jacobian( FixedImageDimension, nnzji );
+  //jacobian.Fill( 0.0 ); // needed?
   TransformJacobianType jacobian;
+  derivative.Fill( NumericTraits<double>::Zero );
 
   /** Declare and allocate arrays for Jacobian preconditioning. */
   DerivativeType jacobianPreconditioner, preconditioningDivisor;
-  if ( this->GetUseJacobianPreconditioning() )
+  if( this->GetUseJacobianPreconditioning() )
   {
     jacobianPreconditioner = DerivativeType( nzji.size() );
     preconditioningDivisor = DerivativeType( this->GetNumberOfParameters() );
@@ -313,7 +344,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
 
   /** Loop over sample container and compute contribution of each sample to pdfs. */
-  for ( fiter = fbegin; fiter != fend; ++fiter )
+  for( fiter = fbegin; fiter != fend; ++fiter )
   {
     /** Read fixed coordinates and create some variables. */
     const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
@@ -325,7 +356,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
 
     /** Check if the point is inside the moving mask. */
-    if ( sampleOk )
+    if( sampleOk )
     {
       sampleOk = this->IsInsideMovingMask( mappedPoint );
     }
@@ -333,13 +364,174 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     /** Compute the moving image value, its derivative, and check
      * if the point is inside the moving image buffer.
      */
-    if ( sampleOk )
+    if( sampleOk )
     {
       sampleOk = this->EvaluateMovingImageValueAndDerivative(
         mappedPoint, movingImageValue, &movingImageDerivative );
     }
 
-    if ( sampleOk )
+    if( sampleOk )
+    {
+      /** Get the fixed image value. */
+      RealType fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
+
+      /** Make sure the values fall within the histogram range. */
+      fixedImageValue = this->GetFixedImageLimiter()
+        ->Evaluate( fixedImageValue );
+      movingImageValue = this->GetMovingImageLimiter()
+        ->Evaluate( movingImageValue, movingImageDerivative );
+
+      /** Get the transform Jacobian dT/dmu. */
+      this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
+
+      /** Compute the inner product (dM/dx)^T (dT/dmu). */
+      this->EvaluateTransformJacobianInnerProduct(
+        jacobian, movingImageDerivative, imageJacobian );
+
+      /** If desired, apply the technique introduced by Tustison. */
+      if( this->GetUseJacobianPreconditioning() )
+      {
+        this->ComputeJacobianPreconditioner( jacobian, nzji,
+          jacobianPreconditioner, preconditioningDivisor );
+        DerivativeValueType * imjacit = imageJacobian.begin();
+        DerivativeValueType * jacprecit = jacobianPreconditioner.begin();
+        for( unsigned int i = 0; i < nzji.size(); ++i )
+        {
+          while( imjacit != imageJacobian.end() )
+          {
+            (*imjacit) *= (*jacprecit);
+            ++imjacit;
+            ++jacprecit;
+          }
+        }
+      }
+
+      /** Compute this sample's contribution to the joint distributions. */
+      this->UpdateDerivativeLowMemory(
+        fixedImageValue, movingImageValue, imageJacobian, nzji, derivative );
+
+    } // end sampleOk
+  } // end loop over sample container
+
+  /** If desired, apply the technique introduced by Tustison */
+  if( this->GetUseJacobianPreconditioning() )
+  {
+    DerivativeValueType * derivit = derivative.begin();
+    DerivativeValueType * divisit = preconditioningDivisor.begin();
+
+    /** This normalization was not in the Tustison paper, but it helps,
+     * especially for localized mutual information.
+     */
+    const double normalizationFactor = preconditioningDivisor.mean();
+    while( derivit != derivative.end() )
+    {
+      (*derivit) *= normalizationFactor / ( (*divisit) + 1e-14 );
+      ++derivit;
+      ++divisit;
+    }
+  }
+
+} // end ComputeDerivativeLowMemorySingleThreaded()
+
+
+/**
+ * ******************** ComputeDerivativeLowMemory *******************
+ */
+
+template < class TFixedImage, class TMovingImage >
+void
+ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+::ComputeDerivativeLowMemory( DerivativeType & derivative ) const
+{
+  /** Option for now to still use the single threaded code. */
+  if ( !this->m_UseMultiThread )
+  {
+    return this->ComputeDerivativeLowMemorySingleThreaded( derivative );
+  }
+
+  /** Launch multi-threading derivative computation. */
+  this->LaunchComputeDerivativeLowMemoryThreaderCallback();
+
+  /** Gather the results from all threads. */
+  this->AfterThreadedComputeDerivativeLowMemory( derivative );
+
+} // end ComputeDerivativeLowMemory()
+
+
+/**
+ * ******************* ThreadedComputeDerivativeLowMemory *******************
+ */
+
+template <class TFixedImage, class TMovingImage>
+void
+ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+::ThreadedComputeDerivativeLowMemory( ThreadIdType threadId )
+{
+    /** Initialize array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
+  const unsigned int nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
+  NonZeroJacobianIndicesType nzji = NonZeroJacobianIndicesType( nnzji );
+  DerivativeType imageJacobian( nzji.size() );
+  //TransformJacobianType jacobian( FixedImageDimension, nnzji );
+  //jacobian.Fill( 0.0 ); // needed?
+  TransformJacobianType jacobian;
+
+  /** Declare and allocate arrays for Jacobian preconditioning. */
+  DerivativeType jacobianPreconditioner, preconditioningDivisor;
+  if( this->GetUseJacobianPreconditioning() )
+  {
+    jacobianPreconditioner = DerivativeType( nzji.size() );
+    preconditioningDivisor = DerivativeType( this->GetNumberOfParameters() );
+    preconditioningDivisor.Fill( 0.0 );
+  }
+
+  /** Get a handle to the sample container. */
+  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
+  const unsigned long sampleContainerSize = sampleContainer->Size();
+
+  /** Get the samples for this thread. */
+  const unsigned long nrOfSamplesPerThreads
+    = static_cast<unsigned long>( vcl_ceil( static_cast<double>( sampleContainerSize )
+      / static_cast<double>( this->m_NumberOfThreads ) ) );
+
+  const unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
+  unsigned long pos_end = nrOfSamplesPerThreads * ( threadId + 1 );
+  pos_end = ( pos_end > sampleContainerSize ) ? sampleContainerSize : pos_end;
+
+  /** Create iterator over the sample container. */
+  typename ImageSampleContainerType::ConstIterator fiter;
+  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
+  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->Begin();
+  fbegin += (int)pos_begin;
+  fend += (int)pos_end;
+
+  /** Loop over sample container and compute contribution of each sample to pdfs. */
+  for( fiter = fbegin; fiter != fend; ++fiter )
+  {
+    /** Read fixed coordinates and create some variables. */
+    const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
+    RealType movingImageValue;
+    MovingImageDerivativeType movingImageDerivative;
+    MovingImagePointType mappedPoint;
+
+    /** Transform point and check if it is inside the B-spline support region. */
+    bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
+
+    /** Check if the point is inside the moving mask. */
+    if( sampleOk )
+    {
+      sampleOk = this->IsInsideMovingMask( mappedPoint );
+    }
+
+    /** Compute the moving image value, its derivative, and check
+     * if the point is inside the moving image buffer.
+     */
+    if( sampleOk )
+    {
+      sampleOk = this->EvaluateMovingImageValueAndDerivative(
+        mappedPoint, movingImageValue, &movingImageDerivative );
+    }
+
+    if( sampleOk )
     {
       /** Get the fixed image value. */
       RealType fixedImageValue = static_cast<RealType>( (*fiter).Value().m_ImageValue );
@@ -375,7 +567,8 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 
       /** Compute this sample's contribution to the joint distributions. */
       this->UpdateDerivativeLowMemory(
-        fixedImageValue, movingImageValue, imageJacobian, nzji, derivative );
+        fixedImageValue, movingImageValue, imageJacobian, nzji,
+        this->m_ThreaderDerivatives[ threadId ] );
 
     } // end sampleOk
   } // end loop over sample container
@@ -383,13 +576,15 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   /** If desired, apply the technique introduced by Tustison */
   if( this->GetUseJacobianPreconditioning() )
   {
-    DerivativeValueType * derivit = derivative.begin();
+    //DerivativeValueType * derivit = derivative.begin();
+    DerivativeValueType * derivit = this->m_ThreaderDerivatives[ threadId ].begin();
     DerivativeValueType * divisit = preconditioningDivisor.begin();
+
     /** This normalization was not in the Tustison paper, but it helps,
      * especially for localized mutual information.
      */
     const double normalizationFactor = preconditioningDivisor.mean();
-    while( derivit != derivative.end() )
+    while( derivit != this->m_ThreaderDerivatives[ threadId ].end() )
     {
       (*derivit) *= normalizationFactor / ( (*divisit) + 1e-14 );
       ++derivit;
@@ -397,10 +592,86 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
     }
   }
 
-  //timer->StopTimer();
-  //this->m_FinalLoopTimings.push_back( timer->GetElapsedClockSec() * 1000.0 );
+} // end ThreadedComputeDerivativeLowMemory()
 
-} // end GetValueAndAnalyticDerivativeLowMemory()
+
+/**
+ * ******************* AfterThreadedComputeDerivativeLowMemory *******************
+ */
+
+template <class TFixedImage, class TMovingImage>
+void
+ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+::AfterThreadedComputeDerivativeLowMemory( DerivativeType & derivative ) const
+{
+  /** Accumulate derivatives. */
+#if 0 // compute single-threadedly
+  derivative = this->m_ThreaderDerivatives[ 0 ];
+  for( ThreadIdType i = 1; i < this->m_NumberOfThreads; i++ )
+  {
+    derivative += this->m_ThreaderDerivatives[ i ];
+  }
+#elif 1 // compute multi-threadedly with openmp
+  const int nthreads = static_cast<int>( this->m_NumberOfThreads );
+  omp_set_num_threads( nthreads );
+  const unsigned int spaceDimension = this->GetNumberOfParameters();
+  #pragma omp parallel for
+  for( int j = 0; j < spaceDimension; ++j )
+  {
+    DerivativeValueType tmp = NumericTraits<DerivativeValueType>::Zero;
+    for( ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i )
+    {
+      tmp += this->m_ThreaderDerivatives[ i ][ j ];
+    }
+    derivative[ j ] = tmp;
+  }
+#endif
+} // end AfterThreadedComputeDerivativeLowMemory()
+
+
+/**
+ * **************** ComputeDerivativeLowMemoryThreaderCallback *******
+ */
+
+template < class TFixedImage, class TMovingImage >
+ITK_THREAD_RETURN_TYPE
+ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+::ComputeDerivativeLowMemoryThreaderCallback( void * arg )
+{
+  ThreadInfoType * infoStruct = static_cast< ThreadInfoType * >( arg );
+  ThreadIdType threadId = infoStruct->ThreadID;
+
+  ParzenWindowMutualInformationMultiThreaderParameterType * temp
+    = static_cast<ParzenWindowMutualInformationMultiThreaderParameterType * >( infoStruct->UserData );
+
+  temp->m_Metric->ThreadedComputeDerivativeLowMemory( threadId );
+
+  return ITK_THREAD_RETURN_VALUE;
+
+} // end ComputeDerivativeLowMemoryThreaderCallback()
+
+
+/**
+ * *********************** LaunchComputeDerivativeLowMemoryThreaderCallback***************
+ */
+
+template < class TFixedImage, class TMovingImage >
+void
+ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
+::LaunchComputeDerivativeLowMemoryThreaderCallback( void ) const
+{
+  /** Setup local threader. */
+  // \todo: is a global threader better performance-wise? check
+  ThreaderType::Pointer local_threader = ThreaderType::New();
+  local_threader->SetNumberOfThreads( this->m_NumberOfThreads );
+  local_threader->SetSingleMethod( ComputeDerivativeLowMemoryThreaderCallback,
+    const_cast<void *>( static_cast<const void *>(
+    &this->m_ParzenWindowMutualInformationThreaderParameters ) ) );
+
+  /** Launch. */
+  local_threader->SingleMethodExecute();
+
+} // end LaunchComputeDerivativeLowMemoryThreaderCallback()
 
 
 /**
@@ -542,10 +813,10 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
 
   /** Loop over the Parzen window region and increment sum. */
   double sum = 0.0;
-  for ( unsigned int f = 0; f < fixedParzenValues.GetSize(); ++f )
+  for( unsigned int f = 0; f < fixedParzenValues.GetSize(); ++f )
   {
     const double fv_et = fixedParzenValues[ f ] / et;
-    for ( unsigned int m = 0; m < movingParzenValues.GetSize(); ++m )
+    for( unsigned int m = 0; m < movingParzenValues.GetSize(); ++m )
     {
       sum += this->m_PRatioArray[ f + fixedParzenWindowIndex ][ m + movingParzenWindowIndex ]
       * fv_et * derivativeMovingParzenValues[ m ];
@@ -556,11 +827,11 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   //typedef typename DerivativeType::iterator   DerivativeIteratorType;
   //DerivativeIteratorType itDerivative( derivative );
 
-  if ( nzji.size() == this->GetNumberOfParameters() )
+  if( nzji.size() == this->GetNumberOfParameters() )
   {
     /** Loop over all Jacobians. */
     //typename DerivativeType::const_iterator imjac = imageJacobian.begin();
-    for ( unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu )
+    for( unsigned int mu = 0; mu < this->GetNumberOfParameters(); ++mu )
     {
       derivative[ mu ] += static_cast<DerivativeValueType>(
         imageJacobian[ mu ] * sum ); // \todo: iterators?
@@ -569,7 +840,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,TMovingImage>
   else
   {
     /** Loop only over the non-zero Jacobians. */
-    for ( unsigned int i = 0; i < imageJacobian.GetSize(); ++i )
+    for( unsigned int i = 0; i < imageJacobian.GetSize(); ++i )
     {
       const unsigned int mu = nzji[ i ];
       derivative[ mu ] += static_cast<DerivativeValueType>(
