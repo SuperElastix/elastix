@@ -1265,6 +1265,9 @@ if ( !this->m_UseMultiThread )
 }
 else
 {
+  // this can be further optimized by discovering the linearity
+  // in the structure of the NonZeroJacobianIndices
+
   // check if needed / expensive
   nonZeroJacobianIndices.resize( this->GetNumberOfNonZeroJacobianIndices() );
 
