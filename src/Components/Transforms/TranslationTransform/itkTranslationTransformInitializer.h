@@ -60,7 +60,7 @@ class TranslationTransformInitializer : public Object
 {
 public:
   /** Standard class typedefs. */
-  typedef TranslationTransformInitializer     Self;
+  typedef TranslationTransformInitializer  Self;
   typedef Object                           Superclass;
   typedef SmartPointer<Self>               Pointer;
   typedef SmartPointer<const Self>         ConstPointer;
@@ -81,11 +81,14 @@ public:
   itkStaticConstMacro(OutputSpaceDimension, unsigned int, TransformType::OutputSpaceDimension);
 
   /** Image Types to use in the initialization of the transform */
-  typedef   TFixedImage              FixedImageType;
-  typedef   TMovingImage             MovingImageType;
-
-  typedef   typename FixedImageType::ConstPointer   FixedImagePointer;
-  typedef   typename MovingImageType::ConstPointer  MovingImagePointer;
+  typedef TFixedImage                                 FixedImageType;
+  typedef TMovingImage                                MovingImageType;
+  typedef typename FixedImageType::ConstPointer       FixedImagePointer;
+  typedef typename MovingImageType::ConstPointer      MovingImagePointer;
+  typedef Image< unsigned char, InputSpaceDimension > FixedMaskType;
+  typedef Image< unsigned char, OutputSpaceDimension > MovingMaskType;
+  typedef typename FixedMaskType::ConstPointer        FixedMaskPointer;
+  typedef typename MovingMaskType::ConstPointer       MovingMaskPointer;
 
   /** Moment calculators */
   typedef ImageMomentsCalculator< FixedImageType >   FixedImageCalculatorType;
@@ -101,13 +104,19 @@ public:
   typedef typename TransformType::OutputVectorType  OutputVectorType;
 
   /** Set the transform to be initialized */
-  itkSetObjectMacro( Transform,   TransformType   );
+  itkSetObjectMacro( Transform, TransformType );
 
   /** Set the fixed image used in the registration process */
-  itkSetConstObjectMacro( FixedImage,  FixedImageType  );
+  itkSetConstObjectMacro( FixedImage, FixedImageType );
 
   /** Set the moving image used in the registration process */
   itkSetConstObjectMacro( MovingImage, MovingImageType );
+
+  /** Set the fixed image mask used in the registration process */
+  itkSetConstObjectMacro( FixedMask, FixedMaskType );
+
+  /** Set the moving image mask used in the registration process */
+  itkSetConstObjectMacro( MovingMask, MovingMaskType );
 
   /** Initialize the transform using data from the images */
   virtual void InitializeTransform() const;
@@ -132,11 +141,10 @@ private:
   void operator=(const Self&); //purposely not implemented
 
   TransformPointer    m_Transform;
-
   FixedImagePointer   m_FixedImage;
-
   MovingImagePointer  m_MovingImage;
-
+  FixedMaskPointer    m_FixedMask;
+  MovingMaskPointer   m_MovingMask;
   bool                m_UseMoments;
 
   FixedImageCalculatorPointer    m_FixedCalculator;

@@ -29,7 +29,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 ///
 /// ********************** Global Functions **********************
@@ -90,15 +89,15 @@ extern int xoutSetup( const char * logfilename );
  * \ingroup Kernel
  */
 
-class ElastixMain : public Object
+class ElastixMain : public itk::Object
 {
 public:
 
   /** Standard itk. */
-  typedef ElastixMain               Self;
-  typedef Object                    Superclass;
-  typedef SmartPointer<Self>        Pointer;
-  typedef SmartPointer<const Self>  ConstPointer;
+  typedef ElastixMain                    Self;
+  typedef itk::Object                    Superclass;
+  typedef itk::SmartPointer<Self>        Pointer;
+  typedef itk::SmartPointer<const Self>  ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -109,9 +108,9 @@ public:
   /** Typedef's.*/
 
   /** ITK base objects. */
-  typedef Object                  ObjectType;
+  typedef itk::Object             ObjectType;
   typedef ObjectType::Pointer     ObjectPointer;
-  typedef DataObject              DataObjectType;
+  typedef itk::DataObject         DataObjectType;
   typedef DataObjectType::Pointer DataObjectPointer;
 
   /** elastix components. */

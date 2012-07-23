@@ -20,7 +20,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 /**
  * ********************* Constructor ****************************
@@ -202,7 +201,7 @@ AffineDTITransformElastix<TElastix>
 
   if ( centerGivenAsPoint )
   {
-    typedef ContinuousIndex< double, SpaceDimension > ContinuousIndexType;
+    typedef itk::ContinuousIndex< double, SpaceDimension > ContinuousIndexType;
     ContinuousIndexType cindex;
     CORPointInImage = this->m_Registration->GetAsITKBaseType()
       ->GetFixedImage()->TransformPhysicalPointToContinuousIndex(

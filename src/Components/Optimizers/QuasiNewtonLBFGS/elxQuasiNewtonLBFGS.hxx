@@ -22,7 +22,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 
   /**
@@ -37,8 +36,8 @@ using namespace itk;
     this->SetLineSearchOptimizer( this->m_LineOptimizer );
     this->m_EventPasser = EventPassThroughType::New();
     this->m_EventPasser->SetCallbackFunction( this, &Self::InvokeIterationEvent );
-    this->m_LineOptimizer->AddObserver( IterationEvent(), this->m_EventPasser );
-    this->m_LineOptimizer->AddObserver( StartEvent(), this->m_EventPasser );
+    this->m_LineOptimizer->AddObserver( itk::IterationEvent(), this->m_EventPasser );
+    this->m_LineOptimizer->AddObserver( itk::StartEvent(), this->m_EventPasser );
 
     this->m_SearchDirectionMagnitude = 0.0;
     this->m_StartLineSearch = false;
@@ -55,9 +54,9 @@ using namespace itk;
 
   template <class TElastix>
     void QuasiNewtonLBFGS<TElastix>::
-    InvokeIterationEvent(const EventObject & event)
+       InvokeIterationEvent(const itk::EventObject & event)
   {
-    if( typeid( event ) == typeid( StartEvent ) )
+     if( typeid( event ) == typeid( itk::StartEvent ) )
     {
       this->m_StartLineSearch = true;
       this->m_SearchDirectionMagnitude =
@@ -70,7 +69,7 @@ using namespace itk;
 
     if ( this->m_GenerateLineSearchIterations )
     {
-      this->InvokeEvent( IterationEvent() );
+       this->InvokeEvent( itk::IterationEvent() );
     }
 
     this->m_StartLineSearch = false;
@@ -125,7 +124,7 @@ using namespace itk;
     {
       this->Superclass1::LineSearch(searchDir, step, x, f, g);
     }
-    catch ( ExceptionObject& err )
+    catch ( itk::ExceptionObject& err )
     {
       if ( this->GetLineSearchOptimizer() == 0 )
       {
@@ -376,7 +375,7 @@ using namespace itk;
             this->m_CurrentValue,
             this->m_CurrentGradient );
         }
-        catch ( ExceptionObject& err )
+        catch ( itk::ExceptionObject& err )
         {
           this->m_StopCondition = MetricError;
           this->StopOptimization();

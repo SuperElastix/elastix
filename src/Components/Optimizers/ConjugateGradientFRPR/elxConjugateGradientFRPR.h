@@ -20,7 +20,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 
   /**
@@ -79,17 +78,17 @@ using namespace itk;
   public:
 
     /** Standard ITK.*/
-    typedef ConjugateGradientFRPR               Self;
-    typedef FRPROptimizer                       Superclass1;
-    typedef OptimizerBase<TElastix>             Superclass2;
-    typedef SmartPointer<Self>                  Pointer;
-    typedef SmartPointer<const Self>            ConstPointer;
+    typedef ConjugateGradientFRPR                    Self;
+    typedef itk::FRPROptimizer                       Superclass1;
+    typedef OptimizerBase<TElastix>                  Superclass2;
+    typedef itk::SmartPointer<Self>                  Pointer;
+    typedef itk::SmartPointer<const Self>            ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( ConjugateGradientFRPR, FRPROptimizer );
+    itkTypeMacro( ConjugateGradientFRPR, itk::FRPROptimizer );
 
     /** Name of this class.*/
     elxClassNameMacro( "ConjugateGradientFRPR" );

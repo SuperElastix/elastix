@@ -11,8 +11,8 @@
      PURPOSE. See the above copyright notices for more information.
 
 ======================================================================*/
-#ifndef __itkPatternIntensityImageToImageMetric_txx
-#define __itkPatternIntensityImageToImageMetric_txx
+#ifndef __itkPatternIntensityImageToImageMetric_hxx
+#define __itkPatternIntensityImageToImageMetric_hxx
 
 #include "itkPatternIntensityImageToImageMetric.h"
 #include "itkImageRegionConstIteratorWithIndex.h"
@@ -21,9 +21,8 @@
 #include <iostream>
 #include <iomanip>
 #include <stdio.h>
-
 #include "itkSimpleFilterWatcher.h"
-//#include "itkImageFileWriter.h"
+
 
 namespace itk
 {
@@ -47,7 +46,7 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
   this->m_CombinationTransform = CombinationTransformType::New();
   this->m_RescaleImageFilter = RescaleIntensityImageFilterType::New();
   this->m_DifferenceImageFilter = DifferenceImageFilterType::New();
-  this->m_MultiplyByConstantImageFilter = MultiplyByConstantImageFilterType::New();
+  this->m_MultiplyImageFilter = MultiplyImageFilterType::New();
 
 } // end Constructor
 
@@ -63,10 +62,19 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
 {
   Superclass::Initialize();
 
-  /* resampling for 3D->2D */
-  this->m_TransformMovingImageFilter->SetTransform(
-    dynamic_cast<RayCastInterpolatorType *>(
-    const_cast<  InterpolatorType *>( ( this->GetInterpolator() ) ) )->GetTransform() );
+  /** Resampling for 3D->2D */
+  RayCastInterpolatorType * rayCaster = dynamic_cast<RayCastInterpolatorType *>(
+    const_cast<InterpolatorType *>( this->GetInterpolator() ) );
+  if ( rayCaster != 0 )
+  {
+    this->m_TransformMovingImageFilter->SetTransform( rayCaster->GetTransform() );
+  }
+  else
+  {
+    itkExceptionMacro( << "ERROR: the NormalizedGradientCorrelationImageToImageMetric is currently "
+        << "only suitable for 2D-3D registration.\n"
+        << "  Therefore it expects an interpolator of type RayCastInterpolator." );
+  }
   this->m_TransformMovingImageFilter->SetInterpolator( this->m_Interpolator );
   this->m_TransformMovingImageFilter->SetInput( this->m_MovingImage );
   this->m_TransformMovingImageFilter->SetDefaultPixelValue( 0 );
@@ -86,12 +94,12 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
     this->m_TransformMovingImageFilter->GetOutput(),
     this->m_TransformMovingImageFilter->GetOutput()->GetBufferedRegion() );
   this->m_NormalizationFactor = this->m_FixedImageTrueMax / this->m_MovingImageTrueMax;
-  this->m_MultiplyByConstantImageFilter->SetInput(
+  this->m_MultiplyImageFilter->SetInput(
     this->m_TransformMovingImageFilter->GetOutput() );
-  this->m_MultiplyByConstantImageFilter->SetConstant(
+  this->m_MultiplyImageFilter->SetConstant(
     this->m_NormalizationFactor );
   this->m_DifferenceImageFilter->SetInput1( this->m_FixedImage );
-  this->m_DifferenceImageFilter->SetInput2( this->m_MultiplyByConstantImageFilter->GetOutput() );
+  this->m_DifferenceImageFilter->SetInput2( this->m_MultiplyImageFilter->GetOutput() );
   this->m_DifferenceImageFilter->UpdateLargestPossibleRegion();
   this->m_FixedMeasure = this->ComputePIFixed();
 
@@ -245,7 +253,7 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
 
   unsigned int iDimension;
   this->m_TransformMovingImageFilter->Modified();
-  this->m_MultiplyByConstantImageFilter->SetConstant( scalingfactor );
+  this->m_MultiplyImageFilter->SetConstant( scalingfactor );
   this->m_DifferenceImageFilter->UpdateLargestPossibleRegion();
   MeasureType measure = NumericTraits< MeasureType >::Zero;
   MeasureType diff = NumericTraits< MeasureType >::Zero;
@@ -439,4 +447,4 @@ PatternIntensityImageToImageMetric<TFixedImage,TMovingImage>
 
 } // end namespace itk
 
-#endif // end __itkPatternIntensityImageToImageMetric_txx
+#endif // end __itkPatternIntensityImageToImageMetric_hxx

@@ -25,7 +25,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
   /**
    * \class InterpolatorBase
@@ -62,7 +61,7 @@ using namespace itk;
     typedef typename ElastixType::CoordRepType          CoordRepType;
 
     /** ITKBaseType. */
-    typedef InterpolateImageFunction<
+    typedef itk::InterpolateImageFunction<
       InputImageType, CoordRepType>                     ITKBaseType;
 
     /** Cast to ITKBaseType. */

@@ -22,7 +22,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
   /**
    * \class AdvancedMeanSquaresMetric
@@ -44,7 +43,7 @@ using namespace itk;
   template <class TElastix >
     class AdvancedMeanSquaresMetric:
     public
-      AdvancedMeanSquaresImageToImageMetric<
+      itk::AdvancedMeanSquaresImageToImageMetric<
         typename MetricBase<TElastix>::FixedImageType,
         typename MetricBase<TElastix>::MovingImageType >,
     public MetricBase<TElastix>
@@ -53,18 +52,18 @@ using namespace itk;
 
     /** Standard ITK-stuff. */
     typedef AdvancedMeanSquaresMetric                             Self;
-    typedef AdvancedMeanSquaresImageToImageMetric<
+    typedef itk::AdvancedMeanSquaresImageToImageMetric<
       typename MetricBase<TElastix>::FixedImageType,
       typename MetricBase<TElastix>::MovingImageType >    Superclass1;
     typedef MetricBase<TElastix>                          Superclass2;
-    typedef SmartPointer<Self>                            Pointer;
-    typedef SmartPointer<const Self>                      ConstPointer;
+    typedef itk::SmartPointer<Self>                       Pointer;
+    typedef itk::SmartPointer<const Self>                 ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( AdvancedMeanSquaresMetric, AdvancedMeanSquaresImageToImageMetric );
+    itkTypeMacro( AdvancedMeanSquaresMetric, itk::AdvancedMeanSquaresImageToImageMetric );
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific metric. \n
@@ -143,7 +142,7 @@ using namespace itk;
     /** Sets up a timer to measure the initialisation time and
      * calls the Superclass' implementation.
      */
-    virtual void Initialize(void) throw (ExceptionObject);
+    virtual void Initialize(void) throw (itk::ExceptionObject);
 
     /**
      * Do some things before each resolution:

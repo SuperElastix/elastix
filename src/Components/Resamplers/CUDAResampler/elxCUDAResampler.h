@@ -20,7 +20,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 /**
  * \class CUDAResampler
@@ -39,7 +38,7 @@ using namespace itk;
 
 template < class TElastix >
 class CUDAResampler :
-  public itkCUDAResampleImageFilter<
+  public itk::itkCUDAResampleImageFilter<
   typename ResamplerBase<TElastix>::InputImageType,
   typename ResamplerBase<TElastix>::OutputImageType,
   typename ResamplerBase<TElastix>::CoordRepType >,
@@ -49,19 +48,19 @@ public:
 
   /** Standard ITK-stuff. */
   typedef CUDAResampler                                   Self;
-  typedef itkCUDAResampleImageFilter<
+  typedef itk::itkCUDAResampleImageFilter<
     typename ResamplerBase<TElastix>::InputImageType,
     typename ResamplerBase<TElastix>::OutputImageType,
     typename ResamplerBase<TElastix>::CoordRepType >      Superclass1;
   typedef ResamplerBase<TElastix>                         Superclass2;
-  typedef SmartPointer<Self>                              Pointer;
-  typedef SmartPointer<const Self>                        ConstPointer;
+  typedef itk::SmartPointer<Self>                         Pointer;
+  typedef itk::SmartPointer<const Self>                   ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( CUDAResampler, itkCUDAResampleImageFilter );
+  itkTypeMacro( CUDAResampler, itk::itkCUDAResampleImageFilter );
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific resampler. \n

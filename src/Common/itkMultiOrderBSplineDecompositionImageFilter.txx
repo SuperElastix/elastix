@@ -333,7 +333,6 @@ void
 MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>
 ::CopyImageToImage()
 {
-
   typedef ImageRegionConstIteratorWithIndex< TInputImage > InputIterator;
   typedef ImageRegionIterator< TOutputImage >              OutputIterator;
   typedef typename TOutputImage::PixelType                 OutputPixelType;
@@ -349,7 +348,6 @@ MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>
     ++inIt;
     ++outIt;
     }
-
 }
 
 

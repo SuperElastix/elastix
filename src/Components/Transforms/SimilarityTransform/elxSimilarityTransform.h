@@ -21,7 +21,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
   /**
    * \class SimilarityTransformElastix
@@ -75,7 +74,7 @@ using namespace itk;
 
   template < class TElastix >
     class SimilarityTransformElastix:
-      public AdvancedCombinationTransform<
+      public itk::AdvancedCombinationTransform<
         typename elx::TransformBase< TElastix >::CoordRepType,
         elx::TransformBase< TElastix >::FixedImageDimension >,
       public elx::TransformBase< TElastix >
@@ -84,16 +83,16 @@ using namespace itk;
 
     /** Standard ITK-stuff. */
     typedef SimilarityTransformElastix                          Self;
-    typedef AdvancedCombinationTransform<
+    typedef itk::AdvancedCombinationTransform<
       typename elx::TransformBase< TElastix >::CoordRepType,
       elx::TransformBase< TElastix >::FixedImageDimension >     Superclass1;
     typedef elx::TransformBase< TElastix >                      Superclass2;
-    typedef SmartPointer<Self>                                  Pointer;
-    typedef SmartPointer<const Self>                            ConstPointer;
+    typedef itk::SmartPointer<Self>                             Pointer;
+    typedef itk::SmartPointer<const Self>                       ConstPointer;
 
     /** The ITK-class that provides most of the functionality, and
      * that is set as the "CurrentTransform" in the CombinationTransform */
-    typedef SimilarityTransform<
+    typedef itk::SimilarityTransform<
       typename elx::TransformBase< TElastix >::CoordRepType,
       elx::TransformBase< TElastix >::FixedImageDimension >     SimilarityTransformType;
 
@@ -101,7 +100,7 @@ using namespace itk;
     itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( SimilarityTransformElastix, AdvancedCombinationTransform );
+    itkTypeMacro( SimilarityTransformElastix, itk::AdvancedCombinationTransform );
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific transform. \n
@@ -155,7 +154,7 @@ using namespace itk;
     typedef typename FixedImageType::RegionType             RegionType;
     typedef typename FixedImageType::DirectionType          DirectionType;
 
-    typedef CenteredTransformInitializer<
+    typedef itk::CenteredTransformInitializer<
       SimilarityTransformType, FixedImageType, MovingImageType> TransformInitializerType;
     typedef typename TransformInitializerType::Pointer      TransformInitializerPointer;
 

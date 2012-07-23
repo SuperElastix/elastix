@@ -21,7 +21,6 @@
 namespace elastix
 {
 
-using namespace itk;
 
   /**
    * \class NearestNeighborInterpolator
@@ -40,7 +39,7 @@ using namespace itk;
   template < class TElastix >
     class NearestNeighborInterpolator :
     public
-      NearestNeighborInterpolateImageFunction<
+      itk::NearestNeighborInterpolateImageFunction<
         typename InterpolatorBase<TElastix>::InputImageType,
         typename InterpolatorBase<TElastix>::CoordRepType >,
     public
@@ -49,19 +48,19 @@ using namespace itk;
   public:
 
     /** Standard ITK-stuff. */
-    typedef NearestNeighborInterpolator                 Self;
-    typedef NearestNeighborInterpolateImageFunction<
+    typedef NearestNeighborInterpolator                   Self;
+    typedef itk::NearestNeighborInterpolateImageFunction<
       typename InterpolatorBase<TElastix>::InputImageType,
       typename InterpolatorBase<TElastix>::CoordRepType > Superclass1;
-    typedef InterpolatorBase<TElastix>          Superclass2;
-    typedef SmartPointer<Self>                  Pointer;
-    typedef SmartPointer<const Self>            ConstPointer;
+    typedef InterpolatorBase<TElastix>                    Superclass2;
+    typedef itk::SmartPointer<Self>                       Pointer;
+    typedef itk::SmartPointer<const Self>                 ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro(Self);
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( NearestNeighborInterpolator, NearestNeighborInterpolateImageFunction );
+    itkTypeMacro( NearestNeighborInterpolator, itk::NearestNeighborInterpolateImageFunction );
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific interpolator. \n

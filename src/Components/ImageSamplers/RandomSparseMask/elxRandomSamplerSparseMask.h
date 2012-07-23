@@ -21,7 +21,6 @@
 namespace elastix
 {
 
-using namespace itk;
 
   /**
    * \class RandomSamplerSparseMask
@@ -52,7 +51,7 @@ using namespace itk;
   template < class TElastix >
     class RandomSamplerSparseMask :
     public
-      ImageRandomSamplerSparseMask<
+      itk::ImageRandomSamplerSparseMask<
       typename elx::ImageSamplerBase<TElastix>::InputImageType >,
     public
       elx::ImageSamplerBase<TElastix>
@@ -60,18 +59,19 @@ using namespace itk;
   public:
 
     /** Standard ITK-stuff. */
-    typedef RandomSamplerSparseMask                       Self;
-    typedef ImageRandomSamplerSparseMask<
-      typename elx::ImageSamplerBase<TElastix>::InputImageType >  Superclass1;
-    typedef elx::ImageSamplerBase<TElastix>         Superclass2;
-    typedef SmartPointer<Self>                  Pointer;
-    typedef SmartPointer<const Self>            ConstPointer;
+    typedef RandomSamplerSparseMask                  Self;
+    typedef itk::ImageRandomSamplerSparseMask<
+      typename elx::ImageSamplerBase<TElastix>::InputImageType >  
+                                                     Superclass1;
+    typedef elx::ImageSamplerBase<TElastix>          Superclass2;
+    typedef itk::SmartPointer<Self>                  Pointer;
+    typedef itk::SmartPointer<const Self>            ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro(Self);
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( RandomSamplerSparseMask, ImageRandomSamplerSparseMask );
+    itkTypeMacro( RandomSamplerSparseMask, itk::ImageRandomSamplerSparseMask );
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific interpolator. \n

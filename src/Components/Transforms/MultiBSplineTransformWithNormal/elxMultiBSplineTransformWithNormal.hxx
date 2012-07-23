@@ -25,7 +25,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 
 /**
@@ -94,8 +93,8 @@ int MultiBSplineTransformWithNormal<TElastix>
   this->m_LabelsPath = this->m_Configuration->GetCommandLineArgument( "-labels" );
   if ( this->m_LabelsPath != "" )
   {
-    typename ImageFileReader<ImageLabelType>::Pointer reader
-      = ImageFileReader<ImageLabelType>::New();
+    typename itk::ImageFileReader<ImageLabelType>::Pointer reader
+      = itk::ImageFileReader<ImageLabelType>::New();
     reader->SetFileName( this->m_LabelsPath );
     reader->Update();
     this->m_Labels = reader->GetOutput();
@@ -624,8 +623,8 @@ void MultiBSplineTransformWithNormal<TElastix>
     "MultiBSplineTransformWithNormalLabels", this->GetComponentLabel(), 0, 0 );
   if ( this->m_LabelsPath != "" )
   {
-    typename ImageFileReader<ImageLabelType>::Pointer reader
-      = ImageFileReader<ImageLabelType>::New();
+    typename itk::ImageFileReader<ImageLabelType>::Pointer reader
+      = itk::ImageFileReader<ImageLabelType>::New();
     reader->SetFileName( this->m_LabelsPath );
     reader->Update();
     this->m_Labels = reader->GetOutput();
@@ -744,7 +743,8 @@ void MultiBSplineTransformWithNormal<TElastix>::
 SetOptimizerScales( const unsigned int edgeWidth )
 {
   /** Some typedefs. */
-  typedef ImageRegionExclusionConstIteratorWithIndex<ImageType>   IteratorType;
+  typedef itk::ImageRegionExclusionConstIteratorWithIndex<ImageType> 
+                                                          IteratorType;
   typedef typename RegistrationType::ITKBaseType          ITKRegistrationType;
   typedef typename ITKRegistrationType::OptimizerType     OptimizerType;
   typedef typename OptimizerType::ScalesType              ScalesType;
@@ -755,7 +755,7 @@ SetOptimizerScales( const unsigned int edgeWidth )
     = this->m_MultiBSplineTransformWithNormal->GetNumberOfParameters();
   const unsigned long offset = numberOfParameters / SpaceDimension;
   ScalesType newScales( numberOfParameters );
-  newScales.Fill( NumericTraits<ScalesValueType>::One );
+  newScales.Fill( itk::NumericTraits<ScalesValueType>::One );
   const ScalesValueType infScale = 10000.0;
 
   if ( edgeWidth == 0 )

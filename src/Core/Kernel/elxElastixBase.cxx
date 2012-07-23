@@ -76,7 +76,7 @@ void ElastixBase::SetDBIndex( DBIndexType _arg )
   {
     this->m_DBIndex = _arg;
 
-    Object * thisasobject = dynamic_cast<Object *>( this );
+    itk::Object * thisasobject = dynamic_cast<itk::Object *>( this );
     if ( thisasobject )
     {
       thisasobject->Modified();

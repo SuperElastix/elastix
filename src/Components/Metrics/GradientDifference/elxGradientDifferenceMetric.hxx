@@ -19,7 +19,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 /**
  * ******************* Initialize ***********************
@@ -27,7 +26,7 @@ using namespace itk;
 
 template <class TElastix>
 void GradientDifferenceMetric<TElastix>
-::Initialize( void ) throw (ExceptionObject)
+::Initialize( void ) throw (itk::ExceptionObject)
 {
   TimerPointer timer = TimerType::New();
   timer->StartTimer();
@@ -37,6 +36,7 @@ void GradientDifferenceMetric<TElastix>
     << static_cast<long>( timer->GetElapsedClockSec() * 1000 ) << " ms." << std::endl;
 
 } // end Initialize()
+
 
 /**
  * ***************** BeforeRegistration ***********************

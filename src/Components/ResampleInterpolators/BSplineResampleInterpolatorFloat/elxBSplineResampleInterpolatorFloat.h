@@ -20,7 +20,6 @@
 
 namespace elastix
 {
-  using namespace itk;
 
   /**
   * \class BSplineResampleInterpolatorFloat
@@ -51,7 +50,7 @@ namespace elastix
   template < class TElastix >
   class BSplineResampleInterpolatorFloat :
     public
-    BSplineInterpolateImageFunction<
+    itk::BSplineInterpolateImageFunction<
     typename ResampleInterpolatorBase<TElastix>::InputImageType,
     typename ResampleInterpolatorBase<TElastix>::CoordRepType,
     float >, //CoefficientType
@@ -61,13 +60,13 @@ namespace elastix
 
     /** Standard ITK-stuff. */
     typedef BSplineResampleInterpolatorFloat      Self;
-    typedef BSplineInterpolateImageFunction<
+    typedef itk::BSplineInterpolateImageFunction<
       typename ResampleInterpolatorBase<TElastix>::InputImageType,
       typename ResampleInterpolatorBase<TElastix>::CoordRepType,
       float >                                     Superclass1;
     typedef ResampleInterpolatorBase<TElastix>    Superclass2;
-    typedef SmartPointer<Self>                    Pointer;
-    typedef SmartPointer<const Self>              ConstPointer;
+    typedef itk::SmartPointer<Self>               Pointer;
+    typedef itk::SmartPointer<const Self>         ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );

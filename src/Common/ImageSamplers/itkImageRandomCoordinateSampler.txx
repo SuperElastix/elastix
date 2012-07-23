@@ -144,7 +144,7 @@ ImageRandomCoordinateSampler< TInputImage >
           typename ImageSampleContainerType::iterator stlnow = sampleContainer->begin();
           typename ImageSampleContainerType::iterator stlend = sampleContainer->end();
           stlnow += iter.Index();
-          sampleContainer->erase( stlnow, stlend);
+          sampleContainer->erase( stlnow, stlend );
           itkExceptionMacro( << "Could not find enough image samples within "
             << "reasonable time. Probably the mask is too small" );
         }

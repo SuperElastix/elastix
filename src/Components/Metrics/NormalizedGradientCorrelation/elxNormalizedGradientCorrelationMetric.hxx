@@ -19,7 +19,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 /**
  * ******************* Initialize ***********************
@@ -28,7 +27,7 @@ using namespace itk;
 template <class TElastix>
 void
 NormalizedGradientCorrelationMetric<TElastix>
-::Initialize( void ) throw ( ExceptionObject )
+::Initialize( void ) throw ( itk::ExceptionObject )
 {
   TimerPointer timer = TimerType::New();
   timer->StartTimer();
@@ -79,8 +78,8 @@ void NormalizedGradientCorrelationMetric<TElastix>
   for ( unsigned int i = 0; i < MovingImageDimension; ++i )
   {
     usescales &= this->GetConfiguration()->ReadParameter(
-    movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
-    this->GetComponentLabel(), i, -1, false );
+      movingImageDerivativeScales[ i ], "MovingImageDerivativeScales",
+      this->GetComponentLabel(), i, -1, false );
   }
   if ( usescales )
   {

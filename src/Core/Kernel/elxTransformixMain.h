@@ -19,7 +19,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 /**
  * \class TransformixMain
@@ -39,10 +38,10 @@ class TransformixMain : public ElastixMain
 public:
 
   /** Standard itk. */
-  typedef TransformixMain           Self;
-  typedef ElastixMain               Superclass;
-  typedef SmartPointer<Self>        Pointer;
-  typedef SmartPointer<const Self>  ConstPointer;
+  typedef TransformixMain                Self;
+  typedef ElastixMain                    Superclass;
+  typedef itk::SmartPointer<Self>        Pointer;
+  typedef itk::SmartPointer<const Self>  ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );

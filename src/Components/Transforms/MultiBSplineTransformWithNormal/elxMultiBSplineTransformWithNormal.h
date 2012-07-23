@@ -26,7 +26,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 /**
  * \class MultiBSplineTransformWithNormal
@@ -86,7 +85,7 @@ using namespace itk;
 template < class TElastix >
 class MultiBSplineTransformWithNormal
   : public
-  AdvancedCombinationTransform<
+  itk::AdvancedCombinationTransform<
   typename elx::TransformBase<TElastix>::CoordRepType,
   elx::TransformBase<TElastix>::FixedImageDimension > ,
   public
@@ -96,12 +95,12 @@ public:
 
   /** Standard ITK-stuff. */
   typedef MultiBSplineTransformWithNormal         Self;
-  typedef AdvancedCombinationTransform<
+  typedef itk::AdvancedCombinationTransform<
     typename elx::TransformBase<TElastix>::CoordRepType,
     elx::TransformBase<TElastix>::FixedImageDimension > Superclass1;
   typedef elx::TransformBase<TElastix>            Superclass2;
-  typedef SmartPointer<Self>                      Pointer;
-  typedef SmartPointer<const Self>                ConstPointer;
+  typedef itk::SmartPointer<Self>                 Pointer;
+  typedef itk::SmartPointer<const Self>           ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -183,17 +182,17 @@ public:
   typedef typename Superclass2::CombinationTransformType  CombinationTransformType;
 
   /** Typedef's for the GridScheduleComputer and the UpsampleBSplineParametersFilter. */
-  typedef GridScheduleComputer<
+  typedef itk::GridScheduleComputer<
     CoordRepType, SpaceDimension >                        GridScheduleComputerType;
   typedef typename GridScheduleComputerType::Pointer      GridScheduleComputerPointer;
   typedef typename GridScheduleComputerType
     ::VectorGridSpacingFactorType                         GridScheduleType;
-  typedef UpsampleBSplineParametersFilter<
+  typedef itk::UpsampleBSplineParametersFilter<
     ParametersType, ImageType >                           GridUpsamplerType;
   typedef typename GridUpsamplerType::Pointer             GridUpsamplerPointer;
 
   /** Typdef's for the Image of Labels */
-  typedef Image<unsigned char,
+  typedef itk::Image<unsigned char,
           itkGetStaticConstMacro( SpaceDimension )>       ImageLabelType;
   typedef typename ImageLabelType::Pointer                ImageLabelPointer;
 

@@ -21,7 +21,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
   /**
    * \class MovingShrinkingPyramid
@@ -37,7 +36,7 @@ using namespace itk;
   template <class TElastix>
     class MovingShrinkingPyramid :
     public
-      MultiResolutionShrinkPyramidImageFilter<
+      itk::MultiResolutionShrinkPyramidImageFilter<
         typename MovingImagePyramidBase<TElastix>::InputImageType,
         typename MovingImagePyramidBase<TElastix>::OutputImageType >,
     public
@@ -46,19 +45,19 @@ using namespace itk;
   public:
 
     /** Standard ITK-stuff. */
-    typedef MovingShrinkingPyramid                                  Self;
-    typedef MultiResolutionShrinkPyramidImageFilter<
+    typedef MovingShrinkingPyramid                                   Self;
+    typedef itk::MultiResolutionShrinkPyramidImageFilter<
         typename MovingImagePyramidBase<TElastix>::InputImageType,
         typename MovingImagePyramidBase<TElastix>::OutputImageType > Superclass1;
-    typedef MovingImagePyramidBase<TElastix>                        Superclass2;
-    typedef SmartPointer<Self>                                      Pointer;
-    typedef SmartPointer<const Self>                                ConstPointer;
+    typedef MovingImagePyramidBase<TElastix>                         Superclass2;
+    typedef itk::SmartPointer<Self>                                  Pointer;
+    typedef itk::SmartPointer<const Self>                            ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( MovingShrinkingPyramid, MultiResolutionShrinkPyramidImageFilter );
+    itkTypeMacro( MovingShrinkingPyramid, itk::MultiResolutionShrinkPyramidImageFilter );
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific pyramid. \n

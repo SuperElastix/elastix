@@ -22,7 +22,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
   /**
    * \class EulerTransformElastix
@@ -70,7 +69,7 @@ using namespace itk;
 
   template < class TElastix >
     class EulerTransformElastix:
-      public AdvancedCombinationTransform<
+      public itk::AdvancedCombinationTransform<
         typename elx::TransformBase< TElastix >::CoordRepType,
         elx::TransformBase< TElastix >::FixedImageDimension >,
       public elx::TransformBase< TElastix >
@@ -80,7 +79,7 @@ using namespace itk;
     /** Standard ITK-stuff.*/
     typedef EulerTransformElastix                               Self;
 
-    typedef AdvancedCombinationTransform<
+    typedef itk::AdvancedCombinationTransform<
       typename elx::TransformBase< TElastix >::CoordRepType,
       elx::TransformBase< TElastix >::FixedImageDimension >     Superclass1;
 
@@ -88,19 +87,19 @@ using namespace itk;
 
     /** The ITK-class that provides most of the functionality, and
      * that is set as the "CurrentTransform" in the CombinationTransform */
-    typedef EulerTransform<
+    typedef itk::EulerTransform<
       typename elx::TransformBase< TElastix >::CoordRepType,
       elx::TransformBase< TElastix >::FixedImageDimension >     EulerTransformType;
 
-    typedef SmartPointer<Self>                                  Pointer;
-    typedef SmartPointer<const Self>                            ConstPointer;
+    typedef itk::SmartPointer<Self>                             Pointer;
+    typedef itk::SmartPointer<const Self>                       ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
     //itkTypeMacro( EulerTransformElastix, EulerTransform );
-    itkTypeMacro( EulerTransformElastix, AdvancedCombinationTransform );
+    itkTypeMacro( EulerTransformElastix, itk::AdvancedCombinationTransform );
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific transform. \n
@@ -153,7 +152,7 @@ using namespace itk;
     typedef typename FixedImageType::RegionType             RegionType;
     typedef typename FixedImageType::DirectionType          DirectionType;
 
-    typedef CenteredTransformInitializer<
+    typedef itk::CenteredTransformInitializer<
       EulerTransformType, FixedImageType, MovingImageType>  TransformInitializerType;
     typedef typename TransformInitializerType::Pointer      TransformInitializerPointer;
 

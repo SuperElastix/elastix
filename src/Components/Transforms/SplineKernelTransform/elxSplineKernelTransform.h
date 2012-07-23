@@ -25,7 +25,6 @@
 
 namespace elastix
 {
-  using namespace itk;
 
   /**
    * \class SplineKernelTransform
@@ -110,7 +109,7 @@ namespace elastix
    */
 
 template < class TElastix >
-class SplineKernelTransform : public AdvancedCombinationTransform<
+class SplineKernelTransform : public itk::AdvancedCombinationTransform<
   typename elx::TransformBase<TElastix>::CoordRepType,
   elx::TransformBase<TElastix>::FixedImageDimension > ,
   public elx::TransformBase<TElastix>
@@ -118,8 +117,8 @@ class SplineKernelTransform : public AdvancedCombinationTransform<
 public:
 
   /** Standard ITK-stuff. */
-  typedef SplineKernelTransform                     Self;
-  typedef AdvancedCombinationTransform<
+  typedef SplineKernelTransform                           Self;
+  typedef itk::AdvancedCombinationTransform<
     typename elx::TransformBase<TElastix>::CoordRepType,
     elx::TransformBase<TElastix>::FixedImageDimension >   Superclass1;
   typedef elx::TransformBase<TElastix>                    Superclass2;
@@ -127,17 +126,17 @@ public:
   /** The ITK-class that provides most of the functionality, and
    * that is set as the "CurrentTransform" in the CombinationTransform.
    */
-  typedef KernelTransform2<
+  typedef itk::KernelTransform2<
     typename elx::TransformBase<TElastix>::CoordRepType,
     elx::TransformBase<TElastix>::FixedImageDimension >   KernelTransformType;
-  typedef SmartPointer<Self>                              Pointer;
-  typedef SmartPointer<const Self>                        ConstPointer;
+  typedef itk::SmartPointer<Self>                         Pointer;
+  typedef itk::SmartPointer<const Self>                   ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( SplineKernelTransform, AdvancedCombinationTransform );
+  itkTypeMacro( SplineKernelTransform, itk::AdvancedCombinationTransform );
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific transform. \n
@@ -207,15 +206,15 @@ protected:
   /** The destructor. */
   virtual ~SplineKernelTransform() {};
 
-  typedef ThinPlateSplineKernelTransform2<
+  typedef itk::ThinPlateSplineKernelTransform2<
     CoordRepType, itkGetStaticConstMacro(SpaceDimension) >   TPKernelTransformType;
-  typedef ThinPlateR2LogRSplineKernelTransform2<
+  typedef itk::ThinPlateR2LogRSplineKernelTransform2<
     CoordRepType, itkGetStaticConstMacro(SpaceDimension) >   TPRKernelTransformType;
-  typedef VolumeSplineKernelTransform2<
+  typedef itk::VolumeSplineKernelTransform2<
     CoordRepType, itkGetStaticConstMacro(SpaceDimension) >   VKernelTransformType;
-  typedef ElasticBodySplineKernelTransform2<
+  typedef itk::ElasticBodySplineKernelTransform2<
     CoordRepType, itkGetStaticConstMacro(SpaceDimension) >   EBKernelTransformType;
-  typedef ElasticBodyReciprocalSplineKernelTransform2<
+  typedef itk::ElasticBodyReciprocalSplineKernelTransform2<
     CoordRepType, itkGetStaticConstMacro(SpaceDimension) >   EBRKernelTransformType;
 
   /** Create an instance of a kernel transform. Returns false if the

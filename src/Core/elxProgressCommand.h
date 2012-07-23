@@ -20,7 +20,6 @@
 
 namespace elastix
 {
-  using namespace itk;
 
   /**
    * \class ProgressCommand
@@ -84,13 +83,13 @@ namespace elastix
    *
    */
 
-class ProgressCommand : public Command
+class ProgressCommand : public itk::Command
 {
 public:
 
   /** Smart pointer declaration methods. */
   typedef ProgressCommand               Self;
-  typedef Command                       Superclass;
+  typedef itk::Command                  Superclass;
   typedef itk::SmartPointer<Self>       Pointer;
   typedef itk::SmartPointer<const Self> ConstPointer;
 
@@ -99,7 +98,7 @@ public:
   itkNewMacro( Self );
 
   /** Typedef's. */
-  typedef ProcessObject                 ProcessObjectType;
+  typedef itk::ProcessObject            ProcessObjectType;
   typedef ProcessObjectType::Pointer    ProcessObjectPointer;
 
   /** Define when to print the progress. */
@@ -108,14 +107,14 @@ public:
     const unsigned long numberOfUpdates );
 
   /** Connect an observer to a process object. */
-  virtual void ConnectObserver( ProcessObject * filter );
+  virtual void ConnectObserver( itk::ProcessObject * filter );
 
   /** Disconnect an observer to a process object. */
-  virtual void DisconnectObserver( ProcessObject * filter );
+  virtual void DisconnectObserver( itk::ProcessObject * filter );
 
   /** Standard Command virtual methods. */
-  virtual void Execute( Object *caller, const EventObject &event );
-  virtual void Execute( const Object *caller, const EventObject &event );
+  virtual void Execute( itk::Object *caller, const itk::EventObject &event );
+  virtual void Execute( const itk::Object *caller, const itk::EventObject &event );
 
   /** Print the progress to screen. A float value between 0.0 and 1.0
    * is expected as input.

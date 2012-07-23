@@ -20,7 +20,6 @@
 
 namespace elastix
 {
-  using namespace itk;
 
   /**
    * \class MyStandardResampler
@@ -44,8 +43,8 @@ namespace elastix
     typedef MyStandardResampler                             Self;
     typedef typename ResamplerBase<TElastix>::ITKBaseType   Superclass1;
     typedef ResamplerBase<TElastix>                         Superclass2;
-    typedef SmartPointer<Self>                              Pointer;
-    typedef SmartPointer<const Self>                        ConstPointer;
+    typedef itk::SmartPointer<Self>                         Pointer;
+    typedef itk::SmartPointer<const Self>                   ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro(Self);

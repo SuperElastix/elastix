@@ -142,6 +142,12 @@ public:
   itkSetMacro( ForegroundValue, RealType );
   itkGetConstReferenceMacro( ForegroundValue, RealType );
 
+  /** Select which kind of kappa to compute:
+   * 1) compare with a foreground value
+   * 2) compare if larger than zero
+   */
+  itkSetMacro( UseForegroundValue, bool );
+
   /** Set/Get whether this metric returns 2*|A&B|/(|A|+|B|)
    * (ComplementOff, the default) or 1.0 - 2*|A&B|/(|A|+|B|)
    * (ComplementOn). When using an optimizer that minimizes
@@ -203,9 +209,10 @@ private:
   AdvancedKappaStatisticImageToImageMetric(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
-  RealType   m_ForegroundValue;
-  RealType   m_Epsilon;
-  bool       m_Complement;
+  bool      m_UseForegroundValue;
+  RealType  m_ForegroundValue;
+  RealType  m_Epsilon;
+  bool      m_Complement;
 
 }; // end class AdvancedKappaStatisticImageToImageMetric
 

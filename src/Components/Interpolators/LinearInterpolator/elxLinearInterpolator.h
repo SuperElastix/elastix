@@ -21,8 +21,6 @@
 namespace elastix
 {
 
-using namespace itk;
-
   /**
    * \class LinearInterpolator
    * \brief An interpolator based on the itk::AdvancedLinearInterpolateImageFunction.
@@ -41,26 +39,27 @@ using namespace itk;
 
 template < class TElastix >
 class LinearInterpolator
-  : public AdvancedLinearInterpolateImageFunction<
+  : public itk::AdvancedLinearInterpolateImageFunction<
     typename InterpolatorBase<TElastix>::InputImageType,
     typename InterpolatorBase<TElastix>::CoordRepType >,
   public InterpolatorBase<TElastix>
 {
 public:
   /** Standard ITK-stuff. */
-  typedef LinearInterpolator                  Self;
-  typedef AdvancedLinearInterpolateImageFunction<
+  typedef LinearInterpolator                    Self;
+  typedef itk::AdvancedLinearInterpolateImageFunction<
     typename InterpolatorBase<TElastix>::InputImageType,
-    typename InterpolatorBase<TElastix>::CoordRepType > Superclass1;
-  typedef InterpolatorBase<TElastix>          Superclass2;
-  typedef SmartPointer<Self>                  Pointer;
-  typedef SmartPointer<const Self>            ConstPointer;
+    typename InterpolatorBase<TElastix>::CoordRepType >
+                                                Superclass1;
+  typedef InterpolatorBase<TElastix>            Superclass2;
+  typedef itk::SmartPointer<Self>               Pointer;
+  typedef itk::SmartPointer<const Self>         ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( LinearInterpolator, AdvancedLinearInterpolateImageFunction );
+  itkTypeMacro( LinearInterpolator, itk::AdvancedLinearInterpolateImageFunction );
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific interpolator. \n

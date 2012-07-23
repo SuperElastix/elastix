@@ -21,7 +21,6 @@
 
 namespace elastix
 {
-  using namespace itk;
 
   /**
    * \class WeightedCombinationTransformElastix
@@ -78,7 +77,7 @@ namespace elastix
 
   template < class TElastix >
     class WeightedCombinationTransformElastix:
-      public AdvancedCombinationTransform<
+      public itk::AdvancedCombinationTransform<
           typename elx::TransformBase<TElastix>::CoordRepType,
           elx::TransformBase<TElastix>::FixedImageDimension > ,
       public elx::TransformBase<TElastix>
@@ -86,9 +85,9 @@ namespace elastix
   public:
 
     /** Standard ITK-stuff. */
-    typedef WeightedCombinationTransformElastix                     Self;
+    typedef WeightedCombinationTransformElastix             Self;
 
-    typedef AdvancedCombinationTransform<
+    typedef itk::AdvancedCombinationTransform<
       typename elx::TransformBase<TElastix>::CoordRepType,
       elx::TransformBase<TElastix>::FixedImageDimension >   Superclass1;
 
@@ -96,19 +95,19 @@ namespace elastix
 
     /** The ITK-class that provides most of the functionality, and
      * that is set as the "CurrentTransform" in the CombinationTransform */
-    typedef WeightedCombinationTransform<
+    typedef itk::WeightedCombinationTransform<
       typename elx::TransformBase<TElastix>::CoordRepType,
       elx::TransformBase<TElastix>::FixedImageDimension,
       elx::TransformBase<TElastix>::MovingImageDimension >  WeightedCombinationTransformType;
 
-    typedef SmartPointer<Self>                              Pointer;
-    typedef SmartPointer<const Self>                        ConstPointer;
+    typedef itk::SmartPointer<Self>                         Pointer;
+    typedef itk::SmartPointer<const Self>                   ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( WeightedCombinationTransformElastix, AdvancedCombinationTransform );
+    itkTypeMacro( WeightedCombinationTransformElastix, itk::AdvancedCombinationTransform );
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific transform. \n

@@ -26,7 +26,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
   /**
    * \class MovingImagePyramidBase
@@ -60,8 +59,8 @@ class MovingImagePyramidBase : public BaseComponentSE<TElastix>
 public:
 
   /** Standard ITK-stuff. */
-  typedef MovingImagePyramidBase      Self;
-  typedef BaseComponentSE<TElastix>   Superclass;
+  typedef MovingImagePyramidBase                     Self;
+  typedef BaseComponentSE<TElastix>                  Superclass;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro( MovingImagePyramidBase, BaseComponentSE );
@@ -75,15 +74,15 @@ public:
   typedef typename Superclass::RegistrationPointer    RegistrationPointer;
 
   /** Typedefs inherited from Elastix. */
-  typedef typename ElastixType::MovingImageType   InputImageType;
-  typedef typename ElastixType::MovingImageType   OutputImageType;
+  typedef typename ElastixType::MovingImageType       InputImageType;
+  typedef typename ElastixType::MovingImageType       OutputImageType;
 
   /** Other typedef's. */
-  typedef MultiResolutionPyramidImageFilter<
-    InputImageType, OutputImageType >             ITKBaseType;
+  typedef itk::MultiResolutionPyramidImageFilter<
+    InputImageType, OutputImageType >                 ITKBaseType;
 
   /** Typedef's from ITKBaseType. */
-  typedef typename ITKBaseType::ScheduleType      ScheduleType;
+  typedef typename ITKBaseType::ScheduleType          ScheduleType;
 
   /** Cast to ITKBaseType. */
   virtual ITKBaseType * GetAsITKBaseType( void )

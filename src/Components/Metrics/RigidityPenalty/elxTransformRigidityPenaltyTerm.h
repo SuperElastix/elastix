@@ -21,7 +21,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
   /**
    * \class TransformRigidityPenalty
@@ -107,7 +106,7 @@ using namespace itk;
 
 template <class TElastix >
 class TransformRigidityPenalty
-  : public TransformRigidityPenaltyTerm<
+  : public itk::TransformRigidityPenaltyTerm<
   typename MetricBase<TElastix>::FixedImageType,
   double >,
   public MetricBase<TElastix>
@@ -116,18 +115,18 @@ public:
 
   /** Standard ITK-stuff. */
   typedef TransformRigidityPenalty                      Self;
-  typedef TransformRigidityPenaltyTerm<
+  typedef itk::TransformRigidityPenaltyTerm<
     typename MetricBase<TElastix>::FixedImageType,
     double >                                            Superclass1;
   typedef MetricBase<TElastix>                          Superclass2;
-  typedef SmartPointer<Self>                            Pointer;
-  typedef SmartPointer<const Self>                      ConstPointer;
+  typedef itk::SmartPointer<Self>                       Pointer;
+  typedef itk::SmartPointer<const Self>                 ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( TransformRigidityPenalty, TransformRigidityPenaltyTerm );
+  itkTypeMacro( TransformRigidityPenalty, itk::TransformRigidityPenaltyTerm );
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific metric. \n
@@ -202,7 +201,7 @@ public:
   /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.
    */
-  virtual void Initialize( void ) throw (ExceptionObject);
+  virtual void Initialize( void ) throw (itk::ExceptionObject);
 
   /**
    * Do some things before each resolution:

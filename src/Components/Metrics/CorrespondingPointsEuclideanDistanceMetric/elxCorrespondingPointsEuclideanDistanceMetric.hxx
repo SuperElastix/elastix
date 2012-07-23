@@ -21,7 +21,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 /**
  * ******************* Initialize ***********************
@@ -30,7 +29,7 @@ using namespace itk;
 template <class TElastix>
 void
 CorrespondingPointsEuclideanDistanceMetric<TElastix>
-::Initialize( void ) throw (ExceptionObject)
+::Initialize( void ) throw (itk::ExceptionObject)
 {
   TimerPointer timer = TimerType::New();
   timer->StartTimer();

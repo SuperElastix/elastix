@@ -23,7 +23,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
   /**
    * ****************** Constructor ***********************
@@ -46,7 +45,7 @@ using namespace itk;
 
   template <class TElastix>
     void AdvancedMattesMutualInformationMetric<TElastix>
-    ::Initialize( void ) throw (ExceptionObject)
+    ::Initialize( void ) throw (itk::ExceptionObject)
   {
     TimerPointer timer = TimerType::New();
     timer->StartTimer();
@@ -87,8 +86,8 @@ using namespace itk;
     this->SetNumberOfMovingHistogramBins( numberOfMovingHistogramBins );
 
     /** Set limiters. */
-    typedef HardLimiterFunction< RealType, FixedImageDimension > FixedLimiterType;
-    typedef ExponentialLimiterFunction< RealType, MovingImageDimension > MovingLimiterType;
+    typedef itk::HardLimiterFunction< RealType, FixedImageDimension > FixedLimiterType;
+    typedef itk::ExponentialLimiterFunction< RealType, MovingImageDimension > MovingLimiterType;
     this->SetFixedImageLimiter( FixedLimiterType::New() );
     this->SetMovingImageLimiter( MovingLimiterType::New() );
 

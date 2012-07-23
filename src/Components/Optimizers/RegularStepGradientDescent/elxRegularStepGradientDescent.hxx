@@ -22,8 +22,6 @@
 
 namespace elastix
 {
-using namespace itk;
-
 
 
   /**

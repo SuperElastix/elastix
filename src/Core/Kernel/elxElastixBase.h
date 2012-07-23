@@ -76,7 +76,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 /**
  * \class ElastixBase
@@ -172,7 +171,7 @@ public:
   /** The itk class that ElastixTemplate is expected to inherit from
    * Of course ElastixTemplate also inherits from this class (ElastixBase).
    */
-  typedef Object      ITKBaseType;
+  typedef itk::Object      ITKBaseType;
 
   /** Cast to ITKBaseType. */
   virtual ITKBaseType * GetAsITKBaseType( void )
@@ -362,13 +361,13 @@ protected:
   class MultipleImageLoader
   {
   public:
-    typedef TImage                              ImageType;
-    typedef typename ImageType::Pointer         ImagePointer;
-    typedef ImageFileReader<ImageType>          ImageReaderType;
-    typedef typename ImageReaderType::Pointer   ImageReaderPointer;
-    typedef typename ImageType::DirectionType   DirectionType;
-    typedef ChangeInformationImageFilter<ImageType> ChangeInfoFilterType;
-    typedef typename ChangeInfoFilterType::Pointer  ChangeInfoFilterPointer;
+    typedef TImage                                       ImageType;
+    typedef typename ImageType::Pointer                  ImagePointer;
+    typedef itk::ImageFileReader<ImageType>              ImageReaderType;
+    typedef typename ImageReaderType::Pointer            ImageReaderPointer;
+    typedef typename ImageType::DirectionType            DirectionType;
+    typedef itk::ChangeInformationImageFilter<ImageType> ChangeInfoFilterType;
+    typedef typename ChangeInfoFilterType::Pointer       ChangeInfoFilterPointer;
 
     static DataObjectContainerPointer GenerateImageContainer(
       FileNameContainerType * fileNameContainer, const std::string & imageDescription,

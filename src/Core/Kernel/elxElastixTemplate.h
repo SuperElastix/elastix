@@ -72,7 +72,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 /**
  * \class ElastixTemplate
@@ -108,22 +107,22 @@ using namespace itk;
  */
 
 template <class TFixedImage, class TMovingImage>
-  class ElastixTemplate : public Object, public ElastixBase
+class ElastixTemplate : public itk::Object, public ElastixBase
 {
 public:
 
   /** Standard itk. */
-  typedef ElastixTemplate           Self;
-  typedef Object                    Superclass1;
-  typedef ElastixBase               Superclass2;
-  typedef SmartPointer<Self>        Pointer;
-  typedef SmartPointer<const Self>  ConstPointer;
+  typedef ElastixTemplate                Self;
+  typedef itk::Object                    Superclass1;
+  typedef ElastixBase                    Superclass2;
+  typedef itk::SmartPointer<Self>        Pointer;
+  typedef itk::SmartPointer<const Self>  ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ElastixTemplate, Object );
+  itkTypeMacro( ElastixTemplate, itk::Object );
 
   /** Typedefs inherited from Superclass2. */
   typedef Superclass2::ConfigurationType                            ConfigurationType;
@@ -152,8 +151,8 @@ public:
 
   /** Types for the masks. */
   typedef unsigned char                                             MaskPixelType;
-  typedef Image<MaskPixelType, FixedDimension>                      FixedMaskType;
-  typedef Image<MaskPixelType, MovingDimension>                     MovingMaskType;
+  typedef itk::Image<MaskPixelType, FixedDimension>                 FixedMaskType;
+  typedef itk::Image<MaskPixelType, MovingDimension>                MovingMaskType;
   typedef typename FixedMaskType::Pointer                           FixedMaskPointer;
   typedef typename MovingMaskType::Pointer                          MovingMaskPointer;
 
@@ -161,7 +160,7 @@ public:
   typedef typename FixedImageType::DirectionType                    FixedImageDirectionType;
 
   /** Type for representation of the transform coordinates. */
-  typedef CostFunction::ParametersValueType   CoordRepType; // double
+  typedef itk::CostFunction::ParametersValueType   CoordRepType; // double
 
   /** BaseComponent. */
   typedef BaseComponent                                             BaseComponentType;
@@ -171,9 +170,9 @@ public:
   typedef int (BaseComponentType::*PtrToMemberFunction2)(void);
 
   /** Commands that react on Events and call Self::Function(void). */
-  typedef SimpleMemberCommand<Self>                                 BeforeEachResolutionCommandType;
-  typedef SimpleMemberCommand<Self>                                 AfterEachResolutionCommandType;
-  typedef SimpleMemberCommand<Self>                                 AfterEachIterationCommandType;
+  typedef itk::SimpleMemberCommand<Self>                            BeforeEachResolutionCommandType;
+  typedef itk::SimpleMemberCommand<Self>                            AfterEachResolutionCommandType;
+  typedef itk::SimpleMemberCommand<Self>                            AfterEachIterationCommandType;
   typedef typename BeforeEachResolutionCommandType::Pointer         BeforeEachResolutionCommandPointer;
   typedef typename AfterEachResolutionCommandType::Pointer          AfterEachResolutionCommandPointer;
   typedef typename AfterEachIterationCommandType::Pointer           AfterEachIterationCommandPointer;

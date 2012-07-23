@@ -210,7 +210,7 @@ void
 TransformToSpatialJacobianSource<TOutputImage,TTransformPrecisionType>
 ::ThreadedGenerateData(
   const OutputImageRegionType & outputRegionForThread,
-  int threadId )
+  ThreadIdType threadId )
 {
   // In case of linear transforms, the computation has already been
   // completed in the BeforeThreadedGenerateData
@@ -231,7 +231,7 @@ void
 TransformToSpatialJacobianSource<TOutputImage,TTransformPrecisionType>
 ::NonlinearThreadedGenerateData(
   const OutputImageRegionType & outputRegionForThread,
-  int threadId )
+  ThreadIdType threadId )
 {
   // Get the output pointer
   OutputImagePointer outputPtr = this->GetOutput();

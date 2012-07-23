@@ -21,7 +21,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
   /**
    * \class MultiResolutionRegistrationWithFeatures
@@ -51,7 +50,7 @@ using namespace itk;
   template <class TElastix>
     class MultiResolutionRegistrationWithFeatures :
     public
-      MultiResolutionImageRegistrationMethodWithFeatures<
+      itk::MultiResolutionImageRegistrationMethodWithFeatures<
       typename RegistrationBase<TElastix>::FixedImageType,
       typename RegistrationBase<TElastix>::MovingImageType >,
     public
@@ -61,13 +60,13 @@ using namespace itk;
 
     /** Standard ITK: Self */
     typedef MultiResolutionRegistrationWithFeatures     Self;
-    typedef MultiResolutionImageRegistrationMethodWithFeatures<
+    typedef itk::MultiResolutionImageRegistrationMethodWithFeatures<
       typename RegistrationBase<TElastix>::FixedImageType,
       typename RegistrationBase<TElastix>::MovingImageType >
                                                         Superclass1;
     typedef RegistrationBase<TElastix>                  Superclass2;
-    typedef SmartPointer<Self>                          Pointer;
-    typedef SmartPointer<const Self>                    ConstPointer;
+    typedef itk::SmartPointer<Self>                     Pointer;
+    typedef itk::SmartPointer<const Self>               ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );

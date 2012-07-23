@@ -24,7 +24,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
   /** \class VarianceOverLastDimensionMetric
    * \brief Compute the sum of variances over the slowest varying dimension in the moving image.
@@ -66,7 +65,7 @@ using namespace itk;
   template <class TElastix >
     class VarianceOverLastDimensionMetric:
     public
-      VarianceOverLastDimensionImageMetric<
+      itk::VarianceOverLastDimensionImageMetric<
         typename MetricBase<TElastix>::FixedImageType,
         typename MetricBase<TElastix>::MovingImageType >,
     public MetricBase<TElastix>
@@ -75,18 +74,18 @@ using namespace itk;
 
     /** Standard ITK-stuff. */
     typedef VarianceOverLastDimensionMetric               Self;
-    typedef VarianceOverLastDimensionImageMetric<
+    typedef itk::VarianceOverLastDimensionImageMetric<
       typename MetricBase<TElastix>::FixedImageType,
       typename MetricBase<TElastix>::MovingImageType >    Superclass1;
     typedef MetricBase<TElastix>                          Superclass2;
-    typedef SmartPointer<Self>                            Pointer;
-    typedef SmartPointer<const Self>                      ConstPointer;
+    typedef itk::SmartPointer<Self>                       Pointer;
+    typedef itk::SmartPointer<const Self>                 ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( VarianceOverLastDimensionMetric, VarianceOverLastDimensionImageMetric );
+    itkTypeMacro( VarianceOverLastDimensionMetric, itk::VarianceOverLastDimensionImageMetric );
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific metric. \n
@@ -160,14 +159,14 @@ using namespace itk;
     typedef typename Superclass2::ITKBaseType               ITKBaseType;
 
     /** Typedef's for the B-spline transform. */
-    typedef AdvancedBSplineDeformableTransformBase<
-      ScalarType, FixedImageDimension >             BSplineTransformBaseType;
-    typedef AdvancedCombinationTransform<
-      ScalarType, FixedImageDimension >             CombinationTransformType;
-    typedef StackTransform<
+    typedef itk::AdvancedBSplineDeformableTransformBase<
+      ScalarType, FixedImageDimension >                       BSplineTransformBaseType;
+    typedef itk::AdvancedCombinationTransform<
+      ScalarType, FixedImageDimension >                       CombinationTransformType;
+    typedef itk::StackTransform<
       ScalarType, FixedImageDimension, MovingImageDimension > StackTransformType;
-    typedef AdvancedBSplineDeformableTransformBase<
-      ScalarType, FixedImageDimension - 1 >         ReducedDimensionBSplineTransformBaseType;
+    typedef itk::AdvancedBSplineDeformableTransformBase<
+      ScalarType, FixedImageDimension - 1 >                   ReducedDimensionBSplineTransformBaseType;
 
     /** Typedef for timer. */
     typedef tmr::Timer          TimerType;
@@ -177,7 +176,7 @@ using namespace itk;
     /** Sets up a timer to measure the initialisation time and
      * calls the Superclass' implementation.
      */
-    virtual void Initialize(void) throw (ExceptionObject);
+    virtual void Initialize(void) throw (itk::ExceptionObject);
 
     /**
      * Do some things before each resolution:

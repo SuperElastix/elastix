@@ -19,7 +19,7 @@
 #include "itkPoint.h"
 #include "itkCastImageFilter.h"
 #include "itkResampleImageFilter.h"
-#include "itkMultiplyByConstantImageFilter.h"
+#include "itkMultiplyImageFilter.h"
 #include "itkSubtractImageFilter.h"
 #include "itkOptimizer.h"
 #include "itkRescaleIntensityImageFilter.h"
@@ -125,12 +125,13 @@ public:
                               RescaleIntensityImageFilterType;
 
   typedef itk::SubtractImageFilter<
-    FixedImageType, TransformedMovingImageType, TransformedMovingImageType >
-                              DifferenceImageFilterType;
-
-  typedef itk::MultiplyByConstantImageFilter<
-    TransformedMovingImageType, double ,TransformedMovingImageType>
-                              MultiplyByConstantImageFilterType;
+    FixedImageType,
+    TransformedMovingImageType,
+    TransformedMovingImageType >        DifferenceImageFilterType;
+  typedef itk::MultiplyImageFilter<
+    TransformedMovingImageType,
+    TransformedMovingImageType,
+    TransformedMovingImageType>         MultiplyImageFilterType;
 
   /** The moving image dimension. */
   itkStaticConstMacro( MovingImageDimension, unsigned int,
@@ -152,7 +153,7 @@ public:
    * \li Call the superclass' implementation
    * \li Estimate the normalization factor, if asked for.
    */
-  virtual void Initialize(void) throw ( ExceptionObject );
+  virtual void Initialize( void ) throw ( ExceptionObject );
 
   /** Set/Get Scales  */
   itkSetMacro( Scales , ScalesType );
@@ -166,7 +167,7 @@ public:
   itkSetMacro( OptimizeNormalizationFactor , bool );
   itkGetConstReferenceMacro( OptimizeNormalizationFactor, bool );
 
-  protected:
+protected:
   PatternIntensityImageToImageMetric();
   virtual ~PatternIntensityImageToImageMetric() {};
   void PrintSelf(std::ostream& os, Indent indent) const;
@@ -177,14 +178,14 @@ public:
   /** Compute the pattern intensity difference image. */
   MeasureType ComputePIDiff( const TransformParametersType &parameters, float scalingfactor ) const;
 
-  private:
-    PatternIntensityImageToImageMetric(const Self&); //purposely not implemented
-    void operator=(const Self&); //purposely not implemented
+private:
+  PatternIntensityImageToImageMetric(const Self&); //purposely not implemented
+  void operator=(const Self&); //purposely not implemented
 
   typename TransformMovingImageFilterType::Pointer    m_TransformMovingImageFilter;
   typename DifferenceImageFilterType::Pointer         m_DifferenceImageFilter;
   typename RescaleIntensityImageFilterType::Pointer   m_RescaleImageFilter;
-  typename MultiplyByConstantImageFilterType::Pointer m_MultiplyByConstantImageFilter;
+  typename MultiplyImageFilterType::Pointer           m_MultiplyImageFilter;
   double                      m_NoiseConstant;
   unsigned int                m_NeighborhoodRadius;
   double                      m_DerivativeDelta;
@@ -204,4 +205,3 @@ public:
 #endif
 
 #endif // end #ifndef __itkPatternIntensityImageToImageMetric_h
-

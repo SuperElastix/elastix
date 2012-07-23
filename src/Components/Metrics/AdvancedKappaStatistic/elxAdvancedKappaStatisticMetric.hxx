@@ -20,7 +20,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 /**
  * ******************* Initialize ***********************
@@ -29,7 +28,7 @@ using namespace itk;
 template <class TElastix>
 void
 AdvancedKappaStatisticMetric<TElastix>
-::Initialize( void ) throw (ExceptionObject)
+::Initialize( void ) throw (itk::ExceptionObject)
 {
   TimerPointer timer = TimerType::New();
   timer->StartTimer();
@@ -56,6 +55,15 @@ AdvancedKappaStatisticMetric<TElastix>
   this->GetConfiguration()->ReadParameter( useComplement,
     "UseComplement", this->GetComponentLabel(), 0, -1 );
   this->SetComplement( useComplement );
+
+  /** Get and set the use of the foreground value:
+   * true) compare with a foreground value
+   * false) compare if larger than zero
+   */
+  bool useForegroundValue = true;
+  this->GetConfiguration()->ReadParameter( useForegroundValue,
+    "UseForegroundValue", this->GetComponentLabel(), 0, -1 );
+  this->SetUseForegroundValue( useForegroundValue );
 
   /** Get and set the foreground value. */
   double foreground = 1.0;

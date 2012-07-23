@@ -22,7 +22,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
   /**
    * \class AdvancedKappaStatisticMetric
@@ -32,7 +31,8 @@ using namespace itk;
    * \parameter Metric: Select this metric as follows:\n
    *    <tt>(Metric "AdvancedKappaStatistic")</tt>
    * \parameter UseComplement: Bool to use the complement of the metric or not.\n
-   *    If true, the 1 - KappaStatistic is returned, which is useful since most optimizers search by default for a minimum.\n
+   *    If true, the 1 - KappaStatistic is returned, which is useful since most 
+   *    optimizers search by default for a minimum.\n
    *    <tt>(UseComplement "true")</tt>\n
    *    The default value is true.
    * \parameter ForeGroundvalue: the overlap of structures with this value is
@@ -47,7 +47,7 @@ using namespace itk;
   template <class TElastix >
     class AdvancedKappaStatisticMetric:
     public
-      AdvancedKappaStatisticImageToImageMetric<
+      itk::AdvancedKappaStatisticImageToImageMetric<
         typename MetricBase<TElastix>::FixedImageType,
         typename MetricBase<TElastix>::MovingImageType >,
     public MetricBase<TElastix>
@@ -56,18 +56,18 @@ using namespace itk;
 
     /** Standard ITK-stuff. */
     typedef AdvancedKappaStatisticMetric                  Self;
-    typedef AdvancedKappaStatisticImageToImageMetric<
+    typedef itk::AdvancedKappaStatisticImageToImageMetric<
       typename MetricBase<TElastix>::FixedImageType,
       typename MetricBase<TElastix>::MovingImageType >    Superclass1;
     typedef MetricBase<TElastix>                          Superclass2;
-    typedef SmartPointer<Self>                            Pointer;
-    typedef SmartPointer<const Self>                      ConstPointer;
+    typedef itk::SmartPointer<Self>                       Pointer;
+    typedef itk::SmartPointer<const Self>                 ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( AdvancedKappaStatisticMetric, AdvancedKappaStatisticImageToImageMetric );
+    itkTypeMacro( AdvancedKappaStatisticMetric, itk::AdvancedKappaStatisticImageToImageMetric );
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific metric. \n
@@ -146,7 +146,7 @@ using namespace itk;
     /** Sets up a timer to measure the initialisation time and
      * calls the Superclass' implementation.
      */
-    virtual void Initialize(void) throw (ExceptionObject);
+    virtual void Initialize(void) throw (itk::ExceptionObject);
 
     /**
      * Do some things before registration:

@@ -28,7 +28,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
   /**
    * \class MetricBase
@@ -98,8 +97,8 @@ public:
   typedef typename MovingPointType::ValueType         MovingPointValueType;
 
   /** ITKBaseType. */
-  typedef SingleValuedCostFunction                    ITKBaseType;
-  typedef AdvancedImageToImageMetric<
+  typedef itk::SingleValuedCostFunction               ITKBaseType;
+  typedef itk::AdvancedImageToImageMetric<
     FixedImageType, MovingImageType >                 AdvancedMetricType;
 
   /** Get the dimension of the fixed image. */
@@ -109,16 +108,16 @@ public:
 
   /** Typedefs for point sets. */
   typedef typename ITKBaseType::ParametersValueType CoordinateRepresentationType;
-  typedef PointSet<
+  typedef itk::PointSet<
     CoordinateRepresentationType, FixedImageDimension,
-    DefaultStaticMeshTraits<
+    itk::DefaultStaticMeshTraits<
       CoordinateRepresentationType,
       FixedImageDimension, FixedImageDimension,
       CoordinateRepresentationType, CoordinateRepresentationType,
       CoordinateRepresentationType > >                FixedPointSetType;
-  typedef PointSet<
+  typedef itk::PointSet<
     CoordinateRepresentationType, MovingImageDimension,
-    DefaultStaticMeshTraits<
+    itk::DefaultStaticMeshTraits<
       CoordinateRepresentationType,
       MovingImageDimension, MovingImageDimension,
       CoordinateRepresentationType, CoordinateRepresentationType,

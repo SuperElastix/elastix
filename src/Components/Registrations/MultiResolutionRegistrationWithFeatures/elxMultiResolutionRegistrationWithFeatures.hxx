@@ -19,7 +19,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
   /**
    * ******************* BeforeRegistration ***********************
@@ -204,7 +203,7 @@ using namespace itk;
     }
 
     /** Create and set interpolators for the fixed feature images. */
-    typedef BSplineInterpolateImageFunction< FixedImageType >             FixedImageInterpolatorType;
+    typedef itk::BSplineInterpolateImageFunction< FixedImageType >             FixedImageInterpolatorType;
     typedef std::vector< typename FixedImageInterpolatorType::Pointer >   FixedImageInterpolatorVectorType;
     FixedImageInterpolatorVectorType interpolators( noFixIm );
     for ( unsigned int i = 0; i < noFixIm; i++ )

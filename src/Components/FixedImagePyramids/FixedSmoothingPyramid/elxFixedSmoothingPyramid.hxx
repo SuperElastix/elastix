@@ -19,7 +19,6 @@
 
 namespace elastix
 {
-  using namespace itk;
 
 
 } // end namespace elastix

@@ -42,7 +42,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 
   /**
@@ -159,8 +158,8 @@ using namespace itk;
 template < class TElastix >
 class BSplineTransformWithDiffusion
   : public
-  DeformationFieldRegulizer<
-    AdvancedCombinationTransform<
+  itk::DeformationFieldRegulizer<
+    itk::AdvancedCombinationTransform<
     //BSplineCombinationTransform<
     typename elx::TransformBase<TElastix>::CoordRepType,
     elx::TransformBase<TElastix>::FixedImageDimension > >,
@@ -172,8 +171,8 @@ public:
 
   /** Standard ITK-stuff. */
   typedef BSplineTransformWithDiffusion               Self;
-  typedef DeformationFieldRegulizer<
-    AdvancedCombinationTransform<
+  typedef itk::DeformationFieldRegulizer<
+    itk::AdvancedCombinationTransform<
     //BSplineCombinationTransform<
     typename elx::TransformBase<TElastix>::CoordRepType,
     elx::TransformBase<TElastix>::FixedImageDimension > >
@@ -184,19 +183,19 @@ public:
   /** The ITK-class that provides most of the functionality, and
    * that is set as the "CurrentTransform" in the CombinationTransform.
    */
-  typedef AdvancedBSplineDeformableTransform<
+  typedef itk::AdvancedBSplineDeformableTransform<
     typename elx::TransformBase<TElastix>::CoordRepType,
     elx::TransformBase<TElastix>::FixedImageDimension,
-    __VSplineOrder >                          BSplineTransformType;
+    __VSplineOrder >                                  BSplineTransformType;
 
-  typedef SmartPointer<Self>                  Pointer;
-  typedef SmartPointer<const Self>            ConstPointer;
+  typedef itk::SmartPointer<Self>                     Pointer;
+  typedef itk::SmartPointer<const Self>               ConstPointer;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( BSplineTransformWithDiffusion, DeformationFieldRegulizer );
+  itkTypeMacro( BSplineTransformWithDiffusion, itk::DeformationFieldRegulizer );
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific transform. \n
@@ -259,39 +258,39 @@ public:
   typedef typename ElastixType::MovingImageType           MovingImageELXType;
 
   /** Other typedef's.*/
-  typedef Image< short,
+  typedef itk::Image< short,
     itkGetStaticConstMacro( SpaceDimension ) >      DummyImageType;
-  typedef ImageRegionConstIterator<
+  typedef itk::ImageRegionConstIterator<
     DummyImageType >                                DummyIteratorType;
   typedef typename BSplineTransformType::Pointer    BSplineTransformPointer;
   typedef typename Superclass1::Superclass          GenericDeformationFieldRegulizer;
 
   /** Typedef's for the diffusion of the deformation field. */
-  typedef ImageFileReader< VectorImageType >        VectorReaderType;
+  typedef itk::ImageFileReader< VectorImageType >        VectorReaderType;
   typedef typename VectorImageType::PixelType       VectorType;
-  typedef ImageRegionIterator<
+  typedef itk::ImageRegionIterator<
     VectorImageType >                               VectorImageIteratorType;
   typedef FixedImageELXType                         GrayValueImageType;
   typedef typename GrayValueImageType::PixelType    GrayValuePixelType;
-  typedef ImageRegionIterator<
+  typedef itk::ImageRegionIterator<
     GrayValueImageType >                            GrayValueImageIteratorType;
-  typedef MaximumImageFilter<
+  typedef itk::MaximumImageFilter<
     GrayValueImageType, GrayValueImageType,
     GrayValueImageType >                            MaximumImageFilterType;
-  typedef VectorMeanDiffusionImageFilter<
+  typedef itk::VectorMeanDiffusionImageFilter<
     VectorImageType, GrayValueImageType >           DiffusionFilterType;
   typedef typename VectorImageType::SizeType        RadiusType;
-  typedef ResampleImageFilter<
+  typedef itk::ResampleImageFilter<
     MovingImageELXType, GrayValueImageType,
     CoordRepType >                                  ResamplerType1;
-  typedef ResampleImageFilter<
+  typedef itk::ResampleImageFilter<
     GrayValueImageType, GrayValueImageType,
     CoordRepType >                                  ResamplerType2;
-  typedef BSplineInterpolateImageFunction<
+  typedef itk::BSplineInterpolateImageFunction<
     GrayValueImageType >                            InterpolatorType;
-  typedef ImageFileReader< GrayValueImageType >     GrayValueImageReaderType;
-  typedef ImageFileWriter< GrayValueImageType >     GrayValueImageWriterType;
-  typedef ImageFileWriter< VectorImageType >        DeformationFieldWriterType;
+  typedef itk::ImageFileReader< GrayValueImageType >     GrayValueImageReaderType;
+  typedef itk::ImageFileWriter< GrayValueImageType >     GrayValueImageWriterType;
+  typedef itk::ImageFileWriter< VectorImageType >        DeformationFieldWriterType;
 
   /** Execute stuff before the actual registration:
    * \li Create an initial B-spline grid.

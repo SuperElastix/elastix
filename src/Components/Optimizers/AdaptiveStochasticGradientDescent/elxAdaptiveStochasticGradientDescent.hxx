@@ -32,7 +32,6 @@
 
 namespace elastix
 {
-  using namespace itk;
 
 /**
  * ********************** Constructor ***********************
@@ -147,6 +146,16 @@ void AdaptiveStochasticGradientDescent<TElastix>
   this->GetConfiguration()->ReadParameter( maximumNumberOfSamplingAttempts,
     "MaximumNumberOfSamplingAttempts", this->GetComponentLabel(), level, 0 );
   this->SetMaximumNumberOfSamplingAttempts( maximumNumberOfSamplingAttempts );
+  if ( maximumNumberOfSamplingAttempts > 5 )
+  {
+    elxout["warning"]
+      << "\nWARNING: You have set MaximumNumberOfSamplingAttempts to "
+      << maximumNumberOfSamplingAttempts << ".\n"
+      << "  This functionality is known to cause problems (stack overflow) for large values.\n"
+      << "  If elastix stops or segfaults for no obvious reason, reduce this value.\n"
+      << "  You may select the RandomSparseMask image sampler to fix mask-related problems.\n"
+      << std::endl;
+  }
 
   /** Set/Get the initial time. Default: 0.0. Should be >=0. */
   double initialTime = 0.0;
@@ -477,7 +486,7 @@ AdaptiveStochasticGradientDescent<TElastix>
 template <class TElastix>
 void
 AdaptiveStochasticGradientDescent<TElastix>
-::MetricErrorResponse( ExceptionObject & err )
+::MetricErrorResponse( itk::ExceptionObject & err )
 {
   if ( this->GetCurrentIteration() != this->m_PreviousErrorAtIteration )
   {
@@ -844,11 +853,11 @@ AdaptiveStochasticGradientDescent<TElastix>
    */
 
   typedef double                                      CovarianceValueType;
-  typedef Array2D<CovarianceValueType>                CovarianceMatrixType;
+  typedef itk::Array2D<CovarianceValueType>           CovarianceMatrixType;
   typedef vnl_sparse_matrix<CovarianceValueType>      SparseCovarianceMatrixType;
   typedef typename SparseCovarianceMatrixType::row    SparseRowType;
   typedef typename SparseCovarianceMatrixType::pair_t SparseCovarianceElementType;
-  typedef Array<SizeValueType>                        NonZeroJacobianIndicesExpandedType;
+  typedef itk::Array<SizeValueType>                   NonZeroJacobianIndicesExpandedType;
   typedef vnl_diag_matrix<CovarianceValueType>        DiagCovarianceMatrixType;
   typedef vnl_vector<CovarianceValueType>             JacobianColumnType;
 
@@ -1462,7 +1471,7 @@ AdaptiveStochasticGradientDescent<TElastix>
   {
     this->GetScaledValueAndDerivative( parameters, dummyvalue, derivative );
   }
-  catch ( ExceptionObject & err )
+  catch ( itk::ExceptionObject & err )
   {
     this->m_StopCondition = MetricError;
     this->StopOptimization();

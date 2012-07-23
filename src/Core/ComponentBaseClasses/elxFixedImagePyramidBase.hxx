@@ -19,7 +19,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 /**
  * ******************* BeforeRegistrationBase *******************
@@ -174,7 +173,7 @@ FixedImagePyramidBase<TElastix>
     doCompression, "CompressResultImage", 0, false );
 
   /** Create writer. */
-  typedef ImageFileCastWriter< OutputImageType > WriterType;
+  typedef itk::ImageFileCastWriter< OutputImageType > WriterType;
   typename WriterType::Pointer writer = WriterType::New();
 
   /** Setup the pipeline. */

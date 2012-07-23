@@ -20,7 +20,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
   /**
    * \class Powell
@@ -45,11 +44,11 @@ using namespace itk;
   public:
 
     /** Standard ITK.*/
-    typedef Powell                  Self;
-    typedef PowellOptimizer Superclass1;
-    typedef OptimizerBase<TElastix>                     Superclass2;
-    typedef SmartPointer<Self>                  Pointer;
-    typedef SmartPointer<const Self>            ConstPointer;
+    typedef Powell                                   Self;
+    typedef PowellOptimizer                          Superclass1;
+    typedef OptimizerBase<TElastix>                  Superclass2;
+    typedef itk::SmartPointer<Self>                  Pointer;
+    typedef itk::SmartPointer<const Self>            ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );

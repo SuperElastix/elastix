@@ -26,7 +26,7 @@ namespace elastix
 
 template <class TElastix>
 void TransformBendingEnergyPenalty<TElastix>
-::Initialize( void ) throw (ExceptionObject)
+::Initialize( void ) throw (itk::ExceptionObject)
 {
   TimerPointer timer = TimerType::New();
   timer->StartTimer();

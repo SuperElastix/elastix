@@ -24,7 +24,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
 /**
  * \class FixedImagePyramidBase
@@ -77,7 +76,7 @@ public:
   typedef typename ElastixType::FixedImageType  OutputImageType;
 
   /** Other typedef's. */
-  typedef MultiResolutionPyramidImageFilter<
+  typedef itk::MultiResolutionPyramidImageFilter<
     InputImageType, OutputImageType >                 ITKBaseType;
 
   /** Typedef's from ITKBaseType. */

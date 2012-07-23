@@ -22,7 +22,6 @@
 
 namespace elastix
 {
-using namespace itk;
 
   /**
    * \class NormalizedMutualInformationMetric
@@ -72,7 +71,7 @@ using namespace itk;
   template <class TElastix >
     class NormalizedMutualInformationMetric :
     public
-      ParzenWindowNormalizedMutualInformationImageToImageMetric<
+      itk::ParzenWindowNormalizedMutualInformationImageToImageMetric<
         typename MetricBase<TElastix>::FixedImageType,
         typename MetricBase<TElastix>::MovingImageType >,
     public MetricBase<TElastix>
@@ -80,20 +79,20 @@ using namespace itk;
   public:
 
     /** Standard ITK-stuff. */
-    typedef NormalizedMutualInformationMetric         Self;
-    typedef ParzenWindowNormalizedMutualInformationImageToImageMetric<
+    typedef NormalizedMutualInformationMetric             Self;
+    typedef itk::ParzenWindowNormalizedMutualInformationImageToImageMetric<
       typename MetricBase<TElastix>::FixedImageType,
       typename MetricBase<TElastix>::MovingImageType >    Superclass1;
     typedef MetricBase<TElastix>                          Superclass2;
-    typedef SmartPointer<Self>                            Pointer;
-    typedef SmartPointer<const Self>                      ConstPointer;
+    typedef itk::SmartPointer<Self>                       Pointer;
+    typedef itk::SmartPointer<const Self>                 ConstPointer;
 
     /** Method for creation through the object factory. */
     itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
     itkTypeMacro( NormalizedMutualInformationMetric,
-      ParzenWindowNormalizedMutualInformationImageToImageMetric );
+      itk::ParzenWindowNormalizedMutualInformationImageToImageMetric );
 
     /** Name of this class.
      * Use this name in the parameter file to select this specific metric. \n
@@ -178,7 +177,7 @@ using namespace itk;
 
     /** Set up a timer to measure the intialisation time and
      * call the Superclass' implementation. */
-    virtual void Initialize(void) throw (ExceptionObject);
+    virtual void Initialize(void) throw (itk::ExceptionObject);
 
   protected:
 

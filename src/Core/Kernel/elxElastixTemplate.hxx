@@ -35,7 +35,6 @@
 
 namespace elastix
 {
-using namespace itk;
 using namespace xl;
 
 

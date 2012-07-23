@@ -18,6 +18,7 @@
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkImageRegionConstIterator.h"
 #include "itkImageRegionConstIteratorWithIndex.h"
+#include "itkAdvancedRayCastInterpolateImageFunction.h"
 
 #include "elxTimer.h"//tmp
 
@@ -461,9 +462,28 @@ AdvancedImageToImageMetric<TFixedImage,TMovingImage>
    */
   if ( !this->GetComputeGradient() )
   {
-    if ( !this->m_InterpolatorIsBSpline
-      && !this->m_InterpolatorIsBSplineFloat
-      && !this->m_InterpolatorIsReducedBSpline )
+    /** In addition, don't compute the moving image gradient for 2D/3D registration,
+     * i.e. whenever the interpolator is a ray cast interpolator.
+     * This is a bit of a hack that does not respect the setting of the boolean
+     * m_ComputeGradient. By doing this, there is no way to ask no gradient
+     * computation at all (to save memory).
+     * The best solution would be to remove everything below this point, and to
+     * override the ComputeGradient() function of ITK by computing a central
+     * difference derivative. This way SetComputeGradient will enable or disable
+     * the gradient computation and let derived classes choose if it needs the
+     * precomputation of the gradient.
+     *
+     * For more details see the post about "2D/3D registration memory issue" in
+     * elastix's mailing list (2 July 2012).
+     */
+    typedef itk::AdvancedRayCastInterpolateImageFunction<
+      MovingImageType, CoordinateRepresentationType >       RayCastInterpolatorType;
+    const bool interpolatorIsRayCast
+      = dynamic_cast<RayCastInterpolatorType *>( this->m_Interpolator.GetPointer() ) != 0;
+
+    if ( !this->m_InterpolatorIsBSpline && !this->m_InterpolatorIsBSplineFloat
+      && !this->m_InterpolatorIsReducedBSpline
+      && !interpolatorIsRayCast )
     {
       this->m_CentralDifferenceGradientFilter = CentralDifferenceGradientFilterType::New();
       this->m_CentralDifferenceGradientFilter->SetUseImageSpacing( true );
