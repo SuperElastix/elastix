@@ -43,9 +43,9 @@ macro( elx_add_test name group )
 
   # Link against other libraries.
   target_link_libraries( ${ELXTEST_EXECUTABLE_NAME}
-    elxCommon # needed for elxTimer
-    ${elastix_opencl}  # is empty if not selected in CMake
-    ${mevisdcmtifflib} # is empty if not selected in CMake
+    elxCommon           # needed for elxTimer
+    elastix_opencl      # is empty if not selected in CMake
+    ${mevisdcmtifflib}  # is empty if not selected in CMake
     ${ITK_LIBRARIES}
   )
 
