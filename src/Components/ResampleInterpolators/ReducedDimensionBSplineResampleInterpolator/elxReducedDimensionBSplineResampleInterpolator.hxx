@@ -36,7 +36,7 @@ ReducedDimensionBSplineResampleInterpolator<TElastix>
 
   /** Read the desired splineOrder from the parameterFile. */
   bool oldstyle = this->m_Configuration->ReadParameter( splineOrder,
-    "FinalReducedDimensionBSplineInterpolationOrder", 0 );
+    "FinalReducedDimensionBSplineInterpolationOrder", 0, false );
   if (oldstyle)
   {
     xout["warning"] << "WARNING: FinalReducedDimensionBSplineInterpolator parameter is depecrated. "
@@ -70,7 +70,7 @@ ReducedDimensionBSplineResampleInterpolator<TElastix>
 
   /** Read the desired splineOrder from the parameterFile. */
   bool oldstyle = this->m_Configuration->ReadParameter( splineOrder,
-    "FinalReducedDimensionBSplineInterpolationOrder", 0 );
+    "FinalReducedDimensionBSplineInterpolationOrder", 0, false );
   if (oldstyle)
   {
     xout["warning"] << "WARNING: FinalReducedDimensionBSplineInterpolator parameter is depecrated. "
