@@ -32,7 +32,7 @@ set( mevisdcmtifflib mevisdcmtiff )
 #   "itk"name_of_test".cxx".
 #
 
-macro( elx_add_test name )
+macro( elx_add_test name group )
   # Define some helper variables.
   set( ELXTEST_EXECUTABLE_NAME itk${name} )
   set( ELXTEST_SOURCE_NAME itk${name}.cxx )
@@ -44,12 +44,13 @@ macro( elx_add_test name )
   # Link against other libraries.
   target_link_libraries( ${ELXTEST_EXECUTABLE_NAME}
     elxCommon # needed for elxTimer
+    ${elastix_opencl}  # is empty if not selected in CMake
+    ${mevisdcmtifflib} # is empty if not selected in CMake
     ${ITK_LIBRARIES}
-    ${mevisdcmtifflib}
   )
 
   # Group in IDE's like Visual Studio
-  set_property( TARGET ${ELXTEST_EXECUTABLE_NAME} PROPERTY FOLDER "tests" )
+  set_property( TARGET ${ELXTEST_EXECUTABLE_NAME} PROPERTY FOLDER "tests/${group}" )
 
   # Add the test.
   add_test( NAME ${ELXTEST_TEST_NAME}
@@ -228,17 +229,17 @@ endmacro()
 # Create elxImageCompare
 add_executable( elxImageCompare elxImageCompare.cxx itkCommandLineArgumentParser.cxx )
 target_link_libraries( elxImageCompare ${ITK_LIBRARIES} )
-set_property( TARGET elxImageCompare PROPERTY FOLDER "tests" )
+set_property( TARGET elxImageCompare PROPERTY FOLDER "tests/Executable" )
 
 # Create elxTransformParametersCompare
 add_executable( elxTransformParametersCompare elxTransformParametersCompare.cxx itkCommandLineArgumentParser.cxx )
 target_link_libraries( elxTransformParametersCompare param ${ITK_LIBRARIES} )
-set_property( TARGET elxTransformParametersCompare PROPERTY FOLDER "tests" )
+set_property( TARGET elxTransformParametersCompare PROPERTY FOLDER "tests/Executable" )
 
 # Create elxInvertTransform
 add_executable( elxInvertTransform elxInvertTransform.cxx itkCommandLineArgumentParser.cxx )
 target_link_libraries( elxInvertTransform param ${ITK_LIBRARIES} )
-set_property( TARGET elxInvertTransform PROPERTY FOLDER "tests" )
+set_property( TARGET elxInvertTransform PROPERTY FOLDER "tests/Executable" )
 
 #---------------------------------------------------------------------
 # Add tests
@@ -258,22 +259,29 @@ add_test( NAME InvertTransformTest_COMPARE_TP
 set_tests_properties( InvertTransformTest_COMPARE_TP
   PROPERTIES DEPENDS InvertTransformTest_OUTPUT )
 
-# Add other tests
-elx_add_test( AdvancedBSplineDeformableTransformTest
+# Add tests that run specific registration components
+elx_add_test( AdvancedBSplineDeformableTransformTest "Common"
   ${elastix_SOURCE_DIR}/Testing/parameters_AdvancedBSplineDeformableTransformTest.txt )
-elx_add_test( AdvancedLinearInterpolatorTest )
-elx_add_test( BSplineDerivativeKernelFunctionTest )
-elx_add_test( BSplineSODerivativeKernelFunctionTest )
-elx_add_test( BSplineInterpolationWeightFunctionTest )
-elx_add_test( BSplineInterpolationDerivativeWeightFunctionTest )
-elx_add_test( BSplineInterpolationSODerivativeWeightFunctionTest )
-elx_add_test( MevisDicomTiffImageIOTest )
-elx_add_test( ThinPlateSplineTransformPerformanceTest
+elx_add_test( AdvancedLinearInterpolatorTest "Common" )
+elx_add_test( BSplineDerivativeKernelFunctionTest "Common" )
+elx_add_test( BSplineSODerivativeKernelFunctionTest "Common" )
+elx_add_test( BSplineInterpolationWeightFunctionTest "Common" )
+elx_add_test( BSplineInterpolationDerivativeWeightFunctionTest "Common" )
+elx_add_test( BSplineInterpolationSODerivativeWeightFunctionTest "Common" )
+elx_add_test( MevisDicomTiffImageIOTest "Common" )
+elx_add_test( ThinPlateSplineTransformPerformanceTest "Common"
   ${elastix_SOURCE_DIR}/Testing/parameters_TPSTransformTest.txt
   ${elastix_BINARY_DIR}/Testing )
-elx_add_test( ThinPlateSplineTransformTest
+elx_add_test( ThinPlateSplineTransformTest "Common"
   ${elastix_SOURCE_DIR}/Testing/parameters_TPSTransformTest.txt )
-elx_add_test( TimerTest )
+elx_add_test( TimerTest "Common" )
+
+# Add tests that run OpenCL
+if( ELASTIX_USE_OPENCL )
+  elx_add_test( GPURecursiveGaussianImageFilterTest "OpenCL"
+    ${TestDataDir}/3DCT_lung_baseline.mha
+    ${TestOutputDir}/3DCT_lung_baseline_OCLblurred.mha )
+endif()
 
 #---------------------------------------------------------------------
 # Add tests that run elastix

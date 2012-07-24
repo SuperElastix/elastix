@@ -13,23 +13,37 @@ IF( ITK_FOUND )
 ENDIF( ITK_FOUND )
 
 #---------------------------------------------------------------------
+# Add the elastix source dir as an additional module path,
+# so that CMake is able to find the FindPackage modules.
+list( APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR} )
+
+#---------------------------------------------------------------------
 # Find CUDA.
-MARK_AS_ADVANCED( ELASTIX_USE_CUDA )
-OPTION( ELASTIX_USE_CUDA "Use CUDA enabled GPU" OFF )
+mark_as_advanced( ELASTIX_USE_CUDA )
+option( ELASTIX_USE_CUDA "Use CUDA enabled GPU" OFF )
 
 IF( ELASTIX_USE_CUDA )
   FIND_PACKAGE( CUDA REQUIRED )
 
-  MARK_AS_ADVANCED( CUDA_BUILD_CUBIN )
-  MARK_AS_ADVANCED( CUDA_BUILD_EMULATION )
-  MARK_AS_ADVANCED( CUDA_VERBOSE_BUILD )
-  MARK_AS_ADVANCED( CUDA_SDK_ROOT_DIR )
+  mark_as_advanced( CUDA_BUILD_CUBIN )
+  mark_as_advanced( CUDA_BUILD_EMULATION )
+  mark_as_advanced( CUDA_VERBOSE_BUILD )
+  mark_as_advanced( CUDA_SDK_ROOT_DIR )
+ENDIF()
+
+#---------------------------------------------------------------------
+# Find OpenCL.
+mark_as_advanced( ELASTIX_USE_OPENCL )
+option( ELASTIX_USE_OPENCL "Use OpenCL enabled GPU" OFF )
+
+IF( ELASTIX_USE_OPENCL )
+  FIND_PACKAGE( OpenCL REQUIRED )
+  INCLUDE_DIRECTORIES( ${OPENCL_INCLUDE_DIRS} )
 ENDIF()
 
 #----------------------------------------------------------------------
 
 # Find Eigen
-list( APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR} )
 find_package( Eigen3 REQUIRED )
 include_directories( ${EIGEN3_INCLUDE_DIR} )
 #message( STATUS EIGEN3_INCLUDE_DIR: ${EIGEN3_INCLUDE_DIR} )
@@ -126,6 +140,13 @@ SET( elxCommon_INCLUDE_DIRECTORIES
   ${elastix_SOURCE_DIR}/Common/MevisDicomTiff
 )
 
+SET( elxCommon_OpenCL_INCLUDE_DIRECTORIES
+  ${elastix_SOURCE_DIR}/Common/OpenCL
+  ${elastix_SOURCE_DIR}/Common/OpenCL/ITKimprovements
+  ${elastix_SOURCE_DIR}/Common/OpenCL/Filters
+  ${elastix_SOURCE_DIR}/Common/OpenCL/Kernels
+)
+
 SET( elxCore_INCLUDE_DIRECTORIES
   ${elastix_SOURCE_DIR}/Core
   ${elastix_SOURCE_DIR}/Core/Install
@@ -157,6 +178,14 @@ SET( elxINCLUDE_DIRECTORIES
 )
 
 INCLUDE_DIRECTORIES( ${elxINCLUDE_DIRECTORIES} )
+# Include the OpenCL directories
+# The key-word BEFORE is important here, because the elastix distribution
+# contains some files with the same name as in the ITK distribution.
+# Some bugs were fixed and features added. When these are contributed back
+# to the ITK the BEFORE keyword is not needed anymore.
+if( ELASTIX_USE_OPENCL )
+  INCLUDE_DIRECTORIES( BEFORE ${elxCommon_OpenCL_INCLUDE_DIRECTORIES} )
+endif()
 
 #---------------------------------------------------------------------
 # Microsoft specific items

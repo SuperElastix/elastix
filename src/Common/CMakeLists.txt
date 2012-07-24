@@ -17,6 +17,10 @@ IF( ELASTIX_USE_CUDA )
   ADD_SUBDIRECTORY( CUDA )
 ENDIF()
 
+IF( ELASTIX_USE_OPENCL )
+  ADD_SUBDIRECTORY( OpenCL )
+ENDIF()
+
 #---------------------------------------------------------------------
 # Define lists of files in the subdirectories.
 
