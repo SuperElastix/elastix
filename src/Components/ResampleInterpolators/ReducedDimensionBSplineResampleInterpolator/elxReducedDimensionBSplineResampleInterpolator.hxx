@@ -35,8 +35,15 @@ ReducedDimensionBSplineResampleInterpolator<TElastix>
   unsigned int splineOrder = 3;
 
   /** Read the desired splineOrder from the parameterFile. */
-  this->m_Configuration->ReadParameter( splineOrder,
+  bool oldstyle = this->m_Configuration->ReadParameter( splineOrder,
     "FinalReducedDimensionBSplineInterpolationOrder", 0 );
+  if (oldstyle)
+  {
+    xout["warning"] << "WARNING: FinalReducedDimensionBSplineInterpolator parameter is depecrated. "
+      << "Replace it by FinalBSplineInterpolationOrder" << std::endl;
+  }
+  this->m_Configuration->ReadParameter( splineOrder,
+    "FinalBSplineInterpolationOrder", 0 );
 
   /** Set the splineOrder in the superclass. */
   this->SetSplineOrder( splineOrder );
@@ -62,8 +69,15 @@ ReducedDimensionBSplineResampleInterpolator<TElastix>
   unsigned int splineOrder = 3;
 
   /** Read the desired splineOrder from the parameterFile. */
-  this->m_Configuration->ReadParameter( splineOrder,
+  bool oldstyle = this->m_Configuration->ReadParameter( splineOrder,
     "FinalReducedDimensionBSplineInterpolationOrder", 0 );
+  if (oldstyle)
+  {
+    xout["warning"] << "WARNING: FinalReducedDimensionBSplineInterpolator parameter is depecrated. "
+      << "Replace it by FinalBSplineInterpolationOrder" << std::endl;
+  }
+  this->m_Configuration->ReadParameter( splineOrder,
+    "FinalBSplineInterpolationOrder", 0 );
 
   /** Set the splineOrder in the superclass. */
   this->SetSplineOrder( splineOrder );
@@ -86,7 +100,7 @@ ReducedDimensionBSplineResampleInterpolator<TElastix>
   /** The ReducedDimensionBSplineResampleInterpolator adds: */
 
   /** Write the FinalBSplineInterpolationOrder. */
-  xout["transpar"] << "(FinalReducedDimensionBSplineInterpolationOrder "
+  xout["transpar"] << "(FinalBSplineInterpolationOrder "
     << this->GetSplineOrder() << ")" << std::endl;
 
 } // end WriteToFile()
